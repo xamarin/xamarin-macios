@@ -235,6 +235,7 @@ xamarin_get_runtime_class ()
  * and create a pool that spans the thread's entire lifetime.
  */
 
+#if !DOTNET
 static CFMutableDictionaryRef xamarin_thread_hash = NULL;
 static pthread_mutex_t thread_hash_lock = PTHREAD_MUTEX_INITIALIZER;
 
@@ -296,14 +297,18 @@ thread_end (MonoProfiler *prof, uintptr_t tid)
 	// COOP: no managed memory access: any mode.
 	xamarin_thread_finish (NULL);
 }
+#endif // !DOTNET
 
 void
 xamarin_install_nsautoreleasepool_hooks ()
 {
+	// No need to do anything here for CoreCLR.
+#if !DOTNET
 	// COOP: executed at startup (and no managed memory access): any mode.
 	xamarin_thread_hash = CFDictionaryCreateMutable (kCFAllocatorDefault, 0, NULL, NULL);
 
 	mono_profiler_install_thread (thread_start, thread_end);
+#endif // !DOTNET
 }
 
 void

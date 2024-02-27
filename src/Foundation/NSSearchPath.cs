@@ -33,19 +33,20 @@ using CoreFoundation;
 using ObjCRuntime;
 using System.Runtime.Versioning;
 
-namespace Foundation
-{
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
+namespace Foundation {
 #if NET
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #endif
-	public static class NSSearchPath
-	{
-		public static string[] GetDirectories (NSSearchPathDirectory directory, NSSearchPathDomain domainMask, bool expandTilde = true)
+	public static class NSSearchPath {
+		public static string [] GetDirectories (NSSearchPathDirectory directory, NSSearchPathDomain domainMask, bool expandTilde = true)
 		{
-			return CFArray.StringArrayFromHandle (NSSearchPathForDirectoriesInDomains ((nuint)(ulong)directory, (nuint)(ulong)domainMask, expandTilde));
+			return CFArray.StringArrayFromHandle (NSSearchPathForDirectoriesInDomains ((nuint) (ulong) directory, (nuint) (ulong) domainMask, expandTilde));
 		}
 
 		[DllImport (Constants.FoundationLibrary)]

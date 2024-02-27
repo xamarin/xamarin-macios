@@ -29,6 +29,8 @@ using System;
 using Foundation;
 using CoreGraphics;
 
+#nullable enable
+
 namespace AppKit {
 
 	public partial class NSImage {
@@ -39,10 +41,10 @@ namespace AppKit {
 			}
 		}
 
-		public static NSImage FromStream (System.IO.Stream stream)
+		public static NSImage? FromStream (System.IO.Stream stream)
 		{
-			using (NSData data = NSData.FromStream (stream)) {
-				return new NSImage (data);
+			using (var data = NSData.FromStream (stream)) {
+				return data is null ? null : new NSImage (data);
 			}
 		}
 
@@ -64,13 +66,13 @@ namespace AppKit {
 		}
 
 		// note: if needed override the protected Get|Set methods
-		public string Name {
+		public string? Name {
 			get { return GetName (); }
 			// ignore return value (bool)
 			set { SetName (value); }
 		}
 
-		public static NSImage ImageNamed (NSImageName name)
+		public static NSImage? ImageNamed (NSImageName name)
 		{
 			return ImageNamed (name.GetConstant ());
 		}

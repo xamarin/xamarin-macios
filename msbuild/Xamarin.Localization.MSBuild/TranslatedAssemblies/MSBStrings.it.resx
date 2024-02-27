@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <resheader name="resmimetype">
     <value>text/microsoft-resx</value>
@@ -424,7 +424,7 @@
         </value>
     </data>
   <data name="E0118" xml:space="preserve">
-        <value>{0} exited with code {1}:
+        <value>{0} terminato con codice {1}:
 {2}</value>
     </data>
   <data name="M0119" xml:space="preserve">
@@ -672,12 +672,13 @@
         </value>
     </data>
   <data name="E0174" xml:space="preserve">
-        <value>{0} ha un formato non corretto o sconosciuto e non può essere elaborato.
-        </value>
+        <value>Il formato del {0} xcframework non è corretto o sconosciuto e non può essere elaborato.</value>
     </data>
   <data name="E0175" xml:space="preserve">
-        <value>Non è stato trovato alcun framework corrispondente in "{0}".
-        </value>
+        <value>Non sono stati trovati framework corrispondenti all'interno di '{0}'. SupportedPlatform: '{0}', SupportedPlatformVariant: '{1}', SupportedArchitectures: '{2}'.</value>
+        <comment>
+            Do not translate: 'SupportedPlatform', 'SupportedPlatformVariant', 'SupportedArchitectures' (they're keys inside a file with key/value pairs))
+        </comment>
     </data>
   <data name="W0176" xml:space="preserve">
         <value>Le opzioni "{0}" e "{1}" sono in conflitto. "{1}" verrà ignorato.
@@ -722,6 +723,12 @@
     </data>
   <data name="E0189" xml:space="preserve">
         <value>Non è stato possibile analizzare gli argomenti del linker personalizzati '-{0}': {1}</value>
+    </data>
+  <data name="E0190" xml:space="preserve">
+        <value>L'elemento NativeResource "{0}" non esiste.</value>
+        <comment>
+            NativeResource: do not translate (this is the name of an item in the project file).
+        </comment>
     </data>
   <data name="E7001" xml:space="preserve">
         <value>Non è stato possibile risolvere gli indirizzi IP host per le impostazioni del debugger Wi-Fi.
@@ -997,6 +1004,7 @@
         <value>Impostazione: la voce "{0}" non esiste
         </value>
     </data>
+  <!-- E7068: not in use anymore -->
   <data name="E7069" xml:space="preserve">
         <value>Xamarin.iOS 14+ non supporta le app watchOS 1. Eseguire la migrazione del progetto a watchOS 2+.</value>
     </data>
@@ -1145,5 +1153,88 @@
     </data>
   <data name="E7101" xml:space="preserve">
         <value>Proprietà sconosciuta '{0}' con valore '{1}'.</value>
+    </data>
+  <data name="E7102" xml:space="preserve">
+        <value>Valore non valido '{0}' per l'entitlement '{1}' di tipo '{2}' specificato nel gruppo di elementi CustomEntitlements. Valore previsto: nessun valore.</value>
+        <comment>
+            Don't translate: CustomEntitlements (name of option in project file)
+        </comment>
+    </data>
+  <data name="E7103" xml:space="preserve">
+        <value>Valore non valido '{0}' per l'entitlement '{1}' di tipo '{2}' specificato nel gruppo di elementi CustomEntitlements. Valore previsto: 'true' o 'false'.</value>
+        <comment>
+            Don't translate:
+                * CustomEntitlements (name of option in project file)
+                * 'true', 'false'
+        </comment>
+    </data>
+  <data name="E7104" xml:space="preserve">
+        <value>Tipo sconosciuto '{0}' per l'entitlement '{1}' specificato nel gruppo di elementi CustomEntitlements. Valore previsto: 'Remove', 'Boolean', 'String' o 'StringArray'.</value>
+        <comment>
+            Don't translate:
+                * CustomEntitlements (name of option in project file)
+                * 'Remove', 'Boolean', 'String', 'StringArray'
+        </comment>
+    </data>
+  <data name="W7105" xml:space="preserve">
+        <value>Estensione imprevista '{0}' per il riferimento nativo '{1}' nel pacchetto di risorse di associazione '{2}'.</value>
+        <comment>
+            {0}: file extension
+            {1}: path to a file
+            {2}: path to a file
+        </comment>
+    </data>
+  <data name="W7106" xml:space="preserve">
+        <value>È previsto un file denominato '{1}' nel file ZIP {0}.</value>
+    </data>
+  <data name="W7107" xml:space="preserve">
+        <value>Il file ZIP '{0}' non esiste.</value>
+    </data>
+  <data name="W7108" xml:space="preserve">
+        <value>Il file '{0}' non esiste.</value>
+    </data>
+  <data name="W7109" xml:space="preserve">
+        <value>Non è possibile elaborare l'elemento '{0}' come riferimento nativo: tipo sconosciuto.</value>
+    </data>
+  <data name="E7110" xml:space="preserve">
+        <value>Non è stato possibile caricare Info.plist '{0}' da xcframework '{1}'.</value>
+    </data>
+  <data name="W7111" xml:space="preserve">
+        <value>La directory '{0}' non esiste.</value>
+    </data>
+  <data name="E7112" xml:space="preserve">
+        <value>Non è possibile trovare il file o la directory '{0}' nel file ZIP '{1}'.</value>
+    </data>
+  <data name="E7113" xml:space="preserve">
+        <value>Non è possibile elaborare il file ZIP '{0}' in questa piattaforma: il file '{1}' è un collegamento simbolico.</value>
+    </data>
+  <data name="E7114" xml:space="preserve">
+        <value>All'attività "{0}" non è stato assegnato un valore per il parametro "{1}", necessario per la compilazione in questa piattaforma.</value>
+    </data>
+  <data name="E7115" xml:space="preserve">
+        <value>L'assembly illink non esiste: '{0}'.</value>
+        <comment>
+            {0}: the path to the linker assembly
+        </comment>
+    </data>
+  <data name="E7116" xml:space="preserve">
+        <value>L'assembly {0} non fornisce metadati 'ObjectFile'.</value>
+        <comment>
+            Don't translate: 'ObjectFile'.
+        </comment>
+    </data>
+  <data name="E7117" xml:space="preserve">
+        <value>L'assembly {0} è stato incluso più volte come assembly di input (riferimento da {1}).</value>
+        <comment>
+            {0}: the name of an assembly
+            {1}: the path to an assembly
+        </comment>
+    </data>
+  <data name="E7118" xml:space="preserve">
+        <value>Non è stato possibile eseguire la compilazione AOT di {0}. Il compilatore AOT è terminato con codice {1}.</value>
+        <comment>
+            {0}: the path to an assembly
+            {1}: the exit code of a process
+        </comment>
     </data>
 </root>

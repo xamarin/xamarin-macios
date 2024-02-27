@@ -1,5 +1,3 @@
-# These performMatterEcosystemAccessorySetupUsingRequest:topology:completionHandler: now fails submission tests
-# And the type was stubbed away as it was not usable
-!missing-selector! HMAccessorySetupManager::performAccessorySetupUsingRequest:completionHandler: not bound
-!missing-selector! HMAccessorySetupManager::performMatterEcosystemAccessorySetupUsingRequest:topology:completionHandler: not bound
-!missing-type! HMAccessorySetupManager not bound
+# CHIP is not bound yet and will be only when is stable
+!missing-selector! HMAccessorySetupRequest::matterPayload not bound
+!missing-selector! HMAccessorySetupRequest::setMatterPayload: not bound

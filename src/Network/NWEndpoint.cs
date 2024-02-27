@@ -16,7 +16,8 @@ using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
 
-using OS_nw_endpoint=System.IntPtr;
+using OS_nw_endpoint = System.IntPtr;
+using OS_nw_txt_record = System.IntPtr;
 
 #if !NET
 using NativeHandle = System.IntPtr;
@@ -26,14 +27,13 @@ namespace Network {
 
 #if NET
 	[SupportedOSPlatform ("tvos12.0")]
-	[SupportedOSPlatform ("macos10.14")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("ios12.0")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
-	[TV (12,0)]
-	[Mac (10,14)]
-	[iOS (12,0)]
-	[Watch (6,0)]
+	[TV (12, 0)]
+	[iOS (12, 0)]
+	[Watch (6, 0)]
 #endif
 
 	public class NWEndpoint : NativeObject {
@@ -41,7 +41,7 @@ namespace Network {
 #if NET
 		internal NWEndpoint (NativeHandle handle, bool owns) : base (handle, owns) {}
 #else
-		public NWEndpoint (NativeHandle handle, bool owns) : base (handle, owns) {}
+		public NWEndpoint (NativeHandle handle, bool owns) : base (handle, owns) { }
 #endif
 
 		[DllImport (Constants.NetworkLibrary)]
@@ -50,7 +50,7 @@ namespace Network {
 		public NWEndpointType Type => nw_endpoint_get_type (GetCheckedHandle ());
 
 		[DllImport (Constants.NetworkLibrary)]
-		extern static OS_nw_endpoint nw_endpoint_create_host (string hostname, string port);
+		extern static OS_nw_endpoint nw_endpoint_create_host (IntPtr hostname, IntPtr port);
 
 		public static NWEndpoint? Create (string hostname, string port)
 		{
@@ -58,7 +58,9 @@ namespace Network {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (hostname));
 			if (port is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (port));
-			var handle = nw_endpoint_create_host (hostname, port);
+			using var hostnamePtr = new TransientString (hostname);
+			using var portPtr = new TransientString (port);
+			var handle = nw_endpoint_create_host (hostnamePtr, portPtr);
 			if (handle == IntPtr.Zero)
 				return null;
 			return new NWEndpoint (handle, owns: true);
@@ -69,8 +71,14 @@ namespace Network {
 
 		public string? Hostname => Marshal.PtrToStringAnsi (nw_endpoint_get_hostname (GetCheckedHandle ()));
 
-		[DllImport (Constants.NetworkLibrary)]
-		static extern string nw_endpoint_copy_port_string (OS_nw_endpoint endpoint);
+		[DllImport (Constants.NetworkLibrary, EntryPoint = "nw_endpoint_copy_port_string")]
+		static extern IntPtr nw_endpoint_copy_port_string_ptr (OS_nw_endpoint endpoint);
+
+		static string nw_endpoint_copy_port_string (OS_nw_endpoint endpoint)
+		{
+			var ptr = nw_endpoint_copy_port_string_ptr (endpoint);
+			return TransientString.ToStringAndFree (ptr)!;
+		}
 
 		public string Port => nw_endpoint_copy_port_string (GetCheckedHandle ());
 
@@ -86,8 +94,14 @@ namespace Network {
 		// address family would have to be mapped, and it does not look like a very useful
 		// type to begin with.
 
-		[DllImport (Constants.NetworkLibrary)]
-		static extern string nw_endpoint_copy_address_string (OS_nw_endpoint endpoint);
+		[DllImport (Constants.NetworkLibrary, EntryPoint = "nw_endpoint_copy_address_string")]
+		static extern IntPtr nw_endpoint_copy_address_string_ptr (OS_nw_endpoint endpoint);
+
+		static string nw_endpoint_copy_address_string (OS_nw_endpoint endpoint)
+		{
+			var ptr = nw_endpoint_copy_address_string_ptr (endpoint);
+			return TransientString.ToStringAndFree (ptr)!;
+		}
 
 		public string Address => nw_endpoint_copy_address_string (GetCheckedHandle ());
 
@@ -99,13 +113,16 @@ namespace Network {
 
 		// TODO: same
 		[DllImport (Constants.NetworkLibrary)]
-		static extern unsafe OS_nw_endpoint nw_endpoint_create_bonjour_service (string name, string type, string domain);
+		static extern unsafe OS_nw_endpoint nw_endpoint_create_bonjour_service (IntPtr name, IntPtr type, IntPtr domain);
 
 		public static NWEndpoint? CreateBonjourService (string name, string serviceType, string domain)
 		{
 			if (serviceType is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (serviceType));
-			var x = nw_endpoint_create_bonjour_service (name, serviceType, domain);
+			using var namePtr = new TransientString (name);
+			using var serviceTypePtr = new TransientString (serviceType);
+			using var domainPtr = new TransientString (domain);
+			var x = nw_endpoint_create_bonjour_service (namePtr, serviceTypePtr, domainPtr);
 			if (x == IntPtr.Zero)
 				return null;
 			return new NWEndpoint (x, owns: true);
@@ -128,32 +145,31 @@ namespace Network {
 
 #if NET
 		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[TV (13,0)]
-		[Mac (10,15)]
-		[iOS (13,0)]
+		[TV (13, 0)]
+		[iOS (13, 0)]
 #endif
 		[DllImport (Constants.NetworkLibrary, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-		static extern OS_nw_endpoint nw_endpoint_create_url (string url);
+		static extern OS_nw_endpoint nw_endpoint_create_url (IntPtr url);
 
 #if NET
 		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[TV (13,0)]
-		[Mac (10,15)]
-		[iOS (13,0)]
+		[TV (13, 0)]
+		[iOS (13, 0)]
 #endif
 		public static NWEndpoint? Create (string url)
 		{
 			if (url is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (url));
-			var handle = nw_endpoint_create_url (url);
+			using var urlPtr = new TransientString (url);
+			var handle = nw_endpoint_create_url (urlPtr);
 			if (handle == IntPtr.Zero)
 				return null;
 			return new NWEndpoint (handle, owns: true);
@@ -161,27 +177,98 @@ namespace Network {
 
 #if NET
 		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[TV (13,0)]
-		[Mac (10,15)]
-		[iOS (13,0)]
+		[TV (13, 0)]
+		[iOS (13, 0)]
 #endif
 		[DllImport (Constants.NetworkLibrary, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
 		static extern IntPtr nw_endpoint_get_url (OS_nw_endpoint endpoint);
 
 #if NET
 		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[TV (13,0)]
-		[Mac (10,15)]
-		[iOS (13,0)]
+		[TV (13, 0)]
+		[iOS (13, 0)]
 #endif
 		public string? Url => Marshal.PtrToStringAnsi (nw_endpoint_get_url (GetCheckedHandle ()));
+
+
+#if NET
+		[SupportedOSPlatform ("tvos16.0")]
+		[SupportedOSPlatform ("macos13.0")]
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+#else
+		[TV (16, 0)]
+		[Mac (13, 0)]
+		[iOS (16, 0)]
+		[Watch (9, 0)]
+#endif
+		[DllImport (Constants.NetworkLibrary)]
+		static extern unsafe byte* nw_endpoint_get_signature (OS_nw_endpoint endpoint, out nuint out_signature_length);
+
+#if NET
+		[SupportedOSPlatform ("tvos16.0")]
+		[SupportedOSPlatform ("macos13.0")]
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+#else
+		[TV (16, 0)]
+		[Mac (13, 0)]
+		[iOS (16, 0)]
+		[Watch (9, 0)]
+#endif
+		public ReadOnlySpan<byte> Signature {
+			get {
+				unsafe {
+					var data = nw_endpoint_get_signature (GetCheckedHandle (), out var length);
+					var mValue = new ReadOnlySpan<byte> (data, (int) length);
+					// we do not know who manages the byte array, so we return a copy, is more expensive but
+					// safer until we know what is the mem management.
+					return new ReadOnlySpan<byte> (mValue.ToArray ());
+				}
+			}
+		}
+
+#if NET
+		[SupportedOSPlatform ("tvos16.0")]
+		[SupportedOSPlatform ("macos13.0")]
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+#else
+		[TV (16, 0)]
+		[Mac (13, 0)]
+		[iOS (16, 0)]
+		[Watch (9, 0)]
+#endif
+		[DllImport (Constants.NetworkLibrary)]
+		static extern OS_nw_txt_record nw_endpoint_copy_txt_record (OS_nw_endpoint endpoint);
+
+#if NET
+		[SupportedOSPlatform ("tvos16.0")]
+		[SupportedOSPlatform ("macos13.0")]
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+#else
+		[TV (16, 0)]
+		[Mac (13, 0)]
+		[iOS (16, 0)]
+		[Watch (9, 0)]
+#endif
+		public NWTxtRecord? TxtRecord {
+			get {
+				var record = nw_endpoint_copy_txt_record (GetCheckedHandle ());
+				if (record == IntPtr.Zero)
+					return null;
+				return new NWTxtRecord (record, owns: true);
+			}
+		}
+
 	}
 }

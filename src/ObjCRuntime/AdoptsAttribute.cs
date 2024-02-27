@@ -32,7 +32,7 @@ using System.Runtime.InteropServices;
 
 namespace ObjCRuntime {
 
-	[AttributeUsage(AttributeTargets.Class, AllowMultiple=true)]
+	[AttributeUsage (AttributeTargets.Class, AllowMultiple = true)]
 	public sealed class AdoptsAttribute : Attribute {
 #if !COREBUILD
 		IntPtr handle;
@@ -41,14 +41,14 @@ namespace ObjCRuntime {
 		{
 			ProtocolType = protocolType;
 		}
-		
+
 		public string ProtocolType {
 			get; private set;
 		}
 
 		public IntPtr ProtocolHandle {
 			get {
-				if (handle == IntPtr.Zero && ProtocolType != null)
+				if (handle == IntPtr.Zero && ProtocolType is not null)
 					handle = Runtime.GetProtocol (ProtocolType);
 
 				return handle;

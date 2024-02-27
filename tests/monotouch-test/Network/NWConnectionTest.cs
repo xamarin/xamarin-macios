@@ -22,7 +22,7 @@ namespace MonoTouchFixtures.Network {
 
 		void ConnectionStateHandler (NWConnectionState state, NWError error)
 		{
-			switch (state){
+			switch (state) {
 			case NWConnectionState.Ready:
 				connectedEvent.Set ();
 				break;
@@ -40,13 +40,12 @@ namespace MonoTouchFixtures.Network {
 		public void SetUp ()
 		{
 			// connect and once the connection is done, deal with the diff tests
-			connectedEvent = new AutoResetEvent(false);
+			connectedEvent = new AutoResetEvent (false);
 			host = NetworkResources.MicrosoftUri.Host;
 			// we create a connection which we are going to use to get the availabe
 			// interfaces, that way we can later test protperties of the NWParameters class.
 			using (var parameters = NWParameters.CreateUdp ())
-			using (var endpoint = NWEndpoint.Create (host, "80"))
-			{
+			using (var endpoint = NWEndpoint.Create (host, "80")) {
 				using (var protocolStack = parameters.ProtocolStack) {
 					var ipOptions = protocolStack.InternetProtocol;
 #if NET
@@ -58,14 +57,14 @@ namespace MonoTouchFixtures.Network {
 				connection = new NWConnection (endpoint, parameters);
 				connection.SetQueue (DispatchQueue.DefaultGlobalQueue); // important, else we will get blocked
 				connection.SetStateChangeHandler (ConnectionStateHandler);
-				connection.Start (); 
+				connection.Start ();
 				Assert.True (connectedEvent.WaitOne (20000), "Connection timed out.");
 			}
 
 		}
 
 		[TearDown]
-		public void TearDown () => connection.Dispose ();
+		public void TearDown () => connection?.Dispose ();
 
 		[Test]
 		public void TestEndpointProperty () => Assert.IsNotNull (connection.Endpoint);

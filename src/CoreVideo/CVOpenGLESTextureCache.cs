@@ -27,13 +27,10 @@ namespace CoreVideo {
 
 	// CVOpenGLESTextureCache.h
 #if NET
-	[UnsupportedOSPlatform ("tvos12.0")]
-	[UnsupportedOSPlatform ("ios12.0")]
-#if TVOS
-	[Obsolete ("Starting with tvos12.0 use 'CVMetalTextureCache' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-	[Obsolete ("Starting with ios12.0 use 'CVMetalTextureCache' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+	[SupportedOSPlatform ("tvos")]
+	[SupportedOSPlatform ("ios")]
+	[ObsoletedOSPlatform ("tvos12.0", "Use 'CVMetalTextureCache' instead.")]
+	[ObsoletedOSPlatform ("ios12.0", "Use 'CVMetalTextureCache' instead.")]
 #else
 	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'CVMetalTextureCache' instead.")]
 	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'CVMetalTextureCache' instead.")]

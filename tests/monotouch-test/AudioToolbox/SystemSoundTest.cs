@@ -11,6 +11,8 @@
 
 using System;
 using System.IO;
+using System.Threading.Tasks;
+
 using Foundation;
 using AudioToolbox;
 using ObjCRuntime;
@@ -18,11 +20,10 @@ using NUnit.Framework;
 using Xamarin.Utils;
 
 namespace MonoTouchFixtures.AudioToolbox {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class SystemSoundTest
-	{
+	public class SystemSoundTest {
 		[Test]
 		public void FromFile ()
 		{
@@ -31,15 +32,16 @@ namespace MonoTouchFixtures.AudioToolbox {
 			var path = NSBundle.MainBundle.PathForResource ("1", "caf", "AudioToolbox");
 
 			using (var ss = SystemSound.FromFile (NSUrl.FromFilename (path))) {
-				var completed = false;
+				var completed = new TaskCompletionSource<bool> ();
 				const int timeout = 10;
 
-				Assert.AreEqual (AudioServicesError.None, ss.AddSystemSoundCompletion (delegate {
-					completed = true;
-					}));
+				Assert.AreEqual (AudioServicesError.None, ss.AddSystemSoundCompletion (delegate
+				{
+					completed.SetResult (true);
+				}));
 
 				ss.PlaySystemSound ();
-				Assert.IsTrue (TestRuntime.RunAsync (DateTime.Now.AddSeconds (timeout), async () => { }, () => completed), "PlaySystemSound");
+				Assert.IsTrue (TestRuntime.RunAsync (TimeSpan.FromSeconds (timeout), completed.Task), "PlaySystemSound");
 			}
 		}
 
@@ -51,6 +53,16 @@ namespace MonoTouchFixtures.AudioToolbox {
 			using (var ss = SystemSound.FromFile (NSUrl.FromFilename (path))) {
 				Assert.That (ss.IsUISound, Is.True, "#1");
 				Assert.That (ss.CompletePlaybackIfAppDies, Is.False, "#2");
+
+				ss.CompletePlaybackIfAppDies = true;
+				ss.IsUISound = false;
+				Assert.That (ss.IsUISound, Is.False, "#1 B");
+				Assert.That (ss.CompletePlaybackIfAppDies, Is.True, "#2 B");
+
+				ss.CompletePlaybackIfAppDies = false;
+				ss.IsUISound = true;
+				Assert.That (ss.IsUISound, Is.True, "#1 C");
+				Assert.That (ss.CompletePlaybackIfAppDies, Is.False, "#2 C");
 			}
 		}
 
@@ -64,13 +76,11 @@ namespace MonoTouchFixtures.AudioToolbox {
 
 			using (var ss = SystemSound.FromFile (NSUrl.FromFilename (path))) {
 
-				var completed = false;
+				var completed = new TaskCompletionSource<bool> ();
 				const int timeout = 10;
 
-				completed = false;
-				Assert.IsTrue (TestRuntime.RunAsync (DateTime.Now.AddSeconds (timeout), async () =>
-					ss.PlaySystemSound (() => {	completed = true; }
-				), () => completed), "TestCallbackPlaySystem");
+				ss.PlaySystemSound (() => { completed.SetResult (true); });
+				Assert.IsTrue (TestRuntime.RunAsync (TimeSpan.FromSeconds (timeout), completed.Task), "TestCallbackPlaySystem");
 			}
 		}
 
@@ -84,13 +94,11 @@ namespace MonoTouchFixtures.AudioToolbox {
 
 			using (var ss = SystemSound.FromFile (NSUrl.FromFilename (path))) {
 
-				var completed = false;
+				var completed = new TaskCompletionSource<bool> ();
 				const int timeout = 10;
 
-				completed = false;
-				Assert.IsTrue (TestRuntime.RunAsync (DateTime.Now.AddSeconds (timeout), async () =>
-					ss.PlayAlertSound (() => { completed = true; }
-				), () => completed), "TestCallbackPlayAlert");
+				ss.PlayAlertSound (() => { completed.SetResult (true); });
+				Assert.IsTrue (TestRuntime.RunAsync (TimeSpan.FromSeconds (timeout), completed.Task), "TestCallbackPlayAlert");
 			}
 		}
 

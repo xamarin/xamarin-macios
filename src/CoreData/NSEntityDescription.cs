@@ -11,20 +11,15 @@ using ObjCRuntime;
 
 #nullable enable
 
-namespace CoreData
-{
-	public partial class NSEntityDescription
-	{
+namespace CoreData {
+	public partial class NSEntityDescription {
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (9,0)]
-		[Mac (10,11)]
 #endif
-		public NSObject[][] UniquenessConstraints {
+		public NSObject [] [] UniquenessConstraints {
 			get { return NSArray.FromArrayOfArray (_UniquenessConstraints); }
 			set { _UniquenessConstraints = NSArray.From (value); }
 		}

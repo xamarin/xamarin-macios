@@ -70,6 +70,7 @@ namespace Introspection {
 			case "Foundation.NSUnitPressure": // -init should never be called on NSUnit!
 			case "Foundation.NSUnitSpeed": // -init should never be called on NSUnit!
 			case "MonoMac.EventKit.EKParticipant":
+			case "EventKit.EKCalendarItem":
 			case "EventKit.EKParticipant":
 			case "XamCore.CoreImage.CISampler":
 			case "CoreImage.CISampler":
@@ -155,20 +156,20 @@ namespace Introspection {
 				}
 				break;
 			case "AVKit.AVCaptureView":
-			// Deallocating the AVCaptureView starts up the A/V capturing pipeline (!):
-			/*
-24  com.apple.avfoundation            0x00007fff28298a2f -[AVCaptureSession startRunning] + 97
-25  com.apple.AVKit                   0x00007fff2866621f __72-[AVCaptureController _createDefaultSessionAndFileOutputAsynchronously:]_block_invoke_2 + 293
-26  com.apple.AVKit                   0x00007fff2866609a __72-[AVCaptureController _createDefaultSessionAndFileOutputAsynchronously:]_block_invoke + 489
-27  com.apple.AVKit                   0x00007fff28661bd4 -[AVCaptureController _createDefaultSessionAndFileOutputAsynchronously:] + 234
-28  com.apple.AVKit                   0x00007fff28661c53 -[AVCaptureController session] + 53
-29  com.apple.AVKit                   0x00007fff28670d2b -[AVCaptureView dealloc] + 124
+				// Deallocating the AVCaptureView starts up the A/V capturing pipeline (!):
+				/*
+	24  com.apple.avfoundation            0x00007fff28298a2f -[AVCaptureSession startRunning] + 97
+	25  com.apple.AVKit                   0x00007fff2866621f __72-[AVCaptureController _createDefaultSessionAndFileOutputAsynchronously:]_block_invoke_2 + 293
+	26  com.apple.AVKit                   0x00007fff2866609a __72-[AVCaptureController _createDefaultSessionAndFileOutputAsynchronously:]_block_invoke + 489
+	27  com.apple.AVKit                   0x00007fff28661bd4 -[AVCaptureController _createDefaultSessionAndFileOutputAsynchronously:] + 234
+	28  com.apple.AVKit                   0x00007fff28661c53 -[AVCaptureController session] + 53
+	29  com.apple.AVKit                   0x00007fff28670d2b -[AVCaptureView dealloc] + 124
 
-				This is unfortunate because capturing audio/video requires permission,
-				and since macOS tests don't execute in a session that can show UI,
-				the permission system (TCC) fails and the process ends up crashing
-				due to a privacy violation (even if the required entry is present in the Info.plist).
-		     */
+					This is unfortunate because capturing audio/video requires permission,
+					and since macOS tests don't execute in a session that can show UI,
+					the permission system (TCC) fails and the process ends up crashing
+					due to a privacy violation (even if the required entry is present in the Info.plist).
+				 */
 				return true;
 			case "AVFoundation.AVAudioRecorder": // Stopped working in macOS 10.15.2
 				return TestRuntime.CheckXcodeVersion (11, 2);
@@ -256,7 +257,7 @@ namespace Introspection {
 			case "AppKit.NSStoryboard":
 			case "MonoMac.AVFoundation.AVCaptureInputPort": // https://bugzilla.xamarin.com/show_bug.cgi?id=57668
 			case "AVFoundation.AVCaptureInputPort": // https://bugzilla.xamarin.com/show_bug.cgi?id=57668
-			// Crashes on 10.12
+													// Crashes on 10.12
 			case "Contacts.CNContainer":
 			// native crash calling MonoMac.Foundation.NSObject.get_Description ()
 			case "WebKit.WKNavigationAction":
@@ -290,6 +291,11 @@ namespace Introspection {
 				if (TestRuntime.CheckXcodeVersion (12, 0))
 					return;
 				break;
+			// crash with xcode 14 Beta 6
+			case "IOSurface.IOSurface":
+				if (TestRuntime.CheckXcodeVersion (14, 0))
+					return;
+				break;
 			default:
 				base.CheckToString (obj);
 				break;
@@ -317,12 +323,12 @@ namespace Introspection {
 			case "ImageKit.IKScannerDeviceView":
 			case "MonoMac.AppKit.NSFontPanel": // *** Terminating app due to uncaught exception 'NSInternalInconsistencyException', reason: 'An instance 0x11491cc00 of class NSButton was deallocated while key value observers were still registered with it.
 			case "AppKit.NSFontPanel":
-			case "MonoMac.AVFoundation.AVAudioRecorder":						// same on iOS
+			case "MonoMac.AVFoundation.AVAudioRecorder":                        // same on iOS
 			case "AVFoundation.AVAudioRecorder":
 			case "MonoMac.Foundation.NSUrlConnection":
 			case "Foundation.NSUrlConnection":
 			// 10.8:
-			case "MonoMac.Accounts.ACAccount":									// maybe the default .ctor is not allowed ?
+			case "MonoMac.Accounts.ACAccount":                                  // maybe the default .ctor is not allowed ?
 			case "Accounts.ACAccount":
 			case "MonoMac.Accounts.ACAccountCredential":
 			case "Accounts.ACAccountCredential":

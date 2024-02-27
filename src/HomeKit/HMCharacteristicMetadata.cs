@@ -7,8 +7,7 @@ using Foundation;
 
 namespace HomeKit {
 
-	public partial class HMCharacteristicMetadata
-	{
+	public partial class HMCharacteristicMetadata {
 		public HMCharacteristicMetadataUnits Units {
 			get {
 				var u = _Units;

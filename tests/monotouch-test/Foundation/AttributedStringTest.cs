@@ -22,7 +22,7 @@ namespace MonoTouchFixtures.Foundation {
 
 		CGColor red, yellow;
 		bool failEnum, t1, t2, tFont1, tFont2;
-		
+
 #if !__WATCHOS__
 		[Test]
 		public void Attributes ()
@@ -30,8 +30,8 @@ namespace MonoTouchFixtures.Foundation {
 			red = TestRuntime.GetCGColor (UIColor.Red);
 			yellow = TestRuntime.GetCGColor (UIColor.Yellow);
 
-			var j = new NSMutableAttributedString ("Hello", new CTStringAttributes() { ForegroundColor = red });
-			j.Append (new NSMutableAttributedString ("12345", new CTStringAttributes() { ForegroundColor = yellow }));
+			var j = new NSMutableAttributedString ("Hello", new CTStringAttributes () { ForegroundColor = red });
+			j.Append (new NSMutableAttributedString ("12345", new CTStringAttributes () { ForegroundColor = yellow }));
 			j.EnumerateAttributes (new NSRange (0, 10), NSAttributedStringEnumeration.None, cb);
 			Assert.True (t1);
 			Assert.True (t2);
@@ -40,17 +40,17 @@ namespace MonoTouchFixtures.Foundation {
 			Assert.True (tFont2);
 		}
 #endif // !__WATCHOS__
-		
+
 		void cb (NSDictionary attrs, NSRange range, ref bool stop)
 		{
 			stop = false;
-			if (range.Location == 0){
-				if (range.Length == 5){
+			if (range.Location == 0) {
+				if (range.Length == 5) {
 					t1 = true;
 					tFont1 = attrs.ContainsKey (new NSString ("CTForegroundColor"));
 				}
-			} else if (range.Location == 5){
-				if (range.Length == 5){
+			} else if (range.Location == 5) {
+				if (range.Length == 5) {
 					t2 = true;
 					tFont2 = attrs.ContainsKey (new NSString ("CTForegroundColor"));
 				}
@@ -75,8 +75,7 @@ namespace MonoTouchFixtures.Foundation {
 				Assert.That (Dlfcn.dlsym (lib, "NSBackgroundColorAttributeName"), Is.EqualTo (IntPtr.Zero), "NSBackgroundColorAttributeName");
 				Assert.That (Dlfcn.dlsym (lib, "NSLigatureAttributeName"), Is.EqualTo (IntPtr.Zero), "NSLigatureAttributeName");
 				Assert.That (Dlfcn.dlsym (lib, "NSObliquenessAttributeName"), Is.EqualTo (IntPtr.Zero), "NSObliquenessAttributeName");
-			}
-			finally {
+			} finally {
 				Dlfcn.dlclose (lib);
 			}
 		}
@@ -92,7 +91,7 @@ namespace MonoTouchFixtures.Foundation {
 			using (var ta = new NSTextAttachment (null, null))
 			using (var as2 = NSAttributedString.FromAttachment (ta)) {
 				Assert.That (as2.Length, Is.EqualTo ((nint) 1), "Length");
-				Assert.That (as2.Value [0], Is.EqualTo ((char)0xFFFC), "NSAttachmentCharacter");
+				Assert.That (as2.Value [0], Is.EqualTo ((char) 0xFFFC), "NSAttachmentCharacter");
 			}
 		}
 #endif // !__WATCHOS__
@@ -194,7 +193,7 @@ namespace MonoTouchFixtures.Foundation {
 				LowLevelGetAttributes_Called++;
 				if (effectiveRangePtr != IntPtr.Zero) {
 					unsafe {
-						NSRange *effectiveRange = (NSRange *) effectiveRangePtr;
+						NSRange* effectiveRange = (NSRange*) effectiveRangePtr;
 						*effectiveRange = new NSRange (location, 1);
 					}
 				}

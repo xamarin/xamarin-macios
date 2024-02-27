@@ -16,7 +16,6 @@
 !missing-enum! NSXMLDTDNodeKind not bound
 !missing-enum! NSXMLNodeKind not bound
 !missing-enum! NSXMLNodeOptions not bound
-!missing-field! NSAppleEventManagerWillProcessFirstEventNotification not bound
 !missing-field! NSAppleEventTimeOutDefault not bound
 !missing-field! NSAppleEventTimeOutNone not bound
 !missing-field! NSClassDescriptionNeededForClassNotification not bound
@@ -115,7 +114,6 @@
 !missing-selector! NSCreateCommand::resolvedKeyDictionary not bound
 !missing-selector! NSDeleteCommand::keySpecifier not bound
 !missing-selector! NSDeleteCommand::setReceiversSpecifier: not bound
-!missing-selector! NSFileProviderService::getFileProviderConnectionWithCompletionHandler: not bound
 !missing-selector! NSIndexSpecifier::index not bound
 !missing-selector! NSIndexSpecifier::initWithContainerClassDescription:containerSpecifier:key:index: not bound
 !missing-selector! NSIndexSpecifier::setIndex: not bound
@@ -269,8 +267,6 @@
 !missing-selector! NSSpellServer::isWordInUserDictionaries:caseSensitive: not bound
 !missing-selector! NSSpellServer::registerLanguage:byVendor: not bound
 !missing-selector! NSSpellServer::setDelegate: not bound
-!missing-selector! NSTask::qualityOfService not bound
-!missing-selector! NSTask::setQualityOfService: not bound
 !missing-selector! NSUniqueIDSpecifier::initWithCoder: not bound
 !missing-selector! NSUniqueIDSpecifier::initWithContainerClassDescription:containerSpecifier:key:uniqueID: not bound
 !missing-selector! NSUniqueIDSpecifier::setUniqueID: not bound
@@ -467,10 +463,6 @@
 !missing-selector! NSXMLNode::detach not bound
 !missing-selector! NSXMLNode::init not bound
 !unknown-native-enum! NSNotificationFlags bound
-!missing-null-allowed! 'System.Void Foundation.NSPortMessage::.ctor(Foundation.NSPort,Foundation.NSPort,Foundation.NSArray)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void Foundation.NSPortMessage::.ctor(Foundation.NSPort,Foundation.NSPort,Foundation.NSArray)' is missing an [NullAllowed] on parameter #1
-!missing-null-allowed! 'System.Void Foundation.NSPortMessage::.ctor(Foundation.NSPort,Foundation.NSPort,Foundation.NSArray)' is missing an [NullAllowed] on parameter #2
-!missing-null-allowed! 'Foundation.NSArray Foundation.NSPortMessage::get_Components()' is missing an [NullAllowed] on return type
 
 ## XPC not supported (just like XM)
 !missing-selector! NSXPCInterface::interfaceForSelector:argumentIndex:ofReply: not bound
@@ -486,24 +478,12 @@
 ## protocol itself since it's subclassed
 !missing-protocol-member! NSPortDelegate::handlePortMessage: not found
 
-## Null allowed also missing in XM 
-!missing-null-allowed! 'Foundation.NSAppleEventDescriptor Foundation.NSScriptCommand::get_AppleEvent()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSObject Foundation.NSScriptCommand::get_EvaluatedReceivers()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSString Foundation.NSScriptCommandDescription::GetNSTypeForArgument(Foundation.NSString)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.String Foundation.NSScriptCommandDescription::get_ReturnType()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.Void Foundation.NSScriptCommandDescription::.ctor(Foundation.NSString,Foundation.NSString,Foundation.NSDictionary)' is missing an [NullAllowed] on parameter #2
-!missing-null-allowed! 'Foundation.NSPort Foundation.NSPortMessage::get_ReceivePort()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSPort Foundation.NSPortMessage::get_SendPort()' is missing an [NullAllowed] on return type
-
-## Only reference is deprecated and not used in Catalyst
+# results in compilation errors, the types are not present and the objc code will fail
 !missing-pinvoke! NSFileTypeForHFSTypeCode is not bound
-
-## Deprecated and none of its selectors had documented availability
 !missing-protocol! NSUserNotificationCenterDelegate not bound
-
-## Ignored in macOS and header files indicate NSCoding protocol
 !extra-designated-initializer! NSScriptCommand::initWithCoder: is incorrectly decorated with an [DesignatedInitializer] attribute
 
+# we expose the Uikit verisons
 ## Also exported under iOS selectors (i.e. CGRectValue)
 !missing-selector! NSValue::pointValue not bound
 !missing-selector! NSValue::rectValue not bound

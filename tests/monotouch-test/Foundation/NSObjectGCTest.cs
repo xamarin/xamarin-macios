@@ -7,12 +7,10 @@ using AppKit;
 using ObjCRuntime;
 using Foundation;
 
-namespace Xamarin.Mac.Tests
-{
+namespace Xamarin.Mac.Tests {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class NSObjectGCTest
-	{
+	public class NSObjectGCTest {
 		[Test]
 		public void NSObject_GCResurrectTest ()
 		{
@@ -42,11 +40,11 @@ namespace Xamarin.Mac.Tests
 			Assert.AreNotEqual (IntPtr.Zero, (IntPtr) o.Handle);
 		}
 
-		[System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
+		[System.Runtime.CompilerServices.MethodImpl (System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
 		private static IntPtr CreateNativeObject ()
 		{
 			var foo = new NSString ("foo");
-			foo.DangerousRetain();
+			foo.DangerousRetain ();
 			return foo.Handle;
 		}
 
@@ -54,7 +52,7 @@ namespace Xamarin.Mac.Tests
 		{
 			using (new NSAutoreleasePool ()) {
 				NSEvent? evnt;
-				while ((evnt = NSApplication.SharedApplication.NextEvent ((NSEventMask)NSEventMask.AnyEvent, NSDate.DistantPast, NSRunLoopMode.Default, true)) != null) {
+				while ((evnt = NSApplication.SharedApplication.NextEvent ((NSEventMask) NSEventMask.AnyEvent, NSDate.DistantPast, NSRunLoopMode.Default, true)) is not null) {
 					NSApplication.SharedApplication.SendEvent (evnt);
 				}
 			}

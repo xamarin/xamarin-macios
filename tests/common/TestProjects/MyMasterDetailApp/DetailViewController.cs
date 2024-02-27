@@ -5,10 +5,8 @@ using System.Collections.Generic;
 using Foundation;
 using UIKit;
 
-namespace MyMasterDetailApp
-{
-	public partial class DetailViewController : UIViewController
-	{
+namespace MyMasterDetailApp {
+	public partial class DetailViewController : UIViewController {
 		UIPopoverController masterPopoverController;
 		object detailItem;
 
@@ -20,19 +18,19 @@ namespace MyMasterDetailApp
 		{
 			if (detailItem != newDetailItem) {
 				detailItem = newDetailItem;
-				
+
 				// Update the view
 				ConfigureView ();
 			}
-			
-			if (masterPopoverController != null)
+
+			if (masterPopoverController is not null)
 				masterPopoverController.Dismiss (true);
 		}
 
 		void ConfigureView ()
 		{
 			// Update the user interface for the detail item
-			if (IsViewLoaded && detailItem != null)
+			if (IsViewLoaded && detailItem is not null)
 				detailDescriptionLabel.Text = detailItem.ToString ();
 		}
 
@@ -40,14 +38,14 @@ namespace MyMasterDetailApp
 		{
 			// Releases the view if it doesn't have a superview.
 			base.DidReceiveMemoryWarning ();
-			
+
 			// Release any cached data, images, etc that aren't in use.
 		}
 
 		public override void ViewDidLoad ()
 		{
 			base.ViewDidLoad ();
-			
+
 			// Perform any additional setup after loading the view, typically from a nib.
 			ConfigureView ();
 		}

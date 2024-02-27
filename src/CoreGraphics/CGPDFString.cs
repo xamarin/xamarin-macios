@@ -36,10 +36,10 @@ using ObjCRuntime;
 using CoreFoundation;
 
 namespace CoreGraphics {
-	
+
 	// internal helper class only - we avoid exposing it to users
 	static class CGPDFString {
-		
+
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static IntPtr /*CFStringRef*/ CGPDFStringCopyTextString (IntPtr /*CGPDFStringRef*/ pdfStr);
 
@@ -47,7 +47,7 @@ namespace CoreGraphics {
 		{
 			if (pdfString == IntPtr.Zero)
 				return null;
-			
+
 			return CFString.FromHandle (CGPDFStringCopyTextString (pdfString), true);
 		}
 	}

@@ -1,9 +1,3 @@
-## shown as available in iOS 9.3 in tvOS header files (from Xcode 7.3) so normally available in tvOS 9.2 
-## In reality it's only available in the simulator, not on AppleTV devices (all fields are null)
-!missing-field! NSUbiquitousUserDefaultsCompletedInitialSyncNotification not bound
-!missing-field! NSUbiquitousUserDefaultsDidChangeAccountsNotification not bound
-!missing-field! NSUserDefaultsSizeLimitExceededNotification not bound
-
 ## does not exists in iOS (or tvOS) as a type - but some API refers to it (messy)
 !unknown-type! NSPortMessage bound
 
@@ -12,18 +6,6 @@
 !missing-protocol-conformance! NSXPCConnection should conform to NSXPCProxyCreating
 !missing-selector! NSXPCInterface::interfaceForSelector:argumentIndex:ofReply: not bound
 !missing-selector! NSXPCInterface::setInterface:forSelector:argumentIndex:ofReply: not bound
+!missing-enum! NSNetServicesError not bound
 
-# Initial result from new rule missing-null-allowed
-!missing-null-allowed! 'Foundation.NSData Foundation.NSUbiquitousKeyValueStore::GetData(System.String)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSDictionary Foundation.NSUbiquitousKeyValueStore::GetDictionary(System.String)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSExpression Foundation.NSExpression::FromFunction(Foundation.NSExpressionHandler,Foundation.NSExpression[])' is missing an [NullAllowed] on parameter #1
-!missing-null-allowed! 'Foundation.NSObject Foundation.NSUbiquitousKeyValueStore::ObjectForKey(System.String)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSObject[] Foundation.NSUbiquitousKeyValueStore::GetArray(System.String)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.String Foundation.NSUbiquitousKeyValueStore::GetString(System.String)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.Void Foundation.NSUbiquitousKeyValueStore::_SetArray(Foundation.NSObject[],System.String)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void Foundation.NSUbiquitousKeyValueStore::_SetData(Foundation.NSData,System.String)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void Foundation.NSUbiquitousKeyValueStore::_SetDictionary(Foundation.NSDictionary,System.String)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void Foundation.NSUbiquitousKeyValueStore::_SetString(System.String,System.String)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void Foundation.NSUbiquitousKeyValueStore::SetObjectForKey(Foundation.NSObject,System.String)' is missing an [NullAllowed] on parameter #0
 !missing-selector! NSURLSession::getTasksWithCompletionHandler: not bound
-!missing-field! NSNetServicesErrorCode not bound

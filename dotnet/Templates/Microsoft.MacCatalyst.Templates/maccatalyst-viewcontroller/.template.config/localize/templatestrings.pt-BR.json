@@ -1,6 +1,6 @@
 {
   "author": "Microsoft",
-  "name": "MacCatalyst View Controller",
-  "description": "A MacCatalyst View Controller class and xib",
-  "symbols/namespace/description": "namespace for the generated code"
+  "name": "Controlador de Exibição do Mac Catalyst",
+  "description": "Uma xib e classe do Controlador de Exibição do MacCatalyst",
+  "symbols/namespace/description": "namespace do código gerado"
 }

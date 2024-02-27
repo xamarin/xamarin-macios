@@ -64,7 +64,7 @@ namespace CoreText {
 		public static readonly NSString? PathWidth;
 		public static readonly NSString? ClippingPaths;
 		public static readonly NSString? PathClippingPath;
-		
+
 		static CTFrameAttributeKey ()
 		{
 			var handle = Libraries.CoreText.Handle;
@@ -97,7 +97,7 @@ namespace CoreText {
 			Dictionary = dictionary;
 		}
 
-		public NSDictionary Dictionary {get; private set;}
+		public NSDictionary Dictionary { get; private set; }
 
 		public CTFrameProgression? Progression {
 			get {
@@ -132,12 +132,12 @@ namespace CoreText {
 			: base (handle, owns, verify: true)
 		{
 		}
-		
+
 		[DllImport (Constants.CoreTextLibrary)]
 		extern static NSRange CTFrameGetStringRange (IntPtr handle);
 		[DllImport (Constants.CoreTextLibrary)]
 		extern static NSRange CTFrameGetVisibleStringRange (IntPtr handle);
-		
+
 		public NSRange GetStringRange ()
 		{
 			return CTFrameGetStringRange (Handle);
@@ -150,7 +150,7 @@ namespace CoreText {
 
 		[DllImport (Constants.CoreTextLibrary)]
 		extern static IntPtr CTFrameGetPath (IntPtr handle);
-		
+
 		public CGPath? GetPath ()
 		{
 			IntPtr h = CTFrameGetPath (Handle);
@@ -165,7 +165,7 @@ namespace CoreText {
 			var attrs = Runtime.GetNSObject<NSDictionary> (CTFrameGetFrameAttributes (Handle));
 			return attrs is null ? null : new CTFrameAttributes (attrs);
 		}
-		
+
 		[DllImport (Constants.CoreTextLibrary)]
 		extern static IntPtr CTFrameGetLines (IntPtr handle);
 
@@ -176,14 +176,14 @@ namespace CoreText {
 				return Array.Empty<CTLine> ();
 
 			return NSArray.ArrayFromHandleFunc<CTLine> (cfArrayRef, (p) => {
-					// We need to take a ref, since we dispose it later.
-					return new CTLine (p, false);
-				})!;
+				// We need to take a ref, since we dispose it later.
+				return new CTLine (p, false);
+			})!;
 		}
 
 		[DllImport (Constants.CoreTextLibrary)]
-		extern static void CTFrameGetLineOrigins(IntPtr handle, NSRange range, [Out] CGPoint[] origins);
-		public void GetLineOrigins (NSRange range, CGPoint[] origins)
+		extern static void CTFrameGetLineOrigins (IntPtr handle, NSRange range, [Out] CGPoint [] origins);
+		public void GetLineOrigins (NSRange range, CGPoint [] origins)
 		{
 			if (origins is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (origins));

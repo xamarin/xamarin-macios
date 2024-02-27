@@ -4,13 +4,11 @@ using ObjCRuntime;
 using NUnit.Framework;
 using Xamarin.Utils;
 
-namespace monotouchtest
-{
+namespace monotouchtest {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class NSLinguisticAnalysisTest
-	{
-		List<NSString>  words;
+	public class NSLinguisticAnalysisTest {
+		List<NSString> words;
 
 		[SetUp]
 		public void SetUp ()
@@ -69,8 +67,8 @@ namespace monotouchtest
 		public void GetLinguisticTagsTest ()
 		{
 			var testString = new NSString ("Hello Hola Bonjour!");
-			var range = new NSRange (0, testString.Length - 1); 
-			NSValue[] tokenRanges;
+			var range = new NSRange (0, testString.Length - 1);
+			NSValue [] tokenRanges;
 			var tags = testString.GetLinguisticTags (range, NSLinguisticTagScheme.NameOrLexicalClass, NSLinguisticTaggerOptions.OmitWhitespace, null, out tokenRanges);
 			var expectedWordCount = 3;
 #if __MACOS__

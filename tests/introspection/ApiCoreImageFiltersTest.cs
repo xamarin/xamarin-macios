@@ -69,7 +69,10 @@ namespace Introspection {
 			// uncomment calls to `GenerateBinding` to use introspection code to generate the skeleton binding code and complete it
 			// e.g. picking better types like `bool` instead of `NSNumber'
 			default:
- 				return false;
+				return false;
+			case "CIConvertLabToRGB":
+			case "CIConvertRGBtoLab":
+				return true;
 			}
 		}
 
@@ -86,9 +89,9 @@ namespace Introspection {
 				if (Skip (filter_name))
 					continue;
 				string type_name = qname.Replace ("CIFilter", filter_name);
-				if (Type.GetType (type_name, false, true) == null) {
+				if (Type.GetType (type_name, false, true) is null) {
 					filters.Add (filter_name);
-					if (BindingOutput != null)
+					if (BindingOutput is not null)
 						GenerateBinding (CIFilter.FromName (filter_name), BindingOutput);
 				}
 				n++;
@@ -115,10 +118,10 @@ namespace Introspection {
 
 				// we need to skip the filters that are not supported by the executing version of iOS
 				if (Skip (t))
-					continue; 
+					continue;
 
 				var ctor = t.GetConstructor (Type.EmptyTypes);
-				if ((ctor == null) || ctor.IsAbstract)
+				if ((ctor is null) || ctor.IsAbstract)
 					continue;
 
 				NSObject obj = ctor.Invoke (null) as NSObject;
@@ -154,7 +157,7 @@ namespace Introspection {
 
 			writer.WriteLine ("[CoreImageFilter]");
 
-			if (!attributes.TryGetValue ((NSString)"CIAttributeFilterAvailable_iOS", out value)) {
+			if (!attributes.TryGetValue ((NSString) "CIAttributeFilterAvailable_iOS", out value)) {
 				writer.WriteLine ("[NoiOS]");
 			} else {
 				var v = value.ToString ();
@@ -167,7 +170,7 @@ namespace Introspection {
 					writer.WriteLine ("[iOS ({0},{1})]", ios.Major, ios.Minor);
 			}
 
-			if (!attributes.TryGetValue ((NSString)"CIAttributeFilterAvailable_Mac", out value)) {
+			if (!attributes.TryGetValue ((NSString) "CIAttributeFilterAvailable_Mac", out value)) {
 				writer.WriteLine ("[NoMac]");
 			} else {
 				try {
@@ -175,14 +178,13 @@ namespace Introspection {
 					// we only document availability for 10.7+
 					if (mac.Minor > 6)
 						writer.WriteLine ("[Mac ({0},{1})]", mac.Major, mac.Minor);
-				}
-				catch (FormatException) {
+				} catch (FormatException) {
 					// 10.? is not a valid version - we'll assume it was added a long time ago (in a galaxy far away)
 					writer.WriteLine ("// incorrect version string for OSX: '{0}' Double-check documentation", value);
 				}
 			}
 			writer.WriteLine ("[BaseType (typeof (CIFilter))]");
-			var fname = attributes [(NSString)"CIAttributeFilterName"].ToString ();
+			var fname = attributes [(NSString) "CIAttributeFilterName"].ToString ();
 			writer.WriteLine ("interface {0} {{", fname);
 			foreach (var k in attributes.Keys) {
 				var key = k.ToString ();
@@ -193,7 +195,7 @@ namespace Introspection {
 				if (key == "inputImage")
 					continue;
 #endif
-				
+
 				writer.WriteLine ();
 				var dict = attributes [k] as NSDictionary;
 				var type = dict [(NSString) "CIAttributeClass"];
@@ -337,7 +339,7 @@ namespace Introspection {
 					if (assign) {
 						// check that `IFooProtocol` has a [Protocol (Name = "Foo")] attribute
 						var ca = t.GetCustomAttribute<ProtocolAttribute> (false);
-						if (ca == null) {
+						if (ca is null) {
 							ReportError ($"Managed {t.Name} should have a '[Protocol (Name=\"{t.Name.Replace ("Protocol", "")}\")]' attribute");
 						}
 						// check that the managed name ends with Protocol, so we can have the _normal_ name to be a concrete type (like our historic, strongly typed filters)
@@ -391,7 +393,7 @@ namespace Introspection {
 					continue;
 
 				var ctor = t.GetConstructor (Type.EmptyTypes);
-				if ((ctor == null) || ctor.IsAbstract)
+				if ((ctor is null) || ctor.IsAbstract)
 					continue;
 
 				CIFilter f = ctor.Invoke (null) as CIFilter;
@@ -408,7 +410,7 @@ namespace Introspection {
 					var getter = p.GetGetMethod ();
 					var ea = getter.GetCustomAttribute<ExportAttribute> (false);
 					// only properties coming (inlined) from protocols have an [Export] attribute
-					if (ea == null)
+					if (ea is null)
 						continue;
 					var key = ea.Selector;
 					// 'output' is always explicit
@@ -494,17 +496,17 @@ namespace Introspection {
 					}
 					// IgnoreCase because there are acronyms (more than 2 letters) that naming convention force us to change
 					var pi = t.GetProperty (cap, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
-					if (pi == null) {
+					if (pi is null) {
 						// 2nd chance: some, but not all, property are prefixed by `Input`
 						if (key.StartsWith ("input", StringComparison.Ordinal)) {
 							cap = Char.ToUpperInvariant (key [5]) + key.Substring (6);
 							pi = t.GetProperty (cap, BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
 						}
 					}
-					if (pi == null) {
+					if (pi is null) {
 						ReportError ($"{t.Name}: Input Key `{key}` is NOT mapped to a `{cap}` property.");
 						//GenerateBinding (f, Console.Out);
-					} else if (pi.GetSetMethod () == null)
+					} else if (pi.GetSetMethod () is null)
 						ReportError ($"{t.Name}: Property `{pi.Name}` MUST have a setter.");
 				}
 
@@ -554,15 +556,24 @@ namespace Introspection {
 							continue;
 						}
 						break;
+					case "CIAreaLogarithmicHistogram":
+						switch (key) {
+						case "outputImageNonMPS":
+						case "outputData":
+						case "outputImageMPS":
+							// no doc for argument
+							continue;
+						}
+						break;
 					}
 
 					var cap = Char.ToUpperInvariant (key [0]) + key.Substring (1);
 					// IgnoreCase because there are acronyms (more than 2 letters) that naming convention force us to change
 					var po = t.GetProperty (cap, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
-					if (po == null) {
+					if (po is null) {
 						ReportError ($"{t.Name}: Output Key `{key}` is NOT mapped to a `{cap}` property.");
 						//GenerateBinding (f, Console.Out);
-					} else if (po.GetSetMethod () != null)
+					} else if (po.GetSetMethod () is not null)
 						ReportError ($"{t.Name}: Property `{po.Name}` should NOT have a setter.");
 				}
 			}

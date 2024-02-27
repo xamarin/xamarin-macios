@@ -16,7 +16,7 @@ namespace iAd {
 
 	// NSInteger -> ADBannerView.h
 	[Deprecated (PlatformName.iOS, 10, 0)]
-	[Obsoleted (PlatformName.iOS, 15,0, PlatformArchitecture.None, Constants.iAdRemoved)]
+	[Obsoleted (PlatformName.iOS, 15, 0, PlatformArchitecture.None, Constants.iAdRemoved)]
 	[Native]
 	public enum ADError : long {
 		Unknown,
@@ -34,7 +34,7 @@ namespace iAd {
 
 	// NSInteger -> ADBannerView.h
 	[Deprecated (PlatformName.iOS, 10, 0)]
-	[Obsoleted (PlatformName.iOS, 15,0, PlatformArchitecture.None, Constants.iAdRemoved)]
+	[Obsoleted (PlatformName.iOS, 15, 0, PlatformArchitecture.None, Constants.iAdRemoved)]
 	[Native]
 	public enum ADAdType : long {
 		Banner, MediumRectangle
@@ -42,7 +42,7 @@ namespace iAd {
 
 	// NSInteger -> UIViewControlleriAdAdditions.h
 	[Deprecated (PlatformName.iOS, 10, 0)]
-	[Obsoleted (PlatformName.iOS, 15,0, PlatformArchitecture.None, Constants.iAdRemoved)]
+	[Obsoleted (PlatformName.iOS, 15, 0, PlatformArchitecture.None, Constants.iAdRemoved)]
 	[Native]
 	public enum ADInterstitialPresentationPolicy : long {
 		None = 0,
@@ -50,8 +50,7 @@ namespace iAd {
 		Manual,
 	}
 
-	[iOS (9,0)]
-	[Obsoleted (PlatformName.iOS, 15,0, PlatformArchitecture.None, Constants.iAdRemoved)]
+	[Obsoleted (PlatformName.iOS, 15, 0, PlatformArchitecture.None, Constants.iAdRemoved)]
 	[Native]
 	[ErrorDomain ("ADClientErrorDomain")]
 	public enum ADClientError : long {

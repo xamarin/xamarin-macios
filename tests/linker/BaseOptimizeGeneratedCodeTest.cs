@@ -23,11 +23,9 @@ using ObjCRuntime;
 
 using NUnit.Framework;
 
-namespace Linker.Shared
-{
+namespace Linker.Shared {
 	[Preserve (AllMembers = true)]
-	public abstract class BaseOptimizeGeneratedCodeTest
-	{
+	public abstract class BaseOptimizeGeneratedCodeTest {
 		protected void IgnoreIfNotLinkAll ()
 		{
 			if (!TestRuntime.IsLinkAll)
@@ -420,7 +418,7 @@ namespace Linker.Shared
 			GC.KeepAlive (dummy1);
 			GC.KeepAlive (dummy2);
 		}
-		
+
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		void SetupBlockOptimized_LoadLocalVariable4 (Action callback)
 		{
@@ -544,7 +542,7 @@ namespace Linker.Shared
 			Assert.That (instructions.Skip (0).First ().OpCode, Is.EqualTo (OpCodes.Ldc_I4_0).Or.EqualTo (OpCodes.Ldc_I4_1), "IL 1");
 			Assert.That (instructions.Skip (1).First ().OpCode, Is.EqualTo (OpCodes.Ret), "IL 2");
 #endif
-						
+
 			Assert.AreEqual (Runtime.IsARM64CallingConvention, GetIsARM64CallingConventionOptimized (), "Value optimized");
 			Assert.AreEqual (Runtime.IsARM64CallingConvention, GetIsARM64CallingConventionNotOptimized (), "Value unoptimized");
 		}

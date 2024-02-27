@@ -10,13 +10,17 @@
     <RootTestsDirectory>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)\..\..'))</RootTestsDirectory>
     <BindingsTestDirectory>$(RootTestsDirectory)\bindings-test</BindingsTestDirectory>
     <TestLibrariesDirectory>$(RootTestsDirectory)\test-libraries</TestLibrariesDirectory>
+
+    <!-- warning CS8981: The type name 'pfloat' only contains lower-cased ascii characters. Such names may become reserved for the language. -->
+    <!-- if this one becomes a problem we can easily fix it with a search&replace -->
+    <NoWarn>$(NoWarn);CS8981</NoWarn>
+
+    <!-- We're warning-free, so let's make sure we stay that way -->
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningsAsErrors>Nullable</WarningsAsErrors>
   </PropertyGroup>
 
   <Import Project="$(RootTestsDirectory)/common/shared-dotnet.csproj" />
-
-  <ItemGroup>
-    <PackageReference Include="NUnitLite" Version="3.12.0" />
-  </ItemGroup>
 
   <ItemGroup>
     <ObjcBindingApiDefinition Include="$(BindingsTestDirectory)\ApiDefinition.cs" />
@@ -51,6 +55,9 @@
     <Compile Include="$(RootTestsDirectory)\..\tools\common\ApplePlatform.cs">
       <Link>ApplePlatform.cs</Link>
     </Compile>
+    <Compile Include="$(RootTestsDirectory)\..\tools\common\SdkVersions.cs">
+      <Link>SdkVersions.cs</Link>
+    </Compile>
     <Compile Include="$(BindingsTestDirectory)\RuntimeTest.cs" />
     <Compile Include="$(BindingsTestDirectory)\CodeBehind.cs" />
     <Compile Include="$(BindingsTestDirectory)\Messaging.cs" />
@@ -82,6 +89,6 @@
   </ItemGroup>
 
   <Target Name="BuildTestLibraries" Inputs="@(TestLibrariesInput)" Outputs="@(TestLibrariesOutput)" BeforeTargets="BeforeBuild">
-    <Exec Command="make -j8 -C $(TestLibrariesDirectory)" />
+    <Exec Command="make -j8 -C $(TestLibrariesDirectory)" Condition="'$(BUILD_REVISION)' == ''" />
   </Target>
 </Project>

@@ -26,7 +26,7 @@ namespace MonoTouchFixtures.Foundation {
 			using (var s3 = new NSString ("fail"))
 			using (var md = NSMutableDictionary.FromObjectAndKey (s2, s1))
 			using (var ur = new NSUrlRequest ())
-			using (var mur = (NSMutableUrlRequest)ur.MutableCopy ()) {
+			using (var mur = (NSMutableUrlRequest) ur.MutableCopy ()) {
 				Assert.Null (ur.Headers, "NSUrlRequest / Headers / null");
 				Assert.Null (mur.Headers, "NSMutableUrlRequest / Headers / null");
 

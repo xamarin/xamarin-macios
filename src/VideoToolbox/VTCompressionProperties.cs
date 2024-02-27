@@ -288,14 +288,12 @@ namespace VideoToolbox {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
-		[SupportedOSPlatform ("ios8.0")]
-		[SupportedOSPlatform ("tvos10.2")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10,9)]
 #endif
-		public VTH264EntropyMode H264EntropyMode { 
+		public VTH264EntropyMode H264EntropyMode {
 			get {
 				var key = GetNSStringValue (VTCompressionPropertyKey.H264EntropyMode);
 
@@ -322,17 +320,17 @@ namespace VideoToolbox {
 			}
 		}
 
-		public List<VTDataRateLimit>? DataRateLimits { 
-			get { 
-				using (var arr = GetNativeValue <NSArray> (VTCompressionPropertyKey.DataRateLimits)) {
+		public List<VTDataRateLimit>? DataRateLimits {
+			get {
+				using (var arr = GetNativeValue<NSArray> (VTCompressionPropertyKey.DataRateLimits)) {
 					if (arr is null)
 						return null;
 
 					var list = new List<VTDataRateLimit> ();
-					for (nuint i = 0; i < (nuint)arr.Count; i += 2) {
+					for (nuint i = 0; i < (nuint) arr.Count; i += 2) {
 						var rateLimit = new VTDataRateLimit (
-							arr.GetItem <NSNumber> (i).UInt32Value,
-							arr.GetItem <NSNumber> (i + 1).DoubleValue
+							arr.GetItem<NSNumber> (i).UInt32Value,
+							arr.GetItem<NSNumber> (i + 1).DoubleValue
 						);
 						list.Add (rateLimit);
 					}
@@ -341,7 +339,7 @@ namespace VideoToolbox {
 			}
 			set {
 				if (value is not null) {
-					using (var arr = new NSMutableArray (capacity: (nuint)(value.Count * 2))) {
+					using (var arr = new NSMutableArray (capacity: (nuint) (value.Count * 2))) {
 						foreach (var item in value) {
 							arr.Add (NSNumber.FromUInt32 (item.NumberOfBytes));
 							arr.Add (NSNumber.FromDouble (item.Seconds));
@@ -353,7 +351,7 @@ namespace VideoToolbox {
 			}
 		}
 
-		public VTFieldDetail FieldDetail { 
+		public VTFieldDetail FieldDetail {
 			get {
 				var key = GetNSStringValue (VTCompressionPropertyKey.FieldDetail);
 
@@ -390,7 +388,7 @@ namespace VideoToolbox {
 			}
 		}
 
-		public VTColorPrimaries ColorPrimaries { 
+		public VTColorPrimaries ColorPrimaries {
 			get {
 				var key = GetNSStringValue (VTCompressionPropertyKey.ColorPrimaries);
 
@@ -427,7 +425,7 @@ namespace VideoToolbox {
 			}
 		}
 
-		public VTTransferFunction TransferFunction { 
+		public VTTransferFunction TransferFunction {
 			get {
 				var key = GetNSStringValue (VTCompressionPropertyKey.TransferFunction);
 
@@ -459,7 +457,7 @@ namespace VideoToolbox {
 			}
 		}
 
-		public VTYCbCrMatrix YCbCrMatrix { 
+		public VTYCbCrMatrix YCbCrMatrix {
 			get {
 				var key = GetNSStringValue (VTCompressionPropertyKey.YCbCrMatrix);
 
@@ -471,7 +469,7 @@ namespace VideoToolbox {
 					return VTYCbCrMatrix.ItuR6014;
 				if (key == CVImageBuffer.YCbCrMatrix_SMPTE_240M_1995)
 					return VTYCbCrMatrix.Smpte240M1955;
-				return VTYCbCrMatrix.Unset; 
+				return VTYCbCrMatrix.Unset;
 			}
 			set {
 				switch (value) {
@@ -492,7 +490,7 @@ namespace VideoToolbox {
 		}
 
 		public VTMultiPassStorage? MultiPassStorage {
-			get	{
+			get {
 				return GetNativeValue<VTMultiPassStorage> (VTCompressionPropertyKey.MultiPassStorage);
 			}
 			set {
@@ -501,14 +499,13 @@ namespace VideoToolbox {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Introduced (PlatformName.MacOSX, 10,15)]
-		[Introduced (PlatformName.iOS, 13,0)]
-		[Introduced (PlatformName.TvOS, 13,0)]
+		[Introduced (PlatformName.iOS, 13, 0)]
+		[Introduced (PlatformName.TvOS, 13, 0)]
 #endif
 		public VTAlphaChannelMode AlphaChannelMode {
 			get => VTAlphaChannelModeExtensions.GetValue (GetNSStringValue (VTCompressionPropertyKey.AlphaChannelMode)!);

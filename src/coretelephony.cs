@@ -3,13 +3,13 @@ using ObjCRuntime;
 using System;
 
 namespace CoreTelephony {
-	[MacCatalyst (14,0)]
+	[MacCatalyst (14, 0)]
 	[Deprecated (PlatformName.MacCatalyst, 14, 0, message: Constants.UseCallKitInstead)]
-	[Deprecated (PlatformName.iOS, 10,0, message: Constants.UseCallKitInstead)]
+	[Deprecated (PlatformName.iOS, 10, 0, message: Constants.UseCallKitInstead)]
 	[BaseType (typeof (NSObject))]
 	interface CTCall {
 		[Export ("callID")]
-		string CallID { get;  }
+		string CallID { get; }
 
 		[Export ("callState")]
 		string CallState { get; }
@@ -17,19 +17,17 @@ namespace CoreTelephony {
 	}
 
 	[NoMacCatalyst]
-	[iOS (9,0)]
 	[BaseType (typeof (NSObject))]
 	interface CTCellularData {
 		[NullAllowed, Export ("cellularDataRestrictionDidUpdateNotifier", ArgumentSemantic.Copy)]
 		Action<CTCellularDataRestrictedState> RestrictionDidUpdateNotifier { get; set; }
-	
+
 		[Export ("restrictedState")]
 		CTCellularDataRestrictedState RestrictedState { get; }
 	}
 
-	[MacCatalyst (14,0)]
+	[MacCatalyst (14, 0)]
 	[Static]
-	[iOS (7,0)]
 	interface CTRadioAccessTechnology {
 		[Field ("CTRadioAccessTechnologyGPRS")]
 		NSString GPRS { get; }
@@ -64,19 +62,21 @@ namespace CoreTelephony {
 		[Field ("CTRadioAccessTechnologyLTE")]
 		NSString LTE { get; }
 
-		[iOS (14,1)]
+		[iOS (14, 1)]
+		[MacCatalyst (14, 1)]
 		[Field ("CTRadioAccessTechnologyNRNSA")]
 		NSString NRNsa { get; }
 
-		[iOS (14,1)]
+		[iOS (14, 1)]
+		[MacCatalyst (14, 1)]
 		[Field ("CTRadioAccessTechnologyNR")]
 		NSString NR { get; }
 	}
 
-	interface ICTTelephonyNetworkInfoDelegate {}
+	interface ICTTelephonyNetworkInfoDelegate { }
 
-	[MacCatalyst (14,0)]
-	[iOS (13,0)]
+	[MacCatalyst (14, 0)]
+	[iOS (13, 0)]
 #if NET
 	[Protocol, Model]
 #else
@@ -89,59 +89,73 @@ namespace CoreTelephony {
 		void DataServiceIdentifierDidChange (string identifier);
 	}
 
-	[MacCatalyst (14,0)]
+	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NSObject))]
 	interface CTTelephonyNetworkInfo {
-		[Deprecated (PlatformName.iOS, 12,0, message: "Use 'ServiceSubscriberCellularProviders' instead.")]
+		[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'ServiceSubscriberCellularProviders' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'ServiceSubscriberCellularProviders' instead.")]
 		[Export ("subscriberCellularProvider", ArgumentSemantic.Retain)]
 		[NullAllowed]
 		CTCarrier SubscriberCellularProvider { get; }
 
-		[Deprecated (PlatformName.iOS, 12,0, message: "Use 'ServiceSubscriberCellularProvidersDidUpdateNotifier' instead.")]
+		[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'ServiceSubscriberCellularProvidersDidUpdateNotifier' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'ServiceSubscriberCellularProvidersDidUpdateNotifier' instead.")]
 		[NullAllowed] // by default this property is null
 		[Export ("subscriberCellularProviderDidUpdateNotifier")]
 		Action<CTCarrier> CellularProviderUpdatedEventHandler { get; set; }
 
-		[Deprecated (PlatformName.iOS, 12,0, message: "Use 'ServiceCurrentRadioAccessTechnology' instead.")]
-		[iOS (7,0), Export ("currentRadioAccessTechnology")]
+		[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'ServiceCurrentRadioAccessTechnology' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'ServiceCurrentRadioAccessTechnology' instead.")]
+		[Export ("currentRadioAccessTechnology")]
 		[NullAllowed]
 		NSString CurrentRadioAccessTechnology { get; }
 
-		[iOS (12,0)]
+		[iOS (12, 0)]
+		[MacCatalyst (14, 0)]
+		[Deprecated (PlatformName.iOS, 16, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 16, 0)]
 		[NullAllowed]
 		[Export ("serviceSubscriberCellularProviders", ArgumentSemantic.Retain)]
 		NSDictionary<NSString, CTCarrier> ServiceSubscriberCellularProviders { get; }
 
-		[iOS (12,0)]
+		[iOS (12, 0)]
+		[MacCatalyst (14, 0)]
 		[NullAllowed]
 		[Export ("serviceCurrentRadioAccessTechnology", ArgumentSemantic.Retain)]
 		NSDictionary<NSString, NSString> ServiceCurrentRadioAccessTechnology { get; }
 
-		[iOS (12,0)]
+		[iOS (12, 0)]
+		[MacCatalyst (14, 0)]
+		[Deprecated (PlatformName.iOS, 16, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 16, 0)]
 		[NullAllowed]
 		[Export ("serviceSubscriberCellularProvidersDidUpdateNotifier", ArgumentSemantic.Copy)]
 		Action<NSString> ServiceSubscriberCellularProvidersDidUpdateNotifier { get; set; }
 
-		[iOS (12,0)]
+		[iOS (12, 0)]
+		[MacCatalyst (14, 0)]
 		[Notification]
 		[Field ("CTServiceRadioAccessTechnologyDidChangeNotification")]
 		NSString ServiceRadioAccessTechnologyDidChangeNotification { get; }
 
-		[iOS (13,0)]
+		[iOS (13, 0)]
+		[MacCatalyst (14, 0)]
 		[NullAllowed, Export ("dataServiceIdentifier")]
 		string DataServiceIdentifier { get; }
 
-		[iOS (13,0)]
+		[iOS (13, 0)]
+		[MacCatalyst (14, 0)]
 		[Wrap ("WeakDelegate")]
 		[NullAllowed]
 		ICTTelephonyNetworkInfoDelegate Delegate { get; set; }
 
-		[iOS (13,0)]
+		[iOS (13, 0)]
+		[MacCatalyst (14, 0)]
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
 		NSObject WeakDelegate { get; set; }
 	}
 
-	[MacCatalyst (14,0)]
+	[MacCatalyst (14, 0)]
 	[Deprecated (PlatformName.MacCatalyst, 14, 0, message: Constants.UseCallKitInstead)]
 	[Deprecated (PlatformName.iOS, 10, 0, message: Constants.UseCallKitInstead)]
 	[BaseType (typeof (NSObject))]
@@ -156,34 +170,36 @@ namespace CoreTelephony {
 
 	}
 
-	[MacCatalyst (14,0)]
+	[Deprecated (PlatformName.MacCatalyst, 16, 0, message: Constants.UseCallKitInstead)]
+	[Deprecated (PlatformName.iOS, 16, 0, message: Constants.UseCallKitInstead)]
+	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NSObject))]
 	interface CTCarrier {
 		[NullAllowed]
 		[Export ("mobileCountryCode")]
-		string MobileCountryCode { get;  }
+		string MobileCountryCode { get; }
 
 		[NullAllowed]
 		[Export ("mobileNetworkCode")]
-		string MobileNetworkCode { get;  }
+		string MobileNetworkCode { get; }
 
 		[NullAllowed]
 		[Export ("isoCountryCode")]
-		string IsoCountryCode { get;  }
+		string IsoCountryCode { get; }
 
 		[Export ("allowsVOIP")]
-		bool AllowsVoip { get;  }
+		bool AllowsVoip { get; }
 
 		[NullAllowed]
 		[Export ("carrierName")]
 		string CarrierName { get; }
 	}
 
-	interface ICTSubscriberDelegate {}
+	interface ICTSubscriberDelegate { }
 
 	[NoMacCatalyst]
 	[Protocol]
-	[iOS (12,1)]
+	[iOS (12, 1)]
 	interface CTSubscriberDelegate {
 		[Abstract]
 		[Export ("subscriberTokenRefreshed:")]
@@ -192,22 +208,22 @@ namespace CoreTelephony {
 
 	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
-	[iOS (7,0)]
 	partial interface CTSubscriber {
 		[Export ("carrierToken")]
 		[NullAllowed]
 		[Deprecated (PlatformName.iOS, 11, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 		NSData CarrierToken { get; }
 
-		[iOS (12,1)]
+		[iOS (12, 1)]
 		[Export ("identifier")]
 		string Identifier { get; }
 
-		[iOS (12,1)]
+		[iOS (12, 1)]
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
 		NSObject WeakDelegate { get; set; }
 
-		[iOS (12,1)]
+		[iOS (12, 1)]
 		[Wrap ("WeakDelegate")]
 		[NullAllowed]
 		ICTSubscriberDelegate Delegate { get; set; }
@@ -216,19 +232,20 @@ namespace CoreTelephony {
 	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	partial interface CTSubscriberInfo {
-		[Deprecated (PlatformName.iOS, 12, 1, message : "Use 'Subscribers' instead.")]
+		[Deprecated (PlatformName.iOS, 12, 1, message: "Use 'Subscribers' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'Subscribers' instead.")]
 		[Static]
 		[Export ("subscriber")]
 		CTSubscriber Subscriber { get; }
 
-		[iOS (12,1)]
+		[iOS (12, 1)]
 		[Static]
 		[Export ("subscribers")]
-		CTSubscriber[] Subscribers { get; }
+		CTSubscriber [] Subscribers { get; }
 	}
 
 	[NoMacCatalyst]
-	[iOS (12,0)]
+	[iOS (12, 0)]
 	[BaseType (typeof (NSObject))]
 	interface CTCellularPlanProvisioningRequest : NSSecureCoding {
 		[Export ("address")]
@@ -251,7 +268,7 @@ namespace CoreTelephony {
 	}
 
 	[NoMacCatalyst]
-	[iOS (12,0)]
+	[iOS (12, 0)]
 	[BaseType (typeof (NSObject))]
 	interface CTCellularPlanProvisioning {
 		[Export ("supportsCellularPlan")]
@@ -260,5 +277,9 @@ namespace CoreTelephony {
 		[Async]
 		[Export ("addPlanWith:completionHandler:")]
 		void AddPlan (CTCellularPlanProvisioningRequest request, Action<CTCellularPlanProvisioningAddPlanResult> completionHandler);
+
+		[iOS (16, 0)]
+		[Export ("supportsEmbeddedSIM")]
+		bool SupportsEmbeddedSim { get; }
 	}
 }

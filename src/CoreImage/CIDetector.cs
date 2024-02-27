@@ -33,8 +33,7 @@ using Foundation;
 namespace CoreImage {
 
 	// convenience enum for CIDetectorAccuracy[High|Low] internal fields in CIDetector (coreimage.cs)
-	public enum FaceDetectorAccuracy
-	{
+	public enum FaceDetectorAccuracy {
 		High,
 		Low
 	}
@@ -44,7 +43,7 @@ namespace CoreImage {
 		{
 			// TypeFace is the only detector supported now
 			using (var options = NSDictionary.FromObjectsAndKeys (new NSObject [] { highAccuracy ? AccuracyHigh : AccuracyLow },
-									      new NSObject [] { Accuracy }))
+										  new NSObject [] { Accuracy }))
 				return FromType (TypeFace, context, options);
 		}
 
@@ -56,7 +55,7 @@ namespace CoreImage {
 
 			// TypeFace is the only detector supported now
 			using (var options = NSDictionary.FromObjectsAndKeys (new NSObject [] { highAccuracy ? AccuracyHigh : AccuracyLow, new NSNumber (minFeatureSize) },
-									      new NSObject [] { Accuracy, MinFeatureSize, }))
+										  new NSObject [] { Accuracy, MinFeatureSize, }))
 				return FromType (TypeFace, context, options);
 		}
 
@@ -84,7 +83,7 @@ namespace CoreImage {
 				return FromType (TypeRectangle, context, options);
 		}
 
-		
+
 		public static CIDetector? CreateQRDetector (CIContext context, CIDetectorOptions detectorOptions)
 		{
 			using (var options = detectorOptions?.ToDictionary ())
@@ -100,7 +99,7 @@ namespace CoreImage {
 		public CIFeature [] FeaturesInImage (CIImage image, CIImageOrientation orientation)
 		{
 			using (var options = NSDictionary.FromObjectsAndKeys (new NSObject [] { new NSNumber ((int) orientation) },
-									      new NSObject [] { ImageOrientation })){
+										  new NSObject [] { ImageOrientation })) {
 				return FeaturesInImage (image, options);
 			}
 		}

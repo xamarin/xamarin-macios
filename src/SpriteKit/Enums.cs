@@ -111,10 +111,9 @@ namespace SpriteKit {
 		DontCare,
 	}
 
-	[iOS (9,0)][Mac (10,11)]
+	[MacCatalyst (13, 1)]
 	[Native]
-	public enum SKAttributeType : long
-	{
+	public enum SKAttributeType : long {
 		None = 0,
 		Float = 1,
 		VectorFloat2 = 2,
@@ -126,30 +125,27 @@ namespace SpriteKit {
 		VectorHalfFloat4 = 8,
 	}
 
-	[iOS (10,0)][Mac (10,12)]
+	[MacCatalyst (13, 1)]
 	[Native]
-	public enum SKTileDefinitionRotation : ulong
-	{
+	public enum SKTileDefinitionRotation : ulong {
 		Angle0 = 0,
 		Angle90,
 		Angle180,
 		Angle270,
 	}
 
-	[iOS (10,0)][Mac (10,12)]
+	[MacCatalyst (13, 1)]
 	[Native]
-	public enum SKTileSetType : ulong
-	{
+	public enum SKTileSetType : ulong {
 		Grid,
 		Isometric,
 		HexagonalFlat,
 		HexagonalPointy,
 	}
 
-	[iOS (10,0)][Mac (10,12)]
+	[MacCatalyst (13, 1)]
 	[Native]
-	public enum SKTileAdjacencyMask : ulong
-	{
+	public enum SKTileAdjacencyMask : ulong {
 		Up = 1 << 0,
 		UpperRight = 1 << 1,
 		Right = 1 << 2,
@@ -187,9 +183,9 @@ namespace SpriteKit {
 		UpperLeftCorner = Up | UpperRight | Right | Down | LowerLeft | Left | UpperLeft,
 	}
 
-	[NoWatch]
 	[NoMac]
-	[TV (11,0), iOS (11,0)]
+	[Watch (9, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum SKNodeFocusBehavior : long {
 		None = 0,

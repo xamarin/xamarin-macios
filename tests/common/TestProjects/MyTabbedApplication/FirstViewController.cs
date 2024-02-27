@@ -4,10 +4,8 @@ using System.Drawing;
 using Foundation;
 using UIKit;
 
-namespace MyTabbedApplication
-{
-	public partial class FirstViewController : UIViewController
-	{
+namespace MyTabbedApplication {
+	public partial class FirstViewController : UIViewController {
 		static bool UserInterfaceIdiomIsPhone {
 			get { return UIDevice.CurrentDevice.UserInterfaceIdiom == UIUserInterfaceIdiom.Phone; }
 		}
@@ -22,7 +20,7 @@ namespace MyTabbedApplication
 		{
 			// Releases the view if it doesn't have a superview.
 			base.DidReceiveMemoryWarning ();
-			
+
 			// Release any cached data, images, etc that aren't in use.
 		}
 
@@ -31,7 +29,7 @@ namespace MyTabbedApplication
 		public override void ViewDidLoad ()
 		{
 			base.ViewDidLoad ();
-			
+
 			// Perform any additional setup after loading the view, typically from a nib.
 		}
 

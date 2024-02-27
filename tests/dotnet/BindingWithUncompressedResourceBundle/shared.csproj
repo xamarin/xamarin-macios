@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+	<PropertyGroup>
+		<IsBindingProject>true</IsBindingProject>
+	</PropertyGroup>
+
+	<Import Project="../../common/shared-dotnet.csproj" />
+
+	<ItemGroup>
+		<ObjcBindingApiDefinition Include="ApiDefinition.cs" />
+		<ObjcBindingCoreSource Include="StructsAndEnums.cs" />
+		<NativeReference Include="..\..\..\test-libraries\.libs\$(NativeLibName)\libtest.a">
+			<Kind>Static</Kind>
+		</NativeReference>
+	</ItemGroup>
+</Project>

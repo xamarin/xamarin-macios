@@ -1,10 +1,8 @@
 using System;
-namespace MySceneKitLibrary
-{
-    public class MyClass
-    {
-        public MyClass()
-        {
-        }
-    }
+namespace MySceneKitLibrary {
+	public class MyClass {
+		public MyClass ()
+		{
+		}
+	}
 }

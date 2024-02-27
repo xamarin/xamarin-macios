@@ -64,7 +64,7 @@ namespace CoreGraphics {
 			: base (handle, owns)
 		{
 		}
-		
+
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CGPDFDocumentRef */ IntPtr CGPDFPageGetDocument (/* CGPDFPageRef */ IntPtr page);
 
@@ -80,9 +80,9 @@ namespace CoreGraphics {
 		public nint PageNumber {
 			get {
 				return CGPDFPageGetPageNumber (Handle);
- 			}
+			}
 		}
-		
+
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static CGRect CGPDFPageGetBoxRect (/* CGPDFPageRef */ IntPtr page, CGPDFBox box);
 
@@ -90,7 +90,7 @@ namespace CoreGraphics {
 		{
 			return CGPDFPageGetBoxRect (Handle, box);
 		}
-		
+
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* int */ int CGPDFPageGetRotationAngle (/* CGPDFPageRef */ IntPtr page);
 
@@ -99,7 +99,7 @@ namespace CoreGraphics {
 				return CGPDFPageGetRotationAngle (Handle);
 			}
 		}
-		
+
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static CGAffineTransform CGPDFPageGetDrawingTransform (/* CGPDFPageRef */ IntPtr page, CGPDFBox box, CGRect rect, int rotate, [MarshalAs (UnmanagedType.I1)] bool preserveAspectRatio);
 

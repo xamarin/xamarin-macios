@@ -2,6 +2,8 @@
 using CoreText;
 using Foundation;
 
+#nullable enable
+
 namespace AppKit {
 	public partial class NSTextStorage {
 		public NSTextStorage (string str, NSDictionary attributes) : base (str, attributes)

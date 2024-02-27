@@ -7,7 +7,7 @@ using NUnit.Framework;
 
 using Foundation;
 
-#nullable  enable
+#nullable enable
 
 namespace MonoTouchFixtures.Foundation {
 	public class NSHostTest {

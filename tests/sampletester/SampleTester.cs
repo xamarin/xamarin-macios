@@ -15,14 +15,14 @@ namespace Samples {
 		public bool BuildSolution;
 		public string KnownFailure;
 		public string CodesignKey;
-		public string[] DebugConfigurations;
-		public string[] ReleaseConfigurations;
-		public string[] Platforms;
+		public string [] DebugConfigurations;
+		public string [] ReleaseConfigurations;
+		public string [] Platforms;
 
 		// for various reasons (build'ability, compatibility, performance) it can be
 		// better to build a subset of a solution
 		// e.g. `nuget restore` requires removing the projects from the .sln
-		public string[] RemoveProjects;
+		public string [] RemoveProjects;
 	}
 
 	public class SampleTestData {
@@ -179,7 +179,7 @@ namespace Samples {
 				var repo = CloneRepo ();
 				file_to_build = Path.Combine (repo, file_to_build);
 
-				if (data.RemoveProjects != null) {
+				if (data.RemoveProjects is not null) {
 					if (String.IsNullOrEmpty (data.Solution))
 						Assert.Fail ("'RemoveProjects' used without a 'Solution' path!");
 					var sln_path = Path.Combine (repo, data.Solution);
@@ -218,7 +218,7 @@ namespace Samples {
 					Select ((v) => GetProjectInfo (v, Path.Combine (GitHub.CloneRepository (org, repo, hash, default_branch, false), v))).
 					Where ((v) => v.IsApplicable (false)).
 					ToArray ();
-			
+
 				projects [repo] = rv;
 			}
 			return rv;
@@ -229,7 +229,7 @@ namespace Samples {
 			var defaultDebugConfigurations = new string [] { "Debug" };
 			var defaultReleaseConfigurations = new string [] { "Release" };
 
-			if (samples == null) {
+			if (samples is null) {
 				samples = new Dictionary<string, SampleTest> ();
 			} else {
 				samples = new Dictionary<string, SampleTest> (samples);
@@ -245,7 +245,7 @@ namespace Samples {
 				}
 			}
 			foreach (var proj in executable_projects) {
-				if (proj.Title == null) {
+				if (proj.Title is null) {
 					proj.Title = Path.GetFileNameWithoutExtension (proj.RelativePath);
 				}
 			}
@@ -273,7 +273,7 @@ namespace Samples {
 					samples [proj.RelativePath] = sample = new SampleTest ();
 				sample.Project = proj;
 				IEnumerable<string> platforms = sample.Platforms;
-				if (platforms == null) {
+				if (platforms is null) {
 					switch (proj.Platform) {
 					case TestPlatform.iOS:
 					case TestPlatform.tvOS:

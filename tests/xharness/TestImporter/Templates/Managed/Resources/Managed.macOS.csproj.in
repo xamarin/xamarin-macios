@@ -13,6 +13,7 @@
     <TargetFrameworkVersion>%TARGET FRAMEWORK VERSION%</TargetFrameworkVersion>
     %TARGET EXTRA INFO%
     <DefineConstants>%DEFINE CONSTANTS%</DefineConstants>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -47,7 +48,7 @@
     <I18n>cjk,mideast,other,rare,west</I18n>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Mono.Options" Version="5.3.0.1" />
+    <PackageReference Include="Mono.Options" Version="6.12.0.148" />
     <PackageReference Include="System.Buffers" Version="4.4.0" />
     <PackageReference Include="System.Memory" Version="4.5.1" />
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.5.1" />

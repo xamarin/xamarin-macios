@@ -41,8 +41,6 @@ namespace CoreVideo {
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
-#else
-	[Watch (4,0)]
 #endif
 	public struct CVPlanarComponentInfo {
 		public /* int32_t */ int Offset;
@@ -55,11 +53,9 @@ namespace CoreVideo {
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
-#else
-	[Watch (4,0)]
 #endif
 	public struct CVPlanarPixelBufferInfo {
-		public CVPlanarComponentInfo[] ComponentInfo;
+		public CVPlanarComponentInfo [] ComponentInfo;
 	}
 
 	// CVPixelBuffer.h
@@ -68,8 +64,6 @@ namespace CoreVideo {
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
-#else
-	[Watch (4,0)]
 #endif
 	public struct CVPlanarPixelBufferInfo_YCbCrPlanar {
 		public CVPlanarComponentInfo ComponentInfoY;
@@ -82,8 +76,6 @@ namespace CoreVideo {
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
-#else
-	[Watch (4,0)]
 #endif
 	public struct CVPlanarPixelBufferInfo_YCbCrBiPlanar {
 		public CVPlanarComponentInfo ComponentInfoY;
@@ -95,39 +87,17 @@ namespace CoreVideo {
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
-#else
-	[Watch (4,0)]
 #endif
 	public struct CVTimeStamp {
-		public UInt32		Version;
-		public Int32 		VideoTimeScale;
-		public Int64 		VideoTime;
-		public UInt64 		HostTime;
-		public double 		RateScalar;
-		public Int64 		VideoRefreshPeriod;
-		public CVSMPTETime 	SMPTETime;
-		public UInt64 		Flags;
-		public UInt64 		Reserved;
-	}
-        
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#else
-	[Watch (4,0)]
-#endif
-	public struct CVSMPTETime {
-		public Int16	Subframes;
-		public Int16	SubframeDivisor;
-		public UInt32	Counter;
-		public UInt32	Type;
-		public UInt32	Flags;
-		public Int16	Hours;
-		public Int16	Minutes;
-		public Int16	Seconds;
-		public Int16	Frames;
+		public UInt32 Version;
+		public Int32 VideoTimeScale;
+		public Int64 VideoTime;
+		public UInt64 HostTime;
+		public double RateScalar;
+		public Int64 VideoRefreshPeriod;
+		public CVSMPTETime SMPTETime;
+		public UInt64 Flags;
+		public UInt64 Reserved;
 	}
 
 #if NET
@@ -135,17 +105,30 @@ namespace CoreVideo {
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
-#else
-	[Watch (4,0)]
+#endif
+	public struct CVSMPTETime {
+		public Int16 Subframes;
+		public Int16 SubframeDivisor;
+		public UInt32 Counter;
+		public UInt32 Type;
+		public UInt32 Flags;
+		public Int16 Hours;
+		public Int16 Minutes;
+		public Int16 Seconds;
+		public Int16 Frames;
+	}
+
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
 #endif
 	public struct CVFillExtendedPixelsCallBackData {
 		public nint /* CFIndex */ Version;
 		public CVFillExtendedPixelsCallBack FillCallBack;
 		public IntPtr UserInfo;
-	} 
+	}
 
-#if !NET
-	[Watch (4,0)]
-#endif
 	public delegate bool CVFillExtendedPixelsCallBack (IntPtr pixelBuffer, IntPtr refCon);
 }

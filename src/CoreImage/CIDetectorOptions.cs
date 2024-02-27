@@ -14,19 +14,16 @@ using ObjCRuntime;
 
 namespace CoreImage {
 
-	public partial class CIDetectorOptions  {
+	public partial class CIDetectorOptions {
 
 		public FaceDetectorAccuracy? Accuracy { get; set; }
 		public float? MinFeatureSize { get; set; }
 
 #if NET
-		[SupportedOSPlatform ("ios10.0")]
-		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (10,0)]
-		[Mac (10,12)]
 #endif
 		public int? MaxFeatureCount { get; set; }
 
@@ -41,7 +38,7 @@ namespace CoreImage {
 		public bool? ReturnSubFeatures { get; set; }
 
 		public CIImageOrientation? ImageOrientation { get; set; }
-		
+
 		internal NSDictionary ToDictionary ()
 		{
 			// We now have 11 possible keys so begining with 6 *might* be optimal
@@ -50,7 +47,7 @@ namespace CoreImage {
 
 			if (CIDetector.Accuracy is not null) {
 				keys.Add (CIDetector.Accuracy);
-				values.Add (Accuracy == FaceDetectorAccuracy.High ? CIDetector.AccuracyHigh :CIDetector.AccuracyLow);
+				values.Add (Accuracy == FaceDetectorAccuracy.High ? CIDetector.AccuracyHigh : CIDetector.AccuracyLow);
 			}
 
 			// MinFeatureSize exists only in iOS6+, before this the field is null (and would throw if used)
@@ -77,21 +74,21 @@ namespace CoreImage {
 				values.Add (NSObject.FromObject (Smile.Value));
 			}
 			// AspectRation exists only in iOS8+, before this the field is null (and would throw if used)
-			if (CIDetector.AspectRatio is not null && AspectRatio is not null){
+			if (CIDetector.AspectRatio is not null && AspectRatio is not null) {
 				keys.Add (CIDetector.AspectRatio);
 				values.Add (new NSNumber (AspectRatio.Value));
 			}
 			// FocalLength exists only in iOS8+, before this the field is null (and would throw if used)
-			if (CIDetector.FocalLength is not null && FocalLength is not null){
+			if (CIDetector.FocalLength is not null && FocalLength is not null) {
 				keys.Add (CIDetector.FocalLength);
 				values.Add (new NSNumber (FocalLength.Value));
 			}
-			if (CIDetector.NumberOfAngles is not null && NumberOfAngles is not null){
+			if (CIDetector.NumberOfAngles is not null && NumberOfAngles is not null) {
 				keys.Add (CIDetector.NumberOfAngles);
 				values.Add (new NSNumber (NumberOfAngles.Value));
 			}
 
-			if (CIDetector.ReturnSubFeatures is not null && ReturnSubFeatures is not null){
+			if (CIDetector.ReturnSubFeatures is not null && ReturnSubFeatures is not null) {
 				keys.Add (CIDetector.ReturnSubFeatures);
 				values.Add (new NSNumber (ReturnSubFeatures.Value));
 			}

@@ -3,10 +3,8 @@ using System;
 using WatchKit;
 using Foundation;
 
-namespace WatchExtension
-{
-	public partial class InterfaceController : WKInterfaceController
-	{
+namespace WatchExtension {
+	public partial class InterfaceController : WKInterfaceController {
 		public InterfaceController (IntPtr handle) : base (handle)
 		{
 		}

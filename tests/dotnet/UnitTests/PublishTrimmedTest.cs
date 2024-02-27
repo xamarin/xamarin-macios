@@ -13,6 +13,7 @@ namespace Xamarin.Tests {
 		{
 			var project = "MySimpleApp";
 			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
 
 			var project_path = GetProjectPath (project, platform: platform);
 			Clean (project_path);
@@ -22,7 +23,8 @@ namespace Xamarin.Tests {
 			var rv = DotNet.AssertBuildFailure (project_path, properties);
 			var errors = BinLog.GetBuildLogErrors (rv.BinLogPath).ToArray ();
 			Assert.AreEqual (1, errors.Length, "Error count");
-			Assert.AreEqual ($"{platform.AsString ()} projects must build with PublishTrimmed=true. Current value: false.", errors [0].Message, "Error message");
+			var linkModeName = platform == ApplePlatform.MacOSX ? "LinkMode" : "MtouchLink";
+			Assert.AreEqual ($"{platform.AsString ()} projects must build with PublishTrimmed=true. Current value: false. Set '{linkModeName}=None' instead to disable trimming for all assemblies.", errors [0].Message, "Error message");
 		}
 	}
 }

@@ -27,9 +27,9 @@ namespace Xharness.Jenkins {
 
 		NUnitExecuteTask CreateNUnitTask (MacTestProject project, MSBuildTask build, bool ignored)
 		{
-			if (project == null)
+			if (project is null)
 				throw new ArgumentNullException (nameof (project));
-			if (build == null)
+			if (build is null)
 				throw new ArgumentNullException (nameof (build));
 
 			var dll = Path.Combine (Path.GetDirectoryName (build.TestProject.Path), project.Xml.GetOutputAssemblyPath (build.ProjectPlatform, build.ProjectConfiguration).Replace ('\\', '/'));
@@ -46,9 +46,9 @@ namespace Xharness.Jenkins {
 
 		IEnumerable<MacExecuteTask> CreateMacExecuteTask (MacTestProject project, MSBuildTask build, bool ignored)
 		{
-			if (project == null)
+			if (project is null)
 				throw new ArgumentNullException (nameof (project));
-			if (build == null)
+			if (build is null)
 				throw new ArgumentNullException (nameof (build));
 
 			var exec = new MacExecuteTask (jenkins, build, processManager, crashReportSnapshotFactory) {
@@ -83,7 +83,7 @@ namespace Xharness.Jenkins {
 					ignored = true;
 
 				var configurations = project.Configurations;
-				if (configurations == null)
+				if (configurations is null)
 					configurations = new string [] { "Debug" };
 
 				TestPlatform platform = project.TargetFrameworkFlavors.ToTestPlatform ();

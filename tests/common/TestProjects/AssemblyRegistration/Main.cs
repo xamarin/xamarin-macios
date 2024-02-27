@@ -7,8 +7,7 @@ using ObjCRuntime;
 static class MainClass {
 	static int Main (string [] args)
 	{
-		Runtime.AssemblyRegistration += (object sender, AssemblyRegistrationEventArgs ea) =>
-		{
+		Runtime.AssemblyRegistration += (object sender, AssemblyRegistrationEventArgs ea) => {
 			Console.WriteLine (ea.AssemblyName);
 			switch (ea.AssemblyName.Name) {
 			case "AssemblyRegistration":

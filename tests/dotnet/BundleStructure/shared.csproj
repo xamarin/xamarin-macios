@@ -54,6 +54,10 @@
 			<!-- Bundled, linked with -->
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
+		<None Include="$(RootTestsDirectory)/test-libraries/libraries/.libs/$(RuntimeIdentifier)/libNoneE.so">
+			<!-- Bundled, not linked with -->
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
 		<None Include="$(RootTestsDirectory)/test-libraries/libraries/.libs/$(RuntimeIdentifier)/libNoneF.a">
 			<!-- Not bundled; linked with -->
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -103,12 +107,41 @@
 			<!-- Bundled, linked with, install_name_tool must have been executed -->
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
+		<None Include="$(RootTestsDirectory)/test-libraries/libraries/.libs/$(RuntimeIdentifier)/libSkipInstallNameTool.so">
+			<!-- Bundled, not linked with, install_name_tool must have been executed -->
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+
+		<!-- Assembly: should be copied, but the xml file next to it should not (and there shouldn't be any warnings either) -->
+		<None Include="../NoneN.dll">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Include="../NoneN.xml">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+
+		<!-- Lone xml file (no sibling assembly): should not be copied, and a warning should be printed -->
+		<None Include="../NoneO.xml">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+
+		<!-- Assembly: should be copied, but the xml file with the same base name (even though it's in a different directory) should not (and there shouldn't be any warnings either) -->
+		<None Include="../NoneP.dll">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Include="NoneP.xml">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
 	</ItemGroup>
 
 	<ItemGroup>
 		<!-- png image -->
 		<!-- bundled -->
 		<None Include="$(RootTestsDirectory)/monotouch-test/basn3p08.png" CopyToOutputDirectory="PreserveNewest" />
+
+		<!-- png image -->
+		<!-- bundled -->
+		<None Include="$(RootTestsDirectory)/monotouch-test/basn3p08_with_loc.png" CopyToOutputDirectory="PreserveNewest" />
 
 		<!-- jpg image -->
 		<!-- bundled -->
@@ -125,6 +158,8 @@
 		<None Include="$(RootTestsDirectory)/test-libraries/frameworks/.libs/$(RuntimeIdentifier)/UnknownF2.resources"          CopyToPublishDirectory="PreserveNewest" PublishFolderType="AppleBindingResourcePackage" />
 		<None Include="$(RootTestsDirectory)/test-libraries/frameworks/.libs/$(RuntimeIdentifier)/PlugInA.bundle"               CopyToPublishDirectory="PreserveNewest" PublishFolderType="PlugIns"           Condition="'$(_IsAppSigned)' == 'false'" /> <!-- we don't support signing apps with plugins yet -->
 		<None Include="$(RootTestsDirectory)/test-libraries/frameworks/.libs/$(RuntimeIdentifier)/CompressedPlugInB.bundle.zip" CopyToPublishDirectory="PreserveNewest" PublishFolderType="CompressedPlugIns" Condition="'$(_IsAppSigned)' == 'false'" /> <!-- we don't support signing apps with plugins yet -->
+		<None Include="$(RootTestsDirectory)/test-libraries/frameworks/.libs/$(RuntimeIdentifier)/XpcServiceE.xpc"              CopyToPublishDirectory="PreserveNewest" PublishFolderType="XPCServices"            />
+		<None Include="$(RootTestsDirectory)/test-libraries/frameworks/.libs/$(RuntimeIdentifier)/CompressedXpcServiceF.xpc.zip" CopyToPublishDirectory="PreserveNewest" PublishFolderType="CompressedXPCServices" />
 		<None Update="UnknownI.bin" CopyToOutputDirectory="PreserveNewest" PublishFolderType="Unknown" />
 		<!-- any files in the root directory will make macOS or Mac Catalyst app bundles invalid, and code signing will fail, so skip the following for those platforms when signing the app bundle-->
 		<None Update="UnknownJ.bin" CopyToOutputDirectory="PreserveNewest" PublishFolderType="RootDirectory" Condition="('$(_PlatformName)' != 'macOS' And '$(_PlatformName)' != 'MacCatalyst') Or '$(_IsAppSigned)' == 'false'" />
@@ -138,6 +173,8 @@
 		<None Include="$(RootTestsDirectory)/test-libraries/frameworks/.libs/$(RuntimeIdentifier)/SomewhatUnknownF2.resources"     CopyToPublishDirectory="PreserveNewest" Link="Subfolder/SomewhatUnknownF2.bin" PublishFolderType="AppleBindingResourcePackage" />
 		<None Include="$(RootTestsDirectory)/test-libraries/frameworks/.libs/$(RuntimeIdentifier)/PlugInC.bundle"                  CopyToPublishDirectory="PreserveNewest" Link="Subfolder/PlugInC.bundle"           PublishFolderType="PlugIns"           Condition="'$(_IsAppSigned)' == 'false'" /> <!-- only if not signing, because these make the app bundle invalid -->
 		<None Include="$(RootTestsDirectory)/test-libraries/frameworks/.libs/$(RuntimeIdentifier)/CompressedPlugInD.bundle.zip"    CopyToPublishDirectory="PreserveNewest" Link="Subfolder/CompressedPlugInD.bundle" PublishFolderType="CompressedPlugIns" Condition="'$(_IsAppSigned)' == 'false'" /> <!-- only if not signing, because these make the app bundle invalid -->
+		<None Include="$(RootTestsDirectory)/test-libraries/frameworks/.libs/$(RuntimeIdentifier)/XpcServiceG.xpc"                 CopyToPublishDirectory="PreserveNewest" Link="Subfolder/XpcServiceG.xpc"           PublishFolderType="XPCServices"           />
+		<None Include="$(RootTestsDirectory)/test-libraries/frameworks/.libs/$(RuntimeIdentifier)/CompressedXpcServiceH.xpc.zip"   CopyToPublishDirectory="PreserveNewest" Link="Subfolder/CompressedXpcServiceH.xpc" PublishFolderType="CompressedXPCServices" />
 		<None Update="SomewhatUnknownI.bin" CopyToOutputDirectory="PreserveNewest" Link="Subfolder/SomewhatUnknownI.bin" PublishFolderType="Unknown" />
 		<!-- any files in the root directory will make macOS or Mac Catalyst app bundles invalid, and code signing will fail, so skip the following for those platforms when signing the app bundle-->
 		<None Update="SomewhatUnknownJ.bin" CopyToOutputDirectory="PreserveNewest" Link="Subfolder/SomewhatUnknownJ.bin" PublishFolderType="RootDirectory" Condition="('$(_PlatformName)' != 'macOS' And '$(_PlatformName)' != 'MacCatalyst') Or '$(_IsAppSigned)' == 'false'" />
@@ -145,6 +182,8 @@
 		<!-- https://github.com/xamarin/xamarin-macios/issues/15727 -->
 		<None Include="$(RootTestsDirectory)/test-libraries/frameworks/.libs/$(RuntimeIdentifier)/Framework.With.Dots.framework"           CopyToPublishDirectory="PreserveNewest" PublishFolderType="AppleFramework" />
 
+		<!-- https://github.com/xamarin/xamarin-macios/issues/15044 -->
+		<None Include="$(RootTestsDirectory)/test-libraries/libraries/.libs/$(RuntimeIdentifier)/NoLibPrefix.dylib" CopyToPublishDirectory="PreserveNewest" PublishFolderType="DynamicLibrary" />
 		<!-- Content items -->
 
 		<!-- Content without any metadata: bundled -->
@@ -290,8 +329,9 @@
 		<!-- The bindings-framework-test project contains (next to the binding assembly):
 			*.resources/* files for iOS and tvOS
 			*.resources.zip for macOS and Mac Catalyst
+			It's only included when building on a Mac (remotely or locally), because we don't support building binding frameworks yet from Windows (without being connected to a Mac).
 		 -->
-		<ProjectReference Include="$(RootTestsDirectory)/bindings-framework-test/dotnet/$(_PlatformName)/bindings-framework-test.csproj" />
+		<ProjectReference Include="$(RootTestsDirectory)/bindings-framework-test/dotnet/$(_PlatformName)/bindings-framework-test.csproj" Condition="'$(IsMacEnabled)' == 'true'" />
 	</ItemGroup>
 
 	<!-- Adding resources using a custom target -->

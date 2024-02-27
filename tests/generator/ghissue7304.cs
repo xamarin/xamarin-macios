@@ -4,7 +4,7 @@ using AppKit;
 using CoreFoundation;
 
 namespace GHIssue7304 {
-	
+
 	[BaseType (typeof (NSObject))]
 	interface FooClass {
 

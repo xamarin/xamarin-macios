@@ -3,11 +3,9 @@ using CoreGraphics;
 using Foundation;
 using SceneKit;
 
-namespace MyCocoaSceneKitApp
-{
-	static class MainClass
-	{
-		static void Main (string[] args)
+namespace MyCocoaSceneKitApp {
+	static class MainClass {
+		static void Main (string [] args)
 		{
 			NSApplication.Init ();
 			NSApplication.SharedApplication.Delegate = new AppDelegate ();
@@ -15,8 +13,7 @@ namespace MyCocoaSceneKitApp
 		}
 	}
 
-	public partial class AppDelegate : NSApplicationDelegate
-	{
+	public partial class AppDelegate : NSApplicationDelegate {
 		NSWindow window;
 		public override void DidFinishLaunching (NSNotification notification)
 		{

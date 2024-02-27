@@ -12,6 +12,8 @@ endif
 
 MTOUCH=$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/bin/mtouch
 
+XHARNESS_EXECUTABLE=xharness/bin/Debug/$(DOTNET_TFM)/xharness.dll
+
 export MD_MTOUCH_SDK_ROOT=$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)
 export MSBUILD_EXE_PATH=$(MONO_PREFIX)/lib/mono/msbuild/15.0/bin/MSBuild.dll
 export TargetFrameworkFallbackSearchPaths=$(IOS_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild-frameworks
@@ -20,11 +22,7 @@ export XAMMAC_FRAMEWORK_PATH=$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.frame
 export XamarinMacFrameworkRoot=$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current
 
 ifneq ($(RELEASE),)
-ifneq ($(BITCODE),)
-CONFIG=Release-bitcode
-else
 CONFIG=Release
-endif
 else
 CONFIG=Debug
 endif
@@ -81,6 +79,13 @@ test.config: Makefile $(TOP)/Make.config $(TOP)/mk/mono.mk $(TOP)/eng/Version.De
 	@printf "$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),$(platform)_NUGET_VERSION_NO_METADATA=$($(platform)_NUGET_VERSION_NO_METADATA)\\n)" | sed 's/^ //' >> $@
 	@echo "SYSTEM_MONO=$(SYSTEM_MONO)" >> $@
 	@echo "DOTNET_DIR=$(DOTNET_DIR)" >> $@
+	@echo "INCLUDE_MAC=$(INCLUDE_MAC)" >> $@
+	@echo "INCLUDE_MACCATALYST=$(INCLUDE_MACCATALYST)" >> $@
+	@echo "IOS_SUPPORTS_32BIT_ARCHITECTURES=$(IOS_SUPPORTS_32BIT_ARCHITECTURES)" >> $@
+	@printf "$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),$(platform)_NUGET_SDK_NAME=$($(platform)_NUGET_SDK_NAME)\\n)" | sed 's/^ //' >> $@
+	@printf "$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),$(platform)_NUGET_REF_NAME=$($(platform)_NUGET_REF_NAME)\\n)" | sed 's/^ //' >> $@
+	@printf "$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),$(rid)_NUGET_RUNTIME_NAME=$($(rid)_NUGET_RUNTIME_NAME)\\n))" | sed 's/^ //' >> $@
+	@printf "$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),SUPPORTED_API_VERSIONS_$(platform)='$(SUPPORTED_API_VERSIONS_$(platform))'\\n)" | sed 's/^ //' >> $@
 
 test-system.config: Makefile $(TOP)/Make.config $(TOP)/mk/mono.mk $(TOP)/eng/Version.Details.xml
 	@rm -f $@
@@ -106,6 +111,13 @@ test-system.config: Makefile $(TOP)/Make.config $(TOP)/mk/mono.mk $(TOP)/eng/Ver
 	@printf "$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),$(platform)_NUGET_VERSION_NO_METADATA=$($(platform)_NUGET_VERSION_NO_METADATA)\\n)" | sed 's/^ //' >> $@
 	@echo "SYSTEM_MONO=$(SYSTEM_MONO)" >> $@
 	@echo "DOTNET_DIR=$(DOTNET_DIR)" >> $@
+	@echo "INCLUDE_MAC=$(INCLUDE_MAC)" >> $@
+	@echo "INCLUDE_MACCATALYST=$(INCLUDE_MACCATALYST)" >> $@
+	@echo "IOS_SUPPORTS_32BIT_ARCHITECTURES=$(IOS_SUPPORTS_32BIT_ARCHITECTURES)" >> $@
+	@printf "$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),$(platform)_NUGET_SDK_NAME=$($(platform)_NUGET_SDK_NAME)\\n)" | sed 's/^ //' >> $@
+	@printf "$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),$(platform)_NUGET_REF_NAME=$($(platform)_NUGET_REF_NAME)\\n)" | sed 's/^ //' >> $@
+	@printf "$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),$(rid)_NUGET_RUNTIME_NAME=$($(rid)_NUGET_RUNTIME_NAME)\\n))" | sed 's/^ //' >> $@
+	@printf "$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),SUPPORTED_API_VERSIONS_$(platform)='$(SUPPORTED_API_VERSIONS_$(platform))'\\n)" | sed 's/^ //' >> $@
 
 clean-local::
 	$(Q) $(SYSTEM_XBUILD) /t:Clean /p:Platform=iPhoneSimulator /p:Configuration=$(CONFIG) $(XBUILD_VERBOSITY) tests.sln
@@ -173,21 +185,22 @@ logdev:
 build-test-libraries:
 	@$(MAKE) -C $(TOP)/tests/test-libraries
 
-.stamp-xharness-configure: xharness/xharness.exe
-	$(Q_GEN) $(SYSTEM_MONO) --debug $(CURDIR)/$< $(XHARNESS_VERBOSITY) --configure --autoconf --rootdir $(CURDIR)
+.stamp-xharness-configure: $(XHARNESS_EXECUTABLE)
+	$(Q_GEN) $(DOTNET) $< $(XHARNESS_VERBOSITY) --configure --autoconf --rootdir $(CURDIR)
 	$(Q) touch $@
 
 all-local:: .stamp-xharness-configure
 
-$(TOP)/tools/common/SdkVersions.cs: $(TOP)/tools/common/SdkVersions.cs.in
+$(TOP)/tools/common/SdkVersions.cs: $(TOP)/tools/common/SdkVersions.in.cs
 	@$(MAKE) -C $(TOP)/tools/mtouch ../common/SdkVersions.cs
 
 .stamp-src-project-files:
 	@$(MAKE) -C $(TOP)/src project-files
 	@touch $@
 
-xharness/xharness.exe: $(xharness_dependencies) test.config test-system.config .stamp-src-project-files $(TOP)/tools/common/SdkVersions.cs
-	$(Q_GEN) $(SYSTEM_MSBUILD) "/bl:$@.binlog" /restore $(MSBUILD_VERBOSITY_QUIET) xharness/xharness.csproj
+$(XHARNESS_EXECUTABLE): MSBUILD_EXE_PATH=
+$(XHARNESS_EXECUTABLE): $(xharness_dependencies) test.config test-system.config .stamp-src-project-files $(TOP)/tools/common/SdkVersions.cs
+	$(Q_GEN) $(DOTNET) build "/bl:$@.binlog" $(MSBUILD_VERBOSITY_QUIET) xharness/xharness.csproj
 xharness/xharness.csproj.inc: export BUILD_VERBOSITY=$(XBUILD_VERBOSITY)
 xharness/xharness.csproj.inc: export ABSOLUTE_PATHS=1
 -include xharness/xharness.csproj.inc
@@ -200,12 +213,14 @@ killall:
 NUNIT_MSBUILD_DIR=$(TOP)/packages/NUnit.Runners.2.6.4/tools/lib
 test-ios-tasks: test-macdev-tests test-macdev-tasks
 
+test-macdev-tests: export MSBUILD_EXE_PATH=
 test-macdev-tests: verify-system-vsmac-xcode-match
-	$(SYSTEM_MSBUILD) "/bl:$@.binlog" $(TOP)/tests/msbuild/Xamarin.MacDev.Tests/Xamarin.MacDev.Tests.csproj /p:Configuration=Debug /r $(MSBUILD_VERBOSITY)
+	$(Q) $(DOTNET) build "/bl:$@.binlog" $(TOP)/tests/msbuild/Xamarin.MacDev.Tests/Xamarin.MacDev.Tests.csproj /p:Configuration=Debug $(DOTNET_BUILD_VERBOSITY)
 	cd $(TOP)/tests/msbuild/Xamarin.MacDev.Tests && $(SYSTEM_XIBUILD) -t -- $(abspath $(TOP)/tools/nunit3-console-3.11.1) $(abspath $(TOP)/tests/msbuild/Xamarin.MacDev.Tests/bin/Debug/net472/Xamarin.MacDev.Tests.dll) "--result=$(abspath $(CURDIR)/TestResults_Xamarin.MacDev.Tests.xml);format=nunit2" -labels=After $(TEST_FIXTURE)
 
+test-macdev-tasks: export MSBUILD_EXE_PATH=
 test-macdev-tasks: verify-system-vsmac-xcode-match
-	$(SYSTEM_MSBUILD) "/bl:$@.binlog" $(TOP)/tests/msbuild/Xamarin.MacDev.Tasks.Tests/Xamarin.MacDev.Tasks.Tests.csproj /p:Configuration=Debug /r  $(MSBUILD_VERBOSITY)
+	$(Q) $(DOTNET) build "/bl:$@.binlog" $(TOP)/tests/msbuild/Xamarin.MacDev.Tasks.Tests/Xamarin.MacDev.Tasks.Tests.csproj /p:Configuration=Debug $(DOTNET_BUILD_VERBOSITY)
 	cd $(TOP)/tests/msbuild/Xamarin.MacDev.Tasks.Tests && $(SYSTEM_XIBUILD) -t -- $(abspath $(TOP)/tools/nunit3-console-3.11.1) $(abspath $(TOP)/tests/msbuild/Xamarin.MacDev.Tasks.Tests/bin/Debug/net472/Xamarin.MacDev.Tasks.Tests.dll) "--result=$(abspath $(CURDIR)/TestResults_Xamarin.MacDev.Tasks.Tests.xml)" -labels=After $(TEST_FIXTURE)
 
 test-install-sources:
@@ -214,11 +229,12 @@ test-install-sources:
 	@[[ -z "$$BUILD_REPOSITORY" ]] || ( xsltproc $(TOP)/tests/HtmlTransform.xslt $(NUNIT_MSBUILD_DIR)/TestResults_InstallSourcesTests.xml > $(TOP)/tests/index.html && echo "@MonkeyWrench: AddFile: $$PWD/index.html" )
 	@if test -e $(NUNIT_MSBUILD_DIR)/.failed-stamp; then rm $(NUNIT_MSBUILD_DIR)/.failed-stamp; exit 1; fi
 
-ifdef INCLUDE_MAC
 mac-test-package.zip:
+ifdef INCLUDE_MAC
+	./package-mac-tests.sh
+else ifdef INCLUDE_MACCATALYST
 	./package-mac-tests.sh
 else
-mac-test-package.zip:
 	@echo Not enabled
 endif
 
@@ -310,9 +326,9 @@ wrench-bcl-sim-%:
 wrench-%:
 	@echo Not here anymore
 
-wrench-jenkins: xharness/xharness.exe
+wrench-jenkins: $(XHARNESS_EXECUTABLE)
 	$(Q) rm -f $@-failed.stamp
-	$(Q) ulimit -n 4096 && $(SYSTEM_MONO) --trace=E:all --debug $(CURDIR)/$< $(XHARNESS_VERBOSITY) --jenkins --autoconf --rootdir $(CURDIR) --sdkroot $(XCODE_DEVELOPER_ROOT) --label run-all-tests,skip-device-tests --markdown-summary=$(abspath $(CURDIR))/TestSummary.md $(TESTS_PERIODIC_COMMAND) --use-system=true || echo "$$?" > $@-failed.stamp
+	$(Q) ulimit -n 4096 && $(DOTNET) $< $(XHARNESS_VERBOSITY) --jenkins --autoconf --rootdir $(CURDIR) --sdkroot $(XCODE_DEVELOPER_ROOT) --label run-all-tests,skip-device-tests --markdown-summary=$(abspath $(CURDIR))/TestSummary.md $(TESTS_PERIODIC_COMMAND) --use-system=true || echo "$$?" > $@-failed.stamp
 	@echo "@MonkeyWrench: SetSummary: <br/>`cat $(abspath $(CURDIR))/TestSummary.md | awk 1 ORS='<br/>'`"
 	@echo "@MonkeyWrench: AddFile: $(abspath $(CURDIR))/TestSummary.md"
 	$(Q) if test -e $@-failed.stamp; then EC=`cat $@-failed.stamp`; rm -f $@-failed.stamp; exit $$EC; fi
@@ -320,19 +336,19 @@ wrench-jenkins: xharness/xharness.exe
 wrench-xtro:
 	@echo Not here anymore
 
-jenkins: xharness/xharness.exe
-	$(Q) $(SYSTEM_MONO) --trace=E:all,-E:System.Reflection.ReflectionTypeLoadException --debug $(CURDIR)/$< $(XHARNESS_VERBOSITY) --jenkins --autoconf --rootdir $(CURDIR) --sdkroot $(XCODE_DEVELOPER_ROOT) --markdown-summary=$(abspath $(CURDIR))/TestSummary.md --use-system=true $(TESTS_EXTRA_ARGUMENTS) $(TESTS_PERIODIC_COMMAND)
+jenkins: $(XHARNESS_EXECUTABLE)
+	$(Q) $(DOTNET) $< $(XHARNESS_VERBOSITY) --jenkins --autoconf --rootdir $(CURDIR) --sdkroot $(XCODE_DEVELOPER_ROOT) --markdown-summary=$(abspath $(CURDIR))/TestSummary.md --use-system=true $(TESTS_EXTRA_ARGUMENTS) $(TESTS_PERIODIC_COMMAND)
 
 # This will launch xharness' interactive test runner in the system's default browser
-runner: xharness/xharness.exe
+runner: $(XHARNESS_EXECUTABLE)
 	@echo "Running xharness in server mode. Press Ctrl-C to exit (or click Quit / press Q in the browser page)"
-	$(Q) $(SYSTEM_MONO) $(CURDIR)/xharness/xharness.exe $(XHARNESS_VERBOSITY) --jenkins:server --autoconf --rootdir $(CURDIR) --sdkroot $(XCODE_DEVELOPER_ROOT)
+	$(Q) $(DOTNET) $< $(XHARNESS_VERBOSITY) --jenkins:server --autoconf --rootdir $(CURDIR) --sdkroot $(XCODE_DEVELOPER_ROOT)
 
 # This makefile target will run the device tests using the Xamarin.iOS version
 # installed on the system.
-vsts-device-tests: xharness/xharness.exe
+vsts-device-tests: $(XHARNESS_EXECUTABLE)
 	$(MAKE) -C $(TOP)/builds .stamp-mono-ios-sdk-destdir download -j
-	$(Q) ulimit -n 4096 && $(SYSTEM_MONO) --debug $(CURDIR)/$< $(XHARNESS_VERBOSITY) --jenkins --autoconf --rootdir $(CURDIR) --sdkroot $(XCODE_DEVELOPER_ROOT) --use-system:true --label=skip-all-tests,run-device-tests,run-bcl-tests --markdown-summary=$(CURDIR)/TestSummary.md $(TESTS_EXTRA_ARGUMENTS) $(TESTS_PERIODIC_COMMAND)
+	$(Q) ulimit -n 4096 && $(DOTNET) $< $(XHARNESS_VERBOSITY) --jenkins --autoconf --rootdir $(CURDIR) --sdkroot $(XCODE_DEVELOPER_ROOT) --use-system:true --label=skip-all-tests,run-device-tests --markdown-summary=$(CURDIR)/TestSummary.md $(TESTS_EXTRA_ARGUMENTS) $(TESTS_PERIODIC_COMMAND)
 
 verify-system-vsmac-xcode-match:
 	@SYSTEM_XCODE=$$(dirname $$(dirname $$(xcode-select -p))); \
@@ -340,8 +356,20 @@ verify-system-vsmac-xcode-match:
 	if [[ "$$SYSTEM_XCODE" != "$$VSMAC_XCODE" ]]; then echo "Error: the system's Xcode ($$SYSTEM_XCODE) does not match the Xcode selected in Visual Studio for Mac ($$VSMAC_XCODE). This will make tests fail in non-trivial ways, so please make sure both match the expected Xcode ($(shell dirname $(shell dirname $(XCODE_DEVELOPER_ROOT))))."; exit 1; fi
 
 package-test-libraries.zip:
-	$(Q) @$(MAKE) all -C test-libraries
-	$(Q) mkdir -p $@.tmpdir
-	$(Q) $(CP) -a test-libraries/*  $@.tmpdir
-	$(Q_GEN) cd $@.tmpdir && zip -9r --symlinks $(abspath $@) .
-	$(Q) rm -rf $@.tmpdir
+	$(Q) $(MAKE) all -C test-libraries
+	$(Q) $(MAKE) all -C test-libraries/custom-type-assembly build-assembly
+	$(Q_GEN) rm -f "$@" "$@.tmp"
+	$(Q_GEN) cd $(TOP) && zip -9r --symlinks $(abspath $@).tmp ./tests/test-libraries
+	$(Q_GEN) cd $(TOP) && zip -9r --symlinks $(abspath $@).tmp ./tests/mono-native/macOS/unified ./tests/mono-native/macOS/compat
+	$(Q_GEN) cd $(TOP) && zip -9r --symlinks $(abspath $@).tmp ./tests/mono-native/iOS/unified ./tests/mono-native/iOS/compat
+	$(Q_GEN) cd $(TOP) && zip -9r --symlinks $(abspath $@).tmp ./tests/bcl-test/generated ./tests/bcl-test/templates
+	$(Q_GEN) cd $(TOP) && find tests -regex '.*/generated-projects/.*[c|f]sproj' -exec zip -9r --symlinks $(abspath $@).tmp {} +
+	$(Q_GEN) cd $(TOP) && find tests -regex '.*/generated-projects/.*sln' -exec zip -9r --symlinks $(abspath $@).tmp {} +
+	$(Q_GEN) cd $(TOP) && find tests -regex 'tests/test-libraries/custom-type-assembly/.libs/.*dll' -exec zip -9r --symlinks $(abspath $@).tmp {} +
+	$(Q_GEN) cd $(TOP) && git ls-files -o -- 'tests/*/Info-*plist' | zip -9r --symlinks $(abspath $@).tmp -@
+ifdef INCLUDE_XAMARIN_LEGACY
+ifdef INCLUDE_IOS
+	$(Q_GEN) cd $(TOP) && zip -9r --symlinks $(abspath $@).tmp ./tools/mtouch/simlauncher*-sgen*
+endif
+endif
+	$(Q) mv "$@".tmp "$@"

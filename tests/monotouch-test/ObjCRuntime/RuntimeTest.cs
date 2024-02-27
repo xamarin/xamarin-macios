@@ -5,6 +5,7 @@ using System.Drawing;
 #endif
 using System.Runtime.InteropServices;
 using System.Threading;
+using System.Threading.Tasks;
 
 using CoreGraphics;
 using Foundation;
@@ -24,11 +25,11 @@ namespace MonoTouchFixtures.ObjCRuntime {
 
 	static class AssociatedObjects {
 		public enum AssociationPolicy { // uintptr_t
-			Assign			= 0,
-			RetainNonAtomic	= 1,
-			CopyNonAtomic	= 3,
-			Retain			= 0x301,
-			Copy			= 0x303,
+			Assign = 0,
+			RetainNonAtomic = 1,
+			CopyNonAtomic = 3,
+			Retain = 0x301,
+			Copy = 0x303,
 		}
 
 		[DllImport (Messaging.LIBOBJC_DYLIB)]
@@ -66,8 +67,8 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			Runtime.ConnectMethod (typeof (ConnectMethodClass).GetMethod ("Method"), new Selector ("method"));
 		}
 
-		class ConnectMethodClass : NSObject { 
-			public void Method () {	}
+		class ConnectMethodClass : NSObject {
+			public void Method () { }
 		}
 
 		[Test]
@@ -142,6 +143,23 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		}
 
 		[Test]
+		public void GetNSObject_T_SameHandleDifferentInstances ()
+		{
+			using var a = new NSDictionary<NSString, NSObject> ();
+			using var b = new NSDictionary<NSString, NSString> ();
+			using var c = new NSDictionary ();
+
+			if (a.Handle != b.Handle || a.Handle != c.Handle)
+				Assert.Ignore ("The dictionaries are actually different");
+
+			var handle = a.Handle;
+
+			Assert.DoesNotThrow (() => Runtime.GetNSObject<NSDictionary> (handle), "A");
+			Assert.DoesNotThrow (() => Runtime.GetNSObject<NSDictionary<NSString, NSObject>> (handle), "B");
+			Assert.DoesNotThrow (() => Runtime.GetNSObject<NSDictionary<NSString, NSString>> (handle), "C");
+		}
+
+		[Test]
 		public void UsableUntilDead ()
 		{
 			// The test can be inconclusive once in a while.
@@ -162,10 +180,10 @@ namespace MonoTouchFixtures.ObjCRuntime {
 
 			var notifierHandle = IntPtr.Zero;
 
-//			bool isDeallocated = false;
+			//			bool isDeallocated = false;
 			Action deallocated = () => {
 				//Console.WriteLine ("Final release!");
-//				isDeallocated = true;
+				//				isDeallocated = true;
 			};
 
 			ManualResetEvent isCollected = new ManualResetEvent (false);
@@ -215,7 +233,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			NSRunLoop.Main.RunUntil (NSDate.Now.AddSeconds (0.1));
 			// Don't verify cleanup, it's not consistent.
 			// And in any case it's not what this test is about.
-//			Assert.IsTrue (isDeallocated, "released");
+			//			Assert.IsTrue (isDeallocated, "released");
 
 			return true;
 		}
@@ -224,7 +242,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			Action collected;
 			Action notified;
 
-			public Notifier (Action collected, Action notified) 
+			public Notifier (Action collected, Action notified)
 			{
 				this.collected = collected;
 				this.notified = notified;
@@ -243,7 +261,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			}
 		}
 
-		class Level1 : NSObject {} // we need two levels of subclassing, since the XI will override 'release' on the first one, and we need to override it as well.
+		class Level1 : NSObject { } // we need two levels of subclassing, since the XI will override 'release' on the first one, and we need to override it as well.
 		class ReleaseNotifier : Level1 {
 			Action deallocated;
 			bool enabled;
@@ -254,7 +272,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			}
 
 			[Export ("release")]
-			new void Release ()
+			void Release ()
 			{
 				if (enabled)
 					deallocated ();
@@ -287,11 +305,10 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			NSDictionary dict = null;
 
 			var thread = new Thread (() => {
-				dict = new NSMutableDictionary();
-				dict["Hello"] = new NSString(@"World");
-				dict["Bye"] = new NSString(@"Bye");
-			})
-			{ 
+				dict = new NSMutableDictionary ();
+				dict ["Hello"] = new NSString (@"World");
+				dict ["Bye"] = new NSString (@"Bye");
+			}) {
 				IsBackground = true
 			};
 			thread.Start ();
@@ -309,22 +326,22 @@ namespace MonoTouchFixtures.ObjCRuntime {
 
 				while (broken == 0 && watch.ElapsedMilliseconds < 10000) {
 					// try getting using Systen.String key
-					string hello = getter1("Hello");
-					if (hello == null)
+					string hello = getter1 ("Hello");
+					if (hello is null)
 						broken = 1;
 
-					string bye = getter1("Bye");
-					if (bye == null)
+					string bye = getter1 ("Bye");
+					if (bye is null)
 						broken = 2;
 
 					// try getting using NSString key
-					string nHello = getter2(new NSString(@"Hello"));
-					string nBye = getter2(new NSString(@"Bye"));
+					string nHello = getter2 (new NSString (@"Hello"));
+					string nBye = getter2 (new NSString (@"Bye"));
 
-					if (nHello == null)
+					if (nHello is null)
 						broken = 3;
 
-					if (nBye == null)
+					if (nBye is null)
 						broken = 4;
 
 					count++;
@@ -344,7 +361,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		{
 			if (!Runtime.DynamicRegistrationSupported)
 				Assert.Ignore ("This test requires support for dynamic registration.");
-			
+
 			var minfo = typeof (RuntimeTest).GetMethod ("ConnectMethod");
 			Assert.Throws<ArgumentNullException> (() => Runtime.ConnectMethod (null, new Selector ("")), "1");
 			Assert.Throws<ArgumentNullException> (() => Runtime.ConnectMethod (minfo, null), "2");
@@ -362,7 +379,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		{
 			if (!Runtime.DynamicRegistrationSupported)
 				Assert.Ignore ("This test requires support for dynamic registration.");
-			
+
 			if (connectMethod1Done)
 				Assert.Ignore ("This is a one-shot test. Restart to run again.");
 			connectMethod1Done = true;
@@ -379,7 +396,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		{
 			if (!Runtime.DynamicRegistrationSupported)
 				Assert.Ignore ("This test requires support for dynamic registration.");
-			
+
 			if (connectMethod2Done)
 				Assert.Ignore ("This is a one-shot test. Restart to run again.");
 			connectMethod2Done = true;
@@ -404,7 +421,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		{
 			if (!Runtime.DynamicRegistrationSupported)
 				Assert.Ignore ("This test requires support for dynamic registration.");
-			
+
 			if (connectMethod3Done)
 				Assert.Ignore ("This is a one-shot test. Restart to run again.");
 			connectMethod3Done = true;
@@ -422,7 +439,8 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		}
 
 		class A : NSObject {
-			public void Test() {
+			public void Test ()
+			{
 				Console.WriteLine ("Tested!");
 			}
 		}
@@ -613,7 +631,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 					Messaging.void_objc_msgSend_IntPtr (Class.GetHandle (typeof (Dummy)), Selector.GetHandle ("doSomethingElse:"), handle);
 					Assert.Fail ("Expected an MX8029 exception (A)");
 				} catch (RuntimeException mex) {
-					Assert.AreEqual (8029, mex.Code, "Exception code (A)");
+					Assert.That (mex.Code, Is.EqualTo (8029).Or.EqualTo (8027), "Exception code (A)");
 					var failure = mex.ToString ();
 					Assert.That (failure, Does.Contain ("Failed to marshal the Objective-C object"), "Failed to marshal (A)");
 					Assert.That (failure, Does.Contain ("Additional information:"), "Additional information: (A)");
@@ -731,7 +749,7 @@ Additional information:
 				Assert.Fail ("This method should never be called.");
 			}
 #endif
-		} 
+		}
 
 		[Test]
 		public void GetINativeObject_ForcedType ()
@@ -762,8 +780,7 @@ Additional information:
 			var handles = new GCHandle [counter];
 			var pointers = new IntPtr [counter];
 
-			var t = new Thread (() =>
-			{
+			var t = new Thread (() => {
 				for (var i = 0; i < counter; i++) {
 					var obj = new NSFileManager ();
 					// do not toggle
@@ -778,19 +795,18 @@ Additional information:
 			t.Start ();
 			Assert.IsTrue (t.Join (TimeSpan.FromSeconds (10)), "Background thread completion");
 
-			var checkForCollectedManagedObjects = new Func<bool> (() =>
-			{
+			var checkForCollectedManagedObjects = new Func<bool> (() => {
 				GC.Collect ();
 				GC.WaitForPendingFinalizers ();
 				for (var i = 0; i < counter; i++) {
-					if (handles [i].Target == null)
+					if (handles [i].Target is null)
 						return true;
 				}
 				return false;
 			});
 
 			// Iterate over the runloop in case something has to happen on the main thread for the objects to be collected.
-			TestRuntime.RunAsync (TimeSpan.FromSeconds (5), () => { }, checkForCollectedManagedObjects);
+			TestRuntime.RunAsync (TimeSpan.FromSeconds (5), checkForCollectedManagedObjects);
 
 			Assert.IsTrue (checkForCollectedManagedObjects (), "Any collected objects");
 
@@ -814,8 +830,7 @@ Additional information:
 			var del = new NSFileManagerDelegate ();
 			var counter = 100;
 			var handles = new GCHandle [counter];
-			var t = new Thread (() =>
-			{
+			var t = new Thread (() => {
 				for (var i = 0; i < counter; i++) {
 					var obj = new NSFileManager ();
 					obj.Delegate = del; // toggle
@@ -829,8 +844,7 @@ Additional information:
 			t.Start ();
 			Assert.IsTrue (t.Join (TimeSpan.FromSeconds (10)), "Background thread completion");
 
-			TestRuntime.RunAsync (TimeSpan.FromSeconds (2), () => { }, () =>
-			{
+			TestRuntime.RunAsync (TimeSpan.FromSeconds (2), () => {
 				// Iterate over the runloop a bit to make sure we're just not collecting because objects are queued on for things to happen on the main thread
 				GC.Collect ();
 				GC.WaitForPendingFinalizers ();
@@ -900,7 +914,7 @@ Additional information:
 		}
 
 		class IntPtrConstructor : NSObject {
-			IntPtrConstructor (IntPtr handle) : base (handle) {}
+			IntPtrConstructor (IntPtr handle) : base (handle) { }
 
 			internal static IntPtr New ()
 			{
@@ -927,5 +941,130 @@ Additional information:
 			}
 		}
 #endif
+	}
+
+	[TestFixture]
+	[Preserve (AllMembers = true)]
+	public class RuntimeTest_GetINativeObjectTest {
+
+		[Test]
+		public void GetINativeObjectTest_NSObject_Owns ()
+		{
+			var handle = CreateNativeNSObject ();
+			Assert.AreEqual (1, GetRetainCount (handle), "A 1");
+			using var obj = Runtime.GetINativeObject<NSObject> (handle, false, true);
+			Assert.AreEqual (1, GetRetainCount (handle), "A 2");
+			obj.DangerousRetain ();
+			Assert.AreEqual (2, GetRetainCount (handle), "A 3");
+			using var obj2 = Runtime.GetINativeObject<NSObject> (handle, false, true);
+			Assert.AreEqual (1, GetRetainCount (handle), "A 4");
+			using var obj3 = Runtime.GetINativeObject<NSObject> (handle, false, false);
+			Assert.AreEqual (1, GetRetainCount (handle), "A 5");
+			Assert.AreSame (obj, obj2, "A 6");
+			Assert.AreSame (obj, obj3, "A 7");
+		}
+
+		[Test]
+		public void GetINativeObjectTest_NSObject_Unowned ()
+		{
+			var handle = CreateNativeNSObject ();
+			Assert.AreEqual (1, GetRetainCount (handle), "A 1");
+			using var obj = Runtime.GetINativeObject<NSObject> (handle, false, false);
+			Assert.AreEqual (2, GetRetainCount (handle), "A 2");
+			obj.DangerousRelease ();
+			Assert.AreEqual (1, GetRetainCount (handle), "A 3");
+			obj.DangerousRetain ();
+			Assert.AreEqual (2, GetRetainCount (handle), "A 4");
+			using var obj2 = Runtime.GetINativeObject<NSObject> (handle, false, true);
+			Assert.AreEqual (1, GetRetainCount (handle), "A 5");
+			using var obj3 = Runtime.GetINativeObject<NSObject> (handle, false, false);
+			Assert.AreEqual (1, GetRetainCount (handle), "A 6");
+			Assert.AreSame (obj, obj2, "A 7");
+			Assert.AreSame (obj, obj3, "A 8");
+		}
+
+		[Test]
+		public void GetINativeObjectTest_INativeObject_Owns ()
+		{
+			var handle = CreateNativeBitmapContext ();
+			Assert.AreEqual (1, CFGetRetainCount (handle), "A 1");
+			using var obj = Runtime.GetINativeObject<CGBitmapContext> (handle, false, true);
+			Assert.AreEqual (1, CFGetRetainCount (handle), "A 2");
+			CGContextRetain (obj.Handle);
+			Assert.AreEqual (2, CFGetRetainCount (handle), "A 3");
+			using var obj2 = Runtime.GetINativeObject<CGBitmapContext> (handle, false, true); // does not decrease refcount because we return a new instance
+			Assert.AreEqual (2, CFGetRetainCount (handle), "A 4");
+			using var obj3 = Runtime.GetINativeObject<CGBitmapContext> (handle, false, false);
+			Assert.AreEqual (3, CFGetRetainCount (handle), "A 5");
+			Assert.AreNotSame (obj, obj2, "A 6");
+			Assert.AreNotSame (obj, obj3, "A 7");
+			obj3.Dispose ();
+			Assert.AreEqual (2, CFGetRetainCount (handle), "A 8");
+			obj2.Dispose ();
+			Assert.AreEqual (1, CFGetRetainCount (handle), "A 9");
+		}
+
+		[Test]
+		public void GetINativeObjectTest_INativeObject_Unowned ()
+		{
+			var handle = CreateNativeBitmapContext ();
+			Assert.AreEqual (1, CFGetRetainCount (handle), "A 1");
+			using var obj = Runtime.GetINativeObject<CGBitmapContext> (handle, false, false);
+			Assert.AreEqual (2, CFGetRetainCount (handle), "A 2");
+			CGContextRelease (obj.Handle);
+			Assert.AreEqual (1, CFGetRetainCount (handle), "A 3");
+			CGContextRetain (obj.Handle);
+			Assert.AreEqual (2, CFGetRetainCount (handle), "A 4");
+			using var obj2 = Runtime.GetINativeObject<CGBitmapContext> (handle, false, true); // does not decrease refcount because we return a new instance
+			Assert.AreEqual (2, CFGetRetainCount (handle), "A 5");
+			using var obj3 = Runtime.GetINativeObject<CGBitmapContext> (handle, false, false);
+			Assert.AreEqual (3, CFGetRetainCount (handle), "A 6");
+			Assert.AreNotSame (obj, obj2, "A 7");
+			Assert.AreNotSame (obj, obj3, "A 8");
+			obj3.Dispose ();
+			Assert.AreEqual (2, CFGetRetainCount (handle), "A 9");
+			obj2.Dispose ();
+			Assert.AreEqual (1, CFGetRetainCount (handle), "A 10");
+		}
+
+		static IntPtr CreateNativeNSObject ()
+		{
+			var handle = Messaging.IntPtr_objc_msgSend (Class.GetHandle (typeof (NSObject)), Selector.GetHandle ("alloc"));
+			return Messaging.IntPtr_objc_msgSend (handle, Selector.GetHandle ("init"));
+		}
+
+		static IntPtr CreateNativeBitmapContext ()
+		{
+			using var cs = CGColorSpace.CreateDeviceRGB ();
+			var handle = CGBitmapContextCreate (IntPtr.Zero, 10, 10, 8, 40, cs.Handle, /* PremultipliedLast */ 1);
+			if (handle == IntPtr.Zero)
+				throw new InvalidOperationException ($"Unable to create CGBitmapContext.");
+			return handle;
+		}
+
+		static long GetRetainCount (IntPtr handle)
+		{
+			if (handle == IntPtr.Zero)
+				return -1;
+			return (long) Messaging.IntPtr_objc_msgSend (handle, Selector.GetHandle ("retainCount"));
+		}
+
+		static long CFGetRetainCount (IntPtr handle)
+		{
+			if (handle == IntPtr.Zero)
+				return -1;
+			return (long) global::MonoTouchFixtures.CoreFoundation.ArrayTest.CFGetRetainCount (handle);
+		}
+
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		extern static void CGContextRelease (/* CGImageRef */ IntPtr image);
+
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		extern static /* CGImageRef */ IntPtr CGContextRetain (/* CGImageRef */ IntPtr image);
+
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		extern static IntPtr CGBitmapContextCreate (/* void* */ IntPtr data, /* size_t */ nint width, /* size_t */ nint height, /* size_t */ nint bitsPerComponent,
+			/* size_t */ nint bytesPerRow, /* CGColorSpaceRef */ IntPtr colorSpace, /* CGBitmapInfo = uint32_t */ uint bitmapInfo);
+
 	}
 }

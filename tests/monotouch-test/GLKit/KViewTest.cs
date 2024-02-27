@@ -10,11 +10,11 @@ using GLKit;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.GLKit {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class KViewTest {
-		
+
 		[Test]
 		public void InitWithFrame ()
 		{

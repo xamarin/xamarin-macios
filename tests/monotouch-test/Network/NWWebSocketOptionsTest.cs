@@ -37,14 +37,14 @@ namespace MonoTouchFixtures.Network {
 				using (var otherOptions = new NWWebSocketOptions (NWWebSocketVersion.Invalid))
 					Assert.AreNotEqual (IntPtr.Zero, otherOptions.Handle);
 			});
-  		}
+		}
 
 		[Test]
 		public void TestSetHeader () => Assert.DoesNotThrow (() => options.SetHeader ("CustomHeader", "hola"));
 
 		[Test]
 		public void TestSetHeaderNullName () => Assert.Throws<ArgumentNullException> (() => options.SetHeader (null, "hola"));
-		
+
 
 		[Test]
 		public void TestSetHeaderNullValue () => Assert.DoesNotThrow (() => options.SetHeader ("CustomHeader", null));

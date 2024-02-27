@@ -56,8 +56,7 @@ namespace CoreGraphics {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #endif
-	public class CGImageProperties : DictionaryContainer
-	{
+	public class CGImageProperties : DictionaryContainer {
 #if !COREBUILD
 
 		public CGImageProperties ()
@@ -90,7 +89,7 @@ namespace CoreGraphics {
 					return CGImageColorModel.CMYK;
 				if (v == Keys.ColorModelLab)
 					return CGImageColorModel.Lab;
-				return null;					
+				return null;
 			}
 			set {
 				NSString key;
@@ -172,7 +171,7 @@ namespace CoreGraphics {
 #if !WATCH
 		public CIImageOrientation? Orientation {
 			get {
-				return (CIImageOrientation?)GetInt32Value (Keys.Orientation);
+				return (CIImageOrientation?) GetInt32Value (Keys.Orientation);
 			}
 			set {
 				SetNumberValue (Keys.Orientation, (int?) value);
@@ -259,8 +258,7 @@ namespace CoreGraphics {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #endif
-	public class CGImagePropertiesExif : DictionaryContainer
-	{
+	public class CGImagePropertiesExif : DictionaryContainer {
 		public CGImagePropertiesExif ()
 			: base (new NSMutableDictionary ())
 		{
@@ -323,7 +321,7 @@ namespace CoreGraphics {
 			set {
 				SetNumberValue (Keys.ExifExposureIndex, value);
 			}
-		}		
+		}
 
 		public float? ExposureTime {
 			get {
@@ -388,7 +386,7 @@ namespace CoreGraphics {
 			}
 		}
 
-		public int[]? ISOSpeedRatings {
+		public int []? ISOSpeedRatings {
 			get {
 				return GetArray (Keys.ExifISOSpeedRatings, l => new NSNumber (l).Int32Value);
 			}
@@ -448,8 +446,7 @@ namespace CoreGraphics {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #endif
-	public class CGImagePropertiesTiff : DictionaryContainer
-	{
+	public class CGImagePropertiesTiff : DictionaryContainer {
 		public CGImagePropertiesTiff ()
 			: base (new NSMutableDictionary ())
 		{
@@ -463,7 +460,7 @@ namespace CoreGraphics {
 #if !WATCH
 		public CIImageOrientation? Orientation {
 			get {
-				return (CIImageOrientation?)GetInt32Value (Keys.TIFFOrientation);
+				return (CIImageOrientation?) GetInt32Value (Keys.TIFFOrientation);
 			}
 			set {
 				SetNumberValue (Keys.TIFFOrientation, (int?) value);
@@ -507,8 +504,7 @@ namespace CoreGraphics {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #endif
-	public class CGImagePropertiesJfif : DictionaryContainer
-	{
+	public class CGImagePropertiesJfif : DictionaryContainer {
 		public CGImagePropertiesJfif ()
 			: base (new NSMutableDictionary ())
 		{
@@ -546,8 +542,7 @@ namespace CoreGraphics {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #endif
-	public class CGImagePropertiesPng : DictionaryContainer
-	{
+	public class CGImagePropertiesPng : DictionaryContainer {
 		public CGImagePropertiesPng ()
 			: base (new NSMutableDictionary ())
 		{
@@ -630,8 +625,7 @@ namespace CoreGraphics {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #endif
-	public class CGImagePropertiesGps : DictionaryContainer
-	{
+	public class CGImagePropertiesGps : DictionaryContainer {
 		public CGImagePropertiesGps ()
 			: base (new NSMutableDictionary ())
 		{
@@ -660,12 +654,30 @@ namespace CoreGraphics {
 			}
 		}
 
+		public string? LatitudeRef {
+			get {
+				return GetStringValue (Keys.GPSLatitudeRef);
+			}
+			set {
+				SetStringValue (Keys.GPSLatitudeRef, value);
+			}
+		}
+
 		public float? Longitude {
 			get {
 				return GetFloatValue (Keys.GPSLongitude);
 			}
 			set {
 				SetNumberValue (Keys.GPSLongitude, value);
+			}
+		}
+
+		public string? LongitudeRef {
+			get {
+				return GetStringValue (Keys.GPSLongitudeRef);
+			}
+			set {
+				SetStringValue (Keys.GPSLongitudeRef, value);
 			}
 		}
 
@@ -679,8 +691,7 @@ namespace CoreGraphics {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #endif
-	public class CGImagePropertiesIptc : DictionaryContainer
-	{
+	public class CGImagePropertiesIptc : DictionaryContainer {
 		public CGImagePropertiesIptc ()
 			: base (new NSMutableDictionary ())
 		{
@@ -726,7 +737,7 @@ namespace CoreGraphics {
 				SetStringValue (Keys.IPTCCity, value);
 			}
 		}
-		
+
 		public string? ContentLocationName {
 			get {
 				return GetStringValue (Keys.IPTCContentLocationName);

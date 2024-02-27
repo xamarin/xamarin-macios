@@ -8,9 +8,9 @@ using AppKit;
 using ObjCRuntime;
 
 namespace Xamarin.Mac.Linker.Test {
-	
+
 	class SystemMono {
-		static void Main (string[] args)
+		static void Main (string [] args)
 		{
 			NSApplication.Init ();
 

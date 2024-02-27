@@ -26,10 +26,14 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 //
+using CoreFoundation;
 using ObjCRuntime;
+
 using System;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
+
+#nullable enable
 
 namespace Foundation {
 
@@ -56,16 +60,16 @@ namespace Foundation {
 	public class NSFileAttributes {
 		public bool? AppendOnly { get; set; }
 		public bool? Busy { get; set; }
-		public bool? ExtensionHidden { get ; set; }
-		public NSDate CreationDate { get; set; }
-		public string OwnerAccountName { get; set; }
-		public string GroupOwnerAccountName { get; set; }
+		public bool? ExtensionHidden { get; set; }
+		public NSDate? CreationDate { get; set; }
+		public string? OwnerAccountName { get; set; }
+		public string? GroupOwnerAccountName { get; set; }
 		public nint? SystemNumber { get; set; } // NSInteger
 		public nuint? DeviceIdentifier { get; set; } // unsigned long
-		public nuint? GroupOwnerAccountID { get ; set; } // unsigned long
+		public nuint? GroupOwnerAccountID { get; set; } // unsigned long
 
 		public bool? Immutable { get; set; }
-		public NSDate ModificationDate { get; set; }
+		public NSDate? ModificationDate { get; set; }
 		public nuint? OwnerAccountID { get; set; } // unsigned long
 		public nuint? HfsCreatorCode { get; set; }
 		public nuint? HfsTypeCode { get; set; } // unsigned long
@@ -75,7 +79,7 @@ namespace Foundation {
 		public nuint? SystemFileNumber { get; set; } // unsigned long
 		public ulong? Size { get; set; } // unsigned long long
 		public NSFileType? Type { get; set; }
-				
+
 #if !MONOMAC
 		public NSFileProtection? ProtectionKey { get; set; }
 #endif
@@ -83,7 +87,7 @@ namespace Foundation {
 		internal NSDictionary ToDictionary ()
 		{
 			NSFileType? type;
-			NSString v = null;
+			NSString? v = null;
 			var dict = new NSMutableDictionary ();
 			if (AppendOnly.HasValue)
 				dict.SetObject (NSNumber.FromBoolean (AppendOnly.Value), NSFileManager.AppendOnly);
@@ -91,11 +95,11 @@ namespace Foundation {
 				dict.SetObject (NSNumber.FromBoolean (Busy.Value), NSFileManager.Busy);
 			if (ExtensionHidden.HasValue)
 				dict.SetObject (NSNumber.FromBoolean (ExtensionHidden.Value), NSFileManager.ExtensionHidden);
-			if (CreationDate != null)
+			if (CreationDate is not null)
 				dict.SetObject (CreationDate, NSFileManager.CreationDate);
-			if (OwnerAccountName != null)
+			if (OwnerAccountName is not null)
 				dict.SetObject (new NSString (OwnerAccountName), NSFileManager.OwnerAccountName);
-			if (GroupOwnerAccountName != null)
+			if (GroupOwnerAccountName is not null)
 				dict.SetObject (new NSString (GroupOwnerAccountName), NSFileManager.GroupOwnerAccountName);
 			if (SystemNumber.HasValue)
 				dict.SetObject (NSNumber.FromLong (SystemNumber.Value), NSFileManager.SystemNumber);
@@ -105,7 +109,7 @@ namespace Foundation {
 				dict.SetObject (NSNumber.FromUnsignedLong (GroupOwnerAccountID.Value), NSFileManager.GroupOwnerAccountID);
 			if (Immutable.HasValue)
 				dict.SetObject (NSNumber.FromBoolean (Immutable.Value), NSFileManager.Immutable);
-			if (ModificationDate != null)
+			if (ModificationDate is not null)
 				dict.SetObject (ModificationDate, NSFileManager.ModificationDate);
 			if (OwnerAccountID.HasValue)
 				dict.SetObject (NSNumber.FromUnsignedLong (OwnerAccountID.Value), NSFileManager.OwnerAccountID);
@@ -126,7 +130,7 @@ namespace Foundation {
 
 			if (type.HasValue) {
 				v = null;
-				switch (type.Value){
+				switch (type.Value) {
 				case NSFileType.Directory:
 					v = NSFileManager.TypeDirectory; break;
 				case NSFileType.Regular:
@@ -158,25 +162,26 @@ namespace Foundation {
 				case NSFileProtection.CompleteUntilFirstUserAuthentication:
 					v = NSFileManager.FileProtectionCompleteUntilFirstUserAuthentication; break;
 				}
-				dict.SetObject (v, NSFileManager.FileProtectionKey);
+				if (v is not null)
+					dict.SetObject (v, NSFileManager.FileProtectionKey);
 			}
 #endif
 			return dict;
 		}
 
-#region fetch
+		#region fetch
 		internal static bool? fetch_bool (NSDictionary dict, NSString key)
 		{
 			var k = dict.ObjectForKey (key) as NSNumber;
-			if (k == null)
+			if (k is null)
 				return null;
 			return k.BoolValue;
 		}
-			
+
 		internal static uint? fetch_uint (NSDictionary dict, NSString key)
 		{
 			var k = dict.ObjectForKey (key) as NSNumber;
-			if (k == null)
+			if (k is null)
 				return null;
 			return k.UInt32Value;
 		}
@@ -184,7 +189,7 @@ namespace Foundation {
 		internal static nuint? fetch_nuint (NSDictionary dict, NSString key)
 		{
 			var k = dict.ObjectForKey (key) as NSNumber;
-			if (k == null)
+			if (k is null)
 				return null;
 			return k.UnsignedLongValue;
 		}
@@ -192,7 +197,7 @@ namespace Foundation {
 		internal static nint? fetch_nint (NSDictionary dict, NSString key)
 		{
 			var k = dict.ObjectForKey (key) as NSNumber;
-			if (k == null)
+			if (k is null)
 				return null;
 			return k.LongValue;
 		}
@@ -200,7 +205,7 @@ namespace Foundation {
 		internal static ulong? fetch_ulong (NSDictionary dict, NSString key)
 		{
 			var k = dict.ObjectForKey (key) as NSNumber;
-			if (k == null)
+			if (k is null)
 				return null;
 			return k.UInt64Value;
 		}
@@ -208,7 +213,7 @@ namespace Foundation {
 		internal static long? fetch_long (NSDictionary dict, NSString key)
 		{
 			var k = dict.ObjectForKey (key) as NSNumber;
-			if (k == null)
+			if (k is null)
 				return null;
 			return k.Int64Value;
 		}
@@ -216,15 +221,15 @@ namespace Foundation {
 		internal static short? fetch_short (NSDictionary dict, NSString key)
 		{
 			var k = dict.ObjectForKey (key) as NSNumber;
-			if (k == null)
+			if (k is null)
 				return null;
 			return k.Int16Value;
 		}
-#endregion
+		#endregion
 
-	public static NSFileAttributes FromDictionary (NSDictionary dict)
+		public static NSFileAttributes? FromDictionary (NSDictionary dict)
 		{
-			if (dict == null)
+			if (dict is null)
 				return null;
 			var ret = new NSFileAttributes ();
 
@@ -247,10 +252,8 @@ namespace Foundation {
 			ret.SystemFileNumber = fetch_nuint (dict, NSFileManager.SystemFileNumber);
 			ret.Size = fetch_ulong (dict, NSFileManager.Size);
 
-			NSString name;
-
-			name = dict.ObjectForKey (NSFileManager.NSFileType) as NSString;
-			if (name != null) {
+			var name = dict.ObjectForKey (NSFileManager.NSFileType) as NSString;
+			if (name is not null) {
 				NSFileType? type = null;
 
 				if (name == NSFileManager.TypeDirectory)
@@ -267,13 +270,13 @@ namespace Foundation {
 					type = NSFileType.BlockSpecial;
 				else if (name == NSFileManager.TypeUnknown)
 					type = NSFileType.Unknown;
-					
+
 				ret.Type = type;
 			}
-				
+
 #if !MONOMAC
 			name = dict.ObjectForKey (NSFileManager.FileProtectionKey) as NSString;
-			if (name != null) {
+			if (name is not null) {
 				NSFileProtection? protection = null;
 
 				if (name == NSFileManager.FileProtectionNone)
@@ -300,7 +303,7 @@ namespace Foundation {
 #endif
 	public class NSFileSystemAttributes {
 		NSDictionary dict;
-		
+
 		internal NSFileSystemAttributes (NSDictionary dict)
 		{
 			this.dict = dict;
@@ -314,16 +317,16 @@ namespace Foundation {
 		// "The value corresponds to the value of st_dev, as returned by stat(2)" => st_dev is defined to be int32_t in all architectures.
 		public uint Number { get; internal set; }
 
-		internal static NSFileSystemAttributes FromDictionary (NSDictionary dict)
+		internal static NSFileSystemAttributes? FromDictionary (NSDictionary dict)
 		{
-			if (dict == null)
+			if (dict is null)
 				return null;
 			var ret = new NSFileSystemAttributes (dict);
-			ret.Size      = NSFileAttributes.fetch_ulong (dict, NSFileManager.SystemSize) ?? 0;
-			ret.FreeSize  = NSFileAttributes.fetch_ulong (dict, NSFileManager.SystemFreeSize) ?? 0;
-			ret.Nodes     = NSFileAttributes.fetch_long (dict, NSFileManager.SystemNodes) ?? 0;
+			ret.Size = NSFileAttributes.fetch_ulong (dict, NSFileManager.SystemSize) ?? 0;
+			ret.FreeSize = NSFileAttributes.fetch_ulong (dict, NSFileManager.SystemFreeSize) ?? 0;
+			ret.Nodes = NSFileAttributes.fetch_long (dict, NSFileManager.SystemNodes) ?? 0;
 			ret.FreeNodes = NSFileAttributes.fetch_long (dict, NSFileManager.SystemFreeNodes) ?? 0;
-			ret.Number    = NSFileAttributes.fetch_uint (dict, NSFileManager.SystemFreeNodes) ?? 0;
+			ret.Number = NSFileAttributes.fetch_uint (dict, NSFileManager.SystemFreeNodes) ?? 0;
 
 			return ret;
 		}
@@ -333,121 +336,112 @@ namespace Foundation {
 		{
 			return attr.dict;
 		}
-		
-	}		
+
+	}
 
 	public partial class NSFileManager {
 
 		[DllImport (Constants.FoundationLibrary)]
 		static extern IntPtr NSUserName ();
 
-		public static string UserName {
+		public static string? UserName {
 			get {
-				using (var nsstring = ObjCRuntime.Runtime.GetNSObject<NSString> (NSUserName ()))
-					return nsstring.ToString ();
+				return CFString.FromHandle (NSUserName ());
 			}
 		}
 
 		[DllImport (Constants.FoundationLibrary)]
 		static extern IntPtr NSFullUserName ();
 
-		public static string FullUserName {
+		public static string? FullUserName {
 			get {
-				using (var nsstring = ObjCRuntime.Runtime.GetNSObject<NSString> (NSFullUserName ()))
-					return nsstring.ToString ();
+				return CFString.FromHandle (NSFullUserName ());
 			}
 		}
 
 		[DllImport (Constants.FoundationLibrary)]
 		static extern IntPtr NSHomeDirectory ();
 
-		public static string HomeDirectory {
+		public static string? HomeDirectory {
 			get {
-				using (var nsstring = ObjCRuntime.Runtime.GetNSObject<NSString> (NSHomeDirectory ()))
-					return nsstring.ToString ();
+				return CFString.FromHandle (NSHomeDirectory ());
 			}
 		}
 
 		[DllImport (Constants.FoundationLibrary)]
 		static extern IntPtr NSHomeDirectoryForUser (/* NSString */IntPtr userName);
 
-		public static string GetHomeDirectory (string userName) {
-			if (userName == null) 
+		public static string? GetHomeDirectory (string userName)
+		{
+			if (userName is null)
 				throw new ArgumentNullException (nameof (userName));
 
-			using (var nsstring = new NSString (userName))
-			using (var homeDir = ObjCRuntime.Runtime.GetNSObject<NSString> (NSHomeDirectoryForUser (nsstring.GetHandle ())))
-				return homeDir.ToString ();
+			var userNamePtr = CFString.CreateNative (userName);
+			var rv = CFString.FromHandle (NSHomeDirectoryForUser (userNamePtr));
+			CFString.ReleaseNative (userNamePtr);
+			return rv;
 		}
 
 		[DllImport (Constants.FoundationLibrary)]
 		static extern IntPtr NSTemporaryDirectory ();
 
-		public static string TemporaryDirectory {
+		public static string? TemporaryDirectory {
 			get {
-				using (var nsstring = ObjCRuntime.Runtime.GetNSObject<NSString> (NSTemporaryDirectory ()))
-					return nsstring.ToString ();
+				return CFString.FromHandle (NSTemporaryDirectory ());
 			}
 		}
 
 		public bool SetAttributes (NSFileAttributes attributes, string path, out NSError error)
 		{
-			if (attributes == null)
-				throw new ArgumentNullException ("attributes");
+			if (attributes is null)
+				throw new ArgumentNullException (nameof (attributes));
 			return SetAttributes (attributes.ToDictionary (), path, out error);
 		}
 
 		public bool SetAttributes (NSFileAttributes attributes, string path)
 		{
-			NSError ignore;
-			if (attributes == null)
-				throw new ArgumentNullException ("attributes");
+			if (attributes is null)
+				throw new ArgumentNullException (nameof (attributes));
 
-			return SetAttributes (attributes.ToDictionary (), path, out ignore);
+			return SetAttributes (attributes.ToDictionary (), path, out _);
 		}
 
-		public bool CreateDirectory (string path, bool createIntermediates, NSFileAttributes attributes, out NSError error)
+		public bool CreateDirectory (string path, bool createIntermediates, NSFileAttributes? attributes, out NSError error)
 		{
-			var dict = attributes == null ? null : attributes.ToDictionary ();
-			return CreateDirectory (path, createIntermediates, dict, out error);
+			return CreateDirectory (path, createIntermediates, attributes?.ToDictionary (), out error);
 		}
 
-		public bool CreateDirectory (string path, bool createIntermediates, NSFileAttributes attributes)
+		public bool CreateDirectory (string path, bool createIntermediates, NSFileAttributes? attributes)
 		{
-			NSError error;
-			var dict = attributes == null ? null : attributes.ToDictionary ();
-			return CreateDirectory (path, createIntermediates, dict, out error);
+			return CreateDirectory (path, createIntermediates, attributes?.ToDictionary (), out var _);
 		}
 
-		public bool CreateFile (string path, NSData data, NSFileAttributes attributes)
+		public bool CreateFile (string path, NSData data, NSFileAttributes? attributes)
 		{
-			var dict = attributes == null ? null : attributes.ToDictionary ();
-			return CreateFile (path, data, dict);
+			return CreateFile (path, data, attributes?.ToDictionary ());
 		}
-		
-		public NSFileAttributes GetAttributes (string path, out NSError error)
+
+		public NSFileAttributes? GetAttributes (string path, out NSError error)
 		{
 			return NSFileAttributes.FromDictionary (_GetAttributes (path, out error));
 		}
 
-		public NSFileAttributes GetAttributes (string path)
+		public NSFileAttributes? GetAttributes (string path)
 		{
-			NSError error;
-			return NSFileAttributes.FromDictionary (_GetAttributes (path, out error));
+			return NSFileAttributes.FromDictionary (_GetAttributes (path, out var _));
 		}
 
-		public NSFileSystemAttributes GetFileSystemAttributes (string path)
+		public NSFileSystemAttributes? GetFileSystemAttributes (string path)
 		{
-			NSError error;
-			return NSFileSystemAttributes.FromDictionary (_GetFileSystemAttributes (path, out error));
+			return NSFileSystemAttributes.FromDictionary (_GetFileSystemAttributes (path, out var _));
 		}
 
-		public NSFileSystemAttributes GetFileSystemAttributes (string path, out NSError error)
+		public NSFileSystemAttributes? GetFileSystemAttributes (string path, out NSError error)
 		{
 			return NSFileSystemAttributes.FromDictionary (_GetFileSystemAttributes (path, out error));
 		}
 
-		public NSUrl[] GetMountedVolumes (NSString [] properties, NSVolumeEnumerationOptions options)
+		public NSUrl [] GetMountedVolumes (NSString [] properties, NSVolumeEnumerationOptions options)
 		{
 			using var array = NSArray.FromNSObjects (properties);
 			return GetMountedVolumes (array, options);
@@ -457,6 +451,33 @@ namespace Foundation {
 			get { return GetCurrentDirectory (); }
 			// ignore boolean return value
 			set { ChangeCurrentDirectory (value); }
+		}
+
+		public static NSError SetSkipBackupAttribute (string filename, bool skipBackup)
+		{
+			if (filename is null)
+				throw new ArgumentNullException (nameof (filename));
+
+			using (var url = NSUrl.FromFilename (filename)) {
+				url.SetResource (NSUrl.IsExcludedFromBackupKey, (NSNumber) (skipBackup ? 1 : 0), out var error);
+				return error;
+			}
+		}
+
+		public static bool GetSkipBackupAttribute (string filename)
+		{
+			return GetSkipBackupAttribute (filename, out var _);
+		}
+
+		public static bool GetSkipBackupAttribute (string filename, out NSError error)
+		{
+			if (filename is null)
+				throw new ArgumentNullException (nameof (filename));
+
+			using (var url = NSUrl.FromFilename (filename)) {
+				url.TryGetResource (NSUrl.IsExcludedFromBackupKey, out var value, out error);
+				return (error is null) && ((long) ((NSNumber) value) == 1);
+			}
 		}
 	}
 }

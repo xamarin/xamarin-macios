@@ -55,7 +55,7 @@ namespace MonoTouchFixtures.Photos {
 
 			// Actual Test
 			var array = collection.ToArray ();
-			Assert.That (array != null && array.Count() > 0);
+			Assert.That (array is not null && array.Count () > 0);
 		}
 
 		[Test]
@@ -83,26 +83,25 @@ namespace MonoTouchFixtures.Photos {
 
 			// Actual Test
 			var obj = collection.ObjectsAt<NSObject> (NSIndexSet.FromNSRange (new NSRange (0, 1)));
-			Assert.That (obj != null && obj.Count() > 0);
+			Assert.That (obj is not null && obj.Count () > 0);
 		}
 	}
 
 	// This class is only used in case the Photo Library is Empty,
 	// this will create a blue Xamagram logo
-	static class XamagramImage
-	{
+	static class XamagramImage {
 		static UIImage imageOfXamagram;
 
-		static void DrawXamagram()
+		static void DrawXamagram ()
 		{
 			var context = UIGraphics.GetCurrentContext ();
 			var color = UIColor.FromRGBA (0.204f, 0.600f, 0.863f, 1.000f);
 
 			context.SaveState ();
 			context.TranslateCTM (257.0f, 257.0f);
-			context.RotateCTM (90.0f * (nfloat)Math.PI / 180.0f);
+			context.RotateCTM (90.0f * (nfloat) Math.PI / 180.0f);
 
-			var polygonPath = new UIBezierPath();
+			var polygonPath = new UIBezierPath ();
 			polygonPath.MoveTo (new CGPoint (0.0f, -250.0f));
 			polygonPath.AddLineTo (new CGPoint (216.51f, -125.0f));
 			polygonPath.AddLineTo (new CGPoint (216.51f, 125.0f));
@@ -113,7 +112,7 @@ namespace MonoTouchFixtures.Photos {
 			color.SetFill ();
 			polygonPath.Fill ();
 
-			context.RestoreState();
+			context.RestoreState ();
 
 			var textRect = new CGRect (0.0f, 0.0f, 512.0f, 512.0f);
 			var textContent = "X";
@@ -123,11 +122,9 @@ namespace MonoTouchFixtures.Photos {
 			new NSString (textContent).DrawString (textRect, textFont, UILineBreakMode.WordWrap, UITextAlignment.Center);
 		}
 
-		public static UIImage Image
-		{
-			get
-			{
-				if (imageOfXamagram != null)
+		public static UIImage Image {
+			get {
+				if (imageOfXamagram is not null)
 					return imageOfXamagram;
 
 				UIGraphics.BeginImageContextWithOptions (new CGSize (512.0f, 512.0f), false, 0);

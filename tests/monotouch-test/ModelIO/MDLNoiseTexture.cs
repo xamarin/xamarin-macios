@@ -22,14 +22,12 @@ using Vector2i = global::CoreGraphics.NVector2i;
 using OpenTK;
 #endif
 
-namespace MonoTouchFixtures.ModelIO
-{
+namespace MonoTouchFixtures.ModelIO {
 
 	[TestFixture]
 	// we want the test to be available if we use the linker
 	[Preserve (AllMembers = true)]
-	public class MDLNoiseTextureTest
-	{
+	public class MDLNoiseTextureTest {
 		[OneTimeSetUp]
 		public void Setup ()
 		{

@@ -31,14 +31,14 @@ namespace CloudKit {
 #if !NET && !WATCH
 	public partial class CKOperation {
 
-		[Obsoleted (PlatformName.iOS, 9,3, message: "Do not use; this API was removed and will always return 0.")]
+		[Obsoleted (PlatformName.iOS, 9, 3, message: "Do not use; this API was removed and will always return 0.")]
 		public virtual ulong ActivityStart ()
 		{
 			return 0;
 		}
 
-		[Deprecated (PlatformName.iOS, 9,0, message: "Empty stub (rejected by Apple). Use 'QualityOfService' property.")]
-		[Deprecated (PlatformName.MacOSX, 10,11, message: "Empty stub (rejected by Apple). Use 'QualityOfService' property.")]
+		[Deprecated (PlatformName.iOS, 9, 0, message: "Empty stub (rejected by Apple). Use 'QualityOfService' property.")]
+		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Empty stub (rejected by Apple). Use 'QualityOfService' property.")]
 		public virtual bool UsesBackgroundSession { get; set; }
 	}
 
@@ -81,17 +81,16 @@ namespace CloudKit {
 	public partial class CKDiscoverAllContactsOperation {
 
 		[Obsolete ("Empty stub (not a public API).")]
-		public virtual Action<CKDiscoveredUserInfo[], NSError>? DiscoverAllContactsHandler { get; set; }
+		public virtual Action<CKDiscoveredUserInfo [], NSError>? DiscoverAllContactsHandler { get; set; }
 
 	}
 #endif
 
-	[iOS (8,0), Mac (10,10)]
 	public delegate void CKDiscoverUserInfosCompletionHandler (NSDictionary emailsToUserInfos, NSDictionary userRecordIdsToUserInfos, NSError operationError);
 
-#if !WATCH	
-	[Obsoleted (PlatformName.iOS, 14, 0, message : "Use 'CKDiscoverUserIdentitiesOperation' instead.")]
-	public partial class CKDiscoverUserInfosOperation : CKOperation { 
+#if !WATCH
+	[Obsoleted (PlatformName.iOS, 14, 0, message: "Use 'CKDiscoverUserIdentitiesOperation' instead.")]
+	public partial class CKDiscoverUserInfosOperation : CKOperation {
 
 		public CKDiscoverUserInfosOperation () : base () { }
 
@@ -103,7 +102,6 @@ namespace CloudKit {
 		protected CKDiscoverUserInfosOperation (NativeHandle handle)
 			=> throw new NotSupportedException ();
 
-		[iOS (8,0), Mac (10,10)]
 		[Obsolete ("Empty stub (not a public API).")]
 		public virtual CKDiscoverUserInfosCompletionHandler? Completed { get; set; }
 
@@ -112,7 +110,7 @@ namespace CloudKit {
 			=> throw new NotSupportedException ();
 
 		[Obsolete ("Empty stub (not a public API).")]
-		public virtual string[]? EmailAddresses { get; set; }
+		public virtual string []? EmailAddresses { get; set; }
 
 		[Obsolete ("Empty stub (not a public API).")]
 		public virtual CKRecordID []? UserRecordIds { get; set; }
@@ -140,7 +138,6 @@ namespace CloudKit {
 
 #if MONOMAC || IOS
 	public partial class CKDiscoveredUserInfo {
-		[iOS (9,0)][Mac (10,11)]
 		[Obsolete ("Empty stub (not public API).")]
 		public virtual CNContact? DisplayContact { get; }
 

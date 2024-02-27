@@ -7,49 +7,45 @@ using NUnit.Framework;
 
 using Mono.Cecil;
 
+using Xamarin.Utils;
+
 #nullable enable
 
 namespace Cecil.Tests {
 
 	[TestFixture]
 	public class ObsoleteTest {
-		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformImplementationAssemblies))] // call this method with every .net6 library
-		public void GetAllObsoletedThings (string assemblyPath)
+		// This test verifies that we don't have any obsolete API in .NET that we don't expect to be there
+		// in particular that we don't start out with obsolete APIs from the very beginning (such API should have been removed).
+		// Any obsoleted API after the first stable .NET release should likely be skipped (until XAMCORE_5_0)
+		//
+		// If you have obsoleted a member and you're here wondering
+		// what you should do, you should add
+		// [EditorBrowsable (EditorBrowsableState.Never)]
+		// to the member in addition to the Obsolete. This will
+		// hide the member from intellisense but still allow it
+		// to compile (with errors/warnings).
+		//
+		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformImplementationAssemblyDefinitions))] // call this method with every .net6 library
+		public void GetAllObsoletedThings (AssemblyInfo info)
 		{
-			var assembly = Helper.GetAssembly (assemblyPath, readSymbols: true);
+			var assembly = info.Assembly;
 
 			// Make a list of Obsolete things
 			var found = new HashSet<string> ();
 
-			foreach (var prop in Helper.FilterProperties (assembly, a => FilterMember (a))) {
-				if (Skip (prop))
-					continue;
-				Console.WriteLine ($"{GetLocation (prop.GetMethod ?? prop.SetMethod)} {prop.FullName}");
-				found.Add (prop.FullName);
+			foreach (var prop in assembly.EnumerateAttributeProviders (a => FilterMember (a))) {
+				Console.WriteLine ($"{prop.RenderLocation ()} {prop.AsFullName ()}: add '[EditorBrowsable (EditorBrowsableState.Never)]' for newly obsoleted API to pass this test.");
+				found.Add (prop.AsFullName ());
 			}
 
-			foreach (var meth in Helper.FilterMethods (assembly, a => FilterMember (a))) {
-				if (Skip (meth))
-					continue;
-				Console.WriteLine ($"{GetLocation (meth)} {meth.FullName}");
-				found.Add (meth.FullName);
-			}
-
-			foreach (var type in Helper.FilterTypes (assembly, a => FilterMember (a))) {
-				if (Skip (type))
-					continue;
-				Console.WriteLine ($"{GetLocation (type.Methods.FirstOrDefault ())} {type.FullName}");
-				found.Add (type.FullName);
-			}
-
-			// TODO: Events?
 			Assert.That (found, Is.Empty, "Obsolete API: add '[EditorBrowsable (EditorBrowsableState.Never)]' for newly obsoleted API to pass this test.");
 		}
 
 		bool FilterMember (ICustomAttributeProvider provider)
 		{
 			// If an API isn't obsolete, it's not under scrutiny from this test.
-			if (!HasObsoleteAttribute (provider))
+			if (!provider.IsObsolete ())
 				return false;
 
 			// If the API has an UnsupportedOSPlatform attribute with a version, it means the API is available
@@ -60,19 +56,13 @@ namespace Cecil.Tests {
 #if !XAMCORE_5_0
 			// If we've hidden an API from the IDE, assume we've decided to keep the API for binary compatibility
 			// At least until the next time we can do breaking changes.
-			if (HasEditorBrowseableNeverAttribute (provider))
+			if (provider.HasEditorBrowseableNeverAttribute ())
 				return false;
 #endif
 
 			// I'm bad!
 			return true;
 		}
-
-		bool HasObsoleteAttribute (ICustomAttributeProvider provider) => HasObsoleteAttribute (provider.CustomAttributes);
-
-		bool HasObsoleteAttribute (IEnumerable<CustomAttribute> attributes) => attributes.Any (a => IsObsoleteAttribute (a));
-
-		bool IsObsoleteAttribute (CustomAttribute attribute) => attribute.AttributeType.Name == "Obsolete" || (attribute.AttributeType.Name == "ObsoleteAttribute");
 
 		bool HasVersionedUnsupportedOSPlatformAttribute (ICustomAttributeProvider provider)
 		{
@@ -94,7 +84,7 @@ namespace Cecil.Tests {
 			return false;
 		}
 
-		bool HasEditorBrowseableNeverAttribute (ICustomAttributeProvider provider)
+		public static bool HasEditorBrowseableNeverAttribute (ICustomAttributeProvider provider)
 		{
 			if (provider?.HasCustomAttributes != true)
 				return false;
@@ -108,28 +98,6 @@ namespace Cecil.Tests {
 			}
 
 			return false;
-		}
-
-		bool Skip (MemberReference member)
-		{
-			var ns = member.FullName.Split ('.') [0];
-
-			switch (ns) {
-			default:
-				return false;
-			}
-		}
-
-		static string GetLocation (MethodDefinition method)
-		{
-			if (method is null)
-				return "<no location> ";
-
-			if (method.DebugInformation.HasSequencePoints) {
-				var seq = method.DebugInformation.SequencePoints [0];
-				return seq.Document.Url + ":" + seq.StartLine + " ";
-			}
-			return string.Empty;
 		}
 	}
 }

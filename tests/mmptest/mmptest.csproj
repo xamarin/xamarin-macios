@@ -41,8 +41,8 @@
       <HintPath Condition="$(TESTS_USE_SYSTEM) == ''">..\..\_mac-build\Library\Frameworks\Xamarin.Mac.framework\Versions\git\lib\mmp\mmp.exe</HintPath>
       <HintPath Condition="$(TESTS_USE_SYSTEM) != ''">\Library\Frameworks\Xamarin.Mac.framework\Versions\Current\lib\mmp\mmp.exe</HintPath>
     </Reference>
-    <PackageReference Include="Mono.Cecil" Version="0.11.4" />
-    <PackageReference Include="MSBuild.StructuredLogger" Version="2.1.500" />
+    <PackageReference Include="Mono.Cecil" Version="$(MonoCecilPackageVersion)" />
+    <PackageReference Include="MSBuild.StructuredLogger" Version="$(MSBuildStructuredLoggerPackageVersion)" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
@@ -97,6 +97,9 @@
     <Compile Include="..\..\tools\common\StringUtils.cs">
       <Link>StringUtils.cs</Link>
     </Compile>
+    <Compile Include="..\..\tools\common\NullableAttributes.cs">
+      <Link>NullableAttributes.cs</Link>
+    </Compile>
     <Compile Include="src\WarningTests.cs" />
     <Compile Include="src\Unified45.cs" />
     <Compile Include="src\System.ServiceModel\Net45.cs" />
@@ -113,8 +116,8 @@
     <Compile Include="..\..\tools\common\MachO.cs">
       <Link>MachO.cs</Link>
     </Compile>
-    <Compile Include="..\..\tools\mtouch\Errors.Designer.cs">
-      <Link>Errors.Designer.cs</Link>
+    <Compile Include="..\..\tools\mtouch\Errors.designer.cs">
+      <Link>Errors.designer.cs</Link>
     </Compile>
     <Compile Include="src\NativeExtensionEmbedding.cs" />
     <Compile Include="..\common\BinLog.cs">

@@ -54,7 +54,7 @@ namespace MonoTouchFixtures.SceneKit {
 		static pfloat SqrtThreeHalved = (pfloat) (Math.Sqrt (3) / 2);
 		static pfloat SqrtThreeInverted = (pfloat) (1 / Math.Sqrt (3));
 		static pfloat SqrtSix = (pfloat) (Math.Sqrt (6));
-		static pfloat SqrtSixInverted = (pfloat)  (1 / Math.Sqrt (6));
+		static pfloat SqrtSixInverted = (pfloat) (1 / Math.Sqrt (6));
 		static pfloat SqrtTwelve = (pfloat) (Math.Sqrt (12)); // 3.464102
 		static pfloat OhPointFive = (pfloat) 0.5;
 
@@ -135,10 +135,22 @@ namespace MonoTouchFixtures.SceneKit {
 		public void Constructor_CATransform3d ()
 		{
 			var transform = new CATransform3D () {
-				M11 = 11, M12 = 12, M13 = 13, M14 = 14,
-				M21 = 21, M22 = 22, M23 = 23, M24 = 24,
-				M31 = 31, M32 = 32, M33 = 33, M34 = 34,
-				M41 = 41, M42 = 42, M43 = 43, M44 = 44,
+				M11 = 11,
+				M12 = 12,
+				M13 = 13,
+				M14 = 14,
+				M21 = 21,
+				M22 = 22,
+				M23 = 23,
+				M24 = 24,
+				M31 = 31,
+				M32 = 32,
+				M33 = 33,
+				M34 = 34,
+				M41 = 41,
+				M42 = 42,
+				M43 = 43,
+				M44 = 44,
 			};
 			var matrix = new SCNMatrix4 (transform);
 			var expected = new SCNMatrix4 (
@@ -252,7 +264,7 @@ namespace MonoTouchFixtures.SceneKit {
 				(pfloat) (0.6363636363636364), (pfloat) (-0.030303030303030304), (pfloat) (0.06060606060606061), (pfloat) (-0.5757575757575758));
 
 			Asserts.AreEqual (expected, matrix, (pfloat) 0.00001, "Invert");
-				
+
 			var pos = new SCNVector3 (10, 20, 30);
 			var transformed = SCNVector3.TransformPosition (pos, matrix);
 			Asserts.AreEqual (new SCNVector3 (-0.4f, 13, -14.6f), transformed, 0.00001f, "Transformed");
@@ -1143,7 +1155,7 @@ namespace MonoTouchFixtures.SceneKit {
 		}
 
 		[Test]
-		public void ToString ()
+		public void ToStringTest ()
 		{
 			var matrix = new SCNMatrix4 (
 				new SCNVector4 (11, 12, 13, 14),

@@ -58,7 +58,7 @@ namespace MonoTouchFixtures.UIKit {
 				txt.SetString (new NSAttributedString (str));
 				using (var lm = new NSLayoutManager ()) {
 					lm.TextStorage = txt;
-					var glyphs = new short[str.Length];
+					var glyphs = new short [str.Length];
 					var props = new NSGlyphProperty [glyphs.Length];
 					var charIndexBuffer = new nuint [glyphs.Length];
 					var bidiLevelBuffer = new byte [glyphs.Length];
@@ -89,7 +89,7 @@ namespace MonoTouchFixtures.UIKit {
 				txt.SetString (new NSAttributedString (str));
 				using (var lm = new NSLayoutManager ()) {
 					lm.TextStorage = txt;
-					var glyphs = new short[str.Length];
+					var glyphs = new short [str.Length];
 					var charIndexBuffer = new nuint [glyphs.Length];
 					var bidiLevelBuffer = new byte [glyphs.Length];
 					lm.GetGlyphs (new NSRange (0, str.Length), glyphs, null, charIndexBuffer, bidiLevelBuffer);

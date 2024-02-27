@@ -155,7 +155,7 @@ namespace MonoTouchFixtures.ModelIO {
 			using (var obj = new MDLMaterialProperty ("name", MDLMaterialSemantic.AmbientOcclusion, "string value")) {
 				Assert.AreEqual ("string value", obj.StringValue, "6 StringValue");
 			}
-				
+
 			using (var obj = new MDLMaterialProperty ("name", MDLMaterialSemantic.AmbientOcclusion, M4)) {
 				Asserts.AreEqual (M4, obj.Matrix4x4, "7 Matrix4x4");
 #if NET

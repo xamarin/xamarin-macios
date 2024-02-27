@@ -3,8 +3,7 @@ using UIKit;
 
 namespace MySceneKitApp {
 	[Register ("AppDelegate")]
-	public class AppDelegate : UIApplicationDelegate
-	{
+	public class AppDelegate : UIApplicationDelegate {
 		UIWindow window;
 		UIViewController dvc;
 
@@ -20,7 +19,7 @@ namespace MySceneKitApp {
 
 			return true;
 		}
-		
+
 		static void Main (string [] args)
 		{
 			UIApplication.Main (args, null, typeof (AppDelegate));

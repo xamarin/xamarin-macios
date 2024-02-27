@@ -27,10 +27,8 @@ using System;
 
 using UIKit;
 
-namespace MyReleaseBuild
-{
-	public partial class ViewController : UIViewController
-	{
+namespace MyReleaseBuild {
+	public partial class ViewController : UIViewController {
 		protected ViewController (IntPtr handle) : base (handle)
 		{
 			// Note: this .ctor should not contain any initialization logic.
@@ -46,7 +44,7 @@ namespace MyReleaseBuild
 
 				// look for non-existing type - it should be there to replace UIWebView
 				var t = Type.GetType ("UIKit.DeprecatedWebView, Xamarin.iOS");
-				if (t == null) {
+				if (t is null) {
 					View.BackgroundColor = UIColor.Red;
 					Console.WriteLine ("FAIL");
 				} else {

@@ -23,13 +23,11 @@ namespace MonoTouchFixtures.SystemConfiguration {
 
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class NetworkReachabilityTest
-	{
+	public class NetworkReachabilityTest {
 		[Test]
 		public void CtorNameAddress ()
 		{
-			using (var nr = new NetworkReachability ("apple.com"))
-			{
+			using (var nr = new NetworkReachability ("apple.com")) {
 				NetworkReachabilityFlags flags;
 
 				Assert.IsTrue (nr.TryGetFlags (out flags));
@@ -40,8 +38,7 @@ namespace MonoTouchFixtures.SystemConfiguration {
 		[Test]
 		public void CtorIPAddress ()
 		{
-			using (var nr = new NetworkReachability (IPAddress.Loopback))
-			{
+			using (var nr = new NetworkReachability (IPAddress.Loopback)) {
 				NetworkReachabilityFlags flags;
 
 				Assert.IsTrue (nr.TryGetFlags (out flags), "#1");
@@ -54,16 +51,14 @@ namespace MonoTouchFixtures.SystemConfiguration {
 				Assert.True ((flags & NetworkReachabilityFlags.Reachable) != 0, "Reachable");
 			}
 
-			using (var nr = new NetworkReachability (new IPAddress (new byte[] { 10, 99, 99, 99 })))
-			{
+			using (var nr = new NetworkReachability (new IPAddress (new byte [] { 10, 99, 99, 99 }))) {
 				NetworkReachabilityFlags flags;
 
 				Assert.IsTrue (nr.TryGetFlags (out flags), "#2");
 				//Assert.That (flags, Is.EqualTo (NetworkReachabilityFlags.Reachable), "#2 Reachable");
 			}
 
-			using (var nr = new NetworkReachability (IPAddress.IPv6Loopback))
-			{
+			using (var nr = new NetworkReachability (IPAddress.IPv6Loopback)) {
 				NetworkReachabilityFlags flags;
 
 				Assert.IsTrue (nr.TryGetFlags (out flags), "#3");
@@ -71,8 +66,7 @@ namespace MonoTouchFixtures.SystemConfiguration {
 				//	NetworkReachabilityFlags.TransientConnection | NetworkReachabilityFlags.Reachable | NetworkReachabilityFlags.ConnectionRequired), "#3 Reachable");
 			}
 
-			using (var nr = new NetworkReachability (IPAddress.Parse ("2001:4860:4860::8844")))
-			{
+			using (var nr = new NetworkReachability (IPAddress.Parse ("2001:4860:4860::8844"))) {
 				NetworkReachabilityFlags flags;
 
 				Assert.IsTrue (nr.TryGetFlags (out flags), "#4");
@@ -87,25 +81,22 @@ namespace MonoTouchFixtures.SystemConfiguration {
 		[Test]
 		public void CtorIPAddressPair ()
 		{
-			var address = Dns.GetHostAddresses ("apple.com")[0];
-			using (var nr = new NetworkReachability (IPAddress.Loopback, address))
-			{
+			var address = Dns.GetHostAddresses ("apple.com") [0];
+			using (var nr = new NetworkReachability (IPAddress.Loopback, address)) {
 				NetworkReachabilityFlags flags;
 
 				Assert.IsTrue (nr.TryGetFlags (out flags), "#1");
 				CheckLoopbackFlags (flags, "1", true);
 			}
 
-			using (var nr = new NetworkReachability (null, address))
-			{
+			using (var nr = new NetworkReachability (null, address)) {
 				NetworkReachabilityFlags flags;
 
 				Assert.IsTrue (nr.TryGetFlags (out flags), "#2");
 				Assert.That (flags, Is.EqualTo (NetworkReachabilityFlags.Reachable), "#2 Reachable");
 			}
 
-			using (var nr = new NetworkReachability (IPAddress.Loopback, null))
-			{
+			using (var nr = new NetworkReachability (IPAddress.Loopback, null)) {
 				NetworkReachabilityFlags flags;
 
 				Assert.IsTrue (nr.TryGetFlags (out flags), "#3");

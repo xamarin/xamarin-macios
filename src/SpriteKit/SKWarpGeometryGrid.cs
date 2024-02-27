@@ -19,10 +19,8 @@ using Vector2 = global::OpenTK.Vector2;
 
 #nullable enable
 
-namespace SpriteKit
-{
-	public partial class SKWarpGeometryGrid
-	{
+namespace SpriteKit {
+	public partial class SKWarpGeometryGrid {
 		public unsafe static SKWarpGeometryGrid Create (nint cols, nint rows, Vector2 [] sourcePositions, Vector2 [] destPositions)
 		{
 			if (cols < 1 || rows < 1)
@@ -35,8 +33,8 @@ namespace SpriteKit
 				throw new InvalidOperationException ("destPositions should have a minimum lenght of (cols + 1) * (rows + 1)");
 
 			fixed (Vector2* source_ptr = sourcePositions)
-				fixed (Vector2* dest_ptr = destPositions)
-					return GridWithColumns (cols, rows, (IntPtr) source_ptr, (IntPtr) dest_ptr);
+			fixed (Vector2* dest_ptr = destPositions)
+				return GridWithColumns (cols, rows, (IntPtr) source_ptr, (IntPtr) dest_ptr);
 		}
 
 		[DesignatedInitializer]
@@ -52,8 +50,8 @@ namespace SpriteKit
 				throw new InvalidOperationException ("destPositions should have a minimum lenght of (cols + 1) * (rows + 1)");
 
 			fixed (Vector2* source_ptr = sourcePositions)
-				fixed (Vector2* dest_ptr = destPositions)
-					InitializeHandle (InitWithColumns (cols, rows, (IntPtr) source_ptr, (IntPtr) dest_ptr), "initWithColumns:rows:sourcePositions:destPositions:");
+			fixed (Vector2* dest_ptr = destPositions)
+				InitializeHandle (InitWithColumns (cols, rows, (IntPtr) source_ptr, (IntPtr) dest_ptr), "initWithColumns:rows:sourcePositions:destPositions:");
 		}
 
 		public unsafe SKWarpGeometryGrid GetGridByReplacingSourcePositions (Vector2 [] sourcePositions)

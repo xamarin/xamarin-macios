@@ -30,16 +30,16 @@ using OpenGLES;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.CoreImage {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class CIContextTest {
-		
+
 		[Test]
 		public void CreateRefCount ()
 		{
 			// Bug #7117
-			
+
 			CIImage img = new CIImage (CIColor.FromRgb (0.5f, 0.5f, 0.5f));
 			Selector retainCount = new Selector ("retainCount");
 

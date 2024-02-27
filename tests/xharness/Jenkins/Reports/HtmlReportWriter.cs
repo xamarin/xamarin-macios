@@ -39,11 +39,11 @@ namespace Xharness.Jenkins.Reports {
 		}
 
 		string GetLinkFullPath (string path)
-			=> linksPrefix != null ? linksPrefix + LinkEncode (path) : LinkEncode (path); // vsdrops index paths are horrible, the use a ; and we cannot use combine, ex: https://vsdrop.corp.microsoft.com/file/v1/devdiv/20200612.13/3806978;/tests/index.html
+			=> linksPrefix is not null ? linksPrefix + LinkEncode (path) : LinkEncode (path); // vsdrops index paths are horrible, the use a ; and we cannot use combine, ex: https://vsdrop.corp.microsoft.com/file/v1/devdiv/20200612.13/3806978;/tests/index.html
 
 		string GetResourcePath (string resource)
 		{
-			var executingDir = Path.GetDirectoryName (Assembly.GetExecutingAssembly ().Location);
+			var executingDir = Path.GetDirectoryName (Assembly.GetExecutingAssembly ().Location)!;
 			return Path.Combine (executingDir, resource);
 		}
 
@@ -54,7 +54,7 @@ namespace Xharness.Jenkins.Reports {
 				writer.WriteLine ("<script type='text/javascript'>");
 				using (var reader = new StreamReader (jsPath)) {
 					string? line = null;
-					while ((line = reader.ReadLine ()) != null) {
+					while ((line = reader.ReadLine ()) is not null) {
 						writer.WriteLine (line);
 					}
 				}
@@ -71,7 +71,7 @@ namespace Xharness.Jenkins.Reports {
 				writer.WriteLine ("<style>");
 				using (var reader = new StreamReader (cssPath)) {
 					string? line = null;
-					while ((line = reader.ReadLine ()) != null) {
+					while ((line = reader.ReadLine ()) is not null) {
 						writer.WriteLine (line);
 					}
 				}
@@ -209,7 +209,7 @@ namespace Xharness.Jenkins.Reports {
 				if (jenkins.IsServerMode) {
 					var include_system_permission_option = string.Empty;
 					var include_system_permission_icon = string.Empty;
-					if (Harness.IncludeSystemPermissionTests == null) {
+					if (Harness.IncludeSystemPermissionTests is null) {
 						include_system_permission_option = "include-permission-tests";
 						include_system_permission_icon = "2753";
 					} else if (Harness.IncludeSystemPermissionTests.Value) {
@@ -235,11 +235,11 @@ namespace Xharness.Jenkins.Reports {
 	</ul>
 </li>
 ");
-					if (previous_test_runs == null) {
+					if (previous_test_runs is null) {
 						previous_test_runs = "\t<li>Previous test runs\t\t<ul>Loading ...</ul></li>";
 						ThreadPool.QueueUserWorkItem ((v) => {
 							var sb = new StringBuilder ();
-							var previous = Directory.GetDirectories (Path.GetDirectoryName (jenkins.LogDirectory)).
+							var previous = Directory.GetDirectories (Path.GetDirectoryName (jenkins.LogDirectory)!).
 									Select ((v) => Path.Combine (v, "index.html")).
 										Where (File.Exists);
 							if (previous.Any ()) {
@@ -249,7 +249,7 @@ namespace Xharness.Jenkins.Reports {
 									var dir = Path.GetFileName (Path.GetDirectoryName (prev));
 									var ts = dir;
 									var description = File.ReadAllLines (prev).Where ((v) => v.StartsWith ("<h2", StringComparison.Ordinal)).FirstOrDefault ();
-									if (description != null) {
+									if (description is not null) {
 										description = description.Substring (description.IndexOf ('>') + 1); // <h2 ...>
 										description = description.Substring (description.IndexOf ('>') + 1); // <span id= ...>
 
@@ -400,14 +400,14 @@ namespace Xharness.Jenkins.Reports {
 						if (!string.IsNullOrEmpty (progressMessage))
 							writer.WriteLine (progressMessage.AsHtml () + " <br />");
 
-						if (runTest != null) {
+						if (runTest is not null) {
 							if (runTest.BuildTask.Duration.Ticks > 0) {
 								writer.WriteLine ($"Project file: {runTest.BuildTask.ProjectFile} <br />");
 								writer.WriteLine ($"Platform: {runTest.BuildTask.ProjectPlatform} Configuration: {runTest.BuildTask.ProjectConfiguration} <br />");
 								IEnumerable<IDevice>? candidates = (runTest as RunDeviceTask)?.Candidates;
-								if (candidates == null)
+								if (candidates is null)
 									candidates = (runTest as RunSimulatorTask)?.Candidates;
-								if (candidates != null) {
+								if (candidates is not null) {
 									writer.WriteLine ($"Candidate devices:<br />");
 									try {
 										foreach (var candidate in candidates)
@@ -421,8 +421,8 @@ namespace Xharness.Jenkins.Reports {
 							if (test.Duration.Ticks > 0)
 								writer.WriteLine ($"Time Elapsed:  {test.TestName} - (waiting time : {test.WaitingDuration} , running time : {test.Duration}) <br />");
 							var runDeviceTest = runTest as RunDeviceTask;
-							if (runDeviceTest?.Device != null) {
-								if (runDeviceTest.CompanionDevice != null) {
+							if (runDeviceTest?.Device is not null) {
+								if (runDeviceTest.CompanionDevice is not null) {
 									writer.WriteLine ($"Device: {runDeviceTest.Device.Name} ({runDeviceTest.CompanionDevice.Name}) <br />");
 								} else {
 									writer.WriteLine ($"Device: {runDeviceTest.Device.Name} <br />");
@@ -441,7 +441,7 @@ namespace Xharness.Jenkins.Reports {
 
 								log.Flush ();
 								var exists = File.Exists (fileLog.FullPath);
-								string log_type = System.Web.MimeMapping.GetMimeMapping (fileLog.FullPath);
+								string log_type = GetMimeMapping (fileLog.FullPath);
 								string log_target;
 								switch (log_type) {
 								case "text/xml":
@@ -475,13 +475,12 @@ namespace Xharness.Jenkins.Reports {
 									List<string> fails;
 									try {
 										using (var reader = fileLog.GetReader ()) {
-											Tuple<long, object> data;
-											if (!log_data.TryGetValue (log, out data) || data.Item1 != reader.BaseStream.Length) {
+											if (!log_data.TryGetValue (log, out var data) || data.Item1 != reader.BaseStream.Length) {
 												summary = string.Empty;
 												fails = new List<string> ();
 												while (!reader.EndOfStream) {
 													string? line = reader.ReadLine ()?.Trim ();
-													if (line == null)
+													if (line is null)
 														continue;
 													// Skip any timestamps if the file is timestamped
 													if (log.Timestamp)
@@ -514,18 +513,17 @@ namespace Xharness.Jenkins.Reports {
 										if (!string.IsNullOrEmpty (summary))
 											writer.WriteLine ("<span style='padding-left: 15px;'>{0}</span><br />", summary);
 									} catch (Exception ex) {
-										writer.WriteLine ("<span style='padding-left: 15px;'>Could not parse log file: {0}: {1}</span><br />", ex.Message.AsHtml (), ex.StackTrace.AsHtml ());
+										writer.WriteLine ("<span style='padding-left: 15px;'>Could not parse log file: {0}: {1}</span><br />", ex.Message?.AsHtml (), ex.StackTrace?.AsHtml ());
 									}
 								} else if (log.Description == LogType.BuildLog.ToString ()) {
 									HashSet<string> errors;
 									try {
 										using (var reader = fileLog.GetReader ()) {
-											Tuple<long, object> data;
-											if (!log_data.TryGetValue (log, out data) || data.Item1 != reader.BaseStream.Length) {
+											if (!log_data.TryGetValue (log, out var data) || data.Item1 != reader.BaseStream.Length) {
 												errors = new HashSet<string> ();
 												while (!reader.EndOfStream) {
 													string? line = reader.ReadLine ()?.Trim ();
-													if (line == null)
+													if (line is null)
 														continue;
 													// Sometimes we put error messages in pull request descriptions
 													// Then Jenkins create environment variables containing the pull request descriptions (and other pull request data)
@@ -550,7 +548,7 @@ namespace Xharness.Jenkins.Reports {
 											writer.WriteLine ("</div>");
 										}
 									} catch (Exception ex) {
-										writer.WriteLine ("<span style='padding-left: 15px;'>Could not parse log file: {0}: {1}</span><br />", ex.Message.AsHtml (), ex.StackTrace.AsHtml ());
+										writer.WriteLine ("<span style='padding-left: 15px;'>Could not parse log file: {0}: {1}</span><br />", ex.Message?.AsHtml (), ex.StackTrace?.AsHtml ());
 									}
 								} else if (log.Description == LogType.NUnitResult.ToString () || log.Description == LogType.XmlLog.ToString ()) {
 									try {
@@ -560,7 +558,7 @@ namespace Xharness.Jenkins.Reports {
 											}
 										}
 									} catch (Exception ex) {
-										writer.WriteLine ($"<span style='padding-left: 15px;'>Could not parse {log.Description}: {ex.Message.AsHtml ()} : {ex.StackTrace.AsHtml ()}</span><br />");
+										writer.WriteLine ($"<span style='padding-left: 15px;'>Could not parse {log.Description}: {ex.Message?.AsHtml ()} : {ex.StackTrace?.AsHtml ()}</span><br />");
 									}
 								} else if (log.Description == LogType.TrxLog.ToString ()) {
 									try {
@@ -568,7 +566,7 @@ namespace Xharness.Jenkins.Reports {
 											resultParser.GenerateTestReport (writer, fileLog.FullPath, jargon);
 										}
 									} catch (Exception ex) {
-										writer.WriteLine ($"<span style='padding-left: 15px;'>Could not parse {log.Description}: {ex.Message.AsHtml ()}</span><br />");
+										writer.WriteLine ($"<span style='padding-left: 15px;'>Could not parse {log.Description}: {ex.Message?.AsHtml ()}</span><br />");
 									}
 								}
 							}
@@ -587,7 +585,7 @@ namespace Xharness.Jenkins.Reports {
 				if (failedTests.Count () == 0) {
 					foreach (var group in failedTests.GroupBy ((v) => v.TestName)) {
 						var enumerableGroup = group as IEnumerable<AppleTestTask>;
-						if (enumerableGroup != null) {
+						if (enumerableGroup is not null) {
 							writer.WriteLine ("<a href='#test_{2}'>{0}</a> ({1})<br />", group.Key, string.Join (", ", enumerableGroup.Select ((v) => string.Format ("<span style='color: {0}'>{1}</span>", v.GetTestColor (), string.IsNullOrEmpty (v.Mode) ? v.ExecutionResult.ToString () : v.Mode)).ToArray ()), group.Key.Replace (' ', '-'));
 							continue;
 						}
@@ -601,7 +599,7 @@ namespace Xharness.Jenkins.Reports {
 					foreach (var test in buildingTests) {
 						var runTask = test as RunTestTask;
 						var buildDuration = string.Empty;
-						if (runTask != null)
+						if (runTask is not null)
 							buildDuration = runTask.BuildTask.Duration.ToString ();
 						writer.WriteLine ($"<a href='#test_{test.TestName}'>{test.TestName} ({test.Mode})</a> {buildDuration}<br />");
 					}
@@ -640,6 +638,14 @@ namespace Xharness.Jenkins.Reports {
 			writer.WriteLine ("</div>");
 			writer.WriteLine ("</body>");
 			writer.WriteLine ("</html>");
+		}
+
+		static string GetMimeMapping (string value)
+		{
+			var provider = new Microsoft.AspNetCore.StaticFiles.FileExtensionContentTypeProvider ();
+			if (provider.TryGetContentType (value, out var contentType))
+				return contentType;
+			return "application/octet-stream";
 		}
 
 		static string LinkEncode (string path)

@@ -22,7 +22,7 @@ SHIPPED_HEADERS +=         \
 	xamarin/monovm-bridge.h \
 	xamarin/coreclr-bridge.h \
 
-SHARED_SOURCES += mono-runtime.m bindings.m bindings-generated.m shared.m runtime.m trampolines.m trampolines-invoke.m xamarin-support.m nsstring-localization.m trampolines-varargs.m monovm-bridge.m coreclr-bridge.m
+SHARED_SOURCES += mono-runtime.m bindings.m bindings-generated.m shared.m runtime.m trampolines.m trampolines-invoke.m xamarin-support.m nsstring-localization.m trampolines-varargs.m monovm-bridge.m coreclr-bridge.m nativeaot-bridge.m
 SHARED_I386_SOURCES += trampolines-i386.m trampolines-i386-asm.s trampolines-i386-objc_msgSend.s trampolines-i386-objc_msgSendSuper.s trampolines-i386-objc_msgSend_stret.s trampolines-i386-objc_msgSendSuper_stret.s
 SHARED_X86_64_SOURCES += trampolines-x86_64.m trampolines-x86_64-asm.s trampolines-x86_64-objc_msgSend.s trampolines-x86_64-objc_msgSendSuper.s trampolines-x86_64-objc_msgSend_stret.s trampolines-x86_64-objc_msgSendSuper_stret.s
 SHARED_ARM64_SOURCES += trampolines-arm64.m trampolines-arm64-asm.s trampolines-arm64-objc_msgSend.s trampolines-arm64-objc_msgSendSuper.s
@@ -31,6 +31,13 @@ SHARED_HEADERS += shared.h product.h delegates.h runtime-internal.h $(SHARED_INC
 SHARED_FILES = $(SHARED_SOURCES) $(SHARED_HEADERS) $(SHARED_I386_SOURCES) $(SHARED_X86_64_SOURCES) $(SHARED_ARM64_SOURCES)
 
 EXTRA_DEPENDENCIES = $(SHARED_HEADERS) $(TOP)/Make.config $(TOP)/mk/mono.mk
+
+ifdef IOS_SUPPORTS_32BIT_ARCHITECTURES
+IOS_SIMULATOR_ARCHITECTURES=x86
+IOS_DEVICE_ARCHITECTURES=armv7 armv7s
+endif
+IOS_SIMULATOR_ARCHITECTURES+=x86_64
+IOS_DEVICE_ARCHITECTURES+=arm64
 
 coreclrhost.h: Makefile
 	$(Q_CURL) curl -L --fail --output "$@.tmp" https://raw.githubusercontent.com/dotnet/runtime/6c8f9fff6adcf6c661072646dbdafabed5267ec5/src/coreclr/hosts/inc/coreclrhost.h
@@ -64,6 +71,9 @@ bindings-generated.m: bindings-generator.exe
 app-main.m watchextension-main.m tvextension-main.m: extension-main.m
 	$(Q_LN) ln -fs $< $@
 
+product.h: product.in.h Makefile $(GIT_DIRECTORY)/index
+	$(Q) sed -e 's/@PRODUCT_HASH@/$(CURRENT_HASH_LONG)/' $< > $@.tmp
+	$(Q) mv $@.tmp $@
 #
 # MonoTouch defines (used for all MonoTouch platforms: iOS, WatchOS and TVOS)
 #
@@ -150,14 +160,18 @@ endef
 # 3: architectures
 ifdef INCLUDE_IOS
 ifdef INCLUDE_DEVICE
-$(eval $(call FrameworkTemplate,iphoneos,IPHONEOS,armv7 armv7s arm64))
+$(eval $(call FrameworkTemplate,iphoneos,IPHONEOS,$(IOS_DEVICE_ARCHITECTURES)))
 endif
-$(eval $(call FrameworkTemplate,iphonesimulator,IOSSIMULATOR,x86 x86_64))
+$(eval $(call FrameworkTemplate,iphonesimulator,IOSSIMULATOR,$(IOS_SIMULATOR_ARCHITECTURES)))
 endif
 
 ifdef INCLUDE_WATCH
 ifdef INCLUDE_DEVICE
+ifdef WATCHOS_SUPPORTS_32BIT_DEVICE_ARCHITECTURES
 $(eval $(call FrameworkTemplate,watchos,WATCHOS,armv7k arm64_32))
+else
+$(eval $(call FrameworkTemplate,watchos,WATCHOS,arm64_32))
+endif
 endif
 $(eval $(call FrameworkTemplate,watchsimulator,WATCHSIMULATOR,x86))
 endif
@@ -218,9 +232,9 @@ endef
 # 3: architectures
 ifdef INCLUDE_IOS
 ifdef INCLUDE_DEVICE
-$(eval $(call PlatformTemplate,iphoneos,IPHONEOS,armv7 armv7s arm64))
+$(eval $(call PlatformTemplate,iphoneos,IPHONEOS,$(IOS_DEVICE_ARCHITECTURES)))
 endif
-$(eval $(call PlatformTemplate,iphonesimulator,IOSSIMULATOR,x86 x86_64))
+$(eval $(call PlatformTemplate,iphonesimulator,IOSSIMULATOR,$(IOS_SIMULATOR_ARCHITECTURES)))
 endif
 ifdef INCLUDE_MACCATALYST
 $(eval $(call PlatformTemplate,maccatalyst,MACCATALYST,x86_64))
@@ -228,7 +242,11 @@ endif
 
 ifdef INCLUDE_WATCH
 ifdef INCLUDE_DEVICE
+ifdef WATCHOS_SUPPORTS_32BIT_DEVICE_ARCHITECTURES
 $(eval $(call PlatformTemplate,watchos,WATCHOS,armv7k arm64_32))
+else
+$(eval $(call PlatformTemplate,watchos,WATCHOS,arm64_32))
+endif
 endif
 $(eval $(call PlatformTemplate,watchsimulator,WATCHSIMULATOR,x86 x86_64))
 endif
@@ -444,6 +462,11 @@ MAC_LIBS =                   \
 #    This is used when using the CoreCLR runtime instead of Mono.
 #    CORECLR_RUNTIME is defined for these versions of libxamarin.
 #
+# libxamarin-nativeaot.a:
+#    This is used when using NativeAOT.
+#    CORECLR_RUNTIME is defined for these versions of libxamarin (because the nativeaot bridge shares *a lot* of code with the coreclr bridge)
+#    NATIVEAOT is defined for these versions of libxamarin
+#
 
 ifdef INCLUDE_XAMARIN_LEGACY
 all-local:: $(TARGETS)
@@ -576,18 +599,18 @@ DOTNET_MacCatalyst_LIBRARIES =
 
 define DotNetLibTemplate
 DOTNET_TARGETS += \
-	$(DOTNET_DESTDIR)/Microsoft.$(1).Runtime.$(2)/runtimes/$(2)/native/libxamarin-dotnet.dylib \
-	$(DOTNET_DESTDIR)/Microsoft.$(1).Runtime.$(2)/runtimes/$(2)/native/libxamarin-dotnet-debug.dylib \
-	$(DOTNET_DESTDIR)/Microsoft.$(1).Runtime.$(2)/runtimes/$(2)/native/libxamarin-dotnet.a \
-	$(DOTNET_DESTDIR)/Microsoft.$(1).Runtime.$(2)/runtimes/$(2)/native/libxamarin-dotnet-debug.a \
-	$$(foreach lib,$$(DOTNET_$(1)_LIBRARIES),$(DOTNET_DESTDIR)/Microsoft.$(1).Runtime.$(2)/runtimes/$(2)/native/$$(lib)) \
-	$$(foreach header,$$(SHIPPED_HEADERS),$(DOTNET_DESTDIR)/Microsoft.$(1).Runtime.$(2)/runtimes/$(2)/native/$$(header)) \
+	$(DOTNET_DESTDIR)/$($(2)_NUGET_RUNTIME_NAME)/runtimes/$(2)/native/libxamarin-dotnet.dylib \
+	$(DOTNET_DESTDIR)/$($(2)_NUGET_RUNTIME_NAME)/runtimes/$(2)/native/libxamarin-dotnet-debug.dylib \
+	$(DOTNET_DESTDIR)/$($(2)_NUGET_RUNTIME_NAME)/runtimes/$(2)/native/libxamarin-dotnet.a \
+	$(DOTNET_DESTDIR)/$($(2)_NUGET_RUNTIME_NAME)/runtimes/$(2)/native/libxamarin-dotnet-debug.a \
+	$$(foreach lib,$$(DOTNET_$(1)_LIBRARIES),$(DOTNET_DESTDIR)/$($(2)_NUGET_RUNTIME_NAME)/runtimes/$(2)/native/$$(lib)) \
+	$$(foreach header,$$(SHIPPED_HEADERS),$(DOTNET_DESTDIR)/$($(2)_NUGET_RUNTIME_NAME)/runtimes/$(2)/native/$$(header)) \
 
 DOTNET_TARGET_DIRS += \
-	$(DOTNET_DESTDIR)/Microsoft.$(1).Runtime.$(2)/runtimes/$(2)/native \
-	$(DOTNET_DESTDIR)/Microsoft.$(1).Runtime.$(2)/runtimes/$(2)/native/xamarin \
+	$(DOTNET_DESTDIR)/$($(2)_NUGET_RUNTIME_NAME)/runtimes/$(2)/native \
+	$(DOTNET_DESTDIR)/$($(2)_NUGET_RUNTIME_NAME)/runtimes/$(2)/native/xamarin \
 
-$(DOTNET_DESTDIR)/Microsoft.$(1).Runtime.$(2)/runtimes/$(2)/native/xamarin/%.h: xamarin/%.h | $(DOTNET_DESTDIR)/Microsoft.$(1).Runtime.$(2)/runtimes/$(2)/native/xamarin
+$(DOTNET_DESTDIR)/$($(2)_NUGET_RUNTIME_NAME)/runtimes/$(2)/native/xamarin/%.h: xamarin/%.h | $(DOTNET_DESTDIR)/$($(2)_NUGET_RUNTIME_NAME)/runtimes/$(2)/native/xamarin
 	$$(Q) $$(CP) $$< $$@
 endef
 
@@ -595,14 +618,23 @@ $(foreach platform,$(DOTNET_PLATFORMS),$(foreach rid,$(DOTNET_$(platform)_RUNTIM
 
 define DotNetCoreClrLibTemplate
 DOTNET_TARGETS += \
-	$(DOTNET_DESTDIR)/Microsoft.$(1).Runtime.$(2)/runtimes/$(2)/native/libxamarin-dotnet-coreclr.a \
-	$(DOTNET_DESTDIR)/Microsoft.$(1).Runtime.$(2)/runtimes/$(2)/native/libxamarin-dotnet-coreclr-debug.a \
-	$(DOTNET_DESTDIR)/Microsoft.$(1).Runtime.$(2)/runtimes/$(2)/native/libxamarin-dotnet-coreclr.dylib \
-	$(DOTNET_DESTDIR)/Microsoft.$(1).Runtime.$(2)/runtimes/$(2)/native/libxamarin-dotnet-coreclr-debug.dylib \
+	$(DOTNET_DESTDIR)/$($(2)_NUGET_RUNTIME_NAME)/runtimes/$(2)/native/libxamarin-dotnet-coreclr.a \
+	$(DOTNET_DESTDIR)/$($(2)_NUGET_RUNTIME_NAME)/runtimes/$(2)/native/libxamarin-dotnet-coreclr-debug.a \
+	$(DOTNET_DESTDIR)/$($(2)_NUGET_RUNTIME_NAME)/runtimes/$(2)/native/libxamarin-dotnet-coreclr.dylib \
+	$(DOTNET_DESTDIR)/$($(2)_NUGET_RUNTIME_NAME)/runtimes/$(2)/native/libxamarin-dotnet-coreclr-debug.dylib \
 
 endef
 
 $(foreach platform,$(DOTNET_CORECLR_PLATFORMS),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),$(eval $(call DotNetCoreClrLibTemplate,$(platform),$(rid)))))
+
+define DotNetNativeAotLibTemplate
+DOTNET_TARGETS += \
+	$(DOTNET_DESTDIR)/$($(2)_NUGET_RUNTIME_NAME)/runtimes/$(2)/native/libxamarin-dotnet-nativeaot.a \
+	$(DOTNET_DESTDIR)/$($(2)_NUGET_RUNTIME_NAME)/runtimes/$(2)/native/libxamarin-dotnet-nativeaot-debug.a \
+
+endef
+
+$(foreach platform,$(DOTNET_NATIVEAOT_PLATFORMS),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),$(eval $(call DotNetNativeAotLibTemplate,$(platform),$(rid)))))
 
 # a few lookup tables, because the data we have is not always in the format we need it
 DOTNET_iphonesimulator_DYLIB_FLAGS=-lmonosgen-2.0 -licudata -licui18n -licuuc -framework UIKit
@@ -617,7 +649,7 @@ DOTNET_mac_DYLIB_FLAGS=-lcoreclr
 #
 
 define DotNetInstallLibTemplate
-$(DOTNET_DESTDIR)/Microsoft.$(1).Runtime.$(2)/runtimes/$(2)/native/libxamarin-%.dylib: $$(foreach arch,$(3),.libs/$(4)/libxamarin-%.$$(arch).dylib) | $(DOTNET_DESTDIR)/Microsoft.$(1).Runtime.$(2)/runtimes/$(2)/native
+$(DOTNET_DESTDIR)/$($(2)_NUGET_RUNTIME_NAME)/runtimes/$(2)/native/libxamarin-%.dylib: $$(foreach arch,$(3),.libs/$(4)/libxamarin-%.$$(arch).dylib) | $(DOTNET_DESTDIR)/$($(2)_NUGET_RUNTIME_NAME)/runtimes/$(2)/native
 ifeq (1,$$(words $(3)))
 	$(Q) $(CP) $$^ $$@
 else
@@ -625,28 +657,28 @@ else
 endif
 	$(Q) install_name_tool -id @rpath/libxamarin-$$*.dylib $$@
 
-$(DOTNET_DESTDIR)/Microsoft.$(1).Runtime.$(2)/runtimes/$(2)/native/libxamarin-%.a: $$(foreach arch,$(3),.libs/$(4)/libxamarin-%.$$(arch).a) | $(DOTNET_DESTDIR)/Microsoft.$(1).Runtime.$(2)/runtimes/$(2)/native
+$(DOTNET_DESTDIR)/$($(2)_NUGET_RUNTIME_NAME)/runtimes/$(2)/native/libxamarin-%.a: $$(foreach arch,$(3),.libs/$(4)/libxamarin-%.$$(arch).a) | $(DOTNET_DESTDIR)/$($(2)_NUGET_RUNTIME_NAME)/runtimes/$(2)/native
 ifeq (1,$$(words $(3)))
 	$(Q) $(CP) $$^ $$@
 else
 	$$(call Q_2,LIPO,  [$1]) $(DEVICE_BIN_PATH)/lipo $$^ -create -output $$@
 endif
 
-$(DOTNET_DESTDIR)/Microsoft.$(1).Runtime.$(2)/runtimes/$(2)/native/libapp-%.a: $$(foreach arch,$(3),.libs/$(4)/libapp-%.$$(arch).a) | $(DOTNET_DESTDIR)/Microsoft.$(1).Runtime.$(2)/runtimes/$(2)/native
+$(DOTNET_DESTDIR)/$($(2)_NUGET_RUNTIME_NAME)/runtimes/$(2)/native/libapp-%.a: $$(foreach arch,$(3),.libs/$(4)/libapp-%.$$(arch).a) | $(DOTNET_DESTDIR)/$($(2)_NUGET_RUNTIME_NAME)/runtimes/$(2)/native
 ifeq (1,$$(words $(3)))
 	$(Q) $(CP) $$^ $$@
 else
 	$$(call Q_2,LIPO,  [$1]) $(DEVICE_BIN_PATH)/lipo $$^ -create -output $$@
 endif
 
-$(DOTNET_DESTDIR)/Microsoft.$(1).Runtime.$(2)/runtimes/$(2)/native/libextension-%.a: $$(foreach arch,$(3),.libs/$(4)/libextension-%.$$(arch).a) | $(DOTNET_DESTDIR)/Microsoft.$(1).Runtime.$(2)/runtimes/$(2)/native
+$(DOTNET_DESTDIR)/$($(2)_NUGET_RUNTIME_NAME)/runtimes/$(2)/native/libextension-%.a: $$(foreach arch,$(3),.libs/$(4)/libextension-%.$$(arch).a) | $(DOTNET_DESTDIR)/$($(2)_NUGET_RUNTIME_NAME)/runtimes/$(2)/native
 ifeq (1,$$(words $(3)))
 	$(Q) $(CP) $$^ $$@
 else
 	$$(call Q_2,LIPO,  [$1]) $(DEVICE_BIN_PATH)/lipo $$^ -create -output $$@
 endif
 
-$(DOTNET_DESTDIR)/Microsoft.$(1).Runtime.$(2)/runtimes/$(2)/native/libtvextension-%.a: $$(foreach arch,$(3),.libs/$(4)/libtvextension-%.$$(arch).a) | $(DOTNET_DESTDIR)/Microsoft.$(1).Runtime.$(2)/runtimes/$(2)/native
+$(DOTNET_DESTDIR)/$($(2)_NUGET_RUNTIME_NAME)/runtimes/$(2)/native/libtvextension-%.a: $$(foreach arch,$(3),.libs/$(4)/libtvextension-%.$$(arch).a) | $(DOTNET_DESTDIR)/$($(2)_NUGET_RUNTIME_NAME)/runtimes/$(2)/native
 ifeq (1,$$(words $(3)))
 	$(Q) $(CP) $$^ $$@
 else
@@ -694,6 +726,8 @@ $(foreach platform,$(DOTNET_PLATFORMS),$(foreach rid,$(DOTNET_$(platform)_RUNTIM
 $(foreach platform,$(DOTNET_PLATFORMS),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),$(foreach arch,$(DOTNET_$(rid)_ARCHITECTURES),$(eval $(call DotNetLibXamarinTemplate,$(DOTNET_$(rid)_SDK_PLATFORM),$(rid),$(arch),_DEBUG,-dotnet-debug,,.mono)))))
 $(foreach platform,$(DOTNET_PLATFORMS),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),$(foreach arch,$(DOTNET_$(rid)_ARCHITECTURES),$(eval $(call DotNetLibXamarinTemplate,$(DOTNET_$(rid)_SDK_PLATFORM),$(rid),$(arch),_CORECLR,-dotnet-coreclr,_CORECLR)))))
 $(foreach platform,$(DOTNET_PLATFORMS),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),$(foreach arch,$(DOTNET_$(rid)_ARCHITECTURES),$(eval $(call DotNetLibXamarinTemplate,$(DOTNET_$(rid)_SDK_PLATFORM),$(rid),$(arch),_CORECLR_DEBUG,-dotnet-coreclr-debug,_CORECLR)))))
+$(foreach platform,$(DOTNET_PLATFORMS),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),$(foreach arch,$(DOTNET_$(rid)_ARCHITECTURES),$(eval $(call DotNetLibXamarinTemplate,$(DOTNET_$(rid)_SDK_PLATFORM),$(rid),$(arch),_NATIVEAOT,-dotnet-nativeaot,_NATIVEAOT,.mono)))))
+$(foreach platform,$(DOTNET_PLATFORMS),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),$(foreach arch,$(DOTNET_$(rid)_ARCHITECTURES),$(eval $(call DotNetLibXamarinTemplate,$(DOTNET_$(rid)_SDK_PLATFORM),$(rid),$(arch),_NATIVEAOT_DEBUG,-dotnet-nativeaot-debug,_NATIVEAOT,.mono)))))
 
 #
 # DotNetLibExtensionTemplate builds lib[tv]extension.a
@@ -721,6 +755,7 @@ endef
 
 $(foreach platform,$(DOTNET_PLATFORMS),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),$(foreach arch,$(DOTNET_$(rid)_ARCHITECTURES),$(eval $(call DotNetLibExtensionTemplate,$(DOTNET_$(rid)_SDK_PLATFORM),$(rid),$(arch),,-dotnet,,)))))
 $(foreach platform,$(DOTNET_PLATFORMS),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),$(foreach arch,$(DOTNET_$(rid)_ARCHITECTURES),$(eval $(call DotNetLibExtensionTemplate,$(DOTNET_$(rid)_SDK_PLATFORM),$(rid),$(arch),_CORECLR,-dotnet-coreclr,_CORECLR)))))
+$(foreach platform,$(DOTNET_PLATFORMS),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),$(foreach arch,$(DOTNET_$(rid)_ARCHITECTURES),$(eval $(call DotNetLibExtensionTemplate,$(DOTNET_$(rid)_SDK_PLATFORM),$(rid),$(arch),_NATOVEAOT,-dotnet-nativeaot,_NATOVEAOT)))))
 
 dotnet: $(DOTNET_TARGETS)
 

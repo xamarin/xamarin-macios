@@ -5,12 +5,8 @@ using Microsoft.Build.Utilities;
 
 using NUnit.Framework;
 
-using Xamarin.iOS.Tasks;
-
-namespace Xamarin.MacDev.Tasks
-{
-	class CustomBTouchTask : BTouch
-	{
+namespace Xamarin.MacDev.Tasks {
+	class CustomBTouchTask : BTouch {
 		public string GetCommandLineCommands ()
 		{
 			return base.GenerateCommandLineCommands ();
@@ -18,15 +14,14 @@ namespace Xamarin.MacDev.Tasks
 	}
 
 	[TestFixture]
-	public class BTouchTaskTests : TestBase
-	{
+	public class BTouchTaskTests : TestBase {
 		[Test]
 		public void StandardCommandline ()
 		{
 			var task = CreateTask<CustomBTouchTask> ();
 
-			task.ApiDefinitions = new[] { new TaskItem ("apidefinition.cs") };
-			task.References = new[] { new TaskItem ("a.dll"), new TaskItem ("b.dll"), new TaskItem ("c.dll") };
+			task.ApiDefinitions = new [] { new TaskItem ("apidefinition.cs") };
+			task.References = new [] { new TaskItem ("a.dll"), new TaskItem ("b.dll"), new TaskItem ("c.dll") };
 			task.ResponseFilePath = Path.Combine (Cache.CreateTemporaryDirectory (), "response-file.txt");
 
 			var args = task.GetCommandLineCommands () + " " + File.ReadAllText (task.ResponseFilePath);
@@ -40,8 +35,8 @@ namespace Xamarin.MacDev.Tasks
 		{
 			var task = CreateTask<CustomBTouchTask> ();
 
-			task.ApiDefinitions = new[] { new TaskItem ("apidefinition.cs") };
-			task.References = new[] { new TaskItem ("a.dll"), new TaskItem ("b.dll"), new TaskItem ("c.dll") };
+			task.ApiDefinitions = new [] { new TaskItem ("apidefinition.cs") };
+			task.References = new [] { new TaskItem ("a.dll"), new TaskItem ("b.dll"), new TaskItem ("c.dll") };
 			task.ProjectDir = "~/"; // not important, but required (so can't be null)
 			task.ResponseFilePath = Path.Combine (Cache.CreateTemporaryDirectory (), "response-file.txt");
 

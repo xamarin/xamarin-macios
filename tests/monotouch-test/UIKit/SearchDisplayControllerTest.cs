@@ -17,13 +17,13 @@ using UIKit;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.UIKit {
-	
+
 	class SearchDisplayControllerPoker : UISearchDisplayController {
-		
+
 		static FieldInfo bkSearchBar;
 		static FieldInfo bkSearchContentsController;
 		static FieldInfo bkSearchResultsTableView;
-		
+
 		static SearchDisplayControllerPoker ()
 		{
 			var t = typeof (UISearchDisplayController);
@@ -31,20 +31,20 @@ namespace MonoTouchFixtures.UIKit {
 			bkSearchContentsController = t.GetField ("__mt_SearchContentsController_var", BindingFlags.Instance | BindingFlags.NonPublic);
 			bkSearchResultsTableView = t.GetField ("__mt_SearchResultsTableView_var", BindingFlags.Instance | BindingFlags.NonPublic);
 		}
-		
+
 		public static bool NewRefcountEnabled ()
 		{
 			return NSObject.IsNewRefcountEnabled ();
 		}
-		
+
 		public SearchDisplayControllerPoker ()
 		{
 		}
-		
+
 		public SearchDisplayControllerPoker (UISearchBar searchBar, UIViewController viewController) : base (searchBar, viewController)
 		{
 		}
-		
+
 		public UISearchBar SearchBarBackingField {
 			get {
 				return (UISearchBar) bkSearchBar.GetValue (this);
@@ -63,17 +63,17 @@ namespace MonoTouchFixtures.UIKit {
 			}
 		}
 	}
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class SearchDisplayControllerTest {
-		
+
 		[Test]
 		public void Ctor_Default_BackingFields ()
 		{
 			if (SearchDisplayControllerPoker.NewRefcountEnabled ())
 				Assert.Inconclusive ("backing fields are removed when newrefcount is enabled");
-			
+
 			using (var sc = new SearchDisplayControllerPoker ()) {
 				// default constructor does not set any UIViewController so the backing fields are null
 				Assert.Null (sc.SearchBarBackingField, "1a");
@@ -95,7 +95,7 @@ namespace MonoTouchFixtures.UIKit {
 		{
 			if (SearchDisplayControllerPoker.NewRefcountEnabled ())
 				Assert.Inconclusive ("backing fields are removed when newrefcount is enabled");
-			
+
 			using (var sb = new UISearchBar ())
 			using (var vc = new UIViewController ())
 			using (var sc = new SearchDisplayControllerPoker (sb, vc)) {

@@ -25,11 +25,11 @@ using NUnit.Framework;
 using Xamarin.Utils;
 
 namespace MonoTouchFixtures.CoreImage {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class ImageTest {
-		
+
 		[Test]
 		public void EmptyImage ()
 		{
@@ -87,7 +87,7 @@ namespace MonoTouchFixtures.CoreImage {
 					success = false;
 #endif
 				if (success) {
-					Assert.That (h.Extent.Height, Is.EqualTo ((nfloat)1), "Height");
+					Assert.That (h.Extent.Height, Is.EqualTo ((nfloat) 1), "Height");
 				} else {
 					Assert.IsNull (h, "Image");
 				}

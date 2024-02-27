@@ -16,11 +16,11 @@ using AdSupport;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.AdSupport {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class IdentifierManagerTest {
-		
+
 		[Test]
 		public void SharedManager ()
 		{

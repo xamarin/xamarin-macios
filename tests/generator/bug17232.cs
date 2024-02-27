@@ -5,7 +5,7 @@ using ObjCRuntime;
 namespace xam.bug17232 {
 	[BaseType (typeof (NSObject))]
 	interface FieldsTest {
-		
+
 		[Field ("MyFooFieldA", "libFoo.a")]
 		NSString FooFieldA { get; }
 

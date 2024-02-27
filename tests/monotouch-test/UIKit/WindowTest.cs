@@ -11,11 +11,11 @@ using ObjCRuntime;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.UIKit {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class WindowTest {
-		
+
 		[Test]
 		public void InitWithFrame ()
 		{
@@ -24,7 +24,7 @@ namespace MonoTouchFixtures.UIKit {
 				Assert.That (w.Frame, Is.EqualTo (frame), "Frame");
 			}
 		}
-		
+
 		[Test]
 		public void Convert_Null ()
 		{
@@ -35,7 +35,7 @@ namespace MonoTouchFixtures.UIKit {
 				Assert.That (w.ConvertRectToWindow (CGRect.Empty, null), Is.EqualTo (CGRect.Empty), "ConvertRectToWindow");
 			}
 		}
-		
+
 		[Test]
 		public void IsKeyWindow_5199 ()
 		{

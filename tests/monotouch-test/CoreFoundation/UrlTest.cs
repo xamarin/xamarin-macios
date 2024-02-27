@@ -8,6 +8,8 @@
 //
 
 using System;
+using System.IO;
+
 using Foundation;
 using CoreFoundation;
 using ObjCRuntime;
@@ -15,11 +17,11 @@ using NUnit.Framework;
 using Xamarin.Utils;
 
 namespace MonoTouchFixtures.CoreFoundation {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class CFUrlTest {
-		
+
 		[Test]
 		public void FromFile_Null ()
 		{
@@ -29,7 +31,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 		[Test]
 		public void RetainCountFromFile ()
 		{
-			var path = typeof (int).Assembly.Location;
+			var path = Path.Combine (Path.GetTempPath (), "placeholder.txt"); // the file doesn't have to exist, so just create any filename.
 
 			using (var url = CFUrl.FromFile (path)) {
 				Assert.That (TestRuntime.CFGetRetainCount (url.Handle), Is.EqualTo ((nint) 1), "RetainCount");
@@ -46,7 +48,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 		public void RetainCountFromUrl ()
 		{
 			using (var url = CFUrl.FromUrlString ("http://xamarin.com", null)) {
-				Assert.That(TestRuntime.CFGetRetainCount (url.Handle), Is.EqualTo ((nint) 1), "RetainCount");
+				Assert.That (TestRuntime.CFGetRetainCount (url.Handle), Is.EqualTo ((nint) 1), "RetainCount");
 			}
 		}
 

@@ -27,17 +27,17 @@ namespace MonoTouchFixtures.Metal {
 		public void TearDown ()
 		{
 			descriptor?.Dispose ();
-			descriptor = null; 
+			descriptor = null;
 		}
 
 		[Test]
 		public void FunctionCountTest ()
-		{ 
+		{
 			nuint newFunctionCount = 10;
 			nuint objFunctionCount = 0;
 			// we want to make sure we do not crash because intro fails 
 			Assert.DoesNotThrow (() => {
-				descriptor.FunctionCount = newFunctionCount ; 
+				descriptor.FunctionCount = newFunctionCount;
 			}, "Setter");
 			Assert.DoesNotThrow (() => {
 				objFunctionCount = descriptor.FunctionCount;

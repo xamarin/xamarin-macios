@@ -21,8 +21,7 @@ using NUnit.Framework;
 namespace MonoTouchFixtures.AudioToolbox {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class AudioUnitTest
-	{
+	public class AudioUnitTest {
 		ManualResetEvent inputCallbackEvent = new ManualResetEvent (false);
 
 		// This test currently only works on macOS, probably due to missing microphone entitlements/permissions for mobile platforms.

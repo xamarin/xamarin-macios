@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net$(BundledNETCoreAppTargetFrameworkVersion)</TargetFramework>
     <ActualPackageVersion Condition="'$(CustomDotNetVersion)' != ''">$(CustomDotNetVersion)</ActualPackageVersion>
     <ActualPackageVersion Condition="'$(ActualPackageVersion)' == ''">$(BundledNETCorePlatformsPackageVersion)</ActualPackageVersion>
     <NoWarn>$(NoWarn);NU1505</NoWarn> <!--  warning NU1505: Duplicate 'PackageDownload' items found. Remove the duplicate items or use the Update functionality to ensure a consistent restore behavior. -->
@@ -20,14 +20,11 @@
     <!-- download the reference assemblies -->
     <PackageDownload Include="microsoft.netcore.app.ref" Version="[$(ActualPackageVersion)]" />
 
-    <!-- download the nfloat reference assembly for .NET 6 (but only for .NET 6, once we switch to .NET 7 this can be removed) -->
-    <PackageDownload Include="System.Runtime.InteropServices.NFloat.Internal" Version="[6.0.1]" Condition="'$(ActualPackageVersion.Substring(0,1))' == '6'" />
+    <!-- and get the mono workload(s) as well -->
+    <PackageDownload Include="Microsoft.NET.Workload.Mono.ToolChain.net7.Manifest-$(MonoToolChainManifestVersionBand)" Version="[$(ActualPackageVersion)]" Condition="'$(TrackingDotNetRuntimeSeparately)' != ''" />
 
-    <!-- and get the mono workload as well -->
-    <PackageDownload Include="Microsoft.NET.Workload.Mono.ToolChain.Manifest-$(ToolChainManifestVersionBand)" Version="[$(ActualPackageVersion)]" />
-
-    <!-- and get the emscripten workload as well -->
-    <PackageDownload Include="Microsoft.NET.Workload.Emscripten.Manifest-$(ToolChainManifestVersionBand)" Version="[$(MicrosoftNETWorkloadEmscriptenManifest60100PackageVersion)]" />
+    <!-- and get the emscripten workload(s) as well -->
+    <PackageDownload Include="Microsoft.NET.Workload.Emscripten.net7.Manifest-$(EmscriptenManifestVersionBand)" Version="[$(Emscriptennet7WorkloadVersion)]" Condition="'$(TrackingDotNetRuntimeSeparately)' != ''" />
   </ItemGroup>
 
   <Import Project="all-package-references.csproj" />

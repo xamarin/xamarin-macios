@@ -1,6 +1,6 @@
 {
   "author": "Microsoft",
-  "name": "MacCatalyst View Controller",
-  "description": "A MacCatalyst View Controller class and xib",
-  "symbols/namespace/description": "namespace for the generated code"
+  "name": "Mac Catalyst 檢視控制器",
+  "description": "MacCatalyst 檢視控制器類別和 xib",
+  "symbols/namespace/description": "適用於產生之程式碼的命名空間"
 }

@@ -24,14 +24,10 @@ using Vector3 = global::OpenTK.Vector3;
 namespace GameplayKit {
 
 #if NET
-	[SupportedOSPlatform ("ios10.0")]
-	[SupportedOSPlatform ("tvos10.0")]
-	[SupportedOSPlatform ("macos10.12")]
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("tvos")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("maccatalyst")]
-#else
-	[iOS (10,0)]
-	[TV (10,0)]
-	[Mac (10,12)]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct GKBox {
@@ -40,14 +36,10 @@ namespace GameplayKit {
 	}
 
 #if NET
-	[SupportedOSPlatform ("ios10.0")]
-	[SupportedOSPlatform ("tvos10.0")]
-	[SupportedOSPlatform ("macos10.12")]
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("tvos")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("maccatalyst")]
-#else
-	[iOS (10,0)]
-	[TV (10,0)]
-	[Mac (10,12)]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct GKQuad {
@@ -56,29 +48,28 @@ namespace GameplayKit {
 	}
 
 #if NET
-	[SupportedOSPlatform ("ios10.0")]
-	[SupportedOSPlatform ("tvos10.0")]
-	[SupportedOSPlatform ("macos10.12")]
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("tvos")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("maccatalyst")]
-#else
-	[iOS (10,0)]
-	[TV (10,0)]
-	[Mac (10,12)]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct GKTriangle {
-		[MarshalAs (UnmanagedType.ByValArray, SizeConst = 3)]
-		Vector3 [] points;
+		Vector3 point1;
+		Vector3 point2;
+		Vector3 point3;
 		public Vector3 [] Points {
 			get {
-				return points ?? (points = new Vector3 [3]);
+				return new Vector3 [] { point1, point2, point3 };
 			}
 			set {
 				if (value is null)
 					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
 				if (value.Length != 3)
 					throw new ArgumentOutOfRangeException (nameof (value), "The length of the Value array must be 3");
-				points = value;
+				point1 = value [0];
+				point2 = value [1];
+				point3 = value [2];
 			}
 		}
 	}

@@ -13,11 +13,10 @@ namespace MonoTouchFixtures.Compression {
 
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class DeflateStreamTest
-	{
+	public class DeflateStreamTest {
 		private static void CopyStream (Stream src, Stream dest)
 		{
-			byte[] array = new byte[1024];
+			byte [] array = new byte [1024];
 			int bytes_read;
 			bytes_read = src.Read (array, 0, 1024);
 			while (bytes_read != 0) {
@@ -26,13 +25,13 @@ namespace MonoTouchFixtures.Compression {
 			}
 		}
 
-		private static bool compare_buffers (byte[] first, byte[] second, int length)
+		private static bool compare_buffers (byte [] first, byte [] second, int length)
 		{
 			if (first.Length < length || second.Length < length) {
 				return false;
 			}
 			for (int i = 0; i < length; i++) {
-				if (first[i] != second[i]) {
+				if (first [i] != second [i]) {
 					return false;
 				}
 			}
@@ -52,7 +51,7 @@ namespace MonoTouchFixtures.Compression {
 		{
 			if (!TestRuntime.CheckXcodeVersion (7, 0))
 				Assert.Ignore ("Requires iOS 9.0+ or macOS 10.11+");
-			Assert.Throws<ArgumentException> (() => new DeflateStream (new MemoryStream (), (CompressionMode)Int32.MinValue, CompressionAlgorithm.Zlib));
+			Assert.Throws<ArgumentException> (() => new DeflateStream (new MemoryStream (), (CompressionMode) Int32.MinValue, CompressionAlgorithm.Zlib));
 		}
 
 		[TestCase (CompressionAlgorithm.LZ4)]
@@ -63,24 +62,24 @@ namespace MonoTouchFixtures.Compression {
 		{
 			if (!TestRuntime.CheckXcodeVersion (7, 0))
 				Assert.Ignore ("Requires iOS 9.0+ or macOS 10.11+");
-			byte [] data = new byte[100000];
+			byte [] data = new byte [100000];
 			for (int i = 0; i < 100000; i++) {
-				data[i] = (byte) i;
+				data [i] = (byte) i;
 			}
 			MemoryStream dataStream = new MemoryStream (data);
 			MemoryStream backing = new MemoryStream ();
 			DeflateStream compressing = new DeflateStream (backing, CompressionMode.Compress, algorithm, true);
 			CopyStream (dataStream, compressing);
-			dataStream.Close();
-			compressing.Close();
+			dataStream.Close ();
+			compressing.Close ();
 			backing.Seek (0, SeekOrigin.Begin);
 			DeflateStream decompressing = new DeflateStream (backing, CompressionMode.Decompress, algorithm);
 			MemoryStream output = new MemoryStream ();
 			CopyStream (decompressing, output);
 			Assert.AreNotEqual (0, output.Length, "Length should be more than 0.");
-			Assert.IsTrue (compare_buffers (data, output.GetBuffer(), (int) output.Length), "Buffers are not equal.");
-			decompressing.Close();
-			output.Close();
+			Assert.IsTrue (compare_buffers (data, output.GetBuffer (), (int) output.Length), "Buffers are not equal.");
+			decompressing.Close ();
+			output.Close ();
 		}
 
 		[Test] // Not passing the algorithm because the compressed data is Zlib compressed.
@@ -92,7 +91,7 @@ namespace MonoTouchFixtures.Compression {
 			DeflateStream decompressing = new DeflateStream (backing, CompressionMode.Decompress, CompressionAlgorithm.Zlib);
 			StreamReader reader = new StreamReader (decompressing);
 			Assert.AreEqual ("Hello", reader.ReadLine ());
-			decompressing.Close();
+			decompressing.Close ();
 		}
 
 		[Test]
@@ -110,7 +109,7 @@ namespace MonoTouchFixtures.Compression {
 		{
 			if (!TestRuntime.CheckXcodeVersion (7, 0))
 				Assert.Ignore ("Requires iOS 9.0+ or macOS 10.11+");
-			byte [] dummy = new byte[20];
+			byte [] dummy = new byte [20];
 			MemoryStream backing = new MemoryStream ();
 			DeflateStream compressing = new DeflateStream (backing, CompressionMode.Compress, CompressionAlgorithm.Zlib);
 			Assert.Throws<InvalidOperationException> (() => compressing.Read (dummy, 0, 20));
@@ -121,7 +120,7 @@ namespace MonoTouchFixtures.Compression {
 		{
 			if (!TestRuntime.CheckXcodeVersion (7, 0))
 				Assert.Ignore ("Requires iOS 9.0+ or macOS 10.11+");
-			byte [] dummy = new byte[20];
+			byte [] dummy = new byte [20];
 			MemoryStream backing = new MemoryStream (compressed_data);
 			DeflateStream decompressing = new DeflateStream (backing, CompressionMode.Decompress, CompressionAlgorithm.Zlib);
 			Assert.Throws<ArgumentException> (() => decompressing.Read (dummy, 10, 20));
@@ -132,7 +131,7 @@ namespace MonoTouchFixtures.Compression {
 		{
 			if (!TestRuntime.CheckXcodeVersion (7, 0))
 				Assert.Ignore ("Requires iOS 9.0+ or macOS 10.11+");
-			byte [] dummy = new byte[20];
+			byte [] dummy = new byte [20];
 			MemoryStream backing = new MemoryStream (compressed_data);
 			DeflateStream decompressing = new DeflateStream (backing, CompressionMode.Decompress, CompressionAlgorithm.Zlib);
 			decompressing.Close ();
@@ -272,7 +271,7 @@ namespace MonoTouchFixtures.Compression {
 			if (!TestRuntime.CheckXcodeVersion (7, 0))
 				Assert.Ignore ("Requires iOS 9.0+ or macOS 10.11+");
 			MemoryStream backing = new MemoryStream (compressed_data);
-			DeflateStream decompress = new DeflateStream (backing, CompressionMode.Decompress,  CompressionAlgorithm.Zlib);
+			DeflateStream decompress = new DeflateStream (backing, CompressionMode.Decompress, CompressionAlgorithm.Zlib);
 			decompress.Dispose ();
 			decompress.Dispose ();
 		}
@@ -290,30 +289,26 @@ namespace MonoTouchFixtures.Compression {
 			if (!TestRuntime.CheckXcodeVersion (7, 0))
 				Assert.Ignore ("Requires iOS 9.0+ or macOS 10.11+");
 			// Write a deflated stream, then some additional data...
-			using (MemoryStream ms = new MemoryStream())
-			{
+			using (MemoryStream ms = new MemoryStream ()) {
 				// The compressed stream
-				using (DeflateStream stream = new DeflateStream(ms, CompressionMode.Compress, algorithm, true))
-				{
-					stream.WriteByte(1);
-					stream.Flush();
+				using (DeflateStream stream = new DeflateStream (ms, CompressionMode.Compress, algorithm, true)) {
+					stream.WriteByte (1);
+					stream.Flush ();
 				}
 				// Junk
-				ms.WriteByte(2);
+				ms.WriteByte (2);
 
 				ms.Position = 0;
 				// Reading: this should not hang
-				using (DeflateStream stream = new DeflateStream(ms, CompressionMode.Decompress, algorithm))
-				{
-					byte[] buffer  = new byte[512];
-					int len = stream.Read(buffer, 0, buffer.Length);
-					Console.WriteLine(len == 1);
+				using (DeflateStream stream = new DeflateStream (ms, CompressionMode.Decompress, algorithm)) {
+					byte [] buffer = new byte [512];
+					int len = stream.Read (buffer, 0, buffer.Length);
+					Console.WriteLine (len == 1);
 				}
 			}
 		}
-		
-		class Bug19313Stream : MemoryStream
-		{
+
+		class Bug19313Stream : MemoryStream {
 			public Bug19313Stream (byte [] buffer)
 				: base (buffer)
 			{
@@ -337,7 +332,7 @@ namespace MonoTouchFixtures.Compression {
 		{
 			if (!TestRuntime.CheckXcodeVersion (7, 0))
 				Assert.Ignore ("Requires iOS 9.0+ or macOS 10.11+");
-			byte [] buffer  = new byte [512];
+			byte [] buffer = new byte [512];
 			using (var backing = new Bug19313Stream (compressed_data))
 			using (var decompressing = new DeflateStream (backing, CompressionMode.Decompress, CompressionAlgorithm.Zlib))
 				decompressing.Read (buffer, 0, buffer.Length);

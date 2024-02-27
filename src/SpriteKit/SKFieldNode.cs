@@ -15,8 +15,8 @@ using ObjCRuntime;
 
 namespace SpriteKit {
 #if !XAMCORE_3_0 && !MONOMAC
-	public partial class SKFieldNode  {
-		
+	public partial class SKFieldNode {
+
 		[Obsolete ("Use the method 'CreateVortexField' instead.")]
 		public static SKFieldNode CraeteVortexField ()
 		{

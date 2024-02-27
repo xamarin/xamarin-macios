@@ -1,0 +1,2 @@
+!missing-selector! CPAlertAction::color not bound
+!missing-selector! CPAlertAction::initWithTitle:color:handler: not bound

@@ -1,8 +1,7 @@
 using System;
 using Foundation;
 
-namespace BindingTests
-{
+namespace BindingTests {
 	public enum HMAccessoryCategoryType {
 		[Field ("HMAccessoryCategoryTypeGarageDoorOpener")]
 		DoorOpener,

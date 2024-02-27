@@ -55,40 +55,40 @@ namespace MonoMac.Tuner {
 				return pe;
 			case MarkException me: {
 				var re = me.InnerException as ResolutionException;
-				if (re == null) {
-					if (me.InnerException != null) {
+				if (re is null) {
+					if (me.InnerException is not null) {
 						return ErrorHelper.CreateError (2102, me, Errors.MT2102, me.Method.FullName, me.Method.Module, me.InnerException.Message);
 					} else {
 						return ErrorHelper.CreateError (2102, me, Errors.MT2102_A, me.Method.FullName, me.Method.Module);
 					}
 				} else {
 					TypeReference tr = (re.Member as TypeReference);
-					IMetadataScope scope = tr == null ? re.Member.DeclaringType.Scope : tr.Scope;
+					IMetadataScope scope = tr is null ? re.Member.DeclaringType.Scope : tr.Scope;
 					return ErrorHelper.CreateError (2101, me, Errors.MT2101, re.Member, me.Method.FullName, scope);
 				}
 			}
 			case ResolutionException re: {
 				TypeReference tr = (re.Member as TypeReference);
-				IMetadataScope scope = tr == null ? re.Member.DeclaringType.Scope : tr.Scope;
+				IMetadataScope scope = tr is null ? re.Member.DeclaringType.Scope : tr.Scope;
 				return new ProductException (2002, true, re, "Failed to resolve \"{0}\" reference from \"{1}\"", re.Member, scope);
 			}
 			case XmlResolutionException ex:
 				return new ProductException (2017, true, ex, Errors.MX2017, ex?.InnerException?.Message ?? ex.Message);
 			default:
-				if (e.InnerException != null)
+				if (e.InnerException is not null)
 					return HandlePipelineProcessException (e.InnerException);
 
 				var message = new StringBuilder ();
 				if (e.Data.Count > 0) {
 					message.AppendLine ();
 					var m = e.Data ["MethodDefinition"] as string;
-					if (m != null)
+					if (m is not null)
 						message.AppendLine ($"\tMethod: `{m}`");
 					var t = e.Data ["TypeReference"] as string;
-					if (t != null)
+					if (t is not null)
 						message.AppendLine ($"\tType: `{t}`");
 					var a = e.Data ["AssemblyDefinition"] as string;
-					if (a != null)
+					if (a is not null)
 						message.AppendLine ($"\tAssembly: `{a}`");
 				}
 				message.Append ($"Reason: {e.Message}");

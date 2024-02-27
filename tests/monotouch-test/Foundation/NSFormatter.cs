@@ -5,12 +5,10 @@ using NUnit.Framework;
 using Foundation;
 using AppKit;
 
-namespace apitest
-{
+namespace apitest {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class NSFormatterTests
-	{
+	public class NSFormatterTests {
 		NSNumberFormatter formatter;
 
 		[SetUp]
@@ -33,7 +31,7 @@ namespace apitest
 		public void NSFormatter_ShouldGetAttributedString ()
 		{
 			var str = formatter.GetAttributedString (NSNumber.FromFloat (3.21f), new NSStringAttributes () { Font = NSFont.SystemFontOfSize (8) });
-		
+
 			Assert.AreEqual (str.Value, "$3.21");
 		}
 

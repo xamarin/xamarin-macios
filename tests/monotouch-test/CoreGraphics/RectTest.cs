@@ -13,33 +13,31 @@ using CoreGraphics;
 using ObjCRuntime;
 using NUnit.Framework;
 
-namespace MonoTouchFixtures.CoreGraphics
-{
+namespace MonoTouchFixtures.CoreGraphics {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class RectTest
-	{
+	public class RectTest {
 		[Test]
 		public void Inflate ()
 		{
 			var rect = new CGRect (1, 2, 3, 4);
 			rect.Inflate (5, 6);
-			Assert.AreEqual (-4, (int)rect.X, "x 1");
-			Assert.AreEqual (-4, (int)rect.Y, "y 1");
-			Assert.AreEqual (13, (int)rect.Width, "w 1");
-			Assert.AreEqual (16, (int)rect.Height, "h 1");
+			Assert.AreEqual (-4, (int) rect.X, "x 1");
+			Assert.AreEqual (-4, (int) rect.Y, "y 1");
+			Assert.AreEqual (13, (int) rect.Width, "w 1");
+			Assert.AreEqual (16, (int) rect.Height, "h 1");
 
 			rect.Inflate (new CGSize (10, 20));
-			Assert.AreEqual (-14, (int)rect.X, "x 2");
-			Assert.AreEqual (-24, (int)rect.Y, "y 2");
-			Assert.AreEqual (33, (int)rect.Width, "w 2");
-			Assert.AreEqual (56, (int)rect.Height, "h 2");
+			Assert.AreEqual (-14, (int) rect.X, "x 2");
+			Assert.AreEqual (-24, (int) rect.Y, "y 2");
+			Assert.AreEqual (33, (int) rect.Width, "w 2");
+			Assert.AreEqual (56, (int) rect.Height, "h 2");
 
 			rect = CGRect.Inflate (rect, 5, 4);
-			Assert.AreEqual (-19, (int)rect.X, "x 3");
-			Assert.AreEqual (-28, (int)rect.Y, "y 3");
-			Assert.AreEqual (43, (int)rect.Width, "w 3");
-			Assert.AreEqual (64, (int)rect.Height, "h 3");
+			Assert.AreEqual (-19, (int) rect.X, "x 3");
+			Assert.AreEqual (-28, (int) rect.Y, "y 3");
+			Assert.AreEqual (43, (int) rect.Width, "w 3");
+			Assert.AreEqual (64, (int) rect.Height, "h 3");
 		}
 
 		[Test]
@@ -78,7 +76,7 @@ namespace MonoTouchFixtures.CoreGraphics
 		[Test]
 		public void ToStringTest ()
 		{
-			var rect = new CGRect ((nfloat)1, (nfloat)2, (nfloat)3, (nfloat)4);
+			var rect = new CGRect ((nfloat) 1, (nfloat) 2, (nfloat) 3, (nfloat) 4);
 #if NET
 			Assert.AreEqual ("{{1, 2}, {3, 4}}", rect.ToString (), "ToString");
 #else

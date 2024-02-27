@@ -28,9 +28,9 @@ namespace Foundation {
 		{
 			if (bytes is null)
 				throw new ArgumentNullException (nameof (bytes));
-			
+
 			unsafe {
-				fixed (byte *p = &bytes[0]){
+				fixed (byte* p = bytes) {
 					AppendBytes ((IntPtr) p, (nuint) bytes.Length);
 				}
 			}
@@ -43,11 +43,11 @@ namespace Foundation {
 
 			if (start < 0 || start > bytes.Length)
 				throw new ArgumentException (nameof (start));
-			if (start+len > bytes.Length)
+			if (start + len > bytes.Length)
 				throw new ArgumentException (nameof (len));
-			
+
 			unsafe {
-				fixed (byte *p = &bytes[start]){
+				fixed (byte* p = &bytes [start]) {
 					AppendBytes ((IntPtr) p, (nuint) len);
 				}
 			}
@@ -58,9 +58,9 @@ namespace Foundation {
 			IntPtr source = Bytes;
 			nuint top = Length;
 
-			for (nuint i = 0; i < top; i++){
+			for (nuint i = 0; i < top; i++) {
 				if (source == Bytes && top == Length)
-					yield return Marshal.ReadByte (source, (int)i);
+					yield return Marshal.ReadByte (source, (int) i);
 				else
 					throw new InvalidOperationException ("The NSMutableData has changed");
 			}
@@ -71,9 +71,9 @@ namespace Foundation {
 			IntPtr source = Bytes;
 			nuint top = Length;
 
-			for (nuint i = 0; i < top; i++){
+			for (nuint i = 0; i < top; i++) {
 				if (source == Bytes && top == Length)
-					yield return Marshal.ReadByte (source, (int)i);
+					yield return Marshal.ReadByte (source, (int) i);
 				else
 					throw new InvalidOperationException ("The NSMutableData has changed");
 			}

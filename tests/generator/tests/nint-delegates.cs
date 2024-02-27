@@ -5,16 +5,17 @@ using ObjCRuntime;
 
 namespace NS {
 	[NoMacCatalyst]
-	[BaseType (typeof (NSObject), Delegates=new string [] { "Delegate" }, Events=new Type [] { typeof (NSTableViewDelegate)})]
+	[BaseType (typeof (NSObject), Delegates = new string [] { "Delegate" }, Events = new Type [] { typeof (NSTableViewDelegate) })]
 	partial interface NSTableView {
 		[NullAllowed]
 		[Export ("delegate")]
 		NSObject Delegate { get; set; }
-	
+
 	}
 
 	[BaseType (typeof (NSObject))]
-	[Model][Protocol]
+	[Model]
+	[Protocol]
 	partial interface NSTableViewDelegate {
 		[Export ("row:"), DelegateName ("NSTableViewColumnRowPredicate"), DefaultValue (0)]
 		nint ShouldEditTableColumn (nint row);

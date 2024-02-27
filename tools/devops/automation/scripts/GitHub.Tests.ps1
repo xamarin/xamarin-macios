@@ -14,7 +14,7 @@ Describe 'New-GitHubComment' {
                 "BUILD_BUILDID" = "BUILD_BUILDID";
                 "SYSTEM_JOBNAME" = "SYSTEM_JOBNAME";
                 "SYSTEM_STAGEDISPLAYNAME" = "SYSTEM_STAGEDISPLAYNAME"
-                "BUILD_REVISION" = "BUILD_REVISION";
+                "BUILD_SOURCEVERSION" = "BUILD_SOURCEVERSION";
                 "GITHUB_TOKEN" = "GITHUB_TOKEN";
                 "BUILD_DEFINITIONNAME" = "BUILD_DEFINITIONNAME"
             }
@@ -39,7 +39,7 @@ Describe 'New-GitHubComment' {
             # assert the call and compare the expected parameters to the received ones
             Assert-MockCalled -CommandName Invoke-RestMethod -Times 1 -Scope It -ParameterFilter {
                 # validate each of the params and the payload
-                if ($Uri -ne "https://api.github.com/repos/xamarin/xamarin-macios/commits/BUILD_REVISION/comments") {
+                if ($Uri -ne "https://api.github.com/repos/xamarin/xamarin-macios/commits/BUILD_SOURCEVERSION/comments") {
                     return $False
                 }
                 if ($Headers.Authorization -ne ("token {0}" -f $envVariables["GITHUB_TOKEN"])) {
@@ -85,7 +85,7 @@ Describe 'New-GitHubComment' {
                 "BUILD_BUILDID" = "BUILD_BUILDID";
                 "SYSTEM_JOBNAME" = "SYSTEM_JOBNAME";
                 "SYSTEM_STAGEDISPLAYNAME" = "SYSTEM_STAGEDISPLAYNAME"
-                "BUILD_REVISION" = "BUILD_REVISION";
+                "BUILD_SOURCEVERSION" = "BUILD_SOURCEVERSION";
                 "GITHUB_TOKEN" = "GITHUB_TOKEN";
                 "BUILD_DEFINITIONNAME" = "BUILD_DEFINITIONNAME"
             }

@@ -10,8 +10,7 @@ using System.Reflection;
 using Xamarin.Utils;
 using Xamarin.Tests;
 
-namespace Xamarin.MMP.Tests
-{
+namespace Xamarin.MMP.Tests {
 	internal class MessageTool : Tool {
 		public MessageTool ()
 		{
@@ -27,8 +26,7 @@ namespace Xamarin.MMP.Tests
 		protected override string MessagePrefix => "MM";
 	}
 
-	public class OutputText
-	{
+	public class OutputText {
 		public BuildResult BuildResult { get; private set; }
 		public string RunOutput { get; private set; }
 
@@ -51,7 +49,7 @@ namespace Xamarin.MMP.Tests
 		string build_output;
 		public string BuildOutput {
 			get {
-				if (build_output == null)
+				if (build_output is null)
 					build_output = string.Join ("\n", BuildOutputLines);
 				return build_output;
 			}
@@ -60,7 +58,7 @@ namespace Xamarin.MMP.Tests
 		string [] build_output_lines;
 		public IList<string> BuildOutputLines {
 			get {
-				if (build_output_lines == null)
+				if (build_output_lines is null)
 					build_output_lines = BinLog.PrintToLines (BinLogPath).ToArray ();
 				return build_output_lines;
 			}
@@ -84,7 +82,7 @@ namespace Xamarin.MMP.Tests
 		MessageTool messages;
 		internal MessageTool Messages {
 			get {
-				if (messages == null) {
+				if (messages is null) {
 					messages = new MessageTool ();
 					messages.ParseBinLog (BinLogPath);
 				}
@@ -93,8 +91,7 @@ namespace Xamarin.MMP.Tests
 		}
 	}
 
-	static class FrameworkBuilder
-	{
+	static class FrameworkBuilder {
 		public static string CreateFatFramework (string tmpDir)
 		{
 			return Path.Combine (Configuration.RootPath, "tests", "test-libraries", "frameworks", ".libs", "MmpTestFramework.xcframework", "macos-arm64_x86_64", "MmpTestFramework.framework"); ;
@@ -107,10 +104,8 @@ namespace Xamarin.MMP.Tests
 	}
 
 	// Hide the hacks and provide a nice interface for writting tests that build / run XM projects
-	static class TI 
-	{
-		public class UnifiedTestConfig
-		{
+	static class TI {
+		public class UnifiedTestConfig {
 			public string TmpDir { get; set; }
 
 			// Not necessarly required
@@ -128,7 +123,7 @@ namespace Xamarin.MMP.Tests
 			public string ItemGroup { get; set; } = "";
 			public string SystemMonoVersion { get; set; } = "";
 			public string TargetFrameworkVersion { get; set; } = "";
-			public Dictionary<string, string> PlistReplaceStrings { get; set; } = new Dictionary<string, string>();
+			public Dictionary<string, string> PlistReplaceStrings { get; set; } = new Dictionary<string, string> ();
 			public Tuple<string, string> CustomProjectReplacement { get; set; } = null;
 
 			// Binding project specific
@@ -147,7 +142,7 @@ namespace Xamarin.MMP.Tests
 			}
 
 			public string BundlePath {
-				get { return Path.Combine (TmpDir, "bin", Release ? "Release" : "Debug", BundleName + ".app");  }
+				get { return Path.Combine (TmpDir, "bin", Release ? "Release" : "Debug", BundleName + ".app"); }
 			}
 
 			public string ExecutablePath {
@@ -164,8 +159,8 @@ namespace Xamarin.MMP.Tests
 		{
 			string output = RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/mono", new [] { "--version" }, "FindMonoVersion");
 
-			Regex versionRegex = new Regex("compiler version \\d+.\\d+.\\d+(.\\d+)?", RegexOptions.IgnoreCase);
-			return new Version (versionRegex.Match (output).Value.Split (' ')[2]);
+			Regex versionRegex = new Regex ("compiler version \\d+.\\d+.\\d+(.\\d+)?", RegexOptions.IgnoreCase);
+			return new Version (versionRegex.Match (output).Value.Split (' ') [2]);
 		}
 
 		public static string RunAndAssert (string exe, params string [] args)
@@ -188,7 +183,7 @@ namespace Xamarin.MMP.Tests
 				Console.WriteLine ($"{exe} {StringUtils.FormatArguments (args)}");
 				Console.WriteLine (output);
 			}
-			Func<string> getInfo = () => getAdditionalFailInfo != null ? getAdditionalFailInfo () : "";
+			Func<string> getInfo = () => getAdditionalFailInfo is not null ? getAdditionalFailInfo () : "";
 			bool passed = shouldFail ? compileResult != 0 : compileResult == 0;
 			if (!passed)
 				Assert.Fail ($@"{stepName} {(shouldFail ? "passed" : "failed")} unexpectedly. Exit code: {compileResult}.");
@@ -224,7 +219,7 @@ namespace Xamarin.MMP.Tests
 
 			buildArgs.Add (csprojTarget);
 
-			Func <string> getBuildProjectErrorInfo = () => {
+			Func<string> getBuildProjectErrorInfo = () => {
 				string csprojText = "\n\n\n\tCSProj: \n" + File.ReadAllText (csprojTarget);
 				string csprojLocation = Path.GetDirectoryName (csprojTarget);
 				string fileList = "\n\n\tFiles: " + String.Join (" ", Directory.GetFiles (csprojLocation).Select (x => x.Replace (csprojLocation + "/", "")));
@@ -239,13 +234,13 @@ namespace Xamarin.MMP.Tests
 
 		static string ProjectTextReplacement (UnifiedTestConfig config, string text)
 		{
-			 text = text.Replace ("%CODE%", config.CSProjConfig)
+			text = text.Replace ("REPLACE_CODE_REPLACE", config.CSProjConfig)
 					   .Replace ("%REFERENCES%", config.References)
 					   .Replace ("%REFERENCES_BEFORE_PLATFORM%", config.ReferencesBeforePlatform)
 					   .Replace ("%NAME%", config.AssemblyName ?? Path.GetFileNameWithoutExtension (config.ProjectName))
 					   .Replace ("%ITEMGROUP%", config.ItemGroup)
 					   .Replace ("%TARGET_FRAMEWORK_VERSION%", config.TargetFrameworkVersion);
-			if (config.CustomProjectReplacement != null)
+			if (config.CustomProjectReplacement is not null)
 				text = text.Replace (config.CustomProjectReplacement.Item1, config.CustomProjectReplacement.Item2);
 			return text;
 		}
@@ -257,7 +252,7 @@ namespace Xamarin.MMP.Tests
 			string output = RunAndAssert (path, Array.Empty<string> (), "Run");
 
 			string guidPath = Path.Combine (tmpDir, guid.ToString ());
-			Assert.IsTrue(File.Exists (guidPath), "Generated program did not create expected guid file: " + output);
+			Assert.IsTrue (File.Exists (guidPath), "Generated program did not create expected guid file: " + output);
 
 			// Let's delete the guid file so re-runs inside same tests are accurate
 			File.Delete (guidPath);
@@ -270,8 +265,7 @@ namespace Xamarin.MMP.Tests
 
 			string sourceDir = FindSourceDirectory ();
 
-			if (config.AssetIcons) 
-			{
+			if (config.AssetIcons) {
 				RunAndAssert ("/bin/cp", new [] { "-R", Path.Combine (sourceDir, "Icons/Assets.xcassets"), config.TmpDir }, "Copy Asset Icons");
 				config.ItemGroup += @"<ItemGroup>
     <ImageAsset Include=""Assets.xcassets\AppIcon.appiconset\Contents.json"" />
@@ -295,20 +289,19 @@ namespace Xamarin.MMP.Tests
 				return text;
 			});
 
-			return CopyFileWithSubstitutions (Path.Combine (sourceDir, config.ProjectName), Path.Combine (config.TmpDir, config.ProjectName), text =>
-				{
-					return ProjectTextReplacement (config, text);
-				});
+			return CopyFileWithSubstitutions (Path.Combine (sourceDir, config.ProjectName), Path.Combine (config.TmpDir, config.ProjectName), text => {
+				return ProjectTextReplacement (config, text);
+			});
 		}
 
 		public static string GenerateBindingLibraryProject (UnifiedTestConfig config)
 		{
 			string sourceDir = FindSourceDirectory ();
-			CopyFileWithSubstitutions (Path.Combine (sourceDir, "ApiDefinition.cs"), Path.Combine (config.TmpDir, "ApiDefinition.cs"), text => text.Replace ("%CODE%", config.APIDefinitionConfig));
-			CopyFileWithSubstitutions (Path.Combine (sourceDir, "StructsAndEnums.cs"), Path.Combine (config.TmpDir, "StructsAndEnums.cs"), text => text.Replace ("%CODE%", config.StructsAndEnumsConfig));
+			CopyFileWithSubstitutions (Path.Combine (sourceDir, "ApiDefinition.cs"), Path.Combine (config.TmpDir, "ApiDefinition.cs"), text => text.Replace ("REPLACE_CODE_REPLACE", config.APIDefinitionConfig));
+			CopyFileWithSubstitutions (Path.Combine (sourceDir, "StructsAndEnums.cs"), Path.Combine (config.TmpDir, "StructsAndEnums.cs"), text => text.Replace ("REPLACE_CODE_REPLACE", config.StructsAndEnumsConfig));
 
 			string linkWithName = null;
-			if (config.LinkWithName != null) {
+			if (config.LinkWithName is not null) {
 				string fileName = Path.GetFileNameWithoutExtension (config.LinkWithName);
 				linkWithName = $"{fileName}.linkwith.cs";
 				File.WriteAllText (Path.Combine (config.TmpDir, linkWithName), $@"using ObjCRuntime;
@@ -318,10 +311,10 @@ namespace Xamarin.MMP.Tests
 			}
 
 			return CopyFileWithSubstitutions (Path.Combine (sourceDir, config.ProjectName), Path.Combine (config.TmpDir, config.ProjectName), text => {
-					if (linkWithName != null)
-						text = text.Replace ("%ITEMGROUP%", $@"<ItemGroup><Compile Include=""{linkWithName}"" /></ItemGroup>%ITEMGROUP%");
-					return ProjectTextReplacement (config, text);
-				});
+				if (linkWithName is not null)
+					text = text.Replace ("%ITEMGROUP%", $@"<ItemGroup><Compile Include=""{linkWithName}"" /></ItemGroup>%ITEMGROUP%");
+				return ProjectTextReplacement (config, text);
+			});
 		}
 
 		public static string GenerateUnifiedLibraryProject (UnifiedTestConfig config)
@@ -331,7 +324,7 @@ namespace Xamarin.MMP.Tests
 			string projectSuffix = config.FSharp ? ".fsproj" : ".csproj";
 
 			CopyFileWithSubstitutions (Path.Combine (sourceDir, sourceFileName), Path.Combine (config.TmpDir, sourceFileName), text => {
-				return text.Replace ("%CODE%", config.TestCode);
+				return text.Replace ("REPLACE_CODE_REPLACE", config.TestCode);
 			});
 
 			return CopyFileWithSubstitutions (Path.Combine (sourceDir, config.ProjectName + projectSuffix), Path.Combine (config.TmpDir, config.ProjectName + projectSuffix), text => {
@@ -418,7 +411,7 @@ namespace Xamarin.MMP.Tests
 			if (shouldFail)
 				return new OutputText (buildOutput, "");
 
-			string exePath = Path.Combine (config.TmpDir, "bin", config.Release ? "Release" : "Debug",  projectName + ".app", "Contents", "MacOS", projectName);
+			string exePath = Path.Combine (config.TmpDir, "bin", config.Release ? "Release" : "Debug", projectName + ".app", "Contents", "MacOS", projectName);
 			string runOutput = RunEXEAndVerifyGUID (config.TmpDir, config.guid, exePath);
 			return new OutputText (buildOutput, runOutput);
 		}
@@ -436,10 +429,9 @@ namespace Xamarin.MMP.Tests
 			string sourceDir = FindSourceDirectory ();
 			File.Copy (Path.Combine (sourceDir, "Info-Unified.plist"), Path.Combine (config.TmpDir, "Info.plist"), true);
 
-			return CopyFileWithSubstitutions (Path.Combine (sourceDir, config.ProjectName), Path.Combine (config.TmpDir, config.ProjectName), text =>
-				{
-					return ProjectTextReplacement (config, text.Replace ("%TARGETFRAMEWORKVERSION%", GetTargetFrameworkValue (config)));
-				});
+			return CopyFileWithSubstitutions (Path.Combine (sourceDir, config.ProjectName), Path.Combine (config.TmpDir, config.ProjectName), text => {
+				return ProjectTextReplacement (config, text.Replace ("%TARGETFRAMEWORKVERSION%", GetTargetFrameworkValue (config)));
+			});
 		}
 
 		public static string TestDirectory => Path.Combine (Configuration.RootPath, "tests");
@@ -454,7 +446,7 @@ namespace Xamarin.MMP.Tests
 			Assert.AreEqual (0, ExecutionHelper.Execute ("/bin/cp", new [] { "-r", src, target }));
 		}
 
-		public static string CopyFileWithSubstitutions (string src, string target, Func<string, string > replacementAction)
+		public static string CopyFileWithSubstitutions (string src, string target, Func<string, string> replacementAction)
 		{
 			string text = replacementAction (System.IO.File.ReadAllText (src));
 			System.IO.File.WriteAllText (target, text);
@@ -474,7 +466,7 @@ module main =
     [<EntryPoint>]
     let main args =
         NSApplication.Init ()
-        %CODE%
+        REPLACE_CODE_REPLACE
         0";
 
 			const string MainTemplate = @"
@@ -490,14 +482,14 @@ namespace TestCase
 		static void Main (string[] args)
 		{
 			NSApplication.Init ();
-			%CODE%
+			REPLACE_CODE_REPLACE
 		}
 	}
 }";
 			string currentTemplate = fsharp ? FSharpMainTemplate : MainTemplate;
-			string testCase = currentTemplate.Replace ("%CODE%", content).Replace ("%DECL%", decl);
+			string testCase = currentTemplate.Replace ("REPLACE_CODE_REPLACE", content).Replace ("%DECL%", decl);
 			using (StreamWriter s = new StreamWriter (location))
-				s.Write(testCase);
+				s.Write (testCase);
 		}
 
 		public static string FindRootDirectory ()
@@ -507,13 +499,13 @@ namespace TestCase
 
 		static string GenerateOutputCommand (string tmpDir, Guid guid)
 		{
-			return string.Format ("System.IO.File.Create(\"{0}\").Dispose();",  Path.Combine (tmpDir, guid.ToString ()));
+			return string.Format ("System.IO.File.Create(\"{0}\").Dispose();", Path.Combine (tmpDir, guid.ToString ()));
 		}
 
 		public static bool TryNugetRestore (string project, out StringBuilder output)
 		{
 			output = new StringBuilder ();
-			var rv = ExecutionHelper.Execute (Configuration.XIBuildPath, new [] { $"--", "/t:Restore", project}, stdout: output, stderr: output, environmentVariables: Configuration.GetBuildEnvironment (ApplePlatform.MacOSX));
+			var rv = ExecutionHelper.Execute (Configuration.XIBuildPath, new [] { $"--", "/t:Restore", project }, stdout: output, stderr: output, environmentVariables: Configuration.GetBuildEnvironment (ApplePlatform.MacOSX));
 			return rv == 0;
 		}
 
@@ -526,8 +518,7 @@ namespace TestCase
 			}
 		}
 
-		public static bool InJenkins
-		{
+		public static bool InJenkins {
 			get {
 				var buildRev = Environment.GetEnvironmentVariable ("BUILD_REVISION");
 				return !string.IsNullOrEmpty (buildRev) && buildRev == "jenkins";
@@ -535,8 +526,7 @@ namespace TestCase
 		}
 	}
 
-	static class PlatformHelpers
-	{
+	static class PlatformHelpers {
 		// Yes, this is a copy of the one in PlatformAvailability.cs. However, right now
 		// we don't depend on Xamarin.Mac.dll, so moving to it was too painful. If we start
 		// using XM, we can revisit.

@@ -3,12 +3,27 @@ parameters:
 - name: isPR
   type: boolean
 
+- name: repositoryAlias
+  type: string
+  default: self
+
+- name: commit
+  type: string
+  default: HEAD
+
+- name: createLocPR
+  type: boolean
+  default: false
+
 steps:
 
-- checkout: self          # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#checkout
-  clean: true             # Executes: git clean -ffdx && git reset --hard HEAD
-  submodules: recursive
-  path: s/xamarin-macios
+- template: sdk-unified/steps/checkout/v1.yml@yaml-templates
+  parameters:
+    resource: ${{ parameters.repositoryAlias }}
+    commit: ${{ parameters.commit }}
+    clean: true
+    submodules: recursive
+    path: s/xamarin-macios
 
 - ${{ if parameters.isPR }}:
   - pwsh: |
@@ -68,7 +83,7 @@ steps:
   inputs:
     locProj: '$(Build.SourcesDirectory)\\Localize\\LocProject.json'
     outDir: '$(Build.ArtifactStagingDirectory)'
-    ${{ if eq(variables['Build.Reason'], 'Schedule') }}:
+    ${{ if eq(parameters.createLocPR, true) }}:
       isCreatePrSelected: true
     ${{ else }}:
       isCreatePrSelected: false
@@ -78,6 +93,8 @@ steps:
     prSourceBranchPrefix: 'locfiles'
     repoType: gitHub
     gitHubPatVariable: '$(GitHub.Token)'
+    isDeletePrSourceBranchSelected: false
+    xLocCustomPowerShellScript: '$(Build.SourcesDirectory)\\tools\\devops\\automation\\scripts\\localizationBomRemoval.ps1'
 
 - task: PublishBuildArtifacts@1
   continueOnError: true

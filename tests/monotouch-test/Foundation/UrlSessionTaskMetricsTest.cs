@@ -26,7 +26,7 @@ namespace MonoTouchFixtures.Foundation {
 		[Test]
 		public void Properties ()
 		{
-			TestRuntime.AssertXcodeVersion (8,0);
+			TestRuntime.AssertXcodeVersion (8, 0);
 
 			using (var stm = new NSUrlSessionTaskMetrics ()) {
 				// in iOS10 those selectors do not respond - but they do work (forwarded to __NSCFURLSessionTaskMetrics type ?)

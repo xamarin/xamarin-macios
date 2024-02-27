@@ -7,7 +7,8 @@
     <OutputType>Exe</OutputType>
     <AssemblyName>MySpacedApp</AssemblyName>
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
-    <SupportedOSPlatformVersion>10.0</SupportedOSPlatformVersion>
+    <CustomBeforeMicrosoftCommonTargets>$(CustomBeforeMicrosoftCommonTargets);$(MSBuildThisFileDirectory)../../SupportedOSPlatformVersions.targets</CustomBeforeMicrosoftCommonTargets>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -36,5 +37,9 @@
     <Content Include="LinkedContent.txt">
       <Link>Folder\LinkedContent.txt</Link>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Info.plist" />
+    <None Update="Info-dotnet.plist" Link="Info.plist" />
   </ItemGroup>
 </Project>

@@ -50,8 +50,8 @@ namespace CoreFoundation {
 			: base (handle, owns)
 		{
 		}
-		
-		[DllImport (Constants.CoreFoundationLibrary, EntryPoint="CFDictionaryGetTypeID")]
+
+		[DllImport (Constants.CoreFoundationLibrary, EntryPoint = "CFDictionaryGetTypeID")]
 		public extern static nint GetTypeID ();
 
 		static CFDictionary ()
@@ -60,13 +60,13 @@ namespace CoreFoundation {
 			KeyCallbacks = Dlfcn.GetIndirect (lib, "kCFTypeDictionaryKeyCallBacks");
 			ValueCallbacks = Dlfcn.GetIndirect (lib, "kCFTypeDictionaryValueCallBacks");
 		}
-		
+
 		public static CFDictionary FromObjectAndKey (INativeObject obj, INativeObject key)
 		{
-			return new CFDictionary (CFDictionaryCreate (IntPtr.Zero, new IntPtr[] { key.Handle }, new IntPtr [] { obj.Handle }, 1, KeyCallbacks, ValueCallbacks), true);
+			return new CFDictionary (CFDictionaryCreate (IntPtr.Zero, new IntPtr [] { key.Handle }, new IntPtr [] { obj.Handle }, 1, KeyCallbacks, ValueCallbacks), true);
 		}
-		
-		public static CFDictionary FromObjectsAndKeys (INativeObject[] objects, INativeObject[] keys)
+
+		public static CFDictionary FromObjectsAndKeys (INativeObject [] objects, INativeObject [] keys)
 		{
 			if (objects is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (objects));
@@ -79,7 +79,7 @@ namespace CoreFoundation {
 
 			IntPtr [] k = new IntPtr [keys.Length];
 			IntPtr [] v = new IntPtr [keys.Length];
-			
+
 			for (int i = 0; i < k.Length; i++) {
 				k [i] = keys [i].Handle;
 				v [i] = objects [i].Handle;
@@ -87,10 +87,10 @@ namespace CoreFoundation {
 
 			return new CFDictionary (CFDictionaryCreate (IntPtr.Zero, k, v, k.Length, KeyCallbacks, ValueCallbacks), true);
 		}
-	
+
 		[DllImport (Constants.CoreFoundationLibrary)]
-		extern static IntPtr CFDictionaryCreate (IntPtr allocator, IntPtr[] keys, IntPtr[] vals, nint len, IntPtr keyCallbacks, IntPtr valCallbacks);
-		
+		extern static IntPtr CFDictionaryCreate (IntPtr allocator, IntPtr [] keys, IntPtr [] vals, nint len, IntPtr keyCallbacks, IntPtr valCallbacks);
+
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static IntPtr CFDictionaryGetValue (IntPtr theDict, IntPtr key);
 		public static IntPtr GetValue (IntPtr theDict, IntPtr key)
@@ -105,7 +105,7 @@ namespace CoreFoundation {
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
-		extern static void CFDictionaryGetKeysAndValues (IntPtr theDict, IntPtr[] keys, IntPtr[] values);
+		extern static void CFDictionaryGetKeysAndValues (IntPtr theDict, IntPtr [] keys, IntPtr [] values);
 		public void GetKeysAndValues (out IntPtr [] keys, out IntPtr [] values)
 		{
 			nint count = this.Count;
@@ -122,7 +122,7 @@ namespace CoreFoundation {
 				return false;
 			return CFBoolean.GetValue (value);
 		}
-		
+
 		public string? GetStringValue (string key)
 		{
 			var keyHandle = CFString.CreateNative (key);
@@ -138,7 +138,11 @@ namespace CoreFoundation {
 			int value = 0;
 			var keyHandle = CFString.CreateNative (key);
 			try {
-				if (!CFNumberGetValue (CFDictionaryGetValue (Handle, keyHandle), /* kCFNumberSInt32Type */ 3, out value))
+				byte rv;
+				unsafe {
+					rv = CFNumberGetValue (CFDictionaryGetValue (Handle, keyHandle), /* kCFNumberSInt32Type */ 3, &value);
+				}
+				if (rv == 0)
 					throw new System.Collections.Generic.KeyNotFoundException (string.Format ("Key {0} not found", key));
 				return value;
 			} finally {
@@ -151,7 +155,11 @@ namespace CoreFoundation {
 			long value = 0;
 			var keyHandle = CFString.CreateNative (key);
 			try {
-				if (!CFNumberGetValue (CFDictionaryGetValue (Handle, keyHandle), /* kCFNumberSInt64Type */ 4, out value))
+				byte rv;
+				unsafe {
+					rv = CFNumberGetValue (CFDictionaryGetValue (Handle, keyHandle), /* kCFNumberSInt64Type */ 4, &value);
+				}
+				if (rv == 0)
 					throw new System.Collections.Generic.KeyNotFoundException (string.Format ("Key {0} not found", key));
 				return value;
 			} finally {
@@ -184,23 +192,20 @@ namespace CoreFoundation {
 		{
 			var keyHandle = CFString.CreateNative (key);
 			try {
-				return CFDictionaryContainsKey (Handle, keyHandle);
+				return CFDictionaryContainsKey (Handle, keyHandle) != 0;
 			} finally {
 				CFString.ReleaseNative (keyHandle);
 			}
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		internal static extern bool CFNumberGetValue (IntPtr number, nint theType, out int value);
+		unsafe internal static extern byte CFNumberGetValue (IntPtr number, nint theType, int* value);
 
 		[DllImport (Constants.CoreFoundationLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		internal static extern bool CFNumberGetValue (IntPtr number, nint theType, out long value);
+		unsafe internal static extern byte CFNumberGetValue (IntPtr number, nint theType, long* value);
 
 		[DllImport (Constants.CoreFoundationLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool CFDictionaryContainsKey (IntPtr theDict, IntPtr key);
+		extern static byte CFDictionaryContainsKey (IntPtr theDict, IntPtr key);
 	}
 
 	static class CFMutableDictionary {

@@ -10,11 +10,9 @@ using Mono.Cecil;
 
 using Xamarin.Tests;
 
-namespace Xamarin.ApiTest
-{
+namespace Xamarin.ApiTest {
 	[TestFixture]
-	public class ApiTest
-	{
+	public class ApiTest {
 		[Test]
 #if MONOTOUCH
 		[TestCase (Profile.iOS)]
@@ -45,13 +43,13 @@ namespace Xamarin.ApiTest
 					MethodReference mr = null;
 					foreach (var instr in method.Body.Instructions) {
 						mr = instr.Operand as MethodReference;
-						if (mr == null)
+						if (mr is null)
 							continue;
 						switch (mr.DeclaringType.Name) {
 						case "BlockLiteral":
 							if (type == mr.DeclaringType)
 								continue; // Calls within BlockLiteral without the optimizable attribute is allowed 
-							
+
 							switch (mr.Name) {
 							case "SetupBlock":
 							case "SetupBlockUnsafe":

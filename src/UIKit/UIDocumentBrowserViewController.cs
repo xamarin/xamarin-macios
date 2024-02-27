@@ -38,7 +38,7 @@ namespace UIKit {
 #if IOS
 			return SystemVersion.CheckiOS (12, 0);
 #else
-			#error Unknown platform
+#error Unknown platform
 #endif
 		}
 

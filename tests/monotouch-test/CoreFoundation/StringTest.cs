@@ -13,11 +13,11 @@ using CoreFoundation;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.CoreFoundation {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class StringTest {
-		
+
 		[Test]
 		public void ToString_ ()
 		{
@@ -39,7 +39,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 			using var nativeStr = new CFString (str);
 			var array = str.ToCharArray ();
 			for (int i = 0; i < array.Length; i++) {
-				Assert.AreEqual (str[i], nativeStr[i], $"{str[i]} != {nativeStr[i]}");
+				Assert.AreEqual (str [i], nativeStr [i], $"{str [i]} != {nativeStr [i]}");
 			}
 		}
 	}

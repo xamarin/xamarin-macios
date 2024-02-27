@@ -1,6 +1,6 @@
 {
   "author": "Microsoft",
-  "name": "iOS Tabbed Application",
+  "name": "iOS-Anwendung mit Registerkarten",
   "description": "Ein Projekt zum Erstellen einer .NET iOS-Anwendung mit Registerkarten",
   "symbols/bundleId/description": "Überschreibt „CFBundleIdentifier“ in „Info.plist“",
   "symbols/minOSVersion/description": "Überschreibt „SupportedOSPlatformVersion“ in der Projektdatei.",

@@ -1,0 +1,7 @@
+{
+  "author": "Microsoft",
+  "name": "Aplicación tvOS",
+  "description": "Proyecto para crear una aplicación tvOS de .NET",
+  "symbols/bundleId/description": "Invalida CFBundleIdentifier en Info.plist",
+  "symbols/minOSVersion/description": "Invalida SupportedOSPlatformVersion en el archivo de proyecto"
+}

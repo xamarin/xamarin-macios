@@ -7,11 +7,9 @@ using System;
 using NativeHandle = System.IntPtr;
 #endif
 
-namespace PushKit 
-{
-	[Watch (6,0)]
-	[Mac (10,15)]
-	[iOS (8,0)]
+namespace PushKit {
+	[Watch (6, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface PKPushCredentials {
@@ -22,9 +20,8 @@ namespace PushKit
 		NSData Token { get; }
 	}
 
-	[Watch (6,0)]
-	[Mac (10,15)]
-	[iOS (8,0)]
+	[Watch (6, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface PKPushPayload {
@@ -35,20 +32,20 @@ namespace PushKit
 		NSDictionary DictionaryPayload { get; }
 	}
 
-	[Watch (6,0)]
-	[Mac (10,15)]
-	[iOS (8,0)]
+	[Watch (6, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface PKPushRegistry {
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		PKPushRegistryDelegate Delegate { get; set; }
+		IPKPushRegistryDelegate Delegate { get; set; }
 
-		[Export ("delegate", ArgumentSemantic.Weak)][NullAllowed]
+		[Export ("delegate", ArgumentSemantic.Weak)]
+		[NullAllowed]
 		NSObject WeakDelegate { get; set; }
 
-		[Export ("desiredPushTypes", ArgumentSemantic.Copy)][NullAllowed]
+		[Export ("desiredPushTypes", ArgumentSemantic.Copy)]
+		[NullAllowed]
 		NSSet DesiredPushTypes { get; set; }
 
 		[Export ("pushTokenForType:")]
@@ -59,35 +56,35 @@ namespace PushKit
 		[Export ("initWithQueue:")]
 		NativeHandle Constructor ([NullAllowed] DispatchQueue queue);
 	}
-	
-	[iOS (8,0)]
+
+	[MacCatalyst (13, 1)]
 	[Static]
 	interface PKPushType {
 
 		[Introduced (PlatformName.MacCatalyst, 14, 0)]
-		[NoWatch]
+		[Watch (9, 0)]
 		[NoMac]
 		[Field ("PKPushTypeVoIP")]
 		NSString Voip { get; }
 
-		[iOS (9,0)]
-		[Deprecated (PlatformName.iOS, 13,0, message: "Use directly from watchOS instead.")]
-		[Watch (6,0)]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use directly from watchOS instead.")]
+		[Watch (6, 0)]
 		[NoMac]
 		[NoMacCatalyst]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use directly from watchOS instead.")]
 		[Field ("PKPushTypeComplication")]
 		NSString Complication { get; }
 
-		[iOS (11,0)]
 		[NoWatch]
-		[Mac (10,15)]
+		[MacCatalyst (13, 1)]
 		[Field ("PKPushTypeFileProvider")]
 		NSString FileProvider { get; }
 	}
 
-	[iOS (8,0)]
-	[Watch (6,0)]
-	[Mac (10,15)]
+	interface IPKPushRegistryDelegate { }
+
+	[Watch (6, 0)]
+	[MacCatalyst (13, 1)]
 	[Model]
 	[Protocol]
 	[BaseType (typeof (NSObject))]
@@ -101,13 +98,13 @@ namespace PushKit
 #if !NET
 		[Abstract] // now optional in iOS 11
 #endif
-		[Deprecated (PlatformName.iOS, 11,0, message: "Use the 'DidReceiveIncomingPushWithPayload' overload accepting an 'Action' argument instead.")]
+		[Deprecated (PlatformName.iOS, 11, 0, message: "Use the 'DidReceiveIncomingPushWithPayload' overload accepting an 'Action' argument instead.")]
 		[NoMacCatalyst]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use the 'DidReceiveIncomingPushWithPayload' overload accepting an 'Action' argument instead.")]
 		[Export ("pushRegistry:didReceiveIncomingPushWithPayload:forType:"), EventArgs ("PKPushRegistryRecieved"), EventName ("IncomingPushReceived")]
 		void DidReceiveIncomingPush (PKPushRegistry registry, PKPushPayload payload, string type);
 
-		[iOS (11,0)]
-		[MacCatalyst (10,13)]
+		[MacCatalyst (13, 1)]
 		[Export ("pushRegistry:didReceiveIncomingPushWithPayload:forType:withCompletionHandler:")]
 		void DidReceiveIncomingPush (PKPushRegistry registry, PKPushPayload payload, string type, Action completion);
 

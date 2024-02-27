@@ -6,7 +6,7 @@ namespace HealthKit {
 
 #if !XAMCORE_3_0
 	public partial class HKStatisticsCollectionQuery {
-		
+
 		[Obsolete ("Use 'InitialResultsHandler'.")]
 		public virtual void SetInitialResultsHandler (HKStatisticsCollectionQueryInitialResultsHandler handler)
 		{

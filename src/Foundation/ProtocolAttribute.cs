@@ -30,8 +30,8 @@ namespace Foundation {
 
 	[AttributeUsage (AttributeTargets.Class | AttributeTargets.Interface)]
 	public sealed class ProtocolAttribute : Attribute {
-		
-		public ProtocolAttribute () {}
+
+		public ProtocolAttribute () { }
 
 		public Type? WrapperType { get; set; }
 		public string? Name { get; set; }
@@ -44,7 +44,7 @@ namespace Foundation {
 				return informal_until;
 			}
 			set {
-				if (value != null)
+				if (value is not null)
 					Version.Parse (value); // This will throw an exception with invalid input, which is what we want.
 				informal_until = value;
 			}
@@ -53,7 +53,7 @@ namespace Foundation {
 
 	[AttributeUsage (AttributeTargets.Interface, AllowMultiple = true)]
 	public sealed class ProtocolMemberAttribute : Attribute {
-		public ProtocolMemberAttribute () {}
+		public ProtocolMemberAttribute () { }
 
 		public bool IsRequired { get; set; }
 		public bool IsProperty { get; set; }
@@ -62,9 +62,9 @@ namespace Foundation {
 		public string? Selector { get; set; }
 		public Type? ReturnType { get; set; }
 		public Type? ReturnTypeDelegateProxy { get; set; }
-		public Type[]? ParameterType { get; set; }
-		public bool[]? ParameterByRef { get; set; }
-		public Type?[]? ParameterBlockProxy { get; set; }
+		public Type []? ParameterType { get; set; }
+		public bool []? ParameterByRef { get; set; }
+		public Type? []? ParameterBlockProxy { get; set; }
 		public bool IsVariadic { get; set; }
 
 		public Type? PropertyType { get; set; }

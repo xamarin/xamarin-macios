@@ -38,19 +38,19 @@ namespace Cecil.Tests {
 		//
 		// This test should find Extension, note that it has an ios attribute,
 		// and insist that some maccatalyst must also be set.
-		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformAssemblies))]
-		public void ChildElementsListAvailabilityForAllPlatformsOnParent (string assemblyPath)
+		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformAssemblyDefinitions))]
+		public void ChildElementsListAvailabilityForAllPlatformsOnParent (AssemblyInfo info)
 		{
-			var assembly = Helper.GetAssembly (assemblyPath);
+			var assembly = info.Assembly;
 
 			HashSet<string> found = new HashSet<string> ();
-			foreach (var prop in Helper.FilterProperties (assembly, a => HasAnyAvailabilityAttribute (a))) {
+			foreach (var prop in assembly.EnumerateProperties (a => HasAnyAvailabilityAttribute (a))) {
 				CheckAllPlatformsOnParent (prop, prop.FullName, prop.DeclaringType, found);
 			}
-			foreach (var meth in Helper.FilterMethods (assembly, a => HasAnyAvailabilityAttribute (a))) {
+			foreach (var meth in assembly.EnumerateMethods (a => HasAnyAvailabilityAttribute (a))) {
 				CheckAllPlatformsOnParent (meth, meth.FullName, meth.DeclaringType, found);
 			}
-			foreach (var field in Helper.FilterFields (assembly, a => HasAnyAvailabilityAttribute (a))) {
+			foreach (var field in assembly.EnumerateFields (a => HasAnyAvailabilityAttribute (a))) {
 				CheckAllPlatformsOnParent (field, field.FullName, field.DeclaringType, found);
 			}
 			Assert.That (found, Is.Empty, $"{found.Count} issues found");
@@ -82,17 +82,12 @@ namespace Cecil.Tests {
 		// Example #2:
 		// [Watch (5,0), NoTV, NoMac, iOS (12,0), NoTV]
 		// interface Type { }
-		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformAssemblies))]
-		public void DoubleAttributedElements (string assemblyPath)
+		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformAssemblyDefinitions))]
+		public void DoubleAttributedElements (AssemblyInfo info)
 		{
-			var assembly = Helper.GetAssembly (assemblyPath);
-			if (assembly is null) {
-				Assert.Ignore ("{assemblyPath} could not be found (might be disabled in build)");
-				return;
-			}
-
+			var assembly = info.Assembly;
 			var doubleAttributed = new List<string> ();
-			foreach (var type in Helper.FilterTypes (assembly, a => HasAnyAvailabilityAttribute (a))) {
+			foreach (var type in assembly.EnumerateTypes (a => HasAnyAvailabilityAttribute (a))) {
 				var platformCount = new Dictionary<string, int> ();
 				foreach (var attribute in type.CustomAttributes.Where (a => IsAvailabilityAttribute (a))) {
 					var kind = FindAvailabilityKind (attribute);
@@ -140,11 +135,13 @@ namespace Cecil.Tests {
 		public class PlatformClaimInfo {
 			public HashSet<string> MentionedPlatforms { get; set; } // Mentioned in both Supported and Unsupported contexts
 			public HashSet<string> ClaimedPlatforms { get; set; } // Mentioned only in Supported contexts
+			public IMemberDefinition Member { get; set; }
 
-			public PlatformClaimInfo (List<string> mentionedPlatforms, List<string> claimedPlatforms)
+			public PlatformClaimInfo (List<string> mentionedPlatforms, List<string> claimedPlatforms, IMemberDefinition member)
 			{
 				MentionedPlatforms = new HashSet<string> (mentionedPlatforms);
 				ClaimedPlatforms = new HashSet<string> (claimedPlatforms);
+				Member = member;
 			}
 
 			public void UnionWith (PlatformClaimInfo other)
@@ -164,7 +161,7 @@ namespace Cecil.Tests {
 
 		// Due to binding and conversion mistakes, sometimes attributes like `[SupportedOSPlatform ("macos")]`
 		// might be documented on elements that are removed from the build with conditional compilation
-		// This test detects these by loading every NET6 platform assembly, and
+		// This test detects these by loading every NET platform assembly, and
 		// comparing reality (what types/members actually exist) with the attributes
 		// We can not do this against a single assembly at a time, as the attributes saying "this is supported on mac" aren't 
 		// in the mac assembly, that's the bug. 
@@ -177,19 +174,26 @@ namespace Cecil.Tests {
 			var harvestedInfo = new Dictionary<string, Dictionary<string, PlatformClaimInfo>> ();
 
 			// Load each platform assembly
-			foreach (string assemblyPath in Helper.NetPlatformAssemblies) {
-				var assembly = Helper.GetAssembly (assemblyPath);
-				if (assembly is null) {
-					Assert.Ignore ("{assemblyPath} could not be found (might be disabled in build)");
-					return;
-				}
-
-				string currentPlatform = AssemblyToAttributeName (assemblyPath);
+			foreach (var info in Helper.NetPlatformAssemblyDefinitions) {
+				var assembly = info.Assembly;
+				string currentPlatform = AssemblyToAttributeName (assembly);
 
 				// Walk every class/struct/enum/property/method/enum value/pinvoke/event
 				foreach (var module in assembly.Modules) {
 					foreach (var type in module.Types) {
+						switch (type.Namespace) {
+						case "AppKit":
+						case "UIKit":
+							// The availability attributes between AppKit and UIKit are quite inconsistent:
+							// https://github.com/xamarin/xamarin-macios/issues/17292
+							// So let's just skip these two namespaces for now.
+							continue;
+						}
 						foreach (var member in GetAllTypeMembers (type)) {
+							// If a member is hidden, it's probably because it's broken in some way, so don't consider it.
+							if (ObsoleteTest.HasEditorBrowseableNeverAttribute (member))
+								continue;
+
 							var mentionedPlatforms = GetAvailabilityAttributes (member).ToList ();
 							if (mentionedPlatforms.Any ()) {
 								var claimedPlatforms = GetSupportedAvailabilityAttributes (member).ToList ();
@@ -197,12 +201,10 @@ namespace Cecil.Tests {
 								if (!harvestedInfo.ContainsKey (key)) {
 									harvestedInfo [key] = new Dictionary<string, PlatformClaimInfo> ();
 								}
-								var claimInfo = new PlatformClaimInfo (mentionedPlatforms, claimedPlatforms);
-								if (harvestedInfo [key].ContainsKey (currentPlatform)) {
-									harvestedInfo [key] [currentPlatform].UnionWith (claimInfo);
-								} else {
-									harvestedInfo [key] [currentPlatform] = claimInfo;
-								}
+								var claimInfo = new PlatformClaimInfo (mentionedPlatforms, claimedPlatforms, member);
+								if (harvestedInfo [key].TryGetValue (currentPlatform, out var existingClaim))
+									throw new InvalidOperationException ($"The key {key} was computed for two different members:\n\tMember 1: {existingClaim.Member.FullName}\n\tMember 2: {member.FullName}\n\tKey: {key}");
+								harvestedInfo [key] [currentPlatform] = claimInfo;
 							}
 						}
 					}
@@ -210,253 +212,217 @@ namespace Cecil.Tests {
 			}
 
 			// Now walk every item found above and check two things:
-			var attributesWereCompiledOut = new List<string> ();
-			var doesNotExistWhereClaimed = new List<string> ();
+			var failures = new Dictionary<string, string> ();
 			foreach (var (member, info) in harvestedInfo) {
 				// 1. All platforms match in count of mentioned (we did not conditionally compile out attributes)
 				int expectedPlatformCount = info.First ().Value.MentionedPlatforms.Count ();
 				if (info.Any (i => i.Value.MentionedPlatforms.Count () != expectedPlatformCount)) {
-					if (IgnoreElementsThatDoNotExistInThatAssembly (member)) {
-						continue;
+					var detailedPlatformBreakdown = string.Join ("\n\t", info.Select (x => ($"Assembly {x.Key} => {x.Value}")));
+					var errorMessage = $"{member} did not have the same number of SupportedOSPlatformAttribute in every assembly:\n\t{detailedPlatformBreakdown}";
+					if (failures.TryGetValue (member, out var existingFailure)) {
+						failures [member] = existingFailure + "\n" + errorMessage;
+					} else {
+						failures [member] = errorMessage;
 					}
-					string detailedPlatformBreakdown = string.Join ("\n", info.Select (x => ($"Assembly {x.Key} => {x.Value}")));
-					string errorMessage = $"{member} did not have the same number of SupportedOSPlatformAttribute in every assembly:\n{detailedPlatformBreakdown}";
-					attributesWereCompiledOut.Add (errorMessage);
-#if DEBUG
-					Console.Error.WriteLine (errorMessage);
-#endif
 				}
-
 
 				// 2. For each supported attribute claim exist, that it exists on that platform
 				// Since we know each platform claims are now equal, just use the first one
 				var claimedPlatforms = info.First ().Value.ClaimedPlatforms;
 				foreach (var platform in claimedPlatforms) {
 					if (!info.ContainsKey (platform)) {
-						if (IgnoreElementsThatDoNotExistInThatAssembly (member)) {
-							continue;
+						var detailedPlatformBreakdown = string.Join ("\n\t", info.Select (x => ($"Assembly {x.Key} => Declares ({string.Join (" ", x.Value)})")));
+						var errorMessage = $"{member} was not found on {platform} despite being declared supported there:\n\t{detailedPlatformBreakdown}";
+						if (failures.TryGetValue (member, out var existingFailure)) {
+							failures [member] = existingFailure + "\n" + errorMessage;
+						} else {
+							failures [member] = errorMessage;
 						}
-						string detailedPlatformBreakdown = string.Join ("\n", info.Select (x => ($"Assembly {x.Key} => Declares ({string.Join (" ", x.Value)})")));
-						string errorMessage = $"{member} was not found on {platform} despite being declared supported there.";
-						doesNotExistWhereClaimed.Add (errorMessage);
-#if DEBUG
-						Console.Error.WriteLine (errorMessage);
-#endif
 					}
 				}
 			}
 
-			Assert.That (attributesWereCompiledOut, Is.Empty, $"{attributesWereCompiledOut.Count} issues found");
-			Assert.That (doesNotExistWhereClaimed, Is.Empty, $"{doesNotExistWhereClaimed.Count} issues found");
+			Helper.AssertFailures (failures, IgnoreElementsThatDoNotExistInThatAssembly, nameof (IgnoreElementsThatDoNotExistInThatAssembly), "Supported inconsistencies");
 		}
 
-		static bool IgnoreElementsThatDoNotExistInThatAssembly (string member)
+		static HashSet<string> IgnoreElementsThatDoNotExistInThatAssembly {
+			get {
+				return new HashSet<string> {
+					// This is from the NSItemProviderWriting protocol: NSUserActivity does not implement NSItemProviderWriting on tvOS and macOS.
+					"Foundation.NSUserActivity.GetItemProviderVisibilityForTypeIdentifier (System.String)",
+					"Foundation.NSUserActivity.LoadData (System.String, System.Action`2<Foundation.NSData, Foundation.NSError>)",
+					"Foundation.NSUserActivity.LoadDataAsync (System.String)",
+					"Foundation.NSUserActivity.LoadDataAsync (System.String, Foundation.NSProgress&)",
+					"Foundation.NSUserActivity.WritableTypeIdentifiers",
+					"Foundation.NSUserActivity.WritableTypeIdentifiersForItemProvider",
+					"Foundation.NSUserActivity.get_WritableTypeIdentifiers ()",
+					"Foundation.NSUserActivity.get_WritableTypeIdentifiersForItemProvider ()",
+
+					// This is from the NSItemProviderReading protocol: NSUserActivity does not implement NSItemProviderReading on tvOS and macOS.
+					"Foundation.NSUserActivity.GetObject (Foundation.NSData, System.String, Foundation.NSError&)",
+					"Foundation.NSUserActivity.ReadableTypeIdentifiers",
+					"Foundation.NSUserActivity.get_ReadableTypeIdentifiers ()",
+
+					// This is from the NSItemProviderWriting protocol: MKMapItem does not implement NSItemProviderWriting on tvOS and macOS.
+					"MapKit.MKMapItem.GetItemProviderVisibilityForTypeIdentifier (System.String)",
+					"MapKit.MKMapItem.LoadData (System.String, System.Action`2<Foundation.NSData, Foundation.NSError>)",
+					"MapKit.MKMapItem.LoadDataAsync (System.String)",
+					"MapKit.MKMapItem.LoadDataAsync (System.String, Foundation.NSProgress&)",
+					"MapKit.MKMapItem.WritableTypeIdentifiers",
+					"MapKit.MKMapItem.WritableTypeIdentifiersForItemProvider",
+					"MapKit.MKMapItem.get_WritableTypeIdentifiers ()",
+					"MapKit.MKMapItem.get_WritableTypeIdentifiersForItemProvider ()",
+
+					// This is from the NSItemProviderReading protocol: MKMapItem does not implement NSItemProviderReading on tvOS and macOS.
+					"MapKit.MKMapItem.GetObject (Foundation.NSData, System.String, Foundation.NSError&)",
+					"MapKit.MKMapItem.ReadableTypeIdentifiers",
+					"MapKit.MKMapItem.get_ReadableTypeIdentifiers ()",
+
+					// This is from the NSItemProviderReading protocol: PHLivePhoto does not implement NSItemProviderReading on tvOS and macOS.
+					"Photos.PHLivePhoto.GetObject (Foundation.NSData, System.String, Foundation.NSError&)",
+					"Photos.PHLivePhoto.ReadableTypeIdentifiers",
+					"Photos.PHLivePhoto.get_ReadableTypeIdentifiers ()",
+
+
+					// This is from the NSSecureCoding protocol: SKView only implements NSSecureCoding on macOS.
+					"SpriteKit.SKView.EncodeTo (Foundation.NSCoder)",
+
+					// These methods have different optional/required semantics between platforms.
+					"Metal.IMTLBlitCommandEncoder.GetTextureAccessCounters (Metal.IMTLTexture, Metal.MTLRegion, System.UIntPtr, System.UIntPtr, System.Boolean, Metal.IMTLBuffer, System.UIntPtr)",
+					"Metal.IMTLBlitCommandEncoder.ResetTextureAccessCounters (Metal.IMTLTexture, Metal.MTLRegion, System.UIntPtr, System.UIntPtr)",
+					"Metal.MTLBlitCommandEncoder_Extensions.GetTextureAccessCounters (Metal.IMTLBlitCommandEncoder, Metal.IMTLTexture, Metal.MTLRegion, System.UIntPtr, System.UIntPtr, System.Boolean, Metal.IMTLBuffer, System.UIntPtr)",
+					"Metal.MTLBlitCommandEncoder_Extensions.ResetTextureAccessCounters (Metal.IMTLBlitCommandEncoder, Metal.IMTLTexture, Metal.MTLRegion, System.UIntPtr, System.UIntPtr)",
+					"PassKit.IPKPaymentAuthorizationControllerDelegate.GetPresentationWindow (PassKit.PKPaymentAuthorizationController)",
+					"PassKit.PKPaymentAuthorizationControllerDelegate_Extensions.GetPresentationWindow (PassKit.IPKPaymentAuthorizationControllerDelegate, PassKit.PKPaymentAuthorizationController)",
+					"Metal.MTLTextureWrapper.FirstMipmapInTail",
+					"Metal.MTLTextureWrapper.IsSparse",
+					"Metal.MTLTextureWrapper.TailSizeInBytes",
+					"Metal.IMTLTexture.FirstMipmapInTail",
+					"Metal.IMTLTexture.IsSparse",
+					"Metal.IMTLTexture.TailSizeInBytes",
+
+
+					// HKSeriesBuilder doesn't implement the ISNCopying protocol on all platforms (and shouldn't on any according to the headers, so removed for XAMCORE_5_0).
+					"HealthKit.HKSeriesBuilder.EncodeTo (Foundation.NSCoder)",
+
+					// The signature is slightly different between platforms for this member, this is expected
+					"SceneKit.SCNRenderer.FromContext (OpenGLES.EAGLContext, Foundation.NSDictionary)",
+					"SceneKit.SCNRenderer.FromContext (OpenGL.CGLContext, Foundation.NSDictionary)",
+
+					// For historical reasons, MPMediaItem and MPMediaEntity are wildly different between platforms (https://github.com/xamarin/xamarin-macios/issues/17291).
+					"MediaPlayer.MPMediaEntity.EncodeTo (Foundation.NSCoder)",
+					"MediaPlayer.MPMediaEntity.get_PropertyPersistentID ()",
+					"MediaPlayer.MPMediaEntity.GetObject (Foundation.NSObject)",
+					"MediaPlayer.MPMediaEntity.PropertyPersistentID",
+					"MediaPlayer.MPMediaItem.DateAdded",
+					"MediaPlayer.MPMediaItem.get_PropertyPersistentID ()",
+					"MediaPlayer.MPMediaItem.GetObject (Foundation.NSObject)",
+					"MediaPlayer.MPMediaItem.HasProtectedAsset",
+					"MediaPlayer.MPMediaItem.IsExplicitItem",
+					"MediaPlayer.MPMediaItem.IsPreorder",
+					"MediaPlayer.MPMediaItem.PlaybackStoreID",
+					"MediaPlayer.MPMediaItem.PropertyPersistentID",
+
+					// Despite what headers say, NSAttributedString only implements NSItemProviderReading and NSItemProviderWriting on iOS (headers say tvOS and watchOS as well).
+					// Ref: https://github.com/xamarin/xamarin-macios/pull/17306
+					"Foundation.NSAttributedString.GetItemProviderVisibilityForTypeIdentifier (System.String)",
+					"Foundation.NSAttributedString.GetObject (Foundation.NSData, System.String, Foundation.NSError&)",
+					"Foundation.NSAttributedString.LoadData (System.String, System.Action`2<Foundation.NSData, Foundation.NSError>)",
+					"Foundation.NSAttributedString.LoadDataAsync (System.String)",
+					"Foundation.NSAttributedString.LoadDataAsync (System.String, Foundation.NSProgress&)",
+					"Foundation.NSAttributedString.ReadableTypeIdentifiers",
+					"Foundation.NSAttributedString.WritableTypeIdentifiers",
+					"Foundation.NSAttributedString.WritableTypeIdentifiersForItemProvider",
+				};
+			}
+		}
+
+		static string GetTypeReferenceLookupKey (TypeReference tr)
 		{
-			// Xkit has many platform specific bits in AppKit/UIKit and is a mess to get right
-			if (member.StartsWith ("Kit")) {
-				return true;
-			}
-			// QuickLook is aliased with QuickLookUI on some platforms
-			if (member.StartsWith ("QuickLook")) {
-				return true;
-			}
-			// These two types are defined with non-trivial define magic and one platform doesn't necessarily have
-			// the same members
-			if (member.StartsWith ("MediaPlayer.MPMediaItem") || member.StartsWith ("MediaPlayer.MPMediaEntity")) {
-				return true;
-			}
-			// These are defined with a code behind due to API differences based on version
-			switch (member) {
-			case "MetricKit.MXMetaData.get_DictionaryRepresentation":
-			case "MetricKit.MXMetaData.DictionaryRepresentation":
-				return true;
-			}
-			// Generator Bug - Protocol inline with different attribute bug
-			if (member.StartsWith ("SceneKit.SCNLayer") ||
-				member.StartsWith ("AVFoundation.AVAudioSession")) {
-				return true;
-			}
-			switch (member) {
-			case "GameplayKit.GKHybridStrategist.get_GameModel":
-			case "GameplayKit.GKHybridStrategist.get_RandomSource":
-			case "GameplayKit.GKHybridStrategist.set_GameModel":
-			case "GameplayKit.GKHybridStrategist.set_RandomSource":
-			case "GLKit.GLKMeshBuffer.get_Allocator":
-			case "GLKit.GLKMeshBuffer.get_Length":
-			case "GLKit.GLKMeshBuffer.get_Map":
-			case "GLKit.GLKMeshBuffer.get_Type":
-			case "GLKit.GLKMeshBuffer.get_Zone":
-			case "Intents.INObject.get_AlternativeSpeakableMatches":
-			case "Intents.INObject.get_Identifier":
-			case "Intents.INObject.get_PronunciationHint":
-			case "Intents.INObject.get_SpokenPhrase":
-			case "Intents.INObject.get_VocabularyIdentifier":
-			case "TVKit.TVMediaItemContentView.get_Configuration":
-			case "TVKit.TVMediaItemContentView.set_Configuration":
-			case "TVKit.TVMonogramContentView.get_Configuration":
-			case "TVKit.TVMonogramContentView.set_Configuration":
-			case "CarPlay.CPApplicationDelegate.get_Window":
-			case "CarPlay.CPApplicationDelegate.set_Window":
-			case "AVFoundation.AVAssetDownloadDelegate.DidFinishCollectingMetrics":
-			case "AVFoundation.AVAssetDownloadDelegate.TaskIsWaitingForConnectivity":
-			case "AVFoundation.AVAssetDownloadDelegate.WillBeginDelayedRequest":
-			case "ARKit.ARQuickLookPreviewItem.get_PreviewItemTitle":
-			case "ARKit.ARQuickLookPreviewItem.get_PreviewItemUrl":
-			case "Intents.INPerson.get_AlternativeSpeakableMatches":
-			case "Intents.INPerson.get_Identifier":
-			case "Intents.INPerson.get_PronunciationHint":
-			case "Intents.INPerson.get_SpokenPhrase":
-			case "Intents.INPerson.get_VocabularyIdentifier":
-			case "MetricKit.MXUnitSignalBars.get_Symbol":
-			case "MetricKit.MXUnitAveragePixelLuminance.get_Symbol":
-			case "WebKit.DomNode.Copy":
-			case "WebKit.DomEventTarget.Copy":
-			case "WebKit.DomObject.Copy":
-			case "WebKit.WebArchive.Copy":
-			case "WebKit.WebHistoryItem.Copy":
-			case "CoreWlan.CWConfiguration.Copy":
-			case "CoreWlan.CWConfiguration.MutableCopy":
-			case "CoreWlan.CWChannel.Copy":
-			case "CoreWlan.CWMutableNetworkProfile.Copy":
-			case "CoreWlan.CWMutableNetworkProfile.MutableCopy":
-			case "CoreWlan.CWNetwork.Copy":
-			case "CoreWlan.CWNetworkProfile.Copy":
-			case "CoreWlan.CWNetworkProfile.MutableCopy":
-				return true;
-			}
-			// Generator Bug/Limitation - Related to ^, Wrapper protocol get/set with attributes
-			switch (member) {
-			case "AuthenticationServices.ASExtensionErrorCodeExtensions.get_LocalizedFailureReasonErrorKey":
-			case "AuthenticationServices.ASExtensionErrorCodeExtensions.LocalizedFailureReasonErrorKey":
-			case "Intents.INSearchForMessagesIntentHandling_Extensions.ResolveSpeakableGroupNames:":
-			case "Intents.INSearchIntents.INSearchCallHistoryIntentHandling_Extensions":
-			case "Intents.INStartAudioCallIntentHandling_Extensions.ResolveDestinationType":
-			case "Metal.IMTLResourceStateCommandEncoder.Wait":
-			case "Metal.IMTLBlitCommandEncoder.ResetTextureAccessCounters":
-			case "Metal.IMTLRenderCommandEncoder_Extensions.SetScissorRects":
-			case "Metal.IMTLRenderCommandEncoder_Extensions.SetViewports":
-			case "Metal.MTLAccelerationStructureCommandEncoderWrapper.get_Device":
-			case "Metal.MTLAccelerationStructureCommandEncoderWrapper.get_Label":
-			case "Metal.MTLAccelerationStructureCommandEncoderWrapper.set_Label":
-			case "Metal.MTLAccelerationStructureWrapper.AllocatedSize":
-			case "Metal.MTLAccelerationStructureWrapper.get_AllocatedSize":
-			case "Metal.MTLAccelerationStructureWrapper.get_CpuCacheMode":
-			case "Metal.MTLAccelerationStructureWrapper.get_Device":
-			case "Metal.MTLAccelerationStructureWrapper.get_HazardTrackingMode":
-			case "Metal.MTLAccelerationStructureWrapper.get_Heap":
-			case "Metal.MTLAccelerationStructureWrapper.get_HeapOffset":
-			case "Metal.MTLAccelerationStructureWrapper.get_IsAliasable":
-			case "Metal.MTLAccelerationStructureWrapper.get_Label":
-			case "Metal.MTLAccelerationStructureWrapper.get_ResourceOptions":
-			case "Metal.MTLAccelerationStructureWrapper.get_StorageMode":
-			case "Metal.MTLAccelerationStructureWrapper.HazardTrackingMode":
-			case "Metal.MTLAccelerationStructureWrapper.Heap":
-			case "Metal.MTLAccelerationStructureWrapper.HeapOffset":
-			case "Metal.MTLAccelerationStructureWrapper.IsAliasable":
-			case "Metal.MTLAccelerationStructureWrapper.ResourceOptions":
-			case "Metal.MTLAccelerationStructureWrapper.set_Label":
-			case "Metal.MTLBlitCommandEncoder_Extensions.GetTextureAccessCounters":
-			case "Metal.MTLBlitCommandEncoder_Extensions.ResetTextureAccessCounters":
-			case "Metal.IMTLBlitCommandEncoder.GetTextureAccessCounters":
-			case "Metal.MTLIntersectionFunctionTableWrapper.AllocatedSize":
-			case "Metal.MTLIntersectionFunctionTableWrapper.get_AllocatedSize":
-			case "Metal.MTLIntersectionFunctionTableWrapper.get_CpuCacheMode":
-			case "Metal.MTLIntersectionFunctionTableWrapper.get_Device":
-			case "Metal.MTLIntersectionFunctionTableWrapper.get_HazardTrackingMode":
-			case "Metal.MTLIntersectionFunctionTableWrapper.get_Heap":
-			case "Metal.MTLIntersectionFunctionTableWrapper.get_HeapOffset":
-			case "Metal.MTLIntersectionFunctionTableWrapper.get_IsAliasable":
-			case "Metal.MTLIntersectionFunctionTableWrapper.get_Label":
-			case "Metal.MTLIntersectionFunctionTableWrapper.get_ResourceOptions":
-			case "Metal.MTLIntersectionFunctionTableWrapper.get_StorageMode":
-			case "Metal.MTLIntersectionFunctionTableWrapper.HazardTrackingMode":
-			case "Metal.MTLIntersectionFunctionTableWrapper.Heap":
-			case "Metal.MTLIntersectionFunctionTableWrapper.HeapOffset":
-			case "Metal.MTLIntersectionFunctionTableWrapper.IsAliasable":
-			case "Metal.MTLIntersectionFunctionTableWrapper.ResourceOptions":
-			case "Metal.MTLIntersectionFunctionTableWrapper.set_Label":
-			case "Metal.MTLResourceStateCommandEncoder_Extensions.Wait":
-			case "Metal.IMTLResourceStateCommandEncoder_Extensions.Wait":
-			case "Metal.MTLResourceStateCommandEncoderWrapper.get_Device":
-			case "Metal.MTLResourceStateCommandEncoderWrapper.get_Label":
-			case "Metal.MTLResourceStateCommandEncoderWrapper.set_Label":
-			case "Metal.IMTLResourceStateCommandEncoder.Update":
-			case "Metal.MTLTexture_Extensions.GetFirstMipmapInTail":
-			case "Metal.MTLTexture_Extensions.GetIsSparse":
-			case "Metal.MTLTexture_Extensions.GetTailSizeInBytes":
-			case "Metal.MTLTextureWrapper.FirstMipmapInTail":
-			case "Metal.MTLTextureWrapper.get_FirstMipmapInTail":
-			case "Metal.MTLTextureWrapper.get_IsSparse":
-			case "Metal.MTLTextureWrapper.get_TailSizeInBytes":
-			case "Metal.MTLTextureWrapper.IsSparse":
-			case "Metal.MTLTextureWrapper.TailSizeInBytes":
-			case "Metal.MTLVisibleFunctionTableWrapper.AllocatedSize":
-			case "Metal.MTLVisibleFunctionTableWrapper.get_AllocatedSize":
-			case "Metal.MTLVisibleFunctionTableWrapper.get_CpuCacheMode":
-			case "Metal.MTLVisibleFunctionTableWrapper.get_Device":
-			case "Metal.MTLVisibleFunctionTableWrapper.get_HazardTrackingMode":
-			case "Metal.MTLVisibleFunctionTableWrapper.get_Heap":
-			case "Metal.MTLVisibleFunctionTableWrapper.get_HeapOffset":
-			case "Metal.MTLVisibleFunctionTableWrapper.get_IsAliasable":
-			case "Metal.MTLVisibleFunctionTableWrapper.get_Label":
-			case "Metal.MTLVisibleFunctionTableWrapper.get_ResourceOptions":
-			case "Metal.MTLVisibleFunctionTableWrapper.get_StorageMode":
-			case "Metal.MTLVisibleFunctionTableWrapper.HazardTrackingMode":
-			case "Metal.MTLVisibleFunctionTableWrapper.Heap":
-			case "Metal.MTLVisibleFunctionTableWrapper.HeapOffset":
-			case "Metal.MTLVisibleFunctionTableWrapper.IsAliasable":
-			case "Metal.MTLVisibleFunctionTableWrapper.ResourceOptions":
-			case "Metal.MTLVisibleFunctionTableWrapper.set_Label":
-			case "WebKit.WKPreviewActionItemWrapper.get_Title":
-				return true;
-			}
-			// Generator Bug/Limitation - Also related to 2 ^, this time with catagories
-			switch (member) {
-			case "AVFoundation.AVMovie_AVMovieTrackInspection.LoadTrack":
-			case "AVFoundation.AVMovie_AVMovieTrackInspection.LoadTrackAsync":
-			case "AVFoundation.AVMovie_AVMovieTrackInspection.LoadTracksWithMediaCharacteristic":
-			case "AVFoundation.AVMovie_AVMovieTrackInspection.LoadTracksWithMediaCharacteristicAsync":
-			case "AVFoundation.AVMovie_AVMovieTrackInspection.LoadTracksWithMediaType":
-			case "AVFoundation.AVMovie_AVMovieTrackInspection.LoadTracksWithMediaTypeAsync":
-			case "AVFoundation.AVMutableMovie.LoadTrack":
-			case "AVFoundation.AVMutableMovie.LoadTrackAsync":
-			case "AVFoundation.AVMutableMovie.LoadTracksWithMediaCharacteristic":
-			case "AVFoundation.AVMutableMovie.LoadTracksWithMediaCharacteristicAsync":
-			case "AVFoundation.AVMutableMovie.LoadTracksWithMediaType":
-			case "AVFoundation.AVMutableMovie.LoadTracksWithMediaTypeAsync":
-				return true;
+			if (tr is ArrayType at) {
+				var sb = new StringBuilder (GetTypeReferenceLookupKey (at.ElementType));
+				for (var i = 0; i < at.Rank; i++)
+					sb.Append ("[]");
+				return sb.ToString ();
 			}
 
-			// Generator Bug/Limitation - Conditional protocol inclusion (NSItemProviderReading, NSItemProviderWriting, NSCoding, NSProgressReporting)
-			if (member.EndsWith ("GetItemProviderVisibilityForTypeIdentifier") ||
-				member.EndsWith ("GetObject") ||
-				member.EndsWith ("LoadData") ||
-				member.EndsWith ("LoadDataAsync") ||
-				member.EndsWith ("get_ReadableTypeIdentifiers") ||
-				member.EndsWith ("get_WritableTypeIdentifiers") ||
-				member.EndsWith ("get_WritableTypeIdentifiersForItemProvider") ||
-				member.EndsWith ("ReadableTypeIdentifiers") ||
-				member.EndsWith ("WritableTypeIdentifiers") ||
-				member.EndsWith ("WritableTypeIdentifiersForItemProvider") ||
-				member.EndsWith ("get_Progress") ||
-				member.EndsWith ("EncodeTo")) {
-				return true;
+			if (tr is ByReferenceType rt)
+				return GetTypeReferenceLookupKey (rt.ElementType) + "&";
+
+			if (tr is GenericInstanceType git) {
+				var sb = new StringBuilder (GetTypeReferenceLookupKey (git.ElementType));
+				sb.Append ('<');
+				for (var i = 0; i < git.GenericArguments.Count; i++) {
+					if (i > 0)
+						sb.Append (", ");
+					sb.Append (GetTypeReferenceLookupKey (git.GenericArguments [i]));
+				}
+				sb.Append ('>');
+				return sb.ToString ();
 			}
-			// Generator Limitation - Conditional Abstract
-			switch (member) {
-			case "PassKit.PKPaymentAuthorizationControllerDelegate_Extensions.GetPresentationWindow":
-			case "PassKit.IPKPaymentAuthorizationControllerDelegate.GetPresentationWindow":
-				return true;
-			}
-			return false;
+
+			var td = tr.Resolve ();
+			if (td is not null)
+				return GetMemberLookupKeyInternal ((IMemberDefinition) td);
+			return string.IsNullOrEmpty (tr.FullName) ? tr.Name : tr.FullName;
 		}
 
 		static string GetMemberLookupKey (IMemberDefinition member)
 		{
-			// Members of xkit and other places conditionally inline and include members in one of two namespaces
-			// based upon platform assembly. Cludge them to the same key, so we don't mistakenly think members are missing
-			// from some platforms
-			return $"{member.DeclaringType.FullName}.{member.Name}".Replace ("AppKit", "Kit").Replace ("UIKit", "Kit");
+			var key = GetMemberLookupKeyInternal (member);
+
+			// The availability attributes between AppKit and UIKit are quite inconsistent:
+			// https://github.com/xamarin/xamarin-macios/issues/17292
+			key = key
+				.Replace ("AppKit.NS", "XKit.X")
+				.Replace ("UIKit.UI", "XKit.X")
+				.Replace ("AppKit.INS", "XKit.IX")
+				.Replace ("UIKit.IUI", "XKit.IX")
+				.Replace ("AppKit", "XKit")
+				.Replace ("UIKit", "XKit");
+
+			return key;
+		}
+
+		static string GetMemberLookupKeyInternal (IMemberDefinition member)
+		{
+			if (member is FieldDefinition fd)
+				return $"{GetMemberLookupKeyInternal (fd.DeclaringType)}.{fd.Name}";
+
+			if (member is MethodDefinition md) {
+				var sb = new StringBuilder ();
+				if (md.IsSpecialName && md.Name.StartsWith ("op_", StringComparison.Ordinal)) {
+					// operators are overloaded on return type, so the return type must be in the key
+					sb.Append (GetTypeReferenceLookupKey (md.ReturnType));
+					sb.Append (' ');
+				}
+				sb.Append (GetMemberLookupKeyInternal (md.DeclaringType));
+				sb.Append ('.');
+				sb.Append (md.Name);
+				if (md.ContainsGenericParameter) {
+					sb.Append ('`');
+					sb.Append (md.GenericParameters.Count.ToString ());
+				}
+				sb.Append (" (");
+				for (var i = 0; i < md.Parameters.Count; i++) {
+					if (i > 0)
+						sb.Append (", ");
+					sb.Append (GetTypeReferenceLookupKey (md.Parameters [i].ParameterType));
+				}
+				sb.Append (")");
+				return sb.ToString ();
+			}
+
+			if (member is PropertyDefinition pd)
+				return $"{GetMemberLookupKeyInternal (pd.DeclaringType)}.{pd.Name}";
+
+			if (member is TypeDefinition td)
+				return string.IsNullOrEmpty (td.FullName) ? td.Name : td.FullName;
+
+			if (member is EventDefinition ed)
+				return "event: " + GetMemberLookupKeyInternal (ed.DeclaringType) + "." + ed.Name;
+
+			throw new NotImplementedException (member.GetType ().FullName);
 		}
 
 		IEnumerable<IMemberDefinition> GetAllTypeMembers (TypeDefinition type)
@@ -489,24 +455,24 @@ namespace Cecil.Tests {
 		// }
 		//
 		// When run against mac, this fails as Extension does not include a mac supported of any kind attribute
-		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformAssemblies))]
-		public void AllAttributedItemsMustIncludeCurrentPlatform (string assemblyPath)
+		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformAssemblyDefinitions))]
+		public void AllAttributedItemsMustIncludeCurrentPlatform (AssemblyInfo info)
 		{
-			var assembly = Helper.GetAssembly (assemblyPath);
+			var assembly = info.Assembly;
 
-			string platformName = AssemblyToAttributeName (assemblyPath);
+			string platformName = AssemblyToAttributeName (assembly);
 
 			HashSet<string> found = new HashSet<string> ();
-			foreach (var type in Helper.FilterTypes (assembly, a => HasAnyAvailabilityAttribute (a))) {
+			foreach (var type in assembly.EnumerateTypes (a => HasAnyAvailabilityAttribute (a))) {
 				CheckCurrentPlatformIncludedIfAny (type, platformName, type.FullName, type.DeclaringType, found);
 			}
-			foreach (var prop in Helper.FilterProperties (assembly, a => HasAnyAvailabilityAttribute (a))) {
+			foreach (var prop in assembly.EnumerateProperties (a => HasAnyAvailabilityAttribute (a))) {
 				CheckCurrentPlatformIncludedIfAny (prop, platformName, prop.FullName, prop.DeclaringType, found);
 			}
-			foreach (var meth in Helper.FilterMethods (assembly, a => HasAnyAvailabilityAttribute (a))) {
+			foreach (var meth in assembly.EnumerateMethods (a => HasAnyAvailabilityAttribute (a))) {
 				CheckCurrentPlatformIncludedIfAny (meth, platformName, meth.FullName, meth.DeclaringType, found);
 			}
-			foreach (var field in Helper.FilterFields (assembly, a => HasAnyAvailabilityAttribute (a))) {
+			foreach (var field in assembly.EnumerateFields (a => HasAnyAvailabilityAttribute (a))) {
 				CheckCurrentPlatformIncludedIfAny (field, platformName, field.FullName, field.DeclaringType, found);
 			}
 			Assert.That (found, Is.Empty, $"{found.Count} issues found");
@@ -543,9 +509,9 @@ namespace Cecil.Tests {
 			}
 		}
 
-		string AssemblyToAttributeName (string assemblyPath)
+		string AssemblyToAttributeName (AssemblyDefinition assembly)
 		{
-			var baseName = Path.GetFileName (assemblyPath);
+			var baseName = assembly.Name.Name + ".dll";
 			if (Configuration.GetBaseLibraryName (TargetFramework.DotNet_iOS.Platform, true) == baseName)
 				return "ios";
 			if (Configuration.GetBaseLibraryName (TargetFramework.DotNet_tvOS.Platform, true) == baseName)
@@ -617,5 +583,56 @@ namespace Cecil.Tests {
 
 		bool IsAvailabilityAttribute (CustomAttribute attribute) => IsSupportedAttribute (attribute) || attribute.AttributeType.Name == "UnsupportedOSPlatformAttribute";
 		bool IsSupportedAttribute (CustomAttribute attribute) => attribute.AttributeType.Name == "SupportedOSPlatformAttribute";
+
+		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformAssemblyDefinitions))]
+		public void ModelMustBeProtocol (AssemblyInfo info)
+		{
+			// Verify that all types with a [Model] attribute must also have a [Protocol] attribute.
+			// Exception: If the type in question has a [Register] attribute with IsWrapper = false, then that's OK.
+			var failures = new HashSet<string> ();
+			var typesWithModelAttribute = 0;
+			var typesWithProtocolAttribute = 0;
+			var assembly = info.Assembly;
+
+			foreach (var type in assembly.EnumerateTypes ()) {
+				if (!type.HasCustomAttributes)
+					continue;
+
+				var attributes = type.CustomAttributes;
+
+				if (!attributes.Any (v => v.AttributeType.Is ("Foundation", "ModelAttribute")))
+					continue;
+				typesWithModelAttribute++;
+
+				if (attributes.Any (v => v.AttributeType.Is ("Foundation", "ProtocolAttribute"))) {
+					typesWithProtocolAttribute++;
+					continue;
+				}
+
+				var registerAttribute = attributes.SingleOrDefault (v => v.AttributeType.Is ("Foundation", "RegisterAttribute"));
+				if (registerAttribute is not null && !GetIsWrapper (registerAttribute))
+					continue;
+
+				failures.Add ($"The type {type.FullName} has a [Model] attribute, but no [Protocol] attribute.");
+			}
+
+			Assert.That (failures, Is.Empty, "Failures");
+			Assert.That (typesWithModelAttribute, Is.GreaterThan (0), "No types with the [Model] attribute?");
+			Assert.That (typesWithProtocolAttribute, Is.GreaterThan (0), "No types with the [Protocol] attribute?");
+
+			static bool GetIsWrapper (CustomAttribute attrib)
+			{
+				// .ctor (string name, bool isWrapper)
+				if (attrib.ConstructorArguments.Count == 2)
+					return (bool) attrib.ConstructorArguments [1].Value;
+
+				// public bool IsWrapper { get; set; }
+				foreach (var field in attrib.Fields) {
+					if (field.Name == "IsWrapper")
+						return (bool) field.Argument.Value;
+				}
+				return false;
+			}
+		}
 	}
 }

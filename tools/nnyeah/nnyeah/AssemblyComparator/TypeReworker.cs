@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Mono.Cecil;
 using Mono.Cecil.Rocks;
 using System.Collections.Generic;
@@ -35,7 +35,7 @@ namespace Microsoft.MaciOS.Nnyeah.AssemblyComparator {
 				if (ty.ToString () == name)
 					return ty;
 			}
-			throw new Exception (String.Format(Errors.E0010, name));
+			throw new Exception (String.Format (Errors.E0010, name));
 		}
 
 		public PropertyDefinition ReworkProperty (PropertyDefinition prop)
@@ -137,9 +137,9 @@ namespace Microsoft.MaciOS.Nnyeah.AssemblyComparator {
 				result = newNfloatTypeReference;
 				return true;
 			} else if (type.IsGenericInstance) {
-				return TryReworkGenericType ((GenericInstanceType)type, nativeTypes, out result);
+				return TryReworkGenericType ((GenericInstanceType) type, nativeTypes, out result);
 			} else if (type.IsArray) {
-				return TryReworkArray ((ArrayType)type, nativeTypes, out result);
+				return TryReworkArray ((ArrayType) type, nativeTypes, out result);
 			}
 			result = type;
 			return false;

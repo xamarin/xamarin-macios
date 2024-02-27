@@ -27,12 +27,12 @@ namespace MonoTouchFixtures.Metal {
 		public void TearDown ()
 		{
 			descriptor?.Dispose ();
-			descriptor = null; 
+			descriptor = null;
 		}
 
 		[Test]
 		public void BinaryArchivesTest ()
-		{ 
+		{
 			// we want to make sure we do not crash because intro fails 
 			Assert.DoesNotThrow (() => {
 				descriptor.BinaryArchives = null; // we are testing if the property works, so setting to null does test the selector

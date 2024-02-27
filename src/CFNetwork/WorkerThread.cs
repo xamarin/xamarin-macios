@@ -38,14 +38,16 @@ using System.Diagnostics;
 using Foundation;
 using CoreFoundation;
 
+#nullable enable
+
 using CFRunLoopModeString = global::Foundation.NSString;
 
 namespace CFNetwork {
 
 	public class WorkerThread {
-		CFRunLoop loop;
-		Source source;
-		Context context;
+		CFRunLoop? loop;
+		Source? source;
+		Context? context;
 		CancellationTokenSource cts;
 		ManualResetEventSlim readyEvent;
 		ConcurrentQueue<Event> eventQueue = new ConcurrentQueue<Event> ();
@@ -62,7 +64,7 @@ namespace CFNetwork {
 		}
 
 		[Conditional ("DEBUG")]
-		static void Log (string message, params object[] args)
+		static void Log (string message, params object [] args)
 		{
 			Debug.WriteLine (string.Format (message, args), "WorkerThread");
 		}
@@ -88,8 +90,9 @@ namespace CFNetwork {
 		public void Stop ()
 		{
 			cts.Cancel ();
-			loop.RemoveSource (source, CFRunLoop.ModeDefault);
-			loop.Stop ();
+			if (source is not null)
+				loop?.RemoveSource (source, CFRunLoop.ModeDefault);
+			loop?.Stop ();
 		}
 
 		protected void PostNoResult (Action callback)
@@ -100,8 +103,8 @@ namespace CFNetwork {
 				return null;
 			};
 			eventQueue.Enqueue (ev);
-			source.Signal ();
-			loop.WakeUp ();
+			source?.Signal ();
+			loop?.WakeUp ();
 		}
 
 		public Task Post (Action callback)
@@ -116,11 +119,11 @@ namespace CFNetwork {
 				callback (c);
 				return null;
 			};
-			ev.Tcs = new TaskCompletionSource<object> ();
+			ev.Tcs = new TaskCompletionSource<object?> ();
 			ev.Cts = CancellationTokenSource.CreateLinkedTokenSource (cts.Token, cancellationToken);
 			eventQueue.Enqueue (ev);
-			source.Signal ();
-			loop.WakeUp ();
+			source?.Signal ();
+			loop?.WakeUp ();
 
 			try {
 				await ev.Tcs.Task;
@@ -129,28 +132,28 @@ namespace CFNetwork {
 			}
 		}
 
-		public Task<T> Post<T> (Func<T> callback)
+		public Task<T?> Post<T> (Func<T> callback)
 		{
 			return Post (c => callback (), CancellationToken.None);
 		}
 
-		public async Task<T> Post<T> (Func<CancellationToken, T> callback,
-		                              CancellationToken cancellationToken)
+		public async Task<T?> Post<T> (Func<CancellationToken, T> callback,
+									  CancellationToken cancellationToken)
 		{
 			var ev = new Event ();
 			ev.Callback = c => callback (c);
-			ev.Tcs = new TaskCompletionSource<object> ();
+			ev.Tcs = new TaskCompletionSource<object?> ();
 			ev.Cts = CancellationTokenSource.CreateLinkedTokenSource (cts.Token, cancellationToken);
 			eventQueue.Enqueue (ev);
-			source.Signal ();
-			loop.WakeUp ();
+			source?.Signal ();
+			loop?.WakeUp ();
 
 			try {
 				var result = await ev.Tcs.Task;
-				if (result != null)
-					return (T)result;
+				if (result is not null)
+					return (T) result;
 				else
-					return default(T);
+					return default (T);
 			} finally {
 				ev.Cts.Dispose ();
 			}
@@ -162,7 +165,7 @@ namespace CFNetwork {
 			if (!eventQueue.TryDequeue (out ev))
 				return;
 
-			if ((ev.Cts != null) && ev.Cts.IsCancellationRequested) {
+			if ((ev.Cts is not null) && ev.Cts.IsCancellationRequested) {
 				ev.Tcs.SetCanceled ();
 				return;
 			}
@@ -171,20 +174,20 @@ namespace CFNetwork {
 
 			try {
 				var result = ev.Callback (effectiveCts.Token);
-				if (ev.Tcs != null)
+				if (ev.Tcs is not null)
 					ev.Tcs.SetResult (result);
 			} catch (TaskCanceledException) {
-				if (ev.Tcs != null)
+				if (ev.Tcs is not null)
 					ev.Tcs.SetCanceled ();
 			} catch (Exception ex) {
-				if (ev.Tcs != null)
+				if (ev.Tcs is not null)
 					ev.Tcs.SetException (ex);
 			}
 		}
 
 		struct Event {
-			public Func<CancellationToken, object> Callback;
-			public TaskCompletionSource<object> Tcs;
+			public Func<CancellationToken, object?> Callback;
+			public TaskCompletionSource<object?> Tcs;
 			public CancellationTokenSource Cts;
 		}
 

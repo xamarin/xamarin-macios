@@ -3,10 +3,8 @@ using System;
 using WatchKit;
 using Foundation;
 
-namespace WatchExtension
-{
-	public partial class GlanceController : WKInterfaceController
-	{
+namespace WatchExtension {
+	public partial class GlanceController : WKInterfaceController {
 		public GlanceController (IntPtr handle) : base (handle)
 		{
 		}

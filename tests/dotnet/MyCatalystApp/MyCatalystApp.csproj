@@ -2,12 +2,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFramework>net$(BundledNETCoreAppTargetFrameworkVersion)-maccatalyst</TargetFramework>
-		<RuntimeIdentifier>maccatalyst-x64</RuntimeIdentifier>
 		<OutputType>Exe</OutputType>
 
 		<ApplicationTitle>MyCatalystApp</ApplicationTitle>
 		<ApplicationId>com.xamarin.mycatalystapp</ApplicationId>
 		<ApplicationVersion>3.14</ApplicationVersion>
-		<SupportedOSPlatformVersion>13.1</SupportedOSPlatformVersion>
+		<CustomBeforeMicrosoftCommonTargets>$(CustomBeforeMicrosoftCommonTargets);$(MSBuildThisFileDirectory)../../common/SupportedOSPlatformVersions.targets</CustomBeforeMicrosoftCommonTargets>
 	</PropertyGroup>
 </Project>

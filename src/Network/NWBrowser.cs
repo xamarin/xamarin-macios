@@ -16,10 +16,10 @@ using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
 
-using OS_nw_browser=System.IntPtr;
-using OS_nw_browse_descriptor=System.IntPtr;
-using OS_nw_parameters=System.IntPtr;
-using dispatch_queue_t =System.IntPtr;
+using OS_nw_browser = System.IntPtr;
+using OS_nw_browse_descriptor = System.IntPtr;
+using OS_nw_parameters = System.IntPtr;
+using dispatch_queue_t = System.IntPtr;
 
 #if !NET
 using NativeHandle = System.IntPtr;
@@ -33,14 +33,13 @@ namespace Network {
 
 #if NET
 	[SupportedOSPlatform ("tvos13.0")]
-	[SupportedOSPlatform ("macos10.15")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("ios13.0")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
-	[TV (13,0)]
-	[Mac (10,15)]
-	[iOS (13,0)]
-	[Watch (6,0)]
+	[TV (13, 0)]
+	[iOS (13, 0)]
+	[Watch (6, 0)]
 #endif
 	public class NWBrowser : NativeObject {
 
@@ -66,7 +65,7 @@ namespace Network {
 			SetChangesHandler (InternalChangesHandler);
 		}
 
-		public NWBrowser (NWBrowserDescriptor descriptor) : this (descriptor, null) {}
+		public NWBrowser (NWBrowserDescriptor descriptor) : this (descriptor, null) { }
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_browser_set_queue (OS_nw_browser browser, dispatch_queue_t queue);
@@ -111,7 +110,7 @@ namespace Network {
 
 		public bool IsActive {
 			get {
-				lock (startLock) 
+				lock (startLock)
 					return started;
 			}
 		}
@@ -129,20 +128,24 @@ namespace Network {
 			=> new NWParameters (nw_browser_copy_parameters (GetCheckedHandle ()), owns: true);
 
 		[DllImport (Constants.NetworkLibrary)]
-		unsafe static extern void nw_browser_set_browse_results_changed_handler (OS_nw_browser browser, void *handler);
+		unsafe static extern void nw_browser_set_browse_results_changed_handler (OS_nw_browser browser, BlockLiteral* handler);
 
-		delegate void nw_browser_browse_results_changed_handler_t (IntPtr block, IntPtr oldResult, IntPtr newResult, bool completed);
+#if !NET
+		delegate void nw_browser_browse_results_changed_handler_t (IntPtr block, IntPtr oldResult, IntPtr newResult, byte completed);
 		static nw_browser_browse_results_changed_handler_t static_ChangesHandler = TrampolineChangesHandler;
 
 		[MonoPInvokeCallback (typeof (nw_browser_browse_results_changed_handler_t))]
-		static void TrampolineChangesHandler (IntPtr block, IntPtr oldResult, IntPtr newResult, bool completed)
+#else
+		[UnmanagedCallersOnly]
+#endif
+		static void TrampolineChangesHandler (IntPtr block, IntPtr oldResult, IntPtr newResult, byte completed)
 		{
 			var del = BlockLiteral.GetTarget<NWBrowserChangesDelegate> (block);
 			if (del is not null) {
 				// we do the cleanup of the objs in the internal handlers
 				NWBrowseResult? nwOldResult = (oldResult == IntPtr.Zero) ? null : new NWBrowseResult (oldResult, owns: false);
 				NWBrowseResult? nwNewResult = (newResult == IntPtr.Zero) ? null : new NWBrowseResult (newResult, owns: false);
-				del (nwOldResult, nwNewResult, completed);
+				del (nwOldResult, nwNewResult, completed != 0);
 			}
 		}
 
@@ -165,7 +168,7 @@ namespace Network {
 				// results can be null, since we could have a not old one
 				oldResult?.Dispose ();
 				newResult?.Dispose ();
-				return; 
+				return;
 			}
 			// get the change, add it to the list
 			var change = NWBrowseResult.GetChanges (oldResult, newResult);
@@ -177,7 +180,7 @@ namespace Network {
 			lock (changesLock) {
 				changes.Add (result);
 				// only call when we know we are done
-				if (completed)  {
+				if (completed) {
 					tmp_changes = changes;
 					changes = new List<(NWBrowseResult? result, NWBrowseResultChange change)> ();
 				}
@@ -198,16 +201,17 @@ namespace Network {
 					nw_browser_set_browse_results_changed_handler (GetCheckedHandle (), null);
 					return;
 				}
-				BlockLiteral block_handler = new BlockLiteral ();
-				BlockLiteral *block_ptr_handler = &block_handler;
-				block_handler.SetupBlockUnsafe (static_ChangesHandler, handler);
-				try {
-					nw_browser_set_browse_results_changed_handler (GetCheckedHandle (), (void*) block_ptr_handler);
-				} finally {
-					block_handler.CleanupBlock ();
-				}
+
+#if NET
+				delegate* unmanaged<IntPtr, IntPtr, IntPtr, byte, void> trampoline = &TrampolineChangesHandler;
+				using var block = new BlockLiteral (trampoline, handler, typeof (NWBrowser), nameof (TrampolineChangesHandler));
+#else
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (static_ChangesHandler, handler);
+#endif
+				nw_browser_set_browse_results_changed_handler (GetCheckedHandle (), &block);
 			}
-		}	
+		}
 
 		// let to not change the API, but would be nice to remove it in the following releases.
 #if !NET
@@ -216,17 +220,21 @@ namespace Network {
 #endif
 
 		[DllImport (Constants.NetworkLibrary)]
-		unsafe static extern void nw_browser_set_state_changed_handler (OS_nw_browser browser, void *state_changed_handler);
+		unsafe static extern void nw_browser_set_state_changed_handler (OS_nw_browser browser, BlockLiteral* state_changed_handler);
 
+#if !NET
 		delegate void nw_browser_set_state_changed_handler_t (IntPtr block, NWBrowserState state, IntPtr error);
 		static nw_browser_set_state_changed_handler_t static_StateChangesHandler = TrampolineStateChangesHandler;
 
 		[MonoPInvokeCallback (typeof (nw_browser_set_state_changed_handler_t))]
+#else
+		[UnmanagedCallersOnly]
+#endif
 		static void TrampolineStateChangesHandler (IntPtr block, NWBrowserState state, IntPtr error)
 		{
 			var del = BlockLiteral.GetTarget<Action<NWBrowserState, NWError?>> (block);
 			if (del is not null) {
-				var nwError = (error == IntPtr.Zero)? null : new NWError (error, owns: false);
+				var nwError = (error == IntPtr.Zero) ? null : new NWError (error, owns: false);
 				del (state, nwError);
 			}
 		}
@@ -239,15 +247,15 @@ namespace Network {
 					nw_browser_set_state_changed_handler (GetCheckedHandle (), null);
 					return;
 				}
-				BlockLiteral block_handler = new BlockLiteral ();
-				BlockLiteral *block_ptr_handler = &block_handler;
-				block_handler.SetupBlockUnsafe (static_StateChangesHandler, handler);
-				try {
-					nw_browser_set_state_changed_handler (GetCheckedHandle (), (void*) block_ptr_handler);
-				} finally {
-					block_handler.CleanupBlock ();
-				}
+#if NET
+				delegate* unmanaged<IntPtr, NWBrowserState, IntPtr, void> trampoline = &TrampolineStateChangesHandler;
+				using var block = new BlockLiteral (trampoline, handler, typeof (NWBrowser), nameof (TrampolineStateChangesHandler));
+#else
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (static_StateChangesHandler, handler);
+#endif
+				nw_browser_set_state_changed_handler (GetCheckedHandle (), &block);
 			}
-		}	
+		}
 	}
 }

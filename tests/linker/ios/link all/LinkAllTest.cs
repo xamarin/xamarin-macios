@@ -37,14 +37,14 @@ using NUnit.Framework;
 using MonoTests.System.Net.Http;
 
 namespace LinkAll {
-	
+
 	// we DO NOT want the code to be "fully" available
 	public class NotPreserved {
-		
+
 		public byte One {
 			get; set;
 		}
-	
+
 		[DefaultValue (2)]
 		public int Two {
 			get; set;
@@ -56,10 +56,10 @@ namespace LinkAll {
 		// but the nested type is a subclass of NSObject and gets preserved (as it's not part of monotouch.dll)
 		public class Derived : NSObject {
 			[Export ("foo")]
-			public void Foo () {}
+			public void Foo () { }
 		}
 
-		public void UnusedMethod () {}
+		public void UnusedMethod () { }
 	}
 
 	[TestFixture]
@@ -102,14 +102,14 @@ namespace LinkAll {
 		public const string AssemblyName = "Xamarin.Mac";
 #endif
 #else
-	#error Unknown platform
+#error Unknown platform
 #endif
 
 		Type not_preserved_type = typeof (NotPreserved);
 
 
 		class TypeAttribute : Attribute {
-			public TypeAttribute (Type type) {}
+			public TypeAttribute (Type type) { }
 		}
 
 		[Type (null)]
@@ -132,7 +132,7 @@ namespace LinkAll {
 			Assert.NotNull (pi.GetGetMethod (), "getter");
 			Assert.Null (pi.GetSetMethod (), "setter");
 		}
-		
+
 		[Test]
 		public void SetterOnly ()
 		{
@@ -162,6 +162,24 @@ namespace LinkAll {
 			}
 			Assert.True (default_value, "DefaultValue");
 		}
+
+#if NET
+		static void Check (string calendarName, bool present)
+		{
+			var type = Type.GetType ("System.Globalization." + calendarName);
+			bool success = present == (type is not null);
+			Assert.AreEqual (present, type is not null, calendarName);
+		}
+
+		[Test]
+		public void Calendars ()
+		{
+			Check ("GregorianCalendar", true);
+			Check ("UmAlQuraCalendar", true);
+			Check ("HijriCalendar", true);
+			Check ("ThaiBuddhistCalendar", true);
+		}
+#endif // NET
 
 		public enum CertificateProblem : long {
 			CertEXPIRED = 0x800B0101,
@@ -208,7 +226,7 @@ namespace LinkAll {
 				var problemMessage = "";
 				CertificateProblem problemList = new CertificateProblem ();
 				var problemCodeName = Enum.GetName (problemList.GetType (), problem);
-				problemMessage = problemCodeName != null ? problemMessage + "-Certificateproblem:" + problemCodeName : "Unknown Certificate Problem";
+				problemMessage = problemCodeName is not null ? problemMessage + "-Certificateproblem:" + problemCodeName : "Unknown Certificate Problem";
 				return problemMessage;
 			}
 		}
@@ -240,7 +258,7 @@ namespace LinkAll {
 			}
 		}
 #endif
-		
+
 #if !__MACOS__
 		[Test]
 		public void DetectPlatform ()
@@ -275,8 +293,9 @@ namespace LinkAll {
 		[ThreadSafe]
 		public void RemovedAttributes ()
 		{
-			const string prefix = NamespacePrefix;
-			const string suffix = ", " + AssemblyName;
+			// Don't use constants here, because the linker can see what we're trying to do and keeps what we're verifying has been removed.
+			string prefix = NamespacePrefix;
+			string suffix = AssemblyName;
 
 			// since we're linking the attributes will NOT be available - even if they are used
 #if !XAMCORE_3_0
@@ -374,7 +393,7 @@ namespace LinkAll {
 #endif
 		}
 #endif
-		
+
 #if !__TVOS__ && !__WATCHOS__ && !__MACOS__
 		[Test]
 		public void Pasteboard_ImagesTest ()
@@ -383,13 +402,13 @@ namespace LinkAll {
 			using (var dp = new CGDataProvider (file)) {
 				using (var cgimg = CGImage.FromPNG (dp, null, false, CGColorRenderingIntent.Default)) {
 					using (var img = new UIImage (cgimg)) {
-						UIPasteboard.General.Images = new UIImage[] { img };
-						if (TestRuntime.CheckXcodeVersion (8,0))
+						UIPasteboard.General.Images = new UIImage [] { img };
+						if (TestRuntime.CheckXcodeVersion (8, 0))
 							Assert.True (UIPasteboard.General.HasImages, "HasImages");
 
 						Assert.AreEqual (1, UIPasteboard.General.Images.Length, "a - length");
 
-						UIPasteboard.General.Images = new UIImage[] { img, img };
+						UIPasteboard.General.Images = new UIImage [] { img, img };
 						Assert.AreEqual (2, UIPasteboard.General.Images.Length, "b - length");
 						Assert.IsNotNull (UIPasteboard.General.Images [0], "b - nonnull[0]");
 						Assert.IsNotNull (UIPasteboard.General.Images [1], "b - nonnull[0]");
@@ -409,7 +428,7 @@ namespace LinkAll {
 
 		[TypeConverter (typeof (TestEnumTypeConverter))]
 		public enum TestEnum {
-			One,Two
+			One, Two
 		}
 
 		[Preserve (AllMembers = true)]
@@ -544,7 +563,7 @@ namespace LinkAll {
 			var type = o.GetType ();
 			var f1 = type.GetField (s, BindingFlags.Instance | BindingFlags.NonPublic);
 			var f2 = type.GetField (s + "i__Field", BindingFlags.Instance | BindingFlags.NonPublic);
-			if (f1 == null && f2 == null)
+			if (f1 is null && f2 is null)
 				return s;
 
 			//Console.WriteLine (f.GetValue (o));
@@ -554,10 +573,10 @@ namespace LinkAll {
 		string FromPattern (string pattern, object o)
 		{
 			var s = GetField (o, "<action>");
-			if (s != null)
+			if (s is not null)
 				return s;
 			s = GetField (o, "<id>");
-			if (s != null)
+			if (s is not null)
 				return s;
 			return GetField (o, "<contentType>");
 		}
@@ -580,7 +599,7 @@ namespace LinkAll {
 			using (var pr = new SKProductsRequest ()) {
 				Assert.Null (pr.WeakDelegate, "none");
 				// event on SKProductsRequest itself
-				pr.ReceivedResponse += (object sender, SKProductsRequestResponseEventArgs e) => {};
+				pr.ReceivedResponse += (object sender, SKProductsRequestResponseEventArgs e) => { };
 
 				var t = pr.WeakDelegate.GetType ();
 				Assert.That (t.Name, Is.EqualTo ("_SKProductsRequestDelegate"), "delegate");
@@ -591,7 +610,7 @@ namespace LinkAll {
 				Assert.NotNull (value, "value");
 
 				// and on the SKRequest defined one
-				pr.RequestFailed += (object sender, SKRequestErrorEventArgs e) => {};
+				pr.RequestFailed += (object sender, SKRequestErrorEventArgs e) => { };
 				// and the existing (initial field) is still set
 				fi = t.GetField ("receivedResponse", BindingFlags.NonPublic | BindingFlags.Instance);
 				Assert.NotNull (fi, "receivedResponse/SKRequest");
@@ -603,7 +622,8 @@ namespace LinkAll {
 		public void Aot_27116 ()
 		{
 			var nix = (from nic in System.Net.NetworkInformation.NetworkInterface.GetAllNetworkInterfaces ()
-				where nic.Id.StartsWith ("en") || nic.Id.StartsWith ("pdp_ip") select nic);
+					   where nic.Id.StartsWith ("en") || nic.Id.StartsWith ("pdp_ip")
+					   select nic);
 			Assert.NotNull (nix);
 		}
 
@@ -650,7 +670,7 @@ namespace LinkAll {
 			Assert.NotNull (oifd,  atmb.FullName + ".ObjectIdForDebugger");
 #else
 			Assert.Null (snfwc, atmb.FullName + ".SetNotificationForWaitCompletion");
-			Assert.Null (oifd,  atmb.FullName + ".ObjectIdForDebugger");
+			Assert.Null (oifd, atmb.FullName + ".ObjectIdForDebugger");
 #endif
 		}
 
@@ -669,8 +689,7 @@ namespace LinkAll {
 		[ProtocolMember (IsRequired = false, IsProperty = false, IsStatic = false, Name = "ConfigureView", Selector = "configureViewForParameters:", ParameterType = new Type [] { typeof (global::Foundation.NSSet<global::Foundation.NSString>) }, ParameterByRef = new bool [] { false })]
 		public interface IProtocolWithGenericsInOptionalMember : INativeObject, IDisposable { }
 
-		internal sealed class ProtocolWithGenericsInOptionalMemberWrapper : BaseWrapper, IProtocolWithGenericsInOptionalMember
-		{
+		internal sealed class ProtocolWithGenericsInOptionalMemberWrapper : BaseWrapper, IProtocolWithGenericsInOptionalMember {
 			public ProtocolWithGenericsInOptionalMemberWrapper (IntPtr handle, bool owns) : base (handle, owns) { }
 		}
 
@@ -725,8 +744,7 @@ namespace LinkAll {
 	[Introduced (PlatformName.WatchOS, 1, 0)]
 #endif
 	[Preserve]
-	public class ClassFromThePast : NSObject
-	{
+	public class ClassFromThePast : NSObject {
 		[Export ("foo:")]
 		public void Foo (ClassFromThePast obj)
 		{

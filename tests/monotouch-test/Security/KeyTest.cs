@@ -43,7 +43,7 @@ namespace MonoTouchFixtures.Security {
 		static X509Certificate2 c {
 			get {
 				TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 8, throwIfOtherPlatform: false); // System.Security.Cryptography.CryptographicException : Input data cannot be coded as a valid certificate.
-				if (_c == null)
+				if (_c is null)
 					_c = new X509Certificate2 (ImportExportTest.farscape_pfx, "farscape");
 				return _c;
 			}
@@ -66,12 +66,12 @@ namespace MonoTouchFixtures.Security {
 		{
 			// the old API was not working but the crash was fixed, still you need to provide an adequatly sized buffer
 			using (SecPolicy p = SecPolicy.CreateBasicX509Policy ())
-				using (SecTrust t = new SecTrust (c, p)) {
+			using (SecTrust t = new SecTrust (c, p)) {
 				// getting the public key won't (always) work if evaluate was not called
 				t.Evaluate ();
 				using (SecKey pubkey = t.GetPublicKey ()) {
-					byte[] plain = new byte [20];
-					byte[] cipher = new byte [pubkey.BlockSize];
+					byte [] plain = new byte [20];
+					byte [] cipher = new byte [pubkey.BlockSize];
 					Assert.That (pubkey.Encrypt (SecPadding.PKCS1, plain, cipher), Is.EqualTo (SecStatusCode.Success), "Encrypt");
 				}
 			}
@@ -85,8 +85,8 @@ namespace MonoTouchFixtures.Security {
 				// getting the public key won't (always) work if evaluate was not called
 				t.Evaluate ();
 				using (SecKey pubkey = t.GetPublicKey ()) {
-					byte[] plain = new byte [0];
-					byte[] secret;
+					byte [] plain = new byte [0];
+					byte [] secret;
 					Assert.That (pubkey.Encrypt (SecPadding.PKCS1, plain, out secret), Is.EqualTo (SecStatusCode.Success), "Encrypt");
 					Assert.That (secret.Length, Is.EqualTo (128), "secret.Length");
 				}
@@ -101,8 +101,8 @@ namespace MonoTouchFixtures.Security {
 				// getting the public key won't (always) work if evaluate was not called
 				t.Evaluate ();
 				using (SecKey pubkey = t.GetPublicKey ()) {
-					byte[] plain = new byte [20];
-					byte[] secret;
+					byte [] plain = new byte [20];
+					byte [] secret;
 					Assert.That (pubkey.Encrypt (SecPadding.PKCS1, plain, out secret), Is.EqualTo (SecStatusCode.Success), "Encrypt");
 					Assert.That (secret.Length, Is.EqualTo (128), "secret.Length");
 				}
@@ -127,7 +127,7 @@ namespace MonoTouchFixtures.Security {
 
 					byte [] plain = new byte [20] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0 };
 					byte [] cipher;
-					if (TestRuntime.CheckXcodeVersion (8,0)) {
+					if (TestRuntime.CheckXcodeVersion (8, 0)) {
 						Assert.True (public_key.IsAlgorithmSupported (SecKeyOperationType.Encrypt, SecKeyAlgorithm.RsaEncryptionPkcs1), "public/IsAlgorithmSupported/Encrypt");
 
 #if MONOMAC
@@ -140,8 +140,7 @@ namespace MonoTouchFixtures.Security {
 #else
 						Assert.True (public_key.IsAlgorithmSupported (SecKeyOperationType.Decrypt, SecKeyAlgorithm.RsaEncryptionPkcs1), "public/IsAlgorithmSupported/Decrypt");
 
-						using (var pub = public_key.GetPublicKey ())
-						{
+						using (var pub = public_key.GetPublicKey ()) {
 							// a new native instance of the key is returned (so having a new managed SecKey is fine)
 							Assert.False (pub.Handle == public_key.Handle, "public/GetPublicKey");
 						}
@@ -161,14 +160,19 @@ namespace MonoTouchFixtures.Security {
 					}
 					Assert.That (public_key.Encrypt (SecPadding.PKCS1, plain, out cipher), Is.EqualTo (SecStatusCode.Success), "Encrypt");
 
-					byte[] result;
-					if (TestRuntime.CheckXcodeVersion (8,0)) {
+					byte [] result;
+					if (TestRuntime.CheckXcodeVersion (8, 0)) {
 						Assert.False (private_key.IsAlgorithmSupported (SecKeyOperationType.Encrypt, SecKeyAlgorithm.RsaEncryptionPkcs1), "private/IsAlgorithmSupported/Encrypt");
 						Assert.True (private_key.IsAlgorithmSupported (SecKeyOperationType.Decrypt, SecKeyAlgorithm.RsaEncryptionPkcs1), "private/IsAlgorithmSupported/Decrypt");
 
 						using (var pub2 = private_key.GetPublicKey ()) {
+#if MONOMAC
+							// macOS behaviour is not consistent - but the test main goal is to check we get a key
+							Assert.That (pub2.Handle, Is.Not.EqualTo (IntPtr.Zero), "private/GetPublicKey");
+#else
 							// a new native instance of the key is returned (so having a new managed SecKey is fine)
 							Assert.That (pub2.Handle, Is.Not.EqualTo (public_key.Handle), "private/GetPublicKey");
+#endif
 						}
 
 						using (var attrs = private_key.GetAttributes ()) {
@@ -254,7 +258,7 @@ namespace MonoTouchFixtures.Security {
 
 					byte [] plain = new byte [0];
 					byte [] cipher;
-					if (TestRuntime.CheckXcodeVersion (8,0)) {
+					if (TestRuntime.CheckXcodeVersion (8, 0)) {
 						Assert.True (public_key.IsAlgorithmSupported (SecKeyOperationType.Encrypt, SecKeyAlgorithm.RsaEncryptionOaepSha1), "public/IsAlgorithmSupported/Encrypt");
 						// I would have expect false
 #if MONOMAC
@@ -266,8 +270,8 @@ namespace MonoTouchFixtures.Security {
 					Assert.That (public_key.Encrypt (SecPadding.OAEP, plain, out cipher), Is.EqualTo (SecStatusCode.Success), "Encrypt");
 					public_key.Dispose ();
 
-					byte[] result;
-					if (TestRuntime.CheckXcodeVersion (8,0)) {
+					byte [] result;
+					if (TestRuntime.CheckXcodeVersion (8, 0)) {
 						Assert.False (private_key.IsAlgorithmSupported (SecKeyOperationType.Encrypt, SecKeyAlgorithm.RsaEncryptionOaepSha1), "private/IsAlgorithmSupported/Encrypt");
 						Assert.True (private_key.IsAlgorithmSupported (SecKeyOperationType.Decrypt, SecKeyAlgorithm.RsaEncryptionOaepSha1), "private/IsAlgorithmSupported/Decrypt");
 					}
@@ -380,7 +384,7 @@ namespace MonoTouchFixtures.Security {
 					record.KeySizeInBits = 8192;
 					if (TestRuntime.CheckXcodeVersion (7, 0)) {
 						// It seems iOS 9 supports 8192, but it takes a long time to generate (~40 seconds on my iPad Air 2), so skip it.
-	//					Assert.That (SecKey.GenerateKeyPair (record.ToDictionary (), out public_key, out private_key), Is.EqualTo (SecStatusCode.Success), "8192");
+						//					Assert.That (SecKey.GenerateKeyPair (record.ToDictionary (), out public_key, out private_key), Is.EqualTo (SecStatusCode.Success), "8192");
 					} else {
 						Assert.That (SecKey.GenerateKeyPair (record.ToDictionary (), out public_key, out private_key), Is.EqualTo (SecStatusCode.Param), "8192");
 					}
@@ -449,7 +453,7 @@ namespace MonoTouchFixtures.Security {
 					chrono.Restart ();
 
 					byte [] hash = new byte [20] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0 };
-					byte[] result;
+					byte [] result;
 					public_key.Encrypt (SecPadding.OAEP, hash, out result);
 					Console.WriteLine ("Encrypt {0} ms", chrono.ElapsedMilliseconds);
 					chrono.Restart ();
@@ -503,8 +507,17 @@ namespace MonoTouchFixtures.Security {
 									Assert.That (data.ToArray (), Is.EqualTo (plain.ToArray ()), "roundtrip");
 								}
 
-								Assert.Null (key.CreateDecryptedData (SecKeyAlgorithm.RsaEncryptionPkcs1, data, out error), "bad data");
-								Assert.NotNull (error, "bad decrypt");
+#if __MACCATALYST__
+								var badDecrypt = !TestRuntime.CheckXcodeVersion (15, 0);
+#else
+								var badDecrypt = true;
+#endif
+								if (badDecrypt) {
+									// on macOS this fails with CSSMERR_CSP_INPUT_LENGTH_ERROR (I haven't checked on iOS/tvOS)
+									// but on  Mac Catalyst apps on Sonoma this succeeds... which means Mac Catalyst can decrypt random data? the returned data looks random too. 🤷‍♂️
+									Assert.Null (key.CreateDecryptedData (SecKeyAlgorithm.RsaEncryptionPkcs1, data, out error), "bad data");
+									Assert.NotNull (error, "bad decrypt");
+								}
 							}
 						}
 					}
@@ -560,7 +573,7 @@ namespace MonoTouchFixtures.Security {
 		[Test]
 		public void ECSecPrimeRandom ()
 		{
-			TestRuntime.AssertXcodeVersion (8,0);
+			TestRuntime.AssertXcodeVersion (8, 0);
 			NSError error;
 			using (var key = SecKey.CreateRandomKey (SecKeyType.ECSecPrimeRandom, 384, null, out error)) {
 				Assert.Null (error, "ECSecPrimeRandom/error");

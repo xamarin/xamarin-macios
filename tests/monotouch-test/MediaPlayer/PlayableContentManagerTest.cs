@@ -21,7 +21,7 @@ namespace MonoTouchFixtures.MediaPlayer {
 
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class PlayableContentManagerTest	{
+	public class PlayableContentManagerTest {
 
 		class DataSource : MPPlayableContentDataSource {
 			#region implemented abstract members of MPPlayableContentDataSource
@@ -54,8 +54,7 @@ namespace MonoTouchFixtures.MediaPlayer {
 					shared.DataSource = ds;
 					shared.Delegate = dg;
 				}
-			}
-			finally {
+			} finally {
 				shared.DataSource = null;
 				shared.Delegate = null;
 			}

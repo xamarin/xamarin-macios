@@ -41,7 +41,7 @@ using NativeHandle = System.IntPtr;
 
 namespace CoreText {
 
-#region Text Tab Constants
+	#region Text Tab Constants
 #if !NET
 	public static class CTTextTabOptionKey {
 
@@ -74,11 +74,11 @@ namespace CoreText {
 			Dictionary = dictionary;
 		}
 
-		public NSDictionary Dictionary {get; private set;}
+		public NSDictionary Dictionary { get; private set; }
 
 		public NSCharacterSet ColumnTerminators {
-			get {return (NSCharacterSet) Dictionary [CTTextTabOptionKey.ColumnTerminators];}
-			set {Adapter.SetValue (Dictionary, CTTextTabOptionKey.ColumnTerminators, value);}
+			get { return (NSCharacterSet) Dictionary [CTTextTabOptionKey.ColumnTerminators]; }
+			set { Adapter.SetValue (Dictionary, CTTextTabOptionKey.ColumnTerminators, value); }
 		}
 	}
 
@@ -90,7 +90,7 @@ namespace CoreText {
 			return self.Dictionary.GetHandle ();
 		}
 	}
-#endregion
+	#endregion
 
 #if NET
 	[SupportedOSPlatform ("ios")]
@@ -105,7 +105,7 @@ namespace CoreText {
 		{
 		}
 
-#region Text Tab Creation
+		#region Text Tab Creation
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTTextTabCreate (CTTextAlignment alignment, double location, IntPtr options);
 		public CTTextTab (CTTextAlignment alignment, double location)
@@ -117,9 +117,9 @@ namespace CoreText {
 			: base (CTTextTabCreate (alignment, location, options.GetHandle ()), true, true)
 		{
 		}
-#endregion
+		#endregion
 
-#region Text Tab Access
+		#region Text Tab Access
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern CTTextAlignment CTTextTabGetAlignment (IntPtr tab);
 		public CTTextAlignment TextAlignment {
@@ -141,6 +141,6 @@ namespace CoreText {
 				return null;
 			return new CTTextTabOptions (Runtime.GetNSObject<NSDictionary> (options)!);
 		}
-#endregion
+		#endregion
 	}
 }

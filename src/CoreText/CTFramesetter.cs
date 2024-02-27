@@ -53,17 +53,17 @@ namespace CoreText {
 			: base (handle, owns, true)
 		{
 		}
-		
-#region Framesetter Creation
+
+		#region Framesetter Creation
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTFramesetterCreateWithAttributedString (IntPtr @string);
 		public CTFramesetter (NSAttributedString value)
 			: base (CTFramesetterCreateWithAttributedString (Runtime.ThrowOnNull (value, nameof (value)).Handle), true, true)
 		{
 		}
-#endregion
+		#endregion
 
-#region Frame Creation
+		#region Frame Creation
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTFramesetterCreateFrame (IntPtr framesetter, NSRange stringRange, IntPtr path, IntPtr frameAttributes);
 		public CTFrame? GetFrame (NSRange stringRange, CGPath path, CTFrameAttributes? frameAttributes)
@@ -86,9 +86,9 @@ namespace CoreText {
 				return null;
 			return new CTTypesetter (h, false);
 		}
-#endregion
+		#endregion
 
-#region Frame Sizing
+		#region Frame Sizing
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern CGSize CTFramesetterSuggestFrameSizeWithConstraints (
 				IntPtr framesetter, NSRange stringRange, IntPtr frameAttributes, CGSize constraints, out NSRange fitRange);
@@ -99,31 +99,29 @@ namespace CoreText {
 					frameAttributes.GetHandle (),
 					constraints, out fitRange);
 		}
-#endregion
+		#endregion
 #if NET
-		[SupportedOSPlatform ("macos10.14")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios12.0")]
 		[SupportedOSPlatform ("tvos12.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Mac (10,14)]
-		[iOS (12,0)]
-		[TV (12,0)]
-		[Watch (5,0)]
+		[iOS (12, 0)]
+		[TV (12, 0)]
+		[Watch (5, 0)]
 #endif
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTFramesetterCreateWithTypesetter (IntPtr typesetter);
 
 #if NET
-		[SupportedOSPlatform ("macos10.14")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios12.0")]
 		[SupportedOSPlatform ("tvos12.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Mac (10,14)]
-		[iOS (12,0)]
-		[TV (12,0)]
-		[Watch (5,0)]
+		[iOS (12, 0)]
+		[TV (12, 0)]
+		[Watch (5, 0)]
 #endif
 		public static CTFramesetter? Create (CTTypesetter typesetter)
 		{

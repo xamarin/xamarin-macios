@@ -49,6 +49,8 @@ namespace Introspection {
 			case "NSMenuView": // not longer supported
 				return true;
 #endif // !NET
+			case "ASAuthorizationProviderExtensionRegistrationHandler":
+				return true;
 			default:
 				return base.Skip (type);
 			}
@@ -96,7 +98,7 @@ namespace Introspection {
 				case "NSFetchRequest": // Not declared in header file
 				case "NSManagedObjectModel": // Not declared in header file
 				case "NSUserInterfaceCompressionOptions": // Not declared in header file
-				// Xcode 10 (running on macOS 10.14)
+														  // Xcode 10 (running on macOS 10.14)
 				case "NSTextAlternatives":
 				case "QTDataReference": // no header files anymore for deprecated QuickTime
 				case "NSTextBlock":
@@ -134,10 +136,27 @@ namespace Introspection {
 				case "NSMergePolicy":
 				case "MEComposeSession":
 				case "MEComposeContext":
+				// xcode 14
+				case "SNClassifySoundRequest":
+				case "PKInk":
+				case "VSUserAccount":
+				case "SCContentFilter":
+				case "SCDisplay":
+				case "SCRunningApplication":
+				case "SCWindow":
+				case "HKAudiogramSensitivityPoint":
+				// xcode 15
+				case "NSCompositeAttributeDescription":
+				case "CKSyncEnginePendingDatabaseChange":
+				case "CKSyncEnginePendingRecordZoneChange":
+				case "CKSyncEnginePendingZoneDelete":
+				case "CKSyncEnginePendingZoneSave":
+				case "CKSyncEngineState":
+				case "NSCursor":
 					return true;
 				default:
 					// CIFilter started implementing NSSecureCoding in 10.11
-					if (!Mac.CheckSystemVersion (10, 11) && (type == typeof(CIFilter) || type.IsSubclassOf (typeof(CIFilter))))
+					if (!Mac.CheckSystemVersion (10, 11) && (type == typeof (CIFilter) || type.IsSubclassOf (typeof (CIFilter))))
 						return true;
 					break;
 				}
@@ -156,11 +175,11 @@ namespace Introspection {
 				case "ACAccount": // Not declared in header file
 				case "NEFlowMetaData": // Not declared in header file
 				case "ACAccountCredential": // Not declared in header file
-				// Xcode 11 (running on macOS 10.15)
+											// Xcode 11 (running on macOS 10.15)
 				case "NSCollectionViewUpdateItem": // Not declared in header file
 				case "MLPredictionOptions": // Not declared in header file
 				case "FPUIActionExtensionContext": // Conformance not in headers
-				// Xcode 12.5
+												   // Xcode 12.5
 				case "CXCall": // Conformance not in headers
 					return true;
 				// xcode 13 / macOS 12
@@ -171,6 +190,32 @@ namespace Introspection {
 				case "NSPropertyMapping":
 				case "HMAccessoryOwnershipToken":
 				case "MEComposeSession":
+				// xcode 14
+				case "SNClassifySoundRequest":
+				case "SCContentFilter":
+				case "SCDisplay":
+				case "SCRunningApplication":
+				case "SCStreamConfiguration":
+				case "SCWindow":
+				case "HKAudiogramSample":
+				case "HKCategorySample":
+				case "HKCdaDocumentSample":
+				case "HKCorrelation":
+				case "HKCumulativeQuantitySample":
+				case "HKDiscreteQuantitySample":
+				case "HKDocumentSample":
+				case "HKElectrocardiogram":
+				case "HKObject":
+				case "HKQuantitySample":
+				case "HKSample":
+				case "HKWorkout":
+				// xcode 15
+				case "MEMessage":
+				case "CKSyncEnginePendingDatabaseChange":
+				case "CKSyncEnginePendingRecordZoneChange":
+				case "CKSyncEnginePendingZoneDelete":
+				case "CKSyncEnginePendingZoneSave":
+				case "PKContact":
 					return true;
 				}
 				break;
@@ -222,7 +267,7 @@ namespace Introspection {
 				case "NSConstraintConflict": // Not declared in header file
 				case "NSQueryGenerationToken": // Declared in header file but SupportsSecureCoding returns false - radar 32856944
 				case "NSPersistentHistoryToken": // Conformance not in headers
-				// Xcode 10 (running on macOS 10.14)
+												 // Xcode 10 (running on macOS 10.14)
 				case "NSTextAlternatives":
 				// Xcode 11 (running on macOS 10.15)
 				case "ICHandle": // Conformance not in headers
@@ -235,7 +280,7 @@ namespace Introspection {
 				case "NSUrlSessionTaskTransactionMetrics": // Conformance not in headers
 				case "NSFileProviderDomain": // Conformance not in headers
 				case "FPUIActionExtensionContext": // Conformance not in headers
-				// Xcode 12.5
+												   // Xcode 12.5
 				case "CXCall": // Conformance not in headers
 				case "CXCallUpdate": // Conformance not in headers
 				case "CXProviderConfiguration": // Conformance not in headers
@@ -250,6 +295,21 @@ namespace Introspection {
 				case "NSImageSymbolConfiguration":
 				case "NSMergePolicy":
 				case "MEComposeContext":
+				// xcode 14 
+				case "SNClassifySoundRequest":
+				case "PKInk":
+				case "VSUserAccount":
+				case "SCContentFilter":
+				case "SCDisplay":
+				case "SCRunningApplication":
+				case "SCWindow":
+				case "HKAudiogramSensitivityPoint":
+				// xcode 15
+				case "CKSyncEnginePendingDatabaseChange":
+				case "CKSyncEnginePendingRecordZoneChange":
+				case "CKSyncEnginePendingZoneDelete":
+				case "CKSyncEnginePendingZoneSave":
+				case "CKSyncEngineState":
 					return true;
 				}
 				break;
@@ -264,7 +324,7 @@ namespace Introspection {
 				break;
 			case "NSUserInterfaceItemIdentification":
 				// NSViewController started implementing NSUserInterfaceItemIdentification in 10.10
-				if (!Mac.CheckSystemVersion (10, 10) && (type == typeof(NSViewController) || type.IsSubclassOf (typeof (NSViewController))))
+				if (!Mac.CheckSystemVersion (10, 10) && (type == typeof (NSViewController) || type.IsSubclassOf (typeof (NSViewController))))
 					return true;
 
 				switch (type.Name) {
@@ -297,14 +357,14 @@ namespace Introspection {
 				case "NSMenuItem":
 					if (!Mac.CheckSystemVersion (10, 12))
 						return true;
-				break;
+					break;
 				}
-			break;
+				break;
 			case "NSAnimationDelegate":
 			case "NSAnimatablePropertyContainer":
 				switch (type.Name) {
 				case "NSTitlebarAccessoryViewController":
-					return true; 
+					return true;
 				}
 				break;
 			case "NSCandidateListTouchBarItemDelegate":
@@ -406,7 +466,7 @@ namespace Introspection {
 		[Test]
 		public override void SupportsSecureCoding ()
 		{
-			if (!Mac.CheckSystemVersion (10,8))
+			if (!Mac.CheckSystemVersion (10, 8))
 				return;
 
 			base.SupportsSecureCoding ();

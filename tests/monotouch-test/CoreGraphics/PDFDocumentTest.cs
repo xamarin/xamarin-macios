@@ -16,11 +16,11 @@ using ObjCRuntime;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.CoreGraphics {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class PDFDocumentTest {
-		
+
 		[Test]
 		public void DataProvider ()
 		{
@@ -46,7 +46,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 				CheckTamarin (doc);
 			}
 		}
-		
+
 		void CheckTamarin (CGPDFDocument pdf)
 		{
 			Assert.True (pdf.AllowsCopying, "AllowsCopying");

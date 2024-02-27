@@ -11,23 +11,23 @@ using MapKit;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.MapKit {
-	
+
 #if !XAMCORE_3_0
 	class CircleViewPoker : MKCircleView {
-		
+
 		static FieldInfo bkCircle;
-		
+
 		static CircleViewPoker ()
 		{
 			var t = typeof (MKCircleView);
 			bkCircle = t.GetField ("__mt_Circle_var", BindingFlags.Instance | BindingFlags.NonPublic);
 		}
-		
+
 		public static bool NewRefcountEnabled ()
 		{
 			return NSObject.IsNewRefcountEnabled ();
 		}
-		
+
 		public CircleViewPoker ()
 		{
 		}
@@ -35,19 +35,19 @@ namespace MonoTouchFixtures.MapKit {
 		public CircleViewPoker (MKCircle circle) : base (circle)
 		{
 		}
-		
+
 		public MKCircle CircleBackingField {
 			get {
 				return (MKCircle) bkCircle.GetValue (this);
 			}
 		}
 	}
-	
+
 #endif // !XAMCORE_3_0
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class CircleViewTest {
-		
+
 		[Test]
 		public void InitWithFrame ()
 		{
@@ -56,14 +56,14 @@ namespace MonoTouchFixtures.MapKit {
 				Assert.That (cv.Frame, Is.EqualTo (frame), "Frame");
 			}
 		}
-		
+
 #if !XAMCORE_3_0
 		[Test]
 		public void Defaults_BackingFields ()
 		{
 			if (CircleViewPoker.NewRefcountEnabled ())
 				Assert.Inconclusive ("backing fields are removed when newrefcount is enabled");
-			
+
 			using (var cv = new CircleViewPoker ()) {
 				Assert.Null (cv.CircleBackingField, "1a");
 				Assert.Null (cv.Circle, "2a");
@@ -75,7 +75,7 @@ namespace MonoTouchFixtures.MapKit {
 		{
 			if (CircleViewPoker.NewRefcountEnabled ())
 				Assert.Inconclusive ("backing fields are removed when newrefcount is enabled");
-			
+
 			using (var c = new MKCircle ())
 			using (var cv = new CircleViewPoker (c)) {
 				Assert.AreSame (c, cv.CircleBackingField, "1a");

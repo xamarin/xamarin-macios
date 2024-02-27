@@ -8,8 +8,7 @@ using NUnit.Framework;
 using NUnit.Framework.Internal;
 
 [Register ("AppDelegate")]
-public partial class AppDelegate : UIApplicationDelegate
-{
+public partial class AppDelegate : UIApplicationDelegate {
 	UIWindow window;
 	TouchRunner runner;
 
@@ -26,7 +25,7 @@ public partial class AppDelegate : UIApplicationDelegate
 		return true;
 	}
 
-	static void Main (string[] args)
+	static void Main (string [] args)
 	{
 		UIApplication.Main (args, null, typeof (AppDelegate));
 	}

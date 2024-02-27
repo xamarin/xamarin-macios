@@ -11,16 +11,13 @@ using NUnit.Framework;
 using Xamarin.Utils;
 
 
-namespace MonoTouchFixtures.HttpClientTests
-{
+namespace MonoTouchFixtures.HttpClientTests {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class HttpClientTest
-	{
+	public class HttpClientTest {
 		const int WaitTimeout = 5000;
 
-		interface IHandlerWrapper
-		{
+		interface IHandlerWrapper {
 			bool AllowAutoRedirect { get; set; }
 			HttpMessageHandler Handler { get; }
 
@@ -28,8 +25,7 @@ namespace MonoTouchFixtures.HttpClientTests
 
 		// Add new classes to deal with in this class in order not to change the tests, that way we ensure all
 		// handlers will pass the exact same tests with no duplication.
-		class HandlerWrapper : IHandlerWrapper
-		{
+		class HandlerWrapper : IHandlerWrapper {
 			string handlerType;
 			HttpMessageHandler handler;
 
@@ -54,20 +50,20 @@ namespace MonoTouchFixtures.HttpClientTests
 			public bool AllowAutoRedirect {
 				get {
 					if (handlerType == "CFNetworkHandler")
-						return ((CFNetworkHandler)handler).AllowAutoRedirect;
+						return ((CFNetworkHandler) handler).AllowAutoRedirect;
 					if (handlerType == "NSUrlSessionHandler")
-						return ((NSUrlSessionHandler)handler).AllowAutoRedirect;
+						return ((NSUrlSessionHandler) handler).AllowAutoRedirect;
 					if (handlerType == "HttpClientHandler")
-						return ((HttpClientHandler)handler).AllowAutoRedirect;
+						return ((HttpClientHandler) handler).AllowAutoRedirect;
 					throw new InvalidOperationException ();
 				}
 				set {
 					if (handlerType == "CFNetworkHandler")
-						((CFNetworkHandler)handler).AllowAutoRedirect = value;
+						((CFNetworkHandler) handler).AllowAutoRedirect = value;
 					if (handlerType == "NSUrlSessionHandler")
-						((NSUrlSessionHandler)handler).AllowAutoRedirect = value;
+						((NSUrlSessionHandler) handler).AllowAutoRedirect = value;
 					if (handlerType == "HttpClientHandler")
-						((HttpClientHandler)handler).AllowAutoRedirect = value;
+						((HttpClientHandler) handler).AllowAutoRedirect = value;
 					throw new InvalidOperationException ();
 				}
 			}

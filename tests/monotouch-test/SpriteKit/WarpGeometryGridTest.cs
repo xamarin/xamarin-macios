@@ -10,12 +10,10 @@ using System.Numerics;
 using OpenTK;
 #endif
 
-namespace MonoTouchFixtures.SpriteKit
-{
+namespace MonoTouchFixtures.SpriteKit {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class WarpGeometryGridTest
-	{
+	public class WarpGeometryGridTest {
 		Vector2 [] points = new Vector2 [] {
 			new Vector2 (0,0), new Vector2 (0,1), new Vector2 (0,2), new Vector2 (0,3),
 			new Vector2 (1,3), new Vector2 (1,2), new Vector2 (1,1), new Vector2 (1,0)

@@ -212,7 +212,7 @@ namespace MonoTouchFixtures.ModelIO {
 		[Test]
 		public void CreateCapsuleTest ()
 		{
-			TestRuntime.AssertXcodeVersion (8,0);
+			TestRuntime.AssertXcodeVersion (8, 0);
 
 			Vector3 V3 = new Vector3 (1, 2, 3);
 			Vector2i V2i = new Vector2i (4, 5);
@@ -280,29 +280,29 @@ namespace MonoTouchFixtures.ModelIO {
 			}
 		}
 
-//		FIXME: figure out valid input arguments for GenerateAmbientOcclusionTexture
-//		[Test]
-//		public void GenerateAmbientOcclusionTextureTest ()
-//		{
-//			var V2 = new Vector2 (1, 1);
-//			var V2i = new Vector2i (1, 2);
-//
-//			using (var obj = MDLMesh.CreateEllipticalCone (5, V2, 3, 1, MDLGeometryKind.Triangles, true, null)) {
-//				Assert.IsTrue (obj.GenerateAmbientOcclusionTexture (V2i, 1, 1, new MDLObject[] { }, "vname", "mname"), "GenerateAmbientOcclusionTexture");
-//			}
-//		}
-//
-//		FIXME: figure out valid input arguments for GenerateLightMapTexture
-//		[Test]
-//		public void GenerateLightMapTextureTest ()
-//		{
-//			var V2 = new Vector2 (1, 1);
-//			var V2i = new Vector2i (1, 2);
-//
-//			using (var obj = MDLMesh.CreateEllipticalCone (5, V2, 3, 1, MDLGeometryKind.Triangles, true, null)) {
-//				Assert.IsTrue (obj.GenerateLightMapTexture (V2i, new MDLLight[] {}, new MDLObject[] { }, "vname", "mname"), "GenerateLightMapTexture");
-//			}
-//		}
+		//		FIXME: figure out valid input arguments for GenerateAmbientOcclusionTexture
+		//		[Test]
+		//		public void GenerateAmbientOcclusionTextureTest ()
+		//		{
+		//			var V2 = new Vector2 (1, 1);
+		//			var V2i = new Vector2i (1, 2);
+		//
+		//			using (var obj = MDLMesh.CreateEllipticalCone (5, V2, 3, 1, MDLGeometryKind.Triangles, true, null)) {
+		//				Assert.IsTrue (obj.GenerateAmbientOcclusionTexture (V2i, 1, 1, new MDLObject[] { }, "vname", "mname"), "GenerateAmbientOcclusionTexture");
+		//			}
+		//		}
+		//
+		//		FIXME: figure out valid input arguments for GenerateLightMapTexture
+		//		[Test]
+		//		public void GenerateLightMapTextureTest ()
+		//		{
+		//			var V2 = new Vector2 (1, 1);
+		//			var V2i = new Vector2i (1, 2);
+		//
+		//			using (var obj = MDLMesh.CreateEllipticalCone (5, V2, 3, 1, MDLGeometryKind.Triangles, true, null)) {
+		//				Assert.IsTrue (obj.GenerateLightMapTexture (V2i, new MDLLight[] {}, new MDLObject[] { }, "vname", "mname"), "GenerateLightMapTexture");
+		//			}
+		//		}
 	}
 }
 

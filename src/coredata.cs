@@ -22,8 +22,7 @@ using CoreSpotlight;
 using NativeHandle = System.IntPtr;
 #endif
 
-namespace CoreData
-{
+namespace CoreData {
 	[StrongDictionary ("UserInfoKeys")]
 	interface UserInfo {
 		NSError [] DetailedErrors { get; set; }
@@ -57,14 +56,23 @@ namespace CoreData
 
 		[Field ("NSAffectedStoresErrorKey")]
 		NSString AffectedStoresForErrorKey { get; }
+
+		[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Field ("NSPersistentStoreStagedMigrationManagerOptionKey")]
+		NSString StagedMigrationManagerOptionKey { get; }
+
+		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0), MacCatalyst (17, 0)]
+		[Field ("NSPersistentStoreDeferredLightweightMigrationOptionKey")]
+		NSString DeferredLightweightMigrationOptionKey { get; }
 	}
 
-	[NoWatch][NoTV]
+	[NoWatch]
+	[NoTV]
 	[Native] // NUInteger -> NSPersistentStoreCoordinator.h
-	[iOS (7, 0)]
-	[Deprecated (PlatformName.iOS, 10, 0, message : "Please see the release notes and Core Data documentation.")]
-	[Mac (10, 9)]
-	[Deprecated (PlatformName.MacOSX, 10, 12, message : "Please see the release notes and Core Data documentation.")]
+	[Deprecated (PlatformName.iOS, 10, 0, message: "Please see the release notes and Core Data documentation.")]
+	[Deprecated (PlatformName.MacOSX, 10, 12, message: "Please see the release notes and Core Data documentation.")]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Please see the release notes and Core Data documentation.")]
 	public enum NSPersistentStoreUbiquitousTransitionType : ulong {
 		AccountAdded = 1,
 		AccountRemoved,
@@ -110,7 +118,7 @@ namespace CoreData
 #endif
 
 		[Export ("addCacheNodes:")]
-		
+
 #if XAMCORE_5_0
 		void AddCacheNodes (NSSet<NSAtomicStoreCacheNode> cacheNodes);
 #else
@@ -138,10 +146,9 @@ namespace CoreData
 		NSAtomicStore ReferenceObjectForObjectID (NSManagedObjectID objectID);
 	}
 
-	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
-	[BaseType (typeof(NSObject))]
-	interface NSFetchIndexElementDescription : NSCoding, NSCopying
-	{
+	[MacCatalyst (13, 1)]
+	[BaseType (typeof (NSObject))]
+	interface NSFetchIndexElementDescription : NSCoding, NSCopying {
 		[Export ("initWithProperty:collationType:")]
 		NativeHandle Constructor (NSPropertyDescription property, NSFetchIndexElementType collationType);
 
@@ -161,18 +168,17 @@ namespace CoreData
 		NSFetchIndexDescription IndexDescription { get; }
 	}
 
-	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
-	[BaseType (typeof(NSObject))]
-	interface NSFetchIndexDescription : NSCoding, NSCopying
-	{
+	[MacCatalyst (13, 1)]
+	[BaseType (typeof (NSObject))]
+	interface NSFetchIndexDescription : NSCoding, NSCopying {
 		[Export ("initWithName:elements:")]
-		NativeHandle Constructor (string name, [NullAllowed] NSFetchIndexElementDescription[] elements);
+		NativeHandle Constructor (string name, [NullAllowed] NSFetchIndexElementDescription [] elements);
 
 		[Export ("name")]
 		string Name { get; set; }
 
 		[Export ("elements", ArgumentSemantic.Copy)]
-		NSFetchIndexElementDescription[] Elements { get; set; }
+		NSFetchIndexElementDescription [] Elements { get; set; }
 
 		[NullAllowed, Export ("entity", ArgumentSemantic.Assign)]
 		NSEntityDescription Entity { get; }
@@ -233,11 +239,12 @@ namespace CoreData
 		[Export ("allowsExternalBinaryDataStorage")]
 		bool AllowsExternalBinaryDataStorage { get; set; }
 
-		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[Watch (6, 0), TV (13, 0), iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("preservesValueInHistoryOnDeletion")]
 		bool PreservesValueInHistoryOnDeletion { get; set; }
 
-		[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15,0)]
+		[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("allowsCloudEncryption")]
 		bool AllowsCloudEncryption { get; set; }
 	}
@@ -271,7 +278,7 @@ namespace CoreData
 		string Name { get; set; }
 
 		[Export ("abstract")]
-		bool Abstract { [Bind("isAbstract")] get; set; }
+		bool Abstract { [Bind ("isAbstract")] get; set; }
 
 		[Export ("subentitiesByName")]
 #if XAMCORE_5_0
@@ -281,7 +288,7 @@ namespace CoreData
 #endif
 
 		[Export ("subentities", ArgumentSemantic.Retain)]
-		NSEntityDescription[] Subentities { get; set; }
+		NSEntityDescription [] Subentities { get; set; }
 
 		[NullAllowed, Export ("superentity")]
 		NSEntityDescription Superentity { get; }
@@ -294,7 +301,7 @@ namespace CoreData
 #endif
 
 		[Export ("properties", ArgumentSemantic.Retain)]
-		NSPropertyDescription[] Properties { get; set; }
+		NSPropertyDescription [] Properties { get; set; }
 
 		[NullAllowed, Export ("userInfo", ArgumentSemantic.Retain)]
 		NSDictionary UserInfo { get; set; }
@@ -314,7 +321,7 @@ namespace CoreData
 #endif
 
 		[Export ("relationshipsWithDestinationEntity:")]
-		NSRelationshipDescription[] RelationshipsWithDestinationEntity (NSEntityDescription entity);
+		NSRelationshipDescription [] RelationshipsWithDestinationEntity (NSEntityDescription entity);
 
 		[Export ("isKindOfEntity:")]
 		bool IsKindOfEntity (NSEntityDescription entity);
@@ -327,22 +334,23 @@ namespace CoreData
 		string VersionHashModifier { get; set; }
 
 		[Export ("compoundIndexes", ArgumentSemantic.Retain)]
-		[Deprecated (PlatformName.iOS, 11, 0, message : "Use 'NSEntityDescription.Indexes' instead.")]
-		[Deprecated (PlatformName.MacOSX, 10, 13, message : "Use 'NSEntityDescription.Indexes' instead.")]
-		[Deprecated (PlatformName.TvOS, 11, 0, message : "Use 'NSEntityDescription.Indexes' instead.")]
-		[Deprecated (PlatformName.WatchOS, 4, 0, message : "Use 'NSEntityDescription.Indexes' instead.")]
+		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'NSEntityDescription.Indexes' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'NSEntityDescription.Indexes' instead.")]
+		[Deprecated (PlatformName.TvOS, 11, 0, message: "Use 'NSEntityDescription.Indexes' instead.")]
+		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'NSEntityDescription.Indexes' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'NSEntityDescription.Indexes' instead.")]
 		NSPropertyDescription [] CompoundIndexes { get; set; }
 
-		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("indexes", ArgumentSemantic.Copy)]
-		NSFetchIndexDescription[] Indexes { get; set; }
+		NSFetchIndexDescription [] Indexes { get; set; }
 
 		// @property (strong) NSArray<NSArray<id __nonnull> * __nonnull> * __nonnull uniquenessConstraints __attribute__((availability(ios, introduced=9.0)));
-		[iOS (9,0), Mac (10,11)]
+		[MacCatalyst (13, 1)]
 		[Internal, Export ("uniquenessConstraints", ArgumentSemantic.Strong)]
 		NSArray _UniquenessConstraints { get; set; }
 
-		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("coreSpotlightDisplayNameExpression", ArgumentSemantic.Retain)]
 		NSExpression CoreSpotlightDisplayNameExpression { get; set; }
 	}
@@ -375,11 +383,11 @@ namespace CoreData
 
 		[Export ("attributeMappings", ArgumentSemantic.Retain)]
 		[NullAllowed]
-		NSPropertyMapping[] AttributeMappings { get; set; }
+		NSPropertyMapping [] AttributeMappings { get; set; }
 
 		[Export ("relationshipMappings", ArgumentSemantic.Retain)]
 		[NullAllowed]
-		NSPropertyMapping[] RelationshipMappings { get; set; }
+		NSPropertyMapping [] RelationshipMappings { get; set; }
 
 		[NullAllowed] // by default this property is null
 		[Export ("sourceExpression", ArgumentSemantic.Retain)]
@@ -456,14 +464,14 @@ namespace CoreData
 		NSExpression Context { get; }
 
 		[Export ("countOnlyRequest")]
-		bool IsCountOnly { [Bind ("isCountOnlyRequest")] get;}
+		bool IsCountOnly { [Bind ("isCountOnlyRequest")] get; }
 	}
 
-	interface INSFetchRequestResult {}
+	interface INSFetchRequestResult { }
 
-	[Watch (3,0), TV (10,0), iOS (10,0), Mac (10,12)]
+	[MacCatalyst (13, 1)]
 	[Protocol]
-	interface NSFetchRequestResult {}
+	interface NSFetchRequestResult { }
 
 	[DisableDefaultCtor] // designated
 	[BaseType (typeof (NSPersistentStoreRequest))]
@@ -483,7 +491,7 @@ namespace CoreData
 
 		[Export ("sortDescriptors", ArgumentSemantic.Retain)]
 		[NullAllowed]
-		NSSortDescriptor[] SortDescriptors { get; set; }
+		NSSortDescriptor [] SortDescriptors { get; set; }
 
 		[Export ("fetchLimit")]
 		nuint FetchLimit { get; set; }
@@ -493,7 +501,7 @@ namespace CoreData
 
 		[Export ("affectedStores", ArgumentSemantic.Retain)]
 		[NullAllowed]
-		NSPersistentStore[] AffectedStores { get; set; }
+		NSPersistentStore [] AffectedStores { get; set; }
 
 		[Export ("resultType")]
 		NSFetchRequestResultType ResultType { get; set; }
@@ -515,7 +523,7 @@ namespace CoreData
 
 		[Export ("relationshipKeyPathsForPrefetching")]
 		[NullAllowed]
-		string[] RelationshipKeyPathsForPrefetching { get; set; }
+		string [] RelationshipKeyPathsForPrefetching { get; set; }
 
 		[Export ("propertiesToFetch", ArgumentSemantic.Copy)]
 		[NullAllowed]
@@ -546,13 +554,14 @@ namespace CoreData
 		[NullAllowed]
 		NSPropertyDescription [] PropertiesToGroupBy { get; set; }
 
-		[Watch (3,0), TV (10,0), iOS (10,0), Mac (10,12)]
+		[MacCatalyst (13, 1)]
 		[Export ("execute:")]
 		[return: NullAllowed]
-		INSFetchRequestResult[] Execute (out NSError error);
+		INSFetchRequestResult [] Execute (out NSError error);
 	}
 
 	[NoMac]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject), Delegates = new string [] { "WeakDelegate" })]
 	interface NSFetchedResultsController {
 
@@ -560,10 +569,10 @@ namespace CoreData
 		NativeHandle Constructor (NSFetchRequest fetchRequest, NSManagedObjectContext context, [NullAllowed] string sectionNameKeyPath, [NullAllowed] string name);
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		NSFetchedResultsControllerDelegate Delegate { get; set; }
+		INSFetchedResultsControllerDelegate Delegate { get; set; }
 
-		[Export ("delegate", ArgumentSemantic.Assign)][NullAllowed]
+		[Export ("delegate", ArgumentSemantic.Assign)]
+		[NullAllowed]
 		NSObject WeakDelegate { get; set; }
 
 		[NullAllowed, Export ("cacheName")]
@@ -571,7 +580,7 @@ namespace CoreData
 
 		[Export ("fetchedObjects")]
 		[NullAllowed]
-		NSObject[] FetchedObjects { get; }
+		NSObject [] FetchedObjects { get; }
 
 		[Export ("fetchRequest")]
 		NSFetchRequest FetchRequest { get; }
@@ -583,7 +592,7 @@ namespace CoreData
 		string SectionNameKeyPath { get; }
 
 		[NullAllowed, Export ("sections")]
-		INSFetchedResultsSectionInfo[] Sections { get; }
+		INSFetchedResultsSectionInfo [] Sections { get; }
 
 		[Export ("performFetch:")]
 		bool PerformFetch (out NSError error);
@@ -607,7 +616,7 @@ namespace CoreData
 
 		// expose a method as the property name is taken
 		[Export ("sectionIndexTitles")]
-		string[] GetSectionIndexTitles ();
+		string [] GetSectionIndexTitles ();
 #else
 		[Export ("sectionIndexTitleForSectionName:")]
 		[return: NullAllowed]
@@ -616,13 +625,16 @@ namespace CoreData
 		[Export ("sectionIndexTitles")]
 		string[] SectionIndexTitles { get; }
 #endif
-		
+
 		[Static]
 		[Export ("deleteCacheWithName:")]
 		void DeleteCache ([NullAllowed] string name);
 	}
 
+	interface INSFetchedResultsControllerDelegate { }
+
 	[NoMac]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -645,6 +657,7 @@ namespace CoreData
 	}
 
 	[NoMac]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -655,7 +668,7 @@ namespace CoreData
 
 		[NullAllowed, Export ("objects")]
 		[Abstract]
-		NSObject[] Objects { get; }
+		NSObject [] Objects { get; }
 
 		[Export ("name")]
 		[Abstract]
@@ -666,7 +679,7 @@ namespace CoreData
 		string IndexTitle { get; }
 	}
 
-	interface INSFetchedResultsSectionInfo {}
+	interface INSFetchedResultsSectionInfo { }
 
 	// 	NSInvalidArgumentException *** -loadMetadata: cannot be sent to an abstract object of class NSIncrementalStore: Create a concrete instance!
 	//	Apple doc quote: "NSIncrementalStore is an abstract superclass..."
@@ -728,7 +741,7 @@ namespace CoreData
 		[Export ("initWithObjectID:withValues:version:")]
 #if XAMCORE_5_0
 		NativeHandle Constructor (NSManagedObjectID objectId, NSDictionary<NSString, NSObject> values, ulong version);
-#else 
+#else
 		NativeHandle Constructor (NSManagedObjectID objectId, NSDictionary values, ulong version);
 #endif
 
@@ -759,16 +772,16 @@ namespace CoreData
 		[Export ("initWithEntity:insertIntoManagedObjectContext:")]
 		NativeHandle Constructor (NSEntityDescription entity, [NullAllowed] NSManagedObjectContext context);
 
-		[Watch (3,0), TV (10,0), iOS (10,0), Mac (10,12)]
+		[MacCatalyst (13, 1)]
 		[Export ("initWithContext:")]
 		NativeHandle Constructor (NSManagedObjectContext moc);
 
-		[Watch (3, 0), TV (10, 0), iOS (10, 0), Mac (10,12)]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("entity")]
 		NSEntityDescription GetEntityDescription ();
 
-		[Watch (3, 0), TV (10, 0), iOS (10, 0), Mac (10,12)]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("fetchRequest")]
 		NSFetchRequest CreateFetchRequest ();
@@ -781,7 +794,7 @@ namespace CoreData
 
 		[Export ("objectID", ArgumentSemantic.Strong)]
 		NSManagedObjectID ObjectID { get; }
-		
+
 		[Static, Export ("contextShouldIgnoreUnmodeledPropertyChanges")]
 		bool ContextShouldIgnoreUnModeledPropertyChanges { get; }
 
@@ -821,7 +834,9 @@ namespace CoreData
 		[Export ("didChangeValueForKey:withSetMutation:usingObjects:")]
 		void DidChangeValueForKey (string inKey, NSKeyValueSetMutationKind inMutationKind, NSSet inObjects);
 
-		[NoWatch][NoTV]
+		[NoWatch]
+		[NoTV]
+		[MacCatalyst (13, 1)]
 		[Export ("observationInfo")]
 		IntPtr ObservationInfo { get; set; }
 
@@ -882,7 +897,7 @@ namespace CoreData
 #elif NET
 		NSDictionary GetCommittedValues ([NullAllowed] string[] keys);
 #else
-		NSDictionary CommittedValuesForKeys ([NullAllowed] string[] keys);
+		NSDictionary CommittedValuesForKeys ([NullAllowed] string [] keys);
 #endif
 
 		[Export ("changedValues")]
@@ -915,23 +930,22 @@ namespace CoreData
 
 		// headers say this is introduced in 7.0,10.9 but Xcode 7 API diff
 		// indicates it's new in 9.0,10.11... going by the header value...
-		[iOS (7,0), Mac (10,9)]
+		[MacCatalyst (13, 1)]
 		[Export ("hasPersistentChangedValues")]
 		bool HasPersistentChangedValues { get; }
 
-		[iOS (8,3), Mac (10,11)]
+		[MacCatalyst (13, 1)]
 		[Export ("objectIDsForRelationshipNamed:")]
 		NSManagedObjectID [] GetObjectIDs (string relationshipName);
 	}
 
-	[Watch (3,0), TV (10,0), iOS (10,0), Mac (10,12)]
-	[BaseType (typeof(NSObject))]
-	interface NSQueryGenerationToken : NSSecureCoding, NSCopying
-	{
+	[MacCatalyst (13, 1)]
+	[BaseType (typeof (NSObject))]
+	interface NSQueryGenerationToken : NSSecureCoding, NSCopying {
 		[Static, Export ("currentQueryGenerationToken", ArgumentSemantic.Strong)]
 		NSQueryGenerationToken CurrentToken { get; }
 	}
-	
+
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NSManagedObjectContext : NSCoding
@@ -943,10 +957,12 @@ namespace CoreData
 #endif
 	{
 		[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'NSManagedObjectContext (NSManagedObjectContextConcurrencyType)' instead.")]
+		[Deprecated (PlatformName.TvOS, 9, 0, message: "Use 'NSManagedObjectContext (NSManagedObjectContextConcurrencyType)' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'NSManagedObjectContext (NSManagedObjectContextConcurrencyType)' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'NSManagedObjectContext (NSManagedObjectContextConcurrencyType)' instead.")]
 		[Export ("init")]
 		NativeHandle Constructor ();
-		
+
 		[NullAllowed] // by default this property is null
 		[Export ("persistentStoreCoordinator", ArgumentSemantic.Retain)]
 		NSPersistentStoreCoordinator PersistentStoreCoordinator { get; set; }
@@ -967,7 +983,7 @@ namespace CoreData
 
 		[Export ("executeFetchRequest:error:")]
 		[return: NullAllowed]
-		NSObject[] ExecuteFetchRequest (NSFetchRequest request, out NSError error);
+		NSObject [] ExecuteFetchRequest (NSFetchRequest request, out NSError error);
 
 		[Export ("countForFetchRequest:error:")]
 		nuint CountForFetchRequest (NSFetchRequest request, out NSError error);
@@ -1046,21 +1062,34 @@ namespace CoreData
 		[Export ("save:")]
 		bool Save (out NSError error);
 
-		[NoWatch][NoTV]
-		[Deprecated (PlatformName.iOS, 8, 0, message : "Use a queue style context and 'PerformAndWait' instead.")]
-		[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use a queue style context and 'PerformAndWait' instead.")]
+#pragma warning disable 0109 // warning CS0109: The member 'NSManagedObjectContext.Lock()' does not hide an accessible member. The new keyword is not required.
+		[NoWatch]
+		[NoTV]
+		[Deprecated (PlatformName.iOS, 8, 0, message: "Use a queue style context and 'PerformAndWait' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Use a queue style context and 'PerformAndWait' instead.")]
+		[MacCatalyst (13, 1)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use a queue style context and 'PerformAndWait' instead.")]
 		[Export ("lock")]
 		new void Lock ();
+#pragma warning restore
 
-		[NoWatch][NoTV]
-		[Deprecated (PlatformName.iOS, 8, 0, message : "Use a queue style context and 'PerformAndWait' instead.")]
-		[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use a queue style context and 'PerformAndWait' instead.")]
+#pragma warning disable 0109 // warning CS0109: The member 'NSManagedObjectContext.Unlock()' does not hide an accessible member. The new keyword is not required.
+		[NoWatch]
+		[NoTV]
+		[Deprecated (PlatformName.iOS, 8, 0, message: "Use a queue style context and 'PerformAndWait' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Use a queue style context and 'PerformAndWait' instead.")]
+		[MacCatalyst (13, 1)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use a queue style context and 'PerformAndWait' instead.")]
 		[Export ("unlock")]
 		new void Unlock ();
+#pragma warning restore
 
-		[NoWatch][NoTV]
-		[Deprecated (PlatformName.iOS, 8, 0, message : "Use a queue style context and 'Perform' instead.")]
-		[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use a queue style context and 'Perform' instead.")]
+		[NoWatch]
+		[NoTV]
+		[Deprecated (PlatformName.iOS, 8, 0, message: "Use a queue style context and 'Perform' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Use a queue style context and 'Perform' instead.")]
+		[MacCatalyst (13, 1)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use a queue style context and 'Perform' instead.")]
 		[Export ("tryLock")]
 		bool TryLock { get; }
 
@@ -1077,7 +1106,7 @@ namespace CoreData
 		IntPtr MergePolicy { get; set; }
 
 		[Export ("obtainPermanentIDsForObjects:error:")]
-		bool ObtainPermanentIDsForObjects (NSManagedObject[] objects, out NSError error);
+		bool ObtainPermanentIDsForObjects (NSManagedObject [] objects, out NSError error);
 
 		[Export ("mergeChangesFromContextDidSaveNotification:")]
 		void MergeChangesFromContextDidSaveNotification (NSNotification notification);
@@ -1115,12 +1144,12 @@ namespace CoreData
 		[Notification ()]
 		NSString WillSaveNotification { get; }
 
-		[iOS (8,0), Mac(10,10)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed] // by default this property is null
 		[Export ("name")]
 		string Name { get; set; }
 
-		[iOS (8,0), Mac(10,10)]
+		[MacCatalyst (13, 1)]
 		[Export ("executeRequest:error:")]
 		[return: NullAllowed]
 		NSPersistentStoreResult ExecuteRequest (NSPersistentStoreRequest request, out NSError error);
@@ -1129,51 +1158,54 @@ namespace CoreData
 		[return: NullAllowed]
 		NSManagedObject GetExistingObject (NSManagedObjectID objectID, out NSError error);
 
-		[iOS (9,0), Mac (10,11)]
+		[MacCatalyst (13, 1)]
 		[Export ("shouldDeleteInaccessibleFaults")]
 		bool ShouldDeleteInaccessibleFaults { get; set; }
 
-		[iOS (9,0), Mac (10,11)]
+		[MacCatalyst (13, 1)]
 		[Export ("shouldHandleInaccessibleFault:forObjectID:triggeredByProperty:")]
 		bool ShouldHandleInaccessibleFault (NSManagedObject fault, NSManagedObjectID oid, [NullAllowed] NSPropertyDescription property);
 
-		[iOS (9,0), Mac (10,11)]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("mergeChangesFromRemoteContextSave:intoContexts:")]
-		void MergeChangesFromRemoteContextSave (NSDictionary changeNotificationData, NSManagedObjectContext[] contexts);
+		void MergeChangesFromRemoteContextSave (NSDictionary changeNotificationData, NSManagedObjectContext [] contexts);
 
-		[Watch (3, 0), TV (10, 0), iOS (10, 0), Mac (10,12)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("queryGenerationToken", ArgumentSemantic.Strong)]
 		NSQueryGenerationToken QueryGenerationToken { get; }
 
-		[Watch (3,0), TV (10,0), iOS (10,0), Mac (10,12)]
+		[MacCatalyst (13, 1)]
 		[Export ("setQueryGenerationFromToken:error:")]
 		bool SetQueryGenerationFromToken ([NullAllowed] NSQueryGenerationToken generation, out NSError error);
 
-		[Watch (3, 0), TV (10, 0), iOS (10, 0), Mac (10,12)]
+		[MacCatalyst (13, 1)]
 		[Export ("automaticallyMergesChangesFromParent")]
 		bool AutomaticallyMergesChangesFromParent { get; set; }
 
-		[iOS (8,3), Mac (10,11)]
+		[MacCatalyst (13, 1)]
 		[Export ("refreshAllObjects")]
 		void RefreshAllObjects ();
 
-		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("transactionAuthor")]
 		string TransactionAuthor { get; set; }
 
 		[Notification (typeof (NSManagedObjectsIdsChangedEventArgs))]
-		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
+		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[MacCatalyst (14, 0)]
 		[Field ("NSManagedObjectContextDidMergeChangesObjectIDsNotification")]
 		NSString DidMergeChangesObjectIdsNotification { get; }
 
 		[Notification (typeof (NSManagedObjectsIdsChangedEventArgs))]
-		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
+		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[MacCatalyst (14, 0)]
 		[Field ("NSManagedObjectContextDidSaveObjectIDsNotification")]
 		NSString DidSaveObjectIdsNotification { get; }
 	}
 
-	[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
+	[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+	[MacCatalyst (14, 0)]
 	interface NSManagedObjectsIdsChangedEventArgs {
 		[Export ("NSDeletedObjectIDsKey")]
 		NSSet DeletedObjectIds { get; }
@@ -1211,7 +1243,7 @@ namespace CoreData
 		[Export ("NSInvalidatedAllObjectsKey")]
 		bool InvalidatedAllObjects { get; }
 	}
-	
+
 	[BaseType (typeof (NSObject))]
 	// Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: *** -URIRepresentation cannot be sent to an abstract object of class NSManagedObjectID: Create a concrete instance!
 	[DisableDefaultCtor]
@@ -1244,12 +1276,12 @@ namespace CoreData
 #if NET
 		NSManagedObjectModel GetMergedModel ([NullAllowed] NSBundle[] bundles);
 #else
-		NSManagedObjectModel MergedModelFromBundles ([NullAllowed] NSBundle[] bundles);
+		NSManagedObjectModel MergedModelFromBundles ([NullAllowed] NSBundle [] bundles);
 #endif
 
 		[Static, Export ("modelByMergingModels:")]
 		[return: NullAllowed]
-		NSManagedObjectModel ModelByMergingModels ([NullAllowed] NSManagedObjectModel[] models);
+		NSManagedObjectModel ModelByMergingModels ([NullAllowed] NSManagedObjectModel [] models);
 
 		[Export ("initWithContentsOfURL:")]
 		NativeHandle Constructor (NSUrl url);
@@ -1262,17 +1294,17 @@ namespace CoreData
 #endif
 
 		[Export ("entities", ArgumentSemantic.Retain)]
-		NSEntityDescription[] Entities { get; set; }
+		NSEntityDescription [] Entities { get; set; }
 
 		[Export ("configurations", ArgumentSemantic.Strong)]
-		string[] Configurations { get; }
+		string [] Configurations { get; }
 
 		[Export ("entitiesForConfiguration:")]
 		[return: NullAllowed]
-		string[] EntitiesForConfiguration ([NullAllowed] string configuration);
+		string [] EntitiesForConfiguration ([NullAllowed] string configuration);
 
 		[Export ("setEntities:forConfiguration:")]
-		void SetEntities (NSEntityDescription[] entities, string configuration);
+		void SetEntities (NSEntityDescription [] entities, string configuration);
 
 		[Export ("setFetchRequestTemplate:forName:")]
 		void SetFetchRequestTemplate ([NullAllowed] NSFetchRequest fetchRequestTemplate, string name);
@@ -1310,7 +1342,7 @@ namespace CoreData
 #elif NET
 		NSManagedObjectModel GetMergedModel ([NullAllowed] NSBundle[] bundles, NSDictionary metadata);
 #else
-		NSManagedObjectModel MergedModelFromBundles ([NullAllowed] NSBundle[] bundles, NSDictionary metadata);
+		NSManagedObjectModel MergedModelFromBundles ([NullAllowed] NSBundle [] bundles, NSDictionary metadata);
 #endif
 
 		[Static, Export ("modelByMergingModels:forStoreMetadata:")]
@@ -1320,7 +1352,7 @@ namespace CoreData
 #elif NET
 		NSManagedObjectModel GetModelByMerging (NSManagedObjectModel[] models, NSDictionary metadata);
 #else
-		NSManagedObjectModel ModelByMergingModels (NSManagedObjectModel[] models, NSDictionary metadata);
+		NSManagedObjectModel ModelByMergingModels (NSManagedObjectModel [] models, NSDictionary metadata);
 #endif
 
 		[Export ("fetchRequestTemplatesByName", ArgumentSemantic.Copy)]
@@ -1348,6 +1380,16 @@ namespace CoreData
 #else
 		NSDictionary EntityVersionHashesByName { get; }
 #endif
+
+		[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Static]
+		[Export ("checksumsForVersionedModelAtURL:error:")]
+		[return: NullAllowed]
+		NSDictionary<NSString, NSString> ChecksumsForVersionedModel (NSUrl modelUrl, [NullAllowed] out NSError error);
+
+		[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("versionChecksum")]
+		string VersionChecksum { get; }
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -1358,7 +1400,7 @@ namespace CoreData
 #if NET
 		NSMappingModel GetMappingModel ([NullAllowed] NSBundle[] bundles, [NullAllowed] NSManagedObjectModel sourceModel, [NullAllowed] NSManagedObjectModel destinationModel);
 #else
-		NSMappingModel MappingModelFromBundles ([NullAllowed] NSBundle[] bundles, [NullAllowed] NSManagedObjectModel sourceModel, [NullAllowed] NSManagedObjectModel destinationModel);
+		NSMappingModel MappingModelFromBundles ([NullAllowed] NSBundle [] bundles, [NullAllowed] NSManagedObjectModel sourceModel, [NullAllowed] NSManagedObjectModel destinationModel);
 #endif
 
 		[Static, Export ("inferredMappingModelForSourceModel:destinationModel:error:")]
@@ -1370,7 +1412,7 @@ namespace CoreData
 
 		[Export ("entityMappings", ArgumentSemantic.Retain)]
 		[NullAllowed]
-		NSEntityMapping[] EntityMappings { get; set; }
+		NSEntityMapping [] EntityMappings { get; set; }
 
 		[Export ("entityMappingsByName", ArgumentSemantic.Copy)]
 #if XAMCORE_5_0
@@ -1385,14 +1427,14 @@ namespace CoreData
 	[DisableDefaultCtor]
 	interface NSMergeConflict {
 		[Export ("sourceObject", ArgumentSemantic.Retain)]
-		NSManagedObject SourceObject { get;  }
+		NSManagedObject SourceObject { get; }
 
 		[Export ("objectSnapshot", ArgumentSemantic.Retain)]
 		[NullAllowed]
 #if XAMCORE_5_0
 		NSDictionary<NSString, NSObject> ObjectSnapshot { get; }
 #else
-		NSDictionary ObjectSnapshot { get;  }
+		NSDictionary ObjectSnapshot { get; }
 #endif
 
 		[Export ("cachedSnapshot", ArgumentSemantic.Retain)]
@@ -1400,7 +1442,7 @@ namespace CoreData
 #if XAMCORE_5_0
 		NSDictionary<NSString, NSObject> CachedSnapshot { get; }
 #else
-		NSDictionary CachedSnapshot { get;  }
+		NSDictionary CachedSnapshot { get; }
 #endif
 
 		[Export ("persistedSnapshot", ArgumentSemantic.Retain)]
@@ -1408,14 +1450,14 @@ namespace CoreData
 #if XAMCORE_5_0
 		NSDictionary<NSString, NSObject> PersistedSnapshot { get; }
 #else
-		NSDictionary PersistedSnapshot { get;  }
+		NSDictionary PersistedSnapshot { get; }
 #endif
 
 		[Export ("newVersionNumber")]
-		nuint NewVersionNumber { get;  }
+		nuint NewVersionNumber { get; }
 
 		[Export ("oldVersionNumber")]
-		nuint OldVersionNumber { get;  }
+		nuint OldVersionNumber { get; }
 
 		[DesignatedInitializer]
 		[Export ("initWithSource:newVersion:oldVersion:cachedSnapshot:persistedSnapshot:")]
@@ -1432,7 +1474,7 @@ namespace CoreData
 	[DisableDefaultCtor]
 	interface NSMergePolicy {
 		[Export ("mergeType")]
-		NSMergePolicyType MergeType { get;  }
+		NSMergePolicyType MergeType { get; }
 
 		[DesignatedInitializer]
 		[Export ("initWithMergeType:")]
@@ -1445,31 +1487,31 @@ namespace CoreData
 		bool ResolveConflictserror (NSMergeConflict [] list, out NSError error);
 #endif
 
-		[iOS (9,0), Mac (10,11)]
+		[MacCatalyst (13, 1)]
 		[Export ("resolveOptimisticLockingVersionConflicts:error:")]
-		bool ResolveOptimisticLockingVersionConflicts (NSMergeConflict[] list, out NSError error);
+		bool ResolveOptimisticLockingVersionConflicts (NSMergeConflict [] list, out NSError error);
 
-		[iOS (9,0), Mac (10,11)]
+		[MacCatalyst (13, 1)]
 		[Export ("resolveConstraintConflicts:error:")]
-		bool ResolveConstraintConflicts (NSConstraintConflict[] list, out NSError error);
+		bool ResolveConstraintConflicts (NSConstraintConflict [] list, out NSError error);
 
-		[Watch (3, 0), TV (10, 0), iOS (10, 0), Mac (10,12)]
+		[MacCatalyst (13, 1)]
 		[Static, Export ("errorMergePolicy", ArgumentSemantic.Strong)]
 		NSMergePolicy ErrorPolicy { get; }
 
-		[Watch (3, 0), TV (10, 0), iOS (10, 0), Mac (10,12)]
+		[MacCatalyst (13, 1)]
 		[Static, Export ("rollbackMergePolicy", ArgumentSemantic.Strong)]
 		NSMergePolicy RollbackPolicy { get; }
 
-		[Watch (3, 0), TV (10, 0), iOS (10, 0), Mac (10,12)]
+		[MacCatalyst (13, 1)]
 		[Static, Export ("overwriteMergePolicy", ArgumentSemantic.Strong)]
 		NSMergePolicy OverwritePolicy { get; }
 
-		[Watch (3, 0), TV (10, 0), iOS (10, 0), Mac (10,12)]
+		[MacCatalyst (13, 1)]
 		[Static, Export ("mergeByPropertyObjectTrumpMergePolicy", ArgumentSemantic.Strong)]
 		NSMergePolicy MergeByPropertyObjectTrumpPolicy { get; }
 
-		[Watch (3, 0), TV (10, 0), iOS (10, 0), Mac (10,12)]
+		[MacCatalyst (13, 1)]
 		[Static, Export ("mergeByPropertyStoreTrumpMergePolicy", ArgumentSemantic.Strong)]
 		NSMergePolicy MergeByPropertyStoreTrumpPolicy { get; }
 	}
@@ -1513,10 +1555,10 @@ namespace CoreData
 		void AssociateSourceInstance (NSManagedObject sourceInstance, NSManagedObject destinationInstance, NSEntityMapping entityMapping);
 
 		[Export ("destinationInstancesForEntityMappingNamed:sourceInstances:")]
-		NSManagedObject[] DestinationInstancesForEntityMappingNamed (string mappingName, [NullAllowed] NSManagedObject[] sourceInstances);
+		NSManagedObject [] DestinationInstancesForEntityMappingNamed (string mappingName, [NullAllowed] NSManagedObject [] sourceInstances);
 
 		[Export ("sourceInstancesForEntityMappingNamed:destinationInstances:")]
-		NSManagedObject[] SourceInstancesForEntityMappingNamed (string mappingName, [NullAllowed] NSManagedObject[] destinationInstances);
+		NSManagedObject [] SourceInstancesForEntityMappingNamed (string mappingName, [NullAllowed] NSManagedObject [] destinationInstances);
 
 		[Export ("currentEntityMapping", ArgumentSemantic.Strong)]
 		NSEntityMapping CurrentEntityMapping { get; }
@@ -1537,10 +1579,9 @@ namespace CoreData
 	}
 
 	[Abstract]
-	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
-	[BaseType (typeof(NSObject))]
-	interface NSPersistentHistoryChange : NSCopying
-	{
+	[MacCatalyst (13, 1)]
+	[BaseType (typeof (NSObject))]
+	interface NSPersistentHistoryChange : NSCopying {
 		[Export ("changeID")]
 		long ChangeId { get; }
 
@@ -1559,34 +1600,36 @@ namespace CoreData
 		[NullAllowed, Export ("updatedProperties", ArgumentSemantic.Copy)]
 		NSSet<NSPropertyDescription> UpdatedProperties { get; }
 
-		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[Watch (6, 0), TV (13, 0), iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[NullAllowed, Export ("entityDescription")]
 		NSEntityDescription EntityDescription { get; }
 
-		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[Watch (6, 0), TV (13, 0), iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[NullAllowed, Export ("fetchRequest")]
 		NSFetchRequest FetchRequest { get; }
 
-		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Watch (6, 0), TV (13, 0), iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("entityDescriptionWithContext:")]
 		[return: NullAllowed]
 		NSEntityDescription GetEntityDescription (NSManagedObjectContext context);
 	}
 
-	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface NSPersistentHistoryToken : NSCopying //, NSSecureCoding TODO: The class does state that it supports the NSSecureCoding YET SupportsSecureCoding returns false, radar 32761925
 	{
 	}
 
-	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
-	[BaseType (typeof(NSPersistentStoreRequest))]
+	[MacCatalyst (13, 1)]
+	[BaseType (typeof (NSPersistentStoreRequest))]
 	[DisableDefaultCtor]
-	interface NSPersistentHistoryChangeRequest
-	{
+	interface NSPersistentHistoryChangeRequest {
 		[Static]
 		[Export ("fetchHistoryAfterDate:")]
 		NSPersistentHistoryChangeRequest FetchHistoryAfter (NSDate date);
@@ -1617,20 +1660,21 @@ namespace CoreData
 		[NullAllowed, Export ("token", ArgumentSemantic.Strong)]
 		NSPersistentHistoryToken Token { get; }
 
-		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Watch (6, 0), TV (13, 0), iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("fetchHistoryWithFetchRequest:")]
 		NSPersistentHistoryChangeRequest FetchHistory (NSFetchRequest fetchRequest);
 
-		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[Watch (6, 0), TV (13, 0), iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("fetchRequest", ArgumentSemantic.Strong)]
 		NSFetchRequest FetchRequest { get; set; }
 	}
 
-	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
-	[BaseType (typeof(NSPersistentStoreResult))]
-	interface NSPersistentHistoryResult
-	{
+	[MacCatalyst (13, 1)]
+	[BaseType (typeof (NSPersistentStoreResult))]
+	interface NSPersistentHistoryResult {
 		[NullAllowed]
 		[Export ("result", ArgumentSemantic.Strong)]
 		NSObject Result { get; }
@@ -1640,15 +1684,14 @@ namespace CoreData
 	}
 
 	[Abstract]
-	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
-	[BaseType (typeof(NSObject))]
-	interface NSPersistentHistoryTransaction : NSCopying
-	{
+	[MacCatalyst (13, 1)]
+	[BaseType (typeof (NSObject))]
+	interface NSPersistentHistoryTransaction : NSCopying {
 		[Export ("timestamp", ArgumentSemantic.Copy)]
 		NSDate Timestamp { get; }
 
 		[NullAllowed, Export ("changes", ArgumentSemantic.Copy)]
-		NSPersistentHistoryChange[] Changes { get; }
+		NSPersistentHistoryChange [] Changes { get; }
 
 		[Export ("transactionNumber")]
 		long TransactionNumber { get; }
@@ -1674,36 +1717,39 @@ namespace CoreData
 		[Export ("objectIDNotification")]
 		NSNotification ObjectIdNotification { get; }
 
-		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Watch (6, 0), TV (13, 0), iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("entityDescriptionWithContext:")]
 		[return: NullAllowed]
 		NSEntityDescription GetEntityDescription (NSManagedObjectContext context);
 
-		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[Watch (6, 0), TV (13, 0), iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[NullAllowed, Export ("entityDescription")]
 		NSEntityDescription EntityDescription { get; }
 
-		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[Watch (6, 0), TV (13, 0), iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[NullAllowed, Export ("fetchRequest")]
 		NSFetchRequest FetchRequest { get; }
 	}
 
 #if !WATCH
-	[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
-	[BaseType (typeof(NSObject))]
+	[NoWatch, NoTV]
+	[MacCatalyst (13, 1)]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // NSInternalInconsistencyException Reason: NSCoreDataCoreSpotlightDelegate requires the use of the initializer initForStoreWithDescription:model: 
-	interface NSCoreDataCoreSpotlightDelegate
-	{
+	interface NSCoreDataCoreSpotlightDelegate {
 
 		[Notification]
-		[Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Field ("NSCoreDataCoreSpotlightDelegateIndexDidUpdateNotification")]
 		NSString IndexDidUpdateNotification { get; }
 
-		[Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("initForStoreWithDescription:coordinator:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (NSPersistentStoreDescription description, NSPersistentStoreCoordinator psc);
@@ -1714,8 +1760,9 @@ namespace CoreData
 		[NullAllowed, Export ("indexName")]
 		string IndexName { get; }
 
-		[Deprecated (PlatformName.iOS, 15,0, message: "Use the constructor that takes a NSPersistentStoreCoordinator instead.")]
-		[Deprecated (PlatformName.MacOSX, 12,0, message: "Use the constructor that takes a NSPersistentStoreCoordinator instead.")]
+		[Deprecated (PlatformName.iOS, 15, 0, message: "Use the constructor that takes a NSPersistentStoreCoordinator instead.")]
+		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use the constructor that takes a NSPersistentStoreCoordinator instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 15, 0, message: "Use the constructor that takes a NSPersistentStoreCoordinator instead.")]
 		[Export ("initForStoreWithDescription:model:")]
 		NativeHandle Constructor (NSPersistentStoreDescription description, NSManagedObjectModel model);
 
@@ -1727,26 +1774,26 @@ namespace CoreData
 		void ReindexAllSearchableItems (CSSearchableIndex searchableIndex, Action acknowledgementHandler);
 
 		[Export ("searchableIndex:reindexSearchableItemsWithIdentifiers:acknowledgementHandler:")]
-		void ReindexSearchableItems (CSSearchableIndex searchableIndex, string[] identifiers, Action acknowledgementHandler);
+		void ReindexSearchableItems (CSSearchableIndex searchableIndex, string [] identifiers, Action acknowledgementHandler);
 
 		[Async]
-		[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[NoWatch, NoTV, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("deleteSpotlightIndexWithCompletionHandler:")]
 		void DeleteSpotlightIndex (Action<NSError> completionHandler);
 
-		[NoWatch, NoTV, Mac (12, 0), iOS (15, 0), MacCatalyst (15,0)]
+		[NoWatch, NoTV, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("indexingEnabled")]
 		bool IndexingEnabled { [Bind ("isIndexingEnabled")] get; }
 
-		[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[NoWatch, NoTV, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("startSpotlightIndexing")]
 		void StartSpotlightIndexing ();
 
-		[NoWatch, NoTV, Mac (12,0), iOS (15,0),MacCatalyst (15,0)]
-		[Export ("stopSpotlightIndexing")] 
+		[NoWatch, NoTV, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+		[Export ("stopSpotlightIndexing")]
 		void StopSpotlightIndexing ();
 	}
-#endif 
+#endif
 
 	// NSPersistentStore is an abstract type according to Apple's documentation, but Apple
 	// also have internal subclasses of NSPersistentStore, and in those cases our closest
@@ -1782,7 +1829,7 @@ namespace CoreData
 		[DesignatedInitializer]
 		[Export ("initWithPersistentStoreCoordinator:configurationName:URL:options:")]
 		NativeHandle Constructor ([NullAllowed] NSPersistentStoreCoordinator root, [NullAllowed] string name, NSUrl url, [NullAllowed] NSDictionary options);
-		
+
 		[Export ("loadMetadata:")]
 		bool LoadMetadata (out NSError error);
 
@@ -1827,22 +1874,25 @@ namespace CoreData
 		NSString SaveConflictsErrorKey { get; }
 
 #if !WATCH
-		[NoWatch, NoTV, Mac (10, 13), iOS (11, 0)]
+		[NoWatch, NoTV]
+		[MacCatalyst (13, 1)]
 		[Export ("coreSpotlightExporter")]
 		NSCoreDataCoreSpotlightDelegate CoreSpotlightExporter { get; }
 #endif
 
-		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[Watch (6, 0), TV (13, 0), iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Field ("NSPersistentStoreRemoteChangeNotificationPostOptionKey")]
 		NSString RemoteChangeNotificationPostOptionKey { get; }
 
 		[Notification (typeof (NSPersistentStoreRemoteChangeEventArgs))]
-		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[Watch (6, 0), TV (13, 0), iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Field ("NSPersistentStoreRemoteChangeNotification")]
 		NSString StoreRemoteChangeNotification { get; }
 
 	}
-	
+
 	interface NSPersistentStoreRemoteChangeEventArgs {
 		[Export ("NSStoreUUIDKey")]
 		NSUuid Uuid { get; }
@@ -1851,14 +1901,13 @@ namespace CoreData
 		string Url { get; }
 
 		[Export ("NSPersistentHistoryTokenKey")]
-		NSPersistentHistoryToken PersistentHistoryTracking  {get; }
+		NSPersistentHistoryToken PersistentHistoryTracking { get; }
 	}
 
-	[Watch (3,0), TV (10,0), iOS (10,0), Mac (10,12)]
-	[BaseType (typeof(NSObject))]
+	[MacCatalyst (13, 1)]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface NSPersistentStoreDescription : NSCopying
-	{
+	interface NSPersistentStoreDescription : NSCopying {
 		[Static]
 		[Export ("persistentStoreDescriptionWithURL:")]
 		NSPersistentStoreDescription GetPersistentStoreDescription (NSUrl Url);
@@ -1904,16 +1953,16 @@ namespace CoreData
 		NativeHandle Constructor (NSUrl url);
 
 		// NSPersistentStoreDescription_NSPersistentCloudKitContainerAdditions category
-		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[Watch (6, 0), TV (13, 0), iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("cloudKitContainerOptions", ArgumentSemantic.Strong)]
 		NSPersistentCloudKitContainerOptions CloudKitContainerOptions { get; set; }
 	}
-	
-	[Watch (3,0), TV (10,0), iOS (10,0), Mac (10,12)]
-	[BaseType (typeof(NSObject))]
+
+	[MacCatalyst (13, 1)]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface NSPersistentContainer
-	{
+	interface NSPersistentContainer {
 		[Static]
 		[Export ("persistentContainerWithName:")]
 		NSPersistentContainer GetPersistentContainer (string name);
@@ -1939,7 +1988,7 @@ namespace CoreData
 		NSPersistentStoreCoordinator PersistentStoreCoordinator { get; }
 
 		[Export ("persistentStoreDescriptions", ArgumentSemantic.Copy)]
-		NSPersistentStoreDescription[] PersistentStoreDescriptions { get; set; }
+		NSPersistentStoreDescription [] PersistentStoreDescriptions { get; set; }
 
 		[Export ("initWithName:")]
 		NativeHandle Constructor (string name);
@@ -1977,25 +2026,27 @@ namespace CoreData
 		[Static, Export ("registerStoreClass:forStoreType:")]
 		void RegisterStoreClass ([NullAllowed] Class storeClass, NSString storeType);
 
-		[Deprecated (PlatformName.iOS, 9, 0, message : "Use the method that takes an out NSError parameter.")]
-		[Deprecated (PlatformName.MacOSX, 10, 11, message : "Use the method that takes an out NSError parameter.")]
+		[Deprecated (PlatformName.iOS, 9, 0, message: "Use the method that takes an out NSError parameter.")]
+		[Deprecated (PlatformName.TvOS, 9, 0, message: "Use the method that takes an out NSError parameter.")]
+		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use the method that takes an out NSError parameter.")]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use the method that takes an out NSError parameter.")]
 		[Static, Export ("metadataForPersistentStoreOfType:URL:error:")]
 		[return: NullAllowed]
 		NSDictionary MetadataForPersistentStoreOfType ([NullAllowed] NSString storeType, NSUrl url, out NSError error);
-		
-		[iOS (7,0)]
-		[Mac (10, 9)]
+
+		[MacCatalyst (13, 1)]
 		[Static, Export ("metadataForPersistentStoreOfType:URL:options:error:")]
 		[return: NullAllowed]
 		NSDictionary<NSString, NSObject> GetMetadata (string storeType, NSUrl url, [NullAllowed] NSDictionary options, out NSError error);
 
-		[Deprecated (PlatformName.iOS, 9, 0, message : "Use the method that takes an 'out NSError' parameter.")]
-		[Deprecated (PlatformName.MacOSX, 10, 11, message : "Use the method that takes an 'out NSError' parameter.")]
+		[Deprecated (PlatformName.iOS, 9, 0, message: "Use the method that takes an 'out NSError' parameter.")]
+		[Deprecated (PlatformName.TvOS, 9, 0, message: "Use the method that takes an 'out NSError' parameter.")]
+		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use the method that takes an 'out NSError' parameter.")]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use the method that takes an 'out NSError' parameter.")]
 		[Static, Export ("setMetadata:forPersistentStoreOfType:URL:error:")]
 		bool SetMetadata ([NullAllowed] NSDictionary metadata, [NullAllowed] NSString storeType, NSUrl url, out NSError error);
-		
-		[iOS (7,0)]
-		[Mac (10,9)]
+
+		[MacCatalyst (13, 1)]
 		[Static, Export ("setMetadata:forPersistentStoreOfType:URL:options:error:")]
 		bool SetMetadata ([NullAllowed] NSDictionary<NSString, NSObject> metadata, string storeType, NSUrl url, [NullAllowed] NSDictionary options, out NSError error);
 
@@ -2023,7 +2074,7 @@ namespace CoreData
 		NSManagedObjectModel ManagedObjectModel { get; }
 
 		[Export ("persistentStores", ArgumentSemantic.Strong)]
-		NSPersistentStore[] PersistentStores { get; }
+		NSPersistentStore [] PersistentStores { get; }
 
 		[Export ("persistentStoreForURL:")]
 		[return: NullAllowed]
@@ -2042,8 +2093,8 @@ namespace CoreData
 #else
 		NSPersistentStore AddPersistentStoreWithType (NSString storeType, [NullAllowed] string configuration, [NullAllowed] NSUrl storeUrl, [NullAllowed] NSDictionary options, out NSError error);
 #endif
-		
-		[Watch (3,0), TV (10,0), iOS (10,0), Mac (10,12)]
+
+		[MacCatalyst (13, 1)]
 		[Export ("addPersistentStoreWithDescription:completionHandler:")]
 		[Async]
 		void AddPersistentStore (NSPersistentStoreDescription storeDescription, Action<NSPersistentStoreDescription, NSError> block);
@@ -2059,25 +2110,41 @@ namespace CoreData
 		[return: NullAllowed]
 		NSManagedObjectID ManagedObjectIDForURIRepresentation (NSUrl url);
 
-		[NoWatch][NoTV]
+#pragma warning disable 0109 // warning CS0109: The member 'NSManagedObjectContext.Lock()' does not hide an accessible member. The new keyword is not required.
+		[NoWatch]
+		[NoTV]
 		[Deprecated (PlatformName.iOS, 8, 0, message: "Use 'PerformAndWait' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Use 'PerformAndWait' instead.")]
+		[MacCatalyst (13, 1)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'PerformAndWait' instead.")]
 		[Export ("lock")]
 		new void Lock ();
+#pragma warning restore
 
-		[NoWatch][NoTV]
+#pragma warning disable 0109 // warning CS0109: The member 'NSManagedObjectContext.Unlock()' does not hide an accessible member. The new keyword is not required.
+		[NoWatch]
+		[NoTV]
 		[Deprecated (PlatformName.iOS, 8, 0, message: "Use 'PerformAndWait' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Use 'PerformAndWait' instead.")]
+		[MacCatalyst (13, 1)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'PerformAndWait' instead.")]
 		[Export ("unlock")]
 		new void Unlock ();
+#pragma warning restore
 
-		[NoWatch][NoTV]
+		[NoWatch]
+		[NoTV]
 		[Deprecated (PlatformName.iOS, 8, 0, message: "Use 'Perform' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Use 'Perform' instead.")]
+		[MacCatalyst (13, 1)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'Perform' instead.")]
 		[Export ("tryLock")]
 		bool TryLock { get; }
 
-		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
+		[NoiOS]
+		[NoMacCatalyst]
+		[NoWatch]
+		[NoTV]
 		[Deprecated (PlatformName.MacOSX, 10, 5)]
 		[Static, Export ("metadataForPersistentStoreWithURL:error:")]
 		[return: NullAllowed]
@@ -2086,18 +2153,21 @@ namespace CoreData
 		[Field ("NSSQLiteStoreType")]
 		NSString SQLiteStoreType { get; }
 
-		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
+		[NoiOS]
+		[NoMacCatalyst]
+		[NoWatch]
+		[NoTV]
 		[Field ("NSXMLStoreType")]
 		NSString XMLStoreType { get; }
 
 		[Field ("NSBinaryStoreType")]
 		NSString BinaryStoreType { get; }
 
-		[Watch (4,0)][TV (11,0)][Mac (10,13)][iOS (11,0)]
+		[MacCatalyst (13, 1)]
 		[Field ("NSBinaryStoreSecureDecodingClasses")]
 		NSString BinaryStoreSecureDecodingClasses { get; }
 
-		[Watch (4,0)][TV (11,0)][Mac (10,13)][iOS (11,0)]
+		[MacCatalyst (13, 1)]
 		[Field ("NSBinaryStoreInsecureDecodingCompatibilityOption")]
 		NSString BinaryStoreInsecureDecodingCompatibilityOption { get; }
 
@@ -2119,7 +2189,10 @@ namespace CoreData
 		[Field ("NSReadOnlyPersistentStoreOption")]
 		NSString ReadOnlyPersistentStoreOption { get; }
 
-		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
+		[NoiOS]
+		[NoMacCatalyst]
+		[NoWatch]
+		[NoTV]
 		[Field ("NSValidateXMLStoreOption")]
 		NSString ValidateXMLStoreOption { get; }
 
@@ -2159,11 +2232,11 @@ namespace CoreData
 		[Notification]
 		[Field ("NSPersistentStoreCoordinatorStoresDidChangeNotification")]
 		NSString StoresDidChangeNotification { get; }
-		
+
 		[Notification]
 		[Field ("NSPersistentStoreCoordinatorWillRemoveStoreNotification")]
 		NSString WillRemoveStoreNotification { get; }
-		
+
 		// 5.0
 		[Export ("executeRequest:withContext:error:")]
 		[return: NullAllowed]
@@ -2173,19 +2246,28 @@ namespace CoreData
 		NSObject ExecuteRequestwithContexterror (NSPersistentStoreRequest request, NSManagedObjectContext context, out NSError error);
 #endif
 
-		[NoWatch][NoTV]
+		[NoWatch]
+		[NoTV]
 		[Notification]
 		[Deprecated (PlatformName.iOS, 10, 0, message: "Please see the release notes and Core Data documentation.")]
+		[MacCatalyst (13, 1)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Please see the release notes and Core Data documentation.")]
 		[Field ("NSPersistentStoreDidImportUbiquitousContentChangesNotification")]
 		NSString DidImportUbiquitousContentChangesNotification { get; }
 
-		[NoWatch][NoTV]
+		[NoWatch]
+		[NoTV]
 		[Deprecated (PlatformName.iOS, 10, 0, message: "Please see the release notes and Core Data documentation.")]
+		[MacCatalyst (13, 1)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Please see the release notes and Core Data documentation.")]
 		[Field ("NSPersistentStoreUbiquitousContentNameKey")]
 		NSString PersistentStoreUbiquitousContentNameKey { get; }
 
-		[NoWatch][NoTV]
+		[NoWatch]
+		[NoTV]
 		[Deprecated (PlatformName.iOS, 10, 0, message: "Please see the release notes and Core Data documentation.")]
+		[MacCatalyst (13, 1)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Please see the release notes and Core Data documentation.")]
 		[Field ("NSPersistentStoreUbiquitousContentURLKey")]
 #if NET
 		NSString PersistentStoreUbiquitousContentUrlKey { get; }
@@ -2194,92 +2276,112 @@ namespace CoreData
 #endif
 
 		[NoMac]
+		[MacCatalyst (13, 1)]
 		[Field ("NSPersistentStoreFileProtectionKey")]
 		NSString PersistentStoreFileProtectionKey { get; }
 
 		// 7.0
 
-		[NoWatch][NoTV]
-		[iOS (7,0), Mac (10, 9)]
+		[NoWatch]
+		[NoTV]
+		[MacCatalyst (13, 1)]
 		[Field ("NSPersistentStoreUbiquitousPeerTokenOption")]
 		NSString PersistentStoreUbiquitousPeerTokenOption { get; }
 
-		[NoWatch][NoTV]
-		[iOS (7,0), Mac (10, 9)]
+		[NoWatch]
+		[NoTV]
 		[Static]
 		[Deprecated (PlatformName.iOS, 10, 0, message: "Please see the release notes and Core Data documentation.")]
 		[Deprecated (PlatformName.MacOSX, 10, 12, message: "Please see the release notes and Core Data documentation.")]
+		[MacCatalyst (13, 1)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Please see the release notes and Core Data documentation.")]
 		[Export ("removeUbiquitousContentAndPersistentStoreAtURL:options:error:")]
 		bool RemoveUbiquitousContentAndPersistentStore (NSUrl storeUrl, [NullAllowed] NSDictionary options, out NSError error);
 
-		[iOS (7,0), Mac (10, 9)]
+		[MacCatalyst (13, 1)]
 		[Notification (typeof (NSPersistentStoreCoordinatorStoreChangeEventArgs))]
 		[Field ("NSPersistentStoreCoordinatorStoresWillChangeNotification")]
 		NSString StoresWillChangeNotification { get; }
 
-		[NoWatch][NoTV]
-		[iOS (7,0), Mac (10, 9)]
+		[NoWatch]
+		[NoTV]
+		[MacCatalyst (13, 1)]
 		[Field ("NSPersistentStoreRebuildFromUbiquitousContentOption")]
 		NSString RebuildFromUbiquitousContentOption { get; }
 
-		[NoWatch][NoTV]
-		[iOS (7,0), Mac (10, 9)]
+		[NoWatch]
+		[NoTV]
+		[MacCatalyst (13, 1)]
 		[Field ("NSPersistentStoreRemoveUbiquitousMetadataOption")]
 		NSString RemoveUbiquitousMetadataOption { get; }
 
-		[NoWatch][NoTV]
-		[iOS (7,0), Mac (10, 9)]
+		[NoWatch]
+		[NoTV]
+		[MacCatalyst (13, 1)]
 		[Field ("NSPersistentStoreUbiquitousContainerIdentifierKey")]
 		[Obsolete ("Use 'UbiquitousContainerIdentifierKey' instead.")]
 		NSString eUbiquitousContainerIdentifierKey { get; }
 
-		[NoWatch][NoTV]
-		[iOS (7,0), Mac (10, 9)]
+		[NoWatch]
+		[NoTV]
+		[MacCatalyst (13, 1)]
 		[Field ("NSPersistentStoreUbiquitousContainerIdentifierKey")]
 		NSString UbiquitousContainerIdentifierKey { get; }
 
 		// 11.0
 
-		[NoWatch, NoTV, Mac (10, 13), iOS (11, 0)]
+		[NoWatch, NoTV]
+		[MacCatalyst (13, 1)]
 		[Field ("NSCoreDataCoreSpotlightExporter")]
 		NSString CoreSpotlightExporter { get; }
 
-		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[Field ("NSPersistentHistoryTrackingKey")]
 		NSString HistoryTrackingKey { get; }
 
-		[iOS (8,0), Mac (10,10)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("name")]
 		string Name { get; set; }
 
-		[iOS (8,0), Mac (10,10)]
+		[MacCatalyst (13, 1)]
 		[Export ("performBlock:")]
 		void Perform (Action code);
 
-		[iOS (8,0), Mac (10,10)]
+		[MacCatalyst (13, 1)]
 		[Export ("performBlockAndWait:")]
 		void PerformAndWait (Action code);
 
-		[iOS (9,0), Mac (10,11)]
+		[MacCatalyst (13, 1)]
 		[Export ("destroyPersistentStoreAtURL:withType:options:error:")]
 		bool DestroyPersistentStore (NSUrl url, string storeType, [NullAllowed] NSDictionary options, out NSError error);
 
-		[iOS (9,0), Mac (10,11)]
+		[MacCatalyst (13, 1)]
 		[Export ("replacePersistentStoreAtURL:destinationOptions:withPersistentStoreFromURL:sourceOptions:storeType:error:")]
 		bool ReplacePersistentStore (NSUrl destinationUrl, [NullAllowed] NSDictionary destinationOptions, NSUrl sourceUrl, [NullAllowed] NSDictionary sourceOptions, string storeType, out NSError error);
 
 
-		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Watch (6, 0), TV (13, 0), iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("currentPersistentHistoryTokenFromStores:")]
 		[return: NullAllowed]
-		NSPersistentHistoryToken GetCurrentPersistentHistoryToken ([NullAllowed] NSObject[] stores);
+		NSPersistentHistoryToken GetCurrentPersistentHistoryToken ([NullAllowed] NSObject [] stores);
+
+		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0), MacCatalyst (14, 0)]
+		[Export ("finishDeferredLightweightMigration:")]
+		bool FinishDeferredLightweightMigration ([NullAllowed] out NSError error);
+
+		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0), MacCatalyst (14, 0)]
+		[Export ("finishDeferredLightweightMigrationTask:")]
+		bool FinishDeferredLightweightMigrationTask ([NullAllowed] out NSError error);
 	}
 
 	interface NSPersistentStoreCoordinatorStoreChangeEventArgs {
-		[NoWatch][NoTV]
+		[NoWatch]
+		[NoTV]
 		[Export ("NSPersistentStoreUbiquitousTransitionTypeKey")]
-		[iOS (7, 0)]
 		[Deprecated (PlatformName.iOS, 10, 0, message: "Please see the release notes and Core Data documentation.")]
+		[MacCatalyst (13, 1)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Please see the release notes and Core Data documentation.")]
 		NSPersistentStoreUbiquitousTransitionType EventType { get; }
 	}
 
@@ -2294,7 +2396,7 @@ namespace CoreData
 		NSPersistentStore [] AffectedStores { get; set; }
 	}
 
-	[iOS (8,0), Mac (10,10)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSPersistentStoreAsynchronousResult))]
 	interface NSAsynchronousFetchResult {
 		[Export ("fetchRequest", ArgumentSemantic.Retain)]
@@ -2309,13 +2411,13 @@ namespace CoreData
 #endif
 	}
 
-	[iOS (8,0), Mac (10,10)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface NSPersistentStoreResult {
 
 	}
 
-	[iOS (8,0), Mac (10,10)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSPersistentStoreResult))]
 	interface NSBatchUpdateResult {
 		[Export ("result", ArgumentSemantic.Retain)]
@@ -2325,8 +2427,8 @@ namespace CoreData
 		[Export ("resultType")]
 		NSBatchUpdateRequestResultType ResultType { get; }
 	}
-	
-	[iOS (8,0), Mac (10,10)]
+
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSPersistentStoreResult))]
 	interface NSPersistentStoreAsynchronousResult {
 		[Export ("managedObjectContext", ArgumentSemantic.Retain)]
@@ -2343,8 +2445,8 @@ namespace CoreData
 		[Export ("cancel")]
 		void Cancel ();
 	}
-	
-	[iOS (8,0), Mac (10,10)]
+
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSPersistentStoreRequest))]
 	interface NSAsynchronousFetchRequest {
 		[Export ("initWithFetchRequest:completionBlock:")]
@@ -2375,22 +2477,23 @@ namespace CoreData
 		bool Transient { [Bind ("isTransient")] get; set; }
 
 		[Export ("validationPredicates")]
-		NSPredicate[] ValidationPredicates { get; }
+		NSPredicate [] ValidationPredicates { get; }
 
 		[Export ("validationWarnings")]
-		string[] ValidationWarnings { get; }
+		string [] ValidationWarnings { get; }
 
 		[Export ("setValidationPredicates:withValidationWarnings:")]
-		void SetValidationPredicates ([NullAllowed] NSPredicate[] validationPredicates, [NullAllowed] string[] validationWarnings);
+		void SetValidationPredicates ([NullAllowed] NSPredicate [] validationPredicates, [NullAllowed] string [] validationWarnings);
 
 		[NullAllowed, Export ("userInfo", ArgumentSemantic.Retain)]
 		NSDictionary UserInfo { get; set; }
 
 		[Export ("indexed")]
-		[Deprecated (PlatformName.iOS, 11, 0, message : "Use 'NSEntityDescription.Indexes' instead.")]
-		[Deprecated (PlatformName.MacOSX, 10, 13, message : "Use 'NSEntityDescription.Indexes' instead.")]
-		[Deprecated (PlatformName.TvOS, 11, 0, message : "Use 'NSEntityDescription.Indexes' instead.")]
-		[Deprecated (PlatformName.WatchOS, 4, 0, message : "Use 'NSEntityDescription.Indexes' instead.")]
+		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'NSEntityDescription.Indexes' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'NSEntityDescription.Indexes' instead.")]
+		[Deprecated (PlatformName.TvOS, 11, 0, message: "Use 'NSEntityDescription.Indexes' instead.")]
+		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'NSEntityDescription.Indexes' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'NSEntityDescription.Indexes' instead.")]
 		bool Indexed { [Bind ("isIndexed")] get; set; }
 
 		[Export ("versionHash")]
@@ -2406,12 +2509,14 @@ namespace CoreData
 
 		// 5.0
 		[Export ("indexedBySpotlight")]
-		bool IndexedBySpotlight { [Bind ("isIndexedBySpotlight")]get; set; }
+		bool IndexedBySpotlight { [Bind ("isIndexedBySpotlight")] get; set; }
 
 		[Export ("storedInExternalRecord")]
-		[Deprecated (PlatformName.iOS, 11, 0, message : "Use 'CoreSpotlight' integration instead.")]
-		[Deprecated (PlatformName.MacOSX, 10, 13, message : "Use 'CoreSpotlight' integration instead.")]
-		bool StoredInExternalRecord { [Bind ("isStoredInExternalRecord")]get; set; }
+		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'CoreSpotlight' integration instead.")]
+		[Deprecated (PlatformName.TvOS, 11, 0, message: "Use 'CoreSpotlight' integration instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'CoreSpotlight' integration instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'CoreSpotlight' integration instead.")]
+		bool StoredInExternalRecord { [Bind ("isStoredInExternalRecord")] get; set; }
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -2458,7 +2563,7 @@ namespace CoreData
 
 		// 5.0
 		[Export ("ordered")]
-		bool Ordered { [Bind ("isOrdered")]get; set; }
+		bool Ordered { [Bind ("isOrdered")] get; set; }
 	}
 
 	[BaseType (typeof (NSPersistentStoreRequest))]
@@ -2499,7 +2604,7 @@ namespace CoreData
 #endif
 	}
 
-	[iOS (8,0), Mac (10,10)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSPersistentStoreRequest))]
 	interface NSBatchUpdateRequest {
 		[Export ("initWithEntityName:")]
@@ -2534,17 +2639,16 @@ namespace CoreData
 		NSBatchUpdateRequest BatchUpdateRequestWithEntityName (string entityName);
 	}
 
-	[iOS (9,0), Mac (10,11)]
-	[BaseType (typeof(NSPersistentStoreRequest))]
+	[MacCatalyst (13, 1)]
+	[BaseType (typeof (NSPersistentStoreRequest))]
 	[DisableDefaultCtor]
-	interface NSBatchDeleteRequest
-	{
+	interface NSBatchDeleteRequest {
 		[Export ("initWithFetchRequest:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (NSFetchRequest fetch);
 
 		[Export ("initWithObjectIDs:")]
-		NativeHandle Constructor (NSManagedObjectID[] objects);
+		NativeHandle Constructor (NSManagedObjectID [] objects);
 
 		[Export ("resultType", ArgumentSemantic.Assign)]
 		NSBatchDeleteRequestResultType ResultType { get; set; }
@@ -2553,10 +2657,9 @@ namespace CoreData
 		NSFetchRequest FetchRequest { get; }
 	}
 
-	[iOS (9,0), Mac (10,11)]
-	[BaseType (typeof(NSPersistentStoreResult))]
-	interface NSBatchDeleteResult
-	{
+	[MacCatalyst (13, 1)]
+	[BaseType (typeof (NSPersistentStoreResult))]
+	interface NSBatchDeleteResult {
 		[NullAllowed, Export ("result", ArgumentSemantic.Strong)]
 		NSObject Result { get; }
 
@@ -2564,20 +2667,19 @@ namespace CoreData
 		NSBatchDeleteRequestResultType ResultType { get; }
 	}
 
-	[iOS (9,0), Mac (10,11)]
-	[BaseType (typeof(NSObject))]
-	interface NSConstraintConflict
-	{
+	[MacCatalyst (13, 1)]
+	[BaseType (typeof (NSObject))]
+	interface NSConstraintConflict {
 		[Export ("initWithConstraint:databaseObject:databaseSnapshot:conflictingObjects:conflictingSnapshots:")]
 		[DesignatedInitializer]
-		NativeHandle Constructor (string[] contraint, [NullAllowed] NSManagedObject databaseObject, [NullAllowed] NSDictionary databaseSnapshot, NSManagedObject[] conflictingObjects, NSObject[] conflictingSnapshots);
+		NativeHandle Constructor (string [] contraint, [NullAllowed] NSManagedObject databaseObject, [NullAllowed] NSDictionary databaseSnapshot, NSManagedObject [] conflictingObjects, NSObject [] conflictingSnapshots);
 
 #if MONOMAC
 		[Export ("constraint", ArgumentSemantic.Copy)]
 #else
 		[Export ("constraint", ArgumentSemantic.Retain)]
 #endif
-		string[] Constraint { get; }
+		string [] Constraint { get; }
 
 #if MONOMAC
 		[Export ("constraintValues", ArgumentSemantic.Copy)]
@@ -2597,14 +2699,14 @@ namespace CoreData
 #else
 		[Export ("conflictingObjects", ArgumentSemantic.Retain)]
 #endif
-		NSManagedObject[] ConflictingObjects { get; }
+		NSManagedObject [] ConflictingObjects { get; }
 
 #if MONOMAC
 		[Export ("conflictingSnapshots", ArgumentSemantic.Copy)]
 #else
 		[Export ("conflictingSnapshots", ArgumentSemantic.Retain)]
 #endif
-		NSDictionary[] ConflictingSnapshots { get; }
+		NSDictionary [] ConflictingSnapshots { get; }
 	}
 
 #if XAMCORE_5_0
@@ -2614,32 +2716,38 @@ namespace CoreData
 #endif
 	delegate bool NSBatchInsertRequestManagedObjectHandler (NSManagedObject managedObject);
 
-	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
-	[BaseType (typeof(NSPersistentStoreRequest))]
+	[Watch (6, 0), TV (13, 0), iOS (13, 0)]
+	[MacCatalyst (13, 1)]
+	[BaseType (typeof (NSPersistentStoreRequest))]
 	[DisableDefaultCtor] // NSInternalInconsistencyException Reason: -init results in undefined behavior for NSBatchInsertRequest
 	interface NSBatchInsertRequest {
 
-		[Deprecated (PlatformName.iOS, 14,0, message: "Use another constructor instead.")]
-		[Deprecated (PlatformName.TvOS, 14,0, message: "Use another constructor instead.")]
-		[Deprecated (PlatformName.WatchOS, 7,0, message: "Use another constructor instead.")]
-		[Deprecated (PlatformName.MacOSX, 10,16, message: "Use another constructor instead.")]
+		[Deprecated (PlatformName.iOS, 14, 0, message: "Use another constructor instead.")]
+		[Deprecated (PlatformName.TvOS, 14, 0, message: "Use another constructor instead.")]
+		[Deprecated (PlatformName.WatchOS, 7, 0, message: "Use another constructor instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 16, message: "Use another constructor instead.")]
 		[NoMacCatalyst]
+		[Deprecated (PlatformName.MacCatalyst, 14, 0, message: "Use another constructor instead.")]
 		[Export ("init")]
 		NativeHandle Constructor ();
 
-		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
+		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("initWithEntity:dictionaryHandler:")]
 		NativeHandle Constructor (NSEntityDescription entity, NSBatchInsertRequestDictionaryHandler handler);
 
-		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
+		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("initWithEntity:managedObjectHandler:")]
 		NativeHandle Constructor (NSEntityDescription entity, NSBatchInsertRequestManagedObjectHandler handler);
 
-		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
+		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("initWithEntityName:dictionaryHandler:")]
 		NativeHandle Constructor (string entityName, NSBatchInsertRequestDictionaryHandler handler);
 
-		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
+		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("initWithEntityName:managedObjectHandler:")]
 		NativeHandle Constructor (string entityName, NSBatchInsertRequestManagedObjectHandler handler);
 
@@ -2650,44 +2758,49 @@ namespace CoreData
 		NSEntityDescription Entity { get; }
 
 		[NullAllowed, Export ("objectsToInsert", ArgumentSemantic.Copy)]
-		NSDictionary<NSString, NSObject>[] ObjectsToInsert { get; set; }
+		NSDictionary<NSString, NSObject> [] ObjectsToInsert { get; set; }
 
 		[Export ("resultType", ArgumentSemantic.Assign)]
 		NSBatchInsertRequestResultType ResultType { get; set; }
 
 		[Static]
 		[Export ("batchInsertRequestWithEntityName:objects:")]
-		NSBatchInsertRequest BatchInsertRequest (string entityName, NSDictionary<NSString, NSObject>[] dictionaries);
+		NSBatchInsertRequest BatchInsertRequest (string entityName, NSDictionary<NSString, NSObject> [] dictionaries);
 
 		[DesignatedInitializer]
 		[Export ("initWithEntityName:objects:")]
-		NativeHandle Constructor (string entityName, NSDictionary<NSString, NSObject>[] dictionaries);
+		NativeHandle Constructor (string entityName, NSDictionary<NSString, NSObject> [] dictionaries);
 
 		[DesignatedInitializer]
 		[Export ("initWithEntity:objects:")]
-		NativeHandle Constructor (NSEntityDescription entity, NSDictionary<NSString, NSObject>[] dictionaries);
+		NativeHandle Constructor (NSEntityDescription entity, NSDictionary<NSString, NSObject> [] dictionaries);
 
 		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[MacCatalyst (14, 0)]
 		[NullAllowed, Export ("dictionaryHandler", ArgumentSemantic.Copy)]
 		NSBatchInsertRequestDictionaryHandler DictionaryHandler { get; set; }
 
 		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[MacCatalyst (14, 0)]
 		[NullAllowed, Export ("managedObjectHandler", ArgumentSemantic.Copy)]
 		NSBatchInsertRequestManagedObjectHandler ManagedObjectHandler { get; set; }
 
-		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
+		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[MacCatalyst (14, 0)]
 		[Static]
 		[Export ("batchInsertRequestWithEntityName:dictionaryHandler:")]
 		NSBatchInsertRequest CreateBatchInsertRequest (string entityName, NSBatchInsertRequestDictionaryHandler handler);
 
-		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
+		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[MacCatalyst (14, 0)]
 		[Static]
 		[Export ("batchInsertRequestWithEntityName:managedObjectHandler:")]
 		NSBatchInsertRequest CreateBatchInsertRequest (string entityName, NSBatchInsertRequestManagedObjectHandler handler);
 	}
 
-	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
-	[BaseType (typeof(NSPersistentStoreResult))]
+	[Watch (6, 0), TV (13, 0), iOS (13, 0)]
+	[MacCatalyst (13, 1)]
+	[BaseType (typeof (NSPersistentStoreResult))]
 	interface NSBatchInsertResult {
 		[NullAllowed, Export ("result", ArgumentSemantic.Strong)]
 		NSObject Result { get; }
@@ -2696,30 +2809,32 @@ namespace CoreData
 		NSBatchInsertRequestResultType ResultType { get; }
 	}
 
-	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
-	[BaseType (typeof(NSAttributeDescription))]
+	[Watch (6, 0), TV (13, 0), iOS (13, 0)]
+	[MacCatalyst (13, 1)]
+	[BaseType (typeof (NSAttributeDescription))]
 	interface NSDerivedAttributeDescription : NSSecureCoding {
 		[NullAllowed, Export ("derivationExpression", ArgumentSemantic.Strong)]
 		NSExpression DerivationExpression { get; set; }
 	}
 
-	[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	delegate void NSPersistentCloudKitContainerShareManagedObjectsHandler (NSSet<NSManagedObjectID> sharedObjectIds, CKShare share, CKContainer container, NSError error);
 
-	[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	delegate void NSPersistentCloudKitContainerFetchParticipantsMatchingLookupInfosHandler (NSArray<CKShareParticipant> fetchedParticipants, NSError error);
 
-	[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	delegate void NSPersistentCloudKitContainerPersistUpdatedShareHandler (CKShare persistedShare, NSError error);
 
-	[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	delegate void NSPersistentCloudKitContainerPurgeObjectsAndRecordsInZoneHandler (CKRecordZoneID purgedZoneId, NSError error);
 
-	[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	delegate void NSPersistentCloudKitContainerAcceptShareInvitationsHandler (NSArray<CKShareMetadata> acceptedShareMetadatas, NSError error);
 
-	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
-	[BaseType (typeof(NSPersistentContainer))]
+	[Watch (6, 0), TV (13, 0), iOS (13, 0)]
+	[MacCatalyst (13, 1)]
+	[BaseType (typeof (NSPersistentContainer))]
 	[DisableDefaultCtor]
 	interface NSPersistentCloudKitContainer {
 
@@ -2735,67 +2850,71 @@ namespace CoreData
 		CKRecord GetRecord (NSManagedObjectID managedObjectId);
 
 		[Export ("recordsForManagedObjectIDs:")]
-		NSDictionary<NSManagedObjectID, CKRecord> GetRecords (NSManagedObjectID[] managedObjectIds);
+		NSDictionary<NSManagedObjectID, CKRecord> GetRecords (NSManagedObjectID [] managedObjectIds);
 
 		[Export ("recordIDForManagedObjectID:")]
 		[return: NullAllowed]
 		CKRecordID GetRecordId (NSManagedObjectID managedObjectId);
 
 		[Export ("recordIDsForManagedObjectIDs:")]
-		NSDictionary<NSManagedObjectID, CKRecordID> GetRecordIds (NSManagedObjectID[] managedObjectIds);
+		NSDictionary<NSManagedObjectID, CKRecordID> GetRecordIds (NSManagedObjectID [] managedObjectIds);
 
-		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
+		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("canUpdateRecordForManagedObjectWithID:")]
 		bool CanUpdateRecord (NSManagedObjectID objectID);
 
-		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
+		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("canDeleteRecordForManagedObjectWithID:")]
 		bool CanDeleteRecord (NSManagedObjectID objectID);
 
-		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
+		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("canModifyManagedObjectsInStore:")]
 		bool CanModifyManagedObjects (NSPersistentStore store);
 
 		// NSPersistentCloudKitContainer_Sharing
 		[Async (ResultTypeName = "NSPersistentCloudKitContainerAcceptShareInvitationsResult")]
-		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("acceptShareInvitationsFromMetadata:intoPersistentStore:completion:")]
-		void AcceptShareInvitations (CKShareMetadata[] metadata, NSPersistentStore persistentStore, [NullAllowed] NSPersistentCloudKitContainerAcceptShareInvitationsHandler handler);
+		void AcceptShareInvitations (CKShareMetadata [] metadata, NSPersistentStore persistentStore, [NullAllowed] NSPersistentCloudKitContainerAcceptShareInvitationsHandler handler);
 
 		[Async (ResultTypeName = "NSPersistentCloudKitContainerPurgeObjectsAndRecordsInZone")]
-		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("purgeObjectsAndRecordsInZoneWithID:inPersistentStore:completion:")]
-		void PurgeObjectsAndRecordsInZone (CKRecordZoneID zoneId, [NullAllowed] NSPersistentStore persistentStore, [NullAllowed] NSPersistentCloudKitContainerPurgeObjectsAndRecordsInZoneHandler handler); 
+		void PurgeObjectsAndRecordsInZone (CKRecordZoneID zoneId, [NullAllowed] NSPersistentStore persistentStore, [NullAllowed] NSPersistentCloudKitContainerPurgeObjectsAndRecordsInZoneHandler handler);
 
 		[Async (ResultTypeName = "NSPersistentCloudKitContainerPersistUpdatedShareResult")]
-		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("persistUpdatedShare:inPersistentStore:completion:")]
 		void PersistUpdatedShare (CKShare share, NSPersistentStore persistentStore, [NullAllowed] NSPersistentCloudKitContainerPersistUpdatedShareHandler handler);
 
 		[Async (ResultTypeName = "NSPersistentCloudKitContainerFetchParticipantsMatchingLookupInfosResult")]
-		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("fetchParticipantsMatchingLookupInfos:intoPersistentStore:completion:")]
-		void FetchParticipantsMatchingLookupInfos (CKUserIdentityLookupInfo[] lookupInfos, NSPersistentStore persistentStore, NSPersistentCloudKitContainerFetchParticipantsMatchingLookupInfosHandler handler); 
+		void FetchParticipantsMatchingLookupInfos (CKUserIdentityLookupInfo [] lookupInfos, NSPersistentStore persistentStore, NSPersistentCloudKitContainerFetchParticipantsMatchingLookupInfosHandler handler);
 
-		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("fetchSharesMatchingObjectIDs:error:")]
 		[return: NullAllowed]
-		NSDictionary<NSManagedObjectID, CKShare> FetchSharesMatchingObjectIds (NSManagedObjectID[] objectIDs, [NullAllowed] out NSError error);
+		NSDictionary<NSManagedObjectID, CKShare> FetchSharesMatchingObjectIds (NSManagedObjectID [] objectIDs, [NullAllowed] out NSError error);
 
-		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("fetchSharesInPersistentStore:error:")]
 		[return: NullAllowed]
-		CKShare[] FetchSharesInPersistentStore ([NullAllowed] NSPersistentStore persistentStore, [NullAllowed] out NSError error);
+		CKShare [] FetchSharesInPersistentStore ([NullAllowed] NSPersistentStore persistentStore, [NullAllowed] out NSError error);
 
 		[Async (ResultTypeName = "NSPersistentCloudKitContainerShareManagedObjectsResult")]
-		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("shareManagedObjects:toShare:completion:")]
-		void ShareManagedObjects (NSManagedObject[] managedObjects, [NullAllowed] CKShare share, NSPersistentCloudKitContainerShareManagedObjectsHandler handler);
+		void ShareManagedObjects (NSManagedObject [] managedObjects, [NullAllowed] CKShare share, NSPersistentCloudKitContainerShareManagedObjectsHandler handler);
 
 	}
 
-	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
-	[BaseType (typeof(NSObject))]
+	[Watch (6, 0), TV (13, 0), iOS (13, 0)]
+	[MacCatalyst (13, 1)]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NSPersistentCloudKitContainerOptions {
 		[Export ("containerIdentifier")]
@@ -2806,13 +2925,14 @@ namespace CoreData
 		NativeHandle Constructor (string containerIdentifier);
 
 		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("databaseScope", ArgumentSemantic.Assign)]
 		CKDatabaseScope DatabaseScope { get; set; }
 	}
 
-	[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
-	[MacCatalyst (14,0)]
-	[BaseType (typeof(NSObject))]
+	[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+	[MacCatalyst (14, 0)]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NSPersistentCloudKitContainerEvent : NSCopying {
 		[Export ("identifier", ArgumentSemantic.Strong)]
@@ -2844,8 +2964,8 @@ namespace CoreData
 		NSString UserInfoKey { get; }
 	}
 
-	[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
-	[MacCatalyst (14,0)]
+	[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NSPersistentStoreRequest))]
 	interface NSPersistentCloudKitContainerEventRequest {
 		[Export ("resultType", ArgumentSemantic.Assign)]
@@ -2868,9 +2988,9 @@ namespace CoreData
 		NSFetchRequest FetchRequest ();
 	}
 
-	[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
-	[MacCatalyst (14,0)]
-	[BaseType (typeof(NSPersistentStoreResult))]
+	[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+	[MacCatalyst (14, 0)]
+	[BaseType (typeof (NSPersistentStoreResult))]
 	[DisableDefaultCtor]
 	interface NSPersistentCloudKitContainerEventResult {
 		[NullAllowed, Export ("result", ArgumentSemantic.Strong)]
@@ -2880,4 +3000,91 @@ namespace CoreData
 		NSPersistentCloudKitContainerEventResultType ResultType { get; }
 	}
 
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface NSStagedMigrationManager {
+		[Export ("stages", ArgumentSemantic.Strong)]
+		NSMigrationStage [] Stages { get; }
+
+		[NullAllowed, Export ("container", ArgumentSemantic.Strong)]
+		NSPersistentContainer Container { get; }
+
+		[Export ("initWithMigrationStages:")]
+		[DesignatedInitializer]
+		NativeHandle Constructor (NSMigrationStage [] stages);
+	}
+
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NSObject))]
+	interface NSMigrationStage {
+		[NullAllowed, Export ("label")]
+		string Label { get; set; }
+	}
+
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface NSManagedObjectModelReference {
+		[Export ("resolvedModel", ArgumentSemantic.Strong)]
+		NSManagedObjectModel ResolvedModel { get; }
+
+		[Export ("versionChecksum", ArgumentSemantic.Strong)]
+		string VersionChecksum { get; }
+
+		[Export ("initWithModel:versionChecksum:")]
+		NativeHandle Constructor (NSManagedObjectModel model, string versionChecksum);
+
+		[Export ("initWithFileURL:versionChecksum:")]
+		NativeHandle Constructor (NSUrl fileUrl, string versionChecksum);
+
+		[Export ("initWithEntityVersionHashes:inBundle:versionChecksum:")]
+		NativeHandle Constructor (NSDictionary versionHash, [NullAllowed] NSBundle bundle, string versionChecksum);
+
+		[Export ("initWithName:inBundle:versionChecksum:")]
+		NativeHandle Constructor (string modelName, [NullAllowed] NSBundle bundle, string versionChecksum);
+	}
+
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NSMigrationStage))]
+	[DisableDefaultCtor]
+	interface NSLightweightMigrationStage {
+		[Export ("versionChecksums", ArgumentSemantic.Strong)]
+		string [] VersionChecksums { get; }
+
+		[Export ("initWithVersionChecksums:")]
+		[DesignatedInitializer]
+		NativeHandle Constructor (string [] versionChecksums);
+	}
+
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NSAttributeDescription))]
+	interface NSCompositeAttributeDescription {
+		[Export ("elements", ArgumentSemantic.Copy)]
+		NSAttributeDescription [] Elements { get; set; }
+	}
+
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NSMigrationStage))]
+	[DisableDefaultCtor]
+	interface NSCustomMigrationStage {
+		[Export ("currentModel", ArgumentSemantic.Strong)]
+		NSManagedObjectModelReference CurrentModel { get; }
+
+		[Export ("nextModel", ArgumentSemantic.Strong)]
+		NSManagedObjectModelReference NextModel { get; }
+
+		[NullAllowed]
+		[Export ("willMigrateHandler", ArgumentSemantic.Copy)]
+		Func<NSStagedMigrationManager, NSCustomMigrationStage, NSError, bool> WillMigrateHandler { get; set; }
+
+		[NullAllowed]
+		[Export ("didMigrateHandler", ArgumentSemantic.Copy)]
+		Func<NSStagedMigrationManager, NSCustomMigrationStage, NSError, bool> DidMigrateHandler { get; set; }
+
+		[Export ("initWithCurrentModelReference:nextModelReference:")]
+		[DesignatedInitializer]
+		NativeHandle Constructor (NSManagedObjectModelReference currentModel, NSManagedObjectModelReference nextModel);
+	}
 }
+

@@ -6,10 +6,8 @@ using Foundation;
 using Social;
 using UIKit;
 
-namespace MyTodayExtension
-{
-	public partial class TodayViewController : UIViewController, INCWidgetProviding
-	{
+namespace MyTodayExtension {
+	public partial class TodayViewController : UIViewController, INCWidgetProviding {
 		public TodayViewController (IntPtr handle) : base (handle)
 		{
 		}

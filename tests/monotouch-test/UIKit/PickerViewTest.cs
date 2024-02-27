@@ -11,11 +11,11 @@ using UIKit;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.UIKit {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class PickerViewTest {
-		
+
 		[Test]
 		public void InitWithFrame ()
 		{

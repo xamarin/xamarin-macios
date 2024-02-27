@@ -11,8 +11,10 @@ using Xamarin.Utils;
 
 #if NET
 using System.Numerics;
+using MatrixFloat4x4 = global::CoreGraphics.NMatrix4;
 #else
 using OpenTK;
+using MatrixFloat4x4 = global::OpenTK.NMatrix4;
 #endif
 
 namespace MonoTouchFixtures.NearbyInteraction {
@@ -39,6 +41,22 @@ namespace MonoTouchFixtures.NearbyInteraction {
 				byte* ptr = (byte*) v;
 				byte zero = 0;
 				for (var i = 0; i < sizeof (Vector3); i++)
+					Assert.That (ptr [i], Is.EqualTo (zero), $"Position {i}");
+			}
+		}
+
+		[Test]
+		public void WorldTransformNotAvailable ()
+		{
+			TestRuntime.AssertXcodeVersion (14, 0);
+
+			MatrixFloat4x4 matrix = NINearbyObject.WorldTransformNotAvailable;
+
+			unsafe {
+				MatrixFloat4x4* m = &matrix;
+				byte* ptr = (byte*) m;
+				byte zero = 0;
+				for (var i = 0; i < sizeof (MatrixFloat4x4); i++)
 					Assert.That (ptr [i], Is.EqualTo (zero), $"Position {i}");
 			}
 		}

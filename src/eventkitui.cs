@@ -20,7 +20,7 @@ using NativeHandle = System.IntPtr;
 #endif
 
 namespace EventKitUI {
-	[BaseType (typeof (UIViewController), Delegates = new string [] { "WeakDelegate"}, Events=new Type [] {typeof (EKEventViewDelegate)})]
+	[BaseType (typeof (UIViewController), Delegates = new string [] { "WeakDelegate" }, Events = new Type [] { typeof (EKEventViewDelegate) })]
 	interface EKEventViewController {
 		[Export ("initWithNibName:bundle:")]
 		[PostGet ("NibBundle")]
@@ -28,21 +28,22 @@ namespace EventKitUI {
 
 		[NullAllowed] // by default this property is null
 		[Export ("event")]
-		EKEvent Event { get; set;  }
+		EKEvent Event { get; set; }
 
 		[Export ("allowsEditing")]
-		bool AllowsEditing { get; set;  }
+		bool AllowsEditing { get; set; }
 
 		[Export ("allowsCalendarPreview")]
-		bool AllowsCalendarPreview { get; set;  }
+		bool AllowsCalendarPreview { get; set; }
 
 		[Export ("delegate", ArgumentSemantic.Weak), NullAllowed]
 		NSObject WeakDelegate { get; set; }
-		
+
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		EKEventViewDelegate Delegate { get; set;  }
+		IEKEventViewDelegate Delegate { get; set; }
 	}
+
+	interface IEKEventViewDelegate { }
 
 	[BaseType (typeof (NSObject))]
 	[Model]
@@ -53,7 +54,7 @@ namespace EventKitUI {
 		void Completed (EKEventViewController controller, EKEventViewAction action);
 	}
 
-	[BaseType (typeof (UINavigationController), Delegates=new string [] { "WeakEditViewDelegate" }, Events=new Type [] {typeof(EKEventEditViewDelegate)})]
+	[BaseType (typeof (UINavigationController), Delegates = new string [] { "WeakEditViewDelegate" }, Events = new Type [] { typeof (EKEventEditViewDelegate) })]
 	interface EKEventEditViewController : UIAppearance {
 		[Export ("initWithNibName:bundle:")]
 		[PostGet ("NibBundle")]
@@ -65,21 +66,22 @@ namespace EventKitUI {
 
 		[Export ("editViewDelegate", ArgumentSemantic.Weak), NullAllowed]
 		NSObject WeakEditViewDelegate { get; set; }
-		
+
 		[Wrap ("WeakEditViewDelegate")]
-		[Protocolize]
-		EKEventEditViewDelegate EditViewDelegate { get; set;  }
+		IEKEventEditViewDelegate EditViewDelegate { get; set; }
 
 		[Export ("eventStore")]
-		EKEventStore EventStore { get; set;  }
+		EKEventStore EventStore { get; set; }
 
 		[NullAllowed]
 		[Export ("event")]
-		EKEvent Event { get; set;  }
+		EKEvent Event { get; set; }
 
 		[Export ("cancelEditing")]
 		void CancelEditing ();
 	}
+
+	interface IEKEventEditViewDelegate { }
 
 	[BaseType (typeof (NSObject))]
 	[Model]
@@ -95,7 +97,7 @@ namespace EventKitUI {
 
 	[BaseType (typeof (UIViewController),
 		   Delegates = new string [] { "WeakDelegate" },
-		   Events=new Type [] {typeof (EKCalendarChooserDelegate)})]
+		   Events = new Type [] { typeof (EKCalendarChooserDelegate) })]
 	interface EKCalendarChooser {
 		[Export ("initWithNibName:bundle:")]
 		[PostGet ("NibBundle")]
@@ -108,29 +110,32 @@ namespace EventKitUI {
 		NativeHandle Constructor (EKCalendarChooserSelectionStyle selectionStyle, EKCalendarChooserDisplayStyle displayStyle, EKEntityType entityType, EKEventStore eventStore);
 
 		[Export ("selectionStyle")]
-		EKCalendarChooserSelectionStyle SelectionStyle { get; 
+		EKCalendarChooserSelectionStyle SelectionStyle {
+			get;
 #if !XAMCORE_3_0
-			[NotImplemented] set;
+			[NotImplemented]
+			set;
 #endif
 		}
 
 		[Export ("delegate", ArgumentSemantic.Weak), NullAllowed]
-		NSObject WeakDelegate { get; set;}
-		
+		NSObject WeakDelegate { get; set; }
+
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		EKCalendarChooserDelegate Delegate { get; set;  }
+		IEKCalendarChooserDelegate Delegate { get; set; }
 
 		[Export ("showsDoneButton")]
-		bool ShowsDoneButton { get; set;  }
+		bool ShowsDoneButton { get; set; }
 
 		[Export ("showsCancelButton")]
-		bool ShowsCancelButton { get; set;  }
+		bool ShowsCancelButton { get; set; }
 
 		[NullAllowed] // by default this property is null
 		[Export ("selectedCalendars", ArgumentSemantic.Copy)]
-		NSSet SelectedCalendars { get; set;  }
+		NSSet SelectedCalendars { get; set; }
 	}
+
+	interface IEKCalendarChooserDelegate { }
 
 	[BaseType (typeof (NSObject))]
 	[Model]
@@ -145,5 +150,5 @@ namespace EventKitUI {
 		[Export ("calendarChooserDidCancel:")]
 		void Cancelled (EKCalendarChooser calendarChooser);
 	}
-	
+
 }

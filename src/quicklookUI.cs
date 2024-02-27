@@ -19,6 +19,8 @@ namespace QuickLookUI {
 		Compact = 1
 	}
 
+	interface IQLPreviewPanelDataSource { }
+
 	[BaseType (typeof (NSObject))]
 	[Protocol, Model]
 	interface QLPreviewPanelDataSource {
@@ -28,10 +30,11 @@ namespace QuickLookUI {
 
 		[Export ("previewPanel:previewItemAtIndex:")]
 		[Abstract]
-		[return:Protocolize]
-		QLPreviewItem PreviewItemAtIndex (QLPreviewPanel panel, nint index);
+		IQLPreviewItem PreviewItemAtIndex (QLPreviewPanel panel, nint index);
 	}
-	
+
+	interface IQLPreviewPanelDelegate { }
+
 	[BaseType (typeof (NSObject))]
 	[Protocol, Model]
 	interface QLPreviewPanelDelegate : NSWindowDelegate {
@@ -39,13 +42,13 @@ namespace QuickLookUI {
 		bool HandleEvent (QLPreviewPanel panel, NSEvent theEvent);
 
 		[Export ("previewPanel:sourceFrameOnScreenForPreviewItem:")]
-		CGRect SourceFrameOnScreenForPreviewItem (QLPreviewPanel panel, [Protocolize] QLPreviewItem item);
+		CGRect SourceFrameOnScreenForPreviewItem (QLPreviewPanel panel, IQLPreviewItem item);
 
 		[Export ("previewPanel:transitionImageForPreviewItem:contentRect:")]
-		NSObject TransitionImageForPreviewItem (QLPreviewPanel panel, [Protocolize] QLPreviewItem item, CGRect contentRect);
+		NSObject TransitionImageForPreviewItem (QLPreviewPanel panel, IQLPreviewItem item, CGRect contentRect);
 	}
-	
-	interface IQLPreviewItem {}
+
+	interface IQLPreviewItem { }
 
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
@@ -66,7 +69,7 @@ namespace QuickLookUI {
 		[Export ("previewItemDisplayState")]
 		NSObject PreviewItemDisplayState { get; }
 	}
-	
+
 	[Category]
 	[BaseType (typeof (NSObject))]
 	interface QLPreviewPanelController {
@@ -85,30 +88,31 @@ namespace QuickLookUI {
 	interface QLPreviewPanel {
 		[Export ("currentController")]
 		NSObject CurrentController { get; }
-		
-		[Export ("dataSource", ArgumentSemantic.Assign)][NullAllowed]
-		NSObject WeakDataSource  { get; set; }
-		
-		[Wrap ("WeakDataSource")][NullAllowed]
-		[Protocolize]
-		QLPreviewPanelDataSource DataSource  { get; set; }
+
+		[Export ("dataSource", ArgumentSemantic.Assign)]
+		[NullAllowed]
+		NSObject WeakDataSource { get; set; }
+
+		[Wrap ("WeakDataSource")]
+		[NullAllowed]
+		IQLPreviewPanelDataSource DataSource { get; set; }
 
 		[Export ("currentPreviewItemIndex")]
 		nint CurrentPreviewItemIndex { get; set; }
 
 		[Export ("currentPreviewItem")]
-		[Protocolize]
-		QLPreviewItem CurrentPreviewItem { get; }
+		IQLPreviewItem CurrentPreviewItem { get; }
 
 		[Export ("displayState", ArgumentSemantic.Retain)]
 		NSObject DisplayState { get; set; }
 
-		[Export ("delegate", ArgumentSemantic.Assign)][NullAllowed]
+		[Export ("delegate", ArgumentSemantic.Assign)]
+		[NullAllowed]
 		NSObject WeakDelegate { get; set; }
 
-		[Wrap ("WeakDelegate")][NullAllowed]
-		[Protocolize]
-		QLPreviewPanelDelegate Delegate { get; set; }
+		[Wrap ("WeakDelegate")]
+		[NullAllowed]
+		IQLPreviewPanelDelegate Delegate { get; set; }
 
 		[Export ("inFullScreenMode")]
 		bool InFullScreenMode { [Bind ("isInFullScreenMode")] get; }
@@ -130,11 +134,11 @@ namespace QuickLookUI {
 
 		// @required - (BOOL)enterFullScreenMode:(NSScreen *)screen withOptions:(NSDictionary *)options;
 		[Export ("enterFullScreenMode:withOptions:")]
-		bool EnterFullScreenMode ([NullAllowed]NSScreen screen, [NullAllowed]NSDictionary options);
+		bool EnterFullScreenMode ([NullAllowed] NSScreen screen, [NullAllowed] NSDictionary options);
 
 		// @required - (void)exitFullScreenModeWithOptions:(NSDictionary *)options;
 		[Export ("exitFullScreenModeWithOptions:")]
-		void ExitFullScreenModeWithOptions ([NullAllowed]NSDictionary options);
+		void ExitFullScreenModeWithOptions ([NullAllowed] NSDictionary options);
 	}
 
 	[BaseType (typeof (NSView))] // Mac 10.6
@@ -165,7 +169,6 @@ namespace QuickLookUI {
 		bool Autostarts { get; set; }
 	}
 
-	[Mac (10,13)]
 	[Protocol]
 	interface QLPreviewingController {
 #if !NET
@@ -174,36 +177,32 @@ namespace QuickLookUI {
 		[Export ("preparePreviewOfSearchableItemWithIdentifier:queryString:completionHandler:")]
 		void PreparePreviewOfSearchableItem (string identifier, string queryString, Action<NSError> ItemLoadingHandler);
 
-		[Mac (10,15)]
 		[Export ("preparePreviewOfFileAtURL:completionHandler:")]
 		void PreparePreviewOfFile (NSUrl url, Action<NSError> completionHandler);
 
-		[iOS (15,0), Mac (12,0), MacCatalyst (15,0)]
+		[iOS (15, 0), Mac (12, 0), MacCatalyst (15, 0)]
 		[Export ("providePreviewForFileRequest:completionHandler:")]
 		void ProvidePreview (QLFilePreviewRequest request, Action<QLPreviewReply, NSError> handler);
 	}
 
-	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof(NSObject))]
+	[NoWatch, NoTV, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface QLFilePreviewRequest
-	{
+	interface QLFilePreviewRequest {
 		[Export ("fileURL")]
 		NSUrl FileUrl { get; }
 	}
 
-	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	[NoWatch, NoTV, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[DisableDefaultCtor]
-	[BaseType (typeof(NSObject))]
-	interface QLPreviewProvider : NSExtensionRequestHandling
-	{
+	[BaseType (typeof (NSObject))]
+	interface QLPreviewProvider : NSExtensionRequestHandling {
 	}
 
-	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof(NSObject))]
+	[NoWatch, NoTV, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface QLPreviewReplyAttachment
-	{
+	interface QLPreviewReplyAttachment {
 		[Export ("data")]
 		NSData Data { get; }
 
@@ -218,10 +217,9 @@ namespace QuickLookUI {
 	delegate NSData QLPreviewReplyDataCreationHandler (QLPreviewReply reply, out NSError error);
 	delegate CGPDFDocument QLPreviewReplyUIDocumentCreationHandler (QLPreviewReply reply, out NSError error);
 
-	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof(NSObject))]
-	interface QLPreviewReply
-	{
+	[NoWatch, NoTV, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (NSObject))]
+	interface QLPreviewReply {
 		[Export ("stringEncoding")]
 		NSStringEncoding StringEncoding { get; set; }
 

@@ -19,5 +19,10 @@ namespace ObjCRuntime {
 
 		// iOS 9
 		public const string libcompressionLibrary = "/usr/lib/libcompression.dylib";
+
+#if !XAMCORE_5_0
+		// Apple removed the NewsstandKit framework from iOS in Xcode 15.
+		public const string NewsstandKitLibrary = "/System/Library/Frameworks/NewsstandKit.framework/NewsstandKit";
+#endif
 	}
 }

@@ -1,4 +1,3 @@
-!missing-selector! NSFileProviderService::getFileProviderConnectionWithCompletionHandler: not bound
 
 !missing-protocol-conformance! NSXPCConnection should conform to NSXPCProxyCreating
 !missing-selector! NSXPCInterface::interfaceForSelector:argumentIndex:ofReply: not bound
@@ -6,16 +5,3 @@
 
 ## does not exists in iOS as a type - but some API refers to it (messy)
 !unknown-type! NSPortMessage bound
-
-# Initial result from new rule missing-null-allowed
-!missing-null-allowed! 'Foundation.NSData Foundation.NSUbiquitousKeyValueStore::GetData(System.String)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSDictionary Foundation.NSUbiquitousKeyValueStore::GetDictionary(System.String)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSExpression Foundation.NSExpression::FromFunction(Foundation.NSExpressionCallbackHandler,Foundation.NSExpression[])' is missing an [NullAllowed] on parameter #1
-!missing-null-allowed! 'Foundation.NSObject Foundation.NSUbiquitousKeyValueStore::ObjectForKey(System.String)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSObject[] Foundation.NSUbiquitousKeyValueStore::GetArray(System.String)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.String Foundation.NSUbiquitousKeyValueStore::GetString(System.String)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.Void Foundation.NSUbiquitousKeyValueStore::_SetArray(Foundation.NSObject[],System.String)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void Foundation.NSUbiquitousKeyValueStore::_SetData(Foundation.NSData,System.String)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void Foundation.NSUbiquitousKeyValueStore::_SetDictionary(Foundation.NSDictionary,System.String)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void Foundation.NSUbiquitousKeyValueStore::_SetString(System.String,System.String)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void Foundation.NSUbiquitousKeyValueStore::SetObjectForKey(Foundation.NSObject,System.String)' is missing an [NullAllowed] on parameter #0

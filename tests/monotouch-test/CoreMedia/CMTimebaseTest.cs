@@ -14,11 +14,10 @@ using NUnit.Framework;
 using Xamarin.Utils;
 
 namespace MonoTouchFixtures.CoreMedia {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class CMTimebaseTest
-	{
+	public class CMTimebaseTest {
 #if !__WATCHOS__
 		[Test]
 		public void DefaultValues ()
@@ -113,7 +112,7 @@ namespace MonoTouchFixtures.CoreMedia {
 		// A returned item should be null if not valid in that context or have a valid handle
 		void AssertNullOrValidHandle (INativeObject o, string description)
 		{
-			if (o == null)
+			if (o is null)
 				return;
 			Assert.AreNotEqual (IntPtr.Zero, o.Handle, "AssertNullOrValidHandle - " + description);
 		}
@@ -121,8 +120,8 @@ namespace MonoTouchFixtures.CoreMedia {
 		[Test]
 		public void CMClockConstructor ()
 		{
-			TestRuntime.AssertXcodeVersion (13,0);
-			Assert.Throws<ArgumentNullException>(() => {
+			TestRuntime.AssertXcodeVersion (13, 0);
+			Assert.Throws<ArgumentNullException> (() => {
 				var timebase = new CMTimebase (null, (CMClock) null);
 			}, "Null clock");
 
@@ -134,7 +133,7 @@ namespace MonoTouchFixtures.CoreMedia {
 		[Test]
 		public void SourceClockProperty ()
 		{
-			TestRuntime.AssertXcodeVersion (13,0);
+			TestRuntime.AssertXcodeVersion (13, 0);
 			using var timebase = new CMTimebase (null, CMClock.HostTimeClock);
 			Assert.NotNull (timebase.SourceClock, "not null source clock");
 			// set and if it throws we fail the test
@@ -144,11 +143,11 @@ namespace MonoTouchFixtures.CoreMedia {
 		[Test]
 		public void CMTimebaseConstructor ()
 		{
-			TestRuntime.AssertXcodeVersion (13,0);
-			Assert.Throws<ArgumentNullException>(() => {
+			TestRuntime.AssertXcodeVersion (13, 0);
+			Assert.Throws<ArgumentNullException> (() => {
 				var timebase = new CMTimebase (null, (CMTimebase) null);
 			}, "Null clock");
-			
+
 			// if it throws we fail the test
 			using var mainTimebase = new CMTimebase (CMClock.HostTimeClock);
 			using var timebase = new CMTimebase (null, mainTimebase);
@@ -157,7 +156,7 @@ namespace MonoTouchFixtures.CoreMedia {
 		[Test]
 		public void SourceTimebaseProperty ()
 		{
-			TestRuntime.AssertXcodeVersion (13,0);
+			TestRuntime.AssertXcodeVersion (13, 0);
 			using var mainTimebase = new CMTimebase (CMClock.HostTimeClock);
 			using var timebase = new CMTimebase (null, mainTimebase);
 			Assert.NotNull (timebase.SourceTimebase, "Not null timebase");

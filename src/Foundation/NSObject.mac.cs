@@ -61,7 +61,6 @@ namespace Foundation {
 		static IntPtr ib = Dlfcn.dlopen (Constants.IOBluetoothLibrary, 1);
 		static IntPtr bu = Dlfcn.dlopen (Constants.IOBluetoothUILibrary, 1);
 		static IntPtr ca = Dlfcn.dlopen (Constants.CoreAudioKitLibrary, 1);
-		static IntPtr im = Dlfcn.dlopen (Constants.InputMethodKitLibrary, 1);
 		static IntPtr ol = Dlfcn.dlopen (Constants.OpenALLibrary, 1);
 		static IntPtr ma = Dlfcn.dlopen (Constants.MediaAccessibilityLibrary, 1);
 		static IntPtr mi = Dlfcn.dlopen (Constants.CoreMidiLibrary, 1);
@@ -105,6 +104,12 @@ namespace Foundation {
 		static IntPtr vs = Dlfcn.dlopen (Constants.VideoSubscriberAccountLibrary, 1);
 		static IntPtr un = Dlfcn.dlopen (Constants.UserNotificationsLibrary, 1);
 		static IntPtr il  = Dlfcn.dlopen (Constants.iTunesLibraryLibrary, 1);
+		static IntPtr exl = Dlfcn.dlopen (Constants.ExtensionKitLibrary, 1);
+		static IntPtr sw = Dlfcn.dlopen (Constants.SharedWithYouLibrary, 1);
+		static IntPtr swc = Dlfcn.dlopen (Constants.SharedWithYouCoreLibrary, 1);
+		static IntPtr th = Dlfcn.dlopen (Constants.ThreadNetworkLibrary, 1);
+		static IntPtr ni = Dlfcn.dlopen (Constants.NearbyInteractionLibrary, 1);
+		static IntPtr sm = Dlfcn.dlopen (Constants.ServiceManagementLibrary, 1);
 
 #if !NET
 		[Obsolete ("Use PlatformAssembly for easier code sharing across platforms.")]

@@ -36,7 +36,7 @@ namespace MonoTouchFixtures.GamePlayKit {
 			Start
 		}
 
-		int[] maze = {
+		int [] maze = {
 			1,1,1,1,1,1,1,1,1,1,
 			1,3,0,0,1,1,1,1,1,1,
 			1,0,1,0,2,0,0,0,0,1,
@@ -63,8 +63,8 @@ namespace MonoTouchFixtures.GamePlayKit {
 
 			for (int i = 0; i < 10; i++) {
 				for (int j = 0; j < 10; j++) {
-					var tile = maze[i * 10 + j];
-					switch ((TileType)tile) {
+					var tile = maze [i * 10 + j];
+					switch ((TileType) tile) {
 					case TileType.Wall:
 #if NET
 						walls.Add (graph.GetNodeAt<GKGridGraphNode> (new Vector2i (i, j)));
@@ -118,8 +118,8 @@ namespace MonoTouchFixtures.GamePlayKit {
 
 			for (int i = 0; i < 10; i++) {
 				for (int j = 0; j < 10; j++) {
-					var tile = maze[i * 10 + j];
-					switch ((TileType)tile) {
+					var tile = maze [i * 10 + j];
+					switch ((TileType) tile) {
 					case TileType.Wall:
 #if NET
 						walls.Add (graph.GetNodeAt<GKGridGraphNode> (new Vector2i (i, j)));
@@ -154,7 +154,7 @@ namespace MonoTouchFixtures.GamePlayKit {
 				graph.RemoveNodes (walls.ToArray ());
 
 			Assert.NotNull (startPosition, "startPosition must not be null");
-			Assert.AreEqual (new Vector2i (1,1), startPosition.GridPosition, "GridPosition must be (1,1)");
+			Assert.AreEqual (new Vector2i (1, 1), startPosition.GridPosition, "GridPosition must be (1,1)");
 			Assert.That (walls.Count > 0, "walls list must be higher than zero");
 			Assert.That (spawnPoints.Count > 0, "spawnPoints list must be higher than zero");
 		}

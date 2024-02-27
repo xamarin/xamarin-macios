@@ -23,20 +23,19 @@ namespace Network {
 
 #if NET
 	[SupportedOSPlatform ("tvos12.0")]
-	[SupportedOSPlatform ("macos10.14")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("ios12.0")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
-	[TV (12,0)]
-	[Mac (10,14)]
-	[iOS (12,0)]
-	[Watch (6,0)]
+	[TV (12, 0)]
+	[iOS (12, 0)]
+	[Watch (6, 0)]
 #endif
 	public class NWUdpMetadata : NWProtocolMetadata {
 
 		[Preserve (Conditional = true)]
-		internal NWUdpMetadata (NativeHandle handle, bool owns) : base (handle, owns) {}
+		internal NWUdpMetadata (NativeHandle handle, bool owns) : base (handle, owns) { }
 
-		public NWUdpMetadata () : this (nw_udp_create_metadata (), owns: true) {}
+		public NWUdpMetadata () : this (nw_udp_create_metadata (), owns: true) { }
 	}
 }

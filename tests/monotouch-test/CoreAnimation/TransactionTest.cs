@@ -14,18 +14,16 @@ using Foundation;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.CoreAnimation {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class TransactionTest {
-		
+
 		[Test]
 		public void CompletionBlock_Null ()
 		{
-			// NULL is not specified in Apple doc but googling returns a lot of  
-			// cases where stuff like "[self setCompletionBlock:nil];" is done
 			CATransaction.CompletionBlock = null;
-			Assert.NotNull (CATransaction.CompletionBlock, "CompletionBlock");
+			Assert.Null (CATransaction.CompletionBlock, "CompletionBlock");
 		}
 
 		[Test]

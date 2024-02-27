@@ -8,6 +8,9 @@ SHARPIE ?= sharpie
 
 XCODE=$(abspath $(XCODE_DEVELOPER_ROOT)/../..)
 
+# MacCatalyst is currently broken wrt sharpie and Xcode 14 beta 2, so skip it.
+XTRO_DOTNET_PLATFORMS=$(filter-out MacCatalyst,$(DOTNET_PLATFORMS))
+
 ANNOTATIONS_DIR=.
 DOTNET_ANNOTATIONS_DIR=api-annotations-dotnet
 
@@ -37,6 +40,7 @@ bin/Debug/xtro-sharpie.exe xtro-report/bin/Debug/xtro-report.exe xtro-sanity/bin
 	$(Q) touch $@
 
 XIOS ?= $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/64bits/iOS/Xamarin.iOS.dll
+XIOS_LIBDIR ?= $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.iOS
 XIOS_GL ?= $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.iOS/OpenTK-1.0.dll
 XIOS_ARCH = arm64
 XIOS_PCH = iphoneos$(IOS_SDK_VERSION)-$(XIOS_ARCH).pch
@@ -44,37 +48,42 @@ XIOS_RID = ios-arm64
 
 $(XIOS_PCH): .stamp-check-sharpie
 	$(SHARPIE) sdk-db --xcode $(XCODE) -s iphoneos$(IOS_SDK_VERSION) -a $(XIOS_ARCH) \
-	-exclude RealityKit \
+	-exclude FactoryOTAWifiUtils \
+	-exclude FactoryOTALogger \
+	-exclude FactoryOTANetworkUtils \
 	-i ThreadNetwork/THClient.h \
 	$(CORETELEPHONY_HEADERS) \
 
 
 XWATCHOS ?= $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/32bits/watchOS/Xamarin.WatchOS.dll
+XWATCHOS_LIBDIR ?= $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.WatchOS
 
 XWATCHOS_ARCH = armv7
 XWATCHOS_PCH = watchos$(WATCH_SDK_VERSION)-$(XWATCHOS_ARCH).pch
 
 $(XWATCHOS_PCH): .stamp-check-sharpie
-	$(SHARPIE) sdk-db --xcode $(XCODE) -s watchos$(WATCH_SDK_VERSION) -a $(XWATCHOS_ARCH) -exclude RealityKit
+	$(SHARPIE) sdk-db --xcode $(XCODE) -s watchos$(WATCH_SDK_VERSION) -a $(XWATCHOS_ARCH)
 
 XTVOS ?= $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/64bits/tvOS/Xamarin.TVOS.dll
+XTVOS_LIBDIR ?= $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.TVOS/
 XTVOS_GL ?= $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.TVOS/OpenTK-1.0.dll
 XTVOS_ARCH = arm64
 XTVOS_PCH = appletvos$(TVOS_SDK_VERSION)-$(XTVOS_ARCH).pch
 XTVOS_RID = tvos-arm64
 
 $(XTVOS_PCH): .stamp-check-sharpie
-	$(SHARPIE) sdk-db --xcode $(XCODE) -s appletvos$(TVOS_SDK_VERSION) -a $(XTVOS_ARCH) -exclude RealityKit
+	$(SHARPIE) sdk-db --xcode $(XCODE) -s appletvos$(TVOS_SDK_VERSION) -a $(XTVOS_ARCH)
 
 XMACOS ?= $(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/lib/64bits/mobile/Xamarin.Mac.dll
+XMACOS_LIBDIR ?= $(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/lib/mono/Xamarin.Mac
 XMACOS_ARCH = x86_64
 XMACOS_PCH = macosx$(MACOS_SDK_VERSION)-$(XMACOS_ARCH).pch
 XMACOS_RID = osx-x64
 
 $(XMACOS_PCH): .stamp-check-sharpie
 	$(SHARPIE) sdk-db --xcode $(XCODE) -s macosx$(MACOS_SDK_VERSION) -a $(XMACOS_ARCH) \
-		-exclude RealityKit \
 		-exclude JavaNativeFoundation \
+		-exclude ParavirtualizedGraphics \
 		$(CORETELEPHONY_HEADERS) \
 
 XMACCATALYST_ARCH = x86_64
@@ -84,6 +93,7 @@ XMACCATALYST_RID = maccatalyst-x64
 $(XMACCATALYST_PCH): .stamp-check-sharpie
 	$(SHARPIE) sdk-db --xcode $(XCODE) -s ios$(MACCATALYST_SDK_VERSION)-macabi -a $(XMACCATALYST_ARCH) \
 	-exclude AGL \
+	-exclude AudioVideoBridging \
 	-exclude CalendarStore \
 	-exclude Carbon \
 	-exclude ClockKit \
@@ -99,7 +109,6 @@ $(XMACCATALYST_PCH): .stamp-check-sharpie
 	-exclude Python \
 	-exclude Quartz \
 	-exclude QuickLookUI \
-	-exclude RealityKit \
 	-exclude SecurityInterface \
 	-exclude Virtualization \
 	-i HomeKit/HomeKit.h \
@@ -107,15 +116,15 @@ $(XMACCATALYST_PCH): .stamp-check-sharpie
 
 define DotNetAssembly
 ifdef TESTS_USE_SYSTEM
-X$(2)_DOTNET ?= $(DOTNET_DIR)/packs/Microsoft.$(1).Runtime.$(X$(2)_RID)/$($(2)_WORKLOAD_VERSION)/runtimes/$(X$(2)_RID)/lib/$(DOTNET_TFM)/$(DOTNET_$(2)_ASSEMBLY_NAME).dll
+X$(2)_DOTNET ?= $(DOTNET_DIR)/packs/$($(X$(2)_RID)_NUGET_RUNTIME_NAME)/$($(2)_WORKLOAD_VERSION)/runtimes/$(X$(2)_RID)/lib/$(DOTNET_TFM)/$(DOTNET_$(2)_ASSEMBLY_NAME).dll
 else
-X$(2)_DOTNET ?= $(DOTNET_DESTDIR)/Microsoft.$(1).Runtime.$(X$(2)_RID)/runtimes/$(X$(2)_RID)/lib/$(DOTNET_TFM)/$(DOTNET_$(2)_ASSEMBLY_NAME).dll
+X$(2)_DOTNET ?= $(DOTNET_DESTDIR)/$($(X$(2)_RID)_NUGET_RUNTIME_NAME)/runtimes/$(X$(2)_RID)/lib/$(DOTNET_TFM)/$(DOTNET_$(2)_ASSEMBLY_NAME).dll
 endif
 
 dotnet-$(1)-$($(2)_SDK_VERSION).g.cs: .stamp-check-sharpie
 	$$(SHARPIE) query -bind $$(X$(2)_PCH) > $$@
 endef
-$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call DotNetAssembly,$(platform),$(shell echo $(platform) | tr a-z A-Z))))
+$(foreach platform,$(XTRO_DOTNET_PLATFORMS),$(eval $(call DotNetAssembly,$(platform),$(shell echo $(platform) | tr a-z A-Z))))
 
 pch-info.proj: Makefile
 	$(Q) rm -f $@.tmp
@@ -189,11 +198,11 @@ report: report/index.html
 endif
 
 ifdef ENABLE_DOTNET
-dotnet-report/index.html: xtro-report/bin/Debug/xtro-report.exe .stamp-dotnet-classify
+report-dotnet/index.html: xtro-report/bin/Debug/xtro-report.exe .stamp-dotnet-classify
 	rm -rf report-dotnet
 	$(MONO) xtro-report/bin/Debug/xtro-report.exe $(DOTNET_ANNOTATIONS_DIR) report-dotnet
 
-dotnet-report: dotnet-report/index.html
+dotnet-report: report-dotnet/index.html
 endif
 
 report-short:
@@ -202,20 +211,20 @@ report-short:
 define DotNetClassify
 .stamp-dotnet-classify-$(1): bin/Debug/xtro-sharpie.exe $$(X$(2)_PCH) $$(X$(2)_DOTNET)
 	rm -f $$(DOTNET_ANNOTATIONS_DIR)/$(1)-*.raw
-	$(MONO) bin/Debug/xtro-sharpie.exe --output-directory $$(DOTNET_ANNOTATIONS_DIR) $$(X$(2)_PCH) $$(X$(2)_DOTNET)
+	$(MONO) bin/Debug/xtro-sharpie.exe --output-directory $$(DOTNET_ANNOTATIONS_DIR) --lib $(DOTNET_BCL_DIR) $$(X$(2)_PCH) $$(X$(2)_DOTNET)
 	touch $$@
 
 dotnet-classify-$(1): .stamp-dotnet-classify-$(1)
 DOTNET_CLASSIFY += .stamp-dotnet-classify-$(1)
 endef
-$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call DotNetClassify,$(platform),$(shell echo $(platform) | tr a-z A-Z))))
+$(foreach platform,$(XTRO_DOTNET_PLATFORMS),$(eval $(call DotNetClassify,$(platform),$(shell echo $(platform) | tr a-z A-Z))))
 
 ifdef INCLUDE_IOS
 INCLUDED_PLATFORMS+=iOS
 CLASSIFY+=.stamp-classify-ios
 .stamp-classify-ios: bin/Debug/xtro-sharpie.exe $(XIOS_PCH) $(XIOS) $(XIOS_GL)
 	rm -f $(ANNOTATIONS_DIR)/iOS-*.raw
-	$(MONO) bin/Debug/xtro-sharpie.exe --output-directory $(ANNOTATIONS_DIR) $(XIOS_PCH) $(XIOS) $(XIOS_GL)
+	$(MONO) bin/Debug/xtro-sharpie.exe --output-directory $(ANNOTATIONS_DIR) --lib $(XIOS_LIBDIR) $(XIOS_PCH) $(XIOS) $(XIOS_GL)
 	$(Q) touch $@
 endif
 
@@ -224,7 +233,7 @@ INCLUDED_PLATFORMS+=tvOS
 CLASSIFY+=.stamp-classify-tvos
 .stamp-classify-tvos: bin/Debug/xtro-sharpie.exe $(XTVOS_PCH) $(XTVOS) $(XTVOS_GL)
 	rm -f $(ANNOTATIONS_DIR)/tvOS-*.raw
-	$(MONO) bin/Debug/xtro-sharpie.exe --output-directory $(ANNOTATIONS_DIR) $(XTVOS_PCH) $(XTVOS) $(XTVOS_GL)
+	$(MONO) bin/Debug/xtro-sharpie.exe --output-directory $(ANNOTATIONS_DIR) --lib $(XTVOS_LIBDIR) $(XTVOS_PCH) $(XTVOS) $(XTVOS_GL)
 	$(Q) touch $@
 endif
 
@@ -233,7 +242,7 @@ INCLUDED_PLATFORMS+=watchOS
 CLASSIFY+=.stamp-classify-watchos
 .stamp-classify-watchos: bin/Debug/xtro-sharpie.exe $(XWATCHOS_PCH) $(XWATCHOS)
 	rm -f $(ANNOTATIONS_DIR)/watchOS-*.raw
-	$(MONO) bin/Debug/xtro-sharpie.exe --output-directory $(ANNOTATIONS_DIR) $(XWATCHOS_PCH) $(XWATCHOS)
+	$(MONO) bin/Debug/xtro-sharpie.exe --output-directory $(ANNOTATIONS_DIR) --lib $(XWATCHOS_LIBDIR) $(XWATCHOS_PCH) $(XWATCHOS)
 	$(Q) touch $@
 endif
 
@@ -242,7 +251,7 @@ INCLUDED_PLATFORMS+=macOS
 CLASSIFY+=.stamp-classify-macos
 .stamp-classify-macos: bin/Debug/xtro-sharpie.exe $(XMACOS_PCH) $(XMACOS)
 	rm -f $(ANNOTATIONS_DIR)/macOS-*.raw
-	$(MONO) bin/Debug/xtro-sharpie.exe --output-directory $(ANNOTATIONS_DIR) $(XMACOS_PCH) $(XMACOS)
+	$(MONO) bin/Debug/xtro-sharpie.exe --output-directory $(ANNOTATIONS_DIR) --lib $(XMACOS_LIBDIR) $(XMACOS_PCH) $(XMACOS)
 	$(Q) touch $@
 endif
 
@@ -256,7 +265,7 @@ endif
 
 ifdef ENABLE_DOTNET
 .stamp-dotnet-classify: xtro-sanity/bin/Debug/xtro-sanity.exe $(DOTNET_CLASSIFY)
-	$(MONO) xtro-sanity/bin/Debug/xtro-sanity.exe $(abspath $(DOTNET_ANNOTATIONS_DIR)) "$(ALL_DOTNET_PLATFORMS)" $(DOTNET_PLATFORMS)
+	$(MONO) xtro-sanity/bin/Debug/xtro-sanity.exe $(abspath $(DOTNET_ANNOTATIONS_DIR)) "$(ALL_DOTNET_PLATFORMS)" $(XTRO_DOTNET_PLATFORMS)
 	$(Q) touch $@
 
 dotnet-classify: .stamp-dotnet-classify
@@ -287,7 +296,7 @@ $(U2TODO): $(wildcard u2todo/*.cs u2todo/*.csproj Filter.cs)
 	$(Q) $(SYSTEM_MSBUILD) $(MSBUILD_VERBOSITY) /bl:$@.binlog /r
 	$(Q) touch $@
 
-unclassified2todo: $(U2TODO)
+unclassified2todo-classic: $(U2TODO)
 	cd $(ANNOTATIONS_DIR) && $(MONO) $(abspath $(U2TODO))
 	@for filename in $(git status -s | cut -c4- | grep .todo); do \
 		sort -o "$filename" "$filename"; \
@@ -296,3 +305,5 @@ unclassified2todo: $(U2TODO)
 unclassified2todo-dotnet: $(U2TODO)
 	$(SYSTEM_CSC) -features:strict Filter.cs u2todo/u2todo.cs
 	cd $(DOTNET_ANNOTATIONS_DIR) && $(MONO) $(abspath $(U2TODO))
+
+unclassified2todo: unclassified2todo-classic unclassified2todo-dotnet

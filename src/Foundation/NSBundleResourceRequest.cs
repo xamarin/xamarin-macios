@@ -21,12 +21,12 @@ namespace Foundation {
 		{
 			return new NSSet<NSString> (tags);
 		}
-		
-		public NSBundleResourceRequest (params string [] tags) : this (MakeSetFromTags (tags)) {}
-		public NSBundleResourceRequest (NSBundle bundle, params string [] tags) : this (MakeSetFromTags (tags), bundle) {}
 
-		public NSBundleResourceRequest (params NSString [] tags) : this (MakeSetFromTags (tags)) {}
-		public NSBundleResourceRequest (NSBundle bundle, params NSString [] tags) : this (MakeSetFromTags (tags), bundle) {}
+		public NSBundleResourceRequest (params string [] tags) : this (MakeSetFromTags (tags)) { }
+		public NSBundleResourceRequest (NSBundle bundle, params string [] tags) : this (MakeSetFromTags (tags), bundle) { }
+
+		public NSBundleResourceRequest (params NSString [] tags) : this (MakeSetFromTags (tags)) { }
+		public NSBundleResourceRequest (NSBundle bundle, params NSString [] tags) : this (MakeSetFromTags (tags), bundle) { }
 
 	}
 }

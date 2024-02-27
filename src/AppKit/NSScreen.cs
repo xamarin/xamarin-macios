@@ -27,6 +27,8 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
+#nullable enable
+
 namespace AppKit {
 
 	public partial class NSScreen {

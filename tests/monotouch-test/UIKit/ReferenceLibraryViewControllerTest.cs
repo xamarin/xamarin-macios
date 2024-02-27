@@ -10,11 +10,11 @@ using NUnit.Framework;
 using Xamarin.Utils;
 
 namespace MonoTouchFixtures.UIKit {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class ReferenceLibraryViewControllerTest {
-		
+
 		[Test]
 #if __MACCATALYST__
 		[Ignore ("https://github.com/xamarin/maccore/issues/2348")] // The native class doesn't exist
@@ -29,7 +29,7 @@ namespace MonoTouchFixtures.UIKit {
 			using (UIReferenceLibraryViewController rlvc = new UIReferenceLibraryViewController ("Mono")) {
 			}
 		}
-		
+
 		[Test]
 		[Ignore ("ios6 beta issues")]
 		public void DictionaryHasDefinitionForTerm ()

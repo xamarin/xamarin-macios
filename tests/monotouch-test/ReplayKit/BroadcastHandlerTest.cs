@@ -1,8 +1,6 @@
 using System;
-namespace monotouchtest.ReplayKit
-{
-	public class BroadcastHandlerTest
-	{
+namespace monotouchtest.ReplayKit {
+	public class BroadcastHandlerTest {
 		public BroadcastHandlerTest ()
 		{
 		}

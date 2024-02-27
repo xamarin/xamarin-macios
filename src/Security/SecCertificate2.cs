@@ -29,21 +29,20 @@ namespace Security {
 
 #if NET
 	[SupportedOSPlatform ("tvos12.0")]
-	[SupportedOSPlatform ("macos10.14")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("ios12.0")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
-	[TV (12,0)]
-	[Mac (10,14)]
-	[iOS (12,0)]
-	[Watch (5,0)]
+	[TV (12, 0)]
+	[iOS (12, 0)]
+	[Watch (5, 0)]
 #endif
 	public class SecCertificate2 : NativeObject {
 		[Preserve (Conditional = true)]
 #if NET
 		internal SecCertificate2 (NativeHandle handle, bool owns) : base (handle, owns) {}
 #else
-		public SecCertificate2 (NativeHandle handle, bool owns) : base (handle, owns) {}
+		public SecCertificate2 (NativeHandle handle, bool owns) : base (handle, owns) { }
 #endif
 
 		[DllImport (Constants.SecurityLibrary)]

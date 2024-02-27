@@ -10,7 +10,7 @@ using UIKit;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.UIKit {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class DatePickerTest {
@@ -47,10 +47,12 @@ namespace MonoTouchFixtures.UIKit {
 
 				// some null checks are done, otherwise we end up with
 				// Objective-C exception thrown.  Name: NSInternalInconsistencyException Reason: Invalid parameter not satisfying: date
-				Assert.Throws<ArgumentNullException> (delegate {
+				Assert.Throws<ArgumentNullException> (delegate
+				{
 					dp.Date = null;
 				});
-				Assert.Throws<ArgumentNullException> (delegate {
+				Assert.Throws<ArgumentNullException> (delegate
+				{
 					dp.SetDate (null, true);
 				});
 			}

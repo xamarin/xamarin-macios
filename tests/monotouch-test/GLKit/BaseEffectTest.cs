@@ -17,11 +17,11 @@ using OpenTK;
 #endif
 
 namespace MonoTouchFixtures.GLKit {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class BaseEffectTest {
-		
+
 		[Test]
 		[SetCulture ("en")]
 		public void Properties ()

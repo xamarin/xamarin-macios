@@ -69,8 +69,8 @@ namespace Xamarin.Linker {
 					if (!ca.AttributeType.Is ("ObjCRuntime", "LinkWithAttribute"))
 						continue;
 					var lwa = Xamarin.Bundler.Assembly.GetLinkWithAttribute (ca);
-					if (lwa.LibraryName != null) {
-						if (libraries == null)
+					if (lwa.LibraryName is not null) {
+						if (libraries is null)
 							libraries = new HashSet<string> (StringComparer.OrdinalIgnoreCase);
 						libraries.Add (lwa.LibraryName);
 					}
@@ -115,7 +115,7 @@ namespace Xamarin.Linker {
 
 		static bool IsNativeLibrary (string resourceName, HashSet<string> libraries)
 		{
-			if (libraries == null)
+			if (libraries is null)
 				return false;
 
 			return libraries.Contains (resourceName);

@@ -9,10 +9,8 @@ using Xamarin.Utils;
 using ObjCRuntime;
 using Foundation;
 
-namespace Xamarin.Mac.Tests
-{
-	public static class Asserts
-	{
+namespace Xamarin.Mac.Tests {
+	public static class Asserts {
 		public static bool IsAtLeastYosemite {
 			get {
 				return TestRuntime.CheckXcodeVersion (6, 1);
@@ -49,7 +47,7 @@ namespace Xamarin.Mac.Tests
 
 		public static bool SkipDueToAvailabilityAttribute (ICustomAttributeProvider member)
 		{
-			if (member == null)
+			if (member is null)
 				return false;
 			return !member.IsAvailableOnHostPlatform ();
 		}

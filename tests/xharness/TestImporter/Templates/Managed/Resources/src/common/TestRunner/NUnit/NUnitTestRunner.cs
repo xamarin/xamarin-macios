@@ -15,10 +15,8 @@ using NUnit.Framework.Internal.Filters;
 using NUnitLite.Runner;
 using NUnitTest = NUnit.Framework.Internal.Test;
 
-namespace Xamarin.iOS.UnitTests.NUnit
-{
-	public class NUnitTestRunner : TestRunner, ITestListener
-	{
+namespace Xamarin.iOS.UnitTests.NUnit {
+	public class NUnitTestRunner : TestRunner, ITestListener {
 		Dictionary<string, object> builderSettings;
 		TestSuiteResult results;
 		bool runAssemblyByDefault;
@@ -38,10 +36,10 @@ namespace Xamarin.iOS.UnitTests.NUnit
 		public override async Task Run (IEnumerable<TestAssemblyInfo> testAssemblies)
 #pragma warning restore 1998
 		{
-			if (testAssemblies == null)
+			if (testAssemblies is null)
 				throw new ArgumentNullException (nameof (testAssemblies));
 
-			if (AssemblyFilters == null || AssemblyFilters.Count == 0)
+			if (AssemblyFilters is null || AssemblyFilters.Count == 0)
 				runAssemblyByDefault = true;
 			else
 				runAssemblyByDefault = AssemblyFilters.Values.Any (v => !v);
@@ -53,7 +51,7 @@ namespace Xamarin.iOS.UnitTests.NUnit
 
 			TotalTests = 0;
 			foreach (TestAssemblyInfo assemblyInfo in testAssemblies) {
-				if (assemblyInfo == null || assemblyInfo.Assembly == null || !ShouldRunAssembly (assemblyInfo))
+				if (assemblyInfo is null || assemblyInfo.Assembly is null || !ShouldRunAssembly (assemblyInfo))
 					continue;
 
 				if (!runner.Load (assemblyInfo.Assembly, builderSettings)) {
@@ -76,11 +74,11 @@ namespace Xamarin.iOS.UnitTests.NUnit
 					OnAssemblyFinish (assemblyInfo.Assembly);
 				}
 
-				if (result == null)
+				if (result is null)
 					continue;
 
 				var testResult = result as TestResult;
-				if (testResult == null)
+				if (testResult is null)
 					throw new InvalidOperationException ($"Unexpected test result type '{result.GetType ()}'");
 				results.AddResult (testResult);
 			}
@@ -92,10 +90,10 @@ namespace Xamarin.iOS.UnitTests.NUnit
 
 		bool ShouldRunAssembly (TestAssemblyInfo assemblyInfo)
 		{
-			if (assemblyInfo == null)
+			if (assemblyInfo is null)
 				return false;
 
-			if (AssemblyFilters == null || AssemblyFilters.Count == 0)
+			if (AssemblyFilters is null || AssemblyFilters.Count == 0)
 				return true;
 
 			bool include;
@@ -138,16 +136,16 @@ namespace Xamarin.iOS.UnitTests.NUnit
 					result.ResultState.Status != TestStatus.Skipped &&
 					result.ResultState.Status != TestStatus.Passed &&
 					result.ResultState.Status != TestStatus.Inconclusive) {
-						Logger.OnInfo ($"\t[INFO] {result.Message}");
+					Logger.OnInfo ($"\t[INFO] {result.Message}");
 				}
-				
+
 				// the NUnit API here is quite dirty, turs out that if we had an issue with the
 				// TestFixrtureSetup, the TestFinished method is never called, but we need to be
 				// able to report the errors, so what we can do is, in case of a failed suit, loop
 				// over the children and check if the fixture setup was the issue.
 				if (result.ResultState.Status == TestStatus.Failed) {
 					foreach (var t in result.Children) {
-						if (t.Message != null && t.Message.Contains ("TestFixtureSetUp Failed")) {
+						if (t.Message is not null && t.Message.Contains ("TestFixtureSetUp Failed")) {
 							var sb = new StringBuilder ();
 							sb.Append ("\t[FAIL] ");
 							FailedTests++;
@@ -168,11 +166,11 @@ namespace Xamarin.iOS.UnitTests.NUnit
 						} // TestFixtureSetup Failed
 					}
 				}
-				
+
 				string name = result.Test.Name;
 				if (!String.IsNullOrEmpty (name))
 					Logger.OnInfo ($"{name} : {result.Duration.TotalMilliseconds} ms\n");
-					
+
 				if (GCAfterEachFixture)
 					GC.Collect ();
 			} else {
@@ -212,11 +210,11 @@ namespace Xamarin.iOS.UnitTests.NUnit
 				Logger.OnInfo (sb.ToString ());
 				string stacktrace = result.StackTrace;
 				if (!string.IsNullOrEmpty (result.StackTrace)) {
-					string[] lines = stacktrace.Split (new char [] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+					string [] lines = stacktrace.Split (new char [] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 					foreach (string line in lines)
 						Logger.OnInfo ($"\t\t{line}");
 				}
-				
+
 				if (result.ResultState.Status == TestStatus.Failed) {
 					FailureInfos.Add (new TestFailureInfo {
 						TestName = result.Test.FullName,
@@ -224,14 +222,14 @@ namespace Xamarin.iOS.UnitTests.NUnit
 					});
 				}
 			}
-			
+
 		}
 
 		public void TestOutput (TestOutput testOutput)
 		{
-			if (testOutput == null || String.IsNullOrEmpty (testOutput.Text))
+			if (testOutput is null || String.IsNullOrEmpty (testOutput.Text))
 				return;
-			
+
 			string kind = testOutput.Type.ToString ();
 			foreach (string l in testOutput.Text.Split ('\n')) {
 				Logger.OnInfo ($"  {kind}: {l}");
@@ -240,7 +238,7 @@ namespace Xamarin.iOS.UnitTests.NUnit
 
 		public void TestStarted (ITest test)
 		{
-			if (test == null)
+			if (test is null)
 				return;
 
 			if (!string.IsNullOrEmpty (TestsRootDirectory))
@@ -253,12 +251,12 @@ namespace Xamarin.iOS.UnitTests.NUnit
 
 		public override string WriteResultsToFile (Jargon jargon)
 		{
-			if (results == null)
+			if (results is null)
 				return string.Empty;
-				
+
 			string ret = GetResultsFilePath ();
- 			if (string.IsNullOrEmpty (ret))
- 				return string.Empty;
+			if (string.IsNullOrEmpty (ret))
+				return string.Empty;
 
 			OutputWriter formatter;
 			switch (jargon) {
@@ -272,14 +270,14 @@ namespace Xamarin.iOS.UnitTests.NUnit
 				throw new InvalidOperationException ($"Jargon {jargon} is not supported by this runner.");
 			}
 
- 			formatter.WriteResultFile (results, ret);
+			formatter.WriteResultFile (results, ret);
 
- 			return ret;
+			return ret;
 		}
-		
+
 		public override void WriteResultsToFile (TextWriter writer, Jargon jargon)
 		{
-			if (results == null)
+			if (results is null)
 				return;
 			OutputWriter formatter;
 			switch (jargon) {
@@ -294,10 +292,10 @@ namespace Xamarin.iOS.UnitTests.NUnit
 			}
 			formatter.WriteResultFile (results, writer);
 		}
-		
+
 		void AppendFilter (ITestFilter filter)
 		{
-			if (filter == null)
+			if (filter is null)
 				throw new ArgumentNullException (nameof (filter));
 			if (Filter.IsEmpty) {
 				Filter = filter;
@@ -308,7 +306,7 @@ namespace Xamarin.iOS.UnitTests.NUnit
 					andFilter = Filter as AndFilter;
 					andFilter.Add (filter);
 				} else {
-					andFilter = new AndFilter (Filter); 
+					andFilter = new AndFilter (Filter);
 					andFilter.Add (filter);
 				}
 				Filter = andFilter;

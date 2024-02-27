@@ -18,11 +18,10 @@ using System.Threading;
 using System.Linq;
 
 namespace MonoTouchFixtures.EventKit {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class EventStoreTest
-	{
+	public class EventStoreTest {
 		[Test]
 		[Ignore ("fail on a cleaned iOS 6 simulator and (differently) on devices")]
 		public void DefaultCalendar ()
@@ -36,7 +35,7 @@ namespace MonoTouchFixtures.EventKit {
 			Assert.IsNotNull (store.Sources, "Sources");
 		}
 
-#if false 
+#if false
 		// The EKEventStore constructor is no longer availble on iOS 6 Beta 4
 
 		[Test]

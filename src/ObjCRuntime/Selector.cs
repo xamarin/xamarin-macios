@@ -73,17 +73,19 @@ namespace ObjCRuntime {
 
 		public string Name {
 			get {
-				if (name == null)
+				if (name is null)
 					name = GetName (handle);
 				return name;
 			}
 		}
 
-		public static bool operator!= (Selector left, Selector right) {
+		public static bool operator != (Selector left, Selector right)
+		{
 			return !(left == right);
 		}
 
-		public static bool operator== (Selector left, Selector right) {
+		public static bool operator == (Selector left, Selector right)
+		{
 			if (left is null)
 				return (right is null);
 			if (right is null)
@@ -138,7 +140,7 @@ namespace ObjCRuntime {
 
 		// objc/runtime.h
 		// Selector.GetHandle is optimized by the AOT compiler, and the current implementation only supports IntPtr, so we can't switch to NativeHandle quite yet (the AOT compiler crashes).
-		[DllImport (Messaging.LIBOBJC_DYLIB, EntryPoint="sel_registerName")]
+		[DllImport (Messaging.LIBOBJC_DYLIB, EntryPoint = "sel_registerName")]
 		public extern static /* SEL */ IntPtr GetHandle (/* const char* */ string name);
 
 		// objc/objc.h

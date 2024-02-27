@@ -29,8 +29,10 @@ using UIKit;
 #endif
 #endif
 
-namespace ObjCRuntime
-{
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
+namespace ObjCRuntime {
 	// iOS versions are stored in the lower 4 bytes an Mac versions in
 	// the higher 4 bytes. Each 4 byte version has the format AAJJNNSS
 	// where AA is the supported architecture flags, JJ is the maJor
@@ -42,8 +44,7 @@ namespace ObjCRuntime
 #if !COREBUILD
 	[Obsolete ("Use [Introduced|Deprecated|Obsoleted|Unavailable] attributes with PlatformName.")]
 #endif
-	public enum Platform : ulong
-	{
+	public enum Platform : ulong {
 		None = 0,
 
 		iOS_2_0 = 0x0000000000020000,
@@ -73,39 +74,38 @@ namespace ObjCRuntime
 
 		// NOTE: Update PlatformHelper.IsValid when adding a version
 
-		Mac_10_0  = 0x000a000000000000,
-		Mac_10_1  = 0x000a010000000000,
-		Mac_10_2  = 0x000a020000000000,
-		Mac_10_3  = 0x000a030000000000,
-		Mac_10_4  = 0x000a040000000000,
-		Mac_10_5  = 0x000a050000000000,
-		Mac_10_6  = 0x000a060000000000,
-		Mac_10_7  = 0x000a070000000000,
-		Mac_10_8  = 0x000a080000000000,
-		Mac_10_9  = 0x000a090000000000,
+		Mac_10_0 = 0x000a000000000000,
+		Mac_10_1 = 0x000a010000000000,
+		Mac_10_2 = 0x000a020000000000,
+		Mac_10_3 = 0x000a030000000000,
+		Mac_10_4 = 0x000a040000000000,
+		Mac_10_5 = 0x000a050000000000,
+		Mac_10_6 = 0x000a060000000000,
+		Mac_10_7 = 0x000a070000000000,
+		Mac_10_8 = 0x000a080000000000,
+		Mac_10_9 = 0x000a090000000000,
 		Mac_10_10 = 0x000a0a0000000000,
 		Mac_10_10_3 = 0x000a0a0300000000,
-		Mac_10_11   = 0x000a0b0000000000,
+		Mac_10_11 = 0x000a0b0000000000,
 		Mac_10_11_3 = 0x000a0b0300000000,
-		Mac_10_12   = 0x000a0c0000000000,
-			
+		Mac_10_12 = 0x000a0c0000000000,
+
 		// NOTE: Update PlatformHelper.IsValid when adding a version
 
 		iOS_Version = 0x0000000000ffffff,
 		Mac_Version = 0x00ffffff00000000,
 
-		Mac_Arch32  = 0x0100000000000000,
-		Mac_Arch64  = 0x0200000000000000,
-		Mac_Arch    = 0xff00000000000000,
+		Mac_Arch32 = 0x0100000000000000,
+		Mac_Arch64 = 0x0200000000000000,
+		Mac_Arch = 0xff00000000000000,
 
-		iOS_Arch32  = 0x0000000001000000,
-		iOS_Arch64  = 0x0000000002000000,
-		iOS_Arch    = 0x00000000ff000000
+		iOS_Arch32 = 0x0000000001000000,
+		iOS_Arch64 = 0x0000000002000000,
+		iOS_Arch = 0x00000000ff000000
 	}
 
 	[Obsolete ("Use [Introduced|Deprecated|Obsoleted|Unavailable] attributes with PlatformName.")]
-	public static class PlatformHelper
-	{
+	public static class PlatformHelper {
 		public static bool IsValid (this Platform platform)
 		{
 #pragma warning disable 0618
@@ -198,12 +198,12 @@ namespace ObjCRuntime
 
 		public static int CompareMacVersion (this Platform a, Platform b)
 		{
-			return ((ulong)ToMacVersion (a)).CompareTo ((ulong)ToMacVersion (b));
+			return ((ulong) ToMacVersion (a)).CompareTo ((ulong) ToMacVersion (b));
 		}
 
 		public static int CompareIosVersion (this Platform a, Platform b)
 		{
-			return ((uint)ToIosVersion (a)).CompareTo ((uint)ToIosVersion (b));
+			return ((uint) ToIosVersion (a)).CompareTo ((uint) ToIosVersion (b));
 		}
 
 		public static bool IsMac (this Platform platform)
@@ -230,7 +230,7 @@ namespace ObjCRuntime
 
 		public static Platform GetHostApiPlatform ()
 		{
-			if (hostApiPlatform != null && hostApiPlatform.HasValue)
+			if (hostApiPlatform is not null && hostApiPlatform.HasValue)
 				return hostApiPlatform.Value;
 
 #if MONOMAC
@@ -254,9 +254,9 @@ namespace ObjCRuntime
 
 		public static Platform ParseApiPlatform (string productName, string productVersion)
 		{
-			if (productName == null)
+			if (productName is null)
 				throw new ArgumentNullException ("productName");
-			if (productVersion == null)
+			if (productVersion is null)
 				throw new ArgumentNullException ("productVersion");
 
 			var product = productName.Replace (" ", String.Empty).ToLowerInvariant ();
@@ -269,9 +269,9 @@ namespace ObjCRuntime
 
 			Platform platform;
 			if (product.StartsWith ("mac", StringComparison.Ordinal))
-				platform = (Platform)((ulong) major << 48 | (ulong) minor << 40);
+				platform = (Platform) ((ulong) major << 48 | (ulong) minor << 40);
 			else if (product.StartsWith ("iphone", StringComparison.Ordinal) || product.StartsWith ("ios", StringComparison.Ordinal))
-				platform = (Platform)((ulong) major << 16 | (ulong) minor << 8);
+				platform = (Platform) ((ulong) major << 16 | (ulong) minor << 8);
 			else
 				throw new FormatException ("Unknown product name: " + productName);
 
@@ -289,10 +289,8 @@ namespace ObjCRuntime
 
 		// Deprecated in OSX 10.8 - but no good alternative is (yet) available
 #if NET
-		[UnsupportedOSPlatform ("macos10.8")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.8.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[SupportedOSPlatform ("macos")]
+		[ObsoletedOSPlatform ("macos10.8")]
 #else
 		[Deprecated (PlatformName.MacOSX, 10, 8)]
 #endif
@@ -322,18 +320,17 @@ namespace ObjCRuntime
 #if !COREBUILD
 	[Obsolete ("Use [Introduced|Deprecated|Obsoleted|Unavailable] attributes with PlatformName.")]
 #endif
-	public class AvailabilityAttribute : Attribute
-	{
+	public class AvailabilityAttribute : Attribute {
 		public static AvailabilityAttribute Merge (IEnumerable<object> attrs)
 		{
 			AvailabilityAttribute merged = null;
 
 			foreach (var attr in attrs) {
 				var aattr = attr as AvailabilityAttribute;
-				if (aattr == null)
+				if (aattr is null)
 					continue;
 
-				if (merged == null)
+				if (merged is null)
 					merged = new AvailabilityAttribute ();
 
 				merged.Introduced |= aattr.Introduced;
@@ -357,7 +354,7 @@ namespace ObjCRuntime
 
 		static void Check (string property, Platform existing, Platform updated)
 		{
-			if (!PlatformHelper.IsValid (updated)){
+			if (!PlatformHelper.IsValid (updated)) {
 				throw new Exception (String.Format ("Platform setting determined invalid, cannot set '{0}' to '{1}' " +
 					"as it is already set for the same platform to '{2}'",
 					property, updated, existing));
@@ -504,7 +501,7 @@ namespace ObjCRuntime
 			append ("Obsoleted", obsoleted);
 			append ("Unavailable", unavailable);
 
-			if (Message != null)
+			if (Message is not null)
 				builder.AppendFormat (", Message = \"{0}\"",
 					Message.Replace ("\"", "\\\""));
 
@@ -517,15 +514,14 @@ namespace ObjCRuntime
 #if !COREBUILD
 	[Obsolete ("Use [Introduced|Deprecated|Obsoleted|Unavailable] attributes with PlatformName.")]
 #endif
-	public sealed class iOSAttribute : AvailabilityAttribute
-	{
+	public sealed class iOSAttribute : AvailabilityAttribute {
 		public iOSAttribute (byte major, byte minor)
 			: this (major, minor, 0)
 		{
 		}
 
 		public iOSAttribute (byte major, byte minor, byte subminor)
-			: base ((Platform)((ulong)major << 16 | (ulong)minor << 8 | (ulong)subminor))
+			: base ((Platform) ((ulong) major << 16 | (ulong) minor << 8 | (ulong) subminor))
 		{
 		}
 
@@ -538,7 +534,7 @@ namespace ObjCRuntime
 
 		[Obsolete ("Use the overload that takes '(major, minor, subminor)', since iOS is always 64-bit.")]
 		public iOSAttribute (byte major, byte minor, byte subminor, bool onlyOn64)
-			: base ((Platform)((ulong)major << 48 | (ulong)minor << 40 | (ulong)subminor << 32) | (onlyOn64 ? Platform.iOS_Arch64 : Platform.None))
+			: base ((Platform) ((ulong) major << 48 | (ulong) minor << 40 | (ulong) subminor << 32) | (onlyOn64 ? Platform.iOS_Arch64 : Platform.None))
 		{
 		}
 #endif
@@ -548,8 +544,7 @@ namespace ObjCRuntime
 #if !COREBUILD
 	[Obsolete ("Use [Introduced|Deprecated|Obsoleted|Unavailable] attributes with PlatformName.")]
 #endif
-	public sealed class MacAttribute : AvailabilityAttribute
-	{
+	public sealed class MacAttribute : AvailabilityAttribute {
 		public MacAttribute (byte major, byte minor)
 #if NET
 			: this (major, minor, 0)
@@ -565,7 +560,7 @@ namespace ObjCRuntime
 			: this (major, minor, 0, onlyOn64)
 		{
 		}
-		
+
 		[Obsolete ("Use the overload that takes '(major, minor, subminor)', since macOS is always 64-bit.")]
 		public MacAttribute (byte major, byte minor, PlatformArchitecture arch)
 			: this (major, minor, 0, arch)
@@ -585,7 +580,7 @@ namespace ObjCRuntime
 #if !NET
 		[Obsolete ("Use the overload that takes '(major, minor, subminor)', since macOS is always 64-bit.")]
 		public MacAttribute (byte major, byte minor, byte subminor, bool onlyOn64)
-			: base ((Platform)((ulong)major << 48 | (ulong)minor << 40 | (ulong)subminor << 32) | (onlyOn64 ? Platform.Mac_Arch64 : Platform.None))
+			: base ((Platform) ((ulong) major << 48 | (ulong) minor << 40 | (ulong) subminor << 32) | (onlyOn64 ? Platform.Mac_Arch64 : Platform.None))
 		{
 		}
 #endif
@@ -593,7 +588,7 @@ namespace ObjCRuntime
 #if !NET
 		[Obsolete ("Use the overload that takes '(major, minor, subminor)', since macOS is always 64-bit.")]
 		public MacAttribute (byte major, byte minor, byte subminor, PlatformArchitecture arch)
-			: base ((Platform)((ulong)major << 48 | (ulong)minor << 40 | (ulong)subminor << 32) | (arch == PlatformArchitecture.Arch64 ? Platform.Mac_Arch64 : Platform.None))
+			: base ((Platform) ((ulong) major << 48 | (ulong) minor << 40 | (ulong) subminor << 32) | (arch == PlatformArchitecture.Arch64 ? Platform.Mac_Arch64 : Platform.None))
 		{
 		}
 #endif

@@ -34,7 +34,6 @@
 !missing-enum! SecPreferencesDomain not bound
 !missing-enum! SecProtocolType not bound
 !missing-enum! SecRequirementType not bound
-!missing-enum! SecTransformMetaAttributeType not bound
 !missing-enum! SecTrustOptionFlags not bound
 !missing-enum! SecTrustSettingsDomain not bound
 !missing-enum! SecTrustSettingsKeyUsage not bound
@@ -93,8 +92,6 @@
 !missing-field! kSecAttrPRFHmacAlgSHA512 not bound
 !missing-field! kSecAttrRounds not bound
 !missing-field! kSecAttrSalt not bound
-!missing-field! kSecBase32Encoding not bound
-!missing-field! kSecBase64Encoding not bound
 !missing-field! kSecCFErrorArchitecture not bound
 !missing-field! kSecCFErrorGuestAttributes not bound
 !missing-field! kSecCFErrorInfoPlist not bound
@@ -136,23 +133,7 @@
 !missing-field! kSecCodeInfoTrust not bound
 !missing-field! kSecCodeInfoUnique not bound
 !missing-field! kSecCodeInfoRuntimeVersion not bound
-!missing-field! kSecCompressionRatio not bound
 !missing-field! kSecDecodeTypeAttribute not bound
-!missing-field! kSecDigestHMACKeyAttribute not bound
-!missing-field! kSecDigestHMACMD5 not bound
-!missing-field! kSecDigestHMACSHA1 not bound
-!missing-field! kSecDigestHMACSHA2 not bound
-!missing-field! kSecDigestLengthAttribute not bound
-!missing-field! kSecDigestMD2 not bound
-!missing-field! kSecDigestMD4 not bound
-!missing-field! kSecDigestMD5 not bound
-!missing-field! kSecDigestSHA1 not bound
-!missing-field! kSecDigestSHA2 not bound
-!missing-field! kSecDigestTypeAttribute not bound
-!missing-field! kSecEncodeLineLengthAttribute not bound
-!missing-field! kSecEncodeTypeAttribute not bound
-!missing-field! kSecEncryptionMode not bound
-!missing-field! kSecEncryptKey not bound
 !missing-field! kSecGuestAttributeArchitecture not bound
 !missing-field! kSecGuestAttributeAudit not bound
 !missing-field! kSecGuestAttributeCanonical not bound
@@ -166,27 +147,14 @@
 !missing-field! kSecIdentityDomainKerberosKDC not bound
 !missing-field! kSecImportExportAccess not bound
 !missing-field! kSecImportExportKeychain not bound
-!missing-field! kSecInputIsAttributeName not bound
 !missing-field! kSecInputIsDigest not bound
 !missing-field! kSecInputIsPlainText not bound
-!missing-field! kSecInputIsRaw not bound
-!missing-field! kSecIVKey not bound
 !missing-field! kSecKeyAttributeName not bound
-!missing-field! kSecLineLength64 not bound
-!missing-field! kSecLineLength76 not bound
 !missing-field! kSecMatchDiacriticInsensitive not bound
 !missing-field! kSecMatchSubjectEndsWith not bound
 !missing-field! kSecMatchSubjectStartsWith not bound
 !missing-field! kSecMatchSubjectWholeString not bound
 !missing-field! kSecMatchWidthInsensitive not bound
-!missing-field! kSecModeCBCKey not bound
-!missing-field! kSecModeCFBKey not bound
-!missing-field! kSecModeECBKey not bound
-!missing-field! kSecModeNoneKey not bound
-!missing-field! kSecModeOFBKey not bound
-!missing-field! kSecOAEPEncodingParametersAttributeName not bound
-!missing-field! kSecOAEPMessageLengthAttributeName not bound
-!missing-field! kSecOAEPMGF1DigestAlgorithmAttributeName not bound
 !missing-field! kSecOIDADC_CERT_POLICY not bound
 !missing-field! kSecOIDAPPLE_CERT_POLICY not bound
 !missing-field! kSecOIDAPPLE_EKU_CODE_SIGNING not bound
@@ -308,12 +276,6 @@
 !missing-field! kSecOIDX509V3CertificateNumberOfExtensions not bound
 !missing-field! kSecOIDX509V3SignedCertificate not bound
 !missing-field! kSecOIDX509V3SignedCertificateCStruct not bound
-!missing-field! kSecPaddingKey not bound
-!missing-field! kSecPaddingNoneKey not bound
-!missing-field! kSecPaddingOAEPKey not bound
-!missing-field! kSecPaddingPKCS1Key not bound
-!missing-field! kSecPaddingPKCS5Key not bound
-!missing-field! kSecPaddingPKCS7Key not bound
 !missing-field! kSecPolicyKU_CRLSign not bound
 !missing-field! kSecPolicyKU_DataEncipherment not bound
 !missing-field! kSecPolicyKU_DecipherOnly not bound
@@ -332,18 +294,9 @@
 !missing-field! kSecPropertyTypeWarning not bound
 !missing-field! kSecSignatureAttributeName not bound
 !missing-field! kSecTransformAbortOriginatorKey not bound
-!missing-field! kSecTransformActionAttributeNotification not bound
-!missing-field! kSecTransformActionAttributeValidation not bound
-!missing-field! kSecTransformActionCanExecute not bound
-!missing-field! kSecTransformActionExternalizeExtraData not bound
-!missing-field! kSecTransformActionFinalize not bound
-!missing-field! kSecTransformActionInternalizeExtraData not bound
-!missing-field! kSecTransformActionProcessData not bound
-!missing-field! kSecTransformActionStartingExecution not bound
 !missing-field! kSecTransformErrorDomain not bound
 !missing-field! kSecTransformPreviousErrorKey not bound
 !missing-field! kSecUseKeychain not bound
-!missing-field! kSecZLibEncoding not bound
 !missing-field! oidAdCAIssuer not bound
 !missing-field! oidAdOCSP not bound
 !missing-field! oidAnsip384r1 not bound
@@ -476,19 +429,6 @@
 !missing-pinvoke! cssmAlgToOid is not bound
 !missing-pinvoke! cssmOidToAlg is not bound
 !missing-pinvoke! cssmPerror is not bound
-!missing-pinvoke! SecAccessCopyACLList is not bound
-!missing-pinvoke! SecAccessCopyMatchingACLList is not bound
-!missing-pinvoke! SecAccessCopyOwnerAndACL is not bound
-!missing-pinvoke! SecAccessCreate is not bound
-!missing-pinvoke! SecAccessCreateWithOwnerAndACL is not bound
-!missing-pinvoke! SecAccessGetTypeID is not bound
-!missing-pinvoke! SecACLCopyAuthorizations is not bound
-!missing-pinvoke! SecACLCopyContents is not bound
-!missing-pinvoke! SecACLCreateWithSimpleContents is not bound
-!missing-pinvoke! SecACLGetTypeID is not bound
-!missing-pinvoke! SecACLRemove is not bound
-!missing-pinvoke! SecACLSetContents is not bound
-!missing-pinvoke! SecACLUpdateAuthorizations is not bound
 !missing-pinvoke! SecCertificateAddToKeychain is not bound
 !missing-pinvoke! SecCertificateCopyLongDescription is not bound
 !missing-pinvoke! SecCertificateCopyPreferred is not bound
@@ -505,14 +445,6 @@
 !missing-pinvoke! SecCodeCopyStaticCode is not bound
 !missing-pinvoke! SecCodeGetTypeID is not bound
 !missing-pinvoke! SecCodeMapMemory is not bound
-!missing-pinvoke! SecDecodeTransformCreate is not bound
-!missing-pinvoke! SecDecryptTransformCreate is not bound
-!missing-pinvoke! SecDecryptTransformGetTypeID is not bound
-!missing-pinvoke! SecDigestTransformCreate is not bound
-!missing-pinvoke! SecDigestTransformGetTypeID is not bound
-!missing-pinvoke! SecEncodeTransformCreate is not bound
-!missing-pinvoke! SecEncryptTransformCreate is not bound
-!missing-pinvoke! SecEncryptTransformGetTypeID is not bound
 !missing-pinvoke! SecIdentityCopyPreferred is not bound
 !missing-pinvoke! SecIdentityCopySystemIdentity is not bound
 !missing-pinvoke! SecIdentityCreateWithCertificate is not bound
@@ -520,43 +452,12 @@
 !missing-pinvoke! SecIdentitySetSystemIdentity is not bound
 !missing-pinvoke! SecItemExport is not bound
 !missing-pinvoke! SecItemImport is not bound
-!missing-pinvoke! SecKeychainAddCallback is not bound
-!missing-pinvoke! SecKeychainAttributeInfoForItemID is not bound
-!missing-pinvoke! SecKeychainCopyDefault is not bound
-!missing-pinvoke! SecKeychainCopyDomainDefault is not bound
-!missing-pinvoke! SecKeychainCopyDomainSearchList is not bound
-!missing-pinvoke! SecKeychainCopySearchList is not bound
-!missing-pinvoke! SecKeychainFreeAttributeInfo is not bound
-!missing-pinvoke! SecKeychainGetPreferenceDomain is not bound
-!missing-pinvoke! SecKeychainGetStatus is not bound
-!missing-pinvoke! SecKeychainGetTypeID is not bound
-!missing-pinvoke! SecKeychainGetUserInteractionAllowed is not bound
-!missing-pinvoke! SecKeychainGetVersion is not bound
-!missing-pinvoke! SecKeychainItemCopyAccess is not bound
-!missing-pinvoke! SecKeychainItemCopyAttributesAndData is not bound
-!missing-pinvoke! SecKeychainItemCopyContent is not bound
-!missing-pinvoke! SecKeychainItemCopyFromPersistentReference is not bound
-!missing-pinvoke! SecKeychainItemCopyKeychain is not bound
-!missing-pinvoke! SecKeychainItemCreateCopy is not bound
-!missing-pinvoke! SecKeychainItemCreateFromContent is not bound
-!missing-pinvoke! SecKeychainItemCreatePersistentReference is not bound
-!missing-pinvoke! SecKeychainItemDelete is not bound
-!missing-pinvoke! SecKeychainItemFreeAttributesAndData is not bound
-!missing-pinvoke! SecKeychainItemGetTypeID is not bound
-!missing-pinvoke! SecKeychainItemModifyAttributesAndData is not bound
-!missing-pinvoke! SecKeychainItemModifyContent is not bound
-!missing-pinvoke! SecKeychainItemSetAccess is not bound
-!missing-pinvoke! SecKeychainRemoveCallback is not bound
-!missing-pinvoke! SecKeychainSetDomainDefault is not bound
-!missing-pinvoke! SecKeychainSetDomainSearchList is not bound
-!missing-pinvoke! SecKeychainSetPreferenceDomain is not bound
 !missing-pinvoke! SecRequirementCopyData is not bound
 !missing-pinvoke! SecRequirementCopyString is not bound
 !missing-pinvoke! SecRequirementCreateWithData is not bound
 !missing-pinvoke! SecRequirementCreateWithString is not bound
 !missing-pinvoke! SecRequirementCreateWithStringAndErrors is not bound
 !missing-pinvoke! SecRequirementGetTypeID is not bound
-!missing-pinvoke! SecSignTransformCreate is not bound
 !missing-pinvoke! SecStaticCodeCheckValidity is not bound
 !missing-pinvoke! SecStaticCodeCheckValidityWithErrors is not bound
 !missing-pinvoke! SecStaticCodeCreateWithPath is not bound
@@ -568,18 +469,7 @@
 !missing-pinvoke! SecTaskCreateFromSelf is not bound
 !missing-pinvoke! SecTaskCreateWithAuditToken is not bound
 !missing-pinvoke! SecTaskGetTypeID is not bound
-!missing-pinvoke! SecTransformCreate is not bound
-!missing-pinvoke! SecTransformCreateReadTransformWithReadStream is not bound
-!missing-pinvoke! SecTransformCustomGetAttribute is not bound
-!missing-pinvoke! SecTransformCustomSetAttribute is not bound
-!missing-pinvoke! SecTransformNoData is not bound
-!missing-pinvoke! SecTransformPushbackAttribute is not bound
-!missing-pinvoke! SecTransformRegister is not bound
-!missing-pinvoke! SecTransformSetAttributeAction is not bound
-!missing-pinvoke! SecTransformSetDataAction is not bound
-!missing-pinvoke! SecTransformSetTransformAction is not bound
 !missing-pinvoke! SecTrustCopyAnchorCertificates is not bound
-!missing-pinvoke! SecTrustedApplicationGetTypeID is not bound
 !missing-pinvoke! SecTrustSetOptions is not bound
 !missing-pinvoke! SecTrustSettingsCopyCertificates is not bound
 !missing-pinvoke! SecTrustSettingsCopyModificationDate is not bound
@@ -588,7 +478,6 @@
 !missing-pinvoke! SecTrustSettingsImportExternalRepresentation is not bound
 !missing-pinvoke! SecTrustSettingsRemoveTrustSettings is not bound
 !missing-pinvoke! SecTrustSettingsSetTrustSettings is not bound
-!missing-pinvoke! SecVerifyTransformCreate is not bound
 !missing-pinvoke! SessionCreate is not bound
 !missing-pinvoke! SessionGetInfo is not bound
 
@@ -601,3 +490,10 @@
 
 ## xcode 12.2 / we do not have bindings for XPC
 !missing-pinvoke! SecCodeCreateWithXPCMessage is not bound
+
+## xcode15
+!missing-field! kSecCodeInfoDefaultDesignatedLightweightCodeRequirement not bound
+!missing-pinvoke! SecCodeValidateFileResource is not bound
+!missing-field! kSecCFErrorResourceRecursive not bound
+!missing-field! kSecCodeInfoStapledNotarizationTicket not bound
+

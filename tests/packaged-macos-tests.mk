@@ -25,9 +25,9 @@ CONFIG?=Debug
 LAUNCH_ARGUMENTS=--autostart --autoexit
 
 # Time test runs out after 5 minutes (300 seconds)
-RUN_WITH_TIMEOUT=./run-with-timeout.sh 300
-# Some tests need a bit more time... (introspection)
-RUN_WITH_TIMEOUT_LONGER=./run-with-timeout.sh 600
+RUN_WITH_TIMEOUT=./run-with-timeout.csharp 300
+# Some tests need a bit more time... (introspection, monotouch-test/xammac_tests)
+RUN_WITH_TIMEOUT_LONGER=./run-with-timeout.csharp 600
 
 .stamp-configure-projects-mac: Makefile xharness/xharness.exe
 	$(Q) $(MAKE) .stamp-xharness-configure
@@ -94,7 +94,7 @@ build-mac-modern-xammac_tests: xammac_tests/xammac_tests.csproj .stamp-nuget-res
 
 exec-mac-modern-xammac_tests:
 	@echo "ℹ️  Executing the 'xammac' test for Xamarin.Mac (Modern profile) ℹ️"
-	$(Q) $(RUN_WITH_TIMEOUT) xammac_tests/bin/x86/$(CONFIG)/xammac_tests.app/Contents/MacOS/xammac_tests
+	$(Q) $(RUN_WITH_TIMEOUT_LONGER) xammac_tests/bin/x86/$(CONFIG)/xammac_tests.app/Contents/MacOS/xammac_tests
 
 #
 # link all
@@ -151,19 +151,27 @@ build-mac-dotnet-x64-$(1): .stamp-dotnet-dependency-macOS
 	$$(Q) $$(MAKE) -C "$(1)/dotnet/macOS" build BUILD_ARGUMENTS=/p:RuntimeIdentifier=osx-x64
 
 exec-mac-dotnet-x64-$(1):
+ifdef ENABLE_DOTNET
 	@echo "ℹ️  Executing the '$(1)' test for macOS/.NET (x64) ℹ️"
 	$$(Q) $(RUN_WITH_TIMEOUT$(3)) "./$(1)/dotnet/macOS/bin/$(CONFIG)/$(DOTNET_TFM)-macos/osx-x64/$(2).app/Contents/MacOS/$(2)"
+else
+	$(Q) echo "Not executing $@, because .NET is not enabled"
+endif
 
 # macOS/.NET/arm64
 build-mac-dotnet-arm64-$(1): .stamp-dotnet-dependency-macOS
 	$$(Q) $$(MAKE) -C "$(1)/dotnet/macOS" build BUILD_ARGUMENTS=/p:RuntimeIdentifier=osx-arm64
 
 exec-mac-dotnet-arm64-$(1):
+ifdef ENABLE_DOTNET
 ifeq ($(IS_APPLE_SILICON),1)
 	@echo "ℹ️  Executing the '$(1)' test for macOS/.NET (arm64) ℹ️"
 	$$(Q) $(RUN_WITH_TIMEOUT$(3)) "./$(1)/dotnet/macOS/bin/$(CONFIG)/$(DOTNET_TFM)-macos/osx-arm64/$(2).app/Contents/MacOS/$(2)"
 else
 	@echo "⚠️  Not executing the '$(1)' test for macOS/.NET (arm64) - not executing on Apple Silicon ⚠️"
+endif
+else
+	$(Q) echo "Not executing $@, because .NET is not enabled"
 endif
 
 # MacCatalyst/.NET/x64
@@ -171,11 +179,15 @@ build-maccatalyst-dotnet-x64-$(1): .stamp-dotnet-dependency-MacCatalyst
 	$$(Q_BUILD) $$(MAKE) -C "$(1)/dotnet/MacCatalyst" build BUILD_ARGUMENTS=/p:RuntimeIdentifier=maccatalyst-x64
 
 exec-maccatalyst-dotnet-x64-$(1):
+ifdef ENABLE_DOTNET
 ifeq ($(SUPPORTS_MACCATALYST),1)
 	@echo "ℹ️  Executing the '$(1)' test for Mac Catalyst/.NET (x64) ℹ️"
 	$$(Q) $(RUN_WITH_TIMEOUT$(3)) "./$(1)/dotnet/MacCatalyst/bin/$(CONFIG)/$(DOTNET_TFM)-maccatalyst/maccatalyst-x64/$(2).app/Contents/MacOS/$(2)" $(LAUNCH_ARGUMENTS)
 else
 	@echo "⚠️  Not executing the '$(1)' test for Mac Catalyst/.NET (x64) - macOS version $(MACOS_VERSION) is too old ⚠️"
+endif
+else
+	$(Q) echo "Not executing $@, because .NET is not enabled"
 endif
 
 # MacCatalyst/.NET/arm64
@@ -183,11 +195,15 @@ build-maccatalyst-dotnet-arm64-$(1):.stamp-dotnet-dependency-MacCatalyst
 	$$(Q) $$(MAKE) -C "$(1)/dotnet/MacCatalyst" build BUILD_ARGUMENTS=/p:RuntimeIdentifier=maccatalyst-arm64
 
 exec-maccatalyst-dotnet-arm64-$(1):
+ifdef ENABLE_DOTNET
 ifeq ($(IS_APPLE_SILICON),1)
 	@echo "ℹ️  Executing the '$(1)' test for Mac Catalyst/.NET (arm64) ℹ️"
 	$$(Q) $(RUN_WITH_TIMEOUT$(3)) "./$(1)/dotnet/MacCatalyst/bin/$(CONFIG)/$(DOTNET_TFM)-maccatalyst/maccatalyst-arm64/$(2).app/Contents/MacOS/$(2)" $(LAUNCH_ARGUMENTS)
 else
 	@echo "⚠️  Not executing the '$(1)' test for Mac Catalyst/.NET (arm64) - not executing on Apple Silicon ⚠️"
+endif
+else
+	$(Q) echo "Not executing $@, because .NET is not enabled"
 endif
 
 build-$(1): .stamp-nuget-restore-mac
@@ -195,10 +211,16 @@ build-$(1): .stamp-nuget-restore-mac
 ifdef INCLUDE_XAMARIN_LEGACY
 	$$(Q) $$(MAKE) -f packaged-macos-tests.mk build-legacy-$(1)                   || echo "build-legacy-$(1) failed"                   >> ".$$@-failure.stamp"
 endif
+ifdef ENABLE_DOTNET
+ifdef INCLUDE_MAC
 	$$(Q) $$(MAKE) -f packaged-macos-tests.mk build-mac-dotnet-x64-$(1)           || echo "build-mac-dotnet-x64-$(1) failed"           >> ".$$@-failure.stamp"
 	$$(Q) $$(MAKE) -f packaged-macos-tests.mk build-mac-dotnet-arm64-$(1)         || echo "build-mac-dotnet-arm64-$(1) failed"         >> ".$$@-failure.stamp"
+endif
+ifdef INCLUDE_MACCATALYST
 	$$(Q) $$(MAKE) -f packaged-macos-tests.mk build-maccatalyst-dotnet-x64-$(1)   || echo "build-maccatalyst-dotnet-x64-$(1) failed"   >> ".$$@-failure.stamp"
 	$$(Q) $$(MAKE) -f packaged-macos-tests.mk build-maccatalyst-dotnet-arm64-$(1) || echo "build-maccatalyst-dotnet-arm64-$(1) failed" >> ".$$@-failure.stamp"
+endif
+endif
 	$$(Q) if test -e ".$$@-failure.stamp"; then cat ".$$@-failure.stamp"; rm ".$$@-failure.stamp"; exit 1; fi
 
 exec-$(1):
@@ -206,14 +228,20 @@ exec-$(1):
 ifdef INCLUDE_XAMARIN_LEGACY
 	$$(Q) $$(MAKE) -f packaged-macos-tests.mk exec-legacy-$(1)                   || echo "exec-legacy-$(1) failed"                   >> ".$$@-failure.stamp"
 endif
+ifdef ENABLE_DOTNET
+ifdef INCLUDE_MAC
 	$$(Q) $$(MAKE) -f packaged-macos-tests.mk exec-mac-dotnet-x64-$(1)           || echo "exec-mac-dotnet-x64-$(1) failed"           >> ".$$@-failure.stamp"
 	$$(Q) $$(MAKE) -f packaged-macos-tests.mk exec-mac-dotnet-arm64-$(1)         || echo "exec-mac-dotnet-arm64-$(1) failed"         >> ".$$@-failure.stamp"
+endif
+ifdef INCLUDE_MACCATALYST
 	$$(Q) $$(MAKE) -f packaged-macos-tests.mk exec-maccatalyst-dotnet-x64-$(1)   || echo "exec-maccatalyst-dotnet-x64-$(1) failed"   >> ".$$@-failure.stamp"
 	$$(Q) $$(MAKE) -f packaged-macos-tests.mk exec-maccatalyst-dotnet-arm64-$(1) || echo "exec-maccatalyst-dotnet-arm64-$(1) failed" >> ".$$@-failure.stamp"
+endif
+endif
 	$$(Q) if test -e ".$$@-failure.stamp"; then cat ".$$@-failure.stamp"; rm ".$$@-failure.stamp"; exit 1; fi
 endef
 
-$(eval $(call DotNetNormalTest,monotouch-test,monotouchtest))
+$(eval $(call DotNetNormalTest,monotouch-test,monotouchtest,_LONGER))
 $(eval $(call DotNetNormalTest,introspection,introspection,_LONGER))
 
 ### .NET linker tests
@@ -268,10 +296,16 @@ build-$(1): .stamp-nuget-restore-mac
 ifdef INCLUDE_XAMARIN_LEGACY
 	$$(Q) $$(MAKE) -f packaged-macos-tests.mk build-legacy-$(1)                   || echo "build-legacy-$(1) failed"                   >> ".$$@-failure.stamp"
 endif
+ifdef ENABLE_DOTNET
+ifdef INCLUDE_MAC
 	$$(Q) $$(MAKE) -f packaged-macos-tests.mk build-mac-dotnet-x64-$(1)           || echo "build-mac-dotnet-x64-$(1) failed"           >> ".$$@-failure.stamp"
 	$$(Q) $$(MAKE) -f packaged-macos-tests.mk build-mac-dotnet-arm64-$(1)         || echo "build-mac-dotnet-arm64-$(1) failed"         >> ".$$@-failure.stamp"
+endif
+ifdef INCLUDE_MACCATALYST
 	$$(Q) $$(MAKE) -f packaged-macos-tests.mk build-maccatalyst-dotnet-x64-$(1)   || echo "build-maccatalyst-dotnet-x64-$(1) failed"   >> ".$$@-failure.stamp"
 	$$(Q) $$(MAKE) -f packaged-macos-tests.mk build-maccatalyst-dotnet-arm64-$(1) || echo "build-maccatalyst-dotnet-arm64-$(1) failed" >> ".$$@-failure.stamp"
+endif
+endif
 	$$(Q) if test -e ".$$@-failure.stamp"; then cat ".$$@-failure.stamp"; rm ".$$@-failure.stamp"; exit 1; fi
 
 exec-$(1):
@@ -279,10 +313,16 @@ exec-$(1):
 ifdef INCLUDE_XAMARIN_LEGACY
 	$$(Q) $$(MAKE) -f packaged-macos-tests.mk exec-legacy-$(1)                   || echo "exec-legacy-$(1) failed"                   >> ".$$@-failure.stamp"
 endif
+ifdef ENABLE_DOTNET
+ifdef INCLUDE_MAC
 	$$(Q) $$(MAKE) -f packaged-macos-tests.mk exec-mac-dotnet-x64-$(1)           || echo "exec-mac-dotnet-x64-$(1) failed"           >> ".$$@-failure.stamp"
 	$$(Q) $$(MAKE) -f packaged-macos-tests.mk exec-mac-dotnet-arm64-$(1)         || echo "exec-mac-dotnet-arm64-$(1) failed"         >> ".$$@-failure.stamp"
+endif
+ifdef INCLUDE_MACCATALYST
 	$$(Q) $$(MAKE) -f packaged-macos-tests.mk exec-maccatalyst-dotnet-x64-$(1)   || echo "exec-maccatalyst-dotnet-x64-$(1) failed"   >> ".$$@-failure.stamp"
 	$$(Q) $$(MAKE) -f packaged-macos-tests.mk exec-maccatalyst-dotnet-arm64-$(1) || echo "exec-maccatalyst-dotnet-arm64-$(1) failed" >> ".$$@-failure.stamp"
+endif
+endif
 	$$(Q) if test -e ".$$@-failure.stamp"; then cat ".$$@-failure.stamp"; rm ".$$@-failure.stamp"; exit 1; fi
 endef
 

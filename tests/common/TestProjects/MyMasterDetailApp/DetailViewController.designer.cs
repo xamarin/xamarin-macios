@@ -22,12 +22,12 @@ namespace MyMasterDetailApp
 
 		void ReleaseDesignerOutlets ()
 		{
-			if (detailDescriptionLabel != null) {
+			if (detailDescriptionLabel is not null) {
 				detailDescriptionLabel.Dispose ();
 				detailDescriptionLabel = null;
 			}
 			
-			if (toolbar != null) {
+			if (toolbar is not null) {
 				toolbar.Dispose ();
 				toolbar = null;
 			}

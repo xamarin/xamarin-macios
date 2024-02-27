@@ -7,6 +7,7 @@
 ## field added in xcode 12 b1 - but not marked as available on macOS and already deprecated on iOS
 !missing-field! MPMediaPlaybackIsPreparedToPlayDidChangeNotification not bound
 
+
 ## unsorted
 
 !unknown-type! MPMediaItem bound

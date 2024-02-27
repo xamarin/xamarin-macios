@@ -10,11 +10,11 @@ using CoreGraphics;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.UIKit {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class TextFieldTest {
-		
+
 		[Test]
 		public void InitWithFrame ()
 		{
@@ -23,7 +23,7 @@ namespace MonoTouchFixtures.UIKit {
 				Assert.That (tf.Frame, Is.EqualTo (frame), "Frame");
 			}
 		}
-		
+
 		[Test]
 		public void InputAccessoryViewTest ()
 		{
@@ -46,7 +46,7 @@ namespace MonoTouchFixtures.UIKit {
 					Assert.IsNull (tf.SelectedTextRange, "SelectedTextRange");
 				}
 				if (TestRuntime.CheckXcodeVersion (13, 0)) {
-#if !__TVOS__ 
+#if !__TVOS__
 					if (TestRuntime.CheckXcodeVersion (13, 2))
 						Assert.That (tf.TypingAttributes, Is.Not.Empty, "default 13.2");
 					else

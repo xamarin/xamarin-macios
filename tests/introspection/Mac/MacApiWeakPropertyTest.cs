@@ -18,7 +18,7 @@ namespace Introspection {
 				return true;
 			// VNImageOptions is a DictionaryContainer that exposes a Weak* NSDictionary
 			case "VNImageOptions":
-				return true; 
+				return true;
 			}
 
 			switch (type.Namespace) {

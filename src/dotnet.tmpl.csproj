@@ -3,10 +3,10 @@
   <!-- This is a project file to load in the IDE to get code completion, etc. It's not used for building the product assemblies, that happens in the makefile -->
   <PropertyGroup>
     <_TargetPlatform>%PLATFORM%</_TargetPlatform>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>%DOTNET_TFM%</TargetFramework>
     <TargetFrameworkIdentifier>.NETCoreApp</TargetFrameworkIdentifier> <!-- this line shouldn't be necessary, but VSMac on one of my machines won't load the project otherwise -->
     <OutputType>Library</OutputType>
-    <AssemblyName>Xamarin.iOS</AssemblyName>
+    <AssemblyName>Microsoft.%PLATFORM%</AssemblyName>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\..\..\..\..\product.snk</AssemblyOriginatorKeyFile>
     <LangVersion>latest</LangVersion>
@@ -18,19 +18,19 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(_TargetPlatform)' == 'iOS'">
     <DefineConstants>$(DefineConstants);__IOS__;IOS;MONOTOUCH;IPHONE;</DefineConstants>
-    <CompilerResponseFile>..\..\..\ios-defines.rsp</CompilerResponseFile>
+    <CompilerResponseFile>..\..\..\..\rsp\ios-defines.rsp</CompilerResponseFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(_TargetPlatform)' == 'tvOS'">
     <DefineConstants>$(DefineConstants);__TVOS__;TVOS;MONOTOUCH;IPHONE;XAMCORE_3_0;SYSTEM_NET_HTTP</DefineConstants>
-    <CompilerResponseFile>..\..\..\tvos-defines.rsp</CompilerResponseFile>
+    <CompilerResponseFile>..\..\..\..\rsp\tvos-defines.rsp</CompilerResponseFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(_TargetPlatform)' == 'macOS'">
     <DefineConstants>$(DefineConstants);__MACOS__;MONOMAC;XAMARIN_MODERN</DefineConstants>
-    <CompilerResponseFile>..\..\..\macos-defines.rsp</CompilerResponseFile>
+    <CompilerResponseFile>..\..\..\..\rsp\macos-defines.rsp</CompilerResponseFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(_TargetPlatform)' == 'MacCatalyst'">
     <DefineConstants>$(DefineConstants);__IOS__;__MACCATALYST__;MACCATALYST;MONOTOUCH;IOS;SYSTEM_NET_HTTP</DefineConstants>
-    <CompilerResponseFile>..\..\..\maccatalyst-defines.rsp</CompilerResponseFile>
+    <CompilerResponseFile>..\..\..\..\rsp\maccatalyst-defines.rsp</CompilerResponseFile>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="..\..\$(_TargetPlatform)\generated-sources\**\*.cs">

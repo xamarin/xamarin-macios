@@ -49,7 +49,7 @@ using NativeHandle = System.IntPtr;
 #endif
 
 namespace CoreFoundation {
-	
+
 	// interesting bits: https://github.com/opensource-apple/CF/blob/master/CFArray.c
 	public partial class CFArray : NativeObject {
 
@@ -68,8 +68,8 @@ namespace CoreFoundation {
 			: base (handle, owns)
 		{
 		}
-		
-		[DllImport (Constants.CoreFoundationLibrary, EntryPoint="CFArrayGetTypeID")]
+
+		[DllImport (Constants.CoreFoundationLibrary, EntryPoint = "CFArrayGetTypeID")]
 		internal extern static /* CFTypeID */ nint GetTypeID ();
 
 		// pointer to a const struct (REALLY APPLE?)
@@ -83,12 +83,12 @@ namespace CoreFoundation {
 			}
 		}
 
-		internal static CFArray FromIntPtrs (params NativeHandle[] values)
+		internal static CFArray FromIntPtrs (params NativeHandle [] values)
 		{
 			return new CFArray (Create (values), true);
 		}
 
-		internal static CFArray FromNativeObjects (params INativeObject[] values)
+		internal static CFArray FromNativeObjects (params INativeObject [] values)
 		{
 			return new CFArray (Create (values), true);
 		}
@@ -108,19 +108,19 @@ namespace CoreFoundation {
 			return CFArrayGetValueAtIndex (GetCheckedHandle (), index);
 		}
 
-		internal static unsafe NativeHandle Create (params NativeHandle[] values)
+		internal static unsafe NativeHandle Create (params NativeHandle [] values)
 		{
 			if (values is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (values));
 			fixed (NativeHandle* pv = values) {
-				return CFArrayCreate (IntPtr.Zero, 
+				return CFArrayCreate (IntPtr.Zero,
 						(IntPtr) pv,
 						values.Length,
 						kCFTypeArrayCallbacks_ptr);
 			}
 		}
 
-		public static unsafe NativeHandle Create (params INativeObject[] values)
+		public static unsafe NativeHandle Create (params INativeObject [] values)
 		{
 			if (values is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (values));
@@ -149,7 +149,7 @@ namespace CoreFoundation {
 			return new CFArray (Create (items), true);
 		}
 
-		[DllImport (Constants.CoreFoundationLibrary, EntryPoint="CFArrayGetCount")]
+		[DllImport (Constants.CoreFoundationLibrary, EntryPoint = "CFArrayGetCount")]
 		internal extern static /* CFIndex */ nint GetCount (/* CFArrayRef */ IntPtr theArray);
 
 		[DllImport (Constants.CoreFoundationLibrary)]
@@ -161,12 +161,12 @@ namespace CoreFoundation {
 		internal extern static void CFArrayGetValues (/* CFArrayRef */ IntPtr theArray, CFRange range, /* const void ** */ IntPtr values);
 
 		// identical signature to NSArray API
-		static unsafe public string?[]? StringArrayFromHandle (NativeHandle handle)
+		static unsafe public string? []? StringArrayFromHandle (NativeHandle handle)
 		{
 			return ArrayFromHandleFunc (handle, CFString.FromHandle);
 		}
 
-		static unsafe public string?[]? StringArrayFromHandle (NativeHandle handle, bool releaseHandle)
+		static unsafe public string? []? StringArrayFromHandle (NativeHandle handle, bool releaseHandle)
 		{
 			var rv = StringArrayFromHandle (handle);
 			if (releaseHandle && handle != NativeHandle.Zero)
@@ -175,13 +175,13 @@ namespace CoreFoundation {
 		}
 
 		// identical signature to NSArray API
-		static public T?[]? ArrayFromHandle<T> (NativeHandle handle) where T : class, INativeObject
+		static public T? []? ArrayFromHandle<T> (NativeHandle handle) where T : class, INativeObject
 		{
 			var rv = ArrayFromHandleFunc<T> (handle, DefaultConvert<T>);
 			return rv;
 		}
 
-		static public T?[]? ArrayFromHandle<T> (NativeHandle handle, bool releaseHandle) where T : class, INativeObject
+		static public T? []? ArrayFromHandle<T> (NativeHandle handle, bool releaseHandle) where T : class, INativeObject
 		{
 			var rv = ArrayFromHandle<T> (handle);
 			if (releaseHandle && handle != NativeHandle.Zero)
@@ -189,7 +189,7 @@ namespace CoreFoundation {
 			return rv;
 		}
 
-		static T DefaultConvert<T> (NativeHandle handle) where T: class, INativeObject
+		static T DefaultConvert<T> (NativeHandle handle) where T : class, INativeObject
 		{
 			if (handle != CFNullHandle)
 				return Runtime.GetINativeObject<T> (handle, forced_type: false, owns: false)!;
@@ -197,7 +197,7 @@ namespace CoreFoundation {
 		}
 
 		// identical signature to NSArray API
-		static public T[]? ArrayFromHandleFunc<T> (NativeHandle handle, Func<NativeHandle, T> createObject)
+		static public T []? ArrayFromHandleFunc<T> (NativeHandle handle, Func<NativeHandle, T> createObject)
 		{
 			if (handle == NativeHandle.Zero)
 				return null;
@@ -219,7 +219,7 @@ namespace CoreFoundation {
 			return ret;
 		}
 
-		static public T[]? ArrayFromHandleFunc<T> (NativeHandle handle, Func<NativeHandle, T> createObject, bool releaseHandle)
+		static public T []? ArrayFromHandleFunc<T> (NativeHandle handle, Func<NativeHandle, T> createObject, bool releaseHandle)
 		{
 			var rv = ArrayFromHandleFunc<T> (handle, createObject);
 			if (releaseHandle && handle != IntPtr.Zero)

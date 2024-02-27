@@ -9,6 +9,9 @@ using System.ComponentModel;
 using ObjCRuntime;
 using Foundation;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace UIKit {
 	public partial class UIPasteboard {
 		const string selImages = "images";
@@ -23,7 +26,7 @@ namespace UIKit {
 					var data = obj as NSData;
 					UIImage img;
 			
-					if (data != null) {
+					if (data is not null) {
 						img = new UIImage (data);
 					} else {
 						img = (UIImage) obj;

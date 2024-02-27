@@ -22,12 +22,12 @@ namespace MessageUI {
 		[Static, Export ("canSendMail")]
 		bool CanSendMail { get; }
 
-		[Export ("mailComposeDelegate", ArgumentSemantic.Weak)][NullAllowed]
+		[Export ("mailComposeDelegate", ArgumentSemantic.Weak)]
+		[NullAllowed]
 		NSObject WeakMailComposeDelegate { get; set; }
 
 		[Wrap ("WeakMailComposeDelegate")]
-		[Protocolize]
-		MFMailComposeViewControllerDelegate MailComposeDelegate { get; set; }
+		IMFMailComposeViewControllerDelegate MailComposeDelegate { get; set; }
 
 		[Export ("setSubject:")]
 		void SetSubject (string subject);
@@ -47,10 +47,12 @@ namespace MessageUI {
 		[Export ("addAttachmentData:mimeType:fileName:")]
 		void AddAttachmentData (NSData attachment, string mimeType, string fileName);
 
-		[iOS (11,0)]
+		[MacCatalyst (13, 1)]
 		[Export ("setPreferredSendingEmailAddress:")]
 		void SetPreferredSendingEmailAddress (string emailAddress);
 	}
+
+	interface IMFMailComposeViewControllerDelegate { }
 
 #if XAMCORE_3_0
 	[BaseType (typeof (NSObject))]
@@ -62,69 +64,67 @@ namespace MessageUI {
 	interface MFMailComposeViewControllerDelegate {
 		[Export ("mailComposeController:didFinishWithResult:error:")]
 		void Finished (MFMailComposeViewController controller, MFMailComposeResult result, [NullAllowed] NSError error);
-	}	
+	}
 
 	interface MFMessageAvailabilityChangedEventArgs {
 		[Export ("MFMessageComposeViewControllerTextMessageAvailabilityKey")]
 		bool TextMessageAvailability { get; }
 	}
-	
+
 	[BaseType (typeof (UINavigationController))]
 	interface MFMessageComposeViewController : UIAppearance {
 		[Export ("messageComposeDelegate", ArgumentSemantic.Weak), NullAllowed]
 		NSObject WeakMessageComposeDelegate { get; set; }
-		
+
 		[Wrap ("WeakMessageComposeDelegate")]
-		[Protocolize]
-		MFMessageComposeViewControllerDelegate MessageComposeDelegate { get; set;  }
+		IMFMessageComposeViewControllerDelegate MessageComposeDelegate { get; set; }
 
 		[NullAllowed]
 		[Export ("recipients", ArgumentSemantic.Copy)]
-		string [] Recipients { get; set;  }
-		
+		string [] Recipients { get; set; }
+
 		[NullAllowed]
 		[Export ("body", ArgumentSemantic.Copy)]
-		string Body { get; set;  }
-		
+		string Body { get; set; }
+
 		[Static]
 		[Export ("canSendText")]
 		bool CanSendText { get; }
 
-		[iOS (7,0)]
-		[Static][Export ("canSendAttachments")]
+		[Static]
+		[Export ("canSendAttachments")]
 		bool CanSendAttachments { get; }
 
-		[iOS (7,0)]
-		[Static][Export ("canSendSubject")]
+		[Static]
+		[Export ("canSendSubject")]
 		bool CanSendSubject { get; }
 
-		[iOS (7,0)]
-		[Static][Export ("isSupportedAttachmentUTI:")]
+		[Static]
+		[Export ("isSupportedAttachmentUTI:")]
 		bool IsSupportedAttachment (string uti);
 
-		[iOS (7,0)]
 		[NullAllowed]
 		[Export ("subject", ArgumentSemantic.Copy)]
 		string Subject { get; set; }
 
-		[iOS (7,0)]
 		[return: NullAllowed]
 		[Export ("attachments")]
-		NSDictionary[] GetAttachments ();
+		NSDictionary [] GetAttachments ();
 
-		[iOS (10,0)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("message", ArgumentSemantic.Copy)]
 		MSMessage Message { get; set; }
 
-		[iOS (7,0)]
 		[Export ("addAttachmentURL:withAlternateFilename:")]
 		bool AddAttachment (NSUrl attachmentURL, [NullAllowed] string alternateFilename);
 
-		[iOS (7,0)]
 		[Export ("addAttachmentData:typeIdentifier:filename:")]
 		bool AddAttachment (NSData attachmentData, string uti, string filename);
 
-		[iOS (7,0)]
+		[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0), NoWatch, NoTV]
+		[Export ("insertCollaborationItemProvider:")]
+		bool InsertCollaboration (NSItemProvider itemProvider);
+
 		[Export ("disableUserAttachments")]
 		void DisableUserAttachments ();
 
@@ -135,14 +135,19 @@ namespace MessageUI {
 		[Field ("MFMessageComposeViewControllerTextMessageAvailabilityKey")]
 		NSString TextMessageAvailabilityKey { get; }
 
-		[iOS (7,0)]
 		[Field ("MFMessageComposeViewControllerAttachmentAlternateFilename")]
 		NSString AttachmentAlternateFilename { get; }
 
-		[iOS (7,0)]
 		[Field ("MFMessageComposeViewControllerAttachmentURL")]
 		NSString AttachmentURL { get; }
+
+		[Async]
+		[iOS (17, 0), NoMacCatalyst, NoWatch, NoTV]
+		[Export ("setUPIVerificationCodeSendCompletion:")]
+		void SetUpiVerificationCodeSendCompletion (Action<bool> completion);
 	}
+
+	interface IMFMessageComposeViewControllerDelegate { }
 
 	[BaseType (typeof (NSObject))]
 	[Model]

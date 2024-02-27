@@ -1,0 +1,7 @@
+{
+  "author": "Microsoft",
+  "name": "macOS 애플리케이션",
+  "description": ".NET macOS 애플리케이션을 만들기 위한 프로젝트",
+  "symbols/bundleId/description": "Info.plist에서 CFBundleIdentifier 재정의",
+  "symbols/minOSVersion/description": "프로젝트 파일에서 SupportedOSPlatformVersion 재정의"
+}

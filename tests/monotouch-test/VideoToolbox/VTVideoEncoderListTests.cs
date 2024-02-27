@@ -23,8 +23,7 @@ namespace MonoTouchFixtures.VideoToolbox {
 
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class VTVideoEncoderListTests
-	{
+	public class VTVideoEncoderListTests {
 		[Test]
 		public void VideoEncoderListTest ()
 		{

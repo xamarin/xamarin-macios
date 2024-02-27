@@ -34,8 +34,7 @@ using System.Threading;
 
 namespace CoreFoundation {
 
-	sealed class DispatchQueueSynchronizationContext : SynchronizationContext
-	{
+	sealed class DispatchQueueSynchronizationContext : SynchronizationContext {
 #if !COREBUILD
 		readonly DispatchQueue queue;
 

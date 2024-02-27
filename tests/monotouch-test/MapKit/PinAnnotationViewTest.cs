@@ -24,7 +24,7 @@ using NUnit.Framework;
 using Xamarin.Utils;
 
 namespace MonoTouchFixtures.MapKit {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class PinAnnotationViewTest {
@@ -33,7 +33,7 @@ namespace MonoTouchFixtures.MapKit {
 		{
 			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 9, throwIfOtherPlatform: false);
 		}
-		
+
 		[Test]
 		public void Ctor_Annotation ()
 		{
@@ -72,7 +72,7 @@ namespace MonoTouchFixtures.MapKit {
 
 				if (!TestRuntime.CheckXcodeVersion (7, 0))
 					return;
-				
+
 				Assert.That (av.PinColor, Is.EqualTo (MKPinAnnotationColor.Red), "PinColor");
 #if MONOMAC
 				if (TestRuntime.CheckSystemVersion (ApplePlatform.MacOSX, 10, 12)) {

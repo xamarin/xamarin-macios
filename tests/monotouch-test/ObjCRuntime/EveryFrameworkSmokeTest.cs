@@ -12,12 +12,10 @@ using AppKit;
 using Foundation;
 using ObjCRuntime;
 
-namespace Xamarin.Mac.Tests
-{
+namespace Xamarin.Mac.Tests {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class EveryFrameworkSmokeTests
-	{
+	public class EveryFrameworkSmokeTests {
 		enum LoadStatus { FailTest, Acceptable };
 
 		LoadStatus CheckLoadFailure (string libraryName, string path)
@@ -31,6 +29,9 @@ namespace Xamarin.Mac.Tests
 			case "CryptoTokenKitLibrary":
 			case "FinderSyncLibrary":
 			case "HypervisorLibrary":
+#if !XAMCORE_5_0
+			case "InputMethodKitLibrary": // Removed very incomplete bindings for InputMethodKit, but the constant itself had to remain to keep binary compat.
+#endif
 				return LoadStatus.Acceptable;
 			}
 
@@ -90,12 +91,15 @@ namespace Xamarin.Mac.Tests
 		[Test]
 		public void ExpectedLibrariesAreLoaded ()
 		{
+			if (TestRuntime.IsLinkAll)
+				Assert.Ignore ("This test will fail when all assemblies are linked, since we won't link with all frameworks in that case.");
+
 			List<string> failures = new List<string> ();
 
 			// In the past, we've missed frameworks in NSObject.mac.cs and shipped brokeness
 			// This test tries to verify every framework listed in Constants either is loaded or expected to not be
-			foreach (FieldInfo info in typeof(Constants).GetFields ().Where (x => x.Name.EndsWith ("Library")) ) {
-				string path = (string)info.GetRawConstantValue ();
+			foreach (FieldInfo info in typeof (Constants).GetFields ().Where (x => x.Name.EndsWith ("Library"))) {
+				string path = (string) info.GetRawConstantValue ();
 				// Use RTLD_NOLOAD (0x10) so we don't load, just check to see if it is in memory
 				IntPtr handle = Dlfcn.dlopen (path, 0x10);
 				if (handle == IntPtr.Zero && CheckLoadFailure (info.Name, path) == LoadStatus.FailTest)

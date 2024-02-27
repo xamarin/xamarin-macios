@@ -31,14 +31,10 @@ namespace GameplayKit {
 	}
 
 #if NET
-	[SupportedOSPlatform ("ios10.0")]
-	[SupportedOSPlatform ("tvos10.0")]
-	[SupportedOSPlatform ("macos10.12")]
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("tvos")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("maccatalyst")]
-#else
-	[iOS (10,0)]
-	[TV (10,0)]
-	[Mac (10,12)]
 #endif
 	[Register ("GKObstacleGraph", SkipRegistration = true)]
 	public partial class GKObstacleGraph<NodeType> : GKObstacleGraph where NodeType : GKGraphNode2D {
@@ -58,7 +54,7 @@ namespace GameplayKit {
 
 		public static new GKObstacleGraph<NodeType>? FromObstacles (GKPolygonObstacle [] obstacles, float bufferRadius)
 		{
-			return Runtime.GetNSObject <GKObstacleGraph<NodeType>> (GraphWithObstacles (obstacles, bufferRadius, new Class (typeof (NodeType))));
+			return Runtime.GetNSObject<GKObstacleGraph<NodeType>> (GraphWithObstacles (obstacles, bufferRadius, new Class (typeof (NodeType))));
 		}
 
 		public new NodeType [] GetNodes (GKPolygonObstacle obstacle)

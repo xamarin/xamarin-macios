@@ -20,7 +20,7 @@ namespace StoreKit {
 	}
 
 	public static partial class SKPaymentTransactionObserver_Extensions {
-		
+
 		[Obsolete ("Use RestoreCompletedTransactionsFinished (SKPaymentQueue) instead.")]
 		public static void PaymentQueueRestoreCompletedTransactionsFinished (ISKPaymentTransactionObserver This, SKPaymentQueue queue)
 		{

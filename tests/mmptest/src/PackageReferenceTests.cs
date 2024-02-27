@@ -3,11 +3,9 @@ using System.IO;
 using System.Linq;
 using NUnit.Framework;
 
-namespace Xamarin.MMP.Tests
-{
+namespace Xamarin.MMP.Tests {
 	[TestFixture]
-	public class PackageReferenceTests
-	{
+	public class PackageReferenceTests {
 		const string PackageReference = @"<ItemGroup><PackageReference Include = ""Newtonsoft.Json"" Version = ""13.0.1"" /></ItemGroup>";
 		const string TestCode = @"var output = Newtonsoft.Json.JsonConvert.SerializeObject (new int[] { 1, 2, 3 });";
 
@@ -64,7 +62,7 @@ namespace Xamarin.MMP.Tests
 				string main = Path.Combine (tmpDir, "Today/TodayViewController.cs");
 
 				TI.CopyFileWithSubstitutions (project, project, s => s.Replace ("%ITEMGROUP%", PackageReference));
-				TI.CopyFileWithSubstitutions (main, main, s => s.Replace ("%TESTCODE%", TestCode));
+				TI.CopyFileWithSubstitutions (main, main, s => s.Replace ("REPLACE_CODE_REPLACE", TestCode));
 
 				TI.NugetRestore (project);
 				var buildResult = TI.BuildProject (Path.Combine (tmpDir, "Today/TodayExtensionTest.csproj"));

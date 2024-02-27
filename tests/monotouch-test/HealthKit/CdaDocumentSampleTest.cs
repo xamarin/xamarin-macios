@@ -14,8 +14,12 @@ using Foundation;
 using ObjCRuntime;
 
 using HealthKit;
-using UIKit;
 using NUnit.Framework;
+#if MONOMAC
+using AppKit;
+#else
+using UIKit;
+#endif
 
 namespace MonoTouchFixtures.HealthKit {
 
@@ -26,12 +30,16 @@ namespace MonoTouchFixtures.HealthKit {
 		[Test]
 		public void Error ()
 		{
+#if MONOMAC
+			TestRuntime.AssertXcodeVersion (14, 0);
+#else
 			TestRuntime.AssertXcodeVersion (8, 0);
+#endif
 
 			NSError error;
 			using (var d = new NSData ()) {
 				TestDelegate action = () => {
-					using (var s = HKCdaDocumentSample.Create (d, NSDate.DistantPast, NSDate.DistantFuture, (NSDictionary)null, out error)) {
+					using (var s = HKCdaDocumentSample.Create (d, NSDate.DistantPast, NSDate.DistantFuture, (NSDictionary) null, out error)) {
 						Assert.NotNull (error, "error");
 						var details = new HKDetailedCdaErrors (error.UserInfo);
 						Assert.That (details.ValidationError.Length, Is.EqualTo ((nint) 0), "Length");
@@ -44,12 +52,21 @@ namespace MonoTouchFixtures.HealthKit {
 #endif
 
 				if (throwsException) {
-#if NET
+#if NET || MONOMAC
 					var ex = Assert.Throws<ObjCException> (action, "Exception");
 #else
 					var ex = Assert.Throws<MonoTouchException> (action, "Exception");
 #endif
+
+#if MONOMAC
 					Assert.That (ex.Message, Does.Match ("startDate.*and endDate.*exceed the maximum allowed duration for this sample type"), "Exception Message");
+#else
+					if (TestRuntime.CheckXcodeVersion (15, 0)) {
+						Assert.That (ex.Message, Does.Match ("Objective-C exception thrown.  Name: _HKObjectValidationFailureException Reason: Type HKSample can not have endDate of NSDate.distantFuture"), "Exception Message");
+					} else {
+						Assert.That (ex.Message, Does.Match ("startDate.*and endDate.*exceed the maximum allowed duration for this sample type"), "Exception Message");
+					}
+#endif
 				} else {
 					action ();
 				}

@@ -42,11 +42,13 @@ namespace CoreText {
 		[Field ("kCTFontFeatureSelectorSettingKey")]
 		NSString Setting { get; }
 
-		[iOS (13,0), Mac (10,15), TV (13,0), Watch (6,0)]
+		[iOS (13, 0), TV (13, 0), Watch (6, 0)]
+		[MacCatalyst (13, 1)]
 		[Field ("kCTFontFeatureSampleTextKey")]
 		NSString SampleText { get; }
 
-		[iOS (13,0), Mac (10,15), TV (13,0), Watch (6,0)]
+		[iOS (13, 0), TV (13, 0), Watch (6, 0)]
+		[MacCatalyst (13, 1)]
 		[Field ("kCTFontFeatureTooltipTextKey")]
 		NSString TooltipText { get; }
 	}
@@ -69,7 +71,7 @@ namespace CoreText {
 		[Field ("kCTFontVariationAxisNameKey")]
 		NSString Name { get; }
 
-		[iOS (11,0), Mac (10,13), Watch (4,0), TV (11,0)]
+		[MacCatalyst (13, 1)]
 		[Field ("kCTFontVariationAxisHiddenKey")]
 		NSString Hidden { get; }
 	}
@@ -78,6 +80,7 @@ namespace CoreText {
 	interface CTTypesetterOptionKey {
 
 		[Deprecated (PlatformName.iOS, 6, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 		[Field ("kCTTypesetterOptionDisableBidiProcessing")]
 #if !NET
 		[Internal]
@@ -94,7 +97,8 @@ namespace CoreText {
 		NSString ForceEmbeddingLevel { get; }
 #endif
 
-		[Watch (5,0), TV (12,0), Mac (10,14), iOS (12,0)]
+		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
+		[MacCatalyst (13, 1)]
 		[Field ("kCTTypesetterOptionAllowUnboundedLayout")]
 		NSString AllowUnboundedLayout { get; }
 	}
@@ -105,10 +109,12 @@ namespace CoreText {
 		NSString FontUrlsKey { get; }
 
 		[NoWatch, NoTV, NoMac, iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Field ("kCTFontManagerErrorFontDescriptorsKey")]
 		NSString FontDescriptorsKey { get; }
 
 		[NoWatch, NoTV, NoMac, iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Field ("kCTFontManagerErrorFontAssetNameKey")]
 		NSString FontAssetNameKey { get; }
 	}
@@ -319,7 +325,48 @@ namespace CoreText {
 	}
 #endif
 
-	[Static][Partial]
+	[Internal]
+	[Static]
+	interface CTFontDescriptorMatchingKeys {
+		[Field ("kCTFontDescriptorMatchingSourceDescriptor")]
+		NSString SourceDescriptorKey { get; }
+
+		[Field ("kCTFontDescriptorMatchingDescriptors")]
+		NSString DescriptorsKey { get; }
+
+		[Field ("kCTFontDescriptorMatchingResult")]
+		NSString ResultKey { get; }
+
+		[Field ("kCTFontDescriptorMatchingPercentage")]
+		NSString PercentageKey { get; }
+
+		[Field ("kCTFontDescriptorMatchingCurrentAssetSize")]
+		NSString CurrentAssetSizeKey { get; }
+
+		[Field ("kCTFontDescriptorMatchingTotalDownloadedSize")]
+		NSString TotalDownloadedSizeKey { get; }
+
+		[Field ("kCTFontDescriptorMatchingTotalAssetSize")]
+		NSString TotalAssetSizeKey { get; }
+
+		[Field ("kCTFontDescriptorMatchingError")]
+		NSString ErrorKey { get; }
+	}
+
+	[StrongDictionary ("CTFontDescriptorMatchingKeys")]
+	interface CTFontDescriptorMatchingProgress {
+		CTFontDescriptor SourceDescriptor { get; }
+		CTFontDescriptor [] Descriptors { get; }
+		CTFontDescriptor [] Result { get; }
+		double Percentage { get; }
+		long CurrentAssetSize { get; }
+		long TotalDownloadedSize { get; }
+		long TotalAssetSize { get; }
+		NSError Error { get; }
+	}
+
+	[Static]
+	[Partial]
 	interface CTStringAttributeKey {
 #if NET
 		[Field ("kCTFontAttributeName")]
@@ -389,7 +436,8 @@ namespace CoreText {
 		NSString WritingDirection { get; }
 #endif
 
-		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Watch (6, 0), TV (13, 0), iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Field ("kCTTrackingAttributeName")]
 		NSString TrackingAttributeName { get; }
 	}

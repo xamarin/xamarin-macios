@@ -16,6 +16,8 @@ using NUnit.Framework;
 
 using Foundation;
 
+#nullable enable
+
 namespace MonoTouchFixtures.Foundation {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
@@ -117,5 +119,32 @@ namespace MonoTouchFixtures.Foundation {
 				Assert.AreEqual ("abc", (string) element, "Value element");
 			}
 		}
+
+#if false // https://github.com/xamarin/xamarin-macios/issues/15577
+		[Test]
+		public void GetDifferenceFromArrayTest ()
+		{
+			TestRuntime.AssertXcodeVersion (13,0);
+			using var str1 = (NSString) "1";
+			using var str2 = (NSString) "1";
+			using var str3 = (NSString) "1";
+			
+			using var array1 = NSArray.FromObjects (str1, str2);
+			using var array2 = NSArray.FromObjects (str1, str3);
+			NSOrderedCollectionDifference? diff = null;
+			Assert.DoesNotThrow (() => {
+				diff = array1.GetDifferenceFromArray (array2,
+					NSOrderedCollectionDifferenceCalculationOptions.OmitInsertedObjects,
+					(first, second) => {
+						var firstStr = (NSString) first;
+						var secondStr = (NSString) second;
+						return first.ToString ().Equals (second.ToString ());
+					});
+			}, "Not throws");
+			// https://github.com/xamarin/xamarin-macios/issues/15577 - Did not rewrite tests that were disabled
+			// Maybe assert that we get a specific diff result as well?
+			Assert.NotNull (diff, "Not null");
+		}
+#endif
 	}
 }

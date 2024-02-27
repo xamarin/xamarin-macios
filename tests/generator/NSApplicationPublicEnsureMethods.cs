@@ -13,15 +13,16 @@ using Foundation;
 using ObjCRuntime;
 
 namespace Test {
-	[BaseType (typeof (NSObject), Delegates=new string [] {"WeakDelegate"}, Events=new Type [] {typeof (SharedDelegate)})]
+	[BaseType (typeof (NSObject), Delegates = new string [] { "WeakDelegate" }, Events = new Type [] { typeof (SharedDelegate) })]
 	public interface TestClass {
 		[Export ("delegate", ArgumentSemantic.Assign), NullAllowed]
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		SharedDelegate Delegate { get; set; }
+		ISharedDelegate Delegate { get; set; }
 	}
+
+	public interface ISharedDelegate { }
 
 	[BaseType (typeof (NSObject))]
 	[Model]

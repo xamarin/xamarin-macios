@@ -21,11 +21,11 @@ using UIKit;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.CoreImage {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class DetectorTest {
-		
+
 		[Test]
 		public void NullContext ()
 		{

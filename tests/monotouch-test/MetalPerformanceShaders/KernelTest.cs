@@ -33,7 +33,7 @@ namespace MonoTouchFixtures.MetalPerformanceShaders {
 
 			device = MTLDevice.SystemDefault;
 			// some older hardware won't have a default
-			if (device == null || !MPSKernel.Supports (device))
+			if (device is null || !MPSKernel.Supports (device))
 				Assert.Inconclusive ("Metal is not supported");
 		}
 
@@ -41,16 +41,16 @@ namespace MonoTouchFixtures.MetalPerformanceShaders {
 		public void RectNoClip ()
 		{
 #if !MONOMAC
-			TestRuntime.AssertXcodeVersion (7,0);
+			TestRuntime.AssertXcodeVersion (7, 0);
 #else
 			TestRuntime.AssertXcodeVersion (9, 0);
 #endif
 
 			var d = MTLDevice.SystemDefault;
 			// some older hardware won't have a default
-			if (d == null)
+			if (d is null)
 				Assert.Inconclusive ("Metal is not supported");
-			
+
 			var r = MPSKernel.RectNoClip;
 			var o = r.Origin;
 			Assert.That (o.X, Is.EqualTo ((nint) 0), "X");
@@ -68,7 +68,7 @@ namespace MonoTouchFixtures.MetalPerformanceShaders {
 #if !MONOMAC
 			TestRuntime.AssertDevice ();
 #endif
-			
+
 			TestRuntime.AssertXcodeVersion (9, 0);
 
 			var kernel = new MPSKernel (MTLDevice.SystemDefault);
@@ -82,7 +82,7 @@ namespace MonoTouchFixtures.MetalPerformanceShaders {
 #if !MONOMAC
 			TestRuntime.AssertDevice ();
 #endif
-			
+
 			TestRuntime.AssertXcodeVersion (9, 0);
 
 			var layer = new MPSRnnImageInferenceLayer (MTLDevice.SystemDefault, MPSRnnSingleGateDescriptor.Create (1, 1));
@@ -96,7 +96,7 @@ namespace MonoTouchFixtures.MetalPerformanceShaders {
 #if !MONOMAC
 			TestRuntime.AssertDevice ();
 #endif
-			
+
 			TestRuntime.AssertXcodeVersion (9, 0);
 
 			var layer = new MPSRnnMatrixInferenceLayer (MTLDevice.SystemDefault, MPSRnnSingleGateDescriptor.Create (1, 1));

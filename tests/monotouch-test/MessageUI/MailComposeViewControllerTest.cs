@@ -18,7 +18,7 @@ using MessageUI;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.MessageUI {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class MailComposeViewControllerTest {
@@ -35,7 +35,7 @@ namespace MonoTouchFixtures.MessageUI {
 			var cancelAttributes = new UITextAttributes ();
 			cancelAttributes.TextShadowOffset = new UIOffset (0, -1);
 #endif
-			UIBarButtonItem.AppearanceWhenContainedIn (typeof(UISearchBar)).SetTitleTextAttributes (cancelAttributes, UIControlState.Disabled);
+			UIBarButtonItem.AppearanceWhenContainedIn (typeof (UISearchBar)).SetTitleTextAttributes (cancelAttributes, UIControlState.Disabled);
 			using (var mail = new MFMailComposeViewController ()) {
 				// we're happy the .ctor did not crash (only on iOS6) because the dictionary had a null key (typo)
 				Assert.That (mail.Handle, Is.Not.EqualTo (IntPtr.Zero));

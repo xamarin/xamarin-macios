@@ -5,8 +5,6 @@ using Foundation;
 using CoreFoundation;
 using ObjCRuntime;
 using System;
-#if NET
-#endif
 
 namespace CoreWlan {
 
@@ -85,17 +83,18 @@ namespace CoreWlan {
 		WPAEnterpriseMixed = 8,
 		WPA2Enterprise = 9,
 		Enterprise = 10,
-		[Mac (10,15)]
 		Wpa3Personal = 11,
-		[Mac (10,15)]
 		Wpa3Enterprise = 12,
-		[Mac (10,15)]
 		Wpa3Transition = 13,
+		[Mac (13, 0)]
+		Owe = 14,
+		[Mac (13, 0)]
+		OweTransition = 15,
 		Unknown = long.MaxValue,
 	}
 
 	[NoMacCatalyst]
-	[Deprecated (PlatformName.MacOSX, 11,0)]
+	[Deprecated (PlatformName.MacOSX, 11, 0)]
 	[Native]
 	public enum CWIbssModeSecurity : ulong {
 		None = 0,
@@ -119,6 +118,7 @@ namespace CoreWlan {
 		Unknown = 0,
 		TwoGHz = 1,
 		FiveGHz = 2,
+		SixGHz = 3,
 	}
 
 	[NoMacCatalyst]
@@ -152,10 +152,10 @@ namespace CoreWlan {
 		ModeDidChange = 7,
 		ScanCacheUpdated = 8,
 
-		[Deprecated (PlatformName.MacOSX, 11,0)]
+		[Deprecated (PlatformName.MacOSX, 11, 0)]
 		VirtualInterfaceStateChanged = 9,
 
-		[Deprecated (PlatformName.MacOSX, 11,0)]
+		[Deprecated (PlatformName.MacOSX, 11, 0)]
 		RangingReportEvent = 10,
 		Unknown = long.MaxValue
 	}

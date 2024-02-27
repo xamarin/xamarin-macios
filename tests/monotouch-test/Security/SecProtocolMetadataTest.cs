@@ -20,7 +20,7 @@ namespace MonoTouchFixtures.Security {
 		[SetUp]
 		public void SetUp ()
 		{
-			TestRuntime.AssertXcodeVersion (10,0);
+			TestRuntime.AssertXcodeVersion (10, 0);
 		}
 
 		[Test]
@@ -32,8 +32,10 @@ namespace MonoTouchFixtures.Security {
 				var connection = new NWConnection (ep, parameters);
 
 				var ready = new ManualResetEvent (false);
+				var anyStateChange = new ManualResetEvent (false);
 				connection.SetStateChangeHandler ((state, error) => {
 					Console.WriteLine (state);
+					anyStateChange.Set ();
 					switch (state) {
 					case NWConnectionState.Cancelled:
 					case NWConnectionState.Failed:
@@ -56,7 +58,12 @@ namespace MonoTouchFixtures.Security {
 				connection.Start ();
 
 				// Wait until the connection is ready.
-				Assert.True (ready.WaitOne (TimeSpan.FromSeconds (10)), "Connection is ready");
+				if (!ready.WaitOne (TimeSpan.FromSeconds (10))) {
+					// If we're in CI, and didn't get _any_ callbacks, then ignore the failure, since it's likely a network hiccup.
+					if (!anyStateChange.WaitOne (0))
+						TestRuntime.IgnoreInCI ("Transient network failure - ignore in CI");
+					Assert.Fail ("Connection is ready");
+				}
 
 #if NET
 				using (var m = connection.GetProtocolMetadata<NWTlsMetadata> (NWProtocolDefinition.CreateTlsDefinition ())) {

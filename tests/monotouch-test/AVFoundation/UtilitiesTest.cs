@@ -51,13 +51,13 @@ namespace MonoTouchFixtures.AVFoundation {
 			if (!TestRuntime.CheckXcodeVersion (6, 1))
 				Assert.Ignore ("Ignoring Tests: Requires Xcode 6.1+ API");
 
-			Assert.That (Marshal.SizeOf (typeof (AVSampleCursorSyncInfo)), Is.EqualTo (3), "AVSampleCursorSyncInfo Size");
-			Assert.That (Marshal.SizeOf (typeof (AVSampleCursorDependencyInfo)), Is.EqualTo (6), "AVSampleCursorDependencyInfo Size");
-			Assert.That (Marshal.SizeOf (typeof (AVSampleCursorStorageRange)), Is.EqualTo (16), "AVSampleCursorStorageRange Size");
-			Assert.That (Marshal.SizeOf (typeof (AVSampleCursorChunkInfo)), Is.EqualTo (IntPtr.Size == 8 ? 16 : 12), "AVSampleCursorChunkInfo Size");
+			Assert.That (Marshal.SizeOf<AVSampleCursorSyncInfo> (), Is.EqualTo (3), "AVSampleCursorSyncInfo Size");
+			Assert.That (Marshal.SizeOf<AVSampleCursorDependencyInfo> (), Is.EqualTo (6), "AVSampleCursorDependencyInfo Size");
+			Assert.That (Marshal.SizeOf<AVSampleCursorStorageRange> (), Is.EqualTo (16), "AVSampleCursorStorageRange Size");
+			Assert.That (Marshal.SizeOf<AVSampleCursorChunkInfo> (), Is.EqualTo (IntPtr.Size == 8 ? 16 : 12), "AVSampleCursorChunkInfo Size");
 		}
 	}
 #endif // __MACOS__ || !NET
 }
-	
+
 #endif // !__WATCHOS__

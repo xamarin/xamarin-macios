@@ -54,7 +54,7 @@ namespace MonoTouchFixtures.CoreServices {
 				Assert.That (m.ResponseStatusCode, Is.EqualTo (HttpStatusCode.OK), "ResponseStatusCode");
 				Assert.That (m.ResponseStatusLine, Is.Empty, "ResponseStatusLine");
 				Assert.That (m.Version.ToString (), Is.EqualTo ("1.1"), "Version");
-				Assert.That (TestRuntime.CFGetRetainCount (m.Handle), Is.EqualTo ((nint)1), "RetainCount");
+				Assert.That (TestRuntime.CFGetRetainCount (m.Handle), Is.EqualTo ((nint) 1), "RetainCount");
 			}
 		}
 
@@ -68,7 +68,7 @@ namespace MonoTouchFixtures.CoreServices {
 				Assert.Throws<InvalidOperationException> (delegate { var x = m.ResponseStatusCode; }, "ResponseStatusCode");
 				Assert.Throws<InvalidOperationException> (delegate { var x = m.ResponseStatusLine; }, "ResponseStatusLine");
 				Assert.That (m.Version.ToString (), Is.EqualTo ("1.0"), "Version");
-				Assert.That (TestRuntime.CFGetRetainCount (m.Handle), Is.EqualTo ((nint)1), "RetainCount");
+				Assert.That (TestRuntime.CFGetRetainCount (m.Handle), Is.EqualTo ((nint) 1), "RetainCount");
 			}
 		}
 
@@ -80,7 +80,7 @@ namespace MonoTouchFixtures.CoreServices {
 			var taskCompletionSource = new TaskCompletionSource<CFHTTPMessage> ();
 			// the following code has to be in a diff thread, else, we are blocking the current loop, not cool
 			// perform a request so that we fail in the auth, then create the auth object and check the count
-			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () => {
+			TestRuntime.RunAsync (TimeSpan.FromSeconds (30), async () => {
 				using (var request = CFHTTPMessage.CreateRequest (
 					new Uri (NetworkResources.Httpbin.GetStatusCodeUrl (HttpStatusCode.Unauthorized)), "GET", null)) {
 					request.SetBody (Array.Empty<byte> ()); // empty body, we are not interested

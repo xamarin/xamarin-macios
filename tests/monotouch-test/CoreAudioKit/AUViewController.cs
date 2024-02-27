@@ -17,8 +17,7 @@ namespace MonoTouchFixtures.CoreAudioKit {
 
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class AUViewControllerTest
-	{
+	public class AUViewControllerTest {
 		[SetUp]
 		public void MinimumSdkCheck ()
 		{

@@ -12,6 +12,7 @@
     <MonoBundlingExtraArgs>$(MtouchExtraArgs)</MonoBundlingExtraArgs>
     <RootTestsDirectory>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)\..\..\..\..'))</RootTestsDirectory>
     <ThisTestDirectory>$(RootTestsDirectory)\linker\ios\link all</ThisTestDirectory>
+    <SingleArchReleaseBuild>true</SingleArchReleaseBuild>
   </PropertyGroup>
 
   <Import Project="$(RootTestsDirectory)/common/shared-dotnet.csproj" />
@@ -37,14 +38,12 @@
 
   <ItemGroup Condition="$(TargetFramework.EndsWith('-macos'))">
     <Compile Include="$(RootTestsDirectory)\common\mac\MacMain.cs" Condition="$(TargetFramework.EndsWith('-macos'))" Link="MacMain.cs" />
-    <Compile Include="$(RootTestsDirectory)\common\mac\TestRuntime.macos.cs">
-      <Link>TestRuntime.macos.cs</Link>
-    </Compile>
     <Compile Include="$(ThisTestDirectory)\..\..\mac\link all\LinkAllTest.cs" />
   </ItemGroup>
 
   <ItemGroup Condition="!$(TargetFramework.EndsWith('-macos'))">
-    <Compile Include="$(ThisTestDirectory)\AppDelegate.cs" />
+    <Compile Include="$(ThisTestDirectory)\..\..\AppDelegate.cs" />
+    <Compile Include="$(RootTestsDirectory)\common\AppDelegate.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -82,6 +81,7 @@
     <Compile Include="$(ThisTestDirectory)\..\..\..\monotouch-test\System.Net.Http\NetworkResources.cs">
       <Link>NetworkResources.cs</Link>
     </Compile>
+    <Compile Include="$(RootTestsDirectory)\common\TestAssemblyLoader.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="$(ThisTestDirectory)\..\..\..\monotouch-test\Tamarin.pdf">

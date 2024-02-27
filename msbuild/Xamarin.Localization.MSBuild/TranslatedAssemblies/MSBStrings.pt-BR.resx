@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <resheader name="resmimetype">
     <value>text/microsoft-resx</value>
@@ -424,7 +424,7 @@
         </value>
     </data>
   <data name="E0118" xml:space="preserve">
-        <value>{0} exited with code {1}:
+        <value>{0} saiu com código {1}:
 {2}</value>
     </data>
   <data name="M0119" xml:space="preserve">
@@ -672,12 +672,13 @@
         </value>
     </data>
   <data name="E0174" xml:space="preserve">
-        <value>{0} tem um formato incorreto ou desconhecido e não pode ser processado.
-        </value>
+        <value>O xcframework {0} tem um formato incorreto ou desconhecido e não pode ser processado.</value>
     </data>
   <data name="E0175" xml:space="preserve">
-        <value>Nenhuma estrutura correspondente encontrada dentro de '{0}'.
-        </value>
+        <value>Nenhuma estrutura correspondente encontrada dentro de '{0}'. SupportedPlatform: '{0}', SupportedPlatformVariant: '{1}', SupportedArchitectures: '{2}'.</value>
+        <comment>
+            Do not translate: 'SupportedPlatform', 'SupportedPlatformVariant', 'SupportedArchitectures' (they're keys inside a file with key/value pairs))
+        </comment>
     </data>
   <data name="W0176" xml:space="preserve">
         <value>Opções conflitantes '{0}' e '{1}'. '{1}' será ignorado.
@@ -722,6 +723,12 @@
     </data>
   <data name="E0189" xml:space="preserve">
         <value>Não foi possível analisar os argumentos do vinculador personalizado '-{0}': {1}</value>
+    </data>
+  <data name="E0190" xml:space="preserve">
+        <value>O item NativeResource '{0}' não existe.</value>
+        <comment>
+            NativeResource: do not translate (this is the name of an item in the project file).
+        </comment>
     </data>
   <data name="E7001" xml:space="preserve">
         <value>Não foi possível resolver os IPs do host para as configurações do depurador de WiFi.
@@ -997,6 +1004,7 @@
         <value>Configurar: A Entrada, "{0}", Não Existe
         </value>
     </data>
+  <!-- E7068: not in use anymore -->
   <data name="E7069" xml:space="preserve">
         <value>O Xamarin.iOS 14+ não oferece suporte a aplicativos watchOS 1. Migre seu projeto para watchOS 2.</value>
     </data>
@@ -1145,5 +1153,88 @@
     </data>
   <data name="E7101" xml:space="preserve">
         <value>Propriedade desconhecida '{0}' com valor '{1}'.</value>
+    </data>
+  <data name="E7102" xml:space="preserve">
+        <value>Valor '{0}' inválido para o direito '{1}' do tipo '{2}' especificado no grupo de itens CustomEntitlements. Nenhum valor esperado.</value>
+        <comment>
+            Don't translate: CustomEntitlements (name of option in project file)
+        </comment>
+    </data>
+  <data name="E7103" xml:space="preserve">
+        <value>Valor '{0}' inválido para o direito '{1}' do tipo '{2}' especificado no grupo de itens CustomEntitlements. Esperado 'true' ou 'false'.</value>
+        <comment>
+            Don't translate:
+                * CustomEntitlements (name of option in project file)
+                * 'true', 'false'
+        </comment>
+    </data>
+  <data name="E7104" xml:space="preserve">
+        <value>Tipo '{0}' desconhecido para o direito '{1}' especificado no grupo de itens CustomEntitlements. Esperado 'Remove', 'Boolean', 'String' ou 'StringArray'.</value>
+        <comment>
+            Don't translate:
+                * CustomEntitlements (name of option in project file)
+                * 'Remove', 'Boolean', 'String', 'StringArray'
+        </comment>
+    </data>
+  <data name="W7105" xml:space="preserve">
+        <value>Extensão inesperada '{0}' para referência nativa '{1}' no pacote de recursos de ligação '{2}'.</value>
+        <comment>
+            {0}: file extension
+            {1}: path to a file
+            {2}: path to a file
+        </comment>
+    </data>
+  <data name="W7106" xml:space="preserve">
+        <value>Esperava um arquivo chamado '{1}' no arquivo zip {0}.</value>
+    </data>
+  <data name="W7107" xml:space="preserve">
+        <value>O arquivo zip '{0}' não existe.</value>
+    </data>
+  <data name="W7108" xml:space="preserve">
+        <value>O arquivo '{0}' não existe.</value>
+    </data>
+  <data name="W7109" xml:space="preserve">
+        <value>Não é possível processar o item '{0}' como uma referência nativa: tipo desconhecido.</value>
+    </data>
+  <data name="E7110" xml:space="preserve">
+        <value>Não foi possível carregar Info.plist '{0}' do xcframework '{1}'.</value>
+    </data>
+  <data name="W7111" xml:space="preserve">
+        <value>O diretório '{0}' não existe.</value>
+    </data>
+  <data name="E7112" xml:space="preserve">
+        <value>Não foi possível encontrar o arquivo ou diretório '{0}' no arquivo zip '{1}'.</value>
+    </data>
+  <data name="E7113" xml:space="preserve">
+        <value>Não é possível processar o arquivo zip '{0}' nesta plataforma: o arquivo '{1}' é um link simbólico.</value>
+    </data>
+  <data name="E7114" xml:space="preserve">
+        <value>A tarefa "{0}" não recebeu um valor para o parâmetro "{1}", que é necessário ao compilar nesta plataforma.</value>
+    </data>
+  <data name="E7115" xml:space="preserve">
+        <value>O assembly illink não existe: '{0}'.</value>
+        <comment>
+            {0}: the path to the linker assembly
+        </comment>
+    </data>
+  <data name="E7116" xml:space="preserve">
+        <value>O assembly {0} não fornece metadados "ObjectFile".</value>
+        <comment>
+            Don't translate: 'ObjectFile'.
+        </comment>
+    </data>
+  <data name="E7117" xml:space="preserve">
+        <value>O assembly {0} foi passado várias vezes como um assembly de entrada (referenciado de {1}).</value>
+        <comment>
+            {0}: the name of an assembly
+            {1}: the path to an assembly
+        </comment>
+    </data>
+  <data name="E7118" xml:space="preserve">
+        <value>Falha ao compilar no AOT {0}. O compilador AOT saiu com o código {1}.</value>
+        <comment>
+            {0}: the path to an assembly
+            {1}: the exit code of a process
+        </comment>
     </data>
 </root>

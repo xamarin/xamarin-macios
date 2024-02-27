@@ -5,6 +5,8 @@ using System.Net;
 using System.Text;
 using Xamarin.Bundler;
 
+#nullable enable
+
 #if MLAUNCH
 using Xamarin.Launcher;
 #elif XAMARIN_HOSTING
@@ -236,23 +238,23 @@ namespace Xamarin {
 		{
 			var file = ReadFile (filename);
 			var fatfile = file as FatFile;
-			if (fatfile != null) {
-				foreach (var ff in fatfile.entries) {
-					if (ff.entry != null)
+			if (fatfile is not null) {
+				foreach (var ff in fatfile.entries!) {
+					if (ff.entry is not null)
 						yield return ff.entry;
-					if (ff.static_library != null)
+					if (ff.static_library is not null)
 						foreach (var obj in ff.static_library.ObjectFiles)
 							yield return obj;
 				}
 			} else {
 				var mf = file as MachOFile;
-				if (mf != null) {
+				if (mf is not null) {
 					yield return mf;
 					yield break;
 				}
 
 				var sl = file as StaticLibrary;
-				if (sl != null) {
+				if (sl is not null) {
 					foreach (var obj in sl.ObjectFiles)
 						yield return obj;
 					yield break;
@@ -289,9 +291,9 @@ namespace Xamarin {
 					bool any_removed = false;
 
 					// remove architectures we don't want
-					for (int i = fatfile.entries.Count - 1; i >= 0; i--) {
+					for (int i = fatfile.entries!.Count - 1; i >= 0; i--) {
 						var ff = fatfile.entries [i];
-						if (!architectures.Contains (ff.entry.Architecture)) {
+						if (!architectures.Contains (ff.entry!.Architecture)) {
 							any_removed = true;
 							fatfile.entries.RemoveAt (i);
 							fatfile.nfat_arch--;
@@ -355,7 +357,7 @@ namespace Xamarin {
 
 		public static IEnumerable<string> GetNativeDependencies (string libraryName)
 		{
-			IEnumerable<string> result;
+			IEnumerable<string>? result;
 			lock (native_dependencies) {
 				if (native_dependencies.TryGetValue (libraryName, out result))
 					return result;
@@ -366,7 +368,7 @@ namespace Xamarin {
 			foreach (var macho_file in macho_files) {
 				foreach (var lc in macho_file.load_commands) {
 					var dyld_lc = lc as Xamarin.DylibLoadCommand;
-					if (dyld_lc != null) {
+					if (dyld_lc?.name is not null) {
 						dependencies.Add (dyld_lc.name);
 					}
 				}
@@ -484,10 +486,10 @@ namespace Xamarin {
 				return ((MachOFile) f).IsDynamicLibrary;
 
 			var fat = f as FatFile;
-			if (fat == null)
+			if (fat is null)
 				return false;
 
-			foreach (var entry in fat.entries)
+			foreach (var entry in fat.entries!)
 				if (!entry.IsDynamicLibrary)
 					return false;
 
@@ -615,8 +617,8 @@ namespace Xamarin {
 	}
 
 	public class MachOFile {
-		FatEntry fat_parent;
-		string filename;
+		FatEntry? fat_parent;
+		string? filename;
 
 		public uint magic;
 		int _cputype;
@@ -637,10 +639,10 @@ namespace Xamarin {
 		public uint flags { get { return is_big_endian ? MachO.ToBigEndian (_flags) : _flags; } }
 		public uint reserved { get { return is_big_endian ? MachO.ToBigEndian (_reserved) : _reserved; } }
 
-		public List<LoadCommand> load_commands;
+		public List<LoadCommand> load_commands = new List<LoadCommand> ();
 
-		public string Filename { get { return filename; } }
-		public FatEntry Parent { get { return fat_parent; } }
+		public string? Filename { get { return filename; } }
+		public FatEntry? Parent { get { return fat_parent; } }
 
 		public MachOFile (FatEntry parent)
 		{
@@ -671,7 +673,7 @@ namespace Xamarin {
 				writer.Write (reserved);
 		}
 
-		internal static bool IsMachOLibrary (FatEntry fat_entry, BinaryReader reader, bool throw_if_error = false)
+		internal static bool IsMachOLibrary (FatEntry? fat_entry, BinaryReader reader, bool throw_if_error = false)
 		{
 			var pos = reader.BaseStream.Position;
 
@@ -692,7 +694,7 @@ namespace Xamarin {
 			reader.BaseStream.Position = pos;
 
 			if (throw_if_error && !rv)
-				throw ErrorHelper.CreateError (1600, Errors.MX1600, magic.ToString ("x"), fat_entry.Parent.Filename);
+				throw ErrorHelper.CreateError (1600, Errors.MX1600, magic.ToString ("x"), fat_entry?.Parent?.Filename);
 
 			return rv;
 		}
@@ -740,7 +742,7 @@ namespace Xamarin {
 				is64bitheader = true;
 				break;
 			default:
-				throw ErrorHelper.CreateError (1602, Errors.MX1602, magic.ToString ("x"), fat_parent != null ? fat_parent.Parent.Filename : filename);
+				throw ErrorHelper.CreateError (1602, Errors.MX1602, magic.ToString ("x"), fat_parent?.Parent?.Filename ?? filename);
 			}
 			_cputype = reader.ReadInt32 ();
 			_cpusubtype = reader.ReadInt32 ();
@@ -878,7 +880,7 @@ namespace Xamarin {
 			set { _nfat_arch = is_big_endian ? MachO.FromBigEndian (value) : value; }
 		}
 
-		public List<FatEntry> entries;
+		public List<FatEntry>? entries;
 
 		internal bool is_big_endian {
 			get { return magic == MachO.FAT_CIGAM; }
@@ -893,7 +895,7 @@ namespace Xamarin {
 		internal void WriteHeaders (BinaryWriter writer)
 		{
 			WriteHeader (writer);
-			for (int i = 0; i < entries.Count; i++) {
+			for (int i = 0; i < entries!.Count; i++) {
 				entries [i].WriteHeader (writer);
 			}
 		}
@@ -915,22 +917,22 @@ namespace Xamarin {
 	}
 
 	public class FatEntry {
-		FatFile parent;
+		FatFile? parent;
 		public int cputype;
 		public int cpusubtype;
 		public uint offset;
 		public uint size;
 		public uint align;
 
-		public MachOFile entry;
-		public StaticLibrary static_library;
+		public MachOFile? entry;
+		public StaticLibrary? static_library;
 
-		public bool IsDynamicLibrary { get { return entry == null ? false : entry.IsDynamicLibrary; } }
-		public FatFile Parent { get { return parent; } }
+		public bool IsDynamicLibrary { get { return entry?.IsDynamicLibrary == true; } }
+		public FatFile Parent { get { return parent!; } }
 
 		internal void WriteHeader (BinaryWriter writer)
 		{
-			if (parent.is_big_endian) {
+			if (Parent.is_big_endian) {
 				writer.Write (MachO.ToBigEndian (cputype));
 				writer.Write (MachO.ToBigEndian (cpusubtype));
 				writer.Write (MachO.ToBigEndian (offset));
@@ -994,9 +996,9 @@ namespace Xamarin {
 				entry.Read (reader);
 			} else if (StaticLibrary.IsStaticLibrary (reader)) {
 				static_library = new StaticLibrary ();
-				static_library.Read (parent?.Filename, reader, size);
+				static_library.Read (parent?.Filename!, reader, size);
 			} else {
-				throw ErrorHelper.CreateError (1603, Errors.MX1603, offset, parent.Filename);
+				throw ErrorHelper.CreateError (1603, Errors.MX1603, offset, parent?.Filename);
 			}
 		}
 	}
@@ -1019,7 +1021,7 @@ namespace Xamarin {
 	}
 
 	public class DylibLoadCommand : LoadCommand {
-		public string name;
+		public string name = string.Empty;
 		public uint timestamp;
 		public uint current_version;
 		public uint compatibility_version;
@@ -1037,7 +1039,7 @@ namespace Xamarin {
 	}
 
 	public class DylibIdCommand : LoadCommand {
-		public string name;
+		public string name = string.Empty;
 		public uint timestamp;
 		public uint current_version;
 		public uint compatibility_version;
@@ -1055,7 +1057,7 @@ namespace Xamarin {
 	}
 
 	public class UuidCommand : LoadCommand {
-		public byte [] uuid;
+		public byte []? uuid;
 
 #if DEBUG
 		public override void Dump ()
@@ -1090,7 +1092,7 @@ namespace Xamarin {
 		public uint minos; /* X.Y.Z is encoded in nibbles xxxx.yy.zz */
 		public uint sdk; /* X.Y.Z is encoded in nibbles xxxx.yy.zz */
 		public uint ntools;
-		public BuildToolVersion [] tools;
+		public BuildToolVersion []? tools;
 
 		public class BuildToolVersion {
 			public uint tool;

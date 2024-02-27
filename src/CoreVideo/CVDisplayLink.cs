@@ -333,11 +333,11 @@ namespace CoreVideo {
 #if NET
 		[UnmanagedCallersOnly]
 		static unsafe CVReturn OutputCallback (IntPtr displayLink, CVTimeStamp* inNow, CVTimeStamp* inOutputTime, CVOptionFlags flagsIn, CVOptionFlags* flagsOut, IntPtr displayLinkContext)
-#else			
+#else
 		static CVDisplayLinkOutputCallback static_OutputCallback = new CVDisplayLinkOutputCallback (OutputCallback);
-	#if !MONOMAC
+#if !MONOMAC
 		[MonoPInvokeCallback (typeof (CVDisplayLinkOutputCallback))]
-	#endif
+#endif
 		static CVReturn OutputCallback (IntPtr displayLink, ref CVTimeStamp inNow, ref CVTimeStamp inOutputTime, CVOptionFlags flagsIn, ref CVOptionFlags flagsOut, IntPtr displayLinkContext)
 #endif
 		{

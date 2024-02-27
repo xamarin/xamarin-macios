@@ -17,12 +17,10 @@ using ObjCRuntime;
 using NUnit.Framework;
 using Xamarin.Mac.Tests;
 
-namespace MonoMacFixtures.CoreBluetooth
-{
+namespace MonoMacFixtures.CoreBluetooth {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class CBUUIDTest
-	{
+	public class CBUUIDTest {
 		[Test]
 		public void Roundtrip_16bits ()
 		{
@@ -93,9 +91,9 @@ namespace MonoMacFixtures.CoreBluetooth
 				Is.EqualTo (CBUUID.FromBytes (guid)));
 
 			// ObjC exception: Data <aabbccdd> does not represent a valid UUID
-//			guid = new byte [] { 0xaa, 0xbb, 0xcc, 0xdd };
-//			Assert.That (CBUUID.FromBytes (guid),
-//				Is.EqualTo (CBUUID.FromBytes (guid)));
+			//			guid = new byte [] { 0xaa, 0xbb, 0xcc, 0xdd };
+			//			Assert.That (CBUUID.FromBytes (guid),
+			//				Is.EqualTo (CBUUID.FromBytes (guid)));
 
 			Assert.That (CBUUID.FromPartial (0x1234),
 				Is.EqualTo (CBUUID.FromPartial (0x1234)));
@@ -104,8 +102,8 @@ namespace MonoMacFixtures.CoreBluetooth
 				Is.EqualTo (CBUUID.FromBytes (new byte [] { 0x12, 0x34 })));
 
 			// ObjC exception: Data <12345678> does not represent a valid UUID
-//			Assert.That (CBUUID.FromString ("12345678"),
-//				Is.EqualTo (CBUUID.FromBytes (new byte [] { 0x12, 0x34, 0x56, 0x78 })));
+			//			Assert.That (CBUUID.FromString ("12345678"),
+			//				Is.EqualTo (CBUUID.FromBytes (new byte [] { 0x12, 0x34, 0x56, 0x78 })));
 		}
 
 		[Test]
@@ -114,15 +112,15 @@ namespace MonoMacFixtures.CoreBluetooth
 			Assert.That (CBUUID.FromPartial (0x0127), Is.EqualTo (MakeFull (0x01, 0x27)));
 
 			// ObjC exception: Data <abcdef12> does not represent a valid UUID
-//			Assert.That (CBUUID.FromBytes (new byte [] { 0xab, 0xcd, 0xef, 0x12 }),
-//				Is.EqualTo (MakeFull (0xab, 0xcd, 0xef, 0x12)));
+			//			Assert.That (CBUUID.FromBytes (new byte [] { 0xab, 0xcd, 0xef, 0x12 }),
+			//				Is.EqualTo (MakeFull (0xab, 0xcd, 0xef, 0x12)));
 
 			Assert.That (CBUUID.FromString ("1234"),
 				Is.EqualTo (CBUUID.FromString ("00001234-0000-1000-8000-00805f9b34fb")));
 
 			// ObjC exception: Data <12345678> does not represent a valid UUID
-//			Assert.That (CBUUID.FromString ("12345678"),
-//				Is.EqualTo (CBUUID.FromString ("12345678-0000-1000-8000-00805f9b34fb")));
+			//			Assert.That (CBUUID.FromString ("12345678"),
+			//				Is.EqualTo (CBUUID.FromString ("12345678-0000-1000-8000-00805f9b34fb")));
 		}
 
 		[Test]

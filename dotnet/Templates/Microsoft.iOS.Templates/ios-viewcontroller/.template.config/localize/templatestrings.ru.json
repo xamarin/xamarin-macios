@@ -1,6 +1,6 @@
 {
   "author": "Microsoft",
-  "name": "iOS View Controller template",
-  "description": "An iOS View Controller class and xib",
-  "symbols/namespace/description": "namespace for the generated code"
+  "name": "Контроллер представления iOS",
+  "description": "Класс контроллера представления iOS и XIB",
+  "symbols/namespace/description": "пространство имен для созданного кода"
 }

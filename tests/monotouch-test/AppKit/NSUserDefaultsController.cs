@@ -6,11 +6,9 @@ using AppKit;
 using ObjCRuntime;
 using Foundation;
 
-namespace Xamarin.Mac.Tests
-{
+namespace Xamarin.Mac.Tests {
 	[Preserve (AllMembers = true)]
-	public class NSUserDefaultsControllerTests
-	{
+	public class NSUserDefaultsControllerTests {
 		NSUserDefaultsController controller;
 
 		[Test]
@@ -35,7 +33,7 @@ namespace Xamarin.Mac.Tests
 			controller = new NSUserDefaultsController (null, null);
 
 			Assert.IsTrue (controller.Defaults == NSUserDefaults.StandardUserDefaults);
-			Assert.IsTrue (controller.InitialValues == null);
+			Assert.IsTrue (controller.InitialValues is null);
 			Assert.IsNotNull (controller, "NSUserDefaultsControllerShouldCreateNewControllerWithNullParameters - Constructor returned null");
 		}
 

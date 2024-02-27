@@ -10,9 +10,6 @@
     <EnableDefaultwatchOSItems Condition=" '$(_PlatformName)' == 'watchOS' And '$(EnableDefaultwatchOSItems)' == '' ">$(EnableDefaultItems)</EnableDefaultwatchOSItems>
     <EnableDefaultmacOSItems Condition=" '$(_PlatformName)' == 'macOS' And '$(EnableDefaultmacOSItems)' == '' ">$(EnableDefaultItems)</EnableDefaultmacOSItems>
     <EnableDefaultMacCatalystItems Condition=" '$(_PlatformName)' == 'MacCatalyst' And '$(EnableDefaultMacCatalystItems)' == '' ">$(EnableDefaultItems)</EnableDefaultMacCatalystItems>
-
-    <UseMonoRuntime Condition=" '$(UseMonoRuntime)' == '' And '$(_PlatformName)' != 'macOS'">true</UseMonoRuntime>
-    <UseMonoRuntime Condition=" '$(UseMonoRuntime)' == '' And '$(_PlatformName)' == 'macOS'">false</UseMonoRuntime>
   </PropertyGroup>
 
   <ItemGroup>
@@ -24,18 +21,14 @@
   </ItemGroup>
 
   <!-- Architecture -->
-  <!-- If the old-style variables are set, use those -->
-  <PropertyGroup Condition=" '$(TargetArchitectures)' == '' ">
-    <TargetArchitectures Condition=" '$(_PlatformName)' == 'macOS' And '$(XamMacArch)' != '' ">$(XamMacArch)</TargetArchitectures>
-    <TargetArchitectures Condition=" '$(_PlatformName)' != 'macOS' And '$(MtouchArch)' != '' ">$(MtouchArch)</TargetArchitectures>
-  </PropertyGroup>
-  <!-- If the old-style variables aren't set, figure it out using RuntimeIdentifier. -->
   <PropertyGroup Condition="'$(RuntimeIdentifiers)' != '' And '$(RuntimeIdentifier)' != '' ">
-    <!-- Check if both RuntimeIdentifier and RuntimeIdentifiers are set, in which case we clear RuntimeIdentifier -->
-    <!-- Also set a variable that says if this happens, so that we can show a warning later -->
-    <_RuntimeIdentifiersClashMessage>Both RuntimeIdentifier and RuntimeIdentifiers are set. The value for RuntimeIdentifier will be ignored.</_RuntimeIdentifiersClashMessage>
     <!-- Clear RuntimeIdentifier -->
     <RuntimeIdentifier />
+    <!-- Check if RuntimeIdentifier was cleared. If it wasn't it was set on the command line, and in that case, try to clear RuntimeIdentifiers instead -->
+    <_RuntimeIdentifiersClashMessage Condition="'$(RuntimeIdentifier)' != ''">RuntimeIdentifier was set on the command line, and will override the value for RuntimeIdentifiers set in the project file.</_RuntimeIdentifiersClashMessage>
+    <RuntimeIdentifiers Condition="'$(RuntimeIdentifier)' != ''" />
+    <!-- If we couldn't clear RuntimeIdentifiers either, then both were set on the command line. This is an error -->
+    <_RuntimeIdentifiersClashErrorMessage  Condition="'$(RuntimeIdentifier)' != '' And '$(RuntimeIdentifiers)' != ''">Both RuntimeIdentifier and RuntimeIdentifiers were passed on the command line, but only one of them can be set at a time.</_RuntimeIdentifiersClashErrorMessage>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -77,34 +70,10 @@
     <ComputedPlatform Condition="'$(ComputedPlatform)' == ''">iPhone</ComputedPlatform>
   </PropertyGroup>
 
-  <!-- Declare the XI/XM framework bundled with this version of the SDK. See Microsoft.NETCoreSdk.BundledVersions.props -->
-  <PropertyGroup>
-    <!-- Runtime pack identifiers -->
-    <_RuntimePackRuntimeIdentifiers Condition=" '$(_PlatformName)' == 'iOS' ">iossimulator-x64;ios-arm64;ios-arm;iossimulator-x86;iossimulator-arm64</_RuntimePackRuntimeIdentifiers>
-    <_RuntimePackRuntimeIdentifiers Condition=" '$(_PlatformName)' == 'tvOS' ">tvossimulator-x64;tvos-arm64;tvossimulator-arm64</_RuntimePackRuntimeIdentifiers>
-    <_RuntimePackRuntimeIdentifiers Condition=" '$(_PlatformName)' == 'watchOS' ">watchos-x86;watchos-x64;watchos-arm</_RuntimePackRuntimeIdentifiers>
-    <_RuntimePackRuntimeIdentifiers Condition=" '$(_PlatformName)' == 'macOS' ">osx-x64;osx-arm64</_RuntimePackRuntimeIdentifiers>
-    <_RuntimePackRuntimeIdentifiers Condition=" '$(_PlatformName)' == 'MacCatalyst' ">maccatalyst-x64;maccatalyst-arm64</_RuntimePackRuntimeIdentifiers>
-  </PropertyGroup>
-
   <PropertyGroup>
     <_RuntimeFrameworkVersion>$(BundledNETCorePlatformsPackageVersion)</_RuntimeFrameworkVersion>
     <_RuntimeFrameworkVersion Condition="'$(CUSTOM_DOTNET_VERSION)' != ''">$(CUSTOM_DOTNET_VERSION)</_RuntimeFrameworkVersion>
   </PropertyGroup>
-
-  <ItemGroup>
-    <KnownFrameworkReference Include="Microsoft.$(_PlatformName)"
-                            TargetFramework="net6.0"
-                            RuntimeFrameworkName="Microsoft.$(_PlatformName)"
-                            DefaultRuntimeFrameworkVersion="**FromWorkload**"
-                            LatestRuntimeFrameworkVersion="**FromWorkload**"
-                            TargetingPackName="Microsoft.$(_PlatformName).Ref"
-                            TargetingPackVersion="**FromWorkload**"
-                            RuntimePackNamePatterns="Microsoft.$(_PlatformName).Runtime.**RID**"
-                            RuntimePackRuntimeIdentifiers="$(_RuntimePackRuntimeIdentifiers)"
-                            Profile="$(_PlatformName)"
-                            />
-  </ItemGroup>
 
   <ItemGroup Condition="'$(DisableImplicitFrameworkReferences)' != 'true'">
     <FrameworkReference Include="Microsoft.$(_PlatformName)" IsImplicitlyDefined="true" Pack="false" PrivateAssets="All" />

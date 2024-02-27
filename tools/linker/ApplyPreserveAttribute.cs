@@ -27,8 +27,9 @@ namespace Xamarin.Linker.Steps {
 		}
 
 #if NET
-		public override void ProcessAssembly (AssemblyDefinition assembly)
+		protected override void Process (AssemblyDefinition assembly)
 		{
+			base.Process (assembly);
 			ProcessAssemblyAttributes (assembly);
 		}
 #else
@@ -55,13 +56,17 @@ namespace Xamarin.Linker.Steps {
 				if (!attribute.HasConstructorArguments)
 					continue;
 				var tr = (attribute.ConstructorArguments [0].Value as TypeReference);
-				if (tr == null)
+				if (tr is null)
 					continue;
 
 				// we do not call `this.ProcessType` since
 				// (a) we're potentially processing a different assembly and `is_active` represent the current one
 				// (b) it will try to fetch the [Preserve] attribute on the type (and it's not there) as `base` would
 				var type = tr.Resolve ();
+
+#if NET
+				PreserveType (type, attribute);
+#else
 				Annotations.Mark (type);
 				if (attribute.HasFields) {
 					foreach (var named_argument in attribute.Fields) {
@@ -69,6 +74,7 @@ namespace Xamarin.Linker.Steps {
 							Annotations.SetPreserve (type, TypePreserve.All);
 					}
 				}
+#endif
 
 				// In .NET6, ApplyPreserveAttribute no longer runs on all assemblies.
 				// [assembly: Preserve (typeof (SomeAttribute))] no longer gives SomeAttribute "Preserve" semantics.
@@ -76,7 +82,7 @@ namespace Xamarin.Linker.Steps {
 				// if the type is a custom attribute then it means we want to preserve what's decorated
 				// with this attribute (not just the attribute alone)
 				if (type.Inherits ("System", "Attribute")) {
-					if (preserve_synonyms == null)
+					if (preserve_synonyms is null)
 						preserve_synonyms = new HashSet<TypeDefinition> ();
 					preserve_synonyms.Add (type);
 				}
@@ -98,7 +104,7 @@ namespace Xamarin.Linker.Steps {
 			return false;
 #else
 			// we need to resolve (as many reference instances can exists)
-			return ((preserve_synonyms != null) && preserve_synonyms.Contains (type.Resolve ()));
+			return ((preserve_synonyms is not null) && preserve_synonyms.Contains (type.Resolve ()));
 #endif
 		}
 	}

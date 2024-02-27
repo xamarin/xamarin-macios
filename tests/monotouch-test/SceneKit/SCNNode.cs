@@ -8,12 +8,10 @@ using Foundation;
 using CoreAnimation;
 using SceneKit;
 
-namespace Xamarin.Mac.Tests
-{
+namespace Xamarin.Mac.Tests {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class SCNNodeTests
-	{
+	public class SCNNodeTests {
 		[SetUp]
 		public void SetUp ()
 		{
@@ -27,13 +25,13 @@ namespace Xamarin.Mac.Tests
 		{
 			SCNNode c = new SCNNode ();
 			CABasicAnimation a = CABasicAnimation.FromKeyPath ("hidden");
-			NSString key = new NSString("MyKey");
+			NSString key = new NSString ("MyKey");
 			c.AddAnimation (a, key);
-			CAPropertyAnimation cur = (CAPropertyAnimation)c.GetAnimation (key);
+			CAPropertyAnimation cur = (CAPropertyAnimation) c.GetAnimation (key);
 			Assert.IsNotNull (cur);
 			Assert.AreEqual (cur.KeyPath, "hidden");
 			c.RemoveAnimation (key);
-			cur = (CAPropertyAnimation)c.GetAnimation (key);
+			cur = (CAPropertyAnimation) c.GetAnimation (key);
 			Assert.IsNull (cur);
 		}
 
@@ -42,8 +40,7 @@ namespace Xamarin.Mac.Tests
 		{
 			Asserts.EnsureYosemite ();
 
-			if (IntPtr.Size == 8)
-			{
+			if (IntPtr.Size == 8) {
 				// Create a new empty scene
 				var Scene = new SCNScene ();
 

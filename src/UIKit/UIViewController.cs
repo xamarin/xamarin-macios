@@ -13,22 +13,25 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Foundation; 
+using Foundation;
 #if HAS_IAD && !NET
 using iAd;
 #endif
 using ObjCRuntime;
 using CoreGraphics;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace UIKit {
 	public partial class UIViewController : IEnumerable {
-		
+
 		// https://bugzilla.xamarin.com/show_bug.cgi?id=3189
 		static Stack<UIViewController> modal;
-		
+
 		static void PushModal (UIViewController controller)
 		{
-			if (modal == null)
+			if (modal is null)
 				modal = new Stack<UIViewController> ();
 			modal.Push (controller);
 		}
@@ -39,9 +42,9 @@ namespace UIKit {
 		{
 			// handle the dismiss from the presenter
 			// https://bugzilla.xamarin.com/show_bug.cgi?id=3489#c2
-			if (modal == null || (modal.Count == 0))
+			if (modal is null || (modal.Count == 0))
 				return;
-			
+
 			UIViewController pop = modal.Pop ();
 			while (pop != controller && (modal.Count > 0)) {
 				pop = modal.Pop ();
@@ -56,7 +59,7 @@ namespace UIKit {
 		public IEnumerator GetEnumerator ()
 		{
 			UIView [] subviews = View.Subviews;
-			if (subviews == null)
+			if (subviews is null)
 				yield break;
 			foreach (UIView uiv in subviews)
 				yield return uiv;

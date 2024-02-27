@@ -3,143 +3,96 @@
 # variables to be used by the rest of the projects
 parameters:
 
-- name: enableDotnet
-  type: boolean
-  default: false
-
 - name: uploadArtifacts
   type: boolean
   default: false
 
+- name: repositoryAlias
+  type: string
+  default: self
+
+- name: commit
+  type: string
+  default: HEAD
+
+- name: uploadPrefix
+  type: string
+  default: '$(MaciosUploadPrefix)'
+
+- name: testConfigurations
+  type: object
+  default: []
+
+- name: supportedPlatforms
+  type: object
+  default: []
+
+- name: testsLabels
+  type: string
+  default: ''
+
+- name: statusContext
+  type: string
+  default: ''
+
 steps:
 - template: checkout.yml
   parameters:
-    isPR: false # always use the latests set of scripts merged with main
+    isPR: true
+    repositoryAlias: ${{ parameters.repositoryAlias }}
+    commit: ${{ parameters.commit }}
 
 - bash: ./xamarin-macios/tools/devops/automation/scripts/bash/configure-platforms.sh
   name: configure_platforms
   displayName: 'Configure platforms'
-  env:
-    ${{ if eq(parameters.enableDotnet, true) }}:
-      ENABLE_DOTNET: "True"
 
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/MaciosCI.psd1
-
-    # we are going to use a custom object to store all the configuration of the build, this later
-    # will be uploaded as an artifact so that it can be easily shared with the cascade pipelines
-    $configuration = [PSCustomObject]@{
-      BuildReason = "$(Build.Reason)"
-      BuildSourceBranchName = "$(Build.SourceBranchName)"
-      BuildSourceBranch = "$(Build.SourceBranch)"
-      BuildId = "$(Build.BuildId)"
-    }
-
-    # calculate the commit to later share it with the cascade pipelines 
-    if ($Env:BUILD_REASON -eq "PullRequest") {
-        $changeId = $configuration.BuildSourceBranch.Replace("refs/pull/", "").Replace("/merge", "")
-    } else {
-        $changeId = $Env:BUILD_REVISION
-    }
-
-    $configuration | Add-Member -NotePropertyName Commit -NotePropertyValue $changeId 
-
-    Write-Host "buildReason: $($configuration.BuildReason)"
-    Write-Host "buildSourceBranchName: $($configuration.BuildSourceBranchName)"
-    Write-Host "buildSourceBranch: $($configuration.BuildSourceBranch)"
-
-    # the following list will be used to track the tags and set them in VSTS to make the monitoring person life easier
-    [System.Collections.Generic.List[string]]$tags = @()
-
-    if ($configuration.BuildReason -eq "Schedule") {
-        $tags.Add("cronjob")
-    }
-    if ($Env:ENABLE_DOTNET -eq "True") {
-      Write-Host "dotnet will be enabled for the build because ENABLE_DOTNET was '$Env:ENABLE_DOTNET'"
-    } else {
-      Write-Host "dotnet will be disabled for the build because ENABLE_DOTNET was '$Env:ENABLE_DOTNET'"
-    }
-
-
-    if ($configuration.BuildReason -eq "PullRequest" -or (($configuration.BuildReason -eq "Manual") -and ($configuration.BuildSourceBranchName -eq "merge")) ) {
-      Write-Host "Configuring build from PR."
-      # This is an interesting step, we do know we are dealing with a PR, but we need the PR id to
-      # be able to get the labels, the buildSourceBranch follows the pattern: refs/pull/{ChangeId}/merge
-      # we could use a regexp but then we would have two problems instead of one
-      $changeId = $configuration.BuildSourceBranch.Replace("refs/pull/", "").Replace("/merge", "")
-
-      # add a var with the change id, which can be later consumed by some of the old scripts from
-      # jenkins
-      Write-Host "##vso[task.setvariable variable=pr_number;isOutput=true]$changeId"
-
-      $prInfo = Get-GitHubPRInfo -ChangeId $changeId
-      Write-Host $prInfo
-
-      # make peoples life better, loop over the labels and add them as tags in the vsts build
-      foreach ($labelInfo in $prInfo.labels) {
-        $labelName = $labelInfo.name
-        Write-Host "Found label $labelName"
-        $tags.Add($labelName)
-        $tagsCount = $tags.Count
-        Write-Host "Tags count $tagsCount"
-      }
-      # special tag, we want to know if we are using a pr
-      $tags.Add("prBuild")
-
-      # special tag, lets add the target branch, will be useful to the users
-      $ref = $prInfo.base.ref
-      $tags.Add("$ref")
-
-      Write-Host "##vso[task.setvariable variable=xharness_labels;isOutput=true]$xharnessLabels"
-
-      # set output variables based on the git labels
-      $labelsOfInterest = @(
-        "build-package",
-        "skip-packages",
-        "skip-nugets",
-        "skip-signing",
-        "run-sample-tests",
-        "skip-packaged-xamarin-mac-tests",
-        "skip-api-comparison",
-        "skip-all-tests"
-      )
-
-      foreach ($l in $labelsOfInterest) {
-        $labelPresent = 1 -eq ($prInfo.labels | Where-Object { $_.name -eq "$l"}).Count
-        # We need to replace dashes with underscores, because bash can't access an environment variable with a dash in the name.
-        $lbl = $l.Replace('-', '_')
-        Write-Host "##vso[task.setvariable variable=$lbl;isOutput=true]$labelPresent"
-      }
-
-      Write-Host "##vso[task.setvariable variable=prBuild;isOutput=true]True"
-    } else {
-      if ($tags.Contains("cronjob")) {
-        # debug so that we do know why we do not have ciBuild
-        Write-Host "Skipping the tag 'ciBuild' because we are dealing with a translation build."
-      } else  {
-        $tags.Add("ciBuild")
-      }
-      # set the name of the branch under build
-      $tags.Add("$($configuration.BuildSourceBranchName)")
-      Write-Host "##vso[task.setvariable variable=prBuild;isOutput=true]False"
-    }
-    # set the tags using the cmdlet
-    $tagCount = $tags.Count
-    Write-Host "Found '$tagsCount' tags"
-    Set-BuildTags -Tags $tags.ToArray()
-    # add the tags and serialize to json
-    $configuration | Add-Member -NotePropertyName Tags -NotePropertyValue $tags
-    $jsonPath = Join-Path -Path "$(Build.ArtifactStagingDirectory)" -ChildPath "configuration.json" 
-    $configuration | ConvertTo-Json | Set-Content -Path $jsonPath
-    Write-Host "Configuration json:'$jsonPath'"
+    $jsonPath = Join-Path -Path "$(Build.ArtifactStagingDirectory)" -ChildPath "configuration.json"
+    New-BuildConfiguration -ConfigFile $jsonPath
   env:
-    BUILD_REVISION: $(Build.SourceVersion)
     GITHUB_TOKEN: $(GitHub.Token)
     ACCESSTOKEN: $(AzDoBuildAccess.Token)
-    ${{ if eq(parameters.enableDotnet, true) }}:
-      ENABLE_DOTNET: "True"
   name: labels
   displayName: 'Configure build'
+
+- bash: ./xamarin-macios/tools/devops/automation/scripts/bash/configure-decisions.sh
+  name: decisions
+  displayName: 'Make decisions'
+
+- pwsh: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/show_env.ps1
+  displayName: 'Show Environment'
+
+- pwsh: |
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/MaciosCI.psd1
+    gci env: | sort | format-table -autosize -wrap
+    $jsonPath = Join-Path -Path "$(Build.ArtifactStagingDirectory)" -ChildPath "configuration.json"
+    $testMatrix = Get-TestConfiguration `
+      -TestConfigurations "$Env:TEST_CONFIGURATIONS" `
+      -SupportedPlatforms "$Env:SUPPORTED_PLATFORMS" `
+      -EnabledPlatforms "$Env:CONFIGURE_PLATFORMS_DOTNET_PLATFORMS" `
+      -TestsLabels "${{ parameters.testsLabels }}" `
+      -StatusContext "${{ parameters.statusContext }}" `
+    # compress the json to remove any newlines, because we can't set the variable below if the json has any newlines
+    Write-Host "$testMatrix"
+    $testMatrix = $testMatrix | ConvertFrom-Json | ConvertTo-Json -Compress
+    Write-Host "##vso[task.setvariable variable=TEST_MATRIX;isOutput=true]$testMatrix"
+  name: test_matrix
+  displayName: 'Create tests strategy matrix'
+  env:
+    TEST_CONFIGURATIONS: ${{ convertToJson(parameters.testConfigurations) }}
+    SUPPORTED_PLATFORMS: ${{ convertToJson(parameters.supportedPlatforms) }}
+
+- pwsh: |
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/MaciosCI.psd1
+    gci env: | sort | format-table -autosize -wrap
+    $apiScanMatrix = Get-APIScanConfiguration -EnabledPlatforms "$Env:CONFIGURE_PLATFORMS_DOTNET_PLATFORMS"
+    # compress the json to remove any newlines, because we can't set the variable below if the json has any newlines
+    Write-Host "$apiScanMatrix"
+    $apiScanMatrix = $apiScanMatrix | ConvertFrom-Json | ConvertTo-Json -Compress
+    Write-Host "##vso[task.setvariable variable=APISCAN_MATRIX;isOutput=true]$apiScanMatrix"
+  name: apiscan_matrix
+  displayName: 'Create APIScan matrix'
 
 # upload config to be consumed later
 - ${{ if eq(parameters.uploadArtifacts, true) }}:
@@ -147,5 +100,5 @@ steps:
     displayName: 'Publish Artifact: configuration.json'
     inputs:
       targetPath: '$(Build.ArtifactStagingDirectory)/configuration.json'
-      artifactName: build-configuration
+      artifactName: '${{ parameters.uploadPrefix }}build-configuration'
     continueOnError: true

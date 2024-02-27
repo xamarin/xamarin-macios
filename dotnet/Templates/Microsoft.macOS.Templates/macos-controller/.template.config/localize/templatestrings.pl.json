@@ -1,6 +1,6 @@
 {
   "author": "Microsoft",
-  "name": "macOS Controller",
-  "description": "A macOS Controller class",
-  "symbols/namespace/description": "namespace for the generated code"
+  "name": "Kontroler systemu macOS",
+  "description": "Kontroler widoku systemu macOS z interfejsem użytkownika zaimplementowanym w kodzie",
+  "symbols/namespace/description": "przestrzeń nazw wygenerowanego kodu."
 }

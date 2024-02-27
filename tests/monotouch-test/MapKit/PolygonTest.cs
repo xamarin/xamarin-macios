@@ -12,7 +12,7 @@ using NUnit.Framework;
 using Xamarin.Utils;
 
 namespace MonoTouchFixtures.MapKit {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class PolygonTest {
@@ -21,7 +21,7 @@ namespace MonoTouchFixtures.MapKit {
 		{
 			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 9, throwIfOtherPlatform: false);
 		}
-		
+
 		[Test]
 		public void FromPoints_Null ()
 		{
@@ -34,7 +34,7 @@ namespace MonoTouchFixtures.MapKit {
 			MKPolygon pg = MKPolygon.FromPoints (new MKMapPoint [] { }, null);
 			CheckEmpty (pg);
 		}
-		
+
 		void CheckEmpty (MKPolygon pg)
 		{
 			// MKAnnotation
@@ -50,10 +50,10 @@ namespace MonoTouchFixtures.MapKit {
 			Assert.False (pg.Intersects (pg.BoundingMapRect), "Intersect/Self");
 			MKMapRect rect = new MKMapRect (0, 0, 0, 0);
 			Assert.False (pg.Intersects (rect), "Intersect/Empty");
-			
+
 			ShapeTest.CheckShape (pg);
 		}
-		
+
 		[Test]
 		public void FromPoints_Empty ()
 		{
@@ -67,7 +67,7 @@ namespace MonoTouchFixtures.MapKit {
 			MKPolygon pg = MKPolygon.FromPoints (new MKMapPoint [] { }, new MKPolygon [] { });
 			CheckEmpty (pg);
 		}
-		
+
 		[Test]
 		public void FromCoordinates_Null ()
 		{
@@ -80,7 +80,7 @@ namespace MonoTouchFixtures.MapKit {
 			MKPolygon pg = MKPolygon.FromCoordinates (new CLLocationCoordinate2D [] { }, null);
 			CheckEmpty (pg);
 		}
-		
+
 		[Test]
 		public void FromCoordinates_Empty ()
 		{
@@ -94,7 +94,7 @@ namespace MonoTouchFixtures.MapKit {
 			MKPolygon pg = MKPolygon.FromCoordinates (new CLLocationCoordinate2D [] { }, new MKPolygon [] { });
 			CheckEmpty (pg);
 		}
-		
+
 #if false
 		// Annotations that support dragging should implement this method to update the position of the annotation.
 		// keyword is SHOULD - it's not working for MKPolygon

@@ -12,6 +12,9 @@ using System;
 using Foundation;
 using ObjCRuntime;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace UIKit {
 
 	// UIGeometry.h
@@ -39,7 +42,7 @@ namespace UIKit {
 
 		public override int GetHashCode ()
 		{
-			return Horizontal.GetHashCode () ^ Vertical.GetHashCode ();
+			return HashCode.Combine (Horizontal, Vertical);
 		}
 
 		public static bool operator == (UIOffset left, UIOffset right)

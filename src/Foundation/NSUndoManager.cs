@@ -17,7 +17,8 @@ using ObjCRuntime;
 namespace Foundation {
 	public partial class NSUndoManager {
 #if !NET
-		public virtual void SetActionName (string actionName) {
+		public virtual void SetActionName (string actionName)
+		{
 			SetActionname (actionName);
 		}
 #endif

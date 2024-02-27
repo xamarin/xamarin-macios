@@ -24,7 +24,7 @@ namespace MonoTouchFixtures.JavascriptCore {
 		{
 			TestRuntime.AssertXcodeVersion (5, 0, 1);
 
-			if (RegistrarTest.CurrentRegistrar != Registrars.Static)
+			if (!global::XamarinTests.ObjCRuntime.Registrar.IsStaticRegistrar)
 				Assert.Ignore ("Exporting protocols to JavaScriptCore requires the static registrar.");
 
 			var context = new JSContext ();
@@ -58,8 +58,7 @@ namespace MonoTouchFixtures.JavascriptCore {
 		void CallMeBack (JSValue callbackFunc);
 	}
 
-	class MyJavaExporter : NSObject, IMyJavaExporter
-	{
+	class MyJavaExporter : NSObject, IMyJavaExporter {
 		public bool MyFuncCalled;
 		public void MyFunc ()
 		{

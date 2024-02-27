@@ -31,6 +31,8 @@
 
 using Foundation;
 
+#nullable enable
+
 namespace AppKit {
 	public enum NSFontCollectionAction {
 		Unknown,

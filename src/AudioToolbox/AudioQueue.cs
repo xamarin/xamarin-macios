@@ -34,6 +34,7 @@ using System;
 using System.IO;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using CoreFoundation;
 using Foundation;
@@ -73,13 +74,10 @@ namespace AudioToolbox {
 		InvalidOfflineMode = -66626,
 		BufferEnqueuedTwice = -66666,
 #if NET
-		[SupportedOSPlatform ("ios10.0")]
-		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (10, 0)]
-		[Mac (10, 12)]
 #endif
 		CannotStartYet = -66665,
 
@@ -334,10 +332,11 @@ namespace AudioToolbox {
 			this.channelNumber = channelNumber;
 		}
 	}
-
+#if !NET
 	delegate void AudioQueueOutputCallback (IntPtr userData, IntPtr AQ, IntPtr audioQueueBuffer);
 	unsafe delegate void AudioQueueInputCallback (IntPtr userData, IntPtr AQ, IntPtr audioQueueBuffer,
 							  AudioTimeStamp* startTime, int descriptors, IntPtr AudioStreamPacketDescription_inPacketDesc);
+#endif
 	delegate void AudioQueuePropertyListener (IntPtr userData, IntPtr AQ, AudioQueueProperty id);
 
 #if NET
@@ -423,7 +422,7 @@ namespace AudioToolbox {
 		}
 
 		[DllImport (Constants.AudioToolboxLibrary)]
-		extern static OSStatus AudioQueueDispose (IntPtr AQ, [MarshalAs (UnmanagedType.I1)] bool immediate);
+		extern static OSStatus AudioQueueDispose (IntPtr AQ, byte immediate);
 
 		protected virtual void Dispose (bool disposing)
 		{
@@ -436,12 +435,18 @@ namespace AudioToolbox {
 				if (disposing) {
 					if (listeners is not null) {
 						foreach (AudioQueueProperty prop in listeners.Keys) {
+#if NET
+							unsafe {
+								AudioQueueRemovePropertyListener (handle, prop, &property_changed, GCHandle.ToIntPtr (gch));
+							}
+#else
 							AudioQueueRemovePropertyListener (handle, prop, property_changed, GCHandle.ToIntPtr (gch));
+#endif
 						}
 					}
 				}
 
-				AudioQueueDispose (handle, immediate);
+				AudioQueueDispose (handle, immediate ? (byte) 1 : (byte) 0);
 				handle = IntPtr.Zero;
 			}
 
@@ -450,14 +455,16 @@ namespace AudioToolbox {
 		}
 
 		[DllImport (Constants.AudioToolboxLibrary)]
-		extern static AudioQueueStatus AudioQueueStart (IntPtr AQ, ref AudioTimeStamp startTime);
+		unsafe extern static AudioQueueStatus AudioQueueStart (IntPtr AQ, AudioTimeStamp* startTime);
 
 		[DllImport (Constants.AudioToolboxLibrary)]
 		extern static AudioQueueStatus AudioQueueStart (IntPtr AQ, IntPtr startTime);
 
 		public AudioQueueStatus Start (AudioTimeStamp startTime)
 		{
-			return AudioQueueStart (handle, ref startTime);
+			unsafe {
+				return AudioQueueStart (handle, &startTime);
+			}
 		}
 
 		public AudioQueueStatus Start ()
@@ -466,10 +473,13 @@ namespace AudioToolbox {
 		}
 
 		[DllImport (Constants.AudioToolboxLibrary)]
-		extern static AudioQueueStatus AudioQueuePrime (IntPtr AQ, int toPrepare, out int prepared);
+		unsafe extern static AudioQueueStatus AudioQueuePrime (IntPtr AQ, int toPrepare, int* prepared);
 		public AudioQueueStatus Prime (int toPrepare, out int prepared)
 		{
-			return AudioQueuePrime (handle, toPrepare, out prepared);
+			prepared = 0;
+			unsafe {
+				return AudioQueuePrime (handle, toPrepare, AsPointer<int> (ref prepared));
+			}
 		}
 
 		[DllImport (Constants.AudioToolboxLibrary)]
@@ -480,10 +490,10 @@ namespace AudioToolbox {
 		}
 
 		[DllImport (Constants.AudioToolboxLibrary)]
-		extern static AudioQueueStatus AudioQueueStop (IntPtr aq, [MarshalAs (UnmanagedType.I1)] bool immediate);
+		unsafe extern static AudioQueueStatus AudioQueueStop (IntPtr aq, byte immediate);
 		public AudioQueueStatus Stop (bool immediate)
 		{
-			return AudioQueueStop (handle, immediate);
+			return AudioQueueStop (handle, immediate ? (byte) 1 : (byte) 0);
 		}
 
 		[DllImport (Constants.AudioToolboxLibrary)]
@@ -501,26 +511,32 @@ namespace AudioToolbox {
 		}
 
 		[DllImport (Constants.AudioToolboxLibrary)]
-		extern static AudioQueueStatus AudioQueueAllocateBuffer (AudioQueueRef AQ, int bufferSize, out IntPtr audioQueueBuffer);
+		unsafe extern static AudioQueueStatus AudioQueueAllocateBuffer (AudioQueueRef AQ, int bufferSize, IntPtr* audioQueueBuffer);
 		public AudioQueueStatus AllocateBuffer (int bufferSize, out IntPtr audioQueueBuffer)
 		{
-			return AudioQueueAllocateBuffer (handle, bufferSize, out audioQueueBuffer);
+			audioQueueBuffer = default (IntPtr);
+			unsafe {
+				return AudioQueueAllocateBuffer (handle, bufferSize, AsPointer<IntPtr> (ref audioQueueBuffer));
+			}
 		}
 
 		public unsafe AudioQueueStatus AllocateBuffer (int bufferSize, out AudioQueueBuffer* audioQueueBuffer)
 		{
 			IntPtr buf;
 			AudioQueueStatus result;
-			result = AudioQueueAllocateBuffer (handle, bufferSize, out buf);
+			result = AudioQueueAllocateBuffer (handle, bufferSize, &buf);
 			audioQueueBuffer = (AudioQueueBuffer*) buf;
 			return result;
 		}
 
 		[DllImport (Constants.AudioToolboxLibrary)]
-		extern static AudioQueueStatus AudioQueueAllocateBufferWithPacketDescriptions (IntPtr AQ, int bufferSize, int nPackets, out IntPtr audioQueueBuffer);
+		unsafe extern static AudioQueueStatus AudioQueueAllocateBufferWithPacketDescriptions (IntPtr AQ, int bufferSize, int nPackets, IntPtr* audioQueueBuffer);
 		public AudioQueueStatus AllocateBufferWithPacketDescriptors (int bufferSize, int nPackets, out IntPtr audioQueueBuffer)
 		{
-			return AudioQueueAllocateBufferWithPacketDescriptions (handle, bufferSize, nPackets, out audioQueueBuffer);
+			audioQueueBuffer = default (IntPtr);
+			unsafe {
+				return AudioQueueAllocateBufferWithPacketDescriptions (handle, bufferSize, nPackets, AsPointer<IntPtr> (ref audioQueueBuffer));
+			}
 		}
 
 		[DllImport (Constants.AudioToolboxLibrary)]
@@ -541,7 +557,7 @@ namespace AudioToolbox {
 		}
 
 		[DllImport (Constants.AudioToolboxLibrary)]
-		internal extern unsafe static AudioQueueStatus AudioQueueEnqueueBuffer (IntPtr AQ, AudioQueueBuffer* audioQueueBuffer, int nPackets, AudioStreamPacketDescription []? desc);
+		internal extern unsafe static AudioQueueStatus AudioQueueEnqueueBuffer (IntPtr AQ, AudioQueueBuffer* audioQueueBuffer, int nPackets, AudioStreamPacketDescription* desc);
 
 		public AudioQueueStatus EnqueueBuffer (IntPtr audioQueueBuffer, int bytes, AudioStreamPacketDescription [] desc)
 		{
@@ -560,7 +576,9 @@ namespace AudioToolbox {
 			if (audioQueueBuffer is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (audioQueueBuffer));
 
-			return AudioQueueEnqueueBuffer (handle, audioQueueBuffer, desc?.Length ?? 0, desc);
+			fixed (AudioStreamPacketDescription* descPtr = desc) {
+				return AudioQueueEnqueueBuffer (handle, audioQueueBuffer, desc?.Length ?? 0, descPtr);
+			}
 		}
 
 		public unsafe AudioQueueStatus EnqueueBuffer (IntPtr audioQueueBuffer, AudioStreamPacketDescription [] desc)
@@ -568,7 +586,9 @@ namespace AudioToolbox {
 			if (audioQueueBuffer == IntPtr.Zero)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (audioQueueBuffer));
 
-			return AudioQueueEnqueueBuffer (handle, (AudioQueueBuffer*) audioQueueBuffer, desc?.Length ?? 0, desc);
+			fixed (AudioStreamPacketDescription* descPtr = desc) {
+				return AudioQueueEnqueueBuffer (handle, (AudioQueueBuffer*) audioQueueBuffer, desc?.Length ?? 0, descPtr);
+			}
 		}
 
 		[DllImport (Constants.AudioToolboxLibrary)]
@@ -576,26 +596,13 @@ namespace AudioToolbox {
 			IntPtr AQ,
 			AudioQueueBuffer* audioQueueBuffer,
 			int nPackets,
-			AudioStreamPacketDescription []? desc,
+			AudioStreamPacketDescription* desc,
 			int trimFramesAtStart,
 			int trimFramesAtEnd,
 			int nParam,
-			AudioQueueParameterEvent []? parameterEvents,
-			ref AudioTimeStamp startTime,
-			out AudioTimeStamp actualStartTime);
-
-		[DllImport (Constants.AudioToolboxLibrary)]
-		extern unsafe static AudioQueueStatus AudioQueueEnqueueBufferWithParameters (
-			IntPtr AQ,
-			AudioQueueBuffer* audioQueueBuffer,
-			int nPackets,
-			AudioStreamPacketDescription []? desc,
-			int trimFramesAtStart,
-			int trimFramesAtEnd,
-			int nParam,
-			AudioQueueParameterEvent []? parameterEvents,
+			AudioQueueParameterEvent* parameterEvents,
 			AudioTimeStamp* startTime,
-			out AudioTimeStamp actualStartTime);
+			AudioTimeStamp* actualStartTime);
 
 		public AudioQueueStatus EnqueueBuffer (IntPtr audioQueueBuffer, int bytes, AudioStreamPacketDescription [] desc,
 							   int trimFramesAtStart, int trimFramesAtEnd, AudioQueueParameterEvent [] parameterEvents,
@@ -604,16 +611,21 @@ namespace AudioToolbox {
 			if (audioQueueBuffer == IntPtr.Zero)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (audioQueueBuffer));
 
+			actualStartTime = default (AudioTimeStamp);
+
 			unsafe {
 				AudioQueueBuffer* buffer = (AudioQueueBuffer*) audioQueueBuffer;
 				buffer->AudioDataByteSize = (uint) bytes;
 
-				return AudioQueueEnqueueBufferWithParameters (
-					handle, buffer, desc?.Length ?? 0, desc,
-					trimFramesAtStart, trimFramesAtEnd, parameterEvents?.Length ?? 0,
-					parameterEvents,
-					ref startTime,
-					out actualStartTime);
+				fixed (AudioStreamPacketDescription* descPtr = desc)
+				fixed (AudioQueueParameterEvent* parameterEventsPtr = parameterEvents) {
+					return AudioQueueEnqueueBufferWithParameters (
+						handle, buffer, desc?.Length ?? 0, descPtr,
+						trimFramesAtStart, trimFramesAtEnd, parameterEvents?.Length ?? 0,
+						parameterEventsPtr,
+						AsPointer<AudioTimeStamp> (ref startTime),
+						AsPointer<AudioTimeStamp> (ref actualStartTime));
+				}
 			}
 		}
 		public AudioQueueStatus EnqueueBuffer (IntPtr audioQueueBuffer, int bytes, AudioStreamPacketDescription [] desc,
@@ -623,65 +635,81 @@ namespace AudioToolbox {
 			if (audioQueueBuffer == IntPtr.Zero)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (audioQueueBuffer));
 
+			actualStartTime = default (AudioTimeStamp);
+
 			unsafe {
 				AudioQueueBuffer* buffer = (AudioQueueBuffer*) audioQueueBuffer;
 				buffer->AudioDataByteSize = (uint) bytes;
 
+				fixed (AudioStreamPacketDescription* descPtr = desc)
+				fixed (AudioQueueParameterEvent* parameterEventsPtr = parameterEvents) {
+					return AudioQueueEnqueueBufferWithParameters (
+						handle, buffer, desc?.Length ?? 0, descPtr,
+						trimFramesAtStart, trimFramesAtEnd, parameterEvents?.Length ?? 0,
+						parameterEventsPtr,
+						null,
+						AsPointer<AudioTimeStamp> (ref actualStartTime));
+				}
+			}
+		}
+
+		public unsafe AudioQueueStatus EnqueueBuffer (AudioQueueBuffer* audioQueueBuffer, int bytes, AudioStreamPacketDescription [] desc,
+							   int trimFramesAtStart, int trimFramesAtEnd, AudioQueueParameterEvent [] parameterEvents,
+							   ref AudioTimeStamp startTime, out AudioTimeStamp actualStartTime)
+		{
+			if (audioQueueBuffer is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (audioQueueBuffer));
+
+			fixed (AudioStreamPacketDescription* descPtr = desc)
+			fixed (AudioQueueParameterEvent* parameterEventsPtr = parameterEvents) {
+				startTime = default;
+				actualStartTime = default;
 				return AudioQueueEnqueueBufferWithParameters (
-					handle, buffer, desc?.Length ?? 0, desc,
+					handle, audioQueueBuffer, desc?.Length ?? 0, descPtr,
 					trimFramesAtStart, trimFramesAtEnd, parameterEvents?.Length ?? 0,
-					parameterEvents,
+					parameterEventsPtr,
+					AsPointer<AudioTimeStamp> (ref startTime),
+					AsPointer<AudioTimeStamp> (ref actualStartTime));
+			}
+		}
+
+		public unsafe AudioQueueStatus EnqueueBuffer (AudioQueueBuffer* audioQueueBuffer, int bytes, AudioStreamPacketDescription [] desc,
+							   int trimFramesAtStart, int trimFramesAtEnd, AudioQueueParameterEvent [] parameterEvents,
+							   out AudioTimeStamp actualStartTime)
+		{
+			if (audioQueueBuffer is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (audioQueueBuffer));
+
+			fixed (AudioStreamPacketDescription* descPtr = desc)
+			fixed (AudioQueueParameterEvent* parameterEventsPtr = parameterEvents) {
+				actualStartTime = default;
+				return AudioQueueEnqueueBufferWithParameters (
+					handle, audioQueueBuffer, desc?.Length ?? 0, descPtr,
+					trimFramesAtStart, trimFramesAtEnd, parameterEvents?.Length ?? 0,
+					parameterEventsPtr,
 					null,
-					out actualStartTime);
+					AsPointer<AudioTimeStamp> (ref actualStartTime));
 			}
-		}
-
-		public unsafe AudioQueueStatus EnqueueBuffer (AudioQueueBuffer* audioQueueBuffer, int bytes, AudioStreamPacketDescription [] desc,
-							   int trimFramesAtStart, int trimFramesAtEnd, AudioQueueParameterEvent [] parameterEvents,
-							   ref AudioTimeStamp startTime, out AudioTimeStamp actualStartTime)
-		{
-			if (audioQueueBuffer is null)
-				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (audioQueueBuffer));
-
-			return AudioQueueEnqueueBufferWithParameters (
-				handle, audioQueueBuffer, desc?.Length ?? 0, desc,
-				trimFramesAtStart, trimFramesAtEnd, parameterEvents?.Length ?? 0,
-				parameterEvents,
-				ref startTime,
-				out actualStartTime);
-		}
-
-		public unsafe AudioQueueStatus EnqueueBuffer (AudioQueueBuffer* audioQueueBuffer, int bytes, AudioStreamPacketDescription [] desc,
-							   int trimFramesAtStart, int trimFramesAtEnd, AudioQueueParameterEvent [] parameterEvents,
-							   out AudioTimeStamp actualStartTime)
-		{
-			if (audioQueueBuffer is null)
-				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (audioQueueBuffer));
-
-			return AudioQueueEnqueueBufferWithParameters (
-				handle, audioQueueBuffer, desc?.Length ?? 0, desc,
-				trimFramesAtStart, trimFramesAtEnd, parameterEvents?.Length ?? 0,
-				parameterEvents,
-				null,
-				out actualStartTime);
 		}
 
 		[DllImport (Constants.AudioToolboxLibrary)]
-		extern static AudioQueueStatus AudioQueueCreateTimeline (IntPtr AQ, out IntPtr timeline);
+		unsafe extern static AudioQueueStatus AudioQueueCreateTimeline (IntPtr AQ, IntPtr* timeline);
 
 		public AudioQueueTimeline? CreateTimeline ()
 		{
 			IntPtr thandle;
 
-			if (AudioQueueCreateTimeline (handle, out thandle) == AudioQueueStatus.Ok)
-				return new AudioQueueTimeline (handle, thandle);
+			unsafe {
+				if (AudioQueueCreateTimeline (handle, &thandle) == AudioQueueStatus.Ok)
+					return new AudioQueueTimeline (handle, thandle);
+			}
 			return null;
 		}
 
 		[DllImport (Constants.AudioToolboxLibrary)]
-		extern static AudioQueueStatus AudioQueueGetCurrentTime (IntPtr AQ, IntPtr timelineHandle, ref AudioTimeStamp time, [MarshalAs (UnmanagedType.I1)] ref bool discontinuty);
+		unsafe extern static AudioQueueStatus AudioQueueGetCurrentTime (IntPtr AQ, IntPtr timelineHandle, AudioTimeStamp* time, byte* discontinuty);
 
-		public AudioQueueStatus GetCurrentTime (AudioQueueTimeline timeline, ref AudioTimeStamp time, ref bool timelineDiscontinuty)
+		public AudioQueueStatus GetCurrentTime (AudioQueueTimeline? timeline, ref AudioTimeStamp time, ref bool timelineDiscontinuty)
 		{
 			IntPtr arg;
 			if (timeline is null)
@@ -692,20 +720,27 @@ namespace AudioToolbox {
 					throw new ObjectDisposedException ("timeline");
 			}
 
-			return AudioQueueGetCurrentTime (handle, arg, ref time, ref timelineDiscontinuty);
+			byte timelineDiscontinuityPtr;
+			AudioQueueStatus rv;
+			unsafe {
+				rv = AudioQueueGetCurrentTime (handle, arg, AsPointer<AudioTimeStamp> (ref time), &timelineDiscontinuityPtr);
+			}
+			timelineDiscontinuty = timelineDiscontinuityPtr != 0;
+			return rv;
 		}
 
-
 		[DllImport (Constants.AudioToolboxLibrary)]
-		extern static AudioQueueStatus AudioQueueDeviceGetCurrentTime (IntPtr AQ, ref AudioTimeStamp time);
+		unsafe extern static AudioQueueStatus AudioQueueDeviceGetCurrentTime (IntPtr AQ, AudioTimeStamp* time);
 
 		public AudioTimeStamp CurrentTime {
 			get {
 				AudioTimeStamp stamp = new AudioTimeStamp ();
 
-				if (AudioQueueDeviceGetCurrentTime (handle, ref stamp) != AudioQueueStatus.Ok) {
-					// Set no values as valid
-					stamp.Flags = 0;
+				unsafe {
+					if (AudioQueueDeviceGetCurrentTime (handle, &stamp) != AudioQueueStatus.Ok) {
+						// Set no values as valid
+						stamp.Flags = 0;
+					}
 				}
 
 				return stamp;
@@ -713,30 +748,34 @@ namespace AudioToolbox {
 		}
 
 		[DllImport (Constants.AudioToolboxLibrary)]
-		extern static AudioQueueStatus AudioQueueDeviceGetNearestStartTime (IntPtr AQ, ref AudioTimeStamp data, int flags);
+		unsafe extern static AudioQueueStatus AudioQueueDeviceGetNearestStartTime (IntPtr AQ, AudioTimeStamp* data, int flags);
 
 		public AudioTimeStamp GetNearestStartTime (AudioTimeStamp requestedStartTime)
 		{
-			var k = AudioQueueDeviceGetNearestStartTime (handle, ref requestedStartTime, 0);
-			if (k != 0)
-				throw new AudioQueueException (k);
+			unsafe {
+				var k = AudioQueueDeviceGetNearestStartTime (handle, &requestedStartTime, 0);
+				if (k != 0)
+					throw new AudioQueueException (k);
+			}
 
 			return requestedStartTime;
 		}
 
 		[DllImport (Constants.AudioToolboxLibrary)]
-		extern static AudioQueueStatus AudioQueueDeviceTranslateTime (IntPtr AQ, ref AudioTimeStamp inTime, out AudioTimeStamp translatedTime);
+		unsafe extern static AudioQueueStatus AudioQueueDeviceTranslateTime (IntPtr AQ, AudioTimeStamp* inTime, AudioTimeStamp* translatedTime);
 
 		public AudioTimeStamp TranslateTime (AudioTimeStamp timeToTranslate)
 		{
 			AudioTimeStamp ret;
 
-			AudioQueueDeviceTranslateTime (handle, ref timeToTranslate, out ret);
+			unsafe {
+				AudioQueueDeviceTranslateTime (handle, &timeToTranslate, &ret);
+			}
 			return ret;
 		}
 
 		[DllImport (Constants.AudioToolboxLibrary)]
-		extern static OSStatus AudioQueueGetParameter (IntPtr AQ, AudioQueueParameter parameterId, out float result);
+		unsafe extern static OSStatus AudioQueueGetParameter (IntPtr AQ, AudioQueueParameter parameterId, float* result);
 
 		[DllImport (Constants.AudioToolboxLibrary)]
 		extern static OSStatus AudioQueueSetParameter (IntPtr AQ, AudioQueueParameter parameterId, float value);
@@ -744,9 +783,11 @@ namespace AudioToolbox {
 		public float Volume {
 			get {
 				float r;
-				var res = AudioQueueGetParameter (handle, AudioQueueParameter.Volume, out r);
-				if (res != 0)
-					throw new AudioQueueException (res);
+				unsafe {
+					var res = AudioQueueGetParameter (handle, AudioQueueParameter.Volume, &r);
+					if (res != 0)
+						throw new AudioQueueException (res);
+				}
 
 				return r;
 			}
@@ -761,9 +802,11 @@ namespace AudioToolbox {
 		public float VolumeRampTime {
 			get {
 				float r;
-				var res = AudioQueueGetParameter (handle, AudioQueueParameter.VolumeRampTime, out r);
-				if (res != 0)
-					throw new AudioQueueException (res);
+				unsafe {
+					var res = AudioQueueGetParameter (handle, AudioQueueParameter.VolumeRampTime, &r);
+					if (res != 0)
+						throw new AudioQueueException (res);
+				}
 
 				return r;
 			}
@@ -778,9 +821,11 @@ namespace AudioToolbox {
 		public float Pan {
 			get {
 				float r;
-				var res = AudioQueueGetParameter (handle, AudioQueueParameter.Pan, out r);
-				if (res != 0)
-					throw new AudioQueueException (res);
+				unsafe {
+					var res = AudioQueueGetParameter (handle, AudioQueueParameter.Pan, &r);
+					if (res != 0)
+						throw new AudioQueueException (res);
+				}
 
 				return r;
 			}
@@ -792,11 +837,17 @@ namespace AudioToolbox {
 			}
 		}
 
+#if !NET
 		delegate void AudioQueuePropertyListenerProc (IntPtr userData, IntPtr AQ, AudioQueueProperty id);
+#endif
 
 		Hashtable? listeners;
 
+#if NET
+		[UnmanagedCallersOnly]
+#else
 		[MonoPInvokeCallback (typeof (AudioQueuePropertyListenerProc))]
+#endif
 		static void property_changed (IntPtr userData, IntPtr AQ, AudioQueueProperty id)
 		{
 			GCHandle gch = GCHandle.FromIntPtr (userData);
@@ -824,7 +875,13 @@ namespace AudioToolbox {
 			lock (listeners) {
 				var a = (ArrayList) listeners [property]!;
 				if (a is null) {
+#if NET
+					unsafe {
+						res = AudioQueueAddPropertyListener (handle, property, &property_changed, GCHandle.ToIntPtr (gch));
+					}
+#else
 					res = AudioQueueAddPropertyListener (handle, property, property_changed, GCHandle.ToIntPtr (gch));
+#endif
 					if (res != AudioQueueStatus.Ok)
 						return res;
 
@@ -848,22 +905,44 @@ namespace AudioToolbox {
 					return;
 				a.Remove (callback);
 				if (a.Count == 0) {
+#if NET
+					unsafe {
+						AudioQueueRemovePropertyListener (handle, property, &property_changed, GCHandle.ToIntPtr (gch));
+					}
+#else
 					AudioQueueRemovePropertyListener (handle, property, property_changed, GCHandle.ToIntPtr (gch));
+#endif
 				}
 			}
 		}
 
+#if NET
+		[DllImport (Constants.AudioToolboxLibrary)]
+		extern unsafe static AudioQueueStatus AudioQueueAddPropertyListener (IntPtr AQ, AudioQueueProperty id, delegate* unmanaged<IntPtr, IntPtr, AudioQueueProperty, void> proc, IntPtr data);
+#else
 		[DllImport (Constants.AudioToolboxLibrary)]
 		extern static AudioQueueStatus AudioQueueAddPropertyListener (IntPtr AQ, AudioQueueProperty id, AudioQueuePropertyListenerProc proc, IntPtr data);
+#endif
 
+#if NET
+		[DllImport (Constants.AudioToolboxLibrary)]
+		extern unsafe static OSStatus AudioQueueRemovePropertyListener (IntPtr AQ, AudioQueueProperty id, delegate* unmanaged<IntPtr, IntPtr, AudioQueueProperty, void> proc, IntPtr data);
+#else
 		[DllImport (Constants.AudioToolboxLibrary)]
 		extern static OSStatus AudioQueueRemovePropertyListener (IntPtr AQ, AudioQueueProperty id, AudioQueuePropertyListenerProc proc, IntPtr data);
+#endif
 
 		[DllImport (Constants.AudioToolboxLibrary)]
-		extern static AudioQueueStatus AudioQueueGetProperty (IntPtr AQ, uint id, IntPtr outdata, ref int dataSize);
+		unsafe extern static AudioQueueStatus AudioQueueGetProperty (IntPtr AQ, uint id, IntPtr outdata, int* dataSize);
 
 		[DllImport (Constants.AudioToolboxLibrary)]
-		extern static AudioQueueStatus AudioQueueGetPropertySize (IntPtr AQ, uint id, out int size);
+		unsafe extern static AudioQueueStatus AudioQueueGetPropertySize (IntPtr AQ, uint id, int* size);
+
+		unsafe static AudioQueueStatus AudioQueueGetPropertySize (IntPtr AQ, uint id, out int size)
+		{
+			size = 0;
+			return AudioQueueGetPropertySize (AQ, id, AsPointer<int> (ref size));
+		}
 
 		[DllImport (Constants.AudioToolboxLibrary)]
 		extern static AudioQueueStatus AudioQueueSetProperty (
@@ -874,7 +953,9 @@ namespace AudioToolbox {
 		{
 			if (outdata == IntPtr.Zero)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (outdata));
-			return AudioQueueGetProperty (handle, (uint) property, outdata, ref dataSize) == 0;
+			unsafe {
+				return AudioQueueGetProperty (handle, (uint) property, outdata, AsPointer<int> (ref dataSize)) == 0;
+			}
 		}
 
 		// Should be private
@@ -896,7 +977,9 @@ namespace AudioToolbox {
 			if (buffer == IntPtr.Zero)
 				return IntPtr.Zero;
 
-			r = AudioQueueGetProperty (handle, (uint) property, buffer, ref size);
+			unsafe {
+				r = AudioQueueGetProperty (handle, (uint) property, buffer, AsPointer<int> (ref size));
+			}
 			if (r == 0)
 				return buffer;
 			Marshal.FreeHGlobal (buffer);
@@ -916,9 +999,9 @@ namespace AudioToolbox {
 			if (buffer == IntPtr.Zero)
 				return default (T);
 			try {
-				r = AudioQueueGetProperty (handle, (uint) property, buffer, ref size);
+				r = AudioQueueGetProperty (handle, (uint) property, buffer, &size);
 				if (r == 0) {
-					T result = (T) Marshal.PtrToStructure (buffer, typeof (T))!;
+					T result = Marshal.PtrToStructure<T> (buffer)!;
 					return result;
 				}
 
@@ -940,9 +1023,9 @@ namespace AudioToolbox {
 			if (buffer == IntPtr.Zero)
 				return default (T);
 			try {
-				r = AudioQueueGetProperty (handle, (uint) property, buffer, ref size);
+				r = AudioQueueGetProperty (handle, (uint) property, buffer, &size);
 				if (r == 0) {
-					T result = (T) Marshal.PtrToStructure (buffer, typeof (T))!;
+					T result = Marshal.PtrToStructure<T> (buffer)!;
 					return result;
 				}
 
@@ -957,7 +1040,7 @@ namespace AudioToolbox {
 			unsafe {
 				int val = 0;
 				int size = 4;
-				var k = AudioQueueGetProperty (handle, (uint) property, (IntPtr) (&val), ref size);
+				var k = AudioQueueGetProperty (handle, (uint) property, (IntPtr) (&val), &size);
 				if (k == 0)
 					return val;
 				throw new AudioQueueException (k);
@@ -980,7 +1063,7 @@ namespace AudioToolbox {
 			unsafe {
 				double val = 0;
 				int size = 8;
-				var k = AudioQueueGetProperty (handle, (uint) property, (IntPtr) (&val), ref size);
+				var k = AudioQueueGetProperty (handle, (uint) property, (IntPtr) (&val), &size);
 				if (k == 0)
 					return val;
 				throw new AudioQueueException (k);
@@ -1041,7 +1124,7 @@ namespace AudioToolbox {
 					return;
 
 				unsafe {
-					fixed (byte* bp = &value [0]) {
+					fixed (byte* bp = value) {
 						SetProperty (AudioQueueProperty.MagicCookie, value.Length, (IntPtr) bp);
 					}
 				}
@@ -1191,10 +1274,17 @@ namespace AudioToolbox {
 		}
 #endif
 
+#if NET
+		[DllImport (Constants.AudioToolboxLibrary)]
+		extern unsafe static AudioQueueStatus AudioQueueProcessingTapNew (IntPtr inAQ, delegate* unmanaged<IntPtr, IntPtr, uint, AudioTimeStamp*, AudioQueueProcessingTapFlags*, uint*, IntPtr, void> inCallback,
+			IntPtr inClientData, AudioQueueProcessingTapFlags inFlags, uint* outMaxFrames,
+			AudioStreamBasicDescription* outProcessingFormat, IntPtr* outAQTap);
+#else
 		[DllImport (Constants.AudioToolboxLibrary)]
 		extern static AudioQueueStatus AudioQueueProcessingTapNew (IntPtr inAQ, AudioQueueProcessingTapCallbackShared inCallback,
 			IntPtr inClientData, AudioQueueProcessingTapFlags inFlags, out uint outMaxFrames,
 			out AudioStreamBasicDescription outProcessingFormat, out IntPtr outAQTap);
+#endif
 
 		public AudioQueueProcessingTap? CreateProcessingTap (AudioQueueProcessingTapDelegate processingCallback, AudioQueueProcessingTapFlags flags,
 															out AudioQueueStatus status)
@@ -1204,8 +1294,15 @@ namespace AudioToolbox {
 			AudioStreamBasicDescription processingFormat;
 			IntPtr tapHandle;
 
+#if NET
+			unsafe {
+				status = AudioQueueProcessingTapNew (handle, &AudioQueueProcessingTap.TapCallback, GCHandle.ToIntPtr (aqpt.Handle), flags, &maxFrames,
+						 &processingFormat,  &tapHandle);
+			}
+#else
 			status = AudioQueueProcessingTapNew (handle, AudioQueueProcessingTap.CreateTapCallback, GCHandle.ToIntPtr (aqpt.Handle), flags, out maxFrames,
 												 out processingFormat, out tapHandle);
+#endif
 
 			if (status != AudioQueueStatus.Ok) {
 				aqpt.Dispose ();
@@ -1217,11 +1314,18 @@ namespace AudioToolbox {
 			aqpt.ProcessingFormat = processingFormat;
 			return aqpt;
 		}
+
+		internal unsafe static T* AsPointer<T> (ref T value) where T : unmanaged
+		{
+			return (T*) Unsafe.AsPointer<T> (ref value);
+		}
 	}
 
+#if !NET
 	delegate void AudioQueueProcessingTapCallbackShared (IntPtr clientData, IntPtr tap, uint numberOfFrames,
 														 ref AudioTimeStamp timeStamp, ref AudioQueueProcessingTapFlags flags,
 														 out uint outNumberFrames, IntPtr data);
+#endif
 
 	public delegate uint AudioQueueProcessingTapDelegate (AudioQueueProcessingTap audioQueueTap, uint numberOfFrames,
 														  ref AudioTimeStamp timeStamp, ref AudioQueueProcessingTapFlags flags,
@@ -1234,7 +1338,9 @@ namespace AudioToolbox {
 	[SupportedOSPlatform ("tvos")]
 #endif
 	public class AudioQueueProcessingTap : IDisposable {
+#if !NET
 		internal static readonly AudioQueueProcessingTapCallbackShared CreateTapCallback = TapCallback;
+#endif
 
 		AudioQueueProcessingTapDelegate? callback;
 		readonly GCHandle gc_handle;
@@ -1282,8 +1388,8 @@ namespace AudioToolbox {
 		extern static OSStatus AudioQueueProcessingTapDispose (IntPtr inAQTap);
 
 		[DllImport (Constants.AudioToolboxLibrary)]
-		extern static AudioQueueStatus AudioQueueProcessingTapGetSourceAudio (IntPtr inAQTap, uint inNumberFrames, ref AudioTimeStamp ioTimeStamp,
-																	   out AudioQueueProcessingTapFlags outFlags, out uint outNumberFrames,
+		unsafe extern static AudioQueueStatus AudioQueueProcessingTapGetSourceAudio (IntPtr inAQTap, uint inNumberFrames, AudioTimeStamp* ioTimeStamp,
+																	   AudioQueueProcessingTapFlags* outFlags, uint* outNumberFrames,
 																	   IntPtr ioData);
 
 		public AudioQueueStatus GetSourceAudio (uint numberOfFrames, ref AudioTimeStamp timeStamp,
@@ -1292,27 +1398,54 @@ namespace AudioToolbox {
 			if (data is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (data));
 
-			return AudioQueueProcessingTapGetSourceAudio (TapHandle, numberOfFrames, ref timeStamp,
-														  out flags, out parentNumberOfFrames, (IntPtr) data);
+			parentNumberOfFrames = 0;
+			flags = default (AudioQueueProcessingTapFlags);
+			unsafe {
+				return AudioQueueProcessingTapGetSourceAudio (TapHandle, numberOfFrames,
+															 AudioQueue.AsPointer<AudioTimeStamp> (ref timeStamp),
+															 AudioQueue.AsPointer<AudioQueueProcessingTapFlags> (ref flags),
+															 AudioQueue.AsPointer<uint> (ref parentNumberOfFrames),
+															 (IntPtr) data);
+			}
 		}
 
 		[DllImport (Constants.AudioToolboxLibrary)]
-		extern static AudioQueueStatus AudioQueueProcessingTapGetQueueTime (IntPtr inAQTap, out double outQueueSampleTime, out uint outQueueFrameCount);
+		unsafe extern static AudioQueueStatus AudioQueueProcessingTapGetQueueTime (IntPtr inAQTap, double* outQueueSampleTime, uint* outQueueFrameCount);
 
 		public AudioQueueStatus GetQueueTime (out double sampleTime, out uint frameCount)
 		{
-			return AudioQueueProcessingTapGetQueueTime (TapHandle, out sampleTime, out frameCount);
+			sampleTime = 0;
+			frameCount = 0;
+			unsafe {
+				return AudioQueueProcessingTapGetQueueTime (TapHandle, AudioQueue.AsPointer<double> (ref sampleTime), AudioQueue.AsPointer<uint> (ref frameCount));
+			}
 		}
 
+#if NET
+		[UnmanagedCallersOnly]
+		internal unsafe static void TapCallback (IntPtr clientData, IntPtr tap,
+			uint numberFrames, AudioTimeStamp* timeStamp,
+			AudioQueueProcessingTapFlags* flags, uint* outNumberFrames,
+			IntPtr data)
+#else
 		[MonoPInvokeCallback (typeof (AudioQueueProcessingTapCallbackShared))]
 		static void TapCallback (IntPtr clientData, IntPtr tap, uint numberFrames, ref AudioTimeStamp timeStamp, ref AudioQueueProcessingTapFlags flags,
 								 out uint outNumberFrames, IntPtr data)
+#endif
 		{
 			GCHandle gch = GCHandle.FromIntPtr (clientData);
 			var aqpt = (AudioQueueProcessingTap) gch.Target!;
 
 			using (var buffers = new AudioBuffers (data)) {
+#if NET
+				var localTimeStamp = *timeStamp;
+				var localFlags = *flags;
+				*outNumberFrames = aqpt.callback! (aqpt, numberFrames, ref localTimeStamp, ref localFlags, buffers);
+				*timeStamp = localTimeStamp;
+				*flags = localFlags;
+#else
 				outNumberFrames = aqpt.callback! (aqpt, numberFrames, ref timeStamp, ref flags, buffers);
+#endif
 			}
 		}
 	}
@@ -1324,14 +1457,25 @@ namespace AudioToolbox {
 	[SupportedOSPlatform ("tvos")]
 #endif
 	public class OutputAudioQueue : AudioQueue {
+#if NET
+		[DllImport (Constants.AudioToolboxLibrary)]
+		extern unsafe static OSStatus AudioQueueNewOutput (AudioStreamBasicDescription* format, delegate* unmanaged<IntPtr, IntPtr, IntPtr, void> callback,
+			IntPtr userData, IntPtr cfrunLoop_callbackRunloop, IntPtr cfstr_runMode,  
+			uint flags, IntPtr* audioQueue);
+#else
 		static readonly AudioQueueOutputCallback dOutputCallback = output_callback;
 
 		[DllImport (Constants.AudioToolboxLibrary)]
-		extern static OSStatus AudioQueueNewOutput (ref AudioStreamBasicDescription format, AudioQueueOutputCallback callback,
+		unsafe extern static OSStatus AudioQueueNewOutput (AudioStreamBasicDescription* format, AudioQueueOutputCallback callback,
 								IntPtr userData, IntPtr cfrunLoop_callbackRunloop, IntPtr cfstr_runMode,
-								uint flags, out IntPtr audioQueue);
+								uint flags, IntPtr* audioQueue);
+#endif
 
+#if NET
+		[UnmanagedCallersOnly]
+#else
 		[MonoPInvokeCallback (typeof (AudioQueueOutputCallback))]
+#endif
 		static void output_callback (IntPtr userData, IntPtr AQ, IntPtr audioQueueBuffer)
 		{
 			GCHandle gch = GCHandle.FromIntPtr (userData);
@@ -1362,9 +1506,18 @@ namespace AudioToolbox {
 			IntPtr h;
 			GCHandle gch = GCHandle.Alloc (this);
 
-			var code = AudioQueueNewOutput (ref desc, dOutputCallback, GCHandle.ToIntPtr (gch),
-							runLoop.GetHandle (),
-							runMode.GetHandle (), 0, out h);
+			OSStatus code = 0;
+			unsafe {
+				code = AudioQueueNewOutput (&desc,
+#if NET
+					&output_callback,
+#else
+					dOutputCallback,
+#endif
+					GCHandle.ToIntPtr (gch),
+					runLoop.GetHandle (),
+					runMode.GetHandle (), 0, &h);
+			}
 
 			if (code != 0) {
 				gch.Free ();
@@ -1379,14 +1532,16 @@ namespace AudioToolbox {
 		extern static AudioQueueStatus AudioQueueSetOfflineRenderFormat2 (IntPtr aq, IntPtr format, IntPtr layout);
 
 		[DllImport (Constants.AudioToolboxLibrary)]
-		extern static AudioQueueStatus AudioQueueSetOfflineRenderFormat (IntPtr aq, ref AudioStreamBasicDescription format, IntPtr layout);
+		unsafe extern static AudioQueueStatus AudioQueueSetOfflineRenderFormat (IntPtr aq, AudioStreamBasicDescription* format, IntPtr layout);
 
 		public AudioQueueStatus SetOfflineRenderFormat (AudioStreamBasicDescription desc, AudioChannelLayout layout)
 		{
 			int size;
 			var h = layout is null ? IntPtr.Zero : layout.ToBlock (out size);
 			try {
-				return AudioQueueSetOfflineRenderFormat (handle, ref desc, h);
+				unsafe {
+					return AudioQueueSetOfflineRenderFormat (handle, &desc, h);
+				}
 			} finally {
 				Marshal.FreeHGlobal (h);
 			}
@@ -1398,7 +1553,7 @@ namespace AudioToolbox {
 		}
 
 		[DllImport (Constants.AudioToolboxLibrary)]
-		extern unsafe static AudioQueueStatus AudioQueueOfflineRender (IntPtr aq, ref AudioTimeStamp stamp, AudioQueueBuffer* buffer, int frames);
+		extern unsafe static AudioQueueStatus AudioQueueOfflineRender (IntPtr aq, AudioTimeStamp* stamp, AudioQueueBuffer* buffer, int frames);
 
 		public unsafe AudioQueueStatus RenderOffline (double timeStamp, AudioQueueBuffer* audioQueueBuffer, int frameCount)
 		{
@@ -1409,7 +1564,7 @@ namespace AudioToolbox {
 				SampleTime = timeStamp,
 				Flags = AudioTimeStamp.AtsFlags.SampleTimeValid
 			};
-			return AudioQueueOfflineRender (handle, ref stamp, audioQueueBuffer, frameCount);
+			return AudioQueueOfflineRender (handle, &stamp, audioQueueBuffer, frameCount);
 		}
 	}
 
@@ -1420,9 +1575,15 @@ namespace AudioToolbox {
 	[SupportedOSPlatform ("tvos")]
 #endif
 	public class InputAudioQueue : AudioQueue {
+#if !NET
 		static unsafe readonly AudioQueueInputCallback dInputCallback = input_callback;
+#endif
 
+#if NET
+		[UnmanagedCallersOnly]
+#else
 		[MonoPInvokeCallback (typeof (AudioQueueInputCallback))]
+#endif
 		unsafe static void input_callback (IntPtr userData, IntPtr AQ, IntPtr audioQueueBuffer,
 						AudioTimeStamp* startTime, int descriptors, IntPtr inPacketDesc)
 		{
@@ -1439,7 +1600,17 @@ namespace AudioToolbox {
 			if (h is not null)
 				h (this, new InputCompletedEventArgs (audioQueueBuffer, timeStamp, packetDescriptions));
 		}
-
+#if NET
+		[DllImport (Constants.AudioToolboxLibrary)]
+		extern unsafe static OSStatus AudioQueueNewInput (
+			AudioStreamBasicDescription* format,
+			delegate* unmanaged<IntPtr, IntPtr, IntPtr, AudioTimeStamp*, int, IntPtr, void> callback,
+			IntPtr inUserData,
+			IntPtr cfrunLoop_inCallbackRunLoop,
+			IntPtr cfstringref_inCallbackRunLoopMode,
+			UInt32 inFlags,
+			IntPtr* audioQueue);
+#else
 		[DllImport (Constants.AudioToolboxLibrary)]
 		extern static OSStatus AudioQueueNewInput (
 			ref AudioStreamBasicDescription format,
@@ -1449,7 +1620,7 @@ namespace AudioToolbox {
 			IntPtr cfstringref_inCallbackRunLoopMode,
 			UInt32 inFlags,
 			out IntPtr audioQueue);
-
+#endif
 		public InputAudioQueue (AudioStreamBasicDescription desc)
 		 : this (desc, null, null)
 		{
@@ -1461,9 +1632,18 @@ namespace AudioToolbox {
 			GCHandle mygch = GCHandle.Alloc (this);
 			CFString? s = runMode is null ? null : new CFString (runMode);
 
+#if NET
+			OSStatus code = 0;
+			unsafe {
+				code = AudioQueueNewInput (&desc, &input_callback, GCHandle.ToIntPtr (mygch),
+					runLoop.GetHandle (), s.GetHandle (),
+					0, &h);
+			}
+#else
 			var code = AudioQueueNewInput (ref desc, dInputCallback, GCHandle.ToIntPtr (mygch),
 							   runLoop.GetHandle (),
 							   s.GetHandle (), 0, out h);
+#endif
 			if (s is not null)
 				s.Dispose ();
 

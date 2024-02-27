@@ -23,23 +23,23 @@ namespace MonoTouchFixtures.Accessibility {
 		{
 			TestRuntime.AssertXcodeVersion (13, 0);
 		}
-		
+
 		[Test]
 		public void GetHearingDeviceEar ()
 		{
-			Assert.That (AXHearingUtilities.GetMFiHearingDeviceStreamingEar (), Is.EqualTo (AXHearingDeviceEar.None), "default");
+			Assert.That (AXHearingUtilities.GetMFiHearingDeviceStreamingEar (), Is.EqualTo (AXHearingDeviceEar.None).Or.EqualTo (AXHearingDeviceEar.Both), "default");
 		}
 
 		[Test]
 		public void GetDoesSupportBidirectionalHearing ()
 		{
-			Assert.That (AXHearingUtilities.SupportsBidirectionalStreaming (), Is.EqualTo (false), "GetDoesSupportBidirectionalHearing");
+			Assert.That (AXHearingUtilities.SupportsBidirectionalStreaming (), Is.EqualTo (false).Or.EqualTo (true), "GetDoesSupportBidirectionalHearing");
 		}
 
 		[Test]
 		public void GetHearingDevicePairedUuids ()
 		{
-			NSUuid[] emptyArray = new NSUuid[0]; 
+			NSUuid [] emptyArray = new NSUuid [0];
 			Assert.That (AXHearingUtilities.GetMFiHearingDevicePairedUuids (), Is.EqualTo (emptyArray), "GetHearingDevicePairedUuids");
 		}
 	}

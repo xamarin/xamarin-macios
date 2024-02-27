@@ -31,12 +31,11 @@ namespace MonoTouchFixtures.SceneKit {
 
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class SCNVector3Test
-	{
+	public class SCNVector3Test {
 		static pfloat delta = (pfloat) 0.000001;
 
 		[Test]
-		public void TransformVector()
+		public void TransformVector ()
 		{
 			var matrix = new SCNMatrix4 (
 				11, 12, 13, 14,
@@ -73,10 +72,10 @@ namespace MonoTouchFixtures.SceneKit {
 		public void TransformNormal ()
 		{
 			var matrix = new SCNMatrix4 (
-				11,  12,  13,  14,
-				21, -22,  23,  24,
-				31,  32,  33,  34,
-				41,  42,  43, -44);
+				11, 12, 13, 14,
+				21, -22, 23, 24,
+				31, 32, 33, 34,
+				41, 42, 43, -44);
 #if !NET
 			matrix.Transpose ();
 #endif
@@ -91,10 +90,10 @@ namespace MonoTouchFixtures.SceneKit {
 		public void TransformNormal_out ()
 		{
 			var matrix = new SCNMatrix4 (
-				11,  12,  13,  14,
-				21, -22,  23,  24,
-				31,  32,  33,  34,
-				41,  42,  43, -44);
+				11, 12, 13, 14,
+				21, -22, 23, 24,
+				31, 32, 33, 34,
+				41, 42, 43, -44);
 #if !NET
 			matrix.Transpose ();
 #endif

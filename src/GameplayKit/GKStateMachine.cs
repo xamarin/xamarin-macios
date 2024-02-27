@@ -15,7 +15,7 @@ using ObjCRuntime;
 
 namespace GameplayKit {
 	public partial class GKStateMachine : NSObject {
-		
+
 		public GKState? GetState (Type stateType)
 		{
 			return GetState (GKState.GetClass (stateType, "stateType"));

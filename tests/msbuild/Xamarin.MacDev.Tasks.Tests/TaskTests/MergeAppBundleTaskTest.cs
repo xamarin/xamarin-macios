@@ -8,7 +8,6 @@ using Microsoft.Build.Utilities;
 
 using NUnit.Framework;
 
-using Xamarin.iOS.Tasks;
 using Xamarin.Tests;
 using Xamarin.Utils;
 
@@ -24,10 +23,11 @@ namespace Xamarin.MacDev.Tasks {
 			};
 
 			RunMake (Path.Combine (Configuration.RootPath, "tests", "test-libraries"), environment: env);
-			RunMake (Path.Combine (Configuration.RootPath, "tests", "common", "TestProjects", "ComplexAssembly"), environment: env);
+			if (Configuration.include_dotnet)
+				RunMake (Path.Combine (Configuration.RootPath, "tests", "common", "TestProjects", "ComplexAssembly"), environment: env);
 		}
 
-		static void RunMake (string directory, Dictionary<string, string> environment =  null)
+		static void RunMake (string directory, Dictionary<string, string> environment = null)
 		{
 			var arguments = new List<string> {
 				"-C",
@@ -51,7 +51,7 @@ namespace Xamarin.MacDev.Tasks {
 			}
 		}
 
-		MergeAppBundles CreateTask (string outputBundle, params string[] inputBundles)
+		MergeAppBundles CreateTask (string outputBundle, params string [] inputBundles)
 		{
 			var inputItems = new List<TaskItem> ();
 			for (var i = 0; i < inputBundles.Length; i++) {
@@ -66,7 +66,7 @@ namespace Xamarin.MacDev.Tasks {
 		}
 
 		// Create two app bundles, one with fileA, and one with fileB, in the root directory
-		string[] CreateAppBundles (string fileA, string fileB, string fileName = null)
+		string [] CreateAppBundles (string fileA, string fileB, string fileName = null)
 		{
 			var appBundleA = Path.Combine (Cache.CreateTemporaryDirectory (), "MergeMe.app");
 			var appBundleB = Path.Combine (Cache.CreateTemporaryDirectory (), "MergeMe.app");
@@ -77,7 +77,7 @@ namespace Xamarin.MacDev.Tasks {
 			return new string [] { appBundleA, appBundleB };
 		}
 
-		string CreateAppBundle (string directory, params string[] files)
+		string CreateAppBundle (string directory, params string [] files)
 		{
 			var appBundle = Path.Combine (Cache.CreateTemporaryDirectory (), "MergeMe.app");
 			Directory.CreateDirectory (appBundle);
@@ -115,6 +115,7 @@ namespace Xamarin.MacDev.Tasks {
 		[Test]
 		public void TestPEAssembly ()
 		{
+			Configuration.AssertDotNetAvailable ();
 			var complexAssemblyPath = Path.Combine (Configuration.RootPath, "tests", "common", "TestProjects", "ComplexAssembly", "bin", "Debug", Configuration.DotNetTfm);
 			var complexFiles = new string [] {
 				"ComplexAssembly.dll",

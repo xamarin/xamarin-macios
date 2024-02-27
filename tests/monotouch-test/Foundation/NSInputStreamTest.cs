@@ -6,8 +6,7 @@ namespace MonoTouchFixtures.Foundation {
 
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class NSInputStreamTest
-	{
+	public class NSInputStreamTest {
 		[Test]
 		public void SubclassedCtor ()
 		{
@@ -57,9 +56,9 @@ namespace MonoTouchFixtures.Foundation {
 		[Test]
 		public unsafe void Read ()
 		{
-			using (var data = NSData.FromArray (new byte[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 })) {
+			using (var data = NSData.FromArray (new byte [] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 })) {
 				using (var s = NSInputStream.FromData (data)) {
-					byte[] arr = new byte[10];
+					byte [] arr = new byte [10];
 					s.Open ();
 					Assert.IsTrue (s.HasBytesAvailable ());
 					Assert.AreEqual ((nint) 2, s.Read (arr, 2), "#a 1");
@@ -68,7 +67,7 @@ namespace MonoTouchFixtures.Foundation {
 				}
 
 				using (var s = new NSInputStream (data)) {
-					byte[] arr = new byte[10];
+					byte [] arr = new byte [10];
 					s.Open ();
 					Assert.IsTrue (s.HasBytesAvailable ());
 					Assert.AreEqual ((nint) 2, s.Read (arr, 1, 2), "#b 1");
@@ -78,10 +77,10 @@ namespace MonoTouchFixtures.Foundation {
 				}
 
 				using (var s = new NSInputStream (data)) {
-					byte[] arr = new byte[10];
+					byte [] arr = new byte [10];
 					s.Open ();
 					Assert.IsTrue (s.HasBytesAvailable ());
-					fixed (byte* ptr = &arr[2])
+					fixed (byte* ptr = &arr [2])
 						Assert.AreEqual ((nint) 2, s.Read ((IntPtr) ptr, 2), "#c 1");
 					Assert.AreEqual (0, arr [0], "#c[0]");
 					Assert.AreEqual (0, arr [1], "#c[1]");

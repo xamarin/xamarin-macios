@@ -22,18 +22,18 @@ using NativeHandle = System.IntPtr;
 #endif
 
 namespace MonoTouchFixtures.ObjCRuntime {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class ClassTest {
 		[DllImport ("/usr/lib/libobjc.dylib")]
 		extern static IntPtr objc_getClass (string name);
-		
+
 		// based on https://xamarin.assistly.com/agent/case/6816
 		[Register ("ZählerObject")]
 		class ZählerObject : NSObject {
 		}
-		
+
 		[Test]
 		public void getClassTest ()
 		{
@@ -43,12 +43,12 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			p = objc_getClass ("ZählerObject");
 			Assert.That (p, Is.Not.EqualTo (IntPtr.Zero), "ä");
 		}
-		
+
 		[Test]
 		public void LookupTest ()
 		{
 			IntPtr p = objc_getClass ("ZählerObject");
-			var m = typeof (Class).GetMethod ("Lookup", BindingFlags.NonPublic | BindingFlags.Static, null, new Type[] { typeof (IntPtr) }, null);
+			var m = typeof (Class).GetMethod ("Lookup", BindingFlags.NonPublic | BindingFlags.Static, null, new Type [] { typeof (IntPtr) }, null);
 			Type t = (Type) m.Invoke (null, new object [] { objc_getClass ("ZählerObject") });
 			Assert.That (t, Is.EqualTo (typeof (ZählerObject)), "Lookup");
 			Assert.That (p, Is.Not.EqualTo (IntPtr.Zero), "Class");
@@ -84,9 +84,11 @@ namespace MonoTouchFixtures.ObjCRuntime {
 					Assert.AreEqual ("Can't register the class System.String when the dynamic registrar has been linked away.", e.Message, "exc message");
 				}
 			}
+#pragma warning disable IL3050 // Using member 'System.Type.MakeArrayType()' which has 'RequiresDynamicCodeAttribute' can break functionality when AOT compiling. The code for an array of the specified type might not be available.
 			Assert.AreEqual (NativeHandle.Zero, Class.GetHandle (typeof (NSObject).MakeByRefType ()), "NSObject&");
 			Assert.AreEqual (NativeHandle.Zero, Class.GetHandle (typeof (NSObject).MakeArrayType ()), "NSObject[]");
 			Assert.AreEqual (NativeHandle.Zero, Class.GetHandle (typeof (NSObject).MakePointerType ()), "NSObject*");
+#pragma warning restore IL3050
 		}
 
 		[Test]
@@ -108,7 +110,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			Assert.Throws<ArgumentException> (() => new Class ("InexistentClass"), "inexistent");
 			// Private class which we've obviously not bound, but we've bound a super class.
 			// And yes, NSMutableString is the first public superclass of __NSCFConstantString.
-			Assert.AreEqual (typeof (NSMutableString), Class.Lookup (new Class ("__NSCFConstantString")), "private class"); 
+			Assert.AreEqual (typeof (NSMutableString), Class.Lookup (new Class ("__NSCFConstantString")), "private class");
 		}
 
 		[Test]
@@ -118,9 +120,8 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				str.MarkDirty ();
 		}
 
-		class DirtyType : NSObject
-		{
-			public void MarkDirty ()
+		class DirtyType : NSObject {
+			public new void MarkDirty ()
 			{
 				base.MarkDirty ();
 			}

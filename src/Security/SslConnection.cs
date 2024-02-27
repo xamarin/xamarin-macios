@@ -29,21 +29,15 @@ namespace Security {
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
-	[UnsupportedOSPlatform ("macos10.15")]
-	[UnsupportedOSPlatform ("tvos13.0")]
-	[UnsupportedOSPlatform ("ios13.0")]
-#if MONOMAC
-	[Obsolete (Constants.UseNetworkInstead, DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif TVOS
-	[Obsolete (Constants.UseNetworkInstead, DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-	[Obsolete (Constants.UseNetworkInstead, DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+	[ObsoletedOSPlatform ("macos10.15", Constants.UseNetworkInstead)]
+	[ObsoletedOSPlatform ("tvos13.0", Constants.UseNetworkInstead)]
+	[ObsoletedOSPlatform ("ios13.0", Constants.UseNetworkInstead)]
+	[ObsoletedOSPlatform ("maccatalyst13.0", Constants.UseNetworkInstead)]
 #else
-	[Deprecated (PlatformName.MacOSX, 10,15, message: Constants.UseNetworkInstead)]
-	[Deprecated (PlatformName.iOS, 13,0, message: Constants.UseNetworkInstead)]
-	[Deprecated (PlatformName.TvOS, 13,0, message: Constants.UseNetworkInstead)]
-	[Deprecated (PlatformName.WatchOS, 6,0, message: Constants.UseNetworkInstead)]
+	[Deprecated (PlatformName.MacOSX, 10, 15, message: Constants.UseNetworkInstead)]
+	[Deprecated (PlatformName.iOS, 13, 0, message: Constants.UseNetworkInstead)]
+	[Deprecated (PlatformName.TvOS, 13, 0, message: Constants.UseNetworkInstead)]
+	[Deprecated (PlatformName.WatchOS, 6, 0, message: Constants.UseNetworkInstead)]
 #endif
 	public abstract class SslConnection : IDisposable {
 
@@ -125,7 +119,7 @@ namespace Security {
 	// a concrete connection based on a managed Stream
 	public class SslStreamConnection : SslConnection {
 
-		byte[] buffer;
+		byte [] buffer;
 
 		public SslStreamConnection (Stream stream)
 		{
@@ -155,11 +149,9 @@ namespace Security {
 			using (var ms = new UnmanagedMemoryStream ((byte*) data, dataLength)) {
 				try {
 					ms.CopyTo (InnerStream);
-				}
-				catch (IOException) {
+				} catch (IOException) {
 					return SslStatus.ClosedGraceful;
-				}
-				catch {
+				} catch {
 					return SslStatus.Internal;
 				}
 			}

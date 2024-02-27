@@ -39,8 +39,8 @@ namespace MonoTouchFixtures.Foundation {
 			var t = new Thread (() => {
 				if (NSThread.IsMain)
 					rv = 1;
-				else if (Assembly.GetEntryAssembly () == null)
-					rv =  2;
+				else if (Assembly.GetEntryAssembly () is null)
+					rv = 2;
 				else
 					rv = 0;
 			}) {

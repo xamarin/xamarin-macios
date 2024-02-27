@@ -9,13 +9,11 @@ using Xamarin.Utils;
 
 [assembly: Preserve (typeof (NSExpression), AllMembers = true)]
 
-namespace MonoTouchFixtures.Foundation
-{
+namespace MonoTouchFixtures.Foundation {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class NSExpressionTest
-	{
-		List<string> properties = new List<string> { "Block", "ConstantValue", "KeyPath",  "Function", 
+	public class NSExpressionTest {
+		List<string> properties = new List<string> { "Block", "ConstantValue", "KeyPath",  "Function",
 			"Variable", "Operand", "Arguments", "Collection", "Predicate", "LeftExpression",
 			"RightExpression", "TrueExpression", "FalseExpression"};
 
@@ -49,9 +47,9 @@ namespace MonoTouchFixtures.Foundation
 			NSObject value = null;
 
 			switch (input) {
-				case String stringValue:
-					value = new NSString (stringValue);
-					break;
+			case String stringValue:
+				value = new NSString (stringValue);
+				break;
 			}
 
 			using (var expression = NSExpression.FromConstant (value))
@@ -114,7 +112,7 @@ namespace MonoTouchFixtures.Foundation
 		[Test]
 		public void UnionSetPropertiesTest ()
 		{
-			var availableProperties = new List<string> { "LeftExpression", "RightExpression"};
+			var availableProperties = new List<string> { "LeftExpression", "RightExpression" };
 
 			using (var llower = NSExpression.FromConstant (new NSNumber (0)))
 			using (var lupper = NSExpression.FromConstant (new NSNumber (5)))
@@ -165,7 +163,7 @@ namespace MonoTouchFixtures.Foundation
 		[Test]
 		public void ConstantPropertiesTest ()
 		{
-			var availableProperties = new List<string> { "ConstantValue"};
+			var availableProperties = new List<string> { "ConstantValue" };
 			using (var expression = NSExpression.FromFormat ("2")) {
 				Assert.AreEqual (NSExpressionType.ConstantValue, expression.ExpressionType);
 				TestProperties (expression, availableProperties);
@@ -195,7 +193,7 @@ namespace MonoTouchFixtures.Foundation
 		[Test]
 		public void FunctionPropertiesTest ()
 		{
-			var availableProperties = new List<string> { "Function", "Operand", "Arguments"};
+			var availableProperties = new List<string> { "Function", "Operand", "Arguments" };
 			using (var expression = NSExpression.FromFormat ("2*2")) {
 				Assert.AreEqual (NSExpressionType.Function, expression.ExpressionType);
 				TestProperties (expression, availableProperties);
@@ -205,7 +203,7 @@ namespace MonoTouchFixtures.Foundation
 		[Test]
 		public void BlockPropertiesTest ()
 		{
-			var availableProperties = new List<string> { "Block", "Arguments"};
+			var availableProperties = new List<string> { "Block", "Arguments" };
 			using (var expression = NSExpression.FromFunction ((o, e, c) => { return new NSString ("Foo"); }, new NSExpression [] { })) {
 				Assert.AreEqual (NSExpressionType.Block, expression.ExpressionType);
 				TestProperties (expression, availableProperties);
@@ -215,8 +213,8 @@ namespace MonoTouchFixtures.Foundation
 		[Test]
 		public void EvaluatedObjectPropertiesTest ()
 		{
-			var availableProperties = new List<string> {  };
-			var mySearchKey =  new NSString ("James");
+			var availableProperties = new List<string> { };
+			var mySearchKey = new NSString ("James");
 			using (var predicate = NSPredicate.FromFormat ("ANY employees.firstName like 'Matthew'") as NSComparisonPredicate)
 			using (var expression = predicate.LeftExpression.Operand) { // NSExpressionType.EvaluatedObject;
 				Assert.AreEqual (NSExpressionType.EvaluatedObject, expression.ExpressionType);

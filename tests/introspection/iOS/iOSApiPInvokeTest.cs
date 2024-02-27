@@ -47,6 +47,10 @@ namespace Introspection {
 			case "MTKModelIOVertexDescriptorFromMetal":
 			case "MTKModelIOVertexFormatFromMetal":
 			case "MTKMetalVertexFormatFromModelIO":
+			case "MTLIOCompressionContextAppendData":
+			case "MTLIOCreateCompressionContext":
+			case "MTLIOFlushAndDestroyCompressionContext":
+			case "MTLIOCompressionContextDefaultChunkSize":
 			case "MPSImageBatchIncrementReadCount":
 			case "MPSImageBatchSynchronize":
 			case "MPSImageBatchResourceSize":
@@ -81,7 +85,7 @@ namespace Introspection {
 			if (!UIDevice.CurrentDevice.CheckSystemVersion (sdk.Major, sdk.Minor))
 				return true;
 #else
-	#error unknown target
+#error unknown target
 #endif
 			// 2. on the real target for Xamarin.iOS.dll/monotouch.dll
 			//    as the simulator miss some libraries and symbols
@@ -92,11 +96,12 @@ namespace Introspection {
 		[Test]
 		public void MonoNativeFunctionWrapper ()
 		{
-			var nativeDelegates = from type in Assembly.GetTypes () where !Skip (type)
-				let attr = type.GetCustomAttribute<MonoNativeFunctionWrapperAttribute> () where attr != null
-				select type;
+			var nativeDelegates = from type in Assembly.GetTypes ()
+								  where !Skip (type)
+								  let attr = type.GetCustomAttribute<MonoNativeFunctionWrapperAttribute> ()
+								  where attr is not null
+								  select type;
 
-			var failed_api = new List<string> ();
 			Errors = 0;
 			int c = 0, n = 0;
 			foreach (var t in nativeDelegates) {
@@ -109,13 +114,12 @@ namespace Introspection {
 				}
 				n++;
 			}
-			Assert.AreEqual (0, Errors, "{0} errors found in {1} native delegate validated: {2}", Errors, n, string.Join (", ", failed_api));
+			AssertIfErrors ("{0} errors found in {1} native delegate validated", Errors, n);
 		}
 
 		[Test]
 		public void MonoPInvokeCallback ()
 		{
-			var failed_api = new List<string> ();
 			Errors = 0;
 			int c = 0, n = 0;
 			foreach (var type in Assembly.GetTypes ()) {
@@ -127,9 +131,9 @@ namespace Introspection {
 					if (Skip (mi))
 						continue;
 					var attr = mi.GetCustomAttribute<MonoPInvokeCallbackAttribute> ();
-					if (attr == null)
+					if (attr is null)
 						continue;
-					
+
 					if (LogProgress)
 						Console.WriteLine ("{0}. {1}", c++, mi);
 
@@ -142,7 +146,7 @@ namespace Introspection {
 					n++;
 				}
 			}
-			Assert.AreEqual (0, Errors, "{0} errors found in {1} native delegate validated: {2}", Errors, n, string.Join (", ", failed_api));
+			AssertIfErrors ("{0} errors found in {1} native delegate validated", Errors, n);
 		}
 	}
 }

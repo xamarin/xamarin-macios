@@ -28,7 +28,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 			Assert.IsTrue (bundles.Length > 0);
 			foreach (CFBundle b in bundles) {
 				Assert.IsFalse (String.IsNullOrEmpty (b.Url.ToString ()),
-  						String.Format("Found bundle with null url and id {0}", b.Identifier));
+  						String.Format ("Found bundle with null url and id {0}", b.Identifier));
 			}
 		}
 
@@ -63,7 +63,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 				if (!String.IsNullOrEmpty (id)) {
 					var otherBundle = CFBundle.Get (id);
 					Assert.AreEqual (b.Info.Type, otherBundle.Info.Type,
-  							 String.Format("Found bundle with diff type and id {0}", id));
+  							 String.Format ("Found bundle with diff type and id {0}", id));
 					var bPath = (string) ((NSString) b.Url.Path).ResolveSymlinksInPath ();
 					var list = dict [id];
 					Assert.That (list, Does.Contain (bPath), "None of the bundles for {0} matches the path {1}", id, bPath);
@@ -97,7 +97,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 		public void TestBuiltInPlugInsUrl ()
 		{
 			var main = CFBundle.GetMain ();
-			Assert.That(main.BuiltInPlugInsUrl.ToString (), Contains.Substring ("PlugIns/"));
+			Assert.That (main.BuiltInPlugInsUrl.ToString (), Contains.Substring ("PlugIns/"));
 		}
 
 		[Test]
@@ -111,42 +111,43 @@ namespace MonoTouchFixtures.CoreFoundation {
 #else
 			var executableRelativePath = Path.Combine (ExpectedAppName, "monotouchtest");
 #endif
-			Assert.That (main.ExecutableUrl.ToString (), Contains.Substring (executableRelativePath));
+			var alternativeRelativePath = executableRelativePath.Replace (ExpectedAppName, "PublicStaging.app");
+			Assert.That (main.ExecutableUrl.ToString (), Does.Contain (executableRelativePath).Or.Contain (alternativeRelativePath));
 		}
 
 		[Test]
 		public void TestPrivateFrameworksUrl ()
 		{
 			var main = CFBundle.GetMain ();
-			Assert.That(main.PrivateFrameworksUrl.ToString (), Contains.Substring ("Frameworks/"));
+			Assert.That (main.PrivateFrameworksUrl.ToString (), Contains.Substring ("Frameworks/"));
 		}
 
 		[Test]
 		public void TestResourcesDirectoryUrl ()
 		{
 			var main = CFBundle.GetMain ();
-			Assert.That(main.ResourcesDirectoryUrl.ToString (), Contains.Substring (ExpectedAppName + "/"));
+			Assert.That (main.ResourcesDirectoryUrl.ToString (), Does.Contain (ExpectedAppName + "/").Or.Contain ("PublicStaging.app/"));
 		}
 
 		[Test]
 		public void TestSharedFrameworksUrl ()
 		{
 			var main = CFBundle.GetMain ();
-			Assert.That(main.SharedFrameworksUrl.ToString (), Contains.Substring ("SharedFrameworks/"));
+			Assert.That (main.SharedFrameworksUrl.ToString (), Contains.Substring ("SharedFrameworks/"));
 		}
 
 		[Test]
 		public void TestSharedSupportUrl ()
 		{
 			var main = CFBundle.GetMain ();
-			Assert.That(main.SharedSupportUrl.ToString (), Contains.Substring ("SharedSupport/"));
+			Assert.That (main.SharedSupportUrl.ToString (), Contains.Substring ("SharedSupport/"));
 		}
 
 		[Test]
 		public void TestSupportFilesDirectoryUrl ()
 		{
 			var main = CFBundle.GetMain ();
-			Assert.That(main.SupportFilesDirectoryUrl.ToString (), Contains.Substring (ExpectedAppName + "/"));
+			Assert.That (main.SupportFilesDirectoryUrl.ToString (), Does.Contain (ExpectedAppName + "/").Or.Contain ("PublicStaging.app/"));
 		}
 
 		[Test]
@@ -160,7 +161,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 		public void TestUrl ()
 		{
 			var main = CFBundle.GetMain ();
-			Assert.That(main.Url.ToString (), Contains.Substring (ExpectedAppName + "/"));
+			Assert.That (main.Url.ToString (), Does.Contain (ExpectedAppName + "/").Or.Contain ("PublicStaging.app/"));
 		}
 
 		[Test]
@@ -187,7 +188,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 		[Test]
 		public void TestPreferredLocalizations ()
 		{
-			var preferred = new string [] {"en", "es"};
+			var preferred = new string [] { "en", "es" };
 			var used = CFBundle.GetPreferredLocalizations (preferred);
 			Assert.IsTrue (used.Length > 0);
 			foreach (var u in used)
@@ -269,7 +270,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 			NSUrl url = null;
 			Assert.Throws<ArgumentNullException> (() => CFBundle.GetResourceUrls (url, "resourceType", null));
 		}
-		
+
 		[TestCase ("")]
 		[TestCase (null)]
 		public void TestStaticResourceUrlsNullType (string resourceType)
@@ -324,7 +325,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 		{
 			var main = CFBundle.GetMain ();
 			Assert.Throws<ArgumentException> (() => main.GetLocalizedString (key, null, "tableName"));
-		} 
+		}
 
 		[TestCase ("")]
 		[TestCase (null)]
@@ -332,7 +333,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 		{
 			var main = CFBundle.GetMain ();
 			Assert.Throws<ArgumentException> (() => main.GetLocalizedString ("key", null, tableName));
-		} 
+		}
 
 		[Test]
 		public void TestGetLocalizationsForPreferencesNullLocalArray ()

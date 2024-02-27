@@ -20,10 +20,6 @@ parameters:
 - name: keyringPass
   type: string
 
-- name: enableDotnet
-  type: boolean
-  default: false
-
 - name: demands
   type: object
   default: []
@@ -31,36 +27,26 @@ parameters:
 - name: isPR
   type: boolean
 
+- name: repositoryAlias
+  type: string
+  default: self
+
+- name: commit
+  type: string
+  default: HEAD
+
 stages:
 - stage: ${{ parameters.stageName }}
   displayName: ${{ parameters.displayName }}
   dependsOn:
-  - build_packages
-  # we need to have the pkgs built and the device sets to be ran, that is decided via the labels or type of build during the build_packages stage
-  condition: succeeded()
-
+  - build_macos_tests
+  - configure_build
+  condition: and(succeeded(), eq(stageDependencies.configure_build.outputs['configure.decisions.RUN_MAC_TESTS'], 'true'))
   variables:
     GITHUB_FAILURE_COMMENT_FILE: $(System.DefaultWorkingDirectory)/github-comment-file.md
 
   jobs:
-  - job: configure
-    displayName: 'Configure build'
-    pool:
-      vmImage: windows-latest
-
-    variables:
-      isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
-      isScheduled: $[eq(variables['Build.Reason'], 'Schedule')]
-
-    steps:
-    - template: ../common/configure.yml
-      parameters: 
-        uploadArtifacts: false
-        enableDotnet: ${{ parameters.enableDotnet }}
-
   - job: run_tests
-    dependsOn:
-    - configure
     displayName: 'macOS tests'
     timeoutInMinutes: 1000
     workspace:
@@ -74,12 +60,14 @@ stages:
         vmImage: ${{ parameters.macPool }}
 
     variables:
-      PR_ID: $[ dependencies.configure.outputs['labels.pr_number'] ]
-      GIT_HASH: $[ stageDependencies.build_packages.build.outputs['fix_commit.GIT_HASH'] ]
+      PR_ID: $[ stageDependencies.configure_build.configure.outputs['labels.pr_number'] ]
+      GIT_HASH: $[ stageDependencies.build_macos_tests.build.outputs['fix_commit.GIT_HASH'] ]
 
     steps:
     - template: build.yml
       parameters:
         isPR: ${{ parameters.isPR }}
+        repositoryAlias: ${{ parameters.repositoryAlias }}
+        commit: ${{ parameters.commit }}
         statusContext: ${{ parameters.statusContext }}
         keyringPass: ${{ parameters.keyringPass }} 

@@ -30,6 +30,7 @@
 #nullable enable
 
 using System;
+using System.ComponentModel;
 using System.Runtime.InteropServices;
 using CoreFoundation;
 using Foundation;
@@ -73,12 +74,11 @@ namespace CoreFoundation {
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static /* Boolean */ bool CFWriteStreamOpen (/* CFWriteStreamRef */ IntPtr stream);
+		extern static /* Boolean */ byte CFWriteStreamOpen (/* CFWriteStreamRef */ IntPtr stream);
 
 		protected override bool DoOpen ()
 		{
-			return CFWriteStreamOpen (Handle);
+			return CFWriteStreamOpen (Handle) != 0;
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
@@ -98,25 +98,24 @@ namespace CoreFoundation {
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static /* Boolean */ bool CFWriteStreamCanAcceptBytes (/* CFWriteStreamRef */ IntPtr handle);
+		extern static /* Boolean */ byte CFWriteStreamCanAcceptBytes (/* CFWriteStreamRef */ IntPtr handle);
 
 		public bool CanAcceptBytes ()
 		{
-			return CFWriteStreamCanAcceptBytes (Handle);
+			return CFWriteStreamCanAcceptBytes (Handle) != 0;
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
 		static extern nint CFWriteStreamWrite (IntPtr handle, IntPtr buffer, nint count);
 
-		public int Write (byte[] buffer)
+		public int Write (byte [] buffer)
 		{
 			if (buffer is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (buffer));
 			return Write (buffer, 0, buffer.Length);
 		}
 
-		public unsafe int Write (byte[] buffer, nint offset, nint count)
+		public unsafe int Write (byte [] buffer, nint offset, nint count)
 		{
 			if (buffer is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (buffer));
@@ -132,15 +131,37 @@ namespace CoreFoundation {
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
+#if NET8_0_OR_GREATER
+		unsafe static extern /* Boolean */ byte CFWriteStreamSetClient (/* CFWriteStreamRef */ IntPtr stream, /* CFOptionFlags */ nint streamEvents,
+			/* CFWriteStreamClientCallBack */ delegate* unmanaged<IntPtr, nint, IntPtr, void> clientCB, /* CFStreamClientContext* */ IntPtr clientContext);
+#else
 		[return: MarshalAs (UnmanagedType.I1)]
 		static extern /* Boolean */ bool CFWriteStreamSetClient (/* CFWriteStreamRef */ IntPtr stream, /* CFOptionFlags */ nint streamEvents,
 			/* CFWriteStreamClientCallBack */ CFStreamCallback? clientCB, /* CFStreamClientContext* */ IntPtr clientContext);
+#endif
 
+#if !XAMCORE_5_0
+#if NET8_0_OR_GREATER
+		[Obsolete ("Use the other overload.")]
+		[EditorBrowsable (EditorBrowsableState.Never)]
+#endif
 		protected override bool DoSetClient (CFStreamCallback? callback, CFIndex eventTypes,
-		                                     IntPtr context)
+											 IntPtr context)
+		{
+#if NET8_0_OR_GREATER
+			throw new InvalidOperationException ($"Use the other overload.");
+#else
+			return CFWriteStreamSetClient (Handle, (nint) eventTypes, callback, context);
+#endif
+		}
+#endif // !XAMCORE_5_0
+
+#if NET8_0_OR_GREATER
+		unsafe protected override byte DoSetClient (delegate* unmanaged<IntPtr, nint, IntPtr, void> callback, CFIndex eventTypes, IntPtr context)
 		{
 			return CFWriteStreamSetClient (Handle, (nint) eventTypes, callback, context);
 		}
+#endif
 
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static void CFWriteStreamScheduleWithRunLoop (/* CFWriteStreamRef */ IntPtr stream, /* CFRunLoopRef */ IntPtr runLoop, /* CFStringRef */ IntPtr runLoopMode);
@@ -167,24 +188,23 @@ namespace CoreFoundation {
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
-		extern static /* CFTypeRef */ IntPtr CFWriteStreamSetProperty (/* CFWriteStreamRef */ IntPtr stream, /* CFStringRef */ IntPtr propertyName);
+		extern static /* CFTypeRef */ IntPtr CFWriteStreamCopyProperty (/* CFWriteStreamRef */ IntPtr stream, /* CFStringRef */ IntPtr propertyName);
 
 		protected override IntPtr DoGetProperty (NSString name)
 		{
 			if (name is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (name));
-			return CFWriteStreamSetProperty (Handle, name.Handle);
+			return CFWriteStreamCopyProperty (Handle, name.Handle);
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static /* Boolean */ bool CFWriteStreamSetProperty (/* CFWriteStreamRef */ IntPtr stream, /* CFStringRef */ IntPtr propertyName, /* CFTypeRef */ IntPtr value);
+		extern static /* Boolean */ byte CFWriteStreamSetProperty (/* CFWriteStreamRef */ IntPtr stream, /* CFStringRef */ IntPtr propertyName, /* CFTypeRef */ IntPtr value);
 
 		protected override bool DoSetProperty (NSString name, INativeObject? value)
 		{
 			if (name is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (name));
-			return CFWriteStreamSetProperty (Handle, name.Handle, value.GetHandle ());
+			return CFWriteStreamSetProperty (Handle, name.Handle, value.GetHandle ()) != 0;
 		}
 	}
 }

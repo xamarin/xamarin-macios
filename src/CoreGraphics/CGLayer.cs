@@ -50,10 +50,9 @@ namespace CoreGraphics {
 	[SupportedOSPlatform ("tvos")]
 #endif
 	// CGLayer.h
-	public class CGLayer : NativeObject
-	{
+	public class CGLayer : NativeObject {
 #if !COREBUILD
-		[Preserve (Conditional=true)]
+		[Preserve (Conditional = true)]
 		internal CGLayer (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
@@ -61,10 +60,10 @@ namespace CoreGraphics {
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static void CGLayerRelease (/* CGLayerRef */ IntPtr layer);
-		
+
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CGLayerRef */ IntPtr CGLayerRetain (/* CGLayerRef */ IntPtr layer);
-		
+
 		protected internal override void Retain ()
 		{
 			CGLayerRetain (GetCheckedHandle ());
@@ -83,7 +82,7 @@ namespace CoreGraphics {
 				return CGLayerGetSize (Handle);
 			}
 		}
-		
+
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CGContextRef */ IntPtr CGLayerGetContext (/* CGLayerRef */ IntPtr layer);
 

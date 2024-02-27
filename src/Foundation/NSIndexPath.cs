@@ -19,7 +19,7 @@ namespace Foundation {
 	public partial class NSIndexPath {
 		public unsafe static NSIndexPath Create (params nint [] indexes)
 		{
-			if (indexes == null)
+			if (indexes is null)
 				throw new ArgumentNullException ("indexes");
 
 			fixed (nint* ptr = indexes)
@@ -28,16 +28,16 @@ namespace Foundation {
 
 		public unsafe static NSIndexPath Create (params nuint [] indexes)
 		{
-			if (indexes == null)
+			if (indexes is null)
 				throw new ArgumentNullException ("indexes");
 
 			fixed (nuint* ptr = indexes)
 				return _FromIndex ((IntPtr) ptr, indexes.Length);
 		}
-		
+
 		public unsafe static NSIndexPath Create (params int [] indexes)
 		{
-			if (indexes == null)
+			if (indexes is null)
 				throw new ArgumentNullException ("indexes");
 
 #if ARCH_32
@@ -51,7 +51,7 @@ namespace Foundation {
 
 		public unsafe static NSIndexPath Create (params uint [] indexes)
 		{
-			if (indexes == null)
+			if (indexes is null)
 				throw new ArgumentNullException ("indexes");
 
 #if ARCH_32
@@ -66,24 +66,21 @@ namespace Foundation {
 		public unsafe nuint [] GetIndexes ()
 		{
 			var ret = new nuint [Length];
-			fixed (nuint *ptr = ret)
+			fixed (nuint* ptr = ret)
 				_GetIndexes ((IntPtr) ptr);
 			return ret;
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (9,0)]
-		[Mac (10,11)]
 #endif
 		public unsafe nuint [] GetIndexes (NSRange range)
 		{
 			var ret = new nuint [range.Length];
-			fixed (nuint *ptr = ret)
+			fixed (nuint* ptr = ret)
 				_GetIndexes ((IntPtr) ptr, range);
 			return ret;
 		}

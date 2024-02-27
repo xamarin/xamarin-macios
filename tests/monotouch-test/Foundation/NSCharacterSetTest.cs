@@ -6,12 +6,10 @@ using UIKit;
 #endif
 using NUnit.Framework;
 
-namespace MonoTouchFixtures.Foundation
-{
+namespace MonoTouchFixtures.Foundation {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class NSCharacterSetTest
-	{
+	public class NSCharacterSetTest {
 		static void RequiresIos8 ()
 		{
 			TestRuntime.AssertXcodeVersion (6, 0);

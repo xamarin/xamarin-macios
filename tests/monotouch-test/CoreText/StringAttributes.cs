@@ -20,16 +20,17 @@ using CoreText;
 using NUnit.Framework;
 using System.Drawing;
 
-namespace MonoTouchFixtures.CoreText
-{
+namespace MonoTouchFixtures.CoreText {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class StringAttributesTests
-	{
+	public class StringAttributesTests {
 #if !MONOMAC // No UIGraphics on mac
 		[Test]
 		public void SimpleValuesSet ()
 		{
+			if (TestRuntime.CheckXcodeVersion (15, 0))
+				Assert.Ignore ("Test timeouts on Xcode 15 beta 4: https://github.com/xamarin/xamarin-macios/issues/18656");
+
 			var sa = new CTStringAttributes ();
 			sa.ForegroundColor = UIColor.Blue.CGColor;
 			sa.Font = new CTFont ("Georgia-BoldItalic", 24);
@@ -51,12 +52,12 @@ namespace MonoTouchFixtures.CoreText
 			var size = new CGSize (300, 300);
 			UIGraphics.BeginImageContext (size);
 			var gctx = UIGraphics.GetCurrentContext ();
-            
+
 			gctx.SetFillColor (UIColor.Green.CGColor);
-            
+
 			var attributedString = new NSAttributedString ("Test_ME~`", sa);
-                
-			using (var textLine = new CTLine (attributedString)) { 
+
+			using (var textLine = new CTLine (attributedString)) {
 				textLine.Draw (gctx);
 			}
 

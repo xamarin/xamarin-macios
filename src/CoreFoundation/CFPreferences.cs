@@ -19,16 +19,14 @@ using ObjCRuntime;
 using Foundation;
 using System.Runtime.Versioning;
 
-namespace CoreFoundation
-{
+namespace CoreFoundation {
 #if NET
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #endif
-	public static class CFPreferences
-	{
+	public static class CFPreferences {
 		[DllImport (Constants.CoreFoundationLibrary)]
 		static extern IntPtr CFPreferencesCopyAppValue (IntPtr key, IntPtr applicationId);
 
@@ -127,7 +125,7 @@ namespace CoreFoundation
 					CFPreferencesSetAppValue (cfKey.Handle, IntPtr.Zero, applicationId.Handle);
 					return;
 				} else if (value is string) {
-					using (var valueStr = new CFString ((string)value)) {
+					using (var valueStr = new CFString ((string) value)) {
 						CFPreferencesSetAppValue (cfKey.Handle, valueStr.Handle, applicationId.Handle);
 					}
 
@@ -137,7 +135,7 @@ namespace CoreFoundation
 					value is NSArray || value is CFArray ||
 					value is NSDictionary || value is CFDictionary ||
 					value is NSNumber || value is CFBoolean) {
-					CFPreferencesSetAppValue (cfKey.Handle, ((INativeObject)value).Handle, applicationId.Handle);
+					CFPreferencesSetAppValue (cfKey.Handle, ((INativeObject) value).Handle, applicationId.Handle);
 					return;
 				}
 
@@ -171,8 +169,7 @@ namespace CoreFoundation
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static extern bool CFPreferencesGetAppBooleanValue (IntPtr key, IntPtr applicationId,
+		static extern byte CFPreferencesGetAppBooleanValue (IntPtr key, IntPtr applicationId,
 			/*out bool*/ IntPtr keyExistsAndHasValidFormat);
 
 		public static bool GetAppBooleanValue (string key)
@@ -202,7 +199,7 @@ namespace CoreFoundation
 			}
 
 			using (var cfKey = new CFString (key)) {
-				return CFPreferencesGetAppBooleanValue (cfKey.Handle, applicationId.Handle, IntPtr.Zero);
+				return CFPreferencesGetAppBooleanValue (cfKey.Handle, applicationId.Handle, IntPtr.Zero) != 0;
 			}
 		}
 
@@ -310,8 +307,7 @@ namespace CoreFoundation
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static extern bool CFPreferencesAppSynchronize (IntPtr applicationId);
+		static extern byte CFPreferencesAppSynchronize (IntPtr applicationId);
 
 		public static bool AppSynchronize ()
 		{
@@ -337,12 +333,11 @@ namespace CoreFoundation
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (applicationId));
 			}
 
-			return CFPreferencesAppSynchronize (applicationId.Handle);
+			return CFPreferencesAppSynchronize (applicationId.Handle) != 0;
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static extern bool CFPreferencesAppValueIsForced (IntPtr key, IntPtr applicationId);
+		static extern byte CFPreferencesAppValueIsForced (IntPtr key, IntPtr applicationId);
 
 		public static bool AppValueIsForced (string key)
 		{
@@ -371,7 +366,7 @@ namespace CoreFoundation
 			}
 
 			using (var cfKey = new CFString (key)) {
-				return CFPreferencesAppValueIsForced (cfKey.Handle, applicationId.Handle);
+				return CFPreferencesAppValueIsForced (cfKey.Handle, applicationId.Handle) != 0;
 			}
 		}
 	}

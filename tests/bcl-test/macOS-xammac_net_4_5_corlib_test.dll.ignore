@@ -47,4 +47,5 @@ MonoTests.System.Security.Policy.PolicyLevelTest.ResolveMatchingCodeGroups_Empty
 # But was:  "10/27/2002 02:59:59"
 MonoTests.System.TimeZoneTest.TestCtors
 
-
+# https://github.com/xamarin/maccore/issues/2629
+MonoTests.System.TimeZoneInfoTest+IsDaylightSavingTimeTests.Bug_16395

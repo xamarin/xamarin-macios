@@ -41,7 +41,7 @@ namespace CoreServices {
 		{
 		}
 
-		[DllImport (Constants.CFNetworkLibrary, EntryPoint="CFHTTPAuthenticationGetTypeID")]
+		[DllImport (Constants.CFNetworkLibrary, EntryPoint = "CFHTTPAuthenticationGetTypeID")]
 		public extern static /* CFTypeID */ nint GetTypeID ();
 
 		[DllImport (Constants.CFNetworkLibrary)]
@@ -63,16 +63,14 @@ namespace CoreServices {
 		}
 
 		[DllImport (Constants.CFNetworkLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static /* Boolean */ bool CFHTTPAuthenticationIsValid (/* CFHTTPAuthenticationRef */ IntPtr auth, /* CFStreamError* */ IntPtr error);
+		extern static /* Boolean */ byte CFHTTPAuthenticationIsValid (/* CFHTTPAuthenticationRef */ IntPtr auth, /* CFStreamError* */ IntPtr error);
 
 		public bool IsValid {
-			get { return CFHTTPAuthenticationIsValid (Handle, IntPtr.Zero); }
+			get { return CFHTTPAuthenticationIsValid (Handle, IntPtr.Zero) != 0; }
 		}
 
 		[DllImport (Constants.CFNetworkLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static /* Boolean */ bool CFHTTPAuthenticationAppliesToRequest (/* CFHTTPAuthenticationRef */ IntPtr auth, /* CFHTTPMessageRef */ IntPtr request);
+		extern static /* Boolean */ byte CFHTTPAuthenticationAppliesToRequest (/* CFHTTPAuthenticationRef */ IntPtr auth, /* CFHTTPMessageRef */ IntPtr request);
 
 		public bool AppliesToRequest (CFHTTPMessage request)
 		{
@@ -82,31 +80,28 @@ namespace CoreServices {
 			if (!request.IsRequest)
 				throw new InvalidOperationException ();
 
-			return CFHTTPAuthenticationAppliesToRequest (Handle, request.Handle);
+			return CFHTTPAuthenticationAppliesToRequest (Handle, request.Handle) != 0;
 		}
 
 		[DllImport (Constants.CFNetworkLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static /* Boolean */ bool CFHTTPAuthenticationRequiresAccountDomain (/* CFHTTPAuthenticationRef */ IntPtr auth);
+		extern static /* Boolean */ byte CFHTTPAuthenticationRequiresAccountDomain (/* CFHTTPAuthenticationRef */ IntPtr auth);
 
 		public bool RequiresAccountDomain {
-			get { return CFHTTPAuthenticationRequiresAccountDomain (Handle); }
+			get { return CFHTTPAuthenticationRequiresAccountDomain (Handle) != 0; }
 		}
 
 		[DllImport (Constants.CFNetworkLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static /* Boolean */ bool CFHTTPAuthenticationRequiresOrderedRequests (/* CFHTTPAuthenticationRef */ IntPtr auth);
+		extern static /* Boolean */ byte CFHTTPAuthenticationRequiresOrderedRequests (/* CFHTTPAuthenticationRef */ IntPtr auth);
 
 		public bool RequiresOrderedRequests {
-			get { return CFHTTPAuthenticationRequiresOrderedRequests (Handle); }
+			get { return CFHTTPAuthenticationRequiresOrderedRequests (Handle) != 0; }
 		}
 
 		[DllImport (Constants.CFNetworkLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static /* Boolean */ bool CFHTTPAuthenticationRequiresUserNameAndPassword (/* CFHTTPAuthenticationRef */ IntPtr auth);
+		extern static /* Boolean */ byte CFHTTPAuthenticationRequiresUserNameAndPassword (/* CFHTTPAuthenticationRef */ IntPtr auth);
 
 		public bool RequiresUserNameAndPassword {
-			get { return CFHTTPAuthenticationRequiresUserNameAndPassword (Handle); }
+			get { return CFHTTPAuthenticationRequiresUserNameAndPassword (Handle) != 0; }
 		}
 
 		[DllImport (Constants.CFNetworkLibrary)]

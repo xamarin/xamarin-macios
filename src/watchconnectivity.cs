@@ -17,7 +17,6 @@ namespace WatchConnectivity {
 	delegate void WCSessionReplyHandler (NSDictionary<NSString, NSObject> replyMessage);
 	delegate void WCSessionReplyDataHandler (NSData replyMessage);
 
-	[iOS (9,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface WCSession {
@@ -30,7 +29,8 @@ namespace WatchConnectivity {
 		[Export ("defaultSession")]
 		WCSession DefaultSession { get; }
 
-		[Export ("delegate", ArgumentSemantic.Weak)][NullAllowed]
+		[Export ("delegate", ArgumentSemantic.Weak)]
+		[NullAllowed]
 		IWCSessionDelegate Delegate { get; set; }
 
 		[Export ("activateSession")]
@@ -78,7 +78,7 @@ namespace WatchConnectivity {
 
 #if !WATCH
 		[Export ("transferCurrentComplicationUserInfo:")]
-		WCSessionUserInfoTransfer TransferCurrentComplicationUserInfo (NSDictionary <NSString, NSObject>userInfo);
+		WCSessionUserInfoTransfer TransferCurrentComplicationUserInfo (NSDictionary<NSString, NSObject> userInfo);
 #endif
 
 		[Export ("outstandingUserInfoTransfers", ArgumentSemantic.Copy)]
@@ -93,27 +93,24 @@ namespace WatchConnectivity {
 		[Field ("WCErrorDomain")]
 		NSString ErrorDomain { get; }
 
-		[Watch (2,2)][iOS (9, 3)]
 		[Export ("activationState")]
 		WCSessionActivationState ActivationState { get; }
 
-		[Watch (3,0)][iOS (10,0)]
 		[Export ("hasContentPending")]
 		bool HasContentPending { get; }
 
-		[NoWatch][iOS (10,0)]
+		[NoWatch]
 		[Export ("remainingComplicationUserInfoTransfers")]
 		nuint RemainingComplicationUserInfoTransfers { get; }
 
-		[Watch (6,0)]
+		[Watch (6, 0)]
 		[NoiOS]
 		[Export ("companionAppInstalled")]
-		bool CompanionAppInstalled { [Bind("isCompanionAppInstalled")] get; }
+		bool CompanionAppInstalled { [Bind ("isCompanionAppInstalled")] get; }
 	}
 
 	interface IWCSessionDelegate { }
 
-	[iOS (9,0)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	interface WCSessionDelegate {
@@ -156,31 +153,29 @@ namespace WatchConnectivity {
 #if NET
 		[Abstract] // OS 10 beta 1 SDK made this required
 #endif
-		[Watch (2,2)][iOS (9,3)]
 		[Export ("session:activationDidCompleteWithState:error:")]
 		void ActivationDidComplete (WCSession session, WCSessionActivationState activationState, [NullAllowed] NSError error);
 
 #if NET
 		[Abstract] // OS 10 beta 1 SDK made this required
 #endif
-		[NoWatch][iOS (9,3)]
+		[NoWatch]
 		[Export ("sessionDidBecomeInactive:")]
 		void DidBecomeInactive (WCSession session);
 
 #if NET
 		[Abstract] // OS 10 beta 1 SDK made this required
 #endif
-		[NoWatch][iOS (9,3)]
+		[NoWatch]
 		[Export ("sessionDidDeactivate:")]
 		void DidDeactivate (WCSession session);
 
-		[Watch (6,0)]
+		[Watch (6, 0)]
 		[NoiOS]
 		[Export ("sessionCompanionAppInstalledDidChange:")]
 		void CompanionAppInstalledDidChange (WCSession session);
 	}
 
-	[iOS (9,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // no handle, doc: You do not create instances of this class directly.
 	interface WCSessionFile {
@@ -193,7 +188,6 @@ namespace WatchConnectivity {
 		NSDictionary<NSString, NSObject> Metadata { get; }
 	}
 
-	[iOS (9,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // no handle, doc: You do not create instances of this class yourself.
 	interface WCSessionFileTransfer {
@@ -207,12 +201,12 @@ namespace WatchConnectivity {
 		[Export ("cancel")]
 		void Cancel ();
 
-		[Watch (5,0)][iOS (12,0)]
+		[Watch (5, 0)]
+		[iOS (12, 0)]
 		[Export ("progress")]
 		NSProgress Progress { get; }
 	}
 
-	[iOS (9,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // no handle, doc: You do not create instances of this class yourself.
 	interface WCSessionUserInfoTransfer : NSSecureCoding {

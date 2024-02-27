@@ -5,8 +5,7 @@ using Foundation;
 
 namespace AudioUnit {
 	[StructLayout (LayoutKind.Sequential)]
-	public struct AURecordedParameterEvent
-	{
+	public struct AURecordedParameterEvent {
 		public ulong hostTime;
 		public ulong address;
 		public float value;

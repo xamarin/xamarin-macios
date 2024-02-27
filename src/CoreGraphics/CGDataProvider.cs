@@ -58,7 +58,7 @@ namespace CoreGraphics {
 		}
 #endif
 
-		[Preserve (Conditional=true)]
+		[Preserve (Conditional = true)]
 		internal CGDataProvider (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
@@ -82,14 +82,15 @@ namespace CoreGraphics {
 
 #if !COREBUILD
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static /* CGDataProviderRef */ IntPtr CGDataProviderCreateWithFilename (/* const char* */ string filename);
+		extern static /* CGDataProviderRef */ IntPtr CGDataProviderCreateWithFilename (/* const char* */ IntPtr filename);
 
 		static public CGDataProvider? FromFile (string file)
 		{
 			if (file is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (file));
 
-			var handle = CGDataProviderCreateWithFilename (file);
+			using var filePtr = new TransientString (file);
+			var handle = CGDataProviderCreateWithFilename (filePtr);
 			if (handle == IntPtr.Zero)
 				return null;
 
@@ -101,7 +102,8 @@ namespace CoreGraphics {
 			if (file is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (file));
 
-			var handle = CGDataProviderCreateWithFilename (file);
+			using var filePtr = new TransientString (file);
+			var handle = CGDataProviderCreateWithFilename (filePtr);
 			if (handle == IntPtr.Zero)
 				throw new ArgumentException ("Could not create provider from the specified file");
 			return handle;

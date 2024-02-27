@@ -2,6 +2,8 @@ using System;
 
 using Mono.Cecil;
 
+#nullable enable
+
 namespace Xamarin.Linker.Steps {
 	// The registrar needs some of the system attributes that the linker might remove, so store those elsewhere for the static registrar's use.
 	public class StoreAttributesStep : AttributeIteratorBaseStep {
@@ -26,6 +28,13 @@ namespace Xamarin.Linker.Steps {
 				case "SupportedOSPlatformAttribute":
 				case "UnsupportedOSPlatformAttribute":
 					LinkContext.StoreCustomAttribute (provider, attribute, "Availability");
+					break;
+				}
+				break;
+			case "Foundation":
+				switch (attr_type.Name) {
+				case "ProtocolAttribute":
+					store = LinkContext.App.Optimizations.RegisterProtocols == true;
 					break;
 				}
 				break;

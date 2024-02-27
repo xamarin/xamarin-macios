@@ -1,6 +1,6 @@
 #nullable enable
 
-#if !NET
+#if !NET && (IOS || WATCHOS)
 
 using System;
 using Foundation;
@@ -8,7 +8,6 @@ using ObjCRuntime;
 
 namespace HealthKit {
 	[Obsolete ("Use the 'HKQuantityTypeIdentifier' enum instead.")]
-	[Introduced (PlatformName.iOS, 8,0, PlatformArchitecture.All)]
 	public unsafe static partial class HKQuantityTypeIdentifierKey  {
 		public static NSString? ActiveEnergyBurned {
 			get {
@@ -16,15 +15,12 @@ namespace HealthKit {
 			}
 		}
 
-		[Introduced (PlatformName.iOS, 9,3, PlatformArchitecture.All)]
-		[Introduced (PlatformName.WatchOS, 2,2, PlatformArchitecture.All)]
 		public static NSString? AppleExerciseTime {
 			get {
 				return HKQuantityTypeIdentifierExtensions.GetConstant (HKQuantityTypeIdentifier.AppleExerciseTime);
 			}
 		}
 
-		[Introduced (PlatformName.iOS, 9,0, PlatformArchitecture.All)]
 		public static NSString? BasalBodyTemperature {
 			get {
 				return HKQuantityTypeIdentifierExtensions.GetConstant (HKQuantityTypeIdentifier.BasalBodyTemperature);
@@ -307,7 +303,6 @@ namespace HealthKit {
 			}
 		}
 
-		[Introduced (PlatformName.iOS, 9,0, PlatformArchitecture.All)]
 		public static NSString? DietaryWater {
 			get {
 				return HKQuantityTypeIdentifierExtensions.GetConstant (HKQuantityTypeIdentifier.DietaryWater);
@@ -334,8 +329,6 @@ namespace HealthKit {
 			}
 		}
 
-		[Introduced (PlatformName.iOS, 10,0, PlatformArchitecture.All)]
-		[Introduced (PlatformName.WatchOS, 3,0, PlatformArchitecture.All)]
 		public static NSString? DistanceSwimming {
 			get {
 				return HKQuantityTypeIdentifierExtensions.GetConstant (HKQuantityTypeIdentifier.DistanceSwimming);
@@ -348,8 +341,6 @@ namespace HealthKit {
 			}
 		}
 
-		[Introduced (PlatformName.iOS, 10,0, PlatformArchitecture.All)]
-		[Introduced (PlatformName.WatchOS, 3,0, PlatformArchitecture.All)]
 		public static NSString? DistanceWheelchair {
 			get {
 				return HKQuantityTypeIdentifierExtensions.GetConstant (HKQuantityTypeIdentifier.DistanceWheelchair);
@@ -386,8 +377,6 @@ namespace HealthKit {
 			}
 		}
 
-		[Introduced (PlatformName.iOS, 11,0, PlatformArchitecture.All)]
-		[Introduced (PlatformName.WatchOS, 4,0, PlatformArchitecture.All)]
 		public static NSString? HeartRateVariabilitySdnn {
 			get {
 				return HKQuantityTypeIdentifierExtensions.GetConstant (HKQuantityTypeIdentifier.HeartRateVariabilitySdnn);
@@ -406,8 +395,6 @@ namespace HealthKit {
 			}
 		}
 
-		[Introduced (PlatformName.iOS, 11,0, PlatformArchitecture.All)]
-		[Introduced (PlatformName.WatchOS, 4,0, PlatformArchitecture.All)]
 		public static NSString? InsulinDelivery {
 			get {
 				return HKQuantityTypeIdentifierExtensions.GetConstant (HKQuantityTypeIdentifier.InsulinDelivery);
@@ -450,8 +437,6 @@ namespace HealthKit {
 			}
 		}
 
-		[Introduced (PlatformName.iOS, 10,0, PlatformArchitecture.All)]
-		[Introduced (PlatformName.WatchOS, 3,0, PlatformArchitecture.All)]
 		public static NSString? PushCount {
 			get {
 				return HKQuantityTypeIdentifierExtensions.GetConstant (HKQuantityTypeIdentifier.PushCount);
@@ -464,8 +449,6 @@ namespace HealthKit {
 			}
 		}
 
-		[Introduced (PlatformName.iOS, 11,0, PlatformArchitecture.All)]
-		[Introduced (PlatformName.WatchOS, 4,0, PlatformArchitecture.All)]
 		public static NSString? RestingHeartRate {
 			get {
 				return HKQuantityTypeIdentifierExtensions.GetConstant (HKQuantityTypeIdentifier.RestingHeartRate);
@@ -478,39 +461,30 @@ namespace HealthKit {
 			}
 		}
 
-		[Introduced (PlatformName.iOS, 10,0, PlatformArchitecture.All)]
-		[Introduced (PlatformName.WatchOS, 3,0, PlatformArchitecture.All)]
 		public static NSString? SwimmingStrokeCount {
 			get {
 				return HKQuantityTypeIdentifierExtensions.GetConstant (HKQuantityTypeIdentifier.SwimmingStrokeCount);
 			}
 		}
 
-		[Introduced (PlatformName.iOS, 9,0, PlatformArchitecture.All)]
 		public static NSString? UVExposure {
 			get {
 				return HKQuantityTypeIdentifierExtensions.GetConstant (HKQuantityTypeIdentifier.UVExposure);
 			}
 		}
 
-		[Introduced (PlatformName.WatchOS, 4,0, PlatformArchitecture.All)]
-		[Introduced (PlatformName.iOS, 11,0, PlatformArchitecture.All)]
 		public static NSString? VO2Max {
 			get {
 				return HKQuantityTypeIdentifierExtensions.GetConstant (HKQuantityTypeIdentifier.VO2Max);
 			}
 		}
 
-		[Introduced (PlatformName.WatchOS, 4,0, PlatformArchitecture.All)]
-		[Introduced (PlatformName.iOS, 11,0, PlatformArchitecture.All)]
 		public static NSString? WaistCircumference {
 			get {
 				return HKQuantityTypeIdentifierExtensions.GetConstant (HKQuantityTypeIdentifier.WaistCircumference);
 			}
 		}
 
-		[Introduced (PlatformName.iOS, 11,0, PlatformArchitecture.All)]
-		[Introduced (PlatformName.WatchOS, 4,0, PlatformArchitecture.All)]
 		public static NSString? WalkingHeartRateAverage {
 			get {
 				return HKQuantityTypeIdentifierExtensions.GetConstant (HKQuantityTypeIdentifier.WalkingHeartRateAverage);
@@ -519,52 +493,43 @@ namespace HealthKit {
 	} /* class HKQuantityTypeIdentifierKey */
 
 	[Obsolete ("Use the 'HKCategoryTypeIdentifier' enum instead.")]
-	[Introduced (PlatformName.iOS, 8,0, PlatformArchitecture.All)]
 	public unsafe static partial class HKCategoryTypeIdentifierKey  {
-		[Introduced (PlatformName.iOS, 9,0, PlatformArchitecture.All)]
 		public static NSString? AppleStandHour {
 			get {
 				return HKCategoryTypeIdentifierExtensions.GetConstant (HKCategoryTypeIdentifier.AppleStandHour);
 			}
 		}
 
-		[Introduced (PlatformName.iOS, 9,0, PlatformArchitecture.All)]
 		public static NSString? CervicalMucusQuality {
 			get {
 				return HKCategoryTypeIdentifierExtensions.GetConstant (HKCategoryTypeIdentifier.CervicalMucusQuality);
 			}
 		}
 
-		[Introduced (PlatformName.iOS, 9,0, PlatformArchitecture.All)]
 		public static NSString? IntermenstrualBleeding {
 			get {
 				return HKCategoryTypeIdentifierExtensions.GetConstant (HKCategoryTypeIdentifier.IntermenstrualBleeding);
 			}
 		}
 
-		[Introduced (PlatformName.iOS, 9,0, PlatformArchitecture.All)]
 		public static NSString? MenstrualFlow {
 			get {
 				return HKCategoryTypeIdentifierExtensions.GetConstant (HKCategoryTypeIdentifier.MenstrualFlow);
 			}
 		}
 
-		[Introduced (PlatformName.iOS, 10,0, PlatformArchitecture.All)]
-		[Introduced (PlatformName.WatchOS, 3,0, PlatformArchitecture.All)]
 		public static NSString? MindfulSession {
 			get {
 				return HKCategoryTypeIdentifierExtensions.GetConstant (HKCategoryTypeIdentifier.MindfulSession);
 			}
 		}
 
-		[Introduced (PlatformName.iOS, 9,0, PlatformArchitecture.All)]
 		public static NSString? OvulationTestResult {
 			get {
 				return HKCategoryTypeIdentifierExtensions.GetConstant (HKCategoryTypeIdentifier.OvulationTestResult);
 			}
 		}
 
-		[Introduced (PlatformName.iOS, 9,0, PlatformArchitecture.All)]
 		public static NSString? SexualActivity {
 			get {
 				return HKCategoryTypeIdentifierExtensions.GetConstant (HKCategoryTypeIdentifier.SexualActivity);
@@ -579,7 +544,6 @@ namespace HealthKit {
 	} /* class HKCategoryTypeIdentifierKey */
 
 	[Obsolete ("Use the 'HKCharacteristicTypeIdentifier' enum instead.")]
-	[Introduced (PlatformName.iOS, 8,0, PlatformArchitecture.All)]
 	public unsafe static partial class HKCharacteristicTypeIdentifierKey  {
 		public static NSString? BiologicalSex {
 			get {
@@ -599,15 +563,12 @@ namespace HealthKit {
 			}
 		}
 
-		[Introduced (PlatformName.iOS, 9,0, PlatformArchitecture.All)]
 		public static NSString? FitzpatrickSkinType {
 			get {
 				return HKCharacteristicTypeIdentifierExtensions.GetConstant (HKCharacteristicTypeIdentifier.FitzpatrickSkinType);
 			}
 		}
 
-		[Introduced (PlatformName.iOS, 10,0, PlatformArchitecture.All)]
-		[Introduced (PlatformName.WatchOS, 3,0, PlatformArchitecture.All)]
 		public static NSString? WheelchairUse {
 			get {
 				return HKCharacteristicTypeIdentifierExtensions.GetConstant (HKCharacteristicTypeIdentifier.WheelchairUse);
@@ -616,7 +577,6 @@ namespace HealthKit {
 	} /* class HKCharacteristicTypeIdentifierKey */
 
 	[Obsolete ("Use the 'HKCorrelationType' enum instead.")]
-	[Introduced (PlatformName.iOS, 8,0, PlatformArchitecture.All)]
 	public unsafe static partial class HKCorrelationTypeKey  {
 		public static NSString? IdentifierBloodPressure {
 			get {

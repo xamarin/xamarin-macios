@@ -6,25 +6,23 @@ using System.Linq;
 using Microsoft.Build.Utilities;
 using NUnit.Framework;
 
-using Xamarin.iOS.Tasks;
 using Xamarin.Utils;
 
 namespace Xamarin.MacDev.Tasks {
 	[TestFixture]
 	public class ReadAppManifestTaskTests : TestBase {
-		ReadAppManifest CreateTask (ApplePlatform platform = ApplePlatform.iOS,  Action<PDictionary>? createDictionary = null)
+		ReadAppManifest CreateTask (ApplePlatform platform = ApplePlatform.iOS, Action<PDictionary>? createDictionary = null)
 		{
 			var tmpdir = Cache.CreateTemporaryDirectory ();
 
 			var plistPath = Path.Combine (tmpdir, "TemporaryAppManifest.plist");
 			var plist = new PDictionary ();
-			if (createDictionary != null)
+			if (createDictionary is not null)
 				createDictionary (plist);
 			plist.Save (plistPath);
 
 			var task = CreateTask<ReadAppManifest> ();
 			task.AppManifest = new TaskItem (plistPath);
-			task.SdkVersion = Sdks.GetAppleSdk (platform).GetInstalledSdkVersions (false).First ().ToString ();
 			task.TargetFrameworkMoniker = TargetFramework.GetTargetFramework (platform, true).ToString ();
 
 			return task;

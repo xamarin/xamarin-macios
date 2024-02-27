@@ -25,11 +25,10 @@ namespace CoreMedia {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #else
-	[Watch (6,0)]
+	[Watch (6, 0)]
 #endif
-	[StructLayout(LayoutKind.Sequential)]
-	public struct CMSampleTimingInfo
-	{
+	[StructLayout (LayoutKind.Sequential)]
+	public struct CMSampleTimingInfo {
 		public CMTime Duration;
 		public CMTime PresentationTimeStamp;
 		public CMTime DecodeTimeStamp;
@@ -42,9 +41,9 @@ namespace CoreMedia {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #else
-	[Watch (6,0)]
+	[Watch (6, 0)]
 #endif
-	[StructLayout(LayoutKind.Sequential)]
+	[StructLayout (LayoutKind.Sequential)]
 	public struct CMTimeRange {
 		public CMTime Start;
 		public CMTime Duration;
@@ -60,54 +59,46 @@ namespace CoreMedia {
 		public static readonly CMTimeRange InvalidRange;
 
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (9,0)]
-		[Mac (10,11)]
 #endif
 		public static readonly CMTimeRange InvalidMapping;
 
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (9,0)]
-		[Mac (10,11)]
 #endif
 		public static NSString? TimeMappingSourceKey { get; private set; }
 
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (9,0)]
-		[Mac (10,11)]
 #endif
 		public static NSString? TimeMappingTargetKey { get; private set; }
 
-		static CMTimeRange () {
+		static CMTimeRange ()
+		{
 			var lib = Libraries.CoreMedia.Handle;
 			var retZero = Dlfcn.dlsym (lib, "kCMTimeRangeZero");
-			Zero = (CMTimeRange)Marshal.PtrToStructure (retZero, typeof(CMTimeRange))!;
+			Zero = Marshal.PtrToStructure<CMTimeRange> (retZero)!;
 
 			var retInvalid = Dlfcn.dlsym (lib, "kCMTimeRangeInvalid");
 #if !XAMCORE_3_0
 #pragma warning disable CS0618 // Type or member is obsolete
-			Invalid = (CMTimeRange)Marshal.PtrToStructure (retInvalid, typeof(CMTimeRange))!;
+			Invalid = Marshal.PtrToStructure<CMTimeRange> (retInvalid)!;
 #pragma warning restore CS0618 // Type or member is obsolete
 #endif
-			InvalidRange = (CMTimeRange)Marshal.PtrToStructure (retInvalid, typeof(CMTimeRange))!;
+			InvalidRange = Marshal.PtrToStructure<CMTimeRange> (retInvalid)!;
 
 			var retMappingInvalid = Dlfcn.dlsym (lib, "kCMTimeMappingInvalid");
 			if (retMappingInvalid != IntPtr.Zero)
-				InvalidMapping = (CMTimeRange)Marshal.PtrToStructure (retMappingInvalid, typeof(CMTimeRange))!;
+				InvalidMapping = Marshal.PtrToStructure<CMTimeRange> (retMappingInvalid)!;
 
 			TimeMappingSourceKey = Dlfcn.GetStringConstant (lib, "kCMTimeMappingSourceKey");
 			TimeMappingTargetKey = Dlfcn.GetStringConstant (lib, "kCMTimeMappingTargetKey");
@@ -122,7 +113,7 @@ namespace CoreMedia {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #else
-	[Watch (6,0)]
+	[Watch (6, 0)]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct CMTimeMapping {
@@ -131,13 +122,10 @@ namespace CoreMedia {
 
 #if !COREBUILD
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (9,0)]
-		[Mac (10,11)]
 #endif
 		public static CMTimeMapping Create (CMTimeRange source, CMTimeRange target)
 		{
@@ -145,13 +133,10 @@ namespace CoreMedia {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (9,0)]
-		[Mac (10,11)]
 #endif
 		public static CMTimeMapping CreateEmpty (CMTimeRange target)
 		{
@@ -159,13 +144,10 @@ namespace CoreMedia {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (9,0)]
-		[Mac (10,11)]
 #endif
 		public static CMTimeMapping CreateFromDictionary (NSDictionary dict)
 		{
@@ -173,13 +155,10 @@ namespace CoreMedia {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (9,0)]
-		[Mac (10,11)]
 #endif
 		public NSDictionary AsDictionary ()
 		{
@@ -187,78 +166,58 @@ namespace CoreMedia {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (9,0)]
-		[Mac (10,11)]
 #endif
-		public string? Description
-		{
-			get
-			{
-				return CFString.FromHandle (CMTimeMappingCopyDescription(IntPtr.Zero, this), true);
+		public string? Description {
+			get {
+				return CFString.FromHandle (CMTimeMappingCopyDescription (IntPtr.Zero, this), true);
 			}
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (9,0)]
-		[Mac (10,11)]
 #endif
 		[DllImport (Constants.CoreMediaLibrary)]
 		static extern CMTimeMapping CMTimeMappingMake (CMTimeRange source, CMTimeRange target);
 
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (9,0)]
-		[Mac (10,11)]
 #endif
 		[DllImport (Constants.CoreMediaLibrary)]
 		static extern CMTimeMapping CMTimeMappingMakeEmpty (CMTimeRange target);
 
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (9,0)]
-		[Mac (10,11)]
 #endif
 		[DllImport (Constants.CoreMediaLibrary)]
 		static extern IntPtr /* CFDictionaryRef* */ CMTimeMappingCopyAsDictionary (CMTimeMapping mapping, IntPtr allocator);
 
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (9,0)]
-		[Mac (10,11)]
 #endif
 		[DllImport (Constants.CoreMediaLibrary)]
 		static extern CMTimeMapping CMTimeMappingMakeFromDictionary (/* CFDictionaryRef* */ IntPtr dict);
 
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (9,0)]
-		[Mac (10,11)]
 #endif
 		[DllImport (Constants.CoreMediaLibrary)]
 		static extern IntPtr /* CFStringRef* */ CMTimeMappingCopyDescription (IntPtr allocator, CMTimeMapping mapping);
@@ -271,11 +230,10 @@ namespace CoreMedia {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #else
-	[Watch (6,0)]
+	[Watch (6, 0)]
 #endif
-	[StructLayout(LayoutKind.Sequential)]
-	public struct CMTimeScale
-	{
+	[StructLayout (LayoutKind.Sequential)]
+	public struct CMTimeScale {
 		// CMTime.h
 		public static readonly CMTimeScale MaxValue = new CMTimeScale (0x7fffffff);
 
@@ -298,7 +256,7 @@ namespace CoreMedia {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #else
-	[Watch (6,0)]
+	[Watch (6, 0)]
 #endif
 	public struct CMVideoDimensions {
 		public int Width;

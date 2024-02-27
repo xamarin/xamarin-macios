@@ -30,39 +30,39 @@ namespace MonoTouchFixtures.Foundation {
 			Assert.AreEqual ("Optional", NSScriptCommandArgumentDescriptionKeys.OptionalKey.ToString ());
 		}
 	}
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class NSScriptCommandArgumentDescriptionTest {
-		
+
 		[TestCase ("")]
 		[TestCase (null)]
 		public void TestConstructorNameNullOrEmpty (string name)
 		{
 			Assert.Throws<ArgumentException> (() => new NSScriptCommandArgumentDescription (name, "eeee", "NSString", false));
 		}
-		
+
 		[TestCase ("")]
 		[TestCase (null)]
 		public void TestConstructorEventCodeNullOrEmpty (string eventCode)
 		{
 			Assert.Throws<ArgumentException> (() => new NSScriptCommandArgumentDescription ("name", eventCode, "NSString", false));
 		}
-		
+
 		[TestCase ("srf")]
 		[TestCase ("TooLong")]
 		public void TestConstructorEventCodeWrongLength (string eventCode)
 		{
 			Assert.Throws<ArgumentException> (() => new NSScriptCommandArgumentDescription ("name", eventCode, "NSString", false));
 		}
-		
+
 		[TestCase ("")]
 		[TestCase (null)]
 		public void TestConstructorTypeNullOrEmpty (string type)
 		{
 			Assert.Throws<ArgumentException> (() => new NSScriptCommandArgumentDescription ("name", "****", type, false));
 		}
-		
+
 		[TestCase ("name", "cdfd", "NSString", true)]
 		[TestCase ("name", "cdfd", "NSNumber", false)]
 		[TestCase ("name", "****", "NSNumber", true)]
@@ -71,10 +71,10 @@ namespace MonoTouchFixtures.Foundation {
 		{
 			var arg = new NSScriptCommandArgumentDescription (name, code, type, isOptional);
 			var description = arg.Dictionary;
-			
+
 			Assert.AreEqual (code, description [new NSString ("AppleEventCode")].ToString ());
 			Assert.AreEqual (type, description [new NSString ("Type")].ToString ());
-			Assert.AreEqual (isOptional? "Yes" : "No", description [ new NSString ("Optional")].ToString ());
+			Assert.AreEqual (isOptional ? "Yes" : "No", description [new NSString ("Optional")].ToString ());
 		}
 	}
 }

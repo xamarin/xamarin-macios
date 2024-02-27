@@ -74,7 +74,6 @@
 !missing-field! ITLibPlaylistPropertyDistinguisedKind not bound
 !missing-field! ITLibPlaylistPropertyItems not bound
 !missing-field! ITLibPlaylistPropertyKind not bound
-!missing-field! ITLibPlaylistPropertyMaster not bound
 !missing-field! ITLibPlaylistPropertyName not bound
 !missing-field! ITLibPlaylistPropertyParentPersistentID not bound
 !missing-field! ITLibPlaylistPropertyVisible not bound

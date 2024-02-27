@@ -13,14 +13,26 @@ using System;
 
 using Foundation;
 using HealthKit;
-using UIKit;
 using NUnit.Framework;
+#if MONOMAC
+using AppKit;
+#else
+using UIKit;
+#endif
 
 namespace MonoTouchFixtures.HealthKit {
 
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class HKHealthStoreTest {
+
+		[SetUp]
+		public void SetUp ()
+		{
+#if MONOMAC
+			TestRuntime.AssertXcodeVersion (14, 0);
+#endif
+		}
 
 		[Test]
 		public void GetBiologicalSexNullReturnTest ()

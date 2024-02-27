@@ -3,13 +3,13 @@ using System.IO;
 using System.Reflection;
 
 namespace Xamarin.Tests {
-	public partial  class Configuration {
+	public partial class Configuration {
 		static object lock_obj = new object ();
 		static string sample_root_directory;
 		public static string SampleRootDirectory {
 			get {
 				lock (lock_obj) {
-					if (sample_root_directory == null) {
+					if (sample_root_directory is null) {
 						sample_root_directory = Path.Combine (Path.GetDirectoryName (Assembly.GetExecutingAssembly ().Location), "repositories");
 						Directory.CreateDirectory (sample_root_directory);
 						CreateNugetConfig (sample_root_directory);
@@ -64,7 +64,7 @@ namespace Xamarin.Tests {
 		public static string TestedHash {
 			get {
 				lock (lock_obj) {
-					if (tested_hash != null)
+					if (tested_hash is not null)
 						return tested_hash;
 
 					tested_hash = GetCurrentHash (Environment.CurrentDirectory);
@@ -87,7 +87,7 @@ namespace Xamarin.Tests {
 		public static string MonoVersion {
 			get {
 				lock (lock_obj) {
-					if (mono_version != null)
+					if (mono_version is not null)
 						return mono_version;
 
 					// We only care about the first line
@@ -102,7 +102,7 @@ namespace Xamarin.Tests {
 		public static string OSVersion {
 			get {
 				lock (lock_obj) {
-					if (sw_version != null)
+					if (sw_version is not null)
 						return sw_version;
 
 					sw_version = ProcessHelper.RunProcess ("sw_vers").Replace ('\n', ';').Replace ((char) 9, ' ');

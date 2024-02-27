@@ -79,7 +79,7 @@ namespace Microsoft.MaciOS.Nnyeah {
 		List<Instruction> CopyInstructions ()
 		{
 			var instrs = new List<Instruction> (Instructions.Count);
-			instrs.AddRange (Instructions.Select (i => i. Copy()));
+			instrs.AddRange (Instructions.Select (i => i.Copy ()));
 			return instrs;
 		}
 

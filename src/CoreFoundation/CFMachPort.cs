@@ -20,8 +20,7 @@ using ObjCRuntime;
 using NativeHandle = System.IntPtr;
 #endif
 
-namespace CoreFoundation
-{
+namespace CoreFoundation {
 
 #if false
 	[StructLayout(LayoutKind.Sequential)]
@@ -39,9 +38,8 @@ namespace CoreFoundation
 
 	delegate void CFMachPortCallBack (IntPtr cfMachPort, IntPtr msg, IntPtr size, IntPtr info);
 #endif
-	
-	public class CFMachPort : NativeObject
-	{
+
+	public class CFMachPort : NativeObject {
 		delegate void CFMachPortCallBack (IntPtr cfmachport, IntPtr msg, nint len, IntPtr context);
 
 #if !NET
@@ -78,11 +76,10 @@ namespace CoreFoundation
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool CFMachPortIsValid (IntPtr handle);
-		public bool IsValid { 
+		extern static byte CFMachPortIsValid (IntPtr handle);
+		public bool IsValid {
 			get {
-				return CFMachPortIsValid (Handle);
+				return CFMachPortIsValid (Handle) != 0;
 			}
 		}
 

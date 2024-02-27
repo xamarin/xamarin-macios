@@ -19,26 +19,26 @@ using ObjCRuntime;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.MapKit {
-	
+
 	class UserTrackingBarButtonItemPoker : MKUserTrackingBarButtonItem {
-		
+
 		static FieldInfo bkMapView;
-		
+
 		static UserTrackingBarButtonItemPoker ()
 		{
 			var t = typeof (MKUserTrackingBarButtonItem);
 			bkMapView = t.GetField ("__mt_MapView_var", BindingFlags.Instance | BindingFlags.NonPublic);
 		}
-		
+
 		public static bool NewRefcountEnabled ()
 		{
 			return NSObject.IsNewRefcountEnabled ();
 		}
-		
+
 		public UserTrackingBarButtonItemPoker (MKMapView view) : base (view)
 		{
 		}
-		
+
 		public MKMapView MapViewBackingField {
 			get {
 				return (MKMapView) bkMapView.GetValue (this);
@@ -49,7 +49,7 @@ namespace MonoTouchFixtures.MapKit {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class UserTrackingBarButtonItemTest {
-		
+
 		[Test]
 		public void Ctor_Defaults ()
 		{
@@ -73,7 +73,7 @@ namespace MonoTouchFixtures.MapKit {
 		{
 			if (UserTrackingBarButtonItemPoker.NewRefcountEnabled ())
 				Assert.Inconclusive ("backing fields are removed when newrefcount is enabled");
-			
+
 			using (var mv = new MKMapView ())
 			using (var ut = new UserTrackingBarButtonItemPoker (mv)) {
 				Assert.AreSame (mv, ut.MapViewBackingField, "1a");

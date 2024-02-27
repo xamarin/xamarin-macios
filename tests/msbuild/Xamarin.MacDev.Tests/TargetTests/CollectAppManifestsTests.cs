@@ -22,6 +22,7 @@ namespace Xamarin.MacDev.Tasks {
 <Project Sdk=""Microsoft.NET.Sdk"">
 	<PropertyGroup>
 		<TargetFramework>{Configuration.DotNetTfm}-macos</TargetFramework>
+		<RuntimeIdentifier>osx-x64</RuntimeIdentifier>
 		<OutputType>Exe</OutputType>
 
 		<CollectAppManifestsDependsOn>

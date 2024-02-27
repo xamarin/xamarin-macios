@@ -8,19 +8,17 @@ using ObjCRuntime;
 using Foundation;
 using CoreGraphics;
 
-namespace Xamarin.Mac.Tests
-{
+namespace Xamarin.Mac.Tests {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class NSIndexSetTests
-	{
+	public class NSIndexSetTests {
 		[Test]
 		public void NSIndexSet_ConstructorTest ()
 		{
 #pragma warning disable 0219
-			NSIndexSet a = new NSIndexSet ((int)5);
-			NSIndexSet b = new NSIndexSet ((uint)5);
-			NSIndexSet c = new NSIndexSet ((nint)5);
+			NSIndexSet a = new NSIndexSet ((int) 5);
+			NSIndexSet b = new NSIndexSet ((uint) 5);
+			NSIndexSet c = new NSIndexSet ((nint) 5);
 #pragma warning restore 0219
 		}
 

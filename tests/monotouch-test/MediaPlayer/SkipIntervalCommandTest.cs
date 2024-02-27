@@ -43,7 +43,7 @@ namespace MonoTouchFixtures.MediaPlayer {
 			} else {
 				Assert.Null (skip.PreferredIntervals, "PreferredIntervals");
 			}
-			double[] intervals = new [] { 1.0d, 3.14d };
+			double [] intervals = new [] { 1.0d, 3.14d };
 			skip.PreferredIntervals = intervals;
 
 			Assert.That (skip.PreferredIntervals, Is.EqualTo (intervals), "identical");

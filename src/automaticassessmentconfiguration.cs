@@ -19,82 +19,92 @@ using NativeHandle = System.IntPtr;
 namespace AutomaticAssessmentConfiguration {
 
 	[ErrorDomain ("AEAssessmentErrorDomain")]
-	[Mac (10,15,4), iOS (13,4)]
-	[MacCatalyst (14,0)]
+	[iOS (13, 4)]
+	[MacCatalyst (14, 0)]
 	[Native]
 	public enum AEAssessmentErrorCode : long {
-		Unknown = 1
+		Unknown = 1,
+		UnsupportedPlatform = 2,
 	}
 
 	[iOS (14, 0)]
-	[MacCatalyst (14,0)]
+	[MacCatalyst (14, 0)]
 	[Native]
 	enum AEAutocorrectMode : long {
 		None = 0,
 		Spelling = 1 << 0,
 		Punctuation = 1 << 1,
 	}
-	
-	[Mac (10,15,4), iOS (13,4)]
-	[MacCatalyst (14,0)]
+
+	[iOS (13, 4)]
+	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NSObject))]
 	interface AEAssessmentConfiguration : NSCopying {
 
 		[NoMac, iOS (14, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("autocorrectMode")]
 		AEAutocorrectMode AutocorrectMode { get; set; }
 
 		[NoMac, iOS (14, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("allowsSpellCheck")]
 		bool AllowsSpellCheck { get; set; }
 
 		[NoMac, iOS (14, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("allowsPredictiveKeyboard")]
 		bool AllowsPredictiveKeyboard { get; set; }
 
 		[NoMac, iOS (14, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("allowsKeyboardShortcuts")]
 		bool AllowsKeyboardShortcuts { get; set; }
 
 		[NoMac, iOS (14, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("allowsActivityContinuation")]
 		bool AllowsActivityContinuation { get; set; }
 
 		[NoMac, iOS (14, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("allowsDictation")]
 		bool AllowsDictation { get; set; }
 
 		[NoMac, iOS (14, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("allowsAccessibilitySpeech")]
 		bool AllowsAccessibilitySpeech { get; set; }
 
 		[NoMac, iOS (14, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("allowsPasswordAutoFill")]
 		bool AllowsPasswordAutoFill { get; set; }
 
 		[NoMac, iOS (14, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("allowsContinuousPathKeyboard")]
 		bool AllowsContinuousPathKeyboard { get; set; }
 
-		[NoiOS, Mac (12,0), MacCatalyst (15,0)]
+		[NoiOS, Mac (12, 0), MacCatalyst (15, 0)]
 		[Export ("configurationsByApplication", ArgumentSemantic.Copy)]
 		NSDictionary<AEAssessmentApplication, AEAssessmentParticipantConfiguration> ConfigurationsByApplication { get; }
 
-		[NoiOS, Mac (12,0), MacCatalyst (15,0)]
+		[NoiOS, Mac (12, 0), MacCatalyst (15, 0)]
 		[Export ("mainParticipantConfiguration", ArgumentSemantic.Strong)]
 		AEAssessmentParticipantConfiguration MainParticipantConfiguration { get; }
 
-		[NoiOS, Mac (12,0), MacCatalyst (15,0)]
+		[NoiOS, Mac (12, 0), MacCatalyst (15, 0)]
 		[Export ("removeApplication:")]
 		void Remove (AEAssessmentApplication application);
 
-		[NoiOS, Mac (12,0), MacCatalyst (15,0)]
+		[NoiOS, Mac (12, 0), MacCatalyst (15, 0)]
 		[Export ("setConfiguration:forApplication:")]
 		void SetConfiguration (AEAssessmentParticipantConfiguration configuration, AEAssessmentApplication application);
 	}
 
-	[Mac (10,15,4), iOS (13,4)]
-	[MacCatalyst (14,0)]
+	[iOS (13, 4)]
+	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface AEAssessmentSession {
@@ -112,11 +122,11 @@ namespace AutomaticAssessmentConfiguration {
 		[Export ("initWithConfiguration:")]
 		NativeHandle Constructor (AEAssessmentConfiguration configuration);
 
-		[Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("configuration", ArgumentSemantic.Copy)]
 		AEAssessmentConfiguration Configuration { get; }
 
-		[Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("updateToConfiguration:")]
 		void Update (AEAssessmentConfiguration configuration);
 
@@ -129,8 +139,8 @@ namespace AutomaticAssessmentConfiguration {
 
 	interface IAEAssessmentSessionDelegate { }
 
-	[Mac (10,15,4), iOS (13,4)]
-	[MacCatalyst (14,0)]
+	[iOS (13, 4)]
+	[MacCatalyst (14, 0)]
 #if NET
 	[Protocol, Model]
 #else
@@ -151,19 +161,31 @@ namespace AutomaticAssessmentConfiguration {
 		[Export ("assessmentSessionDidEnd:")]
 		void DidEnd (AEAssessmentSession session);
 
-		[NoiOS, Mac (12,0), MacCatalyst (15,0)]
+		[NoiOS, Mac (12, 0), MacCatalyst (15, 0)]
 		[Export ("assessmentSessionDidUpdate:")]
 		void DidUpdate (AEAssessmentSession session);
 
-		[NoiOS, Mac (12,0), MacCatalyst (15,0)]
+		[NoiOS, Mac (12, 0), MacCatalyst (15, 0)]
 		[Export ("assessmentSession:failedToUpdateToConfiguration:error:")]
 		void FailedToUpdate (AEAssessmentSession session, AEAssessmentConfiguration configuration, NSError error);
 	}
 
-	[Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	[Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (NSObject))]
-	interface AEAssessmentApplication : NSCopying
-	{
+#if XAMCORE_5_0
+	[DisableDefaultCtor]
+#endif
+	interface AEAssessmentApplication : NSCopying {
+		[NoiOS]
+		[MacCatalyst (15, 0)]
+		[Export ("initWithBundleIdentifier:")]
+		NativeHandle Constructor (string bundleIdentifier);
+
+		[NoiOS]
+		[NoMacCatalyst] // header says it's available in Mac Catalyst, Apple's documentation + xtro says it's not, so don't add it for now.
+		[Export ("initWithBundleIdentifier:teamIdentifier:")]
+		NativeHandle Constructor (string bundleIdentifier, [NullAllowed] string TeamIdentifier);
+
 		[Export ("bundleIdentifier")]
 		string BundleIdentifier { get; }
 
@@ -174,10 +196,9 @@ namespace AutomaticAssessmentConfiguration {
 		bool RequiresSignatureValidation { get; set; }
 	}
 
-	[Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	[Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (NSObject))]
-	interface AEAssessmentParticipantConfiguration : NSCopying
-	{
+	interface AEAssessmentParticipantConfiguration : NSCopying {
 		[Export ("allowsNetworkAccess")]
 		bool AllowsNetworkAccess { get; set; }
 	}

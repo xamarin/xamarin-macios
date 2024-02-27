@@ -10,10 +10,10 @@ using System;
 
 namespace CoreWlan {
 	public unsafe partial class CWInterface {
-		public CWChannel []? SupportedWlanChannels  {
+		public CWChannel []? SupportedWlanChannels {
 			get {
 				NSSet? channels = _SupportedWlanChannels;
-				return channels?.ToArray<CWChannel> ();;
+				return channels?.ToArray<CWChannel> ();
 			}
 		}
 
@@ -28,7 +28,7 @@ namespace CoreWlan {
 			get {
 				NSSet? interfaceNames = _InterfaceNames;
 				if (interfaceNames is not null)
-					return Array.ConvertAll (interfaceNames.ToArray<NSString> (), item => (string)item);
+					return Array.ConvertAll (interfaceNames.ToArray<NSString> (), item => (string) item);
 				return null;
 			}
 		}
@@ -46,10 +46,8 @@ namespace CoreWlan {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10,13)]
 #endif
 		public CWNetwork []? ScanForNetworksWithSsid (NSData ssid, bool includeHidden, out NSError? error)
 		{
@@ -58,10 +56,8 @@ namespace CoreWlan {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10,13)]
 #endif
 		public CWNetwork []? ScanForNetworksWithName (string networkName, bool includeHidden, out NSError? error)
 		{

@@ -21,7 +21,7 @@ namespace OpenTK.Audio
     /// </summary>
     public struct ContextHandle : IComparable<ContextHandle>, IEquatable<ContextHandle>
     {
-        #region Fields
+#region Fields
 
         IntPtr handle;
 
@@ -33,9 +33,9 @@ namespace OpenTK.Audio
         /// <summary>A read-only field that represents a handle that has been initialized to zero.</summary>
         public static readonly ContextHandle Zero = new ContextHandle(IntPtr.Zero);
 
-        #endregion
+#endregion
 
-        #region Constructors
+#region Constructors
 
         /// <summary>
         /// Constructs a new instance with the specified handle.
@@ -43,11 +43,11 @@ namespace OpenTK.Audio
         /// <param name="h">A System.IntPtr containing the value for this instance.</param>
         public ContextHandle(IntPtr h) { handle = h; }
 
-        #endregion
+#endregion
 
-        #region Public Members
+#region Public Members
 
-        #region ToString
+#region ToString
 
         /// <summary>
         /// Converts this instance to its equivalent string representation.
@@ -58,9 +58,9 @@ namespace OpenTK.Audio
             return Handle.ToString();
         }
 
-        #endregion
+#endregion
 
-        #region Equals
+#region Equals
 
         /// <summary>
         /// Compares this instance to the specified object.
@@ -74,9 +74,9 @@ namespace OpenTK.Audio
             return false;
         }
 
-        #endregion
+#endregion
 
-        #region GetHashCode
+#region GetHashCode
 
         /// <summary>
         /// Returns the hash code for this instance.
@@ -87,9 +87,9 @@ namespace OpenTK.Audio
             return Handle.GetHashCode();
         }
 
-        #endregion
+#endregion
 
-        #region public static explicit operator IntPtr(ContextHandle c)
+#region public static explicit operator IntPtr(ContextHandle c)
 
         /// <summary>
         /// Converts the specified ContextHandle to the equivalent IntPtr.
@@ -101,9 +101,9 @@ namespace OpenTK.Audio
             return c != ContextHandle.Zero ? c.handle : IntPtr.Zero;
         }
 
-        #endregion
+#endregion
 
-        #region public static explicit operator ContextHandle(IntPtr p)
+#region public static explicit operator ContextHandle(IntPtr p)
 
         /// <summary>
         /// Converts the specified IntPtr to the equivalent ContextHandle.
@@ -115,9 +115,9 @@ namespace OpenTK.Audio
             return new ContextHandle(p);
         }
 
-        #endregion
+#endregion
 
-        #region public static bool operator ==(ContextHandle left, ContextHandle right)
+#region public static bool operator ==(ContextHandle left, ContextHandle right)
 
         /// <summary>
         /// Compares two ContextHandles for equality.
@@ -130,9 +130,9 @@ namespace OpenTK.Audio
             return left.Equals(right);
         }
 
-        #endregion
+#endregion
 
-        #region public static bool operator !=(ContextHandle left, ContextHandle right)
+#region public static bool operator !=(ContextHandle left, ContextHandle right)
 
         /// <summary>
         /// Compares two ContextHandles for inequality.
@@ -145,11 +145,11 @@ namespace OpenTK.Audio
             return !left.Equals(right);
         }
 
-        #endregion
+#endregion
 
-        #endregion
+#endregion
 
-        #region IComparable<ContextHandle> Members
+#region IComparable<ContextHandle> Members
 
         /// <summary>
         /// Compares the numerical value of this instance to the specified ContextHandle and
@@ -162,9 +162,9 @@ namespace OpenTK.Audio
             unsafe { return (int)((int*)other.handle.ToPointer() - (int*)this.handle.ToPointer()); }
         }
 
-        #endregion
+#endregion
 
-        #region IEquatable<ContextHandle> Members
+#region IEquatable<ContextHandle> Members
 
         /// <summary>
         /// Compares this instance to the specified ContextHandle for equality.
@@ -176,7 +176,7 @@ namespace OpenTK.Audio
             return Handle == other.Handle;
         }
 
-        #endregion
+#endregion
     }
 }
 

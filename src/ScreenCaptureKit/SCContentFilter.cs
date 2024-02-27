@@ -27,7 +27,7 @@ namespace ScreenCaptureKit {
 	[NoiOS]
 	[NoTV]
 	[NoWatch]
-	[Mac (12,3)]
+	[Mac (12, 3)]
 	[NoMacCatalyst]
 #endif
 	public enum SCContentFilterOption {

@@ -4,6 +4,8 @@
 !missing-protocol-conformance! NSDictionary should conform to NSFastEnumeration
 !missing-protocol-conformance! NSEnumerator should conform to NSFastEnumeration
 !missing-protocol-conformance! NSOrderedSet should conform to NSFastEnumeration
+# https://github.com/xamarin/xamarin-macios/issues/15577
+# !missing-protocol-conformance! NSOrderedCollectionDifference should conform to NSFastEnumeration
 !missing-protocol-conformance! NSSet should conform to NSFastEnumeration
 
 ## untyped enums (only values, not type name) NSError.h
@@ -171,6 +173,9 @@
 # this is a better named version of `date` which we already bound as `Now` in C#
 !missing-selector! +NSDate::now not bound
 
+# Apple says this is not implemented
+!missing-field! NSDidBecomeSingleThreadedNotification not bound
+
 ## unsorted
 
 !extra-designated-initializer! NSSortDescriptor::initWithCoder: is incorrectly decorated with an [DesignatedInitializer] attribute
@@ -181,7 +186,6 @@
 !missing-enum! NSSearchPathDomainMask not bound
 !missing-enum! NSStringEncodingConversionOptions not bound
 !missing-field! NSAverageKeyValueOperator not bound
-!missing-field! NSBundleDidLoadNotification not bound
 !missing-field! NSCalendarIdentifierIslamic not bound
 !missing-field! NSCharacterConversionException not bound
 !missing-field! NSCountKeyValueOperator not bound
@@ -190,7 +194,6 @@
 !missing-field! NSDecimalNumberOverflowException not bound
 !missing-field! NSDecimalNumberUnderflowException not bound
 !missing-field! NSDestinationInvalidException not bound
-!missing-field! NSDidBecomeSingleThreadedNotification not bound
 !missing-field! NSDistinctUnionOfArraysKeyValueOperator not bound
 !missing-field! NSDistinctUnionOfObjectsKeyValueOperator not bound
 !missing-field! NSDistinctUnionOfSetsKeyValueOperator not bound
@@ -209,20 +212,15 @@
 !missing-field! NSMallocException not bound
 !missing-field! NSMaximumKeyValueOperator not bound
 !missing-field! NSMinimumKeyValueOperator not bound
-!missing-field! NSNetServicesErrorCode not bound
 !missing-field! NSObjectInaccessibleException not bound
 !missing-field! NSObjectNotAvailableException not bound
 !missing-field! NSOldStyleException not bound
 !missing-field! NSParseErrorException not bound
-!missing-field! NSPortDidBecomeInvalidNotification not bound
 !missing-field! NSPortReceiveException not bound
 !missing-field! NSPortSendException not bound
 !missing-field! NSPortTimeoutException not bound
 !missing-field! NSRangeException not bound
 !missing-field! NSSumKeyValueOperator not bound
-!missing-field! NSSystemClockDidChangeNotification not bound
-!missing-field! NSSystemTimeZoneDidChangeNotification not bound
-!missing-field! NSThreadWillExitNotification not bound
 !missing-field! NSUndefinedKeyException not bound
 !missing-field! NSUnionOfArraysKeyValueOperator not bound
 !missing-field! NSUnionOfObjectsKeyValueOperator not bound
@@ -234,7 +232,6 @@
 !missing-field! NSURLErrorFailingURLStringErrorKey not bound
 !missing-field! NSURLErrorNetworkUnavailableReasonKey not bound
 !missing-field! NSURLFileScheme not bound
-!missing-field! NSWillBecomeMultiThreadedNotification not bound
 !missing-field! NSXMLParserErrorDomain not bound
 !missing-pinvoke! NSAllocateMemoryPages is not bound
 !missing-pinvoke! NSAllocateObject is not bound
@@ -361,8 +358,6 @@
 !missing-selector! +NSTimer::scheduledTimerWithTimeInterval:invocation:repeats: not bound
 !missing-selector! +NSTimer::timerWithTimeInterval:invocation:repeats: not bound
 !missing-selector! +NSTimeZone::setAbbreviationDictionary: not bound
-!missing-selector! +NSURL::fileURLWithPath: not bound
-!missing-selector! +NSURL::fileURLWithPath:isDirectory: not bound
 !missing-selector! +NSURL::resourceValuesForKeys:fromBookmarkData: not bound
 !missing-selector! +NSURLProtocol::canInitWithTask: not bound
 !missing-selector! +NSURLQueryItem::queryItemWithName:value: not bound
@@ -535,7 +530,6 @@
 !missing-selector! NSLocale::alternateQuotationEndDelimiter not bound
 !missing-selector! NSLocale::collationIdentifier not bound
 !missing-selector! NSLocale::collatorIdentifier not bound
-!missing-selector! NSLocale::countryCode not bound
 !missing-selector! NSLocale::currencyCode not bound
 !missing-selector! NSLocale::currencySymbol not bound
 !missing-selector! NSLocale::decimalSeparator not bound
@@ -790,7 +784,7 @@
 !unknown-type! NSObject bound
 
 ## Used 'INSFastEnumeration' placeholer (just so we can start flagging things)
-!missing-protocol-conformance! NSDictionary should conform to NSFastEnumeration (defined in 'NSGenericFastEnumeraiton' category)
+!missing-protocol-conformance! NSDictionary should conform to NSFastEnumeration (defined in 'NSGenericFastEnumeration' category)
 
 ## never bound (or requested) for macOS, added to iOS/tvOS/watchOS in xcode10
 !missing-field! NSNonOwnedPointerHashCallBacks not bound
@@ -957,7 +951,6 @@
 !missing-null-allowed! 'Foundation.NSData Foundation.NSUrl::CreateBookmarkData(Foundation.NSUrlBookmarkCreationOptions,System.String[],Foundation.NSUrl,Foundation.NSError&)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSData Foundation.NSUrl::GetBookmarkData(Foundation.NSUrl,Foundation.NSError&)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSData Foundation.NSUrlRequest::get_Body()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSData Foundation.NSUserDefaults::DataForKey(System.String)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSData[] Foundation.NSUrlProtectionSpace::get_DistinguishedNames()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSDataDetector Foundation.NSDataDetector::Create(Foundation.NSTextCheckingTypes,Foundation.NSError&)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSDate Foundation.NSCalendar::Date(System.IntPtr,System.IntPtr,System.IntPtr,System.IntPtr,System.IntPtr,System.IntPtr,System.IntPtr,System.IntPtr)' is missing an [NullAllowed] on return type
@@ -967,9 +960,6 @@
 !missing-null-allowed! 'Foundation.NSDate Foundation.NSCalendar::DateBySettingUnit(Foundation.NSCalendarUnit,System.IntPtr,Foundation.NSDate,Foundation.NSCalendarOptions)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSDate Foundation.NSCalendar::DateForWeekOfYear(System.IntPtr,System.IntPtr,System.IntPtr,System.IntPtr,System.IntPtr,System.IntPtr,System.IntPtr,System.IntPtr)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSDate Foundation.NSCalendar::DateFromComponents(Foundation.NSDateComponents)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSDate Foundation.NSCalendar::FindNextDateAfterDateMatching(Foundation.NSDate,Foundation.NSCalendarUnit,System.IntPtr,Foundation.NSCalendarOptions)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSDate Foundation.NSCalendar::FindNextDateAfterDateMatching(Foundation.NSDate,Foundation.NSDateComponents,Foundation.NSCalendarOptions)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSDate Foundation.NSCalendar::FindNextDateAfterDateMatching(Foundation.NSDate,System.IntPtr,System.IntPtr,System.IntPtr,Foundation.NSCalendarOptions)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSDate Foundation.NSDateComponents::get_Date()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSDate Foundation.NSDateFormatter::Parse(System.String)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSDate Foundation.NSFileVersion::get_ModificationDate()' is missing an [NullAllowed] on return type
@@ -996,8 +986,6 @@
 !missing-null-allowed! 'Foundation.NSDictionary Foundation.NSUrl::GetResourceValues(Foundation.NSString[],Foundation.NSError&)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSDictionary Foundation.NSUrlCredentialStorage::GetCredentials(Foundation.NSUrlProtectionSpace)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSDictionary Foundation.NSUrlRequest::get_Headers()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSDictionary Foundation.NSUserDefaults::DictionaryForKey(System.String)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSDictionary Foundation.NSUserDefaults::PersistentDomainForName(System.String)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSDirectoryEnumerator Foundation.NSFileManager::GetEnumerator(Foundation.NSUrl,Foundation.NSString[],Foundation.NSDirectoryEnumerationOptions,Foundation.NSEnumerateErrorHandler)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSDirectoryEnumerator Foundation.NSFileManager::GetEnumerator(System.String)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSError Foundation.NSStream::get_Error()' is missing an [NullAllowed] on return type
@@ -1055,18 +1043,14 @@
 !missing-null-allowed! 'Foundation.NSObject Foundation.NSObject::ValueForKey(Foundation.NSString)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject Foundation.NSObject::ValueForKeyPath(Foundation.NSString)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject Foundation.NSObject::ValueForUndefinedKey(Foundation.NSString)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSObject Foundation.NSOrderedSet::FirstObject()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSObject Foundation.NSOrderedSet::LastObject()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject Foundation.NSPropertyListSerialization::PropertyListWithData(Foundation.NSData,Foundation.NSPropertyListReadOptions,Foundation.NSPropertyListFormat&,Foundation.NSError&)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject Foundation.NSPropertyListSerialization::PropertyListWithStream(Foundation.NSInputStream,Foundation.NSPropertyListReadOptions,Foundation.NSPropertyListFormat&,Foundation.NSError&)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject Foundation.NSSet::get_AnyObject()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject Foundation.NSSet::LookupMember(Foundation.NSObject)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject Foundation.NSTimer::get_UserInfo()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject Foundation.NSUrlProtocol::GetProperty(System.String,Foundation.NSUrlRequest)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSObject Foundation.NSUserDefaults::ObjectForKey(System.String)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject Foundation.NSValue::get_NonretainedObjectValue()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject[] Foundation.NSMetadataQueryResultGroup::get_Subgroups()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSObject[] Foundation.NSUserDefaults::ArrayForKey(System.String)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSOperationQueue Foundation.NSOperationQueue::get_CurrentQueue()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSOrthography Foundation.NSTextCheckingResult::get_Orthography()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSProgress Foundation.NSProgress::get_CurrentProgress()' is missing an [NullAllowed] on return type
@@ -1106,7 +1090,6 @@
 !missing-null-allowed! 'Foundation.NSUrl Foundation.NSFileManager::GetUrl(Foundation.NSSearchPathDirectory,Foundation.NSSearchPathDomain,Foundation.NSUrl,System.Boolean,Foundation.NSError&)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSUrl Foundation.NSFileManager::GetUrlForPublishingUbiquitousItem(Foundation.NSUrl,Foundation.NSDate&,Foundation.NSError&)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSUrl Foundation.NSFileManager::GetUrlForUbiquityContainer(System.String)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSUrl Foundation.NSFilePresenter::get_PresentedItemUrl()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSUrl Foundation.NSFileVersion::ReplaceItem(Foundation.NSUrl,Foundation.NSFileVersionReplacingOptions,Foundation.NSError&)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSUrl Foundation.NSFileWrapper::get_SymbolicLinkDestinationURL()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSUrl Foundation.NSHttpCookie::get_CommentUrl()' is missing an [NullAllowed] on return type
@@ -1151,7 +1134,6 @@
 !missing-null-allowed! 'System.Boolean Foundation.NSPredicate::EvaluateWithObject(Foundation.NSObject,Foundation.NSDictionary)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Boolean Foundation.NSPredicate::EvaluateWithObject(Foundation.NSObject,Foundation.NSDictionary)' is missing an [NullAllowed] on parameter #1
 !missing-null-allowed! 'System.Boolean Foundation.NSUrl::SetResourceValue(Foundation.NSObject,Foundation.NSString,Foundation.NSError&)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.IntPtr Foundation.NSUserDefaults::InitWithSuiteName(System.String)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.UIntPtr Foundation.NSString::DetectStringEncoding(Foundation.NSData,Foundation.NSDictionary,System.String&,System.Boolean&)' is missing an [NullAllowed] on parameter #1
 !missing-null-allowed! 'System.String Foundation.NSBundle::get_BuiltinPluginsPath()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'System.String Foundation.NSBundle::get_BundleIdentifier()' is missing an [NullAllowed] on return type
@@ -1215,7 +1197,6 @@
 !missing-null-allowed! 'System.String Foundation.NSUrlResponse::get_MimeType()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'System.String Foundation.NSUrlResponse::get_SuggestedFilename()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'System.String Foundation.NSUrlResponse::get_TextEncodingName()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.String Foundation.NSUserDefaults::StringForKey(System.String)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'System.String Foundation.NSXpcConnection::get_ServiceName()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'System.String[] Foundation.NSBundle::GetPathsForResources(System.String,System.String)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.String[] Foundation.NSBundle::PathsForResources(System.String,System.String)' is missing an [NullAllowed] on parameter #0
@@ -1228,7 +1209,6 @@
 !missing-null-allowed! 'System.String[] Foundation.NSOrthography::LanguagesForScript(System.String)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'System.String[] Foundation.NSTextCheckingResult::get_AlternativeStrings()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'System.String[] Foundation.NSTextCheckingResult::get_GrammarDetails()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.String[] Foundation.NSUserDefaults::StringArrayForKey(System.String)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'System.Void Foundation.NSArray::SetValueForKey(Foundation.NSObject,Foundation.NSString)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void Foundation.NSCalendar::set_Locale(Foundation.NSLocale)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void Foundation.NSDateComponentsFormatter::set_Calendar(Foundation.NSCalendar)' is missing an [NullAllowed] on parameter #0
@@ -1341,7 +1321,6 @@
 !missing-null-allowed! 'System.Void Foundation.NSUrlResponse::.ctor(Foundation.NSUrl,System.String,System.IntPtr,System.String)' is missing an [NullAllowed] on parameter #1
 !missing-null-allowed! 'System.Void Foundation.NSUserActivity::set_ExpirationDate(Foundation.NSDate)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void Foundation.NSUserActivity::set_RequiredUserInfoKeys(Foundation.NSSet`1<Foundation.NSString>)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void Foundation.NSUserDefaults::SetObjectForKey(Foundation.NSObject,System.String)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void Foundation.NSXpcConnection::set_InterruptionHandler(System.Action)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void Foundation.NSXpcConnection::set_InvalidationHandler(System.Action)' is missing an [NullAllowed] on parameter #0
 
@@ -1351,3 +1330,66 @@
 ## the apple docs state that it does accept null: https://developer.apple.com/documentation/foundation/nsurl/1572047-urlwithstring
 ## An NSURL object initialized with URLString. If the URL string was malformed or nil, returns nil.
 !extra-null-allowed! 'Foundation.NSUrl Foundation.NSUrl::FromString(System.String)' has a extraneous [NullAllowed] on parameter #0
+
+# not exposed to users. 
+# https://github.com/xamarin/xamarin-macios/issues/15577
+# !extra-null-allowed! 'ObjCRuntime.NativeHandle Foundation.NSArray::_GetDifferenceFromArray(Foundation.NSArray,Foundation.NSOrderedCollectionDifferenceCalculationOptions,ObjCRuntime.BlockLiteral&)' has a extraneous [NullAllowed] on parameter #2
+# !extra-null-allowed! 'ObjCRuntime.NativeHandle Foundation.NSOrderedCollectionDifference::_GetDifference(ObjCRuntime.BlockLiteral&)' has a extraneous [NullAllowed] on parameter #0
+
+# we do not expose IMP
+!missing-selector! NSInvocation::invokeUsingIMP: not bound
+
+# Variable argument, and can be done in C#
+!missing-selector! +NSString::localizedStringWithValidatedFormat:validFormatSpecifiers:error: not bound
+!missing-selector! +NSString::stringWithValidatedFormat:validFormatSpecifiers:error: not bound
+!missing-selector! NSString::initWithValidatedFormat:validFormatSpecifiers:arguments:error: not bound
+!missing-selector! NSString::initWithValidatedFormat:validFormatSpecifiers:error: not bound
+!missing-selector! NSString::initWithValidatedFormat:validFormatSpecifiers:locale:arguments:error: not bound
+!missing-selector! NSString::initWithValidatedFormat:validFormatSpecifiers:locale:error: not bound
+!missing-selector! NSAttributedString::initWithFormat:options:locale:context: not bound
+!missing-selector! NSAttributedString::initWithFormat:options:locale:context:arguments: not bound
+!missing-selector! NSAttributedString::initWithFormat:options:locale: not bound
+!missing-selector! NSAttributedString::initWithFormat:options:locale:arguments: not bound
+!missing-selector! +NSAttributedString::localizedAttributedStringWithFormat:context: not bound
+!missing-selector! +NSAttributedString::localizedAttributedStringWithFormat:options:context: not bound
+!missing-selector! +NSAttributedString::localizedAttributedStringWithFormat: not bound
+!missing-selector! +NSAttributedString::localizedAttributedStringWithFormat:options: not bound
+!missing-selector! NSMutableAttributedString::appendLocalizedFormat: not bound
+
+# https://github.com/xamarin/xamarin-macios/issues/15577
+!missing-selector! +NSOrderedCollectionChange::changeWithObject:type:index: not bound
+!missing-selector! +NSOrderedCollectionChange::changeWithObject:type:index:associatedIndex: not bound
+!missing-null-allowed! 'Foundation.NSExpression Foundation.NSExpression::FromFunction(Foundation.NSExpressionCallbackHandler,Foundation.NSExpression[])' is missing an [NullAllowed] on parameter #1
+!missing-selector! NSArray::arrayByApplyingDifference: not bound
+!missing-selector! NSArray::differenceFromArray: not bound
+!missing-selector! NSArray::differenceFromArray:withOptions: not bound
+!missing-selector! NSArray::differenceFromArray:withOptions:usingEquivalenceTest: not bound
+!missing-selector! NSMutableArray::applyDifference: not bound
+!missing-selector! NSMutableOrderedSet::applyDifference: not bound
+!missing-selector! NSOrderedCollectionChange::associatedIndex not bound
+!missing-selector! NSOrderedCollectionChange::changeType not bound
+!missing-selector! NSOrderedCollectionChange::index not bound
+!missing-selector! NSOrderedCollectionChange::initWithObject:type:index: not bound
+!missing-selector! NSOrderedCollectionChange::initWithObject:type:index:associatedIndex: not bound
+!missing-selector! NSOrderedCollectionChange::object not bound
+!missing-selector! NSOrderedCollectionDifference::differenceByTransformingChangesWithBlock: not bound
+!missing-selector! NSOrderedCollectionDifference::hasChanges not bound
+!missing-selector! NSOrderedCollectionDifference::initWithChanges: not bound
+!missing-selector! NSOrderedCollectionDifference::initWithInsertIndexes:insertedObjects:removeIndexes:removedObjects: not bound
+!missing-selector! NSOrderedCollectionDifference::initWithInsertIndexes:insertedObjects:removeIndexes:removedObjects:additionalChanges: not bound
+!missing-selector! NSOrderedCollectionDifference::insertions not bound
+!missing-selector! NSOrderedCollectionDifference::inverseDifference not bound
+!missing-selector! NSOrderedCollectionDifference::removals not bound
+!missing-selector! NSOrderedSet::differenceFromOrderedSet: not bound
+!missing-selector! NSOrderedSet::differenceFromOrderedSet:withOptions: not bound
+!missing-selector! NSOrderedSet::differenceFromOrderedSet:withOptions:usingEquivalenceTest: not bound
+!missing-selector! NSOrderedSet::orderedSetByApplyingDifference: not bound
+!missing-type! NSOrderedCollectionChange not bound
+!missing-type! NSOrderedCollectionDifference not bound
+
+# we provide a static method instead of the constructor since there are two of them
+!missing-selector! NSURL::initWithString:encodingInvalidCharacters: not bound
+!missing-selector! NSURLComponents::initWithString:encodingInvalidCharacters: not bound
+
+# it is used in the selectors that support vargs and thefore cannot be used with out bindings
+!missing-field! NSInflectionConceptsKey not bound

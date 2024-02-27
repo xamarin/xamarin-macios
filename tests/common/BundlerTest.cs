@@ -16,11 +16,9 @@ using BundlerTool = Xamarin.MTouchTool;
 using BundlerTool = Xamarin.MmpTool;
 #endif
 
-namespace Xamarin
-{
+namespace Xamarin {
 	[TestFixture]
-	public class BundlerTests
-	{
+	public class BundlerTests {
 #if __MACOS__
 		// The cache doesn't work properly in mmp yet.
 		// [TestCase (Profile.macOSMobile)]

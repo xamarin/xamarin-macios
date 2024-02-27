@@ -79,14 +79,14 @@ namespace CoreGraphics {
 
 	// uint32_t -> CGImage.h
 	public enum CGImageAlphaInfo : uint {
-		None,               
-		PremultipliedLast,  
-		PremultipliedFirst, 
-		Last,               
-		First,              
-		NoneSkipLast,       
-		NoneSkipFirst,      
-		Only                
+		None,
+		PremultipliedLast,
+		PremultipliedFirst,
+		Last,
+		First,
+		NoneSkipLast,
+		NoneSkipFirst,
+		Only
 	}
 
 	public enum CGImagePixelFormatInfo : uint {
@@ -101,35 +101,35 @@ namespace CoreGraphics {
 	// uint32_t -> CGImage.h
 	[Flags]
 	public enum CGBitmapFlags : uint {
-		None,               
-		PremultipliedLast,  
-		PremultipliedFirst, 
-		Last,               
-		First,              
-		NoneSkipLast,       
-		NoneSkipFirst,      
+		None,
+		PremultipliedLast,
+		PremultipliedFirst,
+		Last,
+		First,
+		NoneSkipLast,
+		NoneSkipFirst,
 		Only,
-			
+
 		AlphaInfoMask = 0x1F,
-		FloatInfoMask  = 0xf00,
+		FloatInfoMask = 0xf00,
 		FloatComponents = (1 << 8),
-		
-		ByteOrderMask     = 0x7000,
-		ByteOrderDefault  = (0 << 12),
+
+		ByteOrderMask = 0x7000,
+		ByteOrderDefault = (0 << 12),
 		ByteOrder16Little = (1 << 12),
 		ByteOrder32Little = (2 << 12),
-		ByteOrder16Big    = (3 << 12),
-		ByteOrder32Big    = (4 << 12)
+		ByteOrder16Big = (3 << 12),
+		ByteOrder32Big = (4 << 12)
 	}
 
 	[Flags]
 	public enum CGImageByteOrderInfo : uint {
-		ByteOrderMask     = 0x7000,
-		ByteOrderDefault  = (0 << 12),
+		ByteOrderMask = 0x7000,
+		ByteOrderDefault = (0 << 12),
 		ByteOrder16Little = (1 << 12),
 		ByteOrder32Little = (2 << 12),
-		ByteOrder16Big    = (3 << 12),
-		ByteOrder32Big    = (4 << 12),
+		ByteOrder16Big = (3 << 12),
+		ByteOrder32Big = (4 << 12),
 	}
 
 
@@ -140,8 +140,7 @@ namespace CoreGraphics {
 	[SupportedOSPlatform ("tvos")]
 #endif
 	// CGImage.h
-	public class CGImage : NativeObject
-	{
+	public class CGImage : NativeObject {
 #if !COREBUILD
 #if !NET
 		public CGImage (NativeHandle handle)
@@ -150,7 +149,7 @@ namespace CoreGraphics {
 		}
 #endif
 
-		[Preserve (Conditional=true)]
+		[Preserve (Conditional = true)]
 		internal CGImage (NativeHandle handle, bool owns)
 #if NET
 			: base (handle, owns)
@@ -177,10 +176,10 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static /* CGImageRef */ IntPtr CGImageCreate (/* size_t */ nint width, /* size_t */ nint height, 
+		extern static unsafe /* CGImageRef */ IntPtr CGImageCreate (/* size_t */ nint width, /* size_t */ nint height,
 			/* size_t */ nint bitsPerComponent, /* size_t */ nint bitsPerPixel, /* size_t */ nint bytesPerRow,
 			/* CGColorSpaceRef */ IntPtr space, CGBitmapFlags bitmapInfo, /* CGDataProviderRef */ IntPtr provider,
-			/* CGFloat[] */ nfloat []? decode, [MarshalAs (UnmanagedType.I1)] bool shouldInterpolate, CGColorRenderingIntent intent);
+			/* CGFloat[] */ nfloat* decode, [MarshalAs (UnmanagedType.I1)] bool shouldInterpolate, CGColorRenderingIntent intent);
 
 		static IntPtr Create (int width, int height, int bitsPerComponent, int bitsPerPixel, int bytesPerRow,
 				CGColorSpace? colorSpace, CGBitmapFlags bitmapFlags, CGDataProvider? provider,
@@ -197,9 +196,13 @@ namespace CoreGraphics {
 			if (bytesPerRow < 0)
 				throw new ArgumentException (nameof (bytesPerRow));
 
-			return CGImageCreate (width, height, bitsPerComponent, bitsPerPixel, bytesPerRow,
+			unsafe {
+				fixed (nfloat* decodePtr = decode) {
+					return CGImageCreate (width, height, bitsPerComponent, bitsPerPixel, bytesPerRow,
 						colorSpace.GetHandle (), bitmapFlags, provider.GetHandle (),
-						decode, shouldInterpolate, intent);
+						decodePtr, shouldInterpolate, intent);
+				}
+			}
 		}
 
 		public CGImage (int width, int height, int bitsPerComponent, int bitsPerPixel, int bytesPerRow,
@@ -224,9 +227,13 @@ namespace CoreGraphics {
 			if (bytesPerRow < 0)
 				throw new ArgumentException (nameof (bytesPerRow));
 
-			return CGImageCreate (width, height, bitsPerComponent, bitsPerPixel, bytesPerRow,
+			unsafe {
+				fixed (nfloat* decodePtr = decode) {
+					return CGImageCreate (width, height, bitsPerComponent, bitsPerPixel, bytesPerRow,
 						colorSpace.GetHandle (), (CGBitmapFlags) alphaInfo, provider.GetHandle (),
-						decode, shouldInterpolate, intent);
+						decodePtr, shouldInterpolate, intent);
+				}
+			}
 		}
 
 		public CGImage (int width, int height, int bitsPerComponent, int bitsPerPixel, int bytesPerRow,
@@ -291,31 +298,39 @@ namespace CoreGraphics {
 		}
 #endif
 
-	
+
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static /* CGImageRef */ IntPtr CGImageCreateWithJPEGDataProvider (/* CGDataProviderRef */ IntPtr source,
-			/* CGFloat[] */ nfloat []? decode, [MarshalAs (UnmanagedType.I1)] bool shouldInterpolate, CGColorRenderingIntent intent);
+		extern static unsafe /* CGImageRef */ IntPtr CGImageCreateWithJPEGDataProvider (/* CGDataProviderRef */ IntPtr source,
+			/* CGFloat[] */ nfloat* decode, [MarshalAs (UnmanagedType.I1)] bool shouldInterpolate, CGColorRenderingIntent intent);
 
 		public static CGImage? FromJPEG (CGDataProvider? provider, nfloat []? decode, bool shouldInterpolate, CGColorRenderingIntent intent)
 		{
-			var handle = CGImageCreateWithJPEGDataProvider (provider.GetHandle (), decode, shouldInterpolate, intent);
-			return FromHandle (handle, true);
+			unsafe {
+				fixed (nfloat* decodePtr = decode) {
+					var handle = CGImageCreateWithJPEGDataProvider (provider.GetHandle (), decodePtr, shouldInterpolate, intent);
+					return FromHandle (handle, true);
+				}
+			}
 		}
-		
+
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static /* CGImageRef */ IntPtr CGImageCreateWithPNGDataProvider (/* CGDataProviderRef */ IntPtr source,
-			/* CGFloat[] */ nfloat []? decode, [MarshalAs (UnmanagedType.I1)] bool shouldInterpolate, CGColorRenderingIntent intent);
+		extern static unsafe /* CGImageRef */ IntPtr CGImageCreateWithPNGDataProvider (/* CGDataProviderRef */ IntPtr source,
+			/* CGFloat[] */ nfloat* decode, [MarshalAs (UnmanagedType.I1)] bool shouldInterpolate, CGColorRenderingIntent intent);
 
 		public static CGImage? FromPNG (CGDataProvider provider, nfloat []? decode, bool shouldInterpolate, CGColorRenderingIntent intent)
 		{
-			var handle = CGImageCreateWithPNGDataProvider (provider.GetHandle (), decode, shouldInterpolate, intent);
-			return FromHandle (handle, true);
+			unsafe {
+				fixed (nfloat* decodePtr = decode) {
+					var handle = CGImageCreateWithPNGDataProvider (provider.GetHandle (), decodePtr, shouldInterpolate, intent);
+					return FromHandle (handle, true);
+				}
+			}
 		}
-		
+
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static /* CGImageRef */ IntPtr CGImageMaskCreate (/* size */ nint width, /* size */ nint height, 
-			/* size */ nint bitsPerComponent, /* size */ nint bitsPerPixel, /* size */ nint bytesPerRow, 
-			/* CGDataProviderRef */ IntPtr provider, /* CGFloat[] */ nfloat []? decode, [MarshalAs (UnmanagedType.I1)] bool shouldInterpolate);
+		extern static unsafe /* CGImageRef */ IntPtr CGImageMaskCreate (/* size */ nint width, /* size */ nint height,
+			/* size */ nint bitsPerComponent, /* size */ nint bitsPerPixel, /* size */ nint bytesPerRow,
+			/* CGDataProviderRef */ IntPtr provider, /* CGFloat[] */ nfloat* decode, [MarshalAs (UnmanagedType.I1)] bool shouldInterpolate);
 
 		public static CGImage? CreateMask (int width, int height, int bitsPerComponent, int bitsPerPixel, int bytesPerRow, CGDataProvider? provider, nfloat []? decode, bool shouldInterpolate)
 		{
@@ -327,21 +342,29 @@ namespace CoreGraphics {
 				throw new ArgumentException (nameof (bitsPerPixel));
 			if (bytesPerRow < 0)
 				throw new ArgumentException (nameof (bytesPerRow));
+			unsafe {
+				fixed (nfloat* decodePtr = decode) {
 
-			var handle = CGImageMaskCreate (width, height, bitsPerComponent, bitsPerPixel, bytesPerRow, provider.GetHandle (), decode, shouldInterpolate);
-			return FromHandle (handle, true);
+					var handle = CGImageMaskCreate (width, height, bitsPerComponent, bitsPerPixel, bytesPerRow, provider.GetHandle (), decodePtr, shouldInterpolate);
+					return FromHandle (handle, true);
+				}
+			}
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static /* CGImageRef */ IntPtr CGImageCreateWithMaskingColors (/* CGImageRef */ IntPtr image, /* CGFloat[] */ nfloat []? components);
+		extern static unsafe /* CGImageRef */ IntPtr CGImageCreateWithMaskingColors (/* CGImageRef */ IntPtr image, /* CGFloat[] */ nfloat* components);
 
-		public CGImage? WithMaskingColors (nfloat[]? components)
+		public CGImage? WithMaskingColors (nfloat []? components)
 		{
 			var N = 2 * ColorSpace!.Components;
 			if (components is not null && components.Length != N)
 				throw new ArgumentException ("The argument 'components' must have 2N values, where N is the number of components in the color space of the image.", nameof (components));
-			var handle = CGImageCreateWithMaskingColors (Handle, components);
-			return FromHandle (handle, true);
+			unsafe {
+				fixed (nfloat* componentsPtr = components) {
+					var handle = CGImageCreateWithMaskingColors (Handle, componentsPtr);
+					return FromHandle (handle, true);
+				}
+			}
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
@@ -399,7 +422,7 @@ namespace CoreGraphics {
 				return CGImageGetWidth (Handle);
 			}
 		}
-		
+
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* size_t */ nint CGImageGetHeight (/* CGImageRef */ IntPtr image);
@@ -427,7 +450,7 @@ namespace CoreGraphics {
 				return CGImageGetBitsPerPixel (Handle);
 			}
 		}
-		
+
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* size_t */ nint CGImageGetBytesPerRow (/* CGImageRef */ IntPtr image);
 
@@ -466,14 +489,14 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		unsafe extern static /* CGFloat* */ nfloat * CGImageGetDecode (/* CGImageRef */ IntPtr image);
+		unsafe extern static /* CGFloat* */ nfloat* CGImageGetDecode (/* CGImageRef */ IntPtr image);
 
-		public unsafe nfloat *Decode {
+		public unsafe nfloat* Decode {
 			get {
 				return CGImageGetDecode (Handle);
 			}
 		}
-		
+
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CGImageGetShouldInterpolate (/* CGImageRef */ IntPtr image);
@@ -503,26 +526,20 @@ namespace CoreGraphics {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (9,0)]
-		[Mac (10,11)]
 #endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		static extern IntPtr /* CFStringRef */ CGImageGetUTType (/* __nullable CGImageRef* */ IntPtr image);
 
 		// we return an NSString, instead of a string, as all our UTType constants are NSString (see mobilecoreservices.cs)
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (9,0)]
-		[Mac (10,11)]
 #endif
 		public NSString? UTType {
 			get {
@@ -533,58 +550,54 @@ namespace CoreGraphics {
 
 #if NET
 		[SupportedOSPlatform ("ios12.0")]
-		[SupportedOSPlatform ("macos10.14")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos12.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[iOS (12,0)]
-		[Mac (10,14)]
-		[TV (12,0)]
-		[Watch (5,0)]
+		[iOS (12, 0)]
+		[TV (12, 0)]
+		[Watch (5, 0)]
 #endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		static extern CGImagePixelFormatInfo CGImageGetPixelFormatInfo (/* __nullable CGImageRef */ IntPtr handle);
-		
+
 #if NET
 		[SupportedOSPlatform ("ios12.0")]
-		[SupportedOSPlatform ("macos10.14")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos12.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[iOS (12,0)]
-		[Mac (10,14)]
-		[TV (12,0)]
-		[Watch (5,0)]
+		[iOS (12, 0)]
+		[TV (12, 0)]
+		[Watch (5, 0)]
 #endif
 		public CGImagePixelFormatInfo PixelFormatInfo => CGImageGetPixelFormatInfo (Handle);
-			
+
 #if NET
 		[SupportedOSPlatform ("ios12.0")]
-		[SupportedOSPlatform ("macos10.14")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos12.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[iOS (12,0)]
-		[Mac (10,14)]
-		[TV (12,0)]
-		[Watch (5,0)]
+		[iOS (12, 0)]
+		[TV (12, 0)]
+		[Watch (5, 0)]
 #endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		static extern CGImageByteOrderInfo CGImageGetByteOrderInfo (/* __nullable CGImageRef */ IntPtr handle);
 
 #if NET
 		[SupportedOSPlatform ("ios12.0")]
-		[SupportedOSPlatform ("macos10.14")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos12.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[iOS (12,0)]
-		[Mac (10,14)]
-		[TV (12,0)]
-		[Watch (5,0)]
+		[iOS (12, 0)]
+		[TV (12, 0)]
+		[Watch (5, 0)]
 #endif
 		public CGImageByteOrderInfo ByteOrderInfo => CGImageGetByteOrderInfo (Handle);
-		
+
 #endif // !COREBUILD
 	}
 }

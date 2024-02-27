@@ -184,7 +184,7 @@ namespace MonoTouchFixtures.Foundation {
 
 			using (var st = new NSMutableSet<NSString> ()) {
 				Assert.Throws<ArgumentNullException> (() => st.AddObjects ((NSString) null), "AddObjects ANE 1");
-				Assert.Throws<ArgumentNullException> (() => st.AddObjects ((NSString[]) null), "AddObjects ANE 2");
+				Assert.Throws<ArgumentNullException> (() => st.AddObjects ((NSString []) null), "AddObjects ANE 2");
 
 				st.AddObjects (v1);
 				Assert.AreEqual ((nuint) 1, st.Count, "AddObjects 1 Count");
@@ -250,8 +250,8 @@ namespace MonoTouchFixtures.Foundation {
 		[Test]
 		public void OperatorPlusReferenceTest ()
 		{
-			var one = new NSMutableSet<NSString> ((NSString)"1", (NSString)"2", (NSString)"3");
-			var two = new NSMutableSet<NSString> ((NSString)"4", (NSString)"5", (NSString)"6");
+			var one = new NSMutableSet<NSString> ((NSString) "1", (NSString) "2", (NSString) "3");
+			var two = new NSMutableSet<NSString> ((NSString) "4", (NSString) "5", (NSString) "6");
 			NSMutableSet<NSString> nil = null;
 			using (var sum = one + nil)
 			using (var sum2 = two + one)

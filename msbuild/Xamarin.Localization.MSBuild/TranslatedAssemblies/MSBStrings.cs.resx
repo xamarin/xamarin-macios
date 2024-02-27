@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <resheader name="resmimetype">
     <value>text/microsoft-resx</value>
@@ -424,7 +424,7 @@
         </value>
     </data>
   <data name="E0118" xml:space="preserve">
-        <value>{0} exited with code {1}:
+        <value>Program {0} se ukončil s kódem {1}:
 {2}</value>
     </data>
   <data name="M0119" xml:space="preserve">
@@ -672,12 +672,13 @@
         </value>
     </data>
   <data name="E0174" xml:space="preserve">
-        <value>{0} má nesprávný nebo neznámý formát a nedá se zpracovat.
-        </value>
+        <value>Standard xcframework {0} má nesprávný nebo neznámý formát a nedá se zpracovat.</value>
     </data>
   <data name="E0175" xml:space="preserve">
-        <value>V „{0}“ nebyla nalezena odpovídající architektura.
-        </value>
+        <value>Uvnitř {0} nebyl nalezen žádný odpovídající standard zásad. SupportedPlatform: {0}, SupportedPlatformVariant: {1}, SupportedArchitectures: {2}.</value>
+        <comment>
+            Do not translate: 'SupportedPlatform', 'SupportedPlatformVariant', 'SupportedArchitectures' (they're keys inside a file with key/value pairs))
+        </comment>
     </data>
   <data name="W0176" xml:space="preserve">
         <value>Konfliktní možnosti {0} a {1}. {1} se bude ignorovat.
@@ -722,6 +723,12 @@
     </data>
   <data name="E0189" xml:space="preserve">
         <value>Nepovedlo se parsovat argumenty vlastního linkeru -{0}: {1}</value>
+    </data>
+  <data name="E0190" xml:space="preserve">
+        <value>Položka NativeResource {0} neexistuje.</value>
+        <comment>
+            NativeResource: do not translate (this is the name of an item in the project file).
+        </comment>
     </data>
   <data name="E7001" xml:space="preserve">
         <value>Nepovedlo se přeložit IP adresy hostitele pro nastavení ladicího programu Wi-Fi.
@@ -997,6 +1004,7 @@
         <value>Nastavení: Položka {0} neexistuje.
         </value>
     </data>
+  <!-- E7068: not in use anymore -->
   <data name="E7069" xml:space="preserve">
         <value>Xamarin.iOS 14+ nepodporuje aplikace watchOS 1. Migrujte projekt na watchOS 2+.</value>
     </data>
@@ -1145,5 +1153,88 @@
     </data>
   <data name="E7101" xml:space="preserve">
         <value>Neznámá vlastnost {0} s hodnotou {1}.</value>
+    </data>
+  <data name="E7102" xml:space="preserve">
+        <value>Neplatná hodnota {0} pro nárok {1} typu {2} zadaná ve skupině položek CustomEntitlements. Neočekávala se vůbec žádná hodnota.</value>
+        <comment>
+            Don't translate: CustomEntitlements (name of option in project file)
+        </comment>
+    </data>
+  <data name="E7103" xml:space="preserve">
+        <value>Neplatná hodnota {0} pro nárok {1} typu {2} zadaná ve skupině položek CustomEntitlements. Očekávala se hodnota true nebo false.</value>
+        <comment>
+            Don't translate:
+                * CustomEntitlements (name of option in project file)
+                * 'true', 'false'
+        </comment>
+    </data>
+  <data name="E7104" xml:space="preserve">
+        <value>Neznámý typ {0} pro nárok {1} zadaný ve skupině položek CustomEntitlements Očekávala se hodnota Remove, Boolean, String nebo StringArray.</value>
+        <comment>
+            Don't translate:
+                * CustomEntitlements (name of option in project file)
+                * 'Remove', 'Boolean', 'String', 'StringArray'
+        </comment>
+    </data>
+  <data name="W7105" xml:space="preserve">
+        <value>Neočekávané rozšíření {0} pro nativní odkaz {1}v balíčku prostředků vazby {2}.</value>
+        <comment>
+            {0}: file extension
+            {1}: path to a file
+            {2}: path to a file
+        </comment>
+    </data>
+  <data name="W7106" xml:space="preserve">
+        <value>V souboru ZIP {0} se očekával soubor s názvem {1}.</value>
+    </data>
+  <data name="W7107" xml:space="preserve">
+        <value>Soubor ZIP {0} neexistuje.</value>
+    </data>
+  <data name="W7108" xml:space="preserve">
+        <value>Soubor {0} neexistuje.</value>
+    </data>
+  <data name="W7109" xml:space="preserve">
+        <value>Položku {0} se nepovedlo zpracovat jako nativní odkaz: neznámý typ.</value>
+    </data>
+  <data name="E7110" xml:space="preserve">
+        <value>Ze standardu xcframework {1} se nepovedlo načíst soubor Info.plist {0}.</value>
+    </data>
+  <data name="W7111" xml:space="preserve">
+        <value>Adresář {0} neexistuje.</value>
+    </data>
+  <data name="E7112" xml:space="preserve">
+        <value>V souboru ZIP {1} se nepovedlo najít soubor nebo adresář {0}.</value>
+    </data>
+  <data name="E7113" xml:space="preserve">
+        <value>Soubor ZIP {0} nelze na této platformě zpracovat: soubor {1} je symbolický odkaz.</value>
+    </data>
+  <data name="E7114" xml:space="preserve">
+        <value>Úloze “{0}“ nebyla určena hodnota parametru „{1}“, která se při sestavování na této platformě vyžaduje.</value>
+    </data>
+  <data name="E7115" xml:space="preserve">
+        <value>Sestavení illink neexistuje: „{0}“</value>
+        <comment>
+            {0}: the path to the linker assembly
+        </comment>
+    </data>
+  <data name="E7116" xml:space="preserve">
+        <value>Sestavení {0} neposkytuje metadata „ObjectFile“.</value>
+        <comment>
+            Don't translate: 'ObjectFile'.
+        </comment>
+    </data>
+  <data name="E7117" xml:space="preserve">
+        <value>Sestavení {0} bylo předáno vícekrát jako vstupní sestavení (odkazováno z {1}).</value>
+        <comment>
+            {0}: the name of an assembly
+            {1}: the path to an assembly
+        </comment>
+    </data>
+  <data name="E7118" xml:space="preserve">
+        <value>AOT kompilace {0} se nezdařila. Kompilátor AOT byl ukončen s kódem {1}.</value>
+        <comment>
+            {0}: the path to an assembly
+            {1}: the exit code of a process
+        </comment>
     </data>
 </root>

@@ -21,24 +21,24 @@
       </Item>
       <Item ItemId=";description" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[A project for creating a .NET MacCatalyst binding library]]></Val>
+          <Val><![CDATA[A project for creating a .NET Mac Catalyst binding library]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Progetto per la creazione di una libreria di binding MacCatalyst .NET]]></Val>
+            <Val><![CDATA[Progetto per la creazione di una libreria di binding Mac Catalyst .NET]]></Val>
           </Tgt>
           <Prev Cat="Text">
-            <Val><![CDATA[A project for creating a .NET 6 MacCatalyst binding library]]></Val>
+            <Val><![CDATA[A project for creating a .NET MacCatalyst binding library]]></Val>
           </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";name" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[MacCatalyst Binding Library]]></Val>
+          <Val><![CDATA[Mac Catalyst Binding Library]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Libreria di binding MacCatalyst]]></Val>
+            <Val><![CDATA[Libreria di binding Mac Catalyst]]></Val>
           </Tgt>
           <Prev Cat="Text">
-            <Val><![CDATA[MacCatalyst Binding Library (Preview)]]></Val>
+            <Val><![CDATA[MacCatalyst Binding Library]]></Val>
           </Prev>
         </Str>
         <Disp Icon="Str" />

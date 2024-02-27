@@ -37,7 +37,7 @@ namespace Extrospection {
 					if (!string.IsNullOrEmpty (methodDefinition)) {
 						var argumentSemantic = Helpers.ArgumentSemantic.Assign; // Default
 						if (ca.ConstructorArguments.Count > 1) {
-							argumentSemantic = (Helpers.ArgumentSemantic)ca.ConstructorArguments [1].Value;
+							argumentSemantic = (Helpers.ArgumentSemantic) ca.ConstructorArguments [1].Value;
 							if (!qualified_properties.TryGetValue (methodDefinition, out var list))
 								qualified_properties [methodDefinition] = list = new List<Tuple<MethodDefinition, Helpers.ArgumentSemantic>> ();
 							list.Add (new Tuple<MethodDefinition, Helpers.ArgumentSemantic> (method, argumentSemantic));
@@ -62,7 +62,7 @@ namespace Extrospection {
 				return;
 
 			var framework = Helpers.GetFramework (decl);
-			if (framework == null)
+			if (framework is null)
 				return;
 
 			var nativeArgumentSemantic = decl.Attributes.ToArgumentSemantic ();
@@ -98,11 +98,11 @@ namespace Extrospection {
 				return;
 
 			// don't process deprecated methods (or types)
-			if (decl.IsDeprecated () || (decl.DeclContext as Decl).IsDeprecated ())
+			if (decl.IsDeprecated () || (decl.DeclContext as Decl).IsDeprecated ())
 				return;
 
 			var framework = Helpers.GetFramework (decl);
-			if (framework == null)
+			if (framework is null)
 				return;
 
 			string selector = decl.GetSelector ();
@@ -120,9 +120,9 @@ namespace Extrospection {
 			if (!found) {
 				// a category could be inlined into the type it extend
 				var category = decl.DeclContext as ObjCCategoryDecl;
-				if (category != null) {
+				if (category is not null) {
 					var cname = category.Name;
-					if (cname == null)
+					if (cname is null)
 						name = GetCategoryBase (category) + name;
 					else
 						name = name.ReplaceFirstInstance (cname, GetCategoryBase (category));

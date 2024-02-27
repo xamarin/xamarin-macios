@@ -49,10 +49,10 @@ namespace CoreText {
 		static CTFontTraitKey ()
 		{
 			var handle = Libraries.CoreText.Handle;
-			Symbolic  = Dlfcn.GetStringConstant (handle, "kCTFontSymbolicTrait");
-			Weight    = Dlfcn.GetStringConstant (handle, "kCTFontWeightTrait");
-			Width     = Dlfcn.GetStringConstant (handle, "kCTFontWidthTrait");
-			Slant     = Dlfcn.GetStringConstant (handle, "kCTFontSlantTrait");
+			Symbolic = Dlfcn.GetStringConstant (handle, "kCTFontSymbolicTrait");
+			Weight = Dlfcn.GetStringConstant (handle, "kCTFontWeightTrait");
+			Width = Dlfcn.GetStringConstant (handle, "kCTFontWidthTrait");
+			Slant = Dlfcn.GetStringConstant (handle, "kCTFontSlantTrait");
 		}
 	}
 #endif
@@ -60,34 +60,34 @@ namespace CoreText {
 	[Flags]
 	// defined as uint32_t - /System/Library/Frameworks/CoreText.framework/Headers/CTFontTraits.h
 	public enum CTFontSymbolicTraits : uint {
-		None        = 0,
-		Italic      = (1 << 0),
-		Bold        = (1 << 1),
-		Expanded    = (1 << 5),
-		Condensed   = (1 << 6),
-		MonoSpace   = (1 << 10),
-		Vertical    = (1 << 11),
+		None = 0,
+		Italic = (1 << 0),
+		Bold = (1 << 1),
+		Expanded = (1 << 5),
+		Condensed = (1 << 6),
+		MonoSpace = (1 << 10),
+		Vertical = (1 << 11),
 		UIOptimized = (1 << 12),
 		ColorGlyphs = (1 << 13),
-		Composite   = (1 << 14),
-		
-		Mask        = ((uint) 15 << CTFontTraits.ClassMaskShift)
+		Composite = (1 << 14),
+
+		Mask = ((uint) 15 << CTFontTraits.ClassMaskShift)
 	}
 
 	// defined as uint32_t - /System/Library/Frameworks/CoreText.framework/Headers/CTFontTraits.h
 	public enum CTFontStylisticClass : uint {
-		None                = 0,
-		Unknown             = ((uint) 0 << CTFontTraits.ClassMaskShift),
-		OldStyleSerifs      = ((uint) 1 << CTFontTraits.ClassMaskShift),
-		TransitionalSerifs  = ((uint) 2 << CTFontTraits.ClassMaskShift),
-		ModernSerifs        = ((uint) 3 << CTFontTraits.ClassMaskShift),
-		ClarendonSerifs     = ((uint) 4 << CTFontTraits.ClassMaskShift),
-		SlabSerifs          = ((uint) 5 << CTFontTraits.ClassMaskShift),
-		FreeformSerifs      = ((uint) 7 << CTFontTraits.ClassMaskShift),
-		SansSerif           = ((uint) 8 << CTFontTraits.ClassMaskShift),
-		Ornamentals         = ((uint) 9 << CTFontTraits.ClassMaskShift),
-		Scripts             = ((uint) 10 << CTFontTraits.ClassMaskShift),
-		Symbolic            = ((uint) 12 << CTFontTraits.ClassMaskShift),
+		None = 0,
+		Unknown = ((uint) 0 << CTFontTraits.ClassMaskShift),
+		OldStyleSerifs = ((uint) 1 << CTFontTraits.ClassMaskShift),
+		TransitionalSerifs = ((uint) 2 << CTFontTraits.ClassMaskShift),
+		ModernSerifs = ((uint) 3 << CTFontTraits.ClassMaskShift),
+		ClarendonSerifs = ((uint) 4 << CTFontTraits.ClassMaskShift),
+		SlabSerifs = ((uint) 5 << CTFontTraits.ClassMaskShift),
+		FreeformSerifs = ((uint) 7 << CTFontTraits.ClassMaskShift),
+		SansSerif = ((uint) 8 << CTFontTraits.ClassMaskShift),
+		Ornamentals = ((uint) 9 << CTFontTraits.ClassMaskShift),
+		Scripts = ((uint) 10 << CTFontTraits.ClassMaskShift),
+		Symbolic = ((uint) 12 << CTFontTraits.ClassMaskShift),
 	}
 
 #if NET
@@ -110,12 +110,12 @@ namespace CoreText {
 			Dictionary = dictionary;
 		}
 
-		public NSDictionary Dictionary {get; private set;}
+		public NSDictionary Dictionary { get; private set; }
 
 		// CFNumber
 		public uint? Symbolic {
-			get {return Adapter.GetUInt32Value (Dictionary, CTFontTraitKey.Symbolic);}
-			set {Adapter.SetValue (Dictionary, CTFontTraitKey.Symbolic!, value);}
+			get { return Adapter.GetUInt32Value (Dictionary, CTFontTraitKey.Symbolic); }
+			set { Adapter.SetValue (Dictionary, CTFontTraitKey.Symbolic!, value); }
 		}
 
 		public CTFontSymbolicTraits? SymbolicTraits {
@@ -126,7 +126,7 @@ namespace CoreText {
 			set {
 				var c = StylisticClass;
 				Symbolic = Adapter.BitwiseOr (
-						c.HasValue ? (uint?) c.Value : null, 
+						c.HasValue ? (uint?) c.Value : null,
 						value.HasValue ? (uint?) value.Value : null);
 			}
 		}
@@ -146,23 +146,23 @@ namespace CoreText {
 
 		// CFNumber representing a float value 
 		public float? Weight {
-			get {return Adapter.GetSingleValue (Dictionary, CTFontTraitKey.Weight);}
-			set {Adapter.SetValue (Dictionary, CTFontTraitKey.Weight!, value);}
+			get { return Adapter.GetSingleValue (Dictionary, CTFontTraitKey.Weight); }
+			set { Adapter.SetValue (Dictionary, CTFontTraitKey.Weight!, value); }
 		}
 
 		// CFNumber representing a float value 
 		public float? Width {
-			get {return Adapter.GetSingleValue (Dictionary, CTFontTraitKey.Width);}
-			set {Adapter.SetValue (Dictionary, CTFontTraitKey.Width!, value);}
+			get { return Adapter.GetSingleValue (Dictionary, CTFontTraitKey.Width); }
+			set { Adapter.SetValue (Dictionary, CTFontTraitKey.Width!, value); }
 		}
 
 		// CFNumber representing a float value 
 		public float? Slant {
-			get {return Adapter.GetSingleValue (Dictionary, CTFontTraitKey.Slant);}
-			set {Adapter.SetValue (Dictionary, CTFontTraitKey.Slant!, value);}
+			get { return Adapter.GetSingleValue (Dictionary, CTFontTraitKey.Slant); }
+			set { Adapter.SetValue (Dictionary, CTFontTraitKey.Slant!, value); }
 		}
 
-		internal const int  ClassMaskShift      = 28;
-		internal const uint StylisticClassMask  = ((uint) 15 << ClassMaskShift);
+		internal const int ClassMaskShift = 28;
+		internal const uint StylisticClassMask = ((uint) 15 << ClassMaskShift);
 	}
 }

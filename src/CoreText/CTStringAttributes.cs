@@ -49,34 +49,34 @@ using NativeHandle = System.IntPtr;
 
 namespace CoreText {
 
-#region CFAttributedStringRef AttributeKey Prototypes
+	#region CFAttributedStringRef AttributeKey Prototypes
 	// defined as int32_t - System/Library/Frameworks/CoreText.framework/Headers/CTStringAttributes.h
 	public enum CTUnderlineStyle : int {
-		None    = 0x00,
-		Single  = 0x01,
-		Thick   = 0x02,
-		Double  = 0x09,
+		None = 0x00,
+		Single = 0x01,
+		Thick = 0x02,
+		Double = 0x09,
 	}
 
 	// defined as int32_t - System/Library/Frameworks/CoreText.framework/Headers/CTStringAttributes.h
 	public enum CTUnderlineStyleModifiers : int {
-		PatternSolid      = 0x0000,
-		PatternDot        = 0x0100,
-		PatternDash       = 0x0200,
-		PatternDashDot    = 0x0300,
+		PatternSolid = 0x0000,
+		PatternDot = 0x0100,
+		PatternDash = 0x0200,
+		PatternDashDot = 0x0300,
 		PatternDashDotDot = 0x0400,
 	}
 
 	public enum CTLigatureFormation {
 		Essential = 0,
-		Standard  = 1,
-		All       = 2,
+		Standard = 1,
+		All = 2,
 	}
 
 	public enum CTSuperscriptStyle {
 		None = 0,
 		Superscript = 1,
-		Subscript   = -1,
+		Subscript = -1,
 	}
 
 #if !NET
@@ -108,32 +108,32 @@ namespace CoreText {
 		static CTStringAttributeKey ()
 		{
 			var handle = Libraries.CoreText.Handle;
-			Font                        = Dlfcn.GetStringConstant (handle, "kCTFontAttributeName");
-			ForegroundColorFromContext  = Dlfcn.GetStringConstant (handle, "kCTForegroundColorFromContextAttributeName");
-			KerningAdjustment           = Dlfcn.GetStringConstant (handle, "kCTKernAttributeName");
-			LigatureFormation           = Dlfcn.GetStringConstant (handle, "kCTLigatureAttributeName");
-			ForegroundColor             = Dlfcn.GetStringConstant (handle, "kCTForegroundColorAttributeName");
-			BackgroundColor             = Dlfcn.GetStringConstant (handle, "kCTBackgroundColorAttributeName");
-			ParagraphStyle              = Dlfcn.GetStringConstant (handle, "kCTParagraphStyleAttributeName");
-			StrokeWidth                 = Dlfcn.GetStringConstant (handle, "kCTStrokeWidthAttributeName");
-			StrokeColor                 = Dlfcn.GetStringConstant (handle, "kCTStrokeColorAttributeName");
-			UnderlineStyle              = Dlfcn.GetStringConstant (handle, "kCTUnderlineStyleAttributeName");
-			Superscript                 = Dlfcn.GetStringConstant (handle, "kCTSuperscriptAttributeName");
-			UnderlineColor              = Dlfcn.GetStringConstant (handle, "kCTUnderlineColorAttributeName");
-			VerticalForms               = Dlfcn.GetStringConstant (handle, "kCTVerticalFormsAttributeName");
-			HorizontalInVerticalForms   = Dlfcn.GetStringConstant (handle, "kCTHorizontalInVerticalFormsAttributeName");
-			GlyphInfo                   = Dlfcn.GetStringConstant (handle, "kCTGlyphInfoAttributeName");
-			CharacterShape              = Dlfcn.GetStringConstant (handle, "kCTCharacterShapeAttributeName");
-			RunDelegate                 = Dlfcn.GetStringConstant (handle, "kCTRunDelegateAttributeName");
-			BaselineOffset              = Dlfcn.GetStringConstant (handle, "kCTBaselineOffsetAttributeName");
-			BaselineClass               = Dlfcn.GetStringConstant (handle, "kCTBaselineClassAttributeName");
-			BaselineInfo                = Dlfcn.GetStringConstant (handle, "kCTBaselineInfoAttributeName");
-			BaselineReferenceInfo       = Dlfcn.GetStringConstant (handle, "kCTBaselineReferenceInfoAttributeName");
-			WritingDirection            = Dlfcn.GetStringConstant (handle, "kCTWritingDirectionAttributeName");
+			Font = Dlfcn.GetStringConstant (handle, "kCTFontAttributeName");
+			ForegroundColorFromContext = Dlfcn.GetStringConstant (handle, "kCTForegroundColorFromContextAttributeName");
+			KerningAdjustment = Dlfcn.GetStringConstant (handle, "kCTKernAttributeName");
+			LigatureFormation = Dlfcn.GetStringConstant (handle, "kCTLigatureAttributeName");
+			ForegroundColor = Dlfcn.GetStringConstant (handle, "kCTForegroundColorAttributeName");
+			BackgroundColor = Dlfcn.GetStringConstant (handle, "kCTBackgroundColorAttributeName");
+			ParagraphStyle = Dlfcn.GetStringConstant (handle, "kCTParagraphStyleAttributeName");
+			StrokeWidth = Dlfcn.GetStringConstant (handle, "kCTStrokeWidthAttributeName");
+			StrokeColor = Dlfcn.GetStringConstant (handle, "kCTStrokeColorAttributeName");
+			UnderlineStyle = Dlfcn.GetStringConstant (handle, "kCTUnderlineStyleAttributeName");
+			Superscript = Dlfcn.GetStringConstant (handle, "kCTSuperscriptAttributeName");
+			UnderlineColor = Dlfcn.GetStringConstant (handle, "kCTUnderlineColorAttributeName");
+			VerticalForms = Dlfcn.GetStringConstant (handle, "kCTVerticalFormsAttributeName");
+			HorizontalInVerticalForms = Dlfcn.GetStringConstant (handle, "kCTHorizontalInVerticalFormsAttributeName");
+			GlyphInfo = Dlfcn.GetStringConstant (handle, "kCTGlyphInfoAttributeName");
+			CharacterShape = Dlfcn.GetStringConstant (handle, "kCTCharacterShapeAttributeName");
+			RunDelegate = Dlfcn.GetStringConstant (handle, "kCTRunDelegateAttributeName");
+			BaselineOffset = Dlfcn.GetStringConstant (handle, "kCTBaselineOffsetAttributeName");
+			BaselineClass = Dlfcn.GetStringConstant (handle, "kCTBaselineClassAttributeName");
+			BaselineInfo = Dlfcn.GetStringConstant (handle, "kCTBaselineInfoAttributeName");
+			BaselineReferenceInfo = Dlfcn.GetStringConstant (handle, "kCTBaselineReferenceInfoAttributeName");
+			WritingDirection = Dlfcn.GetStringConstant (handle, "kCTWritingDirectionAttributeName");
 		}
 	}
 #endif // !NET
-#endregion
+	#endregion
 
 #if NET
 	[SupportedOSPlatform ("ios")]
@@ -155,19 +155,19 @@ namespace CoreText {
 			Dictionary = dictionary;
 		}
 
-		public NSDictionary Dictionary {get; private set;}
+		public NSDictionary Dictionary { get; private set; }
 
 		public CTFont? Font {
 			get {
 				var h = CFDictionary.GetValue (Dictionary.Handle, CTStringAttributeKey.Font.GetHandle ());
 				return h == IntPtr.Zero ? null : new CTFont (h, false);
 			}
-			set {Adapter.SetNativeValue (Dictionary, CTStringAttributeKey.Font!, value);}
+			set { Adapter.SetNativeValue (Dictionary, CTStringAttributeKey.Font!, value); }
 		}
 
 		public bool ForegroundColorFromContext {
 			get {
-				return CFDictionary.GetBooleanValue (Dictionary.Handle, 
+				return CFDictionary.GetBooleanValue (Dictionary.Handle,
 						CTStringAttributeKey.ForegroundColorFromContext.GetHandle ());
 			}
 			set {
@@ -179,8 +179,8 @@ namespace CoreText {
 
 		// Header says 'Value must be a CFNumberRef float' - System/Library/Frameworks/CoreText.framework/Headers/CTStringAttributes.h
 		public float? KerningAdjustment {
-			get {return Adapter.GetSingleValue (Dictionary, CTStringAttributeKey.KerningAdjustment);}
-			set {Adapter.SetValue (Dictionary, CTStringAttributeKey.KerningAdjustment!, value);}
+			get { return Adapter.GetSingleValue (Dictionary, CTStringAttributeKey.KerningAdjustment); }
+			set { Adapter.SetValue (Dictionary, CTStringAttributeKey.KerningAdjustment!, value); }
 		}
 
 		// Documentation says this must be 'CFNumber', doesn't specify exact type (but implies it's an integer value)
@@ -200,17 +200,14 @@ namespace CoreText {
 				var h = CFDictionary.GetValue (Dictionary.Handle, CTStringAttributeKey.ForegroundColor.GetHandle ());
 				return h == IntPtr.Zero ? null : new CGColor (h, false);
 			}
-			set {Adapter.SetNativeValue (Dictionary, CTStringAttributeKey.ForegroundColor!, value);}
+			set { Adapter.SetNativeValue (Dictionary, CTStringAttributeKey.ForegroundColor!, value); }
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios10.0")]
-		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (10,0)]
-		[Mac (10,12)]
 #endif
 		public CGColor? BackgroundColor {
 			get {
@@ -232,13 +229,13 @@ namespace CoreText {
 				var h = CFDictionary.GetValue (Dictionary.Handle, CTStringAttributeKey.ParagraphStyle.GetHandle ());
 				return h == IntPtr.Zero ? null : new CTParagraphStyle (h, false);
 			}
-			set {Adapter.SetNativeValue (Dictionary, CTStringAttributeKey.ParagraphStyle!, value);}
+			set { Adapter.SetNativeValue (Dictionary, CTStringAttributeKey.ParagraphStyle!, value); }
 		}
 
 		// Documentation says this must be 'CFNumber', doesn't specify exact type (but implies it's a floating point value)
 		public float? StrokeWidth {
-			get {return Adapter.GetSingleValue (Dictionary, CTStringAttributeKey.StrokeWidth);}
-			set {Adapter.SetValue (Dictionary, CTStringAttributeKey.StrokeWidth!, value);}
+			get { return Adapter.GetSingleValue (Dictionary, CTStringAttributeKey.StrokeWidth); }
+			set { Adapter.SetValue (Dictionary, CTStringAttributeKey.StrokeWidth!, value); }
 		}
 
 		public CGColor? StrokeColor {
@@ -246,32 +243,31 @@ namespace CoreText {
 				var h = CFDictionary.GetValue (Dictionary.Handle, CTStringAttributeKey.StrokeColor.GetHandle ());
 				return h == IntPtr.Zero ? null : new CGColor (h, false);
 			}
-			set {Adapter.SetNativeValue (Dictionary, CTStringAttributeKey.StrokeColor!, value);}
+			set { Adapter.SetNativeValue (Dictionary, CTStringAttributeKey.StrokeColor!, value); }
 		}
 
 #if NET
 		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (6,0)]
-		[TV (13,0)]
-		[Mac (10,15)]
-		[iOS (13,0)]
+		[Watch (6, 0)]
+		[TV (13, 0)]
+		[iOS (13, 0)]
 #endif
 		public float? TrackingAdjustment {
-			get {return Adapter.GetSingleValue (Dictionary, CTStringAttributeKey.TrackingAttributeName);}
-			set {Adapter.SetValue (Dictionary, CTStringAttributeKey.TrackingAttributeName, value);}
+			get { return Adapter.GetSingleValue (Dictionary, CTStringAttributeKey.TrackingAttributeName); }
+			set { Adapter.SetValue (Dictionary, CTStringAttributeKey.TrackingAttributeName, value); }
 		}
 
 		// Documentation says this must be 'CFNumber', doesn't specify exact type
 		public int? UnderlineStyleValue {
-			get {return Adapter.GetInt32Value (Dictionary, CTStringAttributeKey.UnderlineStyle);}
-			set {Adapter.SetValue (Dictionary, CTStringAttributeKey.UnderlineStyle!, value);}
+			get { return Adapter.GetInt32Value (Dictionary, CTStringAttributeKey.UnderlineStyle); }
+			set { Adapter.SetValue (Dictionary, CTStringAttributeKey.UnderlineStyle!, value); }
 		}
 
-		const int UnderlineStyleMask          = 0x000F;
+		const int UnderlineStyleMask = 0x000F;
 		const int UnderlineStyleModifiersMask = 0x0700;
 
 		public CTUnderlineStyle? UnderlineStyle {
@@ -316,12 +312,12 @@ namespace CoreText {
 				var h = CFDictionary.GetValue (Dictionary.Handle, CTStringAttributeKey.UnderlineColor.GetHandle ());
 				return h == IntPtr.Zero ? null : new CGColor (h, false);
 			}
-			set {Adapter.SetNativeValue (Dictionary, CTStringAttributeKey.UnderlineColor!, value);}
+			set { Adapter.SetNativeValue (Dictionary, CTStringAttributeKey.UnderlineColor!, value); }
 		}
 
 		public bool VerticalForms {
 			get {
-				return CFDictionary.GetBooleanValue (Dictionary.Handle, 
+				return CFDictionary.GetBooleanValue (Dictionary.Handle,
 						CTStringAttributeKey.VerticalForms.GetHandle ());
 			}
 			set {
@@ -332,15 +328,10 @@ namespace CoreText {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios10.0")]
-		[SupportedOSPlatform ("macos10.12")]
-		[SupportedOSPlatform ("tvos10.0")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
-#else
-		[iOS (10,0)]
-		[Mac (10,12)]
-		[Watch (3,0)]
-		[TV (10,0)]
 #endif
 		public int? HorizontalInVerticalForms {
 			get {
@@ -355,15 +346,10 @@ namespace CoreText {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios11.0")]
-		[SupportedOSPlatform ("macos10.13")]
-		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
-#else
-		[iOS (11,0)]
-		[Mac (10,13)]
-		[TV (11,0)]
-		[Watch (4,0)]
 #endif
 		public float? BaselineOffset {
 			get { return Adapter.GetSingleValue (Dictionary, CTStringAttributeKey.BaselineOffset); }
@@ -375,12 +361,12 @@ namespace CoreText {
 				var h = CFDictionary.GetValue (Dictionary.Handle, CTStringAttributeKey.GlyphInfo.GetHandle ());
 				return h == IntPtr.Zero ? null : new CTGlyphInfo (h, false);
 			}
-			set {Adapter.SetNativeValue (Dictionary, CTStringAttributeKey.GlyphInfo!, value);}
+			set { Adapter.SetNativeValue (Dictionary, CTStringAttributeKey.GlyphInfo!, value); }
 		}
 
 		public int? CharacterShape {
-			get {return Adapter.GetInt32Value (Dictionary, CTStringAttributeKey.CharacterShape);}
-			set {Adapter.SetValue (Dictionary, CTStringAttributeKey.CharacterShape!, value);}
+			get { return Adapter.GetInt32Value (Dictionary, CTStringAttributeKey.CharacterShape); }
+			set { Adapter.SetValue (Dictionary, CTStringAttributeKey.CharacterShape!, value); }
 		}
 
 		public CTRunDelegate? RunDelegate {
@@ -388,7 +374,7 @@ namespace CoreText {
 				var h = CFDictionary.GetValue (Dictionary.Handle, CTStringAttributeKey.RunDelegate.GetHandle ());
 				return h == IntPtr.Zero ? null : new CTRunDelegate (h, false);
 			}
-			set {Adapter.SetNativeValue (Dictionary, CTStringAttributeKey.RunDelegate!, value);}
+			set { Adapter.SetNativeValue (Dictionary, CTStringAttributeKey.RunDelegate!, value); }
 		}
 
 		public CTBaselineClass? BaselineClass {
@@ -421,11 +407,11 @@ namespace CoreText {
 			Adapter.SetValue (dict, key!, new NSNumber (offset));
 
 			if (ptr == IntPtr.Zero)
-				Adapter.SetNativeValue (Dictionary, infoKey!, (INativeObject)dict);
+				Adapter.SetNativeValue (Dictionary, infoKey!, (INativeObject) dict);
 		}
 
 		// 'Value must be a CFArray of CFNumberRefs' - System/Library/Frameworks/CoreText.framework/Headers/CTStringAttributes.h
-		public void SetWritingDirection (params CTWritingDirection[] writingDirections)
+		public void SetWritingDirection (params CTWritingDirection [] writingDirections)
 		{
 			var ptrs = new NativeHandle [writingDirections.Length];
 			var numbers = new NSNumber [writingDirections.Length];

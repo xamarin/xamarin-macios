@@ -20,11 +20,11 @@ using MonoTests.System.Net.Http;
 
 
 namespace MonoTouchFixtures.CoreFoundation {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class ProxyTest {
-		
+
 		[Test]
 		public void Fields ()
 		{
@@ -36,8 +36,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 				Assert.That (Dlfcn.dlsym (lib, "kCFProxyAutoConfigurationHTTPResponseKey"), Is.EqualTo (IntPtr.Zero), "kCFProxyAutoConfigurationHTTPResponseKey");
 				// http://developer.apple.com/library/ios/documentation/CoreFoundation/Reference/CFProxySupport/Reference/reference.html#//apple_ref/doc/c_ref/kCFNetworkProxiesProxyAutoConfigJavaScript
 				Assert.That (Dlfcn.dlsym (lib, "kCFNetworkProxiesProxyAutoConfigJavaScript"), Is.EqualTo (IntPtr.Zero), "kCFNetworkProxiesProxyAutoConfigJavaScript");
-			}
-			finally {
+			} finally {
 				Dlfcn.dlclose (lib);
 			}
 		}
@@ -98,7 +97,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 			});
 			listener_thread.IsBackground = true;
 			listener_thread.Start ();
-			listening.WaitOne ();
+			Assert.IsTrue (listening.WaitOne (TimeSpan.FromSeconds (15)));
 		}
 
 		[OneTimeTearDown]
@@ -174,11 +173,10 @@ namespace MonoTouchFixtures.CoreFoundation {
 
 			var script = File.ReadAllText (pacPath);
 			var targetUri = NetworkResources.XamarinUri;
-			
+
 			Exception ex;
-			bool foundProxies;
 			// similar to the other tests, but we want to ensure that the async/await API works
-			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () => {
+			TestRuntime.RunAsync (TimeSpan.FromSeconds (30), async () => {
 				try {
 					CancellationTokenSource cancelSource = new CancellationTokenSource ();
 					CancellationToken cancelToken = cancelSource.Token;
@@ -218,9 +216,8 @@ namespace MonoTouchFixtures.CoreFoundation {
 			var targetUri = NetworkResources.MicrosoftUri;
 
 			Exception ex;
-			bool foundProxies;
 			// similar to the other tests, but we want to ensure that the async/await API works
-			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () => {
+			TestRuntime.RunAsync (TimeSpan.FromSeconds (30), async () => {
 				try {
 					CancellationTokenSource cancelSource = new CancellationTokenSource ();
 					CancellationToken cancelToken = cancelSource.Token;
@@ -289,9 +286,8 @@ namespace MonoTouchFixtures.CoreFoundation {
 			var targetUri = NetworkResources.XamarinUri;
 
 			Exception ex;
-			bool foundProxies;
 			// similar to the other tests, but we want to ensure that the async/await API works
-			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () => {
+			TestRuntime.RunAsync (TimeSpan.FromSeconds (30), async () => {
 				try {
 					CancellationTokenSource cancelSource = new CancellationTokenSource ();
 					CancellationToken cancelToken = cancelSource.Token;
@@ -328,9 +324,8 @@ namespace MonoTouchFixtures.CoreFoundation {
 			var targetUri = NetworkResources.MicrosoftUri;
 
 			Exception ex;
-			bool foundProxies;
 			// similar to the other tests, but we want to ensure that the async/await API works
-			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () => {
+			TestRuntime.RunAsync (TimeSpan.FromSeconds (30), async () => {
 				try {
 					CancellationTokenSource cancelSource = new CancellationTokenSource ();
 					CancellationToken cancelToken = cancelSource.Token;

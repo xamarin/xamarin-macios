@@ -18,11 +18,10 @@ using NUnit.Framework;
 using Xamarin.Utils;
 
 namespace MonoTouchFixtures.CoreMedia {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class SampleBufferTest
-	{
+	public class SampleBufferTest {
 		[Test]
 		public void CreateForImageBuffer ()
 		{
@@ -122,13 +121,15 @@ namespace MonoTouchFixtures.CoreMedia {
 					CMSampleBufferError sbe;
 					using (var sb = CMSampleBuffer.CreateForImageBuffer (pixelBuffer, true, desc, sampleTiming, out sbe)) {
 						int i = 0;
-						var result = sb.SetInvalidateCallback (delegate (CMSampleBuffer buffer) {
+						var result = sb.SetInvalidateCallback (delegate (CMSampleBuffer buffer)
+						{
 							i++;
 						});
 
 						// we cannot replace the (native) callback without getting an error (so we should not replace
 						// the managed one either, that would be confusing and make it hard to port code)
-						result = sb.SetInvalidateCallback (delegate (CMSampleBuffer buffer) {
+						result = sb.SetInvalidateCallback (delegate (CMSampleBuffer buffer)
+						{
 							i--;
 							Assert.AreSame (buffer, sb, "same");
 						});
@@ -151,7 +152,8 @@ namespace MonoTouchFixtures.CoreMedia {
 					CMSampleBufferError sbe;
 					using (var sb = CMSampleBuffer.CreateForImageBuffer (pixelBuffer, true, desc, sampleTiming, out sbe)) {
 						int i = 0;
-						var result = sb.SetInvalidateCallback (delegate (CMSampleBuffer buffer) {
+						var result = sb.SetInvalidateCallback (delegate (CMSampleBuffer buffer)
+						{
 							i++;
 							Assert.AreSame (buffer, sb, "same");
 						});
@@ -182,7 +184,8 @@ namespace MonoTouchFixtures.CoreMedia {
 						Assert.That (sb.SetInvalidateCallback (null), Is.EqualTo (CMSampleBufferError.None), "null");
 
 						int i = 0;
-						var result = sb.SetInvalidateCallback (delegate (CMSampleBuffer buffer) {
+						var result = sb.SetInvalidateCallback (delegate (CMSampleBuffer buffer)
+						{
 							i++;
 							Assert.AreSame (buffer, sb, "same");
 						});
@@ -209,7 +212,8 @@ namespace MonoTouchFixtures.CoreMedia {
 					CMSampleBufferError sbe;
 					using (var sb = CMSampleBuffer.CreateForImageBuffer (pixelBuffer, true, desc, sampleTiming, out sbe)) {
 						int i = 0;
-						var result = sb.CallForEachSample (delegate (CMSampleBuffer buffer, int index) {
+						var result = sb.CallForEachSample (delegate (CMSampleBuffer buffer, int index)
+						{
 							i++;
 							Assert.AreSame (buffer, sb, "same-1");
 							return CMSampleBufferError.CannotSubdivide;
@@ -217,7 +221,8 @@ namespace MonoTouchFixtures.CoreMedia {
 						Assert.That (result, Is.EqualTo (CMSampleBufferError.CannotSubdivide), "custom error");
 						Assert.That (i, Is.EqualTo (1), "1");
 
-						Assert.Throws<ArgumentNullException> (delegate {
+						Assert.Throws<ArgumentNullException> (delegate
+						{
 							sb.CallForEachSample (null);
 						}, "null");
 					}

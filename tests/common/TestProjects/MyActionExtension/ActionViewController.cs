@@ -5,10 +5,8 @@ using MobileCoreServices;
 using Foundation;
 using UIKit;
 
-namespace MyActionExtension
-{
-	public partial class ActionViewController : UIViewController
-	{
+namespace MyActionExtension {
+	public partial class ActionViewController : UIViewController {
 		public ActionViewController (IntPtr handle) : base (handle)
 		{
 		}
@@ -35,10 +33,12 @@ namespace MyActionExtension
 				foreach (var itemProvider in item.Attachments) {
 					if (itemProvider.HasItemConformingTo (UTType.Image)) {
 						// This is an image. We'll load it, then place it in our image view.
-						itemProvider.LoadItem (UTType.Image, null, delegate (NSObject image, NSError error) {
-							if (image != null) {
-								NSOperationQueue.MainQueue.AddOperation (delegate {
-									imageView.Image = (UIImage)image;
+						itemProvider.LoadItem (UTType.Image, null, delegate (NSObject image, NSError error)
+						{
+							if (image is not null) {
+								NSOperationQueue.MainQueue.AddOperation (delegate
+								{
+									imageView.Image = (UIImage) image;
 								});
 							}
 						});

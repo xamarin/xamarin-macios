@@ -47,21 +47,21 @@ namespace Foundation {
 
 	// The following constants where taken from MonoDevelop Carbon.cs MacInterop file
 	[NoiOS, NoTV, NoWatch]
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	public enum AEEventID : uint {
 		OpenApplication = 1868656752, // 'oapp'
 		ReopenApplication = 1918988400, //'rapp'
 		OpenDocuments = 1868853091, // 'odoc'
 		PrintDocuments = 188563030, // 'pdoc'
 		OpenContents = 1868787566, // 'ocon'
-		QuitApplication =  1903520116, // 'quit'
+		QuitApplication = 1903520116, // 'quit'
 		ShowPreferences = 1886545254, // 'pref'
 		ApplicationDied = 1868720500, // 'obit'
 		GetUrl = 1196773964, // 'GURL'
 	}
 
 	[NoiOS, NoTV, NoWatch]
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	public enum AEEventClass : uint {
 		Mouse = 1836021107, // 'mous'
 		Keyboard = 1801812322, // 'keyb'
@@ -96,11 +96,10 @@ namespace Foundation {
 		AdditionalActionClicked = 4
 	}
 
-	[Mac (10,11)]
 	[NoiOS, NoTV, NoWatch, NoMacCatalyst]
-	[Native][Flags]
-	public enum NSAppleEventSendOptions : ulong
-	{
+	[Native]
+	[Flags]
+	public enum NSAppleEventSendOptions : ulong {
 		NoReply = 0x00000001, // kAENoReply,
 		QueueReply = 0x00000002, // kAEQueueReply,
 		WaitForReply = 0x00000003, // kAEWaitReply,

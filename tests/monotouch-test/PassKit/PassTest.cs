@@ -17,7 +17,7 @@ using PassKit;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.PassKit {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class PassTest {

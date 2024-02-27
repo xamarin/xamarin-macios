@@ -1,9 +1,7 @@
 using System;
 
-namespace Xamarin.iOS.UnitTests
-{
-	public enum MinimumLogLevel
-	{
+namespace Xamarin.iOS.UnitTests {
+	public enum MinimumLogLevel {
 		Critical,
 		Error,
 		Warning,

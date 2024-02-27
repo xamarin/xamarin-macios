@@ -18,13 +18,10 @@ namespace MetalKit {
 #if !COREBUILD
 
 #if NET
-	[SupportedOSPlatform ("ios9.0")]
-	[SupportedOSPlatform ("macos10.11")]
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("tvos")]
-#else
-	[iOS (9,0)]
-	[Mac (10,11)]
 #endif
 	public partial class MTKTextureLoaderOptions : DictionaryContainer {
 
@@ -32,12 +29,12 @@ namespace MetalKit {
 			get {
 				var val = GetNUIntValue (MTKTextureLoaderKeys.TextureUsageKey);
 				if (val is not null)
-					return (MTLTextureUsage)(uint) val;
+					return (MTLTextureUsage) (uint) val;
 				return null;
 			}
 			set {
 				if (value.HasValue)
-					SetNumberValue (MTKTextureLoaderKeys.TextureUsageKey, (nuint)(uint)value.Value);
+					SetNumberValue (MTKTextureLoaderKeys.TextureUsageKey, (nuint) (uint) value.Value);
 				else
 					RemoveValue (MTKTextureLoaderKeys.TextureUsageKey);
 			}
@@ -47,49 +44,43 @@ namespace MetalKit {
 			get {
 				var val = GetNUIntValue (MTKTextureLoaderKeys.TextureCpuCacheModeKey);
 				if (val is not null)
-					return (MTLCpuCacheMode)(uint) val;
+					return (MTLCpuCacheMode) (uint) val;
 				return null;
 			}
 			set {
 				if (value.HasValue)
-					SetNumberValue (MTKTextureLoaderKeys.TextureCpuCacheModeKey, (nuint)(uint)value.Value);
+					SetNumberValue (MTKTextureLoaderKeys.TextureCpuCacheModeKey, (nuint) (uint) value.Value);
 				else
 					RemoveValue (MTKTextureLoaderKeys.TextureCpuCacheModeKey);
 			}
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios10.0")]
-		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (10,0)]
-		[Mac (10,12)]
 #endif
 		public MTLStorageMode? TextureStorageMode {
 			get {
 				var val = GetNUIntValue (MTKTextureLoaderKeys.TextureStorageModeKey);
 				if (val is not null)
-					return (MTLStorageMode)(uint) val;
+					return (MTLStorageMode) (uint) val;
 				return null;
 			}
 			set {
 				if (value.HasValue)
-					SetNumberValue (MTKTextureLoaderKeys.TextureStorageModeKey, (nuint)(uint)value.Value);
+					SetNumberValue (MTKTextureLoaderKeys.TextureStorageModeKey, (nuint) (uint) value.Value);
 				else
 					RemoveValue (MTKTextureLoaderKeys.TextureStorageModeKey);
 			}
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios10.0")]
-		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (10,0)]
-		[Mac (10,12)]
 #endif
 		public MTKTextureLoaderCubeLayout? CubeLayout {
 			get {
@@ -107,13 +98,10 @@ namespace MetalKit {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios10.0")]
-		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (10,0)]
-		[Mac (10,12)]
 #endif
 		public MTKTextureLoaderOrigin? Origin {
 			get {

@@ -4,7 +4,7 @@ using Mono.Cecil;
 using System.Text;
 using Mono.Collections.Generic;
 
-# nullable disable
+#nullable disable
 
 // This is based upon portions of these files from the MonoMod.Common project:
 //   https://github.com/MonoMod/MonoMod.Common/blob/093ef864257b2eb332ef727e389c2679d98c594e/Utils/Extensions.Cecil.cs
@@ -35,220 +35,225 @@ using Mono.Collections.Generic;
 // SOFTWARE.
 
 namespace MonoMod.Utils {
-    static partial class Extensions {
+	static partial class Extensions {
 
-        /// <summary>
-        /// Get the "patch name" - the name of the target to patch - for the given member.
-        /// </summary>
-        /// <param name="mr">The member to get the patch name for.</param>
-        /// <returns>The patch name.</returns>
-        public static string GetPatchFullName(this MemberReference mr) {
-            return (mr as ICustomAttributeProvider)?.GetPatchFullName(mr) ?? mr.FullName;
-        }
+		/// <summary>
+		/// Get the "patch name" - the name of the target to patch - for the given member.
+		/// </summary>
+		/// <param name="mr">The member to get the patch name for.</param>
+		/// <returns>The patch name.</returns>
+		public static string GetPatchFullName (this MemberReference mr)
+		{
+			return (mr as ICustomAttributeProvider)?.GetPatchFullName (mr) ?? mr.FullName;
+		}
 
-        private static string GetPatchName(this ICustomAttributeProvider cap) {
-            string name;
+		private static string GetPatchName (this ICustomAttributeProvider cap)
+		{
+			string name;
 
-            CustomAttribute patchAttrib = cap.GetCustomAttribute("MonoMod.MonoModPatch");
-            if (patchAttrib != null) {
-                name = (string) patchAttrib.ConstructorArguments[0].Value;
-                int dotIndex = name.LastIndexOf('.');
-                if (dotIndex != -1 && dotIndex != name.Length - 1) {
-                    name = name.Substring(dotIndex + 1);
-                }
-                return name;
-            }
+			CustomAttribute patchAttrib = cap.GetCustomAttribute ("MonoMod.MonoModPatch");
+			if (patchAttrib is not null) {
+				name = (string) patchAttrib.ConstructorArguments [0].Value;
+				int dotIndex = name.LastIndexOf ('.');
+				if (dotIndex != -1 && dotIndex != name.Length - 1) {
+					name = name.Substring (dotIndex + 1);
+				}
+				return name;
+			}
 
-            // Backwards-compatibility: Check for patch_
-            name = ((MemberReference) cap).Name;
-            return name.StartsWith("patch_", StringComparison.Ordinal) ? name.Substring(6) : name;
-        }
+			// Backwards-compatibility: Check for patch_
+			name = ((MemberReference) cap).Name;
+			return name.StartsWith ("patch_", StringComparison.Ordinal) ? name.Substring (6) : name;
+		}
 
-        private static string GetPatchFullName(this ICustomAttributeProvider cap, MemberReference mr) {
-            if (cap is TypeReference type) {
-                CustomAttribute patchAttrib = cap.GetCustomAttribute("MonoMod.MonoModPatch");
-                string name;
+		private static string GetPatchFullName (this ICustomAttributeProvider cap, MemberReference mr)
+		{
+			if (cap is TypeReference type) {
+				CustomAttribute patchAttrib = cap.GetCustomAttribute ("MonoMod.MonoModPatch");
+				string name;
 
-                if (patchAttrib != null) {
-                    name = (string) patchAttrib.ConstructorArguments[0].Value;
-                } else {
-                    // Backwards-compatibility: Check for patch_
-                    name = ((MemberReference) cap).Name;
-                    name = name.StartsWith("patch_", StringComparison.Ordinal) ? name.Substring(6) : name;
-                }
+				if (patchAttrib is not null) {
+					name = (string) patchAttrib.ConstructorArguments [0].Value;
+				} else {
+					// Backwards-compatibility: Check for patch_
+					name = ((MemberReference) cap).Name;
+					name = name.StartsWith ("patch_", StringComparison.Ordinal) ? name.Substring (6) : name;
+				}
 
-                if (name.StartsWith("global::", StringComparison.Ordinal))
-                    name = name.Substring(8); // Patch name is refering to a global type.
-                else if (name.Contains(".", StringComparison.Ordinal) || name.Contains("/", StringComparison.Ordinal)) { } // Patch name is already a full name.
-                else if (!string.IsNullOrEmpty(type.Namespace))
-                    name = type.Namespace + "." + name;
-                else if (type.IsNested)
-                    name = type.DeclaringType.GetPatchFullName() + "/" + name;
+				if (name.StartsWith ("global::", StringComparison.Ordinal))
+					name = name.Substring (8); // Patch name is refering to a global type.
+				else if (name.Contains (".", StringComparison.Ordinal) || name.Contains ("/", StringComparison.Ordinal)) { } // Patch name is already a full name.
+				else if (!string.IsNullOrEmpty (type.Namespace))
+					name = type.Namespace + "." + name;
+				else if (type.IsNested)
+					name = type.DeclaringType.GetPatchFullName () + "/" + name;
 
-                if (mr is TypeSpecification) {
-                    // Collect TypeSpecifications and append formats back to front.
-                    List<TypeSpecification> formats = new List<TypeSpecification>();
-                    TypeSpecification ts = (TypeSpecification) mr;
-                    do {
-                        formats.Add(ts);
-                    } while ((ts = (ts.ElementType as TypeSpecification)) != null);
+				if (mr is TypeSpecification) {
+					// Collect TypeSpecifications and append formats back to front.
+					List<TypeSpecification> formats = new List<TypeSpecification> ();
+					TypeSpecification ts = (TypeSpecification) mr;
+					do {
+						formats.Add (ts);
+					} while ((ts = (ts.ElementType as TypeSpecification)) is not null);
 
-                    StringBuilder builder = new StringBuilder(name.Length + formats.Count * 4);
-                    builder.Append(name);
-                    for (int formati = formats.Count - 1; formati > -1; --formati) {
-                        ts = formats[formati];
+					StringBuilder builder = new StringBuilder (name.Length + formats.Count * 4);
+					builder.Append (name);
+					for (int formati = formats.Count - 1; formati > -1; --formati) {
+						ts = formats [formati];
 
-                        if (ts.IsByReference)
-                            builder.Append("&");
-                        else if (ts.IsPointer)
-                            builder.Append("*");
-                        else if (ts.IsPinned) { } // FullName not overriden.
-                        else if (ts.IsSentinel) { } // FullName not overriden.
-                        else if (ts.IsArray) {
-                            ArrayType array = (ArrayType) ts;
-                            if (array.IsVector)
-                                builder.Append("[]");
-                            else {
-                                builder.Append("[");
-                                for (int i = 0; i < array.Dimensions.Count; i++) {
-                                    if (i > 0)
-                                        builder.Append(",");
-                                    builder.Append(array.Dimensions[i].ToString());
-                                }
-                                builder.Append("]");
-                            }
-                        } else if (ts.IsRequiredModifier)
-                            builder.Append("modreq(").Append(((RequiredModifierType) ts).ModifierType).Append(")");
-                        else if (ts.IsOptionalModifier)
-                            builder.Append("modopt(").Append(((OptionalModifierType) ts).ModifierType).Append(")");
-                        else if (ts.IsGenericInstance) {
-                            GenericInstanceType gen = (GenericInstanceType) ts;
-                            builder.Append("<");
-                            for (int i = 0; i < gen.GenericArguments.Count; i++) {
-                                if (i > 0)
-                                    builder.Append(",");
-                                builder.Append(gen.GenericArguments[i].GetPatchFullName());
-                            }
-                            builder.Append(">");
-                        } else if (ts.IsFunctionPointer) {
-                            FunctionPointerType fpt = (FunctionPointerType) ts;
-                            builder.Append(" ").Append(fpt.ReturnType.GetPatchFullName()).Append(" *(");
-                            if (fpt.HasParameters)
-                                for (int i = 0; i < fpt.Parameters.Count; i++) {
-                                    ParameterDefinition parameter = fpt.Parameters[i];
-                                    if (i > 0)
-                                        builder.Append(",");
+						if (ts.IsByReference)
+							builder.Append ("&");
+						else if (ts.IsPointer)
+							builder.Append ("*");
+						else if (ts.IsPinned) { } // FullName not overriden.
+						else if (ts.IsSentinel) { } // FullName not overriden.
+						else if (ts.IsArray) {
+							ArrayType array = (ArrayType) ts;
+							if (array.IsVector)
+								builder.Append ("[]");
+							else {
+								builder.Append ("[");
+								for (int i = 0; i < array.Dimensions.Count; i++) {
+									if (i > 0)
+										builder.Append (",");
+									builder.Append (array.Dimensions [i].ToString ());
+								}
+								builder.Append ("]");
+							}
+						} else if (ts.IsRequiredModifier)
+							builder.Append ("modreq(").Append (((RequiredModifierType) ts).ModifierType).Append (")");
+						else if (ts.IsOptionalModifier)
+							builder.Append ("modopt(").Append (((OptionalModifierType) ts).ModifierType).Append (")");
+						else if (ts.IsGenericInstance) {
+							GenericInstanceType gen = (GenericInstanceType) ts;
+							builder.Append ("<");
+							for (int i = 0; i < gen.GenericArguments.Count; i++) {
+								if (i > 0)
+									builder.Append (",");
+								builder.Append (gen.GenericArguments [i].GetPatchFullName ());
+							}
+							builder.Append (">");
+						} else if (ts.IsFunctionPointer) {
+							FunctionPointerType fpt = (FunctionPointerType) ts;
+							builder.Append (" ").Append (fpt.ReturnType.GetPatchFullName ()).Append (" *(");
+							if (fpt.HasParameters)
+								for (int i = 0; i < fpt.Parameters.Count; i++) {
+									ParameterDefinition parameter = fpt.Parameters [i];
+									if (i > 0)
+										builder.Append (",");
 
-                                    if (parameter.ParameterType.IsSentinel)
-                                        builder.Append("...,");
+									if (parameter.ParameterType.IsSentinel)
+										builder.Append ("...,");
 
-                                    builder.Append(parameter.ParameterType.FullName);
-                                }
-                            builder.Append(")");
-                        } else
-                            throw new NotSupportedException($"MonoMod can't handle TypeSpecification: {type.FullName} ({type.GetType()})");
-                    }
+									builder.Append (parameter.ParameterType.FullName);
+								}
+							builder.Append (")");
+						} else
+							throw new NotSupportedException ($"MonoMod can't handle TypeSpecification: {type.FullName} ({type.GetType ()})");
+					}
 
-                    name = builder.ToString();
-                }
+					name = builder.ToString ();
+				}
 
-                return name;
-            }
+				return name;
+			}
 
-            if (cap is FieldReference field) {
-                return $"{field.FieldType.GetPatchFullName()} {field.DeclaringType.GetPatchFullName()}::{cap.GetPatchName()}";
-            }
+			if (cap is FieldReference field) {
+				return $"{field.FieldType.GetPatchFullName ()} {field.DeclaringType.GetPatchFullName ()}::{cap.GetPatchName ()}";
+			}
 
-            if (cap is MethodReference)
-                throw new InvalidOperationException("GetPatchFullName not supported on MethodReferences - use GetID instead");
+			if (cap is MethodReference)
+				throw new InvalidOperationException ("GetPatchFullName not supported on MethodReferences - use GetID instead");
 
-            throw new InvalidOperationException($"GetPatchFullName not supported on type {cap.GetType()}");
-        }
+			throw new InvalidOperationException ($"GetPatchFullName not supported on type {cap.GetType ()}");
+		}
 
-        /// <summary>
-        /// Get a reference ID that is similar to the full name, but consistent between System.Reflection and Mono.Cecil.
-        /// </summary>
-        /// <param name="method">The method to get the ID for.</param>
-        /// <param name="name">The name to use instead of the reference's own name.</param>
-        /// <param name="type">The ID to use instead of the reference's declaring type ID.</param>
-        /// <param name="withType">Whether the type ID should be included or not. System.Reflection avoids it by default.</param>
-        /// <param name="simple">Whether the ID should be "simple" (name only).</param>
-        /// <returns>The ID.</returns>
-        public static string GetID(this MethodReference method, string name = null, string type = null, bool withType = true, bool simple = false) {
-            StringBuilder builder = new StringBuilder();
+		/// <summary>
+		/// Get a reference ID that is similar to the full name, but consistent between System.Reflection and Mono.Cecil.
+		/// </summary>
+		/// <param name="method">The method to get the ID for.</param>
+		/// <param name="name">The name to use instead of the reference's own name.</param>
+		/// <param name="type">The ID to use instead of the reference's declaring type ID.</param>
+		/// <param name="withType">Whether the type ID should be included or not. System.Reflection avoids it by default.</param>
+		/// <param name="simple">Whether the ID should be "simple" (name only).</param>
+		/// <returns>The ID.</returns>
+		public static string GetID (this MethodReference method, string name = null, string type = null, bool withType = true, bool simple = false)
+		{
+			StringBuilder builder = new StringBuilder ();
 
-            if (simple) {
-                if (withType && (type != null || method.DeclaringType != null))
-                    builder.Append(type ?? method.DeclaringType.GetPatchFullName()).Append("::");
-                builder.Append(name ?? method.Name);
-                return builder.ToString();
-            }
+			if (simple) {
+				if (withType && (type is not null || method.DeclaringType is not null))
+					builder.Append (type ?? method.DeclaringType.GetPatchFullName ()).Append ("::");
+				builder.Append (name ?? method.Name);
+				return builder.ToString ();
+			}
 
-            builder
-                .Append(method.ReturnType.GetPatchFullName())
-                .Append(" ");
+			builder
+				.Append (method.ReturnType.GetPatchFullName ())
+				.Append (" ");
 
-            if (withType && (type != null || method.DeclaringType != null))
-                builder.Append(type ?? method.DeclaringType.GetPatchFullName()).Append("::");
+			if (withType && (type is not null || method.DeclaringType is not null))
+				builder.Append (type ?? method.DeclaringType.GetPatchFullName ()).Append ("::");
 
-            builder
-                .Append(name ?? method.Name);
+			builder
+				.Append (name ?? method.Name);
 
-            if (method is GenericInstanceMethod gim && gim.GenericArguments.Count != 0) {
-                builder.Append("<");
-                Collection<TypeReference> arguments = gim.GenericArguments;
-                for (int i = 0; i < arguments.Count; i++) {
-                    if (i > 0)
-                        builder.Append(",");
-                    builder.Append(arguments[i].GetPatchFullName());
-                }
-                builder.Append(">");
+			if (method is GenericInstanceMethod gim && gim.GenericArguments.Count != 0) {
+				builder.Append ("<");
+				Collection<TypeReference> arguments = gim.GenericArguments;
+				for (int i = 0; i < arguments.Count; i++) {
+					if (i > 0)
+						builder.Append (",");
+					builder.Append (arguments [i].GetPatchFullName ());
+				}
+				builder.Append (">");
 
-            } else if (method.GenericParameters.Count != 0) {
-                builder.Append("<");
-                Collection<GenericParameter> arguments = method.GenericParameters;
-                for (int i = 0; i < arguments.Count; i++) {
-                    if (i > 0)
-                        builder.Append(",");
-                    builder.Append(arguments[i].Name);
-                }
-                builder.Append(">");
-            }
+			} else if (method.GenericParameters.Count != 0) {
+				builder.Append ("<");
+				Collection<GenericParameter> arguments = method.GenericParameters;
+				for (int i = 0; i < arguments.Count; i++) {
+					if (i > 0)
+						builder.Append (",");
+					builder.Append (arguments [i].Name);
+				}
+				builder.Append (">");
+			}
 
-            builder.Append("(");
+			builder.Append ("(");
 
-            if (method.HasParameters) {
-                Collection<ParameterDefinition> parameters = method.Parameters;
-                for (int i = 0; i < parameters.Count; i++) {
-                    ParameterDefinition parameter = parameters[i];
-                    if (i > 0)
-                        builder.Append(",");
+			if (method.HasParameters) {
+				Collection<ParameterDefinition> parameters = method.Parameters;
+				for (int i = 0; i < parameters.Count; i++) {
+					ParameterDefinition parameter = parameters [i];
+					if (i > 0)
+						builder.Append (",");
 
-                    if (parameter.ParameterType.IsSentinel)
-                        builder.Append("...,");
+					if (parameter.ParameterType.IsSentinel)
+						builder.Append ("...,");
 
-                    builder.Append(parameter.ParameterType.GetPatchFullName());
-                }
-            }
+					builder.Append (parameter.ParameterType.GetPatchFullName ());
+				}
+			}
 
-            builder.Append(")");
+			builder.Append (")");
 
-            return builder.ToString();
-        }
+			return builder.ToString ();
+		}
 
-        /// <summary>
-        /// Get a certain custom attribute from an attribute provider.
-        /// </summary>
-        /// <param name="cap">The attribute provider.</param>
-        /// <param name="attribute">The custom attribute name.</param>
-        /// <returns>The first matching custom attribute, or null if no matching attribute has been found.</returns>
-        public static CustomAttribute GetCustomAttribute(this ICustomAttributeProvider cap, string attribute) {
-            if (cap == null || !cap.HasCustomAttributes)
-                return null;
-            foreach (CustomAttribute attrib in cap.CustomAttributes)
-                if (attrib.AttributeType.FullName == attribute)
-                    return attrib;
-            return null;
-        }
-    }
+		/// <summary>
+		/// Get a certain custom attribute from an attribute provider.
+		/// </summary>
+		/// <param name="cap">The attribute provider.</param>
+		/// <param name="attribute">The custom attribute name.</param>
+		/// <returns>The first matching custom attribute, or null if no matching attribute has been found.</returns>
+		public static CustomAttribute GetCustomAttribute (this ICustomAttributeProvider cap, string attribute)
+		{
+			if (cap is null || !cap.HasCustomAttributes)
+				return null;
+			foreach (CustomAttribute attrib in cap.CustomAttributes)
+				if (attrib.AttributeType.FullName == attribute)
+					return attrib;
+			return null;
+		}
+	}
 }

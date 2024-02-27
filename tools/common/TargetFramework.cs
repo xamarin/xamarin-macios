@@ -14,7 +14,7 @@ using System.Linq;
 
 namespace Xamarin.Utils {
 	public struct TargetFramework : IEquatable<TargetFramework> {
-		const string TFMVersion = "6.0";
+		const string TFMVersion = Xamarin.DotNetVersions.Version;
 		public const string DotNet_iOS_String = ".NETCoreApp,Version=" + TFMVersion + ",Profile=ios"; // Short form: netX.Y-ios
 		public const string DotNet_tvOS_String = ".NETCoreApp,Version=" + TFMVersion + ",Profile=tvos"; // Short form: netX.Y-tvos
 		public const string DotNet_watchOS_String = ".NETCoreApp,Version=" + TFMVersion + ",Profile=watchos"; // Short form: netX.Y-watchos
@@ -30,7 +30,8 @@ namespace Xamarin.Utils {
 		public static readonly TargetFramework Xamarin_Mac_2_0 = Parse ("Xamarin.Mac,v2.0");
 
 		public static readonly TargetFramework Xamarin_iOS_1_0 = Parse ("Xamarin.iOS,v1.0");
-		public static readonly TargetFramework Xamarin_WatchOS_1_0 = Parse ("Xamarin.WatchOS,v1.0");
+		public const string Xamarin_WatchOS_1_0_String = "Xamarin.WatchOS,v1.0";
+		public static readonly TargetFramework Xamarin_WatchOS_1_0 = Parse (Xamarin_WatchOS_1_0_String);
 		public static readonly TargetFramework Xamarin_TVOS_1_0 = Parse ("Xamarin.TVOS,v1.0");
 		public static readonly TargetFramework Xamarin_MacCatalyst_1_0 = Parse ("Xamarin.MacCatalyst,v1.0");
 
@@ -137,7 +138,7 @@ namespace Xamarin.Utils {
 				return false;
 
 			// If we got a profile, then the 'Profile=' part is mandatory.
-			if (profile != null) {
+			if (profile is not null) {
 				if (!profile.StartsWith ("Profile=", StringComparison.Ordinal))
 					return false;
 
@@ -165,7 +166,7 @@ namespace Xamarin.Utils {
 
 		public TargetFramework (string identifier, Version version, string profile = null)
 		{
-			this.identifier = identifier != null ? identifier.Trim () : null;
+			this.identifier = identifier is not null ? identifier.Trim () : null;
 			this.version = version;
 			this.profile = profile;
 		}
@@ -195,11 +196,11 @@ namespace Xamarin.Utils {
 		public override int GetHashCode ()
 		{
 			var hash = 0;
-			if (Identifier != null)
+			if (Identifier is not null)
 				hash ^= Identifier.ToLowerInvariant ().GetHashCode ();
-			if (Version != null)
+			if (Version is not null)
 				hash ^= Version.GetHashCode ();
-			if (Profile != null)
+			if (Profile is not null)
 				hash ^= Profile.GetHashCode ();
 			return hash;
 		}
@@ -212,7 +213,7 @@ namespace Xamarin.Utils {
 			else if (String.Equals (id, "Xamarin.Mac", StringComparison.OrdinalIgnoreCase))
 				id = "Xamarin.Mac";
 
-			return String.Format ("{0},Version=v{1}{2}", id, Version == null ? "0.0" : Version.ToString (), Profile == null ? string.Empty : (",Profile=" + Profile));
+			return String.Format ("{0},Version=v{1}{2}", id, Version is null ? "0.0" : Version.ToString (), Profile is null ? string.Empty : (",Profile=" + Profile));
 		}
 
 		public ApplePlatform Platform {

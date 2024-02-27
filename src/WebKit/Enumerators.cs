@@ -1,3 +1,5 @@
+#if __MACOS__
+
 #nullable enable
 
 using System;
@@ -15,12 +17,14 @@ namespace WebKit {
 	}
 
 	internal class IndexedContainerEnumerator<T> : IEnumerator<T> {
-		public IndexedContainerEnumerator (IIndexedContainer<T> container) {
+		public IndexedContainerEnumerator (IIndexedContainer<T> container)
+		{
 			_container = container;
 			Reset ();
 		}
 
-		public void Dispose () {
+		public void Dispose ()
+		{
 			_container = null;
 		}
 
@@ -36,13 +40,15 @@ namespace WebKit {
 			get { return ((IEnumerator<T>) this).Current; }
 		}
 
-		public bool MoveNext () {
+		public bool MoveNext ()
+		{
 			if (_container is null)
 				throw new ObjectDisposedException (nameof (_container));
 			return ++_index < _container.Count;
 		}
 
-		public void Reset () {
+		public void Reset ()
+		{
 			_index = -1;
 		}
 
@@ -51,72 +57,88 @@ namespace WebKit {
 	}
 
 	public partial class DomCssRuleList : IIndexedContainer<DomCssRule>, IEnumerable<DomCssRule> {
-		public IEnumerator<DomCssRule> GetEnumerator () {
+		public IEnumerator<DomCssRule> GetEnumerator ()
+		{
 			return new IndexedContainerEnumerator<DomCssRule> (this);
 		}
 
-		IEnumerator IEnumerable.GetEnumerator () {
+		IEnumerator IEnumerable.GetEnumerator ()
+		{
 			return ((IEnumerable<DomCssRule>) this).GetEnumerator ();
 		}
 	}
 
 	public partial class DomCssStyleDeclaration : IIndexedContainer<string>, IEnumerable<string> {
-		public IEnumerator<string> GetEnumerator () {
+		public IEnumerator<string> GetEnumerator ()
+		{
 			return new IndexedContainerEnumerator<string> (this);
 		}
 
-		IEnumerator IEnumerable.GetEnumerator () {
+		IEnumerator IEnumerable.GetEnumerator ()
+		{
 			return ((IEnumerable<string>) this).GetEnumerator ();
 		}
 	}
 
 	public partial class DomHtmlCollection : IIndexedContainer<DomNode>, IEnumerable<DomNode> {
-		public IEnumerator<DomNode> GetEnumerator () {
+		public IEnumerator<DomNode> GetEnumerator ()
+		{
 			return new IndexedContainerEnumerator<DomNode> (this);
 		}
 
-		IEnumerator IEnumerable.GetEnumerator () {
+		IEnumerator IEnumerable.GetEnumerator ()
+		{
 			return ((IEnumerable<DomNode>) this).GetEnumerator ();
 		}
 	}
 
 	public partial class DomMediaList : IIndexedContainer<string>, IEnumerable<string> {
-		public IEnumerator<string> GetEnumerator () {
+		public IEnumerator<string> GetEnumerator ()
+		{
 			return new IndexedContainerEnumerator<string> (this);
 		}
 
-		IEnumerator IEnumerable.GetEnumerator () {
+		IEnumerator IEnumerable.GetEnumerator ()
+		{
 			return ((IEnumerable<string>) this).GetEnumerator ();
 		}
 	}
 
 	public partial class DomNamedNodeMap : IIndexedContainer<DomNode>, IEnumerable<DomNode> {
-		public IEnumerator<DomNode> GetEnumerator () {
+		public IEnumerator<DomNode> GetEnumerator ()
+		{
 			return new IndexedContainerEnumerator<DomNode> (this);
 		}
 
-		IEnumerator IEnumerable.GetEnumerator () {
+		IEnumerator IEnumerable.GetEnumerator ()
+		{
 			return ((IEnumerable<DomNode>) this).GetEnumerator ();
 		}
 	}
 
 	public partial class DomNodeList : IIndexedContainer<DomNode>, IEnumerable<DomNode> {
-		public IEnumerator<DomNode> GetEnumerator () {
+		public IEnumerator<DomNode> GetEnumerator ()
+		{
 			return new IndexedContainerEnumerator<DomNode> (this);
 		}
 
-		IEnumerator IEnumerable.GetEnumerator () {
+		IEnumerator IEnumerable.GetEnumerator ()
+		{
 			return ((IEnumerable<DomNode>) this).GetEnumerator ();
 		}
 	}
 
 	public partial class DomStyleSheetList : IIndexedContainer<DomStyleSheet>, IEnumerable<DomStyleSheet> {
-		public IEnumerator<DomStyleSheet> GetEnumerator () {
+		public IEnumerator<DomStyleSheet> GetEnumerator ()
+		{
 			return new IndexedContainerEnumerator<DomStyleSheet> (this);
 		}
 
-		IEnumerator IEnumerable.GetEnumerator () {
+		IEnumerator IEnumerable.GetEnumerator ()
+		{
 			return ((IEnumerable<DomStyleSheet>) this).GetEnumerator ();
 		}
 	}
 }
+
+#endif // __MACOS__

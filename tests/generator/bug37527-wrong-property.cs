@@ -12,14 +12,14 @@ namespace Test {
 	[Protocol]
 	public interface SharedDelegate {
 	}
+	public interface ISharedDelegate { }
 
-	[BaseType (typeof (NSObject), Delegates=new string [] {"WeakDelegate"}, Events=new Type [] {typeof (SharedDelegate)})]
-	public interface TestWrongPropertyName{
+	[BaseType (typeof (NSObject), Delegates = new string [] { "WeakDelegate" }, Events = new Type [] { typeof (SharedDelegate) })]
+	public interface TestWrongPropertyName {
 		[Export ("delegate", ArgumentSemantic.Assign), NullAllowed]
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		SharedDelegate TestProperty { get; set; }
+		ISharedDelegate TestProperty { get; set; }
 	}
 }

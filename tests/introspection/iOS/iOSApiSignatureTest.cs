@@ -17,7 +17,7 @@ using Foundation;
 using UIKit;
 
 namespace Introspection {
-	
+
 	[TestFixture]
 	// we want the tests to be available because we use the linker
 	[Preserve (AllMembers = true)]
@@ -104,7 +104,7 @@ namespace Introspection {
 		protected override bool Check (char encodedType, Type type)
 		{
 			// return an error if null (instead of throwing) so we can continue execution
-			if (type == null)
+			if (type is null)
 				return false;
 
 			switch (encodedType) {

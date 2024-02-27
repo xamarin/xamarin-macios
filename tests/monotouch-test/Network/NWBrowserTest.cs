@@ -27,7 +27,7 @@ namespace MonoTouchFixtures.Network {
 		public void SetUp ()
 		{
 			descriptor = NWBrowserDescriptor.CreateBonjourService (type, domain);
-			using (var parameters = new NWParameters { IncludePeerToPeer = true})
+			using (var parameters = new NWParameters { IncludePeerToPeer = true })
 				browser = new NWBrowser (descriptor);
 			browser.SetDispatchQueue (DispatchQueue.DefaultGlobalQueue);
 		}
@@ -63,7 +63,8 @@ namespace MonoTouchFixtures.Network {
 		}
 
 		[Test]
-		public void TestStartNoQ () {
+		public void TestStartNoQ ()
+		{
 			using (var newBrowser = new NWBrowser (descriptor))
 				Assert.Throws<InvalidOperationException> (() => newBrowser.Start ());
 		}
@@ -86,14 +87,15 @@ namespace MonoTouchFixtures.Network {
 			bool eventsDone = false;
 			bool listeningDone = false;
 			Exception ex = null;
+			NWError? errorState = null;
 			var changesEvent = new AutoResetEvent (false);
 			var browserReady = new AutoResetEvent (false);
 			var finalEvent = new AutoResetEvent (false);
-			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () => {
+			TestRuntime.RunAsync (TimeSpan.FromSeconds (30), () => {
 				// start the browser, before the listener
 				browser.SetStateChangesHandler ((st, er) => {
 					// assert here with a `st` of `Fail`
-					Assert.IsNull (er, "Error");
+					errorState ??= er;
 					if (st == NWBrowserState.Ready)
 						browserReady.Set ();
 				});
@@ -104,7 +106,7 @@ namespace MonoTouchFixtures.Network {
 #endif
 					didRun = true;
 					try {
-						receivedNotNullChange = oldResult != null || newResult != null;
+						receivedNotNullChange = oldResult is not null || newResult is not null;
 					} catch (Exception e) {
 						ex = e;
 					} finally {
@@ -136,7 +138,7 @@ namespace MonoTouchFixtures.Network {
 						// we need the connection handler, else we will get an exception
 						listener.SetNewConnectionHandler ((c) => { });
 						listener.SetStateChangedHandler ((s, e) => {
-							if (e != null) {
+							if (e is not null) {
 								Console.WriteLine ($"Got error {e.ErrorCode} {e.ErrorDomain} '{e.CFError.FailureReason}' {e.ToString ()}");
 							}
 						});
@@ -151,6 +153,7 @@ namespace MonoTouchFixtures.Network {
 			}, () => eventsDone);
 
 			finalEvent.WaitOne (30000);
+			Assert.IsNull (errorState, "Error");
 			Assert.IsTrue (eventsDone, "eventDone");
 			Assert.IsTrue (listeningDone, "listeningDone");
 			Assert.IsNull (ex, "Exception");

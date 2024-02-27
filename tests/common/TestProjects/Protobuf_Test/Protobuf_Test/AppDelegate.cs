@@ -5,10 +5,8 @@ using AppKit;
 using ProtoBuf;
 using System.IO;
 
-namespace Protobuf_Test
-{
-	public partial class AppDelegate : NSApplicationDelegate
-	{
+namespace Protobuf_Test {
+	public partial class AppDelegate : NSApplicationDelegate {
 		public AppDelegate ()
 		{
 		}
@@ -22,25 +20,26 @@ namespace Protobuf_Test
 	static class ProtoTest {
 		[ProtoContract]
 		class Person {
-			[ProtoMember(1)]
-			public int Id {get;set;}
-			[ProtoMember(2)]
-			public string Name { get; set;}
-			[ProtoMember(3)]
-			public Address Address {get;set;}
+			[ProtoMember (1)]
+			public int Id { get; set; }
+			[ProtoMember (2)]
+			public string Name { get; set; }
+			[ProtoMember (3)]
+			public Address Address { get; set; }
 		}
 		[ProtoContract]
 		class Address {
-			[ProtoMember(1)]
-			public string Line1 {get;set;}
-			[ProtoMember(2)]
-			public string Line2 {get;set;}
+			[ProtoMember (1)]
+			public string Line1 { get; set; }
+			[ProtoMember (2)]
+			public string Line2 { get; set; }
 		}
 
 		public static void DoTest ()
 		{
 			var person = new Person {
-				Id = 12345, Name = "Fred",
+				Id = 12345,
+				Name = "Fred",
 				Address = new Address {
 					Line1 = "Flat 1",
 					Line2 = "The Meadows"

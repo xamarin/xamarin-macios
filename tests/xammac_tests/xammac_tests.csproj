@@ -14,7 +14,8 @@
     <LangVersion>latest</LangVersion>
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
     <RootTestsDirectory>..</RootTestsDirectory>
-    <CompilerResponseFile>$(RootTestsDirectory)\..\src\build\macos-defines.rsp</CompilerResponseFile>
+    <CompilerResponseFile>$(RootTestsDirectory)\..\src\rsp\macos-defines.rsp</CompilerResponseFile>
+    <MonoBundlingExtraArgs>$(MonoBundlingExtraArgs) --marshal-objectivec-exceptions:throwmanagedexception</MonoBundlingExtraArgs>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -39,29 +40,6 @@
     <CodeSignEntitlements>Entitlements.plist</CodeSignEntitlements>
     <CodeSignProvision>Automatic</CodeSignProvision>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'DebugARM64|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\arm64\Debug</OutputPath>
-    <DefineConstants>DEBUG;MONOMAC;XAMMAC_TESTS</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>0</WarningLevel>
-    <EnableCodeSigning>false</EnableCodeSigning>
-    <CreatePackage>false</CreatePackage>
-    <EnablePackageSigning>false</EnablePackageSigning>
-    <IncludeMonoRuntime>false</IncludeMonoRuntime>
-    <HttpClientHandler>HttpClientHandler</HttpClientHandler>
-    <TlsProvider>Default</TlsProvider>
-    <LinkMode>None</LinkMode>
-    <XamMacArch>ARM64</XamMacArch>
-    <CodeSigningKey>Mac Developer</CodeSigningKey>
-    <PackageSigningKey>3rd Party Mac Developer Installer</PackageSigningKey>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <CodeSignEntitlements>Entitlements.plist</CodeSignEntitlements>
-    <CodeSignProvision>Automatic</CodeSignProvision>
-    <MmpDebug>true</MmpDebug>
-  </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Optimize>true</Optimize>
     <OutputPath>bin\x86\Release</OutputPath>
@@ -77,23 +55,6 @@
     <TlsProvider>Default</TlsProvider>
     <LinkMode>None</LinkMode>
     <XamMacArch>x86_64</XamMacArch>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'ReleaseARM64|AnyCPU' ">
-    <Optimize>true</Optimize>
-    <OutputPath>bin\arm64\Release</OutputPath>
-    <DefineConstants>MONOMAC;XAMMAC_TESTS</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>0</WarningLevel>
-    <EnableCodeSigning>false</EnableCodeSigning>
-    <CreatePackage>false</CreatePackage>
-    <EnablePackageSigning>false</EnablePackageSigning>
-    <IncludeMonoRuntime>false</IncludeMonoRuntime>
-    <UseSGen>false</UseSGen>
-    <HttpClientHandler>HttpClientHandler</HttpClientHandler>
-    <TlsProvider>Default</TlsProvider>
-    <LinkMode>None</LinkMode>
-    <XamMacArch>ARM64</XamMacArch>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
@@ -120,17 +81,20 @@
     <Compile Include="..\common\TestRuntime.cs">
       <Link>TestRuntime.cs</Link>
     </Compile>
+    <Compile Include="..\common\TestRuntime.RunAsync.cs">
+      <Link>TestRuntime.RunAsync.cs</Link>
+    </Compile>
     <Compile Include="..\common\Extensions.cs">
       <Link>Extensions.cs</Link>
     </Compile>
     <Compile Include="..\common\mac\MacMain.cs">
       <Link>MacMain.cs</Link>
     </Compile>
-    <Compile Include="..\common\mac\TestRuntime.macos.cs">
-      <Link>TestRuntime.macos.cs</Link>
-    </Compile>
     <Compile Include="..\common\ExecutionHelper.cs">
       <Link>ExecutionHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\common\TestAssemblyLoader.cs">
+      <Link>TestAssemblyLoader.cs</Link>
     </Compile>
     <Compile Include="..\api-shared\ObjCRuntime\RegistrarTest.cs">
       <Link>api-shared\ObjCRuntime\RegistrarTest.cs</Link>
@@ -163,6 +127,9 @@
     </Compile>
     <Compile Include="..\..\tools\common\ApplePlatform.cs">
       <Link>ApplePlatform.cs</Link>
+    </Compile>
+    <Compile Include="..\..\tools\common\SdkVersions.cs">
+      <Link>SdkVersions.cs</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -210,6 +177,9 @@
     <Content Include="..\monotouch-test\basn3p08.png">
       <Link>basn3p08.png</Link>
     </Content>
+        <Content Include="..\monotouch-test\basn3p08_with_loc.png">
+      <Link>basn3p08_with_loc.png</Link>
+    </Content>
     <Content Include="..\monotouch-test\AudioToolbox\1.caf">
       <Link>AudioToolbox\1.caf</Link>
     </Content>
@@ -243,6 +213,9 @@
     <Content Include="..\monotouch-test\Resources\square.gif">
       <Link>Resources\square.gif</Link>
     </Content>
+    <Content Include="..\monotouch-test\Resources\full_body.jpg">
+      <Link>Resources\full_body.jpg</Link>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Metal Include="..\monotouch-test\Resources\metal-sample.metal">
@@ -264,6 +237,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="..\EmbeddedResources\Welcome.es.resx">
       <Link>EmbeddedResources\Welcome.es.resx</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\monotouch-test\Resources\Welcome.resx">
+      <LogicalName>monotouchtest.Welcome.resources</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\monotouch-test\Resources\Welcome.en-AU.resx">
+      <LogicalName>monotouchtest.Welcome.en-AU.resources</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\monotouch-test\Resources\Welcome.es.resx">
+      <LogicalName>monotouchtest.Welcome.es.resources</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\monotouch-test\Resources\Welcome.de.resx">
+      <LogicalName>monotouchtest.Welcome.de.resources</LogicalName>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -312,7 +297,7 @@
   </Target>
   <Target Name="BeforeBuild" Inputs="@(GeneratedTestInput)" Outputs="@(GeneratedTestOutput)" DependsOnTargets="CustomMetalSmelting"
       Condition="!Exists('$(TestLibrariesDirectory)/.libs/macos/custom-type-assembly.dll') Or !Exists('$(TestLibrariesDirectory)/.libs/dotnet/macos/custom-type-assembly.dll')" >
-    <Exec Command="make -j8 -C $(TestLibrariesDirectory)" EnvironmentVariables="MSBUILD_EXE_PATH=;MSBuildSDKsPath="/>
-    <Exec Command="make -j8 -C $(TestLibrariesDirectory)/custom-type-assembly build-assembly" EnvironmentVariables="MSBUILD_EXE_PATH=;MSBuildSDKsPath="/>
+    <Exec Command="make -j8 -C $(TestLibrariesDirectory)" EnvironmentVariables="MSBUILD_EXE_PATH=;MSBuildSDKsPath=" Condition="'$(BUILD_REVISION)' == ''" />
+    <Exec Command="make -j8 -C $(TestLibrariesDirectory)/custom-type-assembly build-assembly" EnvironmentVariables="MSBUILD_EXE_PATH=;MSBuildSDKsPath=" Condition="'$(BUILD_REVISION)' == ''"/>
   </Target>
 </Project>

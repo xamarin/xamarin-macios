@@ -6,12 +6,10 @@ using NUnit.Framework;
 using AppKit;
 using Foundation;
 
-namespace Xamarin.Mac.Tests
-{
+namespace Xamarin.Mac.Tests {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class NSTableViewTests
-	{
+	public class NSTableViewTests {
 		[Test]
 		public void NSTableView_DelegateDataSourceNull ()
 		{

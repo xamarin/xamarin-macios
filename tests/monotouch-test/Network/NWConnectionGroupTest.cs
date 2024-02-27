@@ -22,7 +22,7 @@ namespace MonoTouchFixtures.Network {
 
 		[SetUp]
 		public void SetUp ()
-		{ 
+		{
 			TestRuntime.AssertXcodeVersion (12, TestRuntime.MinorXcode12APIMismatch);
 			endpoint = NWEndpoint.Create ("224.0.0.251", "5353");
 			parameters = NWParameters.CreateUdp ();
@@ -42,7 +42,7 @@ namespace MonoTouchFixtures.Network {
 			connectionGroup?.Dispose ();
 			connectionGroup = null;
 		}
-		
+
 		[Test]
 		public void GroupDescriptorTest ()
 			=> Assert.NotNull (connectionGroup.GroupDescriptor);
@@ -69,7 +69,7 @@ namespace MonoTouchFixtures.Network {
 				connectionGroup.GetProtocolMetadata (context);
 			});
 		}
-		
+
 		[Test]
 		public void GetProtocolMetadataContextDefinitionTest ()
 		{
@@ -79,13 +79,13 @@ namespace MonoTouchFixtures.Network {
 				connectionGroup.GetProtocolMetadata (context);
 			});
 		}
-		
+
 		[Test]
 		public void ExtractConnectionTest ()
 		{
 			TestRuntime.AssertXcodeVersion (13, 0);
 			Assert.DoesNotThrow (() => {
-				connectionGroup.ExtractConnection (endpoint, new NWProtocolTcpOptions());
+				connectionGroup.ExtractConnection (endpoint, new NWProtocolTcpOptions ());
 			});
 		}
 
@@ -94,15 +94,15 @@ namespace MonoTouchFixtures.Network {
 		{
 			TestRuntime.AssertXcodeVersion (13, 0);
 			Assert.DoesNotThrow (() => {
-				var conn = connectionGroup.ExtractConnection (endpoint, new NWProtocolTcpOptions());
+				var conn = connectionGroup.ExtractConnection (endpoint, new NWProtocolTcpOptions ());
 				if (conn is not null) {
 					connectionGroup.TryReinsertExtractedConnection (conn);
 				}
 			});
 		}
-		
+
 		[Test]
-		public void SetNewConnectionHandlerTest()
+		public void SetNewConnectionHandlerTest ()
 		{
 			TestRuntime.AssertXcodeVersion (13, 0);
 			Assert.DoesNotThrow (() => {

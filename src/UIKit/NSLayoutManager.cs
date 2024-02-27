@@ -31,22 +31,22 @@ namespace UIKit {
 #endif
 	partial class NSLayoutManager {
 		public unsafe nuint GetGlyphs (
-			NSRange glyphRange, 
-			short[] /* CGGlyph* = CGFontIndex* = unsigned short* */ glyphBuffer,
-			NSGlyphProperty[] /* NSGlyphProperty* = nint* */ props,
-			nuint[] /* NSUInteger */ charIndexBuffer,
-			byte[] /* (unsigned char *) */ bidiLevelBuffer)
+			NSRange glyphRange,
+			short [] /* CGGlyph* = CGFontIndex* = unsigned short* */ glyphBuffer,
+			NSGlyphProperty [] /* NSGlyphProperty* = nint* */ props,
+			nuint [] /* NSUInteger */ charIndexBuffer,
+			byte [] /* (unsigned char *) */ bidiLevelBuffer)
 		{
-			if (glyphBuffer != null && glyphBuffer.Length < glyphRange.Length)
+			if (glyphBuffer is not null && glyphBuffer.Length < glyphRange.Length)
 				throw new ArgumentOutOfRangeException (string.Format ("glyphBuffer must have at least {0} elements", glyphRange.Length));
 
-			if (props != null && props.Length < glyphRange.Length)
-				throw new ArgumentOutOfRangeException (string.Format ("props must have at least {0} elements", glyphRange.Length));
-			
-			if (charIndexBuffer != null && charIndexBuffer.Length < glyphRange.Length)
+			if (props is not null && props.Length < glyphRange.Length)
 				throw new ArgumentOutOfRangeException (string.Format ("props must have at least {0} elements", glyphRange.Length));
 
-			if (bidiLevelBuffer != null && bidiLevelBuffer.Length < glyphRange.Length)
+			if (charIndexBuffer is not null && charIndexBuffer.Length < glyphRange.Length)
+				throw new ArgumentOutOfRangeException (string.Format ("props must have at least {0} elements", glyphRange.Length));
+
+			if (bidiLevelBuffer is not null && bidiLevelBuffer.Length < glyphRange.Length)
 				throw new ArgumentOutOfRangeException (string.Format ("bidiLevelBuffer must have at least {0} elements", glyphRange.Length));
 
 			fixed (short* glyphs = glyphBuffer) {
@@ -54,13 +54,13 @@ namespace UIKit {
 #if ARCH_32
 				// Unified/32: the output array is not the correct size, it needs to be int[], and it's an array of NSGlyphProperty (which is long)
 				nint[] tmpArray = null;
-				if (props != null)
+				if (props is not null)
 					tmpArray = new nint [props.Length];
 #else
 				// Unified/64 + Classic: the input array is the correct size
 				var tmpArray = props;
 #endif
-				fixed (void *properties = tmpArray) {
+				fixed (void* properties = tmpArray) {
 					fixed (nuint* charIBuffer = charIndexBuffer) {
 						fixed (byte* bidi = bidiLevelBuffer) {
 							rv = GetGlyphs (glyphRange, (IntPtr) glyphs, (IntPtr) properties, (IntPtr) charIBuffer, (IntPtr) bidi);
@@ -69,7 +69,7 @@ namespace UIKit {
 				}
 #if ARCH_32
 				// Marshal back from the tmpArray.
-				if (tmpArray != null) {
+				if (tmpArray is not null) {
 					for (int i = 0; i < props.Length; i++)
 						props [i] = (NSGlyphProperty) (long) tmpArray [i];
 				}
@@ -93,8 +93,8 @@ namespace UIKit {
 		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use the 'ShowGlyphs' overload that takes 'nint glyphCount' instead.")]
 		public unsafe void ShowCGGlyphs (
 #endif // MONOMAC
-			short[] /* const CGGlyph* = CGFontIndex* = unsigned short* */ glyphs,
-			CGPoint[] /* const CGPoint* */ positions,
+			short [] /* const CGGlyph* = CGFontIndex* = unsigned short* */ glyphs,
+			CGPoint [] /* const CGPoint* */ positions,
 			nuint /* NSUInteger */ glyphCount,
 			UIFont font,
 			CGAffineTransform textMatrix,
@@ -111,14 +111,13 @@ namespace UIKit {
 
 #if NET
 		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios13.0")]
-		[SupportedOSPlatform ("maccatalyst13.1")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (6,0)]
-		[TV (13,0)]
-		[Mac (10,15)]
-		[iOS (13,0)]
+		[Watch (6, 0)]
+		[TV (13, 0)]
+		[iOS (13, 0)]
 #endif
 		public unsafe void ShowGlyphs (
 			short [] /* const CGGlyph* = CGFontIndex* = unsigned short* */ glyphs,
@@ -143,7 +142,7 @@ namespace UIKit {
 		{
 			return GetTextContainer (glyphIndex);
 		}
-		
+
 		[Obsolete ("Use 'GetTextContainer' instead.")]
 		public NSTextContainer TextContainerForGlyphAtIndex (nuint glyphIndex, ref NSRange effectiveGlyphRange)
 		{
@@ -188,7 +187,7 @@ namespace UIKit {
 		{
 			return GetGlyphRange (charRange, out actualCharRange);
 		}
-		
+
 		// CharacterRangeForGlyphRange
 		[Obsolete ("Use 'GetCharacterRange' instead.")]
 		public NSRange CharacterRangeForGlyphRange (NSRange charRange)
@@ -204,7 +203,7 @@ namespace UIKit {
 #endif // !NET && !MONOMAC
 
 		public unsafe nuint GetLineFragmentInsertionPoints (
-			nuint /* NSUInteger */ charIndex, 
+			nuint /* NSUInteger */ charIndex,
 			bool /* BOOL */ alternatePosition,
 			bool /* BOOL */ inDisplayOrder,
 			nfloat [] /* CGFloat* */ positions,
@@ -216,10 +215,10 @@ namespace UIKit {
 
 					// I can't find an API to check this before the call :(
 
-					if (positions != null && (ulong) positions.Length < (ulong) rv)
+					if (positions is not null && (ulong) positions.Length < (ulong) rv)
 						throw new ArgumentException (string.Format ("Memory corruption: the 'positions' array was not big enough to hold the number of insertion points. {0} insertion points were returned, while the array's Length is only {1}", rv, positions.Length));
 
-					if (charIndexes != null && (ulong) charIndexes.Length < (ulong) rv)
+					if (charIndexes is not null && (ulong) charIndexes.Length < (ulong) rv)
 						throw new ArgumentException (string.Format ("Memory corruption: the 'charIndexes' array was not big enough to hold the number of insertion points. {0} insertion points were returned, while the array's Length is only {1}", rv, charIndexes.Length));
 
 					return rv;

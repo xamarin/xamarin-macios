@@ -1,19 +1,25 @@
-#if MONOMAC
+#if MONOMAC || IOS
 
 #nullable enable
 
 using System;
+using System.ComponentModel;
 using System.Runtime.InteropServices;
 using ObjCRuntime;
 
 namespace FileProvider {
 
+#if !(XAMCORE_5_0 && __MACCATALYST__)
+
 #if NET
 	[SupportedOSPlatform ("macos12.0")]
-	[UnsupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("ios16.0")]
 	[UnsupportedOSPlatform ("maccatalyst")]
+#if __MACCATALYST__
+	[EditorBrowsable (EditorBrowsableState.Never)]
+#endif
 #else
-	[NoiOS]
+	[iOS (16,0)]
 	[NoMacCatalyst]
 	[Mac (12,0)]
 #endif
@@ -31,6 +37,8 @@ namespace FileProvider {
 			=> Runtime.ToFourCCString (Creator);
 #endif
 	}
+
+#endif // !(XAMCORE_5_0 && __MACCATALYST__)
 
 }
 #endif

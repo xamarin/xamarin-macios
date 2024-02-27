@@ -5,6 +5,8 @@ using Mono.Cecil;
 
 using Xamarin.Linker;
 
+#nullable enable
+
 namespace Xamarin {
 
 	public class GatherFrameworksStep : ConfigurationAwareStep {
@@ -40,20 +42,20 @@ namespace Xamarin {
 			// Write out the frameworks we found and pass them to the MSBuild tasks
 			var items = new List<MSBuildItem> ();
 			foreach (var fw in Frameworks.OrderBy (v => v)) {
-				items.Add (new MSBuildItem {
-					Include = fw,
-					Metadata = {
+				items.Add (new MSBuildItem (
+					fw,
+					new Dictionary<string, string> {
 						{ "IsWeak", "false" },
-					},
-				});
+					}
+				));
 			}
 			foreach (var fw in WeakFrameworks.OrderBy (v => v)) {
-				items.Add (new MSBuildItem {
-					Include = fw,
-					Metadata = {
+				items.Add (new MSBuildItem (
+					fw,
+					new Dictionary<string, string> {
 						{ "IsWeak", "true" },
-					},
-				});
+					}
+				));
 			}
 
 			Configuration.WriteOutputForMSBuild ("_LinkerFrameworks", items);

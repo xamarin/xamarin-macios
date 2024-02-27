@@ -41,7 +41,7 @@ namespace CoreText {
 		public static Exception Unknown (object self)
 		{
 			GC.SuppressFinalize (self);
-			var message = string.Format ("Unable to create {0} instance.", self.GetType().Name);
+			var message = string.Format ("Unable to create {0} instance.", self.GetType ().Name);
 			return new ArgumentException (message);
 		}
 	}

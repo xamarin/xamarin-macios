@@ -19,7 +19,7 @@ namespace Social {
 	public partial class SLRequest {
 		internal static NSString KindToType (SLServiceKind kind)
 		{
-			switch (kind){
+			switch (kind) {
 			case SLServiceKind.Facebook:
 				return SLServiceType.Facebook;
 			case SLServiceKind.Twitter:
@@ -36,7 +36,7 @@ namespace Social {
 				throw new ArgumentOutOfRangeException (nameof (kind));
 			}
 		}
-		
+
 		public static SLRequest Create (SLServiceKind serviceKind, SLRequestMethod method, NSUrl url, NSDictionary parameters)
 		{
 			return Create (KindToType (serviceKind), method, url, parameters);

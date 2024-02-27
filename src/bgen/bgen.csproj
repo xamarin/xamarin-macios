@@ -2,9 +2,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net$(BundledNETCoreAppTargetFrameworkVersion)</TargetFramework>
     <OutputType>Exe</OutputType>
     <DefineConstants>DEBUG;BGENERATOR;NET_4_0;NO_AUTHENTICODE;STATIC;NO_SYMBOL_WRITER;NET</DefineConstants>
+    <!-- help macios developers debug the generator during a build -->
+    <DefineConstants Condition="'$(XAMMACIOS_DEBUGGER)' != ''">$(DefineConstants);XAMMACIOS_DEBUGGER</DefineConstants>
+    <WarningsAsErrors>Nullable</WarningsAsErrors>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
@@ -25,14 +29,7 @@
     <None Include="$(RepositoryPath)\docs\website\generator-errors.md">
       <Link>generator-errors.md</Link>
     </None>
-    <Compile Include="$(RepositoryPath)\src\btouch.cs" />
     <Compile Include="$(RepositoryPath)\src\error.cs" />
-    <Compile Include="$(RepositoryPath)\src\generator.cs" />
-    <Compile Include="$(RepositoryPath)\src\generator-attributes.cs" />
-    <Compile Include="$(RepositoryPath)\src\generator-attribute-manager.cs" />
-    <Compile Include="$(RepositoryPath)\src\generator-enums.cs" />
-    <Compile Include="$(RepositoryPath)\src\generator-filters.cs" />
-    <Compile Include="$(RepositoryPath)\src\generator-typemanager.cs" />
     <Compile Include="$(RepositoryPath)\src\ObjCRuntime\Stret.cs" />
     <Compile Include="$(RepositoryPath)\tools\common\ApplePlatform.cs" />
     <Compile Include="$(RepositoryPath)\tools\common\TargetFramework.cs" />
@@ -121,6 +118,16 @@
     <StartWorkingDirectory>..</StartWorkingDirectory>
     <ExternalConsole>false</ExternalConsole>
     <EnvironmentVariables>
+      <Variable name="XamarinMacFrameworkRoot" value="../../_mac-build/Library/Frameworks/Xamarin.Mac.framework/Versions/Current" />
+    </EnvironmentVariables>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'maccatalyst' ">
+    <StartAction>Project</StartAction>
+    <StartArguments>@build/dotnet/$(RunConfiguration)/$(RunConfiguration).rsp</StartArguments>
+    <StartWorkingDirectory>..</StartWorkingDirectory>
+    <ExternalConsole>false</ExternalConsole>
+    <EnvironmentVariables>
+      <Variable name="MD_MTOUCH_SDK_ROOT" value="../../_ios-build//Library/Frameworks/Xamarin.iOS.framework/Versions/git" />
       <Variable name="XamarinMacFrameworkRoot" value="../../_mac-build/Library/Frameworks/Xamarin.Mac.framework/Versions/Current" />
     </EnvironmentVariables>
   </PropertyGroup>

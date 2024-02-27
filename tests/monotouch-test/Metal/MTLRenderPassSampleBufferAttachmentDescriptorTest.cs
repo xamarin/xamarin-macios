@@ -31,7 +31,7 @@ namespace MonoTouchFixtures.Metal {
 
 		[Test]
 		public void SampleBufferTest ()
-		{ 
+		{
 
 			Assert.DoesNotThrow (() => {
 				descriptor.SampleBuffer = null; // we are testing if the property works, so setting to null does test the selector
@@ -39,7 +39,7 @@ namespace MonoTouchFixtures.Metal {
 			Assert.DoesNotThrow (() => {
 				using var f = descriptor.SampleBuffer;
 			}, "Getter");
-		} 
+		}
 
 		[Test]
 		public void StartOfVertexSampleIndexTest ()
@@ -58,7 +58,7 @@ namespace MonoTouchFixtures.Metal {
 
 		[Test]
 		public void EndOfVertexSampleIndexTest ()
-		{ 
+		{
 			nuint newIndex = 10;
 			nuint objIndex = 0;
 
@@ -73,7 +73,7 @@ namespace MonoTouchFixtures.Metal {
 
 		[Test]
 		public void StartOfFragmentSampleIndexTest ()
-		{ 
+		{
 			nuint newIndex = 10;
 			nuint objIndex = 0;
 
@@ -88,7 +88,7 @@ namespace MonoTouchFixtures.Metal {
 
 		[Test]
 		public void EndOfFragmentSampleIndexTest ()
-		{ 
+		{
 			nuint newIndex = 10;
 			nuint objIndex = 0;
 

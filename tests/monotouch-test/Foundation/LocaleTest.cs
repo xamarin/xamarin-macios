@@ -18,11 +18,11 @@ using UIKit;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.Foundation {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class LocaleTest {
-		
+
 		[Test]
 		public void CurrentLocale ()
 		{
@@ -37,13 +37,18 @@ namespace MonoTouchFixtures.Foundation {
 			string ident = NSLocale.CurrentLocale.Identifier;
 			Assert.That (NSLocale.FromLocaleIdentifier (ident).Identifier, Is.EqualTo (ident), "FromLocaleIdentifier");
 		}
-		
+
 		[Test]
 		public void InitRegionInfo ()
 		{
 			string name = NSLocale.CurrentLocale.CountryCode; // two letter code
-			// Handle manually set locale (without country) in iOS Simulator (plist) - ref bug #18520
-			if (name == null)
+															  // Handle manually set locale (without country) in iOS Simulator (plist) - ref bug #18520
+			if (TestRuntime.CheckXcodeVersion (15, 0)) {
+				// got deprecated and do not longer return a valid two letter code
+				Assert.Ignore ("Deprecated in xcode15 and does not longer return a valid value.");
+			}
+
+			if (name is null)
 				Assert.Inconclusive ("You can construct locale without countries");
 			RegionInfo ri = new RegionInfo (name);
 			Assert.That (ri.Name, Is.EqualTo (name), "Name");
@@ -64,7 +69,11 @@ namespace MonoTouchFixtures.Foundation {
 			using (NSLocale en = new NSLocale ("en-US")) {
 				Assert.That (en.AlternateQuotationBeginDelimiterKey, Is.EqualTo ("‘"), "AlternateQuotationBeginDelimiterKey");
 				Assert.That (en.AlternateQuotationEndDelimiterKey, Is.EqualTo ("’"), "AlternateQuotationEndDelimiterKey");
-				Assert.Null (en.CollationIdentifier, "CollationIdentifier");
+				if (TestRuntime.CheckXcodeVersion (15, 0)) {
+					Assert.That (en.CollationIdentifier, Is.EqualTo ("standard"), "CollationIdentifier");
+				} else {
+					Assert.Null (en.CollationIdentifier, "CollationIdentifier");
+				}
 				Assert.That (en.CollatorIdentifier, Is.EqualTo ("en-US"), "CollatorIdentifier");
 				Assert.That (en.CountryCode, Is.EqualTo ("US"), "CountryCode");
 				Assert.That (en.CurrencyCode, Is.EqualTo ("USD"), "CurrencyCode");

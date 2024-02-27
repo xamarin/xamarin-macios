@@ -41,7 +41,8 @@ namespace MonoTouchFixtures {
 		[Test]
 		public void NoRetainCyclesExpectedTest ()
 		{
-			var thread = new Thread (delegate () {
+			var thread = new Thread (delegate ()
+			{
 				MyParentView.weakcount = 0;
 				for (int i = 0; i < totalTestObjects; i++) {
 					var parent = new MyParentView (useWeak: true);
@@ -57,7 +58,7 @@ namespace MonoTouchFixtures {
 			GC.WaitForPendingFinalizers ();
 			GC.WaitForPendingFinalizers ();
 
-			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), () => { }, () => MyParentView.weakcount < totalTestObjects);
+			TestRuntime.RunAsync (TimeSpan.FromSeconds (30), () => { }, () => MyParentView.weakcount < totalTestObjects);
 			Assert.That (MyParentView.weakcount, Is.LessThan (totalTestObjects), "No retain cycles expected");
 		}
 
@@ -78,7 +79,7 @@ namespace MonoTouchFixtures {
 			Assert.That (MyParentView.noweakcount, Is.EqualTo (totalTestObjects), "Retain cycles expected");
 
 			for (int i = 0; i < totalTestObjects; i++) {
-				using (var parent = Runtime.GetNSObject<MyParentView> (cache[i])) {
+				using (var parent = Runtime.GetNSObject<MyParentView> (cache [i])) {
 					var child = (MyButton) parent.Children [0];
 					child.RemoveStrongRef ();
 				}

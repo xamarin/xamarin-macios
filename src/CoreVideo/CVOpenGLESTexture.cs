@@ -28,13 +28,10 @@ namespace CoreVideo {
 
 	// CVOpenGLESTexture.h
 #if NET
-	[UnsupportedOSPlatform ("tvos12.0")]
-	[UnsupportedOSPlatform ("ios12.0")]
-#if TVOS
-	[Obsolete ("Starting with tvos12.0 use 'CVMetalTexture' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-	[Obsolete ("Starting with ios12.0 use 'CVMetalTexture' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+	[SupportedOSPlatform ("tvos")]
+	[SupportedOSPlatform ("ios")]
+	[ObsoletedOSPlatform ("tvos12.0", "Use 'CVMetalTexture' instead.")]
+	[ObsoletedOSPlatform ("ios12.0", "Use 'CVMetalTexture' instead.")]
 #else
 	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'CVMetalTexture' instead.")]
 	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'CVMetalTexture' instead.")]
@@ -120,7 +117,7 @@ namespace CoreVideo {
 			upperLeft = new float [2];
 
 			unsafe {
-				fixed (float *ll = &lowerLeft[0], lr = &lowerRight [0], ur = &upperRight [0], ul = &upperLeft[0]){
+				fixed (float *ll = lowerLeft, lr = lowerRight, ur = upperRight, ul = upperLeft){
 					CVOpenGLESTextureGetCleanTexCoords (handle, (IntPtr) ll, (IntPtr) lr, (IntPtr) ur, (IntPtr) ul);
 				}
 			}

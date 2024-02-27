@@ -10,12 +10,13 @@ namespace NetworkExtension {
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos17.0")]
 #endif
 	public class NEVpnConnectionStartOptions : DictionaryContainer {
 
 #if !COREBUILD
-		public NEVpnConnectionStartOptions () : base (new NSMutableDictionary ()) {}
-		public NEVpnConnectionStartOptions (NSDictionary dictionary) : base (dictionary) {}
+		public NEVpnConnectionStartOptions () : base (new NSMutableDictionary ()) { }
+		public NEVpnConnectionStartOptions (NSDictionary dictionary) : base (dictionary) { }
 
 		public NSString? Username {
 			get {

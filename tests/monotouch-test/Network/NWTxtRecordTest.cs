@@ -7,12 +7,10 @@ using Network;
 
 using NUnit.Framework;
 
-namespace MonoTouchFixtures.Network
-{
+namespace MonoTouchFixtures.Network {
 	[TestFixture]
-	[Preserve(AllMembers = true)]
-	public class NWTxtRecordTest
-	{
+	[Preserve (AllMembers = true)]
+	public class NWTxtRecordTest {
 		NWTxtRecord record;
 		string randomKey = "MyData";
 
@@ -24,7 +22,7 @@ namespace MonoTouchFixtures.Network
 		public void SetUp ()
 		{
 			record = NWTxtRecord.CreateDictionary ();
-			record.Add (randomKey, new byte[3] { 0, 0, 0 });
+			record.Add (randomKey, new byte [3] { 0, 0, 0 });
 		}
 
 		[Test]
@@ -56,7 +54,7 @@ namespace MonoTouchFixtures.Network
 		[Test]
 		public void TestAddByteValue ()
 		{
-			var data = new byte [] {10, 20, 30, 40};
+			var data = new byte [] { 10, 20, 30, 40 };
 			var mySecondKey = "secondKey";
 			Assert.True (record.Add (mySecondKey, data), "Add");
 			Assert.AreEqual (NWTxtRecordFindKey.NonEmptyValue, record.FindKey (mySecondKey));
@@ -111,7 +109,7 @@ namespace MonoTouchFixtures.Network
 		public void TestApply ()
 		{
 			// fill the txt with several keys to be iterated
-			var keys = new List<string> {"first", "second", "third", randomKey};
+			var keys = new List<string> { "first", "second", "third", randomKey };
 			foreach (var key in keys) {
 				record.Add (key, key);
 			}
@@ -167,7 +165,7 @@ namespace MonoTouchFixtures.Network
 				}
 			);
 			e.WaitOne ();
-			
+
 		}
 	}
 }

@@ -6,14 +6,12 @@ using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
-namespace MauiForms
-{
-    public partial class MainPage : ContentPage
-    {
-        public MainPage()
-        {
-            InitializeComponent();
-        }
-    }
+namespace MauiForms {
+	public partial class MainPage : ContentPage {
+		public MainPage ()
+		{
+			InitializeComponent ();
+		}
+	}
 }
 

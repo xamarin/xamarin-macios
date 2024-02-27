@@ -1,0 +1,5 @@
+# CoreMIDI not supported for watch in Xcode14
+!missing-enum! MIDINotificationMessageID not bound
+!missing-enum! MIDIObjectType not bound
+!missing-enum! MIDITransformControlType not bound
+!missing-enum! MIDITransformType not bound

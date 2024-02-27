@@ -7,7 +7,7 @@ MONO_BRANCH    := $(shell cd $(MONO_PATH) 2> /dev/null && git symbolic-ref --sho
 endif
 
 ifdef ENABLE_XAMARIN
-NEEDED_MACCORE_VERSION := 9a347bd708eb0ef975cf52cefdb23cb3a83d2690
+NEEDED_MACCORE_VERSION := 79ae2e4e7ef27f43975579b3ac4e0caa199494d6
 NEEDED_MACCORE_BRANCH := main
 
 MACCORE_DIRECTORY := maccore
@@ -18,7 +18,7 @@ endif
 
 # Available versions can be seen here:
 # https://dev.azure.com/dnceng/public/_artifacts/feed/dotnet-eng/NuGet/Microsoft.Tools.Mlaunch/versions
-MLAUNCH_NUGET_VERSION=1.0.1
+MLAUNCH_NUGET_VERSION=1.0.95
 
 define CheckVersionTemplate
 check-$(1)::

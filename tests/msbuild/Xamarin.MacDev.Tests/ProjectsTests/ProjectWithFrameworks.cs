@@ -9,7 +9,7 @@ namespace Xamarin.MacDev.Tasks {
 	[TestFixture ("iPhone")]
 	[TestFixture ("iPhoneSimulator")]
 	public class ProjectWithFrameworksTests : ExtensionTestBase {
-		public ProjectWithFrameworksTests (string platform) : base (platform)      
+		public ProjectWithFrameworksTests (string platform) : base (platform)
 		{
 		}
 

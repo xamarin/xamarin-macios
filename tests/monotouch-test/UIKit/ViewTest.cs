@@ -12,11 +12,11 @@ using NUnit.Framework;
 using Xamarin.Utils;
 
 namespace MonoTouchFixtures.UIKit {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class ViewTest {
-		
+
 		[Test]
 		public void InitWithFrame ()
 		{
@@ -57,7 +57,7 @@ namespace MonoTouchFixtures.UIKit {
 				Assert.True (v.SizeThatFits (empty).IsEmpty, "Empty");
 			}
 		}
-		
+
 		[Test]
 		public void Convert_Null ()
 		{
@@ -68,23 +68,23 @@ namespace MonoTouchFixtures.UIKit {
 				Assert.That (v.ConvertRectToView (CGRect.Empty, null), Is.EqualTo (CGRect.Empty), "ConvertRectToView");
 			}
 		}
-		
+
 		// Apple does not allow NULL on 'animations' parameters used in animate* and transition* selectors
-		
+
 		void Completion ()
 		{
 		}
-		
+
 		void CompletionHandler (bool finished)
 		{
 		}
-		
+
 		[Test]
 		public void Animate_Null_a1 ()
 		{
 			Assert.Throws<ArgumentNullException> (() => UIView.Animate (1.0, null));
 		}
-		
+
 		[Test]
 		public void Animate_Null_a2 ()
 		{
@@ -102,13 +102,13 @@ namespace MonoTouchFixtures.UIKit {
 		{
 			Assert.Throws<ArgumentNullException> (() => UIView.AnimateNotify (1.0, null, CompletionHandler));
 		}
-		
+
 		[Test]
 		public void AnimateNotify_Null_a2 ()
 		{
 			Assert.Throws<ArgumentNullException> (() => UIView.AnimateNotify (1.0, 2.0, UIViewAnimationOptions.Autoreverse, null, CompletionHandler));
 		}
-		
+
 		[Test]
 		public void Transition_Null_a1 ()
 		{
@@ -124,13 +124,13 @@ namespace MonoTouchFixtures.UIKit {
 				UIView.TransitionNotify (v, 1.0, UIViewAnimationOptions.AllowAnimatedContent, null, CompletionHandler);
 			}
 		}
-		
+
 		// Apple allows NULL on 'completion' parameters used in animate* and transition* selectors
 
 		void Animations ()
 		{
 		}
-		
+
 		[Test]
 		public void Animate_Null_c1 ()
 		{
@@ -148,13 +148,13 @@ namespace MonoTouchFixtures.UIKit {
 		{
 			UIView.AnimateNotify (1.0, Animations, null);
 		}
-		
+
 		[Test]
 		public void AnimateNotify_Null_c2 ()
 		{
 			UIView.AnimateNotify (1.0, 2.0, UIViewAnimationOptions.Autoreverse, Animations, null);
 		}
-		
+
 		[Test]
 		public void Transition_Null_c1 ()
 		{
@@ -186,7 +186,7 @@ namespace MonoTouchFixtures.UIKit {
 				UIView.TransitionNotify (v, v, 1.0, UIViewAnimationOptions.AllowAnimatedContent, null);
 			}
 		}
-		
+
 		[Test]
 		public void BackgroundColorTest ()
 		{
@@ -196,10 +196,9 @@ namespace MonoTouchFixtures.UIKit {
 				}
 			}
 		}
-		
+
 		[Register ("ViewWithCustomBackgroundColor")]
-		public class ViewWithCustomBackgroundColor : UIView
-		{
+		public class ViewWithCustomBackgroundColor : UIView {
 			public override UIColor BackgroundColor {
 				get { return base.BackgroundColor; }
 				set { base.BackgroundColor = value; }
@@ -219,7 +218,7 @@ namespace MonoTouchFixtures.UIKit {
 				Assert.AreEqual (UIAccessibilityTrait.Adjustable | UIAccessibilityTrait.Button, view.AccessibilityTraits, "e");
 			}
 		}
-		
+
 		[Test]
 		public void TraitMatch ()
 		{

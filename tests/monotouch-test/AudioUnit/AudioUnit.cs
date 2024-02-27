@@ -8,12 +8,10 @@ using AudioUnit;
 using theUnit = AudioUnit.AudioUnit;
 using Foundation;
 
-namespace Xamarin.Mac.Tests
-{
+namespace Xamarin.Mac.Tests {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class AudioUnitTests
-	{
+	public class AudioUnitTests {
 		theUnit GetAudioUnitForTest ()
 		{
 			AudioComponentDescription desc = new AudioComponentDescription ();

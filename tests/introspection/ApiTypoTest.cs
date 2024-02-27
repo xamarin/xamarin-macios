@@ -38,20 +38,20 @@ using Foundation;
 using Xamarin.Tests;
 using Xamarin.Utils;
 
-namespace Introspection
-{
-	public abstract class ApiTypoTest : ApiBaseTest
-	{
+namespace Introspection {
+	public abstract class ApiTypoTest : ApiBaseTest {
 		protected ApiTypoTest ()
 		{
 			ContinueOnFailure = true;
 		}
 
-		public virtual bool Skip (Type baseType, string typo) {
+		public virtual bool Skip (Type baseType, string typo)
+		{
 			return SkipAllowed (baseType.Name, null, typo);
 		}
 
-		public virtual bool Skip (MemberInfo methodName, string typo) {
+		public virtual bool Skip (MemberInfo methodName, string typo)
+		{
 			return SkipAllowed (methodName.DeclaringType.Name, methodName.Name, typo);
 		}
 
@@ -767,17 +767,12 @@ namespace Introspection
 
 		bool IsObsolete (MemberInfo mi)
 		{
-			if (mi == null)
+			if (mi is null)
 				return false;
 			if (mi.GetCustomAttributes<ObsoleteAttribute> (true).Any ())
 				return true;
-#if NET
-			if (mi.GetCustomAttributes<UnsupportedOSPlatformAttribute> (true).Any ((v) => v.TryParse (out ApplePlatform? platform, out var _) && platform == PlatformInfo.Host.Name))
+			if (MemberHasObsolete (mi))
 				return true;
-#else
-			if (mi.GetCustomAttributes<ObsoletedAttribute> (true).Any ())
-				return true;
-#endif
 			return IsObsolete (mi.DeclaringType);
 		}
 
@@ -796,16 +791,17 @@ namespace Introspection
 		{
 			AttributesMessageTypoRules (t, t.Name, ref totalErrors);
 
-			foreach (var f in t.GetFields ())
+			var flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.DeclaredOnly;
+			foreach (var f in t.GetFields (flags))
 				AttributesMessageTypoRules (f, t.Name, ref totalErrors);
 
-			foreach (var p in t.GetProperties ())
+			foreach (var p in t.GetProperties (flags))
 				AttributesMessageTypoRules (p, t.Name, ref totalErrors);
 
-			foreach (var m in t.GetMethods ())
+			foreach (var m in t.GetMethods (flags))
 				AttributesMessageTypoRules (m, t.Name, ref totalErrors);
 
-			foreach (var e in t.GetEvents ())
+			foreach (var e in t.GetEvents (flags))
 				AttributesMessageTypoRules (e, t.Name, ref totalErrors);
 
 			foreach (var nt in t.GetNestedTypes ())
@@ -824,7 +820,7 @@ namespace Introspection
 
 					string txt = NameCleaner (t.Name);
 					var typo = GetCachedTypo (txt);
-					if (typo.Length > 0 ) {
+					if (typo.Length > 0) {
 						if (!Skip (t, typo)) {
 							ReportError ("Typo in TYPE: {0} - {1} ", t.Name, typo);
 							totalErrors++;
@@ -838,7 +834,7 @@ namespace Introspection
 
 						if (IsObsolete (f))
 							continue;
-						
+
 						txt = NameCleaner (f.Name);
 						typo = GetCachedTypo (txt);
 						if (typo.Length > 0) {
@@ -856,7 +852,7 @@ namespace Introspection
 
 						if (IsObsolete (m))
 							continue;
-						
+
 						txt = NameCleaner (m.Name);
 						typo = GetCachedTypo (txt);
 						if (typo.Length > 0) {
@@ -892,12 +888,12 @@ namespace Introspection
 		{
 			string message = null;
 			if (attribute is AdviceAttribute)
-				message = ((AdviceAttribute)attribute).Message;
+				message = ((AdviceAttribute) attribute).Message;
 			if (attribute is ObsoleteAttribute)
-				message = ((ObsoleteAttribute)attribute).Message;
+				message = ((ObsoleteAttribute) attribute).Message;
 #if !NET
 			if (attribute is AvailabilityBaseAttribute)
-				message = ((AvailabilityBaseAttribute)attribute).Message;
+				message = ((AvailabilityBaseAttribute) attribute).Message;
 #endif
 
 			return message;
@@ -905,12 +901,12 @@ namespace Introspection
 
 		void AttributesMessageTypoRules (MemberInfo mi, string typeName, ref int totalErrors)
 		{
-			if (mi == null)
+			if (mi is null)
 				return;
 
 			foreach (object ca in mi.GetCustomAttributes ()) {
 				string message = GetMessage (ca);
-				if (message != null) {
+				if (message is not null) {
 					var memberAndTypeFormat = mi.Name == typeName ? "Type: {0}" : "Member name: {1}, Type: {0}";
 					var memberAndType = string.Format (memberAndTypeFormat, typeName, mi.Name);
 
@@ -1068,6 +1064,10 @@ namespace Introspection
 				case "SdkVersion":
 					Assert.True (Version.TryParse (s, out _), fi.Name);
 					break;
+#if !XAMCORE_5_0
+				case "NewsstandKitLibrary": // Removed from iOS, but we have to keep the constant around for binary compatibility.
+					break;
+#endif
 #if !NET
 #if __TVOS__
 				case "PassKitLibrary": // not part of tvOS
@@ -1077,8 +1077,13 @@ namespace Introspection
 					Assert.True (CheckLibrary (s), fi.Name);
 					break;
 #endif
+				case "ChipLibrary": // Chip is removed entirely beginning Xcode 14
+					if (!TestRuntime.CheckXcodeVersion (14, 0))
+						if (TestRuntime.IsDevice)
+							Assert.True (CheckLibrary (s), fi.Name);
+					break;
 #if !__MACOS__
-				case "ChipLibrary":
+				case "CinematicLibrary":
 				case "ThreadNetworkLibrary":
 				case "MediaSetupLibrary":
 				case "MLComputeLibrary":
@@ -1091,6 +1096,20 @@ namespace Introspection
 				case "MetalPerformanceShadersLibrary":
 				case "MetalPerformanceShadersGraphLibrary":
 					// not supported in tvOS (12.1) simulator so load fails
+					if (TestRuntime.IsSimulatorOrDesktop)
+						break;
+					goto default;
+				case "PhaseLibrary":
+					// framework support for tvOS was added in xcode 15
+					// but not supported on tvOS simulator so load fails
+					if (TestRuntime.IsSimulatorOrDesktop)
+						break;
+					goto default;
+#endif
+				case "MetalFXLibrary":
+#if __TVOS__
+					goto default;
+#else
 					if (TestRuntime.IsSimulatorOrDesktop)
 						break;
 					goto default;

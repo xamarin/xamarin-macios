@@ -42,10 +42,20 @@ using NativeHandle = System.IntPtr;
 
 namespace CoreText {
 
-#region Run Delegate Callbacks
+	#region Run Delegate Callbacks
 	delegate void CTRunDelegateDeallocateCallback (IntPtr refCon);
 	delegate nfloat CTRunDelegateGetCallback (IntPtr refCon);
 
+#if NET
+	[StructLayout (LayoutKind.Sequential)]
+	struct CTRunDelegateCallbacks {
+		public /* CFIndex */ nint version;
+		public unsafe delegate* unmanaged<IntPtr, void> dealloc;
+		public unsafe delegate* unmanaged<IntPtr, nfloat> getAscent;
+		public unsafe delegate* unmanaged<IntPtr, nfloat> getDescent;
+		public unsafe delegate* unmanaged<IntPtr, nfloat> getWidth;
+	}
+#else
 	[StructLayout (LayoutKind.Sequential)]
 	struct CTRunDelegateCallbacks {
 		public /* CFIndex */ nint version;
@@ -54,7 +64,8 @@ namespace CoreText {
 		public CTRunDelegateGetCallback getDescent;
 		public CTRunDelegateGetCallback getWidth;
 	}
-#endregion
+#endif
+	#endregion
 
 #if NET
 	[SupportedOSPlatform ("ios")]
@@ -128,6 +139,17 @@ namespace CoreText {
 		internal CTRunDelegateCallbacks GetCallbacks ()
 		{
 			if (!callbacks.HasValue) {
+#if NET
+				unsafe {
+					callbacks = new CTRunDelegateCallbacks () {
+						version = 1,
+						dealloc = &Deallocate,
+						getAscent = &GetAscent,
+						getDescent = &GetDescent,
+						getWidth = &GetWidth,
+					};
+				}
+#else
 				callbacks = new CTRunDelegateCallbacks () {
 					version = 1, // kCTRunDelegateVersion1
 					dealloc = Deallocate,
@@ -135,11 +157,16 @@ namespace CoreText {
 					getDescent = GetDescent,
 					getWidth = GetWidth,
 				};
+#endif
 			}
 			return callbacks.Value;
 		}
 
+#if NET
+		[UnmanagedCallersOnly]
+#else
 		[MonoPInvokeCallback (typeof (CTRunDelegateDeallocateCallback))]
+#endif
 		static void Deallocate (IntPtr refCon)
 		{
 			var self = GetOperations (refCon);
@@ -160,7 +187,11 @@ namespace CoreText {
 			return c.Target as CTRunDelegateOperations;
 		}
 
+#if NET
+		[UnmanagedCallersOnly]
+#else
 		[MonoPInvokeCallback (typeof (CTRunDelegateGetCallback))]
+#endif
 		static nfloat GetAscent (IntPtr refCon)
 		{
 			var self = GetOperations (refCon);
@@ -169,7 +200,11 @@ namespace CoreText {
 			return (nfloat) self.GetAscent ();
 		}
 
+#if NET
+		[UnmanagedCallersOnly]
+#else
 		[MonoPInvokeCallback (typeof (CTRunDelegateGetCallback))]
+#endif
 		static nfloat GetDescent (IntPtr refCon)
 		{
 			var self = GetOperations (refCon);
@@ -178,7 +213,11 @@ namespace CoreText {
 			return (nfloat) self.GetDescent ();
 		}
 
+#if NET
+		[UnmanagedCallersOnly]
+#else
 		[MonoPInvokeCallback (typeof (CTRunDelegateGetCallback))]
+#endif
 		static nfloat GetWidth (IntPtr refCon)
 		{
 			var self = GetOperations (refCon);
@@ -201,7 +240,7 @@ namespace CoreText {
 		{
 		}
 
-#region RunDelegate Creation
+		#region RunDelegate Creation
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTRunDelegateCreate (ref CTRunDelegateCallbacks callbacks, IntPtr refCon);
 
@@ -218,9 +257,9 @@ namespace CoreText {
 			: base (Create (operations), true)
 		{
 		}
-#endregion
+		#endregion
 
-#region Run Delegate Access
+		#region Run Delegate Access
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTRunDelegateGetRefCon (IntPtr runDelegate);
 
@@ -229,6 +268,6 @@ namespace CoreText {
 				return CTRunDelegateOperations.GetOperations (CTRunDelegateGetRefCon (Handle));
 			}
 		}
-#endregion
+		#endregion
 	}
 }

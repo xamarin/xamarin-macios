@@ -10,11 +10,11 @@ using UIKit;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.UIKit {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class PopoverBackgroundViewTest {
-		
+
 		[Test]
 		public void InitWithFrame ()
 		{

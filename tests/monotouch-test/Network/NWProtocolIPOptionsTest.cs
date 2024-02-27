@@ -1,4 +1,5 @@
 #if !__WATCHOS__
+using System;
 using System.Threading;
 
 using Foundation;
@@ -19,11 +20,11 @@ namespace MonoTouchFixtures.Network {
 		string host;
 		NWConnection connection;
 		NWProtocolStack stack;
-		NWProtocolIPOptions options; 
+		NWProtocolIPOptions options;
 
 		void ConnectionStateHandler (NWConnectionState state, NWError error)
 		{
-			switch (state){
+			switch (state) {
 			case NWConnectionState.Ready:
 				connectedEvent.Set ();
 				break;
@@ -37,20 +38,27 @@ namespace MonoTouchFixtures.Network {
 		[OneTimeSetUp]
 		public void Init ()
 		{
+			Exception ex = null;
 			TestRuntime.AssertXcodeVersion (11, 0);
 			// we want to use a single connection, since it is expensive
-			connectedEvent = new AutoResetEvent(false);
+			connectedEvent = new AutoResetEvent (false);
 			host = NetworkResources.MicrosoftUri.Host;
 			using (var parameters = NWParameters.CreateTcp ())
 			using (var endpoint = NWEndpoint.Create (host, "80")) {
 				connection = new NWConnection (endpoint, parameters);
 				connection.SetQueue (DispatchQueue.DefaultGlobalQueue); // important, else we will get blocked
-				connection.SetStateChangeHandler (ConnectionStateHandler);
-				connection.Start (); 
+				connection.SetStateChangeHandler ((NWConnectionState state, NWError error) => {
+					try {
+						ConnectionStateHandler (state, error);
+					} catch (Exception e) {
+						ex = e;
+					}
+				});
+				connection.Start ();
 				Assert.True (connectedEvent.WaitOne (20000), "Connection timed out.");
 				stack = parameters.ProtocolStack;
 				using (var ipOptions = stack.InternetProtocol) {
-					if (ipOptions != null) {
+					if (ipOptions is not null) {
 #if NET
 						ipOptions.SetVersion (NWIPVersion.Version4);
 #else
@@ -60,10 +68,11 @@ namespace MonoTouchFixtures.Network {
 					}
 				}
 			}
+			Assert.IsNull (ex, "Exception");
 		}
 
 		[OneTimeTearDown]
-		public void Dispose()
+		public void Dispose ()
 		{
 			connection?.Dispose ();
 			stack?.Dispose ();
@@ -73,7 +82,7 @@ namespace MonoTouchFixtures.Network {
 		public void SetUp ()
 		{
 			options = stack.InternetProtocol as NWProtocolIPOptions;
-			Assert.NotNull (options, "options"); 
+			Assert.NotNull (options, "options");
 		}
 
 		// we cannot assert that the C code those the right thing, BUT we do know
@@ -104,7 +113,7 @@ namespace MonoTouchFixtures.Network {
 		[Test]
 		public void DisableMulticastLoopbackTest ()
 		{
-			TestRuntime.AssertXcodeVersion (13,0);
+			TestRuntime.AssertXcodeVersion (13, 0);
 			Assert.DoesNotThrow (() => options.DisableMulticastLoopback (false));
 		}
 	}

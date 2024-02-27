@@ -29,7 +29,7 @@ namespace MonoTouchFixtures.Foundation {
 						store [key] = value;
 #if __TVOS__
 						// broken on appletv devices running tvOS 14, test will fail when fixed
-						if ((Runtime.Arch == Arch.DEVICE) && TestRuntime.CheckXcodeVersion (12,0))
+						if ((Runtime.Arch == Arch.DEVICE) && TestRuntime.CheckXcodeVersion (12, 0))
 							Assert.Null (store [key], "key 1");
 						else
 #elif __MACCATALYST__ || __MACOS__
@@ -42,7 +42,7 @@ namespace MonoTouchFixtures.Foundation {
 						store [(string) key] = value;
 #if __TVOS__
 						// broken on appletv devices running tvOS 14, test will fail when fixed
-						if ((Runtime.Arch == Arch.DEVICE) && TestRuntime.CheckXcodeVersion (12,0))
+						if ((Runtime.Arch == Arch.DEVICE) && TestRuntime.CheckXcodeVersion (12, 0))
 							Assert.Null (store [(string) key], "key 2");
 						else
 #elif __MACCATALYST__ || __MACOS__

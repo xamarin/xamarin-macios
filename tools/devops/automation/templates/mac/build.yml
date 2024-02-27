@@ -15,41 +15,47 @@ parameters:
 - name: isPR
   type: boolean
 
+- name: repositoryAlias
+  type: string
+  default: self
+
+- name: commit
+  type: string
+  default: HEAD
+
+- name: uploadPrefix
+  type: string
+  default: '$(MaciosUploadPrefix)'
+
+- name: retryCount
+  type: number
+  default: 3
+
 steps:
 
 - template: ../common/checkout.yml
   parameters:
     isPR: ${{ parameters.isPR }}
+    repositoryAlias: ${{ parameters.repositoryAlias }}
+    commit: ${{ parameters.commit }}
 
-- template: agent-cleanser/v1.yml@templates   # Uninstalls mono, Xamarin.Mac (if installed) plus cleanses the Provisionator Xcode cache and kills processes at the end
+- template: agent-cleanser/v1.yml@yaml-templates # Uninstalls mono, Xamarin.Mac (if installed) plus cleanses the Provisionator Xcode cache and kills processes at the end
   parameters:
     CleanseProcesses: true
 
 # Write a generic failure message to the failure comment file, so a failure will be reported
 # if something goes wrong before we successfully complete the tests (in which case we delete the file).
 - pwsh: |
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
-    $statuses = New-GitHubStatusesObject -Org "xamarin" -Repo "xamarin-macios" -Token $(GitHub.Token)
-
     Set-Content -Path "$Env:GITHUB_FAILURE_COMMENT_FILE" -Value "Tests on macOS ${{ parameters.statusContext }} failed for unknown reasons."
-    $statuses.SetStatus("pending", "Tests on macOS ${{ parameters.statusContext }} have started.", "${{ parameters.statusContext }}")
   displayName: "Initialize state"
   env:
-    BUILD_REVISION: $(Build.SourceVersion)
     CONTEXT: ${{ parameters.statusContext }}
     GITHUB_TOKEN: $(GitHub.Token)
     SYSTEM_ACCESSTOKEN: $(System.AccessToken)
 
-- bash: |
-    RC=0
-    security set-key-partition-list -S apple-tool:,apple: -s -k $KEYCHAIN_PASS login.keychain || RC=$?
-    if [ $RC -eq 0 ]; then
-      echo "Security UI-prompt removed."
-    else
-      echo "Security UI-prompt could NOT be removed."
-    fi
+- bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/remove-ui-prompt.sh
   env:
-    KEYCHAIN_PASS: ${{ parameters.keyringPass }}
+    OSX_KEYCHAIN_PASS: ${{ parameters.keyringPass }}
   displayName: 'Remove security UI-prompt (http://stackoverflow.com/a/40039594/183422)'
   condition: succeededOrFailed() # we do not care about the previous process cleanup
   continueOnError: true
@@ -60,9 +66,8 @@ steps:
 # download the packages that have been created, install them, later download the zip files that contain the already built
 # tests and execute them.
 
-- pwsh: |
-    gci env: | format-table -autosize -wrap
-  displayName: 'Dump Environment'
+- pwsh: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/show_env.ps1
+  displayName: 'Show Environment'
 
 - bash: |
     ioreg -l | grep -e Manufacturer -e 'Vendor Name'
@@ -88,8 +93,6 @@ steps:
 
 - bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/clean-bot.sh
   displayName: 'Clean bot'
-  env:
-    BUILD_REVISION: 'jenkins'
   continueOnError: true
   timeoutInMinutes: 60
 
@@ -106,7 +109,6 @@ steps:
       exit 1
     }
   env:
-    BUILD_REVISION: $(Build.SourceVersion)
     CONTEXT: ${{ parameters.statusContext }}
     GITHUB_TOKEN: $(GitHub.Token)
     SYSTEM_ACCESSTOKEN: $(System.AccessToken)
@@ -118,46 +120,21 @@ steps:
   inputs:
     provisioning_script: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/provision-brew-packages.csx
     provisioning_extra_args: '-vvvv'
+    github_token: $(Github.Token)
   timeoutInMinutes: 30
   enabled: false
 
-- task: DownloadPipelineArtifact@2
-  displayName: Download not notarized build
-  inputs:
-    artifact: 'not-signed-package'
-    allowFailedBuilds: true
-    path: $(Build.SourcesDirectory)/package
-
-- pwsh: |
-    $dir = "$(Build.SourcesDirectory)/package"
-    Dir $dir
-    $items = Get-ChildItem $dir -Recurse
-    foreach ($i in $items) {
-      if ($i.Name -like "xamarin.mac-*.pkg") {
-        $path = $i.FullName
-        Write-Host "##vso[task.setvariable variable=XM_PACKAGE;]$path"
-      }
-    }
-  displayName: 'Set Mac pkgs url'
-  timeoutInMinutes: 5
-
 - bash: |
-    echo "Pkg uri is $XM_PACKAGE"
-    make -C $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/ mac-tests-provisioning.csx
-  displayName: 'Generate Provisionator csx file'
-
-- task: xamops.azdevex.provisionator-task.provisionator@1
-  displayName: 'Provision Products & Frameworks'
-  inputs:
-    provisioning_script: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/mac-tests-provisioning.csx
-    provisioning_extra_args: '-vvvv'
-  timeoutInMinutes: 250
+    sudo rm -Rf $(Build.SourcesDirectory)/package
+    sudo rm -Rf $(Build.SourcesDirectory)/artifacts
+  displayName: "Remove artifacts"
+  condition: always()
 
 # Executed ONLY if we want to clear the provisionator cache.
 - bash: rm -rf "$TOOLS_DIR/provisionator"
   env:
     TOOLS_DIR: $(Agent.ToolsDirectory)
-  displayName: 'Nuke Provisionator Tool Cache'
+  displayName: 'Remove Provisionator Tool Cache'
   condition: ${{ parameters.clearProvisionatorCache }}
 
 # Go get the tests!
@@ -168,82 +145,36 @@ steps:
     allowFailedBuilds: true
     path: $(Build.SourcesDirectory)/artifacts/tmp
 
-# sometimes the make that creates the pkgs fails.
 - bash: |
     set -ex
-    if ! test -f $(Build.SourcesDirectory)/artifacts/tmp/mac-test-package/mac-test-package.7z; then
-      echo "No test package could be found for tests on macOS $CONTEXT" > "$GITHUB_FAILURE_COMMENT_FILE"
-      exit 1
-    fi
-    ls -Rla $(Build.SourcesDirectory)/artifacts/tmp
-    7z x $(Build.SourcesDirectory)/artifacts/tmp/mac-test-package/mac-test-package.7z -o$(Build.SourcesDirectory)/artifacts/ -bb1
-    ls -Rla $(Build.SourcesDirectory)/artifacts/mac-test-package
+    ls -Rla@ $(Build.SourcesDirectory)/artifacts/tmp
+    xattr -s -c -r $(Build.SourcesDirectory)/artifacts/tmp/${{ parameters.uploadPrefix }}mac-test-package/mac-test-package.7z
+    7z x $(Build.SourcesDirectory)/artifacts/tmp/${{ parameters.uploadPrefix }}mac-test-package/mac-test-package.7z -o$(Build.SourcesDirectory)/artifacts/ -bb1
+    # no prefix! we did expand to the exact name we are using
+    xattr -s -c -r $(Build.SourcesDirectory)/artifacts/mac-test-package
+    ls -Rla@ $(Build.SourcesDirectory)/artifacts/mac-test-package
   displayName: Expand tests.
-  env:
-    CONTEXT: ${{ parameters.statusContext }}
 
 - bash: |
     ls -Rla $(Build.SourcesDirectory)/artifacts
+    # no prefix, we do know the path!
     $(Build.SourcesDirectory)/artifacts/mac-test-package/test-dependencies.sh
   displayName: Install dependencies.
   timeoutInMinutes: 60
 
-- pwsh: |
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
-    $statuses = New-GitHubStatusesObject -Org "xamarin" -Repo "xamarin-macios" -Token $(GitHub.Token)
-
-    Write-Host "Found tests"
-    $testsPath = "$(Build.SourcesDirectory)/artifacts/mac-test-package/tests"
-    Write-Host "Tests path is $testsPath"
-
-    # print enviroment
-    dir env:
-
-    [System.Collections.Generic.List[string]]$failures = @()
-
-    # Claim that the tests timed out before we start
-    Set-Content -Path "$Env:GITHUB_FAILURE_COMMENT_FILE" -Value "Tests timed out"
-
-    $macTest = @("dontlink", "introspection", "linksdk", "linkall", "xammac_tests", "monotouch-test")
-    foreach ($t in $macTest) {
-      $testName = "exec-$t"
-      Write-Host "Execution test $testName"
-      make -d -C $testsPath $testName -f packaged-macos-tests.mk
-      if ($LastExitCode -eq 0) {
-        Write-Host "$t succeeded"
-      } else {
-        Write-Host "$t failed with error $LastExitCode"
-        $failures.Add($t)
-      }
-    }
-    if ($failures.Count -ne 0) {
-      # post status and comment in the build
-      $failedTestsStr = [string]::Join(",",$failures)
-      $statuses.SetStatus("error", "Tests on macOS ${{ parameters.statusContext }} failed ($failedTestsStr).", "${{ parameters.statusContext }}")
-      # build message
-      $msg = [System.Text.StringBuilder]::new()
-      $msg.AppendLine("Failed tests are:")
-      $msg.AppendLine("")
-      foreach ($test in $failures)
-      {
-          $msg.AppendLine("* $test")
-      }
-
-      # We failed, so write to the comment file why we failed.
-      Set-Content -Path "$Env:GITHUB_FAILURE_COMMENT_FILE" -Value "$msg"
-
-      exit 1
-    } else {
-      # We succeeded, so remove the failure comment file.
-      Remove-Item -Path "$Env:GITHUB_FAILURE_COMMENT_FILE"
-
-      exit 0
-    }
+- pwsh: >-
+    $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/run_mac_tests.ps1
+    -GithubToken $(GitHub.Token)
+    -RepositoryUri "$(Build.Repository.Uri)"
+    -SourcesDirectory "$(Build.SourcesDirectory)"
+    -GithubFailureCommentFile "$Env:GITHUB_FAILURE_COMMENT_FILE"
+    -StatusContext "${{ parameters.statusContext }}"
   displayName: 'Run tests'
   timeoutInMinutes: 60
+  ${{ if not(parameters.isPR) }}:
+    retryCountOnTaskFailure: ${{ parameters.retryCount }}
   env:
     CONTEXT: ${{ parameters.statusContext }}
-    BUILD_REVISION: $(Build.SourceVersion)
     GITHUB_TOKEN: $(GitHub.Token)
     SYSTEM_ACCESSTOKEN: $(System.AccessToken)
     MONO_DEBUG: no-gdb-backtrace
@@ -253,18 +184,17 @@ steps:
   displayName: 'Collect and upload crash reports'
   condition: always() # who knows when crash reports can end up being useful
   continueOnError: true
+  env:
+    MACIOS_UPLOAD_PREFIX: ${{ parameters.uploadPrefix }}
 
 # Make sure to report any errors
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
-    $githubComments = New-GitHubCommentsObject -Org "xamarin" -Repo "xamarin-macios" -Token $(GitHub.Token) -Hash $Env:GIT_HASH
-    $statuses = New-GitHubStatusesObject -Org "xamarin" -Repo "xamarin-macios" -Token $(GitHub.Token)
-    
+    $githubComments = New-GitHubCommentsObjectFromUrl -Url "$(Build.Repository.Uri)" -Token $(GitHub.Token) -Hash $Env:COMMENT_HASH
+
     if (Test-Path -Path "$Env:GITHUB_FAILURE_COMMENT_FILE" -PathType Leaf)  {
-      $statuses.SetStatus("error", "Tests on macOS ${{ parameters.statusContext }} failed.", "${{ parameters.statusContext }}")
       $githubComments.NewCommentFromFile("Tests on macOS ${{ parameters.statusContext }} failed", ":x:", "$Env:GITHUB_FAILURE_COMMENT_FILE")
     } else {
-      $statuses.SetStatus("success", "Tests on macOS ${{ parameters.statusContext }} passed.", "${{ parameters.statusContext }}")
       $message = ":white_check_mark: **All** tests on macOS ${{ parameters.statusContext }} passed."
       $githubComments.NewCommentFromMessage("Tests on macOS ${{ parameters.statusContext }} passed", ":computer:", $message)
     }
@@ -274,7 +204,10 @@ steps:
   continueOnError: true
   env:
     CONTEXT: ${{ parameters.statusContext }}
-    BUILD_REVISION: $(Build.SourceVersion)
     GITHUB_TOKEN: $(GitHub.Token)
     SYSTEM_ACCESSTOKEN: $(System.AccessToken)
     TEST_BOT: $(Agent.Name)
+    ${{ if eq(parameters.repositoryAlias, 'self') }}:
+      COMMENT_HASH: $(GIT_HASH)
+    ${{ else }}:
+      COMMENT_HASH: $(Build.SourceVersion)

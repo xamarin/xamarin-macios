@@ -1,8 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace Bindings.Test
-{
+namespace Bindings.Test {
 	public static class CFunctions {
 		[DllImport ("__Internal")]
 		public static extern int theUltimateAnswer ();

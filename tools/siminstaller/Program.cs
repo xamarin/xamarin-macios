@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Net;
-using System.IO;
 using System.Text;
 using System.Threading;
 using System.Xml;
-
 using Mono.Options;
 
 namespace xsiminstaller {
@@ -45,17 +45,15 @@ namespace xsiminstaller {
 				var error = new StringBuilder ();
 				var outputDone = new ManualResetEvent (false);
 				var errorDone = new ManualResetEvent (false);
-				p.OutputDataReceived += (sender, args) =>
-				{
-					if (args.Data == null) {
+				p.OutputDataReceived += (sender, args) => {
+					if (args.Data is null) {
 						outputDone.Set ();
 					} else {
 						output.AppendLine (args.Data);
 					}
 				};
-				p.ErrorDataReceived += (sender, args) =>
-				{
-					if (args.Data == null) {
+				p.ErrorDataReceived += (sender, args) => {
+					if (args.Data is null) {
 						errorDone.Set ();
 					} else {
 						error.AppendLine (args.Data);
@@ -83,7 +81,7 @@ namespace xsiminstaller {
 			var only_check = false;
 			var force = false;
 			var printHelp = false;
-			
+
 			var os = new OptionSet {
 				{ "xcode=", "The Xcode.app to use", (v) => xcode_app = v },
 				{ "install=", "ID of simulator to install. Can be repeated multiple times.", (v) => install.Add (v) },
@@ -134,22 +132,49 @@ namespace xsiminstaller {
 
 			xcodeVersion = xcodeVersion.Insert (xcodeVersion.Length - 2, ".");
 			xcodeVersion = xcodeVersion.Insert (xcodeVersion.Length - 1, ".");
-			var url = $"https://devimages-cdn.apple.com/downloads/xcode/simulators/index-{xcodeVersion}-{xcodeUuid}.dvtdownloadableindex";
-			var uri = new Uri (url);
-			var tmpfile = Path.Combine (TempDirectory, Path.GetFileName (uri.LocalPath));
+
+			var indexName = $"index-{xcodeVersion}-{xcodeUuid}.dvtdownloadableindex";
+			var tmpfile = Path.Combine (TempDirectory, indexName);
 			if (!File.Exists (tmpfile)) {
-				var wc = new WebClient ();
-				try {
-					if (verbose > 0)
-						Console.WriteLine ($"Downloading '{uri}'");
-					wc.DownloadFile (uri, tmpfile);
-				} catch (Exception ex) {
-					// 403 means 404
-					if (ex is WebException we && (we.Response as HttpWebResponse)?.StatusCode == HttpStatusCode.Forbidden) {
-						Console.WriteLine ($"Failed to download {url}: Not found"); // Apple's servers return a 403 if the file doesn't exist, which can be quite confusing, so show a better error.
-					} else {
-						Console.WriteLine ($"Failed to download {url}: {ex}");
+				// Try multiple urls
+				var urls = new string [] {
+					$"https://devimages-cdn.apple.com/downloads/xcode/simulators/{indexName}",
+					/*
+					 * The following url was found while debugging Xcode, the "index2" part is actually hardcoded:
+					 * 
+					 *	DVTFoundation`-[DVTDownloadableIndexSource identifier]:
+					 *		0x103db478d <+0>:  pushq  %rbp
+					 *		0x103db478e <+1>:  movq   %rsp, %rbp
+					 *		0x103db4791 <+4>:  leaq   0x53f008(%rip), %rax      ; @"index2"
+					 *		0x103db4798 <+11>: popq   %rbp
+					 *		0x103db4799 <+12>: retq
+					 * 
+					 */
+					"https://devimages-cdn.apple.com/downloads/xcode/simulators/index2.dvtdownloadableindex",
+				};
+				var anyFailures = false;
+				foreach (var url in urls) {
+					var uri = new Uri (url);
+					var wc = new WebClient ();
+					try {
+						if (verbose > 0)
+							Console.WriteLine ($"Downloading '{uri}'");
+						else if (anyFailures)
+							Console.WriteLine ($"Attempting fallback url '{uri}'");
+						wc.DownloadFile (uri, tmpfile);
+					} catch (Exception ex) {
+						File.Delete (tmpfile); // Make sure there are no downloaded remnants
+											   // 403 means 404
+						if (ex is WebException we && (we.Response as HttpWebResponse)?.StatusCode == HttpStatusCode.Forbidden) {
+							Console.WriteLine ($"Failed to download {url}: Not found"); // Apple's servers return a 403 if the file doesn't exist, which can be quite confusing, so show a better error.
+						} else {
+							Console.WriteLine ($"Failed to download {url}: {ex}");
+						}
+						anyFailures = true;
 					}
+				}
+
+				if (!File.Exists (tmpfile)) {
 					// We couldn't download the list of simulators, but the simulator(s) we were requested to install might already be installed.
 					// Don't fail in that case (we'd miss any potential updates, but that's probably not too bad).
 					if (install.Count > 0) {
@@ -169,13 +194,14 @@ namespace xsiminstaller {
 					return 1;
 				}
 			}
- 			if (!TryExecuteAndCapture ("plutil", $"-convert xml1 -o - '{tmpfile}'", out var xml))
+
+			if (!TryExecuteAndCapture ("plutil", $"-convert xml1 -o - '{tmpfile}'", out var xml))
 				return 1;
 
 			var doc = new XmlDocument ();
 			doc.LoadXml (xml);
 
-			var downloadables = doc.SelectNodes ("//plist/dict/key[text()='downloadables']/following-sibling::array/dict");
+			var downloadables = doc.SelectNodes ("//plist/dict/key[text()='downloadables']/following-sibling::array[1]/dict");
 			foreach (XmlNode downloadable in downloadables) {
 				var nameNode = downloadable.SelectSingleNode ("key[text()='name']/following-sibling::string");
 				var versionNode = downloadable.SelectSingleNode ("key[text()='version']/following-sibling::string");
@@ -200,7 +226,14 @@ namespace xsiminstaller {
 
 				var name = Replace (nameNode.InnerText, dict);
 				var source = Replace (sourceNode.InnerText, dict);
-				var installPrefix = Replace (installPrefixNode.InnerText, dict);
+				var installPrefix = Replace (installPrefixNode?.InnerText, dict);
+
+				if (installPrefix is null) {
+					// This is just guesswork
+					var simRuntimeName = name.Replace (" Simulator", ".simruntime");
+					installPrefix = $"/Library/Developer/CoreSimulator/Profiles/Runtimes/{simRuntimeName}";
+				}
+
 				double.TryParse (fileSizeNode?.InnerText, out var parsedFileSize);
 				var fileSize = (long) parsedFileSize;
 
@@ -308,7 +341,7 @@ namespace xsiminstaller {
 			if (download) {
 				var downloadDone = new ManualResetEvent (false);
 				var wc = new WebClient ();
-				long lastProgress =  0;
+				long lastProgress = 0;
 				var watch = Stopwatch.StartNew ();
 				wc.DownloadProgressChanged += (sender, progress_args) => {
 					var progress = progress_args.BytesReceived * 100 / fileSize;
@@ -322,7 +355,7 @@ namespace xsiminstaller {
 				};
 				wc.DownloadFileCompleted += (sender, download_args) => {
 					Console.WriteLine ($"Download completed in {watch.Elapsed.TotalSeconds}s");
-					if (download_args.Error != null) {
+					if (download_args.Error is not null) {
 						Console.WriteLine ($"    with error: {download_args.Error}");
 					}
 					downloadDone.Set ();
@@ -394,10 +427,16 @@ namespace xsiminstaller {
 						Directory.Delete (expanded_path, true);
 					}
 				} finally {
-					TryExecuteAndCapture ("hdiutil", $"detach '{mount_point}' -quiet", out _);
+					if (!TryExecuteAndCapture ("hdiutil", $"detach '{mount_point}' -quiet -force", out _))
+						Console.WriteLine ($"Failed to detach {mount_point}");
 				}
 			} finally {
-				Directory.Delete (mount_point, true);
+				try {
+					Directory.Delete (mount_point, true);
+				} catch (IOException ioex) {
+					Console.WriteLine ($"Unable to remove: {mount_point}");
+					Console.WriteLine ($"    with error: {ioex}");
+				}
 			}
 
 			File.Delete (download_path);
@@ -405,11 +444,28 @@ namespace xsiminstaller {
 			return true;
 		}
 
-		static string Replace (string value, Dictionary<string, string> replacements)
+		[return: NotNullIfNotNull ("value")]
+		static string? Replace (string? value, Dictionary<string, string> replacements)
 		{
+			if (value is null)
+				return null;
 			foreach (var kvp in replacements)
 				value = value.Replace ($"$({kvp.Key})", kvp.Value);
 			return value;
 		}
 	}
 }
+
+#if !NET // the below attributes are no longer needed once we switch to .NET
+namespace System.Diagnostics.CodeAnalysis {
+	[AttributeUsage (AttributeTargets.Parameter | AttributeTargets.Property | AttributeTargets.ReturnValue, AllowMultiple = true, Inherited = false)]
+	internal sealed class NotNullIfNotNullAttribute : Attribute {
+		public string ParameterName { get; }
+
+		public NotNullIfNotNullAttribute (string parameterName)
+		{
+			ParameterName = parameterName;
+		}
+	}
+}
+#endif // !NET

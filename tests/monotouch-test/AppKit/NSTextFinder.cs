@@ -8,12 +8,10 @@ using AudioUnit;
 using AudioToolbox;
 using Foundation;
 
-namespace Xamarin.Mac.Tests
-{
+namespace Xamarin.Mac.Tests {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class NSTextFinderTests
-	{
+	public class NSTextFinderTests {
 		[Test]
 		public void NSTextFinderConstructor ()
 		{
@@ -37,11 +35,11 @@ namespace Xamarin.Mac.Tests
 
 			public string String { get { return "Testing One Two Three"; } }
 
-			public NSRange FirstSelectedRange { get { return new NSRange(); } }
+			public NSRange FirstSelectedRange { get { return new NSRange (); } }
 
 			public NSArray SelectedRanges { get; set; }
 
-			public NSArray VisibleCharacterRanges { get { return new NSArray(); } }
+			public NSArray VisibleCharacterRanges { get { return new NSArray (); } }
 
 			public bool Selectable { get { return true; } }
 #else
@@ -73,7 +71,7 @@ namespace Xamarin.Mac.Tests
 #if NET
 			public nuint StringLength {
 				get {
-					return (nuint)String.Length;
+					return (nuint) String.Length;
 				}
 			}
 #else

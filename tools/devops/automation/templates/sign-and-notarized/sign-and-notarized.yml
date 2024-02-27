@@ -28,16 +28,33 @@ parameters:
 - name: isPR
   type: boolean
 
+- name: repositoryAlias
+  type: string
+  default: self
+
+- name: commit
+  type: string
+  default: HEAD
+
+- name: uploadPrefix
+  type: string
+  default: '$(MaciosUploadPrefix)'
+
 steps:
 
 - ${{ each step in parameters.signingSetupSteps }}:
   - ${{ each pair in step }}:
       ${{ pair.key }}: ${{ pair.value }}
 
+- bash: |
+    sudo rm -Rf $(Build.SourcesDirectory)/package
+  displayName: "Remove artifacts"
+  condition: always()
+
 - task: DownloadPipelineArtifact@2
   displayName: Download not notarized build
   inputs:
-    artifact: 'not-signed-package'
+    artifact: '${{ parameters.uploadPrefix }}not-signed-package'
     patterns: ${{ parameters.packagePattern }}
     allowFailedBuilds: true
     path: $(Build.SourcesDirectory)/package
@@ -95,7 +112,7 @@ steps:
     displayName: 'Publish Artifact: ESRP temp'
     inputs:
       targetPath: '$(Build.ArtifactStagingDirectory)/esrp.zip'
-      artifactName: ESRP-tmp-${{ parameters.packageName }}
+      artifactName: '${{ parameters.uploadPrefix }}ESRP-tmp-${{ parameters.packageName }}'
     continueOnError: true
     condition: ${{ and(eq(parameters.condition, true), eq(variables['System.debug'], 'true')) }}
 
@@ -111,5 +128,5 @@ steps:
   displayName: 'Publish Notarized Classic Artifacts'
   inputs:
     targetPath: $(Build.SourcesDirectory)/package
-    artifactName: classic-${{ parameters.packageName }}-signed
+    artifactName: '${{ parameters.uploadPrefix }}classic-${{ parameters.packageName }}-signed'
   continueOnError: true

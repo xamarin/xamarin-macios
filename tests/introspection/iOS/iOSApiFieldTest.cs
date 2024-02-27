@@ -69,16 +69,19 @@ namespace Introspection {
 				// largely removed in xcode 13, including ADClient.ErrorDomain
 				// since using this code leads to rejections it's totally removed (so no version check)
 				return true;
+			case "NewsstandKit":
+				// largely removed in xcode 15
+				return true;
 			}
 
 			switch (p.Name) {
-			case "AutoConfigurationHTTPResponseKey":		// kCFProxyAutoConfigurationHTTPResponseKey
-			case "CFNetworkProxiesProxyAutoConfigJavaScript":	// kCFNetworkProxiesProxyAutoConfigJavaScript
+			case "AutoConfigurationHTTPResponseKey":        // kCFProxyAutoConfigurationHTTPResponseKey
+			case "CFNetworkProxiesProxyAutoConfigJavaScript":   // kCFNetworkProxiesProxyAutoConfigJavaScript
 				return true;
 
 			// defined in Apple PDF (online) but not in the HTML documentation
 			// but also inside CLError.h from iOS 5.1 SDK...
-			case "ErrorUserInfoAlternateRegionKey":			// kCLErrorUserInfoAlternateRegionKey
+			case "ErrorUserInfoAlternateRegionKey":         // kCLErrorUserInfoAlternateRegionKey
 				return true;
 
 			// ImageIO: documented since iOS 4.3 but null in iOS5 (works on iOS 6.1)
@@ -160,6 +163,10 @@ namespace Introspection {
 			// Xcode 12.2 Beta 1 does not ship this but it is available in Xcode 12.0...
 			case "HKMetadataKeyBarometricPressure":
 				return true;
+#if __WATCHOS__
+			case "AVCaptureLensPositionCurrent": // looks like this was bound by mistake in watchOS
+				return true;
+#endif
 			default:
 				return false;
 			}

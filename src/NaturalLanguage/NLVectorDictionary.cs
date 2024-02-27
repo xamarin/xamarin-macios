@@ -27,13 +27,13 @@ namespace NaturalLanguage {
 		{
 		}
 
-		public float[] this [NSString key] {
+		public float [] this [NSString key] {
 			get {
 				if (key is null)
 					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (key));
 
 				var a = CFDictionary.GetValue (Dictionary.Handle, key.Handle);
-                return NSArray.ArrayFromHandle<float> (a, input => {
+				return NSArray.ArrayFromHandle<float> (a, input => {
 					return new NSNumber (input).FloatValue;
 				});
 			}
@@ -48,7 +48,7 @@ namespace NaturalLanguage {
 			}
 		}
 
-		public float[] this [string key] {
+		public float [] this [string key] {
 			get {
 				return this [(NSString) key];
 			}

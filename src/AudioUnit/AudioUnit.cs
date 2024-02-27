@@ -401,7 +401,7 @@ namespace AudioUnit {
 							   scope,
 							   audioUnitElement,
 							   ref audioFormat,
-							   (uint) Marshal.SizeOf (audioFormat));
+							   (uint) Marshal.SizeOf<AudioToolbox.AudioStreamBasicDescription> ());
 			if (err != 0)
 				throw new AudioUnitException (err);
 		}
@@ -414,13 +414,13 @@ namespace AudioUnit {
 							   scope,
 							   audioUnitElement,
 							   ref audioFormat,
-							   (uint) Marshal.SizeOf (audioFormat));
+							   (uint) Marshal.SizeOf<AudioToolbox.AudioStreamBasicDescription> ());
 		}
 
 		public uint GetCurrentDevice (AudioUnitScopeType scope, uint audioUnitElement = 0)
 		{
 			uint device = 0;
-			int size = Marshal.SizeOf (typeof (uint));
+			int size = sizeof (uint);
 			var err = AudioUnitGetProperty (Handle,
 						AudioUnitPropertyIDType.CurrentDevice,
 						scope,
@@ -453,7 +453,7 @@ namespace AudioUnit {
 			// https://developer.apple.com/library/mac/technotes/tn2223/_index.html
 
 			uint inputDevice;
-			uint size = (uint) Marshal.SizeOf (typeof (uint));
+			uint size = (uint) sizeof (uint);
 			var theAddress = new AudioObjectPropertyAddress (
 				AudioObjectPropertySelector.DefaultInputDevice,
 				AudioObjectPropertyScope.Global,
@@ -478,13 +478,13 @@ namespace AudioUnit {
 						scope,
 						audioUnitElement,
 						ref inputDevice,
-						(uint) Marshal.SizeOf (inputDevice));
+						(uint) sizeof (uint));
 		}
 
 		public AudioStreamBasicDescription GetAudioFormat (AudioUnitScopeType scope, uint audioUnitElement = 0)
 		{
 			var audioFormat = new AudioStreamBasicDescription ();
-			uint size = (uint) Marshal.SizeOf (audioFormat);
+			uint size = (uint) Marshal.SizeOf<AudioStreamBasicDescription> ();
 
 			var err = AudioUnitGetProperty (Handle,
 							   AudioUnitPropertyIDType.StreamFormat,
@@ -501,7 +501,7 @@ namespace AudioUnit {
 		public ClassInfoDictionary? GetClassInfo (AudioUnitScopeType scope = AudioUnitScopeType.Global, uint audioUnitElement = 0)
 		{
 			IntPtr ptr = new IntPtr ();
-			int size = Marshal.SizeOf (typeof (IntPtr));
+			int size = IntPtr.Size;
 			var res = AudioUnitGetProperty (Handle, AudioUnitPropertyIDType.ClassInfo, scope, audioUnitElement,
 				ref ptr, ref size);
 
@@ -515,7 +515,7 @@ namespace AudioUnit {
 		{
 			var ptr = preset.Dictionary.Handle;
 			return AudioUnitSetProperty (Handle, AudioUnitPropertyIDType.ClassInfo, scope, audioUnitElement,
-				ref ptr, Marshal.SizeOf (typeof (IntPtr)));
+				ref ptr, IntPtr.Size);
 		}
 
 		public unsafe AudioUnitParameterInfo []? GetParameterList (AudioUnitScopeType scope = AudioUnitScopeType.Global, uint audioUnitElement = 0)
@@ -553,7 +553,7 @@ namespace AudioUnit {
 
 			var data = instrumentData.ToStruct ();
 			return AudioUnitSetProperty (Handle, AudioUnitPropertyIDType.LoadInstrument, scope, audioUnitElement,
-				ref data, Marshal.SizeOf (typeof (AUSamplerInstrumentData)));
+				ref data, Marshal.SizeOf<AUSamplerInstrumentData> ());
 		}
 
 		public AudioUnitStatus MakeConnection (AudioUnit sourceAudioUnit, uint sourceOutputNumber, uint destInputNumber)
@@ -564,7 +564,7 @@ namespace AudioUnit {
 				DestInputNumber = destInputNumber
 			};
 
-			return AudioUnitSetProperty (Handle, AudioUnitPropertyIDType.MakeConnection, AudioUnitScopeType.Input, 0, ref auc, Marshal.SizeOf (typeof (AudioUnitConnection)));
+			return AudioUnitSetProperty (Handle, AudioUnitPropertyIDType.MakeConnection, AudioUnitScopeType.Input, 0, ref auc, Marshal.SizeOf<AudioUnitConnection> ());
 		}
 
 		public AudioUnitStatus SetEnableIO (bool enableIO, AudioUnitScopeType scope, uint audioUnitElement = 0)
@@ -667,7 +667,7 @@ namespace AudioUnit {
 			cb.Proc = CreateRenderCallback;
 #endif
 			cb.ProcRefCon = GCHandle.ToIntPtr (gcHandle);
-			return AudioUnitSetProperty (Handle, AudioUnitPropertyIDType.SetRenderCallback, scope, audioUnitElement, ref cb, Marshal.SizeOf (cb));
+			return AudioUnitSetProperty (Handle, AudioUnitPropertyIDType.SetRenderCallback, scope, audioUnitElement, ref cb, Marshal.SizeOf<AURenderCallbackStruct> ());
 		}
 
 #if NET
@@ -721,7 +721,7 @@ namespace AudioUnit {
 			cb.Proc = CreateInputCallback;
 #endif
 			cb.ProcRefCon = GCHandle.ToIntPtr (gcHandle);
-			return AudioUnitSetProperty (Handle, AudioUnitPropertyIDType.SetInputCallback, scope, audioUnitElement, ref cb, Marshal.SizeOf (cb));
+			return AudioUnitSetProperty (Handle, AudioUnitPropertyIDType.SetInputCallback, scope, audioUnitElement, ref cb, Marshal.SizeOf<AURenderCallbackStruct> ());
 		}
 #if NET
 		[UnmanagedCallersOnly]
@@ -755,21 +755,13 @@ namespace AudioUnit {
 
 #if !MONOMAC
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst14.0")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("tvos13.0")]
-		[UnsupportedOSPlatform ("maccatalyst14.0")]
-		[UnsupportedOSPlatform ("ios13.0")]
-#if TVOS
-		[Obsolete ("Starting with tvos13.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif __MACCATALYST__
-		[Obsolete ("Starting with maccatalyst14.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios13.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("tvos13.0")]
+		[ObsoletedOSPlatform ("maccatalyst14.0")]
+		[ObsoletedOSPlatform ("ios13.0")]
 #else
-		[iOS (7, 0)]
 		[Deprecated (PlatformName.iOS, 13, 0)]
 		[Deprecated (PlatformName.TvOS, 13, 0)]
 		[MacCatalyst (14, 0)]
@@ -779,22 +771,14 @@ namespace AudioUnit {
 		static extern AudioComponentStatus AudioOutputUnitPublish (AudioComponentDescription inDesc, IntPtr /* CFStringRef */ inName, uint /* UInt32 */ inVersion, IntPtr /* AudioUnit */ inOutputUnit);
 
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst14.0")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("tvos13.0")]
-		[UnsupportedOSPlatform ("maccatalyst14.0")]
-		[UnsupportedOSPlatform ("ios13.0")]
 		[UnsupportedOSPlatform ("macos")]
-#if TVOS
-		[Obsolete ("Starting with tvos13.0 use 'AudioUnit' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif __MACCATALYST__
-		[Obsolete ("Starting with maccatalyst14.0 use 'AudioUnit' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios13.0 use 'AudioUnit' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("tvos13.0", "Use 'AudioUnit' instead.")]
+		[ObsoletedOSPlatform ("maccatalyst14.0", "Use 'AudioUnit' instead.")]
+		[ObsoletedOSPlatform ("ios13.0", "Use 'AudioUnit' instead.")]
 #else
-		[iOS (7, 0)]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'AudioUnit' instead.")]
 		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'AudioUnit' instead.")]
 		[MacCatalyst (14, 0)]
@@ -815,22 +799,14 @@ namespace AudioUnit {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst14.0")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("tvos13.0")]
-		[UnsupportedOSPlatform ("maccatalyst14.0")]
-		[UnsupportedOSPlatform ("ios13.0")]
 		[UnsupportedOSPlatform ("macos")]
-#if TVOS
-		[Obsolete ("Starting with tvos13.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif __MACCATALYST__
-		[Obsolete ("Starting with maccatalyst14.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios13.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("tvos13.0")]
+		[ObsoletedOSPlatform ("maccatalyst14.0")]
+		[ObsoletedOSPlatform ("ios13.0")]
 #else
-		[iOS (7, 0)]
 		[MacCatalyst (14, 0)]
 		[Deprecated (PlatformName.iOS, 13, 0)]
 		[Deprecated (PlatformName.TvOS, 13, 0)]
@@ -840,22 +816,14 @@ namespace AudioUnit {
 		static extern IntPtr AudioOutputUnitGetHostIcon (IntPtr /* AudioUnit */ au, float /* float */ desiredPointSize);
 
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst14.0")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("tvos13.0")]
-		[UnsupportedOSPlatform ("maccatalyst14.0")]
-		[UnsupportedOSPlatform ("ios13.0")]
 		[UnsupportedOSPlatform ("macos")]
-#if TVOS
-		[Obsolete ("Starting with tvos13.0 use 'AudioUnit' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif __MACCATALYST__
-		[Obsolete ("Starting with maccatalyst14.0 use 'AudioUnit' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios13.0 use 'AudioUnit' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("tvos13.0", "Use 'AudioUnit' instead.")]
+		[ObsoletedOSPlatform ("maccatalyst14.0", "Use 'AudioUnit' instead.")]
+		[ObsoletedOSPlatform ("ios13.0", "Use 'AudioUnit' instead.")]
 #else
-		[iOS (7, 0)]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'AudioUnit' instead.")]
 		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'AudioUnit' instead.")]
 		[MacCatalyst (14, 0)]
@@ -1097,7 +1065,7 @@ namespace AudioUnit {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (region));
 
 			var safr = region.GetAudioFileRegion ();
-			return AudioUnitSetProperty (GetCheckedHandle (), AudioUnitPropertyIDType.ScheduledFileRegion, AudioUnitScopeType.Global, 0, ref safr, Marshal.SizeOf (safr));
+			return AudioUnitSetProperty (GetCheckedHandle (), AudioUnitPropertyIDType.ScheduledFileRegion, AudioUnitScopeType.Global, 0, ref safr, Marshal.SizeOf<AUScheduledAudioFileRegion.ScheduledAudioFileRegion> ());
 		}
 
 		[DllImport (Constants.AudioUnitLibrary)]
@@ -1106,7 +1074,7 @@ namespace AudioUnit {
 
 		public AudioUnitStatus SetScheduleStartTimeStamp (AudioTimeStamp timeStamp)
 		{
-			return AudioUnitSetProperty (GetCheckedHandle (), AudioUnitPropertyIDType.ScheduleStartTimeStamp, AudioUnitScopeType.Global, 0, ref timeStamp, Marshal.SizeOf (timeStamp));
+			return AudioUnitSetProperty (GetCheckedHandle (), AudioUnitPropertyIDType.ScheduleStartTimeStamp, AudioUnitScopeType.Global, 0, ref timeStamp, Marshal.SizeOf<AudioTimeStamp> ());
 		}
 
 		public AudioUnitStatus SetScheduledFiles (AudioFile audioFile)
@@ -1115,7 +1083,7 @@ namespace AudioUnit {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (audioFile));
 
 			var audioFilehandle = audioFile.Handle;
-			return AudioUnitSetProperty (GetCheckedHandle (), AudioUnitPropertyIDType.ScheduledFileIDs, AudioUnitScopeType.Global, 0, ref audioFilehandle, Marshal.SizeOf (Handle));
+			return AudioUnitSetProperty (GetCheckedHandle (), AudioUnitPropertyIDType.ScheduledFileIDs, AudioUnitScopeType.Global, 0, ref audioFilehandle, Marshal.SizeOf<NativeHandle> ());
 		}
 
 		[DllImport (Constants.AudioUnitLibrary)]
@@ -1287,7 +1255,7 @@ namespace AudioUnit {
 		public AURenderEvent? Next {
 			get {
 				if (UnsafeNext is not null)
-					return (AURenderEvent?) Marshal.PtrToStructure ((IntPtr) UnsafeNext, typeof (AURenderEvent));
+					return Marshal.PtrToStructure<AURenderEvent> ((IntPtr) UnsafeNext);
 				return null;
 			}
 		}
@@ -1327,7 +1295,7 @@ namespace AudioUnit {
 		public AURenderEvent? Next {
 			get {
 				if (UnsafeNext is not null)
-					return (AURenderEvent?) Marshal.PtrToStructure ((IntPtr) UnsafeNext, typeof (AURenderEvent));
+					return Marshal.PtrToStructure<AURenderEvent> ((IntPtr) UnsafeNext);
 				return null;
 			}
 		}
@@ -1354,7 +1322,7 @@ namespace AudioUnit {
 	//		public AURenderEvent? Next {
 	//			get {
 	//				if (UnsafeNext is not null)
-	//					return (AURenderEvent?) Marshal.PtrToStructure ((IntPtr)UnsafeNext, typeof (AURenderEvent));
+	//					return Marshal.PtrToStructure<AURenderEvent> ((IntPtr)UnsafeNext);
 	//				return null;
 	//			}
 	//		}
@@ -1406,13 +1374,10 @@ namespace AudioUnit {
 	}
 
 #if NET
-	[SupportedOSPlatform ("ios10.0")]
-	[SupportedOSPlatform ("macos10.12")]
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("tvos")]
-#else
-	[iOS (10, 0)]
-	[Mac (10, 12)]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AUParameterAutomationEvent {

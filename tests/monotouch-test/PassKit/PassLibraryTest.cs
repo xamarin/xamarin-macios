@@ -17,7 +17,7 @@ using PassKit;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.PassKit {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class PassLibraryTest {
@@ -38,7 +38,11 @@ namespace MonoTouchFixtures.PassKit {
 
 			var library = new PKPassLibrary ();
 			// not null (but empty by default) and there's no API to add them
-			Assert.NotNull (library.GetPasses (), "GetPasses");
+			var passes = library.GetPasses ();
+			if (passes is null)
+				TestRuntime.IgnoreInCI ("GetPasses () seems to randomly return null on our bots.");
+			// If the following assert fails for you locally, please investigate! See https://github.com/xamarin/maccore/issues/2598.
+			Assert.NotNull (passes, "GetPasses - if this assert fails for you locally, please investigate! See https://github.com/xamarin/maccore/issues/2598.");
 
 			using (var url = PassTest.GetBoardingPassUrl ()) {
 #if __MACCATALYST__
@@ -49,9 +53,9 @@ namespace MonoTouchFixtures.PassKit {
 				Assert.False (UIApplication.SharedApplication.OpenUrl (url), "OpenUrl");
 #endif
 			}
-			
+
 			Assert.Null (library.GetPass (String.Empty, String.Empty), "GetPass");
-			
+
 			using (var pass = PassTest.GetBoardingPass ()) {
 				Assert.False (library.Contains (pass), "Contains");
 				Assert.False (library.Replace (pass), "Replace");
@@ -59,7 +63,7 @@ namespace MonoTouchFixtures.PassKit {
 			}
 		}
 #endif
-		
+
 		[Test]
 		public void Fields ()
 		{

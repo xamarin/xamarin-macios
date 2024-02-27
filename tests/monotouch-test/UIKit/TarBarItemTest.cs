@@ -59,7 +59,7 @@ namespace MonoTouchFixtures.UIKit {
 				Assert.That (tbi.TitlePositionAdjustment.Vertical, Is.EqualTo ((nfloat) 0f), "TitlePositionAdjustment.Vertical");
 			}
 		}
-		
+
 		[Test]
 		public void Ctor_3 ()
 		{
@@ -115,7 +115,7 @@ namespace MonoTouchFixtures.UIKit {
 		public void Ctor_3b_Null ()
 		{
 			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 7, 0, throwIfOtherPlatform: false);
-				
+
 			using (UIImage img = new UIImage ()) {
 				using (UITabBarItem tbi1 = new UITabBarItem (null, null, null)) {
 					Assert.Null (tbi1.Title, "Title-1a");
@@ -135,7 +135,7 @@ namespace MonoTouchFixtures.UIKit {
 
 					var hasSelectedImage = true;
 #if __IOS__
-					if (!TestRuntime.CheckSystemVersion (ApplePlatform.iOS, 7,1))
+					if (!TestRuntime.CheckSystemVersion (ApplePlatform.iOS, 7, 1))
 						hasSelectedImage = false;
 #endif
 					if (hasSelectedImage)

@@ -15,15 +15,18 @@ namespace Cecil.Tests {
 
 	[TestFixture]
 	public class MarshalAsTest {
-		[TestCaseSource (typeof (Helper), nameof (Helper.PlatformAssemblies))]
-		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformAssemblies))]
-		public void TestAssembly (string assemblyPath)
+
+		HashSet<string> knownIssues = new HashSet<string> { };
+
+		[TestCaseSource (typeof (Helper), nameof (Helper.PlatformAssemblyDefinitions))]
+		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformAssemblyDefinitions))]
+		public void TestAssembly (AssemblyInfo info)
 		{
-			var assembly = Helper.GetAssembly (assemblyPath);
-			var failedMethods = new List<string> ();
+			var assembly = info.Assembly;
+			var failedMethods = new HashSet<string> ();
 			List<string>? failures = null;
 			var checkedTypes = new List<TypeReference> ();
-			foreach (var m in Helper.FilterMethods (assembly!, (m) => m.HasPInvokeInfo)) {
+			foreach (var m in assembly.EnumerateMethods ((m) => m.HasPInvokeInfo)) {
 				failures = null;
 				checkedTypes.Clear ();
 				if (!CheckMarshalAs (checkedTypes, m, ref failures)) {
@@ -31,12 +34,12 @@ namespace Cecil.Tests {
 				}
 			}
 
-			Assert.That (failedMethods, Is.Empty, "Methods with bool return type / parameters and no MarshalAs attribute.");
+			Helper.AssertFailures (failedMethods, knownIssues, nameof (MarshalAsTest), "Methods with bool return type / parameters and no MarshalAs attribute.");
 		}
 
 		static void AddFailure (ref List<string>? failures, string failure)
 		{
-			if (failures == null)
+			if (failures is null)
 				failures = new List<string> ();
 
 			failures.Add (failure);
@@ -88,6 +91,9 @@ namespace Cecil.Tests {
 			if (type is null && tr.FullName == "System.Runtime.InteropServices.NFloat")
 				return true;
 
+			if (type is null)
+				throw new Exception ($"Unable to resolve {tr.FullName}");
+
 			if (type.IsEnum)
 				return true;
 
@@ -114,7 +120,7 @@ namespace Cecil.Tests {
 		static bool IsDelegate (TypeReference tr)
 		{
 			var t = tr.Resolve ();
-			if (t == null)
+			if (t is null)
 				return false;
 
 			var baseType = t.BaseType;

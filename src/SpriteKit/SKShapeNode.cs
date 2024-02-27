@@ -17,30 +17,24 @@ namespace SpriteKit {
 	public partial class SKShapeNode : SKNode {
 
 #if NET
-		[SupportedOSPlatform ("ios8.0")]
-		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (8, 0)]
-		[Mac (10, 10)]
 #endif
 		public static SKShapeNode FromPoints (CGPoint [] points)
 		{
 			if (points is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (points));
 
-			return FromPoints (ref points[0], (nuint) points.Length);
+			return FromPoints (ref points [0], (nuint) points.Length);
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios8.0")]
-		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (8, 0)]
-		[Mac (10, 10)]
 #endif
 		public static SKShapeNode FromPoints (CGPoint [] points, int offset, int length)
 		{
@@ -53,30 +47,24 @@ namespace SpriteKit {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios8.0")]
-		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (8, 0)]
-		[Mac (10, 10)]
 #endif
 		public static SKShapeNode FromSplinePoints (CGPoint [] points)
 		{
 			if (points is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (points));
 
-			return FromSplinePoints (ref points[0], (nuint) points.Length);
+			return FromSplinePoints (ref points [0], (nuint) points.Length);
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios8.0")]
-		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (8, 0)]
-		[Mac (10, 10)]
 #endif
 		public static SKShapeNode FromSplinePoints (CGPoint [] points, int offset, int length)
 		{

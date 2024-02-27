@@ -23,7 +23,7 @@ namespace CoreBluetooth {
 		const string format128bits = "{0:x2}{1:x2}{2:x2}{3:x2}-0000-1000-8000-00805f9b34fb";
 
 		const ulong highServiceBits = 0xfb349b5f80000080UL;
-		const ulong lowServiceMask =  0x0010000000000000UL;
+		const ulong lowServiceMask = 0x0010000000000000UL;
 
 		public static CBUUID FromBytes (byte [] bytes)
 		{
@@ -94,7 +94,7 @@ namespace CoreBluetooth {
 				return String.Empty;
 
 			StringBuilder sb = new StringBuilder ();
-			byte *p = (byte*) d.Bytes;
+			byte* p = (byte*) d.Bytes;
 
 			switch (d.Length) {
 			case 2:
@@ -120,7 +120,6 @@ namespace CoreBluetooth {
 #if MONOMAC && !NET
 		// workaround for 27160443 – Trello: https://trello.com/c/oqB27JA6
 		// try new constant (10.13+) and fallback to the old/misnamed one
-		[Mac (10, 13)]
 		public static NSString CharacteristicValidRangeString {
 			get {
 				return CBUUIDCharacteristicValidRangeString ?? CBUUIDValidRangeString;

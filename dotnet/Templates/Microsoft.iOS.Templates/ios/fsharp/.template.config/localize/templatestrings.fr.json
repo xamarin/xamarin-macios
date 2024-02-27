@@ -1,0 +1,10 @@
+{
+  "author": "Microsoft",
+  "name": "Application iOS",
+  "description": "Projet de création d’une application .NET iOS",
+  "symbols/bundleId/description": "Remplace CFBundleIdentifier dans Info.plist",
+  "symbols/minOSVersion/description": "Remplace SupportedOSPlatformVersion dans le fichier projet",
+  "symbols/deviceFamily/choices/universal/description": "Prendre en charge les appareils iPhone et iPad",
+  "symbols/deviceFamily/choices/iphone/description": "Prendre en charge uniquement les appareils iPhone",
+  "symbols/deviceFamily/choices/ipad/description": "Prendre en charge uniquement les appareils iPad"
+}

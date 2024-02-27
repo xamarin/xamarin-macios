@@ -22,8 +22,8 @@ namespace CoreBluetooth {
 		// CFUUID.h
 		[DllImport (Constants.CoreFoundationLibrary)]
 		public extern static /* CFUUIDRef */ IntPtr CFUUIDCreateFromString ( /* CFAllocatorRef */ IntPtr alloc, /* CFStringRef */ IntPtr uuidStr);
-	}		
-	
+	}
+
 	public partial class CBCentralManager {
 
 		public void ConnectPeripheral (CBPeripheral peripheral, PeripheralConnectionOptions? options = null)
@@ -47,7 +47,7 @@ namespace CoreBluetooth {
 				ScanForPeripherals (NSArray.FromObjects (peripheralUuids), options);
 		}
 
-		public void ScanForPeripherals (CBUUID[] peripheralUuids, PeripheralScanningOptions? options = null)
+		public void ScanForPeripherals (CBUUID [] peripheralUuids, PeripheralScanningOptions? options = null)
 		{
 			ScanForPeripherals (peripheralUuids, options?.Dictionary);
 		}

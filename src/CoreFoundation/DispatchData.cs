@@ -29,6 +29,7 @@
 #nullable enable
 
 using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading;
 using ObjCRuntime;
@@ -122,11 +123,15 @@ namespace CoreFoundation {
 		public nuint Size => dispatch_data_get_size (Handle);
 
 		[DllImport (Constants.libcLibrary)]
-		extern static IntPtr dispatch_data_create_map (IntPtr handle, out IntPtr bufferPtr, out nuint size);
+		unsafe extern static IntPtr dispatch_data_create_map (IntPtr handle, IntPtr* bufferPtr, nuint* size);
 
-		public DispatchData CreateMap (out IntPtr bufferPtr, out nuint size)
+		public unsafe DispatchData CreateMap (out IntPtr bufferPtr, out nuint size)
 		{
-			var nh = dispatch_data_create_map (Handle, out bufferPtr, out size);
+			bufferPtr = default;
+			size = default;
+			var nh = dispatch_data_create_map (Handle,
+												(IntPtr*) Unsafe.AsPointer<IntPtr> (ref bufferPtr),
+												(nuint*) Unsafe.AsPointer<nuint> (ref size));
 			return new DispatchData (nh, owns: true);
 		}
 
@@ -158,7 +163,7 @@ namespace CoreFoundation {
 			nuint bufferSize = 0;
 			using DispatchData dataCopy = CreateMap (out bufferAddress, out bufferSize);
 
-			byte[] managedArray = new byte[(int) bufferSize];
+			byte [] managedArray = new byte [(int) bufferSize];
 			Marshal.Copy (bufferAddress, managedArray, 0, (int) bufferSize);
 			return managedArray;
 		}

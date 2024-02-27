@@ -5,11 +5,9 @@ using NUnit.Framework.Api;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Filters;
 
-namespace Xamarin.iOS.UnitTests.NUnit
-{
-	public class TestMethodFilter : TestFilter
-	{
-		HashSet <string> methods = new HashSet<string> ();
+namespace Xamarin.iOS.UnitTests.NUnit {
+	public class TestMethodFilter : TestFilter {
+		HashSet<string> methods = new HashSet<string> ();
 
 		public TestMethodFilter (string method)
 		{
@@ -20,7 +18,7 @@ namespace Xamarin.iOS.UnitTests.NUnit
 
 		public TestMethodFilter (IEnumerable<string> methods)
 		{
-			if (methods == null)
+			if (methods is null)
 				throw new ArgumentNullException (nameof (methods));
 
 			AddRange (methods);
@@ -33,10 +31,10 @@ namespace Xamarin.iOS.UnitTests.NUnit
 
 			methods.Add (method);
 		}
-		
+
 		public void AddRange (IEnumerable<string> ignoredMethods)
 		{
-			if (methods == null)
+			if (methods is null)
 				throw new ArgumentNullException (nameof (ignoredMethods));
 			foreach (var m in ignoredMethods)
 				methods.Add (m);
@@ -44,10 +42,10 @@ namespace Xamarin.iOS.UnitTests.NUnit
 
 		public override bool Match (ITest test)
 		{
-			if (test == null || methods == null || methods.Count == 0)
+			if (test is null || methods is null || methods.Count == 0)
 				return false;
 
-			if (test.FixtureType == null)
+			if (test.FixtureType is null)
 				return false; // It's probably an assembly name, all tests will have a fixture
 
 			return true;
@@ -55,10 +53,10 @@ namespace Xamarin.iOS.UnitTests.NUnit
 
 		public override bool Pass (ITest test)
 		{
-			if (test == null || methods == null || methods.Count == 0)
+			if (test is null || methods is null || methods.Count == 0)
 				return false;
 
-			if (test.FixtureType == null)
+			if (test.FixtureType is null)
 				return false; // It's probably an assembly name, all tests will have a fixture
 
 			// if the  method is not present, execute the test

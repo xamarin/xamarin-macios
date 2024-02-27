@@ -136,7 +136,7 @@ namespace Xamarin.Linker.Steps {
 		void AddRequiredObjectiveCType (TypeDefinition type)
 		{
 			var registerAttribute = DerivedLinkContext.StaticRegistrar?.GetRegisterAttribute (type);
-			if (registerAttribute == null)
+			if (registerAttribute is null)
 				return;
 
 			if (!registerAttribute.IsWrapper)
@@ -160,11 +160,11 @@ namespace Xamarin.Linker.Steps {
 		{
 			var modified = false;
 
-			if (method.IsPInvokeImpl && method.HasPInvokeInfo && method.PInvokeInfo != null) {
+			if (method.IsPInvokeImpl && method.HasPInvokeInfo && method.PInvokeInfo is not null) {
 				var pinfo = method.PInvokeInfo;
 				bool addPInvokeSymbol = false;
 
-				if (State != null) {
+				if (State is not null) {
 					switch (pinfo.EntryPoint) {
 					case "objc_msgSend":
 					case "objc_msgSendSuper":
@@ -189,6 +189,9 @@ namespace Xamarin.Linker.Steps {
 					Where (v => v.EndsWith (".dylib", StringComparison.OrdinalIgnoreCase) || v.EndsWith (".a", StringComparison.OrdinalIgnoreCase)).
 					Select (v => Path.GetFileNameWithoutExtension (v)).
 					Select (v => v.StartsWith ("lib", StringComparison.OrdinalIgnoreCase) ? v.Substring (3) : v).ToHashSet ();
+#if !__MACOS__
+				monoLibraryVariations.Add ("System.Globalization.Native"); // System.Private.CoreLib has P/Invokes pointing to libSystem.Globalization.Native, but they're actually in libmonosgen-2.0
+#endif
 				monoLibraryVariations.UnionWith (monoLibraryVariations.Select (v => "lib" + v).ToArray ());
 				monoLibraryVariations.UnionWith (monoLibraryVariations.Select (v => v + ".dylib").ToArray ());
 				// If the P/Invoke points to any of those libraries, then we add it as a P/Invoke symbol.
@@ -230,7 +233,7 @@ namespace Xamarin.Linker.Steps {
 				var property = method.GetProperty ();
 				object symbol;
 				// The Field attribute may have been linked away, but we've stored it in an annotation.
-				if (property != null && Annotations.GetCustomAnnotations ("ExportedFields").TryGetValue (property, out symbol)) {
+				if (property is not null && Annotations.GetCustomAnnotations ("ExportedFields").TryGetValue (property, out symbol)) {
 					DerivedLinkContext.RequiredSymbols.AddField ((string) symbol).AddMember (property);
 				}
 			}

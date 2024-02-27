@@ -11,13 +11,11 @@ using MetalPerformanceShaders;
 
 using NUnit.Framework;
 
-namespace MonoTouchFixtures.MetalPerformanceShaders
-{
+namespace MonoTouchFixtures.MetalPerformanceShaders {
 
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class MPSImageHistogramEqualizationTest
-	{
+	public class MPSImageHistogramEqualizationTest {
 		IMTLDevice device;
 
 		[OneTimeSetUp]
@@ -35,7 +33,7 @@ namespace MonoTouchFixtures.MetalPerformanceShaders
 
 			device = MTLDevice.SystemDefault;
 			// some older hardware won't have a default
-			if (device == null || !MPSKernel.Supports (device))
+			if (device is null || !MPSKernel.Supports (device))
 				Assert.Inconclusive ("Metal is not supported");
 		}
 

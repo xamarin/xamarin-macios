@@ -44,7 +44,7 @@ namespace Extrospection {
 		public override void VisitManagedMethod (MethodDefinition method)
 		{
 			var key = method.GetName ();
-			if (key == null)
+			if (key is null)
 				return;
 
 			// we still have one case to fix with duplicate selectors :|
@@ -115,16 +115,16 @@ namespace Extrospection {
 				return;
 
 			// don't process deprecated methods (or types)
-			if (decl.IsDeprecated () || (decl.DeclContext as Decl).IsDeprecated ())
+			if (decl.IsDeprecated () || (decl.DeclContext as Decl).IsDeprecated ())
 				return;
 
 			var method = GetMethod (decl);
 			// don't report missing nullability on types that are not bound - that's a different problem
-			if (method == null)
+			if (method is null)
 				return;
 
 			var framework = Helpers.GetFramework (decl);
-			if (framework == null)
+			if (framework is null)
 				return;
 
 			var t = method.DeclaringType;
@@ -171,11 +171,11 @@ namespace Extrospection {
 				switch (nullability) {
 				case NullabilityKind.NonNull:
 					if (parameter_nullable == Null.Annotated)
-						Log.On (framework).Add ($"!extra-null-allowed! '{method.FullName}' has a extraneous [NullAllowed] on parameter #{i-1}");
+						Log.On (framework).Add ($"!extra-null-allowed! '{method.FullName}' has a extraneous [NullAllowed] on parameter #{i - 1}");
 					break;
 				case NullabilityKind.Nullable:
 					if (parameter_nullable != Null.Annotated)
-						Log.On (framework).Add ($"!missing-null-allowed! '{method.FullName}' is missing an [NullAllowed] on parameter #{i-1}");
+						Log.On (framework).Add ($"!missing-null-allowed! '{method.FullName}' is missing an [NullAllowed] on parameter #{i - 1}");
 					break;
 				case NullabilityKind.Unspecified:
 					break;
@@ -203,7 +203,7 @@ namespace Extrospection {
 					var property = method.FindProperty ();
 					// also `null_resettable` will only show something (natively) on the setter (since it does not return null, but accept it)
 					// in this case we'll trust xtro checking the setter only (if it exists, if not then it can't be `null_resettable`)
-					if (property.SetMethod != null)
+					if (property.SetMethod is not null)
 						return;
 					cap = property;
 				} else {

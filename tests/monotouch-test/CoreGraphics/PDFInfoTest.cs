@@ -20,7 +20,7 @@ using CoreGraphics;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.CoreGraphics {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class PDFInfoTest {
@@ -47,11 +47,11 @@ namespace MonoTouchFixtures.CoreGraphics {
 		[Test]
 		public void ToDictionary ()
 		{
-			if (TestRuntime.CheckXcodeVersion (9,3))
+			if (TestRuntime.CheckXcodeVersion (9, 3))
 				Assert.Ignore ("Crash (at least on devices) with iOS 11.3 beta 1");
 			// Bug #8879
 			var info = GetInfo ();
-			UIGraphics.BeginPDFContext("file", CGRect.Empty, info); 
+			UIGraphics.BeginPDFContext ("file", CGRect.Empty, info);
 		}
 #endif
 

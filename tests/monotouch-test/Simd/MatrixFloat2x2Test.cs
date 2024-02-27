@@ -14,12 +14,10 @@ using MatrixFloat2x2 = global::OpenTK.NMatrix2;
 
 using NUnit.Framework;
 
-namespace MonoTouchFixtures.Simd
-{
+namespace MonoTouchFixtures.Simd {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class MatrixFloat2x2Test
-	{
+	public class MatrixFloat2x2Test {
 		[Test]
 		public void Identity ()
 		{
@@ -39,7 +37,7 @@ namespace MonoTouchFixtures.Simd
 		{
 			var expected = GetTestMatrix ();
 			var actual = new MatrixFloat2x2 (expected.R0C0, expected.R0C1,
-			                                 expected.R1C0, expected.R1C1);
+											 expected.R1C0, expected.R1C1);
 			Asserts.AreEqual (expected, actual, "ctor 1");
 
 		}

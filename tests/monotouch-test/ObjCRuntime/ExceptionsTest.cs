@@ -18,7 +18,7 @@ using ObjCException = Foundation.MonoTouchException;
 #endif
 
 namespace MonoTouchFixtures.ObjCRuntime {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class ExceptionsTest {
@@ -193,7 +193,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 						Assert.AreNotSame (e.Exception, thrownException, "exception");
 						Assert.AreSame (typeof (ObjCException), thrownException.GetType (), "2 thrown type");
 						Assert.AreEqual ("Caught exception", ((ObjCException) thrownException).Name, "2 thrown name");
-						Assert.That (((ObjCException) thrownException).Reason, Does.StartWith ("exception was rethrown") , "2 thrown reason");
+						Assert.That (((ObjCException) thrownException).Reason, Does.StartWith ("exception was rethrown"), "2 thrown reason");
 					}
 					if (hasDebugger) {
 						Assert.AreEqual (0, objcEventArgs.Count, "2 objc exception");
@@ -223,7 +223,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 					}
 				}
 			} finally {
-				UninstallHandlers ();      
+				UninstallHandlers ();
 			}
 		}
 	}

@@ -1,7 +1,18 @@
 ## new @required on existing protocols are breaking changes
 !incorrect-protocol-member! CIImageProcessorInput::surface is REQUIRED and should be abstract
 !incorrect-protocol-member! CIImageProcessorOutput::surface is REQUIRED and should be abstract
-
+!incorrect-protocol-member! CIImageProcessorInput::digest is REQUIRED and should be abstract
+!incorrect-protocol-member! CIImageProcessorOutput::digest is REQUIRED and should be abstract
+!incorrect-protocol-member! CIAttributedTextImageGenerator::padding is REQUIRED and should be abstract
+!incorrect-protocol-member! CIAttributedTextImageGenerator::setPadding: is REQUIRED and should be abstract
+!incorrect-protocol-member! CIColorCube::extrapolate is REQUIRED and should be abstract
+!incorrect-protocol-member! CIColorCube::setExtrapolate: is REQUIRED and should be abstract
+!incorrect-protocol-member! CIColorCubesMixedWithMask::extrapolate is REQUIRED and should be abstract
+!incorrect-protocol-member! CIColorCubesMixedWithMask::setExtrapolate: is REQUIRED and should be abstract
+!incorrect-protocol-member! CIColorCubeWithColorSpace::extrapolate is REQUIRED and should be abstract
+!incorrect-protocol-member! CIColorCubeWithColorSpace::setExtrapolate: is REQUIRED and should be abstract
+!incorrect-protocol-member! CITextImageGenerator::padding is REQUIRED and should be abstract
+!incorrect-protocol-member! CITextImageGenerator::setPadding: is REQUIRED and should be abstract
 
 ## requires varargs support
 !missing-selector! +CIFilter::filterWithName:keysAndValues: not bound
@@ -241,3 +252,12 @@
 !missing-selector! +CIFilter::linearLightBlendModeFilter not bound
 !missing-selector! +CIFilter::personSegmentationFilter not bound
 !missing-selector! +CIFilter::vividLightBlendModeFilter not bound
+## xcode 14
+!missing-selector! +CIFilter::areaLogarithmicHistogramFilter not bound
+!missing-selector! +CIFilter::convertLabToRGBFilter not bound
+!missing-selector! +CIFilter::convertRGBtoLabFilter not bound
+# xcode1 5
+!incorrect-protocol-member! CIPhotoEffect::setExtrapolate: is REQUIRED and should be abstract
+!incorrect-protocol-member! CIPhotoEffect::extrapolate is REQUIRED and should be abstract
+!incorrect-protocol-member! CIImageProcessorInput::roiTileCount is REQUIRED and should be abstract
+!incorrect-protocol-member! CIImageProcessorInput::roiTileIndex is REQUIRED and should be abstract

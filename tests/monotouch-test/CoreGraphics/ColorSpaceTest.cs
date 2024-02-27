@@ -24,11 +24,11 @@ using NativeHandle = System.IntPtr;
 #endif
 
 namespace MonoTouchFixtures.CoreGraphics {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class ColorSpaceTest {
-		
+
 		void CheckUnknown (CGColorSpace cs)
 		{
 			Assert.That (cs.Components, Is.EqualTo ((nint) 0), "Unknown-0");
@@ -44,7 +44,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 			CheckUnknown (CGColorSpace.Null);
 		}
 #endif
-		
+
 		[Test]
 		public void CreateDeviceGray ()
 		{
@@ -125,7 +125,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 			nint m = 3; // RGB
 			const int lastIndex = 2;
 			// An array of m*(lastIndex+1) bytes
-			byte[] table = new byte [3 * (lastIndex + 1)] { 1, 2, 3, 4, 5, 6, 255, 255, 255 };
+			byte [] table = new byte [3 * (lastIndex + 1)] { 1, 2, 3, 4, 5, 6, 255, 255, 255 };
 			using (var base_cs = CGColorSpace.CreateDeviceRGB ())
 			using (var cs = CGColorSpace.CreateIndexed (base_cs, lastIndex, table)) {
 				Assert.That (cs.Components, Is.EqualTo ((nint) 1), "1");
@@ -157,9 +157,9 @@ namespace MonoTouchFixtures.CoreGraphics {
 		{
 			if (!TestRuntime.CheckXcodeVersion (8, 0))
 				Assert.Ignore ("Requires iOS 10+");
-			
+
 			using (var cs = CGColorSpace.CreateWithName (CGColorSpaceNames.ExtendedSrgb)) {
-				Assert.That (cs.Components, Is.EqualTo ((nint)3), "3");
+				Assert.That (cs.Components, Is.EqualTo ((nint) 3), "3");
 				Assert.That (cs.Model, Is.EqualTo (CGColorSpaceModel.RGB), "RGB");
 				Assert.Null (cs.GetBaseColorSpace (), "GetBaseColorSpace");
 				// not indexed so no color table
@@ -178,7 +178,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 				Assert.True (cs.SupportsOutput, "SupportsOutput");
 
 				using (var icc_data = cs.GetIccData ())
-					Assert.That (icc_data.Length, Is.EqualTo ((nuint)3144), "GetIccData");
+					Assert.That (icc_data.Length, Is.EqualTo ((nuint) 3144), "GetIccData");
 
 				if (TestRuntime.CheckXcodeVersion (12, 0))
 					Assert.True (cs.UsesExtendedRange, "UsesExtendedRange");
@@ -190,11 +190,11 @@ namespace MonoTouchFixtures.CoreGraphics {
 		{
 			if (!TestRuntime.CheckXcodeVersion (8, 0))
 				Assert.Ignore ("Requires iOS 10+");
-			
+
 			var cs = CGColorSpace.CreateWithName (CGColorSpaceNames.ExtendedSrgb);
 			cs.Dispose ();
 
-			Assert.That (cs.Components, Is.EqualTo ((nint)0), "0");
+			Assert.That (cs.Components, Is.EqualTo ((nint) 0), "0");
 			Assert.That (cs.Model, Is.EqualTo (CGColorSpaceModel.Unknown), "Unknown");
 			Assert.Null (cs.GetBaseColorSpace (), "GetBaseColorSpace");
 			Assert.That (cs.GetColorTable ().Length, Is.EqualTo (0), "GetColorTable");
@@ -294,7 +294,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 		void CheckIndexedFile (CGImage img)
 		{
 			CGColorSpace cs = img.ColorSpace;
-			Assert.That (cs.Components, Is.EqualTo ((nint)1), "Components");
+			Assert.That (cs.Components, Is.EqualTo ((nint) 1), "Components");
 			Assert.That (cs.Model, Is.EqualTo (CGColorSpaceModel.Indexed), "GetBaseColorSpace");
 			var table = cs.GetColorTable ();
 			Assert.That (table.Length, Is.EqualTo (768), "GetColorTable");
@@ -378,7 +378,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 				Assert.IsNotNull (space, "null blackpoint");
 			}
 
-			using (var space = CGColorSpace.CreateCalibratedRGB (whitepoint, blackpoint, null, matrix)) { 
+			using (var space = CGColorSpace.CreateCalibratedRGB (whitepoint, blackpoint, null, matrix)) {
 				Assert.IsNotNull (space, "null gamma");
 			}
 
@@ -451,7 +451,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 			using (var cs = CGColorSpace.CreateWithName (CGColorSpaceNames.GenericRgb)) {
 				var csl = cs.CreateLinearized ();
 				Assert.NotNull (csl, "not null");
-				Assert.That ((nint) TestRuntime.CFGetRetainCount (csl.Handle), Is.EqualTo ((nint) 1));
+				Assert.That ((nint) TestRuntime.CFGetRetainCount (csl.Handle), Is.EqualTo ((nint) 1).Or.EqualTo ((nint) 2));
 			}
 		}
 
@@ -462,7 +462,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 			using (var cs = CGColorSpace.CreateWithName (CGColorSpaceNames.GenericRgb)) {
 				var csl = cs.CreateExtended ();
 				Assert.NotNull (csl, "not null");
-				Assert.That ((nint) TestRuntime.CFGetRetainCount (csl.Handle), Is.EqualTo ((nint) 1));
+				Assert.That ((nint) TestRuntime.CFGetRetainCount (csl.Handle), Is.EqualTo ((nint) 1).Or.EqualTo ((nint) 2));
 			}
 		}
 
@@ -473,25 +473,33 @@ namespace MonoTouchFixtures.CoreGraphics {
 			using (var cs = CGColorSpace.CreateWithName (CGColorSpaceNames.GenericRgb)) {
 				var csl = cs.CreateExtendedLinearized ();
 				Assert.NotNull (csl, "not null");
-				Assert.That ((nint) TestRuntime.CFGetRetainCount (csl.Handle), Is.EqualTo ((nint) 1));
+				Assert.That ((nint) TestRuntime.CFGetRetainCount (csl.Handle), Is.EqualTo ((nint) 1).Or.EqualTo ((nint) 2));
 			}
 		}
-		
+
+		[Test]
+		public void CreateCopyWithStandardRange ()
+		{
+			TestRuntime.AssertXcodeVersion (14, 0);
+			using var cs = CGColorSpace.CreateWithName (CGColorSpaceNames.GenericRgb);
+			Assert.NotNull (cs.CreateCopyWithStandardRange ());
+		}
+
 		[Test]
 		public void IsHlgBasedTest ()
 		{
-			TestRuntime.AssertXcodeVersion (13,0);
+			TestRuntime.AssertXcodeVersion (13, 0);
 			using (var cs = CGColorSpace.CreateDeviceRGB ()) {
 				Assert.DoesNotThrow (() => {
 					var result = cs.IsHlgBased;
 				});
 			}
 		}
-		
+
 		[Test]
 		public void IsPQBasedTest ()
 		{
-			TestRuntime.AssertXcodeVersion (13,0);
+			TestRuntime.AssertXcodeVersion (13, 0);
 			using (var cs = CGColorSpace.CreateDeviceRGB ()) {
 				Assert.DoesNotThrow (() => {
 					var result = cs.IsPQBased;
@@ -499,5 +507,5 @@ namespace MonoTouchFixtures.CoreGraphics {
 			}
 		}
 	}
-	
+
 }

@@ -25,7 +25,7 @@ namespace MonoTouchFixtures.SystemConfiguration {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class CaptiveNetworkTest {
-		
+
 #if !MONOMAC // Fields are not on Mac
 		[Test]
 		public void Fields ()
@@ -53,28 +53,24 @@ namespace MonoTouchFixtures.SystemConfiguration {
 		[Test]
 		public void TryCopyCurrentNetworkInfo_Null ()
 		{
-			NSDictionary dict;
 #if __TVOS__
 #if !NET
-			Assert.Throws<NotSupportedException> (() => CaptiveNetwork.TryCopyCurrentNetworkInfo (null, out dict));
+			Assert.Throws<NotSupportedException> (() => CaptiveNetwork.TryCopyCurrentNetworkInfo (null, out var dict));
 #endif
 #else
-			Assert.Throws<ArgumentNullException> (() => CaptiveNetwork.TryCopyCurrentNetworkInfo (null, out dict));
+			Assert.Throws<ArgumentNullException> (() => CaptiveNetwork.TryCopyCurrentNetworkInfo (null, out var dict));
 #endif
 		}
-		
+
 		[Test]
 		public void TryCopyCurrentNetworkInfo ()
 		{
-			NSDictionary dict;
-			StatusCode status;
-
 #if __TVOS__
 #if !NET
-			Assert.Throws<NotSupportedException> (() => { status = CaptiveNetwork.TryCopyCurrentNetworkInfo ("en0", out dict); });
+			Assert.Throws<NotSupportedException> (() => { CaptiveNetwork.TryCopyCurrentNetworkInfo ("en0", out var dict); });
 #endif
 #else
-			status = CaptiveNetwork.TryCopyCurrentNetworkInfo ("en0", out dict);
+			var status = CaptiveNetwork.TryCopyCurrentNetworkInfo ("en0", out var dict);
 
 			// No network, ignore test
 			if (status == StatusCode.NoKey)
@@ -94,13 +90,12 @@ namespace MonoTouchFixtures.SystemConfiguration {
 		[Test]
 		public void TryGetSupportedInterfaces ()
 		{
-			StatusCode status;
 #if __TVOS__
 #if !NET
 			Assert.Throws<NotSupportedException> (() => CaptiveNetwork.TryGetSupportedInterfaces (out var ifaces));
 #endif
 #else
-			status = CaptiveNetwork.TryGetSupportedInterfaces (out var ifaces);
+			var status = CaptiveNetwork.TryGetSupportedInterfaces (out var ifaces);
 			Assert.AreEqual (StatusCode.OK, status, "Status");
 #endif // __TVOS__
 		}
@@ -132,7 +127,7 @@ namespace MonoTouchFixtures.SystemConfiguration {
 			Assert.False (CaptiveNetwork.MarkPortalOnline ("xamxam"));
 #endif
 		}
-		
+
 		[Test]
 		public void MarkPortalOffline_Null ()
 		{
@@ -158,7 +153,7 @@ namespace MonoTouchFixtures.SystemConfiguration {
 			Assert.False (CaptiveNetwork.MarkPortalOffline ("xamxam"));
 #endif
 		}
-		
+
 		[Test]
 		public void SetSupportedSSIDs_Null ()
 		{

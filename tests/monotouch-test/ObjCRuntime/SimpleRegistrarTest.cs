@@ -6,11 +6,9 @@ using NUnit.Framework;
 using Foundation;
 using ObjCRuntime;
 
-namespace Xamarin.Mac.Tests
-{
+namespace Xamarin.Mac.Tests {
 	[Register ("SimpleRegistrarTestClass")]
-	class SimpleRegistrarTestClass : NSObject 
-	{
+	class SimpleRegistrarTestClass : NSObject {
 		public virtual string Value {
 			[Export ("value")]
 			get {
@@ -20,19 +18,17 @@ namespace Xamarin.Mac.Tests
 	}
 
 	[Register ("RegistrarTestDerivedClass")]
-	class RegistrarTestDerivedClass : SimpleRegistrarTestClass 
-	{
+	class RegistrarTestDerivedClass : SimpleRegistrarTestClass {
 		public override string Value {
 			get {
 				return "RegistrarTestDerivedClass";
 			}
 		}
 	}
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class SimpleRegistrarTest
-	{
+	public class SimpleRegistrarTest {
 		[DllImport ("/usr/lib/libobjc.dylib", EntryPoint = "objc_msgSend")]
 		public extern static IntPtr IntPtr_objc_msgSend (IntPtr receiver, IntPtr selector);
 
@@ -45,9 +41,9 @@ namespace Xamarin.Mac.Tests
 			RegistrarTestDerivedClass derivedObj = new RegistrarTestDerivedClass ();
 			IntPtr derivedReceiver = derivedObj.Handle;
 
-			Assert.AreEqual (Runtime.GetNSObject<NSString> (IntPtr_objc_msgSend (receiver, Selector.GetHandle ("value"))), (NSString)"RegistrarTestClass");
+			Assert.AreEqual (Runtime.GetNSObject<NSString> (IntPtr_objc_msgSend (receiver, Selector.GetHandle ("value"))), (NSString) "RegistrarTestClass");
 
-			Assert.AreEqual (Runtime.GetNSObject<NSString> (IntPtr_objc_msgSend (derivedReceiver, Selector.GetHandle ("value"))), (NSString)"RegistrarTestDerivedClass");
+			Assert.AreEqual (Runtime.GetNSObject<NSString> (IntPtr_objc_msgSend (derivedReceiver, Selector.GetHandle ("value"))), (NSString) "RegistrarTestDerivedClass");
 		}
 
 		[Test]

@@ -30,15 +30,11 @@ namespace CoreServices
 		IgnoreSelf = 0x00000008,
 		FileEvents = 0x00000010,
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
-#else
-		[Mac (10,9)]
+		[SupportedOSPlatform ("macos")]
 #endif
 		MarkSelf = 0x00000020,
 #if NET
-		[SupportedOSPlatform ("macos10.13")]
-#else
-		[Mac (10,13)]
+		[SupportedOSPlatform ("macos")]
 #endif
 		UseExtendedData = 0x00000040,
 #if NET
@@ -76,9 +72,7 @@ namespace CoreServices
 		ItemIsHardlink = 0x00100000,
 		ItemIsLastHardlink = 0x00200000,
 #if NET
-		[SupportedOSPlatform ("macos10.14")]
-#else
-		[Mac (10,14)]
+		[SupportedOSPlatform ("macos")]
 #endif
 		ItemCloned = 0x00400000,
 	}
@@ -114,7 +108,7 @@ namespace CoreServices
 				return Guid.Empty;
 			}
 
-			return (Guid)Marshal.PtrToStructure (uuidRef, typeof (Guid))!;
+			return Marshal.PtrToStructure<Guid> (uuidRef)!;
 		}
 
 		[DllImport (Constants.CoreServicesLibrary)]
@@ -207,7 +201,7 @@ namespace CoreServices
 		/// The service will supply events that have happened after the given event ID. To ask for
 		/// events "since now," set to <c>null</c> or <see cref="FSEvent.SinceNowId"/>. Often, clients
 		/// will supply the highest-numbered event ID they have received in a callback, which they can
-		/// obtain via <see cref="FSEventStream.LatestEventId">. Do not set to zero, unless you want to
+		/// obtain via <see cref="FSEventStream.LatestEventId"/>. Do not set to zero, unless you want to
 		/// receive events for every directory modified since "the beginning of time" -- an unlikely scenario.
 		/// </summary>
 		public ulong? SinceWhenId { get; set; }
@@ -400,6 +394,7 @@ namespace CoreServices
 		// so we cannot use Dlfcn.GetStringConstant against CoreServices. -abock, 2022-03-04
 		static readonly NSString kFSEventStreamEventExtendedDataPathKey = new ("path");
 		static readonly NSString kFSEventStreamEventExtendedFileIDKey = new ("fileID");
+		static readonly NSString kFSEventStreamEventExtendedDocIDKey = new ("docID");
 
 #if NET
 		[UnmanagedCallersOnly]
@@ -430,8 +425,11 @@ namespace CoreServices
 					var fileIdHandle = CFDictionary.GetValue (
 						eventDataHandle,
 						kFSEventStreamEventExtendedFileIDKey.Handle);
-					if (fileIdHandle != IntPtr.Zero)
-						CFDictionary.CFNumberGetValue (fileIdHandle, 4 /*kCFNumberSInt64Type*/, out fileId);
+					if (fileIdHandle != IntPtr.Zero) {
+						unsafe {
+							CFDictionary.CFNumberGetValue (fileIdHandle, 4 /*kCFNumberSInt64Type*/, &fileId);
+						}
+					}
 				}
 
 				events[i] = new FSEvent
@@ -504,6 +502,12 @@ namespace CoreServices
 		static extern void FSEventStreamScheduleWithRunLoop (IntPtr handle,
 			IntPtr runLoop, IntPtr runLoopMode);
 
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[ObsoletedOSPlatform ("macos13.0", "Use 'SetDispatchQueue' instead.")]
+#else
+		[Deprecated (PlatformName.MacOSX, 13,0, message: "Use 'SetDispatchQueue' instead.")]
+#endif
 		public void ScheduleWithRunLoop (CFRunLoop runLoop, NSString runLoopMode)
 		{
 			FSEventStreamScheduleWithRunLoop (GetCheckedHandle (), runLoop.Handle, runLoopMode.Handle);
@@ -528,6 +532,12 @@ namespace CoreServices
 		static extern void FSEventStreamUnscheduleFromRunLoop (IntPtr handle,
 			IntPtr runLoop, IntPtr runLoopMode);
 
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[ObsoletedOSPlatform ("macos13.0", "Use 'SetDispatchQueue' instead.")]
+#else
+		[Deprecated (PlatformName.MacOSX, 13,0, message: "Use 'SetDispatchQueue' instead.")]
+#endif
 		public void UnscheduleFromRunLoop (CFRunLoop runLoop, NSString runLoopMode)
 		{
 			FSEventStreamScheduleWithRunLoop (GetCheckedHandle (), runLoop.Handle, runLoopMode.Handle);

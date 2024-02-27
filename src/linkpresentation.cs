@@ -26,8 +26,9 @@ using NativeHandle = System.IntPtr;
 namespace LinkPresentation {
 
 	[ErrorDomain ("LPErrorDomain")]
-	[Mac (10,15), iOS (13,0)]
-	[TV (14,0)]
+	[iOS (13, 0)]
+	[TV (14, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum LPErrorCode : long {
 		Unknown = 1,
@@ -36,8 +37,9 @@ namespace LinkPresentation {
 		MetadataFetchTimedOut,
 	}
 
-	[Mac (10,15), iOS (13,0)]
-	[TV (14,0)]
+	[iOS (13, 0)]
+	[TV (14, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface LPLinkMetadata : NSCopying, NSSecureCoding {
 
@@ -63,8 +65,9 @@ namespace LinkPresentation {
 		NSUrl RemoteVideoUrl { get; set; }
 	}
 
-	[Mac (10,15), iOS (13,0)]
-	[TV (14,0)]
+	[iOS (13, 0)]
+	[TV (14, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (UIView))]
 	interface LPLinkView {
 
@@ -82,8 +85,9 @@ namespace LinkPresentation {
 		LPLinkMetadata Metadata { get; set; }
 	}
 
-	[Mac (10,15), iOS (13,0)]
+	[iOS (13, 0)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface LPMetadataProvider {
 
@@ -92,7 +96,7 @@ namespace LinkPresentation {
 		void StartFetchingMetadata (NSUrl url, Action<LPLinkMetadata, NSError> completionHandler);
 
 		[Async]
-		[Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("startFetchingMetadataForRequest:completionHandler:")]
 		void StartFetchingMetadata (NSUrlRequest request, Action<LPLinkMetadata, NSError> completionHandler);
 

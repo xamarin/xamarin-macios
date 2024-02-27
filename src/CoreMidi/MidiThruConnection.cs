@@ -1,3 +1,4 @@
+#if !TVOS && !WATCH
 // 
 // MidiThruConnection.cs
 //
@@ -62,21 +63,19 @@ namespace CoreMidi {
 		}
 
 		[DllImport (Constants.CoreMidiLibrary)]
-		static extern /* OSStatus */ MidiError MIDIThruConnectionCreate (
+		unsafe static extern /* OSStatus */ MidiError MIDIThruConnectionCreate (
 			/* CFStringRef */ IntPtr inPersistentOwnerID, /* can be null */
 			/* CFDataRef */ IntPtr inConnectionParams,
-			/* MIDIThruConnectionRef* */ out MidiThruConnectionRef outConnection);
+			/* MIDIThruConnectionRef* */ MidiThruConnectionRef* outConnection);
 
 		public static MidiThruConnection? Create (string persistentOwnerID, MidiThruConnectionParams connectionParams, out MidiError error)
 		{
 			MidiThruConnectionRef ret;
 
 			using (var data = connectionParams.WriteStruct ()) {
-				var retStr = CFString.CreateNative (persistentOwnerID);
-				try {
-					error = MIDIThruConnectionCreate (retStr, data.Handle, out ret);
-				} finally {
-					CFString.ReleaseNative (retStr);
+				using var retStr = new TransientCFString (persistentOwnerID);
+				unsafe {
+					error = MIDIThruConnectionCreate (retStr, data.Handle, &ret);
 				}
 			}
 
@@ -93,9 +92,9 @@ namespace CoreMidi {
 		}
 
 		[DllImport (Constants.CoreMidiLibrary)]
-		static extern /* OSStatus */ MidiError MIDIThruConnectionGetParams (
+		unsafe static extern /* OSStatus */ MidiError MIDIThruConnectionGetParams (
 			/* MIDIThruConnectionRef* */ MidiThruConnectionRef connection,
-			/* CFDataRef */ out IntPtr outConnectionParams);
+			/* CFDataRef */ IntPtr* outConnectionParams);
 
 		public MidiThruConnectionParams? GetParams (out MidiError error)
 		{
@@ -103,7 +102,9 @@ namespace CoreMidi {
 				throw new ObjectDisposedException ("MidiThruConnection");
 
 			IntPtr ret;
-			error = MIDIThruConnectionGetParams (Handle, out ret);
+			unsafe {
+				error = MIDIThruConnectionGetParams (Handle, &ret);
+			}
 			if (error != MidiError.Ok || ret == IntPtr.Zero)
 				return null;
 			using (var data = Runtime.GetNSObject<NSData> (ret, true)) {
@@ -140,43 +141,41 @@ namespace CoreMidi {
 		}
 
 		[DllImport (Constants.CoreMidiLibrary)]
-		static extern /* OSStatus */ MidiError MIDIThruConnectionFind (
+		unsafe static extern /* OSStatus */ MidiError MIDIThruConnectionFind (
 			/* CFStringRef* */ IntPtr inPersistentOwnerID,
-			/* CFDataRef */ out IntPtr outConnectionList);
+			/* CFDataRef */ IntPtr* outConnectionList);
 
-		public static MidiThruConnection[]? Find (string persistentOwnerID, out MidiError error)
+		public static MidiThruConnection []? Find (string persistentOwnerID, out MidiError error)
 		{
 			if (persistentOwnerID is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (persistentOwnerID));
 
 			IntPtr ret;
-			var persistentOwnerIDHandle = CFString.CreateNative (persistentOwnerID);
-			try {
-				error = MIDIThruConnectionFind (persistentOwnerIDHandle, out ret);
-			} finally {
-				CFString.ReleaseNative (persistentOwnerIDHandle);
+			using var persistentOwnerIDHandle = new TransientCFString (persistentOwnerID);
+			unsafe {
+				error = MIDIThruConnectionFind (persistentOwnerIDHandle, &ret);
 			}
 			using (var data = Runtime.GetNSObject<NSData> (ret)) {
 				if (data is null)
 					return null;
-				var typeSize = Marshal.SizeOf (typeof (MidiThruConnectionRef));
+				var typeSize = Marshal.SizeOf<MidiThruConnectionRef> ();
 				var totalObjs = (int) data.Length / typeSize;
 				if (totalObjs == 0)
 					return null;
 
-				var connections = new MidiThruConnection[totalObjs];
+				var connections = new MidiThruConnection [totalObjs];
 				unsafe {
 					uint* handles = (uint*) (IntPtr) data.Bytes;
 					for (int i = 0; i < totalObjs; i++) {
 						connections [i] = new MidiThruConnection (handles [i]);
 					}
 				}
-				
+
 				return connections;
 			}
 		}
 
-		public static MidiThruConnection[]? Find (string persistentOwnerID)
+		public static MidiThruConnection []? Find (string persistentOwnerID)
 		{
 			MidiError error;
 			return Find (persistentOwnerID, out error);
@@ -184,3 +183,4 @@ namespace CoreMidi {
 	}
 #endif // !COREBUILD
 }
+#endif

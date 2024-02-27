@@ -30,10 +30,11 @@ using System.Runtime.InteropServices;
 
 using Foundation;
 
-namespace ObjCRuntime
-{
-	class Stret
-	{
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
+namespace ObjCRuntime {
+	class Stret {
 		static bool IsHomogeneousAggregateSmallEnough_Armv7k (Type t, int members)
 		{
 			// https://github.com/llvm-mirror/clang/blob/82f6d5c9ae84c04d6e7b402f72c33638d1fb6bc8/lib/CodeGen/TargetInfo.cpp#L5516-L5519
@@ -44,7 +45,7 @@ namespace ObjCRuntime
 		{
 			// https://github.com/llvm-mirror/clang/blob/82f6d5c9ae84c04d6e7b402f72c33638d1fb6bc8/lib/CodeGen/TargetInfo.cpp#L5500-L5514
 #if BGENERATOR
-			if (t == generator.TypeManager.System_Float || t == generator.TypeManager.System_Double || t == generator.TypeManager.System_nfloat)
+			if (t == generator.TypeCache.System_Float || t == generator.TypeCache.System_Double || t == generator.TypeCache.System_nfloat)
 				return true;
 #else
 			if (t == typeof (float) || t == typeof (double) || t == typeof (nfloat))
@@ -76,6 +77,7 @@ namespace ObjCRuntime
 			return true;
 		}
 
+#if __WATCHOS__ || BGENERATOR
 		public static bool ArmNeedStret (Type returnType, Generator generator)
 		{
 			bool has32bitArm;
@@ -142,14 +144,16 @@ namespace ObjCRuntime
 					case "System.nuint":
 					case "System.nint":
 						return false;
-					// floating-point types are stret
+						// floating-point types are stret
 					}
 				}
 			}
 
 			return true;
 		}
+#endif // __WATCHOS__ || BGENERATOR
 
+#if __WATCHOS__ || BGENERATOR
 		public static bool X86NeedStret (Type returnType, Generator generator)
 		{
 			Type t = returnType;
@@ -168,6 +172,7 @@ namespace ObjCRuntime
 
 			return false;
 		}
+#endif // __WATCHOS__ || BGENERATOR
 
 		public static bool X86_64NeedStret (Type returnType, Generator generator)
 		{
@@ -305,7 +310,7 @@ namespace ObjCRuntime
 #else
 				var marshalAs = (MarshalAsAttribute) Attribute.GetCustomAttribute (field, typeof (MarshalAsAttribute));
 #endif
-				if (marshalAs == null) {
+				if (marshalAs is null) {
 					GetValueTypeSize (original_type, field.FieldType, field_types, is_64_bits, ref size, ref max_element_size, generator);
 					continue;
 				}
@@ -344,6 +349,7 @@ namespace ObjCRuntime
 			}
 		}
 
+#if BGENERATOR
 		public static bool NeedStret (Type returnType, Generator generator)
 		{
 			if (X86NeedStret (returnType, generator))
@@ -357,5 +363,6 @@ namespace ObjCRuntime
 
 			return false;
 		}
+#endif // BGENERATOR
 	}
 }

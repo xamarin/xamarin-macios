@@ -1,7 +1,9 @@
+#if __MACOS__
+
 #nullable enable
 
 namespace WebKit {
-	
+
 	public partial class DomCssRuleList {
 		public DomCssRule this [int index] {
 			get {
@@ -47,7 +49,7 @@ namespace WebKit {
 			}
 		}
 	}
-	
+
 	public partial class DomNodeList {
 		public DomNode this [int index] {
 			get {
@@ -64,3 +66,5 @@ namespace WebKit {
 		}
 	}
 }
+
+#endif // __MACOS__

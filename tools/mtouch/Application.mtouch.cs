@@ -56,7 +56,7 @@ namespace Xamarin.Bundler {
 		// If we didn't link the final executable because the existing binary is up-to-date.
 		bool cached_executable {
 			get {
-				if (final_build_task == null) {
+				if (final_build_task is null) {
 					// symlinked
 					return false;
 				}
@@ -194,14 +194,14 @@ namespace Xamarin.Bundler {
 
 					if (asm_build_targets.TryGetValue (asm_name, out build_target)) {
 						asm_build_targets.Remove (asm_name);
-					} else if (sdk != null && (Profile.IsSdkAssembly (asm_name) || Profile.IsProductAssembly (asm_name))) {
+					} else if (sdk is not null && (Profile.IsSdkAssembly (asm_name) || Profile.IsProductAssembly (asm_name))) {
 						build_target = sdk;
 					} else {
 						build_target = all;
 					}
 
-					if (build_target == null) {
-						if (exceptions == null)
+					if (build_target is null) {
+						if (exceptions is null)
 							exceptions = new List<Exception> ();
 						exceptions.Add (ErrorHelper.CreateError (105, Errors.MT0105, assembly.Identity));
 						continue;
@@ -218,12 +218,12 @@ namespace Xamarin.Bundler {
 					if (abt.Key == "@all" || abt.Key == "@sdk")
 						continue;
 
-					if (exceptions == null)
+					if (exceptions is null)
 						exceptions = new List<Exception> ();
 					exceptions.Add (ErrorHelper.CreateError (108, Errors.MT0108, abt.Key));
 				}
 
-				if (exceptions != null)
+				if (exceptions is not null)
 					continue;
 
 				var grouped = target.Assemblies.GroupBy ((a) => a.BuildTargetName);
@@ -245,7 +245,7 @@ namespace Xamarin.Bundler {
 			}
 
 
-			if (exceptions != null)
+			if (exceptions is not null)
 				throw new AggregateException (exceptions);
 		}
 
@@ -261,7 +261,7 @@ namespace Xamarin.Bundler {
 
 		public ICollection<Abi> AllArchitectures {
 			get {
-				if (all_architectures == null) {
+				if (all_architectures is null) {
 					all_architectures = new HashSet<Abi> ();
 					foreach (var abi in abis)
 						all_architectures.Add (abi);
@@ -371,7 +371,7 @@ namespace Xamarin.Bundler {
 			CompilePInvokeWrappers ();
 			BuildApp ();
 
-			if (Driver.DotFile != null)
+			if (Driver.DotFile is not null)
 				build_tasks.Dot (this, Driver.DotFile.Length > 0 ? Driver.DotFile : Path.Combine (Cache.Location, "build.dot"));
 
 			Driver.Watch ("Building build tasks", 1);
@@ -587,7 +587,7 @@ namespace Xamarin.Bundler {
 				// Check if there aren't referenced assemblies from different sources
 				foreach (var target in Targets) {
 					var appexTarget = appex.Targets.SingleOrDefault ((v) => v.Is32Build == target.Is32Build);
-					if (appexTarget == null)
+					if (appexTarget is null)
 						continue; // container is fat, appex isn't. This is not a problem.
 					foreach (var kvp in appexTarget.Assemblies.Hashed) {
 						Assembly asm;
@@ -620,7 +620,7 @@ namespace Xamarin.Bundler {
 		{
 			if (a == b)
 				return true;
-			if (a == null ^ b == null)
+			if (a is null ^ b is null)
 				return false;
 			return a.SequenceEqual (b);
 		}
@@ -673,7 +673,7 @@ namespace Xamarin.Bundler {
 				if (File.Exists (root))
 					continue;
 
-				if (exceptions == null)
+				if (exceptions is null)
 					exceptions = new List<Exception> ();
 
 				if (root [0] == '-' || root [0] == '/') {
@@ -1014,7 +1014,7 @@ namespace Xamarin.Bundler {
 					final_build_task = copy_task;
 				}
 				// no link tasks if we were symlinked
-				if (final_build_task != null) {
+				if (final_build_task is not null) {
 					final_build_task.AddDependency (link_tasks);
 					build_tasks.Add (final_build_task);
 				}
@@ -1363,6 +1363,8 @@ namespace Xamarin.Bundler {
 					// We build the arm64_32 slice for watchOS for watchOS 5.1, and the armv7k slice for watchOS 2.0.
 					// Building for anything less than watchOS 5.1 will trigger this warning for the arm64_32 slice.
 					continue;
+				} else if (line.Contains ("ignoring duplicate library")) {
+					continue;
 				}
 
 				if (line.Contains ("Undefined symbols for architecture")) {
@@ -1376,7 +1378,7 @@ namespace Xamarin.Bundler {
 							errors.Add (new ProductException (5211, error, Errors.MT5211, symbol.Replace ("_OBJC_CLASS_$_", ""), symbol));
 						} else {
 							var members = target.GetAllSymbols ().Find (symbol.Substring (1))?.Members;
-							if (members != null && members.Any ()) {
+							if (members is not null && members.Any ()) {
 								var member = members.First (); // Just report the first one.
 															   // Neither P/Invokes nor fields have IL, so we can't find the source code location.
 								errors.Add (new ProductException (5214, error, Errors.MT5214,

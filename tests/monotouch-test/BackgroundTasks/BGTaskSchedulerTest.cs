@@ -36,7 +36,7 @@ namespace MonoTouchFixtures.BackgroundTasks {
 
 		void LaunchBGTask ()
 		{
-			using (var taskId = new NSString (taskIdentifier)) { 
+			using (var taskId = new NSString (taskIdentifier)) {
 				var method = new Selector ("_simulateLaunchForTaskWithIdentifier:");
 				Messaging.void_objc_msgSend_IntPtr (BGTaskScheduler.Shared.Handle, method.Handle, taskId.Handle);
 			}

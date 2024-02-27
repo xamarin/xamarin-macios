@@ -33,23 +33,28 @@ using System.Runtime.InteropServices;
 using ObjCRuntime;
 using CoreGraphics;
 
+#nullable enable
+
 namespace AppKit {
 	public partial class NSCell {
 
 		[DllImport (Constants.AppKitLibrary)]
 		extern static void NSDrawThreePartImage (CGRect rect,
 			IntPtr /* NSImage* */ startCap, IntPtr /* NSImage* */ centerFill, IntPtr /* NSImage* */ endCap,
-			[MarshalAs (UnmanagedType.I1)] bool vertial, nint op, nfloat alphaFraction, [MarshalAs (UnmanagedType.I1)] bool flipped);
+			byte vertial, nint op, nfloat alphaFraction, byte flipped);
 
 		public void DrawThreePartImage (CGRect frame,
 			NSImage startCap, NSImage centerFill, NSImage endCap,
 			bool vertical, NSCompositingOperation op, nfloat alphaFraction, bool flipped)
 		{
 			NSDrawThreePartImage (
-				frame, startCap != null ? startCap.Handle : IntPtr.Zero,
-				centerFill != null ? centerFill.Handle : IntPtr.Zero,
-				endCap != null ? endCap.Handle : IntPtr.Zero,
-				vertical, (nint) (long) op, alphaFraction, flipped);
+				frame, startCap.GetHandle (),
+				centerFill.GetHandle (),
+				endCap.GetHandle (),
+				vertical ? (byte) 1 : (byte) 0,
+				(nint) (long) op,
+				alphaFraction,
+				flipped ? (byte) 1 : (byte) 0);
 		}
 
 		[DllImport (Constants.AppKitLibrary)]
@@ -57,7 +62,7 @@ namespace AppKit {
 			IntPtr /* NSImage* */ topLeftCorner, IntPtr /* NSImage* */ topEdgeFill, IntPtr /* NSImage* */ topRightCorner,
 			IntPtr /* NSImage* */ leftEdgeFill, IntPtr /* NSImage* */ centerFill, IntPtr /* NSImage* */ rightEdgeFill,
 			IntPtr /* NSImage* */ bottomLeftCorner, IntPtr /* NSImage* */ bottomEdgeFill, IntPtr /* NSImage* */ bottomRightCnint,
-			nint op, nfloat alphaFraction, [MarshalAs (UnmanagedType.I1)] bool flipped);
+			nint op, nfloat alphaFraction, byte flipped);
 
 		public void DrawNinePartImage (CGRect frame,
 			NSImage topLeftCorner, NSImage topEdgeFill, NSImage topRightCorner,
@@ -66,16 +71,16 @@ namespace AppKit {
 			NSCompositingOperation op, nfloat alphaFraction, bool flipped)
 		{
 			NSDrawNinePartImage (
-				frame, topLeftCorner != null ? topLeftCorner.Handle : IntPtr.Zero,
-				topEdgeFill != null ? topEdgeFill.Handle : IntPtr.Zero,
-				topRightCorner != null ? topRightCorner.Handle : IntPtr.Zero,
-				leftEdgeFill != null ? leftEdgeFill.Handle : IntPtr.Zero,
-				centerFill != null ? centerFill.Handle : IntPtr.Zero,
-				rightEdgeFill != null ? rightEdgeFill.Handle : IntPtr.Zero,
-				bottomLeftCorner != null ? bottomLeftCorner.Handle : IntPtr.Zero,
-				bottomEdgeFill != null ? bottomEdgeFill.Handle : IntPtr.Zero,
-				bottomRightCorner != null ? bottomRightCorner.Handle : IntPtr.Zero,
-				(nint) (long) op, alphaFraction, flipped);
+				frame, topLeftCorner.GetHandle (),
+				topEdgeFill.GetHandle (),
+				topRightCorner.GetHandle (),
+				leftEdgeFill.GetHandle (),
+				centerFill.GetHandle (),
+				rightEdgeFill.GetHandle (),
+				bottomLeftCorner.GetHandle (),
+				bottomEdgeFill.GetHandle (),
+				bottomRightCorner.GetHandle (),
+				(nint) (long) op, alphaFraction, flipped ? (byte) 1 : (byte) 0);
 		}
 	}
 }

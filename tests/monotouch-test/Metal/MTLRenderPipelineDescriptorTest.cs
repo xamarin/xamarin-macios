@@ -21,7 +21,7 @@ namespace MonoTouchFixtures.Metal {
 		[TearDown]
 		public void TearDown ()
 		{
-			if (descriptor != null)
+			if (descriptor is not null)
 				descriptor.Dispose ();
 			descriptor = null;
 		}
@@ -80,7 +80,7 @@ namespace MonoTouchFixtures.Metal {
 
 		[Test]
 		public void ResetTest ()
-			=> Assert.DoesNotThrow (() => descriptor.Reset());
+			=> Assert.DoesNotThrow (() => descriptor.Reset ());
 
 		[Test]
 		public void ColorAttachments ()

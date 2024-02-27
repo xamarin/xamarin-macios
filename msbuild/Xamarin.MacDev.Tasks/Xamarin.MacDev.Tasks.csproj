@@ -3,27 +3,47 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <IncludeMSBuildAssets Condition="'$(IncludeMSBuildAssets)' == ''">compile</IncludeMSBuildAssets>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>latest</LangVersion>
     <WarningsAsErrors>Nullable</WarningsAsErrors>
     <DefineConstants>$(DefineConstants);MSBUILD_TASKS</DefineConstants>
     <NoWarn>$(NoWarn);NU1603</NoWarn> <!-- Xamarin.Messaging.Build.Common 1.6.24 depends on Merq (>= 1.1.0) but Merq 1.1.0 was not found. An approximate best match of Merq 1.1.4 was resolved. -->
+    <NoWarn>$(NoWarn);MSB3277</NoWarn> <!-- warning MSB3277: Found conflicts between different versions of "System.Reflection.Metadata" that could not be resolved. -->
+    <Nullable>enable</Nullable>
   </PropertyGroup>
+
+  <Import Project="..\..\eng\Versions.props" />
+
   <ItemGroup>
+    <PackageReference Include="System.Reflection.MetadataLoadContext" Version="8.0.0" />
     <PackageReference Include="System.Text.Json" Version="4.7.0" />
-    <PackageReference Include="Mono.Cecil" Version="0.11.4" />
+    <PackageReference Include="Mono.Cecil" Version="$(MonoCecilPackageVersion)" />
     <!-- Compile against Microsoft.Build* NuGet refs, but do not copy to OutputDir. -->
     <PackageReference Include="Microsoft.Build" Version="15.9.20" IncludeAssets="compile" />
     <PackageReference Include="Microsoft.Build.Framework" Version="16.8.0" IncludeAssets="compile" />
     <PackageReference Include="Microsoft.Build.Tasks.Core" Version="16.8.0" IncludeAssets="compile" Aliases="Microsoft_Build_Tasks_Core" />
     <PackageReference Include="Microsoft.Build.Utilities.Core" Version="16.8.0" IncludeAssets="compile" />
+    <PackageReference Include="Microsoft.NET.ILLink.Tasks" Version="$(MicrosoftNETILLinkTasksPackageVersion)" />
+    <PackageReference Include="Microsoft.NET.Runtime.MonoTargets.Sdk" Version="$(MicrosoftNETRuntimeMonoTargetsSdkPackageVersion)" GeneratePathProperty="true"/>
     <PackageReference Include="Xamarin.Messaging.Build.Client" Version="$(MessagingVersion)" />
+    <!-- GitInfo is pulled in because of Xamarin.Messaging from above, but we don't want it, so just exclude all assets from it -->
+    <!-- This can be removed once our package references have been updated to not expose GitInfo -->
+    <PackageReference Include="GitInfo" Version="2.2.0" ExcludeAssets="all" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\external\Xamarin.MacDev\Xamarin.MacDev\Xamarin.MacDev.csproj" />
     <ProjectReference Include="..\Xamarin.Localization.MSBuild\Xamarin.Localization.MSBuild.csproj">
       <ReferenceSourceTarget>ProjectReference</ReferenceSourceTarget>
     </ProjectReference>
+    <!-- We need the net472 implementation, otherwise the Build agent needs to be a net5.0 app -->
+    <Reference Include="ILLink.Tasks">
+      <HintPath>$(PkgMicrosoft_NET_ILLink_Tasks)\tools\net472\ILLink.Tasks.dll</HintPath>
+    </Reference>
+    <Reference Include="ILStrip">
+      <!-- We need the net472 impl, otherwise the Build agent needs to be a net5.0 app -->
+      <HintPath>$(PkgMicrosoft_NET_Runtime_MonoTargets_Sdk)\tasks\net472\MonoTargetsTasks.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\tools\common\ApplePlatform.cs">
@@ -62,19 +82,43 @@
     <Compile Include="..\..\tools\common\FileUtils.cs">
       <Link>external\FileUtils.cs</Link>
     </Compile>
-    <Compile Include="..\Versions.dotnet.g.cs">
-      <Link>Versions.dotnet.g.cs</Link>
+    <Compile Include="..\..\tools\common\NullableAttributes.cs">
+      <Link>external\NullableAttributes.cs</Link>
+    </Compile>
+    <Compile Include="..\Versions.g.cs">
+      <Link>Versions.g.cs</Link>
+    </Compile>
+    <Compile Remove="Errors.designer.cs" /> <!-- The 'CoreResGen' target will add it again from the EmbeddedResource item, this avoids a warning about the file being compiled twice -->
+    <Compile Include="..\..\tools\common\SdkVersions.cs">
+      <Link>external\SdkVersions.cs</Link>
     </Compile>
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="../../tools/mtouch/Errors.resx">
+
+    <!--
+
+      The Xamarin.MacDev.Tasks.sln solution is build with dotnet, while other
+      projects are still built with msbuild. This becomes a problem when
+      generating Errors.designer.cs, because depending on the runtime the
+      output is different.
+
+      This means that the Errors.designer.cs will sometimes randomly change
+      (depending on which project re-generated the file), leaving the file
+      modified in git. This is quite annoying, but it also breaks the api
+      comparison, which depends on the build not leaving modified files
+      behind. So for now, we generate Errors.designer.cs separately
+      for Xamarin.MacDev.Tasks.sln to not conflict with the mtouch version.
+
+    -->
+
       <Type>Resx</Type>
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>../../tools/mtouch/Errors.Designer.cs</LastGenOutput>
+      <LastGenOutput>Errors.designer.cs</LastGenOutput>
       <CustomToolNamespace>Xamarin.Bundler</CustomToolNamespace>
       <ManifestResourceName>Xamarin.Bundler.Errors</ManifestResourceName>
-      <StronglyTypedFileName>../../tools/mtouch/Errors.Designer.cs</StronglyTypedFileName>
+      <StronglyTypedFileName>Errors.designer.cs</StronglyTypedFileName>
       <StronglyTypedLanguage>CSharp</StronglyTypedLanguage>
       <StronglyTypedNamespace>Xamarin.Bundler</StronglyTypedNamespace>
       <StronglyTypedClassName>Errors</StronglyTypedClassName>

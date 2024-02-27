@@ -37,12 +37,9 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="Mono.Security" />
-    <Reference Include="Mono.Cecil">
-      <HintPath>..\..\builds\mono-ios-sdk-destdir\ios-bcl\monotouch_tools\Mono.Cecil.dll</HintPath>
-    </Reference>
-    <Reference Include="Mono.Cecil.Mdb">
-      <HintPath>..\..\builds\mono-ios-sdk-destdir\ios-bcl\monotouch_tools\Mono.Cecil.Mdb.dll</HintPath>
-    </Reference>
+    <PackageReference Include="Mono.Cecil" Version="$(MonoCecilPackageVersion)" />
+    <Reference Include="System.Xml.Linq" />
+    <PackageReference Include="Mono.Options" Version="6.12.0.148" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Application.mmp.cs" />
@@ -56,6 +53,9 @@
     </Compile>
     <Compile Include="..\common\SdkVersions.cs">
       <Link>tools\common\SdkVersions.cs</Link>
+    </Compile>
+    <Compile Include="..\common\ProductConstants.cs">
+      <Link>tools\common\ProductConstants.cs</Link>
     </Compile>
     <Compile Include="..\..\builds\mono-ios-sdk-destdir\ios-sources\external\linker\src\tuner\Mono.Tuner\ApplyPreserveAttributeBase.cs">
       <Link>mono-archive\Mono.Tuner\ApplyPreserveAttributeBase.cs</Link>
@@ -237,9 +237,6 @@
     <Compile Include="..\..\builds\mono-ios-sdk-destdir\ios-sources\external\linker\src\tuner\Mono.Tuner\Profile.cs">
       <Link>mono-archive\Mono.Tuner\Profile.cs</Link>
     </Compile>
-    <Compile Include="..\..\builds\mono-ios-sdk-destdir\ios-sources\mcs\class\Mono.Options\Mono.Options\Options.cs">
-      <Link>mono-archive\Options.cs</Link>
-    </Compile>
     <Compile Include="linker\MonoMac.Tuner\MonoMacMarkStep.cs">
       <Link>linker\MonoMac.Tuner\MonoMacMarkStep.cs</Link>
     </Compile>
@@ -357,6 +354,15 @@
     <Compile Include="..\common\OSPlatformAttributeExtensions.cs">
       <Link>tools\common\OSPlatformAttributeExtensions.cs</Link>
     </Compile>
+    <Compile Include="..\common\CSToObjCMap.cs">
+      <Link>tools\common\CSToObjCMap.cs</Link>
+    </Compile>
+    <Compile Include="..\common\Rewriter.cs">
+      <Link>tools\common\Rewriter.cs</Link>
+    </Compile>
+    <Compile Include="..\common\ObjCNameIndex.cs">
+      <Link>tools\common\ObjCNameIndex.cs</Link>
+    </Compile>
     <Compile Include="..\common\StaticRegistrar.cs">
       <Link>tools\common\StaticRegistrar.cs</Link>
     </Compile>
@@ -440,6 +446,9 @@
     <Compile Include="..\common\StringUtils.cs">
       <Link>tools\common\StringUtils.cs</Link>
     </Compile>
+    <Compile Include="..\common\NullableAttributes.cs">
+      <Link>tools\common\NullableAttributes.cs</Link>
+    </Compile>
     <Compile Include="..\common\CoreResolver.cs">
       <Link>tools\common\CoreResolver.cs</Link>
     </Compile>
@@ -453,8 +462,8 @@
       <Link>tools\linker\CustomSymbolWriter.cs</Link>
     </Compile>
     <Compile Include="Target.mmp.cs" />
-    <Compile Include="..\mtouch\Errors.Designer.cs">
-      <Link>tools\mtouch\Errors.Designer.cs</Link>
+    <Compile Include="..\mtouch\Errors.designer.cs">
+      <Link>tools\mtouch\Errors.designer.cs</Link>
       <DependentUpon>Errors.resx</DependentUpon>
     </Compile>
     <Compile Include="..\linker\ScanTypeReferenceStep.cs">
@@ -502,7 +511,7 @@
     <EmbeddedResource Include="..\mtouch\Errors.resx">
       <Link>tools\mtouch\Errors.resx</Link>
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Errors.Designer.cs</LastGenOutput>
+      <LastGenOutput>Errors.designer.cs</LastGenOutput>
       <CustomToolNamespace>Xamarin.Bundler</CustomToolNamespace>
       <ManifestResourceName>Xamarin.Bundler.Errors</ManifestResourceName>
     </EmbeddedResource>
@@ -565,7 +574,7 @@
       <Link>docs\website\mmp-errors.md</Link>
     </None>
   </ItemGroup>
-  <Target Name="BuildSdkVersions" Inputs="../common/SdkVersions.cs.in" Outputs="../common/SdkVersions.cs">
-    <Exec Command="make ../common/SdkVersions.cs" />
+  <Target Name="BuildSdkVersions" Inputs="../common/SdkVersions.in.cs;../common/ProductConstants.in.cs" Outputs="../common/SdkVersions.cs;../common/ProductConstants.cs">
+    <Exec Command="make ../common/SdkVersions.cs ../common/ProductConstants.cs" />
   </Target>
 </Project>

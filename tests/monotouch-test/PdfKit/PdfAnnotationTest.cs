@@ -18,14 +18,12 @@ using PdfKit;
 
 using NUnit.Framework;
 
-namespace MonoTouchFixtures.PdfKit
-{
+namespace MonoTouchFixtures.PdfKit {
 
 	[TestFixture]
 	// we want the test to be available if we use the linker
 	[Preserve (AllMembers = true)]
-	public class PdfAnnotationTest
-	{
+	public class PdfAnnotationTest {
 		[OneTimeSetUp]
 		public void Setup ()
 		{

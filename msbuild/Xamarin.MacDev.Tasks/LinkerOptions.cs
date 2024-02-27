@@ -23,7 +23,7 @@ namespace Xamarin.MacDev.Tasks {
 
 		public void BuildNativeReferenceFlags (TaskLoggingHelper Log, ITaskItem [] NativeReferences)
 		{
-			if (NativeReferences == null)
+			if (NativeReferences is null)
 				return;
 
 			var libraryPaths = new HashSet<string> ();
@@ -59,17 +59,19 @@ namespace Xamarin.MacDev.Tasks {
 				} else if (kind == NativeReferenceKind.Dynamic) {
 					var path = item.ItemSpec;
 					var directory = Path.GetDirectoryName (path);
-					if (!string.IsNullOrEmpty (directory) && !libraryPaths.Contains (directory)) {
-						Arguments.AddQuoted ("-L" + directory);
-						libraryPaths.Add (directory);
-					}
-					// remove extension + "lib" prefix
 					var lib = Path.GetFileName (path);
-					if (lib.EndsWith (".dylib", StringComparison.OrdinalIgnoreCase))
-						lib = Path.GetFileNameWithoutExtension (lib);
-					if (lib.StartsWith ("lib", StringComparison.OrdinalIgnoreCase))
-						lib = lib.Substring (3);
-					Arguments.AddQuoted ("-l" + lib);
+					if (lib.StartsWith ("lib", StringComparison.Ordinal)) {
+						if (!string.IsNullOrEmpty (directory) && !libraryPaths.Contains (directory)) {
+							Arguments.AddQuoted ("-L" + directory);
+							libraryPaths.Add (directory);
+						}
+						// remove extension + "lib" prefix
+						if (lib.EndsWith (".dylib", StringComparison.OrdinalIgnoreCase))
+							lib = Path.GetFileNameWithoutExtension (lib);
+						Arguments.AddQuoted ("-l" + lib.Substring (3));
+					} else {
+						Arguments.AddQuoted (path);
+					}
 				} else {
 					Log.LogWarning (MSBStrings.W0052, item.ItemSpec);
 					continue;

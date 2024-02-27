@@ -11,12 +11,10 @@ using Xamarin;
 using Xamarin.Tests;
 using Xamarin.Utils;
 
-namespace Xamarin.MMP.Tests
-{
+namespace Xamarin.MMP.Tests {
 	[TestFixture]
-	public partial class MMPTests
-	{
-		void RunMSBuildTest (Action <string> test, string directory_name = null)
+	public partial class MMPTests {
+		void RunMSBuildTest (Action<string> test, string directory_name = null)
 		{
 			test (Cache.CreateTemporaryDirectory (directory_name ?? "msbuild-tests"));
 		}
@@ -150,7 +148,7 @@ namespace Xamarin.MMP.Tests
 		}
 
 		[Test]
-		public void BuildUnifiedProject_WithJustNativeRefNoLinkWith_Builds()
+		public void BuildUnifiedProject_WithJustNativeRefNoLinkWith_Builds ()
 		{
 			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.MacOSX);
 			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET

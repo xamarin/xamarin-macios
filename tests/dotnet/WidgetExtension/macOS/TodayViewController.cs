@@ -12,10 +12,8 @@ using ViewController = AppKit.NSViewController;
 using ViewController = UIKit.NSViewController;
 #endif
 
-namespace MyTodayExtension
-{
-	public partial class TodayViewController : ViewController, INCWidgetProviding
-	{
+namespace MyTodayExtension {
+	public partial class TodayViewController : ViewController, INCWidgetProviding {
 		public TodayViewController (NativeHandle handle) : base (handle)
 		{
 		}

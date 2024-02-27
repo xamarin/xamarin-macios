@@ -19,6 +19,7 @@ void useZLib ();
 
 typedef void (^x_block_callback)();
 void x_call_block (x_block_callback block);
+void* x_call_func_3 (void* (*fptr)(void*, void*, void*), void* p1, void* p2, void* p3);
 
 void x_get_matrix_float2x2 (id self, const char *sel, float* r0c0, float* r0c1, float* r1c0, float* r1c1);
 void x_get_matrix_float3x3 (id self, const char *sel, float* r0c0, float* r0c1, float* r0c2, float* r1c0, float* r1c1, float* r1c2, float* r2c0, float* r2c1, float* r2c2);
@@ -262,7 +263,7 @@ typedef void (^outerBlock) (innerBlock callback);
 	-(void) testNSObject:      (int) action a:(id *)          refValue b:(id *)          outValue;
 	-(void) testNSValue:       (int) action a:(NSValue **)    refValue b:(NSValue **)    outValue;
 	-(void) testString:        (int) action a:(NSString **)   refValue b:(NSString **)   outValue;
-	-(void) testInt:           (int) action a:(int32_t *)     refValue b:(int32_t *)     outValue;
+	-(void) testInt:           (int) action a:(int32_t *)     refValue b:(int32_t *)     outValue c:(int32_t *) pointerValue;
 	-(void) testSelector:      (int) action a:(SEL *)         refValue b:(SEL *)         outValue;
 	-(void) testClass:         (int) action a:(Class *)       refValue b:(Class *)       outValue;
 

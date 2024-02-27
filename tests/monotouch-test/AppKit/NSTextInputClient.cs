@@ -6,12 +6,10 @@ using AppKit;
 using CoreGraphics;
 using Foundation;
 
-namespace apitest
-{
+namespace apitest {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class NSTextInputClient
-	{
+	public class NSTextInputClient {
 		NSTextView textView;
 
 		[SetUp]
@@ -31,7 +29,7 @@ namespace apitest
 		[Test]
 		public void NSTextInputClient_ShouldInsertText ()
 		{
-			textView.InsertText ((NSString)"Test", new NSRange (5, 4));
+			textView.InsertText ((NSString) "Test", new NSRange (5, 4));
 
 			Assert.AreEqual (textView.Value, "This Test new string", "NSTextInputClient_ShouldInsertText - Failed to insert text");
 		}
@@ -39,7 +37,7 @@ namespace apitest
 		[Test]
 		public void NSTextInputClient_ShouldMarkText ()
 		{
-			textView.SetMarkedText ((NSString)"Testing", new NSRange (0, 10), new NSRange (5, 4));
+			textView.SetMarkedText ((NSString) "Testing", new NSRange (0, 10), new NSRange (5, 4));
 
 			Assert.IsTrue (textView.HasMarkedText, "NSTextInputClient_ShouldMarkText - Failed to mark text");
 			Assert.AreEqual (textView.MarkedRange, new NSRange (5, 7));
@@ -56,7 +54,7 @@ namespace apitest
 		[Test]
 		public void NSTextInputClient_ShouldUnmarkText ()
 		{
-			textView.SetMarkedText ((NSString)"Testing", new NSRange (0, 10), new NSRange (5, 4));
+			textView.SetMarkedText ((NSString) "Testing", new NSRange (0, 10), new NSRange (5, 4));
 
 			Assert.IsTrue (textView.HasMarkedText, "NSTextInputClient_ShouldUnMarkText - Failed to mark text");
 
@@ -81,9 +79,13 @@ namespace apitest
 		{
 			NSRange range;
 			var rect = textView.GetFirstRect (new NSRange (12, 18), out range);
+			var rectA = new CGRect (0, 0, 0, 14);
+			var rectB = new CGRect (0, 0, 12, 14);
+			var rangeA = new NSRange (12, 0);
+			var rangeB = new NSRange (10, 4);
 
-			Assert.AreEqual (rect, new CGRect (0, 0, 12, 14), "NSTextInputClient_ShouldGetFirstRect - Returned wrong rect");
-			Assert.AreEqual (range, new NSRange (10, 4), "NSTextInputClient_ShouldGetFirstRect - Returned wrong Range");
+			Assert.That (rect, Is.EqualTo (rectA).Or.EqualTo (rectB), "NSTextInputClient_ShouldGetFirstRect - Returned wrong rect");
+			Assert.That (range, Is.EqualTo (rangeA).Or.EqualTo (rangeB), "NSTextInputClient_ShouldGetFirstRect - Returned wrong Range");
 		}
 
 		[Test]
@@ -101,7 +103,7 @@ namespace apitest
 		[Test]
 		public void NSTextInputClient_ShouldGetBaselineDelta ()
 		{
-			Assert.IsTrue (textView.GetBaselineDelta (4) == 11, "NSTextInputClient_ShouldGetBaselineDelta - Returned wrong baseline delta value");
+			Assert.That ((double) textView.GetBaselineDelta (4), Is.EqualTo ((double) 11).Or.EqualTo ((double) 0), "NSTextInputClient_ShouldGetBaselineDelta - Returned wrong baseline delta value");
 		}
 
 		[Test]

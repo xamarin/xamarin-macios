@@ -20,11 +20,10 @@ namespace MonoTouchFixtures {
 		}
 
 		[DllImport (Constants.libcLibrary)]
-		static extern int strlen ([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef=typeof(UTF8StringMarshaler), MarshalCookie = "ChocolateCookie")] string str);
+		static extern int strlen ([MarshalAs (UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof (UTF8StringMarshaler), MarshalCookie = "ChocolateCookie")] string str);
 
-		[Preserve(AllMembers = true)]
-		class UTF8StringMarshaler : ICustomMarshaler
-		{
+		[Preserve (AllMembers = true)]
+		class UTF8StringMarshaler : ICustomMarshaler {
 			static UTF8StringMarshaler singleton;
 
 			IntPtr ICustomMarshaler.MarshalManagedToNative (object managedObject)
@@ -49,16 +48,16 @@ namespace MonoTouchFixtures {
 			{
 			}
 
-			int ICustomMarshaler.GetNativeDataSize()
+			int ICustomMarshaler.GetNativeDataSize ()
 			{
-				throw new NotImplementedException();
+				throw new NotImplementedException ();
 			}
 
-			public static ICustomMarshaler GetInstance(string cookie)
+			public static ICustomMarshaler GetInstance (string cookie)
 			{
 				MonoRuntimeTests.cookie = cookie;
-				if (singleton == null)
-					return singleton = new UTF8StringMarshaler();
+				if (singleton is null)
+					return singleton = new UTF8StringMarshaler ();
 				return singleton;
 			}
 		}

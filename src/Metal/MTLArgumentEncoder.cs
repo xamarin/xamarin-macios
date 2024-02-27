@@ -31,11 +31,11 @@ namespace Metal {
 			}
 			GC.KeepAlive (buffers);
 		}
-#else 
+#else
 		public unsafe static void SetBuffers (this IMTLArgumentEncoder This, IMTLBuffer [] buffers, nint [] offsets, Foundation.NSRange range)
 		{
 			fixed (void* handle = offsets)
-				This.SetBuffers (buffers, (IntPtr)handle, range);
+				This.SetBuffers (buffers, (IntPtr) handle, range);
 		}
 #endif
 	}

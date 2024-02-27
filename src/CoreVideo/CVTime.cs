@@ -40,8 +40,6 @@ namespace CoreVideo {
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
-#else
-	[Watch (4,0)]
 #endif
 	public struct CVTime {
 
@@ -49,18 +47,18 @@ namespace CoreVideo {
 		public /* int64_t */ long TimeScale;
 		public /* int32_t */ CVTimeFlags TimeFlags;
 
-		public int Flags { get { return (int) TimeFlags; } set { TimeFlags = (CVTimeFlags) value; }}
+		public int Flags { get { return (int) TimeFlags; } set { TimeFlags = (CVTimeFlags) value; } }
 
 #if !COREBUILD
 		public static CVTime ZeroTime {
 			get {
-				return (CVTime) Marshal.PtrToStructure (Dlfcn.GetIndirect (Libraries.CoreVideo.Handle, "kCVZeroTime"), typeof (CVTime))!;
+				return Marshal.PtrToStructure<CVTime> (Dlfcn.GetIndirect (Libraries.CoreVideo.Handle, "kCVZeroTime"))!;
 			}
 		}
 
 		public static CVTime IndefiniteTime {
 			get {
-				return (CVTime) Marshal.PtrToStructure (Dlfcn.GetIndirect (Libraries.CoreVideo.Handle, "kCVIndefiniteTime"), typeof (CVTime))!;
+				return Marshal.PtrToStructure<CVTime> (Dlfcn.GetIndirect (Libraries.CoreVideo.Handle, "kCVIndefiniteTime"))!;
 			}
 		}
 #endif
@@ -69,15 +67,15 @@ namespace CoreVideo {
 		{
 			if (!(other is CVTime))
 				return false;
-			
+
 			CVTime b = (CVTime) other;
-			
+
 			return (TimeValue == b.TimeValue) && (TimeScale == b.TimeScale) && (TimeFlags == b.TimeFlags);
 		}
-		
+
 		public override int GetHashCode ()
 		{
-			return TimeValue.GetHashCode () ^ TimeScale.GetHashCode () ^ Flags;
+			return HashCode.Combine (TimeValue, TimeScale, Flags);
 		}
 
 		// CVHostTime.h

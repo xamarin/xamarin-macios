@@ -55,7 +55,7 @@ namespace Xamarin.MacDev.Tasks {
 				RedirectStandardOutput = true,
 				RedirectStandardError = true,
 			};
-			psi.EnvironmentVariables ["DEVELOPER_DIR"] =Configuration.xcode_root;
+			psi.EnvironmentVariables ["DEVELOPER_DIR"] = Configuration.xcode_root;
 			psi.EnvironmentVariables.Remove ("XCODE_DEVELOPER_DIR_PATH"); // VSfM sets XCODE_DEVELOPER_DIR_PATH, which confuses the command-line tools if it doesn't match xcode-select, so just unset it.
 			var proc = Process.Start (psi);
 

@@ -3,10 +3,8 @@ using CoreGraphics;
 using Foundation;
 using UIKit;
 
-namespace MySpacedApp
-{
-	public partial class MySpacedAppViewController : UIViewController
-	{
+namespace MySpacedApp {
+	public partial class MySpacedAppViewController : UIViewController {
 		public MySpacedAppViewController (IntPtr handle) : base (handle)
 		{
 		}
@@ -15,7 +13,7 @@ namespace MySpacedApp
 		{
 			// Releases the view if it doesn't have a superview.
 			base.DidReceiveMemoryWarning ();
-			
+
 			// Release any cached data, images, etc that aren't in use.
 		}
 
@@ -24,7 +22,7 @@ namespace MySpacedApp
 		public override void ViewDidLoad ()
 		{
 			base.ViewDidLoad ();
-			
+
 			// Perform any additional setup after loading the view, typically from a nib.
 		}
 

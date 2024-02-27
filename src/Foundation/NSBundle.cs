@@ -5,6 +5,9 @@ using System.Runtime.InteropServices;
 
 using ObjCRuntime;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Foundation {
 	public partial class NSBundle : NSObject {
 
@@ -16,12 +19,14 @@ namespace Foundation {
 		}
 
 		[Obsolete ("Use 'GetLocalizedString' instead.")]
-		public string LocalizedString (string key, string comment) {
+		public string LocalizedString (string key, string comment)
+		{
 			return LocalizedString (key, "", "");
 		}
 
 		[Obsolete ("Use 'GetLocalizedString' instead.")]
-		public string LocalizedString (string key, string val, string table, string comment) {
+		public string LocalizedString (string key, string val, string table, string comment)
+		{
 			return LocalizedString (key, val, table);
 		}
 #endif
@@ -30,7 +35,8 @@ namespace Foundation {
 			return GetLocalizedString ((NSString) key, (NSString) value, (NSString) table);
 		}
 
-		public string [] PathsForResources (string fileExtension) {
+		public string [] PathsForResources (string fileExtension)
+		{
 			return PathsForResources (fileExtension, null);
 		}
 	}

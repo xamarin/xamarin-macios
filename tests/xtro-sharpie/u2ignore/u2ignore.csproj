@@ -10,6 +10,7 @@
     <RootNamespace>u2ignore</RootNamespace>
     <AssemblyName>u2ignore</AssemblyName>
     <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>

@@ -1,0 +1,608 @@
+<!--
+***********************************************************************************************
+Xamarin.iOS.Common.targets
+
+WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+  created a backup copy.  Incorrect changes to this file will make it
+  impossible to load or build your projects from the command-line or the IDE.
+
+This file imports the version- and platform-specific targets for the project importing
+this file. This file also defines targets to produce an error if the specified targets
+file does not exist, but the project is built anyway (command-line or IDE build).
+
+Copyright (C) 2013-2016 Xamarin. All rights reserved.
+***********************************************************************************************
+-->
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<Import Project="$(MSBuildThisFileDirectory)Xamarin.iOS.Common.props" />
+
+	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.targets" 
+			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.targets')"/>
+
+	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Shared.targets" />			
+
+	<PropertyGroup>
+		<_CanDeployToDeviceOrSimulator>False</_CanDeployToDeviceOrSimulator>
+		<_CanDeployToDeviceOrSimulator Condition="('$(OutputType)' == 'Exe' Or '$(IsAppExtension)' == 'true') And '$(IsWatchApp)' == 'false'">True</_CanDeployToDeviceOrSimulator>
+
+		<_PreparedResourceRules></_PreparedResourceRules>
+	</PropertyGroup>
+
+	<!-- Insert our app bundle generation step -->
+	<PropertyGroup Condition="'$(UsingAppleNETSdk)' != 'true'">
+		<BuildDependsOn>
+			BuildOnlySettings;
+			PrepareForBuild;
+			_CollectBundleResources;
+			_OptimizePngImages;
+			_OptimizePropertyLists;
+			_OptimizeLocalizationFiles;
+			_PackLibraryResources;
+			_UnpackLibraryResources;
+			$(BuildDependsOn);
+			_GenerateBundleName;
+			_CleanUploaded;
+			_CreateAppBundle;
+			Codesign;
+			CreateIpa;
+			Archive;
+		</BuildDependsOn>
+
+		<CleanDependsOn>
+			$(CleanDependsOn);
+			_ComputeTargetArchitectures;
+			_CleanUploaded;
+		</CleanDependsOn>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(UsingAppleNETSdk)' != 'true'">
+		<CreateAppBundleDependsOn>
+			$(CreateAppBundleDependsOn);
+			_DetectSigningIdentity;
+			_CopyResourcesToBundle;
+			_CreateAssetPackManifest;
+			_SmeltMetal;
+			_TemperMetal;
+			_CompileCoreMLModels;
+			_PrepareResourceRules;
+			_CompileEntitlements;
+			_WriteAppManifest;
+			_GetNativeExecutableName;
+			_ParseBundlerArguments;
+			_CompileToNative;
+			_CompileITunesMetadata;
+			_CollectITunesArtwork;
+			_CopyITunesArtwork;
+			_CreateDebugSettings;
+			_CreateDebugConfiguration;
+			_CreatePkgInfo;
+			_CopyAppExtensionsToBundle;
+			_CopyWatchOS2AppsToBundle;
+			_PostProcessAppBundle;
+			_ValidateAppBundle;
+		</CreateAppBundleDependsOn>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<CoreCodesignDependsOn>
+			$(_CodesignAppBundleDependsOn);
+			$(CoreCodesignDependsOn);
+		</CoreCodesignDependsOn>
+	</PropertyGroup>
+
+	<Target Name="ValidateAppStoreBundle" DependsOnTargets="_DetectSdkLocations;_ComputeTargetFrameworkMoniker">
+		<ALToolValidate
+			SessionId="$(BuildSessionId)"
+			Username="$(Username)"
+			Password="$(Password)"
+			FilePath="$(FilePath)"
+			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
+			SdkDevPath="$(_SdkDevPath)"
+		/>
+	</Target>
+
+	<Target Name="UploadAppStoreBundle" DependsOnTargets="_DetectSdkLocations;_ComputeTargetFrameworkMoniker">
+		<ALToolUpload
+			SessionId="$(BuildSessionId)"
+			Username="$(Username)"
+			Password="$(Password)"
+			FilePath="$(FilePath)"
+			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
+			SdkDevPath="$(_SdkDevPath)"
+		/>
+	</Target>
+
+	<Target Name="_CleanUploaded" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="_ComputeTargetArchitectures">
+		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Files="$(DeviceSpecificOutputPath).uploaded" />
+	</Target>
+
+	<Target Name="_CreateAssetPackManifest" DependsOnTargets="_CopyResourcesToBundle">
+		<CreateAssetPackManifest
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
+			AppBundleDir="$(AppBundleDir)"
+			InitialInstallTags="$(OnDemandResourcesInitialInstallTags)"
+			PrefetchOrder="$(OnDemandResourcesPrefetchOrder)"
+			OutputPath="$(DeviceSpecificOutputPath)"
+		/>
+	</Target>
+
+	<Target Name="_GetWatchAppBundlePath" DependsOnTargets="_GenerateBundleName;$(_GetWatchAppBundlePathDependsOn)">
+		<PropertyGroup>
+			<!-- needed for GetTargetPath/Build/Rebuild task outputs -->
+			<_WatchAppBundlePath>$(MSBuildProjectDirectory)\$(AppBundleDir)</_WatchAppBundlePath>
+		</PropertyGroup>
+		<ItemGroup>
+			<_WatchAppBundlePath Include="$(MSBuildProjectDirectory)\$(AppBundleDir)">
+				<!-- We need this metadata to fix the source in VS -->
+				<BuildSessionId>$(BuildSessionId)</BuildSessionId>
+				<BuildServerPath>..\..\$(BuildAppName)\$(BuildSessionId)\$(AppBundleDir)</BuildServerPath>
+			</_WatchAppBundlePath>
+		</ItemGroup>
+	</Target>
+
+	<Target Name="GetAppBundleDir" DependsOnTargets="_GenerateBundleName" Returns="$(AppBundleDir)"/>
+
+	<PropertyGroup>
+		<_CompileAppManifestDependsOn>
+			$(_CompileAppManifestDependsOn);
+			_PrepareResourceRules;
+			_ResolveWatchAppReferences;
+			_DetectDebugNetworkConfiguration;
+		</_CompileAppManifestDependsOn>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<_CompileITunesMetadataDependsOn>
+			$(_CompileITunesMetadataDependsOn);
+			_DetectSdkLocations;
+			_GenerateBundleName;
+			_ReadAppManifest;
+		</_CompileITunesMetadataDependsOn>
+	</PropertyGroup>
+
+	<Target Name="_CompileITunesMetadata" Condition="'$(ComputedPlatform)' == 'iPhone' And '$(IsAppExtension)' == 'false' And '$(IsWatchApp)' == 'false'"
+		DependsOnTargets="$(_CompileITunesMetadataDependsOn)"
+		Inputs="@(ITunesMetadata)"
+		Outputs="$(DeviceSpecificOutputPath)iTunesMetadata.plist" >
+		<CompileITunesMetadata
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
+			CFBundleIdentifier="$(_BundleIdentifier)"
+			CFBundleVersion="$(_CFBundleVersion)"
+			CFBundleDisplayName="$(_CFBundleDisplayName)"
+			ITunesMetadata="@(ITunesMetadata)"
+			OutputPath="$(DeviceSpecificOutputPath)iTunesMetadata.plist"
+		/>
+	</Target>
+
+	<Target Name="_CollectITunesArtwork" Condition="'$(ComputedPlatform)' == 'iPhone' And '$(IsAppExtension)' == 'false' And '$(IsWatchApp)' == 'false'">
+		<CollectITunesArtwork
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
+			ITunesArtwork="@(ITunesArtwork)"
+			>
+			<Output TaskParameter="ITunesArtworkWithLogicalNames" ItemName="_ITunesArtworkWithLogicalName"/>
+		</CollectITunesArtwork>
+	</Target>
+
+	<Target Name="_CopyITunesArtwork" Condition="'$(ComputedPlatform)' == 'iPhone' And '$(IsAppExtension)' == 'false' And '$(IsWatchApp)' == 'false'"
+		DependsOnTargets="_CollectITunesArtwork"
+		Inputs="@(_ITunesArtworkWithLogicalName)" Outputs="$(DeviceSpecificOutputPath)%(_ITunesArtworkWithLogicalName.LogicalName)">
+		<Copy
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
+			SourceFiles="@(_ITunesArtworkWithLogicalName)"
+			DestinationFiles="$(DeviceSpecificOutputPath)%(_ITunesArtworkWithLogicalName.LogicalName)"
+		/>
+	</Target>
+
+	<PropertyGroup>
+		<_CompileToNativeDependsOn>
+			_ComputeLinkMode;
+			_ComputeTargetFrameworkMoniker;
+			_DetectSdkLocations;
+			_GenerateBundleName;
+			_DetectSigningIdentity;
+			_CompileEntitlements;
+			_WriteAppManifest;
+			_ResolveAppExtensionReferences;
+			_ExtendAppExtensionReferences;
+			_GetNativeExecutableName;
+			_GetCompileToNativeInputs;
+			_ExpandNativeReferences;
+		</_CompileToNativeDependsOn>
+	</PropertyGroup>
+
+	<Target Name="_CompileToNative" DependsOnTargets="$(_CompileToNativeDependsOn)"
+		Condition = "'$(IsAppDistribution)' != 'true' And '$(UsingAppleNETSdk)' != 'true'"
+		Inputs="@(_CompileToNativeInput);@(_FileNativeReference)"
+		Outputs="$(_NativeExecutable);$(DeviceSpecificOutputPath)bundler.stamp">
+
+		<MTouch
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
+			ToolExe="$(MtouchExe)"
+			ToolPath="$(MtouchPath)"
+			AppBundleDir="$(AppBundleDir)"
+			Architectures="$(TargetArchitectures)"
+			ExecutableName="$(_ExecutableName)"
+			CompiledEntitlements="$(_CompiledEntitlements)"
+			Debug="$(_BundlerDebug)"
+			ExtraArgs="$(_BundlerArguments)"
+			FastDev="$(MtouchFastDev)"
+			HttpClientHandler="$(MtouchHttpClientHandler)"
+			I18n="$(MtouchI18n)"
+			IntermediateOutputPath="$(DeviceSpecificIntermediateOutputPath)mtouch-cache"
+			IsAppExtension="$(IsAppExtension)"
+			LinkDescriptions="@(LinkDescription)"
+			LinkerDumpDependencies="$(MtouchLinkerDumpDependencies)"
+			LinkMode="$(_LinkMode)"
+			MainAssembly="$(TargetPath)"
+			MinimumOSVersion="$(_MinimumOSVersion)"
+			NativeReferences="@(_FrameworkNativeReference);@(_FileNativeReference)"
+			OutputPath="$(DeviceSpecificOutputPath)"
+			Profiling="$(MtouchProfiling)"
+			ProjectDir="$(MtouchProjectDirectory)"
+			References="@(ReferencePath);@(_BundlerReferencePath)"
+			Registrar="$(Registrar)"
+			ResponseFilePath="$(DeviceSpecificIntermediateOutputPath)response-file.rsp"
+			SdkRoot="$(_SdkDevPath)"
+			SdkIsSimulator="$(_SdkIsSimulator)"
+			SdkVersion="$(_SdkVersion)"
+			SymbolsList="$(_MtouchSymbolsList)"
+			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
+			UseLlvm="$(MtouchUseLlvm)"
+			UseFloat32="$(MtouchFloat32)"
+			UseThumb="$(MtouchUseThumb)"
+			EnableBitcode="$(MtouchEnableBitcode)"
+			EnableSGenConc="$(EnableSGenConc)"
+			Interpreter="$(MtouchInterpreter)"
+			AppExtensionReferences="@(_ResolvedAppExtensionReferences)"
+			ArchiveSymbols="$(MonoSymbolArchive)"
+			Verbosity="$(MtouchVerbosity)"
+			StandardOutputImportance="High"
+			XamarinSdkRoot="$(_XamarinSdkRoot)"
+			>
+		</MTouch>
+
+		<Touch
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
+			AlwaysCreate="true"
+			Files="$(DeviceSpecificOutputPath)bundler.stamp"
+			>
+			<Output TaskParameter="TouchedFiles" ItemName="FileWrites" />
+		</Touch>
+	</Target>
+
+	<Target Name="_ValidateAppBundle" Condition="'$(IsAppExtension)' == 'false' And '$(IsWatchApp)' == 'false'" DependsOnTargets="_DetectSdkLocations;_ComputeTargetFrameworkMoniker;_GenerateBundleName">
+		<ValidateAppBundleTask
+			Condition="'$(IsMacEnabled)' == 'true'"
+			SessionId="$(BuildSessionId)"
+			AppBundlePath="$(_AppBundlePath)"
+			SdkIsSimulator="$(_SdkIsSimulator)"
+			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
+		/>
+	</Target>
+
+	<Target Name="_SeparateWatchAppReferences" BeforeTargets="AssignProjectConfiguration" Condition="'$(IsAppExtension)' == 'true' Or '$(OutputType)' == 'Exe'">
+		<CreateItem Include="@(ProjectReference)" PreserveExistingMetadata="true" Condition="'%(Identity)' != '' And '%(ProjectReference.IsWatchApp)' == 'true'">
+			<Output ItemName="_WatchAppReference" TaskParameter="Include" />
+		</CreateItem>
+
+		<ItemGroup>
+			<ProjectReference Remove="@(_WatchAppReference)" />
+		</ItemGroup>
+
+		<!--<Warning Text="_SeparateWatchAppReferences: '@(_WatchAppReference)'"/>-->
+	</Target>
+
+	<Target Name="_AssignWatchAppConfiguration" Condition="'@(_WatchAppReference)' != ''">
+		<!-- assign configs if building a solution file -->
+		<AssignProjectConfiguration
+			ProjectReferences = "@(_WatchAppReference)"
+			SolutionConfigurationContents = "$(CurrentSolutionConfigurationContents)"
+			Condition="'$(CurrentSolutionConfigurationContents)' != ''">
+
+			<Output TaskParameter="AssignedProjects" ItemName="_WatchAppReferenceWithConfiguration"/>
+		</AssignProjectConfiguration>
+
+		<!-- Else, just -->
+		<CreateItem Include="@(_WatchAppReference)" 
+					Condition="'$(CurrentSolutionConfigurationContents)' == ''">
+			<Output TaskParameter="Include" ItemName="_WatchAppReferenceWithConfiguration"/>
+		</CreateItem>
+
+		<!--<Warning Text="_AssignWatchAppConfiguration: '@(_WatchAppReferenceWithConfiguration)'"/>-->
+	</Target>
+
+	<!-- Split iOS Watch App projects into 2 lists
+		_WatchAppReferenceWithConfigurationExistent: Projects existent on disk
+		_WatchAppReferenceWithConfigurationNonExistent: Projects non-existent on disk -->
+	<Target Name="_SplitWatchAppReferencesByExistent" DependsOnTargets="_SeparateWatchAppReferences;_AssignWatchAppConfiguration">
+		<CreateItem Include="@(_WatchAppReferenceWithConfiguration)" Condition="'@(_WatchAppReferenceWithConfiguration)' != ''">
+			<Output TaskParameter="Include" ItemName="_WatchAppReferenceWithConfigurationExistent" 
+				Condition="Exists ('%(_WatchAppReferenceWithConfiguration.Identity)')"/>
+
+			<Output TaskParameter="Include" ItemName="_WatchAppReferenceWithConfigurationNonExistent"
+				Condition="!Exists ('%(_WatchAppReferenceWithConfiguration.Identity)')"/>
+		</CreateItem>
+
+		<!--<Warning Text="_SplitWatchAppReferencesByExistent: '@(_WatchAppReferenceWithConfigurationExistent)'"/>-->
+	</Target>
+
+	<Target Name="_ResolveWatchAppReferences" DependsOnTargets="_SplitWatchAppReferencesByExistent">
+		<PropertyGroup>
+			<!-- When building a .sln with msbuild, the dependent projects may not be built. So, always build
+			     the referenced projects unless building from IDE. -->
+			<_BuildReferencedExtensionProjects Condition="'$(BuildingInsideVisualStudio)' != 'true'">true</_BuildReferencedExtensionProjects>
+		</PropertyGroup>
+
+		<!-- If the referenced projects have already been built, then just get the target paths -->
+		<MSBuild
+			Projects="@(_WatchAppReferenceWithConfigurationExistent)"
+			Targets="GetBundleTargetPath"
+			Properties="%(_WatchAppReferenceWithConfigurationExistent.SetConfiguration); %(_WatchAppReferenceWithConfigurationExistent.SetPlatform)"
+			Condition="'@(_WatchAppReferenceWithConfigurationExistent)' != '' and '$(_BuildReferencedExtensionProjects)' != 'true'">
+
+			<Output TaskParameter="TargetOutputs" ItemName="_ResolvedWatchAppReferences" />
+		</MSBuild>
+
+		<!-- Build the referenced project if required -->
+		<MSBuild
+			Projects="@(_WatchAppReferenceWithConfigurationExistent)"
+			Properties="%(_WatchAppReferenceWithConfigurationExistent.SetConfiguration); %(_WatchAppReferenceWithConfigurationExistent.SetPlatform)"
+			Condition="'@(_WatchAppReferenceWithConfigurationExistent)' != '' and '$(_BuildReferencedExtensionProjects)' == 'true' ">
+
+			<Output TaskParameter="TargetOutputs" ItemName="_ResolvedWatchAppReferences" />
+		</MSBuild>
+
+		<Warning Text="Referenced iOS Watch App Project %(_WatchAppReferenceWithConfigurationNonExistent.Identity) not found, ignoring."
+			 Condition="'@(_WatchAppReferenceWithConfigurationNonExistent)' != ''"/>
+
+		<PropertyGroup>
+			<IsWatchExtension Condition="'$(IsAppExtension)' == 'true' And '@(_ResolvedWatchAppReferences)' != ''">True</IsWatchExtension>
+		</PropertyGroup>
+	</Target>
+
+	<Target Name="_CopyWatchOS2AppsToBundle" Condition="'$(OutputType)' == 'Exe'" DependsOnTargets="_ResolveWatchAppReferences">
+		<Ditto
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true' And '@(_ResolvedWatchAppReferences)' != '' And '%(_ResolvedWatchAppReferences.Identity)' != ''"
+			ToolExe="$(DittoExe)"
+			ToolPath="$(DittoPath)"
+			Source="@(_ResolvedWatchAppReferences)"
+			Destination="$(_AppBundlePath)Watch\%(_ResolvedWatchAppReferences.FileName)%(_ResolvedWatchAppReferences.Extension)"
+		/>
+	</Target>
+
+	<Target Name="_CoreCreateIpa" Condition="'$(BuildIpa)' == 'true'" DependsOnTargets="Codesign">
+		<RemoveDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(DeviceSpecificIntermediateOutputPath)ipa" />
+
+		<MakeDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(DeviceSpecificIntermediateOutputPath)ipa\Payload" />
+
+		<PropertyGroup>
+			<_IpaAppBundleDir>$(DeviceSpecificIntermediateOutputPath)ipa\Payload\$(_AppBundleName).app\</_IpaAppBundleDir>
+		</PropertyGroup>
+
+		<!-- Clone the compiled app bundle into the IPA's Payload directory... -->
+		<Ditto
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
+			ToolExe="$(DittoExe)"
+			ToolPath="$(DittoPath)"
+			Source="$(AppBundleDir)"
+			Destination="$(_IpaAppBundleDir)"
+		/>
+
+		<FindWatchOS2AppBundle
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true' And '@(_ResolvedWatchAppReferences)' != ''"
+			WatchAppReferences="@(_ResolvedWatchAppReferences)"
+			>
+			<Output TaskParameter="WatchOS2AppBundle" PropertyName="_WatchOS2AppBundle"/>
+		</FindWatchOS2AppBundle>
+
+		<Copy
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true' And '$(_WatchOS2AppBundle)' != '' And Exists('$(_WatchOS2AppBundle)\_WatchKitStub\WK')"
+			SourceFiles="$(_WatchOS2AppBundle)\_WatchKitStub\WK"
+			DestinationFolder="$(DeviceSpecificIntermediateOutputPath)ipa\WatchKitSupport2"
+		/>
+
+		<CollectITunesSourceFiles
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
+			OutputPath="$(DeviceSpecificOutputPath)"
+			>
+			<Output TaskParameter="ITunesSourceFiles" ItemName="_ITunesSourceFile"/>
+		</CollectITunesSourceFiles>
+
+		<Copy
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true' And '@(_ITunesSourceFile)' != ''"
+			SourceFiles="@(_ITunesSourceFile)"
+			DestinationFolder="$(DeviceSpecificIntermediateOutputPath)ipa"
+		/>
+
+		<ItemGroup>
+			<_IpaPackageSource Include="$(DeviceSpecificIntermediateOutputPath)ipa\Payload" />
+			<_IpaPackageSource Include="$(DeviceSpecificIntermediateOutputPath)ipa\WatchKitSupport" Condition="Exists ('$(DeviceSpecificIntermediateOutputPath)ipa\WatchKitSupport\WK')" />
+			<_IpaPackageSource Include="$(DeviceSpecificIntermediateOutputPath)ipa\WatchKitSupport2" Condition="Exists ('$(DeviceSpecificIntermediateOutputPath)ipa\WatchKitSupport2\WK')" />
+			<_IpaPackageSource Include="$(DeviceSpecificIntermediateOutputPath)ipa\iTunesMetadata.plist" Condition="'$(IpaIncludeArtwork)' == 'true' And Exists ('$(DeviceSpecificIntermediateOutputPath)ipa\iTunesMetadata.plist')" />
+			<_IpaPackageSource Include="$(DeviceSpecificIntermediateOutputPath)ipa\iTunesArtwork@2x" Condition="'$(IpaIncludeArtwork)' == 'true' And Exists ('$(DeviceSpecificIntermediateOutputPath)ipa\iTunesArtwork@2x')" />
+			<_IpaPackageSource Include="$(DeviceSpecificIntermediateOutputPath)ipa\iTunesArtwork" Condition="'$(IpaIncludeArtwork)' == 'true' And Exists ('$(DeviceSpecificIntermediateOutputPath)ipa\iTunesArtwork')" />
+		</ItemGroup>
+
+		<PropertyGroup>
+			<!-- Calculate IpaPackageDir and IpaPackageName based on IpaPackagePath, if defined. -->
+			<IpaPackageDir Condition="'$(IpaPackagePath)' != ''">$([System.IO.Path]::GetDirectoryName('$(IpaPackagePath)'))</IpaPackageDir>
+			<IpaPackageName Condition="'$(IpaPackagePath)' != ''">$([System.IO.Path]::GetFileName('$(IpaPackagePath)'))</IpaPackageName>
+
+			<!-- Calculate an IPA package directory path if not already defined by the developer. -->
+			<!--<IpaPackageDir Condition="'$(IpaPackageDir)' == ''">$([System.Environment]::GetEnvironmentVariable('IPA_PACKAGE_DIR'))</IpaPackageDir>-->
+			<IpaPackageDir Condition="'$(IpaPackageDir)' == ''">$(DeviceSpecificOutputPath)</IpaPackageDir>
+
+			<!-- Calculate an IPA package name if not already defined by the developer. -->
+			<!--<IpaPackageName Condition="'$(IpaPackageName)' == ''">$([System.Environment]::GetEnvironmentVariable('IPA_PACKAGE_NAME'))</IpaPackageName>-->
+			<IpaPackageName Condition="'$(IpaPackageName)' != '' And !$(IpaPackageName.EndsWith ('.ipa', StringComparison.OrdinalIgnoreCase))">$(IpaPackageName).ipa</IpaPackageName>
+			<IpaPackageName Condition="'$(IpaPackageName)' == ''">$(_AppBundleName).ipa</IpaPackageName>
+
+			<!-- Calculate the full path of the IPA package if not already defined by the developer. -->
+			<!--<IpaPackagePath Condition="'$(IpaPackagePath)' == ''">$([System.Environment]::GetEnvironmentVariable('IPA_PACKAGE_PATH'))</IpaPackagePath>-->
+			<IpaPackagePath Condition="'$(IpaPackagePath)' == ''">$(IpaPackageDir)\$(IpaPackageName)</IpaPackagePath>
+		</PropertyGroup>
+	</Target>
+	
+	<Target Name="_PackageOnDemandResources" Condition="'$(BuildIpa)' == 'true' And '$(EnableOnDemandResources)' == 'true' And ('$(_DistributionType)' == 'AppStore' Or '$(_DistributionType)' == 'AdHoc')" >
+		<PropertyGroup>
+			<_PayloadDir>$(DeviceSpecificIntermediateOutputPath)ipa\Payload\</_PayloadDir>
+			<_IpaAppBundleDir>$(_PayloadDir)$(_AppBundleName).app\</_IpaAppBundleDir>
+
+			<_IntermediateODRDir Condition="'$(_DistributionType)' == 'AppStore'">$(_PayloadDir)OnDemandResources\</_IntermediateODRDir>
+			<_IntermediateODRDir Condition="'$(_DistributionType)' == 'AdHoc' And '$(EmbedOnDemandResources)' == 'true'">$(_IpaAppBundleDir)OnDemandResources\</_IntermediateODRDir>
+			<_IntermediateODRDir Condition="'$(_DistributionType)' == 'AdHoc' And '$(EmbedOnDemandResources)' == 'false'">$(DeviceSpecificIntermediateOutputPath)OnDemandResourcesPackage\OnDemandResources\</_IntermediateODRDir>
+
+			<OnDemandResourcesUrl Condition="'$(OnDemandResourcesUrl)' == '' And '$(_DistributionType)' == 'AdHoc' And '$(EmbedOnDemandResources)' == 'true'">OnDemandResources</OnDemandResourcesUrl>
+
+			<IsStreamable>false</IsStreamable>
+			<IsStreamable Condition="'$(EmbedOnDemandResources)' == 'false'">true</IsStreamable>
+
+			<_CodesignDisableTimestamp>False</_CodesignDisableTimestamp>
+			<_CodesignDisableTimestamp Condition="'$(_SdkIsSimulator)' == 'true' Or '$(_BundlerDebug)' == 'true'">True</_CodesignDisableTimestamp>
+		</PropertyGroup>
+		
+		<RemoveDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(_IntermediateODRDir)" />
+		<MakeDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true' And Exists('$(DeviceSpecificOutputPath)OnDemandResources\')" Directories="$(_IntermediateODRDir)" />
+
+		<!-- Clone the compiled assetpack bundle... -->
+		<Ditto
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true' And Exists('$(DeviceSpecificOutputPath)OnDemandResources\')"
+			ToolExe="$(DittoExe)"
+			ToolPath="$(DittoPath)"
+			Source="$(DeviceSpecificOutputPath)OnDemandResources\"
+			Destination="$(_IntermediateODRDir)"
+			/>
+
+		<!-- Look for the *.assetpack folders in the ODR folder -->
+		<CollectAssetPacks
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true' And Exists('$(_IntermediateODRDir)')"
+			OnDemandResourcesPath="$(_IntermediateODRDir)"
+			>
+
+			<Output TaskParameter="AssetPacks" ItemName="_AssetPack"/>
+		</CollectAssetPacks>
+
+		<ItemGroup>
+			<_AssetPack>
+				<_DirectoryName>$([System.IO.Path]::GetDirectoryName('%(Identity)'))</_DirectoryName>
+			</_AssetPack>
+			<_AssetPack>
+				<DirectoryName>$([System.IO.Path]::GetFileName('%(_AssetPack._DirectoryName)'))</DirectoryName>
+			</_AssetPack>
+			<_AssetPack>
+				<CodesignStampFile>$(DeviceSpecificOutputPath)OnDemandResources-codesign\%(DirectoryName)</CodesignStampFile>
+			</_AssetPack>
+		</ItemGroup>
+
+		<Delete
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
+			Files="@(_AssetPack->'%(CodesignStampFile)')"
+		/>
+
+		<!-- Sign assetpacks -->
+		<Codesign
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true' And '@(_AssetPack)' != '' And '$(_DistributionType)' == 'AppStore'"
+			ToolExe="$(CodesignExe)"
+			ToolPath="$(CodesignPath)"
+			CodesignAllocate="$(_CodesignAllocate)"
+			DisableTimestamp="$(_CodesignDisableTimestamp)"
+			Keychain="$(CodesignKeychain)"
+			Entitlements="$(_CompiledCodesignEntitlements)"
+			Resources="@(_AssetPack)"
+			SigningKey="$(_CodeSigningKey)"
+			ExtraArgs="$(CodesignExtraArgs)"
+			>
+		</Codesign>
+
+		<WriteAssetPackManifest
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true' And '$(_DistributionType)' == 'AdHoc' And Exists('$(_IntermediateODRDir)')"
+			TemplatePath="$(_IpaAppBundleDir)AssetPackManifestTemplate.plist"
+			OutputFile="$(_IpaAppBundleDir)AssetPackManifest.plist"
+			OnDemandResourceUrl="$(OnDemandResourcesUrl)"
+			IsStreamable="$(IsStreamable)"
+			/>
+
+		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true' And '$(_DistributionType)' == 'AdHoc' And Exists('$(_IntermediateODRDir)')" Files="$(_IpaAppBundleDir)AssetPackManifestTemplate.plist" />
+
+		<!-- Re-sign app bundle if anything changed inside of it -->
+		<ItemGroup>
+			<_IpaAppBundleToSign Include="$(_IpaAppBundleDir)">
+				<CodesignStampFile>$(DeviceSpecificOutputPath)OnDemandResources-codesign\$(_AppBundleName).app</CodesignStampFile>
+			</_IpaAppBundleToSign>
+		</ItemGroup>
+		<Codesign
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true' And '$(_DistributionType)' == 'AdHoc' And Exists('$(_IntermediateODRDir)')"
+			ToolExe="$(CodesignExe)"
+			ToolPath="$(CodesignPath)"
+			CodesignAllocate="$(_CodesignAllocate)"
+			DisableTimestamp="$(_CodesignDisableTimestamp)"
+			Keychain="$(CodesignKeychain)"
+			Entitlements="$(_CompiledCodesignEntitlements)"
+			ResourceRules="$(_PreparedResourceRules)"
+			Resources="@(_IpaAppBundleToSign)"
+			SigningKey="$(_CodeSigningKey)"
+			ExtraArgs="$(CodesignExtraArgs)"
+			/>
+
+		<RemoveDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true' And '$(EmbedOnDemandResources)' == 'false'" Directories="$(IpaPackageDir)\OnDemandResources\" />
+		<MakeDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true' And '$(EmbedOnDemandResources)' == 'false'" Directories="$(IpaPackageDir)\OnDemandResources\" />
+
+		<CreateAssetPack
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true' And '$(EmbedOnDemandResources)' == 'false'"
+			ToolExe="$(ZipExe)"
+			ToolPath="$(ZipPath)"
+			Source="%(_AssetPack.Identity)"
+			OutputFile="$(IpaPackageDir)OnDemandResources\%(_AssetPack.DirectoryName)"
+			/>
+
+		<Copy
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true' And '$(EmbedOnDemandResources)' == 'false'"
+			SourceFiles="$(_IpaAppBundleDir)AssetPackManifest.plist"
+			DestinationFolder="$(IpaPackageDir)\OnDemandResources\"
+			/>
+	</Target>
+
+	<Target Name="_ZipIpa" Condition="'$(BuildIpa)' == 'true'">
+		<MakeDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(IpaPackageDir)" />
+		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Files="$(IpaPackagePath)" />
+
+		<Zip
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
+			ToolExe="$(ZipExe)"
+			ToolPath="$(ZipPath)"
+			Recursive="true"
+			Symlinks="true"
+			Sources="@(_IpaPackageSource)"
+			OutputFile="$(IpaPackagePath)"
+			WorkingDirectory="$(DeviceSpecificIntermediateOutputPath)ipa"
+			>
+			<Output TaskParameter="OutputFile" ItemName="FileWrites" />
+		</Zip>
+	</Target>
+
+	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.targets"
+			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.targets')"/>
+		
+</Project>

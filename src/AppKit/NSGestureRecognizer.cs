@@ -15,9 +15,11 @@ using Foundation;
 using ObjCRuntime;
 using System.Runtime.Versioning;
 
+#nullable enable
+
 namespace AppKit {
 	public partial class NSGestureRecognizer {
-		object recognizers;
+		object? recognizers;
 		static Selector tsel = new Selector ("target");
 		internal static Selector ParametrizedSelector = new Selector ("target:");
 
@@ -35,7 +37,7 @@ namespace AppKit {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #endif
 		[Register ("__NSGestureRecognizerToken")]
@@ -48,7 +50,7 @@ namespace AppKit {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #endif
 		[Register ("__NSGestureRecognizerParameterlessToken")]
@@ -70,7 +72,7 @@ namespace AppKit {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #endif
 		[Register ("__NSGestureRecognizerParametrizedToken")]

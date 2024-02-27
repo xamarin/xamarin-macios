@@ -1,126 +1,170 @@
 parameters:
-- name: enableDotnet
-  type: boolean
-  default: true
+- name: buildStage
+  type: string
 
 - name: dependsOn
-  type: object 
-  default: []
+  type: object
+  default: null
 
 - name: isPR
   type: boolean
 
+- name: repositoryAlias
+  type: string
+  default: self
+
+- name: commit
+  type: string
+  default: HEAD
+
+- name: pushNugets
+  type: boolean
+  default: true
+
+- name: stageDisplayNamePrefix
+  type: string
+  default: ''
+
+- name: uploadPrefix
+  type: string
+  default: '$(MaciosUploadPrefix)'
+
 stages:
 - stage: prepare_release
-  displayName: Prepare Release
-  dependsOn: ${{ parameters.dependsOn }}
-  condition: and(eq(${{ parameters.isPR }}, false), eq(${{ parameters.enableDotnet }}, true))
+  displayName: '${{ parameters.stageDisplayNamePrefix }}Prepare .NET Release'
+  ${{ if parameters.dependsOn }}:
+    dependsOn: ${{ parameters.dependsOn }}
+    condition: and(
+        or(
+          eq(dependencies.${{ parameters.buildStage }}.result, 'Succeeded'),
+          eq(dependencies.${{ parameters.buildStage }}.result, 'SucceededWithIssues')
+        ),
+        eq(${{ parameters.isPR }}, false)
+      )
+  ${{ else }}:
+    condition: eq(${{ parameters.isPR }}, false)
 
   jobs:
   # Check - "xamarin-macios (Prepare Release Sign NuGets)"
-  - template: sign-artifacts/jobs/v2.yml@templates
+  - template: sign-artifacts/jobs/v2.yml@yaml-templates
     parameters:
-      artifactName: dotnet-signed
+      signedArtifactName: '${{ parameters.uploadPrefix }}nuget-signed'
+      artifactName: '${{ parameters.uploadPrefix }}not-signed-package'
       signType: Real
       usePipelineArtifactTasks: true
+      condition: "ne(stageDependencies.configure_build.configure.outputs['configure_platforms.ENABLE_DOTNET'],'')"
 
   # Check - "xamarin-macios (Prepare Release Convert NuGet to MSI)"
-  - template: nuget-msi-convert/job/v3.yml@templates
+  - template: nuget-msi-convert/job/v3.yml@yaml-templates
     parameters:
-      yamlResourceName: templates
+      yamlResourceName: yaml-templates
       dependsOn: signing
-      artifactName: nuget-signed
-      propsArtifactName: dotnet-signed
+      artifactName: '${{ parameters.uploadPrefix }}nuget-signed'
+      propsArtifactName: ${{ parameters.uploadPrefix }}not-signed-package
+      vsDropArtifactName: ${{ parameters.uploadPrefix }}vsdrop-signed
+      vsDropMultiTargetArtifactName: ${{ parameters.uploadPrefix }}vsdrop-multitarget-signed
+      msiNuGetArtifactName: ${{ parameters.uploadPrefix }}vs-msi-nugets
+      binlogsArtifactName: ${{ parameters.uploadPrefix }}nuget-msi-convert-binlogs
       signType: Real
       useDateTimeVersion: true
+      condition: "ne(stageDependencies.configure_build.configure.outputs['configure_platforms.ENABLE_DOTNET'],'')"
+      postConvertSteps:
+      - task: DownloadPipelineArtifact@2
+        inputs:
+          artifactName: '${{ parameters.uploadPrefix }}not-signed-package'
+          downloadPath: $(Build.StagingDirectory)\sign-verify
+          patterns: |
+            **/SignVerifyIgnore.txt
 
-  # Check - "xamarin-macios (Prepare Release Push NuGets)"
-  - job: push_signed_nugets
-    displayName: Push NuGets
-    dependsOn: nuget_convert
-    variables:
-      skipNugetSecurityAnalysis: true
-    pool:
-      vmImage: windows-latest
-    steps:
-    - task: DownloadPipelineArtifact@2
-      inputs:
-        artifactName: nuget-signed
-        downloadPath: $(Build.SourcesDirectory)/package
-        patterns: |
-          *.nupkg
+      - task: MicroBuildCodesignVerify@3
+        displayName: verify signed msi content
+        inputs:
+          TargetFolders: |
+            $(Build.StagingDirectory)\bin\manifests
+            $(Build.StagingDirectory)\bin\manifests-multitarget
+          ExcludeSNVerify: true
+          ApprovalListPathForCerts: $(Build.StagingDirectory)\sign-verify\SignVerifyIgnore.txt
 
-    - task: NuGetCommand@2
-      displayName: Publish Nugets to dotnet6
-      inputs:
-        command: push
-        packagesToPush: $(Build.SourcesDirectory)/package/*.nupkg
-        nuGetFeedType: external
-        publishFeedCredentials: dnceng-dotnet6
+  - ${{ if eq(parameters.pushNugets, true) }}:
+    # Check - "xamarin-macios (Prepare Release Push NuGets)"
+    - job: push_signed_nugets
+      displayName: Push NuGets
+      dependsOn: nuget_convert
+      condition: "ne(stageDependencies.configure_build.configure.outputs['configure_platforms.ENABLE_DOTNET'],'')"
+      variables:
+        skipNugetSecurityAnalysis: true
+      pool:
+        vmImage: windows-latest
+      steps:
+      - task: DownloadPipelineArtifact@2
+        inputs:
+          artifactName: '${{ parameters.uploadPrefix }}nuget-signed'
+          downloadPath: $(Build.SourcesDirectory)/package
+          patterns: |
+            *.nupkg
 
-    - task: DownloadPipelineArtifact@2
-      inputs:
-        artifactName: vs-msi-nugets
-        downloadPath: $(Build.SourcesDirectory)/vs-msi-nugets
-        patterns: |
-          *.nupkg
+      - task: NuGetCommand@2
+        displayName: Publish Nugets to dotnet8
+        inputs:
+          command: push
+          packagesToPush: '$(Build.SourcesDirectory)/package/*.nupkg'
+          nuGetFeedType: external
+          publishFeedCredentials: dnceng-dotnet8
 
-    - task: NuGetCommand@2
-      displayName: Publish Nugets to dotnet6
-      inputs:
-        command: push
-        packagesToPush: $(Build.SourcesDirectory)/vs-msi-nugets/*.nupkg
-        nuGetFeedType: external
-        publishFeedCredentials: dnceng-dotnet6
+      - task: DownloadPipelineArtifact@2
+        inputs:
+          artifactName: '${{ parameters.uploadPrefix }}vs-msi-nugets'
+          downloadPath: '$(Build.SourcesDirectory)/${{ parameters.uploadPrefix}}vs-msi-nugets'
+          patterns: |
+            *.nupkg
 
-    - pwsh: |
-        mkdir $(Build.SourcesDirectory)/nugets-blob
-        cp $(Build.SourcesDirectory)/package/* $(Build.SourcesDirectory)/nugets-blob
-        cp $(Build.SourcesDirectory)/vs-msi-nugets/* $(Build.SourcesDirectory)/nugets-blob
-      displayName: "Copy content for the nugets blob."
+      - task: NuGetCommand@2
+        displayName: Publish VS MSI Nugets to dotnet8
+        inputs:
+          command: push
+          packagesToPush: '$(Build.SourcesDirectory)/${{ parameters.uploadPrefix }}vs-msi-nugets/*.nupkg'
+          nuGetFeedType: external
+          publishFeedCredentials: dnceng-dotnet8
 
-    - template: templates/common/upload-vs-insertion-artifacts.yml@sdk-insertions
-      parameters:
-        githubToken: $(GitHub.Token)
-        githubContext: $(NupkgCommitStatusName)
-        blobName: $(NupkgCommitStatusName)
-        packagePrefix: xamarin-macios
-        artifactsPath: $(Build.SourcesDirectory)/nugets-blob
+      - pwsh: |
+          mkdir $(Build.SourcesDirectory)/nugets-blob
+          cp $(Build.SourcesDirectory)/package/* $(Build.SourcesDirectory)/nugets-blob
+          cp $(Build.SourcesDirectory)/${{ parameters.uploadPrefix}}vs-msi-nugets/* $(Build.SourcesDirectory)/nugets-blob
+        displayName: "Copy content for the nugets blob."
 
-    - template: templates/common/upload-vs-insertion-artifacts.yml@sdk-insertions
-      parameters:
-        githubToken: $(GitHub.Token)
-        githubContext: $(VSDropCommitStatusName)
-        blobName: $(VSDropCommitStatusName)
-        packagePrefix: xamarin-macios
-        artifactsPath: $(Build.SourcesDirectory)/vs-insertion
-        downloadSteps:
-        - task: DownloadPipelineArtifact@2
-          inputs:
-            artifactName: vsdrop-signed
-            downloadPath: $(Build.SourcesDirectory)/vs-insertion
+      - template: templates/common/upload-vs-insertion-artifacts.yml@sdk-insertions
+        parameters:
+          yamlResourceName: yaml-templates
+          githubToken: $(GitHub.Token)
+          githubContext: $(NupkgCommitStatusName)
+          blobName: $(NupkgCommitStatusName)
+          packagePrefix: xamarin-macios
+          artifactsPath: $(Build.SourcesDirectory)/nugets-blob
 
-    - template: templates/common/upload-vs-insertion-artifacts.yml@sdk-insertions
-      parameters:
-        githubToken: $(GitHub.Token)
-        githubContext: $(MultiTargetVSDropCommitStatusName)
-        blobName: $(MultiTargetVSDropCommitStatusName)
-        packagePrefix: xamarin-macios
-        artifactsPath: $(Build.StagingDirectory)\$(MultiTargetVSDropCommitStatusName)
-        downloadSteps:
-        - task: DownloadPipelineArtifact@2
-          inputs:
-            artifactName: vsdrop-multitarget-signed
-            downloadPath: $(Build.StagingDirectory)\$(MultiTargetVSDropCommitStatusName)
+      - template: templates/common/upload-vs-insertion-artifacts.yml@sdk-insertions
+        parameters:
+          yamlResourceName: yaml-templates
+          githubToken: $(GitHub.Token)
+          githubContext: $(VSDropCommitStatusName)
+          blobName: $(VSDropCommitStatusName)
+          packagePrefix: xamarin-macios
+          artifactsPath: $(Build.SourcesDirectory)/vs-insertion
+          downloadSteps:
+          - task: DownloadPipelineArtifact@2
+            inputs:
+              artifactName: ${{ parameters.uploadPrefix }}vsdrop-signed
+              downloadPath: $(Build.SourcesDirectory)/vs-insertion
 
-# Check - "xamarin-macios (VS Insertion Wait For Approval)"
-# Check - "xamarin-macios (VS Insertion Create VS Drop and Open PR)"
-- template: vs-insertion/stage/v1.yml@templates
-  parameters:
-    dependsOn: prepare_release
-    symbolArtifactName: nuget-signed
-    symbolConversionFilters: '*mlaunch.app*'
-    pushToShippingFeed: true
-    nupkgArtifactName: nuget-signed
-    msiNupkgArtifactName: vs-msi-nugets
-    condition: eq(${{ parameters.isPR }}, false)
+      - template: templates/common/upload-vs-insertion-artifacts.yml@sdk-insertions
+        parameters:
+          yamlResourceName: yaml-templates
+          githubToken: $(GitHub.Token)
+          githubContext: $(MultiTargetVSDropCommitStatusName)
+          blobName: $(MultiTargetVSDropCommitStatusName)
+          packagePrefix: xamarin-macios
+          artifactsPath: $(Build.StagingDirectory)\$(MultiTargetVSDropCommitStatusName)
+          downloadSteps:
+          - task: DownloadPipelineArtifact@2
+            inputs:
+              artifactName: ${{ parameters.uploadPrefix }}vsdrop-multitarget-signed
+              downloadPath: $(Build.StagingDirectory)\$(MultiTargetVSDropCommitStatusName)

@@ -1,0 +1,20 @@
+﻿{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "Microsoft",
+  "classifications": [ "tvOS", "Mobile" ],
+  "groupIdentity": "Microsoft.tvOS.tvOSLib",
+  "identity": "Microsoft.tvOS.tvOSLib.VisualBasic",
+  "name": "tvOS Class Library",
+  "description": "A project for creating a .NET tvOS class library",
+  "shortName": "tvoslib",
+  "tags": {
+    "language": "VB",
+    "type": "project"
+  },
+  "sourceName": "tvOSLib1",
+  "preferNameDirectory": true,
+  "primaryOutputs": [
+    { "path": "tvOSLib1.vbproj" }
+  ],
+  "defaultName": "tvOSLib1"
+}

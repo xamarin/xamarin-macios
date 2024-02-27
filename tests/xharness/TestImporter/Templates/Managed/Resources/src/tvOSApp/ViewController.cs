@@ -19,22 +19,22 @@ namespace BCLTests {
 	public partial class ViewController : UIViewController {
 
 		internal static IEnumerable<TestAssemblyInfo> GetTestAssemblies ()
- 		{
+		{
 			// var t = Path.GetFileName (typeof (ActivatorCas).Assembly.Location);
 			foreach (var name in RegisterType.TypesToRegister.Keys) {
 				var a = Assembly.Load (name);
-				if (a == null) {
+				if (a is null) {
 					Console.WriteLine ($"# WARNING: Unable to load assembly {name}.");
- 					continue;
+					continue;
 				}
 				yield return new TestAssemblyInfo (a, name);
 			}
- 		}
- 		
- 		public ViewController ()
+		}
+
+		public ViewController ()
 		{
 		}
-		
+
 		protected ViewController (IntPtr handle) : base (handle)
 		{
 			// Note: this .ctor should not contain any initialization logic.
@@ -76,14 +76,14 @@ namespace BCLTests {
 			// we generate the logs in two different ways depending if the generate xml flag was
 			// provided. If it was, we will write the xml file to the tcp writer if present, else
 			// we will write the normal console output using the LogWriter
-			var logger = (writer == null || options.EnableXml) ? new LogWriter () : new LogWriter (writer);
+			var logger = (writer is null || options.EnableXml) ? new LogWriter () : new LogWriter (writer);
 			logger.MinimumLogLevel = MinimumLogLevel.Info;
 			var testAssemblies = GetTestAssemblies ();
 			var runner = RegisterType.IsXUnit ? (Xamarin.iOS.UnitTests.TestRunner) new XUnitTestRunner (logger) : new NUnitTestRunner (logger);
 			var categories = await IgnoreFileParser.ParseTraitsContentFileAsync (NSBundle.MainBundle.BundlePath, RegisterType.IsXUnit);
 			// add category filters if they have been added
 			runner.SkipCategories (categories);
-			
+
 			// if we have ignore files, ignore those tests
 			var skippedTests = await IgnoreFileParser.ParseContentFilesAsync (NSBundle.MainBundle.BundlePath);
 			if (skippedTests.Any ()) {
@@ -95,7 +95,7 @@ namespace BCLTests {
 			Xamarin.iOS.UnitTests.TestRunner.Jargon jargon = Xamarin.iOS.UnitTests.TestRunner.Jargon.NUnitV3;
 			switch (options.XmlVersion) {
 			default:
-				case XmlVersion.NUnitV2:
+			case XmlVersion.NUnitV2:
 				jargon = Xamarin.iOS.UnitTests.TestRunner.Jargon.NUnitV2;
 				break;
 			case XmlVersion.NUnitV3:
@@ -109,7 +109,7 @@ namespace BCLTests {
 				string resultsFilePath = runner.WriteResultsToFile (jargon);
 				logger.Info ($"Xml result can be found {resultsFilePath}");
 			}
-			
+
 			logger.Info ($"Tests run: {runner.TotalTests} Passed: {runner.PassedTests} Inconclusive: {runner.InconclusiveTests} Failed: {runner.FailedTests} Ignored: {runner.FilteredTests}");
 			if (options.TerminateAfterExecution)
 				BeginInvokeOnMainThread (TerminateWithSuccess);

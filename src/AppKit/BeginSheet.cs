@@ -32,6 +32,8 @@ using System.Collections;
 using ObjCRuntime;
 using Foundation;
 
+#nullable enable
+
 namespace AppKit {
 	public partial class NSApplication {
 		public void BeginSheet (NSWindow sheet, NSWindow docWindow)

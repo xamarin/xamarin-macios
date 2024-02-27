@@ -15,13 +15,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Photos
-{
-	public partial class PHPhotoLibrary
-	{
+namespace Photos {
+	public partial class PHPhotoLibrary {
 		class __phlib_observer : PHPhotoLibraryChangeObserver {
 			Action<PHChange> observer;
-			
+
 			public __phlib_observer (Action<PHChange> observer)
 			{
 				this.observer = observer;
@@ -32,7 +30,7 @@ namespace Photos
 				observer (changeInstance);
 			}
 		}
-		
+
 		public object RegisterChangeObserver (Action<PHChange> changeObserver)
 		{
 			var token = new __phlib_observer (changeObserver);
@@ -42,7 +40,7 @@ namespace Photos
 
 		public void UnregisterChangeObserver (object registeredToken)
 		{
-			if (registeredToken is __phlib_observer observer) 
+			if (registeredToken is __phlib_observer observer)
 				UnregisterChangeObserver (observer);
 			else
 				throw new ArgumentException ("registeredToken should be a value returned by RegisterChangeObserver(PHChange)");

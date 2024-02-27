@@ -127,7 +127,7 @@ namespace MonoTouchFixtures.ImageIO {
 			TestRuntime.AssertXcodeVersion (5, 0);
 
 			var rc = name.RetainCount;
-			using (var tag = new CGImageMetadataTag (nspace, prefix, name,  CGImageMetadataType.Default, false)) {
+			using (var tag = new CGImageMetadataTag (nspace, prefix, name, CGImageMetadataType.Default, false)) {
 				var n = tag.Name;
 				Assert.That (n.Handle, Is.EqualTo (name.Handle), "same");
 				Assert.That (n.ToString (), Is.EqualTo ("tagName"), "Name");

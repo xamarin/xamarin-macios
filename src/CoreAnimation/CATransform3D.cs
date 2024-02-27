@@ -95,50 +95,51 @@ namespace CoreAnimation {
 			Identity.m11 = Identity.m22 = Identity.m33 = Identity.m44 = 1f;
 #endif
 		}
-		
+
 		[DllImport (Constants.QuartzLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool CATransform3DIsIdentity (CATransform3D t);
+		extern static byte CATransform3DIsIdentity (CATransform3D t);
 
 		public bool IsIdentity {
 			get {
-				return CATransform3DIsIdentity (this);
+				return CATransform3DIsIdentity (this) != 0;
 			}
 		}
 
 		[DllImport (Constants.QuartzLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool CATransform3DEqualToTransform (CATransform3D a, CATransform3D b);
+		extern static byte CATransform3DEqualToTransform (CATransform3D a, CATransform3D b);
 
 		public bool Equals (CATransform3D other)
 		{
-			return CATransform3DEqualToTransform (this, other);
+			return CATransform3DEqualToTransform (this, other) != 0;
 		}
 
 		public override bool Equals (object? other)
 		{
 			if (!(other is CATransform3D))
 				return false;
-			return CATransform3DEqualToTransform (this, (CATransform3D) other);
+			return CATransform3DEqualToTransform (this, (CATransform3D) other) != 0;
 		}
 
 		public override int GetHashCode ()
 		{
-			unsafe {
-#if NET
-				int code = (int) M11;
-				fixed (nfloat *fp = &M11){
-#else
-				int code = (int) m11;
-				fixed (nfloat *fp = &m11){
-#endif
-					int *ip = (int *) fp;
-					for (int i = 1; i < 4 * IntPtr.Size; i++){
-						code = code ^ ip [i];
-					}
-				}
-				return code;
-			}
+			var hash = new HashCode ();
+			hash.Add (M11);
+			hash.Add (M12);
+			hash.Add (M13);
+			hash.Add (M14);
+			hash.Add (M21);
+			hash.Add (M22);
+			hash.Add (M23);
+			hash.Add (M24);
+			hash.Add (M31);
+			hash.Add (M32);
+			hash.Add (M33);
+			hash.Add (M34);
+			hash.Add (M41);
+			hash.Add (M42);
+			hash.Add (M43);
+			hash.Add (M44);
+			return hash.ToHashCode ();
 		}
 
 		// Transform matrix =  [1 0 0 0; 0 1 0 0; 0 0 1 0; tx ty tz 1]
@@ -179,8 +180,8 @@ namespace CoreAnimation {
 
 			return r;
 		}
-		
-		[DllImport (Constants.QuartzLibrary, EntryPoint="CATransform3DMakeRotation")]
+
+		[DllImport (Constants.QuartzLibrary, EntryPoint = "CATransform3DMakeRotation")]
 		public extern static CATransform3D MakeRotation (nfloat angle, nfloat x, nfloat y, nfloat z);
 
 		[DllImport (Constants.QuartzLibrary)]
@@ -190,7 +191,7 @@ namespace CoreAnimation {
 		{
 			return CATransform3DTranslate (this, tx, ty, tz);
 		}
-		
+
 		[DllImport (Constants.QuartzLibrary)]
 		extern static CATransform3D CATransform3DScale (CATransform3D t, nfloat sx, nfloat sy, nfloat sz);
 
@@ -202,7 +203,7 @@ namespace CoreAnimation {
 		{
 			return CATransform3DScale (this, s, s, s);
 		}
-		
+
 		[DllImport (Constants.QuartzLibrary)]
 		extern static CATransform3D CATransform3DRotate (CATransform3D t, nfloat angle, nfloat x, nfloat y, nfloat z);
 
@@ -210,7 +211,7 @@ namespace CoreAnimation {
 		{
 			return CATransform3DRotate (this, angle, x, y, z);
 		}
-		
+
 		[DllImport (Constants.QuartzLibrary)]
 		extern static CATransform3D CATransform3DConcat (CATransform3D a, CATransform3D b);
 
@@ -218,7 +219,7 @@ namespace CoreAnimation {
 		{
 			return CATransform3DConcat (this, b);
 		}
-		
+
 		[DllImport (Constants.QuartzLibrary)]
 		extern static CATransform3D CATransform3DInvert (CATransform3D t);
 
@@ -234,21 +235,20 @@ namespace CoreAnimation {
 			return CATransform3DInvert (this);
 		}
 
-		[DllImport (Constants.QuartzLibrary, EntryPoint="CATransform3DMakeAffineTransform")]
+		[DllImport (Constants.QuartzLibrary, EntryPoint = "CATransform3DMakeAffineTransform")]
 		public extern static CATransform3D MakeFromAffine (CGAffineTransform m);
-		
+
 
 		[DllImport (Constants.QuartzLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool CATransform3DIsAffine (CATransform3D t);
+		extern static byte CATransform3DIsAffine (CATransform3D t);
 
 		public bool IsAffine {
 			get {
-				return CATransform3DIsAffine (this);
+				return CATransform3DIsAffine (this) != 0;
 			}
 		}
 
-		[DllImport (Constants.QuartzLibrary, EntryPoint="CATransform3DGetAffineTransform")]
+		[DllImport (Constants.QuartzLibrary, EntryPoint = "CATransform3DGetAffineTransform")]
 		public extern static CGAffineTransform GetAffine (CATransform3D t);
 
 		public override string ToString ()
@@ -260,10 +260,10 @@ namespace CoreAnimation {
 					      M31, M32, M33, M34,
 					      M41, M42, M43, M44);
 #else
-					      m11, m12, m13, m14,
-					      m21, m22, m23, m24,
-					      m31, m32, m33, m34,
-					      m41, m42, m43, m44);
+						  m11, m12, m13, m14,
+						  m21, m22, m23, m24,
+						  m31, m32, m33, m34,
+						  m41, m42, m43, m44);
 #endif
 		}
 	}

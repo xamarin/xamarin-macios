@@ -32,7 +32,7 @@ namespace MonoTouchFixtures.Metal {
 		[TearDown]
 		public void TearDown ()
 		{
-			if (hd != null)
+			if (hd is not null)
 				hd.Dispose ();
 			hd = null;
 		}

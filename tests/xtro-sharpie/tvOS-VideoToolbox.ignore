@@ -2,6 +2,3 @@
 !missing-field! kVTVideoDecoderSpecification_PreferredDecoderGPURegistryID not bound
 !missing-field! kVTVideoDecoderSpecification_RequiredDecoderGPURegistryID not bound
 !unknown-field! kVTCompressionPropertyKey_UsingHardwareAcceleratedVideoEncoder bound
-!unknown-field! kVTDecompressionPropertyKey_UsingHardwareAcceleratedVideoDecoder bound
-!unknown-field! kVTVideoDecoderSpecification_EnableHardwareAcceleratedVideoDecoder bound
-!unknown-field! kVTVideoDecoderSpecification_RequireHardwareAcceleratedVideoDecoder bound

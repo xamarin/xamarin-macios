@@ -25,24 +25,24 @@ using Vector2 = global::OpenTK.Vector2;
 namespace Vision {
 
 #if NET
-	[SupportedOSPlatform ("tvos11.0")]
-	[SupportedOSPlatform ("macos10.13")]
-	[SupportedOSPlatform ("ios11.0")]
+	[SupportedOSPlatform ("tvos")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
-#else
-	[TV (11,0)]
-	[Mac (10,13)]
-	[iOS (11,0)]
 #endif
 	public static partial class VNUtils {
-	
+
 		// initialized only once (see tests/cecil-tests/)
 		[Field ("VNNormalizedIdentityRect", Constants.VisionLibrary)]
 		public static CGRect NormalizedIdentityRect { get; } = Dlfcn.GetCGRect (Libraries.Vision.Handle, "VNNormalizedIdentityRect");
 
 		[DllImport (Constants.VisionLibrary, EntryPoint = "VNNormalizedRectIsIdentityRect")]
-		[return: MarshalAs (UnmanagedType.U1)]
-		public static extern bool IsIdentityRect (CGRect rect);
+		static extern byte _IsIdentityRect (CGRect rect);
+
+		public static bool IsIdentityRect (CGRect rect)
+		{
+			return _IsIdentityRect (rect) != 0;
+		}
 
 		[DllImport (Constants.VisionLibrary, EntryPoint = "VNImagePointForNormalizedPoint")]
 		public static extern CGPoint GetImagePoint (CGPoint normalizedPoint, nuint imageWidth, nuint imageHeight);
@@ -53,10 +53,10 @@ namespace Vision {
 		[SupportedOSPlatform ("ios14.0")]
 		[SupportedOSPlatform ("maccatalyst14.0")]
 #else
-		[TV (14,0)]
-		[Mac (11,0)]
-		[iOS (14,0)]
-		[MacCatalyst (14,0)]
+		[TV (14, 0)]
+		[Mac (11, 0)]
+		[iOS (14, 0)]
+		[MacCatalyst (14, 0)]
 #endif
 		[DllImport (Constants.VisionLibrary, EntryPoint = "VNNormalizedPointForImagePoint")]
 		public static extern CGPoint GetNormalizedPoint (CGPoint imagePoint, nuint imageWidth, nuint imageHeight);
@@ -73,12 +73,12 @@ namespace Vision {
 		[SupportedOSPlatform ("ios15.0")]
 		[SupportedOSPlatform ("maccatalyst15.0")]
 #else
-		[TV (15,0)]
-		[Mac (12,0)]
-		[iOS (15,0)]
-		[MacCatalyst (15,0)]
+		[TV (15, 0)]
+		[Mac (12, 0)]
+		[iOS (15, 0)]
+		[MacCatalyst (15, 0)]
 #endif
-		[DllImport (Constants.VisionLibrary, EntryPoint="VNImagePointForNormalizedPointUsingRegionOfInterest")]
+		[DllImport (Constants.VisionLibrary, EntryPoint = "VNImagePointForNormalizedPointUsingRegionOfInterest")]
 		public static extern CGPoint GetImagePoint (CGPoint normalizedPoint, nuint imageWidth, nuint imageHeight, CGRect regionOfInterest);
 
 #if NET
@@ -87,12 +87,12 @@ namespace Vision {
 		[SupportedOSPlatform ("ios15.0")]
 		[SupportedOSPlatform ("maccatalyst15.0")]
 #else
-		[TV (15,0)]
-		[Mac (12,0)]
-		[iOS (15,0)]
-		[MacCatalyst (15,0)]
+		[TV (15, 0)]
+		[Mac (12, 0)]
+		[iOS (15, 0)]
+		[MacCatalyst (15, 0)]
 #endif
-		[DllImport (Constants.VisionLibrary, EntryPoint="VNNormalizedPointForImagePointUsingRegionOfInterest")]
+		[DllImport (Constants.VisionLibrary, EntryPoint = "VNNormalizedPointForImagePointUsingRegionOfInterest")]
 		public static extern CGPoint GetNormalizedPoint (CGPoint imagePoint, nuint imageWidth, nuint imageHeight, CGRect regionOfInterest);
 
 #if NET
@@ -101,12 +101,12 @@ namespace Vision {
 		[SupportedOSPlatform ("ios15.0")]
 		[SupportedOSPlatform ("maccatalyst15.0")]
 #else
-		[TV (15,0)]
-		[Mac (12,0)]
-		[iOS (15,0)]
-		[MacCatalyst (15,0)]
+		[TV (15, 0)]
+		[Mac (12, 0)]
+		[iOS (15, 0)]
+		[MacCatalyst (15, 0)]
 #endif
-		[DllImport (Constants.VisionLibrary, EntryPoint="VNImageRectForNormalizedRectUsingRegionOfInterest")]
+		[DllImport (Constants.VisionLibrary, EntryPoint = "VNImageRectForNormalizedRectUsingRegionOfInterest")]
 		public static extern CGRect GetImageRect (CGRect normalizedRect, nuint imageWidth, nuint imageHeight, CGRect regionOfInterest);
 
 #if NET
@@ -115,21 +115,24 @@ namespace Vision {
 		[SupportedOSPlatform ("ios15.0")]
 		[SupportedOSPlatform ("maccatalyst15.0")]
 #else
-		[TV (15,0)]
-		[Mac (12,0)]
-		[iOS (15,0)]
-		[MacCatalyst (15,0)]
+		[TV (15, 0)]
+		[Mac (12, 0)]
+		[iOS (15, 0)]
+		[MacCatalyst (15, 0)]
 #endif
-		[DllImport (Constants.VisionLibrary, EntryPoint="VNNormalizedRectForImageRectUsingRegionOfInterest")]
+		[DllImport (Constants.VisionLibrary, EntryPoint = "VNNormalizedRectForImageRectUsingRegionOfInterest")]
 		public static extern CGRect GetNormalizedRect (CGRect imageRect, nuint imageWidth, nuint imageHeight, CGRect regionOfInterest);
 
 		[DllImport ("__Internal", EntryPoint = "xamarin_CGPoint__VNNormalizedFaceBoundingBoxPointForLandmarkPoint_Vector2_CGRect_nuint_nuint_string")]
-		static extern CGPoint VNNormalizedFaceBoundingBoxPointForLandmarkPoint (Vector2 faceLandmarkPoint, CGRect faceBoundingBox, nuint imageWidth, nuint imageHeight, out IntPtr error);
+		unsafe static extern CGPoint VNNormalizedFaceBoundingBoxPointForLandmarkPoint (Vector2 faceLandmarkPoint, CGRect faceBoundingBox, nuint imageWidth, nuint imageHeight, IntPtr* error);
 
 		public static CGPoint GetNormalizedFaceBoundingBoxPoint (Vector2 faceLandmarkPoint, CGRect faceBoundingBox, nuint imageWidth, nuint imageHeight)
 		{
 			IntPtr error;
-			var result = VNNormalizedFaceBoundingBoxPointForLandmarkPoint (faceLandmarkPoint, faceBoundingBox, imageWidth, imageHeight, out error);
+			CGPoint result;
+			unsafe {
+				result = VNNormalizedFaceBoundingBoxPointForLandmarkPoint (faceLandmarkPoint, faceBoundingBox, imageWidth, imageHeight, &error);
+			}
 			if (error != IntPtr.Zero)
 				throw new InvalidOperationException (Marshal.PtrToStringAuto (error));
 
@@ -137,12 +140,15 @@ namespace Vision {
 		}
 
 		[DllImport ("__Internal", EntryPoint = "xamarin_CGPoint__VNImagePointForFaceLandmarkPoint_Vector2_CGRect_nuint_nuint_string")]
-		static extern CGPoint VNImagePointForFaceLandmarkPoint (Vector2 faceLandmarkPoint, CGRect faceBoundingBox, nuint imageWidth, nuint imageHeight, out IntPtr error);
+		unsafe static extern CGPoint VNImagePointForFaceLandmarkPoint (Vector2 faceLandmarkPoint, CGRect faceBoundingBox, nuint imageWidth, nuint imageHeight, IntPtr* error);
 
 		public static CGPoint GetImagePoint (Vector2 faceLandmarkPoint, CGRect faceBoundingBox, nuint imageWidth, nuint imageHeight)
 		{
 			IntPtr error;
-			var result = VNImagePointForFaceLandmarkPoint (faceLandmarkPoint, faceBoundingBox, imageWidth, imageHeight, out error);
+			CGPoint result;
+			unsafe {
+				result = VNImagePointForFaceLandmarkPoint (faceLandmarkPoint, faceBoundingBox, imageWidth, imageHeight, &error);
+			}
 			if (error != IntPtr.Zero)
 				throw new InvalidOperationException (Marshal.PtrToStringAuto (error));
 
@@ -151,26 +157,24 @@ namespace Vision {
 
 #if NET
 		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[TV (13,0)]
-		[Mac (10,15)]
-		[iOS (13,0)]
+		[TV (13, 0)]
+		[iOS (13, 0)]
 #endif
 		[DllImport (Constants.VisionLibrary)]
 		static extern nuint VNElementTypeSize (nuint elementType);
 
 #if NET
 		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[TV (13,0)]
-		[Mac (10,15)]
-		[iOS (13,0)]
+		[TV (13, 0)]
+		[iOS (13, 0)]
 #endif
 		public static nuint GetElementTypeSize (VNElementType elementType) => VNElementTypeSize ((nuint) (ulong) elementType);
 	}

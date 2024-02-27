@@ -27,16 +27,15 @@ using CoreLocation;
 using PlatformException = ObjCRuntime.RuntimeException;
 using NUnit.Framework;
 
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
-using CatAttrib=ObjCRuntime.CategoryAttribute;
+using RectangleF = CoreGraphics.CGRect;
+using SizeF = CoreGraphics.CGSize;
+using PointF = CoreGraphics.CGPoint;
+using CatAttrib = ObjCRuntime.CategoryAttribute;
 
 namespace MonoTouchFixtures {
 	[CatAttrib (typeof (NSString))]
 	[Preserve (AllMembers = true)]
-	public static class MyStringCategory
-	{
+	public static class MyStringCategory {
 		[Export ("toUpper")]
 		static string ToUpper ()
 		{
@@ -64,8 +63,7 @@ namespace MonoTouchFixtures {
 
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class CategoryTest
-	{
+	public class CategoryTest {
 		[Test]
 		public void Static ()
 		{
@@ -113,8 +111,13 @@ namespace MonoTouchFixtures {
 					category_invoked = true;
 					vc.View.BackgroundColor = UIColor.Green;
 				};
-				MonoTouchFixtures.AppDelegate.PresentModalViewController (nc, 0.5);
-				Assert.That (category_invoked);
+				AppDelegate.PresentModalViewController (nc, 0.5);
+				if (TestRuntime.CheckXcodeVersion (14, 0)) {
+					// The 'shouldAutorotate' selector isn't called anymore in iOS 16+ (this is documented in Xcode 14's release notes)
+					Assert.That (!category_invoked);
+				} else {
+					Assert.That (category_invoked);
+				}
 			} finally {
 				Rotation_IOS6.ShouldAutoRotateCallback = null;
 			}
@@ -130,7 +133,7 @@ namespace MonoTouchFixtures {
 		[Export ("shouldAutorotate")]
 		static bool ShouldAutoRotate (this UINavigationController self)
 		{
-			if (ShouldAutoRotateCallback != null)
+			if (ShouldAutoRotateCallback is not null)
 				ShouldAutoRotateCallback ();
 			return true;
 		}

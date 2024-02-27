@@ -11,7 +11,7 @@ using NUnit.Framework;
 using Xamarin.Utils;
 
 namespace MonoTouchFixtures.GLKit {
-	
+
 #if !NET
 	[TestFixture]
 	[Preserve (AllMembers = true)]

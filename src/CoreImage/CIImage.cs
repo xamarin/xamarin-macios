@@ -58,24 +58,20 @@ namespace CoreImage {
 		public CIImageOrientation? ImageOrientation;
 
 #if NET
-		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (8,0)]
 #endif
 		public bool? AutoAdjustCrop;
 #if NET
-		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (8,0)]
 #endif
 		public bool? AutoAdjustLevel;
-		
+
 		internal NSDictionary? ToDictionary ()
 		{
 			int n = 0;
@@ -93,28 +89,28 @@ namespace CoreImage {
 				n++;
 			if (n == 0)
 				return null;
-			
+
 			NSMutableDictionary dict = new NSMutableDictionary ();
 
-			if (Enhance.HasValue && Enhance.Value == false){
+			if (Enhance.HasValue && Enhance.Value == false) {
 				dict.LowlevelSetObject (CFBoolean.FalseHandle, CIImage.AutoAdjustEnhanceKey.Handle);
 			}
-			if (RedEye.HasValue && RedEye.Value == false){
+			if (RedEye.HasValue && RedEye.Value == false) {
 				dict.LowlevelSetObject (CFBoolean.FalseHandle, CIImage.AutoAdjustRedEyeKey.Handle);
 			}
-			if (Features is not null && Features.Length != 0){
+			if (Features is not null && Features.Length != 0) {
 				dict.LowlevelSetObject (NSArray.FromObjects (Features), CIImage.AutoAdjustFeaturesKey.Handle);
 			}
-			if (ImageOrientation.HasValue){
-				dict.LowlevelSetObject (new NSNumber ((int)ImageOrientation.Value), global::ImageIO.CGImageProperties.Orientation.Handle);
+			if (ImageOrientation.HasValue) {
+				dict.LowlevelSetObject (new NSNumber ((int) ImageOrientation.Value), global::ImageIO.CGImageProperties.Orientation.Handle);
 			}
-			if (AutoAdjustCrop.HasValue && AutoAdjustCrop.Value == true){
+			if (AutoAdjustCrop.HasValue && AutoAdjustCrop.Value == true) {
 				dict.LowlevelSetObject (CFBoolean.TrueHandle, CIImage.AutoAdjustCrop.Handle);
 			}
-			if (AutoAdjustLevel.HasValue && AutoAdjustLevel.Value == true){
+			if (AutoAdjustLevel.HasValue && AutoAdjustLevel.Value == true) {
 				dict.LowlevelSetObject (CFBoolean.TrueHandle, CIImage.AutoAdjustLevel.Handle);
 			}
-			
+
 #if false
 			for (i = 0; i < n; i++){
 				Console.WriteLine ("{0} {1}-{2}", i, keys [i], values [i]);
@@ -135,10 +131,10 @@ namespace CoreImage {
 			if (count == 0)
 				return new CIFilter [0];
 			var ret = new CIFilter [count];
-			for (nuint i = 0; i < count; i++){
+			for (nuint i = 0; i < count; i++) {
 				var filterHandle = filters.ValueAt (i);
 				string? filterName = CIFilter.GetFilterName (filterHandle);
-									 
+
 				ret [i] = CIFilter.FromName (filterName, filterHandle);
 			}
 			return ret;
@@ -148,10 +144,10 @@ namespace CoreImage {
 		{
 			if (colorSpace is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (colorSpace));
-			
-			using (var arr = NSArray.FromIntPtrs (new [] { colorSpace.Handle })){
-				using (var keys = NSArray.FromIntPtrs (new [] { CIImageInitializationOptionsKeys.ColorSpaceKey.Handle } )){
-					using (var dict = NSDictionary.FromObjectsAndKeysInternal (arr, keys)){
+
+			using (var arr = NSArray.FromIntPtrs (new [] { colorSpace.Handle })) {
+				using (var keys = NSArray.FromIntPtrs (new [] { CIImageInitializationOptionsKeys.ColorSpaceKey.Handle })) {
+					using (var dict = NSDictionary.FromObjectsAndKeysInternal (arr, keys)) {
 						return FromCGImage (image, dict);
 					}
 				}
@@ -163,7 +159,7 @@ namespace CoreImage {
 		{
 			return GetAutoAdjustmentFilters (null);
 		}
-		
+
 		public CIFilter [] GetAutoAdjustmentFilters (CIAutoAdjustmentFilterOptions? options)
 		{
 			var dict = options?.ToDictionary ();
@@ -174,11 +170,11 @@ namespace CoreImage {
 		{
 			return FromCGImage (image);
 		}
-		
+
 		internal static int CIFormatToInt (CIFormat format)
 		{
 			switch (format) {
-			case CIFormat.ARGB8: return FormatARGB8;			
+			case CIFormat.ARGB8: return FormatARGB8;
 			case CIFormat.RGBAh: return FormatRGBAh;
 #if MONOMAC
 			case CIFormat.RGBA16: return FormatRGBA16;

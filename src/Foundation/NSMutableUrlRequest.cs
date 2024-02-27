@@ -7,7 +7,7 @@ namespace Foundation {
 			}
 		}
 	}
-	
+
 	public partial class NSMutableUrlRequest {
 		public new string this [string key] {
 			get {

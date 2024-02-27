@@ -18,7 +18,7 @@ using NUnit.Framework;
 using Xamarin.Utils;
 
 namespace MonoTouchFixtures.PassKit {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class AddPassesViewControllerTest {
@@ -33,8 +33,8 @@ namespace MonoTouchFixtures.PassKit {
 			using (var ctrl = new PKAddPassesViewController (pass)) {
 				ctrl.Finished += delegate { };
 				// not available on iPad...
-				Assert.True ((ctrl.Delegate != null) == PKPassLibrary.IsAvailable, "Delegate");
-				Assert.True ((ctrl.WeakDelegate != null) == PKPassLibrary.IsAvailable, "WeakDelegate");
+				Assert.True ((ctrl.Delegate is not null) == PKPassLibrary.IsAvailable, "Delegate");
+				Assert.True ((ctrl.WeakDelegate is not null) == PKPassLibrary.IsAvailable, "WeakDelegate");
 			}
 		}
 
@@ -46,13 +46,13 @@ namespace MonoTouchFixtures.PassKit {
 
 			if (UIDevice.CurrentDevice.UserInterfaceIdiom != UIUserInterfaceIdiom.Phone)
 				Assert.Inconclusive ("PassKit does not work on iPads");
-			
+
 			PKAddPassesViewController ctrl = new PKAddPassesViewController (null, null);
 			Assert.NotNull (ctrl, "PKAddPassesViewController ctor(String, NSBundle)");
 
 			ctrl.Finished += delegate { };
-			Assert.True ((ctrl.Delegate != null) == PKPassLibrary.IsAvailable, "Delegate");
-			Assert.True ((ctrl.WeakDelegate != null) == PKPassLibrary.IsAvailable, "WeakDelegate");
+			Assert.True ((ctrl.Delegate is not null) == PKPassLibrary.IsAvailable, "Delegate");
+			Assert.True ((ctrl.WeakDelegate is not null) == PKPassLibrary.IsAvailable, "WeakDelegate");
 		}
 	}
 }

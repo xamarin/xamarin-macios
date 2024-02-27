@@ -1,6 +1,6 @@
 {
   "author": "Microsoft",
-  "name": "macOS View Controller",
-  "description": "A macOS View Controller class and xib",
-  "symbols/namespace/description": "namespace for the generated code"
+  "name": "macOS 뷰 컨트롤러",
+  "description": "Xcode의 Interface Builder(XIB 파일)에 UI가 구현된 macOS 보기 컨트롤러",
+  "symbols/namespace/description": "생성된 코드의 네임스페이스"
 }

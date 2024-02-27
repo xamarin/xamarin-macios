@@ -22,25 +22,25 @@ namespace MonoTouchFixtures.Foundation {
 			var key = new NSString ("key");
 			var value = new NSString ("value");
 			var j = new NSDictionary (key, value);
-		
+
 			Assert.AreEqual (j.Count, (nuint) 1, "count");
 			Assert.AreEqual (j [key], value, "key lookup");
 
 			j = new NSDictionary (new NSString ("first"), new NSString ("first-k"),
-			                      new NSString ("second"), new NSString ("second-k"));
+								  new NSString ("second"), new NSString ("second-k"));
 			Assert.AreEqual (j.Count, (nuint) 2, "count");
-			Assert.AreEqual ((string)(NSString)(j ["first"]), "first-k", "lookup1");
-			Assert.AreEqual ((string)(NSString)(j ["second"]), "second-k", "lookup2");
+			Assert.AreEqual ((string) (NSString) (j ["first"]), "first-k", "lookup1");
+			Assert.AreEqual ((string) (NSString) (j ["second"]), "second-k", "lookup2");
 		}
 
 		[Test]
 		public void DictionaryCtorKeyValuesObjects ()
 		{
 			var j = new NSDictionary ("key", "value");
-			
+
 			Assert.AreEqual (j.Count, (nuint) 1, "count");
-			Assert.AreEqual ((string)(NSString)(j ["key"]), "value", "key lookup");
-			
+			Assert.AreEqual ((string) (NSString) (j ["key"]), "value", "key lookup");
+
 			j = new NSDictionary (1, 2, 3, 4);
 
 			Assert.AreEqual (j.Count, (nuint) 2, "count");
@@ -49,7 +49,7 @@ namespace MonoTouchFixtures.Foundation {
 		}
 
 		[Test]
-		public void InbalancedCtor()
+		public void InbalancedCtor ()
 		{
 			try {
 				var j = new NSDictionary (new NSString ("key"), new NSString ("value"), new NSString ("other"));
@@ -60,7 +60,7 @@ namespace MonoTouchFixtures.Foundation {
 		}
 
 		[Test]
-		public void InbalancedCtor2()
+		public void InbalancedCtor2 ()
 		{
 			try {
 				var j = new NSDictionary (1, 2, 3);
@@ -73,7 +73,7 @@ namespace MonoTouchFixtures.Foundation {
 		[Test]
 		public void KeyValue_Autorelease ()
 		{
-			using (var k = new NSString ("keyz")) 
+			using (var k = new NSString ("keyz"))
 			using (var v = new NSString ("valuez")) {
 				var k1 = k.RetainCount;
 				if (k1 >= int.MaxValue)
@@ -106,7 +106,7 @@ namespace MonoTouchFixtures.Foundation {
 		[Test]
 		public void XForY_Autorelease ()
 		{
-			using (var k = new NSString ("keyz")) 
+			using (var k = new NSString ("keyz"))
 			using (var v = new NSString ("valuez")) {
 				var k1 = k.RetainCount;
 				if (k1 >= int.MaxValue)
@@ -146,15 +146,15 @@ namespace MonoTouchFixtures.Foundation {
 		public void FromObjectsAndKeysTest ()
 		{
 			{
-				var keys = new NSObject[] { new NSNumber(1), new NSNumber(2) };
-				var objs = new NSObject[] { new NSNumber(1), new NSNumber(4) };
+				var keys = new NSObject [] { new NSNumber (1), new NSNumber (2) };
+				var objs = new NSObject [] { new NSNumber (1), new NSNumber (4) };
 				NSDictionary ns = NSDictionary.FromObjectsAndKeys (objs, keys, 1);
 				Console.WriteLine (ns.Count);
 				Assert.AreEqual ((nuint) 1, ns.Count, "#1");
 			}
 			{
-				var keys = new object[] { 1, 2 };
-				var objs = new object[] { 3, 4 };
+				var keys = new object [] { 1, 2 };
+				var objs = new object [] { 3, 4 };
 				NSDictionary ns = NSDictionary.FromObjectsAndKeys (objs, keys, 1);
 				Assert.AreEqual ((nuint) 1, ns.Count, "#2");
 			}
@@ -163,7 +163,7 @@ namespace MonoTouchFixtures.Foundation {
 		[Test]
 		public void Copy ()
 		{
-			using (var k = new NSString ("key")) 
+			using (var k = new NSString ("key"))
 			using (var v = new NSString ("value"))
 			using (var d = new NSDictionary (k, v)) {
 				// NSObject.Copy works because NSDictionary conforms to NSCopying
@@ -188,7 +188,7 @@ namespace MonoTouchFixtures.Foundation {
 		[Test]
 		public void MutableCopy ()
 		{
-			using (var k = new NSString ("key")) 
+			using (var k = new NSString ("key"))
 			using (var v = new NSString ("value"))
 			using (var d = new NSDictionary (k, v)) {
 				// NSObject.Copy works because NSDictionary conforms to NSMutableCopying
@@ -219,7 +219,6 @@ namespace MonoTouchFixtures.Foundation {
 			IntPtr objptr;
 			IntPtr keyptr;
 
-			NSString obj, key;
 			NSString v;
 
 			try {

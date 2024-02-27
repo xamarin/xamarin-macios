@@ -7,12 +7,10 @@ using AppKit;
 using ObjCRuntime;
 using Foundation;
 
-namespace Xamarin.Mac.Tests
-{
+namespace Xamarin.Mac.Tests {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class NSSCreenTests
-	{
+	public class NSSCreenTests {
 		[Test]
 		public void ScreensNotMainThread ()
 		{
@@ -29,7 +27,7 @@ namespace Xamarin.Mac.Tests
 
 		[Test]
 		public void MainScreenNotMainThread ()
-		{ 
+		{
 			var called = new AutoResetEvent (false);
 			NSScreen main = null;
 			var backgroundThread = new Thread (() => {
@@ -43,7 +41,7 @@ namespace Xamarin.Mac.Tests
 
 		[Test]
 		public void DeepScreenNotMainThread ()
-		{ 
+		{
 			var called = new AutoResetEvent (false);
 			NSScreen deepScreen = null;
 			var screenCount = 0;

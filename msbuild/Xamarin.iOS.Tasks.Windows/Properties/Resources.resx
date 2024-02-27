@@ -12,19 +12,6 @@
 	<resheader name="writer">
 		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
 	</resheader>
-	<data name="Unzip_Error" xml:space="preserve">
-		<value>There was an error unzipping the file {0}: {1}</value>
-	</data>
-	<data name="Unzip_Unzipped" xml:space="preserve">
-		<value>Successfully unzipped the file {0}</value>
-	</data>
-	<data name="Unzip_Unzipping" xml:space="preserve">
-		<value>Unzipping {0}...</value>
-	</data>
-	<data name="CollectDynamicFrameworks_InvalidFramework" xml:space="preserve">
-		<value>Skipping invalid framework {0}. Reason: {1}</value>
-		<comment>0: framework name; 1: why the framework was skipped</comment>
-	</data>
 	<data name="Codesign_MissingPasswordFile" xml:space="preserve">
 		<value>Could not find the password for the selected Signing Identity, please create a new Certificate from Tools -&gt; Options -&gt; Apple Accounts -&gt; View Team Details.</value>
 	</data>
@@ -32,4 +19,7 @@
 		<value>Info.plist file does not exist under {0}, please rebuild your project</value>
 		<comment>0: path</comment>
     </data>
+	<data name="HotRestartStaticLibraryNotSupported" xml:space="preserve">
+		<value>Linking with a static library is not supported when using Hot Restart.</value>
+	</data>
 </root>

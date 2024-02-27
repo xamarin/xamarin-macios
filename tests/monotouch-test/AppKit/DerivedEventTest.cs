@@ -10,12 +10,10 @@ using Foundation;
 using AppKit;
 using CoreGraphics;
 
-namespace Xamarin.Mac.Tests
-{
+namespace Xamarin.Mac.Tests {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class DerivedEventTest
-	{
+	public class DerivedEventTest {
 		[Test]
 		public void DerivedEvents_DontStompEachOther ()
 		{
@@ -35,7 +33,7 @@ namespace Xamarin.Mac.Tests
 
 		void TestDelegates (NSComboBox b)
 		{
-			NSTextField f = (NSTextField)b;
+			NSTextField f = (NSTextField) b;
 			Assert.IsNotNull (b.Delegate, "NSComboBox delegate null");
 			Assert.IsNotNull (f.Delegate, "NSTextField delegate null");
 			Assert.AreEqual (b.Delegate.GetHashCode (), f.Delegate.GetHashCode (), "Delegates are not equal");
@@ -44,8 +42,13 @@ namespace Xamarin.Mac.Tests
 		[Test]
 		public void DerivedEvents_OverwriteThrows ()
 		{
-			TestOverrideThrow (false, true);
-			TestOverrideThrow (true, true);
+#if RELEASE
+			var checkTrimmedAway = TestRuntime.IsLinkAll;
+#else
+			var checkTrimmedAway = false;
+#endif
+			TestOverrideThrow (false, !checkTrimmedAway);
+			TestOverrideThrow (true, !checkTrimmedAway);
 #if MONOMAC
 			NSApplication.CheckForEventAndDelegateMismatches = false;
 #else
@@ -69,8 +72,7 @@ namespace Xamarin.Mac.Tests
 					b.Delegate = new NSComboBoxDelegate ();
 				else
 					b.SelectionChanged += (sender, e) => Console.WriteLine ("Change");
-			}
-			catch (System.InvalidOperationException) {
+			} catch (System.InvalidOperationException) {
 				didThrow = true;
 			}
 			if (shouldThrow != didThrow)

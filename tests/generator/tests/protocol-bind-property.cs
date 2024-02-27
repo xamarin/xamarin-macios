@@ -7,9 +7,9 @@ namespace NS {
 	interface MyProtocol {
 		[Abstract]
 		[Export ("abstractProperty")]
-		bool AbstractProperty { [Bind ("isAbstractProperty")] get; set;  }
+		bool AbstractProperty { [Bind ("isAbstractProperty")] get; set; }
 
 		[Export ("optionalProperty")]
-		bool OptionalProperty { [Bind ("isOptionalProperty")] get; set;  }
+		bool OptionalProperty { [Bind ("isOptionalProperty")] get; set; }
 	}
 }

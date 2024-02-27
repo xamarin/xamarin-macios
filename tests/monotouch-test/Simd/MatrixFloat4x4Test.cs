@@ -14,12 +14,10 @@ using MatrixFloat4x4 = global::OpenTK.NMatrix4;
 
 using NUnit.Framework;
 
-namespace MonoTouchFixtures.Simd
-{
+namespace MonoTouchFixtures.Simd {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class MatrixFloat4x4Test
-	{
+	public class MatrixFloat4x4Test {
 		[Test]
 		public void Identity ()
 		{
@@ -150,7 +148,7 @@ namespace MonoTouchFixtures.Simd
 			inputSimd = (MatrixFloat4x4) input;
 			Matrix4.Transpose (ref input, out expected);
 			MatrixFloat4x4.Transpose (ref inputSimd, out actual);
-			Asserts.AreEqual (expected, actual, "transpose out/ref");	             
+			Asserts.AreEqual (expected, actual, "transpose out/ref");
 		}
 
 		[Test]

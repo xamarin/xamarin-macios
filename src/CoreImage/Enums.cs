@@ -53,7 +53,7 @@ namespace CoreImage {
 		// Please, do not add values into MonoMac/iOS without adding an explicit value
 #elif !XAMCORE_3_0
 		[Obsolete ("This value can not be shared across Mac/iOS binaries, future proof with kBGRA8 instead.")]
-		BGRA8 = 2 ,
+		BGRA8 = 2,
 		[Obsolete ("This value can not be shared across Mac/iOS binaries, future proof with kRGBA8 instead.")]
 		RGBA8 = 3,
 		// Please, do not add values into MonoMac/iOS without adding an explicit value
@@ -64,21 +64,19 @@ namespace CoreImage {
 		ABGR8 = 7,
 		A8 = 11,
 		A16 = 12,
-		Ah = 13, 
+		Ah = 13,
 		Af = 14,
 		R8 = 15,
 		R16 = 16,
 		Rh = 17,
 		Rf = 18,
-		RG8 = 19, 
+		RG8 = 19,
 		RG16 = 20,
 		RGh = 21,
 		RGf = 22
 	}
 
-	[iOS (11,0)]
-	[Mac (10,13)]
-	[TV (11,0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CIQRCodeErrorCorrectionLevel : long {
 		L = 76,
@@ -87,9 +85,7 @@ namespace CoreImage {
 		H = 72,
 	}
 
-	[iOS (11,0)]
-	[Mac (10,13)]
-	[TV (11,0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CIDataMatrixCodeEccVersion : long {
 		V000 = 0,
@@ -100,9 +96,7 @@ namespace CoreImage {
 		V200 = 200,
 	}
 
-	[iOS (11,0)]
-	[Mac (10,13)]
-	[TV (11,0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CIRenderDestinationAlphaMode : ulong {
 		None = 0,

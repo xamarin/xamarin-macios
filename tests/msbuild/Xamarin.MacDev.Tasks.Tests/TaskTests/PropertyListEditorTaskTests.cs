@@ -5,18 +5,16 @@ using NUnit.Framework;
 using Xamarin.MacDev;
 using Xamarin.MacDev.Tasks;
 
-namespace Xamarin.MacDev.Tasks
-{
+namespace Xamarin.MacDev.Tasks {
 	[TestFixture]
-	public class PropertyListEditorTaskTests : TestBase
-	{
+	public class PropertyListEditorTaskTests : TestBase {
 		static void CheckArray (PArray array, PArray expected)
 		{
 			Assert.AreEqual (expected.Count, array.Count, "Unexpected number of array elements");
 
 			for (int i = 0; i < expected.Count; i++) {
-				Assert.AreEqual (expected[i].Type, array[i].Type, "Type-mismatch for array element {0}", i);
-				CheckValue (array[i], expected[i]);
+				Assert.AreEqual (expected [i].Type, array [i].Type, "Type-mismatch for array element {0}", i);
+				CheckValue (array [i], expected [i]);
 			}
 		}
 
@@ -72,7 +70,7 @@ namespace Xamarin.MacDev.Tasks
 			task.Value = value;
 			input.Save (task.PropertyList);
 
-			if (expected == null) {
+			if (expected is null) {
 				Assert.IsFalse (task.Execute (), "Task was expected to fail.");
 				return;
 			}
@@ -215,7 +213,7 @@ namespace Xamarin.MacDev.Tasks
 			files.Add ("icon2");
 
 			var expected = (PDictionary) plist.Clone ();
-			files[0] = new PString ("icon");
+			files [0] = new PString ("icon");
 
 			TestExecuteTask (plist, PropertyListEditorAction.Set, ":CFBundleIcons:CFBundlePrimaryIcon:CFBundleIconFiles:0", "string", "icon0", expected);
 
@@ -239,7 +237,7 @@ namespace Xamarin.MacDev.Tasks
 			TestExecuteTask (plist, PropertyListEditorAction.Clear, null, "integer", null, new PNumber (0));
 			TestExecuteTask (plist, PropertyListEditorAction.Clear, null, "real", null, new PReal (0));
 			TestExecuteTask (plist, PropertyListEditorAction.Clear, null, "string", null, new PString (string.Empty));
-			TestExecuteTask (plist, PropertyListEditorAction.Clear, null, "data", null, new PData (new byte[0]));
+			TestExecuteTask (plist, PropertyListEditorAction.Clear, null, "data", null, new PData (new byte [0]));
 		}
 
 		[Test]

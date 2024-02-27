@@ -16,7 +16,7 @@ using CoreAnimation;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.CoreMotion {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class MediaTimingFunctionTest {

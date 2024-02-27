@@ -7,12 +7,10 @@ using CoreGraphics;
 using Foundation;
 using ObjCRuntime;
 
-namespace Xamarin.Mac.Tests
-{
+namespace Xamarin.Mac.Tests {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class NSClipViewTests
-	{
+	public class NSClipViewTests {
 		[Test]
 		public void NSClipViewConstrainBoundsRect ()
 		{
@@ -22,8 +20,8 @@ namespace Xamarin.Mac.Tests
 			var rect = clipView.ConstrainBoundsRect (new CGRect (10, 10, 30, 30));
 
 			Assert.IsTrue (rect.X == 0, "NSClipViewConstrainBoundsRect - X value was not 0");
-			Assert.IsTrue (rect.Y == 0,  "NSClipViewConstrainBoundsRect - Y value was not 0");
-			Assert.IsTrue (rect.Width == 30,  "NSClipViewConstrainBoundsRect - Width value was not 30");
+			Assert.IsTrue (rect.Y == 0, "NSClipViewConstrainBoundsRect - Y value was not 0");
+			Assert.IsTrue (rect.Width == 30, "NSClipViewConstrainBoundsRect - Width value was not 30");
 			Assert.IsTrue (rect.Height == 30, "NSClipViewConstrainBoundsRect - Height value was not 30");
 		}
 	}

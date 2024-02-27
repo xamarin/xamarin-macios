@@ -16,8 +16,8 @@ using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
 
-using OS_nw_protocol_options=System.IntPtr;
-using nw_ws_request_t=System.IntPtr;
+using OS_nw_protocol_options = System.IntPtr;
+using nw_ws_request_t = System.IntPtr;
 
 #if !NET
 using NativeHandle = System.IntPtr;
@@ -27,14 +27,13 @@ namespace Network {
 
 #if NET
 	[SupportedOSPlatform ("tvos13.0")]
-	[SupportedOSPlatform ("macos10.15")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("ios13.0")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
-	[TV (13,0)]
-	[Mac (10,15)]
-	[iOS (13,0)]
-	[Watch (6,0)]
+	[TV (13, 0)]
+	[iOS (13, 0)]
+	[Watch (6, 0)]
 #endif
 	public class NWWebSocketOptions : NWProtocolOptions {
 		bool autoReplyPing = false;
@@ -42,38 +41,41 @@ namespace Network {
 		nuint maximumMessageSize;
 
 		[Preserve (Conditional = true)]
-		internal NWWebSocketOptions (NativeHandle handle, bool owns) : base (handle, owns) {}
+		internal NWWebSocketOptions (NativeHandle handle, bool owns) : base (handle, owns) { }
 
 		[DllImport (Constants.NetworkLibrary)]
 		extern static IntPtr nw_ws_create_options (NWWebSocketVersion version);
 
-		public NWWebSocketOptions (NWWebSocketVersion version) : base (nw_ws_create_options (version), true) { } 
+		public NWWebSocketOptions (NWWebSocketVersion version) : base (nw_ws_create_options (version), true) { }
 
 		[DllImport (Constants.NetworkLibrary, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-		static extern void nw_ws_options_add_additional_header (OS_nw_protocol_options options, string name, string value);
+		static extern void nw_ws_options_add_additional_header (OS_nw_protocol_options options, IntPtr name, IntPtr value);
 
-		public void SetHeader (string header, string value) 
+		public void SetHeader (string header, string value)
 		{
 			if (header is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (header));
-			nw_ws_options_add_additional_header (GetCheckedHandle(), header, value); 
+			using var headerPtr = new TransientString (header);
+			using var valuePtr = new TransientString (value);
+			nw_ws_options_add_additional_header (GetCheckedHandle (), headerPtr, valuePtr);
 		}
 
 		[DllImport (Constants.NetworkLibrary, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-		static extern void nw_ws_options_add_subprotocol (OS_nw_protocol_options options, string subprotocol);
+		static extern void nw_ws_options_add_subprotocol (OS_nw_protocol_options options, IntPtr subprotocol);
 
 		public void AddSubprotocol (string subprotocol)
 		{
 			if (subprotocol is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (subprotocol));
-			nw_ws_options_add_subprotocol (GetCheckedHandle (), subprotocol);
+			using var subprotocolPtr = new TransientString (subprotocol);
+			nw_ws_options_add_subprotocol (GetCheckedHandle (), subprotocolPtr);
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_ws_options_set_auto_reply_ping (OS_nw_protocol_options options, [MarshalAs (UnmanagedType.I1)] bool auto_reply_ping);
 
 		public bool AutoReplyPing {
-			get { return autoReplyPing;}
+			get { return autoReplyPing; }
 			set {
 				autoReplyPing = value;
 				nw_ws_options_set_auto_reply_ping (GetCheckedHandle (), value);
@@ -87,7 +89,7 @@ namespace Network {
 			get { return maximumMessageSize; }
 			set {
 				maximumMessageSize = value;
-				nw_ws_options_set_maximum_message_size (GetCheckedHandle(), value);
+				nw_ws_options_set_maximum_message_size (GetCheckedHandle (), value);
 			}
 		}
 
@@ -103,12 +105,16 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern void nw_ws_options_set_client_request_handler (OS_nw_protocol_options options, IntPtr client_queue, ref BlockLiteral handler);
+		unsafe static extern void nw_ws_options_set_client_request_handler (OS_nw_protocol_options options, IntPtr client_queue, BlockLiteral* handler);
 
+#if !NET
 		delegate void nw_ws_options_set_client_request_handler_t (IntPtr block, nw_ws_request_t request);
 		static nw_ws_options_set_client_request_handler_t static_ClientRequestHandler = TrampolineClientRequestHandler;
 
 		[MonoPInvokeCallback (typeof (nw_ws_options_set_client_request_handler_t))]
+#else
+		[UnmanagedCallersOnly]
+#endif
 		static void TrampolineClientRequestHandler (IntPtr block, nw_ws_request_t request)
 		{
 			var del = BlockLiteral.GetTarget<Action<NWWebSocketRequest>> (block);
@@ -125,14 +131,16 @@ namespace Network {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 			if (handler is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
+
 			unsafe {
-				BlockLiteral block_handler = new BlockLiteral ();
-				block_handler.SetupBlockUnsafe (static_ClientRequestHandler, handler);
-				try {
-					nw_ws_options_set_client_request_handler (GetCheckedHandle (), queue.Handle, ref block_handler);
-				} finally {
-					block_handler.CleanupBlock ();
-				}
+#if NET
+				delegate* unmanaged<IntPtr, nw_ws_request_t, void> trampoline = &TrampolineClientRequestHandler;
+				using var block = new BlockLiteral (trampoline, handler, typeof (NWWebSocketOptions), nameof (TrampolineClientRequestHandler));
+#else
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (static_ClientRequestHandler, handler);
+#endif
+				nw_ws_options_set_client_request_handler (GetCheckedHandle (), queue.Handle, &block);
 			}
 		}
 	}

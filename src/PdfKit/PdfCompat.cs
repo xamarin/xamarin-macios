@@ -7,7 +7,7 @@ using ObjCRuntime;
 #nullable enable
 
 namespace PdfKit {
-	
+
 	partial class PdfAnnotation {
 #if __IOS__
 		[Obsolete ("Empty stub (not a public API on iOS).")]
@@ -48,7 +48,7 @@ namespace PdfKit {
 		[Obsolete ("Empty stub (not a public API).")]
 		public virtual void RemoveAllAppearanceStreams () {}
 #endif
-	} 
+	}
 }
 
 #endif

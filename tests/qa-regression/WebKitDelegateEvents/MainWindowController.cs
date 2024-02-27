@@ -4,10 +4,8 @@ using MonoMac.Foundation;
 using MonoMac.AppKit;
 using MonoMac.WebKit;
 
-namespace WebKitDelegateEvents
-{
-	public partial class MainWindowController : NSWindowController
-	{
+namespace WebKitDelegateEvents {
+	public partial class MainWindowController : NSWindowController {
 		string currentLocation;
 
 		public MainWindowController (IntPtr handle) : base (handle)
@@ -33,22 +31,20 @@ namespace WebKitDelegateEvents
 			}
 		}
 
-		class DomOutlineViewDelegate : NSOutlineViewDelegate
-		{
+		class DomOutlineViewDelegate : NSOutlineViewDelegate {
 			public override void SelectionDidChange (NSNotification notification)
 			{
 				Console.WriteLine ("SELECTION CHANGE VIA DELEGATE");
 			}
 		}
 
-		class DomOutlineViewDataSource : NSOutlineViewDataSource
-		{
+		class DomOutlineViewDataSource : NSOutlineViewDataSource {
 			WebView webView;
 
 			DomNodeList GetChildren (NSObject item)
 			{
 				var node = item as DomNode;
-				if (node != null && node.HasChildNodes ())
+				if (node is not null && node.HasChildNodes ())
 					return node.ChildNodes;
 
 				return null;
@@ -61,11 +57,11 @@ namespace WebKitDelegateEvents
 
 			public override int GetChildrenCount (NSOutlineView outlineView, NSObject item)
 			{
-				if (item == null)
+				if (item is null)
 					return 1;
 
 				var children = GetChildren (item);
-				if (children != null)
+				if (children is not null)
 					return children.Count;
 
 				return 0;
@@ -73,11 +69,11 @@ namespace WebKitDelegateEvents
 
 			public override NSObject GetChild (NSOutlineView outlineView, int childIndex, NSObject item)
 			{
-				if (item == null)
+				if (item is null)
 					return webView.MainFrameDocument;
 
 				var children = GetChildren (item);
-				if (children != null)
+				if (children is not null)
 					return children.GetItem (childIndex);
 
 				return null;
@@ -90,7 +86,7 @@ namespace WebKitDelegateEvents
 
 			public override bool ItemExpandable (NSOutlineView outlineView, NSObject item)
 			{
-				return GetChildren (item) != null;
+				return GetChildren (item) is not null;
 			}
 		}
 

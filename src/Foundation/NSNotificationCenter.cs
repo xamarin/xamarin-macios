@@ -28,20 +28,23 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.Versioning;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Foundation {
 
 	[Register]
-	internal class InternalNSNotificationHandler : NSObject  {
+	internal class InternalNSNotificationHandler : NSObject {
 		NSNotificationCenter notificationCenter;
 		Action<NSNotification> notify;
-		
+
 		public InternalNSNotificationHandler (NSNotificationCenter notificationCenter, Action<NSNotification> notify)
 		{
 			this.notificationCenter = notificationCenter;
 			this.notify = notify;
 			IsDirectBinding = false;
 		}
-		
+
 		[Export ("post:")]
 		[Preserve (Conditional = true)]
 		public void Post (NSNotification s)
@@ -52,7 +55,7 @@ namespace Foundation {
 
 		protected override void Dispose (bool disposing)
 		{
-			if (disposing && notificationCenter != null){
+			if (disposing && notificationCenter is not null) {
 				notificationCenter.RemoveObserver (this);
 				notificationCenter = null;
 			}
@@ -64,22 +67,21 @@ namespace Foundation {
 	public partial class NSNotificationCenter {
 		const string postSelector = "post:";
 
-		class ObservedData 
-		{
+		class ObservedData {
 			public NSObject Observer;
 			public string Name;
 			public NSObject Object;
 		}
 
-		List <ObservedData> __mt_ObserverList_var = new List <ObservedData> ();
+		List<ObservedData> __mt_ObserverList_var = new List<ObservedData> ();
 
 		public NSObject AddObserver (NSString aName, Action<NSNotification> notify, NSObject fromObject)
 		{
-			if (notify == null)
+			if (notify is null)
 				throw new ArgumentNullException ("notify");
-			
+
 			var proxy = new InternalNSNotificationHandler (this, notify);
-			
+
 			AddObserver (proxy, new Selector (postSelector), aName, fromObject);
 
 			return proxy;
@@ -92,7 +94,7 @@ namespace Foundation {
 
 		public void RemoveObservers (IEnumerable<NSObject> keys)
 		{
-			if (keys == null)
+			if (keys is null)
 				return;
 			foreach (var k in keys)
 				RemoveObserver (k);
@@ -114,10 +116,10 @@ namespace Foundation {
 					if (observer != od.Observer)
 						continue;
 
-					if (aName != null && aName != od.Name)
+					if (aName is not null && aName != od.Name)
 						continue;
 
-					if (anObject != null && anObject != od.Object)
+					if (anObject is not null && anObject != od.Object)
 						continue;
 
 					__mt_ObserverList_var.RemoveAt (i);

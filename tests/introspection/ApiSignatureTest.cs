@@ -56,7 +56,7 @@ namespace Introspection {
 		[DllImport ("/usr/lib/libobjc.dylib")]
 		static extern IntPtr class_getInstanceMethod (IntPtr klass, IntPtr selector);
 
-		protected string[] Split (string encoded, out int size)
+		protected string [] Split (string encoded, out int size)
 		{
 			List<string> elements = new List<string> ();
 			int pos = 0;
@@ -76,7 +76,7 @@ namespace Introspection {
 			pos = end + 3;
 
 			while (pos < encoded.Length) {
-				if (s != null)
+				if (s is not null)
 					elements.Add (s);
 				s = Next (encoded, ref pos);
 			}
@@ -153,15 +153,15 @@ namespace Introspection {
 			}
 			if (simd) {
 				switch (t.Name) {
-				case "Vector3i":	// sizeof (vector_uint3)
-				case "Vector3":		// sizeof (vector_float3)
+				case "Vector3i":    // sizeof (vector_uint3)
+				case "Vector3":     // sizeof (vector_float3)
 					return 16;
 				case "Matrix2":
-					return 16;	// matrix_float2x2
+					return 16;  // matrix_float2x2
 				case "Matrix3":
-					return 48;	// matrix_float3x3
+					return 48;  // matrix_float3x3
 				case "Matrix4":
-					return 64;	// matrix_float4x4
+					return 64;  // matrix_float4x4
 				case "Vector3d":    // sizeof (vector_double3)
 				case "MDLAxisAlignedBoundingBox":
 					return 32; // struct (Vector3, Vector3)
@@ -175,7 +175,7 @@ namespace Introspection {
 		{
 			if (type.ContainsGenericParameters)
 				return true;
-			
+
 			return false;
 		}
 
@@ -200,7 +200,7 @@ namespace Introspection {
 			int n = 0;
 			Errors = 0;
 			ErrorData.Clear ();
-			
+
 			foreach (Type t in Assembly.GetTypes ()) {
 
 				var static_type = t.IsSealed && t.IsAbstract; // e.g. [Category]
@@ -215,11 +215,11 @@ namespace Introspection {
 				FieldInfo fi = null;
 				if (!static_type)
 					fi = t.GetField ("class_ptr", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static);
-				IntPtr class_ptr = fi == null ? IntPtr.Zero : (IntPtr) (NativeHandle) fi.GetValue (null);
+				IntPtr class_ptr = fi is null ? IntPtr.Zero : (IntPtr) (NativeHandle) fi.GetValue (null);
 
-				foreach (MethodBase m in t.GetMethods (Flags)) 
+				foreach (MethodBase m in t.GetMethods (Flags))
 					CheckMemberSignature (m, t, class_ptr, ref n);
-				foreach (MethodBase m in t.GetConstructors (Flags)) 
+				foreach (MethodBase m in t.GetConstructors (Flags))
 					CheckMemberSignature (m, t, class_ptr, ref n);
 			}
 			AssertIfErrors ("{0} errors found in {1} signatures validated{2}", Errors, n, Errors == 0 ? string.Empty : ":\n" + ErrorData.ToString () + "\n");
@@ -230,21 +230,21 @@ namespace Introspection {
 			var methodinfo = m as MethodInfo;
 			var constructorinfo = m as ConstructorInfo;
 
-			if (methodinfo == null && constructorinfo == null)
+			if (methodinfo is null && constructorinfo is null)
 				return;
 
 			// Don't check obsolete methods, it could be obsoleted because it was broken.
-			if (m.GetCustomAttributes<ObsoleteAttribute> () != null)
+			if (m.GetCustomAttributes<ObsoleteAttribute> () is not null)
 				return;
-			
+
 			if (m.DeclaringType != t)
 				return;
-			
+
 			CurrentMethod = m;
-			
+
 			foreach (object ca in m.GetCustomAttributes (true)) {
 				var exportAttribute = ca as ExportAttribute;
-				if (exportAttribute == null)
+				if (exportAttribute is null)
 					continue;
 				string name = exportAttribute.Selector;
 
@@ -252,10 +252,10 @@ namespace Introspection {
 					VariadicChecks (m);
 					continue;
 				}
-				
+
 				if (Skip (t, m, name))
 					continue;
-				
+
 				CurrentSelector = name;
 
 				// in some cases, e.g. *Delegate, we cannot use introspection but we can still do some checks
@@ -302,15 +302,15 @@ namespace Introspection {
 		{
 			IntPtr sel = Selector.GetHandle (CurrentSelector);
 			IntPtr method;
-			if (methodinfo != null)
-				method = m.IsStatic ? class_getClassMethod (class_ptr, sel) :  class_getInstanceMethod (class_ptr, sel);
+			if (methodinfo is not null)
+				method = m.IsStatic ? class_getClassMethod (class_ptr, sel) : class_getInstanceMethod (class_ptr, sel);
 			else
 				method = class_getInstanceMethod (class_ptr, sel);
 			IntPtr tenc = method_getTypeEncoding (method);
 			string encoded = Marshal.PtrToStringAuto (tenc);
 
 			if (LogProgress)
-				Console.WriteLine ("{0} {1} '{2} {3}' selector: {4} == {5}", ++n, t.Name, methodinfo != null ? methodinfo.IsStatic ? "static" : "instance" : "ctor", m, CurrentSelector, encoded);
+				Console.WriteLine ("{0} {1} '{2} {3}' selector: {4} == {5}", ++n, t.Name, methodinfo is not null ? methodinfo.IsStatic ? "static" : "instance" : "ctor", m, CurrentSelector, encoded);
 
 			// NSObject has quite a bit of stuff that's not usable (except by some class that inherits from it)
 			if (String.IsNullOrEmpty (encoded))
@@ -320,10 +320,9 @@ namespace Introspection {
 			string [] elements = null;
 			try {
 				elements = Split (encoded, out encoded_size);
+			} catch {
 			}
-			catch {
-			}
-			if (elements == null || !elements.Any ()) {
+			if (elements is null || !elements.Any ()) {
 				if (LogProgress)
 					Console.WriteLine ("[WARNING] Could not parse encoded signature for {0} : {1}", CurrentSelector, encoded);
 				return;
@@ -332,7 +331,7 @@ namespace Introspection {
 			bool result;
 			CurrentParameter = 0;
 
-			if (methodinfo != null) {
+			if (methodinfo is not null) {
 				// check return value
 
 				if (IgnoreSimd (methodinfo.ReturnType)) {
@@ -603,14 +602,14 @@ namespace Introspection {
 					return false;
 				}
 			case 'r':
-				// const -> ignore
-				// e.g. vectorWithValues:count: == @16@0:4r^f8L12
+			// const -> ignore
+			// e.g. vectorWithValues:count: == @16@0:4r^f8L12
 			case 'o':
-				// out -> ignore
-				// e.g. validateValue:forKey:error: == c20@0:4N^@8@12o^@16
+			// out -> ignore
+			// e.g. validateValue:forKey:error: == c20@0:4N^@8@12o^@16
 			case 'N':
-				// inout -> ignore
-				// e.g. validateValue:forKey:error: == c20@0:4N^@8@12o^@16
+			// inout -> ignore
+			// e.g. validateValue:forKey:error: == c20@0:4N^@8@12o^@16
 			case 'V':
 				// oneway -> ignore
 				// e.g. NSObject 'instance Void NativeRelease()' selector: release == Vv8@0:4
@@ -633,17 +632,17 @@ namespace Introspection {
 				// We use BindAsAttribute to wrap NSNumber/NSValue into more accurate Nullable<T> types
 				// So we check if T of nullable is supported by bindAs
 				var nullableType = Nullable.GetUnderlyingType (type);
-				if (nullableType != null)
+				if (nullableType is not null)
 					return BindAsSupportedTypes.Contains (nullableType.Name);
 
-				return (type.IsInterface ||								// protocol
-					type.IsArray || 									// NSArray
-					(type.Name == "NSArray") || 						// NSArray
-					(type.FullName == "System.String") || 						// NSString
-					(type.FullName == "System.IntPtr") || 						// unbinded, e.g. internal
-					(type.BaseType.FullName == "System.MulticastDelegate") || 	// completion handler -> delegate
-					NSObjectType.IsAssignableFrom (type)) ||					// NSObject derived
-					inativeobject.IsAssignableFrom (type);						// e.g. CGImage
+				return (type.IsInterface ||                             // protocol
+					type.IsArray ||                                     // NSArray
+					(type.Name == "NSArray") ||                         // NSArray
+					(type.FullName == "System.String") ||                       // NSString
+					(type.FullName == "System.IntPtr") ||                       // unbinded, e.g. internal
+					(type.BaseType.FullName == "System.MulticastDelegate") ||   // completion handler -> delegate
+					NSObjectType.IsAssignableFrom (type)) ||                    // NSObject derived
+					inativeobject.IsAssignableFrom (type);                      // e.g. CGImage
 			case 'B':
 				// 64 bits only encode this
 				return type.FullName == "System.Boolean";
@@ -700,7 +699,7 @@ namespace Introspection {
 				case "EventKit.EKRecurrenceFrequency":
 				case "EventKit.EKSpan":
 				case "EventKit.EKAlarmType":
-				// EventKit.EK* enums are anonymous enums in 10.10 and iOS 8, but an NSInteger in 10.11 and iOS 9.
+					// EventKit.EK* enums are anonymous enums in 10.10 and iOS 8, but an NSInteger in 10.11 and iOS 9.
 					if (TestRuntime.CheckXcodeVersion (7, 0))
 						goto default;
 					return true;
@@ -772,7 +771,7 @@ namespace Introspection {
 			case 'v':
 				return type.FullName == "System.Void";
 			case '?':
-				return type.BaseType.FullName == "System.MulticastDelegate";	// completion handler -> delegate
+				return type.BaseType.FullName == "System.MulticastDelegate";    // completion handler -> delegate
 			case '#':
 				return type.FullName == "System.IntPtr" || type.Name == "Class";
 			// CAMediaTimingFunction 'instance Void GetControlPointAtIndex(Int32, IntPtr)' selector: getControlPointAtIndex:values: == v16@0:4L8[2f]12
@@ -821,11 +820,11 @@ namespace Introspection {
 					return CheckType (ga, ref n);
 			}
 			// look for [Model] types
-			if (t.GetCustomAttribute<ModelAttribute> (false) == null)
+			if (t.GetCustomAttribute<ModelAttribute> (false) is null)
 				return true;
 			n++;
 			switch (t.Name) {
-			case "CAAnimationDelegate":	// this was not a protocol before iOS 10 and was not bound as such
+			case "CAAnimationDelegate": // this was not a protocol before iOS 10 and was not bound as such
 				return true;
 			default:
 				return false;
@@ -835,7 +834,7 @@ namespace Introspection {
 		protected virtual void CheckManagedMemberSignatures (MethodBase m, Type t, ref int n)
 		{
 			// if the method was obsoleted then it's not an issue, we assume the alternative is fine
-			if (m.GetCustomAttribute<ObsoleteAttribute> () != null)
+			if (m.GetCustomAttribute<ObsoleteAttribute> () is not null)
 				return;
 			if (m.DeclaringType != t)
 				return;
@@ -890,9 +889,9 @@ namespace Introspection {
 				if (!NSObjectType.IsAssignableFrom (t))
 					continue;
 
-				if (t.GetCustomAttribute<ProtocolAttribute> () != null)
+				if (t.GetCustomAttribute<ProtocolAttribute> () is not null)
 					continue;
-				if (t.GetCustomAttribute<ModelAttribute> () != null)
+				if (t.GetCustomAttribute<ModelAttribute> () is not null)
 					continue;
 
 				// let's not encourage the use of some API
@@ -940,7 +939,7 @@ namespace Introspection {
 
 					// did we provide a async wrapper ?
 					string ma = m.Name + "Async";
-					if (methods.Where ((mi) => mi.Name == ma).FirstOrDefault () != null)
+					if (methods.Where ((mi) => mi.Name == ma).FirstOrDefault () is not null)
 						continue;
 
 					var name = m.ToString ();
@@ -982,6 +981,7 @@ namespace Introspection {
 			"CGAffineTransform", "Range", "CGVector", "SCNMatrix4", "CLLocationCoordinate2D",
 			"SCNVector3", "Vector", "CGPoint", "CGRect", "CGSize", "UIEdgeInsets",
 			"UIOffset", "MKCoordinateSpan", "CMTimeRange", "CMTime", "CMTimeMapping",
+			"CMVideoDimensions",
 			"CATransform3D", "Boolean", "Byte", "Double", "Float", "Int16", "Int32",
 			"Int64", "SByte", "UInt16", "UInt32", "UInt64", "nfloat", "nint", "nuint",
 		};

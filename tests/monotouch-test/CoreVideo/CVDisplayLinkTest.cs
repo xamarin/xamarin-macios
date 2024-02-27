@@ -3,7 +3,6 @@ using System;
 using CoreGraphics;
 using Foundation;
 using NUnit.Framework;
-using Foundation;
 using ObjCRuntime;
 using CoreVideo;
 using Xamarin.Utils;
@@ -21,7 +20,7 @@ namespace MonoTouchFixtures.CoreVideo {
 			Assert.DoesNotThrow (() => {
 				using var displayLink = CVDisplayLink.CreateFromDisplayId ((uint) CGDisplay.MainDisplayID);
 				Assert.NotNull (displayLink, "Not null");
-				Assert.AreEqual (CGDisplay.MainDisplayID,  displayLink.GetCurrentDisplay (), "DisplayId");
+				Assert.AreEqual (CGDisplay.MainDisplayID, displayLink.GetCurrentDisplay (), "DisplayId");
 			}, "Throws");
 		}
 
@@ -42,7 +41,7 @@ namespace MonoTouchFixtures.CoreVideo {
 			// we might not have more than one display, therefore we will use an array 
 			// with a single one, there is nothing in the docs that say that we cannot do that
 			Assert.DoesNotThrow (() => {
-				using var displayLink = CVDisplayLink.CreateFromDisplayIds (new []{ (uint) CGDisplay.MainDisplayID});
+				using var displayLink = CVDisplayLink.CreateFromDisplayIds (new [] { (uint) CGDisplay.MainDisplayID });
 				Assert.NotNull (displayLink, "Not null");
 			}, "Throws");
 		}
@@ -60,7 +59,7 @@ namespace MonoTouchFixtures.CoreVideo {
 
 		[Test]
 		public void DefaultConstructorTest ()
-		{ 
+		{
 			TestRuntime.AssertNotVSTS ();
 			Assert.DoesNotThrow (() => {
 				using var displayLink = new CVDisplayLink ();
@@ -83,7 +82,7 @@ namespace MonoTouchFixtures.CoreVideo {
 			TestRuntime.AssertNotVSTS ();
 			Assert.DoesNotThrow (() => {
 				using var displayLink = new CVDisplayLink ();
-				Assert.AreEqual (CGDisplay.MainDisplayID,  displayLink.GetCurrentDisplay ());
+				Assert.AreEqual (CGDisplay.MainDisplayID, displayLink.GetCurrentDisplay ());
 			});
 		}
 
@@ -104,7 +103,7 @@ namespace MonoTouchFixtures.CoreVideo {
 			var outTime = new CVTimeStamp {
 				Version = 0,
 				Flags = (1L << 0) | (1L << 1), // kCVTimeStampVideoTimeValid | kCVTimeStampHostTimeValid
-			}; 
+			};
 			using var displayLink = new CVDisplayLink ();
 			// it has to be running else you will get a crash
 			if (displayLink.Start () == 0) {

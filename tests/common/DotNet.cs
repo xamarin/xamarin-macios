@@ -10,15 +10,15 @@ using Xamarin.Utils;
 
 using NUnit.Framework;
 
-#nullable disable
+#nullable enable
 
 namespace Xamarin.Tests {
 	public static class DotNet {
-		static string dotnet_executable;
+		static string? dotnet_executable;
 		public static string Executable {
 			get {
-				if (dotnet_executable == null) {
-					dotnet_executable = Configuration.GetVariable ("DOTNET", null);
+				if (dotnet_executable is null) {
+					dotnet_executable = Environment.GetEnvironmentVariable ("DOTNET") ?? Configuration.GetVariable ("DOTNET", null);
 					if (string.IsNullOrEmpty (dotnet_executable))
 						throw new Exception ($"Could not find the dotnet executable.");
 					if (!File.Exists (dotnet_executable))
@@ -28,58 +28,58 @@ namespace Xamarin.Tests {
 			}
 		}
 
-		public static ExecutionResult AssertPack (string project, Dictionary<string, string> properties = null)
+		public static ExecutionResult AssertPack (string project, Dictionary<string, string>? properties = null, bool? msbuildParallelism = null)
 		{
-			return Execute ("pack", project, properties, true);
+			return Execute ("pack", project, properties, true, msbuildParallelism: msbuildParallelism);
 		}
 
-		public static ExecutionResult AssertPackFailure (string project, Dictionary<string, string> properties = null)
+		public static ExecutionResult AssertPackFailure (string project, Dictionary<string, string>? properties = null, bool? msbuildParallelism = null)
 		{
-			var rv = Execute ("pack", project, properties, false);
+			var rv = Execute ("pack", project, properties, false, msbuildParallelism: msbuildParallelism);
 			Assert.AreNotEqual (0, rv.ExitCode, "Unexpected success");
 			return rv;
 		}
 
-		public static ExecutionResult AssertPublish (string project, Dictionary<string, string> properties = null)
+		public static ExecutionResult AssertPublish (string project, Dictionary<string, string>? properties = null)
 		{
 			return Execute ("publish", project, properties, true);
 		}
 
-		public static ExecutionResult AssertPublishFailure (string project, Dictionary<string, string> properties = null)
+		public static ExecutionResult AssertPublishFailure (string project, Dictionary<string, string>? properties = null)
 		{
 			var rv = Execute ("publish", project, properties, false);
 			Assert.AreNotEqual (0, rv.ExitCode, "Unexpected success");
 			return rv;
 		}
 
-		public static ExecutionResult AssertRestore (string project, Dictionary<string, string> properties = null)
+		public static ExecutionResult AssertRestore (string project, Dictionary<string, string>? properties = null)
 		{
 			return Execute ("restore", project, properties, true);
 		}
 
-		public static ExecutionResult Restore (string project, Dictionary<string, string> properties = null)
+		public static ExecutionResult Restore (string project, Dictionary<string, string>? properties = null)
 		{
 			return Execute ("restore", project, properties, false);
 		}
 
-		public static ExecutionResult AssertBuild (string project, Dictionary<string, string> properties = null)
+		public static ExecutionResult AssertBuild (string project, Dictionary<string, string>? properties = null, TimeSpan? timeout = null)
 		{
-			return Execute ("build", project, properties, true);
+			return Execute ("build", project, properties, true, timeout: timeout);
 		}
 
-		public static ExecutionResult AssertBuildFailure (string project, Dictionary<string, string> properties = null)
+		public static ExecutionResult AssertBuildFailure (string project, Dictionary<string, string>? properties = null)
 		{
 			var rv = Execute ("build", project, properties, false);
 			Assert.AreNotEqual (0, rv.ExitCode, "Unexpected success");
 			return rv;
 		}
 
-		public static ExecutionResult Build (string project, Dictionary<string, string> properties = null)
+		public static ExecutionResult Build (string project, Dictionary<string, string>? properties = null)
 		{
 			return Execute ("build", project, properties, false);
 		}
 
-		public static ExecutionResult AssertNew (string outputDirectory, string template, string? name = null)
+		public static ExecutionResult AssertNew (string outputDirectory, string template, string? name = null, string? language = null)
 		{
 			Directory.CreateDirectory (outputDirectory);
 
@@ -88,10 +88,19 @@ namespace Xamarin.Tests {
 			args.Add (template);
 			if (!string.IsNullOrEmpty (name)) {
 				args.Add ("--name");
-				args.Add (name);
+				args.Add (name!);
 			}
 
-			var env = new Dictionary<string, string> ();
+#if NET
+			if (!string.IsNullOrEmpty (language)) {
+#else
+			if (language is not null && !string.IsNullOrEmpty (language)) {
+#endif
+				args.Add ("--language");
+				args.Add (language);
+			}
+
+			var env = new Dictionary<string, string?> ();
 			env ["MSBuildSDKsPath"] = null;
 			env ["MSBUILD_EXE_PATH"] = null;
 			var output = new StringBuilder ();
@@ -101,14 +110,39 @@ namespace Xamarin.Tests {
 				Console.WriteLine (output);
 				Assert.AreEqual (0, rv.ExitCode, $"Exit code: {Executable} {StringUtils.FormatArguments (args)}");
 			}
-			return new ExecutionResult {
-				StandardOutput = output,
-				StandardError = output,
-				ExitCode = rv.ExitCode,
-			};
+			return new ExecutionResult (output, output, rv.ExitCode);
 		}
 
-		public static ExecutionResult Execute (string verb, string project, Dictionary<string, string> properties, bool assert_success = true, string target = null)
+		public static ExecutionResult InstallTool (string tool, string path)
+		{
+			var installed = ExecuteCommand (Executable, "tool", "list", "--tool-path", path);
+			if (!installed.StandardOutput.ToString ().Contains (tool))
+				installed = ExecuteCommand (Executable, "tool", "install", tool, "--tool-path", path);
+			return installed;
+		}
+
+		public static ExecutionResult RunTool (string tool, params string [] args) => ExecuteCommand (tool, args);
+
+		public static ExecutionResult ExecuteCommand (string exe, params string [] args)
+		{
+			var env = new Dictionary<string, string?> ();
+			env ["MSBuildSDKsPath"] = null;
+			env ["MSBUILD_EXE_PATH"] = null;
+
+			var output = new StringBuilder ();
+			var rv = Execution.RunWithStringBuildersAsync (exe, args, env, output, output, Console.Out, workingDirectory: Configuration.SourceRoot, timeout: TimeSpan.FromMinutes (10)).Result;
+			if (rv.ExitCode != 0) {
+				var msg = new StringBuilder ();
+				msg.AppendLine ($"'{exe}' failed with exit code {rv.ExitCode}");
+				msg.AppendLine ($"Full command: {Executable} {StringUtils.FormatArguments (args)}");
+				msg.AppendLine (output.ToString ());
+				Console.WriteLine (msg);
+				Assert.Fail (msg.ToString ());
+			}
+			return new ExecutionResult (output, output, rv.ExitCode);
+		}
+
+		public static ExecutionResult Execute (string verb, string project, Dictionary<string, string>? properties, bool assert_success = true, string? target = null, bool? msbuildParallelism = null, TimeSpan? timeout = null)
 		{
 			if (!File.Exists (project))
 				throw new FileNotFoundException ($"The project file '{project}' does not exist.");
@@ -123,27 +157,40 @@ namespace Xamarin.Tests {
 				var args = new List<string> ();
 				args.Add (verb);
 				args.Add (project);
-				if (properties != null) {
-					Dictionary<string, string> generatedProps = null;
+				if (properties is not null) {
+					Dictionary<string, string>? generatedProps = null;
 					foreach (var prop in properties) {
-						if (prop.Value.IndexOfAny (new char [] { ';' }) >= 0) {
-							// https://github.com/dotnet/msbuild/issues/471
-							// Escaping the semi colon like the issue suggests at one point doesn't work, because in
-							// that case MSBuild won't split the string into its parts for tasks that take a string[].
-							// This means that a task that takes a "string[] RuntimeIdentifiers" will get an array with
-							// a single element, where that single element is the whole RuntimeIdentifiers string.
-							// Example task: https://github.com/dotnet/sdk/blob/ffca47e9a36652da2e7041360f2201a2ba197194/src/Tasks/Microsoft.NET.Build.Tasks/ProcessFrameworkReferences.cs#L45
-							// args.Add ($"/p:{prop.Key}=\"{prop.Value}\"");
-
-							// Setting a property with a semicolon from the command line doesn't work anymore.
-							// Ref: https://github.com/dotnet/sdk/issues/27059#issuecomment-1219319513
-							// So write these properties in a file instead. This is a behavioural difference, because
-							// they'll be project-specific instead of global, but I don't see a better workaround.
+						// Some properties must be specified on the command line to work properly ("TargetFrameworks").
+						// Some tests require certain properties to be specified in a file.
+						// So we support both, where prefixing a property name with "cmdline:" forces it to be passed on the command line,
+						// while prefixing it with "file:" forces it to be specified in a file.
+						// No prefix means the default (which can change): currently on the command line.
+						var cmdline = true; // default
+						var key = prop.Key;
+						var value = prop.Value;
+						if (key.StartsWith ("file:", StringComparison.Ordinal)) {
+							key = key.Substring ("file:".Length);
+							cmdline = false;
+						} else if (key.StartsWith ("cmdline:", StringComparison.Ordinal)) {
+							key = key.Substring ("cmdline:".Length);
+							cmdline = true;
+						}
+						if (cmdline) {
+							if (prop.Value.IndexOfAny (new char [] { ';' }) >= 0) {
+								// https://github.com/dotnet/msbuild/issues/471
+								// Escaping the semi colon like the issue suggests at one point doesn't work, because in
+								// that case MSBuild won't split the string into its parts for tasks that take a string[].
+								// This means that a task that takes a "string[] RuntimeIdentifiers" will get an array with
+								// a single element, where that single element is the whole RuntimeIdentifiers string.
+								// Example task: https://github.com/dotnet/sdk/blob/ffca47e9a36652da2e7041360f2201a2ba197194/src/Tasks/Microsoft.NET.Build.Tasks/ProcessFrameworkReferences.cs#L45
+								args.Add ($"/p:{key}=\"{value}\"");
+							} else {
+								args.Add ($"/p:{key}={value}");
+							}
+						} else {
 							if (generatedProps is null)
 								generatedProps = new Dictionary<string, string> ();
-							generatedProps.Add (prop.Key, prop.Value);
-						} else {
-							args.Add ($"/p:{prop.Key}={prop.Value}");
+							generatedProps.Add (key, value);
 						}
 					}
 					if (generatedProps is not null) {
@@ -164,24 +211,58 @@ namespace Xamarin.Tests {
 				}
 				if (!string.IsNullOrEmpty (target))
 					args.Add ("/t:" + target);
-				var binlogPath = Path.Combine (Path.GetDirectoryName (project), $"log-{verb}-{DateTime.Now:yyyyMMdd_HHmmss}.binlog");
+				var binlogPath = Path.Combine (Path.GetDirectoryName (project)!, $"log-{verb}-{DateTime.Now:yyyyMMdd_HHmmss}.binlog");
 				args.Add ($"/bl:{binlogPath}");
 				Console.WriteLine ($"Binlog: {binlogPath}");
-				var env = new Dictionary<string, string> ();
+
+				// Work around https://github.com/dotnet/msbuild/issues/8845
+				args.Add ("/v:diag");
+				args.Add ("/consoleloggerparameters:Verbosity=Quiet");
+				// vb does not have preview lang, so we force it to latest
+				if (project.EndsWith (".vbproj", StringComparison.OrdinalIgnoreCase))
+					args.Add ("/p:LangVersion=latest");
+				// End workaround
+
+				if (msbuildParallelism.HasValue) {
+					if (msbuildParallelism.Value) {
+						args.Add ("-maxcpucount"); // this means "use as many processes as there are cpus"
+					} else {
+						args.Add ("-maxcpucount:1");
+					}
+				}
+
+				var env = new Dictionary<string, string?> ();
 				env ["MSBuildSDKsPath"] = null;
 				env ["MSBUILD_EXE_PATH"] = null;
 				var output = new StringBuilder ();
-				var rv = Execution.RunWithStringBuildersAsync (Executable, args, env, output, output, Console.Out, workingDirectory: Path.GetDirectoryName (project), timeout: TimeSpan.FromMinutes (10)).Result;
+				timeout ??= TimeSpan.FromMinutes (10);
+				var rv = Execution.RunWithStringBuildersAsync (Executable, args, env, output, output, Console.Out, workingDirectory: Path.GetDirectoryName (project), timeout: timeout).Result;
 				if (assert_success && rv.ExitCode != 0) {
 					var outputStr = output.ToString ();
 					Console.WriteLine ($"'{Executable} {StringUtils.FormatArguments (args)}' failed with exit code {rv.ExitCode}.");
 					Console.WriteLine (outputStr);
+					if (rv.ExitCode != 0) {
+						var msg = new StringBuilder ();
+						msg.AppendLine ($"'dotnet {verb}' failed with exit code {rv.ExitCode}");
+						msg.AppendLine ($"Full command: {Executable} {StringUtils.FormatArguments (args)}");
+#if !MSBUILD_TASKS
+						try {
+							var errors = BinLog.GetBuildLogErrors (binlogPath).ToArray ();
+							if (errors.Any ()) {
+								var errorsToList = errors.Take (10).ToArray ();
+								msg.AppendLine ($"Listing first {errorsToList.Length} error(s) (of {errors.Length} error(s)):");
+								foreach (var error in errorsToList)
+									msg.AppendLine ($"    {string.Join ($"{Environment.NewLine}        ", error.ToString ().Split ('\n', '\r'))}");
+							}
+						} catch (Exception e) {
+							msg.AppendLine ($"Failed to list errors: {e}");
+						}
+#endif
+						Assert.Fail (msg.ToString ());
+					}
 					Assert.AreEqual (0, rv.ExitCode, $"Exit code: {Executable} {StringUtils.FormatArguments (args)}");
 				}
-				return new ExecutionResult {
-					StandardOutput = output,
-					StandardError = output,
-					ExitCode = rv.ExitCode,
+				return new ExecutionResult (output, output, rv.ExitCode) {
 					BinLogPath = binlogPath,
 				};
 			default:
@@ -216,6 +297,7 @@ namespace Xamarin.Tests {
 					var filename = Path.GetFileName (v);
 					switch (filename) {
 					case "icudt.dat":
+					case "icudt_hybrid.dat":
 						return false; // ICU data file only present on .NET
 					case "runtime-options.plist":
 						return false; // the .NET runtime will deal with selecting the http handler, no need for us to do anything
@@ -297,5 +379,13 @@ namespace Xamarin.Tests {
 		public int ExitCode;
 		public bool TimedOut;
 		public string BinLogPath;
+
+		public ExecutionResult (StringBuilder stdout, StringBuilder stderr, int exitCode)
+		{
+			StandardOutput = stdout;
+			StandardError = stderr;
+			ExitCode = exitCode;
+			BinLogPath = string.Empty;
+		}
 	}
 }

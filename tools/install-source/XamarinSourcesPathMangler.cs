@@ -1,13 +1,11 @@
 using System;
 using System.IO;
 
-namespace InstallSources
-{
+namespace InstallSources {
 	/// <summary>
 	/// Path manipulator that can deal with the Xamarin sources.
 	/// </summary>
-	public class XamarinSourcesPathMangler : IPathMangler
-	{
+	public class XamarinSourcesPathMangler : IPathMangler {
 		static string GeneratedExtension = ".g.cs";
 		static string NativeTypeSubpath = "NativeTypes";
 		static string CommonBuildSourceSubpath = "/build/common/";
@@ -31,13 +29,13 @@ namespace InstallSources
 		/// </summary>
 		/// <value>The install dir.</value>
 		public string InstallDir { get; set; }
-		
+
 		/// <summary>
 		/// Gets or sets the frame work dir.
 		/// </summary>
 		/// <value>The frame work dir.</value>
 		public string DestinationDir { get; set; }
-		 
+
 		/// <summary>
 		/// Returns if the provided path was compiler generated or not.
 		/// </summary>
@@ -140,17 +138,18 @@ namespace InstallSources
 		{
 			Console.WriteLine ($"Path is {path}");
 			if (path.StartsWith (InstallDir, StringComparison.Ordinal)) {
-				var removalPath = Path.Combine (InstallDir, FrameworkPath.Replace(".framework", ""), "src");
+				var removalPath = Path.Combine (InstallDir, FrameworkPath.Replace (".framework", ""), "src");
 				Console.WriteLine ($"Removal path s {removalPath}");
 				var src = path.Remove (0, removalPath.Length);
 				Console.WriteLine ($"Src is {src}");
 				if (src.StartsWith ("/", StringComparison.Ordinal))
 					src = src.Remove (0, 1);
 				return Path.Combine (XamarinSourcePath.Replace ("src", "runtime"), src);
-			} return path;
+			}
+			return path;
 		}
 
-		public string GetSourcePath(string path)
+		public string GetSourcePath (string path)
 		{
 			if (IsRunrime (path)) {
 				return GetSourcePathForRuntimeSource (path);
@@ -190,7 +189,7 @@ namespace InstallSources
 			var pos = path.IndexOf (NativeTypeSubpath, StringComparison.InvariantCulture);
 			if (pos >= 0) {
 				var relativePath = path.Remove (0, pos);
-				return Path.Combine (DestinationDir, "src", FrameworkPath.Remove (FrameworkPath.IndexOf (".framework", StringComparison.InvariantCulture)), relativePath);	
+				return Path.Combine (DestinationDir, "src", FrameworkPath.Remove (FrameworkPath.IndexOf (".framework", StringComparison.InvariantCulture)), relativePath);
 			}
 			return null;
 		}
@@ -208,12 +207,12 @@ namespace InstallSources
 
 		public string GetTargetPath (string path)
 		{
-			if (IsRunrime(path))
-				return GetTargetPathForRuntimeSource(path);
-			if (IsGeneratedPath(path))
-				return GetTargetPathForGeneratedPath(path);
-			if (IsManualSource(path))
-				return GetTargetPathForManualSource(path);
+			if (IsRunrime (path))
+				return GetTargetPathForRuntimeSource (path);
+			if (IsGeneratedPath (path))
+				return GetTargetPathForGeneratedPath (path);
+			if (IsManualSource (path))
+				return GetTargetPathForManualSource (path);
 			return GetTargetPathForNativeType (path);
 		}
 

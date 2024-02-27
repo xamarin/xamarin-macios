@@ -63,8 +63,8 @@ namespace MonoTouchFixtures.ARKit {
 			identifiers = new ulong [] { 0, 1 };
 			if (!identifiersHandle.IsAllocated)
 				identifiersHandle = GCHandle.Alloc (identifiers, GCHandleType.Pinned);
-			ulong* addr = (ulong*)identifiersHandle.AddrOfPinnedObject ();
-			return (IntPtr)addr;
+			ulong* addr = (ulong*) identifiersHandle.AddrOfPinnedObject ();
+			return (IntPtr) addr;
 		}
 
 		protected override void Dispose (bool disposing)

@@ -36,7 +36,7 @@ namespace MonoTouchFixtures.NetworkExtension {
 			rule.DnsServerAddressMatch = null;
 			Assert.Null (rule.DnsServerAddressMatch, "DnsServerAddressMatch-3");
 
-			Assert.That (rule.InterfaceTypeMatch, Is.EqualTo ((NEOnDemandRuleInterfaceType)0), "InterfaceTypeMatch");
+			Assert.That (rule.InterfaceTypeMatch, Is.EqualTo ((NEOnDemandRuleInterfaceType) 0), "InterfaceTypeMatch");
 			rule.InterfaceTypeMatch = NEOnDemandRuleInterfaceType.WiFi;
 			Assert.That (rule.InterfaceTypeMatch, Is.EqualTo (NEOnDemandRuleInterfaceType.WiFi), "InterfaceTypeMatch-2");
 

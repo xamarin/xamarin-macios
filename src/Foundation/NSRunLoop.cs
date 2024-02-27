@@ -26,9 +26,9 @@ using System;
 using System.Runtime.InteropServices;
 
 namespace Foundation {
-	
+
 	public partial class NSRunLoop {
-		
+
 		public void Stop ()
 		{
 			GetCFRunLoop ().Stop ();
@@ -43,11 +43,11 @@ namespace Foundation {
 	static public partial class NSRunLoopModeExtensions {
 
 		// this is a less common pattern so it's not automatically generated
-		public static NSString[] GetConstants (this NSRunLoopMode[] self)
+		public static NSString [] GetConstants (this NSRunLoopMode [] self)
 		{
 			if (self is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (self));
-			
+
 			var array = new NSString [self.Length];
 			for (int n = 0; n < self.Length; n++)
 				array [n] = self [n].GetConstant ()!;

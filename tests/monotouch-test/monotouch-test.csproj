@@ -30,7 +30,7 @@
     <MtouchDebug>True</MtouchDebug>
     <MtouchExtraArgs>-v -v -v -v</MtouchExtraArgs>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-    <MtouchArch>i386, x86_64</MtouchArch>
+    <MtouchArch>x86_64</MtouchArch>
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
     <CodesignKey Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.MacCatalyst'">iPhone Developer</CodesignKey>
     <CodesignKey Condition="'$(TargetFrameworkIdentifier)' == 'Xamarin.MacCatalyst'">Apple Development</CodesignKey>
@@ -46,7 +46,7 @@
     <MtouchLink>None</MtouchLink>
     <MtouchExtraArgs>-v -v -v -v</MtouchExtraArgs>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-    <MtouchArch>i386, x86_64</MtouchArch>
+    <MtouchArch>x86_64</MtouchArch>
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhone' ">
@@ -60,40 +60,10 @@
     <MtouchDebug>True</MtouchDebug>
     <CodesignKey>iPhone Developer</CodesignKey>
     <MtouchExtraArgs>-v -v -v -v</MtouchExtraArgs>
-    <MtouchArch>ARMv7, ARM64</MtouchArch>
+    <MtouchArch>ARM64</MtouchArch>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <IpaPackageName>
     </IpaPackageName>
-    <MtouchNoSymbolStrip>true</MtouchNoSymbolStrip>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug64|iPhone' ">
-    <DebugSymbols>True</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>False</Optimize>
-    <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
-    <DefineConstants>DEBUG;DEVICE;$(DefineConstants)</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>0</WarningLevel>
-    <MtouchDebug>True</MtouchDebug>
-    <CodesignKey>iPhone Developer</CodesignKey>
-    <MtouchExtraArgs>-v -v -v -v</MtouchExtraArgs>
-    <MtouchArch>ARM64</MtouchArch>
-    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-    <MtouchNoSymbolStrip>true</MtouchNoSymbolStrip>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug32|iPhone' ">
-    <DebugSymbols>True</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>False</Optimize>
-    <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
-    <DefineConstants>DEBUG;DEVICE;$(DefineConstants)</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>0</WarningLevel>
-    <MtouchDebug>True</MtouchDebug>
-    <CodesignKey>iPhone Developer</CodesignKey>
-    <MtouchExtraArgs>-v -v -v -v</MtouchExtraArgs>
-    <MtouchArch>ARMv7</MtouchArch>
-    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <MtouchNoSymbolStrip>true</MtouchNoSymbolStrip>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
@@ -105,59 +75,17 @@
     <WarningLevel>0</WarningLevel>
     <CodesignKey>iPhone Developer</CodesignKey>
     <MtouchExtraArgs>-v -v -v -v</MtouchExtraArgs>
-    <MtouchArch>ARMv7, ARM64</MtouchArch>
-    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-    <MtouchUseLlvm>true</MtouchUseLlvm>
-    <MtouchNoSymbolStrip>true</MtouchNoSymbolStrip>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release32|iPhone' ">
-    <DebugType>none</DebugType>
-    <Optimize>False</Optimize>
-    <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
-    <DefineConstants>MONOTOUCH;DEVICE;$(DefineConstants)</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>0</WarningLevel>
-    <CodesignKey>iPhone Developer</CodesignKey>
-    <MtouchExtraArgs>-v -v -v -v</MtouchExtraArgs>
-    <MtouchArch>ARMv7</MtouchArch>
-    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-    <MtouchUseLlvm>true</MtouchUseLlvm>
-    <MtouchNoSymbolStrip>true</MtouchNoSymbolStrip>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release64|iPhone' ">
-    <DebugType>none</DebugType>
-    <Optimize>False</Optimize>
-    <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
-    <DefineConstants>MONOTOUCH;DEVICE;$(DefineConstants)</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>0</WarningLevel>
-    <CodesignKey>iPhone Developer</CodesignKey>
-    <MtouchExtraArgs>-v -v -v -v</MtouchExtraArgs>
     <MtouchArch>ARM64</MtouchArch>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <MtouchUseLlvm>true</MtouchUseLlvm>
     <MtouchNoSymbolStrip>true</MtouchNoSymbolStrip>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release-bitcode|iPhone' ">
-    <DebugType>none</DebugType>
-    <Optimize>False</Optimize>
-    <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
-    <DefineConstants>MONOTOUCH;DEVICE;$(DefineConstants)</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>0</WarningLevel>
-    <CodesignKey>iPhone Developer</CodesignKey>
-    <MtouchExtraArgs>-v -v -v -v --bitcode:full</MtouchExtraArgs>
-    <MtouchArch>ARMv7, ARM64</MtouchArch>
-    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-    <MtouchUseLlvm>true</MtouchUseLlvm>
-    <MtouchNoSymbolStrip>true</MtouchNoSymbolStrip>
-  </PropertyGroup>
   <PropertyGroup>
-    <CompilerResponseFile Condition="'$(TargetFrameworkIdentifier)' == 'Xamarin.iOS'">$(RootTestsDirectory)\..\src\build\ios-defines.rsp</CompilerResponseFile>
-    <CompilerResponseFile Condition="'$(TargetFrameworkIdentifier)' == 'Xamarin.TVOS'">$(RootTestsDirectory)\..\src\build\tvos-defines.rsp</CompilerResponseFile>
-    <CompilerResponseFile Condition="'$(TargetFrameworkIdentifier)' == 'Xamarin.WatchOS'">$(RootTestsDirectory)\..\src\build\watchos-defines.rsp</CompilerResponseFile>
-    <CompilerResponseFile Condition="'$(TargetFrameworkIdentifier)' == 'Xamarin.MacCatalyst'">$(RootTestsDirectory)\..\src\build\maccatalyst-defines.rsp</CompilerResponseFile>
-    <CompilerResponseFile Condition="'$(TargetFrameworkIdentifier)' == 'Xamarin.Mac'">$(RootTestsDirectory)\..\src\build\macos-defines.rsp</CompilerResponseFile>
+    <CompilerResponseFile Condition="'$(TargetFrameworkIdentifier)' == 'Xamarin.iOS'">$(RootTestsDirectory)\..\src\rsp\ios-defines.rsp</CompilerResponseFile>
+    <CompilerResponseFile Condition="'$(TargetFrameworkIdentifier)' == 'Xamarin.TVOS'">$(RootTestsDirectory)\..\src\rsp\tvos-defines.rsp</CompilerResponseFile>
+    <CompilerResponseFile Condition="'$(TargetFrameworkIdentifier)' == 'Xamarin.WatchOS'">$(RootTestsDirectory)\..\src\rsp\watchos-defines.rsp</CompilerResponseFile>
+    <CompilerResponseFile Condition="'$(TargetFrameworkIdentifier)' == 'Xamarin.MacCatalyst'">$(RootTestsDirectory)\..\src\rsp\maccatalyst-defines.rsp</CompilerResponseFile>
+    <CompilerResponseFile Condition="'$(TargetFrameworkIdentifier)' == 'Xamarin.Mac'">$(RootTestsDirectory)\..\src\rsp\macos-defines.rsp</CompilerResponseFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -214,17 +142,27 @@
     <Compile Include="..\common\TestRuntime.cs">
       <Link>TestRuntime.cs</Link>
     </Compile>
+    <Compile Include="..\common\TestRuntime.RunAsync.cs">
+      <Link>TestRuntime.RunAsync.cs</Link>
+    </Compile>
     <Compile Include="..\common\ConditionalCompilation.cs">
       <Link>ConditionalCompilation.cs</Link>
     </Compile>
     <Compile Include="..\common\Extensions.cs">
       <Link>Extensions.cs</Link>
     </Compile>
+    <Compile Include="..\common\TestAssemblyLoader.cs">
+      <Link>TestAssemblyLoader.cs</Link>
+    </Compile>
     <Compile Include="..\..\tools\common\ApplePlatform.cs">
       <Link>ApplePlatform.cs</Link>
     </Compile>
+    <Compile Include="..\..\tools\common\SdkVersions.cs">
+      <Link>SdkVersions.cs</Link>
+    </Compile>
     <Compile Include="SceneKit\SCNVector3Test.cs" />
     <Compile Include="SceneKit\SCNVector4Test.cs" />
+    <Compile Include="..\common\AppDelegate.cs" />
   </ItemGroup>
   <Import Project="$(RootTestsDirectory)\ComputeRegistrarConstant.targets" />
   <Import Project="$(RootTestsDirectory)\nunit.framework.targets" />
@@ -308,11 +246,13 @@
     <Folder Include="WebKit\" />
     <Folder Include="NearbyInteraction\" />
     <Folder Include="MetricKit\" />
+    <Folder Include="SharedWithYouCore\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="AudioToolbox\1.caf" />
     <Content Include="Tamarin.pdf" />
     <Content Include="basn3p08.png" />
+    <Content Include="basn3p08_with_loc.png" />
     <Content Include="BoardingPass.pkpass" />
     <Content Include="Hand.wav" />
     <Content Include="Pacifico.ttf" />
@@ -356,6 +296,7 @@
     <BundleResource Include="compressed_zip" />
     <BundleResource Include="example.pac" />
     <BundleResource Include="Resources\square.gif" />
+    <BundleResource Include="Resources\full_body.jpg" />
   </ItemGroup>
   <ItemGroup>
     <Metal Include="Resources\metal-sample.metal" Condition="'$(Platform)' != 'iPhoneSimulator' " />
@@ -363,6 +304,18 @@
   <ItemGroup>
     <EmbeddedResource Include="Security\openssl_crt.der">
         <LogicalName>monotouchtest.Security.openssl_crt.der</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Welcome.resx">
+      <LogicalName>monotouchtest.Welcome.resources</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Welcome.en-AU.resx">
+      <LogicalName>monotouchtest.Welcome.en-AU.resources</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Welcome.es.resx">
+      <LogicalName>monotouchtest.Welcome.es.resources</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Welcome.de.resx">
+      <LogicalName>monotouchtest.Welcome.de.resources</LogicalName>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -401,6 +354,6 @@
     <Exec Command="xcrun -sdk $(_SmeltingSdk) metallib $(IntermediateOutputPath)\fragmentShader.air -o $(AppBundleDir)\fragmentShader.metallib" EnvironmentVariables="DEVELOPER_DIR=$(_SdkDevPath)" />
   </Target>
   <Target Name="BeforeBuild" Inputs="@(GeneratedTestInput)" Outputs="@(GeneratedTestOutput)" DependsOnTargets="CustomMetalSmelting" >
-    <Exec Command="make -j8 -C $(TestLibrariesDirectory)" />
+    <Exec Command="make -j8 -C $(TestLibrariesDirectory)" Condition="'$(BUILD_REVISION)' == ''" />
   </Target>
 </Project>

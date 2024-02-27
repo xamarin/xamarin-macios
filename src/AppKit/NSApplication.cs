@@ -33,6 +33,8 @@ using System.Threading;
 using Foundation;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace AppKit {
 	public partial class NSApplication : NSResponder {
 		public static bool CheckForIllegalCrossThreadCalls = true;
@@ -42,10 +44,10 @@ namespace AppKit {
 		public static bool IgnoreMissingAssembliesDuringRegistration = false;
 #endif
 
-		private static Thread mainThread;
+		private static Thread? mainThread;
 
 		[DllImport (Constants.AppKitLibrary)]
-		extern static int /* int */ NSApplicationMain (int /* int */ argc, string [] argv);
+		extern static int /* int */ NSApplicationMain (int /* int */ argc, IntPtr argv);
 
 		static bool initialized;
 
@@ -66,7 +68,7 @@ namespace AppKit {
 			// and call NSApplicationMain externally prior to this Init, so only
 			// initialize the context if it hasn't been set externally. Alternatively,
 			// AppKitSynchronizationContext could be made public.
-			if (SynchronizationContext.Current == null)
+			if (SynchronizationContext.Current is null)
 				SynchronizationContext.SetSynchronizationContext (new AppKitSynchronizationContext ());
 
 			// Establish the main thread at the time of Init to support hosts
@@ -91,29 +93,32 @@ namespace AppKit {
 		static void ResetHandle ()
 		{
 			// `class_ptr` is `readonly` so one can't simply do `class_ptr = Class.GetHandle ("NSApplication");`
-			typeof (NSApplication).GetField ("class_ptr", BindingFlags.Static | BindingFlags.NonPublic).SetValue (null, Class.GetHandle ("NSApplication"));
+			typeof (NSApplication).GetField ("class_ptr", BindingFlags.Static | BindingFlags.NonPublic)?.SetValue (null, Class.GetHandle ("NSApplication"));
 		}
 
 		public static void InitDrawingBridge ()
 		{
-			FieldInfo UseCocoaDrawableField = Type.GetType ("System.Drawing.GDIPlus, System.Drawing").GetField ("UseCocoaDrawable", BindingFlags.Static | BindingFlags.Public);
-			FieldInfo UseCarbonDrawableField = Type.GetType ("System.Drawing.GDIPlus, System.Drawing").GetField ("UseCarbonDrawable", BindingFlags.Static | BindingFlags.Public);
+			var UseCocoaDrawableField = Type.GetType ("System.Drawing.GDIPlus, System.Drawing")?.GetField ("UseCocoaDrawable", BindingFlags.Static | BindingFlags.Public);
+			var UseCarbonDrawableField = Type.GetType ("System.Drawing.GDIPlus, System.Drawing")?.GetField ("UseCarbonDrawable", BindingFlags.Static | BindingFlags.Public);
 
-			UseCocoaDrawableField.SetValue (null, true);
-			UseCarbonDrawableField.SetValue (null, false);
+			UseCocoaDrawableField?.SetValue (null, true);
+			UseCarbonDrawableField?.SetValue (null, false);
 		}
 
 		public static void Main (string [] args)
 		{
 			// Switch to an AppKitSynchronizationContext if Main is invoked
-			if (SynchronizationContext.Current == null || !typeof (AppKitSynchronizationContext).IsAssignableFrom (SynchronizationContext.Current.GetType ()))
+			if (SynchronizationContext.Current is null || !typeof (AppKitSynchronizationContext).IsAssignableFrom (SynchronizationContext.Current.GetType ()))
 				SynchronizationContext.SetSynchronizationContext (new AppKitSynchronizationContext ());
 
 			// Init where this is set the first time is generally paired
 			// with a call to Main, but this guarantees the right thread.
 			NSApplication.mainThread = Thread.CurrentThread;
 
-			NSApplicationMain (args.Length, args);
+			var argsPtr = TransientString.AllocStringArray (args);
+			NSApplicationMain (args.Length, argsPtr);
+			if (argsPtr != IntPtr.Zero)
+				TransientString.FreeStringArray (argsPtr, args.Length);
 		}
 
 		public static void EnsureUIThread ()
@@ -128,9 +133,9 @@ namespace AppKit {
 				throw new InvalidOperationException (string.Format ("Event registration is overwriting existing delegate. Either just use events or your own delegate: {0} {1}", del.GetType (), expectedType));
 		}
 
-		public static void EnsureDelegateAssignIsNotOverwritingInternalDelegate (object currentDelegateValue, object newDelegateValue, Type internalDelegateType)
+		public static void EnsureDelegateAssignIsNotOverwritingInternalDelegate (object? currentDelegateValue, object? newDelegateValue, Type internalDelegateType)
 		{
-			if (NSApplication.CheckForEventAndDelegateMismatches && currentDelegateValue != null && newDelegateValue != null
+			if (NSApplication.CheckForEventAndDelegateMismatches && currentDelegateValue is not null && newDelegateValue is not null
 				&& currentDelegateValue.GetType ().IsAssignableFrom (internalDelegateType)
 				&& !newDelegateValue.GetType ().IsAssignableFrom (internalDelegateType))
 				throw new InvalidOperationException (string.Format ("Event registration is overwriting existing delegate. Either just use events or your own delegate: {0} {1}", newDelegateValue.GetType (), internalDelegateType));

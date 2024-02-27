@@ -54,7 +54,7 @@ namespace CoreImage {
 			if (count > values.Length)
 				throw new ArgumentOutOfRangeException (nameof (count));
 
-			fixed (nfloat *ptr = values) {
+			fixed (nfloat* ptr = values) {
 				var handle = IntPtr.Zero;
 				if (IsDirectBinding) {
 					handle = Messaging.IntPtr_objc_msgSend_IntPtr_IntPtr (Handle, Selector.GetHandle ("initWithValues:count:"), (IntPtr) ptr, (IntPtr) count);
@@ -69,10 +69,10 @@ namespace CoreImage {
 		{
 			if (values is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (values));
-			fixed (nfloat *ptr = values)
+			fixed (nfloat* ptr = values)
 				return _FromValues ((IntPtr) ptr, values.Length);
 		}
-		
+
 		public override string ToString ()
 		{
 			return StringRepresentation ();

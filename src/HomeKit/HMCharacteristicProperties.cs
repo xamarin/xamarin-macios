@@ -8,12 +8,9 @@ using Foundation;
 namespace HomeKit {
 
 #if NET
-	[SupportedOSPlatform ("ios8.0")]
+	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("tvos10.0")]
-#else
-	[iOS (8,0)]
-	[TV (10,0)]
+	[SupportedOSPlatform ("tvos")]
 #endif
 	public class HMCharacteristicProperties {
 

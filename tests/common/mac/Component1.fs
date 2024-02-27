@@ -2,4 +2,4 @@ namespace FSharpXM45Library
 type Class1() = 
     member this.X = "F#"
 
-%CODE%
+REPLACE_CODE_REPLACE

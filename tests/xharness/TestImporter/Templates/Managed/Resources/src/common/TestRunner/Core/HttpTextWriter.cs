@@ -14,9 +14,8 @@ using System.Threading.Tasks;
 
 using Foundation;
 
-namespace  BCLTests.TestRunner.Core {
-	class HttpTextWriter : TextWriter
-	{
+namespace BCLTests.TestRunner.Core {
+	class HttpTextWriter : TextWriter {
 		public string HostName;
 		public int Port;
 
@@ -40,8 +39,7 @@ namespace  BCLTests.TestRunner.Core {
 		{
 			var valueWasSet = closed.TrySetResult (true);
 			if (valueWasSet) {
-				Task.Run (async () =>
-				{
+				Task.Run (async () => {
 					await finished.Task;
 					base.Close ();
 				});
@@ -54,9 +52,8 @@ namespace  BCLTests.TestRunner.Core {
 			var tcs = new TaskCompletionSource<bool> ();
 			var request = new NSMutableUrlRequest (url);
 			request.HttpMethod = "POST";
-			var rv = NSUrlSession.SharedSession.CreateUploadTask (request, NSData.FromString (uploadData), (NSData data, NSUrlResponse response, NSError error) =>
-			{
-				if (error != null) {
+			var rv = NSUrlSession.SharedSession.CreateUploadTask (request, NSData.FromString (uploadData), (NSData data, NSUrlResponse response, NSError error) => {
+				if (error is not null) {
 					Console.WriteLine ("Failed to send data to {0}: {1}", url.AbsoluteString, error);
 					tcs.SetResult (false);
 				} else {
@@ -91,14 +88,13 @@ namespace  BCLTests.TestRunner.Core {
 			} catch (Exception ex) {
 				Console.WriteLine ("HttpTextWriter failed: {0}", ex);
 			} finally {
-				finished.SetResult (true);				
+				finished.SetResult (true);
 			}
 		}
 
 		public void Open ()
 		{
-			new Thread (SendThread)
-			{
+			new Thread (SendThread) {
 				IsBackground = true,
 			}.Start ();
 		}
@@ -114,7 +110,7 @@ namespace  BCLTests.TestRunner.Core {
 			Console.Out.Write (buffer);
 			log.Append (buffer);
 		}
-	
+
 		public override void WriteLine (string value)
 		{
 			Console.Out.WriteLine (value);

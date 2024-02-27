@@ -15,7 +15,7 @@ using NUnit.Framework;
 using Xamarin.Utils;
 
 namespace MonoTouchFixtures.CoreData {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class ManagedObjectContextTest {

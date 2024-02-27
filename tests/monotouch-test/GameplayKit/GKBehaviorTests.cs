@@ -35,7 +35,7 @@ namespace MonoTouchFixtures.GamePlayKit {
 			var gkBehavior = GKBehavior.FromGoals (new GKGoal [] { goal1, goal2 });
 
 			// Searching the gkBehavior for a non-exisitant goal should throw an ArgumentOutOfRangeException
-			Assert.Throws<ArgumentOutOfRangeException> ( () => { _ = gkBehavior[goal3]; }, "The ObjectForKeyedSubscript indexer should throw ArgumentOutOfRangeException if the goal is not in the behavior's list of GKGoals.");
+			Assert.Throws<ArgumentOutOfRangeException> (() => { _ = gkBehavior [goal3]; }, "The ObjectForKeyedSubscript indexer should throw ArgumentOutOfRangeException if the goal is not in the behavior's list of GKGoals.");
 		}
 	}
 }

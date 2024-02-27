@@ -62,19 +62,49 @@ namespace ObjCRuntime {
 		}
 
 		[DllImport (Messaging.LIBOBJC_DYLIB)]
-		internal extern static IntPtr objc_getProtocol (string? name);
+		extern static IntPtr objc_getProtocol (IntPtr name);
+
+		internal static IntPtr objc_getProtocol (string? name)
+		{
+			var namePtr = new TransientString (name);
+			return objc_getProtocol (namePtr);
+		}
 
 		[DllImport (Messaging.LIBOBJC_DYLIB)]
-		internal extern static IntPtr objc_allocateProtocol (string name);
+		extern static IntPtr objc_allocateProtocol (IntPtr name);
+
+		internal static IntPtr objc_allocateProtocol (string name)
+		{
+			using var namePtr = new TransientString (name);
+			return objc_allocateProtocol (namePtr);
+		}
 
 		[DllImport (Messaging.LIBOBJC_DYLIB)]
 		internal extern static void objc_registerProtocol (IntPtr protocol);
 
 		[DllImport (Messaging.LIBOBJC_DYLIB)]
-		internal extern static void protocol_addProperty (IntPtr protocol, string name, Class.objc_attribute_prop [] attributes, int count, [MarshalAs (UnmanagedType.I1)] bool isRequired, [MarshalAs (UnmanagedType.I1)] bool isInstance);
+		extern static unsafe void protocol_addProperty (IntPtr protocol, IntPtr name, IntPtr* attributes, int count, [MarshalAs (UnmanagedType.I1)] bool isRequired, [MarshalAs (UnmanagedType.I1)] bool isInstance);
+
+		internal static void protocol_addProperty (IntPtr protocol, string name, Class.objc_attribute_prop [] attributes, int count, [MarshalAs (UnmanagedType.I1)] bool isRequired, [MarshalAs (UnmanagedType.I1)] bool isInstance)
+		{
+			using var namePtr = new TransientString (name);
+			var propArr = Class.PropertyStringsToPtrs (attributes);
+			unsafe {
+				fixed (IntPtr* propArrPtr = propArr) {
+					protocol_addProperty (protocol, namePtr, propArrPtr, count, isRequired, isInstance);
+				}
+			}
+			Class.FreeStringPtrs (propArr);
+		}
 
 		[DllImport (Messaging.LIBOBJC_DYLIB)]
-		internal extern static void protocol_addMethodDescription (IntPtr protocol, IntPtr nameSelector, string signature, [MarshalAs (UnmanagedType.I1)] bool isRequired, [MarshalAs (UnmanagedType.I1)] bool isInstance);
+		extern static void protocol_addMethodDescription (IntPtr protocol, IntPtr nameSelector, IntPtr signature, [MarshalAs (UnmanagedType.I1)] bool isRequired, [MarshalAs (UnmanagedType.I1)] bool isInstance);
+
+		internal static void protocol_addMethodDescription (IntPtr protocol, IntPtr nameSelector, string signature, [MarshalAs (UnmanagedType.I1)] bool isRequired, [MarshalAs (UnmanagedType.I1)] bool isInstance)
+		{
+			using var signaturePtr = new TransientString (signature);
+			protocol_addMethodDescription (protocol, nameSelector, signaturePtr, isRequired, isInstance);
+		}
 
 		[DllImport (Messaging.LIBOBJC_DYLIB)]
 		internal extern static void protocol_addProtocol (IntPtr protocol, IntPtr addition);

@@ -10,11 +10,11 @@ using UIKit;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.UIKit {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class StepperTest {
-		
+
 		[Test]
 		public void InitWithFrame ()
 		{
@@ -25,7 +25,7 @@ namespace MonoTouchFixtures.UIKit {
 				// Width and Height are set by the Slider (e.g. 94 x 27 for the iPhone)
 			}
 		}
-		
+
 		[Test]
 		public void BackgroundImage ()
 		{

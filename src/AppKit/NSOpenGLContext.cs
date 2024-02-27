@@ -7,6 +7,8 @@ using System.Drawing;
 using ObjCRuntime;
 using Foundation;
 
+#nullable enable
+
 namespace AppKit {
 
 	public partial class NSOpenGLContext {

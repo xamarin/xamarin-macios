@@ -1,6 +1,8 @@
 // Copyright 2011-2013, Xamarin Inc. All rights reserved,
 // Copyright 2020 Microsoft Corp
 
+#nullable enable
+
 using System;
 using System.Text;
 
@@ -14,7 +16,7 @@ namespace Xamarin.Bundler {
 		{
 		}
 
-		public ProductException (int code, string message, params object [] args) :
+		public ProductException (int code, string message, params object? [] args) :
 			this (code, false, message, args)
 		{
 		}
@@ -24,24 +26,24 @@ namespace Xamarin.Bundler {
 		{
 		}
 
-		public ProductException (int code, bool error, string message, params object [] args) :
+		public ProductException (int code, bool error, string message, params object? [] args) :
 			this (code, error, null, message, args)
 		{
 		}
 
-		public ProductException (int code, bool error, Exception innerException, string message) :
+		public ProductException (int code, bool error, Exception? innerException, string message) :
 			base (message, innerException)
 		{
 			SetValues (code, error);
 		}
 
-		public ProductException (int code, bool error, Exception innerException, string message, params object [] args) :
+		public ProductException (int code, bool error, Exception? innerException, string message, params object? [] args) :
 			base (Format (message, args), innerException)
 		{
 			SetValues (code, error);
 		}
 
-		public string FileName { get; set; }
+		public string? FileName { get; set; }
 
 		public int LineNumber { get; set; }
 
@@ -69,14 +71,14 @@ namespace Xamarin.Bundler {
 		// this is to avoid having error message that can throw FormatException since they hide the real issue
 		// so we need to fix it (first) before we can get the underlying root issue
 		// this is getting more complex with localization since the strings (format) are not in the source itself
-		static string Format (string message, params object [] args)
+		static string Format (string message, params object? [] args)
 		{
 			try {
 				return String.Format (message, args);
 			} catch {
 				var sb = new StringBuilder (message);
 				sb.Append (". String.Format failed! Arguments were:");
-				if (args != null) {
+				if (args is not null) {
 					foreach (var arg in args) {
 						sb.Append (" \"").Append (arg).Append ('"');
 					}

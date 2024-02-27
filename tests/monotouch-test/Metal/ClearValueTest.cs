@@ -8,12 +8,10 @@ using Metal;
 
 using NUnit.Framework;
 
-namespace MonoTouchFixtures.Metal
-{
+namespace MonoTouchFixtures.Metal {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class ClearValueTest
-	{
+	public class ClearValueTest {
 		[Test]
 		public void Constructor ()
 		{

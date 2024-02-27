@@ -21,7 +21,7 @@ using NUnit.Framework;
 using Xamarin.Utils;
 
 namespace MonoTouchFixtures.Foundation {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class UrlTest {
@@ -32,7 +32,7 @@ namespace MonoTouchFixtures.Foundation {
 			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 8, throwIfOtherPlatform: false);
 			Assert.That (NSUrl.IsExcludedFromBackupKey.ToString (), Is.EqualTo ("NSURLIsExcludedFromBackupKey"), "IsExcludedFromBackupKey");
 		}
-		
+
 		[Test]
 		public void IsExcludedFromBackupKey ()
 		{
@@ -43,21 +43,22 @@ namespace MonoTouchFixtures.Foundation {
 			// NOTE: this test was failing with either NullReferenceException or InvalidCastException
 			// when we used CFBoolean as a NSObject (i.e. CFBoolean.TrueObject). The test order execution
 			// was important to track this down
-			
+
 			NSObject value;
 			Assert.True (NSBundle.MainBundle.ExecutableUrl.TryGetResource (NSUrl.IsExcludedFromBackupKey, out value), "MainBundle");
 			Assert.That (value, Is.TypeOf (typeof (NSNumber)), "NSNumber");
 			Assert.That ((int) (value as NSNumber), Is.EqualTo (0), "0");
-			
-			string filename = Path.Combine (Environment.GetFolderPath (Environment.SpecialFolder.UserProfile), $"DoNotBackupMe-NSUrl-{Process.GetCurrentProcess ().Id}");
+
+			var paths = NSSearchPath.GetDirectories (NSSearchPathDirectory.DocumentDirectory, NSSearchPathDomain.User);
+			var filename = Path.Combine (paths [0], $"DoNotBackupMe-NSUrl-{Process.GetCurrentProcess ().Id}");
 			try {
 				File.WriteAllText (filename, "not worth a bit");
 				using (NSUrl url = NSUrl.FromFilename (filename)) {
 					Assert.True (url.TryGetResource (NSUrl.IsExcludedFromBackupKey, out value));
 					Assert.That ((int) (value as NSNumber), Is.EqualTo (0), "DoNotBackupMe-0");
-					
+
 					url.SetResource (NSUrl.IsExcludedFromBackupKey, (NSNumber) 1);
-					
+
 					Assert.True (url.TryGetResource (NSUrl.IsExcludedFromBackupKey, out value));
 					Assert.That ((int) (value as NSNumber), Is.EqualTo (1), "DoNotBackupMe-1");
 
@@ -67,24 +68,28 @@ namespace MonoTouchFixtures.Foundation {
 					Assert.That (dict.Keys [0], Is.EqualTo (NSUrl.IsExcludedFromBackupKey), "Key");
 					Assert.That ((int) (dict.Values [0] as NSNumber), Is.EqualTo (1), "Value");
 				}
-			}
-			finally {
+			} finally {
 				// otherwise the attribute won't reset even if the file is overwritten
 				File.Delete (filename);
 			}
 		}
-		
+
 		const string bad_uri = "http://localhost/page?query={bad}";
 		const string good_uri = "http://localhost/page?query=%7Bgood%7D";
-		
+
 		[Test]
 		public void FromString ()
 		{
-			Assert.Null (NSUrl.FromString (bad_uri), "invalid");
-			
+			if (TestRuntime.CheckXcodeVersion (15, 0)) {
+				using (var url = NSUrl.FromString (bad_uri))
+					Assert.NotNull (bad_uri, "invalid");
+			} else {
+				Assert.Null (NSUrl.FromString (bad_uri), "invalid");
+			}
+
 			using (var url = NSUrl.FromString (good_uri)) {
 				Assert.That (url.Handle, Is.Not.EqualTo (IntPtr.Zero), "Handle");
-				
+
 				Assert.That (url.PathExtension, Is.EqualTo (String.Empty), "PathExtension-1");
 
 				Assert.NotNull (url.ToString (), "ToString"); // see #4763
@@ -94,27 +99,40 @@ namespace MonoTouchFixtures.Foundation {
 				Assert.That (url.PathExtension, Is.EqualTo ("extension"), "PathExtension-2");
 			}
 		}
-		
+
 		[Test]
 		public void Ctor_string ()
 		{
-			Assert.Throws<Exception> (() => new NSUrl (bad_uri), "exception");
-			
+			if (TestRuntime.CheckXcodeVersion (15, 0)) {
+				using (var url = new NSUrl (bad_uri))
+					Assert.That (url.Handle, Is.Not.EqualTo (IntPtr.Zero), "Handle");
+			} else {
+				Assert.Throws<Exception> (() => new NSUrl (bad_uri), "exception");
+			}
+
 			using (var url = new NSUrl (good_uri)) {
 				Assert.That (url.Handle, Is.Not.EqualTo (IntPtr.Zero), "Handle");
 			}
 		}
-		
+
 		[Test]
 		public void Unicode_6597 ()
 		{
 			const string bug6597 = "http://www.bing.com/images/search?q=雅詩蘭黛";
 
-			// does not work - From* static methods returns null for invalid URL
-			Assert.Null (NSUrl.FromString (bug6597), "1");
+			if (TestRuntime.CheckXcodeVersion (15, 0)) {
+				Assert.NotNull (NSUrl.FromString (bug6597), "1");
 
-			// does not work - handle is null (as a .NET .ctor can't return null like ObjC init can do)
-			Assert.Throws<Exception> (() => new NSUrl (bug6597), "exception");
+				using (var url = new NSUrl (bug6597))
+					Assert.NotNull (url, "exception");
+			} else {
+				// does not work - From* static methods returns null for invalid URL
+				Assert.Null (NSUrl.FromString (bug6597), "1");
+
+				// does not work - handle is null (as a .NET .ctor can't return null like ObjC init can do)
+				Assert.Throws<Exception> (() => new NSUrl (bug6597), "exception");
+			}
+
 
 			// works
 			using (var s = new NSString (bug6597))
@@ -145,8 +163,13 @@ namespace MonoTouchFixtures.Foundation {
 			// simulator: /Users/poupou/Library/Application Support/iPhone Simulator/6.0/Applications/DCFB542F-1D37-4ADC-9046-BB0D26ABB3A3/monotouchtest.app
 			string file = Path.Combine (NSBundle.MainBundle.ResourcePath, "Hand Left.wav");
 
-			// initWithString: will fail with spaces
-			Assert.Throws<Exception> (() => new NSUrl (file), "1");
+			if (TestRuntime.CheckXcodeVersion (15, 0)) {
+				using (var url = NSUrl.FromString (file))
+					Assert.NotNull (url, "1");
+			} else {
+				// initWithString: will fail with spaces
+				Assert.Throws<Exception> (() => new NSUrl (file), "1");
+			}
 
 			using (var url2 = new NSUrl (file, false)) {
 				// initFileURLWithPath:isDirectory: will always works (both sim or devices)
@@ -159,7 +182,7 @@ namespace MonoTouchFixtures.Foundation {
 		{
 			using (var url = NSUrl.FromString ("http://www.xamarin.com")) {
 				// NSObject.Copy works because NSUrl conforms to NSCopying
-				using (var copy = (NSUrl)url.Copy ()) {
+				using (var copy = (NSUrl) url.Copy ()) {
 					Assert.That (copy.AbsoluteString, Is.EqualTo ("http://www.xamarin.com"), "AbsoluteString");
 				}
 			}
@@ -170,7 +193,8 @@ namespace MonoTouchFixtures.Foundation {
 		{
 			using (var url = NSUrl.FromString ("http://www.xamarin.com")) {
 				// NSObject.MutableCopy does NOT works because NSUrl does NOT conforms to NSMutableCopying
-				Assert.Throws<InvalidOperationException> (delegate {
+				Assert.Throws<InvalidOperationException> (delegate
+				{
 					url.MutableCopy ();
 				}, "MutableCopy");
 			}
@@ -179,8 +203,8 @@ namespace MonoTouchFixtures.Foundation {
 		[Test]
 		public void Equals ()
 		{
-			using (var url1 = NSUrl.FromString ("http://www.xamarin.com/ios")) 
-			using (var url2 = NSUrl.FromString ("http://www.xamarin.com")) 
+			using (var url1 = NSUrl.FromString ("http://www.xamarin.com/ios"))
+			using (var url2 = NSUrl.FromString ("http://www.xamarin.com"))
 			using (var url3 = new NSUrl ("http://www.xamarin.com")) {
 				Assert.That (url1.GetHashCode (), Is.Not.EqualTo (url2.GetHashCode ()), "GetHashCode 1-2");
 				// created differently but still identical
@@ -233,7 +257,7 @@ namespace MonoTouchFixtures.Foundation {
 			public override bool Equals (object t)
 			{
 				var url = (t as GoodCustomUrl);
-				if (url == null)
+				if (url is null)
 					return false;
 				return base.Equals (t) && Comment == url.Comment;
 			}
@@ -242,7 +266,7 @@ namespace MonoTouchFixtures.Foundation {
 		[Test]
 		public void SubclassEquality ()
 		{
-			using (var url1 = NSUrl.FromString ("http://www.xamarin.com")) 
+			using (var url1 = NSUrl.FromString ("http://www.xamarin.com"))
 			using (var url2 = new BadCustomUrl ("http://www.xamarin.com"))
 			using (var url3 = new GoodCustomUrl ("http://www.xamarin.com")) {
 				Assert.That (url1.GetHashCode (), Is.Not.EqualTo (url2.GetHashCode ()), "GetHashCode 1-2");
@@ -271,8 +295,15 @@ namespace MonoTouchFixtures.Foundation {
 		{
 			string bad = "Server 1/Custom View/Analog Schedule!@#$%^&&%$#@";
 
+#pragma warning disable SYSLIB0013 // warning SYSLIB0013: 'Uri.EscapeUriString(string)' is obsolete: 'Uri.EscapeUriString can corrupt the Uri string in some cases. Consider using Uri.EscapeDataString for query string components instead.'
 			string bad_url = Uri.EscapeUriString (bad);
-			Assert.Null (NSUrl.FromString (bad_url), "bad");
+#pragma warning restore
+			if (TestRuntime.CheckXcodeVersion (15, 0)) {
+				using (var url = NSUrl.FromString (bad_url))
+					Assert.NotNull (bad_url, "bad");
+			} else {
+				Assert.Null (NSUrl.FromString (bad_url), "bad");
+			}
 
 			string converted = ((NSString) bad).CreateStringByAddingPercentEscapes (NSStringEncoding.UTF8);
 			using (var url = NSUrl.FromString (converted)) {
@@ -284,7 +315,9 @@ namespace MonoTouchFixtures.Foundation {
 		public void TestEqualOperatorSameInstace ()
 		{
 			using (var url = NSUrl.FromString ("http://www.xamarin.com"))
+#pragma warning disable CS1718 // warning CS1718: Comparison made to same variable; did you mean to compare something else?
 				Assert.IsTrue (url == url);
+#pragma warning restore
 
 		}
 
@@ -292,7 +325,7 @@ namespace MonoTouchFixtures.Foundation {
 		public void TestEqualOperatorNull ()
 		{
 			using (var url = NSUrl.FromString ("http://www.xamarin.com")) {
-				Assert.IsFalse (url == null, "url == null");
+				Assert.IsFalse (url is null, "url is null");
 				Assert.IsFalse (null == url, "null == url");
 			}
 		}
@@ -309,7 +342,7 @@ namespace MonoTouchFixtures.Foundation {
 		public void TestNotEqualOperatorNull ()
 		{
 			using (var url = NSUrl.FromString ("http://www.xamarin.com")) {
-				Assert.IsTrue (url != null, "url != null");
+				Assert.IsTrue (url is not null, "url is not null");
 				Assert.IsTrue (null != url, "null != url");
 			}
 		}
@@ -339,7 +372,8 @@ namespace MonoTouchFixtures.Foundation {
 		}
 
 		[Test]
-		public void FromNullString () {
+		public void FromNullString ()
+		{
 			Assert.IsNull (NSUrl.FromString (null));
 		}
 	}

@@ -1,7 +1,10 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
+
+#nullable enable
 
 namespace Xamarin.Utils {
 	public static class PathUtils {
@@ -15,7 +18,12 @@ namespace Xamarin.Utils {
 			return (((uint) c - 'a') <= ((uint) 'z' - 'a')) ? (char) (c - 0x20) : c;
 		}
 
-		public static string EnsureTrailingSlash (this string path)
+#if NET
+		[return: NotNullIfNotNull (nameof (path))]
+#else
+		[return: NotNullIfNotNull ("path")]
+#endif
+		public static string? EnsureTrailingSlash (this string? path)
 		{
 			if (path is null)
 				return null;
@@ -32,8 +40,18 @@ namespace Xamarin.Utils {
 		[DllImport ("/usr/lib/libc.dylib")]
 		static extern IntPtr realpath (string path, IntPtr buffer);
 
-		public static string ResolveSymbolicLinks (string path)
+#if NET
+		[return: NotNullIfNotNull (nameof (path))]
+#else
+		[return: NotNullIfNotNull ("path")]
+#endif
+		public static string? ResolveSymbolicLinks (string? path)
 		{
+#if !NET
+			if (path is null)
+				return null;
+#endif
+
 			if (string.IsNullOrEmpty (path))
 				return path;
 
@@ -46,14 +64,14 @@ namespace Xamarin.Utils {
 			try {
 				buffer = Marshal.AllocHGlobal (PATHMAX);
 				var result = realpath (path, buffer);
-				return result == IntPtr.Zero ? path : Marshal.PtrToStringAuto (buffer);
+				return result == IntPtr.Zero ? path : Marshal.PtrToStringAuto (buffer)!;
 			} finally {
 				if (buffer != IntPtr.Zero)
 					Marshal.FreeHGlobal (buffer);
 			}
 		}
 
-		public static string AbsoluteToRelative (string baseDirectory, string absolute)
+		public static string AbsoluteToRelative (string? baseDirectory, string absolute)
 		{
 			if (string.IsNullOrEmpty (baseDirectory))
 				return absolute;
@@ -149,7 +167,7 @@ namespace Xamarin.Utils {
 
 		public static string GetSymlinkTarget (string path)
 		{
-			byte [] buffer = null;
+			byte []? buffer = null;
 			int rv;
 			do {
 				buffer = new byte [(buffer?.Length ?? 0) + 1024];
@@ -172,12 +190,12 @@ namespace Xamarin.Utils {
 			// ignore any errors.
 		}
 
-		struct timespec {
+		struct Timespec {
 			public IntPtr tv_sec;
 			public IntPtr tv_nsec;
 		}
 
-		struct stat { /* when _DARWIN_FEATURE_64_BIT_INODE is defined */
+		struct Stat { /* when _DARWIN_FEATURE_64_BIT_INODE is defined */
 			public uint st_dev;
 			public ushort st_mode;
 			public ushort st_nlink;
@@ -185,10 +203,10 @@ namespace Xamarin.Utils {
 			public uint st_uid;
 			public uint st_gid;
 			public uint st_rdev;
-			public timespec st_atimespec;
-			public timespec st_mtimespec;
-			public timespec st_ctimespec;
-			public timespec st_birthtimespec;
+			public Timespec st_atimespec;
+			public Timespec st_mtimespec;
+			public Timespec st_ctimespec;
+			public Timespec st_birthtimespec;
 			public ulong st_size;
 			public ulong st_blocks;
 			public uint st_blksize;
@@ -200,12 +218,12 @@ namespace Xamarin.Utils {
 		}
 
 		[DllImport ("/usr/lib/libc.dylib", EntryPoint = "lstat$INODE64", SetLastError = true)]
-		static extern int lstat_x64 (string file_name, out stat buf);
+		static extern int lstat_x64 (string file_name, out Stat buf);
 
 		[DllImport ("/usr/lib/libc.dylib", EntryPoint = "lstat", SetLastError = true)]
-		static extern int lstat_arm64 (string file_name, out stat buf);
+		static extern int lstat_arm64 (string file_name, out Stat buf);
 
-		static int lstat (string path, out stat buf)
+		static int lstat (string path, out Stat buf)
 		{
 			if (RuntimeInformation.ProcessArchitecture == Architecture.Arm64) {
 				return lstat_arm64 (path, out buf);
@@ -216,7 +234,7 @@ namespace Xamarin.Utils {
 
 		public static bool IsSymlink (string file)
 		{
-			stat buf;
+			Stat buf;
 			var rv = lstat (file, out buf);
 			if (rv != 0)
 				throw new Exception (string.Format ("Could not lstat '{0}': {1}", file, Marshal.GetLastWin32Error ()));
@@ -241,8 +259,18 @@ namespace Xamarin.Utils {
 		}
 
 		// Replace any windows-style slashes with mac-style slashes.
-		public static string ConvertToMacPath (string path)
+#if NET
+		[return: NotNullIfNotNull (nameof (path))]
+#else
+		[return: NotNullIfNotNull ("path")]
+#endif
+		public static string? ConvertToMacPath (string? path)
 		{
+#if !NET
+			if (path is null)
+				return null;
+#endif
+
 			if (string.IsNullOrEmpty (path))
 				return path;
 

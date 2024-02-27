@@ -35,7 +35,7 @@ namespace MonoTouchFixtures.MetalPerformanceShaders {
 
 			device = MTLDevice.SystemDefault;
 			// some older hardware won't have a default
-			if (device == null || !MPSKernel.Supports (device))
+			if (device is null || !MPSKernel.Supports (device))
 				Assert.Inconclusive ("Metal is not supported.");
 		}
 
@@ -49,8 +49,7 @@ namespace MonoTouchFixtures.MetalPerformanceShaders {
 			MPSImageNormalizedHistogram obj = null;
 			try {
 				obj = new MPSImageNormalizedHistogram (MTLDevice.SystemDefault, ref info);
-			}
-			catch (Exception ex) {
+			} catch (Exception ex) {
 				// This test fails on 10.13 bots but not on a local computer with 10.13. Must work on 10.14+.
 				// there is no a good way to tell if MPSImageNormalizedHistogram will work or not...
 				if (TestRuntime.CheckSystemVersion (ApplePlatform.MacOSX, 10, 14))

@@ -26,7 +26,7 @@ namespace Vision {
 
 			if (count == 0)
 				return supportedRevisions;
-			
+
 			int j = 0;
 			for (var i = indexSet.FirstIndex; i <= indexSet.LastIndex;) {
 				supportedRevisions [j++] = (T) Enum.Parse (typeof (T), i.ToString (), true);

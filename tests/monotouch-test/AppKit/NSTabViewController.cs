@@ -8,11 +8,9 @@ using ObjCRuntime;
 using Foundation;
 using Xamarin.Utils;
 
-namespace Xamarin.Mac.Tests
-{
+namespace Xamarin.Mac.Tests {
 	[Preserve (AllMembers = true)]
-	public class NSTabViewControllerTests
-	{
+	public class NSTabViewControllerTests {
 		NSTabViewController controller;
 
 		[SetUp]
@@ -32,14 +30,14 @@ namespace Xamarin.Mac.Tests
 			Assert.IsFalse (controller.TabStyle == tabStyle, "NSTabViewControllerShouldChangeTabStyle - Failed to set the TabStyle property");
 		}
 
-//		[Test]
-//		public void NSTabViewControllerShouldChangeTabView ()
-//		{
-//			var tabView = controller.TabView;
-//			controller.TabView = new NSTabView ();
-//
-//			Assert.IsFalse (controller.TabView == tabView, "NSTabViewControllerShouldChangeTabView - Failed to set the TabView property");
-//		}
+		//		[Test]
+		//		public void NSTabViewControllerShouldChangeTabView ()
+		//		{
+		//			var tabView = controller.TabView;
+		//			controller.TabView = new NSTabView ();
+		//
+		//			Assert.IsFalse (controller.TabView == tabView, "NSTabViewControllerShouldChangeTabView - Failed to set the TabView property");
+		//		}
 
 #if !NET
 		[Test]
@@ -86,7 +84,7 @@ namespace Xamarin.Mac.Tests
 		[Test]
 		public void NSTabViewControllerShouldChangeSelectedTabViewItemIndex ()
 		{
-			controller.TabViewItems = new NSTabViewItem [] { 
+			controller.TabViewItems = new NSTabViewItem [] {
 				new NSTabViewItem { ViewController = new NSViewController () },
 				new NSTabViewItem { ViewController = new NSViewController () },
 				new NSTabViewItem { ViewController = new NSViewController () }

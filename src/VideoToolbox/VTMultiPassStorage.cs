@@ -24,14 +24,10 @@ using NativeHandle = System.IntPtr;
 namespace VideoToolbox {
 
 #if NET
-	[SupportedOSPlatform ("macos10.10")]
-	[SupportedOSPlatform ("ios8.0")]
-	[SupportedOSPlatform ("tvos10.2")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("tvos")]
 	[SupportedOSPlatform ("maccatalyst")]
-#else
-	[Mac (10,10)]
-	[iOS (8,0)]
-	[TV (10,2)]
 #endif
 	public class VTMultiPassStorage : NativeObject {
 		bool closed;
@@ -44,7 +40,7 @@ namespace VideoToolbox {
 		}
 #endif
 
-		[Preserve (Conditional=true)]
+		[Preserve (Conditional = true)]
 		internal VTMultiPassStorage (NativeHandle handle, bool owns)
 			: base (handle, false)
 		{
@@ -58,12 +54,12 @@ namespace VideoToolbox {
 		}
 
 		[DllImport (Constants.VideoToolboxLibrary)]
-		extern static /* OSStatus */ VTStatus VTMultiPassStorageCreate (
+		unsafe extern static /* OSStatus */ VTStatus VTMultiPassStorageCreate (
 			/* CFAllocatorRef */IntPtr allocator, /* can be null */
 			/* CFURLRef */ IntPtr fileUrl, /* can be null */
 			/* CMTimeRange */ CMTimeRange timeRange, /* can be kCMTimeRangeInvalid */
 			/* CFDictionaryRef */ IntPtr options, /* can be null */
-			/* VTMultiPassStorageRef */ out IntPtr multiPassStorageOut);
+			/* VTMultiPassStorageRef */ IntPtr* multiPassStorageOut);
 
 		// Convenience method taking a strong dictionary
 		public static VTMultiPassStorage? Create (
@@ -79,12 +75,16 @@ namespace VideoToolbox {
 			CMTimeRange? timeRange = null,
 			NSDictionary? options = null)
 		{
-			var status = VTMultiPassStorageCreate (
+			VTStatus status;
+			IntPtr ret;
+			unsafe {
+				status = VTMultiPassStorageCreate (
 				IntPtr.Zero,
 				fileUrl.GetHandle (),
-				timeRange ?? CMTimeRange.InvalidRange, 
+				timeRange ?? CMTimeRange.InvalidRange,
 				options.GetHandle (),
-				out var ret);
+				&ret);
+			}
 
 			if (status != VTStatus.Ok)
 				return null;

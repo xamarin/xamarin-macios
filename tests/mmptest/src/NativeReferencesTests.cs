@@ -9,8 +9,7 @@ using System.Reflection;
 
 using Xamarin.Tests;
 
-namespace Xamarin.MMP.Tests
-{
+namespace Xamarin.MMP.Tests {
 	public class NativeReferenceTests {
 		public const string ItemGroupTemplate = @"<ItemGroup>{0}</ItemGroup>";
 		public const string NativeReferenceTemplate = @"<NativeReference Include=""{0}""><IsCxx>False</IsCxx><Kind>{1}</Kind></NativeReference>";
@@ -58,22 +57,22 @@ namespace Xamarin.MMP.Tests
 			test.XM45 = false;
 			var testResult = TI.TestUnifiedExecutable (test, false);
 			Assert.IsTrue (!buildShouldBeSuccessful || !testResult.BuildResult.HasMessage (2006), string.Format ("{0} - Mobile had MM2006 state {1} not match expected\n{2}", testName, buildShouldBeSuccessful, testResult));
-			if (processBuildOutput != null)
+			if (processBuildOutput is not null)
 				Assert.IsTrue (processBuildOutput (testResult.BuildResult), string.Format ("{0} - Mobile - We did not see our expected item in the build output: {1}", testName, libraryName));
 
 			string mobileBundlePath = Path.Combine (tmpDir, "bin/Debug/UnifiedExample.app/Contents/MonoBundle/");
-			if (libraryName != null)
+			if (libraryName is not null)
 				Assert.IsTrue (Directory.GetFiles (mobileBundlePath).Any (x => x.Contains (libraryName) == !libraryShouldNotBeCopied), string.Format ("{0} - Mobile - We did not pull in native lib: {1}", testName, libraryName));
 
 			// XM45
 			test.XM45 = true;
 			testResult = TI.TestUnifiedExecutable (test, false);
 			Assert.IsTrue (!buildShouldBeSuccessful || !testResult.BuildResult.HasMessage (2006), string.Format ("{0} - XM45 had MM2006 state {1} not match expected\n{2}", testName, buildShouldBeSuccessful, testResult));
-			if (processBuildOutput != null)
+			if (processBuildOutput is not null)
 				Assert.IsTrue (processBuildOutput (testResult.BuildResult), string.Format ("{0} - Mobile - We did not see our expected item in the build output: {1}", testName, libraryName));
 
 			string xm45BundlePath = Path.Combine (tmpDir, "bin/Debug/XM45Example.app/Contents/MonoBundle/");
-			if (libraryName != null)
+			if (libraryName is not null)
 				Assert.IsTrue (Directory.GetFiles (xm45BundlePath).Any (x => x.Contains (libraryName) == !libraryShouldNotBeCopied), string.Format ("{0} - XM45 - We did not pull in native lib: {1}", testName, libraryName));
 		}
 
@@ -125,7 +124,7 @@ namespace Xamarin.MMP.Tests
 				NativeReferenceTestCore (tmpDir, test, "Unified_WithNativeReferences_MissingLibrariesActAsExpected - Nonexistant", null, false);
 
 				// Test a system dylib. Does not matter which one
-				test.ItemGroup = CreateSingleNativeRef ( "/System/Library/Frameworks/MapKit.framework/Versions/A/Resources/BridgeSupport/MapKit.dylib", "Dynamic");
+				test.ItemGroup = CreateSingleNativeRef ("/System/Library/Frameworks/MapKit.framework/Versions/A/Resources/BridgeSupport/MapKit.dylib", "Dynamic");
 				NativeReferenceTestCore (tmpDir, test, "Unified_WithNativeReferences_MissingLibrariesActAsExpected - System", null, true);
 
 				// Test one of the ignored libs
@@ -168,8 +167,7 @@ namespace Xamarin.MMP.Tests
 				string filePath = CreateCopyOfSimpleClassInTestDir (tmpDir);
 
 				// Use absolute path here and in TestDecl to trigger bug
-				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) 
-				{
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
 					ProjectName = "UnifiedExample.csproj",
 					ItemGroup = CreateSingleNativeRef (filePath, "Dynamic"),
 					TestDecl = string.Format ("[System.Runtime.InteropServices.DllImport (\"{0}\")]public static extern int GetFour ();", filePath),
@@ -189,7 +187,7 @@ namespace Xamarin.MMP.Tests
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
 					ProjectName = "UnifiedExample.csproj",
 					CSProjConfig = "<EnableCodeSigning>true</EnableCodeSigning>",
-					ItemGroup = CreateItemGroup (new string[] { CreateNativeRefInclude (firstPath, "Dynamic"), CreateNativeRefInclude (secondPath, "Dynamic") }),
+					ItemGroup = CreateItemGroup (new string [] { CreateNativeRefInclude (firstPath, "Dynamic"), CreateNativeRefInclude (secondPath, "Dynamic") }),
 				};
 				NativeReferenceTestCore (tmpDir, test, "MultipleNativeReferences_OnlyInvokeMMPOneTime_AndCopyEverythingIn", null, true);
 			});

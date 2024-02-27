@@ -3,6 +3,9 @@ using System;
 using Foundation;
 using ObjCRuntime;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Foundation {
 
 #if MONOMAC || __MACCATALYST__
@@ -29,7 +32,7 @@ namespace Foundation {
 
 		public bool IsOptional { 
 			get {
-				return Optional != null && Optional == "Yes";
+				return Optional is not null && Optional == "Yes";
 			}
  			set {
 				Optional = (value) ? "Yes" : "No";
@@ -59,4 +62,4 @@ namespace Foundation {
 #endif
 
 }
-	
+

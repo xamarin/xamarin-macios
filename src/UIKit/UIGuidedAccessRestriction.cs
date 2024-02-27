@@ -16,26 +16,25 @@ using Foundation;
 using ObjCRuntime;
 using UIKit;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace UIKit {
 
 	public static partial class UIGuidedAccessRestriction {
 #if !COREBUILD
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7,0)]
 #endif
 		[DllImport (Constants.UIKitLibrary)]
 		extern static /* UIGuidedAccessRestrictionState */ nint UIGuidedAccessRestrictionStateForIdentifier (/* NSString */ IntPtr restrictionIdentifier);
 
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7,0)]
 #endif
 		public static UIGuidedAccessRestrictionState GetState (string restrictionIdentifier)
 		{
@@ -54,7 +53,7 @@ namespace UIKit {
 		[iOS (12,2)]
 #endif
 		[DllImport (Constants.UIKitLibrary)]
-		static extern void UIGuidedAccessConfigureAccessibilityFeatures (/* UIGuidedAccessAccessibilityFeature */ nuint features, [MarshalAs (UnmanagedType.I1)] bool enabled, IntPtr completion);
+		static unsafe extern void UIGuidedAccessConfigureAccessibilityFeatures (/* UIGuidedAccessAccessibilityFeature */ nuint features, byte enabled, BlockLiteral* completion);
 
 #if NET
 		// [SupportedOSPlatform ("ios12.2")] -- Not valid for Delegates
@@ -65,19 +64,27 @@ namespace UIKit {
 #endif
 		public delegate void UIGuidedAccessConfigureAccessibilityFeaturesCompletionHandler (bool success, NSError error);
 
+#if !NET
 		[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
-		internal delegate void DUIGuidedAccessConfigureAccessibilityFeaturesCompletionHandler (IntPtr block, bool success, IntPtr error);
+		internal delegate void DUIGuidedAccessConfigureAccessibilityFeaturesCompletionHandler (IntPtr block, byte success, IntPtr error);
+#endif
 
 		static internal class UIGuidedAccessConfigureAccessibilityFeaturesTrampoline {
+#if !NET
 			static internal readonly DUIGuidedAccessConfigureAccessibilityFeaturesCompletionHandler Handler = Invoke;
+#endif
 
+#if NET
+			[UnmanagedCallersOnlyAttribute]
+#else
 			[MonoPInvokeCallback (typeof (DUIGuidedAccessConfigureAccessibilityFeaturesCompletionHandler))]
-			static unsafe void Invoke (IntPtr block, bool success, IntPtr error)
+#endif
+			internal static unsafe void Invoke (IntPtr block, byte success, IntPtr error)
 			{
 				var descriptor = (BlockLiteral*) block;
 				var del = (UIGuidedAccessConfigureAccessibilityFeaturesCompletionHandler) (descriptor->Target);
-				if (del != null)
-					del (success, Runtime.GetNSObject<NSError> (error));
+				if (del is not null)
+					del (success != 0, Runtime.GetNSObject<NSError> (error));
 			}
 		}
 
@@ -91,18 +98,18 @@ namespace UIKit {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static void ConfigureAccessibilityFeatures (UIGuidedAccessAccessibilityFeature features, bool enabled, UIGuidedAccessConfigureAccessibilityFeaturesCompletionHandler completionHandler)
 		{
-			if (completionHandler == null)
+			if (completionHandler is null)
 				throw new ArgumentNullException (nameof (completionHandler));
 
 			unsafe {
-				BlockLiteral* block_ptr_completionHandler;
-				BlockLiteral block_completionHandler;
-				block_completionHandler = new BlockLiteral ();
-				block_ptr_completionHandler = &block_completionHandler;
-				block_completionHandler.SetupBlockUnsafe (UIGuidedAccessConfigureAccessibilityFeaturesTrampoline.Handler, completionHandler);
-
-				UIGuidedAccessConfigureAccessibilityFeatures ((nuint) (ulong) features, enabled, (IntPtr) block_ptr_completionHandler);
-				block_ptr_completionHandler->CleanupBlock ();
+#if NET
+				delegate* unmanaged<IntPtr, byte, IntPtr, void> trampoline = &UIGuidedAccessConfigureAccessibilityFeaturesTrampoline.Invoke;
+				using var block = new BlockLiteral (trampoline, completionHandler, typeof (UIGuidedAccessConfigureAccessibilityFeaturesTrampoline), nameof (UIGuidedAccessConfigureAccessibilityFeaturesTrampoline.Invoke));
+#else
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (UIGuidedAccessConfigureAccessibilityFeaturesTrampoline.Handler, completionHandler);
+#endif
+				UIGuidedAccessConfigureAccessibilityFeatures ((nuint) (ulong) features, enabled ? (byte) 1 : (byte) 0, &block);
 			}
 		}
 

@@ -6,6 +6,9 @@ using System.Collections.Generic;
 using Microsoft.Build.Utilities;
 using Xamarin.Utils;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Xamarin.MacDev {
 	/// <summary>
 	/// Builds a process argument string.
@@ -51,7 +54,7 @@ namespace Xamarin.MacDev {
 
 		public void AddQuotedSwitchIfNotNull (string name, string value)
 		{
-			if (value == null)
+			if (value is null)
 				return;
 			AddQuoted (name + value);
 		}
@@ -111,7 +114,7 @@ namespace Xamarin.MacDev {
 		/// arguments, only quoted arguments with escaped quotes.</remarks>
 		public void AddQuoted (string argument, bool appendLine = false)
 		{
-			if (argument == null)
+			if (argument is null)
 				return;
 
 			if (builder.Length > 0 && !appendLine)
@@ -218,7 +221,7 @@ namespace Xamarin.MacDev {
 
 			actualArgs.AddQuoted ($"@{responseFile}");
 
-			if (nonResponseArguments != null) {
+			if (nonResponseArguments is not null) {
 				foreach (var arg in nonResponseArguments)
 					actualArgs.AddQuoted (arg);
 			}

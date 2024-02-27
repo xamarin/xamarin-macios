@@ -4,10 +4,8 @@ using System.Drawing;
 using Foundation;
 using UIKit;
 
-namespace MyWebViewApp
-{
-	public partial class HybridViewController : UIViewController
-	{
+namespace MyWebViewApp {
+	public partial class HybridViewController : UIViewController {
 		static bool UserInterfaceIdiomIsPhone {
 			get { return UIDevice.CurrentDevice.UserInterfaceIdiom == UIUserInterfaceIdiom.Phone; }
 		}

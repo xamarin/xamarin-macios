@@ -19,12 +19,10 @@ using ObjCRuntime;
 namespace ImageIO {
 
 #if NET
-	[SupportedOSPlatform ("ios7.0")]
+	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
-#else
-	[iOS (7,0)]
 #endif
 	public class CGMutableImageMetadata : CGImageMetadata {
 
@@ -48,10 +46,9 @@ namespace ImageIO {
 		}
 
 		[DllImport (Constants.ImageIOLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool CGImageMetadataRegisterNamespaceForPrefix (
+		unsafe extern static byte CGImageMetadataRegisterNamespaceForPrefix (
 			/* CGMutableImageMetadataRef __nonnull */ IntPtr metadata, /* CFStringRef __nonnull */ IntPtr xmlns,
-			/* CFStringRef __nonnull */ IntPtr prefix, /* CFErrorRef __nullable */ out IntPtr error);
+			/* CFStringRef __nonnull */ IntPtr prefix, /* CFErrorRef __nullable */ IntPtr* error);
 
 		public bool RegisterNamespace (NSString xmlns, NSString prefix, out NSError? error)
 		{
@@ -59,14 +56,17 @@ namespace ImageIO {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (xmlns));
 			if (prefix is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (prefix));
-			bool result = CGImageMetadataRegisterNamespaceForPrefix (Handle, xmlns.Handle, prefix.Handle, out var err);
+			byte result;
+			IntPtr err;
+			unsafe {
+				result = CGImageMetadataRegisterNamespaceForPrefix (Handle, xmlns.Handle, prefix.Handle, &err);
+			}
 			error = Runtime.GetNSObject<NSError> (err);
-			return result;
+			return result != 0;
 		}
 
 		[DllImport (Constants.ImageIOLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool CGImageMetadataSetTagWithPath (/* CGMutableImageMetadataRef __nonnull */ IntPtr metadata,
+		extern static byte CGImageMetadataSetTagWithPath (/* CGMutableImageMetadataRef __nonnull */ IntPtr metadata,
 			/* CGImageMetadataTagRef __nullable */ IntPtr parent, /* CFStringRef __nonnull */ IntPtr path,
 			/* CGImageMetadataTagRef __nonnull */ IntPtr tag);
 
@@ -76,12 +76,11 @@ namespace ImageIO {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (path));
 			if (tag is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (tag));
-			return CGImageMetadataSetTagWithPath (Handle, parent.GetHandle (), path.Handle, tag.Handle);
+			return CGImageMetadataSetTagWithPath (Handle, parent.GetHandle (), path.Handle, tag.Handle) != 0;
 		}
 
 		[DllImport (Constants.ImageIOLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool CGImageMetadataSetValueWithPath (/* CGMutableImageMetadataRef __nonnull */ IntPtr metadata,
+		extern static byte CGImageMetadataSetValueWithPath (/* CGMutableImageMetadataRef __nonnull */ IntPtr metadata,
 			/* CGImageMetadataTagRef __nullable */ IntPtr parent, /* CFStringRef __nonnull */ IntPtr path,
 			/* CFTypeRef __nonnull */ IntPtr value);
 
@@ -101,24 +100,22 @@ namespace ImageIO {
 		{
 			if (path is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (path));
-			return CGImageMetadataSetValueWithPath (Handle, parent.GetHandle (), path.Handle, value);
+			return CGImageMetadataSetValueWithPath (Handle, parent.GetHandle (), path.Handle, value) != 0;
 		}
 
 		[DllImport (Constants.ImageIOLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool CGImageMetadataRemoveTagWithPath (/* CGMutableImageMetadataRef __nonnull */ IntPtr metadata,
+		extern static byte CGImageMetadataRemoveTagWithPath (/* CGMutableImageMetadataRef __nonnull */ IntPtr metadata,
 			/* CGImageMetadataTagRef __nullable */ IntPtr parent, /* CFStringRef __nonnull */ IntPtr path);
 
 		public bool RemoveTag (CGImageMetadataTag? parent, NSString path)
 		{
 			if (path is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (path));
-			return CGImageMetadataRemoveTagWithPath (Handle, parent.GetHandle (), path.Handle);
+			return CGImageMetadataRemoveTagWithPath (Handle, parent.GetHandle (), path.Handle) != 0;
 		}
 
 		[DllImport (Constants.ImageIOLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool CGImageMetadataSetValueMatchingImageProperty (
+		extern static byte CGImageMetadataSetValueMatchingImageProperty (
 			/* CGMutableImageMetadataRef __nonnull */ IntPtr metadata,
 			/* CFStringRef __nonnull */ IntPtr dictionaryName, /* CFStringRef __nonnull */ IntPtr propertyName,
 			/* CFTypeRef __nonnull */ IntPtr value);
@@ -141,7 +138,7 @@ namespace ImageIO {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (dictionaryName));
 			if (propertyName is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (propertyName));
-			return CGImageMetadataSetValueMatchingImageProperty (Handle, dictionaryName.Handle, propertyName.Handle, value);
+			return CGImageMetadataSetValueMatchingImageProperty (Handle, dictionaryName.Handle, propertyName.Handle, value) != 0;
 		}
 	}
 }

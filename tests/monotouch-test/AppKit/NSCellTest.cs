@@ -12,12 +12,10 @@ using NUnit.Framework;
 using NativeHandle = System.IntPtr;
 #endif
 
-namespace MonoMacFixtures.AppKit
-{
+namespace MonoMacFixtures.AppKit {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class CellTest
-	{
+	public class CellTest {
 		[Test]
 		public void CopyTest ()
 		{
@@ -35,7 +33,7 @@ namespace MonoMacFixtures.AppKit
 		void Check (IntPtr cell_handle)
 		{
 			var clone_ptr = IntPtr_objc_msgSend (cell_handle, Selector.GetHandle ("copyWithZone:"), IntPtr.Zero);
-//			Console.WriteLine ("Created cell 0x{0} (GCHandle: 0x{2}) with clone 0x{1} (GCHandle: 0x{3})", cell_handle.ToString ("x"), clone_ptr.ToString ("x"), GetGCHandle (cell_handle).ToString ("x"), GetGCHandle (clone_ptr).ToString ("x"));
+			//			Console.WriteLine ("Created cell 0x{0} (GCHandle: 0x{2}) with clone 0x{1} (GCHandle: 0x{3})", cell_handle.ToString ("x"), clone_ptr.ToString ("x"), GetGCHandle (cell_handle).ToString ("x"), GetGCHandle (clone_ptr).ToString ("x"));
 
 			Assert.AreNotEqual (GetGCHandle (cell_handle), GetGCHandle (clone_ptr), "gchandle #1");
 			CustomCell.expectedHandle = cell_handle;
@@ -55,13 +53,13 @@ namespace MonoMacFixtures.AppKit
 
 		const string LIBOBJC_DYLIB = "/usr/lib/libobjc.dylib";
 
-		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend")]
+		[DllImport (LIBOBJC_DYLIB, EntryPoint = "objc_msgSend")]
 		public extern static IntPtr IntPtr_objc_msgSend (IntPtr receiver, IntPtr selector, IntPtr p1);
 
-		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend")]
+		[DllImport (LIBOBJC_DYLIB, EntryPoint = "objc_msgSend")]
 		public extern static void objc_msgSend (IntPtr receiver, IntPtr selector, IntPtr p1);
 
-		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend")]
+		[DllImport (LIBOBJC_DYLIB, EntryPoint = "objc_msgSend")]
 		public extern static void objc_msgSend (IntPtr receiver, IntPtr selector);
 
 		[DllImport (LIBOBJC_DYLIB)]
@@ -81,10 +79,9 @@ namespace MonoMacFixtures.AppKit
 		}
 	}
 
-	class DerivedCell : CustomCell
-	{
+	class DerivedCell : CustomCell {
 		public DerivedCell (NativeHandle ptr) : base (ptr) { }
-		public DerivedCell () {	}
+		public DerivedCell () { }
 
 		public override NSObject Copy (NSZone zone)
 		{

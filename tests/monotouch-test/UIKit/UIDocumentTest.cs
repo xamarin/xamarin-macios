@@ -16,7 +16,7 @@ using System.Threading;
 using Foundation;
 using UIKit;
 using ObjCRuntime;
-using MonoTouchException=ObjCRuntime.RuntimeException;
+using MonoTouchException = ObjCRuntime.RuntimeException;
 using NUnit.Framework;
 using Xamarin.Utils;
 
@@ -24,20 +24,20 @@ namespace MonoTouchFixtures.UIKit {
 
 #if !XAMCORE_3_0
 	class DocumentPoker : UIDocument {
-		
+
 		static FieldInfo bkFileUrl;
-		
+
 		static DocumentPoker ()
 		{
 			var t = typeof (UIDocument);
 			bkFileUrl = t.GetField ("__mt_FileUrl_var", BindingFlags.Instance | BindingFlags.NonPublic);
 		}
-		
+
 		public static bool NewRefcountEnabled ()
 		{
 			return NSObject.IsNewRefcountEnabled ();
 		}
-		
+
 		public DocumentPoker (NSUrl url) : base (url)
 		{
 		}
@@ -48,15 +48,15 @@ namespace MonoTouchFixtures.UIKit {
 			}
 		}
 	}
-	
+
 #endif // !XAMCORE_3_0
 	class MyUrl : NSUrl {
-		
+
 		public MyUrl (string url, string annotation) : base (url)
 		{
 			Annotation = annotation;
 		}
-		
+
 		public string Annotation { get; private set; }
 	}
 
@@ -87,7 +87,7 @@ namespace MonoTouchFixtures.UIKit {
 		}
 
 		MyDocument doc;
-		
+
 		string GetFileName ()
 		{
 			string file = Path.Combine (Environment.GetFolderPath (Environment.SpecialFolder.MyDocuments), "mydocument.txt");
@@ -113,7 +113,7 @@ namespace MonoTouchFixtures.UIKit {
 		{
 			Assert.True (success);
 		}
-		
+
 		[Test]
 		public void PerformAsynchronousFileAccess_Null ()
 		{
@@ -131,11 +131,11 @@ namespace MonoTouchFixtures.UIKit {
 		{
 			if (DocumentPoker.NewRefcountEnabled ())
 				Assert.Inconclusive ("backing fields are removed when newrefcount is enabled");
-			
+
 			string file = Path.Combine (Environment.GetFolderPath (Environment.SpecialFolder.MyDocuments), "uidocument.txt");
 			if (File.Exists (file))
 				File.Delete (file);
-			
+
 			using (NSUrl url = NSUrl.FromFilename (file))
 			using (var doc = new DocumentPoker (url)) {
 				Assert.NotNull (doc.FileUrlBackingField, "1a");
@@ -151,14 +151,15 @@ namespace MonoTouchFixtures.UIKit {
 			string file = Path.Combine (Environment.GetFolderPath (Environment.SpecialFolder.MyDocuments), "uidocument.txt");
 			if (File.Exists (file))
 				File.Delete (file);
-			
+
 			// interesting limitation
 			using (MyUrl url2 = new MyUrl (file, "my document")) {
 				// Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: must pass a valid file URL to -[UIDocument initWithFileURL:]
 #if NET
 				Assert.Throws<ObjCException> (delegate { 
 #else
-				Assert.Throws<MonoTouchException> (delegate { 
+				Assert.Throws<MonoTouchException> (delegate
+				{
 #endif
 					new DocumentPoker (url2);
 				});

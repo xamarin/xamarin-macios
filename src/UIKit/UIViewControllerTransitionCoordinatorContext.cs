@@ -8,11 +8,14 @@
 
 #if !WATCH
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace UIKit {
 	public static partial class UIViewControllerTransitionCoordinatorContext_Extensions {
 		public static UIView GetTransitionViewController (this IUIViewControllerTransitionCoordinatorContext This, UITransitionViewControllerKind kind)
 		{
-			switch (kind){
+			switch (kind) {
 			case UITransitionViewControllerKind.ToView:
 				return This.GetTransitionViewControllerForKey (UITransitionContext.ToViewKey);
 			case UITransitionViewControllerKind.FromView:

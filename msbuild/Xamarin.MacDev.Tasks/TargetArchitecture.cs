@@ -28,7 +28,11 @@ namespace Xamarin.MacDev.Tasks {
 
 			var rv = new List<TargetArchitecture> ();
 
+#if NET
+			var simpleValues = new List<TargetArchitecture> (Enum.GetValues<TargetArchitecture> ());
+#else
 			var simpleValues = new List<TargetArchitecture> ((TargetArchitecture []) Enum.GetValues (typeof (TargetArchitecture)));
+#endif
 			simpleValues.Remove (TargetArchitecture.Default);
 			simpleValues.Remove (TargetArchitecture.ARMv6_ARMv7);
 

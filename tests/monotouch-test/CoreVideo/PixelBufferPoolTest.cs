@@ -17,11 +17,10 @@ using CoreVideo;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.CoreVideo {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class PixelBufferPoolTest
-	{
+	public class PixelBufferPoolTest {
 		[Test]
 		public void AllocationSettings_Threshold ()
 		{

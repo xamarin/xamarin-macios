@@ -18,8 +18,8 @@ namespace MonoTouchFixtures.ObjCRuntime {
 
 			Assert.AreEqual (value, ((NativeHandle) value).Handle, "IntPtr -> NativeHandle");
 			Assert.AreEqual (value, (IntPtr) new NativeHandle (value), "NativeHandle -> IntPtr");
-			Assert.AreEqual (value, ((NativeHandle) ((void *) value)).Handle, "void* -> NativeHandle");
-			Assert.AreEqual (value, (IntPtr) (void *) new NativeHandle (value), "NativeHandle -> void*");
+			Assert.AreEqual (value, ((NativeHandle) ((void*) value)).Handle, "void* -> NativeHandle");
+			Assert.AreEqual (value, (IntPtr) (void*) new NativeHandle (value), "NativeHandle -> void*");
 		}
 	}
 }

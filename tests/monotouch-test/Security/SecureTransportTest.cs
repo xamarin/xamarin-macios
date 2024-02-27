@@ -75,11 +75,11 @@ namespace MonoTouchFixtures.Security {
 				Assert.Null (ssl.PeerTrust, "PeerTrust");
 				Assert.That (ssl.SessionState, Is.EqualTo (SslSessionState.Idle), "SessionState");
 
-				Assert.That ((int)ssl.SetDatagramHelloCookie (new byte [32]), Is.EqualTo (-50), "no cookie in stream");
+				Assert.That ((int) ssl.SetDatagramHelloCookie (new byte [32]), Is.EqualTo (-50), "no cookie in stream");
 
 				// Assert.Null (ssl.GetDistinguishedNames<string> (), "GetDistinguishedNames");
 
-				if (TestRuntime.CheckXcodeVersion (9,0)) {
+				if (TestRuntime.CheckXcodeVersion (9, 0)) {
 					Assert.That (ssl.SetSessionTickets (false), Is.EqualTo (0), "SetSessionTickets");
 					Assert.That (ssl.SetError (SecStatusCode.Success), Is.EqualTo (0), "SetError");
 
@@ -88,7 +88,7 @@ namespace MonoTouchFixtures.Security {
 						Assert.That (ssl.SetOcspResponse (data), Is.EqualTo (0), "SetOcspResponse/empty");
 
 #if MONOMAC
-					if (TestRuntime.CheckXcodeVersion (9,3)) {
+					if (TestRuntime.CheckXcodeVersion (9, 3)) {
 #endif
 					int error;
 					var alpn = ssl.GetAlpnProtocols (out error);
@@ -134,8 +134,8 @@ namespace MonoTouchFixtures.Security {
 				ssl.PeerId = null;
 				Assert.That ((int) ssl.GetLastStatus (), Is.EqualTo (errSecParam), "set_PeerId/null");
 
-				Assert.That ((int)ssl.SetDatagramHelloCookie (new byte [33]), Is.EqualTo (-50), "cookie to long");
-				Assert.That (ssl.SetDatagramHelloCookie (new byte [32]), Is.EqualTo (SslStatus.Success), "tasty cookie");;
+				Assert.That ((int) ssl.SetDatagramHelloCookie (new byte [33]), Is.EqualTo (-50), "cookie to long");
+				Assert.That (ssl.SetDatagramHelloCookie (new byte [32]), Is.EqualTo (SslStatus.Success), "tasty cookie"); ;
 				Assert.That (ssl.SetDatagramHelloCookie (new byte [1]), Is.EqualTo (SslStatus.Success), "fat free cookie");
 				Assert.That (ssl.SetDatagramHelloCookie (null), Is.EqualTo (SslStatus.Success), "no more cookies");
 			}

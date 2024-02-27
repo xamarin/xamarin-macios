@@ -142,7 +142,7 @@ namespace Xamarin.Bundler {
 
 		void AddResourceToBeRemoved (string resource)
 		{
-			if (link_with_resources == null)
+			if (link_with_resources is null)
 				link_with_resources = new List<string> ();
 			link_with_resources.Add (resource);
 		}
@@ -158,52 +158,25 @@ namespace Xamarin.Bundler {
 				return;
 
 			string resourceBundlePath = Path.ChangeExtension (FullPath, ".resources");
-			if (!Directory.Exists (resourceBundlePath)) {
-				var zipPath = resourceBundlePath + ".zip";
-				if (File.Exists (zipPath)) {
-					var path = Path.Combine (App.Cache.Location, Path.GetFileName (resourceBundlePath));
-					if (Driver.RunCommand ("/usr/bin/unzip", "-u", "-o", "-d", path, zipPath) != 0)
-						throw ErrorHelper.CreateError (1306, Errors.MX1306 /* Could not decompress the file '{0}'. Please review the build log for more information from the native 'unzip' command. */, zipPath);
-					resourceBundlePath = path;
-				}
+			if (Directory.Exists (resourceBundlePath)) {
+				Driver.Log (3, $"Found a binding resource package for the assembly '{FullPath}' in {resourceBundlePath}, so not looking for any libraries embedded in the assembly.");
+				return;
 			}
-			string manifestPath = Path.Combine (resourceBundlePath, "manifest");
-			if (File.Exists (manifestPath)) {
-				foreach (NativeReferenceMetadata metadata in ReadManifest (manifestPath)) {
-					LogNativeReference (metadata);
-					ProcessNativeReferenceOptions (metadata);
-
-					switch (Path.GetExtension (metadata.LibraryName).ToLowerInvariant ()) {
-					case ".framework":
-						AssertiOSVersionSupportsUserFrameworks (metadata.LibraryName);
-						Frameworks.Add (metadata.LibraryName);
-#if MMP // HACK - MMP currently doesn't respect Frameworks on non-App - https://github.com/xamarin/xamarin-macios/issues/5203
-						App.Frameworks.Add (metadata.LibraryName);
-#endif
-						break;
-					case ".xcframework":
-						// this is resolved, at msbuild time, into a framework
-						// but we must ignore it here (can't be the `default` case)
-						break;
-					default:
-#if MMP // HACK - MMP currently doesn't respect LinkWith - https://github.com/xamarin/xamarin-macios/issues/5203
-						Driver.native_references.Add (metadata.LibraryName);
-#endif
-						LinkWith.Add (metadata.LibraryName);
-						break;
-					}
-				}
+			var zipPath = resourceBundlePath + ".zip";
+			if (File.Exists (zipPath)) {
+				Driver.Log (3, $"Found a binding resource package for the assembly '{FullPath}' in {zipPath}, so not looking for any libraries embedded in the assembly.");
+				return;
 			}
 
 			ProcessLinkWithAttributes (assembly);
 
 			// Make sure there are no duplicates between frameworks and weak frameworks.
 			// Keep the weak ones.
-			if (Frameworks != null && WeakFrameworks != null)
+			if (Frameworks is not null && WeakFrameworks is not null)
 				Frameworks.ExceptWith (WeakFrameworks);
 
 			if (NeedsGccExceptionHandling) {
-				if (LinkerFlags == null)
+				if (LinkerFlags is null)
 					LinkerFlags = new List<string> ();
 				LinkerFlags.Add ("-lgcc_eh");
 			}
@@ -255,7 +228,7 @@ namespace Xamarin.Bundler {
 			for (int i = 0; i < assembly.CustomAttributes.Count; i++) {
 				CustomAttribute attr = assembly.CustomAttributes [i];
 
-				if (attr.Constructor == null)
+				if (attr.Constructor is null)
 					continue;
 
 				TypeReference type = attr.Constructor.DeclaringType;
@@ -280,17 +253,23 @@ namespace Xamarin.Bundler {
 
 				if (!string.IsNullOrEmpty (linkWith.LibraryName)) {
 					switch (Path.GetExtension (linkWith.LibraryName).ToLowerInvariant ()) {
-					case ".framework":
+					case ".framework": {
 						AssertiOSVersionSupportsUserFrameworks (linkWith.LibraryName);
-						Frameworks.Add (ExtractFramework (assembly, metadata));
+						// TryExtractFramework prints a error/warning if something goes wrong, so no need for us to have an error handling path.
+						if (TryExtractFramework (assembly, metadata, out var framework))
+							Frameworks.Add (framework);
 						break;
+					}
 					case ".xcframework":
 						// this is resolved, at msbuild time, into a framework
 						// but we must ignore it here (can't be the `default` case)
 						break;
-					default:
-						LinkWith.Add (ExtractNativeLibrary (assembly, metadata));
+					default: {
+						// TryExtractFramework prints a error/warning if something goes wrong, so no need for us to have an error handling path.
+						if (TryExtractNativeLibrary (assembly, metadata, out var framework))
+							LinkWith.Add (framework);
 						break;
+					}
 					}
 				}
 			}
@@ -307,15 +286,17 @@ namespace Xamarin.Bundler {
 		void ProcessNativeReferenceOptions (NativeReferenceMetadata metadata)
 		{
 			// We can't add -dead_strip if there are any LinkWith attributes where smart linking is disabled.
-			if (!metadata.SmartLink)
+			if (!metadata.SmartLink) {
+				Driver.Log (3, $"The library '{metadata.LibraryName}', shipped with the assembly '{FullPath}', sets SmartLink=false, which will disable passing -dead_strip to the native linker (and make the app bigger).");
 				App.DeadStrip = false;
+			}
 
 			// Don't add -force_load if the binding's SmartLink value is set and the static registrar is being used.
-			if (metadata.ForceLoad && !(metadata.SmartLink && App.Registrar == RegistrarMode.Static))
+			if (metadata.ForceLoad && !(metadata.SmartLink && (App.Registrar == RegistrarMode.Static || App.Registrar == RegistrarMode.ManagedStatic)))
 				ForceLoad = true;
 
 			if (!string.IsNullOrEmpty (metadata.LinkerFlags)) {
-				if (LinkerFlags == null)
+				if (LinkerFlags is null)
 					LinkerFlags = new List<string> ();
 				if (!StringUtils.TryParseArguments (metadata.LinkerFlags, out string [] args, out var ex))
 					throw ErrorHelper.CreateError (148, ex, Errors.MX0148, metadata.LinkerFlags, metadata.LibraryName, FileName, ex.Message);
@@ -324,7 +305,7 @@ namespace Xamarin.Bundler {
 
 			if (!string.IsNullOrEmpty (metadata.Frameworks)) {
 				foreach (var f in metadata.Frameworks.Split (new char [] { ' ' })) {
-					if (Frameworks == null)
+					if (Frameworks is null)
 						Frameworks = new HashSet<string> ();
 					Frameworks.Add (f);
 				}
@@ -332,7 +313,7 @@ namespace Xamarin.Bundler {
 
 			if (!string.IsNullOrEmpty (metadata.WeakFrameworks)) {
 				foreach (var f in metadata.WeakFrameworks.Split (new char [] { ' ' })) {
-					if (WeakFrameworks == null)
+					if (WeakFrameworks is null)
 						WeakFrameworks = new HashSet<string> ();
 					WeakFrameworks.Add (f);
 				}
@@ -350,12 +331,17 @@ namespace Xamarin.Bundler {
 #endif
 		}
 
-		string ExtractNativeLibrary (AssemblyDefinition assembly, NativeReferenceMetadata metadata)
+		bool TryExtractNativeLibrary (AssemblyDefinition assembly, NativeReferenceMetadata metadata, out string library)
 		{
 			string path = Path.Combine (App.Cache.Location, metadata.LibraryName);
 
+			library = null;
+
 			if (!Application.IsUptodate (FullPath, path)) {
-				Application.ExtractResource (assembly.MainModule, metadata.LibraryName, path, false);
+				if (!Application.ExtractResource (assembly.MainModule, metadata.LibraryName, path, false)) {
+					ErrorHelper.Warning (1308, Errors.MX1308 /* Could not extract the native library '{0}' from the assembly '{1}', because it doesn't contain the resource '{2}'. */, metadata.LibraryName, FullPath, metadata.LibraryName);
+					return false;
+				}
 				Driver.Log (3, "Extracted third-party binding '{0}' from '{1}' to '{2}'", metadata.LibraryName, FullPath, path);
 				LogNativeReference (metadata);
 			} else {
@@ -365,16 +351,24 @@ namespace Xamarin.Bundler {
 			if (!File.Exists (path))
 				ErrorHelper.Warning (1302, Errors.MT1302, metadata.LibraryName, path);
 
-			return path;
+			library = path;
+			return true;
 		}
 
-		string ExtractFramework (AssemblyDefinition assembly, NativeReferenceMetadata metadata)
+		bool TryExtractFramework (AssemblyDefinition assembly, NativeReferenceMetadata metadata, out string framework)
 		{
 			string path = Path.Combine (App.Cache.Location, metadata.LibraryName);
 
 			var zipPath = path + ".zip";
+
+			framework = null;
+
 			if (!Application.IsUptodate (FullPath, zipPath)) {
-				Application.ExtractResource (assembly.MainModule, metadata.LibraryName, zipPath, false);
+				if (!Application.ExtractResource (assembly.MainModule, metadata.LibraryName, zipPath, false)) {
+					ErrorHelper.Warning (1307, Errors.MX1307 /* Could not extract the native framework '{0}' from the assembly '{1}', because it doesn't contain the resource '{2}'. */, metadata.LibraryName, FullPath, metadata.LibraryName);
+					return false;
+				}
+
 				Driver.Log (3, "Extracted third-party framework '{0}' from '{1}' to '{2}'", metadata.LibraryName, FullPath, zipPath);
 				LogNativeReference (metadata);
 			} else {
@@ -382,7 +376,15 @@ namespace Xamarin.Bundler {
 			}
 
 			if (!File.Exists (zipPath)) {
-				ErrorHelper.Warning (1302, Errors.MT1302, metadata.LibraryName, zipPath);
+				ErrorHelper.Warning (1302, Errors.MT1302, metadata.LibraryName, FullPath);
+				if (assembly.MainModule.HasResources) {
+					Driver.Log (3, $"The assembly {FullPath} has {assembly.MainModule.Resources.Count} resources:");
+					foreach (var res in assembly.MainModule.Resources) {
+						Driver.Log (3, $"    {res.ResourceType}: {res.Name}");
+					}
+				} else {
+					Driver.Log (3, $"The assembly {FullPath} does not have any resources.");
+				}
 			} else {
 				if (!Directory.Exists (path))
 					Directory.CreateDirectory (path);
@@ -391,13 +393,14 @@ namespace Xamarin.Bundler {
 					throw ErrorHelper.CreateError (1303, Errors.MT1303, metadata.LibraryName, zipPath);
 			}
 
-			return path;
+			framework = path;
+			return true;
 		}
 
 		static void LogNativeReference (NativeReferenceMetadata metadata)
 		{
 			Driver.Log (3, "    LibraryName: {0}", metadata.LibraryName);
-			Driver.Log (3, "    From: {0}", metadata.Attribute != null ? "LinkWith" : "Binding Manifest");
+			Driver.Log (3, "    From: {0}", metadata.Attribute is not null ? "LinkWith" : "Binding Manifest");
 			Driver.Log (3, "    ForceLoad: {0}", metadata.ForceLoad);
 			Driver.Log (3, "    Frameworks: {0}", metadata.Frameworks);
 			Driver.Log (3, "    IsCxx: {0}", metadata.IsCxx);
@@ -480,7 +483,7 @@ namespace Xamarin.Bundler {
 				}
 			}
 
-			var strong = (framework == null) || (App.DeploymentTarget >= (App.IsSimulatorBuild ? framework.VersionAvailableInSimulator ?? framework.Version : framework.Version));
+			var strong = (framework is null) || (App.DeploymentTarget >= (App.IsSimulatorBuild ? framework.VersionAvailableInSimulator ?? framework.Version : framework.Version));
 			if (strong) {
 				if (Frameworks.Add (file))
 					Driver.Log (3, "Linking with the framework {0} because it's referenced by a module reference in {1}", file, FileName);
@@ -602,7 +605,7 @@ namespace Xamarin.Bundler {
 						if (f > 0) {
 							AddFramework (file);
 						} else {
-							if (UnresolvedModuleReferences == null)
+							if (UnresolvedModuleReferences is null)
 								UnresolvedModuleReferences = new HashSet<ModuleReference> ();
 							UnresolvedModuleReferences.Add (mr);
 							Driver.Log (3, "Could not resolve the module reference {0} in {1}", file, FileName);
@@ -635,7 +638,7 @@ namespace Xamarin.Bundler {
 			var config = FullPath + ".config";
 			if (File.Exists (config))
 				yield return config;
-			if (Satellites != null) {
+			if (Satellites is not null) {
 				foreach (var satellite in Satellites)
 					yield return satellite;
 			}
@@ -647,7 +650,7 @@ namespace Xamarin.Bundler {
 			var path = Path.GetDirectoryName (FullPath);
 			// first look if satellites are located in subdirectories of the current location of the assembly
 			ComputeSatellites (satellite_name, path);
-			if (Satellites == null) {
+			if (Satellites is null) {
 				// 2nd chance: satellite assemblies can come from different nugets (as dependencies)
 				// they will be copied (at build time) into the destination directory (making them work at runtime)
 				// but they won't be side-by-side the original assembly (which breaks our build time assumptions)
@@ -683,12 +686,12 @@ namespace Xamarin.Bundler {
 					continue;
 				}
 
-				if (ci == null)
+				if (ci is null)
 					continue;
 
 				var satellite = Path.Combine (subdir, satellite_name);
 				if (File.Exists (satellite)) {
-					if (Satellites == null)
+					if (Satellites is null)
 						Satellites = new List<string> ();
 					Satellites.Add (satellite);
 				}
@@ -697,7 +700,7 @@ namespace Xamarin.Bundler {
 
 		public void CopySatellitesToDirectory (string directory)
 		{
-			if (Satellites == null)
+			if (Satellites is null)
 				return;
 
 			foreach (var a in Satellites) {
@@ -719,7 +722,7 @@ namespace Xamarin.Bundler {
 			var copied = false;
 
 			try {
-				var strip_assembly = strip != null && strip (source);
+				var strip_assembly = strip is not null && strip (source);
 				if (!Application.IsUptodate (source, target) && (strip_assembly || !Cache.CompareAssemblies (source, target))) {
 					copied = true;
 					if (strip_assembly) {
@@ -788,9 +791,9 @@ namespace Xamarin.Bundler {
 		{
 			// From what I gather it doesn't matter which normalization form
 			// is used, but I chose Form D because HFS normalizes to Form D.
-			if (x != null)
+			if (x is not null)
 				x = x.Normalize (System.Text.NormalizationForm.FormD);
-			if (y != null)
+			if (y is not null)
 				y = y.Normalize (System.Text.NormalizationForm.FormD);
 			return comparer.Equals (x, y);
 		}

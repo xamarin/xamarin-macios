@@ -11,7 +11,8 @@ namespace NS {
 	interface S {
 	}
 
-	[Model][Protocol]
+	[Model]
+	[Protocol]
 	[BaseType (typeof (NSObject))]
 	interface P {
 	}

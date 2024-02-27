@@ -24,7 +24,7 @@ using NUnit.Framework;
 using Xamarin.Utils;
 
 namespace MonoTouchFixtures.CoreBluetooth {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class UuidTest {

@@ -18,7 +18,11 @@ namespace Xamarin {
 
 		static Cache ()
 		{
+#if NATIVEAOT
+			root = Path.Combine (Path.GetDirectoryName (Environment.ProcessPath)!, "tmp-test-dir");
+#else
 			root = Path.Combine (Path.GetDirectoryName (System.Reflection.Assembly.GetExecutingAssembly ().Location)!, "tmp-test-dir");
+#endif
 			if (Directory.Exists (root)) {
 				var movedRoot = root + DateTime.UtcNow.Ticks.ToString () + "-deletion-in-progress";
 				// The temporary directory can be big, and it can take a while to clean it out.
@@ -44,6 +48,23 @@ namespace Xamarin {
 		[DllImport ("libc", SetLastError = true)]
 		static extern int mkdir (string path, ushort mode);
 
+		[DllImport ("kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+		static extern bool CreateDirectory (string path, IntPtr lpSecurityAttributes);
+
+		static bool TryCreateDirectory (string directory)
+		{
+			// There's no way to know if Directory.CreateDirectory
+			// created the directory or not (which would happen if the directory
+			// already existed). Checking if the directory exists before
+			// creating it would result in a race condition if multiple
+			// threads create temporary directories at the same time.
+			if (Environment.OSVersion.Platform == PlatformID.Win32NT) {
+				return CreateDirectory (directory, IntPtr.Zero);
+			} else {
+				return mkdir (directory, Convert.ToUInt16 ("777", 8)) == 0;
+			}
+		}
+
 		public static string CreateTemporaryDirectory (string? name = null)
 		{
 			if (string.IsNullOrEmpty (name)) {
@@ -57,12 +78,7 @@ namespace Xamarin {
 
 			var rv = Path.Combine (root, name);
 			for (int i = last_number; i < 10000 + last_number; i++) {
-				// There's no way to know if Directory.CreateDirectory
-				// created the directory or not (which would happen if the directory
-				// already existed). Checking if the directory exists before
-				// creating it would result in a race condition if multiple
-				// threads create temporary directories at the same time.
-				if (mkdir (rv, Convert.ToUInt16 ("777", 8)) == 0) {
+				if (TryCreateDirectory (rv)) {
 					last_number = i;
 					return rv;
 				}

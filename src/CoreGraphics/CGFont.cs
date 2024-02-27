@@ -52,10 +52,9 @@ namespace CoreGraphics {
 	[SupportedOSPlatform ("tvos")]
 #endif
 	// CGFont.h
-	public class CGFont : NativeObject
-		{
+	public class CGFont : NativeObject {
 #if !COREBUILD
-		[Preserve (Conditional=true)]
+		[Preserve (Conditional = true)]
 		internal CGFont (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
@@ -70,10 +69,10 @@ namespace CoreGraphics {
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CGFontRef */ IntPtr CGFontRetain (/* CGFontRef */ IntPtr font);
-	
+
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static void CGFontRelease (/* CGFontRef */ IntPtr font);
-		
+
 		protected internal override void Retain ()
 		{
 			CGFontRetain (GetCheckedHandle ());
@@ -112,14 +111,14 @@ namespace CoreGraphics {
 				CFString.ReleaseNative (nameHandle);
 			}
 		}
-		
+
 		//[DllImport (Constants.CoreGraphicsLibrary)]
 		//extern static IntPtr CGFontCreateCopyWithVariations(IntPtr font, IntPtr cf_dictionaryref_variations);
 		//public static CGFont CreateCopyWithVariations ()
 		//{
 		//	throw new NotImplementedException ();
 		//}
-		
+
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* size_t */ nint CGFontGetNumberOfGlyphs (/* CGFontRef */ IntPtr font);
 
@@ -128,7 +127,7 @@ namespace CoreGraphics {
 				return CGFontGetNumberOfGlyphs (Handle);
 			}
 		}
-		
+
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* int */ int CGFontGetUnitsPerEm (/* CGFontRef */ IntPtr font);
 
@@ -146,7 +145,7 @@ namespace CoreGraphics {
 				return CFString.FromHandle (CGFontCopyPostScriptName (Handle), releaseHandle: true);
 			}
 		}
-		
+
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CFStringRef __nullable */ IntPtr CGFontCopyFullName (/* CGFontRef __nullable */ IntPtr font);
 
@@ -155,7 +154,7 @@ namespace CoreGraphics {
 				return CFString.FromHandle (CGFontCopyFullName (Handle), releaseHandle: true);
 			}
 		}
-		
+
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* int */ int CGFontGetAscent (/* CGFontRef */ IntPtr font);
 
@@ -164,7 +163,7 @@ namespace CoreGraphics {
 				return CGFontGetAscent (Handle);
 			}
 		}
-		
+
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* int */ int CGFontGetDescent (/* CGFontRef */ IntPtr font);
 
@@ -173,7 +172,7 @@ namespace CoreGraphics {
 				return CGFontGetDescent (Handle);
 			}
 		}
-		
+
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* int */ int CGFontGetLeading (/* CGFontRef */ IntPtr font);
 
@@ -182,7 +181,7 @@ namespace CoreGraphics {
 				return CGFontGetLeading (Handle);
 			}
 		}
-		
+
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* int */ int CGFontGetCapHeight (/* CGFontRef */ IntPtr font);
 
@@ -191,7 +190,7 @@ namespace CoreGraphics {
 				return CGFontGetCapHeight (Handle);
 			}
 		}
-		
+
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* int */ int CGFontGetXHeight (/* CGFontRef */ IntPtr font);
 
@@ -200,7 +199,7 @@ namespace CoreGraphics {
 				return CGFontGetXHeight (Handle);
 			}
 		}
-		
+
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static CGRect CGFontGetFontBBox (/* CGFontRef */ IntPtr font);
 
@@ -209,7 +208,7 @@ namespace CoreGraphics {
 				return CGFontGetFontBBox (Handle);
 			}
 		}
-		
+
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CGFloat */ nfloat CGFontGetItalicAngle (/* CGFontRef */ IntPtr font);
 
@@ -218,7 +217,7 @@ namespace CoreGraphics {
 				return CGFontGetItalicAngle (Handle);
 			}
 		}
-			
+
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CGFloat */ nfloat CGFontGetStemV (/* CGFontRef */ IntPtr font);
 
@@ -227,9 +226,9 @@ namespace CoreGraphics {
 				return CGFontGetStemV (Handle);
 			}
 		}
-		
+
 		//[DllImport (Constants.CoreGraphicsLibrary)]
-	        //extern static CFArrayRef CGFontCopyVariationAxes(IntPtr font);
+		//extern static CFArrayRef CGFontCopyVariationAxes(IntPtr font);
 
 		//[DllImport (Constants.CoreGraphicsLibrary)]
 		//extern static CFDictionaryRef CGFontCopyVariations(IntPtr font);
@@ -256,7 +255,7 @@ namespace CoreGraphics {
 				CFString.ReleaseNative (sHandle);
 			}
 		}
-		
+
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CFStringRef __nullable */ IntPtr CGFontCopyGlyphNameForGlyph (/* CGFontRef __nullable */ IntPtr font, /* CGGlyph */ ushort glyph);
 
@@ -264,7 +263,7 @@ namespace CoreGraphics {
 		{
 			return CFString.FromHandle (CGFontCopyGlyphNameForGlyph (Handle, glyph), releaseHandle: true);
 		}
-		
+
 		//[DllImport (Constants.CoreGraphicsLibrary)]
 		//extern static bool CGFontCanCreatePostScriptSubset(IntPtr font, CGFontPostScriptFormat format);
 		//[DllImport (Constants.CoreGraphicsLibrary)]
@@ -282,7 +281,7 @@ namespace CoreGraphics {
 		// CFStringRef kCGFontVariationAxisDefaultValue;
 
 		[DllImport (Constants.CoreTextLibrary)]
-		unsafe static extern /* CTFontRef */ IntPtr CTFontCreateWithGraphicsFont (/* CGFontRef */ IntPtr graphicsFont, /* CGFloat */ nfloat size, CGAffineTransform *matrix, /* CTFontDescriptorRef */ IntPtr attributes);
+		unsafe static extern /* CTFontRef */ IntPtr CTFontCreateWithGraphicsFont (/* CGFontRef */ IntPtr graphicsFont, /* CGFloat */ nfloat size, CGAffineTransform* matrix, /* CTFontDescriptorRef */ IntPtr attributes);
 
 		public unsafe CTFont ToCTFont (nfloat size)
 		{
@@ -293,12 +292,12 @@ namespace CoreGraphics {
 		{
 			return new CTFont (CTFontCreateWithGraphicsFont (Handle, size, &matrix, IntPtr.Zero), true);
 		}
-	
+
 #if TODO
 		ToCTFont() overloads where attributes is CTFontDescriptorRef
 #endif // TODO
 
-		[DllImport (Constants.CoreGraphicsLibrary, EntryPoint="CGFontGetTypeID")]
+		[DllImport (Constants.CoreGraphicsLibrary, EntryPoint = "CGFontGetTypeID")]
 		public extern static /* CFTypeID */ nint GetTypeID ();
 #endif // !COREBUILD
 	}

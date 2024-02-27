@@ -4,16 +4,19 @@ using System.Threading.Tasks;
 using Xamarin.Messaging.Build.Contracts;
 using Xamarin.Messaging.Client;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Xamarin.Messaging.Build {
 	public class BuildAgent : Agent {
 		readonly AgentInfo buildAgentInfo;
 
 		public BuildAgent (ITopicGenerator topicGenerator, string version = null, string versionInfo = null) : base (topicGenerator)
 		{
-			buildAgentInfo = new BuildAgentInfo ();
-
 			Version = string.IsNullOrEmpty (version) ? GetVersion () : version;
 			VersionInfo = string.IsNullOrEmpty (versionInfo) ? GetInformationalVersion () : versionInfo;
+
+			buildAgentInfo = new BuildAgentInfo (Version);
 		}
 
 		public override string Name => buildAgentInfo.Name;
@@ -21,6 +24,13 @@ namespace Xamarin.Messaging.Build {
 		public override string Version { get; }
 
 		public override string VersionInfo { get; }
+
+		protected override Task OnStartingAsync ()
+		{
+			topicGenerator.AddReplacement ("{AgentVersion}", Version);
+
+			return Task.CompletedTask;
+		}
 
 		protected override Task InitializeAsync ()
 		{
@@ -80,8 +90,11 @@ namespace Xamarin.Messaging.Build {
 			}
 		}
 
-		string GetVersion () => ThisAssembly.Git.BaseVersion.Major + "." + ThisAssembly.Git.BaseVersion.Minor + "." + ThisAssembly.Git.BaseVersion.Patch + "." + ThisAssembly.Git.Commits;
+		// The version is a bit complicated, because we're building this assembly once, and use it for all our platforms.
+		// And since the platforms don't have the same version between them, there's no single version number that's valid for all platforms...
+		// So we just pick the iOS version, which will always be the correct version for remote Mac builds, because only iOS is supported for that scenario.
+		string GetVersion () => VersionConstants.Microsoft_iOS_Standard_Version;
 
-		string GetInformationalVersion () => GetVersion () + "-" + ThisAssembly.Git.Branch + "+" + ThisAssembly.Git.Commit;
+		string GetInformationalVersion () => GetVersion () + "-" + VersionConstants.Branch + "+" + VersionConstants.Commit;
 	}
 }

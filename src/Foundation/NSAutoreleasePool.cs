@@ -62,8 +62,8 @@ namespace Foundation {
 			}
 		}
 
-		public NSAutoreleasePool (NSObjectFlag t) : base (t) {}
-		public NSAutoreleasePool (IntPtr handle) : base (handle) {}
+		public NSAutoreleasePool (NSObjectFlag t) : base (t) { }
+		public NSAutoreleasePool (IntPtr handle) : base (handle) { }
 
 #endif
 	}

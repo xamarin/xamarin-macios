@@ -69,12 +69,12 @@ namespace CoreText {
 		public static NSString? ToNSString (CTBaselineClass key)
 		{
 			switch (key) {
-				case CTBaselineClass.Roman:                return Roman;
-				case CTBaselineClass.IdeographicCentered:  return IdeographicCentered;
-				case CTBaselineClass.IdeographicLow:       return IdeographicLow;
-				case CTBaselineClass.IdeographicHigh:      return IdeographicHigh;
-				case CTBaselineClass.Hanging:              return Hanging;
-				case CTBaselineClass.Math:                 return Math;
+			case CTBaselineClass.Roman: return Roman;
+			case CTBaselineClass.IdeographicCentered: return IdeographicCentered;
+			case CTBaselineClass.IdeographicLow: return IdeographicLow;
+			case CTBaselineClass.IdeographicHigh: return IdeographicHigh;
+			case CTBaselineClass.Hanging: return Hanging;
+			case CTBaselineClass.Math: return Math;
 			}
 
 			throw new ArgumentOutOfRangeException ("key");
@@ -82,12 +82,12 @@ namespace CoreText {
 
 		public static CTBaselineClass FromHandle (IntPtr handle)
 		{
-			if (handle == Roman?.Handle)                return CTBaselineClass.Roman;
-			if (handle == IdeographicCentered?.Handle)  return CTBaselineClass.IdeographicCentered;
-			if (handle == IdeographicLow?.Handle)       return CTBaselineClass.IdeographicLow;
-			if (handle == IdeographicHigh?.Handle)      return CTBaselineClass.IdeographicHigh;
-			if (handle == Hanging?.Handle)              return CTBaselineClass.Hanging;
-			if (handle == Math?.Handle)                 return CTBaselineClass.Math;
+			if (handle == Roman?.Handle) return CTBaselineClass.Roman;
+			if (handle == IdeographicCentered?.Handle) return CTBaselineClass.IdeographicCentered;
+			if (handle == IdeographicLow?.Handle) return CTBaselineClass.IdeographicLow;
+			if (handle == IdeographicHigh?.Handle) return CTBaselineClass.IdeographicHigh;
+			if (handle == Hanging?.Handle) return CTBaselineClass.Hanging;
+			if (handle == Math?.Handle) return CTBaselineClass.Math;
 
 			throw new ArgumentOutOfRangeException ("handle");
 		}
@@ -115,8 +115,8 @@ namespace CoreText {
 		public static NSString? ToNSString (CTBaselineFont key)
 		{
 			switch (key) {
-				case CTBaselineFont.Reference: return Reference;
-				case CTBaselineFont.Original:  return Original;
+			case CTBaselineFont.Reference: return Reference;
+			case CTBaselineFont.Original: return Original;
 			}
 
 			throw new ArgumentOutOfRangeException ("key");

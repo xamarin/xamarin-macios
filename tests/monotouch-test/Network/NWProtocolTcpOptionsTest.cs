@@ -37,7 +37,7 @@ namespace MonoTouchFixtures.Network {
 		public void NoPushTest () => Assert.DoesNotThrow (() => options.SetNoPush (true));
 
 		[Test]
-		public void NoOptionsTest ()=> Assert.DoesNotThrow (() => options.SetNoOptions (true));
+		public void NoOptionsTest () => Assert.DoesNotThrow (() => options.SetNoOptions (true));
 
 		[Test]
 		public void EnableKeepAliveTest () => Assert.DoesNotThrow (() => options.SetEnableKeepAlive (true));
@@ -76,8 +76,8 @@ namespace MonoTouchFixtures.Network {
 		[Test]
 		public void ForceMultipathVersionTest ()
 		{
-			TestRuntime.AssertXcodeVersion (13,0);
-			Assert.DoesNotThrow(() => options.ForceMultipathVersion (NWMultipathVersion.Version0));
+			TestRuntime.AssertXcodeVersion (13, 0);
+			Assert.DoesNotThrow (() => options.ForceMultipathVersion (NWMultipathVersion.Version0));
 		}
 
 	}

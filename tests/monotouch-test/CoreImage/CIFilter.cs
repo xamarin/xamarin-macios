@@ -8,12 +8,10 @@ using ObjCRuntime;
 using CoreImage;
 using CoreGraphics;
 
-namespace Xamarin.Mac.Tests
-{
+namespace Xamarin.Mac.Tests {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class CIFilterTests
-	{
+	public class CIFilterTests {
 		[Test]
 		public void CIFilterOutputImageTest ()
 		{

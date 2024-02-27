@@ -1,0 +1,4 @@
+!missing-selector! +DDDevicePickerViewController::isSupportedForBrowseDescriptor:parameters: not bound
+!missing-selector! DDDevicePickerViewController::initWithBrowseDescriptor:parameters: not bound
+!missing-selector! DDDevicePickerViewController::setDevicePickerCompletionHandler: not bound
+!missing-type! DDDevicePickerViewController not bound

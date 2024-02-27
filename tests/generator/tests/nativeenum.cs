@@ -3,32 +3,32 @@ using Foundation;
 using ObjCRuntime;
 
 namespace NS {
-	[Native (ConvertToManaged = "Extensions.ToManaged1", ConvertToNative="Extensions.ToNative1")]
+	[Native (ConvertToManaged = "Extensions.ToManaged1", ConvertToNative = "Extensions.ToNative1")]
 	public enum MyEnum1 : long {
 		Value1,
 		Value2,
 	}
 
-	[Native (ConvertToManaged = "Extensions.ToManaged2", ConvertToNative="Extensions.ToNative2")]
+	[Native (ConvertToManaged = "Extensions.ToManaged2", ConvertToNative = "Extensions.ToNative2")]
 	public enum MyEnum2 : long {
 		Value1 = long.MinValue,
 		Value2 = long.MaxValue,
 	}
 
-	[Native (ConvertToManaged = "Extensions.ToManaged3", ConvertToNative="Extensions.ToNative3")]
+	[Native (ConvertToManaged = "Extensions.ToManaged3", ConvertToNative = "Extensions.ToNative3")]
 	public enum MyEnum3 : ulong {
 		Value1 = ulong.MinValue,
 		Value2 = ulong.MaxValue,
 	}
 
-	[Native (ConvertToManaged = "Extensions.ToManaged4", ConvertToNative="Extensions.ToNative4")]
+	[Native (ConvertToManaged = "Extensions.ToManaged4", ConvertToNative = "Extensions.ToNative4")]
 	public enum MyEnum4 : long {
 		Zero,
 		One,
 		Two
 	}
 
-	[Native (ConvertToManaged = "Extensions.ToManaged5", ConvertToNative="Extensions.ToNative5")]
+	[Native (ConvertToManaged = "Extensions.ToManaged5", ConvertToNative = "Extensions.ToNative5")]
 	public enum MyEnum5 : ulong {
 		Zero,
 		One,

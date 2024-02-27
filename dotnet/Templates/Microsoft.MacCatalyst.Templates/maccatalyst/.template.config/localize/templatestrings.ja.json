@@ -1,7 +1,0 @@
-{
-  "author": "Microsoft",
-  "name": "MacCatalyst Application",
-  "description": ".NET MacCatalyst アプリケーションを作成するためのプロジェクト",
-  "symbols/bundleId/description": "Info.plist の CFBundleIdentifier をオーバーライドします",
-  "symbols/minOSVersion/description": "プロジェクト ファイルの SupportedOSPlatformVersion をオーバーライドします"
-}

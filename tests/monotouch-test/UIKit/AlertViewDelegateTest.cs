@@ -8,7 +8,7 @@ using UIKit;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.UIKit {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class AlertViewDelegateTest {
@@ -23,7 +23,7 @@ namespace MonoTouchFixtures.UIKit {
 			}
 		}
 #endif
-		
+
 		class MyAlertViewDelegate2 : UIAlertViewDelegate {
 		}
 

@@ -13,12 +13,10 @@ using NMatrix4x3 = global::OpenTK.NMatrix4x3;
 
 using NUnit.Framework;
 
-namespace MonoTouchFixtures.Simd
-{
+namespace MonoTouchFixtures.Simd {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class NMatrix4x3Test
-	{
+	public class NMatrix4x3Test {
 		[Test]
 		public void ElementConstructor ()
 		{

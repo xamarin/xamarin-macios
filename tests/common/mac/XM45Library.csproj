@@ -19,7 +19,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
-%CODE%
+REPLACE_CODE_REPLACE
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />

@@ -35,7 +35,7 @@ namespace CoreBluetooth {
 
 		public new virtual CBCentralManagerState State {
 			get {
-				return (CBCentralManagerState)base.State;
+				return (CBCentralManagerState) base.State;
 			}
 		}
 	}
@@ -44,7 +44,7 @@ namespace CoreBluetooth {
 
 		public virtual CBPeripheralManagerState State {
 			get {
-				return (CBPeripheralManagerState)base.State;
+				return (CBPeripheralManagerState) base.State;
 			}
 		}
 	}

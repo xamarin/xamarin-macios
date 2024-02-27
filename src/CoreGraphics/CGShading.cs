@@ -50,8 +50,7 @@ namespace CoreGraphics {
 	[SupportedOSPlatform ("tvos")]
 #endif
 	// CGShading.h
-	public class CGShading : NativeObject
-	{
+	public class CGShading : NativeObject {
 #if !COREBUILD
 #if !NET
 		public CGShading (NativeHandle handle)
@@ -60,7 +59,7 @@ namespace CoreGraphics {
 		}
 #endif
 
-		[Preserve (Conditional=true)]
+		[Preserve (Conditional = true)]
 		internal CGShading (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
@@ -76,8 +75,8 @@ namespace CoreGraphics {
 			CGShadingRelease (GetCheckedHandle ());
 		}
 
-		[DllImport(Constants.CoreGraphicsLibrary)]
-		extern static /* CGShadingRef */ IntPtr CGShadingCreateAxial (/* CGColorSpaceRef */ IntPtr space, 
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		extern static /* CGShadingRef */ IntPtr CGShadingCreateAxial (/* CGColorSpaceRef */ IntPtr space,
 			CGPoint start, CGPoint end, /* CGFunctionRef */ IntPtr functionHandle, [MarshalAs (UnmanagedType.I1)] bool extendStart, [MarshalAs (UnmanagedType.I1)] bool extendEnd);
 
 		public static CGShading CreateAxial (CGColorSpace colorspace, CGPoint start, CGPoint end, CGFunction function, bool extendStart, bool extendEnd)
@@ -89,14 +88,14 @@ namespace CoreGraphics {
 
 			return new CGShading (CGShadingCreateAxial (colorspace.GetCheckedHandle (), start, end, function.GetCheckedHandle (), extendStart, extendEnd), true);
 		}
-		
-		[DllImport(Constants.CoreGraphicsLibrary)]
-		extern static /* CGShadingRef */ IntPtr CGShadingCreateRadial (/* CGColorSpaceRef */ IntPtr space, 
+
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		extern static /* CGShadingRef */ IntPtr CGShadingCreateRadial (/* CGColorSpaceRef */ IntPtr space,
 			CGPoint start, /* CGFloat */ nfloat startRadius, CGPoint end, /* CGFloat */ nfloat endRadius,
 			/* CGFunctionRef */ IntPtr function, [MarshalAs (UnmanagedType.I1)] bool extendStart, [MarshalAs (UnmanagedType.I1)] bool extendEnd);
 
 		public static CGShading CreateRadial (CGColorSpace colorspace, CGPoint start, nfloat startRadius, CGPoint end, nfloat endRadius,
-						      CGFunction function, bool extendStart, bool extendEnd)
+							  CGFunction function, bool extendStart, bool extendEnd)
 		{
 			if (colorspace is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (colorspace));
@@ -104,9 +103,9 @@ namespace CoreGraphics {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (function));
 
 			return new CGShading (CGShadingCreateRadial (colorspace.GetCheckedHandle (), start, startRadius, end, endRadius,
-								     function.GetCheckedHandle (), extendStart, extendEnd), true);
+									 function.GetCheckedHandle (), extendStart, extendEnd), true);
 		}
-			
+
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CGShadingRef */ IntPtr CGShadingRelease (/* CGShadingRef */ IntPtr shading);
 

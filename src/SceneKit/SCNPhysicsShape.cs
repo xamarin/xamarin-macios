@@ -15,10 +15,8 @@ using Foundation;
 
 #nullable enable
 
-namespace SceneKit
-{
-	public partial class SCNPhysicsShape
-	{
+namespace SceneKit {
+	public partial class SCNPhysicsShape {
 		public static SCNPhysicsShape Create (SCNPhysicsShape [] shapes, SCNMatrix4 [] transforms)
 		{
 			if (shapes is null)
@@ -97,26 +95,22 @@ namespace SceneKit
 	}
 
 #if NET
-	[SupportedOSPlatform ("macos10.10")]
-	[SupportedOSPlatform ("ios8.0")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("tvos")]
-#else
-	[Mac (10, 10)]
-	[iOS (8, 0)]
 #endif
-	public class SCNPhysicsShapeOptions
-	{
+	public class SCNPhysicsShapeOptions {
 		public SCNPhysicsShapeType? ShapeType { get; set; }
 		public bool? KeepAsCompound { get; set; }
 		public SCNVector3? Scale { get; set; }
 
-		public SCNPhysicsShapeOptions () {}
-		
+		public SCNPhysicsShapeOptions () { }
+
 		internal SCNPhysicsShapeOptions (NSDictionary source)
 		{
 			var ret = source [SCNPhysicsShapeOptionsKeys.Type] as NSString;
-			if (ret is not null){
+			if (ret is not null) {
 				if (ret == SCNPhysicsShapeOptionsTypes.BoundingBox)
 					ShapeType = SCNPhysicsShapeType.BoundingBox;
 				else if (ret == SCNPhysicsShapeOptionsTypes.ConcavePolyhedron)
@@ -131,7 +125,7 @@ namespace SceneKit
 			if (nret is not null)
 				Scale = nret.Vector3Value;
 		}
-		
+
 		public NSDictionary? ToDictionary ()
 		{
 			var n = 0;

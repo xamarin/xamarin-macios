@@ -12,7 +12,7 @@
 
 using System;
 using System.Collections.Generic;
-using Foundation; 
+using Foundation;
 using ObjCRuntime;
 #nullable enable
 
@@ -22,7 +22,7 @@ namespace UIKit {
 		//
 		// Tracks the targets (NSObject, which we always enforce to be Token) to the Selector the point to, used when disposing
 		//
-		Dictionary<Token,IntPtr> recognizers = new Dictionary<Token,IntPtr> ();
+		Dictionary<Token, IntPtr> recognizers = new Dictionary<Token, IntPtr> ();
 		const string tsel = "target";
 		internal const string parametrized_selector = "target:";
 
@@ -41,7 +41,7 @@ namespace UIKit {
 			var copyOfRecognizers = recognizers;
 			var savedHandle = Handle;
 			recognizers = new Dictionary<Token, IntPtr> ();
-			
+
 			if (copyOfRecognizers.Count == 0)
 				return;
 
@@ -52,7 +52,7 @@ namespace UIKit {
 				DangerousRelease (savedHandle);
 			});
 		}
-		
+
 		//
 		// Signature swapped, this is only used so we can store the "token" in recognizers
 		//
@@ -67,7 +67,7 @@ namespace UIKit {
 			recognizers [token] = sel;
 			MarkDirty ();
 		}
-		
+
 		[Register ("__UIGestureRecognizerToken")]
 		public class Token : NSObject {
 			public Token ()
@@ -77,7 +77,7 @@ namespace UIKit {
 		}
 
 		[Register ("__UIGestureRecognizerGenericCB")]
-		internal class Callback<T> : Token where T: UIGestureRecognizer {
+		internal class Callback<T> : Token where T : UIGestureRecognizer {
 			Action<T> action;
 
 			internal Callback (Action<T> action)
@@ -88,18 +88,18 @@ namespace UIKit {
 			[Export ("target:")]
 			[Preserve (Conditional = true)]
 			public void Activated (T sender) => action (sender);
-			
+
 		}
 
 		[Register ("__UIGestureRecognizerParameterlessToken")]
 		public class ParameterlessDispatch : Token {
 			Action action;
-			
+
 			internal ParameterlessDispatch (Action action)
 			{
 				this.action = action;
 			}
-			
+
 			[Export ("target")]
 			[Preserve (Conditional = true)]
 			public void Activated ()
@@ -111,12 +111,12 @@ namespace UIKit {
 		[Register ("__UIGestureRecognizerParametrizedToken")]
 		public class ParametrizedDispatch : Token {
 			Action<UIGestureRecognizer> action;
-			
+
 			internal ParametrizedDispatch (Action<UIGestureRecognizer> action)
 			{
 				this.action = action;
 			}
-			
+
 			[Export ("target:")]
 			[Preserve (Conditional = true)]
 			public void Activated (UIGestureRecognizer sender)
@@ -124,10 +124,10 @@ namespace UIKit {
 				action (sender);
 			}
 		}
-		
+
 		public Token AddTarget (Action action)
 		{
-			if (action == null)
+			if (action is null)
 				throw new ArgumentNullException ("action");
 
 			var t = new ParameterlessDispatch (action);
@@ -135,9 +135,9 @@ namespace UIKit {
 			return t;
 		}
 
-		public Token AddTarget (Action<NSObject> action) 
+		public Token AddTarget (Action<NSObject> action)
 		{
-			if (action == null)
+			if (action is null)
 				throw new ArgumentNullException ("action");
 
 			var t = new ParametrizedDispatch (action);
@@ -154,9 +154,9 @@ namespace UIKit {
 
 		public void RemoveTarget (Token token)
 		{
-			if (token == null)
+			if (token is null)
 				throw new ArgumentNullException ("token");
-			if (recognizers == null)
+			if (recognizers is null)
 				return;
 			if (recognizers.Remove (token, out var sel))
 				RemoveTarget (token, sel);
@@ -176,55 +176,55 @@ namespace UIKit {
 
 #if !TVOS
 	public partial class UIRotationGestureRecognizer : UIGestureRecognizer {
-		public UIRotationGestureRecognizer (Action action) : base (action) {}
-		public UIRotationGestureRecognizer (Action<UIRotationGestureRecognizer> action) : base (Selector.GetHandle (UIGestureRecognizer.parametrized_selector), new Callback<UIRotationGestureRecognizer> (action)) {}
+		public UIRotationGestureRecognizer (Action action) : base (action) { }
+		public UIRotationGestureRecognizer (Action<UIRotationGestureRecognizer> action) : base (Selector.GetHandle (UIGestureRecognizer.parametrized_selector), new Callback<UIRotationGestureRecognizer> (action)) { }
 
 	}
 #endif
 
 	public partial class UILongPressGestureRecognizer : UIGestureRecognizer {
-		public UILongPressGestureRecognizer (Action action) : base (action) {}
-		public UILongPressGestureRecognizer (Action<UILongPressGestureRecognizer> action) : base (Selector.GetHandle (UIGestureRecognizer.parametrized_selector), new Callback<UILongPressGestureRecognizer> (action)) {}
+		public UILongPressGestureRecognizer (Action action) : base (action) { }
+		public UILongPressGestureRecognizer (Action<UILongPressGestureRecognizer> action) : base (Selector.GetHandle (UIGestureRecognizer.parametrized_selector), new Callback<UILongPressGestureRecognizer> (action)) { }
 
 	}
 
 	public partial class UITapGestureRecognizer : UIGestureRecognizer {
-		public UITapGestureRecognizer (Action action) : base (action) {}
-		public UITapGestureRecognizer (Action<UITapGestureRecognizer> action) : base (Selector.GetHandle (UIGestureRecognizer.parametrized_selector), new Callback<UITapGestureRecognizer> (action)) {}
+		public UITapGestureRecognizer (Action action) : base (action) { }
+		public UITapGestureRecognizer (Action<UITapGestureRecognizer> action) : base (Selector.GetHandle (UIGestureRecognizer.parametrized_selector), new Callback<UITapGestureRecognizer> (action)) { }
 
 	}
 
 	public partial class UIPanGestureRecognizer : UIGestureRecognizer {
-		public UIPanGestureRecognizer (Action action) : base (action) {}
-		public UIPanGestureRecognizer (Action<UIPanGestureRecognizer> action) : base (Selector.GetHandle (UIGestureRecognizer.parametrized_selector), new Callback<UIPanGestureRecognizer> (action)) {}
+		public UIPanGestureRecognizer (Action action) : base (action) { }
+		public UIPanGestureRecognizer (Action<UIPanGestureRecognizer> action) : base (Selector.GetHandle (UIGestureRecognizer.parametrized_selector), new Callback<UIPanGestureRecognizer> (action)) { }
 
-		internal UIPanGestureRecognizer (IntPtr sel, Token token) : base (token, sel) {}
+		internal UIPanGestureRecognizer (IntPtr sel, Token token) : base (token, sel) { }
 
 	}
 
 #if !TVOS
 	public partial class UIPinchGestureRecognizer : UIGestureRecognizer {
-		public UIPinchGestureRecognizer (Action action) : base (action) {}
-		public UIPinchGestureRecognizer (Action<UIPinchGestureRecognizer> action) : base (Selector.GetHandle (UIGestureRecognizer.parametrized_selector), new Callback<UIPinchGestureRecognizer> (action)) {}
+		public UIPinchGestureRecognizer (Action action) : base (action) { }
+		public UIPinchGestureRecognizer (Action<UIPinchGestureRecognizer> action) : base (Selector.GetHandle (UIGestureRecognizer.parametrized_selector), new Callback<UIPinchGestureRecognizer> (action)) { }
 
 	}
 #endif
 
 	public partial class UISwipeGestureRecognizer : UIGestureRecognizer {
-		public UISwipeGestureRecognizer (Action action) : base (action) {}
-		public UISwipeGestureRecognizer (Action<UISwipeGestureRecognizer> action) : base (Selector.GetHandle (UIGestureRecognizer.parametrized_selector), new Callback<UISwipeGestureRecognizer> (action)) {}
+		public UISwipeGestureRecognizer (Action action) : base (action) { }
+		public UISwipeGestureRecognizer (Action<UISwipeGestureRecognizer> action) : base (Selector.GetHandle (UIGestureRecognizer.parametrized_selector), new Callback<UISwipeGestureRecognizer> (action)) { }
 
 	}
 
 #if !TVOS
 	public partial class UIScreenEdgePanGestureRecognizer : UIPanGestureRecognizer {
-		public UIScreenEdgePanGestureRecognizer (Action action) : base (action) {}
-		public UIScreenEdgePanGestureRecognizer (Action<UIScreenEdgePanGestureRecognizer> action) : base (Selector.GetHandle (UIGestureRecognizer.parametrized_selector), new Callback<UIScreenEdgePanGestureRecognizer> (action)) {}
+		public UIScreenEdgePanGestureRecognizer (Action action) : base (action) { }
+		public UIScreenEdgePanGestureRecognizer (Action<UIScreenEdgePanGestureRecognizer> action) : base (Selector.GetHandle (UIGestureRecognizer.parametrized_selector), new Callback<UIScreenEdgePanGestureRecognizer> (action)) { }
 
 	}
 
 	public partial class UIHoverGestureRecognizer : UIGestureRecognizer {
-		public UIHoverGestureRecognizer (Action<UIHoverGestureRecognizer> action) : base (Selector.GetHandle (UIGestureRecognizer.parametrized_selector), new Callback<UIHoverGestureRecognizer>(action)) {}
+		public UIHoverGestureRecognizer (Action<UIHoverGestureRecognizer> action) : base (Selector.GetHandle (UIGestureRecognizer.parametrized_selector), new Callback<UIHoverGestureRecognizer> (action)) { }
 
 	}
 #endif

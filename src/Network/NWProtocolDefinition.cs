@@ -16,7 +16,7 @@ using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
 
-using OS_nw_protocol_definition=System.IntPtr;
+using OS_nw_protocol_definition = System.IntPtr;
 
 #if !NET
 using NativeHandle = System.IntPtr;
@@ -26,21 +26,20 @@ namespace Network {
 
 #if NET
 	[SupportedOSPlatform ("tvos12.0")]
-	[SupportedOSPlatform ("macos10.14")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("ios12.0")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
-	[TV (12,0)]
-	[Mac (10,14)]
-	[iOS (12,0)]
-	[Watch (6,0)]
+	[TV (12, 0)]
+	[iOS (12, 0)]
+	[Watch (6, 0)]
 #endif
 	public class NWProtocolDefinition : NativeObject {
 		[Preserve (Conditional = true)]
 #if NET
 		internal NWProtocolDefinition (NativeHandle handle, bool owns) : base (handle, owns) {}
 #else
-		public NWProtocolDefinition (NativeHandle handle, bool owns) : base (handle, owns) {}
+		public NWProtocolDefinition (NativeHandle handle, bool owns) : base (handle, owns) { }
 #endif
 
 		[DllImport (Constants.NetworkLibrary)]
@@ -98,57 +97,57 @@ namespace Network {
 
 #if NET
 		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[TV (13,0)]
-		[Mac (10,15)]
-		[iOS (13,0)]
+		[TV (13, 0)]
+		[iOS (13, 0)]
 #endif
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_protocol_definition nw_protocol_copy_ws_definition ();
 
 #if !NET
-		[TV (13,0)]
-		[Mac (10,15)]
-		[iOS (13,0)]
+		[TV (13, 0)]
+		[iOS (13, 0)]
 		[Obsolete ("Use 'CreateWebSocketDefinition' method instead.")]
 		public static NWProtocolDefinition WebSocketDefinition => new NWProtocolDefinition (nw_protocol_copy_ws_definition (), owns: true);
 #endif
 
 #if NET
 		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[TV (13,0)]
-		[Mac (10,15)]
-		[iOS (13,0)]
+		[TV (13, 0)]
+		[iOS (13, 0)]
 #endif
 		public static NWProtocolDefinition CreateWebSocketDefinition () => new NWProtocolDefinition (nw_protocol_copy_ws_definition (), owns: true);
 
 #if NET
 		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[TV (13,0)]
-		[Mac (10,15)]
-		[iOS (13,0)]
+		[TV (13, 0)]
+		[iOS (13, 0)]
 #endif
 		[DllImport (Constants.NetworkLibrary)]
-		static extern unsafe OS_nw_protocol_definition nw_framer_create_definition (string identifier, NWFramerCreateFlags flags, ref BlockLiteral start_handler);
+		static extern unsafe OS_nw_protocol_definition nw_framer_create_definition (IntPtr identifier, NWFramerCreateFlags flags, BlockLiteral* start_handler);
+#if !NET
 		delegate NWFramerStartResult nw_framer_create_definition_t (IntPtr block, IntPtr framer);
 		static nw_framer_create_definition_t static_CreateFramerHandler = TrampolineCreateFramerHandler;
 
 		[MonoPInvokeCallback (typeof (nw_framer_create_definition_t))]
+#else
+		[UnmanagedCallersOnly]
+#endif
 		static NWFramerStartResult TrampolineCreateFramerHandler (IntPtr block, IntPtr framer)
 		{
 			// get and call, this is internal and we are trying to do all the magic in the call
-			var del = BlockLiteral.GetTarget<Func<NWFramer,NWFramerStartResult>> (block);
+			var del = BlockLiteral.GetTarget<Func<NWFramer, NWFramerStartResult>> (block);
 			if (del is not null) {
 				var nwFramer = new NWFramer (framer, owns: true);
 				return del (nwFramer);
@@ -158,37 +157,40 @@ namespace Network {
 
 #if NET
 		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[TV (13,0)]
-		[Mac (10,15)]
-		[iOS (13,0)]
+		[TV (13, 0)]
+		[iOS (13, 0)]
 #endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static NWProtocolDefinition CreateFramerDefinition (string identifier, NWFramerCreateFlags flags, Func<NWFramer, NWFramerStartResult> startCallback)
 		{
-			BlockLiteral block_handler = new BlockLiteral ();
-			block_handler.SetupBlockUnsafe (static_CreateFramerHandler, startCallback);
-			try {
-				return new NWProtocolDefinition (nw_framer_create_definition (identifier, flags, ref block_handler), owns: true);
-			} finally {
-				block_handler.CleanupBlock ();
+			unsafe {
+#if NET
+				delegate* unmanaged<IntPtr, IntPtr, NWFramerStartResult> trampoline = &TrampolineCreateFramerHandler;
+				using var block = new BlockLiteral (trampoline, startCallback, typeof (NWProtocolDefinition), nameof (TrampolineCreateFramerHandler));
+#else
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (static_CreateFramerHandler, startCallback);
+#endif
+				using var identifierPtr = new TransientString (identifier);
+				return new NWProtocolDefinition (nw_framer_create_definition (identifierPtr, flags, &block), owns: true);
 			}
-		} 
-		
+		}
+
 #if NET
 		[SupportedOSPlatform ("tvos15.0")]
 		[SupportedOSPlatform ("macos12.0")]
 		[SupportedOSPlatform ("ios15.0")]
 		[SupportedOSPlatform ("maccatalyst15.0")]
 #else
-		[Watch (8,0)]
-		[TV (15,0)]
-		[Mac (12,0)]
-		[iOS (15,0)]
-		[MacCatalyst (15,0)]
+		[Watch (8, 0)]
+		[TV (15, 0)]
+		[Mac (12, 0)]
+		[iOS (15, 0)]
+		[MacCatalyst (15, 0)]
 #endif
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_protocol_definition nw_protocol_copy_quic_definition ();
@@ -199,11 +201,11 @@ namespace Network {
 		[SupportedOSPlatform ("ios15.0")]
 		[SupportedOSPlatform ("maccatalyst15.0")]
 #else
-		[Watch (8,0)]
-		[TV (15,0)]
-		[Mac (12,0)]
-		[iOS (15,0)]
-		[MacCatalyst (15,0)]
+		[Watch (8, 0)]
+		[TV (15, 0)]
+		[Mac (12, 0)]
+		[iOS (15, 0)]
+		[MacCatalyst (15, 0)]
 #endif
 		public static NWProtocolDefinition CreateQuicDefinition () => new NWProtocolDefinition (nw_protocol_copy_quic_definition (), owns: true);
 	}

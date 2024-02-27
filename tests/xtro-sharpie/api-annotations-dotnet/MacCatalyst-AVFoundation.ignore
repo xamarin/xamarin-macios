@@ -1,12 +1,3 @@
-## Unavailable
-!missing-field! AVCaptureSessionPresetiFrame960x540 not bound
-!missing-selector! AVAssetReaderOutputCaptionAdaptor::setValidationDelegate: not bound
-
-# delegate is not present and will result in a compilation error
-!missing-selector! AVAssetReaderOutputCaptionAdaptor::validationDelegate not bound
-
-# added and deprecated 
-
 # not possible with the generator but added INSFastEnumeration for whenever is supported.
 !missing-protocol-conformance! AVCaptureSynchronizedDataCollection should conform to NSFastEnumeration
 

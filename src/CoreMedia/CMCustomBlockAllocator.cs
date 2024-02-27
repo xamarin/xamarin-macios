@@ -24,7 +24,7 @@ namespace CoreMedia {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #else
-	[Watch (6,0)]
+	[Watch (6, 0)]
 #endif
 	public class CMCustomBlockAllocator : IDisposable {
 
@@ -85,9 +85,9 @@ namespace CoreMedia {
 			return IntPtr.Zero;
 		}
 
-		public virtual IntPtr Allocate (nuint sizeInBytes) 
+		public virtual IntPtr Allocate (nuint sizeInBytes)
 		{
-			return Marshal.AllocHGlobal ((int)sizeInBytes);
+			return Marshal.AllocHGlobal ((int) sizeInBytes);
 		}
 
 #if NET
@@ -123,14 +123,14 @@ namespace CoreMedia {
 		protected virtual void Dispose (bool disposing)
 		{
 			if (gch.IsAllocated)
-				gch.Free();
+				gch.Free ();
 		}
 	}
 
 	// This class is used internally by a couple of CMBlockBuffer methods
 	// that take a managed array as input parameter
 #if !NET
-	[Watch (6,0)]
+	[Watch (6, 0)]
 #endif
 	internal class CMManagedArrayBlockAllocator : CMCustomBlockAllocator {
 

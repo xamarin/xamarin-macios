@@ -9,7 +9,6 @@ using Microsoft.Build.Utilities;
 
 using NUnit.Framework;
 
-using Xamarin.iOS.Tasks;
 using Xamarin.Utils;
 
 namespace Xamarin.MacDev.Tasks {
@@ -150,7 +149,7 @@ namespace Xamarin.MacDev.Tasks {
 			Assert.AreEqual (manifest, File.ReadAllText (Path.Combine (directory, "manifest")), "Manifest");
 		}
 
-		ITaskItem[] CreateNativeReferences (string tmpdir, bool symlinks)
+		ITaskItem [] CreateNativeReferences (string tmpdir, bool symlinks)
 		{
 			var rv = new List<ITaskItem> ();
 

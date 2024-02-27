@@ -38,11 +38,10 @@ using ObjCRuntime;
 using NativeHandle = System.IntPtr;
 #endif
 
-namespace CoreFoundation {	
+namespace CoreFoundation {
 
 	// CFBase.h
-	public partial class CFAllocator : NativeObject
-	{
+	public partial class CFAllocator : NativeObject {
 #if !COREBUILD
 		static CFAllocator? Default_cf;
 		static CFAllocator? SystemDefault_cf;
@@ -81,7 +80,7 @@ namespace CoreFoundation {
 				return SystemDefault_cf ?? (SystemDefault_cf = new CFAllocator (system_default_ptr, false));
 			}
 		}
-		
+
 		public static CFAllocator Malloc {
 			get {
 				return Malloc_cf ?? (Malloc_cf = new CFAllocator (malloc_ptr, false));
@@ -106,7 +105,7 @@ namespace CoreFoundation {
 
 		public IntPtr Allocate (long size)
 		{
-			return CFAllocatorAllocate (Handle, (nint)size, 0);
+			return CFAllocatorAllocate (Handle, (nint) size, 0);
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
@@ -117,7 +116,7 @@ namespace CoreFoundation {
 			CFAllocatorDeallocate (Handle, ptr);
 		}
 
-		[DllImport (Constants.CoreFoundationLibrary, EntryPoint="CFAllocatorGetTypeID")]
+		[DllImport (Constants.CoreFoundationLibrary, EntryPoint = "CFAllocatorGetTypeID")]
 		public extern static /* CFTypeID */ nint GetTypeID ();
 	}
 }

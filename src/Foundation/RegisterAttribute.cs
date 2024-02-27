@@ -23,24 +23,28 @@
 //
 using System;
 
+#nullable enable
+
 namespace Foundation {
 
 	[AttributeUsage (AttributeTargets.Class)]
 	public sealed class RegisterAttribute : Attribute {
-		string name;
+		string? name;
 		bool is_wrapper;
 
-		public RegisterAttribute () {}
-		public RegisterAttribute (string name) {
+		public RegisterAttribute () { }
+		public RegisterAttribute (string name)
+		{
 			this.name = name;
 		}
 
-		public RegisterAttribute (string name, bool isWrapper) {
+		public RegisterAttribute (string name, bool isWrapper)
+		{
 			this.name = name;
 			this.is_wrapper = isWrapper;
 		}
 
-		public string Name {
+		public string? Name {
 			get { return this.name; }
 			set { this.name = value; }
 		}

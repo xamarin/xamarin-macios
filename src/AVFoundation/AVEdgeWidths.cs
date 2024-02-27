@@ -75,8 +75,7 @@ namespace AVFoundation {
 
 		public override int GetHashCode ()
 		{
-			return (int) Left ^
-				(int) Top ^ (int) Right ^ (int) Bottom;
+			return HashCode.Combine (Left, Top, Right, Bottom);
 		}
 
 		public override bool Equals (object? other)

@@ -18,18 +18,21 @@ using NUnit.Framework;
 using Xamarin.Utils;
 
 namespace MonoTouchFixtures.AddressBook {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class AddressBookTest {
-		
+
 		// very general ABSource related tests (works on both simulator and devices)
-		
+
 		[SetUp]
 		public void Setup ()
 		{
 			// The API here was introduced to Mac Catalyst later than for the other frameworks, so we have this additional check
 			TestRuntime.AssertSystemVersion (ApplePlatform.MacCatalyst, 14, 0, throwIfOtherPlatform: false);
+			if (TestRuntime.CheckXcodeVersion (15, 0)) {
+				Assert.Ignore ("The addressbook framework is deprecated in Xcode 15.0 and always returns null");
+			}
 		}
 
 		[Test]
@@ -41,7 +44,7 @@ namespace MonoTouchFixtures.AddressBook {
 			int value = Runtime.Arch == Arch.DEVICE || TestRuntime.CheckSystemVersion (ApplePlatform.iOS, 7, 0, throwIfOtherPlatform: false) ? 0 : 1;
 			Assert.That (sources.Length, Is.GreaterThanOrEqualTo (value), "GetAllSources");
 		}
-		
+
 		[Test]
 		public void GetDefaultSource ()
 		{

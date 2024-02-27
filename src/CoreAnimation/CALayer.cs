@@ -28,7 +28,7 @@
 //
 using System;
 
-using Foundation; 
+using Foundation;
 using ObjCRuntime;
 #if MONOMAC
 using AppKit;
@@ -48,7 +48,7 @@ namespace CoreAnimation {
 			if (other is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (other));
 
-			if (this.GetType () == typeof (CALayer)){
+			if (this.GetType () == typeof (CALayer)) {
 				Messaging.IntPtr_objc_msgSend_IntPtr (Handle, Selector.GetHandle (selInitWithLayer), other.Handle);
 			} else {
 				Messaging.IntPtr_objc_msgSendSuper_IntPtr (SuperHandle, Selector.GetHandle (selInitWithLayer), other.Handle);
@@ -114,7 +114,7 @@ namespace CoreAnimation {
 			}
 		}
 
-		public T? GetContentsAs <T> () where T : NSObject
+		public T? GetContentsAs<T> () where T : NSObject
 		{
 			return Runtime.GetNSObject<T> (_Contents);
 		}
@@ -136,15 +136,10 @@ namespace CoreAnimation {
 		}
 #endif
 #if NET
-		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("macos10.12")]
-		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
-#else
-		[Watch (3,0)]
-		[TV (10,0)]
-		[Mac (10,12)]
-		[iOS (10,0)]
 #endif
 		public CAContentsFormat ContentsFormat {
 			get { return CAContentsFormatExtensions.GetValue (_ContentsFormat); }

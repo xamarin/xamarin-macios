@@ -29,45 +29,21 @@ parameters:
   type: boolean
   default: true
 
+- name: uploadPrefix
+  type: string
+  default: '$(MaciosUploadPrefix)'
+
 steps:
 
-- pwsh: |
-    $style=$Env:STYLE
-    $output=$Env:OUTPUT
-
-    Write-Host "output path: $output"
-
-    # there is no var that gives us the start time, but we can use the rest api to get the time when
-    # the build started
-
-    # User name can be anything. It is the personal access token (PAT) token that matters.
-    $user= "AnyUser"
-    $base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f $user, $Env:ACCESSTOKEN)))
-    $headers = @{Authorization = "Basic {0}" -f $base64AuthInfo}
-
-    # get the url of the build
-    $url= $Env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI + "$Env:SYSTEM_TEAMPROJECT/_apis/build/builds/" + $Env:BUILD_BUILDID + "?api-version=5.1"
-    $buildPipeline= Invoke-RestMethod -Uri $url -Headers $headers -Method Get
-
-    $start=[DateTime]::Parse($buildPipeline.startTime).ToString("yyyy-MM-dd HH:mm:ss")
-
-    $end=Get-Date -Format "yyyy-MM-dd HH:mm:ss"
-    Write-Host "end time: $end"
-
-    $predicate=$Env:PREDICATE
-    if (-not $predicate) {
-      log show --style $style --start "$start" --end "$end" > $output
-    } else {
-      log show --predicate $predicate --style $style --start "$start" --end "$end" > $output
-    }
-
+- pwsh: >-
+    $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/generate_agent_logs.ps1
+    -VstsToken "$(System.AccessToken)"
+    -Style "${{ parameters.style }}"
+    -Output "${{ parameters.outputPath }}"
+    -Predicate "${{ parameters.predicate }}"
   displayName: 'Gathering agent logs'
   condition: always()
-  env:
-    ACCESSTOKEN: $(System.AccessToken)
-    OUTPUT: ${{ parameters.outputPath }}
-    PREDICATE: ${{ parameters.predicate }}
-    STYLE: ${{ parameters.style }}
+  continueOnError: true
   ${{ if ne(parameters.workingDirectory, '') }}:
     workingDirectory: ${{ parameters.workingDirectory }}
 
@@ -82,5 +58,5 @@ steps:
         targetPath: ${{ parameters.outputPath }}
       ${{ else }}:
         targetPath: ${{ parameters.workingDirectory }}/${{ parameters.outputPath }} 
-      artifactName: $(Agent.Name)-$(System.JobName)-$(System.JobId)-${{ parameters.outputPath }} 
+      artifactName: '${{ parameters.uploadPrefix }}$(Agent.Name)-$(System.JobName)-$(System.JobId)-${{ parameters.outputPath }}'
     continueOnError: true

@@ -15,13 +15,13 @@ using ObjCRuntime;
 
 namespace GameplayKit {
 	public partial class GKComponentSystem<TComponent> {
-		
+
 		public GKComponentSystem ()
 			: this (GKState.GetClass (typeof (TComponent), "componentType"))
 		{
 		}
 
-		public Type? ComponentType { 
+		public Type? ComponentType {
 			get { return Class.Lookup (ComponentClass); }
 		}
 

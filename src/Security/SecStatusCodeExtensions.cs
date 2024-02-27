@@ -29,9 +29,9 @@ namespace Security {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 #else
-		[iOS (11,3)]
-		[TV (11,3)]
-		[Watch (4,3)]
+		[iOS (11, 3)]
+		[TV (11, 3)]
+		[Watch (4, 3)]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
 		extern static /* CFStringRef */ IntPtr SecCopyErrorMessageString (
@@ -44,9 +44,9 @@ namespace Security {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 #else
-		[iOS (11,3)] // Since Mac 10,3
-		[TV (11,3)]
-		[Watch (4,3)]
+		[iOS (11, 3)] // Since Mac 10,3
+		[TV (11, 3)]
+		[Watch (4, 3)]
 #endif
 		public static string GetStatusDescription (this SecStatusCode status)
 		{

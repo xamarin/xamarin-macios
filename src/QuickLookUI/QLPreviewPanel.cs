@@ -9,8 +9,7 @@ using System;
 using System.ComponentModel;
 
 namespace QuickLookUI {
-	public partial class QLPreviewPanel
-	{
+	public partial class QLPreviewPanel {
 		public bool EnterFullScreenMode ()
 		{
 			return EnterFullScreenMode (null, null);

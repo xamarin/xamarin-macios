@@ -35,6 +35,8 @@ using Foundation;
 using ObjCRuntime;
 using CoreGraphics;
 
+#nullable enable
+
 namespace AppKit {
 	public partial class NSBezierPath {
 
@@ -46,16 +48,16 @@ namespace AppKit {
 			_GetLineDash (IntPtr.Zero, out length, out phase);
 
 			pattern = new nfloat [length];
-			fixed (nfloat* ptr = &pattern [0])
+			fixed (nfloat* ptr = pattern)
 				_GetLineDash ((IntPtr) ptr, out length, out phase);
 		}
 
 		public unsafe void SetLineDash (nfloat [] pattern, nfloat phase)
 		{
-			if (pattern == null)
+			if (pattern is null)
 				throw new ArgumentNullException ("pattern");
 
-			fixed (nfloat* ptr = &pattern [0])
+			fixed (nfloat* ptr = pattern)
 				_SetLineDash ((IntPtr) ptr, pattern.Length, phase);
 		}
 
@@ -67,7 +69,7 @@ namespace AppKit {
 			// Create output with 3 elements at first
 			points = new CGPoint [3];
 
-			fixed (CGPoint* ptr = &points [0])
+			fixed (CGPoint* ptr = points)
 				bpe = _ElementAt (index, (IntPtr) ptr);
 
 			if (bpe != NSBezierPathElement.CurveTo) {
@@ -80,24 +82,24 @@ namespace AppKit {
 
 		public unsafe void SetAssociatedPointsAtIndex (CGPoint [] points, nint index)
 		{
-			if (points == null)
+			if (points is null)
 				throw new ArgumentNullException ("points");
 
 			if (points.Length < 1)
 				throw new ArgumentException ("points array is empty");
 
-			fixed (CGPoint* ptr = &points [0])
+			fixed (CGPoint* ptr = points)
 				_SetAssociatedPointsAtIndex ((IntPtr) ptr, index);
 		}
 
 		public unsafe void Append (CGPoint [] points)
 		{
-			if (points == null)
+			if (points is null)
 				throw new ArgumentNullException ("points");
 			if (points.Length < 1)
 				throw new ArgumentException ("points array is empty");
 
-			fixed (CGPoint* ptr = &points [0])
+			fixed (CGPoint* ptr = points)
 				_AppendPathWithPoints ((IntPtr) ptr, points.Length);
 		}
 
@@ -111,30 +113,28 @@ namespace AppKit {
 		[Obsolete ("Use 'Append (uint[], NSFont)' instead.")]
 		public unsafe void AppendPathWithGlyphs (uint [] glyphs, NSFont font)
 		{
-			if (glyphs == null)
+			if (glyphs is null)
 				throw new ArgumentNullException ("glyphs");
 			if (glyphs.Length < 1)
 				throw new ArgumentException ("glyphs array is empty");
 
-			fixed (uint* ptr = &glyphs [0])
+			fixed (uint* ptr = glyphs)
 				_AppendPathWithGlyphs ((IntPtr) ptr, glyphs.Length, font);
 		}
 #endif
 
 #if NET
-		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10, 13)]
 #endif
 		public unsafe void Append (uint [] glyphs, NSFont font)
 		{
-			if (glyphs == null)
+			if (glyphs is null)
 				throw new ArgumentNullException ("glyphs");
 			if (glyphs.Length < 1)
 				throw new ArgumentException ("glyphs array is empty");
 
-			fixed (uint* ptr = &glyphs [0])
+			fixed (uint* ptr = glyphs)
 				_AppendBezierPathWithCGGlyphs ((IntPtr) ptr, glyphs.Length, font);
 		}
 	}

@@ -2,10 +2,8 @@ using System.Collections.Generic;
 
 using Microsoft.Build.Framework;
 
-namespace Xamarin.MacDev.Tasks
-{
-	public class Logger : ILogger
-	{
+namespace Xamarin.MacDev.Tasks {
+	public class Logger : ILogger {
 		public List<CustomBuildEventArgs> CustomEvents {
 			get; set;
 		}

@@ -18,26 +18,17 @@ namespace GameController {
 	// GCGamepadSnapshot.h
 	// float_t are 4 bytes (at least for ARM64)
 #if NET
-	[SupportedOSPlatform ("ios7.0")]
-	[SupportedOSPlatform ("macos10.9")]
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("tvos")]
-	[UnsupportedOSPlatform ("macos10.15")]
-	[UnsupportedOSPlatform ("tvos13.0")]
-	[UnsupportedOSPlatform ("ios13.0")]
-#if MONOMAC
-	[Obsolete ("Starting with macos10.15 use 'GCExtendedGamepad' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif TVOS
-	[Obsolete ("Starting with tvos13.0 use 'GCExtendedGamepad' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-	[Obsolete ("Starting with ios13.0 use 'GCExtendedGamepad' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+	[ObsoletedOSPlatform ("macos10.15", "Use 'GCExtendedGamepad' instead.")]
+	[ObsoletedOSPlatform ("tvos13.0", "Use 'GCExtendedGamepad' instead.")]
+	[ObsoletedOSPlatform ("ios13.0", "Use 'GCExtendedGamepad' instead.")]
 #else
 	[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'GCExtendedGamepad' instead.")]
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'GCExtendedGamepad' instead.")]
 	[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'GCExtendedGamepad' instead.")]
-	[iOS (7,0)]
-	[Mac (10,9)]
 #endif
 	[StructLayout (LayoutKind.Sequential, Pack = 1)]
 	public struct GCGamepadSnapShotDataV100 {
@@ -71,7 +62,7 @@ namespace GameController {
 	}
 
 	public partial class GCGamepadSnapshot {
-		
+
 		// GCGamepadSnapshot.h
 		[DllImport (Constants.GameControllerLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]

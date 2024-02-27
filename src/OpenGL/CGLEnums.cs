@@ -29,47 +29,41 @@ using ObjCRuntime;
 namespace OpenGL {
 
 #if NET
-	[UnsupportedOSPlatform ("macos10.14")]
-#if MONOMAC
-	[Obsolete ("Starting with macos10.14 use 'Metal' Framework instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+	[SupportedOSPlatform ("macos")]
+	[ObsoletedOSPlatform ("macos10.14", "Use 'Metal' Framework instead.")]
 #else
 	[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'Metal' Framework instead.")]
 #endif
-	public enum CGLErrorCode : uint
-	{
-		NoError            = 0,		/* no error */
-		BadAttribute       = 10000,	/* invalid pixel format attribute  */
-		BadProperty        = 10001,	/* invalid renderer property       */
-		BadPixelFormat     = 10002,	/* invalid pixel format            */
-		BadRendererInfo    = 10003,	/* invalid renderer info           */
-		BadContext         = 10004,	/* invalid context                 */
-		BadDrawable        = 10005,	/* invalid drawable                */
-		BadDisplay         = 10006,	/* invalid graphics device         */
-		BadState           = 10007,	/* invalid context state           */
-		BadValue           = 10008,	/* invalid numerical value         */
-		BadMatch           = 10009,	/* invalid share context           */
-		BadEnumeration     = 10010,	/* invalid enumerant               */
-		BadOffScreen       = 10011,	/* invalid offscreen drawable      */
-		BadFullScreen      = 10012,	/* invalid offscreen drawable      */
-		BadWindow          = 10013,	/* invalid window                  */
-		BadAddress         = 10014,	/* invalid pointer                 */
-		BadCodeModule      = 10015,	/* invalid code module             */
-		BadAlloc           = 10016,	/* invalid memory allocation       */
-		BadConnection      = 10017 	/* invalid CoreGraphics connection */
+	public enum CGLErrorCode : uint {
+		NoError = 0,        /* no error */
+		BadAttribute = 10000,   /* invalid pixel format attribute  */
+		BadProperty = 10001,    /* invalid renderer property       */
+		BadPixelFormat = 10002, /* invalid pixel format            */
+		BadRendererInfo = 10003,    /* invalid renderer info           */
+		BadContext = 10004, /* invalid context                 */
+		BadDrawable = 10005,    /* invalid drawable                */
+		BadDisplay = 10006, /* invalid graphics device         */
+		BadState = 10007,   /* invalid context state           */
+		BadValue = 10008,   /* invalid numerical value         */
+		BadMatch = 10009,   /* invalid share context           */
+		BadEnumeration = 10010, /* invalid enumerant               */
+		BadOffScreen = 10011,   /* invalid offscreen drawable      */
+		BadFullScreen = 10012,  /* invalid offscreen drawable      */
+		BadWindow = 10013,  /* invalid window                  */
+		BadAddress = 10014, /* invalid pointer                 */
+		BadCodeModule = 10015,  /* invalid code module             */
+		BadAlloc = 10016,   /* invalid memory allocation       */
+		BadConnection = 10017   /* invalid CoreGraphics connection */
 
 	}
 
 #if NET
-	[UnsupportedOSPlatform ("macos10.14")]
-#if MONOMAC
-	[Obsolete ("Starting with macos10.14 use 'Metal' Framework instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+	[SupportedOSPlatform ("macos")]
+	[ObsoletedOSPlatform ("macos10.14", "Use 'Metal' Framework instead.")]
 #else
 	[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'Metal' Framework instead.")]
 #endif
-	public enum CGLPixelFormatAttribute : uint
-	{
+	public enum CGLPixelFormatAttribute : uint {
 		AllRenderers = 1,
 		DoubleBuffer = 5,
 		Stereo = 6,
@@ -109,4 +103,4 @@ namespace OpenGL {
 		VirtualScreenCount = 128
 	}
 
-} 
+}

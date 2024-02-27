@@ -20,7 +20,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 		[Test]
 		public void ToStringTest ()
 		{
-			var size = new CGSize ((nfloat)1, (nfloat)2);
+			var size = new CGSize ((nfloat) 1, (nfloat) 2);
 #if NET
 			Assert.AreEqual ("{1, 2}", size.ToString (), "ToString");
 #else

@@ -2,13 +2,12 @@ using Foundation;
 using ObjCRuntime;
 using CoreBluetooth;
 
-namespace Test
-{
-	
+namespace Test {
+
 	[StrongDictionary ("AdvertisementDataKeys")]
 	interface AdvertisementData {
 		// property under tests, the generator should create a compilable property
-		NSDictionary <CBUUID, NSData> ServiceData { get; set; }
+		NSDictionary<CBUUID, NSData> ServiceData { get; set; }
 	}
 
 	[Static, Internal]

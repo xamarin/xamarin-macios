@@ -6,8 +6,7 @@ using System.Text;
 
 static class C {
 	[Flags]
-	enum Architecture
-	{
+	enum Architecture {
 		None = 0,
 		X86 = 1,
 		X64 = 2,
@@ -50,8 +49,7 @@ static class C {
 	static string [] structs = structs_and_stret.Select ((v) => v.IndexOf (':') >= 0 ? v.Substring (0, v.IndexOf (':')) : v).ToArray ();
 	static Architecture [] strets = structs_and_stret.Select ((v) => v.IndexOf (':') >= 0 ? (Architecture) int.Parse (v.Substring (v.IndexOf (':') + 1)) : Architecture.None).ToArray ();
 
-	class BindAsData
-	{
+	class BindAsData {
 		public string Managed;
 		public string Native;
 		public string ManagedCondition;
@@ -81,7 +79,7 @@ static class C {
 		new BindAsData { Managed = "Boolean", Native = "BOOL", ManagedNewExpression = "true", Map = ".BoolValue" },
 		new BindAsData { Managed = "NSStreamStatus", Native = "NSStreamStatus", ManagedNewExpression = "NSStreamStatus.Closed", Map = ".UInt64Value", ToNSNumberCastExpression = "(ulong) ", FromNSNumberCastExpression = "(NSStreamStatus) " },
 	};
-	static BindAsData[] bindas_nsvalue = new [] {
+	static BindAsData [] bindas_nsvalue = new [] {
 		new BindAsData { Managed = "CGAffineTransform", Native = "CGAffineTransform", ManagedCondition = "!__MACOS__", ManagedNewExpression = "new CGAffineTransform (1, 2, 3, 4, 5, 6)", Map = ".CGAffineTransformValue", MapFrom = "FromCGAffineTransform" },
 		new BindAsData { Managed = "NSRange", Native = "NSRange", ManagedNewExpression = "new NSRange (7, 8)", Map = ".RangeValue", MapFrom = "FromRange" },
 		new BindAsData { Managed = "CGVector", Native = "CGVector", ManagedCondition = "!__MACOS__", ManagedNewExpression = "new CGVector (9, 10)", Map = ".CGVectorValue", MapFrom = "FromCGVector", MinXcodeVersion = new Version (8, 0) },
@@ -98,6 +96,7 @@ static class C {
 		new BindAsData { Managed = "CMTimeRange", Native = "CMTimeRange", ManagedCondition = "HAVE_COREMEDIA", ManagedNewExpression = "new CMTimeRange { Duration = new CMTime (37, 38), Start = new CMTime (39, 40) }", Map = ".CMTimeRangeValue", MapFrom = "FromCMTimeRange"  },
 		new BindAsData { Managed = "CMTime", Native = "CMTime", ManagedCondition = "HAVE_COREMEDIA",  ManagedNewExpression = "new CMTime (35, 36)", Map = ".CMTimeValue", MapFrom = "FromCMTime"  },
 		new BindAsData { Managed = "CMTimeMapping", Native = "CMTimeMapping", ManagedCondition = "HAVE_COREMEDIA", ManagedNewExpression = "new CMTimeMapping { Source = new CMTimeRange { Duration = new CMTime (42, 43), Start = new CMTime (44, 45) } }", Map = ".CMTimeMappingValue", MapFrom = "FromCMTimeMapping"  },
+		new BindAsData { Managed = "CMVideoDimensions", Native = "CMVideoDimensions", ManagedCondition = "HAVE_COREMEDIA", ManagedNewExpression = "new CMVideoDimensions { Height = 51, Width = 52 }", Map = ".CMVideoDimensionsValue", MapFrom = "FromCMVideoDimensions", MinXcodeVersion = new Version (14, 0) },
 		new BindAsData { Managed = "CATransform3D", Native = "CATransform3D", ManagedCondition = "HAVE_COREANIMATION", ManagedNewExpression = "new CATransform3D { M11 = 41 }", Map = ".CATransform3DValue", MapFrom = "FromCATransform3D"  },
 		new BindAsData { Managed = "NSDirectionalEdgeInsets", Native = "NSDirectionalEdgeInsets", ManagedCondition = "HAVE_UIKIT", ManagedNewExpression = "new NSDirectionalEdgeInsets (42, 43, 44, 45)", Map = ".DirectionalEdgeInsetsValue", MapFrom = "FromDirectionalEdgeInsets", MinXcodeVersion = new Version (9, 0) },
 	};
@@ -341,7 +340,7 @@ static class C {
 
 #define HAVE_MAPKIT
 ");
-		
+
 	}
 
 	static void WriteApiDefinition ()
@@ -375,7 +374,7 @@ namespace Bindings.Test {
 	partial interface ObjCRegistrarTest {
 
 ");
-		
+
 		foreach (var s in structs) {
 			w.AppendLine ($"\t\t[Export (\"PS{s}\")]");
 			w.AppendLine ($"\t\tS{s} PS{s} {{ get; set; }}");
@@ -384,7 +383,7 @@ namespace Bindings.Test {
 
 		w.AppendLine ("\t\t// BindAs: NSNumber");
 		foreach (var v in bindas_nsnumber) {
-			if (v.ManagedCondition != null)
+			if (v.ManagedCondition is not null)
 				w.AppendLine ($"#if {v.ManagedCondition}");
 
 			// no BindAs
@@ -404,7 +403,7 @@ namespace Bindings.Test {
 			w.AppendLine ($"\t\t[return: BindAs (typeof ({v.Managed}))]");
 			w.AppendLine ($"\t\t[return: NullAllowed] // This should be the default");
 			w.AppendLine ($"\t\tNSNumber Get{v.Managed}NumberNonNullable ();");
-			
+
 			w.AppendLine ();
 			w.AppendLine ($"\t\t[Export (\"set{v.Managed}NumberNonNullable:\")]");
 			w.AppendLine ($"\t\tvoid Set{v.Managed}NumberNonNullable ([BindAs (typeof ({v.Managed}))] NSNumber value);");
@@ -494,14 +493,14 @@ namespace Bindings.Test {
 			//w.AppendLine ($"\t\t[BindAs (typeof ({v.Managed}?[][]))]");
 			//w.AppendLine ($"\t\tNSNumber[][] P{v.Managed}NullableMulti2ArrayValue {{ get; set; }}");
 
-			if (v.ManagedCondition != null)
+			if (v.ManagedCondition is not null)
 				w.AppendLine ("#endif");
 			w.AppendLine ();
 		}
 
 		w.AppendLine ("\t\t// BindAs: NSValue");
 		foreach (var v in bindas_nsvalue) {
-			if (v.ManagedCondition != null)
+			if (v.ManagedCondition is not null)
 				w.AppendLine ($"#if {v.ManagedCondition}");
 
 			// no BindAs
@@ -613,14 +612,14 @@ namespace Bindings.Test {
 			//w.AppendLine ($"\t\tNSValue[][] P{v.Managed}NullableMulti2ArrayValue {{ get; set; }}");
 
 
-			if (v.ManagedCondition != null)
+			if (v.ManagedCondition is not null)
 				w.AppendLine ("#endif");
 			w.AppendLine ();
 		}
 
 		w.AppendLine ("\t\t// BindAs: NSString");
 		foreach (var v in bindas_nsstring) {
-			if (v.ManagedCondition != null)
+			if (v.ManagedCondition is not null)
 				w.AppendLine ($"#if {v.ManagedCondition}");
 			// plain value
 			w.AppendLine ($"\t\t[return: BindAs (typeof ({v.Managed}))]");
@@ -704,7 +703,7 @@ namespace Bindings.Test {
 			//w.AppendLine ($"\t\t[Export (\"PSmart{v.Managed}PropertiesMulti:\")]");
 			//w.AppendLine ($"\t\tNSString[,] PSmart{v.Managed}PropertiesMulti {{ get; set; }}");
 
-			if (v.ManagedCondition != null)
+			if (v.ManagedCondition is not null)
 				w.AppendLine ("#endif");
 			w.AppendLine ();
 		}
@@ -754,11 +753,11 @@ namespace Bindings.Test
 	static void WriteAsserts (StringBuilder w, BindAsData v)
 	{
 		w.AppendLine ($"\t\t\tAssertIfIgnored ();");
-		if (v.MinXcodeVersion != null) {
+		if (v.MinXcodeVersion is not null) {
 			w.AppendLine ($"\t\t\tTestRuntime.AssertXcodeVersion ({v.MinXcodeVersion.Major}, {v.MinXcodeVersion.Minor});");
 			w.AppendLine ();
 		}
-		if (v.MinMacOSVersion != null) {
+		if (v.MinMacOSVersion is not null) {
 			w.AppendLine ($"\t\t\tTestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, {v.MinMacOSVersion.Major}, {v.MinMacOSVersion.Minor}, throwIfOtherPlatform: false);");
 			w.AppendLine ();
 		}
@@ -837,7 +836,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 
 		w.AppendLine ("\t\t\t// BindAs: NSNumber");
 		foreach (var v in bindas_nsnumber) {
-			if (v.ManagedCondition != null)
+			if (v.ManagedCondition is not null)
 				w.AppendLine ($"#if {v.ManagedCondition}");
 
 			w.AppendLine ($"\t\t\t{v.Managed}? _{v.Managed};");
@@ -853,14 +852,14 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			w.AppendLine ($"\t\t\tpublic override {v.Managed}[] Get{v.Managed}Array () {{ return _{v.Managed}Array; }}");
 			w.AppendLine ($"\t\t\tpublic override void Set{v.Managed}Array ({v.Managed}[] value) {{ _{v.Managed}Array = value; }}");
 
-			if (v.ManagedCondition != null)
+			if (v.ManagedCondition is not null)
 				w.AppendLine ("#endif");
 			w.AppendLine ();
 		}
 
 		w.AppendLine ("\t\t\t// BindAs: NSValue");
 		foreach (var v in bindas_nsvalue) {
-			if (v.ManagedCondition != null)
+			if (v.ManagedCondition is not null)
 				w.AppendLine ($"#if {v.ManagedCondition}");
 
 			w.AppendLine ($"\t\t\t{v.Managed}? _{v.Managed};");
@@ -876,14 +875,14 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			w.AppendLine ($"\t\t\tpublic override {v.Managed}[] Get{v.Managed}Array () {{ return _{v.Managed}Array; }}");
 			w.AppendLine ($"\t\t\tpublic override void Set{v.Managed}Array ({v.Managed}[] value) {{ _{v.Managed}Array = value; }}");
 
-			if (v.ManagedCondition != null)
+			if (v.ManagedCondition is not null)
 				w.AppendLine ("#endif");
 			w.AppendLine ();
 		}
 
 		w.AppendLine ("\t\t\t// BindAs: NSString");
 		foreach (var v in bindas_nsstring) {
-			if (v.ManagedCondition != null)
+			if (v.ManagedCondition is not null)
 				w.AppendLine ($"#if {v.ManagedCondition}");
 
 			w.AppendLine ($"\t\t\t{v.Managed}? _{v.Managed};");
@@ -901,14 +900,14 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			w.AppendLine ($"\t\t\tpublic override {v.Managed}[] GetSmart{v.Managed}Values () {{ return _{v.Managed}Array; }}");
 			w.AppendLine ($"\t\t\tpublic override void SetSmart{v.Managed}Values ({v.Managed}[] value) {{ _{v.Managed}Array = value; }}");
 
-			if (v.ManagedCondition != null)
+			if (v.ManagedCondition is not null)
 				w.AppendLine ("#endif");
 			w.AppendLine ();
 		}
 		w.AppendLine ("\t\t}");
 
 		foreach (var v in bindas_nsnumber) {
-			if (v.ManagedCondition != null)
+			if (v.ManagedCondition is not null)
 				w.AppendLine ($"#if {v.ManagedCondition}");
 
 			// Bindings
@@ -1070,7 +1069,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			w.AppendLine ($"\t\t\t}}");
 			w.AppendLine ("\t\t}");
 
-			if  (v.ManagedCondition != null)
+			if (v.ManagedCondition is not null)
 				w.AppendLine ("#endif");
 
 			w.AppendLine ();
@@ -1078,7 +1077,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 
 
 		foreach (var v in bindas_nsvalue) {
-			if (v.ManagedCondition != null)
+			if (v.ManagedCondition is not null)
 				w.AppendLine ($"#if {v.ManagedCondition}");
 
 			// Bindings
@@ -1239,14 +1238,14 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			w.AppendLine ("\t\t}");
 			w.AppendLine ();
 
-			if (v.ManagedCondition != null)
+			if (v.ManagedCondition is not null)
 				w.AppendLine ("#endif");
-			
+
 			w.AppendLine ();
 		}
 
 		foreach (var v in bindas_nsstring) {
-			if (v.ManagedCondition != null)
+			if (v.ManagedCondition is not null)
 				w.AppendLine ($"#if {v.ManagedCondition}");
 
 			// Bindings
@@ -1274,7 +1273,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			w.AppendLine ($"\t\t\t\tAssert.AreEqual (value.Value, obj.GetSmart{v.Managed}Value (), \"non-nullable get method after setting custom value\");");
 			w.AppendLine ();
 
-			w.AppendLine ($"\t\t\t\tvalue = null;");	
+			w.AppendLine ($"\t\t\t\tvalue = null;");
 			w.AppendLine ($"\t\t\t\tobj.SetSmartNullable{v.Managed}Value (value);");
 			w.AppendLine ($"\t\t\t\tAssert.Throws<ArgumentNullException> (() => {{ Console.WriteLine (obj.PSmart{v.Managed}Property); }}, \"null property after setting null value\");");
 			w.AppendLine ($"\t\t\t\tAssert.Throws<ArgumentNullException> (() => {{ Console.WriteLine (obj.GetSmart{v.Managed}Value ()); }}, \"non-nullable method after setting null value\");");
@@ -1405,7 +1404,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			w.AppendLine ("\t\t}");
 			w.AppendLine ();
 
-			if (v.ManagedCondition != null)
+			if (v.ManagedCondition is not null)
 				w.AppendLine ("#endif");
 
 			w.AppendLine ();

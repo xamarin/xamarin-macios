@@ -35,8 +35,7 @@ using ObjCRuntime;
 
 namespace CoreBluetooth {
 
-	public partial class PeripheralScanningOptions
-	{
+	public partial class PeripheralScanningOptions {
 #if !COREBUILD
 		public bool AllowDuplicatesKey {
 			get {

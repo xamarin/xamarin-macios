@@ -7,42 +7,40 @@ using UIKit;
 using ObjCRuntime;
 using Constants = global::ObjCRuntime.Constants;
 
-namespace Xamarin.iOS.UnitTests
-{
-	public class LogWriter
-	{
+namespace Xamarin.iOS.UnitTests {
+	public class LogWriter {
 		TextWriter writer;
 
 		public MinimumLogLevel MinimumLogLevel { get; set; } = MinimumLogLevel.Info;
 
 		public LogWriter () : this (Console.Out) { }
-		
+
 		public LogWriter (TextWriter w)
 		{
 			writer = w ?? Console.Out;
 			InitLogging ();
 		}
-		
+
 		[System.Runtime.InteropServices.DllImport ("/usr/lib/libobjc.dylib")]
 		static extern IntPtr objc_msgSend (IntPtr receiver, IntPtr selector);
-		
+
 		static string UniqueIdentifier {
 			get {
 #if !__WATCHOS__ && !MONOMAC
 				IntPtr handle = UIDevice.CurrentDevice.Handle;
 				if (UIDevice.CurrentDevice.RespondsToSelector (new Selector ("uniqueIdentifier")))
-					return NSString.FromHandle (objc_msgSend (handle, Selector.GetHandle("uniqueIdentifier")));
+					return NSString.FromHandle (objc_msgSend (handle, Selector.GetHandle ("uniqueIdentifier")));
 #endif
 				return "unknown";
 			}
 		}
-		
+
 		public void InitLogging ()
 		{
 #if !__WATCHOS__ && !MONOMAC
 			UIDevice device = UIDevice.CurrentDevice;
 #endif
-			
+
 			// print some useful info
 			writer.WriteLine ("[Runner executing:\t{0}]", "Run everything");
 			writer.WriteLine ("[MonoTouch Version:\t{0}]", Constants.Version);
@@ -95,7 +93,7 @@ namespace Xamarin.iOS.UnitTests
 			writer.WriteLine (message);
 			writer.Flush ();
 		}
-		
+
 		public void Info (string message)
 		{
 			writer.WriteLine (message);

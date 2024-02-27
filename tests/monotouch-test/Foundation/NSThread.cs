@@ -8,14 +8,12 @@ using ObjCRuntime;
 using Foundation;
 using CoreGraphics;
 
-namespace Xamarin.Mac.Tests
-{
+namespace Xamarin.Mac.Tests {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class NSThreadTests
-	{
+	public class NSThreadTests {
 		[Test]
-		public void NSThread_CallStack_Test()
+		public void NSThread_CallStack_Test ()
 		{
 			string [] stack = NSThread.NativeCallStack;
 			Assert.IsNotNull (stack);

@@ -30,7 +30,7 @@ namespace MultipeerConnectivity {
 			}
 		}
 
-		public MCSession (MCPeerID myPeerID, SecIdentity identity, SecCertificate[] certificates, MCEncryptionPreference encryptionPreference)
+		public MCSession (MCPeerID myPeerID, SecIdentity identity, SecCertificate [] certificates, MCEncryptionPreference encryptionPreference)
 			: base (NSObjectFlag.Empty)
 		{
 			if (identity is null) {

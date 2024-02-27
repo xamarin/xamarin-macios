@@ -2,3 +2,6 @@
 !missing-pinvoke! MKRoadWidthAtZoomScale is not bound
 !missing-protocol-conformance! MKUserLocation should conform to MKAnnotation
 !missing-protocol-member! MKOverlay::coordinate not found
+
+## Marked as unavailable on tvOS
+!missing-enum-value! MKUserTrackingMode native value MKUserTrackingModeFollowWithHeading = 2 not bound

@@ -16,8 +16,8 @@ using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
 using Security;
-using OS_nw_protocol_definition=System.IntPtr;
-using IntPtr=System.IntPtr;
+using OS_nw_protocol_definition = System.IntPtr;
+using IntPtr = System.IntPtr;
 
 #if !NET
 using NativeHandle = System.IntPtr;
@@ -27,21 +27,20 @@ namespace Network {
 
 #if NET
 	[SupportedOSPlatform ("tvos12.0")]
-	[SupportedOSPlatform ("macos10.14")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("ios12.0")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
-	[TV (12,0)]
-	[Mac (10,14)]
-	[iOS (12,0)]
-	[Watch (6,0)]
+	[TV (12, 0)]
+	[iOS (12, 0)]
+	[Watch (6, 0)]
 #endif
 	public class NWProtocolOptions : NativeObject {
 		[Preserve (Conditional = true)]
 #if NET
 		internal NWProtocolOptions (NativeHandle handle, bool owns) : base (handle, owns) {}
 #else
-		public NWProtocolOptions (NativeHandle handle, bool owns) : base (handle, owns) {}
+		public NWProtocolOptions (NativeHandle handle, bool owns) : base (handle, owns) { }
 #endif
 
 		[DllImport (Constants.NetworkLibrary)]
@@ -90,11 +89,11 @@ namespace Network {
 		[SupportedOSPlatform ("ios15.0")]
 		[SupportedOSPlatform ("maccatalyst15.0")]
 #else
-		[Watch (8,0)]
-		[TV (15,0)]
-		[Mac (12,0)]
-		[iOS (15,0)]
-		[MacCatalyst (15,0)]
+		[Watch (8, 0)]
+		[TV (15, 0)]
+		[Mac (12, 0)]
+		[iOS (15, 0)]
+		[MacCatalyst (15, 0)]
 #endif
 		[DllImport (Constants.NetworkLibrary)]
 		internal static extern IntPtr nw_quic_create_options ();
@@ -107,9 +106,9 @@ namespace Network {
 		}
 #endif
 
-//
-// IP Options
-//
+		//
+		// IP Options
+		//
 		[DllImport (Constants.NetworkLibrary)]
 		internal static extern void nw_ip_options_set_version (IntPtr options, NWIPVersion version);
 
@@ -155,7 +154,7 @@ namespace Network {
 #endif // !NET
 
 		[DllImport (Constants.NetworkLibrary)]
-		internal static extern void nw_ip_options_set_calculate_receive_time (IntPtr options,[MarshalAs (UnmanagedType.I1)]  bool calculateReceiveTime);
+		internal static extern void nw_ip_options_set_calculate_receive_time (IntPtr options, [MarshalAs (UnmanagedType.I1)] bool calculateReceiveTime);
 
 #if !NET
 		[Obsolete ("Use the 'NWProtocolIPOptions' class instead.")]
@@ -168,29 +167,27 @@ namespace Network {
 
 #if NET
 		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[TV (13,0)]
-		[Mac (10,15)]
-		[iOS (13,0)]
+		[TV (13, 0)]
+		[iOS (13, 0)]
 #endif
 		[DllImport (Constants.NetworkLibrary)]
 		internal static extern void nw_ip_options_set_local_address_preference (IntPtr options, NWIPLocalAddressPreference preference);
 
 #if !NET
-		[TV (13,0)]
-		[Mac (10,15)]
-		[iOS (13,0)]
+		[TV (13, 0)]
+		[iOS (13, 0)]
 		[Obsolete ("Use the 'NWProtocolIPOptions' class instead.")]
 #endif
 		public NWIPLocalAddressPreference IPLocalAddressPreference {
 			set => nw_ip_options_set_local_address_preference (GetCheckedHandle (), value);
 		}
-//
-// TCP Options
-//
+		//
+		// TCP Options
+		//
 
 		[DllImport (Constants.NetworkLibrary)]
 		internal extern static void nw_tcp_options_set_no_delay (IntPtr handle, [MarshalAs (UnmanagedType.U1)] bool noDelay);
@@ -250,7 +247,7 @@ namespace Network {
 
 		[DllImport (Constants.NetworkLibrary)]
 		internal extern static void nw_tcp_options_set_maximum_segment_size (IntPtr handle, uint maximumSegmentSize);
-		
+
 #if !NET
 		[Obsolete ("Use the 'NWProtocolTcpOptions' class instead.")]
 		public void TcpSetMaximumSegmentSize (uint maximumSegmentSize) => nw_tcp_options_set_maximum_segment_size (GetCheckedHandle (), maximumSegmentSize);
@@ -312,9 +309,9 @@ namespace Network {
 		public void TcpSetDisableEcn (bool disableEcn) => nw_tcp_options_set_disable_ecn (GetCheckedHandle (), disableEcn);
 #endif // !NET
 
-//
-// UDP Options
-//
+		//
+		// UDP Options
+		//
 		[DllImport (Constants.NetworkLibrary)]
 		internal extern static void nw_udp_options_set_prefer_no_checksum (IntPtr handle, [MarshalAs (UnmanagedType.U1)] bool preferNoChecksums);
 
@@ -323,9 +320,9 @@ namespace Network {
 		public void UdpSetPreferNoChecksum (bool preferNoChecksums) => nw_udp_options_set_prefer_no_checksum (GetCheckedHandle (), preferNoChecksums);
 #endif // !NET
 
-//
-// TLS options
-//
+		//
+		// TLS options
+		//
 
 		[DllImport (Constants.NetworkLibrary)]
 		internal extern static IntPtr nw_tls_copy_sec_protocol_options (IntPtr options);
@@ -334,18 +331,18 @@ namespace Network {
 		[Obsolete ("Use the 'NWProtocolTlsOptions' class instead.")]
 		public SecProtocolOptions TlsProtocolOptions => new SecProtocolOptions (nw_tls_copy_sec_protocol_options (GetCheckedHandle ()), owns: true);
 #endif
-		
+
 #if NET
 		[SupportedOSPlatform ("tvos15.0")]
 		[SupportedOSPlatform ("macos12.0")]
 		[SupportedOSPlatform ("ios15.0")]
 		[SupportedOSPlatform ("maccatalyst15.0")]
 #else
-		[Watch (8,0)]
-		[TV (15,0)]
-		[Mac (12,0)]
-		[iOS (15,0)]
-		[MacCatalyst (15,0)]
+		[Watch (8, 0)]
+		[TV (15, 0)]
+		[Mac (12, 0)]
+		[iOS (15, 0)]
+		[MacCatalyst (15, 0)]
 #endif
 		[DllImport (Constants.NetworkLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]

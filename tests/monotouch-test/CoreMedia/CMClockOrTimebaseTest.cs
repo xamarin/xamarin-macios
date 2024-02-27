@@ -5,13 +5,11 @@ using ObjCRuntime;
 using NUnit.Framework;
 using Xamarin.Utils;
 
-namespace MonoTouchFixtures.CoreMedia
-{
+namespace MonoTouchFixtures.CoreMedia {
 
 	[TestFixture]
-	[Preserve(AllMembers = true)]
-	public class CMClockOrTimebaseTest
-	{
+	[Preserve (AllMembers = true)]
+	public class CMClockOrTimebaseTest {
 
 		[Test]
 		public void RetainReleaseTest ()

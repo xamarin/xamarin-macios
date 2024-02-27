@@ -3,12 +3,10 @@ using System.IO;
 using Foundation;
 using AVFoundation;
 using NUnit.Framework;
-namespace monotouchtest.AVFoundation
-{
+namespace monotouchtest.AVFoundation {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class AVPlayerLooperTest
-	{
+	public class AVPlayerLooperTest {
 #if !NET
 		public void TestLoopingEnabled ()
 		{
@@ -16,7 +14,7 @@ namespace monotouchtest.AVFoundation
 			Assert.True (File.Exists (file), file);
 			using (var url = new NSUrl (file))
 			using (var playerItem = AVPlayerItem.FromUrl (url))
-			using (AVQueuePlayer player = AVQueuePlayer.FromItems (new[] { playerItem }))
+			using (AVQueuePlayer player = AVQueuePlayer.FromItems (new [] { playerItem }))
 			using (var playerLooper = AVPlayerLooper.FromPlayer (player, playerItem)) {
 				Assert.True (playerLooper.LoopingEnabled, "The default value should be true.");
 				playerLooper.DisableLooping ();

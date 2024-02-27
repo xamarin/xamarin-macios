@@ -11,7 +11,7 @@ using CoreGraphics;
 
 namespace CoreAnimation {
 	public partial class CABasicAnimation {
-		public T GetFromAs <T> () where T : class, INativeObject
+		public T GetFromAs<T> () where T : class, INativeObject
 		{
 			return Runtime.GetINativeObject<T> (_From, false)!;
 		}
@@ -21,7 +21,7 @@ namespace CoreAnimation {
 			_From = value.Handle;
 		}
 
-		public T GetToAs <T> () where T : class, INativeObject
+		public T GetToAs<T> () where T : class, INativeObject
 		{
 			return Runtime.GetINativeObject<T> (_To, false)!;
 		}
@@ -31,7 +31,7 @@ namespace CoreAnimation {
 			_To = value.Handle;
 		}
 
-		public T GetByAs <T> () where T : class, INativeObject
+		public T GetByAs<T> () where T : class, INativeObject
 		{
 			return Runtime.GetINativeObject<T> (_By, false)!;
 		}

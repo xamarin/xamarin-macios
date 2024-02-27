@@ -120,20 +120,20 @@ namespace Microsoft.MaciOS.Nnyeah {
 		List<(Instruction, int)> FindConstructorInstruction (IList<Instruction> instructions)
 		{
 			var index = new List<(Instruction, int)> ();
-			for (int i = 0 ; i < instructions.Count ; i++) {
-				Instruction instruction = instructions[i];
+			for (int i = 0; i < instructions.Count; i++) {
+				Instruction instruction = instructions [i];
 				if (instruction.OpCode.Code == Code.Newobj && instruction.Operand is MethodDefinition invokedMethod) {
 					if (invokedMethod.IsConstructor && IsNSObjectDerived (invokedMethod.DeclaringType, this)) {
 						switch (invokedMethod.Parameters.Count) {
 						case 1: {
-							if (invokedMethod.Parameters[0].ParameterType.ToString () == "System.IntPtr") {
+							if (invokedMethod.Parameters [0].ParameterType.ToString () == "System.IntPtr") {
 								index.Add ((instruction, 1));
 							}
 							break;
 						}
 						case 2: {
-							if (invokedMethod.Parameters[0].ParameterType.ToString () == "System.IntPtr" &&
-								invokedMethod.Parameters[1].ParameterType.ToString () == "System.Boolean") {
+							if (invokedMethod.Parameters [0].ParameterType.ToString () == "System.IntPtr" &&
+								invokedMethod.Parameters [1].ParameterType.ToString () == "System.Boolean") {
 								index.Add ((instruction, 2));
 							}
 							break;
@@ -154,17 +154,17 @@ namespace Microsoft.MaciOS.Nnyeah {
 			var processor = method.Body.GetILProcessor ();
 			foreach ((Instruction instruction, int argCount) in FindConstructorInstruction (method.Body.Instructions)) {
 				switch (argCount) {
-					case 1:
-						processor.InsertBefore (instruction, Instruction.Create (OpCodes.Call, NativeHandleOpImplicit));
-						break;
-					case 2: {
-						var variable = new VariableDefinition (BoolTypeDefinition);
-						method.Body.Variables.Add (variable);
-						processor.InsertBefore (instruction, Instruction.Create (OpCodes.Stloc, variable));
-						processor.InsertBefore (instruction, Instruction.Create (OpCodes.Call, NativeHandleOpImplicit));
-						processor.InsertBefore (instruction, Instruction.Create (OpCodes.Ldloc, variable));
-						break;
-					}
+				case 1:
+					processor.InsertBefore (instruction, Instruction.Create (OpCodes.Call, NativeHandleOpImplicit));
+					break;
+				case 2: {
+					var variable = new VariableDefinition (BoolTypeDefinition);
+					method.Body.Variables.Add (variable);
+					processor.InsertBefore (instruction, Instruction.Create (OpCodes.Stloc, variable));
+					processor.InsertBefore (instruction, Instruction.Create (OpCodes.Call, NativeHandleOpImplicit));
+					processor.InsertBefore (instruction, Instruction.Create (OpCodes.Ldloc, variable));
+					break;
+				}
 				}
 			}
 		}

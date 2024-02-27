@@ -6,12 +6,10 @@ using NUnit.Framework;
 using Foundation;
 using SceneKit;
 
-namespace Xamarin.Mac.Tests
-{
+namespace Xamarin.Mac.Tests {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class SCNSceneTests
-	{
+	public class SCNSceneTests {
 		[SetUp]
 		public void SetUp ()
 		{

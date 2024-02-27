@@ -2,10 +2,8 @@ using System;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace MyXamarinFormsApp
-{
-	public partial class App : Application
-	{
+namespace MyXamarinFormsApp {
+	public partial class App : Application {
 		public App ()
 		{
 			InitializeComponent ();

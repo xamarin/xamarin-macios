@@ -29,6 +29,9 @@ using System.Diagnostics;
 using ObjCRuntime;
 using System.Runtime.Versioning;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Foundation {
 
 #if NET
@@ -53,7 +56,7 @@ namespace Foundation {
 		{
 			Debug.WriteLine ("Warning: you created an NSError without specifying a domain");
 		}
-		
+
 		public static NSError FromDomain (NSString domain, nint code)
 		{
 			return FromDomain (domain, code, null);

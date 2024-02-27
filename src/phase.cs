@@ -24,14 +24,14 @@ using NativeHandle = System.IntPtr;
 
 namespace Phase {
 
-	[Mac (12,0), NoWatch, NoTV, iOS (15,0), MacCatalyst (15,0)]
+	[Mac (12, 0), NoWatch, TV (17, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[Native]
 	public enum PhaseUpdateMode : long {
 		Automatic = 0,
 		Manual = 1,
 	}
 
-	[Mac (12,0), NoWatch, NoTV, iOS (15,0), MacCatalyst (15,0)]
+	[Mac (12, 0), NoWatch, TV (17, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[Native]
 	public enum PhaseRenderingState : long {
 		Stopped = 0,
@@ -39,7 +39,7 @@ namespace Phase {
 		Paused = 2,
 	}
 
-	[Mac (12,0), NoWatch, NoTV, iOS (15,0), MacCatalyst (15,0)]
+	[Mac (12, 0), NoWatch, TV (17, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[Native]
 	public enum PhaseSpatializationMode : long {
 		Automatic = 0,
@@ -47,7 +47,7 @@ namespace Phase {
 		AlwaysUseChannelBased = 2,
 	}
 
-	[Mac (12,0), NoWatch, NoTV, iOS (15,0), MacCatalyst (15,0)]
+	[Mac (12, 0), NoWatch, TV (17, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[Native]
 	public enum PhaseReverbPreset : long {
 		None = 1917742958,
@@ -65,14 +65,15 @@ namespace Phase {
 		Cathedral = 1917023336,
 	}
 
-	[Mac (12,0), NoWatch, NoTV, iOS (15,0), MacCatalyst (15,0)]
+	[Mac (12, 0), NoWatch, TV (17, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[Native]
 	[ErrorDomain ("PHASEErrorDomain")]
 	public enum PhaseError : long {
 		InitializeFailed = 1346913633,
+		InvalidObject = 1346913634,
 	}
 
-	[Mac (12,0), NoWatch, NoTV, iOS (15,0), MacCatalyst (15,0)]
+	[Mac (12, 0), NoWatch, TV (17, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[Native]
 	[ErrorDomain ("PHASESoundEventErrorDomain")]
 	public enum PhaseSoundEventError : long {
@@ -84,7 +85,7 @@ namespace Phase {
 		OutOfMemory = 1346925670,
 	}
 
-	[Mac (12,0), NoWatch, NoTV, iOS (15,0), MacCatalyst (15,0)]
+	[Mac (12, 0), NoWatch, TV (17, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[Native]
 	[ErrorDomain ("PHASEAssetErrorDomain")]
 	public enum PhaseAssetError : long {
@@ -96,7 +97,7 @@ namespace Phase {
 		MemoryAllocation = 1346920806,
 	}
 
-	[Mac (12,0), NoWatch, NoTV, iOS (15,0), MacCatalyst (15,0)]
+	[Mac (12, 0), NoWatch, TV (17, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[Native]
 	public enum PhaseSoundEventPrepareHandlerReason : long {
 		Error = 0,
@@ -104,7 +105,7 @@ namespace Phase {
 		Terminated = 2,
 	}
 
-	[Mac (12,0), NoWatch, NoTV, iOS (15,0), MacCatalyst (15,0)]
+	[Mac (12, 0), NoWatch, TV (17, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[Native]
 	public enum PhaseSoundEventStartHandlerReason : long {
 		Error = 0,
@@ -112,7 +113,7 @@ namespace Phase {
 		Terminated = 2,
 	}
 
-	[Mac (12,0), NoWatch, NoTV, iOS (15,0), MacCatalyst (15,0)]
+	[Mac (12, 0), NoWatch, TV (17, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[Native]
 	public enum PhaseSoundEventSeekHandlerReason : long {
 		Error = 0,
@@ -120,7 +121,7 @@ namespace Phase {
 		SeekSuccessful = 2,
 	}
 
-	[Mac (12,0), NoWatch, NoTV, iOS (15,0), MacCatalyst (15,0)]
+	[Mac (12, 0), NoWatch, TV (17, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[Native]
 	public enum PhaseSoundEventPrepareState : long {
 		NotStarted = 0,
@@ -128,14 +129,14 @@ namespace Phase {
 		Prepared = 2,
 	}
 
-	[Mac (12,0), NoWatch, NoTV, iOS (15,0), MacCatalyst (15,0)]
+	[Mac (12, 0), NoWatch, TV (17, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[Native]
 	public enum PhaseAssetType : long {
 		Resident = 0,
 		Streamed = 1,
 	}
 
-	[Mac (12,0), NoWatch, NoTV, iOS (15,0), MacCatalyst (15,0)]
+	[Mac (12, 0), NoWatch, TV (17, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[Native]
 	public enum PhaseCurveType : long {
 		Linear = 1668435054,
@@ -147,9 +148,13 @@ namespace Phase {
 		InverseSine = 1668434259,
 		Sigmoid = 1668436839,
 		InverseSigmoid = 1668434247,
+		[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
+		HoldStartValue = 1668434003,
+		[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
+		JumpToEndValue = 1668434501,
 	}
 
-	[Mac (12,0), NoWatch, NoTV, iOS (15,0), MacCatalyst (15,0)]
+	[Mac (12, 0), NoWatch, TV (17, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[Native]
 	public enum PhaseCullOption : long {
 		Terminate = 0,
@@ -159,21 +164,21 @@ namespace Phase {
 		DoNotCull = 4,
 	}
 
-	[Mac (12,0), NoWatch, NoTV, iOS (15,0), MacCatalyst (15,0)]
+	[Mac (12, 0), NoWatch, TV (17, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[Native]
 	public enum PhasePlaybackMode : long {
 		OneShot = 0,
 		Looping = 1,
 	}
 
-	[Mac (12,0), NoWatch, NoTV, iOS (15,0), MacCatalyst (15,0)]
+	[Mac (12, 0), NoWatch, TV (17, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[Native]
 	public enum PhaseNormalizationMode : long {
 		None = 0,
 		Dynamic = 1,
 	}
 
-	[Mac (12,0), NoWatch, NoTV, iOS (15,0), MacCatalyst (15,0)]
+	[Mac (12, 0), NoWatch, TV (17, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[Native]
 	public enum PhaseCalibrationMode : long {
 		None = 0,
@@ -181,7 +186,7 @@ namespace Phase {
 		AbsoluteSpl = 2,
 	}
 
-	[Mac (12,0), NoWatch, NoTV, iOS (15,0), MacCatalyst (15,0)]
+	[Mac (12, 0), NoWatch, TV (17, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[Flags]
 	[Native]
 	public enum PhasePushStreamBufferOptions : ulong {
@@ -191,20 +196,19 @@ namespace Phase {
 		InterruptsAtLoop = 1uL << 3,
 	}
 
-	[Mac (12,0), NoWatch, NoTV, iOS (15,0), MacCatalyst (15,0)]
+	[Mac (12, 0), NoWatch, TV (17, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[Native]
-	public enum PhasePushStreamCompletionCallbackCondition : long
-	{
+	public enum PhasePushStreamCompletionCallbackCondition : long {
 		DataRendered = 0,
 	}
 
-	[Mac (12,0), NoWatch, NoTV, iOS (15,0), MacCatalyst (15,0)]
+	[Mac (12, 0), NoWatch, TV (17, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[Native]
 	public enum PhaseMediumPreset : long {
 		PresetAir = 1835286898,
 	}
 
-	[Mac (12,0), NoWatch, NoTV, iOS (15,0), MacCatalyst (15,0)]
+	[Mac (12, 0), NoWatch, TV (17, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[Native]
 	public enum PhaseMaterialPreset : long {
 		Cardboard = 1833136740,
@@ -215,7 +219,7 @@ namespace Phase {
 		Wood = 1834448228,
 	}
 
-	[Mac (12,0), NoWatch, NoTV, iOS (15,0), MacCatalyst (15,0)]
+	[Mac (12, 0), NoWatch, TV (17, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	public enum PhaseSpatialCategory {
 		[Field ("PHASESpatialCategoryDirectPathTransmission")]
 		DirectPathTransmission,
@@ -225,21 +229,22 @@ namespace Phase {
 		LateReverb,
 	}
 
-	[Mac (12,0), NoWatch, NoTV, iOS (15,0), MacCatalyst (15,0)]
+	[Mac (12, 0), NoWatch, TV (17, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[Flags]
 	[Native]
-	public enum PhaseSpatialPipelineFlags : ulong
-	{
+	public enum PhaseSpatialPipelineFlags : ulong {
 		DirectPathTransmission = 1uL << 0,
 		EarlyReflections = 1uL << 1,
 		LateReverb = 1uL << 2,
 	}
 
 
-	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (NSObject), Name="PHASENumericPair")]
-	interface PhaseNumericPair
-	{
+	[NoWatch, TV (17, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (NSObject), Name = "PHASENumericPair")]
+#if TVOS
+	[DisableDefaultCtor]
+#endif
+	interface PhaseNumericPair {
 		[Export ("initWithFirstValue:secondValue:")]
 		NativeHandle Constructor (double first, double second);
 
@@ -250,18 +255,22 @@ namespace Phase {
 		double Second { get; set; }
 	}
 
-	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (NSObject), Name="PHASEEnvelopeSegment")]
-	interface PhaseEnvelopeSegment
-	{
+	[NoWatch, TV (17, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (NSObject), Name = "PHASEEnvelopeSegment")]
+#if TVOS
+	[DisableDefaultCtor]
+#endif
+	interface PhaseEnvelopeSegment {
 		[Export ("initWithEndPoint:curveType:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		NativeHandle Constructor (Vector2d endPoint, PhaseCurveType curveType);
 
-		[Export ("endPoint", ArgumentSemantic.Assign)]	
-		Vector2d EndPoint { 
-			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;
-			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] set;
+		[Export ("endPoint", ArgumentSemantic.Assign)]
+		Vector2d EndPoint {
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+			get;
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+			set;
 		}
 
 		[Export ("curveType", ArgumentSemantic.Assign)]
@@ -269,26 +278,26 @@ namespace Phase {
 	}
 
 
-	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (NSObject), Name="PHASEEnvelope")]
+	[NoWatch, TV (17, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (NSObject), Name = "PHASEEnvelope")]
 	[DisableDefaultCtor]
-	interface PhaseEnvelope
-	{
+	interface PhaseEnvelope {
 		[Export ("initWithStartPoint:segments:")]
 		[DesignatedInitializer]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-		NativeHandle Constructor (Vector2d startPoint, PhaseEnvelopeSegment[] segments);
+		NativeHandle Constructor (Vector2d startPoint, PhaseEnvelopeSegment [] segments);
 
 		[Export ("evaluateForValue:")]
 		double Evaluate (double x);
 
-		[Export ("startPoint")]	
-		Vector2d StartPoint { 
-			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;
+		[Export ("startPoint")]
+		Vector2d StartPoint {
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+			get;
 		}
 
 		[Export ("segments", ArgumentSemantic.Copy)]
-		PhaseEnvelopeSegment[] Segments { get; }
+		PhaseEnvelopeSegment [] Segments { get; }
 
 		[Export ("domain", ArgumentSemantic.Strong)]
 		PhaseNumericPair Domain { get; }
@@ -297,29 +306,26 @@ namespace Phase {
 		PhaseNumericPair Range { get; }
 	}
 
-	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (NSObject), Name="PHASEDefinition")]
+	[NoWatch, TV (17, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (NSObject), Name = "PHASEDefinition")]
 	[DisableDefaultCtor]
-	interface PhaseDefinition
-	{
+	interface PhaseDefinition {
 		[Export ("identifier")]
 		string Identifier { get; }
 	}
 
-	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (PhaseDefinition), Name="PHASEMetaParameterDefinition")]
+	[NoWatch, TV (17, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (PhaseDefinition), Name = "PHASEMetaParameterDefinition")]
 	[DisableDefaultCtor]
-	interface PhaseMetaParameterDefinition
-	{
+	interface PhaseMetaParameterDefinition {
 		[Export ("value", ArgumentSemantic.Strong)]
 		NSObject Value { get; }
 	}
 
-	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (PhaseMetaParameterDefinition), Name="PHASENumberMetaParameterDefinition")]
+	[NoWatch, TV (17, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (PhaseMetaParameterDefinition), Name = "PHASENumberMetaParameterDefinition")]
 	[DisableDefaultCtor]
-	interface PhaseNumberMetaParameterDefinition
-	{
+	interface PhaseNumberMetaParameterDefinition {
 		[Export ("initWithValue:identifier:")]
 		NativeHandle Constructor (double value, string identifier);
 
@@ -340,11 +346,10 @@ namespace Phase {
 		double Maximum { get; }
 	}
 
-	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (PhaseMetaParameterDefinition), Name="PHASEStringMetaParameterDefinition")]
+	[NoWatch, TV (17, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (PhaseMetaParameterDefinition), Name = "PHASEStringMetaParameterDefinition")]
 	[DisableDefaultCtor]
-	interface PhaseStringMetaParameterDefinition
-	{
+	interface PhaseStringMetaParameterDefinition {
 		[Export ("initWithValue:identifier:")]
 		NativeHandle Constructor (string value, string identifier);
 
@@ -353,11 +358,10 @@ namespace Phase {
 		NativeHandle Constructor (string value);
 	}
 
-	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (PhaseNumberMetaParameterDefinition), Name="PHASEMappedMetaParameterDefinition")]
+	[NoWatch, TV (17, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (PhaseNumberMetaParameterDefinition), Name = "PHASEMappedMetaParameterDefinition")]
 	[DisableDefaultCtor]
-	interface PhaseMappedMetaParameterDefinition
-	{
+	interface PhaseMappedMetaParameterDefinition {
 		[Export ("initWithValue:identifier:")]
 		NativeHandle Constructor (double value, string identifier);
 
@@ -379,11 +383,10 @@ namespace Phase {
 		PhaseNumberMetaParameterDefinition InputMetaParameterDefinition { get; }
 	}
 
-	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (NSObject), Name="PHASEMetaParameter")]
+	[NoWatch, TV (17, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (NSObject), Name = "PHASEMetaParameter")]
 	[DisableDefaultCtor]
-	interface PhaseMetaParameter
-	{
+	interface PhaseMetaParameter {
 		[Export ("identifier", ArgumentSemantic.Strong)]
 		string Identifier { get; }
 
@@ -391,16 +394,15 @@ namespace Phase {
 		NSObject Value { get; set; }
 	}
 
-	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (PhaseMetaParameter), Name="PHASEStringMetaParameter")]
+	[NoWatch, TV (17, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (PhaseMetaParameter), Name = "PHASEStringMetaParameter")]
 	[DisableDefaultCtor]
 	interface PhaseStringMetaParameter { }
 
-	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (PhaseMetaParameter), Name="PHASENumberMetaParameter")]
+	[NoWatch, TV (17, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (PhaseMetaParameter), Name = "PHASENumberMetaParameter")]
 	[DisableDefaultCtor]
-	interface PhaseNumberMetaParameter
-	{
+	interface PhaseNumberMetaParameter {
 		[Export ("minimum")]
 		double Minimum { get; }
 
@@ -411,11 +413,10 @@ namespace Phase {
 		void Fade (double value, double duration);
 	}
 
-	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (PhaseDefinition), Name="PHASEMixerDefinition")]
+	[NoWatch, TV (17, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (PhaseDefinition), Name = "PHASEMixerDefinition")]
 	[DisableDefaultCtor]
-	interface PhaseMixerDefinition
-	{
+	interface PhaseMixerDefinition {
 		[Export ("gain")]
 		double Gain { get; set; }
 
@@ -423,11 +424,10 @@ namespace Phase {
 		PhaseNumberMetaParameterDefinition GainMetaParameterDefinition { get; set; }
 	}
 
-	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (PhaseMixerDefinition), Name="PHASESpatialMixerDefinition")]
+	[NoWatch, TV (17, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (PhaseMixerDefinition), Name = "PHASESpatialMixerDefinition")]
 	[DisableDefaultCtor]
-	interface PhaseSpatialMixerDefinition
-	{
+	interface PhaseSpatialMixerDefinition {
 		[Export ("initWithSpatialPipeline:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (PhaseSpatialPipeline spatialPipeline);
@@ -448,11 +448,10 @@ namespace Phase {
 		PhaseDirectivityModelParameters SourceDirectivityModelParameters { get; set; }
 	}
 
-	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (PhaseMixerDefinition), Name="PHASEAmbientMixerDefinition")]
+	[NoWatch, TV (17, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (PhaseMixerDefinition), Name = "PHASEAmbientMixerDefinition")]
 	[DisableDefaultCtor]
-	interface PhaseAmbientMixerDefinition
-	{
+	interface PhaseAmbientMixerDefinition {
 		[Export ("initWithChannelLayout:orientation:identifier:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		NativeHandle Constructor (AVAudioChannelLayout layout, Quaternion orientation, NSString identifier);
@@ -472,11 +471,10 @@ namespace Phase {
 		AVAudioChannelLayout InputChannelLayout { get; }
 	}
 
-	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (PhaseMixerDefinition), Name="PHASEChannelMixerDefinition")]
+	[NoWatch, TV (17, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (PhaseMixerDefinition), Name = "PHASEChannelMixerDefinition")]
 	[DisableDefaultCtor]
-	interface PhaseChannelMixerDefinition
-	{
+	interface PhaseChannelMixerDefinition {
 		[Export ("initWithChannelLayout:identifier:")]
 		NativeHandle Constructor (AVAudioChannelLayout layout, string identifier);
 
@@ -488,11 +486,10 @@ namespace Phase {
 		AVAudioChannelLayout InputChannelLayout { get; }
 	}
 
-	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (NSObject), Name="PHASEMixer")]
+	[NoWatch, TV (17, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (NSObject), Name = "PHASEMixer")]
 	[DisableDefaultCtor]
-	interface PhaseMixer
-	{
+	interface PhaseMixer {
 		[Export ("identifier", ArgumentSemantic.Strong)]
 		string Identifier { get; }
 
@@ -503,10 +500,12 @@ namespace Phase {
 		PhaseMetaParameter GainMetaParameter { get; }
 	}
 
-	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (NSObject), Name="PHASEMixerParameters")]
-	interface PhaseMixerParameters
-	{
+	[NoWatch, TV (17, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (NSObject), Name = "PHASEMixerParameters")]
+#if TVOS
+	[DisableDefaultCtor]
+#endif
+	interface PhaseMixerParameters {
 		[Export ("addSpatialMixerParametersWithIdentifier:source:listener:")]
 		void AddSpatialMixerParameters (string identifier, PhaseSource source, PhaseListener listener);
 
@@ -514,11 +513,10 @@ namespace Phase {
 		void AddAmbientMixerParameters (string identifier, PhaseListener listener);
 	}
 
-	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof(NSObject), Name="PHASEGroup")]
+	[NoWatch, TV (17, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (NSObject), Name = "PHASEGroup")]
 	[DisableDefaultCtor]
-	interface PhaseGroup
-	{
+	interface PhaseGroup {
 		[Export ("initWithIdentifier:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (string identifier);
@@ -563,20 +561,18 @@ namespace Phase {
 		bool Soloed { [Bind ("isSoloed")] get; }
 	}
 
-	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (PhaseDefinition), Name="PHASESoundEventNodeDefinition")]
+	[NoWatch, TV (17, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (PhaseDefinition), Name = "PHASESoundEventNodeDefinition")]
 	[DisableDefaultCtor]
-	interface PhaseSoundEventNodeDefinition
-	{
+	interface PhaseSoundEventNodeDefinition {
 		[Export ("children", ArgumentSemantic.Copy)]
-		PhaseSoundEventNodeDefinition[] Children { get; }
+		PhaseSoundEventNodeDefinition [] Children { get; }
 	}
 
-	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (PhaseSoundEventNodeDefinition), Name="PHASEGeneratorNodeDefinition")]
+	[NoWatch, TV (17, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (PhaseSoundEventNodeDefinition), Name = "PHASEGeneratorNodeDefinition")]
 	[DisableDefaultCtor]
-	interface PhaseGeneratorNodeDefinition
-	{
+	interface PhaseGeneratorNodeDefinition {
 		[Export ("setCalibrationMode:level:")]
 		void SetCalibrationMode (PhaseCalibrationMode calibrationMode, double level);
 
@@ -602,11 +598,10 @@ namespace Phase {
 		PhaseMixerDefinition MixerDefinition { get; }
 	}
 
-	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (PhaseGeneratorNodeDefinition), Name="PHASESamplerNodeDefinition")]
+	[NoWatch, TV (17, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (PhaseGeneratorNodeDefinition), Name = "PHASESamplerNodeDefinition")]
 	[DisableDefaultCtor]
-	interface PhaseSamplerNodeDefinition
-	{
+	interface PhaseSamplerNodeDefinition {
 		[Export ("initWithSoundAssetIdentifier:mixerDefinition:identifier:")]
 		NativeHandle Constructor (string soundAssetIdentifier, PhaseMixerDefinition mixerDefinition, string identifier);
 
@@ -624,10 +619,9 @@ namespace Phase {
 		PhasePlaybackMode PlaybackMode { get; set; }
 	}
 
-	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (PhaseSoundEventNodeDefinition), Name="PHASEContainerNodeDefinition")]
-	interface PhaseContainerNodeDefinition
-	{
+	[NoWatch, NoTV, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (PhaseSoundEventNodeDefinition), Name = "PHASEContainerNodeDefinition")]
+	interface PhaseContainerNodeDefinition {
 		[Static]
 		[Export ("new")]
 		[return: Release]
@@ -640,11 +634,10 @@ namespace Phase {
 		void Add (PhaseSoundEventNodeDefinition subtree);
 	}
 
-	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (PhaseSoundEventNodeDefinition), Name="PHASEBlendNodeDefinition")]
+	[NoWatch, TV (17, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (PhaseSoundEventNodeDefinition), Name = "PHASEBlendNodeDefinition")]
 	[DisableDefaultCtor]
-	interface PhaseBlendNodeDefinition
-	{
+	interface PhaseBlendNodeDefinition {
 		[Export ("initWithBlendMetaParameterDefinition:identifier:")]
 		NativeHandle Constructor (PhaseNumberMetaParameterDefinition blendMetaParameterDefinition, string identifier);
 
@@ -678,11 +671,10 @@ namespace Phase {
 		void AddRange (PhaseEnvelope envelope, PhaseSoundEventNodeDefinition subtree);
 	}
 
-	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (PhaseSoundEventNodeDefinition), Name="PHASESwitchNodeDefinition")]
+	[NoWatch, TV (17, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (PhaseSoundEventNodeDefinition), Name = "PHASESwitchNodeDefinition")]
 	[DisableDefaultCtor]
-	interface PhaseSwitchNodeDefinition
-	{
+	interface PhaseSwitchNodeDefinition {
 		[Export ("initWithSwitchMetaParameterDefinition:identifier:")]
 		NativeHandle Constructor (PhaseStringMetaParameterDefinition switchMetaParameterDefinition, string identifier);
 
@@ -697,11 +689,10 @@ namespace Phase {
 		PhaseStringMetaParameterDefinition SwitchMetaParameterDefinition { get; }
 	}
 
-	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof(PhaseSoundEventNodeDefinition), Name="PHASERandomNodeDefinition")]
+	[NoWatch, NoTV, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (PhaseSoundEventNodeDefinition), Name = "PHASERandomNodeDefinition")]
 	[DisableDefaultCtor]
-	interface PhaseRandomNodeDefinition
-	{
+	interface PhaseRandomNodeDefinition {
 		[DesignatedInitializer]
 		[Export ("init")]
 		NativeHandle Constructor ();
@@ -716,11 +707,10 @@ namespace Phase {
 		nint UniqueSelectionQueueLength { get; set; }
 	}
 
-	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof(PhaseGeneratorNodeDefinition), Name="PHASEPushStreamNodeDefinition")]
+	[NoWatch, TV (17, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (PhaseGeneratorNodeDefinition), Name = "PHASEPushStreamNodeDefinition")]
 	[DisableDefaultCtor]
-	interface PhasePushStreamNodeDefinition
-	{
+	interface PhasePushStreamNodeDefinition {
 		[Export ("initWithMixerDefinition:format:identifier:")]
 		NativeHandle Constructor (PhaseMixerDefinition mixerDefinition, AVAudioFormat format, string identifier);
 
@@ -735,11 +725,10 @@ namespace Phase {
 		bool Normalize { get; set; }
 	}
 
-	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof(NSObject), Name="PHASEPushStreamNode")]
+	[NoWatch, TV (17, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (NSObject), Name = "PHASEPushStreamNode")]
 	[DisableDefaultCtor]
-	interface PhasePushStreamNode
-	{
+	interface PhasePushStreamNode {
 		[NullAllowed, Export ("gainMetaParameter", ArgumentSemantic.Strong)]
 		PhaseNumberMetaParameter GainMetaParameter { get; }
 
@@ -767,25 +756,23 @@ namespace Phase {
 		void ScheduleBuffer (AVAudioPcmBuffer buffer, [NullAllowed] AVAudioTime when, PhasePushStreamBufferOptions options, PhasePushStreamCompletionCallbackCondition completionCallbackCondition, Action<PhasePushStreamCompletionCallbackCondition> completionHandler);
 	}
 
-	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (NSObject), Name="PHASEAsset")]
+	[NoWatch, TV (17, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (NSObject), Name = "PHASEAsset")]
 	[DisableDefaultCtor]
-	interface PhaseAsset
-	{
+	interface PhaseAsset {
 		[Export ("identifier")]
 		string Identifier { get; }
 	}
 
-	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (PhaseAsset), Name="PHASEGlobalMetaParameterAsset")]
+	[NoWatch, TV (17, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (PhaseAsset), Name = "PHASEGlobalMetaParameterAsset")]
 	[DisableDefaultCtor]
 	interface PhaseGlobalMetaParameterAsset { }
 
-	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (PhaseAsset), Name="PHASESoundAsset")]
+	[NoWatch, TV (17, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (PhaseAsset), Name = "PHASESoundAsset")]
 	[DisableDefaultCtor]
-	interface PhaseSoundAsset
-	{
+	interface PhaseSoundAsset {
 		[NullAllowed, Export ("url")]
 		NSUrl Url { get; }
 
@@ -796,16 +783,15 @@ namespace Phase {
 		PhaseAssetType Type { get; }
 	}
 
-	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (PhaseAsset), Name="PHASESoundEventNodeAsset")]
+	[NoWatch, TV (17, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (PhaseAsset), Name = "PHASESoundEventNodeAsset")]
 	[DisableDefaultCtor]
-	interface PhaseSoundEventNodeAsset {}
+	interface PhaseSoundEventNodeAsset { }
 
-	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (NSObject), Name="PHASEAssetRegistry")]
+	[NoWatch, TV (17, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (NSObject), Name = "PHASEAssetRegistry")]
 	[DisableDefaultCtor]
-	interface PhaseAssetRegistry
-	{
+	interface PhaseAssetRegistry {
 		[Export ("registerGlobalMetaParameter:error:")]
 		[return: NullAllowed]
 		PhaseGlobalMetaParameterAsset RegisterGlobalMetaParameter (PhaseMetaParameterDefinition metaParameterDefinition, [NullAllowed] out NSError error);
@@ -834,10 +820,9 @@ namespace Phase {
 		NSDictionary<NSString, PhaseMetaParameter> GlobalMetaParameters { get; }
 	}
 
-	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof(NSObject), Name="PHASECardioidDirectivityModelSubbandParameters")]
-	interface PhaseCardioidDirectivityModelSubbandParameters
-	{
+	[NoWatch, NoTV, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (NSObject), Name = "PHASECardioidDirectivityModelSubbandParameters")]
+	interface PhaseCardioidDirectivityModelSubbandParameters {
 		[Export ("frequency")]
 		double Frequency { get; set; }
 
@@ -848,10 +833,9 @@ namespace Phase {
 		double Sharpness { get; set; }
 	}
 
-	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (NSObject), Name="PHASEConeDirectivityModelSubbandParameters")]
-	interface PhaseConeDirectivityModelSubbandParameters
-	{
+	[NoWatch, NoTV, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (NSObject), Name = "PHASEConeDirectivityModelSubbandParameters")]
+	interface PhaseConeDirectivityModelSubbandParameters {
 		[Export ("setInnerAngle:outerAngle:")]
 		void SetInnerAngle (double innerAngle, double outerAngle);
 
@@ -868,39 +852,36 @@ namespace Phase {
 		double OuterGain { get; set; }
 	}
 
-	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (NSObject), Name="PHASEDirectivityModelParameters")]
+	[NoWatch, TV (17, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (NSObject), Name = "PHASEDirectivityModelParameters")]
 	[DisableDefaultCtor]
-	interface PhaseDirectivityModelParameters {}
+	interface PhaseDirectivityModelParameters { }
 
-	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (PhaseDirectivityModelParameters), Name="PHASECardioidDirectivityModelParameters")]
+	[NoWatch, NoTV, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (PhaseDirectivityModelParameters), Name = "PHASECardioidDirectivityModelParameters")]
 	[DisableDefaultCtor]
-	interface PhaseCardioidDirectivityModelParameters
-	{
+	interface PhaseCardioidDirectivityModelParameters {
 		[Export ("initWithSubbandParameters:")]
-		NativeHandle Constructor (PhaseCardioidDirectivityModelSubbandParameters[] subbandParameters);
+		NativeHandle Constructor (PhaseCardioidDirectivityModelSubbandParameters [] subbandParameters);
 
 		[Export ("subbandParameters", ArgumentSemantic.Strong)]
-		PhaseCardioidDirectivityModelSubbandParameters[] SubbandParameters { get; }
+		PhaseCardioidDirectivityModelSubbandParameters [] SubbandParameters { get; }
 	}
 
-	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (PhaseDirectivityModelParameters), Name="PHASEConeDirectivityModelParameters")]
-	interface PhaseConeDirectivityModelParameters
-	{
+	[NoWatch, NoTV, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (PhaseDirectivityModelParameters), Name = "PHASEConeDirectivityModelParameters")]
+	interface PhaseConeDirectivityModelParameters {
 		[Export ("initWithSubbandParameters:")]
-		NativeHandle Constructor (PhaseConeDirectivityModelSubbandParameters[] subbandParameters);
+		NativeHandle Constructor (PhaseConeDirectivityModelSubbandParameters [] subbandParameters);
 
 		[Export ("subbandParameters", ArgumentSemantic.Strong)]
-		PhaseConeDirectivityModelSubbandParameters[] SubbandParameters { get; }
+		PhaseConeDirectivityModelSubbandParameters [] SubbandParameters { get; }
 	}
 
-	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (NSObject), Name="PHASEDistanceModelFadeOutParameters")]
+	[NoWatch, TV (17, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (NSObject), Name = "PHASEDistanceModelFadeOutParameters")]
 	[DisableDefaultCtor]
-	interface PhaseDistanceModelFadeOutParameters
-	{
+	interface PhaseDistanceModelFadeOutParameters {
 		[Export ("initWithCullDistance:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (double cullDistance);
@@ -909,28 +890,25 @@ namespace Phase {
 		double CullDistance { get; }
 	}
 
-	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (NSObject), Name="PHASEDistanceModelParameters")]
+	[NoWatch, TV (17, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (NSObject), Name = "PHASEDistanceModelParameters")]
 	[DisableDefaultCtor]
-	interface PhaseDistanceModelParameters
-	{
+	interface PhaseDistanceModelParameters {
 		[NullAllowed, Export ("fadeOutParameters", ArgumentSemantic.Strong)]
 		PhaseDistanceModelFadeOutParameters FadeOutParameters { get; set; }
 	}
 
-	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (PhaseDistanceModelParameters), Name="PHASEGeometricSpreadingDistanceModelParameters")]
-	interface PhaseGeometricSpreadingDistanceModelParameters
-	{
+	[NoWatch, NoTV, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (PhaseDistanceModelParameters), Name = "PHASEGeometricSpreadingDistanceModelParameters")]
+	interface PhaseGeometricSpreadingDistanceModelParameters {
 		[Export ("rolloffFactor")]
 		double RolloffFactor { get; set; }
 	}
 
-	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (PhaseDistanceModelParameters), Name="PHASEEnvelopeDistanceModelParameters")]
+	[NoWatch, TV (17, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (PhaseDistanceModelParameters), Name = "PHASEEnvelopeDistanceModelParameters")]
 	[DisableDefaultCtor]
-	interface PhaseEnvelopeDistanceModelParameters
-	{
+	interface PhaseEnvelopeDistanceModelParameters {
 		[Export ("initWithEnvelope:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (PhaseEnvelope envelope);
@@ -939,11 +917,10 @@ namespace Phase {
 		PhaseEnvelope Envelope { get; }
 	}
 
-	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (NSObject), Name="PHASEDucker")]
+	[NoWatch, TV (17, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (NSObject), Name = "PHASEDucker")]
 	[DisableDefaultCtor]
-	interface PhaseDucker
-	{
+	interface PhaseDucker {
 		[Export ("initWithEngine:sourceGroups:targetGroups:gain:attackTime:releaseTime:attackCurve:releaseCurve:")]
 		NativeHandle Constructor (PhaseEngine engine, NSSet<PhaseGroup> sourceGroups, NSSet<PhaseGroup> targetGroups, double gain, double attackTime, double releaseTime, PhaseCurveType attackCurve, PhaseCurveType releaseCurve);
 
@@ -981,11 +958,10 @@ namespace Phase {
 		string Identifier { get; }
 	}
 
-	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (NSObject), Name="PHASEGroupPresetSetting")]
+	[NoWatch, TV (17, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (NSObject), Name = "PHASEGroupPresetSetting")]
 	[DisableDefaultCtor]
-	interface PhaseGroupPresetSetting
-	{
+	interface PhaseGroupPresetSetting {
 		[Export ("initWithGain:rate:gainCurveType:rateCurveType:")]
 		NativeHandle Constructor (double gain, double rate, PhaseCurveType gainCurveType, PhaseCurveType rateCurveType);
 
@@ -1002,11 +978,10 @@ namespace Phase {
 		PhaseCurveType RateCurveType { get; }
 	}
 
-	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (NSObject), Name="PHASEGroupPreset")]
+	[NoWatch, TV (17, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (NSObject), Name = "PHASEGroupPreset")]
 	[DisableDefaultCtor]
-	interface PhaseGroupPreset
-	{
+	interface PhaseGroupPreset {
 		[Export ("initWithEngine:settings:timeToTarget:timeToReset:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (PhaseEngine engine, NSDictionary<NSString, PhaseGroupPresetSetting> settings, double timeToTarget, double timeToReset);
@@ -1033,20 +1008,18 @@ namespace Phase {
 		void Deactivate (double timeToResetOverride);
 	}
 
-	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (NSObject), Name="PHASEMedium")]
+	[NoWatch, TV (17, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (NSObject), Name = "PHASEMedium")]
 	[DisableDefaultCtor]
-	interface PhaseMedium
-	{
+	interface PhaseMedium {
 		[Export ("initWithEngine:preset:")]
 		NativeHandle Constructor (PhaseEngine engine, PhaseMediumPreset preset);
 	}
 
-	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (NSObject), Name="PHASEObject")]
+	[NoWatch, TV (17, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (NSObject), Name = "PHASEObject")]
 	[DisableDefaultCtor]
-	interface PhaseObject : NSCopying
-	{
+	interface PhaseObject : NSCopying {
 		[Export ("initWithEngine:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (PhaseEngine engine);
@@ -1064,44 +1037,50 @@ namespace Phase {
 		PhaseObject Parent { get; }
 
 		[Export ("children", ArgumentSemantic.Copy)]
-		PhaseObject[] Children { get; }
+		PhaseObject [] Children { get; }
 
 		[Static]
 		[Export ("right")]
- 		Vector3 Right { 
-			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;
+		Vector3 Right {
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+			get;
 		}
 
 		[Static]
 		[Export ("up")]
-		Vector3 Up { 
-			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;
+		Vector3 Up {
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+			get;
 		}
 
 		[Static]
 		[Export ("forward")]
-		Vector3 Forward { 
-			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;
+		Vector3 Forward {
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+			get;
 		}
 
 		[Export ("transform", ArgumentSemantic.Assign)]
 		NMatrix4 Transform {
-			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;
-			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] set;
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+			get;
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+			set;
 		}
 
 		[Export ("worldTransform", ArgumentSemantic.Assign)]
 		NMatrix4 WorldTransform {
-			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;
-			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] set;
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+			get;
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+			set;
 		}
 	}
 
-	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (NSObject), Name="PHASESoundEvent")]
+	[NoWatch, TV (17, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (NSObject), Name = "PHASESoundEvent")]
 	[DisableDefaultCtor]
-	interface PhaseSoundEvent
-	{
+	interface PhaseSoundEvent {
 		[Export ("initWithEngine:assetIdentifier:mixerParameters:error:")]
 		NativeHandle Constructor (PhaseEngine engine, string assetIdentifier, PhaseMixerParameters mixerParameters, [NullAllowed] out NSError error);
 
@@ -1154,11 +1133,10 @@ namespace Phase {
 		bool Indefinite { [Bind ("isIndefinite")] get; }
 	}
 
-	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (NSObject), Name="PHASEEngine")]
+	[NoWatch, TV (17, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (NSObject), Name = "PHASEEngine")]
 	[DisableDefaultCtor]
-	interface PhaseEngine
-	{
+	interface PhaseEngine {
 		[Export ("initWithUpdateMode:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (PhaseUpdateMode updateMode);
@@ -1200,23 +1178,22 @@ namespace Phase {
 		PhaseAssetRegistry AssetRegistry { get; }
 
 		[Export ("soundEvents", ArgumentSemantic.Copy)]
-		PhaseSoundEvent[] SoundEvents { get; }
+		PhaseSoundEvent [] SoundEvents { get; }
 
 		[Export ("groups", ArgumentSemantic.Copy)]
 		NSDictionary<NSString, PhaseGroup> Groups { get; }
 
 		[Export ("duckers", ArgumentSemantic.Copy)]
-		PhaseDucker[] Duckers { get; }
+		PhaseDucker [] Duckers { get; }
 
 		[NullAllowed, Export ("activeGroupPreset", ArgumentSemantic.Strong)]
 		PhaseGroupPreset ActiveGroupPreset { get; }
 	}
 
-	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (PhaseObject), Name="PHASEListener")]
+	[NoWatch, TV (17, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (PhaseObject), Name = "PHASEListener")]
 	[DisableDefaultCtor]
-	interface PhaseListener
-	{
+	interface PhaseListener {
 		[Export ("initWithEngine:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (PhaseEngine engine);
@@ -1225,81 +1202,78 @@ namespace Phase {
 		double Gain { get; set; }
 	}
 
-	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (NSObject), Name="PHASEMaterial")]
+	[NoWatch, TV (17, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (NSObject), Name = "PHASEMaterial")]
 	[DisableDefaultCtor]
-	interface PhaseMaterial
-	{
+	interface PhaseMaterial {
 		[Export ("initWithEngine:preset:")]
 		NativeHandle Constructor (PhaseEngine engine, PhaseMaterialPreset preset);
 	}
 
-	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (NSObject), Name="PHASEShapeElement")]
+	[NoWatch, TV (17, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (NSObject), Name = "PHASEShapeElement")]
 	[DisableDefaultCtor]
-	interface PhaseShapeElement
-	{
+	interface PhaseShapeElement {
 		[NullAllowed, Export ("material", ArgumentSemantic.Strong)]
 		PhaseMaterial Material { get; set; }
 	}
 
-	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (NSObject), Name="PHASEShape")]
+	[NoWatch, TV (17, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (NSObject), Name = "PHASEShape")]
 	[DisableDefaultCtor]
-	interface PhaseShape : NSCopying
-	{
+	interface PhaseShape : NSCopying {
 		[Export ("initWithEngine:mesh:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (PhaseEngine engine, MDLMesh mesh);
 
 		[Export ("initWithEngine:mesh:materials:")]
-		NativeHandle Constructor (PhaseEngine engine, MDLMesh mesh, PhaseMaterial[] materials);
+		NativeHandle Constructor (PhaseEngine engine, MDLMesh mesh, PhaseMaterial [] materials);
 
 		[Export ("elements", ArgumentSemantic.Copy)]
-		PhaseShapeElement[] Elements { get; }
+		PhaseShapeElement [] Elements { get; }
 	}
 
-	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (PhaseObject), Name="PHASEOccluder")]
+	[NoWatch, TV (17, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (PhaseObject), Name = "PHASEOccluder")]
 	[DisableDefaultCtor]
-	interface PhaseOccluder
-	{
+	interface PhaseOccluder {
 		[Export ("initWithEngine:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (PhaseEngine engine);
 
 		[Export ("initWithEngine:shapes:")]
 		[DesignatedInitializer]
-		NativeHandle Constructor (PhaseEngine engine, PhaseShape[] shapes);
+		NativeHandle Constructor (PhaseEngine engine, PhaseShape [] shapes);
 
 		[Export ("shapes", ArgumentSemantic.Copy)]
-		PhaseShape[] Shapes { get; }
+		PhaseShape [] Shapes { get; }
 	}
 
-	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (PhaseObject), Name="PHASESource")]
+	[NoWatch, TV (17, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (PhaseObject), Name = "PHASESource")]
 	[DisableDefaultCtor]
-	interface PhaseSource
-	{
+	interface PhaseSource {
 		[Export ("initWithEngine:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (PhaseEngine engine);
 
 		[Export ("initWithEngine:shapes:")]
 		[DesignatedInitializer]
-		NativeHandle Constructor (PhaseEngine engine, PhaseShape[] shapes);
+		NativeHandle Constructor (PhaseEngine engine, PhaseShape [] shapes);
 
 		[Export ("gain")]
 		double Gain { get; set; }
 
 		[Export ("shapes", ArgumentSemantic.Copy)]
-		PhaseShape[] Shapes { get; }
+		PhaseShape [] Shapes { get; }
 	}
 
-	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (NSObject), Name="PHASESpatialPipelineEntry")]
-	interface PhaseSpatialPipelineEntry
-	{
+	[NoWatch, TV (17, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (NSObject), Name = "PHASESpatialPipelineEntry")]
+#if TVOS
+	[DisableDefaultCtor]
+#endif
+	interface PhaseSpatialPipelineEntry {
 		[Export ("sendLevel")]
 		double SendLevel { get; set; }
 
@@ -1307,11 +1281,10 @@ namespace Phase {
 		PhaseNumberMetaParameterDefinition SendLevelMetaParameterDefinition { get; set; }
 	}
 
-	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (NSObject), Name="PHASESpatialPipeline")]
+	[NoWatch, TV (17, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (NSObject), Name = "PHASESpatialPipeline")]
 	[DisableDefaultCtor]
-	interface PhaseSpatialPipeline
-	{
+	interface PhaseSpatialPipeline {
 		[Export ("initWithFlags:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (PhaseSpatialPipelineFlags flags);

@@ -27,7 +27,7 @@ namespace NaturalLanguage {
 		{
 		}
 
-		public string?[]? this [NSString key] {
+		public string? []? this [NSString key] {
 			get {
 				if (key is null)
 					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (key));
@@ -41,7 +41,7 @@ namespace NaturalLanguage {
 			}
 		}
 
-		public string?[]? this [string key] {
+		public string? []? this [string key] {
 			get {
 				return this [(NSString) key];
 			}

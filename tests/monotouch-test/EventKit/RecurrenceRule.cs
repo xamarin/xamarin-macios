@@ -20,8 +20,7 @@ namespace MonoTouchFixtures.EventKit {
 
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class RecurrenceRuleTest
-	{
+	public class RecurrenceRuleTest {
 		[SetUp]
 		public void Setup ()
 		{

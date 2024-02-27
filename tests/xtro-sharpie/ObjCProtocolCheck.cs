@@ -31,7 +31,7 @@ using Mono.Cecil;
 using Clang.Ast;
 
 namespace Extrospection {
-	
+
 	public class ObjCProtocolCheck : BaseVisitor {
 
 		Dictionary<string, TypeDefinition> protocol_map = new Dictionary<string, TypeDefinition> ();
@@ -83,7 +83,7 @@ namespace Extrospection {
 				return;
 
 			var framework = Helpers.GetFramework (decl);
-			if (framework == null)
+			if (framework is null)
 				return;
 
 			var name = decl.Name;
@@ -118,30 +118,30 @@ namespace Extrospection {
 							s_export = p.Argument.Value as string;
 							break;
 						case "IsRequired":
-							is_required = (bool)p.Argument.Value;
+							is_required = (bool) p.Argument.Value;
 							break;
 						case "IsProperty":
-							is_property = (bool)p.Argument.Value;
+							is_property = (bool) p.Argument.Value;
 							break;
 						case "IsStatic":
-							is_static = (bool)p.Argument.Value;
+							is_static = (bool) p.Argument.Value;
 							break;
 						}
 					}
 					break;
 				}
 				if (is_property) {
-					if (g_export != null) {
+					if (g_export is not null) {
 						if (is_static)
 							g_export = "+" + g_export;
 						map.Add (g_export, is_required);
 					}
-					if (s_export != null) {
+					if (s_export is not null) {
 						if (is_static)
 							s_export = "+" + s_export;
 						map.Add (s_export, is_required);
 					}
-				} else if (export != null) {
+				} else if (export is not null) {
 					if (is_static)
 						export = "+" + export;
 					map.Add (export, is_required);
@@ -163,7 +163,7 @@ namespace Extrospection {
 						continue;
 
 					var selector = GetSelector (method);
-					if (selector == null)
+					if (selector is null)
 						continue;
 
 					// a .NET interface cannot have constructors - so we cannot enforce that on the interface
@@ -204,7 +204,7 @@ namespace Extrospection {
 		static string GetSelector (ObjCMethodDecl method)
 		{
 			var result = method.Selector.ToString ();
-			if (result != null)
+			if (result is not null)
 				return result;
 			if (method.IsPropertyAccessor || (method.DeclContext is ObjCProtocolDecl))
 				return method.Name;

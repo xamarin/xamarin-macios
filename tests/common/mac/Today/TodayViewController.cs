@@ -6,10 +6,8 @@ using Foundation;
 using Social;
 using AppKit;
 
-namespace TodayExtensionTest
-{
-	public partial class TodayViewController : NSViewController, INCWidgetProviding
-	{
+namespace TodayExtensionTest {
+	public partial class TodayViewController : NSViewController, INCWidgetProviding {
 		public TodayViewController (IntPtr handle) : base (handle)
 		{
 		}
@@ -17,7 +15,7 @@ namespace TodayExtensionTest
 		public override void ViewDidLoad ()
 		{
 			base.ViewDidLoad ();
-%TESTCODE%
+			REPLACE_CODE_REPLACE
 			// Do any additional setup after loading the view.
 		}
 

@@ -36,14 +36,14 @@ using ObjCRuntime;
 namespace CoreVideo {
 
 	// uint32_t -> CVBuffer.h
-	[Watch (4,0)]
+	[MacCatalyst (13, 1)]
 	public enum CVAttachmentMode : uint {
-		ShouldNotPropagate    = 0,
-		ShouldPropagate       = 1,
+		ShouldNotPropagate = 0,
+		ShouldPropagate = 1,
 	}
 
 	[Flags]
-	[Watch (4,0)]
+	[MacCatalyst (13, 1)]
 #if NET
 	public enum CVPixelBufferLock : ulong {
 #else
@@ -53,10 +53,10 @@ namespace CoreVideo {
 #endif
 		None = 0x00000000,
 		ReadOnly = 0x00000001,
-	}	
+	}
 
 	// int32_t -> CVReturn.h
-	[Watch (4,0)]
+	[MacCatalyst (13, 1)]
 	public enum CVReturn : int {
 		Success = 0,
 		First = -6660,
@@ -82,64 +82,64 @@ namespace CoreVideo {
 
 
 	// uint64_t -> CVBase.h
-	[Watch (4,0)]
+	[MacCatalyst (13, 1)]
 	public enum CVOptionFlags : long {
 		None = 0,
 	}
 
 	[Flags]
-	[Watch (4,0)]
+	[MacCatalyst (13, 1)]
 	public enum CVTimeFlags : int {
 		IsIndefinite = 1 << 0,
 	}
 
 	[Flags]
-	[Watch (4,0)]
+	[MacCatalyst (13, 1)]
 	public enum CVTimeStampFlags : ulong {
-		VideoTimeValid              = (1 << 0),
-		HostTimeValid               = (1 << 1),
-		SMPTETimeValid              = (1 << 2),
-		VideoRefreshPeriodValid     = (1 << 3),
-		RateScalarValid             = (1 << 4),
-		TopField                    = (1 << 16),
-		BottomField                 = (1 << 17),
-		VideoHostTimeValid          = (VideoTimeValid | HostTimeValid),
-		IsInterlaced                = (TopField | BottomField),
-	}	
-
-	[Flags]
-	[Watch (4,0)]
-	public enum CVSMPTETimeFlags : uint {
-		Valid     = (1 << 0),
-		Running   = (1 << 1)
+		VideoTimeValid = (1 << 0),
+		HostTimeValid = (1 << 1),
+		SMPTETimeValid = (1 << 2),
+		VideoRefreshPeriodValid = (1 << 3),
+		RateScalarValid = (1 << 4),
+		TopField = (1 << 16),
+		BottomField = (1 << 17),
+		VideoHostTimeValid = (VideoTimeValid | HostTimeValid),
+		IsInterlaced = (TopField | BottomField),
 	}
 
-	[Watch (4,0)]
+	[Flags]
+	[MacCatalyst (13, 1)]
+	public enum CVSMPTETimeFlags : uint {
+		Valid = (1 << 0),
+		Running = (1 << 1)
+	}
+
+	[MacCatalyst (13, 1)]
 	public enum CVSMPTETimeType : uint {
-		Type24        = 0,
-		Type25        = 1,
-		Type30Drop    = 2,
-		Type30        = 3,
-		Type2997      = 4,
-		Type2997Drop  = 5,
-		Type60        = 6,
-		Type5994      = 7,
+		Type24 = 0,
+		Type25 = 1,
+		Type30Drop = 2,
+		Type30 = 3,
+		Type2997 = 4,
+		Type2997Drop = 5,
+		Type60 = 6,
+		Type5994 = 7,
 	}
 
 	// CVOptionFlags (uint64_t) -> CVPixelBufferPool.h
-	[Watch (4,0)]
-	[iOS (9,0)][Mac (10,11)]
+	[MacCatalyst (13, 1)]
 	public enum CVPixelBufferPoolFlushFlags : ulong {
 		FlushExcessBuffers = 1,
-	} 
+	}
 
 #if !WATCH
-	[TV (13,0), Mac (10,15), iOS (13,0)]
+	[TV (13, 0), iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	public enum CVImageBufferAlphaChannelMode {
 		[Field ("kCVImageBufferAlphaChannelMode_StraightAlpha")]
 		Straight,
 		[Field ("kCVImageBufferAlphaChannelMode_PremultipliedAlpha")]
-		Premultiplied, 
+		Premultiplied,
 	}
 #endif
 }

@@ -12,11 +12,9 @@ using System.Security;
 
 using ObjCRuntime;
 
-namespace Compression
-{
+namespace Compression {
 
-	internal sealed class Deflater : IDisposable
-	{
+	internal sealed class Deflater : IDisposable {
 		private CompressionStreamStruct _compression_struct;
 		private bool _finished; // Whether the end of the stream has been reached
 		private MemoryHandle _inputBufferHandle;
@@ -53,7 +51,11 @@ namespace Compression
 		private void Dispose (bool disposing)
 		{
 			if (!_isDisposed) {
-				CompressionStreamStruct.compression_stream_destroy (ref _compression_struct);
+				unsafe {
+					fixed (CompressionStreamStruct* _compression_struct = &this._compression_struct) {
+						CompressionStreamStruct.compression_stream_destroy (_compression_struct);
+					}
+				}
 				DeallocateInputBufferHandle ();
 				_isDisposed = true;
 			}
@@ -75,14 +77,14 @@ namespace Compression
 			lock (SyncLock) {
 				_inputBufferHandle = inputBuffer.Pin ();
 
-				_compression_struct.Source = (IntPtr)_inputBufferHandle.Pointer;
+				_compression_struct.Source = (IntPtr) _inputBufferHandle.Pointer;
 				_compression_struct.SourceSize = inputBuffer.Length;
 			}
 		}
 
 		internal unsafe void SetInput (byte* inputBufferPtr, int count)
 		{
-			if (! NeedsInput ())
+			if (!NeedsInput ())
 				throw new InvalidOperationException ("We have something left in previous input!");
 			if (inputBufferPtr is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (inputBufferPtr));
@@ -94,14 +96,14 @@ namespace Compression
 			}
 
 			lock (SyncLock) {
-				_compression_struct.Source = (IntPtr)inputBufferPtr;
+				_compression_struct.Source = (IntPtr) inputBufferPtr;
 				_compression_struct.SourceSize = count;
 			}
 		}
 
-		internal int GetDeflateOutput (byte[] outputBuffer)
+		internal int GetDeflateOutput (byte [] outputBuffer)
 		{
-			if (outputBuffer is null) 
+			if (outputBuffer is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (outputBuffer));
 			if (NeedsInput ())
 				throw new InvalidOperationException ("GetDeflateOutput should only be called after providing input");
@@ -117,7 +119,7 @@ namespace Compression
 			}
 		}
 
-		private unsafe CompressionStatus ReadDeflateOutput (byte[] outputBuffer, StreamFlag flushCode, out int bytesRead)
+		private unsafe CompressionStatus ReadDeflateOutput (byte [] outputBuffer, StreamFlag flushCode, out int bytesRead)
 		{
 			if (outputBuffer is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (outputBuffer));
@@ -125,15 +127,20 @@ namespace Compression
 			if (outputBuffer.Length < 0)
 				throw new ArgumentException ("outputbuffer length must be bigger than 0");
 			lock (SyncLock) {
-				fixed (byte* bufPtr = &outputBuffer[0]) {
-					_compression_struct.Destination = (IntPtr)bufPtr;
+				fixed (byte* bufPtr = outputBuffer) {
+					_compression_struct.Destination = (IntPtr) bufPtr;
 					_compression_struct.DestinationSize = outputBuffer.Length;
 
-					var readStatus = CompressionStreamStruct.compression_stream_process (ref _compression_struct, flushCode);
+					CompressionStatus readStatus;
+					unsafe {
+						fixed (CompressionStreamStruct* _compression_struct = &this._compression_struct) {
+							readStatus = CompressionStreamStruct.compression_stream_process (_compression_struct, flushCode);
+						}
+					}
 					switch (readStatus) {
 					case CompressionStatus.Ok:
 					case CompressionStatus.End:
-						bytesRead = outputBuffer.Length - (int)_compression_struct.DestinationSize;
+						bytesRead = outputBuffer.Length - (int) _compression_struct.DestinationSize;
 						break;
 					default:
 						bytesRead = 0;
@@ -145,21 +152,21 @@ namespace Compression
 			}
 		}
 
-		internal bool Finish (byte[] outputBuffer, out int bytesRead)
+		internal bool Finish (byte [] outputBuffer, out int bytesRead)
 		{
 			if (outputBuffer is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (outputBuffer));
 			if (outputBuffer.Length < 0)
 				throw new ArgumentException ("Can't pass in an empty output buffer!");
 
-			var errC = ReadDeflateOutput (outputBuffer, StreamFlag.Finalize , out bytesRead);
+			var errC = ReadDeflateOutput (outputBuffer, StreamFlag.Finalize, out bytesRead);
 			return errC == CompressionStatus.End;
 		}
 
 		/// <summary>
 		/// Returns true if there was something to flush. Otherwise False.
 		/// </summary>
-		internal unsafe bool Flush (byte[] outputBuffer, out int bytesRead)
+		internal unsafe bool Flush (byte [] outputBuffer, out int bytesRead)
 		{
 			if (outputBuffer is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (outputBuffer));
@@ -193,8 +200,13 @@ namespace Compression
 		{
 			_finished = false;
 			_compression_struct = new CompressionStreamStruct ();
-			
-			var status = CompressionStreamStruct.compression_stream_init (ref _compression_struct, StreamOperation.Encode, algorithm);
+
+			CompressionStatus status;
+			unsafe {
+				fixed (CompressionStreamStruct* _compression_struct = &this._compression_struct) {
+					status = CompressionStreamStruct.compression_stream_init (_compression_struct, StreamOperation.Encode, algorithm);
+				}
+			}
 			if (status != CompressionStatus.Ok)
 				throw new InvalidOperationException (status.ToString ());
 		}

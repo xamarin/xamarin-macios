@@ -24,11 +24,18 @@
 #if !__MACCATALYST__
 
 using System;
+using System.ComponentModel;
 using System.Runtime.InteropServices;
 
 using ObjCRuntime;
 using Foundation;
 using CoreGraphics;
+
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
+#nullable enable
 
 namespace AppKit {
 #if NET
@@ -41,23 +48,46 @@ namespace AppKit {
 		public static readonly float DarkGray = (float) 1 / 3.0f;
 
 		[DllImport (Constants.AppKitLibrary)]
-		extern static NSWindowDepth NSBestDepth (IntPtr colorspaceHandle, nint bitsPerSample, nint bitsPerPixel, [MarshalAs (UnmanagedType.I1)] bool planar, [MarshalAs (UnmanagedType.I1)] ref bool exactMatch);
+		extern unsafe static NSWindowDepth NSBestDepth (IntPtr colorspaceHandle, nint bitsPerSample, nint bitsPerPixel, byte planar, byte* exactMatch);
 
-		public static NSWindowDepth BestDepth (NSString colorspace, nint bitsPerSample, nint bitsPerPixel, [MarshalAs (UnmanagedType.I1)] bool planar, [MarshalAs (UnmanagedType.I1)] ref bool exactMatch)
+#if !XAMCORE_5_0
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		[Obsolete ("Call 'GetBestDepth' instead.")]
+		public static NSWindowDepth BestDepth (NSString colorspace, nint bitsPerSample, nint bitsPerPixel, bool planar, ref bool exactMatch)
 		{
-			if (colorspace == null)
-				throw new ArgumentNullException ("colorspace");
+			if (colorspace is null)
+				throw new ArgumentNullException (nameof (colorspace));
 
-			return NSBestDepth (colorspace.Handle, bitsPerSample, bitsPerPixel, planar, ref exactMatch);
+			var exactMatchValue = (byte) (exactMatch ? 1 : 0);
+			NSWindowDepth rv;
+			unsafe {
+				rv = NSBestDepth (colorspace.Handle, bitsPerSample, bitsPerPixel, (byte) (planar ? 1 : 0), &exactMatchValue);
+			}
+			exactMatch = exactMatchValue != 0;
+			return rv;
+		}
+#endif
+
+		public static NSWindowDepth GetBestDepth (NSString colorspace, nint bitsPerSample, nint bitsPerPixel, bool planar, out bool exactMatch)
+		{
+			if (colorspace is null)
+				throw new ArgumentNullException (nameof (colorspace));
+
+			byte exactMatchValue = 0;
+			NSWindowDepth rv;
+			unsafe {
+				rv = NSBestDepth (colorspace.Handle, bitsPerSample, bitsPerPixel, (byte) (planar ? 1 : 0), &exactMatchValue);
+			}
+			exactMatch = exactMatchValue != 0;
+			return rv;
 		}
 
 		[DllImport (Constants.AppKitLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool NSPlanarFromDepth (NSWindowDepth depth);
+		extern static byte NSPlanarFromDepth (NSWindowDepth depth);
 
 		public static bool PlanarFromDepth (NSWindowDepth depth)
 		{
-			return NSPlanarFromDepth (depth);
+			return NSPlanarFromDepth (depth) != 0;
 		}
 
 		[DllImport (Constants.AppKitLibrary)]
@@ -79,7 +109,7 @@ namespace AppKit {
 
 		public static nint NumberOfColorComponents (NSString colorspaceName)
 		{
-			if (colorspaceName == null)
+			if (colorspaceName is null)
 				throw new ArgumentNullException ("colorspaceName");
 			return NSNumberOfColorComponents (colorspaceName.Handle);
 		}
@@ -121,10 +151,10 @@ namespace AppKit {
 
 		public static void RectFill (CGRect [] rects)
 		{
-			if (rects == null)
+			if (rects is null)
 				throw new ArgumentNullException ("rects");
 			unsafe {
-				fixed (CGRect* ptr = &rects [0])
+				fixed (CGRect* ptr = rects)
 					RectFillList (ptr, rects.Length);
 			}
 		}
@@ -150,11 +180,11 @@ namespace AppKit {
 		}
 
 		[DllImport (Constants.AppKitLibrary, EntryPoint = "NSShowAnimationEffect")]
-		extern static void NSShowAnimationEffect (nuint animationEffect, CGPoint centerLocation, CGSize size, NSObject animationDelegate, Selector didEndSelector, IntPtr contextInfo);
+		extern static void NSShowAnimationEffect (nuint animationEffect, CGPoint centerLocation, CGSize size, NativeHandle animationDelegate, NativeHandle didEndSelector, IntPtr contextInfo);
 
 		public static void ShowAnimationEffect (NSAnimationEffect animationEffect, CGPoint centerLocation, CGSize size, NSObject animationDelegate, Selector didEndSelector, IntPtr contextInfo)
 		{
-			NSShowAnimationEffect ((nuint) (ulong) animationEffect, centerLocation, size, animationDelegate, didEndSelector, contextInfo);
+			NSShowAnimationEffect ((nuint) (ulong) animationEffect, centerLocation, size, animationDelegate.GetHandle (), didEndSelector.Handle, contextInfo);
 		}
 
 		public static void ShowAnimationEffect (NSAnimationEffect animationEffect, CGPoint centerLocation, CGSize size, Action endedCallback)
@@ -192,15 +222,15 @@ namespace AppKit {
 
 		public static CGRect DrawTiledRects (CGRect aRect, CGRect clipRect, NSRectEdge [] sides, nfloat [] grays)
 		{
-			if (sides == null)
+			if (sides is null)
 				throw new ArgumentNullException ("sides");
-			if (grays == null)
+			if (grays is null)
 				throw new ArgumentNullException ("grays");
 			if (sides.Length != grays.Length)
 				throw new ArgumentOutOfRangeException ("grays", "Both array parameters must have the same length");
 			unsafe {
-				fixed (NSRectEdge* ptr = &sides [0])
-				fixed (nfloat* ptr2 = &grays [0])
+				fixed (NSRectEdge* ptr = sides)
+				fixed (nfloat* ptr2 = grays)
 					return DrawTiledRects (aRect, clipRect, ptr, ptr2, sides.Length);
 			}
 		}
@@ -210,10 +240,7 @@ namespace AppKit {
 
 #if NET
 		[SupportedOSPlatform ("macos")]
-		[UnsupportedOSPlatform ("macos10.11")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.11 not usually necessary, 'NSAnimationContext.RunAnimation' can be used instead and not suffer from performance issues.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos10.11", "Not usually necessary, 'NSAnimationContext.RunAnimation' can be used instead and not suffer from performance issues.")]
 #else
 		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Not usually necessary, 'NSAnimationContext.RunAnimation' can be used instead and not suffer from performance issues.")]
 #endif
@@ -222,10 +249,7 @@ namespace AppKit {
 
 #if NET
 		[SupportedOSPlatform ("macos")]
-		[UnsupportedOSPlatform ("macos10.11")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.11 not usually necessary, 'NSAnimationContext.RunAnimation' can be used instead and not suffer from performance issues.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos10.11", "Not usually necessary, 'NSAnimationContext.RunAnimation' can be used instead and not suffer from performance issues.")]
 #else
 		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Not usually necessary, 'NSAnimationContext.RunAnimation' can be used instead and not suffer from performance issues.")]
 #endif

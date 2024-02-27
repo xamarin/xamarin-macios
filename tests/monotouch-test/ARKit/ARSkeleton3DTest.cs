@@ -43,8 +43,7 @@ namespace MonoTouchFixtures.ARKit {
 			}
 		}
 
-		protected unsafe override IntPtr RawJointModelTransforms
-		{
+		protected unsafe override IntPtr RawJointModelTransforms {
 			get {
 				modelTransformsArray = new Matrix4 [] { Matrix4.Identity, Matrix4.Identity };
 				if (!modelTransformsArrayHandle.IsAllocated)
@@ -53,8 +52,7 @@ namespace MonoTouchFixtures.ARKit {
 			}
 		}
 
-		protected unsafe override IntPtr RawJointLocalTransforms
-		{
+		protected unsafe override IntPtr RawJointLocalTransforms {
 			get {
 				localTransformsArray = new Matrix4 [] { Matrix4.Identity, Matrix4.Identity };
 				if (!localTransformsArrayHandle.IsAllocated)

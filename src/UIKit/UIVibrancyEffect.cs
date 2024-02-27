@@ -8,6 +8,9 @@ using NotificationCenter;
 #endif
 using ObjCRuntime;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace UIKit {
 
 	public partial class UIVibrancyEffect {
@@ -19,13 +22,10 @@ namespace UIKit {
 		// https://trello.com/c/iQpXOxCd/227-category-and-static-methods-selectors
 		// note: we cannot reuse the same method name - as it would break compilation of existing apps
 #if NET
-		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("ios10.0")]
-#if IOS
-		[Obsolete ("Starting with ios10.0 use 'CreatePrimaryVibrancyEffectForNotificationCenter' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("ios10.0", "Use 'CreatePrimaryVibrancyEffectForNotificationCenter' instead.")]
 #else
 		[Deprecated (PlatformName.iOS, 10,0, message: "Use 'CreatePrimaryVibrancyEffectForNotificationCenter' instead.")]
 #endif
@@ -35,15 +35,11 @@ namespace UIKit {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("ios13.0")]
-#if IOS
-		[Obsolete ("Starting with ios13.0 use 'UIVibrancyEffect.CreateWidgetEffectForNotificationCenter' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("ios13.0", "Use 'UIVibrancyEffect.CreateWidgetEffectForNotificationCenter' instead.")]
 #else
-		[iOS (10,0)]
 		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'UIVibrancyEffect.CreateWidgetEffectForNotificationCenter' instead.")]
 #endif
 		static public UIVibrancyEffect CreatePrimaryVibrancyEffectForNotificationCenter ()
@@ -52,15 +48,11 @@ namespace UIKit {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("ios13.0")]
-#if IOS
-		[Obsolete ("Starting with ios13.0 use 'UIVibrancyEffect.CreateWidgetEffectForNotificationCenter' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("ios13.0", "Use 'UIVibrancyEffect.CreateWidgetEffectForNotificationCenter' instead.")]
 #else
-		[iOS (10,0)]
 		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'UIVibrancyEffect.CreateWidgetEffectForNotificationCenter' instead.")]
 #endif
 		static public UIVibrancyEffect CreateSecondaryVibrancyEffectForNotificationCenter ()

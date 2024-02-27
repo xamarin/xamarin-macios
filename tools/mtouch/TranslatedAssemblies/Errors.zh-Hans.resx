@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <resheader name="resmimetype">
     <value>text/microsoft-resx</value>
@@ -750,6 +750,9 @@
   <data name="MX0185" xml:space="preserve">
 		<value>使用 CoreCLR 时，选项“{0}”无法取值“{1}”。</value>
 	</data>
+  <data name="MX0186" xml:space="preserve">
+		<value>已启用 Bitcode，但 Xcode 14+ 中不支持 Bitcode，并且已将其禁用。请通过从项目文件中删除 “MtouchEnableBitcode” 属性来禁用 Bitcode。</value>
+	</data>
   <data name="MX1009" xml:space="preserve">
 		<value>无法将程序集 "{0}" 复制到 "{1}": {2}
 		</value>
@@ -816,6 +819,12 @@
 	</data>
   <data name="MX1306" xml:space="preserve">
 		<value>无法解压缩文件“{0}”。请查看生成日志，以从本机 “unzip” 命令获取详细信息。</value>
+	</data>
+  <data name="MX1307" xml:space="preserve">
+		<value>无法从程序集“{1}”中提取本机框架“{0}”，因为它不包含资源“{2}”。</value>
+	</data>
+  <data name="MX1308" xml:space="preserve">
+		<value>无法从程序集“{1}”中提取本机库“{0}”，因为它不包含资源“{2}”。</value>
 	</data>
   <data name="MM1401" xml:space="preserve">
 		<value>引用中缺少必需的 "Xamarin.Mac.dll" 程序集
@@ -951,6 +960,9 @@
 		<value>HttpMessageHandler `{0}` 对于 watchOS 无效。唯一的有效值是 NSUrlSessionHandler。
 		</value>
 	</data>
+  <data name="MX2016" xml:space="preserve">
+		<value>无法通过传递“--optimize=-remove-dynamic-registrar”来保持动态注册器，因为使用 NativeAOT 时不支持动态注册器。仍将删除对动态注册的支持。</value>
+	</data>
   <data name="MX2017" xml:space="preserve">
 		<value>无法处理 XML 说明: {0}
 		</value>
@@ -1031,13 +1043,24 @@
 		<value>无法优化对 {0} 中对 BlockLiteral.{2} 的调用，因为作为第一个参数(trampoline)传递的值类型为 {1}，所以无法计算块签名。
 		</value>
 	</data>
-  <data name="MM2106_C" xml:space="preserve">
-		<value>无法优化在 {0} 中偏移量 {1} 处对 BlockLiteral.SetupBlock 的调用，因为无法在 {2} 中找到任何 [UserDelegateType] 特性。
-		</value>
-	</data>
   <data name="MM2106_D" xml:space="preserve">
 		<value>无法优化在 {0} 中偏移量 {1} 处对 BlockLiteral.SetupBlock 的调用: {2}。
 		</value>
+	</data>
+  <data name="MX2106_E" xml:space="preserve">
+		<value>无法优化对 BlockLiteral 的调用。{0} 中的 {2} 偏移量为 {1}，因为在类型“{4}”中找到了多个名为“{3}”的方法。</value>
+	</data>
+  <data name="MX2106_F" xml:space="preserve">
+		<value>无法优化对 BlockLiteral 的调用。{0} 中的 {2} 偏移量为 {1}，因为“{3}”必须至少具有一个参数，。</value>
+	</data>
+  <data name="MX2106_G" xml:space="preserve">
+		<value>无法优化对 BlockLiteral 的调用。{0} 中的 {2} 偏移量为 {1}，因为方法“{3}”中的第一个参数不是 “System.IntPtr”、“void*” 或 “ObjCRuntime.BlockLiteral*” (它是“{4}”)</value>
+	</data>
+  <data name="MX2106_H" xml:space="preserve">
+		<value>无法优化对 BlockLiteral 的调用。{0} 中的 {2} 偏移量为 {1}，因为方法“{3}”没有 [UnmanagedCallersOnly] 属性。</value>
+	</data>
+  <data name="MX2106_I" xml:space="preserve">
+		<value>无法优化对 BlockLiteral 的调用。{0} 中的 {2} 偏移量为 {1}，因为方法“{3}”没有 [UnmanagedCallersOnly] 属性。</value>
 	</data>
   <data name="MM2107" xml:space="preserve">
 		<value>删除动态注册器是不安全的，因为 {0} 引用 "{1}.{2} ({3})"。
@@ -1084,6 +1107,15 @@
   <!-- 234x: ExtractBindingLibrariesStep -->
   <!-- 235x: LoadNonSkippedAssembliesStep -->
   <!-- 236x: RegistrarStep -->
+  <!-- 237x: ComputeAOTArguments -->
+  <!-- 238x: RegistrarRemovalTrackingStep -->
+  <!-- 239x: CoreTypeMapStep -->
+  <!-- 240x: BackingFieldDelayHandler -->
+  <!-- 241x: BackingFieldReintroductionSubStep -->
+  <!-- 242x: MarkIProtocolHandler -->
+  <!-- 243x: ManagedRegistrarStep -->
+  <!-- 244x: ManagedRegistrarLookupTablesStep -->
+  <!-- 245x: ApplyPreserveAttribute -->
   <data name="MX3001" xml:space="preserve">
 		<value>无法{0}程序集 "{1}" 
 		</value>
@@ -1233,7 +1265,7 @@
 		</value>
 	</data>
   <data name="MT4124_I" xml:space="preserve">
-		<value>Invalid {0} found on '{1}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new</value>
+		<value>在“{1}”上找到的 {0} 无效。请在 https://github.com/xamarin/xamarin-macios/issues/new 提交 Bug 报告</value>
 	</data>
   <data name="MT4125" xml:space="preserve">
 		<value>注册器在方法 "{1}" 的签名中找到无效的类型 "{0}": 接口必须具有指定其包装类型的 Protocol 特性。
@@ -1504,7 +1536,7 @@
 		</value>
 	</data>
   <data name="MT4178" xml:space="preserve">
-		<value>不会注册类 "{0}"，因为已从 iOS SDK 中删除 WatchKit 框架。
+		<value>不会注册类 "{0}"，因为已从 {2} SDK 中删除 {1} 框架。
 		</value>
 	</data>
   <data name="MT4179" xml:space="preserve">
@@ -1521,6 +1553,15 @@
 	</data>
   <data name="MT4186" xml:space="preserve">
 		<value>注册机构找到了非最佳类型 `{0}`: 该类型不具有采用两个(ObjCRuntime.NativeHandle, bool)参数的构造函数。但是，找到了一个采用两个(System.IntPtr, bool)参数的构造函数(并将改用此函数)。强烈建议将(System.IntPtr, bool)构造函数的签名更改为(ObjCRuntime.NativeHandle, bool)。</value>
+	</data>
+  <data name="MX4187" xml:space="preserve">
+		<value>在类型“{0}”上找不到 [UserDelegateType] 属性。</value>
+	</data>
+  <data name="MX4188" xml:space="preserve">
+		<value>无法计算类型“{0}”的块签名: {1}</value>
+	</data>
+  <data name="MX4189" xml:space="preserve">
+		<value>不会注册类“{0}”，因为它已从 SDK 中 {1} 移除。</value>
 	</data>
   <data name="MT5101" xml:space="preserve">
 		<value>缺少 "{0}" 编译器。请安装 Xcode“命令行工具”组件
@@ -1744,10 +1785,56 @@
 		<value>无法创建类型 {0} 的实例。</value>
 	</data>
   <data name="MX8042" xml:space="preserve">
-		<value>An exception occurred while trying to invoke the function {0}: {1}.</value>
+		<value>尝试调用函数 {0} 时发生异常: {1}。</value>
 		<comment>
 			0: name of function
 			1: exception info
 		</comment>
+	</data>
+  <data name="MX8043" xml:space="preserve">
+		<value>验证 {0} 的静态注册器代码时发生异常: {1}</value>
+		<comment>
+			0: name of an assembly
+			1: exception info
+		</comment>
+	</data>
+  <data name="MX8044" xml:space="preserve">
+		<value>自生成应用以来，已对程序集 {0} 进行了修改，从而使生成的静态注册器代码无效。已加载程序集的 MVID 为 {1}，而生成的静态注册器代码对应的程序集的 MVID 为 {2}。</value>
+	</data>
+  <data name="MX8045" xml:space="preserve">
+		<value>无法对类型 {0} 的实例调用发布</value>
+	</data>
+  <data name="MX8046" xml:space="preserve">
+		<value>无法在“{1}”中找到方法“{0}”</value>
+	</data>
+  <data name="MX8047" xml:space="preserve">
+		<value>蹦床方法 {0} 与 trampolineMethod 参数的函数指针 0x{1} 不匹配(它们不引用同一方法)。</value>
+	</data>
+  <data name="MX8048" xml:space="preserve">
+		<value>蹦床方法 {0} 必须至少具有一个参数。</value>
+	</data>
+  <data name="MX8049" xml:space="preserve">
+		<value>蹦床方法 {0} 中的第一个参数必须是 “System.IntPtr”、“void*” 或 “ObjCRuntime.BlockLiteral*”。</value>
+	</data>
+  <data name="MX8050" xml:space="preserve">
+		<value>当动态注册机构已链接到别处时，不支持 BlockLiteral.GetBlockSignature。</value>
+	</data>
+  <data name="MX8051" xml:space="preserve">
+		<value>蹦床方法 {0} 必须至少具有 [UnmanagedCallersOnly] 属性。</value>
+	</data>
+  <data name="MX8052" xml:space="preserve">
+		<value>签名必须是非空字符串。</value>
+	</data>
+  <data name="MX8053" xml:space="preserve">
+		<value>无法解析程序集 {0} 中的模块。</value>
+	</data>
+  <data name="MX8054" xml:space="preserve">
+		<value>使用托管静态注册机构时，无法解析方法的元数据令牌(令牌: 0x{0})。</value>
+	</data>
+  <data name="MX8055" xml:space="preserve">
+		<value>在程序集“{0}”中找不到类型“ObjCRuntime.__Registrar__”。</value>
+	</data>
+  <data name="MX8056" xml:space="preserve">
+		<value>无法封送 Objective-C 对象 0x{0} (类型: {1})。找不到此对象的现有托管实例，也无法创建泛型类型 {2} 的新托管实例。</value>
 	</data>
 </root>

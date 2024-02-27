@@ -12,11 +12,11 @@ using NUnit.Framework;
 using Xamarin.Utils;
 
 namespace MonoTouchFixtures.UIKit {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class TextViewTest {
-		
+
 		[Test]
 		public void InitWithFrame ()
 		{
@@ -31,6 +31,11 @@ namespace MonoTouchFixtures.UIKit {
 		{
 			using (UITextView tv = new UITextView ()) {
 				Assert.That (tv.SelectedRange.Length, Is.EqualTo ((nint) 0), "SelectedRange");
+#if XAMCORE_5_0
+				Assert.IsNotNull (tv.TypingAttributes, "default");
+				tv.TypingAttributes = new NSDictionary ();
+				Assert.IsNotNull (tv.TypingAttributes, "assigned");
+#else
 				Assert.IsNull (tv.TypingAttributes, "default");
 				// ^ without a [PreSnippet] attribute this would crash like:
 				// 7   monotouchtest                 	0x00006340 mono_sigill_signal_handler + 64
@@ -40,8 +45,22 @@ namespace MonoTouchFixtures.UIKit {
 				tv.TypingAttributes = new NSDictionary ();
 				// Assert.IsNotNull (tv.TypingAttributes, "assigned");
 				// ^ this would still crash
+#endif
 			}
 		}
+
+#if !XAMCORE_6_0
+		[Test]
+		public void EmptySelection2 ()
+		{
+			using (UITextView tv = new UITextView ()) {
+				Assert.That (tv.SelectedRange.Length, Is.EqualTo ((nint) 0), "SelectedRange");
+				Assert.IsNotNull (tv.TypingAttributes2, "default");
+				tv.TypingAttributes = new NSDictionary ();
+				Assert.IsNotNull (tv.TypingAttributes2, "assigned");
+			}
+		}
+#endif // !XAMCORE_6_0
 
 		[Test]
 		public void NonEmptySelection ()

@@ -33,14 +33,14 @@ using NativeHandle = System.IntPtr;
 namespace Introspection {
 
 	public abstract class ApiSelectorTest : ApiBaseTest {
-		
+
 		// not everything should be even tried
-		
+
 		protected virtual bool Skip (Type type)
 		{
 			if (type.ContainsGenericParameters)
 				return true;
-			
+
 			// skip delegate (and other protocol references)
 			foreach (object ca in type.GetCustomAttributes (false)) {
 				if (ca is ProtocolAttribute)
@@ -200,14 +200,14 @@ namespace Introspection {
 				break;
 			case "ARBodyTrackingConfiguration":
 			case "ARGeoTrackingConfiguration":
-			switch (selectorName) {
+				switch (selectorName) {
 				case "supportsAppClipCodeTracking": // Only available on device
 					return TestRuntime.IsSimulatorOrDesktop;
 				}
 				break;
 			case "CSImportExtension":
 				switch (selectorName) {
-				case "beginRequestWithExtensionContext:": 
+				case "beginRequestWithExtensionContext:":
 				case "updateAttributes:forFileAtURL:error:":
 					if (TestRuntime.IsSimulatorOrDesktop) // not available in the sim
 						return true;
@@ -229,6 +229,15 @@ namespace Introspection {
 					return true;
 				case "textInteractionEnabled": // xcode 13 renamed this to `isTextInteractionEnabled` but does not respond to the old one
 					return true;
+				}
+				break;
+			case "CIFilterGenerator":
+				switch (selectorName) {
+				case "filterGenerator":
+				case "filterGeneratorWithContentsOfURL:":
+					if (TestRuntime.IsSimulatorOrDesktop)
+						return true;
+					break;
 				}
 				break;
 			}
@@ -380,6 +389,15 @@ namespace Introspection {
 					return true;
 				}
 				break;
+#if (__WATCHOS__ || __MACOS__ || __MACCATALYST__)
+			case "AVPlayerItem":
+				switch (selectorName) { // comes from AVPlayerItem+MPAdditions.h
+				case "nowPlayingInfo":
+				case "setNowPlayingInfo:":
+					return TestRuntime.IsSimulatorOrDesktop;
+				}
+				break;
+#endif
 			case "AVPlayerItemVideoOutput":
 				switch (selectorName) {
 				case "initWithOutputSettings:":
@@ -388,7 +406,7 @@ namespace Introspection {
 				}
 				break;
 			case "MTLBufferLayoutDescriptor": // We do have unit tests under monotouch-tests for this properties
-				switch (selectorName){
+				switch (selectorName) {
 				case "stepFunction":
 				case "setStepFunction:":
 				case "stepRate":
@@ -399,7 +417,7 @@ namespace Introspection {
 				}
 				break;
 			case "MTLFunctionConstant": // we do have unit tests under monotouch-tests for this properties
-				switch (selectorName){
+				switch (selectorName) {
 				case "name":
 				case "type":
 				case "index":
@@ -408,7 +426,7 @@ namespace Introspection {
 				}
 				break;
 			case "MTLStageInputOutputDescriptor": // we do have unit tests under monotouch-tests for this properties
-				switch (selectorName){
+				switch (selectorName) {
 				case "attributes":
 				case "indexBufferIndex":
 				case "setIndexBufferIndex:":
@@ -419,7 +437,7 @@ namespace Introspection {
 				}
 				break;
 			case "MTLAttributeDescriptor": // we do have unit tests under monotouch-tests for this properties
-				switch (selectorName){
+				switch (selectorName) {
 				case "bufferIndex":
 				case "setBufferIndex:":
 				case "format":
@@ -430,7 +448,7 @@ namespace Introspection {
 				}
 				break;
 			case "MTLAttribute": // we do have unit tests under monotouch-tests for this properties
-				switch (selectorName){
+				switch (selectorName) {
 				case "isActive":
 				case "attributeIndex":
 				case "attributeType":
@@ -442,7 +460,7 @@ namespace Introspection {
 				}
 				break;
 			case "MTLArgument": // we do have unit tests under monotouch-tests for this properties
-				switch (selectorName){
+				switch (selectorName) {
 				case "isDepthTexture":
 					return true;
 				}
@@ -579,7 +597,7 @@ namespace Introspection {
 					return true;
 				}
 				break;
-			case "MTLComputePassSampleBufferAttachmentDescriptor": 
+			case "MTLComputePassSampleBufferAttachmentDescriptor":
 				switch (selectorName) {
 				case "sampleBuffer":
 				case "setSampleBuffer:":
@@ -694,7 +712,7 @@ namespace Introspection {
 				case "copyWithZone:":
 				case "mutableCopyWithZone:":
 					// Added in Xcode9 (i.e. only 64 bits) so skip 32 bits
-					return !TestRuntime.CheckXcodeVersion (9,0);
+					return !TestRuntime.CheckXcodeVersion (9, 0);
 				}
 				break;
 			case "MPSCnnConvolution":
@@ -904,6 +922,14 @@ namespace Introspection {
 					break;
 				}
 				break;
+			case "MPSGraphExecutableExecutionDescriptor":
+				switch (selectorName) {
+				case "copyWithZone:":
+					if (!TestRuntime.CheckXcodeVersion (14, 0))
+						return true;
+					break;
+				}
+				break;
 			case "UIControl":
 #if __MACCATALYST__
 				switch (selectorName) {
@@ -924,44 +950,45 @@ namespace Introspection {
 				}
 #endif
 				break;
-#if NET
-			// Incorrect attributes in inlined protocol selectors - https://github.com/xamarin/xamarin-macios/issues/14802
-			case "NSTextAttachment":
+			case "SKAdImpression":
+#if __MACCATALYST__
 				switch (selectorName) {
-				case "attachmentBoundsForAttributes:location:textContainer:proposedLineFragment:position:":
-				case "imageForBounds:attributes:location:textContainer:":
-				case "viewProviderForParentView:location:textContainer:":
-					return true;
+				case "initWithSourceAppStoreItemIdentifier:advertisedAppStoreItemIdentifier:adNetworkIdentifier:adCampaignIdentifier:adImpressionIdentifier:timestamp:signature:version:":
+					if (TestRuntime.CheckXcodeVersion (14, 0))
+						return true;
+					break;
 				}
-				break;
-			// Incorrect attributes in get/set selectors - https://github.com/xamarin/xamarin-macios/issues/14802
-			case "CBManager":
-				switch (selectorName) {
-				case "authorization":
-				case "authorizations":
-					return true;
-				}
-				break;
-			case "NEAppProxyFlow":
-				switch (selectorName) {
-				case "networkInterface":
-				case "setNetworkInterface:":
-					return true;
-				}
-				break;
-			case "WKPreferences":
-				switch (selectorName) {
-				case "setTextInteractionEnabled:":
-					return true;
-				}
-				break;
-			case "MidiCISession":
-				switch (selectorName) {
-				case "midiDestination":
-					return true;
-				}
-				break;
 #endif
+				break;
+			case "EKParticipant":
+#if __MACCATALYST__
+				switch (selectorName) {
+				case "ABRecordWithAddressBook:": // Deprecated in 13.1
+					if (TestRuntime.CheckXcodeVersion (14, 0))
+						return true;
+					break;
+				}
+#endif
+				break;
+			case "SWRemoveParticipantAlertController":
+				switch (selectorName) {
+				case "initWithFrame:":
+					return true;
+				}
+				break;
+			case "CAEdrMetadata":
+				switch (selectorName) {
+				case "copyWithZone:":
+				case "encodeWithCoder:":
+					return !TestRuntime.CheckXcodeVersion (14, 3);
+				}
+				break;
+			case "GCKeyboard":
+				switch (selectorName) {
+				case "encodeWithCoder:": // removed comformance
+					return TestRuntime.CheckXcodeVersion (14, 3);
+				}
+				break;
 			}
 
 			// old binding mistake
@@ -972,7 +999,7 @@ namespace Introspection {
 		{
 			if (value)
 				return true;
-			
+
 			var mname = method.Name;
 			// properties getter and setter will be methods in the _Extensions type
 			if (method.IsSpecialName)
@@ -981,10 +1008,10 @@ namespace Introspection {
 			// it's possible that the selector was inlined for an OPTIONAL protocol member
 			// we do not want those reported (too many false positives) and we have other tests to find such mistakes
 			foreach (var intf in actualType.GetInterfaces ()) {
-				if (intf.GetCustomAttributes<ProtocolAttribute> () == null)
+				if (intf.GetCustomAttributes<ProtocolAttribute> () is null)
 					continue;
 				var ext = Type.GetType (intf.Namespace + "." + intf.Name.Remove (0, 1) + "_Extensions, " + intf.Assembly.FullName);
-				if (ext == null)
+				if (ext is null)
 					continue;
 				foreach (var m in ext.GetMethods ()) {
 					if (mname != m.Name)
@@ -1002,11 +1029,11 @@ namespace Introspection {
 					}
 				}
 			}
-			
+
 			name = actualType.FullName + " : " + name;
 			return false;
 		}
-		
+
 		static IntPtr responds_handle = Selector.GetHandle ("instancesRespondToSelector:");
 
 		[Test]
@@ -1040,7 +1067,7 @@ namespace Introspection {
 
 			foreach (object ca in m.GetCustomAttributes (true)) {
 				ExportAttribute export = (ca as ExportAttribute);
-				if (export == null)
+				if (export is null)
 					continue;
 
 				string name = export.Selector;
@@ -1055,7 +1082,7 @@ namespace Introspection {
 		protected virtual IntPtr GetClassForType (Type type)
 		{
 			var fi = type.GetField ("class_ptr", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static);
-			if (fi == null)
+			if (fi is null)
 				return IntPtr.Zero; // e.g. *Delegate
 #if NET
 			return (NativeHandle) fi.GetValue (null);
@@ -1070,14 +1097,14 @@ namespace Introspection {
 			Errors = 0;
 			ErrorData.Clear ();
 			int n = 0;
-			
+
 			foreach (Type t in Assembly.GetTypes ()) {
 				if (t.IsNested || !NSObjectType.IsAssignableFrom (t))
 					continue;
 
 				if (Skip (t) || SkipDueToAttribute (t))
 					continue;
-				
+
 				IntPtr class_ptr = GetClassForType (t);
 
 				if (class_ptr == IntPtr.Zero)
@@ -1101,7 +1128,7 @@ namespace Introspection {
 
 			foreach (object ca in m.GetCustomAttributes (true)) {
 				ExportAttribute export = (ca as ExportAttribute);
-				if (export == null)
+				if (export is null)
 					continue;
 
 				string name = export.Selector;
@@ -1193,35 +1220,45 @@ namespace Introspection {
 			case "initWithCenter:diameter:":
 			case "initWithCenter:radius:":
 			case "initWithR:theta:":
+			// PassKit
+			case "initWithProvisioningCredentialIdentifier:sharingInstanceIdentifier:cardTemplateIdentifier:preview:":
+			case "initWithProvisioningCredentialIdentifier:sharingInstanceIdentifier:cardConfigurationIdentifier:preview:":
 			// NSImage
 			case "initWithDataIgnoringOrientation:":
-				var mi = m as MethodInfo;
-				return mi != null && !mi.IsPublic && mi.ReturnType.Name == "IntPtr";
-			// NSAppleEventDescriptor
-			case "initListDescriptor":
-			case "initRecordDescriptor":
 			// SCContentFilter
 			case "initWithDisplay:excludingApplications:exceptingWindows:":
 			case "initWithDisplay:excludingWindows:":
 			case "initWithDisplay:includingApplications:exceptingWindows:":
 			case "initWithDisplay:includingWindows:":
+				var mi = m as MethodInfo;
+				return mi is not null && !mi.IsPublic && (mi.ReturnType.Name == "IntPtr" || mi.ReturnType.Name == "NativeHandle");
+			// NSAppleEventDescriptor
+			case "initListDescriptor":
+			case "initRecordDescriptor":
+			// SharedWithYouCore
+			case "initWithLocalIdentifier:":
+			case "initWithCollaborationIdentifier:":
+				return true;
+			// CloudKit
+			case "initWithExcludedZoneIDs:":
+			case "initWithZoneIDs:":
 				return true;
 			default:
 				return false;
 			}
 		}
-		
+
 		protected virtual void Dispose (NSObject obj, Type type)
 		{
 			obj.Dispose ();
 		}
-		
+
 		// funny, this is how I envisioned the instance version... before hitting run :|
 		protected virtual bool CheckStaticResponse (bool value, Type actualType, Type declaredType, ref string name)
 		{
 			if (value)
 				return true;
-			
+
 			name = actualType.FullName + " : " + name;
 			return false;
 		}
@@ -1232,9 +1269,9 @@ namespace Introspection {
 			Errors = 0;
 			ErrorData.Clear ();
 			int n = 0;
-			
+
 			IntPtr responds_handle = Selector.GetHandle ("respondsToSelector:");
-			
+
 			foreach (Type t in Assembly.GetTypes ()) {
 				if (t.IsNested || !NSObjectType.IsAssignableFrom (t))
 					continue;
@@ -1243,10 +1280,10 @@ namespace Introspection {
 					continue;
 
 				FieldInfo fi = t.GetField ("class_ptr", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static);
-				if (fi == null)
+				if (fi is null)
 					continue; // e.g. *Delegate
 				IntPtr class_ptr = (IntPtr) (NativeHandle) fi.GetValue (null);
-				
+
 				foreach (var m in t.GetMethods (BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static)) {
 					if (SkipDueToAttribute (m))
 						continue;

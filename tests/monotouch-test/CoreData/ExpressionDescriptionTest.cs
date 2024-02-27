@@ -3,13 +3,11 @@ using Foundation;
 using CoreData;
 using NUnit.Framework;
 
-namespace MonoTouchFixtures.CoreData
-{
+namespace MonoTouchFixtures.CoreData {
 
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class ExpressionDescriptionTest
-	{
+	public class ExpressionDescriptionTest {
 
 		[Test]
 		public void WeakFramework ()
@@ -35,10 +33,10 @@ namespace MonoTouchFixtures.CoreData
 			using (var exp = new NSExpressionDescription ()) {
 				exp.Name = "Test";
 				Assert.AreEqual (exp.ResultType, NSAttributeType.Undefined,
-				                 "The default value of an unset ResultType should be 'Undefined'");
+								 "The default value of an unset ResultType should be 'Undefined'");
 				exp.ResultType = NSAttributeType.Boolean;
 				Assert.AreEqual (NSAttributeType.Boolean, exp.ResultType,
-				                 "ResultType was not correctly set.");
+								 "ResultType was not correctly set.");
 			}
 		}
 	}

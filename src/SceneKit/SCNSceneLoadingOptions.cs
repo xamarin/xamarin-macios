@@ -2,8 +2,7 @@ using System;
 
 #nullable enable
 
-namespace SceneKit
-{
+namespace SceneKit {
 	public partial class SCNSceneLoadingOptions {
 		public SCNAnimationImportPolicy AnimationImportPolicy {
 			get {
@@ -22,7 +21,7 @@ namespace SceneKit
 			}
 
 			set {
-				switch (value){
+				switch (value) {
 				case SCNAnimationImportPolicy.Play:
 					_AnimationImportPolicyKey = SCNSceneSourceLoading.AnimationImportPolicyPlay;
 					break;

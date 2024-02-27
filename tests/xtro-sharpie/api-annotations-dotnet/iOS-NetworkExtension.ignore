@@ -3,3 +3,11 @@
 ## is, which means we can't use the same managed enum for both cases (the native enums aren't entirely identical
 ## either: one is pointer sized while the other is 32-bit always).
 !duplicate-type-name! NWPathStatus enum exists as both NetworkExtension.NWPathStatus and Network.NWPathStatus
+
+# value got removed in xcode14
+!extra-enum-value! Managed value 1 for NEOnDemandRuleInterfaceType.Ethernet is available for the current platform while the value in the native header is not
+
+# xcode 15
+# error used to be ignored in common-NetworkExtension.ignore but tvOS platform support was added and since this error does not apply to tvOS, it had to be addressed on a per platform basis
+!missing-release-attribute-on-return-value! NetworkExtension.NEAppRule[] NetworkExtension.NETunnelProviderManager::CopyAppRules()'s selector's ('copyAppRules') Objective-C method family ('copy') indicates that the native method returns a retained object, and as such a '[return: Release]' attribute is required.
+

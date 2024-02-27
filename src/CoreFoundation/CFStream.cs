@@ -33,6 +33,7 @@
 #nullable enable
 
 using System;
+using System.ComponentModel;
 using System.Net;
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
@@ -82,23 +83,23 @@ namespace CoreFoundation {
 		IntPtr retain;
 		IntPtr release;
 		IntPtr copyDescription;
-		
+
 		public void Retain ()
 		{
 			if (retain == IntPtr.Zero || Info == IntPtr.Zero)
 				return;
-			
+
 			CFReadStreamRef_InvokeRetain (retain, Info);
 		}
-		
+
 		public void Release ()
 		{
 			if (release == IntPtr.Zero || Info == IntPtr.Zero)
 				return;
-			
+
 			CFReadStreamRef_InvokeRelease (release, Info);
 		}
-		
+
 		public override string? ToString ()
 		{
 			if (copyDescription != IntPtr.Zero) {
@@ -110,7 +111,7 @@ namespace CoreFoundation {
 			}
 			return base.ToString ();
 		}
-		
+
 		internal void Invoke (IntPtr callback, IntPtr stream, CFStreamEventType eventType)
 		{
 			if (callback == IntPtr.Zero)
@@ -118,37 +119,37 @@ namespace CoreFoundation {
 
 			CFReadStreamRef_InvokeCallback (callback, stream, eventType, Info);
 		}
-		
+
 		[MonoNativeFunctionWrapper]
 		delegate IntPtr RetainDelegate (IntPtr info);
 
 		static IntPtr CFReadStreamRef_InvokeRetain (IntPtr retain, IntPtr info)
 		{
-			return ((RetainDelegate)Marshal.GetDelegateForFunctionPointer (retain, typeof (RetainDelegate))) (info);
+			return ((RetainDelegate) Marshal.GetDelegateForFunctionPointer (retain, typeof (RetainDelegate))) (info);
 		}
-		
+
 		[MonoNativeFunctionWrapper]
 		delegate void ReleaseDelegate (IntPtr info);
 
 		static void CFReadStreamRef_InvokeRelease (IntPtr release, IntPtr info)
 		{
-			((ReleaseDelegate)Marshal.GetDelegateForFunctionPointer (release, typeof (ReleaseDelegate))) (info);
+			((ReleaseDelegate) Marshal.GetDelegateForFunctionPointer (release, typeof (ReleaseDelegate))) (info);
 		}
-		
+
 		[MonoNativeFunctionWrapper]
 		delegate IntPtr CopyDescriptionDelegate (IntPtr info);
 
 		static IntPtr CFReadStreamRef_InvokeCopyDescription (IntPtr copyDescription, IntPtr info)
 		{
-			return ((CopyDescriptionDelegate)Marshal.GetDelegateForFunctionPointer (copyDescription, typeof (CopyDescriptionDelegate))) (info);
+			return ((CopyDescriptionDelegate) Marshal.GetDelegateForFunctionPointer (copyDescription, typeof (CopyDescriptionDelegate))) (info);
 		}
-		
+
 		[MonoNativeFunctionWrapper]
 		delegate void CallbackDelegate (IntPtr stream, IntPtr /* CFStreamEventType */ eventType, IntPtr info);
 
 		static void CFReadStreamRef_InvokeCallback (IntPtr callback, IntPtr stream, CFStreamEventType eventType, IntPtr info)
 		{
-			((CallbackDelegate)Marshal.GetDelegateForFunctionPointer (callback, typeof (CallbackDelegate))) (stream, (IntPtr) eventType, info);
+			((CallbackDelegate) Marshal.GetDelegateForFunctionPointer (callback, typeof (CallbackDelegate))) (stream, (IntPtr) eventType, info);
 		}
 	}
 
@@ -184,19 +185,10 @@ namespace CoreFoundation {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("tvos15.0")]
-		[UnsupportedOSPlatform ("maccatalyst15.0")]
-		[UnsupportedOSPlatform ("macos12.0")]
-		[UnsupportedOSPlatform ("ios15.0")]
-#if TVOS
-		[Obsolete (Constants.UseNetworkInstead, DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif __MACCATALYST__
-		[Obsolete (Constants.UseNetworkInstead, DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif MONOMAC
-		[Obsolete (Constants.UseNetworkInstead, DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete (Constants.UseNetworkInstead, DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("tvos15.0", Constants.UseNetworkInstead)]
+		[ObsoletedOSPlatform ("maccatalyst15.0", Constants.UseNetworkInstead)]
+		[ObsoletedOSPlatform ("macos12.0", Constants.UseNetworkInstead)]
+		[ObsoletedOSPlatform ("ios15.0", Constants.UseNetworkInstead)]
 #else
 		[Deprecated (PlatformName.WatchOS, 8, 0, message: Constants.UseNetworkInstead)]
 		[Deprecated (PlatformName.TvOS, 15, 0, message: Constants.UseNetworkInstead)]
@@ -205,27 +197,18 @@ namespace CoreFoundation {
 		[Deprecated (PlatformName.MacOSX, 12, 0, message: Constants.UseNetworkInstead)]
 #endif
 		[DllImport (Constants.CoreFoundationLibrary)]
-		internal extern static void CFStreamCreatePairWithSocket (/* CFAllocatorRef */ IntPtr allocator, CFSocketNativeHandle sock,
-			/* CFReadStreamRef* */ out IntPtr readStream, /* CFWriteStreamRef* */ out IntPtr writeStream);
+		internal unsafe extern static void CFStreamCreatePairWithSocket (/* CFAllocatorRef */ IntPtr allocator, CFSocketNativeHandle sock,
+			/* CFReadStreamRef* */ IntPtr* readStream, /* CFWriteStreamRef* */ IntPtr* writeStream);
 
 #if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("tvos15.0")]
-		[UnsupportedOSPlatform ("maccatalyst15.0")]
-		[UnsupportedOSPlatform ("macos12.0")]
-		[UnsupportedOSPlatform ("ios15.0")]
-#if TVOS
-		[Obsolete (Constants.UseNetworkInstead, DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif __MACCATALYST__
-		[Obsolete (Constants.UseNetworkInstead, DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif MONOMAC
-		[Obsolete (Constants.UseNetworkInstead, DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete (Constants.UseNetworkInstead, DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("tvos15.0", Constants.UseNetworkInstead)]
+		[ObsoletedOSPlatform ("maccatalyst15.0", Constants.UseNetworkInstead)]
+		[ObsoletedOSPlatform ("macos12.0", Constants.UseNetworkInstead)]
+		[ObsoletedOSPlatform ("ios15.0", Constants.UseNetworkInstead)]
 #else
 		[Deprecated (PlatformName.WatchOS, 8, 0, message: Constants.UseNetworkInstead)]
 		[Deprecated (PlatformName.TvOS, 15, 0, message: Constants.UseNetworkInstead)]
@@ -234,13 +217,15 @@ namespace CoreFoundation {
 		[Deprecated (PlatformName.MacOSX, 12, 0, message: Constants.UseNetworkInstead)]
 #endif
 		public static void CreatePairWithSocket (CFSocket socket, out CFReadStream readStream,
-		                                         out CFWriteStream writeStream)
+												 out CFWriteStream writeStream)
 		{
 			if (socket is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (socket));
 
 			IntPtr read, write;
-			CFStreamCreatePairWithSocket (IntPtr.Zero, socket.GetNative (), out read, out write);
+			unsafe {
+				CFStreamCreatePairWithSocket (IntPtr.Zero, socket.GetNative (), &read, &write);
+			}
 			readStream = new CFReadStream (read, true);
 			writeStream = new CFWriteStream (write, true);
 		}
@@ -250,19 +235,10 @@ namespace CoreFoundation {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("tvos15.0")]
-		[UnsupportedOSPlatform ("maccatalyst15.0")]
-		[UnsupportedOSPlatform ("macos12.0")]
-		[UnsupportedOSPlatform ("ios15.0")]
-#if TVOS
-		[Obsolete (Constants.UseNetworkInstead, DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif __MACCATALYST__
-		[Obsolete (Constants.UseNetworkInstead, DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif MONOMAC
-		[Obsolete (Constants.UseNetworkInstead, DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete (Constants.UseNetworkInstead, DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("tvos15.0", Constants.UseNetworkInstead)]
+		[ObsoletedOSPlatform ("maccatalyst15.0", Constants.UseNetworkInstead)]
+		[ObsoletedOSPlatform ("macos12.0", Constants.UseNetworkInstead)]
+		[ObsoletedOSPlatform ("ios15.0", Constants.UseNetworkInstead)]
 #else
 		[Deprecated (PlatformName.WatchOS, 8, 0, message: Constants.UseNetworkInstead)]
 		[Deprecated (PlatformName.TvOS, 15, 0, message: Constants.UseNetworkInstead)]
@@ -271,28 +247,19 @@ namespace CoreFoundation {
 		[Deprecated (PlatformName.MacOSX, 12, 0, message: Constants.UseNetworkInstead)]
 #endif
 		[DllImport (Constants.CoreFoundationLibrary)]
-		internal extern static void CFStreamCreatePairWithPeerSocketSignature (/* CFAllocatorRef */ IntPtr allocator, 
-			/* CFSocketSignature* */ ref CFSocketSignature sig, 
-			/* CFReadStreamRef* */ out IntPtr readStream, /* CFWriteStreamRef* */ out IntPtr writeStream);
+		internal unsafe extern static void CFStreamCreatePairWithPeerSocketSignature (/* CFAllocatorRef */ IntPtr allocator,
+			/* CFSocketSignature* */ CFSocketSignature* sig,
+			/* CFReadStreamRef* */ IntPtr* readStream, /* CFWriteStreamRef* */ IntPtr* writeStream);
 
 #if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("tvos15.0")]
-		[UnsupportedOSPlatform ("maccatalyst15.0")]
-		[UnsupportedOSPlatform ("macos12.0")]
-		[UnsupportedOSPlatform ("ios15.0")]
-#if TVOS
-		[Obsolete (Constants.UseNetworkInstead, DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif __MACCATALYST__
-		[Obsolete (Constants.UseNetworkInstead, DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif MONOMAC
-		[Obsolete (Constants.UseNetworkInstead, DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete (Constants.UseNetworkInstead, DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("tvos15.0", Constants.UseNetworkInstead)]
+		[ObsoletedOSPlatform ("maccatalyst15.0", Constants.UseNetworkInstead)]
+		[ObsoletedOSPlatform ("macos12.0", Constants.UseNetworkInstead)]
+		[ObsoletedOSPlatform ("ios15.0", Constants.UseNetworkInstead)]
 #else
 		[Deprecated (PlatformName.WatchOS, 8, 0, message: Constants.UseNetworkInstead)]
 		[Deprecated (PlatformName.TvOS, 15, 0, message: Constants.UseNetworkInstead)]
@@ -301,14 +268,16 @@ namespace CoreFoundation {
 		[Deprecated (PlatformName.MacOSX, 12, 0, message: Constants.UseNetworkInstead)]
 #endif
 		public static void CreatePairWithPeerSocketSignature (AddressFamily family, SocketType type,
-		                                                      ProtocolType proto, IPEndPoint endpoint,
-		                                                      out CFReadStream readStream,
-		                                                      out CFWriteStream writeStream)
+															  ProtocolType proto, IPEndPoint endpoint,
+															  out CFReadStream readStream,
+															  out CFWriteStream writeStream)
 		{
 			using (var address = new CFSocketAddress (endpoint)) {
 				var sig = new CFSocketSignature (family, type, proto, address);
 				IntPtr read, write;
-				CFStreamCreatePairWithPeerSocketSignature (IntPtr.Zero, ref sig, out read, out write);
+				unsafe {
+					CFStreamCreatePairWithPeerSocketSignature (IntPtr.Zero, &sig, &read, &write);
+				}
 				readStream = new CFReadStream (read, true);
 				writeStream = new CFWriteStream (write, true);
 			}
@@ -321,19 +290,10 @@ namespace CoreFoundation {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("tvos15.0")]
-		[UnsupportedOSPlatform ("maccatalyst15.0")]
-		[UnsupportedOSPlatform ("macos12.0")]
-		[UnsupportedOSPlatform ("ios15.0")]
-#if TVOS
-		[Obsolete (Constants.UseNetworkInstead, DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif __MACCATALYST__
-		[Obsolete (Constants.UseNetworkInstead, DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif MONOMAC
-		[Obsolete (Constants.UseNetworkInstead, DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete (Constants.UseNetworkInstead, DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("tvos15.0", Constants.UseNetworkInstead)]
+		[ObsoletedOSPlatform ("maccatalyst15.0", Constants.UseNetworkInstead)]
+		[ObsoletedOSPlatform ("macos12.0", Constants.UseNetworkInstead)]
+		[ObsoletedOSPlatform ("ios15.0", Constants.UseNetworkInstead)]
 #else
 		[Deprecated (PlatformName.WatchOS, 8, 0, message: Constants.UseNetworkInstead)]
 		[Deprecated (PlatformName.TvOS, 15, 0, message: Constants.UseNetworkInstead)]
@@ -342,30 +302,21 @@ namespace CoreFoundation {
 		[Deprecated (PlatformName.MacOSX, 12, 0, message: Constants.UseNetworkInstead)]
 #endif
 		[DllImport (Constants.CFNetworkLibrary)]
-		internal extern static void CFStreamCreatePairWithSocketToCFHost (
-			/* CFAllocatorRef __nullable */ IntPtr allocator, 
+		internal unsafe extern static void CFStreamCreatePairWithSocketToCFHost (
+			/* CFAllocatorRef __nullable */ IntPtr allocator,
 			/* CFHostRef __nonnull */ IntPtr host, /* SInt32 */ int port,
-			/* CFReadStreamRef __nullable * __nullable */ out IntPtr readStream,
-			/* CFWriteStreamRef __nullable * __nullable */ out IntPtr writeStream);
+			/* CFReadStreamRef __nullable * __nullable */ IntPtr* readStream,
+			/* CFWriteStreamRef __nullable * __nullable */ IntPtr* writeStream);
 
 #if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("tvos15.0")]
-		[UnsupportedOSPlatform ("maccatalyst15.0")]
-		[UnsupportedOSPlatform ("macos12.0")]
-		[UnsupportedOSPlatform ("ios15.0")]
-#if TVOS
-		[Obsolete (Constants.UseNetworkInstead, DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif __MACCATALYST__
-		[Obsolete (Constants.UseNetworkInstead, DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif MONOMAC
-		[Obsolete (Constants.UseNetworkInstead, DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete (Constants.UseNetworkInstead, DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("tvos15.0", Constants.UseNetworkInstead)]
+		[ObsoletedOSPlatform ("maccatalyst15.0", Constants.UseNetworkInstead)]
+		[ObsoletedOSPlatform ("macos12.0", Constants.UseNetworkInstead)]
+		[ObsoletedOSPlatform ("ios15.0", Constants.UseNetworkInstead)]
 #else
 		[Deprecated (PlatformName.WatchOS, 8, 0, message: Constants.UseNetworkInstead)]
 		[Deprecated (PlatformName.TvOS, 15, 0, message: Constants.UseNetworkInstead)]
@@ -374,12 +325,14 @@ namespace CoreFoundation {
 		[Deprecated (PlatformName.MacOSX, 12, 0, message: Constants.UseNetworkInstead)]
 #endif
 		public static void CreatePairWithSocketToHost (IPEndPoint endpoint,
-		                                               out CFReadStream? readStream,
-		                                               out CFWriteStream? writeStream)
+													   out CFReadStream? readStream,
+													   out CFWriteStream? writeStream)
 		{
 			using (var host = CFHost.Create (endpoint)) {
 				IntPtr read, write;
-				CFStreamCreatePairWithSocketToCFHost (IntPtr.Zero, host.Handle, endpoint.Port, out read, out write);
+				unsafe {
+					CFStreamCreatePairWithSocketToCFHost (IntPtr.Zero, host.Handle, endpoint.Port, &read, &write);
+				}
 				// API can return null streams
 				readStream = read == IntPtr.Zero ? null : new CFReadStream (read, true);
 				writeStream = write == IntPtr.Zero ? null : new CFWriteStream (write, true);
@@ -392,19 +345,10 @@ namespace CoreFoundation {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("tvos15.0")]
-		[UnsupportedOSPlatform ("maccatalyst15.0")]
-		[UnsupportedOSPlatform ("macos12.0")]
-		[UnsupportedOSPlatform ("ios15.0")]
-#if TVOS
-		[Obsolete (Constants.UseNetworkInstead, DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif __MACCATALYST__
-		[Obsolete (Constants.UseNetworkInstead, DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif MONOMAC
-		[Obsolete (Constants.UseNetworkInstead, DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete (Constants.UseNetworkInstead, DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("tvos15.0", Constants.UseNetworkInstead)]
+		[ObsoletedOSPlatform ("maccatalyst15.0", Constants.UseNetworkInstead)]
+		[ObsoletedOSPlatform ("macos12.0", Constants.UseNetworkInstead)]
+		[ObsoletedOSPlatform ("ios15.0", Constants.UseNetworkInstead)]
 #else
 		[Deprecated (PlatformName.WatchOS, 8, 0, message: Constants.UseNetworkInstead)]
 		[Deprecated (PlatformName.TvOS, 15, 0, message: Constants.UseNetworkInstead)]
@@ -413,28 +357,19 @@ namespace CoreFoundation {
 		[Deprecated (PlatformName.MacOSX, 12, 0, message: Constants.UseNetworkInstead)]
 #endif
 		[DllImport (Constants.CoreFoundationLibrary)]
-		internal extern static void CFStreamCreatePairWithSocketToHost (/* CFAllocatorRef */ IntPtr allocator, 
+		unsafe extern static void CFStreamCreatePairWithSocketToHost (/* CFAllocatorRef */ IntPtr allocator,
 			/* CFStringRef */ IntPtr host, /* UInt32 */ int port,
-			/* CFReadStreamRef* */ out IntPtr readStream, /* CFWriteStreamRef* */ out IntPtr writeStream);
+			/* CFReadStreamRef* */ IntPtr* readStream, /* CFWriteStreamRef* */ IntPtr* writeStream);
 
 #if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("tvos15.0")]
-		[UnsupportedOSPlatform ("maccatalyst15.0")]
-		[UnsupportedOSPlatform ("macos12.0")]
-		[UnsupportedOSPlatform ("ios15.0")]
-#if TVOS
-		[Obsolete (Constants.UseNetworkInstead, DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif __MACCATALYST__
-		[Obsolete (Constants.UseNetworkInstead, DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif MONOMAC
-		[Obsolete (Constants.UseNetworkInstead, DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete (Constants.UseNetworkInstead, DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("tvos15.0", Constants.UseNetworkInstead)]
+		[ObsoletedOSPlatform ("maccatalyst15.0", Constants.UseNetworkInstead)]
+		[ObsoletedOSPlatform ("macos12.0", Constants.UseNetworkInstead)]
+		[ObsoletedOSPlatform ("ios15.0", Constants.UseNetworkInstead)]
 #else
 		[Deprecated (PlatformName.WatchOS, 8, 0, message: Constants.UseNetworkInstead)]
 		[Deprecated (PlatformName.TvOS, 15, 0, message: Constants.UseNetworkInstead)]
@@ -443,13 +378,14 @@ namespace CoreFoundation {
 		[Deprecated (PlatformName.MacOSX, 12, 0, message: Constants.UseNetworkInstead)]
 #endif
 		public static void CreatePairWithSocketToHost (string host, int port,
-		                                               out CFReadStream? readStream,
-		                                               out CFWriteStream? writeStream)
+													   out CFReadStream? readStream,
+													   out CFWriteStream? writeStream)
 		{
 			using (var str = new CFString (host)) {
 				IntPtr read, write;
-				CFStreamCreatePairWithSocketToHost (
-					IntPtr.Zero, str.Handle, port, out read, out write);
+				unsafe {
+					CFStreamCreatePairWithSocketToHost (IntPtr.Zero, str.Handle, port, &read, &write);
+				}
 				// API not annotated (yet?) but it's safe to bet it match CFStreamCreatePairWithSocketToCFHost
 				readStream = read == IntPtr.Zero ? null : new CFReadStream (read, true);
 				writeStream = write == IntPtr.Zero ? null : new CFWriteStream (write, true);
@@ -462,13 +398,10 @@ namespace CoreFoundation {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos10.11")]
-		[UnsupportedOSPlatform ("ios9.0")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.11.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios9.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos10.11")]
+		[ObsoletedOSPlatform ("ios9.0")]
+		[ObsoletedOSPlatform ("maccatalyst13.0")]
+		[ObsoletedOSPlatform ("tvos9.0")]
 #else
 		[Deprecated (PlatformName.iOS, 9, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 11)]
@@ -482,16 +415,13 @@ namespace CoreFoundation {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos10.11")]
-		[UnsupportedOSPlatform ("ios9.0")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.11 use 'NSUrlSession' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios9.0 use 'NSUrlSession' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos10.11", "Use 'NSUrlSession' instead.")]
+		[ObsoletedOSPlatform ("ios9.0", "Use 'NSUrlSession' instead.")]
+		[ObsoletedOSPlatform ("maccatalyst13.0", "Use 'NSUrlSession' instead.")]
+		[ObsoletedOSPlatform ("tvos9.0", "Use 'NSUrlSession' instead.")]
 #else
-		[Deprecated (PlatformName.iOS, 9, 0, message : "Use 'NSUrlSession' instead.")]
-		[Deprecated (PlatformName.MacOSX, 10, 11, message : "Use 'NSUrlSession' instead.")]
+		[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'NSUrlSession' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'NSUrlSession' instead.")]
 #endif
 		public static CFHTTPStream CreateForHTTPRequest (CFHTTPMessage request)
 		{
@@ -508,16 +438,13 @@ namespace CoreFoundation {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos10.11")]
-		[UnsupportedOSPlatform ("ios9.0")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.11.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios9.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos10.11")]
+		[ObsoletedOSPlatform ("ios9.0")]
+		[ObsoletedOSPlatform ("maccatalyst13.0")]
+		[ObsoletedOSPlatform ("tvos9.0")]
 #else
-		[Deprecated (PlatformName.iOS, 9,0)]
-		[Deprecated (PlatformName.MacOSX, 10,11)]
+		[Deprecated (PlatformName.iOS, 9, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 11)]
 #endif
 		[DllImport (Constants.CFNetworkLibrary)]
 		internal extern static /* CFReadStreamRef __nonnull */ IntPtr CFReadStreamCreateForStreamedHTTPRequest (
@@ -529,16 +456,13 @@ namespace CoreFoundation {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos10.11")]
-		[UnsupportedOSPlatform ("ios9.0")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.11 use 'NSUrlSession' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios9.0 use 'NSUrlSession' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos10.11", "Use 'NSUrlSession' instead.")]
+		[ObsoletedOSPlatform ("ios9.0", "Use 'NSUrlSession' instead.")]
+		[ObsoletedOSPlatform ("maccatalyst13.0", "Use 'NSUrlSession' instead.")]
+		[ObsoletedOSPlatform ("tvos9.0", "Use 'NSUrlSession' instead.")]
 #else
-		[Deprecated (PlatformName.iOS, 9,0, message : "Use 'NSUrlSession' instead.")]
-		[Deprecated (PlatformName.MacOSX, 10,11, message : "Use 'NSUrlSession' instead.")]
+		[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'NSUrlSession' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'NSUrlSession' instead.")]
 #endif
 		public static CFHTTPStream CreateForStreamedHTTPRequest (CFHTTPMessage request, CFReadStream body)
 		{
@@ -564,14 +488,16 @@ namespace CoreFoundation {
 #endif
 
 		[DllImport (Constants.CoreFoundationLibrary)]
-		internal extern static void CFStreamCreateBoundPair (/* CFAllocatorRef */ IntPtr alloc, 
-			/* CFReadStreamRef* */ out IntPtr readStream, /* CFWriteStreamRef* */ out IntPtr writeStream,
+		unsafe internal extern static void CFStreamCreateBoundPair (/* CFAllocatorRef */ IntPtr alloc,
+			/* CFReadStreamRef* */ IntPtr* readStream, /* CFWriteStreamRef* */ IntPtr* writeStream,
 			/* CFIndex */ nint transferBufferSize);
 
 		public static void CreateBoundPair (out CFReadStream readStream, out CFWriteStream writeStream, nint bufferSize)
 		{
 			IntPtr read, write;
-			CFStreamCreateBoundPair (IntPtr.Zero, out read, out write, bufferSize);
+			unsafe {
+				CFStreamCreateBoundPair (IntPtr.Zero, &read, &write, bufferSize);
+			}
 			readStream = new CFReadStream (read, true);
 			writeStream = new CFWriteStream (write, true);
 		}
@@ -609,7 +535,13 @@ namespace CoreFoundation {
 				return;
 			GetCheckedHandle ();
 			if (loop is not null) {
+#if NET8_0_OR_GREATER
+				unsafe {
+					DoSetClient ((delegate* unmanaged<IntPtr, nint, IntPtr, void>) null, (CFIndex) 0, IntPtr.Zero);
+				}
+#else
 				DoSetClient (null, (CFIndex) 0, IntPtr.Zero);
+#endif
 				UnscheduleFromRunLoop (loop, loopMode);
 				loop = null;
 				loopMode = null;
@@ -728,14 +660,20 @@ namespace CoreFoundation {
 
 		protected delegate void CFStreamCallback (IntPtr s, nint type, IntPtr info);
 
-		[MonoPInvokeCallback (typeof(CFStreamCallback))]
-		static void OnCallback (IntPtr s, nint type, IntPtr info)
+#if NET8_0_OR_GREATER
+		[UnmanagedCallersOnly]
+#else
+		[MonoPInvokeCallback (typeof (CFStreamCallback))]
+#endif
+		static void NativeCallback (IntPtr s, nint type, IntPtr info)
 		{
 			var stream = GCHandle.FromIntPtr (info).Target as CFStream;
 			stream?.OnCallback ((CFStreamEventType) (long) type);
 		}
 
-		static CFStreamCallback OnCallbackDelegate = OnCallback;
+#if !NET8_0_OR_GREATER
+		static CFStreamCallback OnCallbackDelegate = NativeCallback;
+#endif
 
 		protected virtual void OnCallback (CFStreamEventType type)
 		{
@@ -779,10 +717,18 @@ namespace CoreFoundation {
 				CFStreamEventType.CanAcceptBytes | CFStreamEventType.ErrorOccurred |
 				CFStreamEventType.EndEncountered;
 
-			var ptr = Marshal.AllocHGlobal (Marshal.SizeOf (typeof (CFStreamClientContext)));
+			var ptr = Marshal.AllocHGlobal (Marshal.SizeOf<CFStreamClientContext> ());
 			try {
-				Marshal.StructureToPtr (ctx, ptr, false);
-				if (!DoSetClient (OnCallbackDelegate, (CFIndex) (long) args, ptr))
+				Marshal.StructureToPtr<CFStreamClientContext> (ctx, ptr, false);
+				bool clientSet;
+#if NET8_0_OR_GREATER
+				unsafe {
+					clientSet = DoSetClient (&NativeCallback, (CFIndex) (long) args, ptr) != 0;
+				}
+#else
+				clientSet = DoSetClient (OnCallbackDelegate, (CFIndex) (long) args, ptr);
+#endif
+				if (!clientSet)
 					throw new InvalidOperationException ("Stream does not support async events.");
 			} finally {
 				Marshal.FreeHGlobal (ptr);
@@ -791,8 +737,26 @@ namespace CoreFoundation {
 			ScheduleWithRunLoop (runLoop, runLoopMode);
 		}
 
+#if !XAMCORE_5_0
+#if NET8_0_OR_GREATER
+		[Obsolete ("Use the other overload.")]
+		[EditorBrowsable (EditorBrowsableState.Never)]
+#endif
 		protected abstract bool DoSetClient (CFStreamCallback? callback, CFIndex eventTypes,
-		                                     IntPtr context);
+											 IntPtr context);
+#endif
+
+#if NET8_0_OR_GREATER
+#if XAMCORE_5_0
+		unsafe protected abstract byte DoSetClient (delegate* unmanaged<IntPtr, nint, IntPtr, void> callback, CFIndex eventTypes, IntPtr context);
+#else
+		unsafe protected virtual byte DoSetClient (delegate* unmanaged<IntPtr, nint, IntPtr, void> callback, CFIndex eventTypes, IntPtr context)
+		{
+			throw new InvalidOperationException ($"This method must be overridden (and don't call base)");
+		}
+#endif // XAMCORE_5_0
+#endif // NET8_0_OR_GREATER
+
 
 #if !NET
 		[Obsolete ("Call 'GetCheckedHandle ()' instead.")]
@@ -819,61 +783,46 @@ namespace CoreFoundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7,0)]
-		[Mac (10,9)]
 #endif
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static void CFReadStreamSetDispatchQueue (/* CFReadStreamRef */ IntPtr stream, /* dispatch_queue_t */ IntPtr queue);
-		
+
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7,0)]
-		[Mac (10,9)]
 #endif
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static void CFWriteStreamSetDispatchQueue (/* CFWriteStreamRef */ IntPtr stream, /* dispatch_queue_t */ IntPtr queue);
 
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7,0)]
-		[Mac (10,9)]
 #endif
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static /* dispatch_queue_t */ IntPtr CFReadStreamCopyDispatchQueue (/* CFReadStreamRef */ IntPtr stream);
 
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7,0)]
-		[Mac (10,9)]
 #endif
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static /* dispatch_queue_t */ IntPtr CFWriteStreamCopyDispatchQueue (/* CFWriteStreamRef */ IntPtr stream);
-	
+
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7,0)]
-		[Mac (10,9)]
 #endif
 		public DispatchQueue ReadDispatchQueue {
 			get {
@@ -885,13 +834,10 @@ namespace CoreFoundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7,0)]
-		[Mac (10,9)]
 #endif
 		public DispatchQueue WriteDispatchQueue {
 			get {

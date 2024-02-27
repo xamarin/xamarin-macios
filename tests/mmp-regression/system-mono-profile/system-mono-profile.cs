@@ -9,9 +9,9 @@ using AppKit;
 using ObjCRuntime;
 
 namespace Xamarin.Mac.Linker.Test {
-	
+
 	class SystemMono {
-		static void Main (string[] args)
+		static void Main (string [] args)
 		{
 			NSApplication.Init ();
 
@@ -20,7 +20,7 @@ namespace Xamarin.Mac.Linker.Test {
 			} else {
 				Test.Log.WriteLine ("FAIL: could not find 'output.mlpd'");
 			}
-		
+
 			Test.Terminate ();
 		}
 	}

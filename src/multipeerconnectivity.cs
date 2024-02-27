@@ -24,8 +24,7 @@ using NativeHandle = System.IntPtr;
 
 namespace MultipeerConnectivity {
 
-	[TV (10,0)]
-	[iOS (7,0)][Mac (10,10)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: -[MCPeerID init]: unrecognized selector sent to instance 0x7d721090
 	partial interface MCPeerID : NSCopying, NSSecureCoding {
@@ -40,8 +39,7 @@ namespace MultipeerConnectivity {
 
 	delegate void MCSessionNearbyConnectionDataForPeerCompletionHandler (NSData connectionData, NSError error);
 
-	[TV (10,0)]
-	[iOS (7,0)][Mac (10,10)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // crash when calling `description` selector
 	partial interface MCSession {
@@ -77,8 +75,7 @@ namespace MultipeerConnectivity {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		MCSessionDelegate Delegate { get; set; }
+		IMCSessionDelegate Delegate { get; set; }
 
 		[Export ("myPeerID")]
 		MCPeerID MyPeerID { get; }
@@ -93,7 +90,7 @@ namespace MultipeerConnectivity {
 
 		[Field ("kMCSessionMaximumNumberOfPeers")]
 		nint MaximumNumberOfPeers { get; }
-	
+
 		[Field ("kMCSessionMinimumNumberOfPeers")]
 		nint MinimumNumberOfPeers { get; }
 
@@ -108,12 +105,13 @@ namespace MultipeerConnectivity {
 
 		[Export ("cancelConnectPeer:")]
 		void CancelConnectPeer (MCPeerID peerID);
-	
+
 		#endregion
 	}
 
-	[TV (10,0)]
-	[iOS (7,0)][Mac (10,10)]
+	interface IMCSessionDelegate { }
+
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -139,11 +137,10 @@ namespace MultipeerConnectivity {
 		void DidReceiveStream (MCSession session, NSInputStream stream, string streamName, MCPeerID peerID);
 
 		[Export ("session:didReceiveCertificate:fromPeer:certificateHandler:")]
-		bool DidReceiveCertificate (MCSession session, [NullAllowed] SecCertificate[] certificate, MCPeerID peerID, Action<bool> certificateHandler);
+		bool DidReceiveCertificate (MCSession session, [NullAllowed] SecCertificate [] certificate, MCPeerID peerID, Action<bool> certificateHandler);
 	}
 
-	[TV (10,0)]
-	[iOS (7,0)][Mac (10,10)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // NSInvalidArgumentException -[MCNearbyServiceAdvertiser init]: unrecognized selector sent to instance 0x19195e50
 	partial interface MCNearbyServiceAdvertiser {
@@ -162,8 +159,7 @@ namespace MultipeerConnectivity {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		MCNearbyServiceAdvertiserDelegate Delegate { get; set; }
+		IMCNearbyServiceAdvertiserDelegate Delegate { get; set; }
 
 		[Export ("myPeerID")]
 		MCPeerID MyPeerID { get; }
@@ -178,8 +174,9 @@ namespace MultipeerConnectivity {
 
 	delegate void MCNearbyServiceAdvertiserInvitationHandler (bool accept, [NullAllowed] MCSession session);
 
-	[TV (10,0)]
-	[iOS (7,0)][Mac (10,10)]
+	interface IMCNearbyServiceAdvertiserDelegate { }
+
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -193,8 +190,7 @@ namespace MultipeerConnectivity {
 		void DidNotStartAdvertisingPeer (MCNearbyServiceAdvertiser advertiser, NSError error);
 	}
 
-	[TV (10,0)]
-	[iOS (7,0)][Mac (10,10)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // NSInvalidArgumentException -[MCNearbyServiceBrowser init]: unrecognized selector sent to instance 0x15519a70
 	partial interface MCNearbyServiceBrowser {
@@ -216,8 +212,7 @@ namespace MultipeerConnectivity {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		MCNearbyServiceBrowserDelegate Delegate { get; set; }
+		IMCNearbyServiceBrowserDelegate Delegate { get; set; }
 
 		[Export ("myPeerID")]
 		MCPeerID MyPeerID { get; }
@@ -226,8 +221,7 @@ namespace MultipeerConnectivity {
 		string ServiceType { get; }
 	}
 
-	[TV (10,0)]
-	[iOS (7,0)][Mac (10,10)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -245,11 +239,9 @@ namespace MultipeerConnectivity {
 		void DidNotStartBrowsingForPeers (MCNearbyServiceBrowser browser, NSError error);
 	}
 
-	interface IMCNearbyServiceBrowserDelegate {}
+	interface IMCNearbyServiceBrowserDelegate { }
 
-	[Mac (10,10)]
-	[TV (10,0)]
-	[iOS (7,0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (UIViewController))]
 	[DisableDefaultCtor] // NSInvalidArgumentException -[MCPeerPickerViewController initWithNibName:bundle:]: unrecognized selector sent to instance 0x15517b90
 	partial interface MCBrowserViewController : MCNearbyServiceBrowserDelegate {
@@ -268,8 +260,7 @@ namespace MultipeerConnectivity {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		MCBrowserViewControllerDelegate Delegate { get; set; }
+		IMCBrowserViewControllerDelegate Delegate { get; set; }
 
 		[Export ("minimumNumberOfPeers", ArgumentSemantic.Assign)]
 		nuint MinimumNumberOfPeers { get; set; }
@@ -287,8 +278,9 @@ namespace MultipeerConnectivity {
 		MCSession Session { get; }
 	}
 
-	[TV (10,0)]
-	[iOS (7,0)][Mac (10,10)]
+	interface IMCBrowserViewControllerDelegate { }
+
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -308,8 +300,7 @@ namespace MultipeerConnectivity {
 		bool ShouldPresentNearbyPeer (MCBrowserViewController browserViewController, MCPeerID peerID, [NullAllowed] NSDictionary info);
 	}
 
-	[TV (10,0)]
-	[iOS (7,0)][Mac (10,10)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: -[MCAdvertiserAssistant init]: unrecognized selector sent to instance 0x7ea7fa40
 	interface MCAdvertiserAssistant {
@@ -332,8 +323,7 @@ namespace MultipeerConnectivity {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		MCAdvertiserAssistantDelegate Delegate { get; set; }
+		IMCAdvertiserAssistantDelegate Delegate { get; set; }
 
 		[Export ("start")]
 		void Start ();
@@ -342,8 +332,9 @@ namespace MultipeerConnectivity {
 		void Stop ();
 	}
 
-	[TV (10,0)]
-	[iOS (7,0)][Mac (10,10)]
+	interface IMCAdvertiserAssistantDelegate { }
+
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]

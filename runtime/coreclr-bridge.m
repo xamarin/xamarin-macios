@@ -11,6 +11,7 @@
 #include <sys/stat.h>
 #include <inttypes.h>
 #include <pthread.h>
+#include <sys/mman.h>
 
 #include "product.h"
 #include "runtime-internal.h"
@@ -477,6 +478,7 @@ xamarin_bridge_compute_properties (int inputCount, const char **inputKeys, const
 		munmap ((void *) buf, fd_len);
 }
 
+#if !defined (NATIVEAOT)
 bool
 xamarin_bridge_vm_initialize (int propertyCount, const char **propertyKeys, const char **propertyValues)
 {
@@ -510,6 +512,7 @@ xamarin_bridge_vm_initialize (int propertyCount, const char **propertyKeys, cons
 
 	return rv == 0;
 }
+#endif // !defined (NATIVEAOT)
 
 void
 xamarin_install_nsautoreleasepool_hooks ()
@@ -537,25 +540,29 @@ xamarin_handle_bridge_exception (GCHandle gchandle, const char *method)
 	xamarin_assertion_message ("%s threw an exception: %p = %s", method, gchandle, [xamarin_print_all_exceptions (gchandle) UTF8String]);
 }
 
-typedef void (*xamarin_runtime_initialize_decl)(struct InitializationOptions* options);
+#if !defined (NATIVEAOT)
+typedef void (*xamarin_runtime_initialize_decl)(struct InitializationOptions* options, GCHandle* exception_gchandle);
 void
 xamarin_bridge_call_runtime_initialize (struct InitializationOptions* options, GCHandle* exception_gchandle)
 {
 	void *del = NULL;
-	int rv = coreclr_create_delegate (coreclr_handle, coreclr_domainId, PRODUCT ", Version=0.0.0.0", "ObjCRuntime.Runtime", "Initialize", &del);
+	int rv = coreclr_create_delegate (coreclr_handle, coreclr_domainId, PRODUCT ", Version=0.0.0.0", "ObjCRuntime.Runtime", "SafeInitialize", &del);
 	if (rv != 0)
 		xamarin_assertion_message ("xamarin_bridge_call_runtime_initialize: failed to create delegate: %i\n", rv);
 
 	xamarin_runtime_initialize_decl runtime_initialize = (xamarin_runtime_initialize_decl) del;
-	runtime_initialize (options);
+	runtime_initialize (options, exception_gchandle);
 }
+#endif // !defined (NATIVEAOT)
 
 void
 xamarin_bridge_register_product_assembly (GCHandle* exception_gchandle)
 {
+#if !defined (NATIVEAOT)
 	MonoAssembly *assembly;
 	assembly = xamarin_open_and_register (PRODUCT_DUAL_ASSEMBLY, exception_gchandle);
 	xamarin_mono_object_release (&assembly);
+#endif // !defined (NATIVEAOT)
 }
 
 MonoMethod *
@@ -737,6 +744,7 @@ mono_reflection_type_get_type (MonoReflectionType *reftype)
 	return rv;
 }
 
+#if !defined (NATIVEAOT)
 int
 mono_jit_exec (MonoDomain * domain, MonoAssembly * assembly, int argc, const char** argv)
 {
@@ -766,6 +774,7 @@ mono_jit_exec (MonoDomain * domain, MonoAssembly * assembly, int argc, const cha
 
 	return (int) exitCode;
 }
+#endif // !defined (NATIVEAOT)
 
 MonoGHashTable *
 mono_g_hash_table_new_type (GHashFunc hash_func, GEqualFunc key_equal_func, MonoGHashGCType type)
@@ -960,26 +969,6 @@ xamarin_bridge_free_mono_signature (MonoMethodSignature **psig)
 	mono_free (sig);
 
 	*psig = NULL;
-}
-
-MonoReferenceQueue *
-mono_gc_reference_queue_new (mono_reference_queue_callback callback)
-{
-	MonoReferenceQueue *rv = xamarin_bridge_gc_reference_queue_new (callback);
-
-	LOG_CORECLR (stderr, "%s (%p) => %p\n", __func__, callback, rv);
-
-	return rv;
-}
-
-gboolean
-mono_gc_reference_queue_add (MonoReferenceQueue *queue, MonoObject *obj, void *user_data)
-{
-	LOG_CORECLR (stderr, "%s (%p, %p, %p)\n", __func__, queue, obj, user_data);
-
-	xamarin_bridge_gc_reference_queue_add (queue, obj, user_data);
-
-	return true;
 }
 
 void

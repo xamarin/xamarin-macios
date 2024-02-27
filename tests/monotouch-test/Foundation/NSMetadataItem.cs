@@ -8,13 +8,13 @@ namespace Xamarin.Mac.Tests {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class NSMetadataItemTest {
-		
+
 		[Test]
 		[Ignore ("Fails on bots, disabled until investigated")]
 		public void CtorUrl ()
 		{
 			// 10.9 for NSMetadataItem initWithURL:
-			TestRuntime.AssertXcodeVersion (5,1);
+			TestRuntime.AssertXcodeVersion (5, 1);
 
 			var url = NSBundle.MainBundle.BundleUrl;
 			using (var mi = new NSMetadataItem (url)) {
@@ -46,7 +46,7 @@ namespace Xamarin.Mac.Tests {
 				Assert.Null (mi.UbiquitousItemUrlInLocalContainer, "UbiquitousItemUrlInLocalContainer");
 
 				// 10.10
-				if (TestRuntime.CheckXcodeVersion (6,0)) {
+				if (TestRuntime.CheckXcodeVersion (6, 0)) {
 					Assert.False (mi.UbiquitousItemDownloadRequested, "UbiquitousItemDownloadRequested");
 					Assert.False (mi.UbiquitousItemIsExternalDocument, "UbiquitousItemIsExternalDocument");
 				}

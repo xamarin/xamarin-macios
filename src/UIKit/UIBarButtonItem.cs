@@ -8,6 +8,9 @@ using Foundation;
 using ObjCRuntime;
 using System;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace UIKit {
 
 	public partial class UIBarButtonItem {
@@ -26,22 +29,22 @@ namespace UIKit {
 			[Preserve (Conditional = true)]
 			public void Call (NSObject sender)
 			{
-				if (container.clicked != null)
+				if (container.clicked is not null)
 					container.clicked (sender, EventArgs.Empty);
 			}
 		}
 
 		public UIBarButtonItem (UIImage image, UIBarButtonItemStyle style, EventHandler handler)
-		: this (image, style, new Callback () , actionSel)
+		: this (image, style, new Callback (), actionSel)
 		{
 			callback = (Callback) Target;
 			callback.container = this;
 			clicked += handler;
 			MarkDirty ();
 		}
-		
-		
-		public UIBarButtonItem  (string title, UIBarButtonItemStyle style, EventHandler handler)
+
+
+		public UIBarButtonItem (string title, UIBarButtonItemStyle style, EventHandler handler)
 		: this (title, style, new Callback (), actionSel)
 		{
 			callback = (Callback) Target;
@@ -49,7 +52,7 @@ namespace UIKit {
 			clicked += handler;
 			MarkDirty ();
 		}
-						
+
 
 		public UIBarButtonItem (UIBarButtonSystemItem systemItem, EventHandler handler)
 		: this (systemItem, new Callback (), actionSel)
@@ -60,23 +63,23 @@ namespace UIKit {
 			MarkDirty ();
 		}
 
-		public UIBarButtonItem (UIBarButtonSystemItem systemItem) : this (systemItem, null, null)
+		public UIBarButtonItem (UIBarButtonSystemItem systemItem) : this (systemItem: systemItem, target: null, action: null)
 		{
 		}
 
 		internal EventHandler clicked;
 		internal Callback callback;
-		
+
 		public event EventHandler Clicked {
 			add {
-				if (clicked == null){
+				if (clicked is null) {
 					callback = new Callback ();
 					callback.container = this;
 					this.Target = callback;
 					this.Action = actionSel;
 					MarkDirty ();
 				}
-				
+
 				clicked += value;
 			}
 

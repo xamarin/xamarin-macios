@@ -3,17 +3,15 @@ using System.Linq;
 using NUnit.Framework;
 using Xamarin.Utils;
 
-namespace Xamarin.MMP.Tests
-{
+namespace Xamarin.MMP.Tests {
 	[TestFixture]
-	public class TargetFrameworkMutateTests
-	{
+	public class TargetFrameworkMutateTests {
 		const string MigrateCSProjTag = "<MigrateToNewXMIdentifier>true</MigrateToNewXMIdentifier>";
 
 		public bool MatchesTFI (string expected, BuildResult buildOutput)
 		{
 			var tfiLine = buildOutput.BuildOutputLines.FirstOrDefault (x => x.StartsWith ("\t\t\tTargetFrameworkIdentifier=", StringComparison.Ordinal));
-			if (tfiLine == null)
+			if (tfiLine is null)
 				return false;
 			return tfiLine.Contains (expected);
 		}

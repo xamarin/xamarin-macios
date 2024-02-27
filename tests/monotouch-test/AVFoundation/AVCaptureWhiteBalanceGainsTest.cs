@@ -7,7 +7,7 @@ namespace MonoTouchFixtures.AVFoundation {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class AVCaptureWhiteBalanceGainsTest {
-	
+
 		[Test]
 		public void ConstructorTest ()
 		{
@@ -18,8 +18,8 @@ namespace MonoTouchFixtures.AVFoundation {
 			var gains = new AVCaptureWhiteBalanceGains (red, green, blue);
 
 			Assert.AreEqual (red, gains.RedGain, "Wrong RedGain value.");
-			Assert.AreEqual (green, gains.GreenGain, "Wrong GreenGain value."); 
-			Assert.AreEqual (blue, gains.BlueGain, "Wrong BlueGain value."); 
+			Assert.AreEqual (green, gains.GreenGain, "Wrong GreenGain value.");
+			Assert.AreEqual (blue, gains.BlueGain, "Wrong BlueGain value.");
 		}
 
 		[Test]
@@ -28,10 +28,10 @@ namespace MonoTouchFixtures.AVFoundation {
 			float red = 2.3f;
 			float green = 30.90f;
 			float blue = 30.90f;
-			
+
 			var gains1 = new AVCaptureWhiteBalanceGains (red, green, blue);
 			var gains2 = new AVCaptureWhiteBalanceGains (red, green, blue);
-			
+
 			Assert.True (gains1 == gains2, "gains1 == gains2");
 			Assert.True (gains1.Equals (gains2), "gains1.Equals (gains2)");
 			Assert.False (gains1 != gains2, "gains1 != gains2");

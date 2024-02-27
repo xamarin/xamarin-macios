@@ -10,8 +10,7 @@
 using System;
 using Foundation;
 
-namespace Foundation
-{
+namespace Foundation {
 	public partial class NSFileManagerDelegate {
 		public virtual bool ShouldCopyItemAtPath (NSFileManager fileManager, string srcPath, string dstPath)
 		{
@@ -25,8 +24,8 @@ namespace Foundation
 			return false;
 		}
 #endif
-	}	
-	public static partial class NSFileManagerDelegate_Extensions  {
+	}
+	public static partial class NSFileManagerDelegate_Extensions {
 		// This was a duplicate [Export] so in order to avoid breaking the API we expose it this way.
 		// NOTE: this is an Extension method, (NSFileManagerDelegate is a [Protocol]) so the exported methods are, by default, extensions. 
 		public static bool ShouldCopyItemAtPath (this INSFileManagerDelegate This, NSFileManager fileManager, string srcPath, string dstPath)
@@ -41,5 +40,5 @@ namespace Foundation
 			return false;
 		}
 #endif
-	}	
+	}
 }

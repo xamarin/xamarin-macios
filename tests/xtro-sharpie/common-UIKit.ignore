@@ -73,18 +73,3 @@
 ## manually bound (better, stronger signature) on `[setS|s]copeBarButtonTitleTextAttributes:forState:` which is decorated with `UI_APPEARANCE_SELECTOR`
 
 ## [Wrap] over `[largeT|t]itleTextAttributes` which is decorated with `UI_APPEARANCE_SELECTOR`
-
-## unsorted
-
-!missing-field! NSCharacterEncodingDocumentOption not bound
-!missing-field! NSDefaultAttributesDocumentOption not bound
-!missing-field! NSDocumentTypeDocumentOption not bound
-
-
-## helpers
-
-## UITextAlignment is deprecated in iOS6 in favor of NSTextAlignment - values added to avoid breaking changes
-
-## it's a `ref` on a struct, which xtro assumes nullable
-
-## manually bound

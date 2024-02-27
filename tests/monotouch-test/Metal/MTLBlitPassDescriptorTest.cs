@@ -13,7 +13,7 @@ namespace MonoTouchFixtures.Metal {
 
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class MTLBlitPassDescriptorTest { 
+	public class MTLBlitPassDescriptorTest {
 
 		[SetUp]
 		public void SetUp ()

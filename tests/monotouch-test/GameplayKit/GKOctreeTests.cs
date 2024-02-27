@@ -32,7 +32,7 @@ namespace MonoTouchFixtures.GamePlayKit {
 		{
 			if (!TestRuntime.CheckXcodeVersion (8, 0))
 				Assert.Ignore ("Ignoring GameplayKit tests: Requires iOS10+");
-			
+
 			var box = new GKBox {
 				Max = new Vector3 (9, 8, 7),
 				Min = new Vector3 (2, 3, 4)

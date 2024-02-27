@@ -99,7 +99,7 @@ namespace UIKit {
 		}
 
 		[Obsolete ("Always throw a 'NotSupportedException' (only available on macOS).")]
-		public virtual void AddTemporaryAttributes (NSDictionary<NSString,NSObject> attributes, NSRange characterRange)
+		public virtual void AddTemporaryAttributes (NSDictionary<NSString, NSObject> attributes, NSRange characterRange)
 		{
 			throw new NotSupportedException ();
 		}
@@ -153,37 +153,37 @@ namespace UIKit {
 		}
 
 		[Obsolete ("Always throw a 'NotSupportedException' (only available on macOS).")]
-		public NSDictionary<NSString,NSObject> GetTemporaryAttributes (nuint characterIndex)
+		public NSDictionary<NSString, NSObject> GetTemporaryAttributes (nuint characterIndex)
 		{
 			throw new NotSupportedException ();
 		}
 
 		[Obsolete ("Always throw a 'NotSupportedException' (only available on macOS).")]
-		public NSDictionary<NSString,NSObject> GetTemporaryAttributes (nuint characterIndex, NSRange rangeLimit)
+		public NSDictionary<NSString, NSObject> GetTemporaryAttributes (nuint characterIndex, NSRange rangeLimit)
 		{
 			throw new NotSupportedException ();
 		}
 
 		[Obsolete ("Always throw a 'NotSupportedException' (only available on macOS).")]
-		protected virtual NSDictionary<NSString,NSObject> GetTemporaryAttributes (nuint characterIndex, IntPtr effectiveCharacterRange)
+		protected virtual NSDictionary<NSString, NSObject> GetTemporaryAttributes (nuint characterIndex, IntPtr effectiveCharacterRange)
 		{
 			throw new NotSupportedException ();
 		}
 
 		[Obsolete ("Always throw a 'NotSupportedException' (only available on macOS).")]
-		public NSDictionary<NSString,NSObject> GetTemporaryAttributes (nuint characterIndex, out NSRange effectiveCharacterRange)
+		public NSDictionary<NSString, NSObject> GetTemporaryAttributes (nuint characterIndex, out NSRange effectiveCharacterRange)
 		{
 			throw new NotSupportedException ();
 		}
 
 		[Obsolete ("Always throw a 'NotSupportedException' (only available on macOS).")]
-		protected virtual NSDictionary<NSString,NSObject> GetTemporaryAttributes (nuint characterIndex, IntPtr longestEffectiveRange, NSRange rangeLimit)
+		protected virtual NSDictionary<NSString, NSObject> GetTemporaryAttributes (nuint characterIndex, IntPtr longestEffectiveRange, NSRange rangeLimit)
 		{
 			throw new NotSupportedException ();
 		}
 
 		[Obsolete ("Always throw a 'NotSupportedException' (only available on macOS).")]
-		public NSDictionary<NSString,NSObject> GetTemporaryAttributes (nuint characterIndex, out NSRange longestEffectiveRange, NSRange rangeLimit)
+		public NSDictionary<NSString, NSObject> GetTemporaryAttributes (nuint characterIndex, out NSRange longestEffectiveRange, NSRange rangeLimit)
 		{
 			throw new NotSupportedException ();
 		}

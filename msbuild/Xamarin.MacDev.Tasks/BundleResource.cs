@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Collections.Generic;
@@ -23,7 +24,7 @@ namespace Xamarin.MacDev {
 			"_CodeSignature",
 		}, StringComparer.OrdinalIgnoreCase);
 
-		public static bool IsIllegalName (string name, out string illegal)
+		public static bool IsIllegalName (string name, [NotNullWhen (true)] out string? illegal)
 		{
 			if (illegalFileNames.Contains (name)) {
 				illegal = name;

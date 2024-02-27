@@ -15,6 +15,6 @@ namespace warnaserrorTests {
 
 	[BaseType (typeof (NSObject))]
 	interface FooObject {
-	
+
 	}
 }

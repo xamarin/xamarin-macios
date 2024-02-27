@@ -9,8 +9,7 @@ using Xamarin.Tests;
 using Mono.Cecil;
 
 namespace Microsoft.MaciOS.Nnyeah.Tests {
-	public static class ReworkerHelper
-	{
+	public static class ReworkerHelper {
 		public static ReaderParameters ReaderParameters {
 			get {
 				var legacyPlatform = Compiler.XamarinPlatformLibraryPath (PlatformName.macOS);

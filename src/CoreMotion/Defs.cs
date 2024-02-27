@@ -43,7 +43,7 @@ namespace CoreMotion {
 	[SupportedOSPlatform ("macos")]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
-	public struct  CMRotationMatrix {
+	public struct CMRotationMatrix {
 		public double m11, m12, m13;
 		public double m21, m22, m23;
 		public double m31, m32, m33;
@@ -56,7 +56,7 @@ namespace CoreMotion {
 	[SupportedOSPlatform ("macos")]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
-	public struct  CMQuaternion {
+	public struct CMQuaternion {
 		public double x, y, z, w;
 
 		public CMQuaternion (double x, double y, double z, double w)

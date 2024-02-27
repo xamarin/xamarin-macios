@@ -23,7 +23,7 @@ using System.Threading;
 using Xamarin.Utils;
 
 namespace MonoTouchFixtures.CoreFoundation {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class DispatchTests {
@@ -49,7 +49,8 @@ namespace MonoTouchFixtures.CoreFoundation {
 			Exception queue_ex = null;
 
 			var defaultQ = DispatchQueue.GetGlobalQueue (DispatchQueuePriority.Default);
-			defaultQ.DispatchAsync (delegate {	
+			defaultQ.DispatchAsync (delegate
+			{
 				try {
 					NSStringDrawing.WeakDrawString (null, CGPoint.Empty, null);
 				} catch (Exception e) {
@@ -58,7 +59,8 @@ namespace MonoTouchFixtures.CoreFoundation {
 
 				queueThread = Thread.CurrentThread;
 				var mainQ = DispatchQueue.MainQueue;
-				mainQ.DispatchAsync (delegate {
+				mainQ.DispatchAsync (delegate
+				{
 					mainQthread = Thread.CurrentThread;
 					try {
 						NSStringDrawing.WeakDrawString (null, CGPoint.Empty, null);
@@ -67,14 +69,14 @@ namespace MonoTouchFixtures.CoreFoundation {
 					} finally {
 						hit = true;
 					}
-				} );
+				});
 
-			} );
-			
+			});
+
 			// Now wait for the above to actually run
-			while (hit == false){
-		        NSRunLoop.Current.RunUntil (NSDate.FromTimeIntervalSinceNow (0.5));
-		    }
+			while (hit == false) {
+				NSRunLoop.Current.RunUntil (NSDate.FromTimeIntervalSinceNow (0.5));
+			}
 			Assert.IsNotNull (ex, "main ex");
 			Assert.That (ex.GetType (), Is.SameAs (typeof (NullReferenceException)), "no thread check hit");
 			Assert.IsNotNull (queue_ex, "queue ex");
@@ -104,7 +106,8 @@ namespace MonoTouchFixtures.CoreFoundation {
 			Exception queue_ex = null;
 
 			var defaultQ = DispatchQueue.GetGlobalQueue (DispatchQualityOfService.Default);
-			defaultQ.DispatchAsync (delegate {	
+			defaultQ.DispatchAsync (delegate
+			{
 				try {
 					NSStringDrawing.WeakDrawString (null, CGPoint.Empty, null);
 				} catch (Exception e) {
@@ -113,7 +116,8 @@ namespace MonoTouchFixtures.CoreFoundation {
 
 				queueThread = Thread.CurrentThread;
 				var mainQ = DispatchQueue.MainQueue;
-				mainQ.DispatchAsync (delegate {
+				mainQ.DispatchAsync (delegate
+				{
 					mainQthread = Thread.CurrentThread;
 					try {
 						NSStringDrawing.WeakDrawString (null, CGPoint.Empty, null);
@@ -122,14 +126,14 @@ namespace MonoTouchFixtures.CoreFoundation {
 					} finally {
 						hit = true;
 					}
-				} );
+				});
 
-			} );
-			
+			});
+
 			// Now wait for the above to actually run
-			while (hit == false){
-		        NSRunLoop.Current.RunUntil (NSDate.FromTimeIntervalSinceNow (0.5));
-		    }
+			while (hit == false) {
+				NSRunLoop.Current.RunUntil (NSDate.FromTimeIntervalSinceNow (0.5));
+			}
 			Assert.IsNotNull (ex, "main ex");
 			Assert.That (ex.GetType (), Is.SameAs (typeof (NullReferenceException)), "no thread check hit");
 			Assert.IsNotNull (queue_ex, "queue ex");
@@ -149,7 +153,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 		public void Default ()
 		{
 			var qname = "com.apple.root.default-priority";
-#if __IOS__ 
+#if __IOS__
 			if (TestRuntime.CheckSystemVersion (ApplePlatform.iOS, 8, 0))
 				qname = "com.apple.root.default-qos";
 #elif __WATCHOS__ || __TVOS__
@@ -171,17 +175,20 @@ namespace MonoTouchFixtures.CoreFoundation {
 			int t2 = ct;
 			using (var q = new DispatchQueue ("my")) {
 				Console.WriteLine ();
-				q.DispatchAsync (delegate {
+				q.DispatchAsync (delegate
+				{
 					t0 = Thread.CurrentThread.ManagedThreadId;
 					n++;
 				});
 				DispatchQueue.DefaultGlobalQueue.SetTargetQueue (DispatchQueue.MainQueue);
-				q.DispatchAsync (delegate {
+				q.DispatchAsync (delegate
+				{
 					t1 = Thread.CurrentThread.ManagedThreadId;
 					n++;
 				});
 				DispatchQueue.DefaultGlobalQueue.SetTargetQueue (null);
-				q.DispatchAsync (delegate {
+				q.DispatchAsync (delegate
+				{
 					t2 = Thread.CurrentThread.ManagedThreadId;
 					n++;
 				});
@@ -225,7 +232,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 		public void NeverTooLate ()
 		{
 			Assert.That (DispatchTime.Now.Nanoseconds, Is.EqualTo (0), "Now");
-			Assert.That (DispatchTime.Forever.Nanoseconds, Is.EqualTo (unchecked ((ulong) ~0)), "Forever");
+			Assert.That (DispatchTime.Forever.Nanoseconds, Is.EqualTo (unchecked((ulong) ~0)), "Forever");
 
 			var dt = new DispatchTime (1);
 			Assert.That (dt.Nanoseconds, Is.EqualTo (1), "1");
@@ -259,7 +266,8 @@ namespace MonoTouchFixtures.CoreFoundation {
 			Exception queue_ex = null;
 
 			var defaultQ = DispatchQueue.GetGlobalQueue (DispatchQueuePriority.Default);
-			defaultQ.DispatchAfter (new DispatchTime (DispatchTime.Now, 1000), delegate {	
+			defaultQ.DispatchAfter (new DispatchTime (DispatchTime.Now, 1000), delegate
+			{
 				try {
 					NSStringDrawing.WeakDrawString (null, CGPoint.Empty, null);
 				} catch (Exception e) {
@@ -268,7 +276,8 @@ namespace MonoTouchFixtures.CoreFoundation {
 
 				queueThread = Thread.CurrentThread;
 				var mainQ = DispatchQueue.MainQueue;
-				mainQ.DispatchAfter (DispatchTime.Now, delegate {
+				mainQ.DispatchAfter (DispatchTime.Now, delegate
+				{
 					mainQthread = Thread.CurrentThread;
 					try {
 						NSStringDrawing.WeakDrawString (null, CGPoint.Empty, null);
@@ -277,11 +286,11 @@ namespace MonoTouchFixtures.CoreFoundation {
 					} finally {
 						hit = true;
 					}
-				} );
-			} );
+				});
+			});
 
 			// Now wait for the above to actually run
-			while (hit == false){
+			while (hit == false) {
 				NSRunLoop.Current.RunUntil (NSDate.FromTimeIntervalSinceNow (0.5));
 			}
 			Assert.IsNotNull (ex, "main ex");
@@ -313,7 +322,8 @@ namespace MonoTouchFixtures.CoreFoundation {
 			Exception queue_ex = null;
 
 			var defaultQ = DispatchQueue.GetGlobalQueue (DispatchQualityOfService.Default);
-			defaultQ.DispatchAfter (new DispatchTime (DispatchTime.Now, 1000), delegate {	
+			defaultQ.DispatchAfter (new DispatchTime (DispatchTime.Now, 1000), delegate
+			{
 				try {
 					NSStringDrawing.WeakDrawString (null, CGPoint.Empty, null);
 				} catch (Exception e) {
@@ -322,7 +332,8 @@ namespace MonoTouchFixtures.CoreFoundation {
 
 				queueThread = Thread.CurrentThread;
 				var mainQ = DispatchQueue.MainQueue;
-				mainQ.DispatchAfter (DispatchTime.Now, delegate {
+				mainQ.DispatchAfter (DispatchTime.Now, delegate
+				{
 					mainQthread = Thread.CurrentThread;
 					try {
 						NSStringDrawing.WeakDrawString (null, CGPoint.Empty, null);
@@ -331,11 +342,11 @@ namespace MonoTouchFixtures.CoreFoundation {
 					} finally {
 						hit = true;
 					}
-				} );
-			} );
+				});
+			});
 
 			// Now wait for the above to actually run
-			while (hit == false){
+			while (hit == false) {
 				NSRunLoop.Current.RunUntil (NSDate.FromTimeIntervalSinceNow (0.5));
 			}
 			Assert.IsNotNull (ex, "main ex");

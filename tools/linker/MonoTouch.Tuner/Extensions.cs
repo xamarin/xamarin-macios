@@ -13,7 +13,7 @@ namespace MonoTouch.Tuner {
 
 		public static bool? GetIsDirectBindingConstant (this TypeDefinition type, DerivedLinkContext link_context)
 		{
-			if (link_context?.IsDirectBindingValue == null)
+			if (link_context?.IsDirectBindingValue is null)
 				return null;
 
 			bool? value;

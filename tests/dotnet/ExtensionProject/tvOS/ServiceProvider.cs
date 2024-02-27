@@ -2,11 +2,9 @@ using System;
 using Foundation;
 using TVServices;
 
-namespace MyTVServicesExtension
-{
+namespace MyTVServicesExtension {
 	[Register ("ServiceProvider")]
-	public class ServiceProvider : NSObject, ITVTopShelfProvider
-	{
+	public class ServiceProvider : NSObject, ITVTopShelfProvider {
 		protected ServiceProvider (IntPtr handle) : base (handle)
 		{
 			// Note: this .ctor should not contain any initialization logic.

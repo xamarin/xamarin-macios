@@ -83,6 +83,7 @@
 !missing-field! kCMImageDescriptionFlavor_3GPFamily not bound
 !missing-field! kCMImageDescriptionFlavor_ISOFamily not bound
 !missing-field! kCMImageDescriptionFlavor_QuickTimeMovie not bound
+!missing-field! kCMImageDescriptionFlavor_ISOFamilyWithAppleExtensions not bound
 !missing-field! kCMMetadataBaseDataType_AffineTransformF64 not bound
 !missing-field! kCMMetadataBaseDataType_BMP not bound
 !missing-field! kCMMetadataBaseDataType_DimensionsF32 not bound
@@ -195,6 +196,7 @@
 !missing-field! kCMTextMarkupAttribute_TextPositionPercentageRelativeToWritingDirection not bound
 !missing-field! kCMTextMarkupAttribute_VerticalLayout not bound
 !missing-field! kCMTextMarkupAttribute_WritingDirectionSizePercentage not bound
+!missing-field! kCMTextMarkupAttribute_FontFamilyNameList not bound
 !missing-field! kCMTextMarkupCharacterEdgeStyle_Depressed not bound
 !missing-field! kCMTextMarkupCharacterEdgeStyle_DropShadow not bound
 !missing-field! kCMTextMarkupCharacterEdgeStyle_None not bound
@@ -249,7 +251,6 @@
 !missing-pinvoke! CMBufferQueueGetEndPresentationTimeStamp is not bound
 !missing-pinvoke! CMBufferQueueGetFirstDecodeTimeStamp is not bound
 !missing-pinvoke! CMBufferQueueGetFirstPresentationTimeStamp is not bound
-!missing-pinvoke! CMBufferQueueGetHead is not bound
 !missing-pinvoke! CMBufferQueueGetMaxPresentationTimeStamp is not bound
 !missing-pinvoke! CMBufferQueueGetMinDecodeTimeStamp is not bound
 !missing-pinvoke! CMBufferQueueGetMinPresentationTimeStamp is not bound

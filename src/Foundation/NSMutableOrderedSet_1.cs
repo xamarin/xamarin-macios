@@ -18,6 +18,9 @@ using ObjCRuntime;
 using NativeHandle = System.IntPtr;
 #endif
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Foundation {
 #if NET
 	[SupportedOSPlatform ("ios")]
@@ -68,11 +71,11 @@ namespace Foundation {
 		public new TKey this [nint idx] {
 			get {
 				var ret = _GetObject (idx);
-				return Runtime.GetINativeObject <TKey> (ret, false);
+				return Runtime.GetINativeObject<TKey> (ret, false);
 			}
 
 			set {
-				if (value == null) // You can't pass nil here
+				if (value is null) // You can't pass nil here
 					throw new ArgumentNullException (nameof (value));
 
 				_SetObject (value.Handle, idx);
@@ -82,12 +85,12 @@ namespace Foundation {
 		public NSSet<TKey> AsSet ()
 		{
 			var ret = _AsSet ();
-			return Runtime.GetINativeObject <NSSet<TKey>> (ret, false);
+			return Runtime.GetINativeObject<NSSet<TKey>> (ret, false);
 		}
 
 		public void Insert (TKey obj, nint atIndex)
 		{
-			if (obj == null)
+			if (obj is null)
 				throw new ArgumentNullException (nameof (obj));
 
 			_Insert (obj.Handle, atIndex);
@@ -95,7 +98,7 @@ namespace Foundation {
 
 		public void Replace (nint objectAtIndex, TKey newObject)
 		{
-			if (newObject == null)
+			if (newObject is null)
 				throw new ArgumentNullException (nameof (newObject));
 
 			_Replace (objectAtIndex, newObject.Handle);
@@ -103,7 +106,7 @@ namespace Foundation {
 
 		public void Add (TKey obj)
 		{
-			if (obj == null)
+			if (obj is null)
 				throw new ArgumentNullException (nameof (obj));
 
 			_Add (obj.Handle);
@@ -111,7 +114,7 @@ namespace Foundation {
 
 		public void AddObjects (params TKey [] source)
 		{
-			if (source == null)
+			if (source is null)
 				throw new ArgumentNullException (nameof (source));
 
 			_AddObjects (NSArray.FromNativeObjects (source));
@@ -119,9 +122,9 @@ namespace Foundation {
 
 		public void InsertObjects (TKey [] objects, NSIndexSet atIndexes)
 		{
-			if (objects == null)
+			if (objects is null)
 				throw new ArgumentNullException (nameof (objects));
-			if (atIndexes == null)
+			if (atIndexes is null)
 				throw new ArgumentNullException (nameof (atIndexes));
 
 			_InsertObjects (NSArray.FromNativeObjects (objects), atIndexes);
@@ -129,9 +132,9 @@ namespace Foundation {
 
 		public void ReplaceObjects (NSIndexSet indexSet, params TKey [] replacementObjects)
 		{
-			if (replacementObjects == null)
+			if (replacementObjects is null)
 				throw new ArgumentNullException (nameof (replacementObjects));
-			if (indexSet == null)
+			if (indexSet is null)
 				throw new ArgumentNullException (nameof (indexSet));
 
 			_ReplaceObjects (indexSet, NSArray.FromNativeObjects (replacementObjects));
@@ -139,15 +142,15 @@ namespace Foundation {
 
 		public void RemoveObject (TKey obj)
 		{
-			if (obj == null)
+			if (obj is null)
 				throw new ArgumentNullException (nameof (obj));
 
 			_RemoveObject (obj.Handle);
 		}
 
-		public void RemoveObjects (params TKey[] objects)
+		public void RemoveObjects (params TKey [] objects)
 		{
-			if (objects == null)
+			if (objects is null)
 				throw new ArgumentNullException (nameof (objects));
 
 			_RemoveObjects (NSArray.FromNativeObjects (objects));
@@ -169,9 +172,9 @@ namespace Foundation {
 
 		public static NSMutableOrderedSet<TKey> operator + (NSMutableOrderedSet<TKey> first, NSMutableOrderedSet<TKey> second)
 		{
-			if (first == null)
-				return second != null ? new NSMutableOrderedSet<TKey> (second) : null;
-			if (second == null)
+			if (first is null)
+				return second is not null ? new NSMutableOrderedSet<TKey> (second) : null;
+			if (second is null)
 				return new NSMutableOrderedSet<TKey> (first);
 			var copy = new NSMutableOrderedSet<TKey> (first);
 			copy.UnionSet (second);
@@ -180,9 +183,9 @@ namespace Foundation {
 
 		public static NSMutableOrderedSet<TKey> operator + (NSMutableOrderedSet<TKey> first, NSSet<TKey> second)
 		{
-			if (first == null)
-				return second != null ? new NSMutableOrderedSet<TKey> (second) : null;
-			if (second == null)
+			if (first is null)
+				return second is not null ? new NSMutableOrderedSet<TKey> (second) : null;
+			if (second is null)
 				return new NSMutableOrderedSet<TKey> (first);
 			var copy = new NSMutableOrderedSet<TKey> (first);
 			copy.UnionSet (second);
@@ -191,9 +194,9 @@ namespace Foundation {
 
 		public static NSMutableOrderedSet<TKey> operator + (NSMutableOrderedSet<TKey> first, NSOrderedSet<TKey> second)
 		{
-			if (first == null)
-				return second != null ? new NSMutableOrderedSet<TKey> (second) : null;
-			if (second == null)
+			if (first is null)
+				return second is not null ? new NSMutableOrderedSet<TKey> (second) : null;
+			if (second is null)
 				return new NSMutableOrderedSet<TKey> (first);
 			var copy = new NSMutableOrderedSet<TKey> (first);
 			copy.UnionSet (second);
@@ -202,9 +205,9 @@ namespace Foundation {
 
 		public static NSMutableOrderedSet<TKey> operator - (NSMutableOrderedSet<TKey> first, NSMutableOrderedSet<TKey> second)
 		{
-			if (first == null)
+			if (first is null)
 				return null;
-			if (second == null)
+			if (second is null)
 				return new NSMutableOrderedSet<TKey> (first);
 			var copy = new NSMutableOrderedSet<TKey> (first);
 			copy.MinusSet (second);
@@ -213,9 +216,9 @@ namespace Foundation {
 
 		public static NSMutableOrderedSet<TKey> operator - (NSMutableOrderedSet<TKey> first, NSSet<TKey> second)
 		{
-			if (first == null)
+			if (first is null)
 				return null;
-			if (second == null)
+			if (second is null)
 				return new NSMutableOrderedSet<TKey> (first);
 			var copy = new NSMutableOrderedSet<TKey> (first);
 			copy.MinusSet (second);
@@ -224,13 +227,27 @@ namespace Foundation {
 
 		public static NSMutableOrderedSet<TKey> operator - (NSMutableOrderedSet<TKey> first, NSOrderedSet<TKey> second)
 		{
-			if (first == null)
+			if (first is null)
 				return null;
-			if (second == null)
+			if (second is null)
 				return new NSMutableOrderedSet<TKey> (first);
 			var copy = new NSMutableOrderedSet<TKey> (first);
 			copy.MinusSet (second);
 			return copy;
 		}
+
+#if false // https://github.com/xamarin/xamarin-macios/issues/15577
+#if !NET
+		[Watch (6,0), TV (13,0), iOS (13,0)]
+#else
+		[SupportedOSPlatform ("ios13.0"), SupportedOSPlatform ("tvos13.0"), SupportedOSPlatform ("macos")]
+#endif
+		public void ApplyDifference (NSOrderedCollectionDifference<TKey> difference)
+		{
+			if (difference is null)
+				throw new ArgumentNullException (nameof (difference));
+			_ApplyDifference (difference.Handle);
+		}
+#endif
 	}
 }

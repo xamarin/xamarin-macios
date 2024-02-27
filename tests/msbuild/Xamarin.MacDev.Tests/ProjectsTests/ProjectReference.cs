@@ -6,12 +6,10 @@ using NUnit.Framework;
 using Xamarin.Tests;
 using Xamarin.Utils;
 
-namespace Xamarin.MacDev.Tasks
-{
+namespace Xamarin.MacDev.Tasks {
 	[TestFixture ("iPhone")]
 	[TestFixture ("iPhoneSimulator")]
-	public class ProjectReferenceTests : ProjectTest
-	{
+	public class ProjectReferenceTests : ProjectTest {
 
 		public ProjectReferenceTests (string platform) : base (platform)
 		{

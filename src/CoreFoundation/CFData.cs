@@ -46,7 +46,7 @@ namespace CoreFoundation {
 		{
 		}
 
-		[DllImport (Constants.CoreFoundationLibrary, EntryPoint="CFDataGetTypeID")]
+		[DllImport (Constants.CoreFoundationLibrary, EntryPoint = "CFDataGetTypeID")]
 		public extern static /* CFTypeID */ nint GetTypeID ();
 
 #if !COREBUILD
@@ -54,7 +54,7 @@ namespace CoreFoundation {
 		{
 			return new CFData (CFDataCreateWithBytesNoCopy (IntPtr.Zero, buffer, length, CFAllocator.null_ptr), true);
 		}
-		
+
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static /* CFDataRef */ IntPtr CFDataCreateWithBytesNoCopy (/* CFAllocatorRef */ IntPtr allocator, /* UInt8* */ IntPtr bytes, /* CFIndex */ nint length, /* CFAllocatorRef */ IntPtr bytesDeallocator);
 #endif
@@ -66,7 +66,7 @@ namespace CoreFoundation {
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static /* CFIndex */ nint CFDataGetLength (/* CFDataRef */ IntPtr theData);
 
-		public byte[] GetBuffer ()
+		public byte [] GetBuffer ()
 		{
 			var buffer = new byte [Length];
 			var ptr = CFDataGetBytePtr (Handle);
@@ -91,7 +91,7 @@ namespace CoreFoundation {
 		{
 			return new CFData (CFDataCreate (IntPtr.Zero, buffer, length), true);
 		}
-		
+
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static /* CFDataRef */ IntPtr CFDataCreateCopy (/* CFAllocatorRef */ IntPtr allocator, /* CFDataRef */ IntPtr theData);
 

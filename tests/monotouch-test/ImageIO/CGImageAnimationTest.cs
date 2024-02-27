@@ -114,7 +114,7 @@ namespace MonoTouchFixtures.ImageIO {
 		{
 			CallAnimateImage ( /* useUrl */ true, MyHandlerSetValueZero);
 			Assert.AreEqual (CGImageAnimationStatus.Ok, status, "status ok: first handler called with url");
-			Assert.AreEqual (0, testValue, "first handler called with url" );
+			Assert.AreEqual (0, testValue, "first handler called with url");
 
 			CallAnimateImage ( /* useUrl */ true, MyHandlerSetValueOne);
 			Assert.AreEqual (CGImageAnimationStatus.Ok, status, "status ok: second handler called with url");
@@ -136,7 +136,7 @@ namespace MonoTouchFixtures.ImageIO {
 		[Test]
 		public void AnimateImageWithUrlNullUrl ()
 		{
-			Assert.Throws<ArgumentNullException> (() => CGImageAnimation.AnimateImage ( (NSUrl) null, null, MyHandlerSetValueZero), "null url");
+			Assert.Throws<ArgumentNullException> (() => CGImageAnimation.AnimateImage ((NSUrl) null, null, MyHandlerSetValueZero), "null url");
 		}
 
 		[Test]
@@ -148,7 +148,7 @@ namespace MonoTouchFixtures.ImageIO {
 		[Test]
 		public void AnimateImageWithDataNullData ()
 		{
-			Assert.Throws<ArgumentNullException> (() => CGImageAnimation.AnimateImage ( (NSData) null, null, MyHandlerSetValueZero), "null data");
+			Assert.Throws<ArgumentNullException> (() => CGImageAnimation.AnimateImage ((NSData) null, null, MyHandlerSetValueZero), "null data");
 		}
 
 		[Test]

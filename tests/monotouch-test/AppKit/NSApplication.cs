@@ -6,16 +6,14 @@ using AppKit;
 using ObjCRuntime;
 using Foundation;
 
-namespace Xamarin.Mac.Tests
-{
+namespace Xamarin.Mac.Tests {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class NSApplicationTests
-	{
+	public class NSApplicationTests {
 		[Test]
 		public void NSApplication_SendActionNullTest ()
 		{
-			NSApplication.SharedApplication.SendAction(new Selector("undo:"), null, new NSObject ());
+			NSApplication.SharedApplication.SendAction (new Selector ("undo:"), null, new NSObject ());
 		}
 	}
 }

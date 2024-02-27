@@ -19,7 +19,7 @@ using NUnit.Framework;
 using Xamarin.Utils;
 
 namespace MonoTouchFixtures.EventKit {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class EventKitCalendarTest {
@@ -78,7 +78,11 @@ namespace MonoTouchFixtures.EventKit {
 			Assert.Null (c.Source, "Source");
 			Assert.False (c.Subscribed, "Subscribed");
 #if MONOMAC || __MACCATALYST__
-			Assert.That (c.SupportedEventAvailabilities, Is.EqualTo (EKCalendarEventAvailability.Busy | EKCalendarEventAvailability.Free), "SupportedEventAvailabilities");
+			if (TestRuntime.CheckXcodeVersion (14, 0))
+				Assert.That (c.SupportedEventAvailabilities, Is.EqualTo (EKCalendarEventAvailability.None), "SupportedEventAvailabilities");
+			else
+				Assert.That (c.SupportedEventAvailabilities, Is.EqualTo (EKCalendarEventAvailability.Busy | EKCalendarEventAvailability.Free), "SupportedEventAvailabilities");
+
 			Assert.That (c.Title, Is.EqualTo (string.Empty), "Title");
 #else
 			Assert.That (c.SupportedEventAvailabilities, Is.EqualTo (EKCalendarEventAvailability.None), "SupportedEventAvailabilities");
@@ -120,7 +124,11 @@ namespace MonoTouchFixtures.EventKit {
 			Assert.Null (c.Source, "Source");
 			Assert.False (c.Subscribed, "Subscribed");
 #if MONOMAC || __MACCATALYST__
-			Assert.That (c.SupportedEventAvailabilities, Is.EqualTo (EKCalendarEventAvailability.Busy | EKCalendarEventAvailability.Free), "SupportedEventAvailabilities");
+			if (TestRuntime.CheckXcodeVersion (14, 0))
+				Assert.That (c.SupportedEventAvailabilities, Is.EqualTo (EKCalendarEventAvailability.None), "SupportedEventAvailabilities");
+			else
+				Assert.That (c.SupportedEventAvailabilities, Is.EqualTo (EKCalendarEventAvailability.Busy | EKCalendarEventAvailability.Free), "SupportedEventAvailabilities");
+
 			Assert.That (c.Title, Is.EqualTo (string.Empty), "Title");
 #else
 			Assert.That (c.SupportedEventAvailabilities, Is.EqualTo (EKCalendarEventAvailability.None), "SupportedEventAvailabilities");

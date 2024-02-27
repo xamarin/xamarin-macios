@@ -25,7 +25,7 @@ public class AppDelegate : UIApplicationDelegate {
 		// make the window visible
 		Window.MakeKeyAndVisible ();
 
-		var alert = UIAlertController.Create ("Test Results", ConsumerTests.Consumer.Test(), UIAlertControllerStyle.Alert);
+		var alert = UIAlertController.Create ("Test Results", ConsumerTests.Consumer.Test (), UIAlertControllerStyle.Alert);
 		vc.PresentViewController (alert, true, null);
 
 		return true;

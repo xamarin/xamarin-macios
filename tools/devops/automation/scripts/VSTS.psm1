@@ -240,6 +240,194 @@ class Vsts {
     }
 }
 
+class BuildConfiguration {
+
+    [PSCustomObject] Import([string] $configFile) {
+        if (-not (Test-Path -Path $configFile -PathType Leaf)) {
+          throw [System.InvalidOperationException]::new("Configuration file $configFile is missing")
+        }
+
+        $config = Get-Content $configFile | ConvertFrom-Json
+
+        if (-not $config) {
+          throw [System.InvalidOperationException]::new("Failed to load configuration file $configFile")
+        }
+
+        $dotnetPlatforms = $config.DOTNET_PLATFORMS.Split(' ', [StringSplitOptions]::RemoveEmptyEntries)
+        Write-Host "##vso[task.setvariable variable=DOTNET_PLATFORMS;isOutput=true]$dotnetPlatforms"
+        foreach ($platform in $dotnetPlatforms) {
+            $variableName = "INCLUDE_DOTNET_$($platform.ToUpper())"
+            $variableValue = $config.$variableName
+            Write-Host "##vso[task.setvariable variable=$variableName;isOutput=true]$variableValue"
+
+            $variableName = "$($platform.ToUpper())_NUGET_VERSION_NO_METADATA"
+            $variableValue = $config.$variableName
+            Write-Host "##vso[task.setvariable variable=$variableName;isOutput=true]$variableValue"
+
+            $variableName = "$($platform.ToUpper())_NUGET_SDK_NAME"
+            $variableValue = $config.$variableName
+            Write-Host "##vso[task.setvariable variable=$variableName;isOutput=true]$variableValue"
+
+            $variableName = "$($platform.ToUpper())_NUGET_REF_NAME"
+            $variableValue = $config.$variableName
+            Write-Host "##vso[task.setvariable variable=$variableName;isOutput=true]$variableValue"
+
+            $variableName = "DOTNET_$($platform.ToUpper())_RUNTIME_IDENTIFIERS"
+            $variableValue = $config.$variableName
+            Write-Host "##vso[task.setvariable variable=$variableName;isOutput=true]$variableValue"
+
+            $rids = $variableValue.Split(' ', [StringSplitOptions]::RemoveEmptyEntries)
+            foreach ($rid in $rids) {
+                $variableName = "$($rid)_NUGET_RUNTIME_NAME"
+                $variableValue = $config.$variableName
+                Write-Host "##vso[task.setvariable variable=$variableName;isOutput=true]$variableValue"
+            }
+        }
+
+        return $config
+    }
+
+    [PSCustomObject] Create([bool] $addTags, [string] $configFile) {
+        # we are going to use a custom object to store all the configuration of the build, this later
+        # will be uploaded as an artifact so that it can be easily shared with the cascade pipelines
+        $configuration = [PSCustomObject]@{
+          BuildReason = "$Env:BUILD_REASON"
+          BuildSourceBranchName = "$Env:BUILD_SOURCEBRANCHNAME"
+          BuildSourceBranch = "$Env:BUILD_SOURCEBRANCH"
+          BuildId = "$Env:BUILD_BUILDID"
+          DOTNET_PLATFORMS = "$Env:CONFIGURE_PLATFORMS_DOTNET_PLATFORMS"
+        }
+
+        # For each .NET platform we support, add a INCLUDE_DOTNET_<platform> variable specifying whether that platform is enabled or not.
+        $dotnetPlatforms = $configuration.DOTNET_PLATFORMS.Split(' ', [StringSplitOptions]::RemoveEmptyEntries)
+        foreach ($platform in $dotnetPlatforms) {
+            $variableName = "INCLUDE_DOTNET_$($platform.ToUpper())"
+            $variableValue = [Environment]::GetEnvironmentVariable("CONFIGURE_PLATFORMS_$variableName")
+            $configuration | Add-Member -NotePropertyName $variableName -NotePropertyValue $variableValue
+
+            $variableName = "$($platform.ToUpper())_NUGET_VERSION_NO_METADATA"
+            $variableValue = [Environment]::GetEnvironmentVariable("CONFIGURE_PLATFORMS_$variableName")
+            $configuration | Add-Member -NotePropertyName $variableName -NotePropertyValue $variableValue
+
+            $variableName = "$($platform.ToUpper())_NUGET_SDK_NAME"
+            $variableValue = [Environment]::GetEnvironmentVariable("CONFIGURE_PLATFORMS_$variableName")
+            $configuration | Add-Member -NotePropertyName $variableName -NotePropertyValue $variableValue
+
+            $variableName = "$($platform.ToUpper())_NUGET_REF_NAME"
+            $variableValue = [Environment]::GetEnvironmentVariable("CONFIGURE_PLATFORMS_$variableName")
+            $configuration | Add-Member -NotePropertyName $variableName -NotePropertyValue $variableValue
+
+            $variableName = "DOTNET_$($platform.ToUpper())_RUNTIME_IDENTIFIERS"
+            $variableValue = [Environment]::GetEnvironmentVariable("CONFIGURE_PLATFORMS_$variableName")
+            $configuration | Add-Member -NotePropertyName $variableName -NotePropertyValue $variableValue
+
+            $rids = $variableValue.Split(' ', [StringSplitOptions]::RemoveEmptyEntries)
+            foreach ($rid in $rids) {
+                $variableName = "$($rid)_NUGET_RUNTIME_NAME"
+                $variableValue = [Environment]::GetEnvironmentVariable("CONFIGURE_PLATFORMS_$variableName")
+                $configuration | Add-Member -NotePropertyName $variableName -NotePropertyValue $variableValue
+            }
+        }
+
+        # calculate the commit to later share it with the cascade pipelines
+        if ($Env:BUILD_REASON -eq "PullRequest") {
+            $changeId = $configuration.BuildSourceBranch.Replace("refs/pull/", "").Replace("/merge", "")
+        } else {
+            $changeId = $Env:BUILD_SOURCEVERSION
+        }
+
+        $configuration | Add-Member -NotePropertyName Commit -NotePropertyValue $changeId
+
+        # the following list will be used to track the tags and set them in VSTS to make the monitoring person life easier
+        [System.Collections.Generic.List[string]]$tags = @()
+
+        if ($configuration.BuildReason -eq "Schedule") {
+            $tags.Add("cronjob")
+        }
+
+        if ($configuration.BuildReason -eq "PullRequest" -or (($configuration.BuildReason -eq "Manual") -and ($configuration.BuildSourceBranchName -eq "merge")) ) {
+          Write-Host "Configuring build from PR."
+          # This is an interesting step, we do know we are dealing with a PR, but we need the PR id to
+          # be able to get the labels, the buildSourceBranch follows the pattern: refs/pull/{ChangeId}/merge
+          # we could use a regexp but then we would have two problems instead of one
+          $changeId = $configuration.BuildSourceBranch.Replace("refs/pull/", "").Replace("/merge", "")
+
+          # add a var with the change id, which can be later consumed by some of the old scripts from
+          # jenkins
+          Write-Host "##vso[task.setvariable variable=pr_number;isOutput=true]$changeId"
+
+          $prInfo = Get-GitHubPRInfo -ChangeId $changeId
+          Write-Host $prInfo
+
+          # make peoples life better, loop over the labels and add them as tags in the vsts build
+          foreach ($labelInfo in $prInfo.labels) {
+            $labelName = $labelInfo.name
+            Write-Host "Found label $labelName"
+            $tags.Add($labelName)
+          }
+          # special tag, we want to know if we are using a pr
+          $tags.Add("prBuild")
+
+          # special tag, lets add the target branch, will be useful to the users
+          $ref = $prInfo.base.ref
+          $tags.Add("$ref")
+
+          # set output variables based on the git labels
+          $labelsOfInterest = @(
+            "build-package",
+            "skip-packages",
+            "skip-nugets",
+            "skip-signing",
+            "run-sample-tests",
+            "skip-packaged-macos-tests",
+            "run-packaged-macos-tests",
+            "skip-api-comparison",
+            "run-windows-tests",
+            "skip-windows-tests",
+            "skip-all-tests"
+          )
+
+          foreach ($l in $labelsOfInterest) {
+            $labelPresent = 1 -eq ($prInfo.labels | Where-Object { $_.name -eq "$l"}).Count
+            # We need to replace dashes with underscores, because bash can't access an environment variable with a dash in the name.
+            $lbl = $l.Replace('-', '_')
+            Write-Host "##vso[task.setvariable variable=$lbl;isOutput=true]$labelPresent"
+          }
+
+          Write-Host "##vso[task.setvariable variable=prBuild;isOutput=true]True"
+        } else {
+          if ($tags.Contains("cronjob")) {
+            # debug so that we do know why we do not have ciBuild
+            Write-Debug "Skipping the tag 'ciBuild' because we are dealing with a translation build."
+          } else  {
+            $tags.Add("ciBuild")
+          }
+          # set the name of the branch under build
+          $tags.Add("$($configuration.BuildSourceBranchName)")
+          Write-Host "##vso[task.setvariable variable=prBuild;isOutput=true]False"
+        }
+        # Remove empty entries
+        $tags = $tags | Where {$_}
+        if ($addTags) {
+            Set-BuildTags -Tags $tags.ToArray()
+        }
+        # add the tags and serialize to json
+        $configuration | Add-Member -NotePropertyName Tags -NotePropertyValue $tags
+
+        $jsonConfiguration = $configuration | ConvertTo-Json
+
+        Write-Host "Build configuration:"
+        Write-Host $jsonConfiguration
+
+        if ($configFile) {
+            Write-Host "Writing configuration to: $configFile"
+            Set-Content -Path $configFile -Value $jsonConfiguration
+        }
+
+        return $configuration
+    }
+}
+
 function New-VSTS {
     param
     (
@@ -408,6 +596,15 @@ function Set-BuildTags {
         $Tags
     )
 
+    # Remove empty entries
+    $Tags = $Tags | Where {$_}
+
+    # No need to do anything if there aren't any tags
+    Write-Host "Found $($Tags.length) tag(s): $([String]::Join(',', $Tags))"
+    if ($Tags.length -eq 0) {
+        return
+    }
+
     $envVars = @{
         "SYSTEM_TEAMFOUNDATIONCOLLECTIONURI" = $Env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI;
         "SYSTEM_TEAMPROJECT" = $Env:SYSTEM_TEAMPROJECT;
@@ -417,7 +614,6 @@ function Set-BuildTags {
 
     foreach ($key in $envVars.Keys) {
         if (-not($envVars[$key])) {
-            Write-Debug "Environment variable missing: $key"
             throw [System.InvalidOperationException]::new("Environment variable missing: $key")
         }
     }
@@ -436,8 +632,80 @@ function Set-BuildTags {
     }
 }
 
+function Get-YamlPreview {
+    param (
+        [String]
+        $Org,
+
+        [String]
+        $Project,
+
+        [String]
+        $AccessToken,
+
+        [String]
+        $PipelineId,
+
+        [String]
+        $Branch,
+
+        [String]
+        $OutputFile
+    )
+
+    $headers = Get-AuthHeader -AccessToken  $AccessToken
+
+    # create the payload, this payload will point to the correct branch of the repo we want to work with, the repository is always 'self'
+    $payload=@{
+        "previewRun"=$true
+        "resources"=@{
+            "repositories"=@{
+                "self"=@{
+                    "refName"="refs/heads/$Branch"
+                }
+            }
+        }
+    }
+    $body = ConvertTo-Json $payload -Depth 100
+
+    $url="https://dev.azure.com/$Org/$Project/_apis/pipelines/$PipelineId/preview?api-version=7.1-preview.1"
+    try {
+        $response=Invoke-RestMethod -Uri $url -Headers $headers -Method "POST"  -ContentType 'application/json' -Body $body
+    } catch {
+        Write-Host $_
+    }
+    Set-Content -Path $OutputFile -Value $response.finalYaml  
+}
+
+function New-BuildConfiguration {
+    param
+    (
+        [bool]
+        $AddTags = $true,
+
+        [string]
+        $ConfigFile = ''
+    )
+    $buildConfiguration = [BuildConfiguration]::new()
+    return $buildConfiguration.Create($AddTags, $ConfigFile)
+}
+
+function Import-BuildConfiguration {
+    param
+    (
+        [Parameter(Mandatory)]
+        [string]
+        $ConfigFile
+    )
+    $buildConfiguration = [BuildConfiguration]::new()
+    return $buildConfiguration.Import($ConfigFile)
+}
+
 # export public functions, other functions are private and should not be used ouside the module.
 Export-ModuleMember -Function Stop-Pipeline
 Export-ModuleMember -Function Set-PipelineResult
 Export-ModuleMember -Function Set-BuildTags
 Export-ModuleMember -Function New-VSTS
+Export-ModuleMember -Function New-BuildConfiguration
+Export-ModuleMember -Function Import-BuildConfiguration
+Export-ModuleMember -Function Get-YamlPreview

@@ -17,13 +17,13 @@ mmp.csproj.inc: export BUILD_VERBOSITY=$(MSBUILD_VERBOSITY)
 -include mmp.csproj.inc
 
 $(MMP_DIR)/mmp.exe: $(mmp_dependencies)
-	$(Q_GEN) $(SYSTEM_MSBUILD) "/bl:$@.binlog" $(TOP)/Xamarin.Mac.sln "/t:mmp" $(XBUILD_VERBOSITY) /p:Configuration=$(MMP_CONF)
+	$(Q_GEN) $(SYSTEM_MSBUILD) "/bl:$@.binlog" mmp.csproj /r $(XBUILD_VERBOSITY) /p:Configuration=$(MMP_CONF)
 
 MMP_TARGETS_DOTNET = \
-	$(DOTNET_DESTDIR)/Microsoft.macOS.Runtime.osx-x64/runtimes/osx-x64/native/Microsoft.macOS.registrar.a \
-	$(DOTNET_DESTDIR)/Microsoft.macOS.Runtime.osx-arm64/runtimes/osx-arm64/native/Microsoft.macOS.registrar.a \
-	$(DOTNET_DESTDIR)/Microsoft.macOS.Runtime.osx-x64/runtimes/osx-x64/native/Microsoft.macOS.registrar.coreclr.a \
-	$(DOTNET_DESTDIR)/Microsoft.macOS.Runtime.osx-arm64/runtimes/osx-arm64/native/Microsoft.macOS.registrar.coreclr.a \
+	$(DOTNET_DESTDIR)/$(osx-x64_NUGET_RUNTIME_NAME)/runtimes/osx-x64/native/Microsoft.macOS.registrar.a \
+	$(DOTNET_DESTDIR)/$(osx-arm64_NUGET_RUNTIME_NAME)/runtimes/osx-arm64/native/Microsoft.macOS.registrar.a \
+	$(DOTNET_DESTDIR)/$(osx-x64_NUGET_RUNTIME_NAME)/runtimes/osx-x64/native/Microsoft.macOS.registrar.coreclr.a \
+	$(DOTNET_DESTDIR)/$(osx-arm64_NUGET_RUNTIME_NAME)/runtimes/osx-arm64/native/Microsoft.macOS.registrar.coreclr.a \
 
 MMP_TARGETS = \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin/mmp \
@@ -32,8 +32,8 @@ MMP_TARGETS = \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mmp/Xamarin.Mac.registrar.full.a \
 
 MMP_DIRECTORIES_DOTNET = \
-	$(DOTNET_DESTDIR)/Microsoft.macOS.Runtime.osx-x64/runtimes/osx-x64/native \
-	$(DOTNET_DESTDIR)/Microsoft.macOS.Runtime.osx-arm64/runtimes/osx-arm64/native \
+	$(DOTNET_DESTDIR)/$(osx-x64_NUGET_RUNTIME_NAME)/runtimes/osx-x64/native \
+	$(DOTNET_DESTDIR)/$(osx-arm64_NUGET_RUNTIME_NAME)/runtimes/osx-arm64/native \
 
 MMP_DIRECTORIES = \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin \
@@ -51,16 +51,16 @@ $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mmp/mmp.exe: $(MMP_DIR)/mmp.exe |
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mmp/Xamarin.Mac.registrar.%.a: Xamarin.Mac.registrar.%.a | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mmp
 	$(Q) $(CP) $<* $(dir $@)
 
-$(DOTNET_DESTDIR)/Microsoft.macOS.Runtime.osx-x64/runtimes/osx-x64/native/Microsoft.macOS.registrar.a: Microsoft.macOS.registrar.x86_64.a | $(DOTNET_DESTDIR)/Microsoft.macOS.Runtime.osx-x64/runtimes/osx-x64/native
+$(DOTNET_DESTDIR)/$(osx-x64_NUGET_RUNTIME_NAME)/runtimes/osx-x64/native/Microsoft.macOS.registrar.a: Microsoft.macOS.registrar.x86_64.a | $(DOTNET_DESTDIR)/$(osx-x64_NUGET_RUNTIME_NAME)/runtimes/osx-x64/native
 	$(Q) $(CP) $< $@
 
-$(DOTNET_DESTDIR)/Microsoft.macOS.Runtime.osx-x64/runtimes/osx-x64/native/Microsoft.macOS.registrar.coreclr.a: Microsoft.macOS.registrar.coreclr.x86_64.a | $(DOTNET_DESTDIR)/Microsoft.macOS.Runtime.osx-x64/runtimes/osx-x64/native
+$(DOTNET_DESTDIR)/$(osx-x64_NUGET_RUNTIME_NAME)/runtimes/osx-x64/native/Microsoft.macOS.registrar.coreclr.a: Microsoft.macOS.registrar.coreclr.x86_64.a | $(DOTNET_DESTDIR)/$(osx-x64_NUGET_RUNTIME_NAME)/runtimes/osx-x64/native
 	$(Q) $(CP) $< $@
 
-$(DOTNET_DESTDIR)/Microsoft.macOS.Runtime.osx-arm64/runtimes/osx-arm64/native/Microsoft.macOS.registrar.a: Microsoft.macOS.registrar.arm64.a | $(DOTNET_DESTDIR)/Microsoft.macOS.Runtime.osx-arm64/runtimes/osx-arm64/native
+$(DOTNET_DESTDIR)/$(osx-arm64_NUGET_RUNTIME_NAME)/runtimes/osx-arm64/native/Microsoft.macOS.registrar.a: Microsoft.macOS.registrar.arm64.a | $(DOTNET_DESTDIR)/$(osx-arm64_NUGET_RUNTIME_NAME)/runtimes/osx-arm64/native
 	$(Q) $(CP) $< $@
 
-$(DOTNET_DESTDIR)/Microsoft.macOS.Runtime.osx-arm64/runtimes/osx-arm64/native/Microsoft.macOS.registrar.coreclr.a: Microsoft.macOS.registrar.coreclr.arm64.a | $(DOTNET_DESTDIR)/Microsoft.macOS.Runtime.osx-arm64/runtimes/osx-arm64/native
+$(DOTNET_DESTDIR)/$(osx-arm64_NUGET_RUNTIME_NAME)/runtimes/osx-arm64/native/Microsoft.macOS.registrar.coreclr.a: Microsoft.macOS.registrar.coreclr.arm64.a | $(DOTNET_DESTDIR)/$(osx-arm64_NUGET_RUNTIME_NAME)/runtimes/osx-arm64/native
 	$(Q) $(CP) $< $@
 
 $(MMP_DIRECTORIES):
@@ -81,11 +81,11 @@ Xamarin.Mac.registrar.mobile.arm64.m: $(TOP)/src/build/mac/mobile-64/Xamarin.Mac
 	$(Q) touch Xamarin.Mac.registrar.mobile.arm64.m Xamarin.Mac.registrar.mobile.arm64.h
 
 Microsoft.macOS.registrar.x86_64.m: $(TOP)/src/build/dotnet/macos/64/Microsoft.macOS.dll $(LOCAL_MMP)
-	$(GENERATE_PART_REGISTRAR) --arch=x86_64 --target-framework .NETCoreApp,Version=$(subst net,,$(DOTNET_TFM)),Profile=macos -a:$(DOTNET_BCL_DIR)/System.Runtime.dll -a:$(DOTNET_SYSTEM_RUNTIME_INTEROPSERVICES_REF_ASSEMBLY_DIR)/System.Runtime.InteropServices.dll
+	$(GENERATE_PART_REGISTRAR) --arch=x86_64 --target-framework .NETCoreApp,Version=$(subst net,,$(DOTNET_TFM)),Profile=macos -a:$(DOTNET_BCL_DIR)/System.Runtime.dll -a:$(DOTNET_BCL_DIR)/System.Runtime.InteropServices.dll
 	$(Q) touch $@ $(basename $@).h
 
 Microsoft.macOS.registrar.coreclr.x86_64.m: $(TOP)/src/build/dotnet/macos/64/Microsoft.macOS.dll $(LOCAL_MMP)
-	$(GENERATE_PART_REGISTRAR) --arch=x86_64 --target-framework .NETCoreApp,Version=$(subst net,,$(DOTNET_TFM)),Profile=macos -a:$(DOTNET_BCL_DIR)/System.Runtime.dll -a:$(DOTNET_SYSTEM_RUNTIME_INTEROPSERVICES_REF_ASSEMBLY_DIR)/System.Runtime.InteropServices.dll --xamarin-runtime CoreCLR
+	$(GENERATE_PART_REGISTRAR) --arch=x86_64 --target-framework .NETCoreApp,Version=$(subst net,,$(DOTNET_TFM)),Profile=macos -a:$(DOTNET_BCL_DIR)/System.Runtime.dll -a:$(DOTNET_BCL_DIR)/System.Runtime.InteropServices.dll --xamarin-runtime CoreCLR
 	$(Q) touch $@ $(basename $@).h
 
 Xamarin.Mac.registrar.full.x86_64.m:   $(TOP)/src/build/mac/full-64/Xamarin.Mac.dll $(LOCAL_MMP)
@@ -93,11 +93,11 @@ Xamarin.Mac.registrar.full.x86_64.m:   $(TOP)/src/build/mac/full-64/Xamarin.Mac.
 	$(Q) touch Xamarin.Mac.registrar.full.x86_64.m Xamarin.Mac.registrar.full.x86_64.h
 
 Microsoft.macOS.registrar.arm64.m: $(TOP)/src/build/dotnet/macos/64/Microsoft.macOS.dll $(LOCAL_MMP)
-	$(GENERATE_PART_REGISTRAR) --arch=arm64 --target-framework .NETCoreApp,Version=$(subst net,,$(DOTNET_TFM)),Profile=macos -a:$(DOTNET_BCL_DIR)/System.Runtime.dll -a:$(DOTNET_SYSTEM_RUNTIME_INTEROPSERVICES_REF_ASSEMBLY_DIR)/System.Runtime.InteropServices.dll
+	$(GENERATE_PART_REGISTRAR) --arch=arm64 --target-framework .NETCoreApp,Version=$(subst net,,$(DOTNET_TFM)),Profile=macos -a:$(DOTNET_BCL_DIR)/System.Runtime.dll -a:$(DOTNET_BCL_DIR)/System.Runtime.InteropServices.dll
 	$(Q) touch $@ $(basename $@).h
 
 Microsoft.macOS.registrar.coreclr.arm64.m: $(TOP)/src/build/dotnet/macos/64/Microsoft.macOS.dll $(LOCAL_MMP)
-	$(GENERATE_PART_REGISTRAR) --arch=arm64 --target-framework .NETCoreApp,Version=$(subst net,,$(DOTNET_TFM)),Profile=macos -a:$(DOTNET_BCL_DIR)/System.Runtime.dll -a:$(DOTNET_SYSTEM_RUNTIME_INTEROPSERVICES_REF_ASSEMBLY_DIR)/System.Runtime.InteropServices.dll --xamarin-runtime CoreCLR
+	$(GENERATE_PART_REGISTRAR) --arch=arm64 --target-framework .NETCoreApp,Version=$(subst net,,$(DOTNET_TFM)),Profile=macos -a:$(DOTNET_BCL_DIR)/System.Runtime.dll -a:$(DOTNET_BCL_DIR)/System.Runtime.InteropServices.dll --xamarin-runtime CoreCLR
 	$(Q) touch $@ $(basename $@).h
 
 Xamarin.Mac.registrar.full.arm64.m:   $(TOP)/src/build/mac/full-64/Xamarin.Mac.dll $(LOCAL_MMP)

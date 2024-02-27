@@ -5,8 +5,7 @@ using NUnit.Framework;
 
 using Xamarin.Tests;
 
-namespace Xamarin.MacDev.Tasks
-{
+namespace Xamarin.MacDev.Tasks {
 	public class ExtensionTestBase : TestBase {
 		public ExtensionTestBase () { }
 
@@ -30,7 +29,7 @@ namespace Xamarin.MacDev.Tasks
 
 			RunTarget (mtouchPaths, "Clean");
 			Assert.IsFalse (Directory.Exists (AppBundlePath), "App bundle exists after cleanup: {0} ", AppBundlePath);
-		
+
 			RunTarget (mtouchPaths, "Build", expectedErrorCount: expectedErrorCount);
 
 			if (expectedErrorCount > 0)
@@ -38,11 +37,11 @@ namespace Xamarin.MacDev.Tasks
 
 			Assert.IsTrue (Directory.Exists (AppBundlePath), "App Bundle does not exist: {0} ", AppBundlePath);
 
-			TestPList (AppBundlePath, new string[] {"CFBundleExecutable", "CFBundleVersion"});
+			TestPList (AppBundlePath, new string [] { "CFBundleExecutable", "CFBundleVersion" });
 
 			Assert.IsTrue (Directory.Exists (extensionPath), "Appex directory does not exist: {0} ", extensionPath);
 
-			TestPList (extensionPath, new string[] {"CFBundleExecutable", "CFBundleVersion"});
+			TestPList (extensionPath, new string [] { "CFBundleExecutable", "CFBundleVersion" });
 
 			TestFilesExists (AppBundlePath, ExpectedAppFiles);
 			TestFilesDoNotExist (AppBundlePath, UnexpectedAppFiles);

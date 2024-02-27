@@ -39,13 +39,13 @@ namespace CoreWlan {
 	interface CWChannel : NSCoding, NSSecureCoding, NSCopying {
 		[Export ("channelNumber")]
 		nint ChannelNumber { get; }
- 
+
 		[Export ("channelWidth")]
 		CWChannelWidth ChannelWidth { get; }
- 
+
 		[Export ("channelBand")]
 		CWChannelBand ChannelBand { get; }
- 
+
 		[Export ("isEqualToChannel:")]
 		bool IsEqualToChannel (CWChannel channel);
 	}
@@ -73,7 +73,7 @@ namespace CoreWlan {
 
 		[Deprecated (PlatformName.MacOSX, 10, 7)]
 		[Export ("alwaysPromptForPassword")]
-		bool AlwaysPromptForPassword{ get; set; }
+		bool AlwaysPromptForPassword { get; set; }
 
 		[Static]
 		[Export ("profile")]
@@ -87,7 +87,7 @@ namespace CoreWlan {
 		[Deprecated (PlatformName.MacOSX, 10, 7), Obsoleted (PlatformName.MacOSX, 10, 10)]
 		[Static]
 		[Export ("allUser8021XProfiles")]
-		CW8021XProfile[] AllUser8021XProfiles { get; }
+		CW8021XProfile [] AllUser8021XProfiles { get; }
 	}
 #endif
 
@@ -101,7 +101,7 @@ namespace CoreWlan {
 
 		[Deprecated (PlatformName.MacOSX, 10, 7), Obsoleted (PlatformName.MacOSX, 10, 9)]
 		[Export ("preferredNetworks")]
-		CWWirelessProfile[] PreferredNetworks { get; set; }
+		CWWirelessProfile [] PreferredNetworks { get; set; }
 
 		[Deprecated (PlatformName.MacOSX, 10, 7), Obsoleted (PlatformName.MacOSX, 10, 9)]
 		[Export ("alwaysRememberNetworks")]
@@ -127,19 +127,19 @@ namespace CoreWlan {
 		[Export ("networkProfiles", ArgumentSemantic.Copy)]
 		[Internal]
 		NSOrderedSet _NetworkProfiles { get; }
- 
+
 		[Export ("requireAdministratorForAssociation", ArgumentSemantic.Assign)]
 		bool RequireAdministratorForAssociation { get; }
- 
+
 		[Export ("requireAdministratorForPower", ArgumentSemantic.Assign)]
 		bool RequireAdministratorForPower { get; }
- 
+
 		[Export ("requireAdministratorForIBSSMode", ArgumentSemantic.Assign)]
 		bool RequireAdministratorForIbssMode { get; }
- 
+
 		[Export ("rememberJoinedNetworks", ArgumentSemantic.Assign)]
 		bool RememberJoinedNetworks { get; }
- 
+
 		[Export ("initWithConfiguration:")]
 		NativeHandle Constructor (CWConfiguration configuration);
 
@@ -168,7 +168,7 @@ namespace CoreWlan {
 		[Export ("requireAdministratorForPower", ArgumentSemantic.Assign)]
 		bool RequireAdministratorForPower { get; set; }
 
-		[Deprecated (PlatformName.MacOSX, 11,0)]
+		[Deprecated (PlatformName.MacOSX, 11, 0)]
 		[Export ("requireAdministratorForIBSSMode", ArgumentSemantic.Assign)]
 		bool RequireAdministratorForIbssMode { get; set; }
 
@@ -250,11 +250,11 @@ namespace CoreWlan {
 
 		[Deprecated (PlatformName.MacOSX, 10, 7), Obsoleted (PlatformName.MacOSX, 10, 9)]
 		[Export ("supportedChannels")]
-		NSNumber[] SupportedChannels { get; }
+		NSNumber [] SupportedChannels { get; }
 
 		[Deprecated (PlatformName.MacOSX, 10, 7), Obsoleted (PlatformName.MacOSX, 10, 9)]
 		[Export ("supportedPHYModes")]
-		NSNumber[] SupportedPhyModes { get; }
+		NSNumber [] SupportedPhyModes { get; }
 
 		[Deprecated (PlatformName.MacOSX, 10, 7), Obsoleted (PlatformName.MacOSX, 10, 9)]
 		[Export ("channel")]
@@ -299,7 +299,7 @@ namespace CoreWlan {
 		[Deprecated (PlatformName.MacOSX, 10, 7), Obsoleted (PlatformName.MacOSX, 10, 9)]
 		[Static]
 		[Export ("supportedInterfaces")]
-		string[] SupportedInterfaces { get; }
+		string [] SupportedInterfaces { get; }
 
 		[Deprecated (PlatformName.MacOSX, 10, 7), Obsoleted (PlatformName.MacOSX, 10, 9)]
 		[Static]
@@ -309,7 +309,7 @@ namespace CoreWlan {
 		[Deprecated (PlatformName.MacOSX, 10, 7), Obsoleted (PlatformName.MacOSX, 10, 9)]
 		[Static]
 		[Export ("interfaceWithName:")]
-		CWInterface FromName ([NullAllowed]string name);
+		CWInterface FromName ([NullAllowed] string name);
 
 		[Deprecated (PlatformName.MacOSX, 10, 7), Obsoleted (PlatformName.MacOSX, 10, 9)]
 		[Export ("isEqualToInterface:")]
@@ -321,7 +321,7 @@ namespace CoreWlan {
 
 		[Deprecated (PlatformName.MacOSX, 10, 7), Obsoleted (PlatformName.MacOSX, 10, 9)]
 		[Export ("scanForNetworksWithParameters:error:")]
-		CWNetwork[] ScanForNetworksWithParameters ([NullAllowed] NSDictionary parameters, out NSError error);
+		CWNetwork [] ScanForNetworksWithParameters ([NullAllowed] NSDictionary parameters, out NSError error);
 
 		[Deprecated (PlatformName.MacOSX, 10, 7), Obsoleted (PlatformName.MacOSX, 10, 9)]
 		[Export ("associateToNetwork:parameters:error:")]
@@ -338,11 +338,11 @@ namespace CoreWlan {
 
 		[Export ("powerOn", ArgumentSemantic.Assign)]
 		bool PowerOn { get; }
-		 
+
 		[NullAllowed]
 		[Export ("interfaceName", ArgumentSemantic.Copy)]
 		string InterfaceName { get; }
-		 
+
 		[NullAllowed]
 		[Export ("supportedWLANChannels")]
 		[Internal]
@@ -351,118 +351,116 @@ namespace CoreWlan {
 		[NullAllowed]
 		[Export ("wlanChannel")]
 		CWChannel WlanChannel { get; }
-		 
+
 		[Export ("activePHYMode")]
 		CWPhyMode ActivePHYMode { get; }
-		 
+
 		[NullAllowed]
 		[Export ("ssid")]
 		string Ssid { get; }
-		 
+
 		[NullAllowed]
 		[Export ("ssidData")]
 		NSData SsidData { get; }
-		 
+
 		[NullAllowed]
 		[Export ("bssid")]
 		string Bssid { get; }
-		 
+
 		[Export ("rssiValue")]
 		nint RssiValue { get; }
-		 
+
 		[Export ("noiseMeasurement")]
 		nint NoiseMeasurement { get; }
-		 
+
 		[Export ("security")]
 		CWSecurity Security { get; }
-		 
+
 		[Export ("transmitRate")]
 		double TransmitRate { get; }
-		 
+
 		[NullAllowed]
 		[Export ("countryCode")]
 		string CountryCode { get; }
-		 
+
 		[Export ("interfaceMode")]
 		CWInterfaceMode InterfaceMode { get; }
-		 
+
 		[Export ("transmitPower")]
 		nint TransmitPower { get; }
-		 
+
 		[NullAllowed]
 		[Export ("hardwareAddress")]
 		string HardwareAddress { get; }
-		 
+
 		[Export ("deviceAttached", ArgumentSemantic.Assign)]
 		bool DeviceAttached { get; }
-		 
+
 		[Export ("serviceActive")]
 		bool ServiceActive { get; }
-		 
+
 		[NullAllowed]
 		[Export ("cachedScanResults")]
 		[Internal]
 		NSSet _CachedScanResults { get; }
-		 
+
 		[NullAllowed]
 		[Export ("configuration")]
 		CWConfiguration Configuration { get; }
-		 
+
 		[NullAllowed]
 		[Static]
 		[Export ("interfaceNames")]
 		[Internal]
 		NSSet _InterfaceNames { get; }
-		 
+
 		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Use 'CWWiFiClient.FromName' instead.")]
 		[Export ("initWithInterfaceName:")]
-		NativeHandle Constructor ([NullAllowed]string name);
-		 
+		NativeHandle Constructor ([NullAllowed] string name);
+
 		[Export ("setPower:error:")]
 		bool SetPower (bool power, out NSError error);
-		 
+
 		[Export ("setWLANChannel:error:")]
 		bool SetWlanChannel (CWChannel channel, out NSError error);
-		 
+
 		[Export ("setPairwiseMasterKey:error:")]
 		bool SetPairwiseMasterKey ([NullAllowed] NSData key, out NSError error);
-		 
+
 		[Export ("setWEPKey:flags:index:error:")]
 		bool SetWEPKey ([NullAllowed] NSData key, CWCipherKeyFlags flags, nint index, out NSError error);
-		 
+
 		[return: NullAllowed]
 		[Export ("scanForNetworksWithSSID:error:")]
 		[Internal]
 		NSSet _ScanForNetworksWithSsid ([NullAllowed] NSData ssid, out NSError error);
-		 
+
 		[return: NullAllowed]
 		[Export ("scanForNetworksWithName:error:")]
 		[Internal]
 		NSSet _ScanForNetworksWithName ([NullAllowed] string networkName, out NSError error);
-		 
+
 		[Export ("associateToNetwork:password:error:")]
 		bool AssociateToNetwork (CWNetwork network, [NullAllowed] string password, out NSError error);
-		 
+
 		[Export ("associateToEnterpriseNetwork:identity:username:password:error:")]
-		bool AssociateToEnterpriseNetwork (CWNetwork network, [NullAllowed] SecIdentity identity, [NullAllowed] string username, [NullAllowed]string password, out NSError error);
-		 
-		[Deprecated (PlatformName.MacOSX, 11,0)]
+		bool AssociateToEnterpriseNetwork (CWNetwork network, [NullAllowed] SecIdentity identity, [NullAllowed] string username, [NullAllowed] string password, out NSError error);
+
+		[Deprecated (PlatformName.MacOSX, 11, 0)]
 		[Export ("startIBSSModeWithSSID:security:channel:password:error:")]
 		bool StartIbssModeWithSsid (NSData ssidData, CWIbssModeSecurity security, nuint channel, [NullAllowed] string password, out NSError error);
-		 
+
 		[Export ("disassociate")]
 		void Disassociate ();
-		 
+
 		[Export ("commitConfiguration:authorization:error:")]
 		bool CommitConfiguration (CWConfiguration configuration, [NullAllowed] NSObject authorization, out NSError error);
 
-		[Mac (10,13)]
 		[Export ("scanForNetworksWithSSID:includeHidden:error:")]
 		[return: NullAllowed]
 		[Internal]
 		NSSet _ScanForNetworksWithSsid ([NullAllowed] NSData ssid, bool includeHidden, [NullAllowed] out NSError error);
 
-		[Mac (10,13)]
 		[Export ("scanForNetworksWithName:includeHidden:error:")]
 		[return: NullAllowed]
 		[Internal]
@@ -541,11 +539,11 @@ namespace CoreWlan {
 		[NullAllowed]
 		[Export ("ssid")]
 		string Ssid { get; }
-		 
+
 		[NullAllowed]
 		[Export ("ssidData")]
 		NSData SsidData { get; }
-		 
+
 		[NullAllowed]
 		[Export ("bssid")]
 		string Bssid { get; }
@@ -553,41 +551,40 @@ namespace CoreWlan {
 		[NullAllowed]
 		[Export ("wlanChannel")]
 		CWChannel WlanChannel { get; }
-		 
+
 		[Export ("rssiValue")]
 		nint RssiValue { get; }
-		 
+
 		[Export ("noiseMeasurement")]
 		nint NoiseMeasurement { get; }
-		 
+
 		[NullAllowed]
 		[Export ("informationElementData")]
 		NSData InformationElementData { get; }
-		 
+
 		[NullAllowed]
 		[Export ("countryCode")]
 		string CountryCode { get; }
-		 
+
 		[Export ("beaconInterval")]
 		nint BeaconInterval { get; }
-		 
+
 		[Export ("ibss")]
 		bool Ibss { get; }
-		 
+
 		[Export ("isEqualToNetwork:")]
 		bool IsEqualToNetwork (CWNetwork network);
-		 
+
 		[Export ("supportsSecurity:")]
 		bool SupportsSecurity (CWSecurity security);
-		 
+
 		[Export ("supportsPHYMode:")]
 		bool SupportsPhyMode (CWPhyMode phyMode);
 	}
 
 	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
-	interface CWNetworkProfile : NSCoding, NSSecureCoding, NSCopying, NSMutableCopying 
-	{
+	interface CWNetworkProfile : NSCoding, NSSecureCoding, NSCopying, NSMutableCopying {
 		[NullAllowed]
 		[Export ("ssid", ArgumentSemantic.Copy)]
 		string Ssid { get; }
@@ -616,8 +613,7 @@ namespace CoreWlan {
 
 	[NoMacCatalyst]
 	[BaseType (typeof (CWNetworkProfile))]
-	interface CWMutableNetworkProfile : NSCoding, NSSecureCoding, NSCopying, NSMutableCopying  
-	{
+	interface CWMutableNetworkProfile : NSCoding, NSSecureCoding, NSCopying, NSMutableCopying {
 		[NullAllowed]
 		[Export ("ssidData", ArgumentSemantic.Copy)]
 		NSData SsidData { get; set; }
@@ -626,14 +622,13 @@ namespace CoreWlan {
 		CWSecurity Security { get; set; }
 	}
 
-	[Mac (10,10), NoMacCatalyst] 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
-	interface CWWiFiClient
-	{
+	interface CWWiFiClient {
 		[Export ("delegate", ArgumentSemantic.Weak)]
 		[NullAllowed]
 		ICWEventDelegate Delegate { get; set; }
-		
+
 		[Export ("interface")]
 		[NullAllowed]
 		CWInterface MainInterface { get; }
@@ -644,12 +639,12 @@ namespace CoreWlan {
 
 		[Export ("interfaces")]
 		[NullAllowed]
-		CWInterface[] Interfaces { get; }
+		CWInterface [] Interfaces { get; }
 
 		[NullAllowed]
 		[Export ("interfaceNames")]
 		[Static]
-		string[] InterfaceNames { get; }
+		string [] InterfaceNames { get; }
 
 		[Export ("sharedWiFiClient")]
 		[Static]
@@ -664,41 +659,40 @@ namespace CoreWlan {
 		[Export ("stopMonitoringEventWithType:error:")]
 		bool StopMonitoringEvent (CWEventType type, out NSError error);
 	}
-	
+
 	interface ICWEventDelegate { }
-	
+
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
-	interface CWEventDelegate
-	{
+	interface CWEventDelegate {
 		[Export ("clientConnectionInterrupted")]
 		void ClientConnectionInterrupted ();
-		
+
 		[Export ("clientConnectionInvalidated")]
 		void ClientConnectionInvalidated ();
-		
+
 		[Export ("powerStateDidChangeForWiFiInterfaceWithName:")]
 		void PowerStateDidChangeForWiFi (string interfaceName);
-		
+
 		[Export ("ssidDidChangeForWiFiInterfaceWithName:")]
 		void SsidDidChangeForWiFi (string interfaceName);
-		
+
 		[Export ("bssidDidChangeForWiFiInterfaceWithName:")]
 		void BssidDidChangeForWiFi (string interfaceName);
-		
+
 		[Export ("countryCodeDidChangeForWiFiInterfaceWithName:")]
 		void CountryCodeDidChangeForWiFi (string interfaceName);
-		
+
 		[Export ("linkDidChangeForWiFiInterfaceWithName:")]
 		void LinkDidChangeForWiFi (string interfaceName);
-		
+
 		[Export ("linkQualityDidChangeForWiFiInterfaceWithName:rssi:transmitRate:")]
 		void LinkQualityDidChangeForWiFi (string interfaceName, int rssi, double transmitRate);
-		
+
 		[Export ("modeDidChangeForWiFiInterfaceWithName:")]
 		void ModeDidChangeForWiFi (string interfaceName);
-		
+
 		[Export ("scanCacheUpdatedForWiFiInterfaceWithName:")]
 		void ScanCacheUpdatedForWiFi (string interfaceName);
 	}

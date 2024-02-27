@@ -7,124 +7,18 @@
 #
 parameters:
 
-- name: provisionatorChannel
-  displayName: Provisionator channel to use 
-  type: string
-  default: 'latest'
-
-- name: pool
-  type: string
-  displayName: Bot pool to use
-  default: automatic
-  values:
-  - pr
-  - ci
-  - automatic
-
-- name: runTests
-  displayName: Run Simulator Tests
-  type: boolean
-  default: true
-
-- name: runDeviceTests
-  displayName: Run Device Tests 
-  type: boolean
-  default: false
-
-- name: runOldMacOSTests
-  displayName: Run Tests on older macOS versions 
-  type: boolean
-  default: true
-
-- name: runWindowsIntegration
-  displayName: Run Windows integration tests
-  type: boolean
-  default: true
-
 - name: runGovernanceTests
-  displayName: Run Governance Checks
   type: boolean
   default: true
 
-- name: runSamples
-  displayName: Run Samples
+- name: manuallyCreateLocPR
   type: boolean
   default: false
-  
-- name: enableDotnet
-  displayName: Build Dotnet 
-  type: boolean
-  default: true
 
-- name: enableAPIDiff
-  displayName: Enable API diff generation
-  type: boolean
-  default: true
-
-- name: forceInsertion
-  displayName: Force Insertion 
-  type: boolean
-  default: false 
-
-- name: skipESRP
-  displayName: Skip ESRP
-  type: boolean
-  default: false # only to be used when testing the CI and we do not need a signed pkg
-
-- name: simTestsConfigurations
-  displayName: Simulator test configurations to run
-  type: object
-  default: []
-
-- name: deviceTestsConfigurations
-  displayName: Device test configurations to run
-  type: object
-  default: [
-    {
-      testPrefix: 'iOS64',
-      stageName: 'ios64b_device',
-      displayName: 'iOS64 Device Tests',
-      testPool: 'VSEng-Xamarin-Mac-Devices',
-      useXamarinStorage: false,
-      testsLabels: '--label=run-ios-64-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests',
-      statusContext: 'VSTS: device tests iOS',
-      makeTarget: 'vsts-device-tests',
-      extraBotDemands: [
-        'ios',
-      ]
-    },
-    {
-      testPrefix: 'tvos',
-      stageName: 'tvos_device',
-      displayName: 'tvOS Device Tests',
-      testPool: 'VSEng-Xamarin-Mac-Devices',
-      useXamarinStorage: false,
-      testsLabels: '--label=run-tvos-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests',
-      statusContext: 'VSTS: device tests tvOS',
-      makeTarget: 'vsts-device-tests',
-      extraBotDemands: [
-        'tvos',
-      ]
-    }]
-
-- name: macTestsConfigurations
-  displayName: macOS test configurations to run
-  type: object
-  default: [
-    {
-      stageName: 'mac_11_5_m1',
-      displayName: 'M1 - Mac Big Sur (11.5)',
-      macPool: 'VSEng-VSMac-Xamarin-Shared',
-      useImage: false,
-      statusContext: 'M1 - Mac Big Sur (11.5)',
-      demands: [
-        "Agent.OS -equals Darwin",
-        "macOS.Name -equals BigSur",
-        "macOS.Architecture -equals arm64",
-        "Agent.HasDevices -equals False",
-        "Agent.IsPaired -equals False"
-      ]
-    }]
+variables:
+- template: templates/variables.yml
+- name: MaciosUploadPrefix
+  value: ''
 
 resources:
   repositories:
@@ -132,7 +26,7 @@ resources:
     checkoutOptions:
       submodules: true
 
-  - repository: templates
+  - repository: yaml-templates
     type: github
     name: xamarin/yaml-templates
     ref: refs/heads/main
@@ -156,46 +50,44 @@ resources:
     ref: refs/heads/only_codesign
     endpoint: xamarin
 
-variables:
-- template: templates/variables.yml
-- name: MicrobuildConnector
-  value: ''
-
-trigger: none
+trigger:
+- main
 
 schedules:
 
-# the translations team wants a green build, we can do that on sundays even if 
-# the code did not change and without the device tests.
+# Create the PR into main with the newest usable localization strings once a week on Sundays
 - cron: "0 12 * * 0"
-  displayName: Weekly Translations build (Sunday @ noon)
+  displayName: Sunday Build
   branches:
     include:
     - main
   always: true
 
 stages:
-- template: templates/main-stage.yml
-  parameters:
-    xcodeChannel: Stable
-    isPR: false
-    provisionatorChannel: ${{ parameters.provisionatorChannel }}
-    pool: ${{ parameters.pool }}
-    runTests: ${{ parameters.runTests }}
-    runDeviceTests: ${{ parameters.runDeviceTests }}
-    runOldMacOSTests: ${{ parameters.runOldMacOSTests }}
-    runWindowsIntegration: ${{ parameters.runWindowsIntegration }}
-    runGovernanceTests: ${{ parameters.runGovernanceTests }}
-    runSamples: ${{ parameters.runSamples }}
-    enableDotnet: ${{ parameters.enableDotnet }}
-    enableAPIDiff: ${{ parameters.enableAPIDiff }}
-    forceInsertion: ${{ parameters.forceInsertion }}
-    skipESRP: ${{ parameters.skipESRP }}
-    ${{ if ne(length(parameters.simTestsConfigurations), 0)}}:
-      simTestsConfigurations: ${{ parameters.simTestsConfigurations }}
-    deviceTestsConfigurations: ${{ parameters.deviceTestsConfigurations }}
-    macTestsConfigurations: ${{ parameters.macTestsConfigurations }}
-    signingSetupSteps:
-    - template: ./templates/sign-and-notarized/setup.yml
-      parameters:
-        isPR: false
+
+- ${{ if eq(parameters.runGovernanceTests, true) }}:
+  - stage: governance_checks
+    displayName: 'Governance Checks'
+    jobs:
+    - job: governance
+      displayName: 'Governance Checks'
+      pool:
+        vmImage: windows-latest
+      steps:
+      - template: templates/governance-checks.yml
+        parameters:
+          isPR: false
+          repositoryAlias: self
+          commit: HEAD
+
+    - job: translations
+      displayName: 'Loc translations'
+      pool:
+        vmImage: windows-latest
+      steps:
+      - template:  templates/loc-translations.yml
+        parameters:
+          isPR: false
+          repositoryAlias: self
+          commit: HEAD
+          createLocPR: ${{ or(eq(parameters.manuallyCreateLocPR, true), eq(variables['Build.Reason'], 'Schedule')) }}

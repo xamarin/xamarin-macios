@@ -19,7 +19,8 @@ namespace JavaScriptCore {
 		Number,
 		String,
 		Object,
-		[iOS (13,0)][Mac (10,15)]
+		[iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		Symbol,
 	}
 

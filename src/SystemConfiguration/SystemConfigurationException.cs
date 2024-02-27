@@ -13,16 +13,15 @@ using System;
 
 namespace SystemConfiguration {
 
-	public class SystemConfigurationException : Exception
-	{
+	public class SystemConfigurationException : Exception {
 		public SystemConfigurationException (StatusCode statusErrorCode)
 			: base (StatusCodeError.GetErrorDescription (statusErrorCode))
 		{
 			StatusErrorCode = statusErrorCode;
 		}
-		
+
 		public StatusCode StatusErrorCode { get; private set; }
-	
+
 		internal static SystemConfigurationException FromMostRecentCall ()
 		{
 			var code = StatusCodeError.SCError ();

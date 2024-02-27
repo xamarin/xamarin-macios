@@ -40,7 +40,7 @@ namespace GLKit {
 	public enum GLKVertexAttrib {
 		Position, Normal, Color, TexCoord0, TexCoord1
 	}
-	
+
 	// GLint (32 bits on 64 bit hardware) -> GLKEffectPropertyLight.h
 	public enum GLKLightingType {
 		PerVertex,
@@ -87,7 +87,7 @@ namespace GLKit {
 	public enum GLKViewDrawableMultisample {
 		None, Sample4x
 	}
-	
+
 	// GLint (32 bits on 64 bit hardware) -> GLKTextureLoader.h
 	public enum GLKTextureInfoAlphaState {
 		None, NonPremultiplied, Premultiplied
@@ -126,26 +126,17 @@ namespace GLKit {
 
 	// glVertexAttribPointer structure values, again, problems with definitions being in different namespaces
 #if NET
-	[SupportedOSPlatform ("ios9.0")]
-	[SupportedOSPlatform ("macos10.11")]
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("tvos")]
-	[UnsupportedOSPlatform ("tvos12.0")]
-	[UnsupportedOSPlatform ("macos10.14")]
-	[UnsupportedOSPlatform ("ios12.0")]
-#if TVOS
-	[Obsolete ("Starting with tvos12.0 use 'Metal' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif MONOMAC
-	[Obsolete ("Starting with macos10.14 use 'Metal' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-	[Obsolete ("Starting with ios12.0 use 'Metal' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+	[ObsoletedOSPlatform ("tvos12.0", "Use 'Metal' instead.")]
+	[ObsoletedOSPlatform ("macos10.14", "Use 'Metal' instead.")]
+	[ObsoletedOSPlatform ("ios12.0", "Use 'Metal' instead.")]
 #else
-	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'Metal' instead.")]
-	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'Metal' instead.")]
-	[Deprecated (PlatformName.MacOSX, 10,14, message: "Use 'Metal' instead.")]
-	[iOS (9,0)]
-	[Mac (10,11)]
+	[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'Metal' instead.")]
+	[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'Metal' instead.")]
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'Metal' instead.")]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct GLKVertexAttributeParameters {

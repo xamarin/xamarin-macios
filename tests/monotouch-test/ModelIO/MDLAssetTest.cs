@@ -28,14 +28,12 @@ using System.Numerics;
 using OpenTK;
 #endif
 
-namespace MonoTouchFixtures.ModelIO
-{
+namespace MonoTouchFixtures.ModelIO {
 
 	[TestFixture]
 	// we want the test to be available if we use the linker
 	[Preserve (AllMembers = true)]
-	public class MDLAssetTest
-	{
+	public class MDLAssetTest {
 		[OneTimeSetUp]
 		public void Setup ()
 		{

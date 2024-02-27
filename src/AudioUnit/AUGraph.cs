@@ -66,16 +66,10 @@ namespace AudioUnit {
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
-	[UnsupportedOSPlatform ("tvos14.0")]
-	[UnsupportedOSPlatform ("macos11.0")]
-	[UnsupportedOSPlatform ("ios14.0")]
-#if TVOS
-	[Obsolete ("Starting with tvos14.0 use 'AVAudioEngine' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif MONOMAC
-	[Obsolete ("Starting with macos11.0 use 'AVAudioEngine' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-	[Obsolete ("Starting with ios14.0 use 'AVAudioEngine' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+	[ObsoletedOSPlatform ("tvos14.0", "Use 'AVAudioEngine' instead.")]
+	[ObsoletedOSPlatform ("macos11.0", "Use 'AVAudioEngine' instead.")]
+	[ObsoletedOSPlatform ("ios14.0", "Use 'AVAudioEngine' instead.")]
+	[ObsoletedOSPlatform ("maccatalyst14.0", "Use 'AVAudioEngine' instead.")]
 #else
 	[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'AVAudioEngine' instead.")]
 	[Deprecated (PlatformName.TvOS, 14, 0, message: "Use 'AVAudioEngine' instead.")]

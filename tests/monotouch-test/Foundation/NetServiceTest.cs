@@ -27,14 +27,14 @@ namespace MonoTouchFixtures.Foundation {
 		[Test]
 		public void DefaultCtor ()
 		{
-			using (var ns = new NSNetService ("d", 
-			                                  "_test._tcp",
+			using (var ns = new NSNetService ("d",
+											  "_test._tcp",
 #if MONOMAC
-			                                  "DeviceName",
+											  "DeviceName",
 #else
-			                                  UIDevice.CurrentDevice.Name,
+											  UIDevice.CurrentDevice.Name,
 #endif
-			                                  1234)) {
+											  1234)) {
 				Assert.That (ns.Domain, Is.EqualTo ("d"), "Domain");
 				Assert.That (ns.Type, Is.EqualTo ("_test._tcp"), "Type");
 				Assert.That (ns.Port, Is.EqualTo ((nint) 1234), "Port");

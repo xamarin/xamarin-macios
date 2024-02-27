@@ -8,12 +8,10 @@ using ObjCRuntime;
 using Foundation;
 using CoreGraphics;
 
-namespace Xamarin.Mac.Tests
-{
+namespace Xamarin.Mac.Tests {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class NSObjectTests
-	{
+	public class NSObjectTests {
 		[Test]
 		public void NSObjectTests_InvokeTest ()
 		{

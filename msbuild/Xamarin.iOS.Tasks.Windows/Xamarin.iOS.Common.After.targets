@@ -12,13 +12,14 @@ Copyright (C) 2011-2013 Xamarin. All rights reserved.
 ***********************************************************************************************
 -->
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">	
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.FindILLink" AssemblyFile="$(CoreiOSSdkDirectory)Xamarin.iOS.Tasks.dll" />
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.Unzip" AssemblyFile="$(CoreiOSSdkDirectory)Xamarin.iOS.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.WriteItemsToFile" AssemblyFile="$(CoreiOSSdkDirectory)Xamarin.iOS.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.Zip" AssemblyFile="$(CoreiOSSdkDirectory)Xamarin.iOS.Tasks.dll" />
-	<UsingTask TaskName="Xamarin.iOS.Tasks.CopyArchiveFiles" AssemblyFile="$(CoreiOSSdkDirectory)Xamarin.iOS.Tasks.dll" />
-	<UsingTask TaskName="Xamarin.iOS.Tasks.ILLink" AssemblyFile="$(CoreiOSSdkDirectory)Xamarin.iOS.Tasks.dll" />
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.CopyArchiveFiles" AssemblyFile="$(CoreiOSSdkDirectory)Xamarin.iOS.Tasks.dll" />
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.ILLink" AssemblyFile="$(CoreiOSSdkDirectory)Xamarin.iOS.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.iOS.Tasks.Windows.CreateArchiveDirectory" AssemblyFile="Xamarin.iOS.Tasks.Windows.dll" />
 	<UsingTask TaskName="Xamarin.iOS.Tasks.Windows.ResolveUniversalTypeIdentifiers" AssemblyFile="Xamarin.iOS.Tasks.Windows.dll" />
-	<UsingTask TaskName="Xamarin.iOS.Tasks.Windows.Unzip" AssemblyFile="Xamarin.iOS.Tasks.Windows.dll" />
 
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Messaging.Build.targets" Condition="Exists('$(MSBuildThisFileDirectory)Xamarin.Messaging.Build.targets') And '$(MessagingBuildTargetsImported)' != 'true'" />
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.iOS.Windows.After.targets" Condition="Exists('$(MSBuildThisFileDirectory)Xamarin.iOS.Windows.After.targets')" />
@@ -304,17 +305,48 @@ Copyright (C) 2011-2013 Xamarin. All rights reserved.
 		</PropertyGroup>
 	</Target>
 
+	<Target Name="_FindILLink" DependsOnTargets="_ComputeVariables">
+		<PropertyGroup>
+			<_RemoteILLinkCachePath>$(DeviceSpecificIntermediateOutputPath)remote-illink-path-$(NETCoreSdkVersion).txt</_RemoteILLinkCachePath>
+		</PropertyGroup>
+
+		<!-- This task does not take a SessionId because we cache the path on Windows for remote builds to avoid a round-trip -->
+		<ReadLinesFromFile
+			Condition="Exists('$(_RemoteILLinkCachePath)')"
+			File="$(_RemoteILLinkCachePath)"
+		>
+			<Output TaskParameter="Lines" PropertyName="_RemoteILLinkPath" />
+		</ReadLinesFromFile>
+
+		<FindILLink
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true' And '$(_RemoteILLinkPath)' == ''"
+			KeepTemporaryOutput="$(FindILLinkKeepKeepTemporaryOutput)"
+			RuntimeIdentifier="$(RuntimeIdentifier)"
+			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
+		>
+			<Output TaskParameter="ILLinkPath" PropertyName="_RemoteILLinkPath" />
+		</FindILLink>
+
+		<!-- This task does not take a SessionId because we cache the path on Windows for remote builds to avoid a round-trip -->
+		<WriteLinesToFile
+			File="$(_RemoteILLinkCachePath)"
+			Lines="$(_RemoteILLinkPath)"
+			Overwrite="true"
+		/>
+		<ItemGroup>
+			<FileWrites Include="$(_RemoteILLinkCachePath)" />
+		</ItemGroup>
+	</Target>
+
 	<!-- Overrides Core SDK target to remote the ILLink execution -->
 	<!-- https://github.com/dotnet/sdk/blob/cdf57465e1cba9e44b5c9a76a403d41b1b8f178c/src/Tasks/Microsoft.NET.Build.Tasks/targets/Microsoft.NET.ILLink.targets#L76-L132 -->
 	<Target Name="_RunILLink"
-		DependsOnTargets="_ComputeManagedAssemblyToLink;PrepareForILLink"
+		DependsOnTargets="_ComputeManagedAssemblyToLink;PrepareForILLink;_FindILLink"
 		Inputs="$(MSBuildAllProjects);@(ManagedAssemblyToLink);@(TrimmerRootDescriptor);@(ReferencePath)"
 		Outputs="$(_LinkSemaphore)">
 
 		<PropertyGroup>
-			<!-- We need to use netX.Y because when building from VS it sets MSBuildRuntimeType to Core and will pick net472 (which doesn't contain the illink assembly) -->
-			<_RemoteILLinkPath>$(ILLinkTasksAssembly.Replace('$(NetCoreRoot)', '$(_DotNetRootRemoteDirectory)').Replace('net472', 'net$(BundledNETCoreAppTargetFrameworkVersion)').Replace('$([System.IO.Path]::GetFileName('$(ILLinkTasksAssembly)'))', 'illink.dll'))</_RemoteILLinkPath>
-
 			<!-- The .NET 7 linker sets _TrimmerDefaultAction instead of TrimmerDefaultAction, so copy that value if it's set (and TrimmerDefaultAction is not set) -->
 			<TrimmerDefaultAction Condition="'$(TrimmerDefaultAction)' == ''">$(_TrimmerDefaultAction)</TrimmerDefaultAction>
 
@@ -329,13 +361,13 @@ Copyright (C) 2011-2013 Xamarin. All rights reserved.
 		</ItemGroup>
 		
 		<Delete SessionId="$(BuildSessionId)" Files="@(_LinkedResolvedFileToPublishCandidate)" />
-		<Xamarin.iOS.Tasks.ILLink 
+		<Xamarin.MacDev.Tasks.ILLink
 				SessionId="$(BuildSessionId)"
 				AssemblyPaths="@(ManagedAssemblyToLink)"
 				ReferenceAssemblyPaths="@(ReferencePath)"
 				RootAssemblyNames="@(TrimmerRootAssembly)"
 				TrimMode="$(TrimMode)"
-				DefaultAction="$(TrimmerDefaultAction)"
+				DefaultAction="$(_TrimmerDefaultAction)"
 				RemoveSymbols="$(TrimmerRemoveSymbols)"
 				FeatureSettings="@(_TrimmerFeatureSettings)"
 				CustomData="@(_TrimmerCustomData)"
@@ -358,6 +390,7 @@ Copyright (C) 2011-2013 Xamarin. All rights reserved.
 				RootDescriptorFiles="@(TrimmerRootDescriptor)"
 				OutputDirectory="$(IntermediateLinkDir)"
 				DumpDependencies="$(_TrimmerDumpDependencies)"
+				DependenciesFileFormat="$(_TrimmerDependenciesFileFormat)"
 				ExtraArgs="$(_RemoteExtraTrimmerArgs)"
 				ToolExe="$(_DotNetHostFileName)"
 				ToolPath="$(_DotNetHostDirectory)"
@@ -368,7 +401,7 @@ Copyright (C) 2011-2013 Xamarin. All rights reserved.
 			<Output TaskParameter="ExitCode" PropertyName="_ILLinkExitCode" />
 			<Output TaskParameter="LinkedItems" ItemName="_XamarinLinkedItems" />
 			<Output TaskParameter="LinkerOutputItems" ItemName="_XamarinLinkerItems" />
-		</Xamarin.iOS.Tasks.ILLink>
+		</Xamarin.MacDev.Tasks.ILLink>
 
 		<Touch Files="$(_LinkSemaphore)" AlwaysCreate="true" Condition=" '$(_ILLinkExitCode)' == '0' " />
 
@@ -378,6 +411,16 @@ Copyright (C) 2011-2013 Xamarin. All rights reserved.
 	<!-- https://github.com/dotnet/sdk/blob/bc0563507d23a20e71087b03cfa50a5b42b03f06/src/Tasks/Microsoft.NET.Build.Tasks/targets/Microsoft.NET.Sdk.targets#L869-L872 -->
 	<Target Name="Run">
 		<Exec SessionId="$(BuildSessionId)" Command="$(RunCommand) $(RunArguments)" WorkingDirectory="$(RunWorkingDirectory)"/>
+	</Target>
+
+	<Target Name="_VerifyNoAbsoluteOutputPath" Condition="'$(AllowAbsoluteOutputPath)' != 'true'" AfterTargets="_SayHello">
+		<!--
+			Remote builds won't work if either OutputPath or IntermediateOutputPath are is an absolute path, so just show an error in that case that tells people what the actual problem is (instead of a random and unintelligible build error).
+				Ref: https://github.com/xamarin/xamarin-macios/issues/18510
+				Ref: https://dev.azure.com/devdiv/DevDiv/_workitems/edit/1847166
+		-->
+		<Error Condition="'$(IsMacEnabled)' == 'true' And $([System.IO.Path]::IsPathRooted('$(OutputPath)'))" Text="An absolute OutputPath is not supported when building remotely. Note that this may occur as a consequence of setting UseArtifactsOutput=true or ArtifactsPath." />
+		<Error Condition="'$(IsMacEnabled)' == 'true' And $([System.IO.Path]::IsPathRooted('$(IntermediateOutputPath)'))" Text="An absolute IntermediateOutputPath is not supported when building remotely. Note that this may occur as a consequence of setting UseArtifactsOutput=true or ArtifactsPath." />
 	</Target>
 
 	<PropertyGroup>

@@ -9,11 +9,11 @@ using UIKit;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.UIKit {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class DictationPhraseTest {
-		
+
 		[Test]
 		public void Defaults ()
 		{

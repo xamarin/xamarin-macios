@@ -32,7 +32,7 @@ namespace AssetsLibrary {
 		[Export ("ALAssetLibraryDeletedAssetGroupsKey")]
 		NSSet DeletedAssetGroupsKey { get; }
 	}
-	
+
 	[Deprecated (PlatformName.iOS, 9, 0, message: "Use the 'Photos' API instead.")]
 	[BaseType (typeof (NSObject))]
 	interface ALAssetsLibrary {
@@ -47,19 +47,19 @@ namespace AssetsLibrary {
 
 		[Export ("writeImageDataToSavedPhotosAlbum:metadata:completionBlock:")]
 		[Async]
-		void WriteImageToSavedPhotosAlbum (NSData imageData, NSDictionary metadata, [NullAllowed] Action<NSUrl,NSError> completionBlock);
+		void WriteImageToSavedPhotosAlbum (NSData imageData, NSDictionary metadata, [NullAllowed] Action<NSUrl, NSError> completionBlock);
 
 		[Export ("writeImageToSavedPhotosAlbum:metadata:completionBlock:")]
 		[Async]
-		void WriteImageToSavedPhotosAlbum (CGImage imageData, NSDictionary metadata, [NullAllowed] Action<NSUrl,NSError> completionBlock);
+		void WriteImageToSavedPhotosAlbum (CGImage imageData, NSDictionary metadata, [NullAllowed] Action<NSUrl, NSError> completionBlock);
 
 		[Export ("writeImageToSavedPhotosAlbum:orientation:completionBlock:")]
 		[Async]
-		void WriteImageToSavedPhotosAlbum (CGImage imageData, ALAssetOrientation orientation, [NullAllowed] Action<NSUrl,NSError> completionBlock);
+		void WriteImageToSavedPhotosAlbum (CGImage imageData, ALAssetOrientation orientation, [NullAllowed] Action<NSUrl, NSError> completionBlock);
 
 		[Export ("writeVideoAtPathToSavedPhotosAlbum:completionBlock:")]
 		[Async]
-		void WriteVideoToSavedPhotosAlbum (NSUrl videoPathURL, [NullAllowed] Action<NSUrl,NSError> completionBlock);
+		void WriteVideoToSavedPhotosAlbum (NSUrl videoPathURL, [NullAllowed] Action<NSUrl, NSError> completionBlock);
 
 		[Field ("ALAssetsLibraryChangedNotification")]
 		[Notification]
@@ -122,7 +122,7 @@ namespace AssetsLibrary {
 
 		[Field ("ALAssetPropertyOrientation"), Internal]
 		NSString _PropertyOrientation { get; }
-		
+
 		[Field ("ALAssetPropertyDate"), Internal]
 		NSString _PropertyDate { get; }
 
@@ -145,29 +145,29 @@ namespace AssetsLibrary {
 		NSString _TypeUnknown { get; }
 
 		[Export ("originalAsset")]
-		ALAsset OriginalAsset { get;  }
+		ALAsset OriginalAsset { get; }
 
 		[Export ("editable")]
-		bool Editable { [Bind ("isEditable")] get;  }
+		bool Editable { [Bind ("isEditable")] get; }
 
 		[Export ("aspectRatioThumbnail")]
 		CGImage AspectRatioThumbnail ();
 
 		[Export ("writeModifiedImageDataToSavedPhotosAlbum:metadata:completionBlock:")]
 		[Async]
-		void WriteModifiedImageToSavedToPhotosAlbum (NSData imageData, NSDictionary metadata, [NullAllowed] Action<NSUrl,NSError> completionBlock);
+		void WriteModifiedImageToSavedToPhotosAlbum (NSData imageData, NSDictionary metadata, [NullAllowed] Action<NSUrl, NSError> completionBlock);
 
 		[Export ("writeModifiedVideoAtPathToSavedPhotosAlbum:completionBlock:")]
 		[Async]
-		void WriteModifiedVideoToSavedPhotosAlbum (NSUrl videoPathURL, [NullAllowed] Action<NSUrl,NSError> completionBlock);
+		void WriteModifiedVideoToSavedPhotosAlbum (NSUrl videoPathURL, [NullAllowed] Action<NSUrl, NSError> completionBlock);
 
 		[Export ("setImageData:metadata:completionBlock:")]
 		[Async]
-		void SetImageData (NSData imageData, NSDictionary metadata, [NullAllowed] Action<NSUrl,NSError> completionBlock);
+		void SetImageData (NSData imageData, NSDictionary metadata, [NullAllowed] Action<NSUrl, NSError> completionBlock);
 
 		[Export ("setVideoAtPath:completionBlock:")]
 		[Async]
-		void SetVideoAtPath (NSUrl videoPathURL, [NullAllowed] Action<NSUrl,NSError> completionBlock);
+		void SetVideoAtPath (NSUrl videoPathURL, [NullAllowed] Action<NSUrl, NSError> completionBlock);
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -208,7 +208,7 @@ namespace AssetsLibrary {
 
 		[Export ("filename")]
 		string Filename { get; }
-		
+
 		[Export ("dimensions")]
 		CGSize Dimensions { get; }
 	}
@@ -246,7 +246,7 @@ namespace AssetsLibrary {
 
 		[Export ("enumerateAssetsUsingBlock:")]
 		void Enumerate (ALAssetsEnumerator result);
-		
+
 		[Export ("enumerateAssetsWithOptions:usingBlock:")]
 		void Enumerate (NSEnumerationOptions options, ALAssetsEnumerator result);
 
@@ -263,7 +263,7 @@ namespace AssetsLibrary {
 		NSString _PersistentID { get; }
 
 		[Export ("editable")]
-		bool Editable { [Bind ("isEditable")] get;  }
+		bool Editable { [Bind ("isEditable")] get; }
 
 		[Export ("addAsset:")]
 		bool AddAsset (ALAsset asset);

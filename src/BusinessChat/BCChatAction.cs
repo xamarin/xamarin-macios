@@ -6,7 +6,8 @@ using Foundation;
 
 namespace BusinessChat {
 	public partial class BCChatAction {
-		public static void OpenTranscript (string businessIdentifier, Dictionary<BCParameterName, string> intentParameters) {
+		public static void OpenTranscript (string businessIdentifier, Dictionary<BCParameterName, string> intentParameters)
+		{
 			var keys = new NSString [intentParameters.Keys.Count];
 			var values = new NSString [intentParameters.Keys.Count];
 			var index = 0;

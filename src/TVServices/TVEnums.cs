@@ -11,7 +11,6 @@ using ObjCRuntime;
 
 namespace TVServices {
 
-	[TV (9,0)]
 	[Native]
 	public enum TVContentItemImageShape : long {
 		None = 0,
@@ -23,14 +22,12 @@ namespace TVServices {
 		ExtraWide
 	}
 
-	[TV (9,0)]
 	[Native]
 	public enum TVTopShelfContentStyle : long {
 		Inset = 1,
 		Sectioned = 2
 	}
 
-	[TV (11,0)]
 	[Native]
 	[Flags]
 	public enum TVContentItemImageTrait : ulong {

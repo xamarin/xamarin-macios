@@ -35,6 +35,7 @@
 using System;
 using System.Text;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
 using CoreFoundation;
@@ -84,13 +85,12 @@ namespace AudioToolbox {
 		Flac = 0x666c6163, // 'flac'
 #if NET
 		[SupportedOSPlatform ("ios13.0")]
-		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[NoWatch]
 		[iOS (13, 0)]
-		[Mac (10, 15)]
 		[TV (13, 0)]
 #endif
 		LatmInLoas = 0x6c6f6173, // 'loas'
@@ -169,16 +169,13 @@ namespace AudioToolbox {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos10.10")]
-		[UnsupportedOSPlatform ("ios8.0")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.10 canonical is no longer encouraged, since fixed-point no longer provides a performance advantage over floating point. 'AudioFormatFlagsNativeFloatPacked' is preffered instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios8.0 canonical is no longer encouraged, since fixed-point no longer provides a performance advantage over floating point. 'AudioFormatFlagsNativeFloatPacked' is preffered instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos10.10", "Canonical is no longer encouraged, since fixed-point no longer provides a performance advantage over floating point. 'AudioFormatFlagsNativeFloatPacked' is preferred instead.")]
+		[ObsoletedOSPlatform ("ios8.0", "Canonical is no longer encouraged, since fixed-point no longer provides a performance advantage over floating point. 'AudioFormatFlagsNativeFloatPacked' is preferred instead.")]
+		[ObsoletedOSPlatform ("tvos9.0", "Canonical is no longer encouraged, since fixed-point no longer provides a performance advantage over floating point. 'AudioFormatFlagsNativeFloatPacked' is preferred instead.")]
+		[ObsoletedOSPlatform ("maccatalyst13.1", "Canonical is no longer encouraged, since fixed-point no longer provides a performance advantage over floating point. 'AudioFormatFlagsNativeFloatPacked' is preferred instead.")]
 #else
-		[Deprecated (PlatformName.iOS, 8, 0, message: "Canonical is no longer encouraged, since fixed-point no longer provides a performance advantage over floating point. 'AudioFormatFlagsNativeFloatPacked' is preffered instead.")]
-		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Canonical is no longer encouraged, since fixed-point no longer provides a performance advantage over floating point. 'AudioFormatFlagsNativeFloatPacked' is preffered instead.")]
+		[Deprecated (PlatformName.iOS, 8, 0, message: "Canonical is no longer encouraged, since fixed-point no longer provides a performance advantage over floating point. 'AudioFormatFlagsNativeFloatPacked' is preferred instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Canonical is no longer encouraged, since fixed-point no longer provides a performance advantage over floating point. 'AudioFormatFlagsNativeFloatPacked' is preferred instead.")]
 #endif
 		public static readonly AudioFormatFlags AudioFormatFlagsAudioUnitCanonical = AudioFormatFlags.IsSignedInteger | (BitConverter.IsLittleEndian ? 0 : AudioFormatFlags.IsBigEndian) |
 			AudioFormatFlags.IsPacked | AudioFormatFlags.IsNonInterleaved | (AudioFormatFlags) (AudioUnitSampleFractionBits << (int) AudioFormatFlags.LinearPCMSampleFractionShift);
@@ -214,12 +211,12 @@ namespace AudioToolbox {
 		{
 			var type_size = sizeof (AudioStreamBasicDescription);
 			uint size;
-			if (AudioFormatPropertyNative.AudioFormatGetPropertyInfo (AudioFormatProperty.AvailableEncodeChannelLayoutTags, type_size, ref format, out size) != 0)
+			if (AudioFormatPropertyNative.AudioFormatGetPropertyInfo (AudioFormatProperty.AvailableEncodeChannelLayoutTags, type_size, &format, &size) != 0)
 				return null;
 
 			var data = new AudioChannelLayoutTag [size / sizeof (AudioChannelLayoutTag)];
 			fixed (AudioChannelLayoutTag* ptr = data) {
-				var res = AudioFormatPropertyNative.AudioFormatGetProperty (AudioFormatProperty.AvailableEncodeChannelLayoutTags, type_size, ref format, ref size, (int*) ptr);
+				var res = AudioFormatPropertyNative.AudioFormatGetProperty (AudioFormatProperty.AvailableEncodeChannelLayoutTags, type_size, &format, &size, (int*) ptr);
 				if (res != 0)
 					return null;
 
@@ -230,12 +227,12 @@ namespace AudioToolbox {
 		public unsafe static int []? GetAvailableEncodeNumberChannels (AudioStreamBasicDescription format)
 		{
 			uint size;
-			if (AudioFormatPropertyNative.AudioFormatGetPropertyInfo (AudioFormatProperty.AvailableEncodeNumberChannels, sizeof (AudioStreamBasicDescription), ref format, out size) != 0)
+			if (AudioFormatPropertyNative.AudioFormatGetPropertyInfo (AudioFormatProperty.AvailableEncodeNumberChannels, sizeof (AudioStreamBasicDescription), &format, &size) != 0)
 				return null;
 
 			var data = new int [size / sizeof (int)];
 			fixed (int* ptr = data) {
-				var res = AudioFormatPropertyNative.AudioFormatGetProperty (AudioFormatProperty.AvailableEncodeNumberChannels, sizeof (AudioStreamBasicDescription), ref format, ref size, ptr);
+				var res = AudioFormatPropertyNative.AudioFormatGetProperty (AudioFormatProperty.AvailableEncodeNumberChannels, sizeof (AudioStreamBasicDescription), &format, &size, ptr);
 				if (res != 0)
 					return null;
 
@@ -250,14 +247,14 @@ namespace AudioToolbox {
 
 			var type_size = sizeof (AudioFormat);
 			uint size;
-			if (AudioFormatPropertyNative.AudioFormatGetPropertyInfo (AudioFormatProperty.OutputFormatList, type_size, ref afi, out size) != 0)
+			if (AudioFormatPropertyNative.AudioFormatGetPropertyInfo (AudioFormatProperty.OutputFormatList, type_size, &afi, &size) != 0)
 				return null;
 
 			Debug.Assert (sizeof (AudioFormat) == type_size);
 
 			var data = new AudioFormat [size / type_size];
-			fixed (AudioFormat* ptr = &data [0]) {
-				var res = AudioFormatPropertyNative.AudioFormatGetProperty (AudioFormatProperty.OutputFormatList, type_size, ref afi, ref size, ptr);
+			fixed (AudioFormat* ptr = data) {
+				var res = AudioFormatPropertyNative.AudioFormatGetProperty (AudioFormatProperty.OutputFormatList, type_size, &afi, &size, ptr);
 				if (res != 0)
 					return null;
 
@@ -280,14 +277,14 @@ namespace AudioToolbox {
 
 				var type_size = sizeof (AudioFormat);
 				uint size;
-				if (AudioFormatPropertyNative.AudioFormatGetPropertyInfo (AudioFormatProperty.FormatList, type_size, ref afi, out size) != 0)
+				if (AudioFormatPropertyNative.AudioFormatGetPropertyInfo (AudioFormatProperty.FormatList, type_size, &afi, &size) != 0)
 					return null;
 
 				Debug.Assert (sizeof (AudioFormat) == type_size);
 
 				var data = new AudioFormat [size / type_size];
-				fixed (AudioFormat* ptr = &data [0]) {
-					var res = AudioFormatPropertyNative.AudioFormatGetProperty (AudioFormatProperty.FormatList, type_size, ref afi, ref size, ptr);
+				fixed (AudioFormat* ptr = data) {
+					var res = AudioFormatPropertyNative.AudioFormatGetProperty (AudioFormatProperty.FormatList, type_size, &afi, &size, ptr);
 					if (res != 0)
 						return null;
 
@@ -301,7 +298,7 @@ namespace AudioToolbox {
 		{
 			unsafe {
 				var size = sizeof (AudioStreamBasicDescription);
-				return AudioFormatPropertyNative.AudioFormatGetProperty (AudioFormatProperty.FormatInfo, 0, IntPtr.Zero, ref size, ref format);
+				return AudioFormatPropertyNative.AudioFormatGetProperty (AudioFormatProperty.FormatInfo, 0, IntPtr.Zero, &size, (AudioStreamBasicDescription*) Unsafe.AsPointer<AudioStreamBasicDescription> (ref format));
 			}
 		}
 
@@ -310,8 +307,10 @@ namespace AudioToolbox {
 				IntPtr ptr;
 				var size = sizeof (IntPtr);
 
-				if (AudioFormatPropertyNative.AudioFormatGetProperty (AudioFormatProperty.FormatName, sizeof (AudioStreamBasicDescription), ref this, ref size, out ptr) != 0)
-					return null;
+				fixed (AudioStreamBasicDescription* self = &this) {
+					if (AudioFormatPropertyNative.AudioFormatGetProperty (AudioFormatProperty.FormatName, sizeof (AudioStreamBasicDescription), self, &size, &ptr) != 0)
+						return null;
+				}
 
 				return new CFString (ptr, true);
 			}
@@ -322,8 +321,10 @@ namespace AudioToolbox {
 				uint data;
 				var size = sizeof (uint);
 
-				if (AudioFormatPropertyNative.AudioFormatGetProperty (AudioFormatProperty.FormatIsEncrypted, sizeof (AudioStreamBasicDescription), ref this, ref size, out data) != 0)
-					return false;
+				fixed (AudioStreamBasicDescription* self = &this) {
+					if (AudioFormatPropertyNative.AudioFormatGetProperty (AudioFormatProperty.FormatIsEncrypted, sizeof (AudioStreamBasicDescription), self, &size, &data) != 0)
+						return false;
+				}
 
 				return data != 0;
 			}
@@ -334,8 +335,10 @@ namespace AudioToolbox {
 				uint data;
 				var size = sizeof (uint);
 
-				if (AudioFormatPropertyNative.AudioFormatGetProperty (AudioFormatProperty.FormatIsExternallyFramed, sizeof (AudioStreamBasicDescription), ref this, ref size, out data) != 0)
-					return false;
+				fixed (AudioStreamBasicDescription* self = &this) {
+					if (AudioFormatPropertyNative.AudioFormatGetProperty (AudioFormatProperty.FormatIsExternallyFramed, sizeof (AudioStreamBasicDescription), self, &size, &data) != 0)
+						return false;
+				}
 
 				return data != 0;
 			}
@@ -346,8 +349,10 @@ namespace AudioToolbox {
 				uint data;
 				var size = sizeof (uint);
 
-				if (AudioFormatPropertyNative.AudioFormatGetProperty (AudioFormatProperty.FormatIsVBR, sizeof (AudioStreamBasicDescription), ref this, ref size, out data) != 0)
-					return false;
+				fixed (AudioStreamBasicDescription* self = &this) {
+					if (AudioFormatPropertyNative.AudioFormatGetProperty (AudioFormatProperty.FormatIsVBR, sizeof (AudioStreamBasicDescription), self, &size, &data) != 0)
+						return false;
+				}
 
 				return data != 0;
 			}
@@ -380,9 +385,6 @@ namespace AudioToolbox {
 		}
 	}
 
-#if !NET
-	[Watch (3, 0)]
-#endif
 	[Flags]
 	public enum AudioChannelFlags : uint { // UInt32 in AudioPanningInfo -- AudioFormat.h
 		AllOff = 0,
@@ -596,7 +598,7 @@ namespace AudioToolbox {
 				int ptr_size = sizeof (AudioChannelDescription);
 				var ptr = ToPointer ();
 
-				var res = AudioFormatPropertyNative.AudioFormatGetProperty (AudioFormatProperty.ChannelName, ptr_size, ptr, ref size, out sptr);
+				var res = AudioFormatPropertyNative.AudioFormatGetProperty (AudioFormatProperty.ChannelName, ptr_size, ptr, &size, &sptr);
 				Marshal.FreeHGlobal (ptr);
 				if (res != 0)
 					return null;
@@ -612,7 +614,7 @@ namespace AudioToolbox {
 				int ptr_size = sizeof (AudioChannelDescription);
 				var ptr = ToPointer ();
 
-				var res = AudioFormatPropertyNative.AudioFormatGetProperty (AudioFormatProperty.ChannelShortName, ptr_size, ptr, ref size, out sptr);
+				var res = AudioFormatPropertyNative.AudioFormatGetProperty (AudioFormatProperty.ChannelShortName, ptr_size, ptr, &size, &sptr);
 				Marshal.FreeHGlobal (ptr);
 				if (res != 0)
 					return null;
@@ -838,6 +840,87 @@ namespace AudioToolbox {
 		Logic_Atmos_7_1_6 = (203U << 16) | 14,
 
 		DiscreteInOrder = (147 << 16) | 0,                       // needs to be ORed with the actual number of channels  
+
+
+#if NET
+		[SupportedOSPlatform ("ios17.0")]
+		[SupportedOSPlatform ("macos14.0")]
+		[SupportedOSPlatform ("tvos17.0")]
+		[SupportedOSPlatform ("maccatalyst17.0")]
+#else
+		[Mac (14, 0)]
+		[Watch (10, 0)]
+		[iOS (17, 0)]
+		[TV (17, 0)]
+		[MacCatalyst (17, 0)]
+#endif
+		Ogg_3_0 = AC3_3_0,
+#if NET
+		[SupportedOSPlatform ("ios17.0")]
+		[SupportedOSPlatform ("macos14.0")]
+		[SupportedOSPlatform ("tvos17.0")]
+		[SupportedOSPlatform ("maccatalyst17.0")]
+#else
+		[Mac (14, 0)]
+		[Watch (10, 0)]
+		[iOS (17, 0)]
+		[TV (17, 0)]
+		[MacCatalyst (17, 0)]
+#endif
+		Ogg_4_0 = Wave_4_0_B,
+#if NET
+		[SupportedOSPlatform ("ios17.0")]
+		[SupportedOSPlatform ("macos14.0")]
+		[SupportedOSPlatform ("tvos17.0")]
+		[SupportedOSPlatform ("maccatalyst17.0")]
+#else
+		[Mac (14, 0)]
+		[Watch (10, 0)]
+		[iOS (17, 0)]
+		[TV (17, 0)]
+		[MacCatalyst (17, 0)]
+#endif
+		Ogg_5_0 = (212U << 16) | 5,
+#if NET
+		[SupportedOSPlatform ("ios17.0")]
+		[SupportedOSPlatform ("macos14.0")]
+		[SupportedOSPlatform ("tvos17.0")]
+		[SupportedOSPlatform ("maccatalyst17.0")]
+#else
+		[Mac (14, 0)]
+		[Watch (10, 0)]
+		[iOS (17, 0)]
+		[TV (17, 0)]
+		[MacCatalyst (17, 0)]
+#endif
+		Ogg_5_1 = (213U << 16) | 6,
+#if NET
+		[SupportedOSPlatform ("ios17.0")]
+		[SupportedOSPlatform ("macos14.0")]
+		[SupportedOSPlatform ("tvos17.0")]
+		[SupportedOSPlatform ("maccatalyst17.0")]
+#else
+		[Mac (14, 0)]
+		[Watch (10, 0)]
+		[iOS (17, 0)]
+		[TV (17, 0)]
+		[MacCatalyst (17, 0)]
+#endif
+		Ogg_6_1 = (214U << 16) | 7,
+#if NET
+		[SupportedOSPlatform ("ios17.0")]
+		[SupportedOSPlatform ("macos14.0")]
+		[SupportedOSPlatform ("tvos17.0")]
+		[SupportedOSPlatform ("maccatalyst17.0")]
+#else
+		[Mac (14, 0)]
+		[Watch (10, 0)]
+		[iOS (17, 0)]
+		[TV (17, 0)]
+		[MacCatalyst (17, 0)]
+#endif
+		Ogg_7_1 = (215U << 16) | 8,
+
 		Unknown = 0xFFFF0000                           // needs to be ORed with the actual number of channels  
 	}
 
@@ -855,8 +938,10 @@ namespace AudioToolbox {
 			int size = sizeof (uint);
 			int layout = (int) layoutTag;
 
-			if (AudioFormatPropertyNative.AudioFormatGetProperty (AudioFormatProperty.BitmapForLayoutTag, sizeof (AudioChannelLayoutTag), ref layout, ref size, out value) != 0)
-				return null;
+			unsafe {
+				if (AudioFormatPropertyNative.AudioFormatGetProperty (AudioFormatProperty.BitmapForLayoutTag, sizeof (AudioChannelLayoutTag), &layout, &size, &value) != 0)
+					return null;
+			}
 
 			return (AudioChannelBit) value;
 		}
@@ -933,7 +1018,7 @@ namespace AudioToolbox {
 				int ptr_size;
 				var ptr = ToBlock (out ptr_size);
 
-				var res = AudioFormatPropertyNative.AudioFormatGetProperty (AudioFormatProperty.ChannelLayoutName, ptr_size, ptr, ref size, out sptr);
+				var res = AudioFormatPropertyNative.AudioFormatGetProperty (AudioFormatProperty.ChannelLayoutName, ptr_size, ptr, &size, &sptr);
 				Marshal.FreeHGlobal (ptr);
 				if (res != 0)
 					return null;
@@ -949,7 +1034,7 @@ namespace AudioToolbox {
 				int ptr_size;
 				var ptr = ToBlock (out ptr_size);
 
-				var res = AudioFormatPropertyNative.AudioFormatGetProperty (AudioFormatProperty.ChannelLayoutSimpleName, ptr_size, ptr, ref size, out sptr);
+				var res = AudioFormatPropertyNative.AudioFormatGetProperty (AudioFormatProperty.ChannelLayoutSimpleName, ptr_size, ptr, &size, &sptr);
 				Marshal.FreeHGlobal (ptr);
 				if (res != 0)
 					return null;
@@ -971,11 +1056,18 @@ namespace AudioToolbox {
 		static AudioChannelLayout? GetChannelLayout (AudioFormatProperty property, int value)
 		{
 			int size;
-			AudioFormatPropertyNative.AudioFormatGetPropertyInfo (property, sizeof (AudioFormatProperty), ref value, out size);
+			unsafe {
+				AudioFormatPropertyNative.AudioFormatGetPropertyInfo (property, sizeof (AudioFormatProperty), &value, &size);
+			}
 
 			AudioChannelLayout? layout;
 			IntPtr ptr = Marshal.AllocHGlobal (size);
-			if (AudioFormatPropertyNative.AudioFormatGetProperty (property, sizeof (AudioFormatProperty), ref value, ref size, ptr) == 0)
+			AudioFormatError rv;
+			unsafe {
+				rv = AudioFormatPropertyNative.AudioFormatGetProperty (property, sizeof (AudioFormatProperty), &value, &size, ptr);
+			}
+
+			if (rv == 0)
 				layout = new AudioChannelLayout (ptr);
 			else
 				layout = null;
@@ -1055,11 +1147,11 @@ namespace AudioToolbox {
 			int [] value;
 			AudioFormatError res;
 
-			fixed (IntPtr* ptr = &array [0]) {
+			fixed (IntPtr* ptr = array) {
 				value = new int [channels_count.Value];
 				var size = sizeof (int) * value.Length;
-				fixed (int* value_ptr = &value [0]) {
-					res = AudioFormatPropertyNative.AudioFormatGetProperty (AudioFormatProperty.ChannelMap, ptr_size, ptr, ref size, value_ptr);
+				fixed (int* value_ptr = value) {
+					res = AudioFormatPropertyNative.AudioFormatGetProperty (AudioFormatProperty.ChannelMap, ptr_size, ptr, &size, value_ptr);
 				}
 			}
 
@@ -1093,11 +1185,11 @@ namespace AudioToolbox {
 			float [,] value;
 			AudioFormatError res;
 
-			fixed (IntPtr* ptr = &array [0]) {
+			fixed (IntPtr* ptr = array) {
 				value = new float [channels_count_input.Value, channels_count_output.Value];
 				var size = sizeof (float) * channels_count_input.Value * channels_count_output.Value;
 				fixed (float* value_ptr = &value [0, 0]) {
-					res = AudioFormatPropertyNative.AudioFormatGetProperty (AudioFormatProperty.MatrixMixMap, ptr_size, ptr, ref size, value_ptr);
+					res = AudioFormatPropertyNative.AudioFormatGetProperty (AudioFormatProperty.MatrixMixMap, ptr_size, ptr, &size, value_ptr);
 				}
 			}
 
@@ -1116,8 +1208,10 @@ namespace AudioToolbox {
 			var ptr = layout.ToBlock (out ptr_size);
 			int size = sizeof (int);
 			int value;
-
-			var res = AudioFormatPropertyNative.AudioFormatGetProperty (AudioFormatProperty.NumberOfChannelsForLayout, ptr_size, ptr, ref size, out value);
+			AudioFormatError res;
+			unsafe {
+				res = AudioFormatPropertyNative.AudioFormatGetProperty (AudioFormatProperty.NumberOfChannelsForLayout, ptr_size, ptr, &size, &value);
+			}
 			Marshal.FreeHGlobal (ptr);
 			return res != 0 ? null : (int?) value;
 		}
@@ -1132,7 +1226,10 @@ namespace AudioToolbox {
 			int size = sizeof (AudioChannelLayoutTag);
 			int value;
 
-			var res = AudioFormatPropertyNative.AudioFormatGetProperty (AudioFormatProperty.TagForChannelLayout, ptr_size, ptr, ref size, out value);
+			AudioFormatError res;
+			unsafe {
+				res = AudioFormatPropertyNative.AudioFormatGetProperty (AudioFormatProperty.TagForChannelLayout, ptr_size, ptr, &size, &value);
+			}
 			Marshal.FreeHGlobal (ptr);
 			return res != 0 ? null : (AudioChannelLayoutTag?) value;
 		}
@@ -1141,12 +1238,12 @@ namespace AudioToolbox {
 		{
 			const int type_size = sizeof (uint);
 			int size;
-			if (AudioFormatPropertyNative.AudioFormatGetPropertyInfo (AudioFormatProperty.TagsForNumberOfChannels, type_size, ref count, out size) != 0)
+			if (AudioFormatPropertyNative.AudioFormatGetPropertyInfo (AudioFormatProperty.TagsForNumberOfChannels, type_size, &count, &size) != 0)
 				return null;
 
 			var data = new AudioChannelLayoutTag [size / type_size];
 			fixed (AudioChannelLayoutTag* ptr = data) {
-				var res = AudioFormatPropertyNative.AudioFormatGetProperty (AudioFormatProperty.TagsForNumberOfChannels, type_size, ref count, ref size, (int*) ptr);
+				var res = AudioFormatPropertyNative.AudioFormatGetProperty (AudioFormatProperty.TagsForNumberOfChannels, type_size, &count, &size, (int*) ptr);
 				if (res != 0)
 					return null;
 
@@ -1174,9 +1271,6 @@ namespace AudioToolbox {
 		TimeRunning = 1 << 1
 	}
 
-#if !NET
-	[Watch (3, 0)]
-#endif
 	public enum MPEG4ObjectID { // long
 		AacMain = 1,
 		AacLc = 2,

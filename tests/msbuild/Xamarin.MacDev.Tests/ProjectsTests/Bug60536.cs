@@ -10,11 +10,9 @@ using NUnit.Framework;
 using Xamarin.Tests;
 using Xamarin.Utils;
 
-namespace Xamarin.MacDev.Tasks
-{
+namespace Xamarin.MacDev.Tasks {
 	[TestFixture]
-	public class Bug60536 : ProjectTest
-	{
+	public class Bug60536 : ProjectTest {
 		public Bug60536 ()
 			: base ("iPhoneSimulator", "Debug")
 		{
@@ -54,13 +52,13 @@ namespace Xamarin.MacDev.Tasks
 
 			RunTarget (MonoTouchProject, "Build", expectedErrorCount: 1);
 
-			var expectedFile = Path.Combine ("obj", Platform, Config, "actool", "cloned-assets", "Assets.xcassets", "AppIcon.appiconset", "Contents.json");
-			Assert.AreEqual (expectedFile, Engine.Logger.ErrorEvents[0].File, "File");
-			Assert.AreEqual (197, Engine.Logger.ErrorEvents[0].LineNumber, "LineNumber");
-			Assert.AreEqual (4, Engine.Logger.ErrorEvents[0].ColumnNumber, "ColumnNumber");
-			Assert.AreEqual (197, Engine.Logger.ErrorEvents[0].EndLineNumber, "EndLineNumber");
-			Assert.AreEqual (4, Engine.Logger.ErrorEvents[0].EndColumnNumber, "EndColumnNumber");
-			Assert.AreEqual ("']' is invalid without a matching open. LineNumber: 196 | BytePositionInLine: 3.", Engine.Logger.ErrorEvents[0].Message, "Message");
+			var expectedFile = Path.Combine ("Assets.xcassets", "AppIcon.appiconset", "Contents.json");
+			Assert.AreEqual (expectedFile, Engine.Logger.ErrorEvents [0].File, "File");
+			Assert.AreEqual (197, Engine.Logger.ErrorEvents [0].LineNumber, "LineNumber");
+			Assert.AreEqual (4, Engine.Logger.ErrorEvents [0].ColumnNumber, "ColumnNumber");
+			Assert.AreEqual (197, Engine.Logger.ErrorEvents [0].EndLineNumber, "EndLineNumber");
+			Assert.AreEqual (4, Engine.Logger.ErrorEvents [0].EndColumnNumber, "EndColumnNumber");
+			Assert.AreEqual ("']' is invalid without a matching open. LineNumber: 196 | BytePositionInLine: 3.", Engine.Logger.ErrorEvents [0].Message, "Message");
 		}
 	}
 }

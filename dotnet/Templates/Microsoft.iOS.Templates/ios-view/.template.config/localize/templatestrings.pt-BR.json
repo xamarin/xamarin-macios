@@ -1,6 +1,6 @@
 {
   "author": "Microsoft",
-  "name": "iOS View template",
-  "description": "An iOS View class",
-  "symbols/namespace/description": "namespace for the generated code"
+  "name": "Exibição do iOS",
+  "description": "Uma Exibição do iOS",
+  "symbols/namespace/description": "namespace do código gerado"
 }

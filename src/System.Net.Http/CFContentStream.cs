@@ -40,16 +40,16 @@ using CoreServices;
 using CoreFoundation;
 #endif
 
-namespace System.Net.Http
-{
-	class BufferData 
-	{
-		public byte[] Buffer;
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
+namespace System.Net.Http {
+	class BufferData {
+		public byte [] Buffer;
 		public int Length;
 	}
 
-	class CFContentStream : HttpContent
-	{
+	class CFContentStream : HttpContent {
 		readonly CFHTTPStream http_stream;
 		BufferData data;
 		Mutex data_mutex;
@@ -92,7 +92,7 @@ namespace System.Net.Http
 		{
 			var gotMutex = data_mutex.WaitOne ();
 			if (gotMutex) {
-				var stream = (CFHTTPStream)sender;
+				var stream = (CFHTTPStream) sender;
 				if (e.EventType == CFStreamEventType.ErrorOccurred)
 					Volatile.Write (ref http_exception, ExceptionDispatchInfo.Capture (stream.GetError ()));
 				data_mutex.ReleaseMutex ();
@@ -126,12 +126,12 @@ namespace System.Net.Http
 		{
 			while (data_event.WaitOne ()) {
 				data_mutex.WaitOne ();
-				if (http_exception != null) {
+				if (http_exception is not null) {
 					http_exception.Throw ();
 					data_mutex.ReleaseMutex ();
 					break;
 				}
-				if (data == null || data.Length <= 0) {
+				if (data is null || data.Length <= 0) {
 					data_mutex.ReleaseMutex ();
 					data_read_event.Set ();
 					break;

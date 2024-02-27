@@ -1,7 +1,0 @@
-{
-  "author": "Microsoft",
-  "name": "MacCatalyst Application",
-  "description": "Projekt służący do tworzenia aplikacji MacCatalyst platformy .NET 6",
-  "symbols/bundleId/description": "Nadpisuje element CFBundleIdentifier w pliku Info.plist",
-  "symbols/minOSVersion/description": "Nadpisuje element SupportedOSPlatformVersion w pliku projektu"
-}

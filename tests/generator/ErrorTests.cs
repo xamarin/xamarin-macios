@@ -4,12 +4,10 @@ using NUnit.Framework;
 
 using Xamarin.Tests;
 
-namespace GeneratorTests
-{
+namespace GeneratorTests {
 	[TestFixture ()]
 	[Parallelizable (ParallelScope.All)]
-	public class ErrorTests
-	{
+	public class ErrorTests {
 		[Test]
 		[TestCase (Profile.iOS)]
 		public void BI0002 (Profile profile)
@@ -203,7 +201,7 @@ namespace GeneratorTests
 			bgen.AssertError (1071, "The BindAs type for the member \"GH6863_property.MyFooClass.StringProp\" must be an array when the member's type is an array.");
 		}
 
-        
+
 		[Test]
 		[TestCase (Profile.iOS)]
 		public void GH6863_method (Profile profile)
@@ -215,7 +213,7 @@ namespace GeneratorTests
 			bgen.AssertExecuteError ("build");
 			bgen.AssertError (1072, "The BindAs type for the parameter \"id_test\" in the method \"GH6863_method.MyFooClass.StringMethod\" must be an array when the parameter's type is an array.");
 		}
-       
+
 
 		[Test]
 		[TestCase (Profile.iOS)]
@@ -250,7 +248,7 @@ namespace GeneratorTests
 			bgen.Profile = profile;
 			bgen.CreateTemporaryBinding (File.ReadAllText (Path.Combine (Configuration.SourceRoot, "tests", "generator", "bi1059.cs")));
 			bgen.AssertExecuteError ("build");
-			bgen.AssertError (1059, "Found 2 Foundation.PreserveAttribute attributes on the member the type BI1059. At most one was expected.");
+			bgen.AssertError (1084, "Found 2 Foundation.PreserveAttribute attributes on the type BI1059. At most one was expected.");
 		}
 
 		[Test]

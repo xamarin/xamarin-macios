@@ -66,7 +66,7 @@ namespace CoreGraphics {
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* size_t */ nint CGPDFArrayGetCount (/* CGPDFArrayRef */ IntPtr array);
-		
+
 		public nint Count {
 			get {
 				return CGPDFArrayGetCount (Handle);
@@ -218,46 +218,50 @@ namespace CoreGraphics {
 		}
 #endif
 
-		delegate bool ApplyBlockHandlerDelegate (IntPtr block, nint index, IntPtr value, IntPtr info);
+#if !NET
+		delegate byte ApplyBlockHandlerDelegate (IntPtr block, nint index, IntPtr value, IntPtr info);
 		static readonly ApplyBlockHandlerDelegate applyblock_handler = ApplyBlockHandler;
 
 #if !MONOMAC
 		[MonoPInvokeCallback (typeof (ApplyBlockHandlerDelegate))]
 #endif
-		static bool ApplyBlockHandler (IntPtr block, nint index, IntPtr value, IntPtr info)
+#else
+		[UnmanagedCallersOnly]
+#endif
+		static byte ApplyBlockHandler (IntPtr block, nint index, IntPtr value, IntPtr info)
 		{
 			var del = BlockLiteral.GetTarget<ApplyCallback> (block);
-			if (del is not null)
-				return del (index, CGPDFObject.FromHandle (value), info == IntPtr.Zero ? null : GCHandle.FromIntPtr (info).Target);
+			if (del is not null) {
+				var context = info == IntPtr.Zero ? null : GCHandle.FromIntPtr (info).Target;
+				return del (index, CGPDFObject.FromHandle (value), context) ? (byte) 1 : (byte) 0;
+			}
 
-			return false;
+			return 0;
 		}
 
 		public delegate bool ApplyCallback (nint index, object? value, object? info);
 
 #if NET
 		[SupportedOSPlatform ("ios12.0")]
-		[SupportedOSPlatform ("macos10.14")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos12.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (12, 0)]
-		[Mac (10, 14)]
 		[TV (12, 0)]
 		[Watch (5, 0)]
 #endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool CGPDFArrayApplyBlock (/* CGPDFArrayRef */ IntPtr array, /* CGPDFArrayApplierBlock */ ref BlockLiteral block, /* void* */ IntPtr info);
+		unsafe extern static bool CGPDFArrayApplyBlock (/* CGPDFArrayRef */ IntPtr array, /* CGPDFArrayApplierBlock */ BlockLiteral* block, /* void* */ IntPtr info);
 
 #if NET
 		[SupportedOSPlatform ("ios12.0")]
-		[SupportedOSPlatform ("macos10.14")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos12.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (12, 0)]
-		[Mac (10, 14)]
 		[TV (12, 0)]
 		[Watch (5, 0)]
 #endif
@@ -267,15 +271,21 @@ namespace CoreGraphics {
 			if (callback is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (callback));
 
-			BlockLiteral block_handler = new BlockLiteral ();
-			block_handler.SetupBlockUnsafe (applyblock_handler, callback);
-			var gc_handle = info is null ? default (GCHandle) : GCHandle.Alloc (info);
-			try {
-				return CGPDFArrayApplyBlock (Handle, ref block_handler, info is null ? IntPtr.Zero : GCHandle.ToIntPtr (gc_handle));
-			} finally {
-				block_handler.CleanupBlock ();
-				if (info is not null)
-					gc_handle.Free ();
+			unsafe {
+#if NET
+				delegate* unmanaged<IntPtr, nint, IntPtr, IntPtr, byte> trampoline = &ApplyBlockHandler;
+				using var block = new BlockLiteral (trampoline, callback, typeof (CGPDFArray), nameof (ApplyBlockHandler));
+#else
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (applyblock_handler, callback);
+#endif
+				var gc_handle = info is null ? default (GCHandle) : GCHandle.Alloc (info);
+				try {
+					return CGPDFArrayApplyBlock (Handle, &block, info is null ? IntPtr.Zero : GCHandle.ToIntPtr (gc_handle));
+				} finally {
+					if (info is not null)
+						gc_handle.Free ();
+				}
 			}
 		}
 	}

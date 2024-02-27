@@ -19,10 +19,6 @@ parameters:
 - name: xqaCertPass
   type: string
 
-- name: enableDotnet
-  type: boolean
-  default: false
-
 - name: uploadBinlogs
   type: boolean
   default: true
@@ -38,16 +34,29 @@ parameters:
 - name: isPR
   type: boolean
 
+- name: repositoryAlias
+  type: string
+  default: self
+
+- name: commit
+  type: string
+  default: HEAD
+
+- name: uploadPrefix
+  type: string
+  default: '$(MaciosUploadPrefix)'
+
 steps:
 - template: build.yml
   parameters:
     isPR: ${{ parameters.isPR }}
+    repositoryAlias: ${{ parameters.repositoryAlias }}
+    commit: ${{ parameters.commit }}
     runDeviceTests: ${{ parameters.runDeviceTests }}
     vsdropsPrefix: ${{ parameters.vsdropsPrefix }}
     keyringPass: ${{ parameters.keyringPass }}
     gitHubToken: ${{ parameters.gitHubToken }}
     xqaCertPass: ${{ parameters.xqaCertPass }}
-    enableDotnet: ${{ parameters.enableDotnet }}
     buildSteps:
     # build not signed .pkgs for the SDK
     - bash: |
@@ -62,8 +71,7 @@ steps:
       timeoutInMinutes: 180
 
     # build nugets
-    - ${{ if eq(parameters.enableDotnet, true) }}:
-      - template: build-nugets.yml
+    - template: build-nugets.yml
 
     - bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/generate-workload-rollback.sh
       name: workload_file
@@ -73,7 +81,7 @@ steps:
       displayName: 'Publish WorkloadRollback.json'
       inputs:
         targetPath: $(Build.SourcesDirectory)/WorkloadRollback.json
-        artifactName: WorkloadRollback
+        artifactName: '${{ parameters.uploadPrefix }}WorkloadRollback'
       continueOnError: true
 
     - bash: |
@@ -101,7 +109,7 @@ steps:
       displayName: 'Publish PkgsVersions.json'
       inputs:
         targetPath: $(Build.SourcesDirectory)/PkgsVersions.json
-        artifactName: PkgsVersions
+        artifactName: '${{ parameters.uploadPrefix }}PkgsVersions'
       continueOnError: true
 
     # upload each of the pkgs into the pipeline artifacts
@@ -109,62 +117,14 @@ steps:
       displayName: 'Publish Build Artifacts'
       inputs:
         targetPath: $(Build.SourcesDirectory)/package
-        artifactName: not-signed-package
-      continueOnError: true
-
-    # funny enough we need these profiles to build the mac tests
-    - bash: '"$BUILD_SOURCESDIRECTORY"/maccore/tools/install-qa-provisioning-profiles.sh -v'
-      displayName: 'Add tests provisioning profiles'
-      timeoutInMinutes: 30
-      continueOnError: true # should not stop the build will result in test failures but we do want the pkg
-      env:
-        AUTH_TOKEN_GITHUB_COM: ${{ parameters.gitHubToken }}
-        AUTH_TOKEN_LA_DEV_APPLE_P12: ${{ parameters.xqaCertPass }}
-        AUTH_TOKEN_LA_DISTR_APPLE_P12: ${{ parameters.xqaCertPass }}
-        AUTH_TOKEN_LA_MAC_INSTALLER_DISTR_P12: ${{ parameters.xqaCertPass }}
-        AUTH_TOKEN_VSENG_XAMARIN_MAC_DEVICES_P12: ${{ parameters.xqaCertPass }}
-        AUTH_TOKEN_VSENG_XAMARIN_MAC_DEVICES_2_P12: ${{ parameters.xqaCertPass }}
-
-    - bash: |
-        set -x
-        set -e
-
-        make -C $(Build.SourcesDirectory)/xamarin-macios/tests package-tests
-
-        if test -f "$(Build.SourcesDirectory)/xamarin-macios/tests/mac-test-package.7z"; then
-          set +x
-          echo "##vso[artifact.upload containerfolder=CrashReports;artifactname=mac-test-package]$(Build.SourcesDirectory)/xamarin-macios/tests/mac-test-package.7z"
-          set -x
-        fi
-
-      name: macTestPkg
-      displayName: 'Package macOS tests'
-      condition: and(succeeded(), contains(variables['configuration.RunMacTests'], 'True'))
-      continueOnError: true # not a terrible blocking issue
-      timeoutInMinutes: 60
-
-    - bash: |
-        set -x
-        set -e
-
-        make -C $(Build.SourcesDirectory)/xamarin-macios/tools/mtouch package-introspection-dependencies.zip || RC=$?
-        exit $RC
-      displayName: 'Package introspection dependencies'
-      continueOnError: true # not a terrible blocking issue
-      timeoutInMinutes: 60
-
-    - task: PublishPipelineArtifact@1
-      displayName: 'Publish introspection dependencies'
-      inputs:
-        targetPath: $(Build.SourcesDirectory)/xamarin-macios/tools/mtouch/package-introspection-dependencies.zip
-        artifactName: package-introspection-dependencies
+        artifactName: '${{ parameters.uploadPrefix }}not-signed-package'
       continueOnError: true
 
     - bash: |
         set -x
         set -e
 
-        make -C $(Build.SourcesDirectory)/xamarin-macios/tests package-test-libraries.zip 
+        make -C $(Build.SourcesDirectory)/xamarin-macios/tests package-test-libraries.zip
       name: introPkg
       displayName: 'Package test libraries dependencies'
       continueOnError: true # not a terrible blocking issue
@@ -174,7 +134,14 @@ steps:
       displayName: 'Publish test libraries dependencies'
       inputs:
         targetPath: $(Build.SourcesDirectory)/xamarin-macios/tests/package-test-libraries.zip 
-        artifactName: package-test-libraries
+        artifactName: '${{ parameters.uploadPrefix }}package-test-libraries'
+      continueOnError: true
+
+    - task: PublishPipelineArtifact@1
+      displayName: 'Publish Build.props'
+      inputs:
+        targetPath: $(Build.SourcesDirectory)/xamarin-macios/Build.props
+        artifactName: '${{ parameters.uploadPrefix }}Build.props'
       continueOnError: true
 
     - ${{ if eq(parameters.uploadBinlogs, true) }}:
@@ -192,6 +159,6 @@ steps:
         displayName: 'Publish Artifact: All binlogs'
         inputs:
           targetPath: $(Build.ArtifactStagingDirectory)/all-binlogs
-          artifactName: all-binlogs-$(Build.BuildId)-$(System.JobAttempt)
+          artifactName: '${{ parameters.uploadPrefix }}all-binlogs-$(Build.BuildId)-$(System.StageAttempt)-$(System.JobAttempt)'
         continueOnError: true
         condition: succeededOrFailed()

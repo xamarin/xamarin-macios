@@ -19,10 +19,10 @@ using Xamarin.Tests;
 using Xamarin.Utils;
 
 namespace Introspection {
-	
+
 	[TestFixture]
 	public class MacApiSelectorTest : CoreSelectorTest {
-		
+
 		static MacApiSelectorTest ()
 		{
 			Runtime.RegisterAssembly (typeof (NSObject).Assembly);
@@ -80,6 +80,9 @@ namespace Introspection {
 				if (!Mac.CheckSystemVersion (10, 8))
 					return true;
 				break;
+			case "AuthenticationServices.ASWebAuthenticationSessionWebBrowserSessionManager":
+				// needed protocol but wont pass without an impl
+				return true;
 			}
 
 			switch (type.Namespace) {
@@ -129,7 +132,7 @@ namespace Introspection {
 		{
 			if (SkipAccessibilitySelectors (type, selectorName))
 				return true;
-			
+
 			switch (selectorName) {
 			case "encodeWithCoder:":
 				switch (type.Name) {
@@ -439,7 +442,7 @@ namespace Introspection {
 					}
 					break;
 #endif // !NET
-#if !NET		// These should be not be marked [Abstract] but can't fix w/o breaking change...
+#if !NET      // These should be not be marked [Abstract] but can't fix w/o breaking change...                                                                                        
 				case "NSScrollView":
 				case "NSTextView":
 					switch (selectorName) {
@@ -753,7 +756,7 @@ namespace Introspection {
 						return true;
 					}
 					break;
-				break;
+					break;
 				}
 				break;
 			case "Metal":
@@ -1068,7 +1071,7 @@ namespace Introspection {
 			case "Foundation.NSUrlConnection":
 
 			// 10.8:
-			case "MonoMac.Accounts.ACAccount":									// maybe the default .ctor is not allowed ?
+			case "MonoMac.Accounts.ACAccount":                                  // maybe the default .ctor is not allowed ?
 			case "Accounts.ACAccount":
 			case "MonoMac.Accounts.ACAccountCredential":
 			case "Accounts.ACAccountCredential":
@@ -1090,23 +1093,23 @@ namespace Introspection {
 
 			switch (name) {
 			// NSDraggingDestination protocol
-			case "concludeDragOperation:":		// e.g. NSTokenField
-			case "draggingEnded:":			// e.g. NSMatrix
-			case "draggingExited:":			// e.g. NSTokenField
-			case "draggingUpdated:":		// e.g. NSTokenField
-			case "performDragOperation:":		// e.g. NSTokenField
-			case "prepareForDragOperation:":	// e.g. NSTokenField
-			case "wantsPeriodicDraggingUpdates":	// e.g. NSBrowser - optional, [DefaultValue(true)] if it does not exists
+			case "concludeDragOperation:":      // e.g. NSTokenField
+			case "draggingEnded:":          // e.g. NSMatrix
+			case "draggingExited:":         // e.g. NSTokenField
+			case "draggingUpdated:":        // e.g. NSTokenField
+			case "performDragOperation:":       // e.g. NSTokenField
+			case "prepareForDragOperation:":    // e.g. NSTokenField
+			case "wantsPeriodicDraggingUpdates":    // e.g. NSBrowser - optional, [DefaultValue(true)] if it does not exists
 				return true;
 			// NSDraggingSource
-			case "draggedImage:beganAt:":				// e.g. NSTextView
-			case "draggedImage:endedAt:deposited:":			// e.g. NSTableView
-			case "draggedImage:movedTo:":				// e.g. NSCollectionView
-			case "ignoreModifierKeysWhileDragging":			// e.g. NSTextView
-			case "namesOfPromisedFilesDroppedAtDestination:":	// e.g. NSTextView
+			case "draggedImage:beganAt:":               // e.g. NSTextView
+			case "draggedImage:endedAt:deposited:":         // e.g. NSTableView
+			case "draggedImage:movedTo:":               // e.g. NSCollectionView
+			case "ignoreModifierKeysWhileDragging":         // e.g. NSTextView
+			case "namesOfPromisedFilesDroppedAtDestination:":   // e.g. NSTextView
 				return true;
 			// NSAnimatablePropertyContainer
-			case "animationForKey:":		// e.g. NSViewAnimation
+			case "animationForKey:":        // e.g. NSViewAnimation
 			case "animator":
 			case "animations":
 			case "setAnimations:":
@@ -1126,7 +1129,7 @@ namespace Introspection {
 			case "finish:":
 				return true;
 			// IKFilterUIView
-			case "viewForUIConfiguration:excludedKeys:":	// [Target] on CIFilter
+			case "viewForUIConfiguration:excludedKeys:":    // [Target] on CIFilter
 				return true;
 			// NSDictionaryEnumerator
 			case "fileModificationDate":
@@ -1144,8 +1147,8 @@ namespace Introspection {
 			case "fileCreationDate":
 			case "fileOwnerAccountID":
 			case "fileGroupOwnerAccountID":
-				return true;				// all [Target] on NSDictionary
-			// SBObject
+				return true;                // all [Target] on NSDictionary
+											// SBObject
 			case "get":
 				return true;
 
@@ -1155,36 +1158,36 @@ namespace Introspection {
 				return true;
 
 			// NSFileManager
-			case "ubiquityIdentityToken":		// documented in 10.8
+			case "ubiquityIdentityToken":       // documented in 10.8
 				return true;
 			// NS[Mutable]UrlRequest
-			case "allowsCellularAccess":		// documented in 10.8
-			case "setAllowsCellularAccess:":	// documented in 10.8
+			case "allowsCellularAccess":        // documented in 10.8
+			case "setAllowsCellularAccess:":    // documented in 10.8
 				return true;
 			// NSString
-			case "capitalizedStringWithLocale:":	// documented in 10.8
-			case "lowercaseStringWithLocale:":	// documented in 10.8
-			case "uppercaseStringWithLocale:":	// documented in 10.8
+			case "capitalizedStringWithLocale:":    // documented in 10.8
+			case "lowercaseStringWithLocale:":  // documented in 10.8
+			case "uppercaseStringWithLocale:":  // documented in 10.8
 				return true;
 			// AVVideoComposition
-			case "isValidForAsset:timeRange:validationDelegate:":	// documented in 10.8
+			case "isValidForAsset:timeRange:validationDelegate:":   // documented in 10.8
 				return true;
 			// AVPlayer
 			case "setRate:time:atHostTime:":                // 10.8+
 			case "prerollAtRate:completionHandler:":        // 10.8+
 			case "cancelPendingPrerolls":                   // 10.8+
 			case "masterClock":                             // 10.8+
-			case "setMasterClock:":				// 10.8+
-			// AVUrlAsset
+			case "setMasterClock:":             // 10.8+
+												// AVUrlAsset
 			case "contentKeySession:didProvideContentKey:": // fails because it is in-lined via protocol AVContentKeyRecipient
 				return true;
 			// NSDateComponents
-			case "isLeapMonth":				// 10.8+
-			case "setLeapMonth:":				// 10.8+
-			// NSFileCoordinator
-			case "itemAtURL:willMoveToURL:":		// 10.8+
+			case "isLeapMonth":             // 10.8+
+			case "setLeapMonth:":               // 10.8+
+												// NSFileCoordinator
+			case "itemAtURL:willMoveToURL:":        // 10.8+
 				return true; // documented (but does not respond)
-			
+
 			// MonoMac.CoreImage.CIDetector (10.8+)
 			case "featuresInImage:options:":
 			// MonoMac.CoreImage.CIFaceFeature (10.8+)
@@ -1273,21 +1276,21 @@ namespace Introspection {
 			case "Foundation.NSUrlSessionStreamTask":
 			case "NSUrlSessionStreamTask":
 				switch (name) {
-					case "captureStreams":
-					case "closeRead":
-					case "closeWrite":
-					case "readDataOfMinLength:maxLength:timeout:completionHandler:":
-					case "startSecureConnection":
-					case "stopSecureConnection":
-					case "writeData:timeout:completionHandler:":
-						if (!Mac.CheckSystemVersion (10, 11))
-							return true;
-						break;
+				case "captureStreams":
+				case "closeRead":
+				case "closeWrite":
+				case "readDataOfMinLength:maxLength:timeout:completionHandler:":
+				case "startSecureConnection":
+				case "stopSecureConnection":
+				case "writeData:timeout:completionHandler:":
+					if (!Mac.CheckSystemVersion (10, 11))
+						return true;
+					break;
 				}
 				break;
 			}
 
-//			Console.WriteLine ("{0} {1}", declaredType, name);
+			//			Console.WriteLine ("{0} {1}", declaredType, name);
 			return base.CheckResponse (value, actualType, method, ref name);
 		}
 
@@ -1340,6 +1343,10 @@ namespace Introspection {
 			case "initWithDuration:animationCurve:":
 				return true;
 #endif
+			// Cinematic.CNDecision
+			case "initWithTime:detectionGroupID:strong:":
+			case "initWithTime:detectionID:strong:":
+				return true;
 			default:
 				return base.SkipInit (selector, m);
 			}

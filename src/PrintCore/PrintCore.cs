@@ -18,8 +18,8 @@ using ObjCRuntime;
 using Foundation;
 using CoreGraphics;
 using CoreFoundation;
-using PMObject=System.IntPtr;
-using OSStatus=System.Int32;
+using PMObject = System.IntPtr;
+using OSStatus = System.Int32;
 
 #if !NET
 using NativeHandle = System.IntPtr;
@@ -57,7 +57,7 @@ namespace PrintCore {
 	[SupportedOSPlatform ("macos")]
 #endif
 	public class PMPrintException : Exception {
-		public PMPrintException (PMStatusCode code) : base (code.ToString ()){}
+		public PMPrintException (PMStatusCode code) : base (code.ToString ()) { }
 	}
 
 #if NET
@@ -68,7 +68,7 @@ namespace PrintCore {
 		extern static PMStatusCode PMCreateSession (out IntPtr session);
 
 		[Preserve (Conditional = true)]
-		internal PMPrintSession (NativeHandle handle, bool owns) : base (handle, owns) {}
+		internal PMPrintSession (NativeHandle handle, bool owns) : base (handle, owns) { }
 
 		static IntPtr Create ()
 		{
@@ -87,7 +87,7 @@ namespace PrintCore {
 		{
 			IntPtr value;
 			var code = PMCreateSession (out value);
-			if (code == PMStatusCode.Ok){
+			if (code == PMStatusCode.Ok) {
 				session = new PMPrintSession (value, true);
 				return PMStatusCode.Ok;
 			}
@@ -99,7 +99,7 @@ namespace PrintCore {
 		extern static PMStatusCode PMSessionError (IntPtr handle);
 		[DllImport (Constants.PrintCoreLibrary)]
 		extern static PMStatusCode PMSessionSetError (IntPtr handle, PMStatusCode code);
-		
+
 		public PMStatusCode SessionError {
 			get {
 				return PMSessionError (Handle);
@@ -108,7 +108,7 @@ namespace PrintCore {
 				PMSessionSetError (Handle, value);
 			}
 		}
-		
+
 		[DllImport (Constants.PrintCoreLibrary)]
 		extern static PMStatusCode PMSessionDefaultPrintSettings (IntPtr session, IntPtr settings);
 
@@ -121,45 +121,45 @@ namespace PrintCore {
 
 		[DllImport (Constants.PrintCoreLibrary)]
 		extern static PMStatusCode PMSessionDefaultPageFormat (IntPtr session, IntPtr pageFormat);
-		
+
 		public void AssignDefaultPageFormat (PMPageFormat pageFormat)
 		{
 			if (pageFormat is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (pageFormat));
 			PMSessionDefaultPageFormat (Handle, pageFormat.Handle);
 		}
-		
+
 		[DllImport (Constants.PrintCoreLibrary)]
 		extern static PMStatusCode PMSessionCreatePrinterList (IntPtr printSession, out IntPtr printerListArray, out int index, out IntPtr printer);
 		public PMStatusCode CreatePrinterList (out string? []? printerList, out int index, out PMPrinter? printer)
 		{
 			var code = PMSessionCreatePrinterList (Handle, out var array, out index, out var printerHandle);
-			if (code != PMStatusCode.Ok){
+			if (code != PMStatusCode.Ok) {
 				printerList = null;
 				printer = null;
 				return code;
 			}
 
 			printerList = CFArray.StringArrayFromHandle (array, true);
-			if (printerHandle != IntPtr.Zero){
+			if (printerHandle != IntPtr.Zero) {
 				// Now get the printer, we do not own it, so retain.
 				printer = new PMPrinter (printerHandle, owns: false);
 			} else
 				printer = null;
-			
+
 			return PMStatusCode.Ok;
 		}
 
 		[DllImport (Constants.PrintCoreLibrary)]
 		extern static PMStatusCode PMSessionValidatePrintSettings (IntPtr handle, IntPtr printSettings, out byte changed);
-		
+
 		public PMStatusCode ValidatePrintSettings (PMPrintSettings settings, out bool changed)
 		{
 			if (settings is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (settings));
-			
+
 			var code = PMSessionValidatePrintSettings (Handle, settings.Handle, out var c);
-			if (code != PMStatusCode.Ok){
+			if (code != PMStatusCode.Ok) {
 				changed = false;
 				return code;
 			}
@@ -174,7 +174,7 @@ namespace PrintCore {
 	public class PMPrintSettings : PMPrintCoreBase {
 		[DllImport (Constants.PrintCoreLibrary)]
 		extern static PMStatusCode PMCreatePrintSettings (out IntPtr session);
-		
+
 		[Preserve (Conditional = true)]
 		internal PMPrintSettings (NativeHandle handle, bool owns)
 			: base (handle, owns)
@@ -198,7 +198,7 @@ namespace PrintCore {
 		{
 			IntPtr value;
 			var code = PMCreatePrintSettings (out value);
-			if (code == PMStatusCode.Ok){
+			if (code == PMStatusCode.Ok) {
 				settings = new PMPrintSettings (value, true);
 				return PMStatusCode.Ok;
 			}
@@ -247,11 +247,11 @@ namespace PrintCore {
 		{
 			return PMSetPageRange (Handle, minPage, maxPage);
 		}
-		
-			
+
+
 		[DllImport (Constants.PrintCoreLibrary)]
 		extern static PMStatusCode PMCopyPrintSettings (IntPtr source, IntPtr dest);
-		
+
 		public PMStatusCode CopySettings (PMPrintSettings destination)
 		{
 			if (destination is null)
@@ -326,7 +326,7 @@ namespace PrintCore {
 				PMSetScale (Handle, value);
 			}
 		}
-		
+
 	}
 
 #if NET
@@ -339,7 +339,7 @@ namespace PrintCore {
 		extern static PMStatusCode PMCreatePageFormatWithPMPaper (out IntPtr handle, IntPtr paper);
 
 		[Preserve (Conditional = true)]
-		internal PMPageFormat (NativeHandle handle, bool owns): base (handle, owns) {}
+		internal PMPageFormat (NativeHandle handle, bool owns) : base (handle, owns) { }
 
 		static IntPtr Create (PMPaper? paper = null)
 		{
@@ -365,13 +365,13 @@ namespace PrintCore {
 		{
 			PMStatusCode code;
 			IntPtr value;
-			
+
 			if (paper is null)
 				code = PMCreatePageFormat (out value);
 			else
 				code = PMCreatePageFormatWithPMPaper (out value, paper.Handle);
-			
-			if (code == PMStatusCode.Ok){
+
+			if (code == PMStatusCode.Ok) {
 				pageFormat = new PMPageFormat (value, true);
 				return PMStatusCode.Ok;
 			}
@@ -422,7 +422,7 @@ namespace PrintCore {
 #endif
 	public class PMPaper : PMPrintCoreBase {
 		[Preserve (Conditional = true)]
-		internal PMPaper (NativeHandle handle, bool owns) : base (handle, owns) {}
+		internal PMPaper (NativeHandle handle, bool owns) : base (handle, owns) { }
 		[DllImport (Constants.PrintCoreLibrary)]
 		extern static PMStatusCode PMPaperGetID (IntPtr handle, out IntPtr str);
 		[DllImport (Constants.PrintCoreLibrary)]
@@ -433,7 +433,7 @@ namespace PrintCore {
 		extern static PMStatusCode PMPaperGetMargins (IntPtr handle, out PMPaperMargins margins);
 		[DllImport (Constants.PrintCoreLibrary)]
 		extern static PMStatusCode PMPaperCreateLocalizedName (IntPtr handle, IntPtr printer, out IntPtr name);
-		
+
 		public string? ID {
 			get {
 				var code = PMPaperGetID (Handle, out var s);
@@ -451,7 +451,7 @@ namespace PrintCore {
 				return s;
 			}
 		}
-			
+
 		public double Height {
 			get {
 				var code = PMPaperGetHeight (Handle, out var s);
@@ -479,7 +479,7 @@ namespace PrintCore {
 				return null;
 			return CFString.FromHandle (name, true);
 		}
-		
+
 	}
 
 #if NET
@@ -488,12 +488,12 @@ namespace PrintCore {
 	public class PMPrinter : PMPrintCoreBase {
 		[DllImport (Constants.PrintCoreLibrary)]
 		extern static PMStatusCode PMCreateGenericPrinter (out IntPtr session);
-		
+
 		[DllImport (Constants.PrintCoreLibrary)]
 		extern static IntPtr PMPrinterCreateFromPrinterID (IntPtr id);
 
 		[Preserve (Conditional = true)]
-		internal PMPrinter (NativeHandle handle, bool owns) : base (handle, owns) {}
+		internal PMPrinter (NativeHandle handle, bool owns) : base (handle, owns) { }
 
 		static IntPtr Create ()
 		{
@@ -528,12 +528,12 @@ namespace PrintCore {
 			: base (Create (printerId), true)
 		{
 		}
-		
+
 		public static PMStatusCode TryCreate (out PMPrinter? printer)
 		{
 			IntPtr value;
 			var code = PMCreateGenericPrinter (out value);
-			if (code == PMStatusCode.Ok){
+			if (code == PMStatusCode.Ok) {
 				printer = new PMPrinter (value, owns: true);
 				return PMStatusCode.Ok;
 			}
@@ -543,7 +543,7 @@ namespace PrintCore {
 
 		public static PMPrinter? TryCreate (string printerId)
 		{
-			using (var idf = new CFString (printerId)){
+			using (var idf = new CFString (printerId)) {
 				var h = PMPrinterCreateFromPrinterID (idf.Handle);
 				if (h == IntPtr.Zero)
 					return null;
@@ -561,7 +561,7 @@ namespace PrintCore {
 		public PMStatusCode TryGetDeviceUrl (out NSUrl? url)
 		{
 			var code = PMPrinterCopyDeviceURI (Handle, out var urlH);
-			if (code != PMStatusCode.Ok){
+			if (code != PMStatusCode.Ok) {
 				url = null;
 				return code;
 			}
@@ -580,7 +580,7 @@ namespace PrintCore {
 		}
 
 		[DllImport (Constants.PrintCoreLibrary)]
-		extern static PMStatusCode PMPrinterGetMakeAndModelName(IntPtr printer, out IntPtr makeAndModel);
+		extern static PMStatusCode PMPrinterGetMakeAndModelName (IntPtr printer, out IntPtr makeAndModel);
 
 		public string? MakeAndModel {
 			get {
@@ -592,7 +592,7 @@ namespace PrintCore {
 		}
 
 		[DllImport (Constants.PrintCoreLibrary)]
-		extern static PMStatusCode PMPrinterGetState(IntPtr printer, out PMPrinterState state);
+		extern static PMStatusCode PMPrinterGetState (IntPtr printer, out PMPrinterState state);
 
 		// Return is overloaded - if negative, a PMStatusCode.
 		public PMPrinterState PrinterState {
@@ -604,14 +604,14 @@ namespace PrintCore {
 				return (PMPrinterState) code;
 			}
 		}
-		
+
 		[DllImport (Constants.PrintCoreLibrary)]
 		extern static PMStatusCode PMPrinterGetMimeTypes (IntPtr printer, IntPtr settings, out IntPtr arrayStr);
 
 		public PMStatusCode TryGetMimeTypes (PMPrintSettings settings, out string? []? mimeTypes)
 		{
 			var code = PMPrinterGetMimeTypes (Handle, settings.GetHandle (), out var m);
-			if (code != PMStatusCode.Ok){
+			if (code != PMStatusCode.Ok) {
 				mimeTypes = null;
 				return code;
 			}
@@ -624,7 +624,7 @@ namespace PrintCore {
 		public PMStatusCode TryGetPaperList (out PMPaper []? paperList)
 		{
 			var code = PMPrinterGetPaperList (Handle, out var m);
-			if (code != PMStatusCode.Ok){
+			if (code != PMStatusCode.Ok) {
 				paperList = null;
 				return code;
 			}
@@ -650,7 +650,7 @@ namespace PrintCore {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (settings));
 			if (fileUrl is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (fileUrl));
-				    
+
 			IntPtr mime = CFString.CreateNative (mimeType);
 			try {
 				return PMPrinterPrintWithFile (Handle, settings.Handle, pageFormat.GetHandle (), mime, fileUrl.Handle);
@@ -668,7 +668,7 @@ namespace PrintCore {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (settings));
 			if (provider is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (provider));
-				    
+
 			IntPtr mime = CFString.CreateNative (mimeType);
 			try {
 				return PMPrinterPrintWithProvider (Handle, settings.Handle, pageFormat.GetHandle (), mime, provider.Handle);
@@ -710,7 +710,7 @@ namespace PrintCore {
 		[DllImport (Constants.PrintCoreLibrary)]
 		extern static byte PMPrinterIsFavorite (IntPtr printer);
 		public bool IsFavorite => PMPrinterIsFavorite (Handle) != 0;
-		
+
 		[DllImport (Constants.PrintCoreLibrary)]
 		extern static byte PMPrinterIsDefault (IntPtr printer);
 		public bool IsDefault => PMPrinterIsDefault (Handle) != 0;
@@ -720,7 +720,7 @@ namespace PrintCore {
 		public bool IsPostScriptCapable => PMPrinterIsPostScriptCapable (Handle) != 0;
 
 		[DllImport (Constants.PrintCoreLibrary)]
-		extern static PMStatusCode PMPrinterIsPostScriptPrinter  (IntPtr printer, out byte isps);
+		extern static PMStatusCode PMPrinterIsPostScriptPrinter (IntPtr printer, out byte isps);
 		public bool IsPostScriptPrinter {
 			get {
 				if (PMPrinterIsPostScriptPrinter (Handle, out var r) == PMStatusCode.Ok)
@@ -730,7 +730,7 @@ namespace PrintCore {
 		}
 
 		[DllImport (Constants.PrintCoreLibrary)]
-		extern static PMStatusCode PMPrinterIsRemote  (IntPtr printer, out byte isrem);
+		extern static PMStatusCode PMPrinterIsRemote (IntPtr printer, out byte isrem);
 		public bool IsRemote {
 			get {
 				if (PMPrinterIsRemote (Handle, out var r) == PMStatusCode.Ok)
@@ -784,7 +784,7 @@ namespace PrintCore {
 		public static PMStatusCode CreatePrinterList (out PMPrinter []? printerList)
 		{
 			var code = PMServerCreatePrinterList (IntPtr.Zero /* ServerLocal */, out var arr);
-			if (code != PMStatusCode.Ok){
+			if (code != PMStatusCode.Ok) {
 				printerList = null;
 				return code;
 			}

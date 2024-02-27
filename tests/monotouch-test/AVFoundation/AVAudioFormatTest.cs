@@ -29,19 +29,19 @@ namespace MonoTouchFixtures.AVFoundation {
 		public void TestEqualOperatorSameInstace ()
 		{
 			using (var format = new AVAudioFormat ())
+#pragma warning disable CS1718 // warning CS1718: Comparison made to same variable; did you mean to compare something else?
 				Assert.IsTrue (format == format, "format == format");
+#pragma warning restore
 		}
 
 		[Test]
 		public void TestEqualOperatorNull ()
 		{
-			using (var format = new AVAudioFormat ())
-			{
+			using (var format = new AVAudioFormat ()) {
 				Assert.IsFalse (format == null, "format == null");
 				Assert.IsFalse (null == format, "null == format");
 			}
-			using (AVAudioFormat nullFormat = null)
-			{
+			using (AVAudioFormat nullFormat = null) {
 				Assert.IsTrue (nullFormat == null, "nullFormat == null");
 				Assert.IsTrue (null == nullFormat, "null == nullFormat");
 			}
@@ -50,13 +50,11 @@ namespace MonoTouchFixtures.AVFoundation {
 		[Test]
 		public void TestNotEqualOperatorNull ()
 		{
-			using (var format = new AVAudioFormat ())
-			{
+			using (var format = new AVAudioFormat ()) {
 				Assert.IsTrue (format != null, "format != null");
 				Assert.IsTrue (null != format, "null != format");
 			}
-			using (AVAudioFormat nullFormat = null)
-			{
+			using (AVAudioFormat nullFormat = null) {
 				Assert.IsFalse (nullFormat != null, "nullFormat != null");
 				Assert.IsFalse (null != nullFormat, "null != nullFormat");
 			}

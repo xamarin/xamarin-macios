@@ -57,7 +57,7 @@ namespace MonoTouchFixtures.SpriteKit {
 					if (!TestRuntime.CheckSystemVersion (ApplePlatform.iOS, 9, 0, throwIfOtherPlatform: false))
 						Assert.That (texture.Size, Is.EqualTo (new CGSize (128, 128)), "Size");
 #endif
-					
+
 					Assert.That (texture.TextureRect, Is.EqualTo (new CGRect (0, 0, 1, 1)), "TextureRect");
 					Assert.False (texture.UsesMipmaps, "UsesMipmaps");
 				}

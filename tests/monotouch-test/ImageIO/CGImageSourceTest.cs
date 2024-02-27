@@ -107,14 +107,14 @@ namespace MonoTouchFixtures.ImageIO {
 				}
 			}
 		}
-		
+
 		[Test]
 		public void CreateIncrementalTest ()
 		{
 			using (var img = CGImageSource.CreateIncremental (null)) {
 				Assert.NotNull (img, "#a1");
 			}
-			
+
 			using (var img = CGImageSource.CreateIncremental (new CGImageOptions ())) {
 				Assert.NotNull (img, "#b1");
 			}
@@ -142,8 +142,7 @@ namespace MonoTouchFixtures.ImageIO {
 						}
 					}
 				}
-			}
-			finally {
+			} finally {
 				Dlfcn.dlclose (lib);
 			}
 		}

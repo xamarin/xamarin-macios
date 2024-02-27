@@ -4,10 +4,8 @@ using Foundation;
 using AppKit;
 using MyLibrary;
 
-namespace BasicPCLTest
-{
-	public partial class AppDelegate : NSApplicationDelegate
-	{
+namespace BasicPCLTest {
+	public partial class AppDelegate : NSApplicationDelegate {
 		public AppDelegate ()
 		{
 		}

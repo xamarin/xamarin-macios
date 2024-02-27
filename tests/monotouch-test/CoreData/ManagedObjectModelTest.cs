@@ -31,7 +31,7 @@ namespace MonoTouchFixtures.CoreData {
 		[Test]
 		public void IsConfiguration_Null ()
 		{
-			using (var moc = new NSManagedObjectModel()) {
+			using (var moc = new NSManagedObjectModel ()) {
 #if NET
 				Assert.IsFalse (moc.IsConfigurationCompatibleWithStoreMetadata (null, new NSDictionary ()), "IsConfiguration");
 #else

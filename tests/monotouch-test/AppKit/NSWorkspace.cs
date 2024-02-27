@@ -6,12 +6,10 @@ using AppKit;
 using Foundation;
 using ObjCRuntime;
 
-namespace Xamarin.Mac.Tests
-{
+namespace Xamarin.Mac.Tests {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class NSWorkspaceTests
-	{
+	public class NSWorkspaceTests {
 		[Test]
 		public void NSWorkspaceConstantTests ()
 		{
@@ -22,9 +20,9 @@ namespace Xamarin.Mac.Tests
 		}
 
 		[Test]
-		public void HfsTypeCode4CCTest()
+		public void HfsTypeCode4CCTest ()
 		{
-		    /* Generic Finder icons */
+			/* Generic Finder icons */
 			Assert.That (FourCC ((int) HfsTypeCode.ClipboardIcon), Is.EqualTo ("CLIP"), "CLIP");
 			Assert.That (FourCC ((int) HfsTypeCode.ClippingUnknownTypeIcon), Is.EqualTo ("clpu"), "clpu");
 			Assert.That (FourCC ((int) HfsTypeCode.ClippingPictureTypeIcon), Is.EqualTo ("clpp"), "clpp");
@@ -210,16 +208,16 @@ namespace Xamarin.Mac.Tests
 			Assert.That (FourCC ((int) HfsTypeCode.EjectMediaIcon), Is.EqualTo ("ejec"), "ejec");
 			Assert.That (FourCC ((int) HfsTypeCode.BurningIcon), Is.EqualTo ("burn"), "burn");
 			Assert.That (FourCC ((int) HfsTypeCode.RightContainerArrowIcon), Is.EqualTo ("rcar"), "rcar");
-        	}
+		}
 
-		string FourCC(int value)
+		string FourCC (int value)
 		{
-		    return new string(new char[] {
+			return new string (new char [] {
 			(char) (byte) (value >> 24),
 			(char) (byte) (value >> 16),
 			(char) (byte) (value >> 8),
 			(char) (byte) value });
 		}
-    }
+	}
 }
 #endif // __MACOS__

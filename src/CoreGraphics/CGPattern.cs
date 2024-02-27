@@ -73,8 +73,7 @@ namespace CoreGraphics {
 	[SupportedOSPlatform ("tvos")]
 #endif
 	// CGPattern.h
-	public class CGPattern : NativeObject
-	{
+	public class CGPattern : NativeObject {
 #if !COREBUILD
 #if !NET
 		public CGPattern (NativeHandle handle)
@@ -83,7 +82,7 @@ namespace CoreGraphics {
 		}
 #endif
 
-		[Preserve (Conditional=true)]
+		[Preserve (Conditional = true)]
 		internal CGPattern (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
@@ -91,11 +90,11 @@ namespace CoreGraphics {
 
 		protected internal override void Retain () => CGPatternRetain (Handle);
 		protected internal override void Release () => CGPatternRelease (Handle);
-		
+
 		// This is what we expose on the API
 		public delegate void DrawPattern (CGContext ctx);
 
-		[DllImport(Constants.CoreGraphicsLibrary)]
+		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static IntPtr CGPatternCreate (/* void* */ IntPtr info, CGRect bounds, CGAffineTransform matrix,
 			/* CGFloat */ nfloat xStep, /* CGFloat */ nfloat yStep, CGPatternTiling tiling, [MarshalAs (UnmanagedType.I1)] bool isColored,
 			/* const CGPatternCallbacks* */ ref CGPatternCallbacks callbacks);
@@ -120,7 +119,7 @@ namespace CoreGraphics {
 		};
 #endif
 		GCHandle gch;
-		
+
 		public CGPattern (CGRect bounds, CGAffineTransform matrix, nfloat xStep, nfloat yStep, CGPatternTiling tiling, bool isColored, DrawPattern drawPattern)
 		{
 			if (drawPattern is null)

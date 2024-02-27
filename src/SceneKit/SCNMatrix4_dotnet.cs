@@ -53,7 +53,7 @@ namespace SceneKit {
 	/// </summary>
 	[Serializable]
 	public struct SCNMatrix4 : IEquatable<SCNMatrix4> {
-		#region Fields
+#region Fields
 
 		/*
 		 * SCNMatrix4 is defined like this for iOS, tvOS and watchOS:
@@ -104,9 +104,9 @@ namespace SceneKit {
 		/// </summary>
 		public readonly static SCNMatrix4 Identity = new SCNMatrix4 (SCNVector4.UnitX, SCNVector4.UnitY, SCNVector4.UnitZ, SCNVector4.UnitW);
 
-		#endregion
+#endregion
 
-		#region Constructors
+#region Constructors
 
 		/// <summary>
 		/// Constructs a new instance.
@@ -164,11 +164,11 @@ namespace SceneKit {
 		}
 #endif
 
-		#endregion
+#endregion
 
-		#region Public Members
+#region Public Members
 
-		#region Properties
+#region Properties
 
 		/// <summary>
 		/// The determinant of this matrix
@@ -317,11 +317,11 @@ namespace SceneKit {
 		/// </summary>
 		public pfloat M44 { get { return Column3.W; } set { Column3.W = value; } }
 
-		#endregion
+#endregion
 
-		#region Instance
+#region Instance
 
-		#region public void Invert()
+#region public void Invert()
 
 		/// <summary>
 		/// Converts this instance into its inverse.
@@ -331,9 +331,9 @@ namespace SceneKit {
 			this = SCNMatrix4.Invert (this);
 		}
 
-		#endregion
+#endregion
 
-		#region public void Transpose()
+#region public void Transpose()
 
 		/// <summary>
 		/// Converts this instance into its transpose.
@@ -343,13 +343,13 @@ namespace SceneKit {
 			this = SCNMatrix4.Transpose (this);
 		}
 
-		#endregion
+#endregion
 
-		#endregion
+#endregion
 
-		#region Static
+#region Static
 
-		#region CreateFromColumns
+#region CreateFromColumns
 
 		public static SCNMatrix4 CreateFromColumns (SCNVector4 column0, SCNVector4 column1, SCNVector4 column2, SCNVector4 column3)
 		{
@@ -370,9 +370,9 @@ namespace SceneKit {
 			result.Column3 = column3;
 		}
 
-		#endregion
+#endregion
 
-		#region CreateFromAxisAngle
+#region CreateFromAxisAngle
 
 		/// <summary>
 		/// Build a rotation matrix from the specified axis/angle rotation.
@@ -476,9 +476,9 @@ namespace SceneKit {
 			return result;
 		}
 
-		#endregion
+#endregion
 
-		#region CreateRotation[XYZ]
+#region CreateRotation[XYZ]
 
 		/// <summary>
 		/// Builds a rotation matrix for a rotation around the x-axis.
@@ -567,9 +567,9 @@ namespace SceneKit {
 			return result;
 		}
 
-		#endregion
+#endregion
 
-		#region CreateTranslation
+#region CreateTranslation
 
 		/// <summary>
 		/// Creates a translation matrix.
@@ -623,9 +623,9 @@ namespace SceneKit {
 			return result;
 		}
 
-		#endregion
+#endregion
 
-		#region CreateOrthographic
+#region CreateOrthographic
 
 		/// <summary>
 		/// Creates an orthographic projection matrix.
@@ -655,9 +655,9 @@ namespace SceneKit {
 			return result;
 		}
 
-		#endregion
+#endregion
 
-		#region CreateOrthographicOffCenter
+#region CreateOrthographicOffCenter
 
 		/// <summary>
 		/// Creates an orthographic projection matrix.
@@ -704,9 +704,9 @@ namespace SceneKit {
 			return result;
 		}
 
-		#endregion
+#endregion
 
-		#region CreatePerspectiveFieldOfView
+#region CreatePerspectiveFieldOfView
 
 		/// <summary>
 		/// Creates a perspective projection matrix.
@@ -772,9 +772,9 @@ namespace SceneKit {
 			return result;
 		}
 
-		#endregion
+#endregion
 
-		#region CreatePerspectiveOffCenter
+#region CreatePerspectiveOffCenter
 
 		/// <summary>
 		/// Creates an perspective projection matrix.
@@ -842,9 +842,9 @@ namespace SceneKit {
 			return result;
 		}
 
-		#endregion
+#endregion
 
-		#region Scale Functions
+#region Scale Functions
 
 		/// <summary>
 		/// Build a scaling matrix
@@ -882,9 +882,9 @@ namespace SceneKit {
 				0, 0, 0, 1);
 		}
 
-		#endregion
+#endregion
 
-		#region Rotation Functions
+#region Rotation Functions
 
 		/// <summary>
 		/// Build a rotation matrix from a quaternion
@@ -915,9 +915,9 @@ namespace SceneKit {
 			CreateFromAxisAngle (axis, angle, out result);
 			return result;
 		}
-		#endregion
+#endregion
 
-		#region Camera Helper Functions
+#region Camera Helper Functions
 
 		/// <summary>
 		/// Build a world space to camera space matrix
@@ -961,27 +961,31 @@ namespace SceneKit {
 			return LookAt (new SCNVector3 (eyeX, eyeY, eyeZ), new SCNVector3 (targetX, targetY, targetZ), new SCNVector3 (upX, upY, upZ));
 		}
 
-		#endregion
+#endregion
 
-		#region Multiply Functions
+#region Multiply Functions
 
+#if XAMCORE_5_0
 		/// <summary>
 		/// Combines two transformation matrices.
 		/// </summary>
-#if XAMCORE_5_0
 		/// <remarks>
 		/// Combining two transformation matrices means using matrix multiplication to multiply them in the reverse order (secondTransformation * firstTransformation).
 		/// </remarks>
 		/// <param name="firstTransformation">The first transformation of the combination.</param>
 		/// <param name="secondTransformation">The second transformation of the combination.</param>
+		/// <returns>A new instance that is the result of the combination</returns>
 #else
+		/// <summary>
+		/// Combines two transformation matrices.
+		/// </summary>
 		/// <remarks>
 		/// Combining two transformation matrices means using matrix multiplication to multiply them in the reverse order (right * left).
 		/// </remarks>
 		/// <param name="left">The first transformation of the combination.</param>
 		/// <param name="right">The second transformation of the combination.</param>
-#endif
 		/// <returns>A new instance that is the result of the combination</returns>
+#endif
 #if XAMCORE_5_0
 		public static SCNMatrix4 Mult (SCNMatrix4 firstTransformation, SCNMatrix4 secondTransformation)
 #else
@@ -998,23 +1002,27 @@ namespace SceneKit {
 			return result;
 		}
 
+#if XAMCORE_5_0
 		/// <summary>
 		/// Combines two transformation matrices.
 		/// </summary>
-#if XAMCORE_5_0
 		/// <remarks>
 		/// Combining two transformation matrices means using matrix multiplication to multiply them in the reverse order (secondTransformation * firstTransformation).
 		/// </remarks>
 		/// <param name="firstTransformation">The first transformation of the combination.</param>
 		/// <param name="secondTransformation">The second transformation of the combination.</param>
+		/// <param name="result">A new instance that is the result of the combination</param>
 #else
+		/// <summary>
+		/// Combines two transformation matrices.
+		/// </summary>
 		/// <remarks>
 		/// Combining two transformation matrices means using matrix multiplication to multiply them in the reverse order (right * left).
 		/// </remarks>
 		/// <param name="left">The first transformation of the combination.</param>
 		/// <param name="right">The second transformation of the combination.</param>
-#endif
 		/// <param name="result">A new instance that is the result of the combination</param>
+#endif
 #if XAMCORE_5_0
 		public static void Mult (ref SCNMatrix4 firstTransformation, ref SCNMatrix4 secondTransformation, out SCNMatrix4 result)
 #else
@@ -1054,9 +1062,9 @@ namespace SceneKit {
 				left.Column0.W * right.Column3.X + left.Column1.W * right.Column3.Y + left.Column2.W * right.Column3.Z + left.Column3.W * right.Column3.W);
 		}
 
-		#endregion
+#endregion
 
-		#region Invert Functions
+#region Invert Functions
 
 		static bool InvertSoftware (SCNMatrix4 matrix, out SCNMatrix4 result)
 		{
@@ -1138,7 +1146,7 @@ namespace SceneKit {
 		/// <summary>
 		/// Calculate the inverse of the given matrix
 		/// </summary>
-		/// <param name="mat">The matrix to invert</param>
+		/// <param name="matrix">The matrix to invert</param>
 		/// <returns>The inverse of the given matrix if it has one, or the input if it is singular</returns>
 		/// <exception cref="InvalidOperationException">Thrown if the SCNMatrix4 is singular.</exception>
 		public static SCNMatrix4 Invert (SCNMatrix4 matrix)
@@ -1148,9 +1156,9 @@ namespace SceneKit {
 			return inverse;
 		}
 
-		#endregion
+#endregion
 
-		#region Transpose
+#region Transpose
 
 		/// <summary>
 		/// Calculate the transpose of the given matrix
@@ -1173,11 +1181,11 @@ namespace SceneKit {
 			result = new SCNMatrix4 (mat.Column0, mat.Column1, mat.Column2, mat.Column3);
 		}
 
-		#endregion
+#endregion
 
-		#endregion
+#endregion
 
-		#region Operators
+#region Operators
 
 		/// <summary>
 		/// Matrix multiplication
@@ -1212,11 +1220,11 @@ namespace SceneKit {
 			return !left.Equals (right);
 		}
 
-		#endregion
+#endregion
 
-		#region Overrides
+#region Overrides
 
-		#region public override string ToString()
+#region public override string ToString()
 
 		/// <summary>
 		/// Returns a System.String that represents the current SCNMatrix4.
@@ -1227,9 +1235,9 @@ namespace SceneKit {
 			return String.Format ("{0}\n{1}\n{2}\n{3}", Row0, Row1, Row2, Row3);
 		}
 
-		#endregion
+#endregion
 
-		#region public override int GetHashCode()
+#region public override int GetHashCode()
 
 		/// <summary>
 		/// Returns the hashcode for this instance.
@@ -1237,12 +1245,12 @@ namespace SceneKit {
 		/// <returns>A System.Int32 containing the unique hashcode for this instance.</returns>
 		public override int GetHashCode ()
 		{
-			return Column0.GetHashCode () ^ Column1.GetHashCode () ^ Column2.GetHashCode () ^ Column3.GetHashCode ();
+			return HashCode.Combine(Column0, Column1, Column2, Column3);
 		}
 
-		#endregion
+#endregion
 
-		#region public override bool Equals(object obj)
+#region public override bool Equals(object obj)
 
 		/// <summary>
 		/// Indicates whether this instance and a specified object are equal.
@@ -1257,13 +1265,13 @@ namespace SceneKit {
 			return this.Equals ((SCNMatrix4) obj);
 		}
 
-		#endregion
+#endregion
 
-		#endregion
+#endregion
 
-		#endregion
+#endregion
 
-		#region IEquatable<SCNMatrix4> Members
+#region IEquatable<SCNMatrix4> Members
 
 		/// <summary>Indicates whether the current matrix is equal to another matrix.</summary>
 		/// <param name="other">An matrix to compare with this matrix.</param>
@@ -1277,7 +1285,7 @@ namespace SceneKit {
 				Column3 == other.Column3;
 		}
 
-		#endregion
+#endregion
 
 		static void ToAxisAngle (Quaternion q, out Vector3 axis, out float angle)
 		{

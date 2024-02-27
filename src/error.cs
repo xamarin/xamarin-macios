@@ -13,12 +13,15 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 
-using ProductException=BindingException;
+using ProductException = BindingException;
+
+// Disable until we get around to enable + fix any issues.
+#nullable disable
 
 // Error allocation: the errors are listed (and documented) in $(TOP)/docs/website/generator-errors.md
 
 public class BindingException : Exception {
-	
+
 	public BindingException (int code, bool error) :
 		base (GetMessage (code))
 	{
@@ -26,17 +29,17 @@ public class BindingException : Exception {
 		Error = error || ErrorHelper.GetWarningLevel (code) == ErrorHelper.WarningLevel.Error;
 	}
 
-	public BindingException (int code, params object[] args) : 
+	public BindingException (int code, params object [] args) :
 		this (code, false, args)
 	{
 	}
 
-	public BindingException (int code, bool error, params object[] args) : 
+	public BindingException (int code, bool error, params object [] args) :
 		this (code, error, null, args)
 	{
 	}
 
-	public BindingException (int code, bool error, Exception innerException, params object[] args) : 
+	public BindingException (int code, bool error, Exception innerException, params object [] args) :
 		base (String.Format (GetMessage (code), args), innerException)
 	{
 		Code = code;
@@ -51,15 +54,15 @@ public class BindingException : Exception {
 				BindingFlags.Static |
 				BindingFlags.GetProperty);
 
-		var errorMessage = prop == null ? String.Format (bgen.Resources._default, errorCode) :
+		var errorMessage = prop is null ? String.Format (bgen.Resources._default, errorCode) :
 					(String) prop.GetValue (null);
 		return errorMessage;
 	}
 
 	public int Code { get; private set; }
-	
+
 	public bool Error { get; private set; }
-	
+
 	// http://blogs.msdn.com/b/msbuild/archive/2006/11/03/msbuild-visual-studio-aware-error-messages-and-message-formats.aspx
 	public override string ToString ()
 	{
@@ -82,13 +85,13 @@ public static class ErrorHelper {
 
 	[ThreadStatic]
 	static Dictionary<int, WarningLevel> warning_levels;
-	
+
 	public static ProductException CreateError (int code)
 	{
 		return new ProductException (code, true);
 	}
 
-	public static ProductException CreateError (int code, params object[] args)
+	public static ProductException CreateError (int code, params object [] args)
 	{
 		return new ProductException (code, true, args);
 	}
@@ -98,7 +101,7 @@ public static class ErrorHelper {
 		Show (new ProductException (code, false));
 	}
 
-	public static void Warning (int code, params object[] args)
+	public static void Warning (int code, params object [] args)
 	{
 		Show (new ProductException (code, false, args));
 	}
@@ -130,7 +133,7 @@ public static class ErrorHelper {
 #if NET_4_0
 		AggregateException ae = ex as AggregateException;
 
-		if (ae != null) {
+		if (ae is not null) {
 			foreach (var ie in ae.InnerExceptions)
 				CollectExceptions (ie, exceptions);
 		} else {
@@ -146,17 +149,17 @@ public static class ErrorHelper {
 		BindingException mte = (e as BindingException);
 		bool error = true;
 
-		if (mte != null) {
+		if (mte is not null) {
 			error = mte.Error;
 
 			if (!error && GetWarningLevel (mte.Code) == WarningLevel.Disable)
 				return false;
 
 			Console.Out.WriteLine (mte.ToString ());
-			
+
 			if (Verbosity > 1) {
 				Exception ie = e.InnerException;
-				if (ie != null) {
+				if (ie is not null) {
 					if (Verbosity > 3) {
 						Console.Error.WriteLine ("--- inner exception");
 						Console.Error.WriteLine (ie);
@@ -166,7 +169,7 @@ public static class ErrorHelper {
 					}
 				}
 			}
-			
+
 			if (Verbosity > 2)
 				Console.Error.WriteLine (e.StackTrace);
 		} else {
@@ -181,7 +184,7 @@ public static class ErrorHelper {
 	{
 		WarningLevel level;
 
-		if (warning_levels == null)
+		if (warning_levels is null)
 			return WarningLevel.Warning;
 
 		// code -1: all codes
@@ -196,7 +199,7 @@ public static class ErrorHelper {
 
 	public static void SetWarningLevel (WarningLevel level, int? code = null /* if null, apply to all warnings */)
 	{
-		if (warning_levels == null)
+		if (warning_levels is null)
 			warning_levels = new Dictionary<int, WarningLevel> ();
 
 		if (code.HasValue)

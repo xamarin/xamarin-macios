@@ -26,7 +26,7 @@ namespace Intents {
 		// into bindings and making them virtual (not a breaking change)
 
 		public bool? Locked {
-			get { return _Locked == null ? null : (bool?) _Locked.BoolValue; }
+			get { return _Locked is null ? null : (bool?) _Locked.BoolValue; }
 		}
 	}
 }

@@ -5,6 +5,13 @@ jobs:
   add-changelog:
     name: Add changelog
     runs-on: ubuntu-latest
+    # GITHUB_TOKEN change from read-write to read-only on 2024-02-01 requires permissions block
+    # https://docs.opensource.microsoft.com/github/apps/permission-changes/
+    # https://docs.github.com/en/actions/using-jobs/assigning-permissions-to-jobs
+    permissions:
+      issues: write
+      pull-requests: write
+      contents: read
     if: github.actor == 'dotnet-maestro[bot]'
 
     steps:
@@ -13,23 +20,15 @@ jobs:
         set -exo pipefail
         git clone https://github.com/spouliot/dotnet-tools
         cd dotnet-tools/changelog
-        dotnet run https://github.com/$GITHUB_REPOSITORY/pull/${GITHUB_REF_NAME/\/*/} > changelog.txt 2>&1
-
-        # need to replace newlines with actual "\n"
-        rm -f changelog2.txt
-        echo "CHANGELOG_MESSAGE<<EOF" >> changelog2.txt
-        cat changelog.txt | sed -e ':a' -e 'N' -e '$!ba' -e 's/\n/\\n/g' >> changelog2.txt
-        echo EOF >> changelog2.txt
-        cat changelog2.txt
-
-        # export the changelog message
-        cat changelog2.txt >> $GITHUB_ENV
+        dotnet run https://github.com/$GITHUB_REPOSITORY/pull/${GITHUB_REF_NAME/\/*/} > /tmp/changelog.txt 2>&1
 
     - name: 'Add changelog'
-      uses: actions/github-script@v6.3.3
+      uses: actions/github-script@v7.0.1
       with:
         github-token: ${{secrets.GITHUB_TOKEN}}
         script: |
+          const fs = require('fs');
+          const changelog_message = fs.readFileSync('/tmp/changelog.txt', 'utf8');
           // check if we've already added a changelog to this PR, and if so, update that comment, otherwise add a new comment
           var commentId = ""
           await github.paginate (github.rest.issues.listComments,
@@ -48,13 +47,13 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: context.issue.number,
-              body: '${{ env.CHANGELOG_MESSAGE }}'
+              body: changelog_message
             })
           } else {
             github.rest.issues.updateComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
               comment_id: commentId,
-              body: '${{ env.CHANGELOG_MESSAGE }}'
+              body: changelog_message
             })
           }

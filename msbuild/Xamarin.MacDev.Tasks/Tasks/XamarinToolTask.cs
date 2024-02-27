@@ -1,18 +1,22 @@
 using System;
+using System.Collections.Generic;
 
+using Microsoft.Build.Framework;
 using Microsoft.Build.Tasks;
 using Microsoft.Build.Utilities;
 
 using Xamarin.Localization.MSBuild;
 using Xamarin.Utils;
 
+#nullable enable
+
 namespace Xamarin.MacDev.Tasks {
 	// This is the same as XamarinTask, except that it subclasses ToolTask instead.
 	public abstract class XamarinToolTask : ToolTask {
 
-		public string SessionId { get; set; }
+		public string SessionId { get; set; } = string.Empty;
 
-		public string TargetFrameworkMoniker { get; set; }
+		public string TargetFrameworkMoniker { get; set; } = string.Empty;
 
 		void VerifyTargetFrameworkMoniker ()
 		{
@@ -81,5 +85,10 @@ namespace Xamarin.MacDev.Tasks {
 		}
 
 		public bool ShouldExecuteRemotely () => this.ShouldExecuteRemotely (SessionId);
+
+		protected internal static IEnumerable<ITaskItem> CreateItemsForAllFilesRecursively (params string [] directories)
+		{
+			return XamarinTask.CreateItemsForAllFilesRecursively ((IEnumerable<string>?) directories);
+		}
 	}
 }

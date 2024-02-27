@@ -26,7 +26,7 @@ namespace VideoToolbox {
 			}
 		}
 
-		public VTFieldMode FieldMode { 
+		public VTFieldMode FieldMode {
 			get {
 				var key = GetNSStringValue (VTDecompressionPropertyKey.FieldMode);
 
@@ -68,7 +68,7 @@ namespace VideoToolbox {
 			}
 		}
 
-		public VTDeinterlaceMode DeinterlaceMode { 
+		public VTDeinterlaceMode DeinterlaceMode {
 			get {
 				var key = GetNSStringValue (VTDecompressionPropertyKey.DeinterlaceMode);
 
@@ -95,7 +95,7 @@ namespace VideoToolbox {
 			}
 		}
 
-		public VTOnlyTheseFrames OnlyTheseFrames { 
+		public VTOnlyTheseFrames OnlyTheseFrames {
 			get {
 				var key = GetNSStringValue (VTDecompressionPropertyKey.OnlyTheseFrames);
 

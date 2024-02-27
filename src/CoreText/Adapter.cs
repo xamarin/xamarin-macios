@@ -84,7 +84,7 @@ namespace CoreText {
 			return ((NSNumber) value).NUIntValue;
 		}
 
-		public static T[]? GetNativeArray<T> (NSDictionary dictionary, NSObject? key, Converter<NativeHandle, T> converter)
+		public static T []? GetNativeArray<T> (NSDictionary dictionary, NSObject? key, Converter<NativeHandle, T> converter)
 		{
 			if (key is null)
 				return null;
@@ -104,7 +104,7 @@ namespace CoreText {
 			return ((NSNumber) value).FloatValue;
 		}
 
-		public static string[]? GetStringArray (IDictionary<NSObject, NSObject> dictionary, NSObject? key)
+		public static string []? GetStringArray (IDictionary<NSObject, NSObject> dictionary, NSObject? key)
 		{
 			if (key is null)
 				return null;
@@ -197,7 +197,7 @@ namespace CoreText {
 			if (key is null)
 				throw new ArgumentOutOfRangeException (nameof (key));
 			List<string> v;
-			if (value is null || (v = new List<string>(value)).Count == 0)
+			if (value is null || (v = new List<string> (value)).Count == 0)
 				SetValue (dictionary, key, (NSObject?) null);
 			else
 				using (var array = NSArray.FromStrings (v.ToArray ()))
@@ -231,9 +231,9 @@ namespace CoreText {
 			if (key is null)
 				throw new ArgumentOutOfRangeException (nameof (key));
 			List<NativeHandle> v;
-			if (value is null || (v = GetHandles (value)).Count == 0) 
+			if (value is null || (v = GetHandles (value)).Count == 0)
 				SetNativeValue (dictionary, key, (INativeObject?) null);
-			else 
+			else
 				using (var array = CFArray.FromIntPtrs (v.ToArray ()))
 					SetNativeValue (dictionary, key, array);
 		}
@@ -254,8 +254,7 @@ namespace CoreText {
 			if (value is not null) {
 				AssertWritable (dictionary);
 				CFMutableDictionary.SetValue (dictionary.Handle, key.Handle, value.Handle);
-			}
-			else {
+			} else {
 				IDictionary<NSObject, NSObject> d = dictionary;
 				d.Remove (key);
 			}

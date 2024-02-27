@@ -37,6 +37,8 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Foundation;
 
+#nullable enable
+
 namespace CFNetwork {
 
 	class Content : StreamContent {
@@ -55,15 +57,13 @@ namespace CFNetwork {
 		protected override bool TryComputeLength (out long length)
 		{
 			length = contentLength ?? 0;
-			return contentLength != null;
+			return contentLength is not null;
 		}
 
 		protected override void Dispose (bool disposing)
 		{
 			if (disposing) {
-				if (responseStream != null)
-					responseStream.Dispose ();
-				responseStream = null;
+				responseStream.Dispose ();
 			}
 		}
 
@@ -111,7 +111,7 @@ namespace CFNetwork {
 			if (pos < 0)
 				return;
 
-			value = value.Substring (pos+1).Trim ();
+			value = value.Substring (pos + 1).Trim ();
 			if (value.StartsWith ("charset=", StringComparison.Ordinal)) {
 				var charset = value.Substring (8);
 				Headers.ContentEncoding.Add (charset);

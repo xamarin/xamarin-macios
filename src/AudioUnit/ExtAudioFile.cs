@@ -82,8 +82,10 @@ namespace AudioUnit {
 			get {
 				uint size = sizeof (uint);
 				uint value;
-				if (ExtAudioFileGetProperty (_extAudioFile, PropertyIDType.ClientMaxPacketSize, ref size, out value) != ExtAudioFileError.OK)
-					return null;
+				unsafe {
+					if (ExtAudioFileGetProperty (_extAudioFile, PropertyIDType.ClientMaxPacketSize, &size, &value) != ExtAudioFileError.OK)
+						return null;
+				}
 
 				return value;
 			}
@@ -94,8 +96,10 @@ namespace AudioUnit {
 				uint size = sizeof (uint);
 				uint value;
 
-				if (ExtAudioFileGetProperty (_extAudioFile, PropertyIDType.FileMaxPacketSize, ref size, out value) != ExtAudioFileError.OK)
-					return null;
+				unsafe {
+					if (ExtAudioFileGetProperty (_extAudioFile, PropertyIDType.FileMaxPacketSize, &size, &value) != ExtAudioFileError.OK)
+						return null;
+				}
 
 				return value;
 			}
@@ -104,10 +108,13 @@ namespace AudioUnit {
 
 		public IntPtr? AudioFile {
 			get {
-				uint size = (uint) Marshal.SizeOf (typeof (IntPtr));
+				uint size = (uint) IntPtr.Size;
 				IntPtr value;
-				if (ExtAudioFileGetProperty (_extAudioFile, PropertyIDType.AudioFile, ref size, out value) != ExtAudioFileError.OK)
-					return null;
+
+				unsafe {
+					if (ExtAudioFileGetProperty (_extAudioFile, PropertyIDType.AudioFile, &size, &value) != ExtAudioFileError.OK)
+						return null;
+				}
 
 				return value;
 			}
@@ -118,8 +125,10 @@ namespace AudioUnit {
 				uint size = sizeof (uint);
 				IntPtr value;
 
-				if (ExtAudioFileGetProperty (_extAudioFile, PropertyIDType.AudioConverter, ref size, out value) != ExtAudioFileError.OK)
-					return null;
+				unsafe {
+					if (ExtAudioFileGetProperty (_extAudioFile, PropertyIDType.AudioConverter, &size, &value) != ExtAudioFileError.OK)
+						return null;
+				}
 
 				return new AudioConverter (value, false);
 			}
@@ -130,9 +139,11 @@ namespace AudioUnit {
 				long length;
 				uint size = sizeof (long);
 
-				var err = ExtAudioFileGetProperty (_extAudioFile, PropertyIDType.FileLengthFrames, ref size, out length);
-				if (err != 0) {
-					throw new InvalidOperationException (String.Format ("Error code:{0}", err));
+				unsafe {
+					var err = ExtAudioFileGetProperty (_extAudioFile, PropertyIDType.FileLengthFrames, &size, &length);
+					if (err != 0) {
+						throw new InvalidOperationException (String.Format ("Error code:{0}", err));
+					}
 				}
 
 				return length;
@@ -142,10 +153,12 @@ namespace AudioUnit {
 		public AudioStreamBasicDescription FileDataFormat {
 			get {
 				AudioStreamBasicDescription dc = new AudioStreamBasicDescription ();
-				uint size = (uint) Marshal.SizeOf (typeof (AudioStreamBasicDescription));
-				int err = ExtAudioFileGetProperty (_extAudioFile, PropertyIDType.FileDataFormat, ref size, ref dc);
-				if (err != 0) {
-					throw new InvalidOperationException (String.Format ("Error code:{0}", err));
+				uint size = (uint) Marshal.SizeOf<AudioStreamBasicDescription> ();
+				unsafe {
+					int err = ExtAudioFileGetProperty (_extAudioFile, PropertyIDType.FileDataFormat, &size, &dc);
+					if (err != 0) {
+						throw new InvalidOperationException (String.Format ("Error code:{0}", err));
+					}
 				}
 
 				return dc;
@@ -154,17 +167,22 @@ namespace AudioUnit {
 
 		public AudioStreamBasicDescription ClientDataFormat {
 			get {
-				uint size = (uint) Marshal.SizeOf (typeof (AudioStreamBasicDescription));
+				uint size = (uint) Marshal.SizeOf<AudioStreamBasicDescription> ();
 				AudioStreamBasicDescription value = new AudioStreamBasicDescription ();
-				if (ExtAudioFileGetProperty (_extAudioFile, PropertyIDType.ClientDataFormat, ref size, ref value) != (int) ExtAudioFileError.OK)
-					return default (AudioStreamBasicDescription);
+				unsafe {
+					if (ExtAudioFileGetProperty (_extAudioFile, PropertyIDType.ClientDataFormat, &size, &value) != (int) ExtAudioFileError.OK)
+						return default (AudioStreamBasicDescription);
+				}
 
 				return value;
 			}
 
 			set {
-				int err = ExtAudioFileSetProperty (_extAudioFile, PropertyIDType.ClientDataFormat,
-					(uint) Marshal.SizeOf (value), ref value);
+				int err;
+				unsafe {
+					err = ExtAudioFileSetProperty (_extAudioFile, PropertyIDType.ClientDataFormat,
+					(uint) Marshal.SizeOf<AudioStreamBasicDescription> (), &value);
+				}
 				if (err != 0) {
 					throw new InvalidOperationException (String.Format ("Error code:{0}", err));
 				}
@@ -220,7 +238,9 @@ namespace AudioUnit {
 		static ExtAudioFile? OpenUrl (IntPtr urlHandle, out ExtAudioFileError error)
 		{
 			IntPtr ptr;
-			error = ExtAudioFileOpenUrl (urlHandle, out ptr);
+			unsafe {
+				error = ExtAudioFileOpenUrl (urlHandle, &ptr);
+			}
 
 			if (error != ExtAudioFileError.OK || ptr == IntPtr.Zero)
 				return null;
@@ -271,7 +291,9 @@ namespace AudioUnit {
 		static ExtAudioFile? CreateWithUrl (IntPtr urlHandle, AudioFileType fileType, AudioStreamBasicDescription inStreamDesc, AudioFileFlags flag, out ExtAudioFileError error)
 		{
 			IntPtr ptr;
-			error = (ExtAudioFileError) ExtAudioFileCreateWithUrl (urlHandle, fileType, ref inStreamDesc, IntPtr.Zero, (uint) flag, out ptr);
+			unsafe {
+				error = (ExtAudioFileError) ExtAudioFileCreateWithUrl (urlHandle, fileType, &inStreamDesc, IntPtr.Zero, (uint) flag, &ptr);
+			}
 			if (error != ExtAudioFileError.OK || ptr == IntPtr.Zero)
 				return null;
 			else
@@ -283,7 +305,7 @@ namespace AudioUnit {
 			IntPtr ptr;
 			ExtAudioFileError res;
 			unsafe {
-				res = ExtAudioFileWrapAudioFileID (audioFileID, forWriting, (IntPtr) (&ptr));
+				res = ExtAudioFileWrapAudioFileID (audioFileID, forWriting ? (byte) 1 : (byte) 0, (IntPtr) (&ptr));
 			}
 
 			if (res != ExtAudioFileError.OK) {
@@ -305,8 +327,10 @@ namespace AudioUnit {
 		public long FileTell ()
 		{
 			long frame = 0;
-
-			int err = ExtAudioFileTell (_extAudioFile, ref frame);
+			int err;
+			unsafe {
+				err = ExtAudioFileTell (_extAudioFile, &frame);
+			}
 			if (err != 0) {
 				throw new ArgumentException (String.Format ("Error code:{0}", err));
 			}
@@ -319,7 +343,9 @@ namespace AudioUnit {
 			if (audioBufferList is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (audioBufferList));
 
-			status = ExtAudioFileRead (_extAudioFile, ref numberFrames, (IntPtr) audioBufferList);
+			unsafe {
+				status = ExtAudioFileRead (_extAudioFile, &numberFrames, (IntPtr) audioBufferList);
+			}
 			return numberFrames;
 		}
 
@@ -343,7 +369,7 @@ namespace AudioUnit {
 		{
 			IntPtr value = IntPtr.Zero;
 			return ExtAudioFileSetProperty (_extAudioFile, PropertyIDType.ConverterConfig,
-				Marshal.SizeOf (value), value);
+				IntPtr.Size, value);
 		}
 
 		public void Dispose ()
@@ -362,13 +388,13 @@ namespace AudioUnit {
 
 		#region Interop
 		[DllImport (Constants.AudioToolboxLibrary, EntryPoint = "ExtAudioFileOpenURL")]
-		static extern ExtAudioFileError ExtAudioFileOpenUrl (IntPtr inUrl, out IntPtr outExtAudioFile);
+		unsafe static extern ExtAudioFileError ExtAudioFileOpenUrl (IntPtr inUrl, IntPtr* outExtAudioFile);
 
 		[DllImport (Constants.AudioToolboxLibrary)]
-		static extern ExtAudioFileError ExtAudioFileWrapAudioFileID (IntPtr inFileID, [MarshalAs (UnmanagedType.I1)] bool inForWriting, IntPtr outExtAudioFile);
+		static extern ExtAudioFileError ExtAudioFileWrapAudioFileID (IntPtr inFileID, byte inForWriting, IntPtr outExtAudioFile);
 
 		[DllImport (Constants.AudioToolboxLibrary)]
-		static extern ExtAudioFileError ExtAudioFileRead (IntPtr inExtAudioFile, ref uint /* UInt32* */ ioNumberFrames, IntPtr ioData);
+		unsafe static extern ExtAudioFileError ExtAudioFileRead (IntPtr inExtAudioFile, uint* /* UInt32* */ ioNumberFrames, IntPtr ioData);
 
 		[DllImport (Constants.AudioToolboxLibrary)]
 		static extern ExtAudioFileError ExtAudioFileWrite (IntPtr inExtAudioFile, uint /* UInt32 */ inNumberFrames, IntPtr ioData);
@@ -383,48 +409,48 @@ namespace AudioUnit {
 		static extern int /* OSStatus */ ExtAudioFileSeek (IntPtr inExtAudioFile, long /* SInt64 */ inFrameOffset);
 
 		[DllImport (Constants.AudioToolboxLibrary, EntryPoint = "ExtAudioFileTell")]
-		static extern int /* OSStatus */ ExtAudioFileTell (IntPtr inExtAudioFile, ref long /* SInt64* */ outFrameOffset);
+		unsafe static extern int /* OSStatus */ ExtAudioFileTell (IntPtr inExtAudioFile, long* /* SInt64* */ outFrameOffset);
 
 		[DllImport (Constants.AudioToolboxLibrary, EntryPoint = "ExtAudioFileCreateWithURL")]
-		static extern int /* OSStatus */ ExtAudioFileCreateWithUrl (IntPtr inURL,
-			[MarshalAs (UnmanagedType.U4)] AudioFileType inFileType,
-			ref AudioStreamBasicDescription inStreamDesc,
+		unsafe static extern int /* OSStatus */ ExtAudioFileCreateWithUrl (IntPtr inURL,
+			AudioFileType inFileType,
+			AudioStreamBasicDescription* inStreamDesc,
 			IntPtr inChannelLayout, //AudioChannelLayout inChannelLayout, AudioChannelLayout results in compilation error (error code 134.)
 			UInt32 /* UInt32 */ flags,
-			out IntPtr outExtAudioFile);
+			IntPtr* outExtAudioFile);
 
 		[DllImport (Constants.AudioToolboxLibrary, EntryPoint = "ExtAudioFileGetProperty")]
-		static extern int ExtAudioFileGetProperty (
+		unsafe static extern int ExtAudioFileGetProperty (
 			IntPtr inExtAudioFile,
 			PropertyIDType inPropertyID,
-			ref uint /* UInt32* */ ioPropertyDataSize,
+			uint* /* UInt32* */ ioPropertyDataSize,
 			IntPtr outPropertyData);
 
 		[DllImport (Constants.AudioToolboxLibrary, EntryPoint = "ExtAudioFileGetProperty")]
-		static extern int ExtAudioFileGetProperty (
+		unsafe static extern int ExtAudioFileGetProperty (
 			IntPtr inExtAudioFile,
 			PropertyIDType inPropertyID,
-			ref uint /* UInt32* */ ioPropertyDataSize,
-			ref AudioStreamBasicDescription outPropertyData);
+			uint* /* UInt32* */ ioPropertyDataSize,
+			AudioStreamBasicDescription* outPropertyData);
 
 		[DllImport (Constants.AudioToolboxLibrary)]
-		static extern ExtAudioFileError ExtAudioFileGetProperty (IntPtr inExtAudioFile, PropertyIDType inPropertyID, ref uint /* UInt32* */ ioPropertyDataSize, out IntPtr outPropertyData);
+		unsafe static extern ExtAudioFileError ExtAudioFileGetProperty (IntPtr inExtAudioFile, PropertyIDType inPropertyID, uint* /* UInt32* */ ioPropertyDataSize, IntPtr* outPropertyData);
 
 		[DllImport (Constants.AudioToolboxLibrary)]
-		static extern ExtAudioFileError ExtAudioFileGetProperty (IntPtr inExtAudioFile, PropertyIDType inPropertyID, ref uint /* UInt32* */ ioPropertyDataSize, out long outPropertyData);
+		unsafe static extern ExtAudioFileError ExtAudioFileGetProperty (IntPtr inExtAudioFile, PropertyIDType inPropertyID, uint* /* UInt32* */ ioPropertyDataSize, long* outPropertyData);
 
 		[DllImport (Constants.AudioToolboxLibrary)]
-		static extern ExtAudioFileError ExtAudioFileGetProperty (IntPtr inExtAudioFile, PropertyIDType inPropertyID, ref uint /* UInt32* */ ioPropertyDataSize, out uint outPropertyData);
+		unsafe static extern ExtAudioFileError ExtAudioFileGetProperty (IntPtr inExtAudioFile, PropertyIDType inPropertyID, uint* /* UInt32* */ ioPropertyDataSize, uint* outPropertyData);
 
 		[DllImport (Constants.AudioToolboxLibrary)]
 		static extern ExtAudioFileError ExtAudioFileSetProperty (IntPtr inExtAudioFile, PropertyIDType inPropertyID, int /* UInt32 */ ioPropertyDataSize, IntPtr outPropertyData);
 
 		[DllImport (Constants.AudioToolboxLibrary, EntryPoint = "ExtAudioFileSetProperty")]
-		static extern int ExtAudioFileSetProperty (
+		unsafe static extern int ExtAudioFileSetProperty (
 			IntPtr inExtAudioFile,
 			PropertyIDType inPropertyID,
 			uint /* UInt32 */ ioPropertyDataSize,
-			ref AudioStreamBasicDescription outPropertyData);
+			AudioStreamBasicDescription* outPropertyData);
 
 		enum PropertyIDType { // UInt32 ExtAudioFilePropertyID
 			FileDataFormat = 0x66666d74,       // 'ffmt'

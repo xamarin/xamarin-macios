@@ -14,19 +14,19 @@ using NativeHandle = System.IntPtr;
 #endif
 
 namespace MonoTouchFixtures.Metal {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class DeviceTest {
-		
+
 		[Test]
 		public void System ()
 		{
-			TestRuntime.AssertXcodeVersion (6,0);
+			TestRuntime.AssertXcodeVersion (6, 0);
 
 			var d = MTLDevice.SystemDefault;
 			// some older hardware won't have a default
-			if (d == null)
+			if (d is null)
 				Assert.Inconclusive ("Metal is not supported");
 
 			// if we get an instance it must be valid, i.e. not an empty wrapper

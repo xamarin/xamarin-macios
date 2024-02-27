@@ -17,10 +17,10 @@ using UIKit;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.UIKit {
-	
+
 	class NavigationControllerPoker : UINavigationController {
 	}
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class NavigationControllerTest {
@@ -30,7 +30,7 @@ namespace MonoTouchFixtures.UIKit {
 			using (UIViewController vc = new UIViewController ())
 			using (var nc = new NavigationControllerPoker ()) {
 				Assert.That (nc.ViewControllers, Is.Empty, "Empty");
-				nc.SetViewControllers (new UIViewController[] { vc }, false);
+				nc.SetViewControllers (new UIViewController [] { vc }, false);
 				Assert.That (nc.ViewControllers, Is.Not.Empty, "!Empty");
 				nc.SetViewControllers (null, false);
 				Assert.That (nc.ViewControllers, Is.Empty, "null->Empty/SetMethod");

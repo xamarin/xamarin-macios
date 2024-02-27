@@ -20,18 +20,17 @@ using ObjCRuntime;
 using OSStatus = System.Int32;
 
 namespace CoreMedia {
-	
+
 	public delegate CMTime CMBufferGetTime (INativeObject buffer);
-	public delegate bool   CMBufferGetBool (INativeObject buffer);
-	public delegate int    CMBufferCompare (INativeObject first, INativeObject second);
+	public delegate bool CMBufferGetBool (INativeObject buffer);
+	public delegate int CMBufferCompare (INativeObject first, INativeObject second);
 
 #if NET
-	// [SupportedOSPlatform ("ios7.1")] -  SupportedOSPlatform is not valid on this declaration type "delegate" 
+	// [SupportedOSPlatform ("ios")] -  SupportedOSPlatform is not valid on this declaration type "delegate" 
 #else
-	[iOS (7,1)]
-	[Watch (6,0)]
+	[Watch (6, 0)]
 #endif
-	public delegate nint   CMBufferGetSize (INativeObject buffer);
+	public delegate nint CMBufferGetSize (INativeObject buffer);
 
 #if NET
 	[SupportedOSPlatform ("ios")]
@@ -39,8 +38,7 @@ namespace CoreMedia {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #endif
-	public class CMBufferQueue : NativeObject
-		{
+	public class CMBufferQueue : NativeObject {
 #if !COREBUILD
 		GCHandle gch;
 		Dictionary<IntPtr, INativeObject> queueObjects;
@@ -50,15 +48,15 @@ namespace CoreMedia {
 		CMBufferGetBool? isDataReady;
 		CMBufferCompare? compare;
 		CMBufferGetSize? getTotalSize;
-		
+
 #if !NET
 		delegate CMTime BufferGetTimeCallback (/* CMBufferRef */ IntPtr buf, /* void* */ IntPtr refcon);
 		[return: MarshalAs (UnmanagedType.I1)]
-		delegate bool   BufferGetBooleanCallback (/* CMBufferRef */ IntPtr buf, /* void* */ IntPtr refcon);
-		delegate int    BufferCompareCallback (/* CMBufferRef */ IntPtr buf1, /* CMBufferRef */ IntPtr buf2, /* void* */ IntPtr refcon);
-		delegate nint   BufferGetSizeCallback (/* CMBufferRef */ IntPtr buffer, /* void* */ IntPtr refcon);
+		delegate bool BufferGetBooleanCallback (/* CMBufferRef */ IntPtr buf, /* void* */ IntPtr refcon);
+		delegate int BufferCompareCallback (/* CMBufferRef */ IntPtr buf1, /* CMBufferRef */ IntPtr buf2, /* void* */ IntPtr refcon);
+		delegate nint BufferGetSizeCallback (/* CMBufferRef */ IntPtr buffer, /* void* */ IntPtr refcon);
 #endif
-		
+
 		[StructLayout (LayoutKind.Sequential)]
 		struct CMBufferCallbacks {
 			internal uint version;
@@ -97,7 +95,7 @@ namespace CoreMedia {
 			internal IntPtr cfStringPtr_dataBecameReadyNotification;
 			internal IntPtr XgetSize;
 		}
-	
+
 		protected override void Dispose (bool disposing)
 		{
 			queueObjects.Clear ();
@@ -108,10 +106,10 @@ namespace CoreMedia {
 
 		// CMItemCount -> CMBase.h (looks weird but it's 4 bytes in 32bits and 8 bytes in 64bits, x86_64 and ARM64)
 
-		[DllImport(Constants.CoreMediaLibrary)]
+		[DllImport (Constants.CoreMediaLibrary)]
 		extern static OSStatus CMBufferQueueCreate (/* CFAllocatorRef */ IntPtr allocator, /* CMItemCount */ nint capacity, CMBufferCallbacks cbacks, /* CMBufferQueueRef* */ out IntPtr result);
 
-		[DllImport(Constants.CoreMediaLibrary)]
+		[DllImport (Constants.CoreMediaLibrary)]
 		extern static OSStatus CMBufferQueueCreate (/* CFAllocatorRef */ IntPtr allocator, /* CMItemCount */ nint capacity, /* CMBufferCallbacks */ IntPtr cbacks, /* CMBufferQueueRef* */ out IntPtr result);
 
 		CMBufferQueue (IntPtr handle, bool owns, int count)
@@ -130,7 +128,7 @@ namespace CoreMedia {
 		public static CMBufferQueue? FromCallbacks (int count, CMBufferGetTime? getDecodeTimeStamp, CMBufferGetTime? getPresentationTimeStamp, CMBufferGetTime? getDuration,
 			CMBufferGetBool? isDataReady, CMBufferCompare? compare, NSString dataBecameReadyNotification)
 		{
-			return FromCallbacks (count, getDecodeTimeStamp, getPresentationTimeStamp, getDuration, isDataReady, 
+			return FromCallbacks (count, getDecodeTimeStamp, getPresentationTimeStamp, getDuration, isDataReady,
 				compare, dataBecameReadyNotification, null);
 		}
 
@@ -183,9 +181,9 @@ namespace CoreMedia {
 			return null;
 		}
 
-		[DllImport(Constants.CoreMediaLibrary)]
+		[DllImport (Constants.CoreMediaLibrary)]
 		unsafe extern static /* CMBufferCallbacks */ IntPtr CMBufferQueueGetCallbacksForUnsortedSampleBuffers ();
-		
+
 		public static CMBufferQueue? CreateUnsorted (int count)
 		{
 			// note: different version of iOS can return a different (size) structure, e.g. iOS 7.1,
@@ -201,9 +199,9 @@ namespace CoreMedia {
 			return null;
 		}
 
-		[DllImport(Constants.CoreMediaLibrary)]
+		[DllImport (Constants.CoreMediaLibrary)]
 		extern static OSStatus CMBufferQueueEnqueue (/* CMBufferQueueRef */ IntPtr queue, /* CMBufferRef */ IntPtr buf);
-		
+
 		//
 		// It really should be ICFType, and we should pepper various classes with ICFType
 		//
@@ -211,7 +209,7 @@ namespace CoreMedia {
 		{
 			if (cftypeBuffer is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (cftypeBuffer));
-			lock (queueObjects){
+			lock (queueObjects) {
 				var cfh = cftypeBuffer.Handle;
 				CMBufferQueueEnqueue (Handle, cfh);
 				if (!queueObjects.ContainsKey (cfh))
@@ -219,7 +217,7 @@ namespace CoreMedia {
 			}
 		}
 
-		[DllImport(Constants.CoreMediaLibrary)]
+		[DllImport (Constants.CoreMediaLibrary)]
 		extern static /* CMBufferRef */ IntPtr CMBufferQueueDequeueAndRetain (/* CMBufferQueueRef */ IntPtr queue);
 
 		public INativeObject? Dequeue ()
@@ -235,16 +233,16 @@ namespace CoreMedia {
 				return null;
 
 			CFObject.CFRelease (oHandle);
-			lock (queueObjects){
+			lock (queueObjects) {
 				var managed = queueObjects [oHandle];
 				queueObjects.Remove (oHandle);
 				return managed;
 			}
 		}
 
-		[DllImport(Constants.CoreMediaLibrary)]
+		[DllImport (Constants.CoreMediaLibrary)]
 		extern static /* CMBufferRef */ IntPtr CMBufferQueueDequeueIfDataReadyAndRetain (/* CMBufferQueueRef */ IntPtr queue);
-		
+
 		public INativeObject? DequeueIfDataReady ()
 		{
 			//
@@ -258,14 +256,14 @@ namespace CoreMedia {
 				return null;
 
 			CFObject.CFRelease (oHandle);
-			lock (queueObjects){
+			lock (queueObjects) {
 				var managed = queueObjects [oHandle];
 				queueObjects.Remove (oHandle);
 				return managed;
 			}
 		}
 
-		[DllImport(Constants.CoreMediaLibrary)]
+		[DllImport (Constants.CoreMediaLibrary)]
 		extern static byte CMBufferQueueIsEmpty (/* CMBufferQueueRef */ IntPtr queue);
 		public bool IsEmpty {
 			get {
@@ -273,15 +271,15 @@ namespace CoreMedia {
 			}
 		}
 
-		
-		[DllImport(Constants.CoreMediaLibrary)]
+
+		[DllImport (Constants.CoreMediaLibrary)]
 		extern static OSStatus CMBufferQueueMarkEndOfData (/* CMBufferQueueRef */ IntPtr queue);
 		public int MarkEndOfData ()
 		{
 			return CMBufferQueueMarkEndOfData (Handle);
 		}
 
-		[DllImport(Constants.CoreMediaLibrary)]
+		[DllImport (Constants.CoreMediaLibrary)]
 		extern static byte CMBufferQueueContainsEndOfData (/* CMBufferQueueRef */ IntPtr queue);
 		public bool ContainsEndOfData {
 			get {
@@ -289,7 +287,7 @@ namespace CoreMedia {
 			}
 		}
 
-		[DllImport(Constants.CoreMediaLibrary)]
+		[DllImport (Constants.CoreMediaLibrary)]
 		extern static byte CMBufferQueueIsAtEndOfData (/* CMBufferQueueRef */ IntPtr queue);
 		public bool IsAtEndOfData {
 			get {
@@ -297,14 +295,14 @@ namespace CoreMedia {
 			}
 		}
 
-		[DllImport(Constants.CoreMediaLibrary)]
+		[DllImport (Constants.CoreMediaLibrary)]
 		extern static OSStatus CMBufferQueueReset (/* CMBufferQueueRef */ IntPtr queue);
 		public OSStatus Reset ()
 		{
 			return CMBufferQueueReset (Handle);
 		}
 
-		[DllImport(Constants.CoreMediaLibrary)]
+		[DllImport (Constants.CoreMediaLibrary)]
 		extern static nint CMBufferQueueGetBufferCount (/* CMBufferQueueRef */ IntPtr queue);
 		public nint BufferCount {
 			get {
@@ -312,34 +310,28 @@ namespace CoreMedia {
 			}
 		}
 
-		[DllImport(Constants.CoreMediaLibrary)]
+		[DllImport (Constants.CoreMediaLibrary)]
 		extern static CMTime CMBufferQueueGetDuration (/* CMBufferQueueRef */ IntPtr queue);
 		public CMTime Duration {
 			get {
 				return CMBufferQueueGetDuration (Handle);
 			}
 		}
-		
+
 #if NET
-		[SupportedOSPlatform ("ios7.1")]
-		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7,1)]
-		[Mac (10,10)]
 #endif
 		[DllImport (Constants.CoreMediaLibrary)]
 		extern static /* size_t */ nint CMBufferQueueGetTotalSize (/* CMBufferQueueRef */ IntPtr queue);
 
 #if NET
-		[SupportedOSPlatform ("ios7.1")]
-		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7,1)]
-		[Mac (10, 10)]
 #endif
 		public nint GetTotalSize ()
 		{
@@ -451,7 +443,7 @@ namespace CoreMedia {
 #endif // !COREBUILD
 
 #if !NET
-		[Watch (6,0)]
+		[Watch (6, 0)]
 #endif
 		public enum TriggerCondition {
 			WhenDurationBecomesLessThan = 1,

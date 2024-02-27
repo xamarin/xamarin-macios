@@ -11,31 +11,29 @@ using OpenGLES;
 using GLKit;
 using UIKit;
 
-namespace MyOpenGLApp
-{
+namespace MyOpenGLApp {
 	[Register ("OpenGLViewController")]
-	public partial class OpenGLViewController : UIViewController
-	{
+	public partial class OpenGLViewController : UIViewController {
 		public OpenGLViewController (IntPtr handle) : base (handle)
 		{
 		}
 
-		new EAGLView View { get { return (EAGLView)base.View; } }
+		new EAGLView View { get { return (EAGLView) base.View; } }
 
 		public override void ViewDidLoad ()
 		{
 			base.ViewDidLoad ();
-			
+
 			NSNotificationCenter.DefaultCenter.AddObserver (UIApplication.WillResignActiveNotification, a => {
-				if (IsViewLoaded && View.Window != null)
+				if (IsViewLoaded && View.Window is not null)
 					View.StopAnimating ();
 			}, this);
 			NSNotificationCenter.DefaultCenter.AddObserver (UIApplication.DidBecomeActiveNotification, a => {
-				if (IsViewLoaded && View.Window != null)
+				if (IsViewLoaded && View.Window is not null)
 					View.StartAnimating ();
 			}, this);
 			NSNotificationCenter.DefaultCenter.AddObserver (UIApplication.WillTerminateNotification, a => {
-				if (IsViewLoaded && View.Window != null)
+				if (IsViewLoaded && View.Window is not null)
 					View.StopAnimating ();
 			}, this);
 		}
@@ -43,7 +41,7 @@ namespace MyOpenGLApp
 		protected override void Dispose (bool disposing)
 		{
 			base.Dispose (disposing);
-			
+
 			NSNotificationCenter.DefaultCenter.RemoveObserver (this);
 		}
 
@@ -51,7 +49,7 @@ namespace MyOpenGLApp
 		{
 			// Releases the view if it doesn't have a superview.
 			base.DidReceiveMemoryWarning ();
-			
+
 			// Release any cached data, images, etc that aren't in use.
 		}
 

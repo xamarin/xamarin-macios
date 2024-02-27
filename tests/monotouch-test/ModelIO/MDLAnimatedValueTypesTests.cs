@@ -509,24 +509,24 @@ namespace MonoTouchFixtures.ModelIO {
 				animatedQuat.Reset (TestMatrices.QuaterniondArray, TestMatrices.GetTimesArray (TestMatrices.QuaterniondArray.Length));
 				var arrd = animatedQuat.GetQuaterniondValues (20);
 				Asserts.AreEqual (TestMatrices.QuaterniondArray, arrd, "C2");
-			} 
+			}
 		}
 
 		[Test]
 		public unsafe void OpenTKSizeOfTests ()
 		{
-			Assert.AreEqual (sizeof (Matrix4), Marshal.SizeOf (typeof (Matrix4)));
-			Assert.AreEqual (sizeof (Matrix4d), Marshal.SizeOf (typeof (Matrix4d)));
+			Assert.AreEqual (sizeof (Matrix4), Marshal.SizeOf<Matrix4> ());
+			Assert.AreEqual (sizeof (Matrix4d), Marshal.SizeOf<Matrix4d> ());
 
-			Assert.AreEqual (sizeof (Quaternion), Marshal.SizeOf (typeof (Quaternion)));
-			Assert.AreEqual (sizeof (Quaterniond), Marshal.SizeOf (typeof (Quaterniond)));
+			Assert.AreEqual (sizeof (Quaternion), Marshal.SizeOf<Quaternion> ());
+			Assert.AreEqual (sizeof (Quaterniond), Marshal.SizeOf<Quaterniond> ());
 
-			Assert.AreEqual (sizeof (Vector2), Marshal.SizeOf (typeof (Vector2)));
-			Assert.AreEqual (sizeof (Vector3), Marshal.SizeOf (typeof (Vector3)));
-			Assert.AreEqual (sizeof (Vector4), Marshal.SizeOf (typeof (Vector4)));
-			Assert.AreEqual (sizeof (Vector2d), Marshal.SizeOf (typeof (Vector2d)));
-			Assert.AreEqual (sizeof (Vector3d), Marshal.SizeOf (typeof (Vector3d)));
-			Assert.AreEqual (sizeof (Vector4d), Marshal.SizeOf (typeof (Vector4d)));
+			Assert.AreEqual (sizeof (Vector2), Marshal.SizeOf<Vector2> ());
+			Assert.AreEqual (sizeof (Vector3), Marshal.SizeOf<Vector3> ());
+			Assert.AreEqual (sizeof (Vector4), Marshal.SizeOf<Vector4> ());
+			Assert.AreEqual (sizeof (Vector2d), Marshal.SizeOf<Vector2d> ());
+			Assert.AreEqual (sizeof (Vector3d), Marshal.SizeOf<Vector3d> ());
+			Assert.AreEqual (sizeof (Vector4d), Marshal.SizeOf<Vector4d> ());
 		}
 
 	}
@@ -698,9 +698,9 @@ namespace MonoTouchFixtures.ModelIO {
 			new NMatrix4d (0.006755914d, 0.07464754d, 0.287938d, 0.3724834d, 0.1496783d, 0.6224982d, 0.7150125d, 0.5554719d, 0.4638171d, 0.4200902d, 0.4867154d, 0.773377d, 0.3558737d, 0.4043404d, 0.04670618d, 0.7695189d),
 		};
 
-		public static T [] CreateOnesArray <T> (int size) where T : struct
+		public static T [] CreateOnesArray<T> (int size) where T : struct
 		{
-			T[] array = null;
+			T [] array = null;
 			var t = typeof (T);
 
 			if (t == typeof (float))

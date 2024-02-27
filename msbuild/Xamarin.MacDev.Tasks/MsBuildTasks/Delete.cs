@@ -1,7 +1,12 @@
+extern alias Microsoft_Build_Tasks_Core;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.Build.Framework;
 using Xamarin.Messaging.Build.Client;
 
 namespace Microsoft.Build.Tasks {
-	public class Delete : DeleteBase {
+	public class Delete : Microsoft_Build_Tasks_Core::Microsoft.Build.Tasks.Delete, ITaskCallback {
+		public string SessionId { get; set; } = string.Empty;
 		public override bool Execute ()
 		{
 			var result = base.Execute ();
@@ -11,19 +16,23 @@ namespace Microsoft.Build.Tasks {
 			}
 
 			var client = BuildConnection
-				.GetAsync (SessionId, BuildEngine4)
+				.GetAsync (BuildEngine4)
 				.Result
-				.Client;
+				.GetClient (SessionId);
 
 			if (!client.IsConnected) {
 				return result;
 			}
 
-			foreach (var file in Files) {
-				client.DeleteFileAsync (file.ItemSpec).Wait ();
-			}
+			client.DeleteFilesAsync (Files.Select (x => x.ItemSpec).ToArray ()).Wait ();
 
 			return result;
 		}
+
+		public bool ShouldCopyToBuildServer (ITaskItem item) => false;
+
+		public bool ShouldCreateOutputFile (ITaskItem item) => false;
+
+		public IEnumerable<ITaskItem> GetAdditionalItemsToBeCopied () => Enumerable.Empty<ITaskItem> ();
 	}
 }

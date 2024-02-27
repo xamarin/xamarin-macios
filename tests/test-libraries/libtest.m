@@ -7,6 +7,8 @@
 #include <zlib.h>
 #include "libtest.h"
 
+NSString *x_GlobalString = @"There's nothing cruvus here!";
+
 int
 theUltimateAnswer ()
 {
@@ -21,6 +23,12 @@ void useZLib ()
 void x_call_block (x_block_callback block)
 {
 	block ();
+}
+
+void *
+x_call_func_3 (void* (*fptr)(void*, void*, void*), void* p1, void* p2, void* p3)
+{
+	return fptr (p1, p2, p3);
 }
 
 typedef matrix_float2x2 (*func_x_get_matrix_float2x2_msgSend) (id self, SEL sel);
@@ -1064,7 +1072,7 @@ static void block_called ()
 	}
 }
 
--(void) testInt: (int) action a:(int32_t *) refValue b:(int32_t *) outValue
+-(void) testInt: (int) action a:(int32_t *) refValue b:(int32_t *) outValue c:(int32_t *) pointerValue
 {
 	NSString *obj __attribute__((unused)) = NULL;
 
@@ -1076,15 +1084,18 @@ static void block_called ()
 	case 1: // Set both to 0
 		*refValue = 0;
 		*outValue = 0;
+		*pointerValue = 0;
 		break;
 	case 3: // set both parameteres to the same value
 		obj = @"A constant native string";
 		*refValue = 314159;
 		*outValue = 314159;
+		*pointerValue = 314159;
 		return;
 	case 4: // set both parameteres to different objects
 		*refValue = 3141592;
 		*outValue = 2718282;
+		*pointerValue = 5772156;
 		break;
 	default:
 		abort ();

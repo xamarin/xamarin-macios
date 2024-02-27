@@ -1,11 +1,9 @@
 using System;
 using Foundation;
 
-namespace NS
-{
+namespace NS {
 	[Protocol]
-	interface ProtocolWithReturnRelease
-	{
+	interface ProtocolWithReturnRelease {
 		[Abstract, Export ("newRequiredObject")]
 		[return: Release]
 		NSObject CreateRequiredObject ();

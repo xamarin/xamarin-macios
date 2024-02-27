@@ -10,6 +10,7 @@
 #nullable enable
 
 using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 using CoreFoundation;
@@ -24,14 +25,10 @@ using NativeHandle = System.IntPtr;
 namespace VideoToolbox {
 
 #if NET
-	[SupportedOSPlatform ("macos10.10")]
-	[SupportedOSPlatform ("ios8.0")]
-	[SupportedOSPlatform ("tvos10.2")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("tvos")]
 	[SupportedOSPlatform ("maccatalyst")]
-#else
-	[Mac (10,10)]
-	[iOS (8,0)]
-	[TV (10,2)]
 #endif
 	public class VTFrameSilo : NativeObject {
 #if !NET
@@ -41,28 +38,32 @@ namespace VideoToolbox {
 		}
 #endif
 
-		[Preserve (Conditional=true)]
+		[Preserve (Conditional = true)]
 		internal VTFrameSilo (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}
 
 		[DllImport (Constants.VideoToolboxLibrary)]
-		extern static /* OSStatus */ VTStatus VTFrameSiloCreate (
+		unsafe extern static /* OSStatus */ VTStatus VTFrameSiloCreate (
 			/* CFAllocatorRef */ IntPtr allocator, /* can be null */
 			/* CFURLRef */ IntPtr fileUrl, /* can be null */
 			/* CMTimeRange */ CMTimeRange timeRange, /* can be kCMTimeRangeInvalid */
 			/* CFDictionaryRef */ IntPtr options, /* Reserved, always null */
-			/* VTFrameSiloRef */ out IntPtr siloOut);
+			/* VTFrameSiloRef */ IntPtr* siloOut);
 
 		public static VTFrameSilo? Create (NSUrl? fileUrl = null, CMTimeRange? timeRange = null)
 		{
-			var status = VTFrameSiloCreate (
+			VTStatus status;
+			IntPtr ret;
+			unsafe {
+				status = VTFrameSiloCreate (
 				IntPtr.Zero,
 				fileUrl.GetHandle (),
-				timeRange ?? CMTimeRange.InvalidRange, 
-				IntPtr.Zero, 
-				out var ret);
+				timeRange ?? CMTimeRange.InvalidRange,
+				IntPtr.Zero,
+				&ret);
+			}
 
 			if (status != VTStatus.Ok)
 				return null;
@@ -89,27 +90,30 @@ namespace VideoToolbox {
 			/* CMItemCount */ nint timeRangeCount,
 			/* const CMTimeRange * */ IntPtr timeRangeArray);
 
-		public unsafe VTStatus SetTimeRangesForNextPass (CMTimeRange[] ranges)
+		public unsafe VTStatus SetTimeRangesForNextPass (CMTimeRange [] ranges)
 		{
 			if (ranges is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (ranges));
 
 			if (ranges.Length > 0)
-				fixed (CMTimeRange *first = &ranges [0]) {
-					return VTFrameSiloSetTimeRangesForNextPass (Handle, ranges.Length, (IntPtr)first);
+				fixed (CMTimeRange* first = ranges) {
+					return VTFrameSiloSetTimeRangesForNextPass (Handle, ranges.Length, (IntPtr) first);
 				}
 			else
 				return VTFrameSiloSetTimeRangesForNextPass (Handle, ranges.Length, IntPtr.Zero);
 		}
 
 		[DllImport (Constants.VideoToolboxLibrary)]
-		extern static /* OSStatus */ VTStatus VTFrameSiloGetProgressOfCurrentPass (
+		unsafe extern static /* OSStatus */ VTStatus VTFrameSiloGetProgressOfCurrentPass (
 			/* VTFrameSiloRef */ IntPtr silo,
-			/* Float32* */ out float progressOut);
+			/* Float32* */ float* progressOut);
 
 		public VTStatus GetProgressOfCurrentPass (out float progress)
 		{
-			return VTFrameSiloGetProgressOfCurrentPass (Handle, out progress);
+			progress = default;
+			unsafe {
+				return VTFrameSiloGetProgressOfCurrentPass (Handle, (float*) Unsafe.AsPointer<float> (ref progress));
+			}
 		}
 
 #if !NET

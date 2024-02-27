@@ -9,11 +9,9 @@ using Xamarin.MacDev;
 using Xamarin.Tests;
 using Xamarin.Utils;
 
-namespace Xamarin.MacDev.Tasks
-{
+namespace Xamarin.MacDev.Tasks {
 	[TestFixture]
-	public class ValidateAppBundleTaskTests : ExtensionTestBase
-	{
+	public class ValidateAppBundleTaskTests : ExtensionTestBase {
 		string extensionBundlePath;
 		string mainAppPlistPath;
 		string extensionPlistPath;
@@ -55,7 +53,7 @@ namespace Xamarin.MacDev.Tasks
 		void MissingPlist_Extension ()
 		{
 			var contents = File.ReadAllBytes (extensionPlistPath);
-			try { 
+			try {
 				File.Delete (extensionPlistPath);
 				RunTarget (MonoTouchProject, "_ValidateAppBundle", 1);
 				Assert.IsTrue (Engine.Logger.ErrorEvents.Count > 0, "#2");

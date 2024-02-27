@@ -17,7 +17,7 @@ using ObjCRuntime;
 namespace Introspection {
 
 	public abstract class CoreSelectorTest : ApiSelectorTest {
-		
+
 		protected override bool CheckResponse (bool value, Type actualType, MethodBase method, ref string name)
 		{
 			if (value)

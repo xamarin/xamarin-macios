@@ -20,7 +20,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 		[Test]
 		public void ToStringTest ()
 		{
-			var vector = new CGVector ((nfloat)1, (nfloat)2);
+			var vector = new CGVector ((nfloat) 1, (nfloat) 2);
 			Assert.AreEqual ("{1, 2}", vector.ToString (), "ToString");
 		}
 	}

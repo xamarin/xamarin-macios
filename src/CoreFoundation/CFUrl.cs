@@ -57,28 +57,27 @@ namespace CoreFoundation {
 	[SupportedOSPlatform ("tvos")]
 #endif
 	// CFURL.h
-	public class CFUrl : NativeObject
-	{
+	public class CFUrl : NativeObject {
 #if !COREBUILD
 		[DllImport (Constants.CoreFoundationLibrary)]
-		extern static /* CFURLRef */ IntPtr CFURLCreateWithFileSystemPath (/* CFAllocatorRef */ IntPtr allocator, 
-			/* CFStringRef */ IntPtr filePath, 
-			/* CFURLPathStyle */ nint pathStyle, 
-			/* Boolean */ [MarshalAs (UnmanagedType.I1)] bool isDirectory);
-		
+		extern static /* CFURLRef */ IntPtr CFURLCreateWithFileSystemPath (/* CFAllocatorRef */ IntPtr allocator,
+			/* CFStringRef */ IntPtr filePath,
+			/* CFURLPathStyle */ nint pathStyle,
+			/* Boolean */ byte isDirectory);
+
 		[Preserve (Conditional = true)]
 		internal CFUrl (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}
-		
+
 		static public CFUrl? FromFile (string filename)
 		{
 			if (filename is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (filename));
 			var strHandle = CFString.CreateNative (filename);
 			try {
-				var handle = CFURLCreateWithFileSystemPath (IntPtr.Zero, strHandle, (nint)(long)CFUrlPathStyle.POSIX, false);
+				var handle = CFURLCreateWithFileSystemPath (IntPtr.Zero, strHandle, (nint) (long) CFUrlPathStyle.POSIX, (byte) 0);
 				if (handle == IntPtr.Zero)
 					return null;
 				return new CFUrl (handle, true);
@@ -88,8 +87,8 @@ namespace CoreFoundation {
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
-		extern static /* CFURLRef */ IntPtr CFURLCreateWithString (/* CFAllocatorRef */ IntPtr allocator, 
-			/* CFStringRef */ IntPtr URLString, 
+		extern static /* CFURLRef */ IntPtr CFURLCreateWithString (/* CFAllocatorRef */ IntPtr allocator,
+			/* CFStringRef */ IntPtr URLString,
 			/* CFStringRef */ IntPtr baseURL);
 
 		static public CFUrl? FromUrlString (string url, CFUrl? baseurl)
@@ -114,16 +113,16 @@ namespace CoreFoundation {
 
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static /* CFStringRef */ IntPtr CFURLGetString (/* CFURLRef */ IntPtr anURL);
-		
+
 		public override string? ToString ()
 		{
 			return CFString.FromHandle (CFURLGetString (Handle));
 		}
-		
+
 		[DllImport (Constants.CoreFoundationLibrary)]
-		extern static /* CFStringRef */ IntPtr CFURLCopyFileSystemPath (/* CFURLRef */ IntPtr anURL, 
+		extern static /* CFStringRef */ IntPtr CFURLCopyFileSystemPath (/* CFURLRef */ IntPtr anURL,
 			/* CFURLPathStyle */ nint style);
-		
+
 		public string? FileSystemPath {
 			get {
 				return GetFileSystemPath (Handle);
@@ -136,34 +135,27 @@ namespace CoreFoundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7,0)]
-		[Mac (10,9)]
 #endif
 		[DllImport (Constants.CoreFoundationLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static /* Boolean */ bool CFURLIsFileReferenceURL (/* CFURLRef */IntPtr url);
+		extern static /* Boolean */ byte CFURLIsFileReferenceURL (/* CFURLRef */IntPtr url);
 
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7,0)]
-		[Mac (10,9)]
 #endif
 		public bool IsFileReference {
 			get {
-				return CFURLIsFileReferenceURL (Handle);
+				return CFURLIsFileReferenceURL (Handle) != 0;
 			}
 		}
-		
-		[DllImport (Constants.CoreFoundationLibrary, EntryPoint="CFURLGetTypeID")]
+
+		[DllImport (Constants.CoreFoundationLibrary, EntryPoint = "CFURLGetTypeID")]
 		public extern static /* CFTypeID */ nint GetTypeID ();
 #endif // !COREBUILD
 	}

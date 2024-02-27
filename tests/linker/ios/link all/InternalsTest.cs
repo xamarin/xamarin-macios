@@ -31,7 +31,7 @@ namespace LinkAll.InernalCalls {
 			Assert.IsNotNull (xamarin_get_locale_country_code (), "xamarin_get_locale_country_code");
 		}
 
-		[DllImport ("__Internal", CharSet=CharSet.Unicode)]
+		[DllImport ("__Internal", CharSet = CharSet.Unicode)]
 		extern static void xamarin_log (string s);
 
 		[Test]

@@ -3,10 +3,13 @@ using System.Runtime.InteropServices;
 using Foundation;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace CoreMedia {
 	// keys names got changed at some point, but they all refer to a CMSampleBuffer (there is not CMSample obj)
-	[Watch (6,0)]
-	enum CMSampleBufferAttachmentKey { 
+	[Watch (6, 0)]
+	[MacCatalyst (13, 1)]
+	enum CMSampleBufferAttachmentKey {
 		[Field ("kCMSampleAttachmentKey_NotSync")]
 		NotSync,
 		[Field ("kCMSampleAttachmentKey_PartialSync")]
@@ -23,16 +26,16 @@ namespace CoreMedia {
 		DisplayImmediately,
 		[Field ("kCMSampleAttachmentKey_DoNotDisplay")]
 		DoNotDisplay,
-		[iOS (11,0), Mac (10,13), TV (11,0)]
+		[MacCatalyst (13, 1)]
 		[Field ("kCMSampleAttachmentKey_HEVCTemporalLevelInfo")]
 		HevcTemporalLevelInfo,
-		[iOS (11,0), Mac (10,13), TV (11,0)]
+		[MacCatalyst (13, 1)]
 		[Field ("kCMSampleAttachmentKey_HEVCTemporalSubLayerAccess")]
 		HevcTemporalSubLayerAccess,
-		[iOS (11,0), Mac (10,13), TV (11,0)]
+		[MacCatalyst (13, 1)]
 		[Field ("kCMSampleAttachmentKey_HEVCStepwiseTemporalSubLayerAccess")]
 		HevcStepwiseTemporalSubLayerAccess,
-		[iOS (11,0), Mac (10,13), TV (11,0)]
+		[MacCatalyst (13, 1)]
 		[Field ("kCMSampleAttachmentKey_HEVCSyncSampleNALUnitType")]
 		HevcSyncSampleNalUnitType,
 		[Field ("kCMSampleBufferAttachmentKey_ResetDecoderBeforeDecoding")]
@@ -66,23 +69,27 @@ namespace CoreMedia {
 		[Field ("kCMSampleBufferAttachmentKey_SampleReferenceURL")]
 		SampleReferenceUrl,
 		[Field ("kCMSampleBufferAttachmentKey_SampleReferenceByteOffset")]
-		SampleReferenceByteOffset, 
+		SampleReferenceByteOffset,
 		[Field ("kCMSampleBufferAttachmentKey_GradualDecoderRefresh")]
 		GradualDecoderRefresh,
-		[Mac (10,14)]
+		[MacCatalyst (13, 1)]
 		[Field ("kCMSampleBufferAttachmentKey_DroppedFrameReason")]
 		DroppedFrameReason,
-		[iOS (9,0)][Mac (10,14)]
+		[MacCatalyst (13, 1)]
 		[Field ("kCMSampleBufferAttachmentKey_StillImageLensStabilizationInfo")]
 		StillImageLensStabilizationInfo,
-		[iOS (11,0), Mac (10,13), TV (11,0)]
+		[MacCatalyst (13, 1)]
 		[Field ("kCMSampleBufferAttachmentKey_CameraIntrinsicMatrix")]
 		CameraIntrinsicMatrix,
-		[Mac (10,14)]
+		[MacCatalyst (13, 1)]
 		[Field ("kCMSampleBufferAttachmentKey_DroppedFrameReasonInfo")]
 		DroppedFrameReasonInfo,
-		[Mac (10,10)]
+		[MacCatalyst (13, 1)]
 		[Field ("kCMSampleBufferAttachmentKey_ForceKeyFrame")]
 		ForceKeyFrame,
+		[Watch (9, 0), TV (16, 0), Mac (13, 0), iOS (16, 0)]
+		[MacCatalyst (16, 0)]
+		[Field ("kCMSampleAttachmentKey_HDR10PlusPerFrameData")]
+		Hdr10PlusPerFrameData,
 	}
 }

@@ -10,11 +10,11 @@ using MapKit;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.MapKit {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class OverlayPathViewTest {
-		
+
 		[Test]
 		public void InitWithFrame ()
 		{

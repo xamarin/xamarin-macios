@@ -31,8 +31,7 @@ namespace OpenTK
 	[SupportedOSPlatform ("tvos")]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
-	public struct NMatrix2 : IEquatable<NMatrix2>
-	{
+	public struct NMatrix2 : IEquatable<NMatrix2> {
 #if NET
 		public float M11;
 		public float M21;
@@ -192,7 +191,7 @@ namespace OpenTK
 
 		public override int GetHashCode ()
 		{
-			return M11.GetHashCode () ^ M12.GetHashCode () ^ M21.GetHashCode () ^ M22.GetHashCode ();
+			return HashCode.Combine (M11, M12, M21, M22);
 		}
 
 		public override bool Equals (object? obj)

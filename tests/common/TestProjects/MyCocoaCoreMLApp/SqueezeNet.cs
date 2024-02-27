@@ -16,8 +16,7 @@ namespace MyCocoaCoreMLApp {
 	/// <summary>
 	/// Model Prediction Input Type
 	/// </summary>
-	public class SqueezeNetInput : NSObject, IMLFeatureProvider
-	{
+	public class SqueezeNetInput : NSObject, IMLFeatureProvider {
 		static readonly NSSet<NSString> featureNames = new NSSet<NSString> (
 			new NSString ("image")
 		);
@@ -31,7 +30,7 @@ namespace MyCocoaCoreMLApp {
 		public CVPixelBuffer Image {
 			get { return image; }
 			set {
-				if (value == null)
+				if (value is null)
 					throw new ArgumentNullException (nameof (value));
 
 				image = value;
@@ -54,7 +53,7 @@ namespace MyCocoaCoreMLApp {
 
 		public SqueezeNetInput (CVPixelBuffer image)
 		{
-			if (image == null)
+			if (image is null)
 				throw new ArgumentNullException (nameof (image));
 
 			Image = image;
@@ -64,8 +63,7 @@ namespace MyCocoaCoreMLApp {
 	/// <summary>
 	/// Model Prediction Output Type
 	/// </summary>
-	public class SqueezeNetOutput : NSObject, IMLFeatureProvider
-	{
+	public class SqueezeNetOutput : NSObject, IMLFeatureProvider {
 		static readonly NSSet<NSString> featureNames = new NSSet<NSString> (
 			new NSString ("classLabelProbs"), new NSString ("classLabel")
 		);
@@ -80,7 +78,7 @@ namespace MyCocoaCoreMLApp {
 		public NSDictionary<NSObject, NSNumber> ClassLabelProbs {
 			get { return classLabelProbs; }
 			set {
-				if (value == null)
+				if (value is null)
 					throw new ArgumentNullException (nameof (value));
 
 				classLabelProbs = value;
@@ -94,7 +92,7 @@ namespace MyCocoaCoreMLApp {
 		public string ClassLabel {
 			get { return classLabel; }
 			set {
-				if (value == null)
+				if (value is null)
 					throw new ArgumentNullException (nameof (value));
 
 				classLabel = value;
@@ -113,7 +111,7 @@ namespace MyCocoaCoreMLApp {
 			switch (featureName) {
 			case "classLabelProbs":
 				value = MLFeatureValue.Create (ClassLabelProbs, out err);
-				if (err != null)
+				if (err is not null)
 					err.Dispose ();
 				return value;
 			case "classLabel":
@@ -125,10 +123,10 @@ namespace MyCocoaCoreMLApp {
 
 		public SqueezeNetOutput (NSDictionary<NSObject, NSNumber> classLabelProbs, string classLabel)
 		{
-			if (classLabelProbs == null)
+			if (classLabelProbs is null)
 				throw new ArgumentNullException (nameof (classLabelProbs));
 
-			if (classLabel == null)
+			if (classLabel is null)
 				throw new ArgumentNullException (nameof (classLabel));
 
 			ClassLabelProbs = classLabelProbs;
@@ -139,8 +137,7 @@ namespace MyCocoaCoreMLApp {
 	/// <summary>
 	/// Class for model loading and prediction
 	/// </summary>
-	public class SqueezeNet : NSObject
-	{
+	public class SqueezeNet : NSObject {
 		readonly MLModel model;
 
 		public SqueezeNet ()
@@ -158,12 +155,12 @@ namespace MyCocoaCoreMLApp {
 
 		public static SqueezeNet FromUrl (NSUrl url, out NSError error)
 		{
-			if (url == null)
+			if (url is null)
 				throw new ArgumentNullException (nameof (url));
 
 			var model = MLModel.Create (url, out error);
 
-			if (model == null)
+			if (model is null)
 				return null;
 
 			return new SqueezeNet (model);
@@ -178,7 +175,7 @@ namespace MyCocoaCoreMLApp {
 		{
 			var prediction = model.GetPrediction (input, out error);
 
-			if (prediction == null)
+			if (prediction is null)
 				return null;
 
 			var classLabelProbs = prediction.GetFeatureValue ("classLabelProbs").DictionaryValue;

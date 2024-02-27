@@ -19,7 +19,10 @@ namespace Introspection {
 		protected virtual bool Skip (Type type)
 		{
 			switch (type.Name) {
-				case "LinkWithAttribute": // LinkWithAttribute.WeakFrameworks
+			case "LinkWithAttribute": // LinkWithAttribute.WeakFrameworks
+				return true;
+			// Xcode 14, this properties have been added as a compat layer
+			case "GKPeerPickerController":
 				return true;
 			}
 			return SkipDueToRejectedTypes (type);
@@ -38,6 +41,14 @@ namespace Introspection {
 			// this is a weakly typed API (not a weak reference) with a [NotImplemented] so there's no [Export]
 			case "WeakSignificantEvent":
 				return property.DeclaringType.Name == "HMSignificantTimeEvent";
+			case "WeakMeasurementUnits":
+				// this is a weakly typed API (not a weak reference), so there's no [Export]
+				return property.DeclaringType.Name == "NSRulerView";
+#if !XAMCORE_5_0
+			case "WeakEnabled":
+				// this is from a strongly typed dictionary, and "Weak" here means nullable (bool) as opposed to a plain bool - and this is fixed in XAMCORE_5_0 so that the Enabled property is nullable and thus we won't need the WeakEnabled version anymore.
+				return property.DeclaringType.Name == "CTFontDescriptorAttributes";
+#endif
 			}
 			return false;
 		}
@@ -90,7 +101,7 @@ namespace Introspection {
 		{
 			error = null;
 			var export = meth.GetCustomAttribute<ExportAttribute> ();
-			if (export == null) {
+			if (export is null) {
 				error = String.Format ("{0}.{1} has no [Export]", meth.DeclaringType.FullName, meth.Name);
 				return true;
 			}

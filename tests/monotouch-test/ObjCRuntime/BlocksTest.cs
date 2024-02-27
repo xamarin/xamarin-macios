@@ -28,8 +28,8 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		[DllImport ("/usr/lib/libobjc.dylib")]
 		extern static IntPtr objc_getClass (string name);
 
-		[DllImport("/usr/lib/libobjc.dylib")]
-		static extern IntPtr imp_implementationWithBlock(ref BlockLiteral block);
+		[DllImport ("/usr/lib/libobjc.dylib")]
+		static extern IntPtr imp_implementationWithBlock (ref BlockLiteral block);
 
 		[DllImport ("/usr/lib/libobjc.dylib")]
 		static extern bool class_addMethod (IntPtr cls, IntPtr name, IntPtr imp, string types);
@@ -41,12 +41,11 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				Assert.Ignore ("This test requires the dynamic registrar to be available.");
 
 			using (var obj = new TestClass ()) {
-				TestClass.OnCallback = ((IntPtr blockArgument, NativeHandle self, IntPtr argument) => 
-					{
-						Assert.AreNotEqual (IntPtr.Zero, blockArgument, "block");
-						Assert.AreEqual (obj.Handle, self, "self");
-						Assert.AreEqual (argument, (IntPtr) 0x12345678, "argument");
-					});
+				TestClass.OnCallback = ((IntPtr blockArgument, NativeHandle self, IntPtr argument) => {
+					Assert.AreNotEqual (IntPtr.Zero, blockArgument, "block");
+					Assert.AreEqual (obj.Handle, self, "self");
+					Assert.AreEqual (argument, (IntPtr) 0x12345678, "argument");
+				});
 				Messaging.void_objc_msgSend_IntPtr (obj.Handle, Selector.GetHandle ("testBlocks:"), (IntPtr) 0x12345678);
 			}
 		}
@@ -73,7 +72,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			}
 		}
 
-#if !DEVICE && !MONOMAC && !AOT // some of these tests cause the AOT compiler to assert
+#if !DEVICE && !MONOMAC && !AOT && !__MACCATALYST__ // some of these tests cause the AOT compiler to assert
 		// No MonoPInvokeCallback
 		static void InvalidTrampoline1 () { }
 
@@ -91,7 +90,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 
 		// Wrong delegate signature in MonoPInvokeCallback
 		[MonoPInvokeCallback (typeof (Func<IntPtr>))]
-		static int InvalidTrampoline5 () { return 0;  }
+		static int InvalidTrampoline5 () { return 0; }
 #endif // !DEVICE
 
 		[Test]

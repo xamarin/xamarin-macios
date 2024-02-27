@@ -13,6 +13,8 @@
     <BuildDir Condition="'$(BUILD_DIR)' == ''">build\</BuildDir>
     <LangVersion>latest</LangVersion>
     <NoWarn>8601,8618</NoWarn>
+    <WarningsAsErrors>Nullable</WarningsAsErrors>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>True</DebugSymbols>
@@ -28,6 +30,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <PackageReference Include="Mono.Options" Version="6.12.0.148" />
     <PackageReference Include="System.Reflection.MetadataLoadContext" Version="4.7.2" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
@@ -92,20 +95,32 @@
     <None Include="..\docs\website\generator-errors.md">
       <Link>generator-errors.md</Link>
     </None>
-    <Compile Include="..\src\btouch.cs" />
     <Compile Include="..\src\error.cs" />
-    <Compile Include="..\src\generator.cs" />
-    <Compile Include="..\src\generator-attributes.cs" />
-    <Compile Include="..\src\generator-attribute-manager.cs" />
-    <Compile Include="..\src\generator-enums.cs" />
-    <Compile Include="..\src\generator-filters.cs" />
-    <Compile Include="..\src\generator-typemanager.cs" />
     <Compile Include="..\src\ObjCRuntime\Stret.cs" />
+    <Compile Include="..\src\bgen\AttributeConversionManager.cs" />
+    <Compile Include="..\src\bgen\AttributeManager.cs" />
+    <Compile Include="..\src\bgen\Attributes.cs" />
+    <Compile Include="..\src\bgen\AttributeFactory.ConstructorArguments.cs" />
+    <Compile Include="..\src\bgen\AttributeFactory.cs" />
+    <Compile Include="..\src\bgen\BindingTouch.cs" />
+    <Compile Include="..\src\bgen\Enums.cs" />
+    <Compile Include="..\src\bgen\Frameworks.cs" />
+    <Compile Include="..\src\bgen\Filters.cs" />
+    <Compile Include="..\src\bgen\GeneratedType.cs" />
+    <Compile Include="..\src\bgen\GeneratedTypes.cs" />
+    <Compile Include="..\src\bgen\Generator.cs" />
+    <Compile Include="..\src\bgen\Generator.PrintAttributes.cs" />
+    <Compile Include="..\src\bgen\IMemberGatherer.cs" />
+    <Compile Include="..\src\bgen\LibraryManager.cs" />
+    <Compile Include="..\src\bgen\Nomenclator.cs" />
+    <Compile Include="..\src\bgen\NullabilityInfoContext.cs" />
+    <Compile Include="..\src\bgen\ReferenceFixer.cs" />
+    <Compile Include="..\src\bgen\SearchPathsAssemblyResolver.cs" />
+    <Compile Include="..\src\bgen\TypeManager.cs" />
     <Compile Include="..\tools\common\ApplePlatform.cs" />
     <Compile Include="..\tools\common\TargetFramework.cs" />
     <Compile Include="..\tools\common\StringUtils.cs" />
     <Compile Include="$(BuildDir)generator-frameworks.g.cs" />
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\mcs\class\Mono.Options\Mono.Options\Options.cs" />
     <Compile Include="..\src\Foundation\AdviceAttribute.cs" />
     <Compile Include="..\src\Foundation\ExportAttribute.cs" />
     <Compile Include="..\src\Foundation\FieldAttribute.cs" />
@@ -128,6 +143,30 @@
     <Compile Include="..\tools\common\Execution.cs">
       <Link>Execution.cs</Link>
     </Compile>
+    <Compile Include="..\tools\common\NullableAttributes.cs">
+      <Link>NullableAttributes.cs</Link>
+    </Compile>
+    <Compile Include="bgen\Caches\NamespaceCache.cs" />
+    <Compile Include="bgen\Caches\TypeCache.cs" />
+    <Compile Include="bgen\Enums\AsyncMethodKind.cs" />
+    <Compile Include="bgen\Enums\BodyOption.cs" />
+    <Compile Include="bgen\Enums\ThreadCheck.cs" />
+    <Compile Include="bgen\Extensions\CollectionsExtensions.cs" />
+    <Compile Include="bgen\Extensions\CustomAttributeDataExtensions.cs" />
+    <Compile Include="bgen\Extensions\ExtensionMethods.cs" />
+    <Compile Include="bgen\Extensions\PlatformNameExtensions.cs" />
+    <Compile Include="bgen\Extensions\StringExtensions.cs" />
+    <Compile Include="bgen\Extensions\TypeExtensions.cs" />
+    <Compile Include="bgen\Models\Api.cs" />
+    <Compile Include="bgen\Models\AsyncMethodInfo.cs" />
+    <Compile Include="bgen\Models\BindingTouchConfig.cs" />
+    <Compile Include="bgen\Models\LibraryInfo.cs" />
+    <Compile Include="bgen\Models\MarshalInfo.cs" />
+    <Compile Include="bgen\Models\MarshalType.cs" />
+    <Compile Include="bgen\Models\MarshalTypeList.cs" />
+    <Compile Include="bgen\Models\MemberInformation.cs" />
+    <Compile Include="bgen\Models\TrampolineInfo.cs" />
+    <Compile Include="bgen\Models\WrapPropMemberInformation.cs" />
     <Compile Include="Resources.Designer.cs">
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
@@ -147,7 +186,7 @@
   </ItemGroup>
   <Target Name="AfterBuild">
     <!-- Only run 'make bgen' if we're not executed as part of 'make' (i.e. MAKEFLAGS is empty) -->
-    <Exec Command="make bgen" Condition="'$(MAKEFLAGS)' == ''"/>
+    <Exec Command="make bgen" Condition="'$(MAKEFLAGS)' == ''" />
   </Target>
   <Import Project="..\packages\XliffTasks.1.0.0-beta.19607.1\build\XliffTasks.targets" Condition="Exists('..\packages\XliffTasks.1.0.0-beta.19607.1\build\XliffTasks.targets')" />
 </Project>

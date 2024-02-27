@@ -14,7 +14,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class ArrayTest {
-		static string[] TestArray = new string [] { "a", "b", "??" };
+		static string [] TestArray = new string [] { "a", "b", "??" };
 
 		void VerifyArray (CFArray? a)
 		{
@@ -24,7 +24,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 				Assert.AreEqual (TestArray [i], (string) CFString.FromHandle (a.GetValue (i), false), i.ToString ());
 		}
 
-		void VerifyArray (NSString[]? a)
+		void VerifyArray (NSString []? a)
 		{
 			Assert.IsNotNull (a, "NotNull");
 			Assert.AreEqual (3, a.Length, "Count");
@@ -66,7 +66,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 			Assert.AreEqual ((nint) 1, CFGetRetainCount (handle), "RC");
 			CFRelease (handle);
 		}
-		
+
 		[Test]
 		public void ArrayFromHandleTest_bool_true ()
 		{
@@ -120,12 +120,12 @@ namespace MonoTouchFixtures.CoreFoundation {
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
-		extern static nint CFGetRetainCount (IntPtr handle);
+		internal extern static nint CFGetRetainCount (IntPtr handle);
 
 		[DllImport (Constants.CoreFoundationLibrary)]
-		extern static void CFRetain (IntPtr obj);
+		internal extern static void CFRetain (IntPtr obj);
 
 		[DllImport (Constants.CoreFoundationLibrary)]
-		extern static void CFRelease (IntPtr obj);
+		internal extern static void CFRelease (IntPtr obj);
 	}
 }

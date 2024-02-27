@@ -9,11 +9,9 @@ using Xamarin.Tests;
 
 using NUnit.Framework;
 
-namespace Xamarin.Tests
-{
+namespace Xamarin.Tests {
 	[TestFixture]
-	public class Misc
-	{
+	public class Misc {
 		[Test]
 		public void InvalidStructOffset ()
 		{
@@ -22,7 +20,7 @@ namespace Xamarin.Tests
 			var str = "invalid struct offset";
 			var contents = ASCIIEncoding.ASCII.GetBytes (str);
 
-			foreach (var sdk in new string [] { "iphoneos", "iphonesimulator"}) {
+			foreach (var sdk in new string [] { "iphoneos", "iphonesimulator" }) {
 				foreach (var ext in new string [] { "dylib", "a" }) {
 					var fn = Path.Combine (Configuration.MonoTouchRootDirectory, "SDKs", "MonoTouch." + sdk + ".sdk", "lib", "libmonosgen-2.0." + ext);
 					Assert.IsFalse (Contains (fn, contents), "Found \"{0}\" in {1}", str, fn);
@@ -30,7 +28,7 @@ namespace Xamarin.Tests
 			}
 		}
 
-		bool Contains (string file, byte[] contents)
+		bool Contains (string file, byte [] contents)
 		{
 			var pagesize = 4096;
 			var buffer = new byte [pagesize * 1024];
@@ -109,6 +107,10 @@ namespace Xamarin.Tests
 				"__Z7isdigiti",
 				"__Z8__istypeim",
 				"__Z9__isctypeim",
+				"__Z15__libcpp_strchr",
+				"__Z16__libcpp_strrchr",
+				"__Z6strchr",
+				"__Z7strrchr",
 				// mono
 				"_mono_",
 				"_monoeg_",

@@ -8,12 +8,10 @@ using CoreAnimation;
 using OpenGL;
 using ObjCRuntime;
 
-namespace Xamarin.Mac.Tests
-{
+namespace Xamarin.Mac.Tests {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class CAOpenGLLayerTest
-	{		
+	public class CAOpenGLLayerTest {
 #if !DYNAMIC_REGISTRAR
 		[Ignore ("https://github.com/xamarin/xamarin-macios/issues/10284")]
 #endif
@@ -28,14 +26,13 @@ namespace Xamarin.Mac.Tests
 		}
 	}
 
-	public partial class OpenGLLayer : CAOpenGLLayer
-	{
+	public partial class OpenGLLayer : CAOpenGLLayer {
 		public override CGLPixelFormat CopyCGLPixelFormatForDisplayMask (uint mask)
 		{
-			var attribs = new object [] { 
-				CGLPixelFormatAttribute.Accelerated, 
-				CGLPixelFormatAttribute.DoubleBuffer, 
-				CGLPixelFormatAttribute.ColorSize, 24, 
+			var attribs = new object [] {
+				CGLPixelFormatAttribute.Accelerated,
+				CGLPixelFormatAttribute.DoubleBuffer,
+				CGLPixelFormatAttribute.ColorSize, 24,
 				CGLPixelFormatAttribute.DepthSize, 16 };
 
 			CGLPixelFormat pixelFormat = new CGLPixelFormat (attribs);

@@ -1,3 +1,13 @@
 !missing-field! MKMapRectNull not bound
 !missing-field! MKMapRectWorld not bound
 !missing-field! MKMapSizeWorld not bound
+
+## soft deprecation
+!deprecated-attribute-missing! MKMapView::mapType missing a [Deprecated] attribute
+!deprecated-attribute-missing! MKMapView::setMapType: missing a [Deprecated] attribute
+!deprecated-attribute-missing! MKMapView::pointOfInterestFilter missing a [Deprecated] attribute
+!deprecated-attribute-missing! MKMapView::setPointOfInterestFilter: missing a [Deprecated] attribute
+!deprecated-attribute-missing! MKMapView::showsBuildings missing a [Deprecated] attribute
+!deprecated-attribute-missing! MKMapView::setShowsBuildings: missing a [Deprecated] attribute
+!deprecated-attribute-missing! MKMapView::showsTraffic missing a [Deprecated] attribute
+!deprecated-attribute-missing! MKMapView::setShowsTraffic: missing a [Deprecated] attribute

@@ -16,7 +16,7 @@ using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
 
-using OS_nw_interface=System.IntPtr;
+using OS_nw_interface = System.IntPtr;
 
 #if !NET
 using NativeHandle = System.IntPtr;
@@ -26,21 +26,20 @@ namespace Network {
 
 #if NET
 	[SupportedOSPlatform ("tvos12.0")]
-	[SupportedOSPlatform ("macos10.14")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("ios12.0")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
-	[TV (12,0)]
-	[Mac (10,14)]
-	[iOS (12,0)]
-	[Watch (6,0)]
+	[TV (12, 0)]
+	[iOS (12, 0)]
+	[Watch (6, 0)]
 #endif
 	public class NWInterface : NativeObject {
 		[Preserve (Conditional = true)]
 #if NET
 		internal NWInterface (NativeHandle handle, bool owns) : base (handle, owns) {}
 #else
-		public NWInterface (NativeHandle handle, bool owns) : base (handle, owns) {}
+		public NWInterface (NativeHandle handle, bool owns) : base (handle, owns) { }
 #endif
 
 		[DllImport (Constants.NetworkLibrary)]

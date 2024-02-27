@@ -6,13 +6,17 @@ using System;
 
 namespace ThreadNetwork {
 
-	[iOS (15,0), NoMac, NoMacCatalyst]
+	[iOS (15, 0), Mac (13, 0), MacCatalyst (16, 1), NoWatch, NoTV]
 	[BaseType (typeof (NSObject))]
-	interface THClient
-	{
+	interface THClient {
 		[Async]
 		[Export ("retrieveAllCredentials:")]
 		void RetrieveAllCredentials (Action<NSSet<THCredentials>, NSError> completion);
+
+		[iOS (16, 4), Mac (13, 3), MacCatalyst (16, 4)]
+		[Async]
+		[Export ("retrieveAllActiveCredentials:")]
+		void RetrieveAllActiveCredentials (Action<NSSet<THCredentials>, NSError> completion);
 
 		[Async]
 		[Export ("deleteCredentialsForBorderAgent:completion:")]
@@ -33,13 +37,23 @@ namespace ThreadNetwork {
 		[Async]
 		[Export ("retrieveCredentialsForExtendedPANID:completion:")]
 		void RetrieveCredentialsForExtendedPanId (NSData extendedPanId, Action<THCredentials, NSError> completion);
+
+		[iOS (16, 0)] // was added in xcode14 targeting iOS 15, intro says otherthings.
+		[MacCatalyst (16, 1)]
+		[Async]
+		[Export ("checkPreferredNetworkForActiveOperationalDataset:completion:")]
+		void CheckPreferredNetwork (NSData activeOperationalDataSet, Action<bool> completion);
+
+		[iOS (16, 4), Mac (13, 3), MacCatalyst (16, 4)]
+		[Async]
+		[Export ("isPreferredNetworkAvailableWithCompletion:")]
+		void IsPreferredNetworkAvailable (Action<bool> completion);
 	}
 
-	[iOS (15,0), NoMac, NoMacCatalyst]
+	[iOS (15, 0), Mac (13, 0), MacCatalyst (16, 1), NoWatch, NoTV]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface THCredentials : NSSecureCoding
-	{
+	interface THCredentials : NSSecureCoding {
 		[NullAllowed, Export ("networkName")]
 		string NetworkName { get; }
 

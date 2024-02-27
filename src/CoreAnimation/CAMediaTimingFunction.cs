@@ -41,7 +41,7 @@ namespace CoreAnimation {
 				throw new ArgumentOutOfRangeException ("index");
 
 			float [] values = new float [2];
-			fixed (float *p = &values [0])
+			fixed (float* p = values)
 				GetControlPointAtIndex (index, (IntPtr) p /* float[2] */);
 			return new CGPoint (values [0], values [1]);
 		}

@@ -2,11 +2,9 @@ using System;
 using Foundation;
 using UIKit;
 
-namespace NewSingleViewTemplate
-{
+namespace NewSingleViewTemplate {
 	[Register ("SceneDelegate")]
-	public class SceneDelegate : UIResponder, IUIWindowSceneDelegate
-	{
+	public class SceneDelegate : UIResponder, IUIWindowSceneDelegate {
 
 		[Export ("window")]
 		public UIWindow Window { get; set; }

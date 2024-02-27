@@ -10,12 +10,12 @@ using ImageIO;
 using ObjCRuntime;
 
 namespace Photos {
-	
+
 #if !XAMCORE_3_0 && !MONOMAC
 	public partial class PHContentEditingInputRequestOptions {
 
 		[Obsolete ("Use 'CanHandleAdjustmentData' property.")]
-		public virtual void SetCanHandleAdjustmentDataHandler (Func<PHAdjustmentData,bool> canHandleAdjustmentDataPredicate)
+		public virtual void SetCanHandleAdjustmentDataHandler (Func<PHAdjustmentData, bool> canHandleAdjustmentDataPredicate)
 		{
 			CanHandleAdjustmentData = canHandleAdjustmentDataPredicate;
 		}

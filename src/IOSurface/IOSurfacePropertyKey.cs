@@ -40,7 +40,7 @@ namespace IOSurface {
 #elif TVOS || IOS
 			return SystemVersion.CheckiOS (12, 0);
 #else
-			#error Unknown platform
+#error Unknown platform
 #endif
 		}
 

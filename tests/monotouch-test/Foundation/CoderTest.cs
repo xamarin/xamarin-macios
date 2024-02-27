@@ -21,9 +21,8 @@ namespace MonoTouchFixtures.Foundation {
 		[Test]
 		public void EncodeDecodeTest ()
 		{
-			var buffer = new byte[] { 3, 14, 15 };
+			var buffer = new byte [] { 3, 14, 15 };
 			var obj = new NSString ();
-			byte[] data;
 			var ptr = Marshal.AllocHGlobal (buffer.Length);
 
 			for (int i = 0; i < buffer.Length; i++)

@@ -4,8 +4,7 @@ using System.Collections.Generic;
 using Foundation;
 using Intents;
 
-namespace MyWatchKit2IntentsExtension
-{
+namespace MyWatchKit2IntentsExtension {
 	// As an example, this class is set up to handle Message intents.
 	// You will want to replace this or add other intents as appropriate.
 	// The intents you wish to handle must be declared in the extension's Info.plist.
@@ -15,8 +14,7 @@ namespace MyWatchKit2IntentsExtension
 	// "<myApp> John saying hello"
 	// "Search for messages in <myApp>"
 	[Register ("IntentHandler")]
-	public class IntentHandler : INExtension, IINSendMessageIntentHandling, IINSearchForMessagesIntentHandling
-	{
+	public class IntentHandler : INExtension, IINSendMessageIntentHandling, IINSearchForMessagesIntentHandling {
 		protected IntentHandler (IntPtr handle) : base (handle)
 		{
 			// Note: this .ctor should not contain any initialization logic.
@@ -32,19 +30,19 @@ namespace MyWatchKit2IntentsExtension
 
 		// Implement resolution methods to provide additional information about your intent (optional).
 		[Export ("resolveRecipientsForSearchForMessages:withCompletion:")]
-		public void ResolveRecipients (INSearchForMessagesIntent intent, Action<INPersonResolutionResult[]> completion)
+		public void ResolveRecipients (INSearchForMessagesIntent intent, Action<INPersonResolutionResult []> completion)
 		{
 			var recipients = intent.Recipients;
 			// If no recipients were provided we'll need to prompt for a value.
 			if (recipients.Length == 0) {
-				completion (new INPersonResolutionResult[] { INPersonResolutionResult.NeedsValue });
+				completion (new INPersonResolutionResult [] { INPersonResolutionResult.NeedsValue });
 				return;
 			}
 
 			var resolutionResults = new List<INPersonResolutionResult> ();
 
 			foreach (var recipient in recipients) {
-				var matchingContacts = new INPerson[] { recipient }; // Implement your contact matching logic here to create an array of matching contacts
+				var matchingContacts = new INPerson [] { recipient }; // Implement your contact matching logic here to create an array of matching contacts
 				if (matchingContacts.Length > 1) {
 					// We need Siri's help to ask user to pick one from the matches.
 					resolutionResults.Add (INPersonResolutionResult.GetDisambiguation (matchingContacts));
@@ -104,8 +102,8 @@ namespace MyWatchKit2IntentsExtension
 			// Initialize with found message's attributes
 			var sender = new INPerson (new INPersonHandle ("sarah@example.com", INPersonHandleType.EmailAddress), null, "Sarah", null, null, null);
 			var recipient = new INPerson (new INPersonHandle ("+1-415-555-5555", INPersonHandleType.PhoneNumber), null, "John", null, null, null);
-			var message = new INMessage ("identifier", "I am so excited about SiriKit!", NSDate.Now, sender, new INPerson[] { recipient });
-			response.Messages = new INMessage[] { message };
+			var message = new INMessage ("identifier", "I am so excited about SiriKit!", NSDate.Now, sender, new INPerson [] { recipient });
+			response.Messages = new INMessage [] { message };
 			completion (response);
 		}
 	}

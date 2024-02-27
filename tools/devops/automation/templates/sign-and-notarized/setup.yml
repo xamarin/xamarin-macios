@@ -8,22 +8,33 @@ parameters:
 - name: isPR
   type: boolean
 
+- name: repositoryAlias
+  type: string
+  default: self
+
+- name: commit
+  type: string
+  default: HEAD
+
 - name: condition
   default: succeeded()
 
 steps:
 
 # DO NOT USE THE checkout.yml template. The reason is that the template changes the hash which results in a problem with the artifacts scripts
-- checkout: self          # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#checkout
-  clean: true             # Executes: git clean -ffdx && git reset --hard HEAD
-  submodules: recursive
-  path: s/xamarin-macios
+- template:  sdk-unified/steps/checkout/v1.yml@yaml-templates
+  parameters:
+    resource: ${{ parameters.repositoryAlias }}
+    commit: ${{ parameters.commit }}
+    clean: true
+    submodules: recursive
+    path: s/xamarin-macios
 
 - checkout: maccore
   clean: true
   persistCredentials: true  # hugely important, else there are some scripts that check a single file from maccore that will fail
 
-- checkout: templates
+- checkout: yaml-templates
   clean: true
 
 - checkout: release-scripts
@@ -32,6 +43,10 @@ steps:
 # the ddsign plugin needs this version or it will crash and will make the sign step fail
 
 - ${{ if eq(parameters.isPR, false) }}:
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '3.11.x'
+
   - task: UseDotNet@2
     inputs:
       packageType: sdk

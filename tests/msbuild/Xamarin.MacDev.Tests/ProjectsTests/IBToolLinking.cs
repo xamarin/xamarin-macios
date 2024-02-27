@@ -3,12 +3,10 @@ using NUnit.Framework;
 using Xamarin.Tests;
 using Xamarin.Utils;
 
-namespace Xamarin.MacDev.Tasks
-{
+namespace Xamarin.MacDev.Tasks {
 	[TestFixture ("iPhone")]
 	[TestFixture ("iPhoneSimulator")]
-	public class IBToolLinking : ProjectTest
-	{
+	public class IBToolLinking : ProjectTest {
 		public IBToolLinking (string platform) : base (platform)
 		{
 		}

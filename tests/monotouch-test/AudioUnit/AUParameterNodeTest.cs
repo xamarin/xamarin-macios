@@ -33,7 +33,7 @@ namespace monotouchtest {
 			var completion = new ManualResetEvent (false);
 
 			using (var parameter = CreateAUParameter ()) {
-				using (var tree = AUParameterTree.CreateTree (new AUParameterNode[] { parameter })) {
+				using (var tree = AUParameterTree.CreateTree (new AUParameterNode [] { parameter })) {
 					Exception ex = null;
 					var recordingObserver = tree.CreateTokenByAddingParameterRecordingObserver ((nint numberOfEvents, ref AURecordedParameterEvent events) => {
 						try {
@@ -69,14 +69,13 @@ namespace monotouchtest {
 		{
 			TestRuntime.AssertXcodeVersion (7, 0);
 
-			const ulong address = 0;
 			const float newValue = 10f;
 
 			bool recordingObserverInvoked = false;
 			var completion = new ManualResetEvent (false);
 
 			using (var parameter = CreateAUParameter ()) {
-				using (var tree = AUParameterTree.CreateTree (new AUParameterNode[] { parameter })) {
+				using (var tree = AUParameterTree.CreateTree (new AUParameterNode [] { parameter })) {
 					var recordingObserver = tree.CreateTokenByAddingParameterRecordingObserver ((nint numberOfEvents, ref AURecordedParameterEvent events) => {
 						recordingObserverInvoked = true;
 						completion.Set ();
@@ -102,18 +101,25 @@ namespace monotouchtest {
 			const string expectedStringValue = "10";
 
 			bool implementorCallbackInvoked = false;
+			Exception ex = null;
 
 			using (var parameter = CreateAUParameter ()) {
 				parameter.ImplementorStringFromValueCallback = new AUImplementorStringFromValueCallback ((AUParameter param, ref float? value) => {
-					Assert.True (floatValue == value.Value,
-						$"Passed float value was incorrect. Expected {floatValue} but was {value}");
+					try {
+						Assert.True (floatValue == value.Value,
+							$"Passed float value was incorrect. Expected {floatValue} but was {value}");
 
-					Assert.True (param.Identifier == parameter.Identifier,
-						$"Passed AUParameter was incorrect. Expected {parameter.Identifier} but was {param.Identifier}");
-
-					implementorCallbackInvoked = true;
-					return (NSString)value.ToString ();
+						Assert.True (param.Identifier == parameter.Identifier,
+							$"Passed AUParameter was incorrect. Expected {parameter.Identifier} but was {param.Identifier}");
+					} catch (Exception e) {
+						ex = e;
+					} finally {
+						implementorCallbackInvoked = true;
+					}
+					return (NSString) value.ToString ();
 				});
+
+				Assert.IsNull (ex, "Exception");
 
 				var str = parameter.GetString (floatValue);
 
@@ -175,7 +181,7 @@ namespace monotouchtest {
 						$"Passed AUParameterNode was incorrect. Expected {parameter.Identifier} but was {node.Identifier}");
 
 					implementorCallbackInvoked = true;
-					return node.DisplayName.Substring (0, (int)desiredLength);
+					return node.DisplayName.Substring (0, (int) desiredLength);
 				});
 
 				var s = parameter.GetDisplayName (length);
@@ -186,7 +192,7 @@ namespace monotouchtest {
 
 		static AUParameter CreateAUParameter ()
 		{
-			return AUParameterTree.CreateParameter ("resonance", "Resonance", 0, -20, 20, AudioUnitParameterUnit.Decibels, null, (AudioUnitParameterOptions)0, null, null);
+			return AUParameterTree.CreateParameter ("resonance", "Resonance", 0, -20, 20, AudioUnitParameterUnit.Decibels, null, (AudioUnitParameterOptions) 0, null, null);
 		}
 	}
 }

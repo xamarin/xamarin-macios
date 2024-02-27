@@ -10,6 +10,9 @@ using System.Runtime.InteropServices;
 
 using ObjCRuntime;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Foundation {
 	public partial class NSNumber : NSValue
 #if COREBUILD
@@ -19,19 +22,19 @@ namespace Foundation {
 
 		public static implicit operator NSNumber (float value)
 		{
-			return FromFloat (value); 
+			return FromFloat (value);
 		}
 
 		public static implicit operator NSNumber (double value)
 		{
-			return FromDouble (value); 
+			return FromDouble (value);
 		}
 
 		public static implicit operator NSNumber (bool value)
 		{
-			return FromBoolean (value); 
+			return FromBoolean (value);
 		}
-		
+
 		public static implicit operator NSNumber (sbyte value)
 		{
 			return FromSByte (value);
@@ -131,7 +134,7 @@ namespace Foundation {
 #if ARCH_64
 			this ((double)value)
 #else
-			this ((float)value)
+			this ((float) value)
 #endif
 		{
 		}
@@ -141,7 +144,7 @@ namespace Foundation {
 #if ARCH_64
 				return (nfloat)DoubleValue;
 #else
-				return (nfloat)FloatValue;
+				return (nfloat) FloatValue;
 #endif
 			}
 		}
@@ -151,7 +154,7 @@ namespace Foundation {
 #if ARCH_64
 			return (FromDouble ((double)value));
 #else
-			return (FromFloat ((float)value));
+			return (FromFloat ((float) value));
 #endif
 		}
 
@@ -169,9 +172,9 @@ namespace Foundation {
 		{
 			// value must not be `nil` to call the `compare:` selector
 			// that match well with the not same type of .NET check
-			if (other == null)
+			if (other is null)
 				throw new ArgumentException ("other");
-			return (int)Compare (other);
+			return (int) Compare (other);
 		}
 
 		// should be present when implementing IComparable
@@ -183,7 +186,7 @@ namespace Foundation {
 		// IEquatable<NSNumber>
 		public bool Equals (NSNumber other)
 		{
-			if (other == null)
+			if (other is null)
 				return false;
 			return IsEqualToNumber (other);
 		}

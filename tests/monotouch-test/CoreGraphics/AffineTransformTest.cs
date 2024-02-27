@@ -12,6 +12,7 @@ using System;
 using System.Runtime.InteropServices;
 using Foundation;
 using CoreGraphics;
+using CoreFoundation;
 using ObjCRuntime;
 
 using NUnit.Framework;
@@ -230,12 +231,12 @@ namespace MonoTouchFixtures.CoreGraphics {
 			Assert.AreEqual ((nfloat) 1, transform2.Tx);
 			Assert.AreEqual ((nfloat) 2, transform2.Ty);
 #else
-			Assert.AreEqual ((nfloat)3, transform2.xx);
-			Assert.AreEqual ((nfloat)0, transform2.yx);
-			Assert.AreEqual ((nfloat)0, transform2.xy);
-			Assert.AreEqual ((nfloat)4, transform2.yy);
-			Assert.AreEqual ((nfloat)1, transform2.x0);
-			Assert.AreEqual ((nfloat)2, transform2.y0);
+			Assert.AreEqual ((nfloat) 3, transform2.xx);
+			Assert.AreEqual ((nfloat) 0, transform2.yx);
+			Assert.AreEqual ((nfloat) 0, transform2.xy);
+			Assert.AreEqual ((nfloat) 4, transform2.yy);
+			Assert.AreEqual ((nfloat) 1, transform2.x0);
+			Assert.AreEqual ((nfloat) 2, transform2.y0);
 #endif
 		}
 
@@ -289,12 +290,12 @@ namespace MonoTouchFixtures.CoreGraphics {
 			Assert.AreEqual ((nfloat) 7, transform.Tx, "Tx");
 			Assert.AreEqual ((nfloat) 3, transform.Ty, "Ty");
 #else
-			Assert.AreEqual ((nfloat)1, transform.xx, "xx");
-			Assert.AreEqual ((nfloat)2, transform.yx, "yx");
-			Assert.AreEqual ((nfloat)3, transform.xy, "xy");
-			Assert.AreEqual ((nfloat)4, transform.yy, "yy");
-			Assert.AreEqual ((nfloat)7, transform.x0, "x0");
-			Assert.AreEqual ((nfloat)3, transform.y0, "y0");
+			Assert.AreEqual ((nfloat) 1, transform.xx, "xx");
+			Assert.AreEqual ((nfloat) 2, transform.yx, "yx");
+			Assert.AreEqual ((nfloat) 3, transform.xy, "xy");
+			Assert.AreEqual ((nfloat) 4, transform.yy, "yy");
+			Assert.AreEqual ((nfloat) 7, transform.x0, "x0");
+			Assert.AreEqual ((nfloat) 3, transform.y0, "y0");
 #endif
 
 			transform = new CGAffineTransform (1, 2, 3, 4, 5, 6);
@@ -308,12 +309,12 @@ namespace MonoTouchFixtures.CoreGraphics {
 			Assert.AreEqual ((nfloat) (-2), transform.Tx, "Tx");
 			Assert.AreEqual ((nfloat) (-2), transform.Ty, "Ty");
 #else
-			Assert.AreEqual ((nfloat)1, transform.xx, "xx");
-			Assert.AreEqual ((nfloat)2, transform.yx, "yx");
-			Assert.AreEqual ((nfloat)3, transform.xy, "xy");
-			Assert.AreEqual ((nfloat)4, transform.yy, "yy");
-			Assert.AreEqual ((nfloat)(-2), transform.x0, "x0");
-			Assert.AreEqual ((nfloat)(-2), transform.y0, "y0");
+			Assert.AreEqual ((nfloat) 1, transform.xx, "xx");
+			Assert.AreEqual ((nfloat) 2, transform.yx, "yx");
+			Assert.AreEqual ((nfloat) 3, transform.xy, "xy");
+			Assert.AreEqual ((nfloat) 4, transform.yy, "yy");
+			Assert.AreEqual ((nfloat) (-2), transform.x0, "x0");
+			Assert.AreEqual ((nfloat) (-2), transform.y0, "y0");
 #endif
 		}
 
@@ -389,22 +390,22 @@ namespace MonoTouchFixtures.CoreGraphics {
 #endif
 
 			transform = new CGAffineTransform (1, 2, 3, 4, 5, 6);
-			transform.Rotate ((nfloat)Math.PI, MatrixOrder.Prepend);
+			transform.Rotate ((nfloat) Math.PI, MatrixOrder.Prepend);
 
 #if NET
-			Assert.That ((double) (-1), Is.EqualTo ((double)transform.A).Within (0.000001), "A");
-			Assert.That ((double) (-2), Is.EqualTo ((double)transform.B).Within (0.000001), "B");
-			Assert.That ((double) (-3), Is.EqualTo ((double)transform.C).Within (0.000001), "C");
-			Assert.That ((double) (-4), Is.EqualTo ((double)transform.D).Within (0.000001), "D");
-			Assert.That ((double) 5, Is.EqualTo ((double)transform.Tx).Within (0.000001), "Tx");
-			Assert.That ((double) 6, Is.EqualTo ((double)transform.Ty).Within (0.000001), "Ty");
+			Assert.That ((double) (-1), Is.EqualTo ((double) transform.A).Within (0.000001), "A");
+			Assert.That ((double) (-2), Is.EqualTo ((double) transform.B).Within (0.000001), "B");
+			Assert.That ((double) (-3), Is.EqualTo ((double) transform.C).Within (0.000001), "C");
+			Assert.That ((double) (-4), Is.EqualTo ((double) transform.D).Within (0.000001), "D");
+			Assert.That ((double) 5, Is.EqualTo ((double) transform.Tx).Within (0.000001), "Tx");
+			Assert.That ((double) 6, Is.EqualTo ((double) transform.Ty).Within (0.000001), "Ty");
 #else
-			Assert.That ((double)(-1), Is.EqualTo ((double)transform.xx).Within (0.000001), "xx");
-			Assert.That ((double)(-2), Is.EqualTo ((double)transform.yx).Within (0.000001), "yx");
-			Assert.That ((double)(-3), Is.EqualTo ((double)transform.xy).Within (0.000001), "xy");
-			Assert.That ((double)(-4), Is.EqualTo ((double)transform.yy).Within (0.000001), "yy");
-			Assert.That ((double)5, Is.EqualTo ((double)transform.x0).Within (0.000001), "x0");
-			Assert.That ((double)6, Is.EqualTo ((double)transform.y0).Within (0.000001), "y0");
+			Assert.That ((double) (-1), Is.EqualTo ((double) transform.xx).Within (0.000001), "xx");
+			Assert.That ((double) (-2), Is.EqualTo ((double) transform.yx).Within (0.000001), "yx");
+			Assert.That ((double) (-3), Is.EqualTo ((double) transform.xy).Within (0.000001), "xy");
+			Assert.That ((double) (-4), Is.EqualTo ((double) transform.yy).Within (0.000001), "yy");
+			Assert.That ((double) 5, Is.EqualTo ((double) transform.x0).Within (0.000001), "x0");
+			Assert.That ((double) 6, Is.EqualTo ((double) transform.y0).Within (0.000001), "y0");
 #endif
 		}
 
@@ -500,6 +501,38 @@ namespace MonoTouchFixtures.CoreGraphics {
 		}
 
 		[Test]
+		public void Decompose ()
+		{
+			TestRuntime.AssertXcodeVersion (14, 0);
+
+			var components = new CGAffineTransform (1, 2, 3, 4, 5, 6).Decompose ();
+			Assert.AreNotEqual (0.0, components.Scale);
+			Assert.AreNotEqual (0.0, components.HorizontalShear);
+			Assert.AreNotEqual (0.0, components.Rotation);
+			Assert.AreNotEqual (new CGVector ((nfloat) 0, (nfloat) 0), components.Translation);
+		}
+
+		[Test]
+		public void MakeWithComponents ()
+		{
+			TestRuntime.AssertXcodeVersion (14, 0);
+
+			var components = new CGAffineTransformComponents () {
+				Scale = new CGSize (1.0, 2.0),
+				HorizontalShear = (nfloat) 3.0,
+				Rotation = (nfloat) 4.0,
+				Translation = new CGVector ((nfloat) 5.0, (nfloat) 6.0),
+			};
+			var transform = CGAffineTransform.MakeWithComponents (components);
+			Assert.AreNotEqual (0.0, transform.A);
+			Assert.AreNotEqual (0.0, transform.B);
+			Assert.AreNotEqual (0.0, transform.C);
+			Assert.AreNotEqual (0.0, transform.D);
+			Assert.AreNotEqual (0.0, transform.Tx);
+			Assert.AreNotEqual (0.0, transform.Ty);
+		}
+
+		[Test]
 		public void NSValueRoundtrip ()
 		{
 			var transform = new CGAffineTransform (1, 2, 3, 4, 5, 6);
@@ -514,12 +547,12 @@ namespace MonoTouchFixtures.CoreGraphics {
 				Assert.AreEqual ((nfloat) 5, tback.Tx, "Tx");
 				Assert.AreEqual ((nfloat) 6, tback.Ty, "Ty");
 #else
-				Assert.AreEqual ((nfloat)1, tback.xx, "xx");
-				Assert.AreEqual ((nfloat)2, tback.yx, "yx");
-				Assert.AreEqual ((nfloat)3, tback.xy, "xy");
-				Assert.AreEqual ((nfloat)4, tback.yy, "yy");
-				Assert.AreEqual ((nfloat)5, tback.x0, "x0");
-				Assert.AreEqual ((nfloat)6, tback.y0, "y0");
+				Assert.AreEqual ((nfloat) 1, tback.xx, "xx");
+				Assert.AreEqual ((nfloat) 2, tback.yx, "yx");
+				Assert.AreEqual ((nfloat) 3, tback.xy, "xy");
+				Assert.AreEqual ((nfloat) 4, tback.yy, "yy");
+				Assert.AreEqual ((nfloat) 5, tback.x0, "x0");
+				Assert.AreEqual ((nfloat) 6, tback.y0, "y0");
 #endif
 			}
 		}
@@ -527,13 +560,13 @@ namespace MonoTouchFixtures.CoreGraphics {
 		[Test]
 		public unsafe void SizeOfTest ()
 		{
-			Assert.AreEqual (sizeof (CGAffineTransform), Marshal.SizeOf (typeof (CGAffineTransform)));
+			Assert.AreEqual (sizeof (CGAffineTransform), Marshal.SizeOf<CGAffineTransform> ());
 		}
 
 		[Test]
 		public void ToStringTest ()
 		{
-			var transform = new CGAffineTransform ((nfloat)1, (nfloat)2, (nfloat)3, (nfloat)4, (nfloat)5, (nfloat)6);
+			var transform = new CGAffineTransform ((nfloat) 1, (nfloat) 2, (nfloat) 3, (nfloat) 4, (nfloat) 5, (nfloat) 6);
 #if NET
 			Assert.AreEqual ("[1, 2, 3, 4, 5, 6]", transform.ToString (), "ToString");
 #else

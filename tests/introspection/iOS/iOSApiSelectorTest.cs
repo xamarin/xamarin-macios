@@ -34,6 +34,12 @@ namespace Introspection {
 		protected override bool Skip (Type type)
 		{
 			switch (type.Namespace) {
+#if __WATCHOS__
+			case "GameKit":
+				if (IntPtr.Size == 4)
+					return true;
+				break;
+#endif
 			// they don't answer on the simulator (Apple implementation does not work) but fine on devices
 			case "GameController":
 			case "MonoTouch.GameController":
@@ -49,6 +55,7 @@ namespace Introspection {
 					return true;
 				break;
 			case "Chip":
+			case "MetalFX":
 			case "MetalKit":
 			case "MonoTouch.MetalKit":
 			case "MetalPerformanceShaders":
@@ -75,11 +82,11 @@ namespace Introspection {
 				break;
 
 			// Apple does not ship a PushKit for every arch on some devices :(
-//			case "PushKit":
-//			case "MonoTouch.PushKit":
-//				if (Runtime.Arch == Arch.DEVICE)
-//					return true;
-//				break;
+			//			case "PushKit":
+			//			case "MonoTouch.PushKit":
+			//				if (Runtime.Arch == Arch.DEVICE)
+			//					return true;
+			//				break;
 #if HAS_WATCHCONNECTIVITY
 			case "WatchConnectivity":
 			case "MonoTouch.WatchConnectivity":
@@ -87,6 +94,8 @@ namespace Introspection {
 					return true;
 				break;
 #endif // HAS_WATCHCONNECTIVITY
+			case "Cinematic":
+			case "PushToTalk":
 			case "ShazamKit":
 				// ShazamKit is not fully supported in the simulator
 				if (TestRuntime.IsSimulatorOrDesktop)
@@ -188,7 +197,7 @@ namespace Introspection {
 				switch (name) {
 				// conformance to CAAction started with iOS8
 				case "runActionForKey:object:arguments:":
-					if (!TestRuntime.CheckXcodeVersion (8,0))
+					if (!TestRuntime.CheckXcodeVersion (8, 0))
 						return true;
 					break;
 				}
@@ -416,7 +425,24 @@ namespace Introspection {
 			case "ARImageAnchor":
 				switch (name) {
 				case "isTracked":
-					if (!TestRuntime.CheckXcodeVersion (10,0))
+					if (!TestRuntime.CheckXcodeVersion (10, 0))
+						return true;
+					break;
+				}
+				break;
+			case "UIHoverGestureRecognizer":
+				switch (name) {
+				case "azimuthAngleInView:": // Only works on iPad according to docs.
+				case "azimuthUnitVectorInView:":
+					if (TestRuntime.CheckXcodeVersion (14, 3) && UIDevice.CurrentDevice.UserInterfaceIdiom == UIUserInterfaceIdiom.Phone)
+						return true;
+					break;
+				}
+				break;
+			case "HKHealthStore":
+				switch (name) {
+				case "workoutSessionMirroringStartHandler":
+					if (TestRuntime.IsSimulatorOrDesktop)
 						return true;
 					break;
 				}
@@ -431,11 +457,19 @@ namespace Introspection {
 					break;
 				}
 				break;
+			case "HKHealthStore":
+				switch (name) {
+				case "workoutSessionMirroringStartHandler":
+					if (TestRuntime.IsSimulatorOrDesktop)
+						return true;
+					break;
+				}
+				break;
 #endif
-			break;
-		}
+				break;
+			}
 
-		switch (name) {
+			switch (name) {
 			// UIResponderStandardEditActions - stuffed inside UIResponder
 			case "cut:":
 			case "copy:":
@@ -751,13 +785,13 @@ namespace Introspection {
 				case "UIFont":
 					return !TestRuntime.CheckXcodeVersion (4, 5);
 				// not conforming to NSCopying before 7.0 SDK
-				case "CBPeripheral": 
+				case "CBPeripheral":
 					return !TestRuntime.CheckXcodeVersion (5, 0);
 				// not conforming to NSCopying before 8.0 SDK
-				case "AVMetadataFaceObject": 
+				case "AVMetadataFaceObject":
 					return !TestRuntime.CheckXcodeVersion (6, 0);
 				// not conforming to NSCopying before 8.2 SDK
-				case "HKUnit": 
+				case "HKUnit":
 					return !TestRuntime.CheckXcodeVersion (6, 2);
 				case "HKBiologicalSexObject":
 				case "HKBloodTypeObject":
@@ -766,6 +800,11 @@ namespace Introspection {
 					return !TestRuntime.CheckXcodeVersion (8, 0);
 				case "HMLocationEvent":
 					return !TestRuntime.CheckXcodeVersion (9, 0);
+				case "MPSGraphExecutableExecutionDescriptor":
+					return TestRuntime.CheckXcodeVersion (14, 0);
+				case "HKElectrocardiogramVoltageMeasurement":
+					// NSCopying conformance added in Xcode 14
+					return !TestRuntime.CheckXcodeVersion (14, 0);
 #if __WATCHOS__
 				case "INParameter":
 					// NSCopying conformance added in Xcode 10
@@ -810,7 +849,7 @@ namespace Introspection {
 				// UIFocusGuide (added in iOS 9.0 and deprecated in iOS 10)
 				case "UIView":
 				case "UIViewController":
-					return !TestRuntime.CheckXcodeVersion (7,0);
+					return !TestRuntime.CheckXcodeVersion (7, 0);
 				}
 				break;
 
@@ -844,6 +883,12 @@ namespace Introspection {
 				switch (declaredType.Name) {
 				case "HMLocationEvent":
 					return !TestRuntime.CheckXcodeVersion (9, 0);
+				}
+				break;
+			case "addTracksForCinematicAssetInfo:preferredStartingTrackID:": // cinematic method only supported on devices
+				switch (declaredType.Name) {
+				case "AVMutableComposition":
+					return TestRuntime.IsSimulatorOrDesktop;
 				}
 				break;
 			}
@@ -882,7 +927,7 @@ namespace Introspection {
 				switch (declaredType.Name) {
 				case "PHLivePhoto":
 					// not yet conforming to NSItemProviderReading
-					if (!TestRuntime.CheckXcodeVersion (10,0))
+					if (!TestRuntime.CheckXcodeVersion (10, 0))
 						return true;
 					break;
 				}
@@ -899,12 +944,18 @@ namespace Introspection {
 					return true;
 				break;
 #endif
+			case "affectsColorAppearance":
+				switch (declaredType.Name) {
+				case "UITraitTypesettingLanguage":
+					return true;
+				}
+				break;
 			}
 			return base.CheckStaticResponse (value, actualType, declaredType, ref name);
 		}
 
 		static List<NSObject> do_not_dispose = new List<NSObject> ();
-		
+
 		protected override void Dispose (NSObject obj, Type type)
 		{
 			switch (type.Name) {

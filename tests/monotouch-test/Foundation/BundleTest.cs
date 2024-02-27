@@ -23,13 +23,13 @@ using ObjCException = Foundation.MonoTouchException;
 #endif
 
 namespace MonoTouchFixtures.Foundation {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class BundleTest {
-		
+
 		NSBundle main = NSBundle.MainBundle;
-		
+
 		[Test]
 		public void LocalizedString2 ()
 		{
@@ -59,7 +59,7 @@ namespace MonoTouchFixtures.Foundation {
 
 			s = NSBundle.MainBundle.GetLocalizedString (null, "value", null);
 			Assert.That (s, Is.EqualTo ("value"), "comment");
-			
+
 			s = main.GetLocalizedString (null, null, null);
 			Assert.That (s, Is.Empty, "all-null");
 		}
@@ -70,23 +70,23 @@ namespace MonoTouchFixtures.Foundation {
 		{
 			string s = main.LocalizedString (null, "value", "table", "comment");
 			Assert.That (s, Is.EqualTo ("value"), "key");
-			
+
 			s = NSBundle.MainBundle.LocalizedString ("key", null, "table", "comment");
 			Assert.That (s, Is.EqualTo ("key"), "value");
-			
+
 			s = NSBundle.MainBundle.LocalizedString ("key", "value", null, "comment");
 			Assert.That (s, Is.EqualTo ("value"), "table");
-			
+
 			s = NSBundle.MainBundle.LocalizedString ("key", "value", "table", null);
 			Assert.That (s, Is.EqualTo ("value"), "comment");
-			
+
 			s = main.LocalizedString (null, null, null, null);
 			Assert.That (s, Is.Empty, "all-null");
 		}
 #endif
-		
+
 		// http://developer.apple.com/library/ios/#documentation/uikit/reference/NSBundle_UIKitAdditions/Introduction/Introduction.html
-		
+
 #if false // Disabling for now due to Xcode 9 does not support nibs if deployment target == 6.0
 #if !__WATCHOS__
 		[Test]

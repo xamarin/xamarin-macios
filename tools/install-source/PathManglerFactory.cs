@@ -1,10 +1,8 @@
 using System;
 using System.IO;
 
-namespace InstallSources
-{
-	public class PathManglerFactory
-	{
+namespace InstallSources {
+	public class PathManglerFactory {
 		public bool Verbose { get; set; }
 		public string InstallDir { get; set; }
 		public string DestinationDir { get; set; }
@@ -24,7 +22,7 @@ namespace InstallSources
 
 		MonoPathMangler MonoPathMangler {
 			get {
-				if (monoMangler == null)
+				if (monoMangler is null)
 					monoMangler = new MonoPathMangler {
 						InstallDir = InstallDir,
 						DestinationDir = DestinationDir,
@@ -37,7 +35,7 @@ namespace InstallSources
 
 		OpenTKSourceMangler OpenTKSourceMangler {
 			get {
-				if (openTKMangler == null)
+				if (openTKMangler is null)
 					openTKMangler = new OpenTKSourceMangler {
 						InstallDir = InstallDir,
 						DestinationDir = DestinationDir,
@@ -49,7 +47,7 @@ namespace InstallSources
 
 		XamarinSourcesPathMangler XamarinSourcesPathMangler {
 			get {
-				if (xamarinPathMangler == null)
+				if (xamarinPathMangler is null)
 					xamarinPathMangler = new XamarinSourcesPathMangler {
 						InstallDir = InstallDir,
 						DestinationDir = DestinationDir,
@@ -63,25 +61,25 @@ namespace InstallSources
 		public bool IsMonoPath (string path)
 		{
 			// remove the intall dir and append the mono source path
-			if (path.StartsWith(MonoPathMangler.iOSFramework, StringComparison.Ordinal) || path.StartsWith(MonoPathMangler.MacFramework, StringComparison.Ordinal)) {
+			if (path.StartsWith (MonoPathMangler.iOSFramework, StringComparison.Ordinal) || path.StartsWith (MonoPathMangler.MacFramework, StringComparison.Ordinal)) {
 				// dealing with the jenkins paths
 				if (Verbose) {
-					Console.WriteLine($"Install dir is {InstallDir}");
-					Console.WriteLine($"Original path os {path}");
+					Console.WriteLine ($"Install dir is {InstallDir}");
+					Console.WriteLine ($"Original path os {path}");
 				}
-				
+
 				var srcDir = path.Contains (xamariniOSDir) ? MonoPathMangler.iOSFramework : MonoPathMangler.MacFramework;
 				if (Verbose)
-					Console.WriteLine($"Src path to remove {srcDir}");
-				var relative = path.Remove(0, srcDir.Length);
+					Console.WriteLine ($"Src path to remove {srcDir}");
+				var relative = path.Remove (0, srcDir.Length);
 				if (Verbose)
-					Console.WriteLine($"Relative path is {relative}");
-				if (relative.StartsWith("/", StringComparison.Ordinal))
-					relative = relative.Remove(0, 1);
-				var monoPath = Path.Combine(MonoSourcePath, relative);
+					Console.WriteLine ($"Relative path is {relative}");
+				if (relative.StartsWith ("/", StringComparison.Ordinal))
+					relative = relative.Remove (0, 1);
+				var monoPath = Path.Combine (MonoSourcePath, relative);
 				if (Verbose)
-					Console.WriteLine($"Mono path is {monoPath}");
-				return File.Exists(monoPath);
+					Console.WriteLine ($"Mono path is {monoPath}");
+				return File.Exists (monoPath);
 			}
 			// check if the path is the xamarin source path + the mono external submodule
 			var monoSubmodule = Path.Combine (XamarinSourcePath.Replace ("src/", ""), "external", "mono");
@@ -89,7 +87,7 @@ namespace InstallSources
 				return true;
 			if (path.StartsWith (XamarinSourcePath, StringComparison.Ordinal))
 				return false;
-			var xamarinRuntimePath = XamarinSourcePath.Replace($"/{srcSubPath}/", $"/{runtimeSubPath}/");
+			var xamarinRuntimePath = XamarinSourcePath.Replace ($"/{srcSubPath}/", $"/{runtimeSubPath}/");
 			if (path.StartsWith (xamarinRuntimePath, StringComparison.Ordinal))
 				return false;
 			return path.StartsWith (MonoSourcePath, StringComparison.Ordinal);
@@ -97,40 +95,40 @@ namespace InstallSources
 
 		public bool IsOpenTKPath (string path)
 		{
-			if (path.StartsWith(InstallDir, StringComparison.Ordinal)) {
+			if (path.StartsWith (InstallDir, StringComparison.Ordinal)) {
 				// dealing with the jenkins paths
 				var srcDir = Path.Combine (InstallDir, srcSubPath,
-					(InstallDir.Contains(xamariniOSDir) ? xamariniOSDir : xamarinMacDir));
+					(InstallDir.Contains (xamariniOSDir) ? xamariniOSDir : xamarinMacDir));
 				var relative = path.Remove (0, srcDir.Length);
-				if (relative.StartsWith("/", StringComparison.Ordinal))
+				if (relative.StartsWith ("/", StringComparison.Ordinal))
 					relative = relative.Remove (0, 1);
 				var openTKPath = Path.Combine (OpenTKSourcePath, relative);
-				return File.Exists(openTKPath);
+				return File.Exists (openTKPath);
 			} else {
-				return path.Contains(OpenTKSourcePath);
+				return path.Contains (OpenTKSourcePath);
 			}
 		}
-		
+
 		public bool IsIgnored (string path)
 		{
 			return path.Contains ("/mcs/mcs/") ||
-				path.Contains ("xammac-parser.cs") ||		// this would require adding sources to the Mono mac archive
-				path.Contains ("xammac_net_4_5-parser.cs");	// which would add a lot of duplicate files, so just ignore these
+				path.Contains ("xammac-parser.cs") ||       // this would require adding sources to the Mono mac archive
+				path.Contains ("xammac_net_4_5-parser.cs"); // which would add a lot of duplicate files, so just ignore these
 		}
-		
+
 		public IPathMangler GetMangler (string path)
 		{
-			if (IsIgnored(path))
+			if (IsIgnored (path))
 				return null;
 
 			if (IsOpenTKPath (path)) {
 				return OpenTKSourceMangler;
 			}
-			
-			if (IsMonoPath(path)) {
+
+			if (IsMonoPath (path)) {
 				return MonoPathMangler;
 			}
-			
+
 			return XamarinSourcesPathMangler;
 		}
 	}

@@ -20,31 +20,34 @@ parameters:
 - name: vsdropsPrefix
   type: string
 
-- name: testPrefix
-  type: string 
-  default: 'ios' # default context, since we started dealing with iOS devices. 
-
-- name: provisioningFailed
-  type: string 
-  default: 'False'
-
-- name: simTestsConfigurations
+- name: testConfigurations
   type: object
 
 - name: isPR
   type: boolean
+
+- name: repositoryAlias
+  type: string
+  default: self
+
+- name: commit
+  type: string
+  default: HEAD
+
+- name: uploadPrefix
+  type: string
+  default: '$(MaciosUploadPrefix)'
+
 
 steps:
 
 - template: ../common/checkout.yml
   parameters:
     isPR: ${{ parameters.isPR }}
+    repositoryAlias: ${{ parameters.repositoryAlias }}
+    commit: ${{ parameters.commit }}
 
 - template: download-artifacts.yml
-  parameters:
-    downloadHtmlReport: false
-    simTestsConfigurations: ${{ parameters.simTestsConfigurations }}
-    testPrefix: ${{ parameters.testPrefix }}
 
 - ${{ if parameters.isPR }}:
   - template: ../common/clean.yml
@@ -52,19 +55,26 @@ steps:
       commentToHide: '[comment]: <> (This is a test result report added by Azure DevOps)'
       checkoutCode: false # we already execute the 'clean.yml' template elsewhere in this job, and running 'checkout' again is useless (it also leads to duplicate step names which Azure DevOps doesn't like).
 
+- pwsh: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/show_env.ps1
+  displayName: 'Show Environment'
+
 # build a message with all the content of all tests, to do so, we get the labels and to pass them to pwsh we do a join with ;
 # as the separator
 - pwsh: |
       try {
+        gci env: | format-table -autosize | Out-String -Width 8192
+
         $vsdropsIndex="$Env:VSDROPSPREFIX/$Env:BUILD_BUILDNUMBER/$Env:BUILD_BUILDID/"
         Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
         $DebugPreference = "Continue" # enable debug messages
 
-        $labels = "$Env:LABELS".Split(";")
+        $parallelResults = New-ParallelTestsResults `
+          -Path "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY\Reports" `
+          -StageDependencies "$Env:STAGE_DEPENDENCIES" `
+          -UploadPrefix "${{  parameters.uploadPrefix }}" `
+          -Context "$Env:CONTEXT" `
+          -VSDropsIndex $vsdropsIndex
 
-        $testResults = New-TestSummaryResults -Path "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY\Reports" -Labels $labels -TestPrefix "${{ parameters.testPrefix }}"
-
-        $parallelResults = New-ParallelTestsResults -Results $testResults -Context "$Env:CONTEXT" -TestPrefix "${{ parameters.testPrefix }}" -VSDropsIndex $vsdropsIndex
         $success = $parallelResults.IsSuccess()
         $emoji = ":rocket:"
         if (-not $success) {
@@ -72,20 +82,24 @@ steps:
           $emoji = ":fire:"
         }
 
-        $gihubComments = New-GitHubCommentsObject -Org "xamarin" -Repo "xamarin-macios" -Token $Env:GITHUB_TOKEN -Hash $Env:GIT_HASH -Debug
+        $gihubComments = New-GitHubCommentsObjectFromUrl -Url "$(Build.Repository.Uri)" -Token $Env:GITHUB_TOKEN -Hash $Env:COMMENT_HASH -Debug
         $result = $gihubComments.NewCommentFromObject("Test results", $emoji, $parallelResults)
       } catch {
+        Write-Host "##vso[task.complete result=Failed;]Failed to compute test summaries: $_"
         New-GitHubComment -Header "Failed to compute test summaries on $Env:CONTEXT" -Emoji ":fire:" -Description "Failed to compute test summaries: $_."
       }
   env:
-    LABELS: ${{ join(';', parameters.simTestsConfigurations) }}
-    BUILD_REVISION: $(Build.SourceVersion)
+    DEPENDENCIES: $(DEPENDENCIES)
+    STAGE_DEPENDENCIES: $(STAGE_DEPENDENCIES)
     CONTEXT: ${{ parameters.statusContext }}
-    DEVICE_PREFIX: ${{ parameters.testPrefix }}
     GITHUB_TOKEN: $(GitHub.Token)
     TESTS_JOBSTATUS: $(TESTS_JOBSTATUS) # set by the runTests step
     TESTS_SUMMARY: $(TEST_SUMMARY_PATH)
     ACCESSTOKEN: $(System.AccessToken)
+    ${{ if eq(parameters.repositoryAlias, 'self') }}:
+      COMMENT_HASH: $(GIT_HASH)
+    ${{ else }}:
+      COMMENT_HASH: $(Build.SourceVersion)
   displayName: 'Add summaries'
   condition: always()
   timeoutInMinutes: 15

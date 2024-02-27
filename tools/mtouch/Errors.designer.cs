@@ -338,16 +338,6 @@ namespace Xamarin.Bundler {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Could not optimize the call to BlockLiteral.SetupBlock in {0} at offset {1} because no [UserDelegateType] attribute could be found on {2}.
-        ///		.
-        /// </summary>
-        public static string MM2106_C {
-            get {
-                return ResourceManager.GetString("MM2106_C", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Could not optimize the call to BlockLiteral.SetupBlock in {0} at offset {1}: {2}.
         ///		.
         /// </summary>
@@ -3076,7 +3066,7 @@ namespace Xamarin.Bundler {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The class &apos;{0}&apos; will not be registered because the WatchKit framework has been removed from the iOS SDK.
+        ///   Looks up a localized string similar to The class &apos;{0}&apos; will not be registered because the {1} framework has been removed from the {2} SDK.
         ///		.
         /// </summary>
         public static string MT4178 {
@@ -3822,6 +3812,24 @@ namespace Xamarin.Bundler {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not extract the native framework &apos;{0}&apos; from the assembly &apos;{1}&apos;, because it doesn&apos;t contain the resource &apos;{2}&apos;..
+        /// </summary>
+        public static string MX1307 {
+            get {
+                return ResourceManager.GetString("MX1307", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not extract the native library &apos;{0}&apos; from the assembly &apos;{1}&apos;, because it doesn&apos;t contain the resource &apos;{2}&apos;..
+        /// </summary>
+        public static string MX1308 {
+            get {
+                return ResourceManager.GetString("MX1308", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to One or more reference(s) to type &apos;{0}&apos; already exists inside &apos;{1}&apos; before linking
         ///		.
         /// </summary>
@@ -3912,6 +3920,15 @@ namespace Xamarin.Bundler {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Keeping the dynamic registrar (by passing &apos;--optimize=-remove-dynamic-registrar&apos;) is not possible, because the dynamic registrar is not supported when using NativeAOT. Support for dynamic registration will still be removed..
+        /// </summary>
+        public static string MX2016 {
+            get {
+                return ResourceManager.GetString("MX2016", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Could not process XML description: {0}
         ///		.
         /// </summary>
@@ -3928,6 +3945,51 @@ namespace Xamarin.Bundler {
         public static string MX2103 {
             get {
                 return ResourceManager.GetString("MX2103", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not optimize the call to BlockLiteral.{2} in {0} at offset {1} because the more than one method named &apos;{3}&apos; was found in the type &apos;{4}..
+        /// </summary>
+        public static string MX2106_E {
+            get {
+                return ResourceManager.GetString("MX2106_E", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not optimize the call to BlockLiteral.{2} in {0} at offset {1} because the method &apos;{3}&apos; must have at least one parameter..
+        /// </summary>
+        public static string MX2106_F {
+            get {
+                return ResourceManager.GetString("MX2106_F", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not optimize the call to BlockLiteral.{2} in {0} at offset {1} because the first parameter in the method &apos;{3}&apos; isn&apos;t &apos;System.IntPtr&apos;, &apos;void*&apos; or &apos;ObjCRuntime.BlockLiteral*&apos; (it&apos;s &apos;{4}&apos;).
+        /// </summary>
+        public static string MX2106_G {
+            get {
+                return ResourceManager.GetString("MX2106_G", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not optimize the call to BlockLiteral.{2} in {0} at offset {1} because the method &apos;{3}&apos; does not have an [UnmanagedCallersOnly] attribute..
+        /// </summary>
+        public static string MX2106_H {
+            get {
+                return ResourceManager.GetString("MX2106_H", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not optimize the call to BlockLiteral.{2} in {0} at offset {1} because the method &apos;{3}&apos; does not have an [UnmanagedCallersOnly] attribute..
+        /// </summary>
+        public static string MX2106_I {
+            get {
+                return ResourceManager.GetString("MX2106_I", resourceCulture);
             }
         }
         
@@ -3958,6 +4020,33 @@ namespace Xamarin.Bundler {
         public static string MX3007 {
             get {
                 return ResourceManager.GetString("MX3007", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not find a [UserDelegateType] attribute on the type &apos;{0}&apos;..
+        /// </summary>
+        public static string MX4187 {
+            get {
+                return ResourceManager.GetString("MX4187", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to compute the block signature for the type &apos;{0}&apos;: {1}.
+        /// </summary>
+        public static string MX4188 {
+            get {
+                return ResourceManager.GetString("MX4188", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The class &apos;{0}&apos; will not be registered because it has been removed from the {1} SDK..
+        /// </summary>
+        public static string MX4189 {
+            get {
+                return ResourceManager.GetString("MX4189", resourceCulture);
             }
         }
         
@@ -4115,7 +4204,7 @@ namespace Xamarin.Bundler {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to An exception occurred while trying to invoke the function {0}: {1}..
+        ///   Looks up a localized string similar to An exception occurred while trying to invoke the function {0}: {1}.
         /// </summary>
         public static string MX8042 {
             get {
@@ -4138,6 +4227,114 @@ namespace Xamarin.Bundler {
         public static string MX8044 {
             get {
                 return ResourceManager.GetString("MX8044", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to call release on an instance of the type {0}.
+        /// </summary>
+        public static string MX8045 {
+            get {
+                return ResourceManager.GetString("MX8045", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to find the method &apos;{0}&apos; in the type &apos;{1}&apos;.
+        /// </summary>
+        public static string MX8046 {
+            get {
+                return ResourceManager.GetString("MX8046", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The trampoline method {0} does not match the function pointer 0x{1} for the trampolineMethod argument (they&apos;re don&apos;t refer to the same method)..
+        /// </summary>
+        public static string MX8047 {
+            get {
+                return ResourceManager.GetString("MX8047", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The trampoline method {0} must have at least one parameter..
+        /// </summary>
+        public static string MX8048 {
+            get {
+                return ResourceManager.GetString("MX8048", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The first parameter in the trampoline method {0} must be either &apos;System.IntPtr&apos;, &apos;void*&apos; or &apos;ObjCRuntime.BlockLiteral*&apos;..
+        /// </summary>
+        public static string MX8049 {
+            get {
+                return ResourceManager.GetString("MX8049", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to BlockLiteral.GetBlockSignature is not supported when the dynamic registrar has been linked away..
+        /// </summary>
+        public static string MX8050 {
+            get {
+                return ResourceManager.GetString("MX8050", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The trampoline method {0} must have an [UnmanagedCallersOnly] attribute..
+        /// </summary>
+        public static string MX8051 {
+            get {
+                return ResourceManager.GetString("MX8051", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The signature must be a non-empty string..
+        /// </summary>
+        public static string MX8052 {
+            get {
+                return ResourceManager.GetString("MX8052", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not resolve the module in the assembly {0}..
+        /// </summary>
+        public static string MX8053 {
+            get {
+                return ResourceManager.GetString("MX8053", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Can&apos;t resolve metadata tokens for methods when using the managed static registrar (token: 0x{0})..
+        /// </summary>
+        public static string MX8054 {
+            get {
+                return ResourceManager.GetString("MX8054", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not find the type &apos;ObjCRuntime.__Registrar__&apos; in the assembly &apos;{0}&apos;..
+        /// </summary>
+        public static string MX8055 {
+            get {
+                return ResourceManager.GetString("MX8055", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to marshal the Objective-C object 0x{0} (type: {1}). Could not find an existing managed instance for this object, nor was it possible to create a new managed instance of generic type {2}..
+        /// </summary>
+        public static string MX8056 {
+            get {
+                return ResourceManager.GetString("MX8056", resourceCulture);
             }
         }
     }

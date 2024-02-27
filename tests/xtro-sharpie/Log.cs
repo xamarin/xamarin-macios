@@ -13,7 +13,7 @@ namespace Extrospection {
 			List<string> list;
 			if (!lists.TryGetValue (fx, out list)) {
 				list = new List<string> ();
-				lists.Add (fx, list); 
+				lists.Add (fx, list);
 			}
 			return list;
 		}

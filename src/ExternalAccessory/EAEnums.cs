@@ -10,19 +10,17 @@ using ObjCRuntime;
 namespace ExternalAccessory {
 
 	[NoMac]
-	[TV (10,0)]
-	[iOS (8,0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	[Flags]
 	public enum EAWiFiUnconfiguredAccessoryProperties : ulong {
-		SupportsAirPlay  = (1 << 0),
+		SupportsAirPlay = (1 << 0),
 		SupportsAirPrint = (1 << 1),
-		SupportsHomeKit  = (1 << 2), // iOS 8 beta 5
+		SupportsHomeKit = (1 << 2), // iOS 8 beta 5
 	}
 
 	[NoMac]
-	[TV (10,0)]
-	[iOS (8,0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum EAWiFiUnconfiguredAccessoryBrowserState : long {
 		WiFiUnavailable = 0,
@@ -33,8 +31,7 @@ namespace ExternalAccessory {
 
 	// NSInteger -> EAWiFiUnconfiguredAccessoryBrowser.h
 	[NoMac]
-	[TV (10,0)]
-	[iOS (8,0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum EAWiFiUnconfiguredAccessoryConfigurationStatus : long {
 		Success,
@@ -43,8 +40,7 @@ namespace ExternalAccessory {
 	}
 
 	// NSInteger -> EAAccessoryManager.h
-	[TV (10,0)]
-	[Mac (10, 13)]
+	[MacCatalyst (13, 1)]
 	[Native ("EABluetoothAccessoryPickerErrorCode")]
 	[ErrorDomain ("EABluetoothAccessoryPickerErrorDomain")]
 	public enum EABluetoothAccessoryPickerError : long {

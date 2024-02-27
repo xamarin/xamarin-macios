@@ -17,13 +17,11 @@ using ObjCRuntime;
 
 using NUnit.Framework;
 
-namespace MonoTouchFixtures.ObjCRuntime
-{
+namespace MonoTouchFixtures.ObjCRuntime {
 
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class ProtocolTest
-	{
+	public class ProtocolTest {
 		[Test]
 		public void Ctors ()
 		{

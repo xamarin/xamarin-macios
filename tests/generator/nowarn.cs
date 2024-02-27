@@ -14,6 +14,6 @@ namespace nowarnTests {
 
 	[BaseType (typeof (NSObject))]
 	interface FooObject {
-	
+
 	}
 }

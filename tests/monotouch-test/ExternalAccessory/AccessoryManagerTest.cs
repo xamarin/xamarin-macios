@@ -28,10 +28,10 @@ namespace MonoTouchFixtures.ExternalAccessory {
 		public void Shared ()
 		{
 #if TVOS
-			TestRuntime.AssertXcodeVersion (8,0);
+			TestRuntime.AssertXcodeVersion (8, 0);
 #endif
 #if MONOMAC
-			TestRuntime.AssertXcodeVersion (9,0);
+			TestRuntime.AssertXcodeVersion (9, 0);
 #endif
 			// reported to throw an InvalidCastException on http://stackoverflow.com/q/18884195/220643
 			var am = EAAccessoryManager.SharedAccessoryManager;

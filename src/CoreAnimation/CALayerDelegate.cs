@@ -27,7 +27,7 @@
 //
 using System;
 
-using Foundation; 
+using Foundation;
 using ObjCRuntime;
 using CoreGraphics;
 

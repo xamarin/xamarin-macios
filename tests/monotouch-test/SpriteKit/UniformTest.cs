@@ -25,12 +25,10 @@ using VectorFloat3 = global::OpenTK.NVector3;
 using NUnit.Framework;
 using Bindings.Test;
 
-namespace MonoTouchFixtures.SpriteKit
-{
+namespace MonoTouchFixtures.SpriteKit {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class UniformTest
-	{
+	public class UniformTest {
 		[OneTimeSetUp]
 		public void Setup ()
 		{
@@ -48,10 +46,10 @@ namespace MonoTouchFixtures.SpriteKit
 			Matrix2 M2;
 			Matrix3 M3;
 			Matrix4 M4;
-#endif
 			MatrixFloat2x2 M2x2;
 			MatrixFloat3x3 M3x3;
 			MatrixFloat4x4 M4x4;
+#endif
 
 			using (var obj = new SKUniform ("name")) {
 #if !NET
@@ -148,7 +146,6 @@ namespace MonoTouchFixtures.SpriteKit
 				Asserts.AreEqual (V4, obj.FloatVector4Value, "7 FloatVector4Value");
 			}
 
-#if !NET
 			using (var obj = new SKUniform ("name", M2)) {
 				Asserts.AreEqual (M2, obj.FloatMatrix2Value, "8 FloatMatrix2Value");
 				Asserts.AreEqual (M2, MatrixFloat2x2.Transpose (CFunctions.GetMatrixFloat2x2 (obj, "matrixFloat2x2Value")), "8b FloatMatrix2Value");
@@ -163,7 +160,6 @@ namespace MonoTouchFixtures.SpriteKit
 				Asserts.AreEqual (M4, obj.FloatMatrix4Value, "10 FloatMatrix4Value");
 				Asserts.AreEqual (M4, MatrixFloat4x4.Transpose (CFunctions.GetMatrixFloat4x4 (obj, "matrixFloat4x4Value")), "10b FloatMatrix4Value");
 			}
-#endif
 
 			using (var obj = new SKUniform ("name", M2x2)) {
 				Asserts.AreEqual (M2x2, obj.MatrixFloat2x2Value, "11 MatrixFloat2x2Value");

@@ -4,10 +4,10 @@ using ObjCRuntime;
 using Foundation;
 
 namespace WrapTest {
-	
+
 	[BaseType (typeof (NSObject))]
 	interface MyFooClass {
-		
+
 		[Export ("fooString")]
 		string FooString { get; }
 

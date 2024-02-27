@@ -14,18 +14,19 @@ using System.Runtime.InteropServices;
 
 using ObjCRuntime;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Foundation {
 	internal class NSFastEnumerator {
-		[DllImport (Messaging.LIBOBJC_DYLIB, EntryPoint="objc_msgSend")]
-		public extern static nuint objc_msgSend (IntPtr receiver, IntPtr selector, ref NSFastEnumerationState arg1, IntPtr[] arg2, nuint arg3);
+		[DllImport (Messaging.LIBOBJC_DYLIB, EntryPoint = "objc_msgSend")]
+		public unsafe extern static nuint objc_msgSend (IntPtr receiver, IntPtr selector, NSFastEnumerationState* arg1, IntPtr* arg2, nuint arg3);
 	}
 
 	internal class NSFastEnumerator<T> : IEnumerator<T>
-		where T: class, INativeObject
-	{
-		NSFastEnumerationState state;
+		where T : class, INativeObject {
+		unsafe NSFastEnumerationState* state;
 		NSObject collection;
-		IntPtr[] array;
 		nuint count;
 		IntPtr mutationValue;
 		nuint current;
@@ -34,30 +35,46 @@ namespace Foundation {
 		public NSFastEnumerator (NSObject collection)
 		{
 			this.collection = collection;
+
+			unsafe {
+				// Create one blob of native memory that holds both our NSFastEnumerationState and the array of pointers we pass to the enumerator.
+				//
+				// Note that we *must* pass native memory to the countByEnumeratingWithState:objects:count: method
+				// (and not a field on the NSFastEnumerator instance), because:
+				// * The pointers in the state (NSFastEnumerationState.mutationsPtr / NSFastEnumerationState.itemsPtr) might point back into the structure.
+				// * We access those pointers using unsafe code (in a way the GC doesn't see).
+				// * If the GC happens to move the NSFastEnumerator instance in memory, it won't update these pointers.
+				// * The next time we read these pointers, we'll read random memory, and thus get random results.
+				// * Ref: https://github.com/xamarin/maccore/issues/2606.
+				// * It would probably also work to create a pinned GCHandle to the NSFastEnumerator structure (instead of allocating native memory), but that doesn't seem easier on the GC.
+				state = (NSFastEnumerationState*) Marshal.AllocHGlobal (sizeof (NSFastEnumerationState));
+				// Zero-initialize
+				*state = default (NSFastEnumerationState);
+			}
 		}
 
 		void Fetch ()
 		{
-			if (array == null)
-				array = new IntPtr [16];
-			count = NSFastEnumerator.objc_msgSend (collection.Handle, Selector.GetHandle ("countByEnumeratingWithState:objects:count:"), ref state, array, (nuint) array.Length);
-			if (!started) {
-				started = true;
-				mutationValue = Marshal.ReadIntPtr (state.mutationsPtr);
+			unsafe {
+				count = NSFastEnumerator.objc_msgSend (collection.Handle, Selector.GetHandle ("countByEnumeratingWithState:objects:count:"), state, &state->array1, (nuint) NSFastEnumerationState.ArrayLength);
+				if (!started) {
+					started = true;
+					mutationValue = *state->mutationsPtr;
+				}
 			}
 			current = 0;
 		}
 
-		void VerifyNonMutated ()
+		unsafe void VerifyNonMutated ()
 		{
-			if (mutationValue != Marshal.ReadIntPtr (state.mutationsPtr))
-				throw new InvalidOperationException ("Collection was modified"); 
+			if (mutationValue != *state->mutationsPtr)
+				throw new InvalidOperationException ("Collection was modified");
 		}
 
-#region IEnumerator implementation
+		#region IEnumerator implementation
 		bool System.Collections.IEnumerator.MoveNext ()
 		{
-			if (array == null || current == count - 1) {
+			if (!started || current == count - 1) {
 				Fetch ();
 				if (count == 0)
 					return false;
@@ -70,7 +87,9 @@ namespace Foundation {
 
 		void System.Collections.IEnumerator.Reset ()
 		{
-			state = new NSFastEnumerationState ();
+			unsafe {
+				*state = new NSFastEnumerationState ();
+			}
 			started = false;
 		}
 
@@ -80,21 +99,28 @@ namespace Foundation {
 				return Current;
 			}
 		}
-#endregion
+		#endregion
 
-#region IDisposable implementation
+		#region IDisposable implementation
 		void IDisposable.Dispose ()
 		{
-			// Nothing to do
-		}
-#endregion
-
-#region IEnumerator<T> implementation
-		public T Current {
-			get {
-				return Runtime.GetINativeObject<T> (Marshal.ReadIntPtr (state.itemsPtr, IntPtr.Size * (int) current), false);
+			unsafe {
+				Marshal.FreeHGlobal ((IntPtr) state);
+				state = null;
 			}
 		}
-#endregion
+		#endregion
+
+		#region IEnumerator<T> implementation
+		public unsafe T Current {
+			get {
+				IntPtr ptr;
+				unsafe {
+					ptr = state->itemsPtr [(int) current];
+				}
+				return Runtime.GetINativeObject<T> (ptr, false);
+			}
+		}
+		#endregion
 	}
 }

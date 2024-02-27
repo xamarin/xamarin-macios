@@ -1,55 +1,20 @@
-# common steps to download the artifacts from the test results.
-parameters:
-
-- name: testPrefix
-  type: string 
-  default: 'ios' # default context, since we started dealing with iOS devices. 
-
-- name: downloadTestSummary
-  type: boolean
-  default: true
-
-- name: downloadHtmlReport
-  type: boolean
-  default: true
-
-- name: runTests
-  type: boolean
-  default: true
-
-- name: simTestsConfigurations
-  type: object
-
 steps:
 
-- ${{ if eq(parameters.runTests, true) }}:
-  - ${{ if eq(parameters.downloadHtmlReport, true) }}:
-    # Download the Html Report that was added by the tests job.
-    - task: DownloadPipelineArtifact@2
-      displayName: Download html reports
-      inputs:
-        patterns: "**/HtmlReport.zip"
-        allowFailedBuilds: true
-        path: $(System.DefaultWorkingDirectory)/Reports
+- pwsh: |
+    if (Test-Path "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/Reports" -PathType Container) {
+      Remove-Item -Path "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/Reports" -Force -Recurse
+    }
+  displayName: "Remove artifacts"
+  condition: always()
 
-    - ${{ each label in parameters.simTestsConfigurations }}:
-      # Unzip report.
-      - task: ExtractFiles@1
-        displayName: 'Extract HtmlReport'
-        continueOnError: true # there might not be an html report, but we should continue processing other steps anyway
-        inputs:
-          archiveFilePatterns: "$(System.DefaultWorkingDirectory)/Reports/HtmlReport-${{ parameters.testPrefix }}${{ replace(parameters.label, '-', '_') }}-$(System.JobAttempt)/HtmlReport.zip"
-          destinationFolder: "$(System.DefaultWorkingDirectory)/HtmlReport-${{ parameters.testPrefix }}${{ replace(parameters.label, '-', '_') }}-$(System.JobAttempt)"
-
-  - ${{ if eq(parameters.downloadTestSummary, true) }}:
-    # Download the test report to write the comment.
-    - task: DownloadPipelineArtifact@2
-      displayName: Download Test Summary
-      continueOnError: true # there are tests that do not have the test results, so far only the install_sources has it
-      inputs:
-        patterns: "**/TestSummary.md"
-        allowFailedBuilds: true
-        path: $(System.DefaultWorkingDirectory)\Reports
+# Download the test report to write the comment.
+- task: DownloadPipelineArtifact@2
+  displayName: Download Test Summary
+  continueOnError: true # there are tests that do not have the test results, so far only the install_sources has it
+  inputs:
+    patterns: "**/TestSummary.md"
+    allowFailedBuilds: true
+    path: $(System.DefaultWorkingDirectory)\Reports
 
 - pwsh:
     Get-ChildItem $(System.DefaultWorkingDirectory)/Reports -Recurse

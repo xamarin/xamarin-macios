@@ -10,12 +10,10 @@ using NUnit.Framework;
 using Xamarin.Tests;
 using Xamarin.Utils;
 
-namespace Xamarin.MacDev.Tasks
-{
+namespace Xamarin.MacDev.Tasks {
 	// [TestFixture ("iPhone")] // Skip this to speed things up a bit.
 	[TestFixture ("iPhoneSimulator")]
-	public class CompileSceneKitAssetsTest : ProjectTest
-	{
+	public class CompileSceneKitAssetsTest : ProjectTest {
 		public CompileSceneKitAssetsTest (string platform) : base (platform)
 		{
 		}

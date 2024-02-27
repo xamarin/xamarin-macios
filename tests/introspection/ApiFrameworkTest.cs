@@ -28,7 +28,7 @@ namespace Introspection {
 
 		public bool Skip (string @namespace)
 		{
-			if (@namespace == null)
+			if (@namespace is null)
 				return true;
 			if (namespaces.Contains (@namespace))
 				return true;
@@ -37,7 +37,7 @@ namespace Introspection {
 			// we always link with the CoreFoundation framework
 			case "CoreFoundation":
 				return true;
-				// not a framework but a dynamic library /usr/lib/libcompression.dylib - tracked elsewhere (p/invoke only)
+			// not a framework but a dynamic library /usr/lib/libcompression.dylib - tracked elsewhere (p/invoke only)
 			case "Compression":
 				return true;
 			// not a framework, largely p/invokes to /usr/lib/libobjc.dylib
@@ -82,6 +82,9 @@ namespace Introspection {
 #endif
 			// not directly bindings
 			case "System.Net.Http":
+				return true;
+			// Removed in Xcode 15
+			case "NewsstandKit":
 				return true;
 			default:
 				return false;

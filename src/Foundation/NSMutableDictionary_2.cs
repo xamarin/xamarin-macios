@@ -35,6 +35,9 @@ using ObjCRuntime;
 using NativeHandle = System.IntPtr;
 #endif
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Foundation {
 #if NET
 	[SupportedOSPlatform ("ios")]
@@ -43,10 +46,9 @@ namespace Foundation {
 	[SupportedOSPlatform ("tvos")]
 #endif
 	[Register ("NSMutableDictionary", SkipRegistration = true)]
-	public sealed partial class NSMutableDictionary<TKey,TValue> : NSMutableDictionary, IDictionary<TKey, TValue> 
-		where TKey : class, INativeObject 
-		where TValue : class, INativeObject
-	{
+	public sealed partial class NSMutableDictionary<TKey, TValue> : NSMutableDictionary, IDictionary<TKey, TValue>
+		where TKey : class, INativeObject
+		where TValue : class, INativeObject {
 
 		public NSMutableDictionary ()
 		{
@@ -72,12 +74,12 @@ namespace Foundation {
 		{
 		}
 
-		NSMutableDictionary (TKey[] keys, TValue[] values, bool validation)
+		NSMutableDictionary (TKey [] keys, TValue [] values, bool validation)
 			: base (NSArray.FromNSObjects (values), NSArray.FromNSObjects (keys))
 		{
 		}
 
-		public NSMutableDictionary (TKey[] keys, TValue[] values)
+		public NSMutableDictionary (TKey [] keys, TValue [] values)
 			: this (keys, values, NSDictionary<TKey, TValue>.ValidateKeysAndValues (keys, values))
 		{
 		}
@@ -85,7 +87,7 @@ namespace Foundation {
 		public NSMutableDictionary (TKey key, TValue value)
 			: base (NSArray.FromNSObjects (value), NSArray.FromNSObjects (key))
 		{
-			
+
 		}
 
 #if hide_loosely_typed_members
@@ -130,45 +132,45 @@ namespace Foundation {
 
 		public TValue ObjectForKey (TKey key)
 		{
-			if (key == null)
+			if (key is null)
 				throw new ArgumentNullException (nameof (key));
 
 			return Runtime.GetINativeObject<TValue> (_ObjectForKey (key.Handle), false);
 		}
 
-		public TKey[] Keys {
+		public TKey [] Keys {
 			get {
 				using (var pool = new NSAutoreleasePool ())
 					return NSArray.ArrayFromHandle<TKey> (_AllKeys ());
 			}
 		}
 
-		public TKey[] KeysForObject (TValue obj)
+		public TKey [] KeysForObject (TValue obj)
 		{
-			if (obj == null)
+			if (obj is null)
 				throw new ArgumentNullException (nameof (obj));
 
 			using (var pool = new NSAutoreleasePool ())
 				return NSArray.ArrayFromHandle<TKey> (_AllKeysForObject (obj.Handle));
 		}
 
-		public TValue[] Values {
+		public TValue [] Values {
 			get {
 				using (var pool = new NSAutoreleasePool ())
 					return NSArray.ArrayFromHandle<TValue> (_AllValues ());
 			}
 		}
 
-		public TValue[] ObjectsForKeys (TKey[] keys, TValue marker)
+		public TValue [] ObjectsForKeys (TKey [] keys, TValue marker)
 		{
-			if (keys == null)
+			if (keys is null)
 				throw new ArgumentNullException (nameof (keys));
 
-			if (marker == null)
+			if (marker is null)
 				throw new ArgumentNullException (nameof (marker));
 
 			if (keys.Length == 0)
-				return new TValue [] {};
+				return new TValue [] { };
 
 			return NSArray.ArrayFromHandle<TValue> (_ObjectsForKeys (NSArray.From<TKey> (keys).Handle, marker.Handle));
 		}
@@ -177,10 +179,10 @@ namespace Foundation {
 
 		public void Add (TKey key, TValue value)
 		{
-			if (key == null)
+			if (key is null)
 				throw new ArgumentNullException (nameof (key));
 
-			if (value == null)
+			if (value is null)
 				throw new ArgumentNullException (nameof (value));
 
 			_SetObject (value.Handle, key.Handle);
@@ -188,7 +190,7 @@ namespace Foundation {
 
 		public bool Remove (TKey key)
 		{
-			if (key == null)
+			if (key is null)
 				throw new ArgumentNullException (nameof (key));
 
 			var last = Count;
@@ -198,12 +200,12 @@ namespace Foundation {
 
 		public bool TryGetValue (TKey key, out TValue value)
 		{
-			return (value = ObjectForKey (key)) != null;
+			return (value = ObjectForKey (key)) is not null;
 		}
 
 		public bool ContainsKey (TKey key)
 		{
-			return ObjectForKey (key) != null;
+			return ObjectForKey (key) is not null;
 		}
 
 		public TValue this [TKey index] {
@@ -215,16 +217,16 @@ namespace Foundation {
 			}
 		}
 
-		static NSMutableDictionary<TKey,TValue> GenericFromObjectsAndKeysInternal (NSArray objects, NSArray keys)
+		static NSMutableDictionary<TKey, TValue> GenericFromObjectsAndKeysInternal (NSArray objects, NSArray keys)
 		{
-			return Runtime.GetNSObject<NSMutableDictionary<TKey,TValue>> (_FromObjectsAndKeysInternal (objects.Handle, keys.Handle));
+			return Runtime.GetNSObject<NSMutableDictionary<TKey, TValue>> (_FromObjectsAndKeysInternal (objects.Handle, keys.Handle));
 		}
 
 		public static NSMutableDictionary<TKey, TValue> FromObjectsAndKeys (TValue [] objects, TKey [] keys, nint count)
 		{
-			if (objects == null)
+			if (objects is null)
 				throw new ArgumentNullException (nameof (objects));
-			if (keys == null)
+			if (keys is null)
 				throw new ArgumentNullException (nameof (keys));
 			if (objects.Length != keys.Length)
 				throw new ArgumentException (nameof (objects) + " and " + nameof (keys) + " arrays have different sizes");
@@ -243,37 +245,37 @@ namespace Foundation {
 		public static NSMutableDictionary<TKey, TValue> FromObjectsAndKeys (TKey [] objects, TValue [] keys)
 #endif
 		{
-			if (objects == null)
+			if (objects is null)
 				throw new ArgumentNullException (nameof (objects));
-			if (keys == null)
+			if (keys is null)
 				throw new ArgumentNullException (nameof (keys));
 			if (objects.Length != keys.Length)
 				throw new ArgumentException (nameof (objects) + " and " + nameof (keys) + " arrays have different sizes");
-			
+
 			using (var no = NSArray.FromNSObjects (objects))
-				using (var nk = NSArray.FromNSObjects (keys))
-					return GenericFromObjectsAndKeysInternal (no, nk);
+			using (var nk = NSArray.FromNSObjects (keys))
+				return GenericFromObjectsAndKeysInternal (no, nk);
 		}
 
-		public static NSMutableDictionary<TKey,TValue> FromObjectsAndKeys (object [] objects, object [] keys)
+		public static NSMutableDictionary<TKey, TValue> FromObjectsAndKeys (object [] objects, object [] keys)
 		{
-			if (objects == null)
+			if (objects is null)
 				throw new ArgumentNullException (nameof (objects));
-			if (keys == null)
+			if (keys is null)
 				throw new ArgumentNullException (nameof (keys));
 			if (objects.Length != keys.Length)
 				throw new ArgumentException (nameof (objects) + " and " + nameof (keys) + " arrays have different sizes");
 
 			using (var no = NSArray.FromObjects (objects))
-				using (var nk = NSArray.FromObjects (keys))
-					return GenericFromObjectsAndKeysInternal (no, nk);
+			using (var nk = NSArray.FromObjects (keys))
+				return GenericFromObjectsAndKeysInternal (no, nk);
 		}
 
-		public static NSMutableDictionary<TKey,TValue> FromObjectsAndKeys (NSObject [] objects, NSObject [] keys, nint count)
+		public static NSMutableDictionary<TKey, TValue> FromObjectsAndKeys (NSObject [] objects, NSObject [] keys, nint count)
 		{
-			if (objects == null)
+			if (objects is null)
 				throw new ArgumentNullException (nameof (objects));
-			if (keys == null)
+			if (keys is null)
 				throw new ArgumentNullException (nameof (keys));
 			if (objects.Length != keys.Length)
 				throw new ArgumentException (nameof (objects) + " and " + nameof (keys) + " arrays have different sizes");
@@ -281,15 +283,15 @@ namespace Foundation {
 				throw new ArgumentException (nameof (count));
 
 			using (var no = NSArray.FromNSObjects (objects))
-				using (var nk = NSArray.FromNSObjects (keys))
-					return GenericFromObjectsAndKeysInternal (no, nk);
+			using (var nk = NSArray.FromNSObjects (keys))
+				return GenericFromObjectsAndKeysInternal (no, nk);
 		}
 
-		public static NSMutableDictionary<TKey,TValue> FromObjectsAndKeys (object [] objects, object [] keys, nint count)
+		public static NSMutableDictionary<TKey, TValue> FromObjectsAndKeys (object [] objects, object [] keys, nint count)
 		{
-			if (objects == null)
+			if (objects is null)
 				throw new ArgumentNullException (nameof (objects));
-			if (keys == null)
+			if (keys is null)
 				throw new ArgumentNullException (nameof (keys));
 			if (objects.Length != keys.Length)
 				throw new ArgumentException (nameof (objects) + " and " + nameof (keys) + " arrays have different sizes");
@@ -297,10 +299,10 @@ namespace Foundation {
 				throw new ArgumentException (nameof (count));
 
 			using (var no = NSArray.FromObjects (objects))
-				using (var nk = NSArray.FromObjects (keys))
-					return GenericFromObjectsAndKeysInternal (no, nk);
+			using (var nk = NSArray.FromObjects (keys))
+				return GenericFromObjectsAndKeysInternal (no, nk);
 		}
-#region IDictionary<K,V>
+		#region IDictionary<K,V>
 		void IDictionary<TKey, TValue>.Add (TKey key, TValue value)
 		{
 			Add (key, value);
@@ -341,9 +343,9 @@ namespace Foundation {
 				return Values;
 			}
 		}
-#endregion
+		#endregion
 
-#region ICollection<KeyValuePair<TKey, TValue>>
+		#region ICollection<KeyValuePair<TKey, TValue>>
 		void ICollection<KeyValuePair<TKey, TValue>>.Add (KeyValuePair<TKey, TValue> item)
 		{
 			Add (item.Key, item.Value);
@@ -364,16 +366,16 @@ namespace Foundation {
 			return (object) value == (object) item.Value;
 		}
 
-		void ICollection<KeyValuePair<TKey, TValue>>.CopyTo (KeyValuePair<TKey, TValue>[] array, int arrayIndex)
+		void ICollection<KeyValuePair<TKey, TValue>>.CopyTo (KeyValuePair<TKey, TValue> [] array, int arrayIndex)
 		{
-			if (array == null)
+			if (array is null)
 				throw new ArgumentNullException (nameof (array));
 			if (arrayIndex < 0)
 				throw new ArgumentOutOfRangeException (nameof (arrayIndex));
 			int c = array.Length;
 			if ((c > 0) && (arrayIndex >= c))
 				throw new ArgumentException (nameof (arrayIndex) + " is equal to or greater than " + nameof (array) + ".Length");
-			if (arrayIndex + (int)Count > c)
+			if (arrayIndex + (int) Count > c)
 				throw new ArgumentException ("Not enough room from " + nameof (arrayIndex) + " to end of " + nameof (array) + " for this dictionary");
 
 			var idx = arrayIndex;
@@ -385,10 +387,10 @@ namespace Foundation {
 		{
 			TValue value;
 
-			if (item.Key == null)
+			if (item.Key is null)
 				throw new ArgumentNullException (nameof (item) + ".Key");
 
-			if (item.Value == null)
+			if (item.Value is null)
 				throw new ArgumentNullException (nameof (item) + ".Value");
 
 			if (!TryGetValue (item.Key, out value))
@@ -413,22 +415,22 @@ namespace Foundation {
 				return false;
 			}
 		}
-#endregion
+		#endregion
 
-#region IEnumerable<KeyValuePair<TKey, TValue>>
+		#region IEnumerable<KeyValuePair<TKey, TValue>>
 		IEnumerator<KeyValuePair<TKey, TValue>> IEnumerable<KeyValuePair<TKey, TValue>>.GetEnumerator ()
 		{
 			foreach (var key in Keys)
 				yield return new KeyValuePair<TKey, TValue> (key, ObjectForKey (key));
 		}
-#endregion
+		#endregion
 
-#region IEnumerable
+		#region IEnumerable
 		IEnumerator IEnumerable.GetEnumerator ()
 		{
 			return ((IEnumerable<KeyValuePair<TKey, TValue>>) this).GetEnumerator ();
 		}
-#endregion
+		#endregion
 
 	}
 }

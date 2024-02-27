@@ -12,13 +12,11 @@ using UIKit;
 using NUnit.Framework;
 using Xamarin.Utils;
 
-namespace MonoTouchFixtures.MediaPlayer
-{
+namespace MonoTouchFixtures.MediaPlayer {
 
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class NowPlayingInfoCenterTest
-	{
+	public class NowPlayingInfoCenterTest {
 		MPNowPlayingInfo NowPlayingInfo;
 
 		bool v8_0 = TestRuntime.CheckSystemVersion (ApplePlatform.iOS, 8, 0);
@@ -94,26 +92,26 @@ namespace MonoTouchFixtures.MediaPlayer
 					Assert.IsInstanceOf (typeof (MPNowPlayingInfoLanguageOption []), np.CurrentLanguageOptions, "#9");
 				}
 				if (v10_0) {
-					Assert.IsInstanceOf (typeof (string), (object)np.CollectionIdentifier, "#10");
-					Assert.IsInstanceOf (typeof (string), (object)np.ExternalContentIdentifier, "#11");
-					Assert.IsInstanceOf (typeof (string), (object)np.ExternalUserProfileIdentifier, "#12");
+					Assert.IsInstanceOf (typeof (string), (object) np.CollectionIdentifier, "#10");
+					Assert.IsInstanceOf (typeof (string), (object) np.ExternalContentIdentifier, "#11");
+					Assert.IsInstanceOf (typeof (string), (object) np.ExternalUserProfileIdentifier, "#12");
 					Assert.IsInstanceOf (typeof (float), np.PlaybackProgress, "#13");
 					Assert.IsInstanceOf (typeof (MPNowPlayingInfoMediaType), np.MediaType, "#14");
 					Assert.IsInstanceOf (typeof (bool), np.IsLiveStream, "#15");
 				}
 
-				Assert.IsInstanceOf (typeof (string), (object)np.AlbumTitle, "#16");
+				Assert.IsInstanceOf (typeof (string), (object) np.AlbumTitle, "#16");
 				Assert.IsInstanceOf (typeof (int), np.AlbumTrackCount, "#17");
 				Assert.IsInstanceOf (typeof (int), np.AlbumTrackNumber, "#18");
-				Assert.IsInstanceOf (typeof (string), (object)np.Artist, "#19");
+				Assert.IsInstanceOf (typeof (string), (object) np.Artist, "#19");
 				Assert.IsInstanceOf (typeof (MPMediaItemArtwork), np.Artwork, "#20");
-				Assert.IsInstanceOf (typeof (string), (object)np.Composer, "#21");
+				Assert.IsInstanceOf (typeof (string), (object) np.Composer, "#21");
 				Assert.IsInstanceOf (typeof (int), np.DiscCount, "#22");
 				Assert.IsInstanceOf (typeof (int), np.DiscNumber, "#23");
-				Assert.IsInstanceOf (typeof (string), (object)np.Genre, "#24");
+				Assert.IsInstanceOf (typeof (string), (object) np.Genre, "#24");
 				Assert.IsInstanceOf (typeof (ulong), np.PersistentID, "#25");
 				Assert.IsInstanceOf (typeof (double), np.PlaybackDuration, "#26");
-				Assert.IsInstanceOf (typeof (string), (object)np.Title, "#27");
+				Assert.IsInstanceOf (typeof (string), (object) np.Title, "#27");
 
 				if (v10_3)
 					Assert.IsInstanceOf (typeof (NSUrl), np.AssetUrl, "#28");

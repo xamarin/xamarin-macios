@@ -8,8 +8,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Microsoft.MaciOS.Nnyeah {
 	// The standard entry point for assembly conversion
-	public class AssemblyConverter
-	{
+	public class AssemblyConverter {
 		string XamarinAssembly;
 		string MicrosoftAssembly;
 		string Infile;
@@ -48,8 +47,7 @@ namespace Microsoft.MaciOS.Nnyeah {
 				var map = new TypeAndModuleMap (XamarinAssembly, MicrosoftAssembly, Resolver);
 				ReworkFile (map);
 				return 0;
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 				Console.Error.WriteLine (Errors.E0011, e.Message);
 				return 1;
 			}
@@ -128,7 +126,8 @@ namespace Microsoft.MaciOS.Nnyeah {
 			return false;
 		}
 
-		static string GetPlatformModulePath (PlatformName platform) {
+		static string GetPlatformModulePath (PlatformName platform)
+		{
 			var path = platform switch {
 				PlatformName.iOS => "/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.iOS/Xamarin.iOS.dll",
 				PlatformName.macOS => "/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/lib/mono/Xamarin.Mac/Xamarin.Mac.dll",
@@ -152,7 +151,7 @@ namespace Microsoft.MaciOS.Nnyeah {
 		public ModuleDefinition MicrosoftModule;
 
 		public TypeAndModuleMap (string infile, string outfile, NNyeahAssemblyResolver resolver)
-		{        
+		{
 			using var inFileStream = TryOpenRead (infile);
 			using var outFileStream = TryOpenRead (outfile);
 
@@ -162,17 +161,17 @@ namespace Microsoft.MaciOS.Nnyeah {
 			var comparingVisitor = new ComparingVisitor (XamarinModule, MicrosoftModule, resolver, true);
 			TypeMap = new TypeAndMemberMap ();
 
-			comparingVisitor.TypeEvents.NotFound += (_, e) => { 
-				switch (e.Original.ToString()) {
-					case "System.nint":
-					case "System.nuint":
-					case "System.nfloat":
-						break;
-					case null:
-						throw new InvalidOperationException ("Null NotFound type event");
-					default:
-						TypeMap.TypesNotPresent.Add (e.Original);
-						break;
+			comparingVisitor.TypeEvents.NotFound += (_, e) => {
+				switch (e.Original.ToString ()) {
+				case "System.nint":
+				case "System.nuint":
+				case "System.nfloat":
+					break;
+				case null:
+					throw new InvalidOperationException ("Null NotFound type event");
+				default:
+					TypeMap.TypesNotPresent.Add (e.Original);
+					break;
 				}
 			};
 			comparingVisitor.TypeEvents.Found += (s, e) => { TypeMap.TypeMap.Add (e.Original, e.Mapped); };

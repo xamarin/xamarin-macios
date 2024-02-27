@@ -11,7 +11,6 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Xml.Linq;
-using Xamarin.iOS.Tasks;
 using Xamarin.Tests;
 
 namespace Xamarin.MacDev.Tasks {
@@ -44,8 +43,8 @@ namespace Xamarin.MacDev.Tasks {
 
 				Assert.IsFalse (task.Execute (), "Execute failure");
 				Assert.AreEqual (1, Engine.Logger.ErrorEvents.Count, "ErrorCount");
-				bool isTranslated = Engine.Logger.ErrorEvents[0].Message.Contains (errorMessage);
-				Assert.IsTrue (isTranslated, $"Should contain \"{errorMessage}\", but instead has value: \"{Engine.Logger.ErrorEvents[0].Message}\"");
+				bool isTranslated = Engine.Logger.ErrorEvents [0].Message.Contains (errorMessage);
+				Assert.IsTrue (isTranslated, $"Should contain \"{errorMessage}\", but instead has value: \"{Engine.Logger.ErrorEvents [0].Message}\"");
 			} finally {
 				Thread.CurrentThread.CurrentUICulture = originalUICulture;
 				Thread.CurrentThread.CurrentCulture = originalCulture;
@@ -78,7 +77,7 @@ namespace Xamarin.MacDev.Tasks {
 				string newCultureError = TranslateError (culture, errorCode);
 
 				Assert.AreNotEqual (englishError, newCultureError, $"\"{errorCode}\" is not translated in {culture}.");
-			} catch (NullReferenceException){
+			} catch (NullReferenceException) {
 				Assert.Fail ($"Error code \"{errorCode}\" was not found");
 			} finally {
 				Thread.CurrentThread.CurrentUICulture = originalUICulture;

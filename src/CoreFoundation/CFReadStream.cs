@@ -30,6 +30,7 @@
 #nullable enable
 
 using System;
+using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 using CoreFoundation;
@@ -82,12 +83,11 @@ namespace CoreFoundation {
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static /* Boolean */ bool CFReadStreamOpen (/* CFReadStreamRef */ IntPtr stream);
+		extern static /* Boolean */ byte CFReadStreamOpen (/* CFReadStreamRef */ IntPtr stream);
 
 		protected override bool DoOpen ()
 		{
-			return CFReadStreamOpen (Handle);
+			return CFReadStreamOpen (Handle) != 0;
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
@@ -107,12 +107,11 @@ namespace CoreFoundation {
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static /* Boolean */ bool CFReadStreamHasBytesAvailable (/* CFReadStreamRef */ IntPtr stream);
+		extern static /* Boolean */ byte CFReadStreamHasBytesAvailable (/* CFReadStreamRef */ IntPtr stream);
 
 		public bool HasBytesAvailable ()
 		{
-			return CFReadStreamHasBytesAvailable (Handle);
+			return CFReadStreamHasBytesAvailable (Handle) != 0;
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
@@ -140,27 +139,49 @@ namespace CoreFoundation {
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
+#if NET8_0_OR_GREATER
+		unsafe static extern byte CFReadStreamSetClient (/* CFReadStreamRef */ IntPtr stream, /* CFOptionFlags */ nint streamEvents,
+			/* CFReadStreamClientCallBack */ delegate* unmanaged<IntPtr, nint, IntPtr, void> clientCB, /* CFStreamClientContext* */ IntPtr clientContext);
+#else
 		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool CFReadStreamSetClient (/* CFReadStreamRef */ IntPtr stream, /* CFOptionFlags */ nint streamEvents,
 			/* CFReadStreamClientCallBack */ CFStreamCallback? clientCB, /* CFStreamClientContext* */ IntPtr clientContext);
+#endif
 
+#if !XAMCORE_5_0
+#if NET8_0_OR_GREATER
+		[Obsolete ("Use the other overload.")]
+		[EditorBrowsable (EditorBrowsableState.Never)]
+#endif
 		protected override bool DoSetClient (CFStreamCallback? callback, CFIndex eventTypes,
-		                                     IntPtr context)
+											 IntPtr context)
+		{
+#if NET8_0_OR_GREATER
+			throw new InvalidOperationException ($"Use the other overload.");
+#else
+			return CFReadStreamSetClient (Handle, (nint) eventTypes, callback, context);
+#endif
+		}
+#endif // !XAMCORE_5_0
+
+#if NET8_0_OR_GREATER
+		unsafe protected override byte DoSetClient (delegate* unmanaged<IntPtr, nint, IntPtr, void> callback, CFIndex eventTypes, IntPtr context)
 		{
 			return CFReadStreamSetClient (Handle, (nint) eventTypes, callback, context);
 		}
+#endif
 
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static /* CFIndex */ nint CFReadStreamRead (/* CFReadStreamRef */ IntPtr handle, /* UInt8* */ IntPtr buffer, /* CFIndex */ nint count);
 
-		public nint Read (byte[] buffer)
+		public nint Read (byte [] buffer)
 		{
 			if (buffer is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (buffer));
 			return Read (buffer, 0, buffer.Length);
 		}
 
-		public unsafe nint Read (byte[] buffer, int offset, int count)
+		public unsafe nint Read (byte [] buffer, int offset, int count)
 		{
 			if (buffer is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (buffer));
@@ -186,14 +207,13 @@ namespace CoreFoundation {
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static /* Boolean */ bool CFReadStreamSetProperty (/* CFReadStreamRef */ IntPtr stream, /* CFStreamRef */ IntPtr propertyName, /* CFTypeRef */ IntPtr propertyValue);
+		extern static /* Boolean */ byte CFReadStreamSetProperty (/* CFReadStreamRef */ IntPtr stream, /* CFStreamRef */ IntPtr propertyName, /* CFTypeRef */ IntPtr propertyValue);
 
 		protected override bool DoSetProperty (NSString name, INativeObject? value)
 		{
 			if (name is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (name));
-			return CFReadStreamSetProperty (Handle, name.Handle, value.GetHandle ());
+			return CFReadStreamSetProperty (Handle, name.Handle, value.GetHandle ()) != 0;
 		}
 	}
 }

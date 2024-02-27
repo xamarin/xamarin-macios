@@ -6,11 +6,9 @@ using NUnit.Framework;
 using Xamarin.Tests;
 using Xamarin.Utils;
 
-namespace Xamarin.MMP.Tests
-{
+namespace Xamarin.MMP.Tests {
 	[TestFixture]
-	public partial class MMPTests
-	{
+	public partial class MMPTests {
 		public string RoslynTestProjectRoot => Path.Combine (Configuration.TestProjectsDirectory, "RoslynTestApp");
 
 		[Test]

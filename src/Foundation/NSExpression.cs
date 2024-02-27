@@ -10,7 +10,7 @@ namespace Foundation {
 	public partial class NSExpression {
 
 		[Export ("arguments")]
-		public virtual NSExpression[] Arguments {
+		public virtual NSExpression [] Arguments {
 			get {
 				var type = ExpressionType;
 				if (type != NSExpressionType.Function && type != NSExpressionType.Block && type != NSExpressionType.KeyPath)
@@ -35,7 +35,7 @@ namespace Foundation {
 		}
 
 		[Export ("predicate")]
-		public virtual NSPredicate Predicate { 
+		public virtual NSPredicate Predicate {
 			get {
 				var type = ExpressionType;
 				if (type != NSExpressionType.Conditional && type != NSExpressionType.Subquery)
@@ -55,8 +55,8 @@ namespace Foundation {
 						+ "are created via the FromFunction (NSExpressionHandler target, NSExpression[] parameters) method.");
 				return _Block;
 			}
-		} 
-		
+		}
+
 		[Export ("constantValue")]
 		public virtual NSObject ConstantValue {
 			get {
@@ -91,15 +91,12 @@ namespace Foundation {
 				return _LeftExpression;
 			}
 		}
-		
+
 #if NET
-		[SupportedOSPlatform ("macos10.11")]
-		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[Mac (10,11)]
-		[iOS (9,0)]
 #endif
 		[Export ("trueExpression")]
 		public virtual NSExpression TrueExpression {
@@ -114,13 +111,10 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.11")]
-		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[Mac (10,11)]
-		[iOS (9,0)]
 #endif
 		[Export ("falseExpression")]
 		public virtual NSExpression FalseExpression {
@@ -168,7 +162,7 @@ namespace Foundation {
 				return _Variable;
 			}
 		}
-		
+
 		[Export ("operand")]
 		public virtual NSExpression Operand {
 			get {
@@ -180,10 +174,11 @@ namespace Foundation {
 				return _Operand;
 			}
 		}
-		
+
 #if !NET && !WATCH
-		[Obsolete("Use 'EvaluateWith' instead.")]
-		public virtual NSExpression ExpressionValueWithObject (NSObject obj, NSMutableDictionary context) {
+		[Obsolete ("Use 'EvaluateWith' instead.")]
+		public virtual NSExpression ExpressionValueWithObject (NSObject obj, NSMutableDictionary context)
+		{
 			var result = EvaluateWith (obj, context);
 			// if it can be casted, do return an NSExpression else null
 			return result as NSExpression;

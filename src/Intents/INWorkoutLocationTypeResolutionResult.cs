@@ -22,7 +22,7 @@ namespace Intents {
 #elif WATCH
 			if (SystemVersion.CheckwatchOS (4, 0))
 #endif
-				return SuccessWithResolvedWorkoutLocationType (resolvedValue);
+			return SuccessWithResolvedWorkoutLocationType (resolvedValue);
 			else
 				return SuccessWithResolvedValue (resolvedValue);
 		}
@@ -34,7 +34,7 @@ namespace Intents {
 #elif WATCH
 			if (SystemVersion.CheckwatchOS (4, 0))
 #endif
-				return ConfirmationRequiredWithWorkoutLocationTypeToConfirm (valueToConfirm);
+			return ConfirmationRequiredWithWorkoutLocationTypeToConfirm (valueToConfirm);
 			else
 				return ConfirmationRequiredWithValueToConfirm (valueToConfirm);
 		}

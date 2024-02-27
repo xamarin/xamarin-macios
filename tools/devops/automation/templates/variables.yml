@@ -35,3 +35,11 @@ variables:
   value: 'https://devdiv.visualstudio.com/_settings/agentpools?poolId=367&view=agents'
 - name: CIBuild
   value: true
+- name: azureStorage
+  value: 'bosstoragemirror'
+- name: azureContainer
+  value: 'wrench'
+- name: BUILD_REVISION
+  value: azure-devops-$(Build.SourceVersion)
+- name: MacPoolAccessToken
+  value: $(botdeploy--azdo--token--register--untrusted)

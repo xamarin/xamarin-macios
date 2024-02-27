@@ -141,9 +141,7 @@ namespace AudioToolbox {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("ios7.0")]
-#if IOS
-		[Obsolete ("Starting with ios7.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("ios7.0")]
 #else
 		[Deprecated (PlatformName.iOS, 7, 0)]
 #endif
@@ -176,9 +174,7 @@ namespace AudioToolbox {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("ios7.0")]
-#if IOS
-		[Obsolete ("Starting with ios7.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("ios7.0")]
 #else
 		[Deprecated (PlatformName.iOS, 7, 0)]
 #endif
@@ -193,9 +189,7 @@ namespace AudioToolbox {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("ios7.0")]
-#if IOS
-		[Obsolete ("Starting with ios7.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("ios7.0")]
 #else
 		[Deprecated (PlatformName.iOS, 7, 0)]
 #endif
@@ -210,9 +204,7 @@ namespace AudioToolbox {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("ios7.0")]
-#if IOS
-		[Obsolete ("Starting with ios7.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("ios7.0")]
 #else
 		[Deprecated (PlatformName.iOS, 7, 0)]
 #endif
@@ -227,9 +219,7 @@ namespace AudioToolbox {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("ios7.0")]
-#if IOS
-		[Obsolete ("Starting with ios7.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("ios7.0")]
 #else
 		[Deprecated (PlatformName.iOS, 7, 0)]
 #endif
@@ -243,9 +233,7 @@ namespace AudioToolbox {
 
 #if NET
 	[UnsupportedOSPlatform ("ios7.0")]
-#if IOS
-	[Obsolete ("Starting with ios7.0 use 'AVAudioSession' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+	[ObsoletedOSPlatform ("ios7.0", "Use 'AVAudioSession' instead.")]
 #else
 	[Deprecated (PlatformName.iOS, 7, 0, message: "Use 'AVAudioSession' instead.")]
 #endif
@@ -357,39 +345,39 @@ namespace AudioToolbox {
 		}
 
 		[DllImport (Constants.AudioToolboxLibrary)]
-		extern static OSStatus AudioSessionSetActive ([MarshalAs (UnmanagedType.I1)] bool active);
+		extern static OSStatus AudioSessionSetActive (byte active);
 
 		public static void SetActive (bool active)
 		{
-			int k = AudioSessionSetActive (active);
+			int k = AudioSessionSetActive (active ? (byte) 1 : (byte) 0);
 			if (k != 0)
 				throw new AudioSessionException (k);
 		}
 
 		[DllImport (Constants.AudioToolboxLibrary)]
-		extern static AudioSessionErrors AudioSessionSetActiveWithFlags ([MarshalAs (UnmanagedType.I1)] bool active, AudioSessionActiveFlags inFlags);
+		extern static AudioSessionErrors AudioSessionSetActiveWithFlags (byte active, AudioSessionActiveFlags inFlags);
 
 		public static AudioSessionErrors SetActive (bool active, AudioSessionActiveFlags flags)
 		{
-			return AudioSessionSetActiveWithFlags (active, flags);
+			return AudioSessionSetActiveWithFlags (active ? (byte) 1 : (byte) 0, flags);
 		}
 
 		[DllImport (Constants.AudioToolboxLibrary)]
-		extern static OSStatus AudioSessionGetProperty (AudioSessionProperty id, ref int size, IntPtr data);
+		unsafe extern static OSStatus AudioSessionGetProperty (AudioSessionProperty id, int* size, IntPtr data);
 
 		[DllImport (Constants.AudioToolboxLibrary)]
 		extern static OSStatus AudioSessionSetProperty (AudioSessionProperty id, int size, IntPtr data);
 
 		[DllImport (Constants.AudioToolboxLibrary)]
 		// deprecated in iOS7 but not exposed / used anywhere
-		extern static OSStatus AudioSessionGetPropertySize (AudioSessionProperty id, out int size);
+		unsafe extern static OSStatus AudioSessionGetPropertySize (AudioSessionProperty id, int* size);
 
 		static double GetDouble (AudioSessionProperty property)
 		{
 			unsafe {
 				double val = 0;
 				int size = 8;
-				int k = AudioSessionGetProperty (property, ref size, (IntPtr) (&val));
+				int k = AudioSessionGetProperty (property, &size, (IntPtr) (&val));
 				if (k != 0)
 					throw new AudioSessionException (k);
 
@@ -402,7 +390,7 @@ namespace AudioToolbox {
 			unsafe {
 				float val = 0;
 				int size = 4;
-				int k = AudioSessionGetProperty (property, ref size, (IntPtr) (&val));
+				int k = AudioSessionGetProperty (property, &size, (IntPtr) (&val));
 				if (k != 0)
 					throw new AudioSessionException (k);
 				return val;
@@ -414,7 +402,7 @@ namespace AudioToolbox {
 			unsafe {
 				int val = 0;
 				int size = 4;
-				int k = AudioSessionGetProperty (property, ref size, (IntPtr) (&val));
+				int k = AudioSessionGetProperty (property, &size, (IntPtr) (&val));
 				if (k != 0)
 					throw new AudioSessionException (k);
 
@@ -427,7 +415,7 @@ namespace AudioToolbox {
 			unsafe {
 				IntPtr val;
 				int size = IntPtr.Size;
-				int k = AudioSessionGetProperty (property, ref size, (IntPtr) (&val));
+				int k = AudioSessionGetProperty (property, &size, (IntPtr) (&val));
 				if (k != 0)
 					throw new AudioSessionException (k);
 
@@ -498,10 +486,12 @@ namespace AudioToolbox {
 #if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
-		[UnsupportedOSPlatform ("ios5.0")]
-#if IOS
-		[Obsolete ("Starting with ios5.0 use 'InputRoute' or 'OutputRoute' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[SupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("macos")]
+		[ObsoletedOSPlatform ("maccatalyst13.1", "Use 'InputRoute' or 'OutputRoute' instead.")]
+		[ObsoletedOSPlatform ("macos10.7", "Use 'InputRoute' or 'OutputRoute' instead.")]
+		[ObsoletedOSPlatform ("ios5.0", "Use 'InputRoute' or 'OutputRoute' instead.")]
+		[ObsoletedOSPlatform ("tvos9.0", "Use 'InputRoute' or 'OutputRoute' instead.")]
 #else
 		[Deprecated (PlatformName.iOS, 5, 0, message: "Use 'InputRoute' or 'OutputRoute' instead.")]
 #endif

@@ -14,8 +14,12 @@ using System.Collections.Generic;
 
 using Foundation;
 using HealthKit;
-using UIKit;
 using NUnit.Framework;
+#if MONOMAC
+using AppKit;
+#else
+using UIKit;
+#endif
 
 namespace MonoTouchFixtures.HealthKit {
 
@@ -26,11 +30,19 @@ namespace MonoTouchFixtures.HealthKit {
 		[Test]
 		public void EnumValues_22351 ()
 		{
+#if MONOMAC
+			TestRuntime.AssertXcodeVersion (14, 0);
+#else
 			TestRuntime.AssertXcodeVersion (6, 0);
+#endif
 
 			var failures = new List<string> ();
 
+#if NET
+			foreach (var value in Enum.GetValues<HKCategoryTypeIdentifier> ()) {
+#else
 			foreach (HKCategoryTypeIdentifier value in Enum.GetValues (typeof (HKCategoryTypeIdentifier))) {
+#endif
 
 				switch (value) {
 				case HKCategoryTypeIdentifier.SleepAnalysis:
@@ -114,6 +126,13 @@ namespace MonoTouchFixtures.HealthKit {
 					if (!TestRuntime.CheckXcodeVersion (13, 0))
 						continue;
 					break;
+				case HKCategoryTypeIdentifier.InfrequentMenstrualCycles:
+				case HKCategoryTypeIdentifier.IrregularMenstrualCycles:
+				case HKCategoryTypeIdentifier.PersistentIntermenstrualBleeding:
+				case HKCategoryTypeIdentifier.ProlongedMenstrualPeriods:
+					if (!TestRuntime.CheckXcodeVersion (14, 1))
+						continue;
+					break;
 				default:
 					if (!TestRuntime.CheckXcodeVersion (7, 0))
 						continue;
@@ -124,8 +143,7 @@ namespace MonoTouchFixtures.HealthKit {
 					using (var ct = HKCategoryType.Create (value)) {
 						Assert.That (ct.Handle, Is.Not.EqualTo (IntPtr.Zero), value.ToString ());
 					}
-				}
-				catch (Exception e) {
+				} catch (Exception e) {
 					failures.Add ($"{value} could not be created: {e}");
 				}
 			}

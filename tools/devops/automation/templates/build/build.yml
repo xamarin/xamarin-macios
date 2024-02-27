@@ -15,13 +15,17 @@ parameters:
 - name: xqaCertPass
   type: string
 
-- name: enableDotnet
-  type: boolean
-  default: false
-
 - name: isPR
   type: boolean
   default: false
+
+- name: repositoryAlias
+  type: string
+  default: self
+
+- name: commit
+  type: string
+  default: HEAD
 
 - name: buildSteps 
   type: stepList 
@@ -31,17 +35,27 @@ parameters:
   type: string
   default: '8'
 
+- name: uploadPrefix
+  type: string
+  default: '$(MaciosUploadPrefix)'
+
+- name: retryCount
+  type: number
+  default: 3
+
 steps:
 
 - template: ../common/checkout.yml
   parameters:
     isPR: ${{ parameters.isPR }}
+    repositoryAlias: ${{ parameters.repositoryAlias }}
+    commit: ${{ parameters.commit }}
 
 - template: ../common/setup.yml
   parameters:
     keyringPass: ${{ parameters.keyringPass }}
 
-- template: install-certificates.yml@templates
+- template: install-certificates.yml@yaml-templates
   parameters:
     DeveloperIdApplication: $(developer-id-application)
     DeveloperIdInstaller: $(developer-id-installer)
@@ -60,6 +74,7 @@ steps:
   inputs:
     provisioning_script: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/provision-brew-packages.csx
     provisioning_extra_args: '-vvvv'
+    github_token: ${{ parameters.gitHubToken }}
   timeoutInMinutes: 30
   enabled: true
   continueOnError: true # brew installation can be temperamental, and things usually work even if the installation fail.
@@ -68,88 +83,26 @@ steps:
     make -C $(Build.SourcesDirectory)/xamarin-macios/tools/devops build-provisioning.csx
   displayName: 'Generate provisionator files.'
 
-- task: xamops.azdevex.provisionator-task.provisionator@1
+- task: xamops.azdevex.provisionator-task.provisionator@2
   displayName: 'Provision Products & Frameworks'
   inputs:
     provisioning_script: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/build-provisioning.csx
     provisioning_extra_args: '-vvvv'
+    github_token: ${{ parameters.gitHubToken }}
   timeoutInMinutes: 250
+  retryCountOnTaskFailure: ${{ parameters.retryCount }} # mono does give issues sometimes to download, we will retry
 
 # Use the env variables that were set by the label parsing in the configure step
 # print some useful logging to allow to know what is going on AND allow make some
 # choices, there are labels that contradict each other (skip-package vs build-packages)
 # we use warnings for those case we are not sure about.
-- pwsh: |
-    # we have a number of scripts that require to be executed from the top of the src, rather
-    # than keeping track of the location of the script, we create two env vars that can be used to
-    # get to the top
-    $configVars = @{} # var name/value pair, later print twice, to process and debug
-
-    $xamTop = "$(Build.SourcesDirectory)/xamarin-macios/"
-    Write-Host "##vso[task.setvariable variable=XAM_TOP]$xamTop"
-
-    $buildReason = "$(Build.Reason)"
-    $buildSourceBranchName = "$(Build.SourceBranchName)"
-
-    Write-Host "PrID in env is $Env:PR_ID"
-    if (-not [string]::IsNullOrEmpty($Env:PR_ID)) {
-      $configVars.Add("PR_ID", $Env:PR_ID)
-    } else {
-      $configVars.Add("PR_ID", "")
-    }
-
-    # decide if we are dealing with a PR or a re-triggered PR or a build from
-    # a branch in origin
-
-    if ($buildReason -eq "PullRequest" -or (($buildReason -eq "Manual" -or $buildReason -eq "IndividualCI") -and ($buildSourceBranchName -eq "merge")) ) {
-      $configVars.Add("BuildPkgs", "True")
-
-      # interesting case, we have build-pkg and skip-pkg... if that is the case, we build it, but we set a warning
-      if ($Env:BuildPackage -eq "True" -and $Env:SkipPackages -eq "True") {
-        Write-Host "##vso[task.logissue type=warning]'build-package' and 'skip-packages' are both present. Building packages in case of a doubt."
-        $configVars.Add("BuildPkgs", "True")
-      }
-
-      if ($Env:SkipNugets -eq "True") {
-        $configVars.Add("BuildNugets", "False")
-      } else {
-        $configVars.Add("BuildNugets", "True")
-      }
-
-      if ($Env:SkipSigning -eq "True") {
-        $configVars.Add("SignPkgs", "False")
-      } else {
-        $configVars.Add("SignPkgs", "True")
-      }
-
-      if ($Env:SkipPackagedXamarinMacTests -eq "True") {
-        $configVars.Add("RunMacTests", "False")
-      } else {
-        $configVars.Add("RunMacTests", "True")
-      }
-
-      $configVars.Add("RunSampleTests", $Env:RunSampleTests)
-
-    } else {
-      # set the defaults, all the things! o/
-      # build pkg, nugets and sign them
-      $configVars.Add("BuildPkgs", "True")
-      $configVars.Add("BuildNugets", "True")
-      $configVars.Add("SignPkgs", "True")
-
-      # tests, run all of them, internal, external, mac but not sample tests
-      $configVars.Add("RunMacTests", "True")
-      $configVars.Add("RunSampleTests", "False")
-    }
-    # write debugging and process of the vars
-    foreach($key in $configVars.Keys) {
-      Write-Host "$key='$($configVars[$key])'"
-      Write-Host "##vso[task.setvariable variable=$key;isOutput=true]$($configVars[$key])"
-    }
-
+- task: PowerShell@2
   name: configuration
   displayName: "Parse PR labels"
   timeoutInMinutes: 5
+  inputs:
+    filePath: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/parse_pr_labels.ps1
+    arguments: -XamarinTop "$(Build.SourcesDirectory)/xamarin-macios/" -BuildReason "$(Build.Reason)"
 
 - ${{ if contains(variables['Build.DefinitionName'], 'private') }}:
   - task: PowerShell@2
@@ -170,45 +123,40 @@ steps:
     displayName: "Configure install extra args"
     timeoutInMinutes: 5
 
-- bash: |
-    set -x
-    set -e
-
-    CONFIGURE_FLAGS="--enable-xamarin"
-
-    if [[ "$EnableDotNet" == "True" ]]; then
-      echo "Enabling dotnet builds."
-      CONFIGURE_FLAGS="$CONFIGURE_FLAGS --enable-dotnet"
-    fi
-
-    CONFIGURE_FLAGS="$CONFIGURE_FLAGS --enable-install-source"
-    echo "Configuration flags are '$CONFIGURE_FLAGS'"
-
-    cd $(Build.SourcesDirectory)/xamarin-macios/
-    ./configure $CONFIGURE_FLAGS
-    echo $(cat $(Build.SourcesDirectory)/xamarin-macios/configure.inc)
+- bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/configure-build.sh
   env:
     ${{ if eq(parameters.isPR, true) }}:
       IsPR: 'True'
     ${{ else }}:
       IsPR: 'False'
-    ${{ if eq(parameters.enableDotnet, true) }}:
-      EnableDotNet: 'True'
   displayName: "Configure build"
+  workingDirectory: "$(Build.SourcesDirectory)/xamarin-macios"
   timeoutInMinutes: 5
 
-# We'll need these profiles to build the hot restart prebuilt app during the build
-# (it's built for device, and thus needs a certificate available so that the app can be signed).
-# We do this again before running the tests further below.
 - bash: |
     set -x
     set -e
+    cat configure.inc
+  displayName: "Print configuration"
+  workingDirectory: "$(Build.SourcesDirectory)/xamarin-macios"
+  timeoutInMinutes: 5
 
-    cd "$SOURCES_DIR/maccore/tools/"
-    ./install-qa-provisioning-profiles.sh -v
+# Make sure we have the right maccore hash checked out before we try to add
+# the provisioning profiles.
+- bash: |
+    set -ex
+    time make -C $(Build.SourcesDirectory)/xamarin-macios/ reset
+  name: resetDependencies
+  displayName: 'Reset dependencies'
+  timeoutInMinutes: 10
+
+# We'll need these profiles to build the hot restart prebuilt app during the build
+# (it's built for device, and thus needs a certificate available so that the app can be signed).
+- bash: ./install-qa-provisioning-profiles.sh -v
   displayName: 'Add build provisioning profiles'
   timeoutInMinutes: 30
   continueOnError: true # should not stop the build
+  workingDirectory: $(Build.SourcesDirectory)/maccore/tools
   env:
     AUTH_TOKEN_GITHUB_COM: ${{ parameters.gitHubToken }}
     AUTH_TOKEN_LA_DEV_APPLE_P12: ${{ parameters.xqaCertPass }}
@@ -216,29 +164,24 @@ steps:
     AUTH_TOKEN_LA_MAC_INSTALLER_DISTR_P12: ${{ parameters.xqaCertPass }}
     AUTH_TOKEN_VSENG_XAMARIN_MAC_DEVICES_P12: ${{ parameters.xqaCertPass }}
     AUTH_TOKEN_VSENG_XAMARIN_MAC_DEVICES_2_P12: ${{ parameters.xqaCertPass }}
-    SOURCES_DIR: $(Build.SourcesDirectory)
+
+# only install all the simulators when working on a PR, EO machines do not allow use to perform this step 
+- ${{ if parameters.isPR }}:
+  - bash: $(Build.SourcesDirectory)/xamarin-macios/system-dependencies.sh --provision-simulators --ignore-shellcheck --ignore-yamllint
+    displayName: 'Provision simulators'
+- ${{ else }}:
+  - bash: |
+      xcodebuild -downloadPlatform iOS
+    displayName: 'Provision simulators'
 
 # Actual build of the project
-- bash: |
-    set -x
-    set -e
-    echo "##vso[task.setvariable variable=TESTS_BOT;isOutput=true]$AGENT_NAME"
-    time make -C $(Build.SourcesDirectory)/xamarin-macios/ reset
-    MAKE_FLAGS=""
-
-    if [[ "$SYSTEM_DEBUG" == "true" ]]; then
-      MAKE_FLAGS="V=1 -w"
-    fi
-
-    if test -z "$makeParallelism"; then
-      makeParallelism=8
-    fi
-
-    time make -C $(Build.SourcesDirectory)/xamarin-macios/ all -j$makeParallelism $MAKE_FLAGS
-    time make -C $(Build.SourcesDirectory)/xamarin-macios/ install -j$makeParallelism $MAKE_FLAGS
+- bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/build-macios.sh
   name: build
+  workingDirectory: "$(Build.SourcesDirectory)/xamarin-macios"
   displayName: 'Build'
-  timeoutInMinutes: 300
+  timeoutInMinutes: 180
+  env:
+    MAKE_PARALLELISM: ${{ parameters.makeParallelism }}
 
 - ${{ each step in parameters.buildSteps }}:
   - ${{ each pair in step }}:
@@ -253,14 +196,20 @@ steps:
 # to write a comment.
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
-
-    $githubComments = New-GitHubCommentsObject -Org "xamarin" -Repo "xamarin-macios" -Token $(GitHub.Token) -Hash $Env:GIT_HASH
+    $githubComments = New-GitHubCommentsObjectFromUrl -Url "$(Build.Repository.Uri)" -Token $(GitHub.Token) -Hash $Env:COMMENT_HASH
     $githubComments.NewCommentFromMessage("Build failed", ":fire:", "Build failed for the job '$(System.JobDisplayName)'")
   condition: failed()
   displayName: 'Report build failure'
+  env:
+    ${{ if eq(parameters.repositoryAlias, 'self') }}:
+      COMMENT_HASH: $(fix_commit.GIT_HASH)
+    ${{ else }}:
+      COMMENT_HASH: $(Build.SourceVersion)
 
 # Upload any crash reports that occurred during the build. This is helpful if we want to file issues about dotnet/csc crashing during the build.
 - bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/collect-and-upload-crash-reports.sh
   displayName: 'Collect and upload crash reports'
   condition: always() # who knows when crash reports can end up being useful
   continueOnError: true
+  env:
+    MACIOS_UPLOAD_PREFIX: ${{ parameters.uploadPrefix }}

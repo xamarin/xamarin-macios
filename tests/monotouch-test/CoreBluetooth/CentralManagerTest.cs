@@ -22,7 +22,7 @@ using NUnit.Framework;
 using Xamarin.Utils;
 
 namespace MonoTouchFixtures.CoreBluetooth {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class CBCentralManagerTest {
@@ -42,11 +42,11 @@ namespace MonoTouchFixtures.CoreBluetooth {
 			}
 
 #if !XAMCORE_3_0 && !NET
-			public override void RetrievedPeripherals (CBCentralManager central, CBPeripheral[] peripherals)
+			public override void RetrievedPeripherals (CBCentralManager central, CBPeripheral [] peripherals)
 			{
 			}
 
-			public override void RetrievedConnectedPeripherals (CBCentralManager central, CBPeripheral[] peripherals)
+			public override void RetrievedConnectedPeripherals (CBCentralManager central, CBPeripheral [] peripherals)
 			{
 			}
 #endif // !XAMCORE_3_0 && !NET
@@ -71,12 +71,14 @@ namespace MonoTouchFixtures.CoreBluetooth {
 
 		CBCentralManager mgr;
 		ManagerDelegate mgrDelegate;
-		CBUUID heartRateMonitorUUID; 
+		CBUUID heartRateMonitorUUID;
 
 		[SetUp]
 		public void SetUp ()
 		{
-			// iOS 13 and friends require bluetooth permission
+			if (TestRuntime.IsInCI && TestRuntime.CheckXcodeVersion (14, 0))
+				TestRuntime.AssertNotDesktop (); // Looks like this particular test doesn't like Desktop + M1 bot machines
+												 // iOS 13 and friends require bluetooth permission
 			if (TestRuntime.CheckXcodeVersion (11, 0))
 				TestRuntime.CheckBluetoothPermission (true);
 			//known UUID for a heart monitor, more common, we want to find something and make sure we do not crash
@@ -96,7 +98,7 @@ namespace MonoTouchFixtures.CoreBluetooth {
 			mgrDelegate?.Dispose ();  // make sure that our delegate does not get messages after the mgr was disposed
 			mgr?.Dispose ();
 		}
-			
+
 		[Test]
 		public void Constructors ()
 		{
@@ -107,7 +109,7 @@ namespace MonoTouchFixtures.CoreBluetooth {
 		[Test]
 		public void ScanForPeripherals ()
 		{
-			mgr.ScanForPeripherals ((CBUUID[])null, (NSDictionary)null);
+			mgr.ScanForPeripherals ((CBUUID []) null, (NSDictionary) null);
 		}
 
 		[Test]

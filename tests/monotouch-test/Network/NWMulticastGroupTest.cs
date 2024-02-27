@@ -17,7 +17,7 @@ namespace MonoTouchFixtures.Network {
 
 		[SetUp]
 		public void SetUp ()
-		{ 
+		{
 			TestRuntime.AssertXcodeVersion (12, TestRuntime.MinorXcode12APIMismatch);
 			endpoint = NWEndpoint.Create ("224.0.0.251", "5353");
 			descriptor = new NWMulticastGroup (endpoint);
@@ -31,7 +31,7 @@ namespace MonoTouchFixtures.Network {
 			descriptor?.Dispose ();
 			descriptor = null;
 		}
-		
+
 		[Test]
 		public void DisabledUnicastTrafficTest ()
 		{
@@ -42,7 +42,7 @@ namespace MonoTouchFixtures.Network {
 				Assert.IsTrue (descriptor.DisabledUnicastTraffic, "Value");
 			}, "Getter");
 		}
-		
+
 		[Test]
 		public void AddEndpointTest ()
 		{
@@ -62,7 +62,7 @@ namespace MonoTouchFixtures.Network {
 			});
 			e.WaitOne (10000);
 		}
-		
+
 		[Test]
 		public void SetSpecificSourceTest ()
 		{

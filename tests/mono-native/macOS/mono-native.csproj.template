@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
+    <RootTestsDirectory>..\..</RootTestsDirectory>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{2B174B45-CC6B-443D-870F-6B5394FDE3FD}</ProjectGuid>
@@ -12,8 +13,10 @@
     <NoWarn>67,168,169,219,414,612,618,649,672</NoWarn>
     <TargetFrameworkIdentifier>Xamarin.Mac</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
-    <DefineConstants>MOBILE;XAMMAC</DefineConstants>
+    <DefineConstants>$(DefineConstants);MOBILE;XAMMAC</DefineConstants>
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+    <LangVersion>latest</LangVersion>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <Optimize>false</Optimize>
@@ -49,6 +52,9 @@
     <Compile Include="..\..\common\MonoNativeConfig.cs">
       <Link>MonoNativeConfig.cs</Link>
     </Compile>
+    <Compile Include="..\..\common\TestAssemblyLoader.cs">
+      <Link>TestAssemblyLoader.cs</Link>
+    </Compile>
     <Compile Include="..\NativePlatformConfig.cs" />
     <Compile Include="..\..\..\builds\mono-ios-sdk-destdir\ios-sources\mcs\class\corlib\Test\Mono\MonoNativePlatform.cs">
       <Link>MonoNativePlatform.cs</Link>
@@ -58,6 +64,15 @@
     </Compile>
     <Compile Include="..\..\..\builds\mono-ios-sdk-destdir\ios-sources\mcs\class\corlib\Test\Mono\NativePlatformTest.cs">
       <Link>NativePlatformTest.cs</Link>
+    </Compile>
+    <Compile Include="$(RootTestsDirectory)\common\TestRuntime.cs">
+      <Link>TestRuntime.cs</Link>
+    </Compile>
+    <Compile Include="$(RootTestsDirectory)\..\tools\common\ApplePlatform.cs">
+      <Link>ApplePlatform.cs</Link>
+    </Compile>
+    <Compile Include="$(RootTestsDirectory)\..\tools\common\SdkVersions.cs">
+      <Link>SdkVersions.cs</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup>

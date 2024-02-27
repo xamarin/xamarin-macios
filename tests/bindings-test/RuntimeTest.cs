@@ -8,12 +8,16 @@ using NUnit.Framework;
 
 using Bindings.Test;
 
-namespace Xamarin.Tests
-{
+namespace Xamarin.Tests {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class RuntimeTest
-	{
+	public class RuntimeTest {
+		[Test]
+		public void GlobalStringTest ()
+		{
+			Assert.AreEqual ("There's nothing cruvus here!", (string) Globals.GlobalString, "Global string");
+		}
+
 		[Test]
 		public void WrapperTypeLookupTest ()
 		{

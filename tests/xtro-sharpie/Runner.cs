@@ -8,14 +8,14 @@ using Mono.Cecil;
 using Clang.Ast;
 
 namespace Extrospection {
-	
+
 	public class Runner {
 
 		public Runner ()
 		{
 		}
 
-		public void Execute (string pchFile, IEnumerable<string> assemblyNames, string outputDirectory = "")
+		public void Execute (string pchFile, IEnumerable<string> assemblyNames, string outputDirectory, IEnumerable<string> searchDirectories)
 		{
 			var managed_reader = new AssemblyReader () {
 				new MapNamesVisitor (), // must come first to map managed and native names.
@@ -47,7 +47,7 @@ namespace Extrospection {
 				else if (name.EndsWith (".MacCatalyst", StringComparison.Ordinal))
 					Helpers.Platform = Platforms.MacCatalyst;
 				Helpers.IsDotNet = assemblyName.Contains ("/runtimes/");
-				managed_reader.Load (assemblyName);
+				managed_reader.Load (assemblyName, searchDirectories);
 			}
 			managed_reader.Process ();
 
@@ -66,18 +66,78 @@ namespace Extrospection {
 		}
 	}
 
+	class AssemblyResolver : IAssemblyResolver, IDisposable {
+		Dictionary<string, AssemblyDefinition> cache = new Dictionary<string, AssemblyDefinition> (StringComparer.Ordinal);
+		HashSet<string> directories = new HashSet<string> ();
+
+		public AssemblyDefinition Resolve (AssemblyNameReference name)
+		{
+			return Resolve (name, new ReaderParameters ());
+		}
+
+		AssemblyDefinition SearchDirectories (AssemblyNameReference name, ReaderParameters parameters)
+		{
+			var extensions = new string [] { ".dll", ".exe" };
+			var paths = directories
+				.SelectMany (dir => extensions.Select (ext => Path.Combine (dir, name.Name + ext)))
+				.Where (File.Exists)
+				.ToArray ();
+
+			if (paths.Length == 0)
+				throw new Exception ($"Unable to resolve the assembly {name.FullName} because it wasn't found in any of the search directories:\n\t{string.Join ("\n\t", directories)}");
+
+			if (paths.Length > 1)
+				throw new Exception ($"Unable to resolve the assembly {name.FullName} because multiple candidates were found:\n\t{string.Join ("\n\t", paths)}\nIn the search directories:\n\t{string.Join ("\n\t", directories)}");
+
+			var path = paths [0];
+			if (parameters.AssemblyResolver is null)
+				parameters.AssemblyResolver = this;
+			return AssemblyDefinition.ReadAssembly (path, parameters);
+		}
+
+		public AssemblyDefinition Load (string path)
+		{
+			var parameters = new ReaderParameters () {
+				AssemblyResolver = this,
+			};
+			var rv = AssemblyDefinition.ReadAssembly (path, parameters);
+			cache [rv.Name.FullName] = rv;
+			return rv;
+		}
+
+		public AssemblyDefinition Resolve (AssemblyNameReference name, ReaderParameters parameters)
+		{
+			var key = name.FullName;
+			if (cache.TryGetValue (key, out var assembly))
+				return assembly;
+
+			assembly = SearchDirectories (name, parameters);
+			cache [key] = assembly;
+			return assembly;
+		}
+
+		public void AddSearchDirectory (params string [] values)
+		{
+			foreach (var value in values)
+				directories.Add (value.TrimEnd ('/'));
+		}
+
+		public void Dispose ()
+		{
+			// Nothing to do.
+		}
+	}
+
 	class AssemblyReader : IEnumerable<BaseVisitor> {
 
 		HashSet<AssemblyDefinition> assemblies = new HashSet<AssemblyDefinition> ();
-		DefaultAssemblyResolver resolver = new DefaultAssemblyResolver ();
+		AssemblyResolver resolver = new AssemblyResolver ();
 
-		public void Load (string filename)
+		public void Load (string filename, IEnumerable<string> searchDirectories)
 		{
+			resolver.AddSearchDirectory (searchDirectories.ToArray ());
 			resolver.AddSearchDirectory (Path.GetDirectoryName (filename));
-			ReaderParameters rp = new ReaderParameters () {
-				AssemblyResolver = resolver
-			};
-			assemblies.Add (AssemblyDefinition.ReadAssembly (filename, rp));
+			assemblies.Add (resolver.Load (filename));
 		}
 
 		public void Process ()
@@ -161,7 +221,7 @@ namespace Extrospection {
 
 	// debug
 	class ListNative : BaseVisitor {
-		
+
 		public override void VisitDecl (Decl decl)
 		{
 			if (decl is FunctionDecl) {

@@ -30,12 +30,12 @@
       </Item>
       <Item ItemId=";name" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[iOS Controller template]]></Val>
+          <Val><![CDATA[iOS Controller]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[iOS 控制器範本]]></Val>
+            <Val><![CDATA[iOS 控制器]]></Val>
           </Tgt>
           <Prev Cat="Text">
-            <Val><![CDATA[iOS Controller template (Preview)]]></Val>
+            <Val><![CDATA[iOS Controller template]]></Val>
           </Prev>
         </Str>
         <Disp Icon="Str" />

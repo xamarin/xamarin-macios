@@ -1,6 +1,7 @@
-!extra-enum-value! Managed value 0 for MTLFeatureSet.iOS_GPUFamily1_v1 is available for the current platform while the value in the native header is not
-!extra-enum-value! Managed value 1 for MTLFeatureSet.iOS_GPUFamily2_v1 is available for the current platform while the value in the native header is not
-!extra-enum-value! Managed value 2 for MTLFeatureSet.iOS_GPUFamily1_v2 is available for the current platform while the value in the native header is not
-!extra-enum-value! Managed value 3 for MTLFeatureSet.iOS_GPUFamily2_v2 is available for the current platform while the value in the native header is not
-!extra-enum-value! Managed value 30000 for MTLFeatureSet.tvOS_GPUFamily1_v1 is available for the current platform while the value in the native header is not
-!extra-enum-value! Managed value 4 for MTLFeatureSet.iOS_GPUFamily3_v1 is available for the current platform while the value in the native header is not
+!missing-protocol-member! MTLIndirectRenderCommand::clearBarrier not found
+!missing-protocol-member! MTLIndirectRenderCommand::drawMeshThreadgroups:threadsPerObjectThreadgroup:threadsPerMeshThreadgroup: not found
+!missing-protocol-member! MTLIndirectRenderCommand::drawMeshThreads:threadsPerObjectThreadgroup:threadsPerMeshThreadgroup: not found
+!missing-protocol-member! MTLIndirectRenderCommand::setBarrier not found
+!missing-protocol-member! MTLIndirectRenderCommand::setMeshBuffer:offset:atIndex: not found
+!missing-protocol-member! MTLIndirectRenderCommand::setObjectBuffer:offset:atIndex: not found
+!missing-protocol-member! MTLIndirectRenderCommand::setObjectThreadgroupMemoryLength:atIndex: not found

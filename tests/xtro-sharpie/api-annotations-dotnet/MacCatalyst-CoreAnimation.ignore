@@ -1,17 +1,4 @@
 # Deprecated
-!missing-type! CAOpenGLLayer not bound
-!missing-selector! CAOpenGLLayer::canDrawInCGLContext:pixelFormat:forLayerTime:displayTime: not bound
-!missing-selector! CAOpenGLLayer::colorspace not bound
-!missing-selector! CAOpenGLLayer::copyCGLContextForPixelFormat: not bound
-!missing-selector! CAOpenGLLayer::copyCGLPixelFormatForDisplayMask: not bound
-!missing-selector! CAOpenGLLayer::drawInCGLContext:pixelFormat:forLayerTime:displayTime: not bound
-!missing-selector! CAOpenGLLayer::isAsynchronous not bound
-!missing-selector! CAOpenGLLayer::releaseCGLContext: not bound
-!missing-selector! CAOpenGLLayer::releaseCGLPixelFormat: not bound
-!missing-selector! CAOpenGLLayer::setAsynchronous: not bound
-!missing-selector! CAOpenGLLayer::setColorspace: not bound
-!missing-selector! CAOpenGLLayer::setWantsExtendedDynamicRangeContent: not bound
-!missing-selector! CAOpenGLLayer::wantsExtendedDynamicRangeContent not bound
 
 # Also ignored on macOS
 !missing-selector! CARemoteLayerClient::clientId not bound
@@ -27,5 +14,3 @@
 !missing-selector! CAConstraint::offset not bound
 !missing-selector! +CALayer::layerWithRemoteClientId: not bound
 !missing-selector! +CARemoteLayerServer::sharedServer not bound
-!missing-selector! CAMetalLayer::setWantsExtendedDynamicRangeContent: not bound
-!missing-selector! CAMetalLayer::wantsExtendedDynamicRangeContent not bound

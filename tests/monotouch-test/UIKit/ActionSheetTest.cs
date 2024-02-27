@@ -13,11 +13,11 @@ using NUnit.Framework;
 using Xamarin.Utils;
 
 namespace MonoTouchFixtures.UIKit {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class ActionSheetTest {
-		
+
 		void CheckDefault (UIActionSheet a)
 		{
 			Assert.That (a.ButtonCount, Is.EqualTo ((nint) 0), "ButtonCount");
@@ -35,7 +35,7 @@ namespace MonoTouchFixtures.UIKit {
 
 			Assert.Null (a.WeakDelegate, "WeakDelegate");
 		}
-		
+
 		[Test]
 		public void CtorDefault ()
 		{
@@ -65,7 +65,7 @@ namespace MonoTouchFixtures.UIKit {
 
 		class MyActionSheetDelegate : UIActionSheetDelegate {
 		}
-		
+
 		[Test]
 		public void CtorDelegate ()
 		{

@@ -17,7 +17,7 @@ using NUnit.Framework;
 using Xamarin.Utils;
 
 namespace MonoTouchFixtures.CoreMedia {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class CMClockTest {
@@ -30,8 +30,7 @@ namespace MonoTouchFixtures.CoreMedia {
 		public void CreateAudioClock ()
 		{
 			CMClockError ce;
-			using (var clock = CMClock.CreateAudioClock (out ce))
-			{
+			using (var clock = CMClock.CreateAudioClock (out ce)) {
 				Assert.AreEqual (CMClockError.None, ce);
 			}
 		}

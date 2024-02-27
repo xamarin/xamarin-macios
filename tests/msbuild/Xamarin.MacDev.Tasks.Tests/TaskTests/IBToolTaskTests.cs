@@ -13,11 +13,9 @@ using Xamarin.MacDev.Tasks;
 using Xamarin.Tests;
 using Xamarin.Utils;
 
-namespace Xamarin.MacDev.Tasks
-{
+namespace Xamarin.MacDev.Tasks {
 	[TestFixture]
-	public class IBToolTaskTests : TestBase
-	{
+	public class IBToolTaskTests : TestBase {
 		IBTool CreateIBToolTask (ApplePlatform framework, string projectDir, string intermediateOutputPath)
 		{
 			var interfaceDefinitions = new List<ITaskItem> ();
@@ -158,7 +156,7 @@ namespace Xamarin.MacDev.Tasks
 			Assert.That (unexpectedResource, Is.Empty, "No extra resources");
 		}
 
-		IBTool CreateIBToolTask (ApplePlatform framework, string projectDir, string intermediateOutputPath, params string[] fileNames)
+		IBTool CreateIBToolTask (ApplePlatform framework, string projectDir, string intermediateOutputPath, params string [] fileNames)
 		{
 			var ibtool = CreateIBToolTask (framework, projectDir, intermediateOutputPath);
 			var interfaceDefinitions = new List<ITaskItem> ();
@@ -171,7 +169,7 @@ namespace Xamarin.MacDev.Tasks
 			return ibtool;
 		}
 
-		void TestGenericAndDeviceSpecificXibsGeneric (params string[] fileNames)
+		void TestGenericAndDeviceSpecificXibsGeneric (params string [] fileNames)
 		{
 			var tmp = Cache.CreateTemporaryDirectory ("advanced-ibtool");
 			IBTool ibtool;

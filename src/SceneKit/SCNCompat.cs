@@ -52,7 +52,6 @@ namespace SceneKit {
 	}
 #if TVOS && !NET
 	partial class SCNMaterialProperty {
-	[iOS (8, 0)]
 		[Deprecated (PlatformName.iOS, 10, 0, message: "This API has been totally removed on iOS.")]
 		[Deprecated (PlatformName.TvOS, 10, 0, message: "This API has been totally removed on tvOS.")]
 		public virtual NSObject? BorderColor { get; set; }
@@ -61,7 +60,6 @@ namespace SceneKit {
 
 #if TVOS && !NET
 	partial class SCNRenderer {
-		[iOS (8, 0)]
 		[Deprecated (PlatformName.iOS, 9, 0, message: "This API has been totally removed on iOS.")]
 		[Deprecated (PlatformName.TvOS, 10, 0, message: "This API has been totally removed on tvOS.")]
 		public virtual void Render ()
@@ -73,14 +71,12 @@ namespace SceneKit {
 #if MONOMAC && !NET
 	partial class SCNScene {
 		[Obsolete ("Use the 'ISCNSceneExportDelegate' overload instead.")]
-		[Mac (10, 9)]
 		public virtual bool WriteToUrl (NSUrl url, SCNSceneLoadingOptions options, SCNSceneExportDelegate handler, SCNSceneExportProgressHandler exportProgressHandler)
 		{
 			return WriteToUrl (url: url, options: options?.Dictionary, aDelegate: handler, exportProgressHandler: exportProgressHandler);
 		}
 
 		[Obsolete ("Use the 'ISCNSceneExportDelegate' overload instead.")]
-		[Mac (10, 9)]
 		public virtual bool WriteToUrl (NSUrl url, NSDictionary options, SCNSceneExportDelegate handler, SCNSceneExportProgressHandler exportProgressHandler)
 		{
 			return WriteToUrl (url: url, options: options, aDelegate: handler, exportProgressHandler: exportProgressHandler);
@@ -90,17 +86,14 @@ namespace SceneKit {
 
 #if !NET
 	public abstract partial class SCNSceneRenderer : NSObject {
-		[Mac (10, 10)]
 		[Obsolete ("Use 'SCNSceneRenderer_Extensions.PrepareAsync' instead.")]
-		public unsafe virtual Task<bool> PrepareAsync (NSObject[] objects)
+		public unsafe virtual Task<bool> PrepareAsync (NSObject [] objects)
 		{
 			return SCNSceneRenderer_Extensions.PrepareAsync (this, objects);
 		}
 
-		[iOS (9, 0)]
-		[Mac (10, 11, 0, PlatformArchitecture.Arch64)]
 		[Obsolete ("Use 'SCNSceneRenderer_Extensions.PresentSceneAsync' instead.")]
-		public unsafe virtual Task PresentSceneAsync (SCNScene scene, global::SpriteKit.SKTransition transition, SCNNode pointOfView)
+		public unsafe virtual Task PresentSceneAsync (SCNScene scene, global::SpriteKit.SKTransition transition, SCNNode? pointOfView)
 		{
 			return SCNSceneRenderer_Extensions.PresentSceneAsync (this, scene, transition, pointOfView);
 		}
@@ -110,11 +103,9 @@ namespace SceneKit {
 
 
 #if !NET
-	[Mac (10,9), iOS (8,0), Watch (4,0)]
 	public delegate void SCNAnimationEventHandler (AnimationType animation, NSObject animatedObject, bool playingBackward);
 
-	public partial class SCNAnimationEvent : NSObject
-	{
+	public partial class SCNAnimationEvent : NSObject {
 		public static SCNAnimationEvent Create (nfloat keyTime, SCNAnimationEventHandler eventHandler)
 		{
 			var handler = new Action<IntPtr, NSObject, bool> ((animationPtr, animatedObject, playingBackward) => {
@@ -127,9 +118,6 @@ namespace SceneKit {
 #endif // !NET
 
 #if !WATCH && !NET
-	[iOS (11,0)]
-	[TV (11,0)]
-	[Mac (10,13,0, PlatformArchitecture.Arch64)]
 	static public partial class SCNAnimatableExtensions {
 		static public void AddAnimation (this ISCNAnimatable self, SCNAnimation animation, string key)
 		{
@@ -141,7 +129,6 @@ namespace SceneKit {
 #endif // !WATCH && !NET
 
 #if !NET
-	[Watch (3,0)]
 	public partial class SCNHitTestOptions {
 		[Obsolete ("Use 'SearchMode' instead.")]
 		public SCNHitTestSearchMode? OptionSearchMode {
@@ -153,9 +140,9 @@ namespace SceneKit {
 
 #if !MONOMAC && !WATCH && !__MACCATALYST__
 	public partial class SCNView {
-		[Watch (6,0), TV (13,0), iOS (13,0)]
+		[Watch (6, 0), TV (13, 0), iOS (13, 0)]
 		[Obsolete ("Empty stub. (not a public API).")]
-		public virtual bool DrawableResizesAsynchronously { get; set; } 
+		public virtual bool DrawableResizesAsynchronously { get; set; }
 	}
 #endif // !MONOMAC && !WATCH && !__MACCATALYST__
 #endif // !NET

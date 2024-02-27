@@ -16,11 +16,11 @@ namespace NaturalLanguage {
 		[SupportedOSPlatform ("ios14.0")]
 		[SupportedOSPlatform ("maccatalyst14.0")]
 #else
-		[Watch (7,0)]
-		[TV (14,0)]
-		[Mac (11,0)]
-		[iOS (14,0)]
-		[MacCatalyst (14,0)]
+		[Watch (7, 0)]
+		[TV (14, 0)]
+		[Mac (11, 0)]
+		[iOS (14, 0)]
+		[MacCatalyst (14, 0)]
 #endif
 		public Dictionary<NLLanguage, double> GetPredictedLabelHypotheses (string @string, nuint maximumCount)
 		{
@@ -34,13 +34,13 @@ namespace NaturalLanguage {
 		[SupportedOSPlatform ("ios14.0")]
 		[SupportedOSPlatform ("maccatalyst14.0")]
 #else
-		[Watch (7,0)]
-		[TV (14,0)]
-		[Mac (11,0)]
-		[iOS (14,0)]
-		[MacCatalyst (14,0)]
+		[Watch (7, 0)]
+		[TV (14, 0)]
+		[Mac (11, 0)]
+		[iOS (14, 0)]
+		[MacCatalyst (14, 0)]
 #endif
-		public Dictionary<NLLanguage, double>[] GetPredictedLabelHypotheses (string[] tokens, nuint maximumCount)
+		public Dictionary<NLLanguage, double> [] GetPredictedLabelHypotheses (string [] tokens, nuint maximumCount)
 		{
 			var hypos = GetNativePredictedLabelHypotheses (tokens, maximumCount);
 			var result = new Dictionary<NLLanguage, double> [hypos.Length];

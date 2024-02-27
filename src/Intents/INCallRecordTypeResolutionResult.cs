@@ -24,7 +24,7 @@ namespace Intents {
 #elif MONOMAC
 			if (SystemVersion.CheckmacOS (10, 13))
 #endif
-				return SuccessWithResolvedCallRecordType (resolvedValue);
+			return SuccessWithResolvedCallRecordType (resolvedValue);
 			else
 				return SuccessWithResolvedValue (resolvedValue);
 		}
@@ -38,7 +38,7 @@ namespace Intents {
 #elif MONOMAC
 			if (SystemVersion.CheckmacOS (10, 13))
 #endif
-				return ConfirmationRequiredWithCallRecordTypeToConfirm (valueToConfirm);
+			return ConfirmationRequiredWithCallRecordTypeToConfirm (valueToConfirm);
 			else
 				return ConfirmationRequiredWithValueToConfirm (valueToConfirm);
 		}

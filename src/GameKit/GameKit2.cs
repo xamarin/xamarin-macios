@@ -47,7 +47,7 @@ namespace GameKit {
 				if (receiver is not null)
 					receiver (session, new GKDataReceivedEventArgs (data, peer, session));
 			}
-				
+
 		}
 
 		//
@@ -55,14 +55,14 @@ namespace GameKit {
 		ReceiverObject? receiver;
 		public event EventHandler<GKDataReceivedEventArgs>? ReceiveData {
 			add {
-				if (receiver is null){
+				if (receiver is null) {
 					receiver = new ReceiverObject ();
 					_SetDataReceiveHandler (receiver, IntPtr.Zero);
 					MarkDirty ();
 				}
 				receiver.receiver += value;
 			}
-			
+
 			remove {
 				if (receiver is null)
 					return;
@@ -82,9 +82,9 @@ namespace GameKit {
 		Mono_GKSessionDelegate EnsureDelegate ()
 		{
 			var del = WeakDelegate;
-			if (del is null || (!(del is Mono_GKSessionDelegate))){
-					del = new Mono_GKSessionDelegate ();
-					WeakDelegate = del;
+			if (del is null || (!(del is Mono_GKSessionDelegate))) {
+				del = new Mono_GKSessionDelegate ();
+				WeakDelegate = del;
 			}
 			return (Mono_GKSessionDelegate) del;
 		}
@@ -98,7 +98,7 @@ namespace GameKit {
 				EnsureDelegate ().cbPeerChanged -= value;
 			}
 		}
-		
+
 		public event EventHandler<GKPeerConnectionEventArgs> ConnectionRequest {
 			add {
 				EnsureDelegate ().cbConnectionRequest += value;
@@ -144,14 +144,14 @@ namespace GameKit {
 			if (cbPeerChanged is not null)
 				cbPeerChanged (session, new GKPeerChangedStateEventArgs (session, peerID, state));
 		}
-		
+
 		[Preserve (Conditional = true)]
 		public override void PeerConnectionRequest (GKSession session, string peerID)
 		{
 			if (cbConnectionRequest is not null)
 				cbConnectionRequest (session, new GKPeerConnectionEventArgs (session, peerID, null));
 		}
-			
+
 		[Preserve (Conditional = true)]
 		public override void PeerConnectionFailed (GKSession session, string peerID, NSError error)
 		{
@@ -159,7 +159,7 @@ namespace GameKit {
 				cbConnectionFailed (session, new GKPeerConnectionEventArgs (session, peerID, error));
 
 		}
-			
+
 		[Preserve (Conditional = true)]
 		public override void FailedWithError (GKSession session, NSError error)
 		{

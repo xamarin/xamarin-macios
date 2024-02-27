@@ -23,28 +23,28 @@ namespace SceneKit {
 		public static unsafe SCNGeometrySource FromVertices (SCNVector3 [] vertices)
 		{
 			if (vertices is null)
-				ObjCRuntime.ThrowHelper.ThrowArgumentNullException  (nameof (vertices));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (vertices));
 
-			fixed (SCNVector3 *ptr = &vertices [0])
-				return FromVertices ((IntPtr)ptr, vertices.Length);
+			fixed (SCNVector3* ptr = vertices)
+				return FromVertices ((IntPtr) ptr, vertices.Length);
 		}
 
 		public static unsafe SCNGeometrySource FromNormals (SCNVector3 [] normals)
 		{
 			if (normals is null)
-				ObjCRuntime.ThrowHelper.ThrowArgumentNullException  (nameof (normals));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (normals));
 
-			fixed (SCNVector3 *ptr = &normals[0])
-				return FromNormals ((IntPtr)ptr, normals.Length);
+			fixed (SCNVector3* ptr = normals)
+				return FromNormals ((IntPtr) ptr, normals.Length);
 		}
 
 		public static unsafe SCNGeometrySource FromTextureCoordinates (CGPoint [] texcoords)
 		{
 			if (texcoords is null)
-				ObjCRuntime.ThrowHelper.ThrowArgumentNullException  (nameof (texcoords));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (texcoords));
 
-			fixed (CGPoint *ptr = &texcoords[0])
-				return FromTextureCoordinates ((IntPtr)ptr, texcoords.Length);
+			fixed (CGPoint* ptr = texcoords)
+				return FromTextureCoordinates ((IntPtr) ptr, texcoords.Length);
 		}
 
 		static NSString SemanticToToken (SCNGeometrySourceSemantics geometrySourceSemantic)
@@ -70,7 +70,7 @@ namespace SceneKit {
 				throw new System.ArgumentException ("geometrySourceSemantic");
 			}
 		}
-		
+
 		public static SCNGeometrySource FromData (NSData data, SCNGeometrySourceSemantics semantic, nint vectorCount, bool floatComponents, nint componentsPerVector, nint bytesPerComponent, nint offset, nint stride)
 		{
 			return FromData (data, SemanticToToken (semantic), vectorCount, floatComponents, componentsPerVector, bytesPerComponent, offset, stride);
@@ -83,5 +83,5 @@ namespace SceneKit {
 		}
 #endif
 	}
-	
+
 }

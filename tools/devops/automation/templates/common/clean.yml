@@ -9,28 +9,28 @@ parameters:
   type: boolean
   default: true
 
+- name: repositoryAlias
+  type: string
+  default: self
+
+- name: commit
+  type: string
+  default: HEAD
+
 steps:
 
 - ${{ if parameters.checkoutCode }}:
   - template: checkout.yml
     parameters:
       isPR: false # always use the latests version of the script
+      repositoryAlias: ${{ parameters.repositoryAlias }}
+      commit: ${{ parameters.commit }}
 
-- pwsh: |
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/MaciosCI.psd1
-    $comments = New-GitHubCommentsObject -Org "xamarin" -Repo "xamarin-macios" -Token $(GitHub.Token)
-    $ciComment = "${{ parameters.commentToHide }}"
-
-    $prId = "$(Build.SourceBranch)".Replace("refs/pull/", "").Replace("/merge", "")
-    $prComments = $comments.GetCommentsForPR($prId)
-
-    $botComments = [System.Collections.ArrayList]@()
-    foreach ($c in $prComments) {
-      if ($c.Author -eq "vs-mobiletools-engineering-service2") {
-        if ($c.Body.Contains($ciComment)) {
-          $botComments.Add($c)
-        }
-      }
-    }
-    $comments.MinimizeComments($botComments)
+- pwsh: >-
+    ./clean_past_comments.ps1
+    -GithubToken "$(GitHub.Token)"
+    -RepositoryUri "$(Build.Repository.Uri)"
+    -SourceBranch "$(Build.SourceBranch)"
+    -CommentToHide "${{ parameters.commentToHide }}"
   displayName: Clear past comments
+  workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts

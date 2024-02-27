@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Logging.StructuredLogger;
 
+#nullable enable
+
 namespace Xamarin.Tests {
 	public class TemplateProjectTest : TestBaseClass {
 		const string EmptyAppManifest =
@@ -52,7 +54,7 @@ class MainClass {
 			var properties = GetDefaultProperties ();
 			var result = DotNet.AssertBuildFailure (project_path, properties);
 			var errors = BinLog.GetBuildLogErrors (result.BinLogPath);
-			Assert.That (errors, Has.Some.Matches<BuildLogEvent> (v => v.Message.Contains (magic)), "Expected error");
+			Assert.That (errors, Has.Some.Matches<BuildLogEvent> (v => v?.Message?.Contains (magic) == true), "Expected error");
 		}
 
 		// https://github.com/xamarin/xamarin-macios/issues/13503

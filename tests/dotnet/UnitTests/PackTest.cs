@@ -26,13 +26,14 @@ namespace Xamarin.Tests {
 			properties ["OutputPath"] = outputPath + Path.DirectorySeparatorChar;
 			properties ["IntermediateOutputPath"] = intermediateOutputPath + Path.DirectorySeparatorChar;
 
-			var rv = DotNet.AssertPackFailure (project_path, properties);
+			var rv = DotNet.AssertPackFailure (project_path, properties, msbuildParallelism: false);
 			var errors = BinLog.GetBuildLogErrors (rv.BinLogPath).ToArray ();
 			Assert.AreEqual (1, errors.Length, "Error count");
 			Assert.AreEqual ($"Creating a NuGet package is not supported for projects that have ObjcBindingNativeLibrary items. Migrate to use NativeReference items instead.", errors [0].Message, "Error message");
 		}
 
 		[Test]
+		[Category ("Multiplatform")]
 		[TestCase (ApplePlatform.iOS, true)]
 		[TestCase (ApplePlatform.iOS, false)]
 		[TestCase (ApplePlatform.MacCatalyst, true)]
@@ -57,7 +58,7 @@ namespace Xamarin.Tests {
 			properties ["IntermediateOutputPath"] = intermediateOutputPath + Path.DirectorySeparatorChar;
 			properties ["NoBindingEmbedding"] = noBindingEmbedding ? "true" : "false";
 
-			DotNet.AssertPack (project_path, properties);
+			DotNet.AssertPack (project_path, properties, msbuildParallelism: false);
 
 			var nupkg = Path.Combine (outputPath, project + ".1.0.0.nupkg");
 			Assert.That (nupkg, Does.Exist, "nupkg existence");
@@ -73,22 +74,23 @@ namespace Xamarin.Tests {
 			Assert.That (files, Does.Contain (project + ".nuspec"), "nuspec");
 			Assert.That (files, Does.Contain ("_rels/.rels"), ".rels");
 			Assert.That (files, Does.Contain ("[Content_Types].xml"), "[Content_Types].xml");
-			Assert.That (files, Does.Contain ($"lib/{platform.ToFrameworkWithDefaultVersion ()}/{project}.dll"), $"{project}.dll");
+			Assert.That (files, Does.Contain ($"lib/{platform.ToFrameworkWithPlatformVersion ()}/{project}.dll"), $"{project}.dll");
 			Assert.That (files, Has.Some.Matches<string> (v => v.StartsWith ("package/services/metadata/core-properties/", StringComparison.Ordinal) && v.EndsWith (".psmdcp", StringComparison.Ordinal)), "psmdcp");
 			if (noBindingEmbedding) {
 				if (hasSymlinks) {
-					Assert.That (files, Does.Contain ($"lib/{platform.ToFrameworkWithDefaultVersion ()}/{project}.resources.zip"), $"{project}.resources.zip");
+					Assert.That (files, Does.Contain ($"lib/{platform.ToFrameworkWithPlatformVersion ()}/{project}.resources.zip"), $"{project}.resources.zip");
 				} else {
-					Assert.That (files, Does.Contain ($"lib/{platform.ToFrameworkWithDefaultVersion ()}/{project}.resources/XStaticArTest.framework/XStaticArTest"), $"XStaticArTest.framework/XStaticArTest");
-					Assert.That (files, Does.Contain ($"lib/{platform.ToFrameworkWithDefaultVersion ()}/{project}.resources/XStaticObjectTest.framework/XStaticObjectTest"), $"XStaticObjectTest.framework/XStaticObjectTest");
-					Assert.That (files, Does.Contain ($"lib/{platform.ToFrameworkWithDefaultVersion ()}/{project}.resources/XTest.framework/XTest"), $"XTest.framework/XTest");
-					Assert.That (files, Does.Contain ($"lib/{platform.ToFrameworkWithDefaultVersion ()}/{project}.resources/XTest.framework/Info.plist"), $"XTest.framework/Info.plist");
-					Assert.That (files, Does.Contain ($"lib/{platform.ToFrameworkWithDefaultVersion ()}/{project}.resources/manifest"), $"manifest");
+					Assert.That (files, Does.Contain ($"lib/{platform.ToFrameworkWithPlatformVersion ()}/{project}.resources/XStaticArTest.framework/XStaticArTest"), $"XStaticArTest.framework/XStaticArTest");
+					Assert.That (files, Does.Contain ($"lib/{platform.ToFrameworkWithPlatformVersion ()}/{project}.resources/XStaticObjectTest.framework/XStaticObjectTest"), $"XStaticObjectTest.framework/XStaticObjectTest");
+					Assert.That (files, Does.Contain ($"lib/{platform.ToFrameworkWithPlatformVersion ()}/{project}.resources/XTest.framework/XTest"), $"XTest.framework/XTest");
+					Assert.That (files, Does.Contain ($"lib/{platform.ToFrameworkWithPlatformVersion ()}/{project}.resources/XTest.framework/Info.plist"), $"XTest.framework/Info.plist");
+					Assert.That (files, Does.Contain ($"lib/{platform.ToFrameworkWithPlatformVersion ()}/{project}.resources/manifest"), $"manifest");
 				}
 			}
 		}
 
 		[Test]
+		[Category ("Multiplatform")]
 		[TestCase (ApplePlatform.iOS, true)]
 		[TestCase (ApplePlatform.iOS, false)]
 		[TestCase (ApplePlatform.MacCatalyst, true)]
@@ -121,7 +123,7 @@ namespace Xamarin.Tests {
 			properties ["IntermediateOutputPath"] = intermediateOutputPath + Path.DirectorySeparatorChar;
 			properties ["NoBindingEmbedding"] = noBindingEmbedding ? "true" : "false";
 
-			DotNet.AssertPack (project_path, properties);
+			DotNet.AssertPack (project_path, properties, msbuildParallelism: false);
 
 			var nupkg = Path.Combine (outputPath, assemblyName + ".1.0.0.nupkg");
 			Assert.That (nupkg, Does.Exist, "nupkg existence");
@@ -132,10 +134,10 @@ namespace Xamarin.Tests {
 			Assert.That (files, Does.Contain (assemblyName + ".nuspec"), "nuspec");
 			Assert.That (files, Does.Contain ("_rels/.rels"), ".rels");
 			Assert.That (files, Does.Contain ("[Content_Types].xml"), "[Content_Types].xml");
-			Assert.That (files, Does.Contain ($"lib/{platform.ToFrameworkWithDefaultVersion ()}/{assemblyName}.dll"), $"{assemblyName}.dll");
+			Assert.That (files, Does.Contain ($"lib/{platform.ToFrameworkWithPlatformVersion ()}/{assemblyName}.dll"), $"{assemblyName}.dll");
 			Assert.That (files, Has.Some.Matches<string> (v => v.StartsWith ("package/services/metadata/core-properties/", StringComparison.Ordinal) && v.EndsWith (".psmdcp", StringComparison.Ordinal)), "psmdcp");
 			if (noBindingEmbedding) {
-				Assert.That (files, Does.Contain ($"lib/{platform.ToFrameworkWithDefaultVersion ()}/{assemblyName}.resources.zip"), $"{assemblyName}.resources.zip");
+				Assert.That (files, Does.Contain ($"lib/{platform.ToFrameworkWithPlatformVersion ()}/{assemblyName}.resources.zip"), $"{assemblyName}.resources.zip");
 			}
 		}
 
@@ -147,15 +149,16 @@ namespace Xamarin.Tests {
 		public void LibraryProject (ApplePlatform platform)
 		{
 			var project = "MyClassLibrary";
+			var configuration = "Release";
 			Configuration.IgnoreIfIgnoredPlatform (platform);
 
-			var project_path = GetProjectPath (project, runtimeIdentifiers: string.Empty, platform: platform, out var appPath);
+			var project_path = GetProjectPath (project, runtimeIdentifiers: string.Empty, platform: platform, out var appPath, configuration: configuration);
 			Clean (project_path);
 			var properties = GetDefaultProperties ();
 
 			DotNet.AssertPack (project_path, properties);
 
-			var nupkg = Path.Combine (Path.GetDirectoryName (project_path)!, "bin", "Debug", project + ".1.0.0.nupkg");
+			var nupkg = Path.Combine (Path.GetDirectoryName (project_path)!, "bin", configuration, project + ".1.0.0.nupkg");
 			Assert.That (nupkg, Does.Exist, "nupkg existence");
 
 			var archive = ZipFile.OpenRead (nupkg);
@@ -164,7 +167,47 @@ namespace Xamarin.Tests {
 			Assert.That (files, Does.Contain (project + ".nuspec"), "nuspec");
 			Assert.That (files, Does.Contain ("_rels/.rels"), ".rels");
 			Assert.That (files, Does.Contain ("[Content_Types].xml"), "[Content_Types].xml");
-			Assert.That (files, Does.Contain ($"lib/{platform.ToFrameworkWithDefaultVersion ()}/{project}.dll"), $"{project}.dll");
+			Assert.That (files, Does.Contain ($"lib/{platform.ToFrameworkWithPlatformVersion ()}/{project}.dll"), $"{project}.dll");
+			Assert.That (files, Has.Some.Matches<string> (v => v.StartsWith ("package/services/metadata/core-properties/", StringComparison.Ordinal) && v.EndsWith (".psmdcp", StringComparison.Ordinal)), "psmdcp");
+		}
+
+		[Test]
+		[TestCase (ApplePlatform.MacCatalyst)]
+		[TestCase (ApplePlatform.iOS)]
+		[TestCase (ApplePlatform.TVOS)]
+		[TestCase (ApplePlatform.MacOSX)]
+		[Ignore ("Multi-targeting support has been temporarily reverted/postponed")]
+		public void MultiTargetLibraryProject (ApplePlatform platform)
+		{
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+
+			// Get all the supported API versions
+			var supportedApiVersion = Configuration.GetVariableArray ($"SUPPORTED_API_VERSIONS_{platform.AsString ().ToUpperInvariant ()}");
+			supportedApiVersion = DotNetProjectTest.RemovePostCurrentOnMacCatalyst (supportedApiVersion, platform);
+			var targetFrameworks = string.Join (";", supportedApiVersion.Select (v => v.Replace ("-", "-" + platform.AsString ().ToLowerInvariant ())));
+
+			var project = "MultiTargetingLibrary";
+			var configuration = "Release";
+			var project_path = GetProjectPath (project, platform: platform);
+			Clean (project_path);
+
+			var properties = GetDefaultProperties ();
+			properties ["cmdline:AllTheTargetFrameworks"] = targetFrameworks;
+
+			DotNet.AssertPack (project_path, properties);
+
+			var nupkg = Path.Combine (Path.GetDirectoryName (project_path)!, "bin", configuration, project + ".1.0.0.nupkg");
+			Assert.That (nupkg, Does.Exist, "nupkg existence");
+
+			var archive = ZipFile.OpenRead (nupkg);
+			var files = archive.Entries.Select (v => v.FullName).ToHashSet ();
+			Assert.That (archive.Entries.Count, Is.EqualTo (4 + supportedApiVersion.Count), "nupkg file count");
+			Assert.That (files, Does.Contain (project + ".nuspec"), "nuspec");
+			Assert.That (files, Does.Contain ("_rels/.rels"), ".rels");
+			Assert.That (files, Does.Contain ("[Content_Types].xml"), "[Content_Types].xml");
+			foreach (var sav in supportedApiVersion) {
+				Assert.That (files, Does.Contain ($"lib/{sav.Replace ("-", "-" + platform.AsString ().ToLowerInvariant ())}/{project}.dll"), $"{project}.dll");
+			}
 			Assert.That (files, Has.Some.Matches<string> (v => v.StartsWith ("package/services/metadata/core-properties/", StringComparison.Ordinal) && v.EndsWith (".psmdcp", StringComparison.Ordinal)), "psmdcp");
 		}
 	}

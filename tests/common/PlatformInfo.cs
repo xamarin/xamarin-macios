@@ -21,10 +21,8 @@ using UIKit;
 
 using Xamarin.Utils;
 
-namespace Xamarin.Tests 
-{
-	public sealed class PlatformInfo
-	{
+namespace Xamarin.Tests {
+	public sealed class PlatformInfo {
 		static PlatformInfo GetHostPlatformInfo ()
 		{
 			string name;
@@ -40,14 +38,14 @@ namespace Xamarin.Tests
 			version = WatchKit.WKInterfaceDevice.CurrentDevice.SystemVersion;
 #elif MONOMAC || __MACOS__
 			using (var plist = NSDictionary.FromFile ("/System/Library/CoreServices/SystemVersion.plist")) {
-				name = (NSString)plist ["ProductName"];
-				version = (NSString)plist ["ProductVersion"];
+				name = (NSString) plist ["ProductName"];
+				version = (NSString) plist ["ProductVersion"];
 			}
 #else
 #error Unknown platform
 #endif
 			name = name?.Replace (" ", String.Empty)?.ToLowerInvariant ();
-			if (name == null)
+			if (name is null)
 				throw new FormatException ("Product name is `null`");
 
 			var platformInfo = new PlatformInfo ();
@@ -133,8 +131,7 @@ namespace Xamarin.Tests
 		}
 	}
 
-	public static class AvailabilityExtensions
-	{
+	public static class AvailabilityExtensions {
 		public static bool IsAvailableOnHostPlatform (this ICustomAttributeProvider attributeProvider)
 		{
 			return attributeProvider.IsAvailable (PlatformInfo.Host);
@@ -216,11 +213,11 @@ namespace Xamarin.Tests
 				if (platform != attributePlatform)
 					continue;
 
-				if (attr is UnsupportedOSPlatformAttribute) {
+				// At this point we can't ascertain that the API is available, only that it's unavailable,
+				// so only return in that case. We need to check the SupportedOSPlatform attributes
+				// to see if the API is available.
+				if (attr is UnsupportedOSPlatformAttribute || attr is ObsoletedOSPlatformAttribute) {
 					var isUnsupported = version is not null && targetPlatform.Version >= version;
-					// At this point we can't ascertain that the API is available, only that it's unavailable,
-					// so only return in that case. We need to check the SupportedOSPlatform attributes
-					// to see if the API is available.
 					if (isUnsupported)
 						return false;
 				}
@@ -249,7 +246,7 @@ namespace Xamarin.Tests
 
 				switch (attr.AvailabilityKind) {
 				case AvailabilityKind.Introduced:
-					if (attr.Version != null)
+					if (attr.Version is not null)
 						available &= targetPlatform.Version >= attr.Version;
 
 					if (attr.Architecture != PlatformArchitecture.None &&
@@ -258,7 +255,7 @@ namespace Xamarin.Tests
 					break;
 				case AvailabilityKind.Deprecated:
 				case AvailabilityKind.Obsoleted:
-					if (attr.Version != null)
+					if (attr.Version is not null)
 						available &= targetPlatform.Version < attr.Version;
 					// FIXME: handle architecture-level _un_availability?
 					// we didn't do this with the old AvailabilityAttribute...

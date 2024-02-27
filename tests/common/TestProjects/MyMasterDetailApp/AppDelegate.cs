@@ -3,14 +3,12 @@ using System;
 using Foundation;
 using UIKit;
 
-namespace MyMasterDetailApp
-{
+namespace MyMasterDetailApp {
 	// The UIApplicationDelegate for the application. This class is responsible for launching the
 	// User Interface of the application, as well as listening (and optionally responding) to
 	// application events from iOS.
 	[Register ("AppDelegate")]
-	public partial class AppDelegate : UIApplicationDelegate
-	{
+	public partial class AppDelegate : UIApplicationDelegate {
 		// class-level declarations
 
 		public override UIWindow Window {
@@ -22,14 +20,14 @@ namespace MyMasterDetailApp
 		{
 			// Override point for customization after application launch.
 			if (UIDevice.CurrentDevice.UserInterfaceIdiom == UIUserInterfaceIdiom.Pad) {
-				var splitViewController = (UISplitViewController)Window.RootViewController;
+				var splitViewController = (UISplitViewController) Window.RootViewController;
 
 				// Get the UINavigationControllers containing our master & detail view controllers
-				var masterNavigationController = (UINavigationController)splitViewController.ViewControllers [0];
-				var detailNavigationController = (UINavigationController)splitViewController.ViewControllers [1];
+				var masterNavigationController = (UINavigationController) splitViewController.ViewControllers [0];
+				var detailNavigationController = (UINavigationController) splitViewController.ViewControllers [1];
 
-				var masterViewController = (MasterViewController)masterNavigationController.TopViewController;
-				var detailViewController = (DetailViewController)detailNavigationController.TopViewController;
+				var masterViewController = (MasterViewController) masterNavigationController.TopViewController;
+				var detailViewController = (DetailViewController) detailNavigationController.TopViewController;
 
 				masterViewController.DetailViewController = detailViewController;
 

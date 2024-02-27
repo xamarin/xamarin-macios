@@ -27,10 +27,10 @@ namespace MonoTouchFixtures.CoreGraphics {
 		[Test]
 		public void CreateNone ()
 		{
-			TestRuntime.AssertXcodeVersion (8,0);
+			TestRuntime.AssertXcodeVersion (8, 0);
 
-			Assert.Throws<ArgumentNullException> (() => new CGColorConversionInfo (null, (CGColorSpace)null), "null");
-			Assert.Throws<ArgumentNullException> (() => new CGColorConversionInfo ((NSDictionary) null, (GColorConversionInfoTriple [])null), "null-2");
+			Assert.Throws<ArgumentNullException> (() => new CGColorConversionInfo (null, (CGColorSpace) null), "null");
+			Assert.Throws<ArgumentNullException> (() => new CGColorConversionInfo ((NSDictionary) null, (GColorConversionInfoTriple []) null), "null-2");
 			Assert.Throws<ArgumentNullException> (() => new CGColorConversionInfo ((NSDictionary) null, new GColorConversionInfoTriple [0]), "empty");
 		}
 
@@ -129,8 +129,8 @@ namespace MonoTouchFixtures.CoreGraphics {
 
 			using (var from = CGColorSpace.CreateGenericGray ())
 			using (var to = CGColorSpace.CreateGenericRgb ()) {
-				var handle = CGColorConversionInfoCreate (from == null ? IntPtr.Zero : from.Handle,
-														   to == null ? IntPtr.Zero : to.Handle);
+				var handle = CGColorConversionInfoCreate (from is null ? IntPtr.Zero : from.Handle,
+														   to is null ? IntPtr.Zero : to.Handle);
 				using (var o = Runtime.GetINativeObject<CGColorConversionInfo> (handle, false)) {
 					Assert.That (o.Handle, Is.Not.EqualTo (IntPtr.Zero), "Handle");
 				}
@@ -157,7 +157,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 			TestRuntime.AssertXcodeVersion (11, 0);
 			using (var from = CGColorSpace.CreateGenericGray ())
 			using (var to = CGColorSpace.CreateGenericRgb ()) {
-				using (var converter = new CGColorConversionInfo (from, to, (NSDictionary)null)) {
+				using (var converter = new CGColorConversionInfo (from, to, (NSDictionary) null)) {
 					Assert.That (converter.Handle, Is.Not.EqualTo (IntPtr.Zero), "Handle - null");
 				}
 				using (var d = new NSDictionary ())
@@ -173,7 +173,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 			TestRuntime.AssertXcodeVersion (11, 0);
 			using (var from = CGColorSpace.CreateGenericGray ())
 			using (var to = CGColorSpace.CreateGenericRgb ()) {
-				using (var converter = new CGColorConversionInfo (from, to, (CGColorConversionOptions)null)) {
+				using (var converter = new CGColorConversionInfo (from, to, (CGColorConversionOptions) null)) {
 					Assert.That (converter.Handle, Is.Not.EqualTo (IntPtr.Zero), "Handle-null");
 				}
 

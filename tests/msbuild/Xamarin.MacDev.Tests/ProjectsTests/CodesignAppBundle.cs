@@ -11,15 +11,13 @@ using Xamarin.MacDev;
 using Xamarin.Tests;
 using Xamarin.Utils;
 
-namespace Xamarin.MacDev.Tasks
-{
+namespace Xamarin.MacDev.Tasks {
 	[TestFixture ("iPhone", "Debug")]
 	[TestFixture ("iPhone", "Release")]
 	// Note: Disabled because Simulator builds aren't consistently signed or not-signed, while device builds are.
 	//[TestFixture ("iPhoneSimulator", "Debug")]
 	//[TestFixture ("iPhoneSimulator", "Release")]
-	public class CodesignAppBundle : ProjectTest
-	{
+	public class CodesignAppBundle : ProjectTest {
 		public CodesignAppBundle (string platform, string configuration)
 			: base (platform, configuration)
 		{
@@ -93,7 +91,7 @@ namespace Xamarin.MacDev.Tasks
 				if (Path.GetFileName (file) == "MyTabbedApplication" || Path.GetExtension (file) == ".dylib")
 					continue;
 
-				Assert.AreEqual (timestamps[file], newTimestamps[file], "App Bundle timestamp changed: " + file);
+				Assert.AreEqual (timestamps [file], newTimestamps [file], "App Bundle timestamp changed: " + file);
 			}
 
 			if (Platform != "iPhoneSimulator") {
@@ -103,9 +101,9 @@ namespace Xamarin.MacDev.Tasks
 				foreach (var file in dsymTimestamps.Keys) {
 					// The Info.plist should be newer because it gets touched
 					if (Path.GetFileName (file) == "Info.plist") {
-						Assert.IsTrue (dsymTimestamps[file] < newDsymTimestamps[file], "App Bundle dSYMs Info.plist not touched: " + file);
+						Assert.IsTrue (dsymTimestamps [file] < newDsymTimestamps [file], "App Bundle dSYMs Info.plist not touched: " + file);
 					} else {
-						Assert.AreEqual (dsymTimestamps[file], newDsymTimestamps[file], "App Bundle dSYMs changed: " + file);
+						Assert.AreEqual (dsymTimestamps [file], newDsymTimestamps [file], "App Bundle dSYMs changed: " + file);
 					}
 				}
 
@@ -115,7 +113,7 @@ namespace Xamarin.MacDev.Tasks
 				// Note: we could fix this by not using `ditto` and instead implementing this ourselves to only overwrite files if they've changed
 				// and then setting some [Output] params that specify whether or not we need to re-codesign and/or strip debug symbols.
 				foreach (var file in appexDsymTimestamps.Keys)
-					Assert.IsTrue (appexDsymTimestamps[file] < newAppexDsymTimestamps[file], "App Extension dSYMs should be newer: " + file);
+					Assert.IsTrue (appexDsymTimestamps [file] < newAppexDsymTimestamps [file], "App Extension dSYMs should be newer: " + file);
 			}
 		}
 

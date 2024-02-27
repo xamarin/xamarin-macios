@@ -46,13 +46,9 @@ namespace AddressBook {
 
 #if NET
 	[SupportedOSPlatform ("maccatalyst14.0")]
-	[UnsupportedOSPlatform ("maccatalyst14.0")]
-	[UnsupportedOSPlatform ("ios9.0")]
-#if __MACCATALYST__
-	[Obsolete ("Starting with maccatalyst14.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-	[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+	[SupportedOSPlatform ("ios")]
+	[ObsoletedOSPlatform ("maccatalyst14.0", "Use the 'Contacts' API instead.")]
+	[ObsoletedOSPlatform ("ios9.0", "Use the 'Contacts' API instead.")]
 #else
 	[Deprecated (PlatformName.iOS, 9, 0, message: "Use the 'Contacts' API instead.")]
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
@@ -135,13 +131,14 @@ namespace AddressBook {
 		// TODO: Should SetValue/CopyValue/RemoveValue be public?
 
 		[DllImport (Constants.AddressBookLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool ABRecordSetValue (IntPtr record, int /* ABPropertyID = int32_t */ property, IntPtr value, out IntPtr error);
+		unsafe extern static byte ABRecordSetValue (IntPtr record, int /* ABPropertyID = int32_t */ property, IntPtr value, IntPtr* error);
 		internal void SetValue (int property, IntPtr value)
 		{
 			IntPtr error;
-			if (!ABRecordSetValue (Handle, property, value, out error))
-				throw CFException.FromCFError (error);
+			unsafe {
+				if (ABRecordSetValue (Handle, property, value, &error) == 0)
+					throw CFException.FromCFError (error);
+			}
 		}
 
 		internal void SetValue (int property, NSObject? value)
@@ -167,12 +164,14 @@ namespace AddressBook {
 		}
 
 		[DllImport (Constants.AddressBookLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool ABRecordRemoveValue (IntPtr record, int /* ABPropertyID = int32_t */ property, out IntPtr error);
+		unsafe extern static byte ABRecordRemoveValue (IntPtr record, int /* ABPropertyID = int32_t */ property, IntPtr* error);
 		internal void RemoveValue (int property)
 		{
 			IntPtr error;
-			bool r = ABRecordRemoveValue (Handle, property, out error);
+			bool r;
+			unsafe {
+				r = ABRecordRemoveValue (Handle, property, &error) != 0;
+			}
 			if (!r && error != IntPtr.Zero)
 				throw CFException.FromCFError (error);
 		}

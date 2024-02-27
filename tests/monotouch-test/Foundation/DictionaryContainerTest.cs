@@ -22,22 +22,22 @@ namespace MonoTouchFixtures.Foundation {
 		}
 
 
-		public void SetArrayValue_ (NSString key, NSNumber[] values)
+		public void SetArrayValue_ (NSString key, NSNumber [] values)
 		{
 			SetArrayValue (key, values);
 		}
 
-		public void SetArrayValue_ (NSString key, string[] values)
+		public void SetArrayValue_ (NSString key, string [] values)
 		{
 			SetArrayValue (key, values);
 		}
 
-		public void SetArrayValue_<T> (NSString key, T[] values)
+		public void SetArrayValue_<T> (NSString key, T [] values)
 		{
 			SetArrayValue<T> (key, values);
 		}
 
-		public void SetArrayValue_ (NSString key, INativeObject[] values)
+		public void SetArrayValue_ (NSString key, INativeObject [] values)
 		{
 			SetArrayValue (key, values);
 		}
@@ -92,13 +92,14 @@ namespace MonoTouchFixtures.Foundation {
 			var numbers = new NSNumber [] { (NSNumber) 0, (NSNumber) 1 };
 			var dc = new DictionaryContainerPoker ();
 
-			Assert.Throws<ArgumentNullException> (delegate {
+			Assert.Throws<ArgumentNullException> (delegate
+			{
 				dc.SetArrayValue_ (null, numbers);
 			}, "null key");
 
 			dc.SetArrayValue_ (key, numbers);
 			Assert.That ((int) dc.Dictionary.Count, Is.EqualTo (1), "1");
-			Assert.That ((int) (dc.Dictionary [key] as NSArray).Count,  Is.EqualTo (2), "2");
+			Assert.That ((int) (dc.Dictionary [key] as NSArray).Count, Is.EqualTo (2), "2");
 
 			numbers = null;
 			dc.SetArrayValue_ (key, numbers);
@@ -111,13 +112,14 @@ namespace MonoTouchFixtures.Foundation {
 			var strings = new String [] { "xamarin", "monkeys" };
 			var dc = new DictionaryContainerPoker ();
 
-			Assert.Throws<ArgumentNullException> (delegate {
+			Assert.Throws<ArgumentNullException> (delegate
+			{
 				dc.SetArrayValue_ (null, strings);
 			}, "null key");
 
 			dc.SetArrayValue_ (key, strings);
 			Assert.That ((int) dc.Dictionary.Count, Is.EqualTo (1), "1");
-			Assert.That ((int) (dc.Dictionary [key] as NSArray).Count,  Is.EqualTo (2), "2");
+			Assert.That ((int) (dc.Dictionary [key] as NSArray).Count, Is.EqualTo (2), "2");
 
 			strings = null;
 			dc.SetArrayValue_ (key, strings);
@@ -130,13 +132,14 @@ namespace MonoTouchFixtures.Foundation {
 			var enums = new NSStringEncoding [] { NSStringEncoding.ISOLatin1, NSStringEncoding.ISOLatin2 };
 			var dc = new DictionaryContainerPoker ();
 
-			Assert.Throws<ArgumentNullException> (delegate {
+			Assert.Throws<ArgumentNullException> (delegate
+			{
 				dc.SetArrayValue_ (null, enums);
 			}, "null key");
 
 			dc.SetArrayValue_ (key, enums);
 			Assert.That ((int) dc.Dictionary.Count, Is.EqualTo (1), "1");
-			Assert.That ((int) (dc.Dictionary [key] as NSArray).Count,  Is.EqualTo (2), "2");
+			Assert.That ((int) (dc.Dictionary [key] as NSArray).Count, Is.EqualTo (2), "2");
 
 			enums = null;
 			dc.SetArrayValue_ (key, enums);
@@ -149,13 +152,14 @@ namespace MonoTouchFixtures.Foundation {
 			var native = new INativeObject [] { new CFString ("xamarin"), CFRunLoop.Main };
 			var dc = new DictionaryContainerPoker ();
 
-			Assert.Throws<ArgumentNullException> (delegate {
+			Assert.Throws<ArgumentNullException> (delegate
+			{
 				dc.SetArrayValue_ (null, native);
 			}, "null key");
 
 			dc.SetArrayValue_ (key, native);
 			Assert.That ((int) dc.Dictionary.Count, Is.EqualTo (1), "1");
-			Assert.That ((int) (dc.Dictionary [key] as NSArray).Count,  Is.EqualTo (2), "2");
+			Assert.That ((int) (dc.Dictionary [key] as NSArray).Count, Is.EqualTo (2), "2");
 
 			native = null;
 			dc.SetArrayValue_ (key, native);
@@ -167,7 +171,8 @@ namespace MonoTouchFixtures.Foundation {
 		{
 			var dc = new DictionaryContainerPoker ();
 
-			Assert.Throws<ArgumentNullException> (delegate {
+			Assert.Throws<ArgumentNullException> (delegate
+			{
 				dc.SetBooleanValue_ (null, true);
 			}, "null key");
 
@@ -183,7 +188,8 @@ namespace MonoTouchFixtures.Foundation {
 		{
 			var dc = new DictionaryContainerPoker ();
 
-			Assert.Throws<ArgumentNullException> (delegate {
+			Assert.Throws<ArgumentNullException> (delegate
+			{
 				dc.SetNumberValue_ (null, int.MinValue);
 			}, "null key");
 
@@ -199,7 +205,8 @@ namespace MonoTouchFixtures.Foundation {
 		{
 			var dc = new DictionaryContainerPoker ();
 
-			Assert.Throws<ArgumentNullException> (delegate {
+			Assert.Throws<ArgumentNullException> (delegate
+			{
 				dc.SetNumberValue_ (null, uint.MaxValue);
 			}, "null key");
 
@@ -215,7 +222,8 @@ namespace MonoTouchFixtures.Foundation {
 		{
 			var dc = new DictionaryContainerPoker ();
 
-			Assert.Throws<ArgumentNullException> (delegate {
+			Assert.Throws<ArgumentNullException> (delegate
+			{
 				dc.SetStringValue_ (null, String.Empty);
 			}, "null key");
 

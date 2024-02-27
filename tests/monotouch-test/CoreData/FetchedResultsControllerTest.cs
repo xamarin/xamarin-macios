@@ -15,7 +15,7 @@ using CoreData;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.CoreData {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class FetchedResultsControllerTest {
@@ -26,7 +26,7 @@ namespace MonoTouchFixtures.CoreData {
 			// null -> delete all cache
 			NSFetchedResultsController.DeleteCache (null);
 		}
-		
+
 		[Test]
 		public void Default ()
 		{
@@ -42,7 +42,7 @@ namespace MonoTouchFixtures.CoreData {
 		{
 			using (NSManagedObjectContext c = new NSManagedObjectContext (NSManagedObjectContextConcurrencyType.PrivateQueue))
 			using (NSFetchRequest r = new NSFetchRequest ()) {
-				r.SortDescriptors = new NSSortDescriptor[] {
+				r.SortDescriptors = new NSSortDescriptor [] {
 					new NSSortDescriptor ("key", true)
 				};
 				r.Entity = new NSEntityDescription ();
@@ -99,7 +99,7 @@ namespace MonoTouchFixtures.CoreData {
 					USGSWebLink.Optional = false;
 
 					// assign the properties to the entity
-					entity.Properties = new NSPropertyDescription[] { 
+					entity.Properties = new NSPropertyDescription [] {
 						date,
 						latitude,
 						location,
@@ -110,7 +110,7 @@ namespace MonoTouchFixtures.CoreData {
 
 					// add the entity to the model, and then add a configuration that
 					// contains the entities
-					ManagedObjectModel.Entities = new NSEntityDescription[] { entity };
+					ManagedObjectModel.Entities = new NSEntityDescription [] { entity };
 					ManagedObjectModel.SetEntities (ManagedObjectModel.Entities, String.Empty);
 				}
 
@@ -123,7 +123,7 @@ namespace MonoTouchFixtures.CoreData {
 #if NET
 						if (PersistentStoreCoordinator.AddPersistentStore (NSPersistentStoreCoordinator.SQLiteStoreType, null, storeUrl, null, out error) is null) {
 #else
-						if (PersistentStoreCoordinator.AddPersistentStoreWithType (NSPersistentStoreCoordinator.SQLiteStoreType, null, storeUrl, null, out error) == null) {
+						if (PersistentStoreCoordinator.AddPersistentStoreWithType (NSPersistentStoreCoordinator.SQLiteStoreType, null, storeUrl, null, out error) is null) {
 #endif
 							Assert.Fail ("Unresolved error " + error + ", " + error.UserInfo);
 						}
@@ -131,10 +131,10 @@ namespace MonoTouchFixtures.CoreData {
 
 					using (var ManagedObjectContext = new NSManagedObjectContext ()) {
 						ManagedObjectContext.PersistentStoreCoordinator = PersistentStoreCoordinator;
-					
-	//					NSNotificationCenter.DefaultCenter.AddObserver (
-	//						this, new MonoTouch.ObjCRuntime.Selector ("mergeChanges"), 
-	//						"NSManagedObjectContextDidSaveNotification", null);
+
+						//					NSNotificationCenter.DefaultCenter.AddObserver (
+						//						this, new MonoTouch.ObjCRuntime.Selector ("mergeChanges"), 
+						//						"NSManagedObjectContextDidSaveNotification", null);
 
 
 						NSFetchRequest fetchRequest = new NSFetchRequest ();

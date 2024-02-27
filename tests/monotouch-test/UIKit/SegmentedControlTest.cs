@@ -11,11 +11,11 @@ using UIKit;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.UIKit {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class SegmentedControlTest {
-		
+
 		[Test]
 		public void InitWithFrame ()
 		{
@@ -62,7 +62,7 @@ namespace MonoTouchFixtures.UIKit {
 			Assert.Throws<ArgumentNullException> (() => new UISegmentedControl ((NSArray) null), "null");
 
 			using (UISegmentedControl sc = new UISegmentedControl (new NSArray ())) {
-				Assert.That(sc.NumberOfSegments, Is.EqualTo ((nint) 0), "Empty");
+				Assert.That (sc.NumberOfSegments, Is.EqualTo ((nint) 0), "Empty");
 			}
 
 			using (var ns = new NSString ("NSString"))
@@ -77,7 +77,7 @@ namespace MonoTouchFixtures.UIKit {
 		public void CtorNSString ()
 		{
 			Assert.Throws<ArgumentNullException> (() => new UISegmentedControl ((NSString) null), "null");
-			Assert.Throws<ArgumentNullException> (() => new UISegmentedControl ((NSString[]) null), "null array");
+			Assert.Throws<ArgumentNullException> (() => new UISegmentedControl ((NSString []) null), "null array");
 
 			using (var ns = new NSString ("NSString"))
 			using (UISegmentedControl sc = new UISegmentedControl (ns)) {
@@ -89,7 +89,7 @@ namespace MonoTouchFixtures.UIKit {
 		public void CtorString ()
 		{
 			Assert.Throws<ArgumentNullException> (() => new UISegmentedControl ((string) null), "null");
-			Assert.Throws<ArgumentNullException> (() => new UISegmentedControl ((string[]) null), "null array");
+			Assert.Throws<ArgumentNullException> (() => new UISegmentedControl ((string []) null), "null array");
 
 			using (UISegmentedControl sc = new UISegmentedControl ("one", "two")) {
 				Assert.That (sc.NumberOfSegments, Is.EqualTo ((nint) 2), "NumberOfSegments");
@@ -100,7 +100,7 @@ namespace MonoTouchFixtures.UIKit {
 		public void CtorUIImage ()
 		{
 			Assert.Throws<ArgumentNullException> (() => new UISegmentedControl ((UIImage) null), "null");
-			Assert.Throws<ArgumentNullException> (() => new UISegmentedControl ((UIImage[]) null), "null array");
+			Assert.Throws<ArgumentNullException> (() => new UISegmentedControl ((UIImage []) null), "null array");
 
 			using (var img = UIImage.FromFile (Path.Combine (NSBundle.MainBundle.ResourcePath, "basn3p08.png")))
 			using (UISegmentedControl sc = new UISegmentedControl (img)) {

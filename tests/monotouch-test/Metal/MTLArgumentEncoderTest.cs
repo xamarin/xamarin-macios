@@ -19,13 +19,18 @@ namespace MonoTouchFixtures.Metal {
 		[SetUp]
 		public void SetUp ()
 		{
+			// The call to CreateArgumentEncoder below doesn't seem to work
+			// on earlier versions of iOS (at least fails on iOS 12), so just
+			// skip those versions for now.
+			TestRuntime.AssertXcodeVersion (11, 0);
+
 			device = MTLDevice.SystemDefault;
 			// some older hardware won't have a default
-			if (device == null)
+			if (device is null)
 				Assert.Inconclusive ("Metal is not supported");
 
 			library = device.CreateDefaultLibrary ();
-			if (library == null)  // this happens on a simulator
+			if (library is null)  // this happens on a simulator
 				Assert.Inconclusive ("Could not get the functions library for the device.");
 
 			if (library.FunctionNames.Length == 0)

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <resheader name="resmimetype">
     <value>text/microsoft-resx</value>
@@ -750,6 +750,9 @@
   <data name="MX0185" xml:space="preserve">
 		<value>Параметр '{0}' не может иметь значение '{1}' при использовании CoreCLR.</value>
 	</data>
+  <data name="MX0186" xml:space="preserve">
+		<value>Bitcode включен, но bitcode не поддерживается в Xcode 14+ и был отключен. Отключите bitcode, удалив свойство "MtouchEnableBitcode" из файла проекта.</value>
+	</data>
   <data name="MX1009" xml:space="preserve">
 		<value>Не удалось скопировать сборку "{0}" в "{1}": {2}.
 		</value>
@@ -816,6 +819,12 @@
 	</data>
   <data name="MX1306" xml:space="preserve">
 		<value>Не удалось распаковать файл "{0}". Дополнительные сведения о собственной команде unzip см. в журнале сборки.</value>
+	</data>
+  <data name="MX1307" xml:space="preserve">
+		<value>Не удалось извлечь собственную платформу "{0}" из сборки "{1}", поскольку она не содержит ресурс "{2}".</value>
+	</data>
+  <data name="MX1308" xml:space="preserve">
+		<value>Не удалось извлечь собственную библиотеку "{0}" из сборки "{1}", поскольку она не содержит ресурс "{2}".</value>
 	</data>
   <data name="MM1401" xml:space="preserve">
 		<value>В ссылках отсутствует требуемая сборка "Xamarin.Mac.dll".
@@ -951,6 +960,9 @@
 		<value>Недопустимый HttpMessageHandler "{0}" для watchOS. Единственное допустимое значение — NSUrlSessionHandler.
 		</value>
 	</data>
+  <data name="MX2016" xml:space="preserve">
+		<value>Сохранение динамического регистратора (путем передачи "--optimize=-remove-dynamic-registrar") невозможно, так как динамический регистратор не поддерживается при использовании NativeAOT. Поддержка динамической регистрации будет по-прежнему удалена.</value>
+	</data>
   <data name="MX2017" xml:space="preserve">
 		<value>Не удалось обработать XML-описание: {0}.
 		</value>
@@ -1031,13 +1043,24 @@
 		<value>Не удалось оптимизировать вызов BlockLiteral.{2} в {0}, так как типом значения, переданного в качестве первого аргумента (трамплин), является {1}, что делает невозможным вычисление подписи блока.
 		</value>
 	</data>
-  <data name="MM2106_C" xml:space="preserve">
-		<value>Не удалось оптимизировать вызов BlockLiteral.SetupBlock в {0} со смещением {1}, так как не удалось найти атрибут [UserDelegateType] в {2}.
-		</value>
-	</data>
   <data name="MM2106_D" xml:space="preserve">
 		<value>Не удалось оптимизировать вызов BlockLiteral.SetupBlock в {0} со смещением {1}: {2}.
 		</value>
+	</data>
+  <data name="MX2106_E" xml:space="preserve">
+		<value>Не удалось оптимизировать вызов BlockLiteral.{2} в {0} со смещением {1}, так как в типе "{4}" найдено несколько методов с именем "{3}".</value>
+	</data>
+  <data name="MX2106_F" xml:space="preserve">
+		<value>Не удалось оптимизировать вызов BlockLiteral.{2} в {0} со смещением {1}, так как метод "{3}" должен содержать хотя бы один параметр.</value>
+	</data>
+  <data name="MX2106_G" xml:space="preserve">
+		<value>Не удалось оптимизировать вызов BlockLiteral.{2} в {0} со смещением {1}, так как первый параметр в методе "{3}" отличается от "System.IntPtr", "void*" или "ObjCRuntime.BlockLiteral*" (текущее значение: "{4}")</value>
+	</data>
+  <data name="MX2106_H" xml:space="preserve">
+		<value>Не удалось оптимизировать вызов BlockLiteral.{2} в {0} со смещением {1}, так как метод "{3}" не содержит атрибут [UnmanagedCallersOnly].</value>
+	</data>
+  <data name="MX2106_I" xml:space="preserve">
+		<value>Не удалось оптимизировать вызов BlockLiteral.{2} в {0} со смещением {1}, так как метод "{3}" не содержит атрибут [UnmanagedCallersOnly].</value>
 	</data>
   <data name="MM2107" xml:space="preserve">
 		<value>Удаление динамического регистратора небезопасно, так как {0} ссылается на "{1}.{2} ({3})".
@@ -1084,6 +1107,15 @@
   <!-- 234x: ExtractBindingLibrariesStep -->
   <!-- 235x: LoadNonSkippedAssembliesStep -->
   <!-- 236x: RegistrarStep -->
+  <!-- 237x: ComputeAOTArguments -->
+  <!-- 238x: RegistrarRemovalTrackingStep -->
+  <!-- 239x: CoreTypeMapStep -->
+  <!-- 240x: BackingFieldDelayHandler -->
+  <!-- 241x: BackingFieldReintroductionSubStep -->
+  <!-- 242x: MarkIProtocolHandler -->
+  <!-- 243x: ManagedRegistrarStep -->
+  <!-- 244x: ManagedRegistrarLookupTablesStep -->
+  <!-- 245x: ApplyPreserveAttribute -->
   <data name="MX3001" xml:space="preserve">
 		<value>Не удалось {0} сборку "{1}".
 		</value>
@@ -1233,7 +1265,7 @@
 		</value>
 	</data>
   <data name="MT4124_I" xml:space="preserve">
-		<value>Invalid {0} found on '{1}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new</value>
+		<value>Недействительный {0} найден на ''{1}''. Отправьте отчет об ошибке по адресу https://github.com/xamarin/xamarin-macios/issues/new.</value>
 	</data>
   <data name="MT4125" xml:space="preserve">
 		<value>Регистратор обнаружил недопустимый тип "{0}" в сигнатуре для метода "{1}": такой интерфейс должен иметь атрибут Protocol, указывающий тип его оболочки.
@@ -1504,7 +1536,7 @@
 		</value>
 	</data>
   <data name="MT4178" xml:space="preserve">
-		<value>Класс "{0}" не будет зарегистрирован, так как платформа WatchKit была удалена из пакета iOS SDK.
+		<value>Класс "{0}" не будет зарегистрирован, поскольку платформа {1} была удалена из пакета SDK для {2}.
 		</value>
 	</data>
   <data name="MT4179" xml:space="preserve">
@@ -1521,6 +1553,15 @@
 	</data>
   <data name="MT4186" xml:space="preserve">
 		<value>Регистратор обнаружил неоптимальный тип "{0}": тип не содержит конструктор, который принимает два аргумента (ObjCRuntime.NativeHandle, логический). Однако найден конструктор, принимающий два аргумента (System.IntPtr, логический), который и будет использоваться. Настоятельно рекомендуется изменить подпись конструктора (System.IntPtr, логический) на (ObjCRuntime.NativeHandle, логический).</value>
+	</data>
+  <data name="MX4187" xml:space="preserve">
+		<value>Не удалось найти атрибут [UserDelegateType] для типа "{0}".</value>
+	</data>
+  <data name="MX4188" xml:space="preserve">
+		<value>Не удалось вычислить подпись блока для типа "{0}": {1}</value>
+	</data>
+  <data name="MX4189" xml:space="preserve">
+		<value>Класс "{0}" не будет зарегистрирован, поскольку он был удален пакета SDK для {1}.</value>
 	</data>
   <data name="MT5101" xml:space="preserve">
 		<value>Отсутствует компилятор "{0}". Установите компонент программ командной строки для Xcode.
@@ -1744,10 +1785,56 @@
 		<value>Невозможно создать экземпляр типа {0}.</value>
 	</data>
   <data name="MX8042" xml:space="preserve">
-		<value>An exception occurred while trying to invoke the function {0}: {1}.</value>
+		<value>Возникло исключение при попытке вызвать функцию {0}: {1}.</value>
 		<comment>
 			0: name of function
 			1: exception info
 		</comment>
+	</data>
+  <data name="MX8043" xml:space="preserve">
+		<value>Произошло исключение при проверке кода статического регистратора для {0}: {1}</value>
+		<comment>
+			0: name of an assembly
+			1: exception info
+		</comment>
+	</data>
+  <data name="MX8044" xml:space="preserve">
+		<value>Сборка {0} была изменена с момента сборки приложения, что аннулирует созданный код статического регистратора. MVID для загруженной сборки — {1}, в то время как MVID для сборки, которой соответствует созданный код статического регистратора — {2}.</value>
+	</data>
+  <data name="MX8045" xml:space="preserve">
+		<value>Не удалось вызвать освобождение для экземпляра типа {0}</value>
+	</data>
+  <data name="MX8046" xml:space="preserve">
+		<value>Не удается найти метод "{0}" в типе "{1}"</value>
+	</data>
+  <data name="MX8047" xml:space="preserve">
+		<value>Метод трамплина {0} не совпадает с указателем функции 0x{1} для аргумента trampolineMethod (они не указывают одинаковый метод).</value>
+	</data>
+  <data name="MX8048" xml:space="preserve">
+		<value>Метод трамплина {0} должен содержать хотя бы один параметр.</value>
+	</data>
+  <data name="MX8049" xml:space="preserve">
+		<value>Первым параметром в методе трамплина {0} должен быть "System.IntPtr", "void*" или "ObjCRuntime.BlockLiteral*".</value>
+	</data>
+  <data name="MX8050" xml:space="preserve">
+		<value>BlockLiteral.GetBlockSignature не поддерживается, если динамический регистратор связан с внешним элементом.</value>
+	</data>
+  <data name="MX8051" xml:space="preserve">
+		<value>Метод трамплина {0} должен содержать атрибут [UnmanagedCallersOnly].</value>
+	</data>
+  <data name="MX8052" xml:space="preserve">
+		<value>Подпись должна быть непустой строкой.</value>
+	</data>
+  <data name="MX8053" xml:space="preserve">
+		<value>Не удалось разрешить модуль в сборке {0}.</value>
+	</data>
+  <data name="MX8054" xml:space="preserve">
+		<value>Не удается разрешить токены метаданных для методов при использовании управляемого статического регистратора (токен: 0x{0}).</value>
+	</data>
+  <data name="MX8055" xml:space="preserve">
+		<value>Не удалось найти тип "ObjCRuntime.__Registrar__" в сборке "{0}".</value>
+	</data>
+  <data name="MX8056" xml:space="preserve">
+		<value>Не удалось маршалировать объект Objective-C 0x{0} (тип: {1}). Не удалось найти существующий у для этого объекта или создать новый управляемый экземпляр универсального типа {2}.</value>
 	</data>
 </root>

@@ -13,11 +13,11 @@ using NativeHandle = System.IntPtr;
 #endif
 
 namespace MonoTouchFixtures.UIKit {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class FontTest {
-		
+
 		void AssertNotBrokenFontWithSize ()
 		{
 #if __MACCATALYST__ || __MACOS__
@@ -34,6 +34,13 @@ namespace MonoTouchFixtures.UIKit {
 			AssertNotBrokenFontWithSize ();
 			var f1 = UIFont.SystemFontOfSize (10).WithSize (20);
 			Assert.AreEqual (f1.PointSize, (nfloat) 20, "#size");
+		}
+
+		[Test]
+		public void GetWeight ()
+		{
+			var weight = UIFontWeight.Semibold;
+			Assert.AreEqual (weight.GetWeight (), UIFontWeightConstants.Semibold);
 		}
 
 		[Test]
@@ -118,6 +125,13 @@ namespace MonoTouchFixtures.UIKit {
 			f1 = UIFont.FromDescriptor (d, 12);
 			f2 = UIFont.FromDescriptor (d, 12);
 			SemiFactory_25511 (f1, f2, "FromDescriptor");
+
+			if (!TestRuntime.CheckXcodeVersion (14, 0))
+				return;
+
+			f1 = UIFont.SystemFontOfSize (12, UIFontWeight.UltraLight, UIFontWidth.Condensed);
+			f2 = UIFont.SystemFontOfSize (12, UIFontWeight.UltraLight, UIFontWidth.Condensed);
+			SemiFactory_25511 (f1, f2, "SystemFontOfSizeWeightWidth");
 		}
 
 		[Test]

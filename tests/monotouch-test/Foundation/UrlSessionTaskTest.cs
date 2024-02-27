@@ -30,7 +30,7 @@ namespace MonoTouchFixtures.Foundation {
 		{
 			TestRuntime.AssertXcodeVersion (5, 0);
 			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 9, throwIfOtherPlatform: false);
-			
+
 			using (var ur = new NSUrlRequest ())
 			using (var task = NSUrlSession.SharedSession.CreateDownloadTask (ur)) {
 				// in iOS9 those selectors do not respond - but they do work (forwarded to __NSCFLocalDownloadTask type ?)
@@ -47,7 +47,7 @@ namespace MonoTouchFixtures.Foundation {
 				Assert.That (task.State, Is.EqualTo (NSUrlSessionTaskState.Suspended), "state");
 				Assert.Null (task.TaskDescription, "taskDescription");
 				task.TaskDescription = "descriptive label";
-				Assert.That ((string)task.TaskDescription, Is.EqualTo ("descriptive label"), "setTaskDescription:");
+				Assert.That ((string) task.TaskDescription, Is.EqualTo ("descriptive label"), "setTaskDescription:");
 				Assert.That (task.TaskIdentifier, Is.GreaterThanOrEqualTo ((nuint) 0), "taskIdentifier");
 
 				if (TestRuntime.CheckXcodeVersion (9, 0)) {

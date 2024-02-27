@@ -5,12 +5,10 @@ using NUnit.Framework;
 using AppKit;
 using Foundation;
 
-namespace Xamarin.Mac.Tests
-{
+namespace Xamarin.Mac.Tests {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class AppleScriptTests
-	{		
+	public class AppleScriptTests {
 		[Test]
 		public void AppleScript_BasicTest ()
 		{
@@ -20,7 +18,7 @@ end tell";
 			NSAppleScript s = new NSAppleScript (script);
 
 			NSDictionary errorInfo;
-			bool success = s.CompileAndReturnError(out errorInfo);
+			bool success = s.CompileAndReturnError (out errorInfo);
 			Assert.IsTrue (success);
 			Assert.IsNull (errorInfo);
 			Assert.IsTrue (s.Compiled);

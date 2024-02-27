@@ -13,10 +13,6 @@ parameters:
 - name: xqaCertPass
   type: string
 
-- name: enableDotnet
-  type: boolean
-  default: false
-
 - name: prID
   type: string
   default: '' # default empty, meaning we are building in CI
@@ -24,16 +20,29 @@ parameters:
 - name: isPR
   type: boolean
 
+- name: repositoryAlias
+  type: string
+  default: self
+
+- name: commit
+  type: string
+  default: HEAD
+
+- name: uploadPrefix
+  type: string
+  default: '$(MaciosUploadPrefix)'
+
 # build the source code (build.yml) and detect changes (the nested api-diff.yml)
 steps:
 - template: build.yml
   parameters:
     isPR: ${{ parameters.isPR }}
+    repositoryAlias: ${{ parameters.repositoryAlias }}
+    commit: ${{ parameters.commit }}
     vsdropsPrefix: ${{ parameters.vsdropsPrefix }}
     keyringPass: ${{ parameters.keyringPass }}
     gitHubToken: ${{ parameters.gitHubToken }}
     xqaCertPass: ${{ parameters.xqaCertPass }}
-    enableDotnet: ${{ parameters.enableDotnet }}
     makeParallelism: '4'
 
 # detect changes
@@ -43,14 +52,14 @@ steps:
   name: detectChanges
   continueOnError: true # this isn't fatal, the github comment will show how bad this really is
   env:
-    BUILD_REVISION: 'devops' # doesn't matter the exact value, any value is understood as "we're in CI"
     PR_ID: ${{ parameters.prID }} # reusing jenkins vars, to be fixed
+    AUTH_TOKEN_GITHUB_COM: ${{ parameters.gitHubToken }}
 
 # publish the resulting artifact
 - task: PublishPipelineArtifact@1
   displayName: 'Publish change detection artifact'
   inputs:
     targetPath: '$(Build.ArtifactStagingDirectory)/change-detection/change-detection.zip'
-    artifactName: change-detection
+    artifactName: ${{ parameters.uploadPrefix }}change-detection
   condition: succeededOrFailed() # we always want to upload the zip as an artifact
   continueOnError: true

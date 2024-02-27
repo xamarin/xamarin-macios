@@ -7,7 +7,7 @@ namespace StrongDictsNativeEnums {
 
 	[Static]
 	interface SomeKeys {
-		[Field("NSSomeNativeKey", "__Internal")]
+		[Field ("NSSomeNativeKey", "__Internal")]
 		NSString TrackingLevelKey { get; }
 	}
 

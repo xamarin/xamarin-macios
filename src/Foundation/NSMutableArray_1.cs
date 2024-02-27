@@ -42,8 +42,7 @@ namespace Foundation {
 #endif
 	[Register ("NSMutableArray", SkipRegistration = true)]
 	public sealed partial class NSMutableArray<TValue> : NSMutableArray, IEnumerable<TValue>
-		where TValue : class, INativeObject
-	{
+		where TValue : class, INativeObject {
 		public NSMutableArray ()
 		{
 		}
@@ -65,9 +64,9 @@ namespace Foundation {
 
 		public NSMutableArray (params TValue [] values)
 		{
-			if (values == null)
+			if (values is null)
 				throw new ArgumentNullException (nameof (values));
-			
+
 			for (int i = 0; i < values.Length; i++)
 				Add (values [i]);
 		}
@@ -75,7 +74,7 @@ namespace Foundation {
 		// Strongly typed methods from NSArray
 		public bool Contains (TValue obj)
 		{
-			if (obj == null)
+			if (obj is null)
 				throw new ArgumentNullException (nameof (obj));
 
 			return _Contains (obj.Handle);
@@ -83,7 +82,7 @@ namespace Foundation {
 
 		public nuint IndexOf (TValue obj)
 		{
-			if (obj == null)
+			if (obj is null)
 				throw new ArgumentNullException (nameof (obj));
 
 			return _IndexOf (obj.Handle);
@@ -92,7 +91,7 @@ namespace Foundation {
 		// Strongly typed methods from NSMutableArray
 		public void Add (TValue obj)
 		{
-			if (obj == null)
+			if (obj is null)
 				throw new ArgumentNullException (nameof (obj));
 
 			_Add (obj.Handle);
@@ -100,7 +99,7 @@ namespace Foundation {
 
 		public void Insert (TValue obj, nint index)
 		{
-			if (obj == null)
+			if (obj is null)
 				throw new ArgumentNullException (nameof (obj));
 
 			ValidateIndex (index);
@@ -110,7 +109,7 @@ namespace Foundation {
 
 		public void ReplaceObject (nint index, TValue withObject)
 		{
-			if (withObject == null)
+			if (withObject is null)
 				throw new ArgumentNullException (nameof (withObject));
 
 			ValidateIndex (index);
@@ -118,32 +117,32 @@ namespace Foundation {
 			_ReplaceObject (index, withObject.Handle);
 		}
 
-		public void AddObjects (params TValue[] source)
+		public void AddObjects (params TValue [] source)
 		{
-			if (source == null)
+			if (source is null)
 				throw new ArgumentNullException (nameof (source));
 
 			for (int i = 0; i < source.Length; i++)
-				if (source [i] == null)
+				if (source [i] is null)
 					throw new ArgumentNullException (nameof (source) + "[" + i.ToString () + "]");
 
 			for (int i = 0; i < source.Length; i++)
 				_Add (source [i].Handle);
 		}
 
-		public void InsertObjects (TValue[] objects, NSIndexSet atIndexes)
+		public void InsertObjects (TValue [] objects, NSIndexSet atIndexes)
 		{
-			if (objects == null)
+			if (objects is null)
 				throw new ArgumentNullException (nameof (objects));
 
-			if (atIndexes == null)
+			if (atIndexes is null)
 				throw new ArgumentNullException (nameof (atIndexes));
 
 			if (objects.Length != atIndexes.Count)
 				throw new ArgumentOutOfRangeException ("'" + nameof (objects) + "' and '" + nameof (atIndexes) + "' must contain the same number of elements");
 
 			for (int i = 0; i < objects.Length; i++)
-				if (objects [i] == null)
+				if (objects [i] is null)
 					throw new ArgumentNullException (nameof (objects) + "[" + i.ToString () + "]");
 
 			nuint idx = atIndexes.FirstIndex;
@@ -163,7 +162,7 @@ namespace Foundation {
 				return GetItem<TValue> (index);
 			}
 			set {
-				if (value == null)
+				if (value is null)
 					throw new ArgumentNullException (nameof (value));
 				ValidateIndex (index);
 				_ReplaceObject ((nint) index, value.Handle);
@@ -185,18 +184,28 @@ namespace Foundation {
 				throw new IndexOutOfRangeException (nameof (index));
 		}
 
-#region IEnumerable<T> implementation
+		#region IEnumerable<T> implementation
 		public IEnumerator<TValue> GetEnumerator ()
 		{
 			return new NSFastEnumerator<TValue> (this);
 		}
-#endregion
+		#endregion
 
-#region IEnumerable implementation
+		#region IEnumerable implementation
 		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator ()
 		{
 			return GetEnumerator ();
 		}
-#endregion
+		#endregion
+
+#if false // https://github.com/xamarin/xamarin-macios/issues/15577
+#if !NET
+		[Watch (6,0), TV (13,0), iOS (13,0)]
+#else
+		[SupportedOSPlatform ("ios13.0"), SupportedOSPlatform ("tvos13.0"), SupportedOSPlatform ("macos")]
+#endif
+		public void ApplyDifference (NSOrderedCollectionDifference<TValue> difference)
+			=> ApplyDifference ((NSOrderedCollectionDifference) difference);
+#endif
 	}
 }

@@ -1,8 +1,0 @@
-!extra-enum-value! Managed value 0 for MTLFeatureSet.iOS_GPUFamily1_v1 is available for the current platform while the value in the native header is not
-!extra-enum-value! Managed value 1 for MTLFeatureSet.iOS_GPUFamily2_v1 is available for the current platform while the value in the native header is not
-!extra-enum-value! Managed value 1 for MTLSamplerAddressMode.MirrorClampToEdge is available for the current platform while the value in the native header is not
-!extra-enum-value! Managed value 2 for MTLFeatureSet.iOS_GPUFamily1_v2 is available for the current platform while the value in the native header is not
-!extra-enum-value! Managed value 3 for MTLFeatureSet.iOS_GPUFamily2_v2 is available for the current platform while the value in the native header is not
-!extra-enum-value! Managed value 4 for MTLFeatureSet.iOS_GPUFamily3_v1 is available for the current platform while the value in the native header is not
-!extra-enum-value! Managed value 5 for MTLSamplerAddressMode.ClampToBorderColor is available for the current platform while the value in the native header is not
-!extra-enum-value! Managed value 8 for MTLTextureType.k2DMultisampleArray is available for the current platform while the value in the native header is not

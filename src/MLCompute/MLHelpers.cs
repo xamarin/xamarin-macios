@@ -15,9 +15,9 @@ namespace MLCompute {
 	[SupportedOSPlatform ("macos11.0")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
-	[iOS (14,0)]
-	[TV (14,0)]
-	[Mac (11,0)]
+	[iOS (14, 0)]
+	[TV (14, 0)]
+	[Mac (11, 0)]
 	[NoWatch]
 #endif
 	public static class MLCActivationTypeExtensions {
@@ -37,9 +37,9 @@ namespace MLCompute {
 	[SupportedOSPlatform ("macos11.0")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
-	[iOS (14,0)]
-	[TV (14,0)]
-	[Mac (11,0)]
+	[iOS (14, 0)]
+	[TV (14, 0)]
+	[Mac (11, 0)]
 	[NoWatch]
 #endif
 	public static class MLCArithmeticOperationExtensions {
@@ -59,9 +59,9 @@ namespace MLCompute {
 	[SupportedOSPlatform ("macos11.0")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
-	[iOS (14,0)]
-	[TV (14,0)]
-	[Mac (11,0)]
+	[iOS (14, 0)]
+	[TV (14, 0)]
+	[Mac (11, 0)]
 	[NoWatch]
 #endif
 	public static class MLCPaddingPolicyExtensions {
@@ -81,9 +81,9 @@ namespace MLCompute {
 	[SupportedOSPlatform ("macos11.0")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
-	[iOS (14,0)]
-	[TV (14,0)]
-	[Mac (11,0)]
+	[iOS (14, 0)]
+	[TV (14, 0)]
+	[Mac (11, 0)]
 	[NoWatch]
 #endif
 	public static class MLCLossTypeExtensions {
@@ -103,9 +103,9 @@ namespace MLCompute {
 	[SupportedOSPlatform ("macos11.0")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
-	[iOS (14,0)]
-	[TV (14,0)]
-	[Mac (11,0)]
+	[iOS (14, 0)]
+	[TV (14, 0)]
+	[Mac (11, 0)]
 	[NoWatch]
 #endif
 	public static class MLCReductionTypeExtensions {
@@ -125,9 +125,9 @@ namespace MLCompute {
 	[SupportedOSPlatform ("macos11.0")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
-	[iOS (14,0)]
-	[TV (14,0)]
-	[Mac (11,0)]
+	[iOS (14, 0)]
+	[TV (14, 0)]
+	[Mac (11, 0)]
 	[NoWatch]
 #endif
 	public static class MLCPaddingTypeExtensions {
@@ -147,9 +147,9 @@ namespace MLCompute {
 	[SupportedOSPlatform ("macos11.0")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
-	[iOS (14,0)]
-	[TV (14,0)]
-	[Mac (11,0)]
+	[iOS (14, 0)]
+	[TV (14, 0)]
+	[Mac (11, 0)]
 	[NoWatch]
 #endif
 	public static class MLCConvolutionTypeExtensions {
@@ -169,9 +169,9 @@ namespace MLCompute {
 	[SupportedOSPlatform ("macos11.0")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
-	[iOS (14,0)]
-	[TV (14,0)]
-	[Mac (11,0)]
+	[iOS (14, 0)]
+	[TV (14, 0)]
+	[Mac (11, 0)]
 	[NoWatch]
 #endif
 	public static class MLCPoolingTypeExtensions {
@@ -191,9 +191,9 @@ namespace MLCompute {
 	[SupportedOSPlatform ("macos11.0")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
-	[iOS (14,0)]
-	[TV (14,0)]
-	[Mac (11,0)]
+	[iOS (14, 0)]
+	[TV (14, 0)]
+	[Mac (11, 0)]
 	[NoWatch]
 #endif
 	public static class MLCSoftmaxOperationExtensions {
@@ -213,9 +213,9 @@ namespace MLCompute {
 	[SupportedOSPlatform ("macos11.0")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
-	[iOS (14,0)]
-	[TV (14,0)]
-	[Mac (11,0)]
+	[iOS (14, 0)]
+	[TV (14, 0)]
+	[Mac (11, 0)]
 	[NoWatch]
 #endif
 	public static class MLCSampleModeExtensions {
@@ -235,9 +235,9 @@ namespace MLCompute {
 	[SupportedOSPlatform ("macos11.0")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
-	[iOS (14,0)]
-	[TV (14,0)]
-	[Mac (11,0)]
+	[iOS (14, 0)]
+	[TV (14, 0)]
+	[Mac (11, 0)]
 	[NoWatch]
 #endif
 	public static class MLCLstmResultModeExtensions {
@@ -257,9 +257,9 @@ namespace MLCompute {
 	[SupportedOSPlatform ("ios14.5")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
-	[TV (14,5)]
-	[Mac (11,3)]
-	[iOS (14,5)]
+	[TV (14, 5)]
+	[Mac (11, 3)]
+	[iOS (14, 5)]
 	[NoWatch]
 #endif
 	public static class MLCComparisonOperationExtensions {
@@ -280,10 +280,10 @@ namespace MLCompute {
 	[SupportedOSPlatform ("maccatalyst15.0")]
 #else
 	[NoWatch]
-	[TV (15,0)]
-	[Mac (12,0)]
-	[iOS (15,0)]
-	[MacCatalyst (15,0)]
+	[TV (15, 0)]
+	[Mac (12, 0)]
+	[iOS (15, 0)]
+	[MacCatalyst (15, 0)]
 #endif
 	public static class MLCGradientClippingTypeExtensions {
 

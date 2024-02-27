@@ -29,16 +29,18 @@
 
 #nullable enable
 
-using System;
 using ObjCRuntime;
-using System.IO;
-using System.Runtime.InteropServices;
+
+using System;
+using System.Buffers;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Runtime.InteropServices;
 
 namespace Foundation {
 	public partial class NSData : IEnumerable, IEnumerable<byte> {
-		public byte[] ToArray ()
+		public byte [] ToArray ()
 		{
 			var res = new byte [Length];
 			if (Length > 0)
@@ -51,8 +53,8 @@ namespace Foundation {
 			IntPtr source = Bytes;
 			nuint top = Length;
 
-			for (nuint i = 0; i < top; i++){
-				yield return Marshal.ReadByte (source, (int)i);
+			for (nuint i = 0; i < top; i++) {
+				yield return Marshal.ReadByte (source, (int) i);
 			}
 		}
 
@@ -62,9 +64,9 @@ namespace Foundation {
 			nuint top = Length;
 
 			for (nuint i = 0; i < top; i++)
-				yield return Marshal.ReadByte (source, (int)i);
+				yield return Marshal.ReadByte (source, (int) i);
 		}
-		
+
 		public static NSData FromString (string s)
 		{
 			return FromString (s, NSStringEncoding.UTF8);
@@ -74,12 +76,12 @@ namespace Foundation {
 		{
 			if (buffer is null)
 				throw new ArgumentNullException (nameof (buffer));
-			
+
 			if (buffer.Length == 0)
 				return FromBytes (IntPtr.Zero, 0);
-			
+
 			unsafe {
-				fixed (byte *ptr = &buffer [0]){
+				fixed (byte* ptr = buffer) {
 					return FromBytes ((IntPtr) ptr, (nuint) buffer.Length);
 				}
 			}
@@ -89,7 +91,7 @@ namespace Foundation {
 		{
 			if (stream is null)
 				throw new ArgumentNullException (nameof (stream));
-			
+
 			if (!stream.CanRead)
 				return null;
 
@@ -100,23 +102,24 @@ namespace Foundation {
 				try {
 					// https://trello.com/c/yyT3u2KY/84-nsdata-fromstream-optimization
 					len = stream.Length - stream.Position;
-				}
-				catch {
+				} catch {
 				}
 			}
 
-			NSMutableData ret = NSMutableData.FromCapacity ((int)len);
-			byte [] buffer = new byte [32*1024];
+			NSMutableData ret = NSMutableData.FromCapacity ((int) len);
+			byte [] buffer = ArrayPool<byte>.Shared.Rent (32 * 1024);
 			int n;
 			try {
 				unsafe {
-					fixed (byte* ptr = &buffer [0]) {
+					fixed (byte* ptr = buffer) {
 						while ((n = stream.Read (buffer, 0, buffer.Length)) != 0)
 							ret.AppendBytes ((IntPtr) ptr, (nuint) n);
 					}
 				}
 			} catch {
 				return null;
+			} finally {
+				ArrayPool<byte>.Shared.Return (buffer);
 			}
 			return ret;
 		}
@@ -135,7 +138,7 @@ namespace Foundation {
 				}
 			}
 
-			public UnmanagedMemoryStreamWithRef (NSData source) : base ((byte *)source.Bytes, (long)source.Length)
+			public UnmanagedMemoryStreamWithRef (NSData source) : base ((byte*) source.Bytes, (long) source.Length)
 			{
 				this.source = source;
 			}
@@ -153,7 +156,7 @@ namespace Foundation {
 		//
 		unsafe class UnmanagedMemoryStreamWithMutableRef : UnmanagedMemoryStreamWithRef {
 			IntPtr base_address;
-			
+
 			public UnmanagedMemoryStreamWithMutableRef (NSData source) : base (source)
 			{
 				base_address = source.Bytes;
@@ -164,11 +167,11 @@ namespace Foundation {
 				throw new InvalidOperationException ("The underlying NSMutableData changed while we were consuming data");
 			}
 
-			public override int Read ([InAttribute] [OutAttribute] byte[] buffer, int offset, int count)
+			public override int Read ([InAttribute][OutAttribute] byte [] buffer, int offset, int count)
 			{
 				if (base_address != Source.Bytes)
 					InvalidOperation ();
-				
+
 				return base.Read (buffer, offset, count);
 			}
 
@@ -180,7 +183,7 @@ namespace Foundation {
 				return base.ReadByte ();
 			}
 
-			public override void Write (byte[] buffer, int offset, int count)
+			public override void Write (byte [] buffer, int offset, int count)
 			{
 				if (base_address != Source.Bytes)
 					InvalidOperation ();
@@ -204,7 +207,7 @@ namespace Foundation {
 					return new UnmanagedMemoryStreamWithRef (this);
 			}
 		}
-		
+
 		public static NSData FromString (string s, NSStringEncoding encoding)
 		{
 			using (var ns = new NSString (s))
@@ -220,7 +223,7 @@ namespace Foundation {
 		{
 			return new NSString (this, encoding);
 		}
-		
+
 		public override string ToString ()
 		{
 			// not every NSData can be converted into a (valid) UTF8 string and:
@@ -230,8 +233,7 @@ namespace Foundation {
 			try {
 				using (var s = new NSString (this, NSStringEncoding.UTF8))
 					return s.ToString ();
-			}
-			catch {
+			} catch {
 				return Description; // ObjC knows how to render NSData into a string
 			}
 		}
@@ -245,11 +247,11 @@ namespace Foundation {
 		{
 			unsafe {
 				IntPtr val;
-				IntPtr val_addr = (IntPtr) ((IntPtr *) &val);
+				IntPtr val_addr = (IntPtr) ((IntPtr*) &val);
 
 				bool ret = _Save (file, (nint) (long) options, val_addr);
 				error = Runtime.GetNSObject<NSError> (val);
-				
+
 				return ret;
 			}
 		}
@@ -263,7 +265,7 @@ namespace Foundation {
 		{
 			unsafe {
 				IntPtr val;
-				IntPtr val_addr = (IntPtr) ((IntPtr *) &val);
+				IntPtr val_addr = (IntPtr) ((IntPtr*) &val);
 
 				bool ret = _Save (url, (nint) (long) options, val_addr);
 				error = Runtime.GetNSObject<NSError> (val);

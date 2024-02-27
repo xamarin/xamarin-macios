@@ -11,10 +11,12 @@ using System;
 using ObjCRuntime;
 using Foundation;
 
+#nullable enable
+
 namespace Contacts {
 
 	// NSInteger -> CNContact.h
-	[iOS (9,0), Mac (10,11)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CNContactType : long {
 		Person,
@@ -22,7 +24,7 @@ namespace Contacts {
 	}
 
 	// NSInteger -> CNContact.h
-	[iOS (9,0), Mac (10,11)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CNContactSortOrder : long {
 		None,
@@ -32,7 +34,7 @@ namespace Contacts {
 	}
 
 	// NSInteger -> CNContactFormatter.h
-	[iOS (9,0), Mac (10,11)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CNContactFormatterStyle : long {
 		FullName,
@@ -40,7 +42,7 @@ namespace Contacts {
 	}
 
 	// NSInteger -> CNContactFormatter.h
-	[iOS (9,0), Mac (10,11)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CNContactDisplayNameOrder : long {
 		UserDefault,
@@ -49,14 +51,14 @@ namespace Contacts {
 	}
 
 	// NSInteger -> CNContactStore.h
-	[iOS (9,0), Mac (10,11)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CNEntityType : long {
 		Contacts
 	}
 
 	// NSInteger -> CNContactStore.h
-	[iOS (9,0), Mac (10,11)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CNAuthorizationStatus : long {
 		NotDetermined = 0,
@@ -66,7 +68,7 @@ namespace Contacts {
 	}
 
 	// NSInteger -> CNContainer.h
-	[iOS (9,0), Mac (10,11)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CNContainerType : long {
 		Unassigned = 0,
@@ -76,7 +78,7 @@ namespace Contacts {
 	}
 
 	// NSInteger -> CNError.h
-	[iOS (9,0), Mac (10,11)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	[ErrorDomain ("CNErrorDomain")]
 	public enum CNErrorCode : long {
@@ -86,6 +88,7 @@ namespace Contacts {
 		NoAccessibleWritableContainers = 101,
 		UnauthorizedKeys = 102,
 		FeatureDisabledByUser = 103,
+		FeatureNotAvailable = 104,
 		RecordDoesNotExist = 200,
 		InsertedRecordAlreadyExists = 201,
 		ContainmentCycle = 202,
@@ -110,43 +113,45 @@ namespace Contacts {
 	}
 
 	// NSInteger -> CNPostalAddressFormatter.h
-	[iOS (9,0), Mac (10,11)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CNPostalAddressFormatterStyle : long {
 		MailingAddress,
 	}
 
-	[iOS (9,0)][Mac (10,11)]
+	[MacCatalyst (13, 1)]
 	[Flags]
 	public enum CNContactOptions : long {
-		None						= 0,
-		Nickname					= 1 << 0,
-		PhoneticGivenName			= 1 << 1,
-		PhoneticMiddleName			= 1 << 2,
-		PhoneticFamilyName			= 1 << 3,
-		OrganizationName			= 1 << 4,
-		DepartmentName				= 1 << 5,
-		JobTitle					= 1 << 6,
-		Birthday					= 1 << 7,
-		NonGregorianBirthday		= 1 << 8,
-		Note						= 1 << 9,
+		None = 0,
+		Nickname = 1 << 0,
+		PhoneticGivenName = 1 << 1,
+		PhoneticMiddleName = 1 << 2,
+		PhoneticFamilyName = 1 << 3,
+		OrganizationName = 1 << 4,
+		DepartmentName = 1 << 5,
+		JobTitle = 1 << 6,
+		Birthday = 1 << 7,
+		NonGregorianBirthday = 1 << 8,
+		Note = 1 << 9,
 #if !MONOMAC
 		[NoMac]
-		ImageData					= 1 << 10,
+		[MacCatalyst (13, 1)]
+		ImageData = 1 << 10,
 #endif
-		ThumbnailImageData			= 1 << 11,
+		ThumbnailImageData = 1 << 11,
 #if !MONOMAC
 		[NoMac]
-		ImageDataAvailable			= 1 << 12,
+		[MacCatalyst (13, 1)]
+		ImageDataAvailable = 1 << 12,
 #endif
-		Type						= 1 << 13,
-		PhoneNumbers				= 1 << 14,
-		EmailAddresses				= 1 << 15,
-		PostalAddresses				= 1 << 16,
-		Dates						= 1 << 17,
-		UrlAddresses				= 1 << 18,
-		Relations					= 1 << 19,
-		SocialProfiles				= 1 << 20,
-		InstantMessageAddresses		= 1 << 21,
+		Type = 1 << 13,
+		PhoneNumbers = 1 << 14,
+		EmailAddresses = 1 << 15,
+		PostalAddresses = 1 << 16,
+		Dates = 1 << 17,
+		UrlAddresses = 1 << 18,
+		Relations = 1 << 19,
+		SocialProfiles = 1 << 20,
+		InstantMessageAddresses = 1 << 21,
 	}
 }

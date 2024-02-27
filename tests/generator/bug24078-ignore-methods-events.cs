@@ -10,16 +10,17 @@ using UIKit;
 namespace Test {
 
 	[BaseType (typeof (NSObject),
-		Delegates=new string [] {"WeakDelegate"},
-		Events=new Type [] { typeof (UIPopoverPresentationControllerDelegate) })]
+		Delegates = new string [] { "WeakDelegate" },
+		Events = new Type [] { typeof (UIPopoverPresentationControllerDelegate) })]
 	public partial interface TestController {
 		[Export ("delegate", ArgumentSemantic.UnsafeUnretained)]
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		UIPopoverPresentationControllerDelegate Delegate { get; set; }
+		IUIPopoverPresentationControllerDelegate Delegate { get; set; }
 	}
+
+	public interface IUIPopoverPresentationControllerDelegate { }
 
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]

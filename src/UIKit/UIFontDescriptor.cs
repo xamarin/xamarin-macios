@@ -11,13 +11,16 @@ using ObjCRuntime;
 using CoreGraphics;
 using Foundation;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace UIKit {
-	
+
 	public class UIFontAttributes : DictionaryContainer {
-		public UIFontAttributes () {}
+		public UIFontAttributes () { }
 
 #if !COREBUILD
-		public UIFontAttributes (NSDictionary dictionary) : base (dictionary) {}
+		public UIFontAttributes (NSDictionary dictionary) : base (dictionary) { }
 
 #if !WATCH
 		public UIFontAttributes (params UIFontFeature [] features)
@@ -25,7 +28,7 @@ namespace UIKit {
 			FeatureSettings = features;
 		}
 #endif
-		
+
 		public string Family {
 			get {
 				return GetStringValue (UIFontDescriptor.FamilyAttribute);
@@ -87,7 +90,7 @@ namespace UIKit {
 				NSObject value;
 				if (!Dictionary.TryGetValue (UIFontDescriptor.MatrixAttribute, out value))
 					return null;
-				
+
 				return ((NSValue) value).CGAffineTransformValue;
 			}
 			set {
@@ -104,7 +107,7 @@ namespace UIKit {
 				return Dictionary [UIFontDescriptor.CharacterSetAttribute] as NSCharacterSet;
 			}
 			set {
-				if (value == null){
+				if (value is null) {
 					RemoveValue (UIFontDescriptor.CharacterSetAttribute);
 					return;
 				}
@@ -115,10 +118,10 @@ namespace UIKit {
 		public UIFontDescriptor [] CascadeList {
 			get {
 				return GetArray<UIFontDescriptor> (UIFontDescriptor.CascadeListAttribute);
-				
+
 			}
 			set {
-				if (value == null){
+				if (value is null) {
 					RemoveValue (UIFontDescriptor.CascadeListAttribute);
 					return;
 				}
@@ -129,16 +132,16 @@ namespace UIKit {
 		public UIFontTraits Traits {
 			get {
 				var traits = GetNSDictionary (UIFontDescriptor.TraitsAttribute);
-				if (traits == null)
+				if (traits is null)
 					return null;
 				return new UIFontTraits (traits);
 			}
 			set {
-				if (value == null){
+				if (value is null) {
 					RemoveValue (UIFontDescriptor.TraitsAttribute);
 					return;
 				}
-				
+
 				Dictionary [UIFontDescriptor.TraitsAttribute] = value.Dictionary;
 			}
 		}
@@ -154,10 +157,10 @@ namespace UIKit {
 
 		public NSDictionary [] WeakFeatureSettings {
 			get {
-				return GetArray<NSDictionary> (UIFontDescriptor.FeatureSettingsAttribute);				
+				return GetArray<NSDictionary> (UIFontDescriptor.FeatureSettingsAttribute);
 			}
 			set {
-				if (value == null){
+				if (value is null) {
 					RemoveValue (UIFontDescriptor.FeatureSettingsAttribute);
 					return;
 				}
@@ -169,9 +172,9 @@ namespace UIKit {
 		public UIFontFeature [] FeatureSettings {
 			get {
 				var dictArray = WeakFeatureSettings;
-				if (dictArray == null)
+				if (dictArray is null)
 					return new UIFontFeature [0];
-				
+
 				var strong = new UIFontFeature [dictArray.Length];
 				for (int i = 0; i < dictArray.Length; i++)
 					strong [i] = new UIFontFeature (dictArray [i]);
@@ -192,31 +195,31 @@ namespace UIKit {
 				return GetPreferredDescriptorForTextStyle (UIFontTextStyle.Headline);
 			}
 		}
-		
+
 		public static UIFontDescriptor PreferredBody {
 			get {
 				return GetPreferredDescriptorForTextStyle (UIFontTextStyle.Body);
 			}
 		}
-		
+
 		public static UIFontDescriptor PreferredSubheadline {
 			get {
 				return GetPreferredDescriptorForTextStyle (UIFontTextStyle.Subheadline);
 			}
 		}
-		
+
 		public static UIFontDescriptor PreferredFootnote {
 			get {
 				return GetPreferredDescriptorForTextStyle (UIFontTextStyle.Footnote);
 			}
 		}
-		
+
 		public static UIFontDescriptor PreferredCaption1 {
 			get {
 				return GetPreferredDescriptorForTextStyle (UIFontTextStyle.Caption1);
 			}
 		}
-		
+
 		public static UIFontDescriptor PreferredCaption2 {
 			get {
 				return GetPreferredDescriptorForTextStyle (UIFontTextStyle.Caption2);
@@ -224,65 +227,57 @@ namespace UIKit {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (9,0)]
 #endif
 		public static UIFontDescriptor PreferredTitle1 {
 			get {
 				return GetPreferredDescriptorForTextStyle (UIFontTextStyle.Title1);
 			}
 		}
-		
+
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (9,0)]
 #endif
 		public static UIFontDescriptor PreferredTitle2 {
 			get {
 				return GetPreferredDescriptorForTextStyle (UIFontTextStyle.Title2);
 			}
 		}
-		
+
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (9,0)]
 #endif
 		public static UIFontDescriptor PreferredTitle3 {
 			get {
 				return GetPreferredDescriptorForTextStyle (UIFontTextStyle.Title3);
 			}
 		}
-		
+
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (9,0)]
 #endif
 		public static UIFontDescriptor PreferredCallout {
 			get {
 				return GetPreferredDescriptorForTextStyle (UIFontTextStyle.Callout);
 			}
 		}
-	
+
 		public UIFontDescriptor [] GetMatchingFontDescriptors (params UIFontDescriptorAttribute [] mandatoryKeys)
 		{
 			var n = mandatoryKeys.Length;
 			if (n == 0)
 				return GetMatchingFontDescriptors ((NSSet) null);
 			var all = new NSString [n];
-			for (int i = 0; i < n; i++){
-				switch (mandatoryKeys [i]){
+			for (int i = 0; i < n; i++) {
+				switch (mandatoryKeys [i]) {
 				case UIFontDescriptorAttribute.Family:
 					all [i] = FamilyAttribute;
 					break;
@@ -332,11 +327,11 @@ namespace UIKit {
 		float? GetFloatValue (NSString key)
 		{
 			var n = (NSNumber) GetObject (key);
-			if (n != null)
+			if (n is not null)
 				return n.FloatValue;
 			return null;
 		}
-	
+
 		public string Family {
 			get {
 				return GetStringValue (UIFontDescriptor.FamilyAttribute);
@@ -382,7 +377,7 @@ namespace UIKit {
 		public UIFontDescriptor [] CascadeList {
 			get {
 				var o = GetObject (UIFontDescriptor.CascadeListAttribute) as NSArray;
-				if (o == null)
+				if (o is null)
 					return new UIFontDescriptor [0];
 				return NSArray.FromArray<UIFontDescriptor> (o);
 			}
@@ -391,7 +386,7 @@ namespace UIKit {
 		public UIFontTraits Traits {
 			get {
 				var traits = GetObject (UIFontDescriptor.TraitsAttribute) as NSDictionary;
-				if (traits == null)
+				if (traits is null)
 					return null;
 				return new UIFontTraits (traits);
 			}
@@ -406,7 +401,7 @@ namespace UIKit {
 		public NSDictionary [] WeakFeatureSettings {
 			get {
 				var wf = GetObject (UIFontDescriptor.FeatureSettingsAttribute) as NSArray;
-				if (wf == null)
+				if (wf is null)
 					return null;
 				return NSArray.FromArray<NSDictionary> (wf);
 			}
@@ -416,9 +411,9 @@ namespace UIKit {
 		public UIFontFeature [] FeatureSettings {
 			get {
 				var dictArray = WeakFeatureSettings;
-				if (dictArray == null)
+				if (dictArray is null)
 					return new UIFontFeature [0];
-				
+
 				var strong = new UIFontFeature [dictArray.Length];
 				for (int i = 0; i < dictArray.Length; i++)
 					strong [i] = new UIFontFeature (dictArray [i]);
@@ -432,10 +427,10 @@ namespace UIKit {
 	public enum UIFontDescriptorAttribute {
 		Family, Face, Name, Size, VisibleName, Matrix, CharacterSet, CascadeList, Traits, FixedAdvance, FeatureSettings, TextStyle
 	}
-	
+
 	public class UIFontTraits : DictionaryContainer {
-		public UIFontTraits (){}
-		public UIFontTraits (NSDictionary dictionary) : base (dictionary) {}
+		public UIFontTraits () { }
+		public UIFontTraits (NSDictionary dictionary) : base (dictionary) { }
 
 		public UIFontDescriptorSymbolicTraits? SymbolicTrait {
 			get {

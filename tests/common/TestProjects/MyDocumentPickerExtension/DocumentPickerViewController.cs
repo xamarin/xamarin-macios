@@ -4,10 +4,8 @@ using System.Drawing;
 using Foundation;
 using UIKit;
 
-namespace MyDocumentPickerExtension
-{
-	public partial class DocumentPickerViewController : UIDocumentPickerExtensionViewController
-	{
+namespace MyDocumentPickerExtension {
+	public partial class DocumentPickerViewController : UIDocumentPickerExtensionViewController {
 		public DocumentPickerViewController (IntPtr handle) : base (handle)
 		{
 		}

@@ -15,11 +15,10 @@ using AudioUnit;
 using CoreFoundation;
 
 namespace MonoTouchFixtures.AudioUnit {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class ExtAudioFileTest
-	{
+	public class ExtAudioFileTest {
 		[Test]
 		public void WrapAudioFileID ()
 		{

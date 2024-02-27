@@ -12,7 +12,7 @@ namespace MapKit {
 	public partial class MKMultiPoint {
 		public unsafe MKMapPoint [] Points {
 			get {
-				var source = (MKMapPoint *) _Points;
+				var source = (MKMapPoint*) _Points;
 				nint n = PointCount;
 				var result = new MKMapPoint [n];
 				for (int i = 0; i < n; i++)
@@ -26,7 +26,7 @@ namespace MapKit {
 		{
 			var range = new NSRange (first, count);
 			var target = new CLLocationCoordinate2D [count];
-			fixed (CLLocationCoordinate2D *firstE = &target [0]){
+			fixed (CLLocationCoordinate2D* firstE = target) {
 				GetCoords ((IntPtr) firstE, range);
 			}
 			return target;

@@ -12,8 +12,7 @@ using NativeHandle = System.IntPtr;
 
 namespace TVServices {
 
-	[TV (9,0)]
-	[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'TVTopShelfContentProvider' instead.")]
+	[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'TVTopShelfContentProvider' instead.")]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface TVContentIdentifier : NSCopying, NSSecureCoding {
@@ -28,9 +27,8 @@ namespace TVServices {
 		NativeHandle Constructor (string identifier, [NullAllowed] TVContentIdentifier container);
 	}
 
-	[TV (9,0)]
 	[BaseType (typeof (NSObject))]
-	[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'TVTopShelfItem' instead.")]
+	[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'TVTopShelfItem' instead.")]
 	[DisableDefaultCtor]
 	interface TVContentItem : NSCopying, NSSecureCoding {
 		[Export ("contentIdentifier", ArgumentSemantic.Copy)]
@@ -74,23 +72,20 @@ namespace TVServices {
 		NSUrl DisplayUrl { get; set; }
 
 		[NullAllowed, Export ("topShelfItems", ArgumentSemantic.Copy)]
-		TVContentItem[] TopShelfItems { get; set; }
+		TVContentItem [] TopShelfItems { get; set; }
 
 		[Export ("initWithContentIdentifier:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (TVContentIdentifier ident);
 
-		[TV (11,0)]
 		[Export ("imageURLForTraits:")]
 		[return: NullAllowed]
 		NSUrl GetImageUrl (TVContentItemImageTrait traits);
 
-		[TV (11,0)]
 		[Export ("setImageURL:forTraits:")]
 		void SetImageUrl ([NullAllowed] NSUrl aUrl, TVContentItemImageTrait traits);
 	}
 
-	[TV (9,0)]
 	[Protocol]
 	interface TVTopShelfProvider {
 		[Abstract]
@@ -99,10 +94,9 @@ namespace TVServices {
 
 		[Abstract]
 		[Export ("topShelfItems")]
-		TVContentItem[] TopShelfItems { get; }
+		TVContentItem [] TopShelfItems { get; }
 	}
 
-	[TV (9,0)]
 	[Static]
 	interface TVTopShelfItems {
 		[Notification]
@@ -110,19 +104,20 @@ namespace TVServices {
 		NSString DidChangeNotification { get; }
 	}
 
-	[TV (13,0)]
-	[BaseType (typeof(NSObject))]
+	[Deprecated (PlatformName.TvOS, 16, 0, message: "Use runs-as-current-user-with-user-independent-keychain entitlement instead.")]
+	[TV (13, 0)]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // Name property can't be null
 	interface TVAppProfileDescriptor : NSCopying, NSSecureCoding {
 
-		[Export("initWithName:")]
+		[Export ("initWithName:")]
 		NativeHandle Constructor (string name);
 
-		[Export("name")]
+		[Export ("name")]
 		string Name { get; set; }
 	}
 
-	[TV (13,0)]
+	[TV (13, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface TVTopShelfAction {
@@ -134,20 +129,20 @@ namespace TVServices {
 		NativeHandle Constructor (NSUrl url);
 	}
 
-	[TV (13,0)]
+	[TV (13, 0)]
 	[Native]
 	enum TVTopShelfCarouselContentStyle : long {
 		Actions,
 		Details,
 	}
 
-	interface ITVTopShelfContent {}
+	interface ITVTopShelfContent { }
 
-	[TV (13,0)]
+	[TV (13, 0)]
 	[Protocol]
 	interface TVTopShelfContent { }
 
-	[TV (13,0)]
+	[TV (13, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface TVTopShelfCarouselContent : TVTopShelfContent {
@@ -155,14 +150,14 @@ namespace TVServices {
 		TVTopShelfCarouselContentStyle Style { get; }
 
 		[Export ("items", ArgumentSemantic.Copy)]
-		TVTopShelfCarouselItem[] Items { get; }
+		TVTopShelfCarouselItem [] Items { get; }
 
 		[Export ("initWithStyle:items:")]
 		[DesignatedInitializer]
-		NativeHandle Constructor (TVTopShelfCarouselContentStyle style, TVTopShelfCarouselItem[] items);
+		NativeHandle Constructor (TVTopShelfCarouselContentStyle style, TVTopShelfCarouselItem [] items);
 	}
 
-	[TV (13,0)]
+	[TV (13, 0)]
 	[Flags]
 	[Native]
 	public enum TVTopShelfCarouselItemMediaOptions : ulong {
@@ -176,7 +171,7 @@ namespace TVServices {
 		AudioDescription = 1uL << 15,
 	}
 
-	[TV (13,0)]
+	[TV (13, 0)]
 	[BaseType (typeof (TVTopShelfItem))]
 	[DisableDefaultCtor] // -[TVTopShelfCarouselItem init]: unrecognized selector sent to instance 0x600000eb18c0
 	interface TVTopShelfCarouselItem {
@@ -192,29 +187,29 @@ namespace TVServices {
 		[NullAllowed, Export ("summary")]
 		string Summary { get; set; }
 
-		[NullAllowed, Export("genre")]
+		[NullAllowed, Export ("genre")]
 		string Genre { get; set; }
 
-		[Export("duration")]
+		[Export ("duration")]
 		double /* NSTimeInterval */ Duration { get; set; }
 
-		[NullAllowed, Export("creationDate", ArgumentSemantic.Copy)]
+		[NullAllowed, Export ("creationDate", ArgumentSemantic.Copy)]
 		NSDate CreationDate { get; set; }
 
-		[Export("mediaOptions", ArgumentSemantic.Assign)]
+		[Export ("mediaOptions", ArgumentSemantic.Assign)]
 		TVTopShelfCarouselItemMediaOptions MediaOptions { get; set; }
 
-		[NullAllowed, Export("previewVideoURL", ArgumentSemantic.Copy)]
+		[NullAllowed, Export ("previewVideoURL", ArgumentSemantic.Copy)]
 		NSUrl PreviewVideoUrl { get; set; }
 
-		[NullAllowed, Export("cinemagraphURL", ArgumentSemantic.Copy)]
+		[NullAllowed, Export ("cinemagraphURL", ArgumentSemantic.Copy)]
 		NSUrl CinemagraphUrl { get; set; }
 
-		[Export("namedAttributes", ArgumentSemantic.Copy)]
-		TVTopShelfNamedAttribute[] NamedAttributes { get; set; }
+		[Export ("namedAttributes", ArgumentSemantic.Copy)]
+		TVTopShelfNamedAttribute [] NamedAttributes { get; set; }
 	}
 
-	[TV (13,0)]
+	[TV (13, 0)]
 	[BaseType (typeof (NSObject))]
 	interface TVTopShelfContentProvider {
 		[Async]
@@ -226,22 +221,22 @@ namespace TVServices {
 		void DidChange ();
 	}
 
-	[TV (13,0)]
+	[TV (13, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface TVTopShelfInsetContent : TVTopShelfContent {
 		[Export ("items", ArgumentSemantic.Copy)]
-		TVTopShelfItem[] Items { get; }
+		TVTopShelfItem [] Items { get; }
 
 		[Static]
 		[Export ("imageSize")]
 		CGSize ImageSize { get; }
 
 		[Export ("initWithItems:")]
-		NativeHandle Constructor (TVTopShelfItem[] items);
+		NativeHandle Constructor (TVTopShelfItem [] items);
 	}
 
-	[TV (13,0)]
+	[TV (13, 0)]
 	[BaseType (typeof (TVTopShelfObject))]
 	[DisableDefaultCtor] // identifier can't be null and we have a designated initializer
 	interface TVTopShelfItem {
@@ -270,7 +265,7 @@ namespace TVServices {
 		NativeHandle Constructor (string identifier);
 	}
 
-	[TV (13,0)]
+	[TV (13, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface TVTopShelfNamedAttribute {
@@ -279,14 +274,14 @@ namespace TVServices {
 		string Name { get; }
 
 		[Export ("values", ArgumentSemantic.Copy)]
-		string[] Values { get; }
+		string [] Values { get; }
 
 		[Export ("initWithName:values:")]
 		[DesignatedInitializer]
-		NativeHandle Constructor (string name, string[] values);
+		NativeHandle Constructor (string name, string [] values);
 	}
 
-	[TV (13,0)]
+	[TV (13, 0)]
 	[BaseType (typeof (NSObject))]
 	[Abstract]
 	[DisableDefaultCtor]
@@ -295,7 +290,7 @@ namespace TVServices {
 		string Title { get; set; }
 	}
 
-	[TV (13,0)]
+	[TV (13, 0)]
 	[Flags]
 	[Native]
 	enum TVTopShelfItemImageTraits : ulong {
@@ -303,59 +298,68 @@ namespace TVServices {
 		Scale2x = 2,
 	}
 
-	[TV (13,0)]
+	[TV (13, 0)]
 	[BaseType (typeof (NSObject))]
 	interface TVUserManager {
 
+		[Deprecated (PlatformName.TvOS, 16, 0, message: "Use runs-as-current-user-with-user-independent-keychain entitlement instead.")]
 		[NullAllowed, Export ("currentUserIdentifier")]
 		string CurrentUserIdentifier { get; }
 
+		[Deprecated (PlatformName.TvOS, 16, 0, message: "Use runs-as-current-user-with-user-independent-keychain entitlement instead.")]
 		[Export ("userIdentifiersForCurrentProfile", ArgumentSemantic.Copy)]
-		string[] UserIdentifiersForCurrentProfile { get; set; }
+		string [] UserIdentifiersForCurrentProfile { get; set; }
 
+		[Deprecated (PlatformName.TvOS, 16, 0, message: "Use runs-as-current-user-with-user-independent-keychain entitlement instead.")]
 		[Async]
 		[Export ("presentProfilePreferencePanelWithCurrentSettings:availableProfiles:completion:")]
-		void PresentProfilePreferencePanel (NSDictionary<NSString, TVAppProfileDescriptor> currentSettings, TVAppProfileDescriptor[] availableProfiles, Action<NSDictionary<NSString, TVAppProfileDescriptor>> completion);
+		void PresentProfilePreferencePanel (NSDictionary<NSString, TVAppProfileDescriptor> currentSettings, TVAppProfileDescriptor [] availableProfiles, Action<NSDictionary<NSString, TVAppProfileDescriptor>> completion);
 
+		[Deprecated (PlatformName.TvOS, 16, 0, message: "Use runs-as-current-user-with-user-independent-keychain entitlement instead.")]
 		[Async]
 		[Export ("shouldStorePreferenceForCurrentUserToProfile:completion:")]
 		void ShouldStorePreferenceForCurrentUser (TVAppProfileDescriptor profile, Action<bool> completion);
 
+		[Deprecated (PlatformName.TvOS, 16, 0, message: "Use runs-as-current-user-with-user-independent-keychain entitlement instead.")]
 		[Notification]
 		[Field ("TVUserManagerCurrentUserIdentifierDidChangeNotification")]
 		NSString CurrentUserIdentifierDidChangeNotification { get; }
+
+		[TV (16, 0)]
+		[Export ("shouldStorePreferencesForCurrentUser")]
+		bool ShouldStorePreferencesForCurrentUser { get; }
 	}
 
-	[TV (13,0)]
+	[TV (13, 0)]
 	[BaseType (typeof (TVTopShelfObject))]
 	[DisableDefaultCtor] // null is not allowed for items
 	interface TVTopShelfItemCollection {
 
 		[Export ("items", ArgumentSemantic.Copy)]
-		TVTopShelfItem[] Items { get; }
+		TVTopShelfItem [] Items { get; }
 
 		[Export ("initWithItems:")]
-		NativeHandle Constructor (TVTopShelfItem[] items);
+		NativeHandle Constructor (TVTopShelfItem [] items);
 	}
 
-	[TV (13,0)]
+	[TV (13, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface TVTopShelfSectionedContent : TVTopShelfContent {
 
 		[Export ("sections", ArgumentSemantic.Copy)]
-		TVTopShelfItemCollection[] Sections { get; }
+		TVTopShelfItemCollection [] Sections { get; }
 
-		[Export("initWithSections:")]
+		[Export ("initWithSections:")]
 		[DesignatedInitializer]
-		NativeHandle Constructor (TVTopShelfItemCollection[] sections);
+		NativeHandle Constructor (TVTopShelfItemCollection [] sections);
 
 		[Static]
-		[Export("imageSizeForImageShape:")]
+		[Export ("imageSizeForImageShape:")]
 		CGSize GetImageSize (TVTopShelfSectionedItemImageShape shape);
 	}
 
-	[TV (13,0)]
+	[TV (13, 0)]
 	[Native]
 	public enum TVTopShelfSectionedItemImageShape : long {
 		Square,
@@ -363,7 +367,7 @@ namespace TVServices {
 		Hdtv,
 	}
 
-	[TV (13,0)]
+	[TV (13, 0)]
 	[BaseType (typeof (TVTopShelfItem))]
 	[DisableDefaultCtor] // -[TVTopShelfSectionedItem init]: unrecognized selector sent to instance 0x600001f251a0
 	interface TVTopShelfSectionedItem {
@@ -380,7 +384,7 @@ namespace TVServices {
 		double PlaybackProgress { get; set; }
 	}
 
-	[TV (14,3)]
+	[TV (14, 3)]
 	[Static]
 	interface TVUserActivityType {
 

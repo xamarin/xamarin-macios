@@ -7,12 +7,10 @@ using ObjCRuntime;
 using Foundation;
 using CoreGraphics;
 
-namespace Xamarin.Mac.Tests
-{
+namespace Xamarin.Mac.Tests {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class NSLayoutManagerTests
-	{
+	public class NSLayoutManagerTests {
 		NSLayoutManager manager;
 
 		[SetUp]

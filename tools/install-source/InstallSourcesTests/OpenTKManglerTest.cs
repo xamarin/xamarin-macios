@@ -3,11 +3,9 @@ using NUnit.Framework;
 
 using InstallSources;
 
-namespace InstallSourcesTests
-{
+namespace InstallSourcesTests {
 	[TestFixture]
-	public class OpenTKManglerTest
-	{
+	public class OpenTKManglerTest {
 		OpenTKSourceMangler mangler;
 		string openTKPath;
 		string installDir;

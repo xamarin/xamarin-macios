@@ -4,9 +4,31 @@ parameters:
   type: string
   default: "VSEng-VSMac-Xamarin-Shared"
 
+- name: repositoryAlias
+  type: string
+  default: self
+
+- name: commit
+  type: string
+  default: HEAD
+
+- name: gitHubToken
+  type: string
+
+- name: xqaCertPass
+  type: string
+
+- name: uploadPrefix
+  type: string
+  default: '$(MaciosUploadPrefix)'
+
 steps:
-- checkout: self
-  path: s/xamarin-macios
+- template:  sdk-unified/steps/checkout/v1.yml@yaml-templates
+  parameters:
+    resource: ${{ parameters.repositoryAlias }}
+    commit: ${{ parameters.commit }}
+    clean: true
+    path: s/xamarin-macios
 
 - checkout: maccore
   persistCredentials: true  # hugely important, else there are some scripts that check a single file from maccore that will fail
@@ -16,15 +38,77 @@ steps:
     echo "##vso[task.setvariable variable=AGENT_NAME;isOutput=true]$(Agent.Name)"
     echo "##vso[task.setvariable variable=AGENT_POOL;isOutput=true]${{ parameters.macPool }}"
     echo "##vso[task.setvariable variable=AGENT_IP;isOutput=true]$macip"
+    echo "##vso[task.setvariable variable=AGENT_SYSTEM_DEFAULTWORKINGDIRECTORY;isOutput=true]$Env:SYSTEM_DEFAULTWORKINGDIRECTORY"
+    echo "##vso[task.setvariable variable=AGENT_BUILD_SOURCESDIRECTORY;isOutput=true]$Env:BUILD_SOURCESDIRECTORY"
   name: macInfo
   displayName: Set agent information
 
+- bash: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/scripts/clean-for-remote-tests.sh
+  displayName: 'Clean for remote tests'
+  continueOnError: true
+
+- bash: ./install-qa-provisioning-profiles.sh -v
+  displayName: 'Add build provisioning profiles'
+  timeoutInMinutes: 30
+  continueOnError: true # should not stop the build
+  workingDirectory: $(Build.SourcesDirectory)/maccore/tools
+  env:
+    AUTH_TOKEN_GITHUB_COM: ${{ parameters.gitHubToken }}
+    AUTH_TOKEN_LA_DEV_APPLE_P12: ${{ parameters.xqaCertPass }}
+    AUTH_TOKEN_LA_DISTR_APPLE_P12: ${{ parameters.xqaCertPass }}
+    AUTH_TOKEN_LA_MAC_INSTALLER_DISTR_P12: ${{ parameters.xqaCertPass }}
+    AUTH_TOKEN_VSENG_XAMARIN_MAC_DEVICES_P12: ${{ parameters.xqaCertPass }}
+    AUTH_TOKEN_VSENG_XAMARIN_MAC_DEVICES_2_P12: ${{ parameters.xqaCertPass }}
+
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
-    $vsts = New-VSTS -Org "devdiv" -Project "DevDiv" -Token $(DropsPAT)
+
+    New-Item -Path "$($Env:HOME)" -Name "remote_build_testing" -Force -ItemType "directory"
+    New-Item -Path "$($Env:HOME)/remote_build_testing" -Name "BuildId.txt" -ItemType "file" -Force -Value "$($Env:BUILD_BUILDID)"
+
+    $vsts = New-VSTS -Org "devdiv" -Project "DevDiv" -Token $(MacPoolAccessToken)
 
     # get the pool and the agent objects and disable the bot
     $pool = $vsts.Pools.GetPool("${{ parameters.macPool }}")
     $agent = $vsts.Agents.GetAgent($pool, "$(Agent.Name)")
     $vsts.Agents.SetEnabled($pool, $agent, $False)
   displayName: "Disable macOS bot from pool"
+
+- bash: make -C $(Build.SourcesDirectory)/xamarin-macios/tools/devops provision-xcode.csx
+  displayName: 'Generate Xcode provisioning csx file'
+
+- task: xamops.azdevex.provisionator-task.provisionator@2
+  displayName: 'Provision Xcode'
+  inputs:
+    provisioning_script: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/provision-xcode.csx
+    provisioning_extra_args: '-vvvv'
+    github_token: ${{ parameters.gitHubToken }}
+  timeoutInMinutes: 250
+
+- task: AzureKeyVault@2
+  inputs:
+    azureSubscription: 'Xamarin - R&D - XamarinSecurity'
+    KeyVaultName: 'xamarin-ios-vault'
+    SecretsFilter: 'RemoteMacIdRsaPub'
+  displayName: 'Download id_rsa.pub'
+
+- bash: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/scripts/authorize-id-rsa-pub.sh "$(RemoteMacIdRsaPub)"
+  displayName: "Autorize id_rsa.pub"
+  continueOnError: true
+
+- task: DownloadPipelineArtifact@2
+  displayName: Download artifacts
+  inputs:
+    allowFailedBuilds: true
+    path: $(Build.SourcesDirectory)/artifacts
+
+- bash: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/install-workloads.sh
+  workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios
+  displayName: 'Install .NET + workloads'
+  timeoutInMinutes: 45
+  env:
+    MACIOS_UPLOAD_PREFIX: ${{ parameters.uploadPrefix }}
+
+- bash: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/scripts/prepare-for-remote-tests.sh
+  displayName: 'Prepare for remote tests'
+  continueOnError: true

@@ -3,10 +3,8 @@ using System;
 using Foundation;
 using UIKit;
 
-namespace MyInterpretedApp
-{
-	public partial class AppDelegate : UIApplicationDelegate
-	{
+namespace MyInterpretedApp {
+	public partial class AppDelegate : UIApplicationDelegate {
 		UIWindow window;
 
 		public override bool FinishedLaunching (UIApplication app, NSDictionary options)

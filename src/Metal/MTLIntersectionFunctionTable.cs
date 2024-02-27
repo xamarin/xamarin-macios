@@ -22,18 +22,18 @@ namespace Metal {
 		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
-		[Mac (11,0)]
-		[iOS (14,0)]
+		[Mac (11, 0)]
+		[iOS (14, 0)]
 		[NoTV]
 #endif
-		public static void SetBuffers (this IMTLIntersectionFunctionTable table, IMTLBuffer[] buffers, nuint[] offsets, NSRange range)
+		public static void SetBuffers (this IMTLIntersectionFunctionTable table, IMTLBuffer [] buffers, nuint [] offsets, NSRange range)
 		{
 			if (buffers is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (buffers));
 			if (offsets is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (offsets));
 
-			var bufferPtrArray = buffers.Length <= 1024 ? stackalloc IntPtr[buffers.Length] : new IntPtr [buffers.Length];
+			var bufferPtrArray = buffers.Length <= 1024 ? stackalloc IntPtr [buffers.Length] : new IntPtr [buffers.Length];
 			// get all intptr from the array to pass to the lower level call
 			for (var i = 0; i < buffers.Length; i++) {
 				bufferPtrArray [i] = buffers [i].Handle;

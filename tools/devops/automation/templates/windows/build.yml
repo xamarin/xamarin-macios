@@ -7,15 +7,263 @@ parameters:
 - name: isPR
   type: boolean
 
+- name: repositoryAlias
+  type: string
+  default: self
+
+- name: commit
+  type: string
+  default: HEAD
+
+- name: uploadPrefix
+  type: string
+  default: '$(MaciosUploadPrefix)'
+
+- name: githubToken
+  type: string
+
+- name: xqaCertPass
+  type: string
+
+- name: retryCount
+  type: number
+  default: 3
+
 steps:
 
 - template: ../common/checkout.yml
   parameters:
     isPR: ${{ parameters.isPR }}
+    repositoryAlias: ${{ parameters.repositoryAlias }}
+    commit: ${{ parameters.commit }}
+
+- pwsh: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/show_env.ps1
+  displayName: 'Dump Environment'
+
+- task: DownloadPipelineArtifact@2
+  displayName: Download artifacts
+  inputs:
+    allowFailedBuilds: true
+    path: $(Build.SourcesDirectory)/artifacts
 
 - pwsh: |
-    gci env: | format-table -autosize -wrap
-  displayName: 'Dump Environment'
+    Get-ChildItem $(Build.SourcesDirectory)/artifacts -Recurse 
+  displayName: "Debug downloads"
+
+- pwsh: |
+    try {
+      Write-Host "Looking in '$(Build.SourcesDirectory)\artifacts"
+      Get-ChildItem "$(Build.SourcesDirectory)\artifacts" -Recurse
+    } catch {
+      Write-Host "Exception occured: $_"
+    }
+  displayName: 'List downloaded artifacts'
+  continueOnError: true
+
+- task: UseDotNet@2
+  inputs:
+    version: 7.0.102
+
+- pwsh: |
+    & dotnet --version
+    & dotnet --info
+    & dotnet workload list
+    # We don't care if anything went wrong here.
+    exit 0
+  displayName: 'Show .NET info'
+  continueOnError: true
+
+- task: AzureKeyVault@2
+  inputs:
+    azureSubscription: 'Xamarin - R&D - XamarinSecurity'
+    KeyVaultName: 'xamarin-ios-vault'
+    SecretsFilter: 'RemoteMacIdRsa'
+  displayName: 'Download id_rsa'
+
+- pwsh: |
+    $idRsaPath = "$(Get-Location)\id_rsa"
+    Write-Host "##vso[task.setvariable variable=ID_RSA_PATH]$idRsaPath"
+    Add-Content -Path "id_rsa"  -Value "$(RemoteMacIdRsa)"
+    # We need to make sure the private key is only accessible by the current user,
+    # otherwise ssh will complain and not use it.
+    icacls id_rsa /inheritance:r
+    $grant="$Env:USERNAME" + ":(R)"
+    icacls id_rsa /grant:r $grant
+  displayName: "Write and verify id_rsa"
+  continueOnError: true
+
+- pwsh: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/show_env.ps1
+  displayName: 'Show Environment'
+
+- pwsh: |
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\\xamarin-macios\\tools\\devops\\automation\\scripts\\MaciosCI.psd1
+    ssh -v -i "$(ID_RSA_PATH)" -o IdentitiesOnly=yes -o StrictHostKeyChecking=no builder@$Env:MAC_AGENT_IP pwd
+    Invoke-SshDownload `
+      -RemoteHost "$Env:MAC_AGENT_IP" `
+      -RemoteUserName "$Env:MAC_AGENT_USER" `
+      -Source "/Users/$Env:MAC_AGENT_USER/remote_build_testing/BuildId.txt" `
+      -Target "BuildId.txt"
+
+    $macBuildId = (Get-Content -Path BuildId.txt).Trim()
+    Remove-Item -Path BuildId.txt # clean up after ourselves
+    if ([string]::IsNullOrEmpty($macBuildId)) {
+      throw "The mac we're trying to connect to ($($Env:MAC_AGENT_IP)) is not reserved for us anymore. If you're reran this job, please rerun all jobs instead."
+    }
+    $windowsBuildId = $Env:BUILD_BUILDID
+    if ($macBuildId -ne $windowsBuildId) {
+      throw "The mac we're trying to connect to ($($Env:MAC_AGENT_IP)) is reserved for a different build (with build id $($macBuildId)). If you're reran this job, please rerun all jobs instead."
+    }
+  displayName: "Verify ssh connection"
+
+# This task fixes errors such as these:
+#     error MSB4242: SDK Resolver Failure: "The SDK resolver "NuGetSdkResolver" failed while attempting to resolve the SDK "Microsoft.Build.NoTargets/3.3.0".
+#                    Exception: "NuGet.Packaging.Core.PackagingException: Unable to find fallback package folder 'D:\Program Files (x86)\Microsoft Visual Studio\Shared\NuGetPackages'.
+- pwsh: |
+    try {
+      New-Item -Path "D:\Program Files (x86)\Microsoft SDKs\" -Name "NuGetPackages" -ItemType "directory"
+    } catch {
+      Write-Host "Exception occured: $_"
+    }
+    try {
+      New-Item -Path "D:\Program Files (x86)\Microsoft SDKs\" -Name "Shared" -ItemType "directory"
+    } catch {
+      Write-Host "Exception occured: $_"
+    }
+    try {
+      New-Item -Path "D:\Program Files (x86)\Microsoft SDKs\Shared\" -Name "NuGetPackages" -ItemType "directory"
+    } catch {
+      Write-Host "Exception occured: $_"
+    }
+    try {
+      New-Item -Path "D:\Program Files (x86)\Microsoft Visual Studio\Shared\NuGetPackages" -Name "NuGetPackages" -ItemType "directory"
+    } catch {
+      Write-Host "Exception occured: $_"
+    }
+  displayName: 'Create directories for NuGet'
+  continueOnError: true
+
+- pwsh: |
+    & dotnet build "$(Build.SourcesDirectory)/xamarin-macios/tests/dotnet/Windows/InstallDotNet.csproj" `
+    --verbosity quiet `
+    "-bl:$(Build.SourcesDirectory)/xamarin-macios/tests/dotnet/Windows/install.binlog" `
+    -p:DisableImplicitNuGetFallbackFolder=true
+  displayName: 'Install custom .NET'
+
+- pwsh: |
+    $Env:DOTNET = "$(Build.SourcesDirectory)\xamarin-macios\tests\dotnet\Windows\bin\dotnet\dotnet.exe"
+    & dotnet build "$(Build.SourcesDirectory)/xamarin-macios/tests/dotnet/Windows/InstallDotNet.csproj" `
+      --verbosity quiet `
+      "-bl:$(Build.SourcesDirectory)/xamarin-macios/tests/dotnet/Windows/install-workloads.binlog" `
+      -p:DisableImplicitNuGetFallbackFolder=true `
+      -t:Install
+  displayName: 'Install workloads'
+
+- pwsh: |
+    $path = "$(Build.SourcesDirectory)/artifacts/${{ parameters.uploadPrefix }}Build.props/Build.props"
+    Write-Host "Move $path to xamarin-macios"
+    mv $path ./xamarin-macios
+  displayName: Relocate Build.props
+  workingDirectory: $(Build.SourcesDirectory)
+
+# this step replaces the test-libraries dir
+- pwsh: |
+    $zip = "$(Build.SourcesDirectory)/artifacts/${{ parameters.uploadPrefix }}package-test-libraries/package-test-libraries.zip"
+    $target = "$(Build.SourcesDirectory)/xamarin-macios"
+    Expand-Archive -Force $zip -DestinationPath $target
+    Get-ChildItem "$target" -Recurse
+  workingDirectory: $(Build.SourcesDirectory)/xamarin-macios
+  displayName: Expand test libraries.
+  timeoutInMinutes: 10
+
+- pwsh: |
+    & $(Build.SourcesDirectory)\xamarin-macios\tests\dotnet\Windows\bin\dotnet\dotnet.exe `
+        nuget push `
+        "$(Build.SourcesDirectory)\xamarin-macios\tests\test-libraries\nugets\FrameworksInRuntimesNativeDirectory\bin\Release\Xamarin.Tests.FrameworksInRuntimesNativeDirectory.1.0.0.nupkg" `
+        --source "$(Build.SourcesDirectory)\xamarin-macios\tests\.nuget\packages"
+  displayName: 'Build dependencies for .NET tests'
+  continueOnError: true
+
+- pwsh: |
+    $runsettings = @"
+    <?xml version="1.0" encoding="utf-8"?>
+    <RunSettings>
+      <RunConfiguration>
+        <DotNetHostPath>$(Build.SourcesDirectory)\xamarin-macios\tests\dotnet\Windows\bin\dotnet\dotnet.exe</DotNetHostPath>
+      </RunConfiguration>
+    </RunSettings>
+    "@
+    Set-Content -Path $(Build.SourcesDirectory)/xamarin-macios/tests/dotnet/Windows/config.runsettings -Value $runsettings
+    Get-Content -Path $(Build.SourcesDirectory)/xamarin-macios/tests/dotnet/Windows/config.runsettings | Write-Host
+  displayName: 'Create runsettings for .NET tests'
+
+- pwsh: |
+    $Env:PATH = "$(Build.SourcesDirectory)\xamarin-macios\tests\dotnet\Windows\bin\dotnet;$env:PATH"
+    $Env:DOTNET = "$(Build.SourcesDirectory)\xamarin-macios\tests\dotnet\Windows\bin\dotnet\dotnet.exe"
+    & $(Build.SourcesDirectory)\xamarin-macios\tests\dotnet\Windows\bin\dotnet\dotnet.exe `
+        test `
+        "$(Build.SourcesDirectory)/xamarin-macios/tests/dotnet/UnitTests/DotNetUnitTests.csproj" `
+        --filter Category=Windows `
+        --verbosity quiet `
+        --settings $(Build.SourcesDirectory)/xamarin-macios/tests/dotnet/Windows/config.runsettings `
+        "--results-directory:$(Build.SourcesDirectory)/xamarin-macios/jenkins-results/" `
+        "--logger:console;verbosity=detailed" `
+        "--logger:trx;LogFileName=$(Build.SourcesDirectory)/xamarin-macios/jenkins-results/windows-dotnet-tests.trx" `
+        "--logger:html;LogFileName=$(Build.SourcesDirectory)/xamarin-macios/jenkins-results/windows-dotnet-tests.html" `
+        "-bl:$(Build.SourcesDirectory)/xamarin-macios/tests/dotnet/Windows/run-dotnet-tests.binlog"
+  displayName: 'Run .NET tests'
+  timeoutInMinutes: 30
+  ${{ if not(parameters.isPR) }}:
+    retryCountOnTaskFailure: ${{ parameters.retryCount }}
+
+- pwsh: $(Build.SourcesDirectory)\xamarin-macios\tools\devops\automation\scripts\run-remote-windows-tests.ps1
+  displayName: 'Run .NET tests remotely'
+  timeoutInMinutes: 120
+  ${{ if not(parameters.isPR) }}:
+    retryCountOnTaskFailure: ${{ parameters.retryCount }}
+  env:
+    XMA_PASSWORD: $(XMA.Password)
+
+- pwsh: $(Build.SourcesDirectory)\xamarin-macios\tools\devops\automation\scripts\fetch-remote-binlogs.ps1
+  displayName: 'Fetch remote binlogs'
+  timeoutInMinutes: 5
+  condition: always()
+  continueOnError: true
+  env:
+    XMA_PASSWORD: $(XMA.Password)
+
+- pwsh: |
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\\xamarin-macios\\tools\\devops\\automation\\scripts\\MaciosCI.psd1
+    $configFile = "$(Build.SourcesDirectory)\\artifacts\\${{ parameters.uploadPrefix }}build-configuration\\configuration.json"
+    $config = Import-BuildConfiguration -ConfigFile $configFile
+    $config | Write-Host
+  name: configuration
+  continueOnError: true
+  displayName: 'Parse build configuration'
+  timeoutInMinutes: 1
+
+- pwsh: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/run-generator-tests-on-windows.ps1
+  displayName: 'Run generator tests'
+
+# Archive files for the Html Report so that the report can be easily uploaded as artifacts of the build.
+- task: ArchiveFiles@1
+  displayName: 'Archive HtmlReport'
+  inputs:
+    rootFolder: '$(Build.SourcesDirectory)/xamarin-macios/jenkins-results'
+    includeRootFolder: false
+    archiveFile: '$(Build.ArtifactStagingDirectory)/HtmlReport.zip'
+  continueOnError: true
+  condition: succeededOrFailed()
+
+# Create HtmlReport artifact. This serves two purposes:
+# 1. It is the way we are going to share the HtmlReport with the publish_html job that is executed on a Windows machine.
+# 2. Users can download this if they want.
+- task: PublishPipelineArtifact@1
+  displayName: 'Publish Artifact: HtmlReport'
+  inputs:
+    targetPath: '$(Build.ArtifactStagingDirectory)/HtmlReport.zip'
+    artifactName: '${{ parameters.uploadPrefix }}HtmlReport-windows-integration-$(System.JobAttempt)'
+  continueOnError: true
+  condition: succeededOrFailed()
 
 - pwsh: |
     Write-Host "Run windows tests."
@@ -23,15 +271,66 @@ steps:
     Write-Host "Mac agent pool: $Env:MAC_AGENT_POOL"
     Write-Host "Mac agent name: $Env:MAC_AGENT_NAME"
     Write-Host "Mac agent IP: $Env:MAC_AGENT_IP"
+    Write-Host "Mac agent SYSTEM_DEFAULTWORKINGDIRECTORY: $Env:MAC_AGENT_SYSTEM_DEFAULTWORKINGDIRECTORY"
+    Write-Host "Mac agent BUILD_SOURCESDIRECTORY: $Env:MAC_AGENT_BUILD_SOURCESDIRECTORY"
   displayName: Run tests
 
+# Upload all the binlogs
+# Copy all the binlogs to a separate directory, keeping directory structure.
+- pwsh: |
+    $sourceDir = '$(Build.SourcesDirectory)\xamarin-macios'
+    $targetDir = '$(Build.ArtifactStagingDirectory)\windows-binlogs'
+    New-Item -Path "$targetDir" -ItemType "directory" -Force
+
+    $binlogs = Get-ChildItem $sourceDir -Recurse -Include "*.binlog"
+    foreach ($binlog in $binlogs) {
+        $targetFile = $targetDir + $binlog.FullName.SubString($sourceDir.Length);
+        New-Item -ItemType File -Path $targetFile -Force
+        Copy-Item $binlog.FullName -destination $targetFile
+    }
+  displayName: Copy all binlogs
+  continueOnError: true
+  condition: succeededOrFailed()
+
+# Publish all the binlogs we collected in the previous step
+- task: PublishPipelineArtifact@1
+  displayName: 'Publish Artifact: Windows binlogs'
+  inputs:
+    targetPath: $(Build.ArtifactStagingDirectory)/windows-binlogs
+    artifactName: windows-binlogs-test-$(Build.BuildId)-$(System.StageAttempt)-$(System.StageAttempt)-$(System.JobAttempt)
+  continueOnError: true
+  condition: succeededOrFailed()
+
+# Make sure to report any errors
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
-    $vsts = New-VSTS -Org "devdiv" -Project "DevDiv" -Token $(DropsPAT)
+    $githubComments = New-GitHubCommentsObjectFromUrl -Url "$(Build.Repository.Uri)" -Token $(GitHub.Token) -Hash $Env:COMMENT_HASH
 
-    # get the pool and the agent objects and disable the bot
-    $pool = $vsts.Pools.GetPool("$Env:MAC_AGENT_POOL")
-    $agent = $vsts.Agents.GetAgent($pool, $Env:MAC_AGENT_NAME)
-    $vsts.Agents.SetEnabled($pool, $agent, $True)
-  displayName: 'Re-enabled macOS bot from pool'
+    if (Test-Path -Path "$Env:GITHUB_FAILURE_COMMENT_FILE" -PathType Leaf)  {
+      $githubComments.NewCommentFromFile("${{ parameters.statusContext }} failed", ":x:", "$Env:GITHUB_FAILURE_COMMENT_FILE")
+    } elseif ("$($Env:AGENT_JOBSTATUS)" -ne "Succeeded") {
+      $message = ":x: $($Env:AGENT_JOBSTATUS) :x:"
+      $githubComments.NewCommentFromMessage("${{ parameters.statusContext }} failed", ":x:", $message)
+    } else {
+      $message = ":white_check_mark: **All** ${{ parameters.statusContext }} passed."
+      $githubComments.NewCommentFromMessage("${{ parameters.statusContext }} passed", ":computer:", $message)
+    }
+  displayName: 'Report results to GitHub'
+  timeoutInMinutes: 5
+  condition: always() # in particular we care if something failed, but let's always run just in case
+  continueOnError: true
+  env:
+    CONTEXT: ${{ parameters.statusContext }}
+    GITHUB_TOKEN: $(GitHub.Token)
+    SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+    TEST_BOT: $(Agent.Name)
+    ${{ if eq(parameters.repositoryAlias, 'self') }}:
+      COMMENT_HASH: $(fix_commit.GIT_HASH)
+    ${{ else }}:
+      COMMENT_HASH: $(Build.SourceVersion)
+
+- pwsh: |
+    Remove-Item "$(ID_RSA_PATH)"
+  displayName: "Remove secrets"
   condition: always()
+  continueOnError: true

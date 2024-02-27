@@ -17,9 +17,8 @@ using ObjCRuntime;
 
 namespace CoreMedia {
 
-	public partial class CMMemoryPool : NativeObject
-	{
-		[DllImport(Constants.CoreMediaLibrary)]
+	public partial class CMMemoryPool : NativeObject {
+		[DllImport (Constants.CoreMediaLibrary)]
 		extern static /* CMMemoryPoolRef */ IntPtr CMMemoryPoolCreate (/* CFDictionaryRef */ IntPtr options);
 
 		public CMMemoryPool ()
@@ -42,7 +41,7 @@ namespace CoreMedia {
 		}
 #endif
 
-		[DllImport(Constants.CoreMediaLibrary)]
+		[DllImport (Constants.CoreMediaLibrary)]
 		extern static /* CFAllocatorRef */ IntPtr CMMemoryPoolGetAllocator (/* CMMemoryPoolRef */ IntPtr pool);
 
 		public CFAllocator GetAllocator ()
@@ -50,7 +49,7 @@ namespace CoreMedia {
 			return new CFAllocator (CMMemoryPoolGetAllocator (Handle), false);
 		}
 
-		[DllImport(Constants.CoreMediaLibrary)]
+		[DllImport (Constants.CoreMediaLibrary)]
 		extern static void CMMemoryPoolFlush (/* CMMemoryPoolRef */ IntPtr pool);
 
 		public void Flush ()
@@ -58,7 +57,7 @@ namespace CoreMedia {
 			CMMemoryPoolFlush (Handle);
 		}
 
-		[DllImport(Constants.CoreMediaLibrary)]
+		[DllImport (Constants.CoreMediaLibrary)]
 		extern static void CMMemoryPoolInvalidate (/* CMMemoryPoolRef */ IntPtr pool);
 
 		public void Invalidate ()

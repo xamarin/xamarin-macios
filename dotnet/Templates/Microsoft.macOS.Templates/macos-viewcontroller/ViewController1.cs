@@ -2,8 +2,7 @@ using ObjCRuntime;
 
 namespace macOSApp1;
 
-public partial class ViewController1 : NSViewController
-{
+public partial class ViewController1 : NSViewController {
 	public ViewController1 () : base (nameof (ViewController1), null)
 	{
 	}

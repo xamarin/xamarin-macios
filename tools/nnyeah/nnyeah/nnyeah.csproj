@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net$(BundledNETCoreAppTargetFrameworkVersion)</TargetFramework>
     <RootNamespace>Microsoft.MaciOS.Nnyeah</RootNamespace>
     <Nullable>enable</Nullable>
     <IsPackable>true</IsPackable>
@@ -20,17 +20,17 @@
     <None Remove="Mono.Options" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Mono.Cecil" Version="0.11.4" />
+    <PackageReference Include="Mono.Cecil" Version="$(MonoCecilPackageVersion)" />
     <PackageReference Include="Mono.Options" Version="6.12.0.148" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Update="Errors.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Errors.Designer.cs</LastGenOutput>
+      <LastGenOutput>Errors.designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Compile Update="Errors.Designer.cs">
+    <Compile Update="Errors.designer.cs">
       <DependentUpon>Errors.resx</DependentUpon>
     </Compile>
   </ItemGroup>

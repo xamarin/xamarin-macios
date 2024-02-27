@@ -6,7 +6,7 @@ using System;
 
 namespace QTKit {
 
-	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10,15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
+	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10, 15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
 	public class QTCaptureConnection : Foundation.NSObject {
 		public Foundation.NSObject GetAttribute (System.String attributeKey)
 		{
@@ -47,73 +47,73 @@ namespace QTKit {
 		}
 
 		public QTKit.QTMediaType MediaTypeValue {
-			get { return default(QTKit.QTMediaType); }
+			get { return default (QTKit.QTMediaType); }
 		}
 
 		public override System.IntPtr ClassHandle {
-			get { return default(System.IntPtr); }
+			get { return default (System.IntPtr); }
 		}
 
 		public virtual Foundation.NSDictionary ConnectionAttributes {
-			get { return default(Foundation.NSDictionary); }
+			get { return default (Foundation.NSDictionary); }
 			set { }
 		}
 
 		public virtual System.Boolean Enabled {
-			get { return default(System.Boolean); }
+			get { return default (System.Boolean); }
 			set { }
 		}
 
 		public virtual QTKit.QTFormatDescription FormatDescription {
-			get { return default(QTKit.QTFormatDescription); }
+			get { return default (QTKit.QTFormatDescription); }
 		}
 
 		public virtual System.String MediaType {
-			get { return default(System.String); }
+			get { return default (System.String); }
 		}
 
 		public virtual Foundation.NSObject Owner {
-			get { return default(Foundation.NSObject); }
+			get { return default (Foundation.NSObject); }
 		}
 
 		public static Foundation.NSString AttributeDidChangeNotification {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString AttributeWillChangeNotification {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString AudioAveragePowerLevelsAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString AudioMasterVolumeAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString AudioPeakHoldLevelsAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString AudioVolumesAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString ChangedAttributeKey {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString EnabledAudioChannelsAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString FormatDescriptionDidChangeNotification {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString FormatDescriptionWillChangeNotification {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static class Notifications : System.Object {
@@ -161,11 +161,11 @@ namespace QTKit {
 
 	}
 
-	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10,15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
+	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10, 15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
 	public class QTCaptureDevice : Foundation.NSObject, Foundation.INSCoding, ObjCRuntime.INativeObject, System.IDisposable {
-		public static QTKit.QTCaptureDevice[] GetInputDevices (QTKit.QTMediaType mediaType)
+		public static QTKit.QTCaptureDevice [] GetInputDevices (QTKit.QTMediaType mediaType)
 		{
-			return default (QTKit.QTCaptureDevice[]);
+			return default (QTKit.QTCaptureDevice []);
 		}
 
 		public static QTKit.QTCaptureDevice GetDefaultInputDevice (QTKit.QTMediaType mediaType)
@@ -232,125 +232,125 @@ namespace QTKit {
 		}
 
 		public System.Boolean IsAvcTransportControlReadOnly {
-			get { return default(System.Boolean); }
+			get { return default (System.Boolean); }
 		}
 
 		public QTKit.QTCaptureDeviceTransportControl AvcTransportControl {
-			get { return default(QTKit.QTCaptureDeviceTransportControl); }
+			get { return default (QTKit.QTCaptureDeviceTransportControl); }
 			set { }
 		}
 
 		public System.Boolean IsSuspended {
-			get { return default(System.Boolean); }
+			get { return default (System.Boolean); }
 		}
 
 		public override System.IntPtr ClassHandle {
-			get { return default(System.IntPtr); }
+			get { return default (System.IntPtr); }
 		}
 
 		public virtual Foundation.NSDictionary DeviceAttributes {
-			get { return default(Foundation.NSDictionary); }
+			get { return default (Foundation.NSDictionary); }
 			set { }
 		}
 
-		public virtual QTKit.QTFormatDescription[] FormatDescriptions {
-			get { return default(QTKit.QTFormatDescription[]); }
+		public virtual QTKit.QTFormatDescription [] FormatDescriptions {
+			get { return default (QTKit.QTFormatDescription []); }
 		}
 
-		public static QTKit.QTCaptureDevice[] InputDevices {
-			get { return default(QTKit.QTCaptureDevice[]); }
+		public static QTKit.QTCaptureDevice [] InputDevices {
+			get { return default (QTKit.QTCaptureDevice []); }
 		}
 
 		public virtual System.Boolean IsConnected {
-			get { return default(System.Boolean); }
+			get { return default (System.Boolean); }
 		}
 
 		public virtual System.Boolean IsInUseByAnotherApplication {
-			get { return default(System.Boolean); }
+			get { return default (System.Boolean); }
 		}
 
 		public virtual System.Boolean IsOpen {
-			get { return default(System.Boolean); }
+			get { return default (System.Boolean); }
 		}
 
 		public virtual System.String LocalizedDisplayName {
-			get { return default(System.String); }
+			get { return default (System.String); }
 		}
 
 		public virtual System.String ModelUniqueID {
-			get { return default(System.String); }
+			get { return default (System.String); }
 		}
 
 		public virtual System.String UniqueID {
-			get { return default(System.String); }
+			get { return default (System.String); }
 		}
 
 		public static Foundation.NSString AVCTransportControlsAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString AVCTransportControlsPlaybackModeKey {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString AVCTransportControlsSpeedKey {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString AttributeDidChangeNotification {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString AttributeWillChangeNotification {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString AvailableInputSourcesAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString ChangedAttributeKey {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString FormatDescriptionsDidChangeNotification {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString FormatDescriptionsWillChangeNotification {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString InputSourceIdentifierAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString InputSourceIdentifierKey {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString InputSourceLocalizedDisplayNameKey {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString LegacySequenceGrabberAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString LinkedDevicesAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString SuspendedAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString WasConnectedNotification {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString WasDisconnectedNotification {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static class Notifications : System.Object {
@@ -418,7 +418,7 @@ namespace QTKit {
 
 	}
 
-	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10,15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
+	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10, 15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
 	public class QTCaptureDeviceTransportControl : System.Object {
 		public QTCaptureDeviceTransportControl ()
 		{
@@ -426,22 +426,22 @@ namespace QTKit {
 		}
 
 		public QTKit.QTCaptureDeviceControlsSpeed? Speed {
-			get { return default(System.Nullable<QTKit.QTCaptureDeviceControlsSpeed>); }
+			get { return default (System.Nullable<QTKit.QTCaptureDeviceControlsSpeed>); }
 			set { }
 		}
 
 		public QTKit.QTCaptureDevicePlaybackMode? PlaybackMode {
-			get { return default(System.Nullable<QTKit.QTCaptureDevicePlaybackMode>); }
+			get { return default (System.Nullable<QTKit.QTCaptureDevicePlaybackMode>); }
 			set { }
 		}
 
 	}
 
-	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10,15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
+	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10, 15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
 	public class QTCompressionOptions : Foundation.NSObject {
-		public System.String[] GetCompressionOptionsIdentifiers (QTKit.QTMediaType forMediaType)
+		public System.String [] GetCompressionOptionsIdentifiers (QTKit.QTMediaType forMediaType)
 		{
-			return default (System.String[]);
+			return default (System.String []);
 		}
 
 		public QTCompressionOptions ()
@@ -464,9 +464,9 @@ namespace QTKit {
 			return default (Foundation.NSObject);
 		}
 
-		public static System.String[] GetCompressionOptionsIdentifiers (System.String forMediaType)
+		public static System.String [] GetCompressionOptionsIdentifiers (System.String forMediaType)
 		{
-			return default (System.String[]);
+			return default (System.String []);
 		}
 
 		public virtual System.Boolean IsEqualToCompressionOptions (QTKit.QTCompressionOptions compressionOptions)
@@ -475,28 +475,28 @@ namespace QTKit {
 		}
 
 		public QTKit.QTMediaType MediaTypeValue {
-			get { return default(QTKit.QTMediaType); }
+			get { return default (QTKit.QTMediaType); }
 		}
 
 		public override System.IntPtr ClassHandle {
-			get { return default(System.IntPtr); }
+			get { return default (System.IntPtr); }
 		}
 
 		public virtual System.String LocalizedCompressionOptionsSummary {
-			get { return default(System.String); }
+			get { return default (System.String); }
 		}
 
 		public virtual System.String LocalizedDisplayName {
-			get { return default(System.String); }
+			get { return default (System.String); }
 		}
 
 		public virtual System.String MediaType {
-			get { return default(System.String); }
+			get { return default (System.String); }
 		}
 
 	}
 
-	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10,15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
+	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10, 15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
 	public class QTFormatDescription : Foundation.NSObject {
 		public QTFormatDescription ()
 		{
@@ -524,36 +524,36 @@ namespace QTKit {
 		}
 
 		public QTKit.QTMediaType MediaTypeValue {
-			get { return default(QTKit.QTMediaType); }
+			get { return default (QTKit.QTMediaType); }
 		}
 
 		public override System.IntPtr ClassHandle {
-			get { return default(System.IntPtr); }
+			get { return default (System.IntPtr); }
 		}
 
 		public virtual Foundation.NSDictionary FormatDescriptionAttributes {
-			get { return default(Foundation.NSDictionary); }
+			get { return default (Foundation.NSDictionary); }
 		}
 
 		public virtual System.UInt32 FormatType {
-			get { return default(System.UInt32); }
+			get { return default (System.UInt32); }
 		}
 
 		public virtual System.String LocalizedFormatSummary {
-			get { return default(System.String); }
+			get { return default (System.String); }
 		}
 
 		public virtual System.String MediaType {
-			get { return default(System.String); }
+			get { return default (System.String); }
 		}
 
 		public virtual Foundation.NSData QuickTimeSampleDescription {
-			get { return default(Foundation.NSData); }
+			get { return default (Foundation.NSData); }
 		}
 
 	}
 
-	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10,15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
+	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10, 15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
 	public class QTMedia : Foundation.NSObject {
 		public QTMedia ()
 		{
@@ -603,93 +603,93 @@ namespace QTKit {
 		}
 
 		public override System.IntPtr ClassHandle {
-			get { return default(System.IntPtr); }
+			get { return default (System.IntPtr); }
 		}
 
 		public virtual Foundation.NSDictionary MediaAttributes {
-			get { return default(Foundation.NSDictionary); }
+			get { return default (Foundation.NSDictionary); }
 			set { }
 		}
 
 		public virtual System.IntPtr QuickTimeMedia {
-			get { return default(System.IntPtr); }
+			get { return default (System.IntPtr); }
 		}
 
 		public virtual QTKit.QTTrack Track {
-			get { return default(QTKit.QTTrack); }
+			get { return default (QTKit.QTTrack); }
 		}
 
 		public static Foundation.NSString CharacteristicAudio {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString CharacteristicCanSendVideo {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString CharacteristicCanStep {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString CharacteristicHasNoDuration {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString CharacteristicHasSkinData {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString CharacteristicHasVideoFrameRate {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString CharacteristicNonLinear {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString CharacteristicProvidesActions {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString CharacteristicProvidesKeyFocus {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString CharacteristicVisual {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString CreationTimeAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString DurationAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString ModificationTimeAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString QualityAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString SampleCountAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString TimeScaleAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString TypeAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 	}
 
-	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10,15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
+	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10, 15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
 	public enum QTCodecQuality : System.Int32 {
 		Lossless = 1024,
 		Max = 1023,
@@ -699,7 +699,7 @@ namespace QTKit {
 		High = 768,
 	}
 
-	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10,15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
+	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10, 15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
 	public class QTImageAttributes : System.Object {
 		public QTImageAttributes ()
 		{
@@ -712,23 +712,23 @@ namespace QTKit {
 		}
 
 		public System.String CodecType {
-			get { return default(System.String); }
+			get { return default (System.String); }
 			set { }
 		}
 
 		public QTKit.QTCodecQuality? Quality {
-			get { return default(System.Nullable<QTKit.QTCodecQuality>); }
+			get { return default (System.Nullable<QTKit.QTCodecQuality>); }
 			set { }
 		}
 
 		public System.Int32? TimeScale {
-			get { return default(System.Nullable<System.Int32>); }
+			get { return default (System.Nullable<System.Int32>); }
 			set { }
 		}
 
 	}
 
-	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10,15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
+	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10, 15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
 	public class QTMovieSaveOptions : System.Object {
 		public QTMovieSaveOptions ()
 		{
@@ -741,28 +741,28 @@ namespace QTKit {
 		}
 
 		public System.Boolean Flatten {
-			get { return default(System.Boolean); }
+			get { return default (System.Boolean); }
 			set { }
 		}
 
 		public QTKit.QTFileType? ExportType {
-			get { return default(System.Nullable<QTKit.QTFileType>); }
+			get { return default (System.Nullable<QTKit.QTFileType>); }
 			set { }
 		}
 
 		public Foundation.NSData ExportSettings {
-			get { return default(Foundation.NSData); }
+			get { return default (Foundation.NSData); }
 			set { }
 		}
 
 		public System.Int32? ManufacturerCode {
-			get { return default(System.Nullable<System.Int32>); }
+			get { return default (System.Nullable<System.Int32>); }
 			set { }
 		}
 
 	}
 
-	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10,15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
+	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10, 15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
 	public class QTTrack : Foundation.NSObject {
 		public void AddImage (AppKit.NSImage image, QTKit.QTTime forDuration, QTKit.QTImageAttributes attributes)
 		{
@@ -845,111 +845,111 @@ namespace QTKit {
 		}
 
 		public override System.IntPtr ClassHandle {
-			get { return default(System.IntPtr); }
+			get { return default (System.IntPtr); }
 		}
 
 		public virtual System.Boolean Enabled {
-			get { return default(System.Boolean); }
+			get { return default (System.Boolean); }
 			set { }
 		}
 
 		public virtual QTKit.QTMedia Media {
-			get { return default(QTKit.QTMedia); }
+			get { return default (QTKit.QTMedia); }
 		}
 
 		public virtual QTKit.QTMovie Movie {
-			get { return default(QTKit.QTMovie); }
+			get { return default (QTKit.QTMovie); }
 		}
 
 		public virtual System.IntPtr QuickTimeTrack {
-			get { return default(System.IntPtr); }
+			get { return default (System.IntPtr); }
 		}
 
 		public virtual Foundation.NSDictionary TrackAttributes {
-			get { return default(Foundation.NSDictionary); }
+			get { return default (Foundation.NSDictionary); }
 			set { }
 		}
 
 		public virtual System.Single Volume {
-			get { return default(System.Single); }
+			get { return default (System.Single); }
 			set { }
 		}
 
 		public static Foundation.NSString BoundsAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString CreationTimeAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString DimensionsAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString DisplayNameAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString EnabledAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString FormatSummaryAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString HasApertureModeDimensionsAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString IDAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString IsChapterTrackAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString LayerAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString MediaTypeAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString ModificationTimeAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString RangeAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString TimeScaleAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString UsageInMovieAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString UsageInPosterAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString UsageInPreviewAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString VolumeAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 	}
 
-	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10,15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
+	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10, 15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
 	public class QTMovie : Foundation.NSObject, Foundation.INSCoding, ObjCRuntime.INativeObject, System.IDisposable, Foundation.INSCopying {
 		public System.Boolean SaveTo (System.String fileName, QTKit.QTMovieSaveOptions options, out Foundation.NSError error)
 		{
@@ -966,9 +966,9 @@ namespace QTKit {
 		{
 		}
 
-		public QTKit.QTTrack[] TracksOfMediaType (QTKit.QTMediaType mediaType)
+		public QTKit.QTTrack [] TracksOfMediaType (QTKit.QTMediaType mediaType)
 		{
-			return default (QTKit.QTTrack[]);
+			return default (QTKit.QTTrack []);
 		}
 
 		public QTMovie ()
@@ -1073,9 +1073,9 @@ namespace QTKit {
 			return default (nint);
 		}
 
-		public virtual Foundation.NSDictionary[] Chapters ()
+		public virtual Foundation.NSDictionary [] Chapters ()
 		{
-			return default (Foundation.NSDictionary[]);
+			return default (Foundation.NSDictionary []);
 		}
 
 		public virtual Foundation.NSObject Copy (Foundation.NSZone zone)
@@ -1210,9 +1210,9 @@ namespace QTKit {
 		{
 		}
 
-		public static System.String[] MovieFileTypes (QTKit.QTMovieFileTypeOptions types)
+		public static System.String [] MovieFileTypes (QTKit.QTMovieFileTypeOptions types)
 		{
-			return default (System.String[]);
+			return default (System.String []);
 		}
 
 		public virtual Foundation.NSData MovieFormatRepresentation ()
@@ -1220,19 +1220,19 @@ namespace QTKit {
 			return default (Foundation.NSData);
 		}
 
-		public static System.String[] MovieTypesWithOptions (QTKit.QTMovieFileTypeOptions types)
+		public static System.String [] MovieTypesWithOptions (QTKit.QTMovieFileTypeOptions types)
 		{
-			return default (System.String[]);
+			return default (System.String []);
 		}
 
-		public static System.String[] MovieUnfilteredFileTypes ()
+		public static System.String [] MovieUnfilteredFileTypes ()
 		{
-			return default (System.String[]);
+			return default (System.String []);
 		}
 
-		public static System.String[] MovieUnfilteredPasteboardTypes ()
+		public static System.String [] MovieUnfilteredPasteboardTypes ()
 		{
-			return default (System.String[]);
+			return default (System.String []);
 		}
 
 		public QTKit.QTMovie MovieWithTimeRange (QTKit.QTTimeRange range, out Foundation.NSError error)
@@ -1317,9 +1317,9 @@ namespace QTKit {
 		{
 		}
 
-		public virtual QTKit.QTTrack[] TracksOfMediaType (System.String type)
+		public virtual QTKit.QTTrack [] TracksOfMediaType (System.String type)
 		{
-			return default (QTKit.QTTrack[]);
+			return default (QTKit.QTTrack []);
 		}
 
 		public virtual System.Boolean UpdateMovieFile ()
@@ -1332,457 +1332,457 @@ namespace QTKit {
 		}
 
 		public override System.IntPtr ClassHandle {
-			get { return default(System.IntPtr); }
+			get { return default (System.IntPtr); }
 		}
 
 		public virtual System.Boolean CanUpdateMovieFile {
-			get { return default(System.Boolean); }
+			get { return default (System.Boolean); }
 		}
 
 		public virtual nint ChapterCount {
-			get { return default(nint); }
+			get { return default (nint); }
 		}
 
 		public virtual AppKit.NSImage CurrentFrameImage {
-			get { return default(AppKit.NSImage); }
+			get { return default (AppKit.NSImage); }
 		}
 
 		public virtual QTKit.QTTime CurrentTime {
-			get { return default(QTKit.QTTime); }
+			get { return default (QTKit.QTTime); }
 			set { }
 		}
 
 		public virtual QTKit.QTTime Duration {
-			get { return default(QTKit.QTTime); }
+			get { return default (QTKit.QTTime); }
 		}
 
 		public virtual System.Boolean HasChapters {
-			get { return default(System.Boolean); }
+			get { return default (System.Boolean); }
 		}
 
 		public virtual System.Boolean Idling {
-			get { return default(System.Boolean); }
+			get { return default (System.Boolean); }
 		}
 
 		public static QTKit.QTMovie Movie {
-			get { return default(QTKit.QTMovie); }
+			get { return default (QTKit.QTMovie); }
 		}
 
 		public virtual Foundation.NSDictionary MovieAttributes {
-			get { return default(Foundation.NSDictionary); }
+			get { return default (Foundation.NSDictionary); }
 			set { }
 		}
 
 		public virtual System.Boolean Muted {
-			get { return default(System.Boolean); }
+			get { return default (System.Boolean); }
 			set { }
 		}
 
 		public virtual AppKit.NSImage PosterImage {
-			get { return default(AppKit.NSImage); }
+			get { return default (AppKit.NSImage); }
 		}
 
 		public virtual System.Single Rate {
-			get { return default(System.Single); }
+			get { return default (System.Single); }
 			set { }
 		}
 
-		public virtual QTKit.QTTrack[] Tracks {
-			get { return default(QTKit.QTTrack[]); }
+		public virtual QTKit.QTTrack [] Tracks {
+			get { return default (QTKit.QTTrack []); }
 		}
 
 		public virtual System.Single Volume {
-			get { return default(System.Single); }
+			get { return default (System.Single); }
 			set { }
 		}
 
 		public virtual Foundation.NSObject WeakDelegate {
-			get { return default(Foundation.NSObject); }
+			get { return default (Foundation.NSObject); }
 			set { }
 		}
 
 		public static Foundation.NSString ActiveSegmentAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString ApertureModeAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString ApertureModeClassic {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString ApertureModeClean {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString ApertureModeDidChangeNotification {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString ApertureModeEncodedPixels {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString ApertureModeProduction {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString AskUnresolvedDataRefsAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString AutoAlternatesAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString ChapterDidChangeNotification {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString ChapterListDidChangeNotification {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString ChapterName {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString ChapterStartTime {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString ChapterTargetTrackAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString CloseWindowRequestNotification {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString CopyrightAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString CreationTimeAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString CurrentSizeAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString CurrentTimeAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString DataAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString DataReferenceAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString DataSizeAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString DelegateAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString DidEndNotification {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString DisplayNameAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString DontInteractWithUserAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString DurationAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString EditabilityDidChangeNotification {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString EditableAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString EditedNotification {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString EnterFullScreenRequestNotification {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString ExitFullScreenRequestNotification {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString FileNameAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString FileOffsetAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString FrameImageDeinterlaceFields {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString FrameImageHighQuality {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString FrameImageOpenGLContext {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString FrameImagePixelFormat {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString FrameImageRepresentationsType {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString FrameImageSingleField {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString FrameImageSize {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString FrameImageType {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString FrameImageTypeCGImageRef {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString FrameImageTypeCIImage {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString FrameImageTypeCVOpenGLTextureRef {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString FrameImageTypeCVPixelBufferRef {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString FrameImageTypeNSImage {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString HasApertureModeDimensionsAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString HasAudioAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString HasDurationAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString HasVideoAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString IsActiveAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString IsInteractiveAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString IsLinearAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString IsSteppableAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString LoadStateAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString LoadStateDidChangeNotification {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString LoopModeDidChangeNotification {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString LoopsAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString LoopsBackAndForthAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString MessageNotificationParameter {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString MessageStringPostedNotification {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString ModificationTimeAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString MutedAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString NaturalSizeAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString OpenAsyncOKAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString PasteboardAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString PasteboardType {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString PlaysAllFramesAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString PlaysSelectionOnlyAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString PosterTimeAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString PreferredMutedAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString PreferredRateAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString PreferredVolumeAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString PreviewModeAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString PreviewRangeAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString RateAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString RateChangesPreservePitchAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString RateDidChangeNotification {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString RateDidChangeNotificationParameter {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString ResolveDataRefsAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString SelectionAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString SelectionDidChangeNotification {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString SizeDidChangeNotification {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString StatusCodeNotificationParameter {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString StatusFlagsNotificationParameter {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString StatusStringNotificationParameter {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString StatusStringPostedNotification {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString TargetIDNotificationParameter {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString TargetNameNotificationParameter {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString TimeDidChangeNotification {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString TimeScaleAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString URLAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString UneditableException {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString VolumeAttribute {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString VolumeDidChangeNotification {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static class Notifications : System.Object {
@@ -1970,7 +1970,7 @@ namespace QTKit {
 
 	}
 
-	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10,15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
+	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10, 15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
 	public struct QTTime {
 		public static readonly QTKit.QTTime Zero;
 
@@ -1992,23 +1992,23 @@ namespace QTKit {
 		}
 
 		public System.Int64 TimeValue {
-			get { return default(System.Int64); }
+			get { return default (System.Int64); }
 			set { }
 		}
 
 		public nint TimeScale {
-			get { return default(nint); }
+			get { return default (nint); }
 			set { }
 		}
 
 		public QTKit.TimeFlags Flags {
-			get { return default(QTKit.TimeFlags); }
+			get { return default (QTKit.TimeFlags); }
 			set { }
 		}
 
 	}
 
-	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10,15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
+	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10, 15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
 	public struct QTTimeRange {
 		public QTTimeRange (QTKit.QTTime time, QTKit.QTTime duration)
 		{
@@ -2021,24 +2021,24 @@ namespace QTKit {
 		}
 
 		public QTKit.QTTime Time {
-			get { return default(QTKit.QTTime); }
+			get { return default (QTKit.QTTime); }
 			set { }
 		}
 
 		public QTKit.QTTime Duration {
-			get { return default(QTKit.QTTime); }
+			get { return default (QTKit.QTTime); }
 			set { }
 		}
 
 	}
 
-	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10,15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
+	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10, 15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
 	[System.Flags]
 	public enum TimeFlags : System.Int32 {
 		TimeIsIndefinite = 1,
 	}
 
-	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10,15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
+	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10, 15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
 	[System.Flags]
 	public enum QTMovieFileTypeOptions : System.UInt32 {
 		StillImageTypes = 1,
@@ -2049,14 +2049,14 @@ namespace QTKit {
 		AllTypes = 65535,
 	}
 
-	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10,15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
+	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10, 15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
 	[ObjCRuntime.Native]
 	public enum QTCaptureDevicePlaybackMode : System.UInt64 {
 		NotPlaying = 0,
 		Playing = 1,
 	}
 
-	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10,15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
+	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10, 15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
 	[ObjCRuntime.Native]
 	public enum QTCaptureDeviceControlsSpeed : System.Int64 {
 		FastestReverse = -19000,
@@ -2076,14 +2076,14 @@ namespace QTKit {
 		FastestForward = 19000,
 	}
 
-	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10,15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
+	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10, 15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
 	[ObjCRuntime.Native]
 	public enum QTCaptureDestination : System.UInt64 {
 		NewFile = 1,
 		OldFile = 2,
 	}
 
-	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10,15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
+	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10, 15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
 	[ObjCRuntime.Native]
 	public enum QTError : System.Int64 {
 		Unknown = -1,
@@ -2106,7 +2106,7 @@ namespace QTKit {
 		DeviceExcludedByAnotherDevice = 1302,
 	}
 
-	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10,15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
+	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10, 15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
 	public enum QTMediaType : System.Int32 {
 		Video = 0,
 		Sound = 1,
@@ -2128,7 +2128,7 @@ namespace QTKit {
 		QuartzComposer = 17,
 	}
 
-	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10,15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
+	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10, 15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
 	public enum QTFileType : System.Int32 {
 		AIFF = 1095321158,
 		AIFC = 1095321155,
@@ -2170,7 +2170,7 @@ namespace QTKit {
 		JPEG2000 = 1785737760,
 	}
 
-	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10,15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
+	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10, 15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
 	public class QTCaptureAudioPreviewOutput : QTKit.QTCaptureOutput {
 		public QTCaptureAudioPreviewOutput ()
 		{
@@ -2188,22 +2188,22 @@ namespace QTKit {
 		}
 
 		public override System.IntPtr ClassHandle {
-			get { return default(System.IntPtr); }
+			get { return default (System.IntPtr); }
 		}
 
 		public virtual System.String OutputDeviceUniqueID {
-			get { return default(System.String); }
+			get { return default (System.String); }
 			set { }
 		}
 
 		public virtual System.Single Volume {
-			get { return default(System.Single); }
+			get { return default (System.Single); }
 			set { }
 		}
 
 	}
 
-	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10,15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
+	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10, 15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
 	public class QTCaptureDecompressedVideoOutput : QTKit.QTCaptureOutput {
 		public QTCaptureDecompressedVideoOutput ()
 		{
@@ -2229,31 +2229,31 @@ namespace QTKit {
 		}
 
 		public override System.IntPtr ClassHandle {
-			get { return default(System.IntPtr); }
+			get { return default (System.IntPtr); }
 		}
 
 		public virtual System.Boolean AutomaticallyDropsLateVideoFrames {
-			get { return default(System.Boolean); }
+			get { return default (System.Boolean); }
 			set { }
 		}
 
 		public QTKit.IQTCaptureDecompressedVideoOutputDelegate Delegate {
-			get { return default(QTKit.IQTCaptureDecompressedVideoOutputDelegate); }
+			get { return default (QTKit.IQTCaptureDecompressedVideoOutputDelegate); }
 			set { }
 		}
 
 		public virtual System.Double MinimumVideoFrameInterval {
-			get { return default(System.Double); }
+			get { return default (System.Double); }
 			set { }
 		}
 
 		public virtual Foundation.NSDictionary PixelBufferAttributes {
-			get { return default(Foundation.NSDictionary); }
+			get { return default (Foundation.NSDictionary); }
 			set { }
 		}
 
 		public virtual Foundation.NSObject WeakDelegate {
-			get { return default(Foundation.NSObject); }
+			get { return default (Foundation.NSObject); }
 			set { }
 		}
 
@@ -2263,7 +2263,7 @@ namespace QTKit {
 
 	}
 
-	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10,15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
+	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10, 15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
 	public class QTCaptureVideoDroppedEventArgs : System.EventArgs {
 		public QTCaptureVideoDroppedEventArgs (QTKit.QTSampleBuffer sampleBuffer, QTKit.QTCaptureConnection connection)
 		{
@@ -2276,18 +2276,18 @@ namespace QTKit {
 		}
 
 		public QTKit.QTCaptureConnection Connection {
-			get { return default(QTKit.QTCaptureConnection); }
+			get { return default (QTKit.QTCaptureConnection); }
 			set { }
 		}
 
 		public QTKit.QTSampleBuffer SampleBuffer {
-			get { return default(QTKit.QTSampleBuffer); }
+			get { return default (QTKit.QTSampleBuffer); }
 			set { }
 		}
 
 	}
 
-	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10,15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
+	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10, 15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
 	public class QTCaptureVideoFrameEventArgs : System.EventArgs {
 		public QTCaptureVideoFrameEventArgs (CoreVideo.CVImageBuffer videoFrame, QTKit.QTSampleBuffer sampleBuffer, QTKit.QTCaptureConnection connection)
 		{
@@ -2300,27 +2300,27 @@ namespace QTKit {
 		}
 
 		public QTKit.QTCaptureConnection Connection {
-			get { return default(QTKit.QTCaptureConnection); }
+			get { return default (QTKit.QTCaptureConnection); }
 			set { }
 		}
 
 		public QTKit.QTSampleBuffer SampleBuffer {
-			get { return default(QTKit.QTSampleBuffer); }
+			get { return default (QTKit.QTSampleBuffer); }
 			set { }
 		}
 
 		public CoreVideo.CVImageBuffer VideoFrame {
-			get { return default(CoreVideo.CVImageBuffer); }
+			get { return default (CoreVideo.CVImageBuffer); }
 			set { }
 		}
 
 	}
 
-	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10,15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
+	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10, 15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
 	public interface IQTCaptureDecompressedVideoOutputDelegate : ObjCRuntime.INativeObject, System.IDisposable {
 	}
 
-	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10,15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
+	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10, 15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
 	public static class QTCaptureDecompressedVideoOutputDelegate_Extensions : System.Object {
 		public static void DidOutputVideoFrame (this QTKit.IQTCaptureDecompressedVideoOutputDelegate This, QTKit.QTCaptureOutput captureOutput, CoreVideo.CVImageBuffer videoFrame, QTKit.QTSampleBuffer sampleBuffer, QTKit.QTCaptureConnection connection)
 		{
@@ -2332,7 +2332,7 @@ namespace QTKit {
 
 	}
 
-	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10,15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
+	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10, 15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
 	public class QTCaptureDecompressedVideoOutputDelegate : Foundation.NSObject, QTKit.IQTCaptureDecompressedVideoOutputDelegate, ObjCRuntime.INativeObject, System.IDisposable {
 		public QTCaptureDecompressedVideoOutputDelegate ()
 		{
@@ -2359,7 +2359,7 @@ namespace QTKit {
 
 	}
 
-	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10,15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
+	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10, 15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
 	public class QTCaptureDeviceInput : QTKit.QTCaptureInput {
 		protected QTCaptureDeviceInput (Foundation.NSObjectFlag t)
 		{
@@ -2387,16 +2387,16 @@ namespace QTKit {
 		}
 
 		public override System.IntPtr ClassHandle {
-			get { return default(System.IntPtr); }
+			get { return default (System.IntPtr); }
 		}
 
 		public virtual QTKit.QTCaptureDevice Device {
-			get { return default(QTKit.QTCaptureDevice); }
+			get { return default (QTKit.QTCaptureDevice); }
 		}
 
 	}
 
-	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10,15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
+	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10, 15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
 	public class QTCaptureFileOutput : QTKit.QTCaptureOutput {
 		protected QTCaptureFileOutput (Foundation.NSObjectFlag t)
 		{
@@ -2443,57 +2443,57 @@ namespace QTKit {
 		}
 
 		public override System.IntPtr ClassHandle {
-			get { return default(System.IntPtr); }
+			get { return default (System.IntPtr); }
 		}
 
 		public QTKit.IQTCaptureFileOutputDelegate Delegate {
-			get { return default(QTKit.IQTCaptureFileOutputDelegate); }
+			get { return default (QTKit.IQTCaptureFileOutputDelegate); }
 			set { }
 		}
 
 		public virtual System.Boolean IsRecordingPaused {
-			get { return default(System.Boolean); }
+			get { return default (System.Boolean); }
 		}
 
 		public virtual QTKit.QTTime MaximumRecordedDuration {
-			get { return default(QTKit.QTTime); }
+			get { return default (QTKit.QTTime); }
 			set { }
 		}
 
 		public virtual System.UInt64 MaximumRecordedFileSize {
-			get { return default(System.UInt64); }
+			get { return default (System.UInt64); }
 			set { }
 		}
 
 		public virtual CoreGraphics.CGSize MaximumVideoSize {
-			get { return default(CoreGraphics.CGSize); }
+			get { return default (CoreGraphics.CGSize); }
 			set { }
 		}
 
 		public virtual System.Double MinimumVideoFrameInterval {
-			get { return default(System.Double); }
+			get { return default (System.Double); }
 			set { }
 		}
 
 		public virtual Foundation.NSUrl OutputFileUrl {
-			get { return default(Foundation.NSUrl); }
+			get { return default (Foundation.NSUrl); }
 		}
 
 		public virtual QTKit.QTTime RecordedDuration {
-			get { return default(QTKit.QTTime); }
+			get { return default (QTKit.QTTime); }
 		}
 
 		public virtual System.UInt64 RecordedFileSize {
-			get { return default(System.UInt64); }
+			get { return default (System.UInt64); }
 		}
 
 		public virtual Foundation.NSObject WeakDelegate {
-			get { return default(Foundation.NSObject); }
+			get { return default (Foundation.NSObject); }
 			set { }
 		}
 
 		public QTKit.QTCaptureFileError ShouldChangeOutputFile {
-			get { return default(QTKit.QTCaptureFileError); }
+			get { return default (QTKit.QTCaptureFileError); }
 			set { }
 		}
 
@@ -2515,9 +2515,9 @@ namespace QTKit {
 
 	}
 
-	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10,15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
+	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10, 15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
 	public class QTCaptureFileErrorEventArgs : System.EventArgs {
-		public QTCaptureFileErrorEventArgs (Foundation.NSUrl outputFileURL, QTKit.QTCaptureConnection[] connections, Foundation.NSError reason)
+		public QTCaptureFileErrorEventArgs (Foundation.NSUrl outputFileURL, QTKit.QTCaptureConnection [] connections, Foundation.NSError reason)
 		{
 			throw new System.PlatformNotSupportedException (ObjCRuntime.Constants.MacOS32bitsUnavailable);
 		}
@@ -2527,24 +2527,24 @@ namespace QTKit {
 			throw new System.PlatformNotSupportedException (ObjCRuntime.Constants.MacOS32bitsUnavailable);
 		}
 
-		public QTKit.QTCaptureConnection[] Connections {
-			get { return default(QTKit.QTCaptureConnection[]); }
+		public QTKit.QTCaptureConnection [] Connections {
+			get { return default (QTKit.QTCaptureConnection []); }
 			set { }
 		}
 
 		public Foundation.NSUrl OutputFileURL {
-			get { return default(Foundation.NSUrl); }
+			get { return default (Foundation.NSUrl); }
 			set { }
 		}
 
 		public Foundation.NSError Reason {
-			get { return default(Foundation.NSError); }
+			get { return default (Foundation.NSError); }
 			set { }
 		}
 
 	}
 
-	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10,15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
+	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10, 15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
 	public class QTCaptureFileSampleEventArgs : System.EventArgs {
 		public QTCaptureFileSampleEventArgs (QTKit.QTSampleBuffer sampleBuffer, QTKit.QTCaptureConnection connection)
 		{
@@ -2557,20 +2557,20 @@ namespace QTKit {
 		}
 
 		public QTKit.QTCaptureConnection Connection {
-			get { return default(QTKit.QTCaptureConnection); }
+			get { return default (QTKit.QTCaptureConnection); }
 			set { }
 		}
 
 		public QTKit.QTSampleBuffer SampleBuffer {
-			get { return default(QTKit.QTSampleBuffer); }
+			get { return default (QTKit.QTSampleBuffer); }
 			set { }
 		}
 
 	}
 
-	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10,15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
+	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10, 15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
 	public class QTCaptureFileUrlEventArgs : System.EventArgs {
-		public QTCaptureFileUrlEventArgs (Foundation.NSUrl fileUrl, QTKit.QTCaptureConnection[] connections)
+		public QTCaptureFileUrlEventArgs (Foundation.NSUrl fileUrl, QTKit.QTCaptureConnection [] connections)
 		{
 			throw new System.PlatformNotSupportedException (ObjCRuntime.Constants.MacOS32bitsUnavailable);
 		}
@@ -2580,64 +2580,64 @@ namespace QTKit {
 			throw new System.PlatformNotSupportedException (ObjCRuntime.Constants.MacOS32bitsUnavailable);
 		}
 
-		public QTKit.QTCaptureConnection[] Connections {
-			get { return default(QTKit.QTCaptureConnection[]); }
+		public QTKit.QTCaptureConnection [] Connections {
+			get { return default (QTKit.QTCaptureConnection []); }
 			set { }
 		}
 
 		public Foundation.NSUrl FileUrl {
-			get { return default(Foundation.NSUrl); }
+			get { return default (Foundation.NSUrl); }
 			set { }
 		}
 
 	}
 
-	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10,15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
+	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10, 15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
 	public interface IQTCaptureFileOutputDelegate : ObjCRuntime.INativeObject, System.IDisposable {
 	}
 
-	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10,15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
+	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10, 15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
 	public static class QTCaptureFileOutputDelegate_Extensions : System.Object {
 		public static void DidOutputSampleBuffer (this QTKit.IQTCaptureFileOutputDelegate This, QTKit.QTCaptureFileOutput captureOutput, QTKit.QTSampleBuffer sampleBuffer, QTKit.QTCaptureConnection connection)
 		{
 		}
 
-		public static void WillStartRecording (this QTKit.IQTCaptureFileOutputDelegate This, QTKit.QTCaptureFileOutput captureOutput, Foundation.NSUrl fileUrl, QTKit.QTCaptureConnection[] connections)
+		public static void WillStartRecording (this QTKit.IQTCaptureFileOutputDelegate This, QTKit.QTCaptureFileOutput captureOutput, Foundation.NSUrl fileUrl, QTKit.QTCaptureConnection [] connections)
 		{
 		}
 
-		public static void DidStartRecording (this QTKit.IQTCaptureFileOutputDelegate This, QTKit.QTCaptureFileOutput captureOutput, Foundation.NSUrl fileUrl, QTKit.QTCaptureConnection[] connections)
+		public static void DidStartRecording (this QTKit.IQTCaptureFileOutputDelegate This, QTKit.QTCaptureFileOutput captureOutput, Foundation.NSUrl fileUrl, QTKit.QTCaptureConnection [] connections)
 		{
 		}
 
-		public static System.Boolean ShouldChangeOutputFile (this QTKit.IQTCaptureFileOutputDelegate This, QTKit.QTCaptureFileOutput captureOutput, Foundation.NSUrl outputFileURL, QTKit.QTCaptureConnection[] connections, Foundation.NSError reason)
+		public static System.Boolean ShouldChangeOutputFile (this QTKit.IQTCaptureFileOutputDelegate This, QTKit.QTCaptureFileOutput captureOutput, Foundation.NSUrl outputFileURL, QTKit.QTCaptureConnection [] connections, Foundation.NSError reason)
 		{
 			return default (System.Boolean);
 		}
 
-		public static void MustChangeOutputFile (this QTKit.IQTCaptureFileOutputDelegate This, QTKit.QTCaptureFileOutput captureOutput, Foundation.NSUrl outputFileURL, QTKit.QTCaptureConnection[] connections, Foundation.NSError reason)
+		public static void MustChangeOutputFile (this QTKit.IQTCaptureFileOutputDelegate This, QTKit.QTCaptureFileOutput captureOutput, Foundation.NSUrl outputFileURL, QTKit.QTCaptureConnection [] connections, Foundation.NSError reason)
 		{
 		}
 
-		public static void WillFinishRecording (this QTKit.IQTCaptureFileOutputDelegate This, QTKit.QTCaptureFileOutput captureOutput, Foundation.NSUrl outputFileURL, QTKit.QTCaptureConnection[] connections, Foundation.NSError reason)
+		public static void WillFinishRecording (this QTKit.IQTCaptureFileOutputDelegate This, QTKit.QTCaptureFileOutput captureOutput, Foundation.NSUrl outputFileURL, QTKit.QTCaptureConnection [] connections, Foundation.NSError reason)
 		{
 		}
 
-		public static void DidFinishRecording (this QTKit.IQTCaptureFileOutputDelegate This, QTKit.QTCaptureFileOutput captureOutput, Foundation.NSUrl outputFileURL, QTKit.QTCaptureConnection[] connections, Foundation.NSError reason)
+		public static void DidFinishRecording (this QTKit.IQTCaptureFileOutputDelegate This, QTKit.QTCaptureFileOutput captureOutput, Foundation.NSUrl outputFileURL, QTKit.QTCaptureConnection [] connections, Foundation.NSError reason)
 		{
 		}
 
-		public static void DidPauseRecording (this QTKit.IQTCaptureFileOutputDelegate This, QTKit.QTCaptureFileOutput captureOutput, Foundation.NSUrl fileUrl, QTKit.QTCaptureConnection[] connections)
+		public static void DidPauseRecording (this QTKit.IQTCaptureFileOutputDelegate This, QTKit.QTCaptureFileOutput captureOutput, Foundation.NSUrl fileUrl, QTKit.QTCaptureConnection [] connections)
 		{
 		}
 
-		public static void DidResumeRecording (this QTKit.IQTCaptureFileOutputDelegate This, QTKit.QTCaptureFileOutput captureOutput, Foundation.NSUrl fileUrl, QTKit.QTCaptureConnection[] connections)
+		public static void DidResumeRecording (this QTKit.IQTCaptureFileOutputDelegate This, QTKit.QTCaptureFileOutput captureOutput, Foundation.NSUrl fileUrl, QTKit.QTCaptureConnection [] connections)
 		{
 		}
 
 	}
 
-	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10,15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
+	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10, 15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
 	public class QTCaptureFileOutputDelegate : Foundation.NSObject, QTKit.IQTCaptureFileOutputDelegate, ObjCRuntime.INativeObject, System.IDisposable {
 		public QTCaptureFileOutputDelegate ()
 		{
@@ -2654,7 +2654,7 @@ namespace QTKit {
 			throw new System.PlatformNotSupportedException (ObjCRuntime.Constants.MacOS32bitsUnavailable);
 		}
 
-		public virtual void DidFinishRecording (QTKit.QTCaptureFileOutput captureOutput, Foundation.NSUrl outputFileURL, QTKit.QTCaptureConnection[] connections, Foundation.NSError reason)
+		public virtual void DidFinishRecording (QTKit.QTCaptureFileOutput captureOutput, Foundation.NSUrl outputFileURL, QTKit.QTCaptureConnection [] connections, Foundation.NSError reason)
 		{
 		}
 
@@ -2662,38 +2662,38 @@ namespace QTKit {
 		{
 		}
 
-		public virtual void DidPauseRecording (QTKit.QTCaptureFileOutput captureOutput, Foundation.NSUrl fileUrl, QTKit.QTCaptureConnection[] connections)
+		public virtual void DidPauseRecording (QTKit.QTCaptureFileOutput captureOutput, Foundation.NSUrl fileUrl, QTKit.QTCaptureConnection [] connections)
 		{
 		}
 
-		public virtual void DidResumeRecording (QTKit.QTCaptureFileOutput captureOutput, Foundation.NSUrl fileUrl, QTKit.QTCaptureConnection[] connections)
+		public virtual void DidResumeRecording (QTKit.QTCaptureFileOutput captureOutput, Foundation.NSUrl fileUrl, QTKit.QTCaptureConnection [] connections)
 		{
 		}
 
-		public virtual void DidStartRecording (QTKit.QTCaptureFileOutput captureOutput, Foundation.NSUrl fileUrl, QTKit.QTCaptureConnection[] connections)
+		public virtual void DidStartRecording (QTKit.QTCaptureFileOutput captureOutput, Foundation.NSUrl fileUrl, QTKit.QTCaptureConnection [] connections)
 		{
 		}
 
-		public virtual void MustChangeOutputFile (QTKit.QTCaptureFileOutput captureOutput, Foundation.NSUrl outputFileURL, QTKit.QTCaptureConnection[] connections, Foundation.NSError reason)
+		public virtual void MustChangeOutputFile (QTKit.QTCaptureFileOutput captureOutput, Foundation.NSUrl outputFileURL, QTKit.QTCaptureConnection [] connections, Foundation.NSError reason)
 		{
 		}
 
-		public virtual System.Boolean ShouldChangeOutputFile (QTKit.QTCaptureFileOutput captureOutput, Foundation.NSUrl outputFileURL, QTKit.QTCaptureConnection[] connections, Foundation.NSError reason)
+		public virtual System.Boolean ShouldChangeOutputFile (QTKit.QTCaptureFileOutput captureOutput, Foundation.NSUrl outputFileURL, QTKit.QTCaptureConnection [] connections, Foundation.NSError reason)
 		{
 			return default (System.Boolean);
 		}
 
-		public virtual void WillFinishRecording (QTKit.QTCaptureFileOutput captureOutput, Foundation.NSUrl outputFileURL, QTKit.QTCaptureConnection[] connections, Foundation.NSError reason)
+		public virtual void WillFinishRecording (QTKit.QTCaptureFileOutput captureOutput, Foundation.NSUrl outputFileURL, QTKit.QTCaptureConnection [] connections, Foundation.NSError reason)
 		{
 		}
 
-		public virtual void WillStartRecording (QTKit.QTCaptureFileOutput captureOutput, Foundation.NSUrl fileUrl, QTKit.QTCaptureConnection[] connections)
+		public virtual void WillStartRecording (QTKit.QTCaptureFileOutput captureOutput, Foundation.NSUrl fileUrl, QTKit.QTCaptureConnection [] connections)
 		{
 		}
 
 	}
 
-	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10,15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
+	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10, 15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
 	public class QTCaptureInput : Foundation.NSObject {
 		protected QTCaptureInput (Foundation.NSObjectFlag t)
 		{
@@ -2711,16 +2711,16 @@ namespace QTKit {
 		}
 
 		public override System.IntPtr ClassHandle {
-			get { return default(System.IntPtr); }
+			get { return default (System.IntPtr); }
 		}
 
-		public virtual QTKit.QTCaptureConnection[] Connections {
-			get { return default(QTKit.QTCaptureConnection[]); }
+		public virtual QTKit.QTCaptureConnection [] Connections {
+			get { return default (QTKit.QTCaptureConnection []); }
 		}
 
 	}
 
-	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10,15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
+	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10, 15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
 	public class QTCaptureLayer : CoreAnimation.CALayer {
 		public QTCaptureLayer ()
 		{
@@ -2753,17 +2753,17 @@ namespace QTKit {
 		}
 
 		public override System.IntPtr ClassHandle {
-			get { return default(System.IntPtr); }
+			get { return default (System.IntPtr); }
 		}
 
 		public virtual QTKit.QTCaptureSession Session {
-			get { return default(QTKit.QTCaptureSession); }
+			get { return default (QTKit.QTCaptureSession); }
 			set { }
 		}
 
 	}
 
-	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10,15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
+	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10, 15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
 	public class QTCaptureMovieFileOutput : QTKit.QTCaptureFileOutput {
 		public QTCaptureMovieFileOutput ()
 		{
@@ -2781,12 +2781,12 @@ namespace QTKit {
 		}
 
 		public override System.IntPtr ClassHandle {
-			get { return default(System.IntPtr); }
+			get { return default (System.IntPtr); }
 		}
 
 	}
 
-	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10,15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
+	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10, 15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
 	public class QTCaptureOutput : Foundation.NSObject {
 		protected QTCaptureOutput (Foundation.NSObjectFlag t)
 		{
@@ -2804,16 +2804,16 @@ namespace QTKit {
 		}
 
 		public override System.IntPtr ClassHandle {
-			get { return default(System.IntPtr); }
+			get { return default (System.IntPtr); }
 		}
 
-		public virtual QTKit.QTCaptureConnection[] Connections {
-			get { return default(QTKit.QTCaptureConnection[]); }
+		public virtual QTKit.QTCaptureConnection [] Connections {
+			get { return default (QTKit.QTCaptureConnection []); }
 		}
 
 	}
 
-	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10,15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
+	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10, 15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
 	public class QTCaptureSession : Foundation.NSObject {
 		public QTCaptureSession ()
 		{
@@ -2859,27 +2859,27 @@ namespace QTKit {
 		}
 
 		public override System.IntPtr ClassHandle {
-			get { return default(System.IntPtr); }
+			get { return default (System.IntPtr); }
 		}
 
-		public virtual QTKit.QTCaptureInput[] Inputs {
-			get { return default(QTKit.QTCaptureInput[]); }
+		public virtual QTKit.QTCaptureInput [] Inputs {
+			get { return default (QTKit.QTCaptureInput []); }
 		}
 
 		public virtual System.Boolean IsRunning {
-			get { return default(System.Boolean); }
+			get { return default (System.Boolean); }
 		}
 
-		public virtual QTKit.QTCaptureOutput[] Outputs {
-			get { return default(QTKit.QTCaptureOutput[]); }
+		public virtual QTKit.QTCaptureOutput [] Outputs {
+			get { return default (QTKit.QTCaptureOutput []); }
 		}
 
 		public static Foundation.NSString ErrorKey {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString RuntimeErrorNotification {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static class Notifications : System.Object {
@@ -2897,7 +2897,7 @@ namespace QTKit {
 
 	}
 
-	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10,15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
+	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10, 15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
 	public class QTCaptureView : AppKit.NSView {
 		public QTCaptureView ()
 		{
@@ -2929,59 +2929,59 @@ namespace QTKit {
 		}
 
 		public override System.IntPtr ClassHandle {
-			get { return default(System.IntPtr); }
+			get { return default (System.IntPtr); }
 		}
 
-		public virtual QTKit.QTCaptureConnection[] AvailableVideoPreviewConnections {
-			get { return default(QTKit.QTCaptureConnection[]); }
+		public virtual QTKit.QTCaptureConnection [] AvailableVideoPreviewConnections {
+			get { return default (QTKit.QTCaptureConnection []); }
 		}
 
 		public virtual QTKit.QTCaptureSession CaptureSession {
-			get { return default(QTKit.QTCaptureSession); }
+			get { return default (QTKit.QTCaptureSession); }
 			set { }
 		}
 
 		public QTKit.IQTCaptureViewDelegate Delegate {
-			get { return default(QTKit.IQTCaptureViewDelegate); }
+			get { return default (QTKit.IQTCaptureViewDelegate); }
 			set { }
 		}
 
 		public virtual AppKit.NSColor FillColor {
-			get { return default(AppKit.NSColor); }
+			get { return default (AppKit.NSColor); }
 			set { }
 		}
 
 		public virtual System.Boolean PreservesAspectRatio {
-			get { return default(System.Boolean); }
+			get { return default (System.Boolean); }
 			set { }
 		}
 
 		public virtual CoreGraphics.CGRect PreviewBounds {
-			get { return default(CoreGraphics.CGRect); }
+			get { return default (CoreGraphics.CGRect); }
 		}
 
 		public virtual QTKit.QTCaptureConnection VideoPreviewConnection {
-			get { return default(QTKit.QTCaptureConnection); }
+			get { return default (QTKit.QTCaptureConnection); }
 			set { }
 		}
 
 		public virtual Foundation.NSObject WeakDelegate {
-			get { return default(Foundation.NSObject); }
+			get { return default (Foundation.NSObject); }
 			set { }
 		}
 
 		public QTKit.QTCaptureImageEvent WillDisplayImage {
-			get { return default(QTKit.QTCaptureImageEvent); }
+			get { return default (QTKit.QTCaptureImageEvent); }
 			set { }
 		}
 
 	}
 
-	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10,15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
+	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10, 15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
 	public interface IQTCaptureViewDelegate : ObjCRuntime.INativeObject, System.IDisposable {
 	}
 
-	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10,15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
+	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10, 15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
 	public static class QTCaptureViewDelegate_Extensions : System.Object {
 		public static CoreImage.CIImage WillDisplayImage (this QTKit.IQTCaptureViewDelegate This, QTKit.QTCaptureView view, CoreImage.CIImage image)
 		{
@@ -2990,7 +2990,7 @@ namespace QTKit {
 
 	}
 
-	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10,15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
+	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10, 15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
 	public class QTCaptureViewDelegate : Foundation.NSObject, QTKit.IQTCaptureViewDelegate, ObjCRuntime.INativeObject, System.IDisposable {
 		public QTCaptureViewDelegate ()
 		{
@@ -3014,7 +3014,7 @@ namespace QTKit {
 
 	}
 
-	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10,15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
+	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10, 15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
 	public class QTDataReference : Foundation.NSObject, Foundation.INSCoding, ObjCRuntime.INativeObject, System.IDisposable {
 		public QTDataReference ()
 		{
@@ -3066,77 +3066,77 @@ namespace QTKit {
 		}
 
 		public override System.IntPtr ClassHandle {
-			get { return default(System.IntPtr); }
+			get { return default (System.IntPtr); }
 		}
 
 		public virtual Foundation.NSData DataRefData {
-			get { return default(Foundation.NSData); }
+			get { return default (Foundation.NSData); }
 		}
 
 		public virtual System.String DataRefType {
-			get { return default(System.String); }
+			get { return default (System.String); }
 			set { }
 		}
 
 		public virtual System.String MimeType {
-			get { return default(System.String); }
+			get { return default (System.String); }
 		}
 
 		public virtual System.String Name {
-			get { return default(System.String); }
+			get { return default (System.String); }
 		}
 
 		public virtual Foundation.NSData ReferenceData {
-			get { return default(Foundation.NSData); }
+			get { return default (Foundation.NSData); }
 		}
 
 		public virtual System.String ReferenceFile {
-			get { return default(System.String); }
+			get { return default (System.String); }
 		}
 
 		public virtual Foundation.NSUrl ReferenceUrl {
-			get { return default(Foundation.NSUrl); }
+			get { return default (Foundation.NSUrl); }
 		}
 
 	}
 
-	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10,15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
+	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10, 15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
 	public static class QTErrorKey : System.Object {
 		public static Foundation.NSString CaptureInput {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString CaptureOutput {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString Device {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString Domain {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString ExcludingDevice {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString FileSize {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString RecordingSuccesfullyFinished {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 		public static Foundation.NSString Time {
-			get { return default(Foundation.NSString); }
+			get { return default (Foundation.NSString); }
 		}
 
 	}
 
-	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10,15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
+	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10, 15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
 	public class QTMovieLayer : CoreAnimation.CALayer {
 		public QTMovieLayer ()
 		{
@@ -3169,17 +3169,17 @@ namespace QTKit {
 		}
 
 		public override System.IntPtr ClassHandle {
-			get { return default(System.IntPtr); }
+			get { return default (System.IntPtr); }
 		}
 
 		public virtual QTKit.QTMovie Movie {
-			get { return default(QTKit.QTMovie); }
+			get { return default (QTKit.QTMovie); }
 			set { }
 		}
 
 	}
 
-	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10,15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
+	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10, 15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
 	public class QTMovieView : AppKit.NSView {
 		public QTMovieView ()
 		{
@@ -3291,98 +3291,98 @@ namespace QTKit {
 		}
 
 		public override System.IntPtr ClassHandle {
-			get { return default(System.IntPtr); }
+			get { return default (System.IntPtr); }
 		}
 
 		public virtual System.Boolean BackButtonVisible {
-			get { return default(System.Boolean); }
+			get { return default (System.Boolean); }
 			set { }
 		}
 
 		public virtual System.Single ControllerBarHeight {
-			get { return default(System.Single); }
+			get { return default (System.Single); }
 		}
 
 		public virtual System.Boolean CustomButtonVisible {
-			get { return default(System.Boolean); }
+			get { return default (System.Boolean); }
 			set { }
 		}
 
 		public QTKit.IQTMovieViewDelegate Delegate {
-			get { return default(QTKit.IQTMovieViewDelegate); }
+			get { return default (QTKit.IQTMovieViewDelegate); }
 			set { }
 		}
 
 		public virtual System.Boolean Editable {
-			get { return default(System.Boolean); }
+			get { return default (System.Boolean); }
 			set { }
 		}
 
 		public virtual AppKit.NSColor FillColor {
-			get { return default(AppKit.NSColor); }
+			get { return default (AppKit.NSColor); }
 			set { }
 		}
 
 		public virtual System.Boolean HotSpotButtonVisible {
-			get { return default(System.Boolean); }
+			get { return default (System.Boolean); }
 			set { }
 		}
 
 		public virtual System.Boolean IsControllerVisible {
-			get { return default(System.Boolean); }
+			get { return default (System.Boolean); }
 			set { }
 		}
 
 		public virtual QTKit.QTMovie Movie {
-			get { return default(QTKit.QTMovie); }
+			get { return default (QTKit.QTMovie); }
 			set { }
 		}
 
 		public virtual CoreGraphics.CGRect MovieBounds {
-			get { return default(CoreGraphics.CGRect); }
+			get { return default (CoreGraphics.CGRect); }
 		}
 
 		public virtual CoreGraphics.CGRect MovieControllerBounds {
-			get { return default(CoreGraphics.CGRect); }
+			get { return default (CoreGraphics.CGRect); }
 		}
 
 		public virtual System.Boolean PreservesAspectRatio {
-			get { return default(System.Boolean); }
+			get { return default (System.Boolean); }
 			set { }
 		}
 
 		public virtual System.Boolean SetStepButtonsVisible {
-			get { return default(System.Boolean); }
+			get { return default (System.Boolean); }
 			set { }
 		}
 
 		public virtual System.Boolean TranslateButtonVisible {
-			get { return default(System.Boolean); }
+			get { return default (System.Boolean); }
 			set { }
 		}
 
 		public virtual System.Boolean VolumeButtonVisible {
-			get { return default(System.Boolean); }
+			get { return default (System.Boolean); }
 			set { }
 		}
 
 		public virtual Foundation.NSObject WeakDelegate {
-			get { return default(Foundation.NSObject); }
+			get { return default (Foundation.NSObject); }
 			set { }
 		}
 
 		public virtual System.Boolean ZoomButtonsVisible {
-			get { return default(System.Boolean); }
+			get { return default (System.Boolean); }
 			set { }
 		}
 
 	}
 
-	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10,15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
+	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10, 15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
 	public interface IQTMovieViewDelegate : ObjCRuntime.INativeObject, System.IDisposable {
 	}
 
-	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10,15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
+	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10, 15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
 	public static class QTMovieViewDelegate_Extensions : System.Object {
 		public static CoreImage.CIImage ViewWillDisplayImage (this QTKit.IQTMovieViewDelegate This, QTKit.QTMovieView view, CoreImage.CIImage image)
 		{
@@ -3391,7 +3391,7 @@ namespace QTKit {
 
 	}
 
-	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10,15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
+	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10, 15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
 	public class QTMovieViewDelegate : Foundation.NSObject, QTKit.IQTMovieViewDelegate, ObjCRuntime.INativeObject, System.IDisposable {
 		public QTMovieViewDelegate ()
 		{
@@ -3415,7 +3415,7 @@ namespace QTKit {
 
 	}
 
-	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10,15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
+	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10, 15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
 	public class QTSampleBuffer : Foundation.NSObject {
 		protected QTSampleBuffer (Foundation.NSObjectFlag t)
 		{
@@ -3446,51 +3446,51 @@ namespace QTKit {
 		}
 
 		public override System.IntPtr ClassHandle {
-			get { return default(System.IntPtr); }
+			get { return default (System.IntPtr); }
 		}
 
 		public virtual System.IntPtr BytesForAllSamples {
-			get { return default(System.IntPtr); }
+			get { return default (System.IntPtr); }
 		}
 
 		public virtual QTKit.QTTime DecodeTime {
-			get { return default(QTKit.QTTime); }
+			get { return default (QTKit.QTTime); }
 		}
 
 		public virtual QTKit.QTTime Duration {
-			get { return default(QTKit.QTTime); }
+			get { return default (QTKit.QTTime); }
 		}
 
 		public virtual QTKit.QTFormatDescription FormatDescription {
-			get { return default(QTKit.QTFormatDescription); }
+			get { return default (QTKit.QTFormatDescription); }
 		}
 
 		public virtual nuint LengthForAllSamples {
-			get { return default(nuint); }
+			get { return default (nuint); }
 		}
 
 		public virtual QTKit.QTTime PresentationTime {
-			get { return default(QTKit.QTTime); }
+			get { return default (QTKit.QTTime); }
 		}
 
 		public virtual Foundation.NSDictionary SampleBufferAttributes {
-			get { return default(Foundation.NSDictionary); }
+			get { return default (Foundation.NSDictionary); }
 		}
 
 		public virtual nint SampleCount {
-			get { return default(nint); }
+			get { return default (nint); }
 		}
 
 		public virtual nint SampleUseCount {
-			get { return default(nint); }
+			get { return default (nint); }
 		}
 
 	}
 
-	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10,15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
-	public delegate System.Boolean QTCaptureFileError (QTKit.QTCaptureFileOutput captureOutput, Foundation.NSUrl outputFileURL, QTKit.QTCaptureConnection[] connections, Foundation.NSError reason);
+	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10, 15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
+	public delegate System.Boolean QTCaptureFileError (QTKit.QTCaptureFileOutput captureOutput, Foundation.NSUrl outputFileURL, QTKit.QTCaptureConnection [] connections, Foundation.NSError reason);
 
-	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10,15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
+	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10, 15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
 	public delegate CoreImage.CIImage QTCaptureImageEvent (QTKit.QTCaptureView view, CoreImage.CIImage image);
 
 }

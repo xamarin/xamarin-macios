@@ -1,9 +1,11 @@
+#if __MACOS__
+
 #nullable enable
 
 using Foundation;
 
 namespace WebKit {
-	
+
 	public partial class WebFrame {
 		public void LoadHtmlString (string htmlString, NSUrl baseUrl)
 		{
@@ -11,3 +13,5 @@ namespace WebKit {
 		}
 	}
 }
+
+#endif // __MACOS__

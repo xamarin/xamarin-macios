@@ -24,7 +24,7 @@ using OpenTK;
 #endif
 
 namespace MonoTouchFixtures.ObjCRuntime {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class TrampolineTest {
@@ -105,7 +105,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			Assert.That (0 == Messaging.float_objc_msgSend (obj.Handle, new Selector ("Test_ZeroProperty").Handle), "#3");
 			Assert.That (0 == Messaging.float_objc_msgSend (class_ptr, new Selector ("Test_StaticZeroProperty").Handle), "#4");
 		}
-		
+
 		[Test]
 		public void LoooongTest ()
 		{
@@ -115,72 +115,72 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			long c = 15;
 			long d = 29;
 			long e;
-			
+
 			void_objc_msgSend_long_long_ref_long_ref_long (obj.Handle, new Selector ("ManyLongs:b:c:d:").Handle, a, b, out c, out d);
 			Assert.That (c == a + b, "#a1");
 			Assert.That (d == b - a, "#a2");
-			
+
 			c = 15;
 			d = 29;
-			
+
 			e = long_objc_msgSend_long_long_out_long_out_long (obj.Handle, new Selector ("VeryManyLongs:b:c:d:").Handle, a, b, out c, out d);
 			Assert.That (a + b + c + d == e, "#b1");
 			Assert.That (c == a + b, "#b2");
 			Assert.That (d == a - b, "#b3");
 		}
-		
+
 		const string LIBOBJC_DYLIB = "/usr/lib/libobjc.dylib";
 
 #if !__WATCHOS__ && !NET
-		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend")]
+		[DllImport (LIBOBJC_DYLIB, EntryPoint = "objc_msgSend")]
 		extern static OpenTK.Matrix4 Matrix4_objc_msgSend (IntPtr receiver, IntPtr selector);
 
-		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
+		[DllImport (LIBOBJC_DYLIB, EntryPoint = "objc_msgSend_stret")]
 		extern static void Matrix4_objc_msgSend_stret (out OpenTK.Matrix4 retval, IntPtr receiver, IntPtr selector);
 #endif // !__WATCHOS__ && !NET
 
-		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
+		[DllImport (LIBOBJC_DYLIB, EntryPoint = "objc_msgSend_stret")]
 		extern static void double_objc_msgSend_stret_out_double (out double retval, IntPtr receiver, IntPtr selector, out double arg1);
-		
-		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint = "objc_msgSend_stret")]
 		extern static void double_objc_msgSend_stret_out_float (out double retval, IntPtr receiver, IntPtr selector, out float arg1);
-		
-		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint = "objc_msgSend_stret")]
 		extern static void float_objc_msgSend_stret_out_double (out float retval, IntPtr receiver, IntPtr selector, out double arg1);
-		
-		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint = "objc_msgSend_stret")]
 		extern static void float_objc_msgSend_stret_out_float (out float retval, IntPtr receiver, IntPtr selector, out float arg1);
-		
-		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint = "objc_msgSend_stret")]
 		extern static void CGPoint_objc_msgSend_stret_out_double (out CGPoint retval, IntPtr receiver, IntPtr selector, out double arg1);
-		
-		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint = "objc_msgSend_stret")]
 		extern static void CGPoint_objc_msgSend_stret_out_float (out CGPoint retval, IntPtr receiver, IntPtr selector, out float arg1);
-		
-		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint = "objc_msgSend_stret")]
 		extern static void CGRect_objc_msgSend_stret_IntPtr_IntPtr_CGRect (out CGRect retval, IntPtr receiver, IntPtr selector, IntPtr a, IntPtr b, CGRect c);
 
-		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend")]
+		[DllImport (LIBOBJC_DYLIB, EntryPoint = "objc_msgSend")]
 		extern static CGRect CGRect_objc_msgSend_IntPtr_IntPtr_CGRect (IntPtr receiver, IntPtr selector, IntPtr a, IntPtr b, CGRect c);
 
-		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend")]
+		[DllImport (LIBOBJC_DYLIB, EntryPoint = "objc_msgSend")]
 		extern static void void_objc_msgSend_out_NSError (IntPtr receiver, IntPtr selector, out IntPtr error, int arg1);
-		
-		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend")]
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint = "objc_msgSend")]
 		extern static void void_objc_msgSend_long_long_ref_long_ref_long (IntPtr receiver, IntPtr selector, long arg1, long arg2, out long arg3, out long arg4);
-			             
-		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend")]
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint = "objc_msgSend")]
 		extern static long long_objc_msgSend_long_long_out_long_out_long (IntPtr receiver, IntPtr selector, long arg1, long arg2, out long arg3, out long arg4);
 
-		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend")]
+		[DllImport (LIBOBJC_DYLIB, EntryPoint = "objc_msgSend")]
 		extern static bool bool_objc_msgSend_out_CGPoint (IntPtr receiver, IntPtr selector, out CGPoint point);
 
 
 #if !__WATCHOS__
-		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend")]
+		[DllImport (LIBOBJC_DYLIB, EntryPoint = "objc_msgSend")]
 		extern static CMTimeRange CMTimeRange_objc_msgSend (IntPtr receiver, IntPtr selector);
 
-		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
+		[DllImport (LIBOBJC_DYLIB, EntryPoint = "objc_msgSend_stret")]
 		extern static void CMTimeRange_objc_msgSend (out CMTimeRange retval, IntPtr receiver, IntPtr selector);
 #endif // !__WATCHOS__
 
@@ -255,7 +255,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			} else {
 				Messaging.CGRect_objc_msgSend_stret_MKCoordinateRegion_IntPtr (out rect, obj.Handle, new Selector ("testCGRect_MCCoordinateRegion_IntPtr:str:").Handle, mkregion, tmp_obj.Handle);
 			}
-			Assert.That (rect == new CGRect (123.456f+pi, 345.678f-pi, 987.654f*pi, 654.321f/pi), "#testCGRect_MCCoordinateRegion_IntPtr:str:");
+			Assert.That (rect == new CGRect (123.456f + pi, 345.678f - pi, 987.654f * pi, 654.321f / pi), "#testCGRect_MCCoordinateRegion_IntPtr:str:");
 
 			mkmaprect = new MKMapRect (111.1, 222.2, 333.3, 444.4);
 			if (IsArm64CallingConvention || IsArmv7k) {
@@ -281,7 +281,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			} else {
 				Messaging.CGRect_objc_msgSend_stret_CGRect_int (out rect, obj.Handle, new Selector ("testCGRect_CGRect_int:i:").Handle, rect2, 8);
 			}
-			AreAlmostEqual (rect, new CGRect (5.44f*i, 4.33f+i, 3.22f-i, 2.11f/i), "testCGRect_CGRect_int:i:");
+			AreAlmostEqual (rect, new CGRect (5.44f * i, 4.33f + i, 3.22f - i, 2.11f / i), "testCGRect_CGRect_int:i:");
 
 			rect2 = new CGRect (5.4f, 4.3f, 3.2f, 2.1f);
 			if (IsArm64CallingConvention || IsArmv7k) {
@@ -289,12 +289,12 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			} else {
 				Messaging.CGRect_objc_msgSend_stret_CGRect_IntPtr (out rect, obj.Handle, new Selector ("testCGRect_CGRect_IntPtr:str:").Handle, rect2, tmp_obj.Handle);
 			}
-			Assert.That (rect == new CGRect (5.4f*pi, 4.3f+pi, 3.2f-pi, 2.1f/pi));
+			Assert.That (rect == new CGRect (5.4f * pi, 4.3f + pi, 3.2f - pi, 2.1f / pi));
 
 			rect2 = new CGRect (1, 2, 3, 4);
 			rect3 = new CGRect (9, 8, 7, 6);
 			if (IsArm64CallingConvention || IsArmv7k) {
-				rect = Messaging.CGRect_objc_msgSend_CGRect_CGRect_float ( obj.Handle, new Selector ("testCGRect_CGRect_CGRect_float:b:c:").Handle, rect2, rect3, (float) pi);
+				rect = Messaging.CGRect_objc_msgSend_CGRect_CGRect_float (obj.Handle, new Selector ("testCGRect_CGRect_CGRect_float:b:c:").Handle, rect2, rect3, (float) pi);
 			} else {
 				Messaging.CGRect_objc_msgSend_stret_CGRect_CGRect_float (out rect, obj.Handle, new Selector ("testCGRect_CGRect_CGRect_float:b:c:").Handle, rect2, rect3, (float) pi);
 			}
@@ -336,23 +336,23 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			res.M44 = 44.4f;
 			Assert.That (catransform3d.Equals (res), "#testCATransform3D");
 #endif // !__WATCHOS__
-			
+
 			CGPoint point;
 			CGSize size;
-			
+
 			if (IsArm32) {
 				Messaging.CGPoint_objc_msgSend_stret (out point, obj.Handle, new Selector ("testCGPoint").Handle);
 			} else {
 				point = Messaging.CGPoint_objc_msgSend (obj.Handle, new Selector ("testCGPoint").Handle);
 			}
-			Assert.That (point == new CGPoint (pi*2, pi*20), "#testCGPoint");
-			
+			Assert.That (point == new CGPoint (pi * 2, pi * 20), "#testCGPoint");
+
 			if (IsArm32) {
 				Messaging.CGSize_objc_msgSend_stret (out size, obj.Handle, new Selector ("testCGSize").Handle);
 			} else {
 				size = Messaging.CGSize_objc_msgSend (obj.Handle, new Selector ("testCGSize").Handle);
 			}
-			Assert.That (size == new CGSize (pi*3, pi*30), "#testCGSize");
+			Assert.That (size == new CGSize (pi * 3, pi * 30), "#testCGSize");
 		}
 
 		[Test]
@@ -361,60 +361,60 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			var obj = new OutParams ();
 			CGPoint point = new CGPoint (3, 14);
 			bool res;
-			
+
 			res = bool_objc_msgSend_out_CGPoint (obj.Handle, new Selector ("Test_CGPoint:").Handle, out point);
 			Assert.That (res, "#res");
 			Assert.That (point.X, Is.EqualTo ((nfloat) 3.1415f), "#x");
 			Assert.That (point.Y, Is.EqualTo ((nfloat) 0), "#y");
 		}
-		
+
 		[Test]
 		public void OutParamTest ()
 		{
 			var obj = new OutParams ();
 			NSError error = new NSError (new NSString ("doomed"), 314);
 			IntPtr errorptr = error.Handle;
-			
+
 			void_objc_msgSend_out_NSError (obj.Handle, new Selector ("Test_NSError:arg1:").Handle, out errorptr, 0);
 			error = errorptr == IntPtr.Zero ? null : Runtime.GetNSObject<NSError> (errorptr);
 			Assert.That (error, Is.Null, "#1");
-			
+
 			void_objc_msgSend_out_NSError (obj.Handle, new Selector ("Test_NSError:arg1:").Handle, out errorptr, 1);
 			error = Runtime.GetNSObject<NSError> (errorptr);
 			Assert.That (error.Domain, Is.EqualTo ("domain"), "#2 - domain");
 			Assert.That (error.Code, Is.EqualTo ((nint) 1), "#3 - code");
 		}
-		
+
 		[Test]
 		public void ArrayTest ()
 		{
 			var obj = new ArrayTrampolines ();
-			string[] arr = new string [] { "abc" };
+			string [] arr = new string [] { "abc" };
 			int c;
-			
+
 			c = Messaging.int_objc_msgSend_IntPtr (obj.Handle, new Selector ("Test_StringArray:").Handle, NSArray.FromStrings (arr).Handle);
-			
+
 			Assert.That (c == 1, "#a1");
 			Assert.That (arr [0] == "abc"); // array elements aren't copied back out (maybe they should be?)
-			
+
 			arr = NSArray.StringArrayFromHandle (Messaging.IntPtr_objc_msgSend (obj.Handle, new Selector ("Test_StringArrayReturn").Handle));
 
 			Assert.That (arr.Length == 1, "#b1");
 			Assert.That (arr [0] == "def", "#b2");
-			
+
 			arr = NSArray.StringArrayFromHandle (Messaging.IntPtr_objc_msgSend (obj.Handle, new Selector ("Test_StringArrayNullReturn").Handle));
 			Assert.IsNull (arr, "#c1");
 
 			c = Messaging.int_objc_msgSend_IntPtr (obj.Handle, new Selector ("Test_StringArray:").Handle, IntPtr.Zero);
 			Assert.AreEqual (-1, c, "#d1");
 		}
-		
+
 		[Test]
 		public void IntPtrTest ()
 		{
 			var obj = new IntPtrTrampolines ();
 			bool res;
-			
+
 			res = Messaging.bool_objc_msgSend_IntPtr (obj.Handle, new Selector ("IsZero:").Handle, IntPtr.Zero);
 			Assert.That (res, "#1");
 			res = Messaging.bool_objc_msgSend_IntPtr (obj.Handle, new Selector ("IsZero:").Handle, new IntPtr (1));
@@ -432,8 +432,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 
 	[Preserve (AllMembers = true)]
 	[Register ("MiscTrampolines")]
-	public class MiscTrampolines : NSObject
-	{
+	public class MiscTrampolines : NSObject {
 		[Export ("x64argumentoverflow:::::")]
 		void X64ArgumentOverflow (nint a, nint b, nint c, NSRange overflow, nint d)
 		{
@@ -448,47 +447,44 @@ namespace MonoTouchFixtures.ObjCRuntime {
 
 	[Register ("IntPtrTrampolines")]
 	[Preserve (AllMembers = true)]
-	public class IntPtrTrampolines : NSObject
-	{
+	public class IntPtrTrampolines : NSObject {
 		[Export ("IsZero:")]
 		bool IsZero (IntPtr foo)
 		{
 			return foo == IntPtr.Zero;
 		}
 	}
-	
+
 	[Register ("ArrayTrampolines")]
 	[Preserve (AllMembers = true)]
-	public class ArrayTrampolines : NSObject
-	{
+	public class ArrayTrampolines : NSObject {
 		[Export ("Test_StringArray:")]
-		int Test_StringArray (string[] arr)
+		int Test_StringArray (string [] arr)
 		{
-			if (arr == null)
+			if (arr is null)
 				return -1;
 			if (arr.Length == 0)
 				return 0;
 			arr [0] = "def";
 			return arr.Length;
 		}
-		
+
 		[Export ("Test_StringArrayReturn")]
-		string[] Test_StringArrayReturn ()
+		string [] Test_StringArrayReturn ()
 		{
 			return new string [] { "def" };
 		}
 
 		[Export ("Test_StringArrayNullReturn")]
-		string[] Test_StringArrayNullReturn ()
+		string [] Test_StringArrayNullReturn ()
 		{
 			return null;
 		}
 	}
-	
+
 	[Register ("OutParams")]
 	[Preserve (AllMembers = true)]
-	public class OutParams : NSObject
-	{
+	public class OutParams : NSObject {
 		[Export ("Test_NSError:arg1:")]
 		void Test_NSError (out NSError error, int arg1)
 		{
@@ -513,8 +509,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 
 	[Preserve (AllMembers = true)]
 	[Register ("LongTrampolines")]
-	public class LongTrampolines : NSObject
-	{
+	public class LongTrampolines : NSObject {
 		[Export ("ManyLongs:b:c:d:")]
 		void ManyLongs (long a, long b, ref long c, ref long d)
 		{
@@ -522,7 +517,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			c = a + b;
 			d = b - a;
 		}
-		
+
 		[Export ("VeryManyLongs:b:c:d:")]
 		long VeryManyLongs (long a, long b, out long c, out long d)
 		{
@@ -532,11 +527,10 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			return a + b + c + d;
 		}
 	}
-	
+
 	[Register ("StretTrampolines")]
 	[Preserve (AllMembers = true)]
-	public class StretTrampolines : NSObject
-	{
+	public class StretTrampolines : NSObject {
 #if !__WATCHOS__
 		[Export ("myTimeRange")]
 		CMTimeRange TimeRange {
@@ -547,41 +541,40 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		}
 #endif // !__WATCHOS__
 	}
-	
-	
+
+
 	[Register ("DoubleStretTrampolines")]
 	[Preserve (AllMembers = true)]
-	public class DoubleStretTrampolines : NSObject
-	{
+	public class DoubleStretTrampolines : NSObject {
 		[Export ("Test_Zero")]
 		double Test_Zero ()
 		{
 			return 0;
 		}
-		
+
 		[Export ("Test_StaticZero")]
 		static double Test_StaticZero ()
 		{
 			return 0;
 		}
-		
+
 		double Test_ZeroProperty {
 			[Export ("Test_ZeroProperty")]
 			get { return 0; }
 		}
-				
+
 		static double Test_StaticZeroProperty {
 			[Export ("Test_StaticZeroProperty")]
 			get { return 0; }
 		}
-		
+
 		[Export ("Test_Double_out_Double:")]
 		double Test_Double_out_Double (out double foo)
 		{
 			foo = 3.16f;
 			return 3.16;
 		}
-		
+
 		[Export ("Test_StaticDouble_out_Float:")]
 		static double Test_StaticDouble_out_Float (out float foo)
 		{
@@ -589,40 +582,39 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			return 3.17;
 		}
 	}
-	
+
 	[Register ("FloatStretTrampolines")]
 	[Preserve (AllMembers = true)]
-	public class FloatStretTrampolines : NSObject
-	{
+	public class FloatStretTrampolines : NSObject {
 		[Export ("Test_Zero")]
 		float Test_Zero ()
 		{
 			return 0;
 		}
-		
+
 		[Export ("Test_StaticZero")]
 		static float Test_StaticZero ()
 		{
 			return 0;
 		}
-		
+
 		float Test_ZeroProperty {
 			[Export ("Test_ZeroProperty")]
 			get { return 0; }
 		}
-				
+
 		static float Test_StaticZeroProperty {
 			[Export ("Test_StaticZeroProperty")]
 			get { return 0; }
 		}
-		
+
 		[Export ("Test_Float_out_Double:")]
 		float Test_Float_out_Double (out double foo)
 		{
 			foo = 3.18f;
 			return 3.18f;
 		}
-		
+
 		[Export ("Test_StaticFloat_out_Float:")]
 		static float Test_StaticFloat_out_Float (out float foo)
 		{
@@ -630,38 +622,37 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			return 3.19f;
 		}
 	}
-	
-	
+
+
 	[Register ("FloatingPointStretTrampolines")]
 	[Preserve (AllMembers = true)]
-	public class FloatingPointStretTrampolines : NSObject
-	{
+	public class FloatingPointStretTrampolines : NSObject {
 		const float pi = 3.14159f;
 		public NSString StringObj = new NSString ("3.14159");
-		
+
 		static float ParseString (string str)
 		{
 			return float.Parse (str, CultureInfo.InvariantCulture.NumberFormat);
 		}
-		
+
 		[Export ("testCGRect")]
 		public CGRect Test_CGRect ()
 		{
 			return new CGRect (1.2f, 2.3f, 3.4f, 4.5f);
 		}
-		
+
 		[Export ("staticTestCGRect")]
 		static public CGRect StaticTest_CGRect ()
 		{
 			return new CGRect (1.2f, 2.3f, 3.4f, 4.5f);
 		}
-		
+
 		[Export ("testCGRect_int:")]
 		public CGRect Test_CGRect_int (int a)
 		{
 			return new CGRect (a + 0.1f, a + 0.2f, a + 0.3f, a + 0.4f);
 		}
-		
+
 		[Export ("testCGRect_IntPtr:")]
 		public CGRect Test_CGRect_IntPtr (NSString str)
 		{
@@ -670,7 +661,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				return CGRect.Empty;
 			return new CGRect (pi + 0.4f, pi + 0.3f, pi + 0.2f, pi + 0.1f);
 		}
-		
+
 #if !__TVOS__
 		[Export ("testCGRect_MCCoordinateRegion_IntPtr:str:")]
 		public CGRect Test_CGRect_MKCoordinateRegion_IntPtr (MKCoordinateRegion a, NSString str)
@@ -678,48 +669,48 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			float pi = ParseString (str.ToString ());
 			if ((object) StringObj != (object) str)
 				return CGRect.Empty;
-			return new CGRect ((double)(float)a.Center.Latitude+pi, (double)(float)a.Center.Longitude-pi, (double)(float)a.Span.LatitudeDelta*pi, (double)(float)a.Span.LongitudeDelta/pi);
+			return new CGRect ((double) (float) a.Center.Latitude + pi, (double) (float) a.Center.Longitude - pi, (double) (float) a.Span.LatitudeDelta * pi, (double) (float) a.Span.LongitudeDelta / pi);
 		}
-		
+
 		[Export ("testCGRect_MKMapRect:")]
 		public CGRect Test_CGRect_MKMapRect (MKMapRect a)
 		{
 			return new CGRect ((float) a.Origin.X, (float) a.Origin.Y, (float) a.Width, (float) a.Height);
 		}
 #endif // !__TVOS__
-		
+
 		[Export ("testCGRect_CGRect:")]
 		public CGRect Test_CGRect_CGRect (CGRect a)
 		{
 			return new CGRect (a.X, a.Y, a.Width, a.Height);
 		}
-		
+
 		[Export ("testCGRect_CGRect_int:i:")]
 		public CGRect Test_CGRect_CGRect_int (CGRect a, int i)
 		{
-			return new CGRect (a.X*i, a.Y+i, a.Width-i, a.Height/i);
+			return new CGRect (a.X * i, a.Y + i, a.Width - i, a.Height / i);
 		}
-		
+
 		[Export ("testCGRect_CGRect_IntPtr:str:")]
 		public CGRect Test_CGRect_CGRect_IntPtr (CGRect a, NSString str)
 		{
 			float pi = ParseString (str.ToString ());
 			if ((object) StringObj != (object) str)
 				return CGRect.Empty;
-			return new CGRect (a.X*pi, a.Y+pi, a.Width-pi, a.Height/pi);
+			return new CGRect (a.X * pi, a.Y + pi, a.Width - pi, a.Height / pi);
 		}
-		
+
 		[Export ("testCGRect_CGRect_CGRect_float:b:c:")]
 		public CGRect Test_CGRect_CGRect_CGRect_float (CGRect a, CGRect b, float c)
 		{
-			return new CGRect (a.X*b.X*c, a.Y*b.Y*c, a.Width*b.Width*c, a.Height*b.Height*c);
+			return new CGRect (a.X * b.X * c, a.Y * b.Y * c, a.Width * b.Width * c, a.Height * b.Height * c);
 		}
 
 
 		[Export ("testCGRect_CGRect_CGRect_CGRect:b:c:")]
 		public CGRect Test_CGRect_CGRect_CGRect_CGRect (CGRect a, CGRect b, CGRect c)
 		{
-			return new CGRect (a.X+b.X+c.X, a.Y+b.Y+c.Y, a.Width+b.Width+c.Width, a.Height+b.Height+c.Height);
+			return new CGRect (a.X + b.X + c.X, a.Y + b.Y + c.Y, a.Width + b.Width + c.Width, a.Height + b.Height + c.Height);
 		}
 
 		[Export ("testCGRect_string_string_CGRect:b:c:")]
@@ -737,7 +728,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		{
 			return new Matrix3 (1, 2, 3, 4, 5, 6, 7, 8, 9);
 		}
-		
+
 		[Export ("testMatrix4")]
 		public Matrix4 Test_Matrix4 ()
 		{
@@ -756,26 +747,26 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			return res;
 		}
 #endif // !__WATCHOS__
-		
+
 		[Export ("testCGPoint")]
 		public CGPoint Test_CGPoint ()
 		{
-			return new CGPoint (pi*2, pi*20);
+			return new CGPoint (pi * 2, pi * 20);
 		}
 
 		[Export ("testCGSize")]
 		public CGSize Test_CGSize ()
 		{
-			return new CGSize (pi*3, pi*30);
+			return new CGSize (pi * 3, pi * 30);
 		}
-		
+
 		[Export ("Test_CGPoint_out_Double:")]
 		CGPoint Test_CGPoint_out_Double (out double foo)
 		{
 			foo = 3.18f;
 			return new CGPoint (1, 2);
 		}
-		
+
 		[Export ("Test_StaticCGPoint_out_Float:")]
 		static CGPoint Test_StaticCGPoint_out_Float (out float foo)
 		{

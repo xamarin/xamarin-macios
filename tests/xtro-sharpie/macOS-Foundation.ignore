@@ -28,7 +28,6 @@
 !missing-enum! NSXMLDTDNodeKind not bound
 !missing-enum! NSXMLNodeKind not bound
 !missing-enum! NSXMLNodeOptions not bound
-!missing-field! NSAppleEventManagerWillProcessFirstEventNotification not bound
 !missing-field! NSAppleEventTimeOutDefault not bound
 !missing-field! NSAppleEventTimeOutNone not bound
 !missing-field! NSAppleScriptErrorAppName not bound
@@ -110,7 +109,6 @@
 !missing-selector! +NSScriptClassDescription::classDescriptionForClass: not bound
 !missing-selector! +NSScriptObjectSpecifier::objectSpecifierWithDescriptor: not bound
 !missing-selector! +NSScriptSuiteRegistry::setSharedScriptSuiteRegistry: not bound
-!missing-selector! +NSTask::launchedTaskWithExecutableURL:arguments:error:terminationHandler: not bound
 !missing-selector! +NSValue::valueWithEdgeInsets: not bound
 !missing-selector! +NSXMLDocument::replacementClassForClass: not bound
 !missing-selector! +NSXMLDTD::predefinedEntityDeclarationForName: not bound
@@ -161,7 +159,6 @@
 !missing-selector! NSDeleteCommand::keySpecifier not bound
 !missing-selector! NSDeleteCommand::setReceiversSpecifier: not bound
 !missing-selector! NSDirectoryEnumerator::level not bound
-!missing-selector! NSFileProviderService::getFileProviderConnectionWithCompletionHandler: not bound
 !missing-selector! NSIndexSpecifier::index not bound
 !missing-selector! NSIndexSpecifier::initWithContainerClassDescription:containerSpecifier:key:index: not bound
 !missing-selector! NSIndexSpecifier::setIndex: not bound
@@ -355,15 +352,6 @@
 !missing-selector! NSSpellServer::isWordInUserDictionaries:caseSensitive: not bound
 !missing-selector! NSSpellServer::registerLanguage:byVendor: not bound
 !missing-selector! NSSpellServer::setDelegate: not bound
-!missing-selector! NSTask::currentDirectoryURL not bound
-!missing-selector! NSTask::executableURL not bound
-!missing-selector! NSTask::launchAndReturnError: not bound
-!missing-selector! NSTask::qualityOfService not bound
-!missing-selector! NSTask::setCurrentDirectoryURL: not bound
-!missing-selector! NSTask::setExecutableURL: not bound
-!missing-selector! NSTask::setQualityOfService: not bound
-!missing-selector! NSTask::setTerminationHandler: not bound
-!missing-selector! NSTask::terminationHandler not bound
 !missing-selector! NSUniqueIDSpecifier::initWithCoder: not bound
 !missing-selector! NSUniqueIDSpecifier::initWithContainerClassDescription:containerSpecifier:key:uniqueID: not bound
 !missing-selector! NSUniqueIDSpecifier::setUniqueID: not bound
@@ -586,33 +574,6 @@
 !missing-selector! NSXMLDTDNode::init not bound
 !missing-selector! NSXMLNode::detach not bound
 !missing-selector! NSXMLNode::init not bound
+!missing-enum! NSNetServicesError not bound
 
-# Initial result from new rule missing-null-allowed
-!missing-null-allowed! 'Foundation.NSAppleEventDescriptor Foundation.NSScriptCommand::get_AppleEvent()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSArray Foundation.NSPortMessage::get_Components()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSData Foundation.NSUbiquitousKeyValueStore::GetData(System.String)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSData Foundation.NSUrlDownload::get_ResumeData()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSDictionary Foundation.NSUbiquitousKeyValueStore::GetDictionary(System.String)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSExpression Foundation.NSExpression::FromFunction(Foundation.NSExpressionHandler,Foundation.NSExpression[])' is missing an [NullAllowed] on parameter #1
-!missing-null-allowed! 'Foundation.NSFileVersion Foundation.NSFileVersion::AddVersion(Foundation.NSUrl,Foundation.NSUrl,Foundation.NSFileVersionAddingOptions,Foundation.NSError&)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSObject Foundation.NSScriptCommand::get_EvaluatedReceivers()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSObject Foundation.NSUbiquitousKeyValueStore::ObjectForKey(System.String)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSObject[] Foundation.NSUbiquitousKeyValueStore::GetArray(System.String)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSPort Foundation.NSPortMessage::get_ReceivePort()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSPort Foundation.NSPortMessage::get_SendPort()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSPredicate Foundation.NSPredicate::FromMetadataQueryString(System.String)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSString Foundation.NSScriptCommandDescription::GetNSTypeForArgument(Foundation.NSString)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSUrl Foundation.NSFilePresenter::get_PrimaryPresentedItemUrl()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.String Foundation.NSScriptCommandDescription::get_ReturnType()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.String Foundation.NSUbiquitousKeyValueStore::GetString(System.String)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.Void Foundation.NSPortMessage::.ctor(Foundation.NSPort,Foundation.NSPort,Foundation.NSArray)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void Foundation.NSPortMessage::.ctor(Foundation.NSPort,Foundation.NSPort,Foundation.NSArray)' is missing an [NullAllowed] on parameter #1
-!missing-null-allowed! 'System.Void Foundation.NSPortMessage::.ctor(Foundation.NSPort,Foundation.NSPort,Foundation.NSArray)' is missing an [NullAllowed] on parameter #2
-!missing-null-allowed! 'System.Void Foundation.NSScriptCommandDescription::.ctor(Foundation.NSString,Foundation.NSString,Foundation.NSDictionary)' is missing an [NullAllowed] on parameter #2
-!missing-null-allowed! 'System.Void Foundation.NSUbiquitousKeyValueStore::_SetArray(Foundation.NSObject[],System.String)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void Foundation.NSUbiquitousKeyValueStore::_SetData(Foundation.NSData,System.String)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void Foundation.NSUbiquitousKeyValueStore::_SetDictionary(Foundation.NSDictionary,System.String)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void Foundation.NSUbiquitousKeyValueStore::_SetString(System.String,System.String)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void Foundation.NSUbiquitousKeyValueStore::SetObjectForKey(Foundation.NSObject,System.String)' is missing an [NullAllowed] on parameter #0
 !unknown-native-enum! NSBundleExecutableArchitecture bound
-!missing-field! NSNetServicesErrorCode not bound

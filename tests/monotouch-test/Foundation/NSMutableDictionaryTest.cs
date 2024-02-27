@@ -6,12 +6,11 @@ using NUnit.Framework;
 using Foundation;
 using ObjCRuntime;
 
-namespace monotouchtest
-{
+namespace monotouchtest {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class NSMutableDictionaryTest {
-		
+
 		[Test]
 		public void IndexerTest ()
 		{
@@ -20,7 +19,6 @@ namespace monotouchtest
 			IntPtr objptr;
 			IntPtr keyptr;
 
-			NSString obj, key;
 			NSString v;
 
 			try {
@@ -93,7 +91,7 @@ namespace monotouchtest
 					Assert.AreEqual ("value", dic1 ["key"].ToString (), "Value 1");
 
 					dic1.AddEntries (dic2);
-					
+
 					Assert.AreEqual ((nuint) 1, dic1.Count, "Count 2");
 					Assert.AreEqual ("value", dic1 ["key"].ToString (), "Value 2");
 				}

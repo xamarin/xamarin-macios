@@ -14,7 +14,7 @@ namespace MonoTouchFixtures.Foundation {
 	[Preserve (AllMembers = true)]
 	public class NSScriptCommandDescriptionTest {
 
-		NSScriptCommandDescription scriptDescription = null;	
+		NSScriptCommandDescription scriptDescription = null;
 		Dictionary<string, NSScriptCommandArgumentDescription> args;
 		NSScriptCommandDescriptionDictionary dict = null;
 		string suiteName, commandName, cmdClass, eventCode, eventClass, returnType, resultAppleEvent = null;
@@ -27,7 +27,7 @@ namespace MonoTouchFixtures.Foundation {
 				{"secondArg", new NSScriptCommandArgumentDescription {Name="secondArg", AppleEventCode="sArg", Type="NSNumber"}},
 				{"thirdArg", new NSScriptCommandArgumentDescription {Name="thirdArg", AppleEventCode="tArg", Type="integer"}}
 			};
-			
+
 			suiteName = "Chromium Suite";
 			commandName = "Exec Python";
 			cmdClass = "NSScriptCommand";
@@ -43,16 +43,16 @@ namespace MonoTouchFixtures.Foundation {
 				ResultAppleEventCode = resultAppleEvent
 			};
 
-			foreach(var arg in args.Values) {
+			foreach (var arg in args.Values) {
 				dict.Add (arg);
 			}
 			scriptDescription = NSScriptCommandDescription.Create (suiteName, commandName, dict);
 		}
-		
+
 		[TearDown]
 		public void Dispose ()
 		{
-			if (scriptDescription != null)
+			if (scriptDescription is not null)
 				scriptDescription.Dispose ();
 		}
 
@@ -62,7 +62,7 @@ namespace MonoTouchFixtures.Foundation {
 			var description = new NSScriptCommandDescriptionDictionary ();
 			Assert.Throws<ArgumentException> (() => NSScriptCommandDescription.Create (suiteName, commandName, description));
 		}
-		
+
 		[TestCase ("")]
 		[TestCase (null)]
 		public void TestCreateWithDictNullOrEmptySuitName (string code)
@@ -70,7 +70,7 @@ namespace MonoTouchFixtures.Foundation {
 			var description = new NSScriptCommandDescriptionDictionary ();
 			Assert.Throws<ArgumentException> (() => NSScriptCommandDescription.Create (code, commandName, description));
 		}
-	
+
 		[TestCase ("")]
 		[TestCase (null)]
 		public void TestCreateWithDictNullOrEmptyCommandName (string code)
@@ -78,28 +78,28 @@ namespace MonoTouchFixtures.Foundation {
 			var description = new NSScriptCommandDescriptionDictionary ();
 			Assert.Throws<ArgumentException> (() => NSScriptCommandDescription.Create (suiteName, code, description));
 		}
-		
+
 		[Test]
 		public void TestCreateWithDictNullDict ()
 		{
 			NSScriptCommandDescriptionDictionary dict = null;
 			Assert.Throws<ArgumentNullException> (() => NSScriptCommandDescription.Create (suiteName, commandName, dict));
 		}
-		
+
 		[TestCase ("")]
 		[TestCase (null)]
 		public void TestCreateSuiteNameNullOrEmpty (string code)
 		{
 			Assert.Throws<ArgumentException> (() => NSScriptCommandDescription.Create (code, commandName, dict));
 		}
-		
+
 		[TestCase ("")]
 		[TestCase (null)]
 		public void TestCreateCommandNameNullOrEmpty (string code)
 		{
 			Assert.Throws<ArgumentException> (() => NSScriptCommandDescription.Create (suiteName, code, dict));
 		}
-		
+
 		[TestCase ("")]
 		[TestCase (null)]
 		public void TestCreateCmdClassNullOrEmpty (string code)
@@ -107,23 +107,23 @@ namespace MonoTouchFixtures.Foundation {
 			dict.CommandClass = code;
 			Assert.Throws<ArgumentException> (() => NSScriptCommandDescription.Create (suiteName, commandName, dict));
 		}
-		
+
 		[TestCase ("")]
 		[TestCase (null)]
 		public void TestCreateEventCodeNullOrEmpty (string code)
 		{
-			dict.AppleEventCode = code; 
+			dict.AppleEventCode = code;
 			Assert.Throws<ArgumentException> (() => NSScriptCommandDescription.Create (suiteName, commandName, dict));
 		}
-		
+
 		[TestCase ("TooLong")]
 		[TestCase ("srt")]
 		public void TestCreateEventCodeWrongLength (string code)
 		{
-			dict.AppleEventCode = code; 
+			dict.AppleEventCode = code;
 			Assert.Throws<ArgumentException> (() => NSScriptCommandDescription.Create (suiteName, commandName, dict));
 		}
-		
+
 		[TestCase ("TooLong")]
 		[TestCase ("srt")]
 		public void TestCreateResultAppleEventWrongLength (string code)
@@ -131,25 +131,25 @@ namespace MonoTouchFixtures.Foundation {
 			dict.ResultAppleEventCode = code;
 			Assert.Throws<ArgumentException> (() => NSScriptCommandDescription.Create (suiteName, commandName, dict));
 		}
-		
+
 		[Test]
 		public void TestClassName ()
 		{
 			Assert.AreEqual (cmdClass, scriptDescription.ClassName);
 		}
-		
+
 		[Test]
 		public void TestName ()
 		{
 			Assert.AreEqual (commandName, scriptDescription.Name);
 		}
-		
+
 		[Test]
 		public void TestSuiteName ()
 		{
 			Assert.AreEqual (suiteName, scriptDescription.SuitName);
 		}
-		
+
 		[Test]
 		public void TestArgumentsNames ()
 		{
@@ -158,7 +158,7 @@ namespace MonoTouchFixtures.Foundation {
 				Assert.IsTrue (args.Keys.Contains (argName), "Arg {0} is missing", argName);
 			}
 		}
-		
+
 		[Test]
 		public void TestAppleEventClassCode ()
 		{

@@ -15,6 +15,9 @@ using System.Collections;
 using ObjCRuntime;
 using Foundation;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace UIKit {
 	public partial class UIActionSheet : IEnumerable {
 
@@ -29,21 +32,21 @@ namespace UIKit {
 		public UIActionSheet (string title, IUIActionSheetDelegate del, string cancelTitle, string destroy, params string [] other)
 			: this (title, del, null, null, (string) null)
 		{
-			if (destroy != null)
+			if (destroy is not null)
 				DestructiveButtonIndex = AddButton (destroy);
 
-			if (other == null) {
-				if (cancelTitle != null)
+			if (other is null) {
+				if (cancelTitle is not null)
 					CancelButtonIndex = AddButton (cancelTitle);
 				return;
 			}
 
 			foreach (string b in other){
-				if (b != null)
+				if (b is not null)
 					AddButton (b);
 			}
 
-			if (cancelTitle != null)
+			if (cancelTitle is not null)
 				CancelButtonIndex = AddButton (cancelTitle);
 		}
 		

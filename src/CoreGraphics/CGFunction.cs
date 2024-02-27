@@ -74,7 +74,7 @@ namespace CoreGraphics {
 		}
 #endif
 
-		[Preserve (Conditional=true)]
+		[Preserve (Conditional = true)]
 		internal CGFunction (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
@@ -106,7 +106,7 @@ namespace CoreGraphics {
 		}
 
 		// Apple's documentation says 'float', the header files say 'CGFloat'
-		unsafe delegate void CGFunctionEvaluateCallback (/* void* */ IntPtr info, /* CGFloat* */ nfloat *data, /* CGFloat* */ nfloat *outData); 
+		unsafe delegate void CGFunctionEvaluateCallback (/* void* */ IntPtr info, /* CGFloat* */ nfloat* data, /* CGFloat* */ nfloat* outData);
 		delegate void CGFunctionReleaseCallback (IntPtr info);
 
 		[StructLayout (LayoutKind.Sequential)]
@@ -120,11 +120,11 @@ namespace CoreGraphics {
 			public CGFunctionReleaseCallback? release;
 #endif
 		}
-		
+
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static IntPtr CGFunctionCreate (/* void* */ IntPtr data, /* size_t */ nint domainDimension, /* CGFloat* */ nfloat []? domain, nint rangeDimension, /* CGFloat* */ nfloat []? range, ref CGFunctionCallbacks callbacks);
-		
-		unsafe public delegate void CGFunctionEvaluate (nfloat *data, nfloat *outData);
+		extern static unsafe IntPtr CGFunctionCreate (/* void* */ IntPtr data, /* size_t */ nint domainDimension, /* CGFloat* */ nfloat* domain, nint rangeDimension, /* CGFloat* */ nfloat* range, ref CGFunctionCallbacks callbacks);
+
+		unsafe public delegate void CGFunctionEvaluate (nfloat* data, nfloat* outData);
 
 
 		public unsafe CGFunction (nfloat []? domain, nfloat []? range, CGFunctionEvaluate callback)
@@ -143,8 +143,12 @@ namespace CoreGraphics {
 			this.evaluate = callback;
 
 			var gch = GCHandle.Alloc (this);
-			var handle = CGFunctionCreate (GCHandle.ToIntPtr (gch), domain is not null ? domain.Length / 2 : 0, domain, range is not null ? range.Length / 2 : 0, range, ref cbacks);
-			InitializeHandle (handle);
+			unsafe {
+				fixed (nfloat* domainPtr = domain, rangePtr = range) {
+					var handle = CGFunctionCreate (GCHandle.ToIntPtr (gch), domain is not null ? domain.Length / 2 : 0, domainPtr, range is not null ? range.Length / 2 : 0, rangePtr, ref cbacks);
+					InitializeHandle (handle);
+				}
+			}
 		}
 #if NET
 		[UnmanagedCallersOnly]
@@ -165,7 +169,7 @@ namespace CoreGraphics {
 		[MonoPInvokeCallback (typeof (CGFunctionEvaluateCallback))]
 #endif
 #endif
-		unsafe static void EvaluateCallback (IntPtr info, nfloat *input, nfloat *output)
+		unsafe static void EvaluateCallback (IntPtr info, nfloat* input, nfloat* output)
 		{
 			GCHandle lgc = GCHandle.FromIntPtr (info);
 			var container = lgc.Target as CGFunction;

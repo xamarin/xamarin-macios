@@ -10,12 +10,6 @@
 	<dict>
 		<key>macOS</key>
 		<array>
-			<string>10.9</string>
-			<string>10.10</string>
-			<string>10.11</string>
-			<string>10.12</string>
-			<string>10.13</string>
-			<string>10.14</string>
 			<string>10.15</string>
 			<string>10.16</string>
 			<string>11.0</string>
@@ -25,6 +19,11 @@
 			<string>12.0</string>
 			<string>12.1</string>
 			<string>12.3</string>
+			<string>13.0</string>
+			<string>13.1</string>
+			<string>13.3</string>
+			<string>14.0</string>
+			<string>14.2</string>
 		</array>
 	</dict>
 	<key>RecommendedXcodeVersion</key>

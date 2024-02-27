@@ -7,11 +7,9 @@ using AppKit;
 using ObjCRuntime;
 using Foundation;
 
-namespace Xamarin.Mac.Tests
-{
+namespace Xamarin.Mac.Tests {
 	[Preserve (AllMembers = true)]
-	public class NSSplitViewItemTests
-	{
+	public class NSSplitViewItemTests {
 		NSSplitViewItem item;
 
 		[SetUp]
@@ -28,7 +26,7 @@ namespace Xamarin.Mac.Tests
 			var viewController = new NSViewController ();
 			var splitViewItem = NSSplitViewItem.FromViewController (viewController);
 
-			Assert.IsFalse (splitViewItem == null, "NSSplitViewItemShouldCreateFromViewController - Returned null");
+			Assert.IsFalse (splitViewItem is null, "NSSplitViewItemShouldCreateFromViewController - Returned null");
 			Assert.IsTrue (splitViewItem.ViewController == viewController, "NSSplitViewItemShouldCreateFromViewController - ViewController property not set correctly");
 		}
 

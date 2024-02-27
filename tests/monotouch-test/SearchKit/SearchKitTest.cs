@@ -21,7 +21,7 @@ namespace apitest {
 			SKIndex.LoadDefaultExtractorPlugIns ();
 			if (File.Exists (path))
 				File.Delete (path);
-			
+
 		}
 
 		[TearDown]
@@ -35,7 +35,7 @@ namespace apitest {
 		public void TestCreate ()
 		{
 			var idx = SKIndex.CreateWithUrl (new NSUrl ("file://" + path), "myIndex", SKIndexType.InvertedVector, null);
-			if (idx == null)
+			if (idx is null)
 				throw new Exception ();
 
 
@@ -47,7 +47,7 @@ namespace apitest {
 
 			const int max = 10;
 			nint [] ids = new nint [max];
-			float[] scores = new float[max];
+			float [] scores = new float [max];
 			nint nfound;
 			bool more;
 
@@ -83,7 +83,7 @@ namespace apitest {
 		public void TestInMemory ()
 		{
 			var m = new NSMutableData ();
-			var idx = SKIndex.CreateWithMutableData (m, "indexName", SKIndexType.Inverted, null); 
+			var idx = SKIndex.CreateWithMutableData (m, "indexName", SKIndexType.Inverted, null);
 			Assert.NotNull (idx);
 			idx.AddDocumentWithText (new SKDocument (new NSUrl ("file:///etc/passwd")), "These are the contents of the passwd file, well, not really", true);
 			idx.Flush ();
@@ -107,7 +107,7 @@ namespace apitest {
 				StopWords = new NSSet ("all", "and", "its", "it's", "the")
 			};
 
-			var idx = SKIndex.CreateWithMutableData (m, "indexName", SKIndexType.Inverted, properties); 
+			var idx = SKIndex.CreateWithMutableData (m, "indexName", SKIndexType.Inverted, properties);
 			Assert.NotNull (idx);
 
 		}
@@ -121,14 +121,14 @@ namespace apitest {
 				"If I cook this rock enough, it will be soft and tasty.   I might even get lucky and find some salt.");
 
 			Assert.NotNull (sum);
-			var rankOrder = new nint[10]; 
-			var sentenceIndex = new nint[10];
+			var rankOrder = new nint [10];
+			var sentenceIndex = new nint [10];
 			var paragraphIndex = new nint [10];
 
 			nint n;
 			n = sum.GetSentenceSummaryInfo (10, rankOrder, sentenceIndex, paragraphIndex);
 			Assert.AreEqual ((nint) 4, n);
-			Assert.AreEqual ((nint) 2, paragraphIndex[3]); // 4th sentence (index 3) is on the 3rd (index 2) paragraph
+			Assert.AreEqual ((nint) 2, paragraphIndex [3]); // 4th sentence (index 3) is on the 3rd (index 2) paragraph
 			n = sum.GetSentenceSummaryInfo (10, null, sentenceIndex, paragraphIndex);
 			Assert.AreEqual ((nint) 4, n);
 			n = sum.GetSentenceSummaryInfo (10, rankOrder, null, paragraphIndex);

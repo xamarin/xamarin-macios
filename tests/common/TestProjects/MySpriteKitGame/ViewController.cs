@@ -3,10 +3,8 @@ using System;
 using SpriteKit;
 using UIKit;
 
-namespace MySpriteKitGame
-{
-	public partial class ViewController : UIViewController
-	{
+namespace MySpriteKitGame {
+	public partial class ViewController : UIViewController {
 		public ViewController (IntPtr handle) : base (handle)
 		{
 		}
@@ -24,7 +22,7 @@ namespace MySpriteKitGame
 			base.ViewDidLoad ();
 
 			// Configure the view.
-			var skView = (SKView)View;
+			var skView = (SKView) View;
 			skView.ShowsFPS = true;
 			skView.ShowsNodeCount = true;
 

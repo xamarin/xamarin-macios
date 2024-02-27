@@ -25,13 +25,9 @@
 !missing-pinvoke! UIImageSymbolWeightForFontWeight is not bound
 
 # Initial result from new rule extra-null-allowed
-!extra-null-allowed! 'System.Void Foundation.NSAttributedString::.ctor(Foundation.NSData,Foundation.NSDictionary,Foundation.NSDictionary&,Foundation.NSError&)' has a extraneous [NullAllowed] on parameter #1
-!extra-null-allowed! 'System.Void Foundation.NSAttributedString::.ctor(Foundation.NSUrl,Foundation.NSDictionary,Foundation.NSDictionary&,Foundation.NSError&)' has a extraneous [NullAllowed] on parameter #1
 !extra-null-allowed! 'System.Void UIKit.UIBezierPath::set_CGPath(CoreGraphics.CGPath)' has a extraneous [NullAllowed] on parameter #0
 
 # Initial result from new rule missing-null-allowed
-!missing-null-allowed! 'Foundation.NSData Foundation.NSAttributedString::GetDataFromRange(Foundation.NSRange,Foundation.NSDictionary,Foundation.NSError&)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSFileWrapper Foundation.NSAttributedString::GetFileWrapperFromRange(Foundation.NSRange,Foundation.NSDictionary,Foundation.NSError&)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject UIKit.UIFontDescriptor::GetObject(Foundation.NSString)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UIFontDescriptor UIKit.UIFontDescriptor::CreateWithTraits(UIKit.UIFontDescriptorSymbolicTraits)' is missing an [NullAllowed] on return type
 

@@ -150,7 +150,7 @@ namespace MonoTouchFixtures.Foundation {
 			var values = new NSString [C];
 			for (int i = 0; i < C; i++)
 				values [i] = (NSString) i.ToString ();
-			
+
 			using (var st = new NSSet<NSString> (values)) {
 				Assert.AreEqual ((nuint) C, st.Count, "Count 1");
 
@@ -190,8 +190,8 @@ namespace MonoTouchFixtures.Foundation {
 		[Test]
 		public void OperatorPlusReferenceTest ()
 		{
-			var one = new NSSet<NSString> ((NSString)"1", (NSString)"2", (NSString)"3");
-			var two = new NSSet<NSString> ((NSString)"4", (NSString)"5", (NSString)"6");
+			var one = new NSSet<NSString> ((NSString) "1", (NSString) "2", (NSString) "3");
+			var two = new NSSet<NSString> ((NSString) "4", (NSString) "5", (NSString) "6");
 			NSSet<NSString> nil = null;
 			using (var sum = one + nil)
 			using (var sum2 = two + one)

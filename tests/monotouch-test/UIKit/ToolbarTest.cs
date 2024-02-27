@@ -10,11 +10,11 @@ using UIKit;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.UIKit {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class ToolbarTest {
-		
+
 		[Test]
 		public void InitWithFrame ()
 		{
@@ -23,7 +23,7 @@ namespace MonoTouchFixtures.UIKit {
 				Assert.That (tb.Frame, Is.EqualTo (frame), "Frame");
 			}
 		}
-		
+
 		[Test]
 		public void BackgroundImage ()
 		{

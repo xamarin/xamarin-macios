@@ -76,7 +76,7 @@ namespace LinkSdk {
 	// we want the test to be availble if we use the linker
 	[Preserve (AllMembers = true)]
 	public class LinkSdkRegressionTest {
-		
+
 		[Test]
 		// https://github.com/xamarin/monotouch/commit/cbefbeaea2eda820dfc7214e976edc83a55df38e
 		public void MonoAssembly_LinkedOut ()
@@ -84,7 +84,7 @@ namespace LinkSdk {
 			Assembly a = Assembly.GetExecutingAssembly ();
 			Assert.That (a.GetType ().Name, Is.EqualTo ("RuntimeAssembly"), "RuntimeAssembly");
 		}
-		
+
 		[Test]
 		// http://bugzilla.xamarin.com/show_bug.cgi?id=205
 		// https://bugzilla.novell.com/show_bug.cgi?id=688414
@@ -95,7 +95,7 @@ namespace LinkSdk {
 				ds.WriteObject (xw, new int [] { 1, 2, 3 });
 			// the above should not throw System.Runtime.Serialization.SerializationException
 		}
-		
+
 #if !NET // This test requires Mono.Data.SqliteConnection, which .NET 5+ doesn't have
 		[Test]
 		// http://bugzilla.xamarin.com/show_bug.cgi?id=233
@@ -103,12 +103,12 @@ namespace LinkSdk {
 		{
 			var c = new SqliteConnection ("Data Source=:memory:");
 			c.Open ();
-			c.Update += (sender, e) => {};
+			c.Update += (sender, e) => { };
 			// the above should not crash
 			c.Close ();
 		}
 #endif
-		
+
 		[Test]
 		// http://bugzilla.xamarin.com/show_bug.cgi?id=234
 		public void Bug234_Interlocked ()
@@ -118,7 +118,7 @@ namespace LinkSdk {
 			// the above should not crash with System.ExecutionEngineException
 			Assert.That (str, Is.EqualTo ("one"), "one");
 		}
-		
+
 		[Test]
 		// http://bugzilla.xamarin.com/show_bug.cgi?id=300
 		// http://stackoverflow.com/questions/6517736/monotouch-crash-dictionary-firstordefault-type-initializer-predicateof
@@ -136,12 +136,12 @@ namespace LinkSdk {
 		public void Bug328_CompletionBlock ()
 		{
 			CATransaction.Begin ();
-			CATransaction.CompletionBlock = delegate {};
+			CATransaction.CompletionBlock = delegate { };
 			// the above should not crash with a MonoTouchException
 			CATransaction.Commit ();
 		}
 #endif // !__WATCHOS__
-		
+
 #if !__TVOS__ && !__WATCHOS__
 		[Test]
 		// http://bugzilla.xamarin.com/show_bug.cgi?id=769
@@ -163,16 +163,19 @@ namespace LinkSdk {
 		// http://bugzilla.xamarin.com/show_bug.cgi?id=865
 		public void Bug865_CanOpenUrl ()
 		{
+			if (TestRuntime.CheckXcodeVersion (15, 0))
+				Assert.Ignore ("NSUrl was fixed with Xcode 15.0");
+
 			Assert.False (UIApplication.SharedApplication.CanOpenUrl (null), "null");
 			// the above should not throw an ArgumentNullException
 			// and that's important because NSUrl.FromString and NSUrl.ctor(string) differs
 			const string bad_tel = "tel://1800 023 009";
-			Assert.Null (NSUrl.FromString (bad_tel), "bad url"); 
+			Assert.Null (NSUrl.FromString (bad_tel), "bad url");
 			// we now throw if `init*` fails
 			Assert.Throws<Exception> (() => new NSUrl (bad_tel), "ctor, bad url");
 		}
 #endif // !__WATCHOS__
-		
+
 		[Test]
 		// issue indirectly found when trying:  http://bugzilla.xamarin.com/show_bug.cgi?id=928
 		// similar to MonoAssembly_LinkedOut
@@ -250,7 +253,7 @@ namespace LinkSdk {
 				}
 			}
 		}
-		
+
 #if !NET // This test requires System.ServiceModel.dll, which .NET 5+ doesn't have
 		[Test]
 		// http://bugzilla.xamarin.com/show_bug.cgi?id=1415
@@ -295,7 +298,7 @@ namespace LinkSdk {
 			Assert.True (type, "Type");
 		}
 #endif // !NET
-		
+
 #if !NET // This test requires System.ServiceModel.dll, which .NET 5+ doesn't have
 		[Test]
 		// http://bugzilla.xamarin.com/show_bug.cgi?id=1415
@@ -306,7 +309,7 @@ namespace LinkSdk {
 			Type ed = typeof (System.ServiceModel.AuditLevel).Assembly.GetType ("System.ServiceModel.EndpointAddress10", false);
 			// type is decorated with both [XmlSchemaProvider] and [XmlRoot]
 			Assert.NotNull (ed, "EndpointAddress10");
-		
+
 #if !__WATCHOS__ // FIXME: this needs to use a different type than OpenTK.Quaternion, so that the test can run on WatchOS as wells
 			var q = new OpenTK.Quaternion ();
 			Assert.Null (q.GetType ().GetProperty ("XYZ"), "XmlIgnore");
@@ -351,27 +354,27 @@ namespace LinkSdk {
 			Assert.NotNull (TimeZoneInfo.Local, "Local");
 			// should not throw a TimeZoneNotFoundException on devices
 		}
-		
+
 		[Test]
 		// http://bugzilla.xamarin.com/show_bug.cgi?id=1922
 		public void Bug1922_PLinq_Aot ()
 		{
 			const int size = 100;
 			Random random = new Random ();
-			int[] values = new int [size];
+			int [] values = new int [size];
 			int currentNumber = 0;
 			List<int> numbers = new List<int> ();
 			while (currentNumber < 100) {
 				values [currentNumber] = random.Next (1, 10);
 				numbers.Add (currentNumber);
-				currentNumber ++;
+				currentNumber++;
 			}
-			numbers.AsParallel ().ForAll (number => {			
+			numbers.AsParallel ().ForAll (number => {
 				Thread.Sleep (values [number]);
 				//Console.WriteLine (number);
 			});
 		}
-		
+
 		[Test]
 		public void Bug2000_NSPersistentStoreCoordinator ()
 		{
@@ -385,15 +388,15 @@ namespace LinkSdk {
 			NSEntityDescription entity = new NSEntityDescription ();
 			Assert.That (entity.Handle, Is.Not.EqualTo (IntPtr.Zero), "NSEntityDescription");
 			entity.Name = "TestEntity";
-			entity.Properties = new NSPropertyDescription[1] { description };
-			
+			entity.Properties = new NSPropertyDescription [1] { description };
+
 			NSManagedObjectModel model = new NSManagedObjectModel ();
 			Assert.That (model.Handle, Is.Not.EqualTo (IntPtr.Zero), "NSManagedObjectModel");
-			model.Entities = new NSEntityDescription[1] { entity };
+			model.Entities = new NSEntityDescription [1] { entity };
 			model.SetEntities (model.Entities, String.Empty);
 
 			var sqlitePath = Path.Combine (NSFileManager.TemporaryDirectory, $"test-{System.Diagnostics.Process.GetCurrentProcess ().Id}.sqlite");
-			NSUrl url =  NSUrl.FromFilename (sqlitePath);
+			NSUrl url = NSUrl.FromFilename (sqlitePath);
 
 			try {
 				// from http://bugzilla.xamarin.com/show_bug.cgi?id=2000
@@ -409,16 +412,15 @@ namespace LinkSdk {
 				File.Delete (sqlitePath);
 			}
 		}
-		
+
 		[Test]
 		// http://lists.dot.net/pipermail/monotouch/2011-December/006976.html
 		public void Linker_RuntimeWrappedException ()
 		{
 			try {
 				// can't throw anything else but Exception-derived types from C#
-				support.throw_object (); 
-			}
-			catch (Exception e) {
+				support.throw_object ();
+			} catch (Exception e) {
 				Assert.That (e.GetType ().Name, Is.EqualTo ("RuntimeWrappedException"), "RuntimeWrappedException");
 			}
 		}
@@ -434,7 +436,7 @@ namespace LinkSdk {
 			c.Close ();
 		}
 #endif
-		
+
 		[Test]
 		public void AsQueryable_3028 ()
 		{
@@ -472,7 +474,7 @@ namespace LinkSdk {
 		}
 #endif // !NET
 #endif // !__WATCHOS__ && !__MACCATALYST__
-		
+
 		[Test]
 		public void XElement_3137 ()
 		{
@@ -481,19 +483,18 @@ namespace LinkSdk {
 				Thread.CurrentThread.CurrentCulture = new CultureInfo ("en-US");
 				var element1 = new System.Xml.Linq.XElement ("Property1", new System.Xml.Linq.XAttribute ("type", "number"), 1.2343445);
 				Assert.That (element1.ToString (), Is.EqualTo ("<Property1 type=\"number\">1.2343445</Property1>"), "en-US");
-				
+
 				Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo ("de-DE");
 				// this was already working because the element was created with en-US
 				Assert.That (element1.ToString (), Is.EqualTo ("<Property1 type=\"number\">1.2343445</Property1>"), "de-DE/1");
 				// however creating a new, identical, element under de-DE return*ed* a different string
 				var element2 = new System.Xml.Linq.XElement ("Property1", new System.Xml.Linq.XAttribute ("type", "number"), 1.2343445);
 				Assert.That (element2.ToString (), Is.EqualTo ("<Property1 type=\"number\">1.2343445</Property1>"), "de-DE/2");
-			}
-			finally {
+			} finally {
 				Thread.CurrentThread.CurrentCulture = current;
 			}
 		}
-		
+
 #if !__TVOS__ && !__WATCHOS__ && !__MACOS__
 		[Test]
 		public void Modal_3489 ()
@@ -503,112 +504,110 @@ namespace LinkSdk {
 			using (UIViewController c = new UIViewController ()) {
 				a.PresentModalViewController (b, true);
 				b.PresentModalViewController (c, true);
-				
+
 				b.DismissModalViewController (true);
 				a.DismissModalViewController (true); //error
 			}
 		}
 #endif // !__TVOS__ && !__WATCHOS__
-				
+
 		[Test]
 		public void Parse_3677 ()
 		{
 			Assert.That (sbyte.Parse ("E3", NumberStyles.HexNumber), Is.EqualTo (-29), "SByte");
 			Assert.That (short.Parse ("E3E3", NumberStyles.HexNumber), Is.EqualTo (-7197), "Int16");
 		}
-		
+
 		public class DeviceHardware {
 			public const string HardwareProperty = "hw.machine";
-		
+
 			public enum HardwareVersion {
-			    iPhone,
-			    iPhone3G,
-			    iPhone3GS,
-			    iPhone4,
-			    iPod1G,
-			    iPod2G,
-			    iPod3G,
-			    iPod4G,
-			    iPad,
-			    iPhoneSimulator,
-			    iPhone4Simulator,
-			    iPadSimulator,
-			    Unknown
+				iPhone,
+				iPhone3G,
+				iPhone3GS,
+				iPhone4,
+				iPod1G,
+				iPod2G,
+				iPod3G,
+				iPod4G,
+				iPad,
+				iPhoneSimulator,
+				iPhone4Simulator,
+				iPadSimulator,
+				Unknown
 			}
-		
-	        // Changing the constant to "/usr/bin/libSystem.dylib" allows this P/Invoke to work on Mac OS X
-	        // Using "hw.model" as property gives Macintosh model, "hw.machine" kernel arch (ppc, ppc64, i386, x86_64)
-	        [DllImport (Constants.libSystemLibrary)]
-	        internal static extern int sysctlbyname ([MarshalAs(UnmanagedType.LPStr)] string property, // name of the property
+
+			// Changing the constant to "/usr/bin/libSystem.dylib" allows this P/Invoke to work on Mac OS X
+			// Using "hw.model" as property gives Macintosh model, "hw.machine" kernel arch (ppc, ppc64, i386, x86_64)
+			[DllImport (Constants.libSystemLibrary)]
+			internal static extern int sysctlbyname ([MarshalAs (UnmanagedType.LPStr)] string property, // name of the property
 				IntPtr output, // output
 				IntPtr oldLen, // IntPtr.Zero
 				IntPtr newp, // IntPtr.Zero
 				uint newlen // 0
 				);
-		
+
 			public static HardwareVersion Version {
 				get {
 					// get the length of the string that will be returned
-					var pLen = Marshal.AllocHGlobal(sizeof(int));
-					sysctlbyname(DeviceHardware.HardwareProperty, IntPtr.Zero, pLen, IntPtr.Zero, 0);
-		
-					var length = Marshal.ReadInt32(pLen);
-		
+					var pLen = Marshal.AllocHGlobal (sizeof (int));
+					sysctlbyname (DeviceHardware.HardwareProperty, IntPtr.Zero, pLen, IntPtr.Zero, 0);
+
+					var length = Marshal.ReadInt32 (pLen);
+
 					// check to see if we got a length
-					if (length == 0)
-					{
-						Marshal.FreeHGlobal(pLen);
+					if (length == 0) {
+						Marshal.FreeHGlobal (pLen);
 						return HardwareVersion.Unknown;
 					}
-		
+
 					// get the hardware string
-					var pStr = Marshal.AllocHGlobal(length);
-					sysctlbyname(DeviceHardware.HardwareProperty, pStr, pLen, IntPtr.Zero, 0);
-		
+					var pStr = Marshal.AllocHGlobal (length);
+					sysctlbyname (DeviceHardware.HardwareProperty, pStr, pLen, IntPtr.Zero, 0);
+
 					// convert the native string into a C# string
-					var hardwareStr = Marshal.PtrToStringAnsi(pStr);
+					var hardwareStr = Marshal.PtrToStringAnsi (pStr);
 					var ret = HardwareVersion.Unknown;
-		
+
 					// determine which hardware we are running
 					if (hardwareStr == "iPhone1,1")
-		                            ret = HardwareVersion.iPhone;
+						ret = HardwareVersion.iPhone;
 					else if (hardwareStr == "iPhone1,2")
-					    ret = HardwareVersion.iPhone3G;
+						ret = HardwareVersion.iPhone3G;
 					else if (hardwareStr == "iPhone2,1")
-					    ret = HardwareVersion.iPhone3GS;
+						ret = HardwareVersion.iPhone3GS;
 					else if (hardwareStr == "iPhone3,1")
-					    ret = HardwareVersion.iPhone4;
+						ret = HardwareVersion.iPhone4;
 					else if (hardwareStr == "iPad1,1")
-					    ret = HardwareVersion.iPad;
+						ret = HardwareVersion.iPad;
 					else if (hardwareStr == "iPod1,1")
-					    ret = HardwareVersion.iPod1G;
+						ret = HardwareVersion.iPod1G;
 					else if (hardwareStr == "iPod2,1")
-					    ret = HardwareVersion.iPod2G;
+						ret = HardwareVersion.iPod2G;
 					else if (hardwareStr == "iPod3,1")
-					    ret = HardwareVersion.iPod3G;
+						ret = HardwareVersion.iPod3G;
 					else if (hardwareStr == "iPod4,1")
-					    ret = HardwareVersion.iPod3G;
+						ret = HardwareVersion.iPod3G;
 					else if (hardwareStr == "i386" || hardwareStr == "x86_64") {
 #if __WATCHOS__ || __MACOS__
 						ret = HardwareVersion.Unknown;
 #else
-						if (UIDevice.CurrentDevice.Model.Contains("iPhone"))
+						if (UIDevice.CurrentDevice.Model.Contains ("iPhone"))
 							ret = UIScreen.MainScreen.Bounds.Height * UIScreen.MainScreen.Scale == 960 || UIScreen.MainScreen.Bounds.Width * UIScreen.MainScreen.Scale == 960 ? HardwareVersion.iPhone4Simulator : HardwareVersion.iPhoneSimulator;
 						else
 							ret = HardwareVersion.iPadSimulator;
 #endif
-					}
-					else ret = HardwareVersion.Unknown;
-		
+					} else ret = HardwareVersion.Unknown;
+
 					// cleanup
-					Marshal.FreeHGlobal(pLen);
-					Marshal.FreeHGlobal(pStr);
-		
+					Marshal.FreeHGlobal (pLen);
+					Marshal.FreeHGlobal (pStr);
+
 					return ret;
 				}
 			}
 		}
-		
+
 		[Test]
 		// http://stackoverflow.com/questions/9685134/monotouch-fatal-crash-once-deployed
 		// could not be duplicated on iPad2 (rolf), iPad1 (spouliot), iPodTouch4 (spouliot)
@@ -617,25 +616,25 @@ namespace LinkSdk {
 			Assert.NotNull (DeviceHardware.Version, "Hardware");
 		}
 
-		public class Location {}
-		
+		public class Location { }
+
 		private static Location mInstance = null;
 
 		[MethodImpl (MethodImplOptions.Synchronized)]
 		public static Location getInstance ()
 		{
-			if (mInstance == null)
+			if (mInstance is null)
 				mInstance = new Location ();
 			return mInstance;
 		}
-		
+
 		[Test]
 		public void Synchronized_3904 ()
 		{
 			// crash with LLVM
 			Assert.NotNull (getInstance (), "Location");
 		}
-		
+
 #if !NET // https://github.com/xamarin/xamarin-macios/issues/11710
 		[Test]
 		[Culture ("en")]
@@ -650,7 +649,7 @@ namespace LinkSdk {
 			Assert.AreNotEqual (f, (float) v, "non-equal");
 		}
 #endif // !NET
-		
+
 		[Test]
 		[Culture ("en")]
 		public void ConvertToDouble_4620 ()
@@ -658,13 +657,13 @@ namespace LinkSdk {
 			// can't duplicate bug when using invarient culture
 			Assert.That (Convert.ToDouble ("0.0"), Is.EqualTo (0.0d));
 		}
-		
+
 		[Test]
 		public void NetworkInterface_4631 ()
 		{
 			Assert.NotNull (NetworkInterface.GetAllNetworkInterfaces ());
 		}
-		
+
 		[Test]
 		public void WebClient_SSL_Leak ()
 		{
@@ -700,7 +699,7 @@ namespace LinkSdk {
 #endif
 		}
 #endif // !__TVOS__ && !__WATCHOS__
-		
+
 		[Test]
 		// https://bugzilla.novell.com/show_bug.cgi?id=650402
 #if __WATCHOS__
@@ -717,21 +716,21 @@ namespace LinkSdk {
 			DataColumn pk = parent.Columns.Add ("PK");
 			DataTable child = new DataTable ("child");
 			DataColumn fk = child.Columns.Add ("FK");
-			
+
 			data.Tables.Add (parent);
 			data.Tables.Add (child);
 			data.Relations.Add (pk, fk);
-			
+
 			parent.Rows.Add ("value");
 			child.Rows.Add ("value");
 			data.AcceptChanges ();
-			child.Rows[0].Delete ();
-			parent.Rows[0][0] = "value2";
-			
+			child.Rows [0].Delete ();
+			parent.Rows [0] [0] = "value2";
+
 			data.EnforceConstraints = false;
 			data.EnforceConstraints = true;
 		}
-		
+
 		[Test]
 		public void Pointer_5200 ()
 		{
@@ -754,7 +753,7 @@ namespace LinkSdk {
 		{
 			new AddedInSilverlight5 ().PropertyChanging += delegate { };
 		}
-		
+
 		[Test]
 		public void MonoIOStat_6118 ()
 		{
@@ -775,7 +774,7 @@ namespace LinkSdk {
 		[Test]
 		public void AttributeUsageAttribute_Persistance ()
 		{
-			Assert.IsFalse (Attribute.IsDefined (GetType (), typeof(SerializableAttribute)));
+			Assert.IsFalse (Attribute.IsDefined (GetType (), typeof (SerializableAttribute)));
 		}
 
 #if !NET // This test requires System.Runtime.Remoting.dll, which .NET 5+ doesn't have
@@ -789,7 +788,7 @@ namespace LinkSdk {
 		[Test]
 		public void ArrayClear_11184 ()
 		{
-			byte[] key = new byte [16];
+			byte [] key = new byte [16];
 			for (int i = 0; i < key.Length; i++)
 				key [i] = (byte) (255 - i);
 			Array.Clear (key, 5, 11);
@@ -861,7 +860,7 @@ namespace LinkSdk {
 		string TestFolder (Environment.SpecialFolder folder, bool supported = true, bool? exists = true, bool readOnly = false)
 		{
 			var path = Environment.GetFolderPath (folder);
-			Assert.That (path.Length > 0, Is.EqualTo (supported), folder.ToString ());
+			Assert.That (path.Length > 0, Is.EqualTo (supported), $"SpecialFolder: {folder.ToString ()} Path: {path} Supported: {supported}");
 			if (!supported)
 				return path;
 
@@ -875,11 +874,9 @@ namespace LinkSdk {
 			try {
 				File.WriteAllText (file, "mine");
 				Assert.False (readOnly, "!readOnly " + folder);
-			}
-			catch {
+			} catch {
 				Assert.True (readOnly, "readOnly " + folder);
-			}
-			finally {
+			} finally {
 				File.Delete (file);
 			}
 			return path;
@@ -887,6 +884,30 @@ namespace LinkSdk {
 
 		[Test]
 		public void SpecialFolder ()
+		{
+			try {
+				SpecialFolderImpl ();
+			} catch (Exception e) {
+#if NET
+				Console.WriteLine ($"An exception occurred in this test: {e}");
+				Console.WriteLine ($"Dumping info about various directories:");
+				foreach (var value in Enum.GetValues<NSSearchPathDirectory> ().OrderBy (v => v.ToString ())) {
+					var urls = NSFileManager.DefaultManager.GetUrls (value, NSSearchPathDomain.User);
+					Console.WriteLine ($"NSFileManager.GetUrls ({value} = {(int) value}) returned {urls.Length} results:");
+					foreach (var url in urls)
+						Console.WriteLine ($"    {url.Path}");
+				}
+
+				foreach (var value in Enum.GetValues<Environment.SpecialFolder> ().OrderBy (v => v.ToString ()))
+					Console.WriteLine ($"SpecialFolder '{value}' => {Environment.GetFolderPath (value)}");
+#endif
+
+				// Throw the original exception so that the test actually fails.
+				throw;
+			}
+		}
+
+		void SpecialFolderImpl ()
 		{
 			// iOS8 changes the rules of the game
 			var fm = NSFileManager.DefaultManager;
@@ -956,10 +977,10 @@ namespace LinkSdk {
 #endif
 			path = TestFolder (Environment.SpecialFolder.MyMusic, exists: myExists);
 
-#if __MACOS__
+#if __MACOS__ && !NET8_0_OR_GREATER
 			path = TestFolder (Environment.SpecialFolder.MyVideos, supported: false);
 #else
-			path = TestFolder (Environment.SpecialFolder.MyVideos, exists: false);
+			path = TestFolder (Environment.SpecialFolder.MyVideos, exists: myExists);
 #endif
 
 			path = TestFolder (Environment.SpecialFolder.DesktopDirectory, exists: myExists);
@@ -1036,13 +1057,23 @@ namespace LinkSdk {
 			bool tvos = false;
 #endif
 
+#if __MACOS__ && NET8_0_OR_GREATER
+			path = Environment.GetFolderPath (Environment.SpecialFolder.MyDocuments);
+			if (string.IsNullOrEmpty (path) && TestRuntime.IsInCI) {
+				// ignore this
+			} else {
+				path = TestFolder (Environment.SpecialFolder.MyDocuments);
+				Assert.That (path, Is.EqualTo (docs), "path - MyDocuments");
+			}
+#else
 			// and some stuff is read/write
 			path = TestFolder (Environment.SpecialFolder.MyDocuments);
-#if __MACOS__
+#if __MACOS__ && !NET8_0_OR_GREATER
 			Assert.That (path, Is.EqualTo (home), "path - MyDocuments");
 #else
 			Assert.That (path, Is.EqualTo (docs), "path - MyDocuments");
 #endif
+#endif // __MACOS__ && NET8_0_OR_GREATER
 
 #if NET
 			path = TestFolder (Environment.SpecialFolder.ApplicationData, exists: null /* may or may not exist */);
@@ -1050,14 +1081,22 @@ namespace LinkSdk {
 			path = TestFolder (Environment.SpecialFolder.ApplicationData);
 #endif
 #if __MACOS__
+#if NET8_0_OR_GREATER
+			Assert.That (path, Is.EqualTo (Path.Combine (home, "Library", "Application Support")), "path - ApplicationData");
+#else
 			Assert.That (path, Is.EqualTo (Path.Combine (home, ".config")), "path - ApplicationData");
+#endif
 #else
 			Assert.That (path, Is.EqualTo (docs + "/.config"), "path - ApplicationData");
 #endif
 
 			path = TestFolder (Environment.SpecialFolder.LocalApplicationData);
 #if __MACOS__
+#if NET8_0_OR_GREATER
+			Assert.That (path, Is.EqualTo (Path.Combine (home, "Library", "Application Support")), "path - ApplicationData");
+#else
 			Assert.That (path, Is.EqualTo (Path.Combine (home, ".local", "share")), "path - LocalApplicationData");
+#endif
 #else
 			Assert.That (path, Is.EqualTo (docs), "path - LocalApplicationData");
 #endif
@@ -1081,7 +1120,7 @@ namespace LinkSdk {
 			using (var tv = new UITextView ()) {
 				Assert.Null (tv.WeakDelegate, "none");
 				// event on UITextView itself
-				tv.Ended += (object sender, EventArgs e) => {};
+				tv.Ended += (object sender, EventArgs e) => { };
 
 				var t = tv.WeakDelegate.GetType ();
 				Assert.That (t.Name, Is.EqualTo ("_UITextViewDelegate"), "textview");
@@ -1092,7 +1131,7 @@ namespace LinkSdk {
 				Assert.NotNull (value, "value");
 
 				// and on the UIScrollView defined one
-				tv.Scrolled += (object sender, EventArgs e) => {};
+				tv.Scrolled += (object sender, EventArgs e) => { };
 				// and the existing (initial field) is still set
 				fi = t.GetField ("editingEnded", BindingFlags.NonPublic | BindingFlags.Instance);
 				Assert.NotNull (fi, "editingEnded/scrollview");
@@ -1216,9 +1255,9 @@ namespace LinkSdk {
 		[Test]
 		public void Github5024 ()
 		{
-			TestRuntime.AssertXcodeVersion (6,0);
+			TestRuntime.AssertXcodeVersion (6, 0);
 			using (var controller = new UISplitViewController ()) {
-				var sc = new UISearchController ((UIViewController)controller);
+				var sc = new UISearchController ((UIViewController) controller);
 				sc.SetSearchResultsUpdater ((vc) => { });
 
 				var a = typeof (UISearchController).AssemblyQualifiedName;
@@ -1254,7 +1293,7 @@ namespace LinkSdk {
 		{
 			// a reference to WKWebView will bring the internal NSProxy type
 			var t = typeof (WKWebView);
-			Assert.NotNull (t, "avoid compiler optimization of unused variable"); 
+			Assert.NotNull (t, "avoid compiler optimization of unused variable");
 			var fqn = typeof (NSObject).AssemblyQualifiedName.Replace ("Foundation.NSObject", "Foundation.NSProxy");
 			Assert.NotNull (GetTypeHelper (fqn), fqn);
 		}

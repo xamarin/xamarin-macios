@@ -27,7 +27,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 #if NET
 		[UnmanagedCallersOnly]
 #else
-		[MonoPInvokeCallback (typeof (Action<IntPtr,IntPtr>))]
+		[MonoPInvokeCallback (typeof (Action<IntPtr, IntPtr>))]
 #endif
 		static void BT (IntPtr reserved, IntPtr info)
 		{
@@ -44,7 +44,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 #if NET
 		[UnmanagedCallersOnly]
 #else
-		[MonoPInvokeCallback (typeof (Action<IntPtr,IntPtr>))]
+		[MonoPInvokeCallback (typeof (Action<IntPtr, IntPtr>))]
 #endif
 		static void Do (IntPtr reserved, IntPtr info)
 		{
@@ -63,7 +63,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 			test.do_checks--;
 
 			var cs = scanner.GetContentStream ();
-			if (cs == null)
+			if (cs is null)
 				return;
 			test.do_checks--;
 
@@ -78,7 +78,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 			test.do_checks--;
 
 			var dict = s.Dictionary;
-			if (dict == null)
+			if (dict is null)
 				return;
 			test.do_checks--;
 
@@ -133,6 +133,9 @@ namespace MonoTouchFixtures.CoreGraphics {
 					Assert.True (scanner.Scan (), "Scan");
 					Assert.That (bt_count, Is.EqualTo (45), "new paragraph");
 					Assert.That (do_checks, Is.EqualTo (0), "found the image");
+					if (TestRuntime.CheckXcodeVersion (14, 0)) {
+						scanner.Stop ();
+					}
 				}
 			}
 		}

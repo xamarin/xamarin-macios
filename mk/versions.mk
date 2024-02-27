@@ -52,7 +52,7 @@ else
 endif
 
 print-$(1)::
-	@printf "*** %-16s %-45s %s (%s)\n" "$(1)" "$(shell git config submodule.external/$(1).url)" "$(NEEDED_$(2)_VERSION)" "$(shell git config -f $(abspath $(TOP)/.gitmodules) submodule.external/$(1).branch)"
+	@printf "*** %-16s %-45s %s (%s)\n" "$(1)" "$(shell git config submodule.external/$(1).url)" "$(NEEDED_$(2)_VERSION)" "$(shell git config -f $(abspath $(GIT_DIRECTORY)modules) submodule.external/$(1).branch)"
 
 .PHONY: check-$(1) reset-$(1) print-$(1)
 
@@ -68,7 +68,6 @@ $(eval $(call CheckSubmoduleTemplate,Touch.Unit,TOUCH_UNIT))
 $(eval $(call CheckSubmoduleTemplate,opentk,OPENTK))
 $(eval $(call CheckSubmoduleTemplate,Xamarin.MacDev,XAMARIN_MACDEV))
 $(eval $(call CheckSubmoduleTemplate,macios-binaries,MACIOS_BINARIES))
-$(eval $(call CheckSubmoduleTemplate,ikvm-fork,IKVM))
 $(eval $(call CheckSubmoduleTemplate,MonoTouch.Dialog,MONOTOUCH_DIALOG))
 $(eval $(call CheckSubmoduleTemplate,api-tools,API_TOOLS))
 
@@ -91,3 +90,10 @@ reset: check-versions
 
 reset-versions: reset-versions-impl
 	$(Q) ! test -f $(THISDIR)/.stamp-reset-maccore || ( echo "$(COLOR_GRAY)Checking again since maccore changed$(COLOR_CLEAR)" && $(MAKE) reset-versions-impl )
+
+README := $(abspath $(TOP)/mk/xamarin.mk)
+bump-current-maccore: P=MACCORE
+bump-current-%:
+	@sed  -i '' -e "s,NEEDED_$(P)_VERSION.*,NEEDED_$(P)_VERSION := $(shell cd $($(P)_PATH) && git log -1 --pretty=format:%H),g" $(README)
+	@sed  -i '' -e "s,NEEDED_$(P)_BRANCH.*,NEEDED_$(P)_BRANCH := $(shell cd $($(P)_PATH) && git rev-parse --abbrev-ref HEAD),g" $(README)
+	@sed  -i '' -e "s,^\\($(P)_MODULE.*:=\\).*\\(git.*$\\),\\1 $(shell cd $($(P)_PATH) && git config remote.$(shell cd $($(P)_PATH) && git config branch.$(shell cd $($(P)_PATH) && git rev-parse --abbrev-ref HEAD).remote).url)," $(README)

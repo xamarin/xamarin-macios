@@ -6,11 +6,9 @@ using AppKit;
 using ObjCRuntime;
 using Foundation;
 
-namespace Xamarin.Mac.Tests
-{
+namespace Xamarin.Mac.Tests {
 	[Preserve (AllMembers = true)]
-	public class NSToolbarItemTests
-	{
+	public class NSToolbarItemTests {
 		[Test]
 		public void InitTests ()
 		{

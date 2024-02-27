@@ -38,29 +38,25 @@ namespace Foundation {
 
 		public NSErrorException (NSError error)
 		{
-			if (error == null)
-				throw new ArgumentNullException (nameof(error));
+			if (error is null)
+				throw new ArgumentNullException (nameof (error));
 			this.error = error;
 		}
-		
-		public NSError Error
-		{
+
+		public NSError Error {
 			get { return error; }
 		}
 
-		public string Domain
-		{
+		public string Domain {
 			get { return error.Domain; }
 		}
 
-		public nint Code
-		{
+		public nint Code {
 			get { return error.Code; }
 		}
 
-		public NSDictionary UserInfo
-		{
-			get {return error.UserInfo; }
+		public NSDictionary UserInfo {
+			get { return error.UserInfo; }
 		}
 
 		public override string Message {

@@ -1,7 +1,7 @@
 using System;
 
 namespace Foundation {
-	
+
 	public partial class NSDimension {
 
 		// this is something that need to be overridden by subclasses, which is not something we _usually_ do in C#

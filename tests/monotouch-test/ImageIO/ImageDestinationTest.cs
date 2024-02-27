@@ -20,12 +20,12 @@ using ImageIO;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.ImageIO {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class ImageDestinationTest {
 
-		const string GoodUti ="public.jpeg"; // correct
+		const string GoodUti = "public.jpeg"; // correct
 		const string BadUti = "public.Jpeg"; // wrong 'J' is an upper letter
 
 		[Test]

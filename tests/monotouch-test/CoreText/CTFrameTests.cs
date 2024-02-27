@@ -15,11 +15,11 @@ using ObjCRuntime;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.CoreText {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class CTFrameTests {
-		
+
 		[Test] // #4677
 		public void GetPathTest ()
 		{

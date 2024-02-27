@@ -16,7 +16,7 @@ namespace ModelIO {
 			self.Matrix = (Matrix4) MatrixFloat4x4.Transpose (value);
 		}
 
-		public static MatrixFloat4x4 GetLocalTransform4x4(this IMDLTransformComponent This, double time)
+		public static MatrixFloat4x4 GetLocalTransform4x4 (this IMDLTransformComponent This, double time)
 		{
 			return MatrixFloat4x4.Transpose ((MatrixFloat4x4) GetLocalTransform (This, time));
 		}

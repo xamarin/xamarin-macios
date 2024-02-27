@@ -4,8 +4,12 @@ using System;
 
 using Foundation;
 using HealthKit;
-using UIKit;
 using NUnit.Framework;
+#if MONOMAC
+using AppKit;
+#else
+using UIKit;
+#endif
 
 namespace MonoTouchFixtures.HealthKit {
 
@@ -16,6 +20,7 @@ namespace MonoTouchFixtures.HealthKit {
 		[SetUp]
 		public void SetUp ()
 		{
+			TestRuntime.AssertNotDesktop (); // Only runs on iOS Devices or Simulators, which makes sense `Apple Walking Steadiness`.
 			TestRuntime.AssertXcodeVersion (13, 0);
 		}
 

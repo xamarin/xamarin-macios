@@ -6,10 +6,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace CloudKit
-{
-	public partial class CKUserIdentityLookupInfo
-	{
+namespace CloudKit {
+	public partial class CKUserIdentityLookupInfo {
 		// extra parameter to get a unique signature for a string argument
 		CKUserIdentityLookupInfo (string id, int type)
 		{
