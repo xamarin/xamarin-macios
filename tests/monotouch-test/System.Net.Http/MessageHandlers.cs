@@ -760,16 +760,26 @@ namespace MonoTests.System.Net.Http {
 		}
 
 		class TestDelegateHandler : DelegatingHandler {
-			public bool FirstRequestCompleted { get; private set; } = false;
-			public bool SecondRequestCompleted { get; private set; } = false;
-			protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+			public int Iterations;
+			public HttpResponseMessage[] Responses;
+
+			public TestDelegateHandler (int iterations)
+			{
+				Responses = new HttpResponseMessage[iterations];
+				Iterations = iterations;
+			}
+
+			public bool IsCompleted (int iteration)
+			{
+				return Responses [iteration] is not null;
+			}
+
+			protected override async Task<HttpResponseMessage> SendAsync (HttpRequestMessage request, CancellationToken cancellationToken)
 			{
 				// test that we can perform a retry with the same request
-				var _ = await base.SendAsync(request, cancellationToken);
-				FirstRequestCompleted = true;
-				var response = await base.SendAsync(request, cancellationToken);
-				SecondRequestCompleted = true;
-				return response;
+				for (var i = 0; i < Iterations; i++)
+					Responses [i] = await base.SendAsync (request, cancellationToken);
+				return Responses.Last ();
 			}
 		}
 
@@ -777,11 +787,9 @@ namespace MonoTests.System.Net.Http {
 		public void GHIssue16339 ()
 		{
 			// test that we can perform two diff requests with the same managed HttpRequestMessage
-			bool done = false;
-			bool firstRequestCompleted = false;
-			bool secondRequestCompleted = false;
-			Exception ex = null;
 			var json = "{this:\"\", is:\"a\", test:2}";
+			var iterations = 2;
+			var bodies = new string [iterations];
 
 			var request = new HttpRequestMessage
 			{
@@ -790,29 +798,40 @@ namespace MonoTests.System.Net.Http {
 				Content = new StringContent (json, Encoding.UTF8, "application/json")
 			};
 
-			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () =>
+			using var delegatingHandler = new TestDelegateHandler (iterations) {
+				InnerHandler = new NSUrlSessionHandler (),
+			};
+
+			var done = TestRuntime.TryRunAsync (TimeSpan.FromSeconds (30), async () =>
 			{
-				try {
-					using var delegatingHandler = new TestDelegateHandler {
-						InnerHandler = new NSUrlSessionHandler (),
-					};
-					using HttpClient client = new(delegatingHandler);
-					var _= await client.SendAsync(request);
-					firstRequestCompleted = delegatingHandler.FirstRequestCompleted;
-					secondRequestCompleted = delegatingHandler.SecondRequestCompleted;
-				} catch (Exception e) {
-					ex = e;
-				} finally {
-					done = true;
+				using var client = new HttpClient (delegatingHandler);
+				var _= await client.SendAsync (request);
+				for (var i = 0; i < iterations; i++) {
+					if (delegatingHandler.IsCompleted (i))
+						bodies [i] = await delegatingHandler.Responses [i].Content.ReadAsStringAsync ();
 				}
-			}, () => done);
+			}, out var ex);
 
 			if (!done) { // timeouts happen in the bots due to dns issues, connection issues etc.. we do not want to fail
 				Assert.Inconclusive ("Request timedout.");
 			} else {
 				Assert.IsNull (ex, "Exception");
-				Assert.IsTrue (firstRequestCompleted, "First request");
-				Assert.IsTrue (secondRequestCompleted, "Second request");
+
+				for (var i = 0; i < iterations; i++) {
+					var rsp = delegatingHandler.Responses [i];
+					Assert.IsTrue (delegatingHandler.IsCompleted (i), $"Completed #{i}");
+					Assert.IsTrue (rsp.IsSuccessStatusCode, $"IsSuccessStatusCode #{i}");
+					Assert.AreEqual ("OK", rsp.ReasonPhrase, $"ReasonPhrase #{i}");
+					Assert.AreEqual (HttpStatusCode.OK, rsp.StatusCode, $"StatusCode #{i}");
+
+					var body = bodies [i];
+					// Poor-man's json parser
+					var data = body.Split ('\n', '\r').Single (v => v.Contains ("\"data\": \""));
+					data = data.Trim ().Replace ("\"data\": \"", "").TrimEnd ('"', ',');
+					data = data.Replace ("\\\"", "\"");
+
+					Assert.AreEqual (json, data, $"Post data #{i}");
+				}
 			}
 		}
 	}
