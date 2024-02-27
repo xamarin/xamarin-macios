@@ -19,7 +19,7 @@ namespace GeneratorTests {
 				"    using System;\n" +
 				"    using Network;\n" +
 				"}\n";
-			CodeBlock codeBlock = new (new string[]{"using System;", "using Network;"});
+			CodeBlock codeBlock = new (new string [] { "using System;", "using Network;" });
 			string output = PerformWriting (codeBlock);
 			Assert.AreEqual (expectedText, output);
 
@@ -166,16 +166,16 @@ namespace GeneratorTests {
 			string methodName = "public void Foobinate";
 			string [] methodArguments = new [] { "int count", "bool isFoo" };
 			string expectedText = "using Network;\n" +
-			                      "\n" +
-			                      "public namespace FooSpace\n{\n" +
-			                      "    public class FooClass\n" +
-			                      "    {\n" +
-			                      "        public string FooText {get;set;}\n" +
-			                      "        public void Foobinate(int count, bool isFoo)\n" +
-			                      "        {\n" +
-			                      "        }\n" +
-			                      "    }\n" +
-			                      "}\n";
+								  "\n" +
+								  "public namespace FooSpace\n{\n" +
+								  "    public class FooClass\n" +
+								  "    {\n" +
+								  "        public string FooText {get;set;}\n" +
+								  "        public void Foobinate(int count, bool isFoo)\n" +
+								  "        {\n" +
+								  "        }\n" +
+								  "    }\n" +
+								  "}\n";
 			BlockContainer blockContainer = new ();
 			blockContainer.AddLine (usingText);
 			blockContainer.AddLine ("");

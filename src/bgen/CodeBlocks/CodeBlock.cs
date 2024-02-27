@@ -28,18 +28,18 @@ public class CodeBlock : ICodeBlock {
 		this.Blocks = blocks;
 	}
 
-	public CodeBlock (string headerText, params string[] lines)
+	public CodeBlock (string headerText, params string [] lines)
 	{
 		HeaderText = headerText;
 		foreach (string line in lines) {
-			Blocks.Add (new LineBlock(line));
+			Blocks.Add (new LineBlock (line));
 		}
 	}
 
-	public CodeBlock (params string[] lines)
+	public CodeBlock (params string [] lines)
 	{
 		foreach (string line in lines) {
-			Blocks.Add (new LineBlock(line));
+			Blocks.Add (new LineBlock (line));
 		}
 	}
 
