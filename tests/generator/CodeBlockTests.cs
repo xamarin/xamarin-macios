@@ -14,12 +14,21 @@ namespace GeneratorTests {
 		[Test]
 		public void LineBlockTest ()
 		{
-			string expectedText = "{\n    using System;\n    using Network;\n}\n";
+			string expectedText =
+				"{\n" +
+				"    using System;\n" +
+				"    using Network;\n" +
+				"}\n";
 			CodeBlock codeBlock = new (new string[]{"using System;", "using Network;"});
 			string output = PerformWriting (codeBlock);
 			Assert.AreEqual (expectedText, output);
 
-			expectedText = "{\n    using System;\n    using Network;\n    using NUnit;\n}\n";
+			expectedText =
+				"{\n" +
+				"    using System;\n" +
+				"    using Network;\n" +
+				"    using NUnit;\n" +
+				"}\n";
 			codeBlock.AddLine ("using NUnit;");
 			output = PerformWriting (codeBlock);
 			Assert.AreEqual (expectedText, output);
@@ -33,7 +42,11 @@ namespace GeneratorTests {
 			string methodName = "public void Foobinate";
 			string [] methodArguments = new [] { "int count", "bool isFoo" };
 			string expectedText =
-				"public void Foobinate(int count, bool isFoo)\n{\n    int fooCount = 1;\n    string[] fooNames = new [] {\"foo\"};\n}\n";
+				"public void Foobinate(int count, bool isFoo)\n" +
+				"{\n" +
+				"    int fooCount = 1;\n" +
+				"    string[] fooNames = new [] {\"foo\"};\n" +
+				"}\n";
 			MethodBlock methodBlock = new (methodName, methodArguments);
 			methodBlock.AddLine (inputText1);
 			methodBlock.AddLine (inputText2);
@@ -45,7 +58,11 @@ namespace GeneratorTests {
 		public void MethodBlockTest ()
 		{
 			string expectedText =
-				"public void Foobinate(int count, bool isFoo)\n{\n    int fooCount = 1;\n    string[] fooNames = new [] {\"foo\"};\n}\n";
+				"public void Foobinate(int count, bool isFoo)\n" +
+				"{\n" +
+				"    int fooCount = 1;\n" +
+				"    string[] fooNames = new [] {\"foo\"};\n" +
+				"}\n";
 			List<ICodeBlock> blocks = new List<ICodeBlock> () { new LineBlock ("int fooCount = 1;"), new LineBlock ("string[] fooNames = new [] {\"foo\"};") };
 			MethodBlock methodBlock = new ("public void Foobinate", blocks, "int count", "bool isFoo");
 			string output = PerformWriting (methodBlock);
@@ -55,8 +72,13 @@ namespace GeneratorTests {
 		[Test]
 		public void CodeBlockAsClassTest ()
 		{
-			string expectedText = "public class FooClass\n{\n    public string FooText {get;set;}\n}\n";
-			CodeBlock codeBlock = new ("public class FooClass", new string[] {"public string FooText {get;set;}"});
+			string expectedText =
+				"public class FooClass\n" +
+				"{\n" +
+				"    public string FooText {get;set;}\n" +
+				"}\n";
+			CodeBlock codeBlock = new ("public class FooClass",
+				"public string FooText {get;set;}");
 			string output = PerformWriting (codeBlock);
 			Assert.AreEqual (expectedText, output);
 		}
@@ -66,7 +88,11 @@ namespace GeneratorTests {
 		{
 			string ifConditionText = "fooCount == 5";
 			string line1 = "Console.WriteLine(fooCount);";
-			string expectedText = "if (fooCount == 5)\n{\n    Console.WriteLine(fooCount);\n}\n";
+			string expectedText =
+				"if (fooCount == 5)\n" +
+				"{\n" +
+				"    Console.WriteLine(fooCount);\n" +
+				"}\n";
 			List<ICodeBlock> blocks = new ();
 			blocks.Add (new LineBlock (line1));
 			IfBlock ifBlock = new (ifConditionText, blocks);
@@ -80,7 +106,15 @@ namespace GeneratorTests {
 			string ifConditionText = "fooCount == 5";
 			string line1 = "Console.WriteLine(fooCount);";
 			string line2 = "Console.WriteLine(booCount);";
-			string expectedText = "if (fooCount == 5)\n{\n    Console.WriteLine(fooCount);\n}\nelse\n{\n    Console.WriteLine(booCount);\n}\n";
+			string expectedText =
+				"if (fooCount == 5)\n" +
+				"{\n" +
+				"    Console.WriteLine(fooCount);\n" +
+				"}\n" +
+				"else\n" +
+				"{\n" +
+				"    Console.WriteLine(booCount);\n" +
+				"}\n";
 			List<ICodeBlock> blocks = new ();
 			List<ICodeBlock> elseBlocks = new List<ICodeBlock> () { new LineBlock (line2) };
 			blocks.Add (new LineBlock (line1));
@@ -98,7 +132,19 @@ namespace GeneratorTests {
 			string line1 = "Console.WriteLine(fooCount);";
 			string line2 = "Console.WriteLine(booCount);";
 			string line3 = "Console.WriteLine(zooCount);";
-			string expectedText = "if (fooCount == 5)\n{\n    Console.WriteLine(fooCount);\n}\nelse if (fooCount == 10)\n{\n    Console.WriteLine(booCount);\n}\nelse\n{\n    Console.WriteLine(zooCount);\n}\n";
+			string expectedText =
+				"if (fooCount == 5)\n" +
+				"{\n" +
+				"    Console.WriteLine(fooCount);\n" +
+				"}\n" +
+				"else if (fooCount == 10)\n" +
+				"{\n" +
+				"    Console.WriteLine(booCount);\n" +
+				"}\n" +
+				"else\n" +
+				"{\n" +
+				"    Console.WriteLine(zooCount);\n" +
+				"}\n";
 			List<ICodeBlock> blocks = new ();
 			List<ICodeBlock> elseIfBlocks = new List<ICodeBlock> () { new LineBlock (line2) };
 			List<ICodeBlock> elseBlocks = new List<ICodeBlock> () { new LineBlock (line3) };
@@ -119,10 +165,17 @@ namespace GeneratorTests {
 			string variableText = "public string FooText {get;set;}";
 			string methodName = "public void Foobinate";
 			string [] methodArguments = new [] { "int count", "bool isFoo" };
-			string expectedText = "using Network;\n\npublic namespace FooSpace\n{\n    " +
-								  "public class FooClass\n    {\n        public string FooText {get;set;}\n        " +
-								  "public void Foobinate(int count, bool isFoo)\n        {\n        }\n    }\n}\n";
-
+			string expectedText = "using Network;\n" +
+			                      "\n" +
+			                      "public namespace FooSpace\n{\n" +
+			                      "    public class FooClass\n" +
+			                      "    {\n" +
+			                      "        public string FooText {get;set;}\n" +
+			                      "        public void Foobinate(int count, bool isFoo)\n" +
+			                      "        {\n" +
+			                      "        }\n" +
+			                      "    }\n" +
+			                      "}\n";
 			BlockContainer blockContainer = new ();
 			blockContainer.AddLine (usingText);
 			blockContainer.AddLine ("");
