@@ -1533,4 +1533,8 @@
             {1}: the exit code of a process
         </comment>
     </data>
+
+    <data name="E7119" xml:space="preserve">
+        <value>Task execution was cancelled.</value>
+    </data>
 </root>
