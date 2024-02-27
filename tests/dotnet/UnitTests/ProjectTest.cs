@@ -1678,6 +1678,8 @@ namespace Xamarin.Tests {
 				Assert.Ignore ("This test is disabled for local runs and Pull Requests.");
 
 			var project = "MySimpleApp";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
 
 			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
 			Clean (project_path);
@@ -1695,7 +1697,7 @@ namespace Xamarin.Tests {
 			DotNet.InstallTool (tool, toolPath);
 			var test = DotNet.RunTool (Path.Combine (toolPath, tool), "test", pdbFile!);
 
-			Assert.AreEqual ($"sourcelink test passed: {pdbFile}", test.StandardOutput.ToString ());
+			Assert.AreEqual ($"sourcelink test passed: {pdbFile}", test.StandardOutput.ToString ().TrimEnd ('\n'));
 		}
 	}
 }
