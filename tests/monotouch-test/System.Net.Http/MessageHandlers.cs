@@ -758,6 +758,7 @@ namespace MonoTests.System.Net.Http {
 				Assert.AreEqual (HttpStatusCode.Unauthorized, httpStatus, "Second status not ok");
 			}
 		}
+
 		class TestDelegateHandler : DelegatingHandler {
 			public bool FirstRequestCompleted { get; private set; } = false;
 			public bool SecondRequestCompleted { get; private set; } = false;
@@ -781,7 +782,7 @@ namespace MonoTests.System.Net.Http {
 			bool secondRequestCompleted = false;
 			Exception ex = null;
 			var json = "{this:\"\", is:\"a\", test:2}";
-			
+
 			var request = new HttpRequestMessage
 			{
 				Method = HttpMethod.Post,
@@ -812,7 +813,7 @@ namespace MonoTests.System.Net.Http {
 				Assert.IsNull (ex, "Exception");
 				Assert.IsTrue (firstRequestCompleted, "First request");
 				Assert.IsTrue (secondRequestCompleted, "Second request");
-			} 
+			}
 		}
 	}
 }
