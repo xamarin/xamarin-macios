@@ -31,21 +31,21 @@
       <Sha>ca7e93445acbd94bfa696c16fa039f2a6130f2cb</Sha>
     </Dependency>
     <!-- This is a subscription of the .NET 8 versions of our packages -->
-    <Dependency Name="Microsoft.MacCatalyst.Sdk" Version="17.2.8042">
+    <Dependency Name="Microsoft.MacCatalyst.Sdk" Version="17.2.8043">
       <Uri>https://github.com/xamarin/xamarin-macios</Uri>
-      <Sha>7ac1956ff7fa83661b3fb098000aeeae90615c3c</Sha>
+      <Sha>2cb9d6666fb84a59e149049f20fee18de0902129</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.macOS.Sdk" Version="14.2.8042">
+    <Dependency Name="Microsoft.macOS.Sdk" Version="14.2.8043">
       <Uri>https://github.com/xamarin/xamarin-macios</Uri>
-      <Sha>7ac1956ff7fa83661b3fb098000aeeae90615c3c</Sha>
+      <Sha>2cb9d6666fb84a59e149049f20fee18de0902129</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.iOS.Sdk" Version="17.2.8042">
+    <Dependency Name="Microsoft.iOS.Sdk" Version="17.2.8043">
       <Uri>https://github.com/xamarin/xamarin-macios</Uri>
-      <Sha>7ac1956ff7fa83661b3fb098000aeeae90615c3c</Sha>
+      <Sha>2cb9d6666fb84a59e149049f20fee18de0902129</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.tvOS.Sdk" Version="17.2.8042">
+    <Dependency Name="Microsoft.tvOS.Sdk" Version="17.2.8043">
       <Uri>https://github.com/xamarin/xamarin-macios</Uri>
-      <Sha>7ac1956ff7fa83661b3fb098000aeeae90615c3c</Sha>
+      <Sha>2cb9d6666fb84a59e149049f20fee18de0902129</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NET.Runtime.MonoTargets.Sdk" Version="9.0.0-alpha.1.23556.4">
       <Uri>https://github.com/dotnet/runtime</Uri>
