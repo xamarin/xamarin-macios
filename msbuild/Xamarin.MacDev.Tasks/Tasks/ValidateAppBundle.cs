@@ -14,7 +14,7 @@ using Xamarin.Localization.MSBuild;
 // Disable until we get around to enable + fix any issues.
 #nullable disable
 
-namespace Xamarin.iOS.Tasks {
+namespace Xamarin.MacDev.Tasks {
 	public class ValidateAppBundleTask : XamarinTask, ICancelableTask {
 		#region Inputs
 

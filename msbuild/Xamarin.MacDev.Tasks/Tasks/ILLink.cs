@@ -9,7 +9,7 @@ using Xamarin.Messaging.Build.Client;
 
 #nullable enable
 
-namespace Xamarin.iOS.Tasks {
+namespace Xamarin.MacDev.Tasks {
 	public class ILLink : global::ILLink.Tasks.ILLink {
 		public string SessionId { get; set; } = string.Empty;
 

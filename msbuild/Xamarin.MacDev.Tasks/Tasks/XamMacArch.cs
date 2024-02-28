@@ -8,7 +8,7 @@
 
 using System;
 
-namespace Xamarin.Mac.Tasks {
+namespace Xamarin.MacDev.Tasks {
 	[Flags]
 	public enum XamMacArch {
 		Default = 0,
