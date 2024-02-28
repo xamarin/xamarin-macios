@@ -39,6 +39,10 @@ parameters:
   type: string
   default: '$(MaciosUploadPrefix)'
 
+- name: retryCount
+  type: number
+  default: 3
+
 steps:
 
 - template: ../common/checkout.yml
@@ -86,6 +90,7 @@ steps:
     provisioning_extra_args: '-vvvv'
     github_token: ${{ parameters.gitHubToken }}
   timeoutInMinutes: 250
+  retryCountOnTaskFailure: ${{ parameters.retryCount }} # mono does give issues sometimes to download, we will retry
 
 # Use the env variables that were set by the label parsing in the configure step
 # print some useful logging to allow to know what is going on AND allow make some

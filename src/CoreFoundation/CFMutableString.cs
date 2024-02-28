@@ -5,6 +5,7 @@
 #if !COREBUILD
 
 using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 
@@ -86,8 +87,7 @@ namespace CoreFoundation {
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static extern internal bool /* Boolean */ CFStringTransform (/* CFMutableStringRef* */ IntPtr @string, /* CFRange* */ ref CFRange range, /* CFStringRef* */ IntPtr transform, [MarshalAs (UnmanagedType.I1)] /* Boolean */ bool reverse);
+		unsafe static extern internal byte /* Boolean */ CFStringTransform (/* CFMutableStringRef* */ IntPtr @string, /* CFRange* */ CFRange* range, /* CFStringRef* */ IntPtr transform, /* Boolean */ byte reverse);
 
 		public bool Transform (ref CFRange range, CFStringTransform transform, bool reverse)
 		{
@@ -120,12 +120,10 @@ namespace CoreFoundation {
 			if (transform == IntPtr.Zero)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (transform));
 			str = null; // destroy any cached value
-			return CFStringTransform (Handle, ref range, transform, reverse);
+			unsafe {
+				return CFStringTransform (Handle, (CFRange*) Unsafe.AsPointer<CFRange> (ref range), transform, reverse ? (byte) 1 : (byte) 0) != 0;
+			}
 		}
-
-		[DllImport (Constants.CoreFoundationLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static extern internal bool /* Boolean */ CFStringTransform (/* CFMutableStringRef* */ IntPtr @string, /* CFRange* */ IntPtr range, /* CFStringRef* */ IntPtr transform, [MarshalAs (UnmanagedType.I1)] /* Boolean */ bool reverse);
 
 		public bool Transform (CFStringTransform transform, bool reverse)
 		{
@@ -158,7 +156,9 @@ namespace CoreFoundation {
 			if (transform == IntPtr.Zero)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (transform));
 			str = null; // destroy any cached value
-			return CFStringTransform (Handle, IntPtr.Zero, transform, reverse);
+			unsafe {
+				return CFStringTransform (Handle, null, transform, reverse ? (byte) 1 : (byte) 0) != 0;
+			}
 		}
 	}
 }

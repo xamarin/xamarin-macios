@@ -8,30 +8,7 @@ namespace Xamarin.Tests {
 		[TestCase (ApplePlatform.TVOS, "tvossimulator-x64")]
 		public void TrimmerWarningsManagedStaticRegistrar (ApplePlatform platform, string runtimeIdentifiers)
 		{
-			ExpectedBuildMessage [] expectedWarnings;
-			switch (platform) {
-			case ApplePlatform.iOS:
-			case ApplePlatform.TVOS:
-				expectedWarnings = new ExpectedBuildMessage [] {
-				};
-				break;
-			case ApplePlatform.MacOSX:
-				expectedWarnings = new ExpectedBuildMessage [] {
-					new ExpectedBuildMessage ("src/ObjCRuntime/Runtime.CoreCLR.cs" /* line 276 */, "ObjCRuntime.Runtime.FindAssembly(IntPtr): Using member 'System.Reflection.Assembly.LoadFrom(String)' which has 'RequiresUnreferencedCodeAttribute' can break functionality when trimming application code. Types and members the loaded assembly depends on might be removed."),
-					new ExpectedBuildMessage ("src/ObjCRuntime/Runtime.CoreCLR.cs" /* line 177 */, "ObjCRuntime.Runtime.ResolvingEventHandler(AssemblyLoadContext, AssemblyName): Using member 'System.Runtime.Loader.AssemblyLoadContext.LoadFromAssemblyPath(String)' which has 'RequiresUnreferencedCodeAttribute' can break functionality when trimming application code. Types and members the loaded assembly depends on might be removed."),
-					new ExpectedBuildMessage ("src/ObjCRuntime/Runtime.cs" /* line 714 */, "ObjCRuntime.Runtime.CollectReferencedAssemblies(List<Assembly>, Assembly): Using member 'System.Reflection.Assembly.GetReferencedAssemblies()' which has 'RequiresUnreferencedCodeAttribute' can break functionality when trimming application code. Assembly references might be removed."),
-					new ExpectedBuildMessage ("src/ObjCRuntime/Runtime.cs" /* line 648 */, "ObjCRuntime.Runtime.GetEntryAssembly(): Using member 'System.Reflection.Assembly.LoadFile(String)' which has 'RequiresUnreferencedCodeAttribute' can break functionality when trimming application code. Types and members the loaded assembly depends on might be removed."),
-				};
-				break;
-			case ApplePlatform.MacCatalyst:
-				expectedWarnings = new ExpectedBuildMessage [] {
-				};
-				break;
-			default:
-				Assert.Fail ($"Unknown platform: {platform}");
-				return;
-			}
-			TrimmerWarnings (platform, runtimeIdentifiers, "managed-static", expectedWarnings);
+			TrimmerWarnings (platform, runtimeIdentifiers, "managed-static", Array.Empty<ExpectedBuildMessage> ());
 		}
 
 		[Test]
@@ -68,12 +45,8 @@ namespace Xamarin.Tests {
 					new ExpectedBuildMessage ("src/ObjCRuntime/Blocks.cs" /* line 427 */, "ObjCRuntime.BlockLiteral.GetDelegateProxyType(MethodInfo, UInt32, MethodInfo&): Value passed to parameter 'interfaceType' of method 'System.Type.GetInterfaceMap(Type)' can not be statically determined and may not meet 'DynamicallyAccessedMembersAttribute' requirements."),
 					new ExpectedBuildMessage ("src/ObjCRuntime/Class.cs" /* line 541 */, "ObjCRuntime.Class.ResolveToken(Assembly, Module, UInt32): Using member 'System.Reflection.Module.ResolveMethod(Int32)' which has 'RequiresUnreferencedCodeAttribute' can break functionality when trimming application code. Trimming changes metadata tokens."),
 					new ExpectedBuildMessage ("src/ObjCRuntime/Class.cs" /* line 528 */, "ObjCRuntime.Class.ResolveToken(Assembly, Module, UInt32): Using member 'System.Reflection.Module.ResolveType(Int32)' which has 'RequiresUnreferencedCodeAttribute' can break functionality when trimming application code. Trimming changes metadata tokens."),
-					new ExpectedBuildMessage ("src/ObjCRuntime/Runtime.CoreCLR.cs" /* line 276 */, "ObjCRuntime.Runtime.FindAssembly(IntPtr): Using member 'System.Reflection.Assembly.LoadFrom(String)' which has 'RequiresUnreferencedCodeAttribute' can break functionality when trimming application code. Types and members the loaded assembly depends on might be removed."),
-					new ExpectedBuildMessage ("src/ObjCRuntime/Runtime.CoreCLR.cs" /* line 177 */, "ObjCRuntime.Runtime.ResolvingEventHandler(AssemblyLoadContext, AssemblyName): Using member 'System.Runtime.Loader.AssemblyLoadContext.LoadFromAssemblyPath(String)' which has 'RequiresUnreferencedCodeAttribute' can break functionality when trimming application code. Types and members the loaded assembly depends on might be removed."),
-					new ExpectedBuildMessage ("src/ObjCRuntime/Runtime.cs" /* line 714 */, "ObjCRuntime.Runtime.CollectReferencedAssemblies(List<Assembly>, Assembly): Using member 'System.Reflection.Assembly.GetReferencedAssemblies()' which has 'RequiresUnreferencedCodeAttribute' can break functionality when trimming application code. Assembly references might be removed."),
 					new ExpectedBuildMessage ("src/ObjCRuntime/Runtime.cs" /* line 2434 */, "ObjCRuntime.Runtime.FindClosedMethod(Type, MethodBase): 'this' argument does not satisfy 'DynamicallyAccessedMemberTypes.PublicMethods', 'DynamicallyAccessedMemberTypes.NonPublicMethods' in call to 'System.Type.GetMethods(BindingFlags)'. The parameter 'closed_type' of method 'ObjCRuntime.Runtime.FindClosedMethod(Type, MethodBase)' does not have matching annotations. The source value must declare at least the same requirements as those declared on the target location it is assigned to."),
 					new ExpectedBuildMessage ("src/ObjCRuntime/Runtime.cs" /* line 1279 */, "ObjCRuntime.Runtime.FindPropertyInfo(MethodInfo): 'this' argument does not satisfy 'DynamicallyAccessedMemberTypes.PublicProperties' in call to 'System.Type.GetProperties()'. The return value of method 'System.Reflection.MemberInfo.DeclaringType.get' does not have matching annotations. The source value must declare at least the same requirements as those declared on the target location it is assigned to."),
-					new ExpectedBuildMessage ("src/ObjCRuntime/Runtime.cs" /* line 648 */, "ObjCRuntime.Runtime.GetEntryAssembly(): Using member 'System.Reflection.Assembly.LoadFile(String)' which has 'RequiresUnreferencedCodeAttribute' can break functionality when trimming application code. Types and members the loaded assembly depends on might be removed."),
 					new ExpectedBuildMessage ("src/ObjCRuntime/Runtime.cs" /* line 1673 */, "ObjCRuntime.Runtime.GetIntPtr_BoolConstructor(Type): 'this' argument does not satisfy 'DynamicallyAccessedMemberTypes.PublicConstructors', 'DynamicallyAccessedMemberTypes.NonPublicConstructors' in call to 'System.Type.GetConstructors(BindingFlags)'. The parameter 'type' of method 'ObjCRuntime.Runtime.GetIntPtr_BoolConstructor(Type)' does not have matching annotations. The source value must declare at least the same requirements as those declared on the target location it is assigned to."),
 					new ExpectedBuildMessage ("src/ObjCRuntime/Runtime.cs" /* line 1623 */, "ObjCRuntime.Runtime.GetIntPtrConstructor(Type): 'this' argument does not satisfy 'DynamicallyAccessedMemberTypes.PublicConstructors', 'DynamicallyAccessedMemberTypes.NonPublicConstructors' in call to 'System.Type.GetConstructors(BindingFlags)'. The parameter 'type' of method 'ObjCRuntime.Runtime.GetIntPtrConstructor(Type)' does not have matching annotations. The source value must declare at least the same requirements as those declared on the target location it is assigned to."),
 				};
@@ -181,7 +154,6 @@ namespace Xamarin.Tests {
 					new ExpectedBuildMessage ("src/ObjCRuntime/DynamicRegistrar.cs" /* line 499 */, "Registrar.DynamicRegistrar.VerifyIsConstrainedToNSObject(Type, Type&): Call to 'System.Type.MakeGenericType(Type[])' can not be statically analyzed. It's not possible to guarantee the availability of requirements of the generic type."),
 					new ExpectedBuildMessage ("src/ObjCRuntime/DynamicRegistrar.cs" /* line 33 */, "Registrar.SharedDynamic.PrepareInterfaceMethodMapping(Type): 'this' argument does not satisfy 'DynamicallyAccessedMemberTypes.Interfaces' in call to 'System.Type.FindInterfaces(TypeFilter, Object)'. The parameter 'type' of method 'Registrar.SharedDynamic.PrepareInterfaceMethodMapping(Type)' does not have matching annotations. The source value must declare at least the same requirements as those declared on the target location it is assigned to."),
 					new ExpectedBuildMessage ("src/ObjCRuntime/DynamicRegistrar.cs" /* line 39 */, "Registrar.SharedDynamic.PrepareInterfaceMethodMapping(Type): Value passed to parameter 'interfaceType' of method 'System.Type.GetInterfaceMap(Type)' can not be statically determined and may not meet 'DynamicallyAccessedMembersAttribute' requirements."),
-					new ExpectedBuildMessage ("src/ObjCRuntime/Runtime.CoreCLR.cs" /* line 276 */, "ObjCRuntime.Runtime.FindAssembly(IntPtr): Using member 'System.Reflection.Assembly.LoadFrom(String)' which has 'RequiresUnreferencedCodeAttribute' can break functionality when trimming application code. Types and members the loaded assembly depends on might be removed."),
 					new ExpectedBuildMessage ("src/ObjCRuntime/Runtime.CoreCLR.cs" /* line 177 */, "ObjCRuntime.Runtime.ResolvingEventHandler(AssemblyLoadContext, AssemblyName): Using member 'System.Runtime.Loader.AssemblyLoadContext.LoadFromAssemblyPath(String)' which has 'RequiresUnreferencedCodeAttribute' can break functionality when trimming application code. Types and members the loaded assembly depends on might be removed."),
 					new ExpectedBuildMessage ("src/ObjCRuntime/Runtime.cs" /* line 714 */, "ObjCRuntime.Runtime.CollectReferencedAssemblies(List<Assembly>, Assembly): Using member 'System.Reflection.Assembly.GetReferencedAssemblies()' which has 'RequiresUnreferencedCodeAttribute' can break functionality when trimming application code. Assembly references might be removed."),
 					new ExpectedBuildMessage ("src/ObjCRuntime/Runtime.cs" /* line 2434 */, "ObjCRuntime.Runtime.FindClosedMethod(Type, MethodBase): 'this' argument does not satisfy 'DynamicallyAccessedMemberTypes.PublicMethods', 'DynamicallyAccessedMemberTypes.NonPublicMethods' in call to 'System.Type.GetMethods(BindingFlags)'. The parameter 'closed_type' of method 'ObjCRuntime.Runtime.FindClosedMethod(Type, MethodBase)' does not have matching annotations. The source value must declare at least the same requirements as those declared on the target location it is assigned to."),
