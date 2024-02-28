@@ -53,7 +53,7 @@ stages:
     pool:
       name: AzurePipelines-EO
       demands:
-        - ImageOverride -equals 1ESPT-Windows2022
+      - ImageOverride -equals 1ESPT-Windows2022
     variables:
       VAR_DEPENDENCIES: $[ convertToJson(dependencies) ]
       VAR_STAGE_DEPENDENCIES: $[ convertToJson(stageDependencies) ]
@@ -79,7 +79,7 @@ stages:
     pool:
       name: AzurePipelines-EO
       demands:
-        - ImageOverride -equals 1ESPT-Windows2022
+      - ImageOverride -equals 1ESPT-Windows2022
     steps:
     - template: publish-html.yml
       parameters:
@@ -101,7 +101,7 @@ stages:
     pool:
       name: AzurePipelines-EO
       demands:
-        - ImageOverride -equals 1ESPT-Windows2022
+      - ImageOverride -equals 1ESPT-Windows2022
 
     steps:
 

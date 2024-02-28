@@ -182,7 +182,7 @@ jobs:
   pool:
     name: AzurePipelines-EO
     demands:
-      - ImageOverride -equals 1ESPT-Windows2022
+    - ImageOverride -equals 1ESPT-Windows2022
   steps:
   - template: artifact-github-comment.yml
     parameters:

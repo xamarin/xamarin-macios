@@ -314,7 +314,7 @@ stages:
       pool:
         name: AzurePipelines-EO
         demands:
-          - ImageOverride -equals 1ESPT-Windows2022
+        - ImageOverride -equals 1ESPT-Windows2022
 
       steps:
       - template: ./common/clean.yml
@@ -331,7 +331,7 @@ stages:
       pool: # Consider using an agentless (server) job here, but would need to host selection logic as an Azure function: https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#server
         name: AzurePipelines-EO
         demands:
-          - ImageOverride -equals 1ESPT-Windows2022
+        - ImageOverride -equals 1ESPT-Windows2022
       steps:
       - checkout: none             # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#checkout
 
@@ -348,7 +348,7 @@ stages:
     pool:
       name: AzurePipelines-EO
       demands:
-        - ImageOverride -equals 1ESPT-Windows2022
+      - ImageOverride -equals 1ESPT-Windows2022
 
     variables:
       isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
@@ -586,7 +586,7 @@ stages:
       pool:
         name: AzurePipelines-EO
         demands:
-          - ImageOverride -equals 1ESPT-Windows2022
+        - ImageOverride -equals 1ESPT-Windows2022
       steps:
       # TODO: do parse labels
       - bash: |

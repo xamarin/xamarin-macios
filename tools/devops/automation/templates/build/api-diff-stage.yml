@@ -81,7 +81,7 @@ jobs:
   pool:
     name: AzurePipelines-EO
     demands:
-      - ImageOverride -equals 1ESPT-Windows2022
+    - ImageOverride -equals 1ESPT-Windows2022
   variables:
     GIT_HASH: $[ dependencies.api_diff.outputs['fix_commit.GIT_HASH'] ]
   steps:
