@@ -51,6 +51,7 @@ stages:
     timeoutInMinutes: 1000
 
     pool:
+      os: macOS
       ${{ if eq(parameters.useImage, false) }}:
         name: ${{ parameters.macPool }}
         demands: ${{ parameters.demands }}

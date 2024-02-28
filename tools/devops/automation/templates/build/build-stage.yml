@@ -89,6 +89,7 @@ jobs:
     XHARNESS_LABELS: $[ stageDependencies.configure_build.configure.outputs['labels.xharness_labels'] ]
     RUN_MAC_TESTS: $[ stageDependencies.configure_build.configure.outputs['decisions.RUN_MAC_TESTS'] ]
   pool:
+    os: macOS
     name: $(AgentPoolComputed)
     demands:
     - Agent.OS -equals Darwin

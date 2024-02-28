@@ -51,6 +51,7 @@ jobs:
     BRANCH_NAME: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', '') ]
     XHARNESS_LABELS: $[ stageDependencies.configure_build.configure.outputs['labels.xharness_labels'] ]
   pool:
+    os: macOS
     name: $(AgentPoolComputed)
     demands:
     - Agent.OS -equals Darwin

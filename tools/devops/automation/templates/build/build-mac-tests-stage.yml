@@ -58,6 +58,7 @@ jobs:
     RUN_MAC_TESTS: $[ stageDependencies.configure_build.configure.outputs['decisions.RUN_MAC_TESTS'] ]
   condition: ne(stageDependencies.configure_build.configure.outputs['decisions.RUN_MAC_TESTS'],'')
   pool:
+    os: macOS
     name: $(AgentPoolComputed)
     demands:
     - Agent.OS -equals Darwin

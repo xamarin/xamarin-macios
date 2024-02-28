@@ -102,6 +102,7 @@ stages:
       ${{ else }}:
         AgentPoolComputed: ${{ parameters.testPool }}
     pool:
+      os: macOS
       name: $(AgentPoolComputed)
       demands:
       - Agent.OS -equals Darwin

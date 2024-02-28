@@ -29,11 +29,14 @@ jobs:
   displayName: 'Collect signed artifacts'
   condition: and(not(failed()), not(canceled())) # default is succeded(), but that fails if there are any skipped jobs, so change the condition to !failed && !cancelled
   timeoutInMinutes: 1000
-  pool:
-    vmImage: internal-macos-11
   variables:
+    AgentPoolComputed: $[ stageDependencies.configure_build.AgentPoolSelector.outputs['setAgentPool.AgentPoolComputed'] ]
     ${{ each pkg in parameters.packages }}:
       ${{ pkg.conditionVariable }}: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.${{ pkg.conditionVariable }}'] ]
+
+  pool:
+    os: macOS
+    name: $(AgentPoolComputed)
 
   steps:
 

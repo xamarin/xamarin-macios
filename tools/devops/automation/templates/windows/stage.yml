@@ -53,6 +53,7 @@ stages:
     timeoutInMinutes: 120
     condition: ne(stageDependencies.configure_build.configure.outputs['configure_platforms.ENABLE_DOTNET'],'')
     pool:
+      os: macOS
       name: ${{ parameters.macPool }}
       demands:
       - agent.os -equals Darwin
