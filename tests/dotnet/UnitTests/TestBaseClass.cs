@@ -415,13 +415,6 @@ namespace Xamarin.Tests {
 			return false;
 		}
 
-		public static void AssertErrorCount (IList<BuildLogEvent> errors, int count, string message)
-		{
-			if (errors.Count == count)
-				return;
-			Assert.Fail ($"Expected {count} errors, got {errors.Count} errors: {message}.\n\t{string.Join ("\n\t", errors.Select (v => v.Message?.TrimEnd ()))}");
-		}
-
 		public static void AssertWarningMessages (IList<BuildLogEvent> actualWarnings, params string [] expectedWarningMessages)
 		{
 			AssertBuildMessages ("warning", actualWarnings, expectedWarningMessages);
@@ -432,20 +425,48 @@ namespace Xamarin.Tests {
 			AssertBuildMessages ("error", actualErrors, expectedErrorMessages);
 		}
 
+		public static void AssertErrorMessages (IList<BuildLogEvent> actualErrors, Func<string, bool> [] matchesExpectedErrorMessage, Func<string> [] rendersExpectedErrorMessage)
+		{
+			AssertBuildMessages ("error", actualErrors, matchesExpectedErrorMessage, rendersExpectedErrorMessage);
+		}
+
 		public static void AssertBuildMessages (string type, IList<BuildLogEvent> actualMessages, params string [] expectedMessages)
 		{
-			if (actualMessages.Count != expectedMessages.Length) {
-				Assert.Fail ($"Expected {expectedMessages.Length} {type}s, got {actualMessages.Count} {type}s:\n\t{string.Join ("\n\t", actualMessages.Select (v => v.Message?.TrimEnd ()))}");
+			AssertBuildMessages (type, actualMessages,
+				expectedMessages.Select (v => new Func<string, bool> ((msg) => msg == v)).ToArray (),
+				expectedMessages.Select (v => new Func<string> (() => v)).ToArray ()
+			);
+		}
+
+		static string makeSingleLine (string? msg)
+		{
+			if (msg is null)
+				return "";
+			return msg.TrimEnd ().Replace ("\n", "\\n").Replace ("\r", "\\r");
+		}
+
+		public static void AssertBuildMessages (string type, IList<BuildLogEvent> actualMessages, Func<string, bool> [] matchesExpectedMessage, Func<string> [] rendersExpectedMessage)
+		{
+			var expectedCount = matchesExpectedMessage.Length;
+			if (expectedCount != rendersExpectedMessage.Length)
+				throw new InvalidOperationException ($"Mismatched function count");
+
+			if (actualMessages.Count != expectedCount) {
+				Assert.Fail ($"Expected {expectedCount} {type}(s), got {actualMessages.Count} {type}(s)\n" +
+					$"\tExpected:\n" +
+					$"\t\t{string.Join ("\n\t\t", rendersExpectedMessage.Select (v => makeSingleLine (v ())))}" +
+					$"\tActual:\n" +
+					$"\t\t{string.Join ("\n\t\t", actualMessages.Select (v => makeSingleLine (v.Message)))}");
 				return;
 			}
 
 			var failures = new List<string> ();
-			for (var i = 0; i < expectedMessages.Length; i++) {
+			for (var i = 0; i < expectedCount; i++) {
 				var actual = actualMessages [i].Message ?? string.Empty;
-				var expected = expectedMessages [i];
-				if (actual != expected) {
-					actual = actual.Replace ("\n", "\\n").Replace ("\r", "\\r");
-					expected = expected.Replace ("\n", "\\n").Replace ("\r", "\\r");
+				var isExpected = matchesExpectedMessage [i];
+				if (!isExpected (actual)) {
+					actual = makeSingleLine (actual);
+					var expected = makeSingleLine (rendersExpectedMessage [i] ());
 					failures.Add ($"\tUnexpected {type} message #{i}:\n\t\tExpected: {expected}\n\t\tActual:   {actual}");
 				}
 			}

@@ -26,9 +26,9 @@ var platformLowerCase = platform.ToLowerInvariant ();
 var tfm = currentApiVersion;
 
 var supportedTFMs = new List<string> ();
-supportedTFMs.AddRange (olderApiVersions.Split (' '));
 supportedTFMs.AddRange (supportedApiVersions.Split (' ').Select (v => v.Replace ('-', '_')));
 supportedTFMs.Sort ();
+supportedTFMs.AddRange (olderApiVersions.Split (' '));
 
 var supportedTFVs = new List<string> ();
 
