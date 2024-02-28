@@ -222,9 +222,9 @@ extends:
   parameters:
     sdl:
       baseline:
-        baselineFile: '$(System.DefaultWorkingDirectory)\\maccore\\tools\\devops\\gdnbaselines'
+        baselineFile: '$(System.DefaultWorkingDirectory)\\maccore\\tools\\devops\\baselines.gdnbaselines'
       suppression:
-        suppressionFile: '$(System.DefaultWorkingDirectory)\\maccore\\tools\\devops\\gdnsuppress'
+        suppressionFile: '$(System.DefaultWorkingDirectory)\\maccore\\tools\\devops\\suppress.gdnsuppress'
       sourceAnalysisPool:
         name: AzurePipelines-EO
         image: 1ESPT-Windows2022
