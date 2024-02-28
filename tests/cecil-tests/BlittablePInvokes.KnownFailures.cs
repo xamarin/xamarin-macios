@@ -260,7 +260,6 @@ namespace Cecil.Tests {
 			"System.Int32 CoreWlan.CWKeychain::CWKeychainCopyWiFiEAPIdentity(System.IntPtr,System.IntPtr,System.IntPtr&)",
 			"System.Int32 CoreWlan.CWKeychain::CWKeychainFindWiFiEAPUsernameAndPassword(System.IntPtr,System.IntPtr,System.IntPtr&,System.IntPtr&)",
 			"System.Int32 CoreWlan.CWKeychain::CWKeychainFindWiFiPassword(System.IntPtr,System.IntPtr,System.IntPtr&)",
-			"System.Int32 Darwin.KernelQueue::kevent(System.Int32,Darwin.KernelEvent*,System.Int32,Darwin.KernelEvent*,System.Int32,Darwin.TimeSpec&)",
 			"System.Int32 ObjCRuntime.Runtime::_NSGetExecutablePath(System.Byte[],System.Int32&)",
 			"System.Int32 Security.Authorization::AuthorizationCreate(Security.AuthorizationItemSet*,Security.AuthorizationItemSet*,Security.AuthorizationFlags,System.IntPtr&)",
 			"System.Int32 Security.SecCertificate::SecCertificateCopyCommonName(System.IntPtr,System.IntPtr&)",
