@@ -234,42 +234,49 @@ namespace Xamarin.BindingTests {
 			}), "Properties: requiredReadonlyProperty");
 
 			if (XamarinTests.ObjCRuntime.Registrar.IsStaticRegistrar) {
-				AssertContains (properties, new objc_property ("optionalInstanceProperty", "T@\"NSString\",N", true, new objc_property_attribute [] {
+				AssertContains (properties, new objc_property ("optionalInstanceProperty", "T@\"NSString\",?,N", new objc_property_attribute [] {
 					new objc_property_attribute ("T", "@\"NSString\""),
+					new objc_property_attribute ("?"),
 					new objc_property_attribute ("N", "")
 				}), "Properties: optionalInstanceProperty");
 
-				AssertContains (properties, new objc_property ("propertyWithCustomAccessors", "T@\"NSString\",N,Gget_propertyWithCustomAccessors,Sset_propertyWithCustomAccessors:", true, new objc_property_attribute [] {
+				AssertContains (properties, new objc_property ("propertyWithCustomAccessors", "T@\"NSString\",?,N,Gget_propertyWithCustomAccessors,Sset_propertyWithCustomAccessors:", new objc_property_attribute [] {
 					new objc_property_attribute ("T", "@\"NSString\""),
+					new objc_property_attribute ("?"),
 					new objc_property_attribute ("N", ""),
 					new objc_property_attribute ("G", "get_propertyWithCustomAccessors"),
 					new objc_property_attribute ("S", "set_propertyWithCustomAccessors:")
 				}), "Properties: propertyWithCustomAccessors");
 
-				AssertContains (properties, new objc_property ("propertyWithArgumentSemanticNone", "T@\"NSString\",N", true, new objc_property_attribute [] {
+				AssertContains (properties, new objc_property ("propertyWithArgumentSemanticNone", "T@\"NSString\",?,N", new objc_property_attribute [] {
 					new objc_property_attribute ("T", "@\"NSString\""),
+					new objc_property_attribute ("?"),
 					new objc_property_attribute ("N", "")
 				}), "Properties: propertyWithArgumentSemanticNone");
 
-				AssertContains (properties, new objc_property ("propertyWithArgumentSemanticCopy", "T@\"NSString\",C,N", true, new objc_property_attribute [] {
+				AssertContains (properties, new objc_property ("propertyWithArgumentSemanticCopy", "T@\"NSString\",?,C,N", new objc_property_attribute [] {
 					new objc_property_attribute ("T", "@\"NSString\""),
+					new objc_property_attribute ("?"),
 					new objc_property_attribute ("N", ""),
 					new objc_property_attribute ("C", "")
 				}), "Properties: propertyWithArgumentSemanticCopy");
 
-				AssertContains (properties, new objc_property ("propertyWithArgumentSemanticAssign", "T@\"NSString\",N", true, new objc_property_attribute [] {
+				AssertContains (properties, new objc_property ("propertyWithArgumentSemanticAssign", "T@\"NSString\",?,N", new objc_property_attribute [] {
 					new objc_property_attribute ("T", "@\"NSString\""),
+					new objc_property_attribute ("?"),
 					new objc_property_attribute ("N", "")
 				}), "Properties: propertyWithArgumentSemanticAssign");
 
-				AssertContains (properties, new objc_property ("propertyWithArgumentSemanticRetain", "T@\"NSString\",&,N", true, new objc_property_attribute [] {
+				AssertContains (properties, new objc_property ("propertyWithArgumentSemanticRetain", "T@\"NSString\",?,&,N", new objc_property_attribute [] {
 					new objc_property_attribute ("T", "@\"NSString\""),
+					new objc_property_attribute ("?"),
 					new objc_property_attribute ("&", ""),
 					new objc_property_attribute ("N", "")
 				}), "Properties: propertyWithArgumentSemanticRetain");
 
-				AssertContains (properties, new objc_property ("readonlyProperty", "T@\"NSString\",R,N", true, new objc_property_attribute [] {
+				AssertContains (properties, new objc_property ("readonlyProperty", "T@\"NSString\",?,R,N", new objc_property_attribute [] {
 					new objc_property_attribute ("T", "@\"NSString\""),
+					new objc_property_attribute ("?"),
 					new objc_property_attribute ("R", ""),
 					new objc_property_attribute ("N", "")
 				}), "Properties: readonlyProperty");
@@ -394,7 +401,7 @@ namespace Xamarin.BindingTests {
 			{
 			}
 
-			public objc_property_attribute (string name, string value)
+			public objc_property_attribute (string name, string value = "")
 			{
 				this.Name = name;
 				this.Value = value;
@@ -438,33 +445,6 @@ namespace Xamarin.BindingTests {
 				this.Name = name;
 				this.Attributes = attributes;
 				this.AttributeList = list;
-			}
-
-			public objc_property (string name, string attributes, bool addNewXcode15_3Property, params objc_property_attribute [] list)
-			{
-				this.Name = name;
-				this.Attributes = attributes;
-				this.AttributeList = list;
-
-				// Xcode 15.3 added a new property attribute (aptly named '?'), so inject it
-				// if we were requested to.
-				if (addNewXcode15_3Property && TestRuntime.CheckXcodeVersion (15, 3)) {
-					var t = Array.FindIndex (list, (v) => v.Name == "T");
-					if (t >= 0) {
-						var newList = new List<objc_property_attribute> (list);
-						newList.Insert (t + 1, new objc_property_attribute ("?", ""));
-						this.AttributeList = newList.ToArray ();
-					}
-
-					var splitAttributes = attributes.Split (',');
-					t = Array.FindIndex (splitAttributes, (v) => v [0] == 'T');
-					if (t >= 0) {
-						var newList = splitAttributes.ToList ();
-						newList.Insert (t + 1, "?");
-
-						this.Attributes = string.Join (",", newList);
-					}
-				}
 			}
 
 			public override string ToString ()
