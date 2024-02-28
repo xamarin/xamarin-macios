@@ -239,7 +239,7 @@ extends:
   parameters:
     sdl:
       baseline:
-        baseFile: '$(System.DefaultWorkingDirectory)\\maccore\\tools\\devops\\gdnbaselines'
+        baselineFile: '$(System.DefaultWorkingDirectory)\\maccore\\tools\\devops\\gdnbaselines'
       suppression:
         suppressionFile: '$(System.DefaultWorkingDirectory)\\maccore\\tools\\devops\\gdnsuppress'
       sourceAnalysisPool:
