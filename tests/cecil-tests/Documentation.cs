@@ -57,8 +57,6 @@ namespace Cecil.Tests {
 					Assert.Fail ($"{doc}: Documented API not found in the platform assembly. This probably indicates that the code to compute the doc name for a given member is incorrect.");
 			});
 
-			var visibleAndDocument = dllMembers.Intersect (xmlMembers).Where (v => v.PubliclyVisible == true);
-
 			var visibleButNotDocumented = dllMembers.Except (xmlMembers).Where (v => v.PubliclyVisible == true).Select (v => v.DocId).OrderBy (v => v).ToList ();
 			var knownfailuresFilename = $"Documentation.KnownFailures.txt";
 			var knownfailuresPath = Path.Combine (Configuration.SourceRoot, "tests", "cecil-tests", knownfailuresFilename);
