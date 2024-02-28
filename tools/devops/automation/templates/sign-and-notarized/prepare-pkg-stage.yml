@@ -34,7 +34,8 @@ jobs:
     condition: ne(stageDependencies.configure_build.configure.outputs['configure_platforms.${{ pkg.conditionVariable }}'],'')
     timeoutInMinutes: 1000
     pool:
-      vmImage: internal-macos-11
+      name: 'VSEng-Xamarin-RedmondMacBuildPool-iOS-Trusted' # always use the trusted pool for signing.
+      os: macOS
 
     steps:
     - template: sign-and-notarized.yml
