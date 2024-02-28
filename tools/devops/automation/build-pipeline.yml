@@ -238,8 +238,10 @@ extends:
   template: azure-pipelines/MicroBuild.1ES.Official.yml@CustomPipelineTemplates
   parameters:
     sdl:
+      baseline:
+        baseFile: '$(System.DefaultWorkingDirectory)\\maccore\\tools\\devops\\gdnbaselines'
       suppression:
-        suppressionFile: '$(System.DefaultWorkingDirectory)\\maccore\\tools\\devops\\gdnbaselines'
+        suppressionFile: '$(System.DefaultWorkingDirectory)\\maccore\\tools\\devops\\gdnsuppress'
       sourceAnalysisPool:
         name: AzurePipelines-EO
         image: 1ESPT-Windows2022
