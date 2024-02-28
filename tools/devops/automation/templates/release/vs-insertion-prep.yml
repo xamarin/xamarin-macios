@@ -107,13 +107,15 @@ stages:
           patterns: |
             *.nupkg
 
-      - task: NuGetCommand@2
-        displayName: Publish Nugets to dotnet8
+      - task: 1ES.PublishNuget@1
+        displayName: Publish Nugets package
         inputs:
-          command: push
+          useDotNetTask: false # The default is false to use the NuGetCommand task. Set to true to use the DotNetCoreCLI task to publish packages.
           packagesToPush: '$(Build.SourcesDirectory)/package/*.nupkg'
+          packageParentPath: '$(Build.SourcesDirectory)/package'
           nuGetFeedType: external
-          publishFeedCredentials: dnceng-dotnet8
+          allowPackageConflicts: true # Optional. NuGetCommand task only.
+          publishPackageMetadata: true # Optional
 
       - task: DownloadPipelineArtifact@2
         inputs:
@@ -122,13 +124,15 @@ stages:
           patterns: |
             *.nupkg
 
-      - task: NuGetCommand@2
-        displayName: Publish VS MSI Nugets to dotnet8
+      - task: 1ES.PublishNuget@1
+        displayName: Publish MSI Nugets package
         inputs:
-          command: push
+          useDotNetTask: false 
           packagesToPush: '$(Build.SourcesDirectory)/${{ parameters.uploadPrefix }}vs-msi-nugets/*.nupkg'
+          packageParentPath: '$(Build.SourcesDirectory)/${{ parameters.uploadPrefix }}vs-msi-nugets'
           nuGetFeedType: external
-          publishFeedCredentials: dnceng-dotnet8
+          allowPackageConflicts: true
+          publishPackageMetadata: true
 
       - pwsh: |
           mkdir $(Build.SourcesDirectory)/nugets-blob
