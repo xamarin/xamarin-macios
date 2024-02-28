@@ -506,8 +506,23 @@ namespace ObjCRuntime {
 			return rv;
 		}
 
+#if NET
+		// This method should never be called when using the managed static registrar, so assert that never happens by throwing an exception in that case.
+		// This method doesn't necessarily work with NativeAOT, but this is covered by the exception, because the managed static registrar is required for NativeAOT.
+		//
+		// IL2026: Using member 'System.Reflection.Module.ResolveMethod(Int32)' which has 'RequiresUnreferencedCodeAttribute' can break functionality when trimming application code. Trimming changes metadata tokens.
+		// IL2026: Using member 'System.Reflection.Module.ResolveType(Int32)' which has 'RequiresUnreferencedCodeAttribute' can break functionality when trimming application code. Trimming changes metadata tokens.
+		[UnconditionalSuppressMessage("", "IL2026", Justification = "The APIs this method tries to access are marked by other means, so this is linker-safe.")]
+#endif
 		static MemberInfo? ResolveToken (Assembly assembly, Module? module, uint token)
 		{
+#if NET
+			// This method should never be called when using the managed static registrar, so assert that never happens by throwing an exception in that case.
+			// This also takes care of NativeAOT, because the managed static registrar is required when using NativeAOT.
+			if (Runtime.IsManagedStaticRegistrar)
+				throw new System.Diagnostics.UnreachableException ();
+#endif
+
 			// Finally resolve the token.
 			var token_type = token & 0xFF000000;
 			switch (token & 0xFF000000) {
