@@ -116,6 +116,7 @@ stages:
           nuGetFeedType: external
           allowPackageConflicts: true # Optional. NuGetCommand task only.
           publishPackageMetadata: true # Optional
+          publishFeedCredentials: dnceng-dotnet8
 
       - task: DownloadPipelineArtifact@2
         inputs:
@@ -133,6 +134,7 @@ stages:
           nuGetFeedType: external
           allowPackageConflicts: true
           publishPackageMetadata: true
+          publishFeedCredentials: dnceng-dotnet8
 
       - pwsh: |
           mkdir $(Build.SourcesDirectory)/nugets-blob

@@ -46,6 +46,7 @@ steps:
     nuGetFeedType: external
     allowPackageConflicts: true # Optional. NuGetCommand task only.
     publishPackageMetadata: true # Optional
+    publishFeedCredentials: variables['nuget-feed']
 
 - task: DownloadPipelineArtifact@2
   inputs:
@@ -63,3 +64,4 @@ steps:
     nuGetFeedType: external
     allowPackageConflicts: true
     publishPackageMetadata: true
+    publishFeedCredentials: variables['nuget-feed']
