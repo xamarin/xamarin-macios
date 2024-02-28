@@ -1,0 +1,7 @@
+!missing-protocol-member! MTLFXTemporalScaler::reactiveMaskTexture not found
+!missing-protocol-member! MTLFXTemporalScaler::reactiveTextureUsage not found
+!missing-protocol-member! MTLFXTemporalScaler::setReactiveMaskTexture: not found
+!missing-selector! MTLFXTemporalScalerDescriptor::isReactiveMaskTextureEnabled not bound
+!missing-selector! MTLFXTemporalScalerDescriptor::reactiveMaskTextureFormat not bound
+!missing-selector! MTLFXTemporalScalerDescriptor::setReactiveMaskTextureEnabled: not bound
+!missing-selector! MTLFXTemporalScalerDescriptor::setReactiveMaskTextureFormat: not bound
