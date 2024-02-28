@@ -51,8 +51,7 @@ namespace Cecil.Tests {
 			}
 
 			var documentedButNotPresent = xmlMembers.Except (dllMembers).ToList ();
-			Assert.Multiple (() =>
-			{
+			Assert.Multiple (() => {
 				foreach (var doc in documentedButNotPresent)
 					Assert.Fail ($"{doc}: Documented API not found in the platform assembly. This probably indicates that the code to compute the doc name for a given member is incorrect.");
 			});
@@ -196,7 +195,7 @@ namespace Cecil.Tests {
 
 			if (tr is GenericInstanceType git) {
 				name += git.Name [0..(git.Name.IndexOf ('`'))];
-				name += "{" + string.Join(",", git.GenericArguments.Select (v => GetDocId (v))) + "}";
+				name += "{" + string.Join (",", git.GenericArguments.Select (v => GetDocId (v))) + "}";
 			} else if (tr is TypeDefinition td && td.HasGenericParameters) {
 				name += tr.Name;
 			} else if (tr is ByReferenceType brt) {
