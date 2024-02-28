@@ -111,6 +111,7 @@ stages:
     condition: ne(stageDependencies.configure_build.configure.outputs['configure_platforms.ENABLE_DOTNET'],'')
     pool:
       name: ${{ parameters.windowsPool }}
+      os: macOS
       demands:
       - agent.os -equals Windows_NT
 
