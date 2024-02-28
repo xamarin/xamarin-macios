@@ -6,7 +6,7 @@ using System.IO;
 using System.Xml;
 
 var args = Args;
-var expectedArgumentCount = 7;
+var expectedArgumentCount = 9;
 if (args.Length != expectedArgumentCount) {
 	Console.WriteLine ($"Need {expectedArgumentCount} arguments, got {args.Length}");
 	Environment.Exit (1);
@@ -22,10 +22,25 @@ var outputPath = args [argumentIndex++];
 var windowsPlatforms = args [argumentIndex++].Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 var hasWindows = Array.IndexOf (windowsPlatforms, platform) >= 0;
 var currentApiVersion = args [argumentIndex++];
+var supportedApiVersions = args [argumentIndex++].Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+var versionsPropsPath = args [argumentIndex++];
 
 var platformLowerCase = platform.ToLowerInvariant ();
 
-var tfm = currentApiVersion;
+var allApiVersions = new List<string> (supportedApiVersions);
+allApiVersions = allApiVersions.Select (v => v.Replace ('-', '_')).ToList ();
+
+var versionsPropsTable = File.ReadAllLines (versionsPropsPath).
+				Where (v => v.Count (f => f == '>') > 1).
+				Select (v => {
+					var split = v.Trim ().Split (new char [] { '<', '>', '/'}, StringSplitOptions.RemoveEmptyEntries);
+					var name = split [0];
+					var value = split [1];
+					return new Tuple<string, string> (name, value);
+				}).
+				ToDictionary (v => v.Item1, v => v.Item2, StringComparer.OrdinalIgnoreCase);
+
+var failed = false;
 using (TextWriter writer = new StreamWriter (outputPath)) {
 	writer.WriteLine ($"{{");
 	writer.WriteLine ($"	\"version\": \"{version}\",");
@@ -39,9 +54,9 @@ using (TextWriter writer = new StreamWriter (outputPath)) {
 		writer.WriteLine ($"				\"Microsoft.{platform}.Windows.Sdk.Aliased.{tfm}\",");
 		writer.WriteLine ($"				\"Microsoft.{platform}.Windows.Sdk.Aliased.net8\",");
 	}
-	writer.WriteLine ($"				\"Microsoft.{platform}.Ref.{tfm}\",");
+	writer.WriteLine ($"				\"Microsoft.{platform}.Ref.{currentApiVersion}\",");
 	foreach (var rid in runtimeIdentifiers) {
-		writer.WriteLine ($"				\"Microsoft.{platform}.Runtime.{rid}.{tfm}\",");
+		writer.WriteLine ($"				\"Microsoft.{platform}.Runtime.{rid}.{currentApiVersion}\",");
 	}
 	writer.WriteLine ($"				\"Microsoft.{platform}.Templates.net9\"");
 	writer.WriteLine ($"			],");
@@ -62,6 +77,7 @@ using (TextWriter writer = new StreamWriter (outputPath)) {
 	writer.WriteLine ($"			\"version\": \"{version}\",");
 	writer.WriteLine ($"		}},");
 	writer.WriteLine ($"		\"Microsoft.{platform}.Sdk.net8\": {{");
+
 	writer.WriteLine ($"			\"kind\": \"sdk\",");
 	writer.WriteLine ($"			\"version\": \"{net8Version}\",");
 	writer.WriteLine ($"			\"alias-to\": {{");
@@ -88,12 +104,12 @@ using (TextWriter writer = new StreamWriter (outputPath)) {
 		writer.WriteLine ($"			}}");
 		writer.WriteLine ($"		}},");
 	}
-	writer.WriteLine ($"		\"Microsoft.{platform}.Ref.{tfm}\": {{");
+	writer.WriteLine ($"		\"Microsoft.{platform}.Ref.{currentApiVersion}\": {{");
 	writer.WriteLine ($"			\"kind\": \"framework\",");
 	writer.WriteLine ($"			\"version\": \"{version}\"");
 	writer.WriteLine ($"		}},");
 	foreach (var rid in runtimeIdentifiers) {
-		writer.WriteLine ($"		\"Microsoft.{platform}.Runtime.{rid}.{tfm}\": {{");
+		writer.WriteLine ($"		\"Microsoft.{platform}.Runtime.{rid}.{currentApiVersion}\": {{");
 		writer.WriteLine ($"			\"kind\": \"framework\",");
 		writer.WriteLine ($"			\"version\": \"{version}\"");
 		writer.WriteLine ($"		}},");
@@ -109,4 +125,6 @@ using (TextWriter writer = new StreamWriter (outputPath)) {
 	writer.WriteLine ($"}}");
 }
 
+if (failed)
+        Environment.Exit (1);
 Environment.Exit (0);
