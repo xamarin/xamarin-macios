@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
@@ -1266,9 +1267,16 @@ namespace ObjCRuntime {
 			}
 		}
 
+#if NET
+		// Note that the code in this method doesn't necessarily work with NativeAOT, so assert that never happens by throwing an exception in that case
+		//
+		// IL2075: 'this' argument does not satisfy 'DynamicallyAccessedMemberTypes.PublicProperties' in call to 'System.Type.GetProperties()'. The return value of method 'System.Reflection.MemberInfo.DeclaringType.get' does not have matching annotations. The source value must declare at least the same requirements as those declared on the target location it is assigned to.
+		[UnconditionalSuppressMessage ("", "IL2075", Justification = "The APIs this method tries to access are marked by other means, so this is linker-safe.")]
+#endif
 		internal static PropertyInfo? FindPropertyInfo (MethodInfo accessor)
 		{
 #if NET
+			// Note that the code in this method doesn't necessarily work with NativeAOT, so assert that never happens by throwing an exception in that case
 			if (IsNativeAOT)
 				throw Runtime.CreateNativeAOTNotSupportedException ();
 #endif
@@ -1609,9 +1617,16 @@ namespace ObjCRuntime {
 			return NSObject.CreateNSObject (type_gchandle, handle, flags);
 		}
 
+#if NET
+		// Note that the code in this method doesn't necessarily work with NativeAOT, so assert that never happens by throwing an exception in that case
+		//
+		// IL2070: 'this' argument does not satisfy 'DynamicallyAccessedMemberTypes.PublicConstructors', 'DynamicallyAccessedMemberTypes.NonPublicConstructors' in call to 'System.Type.GetConstructors(BindingFlags)'. The parameter 'type' of method 'ObjCRuntime.Runtime.GetIntPtrConstructor(Type)' does not have matching annotations. The source value must declare at least the same requirements as those declared on the target location it is assigned to.
+		[UnconditionalSuppressMessage ("", "IL2070", Justification = "The APIs this method tries to access are marked by other means, so this is linker-safe.")]
+#endif
 		static ConstructorInfo? GetIntPtrConstructor (Type type)
 		{
 #if NET
+			// Note that the code in this method doesn't necessarily work with NativeAOT, so assert that never happens by throwing an exception in that case
 			if (IsNativeAOT)
 				throw CreateNativeAOTNotSupportedException ();
 #endif
@@ -1659,9 +1674,16 @@ namespace ObjCRuntime {
 			return null;
 		}
 
+#if NET
+		// Note that the code in this method doesn't necessarily work with NativeAOT, so assert that never happens by throwing an exception in that case
+		//
+		// IL2070: 'this' argument does not satisfy 'DynamicallyAccessedMemberTypes.PublicConstructors', 'DynamicallyAccessedMemberTypes.NonPublicConstructors' in call to 'System.Type.GetConstructors(BindingFlags)'. The parameter 'type' of method 'ObjCRuntime.Runtime.GetIntPtr_BoolConstructor(Type)' does not have matching annotations. The source value must declare at least the same requirements as those declared on the target location it is assigned to.
+		[UnconditionalSuppressMessage ("", "IL2070", Justification = "The APIs this method tries to access are marked by other means, so this is linker-safe.")]
+#endif
 		static ConstructorInfo? GetIntPtr_BoolConstructor (Type type)
 		{
 #if NET
+			// Note that the code in this method doesn't necessarily work with NativeAOT, so assert that never happens by throwing an exception in that case
 			if (IsNativeAOT)
 				throw CreateNativeAOTNotSupportedException ();
 #endif
@@ -2409,9 +2431,16 @@ namespace ObjCRuntime {
 			}
 		}
 
+#if NET
+		// Note that the code in this method doesn't necessarily work with NativeAOT, so assert that never happens by throwing an exception in that case
+		//
+		// IL2070: 'this' argument does not satisfy 'DynamicallyAccessedMemberTypes.PublicMethods', 'DynamicallyAccessedMemberTypes.NonPublicMethods' in call to 'System.Type.GetMethods(BindingFlags)'. The parameter 'closed_type' of method 'ObjCRuntime.Runtime.FindClosedMethod(Type, MethodBase)' does not have matching annotations. The source value must declare at least the same requirements as those declared on the target location it is assigned to.
+		[UnconditionalSuppressMessage ("", "IL2070", Justification = "The APIs this method tries to access are marked by other means, so this is linker-safe.")]
+#endif
 		internal static MethodInfo FindClosedMethod (Type closed_type, MethodBase open_method)
 		{
 #if NET
+			// Note that the code in this method doesn't necessarily work with NativeAOT, so assert that never happens by throwing an exception in that case
 			if (IsNativeAOT)
 				throw Runtime.CreateNativeAOTNotSupportedException ();
 #endif
