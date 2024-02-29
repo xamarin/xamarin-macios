@@ -137,6 +137,35 @@ namespace Xamarin.Tests {
 			return new ExecutionResult (output, output, rv.ExitCode);
 		}
 
+		public static ExecutionResult InstallTool (string tool, string path)
+		{
+			var installed = ExecuteCommand (Executable, "tool", "list", "--tool-path", path);
+			if (!installed.StandardOutput.ToString ().Contains (tool))
+				installed = ExecuteCommand (Executable, "tool", "install", tool, "--tool-path", path);
+			return installed;
+		}
+
+		public static ExecutionResult RunTool (string tool, params string [] args) => ExecuteCommand (tool, args);
+
+		public static ExecutionResult ExecuteCommand (string exe, params string [] args)
+		{
+			var env = new Dictionary<string, string?> ();
+			env ["MSBuildSDKsPath"] = null;
+			env ["MSBUILD_EXE_PATH"] = null;
+
+			var output = new StringBuilder ();
+			var rv = Execution.RunWithStringBuildersAsync (exe, args, env, output, output, Console.Out, workingDirectory: Configuration.SourceRoot, timeout: TimeSpan.FromMinutes (10)).Result;
+			if (rv.ExitCode != 0) {
+				var msg = new StringBuilder ();
+				msg.AppendLine ($"'{exe}' failed with exit code {rv.ExitCode}");
+				msg.AppendLine ($"Full command: {Executable} {StringUtils.FormatArguments (args)}");
+				msg.AppendLine (output.ToString ());
+				Console.WriteLine (msg);
+				Assert.Fail (msg.ToString ());
+			}
+			return new ExecutionResult (output, output, rv.ExitCode);
+		}
+
 		public static ExecutionResult Execute (string verb, string project, Dictionary<string, string>? properties, bool assert_success = true, string? target = null, bool? msbuildParallelism = null, TimeSpan? timeout = null)
 		{
 			if (!File.Exists (project))

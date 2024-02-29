@@ -35,6 +35,18 @@ INCLUDE_MAC=$(cat "$FILE")
 make -C "$BUILD_SOURCESDIRECTORY/xamarin-macios/tools/devops" print-variable-value-to-file FILE="$FILE" VARIABLE=INCLUDE_MACCATALYST
 INCLUDE_MACCATALYST=$(cat "$FILE")
 
+make -C "$BUILD_SOURCESDIRECTORY/xamarin-macios/tools/devops" print-variable-value-to-file FILE="$FILE" VARIABLE=IOS_NUGET_OS_VERSION
+IOS_NUGET_OS_VERSION=$(cat "$FILE")
+
+make -C "$BUILD_SOURCESDIRECTORY/xamarin-macios/tools/devops" print-variable-value-to-file FILE="$FILE" VARIABLE=TVOS_NUGET_OS_VERSION
+TVOS_NUGET_OS_VERSION=$(cat "$FILE")
+
+make -C "$BUILD_SOURCESDIRECTORY/xamarin-macios/tools/devops" print-variable-value-to-file FILE="$FILE" VARIABLE=MACOS_NUGET_OS_VERSION
+MACOS_NUGET_OS_VERSION=$(cat "$FILE")
+
+make -C "$BUILD_SOURCESDIRECTORY/xamarin-macios/tools/devops" print-variable-value-to-file FILE="$FILE" VARIABLE=MACCATALYST_NUGET_OS_VERSION
+MACCATALYST_NUGET_OS_VERSION=$(cat "$FILE")
+
 # print it out, so turn off echoing since that confuses Azure DevOps
 set +x
 
@@ -97,6 +109,12 @@ echo "##vso[task.setvariable variable=INCLUDE_TVOS;isOutput=true]$INCLUDE_TVOS"
 echo "##vso[task.setvariable variable=INCLUDE_WATCH;isOutput=true]$INCLUDE_WATCH"
 echo "##vso[task.setvariable variable=INCLUDE_MAC;isOutput=true]$INCLUDE_MAC"
 echo "##vso[task.setvariable variable=INCLUDE_MACCATALYST;isOutput=true]$INCLUDE_MACCATALYST"
+
+echo "##vso[task.setvariable variable=IOS_NUGET_OS_VERSION;isOutput=true]$IOS_NUGET_OS_VERSION"
+echo "##vso[task.setvariable variable=TVOS_NUGET_OS_VERSION;isOutput=true]$TVOS_NUGET_OS_VERSION"
+echo "##vso[task.setvariable variable=MACOS_NUGET_OS_VERSION;isOutput=true]$MACOS_NUGET_OS_VERSION"
+echo "##vso[task.setvariable variable=MACCATALYST_NUGET_OS_VERSION;isOutput=true]$MACCATALYST_NUGET_OS_VERSION"
+
 
 set -x
 

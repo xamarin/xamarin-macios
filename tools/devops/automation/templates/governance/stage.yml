@@ -1,0 +1,51 @@
+# contains the stage used to run all governance related jobs
+
+parameters:
+- name: isPR
+  type: boolean
+
+- name: repositoryAlias
+  type: string
+  default: self
+
+- name: commit
+  type: string
+  default: HEAD
+
+- name: stageDisplayNamePrefix
+  type: string
+  default: ''
+
+
+stages:
+- stage: governance_checks
+  displayName: '${{ parameters.stageDisplayNamePrefix }}Governance Checks'
+  dependsOn: [ configure_build, build_packages]
+
+  jobs:
+  - job: apiscan
+    displayName: 'APIScan:' 
+    timeoutInMinutes: 1000
+    pool: VSEngSS-MicroBuild2022-1ES
+
+    strategy:
+      matrix: $[ stageDependencies.configure_build.configure.outputs['apiscan_matrix.APISCAN_MATRIX'] ]
+
+    steps:
+    - template: ./apiscan.yml
+      parameters:
+        isPR: ${{ parameters.isPR }}
+        repositoryAlias: ${{ parameters.repositoryAlias }}
+        commit: ${{ parameters.commit }}
+
+  - job: general_governance
+    displayName: 'Governance Checks'
+    pool:
+      vmImage: windows-latest
+
+    steps:
+    - template: ./general.yml
+      parameters:
+        isPR: ${{ parameters.isPR }}
+        repositoryAlias: ${{ parameters.repositoryAlias }}
+        commit: ${{ parameters.commit }}

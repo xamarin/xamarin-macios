@@ -173,8 +173,13 @@ namespace ObjCRuntime {
 
 		static Assembly? ResolvingEventHandler (AssemblyLoadContext sender, AssemblyName assemblyName)
 		{
-			if (xamarin_locate_assembly_resource (assemblyName.Name!, assemblyName.CultureName, assemblyName.Name + ".dll", out var path))
-				return sender.LoadFromAssemblyPath (path);
+			if (xamarin_locate_assembly_resource (assemblyName.Name!, assemblyName.CultureName, assemblyName.Name + ".dll", out var path)) {
+				if (DynamicRegistrationSupported) {
+					return sender.LoadFromAssemblyPath (path);
+				}
+
+				log_coreclr ($"    Resolved the assembly {assemblyName} to {path}, but dynamic registration is not enabled, so won't load the assembly.");
+			}
 			return null;
 		}
 
@@ -250,6 +255,7 @@ namespace ObjCRuntime {
 		}
 
 		// Returns a retained MonoObject. Caller must release.
+		[UnconditionalSuppressMessage("AssemblyLoadTrimming", "IL2026:RequiresUnreferencedCode", Justification = "This method is only called to retrieve the assembly where the entry point is, and the entry point is not trimmed away, so this is safe.")]
 		static IntPtr FindAssembly (IntPtr assembly_name)
 		{
 			if (IsNativeAOT)

@@ -18,6 +18,12 @@ namespace Bindings.Test {
 	}
 #endif
 
+	[Static]
+	interface Globals {
+		[Field ("x_GlobalString", "__Internal")]
+		NSString GlobalString { get; }
+	}
+
 	[BaseType (typeof (NSObject))]
 	public interface UltimateMachine {
 		[Export ("getAnswer")]

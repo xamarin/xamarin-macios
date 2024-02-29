@@ -653,8 +653,7 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("maccatalyst")]
 #endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static extern bool CGColorSpaceIsWideGamutRGB (/* CGColorSpaceRef */ IntPtr space);
+		static extern byte CGColorSpaceIsWideGamutRGB (/* CGColorSpaceRef */ IntPtr space);
 
 #if NET
 		[SupportedOSPlatform ("ios")]
@@ -664,7 +663,7 @@ namespace CoreGraphics {
 #endif
 		public bool IsWideGamutRgb {
 			get {
-				return CGColorSpaceIsWideGamutRGB (Handle);
+				return CGColorSpaceIsWideGamutRGB (Handle) != 0;
 			}
 		}
 
@@ -675,8 +674,7 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("maccatalyst")]
 #endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static extern bool CGColorSpaceSupportsOutput (/* CGColorSpaceRef */ IntPtr space);
+		static extern byte CGColorSpaceSupportsOutput (/* CGColorSpaceRef */ IntPtr space);
 
 #if NET
 		[SupportedOSPlatform ("ios")]
@@ -686,7 +684,7 @@ namespace CoreGraphics {
 #endif
 		public bool SupportsOutput {
 			get {
-				return CGColorSpaceSupportsOutput (Handle);
+				return CGColorSpaceSupportsOutput (Handle) != 0;
 			}
 		}
 
@@ -746,8 +744,7 @@ namespace CoreGraphics {
 		[Deprecated (PlatformName.WatchOS, 6, 2)]
 #endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static extern bool CGColorSpaceIsHDR (/* CGColorSpaceRef */ IntPtr space);
+		static extern byte CGColorSpaceIsHDR (/* CGColorSpaceRef */ IntPtr space);
 
 #if NET
 		[SupportedOSPlatform ("macos")]
@@ -768,7 +765,7 @@ namespace CoreGraphics {
 #endif
 		public bool IsHdr {
 			get {
-				return CGColorSpaceIsHDR (Handle);
+				return CGColorSpaceIsHDR (Handle) != 0;
 			}
 		}
 
@@ -785,8 +782,7 @@ namespace CoreGraphics {
 		[MacCatalyst (14, 0)]
 #endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static extern bool CGColorSpaceUsesExtendedRange (/* CGColorSpaceRef */ IntPtr space);
+		static extern byte CGColorSpaceUsesExtendedRange (/* CGColorSpaceRef */ IntPtr space);
 
 #if NET
 		[SupportedOSPlatform ("ios14.0")]
@@ -802,7 +798,7 @@ namespace CoreGraphics {
 #endif
 		public bool UsesExtendedRange {
 			get {
-				return CGColorSpaceUsesExtendedRange (Handle);
+				return CGColorSpaceUsesExtendedRange (Handle) != 0;
 			}
 		}
 
@@ -819,8 +815,7 @@ namespace CoreGraphics {
 		[MacCatalyst (14, 0)]
 #endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static extern bool CGColorSpaceUsesITUR_2100TF (/* CGColorSpaceRef */ IntPtr space);
+		static extern byte CGColorSpaceUsesITUR_2100TF (/* CGColorSpaceRef */ IntPtr space);
 
 #if NET
 		[SupportedOSPlatform ("ios14.1")]
@@ -834,7 +829,7 @@ namespace CoreGraphics {
 		[Mac (11, 0)]
 		[MacCatalyst (14, 0)]
 #endif
-		public bool UsesItur2100TF => CGColorSpaceUsesITUR_2100TF (Handle);
+		public bool UsesItur2100TF => CGColorSpaceUsesITUR_2100TF (Handle) != 0;
 
 #if NET
 		[SupportedOSPlatform ("ios14.1")]
@@ -964,9 +959,8 @@ namespace CoreGraphics {
 		[MacCatalyst (15, 0)]
 		[Watch (8, 0)]
 #endif
-		[return: MarshalAs (UnmanagedType.I1)]
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		static extern bool CGColorSpaceIsHLGBased (/* CGColorSpace */ IntPtr space);
+		static extern byte CGColorSpaceIsHLGBased (/* CGColorSpace */ IntPtr space);
 
 #if NET
 		[SupportedOSPlatform ("macos12.0")]
@@ -980,7 +974,7 @@ namespace CoreGraphics {
 		[MacCatalyst (15, 0)]
 		[Watch (8, 0)]
 #endif
-		public bool IsHlgBased => CGColorSpaceIsHLGBased (Handle);
+		public bool IsHlgBased => CGColorSpaceIsHLGBased (Handle) != 0;
 
 #if NET
 		[SupportedOSPlatform ("macos12.0")]
@@ -994,9 +988,8 @@ namespace CoreGraphics {
 		[MacCatalyst (15, 0)]
 		[Watch (8, 0)]
 #endif
-		[return: MarshalAs (UnmanagedType.I1)]
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		static extern bool CGColorSpaceIsPQBased (/* CGColorSpace */ IntPtr space);
+		static extern byte CGColorSpaceIsPQBased (/* CGColorSpace */ IntPtr space);
 
 #if NET
 		[SupportedOSPlatform ("macos12.0")]
@@ -1010,7 +1003,7 @@ namespace CoreGraphics {
 		[MacCatalyst (15, 0)]
 		[Watch (8, 0)]
 #endif
-		public bool IsPQBased => CGColorSpaceIsPQBased (Handle);
+		public bool IsPQBased => CGColorSpaceIsPQBased (Handle) != 0;
 
 
 #endif // !COREBUILD

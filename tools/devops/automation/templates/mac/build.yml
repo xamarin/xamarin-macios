@@ -27,6 +27,10 @@ parameters:
   type: string
   default: '$(MaciosUploadPrefix)'
 
+- name: retryCount
+  type: number
+  default: 3
+
 steps:
 
 - template: ../common/checkout.yml
@@ -42,11 +46,7 @@ steps:
 # Write a generic failure message to the failure comment file, so a failure will be reported
 # if something goes wrong before we successfully complete the tests (in which case we delete the file).
 - pwsh: |
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
-    $statuses = New-GitHubStatusesObjectFromUrl -Url "$(Build.Repository.Uri)" -Token $(GitHub.Token)
-
     Set-Content -Path "$Env:GITHUB_FAILURE_COMMENT_FILE" -Value "Tests on macOS ${{ parameters.statusContext }} failed for unknown reasons."
-    $statuses.SetStatus("pending", "Tests on macOS ${{ parameters.statusContext }} have started.", "${{ parameters.statusContext }}")
   displayName: "Initialize state"
   env:
     CONTEXT: ${{ parameters.statusContext }}
@@ -171,6 +171,8 @@ steps:
     -StatusContext "${{ parameters.statusContext }}"
   displayName: 'Run tests'
   timeoutInMinutes: 60
+  ${{ if not(parameters.isPR) }}:
+    retryCountOnTaskFailure: ${{ parameters.retryCount }}
   env:
     CONTEXT: ${{ parameters.statusContext }}
     GITHUB_TOKEN: $(GitHub.Token)
@@ -189,13 +191,10 @@ steps:
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
     $githubComments = New-GitHubCommentsObjectFromUrl -Url "$(Build.Repository.Uri)" -Token $(GitHub.Token) -Hash $Env:COMMENT_HASH
-    $statuses = New-GitHubStatusesObjectFromUrl -Url "$(Build.Repository.Uri)" -Token $(GitHub.Token)
 
     if (Test-Path -Path "$Env:GITHUB_FAILURE_COMMENT_FILE" -PathType Leaf)  {
-      $statuses.SetStatus("error", "Tests on macOS ${{ parameters.statusContext }} failed.", "${{ parameters.statusContext }}")
       $githubComments.NewCommentFromFile("Tests on macOS ${{ parameters.statusContext }} failed", ":x:", "$Env:GITHUB_FAILURE_COMMENT_FILE")
     } else {
-      $statuses.SetStatus("success", "Tests on macOS ${{ parameters.statusContext }} passed.", "${{ parameters.statusContext }}")
       $message = ":white_check_mark: **All** tests on macOS ${{ parameters.statusContext }} passed."
       $githubComments.NewCommentFromMessage("Tests on macOS ${{ parameters.statusContext }} passed", ":computer:", $message)
     }
