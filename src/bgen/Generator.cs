@@ -5095,7 +5095,7 @@ public partial class Generator : IMemberGatherer {
 			// Yes, there are multiple methods with the same selector. Now we must compute the signature for all of them.
 			var computeSignature = new Func<MethodInfo, string> ((MethodInfo minfo) => {
 				var sig = new StringBuilder ();
-				sig.Append (minfo.Name).Append (" (");
+				sig.Append ('(');
 				foreach (var param in minfo.GetParameters ())
 					sig.Append (param.ParameterType.FullName).Append (' ');
 				sig.Append (')');
