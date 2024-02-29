@@ -158,7 +158,7 @@ jobs:
   pool:
     name: azurepipelines-EO
     demands:
-    - ImageOverride -equals AzurePipelinesWindows2022compliant
+    - ImageOverride -equals 1ESPT-Windows2022
   steps:
   - template: upload-azure.yml
     parameters:
