@@ -481,12 +481,33 @@
 			_DetectAppManifest;
 			_ReadAppManifest;
 			_WriteAppManifest;
+			_SelectRegistrar;
 		</_ComputeLinkerArgumentsDependsOn>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(_UseNativeAot)' == 'true'">
 		<IlcCompileDependsOn>Compile;_ComputeLinkerArguments;_ComputeManagedAssemblyToLink;SetupOSSpecificProps;PrepareForILLink;_XamarinComputeIlcCompileInputs</IlcCompileDependsOn>
 	</PropertyGroup>
+
+	<Target Name="_SelectRegistrar">
+		<PropertyGroup>
+			<!--
+			Registrar configuration:
+				- Set 'managed-static' for:
+					- NativeAOT supported platforms in all configurations
+					- ios/tvos device builds in all configurations
+					- macOS/MacCatalyst builds in release configuration
+				- Set 'partial-static' for:
+					- when no assemblies are trimmed and when _MarshalManagedExceptionMode is default (or not set)
+				- Otherwise set 'dynamic' 
+			-->
+			<Registrar Condition="'$(Registrar)' == '' And '$(_UseNativeAot)' == 'true'">managed-static</Registrar>
+			<Registrar Condition="'$(Registrar)' == '' And '$(_SdkIsSimulator)' != 'true' And ('$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS')">managed-static</Registrar>
+			<Registrar Condition="'$(Registrar)' == '' And '$(_BundlerDebug)' != 'true' And ('$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst')">managed-static</Registrar>
+			<Registrar Condition="'$(Registrar)' == '' And '$(_AreAnyAssembliesTrimmed)' != 'true' And ('$(_MarshalManagedExceptionMode)' == '' Or '$(_MarshalManagedExceptionMode)' == 'default')">partial-static</Registrar>
+			<Registrar Condition="'$(Registrar)' == ''">dynamic</Registrar>
+		</PropertyGroup>
+	</Target>
 
 	<Target Name="_ComputeLinkerArguments" DependsOnTargets="$(_ComputeLinkerArgumentsDependsOn)">
 		<!-- Validate the linker mode -->
@@ -514,39 +535,6 @@
 			<!-- A temporary output directory for our linker steps -->
 			<_LinkerCacheDirectory>$([System.IO.Path]::GetFullPath('$(IntermediateOutputPath)linker-cache'))</_LinkerCacheDirectory>
 			<_LinkerCacheDirectory Condition="'$(BuildSessionId)' != ''">$(IntermediateOutputPath)linker-cache</_LinkerCacheDirectory>
-
-			<!-- TrimMode specifies what the linker will do with framework assemblies -->
-			<TrimMode Condition="'$(_LinkMode)' == 'TrimMode'">$(TrimMode)</TrimMode>
-			<TrimMode Condition="'$(_LinkMode)' == 'None'">copy</TrimMode>
-			<TrimMode Condition="'$(_LinkMode)' == 'SdkOnly'">partial</TrimMode>
-			<TrimMode Condition="'$(_LinkMode)' == 'Full'">full</TrimMode>
-			<!-- For None link mode we also need to set TrimMode for all assemblies. This is done further below -->
-
-			<!-- Determine if any assemblies are actually trimmed, or if we're in a "Don't link" scenario -->
-			<!-- We're in a "Don't link" scenario if both of the following are true:
-				 1. The global TrimMode property is set to 'copy'
-				 2. No assembly has the TrimMode metadata (unless it's set to 'copy')
-			-->
-			<_AssembliesWithCustomTrimMode>@(ManagedAssemblyToLink->HasMetadata('TrimMode')->Count())</_AssembliesWithCustomTrimMode>
-			<_AssembliesWithCopyTrimMode>@(ManagedAssemblyToLink->WithMetadataValue('TrimMode', 'copy')->Count())</_AssembliesWithCopyTrimMode>
-			<_AreAnyAssembliesTrimmed Condition="'$(_AreAnyAssembliesTrimmed)' == '' And '$(TrimMode)' == 'copy' And '$(_AssembliesWithCustomTrimMode)' == '$(_AssembliesWithCopyTrimMode)'">false</_AreAnyAssembliesTrimmed>
-			<_AreAnyAssembliesTrimmed Condition="'$(_AreAnyAssembliesTrimmed)' == ''">true</_AreAnyAssembliesTrimmed>
-
-			<!--
-			Registrar configuration:
-				- Set 'managed-static' for:
-					- NativeAOT supported platforms in all configurations
-					- ios/tvos device builds in all configurations
-					- macOS/MacCatalyst builds in release configuration
-				- Set 'partial-static' for:
-					- when no assemblies are trimmed and when _MarshalManagedExceptionMode is default (or not set)
-				- Otherwise set 'dynamic' 
-			-->
-			<Registrar Condition="'$(Registrar)' == '' And '$(_UseNativeAot)' == 'true'">managed-static</Registrar>
-			<Registrar Condition="'$(Registrar)' == '' And '$(_SdkIsSimulator)' != 'true' And ('$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS')">managed-static</Registrar>
-			<Registrar Condition="'$(Registrar)' == '' And '$(_BundlerDebug)' != 'true' And ('$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst')">managed-static</Registrar>
-			<Registrar Condition="'$(Registrar)' == '' And '$(_AreAnyAssembliesTrimmed)' != 'true' And ('$(_MarshalManagedExceptionMode)' == '' Or '$(_MarshalManagedExceptionMode)' == 'default')">partial-static</Registrar>
-			<Registrar Condition="'$(Registrar)' == ''">dynamic</Registrar>
 
 			<!-- Set linker feature flags for device/simulator builds -->
 			<_IsSimulatorFeature Condition="('$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS') And '$(_SdkIsSimulator)' == 'true'">true</_IsSimulatorFeature>
