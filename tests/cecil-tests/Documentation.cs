@@ -165,10 +165,7 @@ namespace Cecil.Tests {
 			return name;
 		}
 
-		static string GetDocId (EventDefinition ed)
-		{
-			return GetDocId (ed.DeclaringType) + "." + ed.Name;
-		}
+		static string GetDocId (EventDefinition ed) => GetDocId (ed.DeclaringType) + "." + ed.Name;
 
 		static string GetDocId (PropertyDefinition pd)
 		{
