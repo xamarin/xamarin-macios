@@ -4,7 +4,7 @@ using System;
 
 namespace AdServices {
 
-	[Mac (11, 1), iOS (14, 3)]
+	[iOS (14, 3)]
 	[MacCatalyst (14, 3)]
 	[NoTV]
 	[NoWatch]
@@ -16,7 +16,7 @@ namespace AdServices {
 		PlatformNotSupported = 3,
 	}
 
-	[Mac (11, 1), iOS (14, 3)]
+	[iOS (14, 3)]
 	[MacCatalyst (14, 3)]
 	[NoTV]
 	[NoWatch]

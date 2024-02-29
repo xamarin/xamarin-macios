@@ -41,7 +41,7 @@ namespace IntentsUI {
 		GenericAction,
 	}
 
-	[NoWatch, NoTV, Mac (12, 0)]
+	[NoWatch, NoTV]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INUIAddVoiceShortcutButtonStyle : ulong {
@@ -109,7 +109,6 @@ namespace IntentsUI {
 		bool DisplaysPaymentTransaction { get; }
 	}
 
-	[Mac (12, 0)]
 	[MacCatalyst (13, 1)]
 #if MONOMAC
 	[BaseType (typeof (NSViewController))]
@@ -133,7 +132,6 @@ namespace IntentsUI {
 
 	interface IINUIAddVoiceShortcutViewControllerDelegate { }
 
-	[Mac (12, 0)]
 	[MacCatalyst (13, 1)]
 #if NET
 	[Protocol, Model]
@@ -152,7 +150,6 @@ namespace IntentsUI {
 		void DidCancel (INUIAddVoiceShortcutViewController controller);
 	}
 
-	[Mac (12, 0)]
 	[MacCatalyst (13, 1)]
 #if MONOMAC
 	[BaseType (typeof (NSViewController))]
@@ -176,7 +173,6 @@ namespace IntentsUI {
 
 	interface IINUIEditVoiceShortcutViewControllerDelegate { }
 
-	[Mac (12, 0)]
 	[MacCatalyst (13, 1)]
 #if NET
 	[Protocol, Model]
@@ -199,7 +195,7 @@ namespace IntentsUI {
 		void DidCancel (INUIEditVoiceShortcutViewController controller);
 	}
 
-	[NoWatch, NoTV, Mac (12, 0)]
+	[NoWatch, NoTV]
 	[MacCatalyst (13, 1)]
 #if MONOMAC
 	[BaseType (typeof (NSButton))]
@@ -239,7 +235,7 @@ namespace IntentsUI {
 
 	interface IINUIAddVoiceShortcutButtonDelegate { }
 
-	[NoWatch, NoTV, Mac (12, 0)]
+	[NoWatch, NoTV]
 	[MacCatalyst (13, 1)]
 #if NET
 	[Protocol, Model]

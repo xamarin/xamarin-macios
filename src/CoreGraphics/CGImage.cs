@@ -44,7 +44,7 @@ namespace CoreGraphics {
 #if MONOMAC || __MACCATALYST__
 	// uint32_t -> CGWindow.h (OSX SDK only)
 #if NET
-	[SupportedOSPlatform ("maccatalyst15.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 #else
 	[MacCatalyst (15,0)]
@@ -61,7 +61,7 @@ namespace CoreGraphics {
 
 	// uint32_t -> CGWindow.h (OSX SDK only)
 #if NET
-	[SupportedOSPlatform ("maccatalyst15.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 #else
 	[MacCatalyst (15,0)]
@@ -252,7 +252,7 @@ namespace CoreGraphics {
 
 #if MONOMAC || __MACCATALYST__
 #if NET
-		[SupportedOSPlatform ("maccatalyst15.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("tvos")]
@@ -263,7 +263,7 @@ namespace CoreGraphics {
 		static extern IntPtr CGWindowListCreateImage(CGRect screenBounds, CGWindowListOption windowOption, uint windowID, CGWindowImageOption imageOption);
         
 #if NET
-		[SupportedOSPlatform ("maccatalyst15.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("tvos")]
@@ -276,7 +276,7 @@ namespace CoreGraphics {
 		}
 
 #if NET
-		[SupportedOSPlatform ("maccatalyst15.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("tvos")]

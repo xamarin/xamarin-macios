@@ -112,7 +112,7 @@ namespace CoreLocation {
 	}
 
 	[Native]
-	[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+	[Watch (7, 0), TV (14, 0), iOS (14, 0)]
 	[MacCatalyst (14, 0)]
 	public enum CLAccuracyAuthorization : long {
 		FullAccuracy,

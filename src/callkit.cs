@@ -95,7 +95,6 @@ namespace CallKit {
 #if NET
 	[NoMac]
 #else
-	[Mac (11, 0)]
 	[Obsoleted (PlatformName.MacOSX, 12, 1)]
 #endif
 	[MacCatalyst (13, 1)]
@@ -109,7 +108,6 @@ namespace CallKit {
 #if NET
 	[NoMac]
 #else
-	[Mac (11, 0)]
 	[Obsoleted (PlatformName.MacOSX, 12, 1)]
 #endif
 	[MacCatalyst (13, 1)]
@@ -125,7 +123,6 @@ namespace CallKit {
 #if NET
 	[NoMac]
 #else
-	[Mac (11, 0)]
 	[Obsoleted (PlatformName.MacOSX, 12, 1)]
 #endif
 	[MacCatalyst (13, 1)]
@@ -532,7 +529,7 @@ namespace CallKit {
 		CXCallAction [] GetPendingCallActions (Class callActionClass, NSUuid callUuid);
 	}
 
-	[Mac (11, 0), Watch (9, 0)]
+	[Watch (9, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]

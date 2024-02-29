@@ -1,0 +1,127 @@
+# Main template that collects all the test results from our various test stages.
+#
+
+parameters:
+
+- name: displayName
+  type: string
+
+- name: stageName
+  type: string
+
+# string that is used to identify the status to be used to expose the result on GitHub
+- name: statusContext
+  type: string
+
+- name: vsdropsPrefix
+  type: string
+
+- name: condition
+  type: boolean
+  default: true
+
+- name: testConfigurations
+  type: object
+
+- name: supportedPlatforms
+  type: object
+
+- name: isPR
+  type: boolean
+
+- name: repositoryAlias
+  type: string
+  default: self
+
+- name: commit
+  type: string
+  default: HEAD
+
+stages:
+- stage: ${{ parameters.stageName }}
+  displayName: ${{ parameters.displayName }}
+  dependsOn:
+  - build_packages
+  - configure_build
+  - simulator_tests
+  condition: and(succeededOrFailed(), ${{ parameters.condition }})
+
+  jobs:
+  - job: postDebugOutput
+    displayName: 'Post Debug output'
+    timeoutInMinutes: 10
+    pool:
+      vmImage: ubuntu-latest
+    variables:
+      VAR_DEPENDENCIES: $[ convertToJson(dependencies) ]
+      VAR_STAGE_DEPENDENCIES: $[ convertToJson(stageDependencies) ]
+    condition: always()
+    steps:
+    - checkout: none
+    - bash: |
+        env -0 | sort -z | tr '\0' '\n' || true
+        env
+      displayName: 'Dump env'
+      name: DumpEnv
+      env:
+        ENV_DEPENDENCIES: $[ convertToJson(dependencies) ]
+
+  - job: publish_test_results
+    condition: and(ne(stageDependencies.configure_build.configure.outputs['labels.skip_all_tests'], 'True'),  succeededOrFailed())
+    displayName: 'GitHub comment - Publish results'
+    timeoutInMinutes: 30
+    variables:
+      GIT_HASH: $[ stageDependencies.build_packages.build.outputs['fix_commit.GIT_HASH'] ]
+      DEPENDENCIES: $[ convertToJson(dependencies) ]
+      STAGE_DEPENDENCIES: $[ convertToJson(stageDependencies) ]
+    pool:
+      vmImage: 'windows-latest'
+      workspace:
+        clean: all
+    steps:
+    - template: publish-html.yml
+      parameters:
+        isPR: ${{ parameters.isPR }}
+        repositoryAlias: ${{ parameters.repositoryAlias }}
+        commit: ${{ parameters.commit }}
+        testConfigurations: ${{ parameters.testConfigurations }}
+        statusContext: ${{ parameters.statusContext }}
+        vsdropsPrefix: ${{ parameters.vsdropsPrefix }}
+
+  - job: publish_skipped_tests
+    condition: eq(stageDependencies.configure_build.configure.outputs['labels.skip_all_tests'], 'True')
+    displayName: 'GitHub comment - Skipped tests'
+    timeoutInMinutes: 30
+
+    variables:
+      GIT_HASH: $[ stageDependencies.build_packages.build.outputs['fix_commit.GIT_HASH'] ]
+
+    pool:
+      vmImage: 'windows-latest'
+      workspace:
+        clean: all
+
+    steps:
+
+    - template: ../common/checkout.yml
+      parameters:
+        isPR: ${{ parameters.isPR }}
+        repositoryAlias: ${{ parameters.repositoryAlias }}
+        commit: ${{ parameters.commit }}
+
+    - pwsh: |
+        Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
+
+        $githubComments = New-GitHubCommentsObjectFromUrl -Url "$(Build.Repository.Uri)" -Token $Env:GITHUB_TOKEN -Hash $Env:COMMENT_HASH -Debug
+        $sb = [System.Text.StringBuilder]::new()
+        $sb.AppendLine("All tests have been skipped because the label 'skip-all-tests' was set.")
+        $result = $githubComments.NewCommentFromMessage("Test results", ":seedling:", $sb.ToString())
+      displayName: 'Set comment'
+      env:
+        CONTEXT: ${{ parameters.statusContext }}
+        GITHUB_TOKEN: $(GitHub.Token)
+        ACCESSTOKEN: $(System.AccessToken)
+        ${{ if eq(parameters.repositoryAlias, 'self') }}:
+          COMMENT_HASH: $(GIT_HASH)
+        ${{ else }}:
+          COMMENT_HASH: $(Build.SourceVersion)

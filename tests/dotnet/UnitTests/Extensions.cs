@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 
 #nullable enable
 
@@ -13,6 +14,88 @@ namespace Xamarin.Tests {
 				return;
 
 			Assert.Fail ($"No warnings expected, but got:\n\t{string.Join ("\n\t", warnings.Select (v => v.ToString ()))}");
+		}
+
+		public static void AssertWarnings (this IEnumerable<BuildLogEvent> actualWarnings, IEnumerable<ExpectedBuildMessage> expectedWarnings)
+		{
+			// Source paths may be full (and local) paths. So make full paths relative to the root folder of xamarin-macios.
+			// We have noticed that in certain bots the SourceRoot property is different to the one we expect, so instead we 
+			// use the fact that we know we are in the xamarin-macios folder and we can use that to calculate the relative path.
+			actualWarnings = actualWarnings.Select (w => {
+				var path = w.File ?? string.Empty;
+				if (!string.IsNullOrEmpty (path) && Path.IsPathRooted (path)) {
+					var rv = w.Clone ();
+					// use the last index of the xamarin-macios since some paths might contain it more than once
+					var localPath = path.Substring (path.LastIndexOf ("/xamarin-macios/") + "/xamarin-macios/".Length);
+					rv.File = localPath;
+					return rv;
+				}
+				return w;
+			});
+
+			var newWarnings = actualWarnings.Where (v => !expectedWarnings.Any (x => x.IsMatch (v))).ToArray ();
+			var missingWarnings = expectedWarnings.Where (v => !actualWarnings.Any (x => v.IsMatch (x))).ToArray ();
+
+			if (newWarnings.Length == 0 && missingWarnings.Length == 0)
+				return;
+
+			var sb = new StringBuilder ();
+			sb.AppendLine ($"\t\t\t\texpectedWarnings = new ExpectedBuildMessage [] {{");
+			foreach (var w in actualWarnings.OrderBy (v => v.File).ThenBy (v => v.Message)) {
+				sb.AppendLine ($"\t\t\t\t\tnew ExpectedBuildMessage (\"{w.File}\" /* line {w.LineNumber} */, \"{w.Message}\"),");
+			}
+			sb.AppendLine ($"\t\t\t\t}};");
+			if (newWarnings.Length > 0) {
+				Console.WriteLine ($"Got {newWarnings.Length} new warnings:");
+				Console.WriteLine ();
+				foreach (var evt in newWarnings)
+					Console.WriteLine ($"    {evt.File}:{evt.LineNumber} {evt.Message}");
+			}
+			if (missingWarnings.Length > 0) {
+				Console.WriteLine ($"Did not get {missingWarnings.Length} missing warnings:");
+				Console.WriteLine ();
+				foreach (var evt in missingWarnings)
+					Console.WriteLine ($"    {evt.File}: {evt.Message}");
+			}
+			Console.WriteLine ($"If this is expected, here's the updated list of expected warnings:");
+			Console.WriteLine (sb);
+
+			// Rather than doing an Assert.IsEmpty, which produces a horrendous error message, we'll do an Assert.Multiple which generates a 
+			// nice enumerated output of all the failures.
+			Assert.Multiple (() => {
+				// fail for each of the new warnings
+				foreach (var evt in newWarnings)
+					Assert.Fail ($"Unexpected warning: {evt.File}:{evt.LineNumber} {evt.Message}");
+
+				// fail for each of the missing warnings
+				foreach (var evt in missingWarnings)
+					Assert.Fail ($"Missing warning: {evt.File}: {evt.Message}");
+			});
+		}
+	}
+
+	public class ExpectedBuildMessage {
+		public string File;
+		public string Message;
+
+		public ExpectedBuildMessage (string file, string message)
+		{
+			File = file;
+			Message = message;
+		}
+
+		public bool IsMatch (BuildLogEvent evt)
+		{
+			if (evt.Message != Message)
+				return false;
+			if (evt.File != File)
+				return false;
+			return true;
+		}
+
+		public override string? ToString ()
+		{
+			return $"{File}: {Message}";
 		}
 	}
 }

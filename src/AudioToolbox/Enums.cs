@@ -17,7 +17,6 @@ namespace AudioToolbox {
 
 	[NoWatch]
 	[TV (14, 0)]
-	[Mac (11, 0)]
 	[iOS (14, 0)]
 	[MacCatalyst (14, 0)]
 	public enum AUSpatialMixerOutputType : uint {
@@ -28,7 +27,6 @@ namespace AudioToolbox {
 
 	[NoWatch]
 	[TV (14, 0)]
-	[Mac (11, 0)]
 	[iOS (14, 0)]
 	[MacCatalyst (14, 0)]
 	public enum AUSpatialMixerPointSourceInHeadMode : uint {
@@ -38,7 +36,6 @@ namespace AudioToolbox {
 
 	[NoWatch]
 	[TV (14, 0)]
-	[Mac (11, 0)]
 	[iOS (14, 0)]
 	[MacCatalyst (14, 0)]
 	public enum AUSpatialMixerSourceMode : uint {

@@ -61,12 +61,11 @@ namespace CoreVideo {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
-		[Mac (12,0)]
 		[NoiOS]
 		[NoTV]
 		[NoMacCatalyst]
@@ -75,12 +74,11 @@ namespace CoreVideo {
 		static extern CVReturn CVDisplayLinkCreateWithCGDisplay (uint displayId, out IntPtr displayLink);
 
 #if NET
-		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
-		[Mac (12,0)]
 		[NoiOS]
 		[NoTV]
 		[NoMacCatalyst]
@@ -95,12 +93,11 @@ namespace CoreVideo {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
-		[Mac (12,0)]
 		[NoiOS]
 		[NoTV]
 		[NoMacCatalyst]
@@ -109,12 +106,11 @@ namespace CoreVideo {
 			=> CreateFromDisplayId (displayId, out var _);
 
 #if NET
-		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
-		[Mac (12,0)]
 		[NoiOS]
 		[NoTV]
 		[NoMacCatalyst]
@@ -123,12 +119,11 @@ namespace CoreVideo {
 		static extern CVReturn CVDisplayLinkCreateWithCGDisplays (uint[] displayArray, nint count, out IntPtr displayLink);
 
 #if NET
-		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
-		[Mac (12,0)]
 		[NoiOS]
 		[NoTV]
 		[NoMacCatalyst]
@@ -148,12 +143,11 @@ namespace CoreVideo {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
-		[Mac (12,0)]
 		[NoiOS]
 		[NoTV]
 		[NoMacCatalyst]
@@ -162,12 +156,11 @@ namespace CoreVideo {
 			=> CreateFromDisplayIds (displayIds, out var _);
 
 #if NET
-		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
-		[Mac (12,0)]
 		[NoiOS]
 		[NoTV]
 		[NoMacCatalyst]
@@ -176,12 +169,11 @@ namespace CoreVideo {
 		static extern CVReturn CVDisplayLinkCreateWithOpenGLDisplayMask (uint mask, out IntPtr displayLinkOut);
 
 #if NET
-		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
-		[Mac (12,0)]
 		[NoiOS]
 		[NoTV]
 		[NoMacCatalyst]
@@ -195,12 +187,11 @@ namespace CoreVideo {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
-		[Mac (12,0)]
 		[NoiOS]
 		[NoTV]
 		[NoMacCatalyst]
@@ -377,12 +368,11 @@ namespace CoreVideo {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
-		[Mac (12,0)]
 		[NoiOS]
 		[NoTV]
 		[NoMacCatalyst]
@@ -391,12 +381,11 @@ namespace CoreVideo {
 		static extern nuint CVDisplayLinkGetTypeID ();
 
 #if NET
-		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
-		[Mac (12,0)]
 		[NoiOS]
 		[NoTV]
 		[NoMacCatalyst]
@@ -405,12 +394,11 @@ namespace CoreVideo {
 			=> CVDisplayLinkGetTypeID ();
 
 #if NET
-		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
-		[Mac (12,0)]
 		[NoiOS]
 		[NoTV]
 		[NoMacCatalyst]
@@ -419,12 +407,11 @@ namespace CoreVideo {
 		static extern int CVDisplayLinkTranslateTime (IntPtr displayLink, CVTimeStamp inTime, ref CVTimeStamp outTime);
 
 #if NET
-		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
-		[Mac (12,0)]
 		[NoiOS]
 		[NoTV]
 		[NoMacCatalyst]

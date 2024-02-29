@@ -210,7 +210,6 @@ namespace CoreMotion {
 
 		[iOS (14, 0)]
 		[Watch (7, 0)]
-		[Mac (11, 0)]
 		[MacCatalyst (14, 0)]
 		[Export ("sensorLocation")]
 		CMDeviceMotionSensorLocation SensorLocation { get; }
@@ -691,7 +690,6 @@ namespace CoreMotion {
 
 	[iOS (14, 0)]
 	[Watch (7, 0)]
-	[Mac (11, 0)]
 	[MacCatalyst (14, 0)]
 	[Native]
 	public enum CMDeviceMotionSensorLocation : long {

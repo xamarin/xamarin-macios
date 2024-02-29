@@ -86,19 +86,19 @@ namespace AutomaticAssessmentConfiguration {
 		[Export ("allowsContinuousPathKeyboard")]
 		bool AllowsContinuousPathKeyboard { get; set; }
 
-		[NoiOS, Mac (12, 0), MacCatalyst (15, 0)]
+		[NoiOS, MacCatalyst (15, 0)]
 		[Export ("configurationsByApplication", ArgumentSemantic.Copy)]
 		NSDictionary<AEAssessmentApplication, AEAssessmentParticipantConfiguration> ConfigurationsByApplication { get; }
 
-		[NoiOS, Mac (12, 0), MacCatalyst (15, 0)]
+		[NoiOS, MacCatalyst (15, 0)]
 		[Export ("mainParticipantConfiguration", ArgumentSemantic.Strong)]
 		AEAssessmentParticipantConfiguration MainParticipantConfiguration { get; }
 
-		[NoiOS, Mac (12, 0), MacCatalyst (15, 0)]
+		[NoiOS, MacCatalyst (15, 0)]
 		[Export ("removeApplication:")]
 		void Remove (AEAssessmentApplication application);
 
-		[NoiOS, Mac (12, 0), MacCatalyst (15, 0)]
+		[NoiOS, MacCatalyst (15, 0)]
 		[Export ("setConfiguration:forApplication:")]
 		void SetConfiguration (AEAssessmentParticipantConfiguration configuration, AEAssessmentApplication application);
 	}
@@ -122,11 +122,11 @@ namespace AutomaticAssessmentConfiguration {
 		[Export ("initWithConfiguration:")]
 		NativeHandle Constructor (AEAssessmentConfiguration configuration);
 
-		[Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+		[iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("configuration", ArgumentSemantic.Copy)]
 		AEAssessmentConfiguration Configuration { get; }
 
-		[Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+		[iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("updateToConfiguration:")]
 		void Update (AEAssessmentConfiguration configuration);
 
@@ -161,16 +161,16 @@ namespace AutomaticAssessmentConfiguration {
 		[Export ("assessmentSessionDidEnd:")]
 		void DidEnd (AEAssessmentSession session);
 
-		[NoiOS, Mac (12, 0), MacCatalyst (15, 0)]
+		[NoiOS, MacCatalyst (15, 0)]
 		[Export ("assessmentSessionDidUpdate:")]
 		void DidUpdate (AEAssessmentSession session);
 
-		[NoiOS, Mac (12, 0), MacCatalyst (15, 0)]
+		[NoiOS, MacCatalyst (15, 0)]
 		[Export ("assessmentSession:failedToUpdateToConfiguration:error:")]
 		void FailedToUpdate (AEAssessmentSession session, AEAssessmentConfiguration configuration, NSError error);
 	}
 
-	[Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (NSObject))]
 #if XAMCORE_5_0
 	[DisableDefaultCtor]
@@ -196,7 +196,7 @@ namespace AutomaticAssessmentConfiguration {
 		bool RequiresSignatureValidation { get; set; }
 	}
 
-	[Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (NSObject))]
 	interface AEAssessmentParticipantConfiguration : NSCopying {
 		[Export ("allowsNetworkAccess")]

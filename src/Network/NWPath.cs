@@ -272,13 +272,12 @@ namespace Network {
 #if NET
 		[SupportedOSPlatform ("ios14.2")]
 		[SupportedOSPlatform ("tvos14.2")]
-		[SupportedOSPlatform ("macos11.0")]
-		[SupportedOSPlatform ("maccatalyst14.2")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (14, 2)]
 		[TV (14, 2)]
 		[Watch (7, 1)]
-		[Mac (11, 0)]
 		[MacCatalyst (14, 2)]
 #endif
 		[DllImport (Constants.NetworkLibrary)]
@@ -287,13 +286,12 @@ namespace Network {
 #if NET
 		[SupportedOSPlatform ("ios14.2")]
 		[SupportedOSPlatform ("tvos14.2")]
-		[SupportedOSPlatform ("macos11.0")]
-		[SupportedOSPlatform ("maccatalyst14.2")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (14, 2)]
 		[TV (14, 2)]
 		[Watch (7, 1)]
-		[Mac (11, 0)]
 		[MacCatalyst (14, 2)]
 #endif
 		public NWPathUnsatisfiedReason GetUnsatisfiedReason ()

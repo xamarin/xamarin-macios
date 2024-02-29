@@ -319,7 +319,7 @@ namespace PdfKit {
 	}
 
 	[Native]
-	[iOS (15, 0), Mac (12, 0), MacCatalyst (15, 0)]
+	[iOS (15, 0), MacCatalyst (15, 0)]
 	public enum PdfAccessPermissions : ulong {
 		LowQualityPrinting = (1uL << 0),
 		HighQualityPrinting = (1uL << 1),
@@ -448,7 +448,7 @@ namespace PdfKit {
 		[Field ("PDFDocumentUserPasswordOption", "+PDFKit")]
 		NSString UserPasswordKey { get; }
 
-		[iOS (15, 0), Mac (12, 0), MacCatalyst (15, 0)]
+		[iOS (15, 0), MacCatalyst (15, 0)]
 		[Field ("PDFDocumentAccessPermissionsOption", "+PDFKit")]
 		NSString AccessPermissionsKey { get; }
 
@@ -476,7 +476,7 @@ namespace PdfKit {
 		string OwnerPassword { get; set; }
 		string UserPassword { get; set; }
 
-		[iOS (15, 0), Mac (12, 0), MacCatalyst (15, 0)]
+		[iOS (15, 0), MacCatalyst (15, 0)]
 		string AccessPermissions { get; set; }
 
 		[iOS (16, 0), Mac (13, 0), MacCatalyst (16, 0)]
@@ -1248,11 +1248,11 @@ namespace PdfKit {
 		[Notification]
 		NSString DidEndPageWriteNotification { get; }
 
-		[iOS (15, 0), Mac (12, 0), MacCatalyst (15, 0)]
+		[iOS (15, 0), MacCatalyst (15, 0)]
 		[Field ("PDFDocumentFoundSelectionKey")]
 		NSString FoundSelectionKey { get; }
 
-		[iOS (15, 0), Mac (12, 0), MacCatalyst (15, 0)]
+		[iOS (15, 0), MacCatalyst (15, 0)]
 		[Field ("PDFDocumentPageIndexKey")]
 		NSString PageIndexKey { get; }
 
@@ -1282,7 +1282,7 @@ namespace PdfKit {
 		[NullAllowed]
 		NSDictionary DocumentAttributes { get; set; }
 
-		[iOS (15, 0), Mac (12, 0), MacCatalyst (15, 0)]
+		[iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("accessPermissions")]
 		PdfAccessPermissions AccessPermissions { get; }
 

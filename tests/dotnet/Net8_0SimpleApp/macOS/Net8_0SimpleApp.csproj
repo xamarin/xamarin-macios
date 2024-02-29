@@ -2,7 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFramework>net8.0-macos</TargetFramework>
-		<SupportedOSPlatformVersion>10.15</SupportedOSPlatformVersion>
+		<SupportedOSPlatformVersion>12.0</SupportedOSPlatformVersion>
 	</PropertyGroup>
 	<Import Project="..\shared.csproj" />
 </Project>

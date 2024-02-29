@@ -64,7 +64,7 @@ namespace AVKit {
 		[Export ("initWithPlayerLayer:")]
 		NativeHandle Constructor (AVPlayerLayer playerLayer);
 
-		[TV (15, 0), NoWatch, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+		[TV (15, 0), NoWatch, iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("initWithContentSource:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (AVPictureInPictureControllerContentSource contentSource);
@@ -118,7 +118,7 @@ namespace AVKit {
 		[Export ("pictureInPictureButtonStopImageCompatibleWithTraitCollection:")]
 		UIImage CreateStopButton ([NullAllowed] UITraitCollection traitCollection);
 
-		[NoWatch, Mac (11, 0), iOS (14, 0)]
+		[NoWatch, iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[Export ("requiresLinearPlayback")]
 		bool RequiresLinearPlayback { get; set; }
@@ -132,12 +132,12 @@ namespace AVKit {
 		[Export ("canStartPictureInPictureAutomaticallyFromInline")]
 		bool CanStartPictureInPictureAutomaticallyFromInline { get; set; }
 
-		[TV (15, 0), NoWatch, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+		[TV (15, 0), NoWatch, iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("invalidatePlaybackState")]
 		void InvalidatePlaybackState ();
 
 		[NullAllowed]
-		[TV (15, 0), NoWatch, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+		[TV (15, 0), NoWatch, iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("contentSource", ArgumentSemantic.Strong)]
 		AVPictureInPictureControllerContentSource ContentSource { get; set; }
 	}
@@ -613,12 +613,10 @@ namespace AVKit {
 		[Export ("showsTimecodes")]
 		bool ShowsTimecodes { get; set; }
 
-		[Mac (12, 0)]
 		[NoMacCatalyst]
 		[Wrap ("WeakDelegate")]
 		IAVPlayerViewDelegate Delegate { get; set; }
 
-		[Mac (12, 0)]
 		[NoMacCatalyst]
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
 		NSObject WeakDelegate { get; set; }
@@ -951,7 +949,7 @@ namespace AVKit {
 		NativeHandle Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
 	}
 
-	[TV (15, 0), NoWatch, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[TV (15, 0), NoWatch, iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface AVPictureInPictureControllerContentSource {
@@ -995,7 +993,7 @@ namespace AVKit {
 
 	interface IAVPictureInPictureSampleBufferPlaybackDelegate { }
 
-	[TV (15, 0), NoWatch, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[TV (15, 0), NoWatch, iOS (15, 0), MacCatalyst (15, 0)]
 #if NET
 	[Protocol, Model]
 #else
@@ -1029,7 +1027,7 @@ namespace AVKit {
 
 	interface IAVPlayerViewDelegate { }
 
-	[Mac (12, 0), NoiOS, NoTV, NoMacCatalyst]
+	[NoiOS, NoTV, NoMacCatalyst]
 #if NET
 	[Protocol, Model]
 #else

@@ -27,7 +27,7 @@ namespace ModelIO {
 		[SupportedOSPlatform ("maccatalyst")]
 #endif
 		[DllImport (Constants.MetalKitLibrary)]
-		static extern /* MDLVertexDescriptor __nonnull */ IntPtr MTKModelIOVertexDescriptorFromMetalWithError (/* MTLVertexDescriptor __nonnull */ IntPtr metalDescriptor, out /* NSError */ IntPtr error);
+		unsafe static extern /* MDLVertexDescriptor __nonnull */ IntPtr MTKModelIOVertexDescriptorFromMetalWithError (/* MTLVertexDescriptor __nonnull */ IntPtr metalDescriptor, /* NSError */ IntPtr* error);
 
 #if NET
 		[SupportedOSPlatform ("ios")]
@@ -40,7 +40,10 @@ namespace ModelIO {
 			if (descriptor is null)
 				throw new ArgumentException (nameof (descriptor));
 			IntPtr err;
-			var vd = Runtime.GetNSObject<MDLVertexDescriptor> (MTKModelIOVertexDescriptorFromMetalWithError (descriptor.Handle, out err));
+			MDLVertexDescriptor? vd;
+			unsafe {
+				vd = Runtime.GetNSObject<MDLVertexDescriptor> (MTKModelIOVertexDescriptorFromMetalWithError (descriptor.Handle, &err));
+			}
 			error = Runtime.GetNSObject<NSError> (err);
 			return vd;
 		}

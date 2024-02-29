@@ -51,15 +51,13 @@ namespace VideoToolbox {
 		ColorCorrectionImageRotationFailed = -12219,
 		VideoDecoderRemoved = -17690,
 		SessionMalfunction = -17691,
-		[Mac (11, 0)]
 		[MacCatalyst (13, 1)]
 		DecoderNeedsRosetta = -17692,
-		[Mac (11, 0)]
 		[MacCatalyst (13, 1)]
 		EncoderNeedsRosetta = -17693,
-		[Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0), Watch (9, 0), TV (15, 0)]
+		[iOS (15, 0), MacCatalyst (15, 0), Watch (9, 0), TV (15, 0)]
 		VideoDecoderReferenceMissing = -17694,
-		[Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0), Watch (9, 0), TV (15, 0)]
+		[iOS (15, 0), MacCatalyst (15, 0), Watch (9, 0), TV (15, 0)]
 		VideoDecoderCallbackMessaging = -17695,
 		[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0), Watch (9, 0), TV (16, 0)]
 		VideoDecoderUnknownErr = -17696,
@@ -267,7 +265,7 @@ namespace VideoToolbox {
 		Average
 	}
 
-	[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+	[Watch (7, 0), TV (14, 0), iOS (14, 0)]
 	[MacCatalyst (14, 0)]
 	public enum HdrMetadataInsertionMode {
 		[Field ("kVTHDRMetadataInsertionMode_None")]

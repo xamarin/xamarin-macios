@@ -62,7 +62,7 @@ namespace AddressBook {
 	}
 
 #if NET
-	[SupportedOSPlatform ("maccatalyst14.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("ios")]
 	[ObsoletedOSPlatform ("maccatalyst14.0", "Use the 'Contacts' API instead.")]
 	[ObsoletedOSPlatform ("ios9.0", "Use the 'Contacts' API instead.")]
@@ -125,15 +125,16 @@ namespace AddressBook {
 		}
 
 		[DllImport (Constants.AddressBookLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool ABGroupAddMember (IntPtr group, IntPtr person, out IntPtr error);
+		unsafe extern static byte ABGroupAddMember (IntPtr group, IntPtr person, IntPtr* error);
 		public void Add (ABRecord person)
 		{
 			if (person is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (person));
 			IntPtr error;
-			if (!ABGroupAddMember (Handle, person.Handle, out error))
-				throw CFException.FromCFError (error);
+			unsafe {
+				if (ABGroupAddMember (Handle, person.Handle, &error) == 0)
+					throw CFException.FromCFError (error);
+			}
 		}
 
 		[DllImport (Constants.AddressBookLibrary)]
@@ -167,15 +168,16 @@ namespace AddressBook {
 		}
 
 		[DllImport (Constants.AddressBookLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool ABGroupRemoveMember (IntPtr group, IntPtr member, out IntPtr error);
+		unsafe extern static byte ABGroupRemoveMember (IntPtr group, IntPtr member, IntPtr* error);
 		public void Remove (ABRecord member)
 		{
 			if (member is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (member));
 			IntPtr error;
-			if (!ABGroupRemoveMember (Handle, member.Handle, out error))
-				throw CFException.FromCFError (error);
+			unsafe {
+				if (ABGroupRemoveMember (Handle, member.Handle, &error) == 0)
+					throw CFException.FromCFError (error);
+			}
 		}
 	}
 }

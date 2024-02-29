@@ -32,6 +32,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using ObjCRuntime;
 using AudioToolbox;
@@ -261,7 +262,9 @@ namespace AudioUnit {
 		public static AudioComponent? FindNextComponent (AudioComponent? cmp, ref AudioComponentDescription cd)
 		{
 			var handle = cmp.GetHandle ();
-			handle = AudioComponentFindNext (handle, ref cd);
+			unsafe {
+				handle = AudioComponentFindNext (handle, (AudioComponentDescription*) Unsafe.AsPointer<AudioComponentDescription> (ref cd));
+			}
 			return (handle != IntPtr.Zero) ? new AudioComponent (handle, false) : null;
 		}
 
@@ -313,38 +316,47 @@ namespace AudioUnit {
 		}
 
 		[DllImport (Constants.AudioUnitLibrary)]
-		static extern IntPtr AudioComponentFindNext (IntPtr inComponent, ref AudioComponentDescription inDesc);
+		unsafe static extern IntPtr AudioComponentFindNext (IntPtr inComponent, AudioComponentDescription* inDesc);
 
 		[DllImport (Constants.AudioUnitLibrary, EntryPoint = "AudioComponentCopyName")]
-		static extern int /* OSStatus */ AudioComponentCopyName (IntPtr component, out IntPtr cfstr);
+		unsafe static extern int /* OSStatus */ AudioComponentCopyName (IntPtr component, IntPtr* cfstr);
 
 		public string? Name {
 			get {
-				if (AudioComponentCopyName (Handle, out var r) == 0)
-					return CFString.FromHandle (r);
+				IntPtr r;
+				unsafe {
+					if (AudioComponentCopyName (Handle, &r) == 0)
+						return CFString.FromHandle (r);
+				}
 				return null;
 			}
 		}
 
 		[DllImport (Constants.AudioUnitLibrary)]
-		static extern int /* OSStatus */ AudioComponentGetDescription (IntPtr component, out AudioComponentDescription desc);
+		unsafe static extern int /* OSStatus */ AudioComponentGetDescription (IntPtr component, AudioComponentDescription* desc);
 
 		public AudioComponentDescription? Description {
 			get {
-				if (AudioComponentGetDescription (Handle, out var desc) == 0)
-					return desc;
+				AudioComponentDescription desc;
+				unsafe {
+					if (AudioComponentGetDescription (Handle, &desc) == 0)
+						return desc;
+				}
 
 				return null;
 			}
 		}
 
 		[DllImport (Constants.AudioUnitLibrary)]
-		static extern int /* OSStatus */ AudioComponentGetVersion (IntPtr component, out int /* UInt32* */ version);
+		unsafe static extern int /* OSStatus */ AudioComponentGetVersion (IntPtr component, int* /* UInt32* */ version);
 
 		public Version? Version {
 			get {
-				if (AudioComponentGetVersion (Handle, out var ret) == 0)
-					return new Version (ret >> 16, (ret >> 8) & 0xff, ret & 0xff);
+				int ret;
+				unsafe {
+					if (AudioComponentGetVersion (Handle, &ret) == 0)
+						return new Version (ret >> 16, (ret >> 8) & 0xff, ret & 0xff);
+				}
 
 				return null;
 			}
@@ -352,13 +364,12 @@ namespace AudioUnit {
 
 #if NET
 		[SupportedOSPlatform ("tvos14.0")]
-		[SupportedOSPlatform ("macos11.0")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios14.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[NoWatch]
 		[TV (14, 0)]
-		[Mac (11, 0)]
 		[iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 #endif
@@ -368,13 +379,12 @@ namespace AudioUnit {
 #if NET
 		[SupportedOSPlatform ("tvos14.0")]
 		[SupportedOSPlatform ("ios14.0")]
-		[SupportedOSPlatform ("macos11.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[NoWatch]
 		[TV (14, 0)]
 		[iOS (14, 0)]
-		[Mac (11, 0)]
 		[MacCatalyst (14, 0)]
 #endif
 		public UIImage? CopyIcon ()
@@ -418,7 +428,7 @@ namespace AudioUnit {
 
 #if NET
 		[SupportedOSPlatform ("ios")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos")]
 		[ObsoletedOSPlatform ("tvos13.0")]
@@ -435,7 +445,7 @@ namespace AudioUnit {
 
 #if NET
 		[SupportedOSPlatform ("ios")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos")]
 		[ObsoletedOSPlatform ("tvos13.0", "Use 'AudioUnit' instead.")]
@@ -495,7 +505,7 @@ namespace AudioUnit {
 		[iOS (16,0)]
 #endif
 		[DllImport (Constants.AudioUnitLibrary)]
-		static extern int AudioComponentCopyConfigurationInfo (IntPtr /* AudioComponent */ inComponent, out /* CFDictionaryRef** */ IntPtr outConfigurationInfo);
+		unsafe static extern int AudioComponentCopyConfigurationInfo (IntPtr /* AudioComponent */ inComponent, /* CFDictionaryRef** */ IntPtr* outConfigurationInfo);
 
 #if NET
 		[SupportedOSPlatform ("macos13.0")]
@@ -509,7 +519,10 @@ namespace AudioUnit {
 		[iOS (16,0)]
 #endif
 		public NSDictionary? GetConfigurationInfo (out int resultCode) {
-			resultCode = AudioComponentCopyConfigurationInfo (GetCheckedHandle (), out var dictPtr);
+			IntPtr dictPtr;
+			unsafe {
+				resultCode = AudioComponentCopyConfigurationInfo (GetCheckedHandle (), &dictPtr);
+			}
 			if (resultCode == 0) {
 				return Runtime.GetNSObject<NSDictionary> (dictPtr, owns: true);
 			}
@@ -542,8 +555,8 @@ namespace AudioUnit {
 		[MacCatalyst (16,0)]
 #endif
 		[DllImport (Constants.AudioUnitLibrary)]
-		static extern int AudioComponentValidate (IntPtr /* AudioComponent* */ inComponent, IntPtr /* CFDictionaryRef* */ inValidationParameters,
-				out AudioComponentValidationResult outValidationResult);
+		unsafe static extern int AudioComponentValidate (IntPtr /* AudioComponent* */ inComponent, IntPtr /* CFDictionaryRef* */ inValidationParameters,
+				AudioComponentValidationResult* outValidationResult);
 
 #if NET
 		[SupportedOSPlatform ("macos13.0")]
@@ -558,7 +571,10 @@ namespace AudioUnit {
 		[MacCatalyst (16,0)]
 #endif
 		public AudioComponentValidationResult Validate (NSDictionary? validationParameters, out int resultCode) {
-			resultCode = AudioComponentValidate (GetCheckedHandle (), validationParameters.GetHandle (), out var result);
+			AudioComponentValidationResult result;
+			unsafe {
+				resultCode = AudioComponentValidate (GetCheckedHandle (), validationParameters.GetHandle (), &result);
+			}
 			if (resultCode == 0)
 				return result;
 			return AudioComponentValidationResult.Unknown;
@@ -764,12 +780,11 @@ namespace AudioUnit {
 #if NET
 		[SupportedOSPlatform ("ios14.5")]
 		[SupportedOSPlatform ("tvos14.5")]
-		[SupportedOSPlatform ("macos11.3")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (14, 5)]
 		[TV (14, 5)]
-		[Mac (11, 3)]
 #endif
 		public static NSString LoadOutOfProcess = new NSString ("LoadOutOfProcess");
 

@@ -68,8 +68,8 @@ namespace Security {
 
 #if NET
 		[SupportedOSPlatform ("ios")]
-		[SupportedOSPlatform ("macos11.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[ObsoletedOSPlatform ("macos11.0")]
 		[ObsoletedOSPlatform ("ios14.0")]
 		[UnsupportedOSPlatform ("tvos")]
@@ -116,8 +116,8 @@ namespace Security {
 
 #if NET
 		[SupportedOSPlatform ("ios")]
-		[SupportedOSPlatform ("macos11.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[ObsoletedOSPlatform ("macos11.0", "Use 'ASAuthorizationPasswordRequest' instead.")]
 		[ObsoletedOSPlatform ("ios14.0", "Use 'ASAuthorizationPasswordRequest' instead.")]
 		[UnsupportedOSPlatform ("tvos")]

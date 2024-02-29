@@ -1523,7 +1523,7 @@ namespace HomeKit {
 	[BaseType (typeof (NSObject))]
 	interface HMCameraSource {
 
-		[Watch (7, 4), TV (14, 5), Mac (11, 3), iOS (14, 5)]
+		[Watch (7, 4), TV (14, 5), iOS (14, 5)]
 		[MacCatalyst (14, 5)]
 		[Export ("aspectRatio")]
 		double AspectRatio { get; }

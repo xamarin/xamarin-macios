@@ -46,7 +46,7 @@ using NativeHandle = System.IntPtr;
 
 namespace AddressBook {
 #if NET
-	[SupportedOSPlatform ("maccatalyst14.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("ios")]
 	[ObsoletedOSPlatform ("maccatalyst14.0", "Use the 'Contacts' API instead.")]
 	[ObsoletedOSPlatform ("ios9.0", "Use the 'Contacts' API instead.")]
@@ -112,7 +112,7 @@ namespace AddressBook {
 	}
 
 #if NET
-	[SupportedOSPlatform ("maccatalyst14.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("ios")]
 	[ObsoletedOSPlatform ("maccatalyst14.0", "Use the 'Contacts' API instead.")]
 	[ObsoletedOSPlatform ("ios9.0", "Use the 'Contacts' API instead.")]
@@ -131,7 +131,7 @@ namespace AddressBook {
 		internal extern static IntPtr ABAddressBookCreate ();
 
 #if NET
-		[SupportedOSPlatform ("maccatalyst14.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("ios")]
 		[ObsoletedOSPlatform ("maccatalyst14.0", "Use the 'Contacts' API instead.")]
 		[ObsoletedOSPlatform ("ios6.0", "Use the static Create method instead.")]
@@ -144,11 +144,15 @@ namespace AddressBook {
 		}
 
 		[DllImport (Constants.AddressBookLibrary)]
-		internal extern static IntPtr ABAddressBookCreateWithOptions (IntPtr dictionary, out IntPtr cfError);
+		unsafe extern static IntPtr ABAddressBookCreateWithOptions (IntPtr dictionary, IntPtr* cfError);
 
 		public static ABAddressBook? Create (out NSError? error)
 		{
-			var handle = ABAddressBookCreateWithOptions (IntPtr.Zero, out var e);
+			IntPtr e;
+			IntPtr handle;
+			unsafe {
+				handle = ABAddressBookCreateWithOptions (IntPtr.Zero, &e);
+			}
 			if (handle == IntPtr.Zero) {
 				error = Runtime.GetNSObject<NSError> (e);
 				return null;
@@ -221,21 +225,22 @@ namespace AddressBook {
 		}
 
 		[DllImport (Constants.AddressBookLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool ABAddressBookHasUnsavedChanges (IntPtr addressBook);
+		extern static byte ABAddressBookHasUnsavedChanges (IntPtr addressBook);
 		public bool HasUnsavedChanges {
 			get {
-				return ABAddressBookHasUnsavedChanges (GetCheckedHandle ());
+				return ABAddressBookHasUnsavedChanges (GetCheckedHandle ()) != 0;
 			}
 		}
 
 		[DllImport (Constants.AddressBookLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool ABAddressBookSave (IntPtr addressBook, out IntPtr error);
+		unsafe extern static byte ABAddressBookSave (IntPtr addressBook, IntPtr* error);
 		public void Save ()
 		{
-			if (!ABAddressBookSave (GetCheckedHandle (), out var error))
-				throw CFException.FromCFError (error);
+			IntPtr error;
+			unsafe {
+				if (ABAddressBookSave (GetCheckedHandle (), &error) == 0)
+					throw CFException.FromCFError (error);
+			}
 		}
 
 		[DllImport (Constants.AddressBookLibrary)]
@@ -246,28 +251,32 @@ namespace AddressBook {
 		}
 
 		[DllImport (Constants.AddressBookLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool ABAddressBookAddRecord (IntPtr addressBook, IntPtr record, out IntPtr error);
+		unsafe extern static byte ABAddressBookAddRecord (IntPtr addressBook, IntPtr record, IntPtr* error);
 		public void Add (ABRecord record)
 		{
 			if (record is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (record));
 
-			if (!ABAddressBookAddRecord (GetCheckedHandle (), record.Handle, out var error))
-				throw CFException.FromCFError (error);
+			IntPtr error;
+			unsafe {
+				if (ABAddressBookAddRecord (GetCheckedHandle (), record.Handle, &error) == 0)
+					throw CFException.FromCFError (error);
+			}
 			record.AddressBook = this;
 		}
 
 		[DllImport (Constants.AddressBookLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool ABAddressBookRemoveRecord (IntPtr addressBook, IntPtr record, out IntPtr error);
+		unsafe extern static byte ABAddressBookRemoveRecord (IntPtr addressBook, IntPtr record, IntPtr* error);
 		public void Remove (ABRecord record)
 		{
 			if (record is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (record));
 
-			if (!ABAddressBookRemoveRecord (GetCheckedHandle (), record.Handle, out var error))
-				throw CFException.FromCFError (error);
+			IntPtr error;
+			unsafe {
+				if (ABAddressBookRemoveRecord (GetCheckedHandle (), record.Handle, &error) == 0)
+					throw CFException.FromCFError (error);
+			}
 			record.AddressBook = null;
 		}
 
