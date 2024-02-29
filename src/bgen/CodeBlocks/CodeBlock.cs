@@ -8,7 +8,7 @@ public class CodeBlock : ICodeBlock {
 	protected List<ICodeBlock> Blocks = new ();
 	const char startBrace = '{';
 	const char endBrace = '}';
-	public const char NewLine = '\n';
+	protected const char NewLine = '\n';
 
 	public CodeBlock () { }
 
@@ -56,18 +56,13 @@ public class CodeBlock : ICodeBlock {
 		Blocks.Add (line);
 	}
 
-	protected void DecrementIndent ()
-	{
-		CurrentIndent -= Indent;
-	}
-
-	public void WriteIndent (TextWriter writer)
+	protected void WriteIndent (TextWriter writer)
 	{
 		for (var i = 0; i < CurrentIndent; i++)
 			writer.Write (' ');
 	}
 
-	public virtual void WriteHeaderText (TextWriter writer)
+	protected virtual void WriteHeaderText (TextWriter writer)
 	{
 		WriteIndent (writer);
 		writer.Write (HeaderText);

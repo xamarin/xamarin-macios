@@ -12,7 +12,7 @@ public class IfBlock : CodeBlock {
 	public IfBlock (string condition, List<ICodeBlock> blocks)
 	{
 		HeaderText = "if (" + condition + ")";
-		this.Blocks = blocks;
+		Blocks.AddRange (blocks);
 	}
 
 	public void AddElseIf (string condition, List<ICodeBlock> blocks)
@@ -25,7 +25,7 @@ public class IfBlock : CodeBlock {
 		ElseBlock = new CodeBlock ("else", blocks);
 	}
 
-	public override void WriteHeaderText (TextWriter writer)
+	protected override void WriteHeaderText (TextWriter writer)
 	{
 		WriteIndent (writer);
 		writer.Write (HeaderText);
