@@ -25,7 +25,7 @@ namespace CoreGraphics {
 
 	// CGEventTypes.h:typedef uint32_t CGEventTapLocation;
 #if NET
-	[SupportedOSPlatform ("maccatalyst15.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 #else
 	[MacCatalyst (15,0)]
@@ -38,7 +38,7 @@ namespace CoreGraphics {
 
 	// CGEventTypes.h:typedef uint32_t CGEventTapPlacement;
 #if NET
-	[SupportedOSPlatform ("maccatalyst15.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 #else
 	[MacCatalyst (15,0)]
@@ -50,7 +50,7 @@ namespace CoreGraphics {
 
 	// CGEventTypes.h:typedef uint32_t CGEventTapOptions;
 #if NET
-	[SupportedOSPlatform ("maccatalyst15.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 #else
 	[MacCatalyst (15,0)]
@@ -62,7 +62,7 @@ namespace CoreGraphics {
 
 	// CGEventTypes.h:typedef uint32_t CGMouseButton;
 #if NET
-	[SupportedOSPlatform ("maccatalyst15.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 #else
 	[MacCatalyst (15,0)]
@@ -73,7 +73,7 @@ namespace CoreGraphics {
 
 	// CGEventTypes.h:typedef uint32_t CGScrollEventUnit;
 #if NET
-	[SupportedOSPlatform ("maccatalyst15.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 #else
 	[MacCatalyst (15,0)]
@@ -84,7 +84,7 @@ namespace CoreGraphics {
 
 	// CGEventTypes.h:typedef uint64_t CGEventMask;
 #if NET
-	[SupportedOSPlatform ("maccatalyst15.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 #else
 	[MacCatalyst (15,0)]
@@ -112,7 +112,7 @@ namespace CoreGraphics {
 
 	// CGEventTypes.h:typedef uint64_t CGEventFlags;
 #if NET
-	[SupportedOSPlatform ("maccatalyst15.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 #else
 	[MacCatalyst (15,0)]
@@ -132,7 +132,7 @@ namespace CoreGraphics {
 
 	// CGEventTypes.h:typedef uint32_t CGEventField;
 #if NET
-	[SupportedOSPlatform ("maccatalyst15.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 #else
 	[MacCatalyst (15,0)]
@@ -202,7 +202,7 @@ namespace CoreGraphics {
 
 	// CGEventTypes.h:typedef uint32_t CGEventType;
 #if NET
-	[SupportedOSPlatform ("maccatalyst15.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 #else
 	[MacCatalyst (15,0)]
@@ -231,7 +231,7 @@ namespace CoreGraphics {
 
 	// CGEventTypes.h:typedef uint32_t CGEventMouseSubtype;
 #if NET
-	[SupportedOSPlatform ("maccatalyst15.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 #else
 	[MacCatalyst (15,0)]
@@ -242,7 +242,7 @@ namespace CoreGraphics {
 
 	// CGEventTypes.h:typedef uint32_t CGEventSourceStateID;
 #if NET
-	[SupportedOSPlatform ("maccatalyst15.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 #else
 	[MacCatalyst (15,0)]
@@ -253,7 +253,7 @@ namespace CoreGraphics {
 
 	// CGRemoteOperation.h:typedef uint32_t CGEventFilterMask;
 #if NET
-	[SupportedOSPlatform ("maccatalyst15.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 #else
 	[MacCatalyst (15,0)]
@@ -267,7 +267,7 @@ namespace CoreGraphics {
 
 	// CGRemoteOperation.h:typedef uint32_t CGEventSuppressionState;
 #if NET
-	[SupportedOSPlatform ("maccatalyst15.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 #else
 	[MacCatalyst (15,0)]

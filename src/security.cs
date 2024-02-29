@@ -97,7 +97,6 @@ namespace Security {
 
 	[Static]
 	[NoWatch]
-	[Mac (11, 0)]
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoTV] // removed in tvOS 10
 	interface SecSharedCredential {
@@ -1173,7 +1172,6 @@ namespace Security {
 
 	[NoTV]
 	[NoWatch]
-	[Mac (11, 0)]
 	[MacCatalyst (13, 1)]
 	[Internal]
 	[Static]
@@ -1194,7 +1192,6 @@ namespace Security {
 
 	[NoTV]
 	[NoWatch]
-	[Mac (11, 0)]
 	[MacCatalyst (13, 1)]
 	[StrongDictionary ("SecSharedCredentialKeys")]
 	interface SecSharedCredentialInfo {

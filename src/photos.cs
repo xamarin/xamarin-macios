@@ -155,11 +155,11 @@ namespace Photos {
 		[Field ("PHLocalIdentifierNotFound")]
 		NSString LocalIdentifierNotFound { get; }
 
-		[TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+		[TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[NullAllowed, Export ("adjustmentFormatIdentifier")]
 		string AdjustmentFormatIdentifier { get; }
 
-		[TV (15, 0), Mac (12, 0), iOS (15, 0)]
+		[TV (15, 0), iOS (15, 0)]
 		[MacCatalyst (15, 0)]
 		[Export ("hasAdjustments")]
 		bool HasAdjustments { get; }
@@ -689,7 +689,7 @@ namespace Photos {
 		[return: NullAllowed]
 		PHCollectionListChangeRequest ChangeRequest (PHCollectionList collectionList, PHFetchResult childCollections);
 
-		[TV (14, 2), Mac (11, 0), iOS (14, 2)]
+		[TV (14, 2), iOS (14, 2)]
 		[MacCatalyst (14, 2)]
 		[Static]
 		[Export ("changeRequestForTopLevelCollectionListUserCollections:")]
@@ -1124,7 +1124,7 @@ namespace Photos {
 		[Static, Export ("authorizationStatus")]
 		PHAuthorizationStatus AuthorizationStatus { get; }
 
-		[TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[TV (14, 0), iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[Static]
 		[Export ("authorizationStatusForAccessLevel:")]
@@ -1138,7 +1138,7 @@ namespace Photos {
 		[Async]
 		void RequestAuthorization (Action<PHAuthorizationStatus> handler);
 
-		[TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[TV (14, 0), iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[Static]
 		[Export ("requestAuthorizationForAccessLevel:handler:")]
@@ -1173,7 +1173,7 @@ namespace Photos {
 		[Export ("unregisterAvailabilityObserver:")]
 		void Unregister (IPHPhotoLibraryAvailabilityObserver observer);
 
-		[TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+		[TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Field ("PHLocalIdentifiersErrorKey")]
 		NSString LocalIdentifiersErrorKey { get; }
 
@@ -1194,12 +1194,10 @@ namespace Photos {
 	[BaseType (typeof (PHPhotoLibrary))]
 	interface PHPhotoLibrary_CloudIdentifiers {
 
-		[Mac (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("localIdentifierMappingsForCloudIdentifiers:")]
 		NSDictionary<PHCloudIdentifier, PHLocalIdentifierMapping> GetLocalIdentifierMappings (PHCloudIdentifier [] cloudIdentifiers);
 
-		[Mac (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("cloudIdentifierMappingsForLocalIdentifiers:")]
 		NSDictionary<NSString, PHCloudIdentifierMapping> GetCloudIdentifierMappings (string [] localIdentifiers);
@@ -1451,7 +1449,7 @@ namespace Photos {
 		NativeHandle Constructor (string stringValue);
 	}
 
-	[TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface PHCloudIdentifierMapping {
@@ -1462,7 +1460,7 @@ namespace Photos {
 		NSError Error { get; }
 	}
 
-	[TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface PHLocalIdentifierMapping {

@@ -41,7 +41,7 @@ using NativeHandle = System.IntPtr;
 namespace Security {
 
 #if NET
-	[SupportedOSPlatform ("maccatalyst15.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 #else
 	[MacCatalyst (15,0)]
@@ -66,7 +66,7 @@ namespace Security {
 	}
 
 #if NET
-	[SupportedOSPlatform ("maccatalyst15.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 #else
 	[MacCatalyst (15,0)]
@@ -95,7 +95,7 @@ namespace Security {
 	// create the structure for them with the proper data
 	//
 #if NET
-	[SupportedOSPlatform ("maccatalyst15.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 #else
 	[MacCatalyst (15,0)]
@@ -107,7 +107,7 @@ namespace Security {
 	}
 
 #if NET
-	[SupportedOSPlatform ("maccatalyst15.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 #else
 	[MacCatalyst (15,0)]
@@ -119,7 +119,7 @@ namespace Security {
 	}
 
 #if NET
-	[SupportedOSPlatform ("maccatalyst15.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 #else
 	[MacCatalyst (15,0)]
@@ -133,7 +133,7 @@ namespace Security {
 	}
 
 #if NET
-	[SupportedOSPlatform ("maccatalyst15.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 #else
 	[MacCatalyst (15,0)]
@@ -144,7 +144,7 @@ namespace Security {
 	}
 
 #if NET
-	[SupportedOSPlatform ("maccatalyst15.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 #else
 	[MacCatalyst (15,0)]
@@ -154,7 +154,7 @@ namespace Security {
 		extern static int /* OSStatus = int */ AuthorizationCreate (AuthorizationItemSet *rights, AuthorizationItemSet *environment, AuthorizationFlags flags, out IntPtr auth);
 
 #if NET
-		[SupportedOSPlatform ("maccatalyst15.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[ObsoletedOSPlatform ("macos10.7", "Use the Service Management framework or the launchd-launched helper tool instead.")]
 #else
@@ -178,7 +178,7 @@ namespace Security {
 		}
 
 #if NET
-		[SupportedOSPlatform ("maccatalyst15.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[ObsoletedOSPlatform ("macos10.7", "Use the Service Management framework or the launchd-launched helper tool instead.")]
 #else

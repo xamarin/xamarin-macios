@@ -333,7 +333,7 @@ namespace StoreKit {
 		[Export ("presentCodeRedemptionSheet")]
 		void PresentCodeRedemptionSheet ();
 
-		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[Watch (7, 0), TV (14, 0), iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[Export ("transactionObservers")]
 		ISKPaymentTransactionObserver [] TransactionObservers { get; }
@@ -419,7 +419,7 @@ namespace StoreKit {
 		[Export ("discounts")]
 		SKProductDiscount [] Discounts { get; }
 
-		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[Watch (7, 0), TV (14, 0), iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[Export ("isFamilyShareable")]
 		bool IsFamilyShareable { get; }
@@ -455,7 +455,6 @@ namespace StoreKit {
 		[Export ("paymentQueue:updatedDownloads:")]
 		void UpdatedDownloads (SKPaymentQueue queue, SKDownload [] downloads);
 
-		[Mac (11, 0)]
 		[NoWatch]
 		[MacCatalyst (13, 1)]
 		[Export ("paymentQueue:shouldAddStorePayment:forProduct:")]
@@ -467,7 +466,7 @@ namespace StoreKit {
 		[Export ("paymentQueueDidChangeStorefront:")]
 		void DidChangeStorefront (SKPaymentQueue queue);
 
-		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[Watch (7, 0), TV (14, 0), iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[Export ("paymentQueue:didRevokeEntitlementsForProductIdentifiers:")]
 		void DidRevokeEntitlements (SKPaymentQueue queue, string [] productIdentifiers);
@@ -626,7 +625,7 @@ namespace StoreKit {
 		void ReceivedResponse (SKProductsRequest request, SKProductsResponse response);
 	}
 
-	[Mac (11, 0), NoTV, NoWatch]
+	[NoTV, NoWatch]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (UIViewController),
 		   Delegates = new string [] { "WeakDelegate" },
@@ -669,7 +668,7 @@ namespace StoreKit {
 
 	interface ISKStoreProductViewControllerDelegate { }
 
-	[Mac (11, 0), NoTV, NoWatch]
+	[NoTV, NoWatch]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[Model]
@@ -680,7 +679,6 @@ namespace StoreKit {
 	}
 
 	[NoWatch]
-	[Mac (11, 0)]
 	[MacCatalyst (13, 1)]
 	[StrongDictionary ("SKStoreProductParameterKey")]
 	interface StoreProductParameters {
@@ -730,7 +728,6 @@ namespace StoreKit {
 	}
 
 	[NoWatch]
-	[Mac (11, 0)]
 	[MacCatalyst (13, 1)]
 	[Static]
 	interface SKStoreProductParameterKey {
@@ -796,7 +793,7 @@ namespace StoreKit {
 		[Field ("SKStoreProductParameterAdNetworkVersion")]
 		NSString AdNetworkVersion { get; }
 
-		[Mac (12, 0), iOS (15, 0), TV (15, 0), MacCatalyst (15, 0)]
+		[iOS (15, 0), TV (15, 0), MacCatalyst (15, 0)]
 		[Field ("SKStoreProductParameterCustomProductPageIdentifier")]
 		NSString CustomProductPageIdentifier { get; }
 	}
@@ -905,7 +902,7 @@ namespace StoreKit {
 		PlayMusic,
 	}
 
-	[Mac (11, 0), Watch (7, 0)]
+	[Watch (7, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface SKCloudServiceController {
@@ -960,7 +957,7 @@ namespace StoreKit {
 
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[NoWatch, Mac (11, 0)]
+	[NoWatch]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // static Default property is the only documented way to get the controller
 	interface SKProductStorePromotionController {

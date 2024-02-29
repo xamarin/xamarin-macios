@@ -315,13 +315,12 @@ namespace MediaPlayer {
 
 #if NET
 		[SupportedOSPlatform ("tvos14.5")]
-		[SupportedOSPlatform ("macos11.3")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios14.5")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (7, 4)]
 		[TV (14, 5)]
-		[Mac (11, 3)]
 		[iOS (14, 5)]
 #endif
 		public bool IsPreorder {

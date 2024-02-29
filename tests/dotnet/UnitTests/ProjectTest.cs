@@ -1091,23 +1091,6 @@ namespace Xamarin.Tests {
 			}
 		}
 
-		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64", "13.3")]
-		public void CatalystAppOptimizedForMacOS_InvalidMinOS (ApplePlatform platform, string runtimeIdentifier, string minOS)
-		{
-			var project = "CatalystAppOptimizedForMacOS";
-			Configuration.IgnoreIfIgnoredPlatform (platform);
-			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifier);
-
-			var project_path = GetProjectPath (project, platform: platform);
-			Clean (project_path);
-			var properties = GetDefaultProperties (runtimeIdentifier);
-			properties ["SupportedOSPlatformVersion"] = minOS;
-			var rv = DotNet.AssertBuildFailure (project_path, properties);
-			var errors = BinLog.GetBuildLogErrors (rv.BinLogPath).ToArray ();
-			Assert.AreEqual (1, errors.Length, "Error count");
-			Assert.AreEqual ($"The UIDeviceFamily value '6' requires macOS 11.0. Please set the 'SupportedOSPlatformVersion' in the project file to at least 14.0 (the Mac Catalyst version equivalent of macOS 11.0). The current value is {minOS} (equivalent to macOS 10.15.2).", errors [0].Message, "Error message");
-		}
-
 		[Test]
 		[TestCase (ApplePlatform.iOS, "iossimulator-x64")]
 		[TestCase (ApplePlatform.iOS, "ios-arm64")]

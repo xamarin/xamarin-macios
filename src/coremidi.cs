@@ -57,7 +57,7 @@ namespace CoreMidi {
 		Anyone,
 	}
 
-	[Mac (11, 0), iOS (14, 0), TV (15, 0), Watch (8, 0)]
+	[iOS (14, 0), TV (15, 0), Watch (8, 0)]
 	[MacCatalyst (14, 0)]
 	[NativeName ("MIDIProtocolID")]
 	public enum MidiProtocolId {
@@ -65,7 +65,7 @@ namespace CoreMidi {
 		Protocol_2_0 = 2,
 	}
 
-	[Mac (11, 0), iOS (14, 0), TV (15, 0), Watch (8, 0)]
+	[iOS (14, 0), TV (15, 0), Watch (8, 0)]
 	[MacCatalyst (14, 0)]
 	[NativeName ("MIDICVStatus")]
 	public enum MidiCVStatus : uint {
@@ -87,7 +87,7 @@ namespace CoreMidi {
 		PerNoteMgmt = 15,
 	}
 
-	[Mac (11, 0), iOS (14, 0), TV (15, 0), Watch (8, 0)]
+	[iOS (14, 0), TV (15, 0), Watch (8, 0)]
 	[MacCatalyst (14, 0)]
 	[NativeName ("MIDIMessageType")]
 	public enum MidiMessageType : uint {
@@ -100,7 +100,7 @@ namespace CoreMidi {
 		UnknownF = 15,
 	}
 
-	[Mac (11, 0), iOS (14, 0), TV (15, 0), Watch (8, 0)]
+	[iOS (14, 0), TV (15, 0), Watch (8, 0)]
 	[MacCatalyst (14, 0)]
 	[NativeName ("MIDISysExStatus")]
 	public enum MidiSysExStatus : uint {
@@ -112,7 +112,7 @@ namespace CoreMidi {
 		MixedDataSetPayload = 9,
 	}
 
-	[Mac (11, 0), iOS (14, 0), TV (15, 0), Watch (8, 0)]
+	[iOS (14, 0), TV (15, 0), Watch (8, 0)]
 	[MacCatalyst (14, 0)]
 	[NativeName ("MIDISystemStatus")]
 	public enum MidiSystemStatus : uint {
@@ -315,7 +315,7 @@ namespace CoreMidi {
 		[Export ("initWithData:name:")]
 		NativeHandle Constructor (NSData data, string inName);
 
-		[Mac (11, 0), iOS (14, 0)]
+		[iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[Export ("initWithData:")]
 		NativeHandle Constructor (NSData data);
@@ -338,12 +338,12 @@ namespace CoreMidi {
 		[Export ("initWithEnabledProfiles:disabledProfiles:")]
 		NativeHandle Constructor (MidiCIProfile [] enabled, MidiCIProfile [] disabled);
 
-		[Mac (11, 0), iOS (14, 0)]
+		[iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[Export ("initWithChannel:enabledProfiles:disabledProfiles:")]
 		NativeHandle Constructor (byte midiChannelNumber, MidiCIProfile [] enabled, MidiCIProfile [] disabled);
 
-		[Mac (11, 0), iOS (14, 0)]
+		[iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[Export ("midiChannel")]
 		byte MidiChannel { get; }
@@ -393,46 +393,46 @@ namespace CoreMidi {
 		[NullAllowed, Export ("profileChangedCallback", ArgumentSemantic.Assign)]
 		MidiCIProfileChangedHandler ProfileChangedCallback { get; set; }
 
-		[Mac (11, 0), iOS (14, 0)]
+		[iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[Export ("initWithDiscoveredNode:dataReadyHandler:disconnectHandler:")]
 		NativeHandle Constructor (MidiCIDiscoveredNode discoveredNode, Action dataReadyHandler, MidiCISessionDisconnectHandler disconnectHandler);
 
-		[Mac (11, 0), iOS (14, 0)]
+		[iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[Export ("sendProfile:onChannel:profileData:")]
 		bool SendProfile (MidiCIProfile profile, byte channel, NSData profileSpecificData);
 
-		[Mac (11, 0), iOS (14, 0)]
+		[iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[Export ("deviceInfo")]
 		MidiCIDeviceInfo DeviceInfo { get; }
 
-		[Mac (11, 0), iOS (14, 0)]
+		[iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[BindAs (typeof (ulong))]
 		[Export ("maxSysExSize")]
 		NSNumber MaxSysExSize { get; }
 
-		[Mac (11, 0), iOS (14, 0)]
+		[iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[BindAs (typeof (int))]
 		[Export ("maxPropertyRequests")]
 		NSNumber MaxPropertyRequests { get; }
 
 		[Internal]
-		[Mac (11, 0), iOS (14, 0)]
+		[iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[Export ("midiDestination")]
 		MidiObjectRef _MidiDestination { get; }
 
-		[Mac (11, 0), iOS (14, 0)]
+		[iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[NullAllowed, Export ("profileSpecificDataHandler", ArgumentSemantic.Copy)]
 		MidiCIProfileSpecificDataHandler ProfileSpecificDataHandler { get; set; }
 	}
 
-	[Mac (11, 0), iOS (14, 0), NoTV, NoWatch]
+	[iOS (14, 0), NoTV, NoWatch]
 	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NSObject), Name = "MIDICIDeviceInfo")]
 	[DisableDefaultCtor]
@@ -464,7 +464,7 @@ namespace CoreMidi {
 		NativeHandle Constructor (MidiEndpoint midiDestination, NSData manufacturer, NSData family, NSData modelNumber, NSData revisionLevel);
 	}
 
-	[Mac (11, 0), iOS (14, 0), NoTV, NoWatch]
+	[iOS (14, 0), NoTV, NoWatch]
 	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NSObject), Name = "MIDICIDiscoveredNode")]
 	[DisableDefaultCtor]
@@ -492,7 +492,7 @@ namespace CoreMidi {
 
 	delegate void MidiCIDiscoveryResponseDelegate (MidiCIDiscoveredNode [] discoveredNodes);
 
-	[Mac (11, 0), iOS (14, 0), NoTV, NoWatch]
+	[iOS (14, 0), NoTV, NoWatch]
 	[MacCatalyst (14, 0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject), Name = "MIDICIDiscoveryManager")]
@@ -507,7 +507,7 @@ namespace CoreMidi {
 
 	interface IMidiCIProfileResponderDelegate { }
 
-	[Mac (11, 0), iOS (14, 0), NoTV, NoWatch]
+	[iOS (14, 0), NoTV, NoWatch]
 	[MacCatalyst (14, 0)]
 #if NET
 	[Protocol, Model]
@@ -531,7 +531,7 @@ namespace CoreMidi {
 		void HandleData (MidiCIProfile profile, byte channel, NSData inData);
 	}
 
-	[Mac (11, 0), iOS (14, 0), NoTV, NoWatch]
+	[iOS (14, 0), NoTV, NoWatch]
 	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NSObject), Name = "MIDICIResponder")]
 	[DisableDefaultCtor]

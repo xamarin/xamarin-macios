@@ -751,7 +751,6 @@ namespace CoreAnimation {
 		[NoTV]
 		[iOS (16, 0)]
 		[MacCatalyst (16, 0)]
-		[Mac (11, 0)]
 		[Export ("wantsExtendedDynamicRangeContent")]
 		bool WantsExtendedDynamicRangeContent { get; set; }
 
@@ -1237,7 +1236,7 @@ namespace CoreAnimation {
 
 		#endregion
 
-		[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0), Mac (12, 0)]
+		[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("preferredFrameRateRange", ArgumentSemantic.Assign)]
 		CAFrameRateRange PreferredFrameRateRange { get; set; }
 	}

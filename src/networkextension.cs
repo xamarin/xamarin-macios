@@ -264,14 +264,13 @@ namespace NetworkExtension {
 			set;
 		}
 
-		[Mac (11, 0)]
 		[iOS (14, 2)]
 		[MacCatalyst (14, 2)]
 		[Export ("remoteHostname")]
 		[NullAllowed]
 		string RemoteHostname { get; }
 
-		[Mac (11, 1), iOS (14, 3)]
+		[iOS (14, 3)]
 		[MacCatalyst (14, 3)]
 		[Export ("isBound")]
 		bool IsBound { get; }
@@ -412,12 +411,12 @@ namespace NetworkExtension {
 		[Export ("matchDomainsNoSearch")]
 		bool MatchDomainsNoSearch { get; set; }
 
-		[NoWatch, Mac (11, 0), iOS (14, 0)]
+		[NoWatch, iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[Export ("dnsProtocol")]
 		NEDnsProtocol DnsProtocol { get; }
 
-		[Mac (11, 0), iOS (14, 0), NoTV, NoWatch]
+		[iOS (14, 0), NoTV, NoWatch]
 		[MacCatalyst (14, 0)]
 		[Notification]
 		[Field ("NEDNSSettingsConfigurationDidChangeNotification")]
@@ -1208,11 +1207,11 @@ namespace NetworkExtension {
 		NSString ErrorDomain { get; }
 #endif
 
-		[NoWatch, NoTV, NoiOS, Mac (11, 0), MacCatalyst (15, 0)]
+		[NoWatch, NoTV, NoiOS, MacCatalyst (15, 0)]
 		[Export ("excludedDomains", ArgumentSemantic.Copy)]
 		string [] ExcludedDomains { get; set; }
 
-		[NoWatch, NoTV, NoiOS, Mac (11, 0), MacCatalyst (15, 0)]
+		[NoWatch, NoTV, NoiOS, MacCatalyst (15, 0)]
 		[Export ("associatedDomains", ArgumentSemantic.Copy)]
 		string [] AssociatedDomains { get; set; }
 	}
@@ -1392,7 +1391,6 @@ namespace NetworkExtension {
 		[Export ("excludeAPNs")]
 		bool ExcludeApns { get; set; }
 
-		[Mac (11, 0)]
 		[iOS (14, 2)]
 		[MacCatalyst (14, 2)]
 		[Export ("enforceRoutes")]
@@ -1502,7 +1500,7 @@ namespace NetworkExtension {
 		[Export ("enableFallback")]
 		bool EnableFallback { get; set; }
 
-		[NoWatch, Mac (11, 0), iOS (14, 0)]
+		[NoWatch, iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[Export ("mtu")]
 		nuint Mtu { get; set; }
@@ -1635,7 +1633,7 @@ namespace NetworkExtension {
 		[Export ("isEqualToPath:")]
 		bool IsEqualToPath (NWPath path);
 
-		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[Watch (7, 0), TV (14, 0), iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[Export ("constrained")]
 		bool Constrained { [Bind ("isConstrained")] get; }
@@ -1835,7 +1833,7 @@ namespace NetworkExtension {
 		}
 
 		[NullAllowed]
-		[NoWatch, NoTV, Mac (11, 0), iOS (14, 0)]
+		[NoWatch, NoTV, iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[Export ("remoteHostname")]
 		string RemoteHostname { get; }
@@ -2411,7 +2409,7 @@ namespace NetworkExtension {
 		void Start ();
 	}
 
-	[NoWatch, Mac (11, 0), iOS (14, 0)]
+	[NoWatch, iOS (14, 0)]
 	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NEDnsSettings), Name = "NEDNSOverHTTPSSettings")]
 	interface NEDnsOverHttpsSettings {
@@ -2425,7 +2423,7 @@ namespace NetworkExtension {
 		NSData IdentityReference { get; set; }
 	}
 
-	[NoWatch, Mac (11, 0), iOS (14, 0)]
+	[NoWatch, iOS (14, 0)]
 	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NEDnsSettings), Name = "NEDNSOverTLSSettings")]
 	interface NEDnsOverTlsSettings {
@@ -2439,7 +2437,7 @@ namespace NetworkExtension {
 		NSData IdentityReference { get; set; }
 	}
 
-	[NoWatch, NoTV, Mac (11, 0), iOS (14, 0)]
+	[NoWatch, NoTV, iOS (14, 0)]
 	[MacCatalyst (14, 0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject), Name = "NEDNSSettingsManager")]
@@ -2492,7 +2490,7 @@ namespace NetworkExtension {
 		void DidReceiveIncomingCall (NEAppPushManager manager, NSDictionary userInfo);
 	}
 
-	[Mac (11, 0), NoMacCatalyst]
+	[NoMacCatalyst]
 	[NoiOS]
 	[NoTV]
 	[NoWatch]

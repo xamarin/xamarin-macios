@@ -133,7 +133,7 @@ namespace PhotosUI {
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	interface PHLivePhotoViewDelegate {
-		[TV (15, 0), iOS (15, 0), MacCatalyst (15, 0), Mac (12, 0)]
+		[TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("livePhotoView:canBeginPlaybackWithStyle:")]
 		bool CanBeginPlayback (PHLivePhotoView livePhotoView, PHLivePhotoViewPlaybackStyle playbackStyle);
 

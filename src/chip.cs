@@ -17,7 +17,7 @@ namespace Chip {
 	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
-	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[Native]
 	public enum ChipOnboardingPayloadType : ulong {
 		QRCode = 0,
@@ -31,7 +31,7 @@ namespace Chip {
 	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
-	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[Native]
 	public enum ChipPairingStatus : ulong {
 		SecurePairingSuccess = 0,
@@ -44,7 +44,7 @@ namespace Chip {
 	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
-	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[ErrorDomain ("CHIPErrorDomain")]
 	[Native]
 	public enum ChipErrorCode : long {
@@ -66,7 +66,7 @@ namespace Chip {
 	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
-	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[Flags]
 	[Native]
 	public enum ChipRendezvousInformationFlags : ulong {
@@ -82,7 +82,7 @@ namespace Chip {
 	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
-	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[Native]
 	public enum ChipCommissioningFlow : ulong {
 		Standard = 0,
@@ -96,7 +96,7 @@ namespace Chip {
 	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
-	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[Native]
 	public enum ChipOptionalQRCodeInfoType : ulong {
 		Unknown,
@@ -109,7 +109,7 @@ namespace Chip {
 	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
-	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (NSObject), Name = "CHIPDevice")]
 	[DisableDefaultCtor]
 	interface ChipDevice {
@@ -129,7 +129,7 @@ namespace Chip {
 	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
-	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (NSObject), Name = "CHIPCluster")]
 	[DisableDefaultCtor]
 	interface ChipCluster {
@@ -154,7 +154,7 @@ namespace Chip {
 	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
-	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	delegate void ChipResponseHandler ([NullAllowed] NSError error, [NullAllowed] NSDictionary data);
 
 	[Obsoleted (PlatformName.iOS, 16, 0, message: Constants.ChipRemoved)]
@@ -162,7 +162,7 @@ namespace Chip {
 	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
-	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (ChipCluster), Name = "CHIPApplicationBasic")]
 	[DisableDefaultCtor]
 	interface ChipApplicationBasic {
@@ -233,7 +233,7 @@ namespace Chip {
 	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
-	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (ChipCluster), Name = "CHIPBarrierControl")]
 	[DisableDefaultCtor]
 	interface ChipBarrierControl {
@@ -286,7 +286,7 @@ namespace Chip {
 	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
-	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (ChipCluster), Name = "CHIPBasic")]
 	[DisableDefaultCtor]
 	interface ChipBasic {
@@ -415,7 +415,7 @@ namespace Chip {
 	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
-	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (ChipCluster), Name = "CHIPBinding")]
 	[DisableDefaultCtor]
 	interface ChipBinding {
@@ -476,7 +476,7 @@ namespace Chip {
 	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
-	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (ChipCluster), Name = "CHIPColorControl")]
 	[DisableDefaultCtor]
 	interface ChipColorControl {
@@ -888,7 +888,7 @@ namespace Chip {
 	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
-	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (ChipCluster), Name = "CHIPDescriptor")]
 	[DisableDefaultCtor]
 	interface ChipDescriptor {
@@ -950,7 +950,7 @@ namespace Chip {
 	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
-	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (ChipCluster), Name = "CHIPDoorLock")]
 	[DisableDefaultCtor]
 	interface ChipDoorLock {
@@ -1091,7 +1091,7 @@ namespace Chip {
 	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
-	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (ChipCluster), Name = "CHIPGroupKeyManagement")]
 	[DisableDefaultCtor]
 	interface ChipGroupKeyManagement {
@@ -1128,7 +1128,7 @@ namespace Chip {
 	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
-	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (ChipCluster), Name = "CHIPGroups")]
 	[DisableDefaultCtor]
 	interface ChipGroups {
@@ -1185,7 +1185,7 @@ namespace Chip {
 	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
-	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (ChipCluster), Name = "CHIPIdentify")]
 	[DisableDefaultCtor]
 	interface ChipIdentify {
@@ -1230,7 +1230,7 @@ namespace Chip {
 	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
-	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (ChipCluster), Name = "CHIPLevelControl")]
 	[DisableDefaultCtor]
 	interface ChipLevelControl {
@@ -1303,7 +1303,7 @@ namespace Chip {
 	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
-	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (ChipCluster), Name = "CHIPNetworkCommissioning")]
 	[DisableDefaultCtor]
 	interface ChipNetworkCommissioning {
@@ -1441,7 +1441,7 @@ namespace Chip {
 	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
-	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (ChipCluster), Name = "CHIPOnOff")]
 	[DisableDefaultCtor]
 	interface ChipOnOff {
@@ -1579,7 +1579,7 @@ namespace Chip {
 	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
-	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (ChipCluster), Name = "CHIPOperationalCredentials")]
 	[DisableDefaultCtor]
 	interface ChipOperationalCredentials {
@@ -1723,7 +1723,7 @@ namespace Chip {
 	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
-	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (ChipCluster), Name = "CHIPPumpConfigurationAndControl")]
 	[DisableDefaultCtor]
 	interface ChipPumpConfigurationAndControl {
@@ -1792,7 +1792,7 @@ namespace Chip {
 	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
-	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (ChipCluster), Name = "CHIPScenes")]
 	[DisableDefaultCtor]
 	interface ChipScenes {
@@ -1881,7 +1881,7 @@ namespace Chip {
 	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
-	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (ChipCluster), Name = "CHIPSwitch")]
 	[DisableDefaultCtor]
 	interface ChipSwitch {
@@ -1926,7 +1926,7 @@ namespace Chip {
 	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
-	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (ChipCluster), Name = "CHIPTemperatureMeasurement")]
 	[DisableDefaultCtor]
 	interface ChipTemperatureMeasurement {
@@ -1975,7 +1975,7 @@ namespace Chip {
 	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
-	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (ChipCluster), Name = "CHIPThermostat")]
 	[DisableDefaultCtor]
 	interface ChipThermostat {
@@ -2148,7 +2148,7 @@ namespace Chip {
 	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
-	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (NSObject), Name = "CHIPOnboardingPayloadParser")]
 	[DisableDefaultCtor]
 	interface ChipOnboardingPayloadParser {
@@ -2165,7 +2165,7 @@ namespace Chip {
 	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
-	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 #if NET
 	[Protocol, Model]
 #else
@@ -2219,7 +2219,7 @@ namespace Chip {
 	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
-	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (NSObject), Name = "CHIPManualSetupPayloadParser")]
 	[DisableDefaultCtor]
 	interface ChipManualSetupPayloadParser {
@@ -2238,7 +2238,7 @@ namespace Chip {
 	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
-	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 #if NET
 	[Protocol, Model]
 #else
@@ -2265,7 +2265,7 @@ namespace Chip {
 	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
-	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (NSObject), Name = "CHIPOptionalQRCodeInfo")]
 	[DisableDefaultCtor]
 	interface ChipOptionalQRCodeInfo {
@@ -2287,7 +2287,7 @@ namespace Chip {
 	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
-	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (NSObject), Name = "CHIPSetupPayload")]
 	[DisableDefaultCtor]
 	interface ChipSetupPayload {
@@ -2364,7 +2364,7 @@ namespace Chip {
 	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
-	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (NSObject), Name = "CHIPQRCodeSetupPayloadParser")]
 	[DisableDefaultCtor]
 	interface ChipQRCodeSetupPayloadParser {
@@ -2381,7 +2381,7 @@ namespace Chip {
 	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
-	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (ChipCluster), Name = "CHIPAccountLogin")]
 	[DisableDefaultCtor]
 	interface ChipAccountLogin {
@@ -2450,7 +2450,7 @@ namespace Chip {
 	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
-	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (ChipCluster), Name = "CHIPApplicationLauncher")]
 	[DisableDefaultCtor]
 	interface ChipApplicationLauncher {
@@ -2497,7 +2497,7 @@ namespace Chip {
 	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
-	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (ChipCluster), Name = "CHIPAudioOutput")]
 	[DisableDefaultCtor]
 	interface ChipAudioOutput {
@@ -2543,7 +2543,7 @@ namespace Chip {
 	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
-	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (ChipCluster), Name = "CHIPBinaryInputBasic")]
 	[DisableDefaultCtor]
 	interface ChipBinaryInputBasic {
@@ -2632,7 +2632,7 @@ namespace Chip {
 	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
-	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (ChipCluster), Name = "CHIPBridgedDeviceBasic")]
 	[DisableDefaultCtor]
 	interface ChipBridgedDeviceBasic {
@@ -2817,7 +2817,7 @@ namespace Chip {
 	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
-	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (ChipCluster), Name = "CHIPEthernetNetworkDiagnostics")]
 	[DisableDefaultCtor]
 	interface ChipEthernetNetworkDiagnostics {
@@ -2870,7 +2870,7 @@ namespace Chip {
 	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
-	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (ChipCluster), Name = "CHIPFixedLabel")]
 	[DisableDefaultCtor]
 	interface ChipFixedLabel {
@@ -2933,7 +2933,7 @@ namespace Chip {
 	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
-	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (ChipCluster), Name = "CHIPGeneralDiagnostics")]
 	[DisableDefaultCtor]
 	interface ChipGeneralDiagnostics {
@@ -2970,7 +2970,7 @@ namespace Chip {
 	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
-	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (ChipCluster), Name = "CHIPKeypadInput")]
 	[DisableDefaultCtor]
 	interface ChipKeypadInput {
@@ -3003,7 +3003,7 @@ namespace Chip {
 	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
-	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (ChipCluster), Name = "CHIPMediaInput")]
 	[DisableDefaultCtor]
 	interface ChipMediaInput {
@@ -3057,7 +3057,7 @@ namespace Chip {
 	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
-	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (ChipCluster), Name = "CHIPMediaPlayback")]
 	[DisableDefaultCtor]
 	interface ChipMediaPlayback {
@@ -3139,7 +3139,7 @@ namespace Chip {
 	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
-	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (ChipCluster), Name = "CHIPRelativeHumidityMeasurement")]
 	[DisableDefaultCtor]
 	interface ChipRelativeHumidityMeasurement {
@@ -3188,7 +3188,7 @@ namespace Chip {
 	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
-	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (ChipCluster), Name = "CHIPSoftwareDiagnostics")]
 	[DisableDefaultCtor]
 	interface ChipSoftwareDiagnostics {
@@ -3225,7 +3225,7 @@ namespace Chip {
 	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
-	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (ChipCluster), Name = "CHIPTargetNavigator")]
 	[DisableDefaultCtor]
 	interface ChipTargetNavigator {
@@ -3304,7 +3304,7 @@ namespace Chip {
 	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
-	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (ChipCluster), Name = "CHIPTvChannel")]
 	[DisableDefaultCtor]
 	interface ChipTvChannel {
@@ -3619,7 +3619,7 @@ namespace Chip {
 	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
-	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (ChipCluster), Name = "CHIPWakeOnLan")]
 	[DisableDefaultCtor]
 	interface ChipWakeOnLan {
@@ -3694,7 +3694,7 @@ namespace Chip {
 	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
 	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
-	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (ChipCluster), Name = "CHIPWindowCovering")]
 	[DisableDefaultCtor]
 	interface ChipWindowCovering {

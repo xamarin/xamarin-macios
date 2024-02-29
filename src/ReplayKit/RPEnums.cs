@@ -10,7 +10,6 @@ using Foundation;
 
 namespace ReplayKit {
 
-	[Mac (11, 0)]
 	[MacCatalyst (13, 1)]
 	[Native ("RPRecordingErrorCode")]
 	[ErrorDomain ("RPRecordingErrorDomain")]
@@ -65,7 +64,6 @@ namespace ReplayKit {
 	}
 
 	[Native]
-	[Mac (11, 0)]
 	[MacCatalyst (13, 1)]
 	public enum RPSampleBufferType : long {
 		Video = 1,
@@ -75,7 +73,6 @@ namespace ReplayKit {
 
 	[Native]
 	[NoTV]
-	[Mac (11, 0)]
 	[MacCatalyst (13, 1)]
 	public enum RPCameraPosition : long {
 		Front = 1,
