@@ -11,7 +11,7 @@
     <MicrosoftNETRuntimeMonoTargetsSdkPackageVersion>8.0.0</MicrosoftNETRuntimeMonoTargetsSdkPackageVersion>
     <MicrosoftTemplateEngineTasksVersion>7.0.100-alpha.1.21601.1</MicrosoftTemplateEngineTasksVersion>
     <MicrosoftDotNetCecilPackageVersion>0.11.4-alpha.23509.2</MicrosoftDotNetCecilPackageVersion>
-    <MicrosoftDotNetXHarnessiOSSharedPackageVersion>9.0.0-prerelease.24112.4</MicrosoftDotNetXHarnessiOSSharedPackageVersion>
+    <MicrosoftDotNetXHarnessiOSSharedPackageVersion>9.0.0-prerelease.24119.1</MicrosoftDotNetXHarnessiOSSharedPackageVersion>
     <!-- Manually updated versions -->
     <Emscriptennet7WorkloadVersion>$(MicrosoftNETWorkloadEmscriptenCurrentManifest80100Version)</Emscriptennet7WorkloadVersion>
     <EmscriptenWorkloadVersion>$(MicrosoftNETWorkloadEmscriptenCurrentManifest80100Version)</EmscriptenWorkloadVersion>
@@ -20,5 +20,10 @@
     <MicrosoftmacOSSdkPackageVersion>13.3.7141</MicrosoftmacOSSdkPackageVersion>
     <MicrosoftiOSSdkPackageVersion>16.4.7141</MicrosoftiOSSdkPackageVersion>
     <MicrosofttvOSSdkPackageVersion>16.4.7141</MicrosofttvOSSdkPackageVersion>
+    <!-- This is a subscription to the .NET 8/Xcode 15.0 versions of our packages -->
+    <MicrosoftMacCatalystSdknet80_170PackageVersion>17.0.8519</MicrosoftMacCatalystSdknet80_170PackageVersion>
+    <MicrosoftmacOSSdknet80_140PackageVersion>14.0.8519</MicrosoftmacOSSdknet80_140PackageVersion>
+    <MicrosoftiOSSdknet80_170PackageVersion>17.0.8519</MicrosoftiOSSdknet80_170PackageVersion>
+    <MicrosofttvOSSdknet80_170PackageVersion>17.0.8519</MicrosofttvOSSdknet80_170PackageVersion>
   </PropertyGroup>
 </Project>

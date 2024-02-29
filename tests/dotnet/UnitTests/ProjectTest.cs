@@ -1493,7 +1493,6 @@ namespace Xamarin.Tests {
 		[TestCase (ApplePlatform.iOS)]
 		[TestCase (ApplePlatform.TVOS)]
 		[TestCase (ApplePlatform.MacOSX)]
-		[Ignore ("Multi-targeting support has been temporarily reverted/postponed")]
 		public void MultiTargetLibrary (ApplePlatform platform)
 		{
 			Configuration.IgnoreIfIgnoredPlatform (platform);
@@ -1596,6 +1595,7 @@ namespace Xamarin.Tests {
 			return supportedApiVersions
 				.Where (v => v.StartsWith (Configuration.DotNetTfm + "-", StringComparison.Ordinal))
 				.Select (v => v.Substring (Configuration.DotNetTfm.Length + 1))
+				.OrderBy (v => v)
 				.ToArray ();
 		}
 
@@ -1678,6 +1678,8 @@ namespace Xamarin.Tests {
 				Assert.Ignore ("This test is disabled for local runs and Pull Requests.");
 
 			var project = "MySimpleApp";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
 
 			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
 			Clean (project_path);
@@ -1695,7 +1697,7 @@ namespace Xamarin.Tests {
 			DotNet.InstallTool (tool, toolPath);
 			var test = DotNet.RunTool (Path.Combine (toolPath, tool), "test", pdbFile!);
 
-			Assert.AreEqual ($"sourcelink test passed: {pdbFile}", test.StandardOutput.ToString ());
+			Assert.AreEqual ($"sourcelink test passed: {pdbFile}", test.StandardOutput.ToString ().TrimEnd ('\n'));
 		}
 	}
 }

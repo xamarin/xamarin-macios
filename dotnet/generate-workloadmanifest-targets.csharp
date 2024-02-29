@@ -20,46 +20,53 @@ var windowsPlatforms = args [argumentIndex++].Split (new char [] { ' ' }, String
 var hasWindows = Array.IndexOf (windowsPlatforms, platform) >= 0;
 var currentApiVersion = args [argumentIndex++];
 var olderApiVersions = args [argumentIndex++];
-var defaultApiVersion = args [argumentIndex++];
+var supportedApiVersions = args [argumentIndex++];
 
 var platformLowerCase = platform.ToLowerInvariant ();
 var tfm = currentApiVersion;
 
 var supportedTFMs = new List<string> ();
-supportedTFMs.Add (currentApiVersion);
 supportedTFMs.AddRange (olderApiVersions.Split (' '));
+supportedTFMs.AddRange (supportedApiVersions.Split (' ').Select (v => v.Replace ('-', '_')));
+supportedTFMs.Sort ();
 
 var supportedTFVs = new List<string> ();
 
 using (var writer = new StreamWriter (outputPath)) {
 	writer.WriteLine ($"<Project>");
-	writer.WriteLine ($"	<ImportGroup Condition=\" '$(TargetPlatformIdentifier)' == '{platform}' \">");
 	foreach (var tfm in supportedTFMs) {
 		var tfv = tfm.Replace ("net", "");
 		var sep = tfv.IndexOfAny (new char [] { '-', '_' });
-		if (sep >= 0)
+		var tpv = "";
+		if (sep >= 0) {
+			tpv = tfv.Substring (sep + 1);
 			tfv = tfv.Substring (0, sep);
+		}
 		supportedTFVs.Add (tfv);
 		var workloadVersion = tfm;
 		if (tfv [0] == '7')
 			workloadVersion = tfm.Replace (".0", "");
-		writer.WriteLine ($"		<Import Project=\"Sdk.props\" Sdk=\"Microsoft.{platform}.Sdk.{workloadVersion}\" Condition=\" $([MSBuild]::VersionEquals($(TargetFrameworkVersion), '{tfv}'))\" />");
-	}
-	if (hasWindows) {
-		writer.WriteLine ();
-		foreach (var tfm in supportedTFMs) {
-			var tfv = tfm.Replace ("net", "");
-			var sep = tfv.IndexOfAny (new char [] { '-', '_' });
-			if (sep >= 0)
-				tfv = tfv.Substring (0, tfv.IndexOfAny (new char [] { '-', '_' }));
-			var workloadVersion = tfm;
-			if (tfv [0] == '7')
-				workloadVersion = tfm.Replace (".0", "");
-			writer.WriteLine ($"		<Import Project=\"Sdk.props\" Sdk=\"Microsoft.{platform}.Windows.Sdk.Aliased.{workloadVersion}\" Condition=\" $([MSBuild]::VersionEquals($(TargetFrameworkVersion), '{tfv}')) And $([MSBuild]::IsOSPlatform('windows'))\" />");
+		if (tfm == currentApiVersion) {
+			writer.WriteLine ($"	<ImportGroup Condition=\" '$(TargetPlatformIdentifier)' == '{platform}' And '$(UsingAppleNETSdk)' != 'true' And $([MSBuild]::VersionEquals($(TargetFrameworkVersion), '{tfv}'))\">");
+			writer.WriteLine ($"		<Import Project=\"Sdk.props\" Sdk=\"Microsoft.{platform}.Sdk.{workloadVersion}\" /> <!-- this SDK version will validate the TargetPlatformVersion and show an error (in .NET 9+) or a warning (.NET 8) if it's not valid -->");
+		} else if (tpv.Length > 0) {
+			writer.WriteLine ($"	<ImportGroup Condition=\" '$(TargetPlatformIdentifier)' == '{platform}' And '$(UsingAppleNETSdk)' != 'true' And $([MSBuild]::VersionEquals($(TargetFrameworkVersion), '{tfv}')) And '$(TargetPlatformVersion)' == '{tpv}'\">");
+			writer.WriteLine ($"		<Import Project=\"Sdk.props\" Sdk=\"Microsoft.{platform}.Sdk.{workloadVersion}\" />");
+		} else {
+			writer.WriteLine ($"	<ImportGroup Condition=\" '$(TargetPlatformIdentifier)' == '{platform}' And '$(UsingAppleNETSdk)' != 'true' And $([MSBuild]::VersionEquals($(TargetFrameworkVersion), '{tfv}'))\">");
+			writer.WriteLine ($"		<Import Project=\"Sdk.props\" Sdk=\"Microsoft.{platform}.Sdk.{workloadVersion}\" />");
 		}
+
+		if (hasWindows) {
+			writer.WriteLine ($"		<Import Project=\"Sdk.props\" Sdk=\"Microsoft.{platform}.Windows.Sdk.Aliased.{workloadVersion}\" Condition=\" $([MSBuild]::IsOSPlatform('windows'))\" />");
+		}
+
+		writer.WriteLine ($"	</ImportGroup>");
+		writer.WriteLine ();
 	}
-	writer.WriteLine ();
+
 	var earliestSupportedTFV = supportedTFVs.Select (v => Version.Parse (v)).OrderBy (v => v).First ();
+	writer.WriteLine ($"	<ImportGroup Condition=\" '$(TargetPlatformIdentifier)' == '{platform}' And '$(UsingAppleNETSdk)' != 'true'\">");
 	writer.WriteLine ($"		<Import Project=\"Sdk-eol.props\" Sdk=\"Microsoft.{platform}.Sdk.{tfm}\" Condition=\" $([MSBuild]::VersionLessThan($(TargetFrameworkVersion), '{earliestSupportedTFV}'))\" />");
 	writer.WriteLine ($"	</ImportGroup>");
 	writer.WriteLine ();
