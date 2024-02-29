@@ -1932,6 +1932,7 @@ SHARED_CORE_SOURCES = \
 	ObjCRuntime/Constants.cs \
 	ObjCRuntime/DisposableObject.cs \
 	ObjCRuntime/ErrorConstants.cs \
+	ObjCRuntime/Extensions.cs \
 	ObjCRuntime/INativeObject.cs \
 	ObjCRuntime/LinkWithAttribute.cs \
 	ObjCRuntime/Messaging.cs \
