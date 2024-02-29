@@ -17,15 +17,15 @@ public class CodeBlock : ICodeBlock {
 		HeaderText = text;
 	}
 
-	public CodeBlock (string text, List<ICodeBlock> blocks)
+	public CodeBlock (string text, IList<ICodeBlock> blocks)
 	{
-		this.Blocks = blocks;
+		Blocks.AddRange (blocks);
 		HeaderText = text;
 	}
 
-	public CodeBlock (List<ICodeBlock> blocks)
+	public CodeBlock (IList<ICodeBlock> blocks)
 	{
-		this.Blocks = blocks;
+		Blocks.AddRange (blocks);
 	}
 
 	public CodeBlock (string headerText, params string [] lines)
