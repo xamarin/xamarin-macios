@@ -338,7 +338,7 @@ namespace Xamarin.Tests {
 
 			// Open the zipped app bundle and get the Info.plist
 			using var zip = ZipFile.OpenRead (zippedAppBundlePath);
-			DumpZipFile (zip, zippedAppBundlePath);
+			ZipHelpers.DumpZipFile (zip, zippedAppBundlePath);
 			var infoPlistEntry = zip.Entries.SingleOrDefault (v => v.Name == "Info.plist")!;
 			Assert.NotNull (infoPlistEntry, "Info.plist");
 
@@ -354,17 +354,6 @@ namespace Xamarin.Tests {
 			Assert.AreEqual ("MySimpleApp", infoPlist.GetString ("CFBundleDisplayName").Value, "CFBundleDisplayName");
 			Assert.AreEqual ("3.14", infoPlist.GetString ("CFBundleVersion").Value, "CFBundleVersion");
 			Assert.AreEqual ("3.14", infoPlist.GetString ("CFBundleShortVersionString").Value, "CFBundleShortVersionString");
-		}
-
-		void DumpZipFile (ZipArchive zip, string path)
-		{
-#if TRACE
-			var entries = zip.Entries;
-			Console.WriteLine ($"Viewing zip archive {path} with {entries.Count} entries:");
-			foreach (var entry in entries) {
-				Console.WriteLine ($"    FullName: {entry.FullName} Name: {entry.Name} Length: {entry.Length} CompressedLength: {entry.CompressedLength} ExternalAttributes: 0x{entry.ExternalAttributes:X}");
-			}
-#endif
 		}
 
 		protected void AddRemoteProperties (Dictionary<string, string> properties)
