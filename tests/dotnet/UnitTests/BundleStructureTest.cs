@@ -700,7 +700,7 @@ namespace Xamarin.Tests {
 			ExecuteWithMagicWordAndAssert (platform, runtimeIdentifiers, appExecutable);
 		}
 
-		string [] FilterWarnings (IEnumerable<BuildLogEvent> warnings)
+		public static string [] FilterWarnings (IEnumerable<BuildLogEvent> warnings)
 		{
 			return warnings
 				.Select (v => v?.Message!).Where (v => !string.IsNullOrWhiteSpace (v))
