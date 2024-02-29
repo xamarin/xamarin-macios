@@ -268,7 +268,6 @@ namespace Cecil.Tests {
 			"System.Int32 Security.SslContext::SSLCopyALPNProtocols(System.IntPtr,System.IntPtr&)",
 			"System.Int32 Security.SslContext::SSLSetSessionTicketsEnabled(System.IntPtr,System.Boolean)",
 			"System.IntPtr CoreText.CTFontManager::CTFontManagerCopyRegisteredFontDescriptors(CoreText.CTFontManagerScope,System.Boolean)",
-			"System.IntPtr CoreText.CTRunDelegate::CTRunDelegateCreate(CoreText.CTRunDelegateCallbacks&,System.IntPtr)",
 			"System.IntPtr CoreVideo.CVBuffer::CVBufferCopyAttachment(System.IntPtr,System.IntPtr,CoreVideo.CVAttachmentMode&)",
 			"System.IntPtr CoreVideo.CVBuffer::CVBufferGetAttachment(System.IntPtr,System.IntPtr,CoreVideo.CVAttachmentMode&)",
 			"System.IntPtr Foundation.NSSearchPath::NSSearchPathForDirectoriesInDomains(System.UIntPtr,System.UIntPtr,System.Boolean)",
