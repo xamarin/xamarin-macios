@@ -374,7 +374,6 @@ namespace Cecil.Tests {
 			"System.Int32 Security.SslContext::SSLCopyALPNProtocols(System.IntPtr,System.IntPtr&)",
 			"System.Int32 Security.SslContext::SSLSetSessionTicketsEnabled(System.IntPtr,System.Boolean)",
 			"System.Int32 SystemConfiguration.NetworkReachability::SCNetworkReachabilityGetFlags(System.IntPtr,SystemConfiguration.NetworkReachabilityFlags&)",
-			"System.IntPtr CoreGraphics.CGFunction::CGFunctionCreate(System.IntPtr,System.IntPtr,System.Runtime.InteropServices.NFloat*,System.IntPtr,System.Runtime.InteropServices.NFloat*,CoreGraphics.CGFunction/CGFunctionCallbacks&)",
 			"System.IntPtr CoreGraphics.CGImage::CGImageCreate(System.IntPtr,System.IntPtr,System.IntPtr,System.IntPtr,System.IntPtr,System.IntPtr,CoreGraphics.CGBitmapFlags,System.IntPtr,System.Runtime.InteropServices.NFloat*,System.Boolean,CoreGraphics.CGColorRenderingIntent)",
 			"System.IntPtr CoreGraphics.CGImage::CGImageCreateWithJPEGDataProvider(System.IntPtr,System.Runtime.InteropServices.NFloat*,System.Boolean,CoreGraphics.CGColorRenderingIntent)",
 			"System.IntPtr CoreGraphics.CGImage::CGImageCreateWithPNGDataProvider(System.IntPtr,System.Runtime.InteropServices.NFloat*,System.Boolean,CoreGraphics.CGColorRenderingIntent)",
