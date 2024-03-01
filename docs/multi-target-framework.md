@@ -122,39 +122,39 @@ WorkloadManifest.targets:
     <!-- Using a specific target platform version --> 
     <Import Project="Sdk.props"
         Sdk="Microsoft.iOS.Sdk.net7.0_16.0"
-        Condition="'$(_AppleSdkLoaded)' != 'true' And $([MSBuild]::VersionEquals($(TargetFrameworkVersion), '7.0')) And '$(TargetPlatformVersion)' != '' And $([MSBuild]::VersionEquals($(TargetPlatformVersion), '16.0'))" />
+        Condition="'$(UsingAppleNETSdk)' != 'true' And $([MSBuild]::VersionEquals($(TargetFrameworkVersion), '7.0')) And '$(TargetPlatformVersion)' != '' And $([MSBuild]::VersionEquals($(TargetPlatformVersion), '16.0'))" />
     <Import Project="Sdk.props"
         Sdk="Microsoft.iOS.Sdk.net7.0_16.4"
-        Condition="'$(_AppleSdkLoaded)' != 'true' And $([MSBuild]::VersionEquals($(TargetFrameworkVersion), '7.0')) And '$(TargetPlatformVersion)' != '' And $([MSBuild]::VersionEquals($(TargetPlatformVersion), '16.4'))" />
+        Condition="'$(UsingAppleNETSdk)' != 'true' And $([MSBuild]::VersionEquals($(TargetFrameworkVersion), '7.0')) And '$(TargetPlatformVersion)' != '' And $([MSBuild]::VersionEquals($(TargetPlatformVersion), '16.4'))" />
     <Import Project="Sdk.props"
         Sdk="Microsoft.iOS.Sdk.net8.0_17.0"
-        Condition="'$(_AppleSdkLoaded)' != 'true' And $([MSBuild]::VersionEquals($(TargetFrameworkVersion), '8.0')) And '$(TargetPlatformVersion)' != '' And $([MSBuild]::VersionEquals($(TargetPlatformVersion), '17.0'))" />
+        Condition="'$(UsingAppleNETSdk)' != 'true' And $([MSBuild]::VersionEquals($(TargetFrameworkVersion), '8.0')) And '$(TargetPlatformVersion)' != '' And $([MSBuild]::VersionEquals($(TargetPlatformVersion), '17.0'))" />
     <Import Project="Sdk.props"
         Sdk="Microsoft.iOS.Sdk.net8.0_18.0"
-        Condition="'$(_AppleSdkLoaded)' != 'true' And $([MSBuild]::VersionEquals($(TargetFrameworkVersion), '8.0')) And '$(TargetPlatformVersion)' != '' And $([MSBuild]::VersionEquals($(TargetPlatformVersion), '18.0'))" />
+        Condition="'$(UsingAppleNETSdk)' != 'true' And $([MSBuild]::VersionEquals($(TargetFrameworkVersion), '8.0')) And '$(TargetPlatformVersion)' != '' And $([MSBuild]::VersionEquals($(TargetPlatformVersion), '18.0'))" />
 
     <!-- Using the default target platform version -->
     <Import Project="Sdk.props"
         Sdk="Microsoft.iOS.Sdk.net7.0_16.4"
-        Condition="'$(_AppleSdkLoaded)' != 'true' And $([MSBuild]::VersionEquals($(TargetFrameworkVersion), '7.0')) And '$(TargetPlatformVersion)' == ''" />
+        Condition="'$(UsingAppleNETSdk)' != 'true' And $([MSBuild]::VersionEquals($(TargetFrameworkVersion), '7.0')) And '$(TargetPlatformVersion)' == ''" />
     <Import Project="Sdk.props"
         Sdk="Microsoft.iOS.Sdk.net8.0_17.0"
-        Condition="'$(_AppleSdkLoaded)' != 'true' And $([MSBuild]::VersionEquals($(TargetFrameworkVersion), '8.0')) And '$(TargetPlatformVersion)' == ''" />
+        Condition="'$(UsingAppleNETSdk)' != 'true' And $([MSBuild]::VersionEquals($(TargetFrameworkVersion), '8.0')) And '$(TargetPlatformVersion)' == ''" />
 
     <!-- Using a .NET version we no longer support -->
     <Import Project="Sdk-eol.props"
         Sdk="Microsoft.iOS.Sdk.net8.0_17.0"
-        Condition="'$(_AppleSdkLoaded)' != 'true' And $([MSBuild]::VersionLessThan($(TargetFrameworkVersion), '7.0'))" />
+        Condition="'$(UsingAppleNETSdk)' != 'true' And $([MSBuild]::VersionLessThan($(TargetFrameworkVersion), '7.0'))" />
 
     <!-- Using a specific, but unsupported, target platform version -->
     <Import Project="Sdk-error.props"
         Sdk="Microsoft.iOS.Sdk.net8.0_17.0"
-        Condition="'$(_AppleSdkLoaded)' != 'true'" />
+        Condition="'$(UsingAppleNETSdk)' != 'true'" />
 
 </ImportGroup>
 ```
 
-Note 1: Every sdk we load sets the property `_AppleSdkLoaded=true`, this makes
+Note 1: Every sdk we load sets the property `UsingAppleNETSdk=true`, this makes
 it easy to avoid loading multiple sdks.
 
 Note 2: One complication here is that TargetPlatformVersion might not be set

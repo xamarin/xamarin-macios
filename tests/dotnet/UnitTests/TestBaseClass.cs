@@ -441,8 +441,12 @@ namespace Xamarin.Tests {
 
 			var failures = new List<string> ();
 			for (var i = 0; i < expectedMessages.Length; i++) {
-				if (actualMessages [i].Message != expectedMessages [i]) {
-					failures.Add ($"\tUnexpected {type} message #{i}:\n\t\tExpected: {expectedMessages [i]}\n\t\tActual: {actualMessages [i].Message?.TrimEnd ()}");
+				var actual = actualMessages [i].Message ?? string.Empty;
+				var expected = expectedMessages [i];
+				if (actual != expected) {
+					actual = actual.Replace ("\n", "\\n").Replace ("\r", "\\r");
+					expected = expected.Replace ("\n", "\\n").Replace ("\r", "\\r");
+					failures.Add ($"\tUnexpected {type} message #{i}:\n\t\tExpected: {expected}\n\t\tActual:   {actual}");
 				}
 			}
 			if (!failures.Any ())
