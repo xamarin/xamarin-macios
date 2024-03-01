@@ -1534,6 +1534,11 @@
         </comment>
     </data>
 
+    <data name="E7119" xml:space="preserve">
+        <value>Task execution was cancelled.</value>
+        <comment></comment>
+    </data>
+
     <data name="E7120" xml:space="preserve">
         <value>Unable to compute the remote generator properties. Please file an issue at https://github.com/xamarin/xamarin-macios/issues/new and attach the following file: {0}</value>
         <comment>
