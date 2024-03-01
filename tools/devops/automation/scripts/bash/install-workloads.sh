@@ -93,7 +93,12 @@ for platform in $DOTNET_PLATFORMS; do
 done
 find "$BUILD_SOURCESDIRECTORY"/xamarin-macios/builds/downloads/dotnet-*
 
-$DOTNET workload install --from-rollback-file "$ROLLBACK_PATH" --source "$DOTNET_NUPKG_DIR" "${SOURCES[@]}" --verbosity diag "${PLATFORMS[@]}"
+# PLATFORMS may be empty/no values
+set +u
+if [ ${#PLATFORMS[@]} -gt 0 ]; then
+  $DOTNET workload install --from-rollback-file "$ROLLBACK_PATH" --source "$DOTNET_NUPKG_DIR" "${SOURCES[@]}" --verbosity diag "${PLATFORMS[@]}"
+fi
+set -u
 
 var=$(make -C "$BUILD_SOURCESDIRECTORY/xamarin-macios/tools/devops" print-variable VARIABLE=DOTNET_DIR)
 DOTNET_DIR=${var#*=}

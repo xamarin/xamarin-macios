@@ -48,7 +48,7 @@ namespace AddressBook {
 
 #if NET
 	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst14.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 	[ObsoletedOSPlatform ("maccatalyst14.0", "Use the 'Contacts' API instead.")]
 	[ObsoletedOSPlatform ("ios9.0", "Use the 'Contacts' API instead.")]
 #else
@@ -181,7 +181,7 @@ namespace AddressBook {
 	}
 
 #if NET
-	[SupportedOSPlatform ("maccatalyst14.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("ios")]
 	[ObsoletedOSPlatform ("maccatalyst14.0", "Use the 'Contacts' API instead.")]
 	[ObsoletedOSPlatform ("ios9.0", "Use the 'Contacts' API instead.")]
@@ -217,7 +217,7 @@ namespace AddressBook {
 	}
 
 #if NET
-	[SupportedOSPlatform ("maccatalyst14.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("ios")]
 	[ObsoletedOSPlatform ("maccatalyst14.0", "Use the 'Contacts' API instead.")]
 	[ObsoletedOSPlatform ("ios9.0", "Use the 'Contacts' API instead.")]
@@ -242,7 +242,7 @@ namespace AddressBook {
 
 #if NET
 	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst14.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 	[ObsoletedOSPlatform ("maccatalyst14.0", "Use the 'Contacts' API instead.")]
 	[ObsoletedOSPlatform ("ios9.0", "Use the 'Contacts' API instead.")]
 #else
@@ -284,7 +284,7 @@ namespace AddressBook {
 	}
 
 #if NET
-	[SupportedOSPlatform ("maccatalyst14.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("ios")]
 	[ObsoletedOSPlatform ("maccatalyst14.0", "Use the 'Contacts' API instead.")]
 	[ObsoletedOSPlatform ("ios9.0", "Use the 'Contacts' API instead.")]
@@ -310,7 +310,7 @@ namespace AddressBook {
 	}
 
 #if NET
-	[SupportedOSPlatform ("maccatalyst14.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("ios")]
 	[ObsoletedOSPlatform ("maccatalyst14.0", "Use the 'Contacts' API instead.")]
 	[ObsoletedOSPlatform ("ios9.0", "Use the 'Contacts' API instead.")]
@@ -342,7 +342,7 @@ namespace AddressBook {
 	}
 
 #if NET
-	[SupportedOSPlatform ("maccatalyst14.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("ios")]
 	[ObsoletedOSPlatform ("maccatalyst14.0", "Use the 'Contacts' API instead.")]
 	[ObsoletedOSPlatform ("ios9.0", "Use the 'Contacts' API instead.")]
@@ -379,7 +379,7 @@ namespace AddressBook {
 	}
 
 #if NET
-	[SupportedOSPlatform ("maccatalyst14.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("ios")]
 	[ObsoletedOSPlatform ("maccatalyst14.0", "Use the 'Contacts' API instead.")]
 	[ObsoletedOSPlatform ("ios9.0", "Use the 'Contacts' API instead.")]
@@ -422,7 +422,7 @@ namespace AddressBook {
 	}
 
 #if NET
-	[SupportedOSPlatform ("maccatalyst14.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("ios")]
 	[ObsoletedOSPlatform ("maccatalyst14.0", "Use the 'Contacts' API instead.")]
 	[ObsoletedOSPlatform ("ios9.0", "Use the 'Contacts' API instead.")]
@@ -449,7 +449,7 @@ namespace AddressBook {
 	}
 
 #if NET
-	[SupportedOSPlatform ("maccatalyst14.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("ios")]
 	[ObsoletedOSPlatform ("maccatalyst14.0", "Use the 'Contacts' API instead.")]
 	[ObsoletedOSPlatform ("ios9.0", "Use the 'Contacts' API instead.")]
@@ -473,7 +473,7 @@ namespace AddressBook {
 	}
 
 #if NET
-	[SupportedOSPlatform ("maccatalyst14.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("ios")]
 	[ObsoletedOSPlatform ("maccatalyst14.0", "Use the 'Contacts' API instead.")]
 	[ObsoletedOSPlatform ("ios9.0", "Use the 'Contacts' API instead.")]
@@ -518,7 +518,7 @@ namespace AddressBook {
 	}
 
 #if NET
-	[SupportedOSPlatform ("maccatalyst14.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("ios")]
 	[ObsoletedOSPlatform ("maccatalyst14.0", "Use the 'Contacts' API instead.")]
 	[ObsoletedOSPlatform ("ios9.0", "Use the 'Contacts' API instead.")]
@@ -547,7 +547,7 @@ namespace AddressBook {
 	}
 
 #if NET
-	[SupportedOSPlatform ("maccatalyst14.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("ios")]
 	[ObsoletedOSPlatform ("maccatalyst14.0", "Use the 'Contacts' API instead.")]
 	[ObsoletedOSPlatform ("ios9.0", "Use the 'Contacts' API instead.")]
@@ -635,40 +635,43 @@ namespace AddressBook {
 		}
 
 		[DllImport (Constants.AddressBookLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool ABPersonSetImageData (IntPtr person, IntPtr imageData, out IntPtr error);
+		unsafe extern static byte ABPersonSetImageData (IntPtr person, IntPtr imageData, IntPtr* error);
 		[DllImport (Constants.AddressBookLibrary)]
 		extern static IntPtr ABPersonCopyImageData (IntPtr person);
 
 		public NSData? Image {
 			get { return Runtime.GetNSObject<NSData> (ABPersonCopyImageData (Handle)); }
 			set {
-				if (!ABPersonSetImageData (Handle, value.GetHandle (), out var error))
-					throw CFException.FromCFError (error);
+				IntPtr error;
+				unsafe {
+					if (ABPersonSetImageData (Handle, value.GetHandle (), &error) == 0)
+						throw CFException.FromCFError (error);
+				}
 			}
 		}
 
 		[DllImport (Constants.AddressBookLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool ABPersonHasImageData (IntPtr person);
+		extern static byte ABPersonHasImageData (IntPtr person);
 		public bool HasImage {
-			get { return ABPersonHasImageData (Handle); }
+			get { return ABPersonHasImageData (Handle) != 0; }
 		}
 
 		[DllImport (Constants.AddressBookLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool ABPersonRemoveImageData (IntPtr person, out IntPtr error);
+		unsafe extern static byte ABPersonRemoveImageData (IntPtr person, IntPtr* error);
 		public void RemoveImage ()
 		{
-			if (!ABPersonRemoveImageData (Handle, out var error))
-				throw CFException.FromCFError (error);
+			IntPtr error;
+			unsafe {
+				if (ABPersonRemoveImageData (Handle, &error) == 0)
+					throw CFException.FromCFError (error);
+			}
 		}
 
 		[DllImport (Constants.AddressBookLibrary)]
 		extern static ABPersonCompositeNameFormat ABPersonGetCompositeNameFormat ();
 
 #if NET
-		[SupportedOSPlatform ("maccatalyst14.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("ios")]
 		[ObsoletedOSPlatform ("maccatalyst14.0", "Use the 'Contacts' API instead.")]
 		[ObsoletedOSPlatform ("ios7.0", "Use 'GetCompositeNameFormat (null)' instead.")]
@@ -681,7 +684,7 @@ namespace AddressBook {
 
 #if NET
 		[SupportedOSPlatform ("ios")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[ObsoletedOSPlatform ("maccatalyst14.0", "Use the 'Contacts' API instead.")]
 		[ObsoletedOSPlatform ("ios9.0", "Use the 'Contacts' API instead.")]
 #endif
@@ -690,7 +693,7 @@ namespace AddressBook {
 
 #if NET
 		[SupportedOSPlatform ("ios")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[ObsoletedOSPlatform ("maccatalyst14.0", "Use the 'Contacts' API instead.")]
 		[ObsoletedOSPlatform ("ios9.0", "Use the 'Contacts' API instead.")]
 #endif
@@ -701,7 +704,7 @@ namespace AddressBook {
 
 #if NET
 		[SupportedOSPlatform ("ios")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[ObsoletedOSPlatform ("maccatalyst14.0", "Use the 'Contacts' API instead.")]
 		[ObsoletedOSPlatform ("ios9.0", "Use the 'Contacts' API instead.")]
 #endif
@@ -710,7 +713,7 @@ namespace AddressBook {
 
 #if NET
 		[SupportedOSPlatform ("ios")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[ObsoletedOSPlatform ("maccatalyst14.0", "Use the 'Contacts' API instead.")]
 		[ObsoletedOSPlatform ("ios9.0", "Use the 'Contacts' API instead.")]
 #endif
@@ -1058,7 +1061,7 @@ namespace AddressBook {
 	}
 
 #if NET
-	[SupportedOSPlatform ("maccatalyst14.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("ios")]
 	[ObsoletedOSPlatform ("maccatalyst14.0", "Use the 'Contacts' API instead.")]
 	[ObsoletedOSPlatform ("ios9.0", "Use the 'Contacts' API instead.")]
@@ -1115,7 +1118,7 @@ namespace AddressBook {
 	}
 
 #if NET
-	[SupportedOSPlatform ("maccatalyst14.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("ios")]
 	[ObsoletedOSPlatform ("maccatalyst14.0", "Use the 'Contacts' API instead.")]
 	[ObsoletedOSPlatform ("ios9.0", "Use the 'Contacts' API instead.")]
@@ -1157,7 +1160,7 @@ namespace AddressBook {
 	}
 
 #if NET
-	[SupportedOSPlatform ("maccatalyst14.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("ios")]
 	[ObsoletedOSPlatform ("maccatalyst14.0", "Use the 'Contacts' API instead.")]
 	[ObsoletedOSPlatform ("ios9.0", "Use the 'Contacts' API instead.")]

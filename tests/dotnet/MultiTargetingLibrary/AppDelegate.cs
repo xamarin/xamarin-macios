@@ -7,5 +7,10 @@ namespace MySimpleApp {
 		{
 			return 42;
 		}
+
+		public static Type GetNSObjectType ()
+		{
+			return typeof (Foundation.NSObject);
+		}
 	}
 }

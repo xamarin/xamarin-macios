@@ -72,7 +72,7 @@ namespace CoreML {
 		Float64 = 0x10000 | 64,
 		Float32 = 0x10000 | 32,
 #if MONOMAC // macOS 12 Only
-		[Mac (12,0)][NoiOS][NoMacCatalyst][NoWatch][NoTV]
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		Float16 = 0x10000 | 16,
 #endif
 		// added in xcode12 but it's the same a `Float32` and can be used in earlier versions
@@ -446,7 +446,7 @@ namespace CoreML {
 		[return: NullAllowed]
 		NSObject GetParameterValue (MLParameterKey key, [NullAllowed] out NSError error);
 
-		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[Watch (7, 0), TV (14, 0), iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[Static]
 		[Async]
@@ -516,7 +516,7 @@ namespace CoreML {
 		[Wrap ("_Metadata")]
 		MLModelMetadata Metadata { get; }
 
-		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[Watch (7, 0), TV (14, 0), iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[NullAllowed, Export ("classLabels", ArgumentSemantic.Copy)]
 		NSObject [] ClassLabels { get; }
@@ -600,7 +600,7 @@ namespace CoreML {
 		nint Count { get; }
 
 		[NullAllowed]
-		[Watch (9, 0), TV (16, 0), Mac (12, 0), iOS (16, 0), MacCatalyst (16, 0)]
+		[Watch (9, 0), TV (16, 0), iOS (16, 0), MacCatalyst (16, 0)]
 		[Export ("pixelBuffer")]
 		CVPixelBuffer PixelBuffer { get; }
 
@@ -612,7 +612,7 @@ namespace CoreML {
 		[Export ("initWithDataPointer:shape:dataType:strides:deallocator:error:")]
 		NativeHandle Constructor (IntPtr dataPointer, NSNumber [] shape, MLMultiArrayDataType dataType, NSNumber [] strides, [NullAllowed] Action<IntPtr> deallocator, out NSError error);
 
-		[Watch (9, 0), TV (16, 0), Mac (12, 0), iOS (16, 0), MacCatalyst (16, 0)]
+		[Watch (9, 0), TV (16, 0), iOS (16, 0), MacCatalyst (16, 0)]
 		[Export ("initWithPixelBuffer:shape:")]
 		IntPtr Constructor (CVPixelBuffer pixelBuffer, NSNumber [] shape);
 
@@ -644,7 +644,7 @@ namespace CoreML {
 
 		// @interface Concatenating (MLMultiArray)
 
-		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[Watch (7, 0), TV (14, 0), iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[Static]
 		[Export ("multiArrayByConcatenatingMultiArrays:alongAxis:dataType:")]
@@ -721,7 +721,7 @@ namespace CoreML {
 		bool UsesCpuOnly { get; set; }
 
 		// Leaving it intentionally as NSDictionary to make it easier to use the lowlevel apis.
-		[Watch (9, 0), TV (16, 0), Mac (12, 0), iOS (16, 0), MacCatalyst (16, 0)]
+		[Watch (9, 0), TV (16, 0), iOS (16, 0), MacCatalyst (16, 0)]
 		[Export ("outputBackings", ArgumentSemantic.Copy)]
 		NSDictionary OutputBackings { get; set; }
 	}
@@ -1137,14 +1137,14 @@ namespace CoreML {
 		[return: NullAllowed]
 		MLUpdateTask Create (NSUrl modelUrl, IMLBatchProvider trainingData, [NullAllowed] MLModelConfiguration configuration, MLUpdateProgressHandlers progressHandlers, [NullAllowed] out NSError error);
 
-		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[Watch (7, 0), TV (14, 0), iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[Static]
 		[Export ("updateTaskForModelAtURL:trainingData:completionHandler:error:")]
 		[return: NullAllowed]
 		MLUpdateTask Create (NSUrl modelUrl, IMLBatchProvider trainingData, Action<MLUpdateContext> completionHandler, [NullAllowed] out NSError error);
 
-		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[Watch (7, 0), TV (14, 0), iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[Static]
 		[Export ("updateTaskForModelAtURL:trainingData:progressHandlers:error:")]
@@ -1170,7 +1170,7 @@ namespace CoreML {
 	[Deprecated (PlatformName.MacOSX, 13, 3, message: "Use Background Assets or 'NSUrlSession' instead.")]
 	[Deprecated (PlatformName.MacCatalyst, 16, 4, message: "Use Background Assets or 'NSUrlSession' instead.")]
 	[Deprecated (PlatformName.iOS, 16, 4, message: "Use Background Assets or 'NSUrlSession' instead.")]
-	[Mac (11, 0), iOS (14, 0)]
+	[iOS (14, 0)]
 	[MacCatalyst (14, 0)]
 	[NoTV]
 	[NoWatch]
@@ -1205,7 +1205,7 @@ namespace CoreML {
 	[Deprecated (PlatformName.MacOSX, 13, 3, message: "Use Background Assets or 'NSUrlSession' instead.")]
 	[Deprecated (PlatformName.MacCatalyst, 16, 4, message: "Use Background Assets or 'NSUrlSession' instead.")]
 	[Deprecated (PlatformName.iOS, 16, 4, message: "Use Background Assets or 'NSUrlSession' instead.")]
-	[Mac (11, 0), iOS (14, 0)]
+	[iOS (14, 0)]
 	[MacCatalyst (14, 0)]
 	[NoTV]
 	[NoWatch]

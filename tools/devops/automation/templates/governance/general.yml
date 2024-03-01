@@ -1,0 +1,108 @@
+parameters:
+
+- name: isPR
+  type: boolean
+
+- name: repositoryAlias
+  type: string
+  default: self
+
+- name: commit
+  type: string
+  default: HEAD
+
+- name: uploadPrefix
+  type: string
+  default: '$(MaciosUploadPrefix)'
+
+steps:
+
+- template: ../common/checkout.yml
+  parameters:
+    isPR: ${{ parameters.isPR }}
+    repositoryAlias: ${{ parameters.repositoryAlias }}
+    commit: ${{ parameters.commit }}
+ 
+- powershell: |
+    Write-Host 'Source dir $(Build.SourcesDirectory)'
+    Write-Host 'Working dir $System.DefaultWorkingDirectory)'
+
+    Dir $(Build.SourcesDirectory)
+    Dir $(System.DefaultWorkingDirectory)
+  displayName: Show directories
+
+- powershell: |
+    Get-ChildItem -Recurse -Path $(Build.SourcesDirectory)/maccore
+  displayName: Show maccore content 
+
+- pwsh: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/show_env.ps1
+  displayName: 'Show Environment'
+
+- task: ms.vss-governance-buildtask.governance-build-task-component-detection.ComponentGovernanceComponentDetection@0
+  displayName: 'Component Detection'
+
+- task: CredScan@3
+  displayName: "Run CredScan"
+  inputs:
+    suppressionsFile: '$(System.DefaultWorkingDirectory)/maccore/tools/devops/CredScanSuppressions.json'
+    outputFormat: 'sarif'
+    verboseOutput: true
+
+- task: PoliCheck@2
+  inputs:
+    inputType: 'Basic'
+    targetType: 'F'
+    targetArgument: '$(Build.SourcesDirectory)'
+    result: '$(Build.SourcesDirectory)/PoliCheck.xml'
+    optionsUEPATH: '$(System.DefaultWorkingDirectory)/maccore/tools/devops/PoliCheckExclusions.xml'
+
+- task: SdtReport@2
+  displayName: Create Security Analysis Report
+  inputs:
+    GdnExportAllTools: false
+    GdnExportGdnToolCredScan: true
+    GdnExportGdnToolCredScanSeverity: 'error'
+    GdnExportGdnToolPoliCheck: true
+    GdnExportGdnToolPoliCheckSeverity: 'error'
+
+- task: PublishSecurityAnalysisLogs@3
+  displayName: Publish Security Analysis Logs
+  inputs:
+    ArtifactName: 'CodeAnalysisLogs - General'
+    ArtifactType: 'Container'
+    AllTools: true
+    ToolLogsNotFoundAction: 'Standard'
+
+- task: TSAUpload@2
+  inputs:
+    GdnPublishTsaOnboard: true
+    GdnPublishTsaConfigFile: '$(System.DefaultWorkingDirectory)\\maccore\\tools\\devops\\tsa_config.gdntsa'
+    GdnPublishTsaExportedResultsPublishable: true
+  displayName: Create bugs for compliance tools results
+  condition: succeededOrFailed()
+  env:
+    WorkingDirectory: '$(Build.SourcesDirectory)/xamarin-macios' 
+
+- task: PublishPipelineArtifact@1
+  displayName: 'Publish Artifact: Policheck Results'
+  inputs:
+    targetPath: '$(Build.SourcesDirectory)/PoliCheck.xml'
+    artifactName: '${{ parameters.uploadPrefix }}Policheck'
+  continueOnError: true
+  condition: always()
+
+- task: securedevelopmentteam.vss-secure-development-tools.build-task-postanalysis.PostAnalysis@2
+  displayName: Break on compliance issues
+  inputs:
+    GdnBreakAllTools: true
+    GdnBreakSuppressionFiles: $(Build.SourcesDirectory)\maccore\tools\devops\falsepositives.gdnsuppress
+    GdnBreakSuppressionSets: falsepositives
+    GdnBreakOutputSuppressionFile: $(Build.ArtifactStagingDirectory)\GuardianSuppressions\falsepositives.gdnsuppress
+    GdnBreakOutputSuppressionSet: falsepositives
+
+- task: PublishBuildArtifacts@1
+  displayName: Publish Artifact for Guardian Supressions
+  inputs:
+    PathtoPublish: $(Build.ArtifactStagingDirectory)\GuardianSuppressions
+    ArtifactName: Guardian Suppressions
+  condition: failed()

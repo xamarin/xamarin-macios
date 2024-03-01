@@ -137,7 +137,7 @@ namespace Speech {
 		[Export ("final")]
 		bool Final { [Bind ("isFinal")] get; }
 
-		[iOS (14, 5), Mac (11, 3)]
+		[iOS (14, 5)]
 		[MacCatalyst (14, 5)]
 		[NullAllowed, Export ("speechRecognitionMetadata")]
 		SFSpeechRecognitionMetadata SpeechRecognitionMetadata { get; }
@@ -251,7 +251,7 @@ namespace Speech {
 		NSOperationQueue Queue { get; set; }
 	}
 
-	[iOS (14, 5), Mac (11, 3)]
+	[iOS (14, 5)]
 	[MacCatalyst (14, 5)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]

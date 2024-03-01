@@ -28,11 +28,10 @@ namespace CoreVideo {
 
 #if NET
 	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("macos12.0")]
-	[SupportedOSPlatform ("maccatalyst15.0")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("tvos")]
 #else
-	[Mac (12, 0)]
 	[MacCatalyst (15, 0)]
 #endif
 	public class CVMetalTexture : NativeObject {

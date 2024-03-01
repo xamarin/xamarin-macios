@@ -25,7 +25,7 @@ using NativeHandle = System.IntPtr;
 
 namespace CoreGraphics {
 #if NET
-	[SupportedOSPlatform ("maccatalyst15.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 #else
 	[MacCatalyst (15,0)]

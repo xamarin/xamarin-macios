@@ -5,6 +5,9 @@ TestConfiguration unit tests.
 $ScriptDir = Split-Path -parent $MyInvocation.MyCommand.Path
 Import-Module $ScriptDir/TestConfiguration.psm1 -Force
 
+$Env:CONFIGURE_PLATFORMS_INCLUDE_WATCH = "1"
+$Env:CONFIGURE_PLATFORMS_INCLUDE_XAMARIN_LEGACY = "1"
+
 Describe 'Get-TestConfiguration' {
   BeforeAll {
     $TestConfigurations = @"
@@ -14,12 +17,23 @@ Describe 'Get-TestConfiguration' {
     "splitByPlatforms": "false",
     "containsDotNetTests": "true",
     "containsLegacyTests": "true",
+    "testPrefix": "test-prefix_",
   },
   {
     "label": "dotnettests",
     "splitByPlatforms": "true",
     "containsDotNetTests": "true",
     "containsLegacyTests": "false",
+    "needsMultiplePlatforms": "true",
+    "testPrefix": "test-prefix_",
+  },
+  {
+    "label": "monotouchtest",
+    "splitByPlatforms": "true",
+    "containsDotNetTests": "true",
+    "containsLegacyTests": "true",
+    "needsMultiplePlatforms": "false",
+    "testPrefix": "test-prefix_",
   }
 ]
 "@
@@ -69,8 +83,7 @@ Describe 'Get-TestConfiguration' {
       -SupportedPlatforms $SupportedPlatforms `
       -EnabledPlatforms $EnabledPlatforms `
       -TestsLabels "extra-test-labels" `
-      -StatusContext "status-context" `
-      -TestPrefix "test-prefix_"
+      -StatusContext "status-context"
     Write-Host $config
     $config | Should -Be @"
 {
@@ -126,6 +139,51 @@ Describe 'Get-TestConfiguration' {
     "TEST_PREFIX": "test-prefix_dotnettests_Multiple",
     "TEST_PLATFORM": "",
     "TEST_FILTER": "Category = MultiPlatform"
+  },
+  "monotouchtest_ios": {
+    "LABEL": "monotouchtest",
+    "TESTS_LABELS": "extra-test-labels,run-monotouchtest-tests",
+    "LABEL_WITH_PLATFORM": "monotouchtest_iOS",
+    "STATUS_CONTEXT": "status-context - monotouchtest - iOS",
+    "TEST_PREFIX": "test-prefix_monotouchtest_ios",
+    "TEST_PLATFORM": "iOS",
+    "TEST_FILTER": "Category != MultiPlatform"
+  },
+  "monotouchtest_macos": {
+    "LABEL": "monotouchtest",
+    "TESTS_LABELS": "extra-test-labels,run-monotouchtest-tests",
+    "LABEL_WITH_PLATFORM": "monotouchtest_macOS",
+    "STATUS_CONTEXT": "status-context - monotouchtest - macOS",
+    "TEST_PREFIX": "test-prefix_monotouchtest_macos",
+    "TEST_PLATFORM": "macOS",
+    "TEST_FILTER": "Category != MultiPlatform"
+  },
+  "monotouchtest_maccatalyst": {
+    "LABEL": "monotouchtest",
+    "TESTS_LABELS": "extra-test-labels,run-monotouchtest-tests",
+    "LABEL_WITH_PLATFORM": "monotouchtest_MacCatalyst",
+    "STATUS_CONTEXT": "status-context - monotouchtest - MacCatalyst",
+    "TEST_PREFIX": "test-prefix_monotouchtest_maccatalyst",
+    "TEST_PLATFORM": "MacCatalyst",
+    "TEST_FILTER": "Category != MultiPlatform"
+  },
+  "monotouchtest_tvos": {
+    "LABEL": "monotouchtest",
+    "TESTS_LABELS": "extra-test-labels,run-monotouchtest-tests",
+    "LABEL_WITH_PLATFORM": "monotouchtest_tvOS",
+    "STATUS_CONTEXT": "status-context - monotouchtest - tvOS",
+    "TEST_PREFIX": "test-prefix_monotouchtest_tvos",
+    "TEST_PLATFORM": "tvOS",
+    "TEST_FILTER": "Category != MultiPlatform"
+  },
+  "monotouchtest_watchos": {
+    "LABEL": "monotouchtest",
+    "TESTS_LABELS": "extra-test-labels,run-monotouchtest-tests",
+    "LABEL_WITH_PLATFORM": "monotouchtest_watchOS",
+    "STATUS_CONTEXT": "status-context - monotouchtest - watchOS",
+    "TEST_PREFIX": "test-prefix_monotouchtest_watchos",
+    "TEST_PLATFORM": "watchOS",
+    "TEST_FILTER": "Category != MultiPlatform"
   }
 }
 "@
@@ -140,8 +198,7 @@ Describe 'Get-TestConfiguration' {
       -SupportedPlatforms $SupportedPlatforms `
       -EnabledPlatforms $EnabledPlatforms `
       -TestsLabels "extra-test-labels" `
-      -StatusContext "status-context" `
-      -TestPrefix "test-prefix_"
+      -StatusContext "status-context"
     Write-Host $config
     $config | Should -Be @"
 {
@@ -161,6 +218,24 @@ Describe 'Get-TestConfiguration' {
     "TEST_PREFIX": "test-prefix_dotnettests_iOS",
     "TEST_PLATFORM": "iOS",
     "TEST_FILTER": "Category != MultiPlatform"
+  },
+  "monotouchtest_ios": {
+    "LABEL": "monotouchtest",
+    "TESTS_LABELS": "extra-test-labels,run-monotouchtest-tests",
+    "LABEL_WITH_PLATFORM": "monotouchtest_iOS",
+    "STATUS_CONTEXT": "status-context - monotouchtest - iOS",
+    "TEST_PREFIX": "test-prefix_monotouchtest_ios",
+    "TEST_PLATFORM": "iOS",
+    "TEST_FILTER": "Category != MultiPlatform"
+  },
+  "monotouchtest_watchos": {
+    "LABEL": "monotouchtest",
+    "TESTS_LABELS": "extra-test-labels,run-monotouchtest-tests",
+    "LABEL_WITH_PLATFORM": "monotouchtest_watchOS",
+    "STATUS_CONTEXT": "status-context - monotouchtest - watchOS",
+    "TEST_PREFIX": "test-prefix_monotouchtest_watchos",
+    "TEST_PLATFORM": "watchOS",
+    "TEST_FILTER": "Category != MultiPlatform"
   }
 }
 "@
@@ -175,8 +250,7 @@ Describe 'Get-TestConfiguration' {
       -SupportedPlatforms $SupportedPlatforms `
       -EnabledPlatforms $EnabledPlatforms `
       -TestsLabels "extra-test-labels" `
-      -StatusContext "status-context" `
-      -TestPrefix "test-prefix_"
+      -StatusContext "status-context"
     Write-Host $config
     $config | Should -Be @"
 {
@@ -187,6 +261,15 @@ Describe 'Get-TestConfiguration' {
     "STATUS_CONTEXT": "status-context - cecil",
     "TEST_PREFIX": "test-prefix_cecil",
     "TEST_PLATFORM": ""
+  },
+  "monotouchtest_watchos": {
+    "LABEL": "monotouchtest",
+    "TESTS_LABELS": "extra-test-labels,run-monotouchtest-tests",
+    "LABEL_WITH_PLATFORM": "monotouchtest_watchOS",
+    "STATUS_CONTEXT": "status-context - monotouchtest - watchOS",
+    "TEST_PREFIX": "test-prefix_monotouchtest_watchos",
+    "TEST_PLATFORM": "watchOS",
+    "TEST_FILTER": "Category != MultiPlatform"
   }
 }
 "@
@@ -201,8 +284,7 @@ Describe 'Get-TestConfiguration' {
         -SupportedPlatforms $SupportedPlatforms `
         -EnabledPlatforms $EnabledPlatforms `
         -TestsLabels "extra-test-labels" `
-        -StatusContext "status-context" `
-        -TestPrefix "test-prefix_"
+        -StatusContext "status-context"
       Write-Host $config
       $config | Should -Be @"
 {
@@ -249,6 +331,42 @@ Describe 'Get-TestConfiguration' {
     "TEST_PREFIX": "test-prefix_dotnettests_Multiple",
     "TEST_PLATFORM": "",
     "TEST_FILTER": "Category = MultiPlatform"
+  },
+  "monotouchtest_ios": {
+    "LABEL": "monotouchtest",
+    "TESTS_LABELS": "extra-test-labels,run-monotouchtest-tests",
+    "LABEL_WITH_PLATFORM": "monotouchtest_iOS",
+    "STATUS_CONTEXT": "status-context - monotouchtest - iOS",
+    "TEST_PREFIX": "test-prefix_monotouchtest_ios",
+    "TEST_PLATFORM": "iOS",
+    "TEST_FILTER": "Category != MultiPlatform"
+  },
+  "monotouchtest_macos": {
+    "LABEL": "monotouchtest",
+    "TESTS_LABELS": "extra-test-labels,run-monotouchtest-tests",
+    "LABEL_WITH_PLATFORM": "monotouchtest_macOS",
+    "STATUS_CONTEXT": "status-context - monotouchtest - macOS",
+    "TEST_PREFIX": "test-prefix_monotouchtest_macos",
+    "TEST_PLATFORM": "macOS",
+    "TEST_FILTER": "Category != MultiPlatform"
+  },
+  "monotouchtest_maccatalyst": {
+    "LABEL": "monotouchtest",
+    "TESTS_LABELS": "extra-test-labels,run-monotouchtest-tests",
+    "LABEL_WITH_PLATFORM": "monotouchtest_MacCatalyst",
+    "STATUS_CONTEXT": "status-context - monotouchtest - MacCatalyst",
+    "TEST_PREFIX": "test-prefix_monotouchtest_maccatalyst",
+    "TEST_PLATFORM": "MacCatalyst",
+    "TEST_FILTER": "Category != MultiPlatform"
+  },
+  "monotouchtest_watchos": {
+    "LABEL": "monotouchtest",
+    "TESTS_LABELS": "extra-test-labels,run-monotouchtest-tests",
+    "LABEL_WITH_PLATFORM": "monotouchtest_watchOS",
+    "STATUS_CONTEXT": "status-context - monotouchtest - watchOS",
+    "TEST_PREFIX": "test-prefix_monotouchtest_watchos",
+    "TEST_PLATFORM": "watchOS",
+    "TEST_FILTER": "Category != MultiPlatform"
   }
 }
 "@

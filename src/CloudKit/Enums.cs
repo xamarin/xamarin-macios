@@ -14,7 +14,7 @@ namespace CloudKit {
 		Available = 1,
 		Restricted = 2,
 		NoAccount = 3,
-		[Mac (12, 0), iOS (15, 0), TV (15, 0), MacCatalyst (15, 0)]
+		[iOS (15, 0), TV (15, 0), MacCatalyst (15, 0)]
 		TemporarilyUnavailable = 4,
 	}
 
@@ -118,7 +118,7 @@ namespace CloudKit {
 		Atomic = 1 << 1,
 		[MacCatalyst (13, 1)]
 		Sharing = 1 << 2,
-		[Mac (12, 0), iOS (15, 0), TV (15, 0)]
+		[iOS (15, 0), TV (15, 0)]
 		[MacCatalyst (15, 0)]
 		ZoneWideSharing = 1 << 3,
 

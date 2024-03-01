@@ -160,7 +160,7 @@ namespace UIKit {
 #if IOS || __MACCATALYST__
 #if NET
 	[SupportedOSPlatform ("ios15.0")]
-	[SupportedOSPlatform ("maccatalyst15.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[Introduced (PlatformName.iOS, 15,0)]
 	[Introduced (PlatformName.MacCatalyst, 15,0)]

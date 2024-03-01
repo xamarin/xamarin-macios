@@ -340,12 +340,11 @@ namespace CoreGraphics {
 
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool CGContextIsPathEmpty (/* CGContextRef */ IntPtr context);
+		extern static byte CGContextIsPathEmpty (/* CGContextRef */ IntPtr context);
 
 		public bool IsPathEmpty ()
 		{
-			return CGContextIsPathEmpty (Handle);
+			return CGContextIsPathEmpty (Handle) != 0;
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
@@ -365,12 +364,11 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool CGContextPathContainsPoint (/* CGContextRef */ IntPtr context, CGPoint point, CGPathDrawingMode mode);
+		extern static byte CGContextPathContainsPoint (/* CGContextRef */ IntPtr context, CGPoint point, CGPathDrawingMode mode);
 
 		public bool PathContainsPoint (CGPoint point, CGPathDrawingMode mode)
 		{
-			return CGContextPathContainsPoint (Handle, point, mode);
+			return CGContextPathContainsPoint (Handle, point, mode) != 0;
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
@@ -1244,26 +1242,26 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static void CGContextSetShouldAntialias (/* CGContextRef */ IntPtr context, [MarshalAs (UnmanagedType.I1)] bool shouldAntialias);
+		extern static void CGContextSetShouldAntialias (/* CGContextRef */ IntPtr context, byte shouldAntialias);
 
 		public void SetShouldAntialias (bool shouldAntialias)
 		{
-			CGContextSetShouldAntialias (Handle, shouldAntialias);
+			CGContextSetShouldAntialias (Handle, shouldAntialias.AsByte ());
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static void CGContextSetAllowsAntialiasing (/* CGContextRef */ IntPtr context, [MarshalAs (UnmanagedType.I1)] bool allowsAntialiasing);
+		extern static void CGContextSetAllowsAntialiasing (/* CGContextRef */ IntPtr context, byte allowsAntialiasing);
 		public void SetAllowsAntialiasing (bool allowsAntialiasing)
 		{
-			CGContextSetAllowsAntialiasing (Handle, allowsAntialiasing);
+			CGContextSetAllowsAntialiasing (Handle, allowsAntialiasing.AsByte ());
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static void CGContextSetShouldSmoothFonts (/* CGContextRef */ IntPtr context, [MarshalAs (UnmanagedType.I1)] bool shouldSmoothFonts);
+		extern static void CGContextSetShouldSmoothFonts (/* CGContextRef */ IntPtr context, byte shouldSmoothFonts);
 
 		public void SetShouldSmoothFonts (bool shouldSmoothFonts)
 		{
-			CGContextSetShouldSmoothFonts (Handle, shouldSmoothFonts);
+			CGContextSetShouldSmoothFonts (Handle, shouldSmoothFonts.AsByte ());
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
@@ -1353,43 +1351,43 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static void CGContextSetAllowsFontSmoothing (/* CGContextRef */ IntPtr context, [MarshalAs (UnmanagedType.I1)] bool shouldSubpixelPositionFonts);
+		extern static void CGContextSetAllowsFontSmoothing (/* CGContextRef */ IntPtr context, byte shouldSubpixelPositionFonts);
 
 		public void SetAllowsFontSmoothing (bool allows)
 		{
-			CGContextSetAllowsFontSmoothing (Handle, allows);
+			CGContextSetAllowsFontSmoothing (Handle, allows.AsByte ());
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static void CGContextSetAllowsFontSubpixelPositioning (/* CGContextRef */ IntPtr context, [MarshalAs (UnmanagedType.I1)] bool allowsFontSubpixelPositioning);
+		extern static void CGContextSetAllowsFontSubpixelPositioning (/* CGContextRef */ IntPtr context, byte allowsFontSubpixelPositioning);
 
 		public void SetAllowsSubpixelPositioning (bool allows)
 		{
-			CGContextSetAllowsFontSubpixelPositioning (Handle, allows);
+			CGContextSetAllowsFontSubpixelPositioning (Handle, allows.AsByte ());
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static void CGContextSetAllowsFontSubpixelQuantization (/* CGContextRef */ IntPtr context, [MarshalAs (UnmanagedType.I1)] bool shouldSubpixelQuantizeFonts);
+		extern static void CGContextSetAllowsFontSubpixelQuantization (/* CGContextRef */ IntPtr context, byte shouldSubpixelQuantizeFonts);
 
 		public void SetAllowsFontSubpixelQuantization (bool allows)
 		{
-			CGContextSetAllowsFontSubpixelQuantization (Handle, allows);
+			CGContextSetAllowsFontSubpixelQuantization (Handle, allows.AsByte ());
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static void CGContextSetShouldSubpixelPositionFonts (/* CGContextRef */ IntPtr context, [MarshalAs (UnmanagedType.I1)] bool shouldSubpixelPositionFonts);
+		extern static void CGContextSetShouldSubpixelPositionFonts (/* CGContextRef */ IntPtr context, byte shouldSubpixelPositionFonts);
 
 		public void SetShouldSubpixelPositionFonts (bool shouldSubpixelPositionFonts)
 		{
-			CGContextSetShouldSubpixelPositionFonts (Handle, shouldSubpixelPositionFonts);
+			CGContextSetShouldSubpixelPositionFonts (Handle, shouldSubpixelPositionFonts.AsByte ());
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static void CGContextSetShouldSubpixelQuantizeFonts (/* CGContextRef */ IntPtr context, [MarshalAs (UnmanagedType.I1)] bool shouldSubpixelQuantizeFonts);
+		extern static void CGContextSetShouldSubpixelQuantizeFonts (/* CGContextRef */ IntPtr context, byte shouldSubpixelQuantizeFonts);
 
 		public void ShouldSubpixelQuantizeFonts (bool shouldSubpixelQuantizeFonts)
 		{
-			CGContextSetShouldSubpixelQuantizeFonts (Handle, shouldSubpixelQuantizeFonts);
+			CGContextSetShouldSubpixelQuantizeFonts (Handle, shouldSubpixelQuantizeFonts.AsByte ());
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]

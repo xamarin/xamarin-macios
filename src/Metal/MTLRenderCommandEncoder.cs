@@ -54,10 +54,9 @@ namespace Metal {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos14.5")]
-		[SupportedOSPlatform ("macos11.0")]
+		[SupportedOSPlatform ("macos")]
 #else
 		[TV (14, 5)]
-		[Mac (11, 0)]
 		[NoWatch]
 #endif
 		public unsafe static void SetTileBuffers (this IMTLRenderCommandEncoder This, IMTLBuffer [] buffers, nuint [] offsets, NSRange range)
@@ -72,10 +71,9 @@ namespace Metal {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos14.5")]
-		[SupportedOSPlatform ("macos11.0")]
+		[SupportedOSPlatform ("macos")]
 #else
 		[TV (14, 5)]
-		[Mac (11, 0)]
 		[NoWatch]
 #endif
 		public unsafe static void SetTileSamplerStates (this IMTLRenderCommandEncoder This, IMTLSamplerState [] samplers, float [] lodMinClamps, float [] lodMaxClamps, NSRange range)

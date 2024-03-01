@@ -148,7 +148,7 @@ namespace PdfKit {
 		IconArea       = 1 << 6,
 		PopupArea      = 1 << 7,
 		ImageArea      = 1 << 8,
-		[iOS (15,0), MacCatalyst (15,0), Mac (12,0)]
+		[iOS (15,0), MacCatalyst (15,0)]
 		AnyArea = Int64.MaxValue,
 	}
 

@@ -10,7 +10,7 @@ namespace CoreGraphics
 {
 
 #if NET
-	[SupportedOSPlatform ("maccatalyst15.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 #else
 	[MacCatalyst (15,0)]
@@ -22,7 +22,7 @@ namespace CoreGraphics
 	}
 
 #if NET
-	[SupportedOSPlatform ("maccatalyst15.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 #else
 	[MacCatalyst (15,0)]
@@ -86,7 +86,7 @@ namespace CoreGraphics
 		public static extern void RestoreColorSyncSettings ();
 
 #if NET
-		[SupportedOSPlatform ("maccatalyst15.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[ObsoletedOSPlatform ("macos10.9")]
 #else

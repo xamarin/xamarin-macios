@@ -22,23 +22,23 @@ namespace Xamarin {
 		public const string MacCatalyst = "17.2";
 
 #if NET
-		public const string MinOSX = "10.15";
+		public const string MinOSX = "12.0";
 		public const string MiniOS = "12.2";
 		public const string MinTVOS = "12.2";
-		public const string MinMacCatalyst = "13.1";
+		public const string MinMacCatalyst = "15.0";
 #else
-		public const string MinOSX = "10.15";
+		public const string MinOSX = "12.0";
 		public const string MiniOS = "11.0";
 		public const string MinWatchOS = "4.0";
 		public const string MinTVOS = "11.0";
-		public const string MinMacCatalyst = "13.1";
+		public const string MinMacCatalyst = "15.0";
 #endif
 
-		public const string DotNetMinOSX = "10.15";
+		public const string DotNetMinOSX = "12.0";
 		public const string DotNetMiniOS = "12.2";
 		public const string DotNetMinTVOS = "12.2";
-		public const string DotNetMinMacCatalyst = "13.1";
-		public const string LegacyMinOSX = "10.15";
+		public const string DotNetMinMacCatalyst = "15.0";
+		public const string LegacyMinOSX = "12.0";
 		public const string LegacyMiniOS = "11.0";
 		public const string LegacyMinWatchOS = "4.0";
 		public const string LegacyMinTVOS = "11.0";

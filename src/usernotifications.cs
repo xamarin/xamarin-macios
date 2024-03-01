@@ -134,7 +134,7 @@ namespace UserNotifications {
 		[MacCatalyst (13, 1)]
 		[Deprecated (PlatformName.MacCatalyst, 15, 0, message: "Announcement is always included.")]
 		Announcement = (1 << 7),
-		[iOS (15, 0), Mac (12, 0), MacCatalyst (15, 0), TV (15, 0), Watch (8, 0)]
+		[iOS (15, 0), MacCatalyst (15, 0), TV (15, 0), Watch (8, 0)]
 		TimeSensitive = (1 << 8),
 	}
 
@@ -154,13 +154,11 @@ namespace UserNotifications {
 		[iOS (14, 0)]
 		[TV (14, 0)]
 		[Watch (7, 0)]
-		[Mac (11, 0)]
 		[MacCatalyst (14, 0)]
 		List = (1 << 3),
 		[iOS (14, 0)]
 		[TV (14, 0)]
 		[Watch (7, 0)]
-		[Mac (11, 0)]
 		[MacCatalyst (14, 0)]
 		Banner = (1 << 4),
 	}
@@ -174,7 +172,7 @@ namespace UserNotifications {
 		Never
 	}
 
-	[iOS (15, 0), Mac (12, 0), MacCatalyst (15, 0), TV (15, 0), Watch (8, 0)]
+	[iOS (15, 0), MacCatalyst (15, 0), TV (15, 0), Watch (8, 0)]
 	[Native]
 	public enum UNNotificationInterruptionLevel : long {
 #if XAMCORE_5_0
@@ -235,12 +233,12 @@ namespace UserNotifications {
 		[Export ("actionWithIdentifier:title:options:")]
 		UNNotificationAction FromIdentifier (string identifier, string title, UNNotificationActionOptions options);
 
-		[Watch (8, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+		[Watch (8, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Static]
 		[Export ("actionWithIdentifier:title:options:icon:")]
 		UNNotificationAction FromIdentifier (string identifier, string title, UNNotificationActionOptions options, [NullAllowed] UNNotificationActionIcon icon);
 
-		[Watch (8, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+		[Watch (8, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[NullAllowed, Export ("icon", ArgumentSemantic.Copy)]
 		UNNotificationActionIcon Icon { get; }
 	}
@@ -255,7 +253,7 @@ namespace UserNotifications {
 		[Export ("actionWithIdentifier:title:options:textInputButtonTitle:textInputPlaceholder:")]
 		UNTextInputNotificationAction FromIdentifier (string identifier, string title, UNNotificationActionOptions options, string textInputButtonTitle, string textInputPlaceholder);
 
-		[iOS (15, 0), Mac (12, 0), MacCatalyst (15, 0), Watch (8, 0)]
+		[iOS (15, 0), MacCatalyst (15, 0), Watch (8, 0)]
 		[Static]
 		[Export ("actionWithIdentifier:title:options:icon:textInputButtonTitle:textInputPlaceholder:")]
 		UNTextInputNotificationAction FromIdentifier (string identifier, string title, UNNotificationActionOptions options, [NullAllowed] UNNotificationActionIcon icon, string textInputButtonTitle, string textInputPlaceholder);
@@ -445,16 +443,16 @@ namespace UserNotifications {
 		[NullAllowed, Export ("targetContentIdentifier")]
 		string TargetContentIdentifier { get; [NotImplemented] set; }
 
-		[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+		[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("contentByUpdatingWithProvider:error:")]
 		[return: NullAllowed]
 		UNNotificationContent Update (IUNNotificationContentProviding fromProvider, [NullAllowed] out NSError outError);
 
-		[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+		[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("interruptionLevel", ArgumentSemantic.Assign)]
 		UNNotificationInterruptionLevel InterruptionLevel { get; }
 
-		[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+		[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("relevanceScore")]
 		double RelevanceScore { get; }
 
@@ -528,11 +526,11 @@ namespace UserNotifications {
 		[NullAllowed, Export ("targetContentIdentifier")]
 		string TargetContentIdentifier { get; set; }
 
-		[iOS (15, 0), Mac (12, 0), MacCatalyst (15, 0), TV (15, 0), Watch (8, 0)]
+		[iOS (15, 0), MacCatalyst (15, 0), TV (15, 0), Watch (8, 0)]
 		[Export ("interruptionLevel", ArgumentSemantic.Assign)]
 		UNNotificationInterruptionLevel InterruptionLevel { get; set; }
 
-		[iOS (15, 0), Mac (12, 0), MacCatalyst (15, 0), TV (15, 0), Watch (8, 0)]
+		[iOS (15, 0), MacCatalyst (15, 0), TV (15, 0), Watch (8, 0)]
 		[Export ("relevanceScore")]
 		double RelevanceScore { get; set; }
 
@@ -684,15 +682,15 @@ namespace UserNotifications {
 		[Export ("announcementSetting")]
 		UNNotificationSetting AnnouncementSetting { get; }
 
-		[iOS (15, 0), Mac (12, 0), MacCatalyst (15, 0), Watch (8, 0), TV (15, 0)]
+		[iOS (15, 0), MacCatalyst (15, 0), Watch (8, 0), TV (15, 0)]
 		[Export ("timeSensitiveSetting")]
 		UNNotificationSetting TimeSensitiveSetting { get; }
 
-		[iOS (15, 0), Mac (12, 0), MacCatalyst (15, 0), Watch (8, 0), TV (15, 0)]
+		[iOS (15, 0), MacCatalyst (15, 0), Watch (8, 0), TV (15, 0)]
 		[Export ("scheduledDeliverySetting")]
 		UNNotificationSetting ScheduledDeliverySetting { get; }
 
-		[iOS (15, 0), Mac (12, 0), MacCatalyst (15, 0), Watch (8, 0), TV (15, 0)]
+		[iOS (15, 0), MacCatalyst (15, 0), Watch (8, 0), TV (15, 0)]
 		[Export ("directMessagesSetting")]
 		UNNotificationSetting DirectMessagesSetting { get; }
 	}
@@ -897,7 +895,7 @@ namespace UserNotifications {
 		void SetBadgeCount (nint newBadgeCount, [NullAllowed] Action<NSError> completionHandler);
 	}
 
-	[iOS (15, 0), Mac (12, 0), MacCatalyst (15, 0), TV (15, 0), Watch (8, 0)]
+	[iOS (15, 0), MacCatalyst (15, 0), TV (15, 0), Watch (8, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface UNNotificationActionIcon : NSCopying, NSSecureCoding {
@@ -912,7 +910,7 @@ namespace UserNotifications {
 
 	interface IUNNotificationContentProviding { }
 
-	[iOS (15, 0), Mac (12, 0), MacCatalyst (15, 0), TV (15, 0), Watch (8, 0)]
+	[iOS (15, 0), MacCatalyst (15, 0), TV (15, 0), Watch (8, 0)]
 	[Protocol]
 	interface UNNotificationContentProviding {
 	}

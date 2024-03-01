@@ -284,7 +284,6 @@ namespace CoreSpotlight {
 		NativeHandle Constructor (string itemContentType);
 
 		[iOS (14, 0)]
-		[Mac (11, 0)]
 		[MacCatalyst (14, 0)]
 		[Export ("initWithContentType:")]
 		NativeHandle Constructor (UTType contentType);
@@ -1071,7 +1070,7 @@ namespace CoreSpotlight {
 		[NullAllowed, Export ("rankingHint", ArgumentSemantic.Strong)]
 		NSNumber RankingHint { get; set; }
 
-		[NoTV, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+		[NoTV, iOS (15, 0), MacCatalyst (15, 0)]
 		[NullAllowed, Export ("darkThumbnailURL", ArgumentSemantic.Strong)]
 		NSUrl DarkThumbnailUrl { get; set; }
 
@@ -1129,7 +1128,7 @@ namespace CoreSpotlight {
 	}
 
 	[Abstract]
-	[NoTV, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[NoTV, iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (NSObject))]
 	interface CSImportExtension : NSExtensionRequestHandling {
 		[Export ("updateAttributes:forFileAtURL:error:")]
