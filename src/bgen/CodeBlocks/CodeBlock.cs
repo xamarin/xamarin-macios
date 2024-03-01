@@ -49,12 +49,6 @@ public class CodeBlock : ICodeBlock {
 		Blocks.Add (block);
 	}
 
-	public void AddBlock (ICodeBlock block)
-	{
-		block.SetIndent (CurrentIndent + Indent);
-		Blocks.Add (block);
-	}
-
 	public void AddLine (string text)
 	{
 		LineBlock line = new LineBlock (text);

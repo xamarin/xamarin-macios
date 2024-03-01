@@ -182,9 +182,9 @@ namespace GeneratorTests {
 			CodeBlock classBlock = new CodeBlock (headerText);
 			MethodBlock methodBlock = new MethodBlock (methodName, methodArguments);
 			classBlock.AddLine (variableText);
-			classBlock.AddBlock (methodBlock);
-			namespaceBlock.AddBlock (classBlock);
-			blockContainer.AddBlock (namespaceBlock);
+			classBlock.Add (methodBlock);
+			namespaceBlock.Add (classBlock);
+			blockContainer.Add (namespaceBlock);
 
 			string output = PerformWriting (blockContainer);
 			Assert.AreEqual (expectedText, output);
