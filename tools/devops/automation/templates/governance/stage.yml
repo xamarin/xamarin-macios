@@ -26,7 +26,10 @@ stages:
   - job: apiscan
     displayName: 'APIScan:' 
     timeoutInMinutes: 1000
-    pool: MAUI-1ESPT-Windows2022
+    pool:
+      name: MAUI-1ESPT
+      demands:
+      - ImageOverride -equals 1ESPT-Windows2022
 
     strategy:
       matrix: $[ stageDependencies.configure_build.configure.outputs['apiscan_matrix.APISCAN_MATRIX'] ]
