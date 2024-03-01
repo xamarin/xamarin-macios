@@ -4,7 +4,7 @@ include $(TOP)/Make.config
 
 TARGETS += \
 
-run-unit-tests:
+run-tests run-unit-tests:
 	$(MAKE) -C UnitTests $@
 
 all-local:: $(TARGETS)

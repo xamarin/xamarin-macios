@@ -16,7 +16,7 @@ using Xamarin.Utils;
 #nullable enable
 
 namespace Xamarin.Tests {
-	class BGenTool : Tool {
+	public class BGenTool : Tool {
 		public const string None = "None";
 		AssemblyDefinition? assembly;
 
@@ -324,7 +324,7 @@ namespace Xamarin.Tests {
 				return true;
 			});
 			if (actual.Count () != count) {
-				Assert.Fail ($"Expected {count} publicly accessible method(s) in {typename}, found {actual} publicly accessible method(s): {message}\n\t{string.Join ("\n\t", actual.Select (v => v.FullName).OrderBy (v => v))}");
+				Assert.Fail ($"Expected {count} publicly accessible method(s) in {typename}, found {actual.Count ()} publicly accessible method(s): {message}\n\t{string.Join ("\n\t", actual.Select (v => v.FullName).OrderBy (v => v))}");
 			}
 		}
 

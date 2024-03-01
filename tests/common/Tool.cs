@@ -9,7 +9,7 @@ using NUnit.Framework;
 using Xamarin.Utils;
 
 namespace Xamarin.Tests {
-	class ToolMessage {
+	public class ToolMessage {
 		public bool IsError;
 		public bool IsWarning { get { return !IsError; } }
 		public string Prefix;
@@ -59,7 +59,7 @@ namespace Xamarin.Tests {
 		}
 	}
 
-	abstract class Tool {
+	public abstract class Tool {
 		StringBuilder output = new StringBuilder ();
 
 		List<string> output_lines;

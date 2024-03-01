@@ -288,18 +288,12 @@ namespace Cecil.Tests {
 					"SpriteKit.SKView.EncodeTo (Foundation.NSCoder)",
 
 					// These methods have different optional/required semantics between platforms.
-					"Metal.IMTLBlitCommandEncoder.GetTextureAccessCounters (Metal.IMTLTexture, Metal.MTLRegion, System.UIntPtr, System.UIntPtr, System.Boolean, Metal.IMTLBuffer, System.UIntPtr)",
-					"Metal.IMTLBlitCommandEncoder.ResetTextureAccessCounters (Metal.IMTLTexture, Metal.MTLRegion, System.UIntPtr, System.UIntPtr)",
 					"Metal.MTLBlitCommandEncoder_Extensions.GetTextureAccessCounters (Metal.IMTLBlitCommandEncoder, Metal.IMTLTexture, Metal.MTLRegion, System.UIntPtr, System.UIntPtr, System.Boolean, Metal.IMTLBuffer, System.UIntPtr)",
 					"Metal.MTLBlitCommandEncoder_Extensions.ResetTextureAccessCounters (Metal.IMTLBlitCommandEncoder, Metal.IMTLTexture, Metal.MTLRegion, System.UIntPtr, System.UIntPtr)",
-					"PassKit.IPKPaymentAuthorizationControllerDelegate.GetPresentationWindow (PassKit.PKPaymentAuthorizationController)",
 					"PassKit.PKPaymentAuthorizationControllerDelegate_Extensions.GetPresentationWindow (PassKit.IPKPaymentAuthorizationControllerDelegate, PassKit.PKPaymentAuthorizationController)",
 					"Metal.MTLTextureWrapper.FirstMipmapInTail",
 					"Metal.MTLTextureWrapper.IsSparse",
 					"Metal.MTLTextureWrapper.TailSizeInBytes",
-					"Metal.IMTLTexture.FirstMipmapInTail",
-					"Metal.IMTLTexture.IsSparse",
-					"Metal.IMTLTexture.TailSizeInBytes",
 
 
 					// HKSeriesBuilder doesn't implement the ISNCopying protocol on all platforms (and shouldn't on any according to the headers, so removed for XAMCORE_5_0).

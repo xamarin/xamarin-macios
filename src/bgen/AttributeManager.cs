@@ -95,6 +95,12 @@ public class AttributeManager {
 			return typeof (Foundation.ProtocolAttribute);
 		case "Foundation.RegisterAttribute":
 			return typeof (Foundation.RegisterAttribute);
+#if NET
+		case "Foundation.RequiredMemberAttribute":
+			return typeof (Foundation.RequiredMemberAttribute);
+		case "Foundation.OptionalMemberAttribute":
+			return typeof (Foundation.OptionalMemberAttribute);
+#endif
 		case "IgnoredInDelegateAttribute":
 			return typeof (IgnoredInDelegateAttribute);
 		case "InternalAttribute":
@@ -625,4 +631,16 @@ public class AttributeManager {
 		return false;
 	}
 
+	public bool IsStatic (ICustomAttributeProvider provider)
+	{
+		if (HasAttribute<StaticAttribute> (provider))
+			return true;
+		var method = provider as MethodInfo;
+		if (method is not null) {
+			var property = Generator.GetProperyFromGetSetMethod (method);
+			if (property is not null && HasAttribute<StaticAttribute> (property))
+				return true;
+		}
+		return false;
+	}
 }

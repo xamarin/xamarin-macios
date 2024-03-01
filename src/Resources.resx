@@ -616,4 +616,9 @@
 	<data name="BI1119" xml:space="preserve">
 		<value>Internal error: found the same type ({0}) in multiple assemblies ({1} and {2}). Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.</value>
 	</data>
+
+	<data name="BI1120" xml:space="preserve">
+		<value>The type '{0}' is trying to inline the methods binding the selector '{1}' from the protocols '{2}' and '{3}', using methods with different signatures ('{4}' vs '{5}'). These methods will be ignored.</value>
+	</data>
+
 </root>

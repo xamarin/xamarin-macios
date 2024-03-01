@@ -346,8 +346,9 @@ namespace Registrar {
 				if (!method.IsPropertyAccessor && !method.DeclaringType.IsProtocol)
 					Registrar.VerifyInSdk (ref exceptions, method);
 
-				rv = AddToMap (method, ref exceptions);
-				Methods.Add (method);
+				rv = AddToMap (method, ref exceptions, out var alreadyAdded);
+				if (!alreadyAdded)
+					Methods.Add (method);
 				return rv;
 			}
 
@@ -427,11 +428,21 @@ namespace Registrar {
 				return Map.TryGetValue (selector, out member);
 			}
 
-			bool AddToMap (ObjCMember member, ref List<Exception> exceptions)
+			bool AddToMap (ObjCMember member, ref List<Exception> exceptions, out bool alreadyAdded)
 			{
 				ObjCMember existing;
 				bool rv = true;
+
+				alreadyAdded = false;
+
 				if (TryGetMember (member.Selector, member.IsNativeStatic, out existing)) {
+					if (existing is ObjCMethod existingMethod && member is ObjCMethod method && object.ReferenceEquals (method.Method, existingMethod.Method)) {
+						// This can happen if we try to register:
+						// * A property declared on a type (we register the getter + setter)
+						// * The getter or setter matches the signature of an exported method from a protocol interface, in which case we'll try to export again.
+						alreadyAdded = true;
+						return true;
+					}
 					if (existing.IsImplicit) {
 						AddException (ref exceptions, CreateException (4141, member, Errors.MT4141, member.Selector, Registrar.GetTypeFullName (Type), Registrar.GetMemberName (member)));
 					} else {
