@@ -28,28 +28,7 @@ namespace Xamarin.Tests {
 		[TestCase (ApplePlatform.TVOS, "tvos-arm64")]
 		public void TrimmerWarningsDynamicRegistrar (ApplePlatform platform, string runtimeIdentifiers)
 		{
-			ExpectedBuildMessage [] expectedWarnings;
-			switch (platform) {
-			case ApplePlatform.iOS:
-			case ApplePlatform.TVOS:
-				expectedWarnings = new ExpectedBuildMessage [] {
-					new ExpectedBuildMessage ("src/ObjCRuntime/Blocks.cs" /* line 313 */, "ObjCRuntime.BlockLiteral.SetupBlock(Delegate, Delegate): 'this' argument does not satisfy 'DynamicallyAccessedMemberTypes.PublicMethods' in call to 'System.Type.GetMethod(String)'. The return value of method 'ObjCRuntime.MonoPInvokeCallbackAttribute.DelegateType.get' does not have matching annotations. The source value must declare at least the same requirements as those declared on the target location it is assigned to."),
-				};
-				break;
-			case ApplePlatform.MacOSX:
-				expectedWarnings = new ExpectedBuildMessage [] {
-				};
-				break;
-			case ApplePlatform.MacCatalyst:
-				expectedWarnings = new ExpectedBuildMessage [] {
-				};
-				break;
-			default:
-				Assert.Fail ($"Unknown platform: {platform}");
-				return;
-			}
-
-			TrimmerWarnings (platform, runtimeIdentifiers, "dynamic", expectedWarnings);
+			TrimmerWarnings (platform, runtimeIdentifiers, "dynamic", Array.Empty<ExpectedBuildMessage> ());
 		}
 
 		void TrimmerWarnings (ApplePlatform platform, string runtimeIdentifiers, string registrar, params ExpectedBuildMessage [] expectedWarnings)
