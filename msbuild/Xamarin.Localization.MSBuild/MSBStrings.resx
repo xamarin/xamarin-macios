@@ -1533,4 +1533,11 @@
             {1}: the exit code of a process
         </comment>
     </data>
+
+    <data name="E7120" xml:space="preserve">
+        <value>Unable to compute the remote generator properties. Please file an issue at https://github.com/xamarin/xamarin-macios/issues/new and attach the following file: {0}</value>
+        <comment>
+            {0}: the path to a file
+        </comment>
+    </data>
 </root>
