@@ -40,7 +40,6 @@ namespace Xamarin.Tests {
 			case ApplePlatform.MacOSX:
 				expectedWarnings = new ExpectedBuildMessage [] {
 					new ExpectedBuildMessage ("src/ObjCRuntime/DynamicRegistrar.cs" /* line 542 */, "Registrar.DynamicRegistrar.HasThisAttributeImpl(MethodBase): Attribute 'System.Runtime.CompilerServices.ExtensionAttribute' is being referenced in code but the trimmer was instructed to remove all instances of this attribute. If the attribute instances are necessary make sure to either remove the trimmer attribute XML portion which removes the attribute instances, or override the removal by using the trimmer XML descriptor to keep the attribute type (which in turn keeps all of its instances)."),
-					new ExpectedBuildMessage ("src/ObjCRuntime/Runtime.CoreCLR.cs" /* line 177 */, "ObjCRuntime.Runtime.ResolvingEventHandler(AssemblyLoadContext, AssemblyName): Using member 'System.Runtime.Loader.AssemblyLoadContext.LoadFromAssemblyPath(String)' which has 'RequiresUnreferencedCodeAttribute' can break functionality when trimming application code. Types and members the loaded assembly depends on might be removed."),
 				};
 				break;
 			case ApplePlatform.MacCatalyst:
