@@ -1,7 +1,8 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 
-public class MethodBlock : CodeBlock {
+public class MethodBlock : CodeBlock, IEnumerable<ICodeBlock> {
 	public MethodBlock (string methodSignature, params string [] parameters)
 	{
 		StringBuilder allParameters = new ();
@@ -13,6 +14,7 @@ public class MethodBlock : CodeBlock {
 		}
 		HeaderText = methodSignature + "(" + allParameters + ")";
 	}
+
 	public MethodBlock (string methodSignature, List<ICodeBlock> blocks, params string [] parameters)
 	{
 		StringBuilder allParameters = new ();
@@ -25,4 +27,7 @@ public class MethodBlock : CodeBlock {
 		HeaderText = methodSignature + "(" + allParameters + ")";
 		this.Blocks = blocks;
 	}
+
+	public IEnumerator<ICodeBlock> GetEnumerator () => Blocks.GetEnumerator ();
+	IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();
 }

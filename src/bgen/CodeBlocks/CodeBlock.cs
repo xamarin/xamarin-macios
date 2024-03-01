@@ -43,6 +43,12 @@ public class CodeBlock : ICodeBlock {
 		}
 	}
 
+	public void Add (ICodeBlock block)
+	{
+		block.SetIndent (CurrentIndent + Indent);
+		Blocks.Add (block);
+	}
+
 	public void AddBlock (ICodeBlock block)
 	{
 		block.SetIndent (CurrentIndent + Indent);

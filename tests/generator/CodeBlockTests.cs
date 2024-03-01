@@ -35,21 +35,19 @@ namespace GeneratorTests {
 		}
 
 		[Test]
-		public void MethodBlockAddLinesTest ()
+		public void MethodBlockConstructionTest ()
 		{
-			string inputText1 = "int fooCount = 1;";
-			string inputText2 = "string[] fooNames = new [] {\"foo\"};";
-			string methodName = "public void Foobinate";
-			string [] methodArguments = new [] { "int count", "bool isFoo" };
 			string expectedText =
 				"public void Foobinate(int count, bool isFoo)\n" +
 				"{\n" +
 				"    int fooCount = 1;\n" +
-				"    string[] fooNames = new [] {\"foo\"};\n" +
+				"    string [] fooNames = new [] {\"foo\"};\n" +
 				"}\n";
-			MethodBlock methodBlock = new (methodName, methodArguments);
-			methodBlock.AddLine (inputText1);
-			methodBlock.AddLine (inputText2);
+			MethodBlock methodBlock = new ("public void Foobinate", "int count", "bool isFoo")
+			{
+				new LineBlock ("int fooCount = 1;"),
+				new LineBlock ("string [] fooNames = new [] {\"foo\"};"),
+			};
 			string output = PerformWriting (methodBlock);
 			Assert.AreEqual (expectedText, output);
 		}
