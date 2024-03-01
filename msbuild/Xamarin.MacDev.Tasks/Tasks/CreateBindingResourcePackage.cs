@@ -181,7 +181,11 @@ namespace Xamarin.MacDev.Tasks {
 
 		public bool ShouldCopyToBuildServer (ITaskItem item) => true;
 
-		public bool ShouldCreateOutputFile (ITaskItem item) => true;
+		public bool ShouldCreateOutputFile (ITaskItem item)
+		{
+			// Don't create output files for the packaged files, because we already copy the entire files to Windows (TransferBindingResourcePackagesToWindowsAsync).
+			return Array.IndexOf (PackagedFiles, item) == -1;
+		}
 
 		public void Cancel ()
 		{
