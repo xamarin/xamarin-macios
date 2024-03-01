@@ -13,7 +13,7 @@ namespace ObjCRuntime {
 		/// <summary>
 		/// Initializes a new instance of the <see cref="BlockCallbackAttribute"/> class.
 		/// </summary>
-		public CCallbackAttribute ()
+		public BlockCallbackAttribute ()
 		{
 		}
 	}
