@@ -9,5 +9,12 @@ namespace ObjCRuntime {
 	/// <seealso cref='T:ObjCRuntime.CCallbackAttribute' />
 	/// </remarks>
 	[AttributeUsage (AttributeTargets.Parameter, AllowMultiple = false)]
-	public class BlockCallbackAttribute : Attribute { }
+	public class BlockCallbackAttribute : Attribute {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="BlockCallbackAttribute"/> class.
+		/// </summary>
+		public CCallbackAttribute ()
+		{
+		}
+	}
 }
