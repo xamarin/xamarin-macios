@@ -434,7 +434,7 @@ namespace CoreGraphics {
 		{
 			unsafe {
 				rect = default;
-				return CGPathIsRect (Handle, (CGRect *) Unsafe.AsPointer<CGRect> (ref rect)) != 0;
+				return CGPathIsRect (Handle, (CGRect*) Unsafe.AsPointer<CGRect> (ref rect)) != 0;
 			}
 		}
 
