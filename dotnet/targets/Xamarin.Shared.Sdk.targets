@@ -491,7 +491,7 @@
 		<IlcCompileDependsOn>Compile;_ComputeLinkerArguments;_ComputeManagedAssemblyToLink;SetupOSSpecificProps;PrepareForILLink;_XamarinComputeIlcCompileInputs</IlcCompileDependsOn>
 	</PropertyGroup>
 
-	<Target Name="SelectRegistrar" DependsOn="_ComputeLinkMode">
+	<Target Name="SelectRegistrar" DependsOnTargets="_ComputeLinkMode">
 		<PropertyGroup>
 			<!--
 			Registrar configuration:
