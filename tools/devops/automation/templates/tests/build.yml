@@ -76,6 +76,10 @@ parameters:
   type: string
   default: ''
 
+- name: retryCount
+  type: number
+  default: 3
+
 steps:
 
 - template: ../common/checkout.yml
@@ -132,6 +136,7 @@ steps:
     ./maccore/tools/install-qa-provisioning-profiles.sh -v
   displayName: 'Add provisioning profiles'
   timeoutInMinutes: 30
+  retryCountOnTaskFailure: ${{ parameters.retryCount }} # We sometinmes have network issues when we try to retrieve the version of provisionator
   env:
     AUTH_TOKEN_GITHUB_COM: ${{ parameters.gitHubToken }}
     AUTH_TOKEN_LA_DEV_APPLE_P12: ${{ parameters.xqaCertPass }}
