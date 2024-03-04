@@ -45,8 +45,8 @@ namespace GeneratorTests {
 				"}\n";
 			MethodBlock methodBlock = new ("public void Foobinate", "int count", "bool isFoo")
 			{
-				new LineBlock ("int fooCount = 1;"),
-				new LineBlock ("string [] fooNames = new [] {\"foo\"};"),
+				"int fooCount = 1;",
+				"string [] fooNames = new [] {\"foo\"};",
 			};
 			string output = PerformWriting (methodBlock);
 			Assert.AreEqual (expectedText, output);
@@ -84,16 +84,14 @@ namespace GeneratorTests {
 		[Test]
 		public void IfBlockTest ()
 		{
-			string ifConditionText = "fooCount == 5";
-			string line1 = "Console.WriteLine(fooCount);";
 			string expectedText =
 				"if (fooCount == 5)\n" +
 				"{\n" +
 				"    Console.WriteLine(fooCount);\n" +
 				"}\n";
-			List<ICodeBlock> blocks = new ();
-			blocks.Add (new LineBlock (line1));
-			IfBlock ifBlock = new (ifConditionText, blocks);
+			IfBlock ifBlock = new ("fooCount == 5") {
+				"Console.WriteLine(fooCount);"
+			};
 			string output = PerformWriting (ifBlock);
 			Assert.AreEqual (expectedText, output);
 		}
@@ -101,9 +99,6 @@ namespace GeneratorTests {
 		[Test]
 		public void IfElseBlockTest ()
 		{
-			string ifConditionText = "fooCount == 5";
-			string line1 = "Console.WriteLine(fooCount);";
-			string line2 = "Console.WriteLine(booCount);";
 			string expectedText =
 				"if (fooCount == 5)\n" +
 				"{\n" +
@@ -113,11 +108,11 @@ namespace GeneratorTests {
 				"{\n" +
 				"    Console.WriteLine(booCount);\n" +
 				"}\n";
-			List<ICodeBlock> blocks = new ();
-			List<ICodeBlock> elseBlocks = new List<ICodeBlock> () { new LineBlock (line2) };
-			blocks.Add (new LineBlock (line1));
-			IfBlock ifBlock = new (ifConditionText, blocks);
-			ifBlock.AddElse (elseBlocks);
+			IfBlock ifBlock = new IfBlock ("fooCount == 5") {
+				"Console.WriteLine(fooCount);"
+			}.AddElse (
+				"Console.WriteLine(booCount);"
+			);
 			string output = PerformWriting (ifBlock);
 			Assert.AreEqual (expectedText, output);
 		}
@@ -125,11 +120,6 @@ namespace GeneratorTests {
 		[Test]
 		public void IfElseIfElseBlockTest ()
 		{
-			string ifConditionText = "fooCount == 5";
-			string elseIfConditionText = "fooCount == 10";
-			string line1 = "Console.WriteLine(fooCount);";
-			string line2 = "Console.WriteLine(booCount);";
-			string line3 = "Console.WriteLine(zooCount);";
 			string expectedText =
 				"if (fooCount == 5)\n" +
 				"{\n" +
@@ -143,13 +133,13 @@ namespace GeneratorTests {
 				"{\n" +
 				"    Console.WriteLine(zooCount);\n" +
 				"}\n";
-			List<ICodeBlock> blocks = new ();
-			List<ICodeBlock> elseIfBlocks = new List<ICodeBlock> () { new LineBlock (line2) };
-			List<ICodeBlock> elseBlocks = new List<ICodeBlock> () { new LineBlock (line3) };
-			blocks.Add (new LineBlock (line1));
-			IfBlock ifBlock = new (ifConditionText, blocks);
-			ifBlock.AddElseIf (elseIfConditionText, elseIfBlocks);
-			ifBlock.AddElse (elseBlocks);
+			IfBlock ifBlock = new IfBlock("fooCount == 5") {
+				"Console.WriteLine(fooCount);"
+			}.AddElseIf ("fooCount == 10",
+				"Console.WriteLine(booCount);"
+			).AddElse (
+				"Console.WriteLine(zooCount);"
+			);
 			string output = PerformWriting (ifBlock);
 			Assert.AreEqual (expectedText, output);
 		}

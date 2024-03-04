@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 
@@ -20,9 +21,21 @@ public class IfBlock : CodeBlock {
 		ElseIfBlocks.Add (new CodeBlock ("else if (" + condition + ")", blocks));
 	}
 
+	public IfBlock AddElseIf (string condition, params string[] lines)
+	{
+		ElseIfBlocks.Add (new CodeBlock ("else if (" + condition + ")", lines));
+		return this;
+	}
+
 	public void AddElse (List<ICodeBlock> blocks)
 	{
 		ElseBlock = new CodeBlock ("else", blocks);
+	}
+
+	public IfBlock AddElse (params string[] lines)
+	{
+		ElseBlock = new CodeBlock ("else", lines);
+		return this;
 	}
 
 	protected override void WriteHeaderText (TextWriter writer)
