@@ -95,7 +95,6 @@ namespace Xamarin.Linker {
 		{
 			base.TryProcess ();
 
-			App.SelectRegistrar ();
 			if (App.Registrar != RegistrarMode.ManagedStatic)
 				return;
 

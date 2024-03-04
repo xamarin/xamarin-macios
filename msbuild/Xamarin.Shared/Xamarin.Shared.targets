@@ -2278,6 +2278,23 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			<_LinkMode Condition="'$(_LinkMode)' == ''">$(_DefaultLinkMode)</_LinkMode> <!-- Let the .NET targets chime in -->
 			<_LinkMode Condition="'$(_LinkMode)' == '' And '$(_PlatformName)' == 'macOS'">None</_LinkMode> <!-- Linking is off by default for macOS apps -->
 			<_LinkMode Condition="'$(_LinkMode)' == '' And '$(_PlatformName)' != 'macOS'">SdkOnly</_LinkMode> <!-- Default linking is SdkOnly for iOS/tvOS/watchOS apps -->
+
+			<!-- TrimMode specifies what the linker will do with framework assemblies -->
+			<TrimMode Condition="'$(_LinkMode)' == 'TrimMode'">$(TrimMode)</TrimMode>
+			<TrimMode Condition="'$(_LinkMode)' == 'None'">copy</TrimMode>
+			<TrimMode Condition="'$(_LinkMode)' == 'SdkOnly'">partial</TrimMode>
+			<TrimMode Condition="'$(_LinkMode)' == 'Full'">full</TrimMode>
+			<!-- For None link mode we also need to set TrimMode for all assemblies. This is done further below -->
+
+			<!-- Determine if any assemblies are actually trimmed, or if we're in a "Don't link" scenario -->
+			<!-- We're in a "Don't link" scenario if both of the following are true:
+					1. The global TrimMode property is set to 'copy'
+					2. No assembly has the TrimMode metadata (unless it's set to 'copy')
+			-->
+			<_AssembliesWithCustomTrimMode>@(ManagedAssemblyToLink->HasMetadata('TrimMode')->Count())</_AssembliesWithCustomTrimMode>
+			<_AssembliesWithCopyTrimMode>@(ManagedAssemblyToLink->WithMetadataValue('TrimMode', 'copy')->Count())</_AssembliesWithCopyTrimMode>
+			<_AreAnyAssembliesTrimmed Condition="'$(_AreAnyAssembliesTrimmed)' == '' And '$(TrimMode)' == 'copy' And '$(_AssembliesWithCustomTrimMode)' == '$(_AssembliesWithCopyTrimMode)'">false</_AreAnyAssembliesTrimmed>
+			<_AreAnyAssembliesTrimmed Condition="'$(_AreAnyAssembliesTrimmed)' == ''">true</_AreAnyAssembliesTrimmed>
 		</PropertyGroup>
 	</Target>
 
