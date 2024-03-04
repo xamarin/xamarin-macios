@@ -403,9 +403,22 @@ namespace Xamarin.Tests {
 				resolver.AddSearchDirectory (searchdir);
 				parameters.AssemblyResolver = resolver;
 				var tmpDirectory = EnsureTempDir ();
-				assembly = AssemblyDefinition.ReadAssembly (Out ?? (Path.Combine (tmpDirectory, Path.GetFileNameWithoutExtension (ApiDefinitions [0]).Replace ('-', '_') + ".dll")), parameters);
+				assembly = AssemblyDefinition.ReadAssembly (AssemblyPath, parameters);
 			}
 			return assembly;
+		}
+
+		public string AssemblyPath {
+			get {
+				var tmpDirectory = EnsureTempDir ();
+				return Out ?? (Path.Combine (tmpDirectory, Path.GetFileNameWithoutExtension (ApiDefinitions [0]).Replace ('-', '_') + ".dll"));
+			}
+		}
+
+		public string XmlDocumentation {
+			get {
+				return Path.ChangeExtension (AssemblyPath, ".xml");
+			}
 		}
 
 		string EnsureTempDir ()

@@ -65,10 +65,14 @@ public class BindingTouch : IDisposable {
 	string []? compile_command = null;
 	string compiled_api_definition_assembly = string.Empty;
 	bool noNFloatUsing;
+	bool supportsXmlDocumentation = true;
 	List<string> references = new List<string> ();
 
 	public MetadataLoadContext? universe;
 	public Frameworks? Frameworks;
+
+	DocumentationManager? documentationManager;
+	public DocumentationManager DocumentationManager => documentationManager!;
 
 	AttributeManager? attributeManager;
 	public AttributeManager AttributeManager => attributeManager!;
@@ -229,6 +233,10 @@ public class BindingTouch : IDisposable {
 					}
 				},
 				{ "compiled-api-definition-assembly=", "An assembly with the compiled api definitions.", (v) => compiled_api_definition_assembly = v },
+				{ "xmldoc:", "If the generator supports xml documentation in the API definition (default: true)", (v) => {
+						supportsXmlDocumentation = string.Equals ("true", v, StringComparison.OrdinalIgnoreCase) || string.IsNullOrEmpty (v);
+					}
+				},
 				new Mono.Options.ResponseFileSource (),
 			};
 			config.Sources = config.OptionSet.Parse (args);
@@ -281,6 +289,8 @@ public class BindingTouch : IDisposable {
 			if (!TryLoadApi (tmpass, out Assembly? apiAssembly) ||
 				!TryLoadApi (LibraryInfo.BaseLibDll, out Assembly? baselib))
 				return false;
+
+			documentationManager = new DocumentationManager (supportsXmlDocumentation ? tmpass : string.Empty);
 
 			Frameworks = new Frameworks (CurrentPlatform);
 
@@ -396,6 +406,12 @@ public class BindingTouch : IDisposable {
 			}
 			if (!string.IsNullOrEmpty (Path.GetDirectoryName (LibraryInfo.BaseLibDll)))
 				cargs.Add ("-lib:" + Path.GetDirectoryName (LibraryInfo.BaseLibDll));
+			if (supportsXmlDocumentation) {
+				cargs.Add ("-doc:" + Path.ChangeExtension (outfile, ".xml"));
+				// warning CS1591: Missing XML comment for publicly visible type or member
+				// Ignore it, because we don't expect code to have everything documented.
+				cargs.Add ("-nowarn:1591");
+			}
 
 			AddNFloatUsing (cargs, config.TemporaryFileDirectory);
 
@@ -463,6 +479,12 @@ public class BindingTouch : IDisposable {
 		cargs.AddRange (core_sources);
 		if (!string.IsNullOrEmpty (Path.GetDirectoryName (libraryInfo.BaseLibDll)))
 			cargs.Add ("-lib:" + Path.GetDirectoryName (libraryInfo.BaseLibDll));
+		if (supportsXmlDocumentation) {
+			cargs.Add ("-doc:" + Path.ChangeExtension (tmpass, ".xml"));
+				// warning CS1591: Missing XML comment for publicly visible type or member
+				// Ignore it, because we don't expect code to have everything documented.
+				cargs.Add ("-nowarn:1591");
+		}
 
 		AddNFloatUsing (cargs, tmpdir);
 

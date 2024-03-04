@@ -1434,6 +1434,117 @@ namespace GeneratorTests {
 			BuildFile (Profile.iOS, "tests/internal-delegate.cs");
 		}
 
+		[Test]
+		public void XmlDocs ()
+		{
+			var bgen = BuildFile (Profile.iOS, "tests/xmldocs.cs");
+			Assert.That (bgen.XmlDocumentation, Does.Exist);
+			var contents = File.ReadAllText (bgen.XmlDocumentation);
+			var expectedContents =
+@"<?xml version=""1.0""?>
+<doc>
+    <assembly>
+        <name>api0</name>
+    </assembly>
+    <members>
+        <member name=""T:XmlDocumentation.IP1"">
+            <summary>
+            Summary for P1
+            </summary>
+        </member>
+        <member name=""M:XmlDocumentation.IP1.PAMethod"">
+            <summary>
+            Summary for PA1.PMethod
+            </summary>
+        </member>
+        <member name=""P:XmlDocumentation.IP1.PAProperty"">
+            <summary>
+            Summary for PA1.PProperty
+            </summary>
+        </member>
+        <member name=""M:XmlDocumentation.P1_Extensions.PMethod(XmlDocumentation.IP1)"">
+            <summary>
+            Summary for P1.PMethod
+            </summary>
+        </member>
+        <member name=""M:XmlDocumentation.P1_Extensions.GetPProperty(XmlDocumentation.IP1)"">
+            <summary>
+            Summary for P1.PProperty
+            </summary>
+        </member>
+        <member name=""M:XmlDocumentation.P1_Extensions.SetPProperty(XmlDocumentation.IP1,System.Int32)"">
+            <summary>
+            Summary for P1.PProperty
+            </summary>
+        </member>
+        <member name=""M:XmlDocumentation.P1Wrapper.PAMethod"">
+            <summary>
+            Summary for PA1.PMethod
+            </summary>
+        </member>
+        <member name=""P:XmlDocumentation.P1Wrapper.PAProperty"">
+            <summary>
+            Summary for PA1.PProperty
+            </summary>
+        </member>
+        <member name=""T:XmlDocumentation.T1"">
+            <summary>
+            Summary for T1
+            </summary>
+        </member>
+        <member name=""M:XmlDocumentation.T1.Method"">
+            <summary>
+            Summary for T1.Method
+            </summary>
+        </member>
+        <member name=""M:XmlDocumentation.T1.PAMethod"">
+            <summary>
+            Summary for PA1.PMethod
+            </summary>
+        </member>
+        <member name=""P:XmlDocumentation.T1.PAProperty"">
+            <summary>
+            Summary for PA1.PProperty
+            </summary>
+        </member>
+        <member name=""P:XmlDocumentation.T1.PProperty"">
+            <summary>
+            Summary for P1.PProperty
+            </summary>
+        </member>
+        <member name=""P:XmlDocumentation.T1.Property"">
+            <summary>
+            Summary for T1.Property
+            </summary>
+        </member>
+        <member name=""T:XmlDocumentation.TG1`2"">
+            <summary>
+            Summary for TG1
+            </summary>
+        </member>
+        <member name=""M:XmlDocumentation.TG1`2.TGMethod"">
+            <summary>
+            Summary for TG1.TGMethod
+            </summary>
+        </member>
+        <member name=""P:XmlDocumentation.TG1`2.TGProperty"">
+            <summary>
+            Summary for TG1.TGProperty
+            </summary>
+        </member>
+    </members>
+</doc>
+";
+			// Fix up a few potential whitespace differences we don't care about.
+			contents = contents.Trim ().Replace ("\r", "");
+			expectedContents = expectedContents.Trim ().Replace ("\r", "");
+
+			if (contents != expectedContents)
+				Console.WriteLine (contents.Replace ("\"", "\"\""));
+
+			Assert.AreEqual (expectedContents, contents, "Xml docs");
+		}
+
 #if NET
 		[Test]
 		public void Issue19612 ()

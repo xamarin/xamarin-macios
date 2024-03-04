@@ -65,6 +65,7 @@ public partial class Generator : IMemberGatherer {
 	public AttributeManager AttributeManager { get { return BindingTouch.AttributeManager; } }
 	NamespaceCache NamespaceCache { get { return BindingTouch.NamespaceCache; } }
 	public TypeCache TypeCache { get { return BindingTouch.TypeCache; } }
+	public DocumentationManager DocumentationManager { get { return BindingTouch.DocumentationManager; } }
 
 	Nomenclator nomenclator;
 	Nomenclator Nomenclator {
@@ -3841,6 +3842,8 @@ public partial class Generator : IMemberGatherer {
 			}
 		}
 
+		WriteDocumentation (pi);
+
 		if (wrap is not null) {
 			print_generated_code ();
 			PrintPropertyAttributes (pi, minfo.type);
@@ -4392,6 +4395,19 @@ public partial class Generator : IMemberGatherer {
 			}
 		}
 
+		// If we're an extension method, the caller must write the xml doc, because we might an extension method for a property,
+		// in which case we need to look for the xml doc for the property (which the caller is better suited for).
+		if (minfo.is_extension_method) {
+			var property = GetProperty (minfo.Method);
+			if (property is not null) {
+				WriteDocumentation (property);
+			} else {
+				WriteDocumentation (minfo.Method);
+			}
+		} else {
+			WriteDocumentation (minfo.Method);
+		}
+
 		PrintDelegateProxy (minfo);
 
 		if (AttributeManager.HasAttribute<NoMethodAttribute> (minfo.mi)) {
@@ -4673,6 +4689,8 @@ public partial class Generator : IMemberGatherer {
 		var optionalInstanceProperties = allProtocolProperties.Where ((v) => !IsRequired (v) && !AttributeManager.HasAttribute<StaticAttribute> (v));
 		var requiredInstanceAsyncMethods = requiredInstanceMethods.Where (m => AttributeManager.HasAttribute<AsyncAttribute> (m)).ToList ();
 
+		WriteDocumentation (type);
+
 		PrintAttributes (type, platform: true, preserve: true, advice: true);
 		print ("[Protocol (Name = \"{1}\", WrapperType = typeof ({0}Wrapper){2}{3})]",
 			   TypeName,
@@ -4812,6 +4830,7 @@ public partial class Generator : IMemberGatherer {
 			var minfo = new MemberInformation (this, this, mi, type, null);
 			var mod = string.Empty;
 
+			WriteDocumentation (mi);
 			PrintMethodAttributes (minfo);
 			print_generated_code ();
 			PrintDelegateProxy (minfo);
@@ -4828,6 +4847,7 @@ public partial class Generator : IMemberGatherer {
 			var mod = string.Empty;
 			minfo.is_export = true;
 
+			WriteDocumentation (pi);
 			print ("[Preserve (Conditional = true)]");
 			PrintAttributes (pi, platform: true);
 
@@ -5203,6 +5223,11 @@ public partial class Generator : IMemberGatherer {
 			PrintRequiresSuperAttribute (mi);
 	}
 
+	void WriteDocumentation (MemberInfo info)
+	{
+		DocumentationManager.WriteDocumentation (sw, indent, info);
+	}
+
 	public void ComputeLibraryName (FieldAttribute fieldAttr, Type type, string propertyName, out string library_name, out string library_path)
 	{
 		library_path = null;
@@ -5361,6 +5386,8 @@ public partial class Generator : IMemberGatherer {
 				print ("namespace {0} {{", type.Namespace);
 				indent++;
 			}
+
+			WriteDocumentation (type);
 
 			bool core_image_filter = false;
 			string class_mod = null;
