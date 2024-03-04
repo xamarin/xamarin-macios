@@ -1,7 +1,8 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 
-public class CodeBlock : ICodeBlock {
+public class CodeBlock : ICodeBlock, IEnumerable<ICodeBlock> {
 	protected int CurrentIndent = 0;
 	protected int Indent = 4;
 	protected string HeaderText = string.Empty;
@@ -49,6 +50,13 @@ public class CodeBlock : ICodeBlock {
 		Blocks.Add (block);
 	}
 
+	public void Add (string text)
+	{
+		LineBlock line = new LineBlock (text);
+		line.SetIndent (CurrentIndent + Indent);
+		Blocks.Add (line);
+	}
+
 	public void AddLine (string text)
 	{
 		LineBlock line = new LineBlock (text);
@@ -94,4 +102,7 @@ public class CodeBlock : ICodeBlock {
 	{
 		CurrentIndent = indent;
 	}
+
+	public IEnumerator<ICodeBlock> GetEnumerator () => Blocks.GetEnumerator ();
+	IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();
 }
