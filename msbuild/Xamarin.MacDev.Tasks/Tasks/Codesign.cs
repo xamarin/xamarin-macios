@@ -55,6 +55,10 @@ namespace Xamarin.MacDev.Tasks {
 		// Can also be specified per resource using the 'CodesignDeep' metadata (yes, the naming difference is correct and due to historical reasons)
 		public bool IsAppExtension { get; set; }
 
+		// How many codesign tasks we execute in parallel. Default is number of processors / 2.
+		// Contrary to many of the other codesigning properties, this can not be set per resource.
+		public string MaxDegreeOfParallelism { get; set; }
+
 		// Can also be specified per resource using the 'CodesignUseHardenedRuntime' metadata
 		public bool UseHardenedRuntime { get; set; }
 
@@ -99,6 +103,16 @@ namespace Xamarin.MacDev.Tasks {
 		string GetCodesignAllocate (ITaskItem item)
 		{
 			return GetNonEmptyStringOrFallback (item, "CodesignAllocate", CodesignAllocate, "CodesignAllocate", required: true);
+		}
+
+		int GetMaxDegreeOfParallelism ()
+		{
+			if (!string.IsNullOrEmpty (MaxDegreeOfParallelism)) {
+				if (int.TryParse (MaxDegreeOfParallelism, out var max))
+					return max;
+				Log.LogWarning (MSBStrings.W7121 /* Unable to parse the value '{0}' for the property 'MaxDegreeOfParallelism'. Falling back to the default value (number of processors / 2). */, MaxDegreeOfParallelism);
+			}
+			return Math.Max (Environment.ProcessorCount / 2, 1);
 		}
 
 		// 'sortedItems' is sorted by length of path, longest first.
@@ -468,7 +482,7 @@ namespace Xamarin.MacDev.Tasks {
 
 			for (var b = 0; b < buckets.Count; b++) {
 				var bucket = buckets [b];
-				Parallel.ForEach (bucket, new ParallelOptions { MaxDegreeOfParallelism = Math.Max (Environment.ProcessorCount / 2, 1) }, (item) => {
+				Parallel.ForEach (bucket, new ParallelOptions { MaxDegreeOfParallelism = GetMaxDegreeOfParallelism () }, (item) => {
 					Sign (item);
 
 					var files = GetCodesignedFiles (item.Item);
