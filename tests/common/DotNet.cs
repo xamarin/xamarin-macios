@@ -279,7 +279,7 @@ namespace Xamarin.Tests {
 									msg.AppendLine ($"    {string.Join ($"{Environment.NewLine}        ", error.ToString ().Split ('\n', '\r'))}");
 							}
 						} catch (Exception e) {
-							msg.AppendLine ($"Failed to list errors: {e}");
+							msg.AppendLine ($"Failed to list errors in the binlog {binlogPath}: {e}");
 						}
 #endif
 						Assert.Fail (msg.ToString ());

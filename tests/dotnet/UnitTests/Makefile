@@ -12,7 +12,7 @@ publish:
 # Example TEST_FILTER:
 #    TEST_FILTER="--filter FullyQualifiedName~BuildMyCocoaApp"
 # Docs: https://docs.microsoft.com/en-us/dotnet/core/tools/dotnet-test#filter-option-details
-run-unit-tests:
+run-tests run-unit-tests:
 	$(DOTNET) test DotNetUnitTests.csproj $(TEST_FILTER)
 
 run-published:
