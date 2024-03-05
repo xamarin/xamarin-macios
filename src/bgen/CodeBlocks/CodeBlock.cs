@@ -7,8 +7,8 @@ public class CodeBlock : ICodeBlock, IEnumerable<ICodeBlock> {
 	protected int Indent = 4;
 	protected string HeaderText = string.Empty;
 	protected List<ICodeBlock> Blocks = new ();
-	const char startBrace = '{';
-	const char endBrace = '}';
+	protected const char StartBrace = '{';
+	protected const char EndBrace = '}';
 	protected const char NewLine = '\n';
 
 	public CodeBlock () { }
@@ -83,7 +83,7 @@ public class CodeBlock : ICodeBlock, IEnumerable<ICodeBlock> {
 			WriteHeaderText (writer);
 
 		WriteIndent (writer);
-		writer.Write (startBrace);
+		writer.Write (StartBrace);
 		writer.Write (NewLine);
 
 		SetIndent (CurrentIndent + Indent);
@@ -94,7 +94,7 @@ public class CodeBlock : ICodeBlock, IEnumerable<ICodeBlock> {
 		SetIndent (CurrentIndent - Indent);
 
 		WriteIndent (writer);
-		writer.Write (endBrace);
+		writer.Write (EndBrace);
 		writer.Write (NewLine);
 	}
 
