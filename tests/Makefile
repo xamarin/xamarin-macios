@@ -131,7 +131,7 @@ clean-local::
 
 ## run targets = build + [install] + exec
 
-run run-all run-tests run-test:
+run run-all run-tests run-test run-unit-tests:
 	$(Q) for subdir in $(SUBDIRS); do \
 		$(MAKE) -C $$subdir run || exit 1; \
 	done

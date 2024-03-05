@@ -179,7 +179,7 @@ namespace CoreGraphics {
 		extern static unsafe /* CGImageRef */ IntPtr CGImageCreate (/* size_t */ nint width, /* size_t */ nint height,
 			/* size_t */ nint bitsPerComponent, /* size_t */ nint bitsPerPixel, /* size_t */ nint bytesPerRow,
 			/* CGColorSpaceRef */ IntPtr space, CGBitmapFlags bitmapInfo, /* CGDataProviderRef */ IntPtr provider,
-			/* CGFloat[] */ nfloat* decode, [MarshalAs (UnmanagedType.I1)] bool shouldInterpolate, CGColorRenderingIntent intent);
+			/* CGFloat[] */ nfloat* decode, byte shouldInterpolate, CGColorRenderingIntent intent);
 
 		static IntPtr Create (int width, int height, int bitsPerComponent, int bitsPerPixel, int bytesPerRow,
 				CGColorSpace? colorSpace, CGBitmapFlags bitmapFlags, CGDataProvider? provider,
@@ -200,7 +200,7 @@ namespace CoreGraphics {
 				fixed (nfloat* decodePtr = decode) {
 					return CGImageCreate (width, height, bitsPerComponent, bitsPerPixel, bytesPerRow,
 						colorSpace.GetHandle (), bitmapFlags, provider.GetHandle (),
-						decodePtr, shouldInterpolate, intent);
+						decodePtr, shouldInterpolate.AsByte (), intent);
 				}
 			}
 		}
@@ -231,7 +231,7 @@ namespace CoreGraphics {
 				fixed (nfloat* decodePtr = decode) {
 					return CGImageCreate (width, height, bitsPerComponent, bitsPerPixel, bytesPerRow,
 						colorSpace.GetHandle (), (CGBitmapFlags) alphaInfo, provider.GetHandle (),
-						decodePtr, shouldInterpolate, intent);
+						decodePtr, shouldInterpolate.AsByte (), intent);
 				}
 			}
 		}
@@ -301,13 +301,13 @@ namespace CoreGraphics {
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static unsafe /* CGImageRef */ IntPtr CGImageCreateWithJPEGDataProvider (/* CGDataProviderRef */ IntPtr source,
-			/* CGFloat[] */ nfloat* decode, [MarshalAs (UnmanagedType.I1)] bool shouldInterpolate, CGColorRenderingIntent intent);
+			/* CGFloat[] */ nfloat* decode, byte shouldInterpolate, CGColorRenderingIntent intent);
 
 		public static CGImage? FromJPEG (CGDataProvider? provider, nfloat []? decode, bool shouldInterpolate, CGColorRenderingIntent intent)
 		{
 			unsafe {
 				fixed (nfloat* decodePtr = decode) {
-					var handle = CGImageCreateWithJPEGDataProvider (provider.GetHandle (), decodePtr, shouldInterpolate, intent);
+					var handle = CGImageCreateWithJPEGDataProvider (provider.GetHandle (), decodePtr, shouldInterpolate.AsByte (), intent);
 					return FromHandle (handle, true);
 				}
 			}
@@ -315,13 +315,13 @@ namespace CoreGraphics {
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static unsafe /* CGImageRef */ IntPtr CGImageCreateWithPNGDataProvider (/* CGDataProviderRef */ IntPtr source,
-			/* CGFloat[] */ nfloat* decode, [MarshalAs (UnmanagedType.I1)] bool shouldInterpolate, CGColorRenderingIntent intent);
+			/* CGFloat[] */ nfloat* decode, byte shouldInterpolate, CGColorRenderingIntent intent);
 
 		public static CGImage? FromPNG (CGDataProvider provider, nfloat []? decode, bool shouldInterpolate, CGColorRenderingIntent intent)
 		{
 			unsafe {
 				fixed (nfloat* decodePtr = decode) {
-					var handle = CGImageCreateWithPNGDataProvider (provider.GetHandle (), decodePtr, shouldInterpolate, intent);
+					var handle = CGImageCreateWithPNGDataProvider (provider.GetHandle (), decodePtr, shouldInterpolate.AsByte (), intent);
 					return FromHandle (handle, true);
 				}
 			}
@@ -330,7 +330,7 @@ namespace CoreGraphics {
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static unsafe /* CGImageRef */ IntPtr CGImageMaskCreate (/* size */ nint width, /* size */ nint height,
 			/* size */ nint bitsPerComponent, /* size */ nint bitsPerPixel, /* size */ nint bytesPerRow,
-			/* CGDataProviderRef */ IntPtr provider, /* CGFloat[] */ nfloat* decode, [MarshalAs (UnmanagedType.I1)] bool shouldInterpolate);
+			/* CGDataProviderRef */ IntPtr provider, /* CGFloat[] */ nfloat* decode, byte shouldInterpolate);
 
 		public static CGImage? CreateMask (int width, int height, int bitsPerComponent, int bitsPerPixel, int bytesPerRow, CGDataProvider? provider, nfloat []? decode, bool shouldInterpolate)
 		{
@@ -345,7 +345,7 @@ namespace CoreGraphics {
 			unsafe {
 				fixed (nfloat* decodePtr = decode) {
 
-					var handle = CGImageMaskCreate (width, height, bitsPerComponent, bitsPerPixel, bytesPerRow, provider.GetHandle (), decodePtr, shouldInterpolate);
+					var handle = CGImageMaskCreate (width, height, bitsPerComponent, bitsPerPixel, bytesPerRow, provider.GetHandle (), decodePtr, shouldInterpolate.AsByte ());
 					return FromHandle (handle, true);
 				}
 			}
@@ -405,12 +405,11 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool CGImageIsMask (/* CGImageRef */ IntPtr image);
+		extern static byte CGImageIsMask (/* CGImageRef */ IntPtr image);
 
 		public bool IsMask {
 			get {
-				return CGImageIsMask (Handle);
+				return CGImageIsMask (Handle) != 0;
 			}
 		}
 
@@ -498,12 +497,11 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool CGImageGetShouldInterpolate (/* CGImageRef */ IntPtr image);
+		extern static byte CGImageGetShouldInterpolate (/* CGImageRef */ IntPtr image);
 
 		public bool ShouldInterpolate {
 			get {
-				return CGImageGetShouldInterpolate (Handle);
+				return CGImageGetShouldInterpolate (Handle) != 0;
 			}
 		}
 

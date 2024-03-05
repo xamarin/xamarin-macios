@@ -133,6 +133,8 @@
     <Compile Include="..\src\ObjCRuntime\ArgumentSemantic.cs" />
     <Compile Include="..\src\ObjCRuntime\BindAsAttribute.cs" />
     <Compile Include="..\src\ObjCRuntime\BindingImplAttribute.cs" />
+    <Compile Include="..\src\ObjCRuntime\BlockCallbackAttribute.cs" />
+    <Compile Include="..\src\ObjCRuntime\CCallbackAttribute.cs" />
     <Compile Include="..\src\ObjCRuntime\LinkWithAttribute.cs" />
     <Compile Include="..\src\ObjCRuntime\NativeAttribute.cs" />
     <Compile Include="..\src\ObjCRuntime\NativeNameAttribute.cs" />
