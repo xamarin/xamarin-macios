@@ -524,10 +524,8 @@ namespace CoreGraphics {
 		static extern byte CGPreflightListenEventAccess ();
 
 #if NET
-		[SupportedOSPlatform ("macos11.0")]
-		[SupportedOSPlatform ("maccatalyst15.0")]
-#else
-		[Mac (11,0)]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("maccatalyst")]
 #endif
 		public static bool PreflightListenEventAccess () => CGPreflightListenEventAccess () != 0;
 
@@ -552,27 +550,21 @@ namespace CoreGraphics {
 		static extern byte CGPreflightPostEventAccess ();
 
 #if NET
-		[SupportedOSPlatform ("macos11.0")]
-		[SupportedOSPlatform ("maccatalyst15.0")]
-#else
-		[Mac (11,0)]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("maccatalyst")]
 #endif
 		public static bool PreflightPostEventAccess () => CGPreflightPostEventAccess () != 0;
 
 #if NET
-		[SupportedOSPlatform ("macos11.0")]
-		[SupportedOSPlatform ("maccatalyst15.0")]
-#else
-		[Mac (11,0)]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("maccatalyst")]
 #endif
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary)]
 		static extern byte CGRequestPostEventAccess ();
 
 #if NET
-		[SupportedOSPlatform ("macos11.0")]
-		[SupportedOSPlatform ("maccatalyst15.0")]
-#else
-		[Mac (11,0)]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("maccatalyst")]
 #endif
 		public static bool RequestPostEventAccess () => CGRequestPostEventAccess () != 0;
 
