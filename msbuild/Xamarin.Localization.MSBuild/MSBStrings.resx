@@ -1533,4 +1533,13 @@
             {0}: the path to an assembly
         </comment>
     </data>
+
+    <data name="W7121" xml:space="preserve">
+        <value>Unable to parse the value '{0}' for the property 'MaxDegreeOfParallelism'. Falling back to the default value (number of processors / 2).</value>
+        <comment>
+            {0}: a developer-supplied property value.
+            MaxDegreeOfParallelism: name of the property (do not translate)
+        </comment>
+    </data>
+
 </root>
