@@ -8,6 +8,7 @@ class AsyncMethodInfo : MemberInformation {
 	public ParameterInfo [] AsyncInitialParams { get; }
 	public ParameterInfo [] AsyncCompletionParams { get; }
 	public bool HasNSError { get; }
+	public bool IsNSErrorNullable { get; }
 	public bool IsVoidAsync { get; }
 	public bool IsSingleArgAsync { get; }
 	public MethodInfo MethodInfo { get; }
@@ -24,8 +25,10 @@ class AsyncMethodInfo : MemberInformation {
 		var cbParams = lastType.GetMethod ("Invoke")?.GetParameters () ?? Array.Empty<ParameterInfo> ();
 		AsyncCompletionParams = cbParams;
 
-		if (cbParams.LastOrDefault ()?.ParameterType.Name == "NSError") {
+		var lastParam = cbParams.LastOrDefault ();
+		if (lastParam is not null && lastParam.ParameterType.Name == "NSError") {
 			HasNSError = true;
+			IsNSErrorNullable = generator.AttributeManager.HasAttribute<NullAllowedAttribute> (lastParam);
 			cbParams = cbParams.DropLast ();
 		}
 

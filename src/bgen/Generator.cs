@@ -4123,7 +4123,7 @@ public partial class Generator : IMemberGatherer {
 			return "Task";
 		var ttype = GetAsyncTaskType (minfo);
 		if (minfo.HasNSError && (ttype == "bool"))
-			ttype = "Tuple<bool,NSError>";
+			ttype = minfo.IsNSErrorNullable ? "Tuple<bool,NSError?>" : "Tuple<bool,NSError>";
 		return "Task<" + ttype + ">";
 	}
 
@@ -4215,7 +4215,7 @@ public partial class Generator : IMemberGatherer {
 			ttype = GetAsyncTaskType (minfo);
 			tuple = (minfo.HasNSError && (ttype == "bool"));
 			if (tuple)
-				ttype = "Tuple<bool,NSError>";
+				ttype = minfo.IsNSErrorNullable ? "Tuple<bool,NSError?>" : "Tuple<bool,NSError>";
 		}
 		print ("var tcs = new TaskCompletionSource<{0}> ();", ttype);
 		bool ignoreResult = !is_void &&
@@ -4247,7 +4247,7 @@ public partial class Generator : IMemberGatherer {
 		else if (tuple) {
 			var cond_name = minfo.AsyncCompletionParams [0].Name;
 			var var_name = minfo.AsyncCompletionParams.Last ().Name;
-			print ("tcs.SetResult (new Tuple<bool,NSError> ({0}_, {1}_));", cond_name, var_name);
+			print ("tcs.SetResult (new {2} ({0}_, {1}_));", cond_name, var_name, ttype);
 		} else if (minfo.IsSingleArgAsync)
 			print ("tcs.SetResult ({0}_!);", minfo.AsyncCompletionParams [0].Name);
 		else
