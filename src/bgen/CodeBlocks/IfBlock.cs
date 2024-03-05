@@ -15,10 +15,10 @@ public class IfBlock : CodeBlock {
 		Blocks.AddRange (blocks);
 	}
 
-	public IfBlock (string condition, params string[] lines)
+	public IfBlock (string condition, params string [] lines)
 	{
 		HeaderText = condition;
-		Blocks.AddRange (new CodeBlock(lines));
+		Blocks.AddRange (new CodeBlock (lines));
 	}
 
 	public IfBlock AddElseIf (string condition, List<ICodeBlock> blocks)
@@ -27,7 +27,7 @@ public class IfBlock : CodeBlock {
 		return this;
 	}
 
-	public IfBlock AddElseIf (string condition, params string[] lines)
+	public IfBlock AddElseIf (string condition, params string [] lines)
 	{
 		ElseIfBlocks.Add (new IfBlock (condition, lines));
 		return this;
@@ -39,7 +39,7 @@ public class IfBlock : CodeBlock {
 		return this;
 	}
 
-	public IfBlock AddElse (params string[] lines)
+	public IfBlock AddElse (params string [] lines)
 	{
 		ElseBlock = new CodeBlock ("else", lines);
 		return this;

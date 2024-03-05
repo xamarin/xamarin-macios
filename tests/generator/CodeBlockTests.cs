@@ -134,7 +134,7 @@ namespace GeneratorTests {
 				"{\n" +
 				"    Console.WriteLine(zooCount);\n" +
 				"}\n";
-			IfBlock ifBlock = new IfBlock("fooCount == 5") {
+			IfBlock ifBlock = new IfBlock ("fooCount == 5") {
 				"Console.WriteLine(fooCount);"
 			}.AddElseIf ("fooCount == 10",
 				"Console.WriteLine(booCount);"
@@ -159,7 +159,7 @@ namespace GeneratorTests {
 								  "        }\n" +
 								  "    }\n" +
 								  "}\n";
-			BlockContainer blockContainer = new() { "using Network;", String.Empty };
+			BlockContainer blockContainer = new () { "using Network;", String.Empty };
 			CodeBlock block = new CodeBlock ("public namespace FooSpace") {
 				new CodeBlock ("public class FooClass") {
 					"public string FooText { get; set; }",
