@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework;
@@ -147,34 +148,26 @@ namespace GeneratorTests {
 		[Test]
 		public void ComprehensiveTest ()
 		{
-			string usingText = "using Network;";
-			string namespaceText = "public namespace FooSpace";
-			string headerText = "public class FooClass";
-			string variableText = "public string FooText {get;set;}";
-			string methodName = "public void Foobinate";
-			string [] methodArguments = new [] { "int count", "bool isFoo" };
 			string expectedText = "using Network;\n" +
 								  "\n" +
 								  "public namespace FooSpace\n{\n" +
 								  "    public class FooClass\n" +
 								  "    {\n" +
-								  "        public string FooText {get;set;}\n" +
+								  "        public string FooText { get; set; }\n" +
 								  "        public void Foobinate(int count, bool isFoo)\n" +
 								  "        {\n" +
 								  "        }\n" +
 								  "    }\n" +
 								  "}\n";
-			BlockContainer blockContainer = new ();
-			blockContainer.AddLine (usingText);
-			blockContainer.AddLine ("");
-
-			CodeBlock namespaceBlock = new CodeBlock (namespaceText);
-			CodeBlock classBlock = new CodeBlock (headerText);
-			MethodBlock methodBlock = new MethodBlock (methodName, methodArguments);
-			classBlock.AddLine (variableText);
-			classBlock.Add (methodBlock);
-			namespaceBlock.Add (classBlock);
-			blockContainer.Add (namespaceBlock);
+			BlockContainer blockContainer = new() { "using Network;", String.Empty };
+			CodeBlock block = new CodeBlock ("public namespace FooSpace") {
+				new CodeBlock ("public class FooClass") {
+					"public string FooText { get; set; }",
+					new MethodBlock ("public void Foobinate",
+						"int count", "bool isFoo") { }
+				}
+			};
+			blockContainer.Add (block);
 
 			string output = PerformWriting (blockContainer);
 			Assert.AreEqual (expectedText, output);
