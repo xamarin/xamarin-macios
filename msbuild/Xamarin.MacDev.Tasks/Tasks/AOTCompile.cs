@@ -223,6 +223,12 @@ namespace Xamarin.MacDev.Tasks {
 
 		public override bool Execute ()
 		{
+			if (Assemblies.Length == 0) {
+				// Not sure how this can happen, since Assemblies is [Required], but it seems to happen once in a while.
+				Log.LogMessage (MessageImportance.Low, "Nothing to AOT-compile");
+				return true;
+			}
+
 			if (ShouldExecuteRemotely ())
 				return new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
 
