@@ -79,6 +79,10 @@ namespace DeviceDiscoveryExtension {
 
 		[NullAllowed, Export ("mediaContentSubtitle")]
 		string MediaContentSubtitle { get; set; }
+
+		[iOS (17, 0)]
+		[Export ("supportsGrouping")]
+		bool SupportsGrouping { get; set; }
 	}
 
 	[NoMac, iOS (16,0), NoMacCatalyst, NoWatch, NoTV]
