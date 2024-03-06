@@ -47,6 +47,8 @@
     <Compile Include="$(RepositoryPath)\src\ObjCRuntime\ArgumentSemantic.cs" />
     <Compile Include="$(RepositoryPath)\src\ObjCRuntime\BindAsAttribute.cs" />
     <Compile Include="$(RepositoryPath)\src\ObjCRuntime\BindingImplAttribute.cs" />
+    <Compile Include="$(RepositoryPath)\src\ObjCRuntime\BlockCallbackAttribute.cs" />
+    <Compile Include="$(RepositoryPath)\src\ObjCRuntime\CCallbackAttribute.cs" />
     <Compile Include="$(RepositoryPath)\src\ObjCRuntime\LinkWithAttribute.cs" />
     <Compile Include="$(RepositoryPath)\src\ObjCRuntime\NativeAttribute.cs" />
     <Compile Include="$(RepositoryPath)\src\ObjCRuntime\NativeNameAttribute.cs" />

@@ -1545,6 +1545,12 @@ namespace GeneratorTests {
 			Assert.AreEqual (expectedContents, contents, "Xml docs");
 		}
 
+		[Test]
+		public void DelegateParameterAttributes ()
+		{
+			BuildFile (Profile.iOS, "tests/delegate-parameter-attributes.cs");
+		}
+
 #if NET
 		[Test]
 		public void Issue19612 ()

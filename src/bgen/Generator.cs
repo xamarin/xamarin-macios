@@ -6840,12 +6840,17 @@ public partial class Generator : IMemberGatherer {
 	{
 		var pt = p.ParameterType;
 
-		string name;
+		string name = string.Empty;
+		if (AttributeManager.HasAttribute<BlockCallbackAttribute> (p))
+			name = "[BlockCallback] ";
+		else if (AttributeManager.HasAttribute<CCallbackAttribute> (p))
+			name = "[CCallback] ";
+
 		if (pt.IsByRef) {
 			pt = pt.GetElementType ();
-			name = (removeRefTypes ? "" : (p.IsOut ? "out " : "ref ")) + TypeManager.RenderType (pt, p);
+			name += (removeRefTypes ? "" : (p.IsOut ? "out " : "ref ")) + TypeManager.RenderType (pt, p);
 		} else
-			name = TypeManager.RenderType (pt, p);
+			name += TypeManager.RenderType (pt, p);
 		if (!pt.IsValueType && AttributeManager.HasAttribute<NullAllowedAttribute> (p))
 			name += "?";
 		return name;
