@@ -481,9 +481,9 @@ public class BindingTouch : IDisposable {
 			cargs.Add ("-lib:" + Path.GetDirectoryName (libraryInfo.BaseLibDll));
 		if (supportsXmlDocumentation) {
 			cargs.Add ("-doc:" + Path.ChangeExtension (tmpass, ".xml"));
-				// warning CS1591: Missing XML comment for publicly visible type or member
-				// Ignore it, because we don't expect code to have everything documented.
-				cargs.Add ("-nowarn:1591");
+			// warning CS1591: Missing XML comment for publicly visible type or member
+			// Ignore it, because we don't expect code to have everything documented.
+			cargs.Add ("-nowarn:1591");
 		}
 
 		AddNFloatUsing (cargs, tmpdir);

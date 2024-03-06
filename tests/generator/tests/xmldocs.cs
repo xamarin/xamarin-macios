@@ -59,8 +59,8 @@ namespace XmlDocumentation {
 	/// </summary>
 	[BaseType (typeof (NSObject))]
 	interface TG1<T, U>
-		where T: NSObject
-		where U: NSObject {
+		where T : NSObject
+		where U : NSObject {
 
 		/// <summary>
 		/// Summary for TG1.TGMethod

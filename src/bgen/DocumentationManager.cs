@@ -33,7 +33,7 @@ public class DocumentationManager {
 		}
 	}
 
-	public bool TryGetDocumentation (MemberInfo member, [NotNullWhen (true)] out string[]? documentation)
+	public bool TryGetDocumentation (MemberInfo member, [NotNullWhen (true)] out string []? documentation)
 	{
 		documentation = null;
 
