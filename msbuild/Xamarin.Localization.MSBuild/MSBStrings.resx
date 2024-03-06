@@ -1533,4 +1533,25 @@
             {1}: the exit code of a process
         </comment>
     </data>
+
+    <data name="E7119" xml:space="preserve">
+        <value>Task execution was cancelled.</value>
+        <comment></comment>
+    </data>
+
+    <data name="E7120" xml:space="preserve">
+        <value>Unable to compute the remote generator properties. Please file an issue at https://github.com/xamarin/xamarin-macios/issues/new and attach the following file: {0}</value>
+        <comment>
+            {0}: the path to a file
+        </comment>
+    </data>
+
+    <data name="W7121" xml:space="preserve">
+        <value>Unable to parse the value '{0}' for the property 'MaxDegreeOfParallelism'. Falling back to the default value (number of processors / 2).</value>
+        <comment>
+            {0}: a developer-supplied property value.
+            MaxDegreeOfParallelism: name of the property (do not translate)
+        </comment>
+    </data>
+
 </root>
