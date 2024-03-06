@@ -19,7 +19,7 @@
     <MicrosoftMacCatalystSdkPackageVersion>16.4.7141</MicrosoftMacCatalystSdkPackageVersion>
     <MicrosoftmacOSSdkPackageVersion>13.3.7141</MicrosoftmacOSSdkPackageVersion>
     <MicrosoftiOSSdkPackageVersion>17.2.8044</MicrosoftiOSSdkPackageVersion>
-    <MicrosofttvOSSdkPackageVersion>16.4.7141</MicrosofttvOSSdkPackageVersion>
+    <MicrosofttvOSSdkPackageVersion>17.2.8044</MicrosofttvOSSdkPackageVersion>
     <!-- This is a subscription to the .NET 8/Xcode 15.0 versions of our packages -->
     <MicrosoftMacCatalystSdknet80_170PackageVersion>17.0.8519</MicrosoftMacCatalystSdknet80_170PackageVersion>
     <MicrosoftmacOSSdknet80_140PackageVersion>14.0.8519</MicrosoftmacOSSdknet80_140PackageVersion>
