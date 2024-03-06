@@ -1133,18 +1133,21 @@ xamarin_unhandled_exception_handler (MonoObject *exc, gpointer user_data)
 	abort ();
 }
 
+thread_local int xamarin_handling_unhandled_exceptions = 0;
 static void
 exception_handler (NSException *exc)
 {
 	// COOP: We won't get here in coop-mode, because we don't set the uncaught objc exception handler in that case.
 	LOG (PRODUCT ": Received unhandled ObjectiveC exception: %@ %@", [exc name], [exc reason]);
 
-	if (xamarin_is_gc_coop) {
-		PRINT ("Uncaught Objective-C exception: %@", exc);
-		assert (false); // Re-throwing the Objective-C exception will probably just end up with infinite recursion
+	if (xamarin_handling_unhandled_exceptions == 1) {
+		PRINT ("Detected recursion when handling uncaught Objective-C exception: %@", exc);
+		abort ();
 	}
 
+	xamarin_handling_unhandled_exceptions = 1;
 	xamarin_throw_ns_exception (exc);
+	xamarin_handling_unhandled_exceptions = 0;
 }
 
 #if defined (DEBUG)
