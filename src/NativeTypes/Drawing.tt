@@ -28,6 +28,7 @@ using System;
 using System.Drawing;
 #endif
 using System.Globalization;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 using Foundation;
@@ -173,7 +174,10 @@ namespace CoreGraphics
 			   	<#= type.ArgName #> = Empty;
 				return false;
 			}
-			return NativeDrawingMethods.<#= type.Name #>MakeWithDictionaryRepresentation (dictionaryRepresentation.Handle, out <#=type.ArgName#>);
+			unsafe {
+				<#=type.ArgName#> = default;
+				return NativeDrawingMethods.<#= type.Name #>MakeWithDictionaryRepresentation (dictionaryRepresentation.Handle, (<#= type.Name #> *) Unsafe.AsPointer<<#= type.Name #>> (ref <#=type.ArgName#>)) != 0;
+			}
 		}
 
 		public NSDictionary ToDictionary ()
@@ -604,7 +608,10 @@ namespace CoreGraphics
 			   	rect = Empty;
 				return false;
 			}
-			return NativeDrawingMethods.CGRectMakeWithDictionaryRepresentation (dictionaryRepresentation.Handle, out rect);
+			rect = default;
+			unsafe {
+				return NativeDrawingMethods.CGRectMakeWithDictionaryRepresentation (dictionaryRepresentation.Handle, (CGRect *) Unsafe.AsPointer<CGRect> (ref rect)) != 0;
+			}
 		}
 
 		public NSDictionary ToDictionary ()
@@ -622,14 +629,11 @@ namespace CoreGraphics
 		internal const string CG = Constants.CoreGraphicsLibrary;
 #endif
 		[DllImport (CG)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		internal extern static bool CGRectMakeWithDictionaryRepresentation (IntPtr dict, out CGRect rect);
+		internal unsafe extern static byte CGRectMakeWithDictionaryRepresentation (IntPtr dict, CGRect* rect);
 		[DllImport (CG)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		internal extern static bool CGPointMakeWithDictionaryRepresentation (IntPtr dict, out CGPoint point);
+		internal unsafe extern static byte CGPointMakeWithDictionaryRepresentation (IntPtr dict, CGPoint* point);
 		[DllImport (CG)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		internal extern static bool CGSizeMakeWithDictionaryRepresentation (IntPtr dict, out CGSize point);
+		internal unsafe extern static byte CGSizeMakeWithDictionaryRepresentation (IntPtr dict, CGSize* point);
 
 		[DllImport (CG)]
 		internal extern static IntPtr CGRectCreateDictionaryRepresentation (CGRect rect);
