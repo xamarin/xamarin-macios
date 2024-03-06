@@ -23,6 +23,7 @@ using NativeHandle = System.IntPtr;
 
 namespace DeviceDiscoveryUI {
 
+	[Internal]
 	delegate void _DevicePickerCompletionHandler ([NullAllowed] OS_nw_endpoint endpoint, [NullAllowed] OS_nw_error error);
 
 	[NoMac, NoiOS, NoMacCatalyst, NoWatch, TV (16,0)]
