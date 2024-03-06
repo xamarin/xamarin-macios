@@ -9,10 +9,10 @@ NO_INSTALL_NAME_TOOL_SkipInstallNameTool=1
 # a few lookup tables, because the data we have is not always in the format we need it
 
 COMMON_ARGS=-g -gdwarf-2 -fms-extensions shared.c -Wall
-iphonesimulator_COMPILER_FLAGS=$(COMMON_ARGS) -mios-simulator-version-min=8.0 -isysroot $(SIMULATOR_SDK)
-iphoneos_COMPILER_FLAGS=$(COMMON_ARGS) -miphoneos-version-min=8.0 -isysroot $(DEVICE_SDK)
-tvsimulator_COMPILER_FLAGS=$(COMMON_ARGS) -mtvos-simulator-version-min=9.0 -isysroot $(SIMULATORTV_SDK)
-tvos_COMPILER_FLAGS=$(COMMON_ARGS) -mtvos-version-min=9.0 -isysroot $(DEVICETV_SDK)
+iphonesimulator_COMPILER_FLAGS=$(COMMON_ARGS) -mios-simulator-version-min=$(MIN_IOS_SDK_VERSION) -isysroot $(SIMULATOR_SDK)
+iphoneos_COMPILER_FLAGS=$(COMMON_ARGS) -miphoneos-version-min=$(MIN_IOS_SDK_VERSION) -isysroot $(DEVICE_SDK)
+tvsimulator_COMPILER_FLAGS=$(COMMON_ARGS) -mtvos-simulator-version-min=$(MIN_TVOS_SDK_VERSION) -isysroot $(SIMULATORTV_SDK)
+tvos_COMPILER_FLAGS=$(COMMON_ARGS) -mtvos-version-min=$(MIN_TVOS_SDK_VERSION) -isysroot $(DEVICETV_SDK)
 maccatalyst_COMPILER_FLAGS=$(COMMON_ARGS) $(MACCATALYST_COMMON_CFLAGS)
 mac_COMPILER_FLAGS=$(COMMON_ARGS) -mmacosx-version-min=$(MIN_OSX_VERSION_FOR_MAC) -isysroot $(XCODE_DEVELOPER_ROOT)/Platforms/MacOSX.platform/Developer/SDKs/MacOSX$(OSX_SDK_VERSION).sdk
 
