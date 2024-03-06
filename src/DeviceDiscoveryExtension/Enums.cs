@@ -67,7 +67,7 @@ namespace DeviceDiscoveryExtension {
 		Internal = 350004,
 		MissingEntitlement = 350005,
 		Permission = 350006,
-		Next,
+		// Next, // don't bind 'Next', it's not static and we'd have to break compat if it were ever to change
 	}
 
 	[NoMac, iOS (16,0), NoMacCatalyst, NoWatch, NoTV]
