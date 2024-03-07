@@ -1434,6 +1434,12 @@ namespace GeneratorTests {
 			BuildFile (Profile.iOS, "tests/internal-delegate.cs");
 		}
 
+		[Test]
+		public void DelegateParameterAttributes ()
+		{
+			BuildFile (Profile.iOS, "tests/delegate-parameter-attributes.cs");
+		}
+
 #if NET
 		[Test]
 		public void Issue19612 ()
