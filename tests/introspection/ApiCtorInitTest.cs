@@ -138,6 +138,8 @@ namespace Introspection {
 			case "PKIdentityButton":
 				return true;
 #endif
+			case "SACrashDetectionManager": // requires a specific entitlement
+				return true;
 			}
 
 #if !NET
