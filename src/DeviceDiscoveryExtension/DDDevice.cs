@@ -20,7 +20,7 @@ namespace DeviceDiscoveryExtension {
 	public partial class DDDevice {
 		public NWEndpoint? NetworkEndpoint {
 			get => _NetworkEndpoint != nw_endpoint_t.Zero ? new NWEndpoint (_NetworkEndpoint, false) : null;
-			set => _NetworkEndpoint = value.GetHandle();
+			set => _NetworkEndpoint = value.GetHandle ();
 		}
 	}
 }

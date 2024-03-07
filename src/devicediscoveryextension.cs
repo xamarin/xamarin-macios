@@ -21,9 +21,8 @@ using NativeHandle = System.IntPtr;
 namespace DeviceDiscoveryExtension {
 
 	[Static]
-	[NoMac, iOS (16,0), NoMacCatalyst, NoWatch, NoTV]
-	interface DDDeviceProtocolStrings
-	{
+	[NoMac, iOS (16, 0), NoMacCatalyst, NoWatch, NoTV]
+	interface DDDeviceProtocolStrings {
 		[Field ("DDDeviceProtocolStringInvalid")]
 		NSString Invalid { get; }
 
@@ -31,11 +30,10 @@ namespace DeviceDiscoveryExtension {
 		NSString Dial { get; }
 	}
 
-	[NoMac, iOS (16,0), NoMacCatalyst, NoWatch, NoTV]
+	[NoMac, iOS (16, 0), NoMacCatalyst, NoWatch, NoTV]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface DDDevice
-	{
+	interface DDDevice {
 		[Export ("initWithDisplayName:category:protocolType:identifier:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (string displayName, DDDeviceCategory category, UTType protocolType, string identifier);
@@ -85,11 +83,10 @@ namespace DeviceDiscoveryExtension {
 		bool SupportsGrouping { get; set; }
 	}
 
-	[NoMac, iOS (16,0), NoMacCatalyst, NoWatch, NoTV]
+	[NoMac, iOS (16, 0), NoMacCatalyst, NoWatch, NoTV]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface DDDeviceEvent
-	{
+	interface DDDeviceEvent {
 		[Export ("initWithEventType:device:")]
 		NativeHandle Constructor (DDEventType type, DDDevice device);
 
@@ -100,10 +97,9 @@ namespace DeviceDiscoveryExtension {
 		DDEventType EventType { get; }
 	}
 
-	[NoMac, iOS (16,0), NoMacCatalyst, NoWatch, NoTV]
+	[NoMac, iOS (16, 0), NoMacCatalyst, NoWatch, NoTV]
 	[BaseType (typeof (NSObject))]
-	interface DDDiscoverySession
-	{
+	interface DDDiscoverySession {
 		[Export ("reportEvent:")]
 		void ReportEvent (DDDeviceEvent inEvent);
 	}

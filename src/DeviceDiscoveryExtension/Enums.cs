@@ -14,18 +14,16 @@ using Foundation;
 
 namespace DeviceDiscoveryExtension {
 
-	[NoMac, iOS (16,0), NoMacCatalyst, NoWatch, NoTV]
+	[NoMac, iOS (16, 0), NoMacCatalyst, NoWatch, NoTV]
 	[Native]
-	public enum DDDeviceProtocol : long
-	{
+	public enum DDDeviceProtocol : long {
 		Invalid = 0,
 		Dial = 1,
 	}
 
-	[NoMac, iOS (16,0), NoMacCatalyst, NoWatch, NoTV]
+	[NoMac, iOS (16, 0), NoMacCatalyst, NoWatch, NoTV]
 	[Native]
-	public enum DDDeviceCategory : long
-	{
+	public enum DDDeviceCategory : long {
 		HiFiSpeaker = 0,
 		HiFiSpeakerMultiple = 1,
 		TvWithMediaBox = 2,
@@ -34,10 +32,9 @@ namespace DeviceDiscoveryExtension {
 		DesktopComputer = 5,
 	}
 
-	[NoMac, iOS (16,0), NoMacCatalyst, NoWatch, NoTV]
+	[NoMac, iOS (16, 0), NoMacCatalyst, NoWatch, NoTV]
 	[Native]
-	public enum DDDeviceState : long
-	{
+	public enum DDDeviceState : long {
 		Invalid = 0,
 		Activating = 10,
 		Activated = 20,
@@ -45,20 +42,18 @@ namespace DeviceDiscoveryExtension {
 		Invalidating = 30,
 	}
 
-	[NoMac, iOS (16,0), NoMacCatalyst, NoWatch, NoTV]
+	[NoMac, iOS (16, 0), NoMacCatalyst, NoWatch, NoTV]
 	[Native]
-	public enum DDDeviceMediaPlaybackState : long
-	{
+	public enum DDDeviceMediaPlaybackState : long {
 		NoContent = 0,
 		Paused = 1,
 		Playing = 2,
-	}	
+	}
 
-	[NoMac, iOS (16,0), NoMacCatalyst, NoWatch, NoTV]
+	[NoMac, iOS (16, 0), NoMacCatalyst, NoWatch, NoTV]
 	[ErrorDomain ("DDErrorDomain")]
 	[Native]
-	public enum DDErrorCode : long
-	{
+	public enum DDErrorCode : long {
 		Success = 0,
 		Unknown = 350000,
 		BadParameter = 350001,
@@ -70,10 +65,9 @@ namespace DeviceDiscoveryExtension {
 		// Next, // don't bind 'Next', it's not static and we'd have to break compat if it were ever to change
 	}
 
-	[NoMac, iOS (16,0), NoMacCatalyst, NoWatch, NoTV]
+	[NoMac, iOS (16, 0), NoMacCatalyst, NoWatch, NoTV]
 	[Native]
-	public enum DDEventType : long
-	{
+	public enum DDEventType : long {
 		Unknown = 0,
 		DeviceFound = 40,
 		DeviceLost = 41,
