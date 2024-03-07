@@ -10,7 +10,7 @@ using Xamarin.Messaging.Build.Client;
 using Xamarin.Utils;
 
 namespace Xamarin.MacDev.Tasks {
-	public class ScnTool : XamarinTask {
+	public class ScnTool : XamarinParallelTask {
 		#region Inputs
 
 		[Required]
@@ -95,7 +95,7 @@ namespace Xamarin.MacDev.Tasks {
 				bundleResources.Add (bundleResource);
 			}
 
-			Parallel.ForEach (listOfArguments, (arg) => {
+			ForEach (listOfArguments, (arg) => {
 				ExecuteAsync ("xcrun", arg.Arguments, sdkDevPath: SdkDevPath).Wait ();
 			});
 
