@@ -105,7 +105,7 @@ namespace CoreGraphics {
 			using var keyPtr = new TransientString (key);
 			result = default;
 			unsafe {
-				return CGPDFDictionaryGetInteger (Handle, keyPtr, (nint *) Unsafe.AsPointer<nint> (ref result)) != 0;
+				return CGPDFDictionaryGetInteger (Handle, keyPtr, (nint*) Unsafe.AsPointer<nint> (ref result)) != 0;
 			}
 		}
 
@@ -122,7 +122,7 @@ namespace CoreGraphics {
 			using var keyPtr = new TransientString (key);
 			result = default;
 			unsafe {
-				return CGPDFDictionaryGetNumber (Handle, keyPtr, (nfloat *) Unsafe.AsPointer<nfloat> (ref result)) != 0;
+				return CGPDFDictionaryGetNumber (Handle, keyPtr, (nfloat*) Unsafe.AsPointer<nfloat> (ref result)) != 0;
 			}
 		}
 
