@@ -1659,7 +1659,9 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 
 		<PropertyGroup>
 			<_CompiledApiDefinitionAssembly>$(DeviceSpecificIntermediateOutputPath)compiled-api-definitions.dll</_CompiledApiDefinitionAssembly>
+			<_CompiledApiDefinitionNoWarn>$(_CompiledApiDefinitionNoWarn);436</_CompiledApiDefinitionNoWarn>
 			<_CompiledApiDefinitionDocumentationFile>$(DeviceSpecificIntermediateOutputPath)compiled-api-definitions.xml</_CompiledApiDefinitionDocumentationFile>
+			<_CompiledApiDefinitionNoWarn>$(_CompiledApiDefinitionNoWarn);1591</_CompiledApiDefinitionNoWarn> <!-- Don't expect every public API to have documentation -->
 			<_CompiledApiDefinitionDefines>$(DefineConstants)</_CompiledApiDefinitionDefines>
 			<_CompiledApiDefinitionDefines Condition="'$(UsingAppleNETSdk)' == 'true'">$(_CompiledApiDefinitionDefines);NET</_CompiledApiDefinitionDefines>
 
@@ -1708,7 +1710,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			AllowUnsafeBlocks="true"
 			DebugType="portable"
 			DefineConstants="$(_CompiledApiDefinitionDefines)"
-			DisabledWarnings="436"
+			DisabledWarnings="$(_CompiledApiDefinitionNoWarn)"
 			DocumentationFile="$(_CompiledApiDefinitionDocumentationFile)"
 			NoConfig="true"
 			NoStandardLib="true"
