@@ -2257,6 +2257,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		<Codesign
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
+			MaxDegreeOfParallelism="$(CodesignMaxDegreeOfParallelism)"
 			Resources="@(_ComputedCodesignItems)"
 			ToolExe="$(CodesignExe)"
 			ToolPath="$(CodesignPath)"
