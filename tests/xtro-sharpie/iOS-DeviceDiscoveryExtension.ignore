@@ -4,3 +4,6 @@
 !missing-pinvoke! DDDeviceProtocolToString is not bound
 !missing-pinvoke! DDDeviceStateToString is not bound
 !missing-pinvoke! DDEventTypeToString is not bound
+
+## This is a non-constant enum value, so we're not binding it so that we don't have to break compat in the future
+!missing-enum-value! DDErrorCode native value DDErrorCodeNext = 350007 not bound
