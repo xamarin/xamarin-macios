@@ -9,7 +9,7 @@
 
 #nullable enable
 
-#if __IOS__
+#if __IOS__ && !__MACCATALYST__
 
 using System;
 using DeviceDiscoveryExtension;

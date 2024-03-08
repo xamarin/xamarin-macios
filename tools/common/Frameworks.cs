@@ -691,6 +691,7 @@ public class Frameworks : Dictionary<string, Framework> {
 					f.Version = v16_1;
 					break;
 				// These frameworks are not available on Mac Catalyst
+				case "DeviceDiscoveryExtension":
 				case "OpenGLES":
 				case "NewsstandKit":
 				case "MediaSetup":
