@@ -1133,6 +1133,36 @@ namespace Xamarin.Tests {
 		[TestCase (ApplePlatform.TVOS, "tvossimulator-arm64")]
 		[TestCase (ApplePlatform.MacOSX, "osx-arm64")]
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64")]
+		public void BuildNetFutureApp (ApplePlatform platform, string runtimeIdentifiers)
+		{
+			// Builds an app with a higher .NET version than we support (for instance 'net9.0-ios' when we support 'net8.0-ios')
+			var project = "MySimpleApp";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
+
+			var majorNetVersion = Version.Parse (Configuration.DotNetTfm.Replace ("net", "")).Major;
+			var netVersion = $"net{majorNetVersion + 1}.0";
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath, netVersion: netVersion);
+			Clean (project_path);
+			var properties = GetDefaultProperties (runtimeIdentifiers);
+			var targetFramework = platform.ToFramework (netVersion);
+			properties ["TargetFramework"] = targetFramework;
+			properties ["ExcludeNUnitLiteReference"] = "true";
+			properties ["ExcludeTouchUnitReference"] = "true";
+
+			var result = DotNet.AssertBuildFailure (project_path, properties);
+			var errors = BinLog.GetBuildLogErrors (result.BinLogPath).ToList ();
+
+			AssertErrorMessages (errors,
+				$"The current .NET SDK does not support targeting .NET {majorNetVersion + 1}.0.  Either target .NET {majorNetVersion}.0 or lower, or use a version of the .NET SDK that supports .NET {majorNetVersion + 1}.0. Download the .NET SDK from https://aka.ms/dotnet/download");
+		}
+
+		[Test]
+		[TestCase (ApplePlatform.iOS, "iossimulator-x64")]
+		[TestCase (ApplePlatform.iOS, "ios-arm64")]
+		[TestCase (ApplePlatform.TVOS, "tvossimulator-arm64")]
+		[TestCase (ApplePlatform.MacOSX, "osx-arm64")]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64")]
 		public void BuildNet7_0App (ApplePlatform platform, string runtimeIdentifiers)
 		{
 			var tfm = "net7.0";

@@ -12,7 +12,7 @@ using Xamarin.Messaging.Build.Client;
 #nullable enable
 
 namespace Xamarin.MacDev.Tasks {
-	public class SymbolStrip : XamarinTask, ITaskCallback {
+	public class SymbolStrip : XamarinParallelTask, ITaskCallback {
 		#region Inputs
 
 		[Required]
@@ -60,7 +60,7 @@ namespace Xamarin.MacDev.Tasks {
 			if (ShouldExecuteRemotely ())
 				return new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
 
-			Parallel.ForEach (Executable, new ParallelOptions { MaxDegreeOfParallelism = Math.Max (Environment.ProcessorCount / 2, 1) }, (item) => {
+			ForEach (Executable, (item) => {
 				ExecuteStrip (item);
 			});
 
