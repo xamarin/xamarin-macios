@@ -361,7 +361,11 @@ namespace CoreBluetooth {
 #endif
 
 		[Export ("centralManager:didDiscoverPeripheral:advertisementData:RSSI:"), EventArgs ("CBDiscoveredPeripheral")]
+#if XAMCORE_5_0
+		void DiscoveredPeripheral (CBCentralManager central, CBPeripheral peripheral, NSDictionary advertisementData, NSNumber rssi);
+#else
 		void DiscoveredPeripheral (CBCentralManager central, CBPeripheral peripheral, NSDictionary advertisementData, NSNumber RSSI);
+#endif
 
 		[Export ("centralManager:didConnectPeripheral:"), EventArgs ("CBPeripheral")]
 		void ConnectedPeripheral (CBCentralManager central, CBPeripheral peripheral);
