@@ -140,7 +140,7 @@ namespace CoreGraphics {
 			major = default;
 			minor = default;
 			unsafe {
-				CGPDFDocumentGetVersion (Handle, (int *) Unsafe.AsPointer<int> (ref major), (int *) Unsafe.AsPointer<int> (ref minor));
+				CGPDFDocumentGetVersion (Handle, (int*) Unsafe.AsPointer<int> (ref major), (int*) Unsafe.AsPointer<int> (ref minor));
 			}
 		}
 
