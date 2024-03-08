@@ -189,11 +189,11 @@ IOS_DEVICE_ARCHITECTURES+=arm64
 # 4: platform name
 # 5: min version
 # 6: os
-$(eval $(call Template,iphonesimulator,IOSSIMULATOR,$(IOS_SIMULATOR_ARCHITECTURES),iPhoneSimulator,-mios-simulator-version-min=8.0 -isysroot $(SIMULATOR_SDK)))
-$(eval $(call Template,iphoneos,IPHONEOS,$(IOS_DEVICE_ARCHITECTURES),iPhoneOS,-miphoneos-version-min=8.0 -isysroot $(DEVICE_SDK)))
+$(eval $(call Template,iphonesimulator,IOSSIMULATOR,$(IOS_SIMULATOR_ARCHITECTURES),iPhoneSimulator,-mios-simulator-version-min=$(MIN_IOS_SDK_VERSION) -isysroot $(SIMULATOR_SDK)))
+$(eval $(call Template,iphoneos,IPHONEOS,$(IOS_DEVICE_ARCHITECTURES),iPhoneOS,-miphoneos-version-min=$(MIN_IOS_SDK_VERSION) -isysroot $(DEVICE_SDK)))
 ifdef INCLUDE_TVOS
-$(eval $(call Template,tvsimulator,TVSIMULATOR,x86_64 arm64,AppleTVSimulator,-mtvos-simulator-version-min=9.0 -isysroot $(SIMULATORTV_SDK)))
-$(eval $(call Template,tvos,TVOS,arm64,AppleTVOS,-mtvos-version-min=9.0 -isysroot $(DEVICETV_SDK)))
+$(eval $(call Template,tvsimulator,TVSIMULATOR,x86_64 arm64,AppleTVSimulator,-mtvos-simulator-version-min=$(MIN_TVOS_SDK_VERSION) -isysroot $(SIMULATORTV_SDK)))
+$(eval $(call Template,tvos,TVOS,arm64,AppleTVOS,-mtvos-version-min=$(MIN_TVOS_SDK_VERSION) -isysroot $(DEVICETV_SDK)))
 endif
 ifdef INCLUDE_WATCH
 ifdef WATCHOS_SUPPORTS_32BIT_SIMULATOR_ARCHITECTURES
