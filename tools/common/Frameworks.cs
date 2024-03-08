@@ -646,6 +646,7 @@ public class Frameworks : Dictionary<string, Framework> {
 #if !NET
 					{ "Chip", "CHIP", new Version (15, 0), NotAvailableInSimulator /* no headers in beta 2 */ },
 #endif
+					{ "DeviceDiscoveryUI", "DeviceDiscoveryUI", 16,0 },
 					{ "OSLog", "OSLog", 15,0 },
 					{ "CoreMidi", "CoreMIDI", 15,0 },
 					{ "ShazamKit", "ShazamKit", new Version (15, 0), NotAvailableInSimulator},
@@ -655,7 +656,7 @@ public class Frameworks : Dictionary<string, Framework> {
 					{ "Cinematic", "Cinematic", new Version (17, 0), NotAvailableInSimulator },
 					{ "Symbols", "Symbols", 17, 0 },
 					{ "NetworkExtension", "NetworkExtension", 17, 0 },
-		  { "Phase", "PHASE", new Version (17,0), NotAvailableInSimulator },
+					{ "Phase", "PHASE", new Version (17,0), NotAvailableInSimulator },
 				};
 			}
 			return tvos_frameworks;
