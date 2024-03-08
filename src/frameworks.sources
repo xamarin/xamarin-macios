@@ -734,6 +734,11 @@ DEVICEDISCOVERYEXTENSION_API_SOURCES = \
 DEVICEDISCOVERYEXTENSION_SOURCES = \
 	DeviceDiscoveryExtension/DDDevice.cs \
 
+# DeviceDiscoveryUI
+
+DEVICEDISCOVERYUI_SOURCES = \
+	DeviceDiscoveryUI/DDDevicePickerViewController.cs \
+
 # EventKit
 
 EVENTKIT_API_SOURCES = \
@@ -2327,6 +2332,7 @@ TVOS_FRAMEWORKS =           \
 	CoreLocation            \
 	CoreSpotlight			\
 	CoreText                \
+	DeviceDiscoveryUI		\
 	ExternalAccessory       \
 	GLKit                   \
 	GameController          \

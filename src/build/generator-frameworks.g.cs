@@ -367,6 +367,7 @@ partial class Frameworks {
 		"CoreText",
 		"CoreVideo",
 		"DeviceCheck",
+		"DeviceDiscoveryUI",
 		"ExternalAccessory",
 		"Foundation",
 		"GameController",
@@ -605,6 +606,7 @@ partial class Frameworks {
 	bool? _CoreWlan;
 	bool? _DeviceCheck;
 	bool? _DeviceDiscoveryExtension;
+	bool? _DeviceDiscoveryUI;
 	bool? _EventKit;
 	bool? _EventKitUI;
 	bool? _ExecutionPolicy;
@@ -771,6 +773,7 @@ partial class Frameworks {
 	public bool HaveCoreWlan { get { if (!_CoreWlan.HasValue) _CoreWlan = GetValue ("CoreWlan"); return _CoreWlan.Value; } }
 	public bool HaveDeviceCheck { get { if (!_DeviceCheck.HasValue) _DeviceCheck = GetValue ("DeviceCheck"); return _DeviceCheck.Value; } }
 	public bool HaveDeviceDiscoveryExtension { get { if (!_DeviceDiscoveryExtension.HasValue) _DeviceDiscoveryExtension = GetValue ("DeviceDiscoveryExtension"); return _DeviceDiscoveryExtension.Value; } }
+	public bool HaveDeviceDiscoveryUI { get { if (!_DeviceDiscoveryUI.HasValue) _DeviceDiscoveryUI = GetValue ("DeviceDiscoveryUI"); return _DeviceDiscoveryUI.Value; } }
 	public bool HaveEventKit { get { if (!_EventKit.HasValue) _EventKit = GetValue ("EventKit"); return _EventKit.Value; } }
 	public bool HaveEventKitUI { get { if (!_EventKitUI.HasValue) _EventKitUI = GetValue ("EventKitUI"); return _EventKitUI.Value; } }
 	public bool HaveExecutionPolicy { get { if (!_ExecutionPolicy.HasValue) _ExecutionPolicy = GetValue ("ExecutionPolicy"); return _ExecutionPolicy.Value; } }

@@ -175,7 +175,11 @@ namespace QuickLookUI {
 		[Abstract]
 #endif
 		[Export ("preparePreviewOfSearchableItemWithIdentifier:queryString:completionHandler:")]
+#if XAMCORE_5_0
+		void PreparePreviewOfSearchableItem (string identifier, string queryString, Action<NSError> itemLoadingHandler);
+#else
 		void PreparePreviewOfSearchableItem (string identifier, string queryString, Action<NSError> ItemLoadingHandler);
+#endif
 
 		[Export ("preparePreviewOfFileAtURL:completionHandler:")]
 		void PreparePreviewOfFile (NSUrl url, Action<NSError> completionHandler);
