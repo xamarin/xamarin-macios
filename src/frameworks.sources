@@ -726,6 +726,11 @@ COREWLAN_SOURCES = \
 	CoreWlan/CWInterface.cs \
 	CoreWlan/CWKeychain.cs \
 
+# DeviceDiscoveryUI
+
+DEVICEDISCOVERYUI_SOURCES = \
+	DeviceDiscoveryUI/DDDevicePickerViewController.cs \
+
 # EventKit
 
 EVENTKIT_API_SOURCES = \
@@ -1928,6 +1933,8 @@ SHARED_CORE_SOURCES = \
 	ObjCRuntime/ArgumentSemantic.cs \
 	ObjCRuntime/BindAsAttribute.cs \
 	ObjCRuntime/Blocks.cs \
+	ObjCRuntime/BlockCallbackAttribute.cs \
+	ObjCRuntime/CCallbackAttribute.cs \
 	ObjCRuntime/Class.cs \
 	ObjCRuntime/Constants.cs \
 	ObjCRuntime/DisposableObject.cs \
@@ -2316,6 +2323,7 @@ TVOS_FRAMEWORKS =           \
 	CoreLocation            \
 	CoreSpotlight			\
 	CoreText                \
+	DeviceDiscoveryUI		\
 	ExternalAccessory       \
 	GLKit                   \
 	GameController          \

@@ -1070,6 +1070,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			Condition="'$(IsMacEnabled)' == 'true'"
 			DeviceSpecificIntermediateOutputPath="$(DeviceSpecificIntermediateOutputPath)"
 			IsWatchApp="$(IsWatchApp)"
+			MaxDegreeOfParallelism="$(ColladaMaxDegreeOfParallelism)"
 			ProjectDir="$(MSBuildProjectDirectory)"
 			ResourcePrefix="$(_ResourcePrefix)"
 			SdkPlatform="$(_SdkPlatform)"
@@ -2257,6 +2258,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		<Codesign
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
+			MaxDegreeOfParallelism="$(CodesignMaxDegreeOfParallelism)"
 			Resources="@(_ComputedCodesignItems)"
 			ToolExe="$(CodesignExe)"
 			ToolPath="$(CodesignPath)"
@@ -2770,6 +2772,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			Condition="'$(IsMacEnabled)' == 'true'"
 			Executable="$(_AppContainerDir)%(_NativeStripItems.Identity)"
 			Kind="%(_NativeStripItems.Kind)"
+			MaxDegreeOfParallelism="$(SymbolStripMaxDegreeOfParallelism)"
 			SymbolFile="%(_NativeStripItems.SymbolFile)"
 		/>
 
