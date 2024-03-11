@@ -138,6 +138,8 @@ namespace Xamarin.Mac.Tests {
 			}
 
 			switch (t.Namespace) {
+			case "SafetyKit":
+				return true; // SafetyKit requires a custom entitlement, and will throw exceptions if it's not present.
 			case "QTKit":
 				return true; // QTKit has been removed from macos.
 			}
