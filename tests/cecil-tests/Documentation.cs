@@ -148,6 +148,8 @@ namespace Cecil.Tests {
 
 		// https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/xmldoc/#id-strings
 		// See src/bgen/DocumentationManager.cs for an implementation that works with System.Reflection.
+		// There's already an implementation in Roslyn, but that's a rather heavy dependency,
+		// so we're implementing this in our own code instead.
 
 		static string GetDocId (MethodDefinition md)
 		{

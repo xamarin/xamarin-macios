@@ -4395,8 +4395,6 @@ public partial class Generator : IMemberGatherer {
 			}
 		}
 
-		// If we're an extension method, the caller must write the xml doc, because we might an extension method for a property,
-		// in which case we need to look for the xml doc for the property (which the caller is better suited for).
 		if (minfo.is_extension_method) {
 			var property = GetProperty (minfo.Method);
 			if (property is not null) {

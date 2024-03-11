@@ -37,10 +37,8 @@ public class DocumentationManager {
 	{
 		documentation = null;
 
-		if (doc is null) {
-			Console.WriteLine ($"No doc!");
+		if (doc is null)
 			return false;
-		}
 
 		if (!TryGetId (member, out var id))
 			return false;
@@ -62,6 +60,9 @@ public class DocumentationManager {
 
 	// https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/xmldoc/#id-strings
 	// See tests/cecil-tests/Documentation.cs for an implementation that works with Cecil.
+	// There's already an implementation in Roslyn, but that's a rather heavy dependency,
+	// so we're implementing this in our own code instead.
+
 	static string GetDocId (MethodInfo md)
 	{
 		var methodName = md.Name.Replace ('.', '#');
@@ -175,20 +176,5 @@ public class DocumentationManager {
 		}
 
 		return name.ToString ();
-	}
-}
-
-public static class Extensions {
-	public static void LoadWithoutNetworkAccess (this XmlDocument doc, string filename)
-	{
-		using (var fs = new FileStream (filename, FileMode.Open, FileAccess.Read)) {
-			var settings = new XmlReaderSettings () {
-				XmlResolver = null,
-				DtdProcessing = DtdProcessing.Parse,
-			};
-			using (var reader = XmlReader.Create (fs, settings)) {
-				doc.Load (reader);
-			}
-		}
 	}
 }
