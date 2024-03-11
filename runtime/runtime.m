@@ -1134,7 +1134,7 @@ xamarin_unhandled_exception_handler (MonoObject *exc, gpointer user_data)
 }
 
 extern "C" {
-	thread_local int xamarin_handling_unhandled_exceptions = 0;
+	static thread_local int xamarin_handling_unhandled_exceptions = 0;
 }
 
 static void
