@@ -1133,7 +1133,10 @@ xamarin_unhandled_exception_handler (MonoObject *exc, gpointer user_data)
 	abort ();
 }
 
-thread_local int xamarin_handling_unhandled_exceptions = 0;
+extern "C" {
+	thread_local int xamarin_handling_unhandled_exceptions = 0;
+}
+
 static void
 exception_handler (NSException *exc)
 {
