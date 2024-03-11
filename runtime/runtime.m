@@ -2375,6 +2375,14 @@ xamarin_process_managed_exception (MonoObject *exception)
 			xamarin_gchandle_free (exception_gchandle);
 		}
 
+		// If we end up here as part of an unhandled Objective-C exception, we're also trying to detect an infinite loop by
+		// setting the xamarin_handling_unhandled_exceptions variable to 1 before processing the unhandled Objective-C exception,
+		// and clearing it afterwards. However, the clearing of the variable will never happen if Mono unwinds native
+		// stack frames, and then on the next unhandled Objective-C exception we'll think we're recursing when we're really not.
+		// (FWIW this is yet another reason why letting Mono unhandled native frames is a really bad idea).
+		// So here we work around that by clearing the variable before letting Mono unwind native frames.
+		xamarin_handling_unhandled_exceptions = 0;
+
 		mono_raise_exception ((MonoException *) exception);
 #endif
 		break;
