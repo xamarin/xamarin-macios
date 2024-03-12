@@ -12,14 +12,14 @@ You must review your native code, C# code, and data collection and tracking prac
 
 * If your application includes the [C# .NET APIs][C#NETAPIs] that call certain APIs listed in the Apple’s [Required Reason API][RequiredReasonAPI] categories, then you must assess your product for the API usage. For assessing what constitutes as part of data collection and tracking practices, refer to Apple’s documentation on [privacy manifest files][PrivacyManifestFiles]. **Note:** It’s your responsibility to assess your use of each of these APIs and declare the applicable reasons for using them.
 
-Depending on whether you’re using [.NET for iOS or .NET MAUI to develop an application](#privacy-manifest-for-net-maui-and-net-for-ios-applications) or providing [ObjectiveC or Swift Binding packages](#privacy-manifest-for-binding-projects) to use with .NET MAUI applications, the requirement for providing a privacy manifest file might differ.
+Depending on whether you’re using [.NET for iOS or .NET MAUI to develop an application](#privacy-manifest-for-net-maui-and-net-for-ios-or-tvos-applications) or providing [ObjectiveC or Swift Binding packages](#privacy-manifest-for-binding-projects) to use with .NET MAUI applications, the requirement for providing a privacy manifest file might differ.
 
 **Note:** The above guidelines are provided for your convenience. It’s important that you review Apple’s documentation on [privacy manifest files][PrivacyManifestFiles] before creating a privacy manifest for your project.
 
 **Important:**
 The following information is proivided based on Apple's documentation as of March 2024. It is recommended that you review Apple’s documentation on [privacy manifest files][PrivacyManifestFiles] when creating a privacy manifest for your project to ensure you are using the most recent guidelines. If you find any discrepancies in the information below, please [file a bug](https://github.com/dotnet/maui/issues) and include the API in question.
 
-## Privacy manifest for .NET MAUI and .NET for iOS applications  
+## Privacy manifest for .NET MAUI and .NET for iOS or tvOS applications  
 If you’re developing an application using .NET MAUI, consider the following steps:
 
 1. Assess if your native application code uses any of the following APIs:
