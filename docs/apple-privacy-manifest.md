@@ -139,7 +139,7 @@ For example, if you use any of the API's listed above, your `PrivacyInfo.xcpriva
 
 ### [Disk space APIs][DiskSpaceAPIs]
  
-The following APIs either directly or indirectly access the available disk space and require reasons for use. Use the string `NSPrivacyAccessedAPICategoryDiskSpace ` as the value for the `NSPrivacyAccessedAPIType` key in your `NSPrivacyAccessedAPITypes` dictionary. If you access the available disk space from the list of API's below, then use [Disk space APIs][DiskSpaceAPIs] to determine the correct values to place in the `NSPrivacyAccessedAPITypeReasons` array.
+The following APIs either directly or indirectly access the available disk space and require reasons for use. Use the string `NSPrivacyAccessedAPICategoryDiskSpace` as the value for the `NSPrivacyAccessedAPIType` key in your `NSPrivacyAccessedAPITypes` dictionary. If you access the available disk space from the list of API's below, then use [Disk space APIs][DiskSpaceAPIs] to determine the correct values to place in the `NSPrivacyAccessedAPITypeReasons` array.
 | Foundation APIs | UIKit APIs | AppKit APIs |
 | - | - | - |
 | [NSUrl.VolumeAvailableCapacityKey](https://learn.microsoft.com/en-us/dotnet/api/foundation.nsurl.volumeavailablecapacitykey)
