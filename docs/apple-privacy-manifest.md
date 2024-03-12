@@ -25,7 +25,7 @@ If you’re developing an application using .NET MAUI, consider the following st
 1. Assess if your native application code uses any of the following APIs:
     * APIs listed under the [Required Reason API][RequiredReasonAPI] category.
     * The [C# .NET APIs][C#NETAPIs] in .NET MAUI framework.
-1. If you meet one or both of the conditions from step 1, or if you have disabled [linking](https://learn.microsoft.com/en-us/xamarin/ios/deploy-test/linker?tabs=macos), which will retain all of the [C# .NET APIs][C#NETAPIs], then [create a privacy manifest file](https://developer.apple.com/documentation/bundleresources/privacy_manifest_files#4284009) following the [example](#an-example) to add a `PrivacyInfo.xcprivacy' file to your project.
+1. If you meet one or both of the conditions from step 1, or if you have disabled [linking](https://learn.microsoft.com/en-us/xamarin/ios/deploy-test/linker?tabs=macos), which will retain all of the [C# .NET APIs][C#NETAPIs], then [create a privacy manifest file](https://developer.apple.com/documentation/bundleresources/privacy_manifest_files#4284009) following the [example](#an-example) to add a `PrivacyInfo.xcprivacy` file to your project.
 
 1. In the privacy manifest file, declare the approved reasons for using the [Required Reasons APIs][RequiredReasonAPI] or [C# .NET APIs][C#NETAPIs], as applicable.
 
