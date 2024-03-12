@@ -382,7 +382,7 @@ The complete `PrivacyInfo.xcprivacy` should now look similar to:
 </plist>
 ```
 
-Now that the file has been created, it needs to be placed properly when building the app. The `PrivacyInfo.xcprivacy` is consider a resource when it is time to build the bundle. In accordance with [Placing Content ina Bundle](https://developer.apple.com/documentation/bundleresources/placing_content_in_a_bundle) the file is placed in the root of the Bundle. Use the proper set of instructions below for your ptoject type:
+Now that the file has been created, it needs to be placed properly when building the app. The `PrivacyInfo.xcprivacy` is consider a resource when it is time to build the bundle. In accordance with [Placing Content in a Bundle](https://developer.apple.com/documentation/bundleresources/placing_content_in_a_bundle) the file is placed in the root of the Bundle. Use the proper set of instructions below for your project type:
 
 ## .NET MAUI
 1. Copy the `PrivacyInfo.xcprivacy` from your documents folder to the `Platforms/iOS` folder in your .NET MAUI project.
