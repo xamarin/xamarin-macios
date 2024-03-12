@@ -254,7 +254,7 @@ Since the application is based on .NET, a privacy manifest is required. Let's wa
 
 1. Open Xcode and either create new `App` project, or open an existing one.
 1. In Xcode use the File->New->File menu to open the `Choose a new template for your file:` dialog box.
-1. Scroll dowen until you find the `App Privacy` template.
+1. Scroll down until you find the `App Privacy` template.
 1. Select the `App Privacy` template and then click `Next`
 1. In the `Save As` dialog, leave the filename as `PrivacyInfo` as that is the required name for the file.
 1. Click `Create` and close Xcode.
