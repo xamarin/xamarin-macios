@@ -2,9 +2,10 @@
 // DeviceDiscoveryExtension C# bindings
 //
 // Authors:
-//	Israel Soto  <issoto@microsoft.com>
+//   Israel Soto (issoto@microsoft.com)
+//   Rolf Bjarne Kvinge (rolf@xamarin.com)
 //
-// Copyright 2022 Microsoft Corporation.
+// Copyright 2022, 2024 Microsoft Corporation.
 //
 
 using System;
