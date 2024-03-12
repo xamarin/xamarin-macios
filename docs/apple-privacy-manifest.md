@@ -44,7 +44,7 @@ Verify if your native application code collects any type of data [categorized by
   If it does, then you must declare their usage in the privacy manifest file.
 
 ## Privacy manifest for Binding projects
-If you are Binding project owner, and you provide a NuGet package of that binding project to be included in a .NET for iOS/macOS or .NET MAUI app then you will need to provide documentation for the consumers of your package in order for them to be able to create the `PrivacyInfo.xcprivacy` file properly. It is currently not possible for Binding project authors to include a `PrivacyInfo.xcprivacy` file that will be recognized by Apple when submitting an app.
+If you are Binding project owner, and you are binding a xcframework, then the xcframework provider will need to include the `PrivacyInfo.xcprivacy` file as part of the xcframework. Otherwise, there are two options, provide documentation for package consumers to create the `PrivacyInfo.xcprivacy` file properly or change the bindings to bind an xcframework that has the `PrivacyInfo.xcprivacy` file included. It is currently not possible for Binding project authors to include a `PrivacyInfo.xcprivacy` file outside an xcframework that will be recognized by Apple when submitting an app.
 
 ## C# .NET APIs in .NET MAUI
 There are three layers that could potentially use any of the [Required Reasons APIs][RequiredReasonAPI]:
