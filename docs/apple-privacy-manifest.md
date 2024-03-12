@@ -1,5 +1,5 @@
 # Apple’s privacy manifest policy requirements
-Apple is introducing a privacy policy for including [privacy manifest files][PrivacyManifestFiles] in new and updated applications targeted for iOS, iPadOS, tvOS, and visionOS platforms on the App Store.
+Apple is introducing a privacy policy for including [privacy manifest files][PrivacyManifestFiles] in new and updated applications targeted for iOS, iPadOS, and tvOS platforms on the App Store.
 
 The privacy manifest file (`PrivacyInfo.xcprivacy`) lists the [types of data](https://developer.apple.com/documentation/bundleresources/privacy_manifest_files/describing_data_use_in_privacy_manifests) your .NET MAUI applications, or any third-party SDKs and packages collect, and the reasons for using certain [Required Reason APIs][RequiredReasonAPI] categories.
 
