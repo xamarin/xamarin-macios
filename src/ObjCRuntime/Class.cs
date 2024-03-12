@@ -508,20 +508,51 @@ namespace ObjCRuntime {
 
 		static MemberInfo? ResolveToken (Assembly assembly, Module? module, uint token)
 		{
+#if !NET
+			return ResolveTokenNonManagedStatic (assembly, module, token);
+#else
+			if (!Runtime.IsManagedStaticRegistrar)
+				return ResolveTokenNonManagedStatic (assembly, module, token);
+
+			// Finally resolve the token.
+			var token_type = token & 0xFF000000;
+			switch (token & 0xFF000000) {
+			case 0x02000000: // TypeDef
+				var type = RegistrarHelper.LookupRegisteredType (assembly, token & 0x00FFFFFF);
+#if LOG_TYPELOAD
+				Runtime.NSLog ($"ResolveToken (0x{token:X}) => Type: {type.FullName}");
+#endif
+				return type;
+			case 0x06000000: // Method
+				throw ErrorHelper.CreateError (8054, Errors.MX8054 /* Can't resolve metadata tokens for methods when using the managed static registrar (token: 0x{0}). */, token.ToString ("x"));
+			default:
+				throw ErrorHelper.CreateError (8021, $"Unknown implicit token type: 0x{token_type:X}.");
+			}
+#endif // !NET
+		}
+
+#if NET
+		// This method should never be called when using the managed static registrar, so assert that never happens by throwing an exception in that case.
+		// This method doesn't necessarily work with NativeAOT, but this is covered by the exception, because the managed static registrar is required for NativeAOT.
+		//
+		// IL2026: Using member 'System.Reflection.Module.ResolveMethod(Int32)' which has 'RequiresUnreferencedCodeAttribute' can break functionality when trimming application code. Trimming changes metadata tokens.
+		// IL2026: Using member 'System.Reflection.Module.ResolveType(Int32)' which has 'RequiresUnreferencedCodeAttribute' can break functionality when trimming application code. Trimming changes metadata tokens.
+		[UnconditionalSuppressMessage("", "IL2026", Justification = "The APIs this method tries to access are marked by other means, so this is linker-safe.")]
+#endif
+		static MemberInfo? ResolveTokenNonManagedStatic (Assembly assembly, Module? module, uint token)
+		{
+#if NET
+			// This method should never be called when using the managed static registrar, so assert that never happens by throwing an exception in that case.
+			// This also takes care of NativeAOT, because the managed static registrar is required when using NativeAOT.
+			if (Runtime.IsManagedStaticRegistrar)
+				throw new System.Diagnostics.UnreachableException ();
+#endif
+
 			// Finally resolve the token.
 			var token_type = token & 0xFF000000;
 			switch (token & 0xFF000000) {
 			case 0x02000000: // TypeDef
 				Type type;
-#if NET
-				if (Runtime.IsManagedStaticRegistrar) {
-					type = RegistrarHelper.LookupRegisteredType (assembly, token & 0x00FFFFFF);
-#if LOG_TYPELOAD
-					Runtime.NSLog ($"ResolveToken (0x{token:X}) => Type: {type.FullName}");
-#endif
-					return type;
-				}
-#endif // NET
 				if (module is null) {
 					throw ErrorHelper.CreateError (8053, Errors.MX8053 /* Could not resolve the module in the assembly {0}. */, assembly.FullName);
 				} else {
@@ -532,9 +563,6 @@ namespace ObjCRuntime {
 #endif
 				return type;
 			case 0x06000000: // Method
-				if (Runtime.IsManagedStaticRegistrar)
-					throw ErrorHelper.CreateError (8054, Errors.MX8054 /* Can't resolve metadata tokens for methods when using the managed static registrar (token: 0x{0}). */, token.ToString ("x"));
-
 				if (module is null)
 					throw ErrorHelper.CreateError (8053, Errors.MX8053 /* Could not resolve the module in the assembly {0}. */, assembly.FullName);
 
