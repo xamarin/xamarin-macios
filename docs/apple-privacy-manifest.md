@@ -324,7 +324,7 @@ You can add the entries for the API's usage to the `PrivacyInfo.xcproject` as fo
 
 1. For the [NSFileManager.ModificationDate](https://learn.microsoft.com/en-us/dotnet/api/foundation.nsfilemanager.modificationdate), a reason code of `C617.1` is needed since the modification dates are stored as a hash using [NSUserDefaults](https://learn.microsoft.com/en-us/dotnet/api/foundation.nsuserdefaults) but not displayed to the user. Again, the .NET runtime and BCL requirements have already satisfied this category and reason so no additional changes are needed.
 
-1. For the [NSUserDefaults](https://learn.microsoft.com/en-us/dotnet/api/foundation.nsuserdefaults), a reason code of `CA92.1` is provided since the data accessed is only accessible to the app itself. Add the followinbg element to the `NSPrivacyAccessedAPITypes` array:
+1. For the [NSUserDefaults](https://learn.microsoft.com/en-us/dotnet/api/foundation.nsuserdefaults), a reason code of `CA92.1` is provided since the data accessed is only accessible to the app itself. Add the following element to the `NSPrivacyAccessedAPITypes` array:
     ```xml
     <dict>
         <key>NSPrivacyAccessedAPIType</key>
