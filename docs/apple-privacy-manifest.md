@@ -419,7 +419,7 @@ Now that the file has been created, it needs to be placed properly when building
     This will package the file into the iOS app at the root of the bundle. 
 
 
-Once added to your project, the `PrivacyInfo.xcprivacy` file will need to be updated if there are any additional API usages from additional categories or additional reasons for usage. This will include adding a NuGet package or Binding project that calls into any of Apple’s [Required Reason APIs][RequiredReasonAPI]. It is ultimately yuour responsibility to provide an accurate `PrivacyInfo.xcprivacy` file, failing to do so may result in the App Store rejecting your submission.
+Once added to your project, the `PrivacyInfo.xcprivacy` file will need to be updated if there are any additional API usages from additional categories or additional reasons for usage. This will include adding a NuGet package or Binding project that calls into any of Apple’s [Required Reason APIs][RequiredReasonAPI]. It is ultimately your responsibility to provide an accurate `PrivacyInfo.xcprivacy` file, failing to do so may result in the App Store rejecting your submission.
 
 [RequiredReasonAPI]: https://developer.apple.com/documentation/bundleresources/privacy_manifest_files/describing_use_of_required_reason_api
 [PrivacyManifestFiles]: https://developer.apple.com/documentation/bundleresources/privacy_manifest_files
