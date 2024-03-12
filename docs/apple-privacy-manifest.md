@@ -17,7 +17,7 @@ Depending on whether you’re using [.NET for iOS or .NET MAUI to develop an app
 **Note:** The above guidelines are provided for your convenience. It’s important that you review Apple’s documentation on [privacy manifest files][PrivacyManifestFiles] before creating a privacy manifest for your project.
 
 **Important:**
-The following ionformation is proivided based on Apple's documentation as of March 2024. It is recommended that you review Apple’s documentation on [privacy manifest files][PrivacyManifestFiles] when creating a privacy manifest for your project to ensure you are using the most recent guidelines. If you find any discrepancies in the information below, please [file a bug](https://github.com/dotnet/maui/issues) and include the API in question.
+The following information is proivided based on Apple's documentation as of March 2024. It is recommended that you review Apple’s documentation on [privacy manifest files][PrivacyManifestFiles] when creating a privacy manifest for your project to ensure you are using the most recent guidelines. If you find any discrepancies in the information below, please [file a bug](https://github.com/dotnet/maui/issues) and include the API in question.
 
 ## Privacy manifest for .NET MAUI and .NET for iOS applications  
 If you’re developing an application using .NET MAUI, consider the following steps:
