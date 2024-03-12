@@ -4396,7 +4396,7 @@ public partial class Generator : IMemberGatherer {
 		}
 
 		if (minfo.is_extension_method) {
-			WriteDocumentation (GetProperty (minfo.Method) ?? minfo.Method);
+			WriteDocumentation ((MemberInfo) GetProperty (minfo.Method) ?? minfo.Method);
 		} else {
 			WriteDocumentation (minfo.Method);
 		}
