@@ -8,7 +8,7 @@ The privacy manifest file (`PrivacyInfo.xcprivacy`) lists the [types of data](ht
 ## Prepare your .NET MAUI applications for Apple’s privacy manifest policy
 You must review your native code, C# code, and data collection and tracking practices to understand if Apple’s privacy manifest policy applies to you. Follow these guidelines to decide if you need to include a privacy manifest file in your product:
 
-* If your application includes multiple third-party SDKs or packages, then these third-party components (if applicable) must provision their own privacy manifest files separately. **Note:** It’s your responsibility however, to make sure that the owners of these third-party components include privacy manifest files. Microsoft isn’t responsible for any third-party privacy manifest, and their data collection and tracking practices.
+* If your application includes any third-party SDKs or packages, then these third-party components (if applicable) must provision their own privacy manifest files separately. **Note:** It’s your responsibility however, to make sure that the owners of these third-party components include privacy manifest files. Microsoft isn’t responsible for any third-party privacy manifest, and their data collection and tracking practices.
 
 * If your application includes the [C# .NET APIs][C#NETAPIs] that call certain APIs listed in the Apple’s [Required Reason API][RequiredReasonAPI] categories, then you must assess your product for the API usage. For assessing what constitutes as part of data collection and tracking practices, refer to Apple’s documentation on [privacy manifest files][PrivacyManifestFiles]. **Note:** It’s your responsibility to assess your use of each of these APIs and declare the applicable reasons for using them.
 
