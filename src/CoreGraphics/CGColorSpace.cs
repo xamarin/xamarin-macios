@@ -261,7 +261,7 @@ namespace CoreGraphics {
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CGColorSpaceRef */ IntPtr CGColorSpaceCreatePattern (/* CGColorSpaceRef */ IntPtr baseSpace);
 
-		public static CGColorSpace? CreatePattern (CGColorSpace baseSpace)
+		public static CGColorSpace? CreatePattern (CGColorSpace? baseSpace)
 		{
 			var ptr = CGColorSpaceCreatePattern (baseSpace.GetHandle ());
 			return FromHandle (ptr, true);
