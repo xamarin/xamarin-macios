@@ -112,6 +112,9 @@ stages:
         - demand
     strategy:
       matrix: $[ stageDependencies.configure_build.configure.outputs['test_matrix.TEST_MATRIX'] ]
+    templateContext:
+      type: validationJob
+
     steps:
     - bash: |
         env | sort

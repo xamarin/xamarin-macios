@@ -61,6 +61,9 @@ stages:
       - macOS.Architecture -equals arm64
       - macOS.Name -equals Ventura
 
+    templateContext:
+      type: validationJob
+
     steps:
     - template: reserve-mac.yml
       parameters:
@@ -91,6 +94,9 @@ stages:
       MAC_AGENT_BUILD_SOURCESDIRECTORY: $[ dependencies.mac_reservation.outputs['macInfo.AGENT_BUILD_SOURCESDIRECTORY'] ]
       MAC_AGENT_USER: builder
 
+    templateContext:
+      type: validationJob
+
     steps:
     - template: build.yml
       parameters:
@@ -113,6 +119,9 @@ stages:
       name: ${{ parameters.windowsPool }}
       demands:
       - agent.os -equals Windows_NT
+
+    templateContext:
+      type: validationJob
 
     steps:
     - template: reenable-mac.yml
