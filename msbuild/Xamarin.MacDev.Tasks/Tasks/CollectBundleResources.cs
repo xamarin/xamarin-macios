@@ -52,7 +52,7 @@ namespace Xamarin.MacDev.Tasks {
 				// But execute locally
 				return ExecuteImpl ();
 			} catch (PathTooLongException ptle) when (Environment.OSVersion.Platform == PlatformID.Win32NT && !PathUtils.OSSupportsLongPaths) {
-				Log.LogError (MSBStrings.E7122 /* A path exceeding max path was detected. Enabling long path in Windows may help. For more information see https://learn.microsoft.com/en-us/windows/win32/fileio/maximum-file-path-limitation. */);
+				Log.LogError (MSBStrings.E7122 /* A path exceeding max path was detected. Enabling long paths in Windows may help. For more information see https://learn.microsoft.com/en-us/windows/win32/fileio/maximum-file-path-limitation. */);
 				Log.LogErrorFromException (ptle); // report the original exception too.
 				return false;
 			} catch (Exception ex) {
