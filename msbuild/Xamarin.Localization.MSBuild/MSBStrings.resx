@@ -1554,4 +1554,8 @@
         </comment>
     </data>
 
+    <data name="E7122" xml:space="preserve">
+        <value>A path exceeding max path was detected. Enabling long path in Windows may help. For more information see https://learn.microsoft.com/en-us/windows/win32/fileio/maximum-file-path-limitation.</value>
+    </data>
+
 </root>
