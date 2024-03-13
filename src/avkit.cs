@@ -1102,11 +1102,10 @@ namespace AVKit {
 	}
 
 	[iOS (17, 2), NoMac, NoMacCatalyst, NoTV, NoWatch]
-	[BaseType(typeof(NSObject))]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface AVCaptureEvent
-	{
-		[Export("phase")]
+	interface AVCaptureEvent {
+		[Export ("phase")]
 		AVCaptureEventPhase Phase { get; }
 	}
 
@@ -1119,10 +1118,9 @@ namespace AVKit {
 	}
 
 	[iOS (17, 2), NoMac, NoMacCatalyst, NoTV, NoWatch]
-	[BaseType(typeof(NSObject))]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface AVCaptureEventInteraction : UIInteraction
-	{
+	interface AVCaptureEventInteraction : UIInteraction {
 		[Export ("initWithEventHandler:")]
 		NativeHandle Constructor (Action<AVCaptureEvent> handler);
 
