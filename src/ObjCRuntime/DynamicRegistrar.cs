@@ -36,6 +36,7 @@ namespace Registrar {
 		// IL2062: Value passed to parameter 'interfaceType' of method 'System.Type.GetInterfaceMap(Type)' can not be statically determined and may not meet 'DynamicallyAccessedMembersAttribute' requirements.
 		[UnconditionalSuppressMessage ("", "IL2062", Justification = "The APIs this method tries to access are marked by other means, so this is linker-safe.")]
 #endif
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static Dictionary<MethodBase, List<MethodBase>> PrepareInterfaceMethodMapping (Type type)
 		{
 			// Note that the code in this method shouldn't be called when using any static registrar, so throw an exception in that case.
@@ -126,6 +127,7 @@ namespace Registrar {
 		// IL2026: Using member 'System.Reflection.Assembly.GetReferencedAssemblies()' which has 'RequiresUnreferencedCodeAttribute' can break functionality when trimming application code. Assembly references might be removed.
 		[UnconditionalSuppressMessage ("", "IL2026", Justification = "The APIs this method tries to access are marked by other means, so this is linker-safe.")]
 #endif
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		protected override bool ContainsPlatformReference (Assembly assembly)
 		{
 			// Note that the code in this method shouldn't be called when using any static registrar, so throw an exception in that case.
@@ -204,6 +206,7 @@ namespace Registrar {
 		// IL2070: 'this' argument does not satisfy 'DynamicallyAccessedMemberTypes.PublicMethods', 'DynamicallyAccessedMemberTypes.NonPublicMethods' in call to 'System.Type.GetMethods(BindingFlags)'. The parameter 'type' of method 'Registrar.DynamicRegistrar.FindMethods(Type, String)' does not have matching annotations. The source value must declare at least the same requirements as those declared on the target location it is assigned to.
 		[UnconditionalSuppressMessage ("", "IL2070", Justification = "The APIs this method tries to access are marked by other means, so this is linker-safe.")]
 #endif
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		protected override IEnumerable<MethodBase> FindMethods (Type type, string name)
 		{
 			// Note that the code in this method shouldn't be called when using any static registrar, so throw an exception in that case.
@@ -221,6 +224,7 @@ namespace Registrar {
 		// IL2070: 'this' argument does not satisfy 'DynamicallyAccessedMemberTypes.PublicProperties', 'DynamicallyAccessedMemberTypes.NonPublicProperties' in call to 'System.Type.GetProperty(String, BindingFlags)'. The parameter 'type' of method 'Registrar.DynamicRegistrar.FindProperty(Type, String)' does not have matching annotations. The source value must declare at least the same requirements as those declared on the target location it is assigned to.
 		[UnconditionalSuppressMessage ("", "IL2070", Justification = "The APIs this method tries to access are marked by other means, so this is linker-safe.")]
 #endif
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		protected override PropertyInfo FindProperty (Type type, string name)
 		{
 			// Note that the code in this method shouldn't be called when using any static registrar, so throw an exception in that case.
@@ -236,6 +240,7 @@ namespace Registrar {
 		// IL2026: Using member 'System.Reflection.Assembly.GetTypes()' which has 'RequiresUnreferencedCodeAttribute' can break functionality when trimming application code. Types might be removed.
 		[UnconditionalSuppressMessage ("", "IL2026", Justification = "The APIs this method tries to access are marked by other means, so this is linker-safe.")]
 #endif
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		public override Type FindType (Type relative, string @namespace, string name)
 		{
 			// Note that the code in this method shouldn't be called when using any static registrar, so throw an exception in that case.
@@ -260,6 +265,7 @@ namespace Registrar {
 		// IL2070: 'this' argument does not satisfy 'DynamicallyAccessedMemberTypes.PublicConstructors', 'DynamicallyAccessedMemberTypes.NonPublicConstructors' in call to 'System.Type.GetConstructors(BindingFlags)'. The parameter 'type' of method 'Registrar.DynamicRegistrar.CollectConstructors(Type)' does not have matching annotations. The source value must declare at least the same requirements as those declared on the target location it is assigned to.
 		[UnconditionalSuppressMessage ("", "IL2070", Justification = "The APIs this method tries to access are marked by other means, so this is linker-safe.")]
 #endif
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		protected override IEnumerable<MethodBase> CollectConstructors (Type type)
 		{
 			// Note that the code in this method shouldn't be called when using any static registrar, so throw an exception in that case.
@@ -275,6 +281,7 @@ namespace Registrar {
 		// IL2070: 'this' argument does not satisfy 'DynamicallyAccessedMemberTypes.PublicMethods', 'DynamicallyAccessedMemberTypes.NonPublicMethods' in call to 'System.Type.GetMethods(BindingFlags)'. The parameter 'type' of method 'Registrar.DynamicRegistrar.CollectMethods(Type)' does not have matching annotations. The source value must declare at least the same requirements as those declared on the target location it is assigned to.
 		[UnconditionalSuppressMessage ("", "IL2070", Justification = "The APIs this method tries to access are marked by other means, so this is linker-safe.")]
 #endif
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		protected override IEnumerable<MethodBase> CollectMethods (Type type)
 		{
 			// Note that the code in this method shouldn't be called when using any static registrar, so throw an exception in that case.
@@ -290,6 +297,7 @@ namespace Registrar {
 		// IL2070: 'this' argument does not satisfy 'DynamicallyAccessedMemberTypes.PublicProperties', 'DynamicallyAccessedMemberTypes.NonPublicProperties' in call to 'System.Type.GetProperties(BindingFlags)'. The parameter 'type' of method 'Registrar.DynamicRegistrar.CollectProperties(Type)' does not have matching annotations. The source value must declare at least the same requirements as those declared on the target location it is assigned to.
 		[UnconditionalSuppressMessage ("", "IL2070", Justification = "The APIs this method tries to access are marked by other means, so this is linker-safe.")]
 #endif
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		protected override IEnumerable<PropertyInfo> CollectProperties (Type type)
 		{
 			// Note that the code in this method shouldn't be called when using any static registrar, so throw an exception in that case.
@@ -305,6 +313,7 @@ namespace Registrar {
 		// IL2026: Using member 'System.Reflection.Assembly.GetTypes()' which has 'RequiresUnreferencedCodeAttribute' can break functionality when trimming application code. Types might be removed.
 		[UnconditionalSuppressMessage ("", "IL2026", Justification = "The APIs this method tries to access are marked by other means, so this is linker-safe.")]
 #endif
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		protected override IEnumerable<Type> CollectTypes (Assembly assembly)
 		{
 			// Note that the code in this method shouldn't be called when using any static registrar, so throw an exception in that case.
@@ -492,6 +501,7 @@ namespace Registrar {
 		// IL2070: 'this' argument does not satisfy 'DynamicallyAccessedMemberTypes.PublicFields', 'DynamicallyAccessedMemberTypes.NonPublicFields' in call to 'System.Type.GetFields(BindingFlags)'. The parameter 'type' of method 'Registrar.DynamicRegistrar.GetFields(Type)' does not have matching annotations. The source value must declare at least the same requirements as those declared on the target location it is assigned to.
 		[UnconditionalSuppressMessage ("", "IL2070", Justification = "The APIs this method tries to access are marked by other means, so this is linker-safe.")]
 #endif
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		protected override IEnumerable<FieldInfo> GetFields (Type type)
 		{
 			// Note that the code in this method shouldn't be called when using any static registrar, so throw an exception in that case.
@@ -573,6 +583,7 @@ namespace Registrar {
 		// IL2055: Call to 'System.Type.MakeGenericType(Type[])' can not be statically analyzed. It's not possible to guarantee the availability of requirements of the generic type.
 		[UnconditionalSuppressMessage ("", "IL2055", Justification = "The APIs this method tries to access are marked by other means, so this is linker-safe.")]
 #endif
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		public override bool VerifyIsConstrainedToNSObject (Type type, out Type constrained_type)
 		{
 			// Note that the code in this method shouldn't be called when using any static registrar, so throw an exception in that case.
@@ -783,6 +794,7 @@ namespace Registrar {
 		// IL2070: 'this' argument does not satisfy 'DynamicallyAccessedMemberTypes.Interfaces' in call to 'System.Type.GetInterfaces()'. The parameter 'type' of method 'Registrar.DynamicRegistrar.GetInterfaces(Type)' does not have matching annotations. The source value must declare at least the same requirements as those declared on the target location it is assigned to.
 		[UnconditionalSuppressMessage ("", "IL2070", Justification = "The APIs this method tries to access are marked by other means, so this is linker-safe.")]
 #endif
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		protected override Type [] GetInterfaces (Type type)
 		{
 			// Note that the code in this method shouldn't be called when using any static registrar, so throw an exception in that case.
@@ -1191,6 +1203,7 @@ namespace Registrar {
 		// IL2070: 'this' argument does not satisfy 'DynamicallyAccessedMemberTypes.PublicProperties', 'DynamicallyAccessedMemberTypes.NonPublicProperties' in call to 'System.Type.GetProperties(BindingFlags)'. The parameter 'type' of method 'Registrar.DynamicRegistrar.TryMatchProperty(Type, PropertyInfo)' does not have matching annotations. The source value must declare at least the same requirements as those declared on the target location it is assigned to.
 		[UnconditionalSuppressMessage ("", "IL2070", Justification = "The APIs this method tries to access are marked by other means, so this is linker-safe.")]
 #endif
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		static PropertyInfo TryMatchProperty (Type type, PropertyInfo property)
 		{
 			// Note that the code in this method shouldn't be called when using any static registrar, so throw an exception in that case.
