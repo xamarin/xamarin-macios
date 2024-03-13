@@ -138,7 +138,7 @@ namespace CoreGraphics {
 		{
 			value = default;
 			unsafe {
-				return CGPDFScannerPopInteger (Handle, (nint *) Unsafe.AsPointer<nint> (ref value)) != 0;
+				return CGPDFScannerPopInteger (Handle, (nint*) Unsafe.AsPointer<nint> (ref value)) != 0;
 			}
 		}
 
@@ -149,7 +149,7 @@ namespace CoreGraphics {
 		{
 			value = default;
 			unsafe {
-				return CGPDFScannerPopNumber (Handle, (nfloat *) Unsafe.AsPointer<nfloat> (ref value)) != 0;
+				return CGPDFScannerPopNumber (Handle, (nfloat*) Unsafe.AsPointer<nfloat> (ref value)) != 0;
 			}
 		}
 
@@ -205,7 +205,7 @@ namespace CoreGraphics {
 			IntPtr ip;
 			bool rv;
 			unsafe {
-				rv =CGPDFScannerPopDictionary (Handle, &ip) != 0;
+				rv = CGPDFScannerPopDictionary (Handle, &ip) != 0;
 			}
 			value = rv ? new CGPDFDictionary (ip) : null;
 			return rv;
