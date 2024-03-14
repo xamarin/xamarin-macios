@@ -355,6 +355,14 @@ stages:
       isScheduled: $[eq(variables['Build.Reason'], 'Schedule')]
       BRANCH_NAME: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', '') ]
 
+    templateContext:
+      type: validationJob
+      outputs:
+        - output: pipelineArtifact
+          displayName: 'Publish Artifact: configuration.json'
+          artifactName: '$(MaciosUploadPrefix)build-configuration'
+          path: '$(Build.ArtifactStagingDirectory)/configuration.json'
+
     steps:
     - template: common/configure.yml
       parameters: 
@@ -364,8 +372,7 @@ stages:
         supportedPlatforms: ${{ parameters.supportedPlatforms }}
         testsLabels: '--label=skip-all-tests,run-ios-tests,run-ios-simulator-tests,run-tvos-tests,run-watchos-tests,run-mac-tests,run-maccatalyst-tests,run-dotnet-tests,run-system-permission-tests,run-legacy-xamarin-tests'
         statusContext: 'VSTS: simulator tests' 
-        uploadArtifacts: true
-        
+
 - stage: build_packages
   displayName: '${{ parameters.stageDisplayNamePrefix }}Build'
   dependsOn: [ configure_build ]

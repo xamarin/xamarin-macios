@@ -184,24 +184,6 @@ steps:
   name: collectSimulatorInfo
   timeoutInMinutes: 30
 
-# Publish the simulator diagnostic logs
-- task: 1ES.PublishPipelineArtifact@1
-  displayName: 'Publish Artifact: Simulator diagnostic info'
-  inputs:
-    path: $(System.DefaultWorkingDirectory)/diagnostic-sim-output
-    artifact: '${{ parameters.uploadPrefix }}diagnostic-simulator-info-$(Build.BuildId)-$(System.StageAttempt)-$(System.JobAttempt)-${{ parameters.labelWithPlatform }}'
-  condition: and(eq(variables['system.debug'], true), succeededOrFailed())
-  continueOnError: true
-
-# Upload TestSummary as an artifact.
-- task: 1ES.PublishPipelineArtifact@1
-  displayName: 'Publish Artifact: TestSummary'
-  inputs:
-    path: 'xamarin-macios/tests/TestSummary.md'
-    artifact: '${{ parameters.uploadPrefix }}TestSummary-${{ parameters.testPrefix }}-$(System.JobAttempt)'
-  continueOnError: true
-  condition: succeededOrFailed()
-
 - pwsh: |
     $summaryName = "TestSummary-${{ parameters.testPrefix }}.md"
     $summaryPath = "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tests/TestSummary.md"
@@ -209,16 +191,6 @@ steps:
       Write-Host "##vso[task.addattachment type=Distributedtask.Core.Summary;name=$summaryName;]$summaryPath"
     }
   displayName: Set TestSummary
-  continueOnError: true
-  condition: succeededOrFailed()
-
-- task: 1ES.PublishArtifactsDrop@1
-  displayName: 'Publish to Artifact Services Drop'
-  inputs:
-    dropServiceURI: 'https://devdiv.artifacts.visualstudio.com/DefaultCollection'
-    dropMetadataContainerName: '${{ parameters.uploadPrefix }}DropMetadata-${{ parameters.testPrefix }}${{ parameters.labelWithPlatform }}-$(System.JobAttempt)'
-    buildNumber: 'xamarin-macios/device-tests/$(Build.BuildNumber)/$(Build.BuildId)/${{ parameters.testPrefix }}-$(System.JobAttempt)'
-    sourcePath: 'xamarin-macios/jenkins-results'
   continueOnError: true
   condition: succeededOrFailed()
 
@@ -253,18 +225,6 @@ steps:
     archiveFile: '$(Build.ArtifactStagingDirectory)/HtmlReport.zip'
   continueOnError: true
   condition: succeededOrFailed()
-
-# Create HtmlReport artifact. This serves two purposes:
-# 1. It is the way we are going to share the HtmlReport with the publish_html job that is executed on a Windows machine.
-# 2. Users can download this if they want.
-- task: 1ES.PublishPipelineArtifact@1
-  displayName: 'Publish Artifact: HtmlReport'
-  inputs:
-    path: '$(Build.ArtifactStagingDirectory)/HtmlReport.zip'
-    artifact: '${{ parameters.uploadPrefix }}HtmlReport-${{ parameters.testPrefix }}-$(System.JobAttempt)'
-  continueOnError: true
-  condition: succeededOrFailed()
-
 # Upload all the binlogs
 # Copy all the binlogs to a separate directory, keeping directory structure.
 - script: |
@@ -272,15 +232,6 @@ steps:
     mkdir -p $(Build.ArtifactStagingDirectory)/all-binlogs
     rsync -av --prune-empty-dirs --include '*/' --include '*.binlog' --exclude '*' $(Build.SourcesDirectory)/xamarin-macios $(Build.ArtifactStagingDirectory)/all-binlogs
   displayName: Copy all binlogs
-  continueOnError: true
-  condition: succeededOrFailed()
-
-# Publish all the binlogs we collected in the previous step
-- task: 1ES.PublishPipelineArtifact@1
-  displayName: 'Publish Artifact: All binlogs'
-  inputs:
-    path: $(Build.ArtifactStagingDirectory)/all-binlogs
-    artifact: ${{ parameters.uploadPrefix }}all-binlogs-test-${{ parameters.testPrefix }}-$(Build.BuildId)-$(System.StageAttempt)-$(System.JobAttempt)
   continueOnError: true
   condition: succeededOrFailed()
 

@@ -254,17 +254,6 @@ steps:
   continueOnError: true
   condition: succeededOrFailed()
 
-# Create HtmlReport artifact. This serves two purposes:
-# 1. It is the way we are going to share the HtmlReport with the publish_html job that is executed on a Windows machine.
-# 2. Users can download this if they want.
-- task: 1ES.PublishPipelineArtifact@1
-  displayName: 'Publish Artifact: HtmlReport'
-  inputs:
-    path: '$(Build.ArtifactStagingDirectory)/HtmlReport.zip'
-    artifact: '${{ parameters.uploadPrefix }}HtmlReport-windows-integration-$(System.JobAttempt)'
-  continueOnError: true
-  condition: succeededOrFailed()
-
 - pwsh: |
     Write-Host "Run windows tests."
     Write-Host "Mac agent to be used:"
@@ -289,15 +278,6 @@ steps:
         Copy-Item $binlog.FullName -destination $targetFile
     }
   displayName: Copy all binlogs
-  continueOnError: true
-  condition: succeededOrFailed()
-
-# Publish all the binlogs we collected in the previous step
-- task: 1ES.PublishPipelineArtifact@1
-  displayName: 'Publish Artifact: Windows binlogs'
-  inputs:
-    path: $(Build.ArtifactStagingDirectory)/windows-binlogs
-    artifact: windows-binlogs-test-$(Build.BuildId)-$(System.StageAttempt)-$(System.StageAttempt)-$(System.JobAttempt)
   continueOnError: true
   condition: succeededOrFailed()
 
