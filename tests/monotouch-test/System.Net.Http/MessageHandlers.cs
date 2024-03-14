@@ -818,7 +818,6 @@ namespace MonoTests.System.Net.Http {
 				for (var i = 0; i < iterations; i++) {
 					var rsp = delegatingHandler.Responses [i];
 					Assert.IsTrue (delegatingHandler.IsCompleted (i), $"Completed #{i}");
-					Assert.IsTrue (rsp.IsSuccessStatusCode, $"IsSuccessStatusCode #{i}");
 					Assert.AreEqual ("OK", rsp.ReasonPhrase, $"ReasonPhrase #{i}");
 					Assert.AreEqual (HttpStatusCode.OK, rsp.StatusCode, $"StatusCode #{i}");
 

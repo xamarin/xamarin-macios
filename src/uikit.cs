@@ -3459,7 +3459,11 @@ namespace UIKit {
 		[MacCatalyst (13, 1)]
 		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Override 'OpenUrl (UIApplication, NSUrl, NSDictionary)'. The later will be called if both are implemented.")]
 		[Export ("application:handleOpenURL:")]
+#if XAMCORE_5_0
+		bool HandleOpenUrl (UIApplication application, NSUrl url);
+#else
 		bool HandleOpenURL (UIApplication application, NSUrl url);
+#endif
 
 		[Export ("applicationDidReceiveMemoryWarning:")]
 		void ReceiveMemoryWarning (UIApplication application);
@@ -16033,7 +16037,11 @@ namespace UIKit {
 		[Deprecated (PlatformName.TvOS, 10, 0, message: "Use the 'ShouldInteractWithUrl' overload that takes 'UITextItemInteraction' instead.")]
 		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use the 'ShouldInteractWithUrl' overload that takes 'UITextItemInteraction' instead.")]
 		[Export ("textView:shouldInteractWithURL:inRange:"), DelegateName ("Func<UITextView,NSUrl,NSRange,bool>"), DefaultValue ("true")]
+#if XAMCORE_5_0
+		bool ShouldInteractWithUrl (UITextView textView, NSUrl url, NSRange characterRange);
+#else
 		bool ShouldInteractWithUrl (UITextView textView, NSUrl URL, NSRange characterRange);
+#endif
 
 		[Deprecated (PlatformName.iOS, 10, 0, message: "Use the 'ShouldInteractWithTextAttachment' overload that takes 'UITextItemInteraction' instead.")]
 		[Deprecated (PlatformName.TvOS, 10, 0, message: "Use the 'ShouldInteractWithTextAttachment' overload that takes 'UITextItemInteraction' instead.")]

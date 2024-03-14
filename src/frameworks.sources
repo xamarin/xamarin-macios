@@ -726,6 +726,19 @@ COREWLAN_SOURCES = \
 	CoreWlan/CWInterface.cs \
 	CoreWlan/CWKeychain.cs \
 
+# DeviceDiscoveryExtension
+
+DEVICEDISCOVERYEXTENSION_API_SOURCES = \
+	DeviceDiscoveryExtension/Enums.cs \
+
+DEVICEDISCOVERYEXTENSION_SOURCES = \
+	DeviceDiscoveryExtension/DDDevice.cs \
+
+# DeviceDiscoveryUI
+
+DEVICEDISCOVERYUI_SOURCES = \
+	DeviceDiscoveryUI/DDDevicePickerViewController.cs \
+
 # EventKit
 
 EVENTKIT_API_SOURCES = \
@@ -2193,6 +2206,7 @@ IOS_FRAMEWORKS =         \
 	CoreSpotlight \
 	CoreTelephony \
 	CoreText \
+	DeviceDiscoveryExtension \
 	EventKit \
 	EventKitUI \
 	ExternalAccessory \
@@ -2318,6 +2332,7 @@ TVOS_FRAMEWORKS =           \
 	CoreLocation            \
 	CoreSpotlight			\
 	CoreText                \
+	DeviceDiscoveryUI		\
 	ExternalAccessory       \
 	GLKit                   \
 	GameController          \

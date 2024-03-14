@@ -1261,6 +1261,7 @@
 			Assemblies="@(_AssembliesToAOT)"
 			AOTCompilerPath="$(_XamarinAOTCompiler)"
 			InputDirectory="$(_AOTInputDirectory)"
+			MaxDegreeOfParallelism="$(AotCompileMaxDegreeOfParallelism)"
 			MinimumOSVersion="$(_MinimumOSVersion)"
 			OutputDirectory="$(_AOTOutputDirectory)\%(_AssembliesToAOT.Arch)"
 			SdkDevPath="$(_SdkDevPath)"

@@ -16,7 +16,7 @@ using Xamarin.Utils;
 #nullable enable
 
 namespace Xamarin.MacDev.Tasks {
-	public class AOTCompile : XamarinTask, ITaskCallback, ICancelableTask {
+	public class AOTCompile : XamarinParallelTask, ITaskCallback, ICancelableTask {
 		public ITaskItem [] AotArguments { get; set; } = Array.Empty<ITaskItem> ();
 
 		[Required]
@@ -314,7 +314,7 @@ namespace Xamarin.MacDev.Tasks {
 				listOfArguments.Add (new (arguments, input));
 			}
 
-			Parallel.ForEach (listOfArguments, (arg) => {
+			ForEach (listOfArguments, (arg) => {
 				ExecuteAsync (AOTCompilerPath, arg.Arguments, sdkDevPath: SdkDevPath, showErrorIfFailure: false /* we show our own error below */)
 					.ContinueWith ((v) => {
 						if (v.Result.ExitCode != 0)
