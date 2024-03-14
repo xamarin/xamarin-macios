@@ -462,6 +462,7 @@ public class Frameworks : Dictionary<string, Framework> {
 
 				{ "AVRouting", "AVRouting", 16,0},
 				{ "BackgroundAssets", "BackgroundAssets", 16,0},
+				{ "DeviceDiscoveryExtension", "DeviceDiscoveryExtension", 16, 0},
 				{ "MetalFX", "MetalFX", new Version (16,0), NotAvailableInSimulator },
 				{ "PushToTalk", "PushToTalk", new Version (16,0), new Version (16, 2) /* available to build with, although it's unusable */},
 				{ "SafetyKit", "SafetyKit", 16, 0 },
@@ -694,6 +695,7 @@ public class Frameworks : Dictionary<string, Framework> {
 					f.Version = v16_1;
 					break;
 				// These frameworks are not available on Mac Catalyst
+				case "DeviceDiscoveryExtension":
 				case "OpenGLES":
 				case "NewsstandKit":
 				case "MediaSetup":
