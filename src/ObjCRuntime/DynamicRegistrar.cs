@@ -213,9 +213,11 @@ namespace Registrar {
 			if (!Runtime.DynamicRegistrationSupported)
 				throw ErrorHelper.CreateError (8026, "The 'DynamicRegistrar' class is not supported when the dynamic registrar has been linked away.");
 
+			var rv = new List<MethodBase> ();
 			foreach (var method in type.GetMethods (BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance | BindingFlags.DeclaredOnly))
 				if (method.Name == name)
-					yield return method;
+					rv.Add (method);
+			return rv;
 		}
 
 #if NET
