@@ -17,7 +17,7 @@ Depending on whether you’re using [.NET for iOS or .NET MAUI to develop an app
 **Note:** The above guidelines are provided for your convenience. It’s important that you review Apple’s documentation on [privacy manifest files][PrivacyManifestFiles] before creating a privacy manifest for your project.
 
 **Important:**
-The following information is proivided based on Apple's documentation as of March 2024. It is recommended that you review Apple’s documentation on [privacy manifest files][PrivacyManifestFiles] when creating a privacy manifest for your project to ensure you are using the most recent guidelines. If you find any discrepancies in the information below, please [file a bug](https://github.com/dotnet/maui/issues) and include the API in question.
+The following information is provided based on Apple's documentation as of March 2024. It is recommended that you review Apple’s documentation on [privacy manifest files][PrivacyManifestFiles] when creating a privacy manifest for your project to ensure you are using the most recent guidelines. If you find any discrepancies in the information below, please [file a bug](https://github.com/dotnet/maui/issues) and include the API in question.
 
 ## Privacy manifest for .NET MAUI and .NET for iOS or tvOS applications  
 If you’re developing an application using .NET MAUI, consider the following steps:
@@ -25,7 +25,7 @@ If you’re developing an application using .NET MAUI, consider the following st
 1. Assess if your native application code uses any of the following APIs:
     * APIs listed under the [Required Reason API][RequiredReasonAPI] category.
     * The [C# .NET APIs][C#NETAPIs] in .NET MAUI framework.
-1. If you meet one or both of the conditions from step 1, or if you have disabled [linking](https://learn.microsoft.com/en-us/xamarin/ios/deploy-test/linker?tabs=macos), which will retain all of the [C# .NET APIs][C#NETAPIs], then [create a privacy manifest file](https://developer.apple.com/documentation/bundleresources/privacy_manifest_files#4284009) following the [example](#an-example) to add a `PrivacyInfo.xcprivacy` file to your project.
+1. If you meet one or both of the conditions from step 1, or if you have disabled [linking](https://learn.microsoft.com/xamarin/ios/deploy-test/linker?tabs=macos), which will retain all of the [C# .NET APIs][C#NETAPIs], then [create a privacy manifest file](https://developer.apple.com/documentation/bundleresources/privacy_manifest_files#4284009) following the [example](#example) to add a `PrivacyInfo.xcprivacy` file to your project.
 
 1. In the privacy manifest file, declare the approved reasons for using the [Required Reasons APIs][RequiredReasonAPI] or [C# .NET APIs][C#NETAPIs], as applicable.
 
@@ -47,203 +47,27 @@ Verify if your native application code collects any type of data [categorized by
 If you are Binding project owner, and you are binding a xcframework, then the xcframework provider will need to include the `PrivacyInfo.xcprivacy` file as part of the xcframework. Otherwise, there are two options, provide documentation for package consumers to create the `PrivacyInfo.xcprivacy` file properly or change the bindings to bind an xcframework that has the `PrivacyInfo.xcprivacy` file included. It is currently not possible for Binding project authors to include a `PrivacyInfo.xcprivacy` file outside an xcframework that will be recognized by Apple when submitting an app.
 
 ## C# .NET APIs in .NET MAUI
-There are three layers that could potentially use any of the [Required Reasons APIs][RequiredReasonAPI]:
+.NET for iOS, tvOS and .NET MAUI build on top of the .NET runtime and BCL. Each SDK's API usages are detailed in the links below. 
 
-* .NET runtime and Base Class libraries (BCL)
-* .NET for iOS SDK
-* .NET MAUI SDK
+* [.NET Runtime and BCL API usages]()
+* [.NET for iOS, tvOS and Xamarin.iOS API Usages]()
+* [.NET MAUI and Xamarin.Forms API Usages]()
 
-The .NET runtime and BCL use and ship as part of your app bundle APIs in the following categories:
-* [File timestamp APIs][FileTimestampAPIs]
-* [System boot time APIs][SystemBootTimeAPIs]
-* [Disk space APIs][DiskSpaceAPIs]
+All .NET Apps that target devices running iOS, iPadOS, or tvOS will require a `PrivacyInfo.xcprivacy` file in the app bundle. This is due to the .NET Runtime and BCL using [Required Reasons APIs][RequiredReasonAPI] that are not removed regardless of the [linking](https://learn.microsoft.com/xamarin/ios/deploy-test/linker?tabs=macos) setting. The following three APIU categories and thier associated reasons must be in the `PrivacyInfo.xcprivacy'. 
+* NSPrivacyAccessedAPICategoryFileTimestamp - C617.1
+* NSPrivacyAccessedAPICategorySystemBootTime - 35F9.1
+* NSPrivacyAccessedAPICategoryDiskSpace - E174.1
 
-Therefore, all .NET applications must include the above categories in `PrivacyInfo.xcprivacy` file. See the [example](#an-example) for the format and reason codes needed.
+Additionally, if you use the `NSUserDefaults` API's in your app, you will need to add the `NSPrivacyAccessedAPICategoryUserDefaults` API category, with a reason code of `CAS92.1`.
 
-.NET for iOS and .NET MAUI build on top of the .NET runtime and BCL and include additional API usages as defined in the following tables. The tables provide lists of C# .NET APIs that call the [Required Reasons APIs][RequiredReasonAPI] organized by category. If your application, SDK or package code calls any of the APIs from these lists, declare the reasons for their use in your privacy manifest file following the guidelines specified in Apple’s documentation on [Required Reasons APIs][RequiredReasonAPI].
-
-**Note:** The following lists are verified only for .NET MAUI versions 8.0.0 and later.
-
-### [File timestamp APIs][FileTimestampAPIs]
-
-The following APIs either directly or indirectly access file timestamps and require reasons for use. Use the string `NSPrivacyAccessedAPICategoryFileTimestamp` as the value for the `NSPrivacyAccessedAPIType` key in your `NSPrivacyAccessedAPITypes` dictionary. Refer to [File timestamp APIs][FileTimestampAPIs] for any additional relevent values to add to the `NSPrivacyAccessedAPITypeReasons` array.
-| Foundation APIs | UIKit APIs | AppKit APIs |
-| - | - | - |
-| [NSFileManager.CreationDate](https://learn.microsoft.com/en-us/dotnet/api/foundation.nsfilemanager.creationdate) | [UIDocument.FileModificationDate](https://learn.microsoft.com/en-us/dotnet/api/uikit.uidocument.filemodificationdate) | [NSDocument.FileModificationDate](https://learn.microsoft.com/en-us/dotnet/api/appkit.nsdocument.filemodificationdate) |
-| [NSFileManager.ModificationDate](https://learn.microsoft.com/en-us/dotnet/api/foundation.nsfilemanager.modificationdate)
-| [NSFileManager.SetAttributes(NSDictionary, string, NSError)](https://learn.microsoft.com/en-us/dotnet/api/foundation.nsfilemanager.setattributes)
-| [NSFileManager.SetAttributes(NSFileAttributes, string, NSError)](https://learn.microsoft.com/en-us/dotnet/api/foundation.nsfilemanager.setattributes)
-| [NSFileManager.SetAttributes(NSFileAttributes, string)](https://learn.microsoft.com/en-us/dotnet/api/foundation.nsfilemanager.setattributes)
-| [NSFileManager.CreateDirectory(string, bool, NSDictionary, NSError)](https://learn.microsoft.com/en-us/dotnet/api/foundation.nsfilemanager.createdictionary)
-| [NSFileManager.CreateDirectory(string, bool, NSFileAttributes, NSError)](https://learn.microsoft.com/en-us/dotnet/api/foundation.nsfilemanager.createdictionary)
-| [NSFileManager.CreateDirectory(string, bool, NSFileAttributes)](https://learn.microsoft.com/en-us/dotnet/api/foundation.nsfilemanager.createdictionary)
-| [NSFileManager.CreateFile(string, NSData, NSDictionary)](https://learn.microsoft.com/en-us/dotnet/api/foundation.nsfilemanager.createfile)
-| [NSFileManager.CreateFile(string, NSData, NSFileAttributes)](https://learn.microsoft.com/en-us/dotnet/api/foundation.nsfilemanager.createfile)
-| [NSFileManager.GetAttributes(string, NSError)](https://learn.microsoft.com/en-us/dotnet/api/foundation.nsfilemanager.getattributes)
-| [NSFileManager.GetAttributes(string)](https://learn.microsoft.com/en-us/dotnet/api/foundation.nsfilemanager.getattributes)
-| [NSDictionary.ToFileAttributes()](https://learn.microsoft.com/en-us/dotnet/api/foundation.nsdictionary.tofileattributes)
-| [NSUrl.ContentModificationDateKey](https://learn.microsoft.com/en-us/dotnet/api/foundation.nsurl.contentmodificationdatekey)
-| [NSUrl.CreationDateKey](https://learn.microsoft.com/en-us/dotnet/api/foundation.nsurl.creationdatekey)
-
-For example, if you use any of the API's listed above, your `PrivacyInfo.xcprivacy` would contain the `dict` element in the `NSPrivacyAccessedAPITypes` key's array as shown below:
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-    <key>NSPrivacyAccessedAPITypes</key>
-    <array>
-        <dict>
-            <key>NSPrivacyAccessedAPIType</key>
-            <string>NSPrivacyAccessedAPICategoryFileTimestamp</string>
-            <key>NSPrivacyAccessedAPITypeReasons</key>
-            <array>
-                <string>...</string>
-            </array>
-        </dict>
-	</array>
-</dict>
-</plist>
-```
-
-Additional reason codes from [File timestamp APIs][FileTimestampAPIs] can be provided in the array following the `NSPrivacyAccessedAPITypeReasons` key.
-
-### [System boot time APIs][SystemBootTimeAPIs]
-
-The following APIs either directly or indirectly access the system boot time and require reasons for use. Use the string `NSPrivacyAccessedAPICategorySystemBootTime` as the value for the `NSPrivacyAccessedAPIType` key in your `NSPrivacyAccessedAPITypes` dictionary. If you only access the system boot time from the list of API's below, then use the `35F9.1` value in the `NSPrivacyAccessedAPITypeReasons` array.
-| Foundation APIs | UIKit APIs | AppKit APIs |
-| - | - | - |
-| [NSProcessInfo.SystemUptime](https://learn.microsoft.com/en-us/dotnet/api/foundation.nsprocessinfo.systemuptime)
-
-For example, if you use any of the API's listed above, your `PrivacyInfo.xcprivacy` would contain the `dict` element in the `NSPrivacyAccessedAPITypes` key's array as shown below:
-
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-    <key>NSPrivacyAccessedAPITypes</key>
-    <array>
-        <dict>
-            <key>NSPrivacyAccessedAPIType</key>
-            <string>NSPrivacyAccessedAPICategorySystemBootTime</string>
-            <key>NSPrivacyAccessedAPITypeReasons</key>
-            <array>
-                <string>35F9.1</string>
-            </array>
-        </dict>
-	</array>
-</dict>
-</plist>
-```
-
-### [Disk space APIs][DiskSpaceAPIs]
- 
-The following APIs either directly or indirectly access the available disk space and require reasons for use. Use the string `NSPrivacyAccessedAPICategoryDiskSpace` as the value for the `NSPrivacyAccessedAPIType` key in your `NSPrivacyAccessedAPITypes` dictionary. If you access the available disk space from the list of API's below, then use [Disk space APIs][DiskSpaceAPIs] to determine the correct values to place in the `NSPrivacyAccessedAPITypeReasons` array.
-| Foundation APIs | UIKit APIs | AppKit APIs |
-| - | - | - |
-| [NSUrl.VolumeAvailableCapacityKey](https://learn.microsoft.com/en-us/dotnet/api/foundation.nsurl.volumeavailablecapacitykey)
-| [NSUrl.VolumeAvailableCapacityForImportantUsageKey](https://learn.microsoft.com/en-us/dotnet/api/foundation.nsurl.volumeavailablecapacityforimportantusagekey)
-| [NSUrl.VolumeAvailableCapacityForOpportunisticUsageKey](https://learn.microsoft.com/en-us/dotnet/api/foundation.nsurl.volumeavailablecapacityforopportunisticusagekey)
-| [NSUrl.VolumeTotalCapacityKey](https://learn.microsoft.com/en-us/dotnet/api/foundation.nsurl.volumetotalcapacity)
-| [NSFileManager.SystemFreeSize](https://learn.microsoft.com/en-us/dotnet/api/foundation.nsfilemanager.systemfreesize)
-| [NSFileManager.SystemSize](https://learn.microsoft.com/en-us/dotnet/api/foundation.nsfilemanager.systemsize)
-| [NSFileManager.GetFileSystemAttributes(string, NSError)](https://learn.microsoft.com/en-us/dotnet/api/foundation.nsfilemanager.getfilesystemattributes)
-| [NSFileManager.GetFileSystemAttributes(string)](https://learn.microsoft.com/en-us/dotnet/api/foundation.nsfilemanager.getfilesystemattributes)
-
-For example, if you use any of the API's listed above, your `PrivacyInfo.xcprivacy` would contain the `dict` element in the `NSPrivacyAccessedAPITypes` key's array as shown below:
-
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-    <key>NSPrivacyAccessedAPITypes</key>
-    <array>
-        <dict>
-            <key>NSPrivacyAccessedAPIType</key>
-            <string>NSPrivacyAccessedAPICategoryDiskSpace</string>
-            <key>NSPrivacyAccessedAPITypeReasons</key>
-            <array>
-                <string>...</string>
-            </array>
-        </dict>
-	</array>
-</dict>
-</plist>
-```
-
-Reason codes from [Disk space APIs][DiskSpaceAPIs] need to be provided in the array following the `NSPrivacyAccessedAPITypeReasons` key.
-
-### [Active keyboard APIs][ActiveKeyboardAPIs]
-
-The following APIs either directly or indirectly access the list of available keyboards and require reasons for use. Use the string `NSPrivacyAccessedAPICategoryActiveKeyboards ` as the value for the `NSPrivacyAccessedAPIType` key in your `NSPrivacyAccessedAPITypes` dictionary. If you access the list of available keyboards from the list of API's below, then use [Active keyboard APIs][ActiveKeyboardAPIs] to determine the correct values to place in the `NSPrivacyAccessedAPITypeReasons` array.
-| Foundation APIs | UIKit APIs | AppKit APIs |
-| - | - | - |
-|  | [UITextInputMode.ActiveInputModes](https://learn.microsoft.com/en-us/dotnet/api/appkit.uitextinputmode.activeinputmodes)
-
-For example, if you use any of the API's listed above, your `PrivacyInfo.xcprivacy` would contain the `dict` element in the `NSPrivacyAccessedAPITypes` key's array as shown below:
-
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-    <key>NSPrivacyAccessedAPITypes</key>
-    <array>
-        <dict>
-            <key>NSPrivacyAccessedAPIType</key>
-            <string>NSPrivacyAccessedAPICategoryActiveKeyboards</string>
-            <key>NSPrivacyAccessedAPITypeReasons</key>
-            <array>
-                <string>...</string>
-            </array>
-        </dict>
-	</array>
-</dict>
-</plist>
-```
-
-Reason codes from [Active keyboard APIs][ActiveKeyboardAPIs] need to be provided in the array following the `NSPrivacyAccessedAPITypeReasons` key.
-
-### [User defaults APIs][UserDefaultsAPIs]
-The following APIs either directly or indirectly access user defaults and require reasons for use. Use the string `NSPrivacyAccessedAPICategoryUserDefaults ` as the value for the `NSPrivacyAccessedAPIType` key in your `NSPrivacyAccessedAPITypes` dictionary. If you only access the user defaults from the list of API's below, then use the value `C56D.1` in the `NSPrivacyAccessedAPITypeReasons` array. Refer to [User defaults APIs][UserDefaultsAPIs] to determine the any additional relevant values to place in the `NSPrivacyAccessedAPITypeReasons` array.
-| Foundation APIs | UIKit APIs | AppKit APIs |
-| - | - | - |
-| [NSUserDefaults](https://learn.microsoft.com/en-us/dotnet/api/foundation.nsuserdefaults) | | [NSUserDefaultsController.NSUserDefaultsController(NSUserDefaults, NSDictionary)](https://learn.microsoft.com/en-us/dotnet/api/appkit.nsuserdefaultscontroller.-ctor#appkit-nsuserdefaultscontroller-ctor(foundation-nsuserdefaults-foundation-nsdictionary))
-|                | | [NSUserDefaultsController.Defaults](https://learn.microsoft.com/en-us/dotnet/api/appkit.nsuserdefaultscontroller.defaults)
-|                | | [NSUserDefaultsController.SharedUserDefaultsController](https://learn.microsoft.com/en-us/dotnet/api/appkit.nsuserdefaultscontroller.shareduserdefaultscontroller)
-
-For example, if you use any of the API's listed above, your `PrivacyInfo.xcprivacy` would contain the `dict` element in the `NSPrivacyAccessedAPITypes` key's array as shown below:
-
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-    <key>NSPrivacyAccessedAPITypes</key>
-    <array>
-        <dict>
-            <key>NSPrivacyAccessedAPIType</key>
-            <string>NSPrivacyAccessedAPICategoryUserDefaults</string>
-            <key>NSPrivacyAccessedAPITypeReasons</key>
-            <array>
-                <string>...</string>
-            </array>
-        </dict>
-	</array>
-</dict>
-</plist>
-```
-
-Reason codes from [User defaults APIs][UserDefaultsAPIs] need to be provided in the array following the `NSPrivacyAccessedAPITypeReasons` key.
+See the example below for detailed instructions on how to add a `PrivacyInfo.xcprivacy` file to your App.
 
 # Example
 Let's look at how you would add a Privacy Manifest file to an application that uses the following API's:
 
-* [NSUserDefaults](https://learn.microsoft.com/en-us/dotnet/api/foundation.nsuserdefaults) 
-* [NSProcessInfo.SystemUptime](https://learn.microsoft.com/en-us/dotnet/api/foundation.nsprocessinfo.systemuptime)
-* [NSFileManager.ModificationDate](https://learn.microsoft.com/en-us/dotnet/api/foundation.nsfilemanager.modificationdate)
+* [NSUserDefaults](https://learn.microsoft.com/dotnet/api/foundation.nsuserdefaults) 
+* [NSProcessInfo.SystemUptime](https://learn.microsoft.com/dotnet/api/foundation.nsprocessinfo.systemuptime)
+* [NSFileManager.ModificationDate](https://learn.microsoft.com/dotnet/api/foundation.nsfilemanager.modificationdate)
 
 How they are used is not that important for this example, but the `why` will determine the reason code needed for the privacy manifest.
 ## Creating the `PrivacyInfo.xcprivacy` file
@@ -320,11 +144,11 @@ You can add the entries for the API's usage to the `PrivacyInfo.xcproject` as fo
         </array>
     </dict>
     ```
-1. For the [NSProcessInfo.SystemUptime](https://learn.microsoft.com/en-us/dotnet/api/foundation.nsprocessinfo.systemuptime), a reason code of `35F9.1` is needed since that is the only reason code available. But since the .NET runtime and BCL already included that category and reason, there is nothing additional to add.
+1. For the [NSProcessInfo.SystemUptime](https://learn.microsoft.com/dotnet/api/foundation.nsprocessinfo.systemuptime), a reason code of `35F9.1` is needed since that is the only reason code available. But since the .NET runtime and BCL already included that category and reason, there is nothing additional to add.
 
-1. For the [NSFileManager.ModificationDate](https://learn.microsoft.com/en-us/dotnet/api/foundation.nsfilemanager.modificationdate), a reason code of `C617.1` is needed since the modification dates are stored as a hash using [NSUserDefaults](https://learn.microsoft.com/en-us/dotnet/api/foundation.nsuserdefaults) but not displayed to the user. Again, the .NET runtime and BCL requirements have already satisfied this category and reason so no additional changes are needed.
+1. For the [NSFileManager.ModificationDate](https://learn.microsoft.com/dotnet/api/foundation.nsfilemanager.modificationdate), a reason code of `C617.1` is needed since the modification dates are stored as a hash using [NSUserDefaults](https://learn.microsoft.com/dotnet/api/foundation.nsuserdefaults) but not displayed to the user. Again, the .NET runtime and BCL requirements have already satisfied this category and reason so no additional changes are needed.
 
-1. For the [NSUserDefaults](https://learn.microsoft.com/en-us/dotnet/api/foundation.nsuserdefaults), a reason code of `CA92.1` is provided since the data accessed is only accessible to the app itself. Add the following element to the `NSPrivacyAccessedAPITypes` array:
+1. For the [NSUserDefaults](https://learn.microsoft.com/dotnet/api/foundation.nsuserdefaults), a reason code of `CA92.1` is provided since the data accessed is only accessible to the app itself. Add the following element to the `NSPrivacyAccessedAPITypes` array:
     ```xml
     <dict>
         <key>NSPrivacyAccessedAPIType</key>
@@ -382,9 +206,13 @@ The complete `PrivacyInfo.xcprivacy` should now look similar to:
 </plist>
 ```
 
-Now that the file has been created, it needs to be placed properly when building the app. The `PrivacyInfo.xcprivacy` is consider a resource when it is time to build the bundle. In accordance with [Placing Content in a Bundle](https://developer.apple.com/documentation/bundleresources/placing_content_in_a_bundle) the file is placed in the root of the Bundle. Use the proper set of instructions below for your project type:
+Now that the file has been created, it needs to be placed properly when building the app. 
 
-## .NET MAUI
+## Adding the `PrivacyInfo.xcprivacy` file to your project
+
+The `PrivacyInfo.xcprivacy` is consider a resource when it is time to build the bundle. In accordance with [Placing Content in a Bundle](https://developer.apple.com/documentation/bundleresources/placing_content_in_a_bundle) the file is placed in the root of the Bundle. Use the proper set of instructions below for your project type:
+
+### .NET MAUI
 1. Copy the `PrivacyInfo.xcprivacy` from your documents folder to the `Platforms/iOS` folder in your .NET MAUI project.
 1. In your favorite text editor, edit the .NET MAUI csproj project file.
 1. Add the following elements to the bottom of the root  `<Project>` element:
@@ -395,10 +223,10 @@ Now that the file has been created, it needs to be placed properly when building
     ```
     This will package the file into the iOS app at the root of the bundle. 
 
-## .NET for iOS (net?-ios) 
+### .NET for iOS (net?-ios) 
 1. Copy the `PrivacyInfo.xcprivacy` from your documents folder to the `Resources` folder in your .NET for iOS project. This is all that is needed to package the file into the iOS app at the root of the bundle.
 
-## .NET for tvOS (net?-tvos)
+### .NET for tvOS (net?-tvos)
 1. Copy the `PrivacyInfo.xcprivacy` from your documents folder to the root folder of your .NET for tvOS project.
 1. In your favorite text editor, edit the .NET for tvOS csproj project file.
 1. Add the following elements to the bottom of the root  `<Project>` element:
@@ -409,7 +237,7 @@ Now that the file has been created, it needs to be placed properly when building
     ```
     This will package the file into the tvOS app at the root of the bundle. 
 
-## Xamarin iOS including Xamarin.Forms
+### Xamarin iOS including Xamarin.Forms
 1. Copy the `PrivacyInfo.xcprivacy` from your documents folder to the root folder of your Xamarin.iOS project.
 1. In your favorite text editor, edit the Xamarin.iOS csproj project file.
 1. Locate the `<ItemGroup>` that contains other `<BundleResource>` elements and add the following element:
