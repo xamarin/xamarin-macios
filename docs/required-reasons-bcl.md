@@ -12,7 +12,7 @@ The following APIs either directly or indirectly access file timestamps and requ
 | [System.Diagnostics.FileVersionInfo](https://learn.microsoft.com/dotnet/api/System.Diagnostics.FileVersionInfo) | [Interop.Sys.LStat](https://source.dot.net/#System.Private.CoreLib/src/libraries/Common/src/Interop/Unix/System.Native/Interop.Stat.cs,65) | SystemNative_LStat | g_file_test
 | [System.IO.Compression.ZipFile.CreateFromDirectory](https://learn.microsoft.com/dotnet/api/System.IO.Compression.ZipFile.CreateFromDirectory) | [Interop.Sys.Stat](https://source.dot.net/#System.Private.CoreLib/src/libraries/Common/src/Interop/Unix/System.Native/Interop.Stat.cs,62) | SystemNative_Stat | mono_file_map_size
 | [System.IO.Directory.CreateDirectory(string)](https://learn.microsoft.com/dotnet/api/System.IO.Directory.CreateDirectory) | [Interop.Sys.FStat](https://source.dot.net/#System.Private.CoreLib/src/libraries/Common/src/Interop/Unix/System.Native/Interop.Stat.cs,59) | SystemNative_FStat | 
-| [System.IO.Directory.CreateDirectory(string, UnixFileMode)](https://learn.microsoft.com/dotnet/api/System.IO.Directory.CreateDirectory)
+| [System.IO.Directory.CreateDirectory(string, UnixFileMode)](https://learn.microsoft.com/dotnet/api/System.IO.Directory.CreateDirectory) | [System.Runtime.Loader.AssemblyLoadContext.ResolveSatelliteAssembly](https://source.dot.net/#System.Private.CoreLib/src/libraries/System.Private.CoreLib/src/System/Runtime/Loader/AssemblyLoadContext.cs,763)
 | [System.IO.Directory.Delete(string)](https://learn.microsoft.com/dotnet/api/System.IO.Directory.Delete)
 | [System.IO.Directory.Exists(string?)](https://learn.microsoft.com/dotnet/api/System.IO.Directory.Exists)
 | [System.IO.Directory.GetCreationTime(string)](https://learn.microsoft.com/dotnet/api/System.IO.Directory.GetCreationTime)
@@ -95,7 +95,6 @@ The following APIs either directly or indirectly access file timestamps and requ
 | [System.Formats.Tar.TarWriter.WriteEntryAsync(TarEntry, CancellationToken)](https://learn.microsoft.com/dotnet/api/System.Formats.Tar.TarWriter.WriteEntryAsync)
 | [System.Formats.Tar.TarWriter.WriteEntryAsync(string, string, CancellationToken)](https://learn.microsoft.com/dotnet/api/System.Formats.Tar.TarWriter.WriteEntryAsync)
 | [System.Net.Sockets.Socket.SendPacketsAsync(SocketAsyncEventArgs)](https://learn.microsoft.com/dotnet/api/System.Net.Sockets.Socket.SendPacketsAsync)
-| [System.Runtime.Loader.AssemblyLoadContext.ResolveSatelliteAssembly](https://learn.microsoft.com/dotnet/api/System.Runtime.Loader.AssemblyLoadContext.ResolveSatelliteAssembly)
 | [System.TimeZoneInfo.Local](https://learn.microsoft.com/dotnet/api/System.TimeZoneInfo.Local) 
 
 
