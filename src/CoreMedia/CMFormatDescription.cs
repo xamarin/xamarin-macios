@@ -483,8 +483,8 @@ namespace CoreMedia {
 							index,
 							&ret,
 							&parameterSetSizeOut,
-							(nuint *) Unsafe.AsPointer<nuint> (ref parameterSetCount),
-							(int *) Unsafe.AsPointer<int> (ref nalUnitHeaderLength));
+							(nuint*) Unsafe.AsPointer<nuint> (ref parameterSetCount),
+							(int*) Unsafe.AsPointer<int> (ref nalUnitHeaderLength));
 			}
 			if (error != CMFormatDescriptionError.None)
 				return null;
@@ -615,8 +615,8 @@ namespace CoreMedia {
 							index,
 							&ret,
 							&parameterSetSizeOut,
-							(nuint *) Unsafe.AsPointer<nuint> (ref parameterSetCount),
-							(int *) Unsafe.AsPointer<int> (ref nalUnitHeaderLength));
+							(nuint*) Unsafe.AsPointer<nuint> (ref parameterSetCount),
+							(int*) Unsafe.AsPointer<int> (ref nalUnitHeaderLength));
 			}
 			if (error != CMFormatDescriptionError.None)
 				return null;
