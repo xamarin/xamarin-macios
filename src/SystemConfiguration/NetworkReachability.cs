@@ -105,7 +105,7 @@ namespace SystemConfiguration {
 
 		[DllImport (Constants.SystemConfigurationLibrary)]
 		extern static /* SCNetworkReachabilityRef __nullable */ IntPtr SCNetworkReachabilityCreateWithName (
-			/* CFAllocatorRef __nullable */ IntPtr allocator, /* const char* __nonnull */ string address);
+			/* CFAllocatorRef __nullable */ IntPtr allocator, /* const char* __nonnull */ IntPtr address);
 
 		[DllImport (Constants.SystemConfigurationLibrary)]
 		extern static /* SCNetworkReachabilityRef __nullable */ IntPtr SCNetworkReachabilityCreateWithAddress (
@@ -156,7 +156,8 @@ namespace SystemConfiguration {
 			if (address is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (address));
 
-			return CheckFailure (SCNetworkReachabilityCreateWithName (IntPtr.Zero, address));
+			using var addressStr = new TransientString (address);
+			return CheckFailure (SCNetworkReachabilityCreateWithName (IntPtr.Zero, addressStr));
 		}
 
 		public NetworkReachability (string address)

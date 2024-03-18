@@ -21,8 +21,8 @@ namespace Xharness.Jenkins.TestTasks {
 
 		public IEnumerable<ISimulatorDevice> Simulators {
 			get {
-				if (testTask.Device == null) return Array.Empty<ISimulatorDevice> ();
-				else if (testTask.CompanionDevice == null) {
+				if (testTask.Device is null) return Array.Empty<ISimulatorDevice> ();
+				else if (testTask.CompanionDevice is null) {
 					return new ISimulatorDevice [] { testTask.Device };
 				} else {
 					return new ISimulatorDevice [] { testTask.Device, testTask.CompanionDevice };
@@ -47,17 +47,17 @@ namespace Xharness.Jenkins.TestTasks {
 			else if (project.EndsWith ("-watchos", StringComparison.Ordinal)) {
 				testTask.AppRunnerTarget = TestTarget.Simulator_watchOS;
 			} else {
-				testTask.AppRunnerTarget = TestTarget.Simulator_iOS;
+				testTask.AppRunnerTarget = TestTarget.Simulator_iOS64;
 			}
 		}
 
 		public async Task FindSimulatorAsync ()
 		{
-			if (testTask.Device != null)
+			if (testTask.Device is not null)
 				return;
 
 			var asyncEnumerable = testTask.Candidates as IAsyncEnumerable;
-			if (asyncEnumerable != null)
+			if (asyncEnumerable is not null)
 				await asyncEnumerable.ReadyTask;
 
 			try {
@@ -123,7 +123,7 @@ namespace Xharness.Jenkins.TestTasks {
 				return;
 			}
 			using (var resource = await testTask.NotifyBlockingWaitAsync (testTask.AcquireResourceAsync ())) {
-				if (testTask.Runner == null)
+				if (testTask.Runner is null)
 					await SelectSimulatorAsync ();
 				await testTask.Runner.RunAsync ();
 			}

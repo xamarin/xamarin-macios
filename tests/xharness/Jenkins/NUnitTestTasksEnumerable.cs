@@ -6,7 +6,7 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 using Xharness.Jenkins.TestTasks;
 
 namespace Xharness.Jenkins {
-	class NUnitTestTasksEnumerable : IEnumerable<NUnitExecuteTask> {
+	class NUnitTestTasksEnumerable : IEnumerable<RunTestTask> {
 
 		readonly Jenkins jenkins;
 		readonly IMlaunchProcessManager processManager;
@@ -17,7 +17,7 @@ namespace Xharness.Jenkins {
 			this.processManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
 		}
 
-		public IEnumerator<NUnitExecuteTask> GetEnumerator ()
+		public IEnumerator<RunTestTask> GetEnumerator ()
 		{
 			var netstandard2Project = new TestProject (TestLabel.Msbuild, Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "msbuild", "Xamarin.MacDev.Tasks.Tests", "Xamarin.MacDev.Tasks.Tests.csproj"))) {
 				IsDotNetProject = true,
@@ -33,7 +33,6 @@ namespace Xharness.Jenkins {
 				Platform = TestPlatform.iOS,
 				SolutionPath = Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "..", "msbuild", "Xamarin.MacDev.Tasks.sln")),
 				SupportsParallelExecution = false,
-				RestoreNugets = true,
 				Environment = env,
 			};
 			var nunitExecutioniOSMSBuild = new NUnitExecuteTask (jenkins, buildiOSMSBuild, processManager) {
@@ -59,7 +58,6 @@ namespace Xharness.Jenkins {
 				Platform = TestPlatform.iOS,
 				SolutionPath = Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "..", "msbuild", "Xamarin.MacDev.Tasks.sln")),
 				SupportsParallelExecution = false,
-				RestoreNugets = true,
 				Environment = env,
 			};
 			var nunitExecutioniOSMSBuildIntegration = new NUnitExecuteTask (jenkins, buildiOSMSBuildIntegration, processManager) {
@@ -107,7 +105,7 @@ namespace Xharness.Jenkins {
 				Platform = TestPlatform.iOS,
 				TestName = "MTouch tests",
 				Timeout = TimeSpan.FromMinutes (180),
-				Ignored = !jenkins.TestSelection.IsEnabled (TestLabel.Mtouch),
+				Ignored = !jenkins.TestSelection.IsEnabled (TestLabel.Mtouch) || !jenkins.TestSelection.IsEnabled (PlatformLabel.iOS),
 				InProcess = true,
 			};
 			yield return nunitExecutionMTouch;
@@ -131,22 +129,22 @@ namespace Xharness.Jenkins {
 			};
 			yield return runGenerator;
 
-			var buildCecilTestsProject = new TestProject (TestLabel.Cecil, Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "cecil-tests", "cecil-tests.csproj")));
-			buildCecilTestsProject.RestoreNugetsInProject = true;
+			var buildCecilTestsProject = new TestProject (TestLabel.Cecil, Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "cecil-tests", "cecil-tests.csproj"))) {
+				IsDotNetProject = true,
+			};
 			var buildCecilTests = new MSBuildTask (jenkins: jenkins, testProject: buildCecilTestsProject, processManager: processManager) {
+				TestProject = buildCecilTestsProject,
 				SpecifyPlatform = false,
-				Platform = TestPlatform.All,
-				ProjectConfiguration = "Debug",
+				SpecifyConfiguration = false,
+				Platform = TestPlatform.iOS,
 				Ignored = !jenkins.TestSelection.IsEnabled (TestLabel.Cecil),
 			};
-			var runCecilTests = new NUnitExecuteTask (jenkins, buildCecilTests, processManager) {
-				TestLibrary = Path.Combine (Path.GetDirectoryName (buildCecilTestsProject.Path), "bin", "Debug", "net472", "cecil-tests.dll"),
+			var runCecilTests = new DotNetTestTask (jenkins, buildCecilTests, processManager) {
 				TestProject = buildCecilTestsProject,
 				Platform = TestPlatform.iOS,
 				TestName = "Cecil-based tests",
-				Timeout = TimeSpan.FromMinutes (5),
-				Ignored = !jenkins.TestSelection.IsEnabled (TestLabel.Cecil),
-				InProcess = true,
+				Timeout = TimeSpan.FromMinutes (10),
+				Ignored = !jenkins.TestSelection.IsEnabled (TestLabel.Cecil) || !jenkins.TestSelection.IsEnabled (PlatformLabel.Dotnet),
 			};
 			yield return runCecilTests;
 

@@ -37,7 +37,7 @@ namespace ObjCRuntime {
 		}
 
 		public IntPtr MarshalManagedToNative (object obj) {
-			if (obj == null)
+			if (obj is null)
 				return IntPtr.Zero;
 			if (!(obj is Selector))
 				throw new MarshalDirectiveException ("This custom marshaler must be used on a Selector derived type.");
@@ -56,7 +56,7 @@ namespace ObjCRuntime {
 		}
 
 		public static ICustomMarshaler GetInstance(string cookie) {
-			if(marshaler == null)
+			if(marshaler is null)
 				return marshaler = new SelectorMarshaler ();
 
 			return marshaler;

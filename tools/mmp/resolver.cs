@@ -48,36 +48,36 @@ namespace Xamarin.Bundler {
 			if (cache.TryGetValue (name, out assembly))
 				return assembly;
 
-			if (CommandLineAssemblies != null && CommandLineAssemblies.Count > 0) {
+			if (CommandLineAssemblies is not null && CommandLineAssemblies.Count > 0) {
 				string cmdasm = CommandLineAssemblies.Find (t => {
 					if (String.IsNullOrEmpty (t))
 						return false;
 					return String.Compare (name, Path.GetFileNameWithoutExtension (t), StringComparison.Ordinal) == 0;
 				});
 				assembly = String.IsNullOrEmpty (cmdasm) ? null : Load (cmdasm);
-				if (assembly != null)
+				if (assembly is not null)
 					return assembly;
 			}
 
-			if (ArchDirectory != null) {
+			if (ArchDirectory is not null) {
 				assembly = SearchDirectory (name, ArchDirectory);
-				if (assembly != null)
+				if (assembly is not null)
 					return assembly;
 			}
 
 			assembly = SearchDirectory (name, FrameworkDirectory);
-			if (assembly != null)
+			if (assembly is not null)
 				return assembly;
 
-			if (FrameworkDirectory != null) {
+			if (FrameworkDirectory is not null) {
 				var pclPath = Path.Combine (FrameworkDirectory, "Facades");
 				assembly = SearchDirectory (name, pclPath);
-				if (assembly != null)
+				if (assembly is not null)
 					return assembly;
 			}
 
 			assembly = SearchDirectory (name, RootDirectory, ".exe");
-			if (assembly != null)
+			if (assembly is not null)
 				return assembly;
 
 			if (!string.IsNullOrEmpty (GlobalAssemblyCache)) {
@@ -99,7 +99,7 @@ namespace Xamarin.Bundler {
 			if (SystemFrameworkDirectories?.Length > 0) {
 				foreach (var dir in SystemFrameworkDirectories) {
 					assembly = SearchDirectory (reference.Name, dir);
-					if (assembly != null) {
+					if (assembly is not null) {
 						if (Driver.IsUnifiedFullXamMacFramework)
 							ErrorHelper.Warning (176, Errors.MX0176, reference.ToString (), assembly.MainModule.FileName);
 						return assembly;
@@ -114,7 +114,7 @@ namespace Xamarin.Bundler {
 		{
 			base.Configure ();
 
-			if (!Driver.UseLegacyAssemblyResolution && (Driver.IsUnifiedFullSystemFramework || Driver.IsUnifiedFullXamMacFramework)) {
+			if (!Driver.UseLegacyAssemblyResolution && (Driver.IsUnifiedFullSystemFramework || Driver.IsUnifiedFullXamMacFramework) && Driver.Action != Action.RunRegistrar) {
 				// We need to look in the GAC/System mono for both FullSystem and FullXamMac, because that's
 				// how we've been resolving assemblies in the past (Cecil has a fall-back mode where it looks
 				// in the GAC, and we never disabled that, meaning that we always looked in the GAC if failing

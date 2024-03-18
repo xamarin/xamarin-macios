@@ -11,11 +11,9 @@ using System.Xml.Linq;
 using System.Linq;
 using Xamarin.Bundler;
 
-namespace Xamarin.Tests
-{
+namespace Xamarin.Tests {
 	[TestFixture]
-	public class LocalizationTests
-	{
+	public class LocalizationTests {
 		[TestCase ("cs-CZ")]
 		[TestCase ("de-DE")]
 		[TestCase ("es-ES")]
@@ -40,12 +38,12 @@ namespace Xamarin.Tests
 				var englishError = TranslateError ("en-US", errorCode);
 				var newCultureError = TranslateError (culture, errorCode);
 				Assert.AreNotEqual (englishError, newCultureError, $"\"{errorCode}\" is not translated in {culture}.");
-			} catch (NullReferenceException){
+			} catch (NullReferenceException) {
 				Assert.Fail ($"Error code \"{errorCode}\" was not found");
 			} catch (AssertionException) {
 				throw;
 			} catch (Exception e) {
-					Assert.Fail ($"There was an issue obtaining the {culture} translation for {errorCode}. {e.Message}");
+				Assert.Fail ($"There was an issue obtaining the {culture} translation for {errorCode}. {e.Message}");
 			} finally {
 				Thread.CurrentThread.CurrentUICulture = originalUICulture;
 				Thread.CurrentThread.CurrentCulture = originalCulture;
@@ -93,7 +91,7 @@ namespace Xamarin.Tests
 			foreach (var errorCodeInfo in typeof (Errors).GetProperties ()) {
 				try {
 					var errorCode = errorCodeInfo.Name;
-					if (ignoredProperties.Contains(errorCode))
+					if (ignoredProperties.Contains (errorCode))
 						continue;
 					string englishError = TranslateError ("en-US", errorCode);
 					string newCultureError = TranslateError (culture, errorCode);

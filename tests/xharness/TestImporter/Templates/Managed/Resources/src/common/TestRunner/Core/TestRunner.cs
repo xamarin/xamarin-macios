@@ -5,10 +5,8 @@ using System.Reflection;
 using System.Threading.Tasks;
 
 
-namespace Xamarin.iOS.UnitTests
-{
-	public abstract class TestRunner
-	{
+namespace Xamarin.iOS.UnitTests {
+	public abstract class TestRunner {
 		public enum Jargon {
 			TouchUnit,
 			NUnitV2,
@@ -79,13 +77,13 @@ namespace Xamarin.iOS.UnitTests
 
 		protected void LogFailureSummary ()
 		{
-			if (FailureInfos == null || FailureInfos.Count == 0)
+			if (FailureInfos is null || FailureInfos.Count == 0)
 				return;
 
 			OnInfo ("Failed tests:");
 			for (int i = 1; i <= FailureInfos.Count; i++) {
 				TestFailureInfo info = FailureInfos [i - 1];
-				if (info == null || !info.HasInfo)
+				if (info is null || !info.HasInfo)
 					continue;
 
 				OnInfo ($"{i}) {info.Message}");
@@ -94,7 +92,7 @@ namespace Xamarin.iOS.UnitTests
 
 		void AssertExecutionState (TestExecutionState state)
 		{
-			if (state == null)
+			if (state is null)
 				throw new ArgumentNullException (nameof (state));
 		}
 

@@ -6,10 +6,8 @@ using Xamarin.Tests;
 
 using Xamarin.Utils;
 
-namespace Xamarin
-{
-	class MmpTool : BundlerTool, IDisposable
-	{
+namespace Xamarin {
+	class MmpTool : BundlerTool, IDisposable {
 		public string ApplicationName;
 		public string OutputPath;
 
@@ -55,7 +53,7 @@ namespace Xamarin
 
 		public override void CreateTemporaryApp (Profile profile, string appName = "testApp", string code = null, IList<string> extraArgs = null, string extraCode = null, string usings = null)
 		{
-			if (RootAssembly == null) {
+			if (RootAssembly is null) {
 				OutputPath = CreateTemporaryDirectory ();
 			} else {
 				// We're rebuilding an existing executable, so just reuse that
@@ -67,7 +65,7 @@ namespace Xamarin
 			RootAssembly = CompileTestAppExecutable (OutputPath, code, extraArgs, profile, appName, extraCode, usings);
 		}
 
-		public override string GetAppAssembliesDirectory()
+		public override string GetAppAssembliesDirectory ()
 		{
 			return Path.Combine (OutputPath, ApplicationName + ".app", "Contents", "MonoBundle");
 		}

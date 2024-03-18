@@ -52,9 +52,9 @@
 	// COOP: no managed memory access: any mode.
 	target = targ;
 	if (is_direct)
-		[((id) targ) retain];
+		objc_retain ((id) targ);
 	selector = sel;
-	argument = [arg retain];
+	argument = objc_retain (arg);
 	is_direct_binding = is_direct;
 	return self;
 }
@@ -81,8 +81,8 @@
 	void *targ = (void *) (is_direct_binding ? target : nil);
 	void *arg = (void *) argument;
 	dispatch_async (dispatch_get_main_queue (), ^{
-		[((id) targ) release];
-		[((id) arg) release];
+		objc_release ((id) targ);
+		objc_release ((id) arg);
 	});
 	[super dealloc];
 }
@@ -92,7 +92,8 @@ id
 xamarin_init_nsthread (id obj, bool is_direct, id target, SEL sel, id arg)
 {
 	// COOP: no managed memory access: any mode.
-	XamarinNSThreadObject *wrap = [[[XamarinNSThreadObject alloc] initWithData: target selector: sel argument: arg is_direct_binding: is_direct] autorelease];
+	XamarinNSThreadObject *wrap = [[XamarinNSThreadObject alloc] initWithData: target selector: sel argument: arg is_direct_binding: is_direct];
+	objc_autorelease (wrap);
 	id (*invoke) (id, SEL, id, SEL, id) = (id (*)(id, SEL, id, SEL, id)) objc_msgSend;
 	return invoke (obj, @selector(initWithTarget:selector:object:), wrap, @selector(start:), nil);
 }
@@ -145,7 +146,7 @@ void
 xamarin_initialize_cocoa_threads (init_cocoa_func *func)
 {
 	// COOP: no managed memory access: any mode.
-	[[[XamarinCocoaThreadInitializer alloc] initWithFunc: func] autorelease];
+	objc_autorelease ([[XamarinCocoaThreadInitializer alloc] initWithFunc: func]);
 }
 
 /* Threads & Blocks

@@ -92,7 +92,7 @@ namespace ObjCRuntime {
 			First = 0x100,
 		}
 
-#if MONOMAC
+#if MONOMAC && !NET
 		[DllImport (Constants.libcLibrary)]
 		internal static extern int dladdr (IntPtr addr, out Dl_info info);
 
@@ -109,7 +109,13 @@ namespace ObjCRuntime {
 		public static extern int dlclose (IntPtr handle);
 
 		[DllImport (Constants.libSystemLibrary, EntryPoint = "dlopen")]
-		internal static extern IntPtr _dlopen (string? path, Mode mode /* this is int32, not nint */);
+		static extern IntPtr _dlopen (IntPtr path, Mode mode /* this is int32, not nint */);
+
+		internal static IntPtr _dlopen (string? path, Mode mode /* this is int32, not nint */)
+		{
+			using var pathPtr = new TransientString (path);
+			return _dlopen (pathPtr, mode);
+		}
 
 		public static IntPtr dlopen (string? path, int mode)
 		{
@@ -148,7 +154,13 @@ namespace ObjCRuntime {
 		}
 
 		[DllImport (Constants.libSystemLibrary)]
-		public static extern IntPtr dlsym (IntPtr handle, string symbol);
+		static extern IntPtr dlsym (IntPtr handle, IntPtr symbol);
+
+		public static IntPtr dlsym (IntPtr handle, string symbol)
+		{
+			using var symbolPtr = new TransientString (symbol);
+			return dlsym (handle, symbolPtr);
+		}
 
 		public static IntPtr dlsym (RTLD lookupType, string symbol)
 		{

@@ -1,6 +1,6 @@
 {
   "author": "Microsoft",
-  "name": "tvOS View",
-  "description": "A tvOS View",
-  "symbols/namespace/description": "namespace for the generated code"
+  "name": "Visualizzazione tvOS",
+  "description": "Una Visualizzazione tvOS",
+  "symbols/namespace/description": "spazio dei nomi per il codice generato"
 }

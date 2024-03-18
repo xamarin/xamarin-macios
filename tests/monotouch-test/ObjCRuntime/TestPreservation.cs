@@ -59,7 +59,7 @@ namespace MonoTouchFixtures {
 		bool IsTestFixture (Type type)
 		{
 			// what's a test fixture: https://docs.nunit.org/articles/nunit/writing-tests/attributes/testfixture.html
-			if (type == null || type == typeof (object))
+			if (type is null || type == typeof (object))
 				return false;
 
 			if (type.IsDefined (typeof (TestFixtureAttribute)))

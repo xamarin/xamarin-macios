@@ -1,6 +1,8 @@
+#nullable enable
+
 namespace Xamarin.MacDev.Tasks {
 	public static class PlatformUtils {
-		public static string GetTargetPlatform (string sdkPlatform, bool isWatchApp)
+		public static string? GetTargetPlatform (string sdkPlatform, bool isWatchApp)
 		{
 			switch (sdkPlatform) {
 			case "iPhoneSimulator":

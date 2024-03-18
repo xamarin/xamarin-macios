@@ -1,6 +1,4 @@
 !missing-enum! MPSCNNConvolutionWeightsLayout not bound
-!missing-enum! MPSPolygonType not bound
-!missing-enum! MPSRayMaskOperator not bound
 !missing-enum! MPSTemporalWeighting not bound
 !missing-protocol! MPSCNNGroupNormalizationDataSource not bound
 !missing-protocol! MPSNNGramMatrixCallback not bound
@@ -23,7 +21,6 @@
 !missing-selector! +MPSNNGramMatrixCalculationGradientNode::nodeWithSourceGradient:sourceImage:gradientState:alpha: not bound
 !missing-selector! +MPSNNGramMatrixCalculationNode::nodeWithSource: not bound
 !missing-selector! +MPSNNGramMatrixCalculationNode::nodeWithSource:alpha: not bound
-!missing-selector! +MPSPolygonBuffer::polygonBuffer not bound
 !missing-selector! MPSCNNBatchNormalizationNode::setTrainingStyle: not bound
 !missing-selector! MPSCNNBatchNormalizationNode::trainingStyle not bound
 !missing-selector! MPSCNNBinaryKernel::batchEncodingStorageSizeForPrimaryImage:secondaryImage:sourceStates:destinationImage: not bound
@@ -323,56 +320,6 @@
 !missing-selector! MPSNNReshape::encodeBatchToCommandBuffer:sourceImages:reshapedWidth:reshapedHeight:reshapedFeatureChannels: not bound
 !missing-selector! MPSNNReshape::encodeToCommandBuffer:sourceImage:destinationState:destinationStateIsTemporary:reshapedWidth:reshapedHeight:reshapedFeatureChannels: not bound
 !missing-selector! MPSNNReshape::encodeToCommandBuffer:sourceImage:reshapedWidth:reshapedHeight:reshapedFeatureChannels: not bound
-!missing-selector! MPSPolygonAccelerationStructure::indexBuffer not bound
-!missing-selector! MPSPolygonAccelerationStructure::indexBufferOffset not bound
-!missing-selector! MPSPolygonAccelerationStructure::indexType not bound
-!missing-selector! MPSPolygonAccelerationStructure::maskBuffer not bound
-!missing-selector! MPSPolygonAccelerationStructure::maskBufferOffset not bound
-!missing-selector! MPSPolygonAccelerationStructure::polygonBuffers not bound
-!missing-selector! MPSPolygonAccelerationStructure::polygonCount not bound
-!missing-selector! MPSPolygonAccelerationStructure::polygonType not bound
-!missing-selector! MPSPolygonAccelerationStructure::setIndexBuffer: not bound
-!missing-selector! MPSPolygonAccelerationStructure::setIndexBufferOffset: not bound
-!missing-selector! MPSPolygonAccelerationStructure::setIndexType: not bound
-!missing-selector! MPSPolygonAccelerationStructure::setMaskBuffer: not bound
-!missing-selector! MPSPolygonAccelerationStructure::setMaskBufferOffset: not bound
-!missing-selector! MPSPolygonAccelerationStructure::setPolygonBuffers: not bound
-!missing-selector! MPSPolygonAccelerationStructure::setPolygonCount: not bound
-!missing-selector! MPSPolygonAccelerationStructure::setPolygonType: not bound
-!missing-selector! MPSPolygonAccelerationStructure::setVertexBuffer: not bound
-!missing-selector! MPSPolygonAccelerationStructure::setVertexBufferOffset: not bound
-!missing-selector! MPSPolygonAccelerationStructure::setVertexStride: not bound
-!missing-selector! MPSPolygonAccelerationStructure::vertexBuffer not bound
-!missing-selector! MPSPolygonAccelerationStructure::vertexBufferOffset not bound
-!missing-selector! MPSPolygonAccelerationStructure::vertexStride not bound
-!missing-selector! MPSPolygonBuffer::copyWithZone: not bound
-!missing-selector! MPSPolygonBuffer::indexBuffer not bound
-!missing-selector! MPSPolygonBuffer::indexBufferOffset not bound
-!missing-selector! MPSPolygonBuffer::init not bound
-!missing-selector! MPSPolygonBuffer::initWithCoder: not bound
-!missing-selector! MPSPolygonBuffer::maskBuffer not bound
-!missing-selector! MPSPolygonBuffer::maskBufferOffset not bound
-!missing-selector! MPSPolygonBuffer::polygonCount not bound
-!missing-selector! MPSPolygonBuffer::setIndexBuffer: not bound
-!missing-selector! MPSPolygonBuffer::setIndexBufferOffset: not bound
-!missing-selector! MPSPolygonBuffer::setMaskBuffer: not bound
-!missing-selector! MPSPolygonBuffer::setMaskBufferOffset: not bound
-!missing-selector! MPSPolygonBuffer::setPolygonCount: not bound
-!missing-selector! MPSPolygonBuffer::setVertexBuffer: not bound
-!missing-selector! MPSPolygonBuffer::setVertexBufferOffset: not bound
-!missing-selector! MPSPolygonBuffer::vertexBuffer not bound
-!missing-selector! MPSPolygonBuffer::vertexBufferOffset not bound
-!missing-selector! MPSQuadrilateralAccelerationStructure::quadrilateralCount not bound
-!missing-selector! MPSQuadrilateralAccelerationStructure::setQuadrilateralCount: not bound
-!missing-selector! MPSRayIntersector::encodeIntersectionToCommandBuffer:intersectionType:rayBuffer:rayBufferOffset:rayIndexBuffer:rayIndexBufferOffset:intersectionBuffer:intersectionBufferOffset:rayIndexCount:accelerationStructure: not bound
-!missing-selector! MPSRayIntersector::encodeIntersectionToCommandBuffer:intersectionType:rayBuffer:rayBufferOffset:rayIndexBuffer:rayIndexBufferOffset:intersectionBuffer:intersectionBufferOffset:rayIndexCountBuffer:rayIndexCountBufferOffset:accelerationStructure: not bound
-!missing-selector! MPSRayIntersector::encodeIntersectionToCommandBuffer:intersectionType:rayTexture:intersectionTexture:accelerationStructure: not bound
-!missing-selector! MPSRayIntersector::rayIndexDataType not bound
-!missing-selector! MPSRayIntersector::rayMask not bound
-!missing-selector! MPSRayIntersector::rayMaskOperator not bound
-!missing-selector! MPSRayIntersector::setRayIndexDataType: not bound
-!missing-selector! MPSRayIntersector::setRayMask: not bound
-!missing-selector! MPSRayIntersector::setRayMaskOperator: not bound
 !missing-selector! MPSSVGF::bilateralFilterRadius not bound
 !missing-selector! MPSSVGF::bilateralFilterSigma not bound
 !missing-selector! MPSSVGF::channelCount not bound
@@ -476,14 +423,10 @@
 !missing-type! MPSNNLossGradient not bound
 !missing-type! MPSNNMultiaryGradientState not bound
 !missing-type! MPSNNMultiaryGradientStateNode not bound
-!missing-type! MPSPolygonAccelerationStructure not bound
-!missing-type! MPSPolygonBuffer not bound
-!missing-type! MPSQuadrilateralAccelerationStructure not bound
 !missing-type! MPSSVGF not bound
 !missing-type! MPSSVGFDefaultTextureAllocator not bound
 !missing-type! MPSSVGFDenoiser not bound
 !missing-type! MPSTemporalAA not bound
-!wrong-base-type! MPSTriangleAccelerationStructure expected MPSPolygonAccelerationStructure actual MPSAccelerationStructure
 ## appended from unclassified file
 !missing-enum-value! MPSDataType native value MPSDataTypeAlternateEncodingBit = 2147483648 not bound
 !missing-enum-value! MPSDataType native value MPSDataTypeBool = 2147483656 not bound
@@ -491,3 +434,9 @@
 !missing-enum-value! MPSIntersectionDataType native value MPSIntersectionDataTypeDistancePrimitiveIndexBufferIndexCoordinates = 6 not bound
 !missing-enum-value! MPSIntersectionDataType native value MPSIntersectionDataTypeDistancePrimitiveIndexBufferIndexInstanceIndex = 7 not bound
 !missing-enum-value! MPSIntersectionDataType native value MPSIntersectionDataTypeDistancePrimitiveIndexBufferIndexInstanceIndexCoordinates = 8 not bound
+!missing-enum-value! MPSDataType native value MPSDataTypeComplexBit = 16777216 not bound
+!missing-enum-value! MPSDataType native value MPSDataTypeComplexFloat16 = 285212704 not bound
+!missing-enum-value! MPSDataType native value MPSDataTypeComplexFloat32 = 285212736 not bound
+!missing-enum! MPSFloatDataTypeBit not bound
+!missing-enum! MPSFloatDataTypeShift not bound
+!missing-enum-value! MPSDataType native value MPSDataTypeBFloat16 = 2415919120 not bound

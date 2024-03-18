@@ -14,7 +14,7 @@ namespace Microsoft.MaciOS.Nnyeah.Tests.Integration {
 	[TestFixture]
 	public class IntegrationExamples {
 		string IntegrationRoot => Path.Combine (Configuration.SourceRoot, "tools", "nnyeah", "integration");
-		string Nnyeah => Path.Combine (Configuration.SourceRoot, "tools", "nnyeah", "nnyeah", "bin", "Debug", "net6.0", "nnyeah.dll");
+		string Nnyeah => Path.Combine (Configuration.SourceRoot, "tools", "nnyeah", "nnyeah", "bin", "Debug", Configuration.DotNetTfm, "nnyeah.dll");
 		string NnyeahNupkg => Path.Combine (Configuration.SourceRoot, "tools", "nnyeah", "nupkg");
 
 		// TODO - This code, and passing xamarin-assembly/microsoft-assembly should be removed long term from nnyeah

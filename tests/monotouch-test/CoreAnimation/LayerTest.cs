@@ -41,9 +41,9 @@ namespace MonoTouchFixtures.CoreAnimation {
 		{
 			// bug 2441
 			CAActionTestClass obj = new CAActionTestClass ();
-			Assert.That (null == obj.ActionForKey ("animation"), "a");
-			Assert.That (null == obj.Actions, "b");
-			Assert.That (null == CAActionTestClass.DefaultActionForKey ("animation"), "c");
+			Assert.IsNull (obj.ActionForKey ("animation"), "a");
+			Assert.IsNull (obj.Actions, "b");
+			Assert.IsNull (CAActionTestClass.DefaultActionForKey ("animation"), "c");
 
 			var animationKey = new NSString ("animation");
 			var basicAnimationKey = new NSString ("basicAnimation");
@@ -56,8 +56,8 @@ namespace MonoTouchFixtures.CoreAnimation {
 
 			Assert.That (obj.ActionForKey ("animation") == dict [animationKey], "e");
 			Assert.That (obj.ActionForKey ("basicAnimation") == dict [basicAnimationKey], "f");
-			Assert.That (null == CAActionTestClass.DefaultActionForKey ("animation"), "g");
-			Assert.That (null == CALayer.DefaultActionForKey ("animation"), "h");
+			Assert.IsNull (CAActionTestClass.DefaultActionForKey ("animation"), "g");
+			Assert.IsNull (CALayer.DefaultActionForKey ("animation"), "h");
 		}
 
 		class CAActionTestClass : CALayer {

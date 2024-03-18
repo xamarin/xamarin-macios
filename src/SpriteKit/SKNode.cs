@@ -20,13 +20,10 @@ using ObjCRuntime;
 namespace SpriteKit {
 	public partial class SKNode : IEnumerable, IEnumerable<SKNode> {
 #if NET
-		[SupportedOSPlatform ("ios8.0")]
-		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (8, 0)]
-		[Mac (10, 10)]
 #endif
 		public static T? FromFile<T> (string file) where T : SKNode
 		{
@@ -65,13 +62,12 @@ namespace SpriteKit {
 
 #if NET
 		[SupportedOSPlatform ("tvos12.0")]
-		[SupportedOSPlatform ("macos10.14")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios12.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (5, 0)]
 		[TV (12, 0)]
-		[Mac (10, 14)]
 		[iOS (12, 0)]
 #endif
 		public static SKNode? Create (string filename, Type [] types, out NSError error)
@@ -93,13 +89,12 @@ namespace SpriteKit {
 
 #if NET
 		[SupportedOSPlatform ("tvos12.0")]
-		[SupportedOSPlatform ("macos10.14")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios12.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (5, 0)]
 		[TV (12, 0)]
-		[Mac (10, 14)]
 		[iOS (12, 0)]
 #endif
 		public static SKNode? Create (string filename, NSSet<Class> classes, out NSError error)

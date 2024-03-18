@@ -17,9 +17,9 @@ using Foundation;
 namespace UIKit {
 	public partial class UIAlertView {
 		public UIAlertView (string title, string message, IUIAlertViewDelegate del, string cancelButtonTitle, params string [] otherButtons)
-			: this (title, message, del, cancelButtonTitle, otherButtons == null || otherButtons.Length == 0 ? IntPtr.Zero : new NSString (otherButtons [0]).Handle, IntPtr.Zero, IntPtr.Zero)
+			: this (title, message, del, cancelButtonTitle, otherButtons is null || otherButtons.Length == 0 ? IntPtr.Zero : new NSString (otherButtons [0]).Handle, IntPtr.Zero, IntPtr.Zero)
 		{
-			if (otherButtons == null)
+			if (otherButtons is null)
 				return;
 
 			// first button, if present, was already added

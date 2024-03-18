@@ -38,7 +38,7 @@ namespace Introspection {
 							   BindingFlags.Public |
 							   BindingFlags.Static)
 						   let attr = mi.GetCustomAttribute<DllImportAttribute> ()
-						   where attr != null && !Skip (mi)
+						   where attr is not null && !Skip (mi)
 						   select mi;
 		}
 
@@ -112,7 +112,7 @@ namespace Introspection {
 
 		protected virtual bool CheckForEnumParameter (MethodInfo mi, ParameterInfo pi)
 		{
-			if (pi.ParameterType.IsEnum && pi.ParameterType.GetCustomAttribute<NativeAttribute> () != null) {
+			if (pi.ParameterType.IsEnum && pi.ParameterType.GetCustomAttribute<NativeAttribute> () is not null) {
 				AddErrorLine ("[FAIL] {0}.{1} has a [Native] enum parameter in its signature: {2} {3}",
 					mi.DeclaringType.FullName, mi.Name, pi.ParameterType, pi.Name);
 				return false;
@@ -161,7 +161,7 @@ namespace Introspection {
 					if (MonoNativeConfig.LinkMode == MonoNativeLinkMode.None)
 						continue;
 #if __IOS__
-					libname = MonoNativeConfig.GetPInvokeLibraryName (MonoNativeFlavor.Compat, MonoNativeConfig.LinkMode);
+					libname = MonoNativeConfig.GetPInvokeLibraryName (MonoNativeFlavor.Unified, MonoNativeConfig.LinkMode);
 #else
 					libname = null;
 #endif
@@ -222,7 +222,23 @@ namespace Introspection {
 						path = null;
 						break;
 					case "libSystem.Native":
-						path += ".dylib";
+						var staticallyLinked = false;
+#if __MACCATALYST__
+						// always statically linked
+						staticallyLinked = true;
+#elif __IOS__ || __TVOS__
+						// statically linked on device
+						staticallyLinked = Runtime.Arch == Arch.DEVICE;
+#elif __MACOS__
+						// never statically linked (by default)
+#else
+#error Unknown platform
+#endif
+						if (staticallyLinked) {
+							path = null;
+						} else {
+							path += ".dylib";
+						}
 						break;
 #endif
 					case "libc":
@@ -235,7 +251,7 @@ namespace Introspection {
 						if (MonoNativeConfig.LinkMode == MonoNativeLinkMode.None)
 							continue;
 #if __IOS__
-						path = MonoNativeConfig.GetPInvokeLibraryName (MonoNativeFlavor.Compat, MonoNativeConfig.LinkMode);
+						path = MonoNativeConfig.GetPInvokeLibraryName (MonoNativeFlavor.Unified, MonoNativeConfig.LinkMode);
 #else
 						path = null;
 #endif
@@ -246,7 +262,7 @@ namespace Introspection {
 					var h = Dlfcn.dlsym (lib, name);
 					if (h == IntPtr.Zero) {
 						ReportError ("Could not find the symbol '{0}' in {1} for the P/Invoke {2}.{3} in {4}", name, path, t.FullName, m.Name, a.GetName ().Name);
-					} else if (path != null) {
+					} else if (path is not null) {
 						// Verify that the P/Invoke points to the right library.
 						Dl_info info = default (Dl_info);
 						var found = dladdr (h, out info);

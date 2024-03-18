@@ -13,13 +13,13 @@ namespace PerfTest {
 
 	public class NativeArrays {
 
-		NSNumber[] array;
+		NSNumber [] array;
 
 		[Params (0, 1, 16, 256, 4096)]
 		public int Length { get; set; }
 
 		[GlobalSetup]
-		public void Setup()
+		public void Setup ()
 		{
 			array = new NSNumber [Length];
 			for (int i = 0; i < Length; i++)

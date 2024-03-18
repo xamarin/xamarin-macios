@@ -29,6 +29,8 @@ using System;
 using ObjCRuntime;
 using Foundation;
 
+#nullable enable
+
 namespace AppKit {
 	[Register ("__monomac_internal_ActionDispatcher")]
 	internal class ActionDispatcher : NSObject
@@ -40,25 +42,25 @@ namespace AppKit {
 		const string dkey = "__monomac_internal_ActionDispatcher_doubleActivated:";
 		public static Selector Action = new Selector (skey);
 		public static Selector DoubleAction = new Selector (dkey);
-		public EventHandler Activated;
-		public EventHandler DoubleActivated;
+		public EventHandler? Activated;
+		public EventHandler? DoubleActivated;
 #if !__MACCATALYST__
-		public Func<NSMenuItem, bool> ValidateMenuItemFunc;
+		public Func<NSMenuItem, bool>? ValidateMenuItemFunc;
 #endif // !__MACCATALYST__
 
 		[Preserve, Export (skey)]
 		public void OnActivated (NSObject sender)
 		{
-			EventHandler handler = Activated;
-			if (handler != null)
+			var handler = Activated;
+			if (handler is not null)
 				handler (sender, EventArgs.Empty);
 		}
 
 		[Preserve, Export (dkey)]
 		public void OnActivated2 (NSObject sender)
 		{
-			EventHandler handler = DoubleActivated;
-			if (handler != null)
+			var handler = DoubleActivated;
+			if (handler is not null)
 				handler (sender, EventArgs.Empty);
 		}
 
@@ -73,38 +75,38 @@ namespace AppKit {
 			IsDirectBinding = false;
 		}
 
-		public static NSObject SetupAction (NSObject target, EventHandler handler)
+		public static NSObject SetupAction (NSObject? target, EventHandler handler)
 		{
-			ActionDispatcher ctarget = target as ActionDispatcher;
-			if (ctarget == null) {
+			var ctarget = target as ActionDispatcher;
+			if (ctarget is null) {
 				ctarget = new ActionDispatcher ();
 			}
 			ctarget.Activated += handler;
 			return ctarget;
 		}
 
-		public static void RemoveAction (NSObject target, EventHandler handler)
+		public static void RemoveAction (NSObject? target, EventHandler handler)
 		{
-			ActionDispatcher ctarget = target as ActionDispatcher;
-			if (ctarget == null)
+			var ctarget = target as ActionDispatcher;
+			if (ctarget is null)
 				return;
 			ctarget.Activated -= handler;
 		}
 
-		public static NSObject SetupDoubleAction (NSObject target, EventHandler doubleHandler)
+		public static NSObject SetupDoubleAction (NSObject? target, EventHandler doubleHandler)
 		{
-			ActionDispatcher ctarget = target as ActionDispatcher;
-			if (ctarget == null) {
+			var ctarget = target as ActionDispatcher;
+			if (ctarget is null) {
 				ctarget = new ActionDispatcher ();
 			}
 			ctarget.DoubleActivated += doubleHandler;
 			return ctarget;
 		}
 
-		public static void RemoveDoubleAction (NSObject target, EventHandler doubleHandler)
+		public static void RemoveDoubleAction (NSObject? target, EventHandler doubleHandler)
 		{
-			ActionDispatcher ctarget = target as ActionDispatcher;
-			if (ctarget == null)
+			var ctarget = target as ActionDispatcher;
+			if (ctarget is null)
 				return;
 			ctarget.DoubleActivated -= doubleHandler;
 		}
@@ -112,7 +114,7 @@ namespace AppKit {
 #if !__MACCATALYST__
 		public bool ValidateMenuItem (NSMenuItem menuItem)
 		{
-			if (ValidateMenuItemFunc != null)
+			if (ValidateMenuItemFunc is not null)
 				return ValidateMenuItemFunc (menuItem);
 
 			return true;

@@ -44,7 +44,7 @@ namespace MapKit {
 			if (points.Length == 0)
 				return PolylineWithPoints (IntPtr.Zero, 0);
 
-			fixed (MKMapPoint* first = &points [0]) {
+			fixed (MKMapPoint* first = points) {
 				return PolylineWithPoints ((IntPtr) first, points.Length);
 			}
 		}
@@ -56,7 +56,7 @@ namespace MapKit {
 			if (coords.Length == 0)
 				return PolylineWithCoordinates (IntPtr.Zero, 0);
 
-			fixed (CLLocationCoordinate2D* first = &coords [0]) {
+			fixed (CLLocationCoordinate2D* first = coords) {
 				return PolylineWithCoordinates ((IntPtr) first, coords.Length);
 			}
 		}

@@ -33,7 +33,7 @@ namespace MonoTouchFixtures.MetalPerformanceShaders {
 
 			device = MTLDevice.SystemDefault;
 			// some older hardware won't have a default
-			if (device == null || !MPSKernel.Supports (device))
+			if (device is null || !MPSKernel.Supports (device))
 				Assert.Inconclusive ("Metal is not supported");
 		}
 
@@ -48,7 +48,7 @@ namespace MonoTouchFixtures.MetalPerformanceShaders {
 
 			var d = MTLDevice.SystemDefault;
 			// some older hardware won't have a default
-			if (d == null)
+			if (d is null)
 				Assert.Inconclusive ("Metal is not supported");
 
 			var r = MPSKernel.RectNoClip;

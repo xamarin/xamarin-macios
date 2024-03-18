@@ -26,7 +26,7 @@ namespace UIKit {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static UICellAccessoryPosition GetPositionBeforeAccessory (Class accessoryClass)
 		{
-			if (accessoryClass == null)
+			if (accessoryClass is null)
 				throw new ArgumentNullException (nameof (accessoryClass));
 			var ret = UICellAccessoryPositionBeforeAccessoryOfClass (accessoryClass.Handle);
 			return NIDUICellAccessoryPosition.Create (ret)!;
@@ -43,7 +43,7 @@ namespace UIKit {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static UICellAccessoryPosition GetPositionAfterAccessory (Class accessoryClass)
 		{
-			if (accessoryClass == null)
+			if (accessoryClass is null)
 				throw new ArgumentNullException (nameof (accessoryClass));
 			var ret = UICellAccessoryPositionAfterAccessoryOfClass (accessoryClass.Handle);
 			return NIDUICellAccessoryPosition.Create (ret)!;
@@ -62,9 +62,13 @@ namespace UIKit {
 	// This class bridges native block invocations that call into C#
 	//
 	static internal class SDUICellAccessoryPosition {
+#if !NET
 		static internal readonly DUICellAccessoryPosition Handler = Invoke;
 
 		[MonoPInvokeCallback (typeof (DUICellAccessoryPosition))]
+#else
+		[UnmanagedCallersOnly]
+#endif
 		static unsafe nuint Invoke (IntPtr block, IntPtr accessories)
 		{
 			var descriptor = (BlockLiteral*) block;
@@ -96,7 +100,7 @@ namespace UIKit {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		nuint Invoke (UICellAccessory [] accessories)
 		{
-			using var nsa_accessories = accessories == null ? null : NSArray.FromNSObjects (accessories);
+			using var nsa_accessories = accessories is null ? null : NSArray.FromNSObjects (accessories);
 
 			return invoker (BlockPointer, nsa_accessories.GetHandle ());
 		}

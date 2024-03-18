@@ -27,6 +27,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Globalization;
 using System.IO;
 using System.Net;
@@ -173,7 +174,7 @@ namespace Foundation {
 			inflightRequests = new Dictionary<NSUrlSessionTask, InflightData> ();
 		}
 
-#if !MONOMAC && !__WATCHOS__
+#if !MONOMAC && !__WATCHOS__ && !NET8_0
 
 		void AddNotification ()
 		{
@@ -223,7 +224,7 @@ namespace Foundation {
 					data.Dispose ();
 					inflightRequests.Remove (task);
 				}
-#if !MONOMAC && !__WATCHOS__
+#if !MONOMAC && !__WATCHOS__ && !NET8_0
 				// do we need to be notified? If we have not inflightData, we do not
 				if (inflightRequests.Count == 0)
 					RemoveNotification ();
@@ -239,7 +240,7 @@ namespace Foundation {
 		protected override void Dispose (bool disposing)
 		{
 			lock (inflightRequestsLock) {
-#if !MONOMAC && !__WATCHOS__
+#if !MONOMAC && !__WATCHOS__ && !NET8_0
 				// remove the notification if present, method checks against null
 				RemoveNotification ();
 #endif
@@ -328,21 +329,37 @@ namespace Foundation {
 				trustOverrideForUrl = value;
 			}
 		}
+#if !NET8_0
 		// we do check if a user does a request and the application goes to the background, but
 		// in certain cases the user does that on purpose (BeingBackgroundTask) and wants to be able
 		// to use the network. In those cases, which are few, we want the developer to explicitly 
 		// bypass the check when there are not request in flight 
 		bool bypassBackgroundCheck = true;
+#endif
 
+#if !XAMCORE_5_0
+		[EditorBrowsable (EditorBrowsableState.Never)]
+#if NET8_0
+		[Obsolete ("This property is ignored.")]
+#else
+		[Obsolete ("This property will be ignored in .NET 8.")]
+#endif
 		public bool BypassBackgroundSessionCheck {
 			get {
+#if NET8_0
+				return true;
+#else
 				return bypassBackgroundCheck;
+#endif
 			}
 			set {
+#if !NET8_0
 				EnsureModifiability ();
 				bypassBackgroundCheck = value;
+#endif
 			}
 		}
+#endif // !XAMCORE_5_0
 
 		public CookieContainer? CookieContainer {
 			get {
@@ -474,6 +491,11 @@ namespace Foundation {
 			};
 
 			if (stream != Stream.Null) {
+				// Rewind the stream to the beginning in case the HttpContent implementation
+				// will be accessed again (e.g. for retry/redirect) and it keeps its stream open behind the scenes.
+				if (stream.CanSeek)
+					stream.Seek (0, SeekOrigin.Begin);
+
 				// HttpContent.TryComputeLength is `protected internal` :-( but it's indirectly called by headers
 				var length = request.Content?.Headers?.ContentLength;
 				if (length.HasValue && (length <= MaxInputInMemory))
@@ -497,7 +519,7 @@ namespace Foundation {
 			var inflightData = new InflightData (request.RequestUri?.AbsoluteUri!, cancellationToken, request);
 
 			lock (inflightRequestsLock) {
-#if !MONOMAC && !__WATCHOS__
+#if !MONOMAC && !__WATCHOS__ && !NET8_0
 				// Add the notification whenever needed
 				AddNotification ();
 #endif
@@ -544,6 +566,7 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos")]
+		[EditorBrowsable (EditorBrowsableState.Never)]
 		public bool CheckCertificateRevocationList { get; set; } = false;
 
 		// We're ignoring this property, just like Xamarin.Android does:
@@ -553,6 +576,7 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos")]
+		[EditorBrowsable (EditorBrowsableState.Never)]
 		public X509CertificateCollection ClientCertificates { get { return new X509CertificateCollection (); } }
 
 		// We're ignoring this property, just like Xamarin.Android does:
@@ -561,6 +585,7 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos")]
+		[EditorBrowsable (EditorBrowsableState.Never)]
 		public ClientCertificateOption ClientCertificateOptions { get; set; }
 
 		// We're ignoring this property, just like Xamarin.Android does:
@@ -569,6 +594,7 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos")]
+		[EditorBrowsable (EditorBrowsableState.Never)]
 		public ICredentials? DefaultProxyCredentials { get; set; }
 
 		public int MaxAutomaticRedirections {
@@ -586,6 +612,7 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos")]
+		[EditorBrowsable (EditorBrowsableState.Never)]
 		public int MaxConnectionsPerServer { get; set; } = int.MaxValue;
 
 		// We're ignoring this property, just like Xamarin.Android does:
@@ -594,6 +621,7 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos")]
+		[EditorBrowsable (EditorBrowsableState.Never)]
 		public int MaxResponseHeadersLength { get; set; } = 64; // Units in K (1024) bytes.
 
 		// We don't support PreAuthenticate, so always return false, and ignore any attempts to change it.
@@ -601,6 +629,7 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos")]
+		[EditorBrowsable (EditorBrowsableState.Never)]
 		public bool PreAuthenticate {
 			get => false;
 			set { }
@@ -612,6 +641,7 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos")]
+		[EditorBrowsable (EditorBrowsableState.Never)]
 		public IDictionary<string, object>? Properties { get { return null; } }
 
 		// We dont support any custom proxies, and don't let anybody wonder why their proxy isn't
@@ -620,6 +650,7 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos")]
+		[EditorBrowsable (EditorBrowsableState.Never)]
 		public IWebProxy? Proxy {
 			get => null;
 			set => throw new PlatformNotSupportedException ();
@@ -635,6 +666,7 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos")]
+		[EditorBrowsable (EditorBrowsableState.Never)]
 		public SslProtocols SslProtocols { get; set; } = SslProtocols.Tls12 | SslProtocols.Tls13;
 
 		private ServerCertificateCustomValidationCallbackHelper? _serverCertificateCustomValidationCallbackHelper;
@@ -908,9 +940,6 @@ namespace Foundation {
 
 				// this can happen if the HTTP request times out and it is removed as part of the cancellation process
 				if (inflight is not null) {
-					// set the stream as finished
-					inflight.Stream.TrySetReceivedAllData ();
-
 					// send the error or send the response back
 					if (error is not null || serverError is not null) {
 						// got an error, cancel the stream operatios before we do anything
@@ -921,6 +950,9 @@ namespace Foundation {
 						inflight.CompletionSource.TrySetException (exc);
 						inflight.Stream.TrySetException (exc);
 					} else {
+						// set the stream as finished
+						inflight.Stream.TrySetReceivedAllData ();
+
 						inflight.Completed = true;
 						SetResponse (inflight);
 					}
@@ -1307,8 +1339,10 @@ namespace Foundation {
 
 				while (current is null) {
 					lock (dataLock) {
-						if (data.Count == 0 && receivedAllData && position == length)
+						if (data.Count == 0 && receivedAllData && position == length) {
+							ThrowIfNeeded (cancellationToken);
 							return 0;
+						}
 
 						if (data.Count > 0 && current is null) {
 							current = data.Peek ();
@@ -1399,51 +1433,72 @@ namespace Foundation {
 			CFRunLoopSource source;
 			readonly Stream stream;
 			bool notifying;
+			NSError? error;
 
 			public WrappedNSInputStream (Stream inputStream)
 			{
 				status = NSStreamStatus.NotOpen;
 				stream = inputStream;
 				source = new CFRunLoopSource (Handle, false);
+				IsDirectBinding = false;
 			}
 
+			[Preserve (Conditional = true)]
 			public override NSStreamStatus Status => status;
 
+			[Preserve (Conditional = true)]
 			public override void Open ()
 			{
 				status = NSStreamStatus.Open;
 				Notify (CFStreamEventType.OpenCompleted);
 			}
 
+			[Preserve (Conditional = true)]
 			public override void Close ()
 			{
 				status = NSStreamStatus.Closed;
 			}
 
+			[Preserve (Conditional = true)]
 			public override nint Read (IntPtr buffer, nuint len)
 			{
-				var sourceBytes = new byte [len];
-				var read = stream.Read (sourceBytes, 0, (int) len);
-				Marshal.Copy (sourceBytes, 0, buffer, (int) len);
+				try {
+					var sourceBytes = new byte [len];
+					var read = stream.Read (sourceBytes, 0, (int) len);
+					Marshal.Copy (sourceBytes, 0, buffer, (int) len);
 
-				if (notifying)
+					if (notifying)
+						return read;
+
+					notifying = true;
+					if (stream.CanSeek && stream.Position == stream.Length) {
+						Notify (CFStreamEventType.EndEncountered);
+						status = NSStreamStatus.AtEnd;
+					}
+					notifying = false;
+
 					return read;
-
-				notifying = true;
-				if (stream.CanSeek && stream.Position == stream.Length) {
-					Notify (CFStreamEventType.EndEncountered);
-					status = NSStreamStatus.AtEnd;
+				} catch (Exception e) {
+					// -1 means that the operation failed; more information about the error can be obtained with streamError.
+					error = new NSExceptionError (e);
+					return -1;
 				}
-				notifying = false;
-
-				return read;
 			}
 
+			[Preserve (Conditional = true)]
+			public override NSError Error {
+				get {
+					return error ?? base.Error;
+				}
+			}
+
+			[Preserve (Conditional = true)]
 			public override bool HasBytesAvailable ()
 			{
 				return true;
 			}
 
+			[Preserve (Conditional = true)]
 			protected override bool GetBuffer (out IntPtr buffer, out nuint len)
 			{
 				// Just call the base implemention (which will return false)
@@ -1451,22 +1506,26 @@ namespace Foundation {
 			}
 
 			// NSInvalidArgumentException Reason: *** -propertyForKey: only defined for abstract class.  Define -[System_Net_Http_NSUrlSessionHandler_WrappedNSInputStream propertyForKey:]!
+			[Preserve (Conditional = true)]
 			protected override NSObject? GetProperty (NSString key)
 			{
 				return null;
 			}
 
+			[Preserve (Conditional = true)]
 			protected override bool SetProperty (NSObject? property, NSString key)
 			{
 				return false;
 			}
 
+			[Preserve (Conditional = true)]
 			protected override bool SetCFClientFlags (CFStreamEventType inFlags, IntPtr inCallback, IntPtr inContextPtr)
 			{
 				// Just call the base implementation, which knows how to handle everything.
 				return base.SetCFClientFlags (inFlags, inCallback, inContextPtr);
 			}
 
+			[Preserve (Conditional = true)]
 #if NET
 			public override void Schedule (NSRunLoop aRunLoop, NSString nsMode)
 #else
@@ -1488,6 +1547,7 @@ namespace Foundation {
 				notifying = false;
 			}
 
+			[Preserve (Conditional = true)]
 #if NET
 			public override void Unschedule (NSRunLoop aRunLoop, NSString nsMode)
 #else

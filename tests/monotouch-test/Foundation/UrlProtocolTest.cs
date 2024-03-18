@@ -73,28 +73,19 @@ namespace MonoTouchFixtures.Foundation {
 			// Networking seems broken on our macOS 10.9 bot, so skip this test.
 			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 10, throwIfOtherPlatform: false);
 
-			Exception ex = null;
-			var done = new ManualResetEvent (false);
 			var success = false;
 
-			Task.Run (async () => {
-				try {
-					var config = NSUrlSessionConfiguration.DefaultSessionConfiguration;
-					config.WeakProtocolClasses = NSArray.FromNSObjects (new Class (typeof (CustomUrlProtocol)));
-					var session = NSUrlSession.FromConfiguration (config);
-					var custom_url = new NSUrl ("foo://server");
-					using (var task = await session.CreateDownloadTaskAsync (custom_url)) {
-						success = true;
-					}
-				} catch (Exception e) {
-					ex = e;
-				} finally {
-					done.Set ();
+			var task = Task.Run (async () => {
+				var config = NSUrlSessionConfiguration.DefaultSessionConfiguration;
+				config.WeakProtocolClasses = NSArray.FromNSObjects (new Class (typeof (CustomUrlProtocol)));
+				var session = NSUrlSession.FromConfiguration (config);
+				var custom_url = new NSUrl ("foo://server");
+				using (var task = await session.CreateDownloadTaskAsync (custom_url)) {
+					success = true;
 				}
 			});
 
-			Assert.IsTrue (TestRuntime.RunAsync (DateTime.Now.AddSeconds (10), () => { }, () => done.WaitOne (0)), "Timed out");
-			Assert.IsNull (ex, "Exception");
+			Assert.IsTrue (TestRuntime.RunAsync (TimeSpan.FromSeconds (10), task), "Timed out");
 			Assert.That (CustomUrlProtocol.State, Is.EqualTo (5), "State");
 			Assert.IsTrue (success, "Success");
 		}
@@ -196,7 +187,7 @@ namespace MonoTouchFixtures.Foundation {
 			public virtual void DidCompleteWithError (NSUrlSession session, NSUrlSessionTask task, NSError error)
 			{
 				State = -5;
-				if (error != null) {
+				if (error is not null) {
 					this.Client.FailedWithError (this, error);
 				} else {
 					this.Client.FinishedLoading (this);

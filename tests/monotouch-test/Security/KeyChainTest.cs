@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.IO;
 using System.Reflection;
+using System.Threading;
 
 using CoreFoundation;
 using Foundation;
@@ -45,7 +46,13 @@ namespace MonoTouchFixtures.Security {
 				// delete any existing certificates first.
 				SecKeyChain.Remove (query);
 				// add the new certificate
-				var rc = SecKeyChain.Add (rec);
+				SecStatusCode rc = SecKeyChain.Add (rec);
+				// Try again a few times if we get SecStatusCode.DuplicateItem - we might be running in parallel with another test run in another process.
+				var attemptsLeft = 10;
+				while (rc == SecStatusCode.DuplicateItem && attemptsLeft-- > 0) {
+					Thread.Sleep (100);
+					rc = SecKeyChain.Add (rec);
+				}
 				Assert.That (rc, Is.EqualTo (SecStatusCode.Success), "Add_Certificate");
 			} finally {
 				// clean up after ourselves
@@ -75,7 +82,7 @@ namespace MonoTouchFixtures.Security {
 			using (var rec = RecordTest.CreateSecRecord (SecKind.Identity)) {
 				SecStatusCode code;
 				var match = SecKeyChain.QueryAsConcreteType (rec, out code);
-				if ((match == null) && (code == SecStatusCode.ItemNotFound))
+				if ((match is null) && (code == SecStatusCode.ItemNotFound))
 					Assert.Inconclusive ("Test randomly fails (race condition between addtion/commit/query?");
 
 				Assert.That (code, Is.EqualTo (SecStatusCode.Success), "QueryAsRecord-2");
@@ -118,7 +125,7 @@ namespace MonoTouchFixtures.Security {
 		string uniqueString;
 		string UniqueString {
 			get {
-				if (uniqueString == null)
+				if (uniqueString is null)
 					uniqueString = $"{CFBundle.GetMain ().Identifier}-{GetType ().FullName}-{Process.GetCurrentProcess ().Id}";
 				return uniqueString;
 			}
@@ -153,7 +160,7 @@ namespace MonoTouchFixtures.Security {
 				account: RecordAccount
 			);
 			var queryResponse = SecKeyChain.QueryAsRecord (queryRec, out code);
-			if (code == SecStatusCode.Success && queryResponse?.Generic != null)
+			if (code == SecStatusCode.Success && queryResponse?.Generic is not null)
 				return new Guid (NSString.FromData (queryResponse.Generic, NSStringEncoding.UTF8));
 
 			return Guid.Empty;
@@ -168,7 +175,7 @@ namespace MonoTouchFixtures.Security {
 				account: RecordAccount
 			);
 			var data = SecKeyChain.QueryAsData (queryRec, true, out code);
-			if (code == SecStatusCode.Success && queryRec != null) {
+			if (code == SecStatusCode.Success && queryRec is not null) {
 				Assert.NotNull (data.Bytes);
 			}
 		}
@@ -182,7 +189,7 @@ namespace MonoTouchFixtures.Security {
 				account: RecordAccount
 			);
 			var data = SecKeyChain.QueryAsData (queryRec, true, 1, out code);
-			if (code == SecStatusCode.Success && queryRec != null) {
+			if (code == SecStatusCode.Success && queryRec is not null) {
 				Assert.NotNull (data [0].Bytes);
 			}
 		}

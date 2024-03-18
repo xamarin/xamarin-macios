@@ -49,6 +49,7 @@ using MonoMac.Tuner;
 using Xamarin.Utils;
 using Xamarin.Linker;
 using Registrar;
+using ClassRedirector;
 using ObjCRuntime;
 
 namespace Xamarin.Bundler {
@@ -105,10 +106,12 @@ namespace Xamarin.Bundler {
 		public static bool LinkProhibitedFrameworks { get; private set; }
 		public static bool UseLegacyAssemblyResolution { get; private set; }
 
+		internal static Action Action { get => action; }
+
 		static string mono_prefix;
 		static string MonoPrefix {
 			get {
-				if (mono_prefix == null) {
+				if (mono_prefix is null) {
 					mono_prefix = Environment.GetEnvironmentVariable ("MONO_PREFIX");
 					if (string.IsNullOrEmpty (mono_prefix))
 						mono_prefix = "/Library/Frameworks/Mono.framework/Versions/Current";
@@ -246,9 +249,9 @@ namespace Xamarin.Bundler {
 			if (ParseOptions (App, os, args, ref action))
 				return 0;
 
-			if (App.AOTOptions == null) {
+			if (App.AOTOptions is null) {
 				string forceAotVariable = Environment.GetEnvironmentVariable ("XM_FORCE_AOT");
-				if (forceAotVariable != null)
+				if (forceAotVariable is not null)
 					App.AOTOptions = new AOTOptions (forceAotVariable);
 			}
 
@@ -344,11 +347,11 @@ namespace Xamarin.Bundler {
 
 		static void ValidateXamarinMacReference ()
 		{
-			// Many Xamarin.Mac references are technically valid, so whitelisting risks breaking working project
+			// Many Xamarin.Mac references are technically valid, so approving them risks breaking working project
 			// However, passing in Mobile / Xamarin.Mac folders and resolving full/4.5 or vice versa is 
 			// far from expected. So catch the common cases if we can
 			string reference = App.References.FirstOrDefault (x => x.EndsWith ("Xamarin.Mac.dll", StringComparison.Ordinal));
-			if (reference != null) {
+			if (reference is not null) {
 				bool valid = true;
 				if (IsUnifiedMobile)
 					valid = !reference.Contains ("full/") && !reference.Contains ("4.5/");
@@ -400,7 +403,7 @@ namespace Xamarin.Bundler {
 		// Validates that sdk_version is set to a reasonable value before compile
 		static void ValidateSDKVersion ()
 		{
-			if (App.SdkVersion != null) {
+			if (App.SdkVersion is not null) {
 				// We can't do mutation while parsing command line args as XcodeVersion isn't set yet
 				App.SdkVersion = MutateSDKVersionToPointRelease (App.SdkVersion);
 				return;
@@ -558,7 +561,7 @@ namespace Xamarin.Bundler {
 				foreach (var kvp in linked_native_libs) {
 					List<MethodDefinition> methods;
 					if (native_libs.TryGetValue (kvp.Key, out methods)) {
-						if (methods == null) {
+						if (methods is null) {
 							methods = new List<MethodDefinition> ();
 							native_libs [kvp.Key] = methods;
 						}
@@ -587,10 +590,10 @@ namespace Xamarin.Bundler {
 			if (generate_plist)
 				GeneratePList ();
 
-			if (App.LinkMode != LinkMode.Full && App.RuntimeOptions != null)
+			if (App.LinkMode != LinkMode.Full && App.RuntimeOptions is not null)
 				App.RuntimeOptions.Write (resources_dir);
 
-			if (App.AOTOptions != null && App.AOTOptions.IsAOT) {
+			if (App.AOTOptions is not null && App.AOTOptions.IsAOT) {
 				AOTCompilerType compilerType;
 				if (IsUnifiedMobile || IsUnifiedFullXamMacFramework)
 					compilerType = AOTCompilerType.Bundled64;
@@ -653,7 +656,7 @@ namespace Xamarin.Bundler {
 		static string system_mono_directory;
 		public static string SystemMonoDirectory {
 			get {
-				if (system_mono_directory == null)
+				if (system_mono_directory is null)
 					system_mono_directory = RunPkgConfig ("--variable=prefix", force_system_mono: true);
 				return system_mono_directory;
 			}
@@ -671,7 +674,7 @@ namespace Xamarin.Bundler {
 		{
 			var sr = new StreamReader (typeof (Driver).Assembly.GetManifestResourceStream (App.Embeddinator ? "Info-framework.plist.tmpl" : "Info.plist.tmpl"));
 			var all = sr.ReadToEnd ();
-			var icon_str = (icon != null) ? "\t<key>CFBundleIconFile</key>\n\t<string>" + icon + "</string>\n\t" : "";
+			var icon_str = (icon is not null) ? "\t<key>CFBundleIconFile</key>\n\t<string>" + icon + "</string>\n\t" : "";
 			var path = Path.Combine (App.Embeddinator ? resources_dir : contents_dir, "Info.plist");
 			using (var sw = new StreamWriter (path)) {
 				sw.WriteLine (
@@ -853,7 +856,7 @@ namespace Xamarin.Bundler {
 					bool appendedObjc = false;
 					var sourceFiles = new List<string> ();
 					foreach (var assembly in BuildTarget.Assemblies) {
-						if (assembly.LinkWith != null) {
+						if (assembly.LinkWith is not null) {
 							foreach (var linkWith in assembly.LinkWith) {
 								Log (2, "Found LinkWith on {0} for {1}", assembly.FileName, linkWith);
 								if (linkWith.EndsWith (".dylib", StringComparison.Ordinal)) {
@@ -870,16 +873,16 @@ namespace Xamarin.Bundler {
 								args.Add ("-ObjC");
 							}
 						}
-						if (assembly.LinkerFlags != null)
+						if (assembly.LinkerFlags is not null)
 							foreach (var linkFlag in assembly.LinkerFlags)
 								args.Add (linkFlag);
-						if (assembly.Frameworks != null) {
+						if (assembly.Frameworks is not null) {
 							foreach (var f in assembly.Frameworks) {
 								Log (2, $"Adding Framework {f} for {assembly.FileName}");
 								HandleFramework (args, f, false);
 							}
 						}
-						if (assembly.WeakFrameworks != null) {
+						if (assembly.WeakFrameworks is not null) {
 							foreach (var f in assembly.WeakFrameworks) {
 								Log (2, $"Adding Weak Framework {f} for {assembly.FileName}");
 								HandleFramework (args, f, true);
@@ -999,7 +1002,7 @@ namespace Xamarin.Bundler {
 						args.Add ("-stdlib=libc++");
 					}
 					args.Add ($"-I{GetProductSdkIncludeDirectory (App)}");
-					if (registrarPath != null)
+					if (registrarPath is not null)
 						args.Add (registrarPath);
 					args.Add ("-fno-caret-diagnostics");
 					args.Add ("-fno-diagnostics-fixit-info");
@@ -1010,6 +1013,10 @@ namespace Xamarin.Bundler {
 						args.Add ("-isysroot");
 						args.Add (Path.Combine (DeveloperDirectory, "Platforms", "MacOSX.platform", "Developer", "SDKs", "MacOSX" + sysRootSDKVersion + ".sdk"));
 					}
+
+					// check if needs to be removed: https://github.com/xamarin/xamarin-macios/issues/18693
+					if (XcodeVersion.Major >= 15 && !App.DisableAutomaticLinkerSelection)
+						args.Add ("-Wl,-ld_classic");
 
 					if (App.RequiresPInvokeWrappers) {
 						var state = BuildTarget.LinkerOptions.MarshalNativeExceptionsState;
@@ -1086,7 +1093,7 @@ namespace Xamarin.Bundler {
 			AssemblyResolver resolver;
 
 			if (UseLegacyAssemblyResolution) {
-				if (cache != null) {
+				if (cache is not null) {
 					resolver = new Mono.Linker.AssemblyResolver (cache);
 				} else {
 					resolver = new Mono.Linker.AssemblyResolver ();
@@ -1140,15 +1147,15 @@ namespace Xamarin.Bundler {
 
 			foreach (string assembly_name in resolved_assemblies) {
 				AssemblyDefinition assembly = BuildTarget.Resolver.GetAssembly (assembly_name);
-				if (assembly != null) {
+				if (assembly is not null) {
 					foreach (ModuleDefinition md in assembly.Modules) {
 						if (md.HasTypes) {
 							foreach (TypeDefinition type in md.Types) {
 								if (type.HasMethods) {
 									foreach (MethodDefinition method in type.Methods) {
-										if ((method != null) && !method.HasBody && method.IsPInvokeImpl) {
+										if ((method is not null) && !method.HasBody && method.IsPInvokeImpl) {
 											// this happens for c++ assemblies (ref #11448)
-											if (method.PInvokeInfo == null)
+											if (method.PInvokeInfo is null)
 												continue;
 											string module = method.PInvokeInfo.Module.Name;
 
@@ -1171,7 +1178,7 @@ namespace Xamarin.Bundler {
 		static void CopyDependencies (IDictionary<string, List<MethodDefinition>> libraries)
 		{
 			// Process LinkWith first so we don't have unnecessary warnings
-			foreach (var assembly in BuildTarget.Assemblies.Where (a => a.LinkWith != null)) {
+			foreach (var assembly in BuildTarget.Assemblies.Where (a => a.LinkWith is not null)) {
 				foreach (var linkWith in assembly.LinkWith.Where (l => l.EndsWith (".dylib", StringComparison.Ordinal))) {
 					string libName = Path.GetFileName (linkWith);
 					string finalLibPath = Path.Combine (mmp_dir, libName);
@@ -1301,20 +1308,20 @@ namespace Xamarin.Bundler {
 
 			// Now let's check inside mono/lib
 			string monoDirPath = Path.Combine (GetMonoLibraryDirectory (App), libName);
-			if (src == null && File.Exists (monoDirPath))
+			if (src is null && File.Exists (monoDirPath))
 				src = monoDirPath;
 
 			// Now let's check in path with our libName
-			if (src == null && !String.IsNullOrEmpty (path)) {
+			if (src is null && !String.IsNullOrEmpty (path)) {
 				string pathWithLibName = Path.Combine (path, name);
 				if (File.Exists (pathWithLibName))
 					src = pathWithLibName;
 			}
 
 			// If we can't find it at this point, scream
-			if (src == null) {
+			if (src is null) {
 				ErrorHelper.Show (new ProductException (2006, false, Errors.MM2006, name));
-				if (used_by_methods != null && used_by_methods.Count > 0) {
+				if (used_by_methods is not null && used_by_methods.Count > 0) {
 					const int referencedByLimit = 25;
 					bool limitReferencedByWarnings = used_by_methods.Count > referencedByLimit && Verbosity < 4;
 					foreach (var m in limitReferencedByWarnings ? used_by_methods.Take (referencedByLimit) : used_by_methods) {
@@ -1471,7 +1478,7 @@ namespace Xamarin.Bundler {
 				CopyResourceFile ("config", "config");
 			}
 
-			if (machine_config_path != null) {
+			if (machine_config_path is not null) {
 				string machineConfigDestDir = Path.Combine (mmp_dir, "mono/4.5/");
 				string machineConfigDestFile = Path.Combine (machineConfigDestDir, "machine.config");
 
@@ -1572,7 +1579,7 @@ namespace Xamarin.Bundler {
 
 		static void ProcessAssemblyReferences (AssemblyDefinition assembly)
 		{
-			if (assembly == null)
+			if (assembly is null)
 				return;
 
 			var fqname = GetRealPath (assembly.MainModule.FileName);
@@ -1599,7 +1606,7 @@ namespace Xamarin.Bundler {
 				path = AssemblySwapInfo.GetSwappedAssemblyPath (path);
 
 			var assembly = BuildTarget.Resolver.Load (path);
-			if (assembly == null)
+			if (assembly is null)
 				ErrorHelper.Warning (1501, Errors.MM1501, path);
 			return assembly;
 		}

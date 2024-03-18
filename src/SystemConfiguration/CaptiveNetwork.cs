@@ -63,8 +63,10 @@ namespace SystemConfiguration {
 #if !MONOMAC
 
 #if NET
-		[UnsupportedOSPlatform ("ios14.0")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[ObsoletedOSPlatform ("ios14.0")]
+		[ObsoletedOSPlatform ("maccatalyst14.0")]
 #else
 		[Deprecated (PlatformName.iOS, 14, 0)]
 #endif
@@ -73,9 +75,10 @@ namespace SystemConfiguration {
 			/* CFStringRef __nonnull */ IntPtr interfaceName);
 
 #if NET
-		[UnsupportedOSPlatform ("ios14.0")]
-		[UnsupportedOSPlatform ("maccatalyst14.0")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[ObsoletedOSPlatform ("ios14.0")]
+		[ObsoletedOSPlatform ("maccatalyst14.0")]
 #else
 		[Deprecated (PlatformName.iOS, 14, 0)]
 #endif
@@ -103,8 +106,8 @@ namespace SystemConfiguration {
 #if NET
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
-		[UnsupportedOSPlatform ("ios14.0")]
-		[UnsupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[ObsoletedOSPlatform ("maccatalyst13.1", "Use 'NEHotspotNetwork.FetchCurrent' instead.")]
 		[ObsoletedOSPlatform ("ios14.0", "Use 'NEHotspotNetwork.FetchCurrent' instead.")]
 #else
 		[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'NEHotspotNetwork.FetchCurrent' instead.")]
@@ -123,10 +126,11 @@ namespace SystemConfiguration {
 		}
 
 #if NET
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
-		[UnsupportedOSPlatform ("ios9.0")]
-		[UnsupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[ObsoletedOSPlatform ("ios9.0")]
+		[ObsoletedOSPlatform ("maccatalyst13.1")]
 #else
 		[Deprecated (PlatformName.iOS, 9, 0)]
 #endif
@@ -135,10 +139,11 @@ namespace SystemConfiguration {
 		extern static bool CNMarkPortalOffline (IntPtr /* CFStringRef __nonnull */ interfaceName);
 
 #if NET
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
-		[UnsupportedOSPlatform ("ios9.0")]
-		[UnsupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[ObsoletedOSPlatform ("ios9.0")]
+		[ObsoletedOSPlatform ("maccatalyst13.1")]
 #else
 		[Deprecated (PlatformName.iOS, 9, 0)]
 #endif
@@ -147,9 +152,10 @@ namespace SystemConfiguration {
 		extern static bool CNMarkPortalOnline (IntPtr /* CFStringRef __nonnull */ interfaceName);
 
 #if NET
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
-		[UnsupportedOSPlatform ("ios9.0")]
-		[UnsupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[ObsoletedOSPlatform ("maccatalyst13.1")]
 		[ObsoletedOSPlatform ("ios9.0")]
 #else
 		[Deprecated (PlatformName.iOS, 9, 0)]
@@ -162,9 +168,10 @@ namespace SystemConfiguration {
 		}
 
 #if NET
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
-		[UnsupportedOSPlatform ("ios9.0")]
-		[UnsupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[ObsoletedOSPlatform ("maccatalyst13.1")]
 		[ObsoletedOSPlatform ("ios9.0")]
 #else
 		[Deprecated (PlatformName.iOS, 9, 0)]
@@ -177,9 +184,10 @@ namespace SystemConfiguration {
 		}
 
 #if NET
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
-		[UnsupportedOSPlatform ("ios9.0")]
-		[UnsupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[ObsoletedOSPlatform ("maccatalyst13.1")]
 		[ObsoletedOSPlatform ("ios9.0")]
 #else
 		[Deprecated (PlatformName.iOS, 9, 0)]
@@ -189,9 +197,10 @@ namespace SystemConfiguration {
 		extern static bool CNSetSupportedSSIDs (IntPtr /* CFArrayRef __nonnull */ ssidArray);
 
 #if NET
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
-		[UnsupportedOSPlatform ("ios9.0")]
-		[UnsupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[ObsoletedOSPlatform ("maccatalyst13.1")]
 		[ObsoletedOSPlatform ("ios9.0")]
 #else
 		[Deprecated (PlatformName.iOS, 9, 0)]

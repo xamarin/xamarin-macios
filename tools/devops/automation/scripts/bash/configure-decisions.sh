@@ -34,3 +34,19 @@ else
 	RUN_MAC_TESTS=false
 fi
 AddOutputVariable RUN_MAC_TESTS "$RUN_MAC_TESTS"
+
+# Run windows tests if any platform is enabled, and they've not been disabled.
+if [[ "${LABELS_SKIP_WINDOWS_TESTS:-}" == "True" ]]; then
+	# They've been skipped: don't run them
+	RUN_WINDOWS_TESTS=false
+elif [[ "${LABELS_RUN_WINDOWS_TESTS:-}" == "True" ]]; then
+	# They've been explicitly enabled: run them
+	RUN_WINDOWS_TESTS=true
+elif [[ "${LABELS_SKIP_ALL_TESTS:-}" == "True" ]]; then
+	# All tests have been skipped
+	RUN_WINDOWS_TESTS=false
+else
+	# Otherwise run windows tests (we want to run windows tests if any platform is enabled)
+	RUN_WINDOWS_TESTS=true
+fi
+AddOutputVariable RUN_WINDOWS_TESTS "$RUN_WINDOWS_TESTS"

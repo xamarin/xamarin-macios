@@ -11,6 +11,8 @@ using Xamarin.Bundler;
 using Xamarin.Linker;
 using Xamarin.Linker.Steps;
 
+#nullable enable
+
 namespace Xamarin {
 
 	public class SetupStep : ConfigurationAwareStep {

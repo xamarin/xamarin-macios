@@ -29,12 +29,14 @@
 
 #nullable enable
 
-using System;
 using ObjCRuntime;
-using System.IO;
-using System.Runtime.InteropServices;
+
+using System;
+using System.Buffers;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Runtime.InteropServices;
 
 namespace Foundation {
 	public partial class NSData : IEnumerable, IEnumerable<byte> {
@@ -79,7 +81,7 @@ namespace Foundation {
 				return FromBytes (IntPtr.Zero, 0);
 
 			unsafe {
-				fixed (byte* ptr = &buffer [0]) {
+				fixed (byte* ptr = buffer) {
 					return FromBytes ((IntPtr) ptr, (nuint) buffer.Length);
 				}
 			}
@@ -105,17 +107,19 @@ namespace Foundation {
 			}
 
 			NSMutableData ret = NSMutableData.FromCapacity ((int) len);
-			byte [] buffer = new byte [32 * 1024];
+			byte [] buffer = ArrayPool<byte>.Shared.Rent (32 * 1024);
 			int n;
 			try {
 				unsafe {
-					fixed (byte* ptr = &buffer [0]) {
+					fixed (byte* ptr = buffer) {
 						while ((n = stream.Read (buffer, 0, buffer.Length)) != 0)
 							ret.AppendBytes ((IntPtr) ptr, (nuint) n);
 					}
 				}
 			} catch {
 				return null;
+			} finally {
+				ArrayPool<byte>.Shared.Return (buffer);
 			}
 			return ret;
 		}

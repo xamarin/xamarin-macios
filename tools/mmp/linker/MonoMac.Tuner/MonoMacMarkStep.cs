@@ -34,7 +34,7 @@ namespace MonoMac.Tuner {
 		protected override TypeDefinition MarkType (TypeReference reference)
 		{
 			TypeDefinition type = base.MarkType (GetOriginalType (reference));
-			if (type == null)
+			if (type is null)
 				return null;
 
 			switch (type.Module.Assembly.Name.Name) {
@@ -72,7 +72,7 @@ namespace MonoMac.Tuner {
 					// System.Net.WebRequest uses reflection to call MonoTouch.CoreFoundation.CFNetwork::GetDefaultProxy()
 					string typename = Namespaces.CoreFoundation + ".CFNetwork";
 					TypeDefinition cfnetwork = GetType (ProductAssembly, typename);
-					if (cfnetwork != null)
+					if (cfnetwork is not null)
 						MarkNamedMethod (cfnetwork, "GetDefaultProxy");
 
 					// FIXME: this is the non-MOBILE version

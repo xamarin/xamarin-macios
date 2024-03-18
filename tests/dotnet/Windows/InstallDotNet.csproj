@@ -1,0 +1,180 @@
+<!--
+  This is a heavily modified (simplified) copy of https://github.com/dotnet/maui/blob/47f8d3ba07661801094578f2d842426ba8a1fed9/src/DotNet/DotNet.csproj
+-->
+
+<Project Sdk="Microsoft.Build.NoTargets/3.3.0">
+
+  <PropertyGroup>
+    <RootSourceDirectory>$(MSBuildThisFileDirectory)\..\..\..\</RootSourceDirectory>
+    <DotNetOutputPath>$(MSBuildThisFileDirectory)bin\</DotNetOutputPath>
+    <DotNetTempDirectory>$(DotNetOutputPath)temp/</DotNetTempDirectory>
+    <DotNetDirectory>$(DotNetOutputPath)dotnet\</DotNetDirectory>
+    <DotNetToolPath>$(DotNetDirectory)dotnet</DotNetToolPath>
+    <DotNetPacksDirectory>$(DotNetDirectory)packs\</DotNetPacksDirectory>
+
+    <MacIosRootDirectory>$(RootSourceDirectory)</MacIosRootDirectory>
+    <PackageOutputPath>$(RootSourceDirectory)..\artifacts\</PackageOutputPath>
+    <RollbackFile>$(PackageOutputPath)$(MaciosUploadPrefix)WorkloadRollback\WorkloadRollback.json</RollbackFile>
+    <RollbackSource>$(PackageOutputPath)$(MaciosUploadPrefix)not-signed-package</RollbackSource>
+  </PropertyGroup>
+
+  <Target Name="GetNuGetSources">
+    <GetNuGetSourcesTask RootSourceDirectory="$(RootSourceDirectory)">
+      <Output TaskParameter="NuGetSourceLines" ItemName="NuGetSourceLines" />
+    </GetNuGetSourcesTask>
+
+    <PropertyGroup>
+      <NuGetSourceList>--source @(NuGetSourceLines,' --source ')</NuGetSourceList>
+    </PropertyGroup>
+  </Target>
+
+  <UsingTask TaskName="GetNuGetSourcesTask"
+      TaskFactory="RoslynCodeTaskFactory"
+      AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
+    <ParameterGroup>
+      <RootSourceDirectory ParameterType="System.String" />
+      <NuGetSourceLines ParameterType="System.String[]" Output="true" />
+    </ParameterGroup>
+    <Task>
+      <Using Namespace="System.IO" />
+      <Using Namespace="System.Linq" />
+      <Code Type="Fragment" Language="cs">
+        <![CDATA[
+          // This is only in C#, because the equivalent MSBuild XML would not be pretty.
+          var path = Path.Combine (RootSourceDirectory, "NuGet.config");
+          var contents = File.ReadAllLines (path);
+          var sourceLines = contents
+            .Where (v => v.Contains ("https://pkgs.dev.azure.com"))
+            .Select (v => v.Substring (v.IndexOf ("value=\"") + "value=\"".Length))
+            .Select (v => v.Substring (0, v.IndexOf ("\"")))
+            .ToArray ();
+          NuGetSourceLines = sourceLines;
+        ]]>
+      </Code>
+    </Task>
+  </UsingTask>
+
+  <Import Project="$(RootSourceDirectory)/eng/Versions.props" />
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <IsPackable>false</IsPackable>
+    <DotNetFeedUrl>https://dotnetbuilds.blob.core.windows.net/public</DotNetFeedUrl>
+  </PropertyGroup>
+  <PropertyGroup Condition="$([MSBuild]::IsOSPlatform('windows'))">
+    <DotNetInstallScriptUrl>https://dot.net/v1/dotnet-install.ps1</DotNetInstallScriptUrl>
+    <!-- the main url often doesn't work, so have a backup url (the main url redirects to this one, and main url has a cache timeout of 1 year, so it should be fairly safe) -->
+    <DotNetInstallScriptBackupUrl>https://dotnet.microsoft.com/download/dotnet/scripts/v1/dotnet-install.ps1</DotNetInstallScriptBackupUrl>
+    <DotNetInstallScriptName>dotnet-install.ps1</DotNetInstallScriptName>
+    <DotNetInstallScriptPath>$(DotNetOutputPath)$(DotNetInstallScriptName)</DotNetInstallScriptPath>
+    <DotNetInstallCommand>&amp; '$(DotNetInstallScriptPath)' -Version $(MicrosoftDotnetSdkInternalPackageVersion) -InstallDir '$(DotNetDirectory)' -Verbose</DotNetInstallCommand>
+    <DotNetInstallCommand>$(DotNetInstallCommand) -AzureFeed $(DotNetFeedUrl)</DotNetInstallCommand>
+    <DotNetInstallCommand>powershell -ExecutionPolicy ByPass -NoProfile -Command &quot;$(DotNetInstallCommand)&quot;</DotNetInstallCommand>
+  </PropertyGroup>
+  <PropertyGroup Condition="$([MSBuild]::IsOSPlatform('osx'))">
+    <DotNetInstallScriptUrl>https://dot.net/v1/dotnet-install.sh</DotNetInstallScriptUrl>
+    <!-- the main url often doesn't work, so have a backup url (the main url redirects to this one, and main url has a cache timeout of 1 year, so it should be fairly safe) -->
+    <DotNetInstallScriptBackupUrl>https://dotnet.microsoft.com/download/dotnet/scripts/v1/dotnet-install.sh</DotNetInstallScriptBackupUrl>
+    <DotNetInstallScriptName>dotnet-install.sh</DotNetInstallScriptName>
+    <DotNetInstallScriptPath>$(DotNetOutputPath)$(DotNetInstallScriptName)</DotNetInstallScriptPath>
+    <DotNetInstallCommand>bash '$(DotNetInstallScriptPath)' --version $(MicrosoftDotnetSdkInternalPackageVersion) --install-dir '$(DotNetDirectory)' --verbose</DotNetInstallCommand>
+    <DotNetInstallCommand>$(DotNetInstallCommand) --azure-feed $(DotNetFeedUrl)</DotNetInstallCommand>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <_ProvisionDependsOn>
+      _DownloadDotNetInstallScript;
+      _InstallDotNet;
+      _InstallWorkloadPacks;
+    </_ProvisionDependsOn>
+  </PropertyGroup>
+
+  <!-- Build target provisions ./bin/dotnet/ -->
+  <Target Name="_Provision" BeforeTargets="Build" DependsOnTargets="$(_ProvisionDependsOn)" />
+
+  <!--
+    Install target takes artifacts/*.nupkg and installs them to the current 'dotnet'.
+    Running this with ./bin/dotnet/dotnet will work without elevation.
+    For a system install, you will need to run this in an admin command-prompt on Windows, or use 'sudo' on Mac.
+  -->
+  <Target Name="Install" DependsOnTargets="GetNuGetSources">
+
+    <Error
+        Condition=" '$(MSBuildRuntimeType)' != 'Core' "
+        Text="You should only run this target with 'dotnet build'."
+    />
+    <PropertyGroup>
+      <_InstallTempDirectory>$(DotNetTempDirectory)install/</_InstallTempDirectory>
+    </PropertyGroup>
+
+    <!-- Run 'dotnet workload install' for the current running 'dotnet' install -->
+    <ItemGroup>
+      <_WorkloadSource Include="$(PackageOutputPath)" />
+    </ItemGroup>
+    <Copy SourceFiles="$(MacIosRootDirectory)NuGet.config" DestinationFolder="$(DotNetTempDirectory)" />
+    <Exec Command="&quot;$(DotNetToolPath)&quot; workload install ios tvos maccatalyst macos --verbosity diag --temp-dir &quot;$(DotNetTempDirectory)&quot; --configfile &quot;$(DotNetTempDirectory)NuGet.config&quot; --from-rollback-file &quot;$(RollbackFile)&quot; --source $(RollbackSource) --skip-sign-check $(NuGetSourceList)" WorkingDirectory="$(MacIosRootDirectory)" />
+
+  </Target>
+
+  <PropertyGroup>
+    <!-- These files should invalidate ./bin/dotnet completely -->
+    <_Inputs>
+      $(MSBuildThisFile);
+      $(RootSourceDirectory)/eng/Versions.props;
+    </_Inputs>
+  </PropertyGroup>
+
+  <Target Name="_DownloadDotNetInstallScript"
+      Inputs="$(_Inputs)"
+      Outputs="$(DotNetInstallScriptPath)">
+    <DownloadFile
+        SourceUrl="$(DotNetInstallScriptUrl)"
+        DestinationFolder="$(DotNetOutputPath)"
+        DestinationFileName="$(DotNetInstallScriptName)"
+        ContinueOnError="true"
+    />
+    <DownloadFile
+        SourceUrl="$(DotNetInstallScriptBackupUrl)"
+        DestinationFolder="$(DotNetOutputPath)"
+        DestinationFileName="$(DotNetInstallScriptName)"
+        Condition="'$(MSBuildLastTaskResult)' == 'false'"
+    />
+
+  </Target>
+
+  <Target Name="_InstallDotNet"
+      Inputs="$(_Inputs)"
+      Outputs="$(DotNetDirectory).stamp">
+    <RemoveDir Directories="$(DotNetDirectory)" />
+    <Exec Command="$(DotNetInstallCommand)" />
+    <Touch Files="$(DotNetDirectory).stamp" AlwaysCreate="true" />
+
+    <!-- This is used by iOS pair to mac because pair to mac can't
+        determine the version of preview versions. -->
+    <WriteLinesToFile
+        File="$(DotNetDirectory)dotnet-sdk-version.txt"
+        Lines="$(MicrosoftDotnetSdkInternalPackageVersion)"
+        Condition="$([MSBuild]::IsOSPlatform('windows'))"
+        Overwrite="true" />
+  </Target>
+
+  <ItemGroup>
+    <!-- Ids for 'dotnet workload install' -->
+    <_WorkloadIds Include="maccatalyst" />
+    <_WorkloadIds Include="macos" />
+    <_WorkloadIds Include="ios" />
+    <_WorkloadIds Include="tvos" />
+   </ItemGroup>
+
+  <Target Name="_InstallWorkloadPacks"
+      Inputs="$(_Inputs)"
+      Outputs="$(DotNetPacksDirectory).stamp">
+    <Exec
+        Command="&quot;$(DotNetToolPath)&quot; workload install %(_WorkloadIds.Identity) --skip-manifest-update --verbosity diag --temp-dir &quot;$(DotNetTempDirectory)&quot; --configfile &quot;$(MacIosRootDirectory)NuGet.config&quot; --skip-sign-check"
+        WorkingDirectory="$(MSBuildThisFileDirectory)"
+        EnvironmentVariables="DOTNET_MULTILEVEL_LOOKUP=0"
+    />
+    <Touch Files="$(DotNetPacksDirectory).stamp" AlwaysCreate="true" />
+  </Target>
+
+</Project>

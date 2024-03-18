@@ -29,7 +29,9 @@ namespace MonoTouchFixtures.AVFoundation {
 		public void TestEqualOperatorSameInstace ()
 		{
 			using (var format = new AVAudioFormat ())
+#pragma warning disable CS1718 // warning CS1718: Comparison made to same variable; did you mean to compare something else?
 				Assert.IsTrue (format == format, "format == format");
+#pragma warning restore
 		}
 
 		[Test]

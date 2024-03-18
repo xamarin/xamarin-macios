@@ -25,7 +25,7 @@ namespace SceneKit {
 			if (vertices is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (vertices));
 
-			fixed (SCNVector3* ptr = &vertices [0])
+			fixed (SCNVector3* ptr = vertices)
 				return FromVertices ((IntPtr) ptr, vertices.Length);
 		}
 
@@ -34,7 +34,7 @@ namespace SceneKit {
 			if (normals is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (normals));
 
-			fixed (SCNVector3* ptr = &normals [0])
+			fixed (SCNVector3* ptr = normals)
 				return FromNormals ((IntPtr) ptr, normals.Length);
 		}
 
@@ -43,7 +43,7 @@ namespace SceneKit {
 			if (texcoords is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (texcoords));
 
-			fixed (CGPoint* ptr = &texcoords [0])
+			fixed (CGPoint* ptr = texcoords)
 				return FromTextureCoordinates ((IntPtr) ptr, texcoords.Length);
 		}
 

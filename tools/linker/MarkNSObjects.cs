@@ -52,7 +52,7 @@ namespace Xamarin.Linker.Steps {
 
 		protected override void Process (TypeDefinition type)
 		{
-			if (ProductAssembly == null)
+			if (ProductAssembly is null)
 				ProductAssembly = (Profile.Current as BaseProfile).ProductAssembly;
 
 			bool nsobject = type.IsNSObject (LinkContext);
@@ -64,7 +64,7 @@ namespace Xamarin.Linker.Steps {
 				// otherwise the sweeper will not keep the parents (nor the children)
 				if (type.IsNested) {
 					var parent = type.DeclaringType;
-					while (parent != null) {
+					while (parent is not null) {
 						Annotations.Mark (parent);
 						parent = parent.DeclaringType;
 					}
@@ -98,7 +98,7 @@ namespace Xamarin.Linker.Steps {
 				return false;
 
 			var overrides = Annotations.GetOverrides (method);
-			if (overrides == null)
+			if (overrides is null)
 				return false;
 
 			foreach (var @override in overrides)
@@ -143,8 +143,11 @@ namespace Xamarin.Linker.Steps {
 			return (method.DeclaringType.Module.Assembly.Name.Name == ProductAssembly);
 		}
 
-		static bool IsProductType (TypeDefinition type)
+		bool IsProductType (TypeDefinition type)
 		{
+			if (LinkContext.App.SkipMarkingNSObjectsInUserAssemblies)
+				return true;
+
 			var name = type.Module.Assembly.Name.Name;
 			switch (name) {
 			case "Xamarin.Forms.Platform.iOS":

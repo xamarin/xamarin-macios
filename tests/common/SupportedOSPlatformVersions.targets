@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This file is included by shared-dotnet.csproj, and sets the default deployment target for test projects. -->
+<!-- We can't do this in shared-dotnet.csproj, because the *MinSupportedOSPlatformVersion properties don't exist yet -->
+<Project>
+	<PropertyGroup Condition="'$(SupportedOSPlatformVersion)' == ''">
+		<SupportedOSPlatformVersion Condition="$(TargetFramework.EndsWith('-ios'))">$(iOSMinSupportedOSPlatformVersion)</SupportedOSPlatformVersion>
+		<SupportedOSPlatformVersion Condition="$(TargetFramework.EndsWith('-tvos'))">$(tvOSMinSupportedOSPlatformVersion)</SupportedOSPlatformVersion>
+		<SupportedOSPlatformVersion Condition="$(TargetFramework.EndsWith('-macos'))">$(macOSMinSupportedOSPlatformVersion)</SupportedOSPlatformVersion>
+		<SupportedOSPlatformVersion Condition="$(TargetFramework.EndsWith('-maccatalyst'))">$(MacCatalystMinSupportedOSPlatformVersion)</SupportedOSPlatformVersion>
+	</PropertyGroup>
+</Project>

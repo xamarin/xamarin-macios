@@ -55,7 +55,7 @@ namespace Extrospection {
 				return;
 
 			var framework = Helpers.GetFramework (decl);
-			if (framework == null)
+			if (framework is null)
 				return;
 
 			// check availability macros to see if the API is available on the OS and not deprecated

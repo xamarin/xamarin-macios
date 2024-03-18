@@ -97,48 +97,49 @@ namespace CoreAnimation {
 		}
 
 		[DllImport (Constants.QuartzLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool CATransform3DIsIdentity (CATransform3D t);
+		extern static byte CATransform3DIsIdentity (CATransform3D t);
 
 		public bool IsIdentity {
 			get {
-				return CATransform3DIsIdentity (this);
+				return CATransform3DIsIdentity (this) != 0;
 			}
 		}
 
 		[DllImport (Constants.QuartzLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool CATransform3DEqualToTransform (CATransform3D a, CATransform3D b);
+		extern static byte CATransform3DEqualToTransform (CATransform3D a, CATransform3D b);
 
 		public bool Equals (CATransform3D other)
 		{
-			return CATransform3DEqualToTransform (this, other);
+			return CATransform3DEqualToTransform (this, other) != 0;
 		}
 
 		public override bool Equals (object? other)
 		{
 			if (!(other is CATransform3D))
 				return false;
-			return CATransform3DEqualToTransform (this, (CATransform3D) other);
+			return CATransform3DEqualToTransform (this, (CATransform3D) other) != 0;
 		}
 
 		public override int GetHashCode ()
 		{
-			unsafe {
-#if NET
-				int code = (int) M11;
-				fixed (nfloat *fp = &M11){
-#else
-				int code = (int) m11;
-				fixed (nfloat* fp = &m11) {
-#endif
-					int* ip = (int*) fp;
-					for (int i = 1; i < 4 * IntPtr.Size; i++) {
-						code = code ^ ip [i];
-					}
-				}
-				return code;
-			}
+			var hash = new HashCode ();
+			hash.Add (M11);
+			hash.Add (M12);
+			hash.Add (M13);
+			hash.Add (M14);
+			hash.Add (M21);
+			hash.Add (M22);
+			hash.Add (M23);
+			hash.Add (M24);
+			hash.Add (M31);
+			hash.Add (M32);
+			hash.Add (M33);
+			hash.Add (M34);
+			hash.Add (M41);
+			hash.Add (M42);
+			hash.Add (M43);
+			hash.Add (M44);
+			return hash.ToHashCode ();
 		}
 
 		// Transform matrix =  [1 0 0 0; 0 1 0 0; 0 0 1 0; tx ty tz 1]
@@ -239,12 +240,11 @@ namespace CoreAnimation {
 
 
 		[DllImport (Constants.QuartzLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool CATransform3DIsAffine (CATransform3D t);
+		extern static byte CATransform3DIsAffine (CATransform3D t);
 
 		public bool IsAffine {
 			get {
-				return CATransform3DIsAffine (this);
+				return CATransform3DIsAffine (this) != 0;
 			}
 		}
 

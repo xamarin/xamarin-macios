@@ -52,7 +52,7 @@ namespace MonoMod.Utils {
 			string name;
 
 			CustomAttribute patchAttrib = cap.GetCustomAttribute ("MonoMod.MonoModPatch");
-			if (patchAttrib != null) {
+			if (patchAttrib is not null) {
 				name = (string) patchAttrib.ConstructorArguments [0].Value;
 				int dotIndex = name.LastIndexOf ('.');
 				if (dotIndex != -1 && dotIndex != name.Length - 1) {
@@ -72,7 +72,7 @@ namespace MonoMod.Utils {
 				CustomAttribute patchAttrib = cap.GetCustomAttribute ("MonoMod.MonoModPatch");
 				string name;
 
-				if (patchAttrib != null) {
+				if (patchAttrib is not null) {
 					name = (string) patchAttrib.ConstructorArguments [0].Value;
 				} else {
 					// Backwards-compatibility: Check for patch_
@@ -94,7 +94,7 @@ namespace MonoMod.Utils {
 					TypeSpecification ts = (TypeSpecification) mr;
 					do {
 						formats.Add (ts);
-					} while ((ts = (ts.ElementType as TypeSpecification)) != null);
+					} while ((ts = (ts.ElementType as TypeSpecification)) is not null);
 
 					StringBuilder builder = new StringBuilder (name.Length + formats.Count * 4);
 					builder.Append (name);
@@ -182,7 +182,7 @@ namespace MonoMod.Utils {
 			StringBuilder builder = new StringBuilder ();
 
 			if (simple) {
-				if (withType && (type != null || method.DeclaringType != null))
+				if (withType && (type is not null || method.DeclaringType is not null))
 					builder.Append (type ?? method.DeclaringType.GetPatchFullName ()).Append ("::");
 				builder.Append (name ?? method.Name);
 				return builder.ToString ();
@@ -192,7 +192,7 @@ namespace MonoMod.Utils {
 				.Append (method.ReturnType.GetPatchFullName ())
 				.Append (" ");
 
-			if (withType && (type != null || method.DeclaringType != null))
+			if (withType && (type is not null || method.DeclaringType is not null))
 				builder.Append (type ?? method.DeclaringType.GetPatchFullName ()).Append ("::");
 
 			builder
@@ -248,7 +248,7 @@ namespace MonoMod.Utils {
 		/// <returns>The first matching custom attribute, or null if no matching attribute has been found.</returns>
 		public static CustomAttribute GetCustomAttribute (this ICustomAttributeProvider cap, string attribute)
 		{
-			if (cap == null || !cap.HasCustomAttributes)
+			if (cap is null || !cap.HasCustomAttributes)
 				return null;
 			foreach (CustomAttribute attrib in cap.CustomAttributes)
 				if (attrib.AttributeType.FullName == attribute)

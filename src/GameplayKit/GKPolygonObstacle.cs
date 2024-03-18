@@ -27,13 +27,13 @@ namespace GameplayKit {
 			if (points is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (points));
 
-			var size = Marshal.SizeOf (typeof (Vector2));
+			var size = Marshal.SizeOf<Vector2> ();
 			var length = points.Length * size;
 			var buffer = Marshal.AllocHGlobal (length);
 
 			try {
 				for (int i = 0; i < points.Length; i++)
-					Marshal.StructureToPtr (points [i], IntPtr.Add (buffer, i * size), false);
+					Marshal.StructureToPtr<Vector2> (points [i], IntPtr.Add (buffer, i * size), false);
 
 				return FromPoints (buffer, (nuint) points.Length);
 			} finally {
@@ -56,12 +56,12 @@ namespace GameplayKit {
 				ctor_pointer = IntPtr.Zero;
 			}
 
-			var size = Marshal.SizeOf (typeof (Vector2));
+			var size = Marshal.SizeOf<Vector2> ();
 			var length = points.Length * size;
 			var buffer = Marshal.AllocHGlobal (length);
 
 			for (int i = 0; i < points.Length; i++)
-				Marshal.StructureToPtr (points [i], IntPtr.Add (buffer, i * size), false);
+				Marshal.StructureToPtr<Vector2> (points [i], IntPtr.Add (buffer, i * size), false);
 
 			ctor_pointer = buffer;
 			return ctor_pointer = buffer;

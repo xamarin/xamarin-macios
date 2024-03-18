@@ -46,14 +46,14 @@ namespace xsiminstaller {
 				var outputDone = new ManualResetEvent (false);
 				var errorDone = new ManualResetEvent (false);
 				p.OutputDataReceived += (sender, args) => {
-					if (args.Data == null) {
+					if (args.Data is null) {
 						outputDone.Set ();
 					} else {
 						output.AppendLine (args.Data);
 					}
 				};
 				p.ErrorDataReceived += (sender, args) => {
-					if (args.Data == null) {
+					if (args.Data is null) {
 						errorDone.Set ();
 					} else {
 						error.AppendLine (args.Data);
@@ -355,7 +355,7 @@ namespace xsiminstaller {
 				};
 				wc.DownloadFileCompleted += (sender, download_args) => {
 					Console.WriteLine ($"Download completed in {watch.Elapsed.TotalSeconds}s");
-					if (download_args.Error != null) {
+					if (download_args.Error is not null) {
 						Console.WriteLine ($"    with error: {download_args.Error}");
 					}
 					downloadDone.Set ();
@@ -427,10 +427,16 @@ namespace xsiminstaller {
 						Directory.Delete (expanded_path, true);
 					}
 				} finally {
-					TryExecuteAndCapture ("hdiutil", $"detach '{mount_point}' -quiet", out _);
+					if (!TryExecuteAndCapture ("hdiutil", $"detach '{mount_point}' -quiet -force", out _))
+						Console.WriteLine ($"Failed to detach {mount_point}");
 				}
 			} finally {
-				Directory.Delete (mount_point, true);
+				try {
+					Directory.Delete (mount_point, true);
+				} catch (IOException ioex) {
+					Console.WriteLine ($"Unable to remove: {mount_point}");
+					Console.WriteLine ($"    with error: {ioex}");
+				}
 			}
 
 			File.Delete (download_path);

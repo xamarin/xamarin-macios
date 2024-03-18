@@ -23,8 +23,8 @@
 //
 using Foundation;
 using ObjCRuntime;
-using AudioToolbox;
 using System;
+using System.Runtime.InteropServices;
 
 #nullable enable
 
@@ -32,58 +32,48 @@ namespace AVFoundation {
 #if !WATCH
 	public partial class AVAudioPlayer {
 
+		[DllImport (Constants.ObjectiveCLibrary, EntryPoint = "objc_msgSend")]
+		unsafe static extern IntPtr objc_msgSend (IntPtr receiver, IntPtr selector, IntPtr arg1, IntPtr* arg2);
+
 		public static AVAudioPlayer? FromUrl (NSUrl url, out NSError? error)
 		{
+			error = null;
+			IntPtr url__handle__ = url!.GetNonNullHandle (nameof (url));
+			IntPtr handle = Messaging.IntPtr_objc_msgSend (class_ptr, Selector.GetHandle ("alloc"));
+			IntPtr errorptr = IntPtr.Zero;
+			if (handle == IntPtr.Zero)
+				return null;
 			unsafe {
-				IntPtr errhandle;
-				IntPtr ptrtohandle = (IntPtr) (&errhandle);
-
-				var ap = new AVAudioPlayer (url, ptrtohandle);
-				if (ap.Handle == IntPtr.Zero) {
-					error = Runtime.GetNSObject<NSError> (errhandle);
-					return null;
-				} else
-					error = null;
-				return ap;
+				handle = objc_msgSend (handle, Selector.GetHandle ("initWithContentsOfURL:error:"), url__handle__, &errorptr);
 			}
+			error = Runtime.GetNSObject<NSError> (errorptr);
+			return Runtime.GetNSObject<AVAudioPlayer> (handle, owns: true);
 		}
 
 		public static AVAudioPlayer? FromUrl (NSUrl url)
 		{
-			unsafe {
-				var ap = new AVAudioPlayer (url, IntPtr.Zero);
-				if (ap.Handle == IntPtr.Zero)
-					return null;
-
-				return ap;
-			}
+			return FromUrl (url, out _);
 		}
 
 		public static AVAudioPlayer? FromData (NSData data, out NSError? error)
 		{
-			unsafe {
-				IntPtr errhandle;
-				IntPtr ptrtohandle = (IntPtr) (&errhandle);
+			error = null;
+			IntPtr data__handle__ = data!.GetNonNullHandle (nameof (data));
+			IntPtr errorptr = IntPtr.Zero;
+			IntPtr handle = Messaging.IntPtr_objc_msgSend (class_ptr, Selector.GetHandle ("alloc"));
 
-				var ap = new AVAudioPlayer (data, ptrtohandle);
-				if (ap.Handle == IntPtr.Zero) {
-					error = Runtime.GetNSObject<NSError> (errhandle);
-					return null;
-				} else
-					error = null;
-				return ap;
+			if (handle == IntPtr.Zero)
+				return null;
+			unsafe {
+				handle = objc_msgSend (handle, Selector.GetHandle ("initWithData:error:"), data__handle__, &errorptr);
 			}
+			error = Runtime.GetNSObject<NSError> (errorptr);
+			return Runtime.GetNSObject<AVAudioPlayer> (handle, owns: true);
 		}
 
 		public static AVAudioPlayer? FromData (NSData data)
 		{
-			unsafe {
-				var ap = new AVAudioPlayer (data, IntPtr.Zero);
-				if (ap.Handle == IntPtr.Zero)
-					return null;
-
-				return ap;
-			}
+			return FromData (data, out _);
 		}
 	}
 #endif // !WATCH

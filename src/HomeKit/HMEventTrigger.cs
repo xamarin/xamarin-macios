@@ -9,11 +9,9 @@ namespace HomeKit {
 	partial class HMEventTrigger {
 
 #if NET
-		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst14.0")]
-		[UnsupportedOSPlatform ("tvos11.0")]
-		[UnsupportedOSPlatform ("ios11.0")]
 		[ObsoletedOSPlatform ("tvos11.0", "Use 'CreatePredicateForEvaluatingTriggerOccurringBeforeSignificantEvent (HMSignificantTimeEvent)' instead.")]
 		[ObsoletedOSPlatform ("ios11.0", "Use 'CreatePredicateForEvaluatingTriggerOccurringBeforeSignificantEvent (HMSignificantTimeEvent)' instead.")]
 #else
@@ -30,11 +28,9 @@ namespace HomeKit {
 		}
 
 #if NET
-		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst14.0")]
-		[UnsupportedOSPlatform ("tvos11.0")]
-		[UnsupportedOSPlatform ("ios11.0")]
 		[ObsoletedOSPlatform ("tvos11.0", "Use 'CreatePredicateForEvaluatingTriggerOccurringAfterSignificantEvent (HMSignificantTimeEvent)' instead.")]
 		[ObsoletedOSPlatform ("ios11.0", "Use 'CreatePredicateForEvaluatingTriggerOccurringAfterSignificantEvent (HMSignificantTimeEvent)' instead.")]
 #else

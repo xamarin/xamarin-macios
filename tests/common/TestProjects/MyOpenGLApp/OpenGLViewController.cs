@@ -25,15 +25,15 @@ namespace MyOpenGLApp {
 			base.ViewDidLoad ();
 
 			NSNotificationCenter.DefaultCenter.AddObserver (UIApplication.WillResignActiveNotification, a => {
-				if (IsViewLoaded && View.Window != null)
+				if (IsViewLoaded && View.Window is not null)
 					View.StopAnimating ();
 			}, this);
 			NSNotificationCenter.DefaultCenter.AddObserver (UIApplication.DidBecomeActiveNotification, a => {
-				if (IsViewLoaded && View.Window != null)
+				if (IsViewLoaded && View.Window is not null)
 					View.StartAnimating ();
 			}, this);
 			NSNotificationCenter.DefaultCenter.AddObserver (UIApplication.WillTerminateNotification, a => {
-				if (IsViewLoaded && View.Window != null)
+				if (IsViewLoaded && View.Window is not null)
 					View.StopAnimating ();
 			}, this);
 		}

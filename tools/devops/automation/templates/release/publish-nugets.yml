@@ -1,5 +1,11 @@
 # all steps that are required to publish the nugets, the template takes the parameters to decide in which feed should the nugets
 # be published
+parameters:
+
+- name: uploadPrefix
+  type: string
+  default: '$(MaciosUploadPrefix)'
+
 steps:
 
 # based on the build, decide if we are used a feed or the other and export it
@@ -18,9 +24,15 @@ steps:
     ${{ else }}:
       VAR_NAME: 'NUGET_PRIVATE_FEED'
 
+- bash: |
+    sudo rm -Rf $(Build.SourcesDirectory)/package
+    sudo rm -Rf $(Build.SourcesDirectory)/vsi-msi-nugets
+  displayName: "Remove artifacts"
+  condition: always()
+
 - task: DownloadPipelineArtifact@2
   inputs:
-    artifactName: nuget-signed
+    artifactName: '${{ parameters.uploadPrefix }}nuget-signed'
     downloadPath: $(Build.SourcesDirectory)/package
     patterns: |
       *.nupkg
@@ -35,7 +47,7 @@ steps:
 
 - task: DownloadPipelineArtifact@2
   inputs:
-    artifactName: vs-msi-nugets
+    artifactName: '${{ parameters.uploadPrefix }}vs-msi-nugets'
     downloadPath: $(Build.SourcesDirectory)/vs-msi-nugets
     patterns: |
       *.nupkg

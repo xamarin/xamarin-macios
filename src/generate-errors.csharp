@@ -1,4 +1,4 @@
-#!/usr/bin/env /Library/Frameworks/Mono.framework/Commands/csharp
+#!/usr/bin/env /Library/Frameworks/Mono.framework/Commands/csharp -s
 
 using System.IO;
 using System.Xml;

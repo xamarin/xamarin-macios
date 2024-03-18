@@ -16,7 +16,7 @@ namespace EndSheet
 		
 		void ReleaseDesignerOutlets ()
 		{
-			if (dismissSheetButton != null) {
+			if (dismissSheetButton is not null) {
 				dismissSheetButton.Dispose ();
 				dismissSheetButton = null;
 			}

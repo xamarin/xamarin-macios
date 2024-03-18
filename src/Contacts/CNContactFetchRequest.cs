@@ -41,7 +41,7 @@ namespace Contacts {
 		// NSObject.ConformsToProtocol won't work for *Wrapper types, like what returns ICNKeyDescriptor instances
 		static bool ConformsToProtocol (IntPtr handle, IntPtr protocol)
 		{
-			return Messaging.bool_objc_msgSend_IntPtr (handle, Selector.GetHandle ("conformsToProtocol:"), protocol);
+			return Messaging.bool_objc_msgSend_IntPtr (handle, Selector.GetHandle ("conformsToProtocol:"), protocol) != 0;
 		}
 
 		static NSArray Validate (params INativeObject [] keysToFetch)

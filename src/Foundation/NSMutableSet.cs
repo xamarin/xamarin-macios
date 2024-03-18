@@ -33,6 +33,9 @@ using System.Collections.Generic;
 
 using ObjCRuntime;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Foundation {
 
 	public partial class NSMutableSet : IEnumerable<NSObject> {
@@ -53,9 +56,9 @@ namespace Foundation {
 
 		public static NSMutableSet operator + (NSMutableSet first, NSMutableSet second)
 		{
-			if (first == null || first.Count == 0)
+			if (first is null || first.Count == 0)
 				return new NSMutableSet (second);
-			if (second == null || second.Count == 0)
+			if (second is null || second.Count == 0)
 				return new NSMutableSet (first);
 
 			var copy = new NSMutableSet (first);
@@ -65,9 +68,9 @@ namespace Foundation {
 
 		public static NSMutableSet operator - (NSMutableSet first, NSMutableSet second)
 		{
-			if (first == null || first.Count == 0)
+			if (first is null || first.Count == 0)
 				return null;
-			if (second == null || second.Count == 0)
+			if (second is null || second.Count == 0)
 				return new NSMutableSet (first);
 
 			var copy = new NSMutableSet (first);

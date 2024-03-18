@@ -104,7 +104,7 @@ namespace Introspection {
 		protected override bool Check (char encodedType, Type type)
 		{
 			// return an error if null (instead of throwing) so we can continue execution
-			if (type == null)
+			if (type is null)
 				return false;
 
 			switch (encodedType) {

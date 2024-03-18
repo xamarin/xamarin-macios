@@ -112,7 +112,7 @@ define NativeCompilationTemplate
 	$$(call Q_2,LD,    [iphoneos]) $(DEVICE_CC) $(DEVICE64_CFLAGS)      $$(EXTRA_FLAGS) -dynamiclib -o $$@ $$^ -L$(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/lib -fapplication-extension
 
 .libs/iphoneos/%$(1).arm64.framework: | .libs/iphoneos
-	$$(call Q_2,LD,    [iphoneos]) $(DEVICE_CC) $(DEVICE64_CFLAGS)      $$(EXTRA_FLAGS) -dynamiclib -o $$@ $$^ -F$(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/Frameworks -fapplication-extension  -miphoneos-version-min=8.0
+	$$(call Q_2,LD,    [iphoneos]) $(DEVICE_CC) $(DEVICE64_CFLAGS)      $$(EXTRA_FLAGS) -dynamiclib -o $$@ $$^ -F$(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/Frameworks -fapplication-extension  -miphoneos-version-min=$(MIN_IOS_SDK_VERSION)
 
 ## maccatalyst (ios on macOS / Catalyst)
 
@@ -297,6 +297,8 @@ $(eval $(call NativeCompilationTemplate,-dotnet,-O2 -DDOTNET))
 $(eval $(call NativeCompilationTemplate,-dotnet-debug,-DDEBUG -DDOTNET))
 $(eval $(call NativeCompilationTemplate,-dotnet-coreclr,-O2 -DCORECLR_RUNTIME -DDOTNET))
 $(eval $(call NativeCompilationTemplate,-dotnet-coreclr-debug,-DDEBUG -DCORECLR_RUNTIME -DDOTNET))
+$(eval $(call NativeCompilationTemplate,-dotnet-nativeaot,-O2 -DCORECLR_RUNTIME -DDOTNET -DNATIVEAOT))
+$(eval $(call NativeCompilationTemplate,-dotnet-nativeaot-debug,-DDEBUG -DCORECLR_RUNTIME -DDOTNET -DNATIVEAOT))
 
 .libs/iphoneos .libs/iphonesimulator .libs/watchos .libs/watchsimulator .libs/tvos .libs/tvsimulator .libs/maccatalyst .libs/mac:
 	$(Q) mkdir -p $@

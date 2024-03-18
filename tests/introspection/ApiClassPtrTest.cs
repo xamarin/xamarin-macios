@@ -49,7 +49,7 @@ namespace Introspection {
 				 where m.IsDefined (typeof (ExtensionAttribute), false)
 				 select m).FirstOrDefault ();
 
-			if (method != null) {
+			if (method is not null) {
 				var paramType = method.GetParameters () [0].ParameterType;
 				if (paramType.Name == "String")
 					return typeof (NSString);
@@ -83,7 +83,7 @@ namespace Introspection {
 					continue;
 
 				FieldInfo fi = t.GetField ("class_ptr", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static);
-				if (fi == null)
+				if (fi is null)
 					continue;
 				IntPtr class_ptr = (IntPtr) (NativeHandle) fi.GetValue (null);
 				IntPtr register_class_ptr = GetClassPtrFromRegister (t);
@@ -100,13 +100,13 @@ namespace Introspection {
 					continue;
 
 				FieldInfo fi = t.GetField ("class_ptr", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static);
-				if (fi == null)
+				if (fi is null)
 					continue;
 				IntPtr class_ptr = (IntPtr) (NativeHandle) fi.GetValue (null);
 
 				var extendedType = GetExtendedType (t);
 				IntPtr extended_class_ptr;
-				if (extendedType == null)
+				if (extendedType is null)
 					extended_class_ptr = IntPtr.Zero;
 				else
 					extended_class_ptr = GetClassPtrFromRegister (extendedType);

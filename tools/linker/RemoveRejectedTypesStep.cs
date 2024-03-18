@@ -51,7 +51,7 @@ namespace Xamarin.Linker {
 				updated = true;
 				foreach (var item in TypeReferencesToBeRemoved) {
 					var type = assembly.MainModule.GetType (item.originalFullName);
-					if (type == null)
+					if (type is null)
 						continue;
 					type.Name = item.replacementTypeName;
 					Context.AddLinkedAwayType (type);

@@ -18,6 +18,7 @@ namespace Xamarin.Tests {
 			var project = "MySimpleApp";
 			var configuration = "Release";
 			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
 
 			var project_path = GetProjectPath (project, runtimeIdentifiers, platform, out var appPath, configuration: configuration);
 			Clean (project_path);
@@ -26,12 +27,11 @@ namespace Xamarin.Tests {
 			properties ["Configuration"] = configuration;
 
 			var result = DotNet.AssertBuild (project_path, properties);
-			var reader = new BinLogReader ();
-			var records = reader.ReadRecords (result.BinLogPath).ToList ();
+			var recordArgs = BinLog.ReadBuildEvents (result.BinLogPath).ToList ();
 			var findString = "Output Property: ArchiveDir";
-			var archiveDirRecord = records.Where (v => v?.Args?.Message?.Contains (findString) == true).ToList ();
+			var archiveDirRecord = recordArgs.Where (v => v?.Message?.Contains (findString) == true).ToList ();
 			Assert.That (archiveDirRecord.Count, Is.GreaterThan (0), "ArchiveDir");
-			var archiveDir = archiveDirRecord [0].Args.Message.Substring (findString.Length + 1).Trim ();
+			var archiveDir = archiveDirRecord [0].Message?.Substring (findString.Length + 1)?.Trim ();
 			Assert.That (archiveDir, Does.Exist, "Archive directory existence");
 			AssertDSymDirectory (appPath);
 		}
@@ -45,6 +45,7 @@ namespace Xamarin.Tests {
 			var project = "MySimpleApp";
 			var configuration = "Release";
 			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
 
 			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath, configuration: configuration);
 			Clean (project_path);
@@ -69,6 +70,7 @@ namespace Xamarin.Tests {
 		public void AssemblyStripping (string project, ApplePlatform platform, string runtimeIdentifiers, bool shouldStrip)
 		{
 			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
 
 			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
 			Clean (project_path);
@@ -97,6 +99,7 @@ namespace Xamarin.Tests {
 		{
 			var projectVersion = "3.14";
 			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
 
 			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
 			Clean (project_path);
@@ -120,6 +123,7 @@ namespace Xamarin.Tests {
 		{
 			var project = "MySimpleApp";
 			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
 
 			var project_path = GetProjectPath (project, runtimeIdentifiers, platform: platform, out var appPath);
 			Clean (project_path);
@@ -155,13 +159,12 @@ namespace Xamarin.Tests {
 		[TestCase (ApplePlatform.iOS, "iossimulator-x64")]
 		[TestCase (ApplePlatform.iOS, "iossimulator-x86")]
 		[TestCase (ApplePlatform.iOS, "iossimulator-x64;iossimulator-x64")]
-		[TestCase (ApplePlatform.iOS, "")]
 		[TestCase (ApplePlatform.TVOS, "tvossimulator-x64")]
-		[TestCase (ApplePlatform.TVOS, "")]
 		public void PublishFailureTest (ApplePlatform platform, string runtimeIdentifiers)
 		{
 			var project = "MySimpleApp";
 			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
 
 			var project_path = GetProjectPath (project, runtimeIdentifiers, platform: platform, out var appPath);
 			Clean (project_path);
@@ -192,9 +195,7 @@ namespace Xamarin.Tests {
 			var errors = BinLog.GetBuildLogErrors (rv.BinLogPath).ToArray ();
 			Assert.AreEqual (1, errors.Length, "Error Count");
 			string expectedErrorMessage;
-			if (string.IsNullOrEmpty (runtimeIdentifiers)) {
-				expectedErrorMessage = $"A runtime identifier must be specified in order to publish this project.";
-			} else if (runtimeIdentifiers.IndexOf (';') >= 0) {
+			if (runtimeIdentifiers.IndexOf (';') >= 0) {
 				expectedErrorMessage = $"A runtime identifier for a device architecture must be specified in order to publish this project. '{runtimeIdentifiers}' are simulator architectures.";
 			} else {
 				expectedErrorMessage = $"A runtime identifier for a device architecture must be specified in order to publish this project. '{runtimeIdentifiers}' is a simulator architecture.";

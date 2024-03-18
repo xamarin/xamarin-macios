@@ -1,10 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.DotNet.XHarness.Common;
+using Microsoft.DotNet.XHarness.Common.Execution;
 using Microsoft.DotNet.XHarness.Common.Logging;
 using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
@@ -13,6 +16,8 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Listeners;
 using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 using Xharness.Targets;
+
+using Xamarin.Utils;
 
 namespace Xharness {
 	public enum HarnessAction {
@@ -51,7 +56,7 @@ namespace Xharness {
 		static string root_directory;
 		public static string RootDirectory {
 			get {
-				if (root_directory == null) {
+				if (root_directory is null) {
 					var testAssemblyDirectory = Path.GetDirectoryName (System.Reflection.Assembly.GetExecutingAssembly ().Location);
 					var dir = testAssemblyDirectory;
 					var path = Path.Combine (testAssemblyDirectory, ".git");
@@ -64,15 +69,60 @@ namespace Xharness {
 					path = Path.Combine (Path.GetDirectoryName (path), "tests");
 					if (!Directory.Exists (path))
 						throw new Exception ("Could not find the tests directory.");
-					root_directory = path;
+					root_directory = Path.GetFullPath (path);
 				}
 				return root_directory;
 			}
 			set {
 				root_directory = value;
-				if (root_directory != null)
+				if (root_directory is not null)
 					root_directory = Path.GetFullPath (root_directory).TrimEnd ('/');
 			}
+		}
+
+		static SemaphoreSlim ls_files_semaphore = new SemaphoreSlim (1);
+		static List<string> files_in_git = new List<string> ();
+		public static async Task<IEnumerable<string>> ListFilesInGitAsync (ILog log, string test_dir, IProcessManager processManager)
+		{
+			var acquired = await ls_files_semaphore.WaitAsync (TimeSpan.FromMinutes (5));
+			try {
+				if (!acquired)
+					log.WriteLine ($"Unable to acquire lock to run 'git ls-files {test_dir}' in 5 minutes; will try to run anyway.");
+				if (files_in_git.Count == 0) {
+					using var process = new Process ();
+					process.StartInfo.FileName = "git";
+					process.StartInfo.Arguments = "ls-files";
+					process.StartInfo.WorkingDirectory = RootDirectory;
+					var stdout = new MemoryLog () { Timestamp = false };
+					var result = await processManager.RunAsync (process, log, stdout, stdout, timeout: TimeSpan.FromSeconds (60));
+					if (!result.Succeeded)
+						throw new Exception ($"Failed to list the files in the directory {test_dir} (TimedOut: {result.TimedOut} ExitCode: {result.ExitCode}):\n{stdout}");
+					files_in_git.AddRange (stdout.ToString ().Split ('\n'));
+				}
+				var relative_dir = Path.GetFullPath (test_dir);
+				if (relative_dir.StartsWith (RootDirectory)) {
+					relative_dir = relative_dir.Substring (RootDirectory.Length);
+					relative_dir = relative_dir.TrimStart ('/');
+				}
+				if (!relative_dir.EndsWith ("/", StringComparison.Ordinal))
+					relative_dir += "/";
+				return files_in_git
+					.Where (v => v.StartsWith (relative_dir, StringComparison.OrdinalIgnoreCase))
+					.Select (v => v.Substring (relative_dir.Length));
+			} finally {
+				if (acquired)
+					ls_files_semaphore.Release ();
+			}
+		}
+
+		public static string EvaluateRootTestsDirectory (string value)
+		{
+			return value.Replace ("$(RootTestsDirectory)", RootDirectory);
+		}
+
+		public static string InjectRootTestsDirectory (string value)
+		{
+			return value.Replace (RootDirectory, "$(RootTestsDirectory)");
 		}
 	}
 
@@ -103,26 +153,58 @@ namespace Xharness {
 			}
 		}
 
+		bool TryGetMlaunchDotnetPath (out string value)
+		{
+			value = null;
+
+			if (!ENABLE_DOTNET)
+				return false;
+
+			ApplePlatform platform;
+			if (INCLUDE_IOS) {
+				platform = ApplePlatform.iOS;
+			} else if (INCLUDE_TVOS) {
+				platform = ApplePlatform.TVOS;
+			} else {
+				return false;
+			}
+
+			var sdkPlatform = platform.AsString ().ToUpperInvariant ();
+			var sdkName = GetVariable ($"{sdkPlatform}_NUGET_SDK_NAME");
+			// there is a diff between getting the path for the current platform when running on CI or off CI. The config files in the CI do not 
+			// contain the correct workload version, the reason for this is that the workload is built in a different machine which means that
+			// the Make.config will use the wrong version. The CI set the version in the environment variable {platform}_WORKLOAD_VERSION via a script.
+			var workloadVersion = GetVariable ($"{sdkPlatform}_WORKLOAD_VERSION");
+			var sdkVersion = GetVariable ($"{sdkPlatform}_NUGET_VERSION_NO_METADATA");
+			value = Path.Combine (DOTNET_DIR, "packs", sdkName, string.IsNullOrEmpty (workloadVersion) ? sdkVersion : workloadVersion, "tools", "bin", "mlaunch");
+			return true;
+		}
+
 		string MlaunchPath {
 			get {
-				if (ENABLE_DOTNET) {
-					string platform;
-					if (INCLUDE_IOS) {
-						platform = "iOS";
-					} else if (INCLUDE_TVOS) {
-						platform = "tvOS";
-					} else {
-						return $"Not building any mobile platform, so can't provide a location to mlaunch.";
-					}
-					var mlaunchPath = Path.Combine (DOTNET_DIR, "packs");
-					mlaunchPath = Path.Combine (mlaunchPath, $"Microsoft.{platform}.Sdk", config [$"{platform.ToUpperInvariant ()}_NUGET_VERSION_NO_METADATA"]);
-					mlaunchPath = Path.Combine (mlaunchPath, "tools", "bin", "mlaunch");
-					return mlaunchPath;
-				} else if (INCLUDE_XAMARIN_LEGACY && INCLUDE_IOS) {
+				if (TryGetMlaunchDotnetPath (out var mlaunch))
+					return mlaunch;
+
+				if (INCLUDE_XAMARIN_LEGACY && (INCLUDE_IOS || INCLUDE_TVOS || INCLUDE_WATCH))
 					return Path.Combine (IOS_DESTDIR, "Library", "Frameworks", "Xamarin.iOS.framework", "Versions", "Current", "bin", "mlaunch");
-				}
+
 				return $"Not building any mobile platform, so can't provide a location to mlaunch.";
 			}
+		}
+
+		bool IsVariableSet (string variable)
+		{
+			return !string.IsNullOrEmpty (GetVariable (variable));
+		}
+
+		string GetVariable (string variable, string @default = null)
+		{
+			var result = Environment.GetEnvironmentVariable (variable);
+			if (string.IsNullOrEmpty (result))
+				config.TryGetValue (variable, out result);
+			if (string.IsNullOrEmpty (result))
+				result = @default;
+			return result;
 		}
 
 		public List<iOSTestProject> IOSTestProjects { get; }
@@ -154,6 +236,7 @@ namespace Xharness {
 		public bool INCLUDE_XAMARIN_LEGACY { get; }
 		public string SYSTEM_MONO { get; set; }
 		public string DOTNET_DIR { get; set; }
+		public string DOTNET_TFM { get; set; }
 
 		// Run
 
@@ -203,42 +286,40 @@ namespace Xharness {
 			WatchOSContainerTemplate = configuration.WatchOSContainerTemplate;
 			XmlJargon = configuration.XmlJargon;
 
-			if (configuration.Labels != null)
+			if (configuration.Labels is not null)
 				Labels = new HashSet<string> (configuration.Labels);
 
-			if (configuration.EnvironmentVariables != null)
+			if (configuration.EnvironmentVariables is not null)
 				EnvironmentVariables = new Dictionary<string, string> (configuration.EnvironmentVariables);
 
 			LaunchTimeout = InCI ? 3 : 120;
 
-			var config = ParseConfigFiles ();
+			config = ParseConfigFiles ();
 			var src_root = Path.GetDirectoryName (Path.GetFullPath (RootDirectory));
 
 			MONO_PATH = Path.GetFullPath (Path.Combine (src_root, "external", "mono"));
 			TVOS_MONO_PATH = MONO_PATH;
-			INCLUDE_IOS = config.ContainsKey ("INCLUDE_IOS") && !string.IsNullOrEmpty (config ["INCLUDE_IOS"]);
-			INCLUDE_TVOS = config.ContainsKey ("INCLUDE_TVOS") && !string.IsNullOrEmpty (config ["INCLUDE_TVOS"]);
-			JENKINS_RESULTS_DIRECTORY = config ["JENKINS_RESULTS_DIRECTORY"];
-			INCLUDE_WATCH = config.ContainsKey ("INCLUDE_WATCH") && !string.IsNullOrEmpty (config ["INCLUDE_WATCH"]);
-			INCLUDE_MAC = config.ContainsKey ("INCLUDE_MAC") && !string.IsNullOrEmpty (config ["INCLUDE_MAC"]);
-			INCLUDE_MACCATALYST = config.ContainsKey ("INCLUDE_MACCATALYST") && !string.IsNullOrEmpty (config ["INCLUDE_MACCATALYST"]);
-			MAC_DESTDIR = config ["MAC_DESTDIR"];
-
-			IOS_DESTDIR = config ["IOS_DESTDIR"];
-			MONO_IOS_SDK_DESTDIR = config ["MONO_IOS_SDK_DESTDIR"];
-			MONO_MAC_SDK_DESTDIR = config ["MONO_MAC_SDK_DESTDIR"];
-			ENABLE_DOTNET = config.ContainsKey ("ENABLE_DOTNET") && !string.IsNullOrEmpty (config ["ENABLE_DOTNET"]);
-			SYSTEM_MONO = config ["SYSTEM_MONO"];
-			DOTNET_DIR = config ["DOTNET_DIR"];
-			INCLUDE_XAMARIN_LEGACY = config.ContainsKey ("INCLUDE_XAMARIN_LEGACY") && !string.IsNullOrEmpty (config ["INCLUDE_XAMARIN_LEGACY"]);
+			INCLUDE_IOS = IsVariableSet (nameof (INCLUDE_IOS));
+			INCLUDE_TVOS = IsVariableSet (nameof (INCLUDE_TVOS));
+			JENKINS_RESULTS_DIRECTORY = GetVariable (nameof (JENKINS_RESULTS_DIRECTORY));
+			INCLUDE_WATCH = IsVariableSet (nameof (INCLUDE_WATCH));
+			INCLUDE_MAC = IsVariableSet (nameof (INCLUDE_MAC));
+			INCLUDE_MACCATALYST = IsVariableSet (nameof (INCLUDE_MACCATALYST));
+			MAC_DESTDIR = GetVariable (nameof (MAC_DESTDIR));
+			IOS_DESTDIR = GetVariable (nameof (IOS_DESTDIR));
+			MONO_IOS_SDK_DESTDIR = GetVariable (nameof (MONO_IOS_SDK_DESTDIR));
+			MONO_MAC_SDK_DESTDIR = GetVariable (nameof (MONO_MAC_SDK_DESTDIR));
+			ENABLE_DOTNET = IsVariableSet (nameof (ENABLE_DOTNET));
+			SYSTEM_MONO = GetVariable (nameof (SYSTEM_MONO));
+			DOTNET_DIR = GetVariable (nameof (DOTNET_DIR));
+			INCLUDE_XAMARIN_LEGACY = IsVariableSet (nameof (INCLUDE_XAMARIN_LEGACY));
+			DOTNET_TFM = GetVariable (nameof (DOTNET_TFM));
 
 			if (string.IsNullOrEmpty (SdkRoot))
-				SdkRoot = config ["XCODE_DEVELOPER_ROOT"] ?? configuration.SdkRoot;
-
-			this.config = config;
+				SdkRoot = GetVariable ("XCODE_DEVELOPER_ROOT", configuration.SdkRoot);
 
 			processManager = new MlaunchProcessManager (XcodeRoot, MlaunchPath);
-			AppBundleLocator = new AppBundleLocator (processManager, () => HarnessLog, XIBuildPath, "/usr/local/share/dotnet/dotnet", config ["DOTNET"]);
+			AppBundleLocator = new AppBundleLocator (processManager, () => HarnessLog, XIBuildPath, "/usr/local/share/dotnet/dotnet", GetVariable ("DOTNET"));
 			TunnelBore = new TunnelBore (processManager);
 		}
 
@@ -396,25 +477,22 @@ namespace Xharness {
 				});
 			}
 
-			foreach (var flavor in new MonoNativeFlavor [] { MonoNativeFlavor.Compat, MonoNativeFlavor.Unified }) {
-				var monoNativeInfo = new MonoNativeInfo (DevicePlatform.macOS, flavor, RootDirectory, Log);
-				var macTestProject = new MacTestProject (TestLabel.Mononative, monoNativeInfo.ProjectPath, targetFrameworkFlavor: MacFlavors.Modern | MacFlavors.Full) {
-					MonoNativeInfo = monoNativeInfo,
-					Name = monoNativeInfo.ProjectName,
-					Platform = "AnyCPU",
-					Ignore = !INCLUDE_XAMARIN_LEGACY,
+			var monoNativeInfo = new MonoNativeInfo (DevicePlatform.macOS, RootDirectory, Log);
+			var macTestProject = new MacTestProject (TestLabel.Mononative, monoNativeInfo.ProjectPath, targetFrameworkFlavor: MacFlavors.Modern | MacFlavors.Full) {
+				MonoNativeInfo = monoNativeInfo,
+				Name = monoNativeInfo.ProjectName,
+				Platform = "AnyCPU",
+				Ignore = !INCLUDE_XAMARIN_LEGACY,
 
-				};
-
-				MacTestProjects.Add (macTestProject);
-			}
+			};
+			MacTestProjects.Add (macTestProject);
 
 			var monoImportTestFactory = new BCLTestImportTargetFactory (this);
 			MacTestProjects.AddRange (monoImportTestFactory.GetMacBclTargets ());
 
 			// Generate test projects from templates (bcl/mono-native templates)
 			if (generate_projects) {
-				foreach (var mtp in MacTestProjects.Where (x => x.MonoNativeInfo != null).Select (x => x.MonoNativeInfo))
+				foreach (var mtp in MacTestProjects.Where (x => x.MonoNativeInfo is not null).Select (x => x.MonoNativeInfo))
 					mtp.Convert ();
 			}
 
@@ -520,16 +598,12 @@ namespace Xharness {
 				Configurations = new string [] { "Debug", "Release" },
 			});
 
-			foreach (var flavor in new MonoNativeFlavor [] { MonoNativeFlavor.Compat, MonoNativeFlavor.Unified }) {
-				var monoNativeInfo = new MonoNativeInfo (DevicePlatform.iOS, flavor, RootDirectory, Log);
-				var iosTestProject = new iOSTestProject (TestLabel.Mononative, monoNativeInfo.ProjectPath) {
-					MonoNativeInfo = monoNativeInfo,
-					Name = monoNativeInfo.ProjectName,
-					SkipwatchOSARM64_32Variation = monoNativeInfo.ProjectName.Contains ("compat"),
-				};
-
-				IOSTestProjects.Add (iosTestProject);
-			}
+			var monoNativeInfo = new MonoNativeInfo (DevicePlatform.iOS, RootDirectory, Log);
+			var iosTestProject = new iOSTestProject (TestLabel.Mononative, monoNativeInfo.ProjectPath) {
+				MonoNativeInfo = monoNativeInfo,
+				Name = monoNativeInfo.ProjectName,
+			};
+			IOSTestProjects.Add (iosTestProject);
 
 			// add all the tests that are using the precompiled mono assemblies
 			var monoImportTestFactory = new BCLTestImportTargetFactory (this);
@@ -569,6 +643,7 @@ namespace Xharness {
 		IEnumerable<string> GetConfigFiles ()
 		{
 			return FindConfigFiles (useSystemXamarinIOSMac ? "test-system.config" : "test.config")
+				.Concat (FindConfigFiles ("configure.inc"))
 				.Concat (FindConfigFiles ("Make.config"))
 				.Concat (FindConfigFiles ("Make.config.local"));
 		}
@@ -578,7 +653,7 @@ namespace Xharness {
 			if (string.IsNullOrEmpty (file))
 				return;
 
-			foreach (var line in File.ReadAllLines (file)) {
+			foreach (var line in File.ReadAllLines (file).Reverse ()) {
 				var eq = line.IndexOf ('=');
 				if (eq == -1)
 					continue;
@@ -620,7 +695,7 @@ namespace Xharness {
 			if (autoConf)
 				AutoConfigureIOS ();
 
-			foreach (var monoNativeInfo in IOSTestProjects.Where (x => x.MonoNativeInfo != null).Select (x => x.MonoNativeInfo))
+			foreach (var monoNativeInfo in IOSTestProjects.Where (x => x.MonoNativeInfo is not null).Select (x => x.MonoNativeInfo))
 				monoNativeInfo.Convert ();
 
 			foreach (var proj in IOSTestProjects.Where ((v) => v.GenerateVariations)) {

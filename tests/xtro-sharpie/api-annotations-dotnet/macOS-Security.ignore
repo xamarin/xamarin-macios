@@ -490,3 +490,10 @@
 
 ## xcode 12.2 / we do not have bindings for XPC
 !missing-pinvoke! SecCodeCreateWithXPCMessage is not bound
+
+## xcode15
+!missing-field! kSecCodeInfoDefaultDesignatedLightweightCodeRequirement not bound
+!missing-pinvoke! SecCodeValidateFileResource is not bound
+!missing-field! kSecCFErrorResourceRecursive not bound
+!missing-field! kSecCodeInfoStapledNotarizationTicket not bound
+

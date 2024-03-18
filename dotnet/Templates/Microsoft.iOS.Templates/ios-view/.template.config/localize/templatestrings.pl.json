@@ -1,6 +1,6 @@
 {
   "author": "Microsoft",
-  "name": "iOS View",
-  "description": "An iOS View",
-  "symbols/namespace/description": "namespace for the generated code"
+  "name": "Widok systemu iOS",
+  "description": "Widok systemu iOS",
+  "symbols/namespace/description": "przestrzeń nazw wygenerowanego kodu."
 }

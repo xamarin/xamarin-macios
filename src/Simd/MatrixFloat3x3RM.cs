@@ -292,10 +292,17 @@ namespace CoreGraphics
 
 		public override int GetHashCode ()
 		{
-			return
-				M11.GetHashCode () ^ M12.GetHashCode () ^ M13.GetHashCode () ^
-				M21.GetHashCode () ^ M22.GetHashCode () ^ M23.GetHashCode () ^
-				M31.GetHashCode () ^ M32.GetHashCode () ^ M33.GetHashCode ();
+			var hash = new HashCode();
+			hash.Add(M11);
+			hash.Add(M12);
+			hash.Add(M13);
+			hash.Add(M21);
+			hash.Add(M22);
+			hash.Add(M23);
+			hash.Add(M31);
+			hash.Add(M32);
+			hash.Add(M33);
+			return hash.ToHashCode();
 		}
 
 		public override bool Equals (object? obj)

@@ -22,29 +22,10 @@ steps:
     submodules: recursive
     path: s/xamarin-macios
 
-- ${{ if parameters.isPR }}:
-  - pwsh: |
-      git config remote.origin.fetch '+refs/pull/*:refs/remotes/origin/pull/*'
-      git fetch origin
-      $branch="$(Build.SourceBranch)".Replace("merge", "head")
-      $branch=$branch.Replace("refs", "origin")
-      Write-Host "Checking out branch $branch"
-      git checkout $branch
-      git submodule update --recursive --init
-      git clean -xffd
-      git submodule foreach --recursive git clean -xffd
-      $hash = git rev-parse HEAD
-      Write-Host "##vso[task.setvariable variable=GIT_HASH;isOutput=true]$hash"
-    name: fix_commit
-    displayName: "Undo Github merge"
-    workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios
-- ${{ else }}:
-  - pwsh: |
-      $hash = git rev-parse HEAD
-      Write-Host "##vso[task.setvariable variable=GIT_HASH;isOutput=true]$hash"
-    name: fix_commit
-    displayName: "Undo Github merge"
-    workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios
+- pwsh: ./undo_github_merge.ps1 -SourceBranch "$(Build.SourceBranch)" -IsPr "${{ parameters.isPR }}"
+  name: fix_commit
+  displayName: "Undo Github merge"
+  workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts
 
 - checkout: maccore
   clean: true
@@ -57,10 +38,6 @@ steps:
 - checkout: release-scripts
   clean: true
 
-- pwsh: |
-    # maccore is special, we use fetch there in some bash scripts, but VSTS uses https.. and some pools don't like the above.. :/
-    git remote remove origin
-    git remote add origin https://$(GitHub.Token)@github.com/xamarin/maccore.git
-    git remote # don't add -v else we see the pat
+- pwsh: ./clean_git_vsts.ps1 -GithubToken "$(GitHub.Token)" -MaccorePath "$(System.DefaultWorkingDirectory)/maccore"
   displayName: 'Clean git mess from VSTS'
-  workingDirectory: $(System.DefaultWorkingDirectory)/maccore
+  workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts

@@ -68,7 +68,7 @@ namespace Extrospection {
 				return;
 
 			var categoryName = decl.Name;
-			if (categoryName == null)
+			if (categoryName is null)
 				return;
 
 			// check availability macros to see if the API is available on the OS and not deprecated
@@ -76,7 +76,7 @@ namespace Extrospection {
 				return;
 
 			var framework = Helpers.GetFramework (decl);
-			if (framework == null)
+			if (framework is null)
 				return;
 
 			var ciName = decl.ClassInterface.Name;
@@ -107,7 +107,7 @@ namespace Extrospection {
 				return;
 
 			var framework = Helpers.GetFramework (decl);
-			if (framework == null)
+			if (framework is null)
 				return;
 
 			if (!type_map.TryGetValue (name, out var td)) {
@@ -158,7 +158,7 @@ namespace Extrospection {
 		// - version check
 		bool ImplementProtocol (string protocol, TypeDefinition td)
 		{
-			if (td == null)
+			if (td is null)
 				return false;
 			if (td.HasInterfaces) {
 				foreach (var intf in td.Interfaces) {

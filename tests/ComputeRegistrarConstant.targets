@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project>
 	<Target Name="ComputeRegistrarConstant" BeforeTargets="BeforeBuild">
-		<PropertyGroup Condition="'$(_PlatformName)' == 'iOS' Or $(TargetFramework.EndsWith('-ios')) Or '$(_PlatformName)' == 'tvOS' Or $(TargetFramework.EndsWith('-tvos'))">
+		<PropertyGroup Condition="('$(_PlatformName)' == 'iOS' Or $(TargetFramework.EndsWith('-ios')) Or '$(_PlatformName)' == 'tvOS' Or $(TargetFramework.EndsWith('-tvos'))) And '$(_UseNativeAot)' != 'true'">
 			<IsDynamicRegistrar Condition="'$(ComputedPlatform)' == 'iPhoneSimulator' And '$(Registrar)' == ''">true</IsDynamicRegistrar>
 			<IsDynamicRegistrar Condition="'$(Registrar)' == 'dynamic'">true</IsDynamicRegistrar>
 		</PropertyGroup>
 
-		<PropertyGroup Condition="'$(_PlatformName)' == 'macOS' Or $(TargetFramework.EndsWith('-macos')) Or '$(_PlatformName)' == 'MacCatalyst' Or $(TargetFramework.EndsWith('-maccatalyst'))">
+		<PropertyGroup Condition="('$(_PlatformName)' == 'macOS' Or $(TargetFramework.EndsWith('-macos')) Or '$(_PlatformName)' == 'MacCatalyst' Or $(TargetFramework.EndsWith('-maccatalyst'))) And '$(_UseNativeAot)' != 'true'">
 			<IsDynamicRegistrar Condition="'$(Configuration)' == 'Debug' And '$(Registrar)' == ''">true</IsDynamicRegistrar>
 			<IsDynamicRegistrar Condition="'$(Registrar)' == 'dynamic'">true</IsDynamicRegistrar>
 		</PropertyGroup>

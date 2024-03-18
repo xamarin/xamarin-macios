@@ -6,7 +6,6 @@
 !deprecated-attribute-missing! AVAsset::tracksWithMediaType: missing a [Deprecated] attribute
 !deprecated-attribute-missing! AVAsset::trackWithTrackID: missing a [Deprecated] attribute
 !deprecated-attribute-missing! AVAsset::unusedTrackID missing a [Deprecated] attribute
-!deprecated-attribute-missing! AVAssetImageGenerator::copyCGImageAtTime:actualTime:error: missing a [Deprecated] attribute
 !deprecated-attribute-missing! AVAssetTrack::associatedTracksOfType: missing a [Deprecated] attribute
 !deprecated-attribute-missing! AVAssetTrack::metadataForFormat: missing a [Deprecated] attribute
 !deprecated-attribute-missing! AVAssetTrack::samplePresentationTimeForTrackTime: missing a [Deprecated] attribute
@@ -74,7 +73,6 @@
 !missing-selector! +NSValue::valueWithCMVideoDimensions: not bound
 !missing-selector! AVAssetExportSession::audioTrackGroupHandling not bound
 !missing-selector! AVAssetExportSession::setAudioTrackGroupHandling: not bound
-!missing-selector! AVAssetImageGenerator::generateCGImageAsynchronouslyForTime:completionHandler: not bound
 !missing-selector! AVAssetPlaybackAssistant::loadPlaybackConfigurationOptionsWithCompletionHandler: not bound
 !missing-selector! AVAssetResourceLoadingContentInformationRequest::isEntireLengthAvailableOnDemand not bound
 !missing-selector! AVAssetResourceLoadingContentInformationRequest::setEntireLengthAvailableOnDemand: not bound
@@ -99,7 +97,6 @@
 !missing-selector! AVCaptureDevice::isStudioLightActive not bound
 !missing-selector! AVCaptureDeviceFormat::isStudioLightSupported not bound
 !missing-selector! AVCaptureDeviceFormat::videoFrameRateRangeForStudioLight not bound
-!missing-selector! AVCaptureSession::hardwareCost not bound
 !missing-selector! AVComposition::chapterMetadataGroupsBestMatchingPreferredLanguages: not bound
 !missing-selector! AVComposition::chapterMetadataGroupsWithTitleLocale:containingItemsWithCommonKeys: not bound
 !missing-selector! AVComposition::mediaSelectionGroupForMediaCharacteristic: not bound

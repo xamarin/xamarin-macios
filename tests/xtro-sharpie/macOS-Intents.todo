@@ -1,2 +1,0 @@
-!missing-selector! INSendMessageIntentResponse::sentMessages not bound
-!missing-selector! INSendMessageIntentResponse::setSentMessages: not bound

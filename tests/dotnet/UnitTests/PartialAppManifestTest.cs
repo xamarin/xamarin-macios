@@ -1,3 +1,5 @@
+#nullable enable
+
 namespace Xamarin.Tests {
 	public class PartialAppManifestTest : TestBaseClass {
 
@@ -15,7 +17,7 @@ namespace Xamarin.Tests {
 			DotNet.AssertBuild (project_path, properties);
 
 			var infoPlistPath = GetInfoPListPath (platform, appPath);
-			var infoPlist = PDictionary.FromFile (infoPlistPath);
+			var infoPlist = PDictionary.FromFile (infoPlistPath)!;
 			Assert.AreEqual ("com.xamarin.mypartialappmanifestapp", infoPlist.GetString ("CFBundleIdentifier").Value, "CFBundleIdentifier");
 			Assert.AreEqual ("MyPartialAppManifestApp", infoPlist.GetString ("CFBundleDisplayName").Value, "CFBundleDisplayName");
 			Assert.AreEqual ("3.14", infoPlist.GetString ("CFBundleVersion").Value, "CFBundleVersion");

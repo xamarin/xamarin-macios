@@ -1,0 +1,4 @@
+!missing-enum! PKAutomaticPassPresentationSuppressionResult not bound
+!missing-selector! +PKPassLibrary::endAutomaticPassPresentationSuppressionWithRequestToken: not bound
+!missing-selector! +PKPassLibrary::isSuppressingAutomaticPassPresentation not bound
+!missing-selector! +PKPassLibrary::requestAutomaticPassPresentationSuppressionWithResponseHandler: not bound

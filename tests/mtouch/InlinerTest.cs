@@ -14,7 +14,7 @@ namespace Xamarin.Linker {
 		// note: direct check, no inheritance
 		public static bool Is (this TypeReference type, string @namespace, string name)
 		{
-			return ((type != null) && (type.Name == name) && (type.Namespace == @namespace));
+			return ((type is not null) && (type.Name == name) && (type.Namespace == @namespace));
 		}
 	}
 
@@ -30,7 +30,7 @@ namespace Xamarin.Linker {
 
 		protected virtual AssemblyDefinition AssemblyDefinition {
 			get {
-				if (assembly == null)
+				if (assembly is null)
 					assembly = AssemblyDefinition.ReadAssembly (Assembly);
 				return assembly;
 			}

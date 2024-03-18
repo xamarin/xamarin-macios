@@ -63,7 +63,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 			test.do_checks--;
 
 			var cs = scanner.GetContentStream ();
-			if (cs == null)
+			if (cs is null)
 				return;
 			test.do_checks--;
 
@@ -78,7 +78,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 			test.do_checks--;
 
 			var dict = s.Dictionary;
-			if (dict == null)
+			if (dict is null)
 				return;
 			test.do_checks--;
 

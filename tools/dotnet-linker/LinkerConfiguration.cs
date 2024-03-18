@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -7,36 +8,39 @@ using System.Xml.Linq;
 
 using Mono.Cecil;
 using Mono.Linker;
+using Mono.Linker.Steps;
 
 using Xamarin.Bundler;
 using Xamarin.Utils;
 using Xamarin.Tuner;
 
-using ObjCRuntime;
+#nullable enable
 
 namespace Xamarin.Linker {
 	public class LinkerConfiguration {
 		string LinkerFile;
 
-		public List<Abi> Abis;
-		public string AOTCompiler;
-		public string AOTOutputDirectory;
-		public string CacheDirectory { get; private set; }
-		public Version DeploymentTarget { get; private set; }
+		public List<Abi> Abis = new List<Abi> ();
+		public string AOTCompiler = string.Empty;
+		public string AOTOutputDirectory = string.Empty;
+		public string DedupAssembly = string.Empty;
+		public string CacheDirectory { get; private set; } = string.Empty;
+		public Version? DeploymentTarget { get; private set; }
 		public HashSet<string> FrameworkAssemblies { get; private set; } = new HashSet<string> ();
-		public string GlobalizationDataFile { get; private set; }
-		public string IntermediateLinkDir { get; private set; }
+		public string GlobalizationDataFile { get; private set; } = string.Empty;
+		public string IntermediateLinkDir { get; private set; } = string.Empty;
 		public bool InvariantGlobalization { get; private set; }
-		public string ItemsDirectory { get; private set; }
+		public bool HybridGlobalization { get; private set; }
+		public string ItemsDirectory { get; private set; } = string.Empty;
 		public bool IsSimulatorBuild { get; private set; }
-		public string PartialStaticRegistrarLibrary { get; set; }
+		public string PartialStaticRegistrarLibrary { get; set; } = string.Empty;
 		public ApplePlatform Platform { get; private set; }
-		public string PlatformAssembly { get; private set; }
-		public string RelativeAppBundlePath { get; private set; }
-		public Version SdkVersion { get; private set; }
-		public string SdkRootDirectory { get; private set; }
+		public string PlatformAssembly { get; private set; } = string.Empty;
+		public string RelativeAppBundlePath { get; private set; } = string.Empty;
+		public Version? SdkVersion { get; private set; }
+		public string SdkRootDirectory { get; private set; } = string.Empty;
 		public int Verbosity => Driver.Verbosity;
-		public string XamarinNativeLibraryDirectory { get; private set; }
+		public string XamarinNativeLibraryDirectory { get; private set; } = string.Empty;
 
 		static ConditionalWeakTable<LinkContext, LinkerConfiguration> configurations = new ConditionalWeakTable<LinkContext, LinkerConfiguration> ();
 
@@ -46,22 +50,40 @@ namespace Xamarin.Linker {
 		public IList<string> RegistrationMethods { get; set; } = new List<string> ();
 		public CompilerFlags CompilerFlags;
 
-		public LinkContext Context { get; private set; }
+		LinkContext? context;
+		public LinkContext Context { get => context!; private set { context = value; } }
 		public DerivedLinkContext DerivedLinkContext { get; private set; }
 		public Profile Profile { get; private set; }
 
 		// The list of assemblies is populated in CollectAssembliesStep.
 		public List<AssemblyDefinition> Assemblies = new List<AssemblyDefinition> ();
 
-		string user_optimize_flags;
+		string? user_optimize_flags;
 
 		Dictionary<string, List<MSBuildItem>> msbuild_items = new Dictionary<string, List<MSBuildItem>> ();
 
-		internal PInvokeWrapperGenerator PInvokeWrapperGenerationState;
+		AppBundleRewriter? abr;
+		internal AppBundleRewriter AppBundleRewriter {
+			get {
+				if (abr is null)
+					abr = new AppBundleRewriter (this);
+				return abr;
+			}
+		}
 
-		public static LinkerConfiguration GetInstance (LinkContext context, bool createIfNotFound = true)
+		// This dictionary contains information about the trampolines created for each assembly.
+		public AssemblyTrampolineInfos AssemblyTrampolineInfos = new ();
+
+		internal PInvokeWrapperGenerator? PInvokeWrapperGenerationState;
+
+		public static bool TryGetInstance (LinkContext context, [NotNullWhen (true)] out LinkerConfiguration? configuration)
 		{
-			if (!configurations.TryGetValue (context, out var instance) && createIfNotFound) {
+			return configurations.TryGetValue (context, out configuration);
+		}
+
+		public static LinkerConfiguration GetInstance (LinkContext context)
+		{
+			if (!TryGetInstance (context, out var instance)) {
 				if (!context.TryGetCustomData ("LinkerOptionsFile", out var linker_options_file))
 					throw new Exception ($"No custom linker options file was passed to the linker (using --custom-data LinkerOptionsFile=...");
 				instance = new LinkerConfiguration (linker_options_file) {
@@ -82,9 +104,9 @@ namespace Xamarin.Linker {
 			LinkerFile = linker_file;
 
 			Profile = new BaseProfile (this);
-			DerivedLinkContext = new DerivedLinkContext { LinkerConfiguration = this, };
 			Application = new Application (this);
 			Target = new Target (Application);
+			DerivedLinkContext = new DerivedLinkContext (this, Target);
 			CompilerFlags = new CompilerFlags (Target);
 
 			var use_llvm = false;
@@ -124,6 +146,9 @@ namespace Xamarin.Linker {
 					break;
 				case "AOTOutputDirectory":
 					AOTOutputDirectory = value;
+					break;
+				case "DedupAssembly":
+					DedupAssembly = value;
 					break;
 				case "CacheDirectory":
 					CacheDirectory = value;
@@ -201,6 +226,13 @@ namespace Xamarin.Linker {
 					if (!TryParseOptionalBoolean (value, out Application.AotFloat32))
 						throw new InvalidOperationException ($"Unable to parse the {key} value: {value} in {linker_file}");
 					break;
+				case "NoWarn":
+					try {
+						ErrorHelper.ParseWarningLevel (ErrorHelper.WarningLevel.Disable, value);
+					} catch (Exception ex) {
+						throw new InvalidOperationException ($"Invalid WarnAsError '{value}' in {linker_file}", ex);
+					}
+					break;
 				case "Optimize":
 					user_optimize_flags = value;
 					break;
@@ -257,11 +289,15 @@ namespace Xamarin.Linker {
 						throw new InvalidOperationException ($"Unable to parse the {key} value: {value} in {linker_file}");
 					SdkVersion = sdk_version;
 					break;
+				case "SkipMarkingNSObjectsInUserAssemblies":
+					if (!TryParseOptionalBoolean (value, out var skip_marking_nsobjects_in_user_assemblies))
+						throw new InvalidOperationException ($"Unable to parse the {key} value: {value} in {linker_file}");
+					Application.SkipMarkingNSObjectsInUserAssemblies = skip_marking_nsobjects_in_user_assemblies.Value;
+					break;
 				case "TargetArchitectures":
 					if (!Enum.TryParse<Abi> (value, out var arch))
 						throw new InvalidOperationException ($"Unknown target architectures: {value} in {linker_file}");
 					// Add to the list of Abis as separate entries (instead of a flags enum value), because that way it's easier to enumerate over them.
-					Abis = new List<Abi> ();
 					for (var b = 0; b < 32; b++) {
 						var a = (Abi) (1 << b);
 						if ((a & arch) == a)
@@ -281,6 +317,13 @@ namespace Xamarin.Linker {
 						throw new InvalidOperationException ($"Invalid Verbosity '{value}' in {linker_file}");
 					Driver.Verbosity += verbosity;
 					break;
+				case "WarnAsError":
+					try {
+						ErrorHelper.ParseWarningLevel (ErrorHelper.WarningLevel.Error, value);
+					} catch (Exception ex) {
+						throw new InvalidOperationException ($"Invalid WarnAsError '{value}' in {linker_file}", ex);
+					}
+					break;
 				case "XamarinRuntime":
 					if (!Enum.TryParse<XamarinRuntime> (value, out var rv))
 						throw new InvalidOperationException ($"Invalid XamarinRuntime '{value}' in {linker_file}");
@@ -291,6 +334,9 @@ namespace Xamarin.Linker {
 					break;
 				case "InvariantGlobalization":
 					InvariantGlobalization = string.Equals ("true", value, StringComparison.OrdinalIgnoreCase);
+					break;
+				case "HybridGlobalization":
+					HybridGlobalization = string.Equals ("true", value, StringComparison.OrdinalIgnoreCase);
 					break;
 				case "XamarinNativeLibraryDirectory":
 					XamarinNativeLibraryDirectory = value;
@@ -317,11 +363,13 @@ namespace Xamarin.Linker {
 
 			Application.CreateCache (significantLines.ToArray ());
 			Application.Cache.Location = CacheDirectory;
-			Application.DeploymentTarget = DeploymentTarget;
-			Application.SdkVersion = SdkVersion;
-			Application.NativeSdkVersion = SdkVersion;
+			if (DeploymentTarget is not null)
+				Application.DeploymentTarget = DeploymentTarget;
+			if (SdkVersion is not null) {
+				Application.SdkVersion = SdkVersion;
+				Application.NativeSdkVersion = SdkVersion;
+			}
 
-			DerivedLinkContext.Target = Target;
 			Target.Abis = Abis;
 			Target.LinkContext = DerivedLinkContext;
 			Application.Abis = Abis;
@@ -346,12 +394,14 @@ namespace Xamarin.Linker {
 			Application.Initialize ();
 		}
 
-		bool TryParseOptionalBoolean (string input, out bool? value)
+		bool TryParseOptionalBoolean (string input, [NotNullWhen (true)] out bool? value)
 		{
 			value = null;
 
-			if (string.IsNullOrEmpty (input))
+			if (string.IsNullOrEmpty (input)) {
+				value = true;
 				return true;
+			}
 
 			if (string.Equals (input, "true", StringComparison.OrdinalIgnoreCase)) {
 				value = true;
@@ -386,12 +436,13 @@ namespace Xamarin.Linker {
 				Console.WriteLine ($"    ABIs: {string.Join (", ", Abis.Select (v => v.AsArchString ()))}");
 				Console.WriteLine ($"    AOTArguments: {string.Join (", ", Application.AotArguments)}");
 				Console.WriteLine ($"    AOTOutputDirectory: {AOTOutputDirectory}");
+				Console.WriteLine ($"    DedupAssembly: {DedupAssembly}");
 				Console.WriteLine ($"    AppBundleManifestPath: {Application.InfoPListPath}");
 				Console.WriteLine ($"    AreAnyAssembliesTrimmed: {Application.AreAnyAssembliesTrimmed}");
 				Console.WriteLine ($"    AssemblyName: {Application.AssemblyName}");
 				Console.WriteLine ($"    CacheDirectory: {CacheDirectory}");
 				Console.WriteLine ($"    Debug: {Application.EnableDebug}");
-				Console.WriteLine ($"    Dlsym: {Application.DlsymOptions} {(Application.DlsymAssemblies != null ? string.Join (" ", Application.DlsymAssemblies.Select (v => (v.Item2 ? "+" : "-") + v.Item1)) : string.Empty)}");
+				Console.WriteLine ($"    Dlsym: {Application.DlsymOptions} {(Application.DlsymAssemblies is not null ? string.Join (" ", Application.DlsymAssemblies.Select (v => (v.Item2 ? "+" : "-") + v.Item1)) : string.Empty)}");
 				Console.WriteLine ($"    DeploymentTarget: {DeploymentTarget}");
 				Console.WriteLine ($"    EnableSGenConc {Application.EnableSGenConc}");
 				Console.WriteLine ($"    IntermediateLinkDir: {IntermediateLinkDir}");
@@ -475,7 +526,7 @@ namespace Xamarin.Linker {
 			var list = ErrorHelper.CollectExceptions (exceptions);
 			var allWarnings = list.All (v => v is ProductException pe && !pe.Error);
 			if (!allWarnings) {
-				var instance = GetInstance (context, false);
+				TryGetInstance (context, out var instance);
 				var platform = (instance?.Platform)?.ToString () ?? "unknown";
 				var msg = MessageContainer.CreateCustomErrorMessage (Errors.MX7000 /* An error occured while executing the custom linker steps. Please review the build log for more information. */, 7000, platform);
 				context.LogMessage (msg);
@@ -483,10 +534,29 @@ namespace Xamarin.Linker {
 			// ErrorHelper.Show will print our errors and warnings to stderr.
 			ErrorHelper.Show (list);
 		}
+
+		public IEnumerable<AssemblyDefinition> GetNonDeletedAssemblies (BaseStep step)
+		{
+			foreach (var assembly in Assemblies) {
+				if (step.Annotations.GetAction (assembly) == Mono.Linker.AssemblyAction.Delete)
+					continue;
+				yield return assembly;
+			}
+		}
 	}
 }
 
 public class MSBuildItem {
 	public string Include;
 	public Dictionary<string, string> Metadata = new Dictionary<string, string> ();
+
+	public MSBuildItem (string include)
+	{
+		Include = include;
+	}
+	public MSBuildItem (string include, Dictionary<string, string> metadata)
+	{
+		Include = include;
+		Metadata = metadata;
+	}
 }

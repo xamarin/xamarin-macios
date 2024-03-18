@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
@@ -74,6 +75,10 @@ namespace Xharness {
 		Xcframework = 1 << 26,
 		[Label ("xtro")]
 		Xtro = 1 << 27,
+		[Label ("packaged-macos")]
+		PackagedMacOS = 1 << 28,
+		[Label ("windows")]
+		Windows = 1 << 29,
 		[Label ("all")]
 		All = Int64.MaxValue,
 	}
@@ -90,10 +95,6 @@ namespace Xharness {
 		iOSExtension = 1 << 3,
 		[Label ("ios-simulator")]
 		iOSSimulator = 1 << 4,
-		[Label ("ios-32")]
-		iOS32 = 1 << 5,
-		[Label ("ios-64")]
-		iOS64 = 1 << 6,
 		[Label ("mac")]
 		Mac = 1 << 7,
 		[Label ("maccatalyst")]
@@ -115,14 +116,18 @@ namespace Xharness {
 	static class TestLabelExtensions {
 		static string GetLabel<T> (this T self) where T : Enum
 		{
-			var name = Enum.GetName (typeof (T), self);
-			var attr = typeof (T).GetField (name).GetCustomAttribute<LabelAttribute> ();
-			return attr.Label;
+			var name = Enum.GetName (typeof (T), self)!;
+			var attr = typeof (T).GetField (name)!.GetCustomAttribute<LabelAttribute> ();
+			return attr!.Label;
 		}
 
-		public static bool TryGetLabel<T> (this string self, out T? label) where T : Enum
+		public static bool TryGetLabel<T> (this string self, out T label) where T : struct, Enum
 		{
+#if NET
+			foreach (var obj in Enum.GetValues<T> ()) {
+#else
 			foreach (var obj in Enum.GetValues (typeof (T))) {
+#endif
 				if (obj is T value && value.GetLabel () == self) {
 					label = value;
 					return true;

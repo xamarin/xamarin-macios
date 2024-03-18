@@ -38,3 +38,7 @@ using System.Runtime.CompilerServices;
 // in order to compile stuff, we erase the third and fourth number and only use 0 for both.
 [assembly: AssemblyVersion ("@NUGET_VERSION_MAJOR@.@NUGET_VERSION_MINOR@.0.0")]
 #endif
+
+#if NET && !XCODE_IS_STABLE && !COREBUILD
+[assembly: RequiresPreviewFeatures("These are preview bindings for an unstable version of Xcode. Opt into preview features by adding <EnablePreviewFeatures>True</EnablePreviewFeatures> to your project file.")]
+#endif

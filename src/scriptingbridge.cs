@@ -35,8 +35,8 @@ using NativeHandle = System.IntPtr;
 #endif
 
 namespace ScriptingBridge {
-	
-	
+
+
 	[BaseType (typeof (NSObject))]
 	interface SBObject : NSCoding {
 
@@ -81,30 +81,30 @@ namespace ScriptingBridge {
 	}
 #pragma warning restore 0618
 
-	
+
 	// TODO: The documentation says these are rarely used so will clean these up later
-//	interface SBObject {
-//		[Export ("initWithElementCode:properties:data:")]
-//		NSObject InitWithElementCodepropertiesdata (DescType code, NSDictionary properties, NSObject data);
-//
-//		[Export ("propertyWithCode:")]
-//		SBObject PropertyWithCode (AEKeyword code);
-//
-//		[Export ("propertyWithClass:code:")]
-//		SBObject PropertyWithClasscode (Class cls, AEKeyword code);
-//
-//		[Export ("elementArrayWithCode:")]
-//		SBElementArray ElementArrayWithCode (DescType code);
-//
-//		[Export ("sendEvent:id:parameters:...")]
-//		NSObject SendEventidparameters... (AEEventClass eventClass, AEEventID eventID, DescType firstParamCode,, );
-//
-//		[Export ("setTo:")]
-//		void SetTo (NSObject value);
-//
-//	}
-	
-	[BaseType (typeof (SBObject),Delegates=new string [] { "WeakDelegate" }, Events=new Type [] { typeof (SBApplicationDelegate)})]
+	//	interface SBObject {
+	//		[Export ("initWithElementCode:properties:data:")]
+	//		NSObject InitWithElementCodepropertiesdata (DescType code, NSDictionary properties, NSObject data);
+	//
+	//		[Export ("propertyWithCode:")]
+	//		SBObject PropertyWithCode (AEKeyword code);
+	//
+	//		[Export ("propertyWithClass:code:")]
+	//		SBObject PropertyWithClasscode (Class cls, AEKeyword code);
+	//
+	//		[Export ("elementArrayWithCode:")]
+	//		SBElementArray ElementArrayWithCode (DescType code);
+	//
+	//		[Export ("sendEvent:id:parameters:...")]
+	//		NSObject SendEventidparameters... (AEEventClass eventClass, AEEventID eventID, DescType firstParamCode,, );
+	//
+	//		[Export ("setTo:")]
+	//		void SetTo (NSObject value);
+	//
+	//	}
+
+	[BaseType (typeof (SBObject), Delegates = new string [] { "WeakDelegate" }, Events = new Type [] { typeof (SBApplicationDelegate) })]
 	[DisableDefaultCtor] // An uncaught exception was raised: *** -[SBApplication init]: should never be used.
 	interface SBApplication : NSCoding {
 		[Export ("initWithURL:")]
@@ -119,20 +119,20 @@ namespace ScriptingBridge {
 		[Internal]
 		[Static]
 		[Export ("applicationWithBundleIdentifier:")]
-		IntPtr _FromBundleIdentifier (string ident );
+		IntPtr _FromBundleIdentifier (string ident);
 
 		[Internal]
 		[Static]
 		[Export ("applicationWithURL:")]
-		IntPtr _FromURL (NSUrl url );
+		IntPtr _FromURL (NSUrl url);
 
 		[Internal]
 		[Static]
 		[Export ("applicationWithProcessIdentifier:")]
-		IntPtr _FromProcessIdentifier (int /* pid_t = int */ pid );
+		IntPtr _FromProcessIdentifier (int /* pid_t = int */ pid);
 
 		[Export ("classForScriptingClass:")]
-		Class ClassForScripting (string className );
+		Class ClassForScripting (string className);
 
 		[Export ("isRunning")]
 		bool IsRunning { get; }
@@ -144,8 +144,7 @@ namespace ScriptingBridge {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		SBApplicationDelegate Delegate { get; set; }
+		ISBApplicationDelegate Delegate { get; set; }
 
 		[Export ("launchFlags")]
 		LSLaunchFlags LaunchFlags { get; set; }
@@ -156,6 +155,8 @@ namespace ScriptingBridge {
 		[Export ("timeout")]
 		nint Timeout { get; set; }
 	}
+
+	interface ISBApplicationDelegate { }
 
 	[BaseType (typeof (NSObject))]
 	[Model]
@@ -172,5 +173,5 @@ namespace ScriptingBridge {
 		NSObject EventFailed (IntPtr appleEvent, NSError error);
 #endif
 	}
-	
+
 }

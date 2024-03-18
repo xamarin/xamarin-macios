@@ -17,22 +17,23 @@ namespace Xamarin.Mac.Tests {
 		{
 			CALayer layer = new CALayer ();
 			CGRect frame = new CGRect (10, 10, 10, 10);
-			using (var provider = new CGDataProvider (new byte [(int) frame.Width * (int) frame.Height * 4])) {
-				using (var image = new CGImage ((int) frame.Width, (int) frame.Height, 8, 32, (int) frame.Width * 4, CGColorSpace.CreateDeviceRGB (), CGBitmapFlags.None, provider, null, false, CGColorRenderingIntent.Default)) {
-					NSImage NSImage = new NSImage ();
+			using var provider = new CGDataProvider (new byte [(int) frame.Width * (int) frame.Height * 4]);
+			using var colorSpace = CGColorSpace.CreateDeviceRGB ();
+			using var image = new CGImage ((int) frame.Width, (int) frame.Height, 8, 32, 4 * (int) frame.Width, colorSpace,
+				CGBitmapFlags.ByteOrderDefault | CGBitmapFlags.Last, provider, null, false, CGColorRenderingIntent.Default);
 
-					layer.Contents = image;
-					CGImage arrayImage = layer.Contents;
-					Assert.AreEqual (image.Handle, arrayImage.Handle);
+			NSImage NSImage = new NSImage ();
 
-					layer.SetContents (NSImage);
-					NSImage arrayNSImage = layer.GetContentsAs<NSImage> ();
-					Assert.AreEqual (NSImage.Handle, arrayNSImage.Handle);
+			layer.Contents = image;
+			CGImage arrayImage = layer.Contents;
+			Assert.AreEqual (image.Handle, arrayImage.Handle);
 
-					layer.SetContents (null); // Should not throw
-					layer.Contents = null; // Should not throw
-				}
-			}
+			layer.SetContents (NSImage);
+			NSImage arrayNSImage = layer.GetContentsAs<NSImage> ();
+			Assert.AreEqual (NSImage.Handle, arrayNSImage.Handle);
+
+			layer.SetContents (null); // Should not throw
+			layer.Contents = null; // Should not throw
 		}
 	}
 }

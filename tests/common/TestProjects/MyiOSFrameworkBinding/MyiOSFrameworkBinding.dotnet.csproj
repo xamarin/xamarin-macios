@@ -6,6 +6,7 @@
     <IsBindingProject>true</IsBindingProject>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <NoBindingEmbedding>true</NoBindingEmbedding>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <Import Project="../Common.props" />
@@ -36,7 +37,7 @@
     </None>
   </ItemGroup>
   <Target Name="BeforeBuild" Inputs="$(RepositoryPath)\tests\test-libraries\libframework.m" Outputs="$(RepositoryPath)\tests\test-libraries\.libs\ios-fat\XTest.framework;$(RepositoryPath)\tests\test-libraries\.libs\ios-fat\XSharedObjectTest.framework;$(RepositoryPath)\tests\test-libraries\.libs\ios-fat\XSharedArTest.framework">
-    <Exec Command="make -j8 -C $(RepositoryPath)\tests\test-libraries" />
+    <Exec Command="make -j8 -C $(RepositoryPath)\tests\test-libraries" Condition="'$(BUILD_REVISION)' == ''" />
   </Target>
   <ItemGroup>
     <ObjcBindingApiDefinition Include="$(RepositoryPath)\tests\bindings-framework-test\ApiDefinition.cs">

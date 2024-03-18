@@ -11,7 +11,7 @@ using ObjCRuntime;
 namespace MetalPerformanceShaders {
 
 	public partial class MPSImageScale {
-		static int size_of_scale_transform = Marshal.SizeOf (typeof (MPSScaleTransform));
+		static int size_of_scale_transform = Marshal.SizeOf<MPSScaleTransform> ();
 
 		public virtual MPSScaleTransform? ScaleTransform {
 			get {

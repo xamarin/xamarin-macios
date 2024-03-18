@@ -25,6 +25,8 @@ namespace GameKit {
 	[NoTV]
 #endif
 	[Deprecated (PlatformName.iOS, 7, 0)]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 	[Native]
 	public enum GKPeerPickerConnectionType : ulong {
 		Online = 1 << 0,
@@ -34,6 +36,9 @@ namespace GameKit {
 	// untyped enum -> GKPublicConstants.h
 	[NoMac]
 	[Deprecated (PlatformName.iOS, 7, 0)]
+	[Deprecated (PlatformName.TvOS, 9, 0)]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 	[ErrorDomain ("GKVoiceChatServiceErrorDomain")]
 	public enum GKVoiceChatServiceError {
 		Internal = 32000,
@@ -57,7 +62,9 @@ namespace GameKit {
 
 	// untyped enum -> GKPublicConstants.h
 	[Deprecated (PlatformName.iOS, 7, 0)]
+	[Deprecated (PlatformName.TvOS, 9, 0)]
 	[Deprecated (PlatformName.MacOSX, 10, 10)]
+	[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 	public enum GKSendDataMode {
 		Reliable,
 		Unreliable,
@@ -65,7 +72,9 @@ namespace GameKit {
 
 	// untyped enum -> GKPublicConstants.h
 	[Deprecated (PlatformName.iOS, 7, 0)]
+	[Deprecated (PlatformName.TvOS, 9, 0)]
 	[Deprecated (PlatformName.MacOSX, 10, 10)]
+	[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 	public enum GKSessionMode {
 		Server,
 		Client,
@@ -74,7 +83,9 @@ namespace GameKit {
 
 	// untyped enum -> GKPublicConstants.h
 	[Deprecated (PlatformName.iOS, 7, 0)]
+	[Deprecated (PlatformName.TvOS, 9, 0)]
 	[Deprecated (PlatformName.MacOSX, 10, 10)]
+	[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 	public enum GKPeerConnectionState {
 		Available,
 		Unavailable,
@@ -139,25 +150,22 @@ namespace GameKit {
 		NotAuthorized = 32,
 		ConnectionTimeout = 33,
 		ApiObsolete = 34,
-
+		ICloudUnavailable = 35,
+		LockdownMode = 36,
 		FriendListDescriptionMissing = 100,
 		FriendListRestricted = 101,
 		FriendListDenied = 102,
 		FriendRequestNotAvailable = 103,
 	}
 
-	[iOS (10, 0)]
-	[Mac (10, 12)]
-	[TV (10, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum GKConnectionState : long {
 		NotConnected,
 		Connected,
 	}
 
-	[iOS (10, 0)]
-	[Mac (10, 12)]
-	[TV (10, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum GKTransportType : long {
 		Unreliable,
@@ -173,6 +181,7 @@ namespace GameKit {
 	[Obsolete ("Not used in watchOS.")]
 #else
 	[Unavailable (PlatformName.WatchOS)]
+	[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 	[ErrorDomain ("GKGameSessionErrorDomain")]
 #endif
 	public enum GKGameSessionErrorCode : long {
@@ -196,7 +205,9 @@ namespace GameKit {
 
 	// NSInteger -> GKMatch.h
 	[Deprecated (PlatformName.iOS, 7, 0)]
+	[Deprecated (PlatformName.TvOS, 9, 0)]
 	[Deprecated (PlatformName.MacOSX, 10, 10)]
+	[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 	[Native]
 	public enum GKMatchSendDataMode : long {
 		Reliable, Unreliable
@@ -244,7 +255,7 @@ namespace GameKit {
 	}
 
 	// NSInteger -> GKChallenge.h
-	[Mac (10, 9)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum GKChallengeState : long {
 		Invalid = 0,
@@ -255,6 +266,7 @@ namespace GameKit {
 
 	// NSInteger -> GKGameCenterViewController.h
 	[NoWatch]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum GKGameCenterViewControllerState : long {
 		Default = -1,
@@ -263,9 +275,11 @@ namespace GameKit {
 		Challenges,
 		[iOS (14, 0)]
 		[TV (14, 0)]
+		[MacCatalyst (14, 0)]
 		LocalPlayerProfile = 3,
 		[iOS (14, 0)]
 		[TV (14, 0)]
+		[MacCatalyst (14, 0)]
 		Dashboard = 4,
 		[iOS (15, 0)]
 		[Mac (12, 0)]
@@ -295,7 +309,6 @@ namespace GameKit {
 	}
 
 	// uint8_t -> GKTurnBasedMatch.h
-	[iOS (7, 0)]
 	public enum GKTurnBasedExchangeStatus : sbyte {
 		Unknown,
 		Active,
@@ -317,7 +330,6 @@ namespace GameKit {
 #if !NET
 	[iOS (11, 3)]
 	[Deprecated (PlatformName.iOS, 14, 0, message: "Do not use; this API was removed.")]
-	[Mac (10, 13, 4)]
 	[Deprecated (PlatformName.MacOSX, 11, 0, message: "Do not use; this API was removed.")]
 	[TV (11, 3)]
 	[Deprecated (PlatformName.TvOS, 14, 0, message: "Do not use; this API was removed.")]
@@ -333,6 +345,7 @@ namespace GameKit {
 	[Mac (11, 0)]
 	[iOS (14, 0)]
 	[NoWatch]
+	[MacCatalyst (14, 0)]
 	[Native]
 	public enum GKAccessPointLocation : long {
 		TopLeading,
@@ -345,6 +358,7 @@ namespace GameKit {
 	[Mac (11, 0)]
 	[iOS (14, 0)]
 	[Watch (7, 0)]
+	[MacCatalyst (14, 0)]
 	[Native]
 	public enum GKLeaderboardType : long {
 		Classic,
@@ -355,6 +369,7 @@ namespace GameKit {
 	[Mac (11, 0)]
 	[iOS (14, 0)]
 	[NoWatch]
+	[MacCatalyst (14, 0)]
 	[Native]
 	public enum GKMatchmakingMode : long {
 		Default = 0,
@@ -371,6 +386,7 @@ namespace GameKit {
 	[TV (14, 5)]
 	[Mac (11, 3)]
 	[iOS (14, 5)]
+	[MacCatalyst (14, 5)]
 	[Native]
 	public enum GKFriendsAuthorizationStatus : long {
 		NotDetermined = 0,

@@ -26,6 +26,8 @@
 using System;
 using System.IO;
 
+#nullable enable
+
 namespace ObjCRuntime {
 	[Flags]
 	public enum LinkTarget : int {
@@ -74,19 +76,19 @@ namespace ObjCRuntime {
 			get; set;
 		}
 
-		public string Frameworks {
+		public string? Frameworks {
 			get; set;
 		}
 
-		public string WeakFrameworks {
+		public string? WeakFrameworks {
 			get; set;
 		}
 
-		public string LibraryName {
+		public string? LibraryName {
 			get; private set;
 		}
 
-		public string LinkerFlags {
+		public string? LinkerFlags {
 			get; set;
 		}
 

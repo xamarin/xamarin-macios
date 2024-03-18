@@ -29,12 +29,11 @@ namespace Network {
 
 #if NET
 	[SupportedOSPlatform ("tvos13.0")]
-	[SupportedOSPlatform ("macos10.15")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("ios13.0")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[TV (13, 0)]
-	[Mac (10, 15)]
 	[iOS (13, 0)]
 	[Watch (6, 0)]
 #endif
@@ -144,12 +143,16 @@ namespace Network {
 			=> nw_data_transfer_report_get_sent_ip_packet_count (GetCheckedHandle (), pathIndex);
 
 		[DllImport (Constants.NetworkLibrary)]
-		unsafe static extern void nw_data_transfer_report_collect (OS_nw_data_transfer_report report, IntPtr queue, ref BlockLiteral collect_block);
+		unsafe static extern void nw_data_transfer_report_collect (OS_nw_data_transfer_report report, IntPtr queue, BlockLiteral* collect_block);
 
+#if !NET
 		delegate void nw_data_transfer_report_collect_t (IntPtr block, IntPtr report);
 		static nw_data_transfer_report_collect_t static_CollectHandler = TrampolineCollectHandler;
 
 		[MonoPInvokeCallback (typeof (nw_data_transfer_report_collect_t))]
+#else
+		[UnmanagedCallersOnly]
+#endif
 		static void TrampolineCollectHandler (IntPtr block, IntPtr report)
 		{
 			var del = BlockLiteral.GetTarget<Action<NWDataTransferReport>> (block);
@@ -166,12 +169,16 @@ namespace Network {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (queue));
 			if (handler is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
-			BlockLiteral block_handler = new BlockLiteral ();
-			block_handler.SetupBlockUnsafe (static_CollectHandler, handler);
-			try {
-				nw_data_transfer_report_collect (GetCheckedHandle (), queue.Handle, ref block_handler);
-			} finally {
-				block_handler.CleanupBlock ();
+
+			unsafe {
+#if NET
+				delegate* unmanaged<IntPtr, IntPtr, void> trampoline = &TrampolineCollectHandler;
+				using var block = new BlockLiteral (trampoline, handler, typeof (NWDataTransferReport), nameof (TrampolineCollectHandler));
+#else
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (static_CollectHandler, handler);
+#endif
+				nw_data_transfer_report_collect (GetCheckedHandle (), queue.Handle, &block);
 			}
 		}
 

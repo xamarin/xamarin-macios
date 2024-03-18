@@ -9,6 +9,7 @@
 //
 
 using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using CoreGraphics;
 using CoreLocation;
@@ -64,12 +65,10 @@ namespace MapKit {
 
 	// MKGeometry.h
 #if NET
-	[SupportedOSPlatform ("macos10.9")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("tvos")]
-#else
-	[Mac (10, 9)]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MKCoordinateRegion {
@@ -98,12 +97,10 @@ namespace MapKit {
 
 	// MKGeometry.h
 #if NET
-	[SupportedOSPlatform ("macos10.9")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("tvos")]
-#else
-	[Mac (10, 9)]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MKMapPoint {
@@ -145,7 +142,7 @@ namespace MapKit {
 
 		public override int GetHashCode ()
 		{
-			return (int) (X + Y);
+			return HashCode.Combine (X, Y);
 		}
 
 		// MKStringFromMapPoint does not really exists, it's inlined in MKGeometry.h
@@ -174,12 +171,10 @@ namespace MapKit {
 		}
 
 #if NET
-		[SupportedOSPlatform ("tvos9.2")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
-#else
-		[TV (9, 2)]
 #endif
 		public static MKMapSize World { get { return new MKMapSize (0x10000000, 0x10000000); } }
 
@@ -206,7 +201,7 @@ namespace MapKit {
 
 		public override int GetHashCode ()
 		{
-			return (int) (Width + Height);
+			return HashCode.Combine (Width, Height);
 		}
 
 		// MKStringFromMapSize does not really exists, it's inlined in MKGeometry.h
@@ -218,22 +213,18 @@ namespace MapKit {
 
 	// MKGeometry.h
 #if NET
-	[SupportedOSPlatform ("macos10.9")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("tvos")]
-#else
-	[Mac (10, 9)]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MKMapRect {
 #if NET
-		[SupportedOSPlatform ("tvos9.2")]
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
-#else
-		[TV (9, 2)]
 #endif
 		public static readonly MKMapRect Null = new MKMapRect (double.PositiveInfinity, double.PositiveInfinity, 0, 0);
 
@@ -326,18 +317,25 @@ namespace MapKit {
 		}
 
 #if NET
-		[SupportedOSPlatform ("tvos9.2")]
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
-#else
-		[TV (9, 2)]
 #endif
+
+#if XAMCORE_5_0
+		public static MKMapRect World {
+			get {
+				return new MKMapRect (0, 0, 0x10000000, 0x10000000);
+			}
+		}
+#else
 		public MKMapRect World {
 			get {
 				return new MKMapRect (0, 0, 0x10000000, 0x10000000);
 			}
 		}
+#endif
 
 		// MKMapRectEqualToRect
 		public static bool operator == (MKMapRect a, MKMapRect b)
@@ -362,7 +360,7 @@ namespace MapKit {
 
 		public override int GetHashCode ()
 		{
-			return Origin.GetHashCode () ^ Size.GetHashCode ();
+			return HashCode.Combine (Origin, Size);
 		}
 
 		// MKStringFromMapRect does not really exists, it's inlined in MKGeometry.h
@@ -372,21 +370,19 @@ namespace MapKit {
 		}
 
 		[DllImport (Constants.MapKitLibrary, EntryPoint = "MKMapRectContainsPoint")]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static extern bool MKMapRectContainsPoint (MKMapRect rect, MKMapPoint point);
+		static extern byte MKMapRectContainsPoint (MKMapRect rect, MKMapPoint point);
 
 		public bool Contains (MKMapPoint point)
 		{
-			return MKMapRectContainsPoint (this, point);
+			return MKMapRectContainsPoint (this, point) != 0;
 		}
 
 		[DllImport (Constants.MapKitLibrary, EntryPoint = "MKMapRectContainsRect")]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static extern bool MKMapRectContainsRect (MKMapRect rect1, MKMapRect rect2);
+		static extern byte MKMapRectContainsRect (MKMapRect rect1, MKMapRect rect2);
 
 		public bool Contains (MKMapRect rect)
 		{
-			return MKMapRectContainsRect (this, rect);
+			return MKMapRectContainsRect (this, rect) != 0;
 		}
 
 		[DllImport (Constants.MapKitLibrary, EntryPoint = "MKMapRectUnion")]
@@ -395,9 +391,13 @@ namespace MapKit {
 		[DllImport (Constants.MapKitLibrary, EntryPoint = "MKMapRectIntersection")]
 		static public extern MKMapRect Intersection (MKMapRect rect1, MKMapRect rect2);
 
-		[DllImport (Constants.MapKitLibrary, EntryPoint = "MKMapRectIntersectsRect")]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static public extern bool Intersects (MKMapRect rect1, MKMapRect rect2);
+		[DllImport (Constants.MapKitLibrary)]
+		static extern byte MKMapRectIntersectsRect (MKMapRect rect1, MKMapRect rect2);
+
+		public static bool Intersects (MKMapRect rect1, MKMapRect rect2)
+		{
+			return MKMapRectIntersectsRect (rect1, rect2) != 0;
+		}
 
 		[DllImport (Constants.MapKitLibrary, EntryPoint = "MKMapRectInset")]
 		static extern MKMapRect MKMapRectInset (MKMapRect rect, double dx, double dy);
@@ -416,21 +416,25 @@ namespace MapKit {
 		}
 
 		[DllImport (Constants.MapKitLibrary, EntryPoint = "MKMapRectDivide")]
-		static extern void MKMapRectDivide (MKMapRect rect, out MKMapRect slice, out MKMapRect remainder, double amount, CGRectEdge edge);
+		unsafe static extern void MKMapRectDivide (MKMapRect rect, MKMapRect* slice, MKMapRect* remainder, double amount, CGRectEdge edge);
 
+#if !COREBUILD
 		public MKMapRect Divide (double amount, CGRectEdge edge, out MKMapRect remainder)
 		{
 			MKMapRect slice;
-			MKMapRectDivide (this, out slice, out remainder, amount, edge);
+			remainder = default;
+			unsafe {
+				MKMapRectDivide (this, &slice, (MKMapRect*) Unsafe.AsPointer<MKMapRect> (ref remainder), amount, edge);
+			}
 			return slice;
 		}
+#endif
 
 		[DllImport (Constants.MapKitLibrary, EntryPoint = "MKMapRectSpans180thMeridian")]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static extern bool MKMapRectSpans180thMeridian (MKMapRect rect);
+		static extern byte MKMapRectSpans180thMeridian (MKMapRect rect);
 
 		public bool Spans180thMeridian {
-			get { return MKMapRectSpans180thMeridian (this); }
+			get { return MKMapRectSpans180thMeridian (this) != 0; }
 		}
 
 		[DllImport (Constants.MapKitLibrary, EntryPoint = "MKMapRectRemainder")]
@@ -444,12 +448,10 @@ namespace MapKit {
 
 	// MKGeometry.h
 #if NET
-	[SupportedOSPlatform ("macos10.9")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("tvos")]
-#else
-	[Mac (10, 9)]
 #endif
 	public static class MKGeometry {
 

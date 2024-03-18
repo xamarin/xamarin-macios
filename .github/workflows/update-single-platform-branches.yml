@@ -14,7 +14,7 @@ jobs:
 
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -23,8 +23,9 @@ jobs:
           set -ex
           git config user.email "github-actions-single-platform-branch-updater@xamarin.com"
           git config user.name "GitHub Actions Single Platform Branch Updater"
-          for platform in iOS tvOS MacCatalyst macOS; do
-            git checkout -b release-test/only-dotnet-$platform origin/release-test/only-dotnet-$platform
+          for platform in dotnet-iOS dotnet-tvOS dotnet-MacCatalyst dotnet-macOS dotnet legacy legacy-iOS legacy-macOS; do
+            git checkout -b release-test/only-$platform origin/release-test/only-$platform
             git merge origin/main
             git push
           done
+

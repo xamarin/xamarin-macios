@@ -5,6 +5,9 @@ using System.Collections.Generic;
 
 using Microsoft.Build.Framework;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Xamarin.MacDev.Tasks {
 	public static class AssetPackUtils {
 		const string Base36Alphabet = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";

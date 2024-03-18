@@ -1,3 +1,5 @@
+#nullable enable
+
 namespace Xamarin.Linker {
 	public class DoneStep : ConfigurationAwareStep {
 		protected override string Name { get; } = "Done";

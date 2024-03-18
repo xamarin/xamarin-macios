@@ -1,8 +1,0 @@
-!missing-protocol-conformance! PDFView should conform to UIFindInteractionDelegate
-!missing-selector! PDFView::findInteraction not bound
-!missing-selector! PDFView::isFindInteractionEnabled not bound
-!missing-selector! PDFView::isInMarkupMode not bound
-!missing-selector! PDFView::pageOverlayViewProvider not bound
-!missing-selector! PDFView::setFindInteractionEnabled: not bound
-!missing-selector! PDFView::setInMarkupMode: not bound
-!missing-selector! PDFView::setPageOverlayViewProvider: not bound

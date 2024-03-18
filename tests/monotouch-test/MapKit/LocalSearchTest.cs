@@ -43,16 +43,14 @@ namespace MonoTouchFixtures.MapKit {
 				NSRunLoop.Main.RunUntil (NSDate.Now.AddSeconds (2));
 				ls.Cancel ();
 
-#if false
 				// give it some time to cancel - but eventually time out
 				int counter = 0;
 				while (wait && (counter < 5)) {
-					NSRunLoop.Main.RunUntil (DateTime.Now.AddSeconds (counter));
+					NSRunLoop.Main.RunUntil (NSDate.Now.AddSeconds (counter));
 					counter++;
 				}
 
 				Assert.False (ls.IsSearching, "IsSearching/Cancel");
-#endif
 			}
 		}
 	}

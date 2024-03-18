@@ -73,9 +73,3 @@
 ## manually bound (better, stronger signature) on `[setS|s]copeBarButtonTitleTextAttributes:forState:` which is decorated with `UI_APPEARANCE_SELECTOR`
 
 ## [Wrap] over `[largeT|t]itleTextAttributes` which is decorated with `UI_APPEARANCE_SELECTOR`
-
-## unsorted
-
-!missing-field! NSCharacterEncodingDocumentOption not bound
-!missing-field! NSDefaultAttributesDocumentOption not bound
-!missing-field! NSDocumentTypeDocumentOption not bound

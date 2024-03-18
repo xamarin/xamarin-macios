@@ -62,7 +62,7 @@ namespace Extrospection {
 				return;
 
 			var framework = Helpers.GetFramework (decl);
-			if (framework == null)
+			if (framework is null)
 				return;
 
 			var nativeArgumentSemantic = decl.Attributes.ToArgumentSemantic ();
@@ -102,7 +102,7 @@ namespace Extrospection {
 				return;
 
 			var framework = Helpers.GetFramework (decl);
-			if (framework == null)
+			if (framework is null)
 				return;
 
 			string selector = decl.GetSelector ();
@@ -120,9 +120,9 @@ namespace Extrospection {
 			if (!found) {
 				// a category could be inlined into the type it extend
 				var category = decl.DeclContext as ObjCCategoryDecl;
-				if (category != null) {
+				if (category is not null) {
 					var cname = category.Name;
-					if (cname == null)
+					if (cname is null)
 						name = GetCategoryBase (category) + name;
 					else
 						name = name.ReplaceFirstInstance (cname, GetCategoryBase (category));

@@ -89,9 +89,9 @@ namespace Introspection {
 				if (Skip (filter_name))
 					continue;
 				string type_name = qname.Replace ("CIFilter", filter_name);
-				if (Type.GetType (type_name, false, true) == null) {
+				if (Type.GetType (type_name, false, true) is null) {
 					filters.Add (filter_name);
-					if (BindingOutput != null)
+					if (BindingOutput is not null)
 						GenerateBinding (CIFilter.FromName (filter_name), BindingOutput);
 				}
 				n++;
@@ -121,7 +121,7 @@ namespace Introspection {
 					continue;
 
 				var ctor = t.GetConstructor (Type.EmptyTypes);
-				if ((ctor == null) || ctor.IsAbstract)
+				if ((ctor is null) || ctor.IsAbstract)
 					continue;
 
 				NSObject obj = ctor.Invoke (null) as NSObject;
@@ -339,7 +339,7 @@ namespace Introspection {
 					if (assign) {
 						// check that `IFooProtocol` has a [Protocol (Name = "Foo")] attribute
 						var ca = t.GetCustomAttribute<ProtocolAttribute> (false);
-						if (ca == null) {
+						if (ca is null) {
 							ReportError ($"Managed {t.Name} should have a '[Protocol (Name=\"{t.Name.Replace ("Protocol", "")}\")]' attribute");
 						}
 						// check that the managed name ends with Protocol, so we can have the _normal_ name to be a concrete type (like our historic, strongly typed filters)
@@ -393,7 +393,7 @@ namespace Introspection {
 					continue;
 
 				var ctor = t.GetConstructor (Type.EmptyTypes);
-				if ((ctor == null) || ctor.IsAbstract)
+				if ((ctor is null) || ctor.IsAbstract)
 					continue;
 
 				CIFilter f = ctor.Invoke (null) as CIFilter;
@@ -410,7 +410,7 @@ namespace Introspection {
 					var getter = p.GetGetMethod ();
 					var ea = getter.GetCustomAttribute<ExportAttribute> (false);
 					// only properties coming (inlined) from protocols have an [Export] attribute
-					if (ea == null)
+					if (ea is null)
 						continue;
 					var key = ea.Selector;
 					// 'output' is always explicit
@@ -496,17 +496,17 @@ namespace Introspection {
 					}
 					// IgnoreCase because there are acronyms (more than 2 letters) that naming convention force us to change
 					var pi = t.GetProperty (cap, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
-					if (pi == null) {
+					if (pi is null) {
 						// 2nd chance: some, but not all, property are prefixed by `Input`
 						if (key.StartsWith ("input", StringComparison.Ordinal)) {
 							cap = Char.ToUpperInvariant (key [5]) + key.Substring (6);
 							pi = t.GetProperty (cap, BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
 						}
 					}
-					if (pi == null) {
+					if (pi is null) {
 						ReportError ($"{t.Name}: Input Key `{key}` is NOT mapped to a `{cap}` property.");
 						//GenerateBinding (f, Console.Out);
-					} else if (pi.GetSetMethod () == null)
+					} else if (pi.GetSetMethod () is null)
 						ReportError ($"{t.Name}: Property `{pi.Name}` MUST have a setter.");
 				}
 
@@ -570,10 +570,10 @@ namespace Introspection {
 					var cap = Char.ToUpperInvariant (key [0]) + key.Substring (1);
 					// IgnoreCase because there are acronyms (more than 2 letters) that naming convention force us to change
 					var po = t.GetProperty (cap, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
-					if (po == null) {
+					if (po is null) {
 						ReportError ($"{t.Name}: Output Key `{key}` is NOT mapped to a `{cap}` property.");
 						//GenerateBinding (f, Console.Out);
-					} else if (po.GetSetMethod () != null)
+					} else if (po.GetSetMethod () is not null)
 						ReportError ($"{t.Name}: Property `{po.Name}` should NOT have a setter.");
 				}
 			}

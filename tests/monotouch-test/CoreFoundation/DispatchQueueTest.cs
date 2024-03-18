@@ -9,6 +9,8 @@
 
 using System;
 using System.IO;
+using System.Threading.Tasks;
+
 using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
@@ -118,18 +120,22 @@ namespace MonoTouchFixtures.CoreFoundation {
 			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 10, throwIfOtherPlatform: false);
 
 			using (var queue = new DispatchQueue ("DispatchAsync")) {
-				var called = false;
-				var callback = new Action (() => called = true);
-				queue.DispatchAsync (callback);
-				TestRuntime.RunAsync (TimeSpan.FromSeconds (5), () => { }, () => called);
-				Assert.IsTrue (called, "Called");
-
-				called = false;
-				using (var dg = new DispatchBlock (callback)) {
-					queue.DispatchAsync (dg);
-					dg.Wait (TimeSpan.FromSeconds (5));
+				{
+					var called = new TaskCompletionSource<bool> ();
+					var callback = new Action (() => called.SetResult (true));
+					queue.DispatchAsync (callback);
+					TestRuntime.RunAsync (TimeSpan.FromSeconds (5), called.Task);
+					Assert.IsTrue (called.Task.Result, "Called");
 				}
-				Assert.IsTrue (called, "Called DispatchBlock");
+				{
+					var called = new TaskCompletionSource<bool> ();
+					var callback = new Action (() => called.SetResult (true));
+					using (var dg = new DispatchBlock (callback)) {
+						queue.DispatchAsync (dg);
+						dg.Wait (TimeSpan.FromSeconds (5));
+					}
+					Assert.IsTrue (called.Task.Result, "Called DispatchBlock");
+				}
 			}
 		}
 
@@ -140,18 +146,22 @@ namespace MonoTouchFixtures.CoreFoundation {
 			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 10, throwIfOtherPlatform: false);
 
 			using (var queue = new DispatchQueue ("DispatchBarrierAsync")) {
-				var called = false;
-				var callback = new Action (() => called = true);
-				queue.DispatchBarrierAsync (callback);
-				TestRuntime.RunAsync (TimeSpan.FromSeconds (5), () => { }, () => called);
-				Assert.IsTrue (called, "Called");
-
-				called = false;
-				using (var dg = new DispatchBlock (callback)) {
-					queue.DispatchBarrierAsync (dg);
-					dg.Wait (TimeSpan.FromSeconds (5));
+				{
+					var called = new TaskCompletionSource<bool> ();
+					var callback = new Action (() => called.SetResult (true));
+					queue.DispatchBarrierAsync (callback);
+					TestRuntime.RunAsync (TimeSpan.FromSeconds (5), called.Task);
+					Assert.IsTrue (called.Task.Result, "Called");
 				}
-				Assert.IsTrue (called, "Called DispatchBlock");
+				{
+					var called = new TaskCompletionSource<bool> ();
+					var callback = new Action (() => called.SetResult (true));
+					using (var dg = new DispatchBlock (callback)) {
+						queue.DispatchBarrierAsync (dg);
+						dg.Wait (TimeSpan.FromSeconds (5));
+					}
+					Assert.IsTrue (called.Task.Result, "Called DispatchBlock");
+				}
 			}
 		}
 

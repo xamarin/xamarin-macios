@@ -55,20 +55,31 @@ namespace CoreFoundation {
 
 		// CFMessagePortContext
 		[StructLayout (LayoutKind.Sequential)]
+#if NET
+		unsafe
+#endif
 		struct ContextProxy {
 			/* CFIndex */
 			nint version; // must be 0
 			public /* void * */ IntPtr info;
-			public /* CFAllocatorRetainCallBack*/ Func<IntPtr, IntPtr> retain;
-			public /* CFAllocatorReleaseCallBack*/ Action<IntPtr> release;
-			public /* CFAllocatorCopyDescriptionCallBack*/ Func<IntPtr, IntPtr> copyDescription;
+#if NET
+			public delegate* unmanaged<IntPtr, IntPtr> retain;
+			public delegate* unmanaged<IntPtr, void> release;
+			public delegate* unmanaged<IntPtr, IntPtr> copyDescription;
+#else
+			public /* CFAllocatorRetainCallBack*/ IntPtr retain;
+			public /* CFAllocatorReleaseCallBack*/ IntPtr release;
+			public /* CFAllocatorCopyDescriptionCallBack*/ IntPtr copyDescription;
+#endif
 		}
 
 		public delegate NSData CFMessagePortCallBack (int type, NSData data);
 
+#if !NET
 		delegate /* CFDataRef */ IntPtr CFMessagePortCallBackProxy (/* CFMessagePortRef */ IntPtr messagePort, /* SInt32 */ int type, /* CFDataRef */ IntPtr data, /* void* */ IntPtr info);
 
 		delegate void CFMessagePortInvalidationCallBackProxy (/* CFMessagePortRef */ IntPtr messagePort, /* void * */ IntPtr info);
+#endif
 
 		static Dictionary<IntPtr, CFMessagePortCallBack> outputHandles = new Dictionary<IntPtr, CFMessagePortCallBack> (Runtime.IntPtrEqualityComparer);
 
@@ -76,15 +87,17 @@ namespace CoreFoundation {
 
 		static Dictionary<IntPtr, CFMessagePortContext?> messagePortContexts = new Dictionary<IntPtr, CFMessagePortContext?> (Runtime.IntPtrEqualityComparer);
 
+#if !NET
 		static CFMessagePortCallBackProxy messageOutputCallback = new CFMessagePortCallBackProxy (MessagePortCallback);
 
 		static CFMessagePortInvalidationCallBackProxy messageInvalidationCallback = new CFMessagePortInvalidationCallBackProxy (MessagePortInvalidationCallback);
+#endif
 
 		IntPtr contextHandle;
 
 		public bool IsRemote {
 			get {
-				return CFMessagePortIsRemote (GetCheckedHandle ());
+				return CFMessagePortIsRemote (GetCheckedHandle ()) != 0;
 			}
 		}
 
@@ -104,7 +117,7 @@ namespace CoreFoundation {
 
 		public bool IsValid {
 			get {
-				return CFMessagePortIsValid (GetCheckedHandle ());
+				return CFMessagePortIsValid (GetCheckedHandle ()) != 0;
 			}
 		}
 
@@ -112,7 +125,9 @@ namespace CoreFoundation {
 			get {
 				CFMessagePortContext? result;
 				ContextProxy context = new ContextProxy ();
-				CFMessagePortGetContext (GetCheckedHandle (), ref context);
+				unsafe {
+					CFMessagePortGetContext (GetCheckedHandle (), &context);
+				}
 
 				if (context.info == IntPtr.Zero)
 					return null;
@@ -139,7 +154,13 @@ namespace CoreFoundation {
 						invalidationHandles.Add (GetCheckedHandle (), value);
 				}
 
+#if NET
+				unsafe {
+					CFMessagePortSetInvalidationCallBack (Handle, &MessagePortInvalidationCallback);
+				}
+#else
 				CFMessagePortSetInvalidationCallBack (Handle, messageInvalidationCallback);
+#endif
 			}
 		}
 
@@ -172,8 +193,13 @@ namespace CoreFoundation {
 			base.Dispose (disposing);
 		}
 
+#if NET
 		[DllImport (Constants.CoreFoundationLibrary)]
-		static extern /* CFMessagePortRef */ IntPtr CFMessagePortCreateLocal (/* CFAllocatorRef */ IntPtr allocator, /* CFStringRef */ IntPtr name, CFMessagePortCallBackProxy callout, /*  CFMessagePortContext */ ref ContextProxy context, [MarshalAs (UnmanagedType.I1)] ref bool shouldFreeInfo);
+		static unsafe extern /* CFMessagePortRef */ IntPtr CFMessagePortCreateLocal (/* CFAllocatorRef */ IntPtr allocator, /* CFStringRef */ IntPtr name, delegate* unmanaged<IntPtr, int, IntPtr, IntPtr, IntPtr> callout, /*  CFMessagePortContext */ ContextProxy* context, byte* shouldFreeInfo);
+#else
+		[DllImport (Constants.CoreFoundationLibrary)]
+		static unsafe extern /* CFMessagePortRef */ IntPtr CFMessagePortCreateLocal (/* CFAllocatorRef */ IntPtr allocator, /* CFStringRef */ IntPtr name, CFMessagePortCallBackProxy callout, /*  CFMessagePortContext */ ContextProxy* context, byte* shouldFreeInfo);
+#endif
 
 		[DllImport (Constants.CoreFoundationLibrary)]
 		static extern /* CFMessagePortRef */ IntPtr CFMessagePortCreateRemote (/* CFAllocatorRef */ IntPtr allocator, /* CFStringRef */ IntPtr name);
@@ -185,31 +211,33 @@ namespace CoreFoundation {
 		static extern IntPtr CFMessagePortCreateRunLoopSource (/* CFAllocatorRef */ IntPtr allocator, /* CFMessagePortRef */ IntPtr local, /* CFIndex */ nint order);
 
 		[DllImport (Constants.CoreFoundationLibrary)]
-		static extern /* SInt32 */ CFMessagePortSendRequestStatus CFMessagePortSendRequest (/* CFMessagePortRef */ IntPtr remote, /* SInt32 */ int msgid, /* CFDataRef */ IntPtr data, /* CFTiemInterval */ double sendTimeout, /* CFTiemInterval */ double rcvTimeout, /* CFStringRef */ IntPtr replyMode, /* CFDataRef* */ out IntPtr returnData);
+		unsafe static extern /* SInt32 */ CFMessagePortSendRequestStatus CFMessagePortSendRequest (/* CFMessagePortRef */ IntPtr remote, /* SInt32 */ int msgid, /* CFDataRef */ IntPtr data, /* CFTiemInterval */ double sendTimeout, /* CFTiemInterval */ double rcvTimeout, /* CFStringRef */ IntPtr replyMode, /* CFDataRef* */ IntPtr* returnData);
 
 		[DllImport (Constants.CoreFoundationLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static extern /* Boolean */ bool CFMessagePortIsRemote (/* CFMessagePortRef */ IntPtr ms);
+		static extern /* Boolean */ byte CFMessagePortIsRemote (/* CFMessagePortRef */ IntPtr ms);
 
 		[DllImport (Constants.CoreFoundationLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static extern /* Boolean */ bool CFMessagePortSetName (/* CFMessagePortRef */ IntPtr ms, /* CFStringRef */ IntPtr newName);
+		static extern /* Boolean */ byte CFMessagePortSetName (/* CFMessagePortRef */ IntPtr ms, /* CFStringRef */ IntPtr newName);
 
 		[DllImport (Constants.CoreFoundationLibrary)]
 		static extern /* CFStringRef */ IntPtr CFMessagePortGetName (/* CFMessagePortRef */ IntPtr ms);
 
 		[DllImport (Constants.CoreFoundationLibrary)]
-		static extern void CFMessagePortGetContext (/* CFMessagePortRef */ IntPtr ms, /* CFMessagePortContext* */ ref ContextProxy context);
+		unsafe static extern void CFMessagePortGetContext (/* CFMessagePortRef */ IntPtr ms, /* CFMessagePortContext* */ ContextProxy* context);
 
 		[DllImport (Constants.CoreFoundationLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static extern /* Boolean */ bool CFMessagePortIsValid (/* CFMessagePortRef */ IntPtr ms);
+		static extern /* Boolean */ byte CFMessagePortIsValid (/* CFMessagePortRef */ IntPtr ms);
 
 		[DllImport (Constants.CoreFoundationLibrary)]
 		static extern void CFMessagePortSetDispatchQueue (/* CFMessagePortRef */ IntPtr ms, dispatch_queue_t queue);
 
+#if NET
+		[DllImport (Constants.CoreFoundationLibrary)]
+		static unsafe extern void CFMessagePortSetInvalidationCallBack (/* CFMessagePortRef */ IntPtr ms, delegate* unmanaged<IntPtr, IntPtr, void> callout);
+#else
 		[DllImport (Constants.CoreFoundationLibrary)]
 		static extern void CFMessagePortSetInvalidationCallBack (/* CFMessagePortRef */ IntPtr ms, CFMessagePortInvalidationCallBackProxy callout);
+#endif
 
 		[DllImport (Constants.CoreFoundationLibrary)]
 		static extern IntPtr CFMessagePortGetInvalidationCallBack (/* CFMessagePortRef */ IntPtr ms);
@@ -225,7 +253,7 @@ namespace CoreFoundation {
 		internal static CFMessagePort? CreateLocalPort (CFAllocator? allocator, string? name, CFMessagePortCallBack callback, CFMessagePortContext? context)
 		{
 			var n = CFString.CreateNative (name);
-			bool shouldFreeInfo = false;
+			byte shouldFreeInfo = 0;
 			var contextProxy = new ContextProxy ();
 
 			// a GCHandle is needed because we do not have an handle before calling CFMessagePortCreateLocal
@@ -234,19 +262,37 @@ namespace CoreFoundation {
 			var shortHandle = GCHandle.Alloc (contextProxy);
 
 			if (context is not null) {
+#if NET
+				unsafe {
 				if (context.Retain is not null)
-					contextProxy.retain = RetainProxy;
+					contextProxy.retain = &RetainProxy;
 				if (context.Release is not null)
-					contextProxy.release = ReleaseProxy;
+					contextProxy.release = &ReleaseProxy;
 				if (context.CopyDescription is not null)
-					contextProxy.copyDescription = CopyDescriptionProxy;
+					contextProxy.copyDescription = &CopyDescriptionProxy;
+				}
+#else
+				if (context.Retain is not null)
+					contextProxy.retain = Marshal.GetFunctionPointerForDelegate (RetainProxyDelegate);
+				if (context.Release is not null)
+					contextProxy.release = Marshal.GetFunctionPointerForDelegate (ReleaseProxyDelegate);
+				if (context.CopyDescription is not null)
+					contextProxy.copyDescription = Marshal.GetFunctionPointerForDelegate (CopyDescriptionProxyDelegate);
+#endif
 				contextProxy.info = (IntPtr) shortHandle;
 				lock (messagePortContexts)
 					messagePortContexts.Add (contextProxy.info, context);
 			}
 
 			try {
-				var portHandle = CFMessagePortCreateLocal (allocator.GetHandle (), n, messageOutputCallback, ref contextProxy, ref shouldFreeInfo);
+				IntPtr portHandle;
+				unsafe {
+#if NET
+					portHandle = CFMessagePortCreateLocal (allocator.GetHandle (), n, &MessagePortCallback, &contextProxy, &shouldFreeInfo);
+#else
+					portHandle = CFMessagePortCreateLocal (allocator.GetHandle (), n, messageOutputCallback, &contextProxy, &shouldFreeInfo);
+#endif
+				}
 
 				// TODO handle should free info
 				if (portHandle == IntPtr.Zero)
@@ -260,7 +306,9 @@ namespace CoreFoundation {
 				if (context is not null) {
 					lock (messagePortContexts) {
 						messagePortContexts.Remove (contextProxy.info);
-						CFMessagePortGetContext (portHandle, ref contextProxy);
+						unsafe {
+							CFMessagePortGetContext (portHandle, &contextProxy);
+						}
 						messagePortContexts.Add (contextProxy.info, context);
 					}
 
@@ -279,7 +327,12 @@ namespace CoreFoundation {
 		//
 		// Proxy callbacks
 		//
+#if NET
+		[UnmanagedCallersOnly]
+#else
+		static Func<IntPtr, IntPtr> RetainProxyDelegate = RetainProxy;
 		[MonoPInvokeCallback (typeof (Func<IntPtr, IntPtr>))]
+#endif
 		static IntPtr RetainProxy (IntPtr info)
 		{
 			INativeObject? result = null;
@@ -295,7 +348,12 @@ namespace CoreFoundation {
 			return result.GetHandle ();
 		}
 
+#if NET
+		[UnmanagedCallersOnly]
+#else
+		static Action<IntPtr> ReleaseProxyDelegate = ReleaseProxy;
 		[MonoPInvokeCallback (typeof (Action<IntPtr>))]
+#endif
 		static void ReleaseProxy (IntPtr info)
 		{
 			CFMessagePortContext? context;
@@ -307,7 +365,12 @@ namespace CoreFoundation {
 				context.Release ();
 		}
 
+#if NET
+		[UnmanagedCallersOnly]
+#else
+		static Func<IntPtr, IntPtr> CopyDescriptionProxyDelegate = CopyDescriptionProxy;
 		[MonoPInvokeCallback (typeof (Func<IntPtr, IntPtr>))]
+#endif
 		static IntPtr CopyDescriptionProxy (IntPtr info)
 		{
 			NSString? result = null;
@@ -322,7 +385,11 @@ namespace CoreFoundation {
 			return result.GetHandle ();
 		}
 
+#if NET
+		[UnmanagedCallersOnly]
+#else
 		[MonoPInvokeCallback (typeof (CFMessagePortCallBackProxy))]
+#endif
 		static IntPtr MessagePortCallback (IntPtr local, int msgid, IntPtr data, IntPtr info)
 		{
 			CFMessagePortCallBack callback;
@@ -341,7 +408,11 @@ namespace CoreFoundation {
 			}
 		}
 
+#if NET
+		[UnmanagedCallersOnly]
+#else
 		[MonoPInvokeCallback (typeof (CFMessagePortInvalidationCallBackProxy))]
+#endif
 		static void MessagePortInvalidationCallback (IntPtr messagePort, IntPtr info)
 		{
 			Action? callback;
@@ -374,7 +445,11 @@ namespace CoreFoundation {
 
 		public CFMessagePortSendRequestStatus SendRequest (int msgid, NSData? data, double sendTimeout, double rcvTimeout, NSString? replyMode, out NSData? returnData)
 		{
-			var result = CFMessagePortSendRequest (GetCheckedHandle (), msgid, data.GetHandle (), sendTimeout, rcvTimeout, replyMode.GetHandle (), out var returnDataHandle);
+			CFMessagePortSendRequestStatus result;
+			IntPtr returnDataHandle;
+			unsafe {
+				result = CFMessagePortSendRequest (GetCheckedHandle (), msgid, data.GetHandle (), sendTimeout, rcvTimeout, replyMode.GetHandle (), &returnDataHandle);
+			}
 
 			returnData = Runtime.GetINativeObject<NSData> (returnDataHandle, false);
 

@@ -33,6 +33,8 @@ using System;
 using Foundation;
 using CoreGraphics;
 
+#nullable enable
+
 namespace AppKit {
 	public partial class NSGraphicsContext {
 		public static NSGraphicsContext FromGraphicsPort (CGContext context, bool initialFlippedState)

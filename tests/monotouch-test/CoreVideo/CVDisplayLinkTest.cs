@@ -3,7 +3,6 @@ using System;
 using CoreGraphics;
 using Foundation;
 using NUnit.Framework;
-using Foundation;
 using ObjCRuntime;
 using CoreVideo;
 using Xamarin.Utils;

@@ -15,7 +15,7 @@ namespace Xharness.Jenkins.TestTasks {
 		{
 		}
 
-		public virtual bool RestoreNugets {
+		public bool RestoreNugets {
 			get => BuildProject.RestoreNugets;
 			set => BuildProject.RestoreNugets = value;
 		}

@@ -35,3 +35,6 @@
 !missing-protocol-member! INSendMessageIntentHandling::resolveSpeakableGroupNameForSendMessage:withCompletion: not found
 !missing-selector! INDateComponentsRange::initWithStartDateComponents:endDateComponents:recurrenceRule: not bound
 !missing-selector! INDateComponentsRange::recurrenceRule not bound
+!missing-selector! +CLPlacemark::placemarkWithLocation:name:postalAddress: not bound
+!missing-selector! INSendMessageIntentResponse::sentMessages not bound
+!missing-selector! INSendMessageIntentResponse::setSentMessages: not bound

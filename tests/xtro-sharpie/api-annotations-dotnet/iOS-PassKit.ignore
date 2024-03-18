@@ -1,2 +1,11 @@
 # Breaking change, but added in XAMCORE_5_0
 !incorrect-protocol-member! PKAddSecureElementPassViewControllerDelegate::addSecureElementPassViewController:didFinishAddingSecureElementPass:error: is OPTIONAL and should NOT be abstract
+
+# No longer used enum, will be removed in XAMCORE_5_0
+!unknown-native-enum! PKDisbursementRequestSchedule bound
+
+# needed to allow our WeakDelegate wrap
+!extra-null-allowed! 'System.Void PassKit.PKPayLaterView::set_WeakDelegate(Foundation.NSObject)' has a extraneous [NullAllowed] on parameter #0
+
+# https://github.com/xamarin/xamarin-macios/issues/19271
+!missing-pinvoke! PKPayLaterValidateAmount is not bound

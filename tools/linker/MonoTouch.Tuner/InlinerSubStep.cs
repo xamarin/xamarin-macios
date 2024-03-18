@@ -39,7 +39,7 @@ namespace Xamarin.Linker.Steps {
 			foreach (var il in method.Body.Instructions) {
 				if (il.OpCode.Code == Code.Call) {
 					var mr = il.Operand as MethodReference;
-					if (mr == null)
+					if (mr is null)
 						continue;
 					// this removes type System.Security.SecurityManager (unless referenced by user code)
 					if (!mr.HasParameters && mr.DeclaringType.Is ("System.Security", "SecurityManager")) {

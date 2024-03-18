@@ -18,12 +18,12 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			public Subclassed (NativeHandle handle, bool owns) : base (handle, owns) { }
 			public Subclassed (NativeHandle handle, bool owns, bool verify) : base (handle, owns, verify) { }
 
-			public NativeHandle Handle {
+			public new NativeHandle Handle {
 				get => base.Handle;
 				set => base.Handle = value;
 			}
 
-			public bool Owns { get => base.Owns; }
+			public new bool Owns { get => base.Owns; }
 		}
 
 		[Test]

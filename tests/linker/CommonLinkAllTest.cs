@@ -38,7 +38,7 @@ namespace LinkAll {
 
 	public class CustomConverter : TypeConverter {
 		// note: the default ctor will be preserved by the linker because it's used in a [TypeConverter] attribute
-	} 
+	}
 
 	[TypeConverter (typeof (BooleanConverter))]
 	public class BuiltInConverter {

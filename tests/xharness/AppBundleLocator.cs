@@ -136,7 +136,7 @@ namespace Xharness {
 
 		public string GetDotNetExecutable (string directory)
 		{
-			if (directory == null)
+			if (directory is null)
 				throw new ArgumentNullException (nameof (directory));
 
 			lock (dotnet_executables) {

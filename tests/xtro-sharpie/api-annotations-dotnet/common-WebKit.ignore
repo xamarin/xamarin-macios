@@ -1,0 +1,5 @@
+# xcode 15
+# requires OS_nw_proxy_config type which has not been bound yet, part of Xcode 15 Network binding
+!missing-selector! WKWebsiteDataStore::proxyConfigurations not bound
+!missing-selector! WKWebsiteDataStore::setProxyConfigurations: not bound
+

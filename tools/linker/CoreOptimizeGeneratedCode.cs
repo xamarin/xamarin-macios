@@ -2,6 +2,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
+
 using ObjCRuntime;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
@@ -32,7 +34,7 @@ namespace Xamarin.Linker {
 		Dictionary<AssemblyDefinition, bool?> _hasOptimizableCode;
 		Dictionary<AssemblyDefinition, bool?> HasOptimizableCode {
 			get {
-				if (_hasOptimizableCode == null)
+				if (_hasOptimizableCode is null)
 					_hasOptimizableCode = new Dictionary<AssemblyDefinition, bool?> ();
 				return _hasOptimizableCode;
 			}
@@ -41,7 +43,7 @@ namespace Xamarin.Linker {
 		Dictionary<AssemblyDefinition, bool> _inlineIntPtrSize;
 		Dictionary<AssemblyDefinition, bool> InlineIntPtrSize {
 			get {
-				if (_inlineIntPtrSize == null)
+				if (_inlineIntPtrSize is null)
 					_inlineIntPtrSize = new Dictionary<AssemblyDefinition, bool> ();
 				return _inlineIntPtrSize;
 			}
@@ -133,7 +135,7 @@ namespace Xamarin.Linker {
 			if (HasOptimizableCode.TryGetValue (assembly, out bool? optimizable)) {
 				if (optimizable == true)
 					hasOptimizableCode = true;
-				return optimizable != null;
+				return optimizable is not null;
 			}
 #else
 			bool hasOptimizableCode = false;
@@ -211,6 +213,12 @@ namespace Xamarin.Linker {
 		// less risky to nop-ify if branches are pointing to this instruction
 		static protected void Nop (Instruction ins)
 		{
+			// Leave 'leave' instructions in place, they might be required for the resulting IL to be correct/verifiable.
+			switch (ins.OpCode.Code) {
+			case Code.Leave:
+			case Code.Leave_S:
+				return;
+			}
 			ins.OpCode = OpCodes.Nop;
 			ins.Operand = null;
 		}
@@ -238,7 +246,7 @@ namespace Xamarin.Linker {
 
 		static int? GetConstantValue (Instruction ins)
 		{
-			if (ins == null)
+			if (ins is null)
 				return null;
 
 			switch (ins.OpCode.Code) {
@@ -337,7 +345,7 @@ namespace Xamarin.Linker {
 						// Treat all branches of the switch statement as reachable.
 						// FIXME: calculate the potential constant branch (currently there are no optimizable methods where the switch condition is constant, so this is not needed for now)
 						var targets = ins.Operand as Instruction [];
-						if (targets == null) {
+						if (targets is null) {
 							Driver.Log (4, $"Can't optimize {0} because of unknown target of branch instruction {1} {2}", method, ins, ins.Operand);
 							return false;
 						}
@@ -349,7 +357,7 @@ namespace Xamarin.Linker {
 						return MarkInstructions (method, instructions, reachable, instructions.IndexOf (ins.Next), end);
 					}
 
-					if (cond_target == null) {
+					if (cond_target is null) {
 						Driver.Log (4, $"Can't optimize {0} because of unknown target of branch instruction {1} {2}", method, ins, ins.Operand);
 						return false;
 					}
@@ -499,7 +507,7 @@ namespace Xamarin.Linker {
 				case FlowControl.Branch:
 				case FlowControl.Cond_Branch:
 					var target = ins.Operand as Instruction;
-					if (target != null && target.Offset >= first.Offset && target.Offset <= last.Offset)
+					if (target is not null && target.Offset >= first.Offset && target.Offset <= last.Offset)
 						return true;
 					break;
 				}
@@ -584,7 +592,7 @@ namespace Xamarin.Linker {
 				if (ins.OpCode.Code != Code.Br && ins.OpCode.Code != Code.Br_S)
 					continue;
 				var target = ins.Operand as Instruction;
-				if (target == null)
+				if (target is null)
 					continue;
 				if (target.Offset < ins.Offset)
 					continue; // backwards branch, keep those
@@ -646,7 +654,7 @@ namespace Xamarin.Linker {
 			}
 
 			// Remove exception handlers
-			if (reachableExceptionHandlers != null) {
+			if (reachableExceptionHandlers is not null) {
 				for (int i = reachableExceptionHandlers.Length - 1; i >= 0; i--) {
 					if (reachableExceptionHandlers [i])
 						continue;
@@ -751,6 +759,7 @@ namespace Xamarin.Linker {
 			for (int i = 0; i < instructions.Count; i++) {
 				var ins = instructions [i];
 				switch (ins.OpCode.Code) {
+				case Code.Newobj:
 				case Code.Call:
 					i += ProcessCalls (method, ins);
 					break;
@@ -763,7 +772,7 @@ namespace Xamarin.Linker {
 			EliminateDeadCode (method);
 		}
 
-		// Returns the number of instructions add (or removed).
+		// Returns the number of instructions added (or removed).
 		protected virtual int ProcessCalls (MethodDefinition caller, Instruction ins)
 		{
 			var mr = ins.Operand as MethodReference;
@@ -787,6 +796,10 @@ namespace Xamarin.Linker {
 			case "SetupBlock":
 			case "SetupBlockUnsafe":
 				return ProcessSetupBlock (caller, ins);
+			case ".ctor":
+				if (!mr.DeclaringType.Is (Namespaces.ObjCRuntime, "BlockLiteral"))
+					break;
+				return ProcessBlockLiteralConstructor (caller, ins);
 			}
 
 			return 0;
@@ -925,8 +938,14 @@ namespace Xamarin.Linker {
 			if (!mr.DeclaringType.Is (Namespaces.ObjCRuntime, "BlockLiteral"))
 				return 0;
 
-			if (caller.Name == "GetBlockForDelegate" && caller.DeclaringType.Is ("ObjCRuntime", "BlockLiteral"))
-				return 0; // BlockLiteral.GetBlockForDelegate contains a non-optimizable call to SetupBlock, and this way we don't show any warnings to users about things they can't do anything about.
+			if (caller.DeclaringType.Is ("ObjCRuntime", "BlockLiteral")) {
+				switch (caller.Name) {
+				case "GetBlockForDelegate":
+				case "CreateBlockForDelegate":
+					// These methods contain a non-optimizable call to SetupBlock, and this way we don't show any warnings to users about things they can't do anything about.
+					return 0;
+				}
+			}
 
 			string signature = null;
 			try {
@@ -942,7 +961,7 @@ namespace Xamarin.Linker {
 				// Locating the instruction that loads the first argument can be complicated, so we simplify by making a few assumptions:
 				// 1. The instruction immediately before the call instruction (which would load the last argument) is a Push1/Pop0 instruction. 
 				//    This avoids running into trouble when the instruction does something else (it could be a any other instruction, which would throw off the next calculations)
-				// 2. We have a whitelist of instructions we know how to calculate the type for, and which we use on the second to last instruction before the call instruction
+				// 2. We have a approved list of instructions we know how to calculate the type for, and which we use on the second to last instruction before the call instruction
 
 				// First verify the Push1/Pop0 behavior in point 1.
 				var prev = ins.Previous;
@@ -963,7 +982,7 @@ namespace Xamarin.Linker {
 
 				// Then find the type of the previous instruction (the first argument to SetupBlock[Unsafe])
 				var trampolineDelegateType = GetPushedType (caller, loadTrampolineInstruction);
-				if (trampolineDelegateType == null) {
+				if (trampolineDelegateType is null) {
 					ErrorHelper.Show (ErrorHelper.CreateWarning (LinkContext.App, 2106, caller, ins, Errors.MM2106_A, caller, ins.Offset, mr.Name, loadTrampolineInstruction));
 					return 0;
 				}
@@ -973,33 +992,11 @@ namespace Xamarin.Linker {
 					return 0;
 				}
 
-				// Calculate the block signature.
-				var blockSignature = false;
-				MethodReference userMethod = null;
-
-				// First look for any [UserDelegateType] attributes on the trampoline delegate type.
-				var userDelegateType = GetUserDelegateType (trampolineDelegateType);
-				if (userDelegateType != null) {
-					var userMethodDefinition = GetDelegateInvoke (userDelegateType);
-					userMethod = InflateMethod (userDelegateType, userMethodDefinition);
-					blockSignature = true;
-				} else {
-					// Couldn't find a [UserDelegateType] attribute, use the type of the actual trampoline instead.
-					var userMethodDefinition = GetDelegateInvoke (trampolineDelegateType);
-					userMethod = InflateMethod (trampolineDelegateType, userMethodDefinition);
-					blockSignature = false;
-				}
-
-				// No luck finding the signature, so give up.
-				if (userMethod == null) {
-					ErrorHelper.Show (ErrorHelper.CreateWarning (LinkContext.App, 2106, caller, ins, Errors.MM2106_C, caller, ins.Offset, trampolineDelegateType.FullName));
+				if (!LinkContext.Target.StaticRegistrar.TryComputeBlockSignature (caller, trampolineDelegateType, out var exception, out signature)) {
+					ErrorHelper.Show (ErrorHelper.CreateWarning (LinkContext.App, 2106, exception, caller, ins, Errors.MM2106_D, caller, ins.Offset, exception.Message));
 					return 0;
-				}
 
-				var parameters = new TypeReference [userMethod.Parameters.Count];
-				for (int p = 0; p < parameters.Length; p++)
-					parameters [p] = userMethod.Parameters [p].ParameterType;
-				signature = LinkContext.Target.StaticRegistrar.ComputeSignature (userMethod.DeclaringType, false, userMethod.ReturnType, parameters, userMethod.Resolve (), isBlockSignature: blockSignature);
+				}
 			} catch (Exception e) {
 				ErrorHelper.Show (ErrorHelper.CreateWarning (LinkContext.App, 2106, e, caller, ins, Errors.MM2106_D, caller, ins.Offset, e.Message));
 				return 0;
@@ -1016,6 +1013,174 @@ namespace Xamarin.Linker {
 
 			//Driver.Log (4, "Optimized call to BlockLiteral.SetupBlock in {0} at offset {1} with delegate type {2} and signature {3}", caller, ins.Offset, delegateType.FullName, signature);
 			return 2;
+		}
+
+		internal static bool IsBlockLiteralCtor_Type_String (MethodDefinition md)
+		{
+			if (!md.HasParameters)
+				return false;
+
+			if (md.Parameters.Count != 4)
+				return false;
+
+			if (!(md.Parameters [0].ParameterType is PointerType pt) || !pt.ElementType.Is ("System", "Void"))
+				return false;
+
+			if (!md.Parameters [1].ParameterType.Is ("System", "Object"))
+				return false;
+
+			if (!md.Parameters [2].ParameterType.Is ("System", "Type"))
+				return false;
+
+			if (!md.Parameters [3].ParameterType.Is ("System", "String"))
+				return false;
+
+			return true;
+		}
+
+		int ProcessBlockLiteralConstructor (MethodDefinition caller, Instruction ins)
+		{
+			if (Optimizations.OptimizeBlockLiteralSetupBlock != true)
+				return 0;
+
+			// This will optimize calls to this BlockLiteral constructor:
+			//     (void* ptr, object context, Type trampolineType, string trampolineMethod)
+			// by calculating the signature for the block using the last two arguments,
+			// and then rewrite the code to call this constructor overload instead:
+			//     (void* ptr, object context, string signature)
+			// This is required to  remove the dynamic registrar, because calculating the block signature
+			// is done in the dynamic registrar.
+			//
+			// This code is a mirror of the code in BlockLiteral.SetupBlock (to calculate the block signature).
+			var mr = ins.Operand as MethodReference;
+			if (!mr.DeclaringType.Is (Namespaces.ObjCRuntime, "BlockLiteral"))
+				return 0;
+
+			var md = mr.Resolve ();
+			if (!IsBlockLiteralCtor_Type_String (md))
+				return 0;
+
+			string signature = null;
+			Instruction sequenceStart;
+			try {
+				// We need to figure out the last argument to the call to the ctor
+				// 
+				// Example sequence:
+				//
+				// ldarg.0
+				// ldarg.1
+				// ldtoken ...
+				// call System.Type System.Type::GetTypeFromHandle(System.RuntimeTypeHandle)
+				// ldstr ...
+				// newobj BlockLiteral (void*, System.Object, System.Type, System.String)
+				// 
+
+				// Verify 'ldstr ...'
+				var loadString = GetPreviousSkippingNops (ins);
+				if (loadString.OpCode != OpCodes.Ldstr) {
+					ErrorHelper.Show (ErrorHelper.CreateWarning (LinkContext.App, 2106, caller, ins, Errors.MM2106 /* Could not optimize the call to BlockLiteral.{2} in {0} at offset {1} because the previous instruction was unexpected ({3}) */, caller, ins.Offset, mr.Name, loadString));
+					return 0;
+				}
+
+				// Verify 'call System.Type System.Type::GetTypeFromHandle(System.RuntimeTypeHandle)' 
+				var callGetTypeFromHandle = GetPreviousSkippingNops (loadString);
+				if (callGetTypeFromHandle.OpCode != OpCodes.Call || !(callGetTypeFromHandle.Operand is MethodReference methodOperand) || methodOperand.Name != "GetTypeFromHandle" || !methodOperand.DeclaringType.Is ("System", "Type")) {
+					ErrorHelper.Show (ErrorHelper.CreateWarning (LinkContext.App, 2106, caller, ins, Errors.MM2106 /* Could not optimize the call to BlockLiteral.{2} in {0} at offset {1} because the previous instruction was unexpected ({3}) */, caller, ins.Offset, mr.Name, callGetTypeFromHandle));
+					return 0;
+				}
+
+				// Verify 'ldtoken ...'
+				var loadType = GetPreviousSkippingNops (callGetTypeFromHandle);
+				if (loadType.OpCode != OpCodes.Ldtoken) {
+					ErrorHelper.Show (ErrorHelper.CreateWarning (LinkContext.App, 2106, caller, ins, Errors.MM2106 /* Could not optimize the call to BlockLiteral.{2} in {0} at offset {1} because the previous instruction was unexpected ({3}) */, caller, ins.Offset, mr.Name, loadType));
+					return 0;
+				}
+
+				// Then find the type of the previous instruction
+				var trampolineContainerTypeReference = loadType.Operand as TypeReference;
+				if (trampolineContainerTypeReference is null) {
+					ErrorHelper.Show (ErrorHelper.CreateWarning (LinkContext.App, 2106, caller, ins, Errors.MM2106 /* Could not optimize the call to BlockLiteral.{2} in {0} at offset {1} because the previous instruction was unexpected ({3}) */, caller, ins.Offset, mr.Name, loadType.Operand));
+					return 0;
+				}
+
+				var trampolineContainerType = trampolineContainerTypeReference.Resolve ();
+				if (trampolineContainerType is null) {
+					ErrorHelper.Show (ErrorHelper.CreateWarning (LinkContext.App, 2106, caller, ins, Errors.MM2106 /* Could not optimize the call to BlockLiteral.{2} in {0} at offset {1} because the previous instruction was unexpected ({3}) */, caller, ins.Offset, mr.Name, trampolineContainerTypeReference));
+					return 0;
+				}
+
+				// Find the trampoline method
+				var trampolineMethodName = (string) loadString.Operand;
+				var trampolineMethods = trampolineContainerType.Methods.Where (v => v.Name == trampolineMethodName).ToArray ();
+				if (trampolineMethods.Count () != 1) {
+					ErrorHelper.Show (ErrorHelper.CreateWarning (LinkContext.App, 2106, caller, ins, Errors.MX2106_E /* Could not optimize the call to BlockLiteral.{2} in {0} at offset {1} because the more than one method named '{3}' was found in the type '{4}. /* Errors.MM2106 */, caller, ins.Offset, mr.Name, trampolineMethodName, trampolineContainerType.FullName));
+					return 0;
+				}
+				var trampolineMethod = trampolineMethods [0];
+				if (!trampolineMethod.HasParameters || trampolineMethod.Parameters.Count < 1) {
+					ErrorHelper.Show (ErrorHelper.CreateWarning (LinkContext.App, 2106, caller, ins, Errors.MX2106_F /* Could not optimize the call to BlockLiteral.{2} in {0} at offset {1} because the method '{3}' must have at least one parameter. */, caller, ins.Offset, mr.Name, trampolineContainerType.FullName + "::" + trampolineMethodName));
+					return 0;
+				}
+
+				// Check that the method's first parameter is either IntPtr, void* or BlockLiteral*
+				var firstParameterType = trampolineMethod.Parameters [0].ParameterType;
+				if (firstParameterType.Is ("System", "IntPtr")) {
+					// ok
+				} else if (firstParameterType is PointerType ptrType) {
+					var ptrTargetType = ptrType.ElementType;
+					if (!(ptrTargetType.Is ("System", "Void") || ptrTargetType.Is ("ObjCRuntime", "BlockLiteral"))) {
+						ErrorHelper.Show (ErrorHelper.CreateWarning (LinkContext.App, 2106, caller, ins, Errors.MX2106_G /* Could not optimize the call to BlockLiteral.{2} in {0} at offset {1} because the first parameter in the method '{3}' isn't 'System.IntPtr', 'void*' or 'ObjCRuntime.BlockLiteral*' (it's '{4}') */, caller, ins.Offset, mr.Name, trampolineContainerType.FullName + "::" + trampolineMethodName, firstParameterType.FullName));
+						return 0;
+					}
+					// ok
+				} else {
+					ErrorHelper.Show (ErrorHelper.CreateWarning (LinkContext.App, 2106, caller, ins, Errors.MX2106_G /* Could not optimize the call to BlockLiteral.{2} in {0} at offset {1} because the first parameter in the method '{3}' isn't 'System.IntPtr', 'void*' or 'ObjCRuntime.BlockLiteral*' (it's '{4}') */, caller, ins.Offset, mr.Name, trampolineContainerType.FullName + "::" + trampolineMethodName, firstParameterType.FullName));
+					return 0;
+				}
+
+				// Check that the method has [UnmanagedCallersOnly]
+				if (!trampolineMethod.HasCustomAttributes || !trampolineMethod.CustomAttributes.Any (v => v.AttributeType.Is ("System.Runtime.InteropServices", "UnmanagedCallersOnlyAttribute"))) {
+					ErrorHelper.Show (ErrorHelper.CreateWarning (LinkContext.App, 2106, caller, ins, Errors.MX2106_H /* Could not optimize the call to BlockLiteral.{2} in {0} at offset {1} because the method '{3}' does not have an [UnmanagedCallersOnly] attribute. */, caller, ins.Offset, mr.Name, trampolineContainerType.FullName + "::" + trampolineMethodName));
+					return 0;
+				}
+
+				// Calculate the block signature.
+				var blockSignature = true;
+				var parameters = new TypeReference [trampolineMethod.Parameters.Count];
+				for (int p = 0; p < parameters.Length; p++)
+					parameters [p] = trampolineMethod.Parameters [p].ParameterType;
+				signature = LinkContext.Target.StaticRegistrar.ComputeSignature (trampolineMethod.DeclaringType, false, trampolineMethod.ReturnType, parameters, trampolineMethod.Resolve (), isBlockSignature: blockSignature);
+
+				sequenceStart = loadType;
+			} catch (Exception e) {
+				ErrorHelper.Show (ErrorHelper.CreateWarning (LinkContext.App, 2106, e, caller, ins, Errors.MM2106_D, caller, ins.Offset, e.Message));
+				return 0;
+			}
+
+			// We got the information we need: rewrite the IL.
+			var instructions = caller.Body.Instructions;
+			var index = instructions.IndexOf (sequenceStart);
+			int instructionDiff = 0;
+			while (instructions [index] != ins) {
+				instructions.RemoveAt (index);
+				instructionDiff--;
+			}
+			// Inject the extra arguments
+			instructions.Insert (index, Instruction.Create (OpCodes.Ldstr, signature));
+			instructionDiff++;
+			// Change the call to call the ctor with the string signature parameter instead
+			ins.Operand = GetBlockLiteralConstructor (caller, ins);
+
+			Driver.Log (4, "Optimized call to BlockLiteral..ctor in {0} at offset {1} with signature {2}", caller, ins.Offset, signature);
+			return instructionDiff;
+		}
+
+		static Instruction GetPreviousSkippingNops (Instruction ins)
+		{
+			do {
+				ins = ins.Previous;
+			} while (ins.OpCode == OpCodes.Nop);
+			return ins;
 		}
 
 		int ProcessIsARM64CallingConvention (MethodDefinition caller, Instruction ins)
@@ -1128,33 +1293,10 @@ namespace Xamarin.Linker {
 			}
 		}
 
-		// Find the value of the [UserDelegateType] attribute on the specified delegate
-		TypeReference GetUserDelegateType (TypeReference delegateType)
-		{
-			var delegateTypeDefinition = delegateType.Resolve ();
-			foreach (var attrib in delegateTypeDefinition.CustomAttributes) {
-				var attribType = attrib.AttributeType;
-				if (!attribType.Is (Namespaces.ObjCRuntime, "UserDelegateTypeAttribute"))
-					continue;
-				return attrib.ConstructorArguments [0].Value as TypeReference;
-			}
-			return null;
-		}
-
-		MethodDefinition GetDelegateInvoke (TypeReference delegateType)
-		{
-			var td = delegateType.Resolve ();
-			foreach (var method in td.Methods) {
-				if (method.Name == "Invoke")
-					return method;
-			}
-			return null;
-		}
-
 		MethodDefinition setupblock_def;
 		MethodReference GetBlockSetupImpl (MethodDefinition caller, Instruction ins)
 		{
-			if (setupblock_def == null) {
+			if (setupblock_def is null) {
 				var type = LinkContext.GetAssembly (Driver.GetProductAssembly (LinkContext.Target.App)).MainModule.GetType (Namespaces.ObjCRuntime, "BlockLiteral");
 				foreach (var method in type.Methods) {
 					if (method.Name != "SetupBlockImpl")
@@ -1163,28 +1305,37 @@ namespace Xamarin.Linker {
 					setupblock_def.IsPublic = true; // Make sure the method is callable from the optimized code.
 					break;
 				}
-				if (setupblock_def == null)
+				if (setupblock_def is null)
 					throw ErrorHelper.CreateError (LinkContext.App, 99, caller, ins, Errors.MX0099, $"could not find the method {Namespaces.ObjCRuntime}.BlockLiteral.SetupBlockImpl");
 			}
 			return caller.Module.ImportReference (setupblock_def);
 		}
 
-		MethodReference InflateMethod (TypeReference inflatedDeclaringType, MethodDefinition openMethod)
+		MethodDefinition block_ctor_def;
+		MethodReference GetBlockLiteralConstructor (MethodDefinition caller, Instruction ins)
 		{
-			var git = inflatedDeclaringType as GenericInstanceType;
-			if (git == null)
-				return openMethod;
-
-			var inflatedReturnType = TypeReferenceExtensions.InflateGenericType (git, openMethod.ReturnType);
-			var mr = new MethodReference (openMethod.Name, inflatedReturnType, git);
-			if (openMethod.HasParameters) {
-				for (int i = 0; i < openMethod.Parameters.Count; i++) {
-					var inflatedParameterType = TypeReferenceExtensions.InflateGenericType (git, openMethod.Parameters [i].ParameterType);
-					var p = new ParameterDefinition (openMethod.Parameters [i].Name, openMethod.Parameters [i].Attributes, inflatedParameterType);
-					mr.Parameters.Add (p);
+			if (block_ctor_def is null) {
+				var type = LinkContext.GetAssembly (Driver.GetProductAssembly (LinkContext.Target.App)).MainModule.GetType (Namespaces.ObjCRuntime, "BlockLiteral");
+				foreach (var method in type.Methods) {
+					if (!method.IsConstructor)
+						continue;
+					if (method.IsStatic)
+						continue;
+					if (!method.HasParameters || method.Parameters.Count != 3)
+						continue;
+					if (!(method.Parameters [0].ParameterType is PointerType pt) || !pt.ElementType.Is ("System", "Void"))
+						continue;
+					if (!method.Parameters [1].ParameterType.Is ("System", "Object"))
+						continue;
+					if (!method.Parameters [2].ParameterType.Is ("System", "String"))
+						continue;
+					block_ctor_def = method;
+					break;
 				}
+				if (block_ctor_def is null)
+					throw ErrorHelper.CreateError (LinkContext.App, 99, caller, ins, Errors.MX0099, $"could not find the constructor ObjCRuntime.BlockLiteral (void*, object, string)");
 			}
-			return mr;
+			return caller.Module.ImportReference (block_ctor_def);
 		}
 	}
 }

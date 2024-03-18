@@ -87,7 +87,9 @@ namespace Introspection {
 			case "CAMetalLayer":
 			case "MTLFunctionConstantValues":
 			case "MTLHeapDescriptor":
+			case "MTLIOCommandQueueDescriptor":
 			case "SWCollaborationActionHandler":
+			case "UISymbolEffectCompletionContext":
 				// Symbol not available in simulator - but works on BigSur (others might too)
 				if (TestRuntime.IsSimulatorOrDesktop)
 					return true;
@@ -136,6 +138,11 @@ namespace Introspection {
 				if (TestRuntime.IsSimulatorOrDesktop)
 					return true;
 				break;
+			case "ASCredentialIdentity":
+			case "ASCredentialRequest":
+				if (TestRuntime.IsSimulatorOrDesktop)
+					return true;
+				break;
 			}
 
 			return base.Skip (type);
@@ -167,7 +174,7 @@ namespace Introspection {
 			case "CAMetalLayer":
 				return TestRuntime.IsSimulatorOrDesktop && !TestRuntime.CheckXcodeVersion (11, 0);
 #if !XAMCORE_3_0
-				// mistake (base type) fixed by a breaking change
+			// mistake (base type) fixed by a breaking change
 			case "MFMailComposeViewControllerDelegate":
 				if (protocolName == "UINavigationControllerDelegate")
 					return true;
@@ -205,7 +212,6 @@ namespace Introspection {
 #if __MACCATALYST__
 			case "BCChatButton":
 			case "PKAddPassButton":
-			case "PKPaymentButton":
 			case "UIButton":
 			case "UIControl":
 			case "UISegmentedControl":
@@ -221,6 +227,32 @@ namespace Introspection {
 			case "INUIAddVoiceShortcutButton":
 				if (protocolName == "UIContextMenuInteractionDelegate")
 					return !TestRuntime.CheckXcodeVersion (12, 0);
+				break;
+
+			// We have to special case the following PKPayment* in MacCatalyst
+			// since it gets all of these via inheritance from UIView
+			case "PKPaymentButton":
+			case "PKPaymentAuthorizationViewController":
+				switch (protocolName) {
+				case "UIUserActivityRestoring":
+				case "UIAppearanceContainer":
+				case "UIFocusItem":
+				case "UICoordinateSpace":
+				case "UIPopoverPresentationControllerSourceItem":
+				case "UIContextMenuInteractionDelegate":
+				case "UIFocusItemContainer":
+				case "UITraitEnvironment":
+				case "UIActivityItemsConfigurationProviding":
+				case "UIResponderStandardEditActions":
+				case "UILargeContentViewerItem":
+				case "UIDynamicItem":
+				case "UIAppearance":
+				case "UIAccessibilityContentSizeCategoryImageAdjusting":
+				case "UIContentContainer":
+					if (TestRuntime.CheckXcodeVersion (14, 0))
+						return true;
+					break;
+				}
 				break;
 #endif
 			}
@@ -358,6 +390,10 @@ namespace Introspection {
 				case "OSLogEntryLog":
 				case "OSLogEntrySignpost":
 					return true;
+				// iOS 16
+				case "DDDevice":
+				case "DDDeviceEvent":
+					return true;
 #if __WATCHOS__
 				case "CLKComplicationTemplate":
 				case "CLKComplicationTemplateCircularSmallRingImage":
@@ -476,6 +512,14 @@ namespace Introspection {
 				// Xcode 14
 				case "VSUserAccount": // Conformance not in headers
 				case "PKInk":
+					return true;
+				// XCode1 5
+				case "CKSyncEnginePendingRecordZoneChange":
+				case "CKSyncEnginePendingZoneDelete":
+				case "CKSyncEnginePendingZoneSave":
+				case "CKSyncEngineState":
+				case "CKSyncEnginePendingDatabaseChange":
+				case "NSCursor":
 					return true;
 				}
 				break;
@@ -612,6 +656,10 @@ namespace Introspection {
 				case "OSLogEntryLog":
 				case "OSLogEntrySignpost":
 					return true;
+				// iOS 16
+				case "DDDevice":
+				case "DDDeviceEvent":
+					return true;
 #if __WATCHOS__
 				case "CLKComplicationTemplate":
 				case "CLKComplicationTemplateCircularSmallRingImage":
@@ -729,6 +777,15 @@ namespace Introspection {
 				case "VSUserAccount": // Conformance not in headers
 				case "PKInk":
 					return true;
+				// Xcode1 5
+				case "NSCompositeAttributeDescription":
+				case "CKSyncEnginePendingDatabaseChange":
+				case "CKSyncEnginePendingRecordZoneChange":
+				case "CKSyncEnginePendingZoneDelete":
+				case "CKSyncEnginePendingZoneSave":
+				case "CKSyncEngineState":
+				case "NSCursor":
+					return true;
 				}
 				break;
 			case "NSCopying":
@@ -768,6 +825,9 @@ namespace Introspection {
 				// iOS 11.3
 				case "WKPreferences": // Conformance not in headers
 				case "QLPreviewSceneActivationConfiguration":
+					return true;
+				// iOS 16
+				case "DDDevice":
 					return true;
 #if __WATCHOS__
 				case "CLKComplicationTimelineEntry":
@@ -814,6 +874,12 @@ namespace Introspection {
 				case "NSMergePolicy":
 				case "NSPropertyMapping":
 				case "UIWindowSceneActivationConfiguration":
+					return true;
+				// Xcode 15
+				case "CKSyncEnginePendingDatabaseChange":
+				case "CKSyncEnginePendingRecordZoneChange":
+				case "CKSyncEnginePendingZoneDelete":
+				case "CKSyncEnginePendingZoneSave":
 					return true;
 				}
 				break;

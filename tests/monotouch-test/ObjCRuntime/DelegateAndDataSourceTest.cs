@@ -14,9 +14,9 @@ namespace Xamarin.Mac.Tests {
 	static class TypeExtension {
 		public static PropertyInfo GetMostDerivedProperty (this Type t, string name)
 		{
-			while (t != null && t != t.BaseType) {
+			while (t is not null && t != t.BaseType) {
 				var rv = t.GetProperty (name, BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
-				if (rv != null)
+				if (rv is not null)
 					return rv;
 				t = t.BaseType;
 			}
@@ -46,7 +46,7 @@ namespace Xamarin.Mac.Tests {
 					continue;
 
 				// If they have one of the properites we are testing
-				if (ctor != null) {
+				if (ctor is not null) {
 					PropertyInfo weakDelegate = t.GetMostDerivedProperty ("WeakDelegate");
 					PropertyInfo del = t.GetMostDerivedProperty ("Delegate");
 					PropertyInfo weakDataSource = t.GetMostDerivedProperty ("WeakDataSource");
@@ -138,6 +138,8 @@ namespace Xamarin.Mac.Tests {
 			}
 
 			switch (t.Namespace) {
+			case "SafetyKit":
+				return true; // SafetyKit requires a custom entitlement, and will throw exceptions if it's not present.
 			case "QTKit":
 				return true; // QTKit has been removed from macos.
 			}
@@ -166,8 +168,8 @@ namespace Xamarin.Mac.Tests {
 
 				MethodInfo [] accessors = null;
 
-				if (del != null) {
-					if (weakDelegate != null) {
+				if (del is not null) {
+					if (weakDelegate is not null) {
 						if (!weakDelegate.CanWrite)
 							continue;
 
@@ -181,7 +183,7 @@ namespace Xamarin.Mac.Tests {
 
 					foreach (var accessor in accessors) {
 						var attr = accessor.GetCustomAttributes<ExportAttribute> ().FirstOrDefault (a => a.Selector == "delegate");
-						if (attr == null)
+						if (attr is null)
 							continue;
 
 						if (attr.ArgumentSemantic == ArgumentSemantic.None) {
@@ -194,9 +196,9 @@ namespace Xamarin.Mac.Tests {
 				PropertyInfo weakDataSource = t.GetMostDerivedProperty ("WeakDataSource");
 				PropertyInfo dataSource = t.GetMostDerivedProperty ("DataSource");
 
-				if (dataSource != null) {
+				if (dataSource is not null) {
 					accessors = null;
-					if (weakDataSource != null) {
+					if (weakDataSource is not null) {
 						if (!weakDataSource.CanWrite)
 							continue;
 
@@ -210,7 +212,7 @@ namespace Xamarin.Mac.Tests {
 
 					foreach (var accessor in accessors) {
 						var attr = accessor.GetCustomAttributes<ExportAttribute> ().FirstOrDefault (a => a.Selector == "dataSource");
-						if (attr == null)
+						if (attr is null)
 							continue;
 
 						if (attr.ArgumentSemantic == ArgumentSemantic.None) {
@@ -243,11 +245,11 @@ namespace Xamarin.Mac.Tests {
 					continue;
 
 				PropertyInfo target = t.GetMostDerivedProperty ("Target");
-				if (target != null && target.PropertyType == typeof (NSObject)) {
+				if (target is not null && target.PropertyType == typeof (NSObject)) {
 					MethodInfo [] accessors = target.GetAccessors ();
 					foreach (var accessor in accessors) {
 						var attr = accessor.GetCustomAttributes<ExportAttribute> ().FirstOrDefault (a => a.Selector == "target");
-						if (attr == null)
+						if (attr is null)
 							continue;
 
 						if (attr.ArgumentSemantic == ArgumentSemantic.None) {
@@ -268,7 +270,7 @@ namespace Xamarin.Mac.Tests {
 
 		bool isValidToTest (PropertyInfo p)
 		{
-			return p != null && p.CanWrite && !Asserts.SkipDueToAvailabilityAttribute (p);
+			return p is not null && p.CanWrite && !Asserts.SkipDueToAvailabilityAttribute (p);
 		}
 	}
 }

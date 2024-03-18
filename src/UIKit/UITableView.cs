@@ -13,15 +13,18 @@ using MapKit;
 using UIKit;
 using CoreGraphics;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace UIKit {
 	public partial class UITableView {
 		public UITableViewSource Source {
 			get {
 				var d = WeakDelegate as UITableViewSource;
-				if (d != null)
+				if (d is not null)
 					return d;
 				d = WeakDataSource as UITableViewSource;
-				if (d != null)
+				if (d is not null)
 					return d;
 				return null;
 			}
@@ -34,24 +37,24 @@ namespace UIKit {
 
 		public void RegisterClassForCellReuse (Type cellType, NSString reuseIdentifier)
 		{
-			RegisterClassForCellReuse (cellType == null ? IntPtr.Zero : Class.GetHandle (cellType), reuseIdentifier);
+			RegisterClassForCellReuse (cellType is null ? IntPtr.Zero : Class.GetHandle (cellType), reuseIdentifier);
 		}
 
 		public void RegisterClassForCellReuse (Type cellType, string reuseIdentifier)
 		{
 			using (var str = (NSString) reuseIdentifier)
-				RegisterClassForCellReuse (cellType == null ? IntPtr.Zero : Class.GetHandle (cellType), str);
+				RegisterClassForCellReuse (cellType is null ? IntPtr.Zero : Class.GetHandle (cellType), str);
 		}
 
 		public void RegisterClassForHeaderFooterViewReuse (Type cellType, string reuseIdentifier)
 		{
 			using (var str = (NSString) reuseIdentifier)
-				RegisterClassForHeaderFooterViewReuse (cellType == null ? IntPtr.Zero : Class.GetHandle (cellType), str);
+				RegisterClassForHeaderFooterViewReuse (cellType is null ? IntPtr.Zero : Class.GetHandle (cellType), str);
 		}
 
 		public void RegisterClassForHeaderFooterViewReuse (Type cellType, NSString reuseIdentifier)
 		{
-			RegisterClassForHeaderFooterViewReuse (cellType == null ? IntPtr.Zero : Class.GetHandle (cellType), reuseIdentifier);
+			RegisterClassForHeaderFooterViewReuse (cellType is null ? IntPtr.Zero : Class.GetHandle (cellType), reuseIdentifier);
 		}
 
 		// This is not obsolete, we provide both a (UINib,string) overload and a (UINib,NSString) overload.

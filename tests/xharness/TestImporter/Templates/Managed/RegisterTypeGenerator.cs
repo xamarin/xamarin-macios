@@ -6,9 +6,9 @@ using Mono.Cecil;
 namespace Xharness.TestImporter.Templates.Managed {
 	public static class RegisterTypeGenerator {
 
-		static readonly string UsingReplacement = "%USING%";
-		static readonly string KeysReplacement = "%KEY VALUES%";
-		static readonly string IsxUnitReplacement = "%IS XUNIT%";
+		static readonly string UsingReplacement = "_REPLACE_USING_REPLACE_";
+		static readonly string KeysReplacement = "_REPLACE_KEY_VALUES_REPLACE_";
+		static readonly string IsxUnitReplacement = "_REPLACE_IS_XUNIT_REPLACE_";
 
 		public static string GenerateCode ((string FailureMessage, Dictionary<string, TypeDefinition> Types) typeRegistration, bool isXunit, string template)
 		{

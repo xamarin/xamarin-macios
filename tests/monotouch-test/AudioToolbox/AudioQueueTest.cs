@@ -60,12 +60,12 @@ namespace MonoTouchFixtures.AudioToolbox {
 		{
 			var aq = new InputAudioQueue (AudioStreamBasicDescription.CreateLinearPCM ());
 			AudioQueueStatus ret;
-			bool called = false;
+			// bool called = false;
 
 			using (var tap = aq.CreateProcessingTap (
 				delegate (AudioQueueProcessingTap audioQueueTap, uint numberOfFrames, ref AudioTimeStamp timeStamp, ref AudioQueueProcessingTapFlags flags, AudioBuffers data)
 				{
-					called = true;
+					// called = true;
 					return 33;
 				}, AudioQueueProcessingTapFlags.PreEffects, out ret)) {
 				Assert.AreEqual (AudioQueueStatus.Ok, ret, "#1");

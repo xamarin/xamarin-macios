@@ -6,11 +6,9 @@ using NUnit.Framework;
 using Xamarin.Tests;
 using Xamarin.Utils;
 
-namespace Xamarin.MMP.Tests
-{
+namespace Xamarin.MMP.Tests {
 	[TestFixture]
-	public class TargetFrameworkDetectionTests
-	{
+	public class TargetFrameworkDetectionTests {
 		TargetFramework [] XMTargetFrameworks = { TargetFramework.Xamarin_Mac_2_0_Mobile, TargetFramework.Xamarin_Mac_4_5_Full, TargetFramework.Xamarin_Mac_4_5_System };
 
 		string CreateTestExe (string tmpDir)
@@ -30,7 +28,7 @@ namespace Xamarin.MMP.Tests
 				"--arch=x86_64","" +
 				"--sdkroot",
 				Configuration.xcode_root,
-				"--minos", "10.9",
+				"--minos", SdkVersions.MinOSX,
 				libPath,
 				"--sdk", Configuration.macos_sdk_version,
 				"--nolink",
@@ -50,14 +48,14 @@ namespace Xamarin.MMP.Tests
 
 		string GetXMReference (TargetFramework target)
 		{
-			switch (target.Profile)	{
+			switch (target.Profile) {
 			case "Mobile":
-					return $"-a:{Configuration.SdkRootXM}/lib/mono/Xamarin.Mac/Xamarin.Mac.dll";
+				return $"-a:{Configuration.SdkRootXM}/lib/mono/Xamarin.Mac/Xamarin.Mac.dll";
 			case "Full":
 			case "System":
-					return $"-a:{Configuration.SdkRootXM}/lib/mono/4.5/Xamarin.Mac.dll";
+				return $"-a:{Configuration.SdkRootXM}/lib/mono/4.5/Xamarin.Mac.dll";
 			default:
-					throw new System.InvalidOperationException ();
+				throw new System.InvalidOperationException ();
 			}
 		}
 
@@ -87,7 +85,7 @@ namespace Xamarin.MMP.Tests
 				foreach (var targetProfile in XMTargetFrameworks) {
 					string libPath = CreateTestExe (tmpDir);
 					var args = GetTestMMPInvocation (tmpDir, libPath, targetProfile, false);
-					string buildResults = TI.RunAndAssert (MMPPath, args, "mmp invoke with wrong XM", shouldFail:true);
+					string buildResults = TI.RunAndAssert (MMPPath, args, "mmp invoke with wrong XM", shouldFail: true);
 					Assert.IsTrue (buildResults.Contains ("1407"), "Did not contains 1407 error expected");
 				}
 			});

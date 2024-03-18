@@ -1,6 +1,6 @@
 {
   "author": "Microsoft",
-  "name": "iOS View Controller",
-  "description": "An iOS View Controller class and xib",
-  "symbols/namespace/description": "namespace for the generated code"
+  "name": "Kontroler zobrazení iOS",
+  "description": "Třída kontroleru zobrazení iOS a xib",
+  "symbols/namespace/description": "obor názvů pro vygenerovaný kód"
 }

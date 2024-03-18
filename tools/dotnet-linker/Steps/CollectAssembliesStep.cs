@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using Mono.Cecil;
 
+#nullable enable
+
 namespace Xamarin.Linker {
 	public class CollectAssembliesStep : ConfigurationAwareStep {
 		protected override string Name { get; } = "Collect Assemblies";
@@ -16,8 +18,8 @@ namespace Xamarin.Linker {
 			// This step now runs at the very beginning, using reflection to call into the linker to load all
 			// the referenced assemblies, so that we can then have another step before MarkStep that does the
 			// custom marking we need to do.
-			var getReferencedAssemblies = Configuration.Context.GetType ().GetMethod ("GetReferencedAssemblies");
-			var assemblies = (IEnumerable<AssemblyDefinition>) getReferencedAssemblies.Invoke (Configuration.Context, new object [0]);
+			var getReferencedAssemblies = Configuration.Context.GetType ().GetMethod ("GetReferencedAssemblies")!;
+			var assemblies = (IEnumerable<AssemblyDefinition>) getReferencedAssemblies.Invoke (Configuration.Context, new object [0])!;
 			Configuration.Assemblies.AddRange (assemblies);
 		}
 	}

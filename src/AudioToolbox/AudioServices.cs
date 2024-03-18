@@ -61,12 +61,12 @@ namespace AudioToolbox {
 		//static extern AudioServicesError AudioServicesGetProperty (AudioServicesPropertyKey propertyId, uint specifierSize, IntPtr specifier, out uint propertyDataSize, IntPtr propertyData);
 
 		[DllImport (Constants.AudioToolboxLibrary)]
-		public static extern AudioServicesError AudioServicesGetProperty (AudioServicesPropertyKey propertyId, uint specifierSize, ref uint specifier, out uint propertyDataSize, out uint propertyData);
+		public unsafe static extern AudioServicesError AudioServicesGetProperty (AudioServicesPropertyKey propertyId, uint specifierSize, uint* specifier, uint* propertyDataSize, uint* propertyData);
 
 		//[DllImport (Constants.AudioToolboxLibrary)]
 		//static extern AudioServicesError AudioServicesSetProperty (AudioServicesPropertyKey propertyId, uint specifierSize, IntPtr specifier, uint propertyDataSize, IntPtr propertyData);
 
 		[DllImport (Constants.AudioToolboxLibrary)]
-		public static extern AudioServicesError AudioServicesSetProperty (AudioServicesPropertyKey propertyId, uint specifierSize, ref uint specifier, uint propertyDataSize, ref uint propertyData);
+		public unsafe static extern AudioServicesError AudioServicesSetProperty (AudioServicesPropertyKey propertyId, uint specifierSize, uint* specifier, uint propertyDataSize, uint* propertyData);
 	}
 }

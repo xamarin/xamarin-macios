@@ -14,7 +14,6 @@ namespace Xamarin.Tests {
 
 	public enum MonoNativeFlavor {
 		None,
-		Compat,
 		Unified,
 	}
 
@@ -35,9 +34,7 @@ namespace Xamarin.Tests {
 
 		public static MonoNativeFlavor Flavor {
 			get {
-#if MONO_NATIVE_COMPAT
-				return MonoNativeFlavor.Compat;
-#elif MONO_NATIVE_UNIFIED
+#if MONO_NATIVE_UNIFIED
 				return MonoNativeFlavor.Unified;
 #else
 				return MonoNativeFlavor.None;
@@ -47,27 +44,23 @@ namespace Xamarin.Tests {
 
 		public static bool UsingCompat {
 			get {
-#if MONO_NATIVE_COMPAT
-				return true;
-#elif MONO_NATIVE_UNIFIED
+#if MONO_NATIVE_UNIFIED
 				return false;
 #else
-				Assert.Fail ("Missing `MONO_NATIVE_COMPAT` or `MONO_NATIVE_UNIFIED`");
+				Assert.Fail ("Missing `MONO_NATIVE_UNIFIED`");
 				throw new NotImplementedException ();
 #endif
 			}
 		}
 
-		public static string GetDynamicLibraryName (bool usingCompat)
+		public static string GetDynamicLibraryName ()
 		{
-			return GetDynamicLibraryName (usingCompat ? MonoNativeFlavor.Compat : MonoNativeFlavor.Unified);
+			return GetDynamicLibraryName (MonoNativeFlavor.Unified);
 		}
 
 		public static string GetDynamicLibraryName (MonoNativeFlavor flavor)
 		{
 			switch (flavor) {
-			case MonoNativeFlavor.Compat:
-				return "libmono-native-compat.dylib";
 			case MonoNativeFlavor.Unified:
 				return "libmono-native-unified.dylib";
 			default:
@@ -91,6 +84,6 @@ namespace Xamarin.Tests {
 			}
 		}
 
-		public static string DynamicLibraryName => GetDynamicLibraryName (UsingCompat);
+		public static string DynamicLibraryName => GetDynamicLibraryName ();
 	}
 }

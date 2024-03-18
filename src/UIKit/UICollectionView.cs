@@ -14,6 +14,9 @@ using ObjCRuntime;
 using Foundation;
 using System.Threading.Tasks;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace UIKit {
 	public partial class UICollectionView {
 
@@ -49,7 +52,7 @@ namespace UIKit {
 
 		public void RegisterClassForCell (Type cellType, NSString reuseIdentifier)
 		{
-			if (cellType == null)
+			if (cellType is null)
 				throw new ArgumentNullException ("cellType");
 
 			RegisterClassForCell (Class.GetHandle (cellType), reuseIdentifier);
@@ -74,7 +77,7 @@ namespace UIKit {
 
 		public void RegisterClassForSupplementaryView (Type cellType, UICollectionElementKindSection section, NSString reuseIdentifier)
 		{
-			if (cellType == null)
+			if (cellType is null)
 				throw new ArgumentNullException ("cellType");
 
 			RegisterClassForSupplementaryView (Class.GetHandle (cellType), KindToString (section), reuseIdentifier);
@@ -111,7 +114,7 @@ namespace UIKit {
 		public UICollectionViewSource Source {
 			get {
 				var d = WeakDelegate as UICollectionViewSource;
-				if (d != null)
+				if (d is not null)
 					return d;
 				return null;
 			}

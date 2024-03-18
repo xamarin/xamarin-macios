@@ -1,6 +1,7 @@
 // Copyright 2016 Xamarin Inc. All rights reserved.
 
 using System;
+using System.ComponentModel;
 using Foundation;
 using ObjCRuntime;
 
@@ -16,7 +17,6 @@ namespace GameKit {
 	public partial class GKMatchRequest {
 
 #if !NET
-		[iOS (8, 0), Mac (10, 10)]
 		[Obsolete ("Use 'RecipientResponseHandler' property.")]
 #else
 		[Obsolete ("Use 'RecipientResponseHandler' property.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
@@ -71,6 +71,7 @@ namespace GameKit {
 
 #if !XAMCORE_5_0
 #if __IOS__ || __MACCATALYST__
+	[EditorBrowsable (EditorBrowsableState.Never)]
 	[Obsolete ("Use 'MCBrowserViewController' from the 'MultipeerConnectivity' framework instead.")]
 #if NET
 	[UnsupportedOSPlatform ("macos")]
@@ -87,6 +88,7 @@ namespace GameKit {
 	{
 	}
 
+	[EditorBrowsable (EditorBrowsableState.Never)]
 	[Obsolete ("Use 'MCBrowserViewController' from the 'MultipeerConnectivity' framework instead.")]
 #if NET
 	[UnsupportedOSPlatform ("macos")]
@@ -121,6 +123,7 @@ namespace GameKit {
 		}
 	}
 
+	[EditorBrowsable (EditorBrowsableState.Never)]
 	[Obsolete ("Use 'MCBrowserViewController' from the 'MultipeerConnectivity' framework instead.")]
 #if NET
 	[UnsupportedOSPlatform ("macos")]
@@ -170,6 +173,7 @@ namespace GameKit {
 		}
 	} /* class GKPeerPickerControllerDelegate */
 
+	[EditorBrowsable (EditorBrowsableState.Never)]
 	[Obsolete ("Use 'MCBrowserViewController' from the 'MultipeerConnectivity' framework instead.")]
 #if NET
 	[UnsupportedOSPlatform ("macos")]

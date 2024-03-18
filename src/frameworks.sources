@@ -34,6 +34,8 @@ ACCELERATE_SOURCES = \
 
 ACCESSIBILITY_SOURCES = \
 	Accessibility/AXHearingUtilities.cs \
+	Accessibility/AXAnimatedImagesUtilities.cs \
+	Accessibility/AXPrefers.cs \
 
 # Accounts
 
@@ -230,6 +232,7 @@ AUDIOUNIT_SOURCES = \
 # AuthenticationServices
 
 AUTHENTICATIONSERVICES_SOURCES = \
+	AuthenticationServices/ASCompat.cs \
 	AuthenticationServices/ASAuthorization.cs \
 	AuthenticationServices/ASAuthorizationRequest.cs \
 	AuthenticationServices/PublicPrivateKeyAuthentication.cs \
@@ -261,9 +264,9 @@ AVFOUNDATION_SOURCES = \
 	AVFoundation/AVAudioFormat.cs \
 	AVFoundation/AVAudioPlayer.cs \
 	AVFoundation/AVAudioRecorder.cs \
-	AVFoundation/AVAudioSession.cs \
 	AVFoundation/AVAudioSessionDataSourceDescription.cs \
 	AVFoundation/AVAudioSessionPortDescription.cs \
+	AVFoundation/AVAudioSinkNode.cs \
 	AVFoundation/AVCaptureConnection.cs \
 	AVFoundation/AVCaptureDeviceDiscoverySession.cs \
 	AVFoundation/AVCaptureDeviceInput.cs \
@@ -369,6 +372,8 @@ CLOUDKIT_SOURCES = \
 	CloudKit/CKRecordID.cs \
 	CloudKit/CKRecordZoneID.cs \
 	CloudKit/CKUserIdentityLookupInfo.cs \
+	CloudKit/CKSyncEngineFetchChangesScope.cs \
+	CloudKit/CKSyncEngineSendChangesScope.cs \
 
 # CFNetwork
 
@@ -377,6 +382,10 @@ CFNETWORK_SOURCES = \
 	CFNetwork/CFHTTPMessage.cs \
 	CFNetwork/CFHTTPStream.cs \
 	CFNetwork/CFHost.cs \
+
+# Cinematic
+CINEMATIC_SOURCES = \
+	Cinematic/CNDecision.cs \
 
 # Compression
 
@@ -568,7 +577,6 @@ CORELOCATION_API_SOURCES = \
 	CoreLocation/CLEnums.cs
 
 CORELOCATION_CORE_SOURCES = \
-	CoreLocation/CLLocationDistance.cs \
 	CoreLocation/CoreLocation.cs \
 
 CORELOCATION_SOURCES = \
@@ -614,6 +622,7 @@ COREMIDI_SOURCES = \
 
 COREML_SOURCES = \
 	CoreML/MLDictionaryFeatureProvider.cs \
+	CoreML/MLModel.cs \
 	CoreML/MLMultiArray.cs \
 	CoreML/MLMultiArrayConstraint.cs \
 
@@ -717,6 +726,19 @@ COREWLAN_SOURCES = \
 	CoreWlan/CWInterface.cs \
 	CoreWlan/CWKeychain.cs \
 
+# DeviceDiscoveryExtension
+
+DEVICEDISCOVERYEXTENSION_API_SOURCES = \
+	DeviceDiscoveryExtension/Enums.cs \
+
+DEVICEDISCOVERYEXTENSION_SOURCES = \
+	DeviceDiscoveryExtension/DDDevice.cs \
+
+# DeviceDiscoveryUI
+
+DEVICEDISCOVERYUI_SOURCES = \
+	DeviceDiscoveryUI/DDDevicePickerViewController.cs \
+
 # EventKit
 
 EVENTKIT_API_SOURCES = \
@@ -786,7 +808,7 @@ FOUNDATION_CORE_SOURCES = \
 	Foundation/ProtocolAttribute.cs \
 	Foundation/RegisterAttribute.cs \
 	Foundation/NSObject.iOS.cs \
-	Foundation/NSAttributedString.iOS.cs \
+	Foundation/NSAttributedStringDocumentAttributes.cs  \
 	Foundation/NSObject.mac.cs \
 	Foundation/NSDateComponents.cs \
 	Foundation/XpcInterfaceAttribute.cs \
@@ -817,11 +839,11 @@ FOUNDATION_SOURCES = \
 	Foundation/NSDistributedNotificationCenter.cs \
 	Foundation/NSEnumerator_1.cs \
 	Foundation/NSErrorException.cs \
+	Foundation/NSExceptionError.cs \
 	Foundation/NSExpression.cs \
 	Foundation/NSFastEnumerationState.cs \
 	Foundation/NSFastEnumerator.cs \
 	Foundation/NSFileManager.cs \
-	Foundation/NSFileManager.iOS.cs \
 	Foundation/NSFileManagerDelegate.cs \
 	Foundation/NSFormatter.cs \
 	Foundation/NSHost.cs \
@@ -985,7 +1007,10 @@ IAD_SOURCES = \
 
 # ImageCaptureKit
 IMAGECAPTURECORE_API_SOURCES = \
-	ImageCaptureCore/Defs.cs
+	ImageCaptureCore/Defs.cs \
+
+IMAGECAPTURECORE_SOURCES = \
+	ImageCaptureCore/ICCameraDevice.cs \
 
 # ImageIO
 
@@ -1080,7 +1105,7 @@ JAVASCRIPTCORE_SOURCES = \
 # LocalAuthentication
 
 LOCALAUTHENTICATION_API_SOURCES = \
-	Localauthentication/LAEnums.cs \
+	LocalAuthentication/LAEnums.cs \
 
 # MapKit
 
@@ -1099,6 +1124,7 @@ MAPKIT_SOURCES = \
 	MapKit/MKMapCameraZoomRange.cs \
 	MapKit/MKMapItem.cs \
 	MapKit/MKMultiPoint.cs \
+	MapKit/MKOverlayRenderer.cs \
 	MapKit/MKOverlayView.cs \
 	MapKit/MKPointOfInterestFilter.cs \
 	MapKit/MKPolygon.cs \
@@ -1163,6 +1189,7 @@ METAL_SOURCES = \
 	Metal/MTLArgumentEncoder.cs \
 	Metal/MTLBlitPassSampleBufferAttachmentDescriptorArray.cs \
 	Metal/MTLCompat.cs \
+	Metal/MTLIOCompression.cs \
 	Metal/MTLComputeCommandEncoder.cs \
 	Metal/MTLComputePassSampleBufferAttachmentDescriptorArray.cs \
 	Metal/MTLDevice.cs \
@@ -1175,6 +1202,9 @@ METAL_SOURCES = \
 	Metal/MTLResourceStateCommandEncoder.cs \
 	Metal/MTLResourceStatePassSampleBufferAttachmentDescriptorArray.cs \
 	Metal/MTLVertexDescriptor.cs \
+
+# MetalFX
+
 
 # MetalKit
 
@@ -1248,6 +1278,7 @@ MODELIO_SOURCES = \
 	ModelIO/MDLAnimatedQuaternion.cs \
 	ModelIO/MDLAnimatedValueTypes.cs \
 	ModelIO/MDLAsset.cs \
+	ModelIO/MDLMaterial.cs \
 	ModelIO/MDLNoiseTexture.cs \
 	ModelIO/MDLTransform.cs \
 	ModelIO/MDLTransformComponent.cs \
@@ -1307,14 +1338,17 @@ NETWORK_SOURCES = \
 	Network/NWPrivacyContext.cs	\
 	Network/NWProtocolFramerOptions.cs \
 	Network/NWProtocolIPOptions.cs	\
+	Network/NWProxyConfig.cs	\
 	Network/NWParameters.cs			\
 	Network/NWPath.cs			\
 	Network/NWPathMonitor.cs		\
+	Network/NWPrivacyContext.cs		\
 	Network/NWProtocolDefinition.cs		\
 	Network/NWProtocolMetadata.cs		\
 	Network/NWProtocolOptions.cs		\
 	Network/NWProtocolStack.cs			\
 	Network/NWQuicMetadata.cs			\
+	Network/NWRelayHop.cs			\
 	Network/NWResolutionReport.cs \
 	Network/NWResolverConfig.cs			\
 	Network/NWTcpMetadata.cs \
@@ -1360,8 +1394,8 @@ NETWORKEXTENSION_SOURCES = \
 
 # NewsstandKit
 
-NEWSSTANDKIT_API_SOURCES = \
-	NewsstandKit/Enums.cs \
+NEWSSTANDKIT_SOURCES = \
+	NewsstandKit/Compat.cs \
 
 # NotificationCenter
 
@@ -1431,6 +1465,7 @@ PASSKIT_API_SOURCES = \
 	
 PASSKIT_SOURCES = \
 	PassKit/PKCompat.cs	\
+	PassKit/PKPayLaterView.cs	\
 	PassKit/PKPaymentRequest.cs	\
 	PassKit/PKShareablePassMetadata.cs \
 
@@ -1471,6 +1506,10 @@ PHOTOSUI_API_SOURCES = \
 PRINTCORE_SOURCES = \
 	PrintCore/Defs.cs	\
 	PrintCore/PrintCore.cs
+
+# PushToTalk
+PUSHTOTALK_SOURCES = \
+	PushToTalk/Compat.cs \
 	
 # QTKit
 
@@ -1503,6 +1542,11 @@ SAFARISERVICES_API_SOURCES = \
 SAFARISERVICES_CORE_SOURCES = \
 
 SAFARISERVICES_SOURCES = \
+
+# SafetyKit
+
+SAFETYKIT_API_SOURCES = \
+	SafetyKit/SAEnums.cs \
 
 # SceneKit
 
@@ -1609,6 +1653,11 @@ SOCIAL_SOURCES = \
 	Social/SLCompat.cs \
 	Social/SLComposeViewController.cs \
 	Social/SLRequest.cs \
+
+# Speech
+
+SPEECH_SOURCES = \
+	Speech/SFCompat.cs \
 
 # SpriteKit
 
@@ -1734,6 +1783,7 @@ UIKIT_SOURCES = \
 	UIKit/UIKeyboard.cs \
 	UIKit/UIKitSynchronizationContext.cs \
 	UIKit/UIListSeparatorConfiguration.cs \
+	UIKit/UIMenu.cs \
 	UIKit/UINavigationBar.cs \
 	UIKit/UINavigationController.cs \
 	UIKit/UIPageViewController.cs \
@@ -1758,6 +1808,8 @@ UIKIT_SOURCES = \
 	UIKit/UITextAttributes.cs \
 	UIKit/UITextField.cs \
 	UIKit/UITextView.cs \
+	UIKit/UITraitChangeObservable.cs \
+	UIKit/UITraitOverrides.cs \
 	UIKit/UITraitCollection.cs \
 	UIKit/UIToolbar.cs \
 	UIKit/UIVibrancyEffect.cs \
@@ -1858,10 +1910,11 @@ WATCHKIT_SOURCES = \
 	WatchKit/iOS/WKUserNotificationInterfaceController.cs \
 	WatchKit/iOS/WKUserNotificationInterfaceType.cs \
 
-# WebKit (Mac version)
+# WebKit
 
 WEBKIT_API_SOURCES = \
 	WebKit/Enums.cs \
+	WebKit/Defs.cs \
 
 WEBKIT_SOURCES = \
 	WebKit/DomNode.cs \
@@ -1872,20 +1925,9 @@ WEBKIT_SOURCES = \
 	WebKit/WebNavigationPolicyEventArgs.cs \
 	WebKit/WebPolicyDelegate.cs \
 	WebKit/WebView.cs \
-
-# WebKit (iOS version)
-#
-# Here we're cheating a bit; the WebKit shipped with iOS is
-# bound in wkwebkit.cs, so the variable need to be named
-# accordingly.
-
-WKWEBKIT_API_SOURCES = \
-	WKWebKit/Defs.cs \
-
-WKWEBKIT_SOURCES = \
-	WKWebKit/WKCompat.cs \
-	WKWebKit/WKPreferences.cs \
-	WKWebKit/WKWindowFeatures.cs \
+	WebKit/WKCompat.cs \
+	WebKit/WKPreferences.cs \
+	WebKit/WKWindowFeatures.cs \
 
 #
 # SHARED_[CORE_]SOURCES: source code needed in core.dll or the platform assembly
@@ -1904,16 +1946,21 @@ SHARED_CORE_SOURCES = \
 	ObjCRuntime/ArgumentSemantic.cs \
 	ObjCRuntime/BindAsAttribute.cs \
 	ObjCRuntime/Blocks.cs \
+	ObjCRuntime/BlockCallbackAttribute.cs \
+	ObjCRuntime/CCallbackAttribute.cs \
 	ObjCRuntime/Class.cs \
 	ObjCRuntime/Constants.cs \
 	ObjCRuntime/DisposableObject.cs \
 	ObjCRuntime/ErrorConstants.cs \
+	ObjCRuntime/Extensions.cs \
 	ObjCRuntime/INativeObject.cs \
 	ObjCRuntime/LinkWithAttribute.cs \
 	ObjCRuntime/Messaging.cs \
 	ObjCRuntime/NativeAttribute.cs \
 	ObjCRuntime/NativeHandle.cs \
 	ObjCRuntime/NativeNameAttribute.cs \
+	ObjCRuntime/TransientCFString.cs \
+	ObjCRuntime/TransientString.cs \
 	ObjCRuntime/NFloat.cs \
 	ObjCRuntime/ObsoleteConstants.cs \
 	ObjCRuntime/PlatformAvailability.cs \
@@ -1948,6 +1995,7 @@ SHARED_SOURCES = \
 	ObjCRuntime/AdoptsAttribute.cs \
 	ObjCRuntime/BackingField.cs \
 	ObjCRuntime/BaseWrapper.cs \
+	ObjCRuntime/BindAs.cs \
 	ObjCRuntime/BlockProxyAttribute.cs \
 	ObjCRuntime/BindingImplAttribute.cs \
 	ObjCRuntime/CategoryAttribute.cs \
@@ -1959,8 +2007,10 @@ SHARED_SOURCES = \
 	ObjCRuntime/ErrorHelper.runtime.cs \
 	ObjCRuntime/Exceptions.cs \
 	ObjCRuntime/ExceptionMode.cs \
+	ObjCRuntime/IManagedRegistrar.cs \
 	ObjCRuntime/Method.cs \
 	ObjCRuntime/Registrar.cs \
+	ObjCRuntime/RegistrarHelper.cs \
 	ObjCRuntime/ReleaseAttribute.cs \
 	ObjCRuntime/RequiredFrameworkAttribute.cs \
 	ObjCRuntime/Runtime.cs \
@@ -1984,9 +2034,6 @@ SHARED_SOURCES = \
 # Each framework listed needs a corresponding <framework>.cs (all lower case)
 # file in src/
 #
-# Exceptions: iOS' WebKit is listed as WKWebKit, because the bindings are in
-# wkwebkit.cs (webkit.cs is already used for Mac bindings)
-#
 
 COMMON_FRAMEWORKS =         \
 	Accessibility           \
@@ -1998,6 +2045,7 @@ COMMON_FRAMEWORKS =         \
 	CoreFoundation          \
 	CoreMedia               \
 	CoreML                  \
+	CoreMidi                \
 	CoreVideo               \
 	Compression             \
 	DeviceCheck             \
@@ -2008,6 +2056,7 @@ COMMON_FRAMEWORKS =         \
 	OSLog                   \
 	SceneKit                \
 	ShazamKit               \
+	Symbols                 \
 	SoundAnalysis 			\
 	SpriteKit               \
 	StoreKit				\
@@ -2030,6 +2079,7 @@ MACOS_FRAMEWORKS =          \
 	CallKit \
 	CFNetwork               \
 	Chip                    \
+	Cinematic              \
 	ClassKit                \
 	CloudKit                \
 	Contacts                \
@@ -2039,7 +2089,6 @@ MACOS_FRAMEWORKS =          \
 	CoreGraphics            \
 	CoreImage               \
 	CoreLocation            \
-	CoreMidi                \
 	CoreMotion		\
 	CoreServices            \
 	CoreSpotlight           \
@@ -2074,6 +2123,7 @@ MACOS_FRAMEWORKS =          \
 	MediaPlayer             \
 	MediaToolbox            \
 	Metal                   \
+	MetalFX                 \
 	MetalKit                \
 	MetalPerformanceShaders \
 	MetalPerformanceShadersGraph \
@@ -2101,10 +2151,13 @@ MACOS_FRAMEWORKS =          \
 	QuickLookUI             \
 	ReplayKit               \
 	SafariServices          \
+	SafetyKit               \
 	ScreenCaptureKit        \
 	ScreenTime              \
 	ScriptingBridge         \
 	SearchKit               \
+	SensitiveContentAnalysis \
+	ServiceManagement       \
 	Security                \
 	SharedWithYou           \
 	SharedWithYouCore       \
@@ -2118,7 +2171,6 @@ MACOS_FRAMEWORKS =          \
 	VideoToolbox            \
 	Vision                  \
 	WebKit                  \
-	WKWebKit                \
 
 IOS_FRAMEWORKS =         \
 	$(COMMON_FRAMEWORKS) \
@@ -2143,6 +2195,7 @@ IOS_FRAMEWORKS =         \
 	CarPlay \
 	CFNetwork \
 	Chip \
+	Cinematic \
 	ClassKit \
 	CloudKit \
 	Contacts \
@@ -2154,12 +2207,12 @@ IOS_FRAMEWORKS =         \
 	CoreImage \
 	CoreLocation \
 	CoreLocationUI \
-	CoreMIDI \
 	CoreMotion \
 	CoreNFC \
 	CoreSpotlight \
 	CoreTelephony \
 	CoreText \
+	DeviceDiscoveryExtension \
 	EventKit \
 	EventKitUI \
 	ExternalAccessory \
@@ -2188,6 +2241,7 @@ IOS_FRAMEWORKS =         \
 	Messages \
 	MessageUI \
 	Metal \
+	MetalFX \
 	MetalKit \
 	MetalPerformanceShaders \
 	MetalPerformanceShadersGraph \
@@ -2213,8 +2267,10 @@ IOS_FRAMEWORKS =         \
 	QuickLookThumbnailing \
 	ReplayKit \
 	SafariServices \
+	SafetyKit \
 	ScreenTime \
 	Security \
+	SensitiveContentAnalysis \
 	SensorKit \
 	SharedWithYou \
 	SharedWithYouCore \
@@ -2232,7 +2288,7 @@ IOS_FRAMEWORKS =         \
 	VisionKit \
 	WatchConnectivity \
 	WatchKit \
-	WKWebKit \
+	WebKit \
 	iAd \
 
 WATCHOS_FRAMEWORKS =        \
@@ -2258,6 +2314,7 @@ WATCHOS_FRAMEWORKS =        \
 	NearbyInteraction       \
 	PassKit                 \
 	PushKit			\
+	SafetyKit               \
 	Security                \
 	UIKit XKit              \
 	UserNotifications       \
@@ -2274,6 +2331,7 @@ TVOS_FRAMEWORKS =           \
 	BackgroundTasks         \
 	CFNetwork               \
 	Chip                    \
+	Cinematic              \
 	CloudKit                \
 	CoreAnimation           \
 	CoreGraphics            \
@@ -2282,6 +2340,7 @@ TVOS_FRAMEWORKS =           \
 	CoreLocation            \
 	CoreSpotlight			\
 	CoreText                \
+	DeviceDiscoveryUI		\
 	ExternalAccessory       \
 	GLKit                   \
 	GameController          \
@@ -2304,7 +2363,9 @@ TVOS_FRAMEWORKS =           \
 	MobileCoreServices      \
 	ModelIO                 \
 	MultipeerConnectivity   \
+	NetworkExtension        \
 	OpenGLES                \
+	Phase                   \
 	Photos                  \
 	PhotosUI                \
 	ReplayKit               \
@@ -2351,7 +2412,6 @@ MACCATALYST_FRAMEWORKS = \
 	CoreImage \
 	CoreLocation \
 	CoreLocationUI \
-	CoreMIDI \
 	CoreMotion \
 	CoreNFC \
 	CoreSpotlight \
@@ -2407,7 +2467,9 @@ MACCATALYST_FRAMEWORKS = \
 	SafariServices \
 	ScreenTime \
 	Security \
+	SensitiveContentAnalysis \
 	SensorKit \
+	ServiceManagement \
 	SharedWithYou \
 	SharedWithYouCore \
 	Social \
@@ -2420,7 +2482,7 @@ MACCATALYST_FRAMEWORKS = \
 	VideoToolbox \
 	Vision \
 	VisionKit \
-	WKWebKit \
+	WebKit \
 
 # List frameworks that have been removed in .NET
 

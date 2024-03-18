@@ -441,6 +441,7 @@ xamarin_main (int argc, char *argv[], enum XamarinLaunchMode launch_mode)
 	if (xamarin_register_assemblies != NULL)
 		xamarin_register_assemblies ();
 
+#if !defined (NATIVEAOT)
 	if (xamarin_executable_name) {
 		assembly = xamarin_open_and_register (xamarin_executable_name, &exception_gchandle);
 		xamarin_process_fatal_exception_gchandle (exception_gchandle, "An exception occurred while opening the main executable");
@@ -460,6 +461,10 @@ xamarin_main (int argc, char *argv[], enum XamarinLaunchMode launch_mode)
 		xamarin_mono_object_release (&rassembly);
 		xamarin_process_fatal_exception_gchandle (exception_gchandle, "An exception occurred while opening the entry assembly");
 	}
+#else
+	assembly = NULL;
+	(void)exception_gchandle;
+#endif // !defined (NATIVEAOT)
 
 	DEBUG_LAUNCH_TIME_PRINT ("\tAssembly register time");
 

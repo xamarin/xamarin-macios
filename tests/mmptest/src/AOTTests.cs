@@ -9,13 +9,11 @@ using System.Reflection;
 
 using Xamarin.Tests;
 
-namespace Xamarin.MMP.Tests
-{
+namespace Xamarin.MMP.Tests {
 	[TestFixture]
-	public class AOTTests
-	{
+	public class AOTTests {
 		void ValidateAOTStatus (string tmpDir, Func<FileInfo, bool> shouldAOT)
-		{ 
+		{
 			foreach (var file in GetOutputDirInfo (tmpDir).EnumerateFiles ()) {
 				bool shouldBeAOT = shouldAOT (file);
 				Assert.AreEqual (shouldBeAOT, File.Exists (file.FullName + ".dylib"), "{0} should {1}be AOT.", file.FullName, shouldBeAOT ? "" : "not ");
@@ -54,7 +52,8 @@ namespace Xamarin.MMP.Tests
 
 		[TestCase (false)]
 		[TestCase (true)]
-		public void AOT_SmokeTest (bool useProjectTags) {
+		public void AOT_SmokeTest (bool useProjectTags)
+		{
 			MMPTests.RunMMPTest (tmpDir => {
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
 					CSProjConfig = GetTestConfig (TestType.Base, useProjectTags)

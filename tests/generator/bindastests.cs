@@ -69,6 +69,10 @@ namespace BindAsTests {
 		[Export ("cmTimeRangeProperty")]
 		NSValue CMTimeRangeProperty { get; }
 
+		[BindAs (typeof (CMVideoDimensions))]
+		[Export ("cmVideoDimensionsProperty")]
+		NSValue CMVideoDimensionsProperty { get; }
+
 		[BindAs (typeof (long))]
 		[Export ("longProperty")]
 		NSNumber LongProperty { get; set; }

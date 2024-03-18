@@ -31,7 +31,7 @@ namespace MonoTouchFixtures.NetworkExtension {
 			var shared = NEVpnManager.SharedManager;
 			// https://developer.apple.com/library/ios/documentation/IDEs/Conceptual/AppDistributionGuide/AddingCapabilities/AddingCapabilities.html#//apple_ref/doc/uid/TP40012582-CH26-SW59
 			// Enabling Personal VPN (iOS Only)
-			if (shared == null)
+			if (shared is null)
 				Assert.Inconclusive ("Requires enabling Personal PVN (entitlements)");
 
 			Assert.That (shared.Connection.Status, Is.EqualTo (NEVpnStatus.Invalid), "Connection");

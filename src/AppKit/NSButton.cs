@@ -32,10 +32,19 @@ using System;
 using ObjCRuntime;
 using Foundation;
 
+#nullable enable
+
 namespace AppKit {
 
 	public partial class NSButton {
-		NSActionDispatcher dispatcher;
+		NSObject? dispatcher;
+
+		NSObject? Dispatcher {
+			set {
+				dispatcher = value;
+				MarkDirty ();
+			}
+		}
 
 		public new NSButtonCell Cell {
 			get { return (NSButtonCell) base.Cell; }
@@ -43,72 +52,62 @@ namespace AppKit {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10, 12)]
 #endif
 		public static NSButton CreateButton (string title, NSImage image, Action action)
 		{
 			var dispatcher = new NSActionDispatcher (action);
 			var control = _CreateButton (title, image, dispatcher, NSActionDispatcher.Selector);
-			control.dispatcher = dispatcher;
+			control.Dispatcher = dispatcher;
 			return control;
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10, 12)]
 #endif
 		public static NSButton CreateButton (string title, Action action)
 		{
 			var dispatcher = new NSActionDispatcher (action);
 			var control = _CreateButton (title, dispatcher, NSActionDispatcher.Selector);
-			control.dispatcher = dispatcher;
+			control.Dispatcher = dispatcher;
 			return control;
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10, 12)]
 #endif
 		public static NSButton CreateButton (NSImage image, Action action)
 		{
 			var dispatcher = new NSActionDispatcher (action);
 			var control = _CreateButton (image, dispatcher, NSActionDispatcher.Selector);
-			control.dispatcher = dispatcher;
+			control.Dispatcher = dispatcher;
 			return control;
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10, 12)]
 #endif
 		public static NSButton CreateCheckbox (string title, Action action)
 		{
 			var dispatcher = new NSActionDispatcher (action);
 			var control = _CreateCheckbox (title, dispatcher, NSActionDispatcher.Selector);
-			control.dispatcher = dispatcher;
+			control.Dispatcher = dispatcher;
 			return control;
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10, 12)]
 #endif
 		public static NSButton CreateRadioButton (string title, Action action)
 		{
 			var dispatcher = new NSActionDispatcher (action);
 			var control = _CreateRadioButton (title, dispatcher, NSActionDispatcher.Selector);
-			control.dispatcher = dispatcher;
+			control.Dispatcher = dispatcher;
 			return control;
 		}
 	}

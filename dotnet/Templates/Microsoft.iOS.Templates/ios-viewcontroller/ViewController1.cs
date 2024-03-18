@@ -1,7 +1,6 @@
 namespace iOSApp1;
 
-public partial class ViewController1 : UIViewController
-{
+public partial class ViewController1 : UIViewController {
 	public ViewController1 () : base (nameof (ViewController1), null)
 	{
 	}

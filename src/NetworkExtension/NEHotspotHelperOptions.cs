@@ -1,6 +1,6 @@
 #nullable enable
 
-#if !MONOMAC
+#if !MONOMAC && !TVOS
 
 using Foundation;
 

@@ -20,12 +20,10 @@ namespace PdfKit {
 	public partial class PdfAnnotation {
 
 #if NET
-		[SupportedOSPlatform ("macos10.12")]
-		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
-#else
-		[Mac (10, 12)]
 #endif
 		public bool SetValue<T> (T value, PdfAnnotationKey key) where T : class, INativeObject
 		{
@@ -36,12 +34,10 @@ namespace PdfKit {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.12")]
-		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
-#else
-		[Mac (10, 12)]
 #endif
 		public bool SetValue (string str, PdfAnnotationKey key)
 		{
@@ -54,12 +50,10 @@ namespace PdfKit {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.12")]
-		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
-#else
-		[Mac (10, 12)]
 #endif
 		public T GetValue<T> (PdfAnnotationKey key) where T : class, INativeObject
 		{
@@ -77,12 +71,10 @@ namespace PdfKit {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.13")]
-		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
-#else
-		[Mac (10, 13)]
 #endif
 		public CGPoint [] QuadrilateralPoints {
 			get {

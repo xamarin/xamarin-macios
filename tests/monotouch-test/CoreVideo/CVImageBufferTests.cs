@@ -10,7 +10,6 @@
 using System;
 using Foundation;
 using NUnit.Framework;
-using Foundation;
 using ObjCRuntime;
 using CoreVideo;
 

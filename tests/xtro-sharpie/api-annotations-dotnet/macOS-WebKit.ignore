@@ -1,13 +1,10 @@
 ## only a subset of the old, pre WKWebKit, is bound for macOS
 
-!missing-enum! WKUserInterfaceDirectionPolicy not bound
-!missing-field! WebViewDidBeginEditingNotification not bound
-!missing-field! WebViewDidChangeNotification not bound
-!missing-field! WebViewDidChangeSelectionNotification not bound
-!missing-field! WebViewDidChangeTypingStyleNotification not bound
-!missing-field! WebViewDidEndEditingNotification not bound
 # TODO WKWebView should conform to NSTextFinderClient is marked as macos(WK_MAC_TBA) as of 11.4 beta3
-!missing-protocol-conformance! WKWebView should conform to NSTextFinderClient (defined in 'WKNSTextFinderClient' category)
+
+# xcode 15
+
+# older/legacy API
 !missing-selector! +NSObject::isKeyExcludedFromWebScript: not bound
 !missing-selector! +NSObject::isSelectorExcludedFromWebScript: not bound
 !missing-selector! +NSObject::webScriptNameForKey: not bound
@@ -29,10 +26,7 @@
 !missing-selector! NSObject::webPlugInSetIsSelected: not bound
 !missing-selector! NSObject::webPlugInStart not bound
 !missing-selector! NSObject::webPlugInStop not bound
-!missing-selector! WKWebView::goBack: not bound
-!missing-selector! WKWebView::goForward: not bound
-!missing-selector! WKWebView::reload: not bound
-!missing-selector! WKWebView::reloadFromOrigin: not bound
-!missing-selector! WKWebView::stopLoading: not bound
-!missing-selector! WKWebViewConfiguration::setUserInterfaceDirectionPolicy: not bound
-!missing-selector! WKWebViewConfiguration::userInterfaceDirectionPolicy not bound
+
+# enabled for XAMCORE 5, else breaking change
+!missing-protocol-conformance! WKWebView should conform to NSTextFinderClient (defined in 'WKNSTextFinderClient' category)
+

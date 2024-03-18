@@ -51,21 +51,12 @@ namespace MonoTouchFixtures.AVFoundation {
 		[Test]
 		public void Flags ()
 		{
-			// we can only only work with [Weak]AvailableMetadataObjectTypes on an instance of AVCaptureMetadataOutput
-			// so we use reflection to test the internal of the flags/enum/constants conversions
-			// the previous tests ensure what we need is not removed by the linker
-			var t = typeof (AVMetadataObject);
-			var array_to_enum = t.GetMethod ("ArrayToEnum", BindingFlags.Static | BindingFlags.NonPublic);
-			Assert.NotNull (array_to_enum, "ArrayToEnum");
-
-			var enum_to_array = t.GetMethod ("EnumToArray", BindingFlags.Static | BindingFlags.NonPublic);
-			Assert.NotNull (enum_to_array, "EnumToArray");
-
 			// single
 			var flags = AVMetadataObjectType.Face;
-			var result = (AVMetadataObjectType) array_to_enum.Invoke (null, new [] { new NSString [] { flags.GetConstant () } });
+			var result = AVMetadataObjectTypeExtensions.ToFlags (new NSString [] { flags.GetConstant () });
 			Assert.AreEqual (flags, result, "a2e 1");
-			var back = (NSString []) enum_to_array.Invoke (null, new object [] { result });
+
+			var back = result.ToArray ();
 			Assert.That (back.Length, Is.EqualTo (1), "l 1");
 			Assert.That (back [0], Is.EqualTo (flags.GetConstant ()), "e2a 1");
 
@@ -78,14 +69,21 @@ namespace MonoTouchFixtures.AVFoundation {
 					AVMetadataObjectType.DogBody.GetConstant (),
 					AVMetadataObjectType.HumanBody.GetConstant ()
 				};
-				result = (AVMetadataObjectType) array_to_enum.Invoke (null, new [] { array });
+				result = AVMetadataObjectTypeExtensions.ToFlags (array);
 				Assert.AreEqual (flags, result, "a2e 3");
-				back = (NSString []) enum_to_array.Invoke (null, new object [] { result });
+				back = result.ToArray ();
 				Assert.That (back.Length, Is.EqualTo (3), "l 3");
 				Assert.That (back [0], Is.EqualTo (array [0]), "e2a 3a");
 				Assert.That (back [1], Is.EqualTo (array [1]), "e2a 3b");
 				Assert.That (back [2], Is.EqualTo (array [2]), "e2a 3c");
 			}
+
+			var all = (AVMetadataObjectType) ulong.MaxValue;
+			var someArray = all.ToArray (); // converting all flags to an array will only return strings for flags that exist in the current OS.
+			Assert.That (someArray.Length, Is.GreaterThan (1), "some back");
+			var someFlags = AVMetadataObjectTypeExtensions.ToFlags (someArray);
+			Assert.That (someFlags, Is.Not.EqualTo (AVMetadataObjectType.None), "Some, but not None");
+			Assert.That (someFlags, Is.Not.EqualTo (all), "Some, but not all");
 		}
 
 		[Test]
@@ -109,7 +107,11 @@ namespace MonoTouchFixtures.AVFoundation {
 								captureSession.AddOutput (metadataOutput);
 
 							AVMetadataObjectType all = AVMetadataObjectType.None;
+#if NET
+							foreach (var val in Enum.GetValues<AVMetadataObjectType> ()) {
+#else
 							foreach (AVMetadataObjectType val in Enum.GetValues (typeof (AVMetadataObjectType))) {
+#endif
 								switch (val) {
 								case AVMetadataObjectType.CatBody:
 								case AVMetadataObjectType.DogBody:
@@ -120,6 +122,15 @@ namespace MonoTouchFixtures.AVFoundation {
 										continue;
 									// xcode 12 beta 1 on device
 									if (TestRuntime.IsDevice && TestRuntime.CheckXcodeVersion (12, 0))
+										continue;
+									break;
+								case AVMetadataObjectType.CodabarCode:
+								case AVMetadataObjectType.GS1DataBarCode:
+								case AVMetadataObjectType.GS1DataBarExpandedCode:
+								case AVMetadataObjectType.GS1DataBarLimitedCode:
+								case AVMetadataObjectType.MicroQRCode:
+								case AVMetadataObjectType.MicroPdf417Code:
+									if (!TestRuntime.CheckXcodeVersion (13, 3))
 										continue;
 									break;
 								}

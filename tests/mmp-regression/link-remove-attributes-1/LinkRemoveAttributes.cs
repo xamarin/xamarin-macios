@@ -25,13 +25,13 @@ using AppKit;
 
 namespace Xamarin.Mac.Linker.Test {
 
-//	[System.MonoDocumentationNote]
-//	[System.MonoExtension]
-//	[System.MonoLimitation]
-//	[System.MonoNotSupported]
-//	[System.MonoTODO]
+	//	[System.MonoDocumentationNote]
+	//	[System.MonoExtension]
+	//	[System.MonoLimitation]
+	//	[System.MonoNotSupported]
+	//	[System.MonoTODO]
 	[System.Obsolete]
-//	[System.Xml.MonoFIX]
+	//	[System.Xml.MonoFIX]
 
 	[ObjCRuntime.Availability]
 	[ObjCRuntime.Deprecated (ObjCRuntime.PlatformName.MacOSX)]
@@ -79,7 +79,7 @@ namespace Xamarin.Mac.Linker.Test {
 		const bool debug = false;
 #endif
 
-		static void Main (string[] args)
+		static void Main (string [] args)
 		{
 			NSApplication.Init ();
 
@@ -109,11 +109,10 @@ namespace Xamarin.Mac.Linker.Test {
 				CheckPresence (method, "System.Diagnostics.DebuggerStepThroughAttribute", debug);
 				CheckPresence (method, "System.LoaderOptimizationAttribute", true);
 
-				var field = type.GetField ("document", BindingFlags.Instance| BindingFlags.NonPublic);
+				var field = type.GetField ("document", BindingFlags.Instance | BindingFlags.NonPublic);
 				CheckPresence (field, "Foundation.PreserveAttribute", false);
 				CheckPresence (field, "System.Diagnostics.DebuggerBrowsableAttribute", debug);
-			}
-			finally {
+			} finally {
 				Test.Terminate ();
 			}
 		}

@@ -34,28 +34,30 @@ using System.Reflection;
 using ObjCRuntime;
 using Registrar;
 
+#nullable enable
+
 namespace Foundation {
 
 	[AttributeUsage (AttributeTargets.Method | AttributeTargets.Constructor | AttributeTargets.Property)]
 	public class ExportAttribute : Attribute {
-		string selector;
+		string? selector;
 		ArgumentSemantic semantic;
 
 		protected ExportAttribute () { }
 
-		public ExportAttribute (string selector)
+		public ExportAttribute (string? selector)
 		{
 			this.selector = selector;
 			this.semantic = ArgumentSemantic.None;
 		}
 
-		public ExportAttribute (string selector, ArgumentSemantic semantic)
+		public ExportAttribute (string? selector, ArgumentSemantic semantic)
 		{
 			this.selector = selector;
 			this.semantic = semantic;
 		}
 
-		public string Selector {
+		public string? Selector {
 			get { return this.selector; }
 			set { this.selector = value; }
 		}

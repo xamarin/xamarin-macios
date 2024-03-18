@@ -45,7 +45,7 @@ namespace Xamarin.Tests {
 			var itemGroup = doc.CreateElement ("ItemGroup", MSBuild_Namespace);
 			var item = doc.CreateElement (name, MSBuild_Namespace);
 			item.SetAttribute ("Include", value);
-			if (metadata != null) {
+			if (metadata is not null) {
 				foreach (var kvp in metadata) {
 					var m = doc.CreateElement (kvp.Key, MSBuild_Namespace);
 					m.InnerText = kvp.Value;

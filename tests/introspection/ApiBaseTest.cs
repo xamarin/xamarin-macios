@@ -145,7 +145,7 @@ namespace Introspection {
 
 		protected virtual bool SkipDueToAttribute (MemberInfo member)
 		{
-			if (member == null)
+			if (member is null)
 				return false;
 
 			return !member.IsAvailableOnHostPlatform () ||
@@ -159,20 +159,20 @@ namespace Introspection {
 		// https://bugzilla.xamarin.com/show_bug.cgi?id=35176
 		protected bool SkipDueToAttributeInProperty (MemberInfo member)
 		{
-			if (member == null)
+			if (member is null)
 				return false;
 
 			var m = member as MethodInfo;
 
-			if (m == null || // Skip anything that is not a method
+			if (m is null || // Skip anything that is not a method
 				!m.Attributes.HasFlag (MethodAttributes.SpecialName)) // We want properties with SpecialName Attribute
 				return false;
 
 			// FIXME: In the future we could cache this to reduce memory requirements
 			var property = m.DeclaringType
-							.GetProperties ()
-							.SingleOrDefault (p => p.GetGetMethod () == m || p.GetSetMethod () == m);
-			return property != null && SkipDueToAttribute (property);
+							.GetProperties (BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
+							.SingleOrDefault (p => p.GetGetMethod (true) == m || p.GetSetMethod (true) == m);
+			return property is not null && SkipDueToAttribute (property);
 		}
 
 		protected bool SkipDueToRejectedTypes (Type type)
@@ -198,7 +198,7 @@ namespace Introspection {
 #if NET
 			return member.GetCustomAttributes<ObsoletedOSPlatformAttribute> (false).Any ();
 #else
-			return member.GetCustomAttribute<ObsoleteAttribute> () != null;
+			return member.GetCustomAttribute<ObsoleteAttribute> () is not null;
 #endif
 		}
 

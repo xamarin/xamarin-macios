@@ -1,6 +1,7 @@
 #nullable enable
 
 using System;
+using System.Runtime.CompilerServices;
 using Foundation;
 
 #if !NET
@@ -15,13 +16,21 @@ namespace ObjCRuntime {
 			get;
 		}
 #endif
+
+#if NET
+		// The method will be implemented via custom linker step if the managed static registrar is used
+		// for classes which have an (NativeHandle, bool) or (IntPtr, bool) constructor.
+		// This method will be made public when the managed static registrar is used.
+		[MethodImpl(MethodImplOptions.NoInlining)]
+		internal static virtual INativeObject? _Xamarin_ConstructINativeObject (NativeHandle handle, bool owns) => null;
+#endif
 	}
 
 #if !COREBUILD
 	public static class NativeObjectExtensions {
 
 		// help to avoid the (too common pattern)
-		// 	var p = x == null ? IntPtr.Zero : x.Handle;
+		// 	var p = x is null ? IntPtr.Zero : x.Handle;
 		static public NativeHandle GetHandle (this INativeObject? self)
 		{
 			return self is null ? NativeHandle.Zero : self.Handle;

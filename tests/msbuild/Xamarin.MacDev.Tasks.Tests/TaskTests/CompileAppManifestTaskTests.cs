@@ -22,7 +22,6 @@ namespace Xamarin.MacDev.Tasks {
 			task.AppBundleName = "AppBundleName";
 			task.CompiledAppManifest = new TaskItem (Path.Combine (tmpdir, "TemporaryAppManifest.plist"));
 			task.DefaultSdkVersion = Sdks.GetAppleSdk (platform).GetInstalledSdkVersions (false).First ().ToString ();
-			task.SdkPlatform = PlatformFrameworkHelper.GetSdkPlatform (platform, false);
 			task.SdkVersion = task.DefaultSdkVersion;
 			task.TargetFrameworkMoniker = TargetFramework.GetTargetFramework (platform, true).ToString ();
 
@@ -136,6 +135,36 @@ namespace Xamarin.MacDev.Tasks {
 
 			ExecuteTask (task, expectedErrorCount: 1);
 			Assert.That (Engine.Logger.ErrorEvents [0].Message, Does.StartWith ("Could not map the Mac Catalyst version 10.0 to a corresponding macOS version. Valid Mac Catalyst versions are:"));
+		}
+
+		[Test]
+		[TestCase (ApplePlatform.iOS, true)]
+		[TestCase (ApplePlatform.iOS, false)]
+		[TestCase (ApplePlatform.MacCatalyst, false)]
+		[TestCase (ApplePlatform.TVOS, true)]
+		[TestCase (ApplePlatform.TVOS, false)]
+		[TestCase (ApplePlatform.MacOSX, false)]
+		public void XcodeVariables (ApplePlatform platform, bool isSimulator)
+		{
+			var task = CreateTask (platform: platform);
+			task.SdkIsSimulator = isSimulator;
+			ExecuteTask (task);
+
+			var plist = PDictionary.FromFile (task.CompiledAppManifest.ItemSpec);
+			var variables = new string [] {
+				"DTCompiler",
+				"DTPlatformBuild",
+				"DTPlatformName",
+				"DTPlatformVersion",
+				"DTSDKBuild",
+				"DTSDKName",
+				"DTXcode",
+				"DTXcodeBuild",
+			};
+			foreach (var variable in variables) {
+				var value = plist.GetString (variable)?.Value;
+				Assert.That (value, Is.Not.Null.And.Not.Empty, variable);
+			}
 		}
 	}
 }

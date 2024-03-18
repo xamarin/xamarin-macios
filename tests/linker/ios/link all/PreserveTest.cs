@@ -55,7 +55,7 @@ namespace LinkAll.Attributes {
 		const bool Debug = false;
 #endif
 		string AssemblyName = typeof (NSObject).Assembly.ToString ();
-		string WorkAroundLinkerHeuristics { get { return ""; }}
+		string WorkAroundLinkerHeuristics { get { return ""; } }
 
 		[Test]
 		public void PreserveTypeWithMembers ()
@@ -105,7 +105,7 @@ namespace LinkAll.Attributes {
 #else
 			var expectedNull = TestRuntime.IsDevice;
 #endif
-			Assert.That (method == null, Is.EqualTo (expectedNull), "RegisterEntryAssembly");
+			Assert.That (method is null, Is.EqualTo (expectedNull), "RegisterEntryAssembly");
 		}
 
 		[Test]
@@ -118,7 +118,7 @@ namespace LinkAll.Attributes {
 #else
 			const string klassName = "Foundation.MonoTouchException";
 #endif
-			var klass = Type.GetType (klassName +", " + AssemblyName);
+			var klass = Type.GetType (klassName + ", " + AssemblyName);
 			Assert.NotNull (klass, klassName);
 		}
 
@@ -140,7 +140,7 @@ namespace LinkAll.Attributes {
 			// Initialize and a few other methods are unconditionally preserved
 			var method = klass.GetMethod ("Initialize", BindingFlags.NonPublic | BindingFlags.Static);
 			Assert.NotNull (method, "Initialize");
-			method = klass.GetMethod ("RegisterNSObject", BindingFlags.NonPublic | BindingFlags.Static, null, new Type[] { typeof (NSObject), typeof (IntPtr) }, null);
+			method = klass.GetMethod ("RegisterNSObject", BindingFlags.NonPublic | BindingFlags.Static, null, new Type [] { typeof (NSObject), typeof (IntPtr) }, null);
 			Assert.NotNull (method, "RegisterNSObject");
 		}
 
@@ -174,11 +174,41 @@ namespace LinkAll.Attributes {
 			Assert.IsNull (typeof (NSObject).Assembly.GetType ("AVFoundation.AVMediaTypes"), "AVMediaTypes");
 			Assert.IsNull (typeof (NSObject).Assembly.GetType ("AVFoundation.AVMediaTypesExtensions"), "AVMediaTypesExtensions");
 		}
+
+		[Test]
+		public void PreserveAllExcludesNestedTypes ()
+		{
+			var parentClass = GetType ().Assembly.GetType ("LinkAll.Attributes.ParentClass" + WorkAroundLinkerHeuristics);
+			Assert.NotNull (parentClass, "ParentClass");
+			var nestedEnum = GetType ().Assembly.GetType ("LinkAll.Attributes.ParentClass.NestedEnum" + WorkAroundLinkerHeuristics);
+			Assert.Null (nestedEnum, "NestedEnum");
+			var nestedStruct = GetType ().Assembly.GetType ("LinkAll.Attributes.ParentClass.NestedStruct" + WorkAroundLinkerHeuristics);
+			Assert.Null (nestedStruct, "NestedStruct");
+			var nestedClass = GetType ().Assembly.GetType ("LinkAll.Attributes.ParentClass.NestedClass" + WorkAroundLinkerHeuristics);
+			Assert.Null (nestedClass, "NestedClass");
+		}
+
+		[Test]
+		public void PreserveAllKeepsEnumValues ()
+		{
+			var enumType = GetType ().Assembly.GetType ("LinkAll.Attributes.MyEnum" + WorkAroundLinkerHeuristics);
+			Assert.NotNull (enumType, "MyEnum");
+			Assert.AreEqual (3, enumType.GetFields (BindingFlags.Public | BindingFlags.Static).Length, "fields");
+			AssertHasStaticField ("A", 1);
+			AssertHasStaticField ("B", 2);
+			AssertHasStaticField ("C", 4);
+
+			void AssertHasStaticField (string name, int value)
+			{
+				var field = enumType.GetField (name, BindingFlags.Public | BindingFlags.Static);
+				Assert.NotNull (field, name);
+				Assert.AreEqual (value, (int) field.GetValue (null), $"{name} == {value}");
+			}
+		}
 	}
 
 	[Preserve (AllMembers = true)]
-	class SmartConsumer : NSObject
-	{
+	class SmartConsumer : NSObject {
 		// The Smart Get/Set methods should not be linked away, and neither should the Smart enums + extensions
 		[Export ("getSmartEnumValue")]
 		[return: BindAs (typeof (SmartEnum), OriginalType = typeof (NSString))]
@@ -193,13 +223,11 @@ namespace LinkAll.Attributes {
 		}
 	}
 
-	public enum SmartEnum : int
-	{
+	public enum SmartEnum : int {
 		Smart = 0,
 	}
 
-	public static class SmartEnumExtensions
-	{
+	public static class SmartEnumExtensions {
 		public static NSString GetConstant (this SmartEnum self)
 		{
 			return (NSString) "Smart";
@@ -211,4 +239,13 @@ namespace LinkAll.Attributes {
 		}
 	}
 
+	[Preserve (AllMembers = true)]
+	public class ParentClass {
+		public enum NestedEnum { A, B };
+		public class NestedClass { }
+		public struct NestedStruct { }
+	}
+
+	[Preserve (AllMembers = true)]
+	public enum MyEnum { A = 1, B = 2, C = 4 }
 }

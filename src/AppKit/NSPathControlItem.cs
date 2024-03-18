@@ -2,6 +2,8 @@
 using System;
 using Foundation;
 
+#nullable enable
+
 namespace AppKit {
 	public partial class NSPathControlItem
 #if !XAMCORE_3_0

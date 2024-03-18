@@ -37,6 +37,9 @@ using CoreGraphics;
 using CoreText;
 #endif
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace UIKit {
 
 	public class UIStringAttributes : DictionaryContainer {
@@ -90,7 +93,7 @@ namespace UIKit {
 		public NSLigatureType? Ligature {
 			get {
 				var value = GetInt32Value (UIStringAttributeKey.Ligature);
-				return value == null ? null : (NSLigatureType?) value.Value;
+				return value is null ? null : (NSLigatureType?) value.Value;
 			}
 			set {
 				SetNumberValue (UIStringAttributeKey.Ligature, (int?) value);
@@ -109,7 +112,7 @@ namespace UIKit {
 		public NSUnderlineStyle? StrikethroughStyle {
 			get {
 				var value = GetInt32Value (UIStringAttributeKey.StrikethroughStyle);
-				return value == null ? null : (NSUnderlineStyle?) value.Value;
+				return value is null ? null : (NSUnderlineStyle?) value.Value;
 			}
 			set {
 				SetNumberValue (UIStringAttributeKey.StrikethroughStyle, (int?) value);
@@ -148,7 +151,7 @@ namespace UIKit {
 		public NSUnderlineStyle? UnderlineStyle {
 			get {
 				var value = GetInt32Value (UIStringAttributeKey.UnderlineStyle);
-				return value == null ? null : (NSUnderlineStyle?) value.Value;
+				return value is null ? null : (NSUnderlineStyle?) value.Value;
 			}
 			set {
 				SetNumberValue (UIStringAttributeKey.UnderlineStyle, (int?) value);
@@ -156,11 +159,9 @@ namespace UIKit {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)]
 #endif
 		public NSString WeakTextEffect {
 			get {
@@ -172,16 +173,14 @@ namespace UIKit {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)]
 #endif
 		public NSTextEffect TextEffect {
 			get {
 				var s = WeakTextEffect;
-				if (s == null)
+				if (s is null)
 					return NSTextEffect.None;
 
 				if (s == UIStringAttributeKey.NSTextEffectLetterpressStyle)
@@ -198,11 +197,9 @@ namespace UIKit {
 
 #if !WATCH
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)]
 #endif
 		public NSTextAttachment TextAttachment {
 			get {
@@ -215,11 +212,9 @@ namespace UIKit {
 #endif // !WATCH
 
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)]
 #endif
 		public NSUrl Link {
 			get {
@@ -231,11 +226,9 @@ namespace UIKit {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)]
 #endif
 		public float? BaselineOffset {
 			get {
@@ -247,11 +240,9 @@ namespace UIKit {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)]
 #endif
 		public UIColor StrikethroughColor {
 			get {
@@ -263,11 +254,9 @@ namespace UIKit {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)]
 #endif
 		public UIColor UnderlineColor {
 			get {
@@ -280,11 +269,9 @@ namespace UIKit {
 
 
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)]
 #endif
 		public float? Obliqueness {
 			get {
@@ -296,11 +283,9 @@ namespace UIKit {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)]
 #endif
 		public float? Expansion {
 			get {
@@ -312,11 +297,9 @@ namespace UIKit {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)]
 #endif
 		public NSNumber [] WritingDirectionInt {
 			get {

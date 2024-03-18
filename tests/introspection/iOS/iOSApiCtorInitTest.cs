@@ -61,7 +61,7 @@ namespace Introspection {
 				if (TestRuntime.IsSimulatorOrDesktop)
 					return true;
 				// some devices don't support metal and that crash some API that does not check that, e.g. #33153
-				if (!TestRuntime.CheckXcodeVersion (7, 0) || (MTLDevice.SystemDefault == null))
+				if (!TestRuntime.CheckXcodeVersion (7, 0) || (MTLDevice.SystemDefault is null))
 					return true;
 				break;
 #endif // !__WATCHOS__
@@ -75,6 +75,7 @@ namespace Introspection {
 				if (Class.GetHandle ("NFCNDEFReaderSession") == IntPtr.Zero)
 					return true;
 				break;
+			case "Cinematic":
 			case "DeviceCheck": // Only available on device
 			case "MLCompute": // Only available on device
 			case "PushToTalk":
@@ -260,8 +261,6 @@ namespace Introspection {
 			switch (type.Name) {
 			case "SWRemoveParticipantAlertController":
 				return true;
-			default:
-				return false;
 			}
 
 			return base.SkipCheckShouldReExposeBaseCtor (type);

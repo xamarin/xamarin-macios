@@ -57,7 +57,7 @@ namespace Xharness.Jenkins {
 		public void SetEnabled (string label, bool value)
 		{
 			// there are two possible cases, either we are setting a test label OR a platform
-			if (label.TryGetLabel (out TestLabel tLabel)) {
+			if (label.TryGetLabel<TestLabel> (out var tLabel)) {
 				SetEnabled (tLabel, value);
 				// some labels overlap, not ideal, but is just a few
 				switch (tLabel) {
@@ -246,8 +246,6 @@ namespace Xharness.Jenkins {
 			if (!Harness.INCLUDE_IOS) {
 				MainLog?.WriteLine ("The iOS build is disabled, so any iOS tests will be disabled as well.");
 				selection.SetEnabled (PlatformLabel.iOS, false);
-				selection.SetEnabled (PlatformLabel.iOS64, false);
-				selection.SetEnabled (PlatformLabel.iOS32, false);
 			}
 
 			if (!Harness.INCLUDE_WATCH) {

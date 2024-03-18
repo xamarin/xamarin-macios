@@ -7,3 +7,8 @@
 !missing-selector! PKIssuerProvisioningExtensionHandler::remotePassEntriesWithCompletion: not bound
 !missing-selector! PKIssuerProvisioningExtensionHandler::statusWithCompletion: not bound
 !missing-type! PKIssuerProvisioningExtensionHandler not bound
+
+# Breaking change, but added in XAMCORE_5_0
+!incorrect-protocol-member! PKAddSecureElementPassViewControllerDelegate::addSecureElementPassViewController:didFinishAddingSecureElementPass:error: is OPTIONAL and should NOT be abstract
+!extra-null-allowed! 'System.Void PassKit.PKDisbursementRequest::set_CurrencyCode(System.String)' has a extraneous [NullAllowed] on parameter #0
+!extra-null-allowed! 'System.Void PassKit.PKDisbursementRequest::set_SummaryItems(PassKit.PKPaymentSummaryItem[])' has a extraneous [NullAllowed] on parameter #0

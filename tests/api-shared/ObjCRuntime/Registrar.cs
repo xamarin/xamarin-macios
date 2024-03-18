@@ -16,19 +16,36 @@ using ObjCRuntime;
 
 namespace XamarinTests.ObjCRuntime {
 
+	[Flags]
 	public enum Registrars {
 		Static = 1,
+		ManagedStatic = Static | 2,
 		Dynamic = 4,
-		AllStatic = Static,
+		AllStatic = Static | ManagedStatic,
 		AllDynamic = Dynamic,
 	}
-		
+
 	public class Registrar {
 		[Register ("__registration_test_CLASS")]
-		class RegistrationTestClass : NSObject {}
+		class RegistrationTestClass : NSObject { }
+
+		public static bool IsStaticRegistrar {
+			get {
+				return CurrentRegistrar.HasFlag (Registrars.Static);
+			}
+		}
+
+		public static bool IsDynamicRegistrar {
+			get {
+				return CurrentRegistrar.HasFlag (Registrars.Dynamic);
+			}
+		}
 
 		public static Registrars CurrentRegistrar {
 			get {
+				var __registrar__ = typeof (Class).Assembly.GetType ("ObjCRuntime.__Registrar__");
+				if (__registrar__ is not null)
+					return Registrars.ManagedStatic;
 #if NET
 				var types = new Type [] { typeof (NativeHandle), typeof (bool).MakeByRefType () };
 #else

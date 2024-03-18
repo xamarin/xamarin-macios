@@ -1,65 +1,19 @@
 name: Autoformat code
 on: pull_request
 
-#
-# The autoformat action is a 2-parter:
-# Part 1 (this file):
-#     * This is done in a safe context with no secrets (target: pull_request)
-#     * We clone the repo and check out the pull request
-#     * We run 'dotnet format' to format incorrectly formatted code (this is the potentially unsafe action, since who knows what kind of attach vector 'dotnet format' is)
-#     * We see if any code was formatted, and create a commit with those changes.
-#     * We preare a patch for the commit, and store it as an artifact.
-# Part 2 (autoformat2.yml):
-#     * This is done in a context with more powers (most importantly it can push to forks)
-#     * We get the πatch artifact from part 1
-#     * We push the commit, and add a label to the PR.
-#
-# Ref:
-#     https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_run
-#     https://securitylab.github.com/research/github-actions-preventing-pwn-requests/
-#     https://github.com/actions/checkout/issues/455
-#     https://stackoverflow.com/a/65081720/183422
-#
+# This action only need a single permission in order to autoformat the code.
+permissions:
+  contents: read
 
 jobs:
   autoformat-code:
     name: Autoformat code
     runs-on: ubuntu-latest
-    if: contains(github.event.pull_request.labels.*.name, 'actions-disable-autoformat') == false
 
     steps:
-    - name: 'Checkout repo'
-      uses: actions/checkout@v3
-      with:
-        fetch-depth: 0
-        repository: ${{ github.event.pull_request.head.repo.full_name }}
-        ref: ${{ github.event.pull_request.head.sha }}
-
     - name: 'Autoformat'
-      id: autoformat
-      run: |
-        set -exo pipefail
-
-        ./tools/autoformat.sh
-
-        mkdir -p autoformat
-        echo ${{ github.event.number }} > ./autoformat/PR
-
-        if git diff --exit-code >/dev/null; then
-          echo "No code formatting occurred"
-        else
-          git add -- .
-          git reset -- autoformat/PR # Don't add this file to the diff
-          git config --global user.email "github-actions-autoformatter@xamarin.com"
-          git config --global user.name "GitHub Actions Autoformatter"
-          git checkout "$GITHUB_HEAD_REF"
-          git commit -m "Auto-format source code"
-
-          git format-patch HEAD^..HEAD --stdout > ./autoformat/autoformat.patch
-        fi
-
-    - name: 'Upload patch'
-      uses: actions/upload-artifact@v3
+      uses: rolfbjarne/autoformat@v0.2.99
       with:
-        name: autoformat
-        path: autoformat/
+        script: ./tools/autoformat.sh
+        git_user_email: 'github-actions-autoformatter@xamarin.com'
+        git_user_name: 'GitHub Actions Autoformatter'

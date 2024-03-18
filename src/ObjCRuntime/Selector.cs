@@ -73,7 +73,7 @@ namespace ObjCRuntime {
 
 		public string Name {
 			get {
-				if (name == null)
+				if (name is null)
 					name = GetName (handle);
 				return name;
 			}

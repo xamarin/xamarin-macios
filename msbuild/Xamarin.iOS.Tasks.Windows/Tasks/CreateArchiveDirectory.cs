@@ -3,6 +3,9 @@ using Microsoft.Build.Utilities;
 using System;
 using System.IO;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Xamarin.iOS.Tasks.Windows {
 	public class CreateArchiveDirectory : Task {
 		[Required]

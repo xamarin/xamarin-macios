@@ -13,5 +13,8 @@ namespace MySimpleApp {
 
 			return args.Length;
 		}
+
+		[DllImport ("__Internal")]
+		static extern IntPtr getNoLibPrefix ();
 	}
 }

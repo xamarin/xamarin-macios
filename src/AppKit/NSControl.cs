@@ -32,12 +32,14 @@ using System;
 using ObjCRuntime;
 using Foundation;
 
+#nullable enable
+
 namespace AppKit {
 
 	public partial class NSControl {
 		// If you modify, also search for other other XM_ACTIVATED_COPY and update as well
-		NSObject target;
-		Selector action;
+		NSObject? target;
+		Selector? action;
 
 		public event EventHandler Activated {
 			add {

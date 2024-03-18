@@ -26,6 +26,16 @@ This is the scheme: `OsMajor.OsMinor.InternalRelease[-prereleaseX]+sha.1b2c3d4`.
           referencing `iOS *-xcode13-1.beta.*`
         * It's still possible to sign up for all `xcode13-1` builds, by
           referencing `iOS *-ci.xcode11-3.*`
+    * Long versions are sometimes problematic on Windows, because of MAX_PATH
+      issues. Versions for release builds don't contain the pre-release part,
+      and are thus usually short, but pre-release versions (which include an
+      arbitrarily long branch name) can get too long for Windows. This is a
+      complication when testing a release pipeline/process: we have to use
+      final versioning just for testing. This isn't ideal, so we special-case
+      branch names that start with `release-test/rt/`:
+        * Example: `iOS 15.1.123-rt` (and nothing else). This makes these
+          versions exactly 3 characters longer than the release version, which
+          is hopefully enough to avoid MAX_PATH issues on Windows.
 * Build metadata: Required Hash
     * This is `sha.` + the short commit hash.
         * Use the short hash because the long hash is quite long and

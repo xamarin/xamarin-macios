@@ -3,6 +3,8 @@
 using System;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace FileProvider {
 
 #if MONOMAC
@@ -23,7 +25,6 @@ namespace FileProvider {
 
 	[iOS (13, 0)]
 	[Obsoleted (PlatformName.iOS, 14, 0)]
-	[Mac (10, 15)]
 	[Obsoleted (PlatformName.MacOSX, 11, 0)]
 	public interface INSFileProviderItemFlags : INativeObject, IDisposable {
 		bool Hidden { get; }

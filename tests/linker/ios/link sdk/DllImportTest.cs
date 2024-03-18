@@ -56,7 +56,7 @@ namespace LinkSdk {
 #else
 				var hasNewSqlite = hasNewerSqlite || TestRuntime.CheckXcodeVersion (8, 0) && Runtime.Arch == Arch.DEVICE;
 #endif
-				
+
 				var new_symbols = new string [] {
 					"sqlite3_key",
 					"sqlite3_rekey",
@@ -75,8 +75,7 @@ namespace LinkSdk {
 
 				foreach (var symbol in newer_symbols)
 					Assert.That (Dlfcn.dlsym (lib, symbol), hasNewerSqlite ? Is.Not.EqualTo (IntPtr.Zero) : Is.EqualTo (IntPtr.Zero), symbol);
-			}
-			finally {
+			} finally {
 				Dlfcn.dlclose (lib);
 			}
 		}

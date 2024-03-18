@@ -52,7 +52,7 @@ namespace Xamarin.MacDev.Tasks {
 
 			RunTarget (MonoTouchProject, "Build", expectedErrorCount: 1);
 
-			var expectedFile = Path.Combine ("obj", Platform, Config, "actool", "cloned-assets", "Assets.xcassets", "AppIcon.appiconset", "Contents.json");
+			var expectedFile = Path.Combine ("Assets.xcassets", "AppIcon.appiconset", "Contents.json");
 			Assert.AreEqual (expectedFile, Engine.Logger.ErrorEvents [0].File, "File");
 			Assert.AreEqual (197, Engine.Logger.ErrorEvents [0].LineNumber, "LineNumber");
 			Assert.AreEqual (4, Engine.Logger.ErrorEvents [0].ColumnNumber, "ColumnNumber");

@@ -43,6 +43,9 @@ using CoreFoundation;
 using CF = CoreFoundation;
 #endif
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace System.Net.Http {
 	public class CFNetworkHandler : HttpMessageHandler {
 		class StreamBucket {
@@ -55,7 +58,7 @@ namespace System.Net.Http {
 			public void Close ()
 			{
 				CancellationTokenRegistration.Dispose ();
-				if (ContentStream != null) {
+				if (ContentStream is not null) {
 					// The Close method of the CFContentStream blocks as you can see:
 					// public void Close ()
 					// {
@@ -164,7 +167,7 @@ namespace System.Net.Http {
 							wr.Proxy = proxy;
 						}
 			*/
-			if (cookies != null) {
+			if (cookies is not null) {
 				string cookieHeader = cookies.GetCookieHeader (request.RequestUri);
 				if (cookieHeader != "")
 					req.SetHeaderFieldValue ("Cookie", cookieHeader);
@@ -176,7 +179,7 @@ namespace System.Net.Http {
 				}
 			}
 
-			if (request.Content != null) {
+			if (request.Content is not null) {
 				foreach (var header in request.Content.Headers) {
 					foreach (var value in header.Value) {
 						req.SetHeaderFieldValue (header.Key, value);
@@ -201,7 +204,7 @@ namespace System.Net.Http {
 
 			CFHTTPStream stream;
 			using (var message = CreateWebRequestAsync (request)) {
-				if (request.Content != null) {
+				if (request.Content is not null) {
 					var data = await request.Content.ReadAsByteArrayAsync ().ConfigureAwait (false);
 					message.SetBody (data);
 				}
@@ -341,20 +344,20 @@ namespace System.Net.Http {
 			response_msg.Content = bucket.ContentStream;
 
 			var fields = header.GetAllHeaderFields ();
-			if (fields != null) {
+			if (fields is not null) {
 				foreach (var entry in fields) {
-					if (entry.Key == null)
+					if (entry.Key is null)
 						continue;
 
 					var key = entry.Key.ToString ();
-					var value = entry.Value == null ? string.Empty : entry.Value.ToString ();
+					var value = entry.Value is null ? string.Empty : entry.Value.ToString ();
 					HttpHeaders item_headers;
 					if (IsContentHeader (key)) {
 						item_headers = response_msg.Content.Headers;
 					} else {
 						item_headers = response_msg.Headers;
 
-						if (cookies != null && (key == "Set-Cookie" || key == "Set-Cookie2"))
+						if (cookies is not null && (key == "Set-Cookie" || key == "Set-Cookie2"))
 							AddCookie (value, bucket.Request.RequestUri, key);
 					}
 
@@ -388,7 +391,7 @@ namespace System.Net.Http {
 			} catch {
 			}
 
-			if (cookies1 != null && cookies1.Count != 0)
+			if (cookies1 is not null && cookies1.Count != 0)
 				cookies.Add (cookies1);
 #endif
 		}

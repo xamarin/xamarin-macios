@@ -2,11 +2,10 @@
 using System;
 using System.IO;
 using System.Linq;
+using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using NUnit.Framework;
 
-using Xamarin.iOS.Tasks;
-using Xamarin.MacDev;
 using Xamarin.MacDev.Tasks;
 using Xamarin.Utils;
 
@@ -39,6 +38,7 @@ namespace Xamarin.MacDev.Tasks {
 			Assert.AreEqual ($"{Xamarin.Tests.Configuration.XcodeLocation}/Toolchains/XcodeDefault.xctoolchain/usr/bin/codesign_allocate", task.DetectedCodesignAllocate, "DetectedCodesignAllocate");
 			Assert.AreEqual ("Any", task.DetectedDistributionType, "DetectedDistributionType");
 			Assert.IsNull (task.DetectedProvisioningProfile, "DetectedProvisioningProfile");
+			Assert.IsFalse (task.HasEntitlements, "HasEntitlements");
 		}
 
 		const string EmptyEntitlements1 = @"<?xml version=""1.0"" encoding=""UTF-8""?>
@@ -131,6 +131,22 @@ namespace Xamarin.MacDev.Tasks {
 				Assert.IsNull (task.DetectedProvisioningProfile, "DetectedProvisioningProfile");
 			}
 			Assert.AreEqual ($"{Xamarin.Tests.Configuration.XcodeLocation}/Toolchains/XcodeDefault.xctoolchain/usr/bin/codesign_allocate", task.DetectedCodesignAllocate, "DetectedCodesignAllocate");
+		}
+
+		[Test]
+		public void CustomEntitlements ()
+		{
+			var dir = Cache.CreateTemporaryDirectory ();
+			var task = CreateTask (dir);
+			task.CustomEntitlements = new ITaskItem [] { new TaskItem ("keychain-access-group") };
+			ExecuteTask (task);
+
+			Assert.IsNull (task.DetectedAppId, "DetectedAppId");
+			Assert.AreEqual ("-", task.DetectedCodeSigningKey, "DetectedCodeSigningKey");
+			Assert.AreEqual ($"{Xamarin.Tests.Configuration.XcodeLocation}/Toolchains/XcodeDefault.xctoolchain/usr/bin/codesign_allocate", task.DetectedCodesignAllocate, "DetectedCodesignAllocate");
+			Assert.AreEqual ("Any", task.DetectedDistributionType, "DetectedDistributionType");
+			Assert.IsNull (task.DetectedProvisioningProfile, "DetectedProvisioningProfile");
+			Assert.IsTrue (task.HasEntitlements, "HasEntitlements");
 		}
 	}
 }

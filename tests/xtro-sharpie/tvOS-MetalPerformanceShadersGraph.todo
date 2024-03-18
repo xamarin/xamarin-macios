@@ -32,9 +32,7 @@
 !missing-selector! MPSGraph::squeezeTensor:name: not bound
 !missing-selector! MPSGraph::stackTensors:axis:name: not bound
 !missing-selector! MPSGraphCompilationDescriptor::optimizationLevel not bound
-!missing-selector! MPSGraphCompilationDescriptor::optimizationProfile not bound
 !missing-selector! MPSGraphCompilationDescriptor::setOptimizationLevel: not bound
-!missing-selector! MPSGraphCompilationDescriptor::setOptimizationProfile: not bound
 !missing-selector! MPSGraphExecutionDescriptor::compilationDescriptor not bound
 !missing-selector! MPSGraphExecutionDescriptor::setCompilationDescriptor: not bound
 !missing-selector! MPSGraphPooling2DOpDescriptor::returnIndicesDataType not bound
@@ -188,3 +186,159 @@
 !missing-selector! MPSGraph::inverseOfTensor:name: not bound
 !missing-selector! MPSGraph::spaceToBatchTensor:spatialAxes:batchAxis:blockDimensions:usePixelShuffleOrder:name: not bound
 !missing-selector! MPSGraph::spaceToBatchTensor:spatialAxesTensor:batchAxisTensor:blockDimensionsTensor:usePixelShuffleOrder:name: not bound
+!missing-enum-value! MPSGraphTensorNamedDataLayout native value MPSGraphTensorNamedDataLayoutDHWIO = 10 not bound
+!missing-enum-value! MPSGraphTensorNamedDataLayout native value MPSGraphTensorNamedDataLayoutNCDHW = 7 not bound
+!missing-enum-value! MPSGraphTensorNamedDataLayout native value MPSGraphTensorNamedDataLayoutNDHWC = 8 not bound
+!missing-enum-value! MPSGraphTensorNamedDataLayout native value MPSGraphTensorNamedDataLayoutOIDHW = 9 not bound
+!missing-selector! +MPSGraphConvolution3DOpDescriptor::descriptorWithStrideInX:strideInY:strideInZ:dilationRateInX:dilationRateInY:dilationRateInZ:groups:paddingLeft:paddingRight:paddingTop:paddingBottom:paddingFront:paddingBack:paddingStyle:dataLayout:weightsLayout: not bound
+!missing-selector! +MPSGraphConvolution3DOpDescriptor::descriptorWithStrideInX:strideInY:strideInZ:dilationRateInX:dilationRateInY:dilationRateInZ:groups:paddingStyle:dataLayout:weightsLayout: not bound
+!missing-selector! MPSGraph::convolution3DDataGradientWithIncomingGradientTensor:weightsTensor:outputShape:forwardConvolutionDescriptor:name: not bound
+!missing-selector! MPSGraph::convolution3DDataGradientWithIncomingGradientTensor:weightsTensor:outputShapeTensor:forwardConvolutionDescriptor:name: not bound
+!missing-selector! MPSGraph::convolution3DWeightsGradientWithIncomingGradientTensor:sourceTensor:outputShape:forwardConvolutionDescriptor:name: not bound
+!missing-selector! MPSGraph::convolution3DWeightsGradientWithIncomingGradientTensor:sourceTensor:outputShapeTensor:forwardConvolutionDescriptor:name: not bound
+!missing-selector! MPSGraph::convolution3DWithSourceTensor:weightsTensor:descriptor:name: not bound
+!missing-selector! MPSGraph::dequantizeTensor:scale:zeroPoint:dataType:name: not bound
+!missing-selector! MPSGraph::dequantizeTensor:scaleTensor:zeroPoint:dataType:axis:name: not bound
+!missing-selector! MPSGraph::dequantizeTensor:scaleTensor:zeroPointTensor:dataType:axis:name: not bound
+!missing-selector! MPSGraph::quantizeTensor:scale:zeroPoint:dataType:name: not bound
+!missing-selector! MPSGraph::quantizeTensor:scaleTensor:zeroPoint:dataType:axis:name: not bound
+!missing-selector! MPSGraph::quantizeTensor:scaleTensor:zeroPointTensor:dataType:axis:name: not bound
+!missing-selector! MPSGraph::reinterpretCastTensor:toType:name: not bound
+!missing-selector! MPSGraph::sampleGridWithSourceTensor:coordinateTensor:layout:normalizeCoordinates:relativeCoordinates:alignCorners:paddingMode:nearestRoundingMode:constantValue:name: not bound
+!missing-selector! MPSGraph::sampleGridWithSourceTensor:coordinateTensor:layout:normalizeCoordinates:relativeCoordinates:alignCorners:paddingMode:samplingMode:constantValue:name: not bound
+!missing-selector! MPSGraphConvolution3DOpDescriptor::dataLayout not bound
+!missing-selector! MPSGraphConvolution3DOpDescriptor::dilationRateInX not bound
+!missing-selector! MPSGraphConvolution3DOpDescriptor::dilationRateInY not bound
+!missing-selector! MPSGraphConvolution3DOpDescriptor::dilationRateInZ not bound
+!missing-selector! MPSGraphConvolution3DOpDescriptor::groups not bound
+!missing-selector! MPSGraphConvolution3DOpDescriptor::paddingBack not bound
+!missing-selector! MPSGraphConvolution3DOpDescriptor::paddingBottom not bound
+!missing-selector! MPSGraphConvolution3DOpDescriptor::paddingFront not bound
+!missing-selector! MPSGraphConvolution3DOpDescriptor::paddingLeft not bound
+!missing-selector! MPSGraphConvolution3DOpDescriptor::paddingRight not bound
+!missing-selector! MPSGraphConvolution3DOpDescriptor::paddingStyle not bound
+!missing-selector! MPSGraphConvolution3DOpDescriptor::paddingTop not bound
+!missing-selector! MPSGraphConvolution3DOpDescriptor::setDataLayout: not bound
+!missing-selector! MPSGraphConvolution3DOpDescriptor::setDilationRateInX: not bound
+!missing-selector! MPSGraphConvolution3DOpDescriptor::setDilationRateInY: not bound
+!missing-selector! MPSGraphConvolution3DOpDescriptor::setDilationRateInZ: not bound
+!missing-selector! MPSGraphConvolution3DOpDescriptor::setExplicitPaddingWithPaddingLeft:paddingRight:paddingTop:paddingBottom:paddingFront:paddingBack: not bound
+!missing-selector! MPSGraphConvolution3DOpDescriptor::setGroups: not bound
+!missing-selector! MPSGraphConvolution3DOpDescriptor::setPaddingBack: not bound
+!missing-selector! MPSGraphConvolution3DOpDescriptor::setPaddingBottom: not bound
+!missing-selector! MPSGraphConvolution3DOpDescriptor::setPaddingFront: not bound
+!missing-selector! MPSGraphConvolution3DOpDescriptor::setPaddingLeft: not bound
+!missing-selector! MPSGraphConvolution3DOpDescriptor::setPaddingRight: not bound
+!missing-selector! MPSGraphConvolution3DOpDescriptor::setPaddingStyle: not bound
+!missing-selector! MPSGraphConvolution3DOpDescriptor::setPaddingTop: not bound
+!missing-selector! MPSGraphConvolution3DOpDescriptor::setStrideInX: not bound
+!missing-selector! MPSGraphConvolution3DOpDescriptor::setStrideInY: not bound
+!missing-selector! MPSGraphConvolution3DOpDescriptor::setStrideInZ: not bound
+!missing-selector! MPSGraphConvolution3DOpDescriptor::setWeightsLayout: not bound
+!missing-selector! MPSGraphConvolution3DOpDescriptor::strideInX not bound
+!missing-selector! MPSGraphConvolution3DOpDescriptor::strideInY not bound
+!missing-selector! MPSGraphConvolution3DOpDescriptor::strideInZ not bound
+!missing-selector! MPSGraphConvolution3DOpDescriptor::weightsLayout not bound
+!missing-selector! MPSGraphExecutable::getOutputTypesWithDevice:inputTypes:compilationDescriptor: not bound
+!missing-type! MPSGraphConvolution3DOpDescriptor not bound
+!missing-enum! MPSGraphDeploymentPlatform not bound
+!missing-enum! MPSGraphFFTScalingMode not bound
+!missing-enum! MPSGraphNonMaximumSuppressionCoordinateMode not bound
+!missing-selector! +MPSGraphFFTDescriptor::descriptor not bound
+!missing-selector! +MPSGraphImToColOpDescriptor::descriptorWithKernelWidth:kernelHeight:strideInX:strideInY:dilationRateInX:dilationRateInY:dataLayout: not bound
+!missing-selector! +MPSGraphImToColOpDescriptor::descriptorWithKernelWidth:kernelHeight:strideInX:strideInY:dilationRateInX:dilationRateInY:paddingLeft:paddingRight:paddingTop:paddingBottom:dataLayout: not bound
+!missing-selector! MPSGraph::absoluteSquareWithTensor:name: not bound
+!missing-selector! MPSGraph::bottomKWithGradientTensor:source:axis:k:name: not bound
+!missing-selector! MPSGraph::bottomKWithGradientTensor:source:axisTensor:kTensor:name: not bound
+!missing-selector! MPSGraph::bottomKWithSourceTensor:axis:k:name: not bound
+!missing-selector! MPSGraph::bottomKWithSourceTensor:axisTensor:kTensor:name: not bound
+!missing-selector! MPSGraph::colToImWithSourceTensor:outputShape:descriptor:name: not bound
+!missing-selector! MPSGraph::complexTensorWithRealTensor:imaginaryTensor:name: not bound
+!missing-selector! MPSGraph::conjugateWithTensor:name: not bound
+!missing-selector! MPSGraph::constantWithRealPart:imaginaryPart: not bound
+!missing-selector! MPSGraph::constantWithRealPart:imaginaryPart:dataType: not bound
+!missing-selector! MPSGraph::constantWithRealPart:imaginaryPart:shape:dataType: not bound
+!missing-selector! MPSGraph::fastFourierTransformWithTensor:axes:descriptor:name: not bound
+!missing-selector! MPSGraph::fastFourierTransformWithTensor:axesTensor:descriptor:name: not bound
+!missing-selector! MPSGraph::HermiteanToRealFFTWithTensor:axes:descriptor:name: not bound
+!missing-selector! MPSGraph::HermiteanToRealFFTWithTensor:axesTensor:descriptor:name: not bound
+!missing-selector! MPSGraph::imaginaryPartOfTensor:name: not bound
+!missing-selector! MPSGraph::imToColWithSourceTensor:descriptor:name: not bound
+!missing-selector! MPSGraph::nonMaximumSuppressionWithBoxesTensor:scoresTensor:classIndicesTensor:IOUThreshold:scoreThreshold:perClassSuppression:coordinateMode:name: not bound
+!missing-selector! MPSGraph::nonMaximumSuppressionWithBoxesTensor:scoresTensor:IOUThreshold:scoreThreshold:perClassSuppression:coordinateMode:name: not bound
+!missing-selector! MPSGraph::nonZeroIndicesOfTensor:name: not bound
+!missing-selector! MPSGraph::realPartOfTensor:name: not bound
+!missing-selector! MPSGraph::realToHermiteanFFTWithTensor:axes:descriptor:name: not bound
+!missing-selector! MPSGraph::realToHermiteanFFTWithTensor:axesTensor:descriptor:name: not bound
+!missing-selector! MPSGraph::resizeBilinearWithGradientTensor:input:scaleTensor:offsetTensor:name: not bound
+!missing-selector! MPSGraph::resizeBilinearWithTensor:sizeTensor:centerResult:alignCorners:name: not bound
+!missing-selector! MPSGraph::resizeBilinearWithTensor:sizeTensor:scaleTensor:offsetTensor:name: not bound
+!missing-selector! MPSGraph::resizeNearestWithGradientTensor:input:scaleTensor:offsetTensor:nearestRoundingMode:name: not bound
+!missing-selector! MPSGraph::resizeNearestWithTensor:sizeTensor:nearestRoundingMode:centerResult:alignCorners:name: not bound
+!missing-selector! MPSGraph::resizeNearestWithTensor:sizeTensor:scaleTensor:offsetTensor:nearestRoundingMode:name: not bound
+!missing-selector! MPSGraph::resizeTensor:sizeTensor:mode:centerResult:alignCorners:name: not bound
+!missing-selector! MPSGraph::resizeTensor:sizeTensor:scaleTensor:offsetTensor:mode:name: not bound
+!missing-selector! MPSGraph::resizeWithGradientTensor:input:scaleTensor:offsetTensor:mode:name: not bound
+!missing-selector! MPSGraph::topKWithGradientTensor:source:axis:k:name: not bound
+!missing-selector! MPSGraph::topKWithGradientTensor:source:axisTensor:kTensor:name: not bound
+!missing-selector! MPSGraph::topKWithSourceTensor:axis:k:name: not bound
+!missing-selector! MPSGraph::topKWithSourceTensor:axisTensor:kTensor:name: not bound
+!missing-selector! MPSGraphExecutable::initWithMPSGraphPackageAtURL:compilationDescriptor: not bound
+!missing-selector! MPSGraphExecutable::serializeToMPSGraphPackageAtURL:descriptor: not bound
+!missing-selector! MPSGraphExecutableSerializationDescriptor::append not bound
+!missing-selector! MPSGraphExecutableSerializationDescriptor::deploymentPlatform not bound
+!missing-selector! MPSGraphExecutableSerializationDescriptor::minimumDeploymentTarget not bound
+!missing-selector! MPSGraphExecutableSerializationDescriptor::setAppend: not bound
+!missing-selector! MPSGraphExecutableSerializationDescriptor::setDeploymentPlatform: not bound
+!missing-selector! MPSGraphExecutableSerializationDescriptor::setMinimumDeploymentTarget: not bound
+!missing-selector! MPSGraphFFTDescriptor::inverse not bound
+!missing-selector! MPSGraphFFTDescriptor::roundToOddHermitean not bound
+!missing-selector! MPSGraphFFTDescriptor::scalingMode not bound
+!missing-selector! MPSGraphFFTDescriptor::setInverse: not bound
+!missing-selector! MPSGraphFFTDescriptor::setRoundToOddHermitean: not bound
+!missing-selector! MPSGraphFFTDescriptor::setScalingMode: not bound
+!missing-selector! MPSGraphImToColOpDescriptor::dataLayout not bound
+!missing-selector! MPSGraphImToColOpDescriptor::dilationRateInX not bound
+!missing-selector! MPSGraphImToColOpDescriptor::dilationRateInY not bound
+!missing-selector! MPSGraphImToColOpDescriptor::kernelHeight not bound
+!missing-selector! MPSGraphImToColOpDescriptor::kernelWidth not bound
+!missing-selector! MPSGraphImToColOpDescriptor::paddingBottom not bound
+!missing-selector! MPSGraphImToColOpDescriptor::paddingLeft not bound
+!missing-selector! MPSGraphImToColOpDescriptor::paddingRight not bound
+!missing-selector! MPSGraphImToColOpDescriptor::paddingTop not bound
+!missing-selector! MPSGraphImToColOpDescriptor::setDataLayout: not bound
+!missing-selector! MPSGraphImToColOpDescriptor::setDilationRateInX: not bound
+!missing-selector! MPSGraphImToColOpDescriptor::setDilationRateInY: not bound
+!missing-selector! MPSGraphImToColOpDescriptor::setExplicitPaddingWithPaddingLeft:paddingRight:paddingTop:paddingBottom: not bound
+!missing-selector! MPSGraphImToColOpDescriptor::setKernelHeight: not bound
+!missing-selector! MPSGraphImToColOpDescriptor::setKernelWidth: not bound
+!missing-selector! MPSGraphImToColOpDescriptor::setPaddingBottom: not bound
+!missing-selector! MPSGraphImToColOpDescriptor::setPaddingLeft: not bound
+!missing-selector! MPSGraphImToColOpDescriptor::setPaddingRight: not bound
+!missing-selector! MPSGraphImToColOpDescriptor::setPaddingTop: not bound
+!missing-selector! MPSGraphImToColOpDescriptor::setStrideInX: not bound
+!missing-selector! MPSGraphImToColOpDescriptor::setStrideInY: not bound
+!missing-selector! MPSGraphImToColOpDescriptor::strideInX not bound
+!missing-selector! MPSGraphImToColOpDescriptor::strideInY not bound
+!missing-type! MPSGraphExecutableSerializationDescriptor not bound
+!missing-type! MPSGraphFFTDescriptor not bound
+!missing-type! MPSGraphImToColOpDescriptor not bound
+!missing-type! MPSGraphObject not bound
+!wrong-base-type! MPSGraph expected MPSGraphObject actual NSObject
+!wrong-base-type! MPSGraphCompilationDescriptor expected MPSGraphObject actual NSObject
+!wrong-base-type! MPSGraphConvolution2DOpDescriptor expected MPSGraphObject actual NSObject
+!wrong-base-type! MPSGraphCreateSparseOpDescriptor expected MPSGraphObject actual NSObject
+!wrong-base-type! MPSGraphDepthwiseConvolution2DOpDescriptor expected MPSGraphObject actual NSObject
+!wrong-base-type! MPSGraphDepthwiseConvolution3DOpDescriptor expected MPSGraphObject actual NSObject
+!wrong-base-type! MPSGraphDevice expected MPSGraphObject actual NSObject
+!wrong-base-type! MPSGraphExecutable expected MPSGraphObject actual NSObject
+!wrong-base-type! MPSGraphExecutableExecutionDescriptor expected MPSGraphObject actual NSObject
+!wrong-base-type! MPSGraphExecutionDescriptor expected MPSGraphObject actual NSObject
+!wrong-base-type! MPSGraphOperation expected MPSGraphObject actual NSObject
+!wrong-base-type! MPSGraphPooling2DOpDescriptor expected MPSGraphObject actual NSObject
+!wrong-base-type! MPSGraphPooling4DOpDescriptor expected MPSGraphObject actual NSObject
+!wrong-base-type! MPSGraphRandomOpDescriptor expected MPSGraphObject actual NSObject
+!wrong-base-type! MPSGraphStencilOpDescriptor expected MPSGraphObject actual NSObject
+!wrong-base-type! MPSGraphTensor expected MPSGraphObject actual NSObject
+!wrong-base-type! MPSGraphTensorData expected MPSGraphObject actual NSObject
+!wrong-base-type! MPSGraphType expected MPSGraphObject actual NSObject

@@ -965,23 +965,27 @@ namespace SceneKit {
 
 #region Multiply Functions
 
+#if XAMCORE_5_0
 		/// <summary>
 		/// Combines two transformation matrices.
 		/// </summary>
-#if XAMCORE_5_0
 		/// <remarks>
 		/// Combining two transformation matrices means using matrix multiplication to multiply them in the reverse order (secondTransformation * firstTransformation).
 		/// </remarks>
 		/// <param name="firstTransformation">The first transformation of the combination.</param>
 		/// <param name="secondTransformation">The second transformation of the combination.</param>
+		/// <returns>A new instance that is the result of the combination</returns>
 #else
+		/// <summary>
+		/// Combines two transformation matrices.
+		/// </summary>
 		/// <remarks>
 		/// Combining two transformation matrices means using matrix multiplication to multiply them in the reverse order (right * left).
 		/// </remarks>
 		/// <param name="left">The first transformation of the combination.</param>
 		/// <param name="right">The second transformation of the combination.</param>
-#endif
 		/// <returns>A new instance that is the result of the combination</returns>
+#endif
 #if XAMCORE_5_0
 		public static SCNMatrix4 Mult (SCNMatrix4 firstTransformation, SCNMatrix4 secondTransformation)
 #else
@@ -998,23 +1002,27 @@ namespace SceneKit {
 			return result;
 		}
 
+#if XAMCORE_5_0
 		/// <summary>
 		/// Combines two transformation matrices.
 		/// </summary>
-#if XAMCORE_5_0
 		/// <remarks>
 		/// Combining two transformation matrices means using matrix multiplication to multiply them in the reverse order (secondTransformation * firstTransformation).
 		/// </remarks>
 		/// <param name="firstTransformation">The first transformation of the combination.</param>
 		/// <param name="secondTransformation">The second transformation of the combination.</param>
+		/// <param name="result">A new instance that is the result of the combination</param>
 #else
+		/// <summary>
+		/// Combines two transformation matrices.
+		/// </summary>
 		/// <remarks>
 		/// Combining two transformation matrices means using matrix multiplication to multiply them in the reverse order (right * left).
 		/// </remarks>
 		/// <param name="left">The first transformation of the combination.</param>
 		/// <param name="right">The second transformation of the combination.</param>
-#endif
 		/// <param name="result">A new instance that is the result of the combination</param>
+#endif
 #if XAMCORE_5_0
 		public static void Mult (ref SCNMatrix4 firstTransformation, ref SCNMatrix4 secondTransformation, out SCNMatrix4 result)
 #else
@@ -1138,7 +1146,7 @@ namespace SceneKit {
 		/// <summary>
 		/// Calculate the inverse of the given matrix
 		/// </summary>
-		/// <param name="mat">The matrix to invert</param>
+		/// <param name="matrix">The matrix to invert</param>
 		/// <returns>The inverse of the given matrix if it has one, or the input if it is singular</returns>
 		/// <exception cref="InvalidOperationException">Thrown if the SCNMatrix4 is singular.</exception>
 		public static SCNMatrix4 Invert (SCNMatrix4 matrix)
@@ -1237,7 +1245,7 @@ namespace SceneKit {
 		/// <returns>A System.Int32 containing the unique hashcode for this instance.</returns>
 		public override int GetHashCode ()
 		{
-			return Column0.GetHashCode () ^ Column1.GetHashCode () ^ Column2.GetHashCode () ^ Column3.GetHashCode ();
+			return HashCode.Combine(Column0, Column1, Column2, Column3);
 		}
 
 #endregion

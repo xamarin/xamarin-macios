@@ -1,5 +1,7 @@
 using System;
 
+#nullable enable
+
 namespace ObjCRuntime {
 	//
 	// BindAsAttribute
@@ -43,23 +45,23 @@ namespace ObjCRuntime {
 			Type = type;
 		}
 		public Type Type;
-		public Type OriginalType;
+		public Type? OriginalType;
 #if BGENERATOR
-		Type nullable;
-		Type GetNullable (Generator generator)
+		Type? nullable;
+		Type? GetNullable (Generator generator)
 		{
-			if (nullable == null)
-				nullable = Type.IsArray ? generator.TypeManager.GetUnderlyingNullableType (Type.GetElementType ()) : generator.TypeManager.GetUnderlyingNullableType (Type);
+			if (nullable is null)
+				nullable = Type.IsArray ? generator.TypeManager.GetUnderlyingNullableType (Type.GetElementType ()!) : generator.TypeManager.GetUnderlyingNullableType (Type);
 			return nullable;
 		}
 
 		internal bool IsNullable (Generator generator)
 		{
-			return GetNullable (generator) != null;
+			return GetNullable (generator) is not null;
 		}
 		internal bool IsValueType (Generator generator)
 		{
-			return IsNullable (generator) ? GetNullable (generator).IsValueType : Type.IsValueType;
+			return IsNullable (generator) ? GetNullable (generator)!.IsValueType : Type.IsValueType;
 
 		}
 #endif

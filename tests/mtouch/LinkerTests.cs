@@ -5,11 +5,9 @@ using NUnit.Framework;
 
 using MTouchLinker = Xamarin.Tests.LinkerOption;
 
-namespace Xamarin.Linker
-{
+namespace Xamarin.Linker {
 	[TestFixture]
-	public partial class Preservation
-	{
+	public partial class Preservation {
 		[Test]
 		public void PreserveParameterInfoInXml ()
 		{

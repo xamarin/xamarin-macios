@@ -13,6 +13,7 @@
 #if !WATCH
 
 using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 
@@ -86,7 +87,7 @@ namespace AudioToolbox {
 	// MusicPlayer.h
 	public class MusicPlayer : DisposableObject {
 		[DllImport (Constants.AudioToolboxLibrary)]
-		extern static /* OSStatus */ MusicPlayerStatus NewMusicPlayer (/* MusicPlayer* */ out IntPtr outPlayer);
+		unsafe extern static /* OSStatus */ MusicPlayerStatus NewMusicPlayer (/* MusicPlayer* */ IntPtr* outPlayer);
 
 		[DllImport (Constants.AudioToolboxLibrary)]
 		extern static /* OSStatus */ MusicPlayerStatus DisposeMusicPlayer (/* MusicPlayer */ IntPtr inPlayer);
@@ -97,7 +98,7 @@ namespace AudioToolbox {
 		{
 		}
 
-		new protected virtual void Dispose (bool disposing)
+		protected override void Dispose (bool disposing)
 		{
 			currentSequence = null;
 			if (Owns && Handle != IntPtr.Zero)
@@ -105,9 +106,10 @@ namespace AudioToolbox {
 			base.Dispose (disposing);
 		}
 
-		static IntPtr Create ()
+		unsafe static IntPtr Create ()
 		{
-			var result = NewMusicPlayer (out var handle);
+			IntPtr handle;
+			var result = NewMusicPlayer (&handle);
 			if (result == MusicPlayerStatus.Success)
 				return handle;
 			throw new Exception ("Unable to create MusicPlayer: " + result);
@@ -120,7 +122,10 @@ namespace AudioToolbox {
 
 		static public MusicPlayer? Create (out MusicPlayerStatus OSstatus)
 		{
-			OSstatus = NewMusicPlayer (out var handle);
+			IntPtr handle;
+			unsafe {
+				OSstatus = NewMusicPlayer (&handle);
+			}
 			if (OSstatus == 0)
 				return new MusicPlayer (handle, true);
 			return null;
@@ -131,19 +136,35 @@ namespace AudioToolbox {
 		// note: MusicTimeStamp -> Float64
 
 		[DllImport (Constants.AudioToolboxLibrary)]
-		extern static /* OSStatus */ MusicPlayerStatus MusicPlayerGetTime (/* MusicPlayer */ IntPtr inPlayer, /* MusicTimeStamp* */ out double outTime);
+		unsafe extern static /* OSStatus */ MusicPlayerStatus MusicPlayerGetTime (/* MusicPlayer */ IntPtr inPlayer, /* MusicTimeStamp* */ double* outTime);
 
 		[DllImport (Constants.AudioToolboxLibrary)]
 		extern static /* OSStatus */ MusicPlayerStatus MusicPlayerSetTime (/* MusicPlayer */ IntPtr inPlayer, /* MusicTimeStamp* */ double inTime);
 
 		public double Time {
 			get {
-				MusicPlayerGetTime (Handle, out var time);
+				double time;
+				unsafe {
+					MusicPlayerGetTime (Handle, &time);
+				}
 				return time;
 			}
 			set {
 				MusicPlayerSetTime (Handle, value);
 			}
+		}
+
+		public MusicPlayerStatus GetTime (out double time)
+		{
+			time = 0;
+			unsafe {
+				return MusicPlayerGetTime (Handle, (double*) Unsafe.AsPointer<double> (ref time));
+			}
+		}
+
+		public MusicPlayerStatus SetTime (double time)
+		{
+			return MusicPlayerSetTime (Handle, time);
 		}
 
 		[DllImport (Constants.AudioToolboxLibrary)]
@@ -171,12 +192,15 @@ namespace AudioToolbox {
 		}
 
 		[DllImport (Constants.AudioToolboxLibrary)]
-		extern static /* OSStatus */ MusicPlayerStatus MusicPlayerIsPlaying (/* MusicPlayer */ IntPtr inPlayer, /* Boolean* */ [MarshalAs (UnmanagedType.I1)] out bool outIsPlaying);
+		unsafe extern static /* OSStatus */ MusicPlayerStatus MusicPlayerIsPlaying (/* MusicPlayer */ IntPtr inPlayer, /* Boolean* */ byte* outIsPlaying);
 
 		public bool IsPlaying {
 			get {
-				MusicPlayerIsPlaying (Handle, out var res);
-				return res;
+				byte res;
+				unsafe {
+					MusicPlayerIsPlaying (Handle, &res);
+				}
+				return res != 0;
 			}
 		}
 
@@ -184,11 +208,14 @@ namespace AudioToolbox {
 		extern static /* OSStatus */ MusicPlayerStatus MusicPlayerSetPlayRateScalar (/* MusicPlayer */ IntPtr inPlayer, /* Float64 */ double inScaleRate);
 
 		[DllImport (Constants.AudioToolboxLibrary)]
-		extern static /* OSStatus */ MusicPlayerStatus MusicPlayerGetPlayRateScalar (/* MusicPlayer */ IntPtr inPlayer, /* Float64* */ out double outScaleRate);
+		unsafe extern static /* OSStatus */ MusicPlayerStatus MusicPlayerGetPlayRateScalar (/* MusicPlayer */ IntPtr inPlayer, /* Float64* */ double* outScaleRate);
 
 		public double PlayRateScalar {
 			get {
-				MusicPlayerGetPlayRateScalar (Handle, out var rate);
+				double rate;
+				unsafe {
+					MusicPlayerGetPlayRateScalar (Handle, &rate);
+				}
 				return rate;
 			}
 			set {
@@ -197,34 +224,43 @@ namespace AudioToolbox {
 		}
 
 		[DllImport (Constants.AudioToolboxLibrary)]
-		extern static /* OSStatus */ MusicPlayerStatus MusicPlayerGetHostTimeForBeats (/* MusicPlayer */ IntPtr inPlayer, /* MusicTimeStamp */ double inBeats, /* UInt64* */ out long outHostTime);
+		unsafe extern static /* OSStatus */ MusicPlayerStatus MusicPlayerGetHostTimeForBeats (/* MusicPlayer */ IntPtr inPlayer, /* MusicTimeStamp */ double inBeats, /* UInt64* */ long* outHostTime);
 
 		public MusicPlayerStatus GetHostTimeForBeats (double beats, out long hostTime)
 		{
-			return MusicPlayerGetHostTimeForBeats (Handle, beats, out hostTime);
+			hostTime = 0;
+			unsafe {
+				return MusicPlayerGetHostTimeForBeats (Handle, beats, (long*) Unsafe.AsPointer<long> (ref hostTime));
+			}
 		}
 
 		[DllImport (Constants.AudioToolboxLibrary)]
-		extern static /* OSStatus */ MusicPlayerStatus MusicPlayerGetBeatsForHostTime (/* MusicPlayer */ IntPtr inPlayer, /* UInt64 */ long inHostTime, /* MusicTimeStamp* */ out double outBeats);
+		unsafe extern static /* OSStatus */ MusicPlayerStatus MusicPlayerGetBeatsForHostTime (/* MusicPlayer */ IntPtr inPlayer, /* UInt64 */ long inHostTime, /* MusicTimeStamp* */ double* outBeats);
 
 		public MusicPlayerStatus GetBeatsForHostTime (long hostTime, out double beats)
 		{
-			return MusicPlayerGetBeatsForHostTime (Handle, hostTime, out beats);
+			beats = 0;
+			unsafe {
+				return MusicPlayerGetBeatsForHostTime (Handle, hostTime, (double*) Unsafe.AsPointer<double> (ref beats));
+			}
 		}
 
 
 		[DllImport (Constants.AudioToolboxLibrary)]
-		extern static /* OSStatus */ MusicPlayerStatus MusicPlayerGetSequence (/* MusicPlayer */ IntPtr inPlayer, /* MusicSequence* */ out IntPtr outSequence);
+		unsafe extern static /* OSStatus */ MusicPlayerStatus MusicPlayerGetSequence (/* MusicPlayer */ IntPtr inPlayer, /* MusicSequence* */ IntPtr* outSequence);
 
 		[DllImport (Constants.AudioToolboxLibrary)]
 		extern static /* OSStatus */ MusicPlayerStatus MusicPlayerSetSequence (/* MusicPlayer */ IntPtr inPlayer, IntPtr inSequence);
 
 		public MusicSequence? MusicSequence {
 			get {
-				if (MusicPlayerGetSequence (Handle, out var seqHandle) == MusicPlayerStatus.Success)
-					return MusicSequence.Lookup (seqHandle);
-				else
-					return null;
+				IntPtr seqHandle;
+				unsafe {
+					if (MusicPlayerGetSequence (Handle, &seqHandle) == MusicPlayerStatus.Success)
+						return MusicSequence.Lookup (seqHandle);
+				}
+
+				return null;
 			}
 			set {
 				currentSequence = value;

@@ -1,0 +1,4 @@
+!missing-enum-value! VTDecodeInfoFlags native value kVTDecodeInfo_SkippedLeadingFrameDropped = 8 not bound
+!missing-field! kVTDecompressionPropertyKey_GeneratePerFrameHDRDisplayMetadata not bound
+!missing-pinvoke! VTIsStereoMVHEVCDecodeSupported is not bound
+!missing-pinvoke! VTIsStereoMVHEVCEncodeSupported is not bound

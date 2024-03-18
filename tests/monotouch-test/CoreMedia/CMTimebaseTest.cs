@@ -112,7 +112,7 @@ namespace MonoTouchFixtures.CoreMedia {
 		// A returned item should be null if not valid in that context or have a valid handle
 		void AssertNullOrValidHandle (INativeObject o, string description)
 		{
-			if (o == null)
+			if (o is null)
 				return;
 			Assert.AreNotEqual (IntPtr.Zero, o.Handle, "AssertNullOrValidHandle - " + description);
 		}

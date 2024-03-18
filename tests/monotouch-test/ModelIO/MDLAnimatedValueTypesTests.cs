@@ -515,18 +515,18 @@ namespace MonoTouchFixtures.ModelIO {
 		[Test]
 		public unsafe void OpenTKSizeOfTests ()
 		{
-			Assert.AreEqual (sizeof (Matrix4), Marshal.SizeOf (typeof (Matrix4)));
-			Assert.AreEqual (sizeof (Matrix4d), Marshal.SizeOf (typeof (Matrix4d)));
+			Assert.AreEqual (sizeof (Matrix4), Marshal.SizeOf<Matrix4> ());
+			Assert.AreEqual (sizeof (Matrix4d), Marshal.SizeOf<Matrix4d> ());
 
-			Assert.AreEqual (sizeof (Quaternion), Marshal.SizeOf (typeof (Quaternion)));
-			Assert.AreEqual (sizeof (Quaterniond), Marshal.SizeOf (typeof (Quaterniond)));
+			Assert.AreEqual (sizeof (Quaternion), Marshal.SizeOf<Quaternion> ());
+			Assert.AreEqual (sizeof (Quaterniond), Marshal.SizeOf<Quaterniond> ());
 
-			Assert.AreEqual (sizeof (Vector2), Marshal.SizeOf (typeof (Vector2)));
-			Assert.AreEqual (sizeof (Vector3), Marshal.SizeOf (typeof (Vector3)));
-			Assert.AreEqual (sizeof (Vector4), Marshal.SizeOf (typeof (Vector4)));
-			Assert.AreEqual (sizeof (Vector2d), Marshal.SizeOf (typeof (Vector2d)));
-			Assert.AreEqual (sizeof (Vector3d), Marshal.SizeOf (typeof (Vector3d)));
-			Assert.AreEqual (sizeof (Vector4d), Marshal.SizeOf (typeof (Vector4d)));
+			Assert.AreEqual (sizeof (Vector2), Marshal.SizeOf<Vector2> ());
+			Assert.AreEqual (sizeof (Vector3), Marshal.SizeOf<Vector3> ());
+			Assert.AreEqual (sizeof (Vector4), Marshal.SizeOf<Vector4> ());
+			Assert.AreEqual (sizeof (Vector2d), Marshal.SizeOf<Vector2d> ());
+			Assert.AreEqual (sizeof (Vector3d), Marshal.SizeOf<Vector3d> ());
+			Assert.AreEqual (sizeof (Vector4d), Marshal.SizeOf<Vector4d> ());
 		}
 
 	}

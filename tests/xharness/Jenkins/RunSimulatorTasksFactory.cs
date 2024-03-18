@@ -30,7 +30,7 @@ namespace Xharness.Jenkins {
 				} else {
 					if (!project.SkipiOSVariation)
 						ps.Add (new Tuple<TestProject, TestPlatform, bool> (project, TestPlatform.iOS_Unified, ignored));
-					if (project.MonoNativeInfo != null)
+					if (project.MonoNativeInfo is not null)
 						ps.Add (new Tuple<TestProject, TestPlatform, bool> (project, TestPlatform.iOS_TodayExtension64, ignored));
 					if (!project.SkiptvOSVariation)
 						ps.Add (new Tuple<TestProject, TestPlatform, bool> (project.AsTvOSProject (), TestPlatform.tvOS, ignored));
@@ -39,7 +39,7 @@ namespace Xharness.Jenkins {
 				}
 
 				var configurations = project.Configurations;
-				if (configurations == null)
+				if (configurations is null)
 					configurations = new string [] { "Debug" };
 				foreach (var config in configurations) {
 					foreach (var pair in ps) {
@@ -48,7 +48,7 @@ namespace Xharness.Jenkins {
 						switch (testPlatform) {
 						case TestPlatform.iOS_Unified:
 						case TestPlatform.iOS_TodayExtension64:
-							configIgnored |= !jenkins.TestSelection.IsEnabled (PlatformLabel.iOS64);
+							configIgnored |= !jenkins.TestSelection.IsEnabled (PlatformLabel.iOS);
 							break;
 						case TestPlatform.tvOS:
 							configIgnored |= !jenkins.TestSelection.IsEnabled (PlatformLabel.tvOS);

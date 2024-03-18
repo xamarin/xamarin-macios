@@ -1,0 +1,18 @@
+<Project>
+    <ItemGroup>
+        <None Include="$(MSBuildThisFileDirectory)..\bin\$(RuntimeIdentifier)\libtest.dylib">
+            <Visible>false</Visible>
+            <Link>$(OutputDirectory)\subdir\%(FileName)%(Extension)</Link>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+            <PublishState>Included</PublishState>
+        </None>
+        <None Include="$(MSBuildThisFileDirectory)..\bin\$(RuntimeIdentifier)\libtest.dylib">
+            <Visible>false</Visible>
+            <Link>$(OutputDirectory)\subdir\%(FileName).so</Link>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+            <PublishState>Included</PublishState>
+        </None>
+    </ItemGroup>
+</Project>

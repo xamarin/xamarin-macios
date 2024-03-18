@@ -4,16 +4,13 @@ using System.IO;
 using System.Text;
 
 try {
-	var args = Environment.GetCommandLineArgs ();
-	var defaultArgumentCount = 3;
+	var args = Args;
 	var actualArgumentCount = 6;
-	if (args.Length != defaultArgumentCount + actualArgumentCount) {
-		Console.WriteLine ($"Need {actualArgumentCount} arguments, got {args.Length - defaultArgumentCount} arguments");
+	if (args.Length != actualArgumentCount) {
+		Console.WriteLine ($"Need {actualArgumentCount} arguments, got {args.Length} arguments");
 		Environment.Exit (1);
 		return;
 	}
-
-	args = args.Skip (3).ToArray ();
 
 	var csharpOutput = args [0];
 
@@ -52,9 +49,12 @@ try {
 	for (int i = 0; i < names.Length; i++) {
 		var name = names [i];
 		var frameworks = allframeworks [i];
-		sb.Append ($"\tinternal readonly HashSet<string> {name} = new HashSet<string> {{\"");
-		sb.Append (string.Join ("\", \"", frameworks));
-		sb.AppendLine ("\"};");
+		sb.AppendLine ($"\t// GENERATED FILE - DO NOT EDIT");
+		sb.AppendLine ($"\tinternal readonly HashSet<string> {name} = new HashSet<string> {{");
+		foreach (var fw in frameworks.OrderBy (v => v)) {
+			sb.AppendLine ($"\t\t\"{fw}\",");
+		}
+		sb.AppendLine ("\t};");
 	}
 
 	var allArray = all.ToArray ();

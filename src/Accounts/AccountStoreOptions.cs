@@ -71,7 +71,7 @@ namespace Accounts {
 
 		public void SetPermissions (ACFacebookAudience audience, params string [] permissions)
 		{
-			if (permissions == null)
+			if (permissions is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (permissions));
 			if (permissions.Length == 0)
 				ObjCRuntime.ThrowHelper.ThrowArgumentException (nameof (permissions));

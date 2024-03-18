@@ -101,8 +101,12 @@ namespace AudioToolbox {
 			get {
 				uint out_size = sizeof (uint);
 				uint data;
+				AudioServicesError res;
+				var soundId = this.soundId;
 
-				var res = AudioServices.AudioServicesGetProperty (AudioServicesPropertyKey.IsUISound, sizeof (AudioServicesPropertyKey), ref soundId, out out_size, out data);
+				unsafe {
+					res = AudioServices.AudioServicesGetProperty (AudioServicesPropertyKey.IsUISound, sizeof (AudioServicesPropertyKey), &soundId, &out_size, &data);
+				}
 				if (res != AudioServicesError.None)
 					throw new ArgumentException (res.ToString ());
 
@@ -111,8 +115,12 @@ namespace AudioToolbox {
 
 			set {
 				uint data = value ? (uint) 1 : 0;
+				AudioServicesError res;
+				var soundId = this.soundId;
 
-				var res = AudioServices.AudioServicesSetProperty (AudioServicesPropertyKey.IsUISound, sizeof (AudioServicesPropertyKey), ref soundId, sizeof (uint), ref data);
+				unsafe {
+					res = AudioServices.AudioServicesSetProperty (AudioServicesPropertyKey.IsUISound, sizeof (AudioServicesPropertyKey), &soundId, sizeof (uint), &data);
+				}
 				if (res != AudioServicesError.None)
 					throw new ArgumentException (res.ToString ());
 			}
@@ -122,8 +130,11 @@ namespace AudioToolbox {
 			get {
 				uint out_size = sizeof (uint);
 				uint data;
-
-				var res = AudioServices.AudioServicesGetProperty (AudioServicesPropertyKey.CompletePlaybackIfAppDies, sizeof (AudioServicesPropertyKey), ref soundId, out out_size, out data);
+				AudioServicesError res;
+				var soundId = this.soundId;
+				unsafe {
+					res = AudioServices.AudioServicesGetProperty (AudioServicesPropertyKey.CompletePlaybackIfAppDies, sizeof (AudioServicesPropertyKey), &soundId, &out_size, &data);
+				}
 				if (res != AudioServicesError.None)
 					throw new ArgumentException (res.ToString ());
 
@@ -132,8 +143,11 @@ namespace AudioToolbox {
 
 			set {
 				uint data = value ? (uint) 1 : 0;
-
-				var res = AudioServices.AudioServicesSetProperty (AudioServicesPropertyKey.CompletePlaybackIfAppDies, sizeof (AudioServicesPropertyKey), ref soundId, sizeof (uint), ref data);
+				AudioServicesError res;
+				var soundId = this.soundId;
+				unsafe {
+					res = AudioServices.AudioServicesSetProperty (AudioServicesPropertyKey.CompletePlaybackIfAppDies, sizeof (AudioServicesPropertyKey), &soundId, sizeof (uint), &data);
+				}
 				if (res != AudioServicesError.None)
 					throw new ArgumentException (res.ToString ());
 			}
@@ -202,26 +216,11 @@ namespace AudioToolbox {
 			AudioServicesPlaySystemSound (soundId);
 		}
 
-		delegate void TrampolineCallback (IntPtr blockPtr);
-
-		static unsafe readonly TrampolineCallback static_action = TrampolineAction;
-
-		[MonoPInvokeCallback (typeof (TrampolineCallback))]
-		static void TrampolineAction (IntPtr blockPtr)
-		{
-			var del = BlockLiteral.GetTarget<Action> (blockPtr);
-			if (del is not null)
-				del ();
-		}
-
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (9, 0)]
-		[Mac (10, 11)]
 #endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void PlayAlertSound (Action onCompletion)
@@ -231,23 +230,17 @@ namespace AudioToolbox {
 
 			AssertNotDisposed ();
 
-			var block_handler = new BlockLiteral ();
-			block_handler.SetupBlockUnsafe (static_action, onCompletion);
-			try {
-				AudioServicesPlayAlertSoundWithCompletion (soundId, ref block_handler);
-			} finally {
-				block_handler.CleanupBlock ();
+			unsafe {
+				using var block = BlockStaticDispatchClass.CreateBlock (onCompletion);
+				AudioServicesPlayAlertSoundWithCompletion (soundId, &block);
 			}
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (9, 0)]
-		[Mac (10, 11)]
 #endif
 		public Task PlayAlertSoundAsync ()
 		{
@@ -259,13 +252,10 @@ namespace AudioToolbox {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (9, 0)]
-		[Mac (10, 11)]
 #endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void PlaySystemSound (Action onCompletion)
@@ -275,23 +265,17 @@ namespace AudioToolbox {
 
 			AssertNotDisposed ();
 
-			var block_handler = new BlockLiteral ();
-			block_handler.SetupBlockUnsafe (static_action, onCompletion);
-			try {
-				AudioServicesPlaySystemSoundWithCompletion (soundId, ref block_handler);
-			} finally {
-				block_handler.CleanupBlock ();
+			unsafe {
+				using var block = BlockStaticDispatchClass.CreateBlock (onCompletion);
+				AudioServicesPlaySystemSoundWithCompletion (soundId, &block);
 			}
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (9, 0)]
-		[Mac (10, 11)]
 #endif
 		public Task PlaySystemSoundAsync ()
 		{
@@ -303,38 +287,38 @@ namespace AudioToolbox {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (9, 0)]
-		[Mac (10, 11)]
 #endif
 		[DllImport (Constants.AudioToolboxLibrary)]
-		static extern void AudioServicesPlayAlertSoundWithCompletion (uint inSystemSoundID, ref BlockLiteral inCompletionBlock);
+		unsafe static extern void AudioServicesPlayAlertSoundWithCompletion (uint inSystemSoundID, BlockLiteral* inCompletionBlock);
 
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (9, 0)]
-		[Mac (10, 11)]
 #endif
 		[DllImport (Constants.AudioToolboxLibrary)]
-		static extern void AudioServicesPlaySystemSoundWithCompletion (uint inSystemSoundID, ref BlockLiteral inCompletionBlock);
+		unsafe static extern void AudioServicesPlaySystemSoundWithCompletion (uint inSystemSoundID, BlockLiteral* inCompletionBlock);
 
 		[DllImport (Constants.AudioToolboxLibrary)]
-		static extern AudioServicesError AudioServicesCreateSystemSoundID (IntPtr fileUrl, out uint soundId);
+		unsafe static extern AudioServicesError AudioServicesCreateSystemSoundID (IntPtr fileUrl, uint* soundId);
 
 		static uint Create (NSUrl fileUrl)
 		{
+			AudioServicesError error;
+			uint soundId;
+
 			if (fileUrl is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (fileUrl));
 
-			var error = AudioServicesCreateSystemSoundID (fileUrl.Handle, out var soundId);
+			unsafe {
+				error = AudioServicesCreateSystemSoundID (fileUrl.Handle, &soundId);
+			}
+
 			if (error != AudioServicesError.None)
 				throw new InvalidOperationException (string.Format ("Could not create system sound ID for url {0}; error={1}",
 							fileUrl, error));
@@ -348,10 +332,15 @@ namespace AudioToolbox {
 
 		public static SystemSound? FromFile (NSUrl fileUrl)
 		{
+			AudioServicesError error;
+			uint soundId;
+
 			if (fileUrl is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (fileUrl));
 
-			var error = AudioServicesCreateSystemSoundID (fileUrl.Handle, out var soundId);
+			unsafe {
+				error = AudioServicesCreateSystemSoundID (fileUrl.Handle, &soundId);
+			}
 			if (error != AudioServicesError.None)
 				return null;
 			return new SystemSound (soundId, true);
@@ -359,11 +348,16 @@ namespace AudioToolbox {
 
 		public static SystemSound? FromFile (string filename)
 		{
+			AudioServicesError error;
+			uint soundId;
+
 			if (filename is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (filename));
 
 			using (var url = new NSUrl (filename)) {
-				var error = AudioServicesCreateSystemSoundID (url.Handle, out var soundId);
+				unsafe {
+					error = AudioServicesCreateSystemSoundID (url.Handle, &soundId);
+				}
 				if (error != AudioServicesError.None)
 					return null;
 				return new SystemSound (soundId, true);

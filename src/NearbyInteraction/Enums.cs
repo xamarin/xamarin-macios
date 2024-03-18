@@ -14,6 +14,7 @@ using System;
 namespace NearbyInteraction {
 
 	[Watch (8, 0), NoTV, NoMac, iOS (14, 0)]
+	[MacCatalyst (14, 0)]
 	[ErrorDomain ("NIErrorDomain")]
 	[Native]
 	public enum NIErrorCode : long {
@@ -25,9 +26,12 @@ namespace NearbyInteraction {
 		UserDidNotAllow = -5884,
 		AccessoryPeerDeviceUnavailable = -5882,
 		InvalidARConfiguration = -5883,
+		IncompatiblePeerDevice = -5881,
+		ActiveExtendedDistanceSessionsLimitExceeded = -5880,
 	}
 
 	[Watch (8, 0), NoTV, NoMac, iOS (14, 0)]
+	[MacCatalyst (14, 0)]
 	[Native]
 	public enum NINearbyObjectRemovalReason : long {
 		Timeout,

@@ -111,7 +111,7 @@ namespace MonoTouchFixtures {
 					category_invoked = true;
 					vc.View.BackgroundColor = UIColor.Green;
 				};
-				MonoTouchFixtures.AppDelegate.PresentModalViewController (nc, 0.5);
+				AppDelegate.PresentModalViewController (nc, 0.5);
 				if (TestRuntime.CheckXcodeVersion (14, 0)) {
 					// The 'shouldAutorotate' selector isn't called anymore in iOS 16+ (this is documented in Xcode 14's release notes)
 					Assert.That (!category_invoked);
@@ -133,7 +133,7 @@ namespace MonoTouchFixtures {
 		[Export ("shouldAutorotate")]
 		static bool ShouldAutoRotate (this UINavigationController self)
 		{
-			if (ShouldAutoRotateCallback != null)
+			if (ShouldAutoRotateCallback is not null)
 				ShouldAutoRotateCallback ();
 			return true;
 		}

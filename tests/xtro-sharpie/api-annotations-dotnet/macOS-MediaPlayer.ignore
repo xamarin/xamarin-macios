@@ -7,9 +7,6 @@
 ## field added in xcode 12 b1 - but not marked as available on macOS and already deprecated on iOS
 !missing-field! MPMediaPlaybackIsPreparedToPlayDidChangeNotification not bound
 
-## intro says that it does not work
-!missing-selector! AVPlayerItem::nowPlayingInfo not bound
-!missing-selector! AVPlayerItem::setNowPlayingInfo: not bound
 
 ## unsorted
 

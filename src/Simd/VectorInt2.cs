@@ -47,7 +47,7 @@ namespace CoreGraphics
 
 		public override int GetHashCode ()
 		{
-			return X.GetHashCode () ^ Y.GetHashCode ();
+			return HashCode.Combine(X, Y);
 		}
 
 		public override bool Equals (object? obj)

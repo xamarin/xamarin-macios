@@ -130,9 +130,9 @@ namespace Xamarin.iOS.UnitTests.NUnit {
 		{
 			xmlWriter.WriteStartElement ("culture-info");
 			xmlWriter.WriteAttributeString ("current-culture",
-						       CultureInfo.CurrentCulture.ToString ());
+							   CultureInfo.CurrentCulture.ToString ());
 			xmlWriter.WriteAttributeString ("current-uiculture",
-						       CultureInfo.CurrentUICulture.ToString ());
+							   CultureInfo.CurrentUICulture.ToString ());
 			xmlWriter.WriteEndElement ();
 			xmlWriter.Flush ();
 		}
@@ -142,23 +142,23 @@ namespace Xamarin.iOS.UnitTests.NUnit {
 			xmlWriter.WriteStartElement ("environment");
 			AssemblyName assemblyName = AssemblyHelper.GetAssemblyName (Assembly.GetExecutingAssembly ());
 			xmlWriter.WriteAttributeString ("nunit-version",
-						       assemblyName.Version.ToString ());
+							   assemblyName.Version.ToString ());
 			xmlWriter.WriteAttributeString ("clr-version",
-						       Environment.Version.ToString ());
+							   Environment.Version.ToString ());
 			xmlWriter.WriteAttributeString ("os-version",
-						       Environment.OSVersion.ToString ());
+							   Environment.OSVersion.ToString ());
 			xmlWriter.WriteAttributeString ("platform",
-			    Environment.OSVersion.Platform.ToString ());
+				Environment.OSVersion.Platform.ToString ());
 #if !NETCF
 			xmlWriter.WriteAttributeString ("cwd",
-						       Environment.CurrentDirectory);
+							   Environment.CurrentDirectory);
 #if !SILVERLIGHT
 			xmlWriter.WriteAttributeString ("machine-name",
-						       Environment.MachineName);
+							   Environment.MachineName);
 			xmlWriter.WriteAttributeString ("user",
-						       Environment.UserName);
+							   Environment.UserName);
 			xmlWriter.WriteAttributeString ("user-domain",
-						       Environment.UserDomainName);
+							   Environment.UserDomainName);
 #endif
 #endif
 			xmlWriter.WriteEndElement ();
@@ -203,19 +203,19 @@ namespace Xamarin.iOS.UnitTests.NUnit {
 			ITest test = result.Test;
 			TestSuite suite = test as TestSuite;
 
-			if (suite != null) {
+			if (suite is not null) {
 				xmlWriter.WriteStartElement ("test-suite");
 				xmlWriter.WriteAttributeString ("type", suite.TestType);
 				xmlWriter.WriteAttributeString ("name", suite.TestType == "Assembly"
-				    ? result.Test.FullName
-				    : result.Test.Name);
+					? result.Test.FullName
+					: result.Test.Name);
 			} else {
 				xmlWriter.WriteStartElement ("test-case");
 				xmlWriter.WriteAttributeString ("name", result.Name);
 			}
 
 			if (test.Properties.ContainsKey (PropertyNames.Description)) {
-				string description = (string)test.Properties.Get (PropertyNames.Description);
+				string description = (string) test.Properties.Get (PropertyNames.Description);
 				xmlWriter.WriteAttributeString ("description", description);
 			}
 
@@ -273,7 +273,7 @@ namespace Xamarin.iOS.UnitTests.NUnit {
 			WriteCData (message);
 			xmlWriter.WriteEndElement ();
 			xmlWriter.WriteStartElement ("stack-trace");
-			if (stackTrace != null)
+			if (stackTrace is not null)
 				WriteCData (stackTrace);
 			xmlWriter.WriteEndElement ();
 			xmlWriter.WriteEndElement ();

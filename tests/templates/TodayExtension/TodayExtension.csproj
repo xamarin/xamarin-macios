@@ -20,12 +20,13 @@
     <MtouchUseLlvm>%MTOUCH_USELLVM%</MtouchUseLlvm>
     <MtouchEnableBitcode>%MTOUCH_ENABLEBITCODE%</MtouchEnableBitcode>
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Platform)' == 'iPhoneSimulator' ">
-    <MtouchArch>i386, x86_64</MtouchArch>
+    <MtouchArch>x86_64</MtouchArch>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Platform)' == 'iPhone' ">
-    <MtouchArch>ARMv7, ARM64</MtouchArch>
+    <MtouchArch>ARM64</MtouchArch>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Xamarin.iOS" />

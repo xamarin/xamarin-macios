@@ -12,7 +12,7 @@ include $(TOP)/Make.config
 	$(Q) mkdir -p $@
 
 bin/Debug/$(DOTNET_TFM)-macos/custom-type-assembly.dll: custom-type-assembly.csproj custom-type-assembly.cs
-	$(Q) $(DOTNET) build $< "/bl:$@.binlog" $(MSBUILD_VERBOSITY)
+	$(Q) unset MSBUILD_EXE_PATH && $(DOTNET) build $< "/bl:$@.binlog" $(MSBUILD_VERBOSITY)
 
 ifdef INCLUDE_MAC
 

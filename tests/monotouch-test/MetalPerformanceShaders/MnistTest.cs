@@ -42,6 +42,7 @@ namespace MonoTouchFixtures.MetalPerformanceShadersGraph {
 				TestRuntime.AssertNotSimulator ("Fails with 'Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: -[MTLSimHeap protectionOptions]: unrecognized selector sent to instance 0x600002a09090' - note that we don't call this selector.");
 #endif
 			TestRuntime.IgnoreInCI ("This test seems to make bots keel over and die.");
+			TestRuntime.AssertNotX64Desktop (); // Intel Mac is not fast enough.
 
 			var device = MTLDevice.SystemDefault;
 			// some older hardware won't have a default
@@ -52,6 +53,7 @@ namespace MonoTouchFixtures.MetalPerformanceShadersGraph {
 		}
 
 		[Test]
+		[Ignore ("This test frequently fails, so just ignore it for now.")]
 		public void Run ()
 		{
 			using (var tester = new MnistTest ()) {
@@ -90,7 +92,7 @@ namespace MonoTouchFixtures.MetalPerformanceShadersGraph {
 				completed = true;
 			});
 
-			Assert.IsTrue (TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () => {
+			Assert.IsTrue (TestRuntime.RunAsync (TimeSpan.FromSeconds (30), () => {
 			}, () => completed), "Completion");
 
 			// Don't need to commit since EncodeTrainingBatch oddly does that

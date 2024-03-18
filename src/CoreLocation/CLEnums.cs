@@ -32,6 +32,8 @@
 using System;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace CoreLocation {
 
 	// NSInteger -> CLError.h
@@ -90,6 +92,7 @@ namespace CoreLocation {
 		Denied,
 
 		[Deprecated (PlatformName.iOS, 8, 0, message: "Use 'AuthorizedAlways' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'AuthorizedAlways' instead.")]
 		Authorized,
 		AuthorizedAlways = Authorized,
 		[Deprecated (PlatformName.MacOSX, 13, 0)]
@@ -106,12 +109,13 @@ namespace CoreLocation {
 		[iOS (12, 0)]
 		[TV (12, 0)]
 		[Watch (5, 0)]
-		[Mac (10, 14)]
+		[MacCatalyst (13, 1)]
 		Airborne,
 	}
 
 	[Native]
 	[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+	[MacCatalyst (14, 0)]
 	public enum CLAccuracyAuthorization : long {
 		FullAccuracy,
 		ReducedAccuracy,

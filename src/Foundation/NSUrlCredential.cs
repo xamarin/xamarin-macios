@@ -8,6 +8,9 @@ using System.Runtime.InteropServices;
 using ObjCRuntime;
 using Security;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Foundation {
 
 	public partial class NSUrlCredential {
@@ -18,10 +21,10 @@ namespace Foundation {
 
 		public static NSUrlCredential FromIdentityCertificatesPersistance (SecIdentity identity, SecCertificate [] certificates, NSUrlCredentialPersistence persistence)
 		{
-			if (identity == null)
+			if (identity is null)
 				throw new ArgumentNullException ("identity");
 
-			if (certificates == null)
+			if (certificates is null)
 				throw new ArgumentNullException ("certificates");
 
 			using (var certs = NSArray.FromNativeObjects (certificates))
@@ -37,7 +40,7 @@ namespace Foundation {
 
 		public static NSUrlCredential FromTrust (SecTrust trust)
 		{
-			if (trust == null)
+			if (trust is null)
 				throw new ArgumentNullException ("trust");
 
 			return FromTrust (trust.Handle);

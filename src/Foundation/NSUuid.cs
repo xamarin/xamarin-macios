@@ -15,13 +15,13 @@ namespace Foundation {
 
 		public NSUuid (byte [] bytes) : base (NSObjectFlag.Empty)
 		{
-			if (bytes == null)
+			if (bytes is null)
 				throw new ArgumentNullException ("bytes");
 			if (bytes.Length < 16)
 				throw new ArgumentException ("length must be at least 16 bytes");
 
 			unsafe {
-				fixed (byte* p = &bytes [0]) {
+				fixed (byte* p = bytes) {
 					IntPtr ptr = (IntPtr) p;
 
 					if (IsDirectBinding) {

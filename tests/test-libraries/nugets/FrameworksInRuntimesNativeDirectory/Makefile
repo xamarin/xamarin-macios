@@ -14,7 +14,7 @@ PACKAGE_VERSION=$(shell grep '<PackageVersion>' FrameworksInRuntimesNativeDirect
 .libs/FrameworksInRuntimesNativeDirectory.nupkg: FrameworksInRuntimesNativeDirectory.csproj $(wildcard *.cs) | .libs
 	$(Q) mkdir -p $(abspath $(NUGET_TEST_FEED))
 	$(Q_GEN) $(DOTNET) pack /bl $(DOTNET_PACK_VERBOSITY) $<
-	$(Q) $(CP) bin/Debug/Xamarin.Tests.FrameworksInRuntimesNativeDirectory.$(PACKAGE_VERSION).nupkg $@
+	$(Q) $(CP) bin/Release/Xamarin.Tests.FrameworksInRuntimesNativeDirectory.$(PACKAGE_VERSION).nupkg $@
 
 INSTALLED_PACKAGE=$(NUGET_TEST_FEED)/xamarin.tests.frameworksinruntimesnativedirectory/$(PACKAGE_VERSION)/xamarin.tests.frameworksinruntimesnativedirectory.$(PACKAGE_VERSION).nupkg
 
@@ -24,4 +24,6 @@ $(INSTALLED_PACKAGE): .libs/FrameworksInRuntimesNativeDirectory.nupkg
 	mkdir -p $(abspath $(NUGET_TEST_FEED))
 	nuget add "$<" -source $(abspath $(NUGET_TEST_FEED)) -NonInteractive
 
+ifdef ENABLE_DOTNET
 all-local:: $(INSTALLED_PACKAGE)
+endif

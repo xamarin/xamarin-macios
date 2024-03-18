@@ -1,0 +1,111 @@
+!missing-enum! CMPackingType not bound
+!missing-enum! CMProjectionType not bound
+!missing-enum! CMStereoViewComponents not bound
+!missing-enum! CMStereoViewInterpretationOptions not bound
+!missing-enum! CMTagCategory not bound
+!missing-enum! CMTagCollectionError not bound
+!missing-enum! CMTagDataType not bound
+!missing-enum! CMTagError not bound
+!missing-enum! CMTaggedBufferGroupError not bound
+!missing-field! kCMFormatDescriptionExtension_ContentColorVolume not bound
+!missing-field! kCMFormatDescriptionExtension_HeroEye not bound
+!missing-field! kCMFormatDescriptionExtension_HorizontalDisparityAdjustment not bound
+!missing-field! kCMFormatDescriptionExtension_StereoCameraBaseline not bound
+!missing-field! kCMFormatDescriptionHeroEye_Left not bound
+!missing-field! kCMFormatDescriptionHeroEye_Right not bound
+!missing-field! kCMTagCategoryKey not bound
+!missing-field! kCMTagCollectionTagsArrayKey not bound
+!missing-field! kCMTagDataTypeKey not bound
+!missing-field! kCMTagInvalid not bound
+!missing-field! kCMTagMediaSubTypeMebx not bound
+!missing-field! kCMTagMediaTypeAudio not bound
+!missing-field! kCMTagMediaTypeMetadata not bound
+!missing-field! kCMTagMediaTypeVideo not bound
+!missing-field! kCMTagPackingTypeNone not bound
+!missing-field! kCMTagPackingTypeOverUnder not bound
+!missing-field! kCMTagPackingTypeSideBySide not bound
+!missing-field! kCMTagProjectionTypeEquirectangular not bound
+!missing-field! kCMTagProjectionTypeFisheye not bound
+!missing-field! kCMTagProjectionTypeRectangular not bound
+!missing-field! kCMTagStereoInterpretationOrderReversed not bound
+!missing-field! kCMTagStereoLeftAndRightEye not bound
+!missing-field! kCMTagStereoLeftEye not bound
+!missing-field! kCMTagStereoNone not bound
+!missing-field! kCMTagStereoRightEye not bound
+!missing-field! kCMTagValueKey not bound
+!missing-pinvoke! CMBufferQueueCopyHead is not bound
+!missing-pinvoke! CMSampleBufferCreateForTaggedBufferGroup is not bound
+!missing-pinvoke! CMSampleBufferGetTaggedBufferGroup is not bound
+!missing-pinvoke! CMTagCollectionAddTag is not bound
+!missing-pinvoke! CMTagCollectionAddTagsFromArray is not bound
+!missing-pinvoke! CMTagCollectionAddTagsFromCollection is not bound
+!missing-pinvoke! CMTagCollectionApply is not bound
+!missing-pinvoke! CMTagCollectionApplyUntil is not bound
+!missing-pinvoke! CMTagCollectionContainsCategory is not bound
+!missing-pinvoke! CMTagCollectionContainsSpecifiedTags is not bound
+!missing-pinvoke! CMTagCollectionContainsTag is not bound
+!missing-pinvoke! CMTagCollectionContainsTagsOfCollection is not bound
+!missing-pinvoke! CMTagCollectionCopyAsData is not bound
+!missing-pinvoke! CMTagCollectionCopyAsDictionary is not bound
+!missing-pinvoke! CMTagCollectionCopyDescription is not bound
+!missing-pinvoke! CMTagCollectionCopyTagsOfCategories is not bound
+!missing-pinvoke! CMTagCollectionCountTagsWithFilterFunction is not bound
+!missing-pinvoke! CMTagCollectionCreate is not bound
+!missing-pinvoke! CMTagCollectionCreateCopy is not bound
+!missing-pinvoke! CMTagCollectionCreateDifference is not bound
+!missing-pinvoke! CMTagCollectionCreateExclusiveOr is not bound
+!missing-pinvoke! CMTagCollectionCreateFromData is not bound
+!missing-pinvoke! CMTagCollectionCreateFromDictionary is not bound
+!missing-pinvoke! CMTagCollectionCreateIntersection is not bound
+!missing-pinvoke! CMTagCollectionCreateMutable is not bound
+!missing-pinvoke! CMTagCollectionCreateMutableCopy is not bound
+!missing-pinvoke! CMTagCollectionCreateUnion is not bound
+!missing-pinvoke! CMTagCollectionGetCount is not bound
+!missing-pinvoke! CMTagCollectionGetCountOfCategory is not bound
+!missing-pinvoke! CMTagCollectionGetTags is not bound
+!missing-pinvoke! CMTagCollectionGetTagsWithCategory is not bound
+!missing-pinvoke! CMTagCollectionGetTagsWithFilterFunction is not bound
+!missing-pinvoke! CMTagCollectionGetTypeID is not bound
+!missing-pinvoke! CMTagCollectionIsEmpty is not bound
+!missing-pinvoke! CMTagCollectionRemoveAllTags is not bound
+!missing-pinvoke! CMTagCollectionRemoveAllTagsOfCategory is not bound
+!missing-pinvoke! CMTagCollectionRemoveTag is not bound
+!missing-pinvoke! CMTagCompare is not bound
+!missing-pinvoke! CMTagCopyAsDictionary is not bound
+!missing-pinvoke! CMTagCopyDescription is not bound
+!missing-pinvoke! CMTagEqualToTag is not bound
+!missing-pinvoke! CMTaggedBufferGroupCreate is not bound
+!missing-pinvoke! CMTaggedBufferGroupCreateCombined is not bound
+!missing-pinvoke! CMTaggedBufferGroupFormatDescriptionCreateForTaggedBufferGroup is not bound
+!missing-pinvoke! CMTaggedBufferGroupFormatDescriptionMatchesTaggedBufferGroup is not bound
+!missing-pinvoke! CMTaggedBufferGroupGetCMSampleBufferAtIndex is not bound
+!missing-pinvoke! CMTaggedBufferGroupGetCMSampleBufferForTag is not bound
+!missing-pinvoke! CMTaggedBufferGroupGetCMSampleBufferForTagCollection is not bound
+!missing-pinvoke! CMTaggedBufferGroupGetCount is not bound
+!missing-pinvoke! CMTaggedBufferGroupGetCVPixelBufferAtIndex is not bound
+!missing-pinvoke! CMTaggedBufferGroupGetCVPixelBufferForTag is not bound
+!missing-pinvoke! CMTaggedBufferGroupGetCVPixelBufferForTagCollection is not bound
+!missing-pinvoke! CMTaggedBufferGroupGetNumberOfMatchesForTagCollection is not bound
+!missing-pinvoke! CMTaggedBufferGroupGetTagCollectionAtIndex is not bound
+!missing-pinvoke! CMTaggedBufferGroupGetTypeID is not bound
+!missing-pinvoke! CMTagGetFlagsValue is not bound
+!missing-pinvoke! CMTagGetFloat64Value is not bound
+!missing-pinvoke! CMTagGetOSTypeValue is not bound
+!missing-pinvoke! CMTagGetSInt64Value is not bound
+!missing-pinvoke! CMTagGetValueDataType is not bound
+!missing-pinvoke! CMTagHasFlagsValue is not bound
+!missing-pinvoke! CMTagHasFloat64Value is not bound
+!missing-pinvoke! CMTagHash is not bound
+!missing-pinvoke! CMTagHasOSTypeValue is not bound
+!missing-pinvoke! CMTagHasSInt64Value is not bound
+!missing-pinvoke! CMTagMakeFromDictionary is not bound
+!missing-pinvoke! CMTagMakeWithFlagsValue is not bound
+!missing-pinvoke! CMTagMakeWithFloat64Value is not bound
+!missing-pinvoke! CMTagMakeWithOSTypeValue is not bound
+!missing-pinvoke! CMTagMakeWithSInt64Value is not bound
+!missing-pinvoke! CMVideoFormatDescriptionCopyTagCollectionArray is not bound
+!missing-field! kCMFormatDescriptionExtension_HasAdditionalViews not bound
+!missing-field! kCMFormatDescriptionExtension_HasLeftStereoEyeView not bound
+!missing-field! kCMFormatDescriptionExtension_HasRightStereoEyeView not bound
+!missing-field! kCMFormatDescriptionExtension_LogTransferFunction not bound
+!missing-field! kCMFormatDescriptionLogTransferFunction_AppleLog not bound

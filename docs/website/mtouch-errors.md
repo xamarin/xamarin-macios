@@ -3749,3 +3749,28 @@ This exception will have an inner exception which gives the reason for the failu
 ### MT8036: Failed to convert the value at index {index} from {type} to {type}.
 
 This exception will have an inner exception which gives the reason for the failure.
+
+<a name="MX8056" />
+
+### MX8056: Failed to marshal the Objective-C object {handle} (type: {objc_type}). Could not find an existing managed instance for this object, nor was it possible to create a new managed instance of generic type {managed_type}.
+
+This occurs when the Xamarin.iOS runtime finds an Objective-C object without a
+corresponding managed wrapper object, and when trying to create that managed
+wrapper, it turns out it's not possible. This error is specific to the managed
+static registrar.
+
+There are a few reasons this may happen:
+
+* A managed wrapper existed at some point, but was collected by the GC. If the
+  native object is still alive, and later resurfaces to managed code, the
+  Xamarin.iOS runtime will try to re-create a managed wrapper instance. In
+  most cases the problem here is that the managed wrapper shouldn't have been
+  collected by the GC in the first place.
+
+  Possible causes include:
+
+  * Manually calling Dispose too early on the managed wrapper.
+  * Incorrect bindings for third-party libraries.
+  * Reference-counting bugs in third-party libraries.
+
+* This indicates a bug in Xamarin.iOS. Please file a new issue on [github](https://github.com/xamarin/xamarin-macios/issues/new).

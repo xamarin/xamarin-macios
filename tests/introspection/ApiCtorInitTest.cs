@@ -134,10 +134,15 @@ namespace Introspection {
 				return true;
 			case "HMMatterRequestHandler": // got removed and the current API throws an exception at run time.
 				return true;
+#if __MACCATALYST__
+			case "PKIdentityButton":
+				return true;
+#endif
 			}
 
-#if !NET
 			switch (type.Namespace) {
+			case "SafetyKit":
+				return true; // SafetyKit requires a custom entitlement, and will throw exceptions if it's not present.
 #if __IOS__
 			case "WatchKit":
 				return true; // WatchKit has been removed from iOS.
@@ -146,7 +151,6 @@ namespace Introspection {
 				return true; // QTKit has been removed from macos.
 #endif
 			}
-#endif // !NET
 
 			// skip types that we renamed / rewrite since they won't behave correctly (by design)
 			if (SkipDueToRejectedTypes (type))
@@ -171,7 +175,7 @@ namespace Introspection {
 		/// <param name="obj">NSObject instance to validate</param>
 		protected virtual void CheckToString (NSObject obj)
 		{
-			if (obj.ToString () == null)
+			if (obj.ToString () is null)
 				ReportError ("{0} : ToString", instance_type_name);
 		}
 
@@ -189,9 +193,9 @@ namespace Introspection {
 		{
 			var attrib = obj.GetType ().GetCustomAttribute<RegisterAttribute> (false);
 			// only check types that we register - that way we avoid the 118 MonoTouch.CoreImagge.CI* "special" types
-			if (attrib == null)
+			if (attrib is null)
 				return;
-			var is_wrapper = attrib != null && attrib.IsWrapper;
+			var is_wrapper = attrib is not null && attrib.IsWrapper;
 			var is_direct_binding = GetIsDirectBinding (obj);
 			if (is_direct_binding != is_wrapper)
 				ReportError ("{0} : IsDirectBinding (expected {1}, got {2})", instance_type_name, is_wrapper, is_direct_binding);
@@ -244,7 +248,7 @@ namespace Introspection {
 		// if a .ctor is obsolete then it's because it was not usable (nor testable)
 		protected override bool SkipDueToAttribute (MemberInfo member)
 		{
-			if (member == null)
+			if (member is null)
 				return false;
 			return MemberHasObsolete (member) || base.SkipDueToAttribute (member);
 		}
@@ -267,7 +271,7 @@ namespace Introspection {
 				if (SkipDueToAttribute (ctor))
 					continue;
 
-				if ((ctor == null) || ctor.IsAbstract) {
+				if ((ctor is null) || ctor.IsAbstract) {
 					if (LogUntestedTypes)
 						Console.WriteLine ("[WARNING] {0} was skipped because it had no default constructor", t);
 					continue;
@@ -291,7 +295,7 @@ namespace Introspection {
 						throw;
 
 					TargetInvocationException tie = (e as TargetInvocationException);
-					if (tie != null)
+					if (tie is not null)
 						e = tie.InnerException;
 					ReportError ("Default constructor not allowed for {0} : {1}", instance_type_name, e.Message);
 				}
@@ -318,9 +322,14 @@ namespace Introspection {
 				if (!t.IsPublic || !NSObjectType.IsAssignableFrom (t))
 					continue;
 
+				// we only care about wrapper types (types with a native counterpart), and they all have a Register attribute.
+				var typeRegisterAttribute = t.GetCustomAttribute<RegisterAttribute> (false);
+				if (typeRegisterAttribute is null)
+					continue;
+
 				int designated = 0;
 				foreach (var ctor in t.GetConstructors ()) {
-					if (ctor.GetCustomAttribute<DesignatedInitializerAttribute> () == null)
+					if (ctor.GetCustomAttribute<DesignatedInitializerAttribute> () is null)
 						continue;
 					designated++;
 				}
@@ -335,7 +344,7 @@ namespace Introspection {
 					continue;
 				foreach (var ctor in base_class.GetConstructors ()) {
 					// if the base ctor is a designated (not a convenience) initializer then we should re-expose it
-					if (ctor.GetCustomAttribute<DesignatedInitializerAttribute> () == null)
+					if (ctor.GetCustomAttribute<DesignatedInitializerAttribute> () is null)
 						continue;
 
 					// check if this ctor (from base type) is exposed in the current (subclass) type
@@ -507,6 +516,11 @@ namespace Introspection {
 				if (cstr == "Void .ctor(System.String, Foundation.NSBundle)")
 					return true;
 				break;
+			case "PKPayLaterView":
+				// headers have: (instancetype)initWithFrame:(CGRect)frame NS_UNAVAILABLE;
+				if (cstr == "Void .ctor(CoreGraphics.CGRect)")
+					return true;
+				break;
 			case "VNDetectedPoint":
 				// This class is not meant to be instantiated
 				if (cstr == "Void .ctor(Double, Double)")
@@ -561,7 +575,7 @@ namespace Introspection {
 					continue;
 
 				// ignore CIFilter derived subclasses since they are specially generated
-				if (cifiltertype != null && t.IsSubclassOf (cifiltertype))
+				if (cifiltertype is not null && t.IsSubclassOf (cifiltertype))
 					continue;
 
 				if (SkipCheckShouldNotExposeDefaultCtor (t))
@@ -571,7 +585,7 @@ namespace Introspection {
 				if (SkipDueToAttribute (ctor))
 					continue;
 
-				if (ctor == null || ctor.IsAbstract) {
+				if (ctor is null || ctor.IsAbstract) {
 					if (LogUntestedTypes)
 						Console.WriteLine ("[WARNING] {0} was skipped because it had no default constructor", t);
 					continue;
@@ -583,7 +597,7 @@ namespace Introspection {
 				var parentType = t.BaseType;
 				var parentCtor = parentType.GetConstructor (BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic, null, Type.EmptyTypes, null);
 
-				if (parentCtor == null) {
+				if (parentCtor is null) {
 					ReportError ($"Type '{t.FullName}' is a possible candidate for [DisableDefaultCtor] because its BaseType '{parentType.FullName}' does not have one.");
 
 					// Useful to test in Xcode
@@ -633,7 +647,7 @@ namespace Introspection {
 				if (!typeof (IARAnchorCopying).IsAssignableFrom (t))
 					continue;
 
-				if (t.GetConstructor (new Type [] { typeof (ARAnchor) }) == null)
+				if (t.GetConstructor (new Type [] { typeof (ARAnchor) }) is null)
 					ReportError ("{0} should re-expose IARAnchorCopying::.ctor(ARAnchor)", t);
 			}
 

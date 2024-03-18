@@ -97,7 +97,7 @@ namespace Xharness.Tests.Jenkins {
 
 			using (var reader = new StreamReader (path)) {
 				string line = null;
-				while ((line = reader.ReadLine ()) != null) {
+				while ((line = reader.ReadLine ()) is not null) {
 					if (line.StartsWith ("<summary"))
 						summaryLine = line;
 					if (line.Contains ("Failure with id "))
@@ -183,7 +183,7 @@ namespace Xharness.Tests.Jenkins {
 			int failureCount = 0;
 			using (var reader = new StreamReader (path)) {
 				string line = null;
-				while ((line = reader.ReadLine ()) != null) {
+				while ((line = reader.ReadLine ()) is not null) {
 					if (line.Contains ("Failure")) {
 						Assert.AreEqual ($" * Failure with id {failureCount}: Failed Known issue: [Testing known issues](http://github.com)", line, line);
 						failureCount++;

@@ -9,7 +9,7 @@
 	<key>CFBundleName</key>
 	<string>LinkAll</string>
 	<key>MinimumOSVersion</key>
-	<string>7.0</string>
+	<string>11.0</string>
 	<key>UIDeviceFamily</key>
 	<array>
 		<integer>1</integer>

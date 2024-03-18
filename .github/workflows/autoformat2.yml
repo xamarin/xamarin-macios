@@ -1,11 +1,14 @@
-name: Autoformat code - publish results
+name: Autoformat code - push results
 on:
   workflow_run:
     workflows: ["Autoformat code"]
     types:
       - completed
 
-# See autoformat.yml for a description of what happens here.
+# This action needs the following permissions in order to push the results back to the original branch.
+permissions:
+  pull-requests: write
+  contents: write
 
 jobs:
   push-and-notify:
@@ -14,66 +17,11 @@ jobs:
     if: >
       github.event.workflow_run.event == 'pull_request' &&
       github.event.workflow_run.conclusion == 'success'
-
     steps:
-    - name: 'Download artifacts'
-      uses: actions/github-script@v6.3.3
-      with:
-        script: |
-          var artifacts = await github.rest.actions.listWorkflowRunArtifacts({
-             owner: context.repo.owner,
-             repo: context.repo.repo,
-             run_id: ${{github.event.workflow_run.id }},
-          });
-          var matchArtifact = artifacts.data.artifacts.filter((artifact) => {
-            return artifact.name == "autoformat"
-          })[0];
-          var download = await github.rest.actions.downloadArtifact({
-             owner: context.repo.owner,
-             repo: context.repo.repo,
-             artifact_id: matchArtifact.id,
-             archive_format: 'zip',
-          });
-          var fs = require('fs');
-          fs.writeFileSync('${{github.workspace}}/autoformat.zip', Buffer.from(download.data));
-
-    - name: 'Unzip artifacts'
-      id: unzip_artifacts
-      run: |
-        unzip -d ../autoformat autoformat.zip
-        if test -f ../autoformat/autoformat.patch; then
-          echo "::set-output name=autoformatted::true"
-        fi
-
-    - name: 'Checkout repo'
-      uses: actions/checkout@v3
-      if: steps.unzip_artifacts.outputs.autoformatted == 'true'
-      with:
-        fetch-depth: 0
-        repository: ${{ github.event.workflow_run.head_repository.full_name }}
-        ref: ${{ github.event.workflow_run.head_branch }}
-
-    - name: 'Get autoformatted commit and push it'
-      if: steps.unzip_artifacts.outputs.autoformatted == 'true'
-      run: |
-        git config user.email "github-actions-autoformatter@xamarin.com"
-        git config user.name "GitHub Actions Autoformatter"
-        cat ../autoformat/autoformat.patch
-        git am < ../autoformat/autoformat.patch
-        git show
-        git push
-
-    - name: 'Yell at user'
-      if: steps.unzip_artifacts.outputs.autoformatted == 'true'
-      uses: actions/github-script@v6.3.3
-      with:
-        github-token: ${{secrets.GITHUB_TOKEN}}
-        script: |
-          let fs = require('fs');
-          let issue_number = Number(fs.readFileSync('../autoformat/PR'));
-          await github.rest.issues.createComment({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            issue_number: issue_number,
-            body: '# :warning: Your code has been reformatted. :warning:\n\nIf this is not desired, add the `actions-disable-autoformat` label, and revert the reformatting commit.\n\nIf files unrelated to your change were modified, try reverting the reformatting commit + merging with the target branch (and push those changes).'
-          });
+      - name: 'Push autoformatted patch'
+        uses: rolfbjarne/autoformat-push@v0.2
+        with:
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+          git_user_email: 'github-actions-autoformatter@xamarin.com'
+          git_user_name: 'GitHub Actions Autoformatter'
+          commentContents: '# :warning: Your code has been reformatted. :warning:\n\nIf this is not desired, add the `actions-disable-autoformat` label, and revert the reformatting commit.\n\nIf files unrelated to your change were modified, try reverting the reformatting commit + merging with the target branch (and push those changes).'

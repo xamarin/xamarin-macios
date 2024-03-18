@@ -39,7 +39,7 @@ namespace MonoTouch.Tuner {
 		Dictionary<AssemblyDefinition, HashSet<AssemblyDefinition>> _reversedReferences;
 		Dictionary<AssemblyDefinition, HashSet<AssemblyDefinition>> GetReversedReferences ()
 		{
-			if (_reversedReferences != null)
+			if (_reversedReferences is not null)
 				return _reversedReferences;
 
 			_reversedReferences = new Dictionary<AssemblyDefinition, HashSet<AssemblyDefinition>> ();
@@ -49,7 +49,7 @@ namespace MonoTouch.Tuner {
 
 				foreach (var reference in assembly.MainModule.AssemblyReferences) {
 					var resolvedReference = Configuration.Context.GetLoadedAssembly (reference.Name);
-					if (resolvedReference == null)
+					if (resolvedReference is null)
 						continue;
 
 					if (!_reversedReferences.TryGetValue (resolvedReference, out var referrers)) {
@@ -66,7 +66,7 @@ namespace MonoTouch.Tuner {
 		Dictionary<AssemblyDefinition, bool> _transitivelyReferencesProduct;
 		bool TransitivelyReferencesProduct (AssemblyDefinition assembly)
 		{
-			if (_transitivelyReferencesProduct != null) {
+			if (_transitivelyReferencesProduct is not null) {
 				Debug.Assert (_transitivelyReferencesProduct.ContainsKey (assembly));
 				return _transitivelyReferencesProduct.TryGetValue (assembly, out bool result) && result;
 			}
@@ -198,7 +198,7 @@ namespace MonoTouch.Tuner {
 		static Dictionary<TypeReference, bool> ci_filter_types = new Dictionary<TypeReference, bool> ();
 		bool IsCIFilter (TypeReference type)
 		{
-			if (type == null)
+			if (type is null)
 				return false;
 
 			bool rv;
@@ -224,7 +224,7 @@ namespace MonoTouch.Tuner {
 			if (IsCIFilter (type)) {
 				isdirectbinding_value [type] = null;
 				var base_type = Context.Resolve (type.BaseType);
-				while (base_type != null && IsNSObject (base_type)) {
+				while (base_type is not null && IsNSObject (base_type)) {
 					isdirectbinding_value [base_type] = null;
 					base_type = Context.Resolve (base_type.BaseType);
 				}
@@ -238,7 +238,7 @@ namespace MonoTouch.Tuner {
 
 				// We must clear IsDirectBinding for any wrapper superclasses.
 				var base_type = Context.Resolve (type.BaseType);
-				while (base_type != null && IsNSObject (base_type)) {
+				while (base_type is not null && IsNSObject (base_type)) {
 					if (IsWrapperType (base_type))
 						isdirectbinding_value [base_type] = null;
 					base_type = Context.Resolve (base_type.BaseType);

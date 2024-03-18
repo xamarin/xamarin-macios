@@ -1,8 +1,3 @@
-# https://github.com/xamarin/xamarin-macios/issues/12871 
-# Catalyst field constants that are loaded from private UIKitCore are not being handled by Field attribute
-!missing-field! NSToolbarPrimarySidebarTrackingSeparatorItemIdentifier not bound
-!missing-field! NSToolbarSupplementarySidebarTrackingSeparatorItemIdentifier not bound
-
 # deprecated types, not working at runtime
 !missing-protocol! UISearchDisplayDelegate not bound
 

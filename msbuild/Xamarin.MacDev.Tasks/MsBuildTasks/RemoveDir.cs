@@ -1,7 +1,9 @@
+extern alias Microsoft_Build_Tasks_Core;
 using Xamarin.Messaging.Build.Client;
 
 namespace Microsoft.Build.Tasks {
-	public class RemoveDir : RemoveDirBase {
+	public class RemoveDir : Microsoft_Build_Tasks_Core::Microsoft.Build.Tasks.RemoveDir {
+		public string SessionId { get; set; } = string.Empty;
 		public bool RemoveAppDir { get; set; }
 
 		public override bool Execute ()
@@ -15,7 +17,7 @@ namespace Microsoft.Build.Tasks {
 			var client = BuildConnection
 				.GetAsync (BuildEngine4)
 				.Result
-				.Client;
+				.GetClient (SessionId);
 
 			if (!client.IsConnected) {
 				return result;

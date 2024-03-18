@@ -12,9 +12,12 @@ parameters:
 
 - name: testsLabels
   type: string
-  default: '--label=run-ios-64-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests' # default context, since we started dealing with iOS devices.
+  default: '--label=run-ios-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests' # default context, since we started dealing with iOS devices.
 
 - name: label
+  type: string
+
+- name: labelWithPlatform
   type: string
 
 - name: disableProvisionatorCache
@@ -61,6 +64,22 @@ parameters:
   type: string
   default: HEAD
 
+- name: uploadPrefix
+  type: string
+  default: '$(MaciosUploadPrefix)'
+
+- name: testPlatform
+  type: string
+  default: ''
+
+- name: conditionVariable
+  type: string
+  default: ''
+
+- name: retryCount
+  type: number
+  default: 3
+
 steps:
 
 - template: ../common/checkout.yml
@@ -75,19 +94,14 @@ steps:
 
 # Use a cmdlet to check if the space available in the devices root system is larger than 50 gb. If there is not
 # enough space available it:
-# 1. Set the status of the build to error. It is not a failure since no tests have been ran.
-# 2. Set a comment stating the same as what was sent to the status.
-# 3. Cancel the pipeline and do not execute any of the following steps.
+# 1. Set a comment stating the same as what was sent to the status.
+# 2. Cancel the pipeline and do not execute any of the following steps.
 - pwsh: | 
     Import-Module ./MaciosCI.psd1
-    $statuses = New-GitHubStatusesObjectFromUrl -Url "$(Build.Repository.Uri)" -Token $(GitHub.Token)
 
     if ( -not (Test-HDFreeSpace -Size 20)) {
-      $statuses.SetStatus("error", "Not enough free space in the host.", "${{ parameters.statusContext }}")
       New-GitHubComment -Header "Tests failed catastrophically on $Env:CONTEXT" -Emoji ":fire:" -Description "Not enough free space in the host."
       Stop-Pipeline
-    } else {
-      $statuses.SetStatus("pending", "Device tests on VSTS have been started.", "${{ parameters.statusContext }}")
     }
   env:
     CONTEXT: ${{ parameters.statusContext }}
@@ -103,8 +117,14 @@ steps:
     set -x
     set -e
     cd xamarin-macios
-    ./configure --enable-xamarin
-  displayName: 'Enable Xamarin'
+    TEST_PLATFORM=$(echo "${{ parameters.testPlatform }}" | tr '[:upper:]' '[:lower:]')
+    ARGS=(--enable-xamarin)
+    if test -n "$TEST_PLATFORM"; then
+      ARGS+=("--disable-all-platforms")
+      ARGS+=("--enable-$TEST_PLATFORM")
+    fi
+    ./configure "${ARGS[@]}"
+  displayName: 'Enable Xamarin and configure platforms'
   timeoutInMinutes: 1
 
 # Add the required provisioning profiles to be able to execute the tests.
@@ -116,6 +136,7 @@ steps:
     ./maccore/tools/install-qa-provisioning-profiles.sh -v
   displayName: 'Add provisioning profiles'
   timeoutInMinutes: 30
+  retryCountOnTaskFailure: ${{ parameters.retryCount }} # We sometinmes have network issues when we try to retrieve the version of provisionator
   env:
     AUTH_TOKEN_GITHUB_COM: ${{ parameters.gitHubToken }}
     AUTH_TOKEN_LA_DEV_APPLE_P12: ${{ parameters.xqaCertPass }}
@@ -137,15 +158,15 @@ steps:
 
 - pwsh: |
     $dir = "$(Build.SourcesDirectory)/artifacts"
-    $versionsPath = "$dir/PkgsVersions/PkgsVersions.json"
+    $versionsPath = "$dir/${{ parameters.uploadPrefix }}PkgsVersions/PkgsVersions.json"
     $versionData = Get-Content $versionsPath | ConvertFrom-Json
 
     $iOSVersion = $versionData | Select-Object -ExpandProperty "iOS"
-    $iOSPath = "$dir/not-signed-package/xamarin.ios-$iOSVersion.pkg"
+    $iOSPath = "$dir/${{ parameters.uploadPrefix }}not-signed-package/xamarin.ios-$iOSVersion.pkg"
     Write-Host "##vso[task.setvariable variable=XI_PACKAGE;]$iOSPath"
 
     $macOSVersion = $versionData | Select-Object -ExpandProperty "macOS"
-    $macOSPath = "$dir/not-signed-package/xamarin.mac-$macOSVersion.pkg"
+    $macOSPath = "$dir/${{ parameters.uploadPrefix }}not-signed-package/xamarin.mac-$macOSVersion.pkg"
     Write-Host "##vso[task.setvariable variable=XM_PACKAGE;]$macOSPath"
 
   displayName: 'Set pkgs url'
@@ -160,7 +181,7 @@ steps:
 - bash: rm -rf "$TOOLS_DIR/provisionator"
   env:
     TOOLS_DIR: $(Agent.ToolsDirectory)
-  displayName: 'Nuke Provisionator Tool Cache'
+  displayName: 'Remove Provisionator Tool Cache'
   condition: ${{ parameters.clearProvisionatorCache }}
 
 # Use the provisionator to install the test dependencies. Those have been generated in the 'Generate Provisionator csx file' step.
@@ -200,10 +221,20 @@ steps:
     set -e
     $(Build.SourcesDirectory)/xamarin-macios/system-dependencies.sh --provision-simulators --ignore-shellcheck --ignore-yamllint
   displayName: 'Provision simulators'
+  timeoutInMinutes: 250
+
+# clean sims incase we were left in a strange state
+- bash: |
+    sudo xcrun simctl shutdown all
+    sudo xcrun simctl erase all
+  displayName: 'Clean simulators'
+  timeoutInMinutes: 20
 
 - template: ./run-tests.yml
   parameters:
+    isPR: ${{ parameters.isPR }}
     label: ${{ parameters.label }}
+    labelWithPlatform: ${{ parameters.labelWithPlatform }}
     statusContext: ${{ parameters.statusContext }}
     testsLabels: ${{ parameters.testsLabels }}
     vsdropsPrefix: ${{ parameters.vsdropsPrefix }}

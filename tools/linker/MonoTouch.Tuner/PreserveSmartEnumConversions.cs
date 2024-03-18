@@ -61,17 +61,17 @@ namespace Xamarin.Linker.Steps {
 #if NET
 		void Mark (Tuple<MethodDefinition, MethodDefinition> pair)
 		{
-			context.Annotations.Mark (pair.Item1);
-			context.Annotations.Mark (pair.Item2);
+			Context.Annotations.Mark (pair.Item1);
+			Context.Annotations.Mark (pair.Item2);
 		}
 #else
 		void Preserve (Tuple<MethodDefinition, MethodDefinition> pair, MethodDefinition conditionA, MethodDefinition conditionB = null)
 		{
-			if (conditionA != null) {
+			if (conditionA is not null) {
 				context.Annotations.AddPreservedMethod (conditionA, pair.Item1);
 				context.Annotations.AddPreservedMethod (conditionA, pair.Item2);
 			}
-			if (conditionB != null) {
+			if (conditionB is not null) {
 				context.Annotations.AddPreservedMethod (conditionB, pair.Item1);
 				context.Annotations.AddPreservedMethod (conditionB, pair.Item2);
 			}
@@ -100,7 +100,7 @@ namespace Xamarin.Linker.Steps {
 
 				var managedType = ca.ConstructorArguments [0].Value as TypeReference;
 				var managedEnumType = managedType?.GetElementType ().Resolve ();
-				if (managedEnumType == null) {
+				if (managedEnumType is null) {
 					ErrorHelper.Show (ErrorHelper.CreateWarning (LinkContext.Target.App, 4124, provider, Errors.MT4124_H, provider.AsString (), managedType?.FullName));
 					continue;
 				}
@@ -110,7 +110,7 @@ namespace Xamarin.Linker.Steps {
 					continue;
 
 				Tuple<MethodDefinition, MethodDefinition> pair;
-				if (cache != null && cache.TryGetValue (managedEnumType, out pair)) {
+				if (cache is not null && cache.TryGetValue (managedEnumType, out pair)) {
 #if NET
 					// The pair was already marked if it was cached.
 #else
@@ -130,7 +130,7 @@ namespace Xamarin.Linker.Steps {
 					extensionType = type;
 					break;
 				}
-				if (extensionType == null) {
+				if (extensionType is null) {
 					Driver.Log (1, $"Could not find a smart extension type for the enum {managedEnumType.FullName} (due to BindAs attribute on {provider.AsString ()}): most likely this is because the enum isn't a smart enum.");
 					continue;
 				}
@@ -159,18 +159,18 @@ namespace Xamarin.Linker.Steps {
 					}
 				}
 
-				if (getConstant == null) {
+				if (getConstant is null) {
 					Driver.Log (1, $"Could not find the GetConstant method on the supposedly smart extension type {extensionType.FullName} for the enum {managedEnumType.FullName} (due to BindAs attribute on {provider.AsString ()}): most likely this is because the enum isn't a smart enum.");
 					continue;
 				}
 
-				if (getValue == null) {
+				if (getValue is null) {
 					Driver.Log (1, $"Could not find the GetValue method on the supposedly smart extension type {extensionType.FullName} for the enum {managedEnumType.FullName} (due to BindAs attribute on {provider.AsString ()}): most likely this is because the enum isn't a smart enum.");
 					continue;
 				}
 
 				pair = new Tuple<MethodDefinition, MethodDefinition> (getConstant, getValue);
-				if (cache == null)
+				if (cache is null)
 					cache = new Dictionary<TypeDefinition, Tuple<MethodDefinition, MethodDefinition>> ();
 				cache.Add (managedEnumType, pair);
 #if NET
@@ -217,9 +217,9 @@ namespace Xamarin.Linker.Steps {
 		protected override void Process (PropertyDefinition property)
 		{
 			ProcessAttributeProvider (property, property.GetMethod, property.SetMethod);
-			if (property.GetMethod != null)
+			if (property.GetMethod is not null)
 				Process (property.GetMethod);
-			if (property.SetMethod != null)
+			if (property.SetMethod is not null)
 				Process (property.SetMethod);
 		}
 #endif

@@ -1,0 +1,3 @@
+!missing-enum! AUVoiceIOOtherAudioDuckingLevel not bound
+!missing-pinvoke! AudioFileGetUserDataAtOffset is not bound
+!missing-pinvoke! AudioFileGetUserDataSize64 is not bound

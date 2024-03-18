@@ -1,6 +1,6 @@
 {
   "author": "Microsoft",
-  "name": "macOS Controller",
-  "description": "A macOS View Controller with UI implemented in code",
-  "symbols/namespace/description": "namespace for the generated code"
+  "name": "Ovladač macOS",
+  "description": "Ovladač zobrazení macOS s uživatelským rozhraním implementovaným v kódu",
+  "symbols/namespace/description": "obor názvů pro vygenerovaný kód"
 }

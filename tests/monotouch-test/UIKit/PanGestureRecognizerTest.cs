@@ -12,8 +12,6 @@
 using System;
 using System.Drawing;
 using CoreGraphics;
-using CoreGraphics;
-using CoreGraphics;
 using Foundation;
 using UIKit;
 using NUnit.Framework;

@@ -14,6 +14,9 @@ using System.Threading.Tasks;
 
 using Xamarin.Utils;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Xamarin.Bundler {
 	public partial class Driver {
 		public static int RunCommand (string path, IList<string> args, Dictionary<string, string> env, out StringBuilder output, bool suppressPrintOnErrors, int verbose)
@@ -70,8 +73,8 @@ namespace Xamarin.Bundler {
 
 		public static int RunCommand (string path, IList<string> args, Dictionary<string, string> env, StringBuilder output, StringBuilder error, bool suppressPrintOnErrors, int verbosity)
 		{
-			var output_received = output == null ? null : new Action<string> ((v) => { if (v != null) output.AppendLine (v); });
-			var error_received = error == null ? null : new Action<string> ((v) => { if (v != null) error.AppendLine (v); });
+			var output_received = output is null ? null : new Action<string> ((v) => { if (v is not null) output.AppendLine (v); });
+			var error_received = error is null ? null : new Action<string> ((v) => { if (v is not null) error.AppendLine (v); });
 			return RunCommand (path, args, env, output_received, error_received, suppressPrintOnErrors, verbosity);
 		}
 
@@ -89,13 +92,13 @@ namespace Xamarin.Bundler {
 		{
 			var output = new StringBuilder ();
 			var outputCallback = new Action<string> ((string line) => {
-				if (output_received != null)
+				if (output_received is not null)
 					output_received (line);
 				lock (output)
 					output.AppendLine (line);
 			});
 			var errorCallback = new Action<string> ((string line) => {
-				if (error_received != null)
+				if (error_received is not null)
 					error_received (line);
 				lock (output)
 					output.AppendLine (line);
@@ -106,9 +109,9 @@ namespace Xamarin.Bundler {
 
 			var p = Execution.RunWithCallbacksAsync (path, args, env, outputCallback, errorCallback).Result;
 
-			if (output_received != null)
+			if (output_received is not null)
 				output_received (null);
-			if (error_received != null)
+			if (error_received is not null)
 				error_received (null);
 
 			if (p.ExitCode != 0) {

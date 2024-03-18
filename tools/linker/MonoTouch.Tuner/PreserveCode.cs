@@ -30,7 +30,7 @@ namespace MonoTouch.Tuner {
 		void PreserveDictionaryConstructor ()
 		{
 			var dictionary = Context.Corlib.MainModule.GetType ("System.Collections.Generic", "Dictionary`2");
-			if (dictionary == null || !dictionary.HasMethods)
+			if (dictionary is null || !dictionary.HasMethods)
 				return;
 
 			foreach (MethodDefinition ctor in dictionary.Methods) {
@@ -46,7 +46,7 @@ namespace MonoTouch.Tuner {
 				return;
 
 			var queryable_enumerable = core.MainModule.GetType ("System.Linq", "QueryableEnumerable`1");
-			if (queryable_enumerable == null)
+			if (queryable_enumerable is null)
 				return;
 
 			var a = Context.Annotations;

@@ -30,12 +30,12 @@ namespace UIKit {
 
 		public void SetLineDash (nfloat [] values, nfloat phase)
 		{
-			if (values == null) {
+			if (values is null) {
 				SetLineDash (IntPtr.Zero, 0, phase);
 				return;
 			}
 			unsafe {
-				fixed (nfloat* fp = &values [0]) {
+				fixed (nfloat* fp = values) {
 					SetLineDash ((IntPtr) fp, values.Length, phase);
 				}
 			}

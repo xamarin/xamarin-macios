@@ -59,3 +59,5 @@
 !missing-pinvoke! vImagePerspectiveWarp_Planar16F is not bound
 !missing-pinvoke! vImagePerspectiveWarp_Planar16U is not bound
 !missing-pinvoke! vImagePerspectiveWarp_Planar8 is not bound
+!missing-pinvoke! vImageConvolveFloatKernel_ARGB8888 is not bound
+!missing-pinvoke! vImageSepConvolve_ARGB8888 is not bound

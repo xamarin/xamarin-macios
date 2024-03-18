@@ -15,76 +15,82 @@ using Xamarin.Localization.MSBuild;
 using Xamarin.MacDev;
 using Xamarin.Utils;
 
+#nullable enable
+
 namespace Xamarin.MacDev.Tasks {
 	public abstract class XcodeCompilerToolTask : XamarinTask {
 		protected bool Link { get; set; }
-		IList<string> prefixes;
-		string toolExe;
+		IList<string>? prefixes;
+		string? toolExe;
 
 		#region Inputs
 
-		public string BundleIdentifier { get; set; }
+		public string BundleIdentifier { get; set; } = string.Empty;
 
 		[Required]
-		public string MinimumOSVersion { get; set; }
+		public string MinimumOSVersion { get; set; } = string.Empty;
 
 		[Required]
-		public string IntermediateOutputPath { get; set; }
+		public string IntermediateOutputPath { get; set; } = string.Empty;
 
 		[Required]
-		public string ProjectDir { get; set; }
+		public string ProjectDir { get; set; } = string.Empty;
 
 		[Required]
-		public string ResourcePrefix { get; set; }
+		public string ResourcePrefix { get; set; } = string.Empty;
 
-		public string SdkBinPath { get; set; }
+		public string SdkBinPath { get; set; } = string.Empty;
 
 		[Required]
-		public string SdkPlatform { get; set; }
+		public string SdkPlatform { get; set; } = string.Empty;
 
-		string sdkDevPath;
+		string? sdkDevPath;
 		public string SdkDevPath {
+#if NET
 			get { return string.IsNullOrEmpty (sdkDevPath) ? "/" : sdkDevPath; }
+#else
+			get { return (sdkDevPath is null || string.IsNullOrEmpty (sdkDevPath)) ? "/" : sdkDevPath; }
+#endif
 			set { sdkDevPath = value; }
 		}
 
-		public string SdkUsrPath { get; set; }
+		public string SdkUsrPath { get; set; } = string.Empty;
 
 		[Required]
-		public string SdkVersion { get; set; }
+		public string SdkVersion { get; set; } = string.Empty;
 
 		public string ToolExe {
 			get { return toolExe ?? ToolName; }
 			set { toolExe = value; }
 		}
 
-		public string ToolPath { get; set; }
+		public string ToolPath { get; set; } = string.Empty;
 
 		#endregion
 
 		#region Outputs
 
 		[Output]
-		public ITaskItem [] BundleResources { get; set; }
+		public ITaskItem [] BundleResources { get; set; } = Array.Empty<ITaskItem> ();
 
 		[Output]
-		public ITaskItem [] OutputManifests { get; set; }
+		public ITaskItem [] OutputManifests { get; set; } = Array.Empty<ITaskItem> ();
 
 		#endregion
 
 		#region Inputs from the app manifest
 
-		public string CLKComplicationGroup { get; set; }
+		public string CLKComplicationGroup { get; set; } = string.Empty;
 
-		public string NSExtensionPointIdentifier { get; set; }
+		public string NSExtensionPointIdentifier { get; set; } = string.Empty;
 
-		public string UIDeviceFamily { get; set; }
+		public string UIDeviceFamily { get; set; } = string.Empty;
 
 		public bool WKWatchKitApp { get; set; }
 
-		public string XSAppIconAssets { get; set; }
+		public string XSAppIconAssets { get; set; } = string.Empty;
 
-		public string XSLaunchImageAssets { get; set; }
+		public string XSLaunchImageAssets { get; set; } = string.Empty;
 
 		#endregion
 
@@ -106,7 +112,7 @@ namespace Xamarin.MacDev.Tasks {
 
 		protected IList<string> ResourcePrefixes {
 			get {
-				if (prefixes == null)
+				if (prefixes is null)
 					prefixes = BundleResource.SplitResourcePrefixes (ResourcePrefix);
 
 				return prefixes;
@@ -162,7 +168,7 @@ namespace Xamarin.MacDev.Tasks {
 			yield break;
 		}
 
-		protected abstract void AppendCommandLineArguments (IDictionary<string, string> environment, CommandLineArgumentBuilder args, ITaskItem [] items);
+		protected abstract void AppendCommandLineArguments (IDictionary<string, string?> environment, CommandLineArgumentBuilder args, ITaskItem [] items);
 
 		static bool? translated;
 
@@ -172,7 +178,7 @@ namespace Xamarin.MacDev.Tasks {
 		// https://developer.apple.com/documentation/apple_silicon/about_the_rosetta_translation_environment
 		static bool IsTranslated ()
 		{
-			if (translated == null) {
+			if (translated is null) {
 				long result = 0;
 				long size = sizeof (long);
 				translated = ((sysctlbyname ("sysctl.proc_translated", ref result, ref size, IntPtr.Zero, 0) != -1) && (result == 1));
@@ -182,7 +188,7 @@ namespace Xamarin.MacDev.Tasks {
 
 		protected int Compile (ITaskItem [] items, string output, ITaskItem manifest)
 		{
-			var environment = new Dictionary<string, string> ();
+			var environment = new Dictionary<string, string?> ();
 			var args = new CommandLineArgumentBuilder ();
 
 			if (!string.IsNullOrEmpty (SdkBinPath))
@@ -225,14 +231,14 @@ namespace Xamarin.MacDev.Tasks {
 			var arguments = args.ToList ();
 			var rv = ExecuteAsync (tool, arguments, sdkDevPath, environment: environment, mergeOutput: false).Result;
 			var exitCode = rv.ExitCode;
-			var messages = rv.StandardOutput.ToString ();
+			var messages = rv.StandardOutput!.ToString ();
 			File.WriteAllText (manifest.ItemSpec, messages);
 
 			if (exitCode != 0) {
 				// Note: ibtool or actool exited with an error. Dump everything we can to help the user
 				// diagnose the issue and then delete the manifest log file so that rebuilding tries
 				// again (in case of ibtool's infamous spurious errors).
-				var errors = rv.StandardError.ToString ();
+				var errors = rv.StandardError!.ToString ();
 				if (errors.Length > 0)
 					Log.LogError (null, null, null, items [0].ItemSpec, 0, 0, 0, 0, "{0}", errors);
 
@@ -241,7 +247,7 @@ namespace Xamarin.MacDev.Tasks {
 				// Note: If the log file exists and is parseable, log those warnings/errors as well...
 				if (File.Exists (manifest.ItemSpec)) {
 					try {
-						var plist = PDictionary.FromFile (manifest.ItemSpec);
+						var plist = PDictionary.FromFile (manifest.ItemSpec)!;
 
 						LogWarningsAndErrors (plist, items [0]);
 					} catch (Exception ex) {
@@ -257,9 +263,9 @@ namespace Xamarin.MacDev.Tasks {
 
 		protected void LogWarningsAndErrors (PDictionary plist, ITaskItem file)
 		{
-			PDictionary dictionary;
-			PString message;
-			PArray array;
+			PDictionary? dictionary;
+			PString? message;
+			PArray? array;
 
 			if (plist.TryGetValue (string.Format ("com.apple.{0}.document.notices", ToolName), out array)) {
 				foreach (var item in array.OfType<PDictionary> ()) {

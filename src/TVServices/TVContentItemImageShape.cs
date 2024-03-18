@@ -15,7 +15,7 @@ namespace TVServices {
 	static public class TVContentItemImageShapeExtensions {
 
 #if NET
-		[UnsupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("tvos")]
 		[ObsoletedOSPlatform ("tvos13.0")]
 #else
 		[Deprecated (PlatformName.TvOS, 13, 0)]
@@ -25,7 +25,7 @@ namespace TVServices {
 			/* TVTopShelfContentStyle */ nint style);
 
 #if NET
-		[UnsupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("tvos")]
 		[ObsoletedOSPlatform ("tvos13.0")]
 #else
 		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'TVTopShelfSectionedContent.GetImageSize' or 'TVTopShelfInsetContent.ImageSize' instead.")]

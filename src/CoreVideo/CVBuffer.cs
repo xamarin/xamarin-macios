@@ -48,8 +48,6 @@ namespace CoreVideo {
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
-#else
-	[Watch (4, 0)]
 #endif
 	public partial class CVBuffer : NativeObject {
 #if !COREBUILD
@@ -99,10 +97,6 @@ namespace CoreVideo {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos12.0")]
-		[UnsupportedOSPlatform ("tvos15.0")]
-		[UnsupportedOSPlatform ("maccatalyst15.0")]
-		[UnsupportedOSPlatform ("ios15.0")]
 		[ObsoletedOSPlatform ("macos12.0")]
 		[ObsoletedOSPlatform ("tvos15.0")]
 		[ObsoletedOSPlatform ("maccatalyst15.0")]
@@ -166,10 +160,6 @@ namespace CoreVideo {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos12.0")]
-		[UnsupportedOSPlatform ("tvos15.0")]
-		[UnsupportedOSPlatform ("maccatalyst15.0")]
-		[UnsupportedOSPlatform ("ios15.0")]
 		[ObsoletedOSPlatform ("macos12.0")]
 		[ObsoletedOSPlatform ("tvos15.0")]
 		[ObsoletedOSPlatform ("maccatalyst15.0")]

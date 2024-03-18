@@ -37,7 +37,6 @@ namespace Extrospection {
 			case "HIToolbox":
 			case "Hypervisor":
 			case "ICADevices":
-			case "ImageCaptureCore":
 			case "ImageCapture":
 			case "IMServicePlugIn":
 			case "Ink":
@@ -75,7 +74,6 @@ namespace Extrospection {
 			case "SearchKit":
 			case "SecurityFoundation": // bugzilla
 			case "SecurityHI":
-			case "ServiceManagement":
 			case "SharedFileList":
 			case "SpeechRecognition":
 			case "SpeechSynthesis":

@@ -15,12 +15,12 @@ using UIKit;
 
 namespace BCLTests.TestRunner.Core {
 	public class TcpTextWriter : TextWriter {
-		
+
 		TcpClient client;
 		TcpListener server;
 		StreamWriter writer;
-		
-		static string SelectHostName (string[] names, int port)
+
+		static string SelectHostName (string [] names, int port)
 		{
 			if (names.Length == 0)
 				return null;
@@ -35,26 +35,25 @@ namespace BCLTests.TestRunner.Core {
 			using (var evt = new ManualResetEvent (false)) {
 				for (int i = names.Length - 1; i >= 0; i--) {
 					var name = names [i];
-					ThreadPool.QueueUserWorkItem ((v) =>
-						{
-							try {
-								var client = new TcpClient (name, port);
-								using (var writer = new StreamWriter (client.GetStream ())) {
-									writer.WriteLine ("ping");
-								}
-								lock (lock_obj) {
-									if (result == null)
-										result = name;
-								}
-								evt.Set ();
-							} catch (Exception) {
-								lock (lock_obj) {
-									failures++;
-									if (failures == names.Length)
-										evt.Set ();
-								}
+					ThreadPool.QueueUserWorkItem ((v) => {
+						try {
+							var client = new TcpClient (name, port);
+							using (var writer = new StreamWriter (client.GetStream ())) {
+								writer.WriteLine ("ping");
 							}
-						});
+							lock (lock_obj) {
+								if (result is null)
+									result = name;
+							}
+							evt.Set ();
+						} catch (Exception) {
+							lock (lock_obj) {
+								failures++;
+								if (failures == names.Length)
+									evt.Set ();
+							}
+						}
+					});
 				}
 
 				// Wait for 1 success or all failures
@@ -67,9 +66,9 @@ namespace BCLTests.TestRunner.Core {
 		public TcpTextWriter (string hostName, int port, bool isTunnel = false)
 		{
 			if ((port < 0) || (port > ushort.MaxValue))
-				throw new ArgumentOutOfRangeException (nameof (port), $"Port must be between 0 and {ushort.MaxValue}" );
+				throw new ArgumentOutOfRangeException (nameof (port), $"Port must be between 0 and {ushort.MaxValue}");
 
-			if (!isTunnel && hostName == null)
+			if (!isTunnel && hostName is null)
 				throw new ArgumentNullException (nameof (hostName));
 			if (!isTunnel)
 				HostName = SelectHostName (hostName.Split (','), port);
@@ -98,17 +97,16 @@ namespace BCLTests.TestRunner.Core {
 					client = new TcpClient (HostName, port);
 				}
 				writer = new StreamWriter (client.GetStream ());
-			}
-			catch {
+			} catch {
 #if __IOS__
 				UIApplication.SharedApplication.NetworkActivityIndicatorVisible = false;
 #endif
 				throw;
 			}
 		}
-		
+
 		public string HostName { get; private set; }
-		
+
 		public int Port { get; private set; }
 
 		// we override everything that StreamWriter overrides from TextWriter
@@ -122,10 +120,10 @@ namespace BCLTests.TestRunner.Core {
 #endif
 			writer.Close ();
 		}
-		
+
 		protected override void Dispose (bool disposing)
 		{
-			 writer.Dispose ();
+			writer.Dispose ();
 		}
 
 		public override void Flush ()
@@ -138,13 +136,13 @@ namespace BCLTests.TestRunner.Core {
 		{
 			writer.Write (value);
 		}
-		
-		public override void Write (char[] buffer)
+
+		public override void Write (char [] buffer)
 		{
-			 writer.Write (buffer);
+			writer.Write (buffer);
 		}
-		
-		public override void Write (char[] buffer, int index, int count)
+
+		public override void Write (char [] buffer, int index, int count)
 		{
 			writer.Write (buffer, index, count);
 		}
@@ -153,7 +151,7 @@ namespace BCLTests.TestRunner.Core {
 		{
 			writer.Write (value);
 		}
-		
+
 		// special extra override to ensure we flush data regularly
 
 		public override void WriteLine ()

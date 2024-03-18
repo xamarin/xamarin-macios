@@ -29,6 +29,36 @@ namespace Xamarin.Tests {
 		}
 	}
 
+	static class Extensions {
+		public static IEnumerable<ToolMessage> FilterUnrelatedWarnings (this IEnumerable<ToolMessage> messages)
+		{
+			return messages.Where (msg => {
+				if (!msg.IsWarning)
+					return true;
+
+				switch (msg.Number) {
+				case 4189:
+					switch (msg.Message) {
+					case "The class 'PassKit.PKDisbursementAuthorizationController' will not be registered it has been removed from the iOS SDK.":
+					case "The class 'PassKit.PKDisbursementAuthorizationControllerDelegate' will not be registered it has been removed from the iOS SDK.":
+						return false;
+					}
+					break;
+				case 4178:
+					switch (msg.Message) {
+					case "The class 'NewsstandKit.NKAssetDownload' will not be registered because the NewsstandKit framework has been removed from the iOS SDK.":
+					case "The class 'NewsstandKit.NKLibrary' will not be registered because the NewsstandKit framework has been removed from the iOS SDK.":
+					case "The class 'NewsstandKit.NKIssue' will not be registered because the NewsstandKit framework has been removed from the iOS SDK.":
+						return false;
+					}
+					break;
+				}
+
+				return true;
+			});
+		}
+	}
+
 	abstract class Tool {
 		StringBuilder output = new StringBuilder ();
 
@@ -45,7 +75,7 @@ namespace Xamarin.Tests {
 		public IEnumerable<ToolMessage> Messages { get { return messages; } }
 		public List<string> OutputLines {
 			get {
-				if (output_lines == null) {
+				if (output_lines is null) {
 					output_lines = new List<string> ();
 					output_lines.AddRange (output.ToString ().Split ('\n'));
 				}
@@ -170,7 +200,7 @@ namespace Xamarin.Tests {
 
 				line = line.Substring (8);
 				var toolName = messageToolName;
-				if (toolName != null && line.StartsWith (toolName + ": ", StringComparison.Ordinal))
+				if (toolName is not null && line.StartsWith (toolName + ": ", StringComparison.Ordinal))
 					line = line.Substring (toolName.Length + 2);
 
 				msg.Message = line;
@@ -196,7 +226,7 @@ namespace Xamarin.Tests {
 		public void ParseMessages ()
 		{
 			messages.Clear ();
-			ParseMessages (messages, output.ToString ().Split ('\n'), MessageToolName);
+			ParseMessages (messages, output.ToString ().Split ('\n', '\r'), MessageToolName);
 		}
 
 		static bool TrySplitCode (string code, out string prefix, out int number)
@@ -204,7 +234,7 @@ namespace Xamarin.Tests {
 			prefix = null;
 			number = -1;
 
-			if (code == null)
+			if (code is null)
 				return false;
 
 			for (var i = 0; i < code.Length; i++) {
@@ -265,7 +295,9 @@ namespace Xamarin.Tests {
 
 		public static int GetWarningCount (IEnumerable<ToolMessage> messages)
 		{
-			return messages.Count ((v) => v.IsWarning);
+			return messages
+				.FilterUnrelatedWarnings ()
+				.Count ((v) => v.IsWarning);
 		}
 
 		public bool HasError (string prefix, int number, string message)
@@ -322,7 +354,7 @@ namespace Xamarin.Tests {
 		public void AssertError (string prefix, int number, string message, string filename = null, int? linenumber = null)
 		{
 			if (!messages.Any ((msg) => msg.Prefix == prefix && msg.Number == number))
-				Assert.Fail (string.Format ("The error '{0}{1:0000}' was not found in the output.", prefix, number));
+				Assert.Fail (string.Format ("The error '{0}{1:0000}' was not found in the output.\nFound {2}i:\n", prefix, number, string.Join ("\n", messages)));
 
 			var matches = messages.Where ((msg) => msg.Message == message);
 			if (!matches.Any ()) {
@@ -342,7 +374,7 @@ namespace Xamarin.Tests {
 
 		static void AssertFilename (IList<ToolMessage> messages, string prefix, int number, string message, IEnumerable<ToolMessage> matches, string filename, int? linenumber)
 		{
-			if (filename != null) {
+			if (filename is not null) {
 				var hasDirectory = filename.IndexOf (Path.DirectorySeparatorChar) > -1;
 				if (!matches.Any ((v) => {
 					if (hasDirectory) {
@@ -358,7 +390,7 @@ namespace Xamarin.Tests {
 				}
 			}
 
-			if (linenumber != null) {
+			if (linenumber is not null) {
 				if (!matches.Any ((v) => linenumber.Value == v.LineNumber)) {
 					var details = matches.Select ((msg) => string.Format ("\tMessage #{2} did not contain expected line number:\n\t\tactual:   '{0}'\n\t\texpected: '{1}'", msg.LineNumber, linenumber, messages.IndexOf (msg) + 1));
 					Assert.Fail (string.Format ($"The linenumber '{linenumber.Value}' was not found in the output for the error {prefix}{number:X4}: {message}:\n{string.Join ("\n", details.ToArray ())}"));
@@ -414,7 +446,9 @@ namespace Xamarin.Tests {
 
 		public void AssertNoWarnings ()
 		{
-			var warnings = messages.Where ((v) => v.IsWarning);
+			var warnings = messages
+				.FilterUnrelatedWarnings ()
+				.Where ((v) => v.IsWarning);
 			if (!warnings.Any ())
 				return;
 

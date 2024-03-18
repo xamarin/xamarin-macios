@@ -164,12 +164,16 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static void CGContextSetLineDash (/* CGContextRef */ IntPtr c, /* CGFloat */ nfloat phase, /* CGFloat[] */ nfloat []? lengths, /* size_t */ nint count);
+		extern static unsafe void CGContextSetLineDash (/* CGContextRef */ IntPtr c, /* CGFloat */ nfloat phase, /* CGFloat[] */ nfloat* lengths, /* size_t */ nint count);
 
 		public void SetLineDash (nfloat phase, nfloat []? lengths)
 		{
 			int n = lengths is null ? 0 : lengths.Length;
-			CGContextSetLineDash (Handle, phase, lengths, n);
+			unsafe {
+				fixed (nfloat* lengthsPtr = lengths) {
+					CGContextSetLineDash (Handle, phase, lengthsPtr, n);
+				}
+			}
 		}
 
 		public void SetLineDash (nfloat phase, nfloat []? lengths, int n)
@@ -178,7 +182,11 @@ namespace CoreGraphics {
 				n = 0;
 			else if (n < 0 || n > lengths.Length)
 				throw new ArgumentException (nameof (n));
-			CGContextSetLineDash (Handle, phase, lengths, n);
+			unsafe {
+				fixed (nfloat* lengthsPtr = lengths) {
+					CGContextSetLineDash (Handle, phase, lengthsPtr, n);
+				}
+			}
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
@@ -332,12 +340,11 @@ namespace CoreGraphics {
 
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool CGContextIsPathEmpty (/* CGContextRef */ IntPtr context);
+		extern static byte CGContextIsPathEmpty (/* CGContextRef */ IntPtr context);
 
 		public bool IsPathEmpty ()
 		{
-			return CGContextIsPathEmpty (Handle);
+			return CGContextIsPathEmpty (Handle) != 0;
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
@@ -357,12 +364,11 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool CGContextPathContainsPoint (/* CGContextRef */ IntPtr context, CGPoint point, CGPathDrawingMode mode);
+		extern static byte CGContextPathContainsPoint (/* CGContextRef */ IntPtr context, CGPoint point, CGPathDrawingMode mode);
 
 		public bool PathContainsPoint (CGPoint point, CGPathDrawingMode mode)
 		{
-			return CGContextPathContainsPoint (Handle, point, mode);
+			return CGContextPathContainsPoint (Handle, point, mode) != 0;
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
@@ -482,29 +488,19 @@ namespace CoreGraphics {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios11.0")]
-		[SupportedOSPlatform ("macos10.13")]
-		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
-#else
-		[iOS (11, 0)]
-		[Mac (10, 13)]
-		[TV (11, 0)]
-		[Watch (4, 0)]
 #endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static void CGContextResetClip (/* CGContextRef */ IntPtr c);
 
 #if NET
-		[SupportedOSPlatform ("ios11.0")]
-		[SupportedOSPlatform ("macos10.13")]
-		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
-#else
-		[iOS (11, 0)]
-		[Mac (10, 13)]
-		[TV (11, 0)]
-		[Watch (4, 0)]
 #endif
 		public void ResetClip ()
 		{
@@ -583,39 +579,55 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static void CGContextSetFillColor (/* CGContextRef */ IntPtr context,
-			/* const CGFloat * __nullable */ nfloat []? components);
+		extern static unsafe void CGContextSetFillColor (/* CGContextRef */ IntPtr context,
+			/* const CGFloat * __nullable */ nfloat* components);
 
 		public void SetFillColor (nfloat []? components)
 		{
-			CGContextSetFillColor (Handle, components);
+			unsafe {
+				fixed (nfloat* componentsPtr = components) {
+					CGContextSetFillColor (Handle, componentsPtr);
+				}
+			}
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static void CGContextSetStrokeColor (/* CGContextRef */ IntPtr context,
-			/* const CGFloat * __nullable */ nfloat []? components);
+		extern static unsafe void CGContextSetStrokeColor (/* CGContextRef */ IntPtr context,
+			/* const CGFloat * __nullable */ nfloat* components);
 
 		public void SetStrokeColor (nfloat []? components)
 		{
-			CGContextSetStrokeColor (Handle, components);
+			unsafe {
+				fixed (nfloat* componentsPtr = components) {
+					CGContextSetStrokeColor (Handle, componentsPtr);
+				}
+			}
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static void CGContextSetFillPattern (/* CGContextRef */ IntPtr context,
-			/* CGPatternRef __nullable */ IntPtr pattern, /* const CGFloat * __nullable */ nfloat []? components);
+		extern static unsafe void CGContextSetFillPattern (/* CGContextRef */ IntPtr context,
+			/* CGPatternRef __nullable */ IntPtr pattern, /* const CGFloat * __nullable */ nfloat* components);
 
 		public void SetFillPattern (CGPattern pattern, nfloat []? components)
 		{
-			CGContextSetFillPattern (Handle, pattern.GetHandle (), components);
+			unsafe {
+				fixed (nfloat* componentsPtr = components) {
+					CGContextSetFillPattern (Handle, pattern.GetHandle (), componentsPtr);
+				}
+			}
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static void CGContextSetStrokePattern (/* CGContextRef */ IntPtr context,
-			/* CGPatternRef __nullable */ IntPtr pattern, /* const CGFloat * __nullable */ nfloat []? components);
+		extern static unsafe void CGContextSetStrokePattern (/* CGContextRef */ IntPtr context,
+			/* CGPatternRef __nullable */ IntPtr pattern, /* const CGFloat * __nullable */ nfloat* components);
 
 		public void SetStrokePattern (CGPattern? pattern, nfloat []? components)
 		{
-			CGContextSetStrokePattern (Handle, pattern.GetHandle (), components);
+			unsafe {
+				fixed (nfloat* componentsPtr = components) {
+					CGContextSetStrokePattern (Handle, pattern.GetHandle (), componentsPtr);
+				}
+			}
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
@@ -828,8 +840,6 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos10.9")]
-		[UnsupportedOSPlatform ("ios7.0")]
 		[ObsoletedOSPlatform ("macos10.9")]
 		[ObsoletedOSPlatform ("ios7.0")]
 #else
@@ -838,15 +848,13 @@ namespace CoreGraphics {
 #endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static void CGContextSelectFont (/* CGContextRef */ IntPtr c,
-			/* const char* __nullable */ string? name, /* CGFloat */ nfloat size, CGTextEncoding textEncoding);
+			/* const char* __nullable */ IntPtr name, /* CGFloat */ nfloat size, CGTextEncoding textEncoding);
 
 #if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos10.9")]
-		[UnsupportedOSPlatform ("ios7.0")]
 		[ObsoletedOSPlatform ("macos10.9", "Use the 'CoreText' API instead.")]
 		[ObsoletedOSPlatform ("ios7.0", "Use the 'CoreText' API instead.")]
 #else
@@ -855,7 +863,8 @@ namespace CoreGraphics {
 #endif
 		public void SelectFont (string? name, nfloat size, CGTextEncoding textEncoding)
 		{
-			CGContextSelectFont (Handle, name, size, textEncoding);
+			using var namePtr = new TransientString (name);
+			CGContextSelectFont (Handle, namePtr, size, textEncoding);
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
@@ -877,8 +886,6 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos10.9")]
-		[UnsupportedOSPlatform ("ios7.0")]
 		[ObsoletedOSPlatform ("macos10.9")]
 		[ObsoletedOSPlatform ("ios7.0")]
 #else
@@ -886,15 +893,13 @@ namespace CoreGraphics {
 		[Deprecated (PlatformName.MacOSX, 10, 9)]
 #endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static void CGContextShowText (/* CGContextRef */ IntPtr c, /* const char* __nullable */ string? s, /* size_t */ nint length);
+		extern static void CGContextShowText (/* CGContextRef */ IntPtr c, /* const char* __nullable */ IntPtr s, /* size_t */ nint length);
 
 #if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos10.9")]
-		[UnsupportedOSPlatform ("ios7.0")]
 		[ObsoletedOSPlatform ("macos10.9", "Use the 'CoreText' API instead.")]
 		[ObsoletedOSPlatform ("ios7.0", "Use the 'CoreText' API instead.")]
 #else
@@ -907,7 +912,8 @@ namespace CoreGraphics {
 				count = 0;
 			else if (count > str.Length)
 				throw new ArgumentException (nameof (count));
-			CGContextShowText (Handle, str, count);
+			using var strPtr = new TransientString (str);
+			CGContextShowText (Handle, strPtr, count);
 		}
 
 #if NET
@@ -915,8 +921,6 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos10.9")]
-		[UnsupportedOSPlatform ("ios7.0")]
 		[ObsoletedOSPlatform ("macos10.9", "Use the 'CoreText' API instead.")]
 		[ObsoletedOSPlatform ("ios7.0", "Use the 'CoreText' API instead.")]
 #else
@@ -925,7 +929,8 @@ namespace CoreGraphics {
 #endif
 		public void ShowText (string? str)
 		{
-			CGContextShowText (Handle, str, str is null ? 0 : str.Length);
+			using var strPtr = new TransientString (str);
+			CGContextShowText (Handle, strPtr, str is null ? 0 : str.Length);
 		}
 
 #if NET
@@ -933,8 +938,6 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos10.9")]
-		[UnsupportedOSPlatform ("ios7.0")]
 		[ObsoletedOSPlatform ("macos10.9")]
 		[ObsoletedOSPlatform ("ios7.0")]
 #else
@@ -949,8 +952,6 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos10.9")]
-		[UnsupportedOSPlatform ("ios7.0")]
 		[ObsoletedOSPlatform ("macos10.9", "Use the 'CoreText' API instead.")]
 		[ObsoletedOSPlatform ("ios7.0", "Use the 'CoreText' API instead.")]
 #else
@@ -971,8 +972,6 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos10.9")]
-		[UnsupportedOSPlatform ("ios7.0")]
 		[ObsoletedOSPlatform ("macos10.9", "Use the 'CoreText' API instead.")]
 		[ObsoletedOSPlatform ("ios7.0", "Use the 'CoreText' API instead.")]
 #else
@@ -989,8 +988,6 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos10.9")]
-		[UnsupportedOSPlatform ("ios7.0")]
 		[ObsoletedOSPlatform ("macos10.9")]
 		[ObsoletedOSPlatform ("ios7.0")]
 #else
@@ -999,15 +996,13 @@ namespace CoreGraphics {
 #endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static void CGContextShowTextAtPoint (/* CGContextRef __nullable */ IntPtr c, /* CGFloat */ nfloat x,
-			/* CGFloat */ nfloat y, /* const char* __nullable */ string? str, /* size_t */ nint length);
+			/* CGFloat */ nfloat y, /* const char* __nullable */ IntPtr str, /* size_t */ nint length);
 
 #if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos10.9")]
-		[UnsupportedOSPlatform ("ios7.0")]
 		[ObsoletedOSPlatform ("macos10.9", "Use the 'CoreText' API instead.")]
 		[ObsoletedOSPlatform ("ios7.0", "Use the 'CoreText' API instead.")]
 #else
@@ -1016,7 +1011,8 @@ namespace CoreGraphics {
 #endif
 		public void ShowTextAtPoint (nfloat x, nfloat y, string? str, int length)
 		{
-			CGContextShowTextAtPoint (Handle, x, y, str, length);
+			using var strPtr = new TransientString (str);
+			CGContextShowTextAtPoint (Handle, x, y, strPtr, length);
 		}
 
 #if NET
@@ -1024,8 +1020,6 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos10.9")]
-		[UnsupportedOSPlatform ("ios7.0")]
 		[ObsoletedOSPlatform ("macos10.9", "Use the 'CoreText' API instead.")]
 		[ObsoletedOSPlatform ("ios7.0", "Use the 'CoreText' API instead.")]
 #else
@@ -1034,7 +1028,8 @@ namespace CoreGraphics {
 #endif
 		public void ShowTextAtPoint (nfloat x, nfloat y, string? str)
 		{
-			CGContextShowTextAtPoint (Handle, x, y, str, str is null ? 0 : str.Length);
+			using var strPtr = new TransientString (str);
+			CGContextShowTextAtPoint (Handle, x, y, strPtr, str is null ? 0 : str.Length);
 		}
 
 #if NET
@@ -1042,8 +1037,6 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos10.9")]
-		[UnsupportedOSPlatform ("ios7.0")]
 		[ObsoletedOSPlatform ("macos10.9")]
 		[ObsoletedOSPlatform ("ios7.0")]
 #else
@@ -1068,8 +1061,6 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos10.9")]
-		[UnsupportedOSPlatform ("ios7.0")]
 		[ObsoletedOSPlatform ("macos10.9")]
 		[ObsoletedOSPlatform ("ios7.0")]
 #else
@@ -1085,8 +1076,6 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos10.9")]
-		[UnsupportedOSPlatform ("ios7.0")]
 		[ObsoletedOSPlatform ("macos10.9", "Use the 'CoreText' API instead.")]
 		[ObsoletedOSPlatform ("ios7.0", "Use the 'CoreText' API instead.")]
 #else
@@ -1103,8 +1092,6 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos10.9")]
-		[UnsupportedOSPlatform ("ios7.0")]
 		[ObsoletedOSPlatform ("macos10.9", "Use the 'CoreText' API instead.")]
 		[ObsoletedOSPlatform ("ios7.0", "Use the 'CoreText' API instead.")]
 #else
@@ -1125,8 +1112,6 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos10.9")]
-		[UnsupportedOSPlatform ("ios7.0")]
 		[ObsoletedOSPlatform ("macos10.9")]
 		[ObsoletedOSPlatform ("ios7.0")]
 #else
@@ -1142,8 +1127,6 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos10.9")]
-		[UnsupportedOSPlatform ("ios7.0")]
 		[ObsoletedOSPlatform ("macos10.9", "Use the 'CoreText' API instead.")]
 		[ObsoletedOSPlatform ("ios7.0", "Use the 'CoreText' API instead.")]
 #else
@@ -1164,8 +1147,6 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos10.9")]
-		[UnsupportedOSPlatform ("ios7.0")]
 		[ObsoletedOSPlatform ("macos10.9", "Use the 'CoreText' API instead.")]
 		[ObsoletedOSPlatform ("ios7.0", "Use the 'CoreText' API instead.")]
 #else
@@ -1182,8 +1163,6 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos10.9")]
-		[UnsupportedOSPlatform ("ios7.0")]
 		[ObsoletedOSPlatform ("macos10.9")]
 		[ObsoletedOSPlatform ("ios7.0")]
 #else
@@ -1200,8 +1179,6 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos10.9")]
-		[UnsupportedOSPlatform ("ios7.0")]
 		[ObsoletedOSPlatform ("macos10.9", "Use the 'CoreText' API instead.")]
 		[ObsoletedOSPlatform ("ios7.0", "Use the 'CoreText' API instead.")]
 #else
@@ -1265,26 +1242,26 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static void CGContextSetShouldAntialias (/* CGContextRef */ IntPtr context, [MarshalAs (UnmanagedType.I1)] bool shouldAntialias);
+		extern static void CGContextSetShouldAntialias (/* CGContextRef */ IntPtr context, byte shouldAntialias);
 
 		public void SetShouldAntialias (bool shouldAntialias)
 		{
-			CGContextSetShouldAntialias (Handle, shouldAntialias);
+			CGContextSetShouldAntialias (Handle, shouldAntialias.AsByte ());
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static void CGContextSetAllowsAntialiasing (/* CGContextRef */ IntPtr context, [MarshalAs (UnmanagedType.I1)] bool allowsAntialiasing);
+		extern static void CGContextSetAllowsAntialiasing (/* CGContextRef */ IntPtr context, byte allowsAntialiasing);
 		public void SetAllowsAntialiasing (bool allowsAntialiasing)
 		{
-			CGContextSetAllowsAntialiasing (Handle, allowsAntialiasing);
+			CGContextSetAllowsAntialiasing (Handle, allowsAntialiasing.AsByte ());
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static void CGContextSetShouldSmoothFonts (/* CGContextRef */ IntPtr context, [MarshalAs (UnmanagedType.I1)] bool shouldSmoothFonts);
+		extern static void CGContextSetShouldSmoothFonts (/* CGContextRef */ IntPtr context, byte shouldSmoothFonts);
 
 		public void SetShouldSmoothFonts (bool shouldSmoothFonts)
 		{
-			CGContextSetShouldSmoothFonts (Handle, shouldSmoothFonts);
+			CGContextSetShouldSmoothFonts (Handle, shouldSmoothFonts.AsByte ());
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
@@ -1374,43 +1351,43 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static void CGContextSetAllowsFontSmoothing (/* CGContextRef */ IntPtr context, [MarshalAs (UnmanagedType.I1)] bool shouldSubpixelPositionFonts);
+		extern static void CGContextSetAllowsFontSmoothing (/* CGContextRef */ IntPtr context, byte shouldSubpixelPositionFonts);
 
 		public void SetAllowsFontSmoothing (bool allows)
 		{
-			CGContextSetAllowsFontSmoothing (Handle, allows);
+			CGContextSetAllowsFontSmoothing (Handle, allows.AsByte ());
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static void CGContextSetAllowsFontSubpixelPositioning (/* CGContextRef */ IntPtr context, [MarshalAs (UnmanagedType.I1)] bool allowsFontSubpixelPositioning);
+		extern static void CGContextSetAllowsFontSubpixelPositioning (/* CGContextRef */ IntPtr context, byte allowsFontSubpixelPositioning);
 
 		public void SetAllowsSubpixelPositioning (bool allows)
 		{
-			CGContextSetAllowsFontSubpixelPositioning (Handle, allows);
+			CGContextSetAllowsFontSubpixelPositioning (Handle, allows.AsByte ());
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static void CGContextSetAllowsFontSubpixelQuantization (/* CGContextRef */ IntPtr context, [MarshalAs (UnmanagedType.I1)] bool shouldSubpixelQuantizeFonts);
+		extern static void CGContextSetAllowsFontSubpixelQuantization (/* CGContextRef */ IntPtr context, byte shouldSubpixelQuantizeFonts);
 
 		public void SetAllowsFontSubpixelQuantization (bool allows)
 		{
-			CGContextSetAllowsFontSubpixelQuantization (Handle, allows);
+			CGContextSetAllowsFontSubpixelQuantization (Handle, allows.AsByte ());
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static void CGContextSetShouldSubpixelPositionFonts (/* CGContextRef */ IntPtr context, [MarshalAs (UnmanagedType.I1)] bool shouldSubpixelPositionFonts);
+		extern static void CGContextSetShouldSubpixelPositionFonts (/* CGContextRef */ IntPtr context, byte shouldSubpixelPositionFonts);
 
 		public void SetShouldSubpixelPositionFonts (bool shouldSubpixelPositionFonts)
 		{
-			CGContextSetShouldSubpixelPositionFonts (Handle, shouldSubpixelPositionFonts);
+			CGContextSetShouldSubpixelPositionFonts (Handle, shouldSubpixelPositionFonts.AsByte ());
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static void CGContextSetShouldSubpixelQuantizeFonts (/* CGContextRef */ IntPtr context, [MarshalAs (UnmanagedType.I1)] bool shouldSubpixelQuantizeFonts);
+		extern static void CGContextSetShouldSubpixelQuantizeFonts (/* CGContextRef */ IntPtr context, byte shouldSubpixelQuantizeFonts);
 
 		public void ShouldSubpixelQuantizeFonts (bool shouldSubpixelQuantizeFonts)
 		{
-			CGContextSetShouldSubpixelQuantizeFonts (Handle, shouldSubpixelQuantizeFonts);
+			CGContextSetShouldSubpixelQuantizeFonts (Handle, shouldSubpixelQuantizeFonts.AsByte ());
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
@@ -1441,6 +1418,21 @@ namespace CoreGraphics {
 		{
 			return new CGBitmapContext (Handle, false);
 		}
+
+#if NET
+		[SupportedOSPlatform ("ios17.0")]
+		[SupportedOSPlatform ("maccatalyst17.0")]
+		[SupportedOSPlatform ("macos14.0")]
+		[SupportedOSPlatform ("tvos17.0")]
+#else
+		[Mac (14, 0), iOS (17, 0), TV (17, 0), MacCatalyst (17, 0), Watch (10, 0)]
+#endif
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		static extern void CGContextDrawConicGradient (/* CGContext */ IntPtr context, /*[NullAllowed] CGGradient*/ IntPtr gradient, CGPoint center, nfloat angle);
+
+		public void DrawConicGradient (CGGradient? gradient, CGPoint point, nfloat angle) =>
+			CGContextDrawConicGradient (Handle, gradient.GetHandle (), point, angle);
+
 #endif // !COREBUILD
 	}
 }

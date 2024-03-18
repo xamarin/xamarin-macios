@@ -82,7 +82,7 @@ namespace MonoTouch.Tuner {
 		protected override TypeDefinition MarkType (TypeReference reference)
 		{
 			TypeDefinition type = base.MarkType (reference);
-			if (type == null)
+			if (type is null)
 				return null;
 
 			switch (type.Module.Assembly.Name.Name) {
@@ -96,13 +96,13 @@ namespace MonoTouch.Tuner {
 		protected override MethodDefinition MarkMethod (MethodReference reference)
 		{
 			var method = base.MarkMethod (reference);
-			if (method == null)
+			if (method is null)
 				return null;
 
 			// we need to track who's calling ParameterInfo.Name property getter, if it comes from
 			// user code then it's not possible to remove the parameters from the assemblies metadata
 			if (!parameter_info && (method.Name == "get_Name") && method.DeclaringType.Is ("System.Reflection", "ParameterInfo")) {
-				if (current_method == null) {
+				if (current_method is null) {
 					// This can happen if ParameterInfo.get_Name is preserved in an xml file
 					Annotations.GetCustomAnnotations ("ParameterInfo").Add (method, null);
 					parameter_info = true;
@@ -170,7 +170,7 @@ namespace MonoTouch.Tuner {
 				switch (type.Name) {
 				case "LambdaExpression":
 					var expr_t = type.Module.GetType ("System.Linq.Expressions.ExpressionCreator`1");
-					if (expr_t != null) {
+					if (expr_t is not null) {
 						MarkNamedMethod (expr_t, "CreateExpressionFunc");
 					}
 					break;
@@ -188,7 +188,7 @@ namespace MonoTouch.Tuner {
 				switch (type.Name) {
 				case "CallSite":
 					var cs_ops = type.Module.GetType ("System.Runtime.CompilerServices.CallSiteOps");
-					if (cs_ops != null)
+					if (cs_ops is not null)
 						MarkMethods (cs_ops.Resolve ());
 
 					break;
@@ -196,7 +196,7 @@ namespace MonoTouch.Tuner {
 					MarkNamedMethod (type, "get_Update");
 
 					var ud = type.Module.GetType ("System.Dynamic.UpdateDelegates");
-					if (ud != null)
+					if (ud is not null)
 						MarkMethods (ud.Resolve ());
 
 					break;

@@ -89,7 +89,7 @@ namespace OpenTK {
 		/// <summary>
 		/// Defines the size of the Vector4i struct in bytes.
 		/// </summary>
-		public static readonly int SizeInBytes = Marshal.SizeOf (new Vector4i ());
+		public static readonly int SizeInBytes = Marshal.SizeOf<Vector4i> ();
 
 		#endregion
 

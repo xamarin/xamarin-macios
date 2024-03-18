@@ -1,7 +1,6 @@
 ## there's a type of the same name (like NSObject, check what Swift did)
 
 ## fixed in XAMCORE_3_0 - API break
-!incorrect-protocol-member! AVAudioMixing::destinationForMixer:bus: is REQUIRED and should be abstract
 
 ## Used only once in a deprecated API, native use `NSInteger` not a real enum - that's why there's a `[Native]`
 
@@ -9,7 +8,6 @@
 !unknown-native-enum! AVAudioSessionInterruptionFlags bound
 
 ## it's already defined in the base class, it's fine even if it returns mutable tracks in this case 
-!missing-selector! AVMutableComposition::tracks not bound
 
 ## type and protocol are named identically (check the swift name, it's a similar situation to NSObject)
 
@@ -20,48 +18,25 @@
 
 ## unsorted
 
-!missing-protocol-conformance! AVAsset should conform to AVAsynchronousKeyValueLoading
-!missing-protocol-conformance! AVAssetTrack should conform to AVAsynchronousKeyValueLoading
-!missing-protocol-conformance! AVMetadataItem should conform to AVAsynchronousKeyValueLoading
-!missing-selector! +AVAudioChannelLayout::layoutWithLayout: not bound
-!missing-selector! +AVAudioChannelLayout::layoutWithLayoutTag: not bound
-!missing-selector! AVCompositionTrack::segmentForTrackTime: not bound
-!missing-selector! NSCoder::decodeCMTimeForKey: not bound
-!missing-selector! NSCoder::decodeCMTimeMappingForKey: not bound
-!missing-selector! NSCoder::decodeCMTimeRangeForKey: not bound
-!missing-selector! NSCoder::encodeCMTime:forKey: not bound
-!missing-selector! NSCoder::encodeCMTimeMapping:forKey: not bound
-!missing-selector! NSCoder::encodeCMTimeRange:forKey: not bound
 
 # cannot be done because it will break the API, we have a #if define with the correct implementation
 
 !missing-release-attribute-on-return-value! CoreMedia.CMFormatDescription AVFoundation.AVTimedMetadataGroup::CopyFormatDescription()'s selector's ('copyFormatDescription') Objective-C method family ('copy') indicates that the native method returns a retained object, and as such a '[return: Release]' attribute is required.
 
 # Initial result from new rule extra-null-allowed
-!extra-null-allowed! 'AVFoundation.AVAudioTime AVFoundation.AVAudioTime::FromAudioTimeStamp(AudioToolbox.AudioTimeStamp&,System.Double)' has a extraneous [NullAllowed] on parameter #0
-!extra-null-allowed! 'System.Void AVFoundation.AVAudioFormat::.ctor(AudioToolbox.AudioStreamBasicDescription&)' has a extraneous [NullAllowed] on parameter #0
-!extra-null-allowed! 'System.Void AVFoundation.AVAudioFormat::.ctor(AudioToolbox.AudioStreamBasicDescription&,AVFoundation.AVAudioChannelLayout)' has a extraneous [NullAllowed] on parameter #0
-!extra-null-allowed! 'System.Void AVFoundation.AVAudioTime::.ctor(AudioToolbox.AudioTimeStamp&,System.Double)' has a extraneous [NullAllowed] on parameter #0
 
 # Swift Docs and Obj-C are out of sync
 # https://developer.apple.com/documentation/avfoundation/avvideocompositioninstructionprotocol/1388661-requiredsourcetrackids
 # https://developer.apple.com/documentation/avfoundation/1386654-avvideocompositioninstruction/1388661-requiredsourcetrackids?language=objc
 
 # Keep [NullAllowed] on FromAsset to keep existing tests passing and allow backwards compatibility
-!extra-null-allowed! 'AVFoundation.AVPlayerItem AVFoundation.AVPlayerItem::FromAsset(AVFoundation.AVAsset)' has a extraneous [NullAllowed] on parameter #0
-!extra-null-allowed! 'AVFoundation.AVPlayerItem AVFoundation.AVPlayerItem::FromAsset(AVFoundation.AVAsset,Foundation.NSString[])' has a extraneous [NullAllowed] on parameter #0
 
 # Initial result from new rule missing-null-allowed
-!missing-null-allowed! 'System.Boolean AVFoundation.AVPlayerItem::Seek(Foundation.NSDate,AVFoundation.AVCompletion)' is missing an [NullAllowed] on parameter #1
 
 # intro says that this is not true
-!missing-protocol-conformance! AVURLAsset should conform to NSItemProviderReading (defined in 'AVURLAssetNSItemProvider' category)
-!missing-protocol-conformance! AVURLAsset should conform to NSItemProviderWriting (defined in 'AVURLAssetNSItemProvider' category)
 
 # no tests/samples
-!missing-pinvoke! AVSampleBufferAttachContentKey is not bound
 
 # adding abstract member to an existing type would be a breaking change
-!incorrect-protocol-member! AVQueuedSampleBufferRendering::hasSufficientMediaDataForReliablePlaybackStart is REQUIRED and should be abstract
 
 # added for .NET since it is part of a new breaking change in a notification

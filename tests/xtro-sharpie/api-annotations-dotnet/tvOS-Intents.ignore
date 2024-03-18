@@ -5,3 +5,5 @@
 !missing-selector! INDateComponentsRange::initWithStartDateComponents:endDateComponents:recurrenceRule: not bound
 !missing-selector! INDateComponentsRange::recurrenceRule not bound
 !unknown-native-enum! INCallRecordType bound
+!missing-field! INAnswerCallIntentIdentifier not bound
+!missing-field! INHangUpCallIntentIdentifier not bound

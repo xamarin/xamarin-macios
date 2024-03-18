@@ -19,7 +19,6 @@ namespace monotouchtest {
 			IntPtr objptr;
 			IntPtr keyptr;
 
-			NSString obj, key;
 			NSString v;
 
 			try {

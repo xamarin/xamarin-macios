@@ -188,24 +188,25 @@ namespace MonoTouchFixtures.Security {
 
 		void Protocol (SecProtocol protocol)
 		{
+			var account = $"Protocol-{protocol}-{CFBundle.GetMain ().Identifier}-{GetType ().FullName}-{Process.GetCurrentProcess ().Id}";
 			var rec = CreateSecRecord (SecKind.InternetPassword,
-				account: $"Protocol-{protocol}-{CFBundle.GetMain ().Identifier}-{GetType ().FullName}-{Process.GetCurrentProcess ().Id}"
+				account: account
 			);
 			try {
 				SecKeyChain.Remove (rec); // it might already exists (or not)
 
 				rec = CreateSecRecord (SecKind.InternetPassword,
-					account: "Protocol",
+					account: account,
 					valueData: NSData.FromString ("Password"),
 					protocol: protocol,
 					server: "www.xamarin.com"
 				);
 
-				Assert.That (SecKeyChain.Add (rec), Is.EqualTo (SecStatusCode.Success), "Add");
+				Assert.That (SecKeyChain.Add (rec), Is.EqualTo (SecStatusCode.Success), $"Add: {protocol}");
 
 				SecStatusCode code;
 				var match = SecKeyChain.QueryAsRecord (rec, out code);
-				Assert.That (code, Is.EqualTo (SecStatusCode.Success), "QueryAsRecord");
+				Assert.That (code, Is.EqualTo (SecStatusCode.Success), $"QueryAsRecord: {protocol}");
 
 				Assert.That (match.Protocol, Is.EqualTo (protocol), "Protocol");
 			} finally {
@@ -347,7 +348,7 @@ namespace MonoTouchFixtures.Security {
 			);
 			SecStatusCode code;
 			var record = SecKeyChain.QueryAsRecord (searchRecord, out code);
-			if (code == SecStatusCode.Success && record != null)
+			if (code == SecStatusCode.Success && record is not null)
 				password = NSString.FromData (record.ValueData, NSStringEncoding.UTF8);
 			return password;
 		}
@@ -370,7 +371,7 @@ namespace MonoTouchFixtures.Security {
 				var addCode = SecKeyChain.Add (record);
 				success = (addCode == SecStatusCode.Success);
 			}
-			if (queryCode == SecStatusCode.Success && record != null) {
+			if (queryCode == SecStatusCode.Success && record is not null) {
 				record.ValueData = NSData.FromString (password);
 				var updateCode = SecKeyChain.Update (searchRecord, record);
 				success = (updateCode == SecStatusCode.Success);
@@ -388,7 +389,7 @@ namespace MonoTouchFixtures.Security {
 			SecStatusCode queryCode;
 			var record = SecKeyChain.QueryAsRecord (searchRecord, out queryCode);
 
-			if (queryCode == SecStatusCode.Success && record != null) {
+			if (queryCode == SecStatusCode.Success && record is not null) {
 				var removeCode = SecKeyChain.Remove (searchRecord);
 				success = (removeCode == SecStatusCode.Success);
 			}

@@ -58,7 +58,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 				var callback = new Action (() => called = true);
 				using (var block = new DispatchBlock (callback)) {
 					dg.Notify (DispatchQueue.MainQueue, block);
-					TestRuntime.RunAsync (DateTime.Now.AddSeconds (5), () => { }, () => called);
+					TestRuntime.RunAsync (TimeSpan.FromSeconds (5), () => { }, () => called);
 					Assert.IsTrue (called, "Called");
 				}
 			}
@@ -71,7 +71,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 				var called = false;
 				var callback = new Action (() => called = true);
 				dg.Notify (DispatchQueue.MainQueue, callback);
-				TestRuntime.RunAsync (DateTime.Now.AddSeconds (5), () => { }, () => called);
+				TestRuntime.RunAsync (TimeSpan.FromSeconds (5), () => { }, () => called);
 				Assert.IsTrue (called, "Called");
 			}
 		}

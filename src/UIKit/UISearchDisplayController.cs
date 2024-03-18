@@ -11,12 +11,15 @@ using MapKit;
 using UIKit;
 using CoreGraphics;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace UIKit {
 	public partial class UISearchDisplayController {
 		public UITableViewSource SearchResultsSource {
 			get {
 				var d = SearchResultsWeakDelegate as UITableViewSource;
-				if (d != null)
+				if (d is not null)
 					return d;
 				return null;
 			}

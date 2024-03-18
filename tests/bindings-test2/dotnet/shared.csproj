@@ -52,6 +52,6 @@
   </ItemGroup>
 
   <Target Name="BuildTestLibraries" Inputs="@(TestLibrariesInput)" Outputs="@(TestLibrariesOutput)" BeforeTargets="BeforeBuild">
-    <Exec Command="make -j8 -C $(TestLibrariesDirectory)" />
+    <Exec Command="make -j8 -C $(TestLibrariesDirectory)" Condition="'$(BUILD_REVISION)' == ''" />
   </Target>
 </Project>

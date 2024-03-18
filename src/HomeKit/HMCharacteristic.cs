@@ -38,12 +38,9 @@ namespace HomeKit {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios9.3")]
-		[SupportedOSPlatform ("tvos10.0")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
-		[iOS (9, 3)]
-		[Watch (2, 2)]
 #endif
 		public bool Hidden {
 			get {

@@ -32,4 +32,6 @@ using CoreFoundation;
 namespace CoreText {
 	public partial class CTFont : NativeObject {
 	}
+	public partial class CTFontDescriptor : NativeObject {
+	}
 }

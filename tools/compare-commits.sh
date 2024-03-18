@@ -272,7 +272,9 @@ if test -z "$USE_EXISTING_BUILD"; then
 	git clone https://github.com/xamarin/xamarin-macios --reference "$ROOT_DIR" 2>&1 | sed 's/^/        /'
 	cd xamarin-macios
 	git reset --hard "$BASE_HASH" 2>&1 | sed 's/^/        /'
-	cp "$ROOT_DIR/configure.inc" .
+	if test -f "$ROOT_DIR/configure.inc"; then
+		cp "$ROOT_DIR/configure.inc" .
+	fi
 	echo "    ${BLUE}Building temporary working directory ${WHITE}$OUTPUT_SRC_DIR${BLUE}...${CLEAR}"
 	make reset 2>&1 | sed 's/^/    /'
 	make check-versions 2>&1 | sed 's/^/    /'

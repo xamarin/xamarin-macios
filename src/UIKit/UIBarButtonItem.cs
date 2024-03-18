@@ -8,6 +8,9 @@ using Foundation;
 using ObjCRuntime;
 using System;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace UIKit {
 
 	public partial class UIBarButtonItem {
@@ -26,7 +29,7 @@ namespace UIKit {
 			[Preserve (Conditional = true)]
 			public void Call (NSObject sender)
 			{
-				if (container.clicked != null)
+				if (container.clicked is not null)
 					container.clicked (sender, EventArgs.Empty);
 			}
 		}
@@ -69,7 +72,7 @@ namespace UIKit {
 
 		public event EventHandler Clicked {
 			add {
-				if (clicked == null) {
+				if (clicked is null) {
 					callback = new Callback ();
 					callback.container = this;
 					this.Target = callback;

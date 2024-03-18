@@ -1,8 +1,6 @@
 ## all members are marked as not available on watchOS (but not the protocol itself)
-!missing-protocol! AVAudio3DMixing not bound
 
 # as per the header comments, the following two enums have to be ignored on watchOS
-!missing-enum! AVAudioSessionIOType not bound
 
 # got removed in watchOS 5 withouth a deprecation, added obsolete attr.
 
@@ -19,15 +17,11 @@
 !unknown-field! AVAudioUnitTypePanner bound
 
 # headers say it is present, but AVMetadataItemFilter is not
-!missing-selector! +AVMetadataItem::metadataItemsFromArray:filteredByMetadataItemFilter: not bound
 
 # The related keys are inside AVVideo which is not available in watchOS
-!missing-field! AVVideoAppleProRAWBitDepthKey not bound
 
 # members of that category are not annotated as supporting watchOS
-!missing-selector! AVPlayerItem::automaticallyHandlesInterstitialEvents not bound
-!missing-selector! AVPlayerItem::setAutomaticallyHandlesInterstitialEvents: not bound
-!missing-selector! AVPlayerItem::templatePlayerItem not bound
 !unknown-native-enum! AVAudioSessionFlags bound
-!missing-protocol-member! AVAudioPlayerDelegate::audioPlayerEndInterruption:withFlags: not found
-!missing-protocol-member! AVAudioRecorderDelegate::audioRecorderEndInterruption:withOptions: not found
+
+## https://github.com/xamarin/xamarin-macios/issues/16229 prevents crashing instead of return null
+## so these selectors have been bound manually

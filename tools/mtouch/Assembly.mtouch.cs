@@ -43,7 +43,7 @@ namespace Xamarin.Bundler {
 		// Recursively list all the assemblies the specified assembly depends on.
 		HashSet<string> ComputeDependencies (List<Exception> warnings)
 		{
-			if (dependency_map != null)
+			if (dependency_map is not null)
 				return dependency_map;
 
 			dependency_map = new HashSet<string> ();
@@ -207,10 +207,10 @@ namespace Xamarin.Bundler {
 			if (EnableCxx || NeedsGccExceptionHandling || ForceLoad)
 				return false;
 
-			if (LinkerFlags != null && LinkerFlags.Count > 0)
+			if (LinkerFlags is not null && LinkerFlags.Count > 0)
 				return false;
 
-			if (LinkWith != null && LinkWith.Count > 0)
+			if (LinkWith is not null && LinkWith.Count > 0)
 				return false;
 
 			return true;
@@ -228,7 +228,7 @@ namespace Xamarin.Bundler {
 				CopyAssembly (source, target);
 			}
 
-			if (Satellites != null) {
+			if (Satellites is not null) {
 				foreach (var a in Satellites) {
 					string s_target_dir = Path.Combine (Target.TargetDirectory, Path.GetFileName (Path.GetDirectoryName (a)));
 					string s_target = Path.Combine (s_target_dir, Path.GetFileName (a));

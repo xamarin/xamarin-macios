@@ -32,14 +32,16 @@ public static class LibTest {
 	public static extern int theUltimateAnswer ();
 }
 
-namespace Bindings.Test
-{
+namespace Bindings.Test {
 	public static class CFunctions {
 		[DllImport ("__Internal")]
 		public static extern int theUltimateAnswer ();
 
 		[DllImport ("__Internal")]
 		public static extern void x_call_block (ref BlockLiteral block);
+
+		[DllImport ("__Internal")]
+		public static extern IntPtr x_call_func_3 (IntPtr fptr, IntPtr p1, IntPtr p2, IntPtr p3);
 
 		[DllImport ("__Internal")]
 		public static extern void x_get_matrix_float2x2 (IntPtr self, string sel, out float r0c0, out float r0c1, out float r1c0, out float r1c1);

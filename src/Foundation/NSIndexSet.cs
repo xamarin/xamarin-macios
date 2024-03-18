@@ -75,7 +75,7 @@ namespace Foundation {
 
 		public static NSIndexSet FromArray (nuint[] items)
 		{
-			if (items == null)
+			if (items is null)
 				return new NSIndexSet ();
 			
 			var indexSet = new NSMutableIndexSet();
@@ -86,7 +86,7 @@ namespace Foundation {
 
 		public static NSIndexSet FromArray (uint[] items)
 		{
-			if (items == null)
+			if (items is null)
 				return new NSIndexSet ();
 
 			var indexSet = new NSMutableIndexSet();
@@ -97,7 +97,7 @@ namespace Foundation {
 
 		public static NSIndexSet FromArray (int[] items)
 		{
-			if (items == null)
+			if (items is null)
 				return new NSIndexSet ();
 			
 			var indexSet = new NSMutableIndexSet();

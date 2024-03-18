@@ -24,12 +24,6 @@ namespace Xharness {
 				"\t\t{0}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU\n" +
 				"\t\t{0}.Debug|iPhone.ActiveCfg = Debug|Any CPU\n" +
 				"\t\t{0}.Debug|iPhone.Build.0 = Debug|Any CPU\n" +
-				"\t\t{0}.Release-bitcode|Any CPU.ActiveCfg = Release-bitcode|Any CPU\n" +
-				"\t\t{0}.Release-bitcode|Any CPU.Build.0 = Release-bitcode|Any CPU\n" +
-				"\t\t{0}.Release-bitcode|iPhoneSimulator.ActiveCfg = Release-bitcode|Any CPU\n" +
-				"\t\t{0}.Release-bitcode|iPhoneSimulator.Build.0 = Release-bitcode|Any CPU\n" +
-				"\t\t{0}.Release-bitcode|iPhone.ActiveCfg = Release-bitcode|Any CPU\n" +
-				"\t\t{0}.Release-bitcode|iPhone.Build.0 = Release-bitcode|Any CPU\n" +
 				"\t\t{0}.Release|Any CPU.ActiveCfg = Release|Any CPU\n" +
 				"\t\t{0}.Release|Any CPU.Build.0 = Release|Any CPU\n" +
 				"\t\t{0}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU\n" +
@@ -57,7 +51,7 @@ namespace Xharness {
 			var folders = new StringBuilder ();
 
 			var srcDirectory = Path.Combine (HarnessConfiguration.RootDirectory, "..", "src");
-			var sln_path = exeTarget == null ? Path.Combine (HarnessConfiguration.RootDirectory, "tests-" + infix + ".sln") : Path.Combine (Path.GetDirectoryName (exeTarget.ProjectPath), Path.GetFileNameWithoutExtension (exeTarget.ProjectPath) + ".sln");
+			var sln_path = exeTarget is null ? Path.Combine (HarnessConfiguration.RootDirectory, "tests-" + infix + ".sln") : Path.Combine (Path.GetDirectoryName (exeTarget.ProjectPath), Path.GetFileNameWithoutExtension (exeTarget.ProjectPath) + ".sln");
 
 			using (var writer = new StringWriter ()) {
 				writer.WriteLine ();
@@ -65,12 +59,12 @@ namespace Xharness {
 				writer.WriteLine ("# Visual Studio 2010");
 				foreach (var target in targets) {
 					var relatedProjects = target.GetRelatedProjects ();
-					var hasRelatedProjects = relatedProjects != null;
+					var hasRelatedProjects = relatedProjects is not null;
 					var folderGuid = string.Empty;
-					var useFolders = hasRelatedProjects && target.IsExe && exeTarget == null;
+					var useFolders = hasRelatedProjects && target.IsExe && exeTarget is null;
 
 					if (hasRelatedProjects && target.IsExe) {
-						if (exeTarget == null) {
+						if (exeTarget is null) {
 							CreateSolution (harness, targets, target, infix, testPlatform); // create a solution for just this test project as well
 						} else if (exeTarget != target) {
 							continue;
@@ -112,16 +106,15 @@ namespace Xharness {
 				writer.WriteLine ("\t\tRelease|iPhoneSimulator = Release|iPhoneSimulator");
 				writer.WriteLine ("\t\tDebug|iPhone = Debug|iPhone");
 				writer.WriteLine ("\t\tRelease|iPhone = Release|iPhone");
-				writer.WriteLine ("\t\tRelease-bitcode|iPhone = Release-bitcode|iPhone");
 				writer.WriteLine ("\t\tDebug|Any CPU = Debug|Any CPU");
 				writer.WriteLine ("\t\tRelease|Any CPU = Release|Any CPU");
 				writer.WriteLine ("\tEndGlobalSection");
 
 				writer.WriteLine ("\tGlobalSection(ProjectConfigurationPlatforms) = postSolution");
 				var exePlatforms = new string [] { "iPhone", "iPhoneSimulator" };
-				var configurations = new string [] { "Debug", "Release", "Release-bitcode" };
+				var configurations = new string [] { "Debug", "Release" };
 				foreach (var target in targets) {
-					if (target.IsExe && exeTarget != null && target != exeTarget)
+					if (target.IsExe && exeTarget is not null && target != exeTarget)
 						continue;
 
 					foreach (var conf in configurations) {
@@ -141,7 +134,7 @@ namespace Xharness {
 
 					if (target.IsExe) {
 						var relatedProjects = target.GetRelatedProjects ();
-						if (relatedProjects != null) {
+						if (relatedProjects is not null) {
 							foreach (var rp in relatedProjects) {
 								foreach (var conf in configurations) {
 									foreach (var platform in exePlatforms) {

@@ -52,7 +52,7 @@ namespace MonoTouchFixtures.Foundation {
 		[TearDown]
 		public void Dispose ()
 		{
-			if (scriptDescription != null)
+			if (scriptDescription is not null)
 				scriptDescription.Dispose ();
 		}
 

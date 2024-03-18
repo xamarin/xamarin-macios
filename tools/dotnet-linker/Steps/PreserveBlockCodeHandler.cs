@@ -9,6 +9,8 @@ using Mono.Tuner;
 
 using Xamarin.Bundler;
 
+#nullable enable
+
 namespace Xamarin.Linker.Steps {
 
 	public class PreserveBlockCodeHandler : ConfigurationAwareMarkHandler {
@@ -74,12 +76,12 @@ namespace Xamarin.Linker.Steps {
 				return true;
 			});
 
-			if (method == null)
+			if (method is null)
 				return;
 
 			// The type was used, so preserve the method and field
-			context.Annotations.Mark (method);
-			context.Annotations.Mark (field);
+			Context.Annotations.Mark (method);
+			Context.Annotations.Mark (field);
 		}
 	}
 }

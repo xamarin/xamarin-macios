@@ -1155,7 +1155,7 @@ namespace MonoTouchFixtures.SceneKit {
 		}
 
 		[Test]
-		public void ToString ()
+		public void ToStringTest ()
 		{
 			var matrix = new SCNMatrix4 (
 				new SCNVector4 (11, 12, 13, 14),

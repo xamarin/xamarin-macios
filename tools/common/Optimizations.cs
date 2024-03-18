@@ -27,6 +27,7 @@ namespace Xamarin.Bundler {
 			"custom-attributes-removal",
 			"experimental-xforms-product-type",
 			"force-rejected-types-removal",
+			"redirect-class-handles",
 		};
 
 		static ApplePlatform [] [] valid_platforms = new ApplePlatform [] [] {
@@ -48,6 +49,7 @@ namespace Xamarin.Bundler {
 			/* Opt.CustomAttributesRemoval            */ new ApplePlatform [] { ApplePlatform.iOS, ApplePlatform.MacOSX, ApplePlatform.WatchOS, ApplePlatform.TVOS, ApplePlatform.MacCatalyst },
 			/* Opt.ExperimentalFormsProductType       */ new ApplePlatform [] { ApplePlatform.iOS, ApplePlatform.MacOSX, ApplePlatform.WatchOS, ApplePlatform.TVOS, ApplePlatform.MacCatalyst },
 			/* Opt.ForceRejectedTypesRemoval          */ new ApplePlatform [] { ApplePlatform.iOS,                       ApplePlatform.WatchOS, ApplePlatform.TVOS, ApplePlatform.MacCatalyst },
+			/* Opt.RedirectClassHandles               */ new ApplePlatform [] { ApplePlatform.iOS, ApplePlatform.MacOSX, ApplePlatform.WatchOS, ApplePlatform.TVOS, ApplePlatform.MacCatalyst },
 		};
 
 		enum Opt {
@@ -69,6 +71,7 @@ namespace Xamarin.Bundler {
 			CustomAttributesRemoval,
 			ExperimentalFormsProductType,
 			ForceRejectedTypesRemoval,
+			RedirectClassHandles,
 		}
 
 		bool? [] values;
@@ -155,6 +158,11 @@ namespace Xamarin.Bundler {
 			set { values [(int) Opt.ForceRejectedTypesRemoval] = value; }
 		}
 
+		public bool? RedirectClassHandles {
+			get { return values [(int) Opt.RedirectClassHandles]; }
+			set { values [(int) Opt.RedirectClassHandles] = value; }
+		}
+
 		public Optimizations ()
 		{
 			values = new bool? [opt_names.Length];
@@ -168,12 +176,19 @@ namespace Xamarin.Bundler {
 				if (!values [i].HasValue)
 					continue;
 
+				// The remove-dynamic-registrar optimization is required when using NativeAOT
+				if (app.XamarinRuntime == XamarinRuntime.NativeAOT && (Opt) i == Opt.RemoveDynamicRegistrar && values [i] == false) {
+					messages.Add (ErrorHelper.CreateWarning (2016, Errors.MX2016 /* Keeping the dynamic registrar (by passing '--optimize=-remove-dynamic-registrar') is not possible, because the dynamic registrar is not supported when using NativeAOT. Support for dynamic registration will still be removed. */));
+					values [i] = true;
+					continue;
+				}
+
 				// The remove-dynamic-registrar optimization is a bit if a special case on macOS:
 				// it only works in very specific circumstances, so we don't add it to valid_platforms.
 				// This means it won't be listed in --help, and it won't be enabled if all optimizations
 				// are enabled. Yet we still might want to enable it manually, and this condition
 				// allows us to manually pass --optimize=remove-dynamic-registrar and enable it that way.
-				if (app.Platform == ApplePlatform.MacOSX && (Opt) i == Opt.RemoveDynamicRegistrar)
+				if (app.Platform == ApplePlatform.MacOSX && app.XamarinRuntime != XamarinRuntime.NativeAOT && (Opt) i == Opt.RemoveDynamicRegistrar)
 					continue;
 
 				// check if the optimization is valid for the current platform
@@ -186,7 +201,7 @@ namespace Xamarin.Bundler {
 
 				switch ((Opt) i) {
 				case Opt.StaticBlockToDelegateLookup:
-					if (app.Registrar != RegistrarMode.Static) {
+					if (app.Registrar != RegistrarMode.Static && app.Registrar != RegistrarMode.ManagedStatic) {
 						messages.Add (ErrorHelper.CreateWarning (2003, Errors.MT2003, (values [i].Value ? "" : "-"), opt_names [i]));
 						values [i] = false;
 						continue;
@@ -196,7 +211,8 @@ namespace Xamarin.Bundler {
 					break; // Does not require linker
 				case Opt.RegisterProtocols:
 				case Opt.RemoveDynamicRegistrar:
-					if (app.Registrar != RegistrarMode.Static) {
+				case Opt.RedirectClassHandles:
+					if (app.Registrar != RegistrarMode.Static && app.Registrar != RegistrarMode.ManagedStatic) {
 						messages.Add (ErrorHelper.CreateWarning (2003, Errors.MT2003, (values [i].Value ? "" : "-"), opt_names [i]));
 						values [i] = false;
 						continue;
@@ -241,19 +257,19 @@ namespace Xamarin.Bundler {
 					InlineRuntimeArch = true;
 			}
 
-			// We try to optimize calls to BlockLiteral.SetupBlock if the static registrar is enabled
+			// We try to optimize calls to BlockLiteral.SetupBlock and certain BlockLiteral constructors if the static registrar is enabled
 			if (!OptimizeBlockLiteralSetupBlock.HasValue) {
-				OptimizeBlockLiteralSetupBlock = app.Registrar == RegistrarMode.Static;
+				OptimizeBlockLiteralSetupBlock = app.Registrar == RegistrarMode.Static || app.Registrar == RegistrarMode.ManagedStatic;
 			}
 
 			// We will register protocols if the static registrar is enabled and loading assemblies is not possible
 			if (!RegisterProtocols.HasValue) {
-				if (app.Platform != ApplePlatform.MacOSX) {
-					RegisterProtocols = (app.Registrar == RegistrarMode.Static) && !app.UseInterpreter;
+				if (app.Platform != ApplePlatform.MacOSX || app.XamarinRuntime == XamarinRuntime.NativeAOT) {
+					RegisterProtocols = (app.Registrar == RegistrarMode.Static || app.Registrar == RegistrarMode.ManagedStatic) && !app.UseInterpreter;
 				} else {
 					RegisterProtocols = false;
 				}
-			} else if (app.Registrar != RegistrarMode.Static && RegisterProtocols == true) {
+			} else if (app.Registrar != RegistrarMode.Static && app.Registrar != RegistrarMode.ManagedStatic && RegisterProtocols == true) {
 				RegisterProtocols = false; // we've already shown a warning for this.
 			}
 
@@ -266,13 +282,15 @@ namespace Xamarin.Bundler {
 				StaticBlockToDelegateLookup = true;
 
 			if (!RemoveDynamicRegistrar.HasValue) {
-				if (InlineDynamicRegistrationSupported != true) {
+				if (app.XamarinRuntime == XamarinRuntime.NativeAOT) {
+					RemoveDynamicRegistrar = true;
+				} else if (InlineDynamicRegistrationSupported != true) {
 					// Can't remove the dynamic registrar unless also inlining Runtime.DynamicRegistrationSupported
 					RemoveDynamicRegistrar = false;
 				} else if (StaticBlockToDelegateLookup != true) {
 					// Can't remove the dynamic registrar unless also generating static lookup of block-to-delegates in the static registrar.
 					RemoveDynamicRegistrar = false;
-				} else if (app.Registrar != RegistrarMode.Static || !app.AreAnyAssembliesTrimmed) {
+				} else if ((app.Registrar != RegistrarMode.Static && app.Registrar != RegistrarMode.ManagedStatic) || !app.AreAnyAssembliesTrimmed) {
 					// Both the linker and the static registrar are also required
 					RemoveDynamicRegistrar = false;
 				} else {
@@ -324,7 +342,7 @@ namespace Xamarin.Bundler {
 		public void Parse (ApplePlatform platform, string options, List<ProductException> messages)
 		{
 			foreach (var option in options.Split (',')) {
-				if (option == null || option.Length < 2) {
+				if (option is null || option.Length < 2) {
 					messages.Add (ErrorHelper.CreateError (10, Errors.MX0010, $"'--optimize={options}'"));
 					return;
 				}
@@ -368,7 +386,11 @@ namespace Xamarin.Bundler {
 					values [i] = enabled;
 				}
 				if (!found)
+#if NET
+					messages.Add (ErrorHelper.CreateWarning (132, Errors.MX0132, opt, string.Join (", ", Enum.GetValues<Opt> ().Where (o => Array.IndexOf (valid_platforms [(int) o], platform) >= 0).Select (o => opt_names [(int) o]))));
+#else
 					messages.Add (ErrorHelper.CreateWarning (132, Errors.MX0132, opt, string.Join (", ", Enum.GetValues (typeof (Opt)).Cast<Opt> ().Where (o => Array.IndexOf (valid_platforms [(int) o], platform) >= 0).Select (o => opt_names [(int) o]))));
+#endif
 			}
 		}
 
@@ -376,7 +398,7 @@ namespace Xamarin.Bundler {
 		{
 			var sb = new StringBuilder ();
 			for (var i = 0; i < values.Length; i++) {
-				if (values [i] == null)
+				if (values [i] is null)
 					continue;
 				if (sb.Length > 0)
 					sb.Append (' ');

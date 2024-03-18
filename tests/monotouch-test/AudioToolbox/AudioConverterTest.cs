@@ -4,6 +4,7 @@
 using System;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
@@ -20,6 +21,18 @@ namespace MonoTouchFixtures.AudioToolbox {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class AudioConverterTest {
+
+		[Test]
+		public void Formats ()
+		{
+			var decodeFormats = AudioConverter.DecodeFormats;
+			Assert.NotNull (decodeFormats, "Decode #1");
+			Assert.That (decodeFormats.Length, Is.GreaterThan (10), "Decode Length #1");
+
+			var encodeFormats = AudioConverter.EncodeFormats;
+			Assert.NotNull (encodeFormats, "Encode #1");
+			Assert.That (encodeFormats.Length, Is.GreaterThan (10), "Encode Length #1");
+		}
 
 		[Test]
 		public void Convert ()

@@ -357,7 +357,7 @@ namespace OpenTK {
 		/// <summary>
 		/// Defines the size of the Vector3d struct in bytes.
 		/// </summary>
-		public static readonly int SizeInBytes = Marshal.SizeOf (new Vector3d ());
+		public static readonly int SizeInBytes = Marshal.SizeOf<Vector3d> ();
 
 		#endregion
 

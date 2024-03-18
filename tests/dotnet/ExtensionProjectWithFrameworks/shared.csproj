@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+	<PropertyGroup>
+		<IsAppExtension>true</IsAppExtension>
+		<RootTestsDirectory Condition="'$(RootTestsDirectory)' == ''">$(MSBuildThisFileDirectory)/../..</RootTestsDirectory>
+	</PropertyGroup>
+
+	<Import Project="../../common/shared-dotnet.csproj" />
+
+	<ItemGroup>
+		<Compile Include="../*.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<!-- Only the extension references UnknownD.framework -->
+		<None Include="$(RootTestsDirectory)/test-libraries/frameworks/.libs/$(RuntimeIdentifier)/UnknownD.framework.zip"       CopyToPublishDirectory="PreserveNewest" PublishFolderType="CompressedAppleFramework" />
+		<!-- Both the extension and the consumer references UnknownE.framework -->
+		<None Include="$(RootTestsDirectory)/test-libraries/frameworks/.libs/$(RuntimeIdentifier)/UnknownE.framework"           CopyToPublishDirectory="PreserveNewest" PublishFolderType="AppleFramework" />
+	</ItemGroup>
+</Project>

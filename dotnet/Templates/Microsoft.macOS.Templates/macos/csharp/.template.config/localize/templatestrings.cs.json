@@ -1,0 +1,7 @@
+{
+  "author": "Microsoft",
+  "name": "Aplikace macOS",
+  "description": "Projekt pro vytvoření aplikace .NET pro macOS",
+  "symbols/bundleId/description": "Přepíše CFBundleIdentifier v souboru Info.plist.",
+  "symbols/minOSVersion/description": "Přepíše SupportedOSPlatformVersion v souboru projektu."
+}

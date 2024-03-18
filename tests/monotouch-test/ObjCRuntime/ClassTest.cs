@@ -84,9 +84,11 @@ namespace MonoTouchFixtures.ObjCRuntime {
 					Assert.AreEqual ("Can't register the class System.String when the dynamic registrar has been linked away.", e.Message, "exc message");
 				}
 			}
+#pragma warning disable IL3050 // Using member 'System.Type.MakeArrayType()' which has 'RequiresDynamicCodeAttribute' can break functionality when AOT compiling. The code for an array of the specified type might not be available.
 			Assert.AreEqual (NativeHandle.Zero, Class.GetHandle (typeof (NSObject).MakeByRefType ()), "NSObject&");
 			Assert.AreEqual (NativeHandle.Zero, Class.GetHandle (typeof (NSObject).MakeArrayType ()), "NSObject[]");
 			Assert.AreEqual (NativeHandle.Zero, Class.GetHandle (typeof (NSObject).MakePointerType ()), "NSObject*");
+#pragma warning restore IL3050
 		}
 
 		[Test]
@@ -119,7 +121,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		}
 
 		class DirtyType : NSObject {
-			public void MarkDirty ()
+			public new void MarkDirty ()
 			{
 				base.MarkDirty ();
 			}

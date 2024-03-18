@@ -14,6 +14,9 @@ using ObjCRuntime;
 using System;
 using System.ComponentModel;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace UIKit {
 
 #if XAMCORE_5_0
@@ -45,15 +48,75 @@ namespace UIKit {
 		[DllImport (Constants.UIKitLibrary, EntryPoint = "UIRectClip")]
 		public extern static void RectClip (CGRect rect);
 
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("ios17.0")]
+		[UnsupportedOSPlatform ("tvos17.0")]
+		[UnsupportedOSPlatform ("maccatalyst17.0")]
+#else
+		[Deprecated (PlatformName.iOS, 17, 0)]
+		[Deprecated (PlatformName.TvOS, 17, 0)]
+#endif
 		[DllImport (Constants.UIKitLibrary, EntryPoint = "UIGraphicsBeginImageContext")]
 		public extern static void BeginImageContext (CGSize size);
 
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("ios17.0")]
+		[UnsupportedOSPlatform ("tvos17.0")]
+		[UnsupportedOSPlatform ("maccatalyst17.0")]
+#else
+		[Deprecated (PlatformName.iOS, 17, 0)]
+		[Deprecated (PlatformName.TvOS, 17, 0)]
+#endif
 		[DllImport (Constants.UIKitLibrary, EntryPoint = "UIGraphicsBeginImageContextWithOptions")]
-		public extern static void BeginImageContextWithOptions (CGSize size, [MarshalAs (UnmanagedType.I1)] bool opaque, nfloat scale);
+		extern static void BeginImageContextWithOptions (CGSize size, byte opaque, nfloat scale);
 
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("ios17.0")]
+		[UnsupportedOSPlatform ("tvos17.0")]
+		[UnsupportedOSPlatform ("maccatalyst17.0")]
+#else
+		[Deprecated (PlatformName.iOS, 17, 0)]
+		[Deprecated (PlatformName.TvOS, 17, 0)]
+#endif
+		public static void BeginImageContextWithOptions (CGSize size, bool opaque, nfloat scale)
+		{
+			BeginImageContextWithOptions (size, opaque ? (byte) 1 : (byte) 0, scale);
+		}
+
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("ios17.0")]
+		[UnsupportedOSPlatform ("tvos17.0")]
+		[UnsupportedOSPlatform ("maccatalyst17.0")]
+#else
+		[Deprecated (PlatformName.iOS, 17, 0)]
+		[Deprecated (PlatformName.TvOS, 17, 0)]
+#endif
 		[DllImport (Constants.UIKitLibrary)]
 		static extern IntPtr UIGraphicsGetImageFromCurrentImageContext ();
 
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("ios17.0")]
+		[UnsupportedOSPlatform ("tvos17.0")]
+		[UnsupportedOSPlatform ("maccatalyst17.0")]
+#else
+		[Deprecated (PlatformName.iOS, 17, 0)]
+		[Deprecated (PlatformName.TvOS, 17, 0)]
+#endif
 		[DllImport (Constants.UIKitLibrary, EntryPoint = "UIGraphicsEndImageContext")]
 		public extern static void EndImageContext ();
 
@@ -99,14 +162,14 @@ namespace UIKit {
 		public static void BeginPDFContext (string file, CGRect bounds, NSDictionary documentInfo)
 		{
 			using (var nsstr = new NSString (file))
-				UIGraphicsBeginPDFContextToFile (nsstr.Handle, bounds, documentInfo == null ? IntPtr.Zero : documentInfo.Handle);
+				UIGraphicsBeginPDFContextToFile (nsstr.Handle, bounds, documentInfo is null ? IntPtr.Zero : documentInfo.Handle);
 		}
 
 		public static void BeginPDFContext (string file, CGRect bounds, CGPDFInfo documentInfo)
 		{
-			using (var dict = documentInfo == null ? null : documentInfo.ToDictionary ())
+			using (var dict = documentInfo is null ? null : documentInfo.ToDictionary ())
 			using (var nsstr = new NSString (file))
-				UIGraphicsBeginPDFContextToFile (nsstr.Handle, bounds, dict == null ? IntPtr.Zero : dict.Handle);
+				UIGraphicsBeginPDFContextToFile (nsstr.Handle, bounds, dict is null ? IntPtr.Zero : dict.Handle);
 		}
 
 		[DllImport (Constants.UIKitLibrary)]
@@ -115,7 +178,7 @@ namespace UIKit {
 
 		public static void BeginPDFContext (NSMutableData data, CGRect bounds, NSDictionary documentInfo)
 		{
-			UIGraphicsBeginPDFContextToData (data.Handle, bounds, documentInfo == null ? IntPtr.Zero : documentInfo.Handle);
+			UIGraphicsBeginPDFContextToData (data.Handle, bounds, documentInfo is null ? IntPtr.Zero : documentInfo.Handle);
 		}
 
 		[DllImport (Constants.UIKitLibrary)]
@@ -148,6 +211,17 @@ namespace UIKit {
 		public static void EndPDFContent () => EndPDFContext ();
 #endif
 
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("ios17.0")]
+		[UnsupportedOSPlatform ("tvos17.0")]
+		[UnsupportedOSPlatform ("maccatalyst17.0")]
+#else
+		[Deprecated (PlatformName.iOS, 17, 0)]
+		[Deprecated (PlatformName.TvOS, 17, 0)]
+#endif
 		public static UIImage GetImageFromCurrentImageContext ()
 		{
 			using (var pool = new NSAutoreleasePool ()) {

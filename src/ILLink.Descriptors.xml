@@ -1,8 +1,0 @@
-<linker>
-	<!-- Workaround for https://github.com/xamarin/xamarin-android/issues/6626, remove once https://github.com/dotnet/runtime/pull/68265 lands -->
-	<assembly fullname="System.Private.CoreLib">
-		<type fullname="System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs">
-			<method signature="System.Void .ctor(System.Exception)" />
-		</type>
-	</assembly>
-</linker>

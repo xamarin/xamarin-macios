@@ -6,6 +6,8 @@ using Foundation;
 using CoreGraphics;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace AppKit {
 
 	[DebuggerTypeProxy (typeof (NSEvent.NSEventDebuggerProxy))]

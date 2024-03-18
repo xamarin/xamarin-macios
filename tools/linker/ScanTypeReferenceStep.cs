@@ -59,7 +59,7 @@ namespace Xamarin.Linker.Steps {
 			// it might be there (and not cleaned) until it's saved back to disk
 			// but it can't resolve anymore (since it's removed from the actual assembly)
 			var td = tr.Resolve ();
-			if (td == null)
+			if (td is null)
 				return false;
 			// and, if it was (cache) then we can ask if it was marked (since we're post mark)
 			return Annotations.IsMarked (td);

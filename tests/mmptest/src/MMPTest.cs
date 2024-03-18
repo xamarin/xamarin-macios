@@ -10,12 +10,10 @@ using System.Reflection;
 using Xamarin.Utils;
 using Xamarin.Tests;
 
-namespace Xamarin.MMP.Tests
-{
+namespace Xamarin.MMP.Tests {
 	[TestFixture]
-	public partial class MMPTests 
-	{
-		public static void RunMMPTest (Action <string> test, string directoryName = null)
+	public partial class MMPTests {
+		public static void RunMMPTest (Action<string> test, string directoryName = null)
 		{
 			test (Cache.CreateTemporaryDirectory (directoryName));
 		}
@@ -26,14 +24,14 @@ namespace Xamarin.MMP.Tests
 			TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { CSProjConfig = projectConfig };
 			var splitBuildOutput = TI.TestUnifiedExecutable (test).BuildResult.BuildOutputLines;
 			string clangInvocation = splitBuildOutput.Single (x => x.Contains ("usr/bin/clang") && x.Contains ("mmacosx-version-min"));
-			return clangInvocation.Split (new string[] { " " }, StringSplitOptions.None);
+			return clangInvocation.Split (new string [] { " " }, StringSplitOptions.None);
 		}
 
 		[Test]
 		public void CollisionsBetweenLibraryNameAndEXE_ShouldFailBuild ()
 		{
 			RunMMPTest (tmpDir => {
-				Action <string, string, bool> testCore = (projectName, assemblyName, XM45) => {
+				Action<string, string, bool> testCore = (projectName, assemblyName, XM45) => {
 					// Build a library with the conflicting name
 					TI.UnifiedTestConfig libConfig = new TI.UnifiedTestConfig (tmpDir) { XM45 = XM45, ProjectName = projectName, AssemblyName = assemblyName };
 					string csprojTarget = TI.GenerateUnifiedLibraryProject (libConfig);
@@ -43,7 +41,7 @@ namespace Xamarin.MMP.Tests
 					string referenceCode = string.Format (@"<Reference Include=""TestApp""><HintPath>{0}</HintPath></Reference>", Path.Combine (tmpDir, "bin/Debug", assemblyName + ".dll"));
 
 					TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { XM45 = XM45, References = referenceCode };
-					TI.TestUnifiedExecutable (test, shouldFail : true);
+					TI.TestUnifiedExecutable (test, shouldFail: true);
 				};
 				// These library assembly names conflict with the exe name
 				testCore ("UnifiedLibrary", "UnifiedExample", false);
@@ -55,10 +53,10 @@ namespace Xamarin.MMP.Tests
 		public void CollisionBetweenEXEAndSDKAssembly_ShouldFailBuild ()
 		{
 			RunMMPTest (tmpDir => {
-				Action <string, bool> testCore = (assemblyName, XM45) => {
+				Action<string, bool> testCore = (assemblyName, XM45) => {
 					// Build a library with the conflicting name
 					TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { XM45 = XM45, AssemblyName = assemblyName };
-					TI.TestUnifiedExecutable (test, shouldFail : true);
+					TI.TestUnifiedExecutable (test, shouldFail: true);
 				};
 				// These library assembly names conflict with the exe name
 				testCore ("Xamarin.Mac", false);
@@ -119,7 +117,7 @@ namespace Xamarin.MMP.Tests
 				string referenceCode = string.Format (@"<Reference Include=""UnifiedLibrary""><HintPath>{0}</HintPath></Reference>", Path.Combine (libraryDirectory, "bin/Debug/", $"{libraryName}.dll"));
 
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { References = referenceCode };
-				TI.TestUnifiedExecutable  (test);
+				TI.TestUnifiedExecutable (test);
 			});
 		}
 
@@ -188,8 +186,7 @@ namespace Xamarin.MMP.Tests
 		public void Dontlink_Allow_ReadonlyAssembly ()
 		{
 			string [] sb;
-			RunMMPTest (tmpDir =>
-			{
+			RunMMPTest (tmpDir => {
 				// build b.dll
 				string assemblyPath = string.Format ("{0}/b.dll", tmpDir);
 				sb = new [] { "-target:library", "-debug", $"-out:{assemblyPath}", $"{tmpDir}/b.cs" };
@@ -200,8 +197,7 @@ namespace Xamarin.MMP.Tests
 				File.SetAttributes (Path.ChangeExtension (assemblyPath, ".pdb"), FileAttributes.ReadOnly);
 
 				// build project referencing a.dll
-				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir)
-				{
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
 					References = string.Format (" <Reference Include=\"b\" > <HintPath>{0}</HintPath> </Reference> ", assemblyPath),
 					TestCode = "System.Console.WriteLine (typeof (B));",
 				};
@@ -215,8 +211,7 @@ namespace Xamarin.MMP.Tests
 		[Test]
 		public void DefaultProject_ShouldPullInMonoPosix_AndNaitveLib ()
 		{
-			RunMMPTest (tmpDir =>
-			{
+			RunMMPTest (tmpDir => {
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { XM45 = true };
 				MonoPosixTestCore (tmpDir, test);
 				test.XM45 = false;
@@ -261,7 +256,7 @@ namespace Xamarin.MMP.Tests
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
 					CSProjConfig = string.Format ("<MonoBundlingExtraArgs>--machine-config={0}</MonoBundlingExtraArgs>", invalidConfigPath)
 				};
-				var testResult = TI.TestUnifiedExecutable (test, shouldFail : true);
+				var testResult = TI.TestUnifiedExecutable (test, shouldFail: true);
 				testResult.Messages.AssertError (97, $"machine.config file '{invalidConfigPath}' can not be found.");
 			});
 		}
@@ -310,7 +305,7 @@ namespace Xamarin.MMP.Tests
 
 				Assert.IsTrue (File.Exists (Path.Combine (tmpDir, machineConfigMobileLocation)));
 				string [] text = File.ReadAllLines (Path.Combine (tmpDir, machineConfigMobileLocation));
-				Assert.IsTrue (text.Length == 1 && text[0] == configText);
+				Assert.IsTrue (text.Length == 1 && text [0] == configText);
 
 				// XM45
 				test.XM45 = true;
@@ -318,7 +313,7 @@ namespace Xamarin.MMP.Tests
 
 				Assert.IsTrue (File.Exists (Path.Combine (tmpDir, machineConfigXM45Location)));
 				text = File.ReadAllLines (Path.Combine (tmpDir, machineConfigXM45Location));
-				Assert.IsTrue (text.Length == 1 && text[0] == configText);
+				Assert.IsTrue (text.Length == 1 && text [0] == configText);
 			});
 		}
 
@@ -326,8 +321,7 @@ namespace Xamarin.MMP.Tests
 		public void Unified_FailedBuild_ShouldRequireAnotherBuildNotSkipMMP ()
 		{
 			RunMMPTest (tmpDir => {
-				foreach (bool xm45 in new bool [] {false, true})
-				{
+				foreach (bool xm45 in new bool [] { false, true }) {
 					// First build with a Non-existant file to force us to error inside mmp test
 					TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { CSProjConfig = "<MonoBundlingExtraArgs>--resource=Foo.bar</MonoBundlingExtraArgs>", XM45 = xm45 };
 					TI.GenerateAndBuildUnifiedExecutable (test, shouldFail: true);
@@ -344,20 +338,18 @@ namespace Xamarin.MMP.Tests
 					Assert.IsTrue (secondBuildOutput.Contains ("Building target \"_CompileToNative\" completely"), "Did need to build");
 				}
 			});
-		}	
+		}
 
 		public const string BundleResourceTemplate = "<ItemGroup><BundleResource Include=\"{0}\" /></ItemGroup>";
 
 		[Test]
 		public void UnifiedWithDepLib_ThatContainsUserResource_ShouldBeRemovedUnderFullLink ()
 		{
-			RunMMPTest (tmpDir =>
-			{
+			RunMMPTest (tmpDir => {
 				string resoucePath = Path.Combine (tmpDir, "foo.xml");
 				File.Create (resoucePath);
 
-				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir)
-				{
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
 					ProjectName = "UnifiedLibrary",
 					ItemGroup = string.Format (BundleResourceTemplate, resoucePath),
 				};
@@ -379,13 +371,12 @@ namespace Xamarin.MMP.Tests
 		[Test]
 		public void Unified_SideBySideXamMac_ConsoleTest ()
 		{
-			RunMMPTest (tmpDir =>
-			{
+			RunMMPTest (tmpDir => {
 				string testPath = Path.Combine (TI.FindSourceDirectory (), @"ConsoleXMApp.csproj");
 				TI.BuildProject (testPath);
 				string exePath = Path.Combine (TI.FindSourceDirectory (), @"bin/Debug/ConsoleXMApp.exe");
 				var output = TI.RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/mono64", new [] { exePath }, "RunSideBySizeXamMac");
-				Assert.IsTrue (output.Split (Environment.NewLine.ToCharArray ()).Any (x => x.Contains ("True")), "Unified_SideBySideXamMac_ConsoleTest run"); 
+				Assert.IsTrue (output.Split (Environment.NewLine.ToCharArray ()).Any (x => x.Contains ("True")), "Unified_SideBySideXamMac_ConsoleTest run");
 			});
 		}
 
@@ -474,17 +465,17 @@ namespace Xamarin.MMP.Tests
 					TestCode = $@"
 			var client = new System.Net.Http.HttpClient ();
 			var field = client.GetType ().BaseType.GetField (""_handler"", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-			if (field == null)
+			if (field is null)
 				throw new System.Exception (""Could not find the field '_handler' in HttpClient's base type (which should be 'HttpMessageInvoker')."");
 			var fieldValue = field.GetValue (client);
-			if (fieldValue == null)
+			if (fieldValue is null)
 				throw new System.Exception (""Unexpected null value found in 'HttpMessageInvoker.handler' field."");
 			var fieldValueType = fieldValue.GetType ().Name;
 			if (fieldValueType != ""{expectedHandler}"")
 				throw new System.Exception ($""Unexpected field type, found '{{fieldValueType}}', expected '{expectedHandler}'"");
 ",
 				};
-				if (mmpHandler != null)
+				if (mmpHandler is not null)
 					test.CSProjConfig = "<HttpClientHandler>" + mmpHandler + "</HttpClientHandler>";
 				TI.TestUnifiedExecutable (test);
 			});
@@ -507,7 +498,7 @@ namespace Xamarin.MMP.Tests
 		public void Unified_ShouldSupportDynamic ()
 		{
 			RunMMPTest (tmpDir => {
-				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { 
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
 					TestCode = @"
 						NSObject o = new NSObject ();
 						dynamic w = o;
@@ -557,7 +548,7 @@ namespace Xamarin.MMP.Tests
 			RunMMPTest (tmpDir => {
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
 					PlistReplaceStrings = new Dictionary<string, string> {
-						{ "<string>10.9</string>", "<string>10.4</string>"}
+						{ $"<string>{SdkVersions.MinOSX}</string>", "<string>10.4</string>"}
 					}
 				};
 				TI.TestUnifiedExecutable (test, shouldFail: true);
@@ -570,7 +561,7 @@ namespace Xamarin.MMP.Tests
 			RunMMPTest (tmpDir => {
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
 					PlistReplaceStrings = new Dictionary<string, string> {
-						{ "<string>10.9</string>", "<string>19.0</string>"}
+						{ $"<string>{SdkVersions.MinOSX}</string>", "<string>19.0</string>"}
 					}
 				};
 				TI.TestUnifiedExecutable (test, shouldFail: true);
@@ -598,7 +589,7 @@ namespace Xamarin.MMP.Tests
 		{
 			RunMMPTest (tmpDir => {
 				var test = new TI.UnifiedTestConfig (tmpDir) {
-					CSProjConfig = $"<MonoBundlingExtraArgs>--optimize={opt}</MonoBundlingExtraArgs>" + 
+					CSProjConfig = $"<MonoBundlingExtraArgs>--optimize={opt}</MonoBundlingExtraArgs>" +
 						"<LinkMode>Full</LinkMode>",
 				};
 				// register-protocols requires static registrar which is default in Release
@@ -616,11 +607,11 @@ namespace Xamarin.MMP.Tests
 		{
 			RunMMPTest (tmpDir => {
 				var test = new TI.UnifiedTestConfig (tmpDir) {
-					CSProjConfig = $"<MonoBundlingExtraArgs>--optimize={opt}</MonoBundlingExtraArgs>" + 
+					CSProjConfig = $"<MonoBundlingExtraArgs>--optimize={opt}</MonoBundlingExtraArgs>" +
 						"<LinkMode>Full</LinkMode>",
 				};
 				var rv = TI.TestUnifiedExecutable (test, shouldFail: false);
-				rv.Messages.AssertWarning (132, $"Unknown optimization: '{opt}'. Valid optimizations are: remove-uithread-checks, dead-code-elimination, inline-isdirectbinding, inline-intptr-size, blockliteral-setupblock, register-protocols, inline-dynamic-registration-supported, static-block-to-delegate-lookup, trim-architectures, inline-is-arm64-calling-convention, cctor-beforefieldinit, custom-attributes-removal, experimental-xforms-product-type.");
+				rv.Messages.AssertWarning (132, $"Unknown optimization: '{opt}'. Valid optimizations are: remove-uithread-checks, dead-code-elimination, inline-isdirectbinding, inline-intptr-size, blockliteral-setupblock, register-protocols, inline-dynamic-registration-supported, static-block-to-delegate-lookup, trim-architectures, inline-is-arm64-calling-convention, cctor-beforefieldinit, custom-attributes-removal, experimental-xforms-product-type, redirect-class-handles.");
 				rv.Messages.AssertErrorCount (0);
 			});
 		}
@@ -652,7 +643,7 @@ namespace Xamarin.MMP.Tests
 					TestCode = "System.Console.WriteLine (typeof (Xunit.AfterTestFinished));",
 					XM45 = xm45,
 				};
-				if (tfv != null)
+				if (tfv is not null)
 					test.TargetFrameworkVersion = $"<TargetFrameworkVersion>{tfv}</TargetFrameworkVersion>";
 
 				string project = TI.GenerateUnifiedExecutableProject (test);
@@ -660,7 +651,7 @@ namespace Xamarin.MMP.Tests
 				var rv = new OutputText (TI.BuildProject (project), string.Empty);
 				Console.WriteLine (rv.BuildResult);
 				if (xm45) {
-					var referenced_version = tfv == null ? "2.0.0.0" : "4.0.0.0";
+					var referenced_version = tfv is null ? "2.0.0.0" : "4.0.0.0";
 					rv.Messages.AssertWarningPattern (176, $"The assembly 'System.Web, Version={referenced_version}, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a' was resolved from the system's GAC: /Library/Frameworks/Mono.framework/Versions/.*/lib/mono/gac/System.Web/4.0.0.0__b03f5f7f11d50a3a/System.Web.dll. This could potentially be a problem in the future; to avoid such problems, please make sure to not use assemblies only available in the system's GAC.");
 					rv.Messages.AssertWarningPattern (176, $"The assembly 'System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a' was resolved from the system's GAC: /Library/Frameworks/Mono.framework/Versions/.*/lib/mono/gac/System.Drawing/4.0.0.0__b03f5f7f11d50a3a/System.Drawing.dll. This could potentially be a problem in the future; to avoid such problems, please make sure to not use assemblies only available in the system's GAC.");
 					rv.Messages.AssertWarningPattern (176, $"The assembly 'System.Web.ApplicationServices, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35' was resolved from the system's GAC: /Library/Frameworks/Mono.framework/Versions/.*/lib/mono/gac/System.Web.ApplicationServices/4.0.0.0__31bf3856ad364e35/System.Web.ApplicationServices.dll. This could potentially be a problem in the future; to avoid such problems, please make sure to not use assemblies only available in the system's GAC.");
@@ -781,6 +772,14 @@ namespace Xamarin.MMP.Tests
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
 					CSProjConfig = "<MonoBundlingExtraArgs>-link_flags=-fobjc-arc</MonoBundlingExtraArgs>"
 				};
+				// Starting with Xcode 14.3, this happens if min OS <= 10.10:
+				// ld: file not found: /Applications/Xcode_14.3.0-rc.2.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/arc/libarclite_macosx.a
+				// clang: error: linker command failed with exit code 1 (use -v to see invocation)
+				if (Version.Parse (SdkVersions.MinOSX) < new Version (10, 10)) {
+					test.PlistReplaceStrings = new Dictionary<string, string> {
+						{ $"<string>{SdkVersions.MinOSX}</string>", "<string>10.11</string>"}
+					};
+				}
 				TI.TestUnifiedExecutable (test);
 				TI.BuildProject (Path.Combine (tmpDir, "UnifiedExample.csproj"));
 			});
@@ -791,7 +790,7 @@ namespace Xamarin.MMP.Tests
 		[Test]
 		public void AssemblyNameWithCommaShouldNotFail () => RunMMPTest (tmpDir => {
 			// Build a library with the conflicting name
-			TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { XM45 = true, AssemblyName = "UserLikes,ToEnumerate.Mac",  ProjectName = "UserLikes,ToEnumerate.Mac" };
+			TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { XM45 = true, AssemblyName = "UserLikes,ToEnumerate.Mac", ProjectName = "UserLikes,ToEnumerate.Mac" };
 			TI.TestUnifiedExecutable (test, shouldFail: false);
 		});
 	}

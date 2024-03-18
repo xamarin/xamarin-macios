@@ -1,0 +1,108 @@
+# YAML pipeline build definition
+# https://devdiv.visualstudio.com/DevDiv/_apps/hub/ms.vss-ciworkflow.build-ci-hub?_a=edit-build-definition&id=13947&view=Tab_Tasks
+#
+# YAML build pipeline based on the Jenkins multi-stage (main branch) build workflow
+# https://jenkins.internalx.com/view/Xamarin.MaciOS/job/macios/job/main/
+# https://jenkins.internalx.com/view/Xamarin.MaciOS/job/macios/configure
+#
+parameters:
+
+- name: runGovernanceTests
+  type: boolean
+  default: true
+
+variables:
+- template: templates/variables.yml
+- name: MaciosUploadPrefix
+  value: ''
+
+resources:
+  repositories:
+  - repository: self
+    checkoutOptions:
+      submodules: true
+
+  - repository: yaml-templates
+    type: github
+    name: xamarin/yaml-templates
+    ref: refs/heads/main
+    endpoint: xamarin
+
+  - repository: sdk-insertions
+    type: github
+    name: xamarin/sdk-insertions
+    ref: refs/heads/main
+    endpoint: xamarin
+
+  - repository: maccore
+    type: github
+    name: xamarin/maccore
+    ref: refs/heads/main
+    endpoint: xamarin
+
+  - repository: release-scripts
+    type: github
+    name: xamarin/release-scripts
+    ref: refs/heads/only_codesign
+    endpoint: xamarin
+
+trigger:
+  branches:
+    include:
+    - Localization
+
+stages:
+
+- ${{ if eq(parameters.runGovernanceTests, true) }}:
+  - stage: LocalizationChanges
+    displayName: 'Governance Checks'
+    jobs:
+    - job: governance
+      displayName: 'Governance Checks'
+      pool:
+        vmImage: windows-latest
+      steps:
+      - template: templates/governance-checks.yml
+        parameters:
+          isPR: false
+          repositoryAlias: self
+          commit: HEAD
+
+    - job: BringLocChanges
+      displayName: 'Copy over the lcl file changes from Localization branch'
+      pool:
+        vmImage: windows-latest
+      steps:
+
+      - pwsh: |
+          git remote remove origin
+          git remote add origin https://$(github--pat--vs-mobiletools-engineering-service2--repo-user)@github.com/xamarin/xamarin-macios.git
+          git remote # don't add -v else we see the pat
+
+          git config user.email "valco@microsoft.com"
+          git config user.name "vs-mobiletools-engineering-service2"
+
+          git fetch origin
+
+          # create a new branch from the Localization branch for our PR in case the Localization branch gets overwritten
+          git checkout Localization
+          git checkout -b Localization-Automated-$(Build.BuildNumber)
+          git push origin Localization-Automated-$(Build.BuildNumber)
+
+          git checkout main
+
+          gh pr create `
+          --title "Bring changes from Localization branch #$(Build.BuildNumber)" `
+          --body "The OneLoc team creates these translations to be consumed later on in the second step of the Localization process. We need to bring these into the main branch in order to continue the process." `
+          --base main `
+          --head Localization-Automated-$(Build.BuildNumber) `
+          --label not-notes-worthy `
+          --milestone Future `
+          --draft=false
+
+        name: BringLocChanges
+        displayName: "BringLocChanges"
+        workingDirectory: $(System.DefaultWorkingDirectory)
+        condition: startsWith(variables['Build.SourceVersionMessage'], 'LEGO')
+        env:
+          GITHUB_TOKEN: $(github--pat--vs-mobiletools-engineering-service2--repo-user)

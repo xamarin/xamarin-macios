@@ -68,12 +68,11 @@ namespace ObjCRuntime {
 			handle = NativeHandle.Zero;
 		}
 
-#if !NET
 		protected void ClearHandle ()
 		{
 			handle = NativeHandle.Zero;
 		}
-#endif
+
 		void InitializeHandle (NativeHandle handle, bool verify)
 		{
 #if !COREBUILD

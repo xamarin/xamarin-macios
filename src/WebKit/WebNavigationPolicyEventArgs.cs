@@ -6,6 +6,8 @@
 //
 // Copyright 2013 Xamarin Inc
 
+#if __MACOS__
+
 #nullable enable
 
 using System;
@@ -52,3 +54,5 @@ namespace WebKit {
 		}
 	}
 }
+
+#endif // __MACOS__

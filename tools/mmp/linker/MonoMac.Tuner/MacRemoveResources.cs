@@ -46,7 +46,7 @@ namespace MonoMac.Tuner {
 			var resources = assembly.MainModule.Resources;
 			for (int i = 0; i < resources.Count; i++) {
 				var resource = resources [i] as EmbeddedResource;
-				if (resource == null)
+				if (resource is null)
 					continue;
 				if (resource.Name.EndsWith (extension, StringComparison.OrdinalIgnoreCase))
 					resources.RemoveAt (i--);

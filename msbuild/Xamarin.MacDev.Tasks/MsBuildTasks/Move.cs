@@ -1,10 +1,12 @@
+extern alias Microsoft_Build_Tasks_Core;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Build.Framework;
 using Xamarin.Messaging.Build.Client;
 
 namespace Microsoft.Build.Tasks {
-	public class Move : MoveTaskBase, ITaskCallback {
+	public class Move : Microsoft_Build_Tasks_Core::Microsoft.Build.Tasks.Move, ITaskCallback {
+		public string SessionId { get; set; } = string.Empty;
 		public override bool Execute ()
 		{
 			if (this.ShouldExecuteRemotely (SessionId))

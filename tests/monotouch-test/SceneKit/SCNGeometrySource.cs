@@ -51,7 +51,11 @@ namespace Xamarin.Mac.Tests {
 			Asserts.EnsureMountainLion ();
 #pragma warning disable 0219
 			SCNGeometrySource d = SCNGeometrySource.FromData (new NSData (), SCNGeometrySourceSemantic.Color, 1, false, 1, 1, 1, 1);
+#if NET
+			foreach (var s in Enum.GetValues<SCNGeometrySourceSemantics> ()) {
+#else
 			foreach (SCNGeometrySourceSemantics s in Enum.GetValues (typeof (SCNGeometrySourceSemantics))) {
+#endif
 				if (!isValidEnumForPlatform (s))
 					continue;
 				d = SCNGeometrySource.FromData (new NSData (), s, 1, false, 1, 1, 1, 1);

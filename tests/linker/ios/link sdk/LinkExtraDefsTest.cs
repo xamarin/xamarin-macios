@@ -17,15 +17,15 @@ namespace LinkSdk {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class LinkExtraDefsTest {
-		
+
 		// ensure the types in extra-linker-defs.xml are included
 		// even if they are:
 		// * part of SDK / product assemblies, where adding [Preserve] is not possible;
 		// * not used anywhere in this application
-		
+
 		// note: reflection is used so we're testing the XML-based preservation
 		// 	not the normal linking process
-		
+
 		[Test]
 		public void Corlib ()
 		{
@@ -50,7 +50,7 @@ namespace LinkSdk {
 		[Test]
 		public void MonoTouch ()
 		{
-			Type t = Type.GetType ("CoreBluetooth.CBUUID, " + typeof(NSObject).Assembly.ToString ());
+			Type t = Type.GetType ("CoreBluetooth.CBUUID, " + typeof (NSObject).Assembly.ToString ());
 			Assert.NotNull (t, "[MonoTouch.]CoreBluetooth.CBUUID");
 			// check (generated) fields since we instructed the linker to keep them
 			var f = t.GetFields (BindingFlags.NonPublic | BindingFlags.Static);

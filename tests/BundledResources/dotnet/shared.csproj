@@ -11,6 +11,9 @@
 		<BundleResource Include="$(RootTestsDirectory)\monotouch-test\basn3p08.png">
 			<Link>basn3p08.png</Link>
 		</BundleResource>
+		<BundleResource Include="$(RootTestsDirectory)\monotouch-test\basn3p08_with_loc.png">
+			<Link>basn3p08_with_loc.png</Link>
+		</BundleResource>
 		<BundleResource Include="$(RootTestsDirectory)\monotouch-test\xamvideotest.mp4">
 			<Link>xamvideotest.mp4</Link>
 		</BundleResource>

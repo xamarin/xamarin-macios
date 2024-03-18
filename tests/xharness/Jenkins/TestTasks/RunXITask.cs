@@ -32,9 +32,9 @@ namespace Xharness.Jenkins.TestTasks {
 		public override IEnumerable<ILog> AggregatedLogs {
 			get {
 				var rv = base.AggregatedLogs;
-				if (Runner != null)
+				if (Runner is not null)
 					rv = rv.Union (Runner.Logs);
-				if (AdditionalRunner != null)
+				if (AdditionalRunner is not null)
 					rv = rv.Union (AdditionalRunner.Logs);
 				return rv;
 			}
@@ -74,7 +74,7 @@ namespace Xharness.Jenkins.TestTasks {
 
 			var enumerable = Candidates;
 			var asyncEnumerable = enumerable as IAsyncEnumerable;
-			if (asyncEnumerable != null)
+			if (asyncEnumerable is not null)
 				await asyncEnumerable.ReadyTask;
 			if (!enumerable.Any ()) {
 				ExecutionResult = TestExecutingResult.DeviceNotFound;

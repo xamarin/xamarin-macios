@@ -231,6 +231,15 @@ namespace Introspection {
 					return true;
 				}
 				break;
+			case "CIFilterGenerator":
+				switch (selectorName) {
+				case "filterGenerator":
+				case "filterGeneratorWithContentsOfURL:":
+					if (TestRuntime.IsSimulatorOrDesktop)
+						return true;
+					break;
+				}
+				break;
 			}
 			// This ctors needs to be manually bound
 			switch (type.Name) {
@@ -380,9 +389,9 @@ namespace Introspection {
 					return true;
 				}
 				break;
-#if __WATCHOS__
+#if (__WATCHOS__ || __MACOS__ || __MACCATALYST__)
 			case "AVPlayerItem":
-				switch (selectorName) {
+				switch (selectorName) { // comes from AVPlayerItem+MPAdditions.h
 				case "nowPlayingInfo":
 				case "setNowPlayingInfo:":
 					return TestRuntime.IsSimulatorOrDesktop;
@@ -941,50 +950,45 @@ namespace Introspection {
 				}
 #endif
 				break;
+			case "SKAdImpression":
+#if __MACCATALYST__
+				switch (selectorName) {
+				case "initWithSourceAppStoreItemIdentifier:advertisedAppStoreItemIdentifier:adNetworkIdentifier:adCampaignIdentifier:adImpressionIdentifier:timestamp:signature:version:":
+					if (TestRuntime.CheckXcodeVersion (14, 0))
+						return true;
+					break;
+				}
+#endif
+				break;
+			case "EKParticipant":
+#if __MACCATALYST__
+				switch (selectorName) {
+				case "ABRecordWithAddressBook:": // Deprecated in 13.1
+					if (TestRuntime.CheckXcodeVersion (14, 0))
+						return true;
+					break;
+				}
+#endif
+				break;
 			case "SWRemoveParticipantAlertController":
 				switch (selectorName) {
 				case "initWithFrame:":
 					return true;
 				}
 				break;
-#if NET
-			// Incorrect attributes in inlined protocol selectors - https://github.com/xamarin/xamarin-macios/issues/14802
-			case "NSTextAttachment":
+			case "CAEdrMetadata":
 				switch (selectorName) {
-				case "attachmentBoundsForAttributes:location:textContainer:proposedLineFragment:position:":
-				case "imageForBounds:attributes:location:textContainer:":
-				case "viewProviderForParentView:location:textContainer:":
-					return true;
+				case "copyWithZone:":
+				case "encodeWithCoder:":
+					return !TestRuntime.CheckXcodeVersion (14, 3);
 				}
 				break;
-			// Incorrect attributes in get/set selectors - https://github.com/xamarin/xamarin-macios/issues/14802
-			case "CBManager":
+			case "GCKeyboard":
 				switch (selectorName) {
-				case "authorization":
-				case "authorizations":
-					return true;
+				case "encodeWithCoder:": // removed comformance
+					return TestRuntime.CheckXcodeVersion (14, 3);
 				}
 				break;
-			case "NEAppProxyFlow":
-				switch (selectorName) {
-				case "networkInterface":
-				case "setNetworkInterface:":
-					return true;
-				}
-				break;
-			case "WKPreferences":
-				switch (selectorName) {
-				case "setTextInteractionEnabled:":
-					return true;
-				}
-				break;
-			case "MidiCISession":
-				switch (selectorName) {
-				case "midiDestination":
-					return true;
-				}
-				break;
-#endif
 			}
 
 			// old binding mistake
@@ -1004,10 +1008,10 @@ namespace Introspection {
 			// it's possible that the selector was inlined for an OPTIONAL protocol member
 			// we do not want those reported (too many false positives) and we have other tests to find such mistakes
 			foreach (var intf in actualType.GetInterfaces ()) {
-				if (intf.GetCustomAttributes<ProtocolAttribute> () == null)
+				if (intf.GetCustomAttributes<ProtocolAttribute> () is null)
 					continue;
 				var ext = Type.GetType (intf.Namespace + "." + intf.Name.Remove (0, 1) + "_Extensions, " + intf.Assembly.FullName);
-				if (ext == null)
+				if (ext is null)
 					continue;
 				foreach (var m in ext.GetMethods ()) {
 					if (mname != m.Name)
@@ -1063,7 +1067,7 @@ namespace Introspection {
 
 			foreach (object ca in m.GetCustomAttributes (true)) {
 				ExportAttribute export = (ca as ExportAttribute);
-				if (export == null)
+				if (export is null)
 					continue;
 
 				string name = export.Selector;
@@ -1078,7 +1082,7 @@ namespace Introspection {
 		protected virtual IntPtr GetClassForType (Type type)
 		{
 			var fi = type.GetField ("class_ptr", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static);
-			if (fi == null)
+			if (fi is null)
 				return IntPtr.Zero; // e.g. *Delegate
 #if NET
 			return (NativeHandle) fi.GetValue (null);
@@ -1124,7 +1128,7 @@ namespace Introspection {
 
 			foreach (object ca in m.GetCustomAttributes (true)) {
 				ExportAttribute export = (ca as ExportAttribute);
-				if (export == null)
+				if (export is null)
 					continue;
 
 				string name = export.Selector;
@@ -1227,13 +1231,19 @@ namespace Introspection {
 			case "initWithDisplay:includingApplications:exceptingWindows:":
 			case "initWithDisplay:includingWindows:":
 				var mi = m as MethodInfo;
-				return mi != null && !mi.IsPublic && (mi.ReturnType.Name == "IntPtr" || mi.ReturnType.Name == "NativeHandle");
+				return mi is not null && !mi.IsPublic && (mi.ReturnType.Name == "IntPtr" || mi.ReturnType.Name == "NativeHandle");
 			// NSAppleEventDescriptor
 			case "initListDescriptor":
 			case "initRecordDescriptor":
 			// SharedWithYouCore
 			case "initWithLocalIdentifier:":
 			case "initWithCollaborationIdentifier:":
+				return true;
+			// CloudKit
+			case "initWithExcludedZoneIDs:":
+			case "initWithZoneIDs:":
+			// DDDevicePickerViewController
+			case "initWithBrowseDescriptor:parameters:":
 				return true;
 			default:
 				return false;
@@ -1272,7 +1282,7 @@ namespace Introspection {
 					continue;
 
 				FieldInfo fi = t.GetField ("class_ptr", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static);
-				if (fi == null)
+				if (fi is null)
 					continue; // e.g. *Delegate
 				IntPtr class_ptr = (IntPtr) (NativeHandle) fi.GetValue (null);
 

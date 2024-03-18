@@ -18,7 +18,7 @@ all-local::
 # or multiple tests:
 #     make run-tests TEST_FIXTURE="-test=Xamarin.MTouch.MT1016,Xamarin.MTouch.MT1017"
 
-run-tests: bin/Debug/mtouchtests.dll test.config
+run-tests run-unit-tests: bin/Debug/mtouchtests.dll test.config
 	rm -f .failed-stamp
 	$(TOP)/tools/nunit3-console-3.11.1 "$(abspath $<)" "--result=$(abspath $(CURDIR)/TestResult.xml);format=nunit2" $(TEST_FIXTURE) --labels=After --inprocess || touch $(CURDIR)/.failed-stamp
 	@# Create an html file and tell MonkeyWrench to upload it (if we're running there)
@@ -37,6 +37,9 @@ bin/Debug/mtouchtests.dll: $(mtouchtests_dependencies)
 
 $(abspath $(TOP)/tools/mtouch/Constants.cs):
 	$(Q) $(MAKE) $(notdir $@) -C $(dir $@)
+
+$(TOP)/tools/common/ProductConstants.cs:
+	$(Q) $(MAKE) -C $(TOP)/tools/mtouch ../common/ProductConstants.cs
 
 build: bin/Debug/mtouchtests.dll
 

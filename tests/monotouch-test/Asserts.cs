@@ -247,11 +247,11 @@ public static class Asserts {
 
 	public static void AreEqual (Quaternion [] expected, Quaternion [] actual, string message)
 	{
-		if (expected == null) {
-			if (actual == null)
+		if (expected is null) {
+			if (actual is null)
 				return;
 			Assert.Fail ($"Expected null, got {actual}. {message}");
-		} else if (actual == null) {
+		} else if (actual is null) {
 			Assert.Fail ($"Expected {expected}, got null. {message}");
 		}
 
@@ -263,14 +263,6 @@ public static class Asserts {
 
 	public static void AreEqual (Quaterniond expected, Quaterniond actual, string message)
 	{
-		if (expected == null) {
-			if (actual == null)
-				return;
-			Assert.Fail ($"Expected null, got {actual}. {message}");
-		} else if (actual == null) {
-			Assert.Fail ($"Expected {expected}, got null. {message}");
-		}
-
 		Assert.AreEqual (expected.X, actual.X, $"{message} (X) expected: {expected} actual: {actual}");
 		Assert.AreEqual (expected.Y, actual.Y, $"{message} (Y) expected: {expected} actual: {actual}");
 		Assert.AreEqual (expected.Z, actual.Z, $"{message} (Z) expected: {expected} actual: {actual}");
@@ -836,7 +828,7 @@ public static class Asserts {
 			AreEqual (expected.M34, actual.M34, out var d34) &
 			AreEqual (expected.M44, actual.M44, out var d44)) {
 
-			var size = Marshal.SizeOf (typeof (SCNMatrix4));
+			var size = Marshal.SizeOf<SCNMatrix4> ();
 			unsafe {
 				byte* e = (byte*) (void*) &expected;
 				byte* a = (byte*) (void*) &actual;

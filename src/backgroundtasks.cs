@@ -18,7 +18,8 @@ using NativeHandle = System.IntPtr;
 
 namespace BackgroundTasks {
 
-	[TV (13,0), NoWatch, NoMac, iOS (13,0)]
+	[TV (13, 0), NoWatch, NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (BGTaskRequest))]
 	[DisableDefaultCtor]
 	interface BGAppRefreshTaskRequest {
@@ -26,7 +27,8 @@ namespace BackgroundTasks {
 		NativeHandle Constructor (string identifier);
 	}
 
-	[TV (13,0), NoWatch, NoMac, iOS (13,0)]
+	[TV (13, 0), NoWatch, NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (BGTaskRequest))]
 	[DisableDefaultCtor]
 	interface BGProcessingTaskRequest {
@@ -41,7 +43,8 @@ namespace BackgroundTasks {
 	}
 
 	[Abstract]
-	[TV (13,0), NoWatch, NoMac, iOS (13,0)]
+	[TV (13, 0), NoWatch, NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface BGTaskRequest : NSCopying {
@@ -52,7 +55,8 @@ namespace BackgroundTasks {
 		NSDate EarliestBeginDate { get; set; }
 	}
 
-	[TV (13,0), NoWatch, NoMac, iOS (13,0)]
+	[TV (13, 0), NoWatch, NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface BGTask {
@@ -66,19 +70,22 @@ namespace BackgroundTasks {
 		void SetTaskCompleted (bool success);
 	}
 
-	[TV (13,0), NoWatch, NoMac, iOS (13,0)]
+	[TV (13, 0), NoWatch, NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (BGTask))]
 	[DisableDefaultCtor]
 	interface BGAppRefreshTask {
 	}
 
-	[TV (13,0), NoWatch, NoMac, iOS (13,0)]
+	[TV (13, 0), NoWatch, NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (BGTask))]
 	[DisableDefaultCtor]
 	interface BGProcessingTask {
 	}
 
-	[TV (13,0), NoWatch, NoMac, iOS (13,0)]
+	[TV (13, 0), NoWatch, NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface BGTaskScheduler {
@@ -102,6 +109,17 @@ namespace BackgroundTasks {
 		[Async]
 		[Export ("getPendingTaskRequestsWithCompletionHandler:")]
 		void GetPending (Action<BGTaskRequest []> completionHandler);
+	}
+
+	[TV (17, 0), NoWatch, NoMac, iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (BGProcessingTask))]
+	interface BGHealthResearchTask { }
+
+	[TV (17, 0), NoWatch, NoMac, iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (BGProcessingTaskRequest))]
+	interface BGHealthResearchTaskRequest {
+		[Export ("protectionTypeOfRequiredData")]
+		string ProtectionTypeOfRequiredData { get; set; }
 	}
 
 }

@@ -62,7 +62,7 @@ namespace MonoTouchFixtures.CoreMedia {
 
 				using (var captureSession = new AVCaptureSession ()) {
 					using (var videoDevice = AVCaptureDevice.GetDefaultDevice (AVMediaTypes.Video.GetConstant ())) {
-						if (videoDevice == null)
+						if (videoDevice is null)
 							Assert.Inconclusive ("Failed to create a video device for testing");
 						NSError error;
 						using (var videoInput = new AVCaptureDeviceInput (videoDevice, out error)) {
@@ -95,7 +95,7 @@ namespace MonoTouchFixtures.CoreMedia {
 
 			using (var captureSession = new AVCaptureSession ()) {
 				using (var videoDevice = AVCaptureDevice.GetDefaultDevice (AVMediaTypes.Video.GetConstant ())) {
-					if (videoDevice == null)
+					if (videoDevice is null)
 						Assert.Inconclusive ("Failed to create a video device for testing");
 					foreach (var format in videoDevice.Formats) {
 						for (int i = 0; i < 10; i++) {

@@ -28,12 +28,10 @@ namespace MediaPlayer {
 
 	public partial class MPPlayableContentDataSource : NSObject {
 #if NET
-		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("tvos")]
-#else
-		[iOS (10, 0)]
 #endif
 		[Obsolete ("Use 'MPPlayableContentDataSource_Extensions.GetContentItemAsync' instead.")]
 		public unsafe virtual Task<MPContentItem> GetContentItemAsync (string identifier)

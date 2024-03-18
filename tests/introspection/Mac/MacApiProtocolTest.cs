@@ -145,6 +145,14 @@ namespace Introspection {
 				case "SCRunningApplication":
 				case "SCWindow":
 				case "HKAudiogramSensitivityPoint":
+				// xcode 15
+				case "NSCompositeAttributeDescription":
+				case "CKSyncEnginePendingDatabaseChange":
+				case "CKSyncEnginePendingRecordZoneChange":
+				case "CKSyncEnginePendingZoneDelete":
+				case "CKSyncEnginePendingZoneSave":
+				case "CKSyncEngineState":
+				case "NSCursor":
 					return true;
 				default:
 					// CIFilter started implementing NSSecureCoding in 10.11
@@ -201,6 +209,13 @@ namespace Introspection {
 				case "HKQuantitySample":
 				case "HKSample":
 				case "HKWorkout":
+				// xcode 15
+				case "MEMessage":
+				case "CKSyncEnginePendingDatabaseChange":
+				case "CKSyncEnginePendingRecordZoneChange":
+				case "CKSyncEnginePendingZoneDelete":
+				case "CKSyncEnginePendingZoneSave":
+				case "PKContact":
 					return true;
 				}
 				break;
@@ -289,6 +304,12 @@ namespace Introspection {
 				case "SCRunningApplication":
 				case "SCWindow":
 				case "HKAudiogramSensitivityPoint":
+				// xcode 15
+				case "CKSyncEnginePendingDatabaseChange":
+				case "CKSyncEnginePendingRecordZoneChange":
+				case "CKSyncEnginePendingZoneDelete":
+				case "CKSyncEnginePendingZoneSave":
+				case "CKSyncEngineState":
 					return true;
 				}
 				break;

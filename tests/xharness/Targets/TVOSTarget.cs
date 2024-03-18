@@ -63,9 +63,9 @@ namespace Xharness.Targets {
 
 		protected override string GetMinimumOSVersion (string templateMinimumOSVersion)
 		{
-			if (MonoNativeInfo == null)
+			if (MonoNativeInfo is null)
 				return Xamarin.SdkVersions.MinTVOS;
-			return MonoNativeHelper.GetMinimumOSVersion (DevicePlatform.tvOS, MonoNativeInfo.Flavor);
+			return MonoNativeHelper.GetMinimumOSVersion (DevicePlatform.tvOS);
 		}
 
 		protected override int [] UIDeviceFamily {
@@ -83,12 +83,6 @@ namespace Xharness.Targets {
 		public override string Platform {
 			get {
 				return "tvos";
-			}
-		}
-
-		protected override bool SupportsBitcode {
-			get {
-				return true;
 			}
 		}
 
@@ -111,7 +105,7 @@ namespace Xharness.Targets {
 			inputProject.ResolveAllPaths (TemplateProjectPath);
 
 			// Remove bitcode from executables, since we don't need it for testing, and it makes test apps bigger (and the Apple TV might refuse to install them).
-			var configurations = new string [] { "Debug", "Debug64", "Release", "Release64" };
+			var configurations = new string [] { "Debug", "Release" };
 			foreach (var c in configurations) {
 				inputProject.AddExtraMtouchArgs ($"--gcc_flags=-fembed-bitcode-marker", "iPhone", c);
 			}

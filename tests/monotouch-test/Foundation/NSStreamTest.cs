@@ -63,7 +63,7 @@ namespace MonoTouchFixtures.Foundation {
 
 			int port;
 			var listener = FindPort (out port);
-			if (listener == null) {
+			if (listener is null) {
 				Assert.Inconclusive ("Not possible to bind a port");
 				return;
 			}
@@ -93,7 +93,7 @@ namespace MonoTouchFixtures.Foundation {
 
 			int port;
 			var listener = FindPort (out port);
-			if (listener == null) {
+			if (listener is null) {
 				Assert.Inconclusive ("Not possible to bind a port");
 				return;
 			}

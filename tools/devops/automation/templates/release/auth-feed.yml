@@ -3,7 +3,7 @@ parameters:
   type: string  
 
 steps:
-- task: NuGetAuthenticate@0
+- task: NuGetAuthenticate@1
   displayName: 'Authenticate dotnet-tool feed'
   inputs:
     nuGetServiceConnections: ${{ parameters.serviceConnection }}

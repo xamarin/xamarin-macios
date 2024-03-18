@@ -4,3 +4,5 @@
 !missing-enum! CWErr not bound
 !extra-enum-value! Managed value 10 for CWEventType.RangingReportEvent not found in native headers
 !missing-pinvoke! CWMergeNetworks is not bound
+# xcode15 added and removed 
+!missing-selector! CWWiFiClient::interfaceNames not bound

@@ -3,10 +3,6 @@ parameters:
 - name: keyringPass
   type: string
 
-- name: enableDotnet
-  type: boolean
-  default: false
-
 - name: skipESRP
   type: boolean
   default: false # only to be used when testing the CI and we do not need a signed pkg
@@ -31,27 +27,11 @@ parameters:
   default: []
 
 jobs:
-- job: configure
-  displayName: 'Configure build'
-  pool:
-    vmImage: windows-latest
-
-  variables:
-    isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
-    isScheduled: $[eq(variables['Build.Reason'], 'Schedule')]
-
-  steps:
-  - template: ../common/configure.yml
-    parameters:
-      repositoryAlias: ${{ parameters.repositoryAlias }}
-      commit: ${{ parameters.commit }}
-
 - ${{ each pkg in parameters.packages }}:
   - job: ${{ pkg.job }}
     dependsOn:
-    - configure
     displayName: 'Sign & Notarize ${{ pkg.name }}'
-    condition: ne(dependencies.configure.outputs['configure_platforms.${{ pkg.conditionVariable }}'],'')
+    condition: ne(stageDependencies.configure_build.configure.outputs['configure_platforms.${{ pkg.conditionVariable }}'],'')
     timeoutInMinutes: 1000
     pool:
       vmImage: internal-macos-11

@@ -5,12 +5,10 @@ using NUnit.Framework.Api;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Filters;
 
-namespace Xamarin.iOS.UnitTests.NUnit
-{
-	public class ClassOrNamespaceFilter : TestFilter
-	{
+namespace Xamarin.iOS.UnitTests.NUnit {
+	public class ClassOrNamespaceFilter : TestFilter {
 		bool isClassFilter;
-		List <string> names;
+		List<string> names;
 
 		public ClassOrNamespaceFilter (string name, bool isClassFilter)
 		{
@@ -20,7 +18,7 @@ namespace Xamarin.iOS.UnitTests.NUnit
 
 		public ClassOrNamespaceFilter (IEnumerable<string> names, bool isClassFilter)
 		{
-			if (names == null)
+			if (names is null)
 				throw new ArgumentNullException (nameof (names));
 
 			this.isClassFilter = isClassFilter;
@@ -38,8 +36,8 @@ namespace Xamarin.iOS.UnitTests.NUnit
 			if (String.IsNullOrEmpty (name))
 				throw new ArgumentException ("must not be null or empty", nameof (name));
 
-			if (names == null)
-				names = new List <string> ();
+			if (names is null)
+				names = new List<string> ();
 			if (names.Contains (name))
 				return;
 
@@ -48,10 +46,10 @@ namespace Xamarin.iOS.UnitTests.NUnit
 
 		public override bool Match (ITest test)
 		{
-			if (test == null || names == null || names.Count == 0)
+			if (test is null || names is null || names.Count == 0)
 				return false;
 
-			if (test.FixtureType == null)
+			if (test.FixtureType is null)
 				return false; // It's probably an assembly name, all tests will have a fixture
 
 			if (isClassFilter)
@@ -67,7 +65,7 @@ namespace Xamarin.iOS.UnitTests.NUnit
 		bool NameMatches (string name)
 		{
 			foreach (string n in names) {
-				if (n == null)
+				if (n is null)
 					continue;
 				if (String.Compare (name, n, StringComparison.Ordinal) == 0)
 					return true;

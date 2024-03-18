@@ -1,41 +1,88 @@
 using module ".\\GitHub.psm1"
 
-class TestResults {
+class TestSuite {
+    [string] $Label
+    [TestConfiguration[]] $TestConfigurations
+
+    TestSuite (
+        [string] $label
+    )
+    {
+        $this.Label = $label
+    }
+
+    [string]
+    ToString() {
+        return $this.Label
+    }
+}
+
+class TestConfiguration {
+    [TestSuite] $Suite
+    [string] $Title
+    [string] $Platform
+    [string] $Context
+
+    TestConfiguration (
+        [TestSuite] $suite,
+        [string] $title,
+        [string] $platform,
+        [string] $context
+    )
+    {
+        $this.Suite = $suite
+        $this.Title = $title
+        $this.Platform = $platform
+        $this.Context = $context
+    }
+    
+    [string]
+    ToString() {
+        return "$($this.Suite.Label) : $($this.Title) - $($this.Platform) - $($this.Context)"
+    }
+}
+
+class TestResult {
     [string] $ResultsPath # path to the file with the results
     [string] $TestsJobStatus # the value of the env var that lets us know if the tests passed or not can be null or empty
-    [string] $Label
-    [string] $Context
+    [TestConfiguration] $TestConfiguration
     [int] $Attempt
+    [string] $Label
+    [string] $Title
+    [string] $Platform
+    [string] $Context
     hidden [int] $Passed
     hidden [int] $Failed
     hidden [string[]] $NotTestSummaryLabels = @("install-source")
 
-    TestResults (
+    TestResult (
         [string] $path,
         [string] $status,
-        [string] $label,
-        [string] $context,
+        [TestConfiguration] $testConfiguration,
         [int] $attempt
     ) {
-        Write-Debug "TestsResults::new($path, $status, $label, $context, $attempt)"
         $this.ResultsPath = $path
         $this.TestsJobStatus = $status
-        $this.Label = $label
-        $this.Context = $context
+        $this.TestConfiguration = $testConfiguration
         $this.Attempt = $attempt
         $this.Passed = -1
         $this.Failed = -1
+        $this.Label = $testConfiguration.Suite.Label
+        $this.Title = $testConfiguration.Title
+        $this.Platform = $testConfiguration.Platform
+        $this.Context = $testConfiguration.Context
+        Write-Host "TestsResult::new($path, $status, $testConfiguration, $attempt) Label: $($this.Label) Platform: $($this.Platform) Title: $($this.Title) Context: $($this.Context)"
     }
 
     [bool] IsSuccess() {
-        Write-Debug "`t$($this.Label) - IsSuccess()"
+        Write-Host "`t$($this.GetLabelWithSuffix(`"`")) - IsSuccess()"
         if ($this.NotTestSummaryLabels.Contains($this.Label)) {
-            Write-Debug "`t`t$($this.Label) - Found special label $($this.Label), checking only status."
+            Write-Host "`t`t$($this.Label) - Found special label $($this.Label), checking only status."
             return $this.TestsJobStatus -eq "Succeeded"
         } else {
             $hasResultsPath = Test-Path $this.ResultsPath -PathType Leaf
-            Write-Debug "`t`t$($this.Label) - Path $($this.ResultsPath) exists? $hasResultsPath"
-            Write-Debug "`t`t$($this.Label) - Test status: $($this.TestsJobStatus)"
+            Write-Host "`t`t$($this.GetLabelWithSuffix(`"`")) - Path $($this.ResultsPath) exists? $hasResultsPath"
+            Write-Host "`t`t$($this.GetLabelWithSuffix(`"`")) - Test status: $($this.TestsJobStatus)"
             return $hasResultsPath -and ($this.TestsJobStatus -eq "Succeeded")
         }
     }
@@ -45,6 +92,20 @@ class TestResults {
             return " [attempt $($this.Attempt)]"
         }
         return ""
+    }
+
+    [string] GetLabelSuffix() {
+        if ($this.Title -like "*_multiple") {
+            return " (Multiple platforms)"
+        } elseif ($this.Platform -eq "") {
+            return ""
+        } else {
+            return " ($($this.Platform))"
+        }
+    }
+
+    [string] GetLabelWithSuffix([string] $infix) {
+        return $this.Label + $infix + $this.GetLabelSuffix()
     }
 
     [void] WriteComment($stringBuilder) {
@@ -74,6 +135,7 @@ class TestResults {
 
     [object] GetStatus() {
         $status = $null
+        Write-Host "$($this.Title) - Getting status"
         if (-not (Test-Path $this.ResultsPath -PathType Leaf)) {
             $status = [GitHubStatus]::new("failure", "Tests failed catastrophically on $($this.Context) (no summary found).", $this.Context)
         } else {
@@ -89,15 +151,15 @@ class TestResults {
     }
 
     [object] GetPassedTests() {
-        Write-Debug "$($this.Label) - GetPassedTests()"
+        Write-Host "$($this.Title) - GetPassedTests()"
         if ($this.Passed -eq -1 -or $this.Failed -eq -1) {
-            Write-Debug "`t$($this.Label) - Calculate results."
+            Write-Host "`t$($this.Title) - Calculate results."
             # the result file is diff if the result was a success or not
             if ($this.IsSuccess()) {
-                Write-Debug "`t$($this.Label) - IsSuccess() => TRUE"
+                Write-Host "`t$($this.Title) - IsSuccess() => TRUE"
                 $this.Failed = 0
                 if ($this.NotTestSummaryLabels.Contains($this.Label)) {
-                    Write-Debug "`t`t$($this.Label) - Found special label $($this.Label), adding a single pass."
+                    Write-Host "`t`t$($this.Title) - Found special label $($this.Label), adding a single pass."
                     $this.Passed = 1
                 } else {
                     # in this case, the file contains a single line with the number and the following
@@ -106,26 +168,26 @@ class TestResults {
                     $regexp = "(# :tada: All )(?<passed>[0-9]+)( tests passed :tada:)"
                     $content = Get-Content $this.ResultsPath | Select -First 1
                     if ($content -eq "# No tests selected.") {
-                        Write-Debug "`t`tNo tests selected"
+                        Write-Host "`t`tNo tests selected"
                         $this.Passed = 0
                     } elseif ($content -match $regexp) {
                         $this.Passed = $matches.passed -as [int]
-                        Write-Debug "`tPassed tests count: $($this.Passed)"
+                        Write-Host "`tPassed tests count: $($this.Passed)"
                     } else {
-                        throw "Unable to understand the test result '$content' for test '$($this.Label)'"
+                        throw "Unable to understand the test result '$content' for test '$($this.GetLabelWithSuffix(`"`"))'"
                     }
                 }
             } else {
-                Write-Debug "`t$($this.Label) - IsSuccess() => FALSE"
+                Write-Host "`t$($this.GetLabelWithSuffix(`"`")) - IsSuccess() => FALSE"
                 $fileIsPresent = Test-Path $this.ResultsPath -PathType Leaf
                 if ($this.TestsJobStatus -eq "" -or -not (Test-Path $this.ResultsPath -PathType Leaf)) {
-                    Write-Debug "`t`tTests job status: $($this.TestsJobStatus)"
-                    Write-Debug "`t`tNot Found results path: $fileIsPresent"
+                    Write-Host "`t`tTests job status: $($this.TestsJobStatus)"
+                    Write-Host "`t`tNot Found results path: $fileIsPresent"
                     $this.Passed = -2
                     $this.Failed = -2
                 } else {
                     if ($this.NotTestSummaryLabels.Contains($this.Label)) {
-                        Write-Debug "`t`tFound special label $($this.Label), adding a single fail."
+                        Write-Host "`t`tFound special label $($this.Label), adding a single fail."
                         $this.Passed = 0
                         $this.Failed = 1
                     } else {
@@ -159,16 +221,16 @@ class TestResults {
                             # <summary>4 tests failed, 144 tests passed.</summary>
                             $regexp = "(\<summary\>)(?<failed>[0-9]+)( tests failed, )(?<passed>[0-9]+)( tests passed\.\</summary\>)"
                             if ($content -match $regexp) {
-                                Write-Debug "`t`tMatched regexpt."
+                                Write-Host "`t`tMatched regexpt."
                                 $this.Passed = $matches.passed -as [int]
                                 $this.Failed = $matches.failed -as [int]
                             } else {
-                                Write-Debug "`t`tAdding a single fail because unexpected <summary> contents found: $($content)"
+                                Write-Host "`t`tAdding a single fail because unexpected <summary> contents found: $($content)"
                                 $this.Passed = 0
                                 $this.Failed = 1
                             }
                         } else {
-                            Write-Debug "`t`tNo <summary> found, adding a single fail"
+                            Write-Host "`t`tNo <summary> found, adding a single fail"
                             $this.Passed = 0
                             $this.Failed = 1
                         }
@@ -176,7 +238,7 @@ class TestResults {
                 }
             }
         }
-        Write-Debug "`t$($this.Label) - Passed: $($this.Passed) Failed: $($this.Failed)"
+        Write-Host "`t$($this.GetLabelWithSuffix(`"`")) - Passed: $($this.Passed) Failed: $($this.Failed)"
         return [PSCustomObject]@{
             Passed = $this.Passed
             Failed = $this.Failed
@@ -188,10 +250,10 @@ class ParallelTestsResults {
     [string] $Context
     [string] $TestPrefix
     [string] $VSDropsIndex
-    [TestResults[]] $Results
+    [TestResult[]] $Results
 
     ParallelTestsResults (
-        [TestResults[]] $results,
+        [TestResult[]] $results,
         [string] $context,
         [string] $testPrefix,
         [string] $vsDropsIndex
@@ -252,8 +314,8 @@ class ParallelTestsResults {
     }
 
     [string] GetDownloadLinks($testResult) {
-        $dropsIndex = "$($this.VSDropsIndex)/$($this.TestPrefix)$($testResult.Label)-$($testResult.Attempt)/;/tests/vsdrops_index.html"
-        $artifactUrl = "$Env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI$Env:SYSTEM_TEAMPROJECT/_apis/build/builds/$Env:BUILD_BUILDID/artifacts?artifactName=HtmlReport-$($this.TestPrefix)$($testResult.Label)-$($testResult.Attempt)&api-version=6.0&`$format=zip"
+        $dropsIndex = "$($this.VSDropsIndex)/$($this.TestPrefix)$($testResult.Title)-$($testResult.Attempt)/;/tests/vsdrops_index.html"
+        $artifactUrl = "$Env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI$Env:SYSTEM_TEAMPROJECT/_apis/build/builds/$Env:BUILD_BUILDID/artifacts?artifactName=HtmlReport-$($this.TestPrefix)$($testResult.Title)-$($testResult.Attempt)&api-version=6.0&`$format=zip"
         $downloadInfo = "[Html Report (VSDrops)]($dropsIndex) [Download]($artifactUrl)"
         return $downloadInfo
     }
@@ -263,9 +325,9 @@ class ParallelTestsResults {
         $result = $testResult.GetPassedTests()
         $attemptText = $testResult.GetAttemptText()
         if ($result.Passed -eq 0) {
-            $stringBuilder.AppendLine(":warning: $($testResult.Label): No tests selected.$attemptText $downloadInfo")
+            $stringBuilder.AppendLine(":warning: $($testResult.GetLabelWithSuffix(`"`")): No tests selected.$attemptText $downloadInfo")
         } else {
-            $stringBuilder.AppendLine(":white_check_mark: $($testResult.Label): All $($result.Passed) tests passed.$attemptText $downloadInfo")
+            $stringBuilder.AppendLine(":white_check_mark: $($testResult.GetLabelWithSuffix(`"`")): All $($result.Passed) tests passed.$attemptText $downloadInfo")
         }
     }
 
@@ -297,7 +359,7 @@ class ParallelTestsResults {
             foreach ($r in $failingTests)
             {
                 $attemptText = $r.GetAttemptText()
-                $stringBuilder.AppendLine("### :x: $($r.Label) tests$attemptText")
+                $stringBuilder.AppendLine("### :x: $($r.GetLabelWithSuffix(`" tests`"))$attemptText")
                 $stringBuilder.AppendLine("")
                 # print diff messages if the tests crash or if the tests did indeed fail
                 # get the result, if -1, we had a crash, else we print the result
@@ -359,11 +421,15 @@ function New-TestResults {
         [string]
         $Label,
         [string]
+        $Title,
+        [string]
+        $Platform,
+        [string]
         $Context,
         [int]
         $Attempt
     )
-    return [TestResults]::new($Path, $Status, $Label, $Context, $Attempt)
+    return [TestResult]::new($Path, $Status, [TestConfiguration]::new($Label, $Title, $Platform, $Context), $Attempt)
 }
 
 <#
@@ -372,88 +438,146 @@ function New-TestResults {
 #>
 function New-ParallelTestsResults {
     param (
-        [object[]]
-        $Results,
+        [Parameter(Mandatory)]
+        [string]
+        $Path,
+        [Parameter(Mandatory)]
+        [string]
+        $StageDependencies,        
+        [string]
+        $UploadPrefix="",
         [string]
         $Context,
         [string]
-        $TestPrefix,
-        [string]
         $VSDropsIndex
     )
-    return [ParallelTestsResults]::new($Results, $Context, $TestPrefix, $VSDropsIndex)
-}
 
-<#
-    .SYNOPSIS
-        Find test results in a directory
-#>
-function New-TestSummaryResults {
-    param (
-        [string]
-        $Path,
-        [string[]]
-        $Labels,
-        [string]
-        $TestPrefix
-    )
+    Write-Host "Stage dependencies:`n$($StageDependencies)"
+    Write-Host "Test Summaries:"
+    Get-ChildItem $Path -Recurse *.md | Select-Object -Property FullName | Format-Table | Out-String | Write-Host
 
-    $testResults = [System.Collections.ArrayList]@()
-    foreach ($label in $Labels) {
-        $label = $label.Replace("-", "_")
-        $environmentVariable = "TESTS_JOBSTATUS_$($label.ToUpper())"
-        $status = [Environment]::GetEnvironmentVariable($environmentVariable)
+    $stageDep = $StageDependencies | ConvertFrom-Json -AsHashtable
 
-        Write-Debug "Test results for $label is '$status'"
+    $matrix = $stageDep.configure_build.configure.outputs["test_matrix.TEST_MATRIX"] | ConvertFrom-Json -AsHashtable
+    $suites = [System.Collections.SortedList]::new()
+    foreach ($title in $matrix.Keys) {
+        Write-Host "Got title: $title"
+        $entry = $matrix[$title]
+        Write-Host "Got title: $title with entry: $( $entry | ConvertTo-Json -Depth 100 )"
+        $platform = $entry["TEST_PLATFORM"]
+        $label = $entry["LABEL"]
 
-        $testSummaryDirectoryExpression = "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY\Reports\TestSummary-$TestPrefix$label-*"
-
-        # Get the list of directories
-        $directoryFilter = "TestSummary-$TestPrefix$label-*"
-        $testSummaryDirectories = Get-ChildItem -Path $Path -Directory -Filter $directoryFilter
-
-        if ($testSummaryDirectories.length -eq 0) {
-            Write-Debug "WARNING: Found no directories matching $directoryFilter for label $label and prefix $TestPrefix"
-            $testSummaryPath = Join-Path $Path "TestSummary-$TestPrefix$label-1" "TestSummary.md"
-            $result = New-TestResults -Path $testSummaryPath -Status $status -Label $label -Context "$Env:CONTEXT - $label" -Attempt 1
-            $testResults += $result
-            continue
+        if ($suites.Contains($label)) {
+            $suite = $suites[$label]
+        } else {
+            $suite = [TestSuite]::new($label)
+            $suites[$label] = $suite
         }
-
-        # Compute the attempt # and create a list of (Name, Attempt) entries
-        $attemptDirectories = [System.Collections.ArrayList]@()
-        $computeAttempt = {this.Name.Substring($this.Name.LastIndexOf("-") + 1)}
-        foreach ($dir in $testSummaryDirectories) {
-            $attempt = [int] $dir.Name.Substring($dir.Name.LastIndexOf("-") + 1)
-            $obj = [PSCustomObject]@{
-                Name = $dir
-                Attempt = [int] $attempt
-            }
-            $attemptDirectories += $obj
-        }
-
-        # Sort the list by attempt #
-        $attemptDirectories = $attemptDirectories | Sort-Object -Property "Attempt"
-
-        # Get the last path in the array, that's the last attempt
-        $testSummaryDirectory = $attemptDirectories[$attemptDirectories.count-1]
-        $testAttempt = $testSummaryDirectory.Attempt
-        $testAttemptPath = $testSummaryDirectory.Name
-        $testSummaryPath = Join-Path $testAttemptPath "TestSummary.md"
-
-        Write-Debug "Found $($attemptDirectories.count) directories, selected $testSummaryDirectory and final path is $testSummaryPath"
-
-        if (-not (Test-Path -Path $testSummaryPath -PathType Leaf)) {
-            Write-Debug "WARNING: Path $testSummaryPath does not exist"
-        }
-
-        $result = New-TestResults -Path $testSummaryPath -Status $status -Label $label -Context "$Env:CONTEXT - $label" -Attempt $testAttempt
-        $testResults += $result
+        $testConfig = [TestConfiguration]::new($suite, $title, $platform, "$Context - $title")
+        $suite.TestConfigurations += $testConfig
+        Write-Host "Added test config: $( $testConfig.Title )"
+        Write-Host "To suite: $( $suite.Label )"
+        Write-Host "Which now has $($suite.TestConfigurations.Length) configuration:"
+        Write-Host $( $suite.TestConfigurations | Select-Object -ExpandProperty Title )
     }
 
-    return $testResults
+    Write-Host "Test suites:"
+    Write-Host $suites.Keys
+
+    foreach ($kvp in $stageDep.GetEnumerator()) {
+        $candidate = $kvp.Value
+        if ($candidate.tests.outputs -eq $null) {
+            Write-Host "Stage dependency $($kvp.Name) is not a test dependency"
+            continue
+        }
+        Write-Host "Stage dependency $($kvp.Name) is a test dependency"
+
+        $testPrefix = $kvp.Name
+        $outputs = $candidate.tests.outputs
+
+        Write-Host "Outputs for $($testPrefix):"
+        Write-Host $outputs
+        $tests = [System.Collections.SortedList]::new()
+        foreach ($name in $outputs.Keys) {
+            if ($name.EndsWith(".TESTS_LABEL")) {
+                $label = $outputs[$name]
+                $title = $name.Substring(0, $name.IndexOf('.'))
+                $statusKey = $outputs.Keys | Where-Object { $_.StartsWith($title + ".") -and $_.EndsWith("." + "TESTS_JOBSTATUS") } | Sort-Object | Select-Object -Last 1
+                $botKey = $outputs.Keys | Where-Object { $_.StartsWith($title + ".") -and $_.EndsWith("." + "TESTS_BOT") }
+                $platformKey = $outputs.Keys | Where-Object { $_.StartsWith($title + ".") -and $_.EndsWith("." + "TESTS_PLATFORM") }
+                $attemptKey = $outputs.Keys | Where-Object { $_.StartsWith($title + ".") -and $_.EndsWith("." + "TESTS_ATTEMPT") }
+                Write-Host "Keys: Label=$label Title=$title Status=$statusKey Bot=$botKey Platform=$platformKey Attempt=$attemptKey"
+                $status =  if ($statusKey -eq $null) { "NotFound"} else { $outputs[$statusKey] }
+                $bot = if ($botKey -eq $null) { "NotFound" } else { $outputs[$botKey] }
+                $platform = if ($platformKey -eq $null) { "NotFound" } else { $outputs[$platformKey] }
+                $attempt = if ($attemptKey -eq $null) { -2 } else { [int]$outputs[$attemptKey] }
+                $testResult = [PSCustomObject]@{
+                    Label = $label
+                    Title = $title
+                    Status = $status
+                    Bot = $bot
+                    Platform = $platform
+                    Attempt = $attempt
+                }
+                if ($tests.Contains($label)) {
+                    $testInfo = $tests[$label]
+                } else {
+                    $testInfo = [System.Collections.SortedList]::new()
+                    $tests[$label] = $testInfo
+                }
+                $testInfo[$title] = $testResult
+                Write-Host "Added $label to tests ($title) Name: $name status: $($testResult.Status) bot: $($testResult.Bot) Platform: $($testResult.Platform) Attempt: $($testResult.Attempt)"
+            }
+        }
+
+        $testResults = [System.Collections.ArrayList]@()
+        foreach ($suite in $suites.Values | Sort-Object -Property Label) {
+            $label = $suite.Label
+            Write-Host "Processing results for $label with $($suite.TestConfigurations.Length) configurations"
+            foreach ($testConfig in $suite.TestConfigurations | Sort-Object -Property Title) {
+                $title = $testConfig.Title
+                $testResult = $null
+                Write-Host "`tProcessing config $title"
+                if ($tests.Contains($label)) {
+                    Write-Host "`t`tFound results for label: $label"
+                    $testInfo = $tests[$label]
+                    if ($testInfo.Contains($title)) {
+                        $testResult = $testInfo[$title]
+                        Write-Host "`t`tFound results for title '$title': $testResult"
+                    } else {
+                        Write-Host "`t`tFound NO results for title: $title"
+                    }
+                } else {
+                    Write-Host "`tFound NO results for label: $label"
+                }
+
+
+                $platform = $testConfig.Platform
+                $title = $testConfig.Title
+                if ($null -eq $testResult) {
+                    $result = [TestResult]::new($null, "None", $testConfig, -1)
+                } else {
+                    $status = $testResult.Status
+                    $testAttempt = $testResult.Attempt
+
+                    $testSummaryPath = Join-Path "$Path" "${UploadPrefix}TestSummary-$TestPrefix$($title.Replace('-','_'))-$testAttempt" "TestSummary.md"
+
+                    Write-Host "`t`tTest results for $label on attempt $testAttempt is '$status' in $testSummaryPath"
+
+                    if (-not (Test-Path -Path $testSummaryPath -PathType Leaf)) {
+                        Write-Host "`t`tWARNING: Path $testSummaryPath does not exist"
+                    }
+
+                    $result = [TestResult]::new($testSummaryPath, $status, $testConfig, $testAttempt)
+                }
+
+                $testResults += $result
+            }
+        }
+    }
+
+    return [ParallelTestsResults]::new($testResults, $Context, $TestPrefix, $VSDropsIndex)
 }
 
 Export-ModuleMember -Function New-TestResults
 Export-ModuleMember -Function New-ParallelTestsResults
-Export-ModuleMember -Function New-TestSummaryResults

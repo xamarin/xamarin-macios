@@ -157,6 +157,7 @@ namespace MonoMac.Tuner {
 			sub.Add (new MarkNSObjects ());
 
 			sub.Add (new CoreRemoveSecurity ());
+			sub.Add (new PreserveSmartEnumConversionsSubStep ());
 
 			return sub;
 		}
@@ -257,7 +258,7 @@ namespace MonoMac.Tuner {
 			foreach (AssemblyNameReference reference in assembly.MainModule.AssemblyReferences) {
 				try {
 					var asm = Context.Resolve (reference);
-					if (asm == null) {
+					if (asm is null) {
 						ErrorHelper.Warning (2013, Errors.MM2013, reference.FullName, assembly.Name.FullName);
 					} else {
 						ProcessReferences (asm);

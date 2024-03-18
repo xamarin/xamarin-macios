@@ -7,6 +7,14 @@
 		<EmbeddedResourcesTestDirectory>$(RootTestsDirectory)\EmbeddedResources</EmbeddedResourcesTestDirectory>
 
 		<AssemblyOriginatorKeyFile>$(RootTestsDirectory)\..\product.snk</AssemblyOriginatorKeyFile>
+
+		<!-- warning CS8981: The type name 'pfloat' only contains lower-cased ascii characters. Such names may become reserved for the language. -->
+		<!-- if this one becomes a problem we can easily fix it with a search&replace -->
+		<NoWarn>$(NoWarn);CS8981</NoWarn>
+
+		<!-- We're warning-free, so let's make sure we stay that way -->
+		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+		<WarningsAsErrors>Nullable</WarningsAsErrors>
 	</PropertyGroup>
 
 	<Import Project="$(RootTestsDirectory)/common/shared-dotnet.csproj" />
@@ -18,6 +26,9 @@
 		</Compile>
 		<Compile Include="$(RootTestsDirectory)\..\tools\common\ApplePlatform.cs">
 			<Link>ApplePlatform.cs</Link>
+		</Compile>
+		<Compile Include="$(RootTestsDirectory)\..\tools\common\SdkVersions.cs">
+			<Link>SdkVersions.cs</Link>
 		</Compile>
 	</ItemGroup>
 

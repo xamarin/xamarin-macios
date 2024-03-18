@@ -107,3 +107,5 @@
 !missing-pinvoke! JSObjectSetPropertyForKey is not bound
 !missing-pinvoke! JSValueIsSymbol is not bound
 !missing-pinvoke! JSValueMakeSymbol is not bound
+!missing-pinvoke! JSGlobalContextIsInspectable is not bound
+!missing-pinvoke! JSGlobalContextSetInspectable is not bound

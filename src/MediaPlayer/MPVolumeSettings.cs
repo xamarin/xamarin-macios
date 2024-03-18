@@ -22,7 +22,6 @@ namespace MediaPlayer {
 #if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
-		[UnsupportedOSPlatform ("ios11.3")]
 		[ObsoletedOSPlatform ("ios11.3", "Use 'MPVolumeView' to present volume controls.")]
 #else
 		[Deprecated (PlatformName.iOS, 11, 3, message: "Use 'MPVolumeView' to present volume controls.")]
@@ -33,7 +32,6 @@ namespace MediaPlayer {
 #if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
-		[UnsupportedOSPlatform ("ios11.3")]
 		[ObsoletedOSPlatform ("ios11.3", "Use 'MPVolumeView' to present volume controls.")]
 #else
 		[Deprecated (PlatformName.iOS, 11, 3, message: "Use 'MPVolumeView' to present volume controls.")]
@@ -41,18 +39,29 @@ namespace MediaPlayer {
 		[DllImport (Constants.MediaPlayerLibrary, EntryPoint = "MPVolumeSettingsAlertHide")]
 		public extern static void AlertHide ();
 
-		// note: sizeof (BOOL) is 1 like C, i.e. it's not a Win32 BOOL (4 bytes)
 #if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
-		[UnsupportedOSPlatform ("ios11.3")]
 		[ObsoletedOSPlatform ("ios11.3", "Use 'MPVolumeView' to present volume controls.")]
+		[ObsoletedOSPlatform ("maccatalyst13.1", "Use 'MPVolumeView' to present volume controls.")]
 #else
 		[Deprecated (PlatformName.iOS, 11, 3, message: "Use 'MPVolumeView' to present volume controls.")]
 #endif
-		[DllImport (Constants.MediaPlayerLibrary, EntryPoint = "MPVolumeSettingsAlertIsVisible")]
-		[return: MarshalAs (UnmanagedType.I1)]
-		public extern static /* BOOL */ bool AlertIsVisible ();
+		[DllImport (Constants.MediaPlayerLibrary)]
+		extern static /* BOOL */ byte MPVolumeSettingsAlertIsVisible ();
+
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[ObsoletedOSPlatform ("ios11.3", "Use 'MPVolumeView' to present volume controls.")]
+		[ObsoletedOSPlatform ("maccatalyst13.1", "Use 'MPVolumeView' to present volume controls.")]
+#else
+		[Deprecated (PlatformName.iOS, 11, 3, message: "Use 'MPVolumeView' to present volume controls.")]
+#endif
+		public static bool AlertIsVisible ()
+		{
+			return MPVolumeSettingsAlertIsVisible () != 0;
+		}
 	}
 }
 

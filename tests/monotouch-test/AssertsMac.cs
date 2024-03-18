@@ -47,7 +47,7 @@ namespace Xamarin.Mac.Tests {
 
 		public static bool SkipDueToAvailabilityAttribute (ICustomAttributeProvider member)
 		{
-			if (member == null)
+			if (member is null)
 				return false;
 			return !member.IsAvailableOnHostPlatform ();
 		}

@@ -70,21 +70,21 @@ namespace Xamarin.Linker.Steps {
 		// xml serialization requires the default .ctor to be present
 		void MarkDefaultConstructor (ICustomAttributeProvider provider, IList<ICustomAttributeProvider> list)
 		{
-			if (list != null) {
+			if (list is not null) {
 				list.Add (provider);
 				return;
 			}
 
 			TypeDefinition td = (provider as TypeDefinition);
-			if (td == null) {
+			if (td is null) {
 				PropertyDefinition pd = (provider as PropertyDefinition);
-				if (pd != null) {
+				if (pd is not null) {
 					MarkDefaultConstructor (pd.DeclaringType);
 					MarkGenericType (pd.PropertyType as GenericInstanceType);
 					td = pd.PropertyType.Resolve ();
 				} else {
 					FieldDefinition fd = (provider as FieldDefinition);
-					if (fd != null) {
+					if (fd is not null) {
 						MarkDefaultConstructor (fd.DeclaringType);
 						MarkGenericType (fd.FieldType as GenericInstanceType);
 						td = (fd.FieldType as TypeReference).Resolve ();
@@ -93,13 +93,13 @@ namespace Xamarin.Linker.Steps {
 			}
 
 			// e.g. <T> property (see bug #5543) or field (see linkall unit tests)
-			if (td != null)
+			if (td is not null)
 				MarkDefaultConstructor (td);
 		}
 
 		void MarkGenericType (GenericInstanceType git)
 		{
-			if (git == null || !git.HasGenericArguments)
+			if (git is null || !git.HasGenericArguments)
 				return;
 
 			foreach (TypeReference tr in git.GenericArguments)
@@ -108,7 +108,7 @@ namespace Xamarin.Linker.Steps {
 
 		void MarkDefaultConstructor (TypeDefinition type)
 		{
-			if ((type == null) || !type.HasMethods)
+			if ((type is null) || !type.HasMethods)
 				return;
 
 			foreach (MethodDefinition ctor in type.Methods) {

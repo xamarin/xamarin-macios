@@ -7,10 +7,8 @@
 ## field added in xcode 12 b1 - but not marked as available on macOS and already deprecated on iOS
 !missing-field! MPMediaPlaybackIsPreparedToPlayDidChangeNotification not bound
 
-## intro says that it does not work
-!missing-selector! AVPlayerItem::nowPlayingInfo not bound
-!missing-selector! AVPlayerItem::setNowPlayingInfo: not bound
 
 ## unsorted
 
 !unknown-type! MPMediaItem bound
+!extra-null-allowed! 'System.Void MediaPlayer.MPRemoteCommand::RemoveTarget(Foundation.NSObject,ObjCRuntime.Selector)' has a extraneous [NullAllowed] on parameter #0

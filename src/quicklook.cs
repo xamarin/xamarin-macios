@@ -48,7 +48,8 @@ using NativeHandle = System.IntPtr;
 namespace QuickLook {
 #if !MONOMAC
 	[NoMac]
-	[BaseType (typeof (UIViewController), Delegates = new string [] { "WeakDelegate" }, Events=new Type [] { typeof (QLPreviewControllerDelegate)})]
+	[MacCatalyst (13, 1)]
+	[BaseType (typeof (UIViewController), Delegates = new string [] { "WeakDelegate" }, Events = new Type [] { typeof (QLPreviewControllerDelegate) })]
 	interface QLPreviewController {
 		[Export ("initWithNibName:bundle:")]
 		[PostGet ("NibBundle")]
@@ -56,29 +57,26 @@ namespace QuickLook {
 
 		[Export ("dataSource", ArgumentSemantic.Weak), NullAllowed]
 		NSObject WeakDataSource { get; set; }
-		
+
 		[Wrap ("WeakDataSource")]
-		[Protocolize]
-		QLPreviewControllerDataSource DataSource { get; set;  }
+		IQLPreviewControllerDataSource DataSource { get; set; }
 
 		[Export ("delegate", ArgumentSemantic.Weak), NullAllowed]
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		QLPreviewControllerDelegate Delegate { get; set; }
-		
+		IQLPreviewControllerDelegate Delegate { get; set; }
+
 		[Export ("currentPreviewItemIndex")]
-		nint CurrentPreviewItemIndex  { get; set;  }
+		nint CurrentPreviewItemIndex { get; set; }
 
 		[Export ("currentPreviewItem")]
-		[Protocolize]
 		[NullAllowed]
-		QLPreviewItem CurrentPreviewItem { get;  }
+		IQLPreviewItem CurrentPreviewItem { get; }
 
 		[Static]
 		[Export ("canPreviewItem:")]
-		bool CanPreviewItem ([Protocolize] QLPreviewItem item);
+		bool CanPreviewItem (IQLPreviewItem item);
 
 		[Export ("reloadData")]
 		void ReloadData ();
@@ -87,10 +85,13 @@ namespace QuickLook {
 		void RefreshCurrentPreviewItem ();
 	}
 
+	interface IQLPreviewControllerDataSource { }
+
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
 	[NoMac]
+	[MacCatalyst (13, 1)]
 	interface QLPreviewControllerDataSource {
 		[Abstract]
 		[Export ("numberOfPreviewItemsInPreviewController:")]
@@ -98,12 +99,12 @@ namespace QuickLook {
 
 		[Abstract]
 		[Export ("previewController:previewItemAtIndex:")]
-		[return:Protocolize]
-		QLPreviewItem GetPreviewItem (QLPreviewController controller, nint index);
+		IQLPreviewItem GetPreviewItem (QLPreviewController controller, nint index);
 	}
 
 	[NoMac]
-	[iOS (13,0)]
+	[iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum QLPreviewItemEditingMode : long {
 		Disabled = 0,
@@ -111,7 +112,10 @@ namespace QuickLook {
 		CreateCopy,
 	}
 
+	interface IQLPreviewControllerDelegate { }
+
 	[NoMac]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -123,41 +127,45 @@ namespace QuickLook {
 		void DidDismiss (QLPreviewController controller);
 
 		[Export ("previewController:shouldOpenURL:forPreviewItem:"), DelegateName ("QLOpenUrl"), DefaultValue (false)]
-		bool ShouldOpenUrl (QLPreviewController controller, NSUrl url, [Protocolize] QLPreviewItem item);
+		bool ShouldOpenUrl (QLPreviewController controller, NSUrl url, IQLPreviewItem item);
 
 #if !MONOMAC
 		// UIView and UIImage do not exists in MonoMac
-		
+
 		[Export ("previewController:frameForPreviewItem:inSourceView:"), DelegateName ("QLFrame"), DefaultValue (typeof (CGRect))]
-		CGRect FrameForPreviewItem (QLPreviewController controller, [Protocolize] QLPreviewItem item, ref UIView view);
-		
+		CGRect FrameForPreviewItem (QLPreviewController controller, IQLPreviewItem item, ref UIView view);
+
 		[Export ("previewController:transitionImageForPreviewItem:contentRect:"), DelegateName ("QLTransition"), DefaultValue (null)]
 		[return: NullAllowed]
-		UIImage TransitionImageForPreviewItem (QLPreviewController controller, [Protocolize] QLPreviewItem item, CGRect contentRect);
+		UIImage TransitionImageForPreviewItem (QLPreviewController controller, IQLPreviewItem item, CGRect contentRect);
 
-		[iOS (10,0)]
+		[MacCatalyst (13, 1)]
 		[Export ("previewController:transitionViewForPreviewItem:"), DelegateName ("QLTransitionView"), DefaultValue (null)]
 		[return: NullAllowed]
 		UIView TransitionViewForPreviewItem (QLPreviewController controller, IQLPreviewItem item);
 
-		[iOS (13,0)]
-		[Export ("previewController:editingModeForPreviewItem:"), DelegateName("QLEditingMode"), DefaultValue ("QLPreviewItemEditingMode.Disabled")]
+		[iOS (13, 0)]
+		[MacCatalyst (13, 1)]
+		[Export ("previewController:editingModeForPreviewItem:"), DelegateName ("QLEditingMode"), DefaultValue ("QLPreviewItemEditingMode.Disabled")]
 		QLPreviewItemEditingMode GetEditingMode (QLPreviewController controller, IQLPreviewItem previewItem);
 
-		[iOS (13,0)]
+		[iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("previewController:didUpdateContentsOfPreviewItem:"), EventArgs ("QLPreviewControllerDelegateDidUpdate")]
 		void DidUpdateContents (QLPreviewController controller, IQLPreviewItem previewItem);
 
-		[iOS (13,0)]
+		[iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("previewController:didSaveEditedCopyOfPreviewItem:atURL:"), EventArgs ("QLPreviewControllerDelegateDidSave")]
 		void DidSaveEditedCopy (QLPreviewController controller, IQLPreviewItem previewItem, NSUrl modifiedContentsUrl);
 
 #endif
 	}
 
-	interface IQLPreviewItem {}
+	interface IQLPreviewItem { }
 
 	[NoMac]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -186,10 +194,9 @@ namespace QuickLook {
 	delegate CGPDFDocument QLPreviewReplyUIDocumentCreationHandler (QLPreviewReply reply, out NSError error);
 
 	[NoMac]
-	[NoWatch, NoTV, iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof(NSObject))]
-	interface QLPreviewReply
-	{
+	[NoWatch, NoTV, iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (NSObject))]
+	interface QLPreviewReply {
 		[Export ("stringEncoding")]
 		NSStringEncoding StringEncoding { get; set; }
 
@@ -214,11 +221,10 @@ namespace QuickLook {
 	}
 
 	[NoMac]
-	[NoWatch, NoTV, iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof(NSObject))]
+	[NoWatch, NoTV, iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface QLPreviewReplyAttachment
-	{
+	interface QLPreviewReplyAttachment {
 		[Export ("data")]
 		NSData Data { get; }
 
@@ -230,41 +236,39 @@ namespace QuickLook {
 	}
 
 	[NoMac]
-	[NoWatch, NoTV, iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof(NSObject))]
+	[NoWatch, NoTV, iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface QLFilePreviewRequest
-	{
+	interface QLFilePreviewRequest {
 		[Export ("fileURL")]
 		NSUrl FileUrl { get; }
 	}
 
 	[NoMac]
-	[NoWatch, NoTV, iOS (15,0), MacCatalyst (15,0)]
+	[NoWatch, NoTV, iOS (15, 0), MacCatalyst (15, 0)]
 	[DisableDefaultCtor]
-	[BaseType (typeof(NSObject))]
-	interface QLPreviewProvider : NSExtensionRequestHandling
-	{
+	[BaseType (typeof (NSObject))]
+	interface QLPreviewProvider : NSExtensionRequestHandling {
 	}
 
-	[NoWatch][NoTV][NoMac] // availability not mentioned in the header files
-	[iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof(NSObject))]
-	interface QLPreviewSceneOptions
-	{
+	[NoWatch]
+	[NoTV]
+	[NoMac] // availability not mentioned in the header files
+	[iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (NSObject))]
+	interface QLPreviewSceneOptions {
 		[Export ("initialPreviewIndex")]
 		nint InitialPreviewIndex { get; set; }
 	}
 
 	[NoMac]
-	[iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof(UIWindowSceneActivationConfiguration))]
-	interface QLPreviewSceneActivationConfiguration
-	{
+	[iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (UIWindowSceneActivationConfiguration))]
+	interface QLPreviewSceneActivationConfiguration {
 		[Export ("initWithItemsAtURLs:options:")]
 
 		[DesignatedInitializer]
-		NativeHandle Constructor (NSUrl[] urls, [NullAllowed] QLPreviewSceneOptions options);
+		NativeHandle Constructor (NSUrl [] urls, [NullAllowed] QLPreviewSceneOptions options);
 
 		[Export ("initWithUserActivity:")]
 		[DesignatedInitializer]
@@ -272,7 +276,7 @@ namespace QuickLook {
 	}
 
 	[NoMac]
-	[iOS (11,0)]
+	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface QLPreviewingController {
 		[Export ("preparePreviewOfSearchableItemWithIdentifier:queryString:completionHandler:")]
@@ -281,7 +285,7 @@ namespace QuickLook {
 		[Export ("preparePreviewOfFileAtURL:completionHandler:")]
 		void PreparePreviewOfFile (NSUrl url, Action<NSError> handler);
 
-		[iOS (15,0), Mac (12,0), MacCatalyst (15,0)]
+		[iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("providePreviewForFileRequest:completionHandler:")]
 		void ProvidePreview (QLFilePreviewRequest request, Action<QLPreviewReply, NSError> handler);
 	}

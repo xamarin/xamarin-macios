@@ -215,12 +215,10 @@ namespace AVFoundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)]
 #endif
 		public double? MaxKeyFrameIntervalDuration {
 			get {
@@ -233,12 +231,10 @@ namespace AVFoundation {
 
 #if !MONOMAC
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos")]
-#else
-		[iOS (7, 0)]
 #endif
 		public bool? AllowFrameReordering {
 			get {
@@ -250,12 +246,10 @@ namespace AVFoundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos")]
-#else
-		[iOS (7, 0)]
 #endif
 		public AVVideoH264EntropyMode? EntropyEncoding {
 			get {
@@ -293,12 +287,10 @@ namespace AVFoundation {
 
 		// frame rate can be floating point (29.97 is common for instance)
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos")]
-#else
-		[iOS (7, 0)]
 #endif
 		public float? ExpectedSourceFrameRate {
 			get {
@@ -311,12 +303,10 @@ namespace AVFoundation {
 
 		// frame rate can be floating point (29.97 is common for instance)
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos")]
-#else
-		[iOS (7, 0)]
 #endif
 		public float? AverageNonDroppableFrameRate {
 			get {

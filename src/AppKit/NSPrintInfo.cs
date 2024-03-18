@@ -2,6 +2,8 @@
 using System;
 using PrintCore;
 
+#nullable enable
+
 namespace AppKit {
 	public partial class NSPrintInfo {
 		public PMPrintSession GetPrintSession ()

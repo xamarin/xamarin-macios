@@ -113,10 +113,10 @@ namespace MonoTouchFixtures.VideoToolbox {
 				var key = new NSString ("ShouldBeSerialized");
 				foreach (var item in supportedProps) {
 					var dict = (NSDictionary) item.Value;
-					if (dict == null) continue;
+					if (dict is null) continue;
 
 					NSObject value;
-					if (dict.TryGetValue (key, out value) && value != null) {
+					if (dict.TryGetValue (key, out value) && value is not null) {
 						var number = (NSNumber) value;
 						Assert.IsFalse (number.BoolValue, "CompressionSession GetSupportedPropertiesTest ShouldBeSerialized is True");
 					}

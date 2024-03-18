@@ -22,14 +22,16 @@ namespace Xamarin.Mac.Tests {
 			Assert.AreEqual (5, arrayNumber.Int32Value);
 
 			CGRect frame = new CGRect (10, 10, 10, 10);
-			using (var provider = new CGDataProvider (new byte [(int) frame.Width * (int) frame.Height * 4])) {
-				using (var image = new CGImage ((int) frame.Width, (int) frame.Height, 8, 32, (int) frame.Width * 4, CGColorSpace.CreateDeviceRGB (), CGBitmapFlags.None, provider, null, false, CGColorRenderingIntent.Default)) {
-					keyFrameAni.SetValues (new CGImage [] { image, image });
-					Assert.AreEqual (2, keyFrameAni.Values.Length);
-					CGImage arrayImage = (CGImage) keyFrameAni.GetValuesAs<CGImage> () [1];
-					Assert.AreEqual (image.Handle, arrayImage.Handle);
-				}
-			}
+
+			using var provider = new CGDataProvider (new byte [(int) frame.Width * (int) frame.Height * 4]);
+			using var colorSpace = CGColorSpace.CreateDeviceRGB ();
+			using var image = new CGImage ((int) frame.Width, (int) frame.Height, 8, 32, 4 * (int) frame.Width, colorSpace,
+				CGBitmapFlags.ByteOrderDefault | CGBitmapFlags.Last, provider, null, false, CGColorRenderingIntent.Default);
+
+			keyFrameAni.SetValues (new CGImage [] { image, image });
+			Assert.AreEqual (2, keyFrameAni.Values.Length);
+			CGImage arrayImage = (CGImage) keyFrameAni.GetValuesAs<CGImage> () [1];
+			Assert.AreEqual (image.Handle, arrayImage.Handle);
 		}
 	}
 }

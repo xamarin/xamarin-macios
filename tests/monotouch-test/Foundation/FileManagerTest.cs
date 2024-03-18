@@ -46,7 +46,7 @@ namespace MonoTouchFixtures.Foundation {
 		public void GetUrlForUbiquityContainer ()
 		{
 			NSFileManager fm = new NSFileManager ();
-			if (TestRuntime.CheckXcodeVersion (4, 5) && fm.UbiquityIdentityToken == null) {
+			if (TestRuntime.CheckXcodeVersion (4, 5) && fm.UbiquityIdentityToken is null) {
 				// UbiquityIdentityToken is a fast way to check if iCloud is enabled
 				Assert.Pass ("not iCloud enabled");
 			}
@@ -71,10 +71,10 @@ namespace MonoTouchFixtures.Foundation {
 			}.Start ();
 
 			if (evt.WaitOne (TimeSpan.FromSeconds (15))) {
-				if (e != null)
+				if (e is not null)
 					throw e;
 
-				if (c == null)
+				if (c is null)
 					Assert.Pass ("not iCloud enabled"); // simulator or provisioning profile without iCloud enabled (old ones)
 				else {
 					Assert.That (c.ToString (), Does.StartWith ("file://localhost/private/var/mobile/Library/Mobile%20Documents").
@@ -85,15 +85,14 @@ namespace MonoTouchFixtures.Foundation {
 				// aborting is evil, so don't bother aborting the thread, just let it run its course
 			}
 		}
-		//GetSkipBackupAttribute doesn't exist on Mac
-#if !MONOMAC
 
 		[Test]
 		public void GetSkipBackupAttribute ()
 		{
 			Assert.False (NSFileManager.GetSkipBackupAttribute (NSBundle.MainBundle.ExecutableUrl.ToString ()), "MainBundle");
 
-			string filename = Path.Combine (Environment.GetFolderPath (Environment.SpecialFolder.UserProfile), $"DoNotBackupMe-NSFileManager-{Process.GetCurrentProcess ().Id}");
+			var paths = NSSearchPath.GetDirectories (NSSearchPathDirectory.DocumentDirectory, NSSearchPathDomain.User);
+			var filename = Path.Combine (paths [0], $"DoNotBackupMe-NSFileManager-{Process.GetCurrentProcess ().Id}");
 			try {
 				File.WriteAllText (filename, "not worth a bit");
 
@@ -113,7 +112,6 @@ namespace MonoTouchFixtures.Foundation {
 				File.Delete (filename);
 			}
 		}
-#endif
 
 		[Test]
 		public void DefaultManager ()

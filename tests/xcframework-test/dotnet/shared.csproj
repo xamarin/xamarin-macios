@@ -13,6 +13,7 @@
     <MtouchNoSymbolStrip>true</MtouchNoSymbolStrip>
 
     <DefineConstants Condition="'$(Configuration)' == 'Debug'">$(DefineConstants);DEBUG</DefineConstants>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <Import Project="$(RootTestsDirectory)/common/shared-dotnet.csproj" />
@@ -28,8 +29,18 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="$(FrameworkTestDirectory)\iOS\AppDelegate.cs" Condition="!$(TargetFramework.EndsWith('-macos'))" />
+    <Compile Include="$(RootTestsDirectory)\common\AppDelegate.cs" Condition="!$(TargetFramework.EndsWith('-macos'))" />
     <Compile Include="$(FrameworkTestDirectory)\iOS\XCFrameworkTests.cs" />
     <Compile Include="$(RootTestsDirectory)\common\mac\MacMain.cs" Condition="$(TargetFramework.EndsWith('-macos'))" Link="MacMain.cs" />
+    <Compile Include="$(RootTestsDirectory)\common\TestAssemblyLoader.cs" />
+    <Compile Include="$(RootTestsDirectory)\common\TestRuntime.cs">
+      <Link>TestRuntime.cs</Link>
+    </Compile>
+    <Compile Include="$(RootTestsDirectory)\..\tools\common\ApplePlatform.cs">
+      <Link>ApplePlatform.cs</Link>
+    </Compile>
+    <Compile Include="$(RootTestsDirectory)\..\tools\common\SdkVersions.cs">
+      <Link>SdkVersions.cs</Link>
+    </Compile>
   </ItemGroup>
 </Project>

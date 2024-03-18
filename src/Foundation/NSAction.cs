@@ -27,6 +27,9 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using ObjCRuntime;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Foundation {
 
 #if !COREBUILD
@@ -52,7 +55,7 @@ namespace Foundation {
 
 		public NSActionDispatcher (Action action)
 		{
-			if (action == null)
+			if (action is null)
 				throw new ArgumentNullException ("action");
 
 			this.action = action;
@@ -69,7 +72,7 @@ namespace Foundation {
 
 		public NSSynchronizationContextDispatcher (SendOrPostCallback d, object state)
 		{
-			if (d == null)
+			if (d is null)
 				throw new ArgumentNullException (nameof (d));
 
 			this.d = d;
@@ -89,7 +92,7 @@ namespace Foundation {
 
 		public NSTimerActionDispatcher (Action<NSTimer> action)
 		{
-			if (action == null)
+			if (action is null)
 				throw new ArgumentNullException ("action");
 
 			this.action = action;
@@ -138,7 +141,7 @@ namespace Foundation {
 
 		public NSAsyncActionDispatcher (Action action)
 		{
-			if (action == null)
+			if (action is null)
 				throw new ArgumentNullException (nameof (action));
 
 			this.action = action;
@@ -163,7 +166,7 @@ namespace Foundation {
 
 		public NSAsyncSynchronizationContextDispatcher (SendOrPostCallback d, object state)
 		{
-			if (d == null)
+			if (d is null)
 				throw new ArgumentNullException (nameof (d));
 
 			this.d = d;

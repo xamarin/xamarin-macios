@@ -53,6 +53,7 @@ wrong, then developers can override the target location by:
     * If the `PackageDebugSymbols` is set to something else: `PublishFolderType=None`.
     * If the `PackageDebugSymbols` is not set: `PublishFolderType=None` for
       release builds, `PublishFolderType=Assembly` otherwise.
+* \*.xml: if there's an assembly with the same name (\*.exe or \*.dll), then `PublishFolderType=None`
 * A \*.resources directory or a \*.resources.zip file next to an assembly with
   the same name is treated as a third-party binding
   (`PublishFolderType=AppleBindingResourcePackage`), and we handle it as such
@@ -63,6 +64,7 @@ wrong, then developers can override the target location by:
 * \*.framework.zip and \*.xcframework.zip:
   `PublishFolderType=CompressedAppleFramework`
 * \*.dylib: `PublishFolderType=DynamicLibrary`
+* \*.so: `PublishFolderType=PluginLibrary`
 * \*.a: `PublishFolderType=StaticLibrary`
 * No other files are copied. We show a warning if we find any such files.
 
@@ -160,6 +162,24 @@ Setting the `TargetPath` or `Link` metadata has no effect these items.
 If a plugin needs to be in a custom subdirectory, then put it in that
 directory in the zip file.
 
+## XpcServices
+
+The target directory is:
+
+* iOS, tvOS: the `XPCServices/` subdirectory.
+* macOS, Mac Catalyst: the `Contents/XPCServices/` subdirectory.
+
+### CompressedXpcServices
+
+The item must be a zip file, which is decompressed, and then treated as
+`XpcServices` (the contents of the zip file will be copied to the corresponding
+`XPCServices` directory).
+
+Setting the `TargetPath` or `Link` metadata has no effect these items.
+
+If an xpc service needs to be in a custom subdirectory, then put it in that
+directory in the zip file.
+
 ### DynamicLibrary
 
 These are dynamic libraries (\*.dylib) files.
@@ -173,6 +193,20 @@ The target directory is the same as for `Assembly`:
 
 *Warning*: The App Store will reject any apps with \*.dylib files (for iOS and
 tvOS, not for macOS or Mac Catalyst).
+
+### PluginLibrary
+
+These are plugins provided as un-versioned dynamic library (\*.so or \*.dylib) files.
+
+An example are GStreamer plugins: `libgstogg.dylib`
+
+We will _not_ link with these libraries when linking the native executable since
+this type of plugins are loaded on demand at runtime.
+
+The target directory is the same as for `DynamicLibrary`
+
+*Warning*: The App Store will reject any apps with dynamic library files, for iOS and
+tvOS plugins must be provided as static libraries.
 
 ### StaticLibrary
 

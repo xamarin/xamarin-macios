@@ -1,6 +1,4 @@
 !missing-protocol! CIPlugInRegistration not bound
-!missing-selector! +CIFilter::filterArrayFromSerializedXMP:inputImageExtent:error: not bound
-!missing-selector! +CIFilter::serializedXMPFromFilters:inputImageExtent: not bound
 !missing-selector! +CIImage::imageWithCVPixelBuffer: not bound
 !missing-selector! +CIImage::imageWithCVPixelBuffer:options: not bound
 !missing-selector! +CIVector::vectorWithCGAffineTransform: not bound

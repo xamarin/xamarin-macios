@@ -22,11 +22,13 @@
 //
 using System;
 
+#nullable enable
+
 namespace Foundation {
 
 	[AttributeUsage (AttributeTargets.Property)]
 	public sealed class ConnectAttribute : Attribute {
-		string name;
+		string? name;
 
 		public ConnectAttribute () { }
 		public ConnectAttribute (string name)
@@ -34,7 +36,7 @@ namespace Foundation {
 			this.name = name;
 		}
 
-		public string Name {
+		public string? Name {
 			get { return this.name; }
 			set { this.name = value; }
 		}

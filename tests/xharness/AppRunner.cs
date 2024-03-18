@@ -118,25 +118,25 @@ namespace Xharness {
 
 		public async Task InitializeAsync ()
 		{
-			AppInformation = await appBundleInformationParser.ParseFromProject (projectFilePath, target, buildConfiguration);
+			AppInformation = await appBundleInformationParser.ParseFromProject2 (harness.AppBundleLocator, projectFilePath, target, buildConfiguration);
 			AppInformation.Variation = variation;
 		}
 
 		async Task<bool> FindSimulatorAsync ()
 		{
-			if (simulator != null)
+			if (simulator is not null)
 				return true;
 
 			var sims = simulatorsLoaderFactory.CreateLoader ();
 			await sims.LoadDevices (Logs.Create ($"simulator-list-{Harness.Helpers.Timestamp}.log", "Simulator list"), false, false);
 			(simulator, companionSimulator) = await sims.FindSimulators (target.GetTargetOs (false), MainLog);
 
-			return simulator != null;
+			return simulator is not null;
 		}
 
 		async Task FindDevice ()
 		{
-			if (deviceName != null)
+			if (deviceName is not null)
 				return;
 
 			deviceName = Environment.GetEnvironmentVariable ("DEVICE_NAME");
@@ -207,7 +207,7 @@ namespace Xharness {
 			if (!isSimulator) {
 				await FindDevice ();
 
-				if (deviceName == null)
+				if (deviceName is null)
 					throw new NoDeviceFoundException ();
 			}
 
@@ -329,7 +329,7 @@ namespace Xharness {
 				args.Add (new SetStdoutArgument (stdout_log));
 				args.Add (new SetStderrArgument (stderr_log));
 
-				var simulators = new [] { simulator, companionSimulator }.Where (s => s != null);
+				var simulators = new [] { simulator, companionSimulator }.Where (s => s is not null);
 				var systemLogs = new List<ICaptureLog> ();
 				foreach (var sim in simulators) {
 					// Upload the system log

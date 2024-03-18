@@ -24,8 +24,12 @@ using NativeHandle = System.IntPtr;
 
 namespace BusinessChat {
 
-	[Mac (10,13,4), iOS (11,3)]
-	[BaseType (typeof(UIControl))]
+	[Deprecated (PlatformName.MacOSX, 13, 1)]
+	[Deprecated (PlatformName.iOS, 16, 2)]
+	[iOS (11, 3)]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 16, 2)]
+	[BaseType (typeof (UIControl))]
 	[DisableDefaultCtor]
 	interface BCChatButton {
 		[Export ("initWithStyle:")]
@@ -34,8 +38,12 @@ namespace BusinessChat {
 	}
 
 
-	[Mac (10,13,4), iOS (11,3)]
-	[BaseType (typeof(NSObject))]
+	[Deprecated (PlatformName.MacOSX, 13, 1)]
+	[Deprecated (PlatformName.iOS, 16, 2)]
+	[iOS (11, 3)]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 16, 2)]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface BCChatAction {
 

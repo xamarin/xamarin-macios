@@ -25,12 +25,11 @@ namespace Network {
 
 #if NET
 	[SupportedOSPlatform ("tvos13.0")]
-	[SupportedOSPlatform ("macos10.15")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("ios13.0")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[TV (13, 0)]
-	[Mac (10, 15)]
 	[iOS (13, 0)]
 	[Watch (6, 0)]
 #endif
@@ -40,7 +39,7 @@ namespace Network {
 		internal NWBrowserDescriptor (NativeHandle handle, bool owns) : base (handle, owns) { }
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern OS_nw_browse_descriptor nw_browse_descriptor_create_bonjour_service (string type, string? domain);
+		static extern OS_nw_browse_descriptor nw_browse_descriptor_create_bonjour_service (IntPtr type, IntPtr domain);
 
 #if NET
 		[SupportedOSPlatform ("tvos16.0")]
@@ -54,7 +53,7 @@ namespace Network {
 		[Watch (9, 0)]
 #endif
 		[DllImport (Constants.NetworkLibrary)]
-		static extern OS_nw_browse_descriptor nw_browse_descriptor_create_application_service (string application_service_name);
+		static extern OS_nw_browse_descriptor nw_browse_descriptor_create_application_service (IntPtr application_service_name);
 
 #if NET
 		[SupportedOSPlatform ("tvos16.0")]
@@ -72,7 +71,8 @@ namespace Network {
 			if (applicationServiceName is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (applicationServiceName));
 
-			return new NWBrowserDescriptor (nw_browse_descriptor_create_application_service (applicationServiceName), owns: true);
+			using var applicationServiceNamePtr = new TransientString (applicationServiceName);
+			return new NWBrowserDescriptor (nw_browse_descriptor_create_application_service (applicationServiceNamePtr), owns: true);
 		}
 
 #if NET
@@ -113,7 +113,9 @@ namespace Network {
 			if (type is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (type));
 
-			return new NWBrowserDescriptor (nw_browse_descriptor_create_bonjour_service (type, domain), owns: true);
+			using var typePtr = new TransientString (type);
+			using var domainPtr = new TransientString (domain);
+			return new NWBrowserDescriptor (nw_browse_descriptor_create_bonjour_service (typePtr, domainPtr), owns: true);
 		}
 
 		public static NWBrowserDescriptor CreateBonjourService (string type) => CreateBonjourService (type, null);

@@ -1,3 +1,6 @@
 !missing-field! kCGImageProperty8BIMVersion not bound
 !missing-field! kCGImagePropertyGPSProcessingMethod not bound
 !missing-field! kCGImagePropertyTIFFCopyright not bound
+
+## xtro fails to recognize
+!unknown-field! kCGImagePropertyOpenEXRCompression bound

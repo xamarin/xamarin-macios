@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -13,6 +14,7 @@ using System.Reflection.Emit;
 
 using AVFoundation;
 using CoreBluetooth;
+using CoreFoundation;
 using Foundation;
 #if !__TVOS__
 using Contacts;
@@ -35,9 +37,13 @@ using ObjCRuntime;
 
 using Xamarin.Utils;
 
+using NUnit.Framework;
+
 #if !NET
 using NativeHandle = System.IntPtr;
 #endif
+
+#nullable enable
 
 partial class TestRuntime {
 
@@ -74,7 +80,7 @@ partial class TestRuntime {
 #elif MONOMAC
 		throw new Exception ("Can't get iOS Build version on OSX.");
 #else
-		return NSString.FromHandle (IntPtr_objc_msgSend (UIDevice.CurrentDevice.Handle, Selector.GetHandle ("buildVersion")));
+		return CFString.FromHandle (IntPtr_objc_msgSend (UIDevice.CurrentDevice.Handle, Selector.GetHandle ("buildVersion")))!;
 #endif
 	}
 
@@ -87,11 +93,11 @@ partial class TestRuntime {
 	[System.Runtime.InteropServices.DllImport ("/System/Library/Frameworks/Carbon.framework/Versions/Current/Carbon")]
 	static extern int Gestalt (int selector, out int result);
 
-	static Version version;
+	static Version? version;
 
 	public static Version OSXVersion {
 		get {
-			if (version == null) {
+			if (version is null) {
 				int major, minor, build;
 				Gestalt (sys1, out major);
 				Gestalt (sys2, out minor);
@@ -130,13 +136,24 @@ partial class TestRuntime {
 		}
 	}
 
+	static bool? is_pull_request;
+	public static bool IsPullRequest {
+		get {
+			if (!is_pull_request.HasValue) {
+				var pr = string.Equals (Environment.GetEnvironmentVariable ("BUILD_REASON"), "PullRequest", StringComparison.Ordinal);
+				is_pull_request = pr;
+			}
+			return is_pull_request.Value;
+		}
+	}
+
 	public static void IgnoreInCI (string message)
 	{
 		if (!IsInCI) {
-			Console.WriteLine ($"Not ignoring test ('{message}'), because not running in CI. BUILD_REVISION={Environment.GetEnvironmentVariable ("BUILD_REVISION")} BUILD_SOURCEVERSION={Environment.GetEnvironmentVariable ("BUILD_SOURCEVERSION")}");
+			Console.WriteLine ($"Not ignoring test, because not running in CI: {message}");
 			return;
 		}
-		Console.WriteLine ($"Ignoring test ('{message}'), because not running in CI. BUILD_REVISION={Environment.GetEnvironmentVariable ("BUILD_REVISION")} BUILD_SOURCEVERSION={Environment.GetEnvironmentVariable ("BUILD_SOURCEVERSION")}");
+		Console.WriteLine ($"Ignoring test, because not running in CI: {message}");
 		NUnit.Framework.Assert.Ignore (message);
 	}
 
@@ -180,6 +197,28 @@ partial class TestRuntime {
 	{
 #if !MONOMAC && !__MACCATALYST__
 		if (ObjCRuntime.Runtime.Arch == Arch.DEVICE)
+			NUnit.Framework.Assert.Ignore (message);
+#endif
+	}
+
+	public static void AssertDesktop (string message = "This test only runs on Desktops (macOS or MacCatalyst).")
+	{
+#if !(__MACOS__ || __MACCATALYST__)
+		NUnit.Framework.Assert.Ignore (message);
+#endif
+	}
+
+	public static void AssertNotDesktop (string message = "This test does not run on Desktops (macOS or MacCatalyst).")
+	{
+#if __MACOS__ || __MACCATALYST__
+		NUnit.Framework.Assert.Ignore (message);
+#endif
+	}
+
+	public static void AssertNotX64Desktop (string message = "This test does not run on x64 desktops.")
+	{
+#if __MACOS__ || __MACCATALYST__
+		if (!IsARM64)
 			NUnit.Framework.Assert.Ignore (message);
 #endif
 	}
@@ -347,7 +386,11 @@ partial class TestRuntime {
 			 *
 			 * The above statement also applies to 'CheckExactmacOSSystemVersion' =S
 			 */
+#if NET
 			return NSProcessInfo.ProcessInfo.OperatingSystemVersionString.Contains (v.macOS.Build, StringComparison.Ordinal);
+#else
+			return NSProcessInfo.ProcessInfo.OperatingSystemVersionString.Contains (v.macOS.Build);
+#endif
 #else
 			throw new NotImplementedException ();
 #endif
@@ -359,6 +402,23 @@ partial class TestRuntime {
 	public static bool CheckXcodeVersion (int major, int minor, int build = 0)
 	{
 		switch (major) {
+		case 15:
+			switch (minor) {
+			case 0:
+#if __WATCHOS__
+				return CheckWatchOSSystemVersion (10, 0);
+#elif __TVOS__
+				return ChecktvOSSystemVersion (17, 0);
+#elif __IOS__
+				return CheckiOSSystemVersion (17, 0);
+#elif MONOMAC
+				return CheckMacSystemVersion (14, 0);
+#else
+				throw new NotImplementedException ($"Missing platform case for Xcode {major}.{minor}");
+#endif
+			default:
+				throw new NotImplementedException ($"Missing version logic for checking for Xcode {major}.{minor}");
+			}
 		case 14:
 			switch (minor) {
 			case 0:
@@ -382,6 +442,30 @@ partial class TestRuntime {
 				return CheckiOSSystemVersion (16, 1);
 #elif MONOMAC
 				return CheckMacSystemVersion (13, 0);
+#else
+				throw new NotImplementedException ($"Missing platform case for Xcode {major}.{minor}");
+#endif
+			case 2:
+#if __WATCHOS__
+				return CheckWatchOSSystemVersion (9, 1);
+#elif __TVOS__
+				return ChecktvOSSystemVersion (16, 1);
+#elif __IOS__
+				return CheckiOSSystemVersion (16, 2);
+#elif MONOMAC
+				return CheckMacSystemVersion (13, 1);
+#else
+				throw new NotImplementedException ($"Missing platform case for Xcode {major}.{minor}");
+#endif
+			case 3:
+#if __WATCHOS__
+				return CheckWatchOSSystemVersion (9, 4);
+#elif __TVOS__
+				return ChecktvOSSystemVersion (16, 4);
+#elif __IOS__
+				return CheckiOSSystemVersion (16, 4);
+#elif MONOMAC
+				return CheckMacSystemVersion (13, 3);
 #else
 				throw new NotImplementedException ($"Missing platform case for Xcode {major}.{minor}");
 #endif
@@ -423,6 +507,18 @@ partial class TestRuntime {
 				return CheckiOSSystemVersion (15, 2);
 #elif MONOMAC
 				return CheckMacSystemVersion (12, 1);
+#else
+				throw new NotImplementedException ();
+#endif
+			case 3:
+#if __WATCHOS__
+				return CheckWatchOSSystemVersion (8, 5);
+#elif __TVOS__
+				return ChecktvOSSystemVersion (15, 4);
+#elif __IOS__
+				return CheckiOSSystemVersion (15, 4);
+#elif MONOMAC
+				return CheckMacSystemVersion (12, 3);
 #else
 				throw new NotImplementedException ();
 #endif
@@ -1160,7 +1256,7 @@ partial class TestRuntime {
 			});
 		}
 
-		switch (AVCaptureDevice.GetAuthorizationStatus (AVMediaTypes.Video.GetConstant ())) {
+		switch (AVCaptureDevice.GetAuthorizationStatus (AVMediaTypes.Video.GetConstant ()!)) {
 		case AVAuthorizationStatus.Restricted:
 		case AVAuthorizationStatus.Denied:
 			if (assert_granted)
@@ -1215,6 +1311,7 @@ partial class TestRuntime {
 #if __MACCATALYST__
 		NUnit.Framework.Assert.Ignore ("CheckAddressBookPermission -> Ignore in MacCat, it hangs since our TCC hack does not work on BS.");
 #endif
+#pragma warning disable CA1422 // warning CA1422: This call site is reachable on: 'MacCatalyst' 13.3 and later. 'ABAuthorizationStatus.*' is obsoleted on: 'maccatalyst' 9.0 and later (Use the 'Contacts' API instead.).
 		switch (ABAddressBook.GetAuthorizationStatus ()) {
 		case ABAuthorizationStatus.NotDetermined:
 			if (IgnoreTestThatRequiresSystemPermissions ())
@@ -1229,6 +1326,7 @@ partial class TestRuntime {
 			break;
 		}
 	}
+#pragma warning restore CA1422
 #endif // !MONOMAC && !__TVOS__ && !__WATCHOS__
 
 #if !__WATCHOS__
@@ -1315,9 +1413,9 @@ partial class TestRuntime {
 #else
 			if (TestRuntime.CheckMacSystemVersion (10, 10))
 				return; // Crossing fingers that this won't hang.
-#endif
 			NUnit.Framework.Assert.Ignore ("This test requires permission to access events, but there's no API to request access without potentially showing dialogs.");
 			break;
+#endif
 		case EKAuthorizationStatus.Denied:
 			if (assert_granted)
 				NUnit.Framework.Assert.Ignore ("This test requires permission to access events.");
@@ -1351,7 +1449,7 @@ partial class TestRuntime {
 #else
 		const string fieldName = "flags";
 #endif
-		return (ushort) typeof (NSObject).GetField (fieldName, BindingFlags.Instance | BindingFlags.GetField | BindingFlags.NonPublic).GetValue (obj);
+		return (ushort) typeof (NSObject).GetField (fieldName, BindingFlags.Instance | BindingFlags.GetField | BindingFlags.NonPublic).GetValue (obj)!;
 	}
 
 	// Determine if linkall was enabled by checking if an unused class in this assembly is still here.
@@ -1359,7 +1457,7 @@ partial class TestRuntime {
 	public static bool IsLinkAll {
 		get {
 			if (!link_all.HasValue)
-				link_all = typeof (TestRuntime).Assembly.GetType (typeof (TestRuntime).FullName + "+LinkerSentinel") == null;
+				link_all = typeof (TestRuntime).Assembly.GetType (typeof (TestRuntime).FullName + "+LinkerSentinel") is null;
 			return link_all.Value;
 		}
 	}
@@ -1384,9 +1482,53 @@ partial class TestRuntime {
 		}
 	}
 
-	public static void IgnoreInCIIfBadNetwork (Exception ex)
+	public static void IgnoreInCIIfBadNetwork (Exception? ex)
 	{
+		if (ex is null)
+			return;
+
 		IgnoreInCIfHttpStatusCodes (ex, HttpStatusCode.BadGateway, HttpStatusCode.GatewayTimeout, HttpStatusCode.ServiceUnavailable);
+		IgnoreInCIIfNetworkConnectionLost (ex);
+		IgnoreInCIIfDnsResolutionFailed (ex);
+	}
+
+	public static void IgnoreInCIIfBadNetwork (NSError? error)
+	{
+		if (error is null)
+			return;
+
+		IgnoreInCIIfNetworkConnectionLost (error);
+		IgnoreInCIIfNoNetworkConnection (error);
+		IgnoreInCIIfDnsResolutionFailed (error);
+		IgnoreInCIIfTimedOut (error);
+	}
+
+	public static void IgnoreInCIIfDnsResolutionFailed (Exception ex)
+	{
+		var se = FindInner<System.Net.Sockets.SocketException> (ex);
+		if (se is null)
+			return;
+
+		var isDnsResolutionFailed = false;
+		if (se.ErrorCode == 8 /* EAI_NONAME: 'hostname or servname not provided, or not known' */) {
+			isDnsResolutionFailed = true;
+		} else if (se.Message.Contains ("hostname or servname not provided, or not known")) {
+			isDnsResolutionFailed = true;
+		}
+		if (!isDnsResolutionFailed)
+			return;
+
+		IgnoreInCI ($"Ignored due to DNS resolution failure '{se.Message}'");
+	}
+
+	public static void IgnoreInCIIfDnsResolutionFailed (NSError error)
+	{
+		IgnoreNetworkError (error, CFNetworkErrors.CannotFindHost);
+	}
+
+	public static void IgnoreInCIIfTimedOut (NSError error)
+	{
+		IgnoreNetworkError (error, CFNetworkErrors.TimedOut);
 	}
 
 	public static void IgnoreInCIIfForbidden (Exception ex)
@@ -1416,6 +1558,54 @@ partial class TestRuntime {
 			return;
 
 		IgnoreInCI ($"Ignored due to http status code '{status}': {ex.Message}");
+	}
+
+	public static void IgnoreInCIIfNetworkConnectionLost (Exception ex)
+	{
+		if (!(ex is NSErrorException nex))
+			return;
+
+		IgnoreInCIIfNetworkConnectionLost (nex.Error);
+	}
+
+	public static void IgnoreInCIIfNetworkConnectionLost (NSError error)
+	{
+		// <Foundation.NSErrorException: Error Domain=NSURLErrorDomain Code=-1005 "The network connection was lost." UserInfo ...
+		IgnoreNetworkError (error, CFNetworkErrors.NetworkConnectionLost);
+	}
+
+	public static void IgnoreInCIIfNoNetworkConnection (NSError error)
+	{
+		// Error Domain=NSURLErrorDomain Code=-1009 "The Internet connection appears to be offline."
+		IgnoreNetworkError (error, CFNetworkErrors.NotConnectedToInternet);
+	}
+
+	static void IgnoreNetworkError (NSError error, params CFNetworkErrors [] errors)
+	{
+		if (error is null)
+			return;
+
+#if __WATCHOS__
+		if (error.Domain != NSError.NSUrlErrorDomain)
+#else
+		if (error.Domain != NSError.NSUrlErrorDomain && error.Domain != NSError.CFNetworkErrorDomain)
+#endif
+			return;
+
+		foreach (var e in errors) {
+			if (error.Code == (nint) (long) e)
+				IgnoreInCI ($"Ignored due to network error: {error}");
+		}
+	}
+
+	static T? FindInner<T> (Exception? ex) where T : Exception
+	{
+		while (ex is not null) {
+			if (ex is T target)
+				return target;
+			ex = ex.InnerException;
+		}
+		return null;
 	}
 
 	static bool TryGetHttpStatusCode (Exception ex, out HttpStatusCode status)
@@ -1456,6 +1646,13 @@ partial class TestRuntime {
 		return false;
 	}
 
+	public static void NotifyLaunchCompleted ()
+	{
+		var env = Environment.GetEnvironmentVariable ("LAUNCH_SENTINEL_FILE");
+		if (!string.IsNullOrEmpty (env))
+			File.WriteAllText (env, "Launched!"); // content doesn't matter, the file just has to exist.
+	}
+
 	enum NXByteOrder /* unspecified in header, means most likely int */ {
 		Unknown,
 		LittleEndian,
@@ -1471,11 +1668,11 @@ partial class TestRuntime {
 		IntPtr description; // const char *
 
 		public string Name {
-			get { return Marshal.PtrToStringUTF8 (name)!; }
+			get { return Marshal.PtrToStringAuto (name)!; }
 		}
 
 		public string Description {
-			get { return Marshal.PtrToStringUTF8 (description)!; }
+			get { return Marshal.PtrToStringAuto (description)!; }
 		}
 	}
 
@@ -1484,6 +1681,33 @@ partial class TestRuntime {
 
 	public unsafe static bool IsARM64 {
 		get { return NXGetLocalArchInfo ()->Name.StartsWith ("arm64"); }
+	}
+
+	[DllImport ("__Internal")]
+	extern static void xamarin_log (IntPtr s);
+
+	// Calling Console.WriteLine from inside a test is rather annoying, because NUnit captures stdout and only
+	// shows it at the end of the test. That's not very helpful when the test crashes, or while debugging
+	// a test (in a debugger).
+	internal static void NSLog (string value)
+	{
+		var valuePtr = Marshal.StringToHGlobalUni (value);
+		xamarin_log (valuePtr);
+		Marshal.FreeHGlobal (valuePtr);
+	}
+
+	public static void AssertNoNonNUnitException (Exception ex, string message)
+	{
+		switch (ex) {
+		case SuccessException: throw new SuccessException (ex.Message, ex);
+		case IgnoreException: throw new IgnoreException (ex.Message, ex);
+		case AssertionException: throw new AssertionException (ex.Message, ex);
+		case InconclusiveException: throw new InconclusiveException (ex.Message, ex);
+		case ResultStateException: throw ex;
+		default:
+			Assert.IsNull (ex, message);
+			break;
+		}
 	}
 }
 

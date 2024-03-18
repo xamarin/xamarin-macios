@@ -23,19 +23,19 @@ namespace Twitter {
 	[Deprecated (PlatformName.iOS, 6, 0, message: "Use the 'Social' framework.")]
 	[BaseType (typeof (NSObject))]
 	interface TWRequest {
-		
+
 		[NullAllowed] // by default this property is null
 		[Export ("account")]
-		ACAccount Account { get; set;  }
+		ACAccount Account { get; set; }
 
 		[Export ("requestMethod")]
 		TWRequestMethod RequestMethod { get; }
 
 		[Export ("URL")]
-		NSUrl Url { get;  }
+		NSUrl Url { get; }
 
 		[Export ("parameters")]
-		NSDictionary Parameters { get;  }
+		NSDictionary Parameters { get; }
 
 		[Export ("initWithURL:parameters:requestMethod:")]
 		NativeHandle Constructor (NSUrl url, [NullAllowed] NSDictionary parameters, TWRequestMethod requestMethod);

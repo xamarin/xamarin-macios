@@ -20,16 +20,11 @@ namespace OpenGLES {
 #endif
 
 #if NET
-		[SupportedOSPlatform ("ios10.0")]
-		[SupportedOSPlatform ("tvos10.0")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
-		[UnsupportedOSPlatform ("tvos12.0")]
-		[UnsupportedOSPlatform ("ios12.0")]
 		[ObsoletedOSPlatform ("tvos12.0", "Use 'Metal' instead.")]
 		[ObsoletedOSPlatform ("ios12.0", "Use 'Metal' instead.")]
-#else
-		[iOS (10, 0)]
-		[TV (10, 0)]
 #endif
 		public virtual bool PresentRenderBuffer (nuint target, double presentationTime)
 		{
@@ -37,16 +32,11 @@ namespace OpenGLES {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios10.3")]
-		[SupportedOSPlatform ("tvos10.2")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
-		[UnsupportedOSPlatform ("tvos12.0")]
-		[UnsupportedOSPlatform ("ios12.0")]
 		[ObsoletedOSPlatform ("tvos12.0", "Use 'Metal' instead.")]
 		[ObsoletedOSPlatform ("ios12.0", "Use 'Metal' instead.")]
-#else
-		[iOS (10, 3)]
-		[TV (10, 2)]
 #endif
 		public virtual bool PresentRenderBuffer (nuint target, double presentationTime, PresentationMode mode)
 		{

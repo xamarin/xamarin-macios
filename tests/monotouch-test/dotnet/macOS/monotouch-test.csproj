@@ -12,9 +12,6 @@
     <Compile Include="..\..\..\common\Configuration.cs">
       <Link>Configuration.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\common\mac\TestRuntime.macos.cs">
-      <Link>TestRuntime.macos.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\common\ExecutionHelper.cs">
       <Link>ExecutionHelper.cs</Link>
     </Compile>

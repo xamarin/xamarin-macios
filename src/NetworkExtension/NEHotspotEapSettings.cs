@@ -9,11 +9,13 @@
 
 #nullable enable
 
-#if !MONOMAC
+#if !MONOMAC && !TVOS
 using System;
 using Foundation;
+using ObjCRuntime;
 
 namespace NetworkExtension {
+
 	public partial class NEHotspotEapSettings {
 
 		public NEHotspotConfigurationEapType [] SupportedEapTypes {

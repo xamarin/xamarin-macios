@@ -8,6 +8,7 @@
     <_DotNetRootRemoteDirectory Condition="$(_DotNetRootRemoteDirectory) == ''">/usr/local/share/dotnet/</_DotNetRootRemoteDirectory>
     <_XamarinSdkRootDirectoryOnMac Condition="'$(_XamarinSdkRootDirectory)' != ''">$(_XamarinSdkRootDirectory.Replace('$(NetCoreRoot)', '$(_DotNetRootRemoteDirectory)'))</_XamarinSdkRootDirectoryOnMac>
     <_MlaunchPath Condition="'$(_MlaunchPath)' == ''">$(_XamarinSdkRootDirectoryOnMac)tools/bin/mlaunch</_MlaunchPath>
+    <MlaunchPath Condition="'$(MlaunchPath)' == ''">$(_XamarinSdkRootDirectoryOnMac)tools/bin/mlaunch</MlaunchPath>
     <AfterMicrosoftNETSdkTargets>$(AfterMicrosoftNETSdkTargets);$(MSBuildThisFileDirectory)..\targets\Microsoft.iOS.Windows.Sdk.targets</AfterMicrosoftNETSdkTargets>
 
     <_XamarinSdkRootOnMac Condition="'$(_XamarinSdkRoot)' != ''">$(_XamarinSdkRoot.Replace('$(NetCoreRoot)', '$(_DotNetRootRemoteDirectory)'))</_XamarinSdkRootOnMac>

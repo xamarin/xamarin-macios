@@ -15,6 +15,9 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using ObjCRuntime;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace UIKit {
 	[Register]
 	class UIControlEventProxy : NSObject {
@@ -50,7 +53,7 @@ namespace UIKit {
 		static ConditionalWeakTable<UIControl, Dictionary<EventHandler, Dictionary<UIControlEvent, UIControlEventProxy>>> allTargets;
 		public void AddTarget (EventHandler notification, UIControlEvent events)
 		{
-			if (allTargets == null)
+			if (allTargets is null)
 				allTargets = new ();
 
 			var targets = allTargets.GetValue (this, k => {
@@ -79,7 +82,7 @@ namespace UIKit {
 		{
 			Dictionary<EventHandler, Dictionary<UIControlEvent, UIControlEventProxy>> targets;
 
-			if (allTargets == null)
+			if (allTargets is null)
 				return;
 
 			if (!allTargets.TryGetValue (this, out targets))
@@ -195,11 +198,9 @@ namespace UIKit {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (9, 0)]
 #endif
 		public event EventHandler PrimaryActionTriggered {
 			add {

@@ -29,11 +29,6 @@
 
 # This fields are use for a notifications that returns a AVAudioSessionRouteDescription
 # which cannot be found on macOS
-!missing-field! AVAudioSessionRouteChangeNotification not bound
-!missing-field! AVAudioSessionRouteChangePreviousRouteKey not bound
-!missing-field! AVAudioSessionRouteChangeReasonKey not bound
-!missing-field! AVAudioSessionSilenceSecondaryAudioHintNotification not bound
-!missing-field! AVAudioSessionSilenceSecondaryAudioHintTypeKey not bound
 
 # not applicable to macOS
 !extra-enum-value! Managed value -11818 for AVError.SessionWasInterrupted not found in native headers
@@ -43,3 +38,8 @@
 
 # not used on macOS
 !missing-enum! AVAudioSessionInterruptionReason not bound
+
+## https://github.com/xamarin/xamarin-macios/issues/16229 prevents crashing instead of return null
+## so these selectors have been bound manually
+!missing-selector! AVAudioPlayer::initWithContentsOfURL:error: not bound
+!missing-selector! AVAudioPlayer::initWithData:error: not bound

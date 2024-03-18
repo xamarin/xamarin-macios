@@ -66,22 +66,27 @@ namespace Xamarin.Tests {
 		{
 			var rv = GetProjectPath (project, subdir, platform);
 			if (string.IsNullOrEmpty (runtimeIdentifiers))
-				runtimeIdentifiers = GetDefaultRuntimeIdentifier (platform);
+				runtimeIdentifiers = GetDefaultRuntimeIdentifier (platform, configuration);
 			var appPathRuntimeIdentifier = runtimeIdentifiers.IndexOf (';') >= 0 ? "" : runtimeIdentifiers;
 			return Path.Combine (Path.GetDirectoryName (rv)!, "bin", configuration, platform.ToFramework (netVersion), appPathRuntimeIdentifier);
 		}
 
-		protected string GetDefaultRuntimeIdentifier (ApplePlatform platform)
+		protected string GetDefaultRuntimeIdentifier (ApplePlatform platform, string configuration = "Debug")
 		{
+			var arch = Configuration.CanRunArm64 ? "arm64" : "x64";
 			switch (platform) {
 			case ApplePlatform.iOS:
-				return "iossimulator-x64";
+				return $"iossimulator-{arch}";
 			case ApplePlatform.TVOS:
-				return "tvossimulator-x64";
+				return $"tvossimulator-{arch}";
 			case ApplePlatform.MacOSX:
-				return "osx-x64";
+				if ("Release".Equals (configuration, StringComparison.OrdinalIgnoreCase))
+					return "osx-x64;osx-arm64";
+				return $"osx-{arch}";
 			case ApplePlatform.MacCatalyst:
-				return "maccatalyst-x64";
+				if ("Release".Equals (configuration, StringComparison.OrdinalIgnoreCase))
+					return "maccatalyst-x64;maccatalyst-arm64";
+				return $"maccatalyst-{arch}";
 			default:
 				throw new ArgumentOutOfRangeException ($"Unknown platform: {platform}");
 			}
@@ -119,6 +124,20 @@ namespace Xamarin.Tests {
 			case ApplePlatform.MacCatalyst:
 			case ApplePlatform.MacOSX:
 				return Path.Combine ("Contents", "PlugIns");
+			default:
+				throw new ArgumentOutOfRangeException ($"Unknown platform: {platform}");
+			}
+		}
+
+		protected string GetFrameworksRelativePath (ApplePlatform platform)
+		{
+			switch (platform) {
+			case ApplePlatform.iOS:
+			case ApplePlatform.TVOS:
+				return "Frameworks";
+			case ApplePlatform.MacCatalyst:
+			case ApplePlatform.MacOSX:
+				return Path.Combine ("Contents", "Frameworks");
 			default:
 				throw new ArgumentOutOfRangeException ($"Unknown platform: {platform}");
 			}
@@ -234,13 +253,13 @@ namespace Xamarin.Tests {
 			Assert.That (dSYMDirectory, Does.Exist, "dsym directory");
 		}
 
-		protected string GetNativeExecutable (ApplePlatform platform, string app_directory)
+		protected static string GetNativeExecutable (ApplePlatform platform, string app_directory)
 		{
 			var executableName = Path.GetFileNameWithoutExtension (app_directory);
 			return Path.Combine (app_directory, GetRelativeExecutableDirectory (platform), executableName);
 		}
 
-		protected string GetRelativeExecutableDirectory (ApplePlatform platform)
+		protected static string GetRelativeExecutableDirectory (ApplePlatform platform)
 		{
 			switch (platform) {
 			case ApplePlatform.iOS:
@@ -308,19 +327,20 @@ namespace Xamarin.Tests {
 			return csproj;
 		}
 
-		protected void ExecuteWithMagicWordAndAssert (ApplePlatform platform, string runtimeIdentifiers, string executable)
+		protected string ExecuteWithMagicWordAndAssert (ApplePlatform platform, string runtimeIdentifiers, string executable)
 		{
 			if (!CanExecute (platform, runtimeIdentifiers))
-				return;
+				return string.Empty;
 
-			ExecuteWithMagicWordAndAssert (executable);
+			return ExecuteWithMagicWordAndAssert (executable);
 		}
 
-		protected void ExecuteWithMagicWordAndAssert (string executable)
+		protected string ExecuteWithMagicWordAndAssert (string executable)
 		{
 			var rv = Execute (executable, out var output, out string magicWord);
 			Assert.That (output.ToString (), Does.Contain (magicWord), "Contains magic word");
 			Assert.AreEqual (0, rv.ExitCode, "ExitCode");
+			return output.ToString ();
 		}
 
 		protected Execution Execute (string executable, out StringBuilder output, out string magicWord)
@@ -389,10 +409,88 @@ namespace Xamarin.Tests {
 			Assert.AreEqual (0, rv, $"'codesign {string.Join (" ", args)}' failed:\n{codesignOutput}");
 			if (File.Exists (entitlementsPath)) {
 				entitlements = PDictionary.FromFile (entitlementsPath);
-				return true;
+				return entitlements is not null;
 			}
 			entitlements = null;
 			return false;
 		}
+
+		public static void AssertErrorCount (IList<BuildLogEvent> errors, int count, string message)
+		{
+			if (errors.Count == count)
+				return;
+			Assert.Fail ($"Expected {count} errors, got {errors.Count} errors: {message}.\n\t{string.Join ("\n\t", errors.Select (v => v.Message?.TrimEnd ()))}");
+		}
+
+		public static void AssertWarningMessages (IList<BuildLogEvent> actualWarnings, params string [] expectedWarningMessages)
+		{
+			AssertBuildMessages ("warning", actualWarnings, expectedWarningMessages);
+		}
+
+		public static void AssertErrorMessages (IList<BuildLogEvent> actualErrors, params string [] expectedErrorMessages)
+		{
+			AssertBuildMessages ("error", actualErrors, expectedErrorMessages);
+		}
+
+		public static void AssertBuildMessages (string type, IList<BuildLogEvent> actualMessages, params string [] expectedMessages)
+		{
+			if (actualMessages.Count != expectedMessages.Length) {
+				Assert.Fail ($"Expected {expectedMessages.Length} {type}s, got {actualMessages.Count} {type}s:\n\t{string.Join ("\n\t", actualMessages.Select (v => v.Message?.TrimEnd ()))}");
+				return;
+			}
+
+			var failures = new List<string> ();
+			for (var i = 0; i < expectedMessages.Length; i++) {
+				var actual = actualMessages [i].Message ?? string.Empty;
+				var expected = expectedMessages [i];
+				if (actual != expected) {
+					actual = actual.Replace ("\n", "\\n").Replace ("\r", "\\r");
+					expected = expected.Replace ("\n", "\\n").Replace ("\r", "\\r");
+					failures.Add ($"\tUnexpected {type} message #{i}:\n\t\tExpected: {expected}\n\t\tActual:   {actual}");
+				}
+			}
+			if (!failures.Any ())
+				return;
+
+			Assert.Fail ($"Failure when comparing {type} messages:\n{string.Join ("\n", failures)}\n\tAll {type}s:\n\t\t{string.Join ("\n\t\t", actualMessages.Select (v => v.Message?.TrimEnd ()))}");
+		}
+
+		public void AssertThatLinkerExecuted (ExecutionResult result)
+		{
+			var output = BinLog.PrintToString (result.BinLogPath);
+			Assert.That (output, Does.Contain ("Building target \"_RunILLink\" completely."), "Linker did not executed as expected.");
+			Assert.That (output, Does.Contain ("LinkerConfiguration:"), "Custom steps did not run as expected.");
+		}
+
+		public void AssertThatLinkerDidNotExecute (ExecutionResult result)
+		{
+			var output = BinLog.PrintToString (result.BinLogPath);
+			Assert.That (output, Does.Not.Contain ("Building target \"_RunILLink\" completely."), "Linker did not executed as expected.");
+			Assert.That (output, Does.Not.Contain ("LinkerConfiguration:"), "Custom steps did not run as expected.");
+		}
+
+		static bool? is_in_ci;
+		public static bool IsInCI {
+			get {
+				if (!is_in_ci.HasValue) {
+					var in_ci = !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("BUILD_REVISION"));
+					in_ci |= !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("BUILD_SOURCEVERSION")); // set by Azure DevOps
+					is_in_ci = in_ci;
+				}
+				return is_in_ci.Value;
+			}
+		}
+
+		static bool? is_pull_request;
+		public static bool IsPullRequest {
+			get {
+				if (!is_pull_request.HasValue) {
+					var pr = string.Equals (Environment.GetEnvironmentVariable ("BUILD_REASON"), "PullRequest", StringComparison.Ordinal);
+					is_pull_request = pr;
+				}
+				return is_pull_request.Value;
+			}
+		}
+
 	}
 }

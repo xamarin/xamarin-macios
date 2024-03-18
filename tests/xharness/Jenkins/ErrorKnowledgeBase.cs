@@ -21,7 +21,7 @@ namespace Xharness.Jenkins {
 		static bool TryFindErrors (IFileBackedLog? log, Dictionary<string, KnownIssue> errorMap, [NotNullWhen (true)] out KnownIssue? failureMessage)
 		{
 			failureMessage = null;
-			if (log == null) {
+			if (log is null) {
 				return false;
 			}
 
@@ -30,8 +30,8 @@ namespace Xharness.Jenkins {
 
 			using var reader = log.GetReader ();
 			while (!reader.EndOfStream) {
-				string line = reader.ReadLine ();
-				if (line == null)
+				var line = reader.ReadLine ();
+				if (line is null)
 					continue;
 				//go over errors and return true as soon as we find one that matches
 				foreach (var error in errorMap.Keys) {

@@ -12,7 +12,7 @@ namespace Xamarin.MacDev.Tasks {
 		TestEngine engine;
 		public TestEngine Engine {
 			get {
-				if (engine == null)
+				if (engine is null)
 					engine = new TestEngine ();
 				return engine;
 			}
@@ -21,7 +21,7 @@ namespace Xamarin.MacDev.Tasks {
 		ProjectPaths paths;
 		ProjectPaths MonoTouchProject {
 			get {
-				if (paths == null) {
+				if (paths is null) {
 					var platform = "iPhoneSimulator";
 					var config = "Debug";
 					var projectPath = Path.Combine (Configuration.TestProjectsDirectory, "MySingleView");

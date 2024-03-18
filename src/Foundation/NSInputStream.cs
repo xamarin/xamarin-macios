@@ -87,7 +87,7 @@ namespace Foundation {
 			if (inContextPtr == IntPtr.Zero)
 				return false;
 
-			inContext = (CFStreamClientContext) Marshal.PtrToStructure (inContextPtr, typeof (CFStreamClientContext));
+			inContext = Marshal.PtrToStructure<CFStreamClientContext> (inContextPtr)!;
 			if (inContext.Version != 0)
 				return false;
 

@@ -28,10 +28,18 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="$(FrameworkTestDirectory)\iOS\AppDelegate.cs" Condition="!$(TargetFramework.EndsWith('-macos'))" />
     <Compile Include="$(FrameworkTestDirectory)\iOS\FrameworkTests.cs" />
+    <Compile Include="$(RootTestsDirectory)\common\AppDelegate.cs" Condition="!$(TargetFramework.EndsWith('-macos'))" />
     <Compile Include="$(RootTestsDirectory)\common\mac\MacMain.cs" Condition="$(TargetFramework.EndsWith('-macos'))" Link="MacMain.cs" />
+    <Compile Include="$(RootTestsDirectory)\common\TestAssemblyLoader.cs" />
+    <Compile Include="$(RootTestsDirectory)\common\TestRuntime.cs">
+      <Link>TestRuntime.cs</Link>
+    </Compile>
+    <Compile Include="$(RootTestsDirectory)\..\tools\common\ApplePlatform.cs">
+      <Link>ApplePlatform.cs</Link>
+    </Compile>
+    <Compile Include="$(RootTestsDirectory)\..\tools\common\SdkVersions.cs">
+      <Link>SdkVersions.cs</Link>
+    </Compile>
   </ItemGroup>
-
-  <Import Project="$(RootTestsDirectory)\nunit.framework.targets" />
 </Project>

@@ -78,7 +78,7 @@ xamarin_log (const unsigned short *unicodeMessage)
 		NSLog (@"%@", msg);
 	}
 #endif
-	[msg release];
+	objc_release (msg);
 }
 
 // NOTE: The timezone functions are duplicated in mono, so if you're going to modify here, it would be nice
@@ -93,8 +93,8 @@ xamarin_timezone_get_data (const char *name, uint32_t *size)
 	NSTimeZone *tz = nil;
 	if (name) {
 		NSString *n = [[NSString alloc] initWithUTF8String: name];
-		tz = [[[NSTimeZone alloc] initWithName:n] autorelease];
-		[n release];
+		tz = objc_autorelease ([[NSTimeZone alloc] initWithName:n]);
+		objc_release (n);
 	} else {
 		tz = [NSTimeZone localTimeZone];
 	}

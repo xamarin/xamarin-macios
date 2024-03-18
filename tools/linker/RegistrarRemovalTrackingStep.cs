@@ -86,7 +86,7 @@ namespace MonoTouch.Tuner {
 			var productAssemblyName = PlatformAssemblyName;
 			var requires = false;
 			foreach (var mr in assembly.MainModule.GetMemberReferences ()) {
-				if (mr.DeclaringType == null || string.IsNullOrEmpty (mr.DeclaringType.Namespace))
+				if (mr.DeclaringType is null || string.IsNullOrEmpty (mr.DeclaringType.Namespace))
 					continue;
 
 				var scope = mr.DeclaringType.Scope;
@@ -122,21 +122,37 @@ namespace MonoTouch.Tuner {
 						}
 						break;
 					case "BlockLiteral":
+						// Req 2:
+						// * Nobody must call BlockLiteral.SetupBlock[Unsafe].
+						// * Nobody must call BlockLiteral..ctor (void*, object, Type, string)
+						//
+						// Fortunately the linker is able to rewrite:
+						//
+						// * Calls to SetupBlock[Unsafe] to call SetupBlockImpl
+						// * Calls to .ctor(void*, object, Type, string) to call .ctor(void*, object, string)
+						//
+						// and these overloads don't need the dynamic registrar, which means we only have
+						// to look in assemblies that aren't linked.
+						if (Annotations.GetAction (assembly) == AssemblyAction.Link && Optimizations.OptimizeBlockLiteralSetupBlock == true)
+							break;
+
 						switch (mr.Name) {
 						case "SetupBlock":
 						case "SetupBlockUnsafe":
-							// Req 2: Nobody must call BlockLiteral.SetupBlock[Unsafe].
-							//
-							// Fortunately the linker is able to rewrite calls to SetupBlock[Unsafe] to call
-							// SetupBlockImpl (which doesn't need the dynamic registrar), which means we only have
-							// to look in assemblies that aren't linked.
-							if (Annotations.GetAction (assembly) == AssemblyAction.Link && Optimizations.OptimizeBlockLiteralSetupBlock == true)
-								break;
-
 							if (warnIfRequired)
 								Warn (assembly, mr);
 
 							requires = true;
+							break;
+						case ".ctor":
+							var md = mr.Resolve () as MethodDefinition;
+#if NET
+							requires |= Xamarin.Linker.OptimizeGeneratedCodeHandler.IsBlockLiteralCtor_Type_String (md);
+#else
+							requires |= Xamarin.Linker.OptimizeGeneratedCodeSubStep.IsBlockLiteralCtor_Type_String (md);
+#endif
+							if (requires && warnIfRequired)
+								Warn (assembly, mr);
 							break;
 						}
 						break;
@@ -184,7 +200,7 @@ namespace MonoTouch.Tuner {
 				// and this will runs before we have the chance to set it to `false` in `CoreOptimizedGeneratedCode` so we instead
 				// do the change here so the linker can do this without further ado
 				// note: it does not matter for _legacy_ so we apply the change (to earlier) to minimize the difference between them
-				if (PlatformAssembly != null) {
+				if (PlatformAssembly is not null) {
 					var method = PlatformAssembly.MainModule.GetType ("ObjCRuntime.Runtime").Methods.First ((n) => n.Name == "get_DynamicRegistrationSupported");
 					// Rewrite to return 'false'
 					var instr = method.Body.Instructions;

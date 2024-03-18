@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30114.105
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySimpleApp", "MySimpleApp.csproj", "{23664512-6B06-4135-9A94-C012BDA93CB1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExtensionProject", "..\..\ExtensionProject\iOS\ExtensionProject.csproj", "{8A72DB8F-4C30-4462-9F7A-6095E41D5D46}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{23664512-6B06-4135-9A94-C012BDA93CB1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{23664512-6B06-4135-9A94-C012BDA93CB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{23664512-6B06-4135-9A94-C012BDA93CB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{23664512-6B06-4135-9A94-C012BDA93CB1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8A72DB8F-4C30-4462-9F7A-6095E41D5D46}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8A72DB8F-4C30-4462-9F7A-6095E41D5D46}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8A72DB8F-4C30-4462-9F7A-6095E41D5D46}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8A72DB8F-4C30-4462-9F7A-6095E41D5D46}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

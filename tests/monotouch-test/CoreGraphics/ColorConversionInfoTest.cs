@@ -129,8 +129,8 @@ namespace MonoTouchFixtures.CoreGraphics {
 
 			using (var from = CGColorSpace.CreateGenericGray ())
 			using (var to = CGColorSpace.CreateGenericRgb ()) {
-				var handle = CGColorConversionInfoCreate (from == null ? IntPtr.Zero : from.Handle,
-														   to == null ? IntPtr.Zero : to.Handle);
+				var handle = CGColorConversionInfoCreate (from is null ? IntPtr.Zero : from.Handle,
+														   to is null ? IntPtr.Zero : to.Handle);
 				using (var o = Runtime.GetINativeObject<CGColorConversionInfo> (handle, false)) {
 					Assert.That (o.Handle, Is.Not.EqualTo (IntPtr.Zero), "Handle");
 				}

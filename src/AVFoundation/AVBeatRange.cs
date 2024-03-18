@@ -32,13 +32,10 @@ using ObjCRuntime;
 namespace AVFoundation {
 
 #if NET
-	[SupportedOSPlatform ("ios9.0")]
-	[SupportedOSPlatform ("macos10.11")]
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("tvos")]
-#else
-	[iOS (9, 0)]
-	[Mac (10, 11)]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AVBeatRange {
@@ -82,7 +79,7 @@ namespace AVFoundation {
 
 		public override int GetHashCode ()
 		{
-			return Start.GetHashCode () ^ Length.GetHashCode ();
+			return HashCode.Combine (Start, Length);
 		}
 	}
 }

@@ -3,7 +3,8 @@ using System.IO;
 using System.Text;
 
 using Xamarin.Linker;
-using Xamarin.Utils;
+
+#nullable enable
 
 namespace Xamarin {
 
@@ -30,15 +31,8 @@ namespace Xamarin {
 
 				contents.AppendLine ("#include <stdlib.h>");
 				contents.AppendLine ();
-				contents.AppendLine ("extern \"C\" const char *xamarin_icu_dat_file_name;");
-				contents.AppendLine ();
 				contents.AppendLine ("static void xamarin_initialize_dotnet ()");
 				contents.AppendLine ("{");
-				if (Configuration.InvariantGlobalization) {
-					contents.AppendLine ("\tsetenv (\"DOTNET_SYSTEM_GLOBALIZATION_INVARIANT\", \"1\", 1);");
-				} else {
-					contents.AppendLine ($"\txamarin_icu_dat_file_name = \"{Configuration.GlobalizationDataFile}\";");
-				}
 				if (Configuration.Application.PackageManagedDebugSymbols && Configuration.Application.UseInterpreter)
 					contents.AppendLine ($"\tsetenv (\"DOTNET_MODIFIABLE_ASSEMBLIES\", \"debug\", 1);");
 				contents.AppendLine ("}");
@@ -46,24 +40,24 @@ namespace Xamarin {
 
 				Configuration.Target.GenerateMain (contents, app.Platform, abi, file, registration_methods);
 
-				var item = new MSBuildItem {
-					Include = file,
-					Metadata = {
+				var item = new MSBuildItem (
+					file,
+					new Dictionary<string, string> {
 						{ "Arch", abi.AsArchString () },
-					},
-				};
+					}
+				);
 				if (app.EnableDebug)
 					item.Metadata.Add ("Arguments", "-DDEBUG");
 				items.Add (item);
 
 				if (app.RequiresPInvokeWrappers) {
-					var state = Configuration.PInvokeWrapperGenerationState;
-					item = new MSBuildItem {
-						Include = state.SourcePath,
-						Metadata = {
+					var state = Configuration.PInvokeWrapperGenerationState!;
+					item = new MSBuildItem (
+						state.SourcePath,
+						new Dictionary<string, string> {
 							{ "Arch", abi.AsArchString () },
-						},
-					};
+						}
+					);
 					if (app.EnableDebug)
 						item.Metadata.Add ("Arguments", "-DDEBUG");
 					items.Add (item);
@@ -73,25 +67,23 @@ namespace Xamarin {
 			Configuration.WriteOutputForMSBuild ("_MainFile", items);
 
 			var linkWith = new List<MSBuildItem> ();
-			if (Configuration.CompilerFlags.LinkWithLibraries != null) {
+			if (Configuration.CompilerFlags.LinkWithLibraries is not null) {
 				foreach (var lib in Configuration.CompilerFlags.LinkWithLibraries) {
-					linkWith.Add (new MSBuildItem {
-						Include = lib,
-					});
+					linkWith.Add (new MSBuildItem (lib));
 				}
 			}
-			if (Configuration.CompilerFlags.ForceLoadLibraries != null) {
+			if (Configuration.CompilerFlags.ForceLoadLibraries is not null) {
 				foreach (var lib in Configuration.CompilerFlags.ForceLoadLibraries) {
-					linkWith.Add (new MSBuildItem {
-						Include = lib,
-						Metadata = {
+					linkWith.Add (new MSBuildItem (
+						lib,
+						new Dictionary<string, string> {
 							{ "ForceLoad", "true" },
-						},
-					});
+						}
+					));
 				}
 			}
 
-			string extensionlib = null;
+			string? extensionlib = null;
 			if (app.IsTVExtension) {
 				extensionlib = "libtvextension-dotnet.a";
 			} else if (app.IsExtension) {
@@ -102,12 +94,12 @@ namespace Xamarin {
 				}
 			}
 			if (!string.IsNullOrEmpty (extensionlib)) {
-				linkWith.Add (new MSBuildItem {
-					Include = Path.Combine (Configuration.XamarinNativeLibraryDirectory, extensionlib),
-					Metadata = {
+				linkWith.Add (new MSBuildItem (
+					Path.Combine (Configuration.XamarinNativeLibraryDirectory, extensionlib),
+					new Dictionary<string, string> {
 						{ "ForceLoad", "true" },
 					}
-				});
+				));
 			}
 
 			Configuration.WriteOutputForMSBuild ("_MainLinkWith", linkWith);

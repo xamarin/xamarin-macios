@@ -34,6 +34,9 @@ using System.Runtime.Versioning;
 
 using ObjCRuntime;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Foundation {
 
 	public partial class NSOrderedSet : IEnumerable<NSObject> {
@@ -74,7 +77,7 @@ namespace Foundation {
 			var enumerator = _GetEnumerator ();
 			NSObject obj;
 
-			while ((obj = enumerator.NextObject ()) != null)
+			while ((obj = enumerator.NextObject ()) is not null)
 				yield return obj as NSObject;
 		}
 
@@ -83,15 +86,15 @@ namespace Foundation {
 			var enumerator = _GetEnumerator ();
 			NSObject obj;
 
-			while ((obj = enumerator.NextObject ()) != null)
+			while ((obj = enumerator.NextObject ()) is not null)
 				yield return obj;
 		}
 
 		public static NSOrderedSet operator + (NSOrderedSet first, NSOrderedSet second)
 		{
-			if (first == null)
+			if (first is null)
 				return new NSOrderedSet (second);
-			if (second == null)
+			if (second is null)
 				return new NSOrderedSet (first);
 			var copy = new NSMutableOrderedSet (first);
 			copy.UnionSet (second);
@@ -100,9 +103,9 @@ namespace Foundation {
 
 		public static NSOrderedSet operator + (NSOrderedSet first, NSSet second)
 		{
-			if (first == null)
+			if (first is null)
 				return new NSOrderedSet (second);
-			if (second == null)
+			if (second is null)
 				return new NSOrderedSet (first);
 			var copy = new NSMutableOrderedSet (first);
 			copy.UnionSet (second);
@@ -111,9 +114,9 @@ namespace Foundation {
 
 		public static NSOrderedSet operator - (NSOrderedSet first, NSOrderedSet second)
 		{
-			if (first == null)
+			if (first is null)
 				return null;
-			if (second == null)
+			if (second is null)
 				return new NSOrderedSet (first);
 			var copy = new NSMutableOrderedSet (first);
 			copy.MinusSet (second);
@@ -122,9 +125,9 @@ namespace Foundation {
 
 		public static NSOrderedSet operator - (NSOrderedSet first, NSSet second)
 		{
-			if (first == null)
+			if (first is null)
 				return null;
-			if (second == null)
+			if (second is null)
 				return new NSOrderedSet (first);
 			var copy = new NSMutableOrderedSet (first);
 			copy.MinusSet (second);
@@ -156,7 +159,7 @@ namespace Foundation {
 		public override bool Equals (object other)
 		{
 			NSOrderedSet o = other as NSOrderedSet;
-			if (o == null)
+			if (o is null)
 				return false;
 			return IsEqualToOrderedSet (o);
 		}
@@ -212,9 +215,9 @@ namespace Foundation {
 		}
 
 #if !NET
-		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Watch (6,0), TV (13,0), iOS (13,0)]
 #else
-		[SupportedOSPlatform ("ios13.0"), SupportedOSPlatform ("tvos13.0"), SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0"), SupportedOSPlatform ("tvos13.0"), SupportedOSPlatform ("macos")]
 #endif
 		public NSOrderedCollectionDifference GetDifference (NSOrderedSet other, NSOrderedCollectionDifferenceCalculationOptions options, NSOrderedCollectionDifferenceEquivalenceTest equivalenceTest)
 		{
