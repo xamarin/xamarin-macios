@@ -238,6 +238,8 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 		<!-- Xamarin.Mac never had an equivalent for MtouchNoSymbolStrip and was never stripped, except when using NativeAOT -> true -->
 		<!-- default to 'false' -->
 		<NoSymbolStrip Condition="'$(NoSymbolStrip)' == '' And '$(_PlatformName)' != 'macOS'">$(MtouchNoSymbolStrip)</NoSymbolStrip>
+		<!-- Disable stripping for Debug builds by default -->
+		<NoSymbolStrip Condition="'$(NoSymbolStrip)' == '' And '$(Configuration)' == 'Debug'">true</NoSymbolStrip>
 		<NoSymbolStrip Condition="'$(NoSymbolStrip)' == '' And ('$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst') And '$(_UseNativeAot)' != 'true'">true</NoSymbolStrip>
 		<!-- Disable stripping for simulator builds by default -->
 		<NoSymbolStrip Condition="'$(NoSymbolStrip)' == '' And ('$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'watchOS') And '$(ComputedPlatform)' != 'iPhone'">true</NoSymbolStrip>
