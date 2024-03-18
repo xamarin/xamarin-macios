@@ -726,6 +726,19 @@ COREWLAN_SOURCES = \
 	CoreWlan/CWInterface.cs \
 	CoreWlan/CWKeychain.cs \
 
+# DeviceDiscoveryExtension
+
+DEVICEDISCOVERYEXTENSION_API_SOURCES = \
+	DeviceDiscoveryExtension/Enums.cs \
+
+DEVICEDISCOVERYEXTENSION_SOURCES = \
+	DeviceDiscoveryExtension/DDDevice.cs \
+
+# DeviceDiscoveryUI
+
+DEVICEDISCOVERYUI_SOURCES = \
+	DeviceDiscoveryUI/DDDevicePickerViewController.cs \
+
 # EventKit
 
 EVENTKIT_API_SOURCES = \
@@ -1530,6 +1543,11 @@ SAFARISERVICES_CORE_SOURCES = \
 
 SAFARISERVICES_SOURCES = \
 
+# SafetyKit
+
+SAFETYKIT_API_SOURCES = \
+	SafetyKit/SAEnums.cs \
+
 # SceneKit
 
 SCENEKIT_API_SOURCES = \
@@ -2133,6 +2151,7 @@ MACOS_FRAMEWORKS =          \
 	QuickLookUI             \
 	ReplayKit               \
 	SafariServices          \
+	SafetyKit               \
 	ScreenCaptureKit        \
 	ScreenTime              \
 	ScriptingBridge         \
@@ -2193,6 +2212,7 @@ IOS_FRAMEWORKS =         \
 	CoreSpotlight \
 	CoreTelephony \
 	CoreText \
+	DeviceDiscoveryExtension \
 	EventKit \
 	EventKitUI \
 	ExternalAccessory \
@@ -2247,6 +2267,7 @@ IOS_FRAMEWORKS =         \
 	QuickLookThumbnailing \
 	ReplayKit \
 	SafariServices \
+	SafetyKit \
 	ScreenTime \
 	Security \
 	SensitiveContentAnalysis \
@@ -2293,6 +2314,7 @@ WATCHOS_FRAMEWORKS =        \
 	NearbyInteraction       \
 	PassKit                 \
 	PushKit			\
+	SafetyKit               \
 	Security                \
 	UIKit XKit              \
 	UserNotifications       \
@@ -2318,6 +2340,7 @@ TVOS_FRAMEWORKS =           \
 	CoreLocation            \
 	CoreSpotlight			\
 	CoreText                \
+	DeviceDiscoveryUI		\
 	ExternalAccessory       \
 	GLKit                   \
 	GameController          \

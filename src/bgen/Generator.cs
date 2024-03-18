@@ -65,6 +65,7 @@ public partial class Generator : IMemberGatherer {
 	public AttributeManager AttributeManager { get { return BindingTouch.AttributeManager; } }
 	NamespaceCache NamespaceCache { get { return BindingTouch.NamespaceCache; } }
 	public TypeCache TypeCache { get { return BindingTouch.TypeCache; } }
+	public DocumentationManager DocumentationManager { get { return BindingTouch.DocumentationManager; } }
 
 	Nomenclator nomenclator;
 	Nomenclator Nomenclator {
@@ -3841,6 +3842,8 @@ public partial class Generator : IMemberGatherer {
 			}
 		}
 
+		WriteDocumentation (pi);
+
 		if (wrap is not null) {
 			print_generated_code ();
 			PrintPropertyAttributes (pi, minfo.type);
@@ -4123,7 +4126,7 @@ public partial class Generator : IMemberGatherer {
 			return "Task";
 		var ttype = GetAsyncTaskType (minfo);
 		if (minfo.HasNSError && (ttype == "bool"))
-			ttype = "Tuple<bool,NSError>";
+			ttype = minfo.IsNSErrorNullable ? "Tuple<bool,NSError?>" : "Tuple<bool,NSError>";
 		return "Task<" + ttype + ">";
 	}
 
@@ -4215,7 +4218,7 @@ public partial class Generator : IMemberGatherer {
 			ttype = GetAsyncTaskType (minfo);
 			tuple = (minfo.HasNSError && (ttype == "bool"));
 			if (tuple)
-				ttype = "Tuple<bool,NSError>";
+				ttype = minfo.IsNSErrorNullable ? "Tuple<bool,NSError?>" : "Tuple<bool,NSError>";
 		}
 		print ("var tcs = new TaskCompletionSource<{0}> ();", ttype);
 		bool ignoreResult = !is_void &&
@@ -4247,7 +4250,7 @@ public partial class Generator : IMemberGatherer {
 		else if (tuple) {
 			var cond_name = minfo.AsyncCompletionParams [0].Name;
 			var var_name = minfo.AsyncCompletionParams.Last ().Name;
-			print ("tcs.SetResult (new Tuple<bool,NSError> ({0}_, {1}_));", cond_name, var_name);
+			print ("tcs.SetResult (new {2} ({0}_, {1}_));", cond_name, var_name, ttype);
 		} else if (minfo.IsSingleArgAsync)
 			print ("tcs.SetResult ({0}_!);", minfo.AsyncCompletionParams [0].Name);
 		else
@@ -4390,6 +4393,12 @@ public partial class Generator : IMemberGatherer {
 				ErrorHelper.Warning (1105,
 					minfo.selector, argCount, minfo.Method, minfo.Method.GetParameters ().Length);
 			}
+		}
+
+		if (minfo.is_extension_method) {
+			WriteDocumentation ((MemberInfo) GetProperty (minfo.Method) ?? minfo.Method);
+		} else {
+			WriteDocumentation (minfo.Method);
 		}
 
 		PrintDelegateProxy (minfo);
@@ -4673,6 +4682,8 @@ public partial class Generator : IMemberGatherer {
 		var optionalInstanceProperties = allProtocolProperties.Where ((v) => !IsRequired (v) && !AttributeManager.HasAttribute<StaticAttribute> (v));
 		var requiredInstanceAsyncMethods = requiredInstanceMethods.Where (m => AttributeManager.HasAttribute<AsyncAttribute> (m)).ToList ();
 
+		WriteDocumentation (type);
+
 		PrintAttributes (type, platform: true, preserve: true, advice: true);
 		print ("[Protocol (Name = \"{1}\", WrapperType = typeof ({0}Wrapper){2}{3})]",
 			   TypeName,
@@ -4812,6 +4823,7 @@ public partial class Generator : IMemberGatherer {
 			var minfo = new MemberInformation (this, this, mi, type, null);
 			var mod = string.Empty;
 
+			WriteDocumentation (mi);
 			PrintMethodAttributes (minfo);
 			print_generated_code ();
 			PrintDelegateProxy (minfo);
@@ -4828,6 +4840,7 @@ public partial class Generator : IMemberGatherer {
 			var mod = string.Empty;
 			minfo.is_export = true;
 
+			WriteDocumentation (pi);
 			print ("[Preserve (Conditional = true)]");
 			PrintAttributes (pi, platform: true);
 
@@ -5203,6 +5216,11 @@ public partial class Generator : IMemberGatherer {
 			PrintRequiresSuperAttribute (mi);
 	}
 
+	void WriteDocumentation (MemberInfo info)
+	{
+		DocumentationManager.WriteDocumentation (sw, indent, info);
+	}
+
 	public void ComputeLibraryName (FieldAttribute fieldAttr, Type type, string propertyName, out string library_name, out string library_path)
 	{
 		library_path = null;
@@ -5361,6 +5379,8 @@ public partial class Generator : IMemberGatherer {
 				print ("namespace {0} {{", type.Namespace);
 				indent++;
 			}
+
+			WriteDocumentation (type);
 
 			bool core_image_filter = false;
 			string class_mod = null;
