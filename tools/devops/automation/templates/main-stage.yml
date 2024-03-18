@@ -362,6 +362,7 @@ stages:
           displayName: 'Publish Artifact: configuration.json'
           artifactName: '$(MaciosUploadPrefix)build-configuration'
           path: '$(Build.ArtifactStagingDirectory)/configuration.json'
+          postValidationJobArtifactName: configuration_validation
 
     steps:
     - template: common/configure.yml

@@ -185,7 +185,8 @@ resources:
 
   - repository: CustomPipelineTemplates
     type: git
-    name: 1ESPipelineTemplates/MicroBuildTemplate
+    name: 1ESPipelineTemplates/1ESPipelineTemplates
+    ref: refs/tags/canary
 
 variables:
 - template: templates/variables.yml

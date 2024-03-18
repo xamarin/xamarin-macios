@@ -200,7 +200,8 @@ resources:
 
   - repository: CustomPipelineTemplates
     type: git
-    name: 1ESPipelineTemplates/MicroBuildTemplate
+    name: 1ESPipelineTemplates/1ESPipelineTemplates
+    ref: refs/tags/canary
 
 variables:
 - ${{ if contains(variables['Build.DefinitionName'], 'private') }}:
