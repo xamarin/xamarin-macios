@@ -281,6 +281,7 @@ public class Frameworks : Dictionary<string, Framework> {
 					{ "BackgroundAssets", "BackgroundAssets", 13,0},
 					{ "HealthKit", "HealthKit", 13,0 },
 					{ "MetalFX", "MetalFX", 13, 0 },
+					{ "SafetyKit", "SafetyKit", 13, 0 },
 					{ "SharedWithYou", "SharedWithYou", 13,0 },
 					{ "SharedWithYouCore", "SharedWithYouCore", 13, 0 },
 					{ "ExtensionKit", "ExtensionKit", 13,0 },
@@ -460,8 +461,10 @@ public class Frameworks : Dictionary<string, Framework> {
 
 				{ "AVRouting", "AVRouting", 16,0},
 				{ "BackgroundAssets", "BackgroundAssets", 16,0},
+				{ "DeviceDiscoveryExtension", "DeviceDiscoveryExtension", 16, 0},
 				{ "MetalFX", "MetalFX", new Version (16,0), NotAvailableInSimulator },
 				{ "PushToTalk", "PushToTalk", new Version (16,0), new Version (16, 2) /* available to build with, although it's unusable */},
+				{ "SafetyKit", "SafetyKit", 16, 0 },
 				{ "SharedWithYou", "SharedWithYou", 16, 0 },
 				{ "SharedWithYouCore", "SharedWithYouCore", 16, 0 },
 
@@ -547,6 +550,7 @@ public class Frameworks : Dictionary<string, Framework> {
 				{ "DeviceCheck", "DeviceCheck", 9,0 },
 				{ "CallKit", "CallKit", 9,0 },
 				{ "LocalAuthentication", "LocalAuthentication", 9,0 },
+				{ "SafetyKit", "SafetyKit", 9, 0 },
 
 				{ "Symbols", "Symbols", 10, 0 },
 			};
@@ -642,6 +646,7 @@ public class Frameworks : Dictionary<string, Framework> {
 #if !NET
 					{ "Chip", "CHIP", new Version (15, 0), NotAvailableInSimulator /* no headers in beta 2 */ },
 #endif
+					{ "DeviceDiscoveryUI", "DeviceDiscoveryUI", 16,0 },
 					{ "OSLog", "OSLog", 15,0 },
 					{ "CoreMidi", "CoreMIDI", 15,0 },
 					{ "ShazamKit", "ShazamKit", new Version (15, 0), NotAvailableInSimulator},
@@ -689,6 +694,7 @@ public class Frameworks : Dictionary<string, Framework> {
 					f.Version = v16_1;
 					break;
 				// These frameworks are not available on Mac Catalyst
+				case "DeviceDiscoveryExtension":
 				case "OpenGLES":
 				case "NewsstandKit":
 				case "MediaSetup":

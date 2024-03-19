@@ -14,6 +14,7 @@
 #nullable enable
 
 using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Collections.Generic;
 
@@ -139,12 +140,14 @@ namespace CoreMedia {
 		}
 
 		[DllImport (Constants.CoreMediaLibrary)]
-		extern static /* OSStatus */ CMFormatDescriptionError CMFormatDescriptionCreate (/* CFAllocatorRef */ IntPtr allocator, CMMediaType mediaType, /* FourCharCode */ uint mediaSubtype, /* CFDictionaryRef */ IntPtr extensions, /* CMFormatDescriptionRef* */ out IntPtr descOut);
+		unsafe extern static /* OSStatus */ CMFormatDescriptionError CMFormatDescriptionCreate (/* CFAllocatorRef */ IntPtr allocator, CMMediaType mediaType, /* FourCharCode */ uint mediaSubtype, /* CFDictionaryRef */ IntPtr extensions, /* CMFormatDescriptionRef* */ IntPtr* descOut);
 
 		public static CMFormatDescription? Create (CMMediaType mediaType, uint mediaSubtype, out CMFormatDescriptionError error)
 		{
 			IntPtr handle;
-			error = CMFormatDescriptionCreate (IntPtr.Zero, mediaType, mediaSubtype, IntPtr.Zero, out handle);
+			unsafe {
+				error = CMFormatDescriptionCreate (IntPtr.Zero, mediaType, mediaSubtype, IntPtr.Zero, &handle);
+			}
 			if (error != CMFormatDescriptionError.None)
 				return null;
 
@@ -192,12 +195,15 @@ namespace CoreMedia {
 		}
 
 		[DllImport (Constants.CoreMediaLibrary)]
-		extern static /* AudioChannelLayout* */ IntPtr CMAudioFormatDescriptionGetChannelLayout (/* CMAudioFormatDescriptionRef */ IntPtr desc, /* size_t* */ out nint size);
+		unsafe extern static /* AudioChannelLayout* */ IntPtr CMAudioFormatDescriptionGetChannelLayout (/* CMAudioFormatDescriptionRef */ IntPtr desc, /* size_t* */ nint* size);
 
 		public AudioChannelLayout? AudioChannelLayout {
 			get {
 				nint size;
-				var res = CMAudioFormatDescriptionGetChannelLayout (Handle, out size);
+				IntPtr res;
+				unsafe {
+					res = CMAudioFormatDescriptionGetChannelLayout (Handle, &size);
+				}
 				if (res == IntPtr.Zero || size == 0)
 					return null;
 				return AudioChannelLayout.FromHandle (res);
@@ -205,13 +211,16 @@ namespace CoreMedia {
 		}
 
 		[DllImport (Constants.CoreMediaLibrary)]
-		extern static /* AudioFormatListItem* */ IntPtr CMAudioFormatDescriptionGetFormatList (/* CMAudioFormatDescriptionRef */ IntPtr desc, /* size_t* */ out nint size);
+		unsafe extern static /* AudioFormatListItem* */ IntPtr CMAudioFormatDescriptionGetFormatList (/* CMAudioFormatDescriptionRef */ IntPtr desc, /* size_t* */ nint* size);
 
 		public AudioFormat []? AudioFormats {
 			get {
 				unsafe {
 					nint size;
-					var v = CMAudioFormatDescriptionGetFormatList (Handle, out size);
+					IntPtr v;
+					unsafe {
+						v = CMAudioFormatDescriptionGetFormatList (Handle, &size);
+					}
 					if (v == IntPtr.Zero)
 						return null;
 					var items = size / sizeof (AudioFormat);
@@ -225,12 +234,15 @@ namespace CoreMedia {
 		}
 
 		[DllImport (Constants.CoreMediaLibrary)]
-		extern static /* const void* */ IntPtr CMAudioFormatDescriptionGetMagicCookie (/* CMAudioFormatDescriptionRef */ IntPtr desc, /* size_t* */ out nint size);
+		unsafe extern static /* const void* */ IntPtr CMAudioFormatDescriptionGetMagicCookie (/* CMAudioFormatDescriptionRef */ IntPtr desc, /* size_t* */ nint* size);
 
 		public byte []? AudioMagicCookie {
 			get {
 				nint size;
-				var h = CMAudioFormatDescriptionGetMagicCookie (Handle, out size);
+				IntPtr h;
+				unsafe {
+					h = CMAudioFormatDescriptionGetMagicCookie (Handle, &size);
+				}
 				if (h == IntPtr.Zero)
 					return null;
 
@@ -274,17 +286,16 @@ namespace CoreMedia {
 		internal extern static CMVideoDimensions CMVideoFormatDescriptionGetDimensions (/* CMVideoFormatDescriptionRef */ IntPtr videoDesc);
 
 		[DllImport (Constants.CoreMediaLibrary)]
-		internal extern static CGRect CMVideoFormatDescriptionGetCleanAperture (/* CMVideoFormatDescriptionRef */ IntPtr videoDesc, /* Boolean */ [MarshalAs (UnmanagedType.I1)] bool originIsAtTopLeft);
+		internal extern static CGRect CMVideoFormatDescriptionGetCleanAperture (/* CMVideoFormatDescriptionRef */ IntPtr videoDesc, /* Boolean */ byte originIsAtTopLeft);
 
 		[DllImport (Constants.CoreMediaLibrary)]
 		internal extern static /* CFArrayRef */ IntPtr CMVideoFormatDescriptionGetExtensionKeysCommonWithImageBuffers ();
 
 		[DllImport (Constants.CoreMediaLibrary)]
-		internal extern static CGSize CMVideoFormatDescriptionGetPresentationDimensions (/* CMVideoFormatDescriptionRef */ IntPtr videoDesc, /* Boolean */ [MarshalAs (UnmanagedType.I1)] bool usePixelAspectRatio, /* Boolean */ [MarshalAs (UnmanagedType.I1)] bool useCleanAperture);
+		internal extern static CGSize CMVideoFormatDescriptionGetPresentationDimensions (/* CMVideoFormatDescriptionRef */ IntPtr videoDesc, /* Boolean */ byte usePixelAspectRatio, /* Boolean */ byte useCleanAperture);
 
 		[DllImport (Constants.CoreMediaLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		internal extern static /* Boolean */ bool CMVideoFormatDescriptionMatchesImageBuffer (/* CMVideoFormatDescriptionRef */ IntPtr videoDesc, /* CVImageBufferRef */ IntPtr imageBuffer);
+		internal extern static /* Boolean */ byte CMVideoFormatDescriptionMatchesImageBuffer (/* CMVideoFormatDescriptionRef */ IntPtr videoDesc, /* CVImageBufferRef */ IntPtr imageBuffer);
 
 #endif
 	}
@@ -324,18 +335,21 @@ namespace CoreMedia {
 
 #if !COREBUILD
 		[DllImport (Constants.CoreMediaLibrary)]
-		static extern /* OSStatus */ CMFormatDescriptionError CMVideoFormatDescriptionCreate (
+		unsafe static extern /* OSStatus */ CMFormatDescriptionError CMVideoFormatDescriptionCreate (
 			/* CFAllocatorRef */ IntPtr allocator,
 			CMVideoCodecType codecType,
 			/* int32_t */ int width,
 			/* int32_t */ int height,
 			/* CFDictionaryRef */ IntPtr extensions,
-			/* CMVideoFormatDescriptionRef* */ out IntPtr outDesc);
+			/* CMVideoFormatDescriptionRef* */ IntPtr* outDesc);
 
 		static IntPtr CreateCMVideoFormatDescription (CMVideoCodecType codecType, CMVideoDimensions size)
 		{
 			IntPtr handle;
-			var error = CMVideoFormatDescriptionCreate (IntPtr.Zero, codecType, size.Width, size.Height, IntPtr.Zero, out handle);
+			CMFormatDescriptionError error;
+			unsafe {
+				error = CMVideoFormatDescriptionCreate (IntPtr.Zero, codecType, size.Width, size.Height, IntPtr.Zero, &handle);
+			}
 			if (error != CMFormatDescriptionError.None)
 				ObjCRuntime.ThrowHelper.ThrowArgumentException (error.ToString ());
 			return handle;
@@ -353,10 +367,10 @@ namespace CoreMedia {
 		}
 
 		[DllImport (Constants.CoreMediaLibrary)]
-		static extern /* OSStatus */ CMFormatDescriptionError CMVideoFormatDescriptionCreateForImageBuffer (
+		unsafe static extern /* OSStatus */ CMFormatDescriptionError CMVideoFormatDescriptionCreateForImageBuffer (
 			/* CFAllocatorRef */ IntPtr allocator,
 			/* CVImageBufferRef */ IntPtr imageBuffer,
-			/* CMVideoFormatDescriptionRef* */ out IntPtr outDesc);
+			/* CMVideoFormatDescriptionRef* */ IntPtr* outDesc);
 
 		public static CMVideoFormatDescription? CreateForImageBuffer (CVImageBuffer imageBuffer, out CMFormatDescriptionError error)
 		{
@@ -364,7 +378,9 @@ namespace CoreMedia {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (imageBuffer));
 
 			IntPtr desc;
-			error = CMVideoFormatDescriptionCreateForImageBuffer (IntPtr.Zero, imageBuffer.Handle, out desc);
+			unsafe {
+				error = CMVideoFormatDescriptionCreateForImageBuffer (IntPtr.Zero, imageBuffer.Handle, &desc);
+			}
 			if (error != CMFormatDescriptionError.None)
 				return null;
 
@@ -378,13 +394,13 @@ namespace CoreMedia {
 		[SupportedOSPlatform ("tvos")]
 #endif
 		[DllImport (Constants.CoreMediaLibrary)]
-		static extern /* OSStatus */ CMFormatDescriptionError CMVideoFormatDescriptionCreateFromH264ParameterSets (
+		unsafe static extern /* OSStatus */ CMFormatDescriptionError CMVideoFormatDescriptionCreateFromH264ParameterSets (
 			/* CFAllocatorRef */ IntPtr allocator,
 			/* size_t  */ nuint parameterSetCount,
-			/* const uint8_t* const* */ IntPtr [] parameterSetPointers,
-			/* size_t*  */ nuint [] parameterSetSizes,
+			/* const uint8_t* const* */ IntPtr* parameterSetPointers,
+			/* size_t*  */ nuint* parameterSetSizes,
 			/* int */ int NALUnitHeaderLength,
-			/* CMFormatDescriptionRef* */ out IntPtr formatDescriptionOut);
+			/* CMFormatDescriptionRef* */ IntPtr* formatDescriptionOut);
 
 #if NET
 		[SupportedOSPlatform ("ios")]
@@ -415,7 +431,13 @@ namespace CoreMedia {
 				}
 
 				IntPtr desc;
-				error = CMVideoFormatDescriptionCreateFromH264ParameterSets (IntPtr.Zero, (nuint) parameterSets.Count, parameterSetPtrs, parameterSetSizes, nalUnitHeaderLength, out desc);
+				unsafe {
+					fixed (IntPtr* parameterSetPtrsPtr = parameterSetPtrs) {
+						fixed (nuint* parameterSetSizesPtr = parameterSetSizes) {
+							error = CMVideoFormatDescriptionCreateFromH264ParameterSets (IntPtr.Zero, (nuint) parameterSets.Count, parameterSetPtrsPtr, parameterSetSizesPtr, nalUnitHeaderLength, &desc);
+						}
+					}
+				}
 				if (error != CMFormatDescriptionError.None)
 					return null;
 
@@ -435,13 +457,13 @@ namespace CoreMedia {
 		[SupportedOSPlatform ("tvos")]
 #endif
 		[DllImport (Constants.CoreMediaLibrary)]
-		static extern /* OSStatus */ CMFormatDescriptionError CMVideoFormatDescriptionGetH264ParameterSetAtIndex (
+		unsafe static extern /* OSStatus */ CMFormatDescriptionError CMVideoFormatDescriptionGetH264ParameterSetAtIndex (
 			/* CMFormatDescriptionRef */ IntPtr videoDesc,
 			/* size_t  */ nuint parameterSetIndex,
-			/* const uint8_t** */ out IntPtr parameterSetPointerOut,
-			/* size_t* */ out nuint parameterSetSizeOut,
-			/* size_t* */ out nuint parameterSetCountOut,
-			/* int* */ out int nalUnitHeaderLengthOut);
+			/* const uint8_t** */ IntPtr* parameterSetPointerOut,
+			/* size_t* */ nuint* parameterSetSizeOut,
+			/* size_t* */ nuint* parameterSetCountOut,
+			/* int* */ int* nalUnitHeaderLengthOut);
 
 #if NET
 		[SupportedOSPlatform ("ios")]
@@ -453,7 +475,17 @@ namespace CoreMedia {
 		{
 			IntPtr ret;
 			nuint parameterSetSizeOut;
-			error = CMVideoFormatDescriptionGetH264ParameterSetAtIndex (GetCheckedHandle (), index, out ret, out parameterSetSizeOut, out parameterSetCount, out nalUnitHeaderLength);
+			parameterSetCount = default;
+			nalUnitHeaderLength = default;
+			unsafe {
+				error = CMVideoFormatDescriptionGetH264ParameterSetAtIndex (
+							GetCheckedHandle (),
+							index,
+							&ret,
+							&parameterSetSizeOut,
+							(nuint*) Unsafe.AsPointer<nuint> (ref parameterSetCount),
+							(int*) Unsafe.AsPointer<int> (ref nalUnitHeaderLength));
+			}
 			if (error != CMFormatDescriptionError.None)
 				return null;
 
@@ -465,12 +497,12 @@ namespace CoreMedia {
 
 		public CGRect GetCleanAperture (bool originIsAtTopLeft)
 		{
-			return CMVideoFormatDescriptionGetCleanAperture (Handle, originIsAtTopLeft);
+			return CMVideoFormatDescriptionGetCleanAperture (Handle, originIsAtTopLeft.AsByte ());
 		}
 
 		public CGSize GetPresentationDimensions (bool usePixelAspectRatio, bool useCleanAperture)
 		{
-			return CMVideoFormatDescriptionGetPresentationDimensions (Handle, usePixelAspectRatio, useCleanAperture);
+			return CMVideoFormatDescriptionGetPresentationDimensions (Handle, usePixelAspectRatio.AsByte (), useCleanAperture.AsByte ());
 		}
 
 		public static NSObject? []? GetExtensionKeysCommonWithImageBuffers ()
@@ -483,7 +515,7 @@ namespace CoreMedia {
 		{
 			if (imageBuffer is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (imageBuffer));
-			return CMVideoFormatDescriptionMatchesImageBuffer (Handle, imageBuffer.Handle);
+			return CMVideoFormatDescriptionMatchesImageBuffer (Handle, imageBuffer.Handle) != 0;
 		}
 
 #if NET
@@ -493,14 +525,14 @@ namespace CoreMedia {
 		[SupportedOSPlatform ("maccatalyst")]
 #endif
 		[DllImport (Constants.CoreMediaLibrary)]
-		static extern /* OSStatus */ CMFormatDescriptionError CMVideoFormatDescriptionCreateFromHEVCParameterSets (
+		unsafe static extern /* OSStatus */ CMFormatDescriptionError CMVideoFormatDescriptionCreateFromHEVCParameterSets (
 			/* CFAllocatorRef */ IntPtr allocator,
 			/* size_t  */ nuint parameterSetCount,
-			/* const uint8_t* const* */ IntPtr [] parameterSetPointers,
-			/* size_t*  */ nuint [] parameterSetSizes,
+			/* const uint8_t* const* */ IntPtr* parameterSetPointers,
+			/* size_t*  */ nuint* parameterSetSizes,
 			/* int */ int NALUnitHeaderLength,
 			/* CFDictionaryRef */ IntPtr extensions,
-			/* CMFormatDescriptionRef* */ out IntPtr formatDescriptionOut);
+			/* CMFormatDescriptionRef* */ IntPtr* formatDescriptionOut);
 
 #if NET
 		[SupportedOSPlatform ("ios")]
@@ -531,7 +563,13 @@ namespace CoreMedia {
 				}
 
 				IntPtr desc;
-				error = CMVideoFormatDescriptionCreateFromHEVCParameterSets (IntPtr.Zero, (nuint) parameterSets.Count, parameterSetPtrs, parameterSetSizes, nalUnitHeaderLength, extensions.GetHandle (), out desc);
+				unsafe {
+					fixed (IntPtr* parameterSetPtrsPtr = parameterSetPtrs) {
+						fixed (nuint* parameterSetSizesPtr = parameterSetSizes) {
+							error = CMVideoFormatDescriptionCreateFromHEVCParameterSets (IntPtr.Zero, (nuint) parameterSets.Count, parameterSetPtrsPtr, parameterSetSizesPtr, nalUnitHeaderLength, extensions.GetHandle (), &desc);
+						}
+					}
+				}
 				if (error != CMFormatDescriptionError.None || desc == IntPtr.Zero)
 					return null;
 
@@ -551,13 +589,13 @@ namespace CoreMedia {
 		[SupportedOSPlatform ("maccatalyst")]
 #endif
 		[DllImport (Constants.CoreMediaLibrary)]
-		static extern /* OSStatus */ CMFormatDescriptionError CMVideoFormatDescriptionGetHEVCParameterSetAtIndex (
+		unsafe static extern /* OSStatus */ CMFormatDescriptionError CMVideoFormatDescriptionGetHEVCParameterSetAtIndex (
 			/* CMFormatDescriptionRef */ IntPtr videoDesc,
 			/* size_t  */ nuint parameterSetIndex,
-			/* const uint8_t** */ out IntPtr parameterSetPointerOut,
-			/* size_t* */ out nuint parameterSetSizeOut,
-			/* size_t* */ out nuint parameterSetCountOut,
-			/* int* */ out int nalUnitHeaderLengthOut);
+			/* const uint8_t** */ IntPtr* parameterSetPointerOut,
+			/* size_t* */ nuint* parameterSetSizeOut,
+			/* size_t* */ nuint* parameterSetCountOut,
+			/* int* */ int* nalUnitHeaderLengthOut);
 
 #if NET
 		[SupportedOSPlatform ("ios")]
@@ -569,7 +607,17 @@ namespace CoreMedia {
 		{
 			IntPtr ret;
 			nuint parameterSetSizeOut;
-			error = CMVideoFormatDescriptionGetHEVCParameterSetAtIndex (GetCheckedHandle (), index, out ret, out parameterSetSizeOut, out parameterSetCount, out nalUnitHeaderLength);
+			parameterSetCount = default;
+			nalUnitHeaderLength = default;
+			unsafe {
+				error = CMVideoFormatDescriptionGetHEVCParameterSetAtIndex (
+							GetCheckedHandle (),
+							index,
+							&ret,
+							&parameterSetSizeOut,
+							(nuint*) Unsafe.AsPointer<nuint> (ref parameterSetCount),
+							(int*) Unsafe.AsPointer<int> (ref nalUnitHeaderLength));
+			}
 			if (error != CMFormatDescriptionError.None)
 				return null;
 
