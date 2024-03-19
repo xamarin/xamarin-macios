@@ -896,7 +896,7 @@ namespace AppKit {
 	[Category]
 	[BaseType (typeof (NSApplication))]
 	interface NSApplication_NSServicesMenu {
-		[Export ("registerServicesMenuSendTypes:returnTypes:"), EventArgs ("NSApplicationRegister")]
+		[Export ("registerServicesMenuSendTypes:returnTypes:")]
 		void RegisterServicesMenu (string [] sendTypes, string [] returnTypes);
 	}
 
