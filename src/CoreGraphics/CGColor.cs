@@ -211,8 +211,7 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool CGColorEqualToColor (/* CGColorRef */ IntPtr color1, /* CGColorRef */ IntPtr color2);
+		extern static byte CGColorEqualToColor (/* CGColorRef */ IntPtr color1, /* CGColorRef */ IntPtr color2);
 
 		public static bool operator == (CGColor color1, CGColor color2)
 		{
@@ -242,7 +241,7 @@ namespace CoreGraphics {
 			if (other is null)
 				return false;
 
-			return CGColorEqualToColor (this.Handle, other.Handle);
+			return CGColorEqualToColor (this.Handle, other.Handle) != 0;
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]

@@ -247,6 +247,7 @@
     <Folder Include="NearbyInteraction\" />
     <Folder Include="MetricKit\" />
     <Folder Include="SharedWithYouCore\" />
+    <Folder Include="DeviceDiscoveryUI\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="AudioToolbox\1.caf" />
