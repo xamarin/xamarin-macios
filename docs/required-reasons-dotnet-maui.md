@@ -6,12 +6,12 @@ The tables provide lists of C# .NET APIs that call the [Required Reasons APIs][R
 **Note:** The following lists are verified only for .NET MAUI versions 8.0.0 and later.
 
 ### [User defaults APIs][UserDefaultsAPIs]
-The following APIs either directly or indirectly access user defaults and require reasons for use. Use the string `NSPrivacyAccessedAPICategoryUserDefaults` as the value for the `NSPrivacyAccessedAPIType` key in your `NSPrivacyAccessedAPITypes` dictionary. If you only access the user defaults from the list of API's below, then use the value `C56D.1` in the `NSPrivacyAccessedAPITypeReasons` array. Refer to [User defaults APIs][UserDefaultsAPIs] to determine the any additional relevant values to place in the `NSPrivacyAccessedAPITypeReasons` array.
+The following APIs either directly or indirectly access user defaults and require reasons for use. Use the string `NSPrivacyAccessedAPICategoryUserDefaults` as the value for the `NSPrivacyAccessedAPIType` key in your `NSPrivacyAccessedAPITypes` dictionary. If you only access the user defaults from the list of APIs below, then use the value `C56D.1` in the `NSPrivacyAccessedAPITypeReasons` array. Refer to [User defaults APIs][UserDefaultsAPIs] to determine the any additional relevant values to place in the `NSPrivacyAccessedAPITypeReasons` array.
 | API usage |
 | - |
 | [NSUserDefaults](https://learn.microsoft.com/dotnet/api/foundation.nsuserdefaults) | 
 
-For example, if you use any of the API's listed above, your `PrivacyInfo.xcprivacy` would contain the `dict` element in the `NSPrivacyAccessedAPITypes` key's array as shown below:
+For example, if you use any of the APIs listed above, your `PrivacyInfo.xcprivacy` would contain the `dict` element in the `NSPrivacyAccessedAPITypes` key's array as shown below:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -28,7 +28,7 @@ For example, if you use any of the API's listed above, your `PrivacyInfo.xcpriva
                 <string>...</string>
             </array>
         </dict>
-	</array>
+    </array>
 </dict>
 </plist>
 ```

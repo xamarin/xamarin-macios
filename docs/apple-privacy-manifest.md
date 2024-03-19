@@ -10,7 +10,7 @@ You must review your native code, C# code, and data collection and tracking prac
 
 * If your application includes any third-party SDKs or packages, then these third-party components (if applicable) must provision their own privacy manifest files separately. **Note:** It’s your responsibility however, to make sure that the owners of these third-party components include privacy manifest files. Microsoft isn’t responsible for any third-party privacy manifest, and their data collection and tracking practices.
 
-* If your application includes the [C# .NET APIs][C#NETAPIs] that call certain APIs listed in the Apple’s [Required Reason API][RequiredReasonAPI] categories, then you must assess your product for the API usage. For assessing what constitutes as part of data collection and tracking practices, refer to Apple’s documentation on [privacy manifest files][PrivacyManifestFiles]. **Note:** It’s your responsibility to assess your use of each of these APIs and declare the applicable reasons for using them.
+* If your application includes the [.NET APIs][C#NETAPIs] that call certain native APIs listed in the Apple’s [Required Reason API][RequiredReasonAPI] categories, then you must assess your product for the API usage. For assessing what constitutes as part of data collection and tracking practices, refer to Apple’s documentation on [privacy manifest files][PrivacyManifestFiles]. **Note:** It’s your responsibility to assess your use of each of these APIs and declare the applicable reasons for using them.
 
 Depending on whether you’re using [.NET for iOS or .NET MAUI to develop an application](#privacy-manifest-for-net-maui-and-net-for-ios-or-tvos-applications) or providing [ObjectiveC or Swift Binding packages](#privacy-manifest-for-binding-projects) to use with .NET MAUI applications, the requirement for providing a privacy manifest file might differ.
 
@@ -53,17 +53,17 @@ If you are Binding project owner, and you are binding a xcframework, then the xc
 * [.NET for iOS, tvOS and Xamarin.iOS API Usages]()
 * [.NET MAUI and Xamarin.Forms API Usages]()
 
-All .NET Apps that target devices running iOS, iPadOS, or tvOS will require a `PrivacyInfo.xcprivacy` file in the app bundle. This is due to the .NET Runtime and BCL using [Required Reasons APIs][RequiredReasonAPI] that are not removed regardless of the [linking](https://learn.microsoft.com/xamarin/ios/deploy-test/linker?tabs=macos) setting. The following three APIU categories and thier associated reasons must be in the `PrivacyInfo.xcprivacy'. 
+All .NET Apps that target devices running iOS, iPadOS, or tvOS will require a `PrivacyInfo.xcprivacy` file in the app bundle. This is due to the .NET Runtime and BCL using [Required Reasons APIs][RequiredReasonAPI] that are not removed regardless of the [linking](https://learn.microsoft.com/xamarin/ios/deploy-test/linker?tabs=macos) setting. The following three API categories and their associated reasons must be in the `PrivacyInfo.xcprivacy`. 
 * NSPrivacyAccessedAPICategoryFileTimestamp - C617.1
 * NSPrivacyAccessedAPICategorySystemBootTime - 35F9.1
 * NSPrivacyAccessedAPICategoryDiskSpace - E174.1
 
-Additionally, if you use the `NSUserDefaults` API's in your app, you will need to add the `NSPrivacyAccessedAPICategoryUserDefaults` API category, with a reason code of `CAS92.1`.
+Additionally, if you use the `NSUserDefaults` APIs in your app, you will need to add the `NSPrivacyAccessedAPICategoryUserDefaults` API category, with a reason code of `CAS92.1`.
 
 See the example below for detailed instructions on how to add a `PrivacyInfo.xcprivacy` file to your App.
 
 # Example
-Let's look at how you would add a Privacy Manifest file to an application that uses the following API's:
+Let's look at how you would add a Privacy Manifest file to an application that uses the following APIs:
 
 * [NSUserDefaults](https://learn.microsoft.com/dotnet/api/foundation.nsuserdefaults) 
 * [NSProcessInfo.SystemUptime](https://learn.microsoft.com/dotnet/api/foundation.nsprocessinfo.systemuptime)
@@ -72,7 +72,7 @@ Let's look at how you would add a Privacy Manifest file to an application that u
 How they are used is not that important for this example, but the `why` will determine the reason code needed for the privacy manifest.
 ## Creating the `PrivacyInfo.xcprivacy` file
 
-We will start by building the contents of the `PrivacyInfo.xcprivacy` file, and then go through each supported platform and how to properly configure your project so the file in included in the bundle properly.
+We will start by building the contents of the `PrivacyInfo.xcprivacy` file, and then go through each supported platform and how to properly configure your project so the file is included in the bundle properly.
 
 Since the application is based on .NET, a privacy manifest is required. Let's walkthrough the steps needed to add a privacy manifest that declares our usages of the above three API's.
 
@@ -99,7 +99,7 @@ You should now have a file named `PrivacyInfo.xcprivacy` under your documents fo
 ```
 Use your favorite text editor, like [Visual Studio Code](https://aka.ms/vscode), to open the file for editing.
 
-You can add the entries for the API's usage to the `PrivacyInfo.xcproject` as follows: 
+You can add the entries for the APIs usage to the `PrivacyInfo.xcproject` as follows: 
 
 1. Edit the `PrivacyInfo.xcprivacy` file to appear as follows:
     ```xml
@@ -117,7 +117,7 @@ You can add the entries for the API's usage to the `PrivacyInfo.xcproject` as fo
     </plist>
     ```
     This adds the `NSPrivacyAccessAPITypes` key where each category usage will be added.
-1. Since the .NET runtime and BCL include API's from the [File timestamp][FileTimestampAPIs], [System boot time][SystemBootTimeAPIs], [Disk space][DiskSpaceAPIs] API categories, add the following to the `NSPrivacyAccessedAPITypes` array:
+1. Since the .NET runtime and BCL include APIs from the [File timestamp][FileTimestampAPIs], [System boot time][SystemBootTimeAPIs], [Disk space][DiskSpaceAPIs] API categories, add the following to the `NSPrivacyAccessedAPITypes` array:
     ```xml
     <dict>
         <key>NSPrivacyAccessedAPIType</key>
@@ -237,7 +237,7 @@ The `PrivacyInfo.xcprivacy` is consider a resource when it is time to build the 
     ```
     This will package the file into the tvOS app at the root of the bundle. 
 
-### Xamarin iOS including Xamarin.Forms
+### Xamarin.iOS including Xamarin.Forms
 1. Copy the `PrivacyInfo.xcprivacy` from your documents folder to the root folder of your Xamarin.iOS project.
 1. In your favorite text editor, edit the Xamarin.iOS csproj project file.
 1. Locate the `<ItemGroup>` that contains other `<BundleResource>` elements and add the following element:

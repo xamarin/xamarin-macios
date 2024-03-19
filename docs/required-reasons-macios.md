@@ -25,7 +25,7 @@ The following APIs either directly or indirectly access file timestamps and requ
 | [NSUrl.ContentModificationDateKey](https://learn.microsoft.com/dotnet/api/foundation.nsurl.contentmodificationdatekey)
 | [NSUrl.CreationDateKey](https://learn.microsoft.com/dotnet/api/foundation.nsurl.creationdatekey)
 
-For example, if you use any of the API's listed above, your `PrivacyInfo.xcprivacy` would contain the `dict` element in the `NSPrivacyAccessedAPITypes` key's array as shown below:
+For example, if you use any of the APIs listed above, your `PrivacyInfo.xcprivacy` would contain the `dict` element in the `NSPrivacyAccessedAPITypes` key's array as shown below:
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -41,7 +41,7 @@ For example, if you use any of the API's listed above, your `PrivacyInfo.xcpriva
                 <string>...</string>
             </array>
         </dict>
-	</array>
+    </array>
 </dict>
 </plist>
 ```
@@ -50,12 +50,12 @@ Additional reason codes from [File timestamp APIs][FileTimestampAPIs] can be pro
 
 ### [System boot time APIs][SystemBootTimeAPIs]
 
-The following APIs either directly or indirectly access the system boot time and require reasons for use. Use the string `NSPrivacyAccessedAPICategorySystemBootTime` as the value for the `NSPrivacyAccessedAPIType` key in your `NSPrivacyAccessedAPITypes` dictionary. If you only access the system boot time from the list of API's below, then use the `35F9.1` value in the `NSPrivacyAccessedAPITypeReasons` array.
+The following APIs either directly or indirectly access the system boot time and require reasons for use. Use the string `NSPrivacyAccessedAPICategorySystemBootTime` as the value for the `NSPrivacyAccessedAPIType` key in your `NSPrivacyAccessedAPITypes` dictionary. If you only access the system boot time from the list of APIs below, then use the `35F9.1` value in the `NSPrivacyAccessedAPITypeReasons` array.
 | Foundation APIs | UIKit APIs | AppKit APIs |
 | - | - | - |
 | [NSProcessInfo.SystemUptime](https://learn.microsoft.com/dotnet/api/foundation.nsprocessinfo.systemuptime)
 
-For example, if you use any of the API's listed above, your `PrivacyInfo.xcprivacy` would contain the `dict` element in the `NSPrivacyAccessedAPITypes` key's array as shown below:
+For example, if you use any of the APIs listed above, your `PrivacyInfo.xcprivacy` would contain the `dict` element in the `NSPrivacyAccessedAPITypes` key's array as shown below:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -72,14 +72,14 @@ For example, if you use any of the API's listed above, your `PrivacyInfo.xcpriva
                 <string>35F9.1</string>
             </array>
         </dict>
-	</array>
+    </array>
 </dict>
 </plist>
 ```
 
 ### [Disk space APIs][DiskSpaceAPIs]
  
-The following APIs either directly or indirectly access the available disk space and require reasons for use. Use the string `NSPrivacyAccessedAPICategoryDiskSpace` as the value for the `NSPrivacyAccessedAPIType` key in your `NSPrivacyAccessedAPITypes` dictionary. If you access the available disk space from the list of API's below, then use [Disk space APIs][DiskSpaceAPIs] to determine the correct values to place in the `NSPrivacyAccessedAPITypeReasons` array.
+The following APIs either directly or indirectly access the available disk space and require reasons for use. Use the string `NSPrivacyAccessedAPICategoryDiskSpace` as the value for the `NSPrivacyAccessedAPIType` key in your `NSPrivacyAccessedAPITypes` dictionary. If you access the available disk space from the list of APIs below, then use [Disk space APIs][DiskSpaceAPIs] to determine the correct values to place in the `NSPrivacyAccessedAPITypeReasons` array.
 | Foundation APIs | UIKit APIs | AppKit APIs |
 | - | - | - |
 | [NSUrl.VolumeAvailableCapacityKey](https://learn.microsoft.com/dotnet/api/foundation.nsurl.volumeavailablecapacitykey)
@@ -91,7 +91,7 @@ The following APIs either directly or indirectly access the available disk space
 | [NSFileManager.GetFileSystemAttributes(string, NSError)](https://learn.microsoft.com/dotnet/api/foundation.nsfilemanager.getfilesystemattributes)
 | [NSFileManager.GetFileSystemAttributes(string)](https://learn.microsoft.com/dotnet/api/foundation.nsfilemanager.getfilesystemattributes)
 
-For example, if you use any of the API's listed above, your `PrivacyInfo.xcprivacy` would contain the `dict` element in the `NSPrivacyAccessedAPITypes` key's array as shown below:
+For example, if you use any of the APIs listed above, your `PrivacyInfo.xcprivacy` would contain the `dict` element in the `NSPrivacyAccessedAPITypes` key's array as shown below:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -108,7 +108,7 @@ For example, if you use any of the API's listed above, your `PrivacyInfo.xcpriva
                 <string>...</string>
             </array>
         </dict>
-	</array>
+    </array>
 </dict>
 </plist>
 ```
@@ -117,12 +117,12 @@ Reason codes from [Disk space APIs][DiskSpaceAPIs] need to be provided in the ar
 
 ### [Active keyboard APIs][ActiveKeyboardAPIs]
 
-The following APIs either directly or indirectly access the list of available keyboards and require reasons for use. Use the string `NSPrivacyAccessedAPICategoryActiveKeyboards` as the value for the `NSPrivacyAccessedAPIType` key in your `NSPrivacyAccessedAPITypes` dictionary. If you access the list of available keyboards from the list of API's below, then use [Active keyboard APIs][ActiveKeyboardAPIs] to determine the correct values to place in the `NSPrivacyAccessedAPITypeReasons` array.
+The following APIs either directly or indirectly access the list of available keyboards and require reasons for use. Use the string `NSPrivacyAccessedAPICategoryActiveKeyboards` as the value for the `NSPrivacyAccessedAPIType` key in your `NSPrivacyAccessedAPITypes` dictionary. If you access the list of available keyboards from the list of APIs below, then use [Active keyboard APIs][ActiveKeyboardAPIs] to determine the correct values to place in the `NSPrivacyAccessedAPITypeReasons` array.
 | Foundation APIs | UIKit APIs | AppKit APIs |
 | - | - | - |
 |  | [UITextInputMode.ActiveInputModes](https://learn.microsoft.com/dotnet/api/appkit.uitextinputmode.activeinputmodes)
 
-For example, if you use any of the API's listed above, your `PrivacyInfo.xcprivacy` would contain the `dict` element in the `NSPrivacyAccessedAPITypes` key's array as shown below:
+For example, if you use any of the APIs listed above, your `PrivacyInfo.xcprivacy` would contain the `dict` element in the `NSPrivacyAccessedAPITypes` key's array as shown below:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -139,7 +139,7 @@ For example, if you use any of the API's listed above, your `PrivacyInfo.xcpriva
                 <string>...</string>
             </array>
         </dict>
-	</array>
+    </array>
 </dict>
 </plist>
 ```
@@ -147,14 +147,14 @@ For example, if you use any of the API's listed above, your `PrivacyInfo.xcpriva
 Reason codes from [Active keyboard APIs][ActiveKeyboardAPIs] need to be provided in the array following the `NSPrivacyAccessedAPITypeReasons` key.
 
 ### [User defaults APIs][UserDefaultsAPIs]
-The following APIs either directly or indirectly access user defaults and require reasons for use. Use the string `NSPrivacyAccessedAPICategoryUserDefaults` as the value for the `NSPrivacyAccessedAPIType` key in your `NSPrivacyAccessedAPITypes` dictionary. If you only access the user defaults from the list of API's below, then use the value `C56D.1` in the `NSPrivacyAccessedAPITypeReasons` array. Refer to [User defaults APIs][UserDefaultsAPIs] to determine the any additional relevant values to place in the `NSPrivacyAccessedAPITypeReasons` array.
+The following APIs either directly or indirectly access user defaults and require reasons for use. Use the string `NSPrivacyAccessedAPICategoryUserDefaults` as the value for the `NSPrivacyAccessedAPIType` key in your `NSPrivacyAccessedAPITypes` dictionary. If you only access the user defaults from the list of APIs below, then use the value `C56D.1` in the `NSPrivacyAccessedAPITypeReasons` array. Refer to [User defaults APIs][UserDefaultsAPIs] to determine the any additional relevant values to place in the `NSPrivacyAccessedAPITypeReasons` array.
 | Foundation APIs | UIKit APIs | AppKit APIs |
 | - | - | - |
 | [NSUserDefaults](https://learn.microsoft.com/dotnet/api/foundation.nsuserdefaults) | | [NSUserDefaultsController.NSUserDefaultsController(NSUserDefaults, NSDictionary)](https://learn.microsoft.com/dotnet/api/appkit.nsuserdefaultscontroller.-ctor#appkit-nsuserdefaultscontroller-ctor(foundation-nsuserdefaults-foundation-nsdictionary))
 |                | | [NSUserDefaultsController.Defaults](https://learn.microsoft.com/dotnet/api/appkit.nsuserdefaultscontroller.defaults)
 |                | | [NSUserDefaultsController.SharedUserDefaultsController](https://learn.microsoft.com/dotnet/api/appkit.nsuserdefaultscontroller.shareduserdefaultscontroller)
 
-For example, if you use any of the API's listed above, your `PrivacyInfo.xcprivacy` would contain the `dict` element in the `NSPrivacyAccessedAPITypes` key's array as shown below:
+For example, if you use any of the APIs listed above, your `PrivacyInfo.xcprivacy` would contain the `dict` element in the `NSPrivacyAccessedAPITypes` key's array as shown below:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -171,7 +171,7 @@ For example, if you use any of the API's listed above, your `PrivacyInfo.xcpriva
                 <string>...</string>
             </array>
         </dict>
-	</array>
+    </array>
 </dict>
 </plist>
 ```

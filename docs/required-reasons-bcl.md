@@ -1,12 +1,12 @@
-# Required Reasons API usage in .NET, MONO and the BCL
+# Required Reasons API usage in .NET, Mono and the BCL
 
-The tables provide lists of C# .NET APIs that call the [Required Reasons APIs][RequiredReasonAPI] organized by category. These API usages are present in your app even if you do not explicitly call them. Therefore, you will be required to provide the API categories and reasons provided below inb your apps `PrivacyInfo.xcprivacy` file. You may have to provide additional reasaon codes if you use the API's directly, see [Required Reasons APIs][RequiredReasonAPI] for more information on the reson codes.
+The tables provide lists of C# .NET APIs that call the [Required Reasons APIs][RequiredReasonAPI] organized by category. These API usages are present in your app even if you do not explicitly call them. Therefore, you will be required to provide the API categories and reasons provided below in your apps `PrivacyInfo.xcprivacy` file. You may have to provide additional reason codes if you use the APIs directly, see [Required Reasons APIs][RequiredReasonAPI] for more information on the reason codes.
 
 **Note:** The following lists are verified only for .NET versions 8.0.0 and later.
 
 ### [File timestamp APIs][FileTimestampAPIs]
 
-The following APIs either directly or indirectly access file timestamps and require reasons for use. Use the string `NSPrivacyAccessedAPICategoryFileTimestamp` as the value for the `NSPrivacyAccessedAPIType` key in your `NSPrivacyAccessedAPITypes` dictionary. Refer to [File timestamp APIs][FileTimestampAPIs] for any additional relevent values to add to the `NSPrivacyAccessedAPITypeReasons` array.
+The following APIs either directly or indirectly access file timestamps and require reasons for use. Use the string `NSPrivacyAccessedAPICategoryFileTimestamp` as the value for the `NSPrivacyAccessedAPIType` key in your `NSPrivacyAccessedAPITypes` dictionary. Refer to [File timestamp APIs][FileTimestampAPIs] for any additional relevant values to add to the `NSPrivacyAccessedAPITypeReasons` array.
 | .NET API | Internal Usages | CoreClr Usages | Mono Usages
 | - | - | - | - |
 | [System.Diagnostics.FileVersionInfo](https://learn.microsoft.com/dotnet/api/System.Diagnostics.FileVersionInfo) | [Interop.Sys.LStat](https://source.dot.net/#System.Private.CoreLib/src/libraries/Common/src/Interop/Unix/System.Native/Interop.Stat.cs,65) | SystemNative_LStat | g_file_test
@@ -99,7 +99,7 @@ The following APIs either directly or indirectly access file timestamps and requ
 
 
 
-For example, if you use any of the API's listed above, your `PrivacyInfo.xcprivacy` would contain the `dict` element in the `NSPrivacyAccessedAPITypes` key's array as shown below:
+For example, if you use any of the APIs listed above, your `PrivacyInfo.xcprivacy` would contain the `dict` element in the `NSPrivacyAccessedAPITypes` key's array as shown below:
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -112,10 +112,10 @@ For example, if you use any of the API's listed above, your `PrivacyInfo.xcpriva
             <string>NSPrivacyAccessedAPICategoryFileTimestamp</string>
             <key>NSPrivacyAccessedAPITypeReasons</key>
             <array>
-                <string>C617.1,...</string>
+                <string>C617.1</string>
             </array>
         </dict>
-	</array>
+    </array>
 </dict>
 </plist>
 ```
@@ -124,7 +124,7 @@ Additional reason codes from [File timestamp APIs][FileTimestampAPIs] can be pro
 
 ### [System boot time APIs][SystemBootTimeAPIs]
 
-The following APIs either directly or indirectly access the system boot time and require reasons for use. Use the string `NSPrivacyAccessedAPICategorySystemBootTime` as the value for the `NSPrivacyAccessedAPIType` key in your `NSPrivacyAccessedAPITypes` dictionary. If you only access the system boot time from the list of API's below, then use the `35F9.1` value in the `NSPrivacyAccessedAPITypeReasons` array.
+The following APIs either directly or indirectly access the system boot time and require reasons for use. Use the string `NSPrivacyAccessedAPICategorySystemBootTime` as the value for the `NSPrivacyAccessedAPIType` key in your `NSPrivacyAccessedAPITypes` dictionary. If you only access the system boot time from the list of APIs below, then use the `35F9.1` value in the `NSPrivacyAccessedAPITypeReasons` array.
 | .NET API | Internal Usages | CoreClr Usages | Mono Usages
 | - | - | - | - |
 | [System.Environment.TickCount](https://learn.microsoft.com/dotnet/api/System.Environment.TickCount) | | | mono_msec_boottime
@@ -135,7 +135,7 @@ The following APIs either directly or indirectly access the system boot time and
 | | | | threads_wait_pending_joinable_threads
 | | | | current_time
 
-For example, if you use any of the API's listed above, your `PrivacyInfo.xcprivacy` would contain the `dict` element in the `NSPrivacyAccessedAPITypes` key's array as shown below:
+For example, if you use any of the APIs listed above, your `PrivacyInfo.xcprivacy` would contain the `dict` element in the `NSPrivacyAccessedAPITypes` key's array as shown below:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -152,14 +152,14 @@ For example, if you use any of the API's listed above, your `PrivacyInfo.xcpriva
                 <string>35F9.1</string>
             </array>
         </dict>
-	</array>
+    </array>
 </dict>
 </plist>
 ```
 
 ### [Disk space APIs][DiskSpaceAPIs]
  
-The following APIs either directly or indirectly access the available disk space and require reasons for use. Use the string `NSPrivacyAccessedAPICategoryDiskSpace` as the value for the `NSPrivacyAccessedAPIType` key in your `NSPrivacyAccessedAPITypes` dictionary. If you access the available disk space from the list of API's below, then use [Disk space APIs][DiskSpaceAPIs] to determine the correct values to place in the `NSPrivacyAccessedAPITypeReasons` array.
+The following APIs either directly or indirectly access the available disk space and require reasons for use. Use the string `NSPrivacyAccessedAPICategoryDiskSpace` as the value for the `NSPrivacyAccessedAPIType` key in your `NSPrivacyAccessedAPITypes` dictionary. If you access the available disk space from the list of APIs below, then use [Disk space APIs][DiskSpaceAPIs] to determine the correct values to place in the `NSPrivacyAccessedAPITypeReasons` array.
 | .NET API | Internal Usages | CoreClr Usages | Mono Usages
 | - | - | - | - |
 | [System.IO.DriveInfo.AvailableFreeSpace](https://learn.microsoft.com/dotnet/api/System.IO.DriveInfo.AvailableFreeSpace) | [Interop.Sys.TryGetFileSystemType](https://source.dot.net/#System.Private.CoreLib/src/libraries/Common/src/Interop/Unix/System.Native/Interop.UnixFileSystemTypes.cs,155) | SystemNative_GetFileSystemType | |
@@ -178,7 +178,7 @@ The following APIs either directly or indirectly access the available disk space
 | [System.TimeZoneInfo.Local](https://learn.microsoft.com/dotnet/api/System.TimeZoneInfo.Local) 
 | [System.Net.Sockets.Socket.SendPacketsAsync(SocketAsyncEventArgs)](https://learn.microsoft.com/dotnet/api/System.Net.Sockets.Socket.SendPacketsAsync)
 
-For example, if you use any of the API's listed above, your `PrivacyInfo.xcprivacy` would contain the `dict` element in the `NSPrivacyAccessedAPITypes` key's array as shown below:
+For example, if you use any of the APIs listed above, your `PrivacyInfo.xcprivacy` would contain the `dict` element in the `NSPrivacyAccessedAPITypes` key's array as shown below:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -192,10 +192,10 @@ For example, if you use any of the API's listed above, your `PrivacyInfo.xcpriva
             <string>NSPrivacyAccessedAPICategoryDiskSpace</string>
             <key>NSPrivacyAccessedAPITypeReasons</key>
             <array>
-                <string>E174.1,...</string>
+                <string>E174.1</string>
             </array>
         </dict>
-	</array>
+    </array>
 </dict>
 </plist>
 ```
