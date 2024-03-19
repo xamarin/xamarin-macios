@@ -853,10 +853,22 @@ namespace Foundation {
 			[Preserve (Conditional = true)]
 			public override void DidReceiveResponse (NSUrlSession session, NSUrlSessionDataTask dataTask, NSUrlResponse response, Action<NSUrlSessionResponseDisposition> completionHandler)
 			{
+				try {
+					DidReceiveResponseImpl (session, dataTask, response, completionHandler);
+				} catch {
+					completionHandler (NSUrlSessionResponseDisposition.Cancel);
+					throw;
+				}
+			}
+
+			void DidReceiveResponseImpl (NSUrlSession session, NSUrlSessionDataTask dataTask, NSUrlResponse response, Action<NSUrlSessionResponseDisposition> completionHandler)
+			{
 				var inflight = GetInflightData (dataTask);
 
-				if (inflight is null)
+				if (inflight is null) {
+					completionHandler (NSUrlSessionResponseDisposition.Cancel);
 					return;
+				}
 
 				try {
 					var urlResponse = (NSHttpUrlResponse) response;
@@ -985,10 +997,23 @@ namespace Foundation {
 			[Preserve (Conditional = true)]
 			public override void WillCacheResponse (NSUrlSession session, NSUrlSessionDataTask dataTask, NSCachedUrlResponse proposedResponse, Action<NSCachedUrlResponse> completionHandler)
 			{
+				try {
+					WillCacheResponseImpl (session, dataTask, proposedResponse, completionHandler);
+				} catch {
+					completionHandler (null!);
+					throw;
+				}
+			}
+
+			void WillCacheResponseImpl (NSUrlSession session, NSUrlSessionDataTask dataTask, NSCachedUrlResponse proposedResponse, Action<NSCachedUrlResponse> completionHandler)
+			{
 				var inflight = GetInflightData (dataTask);
 
-				if (inflight is null)
+				if (inflight is null) {
+					completionHandler (null!);
 					return;
+				}
+
 				// apple caches post request with a body, which should not happen. https://github.com/xamarin/maccore/issues/2571 
 				var disableCache = sessionHandler.DisableCaching || (inflight.Request.Method == HttpMethod.Post && inflight.Request.Content is not null);
 				completionHandler (disableCache ? null! : proposedResponse);
@@ -1003,10 +1028,23 @@ namespace Foundation {
 			[Preserve (Conditional = true)]
 			public override void DidReceiveChallenge (NSUrlSession session, NSUrlSessionTask task, NSUrlAuthenticationChallenge challenge, Action<NSUrlSessionAuthChallengeDisposition, NSUrlCredential> completionHandler)
 			{
+				try {
+					DidReceiveChallengeImpl (session, task, challenge, completionHandler);
+				} catch {
+					completionHandler (NSUrlSessionAuthChallengeDisposition.CancelAuthenticationChallenge, null!);
+					throw;
+				}
+			}
+
+			void DidReceiveChallengeImpl (NSUrlSession session, NSUrlSessionTask task, NSUrlAuthenticationChallenge challenge, Action<NSUrlSessionAuthChallengeDisposition, NSUrlCredential> completionHandler)
+			{
 				var inflight = GetInflightData (task);
 
-				if (inflight is null)
+				if (inflight is null) {
+					// Request was probably cancelled
+					completionHandler (NSUrlSessionAuthChallengeDisposition.CancelAuthenticationChallenge, null!);
 					return;
+				}
 
 				// ToCToU for the callback
 				var trustCallbackForUrl = sessionHandler.TrustOverrideForUrl;
