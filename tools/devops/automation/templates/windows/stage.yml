@@ -97,21 +97,21 @@ stages:
     templateContext:
       type: validationJob
       outputs:
-        # Create HtmlReport artifact. This serves two purposes:
-        # 1. It is the way we are going to share the HtmlReport with the publish_html job that is executed on a Windows machine.
-        # 2. Users can download this if they want.
-        - output: pipelineArtifact
-          displayName: 'Publish Artifact: HtmlReport'
-          artifactName: '$(MaciosUploadPrefix)HtmlReport-windows-integration-$(System.JobAttempt)'
-          path: '$(Build.ArtifactStagingDirectory)/HtmlReport.zip'
-          postValidationJobArtifactName: html_report_windows_output_validation
-          condition: succeededOrFailed()
-        - output: pipelineArtifact
-          displayName: 'Publish Artifact: Windows binlogs'
-          artifactName: windows-binlogs-test-$(Build.BuildId)-$(System.StageAttempt)-$(System.StageAttempt)-$(System.JobAttempt)
-          path: $(Build.ArtifactStagingDirectory)/windows-binlogs
-          postValidationJobArtifactName: windows_binlogs_test_output_validation
-          condition: succeededOrFailed()
+      # Create HtmlReport artifact. This serves two purposes:
+      # 1. It is the way we are going to share the HtmlReport with the publish_html job that is executed on a Windows machine.
+      # 2. Users can download this if they want.
+      - output: pipelineArtifact
+        displayName: 'Publish Artifact: HtmlReport'
+        artifactName: '$(MaciosUploadPrefix)HtmlReport-windows-integration-$(System.JobAttempt)'
+        path: '$(Build.ArtifactStagingDirectory)/HtmlReport.zip'
+        postValidationJobArtifactName: html_report_windows_output_validation
+        condition: succeededOrFailed()
+      - output: pipelineArtifact
+        displayName: 'Publish Artifact: Windows binlogs'
+        artifactName: windows-binlogs-test-$(Build.BuildId)-$(System.StageAttempt)-$(System.StageAttempt)-$(System.JobAttempt)
+        path: $(Build.ArtifactStagingDirectory)/windows-binlogs
+        postValidationJobArtifactName: windows_binlogs_test_output_validation
+        condition: succeededOrFailed()
 
     steps:
     - template: build.yml
