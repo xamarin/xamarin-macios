@@ -987,8 +987,7 @@ namespace Foundation {
 
 					inflight.ResponseSent = true;
 
-					// EVIL HACK: having TrySetResult inline was blocking the request from completing
-					Task.Run (() => inflight.CompletionSource.TrySetResult (httpResponse!));
+					inflight.CompletionSource.TrySetResult (httpResponse!);
 				}
 			}
 
@@ -1170,7 +1169,7 @@ namespace Foundation {
 			public readonly object Lock = new object ();
 			public string RequestUrl { get; set; }
 
-			public TaskCompletionSource<HttpResponseMessage> CompletionSource { get; } = new TaskCompletionSource<HttpResponseMessage> ();
+			public TaskCompletionSource<HttpResponseMessage> CompletionSource { get; } = new TaskCompletionSource<HttpResponseMessage> (TaskCreationOptions.RunContinuationsAsynchronously);
 			public CancellationToken CancellationToken { get; set; }
 			public CancellationTokenSource CancellationTokenSource { get; } = new CancellationTokenSource ();
 			public NSUrlSessionDataTaskStream Stream { get; } = new NSUrlSessionDataTaskStream ();
