@@ -221,7 +221,6 @@ namespace Foundation {
 				if (inflightRequests.TryGetValue (task, out var data)) {
 					if (cancel)
 						data.CancellationTokenSource.Cancel ();
-					data.Dispose ();
 					inflightRequests.Remove (task);
 				}
 #if !MONOMAC && !__WATCHOS__ && !NET8_0
@@ -247,7 +246,6 @@ namespace Foundation {
 				foreach (var pair in inflightRequests) {
 					pair.Key?.Cancel ();
 					pair.Key?.Dispose ();
-					pair.Value?.Dispose ();
 				}
 
 				inflightRequests.Clear ();
@@ -1168,7 +1166,7 @@ namespace Foundation {
 			}
 		}
 
-		class InflightData : IDisposable {
+		class InflightData {
 			public readonly object Lock = new object ();
 			public string RequestUrl { get; set; }
 
@@ -1192,21 +1190,6 @@ namespace Foundation {
 				CancellationToken = cancellationToken;
 				Request = request;
 			}
-
-			public void Dispose ()
-			{
-				Dispose (true);
-				GC.SuppressFinalize (this);
-			}
-
-			// The bulk of the clean-up code is implemented in Dispose(bool)
-			protected virtual void Dispose (bool disposing)
-			{
-				if (disposing) {
-					CancellationTokenSource.Dispose ();
-				}
-			}
-
 		}
 
 		class NSUrlSessionDataTaskStreamContent : MonoStreamContent {
