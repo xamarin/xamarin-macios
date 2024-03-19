@@ -90,13 +90,13 @@ namespace CoreMedia {
 			unsafe {
 				fixed (AudioStreamPacketDescription* packetDescriptionsPtr = packetDescriptions) {
 					error = CMAudioSampleBufferCreateWithPacketDescriptions (
-					            IntPtr.Zero,
-					            dataBuffer.GetHandle (),
-					            1, IntPtr.Zero, IntPtr.Zero,
-					            formatDescription.Handle,
-					            samplesCount, sampleTimestamp,
-					            packetDescriptionsPtr,
-					            &buffer);
+								IntPtr.Zero,
+								dataBuffer.GetHandle (),
+								1, IntPtr.Zero, IntPtr.Zero,
+								formatDescription.Handle,
+								samplesCount, sampleTimestamp,
+								packetDescriptionsPtr,
+								&buffer);
 				}
 			}
 
@@ -246,12 +246,12 @@ namespace CoreMedia {
 			IntPtr buffer;
 			unsafe {
 				error = CMSampleBufferCreateForImageBuffer (
-				            IntPtr.Zero,
-				            imageBuffer.Handle, dataReady.AsByte (),
-				            IntPtr.Zero, IntPtr.Zero,
-				            formatDescription.Handle,
-				            &sampleTiming,
-				            &buffer);
+							IntPtr.Zero,
+							imageBuffer.Handle, dataReady.AsByte (),
+							IntPtr.Zero, IntPtr.Zero,
+							formatDescription.Handle,
+							&sampleTiming,
+							&buffer);
 			}
 
 			if (error != CMSampleBufferError.None)
@@ -716,13 +716,13 @@ namespace CoreMedia {
 			unsafe {
 				fixed (AudioStreamPacketDescription* packetDescriptionsPtr = packetDescriptions) {
 					error = CMAudioSampleBufferCreateReadyWithPacketDescriptions (
-					            IntPtr.Zero,
-					            dataBuffer.Handle,
-					            formatDescription.Handle,
-					            samplesCount,
-					            sampleTimestamp,
-					            packetDescriptionsPtr,
-					            &buffer);
+								IntPtr.Zero,
+								dataBuffer.Handle,
+								formatDescription.Handle,
+								samplesCount,
+								sampleTimestamp,
+								packetDescriptionsPtr,
+								&buffer);
 				}
 			}
 
@@ -773,15 +773,15 @@ namespace CoreMedia {
 				fixed (CMSampleTimingInfo* sampleTimingArrayPtr = sampleTimingArray) {
 					fixed (nuint* sampleSizeArrayPtr = sampleSizeArray) {
 						error = CMSampleBufferCreateReady (
-						            IntPtr.Zero,
-						            dataBuffer.Handle,
-						            fdh,
-						            samplesCount,
-						            timingCount,
-						            sampleTimingArrayPtr,
-						            sizeCount,
-						            sampleSizeArrayPtr,
-						            &buffer);
+									IntPtr.Zero,
+									dataBuffer.Handle,
+									fdh,
+									samplesCount,
+									timingCount,
+									sampleTimingArrayPtr,
+									sizeCount,
+									sampleSizeArrayPtr,
+									&buffer);
 					}
 				}
 			}
@@ -837,11 +837,11 @@ namespace CoreMedia {
 			IntPtr buffer;
 			unsafe {
 				error = CMSampleBufferCreateReadyWithImageBuffer (
-				            IntPtr.Zero,
-				            imageBuffer.Handle,
-				            formatDescription.Handle,
-				            (CMSampleTimingInfo *) Unsafe.AsPointer<CMSampleTimingInfo> (ref sampleTiming),
-				            &buffer);
+							IntPtr.Zero,
+							imageBuffer.Handle,
+							formatDescription.Handle,
+							(CMSampleTimingInfo*) Unsafe.AsPointer<CMSampleTimingInfo> (ref sampleTiming),
+							&buffer);
 			}
 
 			if (error != CMSampleBufferError.None)
