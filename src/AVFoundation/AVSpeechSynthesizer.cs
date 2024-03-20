@@ -24,7 +24,7 @@ namespace AVFoundation {
 		public unsafe virtual Task<AVAudioBuffer> WriteUtteranceAsync (AVSpeechUtterance utterance)
 		{
 			var tcs = new TaskCompletionSource<AVAudioBuffer> ();
-			WriteUtterance(utterance, (obj_) => {
+			WriteUtterance (utterance, (obj_) => {
 				tcs.SetResult (obj_!);
 			});
 			return tcs.Task;
