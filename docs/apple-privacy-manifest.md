@@ -1,7 +1,11 @@
 # Apple’s privacy manifest policy requirements
-Apple is introducing a privacy policy for including [privacy manifest files][PrivacyManifestFiles] in new and updated applications targeted for iOS, iPadOS, and tvOS platforms on the App Store.
+Apple is introducing new privacy policies that affect .NET applications targeting macOS, Mac Catalyst, iOS, iPadOS, and tvOS platforms on the App Stores. The policies affect how app developers are expected to disclose how they use any data collected from a users device and why certain APIs are being used. Developers will provide the details for these in a [privacy manifest file][PrivacyManifestFiles] that is included in the application bundle.
 
-The privacy manifest file (`PrivacyInfo.xcprivacy`) lists the [types of data](https://developer.apple.com/documentation/bundleresources/privacy_manifest_files/describing_data_use_in_privacy_manifests) your .NET MAUI applications, or any third-party SDKs and packages collect, and the reasons for using certain [Required Reason APIs][RequiredReasonAPI] categories.
+The [data collection](https://developer.apple.com/documentation/bundleresources/privacy_manifest_files/describing_data_use_in_privacy_manifests) policies require you to declare the types of data that you collect and describe the data in a [privacy manifest files][PrivacyManifestFiles]. Apart from how to properly include the [privacy manifest files][PrivacyManifestFiles] in your .NET project, this document does not go into any detail on the data collection settings. The Apple documentation should be sufficient for declaring how your App or framework uses data it collects from users.
+
+The [Required Reason APIs][RequiredReasonAPI] policy forces app developers to identify certain categories of APIs that their app, or frameworks use and to provide a reason for their use. This information is provided in a [privacy manifest files][PrivacyManifestFiles] along with the data collection information. This document will provide .NET application developers the information needed to provide a `PrivacyInfo.xcprivacy` file with thier .NET applications with the proper  policy settings to pass the [Required Reason APIs][RequiredReasonAPI] checks when submitting to the Apple App Stores.
+
+The privacy manifest file (`PrivacyInfo.xcprivacy`) lists the [types of data](https://developer.apple.com/documentation/bundleresources/privacy_manifest_files/describing_data_use_in_privacy_manifests) your .NET MAUI application, or any third-party SDKs and packages collect, and the reasons for using certain [Required Reason APIs][RequiredReasonAPI] categories.
 
 **Important:** If the use of the [Required Reason APIs][RequiredReasonAPI] by you or third-party SDKs isn’t declared in the privacy manifest, your application might be rejected by the App Store. For more information, visit Apple’s documentation on [Required Reasons APIs][RequiredReasonAPI].
 
@@ -70,6 +74,47 @@ Let's look at how you would add a Privacy Manifest file to an application that u
 * [NSFileManager.ModificationDate](https://learn.microsoft.com/dotnet/api/foundation.nsfilemanager.modificationdate)
 
 How they are used is not that important for this example, but the `why` will determine the reason code needed for the privacy manifest.
+
+## Adding the `PrivacyInfo.xcprivacy` file to your project
+
+The `PrivacyInfo.xcprivacy` is consider a resource when it is time to build the bundle. In accordance with [Placing Content in a Bundle](https://developer.apple.com/documentation/bundleresources/placing_content_in_a_bundle) the file is placed in the root of the Bundle. Use the proper set of instructions below for your project type:
+
+### .NET MAUI
+1. Creat a new blank file named `PrivacyInfo.xcprivacy` in the `Platforms/iOS` folder in your .NET MAUI project.
+1. In your favorite text editor, edit the .NET MAUI csproj project file.
+1. Add the following elements to the bottom of the root  `<Project>` element:
+    ```xml
+    <ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">
+      <BundleResource Include="Platforms\iOS\PrivacyInfo.xcprivacy" LogicalName="PrivacyInfo.xcprivacy" />
+    </ItemGroup>
+    ```
+    This will package the file into the iOS app at the root of the bundle. 
+
+### .NET for iOS (net?-ios) 
+1. Creat a new blank file named `PrivacyInfo.xcprivacy` in the `Resources` folder in your .NET for iOS project. This is all that is needed to package the file into the iOS app at the root of the bundle.
+
+### .NET for tvOS (net?-tvos)
+1. Creat a new blank file named `PrivacyInfo.xcprivacy` in the root folder in your .NET for tvOS project.
+1. In your favorite text editor, edit the .NET for tvOS csproj project file.
+1. Add the following elements to the bottom of the root  `<Project>` element:
+    ```xml
+    <ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tvos'">
+      <BundleResource Include="PrivacyInfo.xcprivacy" LogicalName="PrivacyInfo.xcprivacy" />
+    </ItemGroup>
+    ```
+    This will package the file into the tvOS app at the root of the bundle. 
+
+### Xamarin.iOS including Xamarin.Forms
+1. Creat a new blank file named `PrivacyInfo.xcprivacy` in the root folder of your Xamarin.iOS project.
+1. In your favorite text editor, edit the Xamarin.iOS csproj project file.
+1. Locate the `<ItemGroup>` that contains other `<BundleResource>` elements and add the following element:
+    ```xml
+    <BundleResource Include="PrivacyInfo.xcprivacy" LogicalName="PrivacyInfo.xcprivacy" />
+    ```
+    This will package the file into the iOS app at the root of the bundle. 
+
+Now that the file has been created in the proper location your project, it needs to be ppopulated with the correct settings for your app or framework. 
+
 ## Creating the `PrivacyInfo.xcprivacy` file
 
 We will start by building the contents of the `PrivacyInfo.xcprivacy` file, and then go through each supported platform and how to properly configure your project so the file is included in the bundle properly.
@@ -205,47 +250,6 @@ The complete `PrivacyInfo.xcprivacy` should now look similar to:
 </dict>
 </plist>
 ```
-
-Now that the file has been created, it needs to be placed properly when building the app. 
-
-## Adding the `PrivacyInfo.xcprivacy` file to your project
-
-The `PrivacyInfo.xcprivacy` is consider a resource when it is time to build the bundle. In accordance with [Placing Content in a Bundle](https://developer.apple.com/documentation/bundleresources/placing_content_in_a_bundle) the file is placed in the root of the Bundle. Use the proper set of instructions below for your project type:
-
-### .NET MAUI
-1. Copy the `PrivacyInfo.xcprivacy` from your documents folder to the `Platforms/iOS` folder in your .NET MAUI project.
-1. In your favorite text editor, edit the .NET MAUI csproj project file.
-1. Add the following elements to the bottom of the root  `<Project>` element:
-    ```xml
-    <ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">
-      <BundleResource Include="Platforms\iOS\PrivacyInfo.xcprivacy" LogicalName="PrivacyInfo.xcprivacy" />
-    </ItemGroup>
-    ```
-    This will package the file into the iOS app at the root of the bundle. 
-
-### .NET for iOS (net?-ios) 
-1. Copy the `PrivacyInfo.xcprivacy` from your documents folder to the `Resources` folder in your .NET for iOS project. This is all that is needed to package the file into the iOS app at the root of the bundle.
-
-### .NET for tvOS (net?-tvos)
-1. Copy the `PrivacyInfo.xcprivacy` from your documents folder to the root folder of your .NET for tvOS project.
-1. In your favorite text editor, edit the .NET for tvOS csproj project file.
-1. Add the following elements to the bottom of the root  `<Project>` element:
-    ```xml
-    <ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tvos'">
-      <BundleResource Include="PrivacyInfo.xcprivacy" LogicalName="PrivacyInfo.xcprivacy" />
-    </ItemGroup>
-    ```
-    This will package the file into the tvOS app at the root of the bundle. 
-
-### Xamarin.iOS including Xamarin.Forms
-1. Copy the `PrivacyInfo.xcprivacy` from your documents folder to the root folder of your Xamarin.iOS project.
-1. In your favorite text editor, edit the Xamarin.iOS csproj project file.
-1. Locate the `<ItemGroup>` that contains other `<BundleResource>` elements and add the following element:
-    ```xml
-    <BundleResource Include="PrivacyInfo.xcprivacy" LogicalName="PrivacyInfo.xcprivacy" />
-    ```
-    This will package the file into the iOS app at the root of the bundle. 
-
 
 Once added to your project, the `PrivacyInfo.xcprivacy` file will need to be updated if there are any additional API usages from additional categories or additional reasons for usage. This will include adding a NuGet package or Binding project that calls into any of Apple’s [Required Reason APIs][RequiredReasonAPI]. It is ultimately your responsibility to provide an accurate `PrivacyInfo.xcprivacy` file, failing to do so may result in the App Store rejecting your submission.
 
