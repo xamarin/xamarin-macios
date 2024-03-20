@@ -92,7 +92,7 @@ namespace CoreMedia {
 			clockTime = default;
 			referenceClockTime = default;
 			unsafe {
-				return CMClockGetAnchorTime (Handle, (CMTime *) Unsafe.AsPointer<CMTime> (ref clockTime), (CMTime *) Unsafe.AsPointer<CMTime> (ref referenceClockTime));
+				return CMClockGetAnchorTime (Handle, (CMTime*) Unsafe.AsPointer<CMTime> (ref clockTime), (CMTime*) Unsafe.AsPointer<CMTime> (ref referenceClockTime));
 			}
 		}
 
@@ -541,7 +541,7 @@ namespace CoreMedia {
 			time = default;
 			rate = default;
 			unsafe {
-				return CMTimebaseGetTimeAndRate (Handle, (CMTime *) Unsafe.AsPointer<CMTime> (ref time), (double *) Unsafe.AsPointer<double> (ref rate));
+				return CMTimebaseGetTimeAndRate (Handle, (CMTime*) Unsafe.AsPointer<CMTime> (ref time), (double*) Unsafe.AsPointer<double> (ref rate));
 			}
 		}
 
@@ -927,9 +927,9 @@ namespace CoreMedia {
 				return CMSyncGetRelativeRateAndAnchorTime (
 					clockOrTimebaseA.Handle,
 					clockOrTimebaseB.Handle,
-					(double *) Unsafe.AsPointer<double> (ref relativeRate),
-					(CMTime *) Unsafe.AsPointer<CMTime> (ref timeA),
-					(CMTime *) Unsafe.AsPointer<CMTime> (ref timeB));
+					(double*) Unsafe.AsPointer<double> (ref relativeRate),
+					(CMTime*) Unsafe.AsPointer<CMTime> (ref timeA),
+					(CMTime*) Unsafe.AsPointer<CMTime> (ref timeB));
 			}
 		}
 
