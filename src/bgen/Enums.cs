@@ -98,6 +98,7 @@ public partial class Generator {
 			// skip value__ field 
 			if (f.IsSpecialName)
 				continue;
+			WriteDocumentation (f);
 			PrintPlatformAttributes (f);
 			PrintObsoleteAttributes (f);
 			print ("{0} = {1},", f.Name, f.GetRawConstantValue ());
