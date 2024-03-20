@@ -2273,10 +2273,30 @@ xamarin_process_nsexception_using_mode (NSException *ns_exception, bool throwMan
 		GCHandle handle;
 		if (exc_handle != NULL) {
 			GCHandle e_handle = [exc_handle getHandle];
+			GCHandle rethrow_exception_gchandle;
 			MONO_ENTER_GC_UNSAFE;
-			MonoObject *exc = xamarin_gchandle_get_target (e_handle);
-			handle = xamarin_gchandle_new (exc, false);
-			xamarin_mono_object_release (&exc);
+
+			//
+			// We want to maintain the original stack trace of the exception, but unfortunately
+			// calling mono_runtime_set_pending_exception directly with the original exception will overwrite
+			// the original stack trace.
+			//
+			// The good news is that the managed ExceptionDispatchInfo class is able to capture
+			// a stack trace for an exception and show it later.
+			//
+			// The xamarin_rethrow_managed_exception method will use ExceptionDispatchInfo
+			// to throw an exception that contains the original stack trace, we will then capture that
+			// exception, and pass it to mono_runtime_set_pending_exception.
+			//
+			xamarin_rethrow_managed_exception (e_handle, &rethrow_exception_gchandle);
+			if (rethrow_exception_gchandle == INVALID_GCHANDLE) {
+				PRINT (PRODUCT ": Did not get a rethrow exception, will throw the original exception. The original stack trace will be lost.");
+				MonoObject *exc = xamarin_gchandle_get_target (e_handle);
+				handle = xamarin_gchandle_new (exc, false);
+				xamarin_mono_object_release (&exc);
+			} else {
+				handle = rethrow_exception_gchandle;
+			}
 			MONO_EXIT_GC_UNSAFE;
 		} else {
 			handle = xamarin_create_ns_exception (ns_exception, &exception_gchandle);
