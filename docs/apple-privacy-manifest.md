@@ -62,7 +62,7 @@ All .NET Apps that target devices running iOS, iPadOS, or tvOS will require a `P
 * NSPrivacyAccessedAPICategorySystemBootTime - 35F9.1
 * NSPrivacyAccessedAPICategoryDiskSpace - E174.1
 
-Additionally, if you use the `NSUserDefaults` APIs in your app, you will need to add the `NSPrivacyAccessedAPICategoryUserDefaults` API category, with a reason code of `CAS92.1`.
+Additionally, if you use the `NSUserDefaults` APIs in your app, you will need to add the `NSPrivacyAccessedAPICategoryUserDefaults` API category, with a reason code of `CA92.1`.
 
 See the example below for detailed instructions on how to add a `PrivacyInfo.xcprivacy` file to your App.
 
@@ -80,7 +80,7 @@ How they are used is not that important for this example, but the `why` will det
 The `PrivacyInfo.xcprivacy` is consider a resource when it is time to build the bundle. In accordance with [Placing Content in a Bundle](https://developer.apple.com/documentation/bundleresources/placing_content_in_a_bundle) the file is placed in the root of the Bundle. Use the proper set of instructions below for your project type:
 
 ### .NET MAUI
-1. Creat a new blank file named `PrivacyInfo.xcprivacy` in the `Platforms/iOS` folder in your .NET MAUI project.
+1. Create a new blank file named `PrivacyInfo.xcprivacy` in the `Platforms/iOS` folder in your .NET MAUI project.
 1. In your favorite text editor, edit the .NET MAUI csproj project file.
 1. Add the following elements to the bottom of the root  `<Project>` element:
     ```xml
@@ -91,10 +91,10 @@ The `PrivacyInfo.xcprivacy` is consider a resource when it is time to build the 
     This will package the file into the iOS app at the root of the bundle. 
 
 ### .NET for iOS (net?-ios) 
-1. Creat a new blank file named `PrivacyInfo.xcprivacy` in the `Resources` folder in your .NET for iOS project. This is all that is needed to package the file into the iOS app at the root of the bundle.
+1. Create a new blank file named `PrivacyInfo.xcprivacy` in the `Resources` folder in your .NET for iOS project. This is all that is needed to package the file into the iOS app at the root of the bundle.
 
 ### .NET for tvOS (net?-tvos)
-1. Creat a new blank file named `PrivacyInfo.xcprivacy` in the root folder in your .NET for tvOS project.
+1. Create a new blank file named `PrivacyInfo.xcprivacy` in the root folder in your .NET for tvOS project.
 1. In your favorite text editor, edit the .NET for tvOS csproj project file.
 1. Add the following elements to the bottom of the root  `<Project>` element:
     ```xml
@@ -105,7 +105,7 @@ The `PrivacyInfo.xcprivacy` is consider a resource when it is time to build the 
     This will package the file into the tvOS app at the root of the bundle. 
 
 ### Xamarin.iOS including Xamarin.Forms
-1. Creat a new blank file named `PrivacyInfo.xcprivacy` in the root folder of your Xamarin.iOS project.
+1. Create a new blank file named `PrivacyInfo.xcprivacy` in the root folder of your Xamarin.iOS project.
 1. In your favorite text editor, edit the Xamarin.iOS csproj project file.
 1. Locate the `<ItemGroup>` that contains other `<BundleResource>` elements and add the following element:
     ```xml
