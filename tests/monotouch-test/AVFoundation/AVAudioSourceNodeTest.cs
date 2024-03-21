@@ -139,10 +139,10 @@ namespace MonoTouchFixtures.AVFoundation {
 		{
 			int rv = 0;
 			try {
-				byte* isSilencePtr = (byte *) isSilence;
+				byte* isSilencePtr = (byte*) isSilence;
 				bool isSilenceBool = (*isSilencePtr) != 0;
 				var buffers = new AudioBuffers (outputData);
-				rv = SourceHandler (ref isSilenceBool, ref Unsafe.AsRef<AudioTimeStamp> ((void *) timestamp), frameCount, buffers, evt);
+				rv = SourceHandler (ref isSilenceBool, ref Unsafe.AsRef<AudioTimeStamp> ((void*) timestamp), frameCount, buffers, evt);
 				*isSilencePtr = isSilenceBool ? (byte) 1 : (byte) 0;
 			} catch (Exception e) {
 				evt.SetException (e);

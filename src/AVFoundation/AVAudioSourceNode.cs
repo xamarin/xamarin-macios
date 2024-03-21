@@ -111,9 +111,9 @@ namespace AVFoundation {
 		{
 			AVAudioSourceNodeRenderHandlerRaw rv = (IntPtr isSilence, IntPtr timestamp, uint frameCount, IntPtr outputData) => {
 				unsafe {
-					byte* isSilencePtr = (byte *) isSilence;
+					byte* isSilencePtr = (byte*) isSilence;
 					bool isSilenceBool = (*isSilencePtr) != 0;
-					AudioTimeStamp timestampValue = *(AudioTimeStamp *) timestamp;
+					AudioTimeStamp timestampValue = *(AudioTimeStamp*) timestamp;
 					var buffers = new AudioBuffers (outputData);
 					return receiverHandler (isSilenceBool, timestampValue, frameCount, ref buffers);
 				}
@@ -131,10 +131,10 @@ namespace AVFoundation {
 		{
 			AVAudioSourceNodeRenderHandlerRaw rv = (IntPtr isSilence, IntPtr timestamp, uint frameCount, IntPtr outputData) => {
 				unsafe {
-					byte* isSilencePtr = (byte *) isSilence;
+					byte* isSilencePtr = (byte*) isSilence;
 					bool isSilenceBool = (*isSilencePtr) != 0;
 					var buffers = new AudioBuffers (outputData);
-					var rv = receiverHandler (ref isSilenceBool, ref Unsafe.AsRef<AudioTimeStamp> ((void *) timestamp), frameCount, ref buffers);
+					var rv = receiverHandler (ref isSilenceBool, ref Unsafe.AsRef<AudioTimeStamp> ((void*) timestamp), frameCount, ref buffers);
 					*isSilencePtr = isSilenceBool.AsByte ();
 					return rv;
 				}
@@ -151,10 +151,10 @@ namespace AVFoundation {
 #endif // !XAMCORE_5_0
 			AVAudioSourceNodeRenderHandlerRaw rv = (IntPtr isSilence, IntPtr timestamp, uint frameCount, IntPtr outputData) => {
 				unsafe {
-					byte* isSilencePtr = (byte *) isSilence;
+					byte* isSilencePtr = (byte*) isSilence;
 					bool isSilenceBool = (*isSilencePtr) != 0;
 					var buffers = new AudioBuffers (outputData);
-					var rv = receiverHandler (ref isSilenceBool, ref Unsafe.AsRef<AudioTimeStamp> ((void *) timestamp), frameCount, buffers);
+					var rv = receiverHandler (ref isSilenceBool, ref Unsafe.AsRef<AudioTimeStamp> ((void*) timestamp), frameCount, buffers);
 					*isSilencePtr = isSilenceBool.AsByte ();
 					return rv;
 				}
