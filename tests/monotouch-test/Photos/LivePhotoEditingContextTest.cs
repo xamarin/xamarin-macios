@@ -1,6 +1,7 @@
 #if !__TVOS__ && !__WATCHOS__
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using CoreGraphics;
@@ -56,6 +57,10 @@ namespace MonoTouchFixtures.Photos {
 			}
 		}
 
+#if NET
+		[UnconditionalSuppressMessage ("Trimming", "IL2026", Justification = "This test pokes at internals, so it's expected to not be trimmer safe. It works though, so unless something changes, we're going to assume it's trimmer-compatible.")]
+		[UnconditionalSuppressMessage ("Trimming", "IL2075", Justification = "This test pokes at internals, so it's expected to not be trimmer safe. It works though, so unless something changes, we're going to assume it's trimmer-compatible.")]
+#endif
 		[Test]
 		public unsafe void FrameProcessingBlock2 ()
 		{
