@@ -641,6 +641,10 @@ namespace ObjCRuntime {
 			return Marshal.StringToHGlobalAuto (str.ToString ());
 		}
 
+#if NET
+		// IL2026: Using member 'System.Reflection.Assembly.LoadFile(String)' which has 'RequiresUnreferencedCodeAttribute' can break functionality when trimming application code. Types and members the loaded assembly depends on might be removed.
+		[UnconditionalSuppressMessage ("", "IL2026", Justification = "We only want the entry assembly, and then we only want the entry point, which survives trimming.")]
+#endif
 		static unsafe Assembly? GetEntryAssembly ()
 		{
 			var asm = Assembly.GetEntryAssembly ();
@@ -709,6 +713,10 @@ namespace ObjCRuntime {
 				RegisterAssembly (a);
 		}
 
+#if NET
+		// IL2075: Using member 'System.Reflection.Assembly.GetReferencedAssemblies()' which has 'RequiresUnreferencedCodeAttribute' can break functionality when trimming application code. Assembly references might be removed.
+		[UnconditionalSuppressMessage ("", "IL2026", Justification = "We only want assemblies that survived trimming, so this is effectively trimmer-safe.")]
+#endif
 		static void CollectReferencedAssemblies (List<Assembly> assemblies, Assembly assembly)
 		{
 			assemblies.Add (assembly);
@@ -975,6 +983,10 @@ namespace ObjCRuntime {
 		}
 		#endregion
 
+#if NET
+		// IL2075: this' argument does not satisfy 'DynamicallyAccessedMemberTypes.PublicMethods' in call to 'System.Type.GetMethod(String)'. The return value of method 'ObjCRuntime.BlockProxyAttribute.Type.get' does not have matching annotations. The source value must declare at least the same requirements as those declared on the target location it is assigned to.
+		[UnconditionalSuppressMessage ("", "IL2075", Justification = "The APIs this method tries to access are marked by other means, so this is linker-safe.")]
+#endif
 		static MethodInfo? GetBlockProxyAttributeMethod (MethodInfo method, int parameter)
 		{
 			var attrs = method.GetParameters () [parameter].GetCustomAttributes (typeof (BlockProxyAttribute), true);
@@ -1036,10 +1048,23 @@ namespace ObjCRuntime {
 		// a the block in the given method at the given parameter into a strongly typed
 		// delegate
 		//
+#if NET
+		// Note that the code in this method doesn't work with NativeAOT, so assert that never happens by throwing an exception in that case
+		// IL2075: 'this' argument does not satisfy 'DynamicallyAccessedMemberTypes.Interfaces' in call to 'System.Type.GetInterfaces()'. The return value of method 'System.Reflection.MemberInfo.DeclaringType.get' does not have matching annotations. The source value must declare at least the same requirements as those declared on the target location it is assigned to."),
+		// IL2075: 'this' argument does not satisfy 'DynamicallyAccessedMemberTypes.PublicMethods' in call to 'System.Type.GetMethod(String, BindingFlags, Binder, Type[], ParameterModifier[])'. The return value of method 'System.Reflection.Assembly.GetType(String, Boolean)' does not have matching annotations. The source value must declare at least the same requirements as those declared on the target location it is assigned to."),
+		[UnconditionalSuppressMessage ("", "IL2075", Justification = "The APIs this method tries to access are marked by other means, so this is linker-safe.")]
+		// IL2026: Using member 'System.Reflection.Assembly.GetType(String, Boolean)' which has 'RequiresUnreferencedCodeAttribute' can break functionality when trimming application code. Types might be removed."),
+		[UnconditionalSuppressMessage ("", "IL2026", Justification = "The APIs this method tries to access are marked by other means, so this is linker-safe.")]
+		// IL2065: Value passed to implicit 'this' parameter of method 'System.Type.GetMethod(String)' can not be statically determined and may not meet 'DynamicallyAccessedMembersAttribute' requirements."),
+		[UnconditionalSuppressMessage ("", "IL2065", Justification = "The APIs this method tries to access are marked by other means, so this is linker-safe.")]
+		// IL2062: Value passed to parameter 'interfaceType' of method 'System.Type.GetInterfaceMap(Type)' can not be statically determined and may not meet 'DynamicallyAccessedMembersAttribute' requirements."),
+		[UnconditionalSuppressMessage ("", "IL2062", Justification = "The APIs this method tries to access are marked by other means, so this is linker-safe.")]
+#endif
 		[EditorBrowsable (EditorBrowsableState.Never)]
 		static MethodInfo? GetBlockWrapperCreator (MethodInfo method, int parameter)
 		{
 #if NET
+			// Note that the code in this method doesn't work with NativeAOT, so assert that never happens by throwing an exception in that case
 			if (IsNativeAOT)
 				throw Runtime.CreateNativeAOTNotSupportedException ();
 #endif
