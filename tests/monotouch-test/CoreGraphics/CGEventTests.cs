@@ -42,6 +42,8 @@ namespace MonoTouchFixtures.CoreGraphics {
 			Assert.IsFalse (tapCalled, "tap was mistakenly called.");
 		}
 #endif
+
+#if __MACOS__ || __MACCATALYST__
 		[Test]
 		public void Constructor_CGEventSourceStateID_0 ()
 		{
@@ -94,5 +96,6 @@ namespace MonoTouchFixtures.CoreGraphics {
 			var ex = Assert.Throws<ArgumentException> (() => new CGEvent (null, CGScrollEventUnit.Pixel, 0, 3, 9, 42), "ArgumentException");
 			Assert.AreEqual ("Only one to three wheels are supported on this constructor", ex.Message, "Message");
 		}
+#endif // __MACOS__ || __MACCATALYST__
 	}
 }
