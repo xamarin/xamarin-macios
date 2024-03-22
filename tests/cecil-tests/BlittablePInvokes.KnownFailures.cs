@@ -281,7 +281,6 @@ namespace Cecil.Tests {
 			"System.Int32 Security.SslContext::SSLCopyALPNProtocols(System.IntPtr,System.IntPtr&)",
 			"System.Int32 Security.SslContext::SSLSetSessionTicketsEnabled(System.IntPtr,System.Boolean)",
 			"System.Int32 SystemConfiguration.NetworkReachability::SCNetworkReachabilityGetFlags(System.IntPtr,SystemConfiguration.NetworkReachabilityFlags&)",
-			"System.IntPtr CoreMedia.CMAttachmentBearer::CMGetAttachment(System.IntPtr,System.IntPtr,CoreMedia.CMAttachmentMode&)",
 			"System.IntPtr CoreServices.FSEventStream::FSEventStreamCreate(System.IntPtr,method System.Void *(System.IntPtr,System.IntPtr,System.IntPtr,System.IntPtr,System.IntPtr,System.IntPtr),CoreServices.FSEventStreamContext&,System.IntPtr,System.UInt64,System.Double,CoreServices.FSEventStreamCreateFlags)",
 			"System.IntPtr CoreServices.FSEventStream::FSEventStreamCreateRelativeToDevice(System.IntPtr,method System.Void *(System.IntPtr,System.IntPtr,System.IntPtr,System.IntPtr,System.IntPtr,System.IntPtr),CoreServices.FSEventStreamContext&,System.UInt64,System.IntPtr,System.UInt64,System.Double,CoreServices.FSEventStreamCreateFlags)",
 			"System.IntPtr CoreText.CTFont::CTFontCopyLocalizedName(System.IntPtr,System.IntPtr,System.IntPtr&)",
