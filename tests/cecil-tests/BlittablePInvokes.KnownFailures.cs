@@ -268,8 +268,6 @@ namespace Cecil.Tests {
 			"System.Int32 AudioUnit.AudioUnit::AudioUnitGetProperty(System.IntPtr,AudioUnit.AudioUnitPropertyIDType,AudioUnit.AudioUnitScopeType,System.UInt32,System.UInt32&,System.UInt32&)",
 			"System.Int32 AudioUnit.AudioUnit::AudioUnitSetProperty(System.IntPtr,AudioUnit.AudioUnitPropertyIDType,AudioUnit.AudioUnitScopeType,System.UInt32,AudioToolbox.AudioStreamBasicDescription&,System.UInt32)",
 			"System.Int32 AudioUnit.AUGraph::NewAUGraph(System.IntPtr&)",
-			"System.Int32 CoreMedia.CMBufferQueue::CMBufferQueueCreate(System.IntPtr,System.IntPtr,CoreMedia.CMBufferQueue/CMBufferCallbacks,System.IntPtr&)",
-			"System.Int32 CoreMedia.CMBufferQueue::CMBufferQueueCreate(System.IntPtr,System.IntPtr,System.IntPtr,System.IntPtr&)",
 			"System.Int32 CoreVideo.CVDisplayLink::CVDisplayLinkTranslateTime(System.IntPtr,CoreVideo.CVTimeStamp,CoreVideo.CVTimeStamp&)",
 			"System.Int32 CoreVideo.CVMetalTextureCache::CVMetalTextureCacheCreate(System.IntPtr,System.IntPtr,System.IntPtr,System.IntPtr,System.IntPtr&)",
 			"System.Int32 CoreWlan.CWKeychain::CWKeychainCopyWiFiEAPIdentity(System.IntPtr,System.IntPtr,System.IntPtr&)",
