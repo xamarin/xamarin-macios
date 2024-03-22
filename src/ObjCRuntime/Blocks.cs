@@ -304,6 +304,17 @@ namespace ObjCRuntime {
 			if (trampoline is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (trampoline));
 
+			VerifyBlockDelegates (trampoline, userDelegate);
+
+			SetupBlock (trampoline, userDelegate, safe: true);
+		}
+
+#if NET
+		// IL2075: 'this' argument does not satisfy 'DynamicallyAccessedMemberTypes.PublicMethods' in call to 'System.Type.GetMethod(String)'. The return value of method 'ObjCRuntime.MonoPInvokeCallbackAttribute.DelegateType.get' does not have matching annotations. The source value must declare at least the same requirements as those declared on the target location it is assigned to.
+		[UnconditionalSuppressMessage ("", "IL2075", Justification = "Calling GetMethod('Invoke') on a delegate type will always find something, because the invoke method can't be linked away for a delegate.")]
+#endif
+		void VerifyBlockDelegates (Delegate trampoline, Delegate userDelegate)
+		{
 #if !MONOMAC && !__MACCATALYST__
 			// Check that:
 			// * The trampoline is static
@@ -338,7 +349,7 @@ namespace ObjCRuntime {
 				}
 			}
 #endif
-			SetupBlock (trampoline, userDelegate, safe: true);
+
 		}
 
 		public void CleanupBlock ()
