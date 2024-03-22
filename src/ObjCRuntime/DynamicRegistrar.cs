@@ -661,6 +661,10 @@ namespace Registrar {
 			return mi.ReturnTypeCustomAttributes.IsDefined (typeof (ReleaseAttribute), false);
 		}
 
+#if NET
+		// IL2025: Attribute 'System.Runtime.CompilerServices.ExtensionAttribute' is being referenced in code but the trimmer was instructed to remove all instances of this attribute. If the attribute instances are necessary make sure to either remove the trimmer attribute XML portion which removes the attribute instances, or override the removal by using the trimmer XML descriptor to keep the attribute type (which in turn keeps all of its instances).
+		[UnconditionalSuppressMessage ("", "IL2045", Justification = "The Extension attribute is manually preserved.")]
+#endif
 		public static bool HasThisAttributeImpl (MethodBase method)
 		{
 			var mi = method as MethodInfo;

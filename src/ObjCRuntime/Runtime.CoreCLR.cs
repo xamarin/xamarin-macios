@@ -171,8 +171,17 @@ namespace ObjCRuntime {
 			return path is not null;
 		}
 
+#if NET
+		// Note that this method does not work with NativeAOT, so throw an exception in that case.
+		// IL2026: Using member 'System.Runtime.Loader.AssemblyLoadContext.LoadFromAssemblyPath(String)' which has 'RequiresUnreferencedCodeAttribute' can break functionality when trimming application code. Types and members the loaded assembly depends on might be removed.
+		[UnconditionalSuppressMessage ("", "IL2026", Justification = "The APIs this method tries to access are marked by other means, so this is linker-safe.")]
+#endif
 		static Assembly? ResolvingEventHandler (AssemblyLoadContext sender, AssemblyName assemblyName)
 		{
+			// Note that this method does not work with NativeAOT, so throw an exception in that case.
+			if (IsNativeAOT)
+				throw CreateNativeAOTNotSupportedException ();
+
 			if (xamarin_locate_assembly_resource (assemblyName.Name!, assemblyName.CultureName, assemblyName.Name + ".dll", out var path)) {
 				if (DynamicRegistrationSupported) {
 					return sender.LoadFromAssemblyPath (path);
