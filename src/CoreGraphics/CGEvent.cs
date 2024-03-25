@@ -489,12 +489,39 @@ namespace CoreGraphics {
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary)]
 		extern static void CGEventPostToPSN (IntPtr processSerialNumber, IntPtr handle);
 
+		/// <summary>Post an event to a specific process</summary>
+		/// <remarks>Deprecated, use <see cref="PostToPid" /> instead.</remarks>
 		public static void PostToPSN (CGEvent evt, IntPtr processSerialNumber)
 		{
 			if (evt is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (evt));
 			
 			CGEventPostToPSN (processSerialNumber, evt.Handle);
+		}
+
+		/// <summary>Post an event to a specific process</summary>
+		/// <remarks>Deprecated, use <see cref="PostToPid" /> instead.</remarks>
+		public void PostToPSN (IntPtr processSerialNumber)
+		{
+			PostToPSN (this, processSerialNumber);
+		}
+
+		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary)]
+		extern static void CGEventPostToPid (int pid, IntPtr handle);
+
+		/// <summary>Post an event to a specific process</summary>
+		public static void PostToPid (CGEvent evt, int pid)
+		{
+			if (evt is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (evt));
+
+			CGEventPostToPid (pid, evt.Handle);
+		}
+
+		/// <summary>Post an event to a specific process</summary>
+		public void PostToPid (int pid)
+		{
+			PostToPid (this, pid);
 		}
 		
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary)]
