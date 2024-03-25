@@ -35,7 +35,7 @@ jobs:
 
       # only post a comment if the linting fails
       - name: Post comment
-        uses: unsplash/comment-on-pr@v1.3.0
+        uses: unsplash/comment-on-pr@v1.3.1
         if: failure()
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
