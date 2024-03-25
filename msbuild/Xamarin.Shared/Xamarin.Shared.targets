@@ -1899,13 +1899,28 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</PackLibraryResources>
 	</Target>
 
+	<!-- Unpacking of resources from libraries -->
+
+	<PropertyGroup>
+		<_UnpackLibraryResourcesDependsOn>
+			$(_UnpackLibraryResourcesDependsOn);
+			ResolveReferences;
+			_DetectBuildType;
+			_CollectBundleResources;
+			_PrepareUnpackLibraryResources;
+			_BeforeUnpackLibraryResources;
+			_ReadUnpackedLibraryResources;
+		</_UnpackLibraryResourcesDependsOn>
+	</PropertyGroup>
+
 	<Target Name="_PrepareUnpackLibraryResources">
 		<PropertyGroup>
-			<_StampDirectory>$(IntermediateOutputPath)resourcestamps\</_StampDirectory>
+			<_StampDirectory>$(DeviceSpecificIntermediateOutputPath)resourcestamps\</_StampDirectory>
 		</PropertyGroup>
 		<ItemGroup>
 			<_UnpackLibraryResourceItems Include="@(ReferencePath);@(ReferenceDependencyPaths)">
-				<StampFile>%(FileName).stamp</StampFile>
+				<StampFile>$(_StampDirectory)%(FileName).stamp</StampFile>
+				<ItemsFile>$(_StampDirectory)%(FileName).items</ItemsFile>
 			</_UnpackLibraryResourceItems>
 		</ItemGroup>
 	</Target>
@@ -1920,30 +1935,77 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</_UnpackLibraryResourcesDependsOn>
 	</PropertyGroup>
 
+	<Target Name="_BeforeUnpackLibraryResources"
+		Inputs="@(_UnpackLibraryResourceItems)"
+		Outputs="@(_UnpackLibraryResourceItems -> '%(StampFile)')"
+		DependsOnTargets="_PrepareUnpackLibraryResources"
+		>
+
+		<!-- If any assemblies is newer than the stamp file, we delete the stamp file and items so that _UnpackLibraryResources runs again -->
+		<Delete
+			Condition="'$(IsMacEnabled)' == 'true' Or '$(IsHotRestartBuild)' == 'true'"
+			SessionId="$(BuildSessionId)"
+			Files="%(_UnpackLibraryResourceItems.StampFile);%(_UnpackLibraryResourceItems.ItemsFile)"
+			/>
+	</Target>
+
+	<Target Name="_ReadUnpackedLibraryResources"
+		DependsOnTargets="_BeforeUnpackLibraryResources">
+
+		<!-- If _BeforeUnpackLibraryResources did not delete the generated items lists from the stamp file, then we read them
+		     since that target won't run and we need to the output items that are cached in those files which includes full metadata -->
+		<!-- This task is always executed on Windows (when building on Windows), because we copy the stamp file to Windows when we create it (no need to go back to the Mac to read it)-->
+		<ReadItemsFromFile
+			File="@(_UnpackLibraryResourceItems -> '%(ItemsFile)')"
+			Condition="Exists('%(ItemsFile)')"
+			>
+			<Output TaskParameter="Items" ItemName="_PreviouslyUnpackedBundleResourceWithLogicalName" />
+		</ReadItemsFromFile>
+
+		<ItemGroup>
+			<FileWrites Include="@(_PreviouslyUnpackedBundleResourceWithLogicalName)" />
+			<FileWrites Include="@(_PreviouslyUnpackedBundleResourceWithLogicalName -> '%(ItemsFile)')" />
+
+			<_BundleResourceWithLogicalName Include="@(_PreviouslyUnpackedBundleResourceWithLogicalName)" />
+		</ItemGroup>
+	</Target>
+
 	<Target Name="_UnpackLibraryResources" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="$(_UnpackLibraryResourcesDependsOn)"
 		Inputs="@(_UnpackLibraryResourceItems)"
-		Outputs="@(_UnpackLibraryResourceItems->'$(_StampDirectory)%(StampFile)')">
-		<MakeDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true' Or '$(IsHotRestartBuild)' == 'true'" Directories="$(_StampDirectory)" />
+		Outputs="@(_UnpackLibraryResourceItems->'%(StampFile)')">
+
+		<MakeDir Directories="$(_StampDirectory)" />
+
 		<!-- This task may be executed locally on Windows (for Hot Restart) -->
+		<!-- Note that ReferenceAssemblies must always be passed all referenced assemblies, even for incremental builds when we're not necessarily unpacking from all assemblies -->
 		<UnpackLibraryResources
 			Condition="'$(IsMacEnabled)' == 'true' Or '$(IsHotRestartBuild)' == 'true'"
 			SessionId="$(BuildSessionId)"
 			Prefix="$(_EmbeddedResourcePrefix)"
-			NoOverwrite="@(_BundleResourceWithLogicalName)"
 			IntermediateOutputPath="$(DeviceSpecificIntermediateOutputPath)"
 			TargetFrameworkDirectory="$(TargetFrameworkDirectory)"
 			ReferenceAssemblies="@(ReferencePath);@(ReferenceDependencyPaths)"
-			ReferencedLibraries="@(_UnpackLibraryResourceItems)">
+			ReferencedLibraries="@(_UnpackLibraryResourceItems)"
+			>
 			<Output TaskParameter="BundleResourcesWithLogicalNames" ItemName="_BundleResourceWithLogicalName" />
+
+			<!-- Local items to be persisted to items files -->
+			<Output TaskParameter="BundleResourcesWithLogicalNames" ItemName="_UnpackedBundleResourceWithLogicalName" />
+
+			<Output TaskParameter="ItemsFiles" ItemName="FileWrites" />
 		</UnpackLibraryResources>
+
 		<Touch
-			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true' Or '$(IsHotRestartBuild)' == 'true'"
-			Files="@(_UnpackLibraryResourceItems->'$(_StampDirectory)%(StampFile)')"
+			Files="@(_UnpackLibraryResourceItems->'%(StampFile)')"
 			AlwaysCreate="True"
 		>
 			<Output TaskParameter="TouchedFiles" ItemName="FileWrites" />
 		</Touch>
+
+		<ItemGroup>
+			<FileWrites Include="@(_UnpackedBundleResourceWithLogicalName)" />
+		</ItemGroup>
 	</Target>
 
 	<Target Name="_ParseBundlerArguments">

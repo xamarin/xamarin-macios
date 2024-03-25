@@ -34,37 +34,41 @@ namespace Xamarin.MacDev.Tasks {
 
 		public override bool Execute ()
 		{
-			var items = this.Items;
-			if (items is null)
-				items = new ITaskItem [0];
+			Write (this, File?.ItemSpec, Items, ItemName, Overwrite, IncludeMetadata);
+			return true;
+		}
+
+		public static void Write (Task task, string? file, IEnumerable<ITaskItem> items, string itemName, bool overwrite, bool includeMetadata)
+		{
+			if (file is null) {
+				task.Log.LogWarning ($"No output file to write to for item {itemName}");
+				return;
+			}
 
 			var document = new XDocument (
 				new XElement (ProjectElementName,
 					new XElement (ItemGroupElementName,
-						items.Select (item => this.CreateElementFromItem (item)))));
+						items.Select (item => CreateElementFromItem (item, itemName, includeMetadata)))));
 
-			var file = this.File?.ItemSpec;
-			if (this.Overwrite && System.IO.File.Exists (file))
+			if (overwrite && System.IO.File.Exists (file))
 				System.IO.File.Delete (file);
 
 			if (!Directory.Exists (Path.GetDirectoryName (file)))
 				Directory.CreateDirectory (Path.GetDirectoryName (file));
 
 			document.Save (file);
-
-			return true;
 		}
 
-		private XElement CreateElementFromItem (ITaskItem item)
+		static XElement CreateElementFromItem (ITaskItem item, string itemName, bool includeMetadata)
 		{
-			return new XElement (XmlNs + ItemName,
+			return new XElement (XmlNs + itemName,
 				new XAttribute (IncludeAttributeName, item.ItemSpec),
-					this.CreateMetadataFromItem (item));
+					CreateMetadataFromItem (item, includeMetadata));
 		}
 
-		private IEnumerable<XElement> CreateMetadataFromItem (ITaskItem item)
+		static IEnumerable<XElement> CreateMetadataFromItem (ITaskItem item, bool includeMetadata)
 		{
-			if (this.IncludeMetadata) {
+			if (includeMetadata) {
 				var metadata = item.CloneCustomMetadata ();
 
 				return metadata.Keys
