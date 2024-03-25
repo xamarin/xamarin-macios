@@ -45,6 +45,7 @@
       <Link>NullableAttributes.cs</Link>
     </Compile>
     <Compile Include="AttributeFactoryTests.cs" />
+    <Compile Include="CodeBlockTests.cs" />
     <Compile Include="CollectionsExtensionsTests.cs" />
     <Compile Include="ConstructorArgumentsTests.cs" />
     <Compile Include="ErrorTests.cs" />

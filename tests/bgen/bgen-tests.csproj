@@ -30,6 +30,9 @@
     <Compile Include="..\generator\BGenTool.cs">
       <Link>BGenTool.cs</Link>
     </Compile>
+      <Compile Include="..\generator\CodeBlockTests.cs">
+          <Link>CodeBlockTests.cs</Link>
+      </Compile>
     <Compile Include="..\generator\AttributeFactoryTests.cs">
       <Link>AttributeFactoryTests.cs</Link>
     </Compile>
