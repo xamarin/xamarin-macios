@@ -68,6 +68,6 @@ namespace MonoTouchFixtures.CoreGraphics {
 
 		[DllImport ("/System/Library/Frameworks/ApplicationServices.framework/Versions/A/ApplicationServices")]
 		static extern int GetProcessForPID (int pid, out IntPtr psn);
-	}
 #endif // __MACOS__ || __MACCATALYST__
 	}
+}
