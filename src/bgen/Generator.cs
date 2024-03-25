@@ -4538,6 +4538,8 @@ public partial class Generator : IMemberGatherer {
 				if (shortName.StartsWith ("Func<", StringComparison.Ordinal))
 					continue;
 
+				WriteDocumentation (mi.DeclaringType);
+
 				var del = mi.DeclaringType;
 
 				if (AttributeManager.HasAttribute (mi.DeclaringType, "MonoNativeFunctionWrapper"))

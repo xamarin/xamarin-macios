@@ -16,8 +16,6 @@ using NativeHandle = System.IntPtr;
 #nullable enable
 
 namespace AVFoundation {
-	public delegate int AVAudioSourceNodeRenderHandler (bool isSilence, AudioToolbox.AudioTimeStamp timestamp, uint frameCount, ref AudioToolbox.AudioBuffers outputData);
-
 	partial class AVAudioNode {
 		internal AVAudioNode () { }
 	}
