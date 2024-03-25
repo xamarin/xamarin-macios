@@ -284,6 +284,8 @@ MonoClass *		xamarin_get_runtime_class ();
 
 bool			xamarin_is_managed_exception_marshaling_disabled ();
 
+bool			xamarin_is_object_valid (id ptr, char** error_message);
+
 const char *	xamarin_find_assembly_directory (const char *assembly_name);
 void			xamarin_set_assembly_directories (struct AssemblyLocations *directories);
 void			xamarin_get_assembly_name_without_extension (const char *aname, char *name, size_t namelen);
