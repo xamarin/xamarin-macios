@@ -50,6 +50,12 @@ namespace Xamarin.Tests {
 			CheckAppBundleContents (platform, allFiles, runtimeIdentifiers, isSigned, isReleaseBuild, appPath);
 		}
 
+		internal static void CheckZippedAppBundleContents (ApplePlatform platform, string zippedApp, string [] runtimeIdentifiers, CodeSignature isSigned, bool isReleaseBuild)
+		{
+			var allFiles = ZipHelpers.List (zippedApp);
+			CheckAppBundleContents (platform, allFiles, runtimeIdentifiers, isSigned, isReleaseBuild, null);
+		}
+
 		internal static void CheckAppBundleContents (ApplePlatform platform, IEnumerable<string> allFiles, string [] runtimeIdentifiers, CodeSignature isSigned, bool isReleaseBuild, string? appPath = null)
 		{
 			var isCoreCLR = platform == ApplePlatform.MacOSX;
@@ -700,7 +706,7 @@ namespace Xamarin.Tests {
 			ExecuteWithMagicWordAndAssert (platform, runtimeIdentifiers, appExecutable);
 		}
 
-		string [] FilterWarnings (IEnumerable<BuildLogEvent> warnings)
+		public static string [] FilterWarnings (IEnumerable<BuildLogEvent> warnings, bool canonicalizePaths = false)
 		{
 			return warnings
 				.Select (v => v?.Message!).Where (v => !string.IsNullOrWhiteSpace (v))
@@ -714,6 +720,8 @@ namespace Xamarin.Tests {
 				.Where (v => !v.Contains (" overrides obsolete member "))
 				// Don't care about this
 				.Where (v => !v.Contains ("Supported iPhone orientations have not been set"))
+				// Canonicalize if so requested
+				.Select (v => canonicalizePaths ? v.Replace (Path.DirectorySeparatorChar, '/') : v)
 				// Sort the messages so that comparison against the expected array is faster
 				.OrderBy (v => v)
 				.ToArray ();

@@ -337,6 +337,11 @@ namespace Xamarin.Tests {
 
 		protected string ExecuteWithMagicWordAndAssert (string executable)
 		{
+			if (Environment.OSVersion.Platform == PlatformID.Win32NT) {
+				Console.WriteLine ($"Not executing '{executable}' because we're on Windows.");
+				return string.Empty;
+			}
+
 			var rv = Execute (executable, out var output, out string magicWord);
 			Assert.That (output.ToString (), Does.Contain (magicWord), "Contains magic word");
 			Assert.AreEqual (0, rv.ExitCode, "ExitCode");
