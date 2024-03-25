@@ -34,6 +34,7 @@ using System;
 using System.IO;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using CoreFoundation;
@@ -987,7 +988,11 @@ namespace AudioToolbox {
 		}
 
 		// Should be private
+#if NET
+		public unsafe T GetProperty<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.NonPublicConstructors)] T> (AudioQueueProperty property) where T : struct
+#else
 		public unsafe T GetProperty<T> (AudioQueueProperty property) where T : struct
+#endif
 		{
 			int size;
 
@@ -1011,7 +1016,11 @@ namespace AudioToolbox {
 			}
 		}
 
+#if NET
+		unsafe T GetProperty<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.NonPublicConstructors)] T> (AudioConverterPropertyID property) where T : struct
+#else
 		unsafe T GetProperty<T> (AudioConverterPropertyID property) where T : struct
+#endif
 		{
 			int size;
 
