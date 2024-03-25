@@ -44,6 +44,7 @@ namespace Xamarin.MacDev.Tasks {
 						Item = item;
 						break;
 					}
+					Log.LogMessage (MessageImportance.Low, MSBStrings.M0149b /* "Discarded '{0}' with logical name '{1}' because the logical name does not match '{2}'" */, item.ItemSpec, logical, LogicalName);
 				}
 			}
 
