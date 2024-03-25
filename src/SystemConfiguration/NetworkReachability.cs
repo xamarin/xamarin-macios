@@ -50,7 +50,10 @@ namespace SystemConfiguration {
 		// netinet/in.h
 		[StructLayout (LayoutKind.Sequential)]
 		struct sockaddr_in {
-			// size = 28, so 7 * 4 bytes = 28.
+			// We're defining fields to make the struct the correct size (expected size = 28, so 7 * 4 bytes = 28),
+			// and then we're defining properties that accesses these fields to get and set field values.
+			// This looks a bit convoluted, but the purpose is to avoid .NET's built-in marshaling support,
+			// so that we're able to trim away the corresponding marshalling code in .NET to minimize app size.
 			uint value1;
 			uint value2;
 			uint value3;
