@@ -13,6 +13,15 @@ namespace AppKit {
 	[DebuggerTypeProxy (typeof (NSEvent.NSEventDebuggerProxy))]
 	public partial class NSEvent {
 
+		/// <summary>Create a new <see cref="AppKit.NSEvent" /> using the specified <see cref="CoreGraphics.CGEvent" />.</summary>
+		/// <param name="event">The <see cref="CoreGraphics.CGEvent" /> that will be wrapped.</param>
+		/// <returns>The newly created <see cref="AppKit.NSEvent" />.</returns>
+		/// <remarks>This method will return null if there's no corresponding Cocoa event.</remarks>
+		public static NSEvent? Create (CGEvent @event)
+		{
+			return EventWithCGEvent (@event.GetNonNullHandle (nameof (@event)));
+		}
+
 		class NSEventDebuggerProxy {
 			NSEvent target;
 

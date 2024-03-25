@@ -1,6 +1,7 @@
 #nullable enable
 
 using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 using Foundation;
@@ -49,8 +50,8 @@ namespace CoreMedia {
 		}
 
 		[DllImport (Constants.CoreMediaLibrary)]
-		extern static /* CFTypeRef */ IntPtr CMGetAttachment (/* CMAttachmentBearerRef */ IntPtr target, /* CFStringRef */ IntPtr key,
-			/* CMAttachmentMode */ out CMAttachmentMode attachmentModeOut);
+		unsafe extern static /* CFTypeRef */ IntPtr CMGetAttachment (/* CMAttachmentBearerRef */ IntPtr target, /* CFStringRef */ IntPtr key,
+			/* CMAttachmentMode */ CMAttachmentMode* attachmentModeOut);
 		public static T? GetAttachment<T> (this ICMAttachmentBearer target, string key, out CMAttachmentMode attachmentModeOut) where T : class, INativeObject
 		{
 			if (target is null)
@@ -58,7 +59,11 @@ namespace CoreMedia {
 			if (key is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (key));
 			var nsKey = CFString.CreateNative (key);
-			var attchm = CMGetAttachment (target.Handle, nsKey, out attachmentModeOut);
+			IntPtr attchm;
+			attachmentModeOut = default;
+			unsafe {
+				attchm = CMGetAttachment (target.Handle, nsKey, (CMAttachmentMode*) Unsafe.AsPointer<CMAttachmentMode> (ref attachmentModeOut));
+			}
 			CFString.ReleaseNative (nsKey);
 			if (attchm != IntPtr.Zero)
 				return Runtime.GetINativeObject<T> (attchm, false);

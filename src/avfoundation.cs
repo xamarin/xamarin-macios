@@ -14516,7 +14516,6 @@ namespace AVFoundation {
 		[Export ("speakUtterance:")]
 		void SpeakUtterance (AVSpeechUtterance utterance);
 
-		[Async]
 		[Watch (6, 0), TV (13, 0), iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("writeUtterance:toBufferCallback:")]

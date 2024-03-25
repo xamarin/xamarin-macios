@@ -135,8 +135,7 @@ namespace SystemConfiguration {
 		[Deprecated (PlatformName.iOS, 9, 0)]
 #endif
 		[DllImport (Constants.SystemConfigurationLibrary)]
-		[return: MarshalAs (UnmanagedType.U1)]
-		extern static bool CNMarkPortalOffline (IntPtr /* CFStringRef __nonnull */ interfaceName);
+		extern static byte CNMarkPortalOffline (IntPtr /* CFStringRef __nonnull */ interfaceName);
 
 #if NET
 		[SupportedOSPlatform ("ios")]
@@ -148,8 +147,7 @@ namespace SystemConfiguration {
 		[Deprecated (PlatformName.iOS, 9, 0)]
 #endif
 		[DllImport (Constants.SystemConfigurationLibrary)]
-		[return: MarshalAs (UnmanagedType.U1)]
-		extern static bool CNMarkPortalOnline (IntPtr /* CFStringRef __nonnull */ interfaceName);
+		extern static byte CNMarkPortalOnline (IntPtr /* CFStringRef __nonnull */ interfaceName);
 
 #if NET
 		[SupportedOSPlatform ("ios")]
@@ -163,7 +161,7 @@ namespace SystemConfiguration {
 		static public bool MarkPortalOnline (string iface)
 		{
 			using (var nss = new NSString (iface)) {
-				return CNMarkPortalOnline (nss.Handle);
+				return CNMarkPortalOnline (nss.Handle) != 0;
 			}
 		}
 
@@ -179,7 +177,7 @@ namespace SystemConfiguration {
 		static public bool MarkPortalOffline (string iface)
 		{
 			using (var nss = new NSString (iface)) {
-				return CNMarkPortalOffline (nss.Handle);
+				return CNMarkPortalOffline (nss.Handle) != 0;
 			}
 		}
 
@@ -193,8 +191,7 @@ namespace SystemConfiguration {
 		[Deprecated (PlatformName.iOS, 9, 0)]
 #endif
 		[DllImport (Constants.SystemConfigurationLibrary)]
-		[return: MarshalAs (UnmanagedType.U1)]
-		extern static bool CNSetSupportedSSIDs (IntPtr /* CFArrayRef __nonnull */ ssidArray);
+		extern static byte CNSetSupportedSSIDs (IntPtr /* CFArrayRef __nonnull */ ssidArray);
 
 #if NET
 		[SupportedOSPlatform ("ios")]
@@ -208,7 +205,7 @@ namespace SystemConfiguration {
 		static public bool SetSupportedSSIDs (string [] ssids)
 		{
 			using (var arr = NSArray.FromStrings (ssids)) {
-				return CNSetSupportedSSIDs (arr.Handle);
+				return CNSetSupportedSSIDs (arr.Handle) != 0;
 			}
 		}
 #endif // __TVOS__

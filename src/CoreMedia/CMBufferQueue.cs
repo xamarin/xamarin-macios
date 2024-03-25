@@ -68,17 +68,17 @@ namespace CoreMedia {
 			internal unsafe delegate* unmanaged<IntPtr, IntPtr, byte> XisDataReady;
 			internal unsafe delegate* unmanaged<IntPtr, IntPtr, IntPtr, int> Xcompare;
 #else
-			internal BufferGetTimeCallback? XgetDecodeTimeStamp;
-			internal BufferGetTimeCallback? XgetPresentationTimeStamp;
-			internal BufferGetTimeCallback? XgetDuration;
-			internal BufferGetBooleanCallback? XisDataReady;
-			internal BufferCompareCallback? Xcompare;
+			internal IntPtr XgetDecodeTimeStamp;
+			internal IntPtr XgetPresentationTimeStamp;
+			internal IntPtr XgetDuration;
+			internal IntPtr XisDataReady;
+			internal IntPtr Xcompare;
 #endif
 			internal IntPtr cfStringPtr_dataBecameReadyNotification;
 #if NET
 			internal unsafe delegate* unmanaged<IntPtr, IntPtr, nint> XgetSize;
 #else
-			internal BufferGetSizeCallback? XgetSize;
+			internal IntPtr XgetSize;
 #endif
 		}
 
@@ -107,10 +107,7 @@ namespace CoreMedia {
 		// CMItemCount -> CMBase.h (looks weird but it's 4 bytes in 32bits and 8 bytes in 64bits, x86_64 and ARM64)
 
 		[DllImport (Constants.CoreMediaLibrary)]
-		extern static OSStatus CMBufferQueueCreate (/* CFAllocatorRef */ IntPtr allocator, /* CMItemCount */ nint capacity, CMBufferCallbacks cbacks, /* CMBufferQueueRef* */ out IntPtr result);
-
-		[DllImport (Constants.CoreMediaLibrary)]
-		extern static OSStatus CMBufferQueueCreate (/* CFAllocatorRef */ IntPtr allocator, /* CMItemCount */ nint capacity, /* CMBufferCallbacks */ IntPtr cbacks, /* CMBufferQueueRef* */ out IntPtr result);
+		unsafe extern static OSStatus CMBufferQueueCreate (/* CFAllocatorRef */ IntPtr allocator, /* CMItemCount */ nint capacity, CMBufferCallbacks* cbacks, /* CMBufferQueueRef* */ IntPtr* result);
 
 		CMBufferQueue (IntPtr handle, bool owns, int count)
 			: base (handle, owns)
@@ -155,13 +152,13 @@ namespace CoreMedia {
 			var cbacks = new CMBufferCallbacks () {
 				version = (uint) (getTotalSize is null ? 0 : 1),
 				refcon = GCHandle.ToIntPtr (bq.gch),
-				XgetDecodeTimeStamp = getDecodeTimeStamp is not null ? GetDecodeTimeStamp : null,
-				XgetPresentationTimeStamp = getPresentationTimeStamp is not null ? GetPresentationTimeStamp : null,
-				XgetDuration = getDuration is not null ? GetDuration : null,
-				XisDataReady = isDataReady is not null ? GetDataReady : null,
-				Xcompare = compare is not null ? Compare : null,
+				XgetDecodeTimeStamp = getDecodeTimeStamp is not null ? Marshal.GetFunctionPointerForDelegate (GetDecodeTimeStampCallback) : IntPtr.Zero,
+				XgetPresentationTimeStamp = getPresentationTimeStamp is not null ? Marshal.GetFunctionPointerForDelegate (GetPresentationTimeStampCallback) : IntPtr.Zero,
+				XgetDuration = getDuration is not null ? Marshal.GetFunctionPointerForDelegate (GetDurationCallback) : IntPtr.Zero,
+				XisDataReady = isDataReady is not null ? Marshal.GetFunctionPointerForDelegate (GetDataReadyCallback) : IntPtr.Zero,
+				Xcompare = compare is not null ? Marshal.GetFunctionPointerForDelegate (CompareCallback) : IntPtr.Zero,
 				cfStringPtr_dataBecameReadyNotification = dataBecameReadyNotification is null ? IntPtr.Zero : dataBecameReadyNotification.Handle,
-				XgetSize = getTotalSize is not null ? GetTotalSize : null
+				XgetSize = getTotalSize is not null ? Marshal.GetFunctionPointerForDelegate (GetTotalSizeCallback) : IntPtr.Zero
 			};
 #endif
 
@@ -172,7 +169,12 @@ namespace CoreMedia {
 			bq.compare = compare;
 			bq.getTotalSize = getTotalSize;
 
-			if (CMBufferQueueCreate (IntPtr.Zero, count, cbacks, out var handle) == 0) {
+			OSStatus rv;
+			IntPtr handle;
+			unsafe {
+				rv = CMBufferQueueCreate (IntPtr.Zero, count, &cbacks, &handle);
+			}
+			if (rv == 0) {
 				bq.InitializeHandle (handle);
 				return bq;
 			}
@@ -182,7 +184,7 @@ namespace CoreMedia {
 		}
 
 		[DllImport (Constants.CoreMediaLibrary)]
-		unsafe extern static /* CMBufferCallbacks */ IntPtr CMBufferQueueGetCallbacksForUnsortedSampleBuffers ();
+		unsafe extern static /* CMBufferCallbacks */ CMBufferCallbacks* CMBufferQueueGetCallbacksForUnsortedSampleBuffers ();
 
 		public static CMBufferQueue? CreateUnsorted (int count)
 		{
@@ -191,10 +193,13 @@ namespace CoreMedia {
 			// and can cause a crash, e.g. bug #17330
 			// since we don't need the managed bcallbacks (it's the native callback that will be used for this queue)
 			// then we can simply use an IntPtr to represent them (no GCHandle)
-			var callbacks = CMBufferQueueGetCallbacksForUnsortedSampleBuffers ();
 
-			if (CMBufferQueueCreate (IntPtr.Zero, count, callbacks, out var handle) == 0)
-				return new CMBufferQueue (handle, true, count);
+			IntPtr handle;
+			unsafe {
+				var callbacks = CMBufferQueueGetCallbacksForUnsortedSampleBuffers ();
+				if (CMBufferQueueCreate (IntPtr.Zero, count, callbacks, &handle) == 0)
+					return new CMBufferQueue (handle, true, count);
+			}
 
 			return null;
 		}
@@ -348,6 +353,7 @@ namespace CoreMedia {
 #if NET
 		[UnmanagedCallersOnly]
 #else
+		static BufferGetTimeCallback GetDecodeTimeStampCallback = GetDecodeTimeStamp;
 #if !MONOMAC
 		[MonoPInvokeCallback (typeof (BufferGetTimeCallback))]
 #endif
@@ -363,6 +369,7 @@ namespace CoreMedia {
 #if NET
 		[UnmanagedCallersOnly]
 #else
+		static BufferGetTimeCallback GetPresentationTimeStampCallback = GetPresentationTimeStamp;
 #if !MONOMAC
 		[MonoPInvokeCallback (typeof (BufferGetTimeCallback))]
 #endif
@@ -378,6 +385,7 @@ namespace CoreMedia {
 #if NET
 		[UnmanagedCallersOnly]
 #else
+		static BufferGetTimeCallback GetDurationCallback = GetDuration;
 #if !MONOMAC
 		[MonoPInvokeCallback (typeof (BufferGetTimeCallback))]
 #endif
@@ -394,6 +402,7 @@ namespace CoreMedia {
 		[UnmanagedCallersOnly]
 		static byte GetDataReady (IntPtr buffer, IntPtr refcon)
 #else
+		static BufferGetBooleanCallback GetDataReadyCallback = GetDataReady;
 #if !MONOMAC
 		[MonoPInvokeCallback (typeof (BufferGetBooleanCallback))]
 #endif
@@ -414,6 +423,7 @@ namespace CoreMedia {
 #if NET
 		[UnmanagedCallersOnly]
 #else
+		static BufferCompareCallback CompareCallback = Compare;
 #if !MONOMAC
 		[MonoPInvokeCallback (typeof (BufferCompareCallback))]
 #endif
@@ -429,6 +439,7 @@ namespace CoreMedia {
 #if NET
 		[UnmanagedCallersOnly]
 #else
+		static BufferGetSizeCallback GetTotalSizeCallback = GetTotalSize;
 #if !MONOMAC
 		[MonoPInvokeCallback (typeof (BufferGetSizeCallback))]
 #endif

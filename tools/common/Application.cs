@@ -481,7 +481,7 @@ namespace Xamarin.Bundler {
 		public Version GetMacCatalystmacOSVersion (Version iOSVersion)
 		{
 			if (!MacCatalystSupport.TryGetMacOSVersion (Driver.GetFrameworkDirectory (this), iOSVersion, out var value, out var knowniOSVersions))
-				throw ErrorHelper.CreateError (183, Errors.MX0183 /* Could not map the Mac Catalyst version {0} to a corresponding macOS version. Valid Mac Catalyst versions are: {1} */, iOSVersion.ToString (), string.Join (", ", knowniOSVersions));
+				throw ErrorHelper.CreateError (183, Errors.MX0183 /* Could not map the Mac Catalyst version {0} to a corresponding macOS version. Valid Mac Catalyst versions are: {1} */, iOSVersion.ToString (), string.Join (", ", knowniOSVersions.OrderBy (v => v)));
 
 			return value;
 		}
@@ -489,7 +489,7 @@ namespace Xamarin.Bundler {
 		public Version GetMacCatalystiOSVersion (Version macOSVersion)
 		{
 			if (!MacCatalystSupport.TryGetiOSVersion (Driver.GetFrameworkDirectory (this), macOSVersion, out var value, out var knownMacOSVersions))
-				throw ErrorHelper.CreateError (184, Errors.MX0184 /* Could not map the macOS version {0} to a corresponding Mac Catalyst version. Valid macOS versions are: {1} */, macOSVersion.ToString (), string.Join (", ", knownMacOSVersions));
+				throw ErrorHelper.CreateError (184, Errors.MX0184 /* Could not map the macOS version {0} to a corresponding Mac Catalyst version. Valid macOS versions are: {1} */, macOSVersion.ToString (), string.Join (", ", knownMacOSVersions.OrderBy (v => v)));
 
 			return value;
 		}
