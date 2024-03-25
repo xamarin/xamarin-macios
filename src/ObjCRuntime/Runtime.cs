@@ -2445,7 +2445,7 @@ namespace ObjCRuntime {
 					byte b = c [i];
 					if (b > 0x7F) {
 						// This string is a multibyte UTF8 string, so go the slow route and convert it to a managed string before comparison
-						return string.Equals (Marshal.PtrToStringUTF8 (utf8), str);
+						return string.Equals (Marshal.PtrToStringUTF8 (utf8), str, StringComparison.Ordinal);
 					}
 					if (b != (short) str [i])
 						return false;
