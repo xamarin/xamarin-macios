@@ -786,6 +786,9 @@ namespace GeneratorTests {
 		public void GHIssue5692 () => BuildFile (Profile.iOS, "ghissue5692.cs");
 
 		[Test]
+		public void GHIssue6994 () => BuildFile (Profile.iOS, "ghissue6994.cs");
+
+		[Test]
 		public void GHIssue7304 () => BuildFile (Profile.macOSMobile, "ghissue7304.cs");
 
 		[Test]
