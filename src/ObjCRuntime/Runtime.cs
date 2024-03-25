@@ -428,6 +428,9 @@ namespace ObjCRuntime {
 #endif // !NET
 #endif
 
+		// This is used to control whether non-UI or [ThreadSafe] objects are disposed on the UI thread.
+		internal static bool DisposeThreadSafeObjectsOnFinalizerThread { get; set; }
+
 #if MONOMAC
 		public static event AssemblyRegistrationHandler? AssemblyRegistration;
 
