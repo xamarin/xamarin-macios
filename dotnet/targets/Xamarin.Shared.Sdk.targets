@@ -513,12 +513,20 @@
 			<!-- Set NativeAOT value -->
 			<_IsNativeAOTFeature Condition="'$(_XamarinRuntime)' == 'NativeAOT'">true</_IsNativeAOTFeature>
 			<_IsNativeAOTFeature Condition="'$(_XamarinRuntime)' != 'NativeAOT'">false</_IsNativeAOTFeature>
+
+			<!-- Computing the values for UseCFNetworkHandler and UseNSUrlSessionHandler -->
+			<_IsCFNetworkHandlerFeature Condition="'$(UseNativeHttpHandler)' == 'true' And '$(MtouchHttpClientHandler)' == 'CFNetworkHandler'">true</_IsCFNetworkHandlerFeature>
+			<_IsCFNetworkHandlerFeature Condition="'$(_IsCFNetworkHandlerFeature)' == ''">false</_IsCFNetworkHandlerFeature>
+			<_IsNSUrlSessionHandlerFeature Condition="'$(UseNativeHttpHandler)' == 'true' And '$(MtouchHttpClientHandler)' == 'NSUrlSessionHandler'">true</_IsNSUrlSessionHandlerFeature>
+			<_IsNSUrlSessionHandlerFeature Condition="'$(_IsNSUrlSessionHandlerFeature)' == ''">false</_IsNSUrlSessionHandlerFeature>
 		</PropertyGroup>
 
 		<ItemGroup>
 			<RuntimeHostConfigurationOption Include="ObjCRuntime.Runtime.Arch.IsSimulator" Value="$(_IsSimulatorFeature)" Trim="true" />
 			<RuntimeHostConfigurationOption Include="ObjCRuntime.Runtime.IsManagedStaticRegistrar" Value="$(_IsManagedStaticRegistrarFeature)" Trim="true" />
 			<RuntimeHostConfigurationOption Include="ObjCRuntime.Runtime.IsNativeAOT" Value="$(_IsNativeAOTFeature)" Trim="true" />
+			<RuntimeHostConfigurationOption Include="ObjCRuntime.Runtime.UseCFNetworkHandler" Value="$(_IsCFNetworkHandlerFeature)" Trim="true" />
+			<RuntimeHostConfigurationOption Include="ObjCRuntime.Runtime.UseNSUrlSessionHandler" Value="$(_IsNSUrlSessionHandlerFeature)" Trim="true" />
 		</ItemGroup>
 	</Target>
 

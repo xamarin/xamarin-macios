@@ -156,6 +156,15 @@ namespace ObjCRuntime {
 
 		internal static RuntimeOptions? Read ()
 		{
+#if NET
+			var options = new RuntimeOptions ();
+			if (Runtime.UseCFNetworkHandler)
+				options.http_message_handler = CFNetworkHandlerValue;
+			else if (Runtime.UseNSUrlSessionHandler)
+				options.http_message_handler = NSUrlSessionHandlerValue;
+
+			return options;
+#else
 			// for iOS NSBundle.ResourcePath returns the path to the root of the app bundle
 			// for macOS apps NSBundle.ResourcePath returns foo.app/Contents/Resources
 			// for macOS frameworks NSBundle.ResourcePath returns foo.app/Versions/Current/Resources
@@ -171,6 +180,7 @@ namespace ObjCRuntime {
 				options.http_message_handler = (NSString) plist ["HttpMessageHandler"];
 				return options;
 			}
+#endif
 		}
 
 		// This is invoked by
