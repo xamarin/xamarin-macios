@@ -262,6 +262,14 @@ namespace Introspection {
 					return true;
 				}
 				break;
+			case "input":
+				switch (type.Name) {
+				case "GCControllerElement":
+				case "GCControllerLiveInput":
+					// will fail if there is no input device on the machine/bot
+					return true;
+				}
+				break;
 			}
 
 			switch (type.Namespace) {

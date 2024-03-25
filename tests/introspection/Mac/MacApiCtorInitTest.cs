@@ -181,6 +181,9 @@ namespace Introspection {
 				if (Mac.CheckSystemVersion (10, 15))
 					return true;
 				break;
+			case "GameController.GCPhysicalInputSource":
+				// needs an input in the machine/bot
+				return true;
 			}
 
 			switch (type.Namespace) {
