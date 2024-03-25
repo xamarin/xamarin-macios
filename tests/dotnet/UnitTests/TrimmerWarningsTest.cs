@@ -28,32 +28,7 @@ namespace Xamarin.Tests {
 		[TestCase (ApplePlatform.TVOS, "tvos-arm64")]
 		public void TrimmerWarningsDynamicRegistrar (ApplePlatform platform, string runtimeIdentifiers)
 		{
-			ExpectedBuildMessage [] expectedWarnings;
-			switch (platform) {
-			case ApplePlatform.iOS:
-			case ApplePlatform.TVOS:
-				expectedWarnings = new ExpectedBuildMessage [] {
-					new ExpectedBuildMessage ("src/ObjCRuntime/Blocks.cs" /* line 313 */, "ObjCRuntime.BlockLiteral.SetupBlock(Delegate, Delegate): 'this' argument does not satisfy 'DynamicallyAccessedMemberTypes.PublicMethods' in call to 'System.Type.GetMethod(String)'. The return value of method 'ObjCRuntime.MonoPInvokeCallbackAttribute.DelegateType.get' does not have matching annotations. The source value must declare at least the same requirements as those declared on the target location it is assigned to."),
-					new ExpectedBuildMessage ("src/ObjCRuntime/DynamicRegistrar.cs" /* line 542 */, "Registrar.DynamicRegistrar.HasThisAttributeImpl(MethodBase): Attribute 'System.Runtime.CompilerServices.ExtensionAttribute' is being referenced in code but the trimmer was instructed to remove all instances of this attribute. If the attribute instances are necessary make sure to either remove the trimmer attribute XML portion which removes the attribute instances, or override the removal by using the trimmer XML descriptor to keep the attribute type (which in turn keeps all of its instances)."),
-				};
-				break;
-			case ApplePlatform.MacOSX:
-				expectedWarnings = new ExpectedBuildMessage [] {
-					new ExpectedBuildMessage ("src/ObjCRuntime/DynamicRegistrar.cs" /* line 542 */, "Registrar.DynamicRegistrar.HasThisAttributeImpl(MethodBase): Attribute 'System.Runtime.CompilerServices.ExtensionAttribute' is being referenced in code but the trimmer was instructed to remove all instances of this attribute. If the attribute instances are necessary make sure to either remove the trimmer attribute XML portion which removes the attribute instances, or override the removal by using the trimmer XML descriptor to keep the attribute type (which in turn keeps all of its instances)."),
-					new ExpectedBuildMessage ("src/ObjCRuntime/Runtime.CoreCLR.cs" /* line 177 */, "ObjCRuntime.Runtime.ResolvingEventHandler(AssemblyLoadContext, AssemblyName): Using member 'System.Runtime.Loader.AssemblyLoadContext.LoadFromAssemblyPath(String)' which has 'RequiresUnreferencedCodeAttribute' can break functionality when trimming application code. Types and members the loaded assembly depends on might be removed."),
-				};
-				break;
-			case ApplePlatform.MacCatalyst:
-				expectedWarnings = new ExpectedBuildMessage [] {
-					new ExpectedBuildMessage ("src/ObjCRuntime/DynamicRegistrar.cs" /* line 542 */, "Registrar.DynamicRegistrar.HasThisAttributeImpl(MethodBase): Attribute 'System.Runtime.CompilerServices.ExtensionAttribute' is being referenced in code but the trimmer was instructed to remove all instances of this attribute. If the attribute instances are necessary make sure to either remove the trimmer attribute XML portion which removes the attribute instances, or override the removal by using the trimmer XML descriptor to keep the attribute type (which in turn keeps all of its instances)."),
-				};
-				break;
-			default:
-				Assert.Fail ($"Unknown platform: {platform}");
-				return;
-			}
-
-			TrimmerWarnings (platform, runtimeIdentifiers, "dynamic", expectedWarnings);
+			TrimmerWarnings (platform, runtimeIdentifiers, "dynamic", Array.Empty<ExpectedBuildMessage> ());
 		}
 
 		void TrimmerWarnings (ApplePlatform platform, string runtimeIdentifiers, string registrar, params ExpectedBuildMessage [] expectedWarnings)

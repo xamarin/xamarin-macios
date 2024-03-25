@@ -1,4 +1,6 @@
 using System;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Text;
 
 using Foundation;
@@ -96,6 +98,30 @@ namespace MonoTouchFixtures.CoreGraphics {
 			var ex = Assert.Throws<ArgumentException> (() => new CGEvent (null, CGScrollEventUnit.Pixel, 0, 3, 9, 42), "ArgumentException");
 			Assert.AreEqual ("Only one to three wheels are supported on this constructor", ex.Message, "Message");
 		}
+
+		public void PostToPid ()
+		{
+			var pid = Process.GetCurrentProcess ().Id;
+			using var evt = new CGEvent (null, (ushort) 1, true);
+			evt.PostToPid (pid);
+			CGEvent.PostToPid (evt, pid);
+		}
+
+		[Test]
+		public void PostToPSN ()
+		{
+			var pid = Process.GetCurrentProcess ().Id;
+			Assert.AreEqual (0, GetProcessForPID (pid, out var psn), "GetProcessForPID");
+			using var evt = new CGEvent (null, (ushort) 1, true);
+			unsafe {
+				IntPtr* psnPtr = &psn;
+				evt.PostToPSN ((IntPtr) psnPtr);
+				CGEvent.PostToPSN (evt, (IntPtr) psnPtr);
+			}
+		}
+
+		[DllImport ("/System/Library/Frameworks/ApplicationServices.framework/Versions/A/ApplicationServices")]
+		static extern int GetProcessForPID (int pid, out IntPtr psn);
 #endif // __MACOS__ || __MACCATALYST__
 	}
 }

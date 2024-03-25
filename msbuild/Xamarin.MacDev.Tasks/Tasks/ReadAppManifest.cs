@@ -74,7 +74,7 @@ namespace Xamarin.MacDev.Tasks {
 				// The minimum version in the Info.plist is the macOS version. However, the rest of our tooling
 				// expects the iOS version, so expose that.
 				if (!MacCatalystSupport.TryGetiOSVersion (Sdks.GetAppleSdk (Platform).GetSdkPath (), MinimumOSVersion!, out var convertedVersion, out var knownMacOSVersions))
-					Log.LogError (MSBStrings.E0187, MinimumOSVersion, string.Join (", ", knownMacOSVersions));
+					Log.LogError (MSBStrings.E0187, MinimumOSVersion, string.Join (", ", knownMacOSVersions.OrderBy (v => v)));
 				MinimumOSVersion = convertedVersion;
 			}
 
