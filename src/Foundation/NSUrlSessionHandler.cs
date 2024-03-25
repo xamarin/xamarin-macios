@@ -221,7 +221,6 @@ namespace Foundation {
 				if (inflightRequests.TryGetValue (task, out var data)) {
 					if (cancel)
 						data.CancellationTokenSource.Cancel ();
-					data.Dispose ();
 					inflightRequests.Remove (task);
 				}
 #if !MONOMAC && !__WATCHOS__ && !NET8_0
@@ -247,7 +246,6 @@ namespace Foundation {
 				foreach (var pair in inflightRequests) {
 					pair.Key?.Cancel ();
 					pair.Key?.Dispose ();
-					pair.Value?.Dispose ();
 				}
 
 				inflightRequests.Clear ();
@@ -853,10 +851,22 @@ namespace Foundation {
 			[Preserve (Conditional = true)]
 			public override void DidReceiveResponse (NSUrlSession session, NSUrlSessionDataTask dataTask, NSUrlResponse response, Action<NSUrlSessionResponseDisposition> completionHandler)
 			{
+				try {
+					DidReceiveResponseImpl (session, dataTask, response, completionHandler);
+				} catch {
+					completionHandler (NSUrlSessionResponseDisposition.Cancel);
+					throw;
+				}
+			}
+
+			void DidReceiveResponseImpl (NSUrlSession session, NSUrlSessionDataTask dataTask, NSUrlResponse response, Action<NSUrlSessionResponseDisposition> completionHandler)
+			{
 				var inflight = GetInflightData (dataTask);
 
-				if (inflight is null)
+				if (inflight is null) {
+					completionHandler (NSUrlSessionResponseDisposition.Cancel);
 					return;
+				}
 
 				try {
 					var urlResponse = (NSHttpUrlResponse) response;
@@ -977,18 +987,30 @@ namespace Foundation {
 
 					inflight.ResponseSent = true;
 
-					// EVIL HACK: having TrySetResult inline was blocking the request from completing
-					Task.Run (() => inflight.CompletionSource.TrySetResult (httpResponse!));
+					inflight.CompletionSource.TrySetResult (httpResponse!);
 				}
 			}
 
 			[Preserve (Conditional = true)]
 			public override void WillCacheResponse (NSUrlSession session, NSUrlSessionDataTask dataTask, NSCachedUrlResponse proposedResponse, Action<NSCachedUrlResponse> completionHandler)
 			{
+				try {
+					WillCacheResponseImpl (session, dataTask, proposedResponse, completionHandler);
+				} catch {
+					completionHandler (null!);
+					throw;
+				}
+			}
+
+			void WillCacheResponseImpl (NSUrlSession session, NSUrlSessionDataTask dataTask, NSCachedUrlResponse proposedResponse, Action<NSCachedUrlResponse> completionHandler)
+			{
 				var inflight = GetInflightData (dataTask);
 
-				if (inflight is null)
+				if (inflight is null) {
+					completionHandler (null!);
 					return;
+				}
+
 				// apple caches post request with a body, which should not happen. https://github.com/xamarin/maccore/issues/2571 
 				var disableCache = sessionHandler.DisableCaching || (inflight.Request.Method == HttpMethod.Post && inflight.Request.Content is not null);
 				completionHandler (disableCache ? null! : proposedResponse);
@@ -1003,10 +1025,23 @@ namespace Foundation {
 			[Preserve (Conditional = true)]
 			public override void DidReceiveChallenge (NSUrlSession session, NSUrlSessionTask task, NSUrlAuthenticationChallenge challenge, Action<NSUrlSessionAuthChallengeDisposition, NSUrlCredential> completionHandler)
 			{
+				try {
+					DidReceiveChallengeImpl (session, task, challenge, completionHandler);
+				} catch {
+					completionHandler (NSUrlSessionAuthChallengeDisposition.CancelAuthenticationChallenge, null!);
+					throw;
+				}
+			}
+
+			void DidReceiveChallengeImpl (NSUrlSession session, NSUrlSessionTask task, NSUrlAuthenticationChallenge challenge, Action<NSUrlSessionAuthChallengeDisposition, NSUrlCredential> completionHandler)
+			{
 				var inflight = GetInflightData (task);
 
-				if (inflight is null)
+				if (inflight is null) {
+					// Request was probably cancelled
+					completionHandler (NSUrlSessionAuthChallengeDisposition.CancelAuthenticationChallenge, null!);
 					return;
+				}
 
 				// ToCToU for the callback
 				var trustCallbackForUrl = sessionHandler.TrustOverrideForUrl;
@@ -1130,11 +1165,11 @@ namespace Foundation {
 			}
 		}
 
-		class InflightData : IDisposable {
+		class InflightData {
 			public readonly object Lock = new object ();
 			public string RequestUrl { get; set; }
 
-			public TaskCompletionSource<HttpResponseMessage> CompletionSource { get; } = new TaskCompletionSource<HttpResponseMessage> ();
+			public TaskCompletionSource<HttpResponseMessage> CompletionSource { get; } = new TaskCompletionSource<HttpResponseMessage> (TaskCreationOptions.RunContinuationsAsynchronously);
 			public CancellationToken CancellationToken { get; set; }
 			public CancellationTokenSource CancellationTokenSource { get; } = new CancellationTokenSource ();
 			public NSUrlSessionDataTaskStream Stream { get; } = new NSUrlSessionDataTaskStream ();
@@ -1154,21 +1189,6 @@ namespace Foundation {
 				CancellationToken = cancellationToken;
 				Request = request;
 			}
-
-			public void Dispose ()
-			{
-				Dispose (true);
-				GC.SuppressFinalize (this);
-			}
-
-			// The bulk of the clean-up code is implemented in Dispose(bool)
-			protected virtual void Dispose (bool disposing)
-			{
-				if (disposing) {
-					CancellationTokenSource.Dispose ();
-				}
-			}
-
 		}
 
 		class NSUrlSessionDataTaskStreamContent : MonoStreamContent {

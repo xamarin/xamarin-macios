@@ -235,14 +235,7 @@ namespace Xamarin.MacDev.Tasks {
 		{
 			var currentSdk = CurrentSdk;
 			if (!currentSdk.IsInstalled) {
-				string ideSdkPath;
-				if (string.IsNullOrEmpty (SessionId))
-					// SessionId is only and always defined on windows.
-					// We can't check 'Environment.OSVersion.Platform' since the base tasks are always executed on the Mac.
-					ideSdkPath = "(Projects > SDK Locations > Apple > Apple SDK)";
-				else
-					ideSdkPath = "(Tools > Options > Xamarin > iOS Settings > Apple SDK)";
-				Log.LogError (MSBStrings.E0044, AppleSdkSettings.InvalidDeveloperRoot, ideSdkPath);
+				Log.LogError (MSBStrings.E0044v2 /* Could not find a valid Xcode app bundle at '{0}'. Please verify that 'xcode-select -p' points to your Xcode installation. For more information see https://aka.ms/macios-missing-xcode. */, AppleSdkSettings.InvalidDeveloperRoot);
 				return false;
 			}
 			Log.LogMessage (MessageImportance.Low, "DeveloperRoot: {0}", currentSdk.DeveloperRoot);

@@ -41,8 +41,8 @@ namespace CoreMedia {
 				Cblock.Free = &FreeCallback;
 			}
 #else
-			Cblock.Allocate = static_AllocateCallback;
-			Cblock.Free = static_FreeCallback;
+			Cblock.Allocate = Marshal.GetFunctionPointerForDelegate (static_AllocateCallback);
+			Cblock.Free = Marshal.GetFunctionPointerForDelegate (static_FreeCallback);
 #endif
 			Cblock.RefCon = GCHandle.ToIntPtr (gch);
 		}
@@ -55,8 +55,8 @@ namespace CoreMedia {
 			public unsafe delegate* unmanaged<IntPtr, nuint, IntPtr> Allocate;
 			public unsafe delegate* unmanaged<IntPtr, IntPtr, nuint, void> Free;
 #else
-			public CMAllocateCallback Allocate;
-			public CMFreeCallback Free;
+			public IntPtr Allocate;
+			public IntPtr Free;
 #endif
 			public IntPtr RefCon;
 		}

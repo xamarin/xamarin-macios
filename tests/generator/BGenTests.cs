@@ -1437,7 +1437,7 @@ namespace GeneratorTests {
 		[Test]
 		public void XmlDocs ()
 		{
-			var bgen = BuildFile (Profile.iOS, "tests/xmldocs.cs");
+			var bgen = BuildFile (Profile.iOS, false, true, "tests/xmldocs.cs");
 			Assert.That (bgen.XmlDocumentation, Does.Exist);
 			var contents = File.ReadAllText (bgen.XmlDocumentation);
 			var expectedContents =
@@ -1447,6 +1447,16 @@ namespace GeneratorTests {
         <name>api0</name>
     </assembly>
     <members>
+        <member name=""T:XmlDocumentation.E1"">
+            <summary>
+            Summary for E1
+            </summary>
+        </member>
+        <member name=""F:XmlDocumentation.E1.Value1"">
+            <summary>
+            Summary for E1.Value1
+            </summary>
+        </member>
         <member name=""T:XmlDocumentation.IP1"">
             <summary>
             Summary for P1
