@@ -7939,6 +7939,10 @@ namespace AppKit {
 
 		[Static]
 		[Export ("eventWithCGEvent:")]
+		[Obsolete ("Use 'Create (CGEvent)' instead.")]
+#if XAMCORE_5_0
+		[Internal]
+#endif
 		NSEvent EventWithCGEvent (IntPtr cgEventPtr);
 
 		[Export ("magnification")]
