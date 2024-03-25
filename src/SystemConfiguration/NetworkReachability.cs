@@ -65,14 +65,14 @@ namespace SystemConfiguration {
 			unsafe byte sin_len {
 				get {
 					fixed (sockaddr_in* myself = &this) {
-						byte *self = (byte *) myself;
-						return self[0];
+						byte* self = (byte*) myself;
+						return self [0];
 					}
 				}
 				set {
 					fixed (sockaddr_in* myself = &this) {
-						byte *self = (byte *) myself;
-						self[0] = value;
+						byte* self = (byte*) myself;
+						self [0] = value;
 					}
 				}
 			}
@@ -80,14 +80,14 @@ namespace SystemConfiguration {
 			unsafe byte sin_family {
 				get {
 					fixed (sockaddr_in* myself = &this) {
-						byte *self = (byte *) myself;
-						return self[1];
+						byte* self = (byte*) myself;
+						return self [1];
 					}
 				}
 				set {
 					fixed (sockaddr_in* myself = &this) {
-						byte *self = (byte *) myself;
-						self[1] = value;
+						byte* self = (byte*) myself;
+						self [1] = value;
 					}
 				}
 			}
@@ -95,14 +95,14 @@ namespace SystemConfiguration {
 			unsafe short sin_port {
 				get {
 					fixed (sockaddr_in* myself = &this) {
-						short *self = (short *) myself;
-						return self[1];
+						short* self = (short*) myself;
+						return self [1];
 					}
 				}
 				set {
 					fixed (sockaddr_in* myself = &this) {
-						short *self = (short *) myself;
-						self[1] = value;
+						short* self = (short*) myself;
+						self [1] = value;
 					}
 				}
 			}
@@ -110,14 +110,14 @@ namespace SystemConfiguration {
 			unsafe int sin_addr {
 				get {
 					fixed (sockaddr_in* myself = &this) {
-						int *self = (int *) myself;
-						return self[1];
+						int* self = (int*) myself;
+						return self [1];
 					}
 				}
 				set {
 					fixed (sockaddr_in* myself = &this) {
-						int *self = (int *) myself;
-						self[1] = value;
+						int* self = (int*) myself;
+						self [1] = value;
 					}
 				}
 			}
@@ -126,30 +126,30 @@ namespace SystemConfiguration {
 			unsafe uint sin6_flowinfo {
 				get {
 					fixed (sockaddr_in* myself = &this) {
-						uint *self = (uint *) myself;
-						return self[1];
+						uint* self = (uint*) myself;
+						return self [1];
 					}
 				}
 				set {
 					fixed (sockaddr_in* myself = &this) {
-						uint *self = (uint *) myself;
-						self[1] = value;
+						uint* self = (uint*) myself;
+						self [1] = value;
 					}
 				}
 			}
 
-			unsafe byte[] sin6_addr8 {
+			unsafe byte [] sin6_addr8 {
 				get {
 					var rv = new byte [16];
 					fixed (sockaddr_in* myself = &this) {
-						byte *self = (byte *) myself;
+						byte* self = (byte*) myself;
 						Marshal.Copy ((IntPtr) (self + 8), rv, 0, 16);
 					}
 					return rv;
 				}
 				set {
 					fixed (sockaddr_in* myself = &this) {
-						byte *self = (byte *) myself;
+						byte* self = (byte*) myself;
 						Marshal.Copy (value, 0, (IntPtr) (self + 8), 16);
 					}
 				}
@@ -158,14 +158,14 @@ namespace SystemConfiguration {
 			unsafe uint sin6_scope_id {
 				get {
 					fixed (sockaddr_in* myself = &this) {
-						uint *self = (uint *) myself;
-						return self[6];
+						uint* self = (uint*) myself;
+						return self [6];
 					}
 				}
 				set {
 					fixed (sockaddr_in* myself = &this) {
-						uint *self = (uint *) myself;
-						self[6] = value;
+						uint* self = (uint*) myself;
+						self [6] = value;
 					}
 				}
 			}
@@ -328,7 +328,7 @@ namespace SystemConfiguration {
 			flags = default;
 			int rv;
 			unsafe {
-				rv = SCNetworkReachabilityGetFlags (Handle, (NetworkReachabilityFlags *) Unsafe.AsPointer<NetworkReachabilityFlags> (ref flags));
+				rv = SCNetworkReachabilityGetFlags (Handle, (NetworkReachabilityFlags*) Unsafe.AsPointer<NetworkReachabilityFlags> (ref flags));
 			}
 			return rv == 0 ? StatusCodeError.SCError () : StatusCode.OK;
 		}
