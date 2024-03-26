@@ -541,9 +541,15 @@ namespace Foundation {
 			}
 		}
 
+#if NET
+		// Note that this method does not work with NativeAOT, so throw an exception in that case.
+		// IL2075: 'this' argument does not satisfy 'DynamicallyAccessedMemberTypes.Interfaces' in call to 'System.Type.GetInterfaces()'. The return value of method 'System.Object.GetType()' does not have matching annotations. The source value must declare at least the same requirements as those declared on the target location it is assigned to.
+		[UnconditionalSuppressMessage ("", "IL2075", Justification = "The APIs this method tries to access are marked by other means, so this is linker-safe.")]
+#endif
 		bool DynamicConformsToProtocol (NativeHandle protocol)
 		{
 #if NET
+			// Note that this method does not work with NativeAOT, so throw an exception in that case.
 			if (Runtime.IsNativeAOT)
 				throw Runtime.CreateNativeAOTNotSupportedException ();
 #endif

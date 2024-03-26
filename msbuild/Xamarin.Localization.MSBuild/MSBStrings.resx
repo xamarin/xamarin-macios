@@ -165,6 +165,12 @@
         <comment>The following are literal names and should not be translated: Xcode, Apple SDK, Visual Studio
 {0} - The selected Xcode / Apple SDK directory.</comment>
     </data>
+
+    <data name="E0044v2" xml:space="preserve">
+        <value>Could not find a valid Xcode app bundle at '{0}'. Please verify that 'xcode-select -p' points to your Xcode installation. For more information see https://aka.ms/macios-missing-xcode.
+        </value>
+        <comment>The following are literal names and should not be translated: Xcode</comment>
+    </data>
     
     <data name="E0045" xml:space="preserve">
         <value>Could not find valid a usable Xcode developer path
@@ -1552,6 +1558,10 @@
             {0}: a developer-supplied property value.
             MaxDegreeOfParallelism: name of the property (do not translate)
         </comment>
+    </data>
+
+    <data name="E7122" xml:space="preserve">
+        <value>A path exceeding max path was detected. Enabling long paths in Windows may help. For more information see https://learn.microsoft.com/en-us/windows/win32/fileio/maximum-file-path-limitation.</value>
     </data>
 
 </root>

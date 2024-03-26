@@ -76,7 +76,7 @@ public class MarshalTypeList : List<MarshalType> {
 		Add (typeCache.SecProtocolOptions);
 		Add (typeCache.SecProtocolMetadata);
 		Add (typeCache.SecAccessControl);
-		Add (typeCache.AudioBuffers);
+		Add (new MarshalType (typeCache.AudioBuffers, create: "new global::AudioToolbox.AudioBuffers (", closingCreate: ", false)"));
 		if (frameworks.HaveAudioUnit) {
 			Add (typeCache.AURenderEventEnumerator);
 		}

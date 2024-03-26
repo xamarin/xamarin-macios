@@ -896,7 +896,7 @@ namespace AppKit {
 	[Category]
 	[BaseType (typeof (NSApplication))]
 	interface NSApplication_NSServicesMenu {
-		[Export ("registerServicesMenuSendTypes:returnTypes:"), EventArgs ("NSApplicationRegister")]
+		[Export ("registerServicesMenuSendTypes:returnTypes:")]
 		void RegisterServicesMenu (string [] sendTypes, string [] returnTypes);
 	}
 
@@ -7956,6 +7956,10 @@ namespace AppKit {
 
 		[Static]
 		[Export ("eventWithCGEvent:")]
+		[Obsolete ("Use 'Create (CGEvent)' instead.")]
+#if XAMCORE_5_0
+		[Internal]
+#endif
 		NSEvent EventWithCGEvent (IntPtr cgEventPtr);
 
 		[Export ("magnification")]

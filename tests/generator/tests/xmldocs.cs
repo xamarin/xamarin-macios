@@ -77,4 +77,14 @@ namespace XmlDocumentation {
 		[Export ("method2:")]
 		void TGMethod2 (TG1<T, U> value);
 	}
+
+	/// <summary>
+	/// Summary for E1
+	/// </summary>
+	public enum E1 {
+		/// <summary>
+		/// Summary for E1.Value1
+		/// </summary>
+		Value1,
+	}
 }

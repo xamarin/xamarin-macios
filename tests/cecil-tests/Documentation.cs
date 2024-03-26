@@ -28,6 +28,7 @@ namespace Cecil.Tests {
 		{
 			// We join all the APIs from all the platforms, so we can only run this test when all platforms are enabled.
 			Configuration.IgnoreIfAnyIgnoredPlatforms ();
+			Configuration.IgnoreIfNotXamarinEnabled (); // our tooling to inject docs for Apple APIs lives in maccore, so if we don't do that, we'll get a lot of false positives.
 
 			// Collect everything
 			var xmlMembers = new HashSet<AssemblyApi> ();

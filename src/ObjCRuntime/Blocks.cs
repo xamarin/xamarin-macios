@@ -145,9 +145,15 @@ namespace ObjCRuntime {
 			SetupFunctionPointerBlock ((IntPtr) trampoline, context, System.Text.Encoding.UTF8.GetBytes (trampolineSignature));
 		}
 
+#if NET
+		// Note that the code in this method shouldn't be called when using NativeAOT, so throw an exception in that case.
+		// IL2070: 'this' argument does not satisfy 'DynamicallyAccessedMemberTypes.PublicMethods', 'DynamicallyAccessedMemberTypes.NonPublicMethods' in call to 'System.Type.GetMethod(String, BindingFlags)'. The parameter 'trampolineType' of method 'ObjCRuntime.BlockLiteral.FindTrampoline(Type, String)' does not have matching annotations. The source value must declare at least the same requirements as those declared on the target location it is assigned to.
+		[UnconditionalSuppressMessage ("", "IL2070", Justification = "The APIs this method tries to access are marked by other means, so this is linker-safe.")]
+#endif
 		static MethodInfo FindTrampoline (Type trampolineType, string trampolineMethod)
 		{
 #if NET
+			// Note that the code in this method shouldn't be called when using NativeAOT, so throw an exception in that case.
 			if (Runtime.IsNativeAOT)
 				throw Runtime.CreateNativeAOTNotSupportedException ();
 #endif
@@ -191,9 +197,15 @@ namespace ObjCRuntime {
 		}
 #endif // NET
 
+#if NET
+		// Note that the code in this method shouldn't be called when using any static registrar, so throw an exception in that case.
+		// IL2075: 'this' argument does not satisfy 'DynamicallyAccessedMemberTypes.PublicMethods' in call to 'System.Type.GetMethod(String)'. The return value of method 'ObjCRuntime.UserDelegateTypeAttribute.UserDelegateType.get' does not have matching annotations. The source value must declare at least the same requirements as those declared on the target location it is assigned to.
+		[UnconditionalSuppressMessage ("", "IL2075", Justification = "The APIs this method tries to access are marked by other means, so this is linker-safe.")]
+#endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		void SetupBlock (Delegate trampoline, Delegate target, bool safe)
 		{
+			// Note that the code in this method shouldn't be called when using any static registrar, so throw an exception in that case.
 			if (!Runtime.DynamicRegistrationSupported)
 				throw ErrorHelper.CreateError (8026, "BlockLiteral.SetupBlock is not supported when the dynamic registrar has been linked away.");
 
@@ -292,6 +304,17 @@ namespace ObjCRuntime {
 			if (trampoline is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (trampoline));
 
+			VerifyBlockDelegates (trampoline, userDelegate);
+
+			SetupBlock (trampoline, userDelegate, safe: true);
+		}
+
+#if NET
+		// IL2075: 'this' argument does not satisfy 'DynamicallyAccessedMemberTypes.PublicMethods' in call to 'System.Type.GetMethod(String)'. The return value of method 'ObjCRuntime.MonoPInvokeCallbackAttribute.DelegateType.get' does not have matching annotations. The source value must declare at least the same requirements as those declared on the target location it is assigned to.
+		[UnconditionalSuppressMessage ("", "IL2075", Justification = "Calling GetMethod('Invoke') on a delegate type will always find something, because the invoke method can't be linked away for a delegate.")]
+#endif
+		void VerifyBlockDelegates (Delegate trampoline, Delegate userDelegate)
+		{
 #if !MONOMAC && !__MACCATALYST__
 			// Check that:
 			// * The trampoline is static
@@ -326,7 +349,7 @@ namespace ObjCRuntime {
 				}
 			}
 #endif
-			SetupBlock (trampoline, userDelegate, safe: true);
+
 		}
 
 		public void CleanupBlock ()

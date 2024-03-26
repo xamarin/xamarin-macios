@@ -74,7 +74,6 @@
 !missing-pinvoke! CGDisplayVendorNumber is not bound
 !missing-pinvoke! CGEventCreateScrollWheelEvent2 is not bound
 !missing-pinvoke! CGEventGetTypeID is not bound
-!missing-pinvoke! CGEventPostToPid is not bound
 !missing-pinvoke! CGEventSetDoubleValueField is not bound
 !missing-pinvoke! CGEventSetIntegerValueField is not bound
 !missing-pinvoke! CGEventSourceGetTypeID is not bound
