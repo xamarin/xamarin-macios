@@ -1085,8 +1085,10 @@
 
 			<_AOTInputDirectory>$(_IntermediateNativeLibraryDir)aot-input/</_AOTInputDirectory>
 			<_AOTOutputDirectory>$(_IntermediateNativeLibraryDir)aot-output/</_AOTOutputDirectory>
-			<_IsDedupEnabled Condition="'$(_IsDedupEnabled)' == ''">true</_IsDedupEnabled>
-			<_DedupAssembly Condition="'$(_RunAotCompiler)' == 'true' And '$(IsMacEnabled)' == 'true' And '$(_IsDedupEnabled)' == 'true'">$(IntermediateOutputPath)aot-instances.dll</_DedupAssembly>
+
+			<!-- Enable dedup optimization only in FullAOT mode -->
+			<_IsDedupEnabled Condition="'$(_IsDedupEnabled)' == '' And '$(_RunAotCompiler)' == 'true' And '$(UseInterpreter)' != 'true' And '$(MtouchInterpreter)' == '' And '$(IsMacEnabled)' == 'true'">true</_IsDedupEnabled>
+			<_DedupAssembly Condition="'$(_IsDedupEnabled)' == 'true'">$(IntermediateOutputPath)aot-instances.dll</_DedupAssembly>
 
 			<!-- default to 'static' for Mac Catalyst to work around https://github.com/xamarin/xamarin-macios/issues/14686 -->
 			<_LibMonoLinkMode Condition="'$(_LibMonoLinkMode)' == '' And '$(_PlatformName)' == 'MacCatalyst'">static</_LibMonoLinkMode>
@@ -1208,7 +1210,7 @@
 	</Target>
 
 	<Target Name="_CreateAOTDedupAssembly"
-			Condition="'$(_RunAotCompiler)' == 'true' And '$(IsMacEnabled)' == 'true'"
+			Condition="'$(_IsDedupEnabled)' == 'true'"
 			DependsOnTargets="_ComputeManagedAssemblyToLink"
 			BeforeTargets="PrepareForILLink"
 			Inputs="$(MSBuildThisFileFullPath)"
