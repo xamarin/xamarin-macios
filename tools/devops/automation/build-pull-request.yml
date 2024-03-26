@@ -183,6 +183,10 @@ resources:
     ref: refs/heads/only_codesign
     endpoint: xamarin
 
+  - repository: CustomPipelineTemplates
+    type: git
+    name: 1ESPipelineTemplates/MicroBuildTemplate
+
 variables:
 - template: templates/variables.yml
 - name: MicrobuildConnector
@@ -213,30 +217,65 @@ pr:
     - tools/mtouch/README.md
     - msbuild/Xamarin.Localization.MSBuild/README.md
 
-stages:
-- template: templates/main-stage.yml
+extends:
+  template: azure-pipelines/MicroBuild.1ES.Official.yml@CustomPipelineTemplates
   parameters:
-    xcodeChannel: Stable
-    macOSName: ${{ parameters.macOSName }}
-    isPR: true
-    provisionatorChannel: ${{ parameters.provisionatorChannel }}
-    pool: ${{ parameters.pool }}
-    runTests: ${{ parameters.runTests }}
-    runDeviceTests: false
-    runOldMacOSTests: ${{ parameters.runOldMacOSTests }}
-    runWindowsIntegration: ${{ parameters.runWindowsIntegration }}
-    runGovernanceTests: ${{ parameters.runGovernanceTests }}
-    runSamples: ${{ parameters.runSamples }}
-    enableAPIDiff: ${{ parameters.enableAPIDiff }}
-    forceInsertion: false
-    skipESRP: true
-    ${{ if ne(length(parameters.testConfigurations), 0)}}:
-      testConfigurations: ${{ parameters.testConfigurations }}
-    deviceTestsConfigurations: ${{ parameters.deviceTestsConfigurations }}
-    macTestsConfigurations: ${{ parameters.macTestsConfigurations }}
-    azureStorage: ${{ variables['azureStorage'] }}
-    azureContainer: ${{ variables['azureContainer'] }}
-    signingSetupSteps:
-    - template: ./templates/sign-and-notarized/setup.yml
+    pool:  # default pool to be used forvalidation jobs
+      name: AzurePipelines-EO
+      image: 1ESPT-Windows2022
+      os: windows
+    sdl:
+      baseline:
+        baselineFile: '$(System.DefaultWorkingDirectory)\\maccore\\tools\\devops\\baselines.gdnbaselines'
+      suppression:
+        suppressionFile: '$(System.DefaultWorkingDirectory)\\maccore\\tools\\devops\\suppress.gdnsuppress'
+      sourceAnalysisPool:
+        name: AzurePipelines-EO
+        image: 1ESPT-Windows2022
+        os: windows
+      tsa:
+        configFile: '$(System.DefaultWorkingDirectory)\\maccore\\tools\\devops\\tsa_config.gdntsa'
+      sbom:
+        enabled: false  # we run our on sbom generation
+      credscan:
+        suppressionsFile: '$(System.DefaultWorkingDirectory)/maccore/tools/devops/CredScanSuppressions.json'
+        outputFormat: sarif
+        debugMode: false
+        batchSize: 16
+      policheck:
+        exclusionsFile: '$(System.DefaultWorkingDirectory)\\maccore\\tools\\devops\\PoliCheckExclusions.xml'
+      sourceRepositoriesToScan:
+        runInSingleJob: true # run both maccore and macios in the same job
+        include:
+        - repository: maccore
+        exclude:
+        - repository: yaml-templates
+        - repository: sdk-insertions
+        - repository: release-scripts
+    stages:
+    - template: templates/main-stage.yml
       parameters:
+        xcodeChannel: Stable
+        macOSName: ${{ parameters.macOSName }}
         isPR: true
+        provisionatorChannel: ${{ parameters.provisionatorChannel }}
+        pool: ${{ parameters.pool }}
+        runTests: ${{ parameters.runTests }}
+        runDeviceTests: false
+        runOldMacOSTests: ${{ parameters.runOldMacOSTests }}
+        runWindowsIntegration: ${{ parameters.runWindowsIntegration }}
+        runGovernanceTests: ${{ parameters.runGovernanceTests }}
+        runSamples: ${{ parameters.runSamples }}
+        enableAPIDiff: ${{ parameters.enableAPIDiff }}
+        forceInsertion: false
+        skipESRP: true
+        ${{ if ne(length(parameters.testConfigurations), 0)}}:
+          testConfigurations: ${{ parameters.testConfigurations }}
+        deviceTestsConfigurations: ${{ parameters.deviceTestsConfigurations }}
+        macTestsConfigurations: ${{ parameters.macTestsConfigurations }}
+        azureStorage: ${{ variables['azureStorage'] }}
+        azureContainer: ${{ variables['azureContainer'] }}
+        signingSetupSteps:
+        - template: ./templates/sign-and-notarized/setup.yml
+          parameters:
+            isPR: true

@@ -49,10 +49,9 @@ stages:
   - job: run_tests
     displayName: 'macOS tests'
     timeoutInMinutes: 120
-    workspace:
-      clean: all
 
     pool:
+      os: macOS
       ${{ if eq(parameters.useImage, false) }}:
         name: ${{ parameters.macPool }}
         demands: ${{ parameters.demands }}
@@ -62,6 +61,9 @@ stages:
     variables:
       PR_ID: $[ stageDependencies.configure_build.configure.outputs['labels.pr_number'] ]
       GIT_HASH: $[ stageDependencies.build_macos_tests.build.outputs['fix_commit.GIT_HASH'] ]
+
+    templateContext:
+      type: validationJob
 
     steps:
     - template: build.yml

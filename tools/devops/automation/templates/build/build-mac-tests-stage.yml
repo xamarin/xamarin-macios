@@ -58,13 +58,12 @@ jobs:
     RUN_MAC_TESTS: $[ stageDependencies.configure_build.configure.outputs['decisions.RUN_MAC_TESTS'] ]
   condition: ne(stageDependencies.configure_build.configure.outputs['decisions.RUN_MAC_TESTS'],'')
   pool:
+    os: macOS
     name: $(AgentPoolComputed)
     demands:
     - Agent.OS -equals Darwin
     - macOS.Name -equals ${{ parameters.macOSName }}
     - XcodeChannel -equals ${{ parameters.xcodeChannel }}
-  workspace:
-    clean: all
 
   steps:
   - template: build-mac-tests.yml

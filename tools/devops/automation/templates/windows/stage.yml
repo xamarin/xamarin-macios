@@ -52,15 +52,17 @@ stages:
     displayName: "Reserve macOS bot for tests"
     timeoutInMinutes: 120
     condition: ne(stageDependencies.configure_build.configure.outputs['configure_platforms.ENABLE_DOTNET'],'')
-    workspace:
-      clean: all
     pool:
+      os: macOS
       name: ${{ parameters.macPool }}
       demands:
       - agent.os -equals Darwin
       - SSH.Enabled -equals True
       - macOS.Architecture -equals arm64
       - macOS.Name -equals Ventura
+
+    templateContext:
+      type: validationJob
 
     steps:
     - template: reserve-mac.yml
@@ -77,8 +79,6 @@ stages:
     displayName: 'Dotnet tests'
     timeoutInMinutes: 120
     condition: and(succeeded(),ne(stageDependencies.configure_build.configure.outputs['configure_platforms.ENABLE_DOTNET'],''))
-    workspace:
-      clean: all
 
     pool:
       name: ${{ parameters.windowsPool }}
@@ -93,6 +93,25 @@ stages:
       MAC_AGENT_SYSTEM_DEFAULTWORKINGDIRECTORY: $[ dependencies.mac_reservation.outputs['macInfo.AGENT_SYSTEM_DEFAULTWORKINGDIRECTORY'] ]
       MAC_AGENT_BUILD_SOURCESDIRECTORY: $[ dependencies.mac_reservation.outputs['macInfo.AGENT_BUILD_SOURCESDIRECTORY'] ]
       MAC_AGENT_USER: builder
+
+    templateContext:
+      type: validationJob
+      outputs:
+      # Create HtmlReport artifact. This serves two purposes:
+      # 1. It is the way we are going to share the HtmlReport with the publish_html job that is executed on a Windows machine.
+      # 2. Users can download this if they want.
+      - output: pipelineArtifact
+        displayName: 'Publish Artifact: HtmlReport'
+        artifactName: '$(MaciosUploadPrefix)HtmlReport-windows-integration-$(System.JobAttempt)'
+        path: '$(Build.ArtifactStagingDirectory)/HtmlReport.zip'
+        postValidationJobArtifactName: html_report_windows_output_validation
+        condition: succeededOrFailed()
+      - output: pipelineArtifact
+        displayName: 'Publish Artifact: Windows binlogs'
+        artifactName: windows-binlogs-test-$(Build.BuildId)-$(System.StageAttempt)-$(System.StageAttempt)-$(System.JobAttempt)
+        path: $(Build.ArtifactStagingDirectory)/windows-binlogs
+        postValidationJobArtifactName: windows_binlogs_test_output_validation
+        condition: succeededOrFailed()
 
     steps:
     - template: build.yml
@@ -112,12 +131,13 @@ stages:
     timeoutInMinutes: 120
     # the condition must be exactly the same as for the mac_reservation job (or if no condition there, then 'always ()')
     condition: ne(stageDependencies.configure_build.configure.outputs['configure_platforms.ENABLE_DOTNET'],'')
-    workspace:
-      clean: all
     pool:
       name: ${{ parameters.windowsPool }}
       demands:
       - agent.os -equals Windows_NT
+
+    templateContext:
+      type: validationJob
 
     steps:
     - template: reenable-mac.yml

@@ -51,13 +51,12 @@ jobs:
     BRANCH_NAME: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', '') ]
     XHARNESS_LABELS: $[ stageDependencies.configure_build.configure.outputs['labels.xharness_labels'] ]
   pool:
+    os: macOS
     name: $(AgentPoolComputed)
     demands:
     - Agent.OS -equals Darwin
     - macOS.Name -equals ${{ parameters.macOSName }}
     - XcodeChannel -equals ${{ parameters.xcodeChannel }}
-  workspace:
-    clean: all
 
   # build the source code and compute the api diffs
   steps:
@@ -80,9 +79,9 @@ jobs:
   - api_diff
   condition: or(eq(dependencies.api_diff.result, 'Succeeded'), eq(dependencies.api_diff.result, 'SucceededWithIssues'))
   pool:
-    vmImage: 'windows-latest'
-    workspace:
-      clean: all
+    name: AzurePipelines-EO
+    demands:
+    - ImageOverride -equals 1ESPT-Windows2022
   variables:
     GIT_HASH: $[ dependencies.api_diff.outputs['fix_commit.GIT_HASH'] ]
   steps:

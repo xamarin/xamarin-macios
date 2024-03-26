@@ -48,6 +48,7 @@ stages:
   # Check - "xamarin-macios (Prepare Release Sign NuGets)"
   - template: sign-artifacts/jobs/v2.yml@yaml-templates
     parameters:
+      use1ESTemplate: true
       signedArtifactName: '${{ parameters.uploadPrefix }}nuget-signed'
       artifactName: '${{ parameters.uploadPrefix }}not-signed-package'
       signType: Real
@@ -57,6 +58,7 @@ stages:
   # Check - "xamarin-macios (Prepare Release Convert NuGet to MSI)"
   - template: nuget-msi-convert/job/v3.yml@yaml-templates
     parameters:
+      use1ESTemplate: true
       yamlResourceName: yaml-templates
       dependsOn: signing
       artifactName: '${{ parameters.uploadPrefix }}nuget-signed'
@@ -94,7 +96,9 @@ stages:
       variables:
         skipNugetSecurityAnalysis: true
       pool:
-        vmImage: windows-latest
+        name: AzurePipelines-EO
+        demands:
+        - ImageOverride -equals 1ESPT-Windows2022
       steps:
       - task: DownloadPipelineArtifact@2
         inputs:
@@ -103,12 +107,15 @@ stages:
           patterns: |
             *.nupkg
 
-      - task: NuGetCommand@2
-        displayName: Publish Nugets to dotnet8
+      - task: 1ES.PublishNuget@1
+        displayName: Publish Nugets package
         inputs:
-          command: push
+          useDotNetTask: false # The default is false to use the NuGetCommand task. Set to true to use the DotNetCoreCLI task to publish packages.
           packagesToPush: '$(Build.SourcesDirectory)/package/*.nupkg'
+          packageParentPath: '$(Build.SourcesDirectory)/package'
           nuGetFeedType: external
+          allowPackageConflicts: true # Optional. NuGetCommand task only.
+          publishPackageMetadata: true # Optional
           publishFeedCredentials: dnceng-dotnet8
 
       - task: DownloadPipelineArtifact@2
@@ -118,12 +125,15 @@ stages:
           patterns: |
             *.nupkg
 
-      - task: NuGetCommand@2
-        displayName: Publish VS MSI Nugets to dotnet8
+      - task: 1ES.PublishNuget@1
+        displayName: Publish MSI Nugets package
         inputs:
-          command: push
+          useDotNetTask: false 
           packagesToPush: '$(Build.SourcesDirectory)/${{ parameters.uploadPrefix }}vs-msi-nugets/*.nupkg'
+          packageParentPath: '$(Build.SourcesDirectory)/${{ parameters.uploadPrefix }}vs-msi-nugets'
           nuGetFeedType: external
+          allowPackageConflicts: true
+          publishPackageMetadata: true
           publishFeedCredentials: dnceng-dotnet8
 
       - pwsh: |

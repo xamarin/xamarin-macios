@@ -127,10 +127,10 @@ jobs:
     # So in order to not use it, we set the working directory to the parent directory of xamarin-macios.
     workingDirectory: $(Build.SourcesDirectory)\..
 
-  - task: PublishPipelineArtifact@1
+  - task: 1ES.PublishPipelineArtifact@1
     displayName: 'Publish Artifact: post-build-binlogs'
     inputs:
-      targetPath: $(Build.ArtifactStagingDirectory)\post-build-binlogs
-      artifactName: post-build-binlogs
+      path: $(Build.ArtifactStagingDirectory)\post-build-binlogs
+      artifact: post-build-binlogs
     condition: succeededOrFailed()
     continueOnError: true

@@ -312,7 +312,10 @@ stages:
     - job:
       displayName: 'Clean comments'
       pool:
-        vmImage: windows-latest
+        name: AzurePipelines-EO
+        demands:
+        - ImageOverride -equals 1ESPT-Windows2022
+
       steps:
       - template: ./common/clean.yml
 
@@ -325,8 +328,10 @@ stages:
   
   - ${{ if eq(parameters.pool, 'automatic') }}:
     - job: AgentPoolSelector       # https://docs.microsoft.com/en-us/azure/devops/pipelines/process/phases?view=azure-devops&tabs=yaml
-      pool:                        # Consider using an agentless (server) job here, but would need to host selection logic as an Azure function: https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#server
-        vmImage: ubuntu-latest
+      pool: # Consider using an agentless (server) job here, but would need to host selection logic as an Azure function: https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#server
+        name: AzurePipelines-EO
+        demands:
+        - ImageOverride -equals 1ESPT-Windows2022
       steps:
       - checkout: none             # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#checkout
 
@@ -341,12 +346,23 @@ stages:
   - job: configure
     displayName: 'Configure build'
     pool:
-      vmImage: windows-latest
+      name: AzurePipelines-EO
+      demands:
+      - ImageOverride -equals 1ESPT-Windows2022
 
     variables:
       isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
       isScheduled: $[eq(variables['Build.Reason'], 'Schedule')]
       BRANCH_NAME: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', '') ]
+
+    templateContext:
+      type: validationJob
+      outputs:
+      - output: pipelineArtifact
+        displayName: 'Publish Artifact: configuration.json'
+        artifactName: '$(MaciosUploadPrefix)build-configuration'
+        path: '$(Build.ArtifactStagingDirectory)/configuration.json'
+        postValidationJobArtifactName: configuration_validation
 
     steps:
     - template: common/configure.yml
@@ -357,8 +373,7 @@ stages:
         supportedPlatforms: ${{ parameters.supportedPlatforms }}
         testsLabels: '--label=skip-all-tests,run-ios-tests,run-ios-simulator-tests,run-tvos-tests,run-watchos-tests,run-mac-tests,run-maccatalyst-tests,run-dotnet-tests,run-system-permission-tests,run-legacy-xamarin-tests'
         statusContext: 'VSTS: simulator tests' 
-        uploadArtifacts: true
-        
+
 - stage: build_packages
   displayName: '${{ parameters.stageDisplayNamePrefix }}Build'
   dependsOn: [ configure_build ]
@@ -577,7 +592,9 @@ stages:
     jobs:
     - job: sample_testing
       pool:
-        vmImage: ubuntu-latest
+        name: AzurePipelines-EO
+        demands:
+        - ImageOverride -equals 1ESPT-Windows2022
       steps:
       # TODO: do parse labels
       - bash: |
