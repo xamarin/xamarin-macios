@@ -220,16 +220,16 @@ pr:
 extends:
   template: azure-pipelines/MicroBuild.1ES.Official.yml@CustomPipelineTemplates
   parameters:
+    pool:  # default pool to be used forvalidation jobs
+      name: AzurePipelines-EO
+      image: 1ESPT-Windows2022
+      os: windows
     sdl:
       baseline:
         baselineFile: '$(System.DefaultWorkingDirectory)\\maccore\\tools\\devops\\baselines.gdnbaselines'
       suppression:
         suppressionFile: '$(System.DefaultWorkingDirectory)\\maccore\\tools\\devops\\suppress.gdnsuppress'
       sourceAnalysisPool:
-        name: AzurePipelines-EO
-        image: 1ESPT-Windows2022
-        os: windows
-      pool:  # default pool to be used forvalidation jobs
         name: AzurePipelines-EO
         image: 1ESPT-Windows2022
         os: windows
