@@ -229,6 +229,10 @@ extends:
         name: AzurePipelines-EO
         image: 1ESPT-Windows2022
         os: windows
+      pool:  # default pool to be used forvalidation jobs
+        name: AzurePipelines-EO
+        image: 1ESPT-Windows2022
+        os: windows
       tsa:
         configFile: '$(System.DefaultWorkingDirectory)\\maccore\\tools\\devops\\tsa_config.gdntsa'
       sbom:
