@@ -85,8 +85,6 @@
 !missing-protocol! UIPreviewInteractionDelegate not bound
 
 ## enums only exposed from properties marked with UIKIT_CLASS_AVAILABLE_IOS_ONLY(10_0)
-!missing-enum! UIImpactFeedbackStyle not bound
-!missing-enum! UINotificationFeedbackType not bound
 
 ## headers are unclear (added in iOS9.1) but Apple web documentation does not show those members
 ## and several only make sense for the stylus touches
@@ -110,7 +108,6 @@
 !missing-selector! UIViewController::popoverPresentationController not bound
 
 ## property not decorated as unavailable but UIPinchGestureRecognizer, the returned type, is not available in tvOS
-!missing-selector! UIScrollView::pinchGestureRecognizer not bound
 
 ## Apple renamed NSLineBreakMode from UILineBreakMode and we kept the old name
 !unknown-native-enum! UILineBreakMode bound

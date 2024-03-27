@@ -1,0 +1,2 @@
+!missing-protocol-member! SCStreamDelegate::userDidStopStream: not found
+!missing-selector! +SCShareableContent::getCurrentProcessShareableContentWithCompletionHandler: not bound

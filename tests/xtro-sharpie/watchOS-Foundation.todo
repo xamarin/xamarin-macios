@@ -1,0 +1,2 @@
+!missing-selector! NSUndoManager::redoCount not bound
+!missing-selector! NSUndoManager::undoCount not bound

@@ -126,19 +126,13 @@ namespace xsiminstaller {
 				return 1;
 			xcodeVersion = xcodeVersion.Trim ();
 
-			if (!TryExecuteAndCapture ("/usr/libexec/PlistBuddy", $"-c 'Print :DVTPlugInCompatibilityUUID' '{plist}'", out var xcodeUuid))
-				return 1;
-			xcodeUuid = xcodeUuid.Trim ();
-
 			xcodeVersion = xcodeVersion.Insert (xcodeVersion.Length - 2, ".");
 			xcodeVersion = xcodeVersion.Insert (xcodeVersion.Length - 1, ".");
 
-			var indexName = $"index-{xcodeVersion}-{xcodeUuid}.dvtdownloadableindex";
+			var indexName = $"index2-{xcodeVersion}.dvtdownloadableindex";
 			var tmpfile = Path.Combine (TempDirectory, indexName);
 			if (!File.Exists (tmpfile)) {
-				// Try multiple urls
 				var urls = new string [] {
-					$"https://devimages-cdn.apple.com/downloads/xcode/simulators/{indexName}",
 					/*
 					 * The following url was found while debugging Xcode, the "index2" part is actually hardcoded:
 					 * 

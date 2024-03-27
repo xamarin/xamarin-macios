@@ -1,0 +1,3 @@
+!missing-enum! IOSurfaceMemoryLedgerFlags not bound
+!missing-enum! IOSurfaceMemoryLedgerTags not bound
+!missing-pinvoke! IOSurfaceSetOwnershipIdentity is not bound

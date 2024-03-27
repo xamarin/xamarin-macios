@@ -177,12 +177,8 @@ ARKIT_SOURCES = \
 
 # AssetsLibrary
 
-ASSETSLIBRARY_API_SOURCES = \
-	AssetsLibrary/Enums.cs \
-
 ASSETSLIBRARY_SOURCES = \
-	AssetsLibrary/ALAsset.cs \
-	AssetsLibrary/ALAssetsGroup.cs \
+	AssetsLibrary/Compat.cs \
 
 # AudioToolbox
 

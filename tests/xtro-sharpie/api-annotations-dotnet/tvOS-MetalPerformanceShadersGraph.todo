@@ -342,3 +342,5 @@
 !wrong-base-type! MPSGraphTensor expected MPSGraphObject actual NSObject
 !wrong-base-type! MPSGraphTensorData expected MPSGraphObject actual NSObject
 !wrong-base-type! MPSGraphType expected MPSGraphObject actual NSObject
+!missing-selector! MPSGraph::sliceUpdateDataTensor:updateTensor:starts:ends:strides:startMask:endMask:squeezeMask:name: not bound
+!missing-selector! MPSGraph::sliceUpdateDataTensor:updateTensor:startsTensor:endsTensor:stridesTensor:startMask:endMask:squeezeMask:name: not bound

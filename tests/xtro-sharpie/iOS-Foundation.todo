@@ -1,0 +1,7 @@
+!missing-protocol-member! NSFilePresenter::accommodatePresentedItemEvictionWithCompletionHandler: not found
+!missing-selector! NSUndoManager::redoCount not bound
+!missing-selector! NSUndoManager::undoCount not bound
+!missing-selector! NSXPCCoder::decodeXPCObjectOfType:forKey: not bound
+!missing-selector! NSXPCCoder::encodeXPCObject:forKey: not bound
+!missing-selector! NSXPCInterface::setXPCType:forSelector:argumentIndex:ofReply: not bound
+!missing-selector! NSXPCInterface::XPCTypeForSelector:argumentIndex:ofReply: not bound

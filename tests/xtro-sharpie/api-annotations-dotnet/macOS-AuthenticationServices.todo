@@ -1,0 +1,21 @@
+!deprecated-attribute-missing! ASWebAuthenticationSession::initWithURL:callbackURLScheme:completionHandler: missing a [Deprecated] attribute
+!missing-enum! ASAuthorizationProviderExtensionUserSecureEnclaveKeyBiometricPolicy not bound
+!missing-enum! ASCredentialIdentityTypes not bound
+!missing-enum! ASUserAgeRange not bound
+!missing-enum-value! ASAuthorizationProviderExtensionRequestOptions native value ASAuthorizationProviderExtensionRequestOptionsUserKeyInvalid = 32 not bound
+!missing-protocol! ASAuthorizationWebBrowserSecurityKeyPublicKeyCredentialAssertionRequest not bound
+!missing-protocol! ASAuthorizationWebBrowserSecurityKeyPublicKeyCredentialProvider not bound
+!missing-protocol! ASAuthorizationWebBrowserSecurityKeyPublicKeyCredentialRegistrationRequest not bound
+!missing-selector! +ASWebAuthenticationSessionCallback::callbackWithCustomScheme: not bound
+!missing-selector! +ASWebAuthenticationSessionCallback::callbackWithHTTPSHost:path: not bound
+!missing-selector! ASAuthorizationAppleIDCredential::userAgeRange not bound
+!missing-selector! ASAuthorizationProviderExtensionLoginConfiguration::setUserSecureEnclaveKeyBiometricPolicy: not bound
+!missing-selector! ASAuthorizationProviderExtensionLoginConfiguration::userSecureEnclaveKeyBiometricPolicy not bound
+!missing-selector! ASCredentialIdentityStore::getCredentialIdentitiesForService:credentialIdentityTypes:completionHandler: not bound
+!missing-selector! ASWebAuthenticationSession::additionalHeaderFields not bound
+!missing-selector! ASWebAuthenticationSession::initWithURL:callback:completionHandler: not bound
+!missing-selector! ASWebAuthenticationSession::setAdditionalHeaderFields: not bound
+!missing-selector! ASWebAuthenticationSessionCallback::matchesURL: not bound
+!missing-selector! ASWebAuthenticationSessionRequest::additionalHeaderFields not bound
+!missing-selector! ASWebAuthenticationSessionRequest::callback not bound
+!missing-type! ASWebAuthenticationSessionCallback not bound

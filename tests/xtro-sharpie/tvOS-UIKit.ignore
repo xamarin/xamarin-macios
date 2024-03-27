@@ -83,8 +83,6 @@
 !missing-protocol! UIPreviewInteractionDelegate not bound
 
 ## enums only exposed from properties marked with UIKIT_CLASS_AVAILABLE_IOS_ONLY(10_0)
-!missing-enum! UIImpactFeedbackStyle not bound
-!missing-enum! UINotificationFeedbackType not bound
 
 ## Marked as not in tvOS in Xcode 8.2 beta 1 but it's a breaking change and it's fixed only in .NET
 !unknown-native-enum! UICloudSharingPermissionOptions bound
@@ -111,7 +109,6 @@
 !missing-selector! UIViewController::popoverPresentationController not bound
 
 ## property not decorated as unavailable but UIPinchGestureRecognizer, the returned type, is not available in tvOS
-!missing-selector! UIScrollView::pinchGestureRecognizer not bound
 
 ## Apple renamed NSLineBreakMode from UILineBreakMode and we kept the old name
 !unknown-native-enum! UILineBreakMode bound

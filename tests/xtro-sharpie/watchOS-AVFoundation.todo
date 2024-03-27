@@ -279,7 +279,6 @@
 !missing-pinvoke! CMTagCollectionCreateWithVideoOutputPreset is not bound
 !missing-selector! AVPlayer::setVideoOutput: not bound
 !missing-selector! AVPlayer::videoOutput not bound
-!missing-selector! AVPlayerItemErrorLogEvent::allHTTPResponseHeaderFields not bound
 !missing-selector! AVPlayerVideoOutput::copyTaggedBufferGroupForHostTime:presentationTimeStamp:activeConfiguration: not bound
 !missing-selector! AVPlayerVideoOutput::initWithSpecification: not bound
 !missing-selector! AVPlayerVideoOutputConfiguration::activationTime not bound
@@ -293,3 +292,5 @@
 !missing-type! AVPlayerVideoOutput not bound
 !missing-type! AVPlayerVideoOutputConfiguration not bound
 !missing-type! AVVideoOutputSpecification not bound
+!missing-protocol-member! AVContentKeySessionDelegate::contentKeySession:didProvideContentKeyRequests:forInitializationData: not found
+!missing-selector! AVContentKey::revoke not bound

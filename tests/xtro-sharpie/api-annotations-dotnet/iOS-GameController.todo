@@ -35,3 +35,13 @@
 !missing-type! GCControllerInputState not bound
 !missing-type! GCControllerLiveInput not bound
 !missing-type! GCPhysicalInputElementCollection not bound
+!missing-field! GCInputLeftBumper not bound
+!missing-field! GCInputRightBumper not bound
+!missing-field! GCPoint2Zero not bound
+!missing-pinvoke! GCInputBackLeftButton is not bound
+!missing-pinvoke! GCInputBackRightButton is not bound
+!missing-pinvoke! NSStringFromGCPoint2 is not bound
+!missing-protocol! GCAxis2DInput not bound
+!missing-protocol-member! GCDirectionPadElement::xyAxes not found
+!missing-selector! +NSValue::valueWithGCPoint2: not bound
+!missing-selector! NSValue::GCPoint2Value not bound
