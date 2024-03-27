@@ -165,11 +165,12 @@ namespace Xamarin.MacDev.Tasks {
 					if (path.EndsWith ("partial-info.plist", StringComparison.Ordinal))
 						continue;
 
-					var vpath = PathUtils.AbsoluteToRelative (pwd, PathUtils.ResolveSymbolicLinks (path));
+					var resolvedPath = PathUtils.ResolveSymbolicLinks (path);
+					var vpath = PathUtils.AbsoluteToRelative (pwd, resolvedPath);
 					var item = new TaskItem (vpath);
 
 					// Note: the intermediate bundle dir functions as a top-level bundle dir
-					var logicalName = PathUtils.AbsoluteToRelative (intermediateBundleDir, path);
+					var logicalName = PathUtils.AbsoluteToRelative (intermediateBundleDir, resolvedPath);
 
 					if (logicalName.StartsWith ("../OnDemandResources/", StringComparison.Ordinal)) {
 						logicalName = logicalName.Substring (3);
