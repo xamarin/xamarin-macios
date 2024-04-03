@@ -1087,7 +1087,7 @@
 			<_AOTOutputDirectory>$(_IntermediateNativeLibraryDir)aot-output/</_AOTOutputDirectory>
 
 			<!-- Enable dedup optimization only in FullAOT mode -->
-			<_IsDedupEnabled Condition="'$(_IsDedupEnabled)' == '' And '$(_RunAotCompiler)' == 'true' And '$(UseInterpreter)' != 'true' And '$(MtouchInterpreter)' == '' And '$(IsMacEnabled)' == 'true'">true</_IsDedupEnabled>
+			<_IsDedupEnabled Condition="'$(_IsDedupEnabled)' == '' And '$(_RunAotCompiler)' == 'true' And '$(MtouchInterpreter)' == '' And '$(IsMacEnabled)' == 'true'">true</_IsDedupEnabled>
 			<_DedupAssembly Condition="'$(_IsDedupEnabled)' == 'true'">$(IntermediateOutputPath)aot-instances.dll</_DedupAssembly>
 
 			<!-- default to 'static' for Mac Catalyst to work around https://github.com/xamarin/xamarin-macios/issues/14686 -->
