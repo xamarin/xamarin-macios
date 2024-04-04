@@ -361,6 +361,9 @@ namespace Introspection {
 				case "MKPolylineRenderer":
 				case "AVAudioPcmBuffer":
 					return true;
+				// Xcode 15.3, Conformance not in headers
+				case "ASWebAuthenticationSessionCallback":
+					return true;
 				}
 				break;
 			case "NSSecureCoding":
@@ -529,6 +532,9 @@ namespace Introspection {
 				case "MKPolygonRenderer":
 				case "MKPolylineRenderer":
 				case "AVAudioPcmBuffer":
+					return true;
+				// Xcode 15.3, Conformance not in headers
+				case "ASWebAuthenticationSessionCallback":
 					return true;
 				}
 				break;
