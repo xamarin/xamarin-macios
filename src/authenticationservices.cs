@@ -2434,7 +2434,7 @@ namespace AuthenticationServices {
 		ASPublicKeyCredentialClientData ClientData { get; }
 	}
 
-	[Watch (10, 4), TV (17, 4), Mac (14, 4), iOS (17, 4), MacCatalyst (17, 4)]
+	[Watch (10, 4), TV (17, 4), Mac (14, 4), iOS (17, 4), MacCatalyst (17, 4)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface ASWebAuthenticationSessionCallback {
