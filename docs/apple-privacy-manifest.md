@@ -48,7 +48,11 @@ Verify if your native application code collects any type of data [categorized by
   If it does, then you must declare their usage in the privacy manifest file.
 
 ## Privacy manifest for Binding projects
-If you are Binding project owner, and you are binding a xcframework, then the xcframework provider will need to include the `PrivacyInfo.xcprivacy` file as part of the xcframework. Otherwise, there are two options, provide documentation for package consumers to create the `PrivacyInfo.xcprivacy` file properly or change the bindings to bind an xcframework that has the `PrivacyInfo.xcprivacy` file included. It is currently not possible for Binding project authors to include a `PrivacyInfo.xcprivacy` file outside an xcframework that will be recognized by Apple when submitting an app.
+Binding projects fall into two categories, static framework bindings, or dynamic framework bindings. Privacy manifests should be included with the framework by [placing the privacy manifest in the framework bundle](https://developer.apple.com/documentation/bundleresources/placing_content_in_a_bundle#3875930). If placed properly, then the binding project can automatically place them in the app bundle properly so app developers do not need to provide reasons for the framework api usages. 
+
+For a dynamic framework, the framework is added to the app bundle. The privacy policy manifest is in the location that the App Store expects it to be, and there is nothing for the app developer to do.
+
+At this time, when binding a static framework, app developers will be required to manually merge the privacy manifest included with the static framework into the app privacy manifest. This is due to how static libraries are linked into the main app binary removing the need for the framework.
 
 ## C# .NET APIs in .NET MAUI
 .NET for iOS, tvOS and .NET MAUI build on top of the .NET runtime and BCL. Each SDK's API usages are detailed in the links below. 
