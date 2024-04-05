@@ -105,12 +105,14 @@ stages:
         artifactName: '$(MaciosUploadPrefix)HtmlReport-windows-integration-$(System.JobAttempt)'
         path: '$(Build.ArtifactStagingDirectory)/HtmlReport.zip'
         postValidationJobArtifactName: html_report_windows_output_validation
+        postValidationJobSourceRepositoryToCheckout: maccore
         condition: succeededOrFailed()
       - output: pipelineArtifact
         displayName: 'Publish Artifact: Windows binlogs'
         artifactName: windows-binlogs-test-$(Build.BuildId)-$(System.StageAttempt)-$(System.StageAttempt)-$(System.JobAttempt)
         path: $(Build.ArtifactStagingDirectory)/windows-binlogs
         postValidationJobArtifactName: windows_binlogs_test_output_validation
+        postValidationJobSourceRepositoryToCheckout: maccore
         condition: succeededOrFailed()
 
     steps:

@@ -363,6 +363,7 @@ stages:
         artifactName: '$(MaciosUploadPrefix)build-configuration'
         path: '$(Build.ArtifactStagingDirectory)/configuration.json'
         postValidationJobArtifactName: configuration_validation
+        postValidationJobSourceRepositoryToCheckout: maccore
 
     steps:
     - template: common/configure.yml
