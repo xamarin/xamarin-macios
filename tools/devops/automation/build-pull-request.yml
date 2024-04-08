@@ -238,7 +238,7 @@ extends:
       sbom:
         enabled: false  # we run our on sbom generation
       credscan:
-        suppressionsFile: '$(System.DefaultWorkingDirectory)/maccore/tools/devops/CredScanSuppressions.json'
+        suppressionsFile: '$(System.DefaultWorkingDirectory)\\maccore\\tools\\devops\\CredScanSuppressions.json'
         outputFormat: sarif
         debugMode: false
         batchSize: 16
