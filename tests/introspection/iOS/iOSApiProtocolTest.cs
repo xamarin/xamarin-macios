@@ -143,6 +143,8 @@ namespace Introspection {
 				if (TestRuntime.IsSimulatorOrDesktop)
 					return true;
 				break;
+			case "GCPhysicalInputSource":
+				return true;
 			}
 
 			return base.Skip (type);
