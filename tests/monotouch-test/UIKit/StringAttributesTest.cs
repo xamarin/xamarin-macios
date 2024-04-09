@@ -149,7 +149,7 @@ namespace MonoTouchFixtures.UIKit {
 		{
 			// https://github.com/xamarin/xamarin-macios/issues/20409
 			using var control = new UISegmentedControl ();
-			var attrs = new UIStringAttributes();
+			var attrs = new UIStringAttributes ();
 			control.SetTitleTextAttributes (attrs, UIControlState.Normal);
 			control.SetTitleTextAttributes (attrs, UIControlState.Selected);
 		}
@@ -159,7 +159,7 @@ namespace MonoTouchFixtures.UIKit {
 		{
 			// https://github.com/xamarin/xamarin-macios/issues/20409
 			using var control = new UIBarItem ();
-			var attrs = new UIStringAttributes();
+			var attrs = new UIStringAttributes ();
 			control.SetTitleTextAttributes (attrs, UIControlState.Normal);
 			control.SetTitleTextAttributes (attrs, UIControlState.Selected);
 		}
@@ -169,7 +169,7 @@ namespace MonoTouchFixtures.UIKit {
 		{
 			// https://github.com/xamarin/xamarin-macios/issues/20409
 			using var control = new UISearchBar ();
-			var attrs = new UIStringAttributes();
+			var attrs = new UIStringAttributes ();
 			control.SetScopeBarButtonTitle (attrs, UIControlState.Normal);
 			control.SetScopeBarButtonTitle (attrs, UIControlState.Selected);
 		}
