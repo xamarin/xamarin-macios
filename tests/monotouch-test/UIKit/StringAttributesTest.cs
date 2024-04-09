@@ -142,6 +142,38 @@ namespace MonoTouchFixtures.UIKit {
 			}
 		}
 #endif // !__WATCHOS__
+
+#if !__WATCHOS__
+		[Test]
+		public void PrematureDisposal_SegmentedControl ()
+		{
+			// https://github.com/xamarin/xamarin-macios/issues/20409
+			using var control = new UISegmentedControl ();
+			var attrs = new UIStringAttributes();
+			control.SetTitleTextAttributes (attrs, UIControlState.Normal);
+			control.SetTitleTextAttributes (attrs, UIControlState.Selected);
+		}
+
+		[Test]
+		public void PrematureDisposal_BarItem ()
+		{
+			// https://github.com/xamarin/xamarin-macios/issues/20409
+			using var control = new UIBarItem ();
+			var attrs = new UIStringAttributes();
+			control.SetTitleTextAttributes (attrs, UIControlState.Normal);
+			control.SetTitleTextAttributes (attrs, UIControlState.Selected);
+		}
+
+		[Test]
+		public void PrematureDisposal_SearchBar ()
+		{
+			// https://github.com/xamarin/xamarin-macios/issues/20409
+			using var control = new UISearchBar ();
+			var attrs = new UIStringAttributes();
+			control.SetScopeBarButtonTitle (attrs, UIControlState.Normal);
+			control.SetScopeBarButtonTitle (attrs, UIControlState.Selected);
+		}
+#endif // !__WATCHOS__
 	}
 }
 #endif
