@@ -2156,6 +2156,10 @@ namespace GameController {
 	interface GCVirtualControllerConfiguration {
 		[Export ("elements", ArgumentSemantic.Strong)]
 		NSSet<NSString> Elements { get; set; }
+
+		[iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("hidden")]
+		bool Hidden { [Bind ("isHidden")] get; set; }
 	}
 
 	[NoTV, NoMac, NoWatch, iOS (15, 0), MacCatalyst (15, 0)]
