@@ -713,6 +713,11 @@
 {1} - The location the file was found.</comment>
     </data>
     
+    <data name="M0149b" xml:space="preserve">
+        <value>Discarded '{0}' with logical name '{1}' because the logical name does not match '{2}'</value>
+        <comment>{0} - A path to a file.</comment>
+    </data>
+
     <data name="E0150" xml:space="preserve">
         <value>  AssemblyPath cannot be null or empty
         </value>

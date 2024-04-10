@@ -47,7 +47,7 @@ namespace CoreGraphics {
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 #else
-	[MacCatalyst (15,0)]
+	[MacCatalyst (13,1)]
 #endif
 	[Flags]
 	public enum CGWindowImageOption : uint {
@@ -64,7 +64,7 @@ namespace CoreGraphics {
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 #else
-	[MacCatalyst (15,0)]
+	[MacCatalyst (13,1)]
 #endif
 	[Flags]
 	public enum CGWindowListOption : uint {
@@ -257,7 +257,7 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
-		[MacCatalyst (15,0)]
+		[MacCatalyst (13,1)]
 #endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		static extern IntPtr CGWindowListCreateImage(CGRect screenBounds, CGWindowListOption windowOption, uint windowID, CGWindowImageOption imageOption);
@@ -268,7 +268,7 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
-		[MacCatalyst (15,0)]
+		[MacCatalyst (13,1)]
 #endif
 		public static CGImage? ScreenImage (int windownumber, CGRect bounds)
 		{
@@ -281,7 +281,7 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
-		[MacCatalyst (15,0)]
+		[MacCatalyst (13,1)]
 #endif
 		public static CGImage? ScreenImage (int windownumber, CGRect bounds, CGWindowListOption windowOption,
 			CGWindowImageOption imageOption)
