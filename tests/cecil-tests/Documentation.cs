@@ -133,6 +133,9 @@ namespace Cecil.Tests {
 				} else if (member is PropertyDefinition pd) {
 					name = "P:" + GetDocId (pd);
 				} else if (member is FieldDefinition fd) {
+					// It's not possible to add xml documentation to the 'value__' field for enums, so don't verify those
+					if (fd.Name == "value__" && fd.DeclaringType.BaseType.Is ("System", "Enum"))
+						continue;
 					name = "F:" + GetDocId (fd.DeclaringType) + "." + fd.Name;
 				} else if (member is EventDefinition ed) {
 					name = "E:" + GetDocId (ed);
