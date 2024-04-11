@@ -13,7 +13,7 @@ jobs:
 
     steps:
       - name: 'Checkout'
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 0
@@ -35,7 +35,7 @@ jobs:
 
       # only post a comment if the linting fails
       - name: Post comment
-        uses: unsplash/comment-on-pr@v1.3.0
+        uses: unsplash/comment-on-pr@v1.3.1
         if: failure()
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

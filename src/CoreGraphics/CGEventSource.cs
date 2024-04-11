@@ -28,7 +28,7 @@ namespace CoreGraphics {
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 #else
-	[MacCatalyst (15,0)]
+	[MacCatalyst (13,1)]
 #endif
 	public sealed class CGEventSource : NativeObject {
 #if !NET

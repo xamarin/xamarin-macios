@@ -13,7 +13,7 @@ namespace CoreGraphics
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 #else
-	[MacCatalyst (15,0)]
+	[MacCatalyst (13,1)]
 #endif
 	public enum CGCaptureOptions : uint
 	{
@@ -25,7 +25,7 @@ namespace CoreGraphics
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 #else
-	[MacCatalyst (15,0)]
+	[MacCatalyst (13,1)]
 #endif
 	public static class CGDisplay
 	{
@@ -89,6 +89,7 @@ namespace CoreGraphics
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[ObsoletedOSPlatform ("macos10.9")]
+		[ObsoletedOSPlatform ("maccatalyst13.1")]
 #else
 		[Deprecated (PlatformName.MacOSX, 10, 9)]
 #endif

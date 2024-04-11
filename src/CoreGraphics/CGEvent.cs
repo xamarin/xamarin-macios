@@ -33,7 +33,7 @@ namespace CoreGraphics {
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 #else
-	[MacCatalyst (15,0)]
+	[MacCatalyst (13,1)]
 #endif
 	public sealed class CGEvent : NativeObject {
 		public delegate IntPtr CGEventTapCallback (IntPtr tapProxyEvent, CGEventType eventType, IntPtr eventRef, IntPtr userInfo);
@@ -187,15 +187,8 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary)]
-		extern static IntPtr CGEventCreateScrollWheelEvent (IntPtr source, CGScrollEventUnit units, uint /* uint32_t */ wheelCount, int /* uint32_t */ wheel1);
+		extern static IntPtr CGEventCreateScrollWheelEvent2 (IntPtr source, CGScrollEventUnit units, uint /* uint32_t */ wheelCount, int /* uint32_t */ wheel1, int /* uint32_t */ wheel2, int /* uint32_t */ wheel3);
 
-		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary)]
-		extern static IntPtr CGEventCreateScrollWheelEvent (IntPtr source, CGScrollEventUnit units, uint /* uint32_t */ wheelCount, int /* uint32_t */ wheel1, int /* uint32_t */ wheel2);
-
-		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary)]
-		extern static IntPtr CGEventCreateScrollWheelEvent (IntPtr source, CGScrollEventUnit units, uint /* uint32_t */ wheelCount, int /* uint32_t */ wheel1, int /* uint32_t */ wheel2, int /* uint32_t */ wheel3);
-
-		// This implementation doesn't work correctly on ARM64: https://github.com/xamarin/xamarin-macios/issues/13121
 		static IntPtr Create (CGEventSource? source, CGScrollEventUnit units, params int [] wheel)
 		{
 			IntPtr handle;
@@ -205,13 +198,13 @@ namespace CoreGraphics {
 			case 0:
 				throw new ArgumentException ("At least one wheel must be provided");
 			case 1:
-				handle = CGEventCreateScrollWheelEvent (shandle, units, 1, wheel [0]);
+				handle = CGEventCreateScrollWheelEvent2 (shandle, units, 1, wheel [0], 0, 0);
 				break;
 			case 2:
-				handle = CGEventCreateScrollWheelEvent (shandle, units, 2, wheel [0], wheel [1]);
+				handle = CGEventCreateScrollWheelEvent2 (shandle, units, 2, wheel [0], wheel [1], 0);
 				break;
 			case 3:
-				handle = CGEventCreateScrollWheelEvent (shandle, units, 3, wheel [0], wheel [1], wheel [2]);
+				handle = CGEventCreateScrollWheelEvent2 (shandle, units, 3, wheel [0], wheel [1], wheel [2]);
 				break;
 			default:
 				throw new ArgumentException ("Only one to three wheels are supported on this constructor");
@@ -219,7 +212,12 @@ namespace CoreGraphics {
 			return handle;
 		}
 
-		public CGEvent (CGEventSource source, CGScrollEventUnit units, params int []  wheel)
+		/// <summary>Create a new scrolling event.</summary>
+		/// <returns>A new scrolling event.</returns>
+		/// <param name="source">An optional source for the new scrolling event.</param>
+		/// <param name="units">The unit of measurement for the new scrolling event.</param>
+		/// <param name="wheel">The wheel(s) the scrolling event refer to.</param>
+		public CGEvent (CGEventSource? source, CGScrollEventUnit units, params int [] wheel)
 			: base (Create (source, units, wheel), true)
 		{
 		}
@@ -489,12 +487,39 @@ namespace CoreGraphics {
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary)]
 		extern static void CGEventPostToPSN (IntPtr processSerialNumber, IntPtr handle);
 
+		/// <summary>Post an event to a specific process</summary>
+		/// <remarks>Deprecated, use <see cref="PostToPid" /> instead.</remarks>
 		public static void PostToPSN (CGEvent evt, IntPtr processSerialNumber)
 		{
 			if (evt is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (evt));
 			
 			CGEventPostToPSN (processSerialNumber, evt.Handle);
+		}
+
+		/// <summary>Post an event to a specific process</summary>
+		/// <remarks>Deprecated, use <see cref="PostToPid" /> instead.</remarks>
+		public void PostToPSN (IntPtr processSerialNumber)
+		{
+			PostToPSN (this, processSerialNumber);
+		}
+
+		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary)]
+		extern static void CGEventPostToPid (int pid, IntPtr handle);
+
+		/// <summary>Post an event to a specific process</summary>
+		public static void PostToPid (CGEvent evt, int pid)
+		{
+			if (evt is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (evt));
+
+			CGEventPostToPid (pid, evt.Handle);
+		}
+
+		/// <summary>Post an event to a specific process</summary>
+		public void PostToPid (int pid)
+		{
+			PostToPid (this, pid);
 		}
 		
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary)]
