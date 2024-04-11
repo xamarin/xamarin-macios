@@ -26,6 +26,7 @@ steps:
   name: fix_commit
   displayName: "Undo Github merge"
   workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts
+  timeoutInMinutes: 15
 
 - checkout: maccore
   clean: true
