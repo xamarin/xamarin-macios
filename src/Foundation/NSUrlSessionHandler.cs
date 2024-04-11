@@ -567,15 +567,21 @@ namespace Foundation {
 		[EditorBrowsable (EditorBrowsableState.Never)]
 		public bool CheckCertificateRevocationList { get; set; } = false;
 
-		// We're ignoring this property, just like Xamarin.Android does:
-		// https://github.com/xamarin/xamarin-android/blob/09e8cb5c07ea6c39383185a3f90e53186749b802/src/Mono.Android/Xamarin.Android.Net/AndroidMessageHandler.cs#L150
-		// Note: we can't return null (like Xamarin.Android does), because the return type isn't nullable.
-		[UnsupportedOSPlatform ("ios")]
-		[UnsupportedOSPlatform ("maccatalyst")]
-		[UnsupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos")]
-		[EditorBrowsable (EditorBrowsableState.Never)]
-		public X509CertificateCollection ClientCertificates { get { return new X509CertificateCollection (); } }
+
+		private X509CertificateCollection? _clientCertificates;
+
+		public X509CertificateCollection ClientCertificates
+		{
+			get
+			{
+				if (ClientCertificateOptions != ClientCertificateOption.Manual)
+				{
+					throw new InvalidOperationException($"Enable manual options first on {nameof(ClientCertificateOptions)}");
+				}
+
+                return _clientCertificates ?? (_clientCertificates = new X509CertificateCollection());
+			}
+		}
 
 		// We're ignoring this property, just like Xamarin.Android does:
 		// https://github.com/xamarin/xamarin-android/blob/09e8cb5c07ea6c39383185a3f90e53186749b802/src/Mono.Android/Xamarin.Android.Net/AndroidMessageHandler.cs#L148
@@ -1088,6 +1094,18 @@ namespace Foundation {
 					}
 					return;
 				}
+                if (sessionHandler.ClientCertificateOptions == ClientCertificateOption.Manual && challenge.ProtectionSpace.AuthenticationMethod == NSUrlProtectionSpace.AuthenticationMethodClientCertificate)
+                {
+					var certificate = System.Net.Security.CertificateHelper.GetEligibleClientCertificate(sessionHandler.ClientCertificates);
+					if (certificate != null)
+					{
+						var cert = new SecCertificate(certificate);
+						var identity = SecIdentity.Import(certificate);
+						var credential = new NSUrlCredential(identity, new SecCertificate[] { cert }, NSUrlCredentialPersistence.ForSession);
+						completionHandler(NSUrlSessionAuthChallengeDisposition.UseCredential, credential);
+						return;
+					}
+                }
 				// case for the basic auth failing up front. As per apple documentation:
 				// The URL Loading System is designed to handle various aspects of the HTTP protocol for you. As a result, you should not modify the following headers using
 				// the addValue(_:forHTTPHeaderField:) or setValue(_:forHTTPHeaderField:) methods:
