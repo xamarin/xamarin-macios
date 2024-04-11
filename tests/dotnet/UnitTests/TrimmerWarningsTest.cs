@@ -17,9 +17,7 @@ namespace Xamarin.Tests {
 				break;
 			case ApplePlatform.MacOSX:
 			case ApplePlatform.MacCatalyst:
-				expectedWarnings = new ExpectedBuildMessage [] {
-					new ExpectedBuildMessage ("ILLink" /* line 0 */, "System.Runtime.CompilerServices.RuntimeFeature.IsDynamicCodeCompiled: Attribute 'System.Diagnostics.CodeAnalysis.RequiresDynamicCodeAttribute' is being referenced in code but the trimmer was instructed to remove all instances of this attribute. If the attribute instances are necessary make sure to either remove the trimmer attribute XML portion which removes the attribute instances, or override the removal by using the trimmer XML descriptor to keep the attribute type (which in turn keeps all of its instances)."),
-				};
+				expectedWarnings = Array.Empty<ExpectedBuildMessage> ();
 				break;
 			default:
 				Assert.Fail ($"Unknown platform: {platform}");
@@ -45,9 +43,7 @@ namespace Xamarin.Tests {
 				break;
 			case ApplePlatform.MacOSX:
 			case ApplePlatform.MacCatalyst:
-				expectedWarnings = new ExpectedBuildMessage [] {
-					new ExpectedBuildMessage ("ILLink" /* line 0 */, "System.Runtime.CompilerServices.RuntimeFeature.IsDynamicCodeCompiled: Attribute 'System.Diagnostics.CodeAnalysis.RequiresDynamicCodeAttribute' is being referenced in code but the trimmer was instructed to remove all instances of this attribute. If the attribute instances are necessary make sure to either remove the trimmer attribute XML portion which removes the attribute instances, or override the removal by using the trimmer XML descriptor to keep the attribute type (which in turn keeps all of its instances)."),
-				};
+				expectedWarnings = Array.Empty<ExpectedBuildMessage> ();
 				break;
 			default:
 				Assert.Fail ($"Unknown platform: {platform}");
@@ -73,9 +69,7 @@ namespace Xamarin.Tests {
 				break;
 			case ApplePlatform.MacOSX:
 			case ApplePlatform.MacCatalyst:
-				expectedWarnings = new ExpectedBuildMessage [] {
-					new ExpectedBuildMessage ("ILLink" /* line 0 */, "System.Runtime.CompilerServices.RuntimeFeature.IsDynamicCodeCompiled: Attribute 'System.Diagnostics.CodeAnalysis.RequiresDynamicCodeAttribute' is being referenced in code but the trimmer was instructed to remove all instances of this attribute. If the attribute instances are necessary make sure to either remove the trimmer attribute XML portion which removes the attribute instances, or override the removal by using the trimmer XML descriptor to keep the attribute type (which in turn keeps all of its instances)."),
-				};
+				expectedWarnings = Array.Empty<ExpectedBuildMessage> ();
 				break;
 			default:
 				Assert.Fail ($"Unknown platform: {platform}");
