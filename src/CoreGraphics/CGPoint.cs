@@ -152,15 +152,17 @@ namespace CoreGraphics {
 			return point.x == x && point.y == y;
 		}
 
-#if !NET
 		public override int GetHashCode ()
 		{
+#if NET
+			return HashCode.Combine (x, y);
+#else
 			var hash = 23;
 			hash = hash * 31 + x.GetHashCode ();
 			hash = hash * 31 + y.GetHashCode ();
 			return hash;
-		}
 #endif
+		}
 
 #if !COREBUILD
 		public void Deconstruct (out nfloat x, out nfloat y)
@@ -169,22 +171,19 @@ namespace CoreGraphics {
 			y = Y;
 		}
 
-#if !NET
 		public override string? ToString ()
 		{
+#if NET
+			return CFString.FromHandle (NSStringFromCGPoint (this));
+#else
 			return String.Format ("{{X={0}, Y={1}}}",
 				x.ToString (CultureInfo.CurrentCulture),
 				y.ToString (CultureInfo.CurrentCulture)
 			);
-		}
 #endif
+		}
 
 #if NET
-		public override int GetHashCode ()
-		{
-			return HashCode.Combine (x, y);
-		}
-
 #if MONOMAC
 		// <quote>When building for 64 bit systems, or building 32 bit like 64 bit, NSPoint is typedef’d to CGPoint.</quote>
 		// https://developer.apple.com/documentation/foundation/nspoint?language=objc
@@ -194,12 +193,6 @@ namespace CoreGraphics {
 		[DllImport (Constants.UIKitLibrary)]
 		extern static /* NSString* */ IntPtr NSStringFromCGPoint (CGPoint point);
 #endif // MONOMAC
-
-		public override string? ToString ()
-		{
-			return CFString.FromHandle (NSStringFromCGPoint (this));
-		}
-
 #endif // !NET
 #endif // !COREBUILD
 	}
