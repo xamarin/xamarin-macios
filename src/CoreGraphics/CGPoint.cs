@@ -124,7 +124,7 @@ namespace CoreGraphics {
 			this.y = point.y;
 		}
 
-		public static bool TryParse (NSDictionary dictionaryRepresentation, out CGPoint point)
+		public static bool TryParse (NSDictionary? dictionaryRepresentation, out CGPoint point)
 		{
 			if (dictionaryRepresentation is null) {
 				point = Empty;
@@ -142,7 +142,7 @@ namespace CoreGraphics {
 		}
 #endif // !COREBUILD
 
-		public override bool Equals (object obj)
+		public override bool Equals (object? obj)
 		{
 			return (obj is CGPoint t) && Equals (t);
 		}
@@ -170,7 +170,7 @@ namespace CoreGraphics {
 		}
 
 #if !NET
-		public override string ToString ()
+		public override string? ToString ()
 		{
 			return String.Format ("{{X={0}, Y={1}}}",
 				x.ToString (CultureInfo.CurrentCulture),

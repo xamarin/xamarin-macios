@@ -308,7 +308,7 @@ namespace CoreGraphics {
 		}
 #endif // !COREBUILD
 
-		public override bool Equals (object obj)
+		public override bool Equals (object? obj)
 		{
 			return (obj is CGRect rect) && Equals (rect);
 		}
@@ -333,7 +333,7 @@ namespace CoreGraphics {
 			return hash;
 		}
 
-		public override string ToString ()
+		public override string? ToString ()
 		{
 			return String.Format ("{{X={0},Y={1},Width={2},Height={3}}}",
 				x, y, width, height);
@@ -355,7 +355,7 @@ namespace CoreGraphics {
 			size = Size;
 		}
 
-		public static bool TryParse (NSDictionary dictionaryRepresentation, out CGRect rect)
+		public static bool TryParse (NSDictionary? dictionaryRepresentation, out CGRect rect)
 		{
 			if (dictionaryRepresentation is null) {
 				rect = Empty;

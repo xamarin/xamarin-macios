@@ -122,7 +122,7 @@ namespace CoreGraphics {
 			this.height = size.height;
 		}
 
-		public static bool TryParse (NSDictionary dictionaryRepresentation, out CGSize size)
+		public static bool TryParse (NSDictionary? dictionaryRepresentation, out CGSize size)
 		{
 			if (dictionaryRepresentation is null) {
 				size = Empty;
@@ -146,7 +146,7 @@ namespace CoreGraphics {
 		}
 #endif // !COREBUILD
 
-		public override bool Equals (object obj)
+		public override bool Equals (object? obj)
 		{
 			return (obj is CGSize t) && Equals (t);
 		}
@@ -198,7 +198,7 @@ namespace CoreGraphics {
 		}
 
 #if !NET
-		public override string ToString ()
+		public override string? ToString ()
 		{
 			return String.Format ("{{Width={0}, Height={1}}}",
 				width.ToString (CultureInfo.CurrentCulture),
