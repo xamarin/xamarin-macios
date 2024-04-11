@@ -570,7 +570,6 @@ namespace Foundation {
 
 		private X509CertificateCollection? _clientCertificates;
 
-		[EditorBrowsable (EditorBrowsableState.Never)]
 		public X509CertificateCollection ClientCertificates
 		{
 			get
