@@ -73,8 +73,6 @@
 !missing-pinvoke! CGDisplayUsesOpenGLAcceleration is not bound
 !missing-pinvoke! CGDisplayVendorNumber is not bound
 !missing-pinvoke! CGEventGetTypeID is not bound
-!missing-pinvoke! CGEventSetDoubleValueField is not bound
-!missing-pinvoke! CGEventSetIntegerValueField is not bound
 !missing-pinvoke! CGEventSourceGetTypeID is not bound
 !missing-pinvoke! CGGetActiveDisplayList is not bound
 !missing-pinvoke! CGGetDisplaysWithOpenGLDisplayMask is not bound
