@@ -512,6 +512,7 @@ COREGRAPHICS_CORE_SOURCES = \
 	CoreGraphics/CGColorSpace.cs \
 	CoreGraphics/CGContext.cs \
 	CoreGraphics/CGDisplay.cs \
+	CoreGraphics/CGEvent.cs \
 	CoreGraphics/CGGeometry.cs \
 	CoreGraphics/CGGradient.cs \
 	CoreGraphics/CGImage.cs \
@@ -532,7 +533,6 @@ COREGRAPHICS_SOURCES = \
 	CoreGraphics/CGColorConversionInfo.cs \
 	CoreGraphics/CGDataConsumer.cs \
 	CoreGraphics/CGDataProvider.cs \
-	CoreGraphics/CGEvent.cs \
 	CoreGraphics/CGEventSource.cs \
 	CoreGraphics/CGEventTypes.cs \
 	CoreGraphics/CGFont.cs \
