@@ -75,7 +75,7 @@ This optimization requires the linker to be enabled, and is only applied to
 methods with the `[BindingImpl (BindingImplOptions.Optimizable)]` attribute.
 
 By default it's enabled if targeting a single architecture, or for the
-platform assembly (**Xamarin.iOS.dll**, **Xamarin.TVOS.dll**, 
+platform assembly (**Xamarin.iOS.dll**, **Xamarin.TVOS.dll**,
 **Xamarin.WatchOS.dll** or **Xamarin.Mac.dll**).
 
 If targeting multiple architectures, this optimization will create different

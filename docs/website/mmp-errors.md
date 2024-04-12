@@ -757,7 +757,7 @@ You can silence this warning by adding `--nowarn=5221` to the **Additional mmp a
 
 <a name="MM5309"></a>
 
-#### MM5309: Native linking failed with error code 1.  Check build log for details.
+#### MM5309: Native linking failed with error code 1. Check build log for details.
 
 <a name="MM5310"></a>
 

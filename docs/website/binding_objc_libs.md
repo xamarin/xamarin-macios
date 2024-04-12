@@ -130,10 +130,10 @@ section below.
 To produce a complete binding, you will typically deal with four
 components:
 
--  The API definition file (`ApiDefinition.cs` in the template).
--  Optional: any enums, types, structs required by the API definition file (`StructsAndEnums.cs` in the template).
--  Optional: extra sources that might expand the generated binding, or provide a more C# friendly API (any C# files that you add to the project).
--  The native library that you are binding.
+- The API definition file (`ApiDefinition.cs` in the template).
+- Optional: any enums, types, structs required by the API definition file (`StructsAndEnums.cs` in the template).
+- Optional: extra sources that might expand the generated binding, or provide a more C# friendly API (any C# files that you add to the project).
+- The native library that you are binding.
 
 This chart shows the relationship between the files:
 
@@ -432,10 +432,10 @@ interface MyMutableTree {
 The `btouch-native` tool will automatically generate fours
 constructors in your class, for a given class `Foo`, it generates:
 
--  `Foo ()`: the default constructor (maps to Objective-C's "init" constructor)
--  `Foo (NSCoder)`: the constructor used during deserialization of NIB files (maps to Objective-C's "initWithCoder:" constructor).
--  `Foo (IntPtr handle)`: the constructor for handle-based creation, this is invoked by the runtime when the runtime needs to expose a managed object from an unmanaged object.
--  `Foo (NSEmptyFlag)`: this is used by derived classes to prevent double initialization.
+- `Foo ()`: the default constructor (maps to Objective-C's "init" constructor)
+- `Foo (NSCoder)`: the constructor used during deserialization of NIB files (maps to Objective-C's "initWithCoder:" constructor).
+- `Foo (IntPtr handle)`: the constructor for handle-based creation, this is invoked by the runtime when the runtime needs to expose a managed object from an unmanaged object.
+- `Foo (NSEmptyFlag)`: this is used by derived classes to prevent double initialization.
 
 For constructors that you define, they need to be declared using the
 following signature inside the Interface definition: they must return
@@ -736,15 +736,15 @@ public void AppendWorkers(params Worker[] workers)
 ### Binding fields
 
 Sometimes you will want to access public fields that were declared in a
-	library.
+library.
 
 Usually these fields contain strings or integers values that must be
-	referenced. They are commonly used as string that represent a specific
-	notification and as keys in dictionaries.
+referenced. They are commonly used as string that represent a specific
+notification and as keys in dictionaries.
 
 To bind a field, add a property to your interface definition file, and
-	decorate the property with the [`[Field]`](~/cross-platform/macios/binding/binding-types-reference.md#FieldAttribute) attribute. This attribute takes one parameter: the C name of the
-	symbol to lookup. For example:
+decorate the property with the [`[Field]`](~/cross-platform/macios/binding/binding-types-reference.md#FieldAttribute) attribute. This attribute takes one parameter: the C name of the
+symbol to lookup. For example:
 
 ```csharp
 [Field ("NSSomeEventNotification")]
@@ -771,14 +771,14 @@ The above will generate a `LonelyClass` which does not derive from
 The [`[Field]`](~/cross-platform/macios/binding/binding-types-reference.md#FieldAttribute) 
 attribute can be applied to the following data types:
 
--  `NSString` references (read-only properties only)
--  `NSArray` references (read-only properties only)
--  32-bit ints (`System.Int32`)
--  64-bit ints (`System.Int64`)
--  32-bit floats (`System.Single`)
--  64-bit floats (`System.Double`)
--  `System.Drawing.SizeF`
--  `CGSize`
+- `NSString` references (read-only properties only)
+- `NSArray` references (read-only properties only)
+- 32-bit ints (`System.Int32`)
+- 64-bit ints (`System.Int64`)
+- 32-bit floats (`System.Single`)
+- 64-bit floats (`System.Double`)
+- `System.Drawing.SizeF`
+- `CGSize`
 
 In addition to the native field name, you can specify the library name where
 the field is located, by passing the library name:
@@ -1216,7 +1216,7 @@ void LoadFile (string file, Action<string> completed);
 ```
 
 The above code will generate both the LoadFile method, as
-	well as:
+well as:
 
 ```csharp
 [Export ("loadfile:completed:")]
@@ -1599,9 +1599,9 @@ for example:
 The above would flag the value as having the "Retain" semantics. The
 semantics available are:
 
--  Assign
--  Copy
--  Retain
+- Assign
+- Copy
+- Retain
 
 <a name="Style_Guidelines"></a>
 
@@ -1674,12 +1674,12 @@ interface MyClassDelegate {
 
 To wrap the class you must:
 
--  In your host class, add to your 
+- In your host class, add to your 
    [`[BaseType]`](~/cross-platform/macios/binding/binding-types-reference.md#BaseTypeAttribute)  
    declaration the type that is acting as its delegate and the C# name that 
    you exposed. In our example above those are `typeof (MyClassDelegate)` 
    and `WeakDelegate` respectively.
--  In your delegate class, on each method that has more than two parameters, 
+- In your delegate class, on each method that has more than two parameters, 
    you need to specify the type that you want to use for the automatically 
    generated EventArgs class.
 

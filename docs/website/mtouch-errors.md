@@ -20,7 +20,7 @@ E.g. parameters, environment, missing tools.
 <!--
  MT0xxx mtouch itself, e.g. parameters, environment (e.g. missing tools)
  https://github.com/xamarin/xamarin-macios/blob/main/tools/mtouch/error.cs
-	-->
+  -->
 
 <a name="MT0000"></a>
 
@@ -174,12 +174,12 @@ instead of this:
 
 There are several options for mtouch that can't be used simultaneously:
 
--  --logdev
--  --installdev
--  --killdev
--  --launchdev
--  --launchdebug
--  --launchsim
+- --logdev
+- --installdev
+- --killdev
+- --launchdev
+- --launchdebug
+- --launchsim
 
 <a name="MT0020"></a>
 
@@ -1303,13 +1303,13 @@ If you're deploying an enterprise app or using a free provisioning profile, you 
 ### MT1108: Could not find developer tools for this XX (YY) device.
 
 A few operations from mtouch require the `DeveloperDiskImage.dmg` file to be present.   This
-	file is part of Xcode and is usually located relative to the
-	SDK that you are using to build against, in
-	the `Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/DeviceSupport/VERSION/DeveloperDiskImage.dmg`.
+file is part of Xcode and is usually located relative to the
+SDK that you are using to build against, in
+the `Xcode.app/Contents/Developer/iPhoneOS.platform/DeviceSupport/VERSION/DeveloperDiskImage.dmg`.
 
 This error can happen either because you do not have a
-	DeveloperDiskImage.dmg that matches the device that you have
-	connected.
+DeveloperDiskImage.dmg that matches the device that you have
+connected.
 
 <a name="MT1109"></a>
 
@@ -2879,9 +2879,9 @@ class MyImports {
 
 There are a few possible solutions:
 
-  -  Remove the P/Invokes in question from the source code.
-  -  Enable the managed linker for all assemblies (this is done in the project's iOS Build options, by setting "Linker Behavior" to "All assemblies"). This will effectively remove all the P/Invokes you don't use from the app (automatically, instead of manually like the previous point). The downside is that this will make your simulator builds somewhat slower, and it may break your app if it's using reflection - more information about the linker can be found  [here](~/ios/deploy-test/linker.md) )
-  -  Create a second native library which contains the missing native symbols. Note that this is merely a workaround (if you happen to try to call those functions, your app will crash).
+- Remove the P/Invokes in question from the source code.
+- Enable the managed linker for all assemblies (this is done in the project's iOS Build options, by setting "Linker Behavior" to "All assemblies"). This will effectively remove all the P/Invokes you don't use from the app (automatically, instead of manually like the previous point). The downside is that this will make your simulator builds somewhat slower, and it may break your app if it's using reflection - more information about the linker can be found  [here](~/ios/deploy-test/linker.md) )
+- Create a second native library which contains the missing native symbols. Note that this is merely a workaround (if you happen to try to call those functions, your app will crash).
 
 <a name="MT5215"></a>
 
