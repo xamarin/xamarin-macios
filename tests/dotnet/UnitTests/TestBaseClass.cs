@@ -441,8 +441,12 @@ namespace Xamarin.Tests {
 
 			var failures = new List<string> ();
 			for (var i = 0; i < expectedMessages.Length; i++) {
-				if (actualMessages [i].Message != expectedMessages [i]) {
-					failures.Add ($"\tUnexpected {type} message #{i}:\n\t\tExpected: {expectedMessages [i]}\n\t\tActual: {actualMessages [i].Message?.TrimEnd ()}");
+				var actual = actualMessages [i].Message ?? string.Empty;
+				var expected = expectedMessages [i];
+				if (actual != expected) {
+					actual = actual.Replace ("\n", "\\n").Replace ("\r", "\\r");
+					expected = expected.Replace ("\n", "\\n").Replace ("\r", "\\r");
+					failures.Add ($"\tUnexpected {type} message #{i}:\n\t\tExpected: {expected}\n\t\tActual:   {actual}");
 				}
 			}
 			if (!failures.Any ())
@@ -463,6 +467,29 @@ namespace Xamarin.Tests {
 			var output = BinLog.PrintToString (result.BinLogPath);
 			Assert.That (output, Does.Not.Contain ("Building target \"_RunILLink\" completely."), "Linker did not executed as expected.");
 			Assert.That (output, Does.Not.Contain ("LinkerConfiguration:"), "Custom steps did not run as expected.");
+		}
+
+		static bool? is_in_ci;
+		public static bool IsInCI {
+			get {
+				if (!is_in_ci.HasValue) {
+					var in_ci = !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("BUILD_REVISION"));
+					in_ci |= !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("BUILD_SOURCEVERSION")); // set by Azure DevOps
+					is_in_ci = in_ci;
+				}
+				return is_in_ci.Value;
+			}
+		}
+
+		static bool? is_pull_request;
+		public static bool IsPullRequest {
+			get {
+				if (!is_pull_request.HasValue) {
+					var pr = string.Equals (Environment.GetEnvironmentVariable ("BUILD_REASON"), "PullRequest", StringComparison.Ordinal);
+					is_pull_request = pr;
+				}
+				return is_pull_request.Value;
+			}
 		}
 
 	}

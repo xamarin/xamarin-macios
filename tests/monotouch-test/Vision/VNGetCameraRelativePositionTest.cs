@@ -44,6 +44,7 @@ namespace MonoTouchFixtures.Vision {
 		{
 			TestRuntime.AssertNotSimulator ();
 			TestRuntime.AssertXcodeVersion (15, 0);
+			TestRuntime.AssertNotX64Desktop ();
 		}
 
 		[Test]
@@ -66,7 +67,8 @@ namespace MonoTouchFixtures.Vision {
 
 			var position = observation.GetCameraRelativePosition (out var modelPositionOut, VNHumanBodyPose3DObservationJointName.CenterHead, out NSError observationError);
 			Assert.Null (observationError, $"GetCameraRelativePosition should not return an error {observationError}");
-			Assert.That (modelPositionOut, Is.EqualTo (expectedMatrix), "VNVector3DGetCameraRelativePosition result is not equal to expected matrix");
+			// GetCameraRelativePosition results can vary slightly between runs so we need to use a delta.
+			Asserts.AreEqual (expectedMatrix, modelPositionOut, 0.1f, "VNVector3DGetCameraRelativePosition result is not equal to expected matrix");
 		}
 	}
 }

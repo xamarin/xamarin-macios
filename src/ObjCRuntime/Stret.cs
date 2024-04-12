@@ -22,6 +22,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 #if !BGENERATOR
 using Generator = System.Object;
@@ -77,6 +78,7 @@ namespace ObjCRuntime {
 			return true;
 		}
 
+#if __WATCHOS__ || BGENERATOR
 		public static bool ArmNeedStret (Type returnType, Generator generator)
 		{
 			bool has32bitArm;
@@ -150,7 +152,9 @@ namespace ObjCRuntime {
 
 			return true;
 		}
+#endif // __WATCHOS__ || BGENERATOR
 
+#if __WATCHOS__ || BGENERATOR
 		public static bool X86NeedStret (Type returnType, Generator generator)
 		{
 			Type t = returnType;
@@ -169,6 +173,7 @@ namespace ObjCRuntime {
 
 			return false;
 		}
+#endif // __WATCHOS__ || BGENERATOR
 
 		public static bool X86_64NeedStret (Type returnType, Generator generator)
 		{
@@ -181,6 +186,10 @@ namespace ObjCRuntime {
 			return GetValueTypeSize (t, fieldTypes, true, generator) > 16;
 		}
 
+#if NET
+		// IL2070: 'this' argument does not satisfy 'DynamicallyAccessedMemberTypes.PublicFields', 'DynamicallyAccessedMemberTypes.NonPublicFields' in call to 'System.Type.GetFields(BindingFlags)'. The parameter 'type' of method 'ObjCRuntime.Stret.GetValueTypeSize(Type, List<Type>, Boolean, Object)' does not have matching annotations. The source value must declare at least the same requirements as those declared on the target location it is assigned to.
+		[UnconditionalSuppressMessage ("", "IL2070", Justification = "Computing the size of a struct is safe, because the trimmer can't remove fields that would affect the size of a marshallable struct (it could affect marshalling behavior).")]
+#endif
 		static int GetValueTypeSize (Type type, List<Type> fieldTypes, bool is_64_bits, Generator generator)
 		{
 			int size = 0;
@@ -286,6 +295,10 @@ namespace ObjCRuntime {
 			return false;
 		}
 
+#if NET
+		// IL2070: 'this' argument does not satisfy 'DynamicallyAccessedMemberTypes.PublicFields', 'DynamicallyAccessedMemberTypes.NonPublicFields' in call to 'System.Type.GetFields(BindingFlags)'. The parameter 'type' of method 'ObjCRuntime.Stret.GetValueTypeSize(Type, Type, List<Type>, Boolean, Int32&, Int32&, Object)' does not have matching annotations. The source value must declare at least the same requirements as those declared on the target location it is assigned to.
+		[UnconditionalSuppressMessage ("", "IL2070", Justification = "Computing the size of a struct is safe, because the trimmer can't remove fields that would affect the size of a marshallable struct (it could affect marshalling behavior).")]
+#endif
 		static void GetValueTypeSize (Type original_type, Type type, List<Type> field_types, bool is_64_bits, ref int size, ref int max_element_size, Generator generator)
 		{
 			// FIXME:
@@ -345,6 +358,7 @@ namespace ObjCRuntime {
 			}
 		}
 
+#if BGENERATOR
 		public static bool NeedStret (Type returnType, Generator generator)
 		{
 			if (X86NeedStret (returnType, generator))
@@ -358,5 +372,6 @@ namespace ObjCRuntime {
 
 			return false;
 		}
+#endif // BGENERATOR
 	}
 }

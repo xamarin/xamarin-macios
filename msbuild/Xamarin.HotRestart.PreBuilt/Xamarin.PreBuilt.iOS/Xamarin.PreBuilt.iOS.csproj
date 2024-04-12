@@ -9,6 +9,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <ProvisioningType>automatic</ProvisioningType>
+    <DebugSymbols>true</DebugSymbols>
     <DebugType>portable</DebugType>
     <_LinkMode>None</_LinkMode>
     <UseInterpreter>true</UseInterpreter>

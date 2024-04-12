@@ -21,18 +21,26 @@ namespace HealthKit {
 	public static class HKAppleWalkingSteadiness {
 
 		[DllImport (Constants.HealthKitLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static extern bool HKAppleWalkingSteadinessClassificationForQuantity (HKQuantityRef value, out nint classificationOut, out NSErrorRef errorOut);
+		unsafe static extern byte HKAppleWalkingSteadinessClassificationForQuantity (HKQuantityRef value, nint* classificationOut, NSErrorRef* errorOut);
 
 		public static bool TryGetClassification (HKQuantity value, out HKAppleWalkingSteadinessClassification? classification, out NSError? error)
 		{
+			nint classificationOut;
+			NSErrorRef errorPtr;
+
 			if (value is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
 			classification = null;
-			error = null;
-			if (HKAppleWalkingSteadinessClassificationForQuantity (value.GetHandle (), out var classificationOut, out var errorPtr)) {
+
+			byte rv;
+			unsafe {
+				rv = HKAppleWalkingSteadinessClassificationForQuantity (value.GetHandle (), &classificationOut, &errorPtr);
+			}
+
+			error = Runtime.GetNSObject<NSError> (errorPtr, false);
+
+			if (rv != 0) {
 				classification = (HKAppleWalkingSteadinessClassification) (long) classificationOut;
-				error = Runtime.GetNSObject<NSError> (errorPtr, false);
 				return true;
 			}
 			return false;

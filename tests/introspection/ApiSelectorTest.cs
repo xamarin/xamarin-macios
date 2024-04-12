@@ -1242,6 +1242,8 @@ namespace Introspection {
 			// CloudKit
 			case "initWithExcludedZoneIDs:":
 			case "initWithZoneIDs:":
+			// DDDevicePickerViewController
+			case "initWithBrowseDescriptor:parameters:":
 				return true;
 			default:
 				return false;

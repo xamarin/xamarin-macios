@@ -362,10 +362,10 @@ $$(foreach arch,$$($(2)_ARCHITECTURES),$$(eval $$(call LibXamarinArchTemplate,$(
 .libs/$(1)/libxamarin$(4).x86_64.dylib: EXTRA_FLAGS=$$($(1)$(3)_COMMON_DYLIB_FLAGS)
 .libs/$(1)/libxamarin$(4).x86_64.dylib: $$(x86_64_$(1)$(3)_OBJECTS)
 
-.libs/$(1)/libxamarin$(4).armv7.dylib: EXTRA_FLAGS=$$($(1)$(3)_COMMON_DYLIB_FLAGS) -miphoneos-version-min=8.0
+.libs/$(1)/libxamarin$(4).armv7.dylib: EXTRA_FLAGS=$$($(1)$(3)_COMMON_DYLIB_FLAGS) -miphoneos-version-min=$(MIN_IOS_SDK_VERSION)
 .libs/$(1)/libxamarin$(4).armv7.dylib: $$(armv7_$(1)$(3)_OBJECTS)
 
-.libs/$(1)/libxamarin$(4).armv7s.dylib: EXTRA_FLAGS=$$($(1)$(3)_COMMON_DYLIB_FLAGS) -miphoneos-version-min=8.0
+.libs/$(1)/libxamarin$(4).armv7s.dylib: EXTRA_FLAGS=$$($(1)$(3)_COMMON_DYLIB_FLAGS) -miphoneos-version-min=$(MIN_IOS_SDK_VERSION)
 .libs/$(1)/libxamarin$(4).armv7s.dylib: $$(armv7s_$(1)$(3)_OBJECTS)
 
 .libs/$(1)/libxamarin$(4).arm64.dylib: EXTRA_FLAGS=$$($(1)$(3)_COMMON_DYLIB_FLAGS)
@@ -383,10 +383,10 @@ $$(foreach arch,$$($(2)_ARCHITECTURES),$$(eval $$(call LibXamarinArchTemplate,$(
 .libs/$(1)/Xamarin$(4).x86_64.framework: EXTRA_FLAGS=$$($(1)$(3)_COMMON_FRAMEWORK_FLAGS)
 .libs/$(1)/Xamarin$(4).x86_64.framework: $$(x86_64_$(1)$(3)_OBJECTS)
 
-.libs/$(1)/Xamarin$(4).armv7.framework: EXTRA_FLAGS=$$($(1)$(3)_COMMON_FRAMEWORK_FLAGS) -miphoneos-version-min=8.0
+.libs/$(1)/Xamarin$(4).armv7.framework: EXTRA_FLAGS=$$($(1)$(3)_COMMON_FRAMEWORK_FLAGS) -miphoneos-version-min=$(MIN_IOS_SDK_VERSION)
 .libs/$(1)/Xamarin$(4).armv7.framework: $$(armv7_$(1)$(3)_OBJECTS)
 
-.libs/$(1)/Xamarin$(4).armv7s.framework: EXTRA_FLAGS=$$($(1)$(3)_COMMON_FRAMEWORK_FLAGS) -miphoneos-version-min=8.0
+.libs/$(1)/Xamarin$(4).armv7s.framework: EXTRA_FLAGS=$$($(1)$(3)_COMMON_FRAMEWORK_FLAGS) -miphoneos-version-min=$(MIN_IOS_SDK_VERSION)
 .libs/$(1)/Xamarin$(4).armv7s.framework: $$(armv7s_$(1)$(3)_OBJECTS)
 
 .libs/$(1)/Xamarin$(4).arm64.framework: EXTRA_FLAGS=$$($(1)$(3)_COMMON_FRAMEWORK_FLAGS)

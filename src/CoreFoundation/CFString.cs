@@ -261,16 +261,15 @@ namespace CoreFoundation {
 			}
 		}
 
-		[DllImport (Constants.CoreFoundationLibrary, CharSet = CharSet.Unicode)]
-		[return: MarshalAs (UnmanagedType.U2)]
-		extern static char CFStringGetCharacterAtIndex (IntPtr handle, nint p);
+		[DllImport (Constants.CoreFoundationLibrary)]
+		extern static ushort CFStringGetCharacterAtIndex (IntPtr handle, nint p);
 
 		public char this [nint p] {
 			get {
 				if (str is not null)
 					return str [(int) p];
 				else
-					return CFStringGetCharacterAtIndex (Handle, p);
+					return (char) CFStringGetCharacterAtIndex (Handle, p);
 			}
 		}
 
