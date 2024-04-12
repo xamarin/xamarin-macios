@@ -84,7 +84,7 @@ namespace Xamarin.MacDev.Tasks {
 			} else if (taskMessage.StartsWith ("TaskInput: BundleIdentifier")) {
 				bundleIdentifier = taskMessage.Substring ("TaskInput: BundleIdentifier".Length).Trim ();
 			} else {
-				bundleIdentifier ="Unhandled task message format.";
+				bundleIdentifier = "Unhandled task message format.";
 			}
 			Assert.AreEqual ("com.xamarin.detectsigningidentitytest", bundleIdentifier, "Bundle identifier");
 		}
