@@ -32,6 +32,7 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 using CoreFoundation;
@@ -97,10 +98,10 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static /* CGMutablePathRef */ IntPtr CGPathCreateMutableCopyByTransformingPath (/* CGPathRef */ IntPtr path, /* const CGAffineTransform* */ ref CGAffineTransform transform);
+		unsafe extern static /* CGMutablePathRef */ IntPtr CGPathCreateMutableCopyByTransformingPath (/* CGPathRef */ IntPtr path, /* const CGAffineTransform* */ CGAffineTransform* transform);
 
-		public CGPath (CGPath reference, CGAffineTransform transform)
-			: base (CGPathCreateMutableCopyByTransformingPath (Runtime.ThrowOnNull (reference, nameof (reference)).Handle, ref transform), true)
+		public unsafe CGPath (CGPath reference, CGAffineTransform transform)
+			: base (CGPathCreateMutableCopyByTransformingPath (Runtime.ThrowOnNull (reference, nameof (reference)).Handle, &transform), true)
 		{
 		}
 
@@ -142,8 +143,7 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool CGPathEqualToPath (/* CGPathRef */ IntPtr path1, /* CGPathRef */ IntPtr path2);
+		extern static byte CGPathEqualToPath (/* CGPathRef */ IntPtr path1, /* CGPathRef */ IntPtr path2);
 
 		public static bool operator == (CGPath? path1, CGPath? path2)
 		{
@@ -173,7 +173,7 @@ namespace CoreGraphics {
 			if (other is null)
 				return false;
 
-			return CGPathEqualToPath (this.Handle, other.Handle);
+			return CGPathEqualToPath (this.Handle, other.Handle) != 0;
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
@@ -363,16 +363,16 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		unsafe extern static void CGPathAddArc (/* CGMutablePathRef */ IntPtr path, CGAffineTransform* m, /* CGFloat */ nfloat x, /* CGFloat */ nfloat y, /* CGFloat */ nfloat radius, /* CGFloat */ nfloat startAngle, /* CGFloat */ nfloat endAngle, [MarshalAs (UnmanagedType.I1)] bool clockwise);
+		unsafe extern static void CGPathAddArc (/* CGMutablePathRef */ IntPtr path, CGAffineTransform* m, /* CGFloat */ nfloat x, /* CGFloat */ nfloat y, /* CGFloat */ nfloat radius, /* CGFloat */ nfloat startAngle, /* CGFloat */ nfloat endAngle, byte clockwise);
 
 		public unsafe void AddArc (CGAffineTransform m, nfloat x, nfloat y, nfloat radius, nfloat startAngle, nfloat endAngle, bool clockwise)
 		{
-			CGPathAddArc (Handle, &m, x, y, radius, startAngle, endAngle, clockwise);
+			CGPathAddArc (Handle, &m, x, y, radius, startAngle, endAngle, clockwise.AsByte ());
 		}
 
 		public unsafe void AddArc (nfloat x, nfloat y, nfloat radius, nfloat startAngle, nfloat endAngle, bool clockwise)
 		{
-			CGPathAddArc (Handle, null, x, y, radius, startAngle, endAngle, clockwise);
+			CGPathAddArc (Handle, null, x, y, radius, startAngle, endAngle, clockwise.AsByte ());
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
@@ -419,22 +419,23 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool CGPathIsEmpty (/* CGPathRef */ IntPtr path);
+		extern static byte CGPathIsEmpty (/* CGPathRef */ IntPtr path);
 
 		public bool IsEmpty {
 			get {
-				return CGPathIsEmpty (Handle);
+				return CGPathIsEmpty (Handle) != 0;
 			}
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool CGPathIsRect (/* CGPathRef */ IntPtr path, out CGRect rect);
+		unsafe extern static byte CGPathIsRect (/* CGPathRef */ IntPtr path, CGRect* rect);
 
 		public bool IsRect (out CGRect rect)
 		{
-			return CGPathIsRect (Handle, out rect);
+			unsafe {
+				rect = default;
+				return CGPathIsRect (Handle, (CGRect*) Unsafe.AsPointer<CGRect> (ref rect)) != 0;
+			}
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
@@ -465,17 +466,16 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		unsafe extern static bool CGPathContainsPoint (IntPtr path, CGAffineTransform* m, CGPoint point, [MarshalAs (UnmanagedType.I1)] bool eoFill);
+		unsafe extern static byte CGPathContainsPoint (IntPtr path, CGAffineTransform* m, CGPoint point, byte eoFill);
 
 		public unsafe bool ContainsPoint (CGAffineTransform m, CGPoint point, bool eoFill)
 		{
-			return CGPathContainsPoint (Handle, &m, point, eoFill);
+			return CGPathContainsPoint (Handle, &m, point, eoFill.AsByte ()) != 0;
 		}
 
 		public unsafe bool ContainsPoint (CGPoint point, bool eoFill)
 		{
-			return CGPathContainsPoint (Handle, null, point, eoFill);
+			return CGPathContainsPoint (Handle, null, point, eoFill.AsByte ()) != 0;
 		}
 
 		public delegate void ApplierFunction (CGPathElement element);
@@ -554,11 +554,11 @@ namespace CoreGraphics {
 		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0), Watch (9, 0)]
 #endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		static extern IntPtr CGPathCreateCopyByNormalizing (IntPtr path, [MarshalAs (UnmanagedType.I1)] bool evenOddFillRule);
+		static extern IntPtr CGPathCreateCopyByNormalizing (IntPtr path, byte evenOddFillRule);
 
 		public CGPath? CreateByNormalizing (bool evenOddFillRule)
 		{
-			return Runtime.GetINativeObject<CGPath> (CGPathCreateCopyByNormalizing (Handle, evenOddFillRule), owns: true);
+			return Runtime.GetINativeObject<CGPath> (CGPathCreateCopyByNormalizing (Handle, evenOddFillRule.AsByte ()), owns: true);
 		}
 
 #if NET
@@ -570,11 +570,11 @@ namespace CoreGraphics {
 		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0), Watch (9, 0)]
 #endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		static extern IntPtr CGPathCreateCopyByUnioningPath (IntPtr path, IntPtr maskPath, [MarshalAs (UnmanagedType.I1)] bool evenOddFillRule);
+		static extern IntPtr CGPathCreateCopyByUnioningPath (IntPtr path, IntPtr maskPath, byte evenOddFillRule);
 
 		public CGPath? CreateByUnioningPath (CGPath? maskPath, bool evenOddFillRule)
 		{
-			return Runtime.GetINativeObject<CGPath> (CGPathCreateCopyByUnioningPath (Handle, maskPath.GetHandle (), evenOddFillRule), owns: true);
+			return Runtime.GetINativeObject<CGPath> (CGPathCreateCopyByUnioningPath (Handle, maskPath.GetHandle (), evenOddFillRule.AsByte ()), owns: true);
 		}
 
 #if NET
@@ -586,11 +586,11 @@ namespace CoreGraphics {
 		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0), Watch (9, 0)]
 #endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		static extern IntPtr CGPathCreateCopyByIntersectingPath (IntPtr path, IntPtr maskPath, [MarshalAs (UnmanagedType.I1)] bool evenOddFillRule);
+		static extern IntPtr CGPathCreateCopyByIntersectingPath (IntPtr path, IntPtr maskPath, byte evenOddFillRule);
 
 		public CGPath? CreateByIntersectingPath (CGPath? maskPath, bool evenOddFillRule)
 		{
-			return Runtime.GetINativeObject<CGPath> (CGPathCreateCopyByIntersectingPath (Handle, maskPath.GetHandle (), evenOddFillRule), owns: true);
+			return Runtime.GetINativeObject<CGPath> (CGPathCreateCopyByIntersectingPath (Handle, maskPath.GetHandle (), evenOddFillRule.AsByte ()), owns: true);
 		}
 
 #if NET
@@ -602,11 +602,11 @@ namespace CoreGraphics {
 		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0), Watch (9, 0)]
 #endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		static extern IntPtr CGPathCreateCopyBySubtractingPath (IntPtr path, IntPtr maskPath, [MarshalAs (UnmanagedType.I1)] bool evenOddFillRule);
+		static extern IntPtr CGPathCreateCopyBySubtractingPath (IntPtr path, IntPtr maskPath, byte evenOddFillRule);
 
 		public CGPath? CreateBySubtractingPath (CGPath? maskPath, bool evenOddFillRule)
 		{
-			return Runtime.GetINativeObject<CGPath> (CGPathCreateCopyBySubtractingPath (Handle, maskPath.GetHandle (), evenOddFillRule), owns: true);
+			return Runtime.GetINativeObject<CGPath> (CGPathCreateCopyBySubtractingPath (Handle, maskPath.GetHandle (), evenOddFillRule.AsByte ()), owns: true);
 		}
 
 #if NET
@@ -618,11 +618,11 @@ namespace CoreGraphics {
 		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0), Watch (9, 0)]
 #endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		static extern IntPtr CGPathCreateCopyBySymmetricDifferenceOfPath (IntPtr path, IntPtr maskPath, [MarshalAs (UnmanagedType.I1)] bool evenOddFillRule);
+		static extern IntPtr CGPathCreateCopyBySymmetricDifferenceOfPath (IntPtr path, IntPtr maskPath, byte evenOddFillRule);
 
 		public CGPath? CreateBySymmetricDifferenceOfPath (CGPath? maskPath, bool evenOddFillRule)
 		{
-			return Runtime.GetINativeObject<CGPath> (CGPathCreateCopyBySymmetricDifferenceOfPath (Handle, maskPath.GetHandle (), evenOddFillRule), owns: true);
+			return Runtime.GetINativeObject<CGPath> (CGPathCreateCopyBySymmetricDifferenceOfPath (Handle, maskPath.GetHandle (), evenOddFillRule.AsByte ()), owns: true);
 		}
 
 #if NET
@@ -634,11 +634,11 @@ namespace CoreGraphics {
 		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0), Watch (9, 0)]
 #endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		static extern IntPtr CGPathCreateCopyOfLineBySubtractingPath (IntPtr path, IntPtr maskPath, [MarshalAs (UnmanagedType.I1)] bool evenOddFillRule);
+		static extern IntPtr CGPathCreateCopyOfLineBySubtractingPath (IntPtr path, IntPtr maskPath, byte evenOddFillRule);
 
 		public CGPath? CreateLineBySubtractingPath (CGPath? maskPath, bool evenOddFillRule)
 		{
-			return Runtime.GetINativeObject<CGPath> (CGPathCreateCopyOfLineBySubtractingPath (Handle, maskPath.GetHandle (), evenOddFillRule), owns: true);
+			return Runtime.GetINativeObject<CGPath> (CGPathCreateCopyOfLineBySubtractingPath (Handle, maskPath.GetHandle (), evenOddFillRule.AsByte ()), owns: true);
 		}
 
 #if NET
@@ -650,11 +650,11 @@ namespace CoreGraphics {
 		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0), Watch (9, 0)]
 #endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		static extern IntPtr CGPathCreateCopyOfLineByIntersectingPath (IntPtr path, IntPtr maskPath, [MarshalAs (UnmanagedType.I1)] bool evenOddFillRule);
+		static extern IntPtr CGPathCreateCopyOfLineByIntersectingPath (IntPtr path, IntPtr maskPath, byte evenOddFillRule);
 
 		public CGPath? CreateLineByIntersectingPath (CGPath? maskPath, bool evenOddFillRule)
 		{
-			return Runtime.GetINativeObject<CGPath> (CGPathCreateCopyOfLineByIntersectingPath (Handle, maskPath.GetHandle (), evenOddFillRule), owns: true);
+			return Runtime.GetINativeObject<CGPath> (CGPathCreateCopyOfLineByIntersectingPath (Handle, maskPath.GetHandle (), evenOddFillRule.AsByte ()), owns: true);
 		}
 
 #if NET
@@ -666,11 +666,11 @@ namespace CoreGraphics {
 		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0), Watch (9, 0)]
 #endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		static extern unsafe /* CFArrayRef __nullable */ IntPtr CGPathCreateSeparateComponents (IntPtr path, [MarshalAs (UnmanagedType.I1)] bool evenOddFillRule);
+		static extern unsafe /* CFArrayRef __nullable */ IntPtr CGPathCreateSeparateComponents (IntPtr path, byte evenOddFillRule);
 
 		public CGPath [] GetSeparateComponents (bool evenOddFillRule)
 		{
-			var cfArrayRef = CGPathCreateSeparateComponents (Handle, evenOddFillRule);
+			var cfArrayRef = CGPathCreateSeparateComponents (Handle, evenOddFillRule.AsByte ());
 			if (cfArrayRef == IntPtr.Zero)
 				return Array.Empty<CGPath> ();
 			return NSArray.ArrayFromHandle<CGPath> (cfArrayRef);
@@ -701,12 +701,11 @@ namespace CoreGraphics {
 		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0), Watch (9, 0)]
 #endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static extern bool CGPathIntersectsPath (IntPtr path1, IntPtr path2, [MarshalAs (UnmanagedType.I1)] bool evenOddFillRule);
+		static extern byte CGPathIntersectsPath (IntPtr path1, IntPtr path2, byte evenOddFillRule);
 
 		public bool DoesIntersect (CGPath? maskPath, bool evenOddFillRule)
 		{
-			return CGPathIntersectsPath (Handle, maskPath.GetHandle (), evenOddFillRule);
+			return CGPathIntersectsPath (Handle, maskPath.GetHandle (), evenOddFillRule.AsByte ()) != 0;
 		}
 
 		static CGPath MakeMutable (IntPtr source, bool owns)
@@ -769,11 +768,13 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static IntPtr CGPathCreateCopyByTransformingPath (/* CGPathRef */ IntPtr path, ref CGAffineTransform transform);
+		unsafe extern static IntPtr CGPathCreateCopyByTransformingPath (/* CGPathRef */ IntPtr path, CGAffineTransform* transform);
 
 		public CGPath CopyByTransformingPath (CGAffineTransform transform)
 		{
-			return MakeMutable (CGPathCreateCopyByTransformingPath (Handle, ref transform), true);
+			unsafe {
+				return MakeMutable (CGPathCreateCopyByTransformingPath (Handle, &transform), true);
+			}
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]

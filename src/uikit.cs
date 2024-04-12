@@ -3459,7 +3459,11 @@ namespace UIKit {
 		[MacCatalyst (13, 1)]
 		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Override 'OpenUrl (UIApplication, NSUrl, NSDictionary)'. The later will be called if both are implemented.")]
 		[Export ("application:handleOpenURL:")]
+#if XAMCORE_5_0
+		bool HandleOpenUrl (UIApplication application, NSUrl url);
+#else
 		bool HandleOpenURL (UIApplication application, NSUrl url);
+#endif
 
 		[Export ("applicationDidReceiveMemoryWarning:")]
 		void ReceiveMemoryWarning (UIApplication application);
@@ -15912,14 +15916,35 @@ namespace UIKit {
 		[Export ("clearsOnInsertion")]
 		bool ClearsOnInsertion { get; set; }
 
+#if !XAMCORE_5_0
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		[Obsolete ("Use 'TypingAttributes2' instead, because this property will return null instead of an empty dictionary.")]
+#endif
 		[NullAllowed] // by default this property is null
 		[Export ("typingAttributes", ArgumentSemantic.Copy)]
 		NSDictionary TypingAttributes {
+#if !XAMCORE_5_0
 			// this avoids a crash (see unit tests) and behave like UITextField does (return null)
+			// however, it's un-intuitive and causes other problems (https://github.com/xamarin/xamarin-macios/issues/12709), so remove it the next time we can make a breaking change.
 			[PreSnippet ("if (SelectedRange.Length == 0) return null;", Optimizable = true)]
+#endif
 			get;
 			set;
 		}
+
+#if !XAMCORE_6_0
+		[NullAllowed] // by default this property is null
+		[Export ("typingAttributes", ArgumentSemantic.Copy)]
+#if XAMCORE_5_0
+		[Obsolete ("Use 'TypingAttributes' instead.")
+		[EditorBrowsable (EditorBrowsableState.Never)]
+#endif
+		[Sealed]
+		NSDictionary TypingAttributes2 {
+			get;
+			set;
+		}
+#endif // XAMCORE_6_0
 
 		[Export ("selectable")]
 		bool Selectable { [Bind ("isSelectable")] get; set; }
@@ -16012,7 +16037,11 @@ namespace UIKit {
 		[Deprecated (PlatformName.TvOS, 10, 0, message: "Use the 'ShouldInteractWithUrl' overload that takes 'UITextItemInteraction' instead.")]
 		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use the 'ShouldInteractWithUrl' overload that takes 'UITextItemInteraction' instead.")]
 		[Export ("textView:shouldInteractWithURL:inRange:"), DelegateName ("Func<UITextView,NSUrl,NSRange,bool>"), DefaultValue ("true")]
+#if XAMCORE_5_0
+		bool ShouldInteractWithUrl (UITextView textView, NSUrl url, NSRange characterRange);
+#else
 		bool ShouldInteractWithUrl (UITextView textView, NSUrl URL, NSRange characterRange);
+#endif
 
 		[Deprecated (PlatformName.iOS, 10, 0, message: "Use the 'ShouldInteractWithTextAttachment' overload that takes 'UITextItemInteraction' instead.")]
 		[Deprecated (PlatformName.TvOS, 10, 0, message: "Use the 'ShouldInteractWithTextAttachment' overload that takes 'UITextItemInteraction' instead.")]

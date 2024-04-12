@@ -140,8 +140,9 @@ namespace Introspection {
 #endif
 			}
 
-#if !NET
 			switch (type.Namespace) {
+			case "SafetyKit":
+				return true; // SafetyKit requires a custom entitlement, and will throw exceptions if it's not present.
 #if __IOS__
 			case "WatchKit":
 				return true; // WatchKit has been removed from iOS.
@@ -150,7 +151,6 @@ namespace Introspection {
 				return true; // QTKit has been removed from macos.
 #endif
 			}
-#endif // !NET
 
 			// skip types that we renamed / rewrite since they won't behave correctly (by design)
 			if (SkipDueToRejectedTypes (type))
@@ -320,6 +320,11 @@ namespace Introspection {
 
 				// we only care for NSObject subclasses that we expose publicly
 				if (!t.IsPublic || !NSObjectType.IsAssignableFrom (t))
+					continue;
+
+				// we only care about wrapper types (types with a native counterpart), and they all have a Register attribute.
+				var typeRegisterAttribute = t.GetCustomAttribute<RegisterAttribute> (false);
+				if (typeRegisterAttribute is null)
 					continue;
 
 				int designated = 0;

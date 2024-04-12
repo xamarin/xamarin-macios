@@ -76,6 +76,10 @@ parameters:
   type: string
   default: ''
 
+- name: retryCount
+  type: number
+  default: 3
+
 steps:
 
 - template: ../common/checkout.yml
@@ -90,19 +94,14 @@ steps:
 
 # Use a cmdlet to check if the space available in the devices root system is larger than 50 gb. If there is not
 # enough space available it:
-# 1. Set the status of the build to error. It is not a failure since no tests have been ran.
-# 2. Set a comment stating the same as what was sent to the status.
-# 3. Cancel the pipeline and do not execute any of the following steps.
+# 1. Set a comment stating the same as what was sent to the status.
+# 2. Cancel the pipeline and do not execute any of the following steps.
 - pwsh: | 
     Import-Module ./MaciosCI.psd1
-    $statuses = New-GitHubStatusesObjectFromUrl -Url "$(Build.Repository.Uri)" -Token $(GitHub.Token)
 
     if ( -not (Test-HDFreeSpace -Size 20)) {
-      $statuses.SetStatus("error", "Not enough free space in the host.", "${{ parameters.statusContext }}")
       New-GitHubComment -Header "Tests failed catastrophically on $Env:CONTEXT" -Emoji ":fire:" -Description "Not enough free space in the host."
       Stop-Pipeline
-    } else {
-      $statuses.SetStatus("pending", "Device tests on VSTS have been started.", "${{ parameters.statusContext }}")
     }
   env:
     CONTEXT: ${{ parameters.statusContext }}
@@ -137,6 +136,7 @@ steps:
     ./maccore/tools/install-qa-provisioning-profiles.sh -v
   displayName: 'Add provisioning profiles'
   timeoutInMinutes: 30
+  retryCountOnTaskFailure: ${{ parameters.retryCount }} # We sometinmes have network issues when we try to retrieve the version of provisionator
   env:
     AUTH_TOKEN_GITHUB_COM: ${{ parameters.gitHubToken }}
     AUTH_TOKEN_LA_DEV_APPLE_P12: ${{ parameters.xqaCertPass }}
@@ -232,6 +232,7 @@ steps:
 
 - template: ./run-tests.yml
   parameters:
+    isPR: ${{ parameters.isPR }}
     label: ${{ parameters.label }}
     labelWithPlatform: ${{ parameters.labelWithPlatform }}
     statusContext: ${{ parameters.statusContext }}

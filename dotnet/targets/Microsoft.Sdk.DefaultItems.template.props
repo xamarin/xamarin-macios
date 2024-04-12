@@ -17,40 +17,40 @@
 
 -->
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-	<ItemGroup Condition="'$(EnableDefault@PLATFORM@Items)' == 'true' And $([MSBuild]::VersionEquals($(TargetFrameworkVersion), '@TARGET_FRAMEWORK_VERSION@'))">
+	<ItemGroup Condition="'$(EnableDefault@PLATFORM@Items)' == 'true' And $([MSBuild]::VersionEquals($(TargetFrameworkVersion), '@TARGET_FRAMEWORK_VERSION@')) And '$(CurrentHash)' == '@CURRENT_HASH_LONG@'">
 		<!-- Default plist file inclusion -->
 		<None Include="*.plist">
-			<Link>$([MSBuild]::MakeRelative ('$(MSBuildProjectDirectory)', '%(Identity)'))</Link>
+			<Link>$([MSBuild]::MakeRelative ('$(MSBuildProjectDirectory)', '%(FullPath)'))</Link>
 		</None>
 
 		<!-- Default Asset Catalog file inclusion -->
 		<ImageAsset Include="**\*.xcassets\**\*.*" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder);**\*.xcassets\**\*.DS_Store">
-			<Link>$([MSBuild]::MakeRelative ('$(MSBuildProjectDirectory)', '%(Identity)'))</Link>
+			<Link>$([MSBuild]::MakeRelative ('$(MSBuildProjectDirectory)', '%(FullPath)'))</Link>
 			<Visible>false</Visible>
 			<IsDefaultItem>true</IsDefaultItem>
 		</ImageAsset>
 
 		<!-- Default Storyboard file inclusion -->
 		<InterfaceDefinition Include="**\*.storyboard;**\*.xib" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" >
-			<Link>$([MSBuild]::MakeRelative ('$(MSBuildProjectDirectory)', '%(Identity)'))</Link>
+			<Link>$([MSBuild]::MakeRelative ('$(MSBuildProjectDirectory)', '%(FullPath)'))</Link>
 			<IsDefaultItem>true</IsDefaultItem>
 		</InterfaceDefinition>
 
 		<!-- Default Atlas Texture file inclusion -->
 		<AtlasTexture Include="**\*.atlas\*.png" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" >
-			<Link>$([MSBuild]::MakeRelative ('$(MSBuildProjectDirectory)', '%(Identity)'))</Link>
+			<Link>$([MSBuild]::MakeRelative ('$(MSBuildProjectDirectory)', '%(FullPath)'))</Link>
 			<IsDefaultItem>true</IsDefaultItem>
 		</AtlasTexture>
 
 		<!-- Default CoreMLModel inclusion -->
 		<CoreMLModel Include="**\*.mlmodel" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" >
-			<Link>$([MSBuild]::MakeRelative ('$(MSBuildProjectDirectory)', '%(Identity)'))</Link>
+			<Link>$([MSBuild]::MakeRelative ('$(MSBuildProjectDirectory)', '%(FullPath)'))</Link>
 			<IsDefaultItem>true</IsDefaultItem>
 		</CoreMLModel>
 
 		<!-- Default Metal inclusion -->
 		<Metal Include="**\*.metal" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" >
-			<Link>$([MSBuild]::MakeRelative ('$(MSBuildProjectDirectory)', '%(Identity)'))</Link>
+			<Link>$([MSBuild]::MakeRelative ('$(MSBuildProjectDirectory)', '%(FullPath)'))</Link>
 			<IsDefaultItem>true</IsDefaultItem>
 		</Metal>
 
@@ -74,7 +74,7 @@
 			@(Compile);
 			@(EmbeddedResource);
 			" Condition="'$(_ResourcePrefix)' != ''" >
-			<Link>$([MSBuild]::MakeRelative ('$(MSBuildProjectDirectory)', '%(Identity)'))</Link>
+			<Link>$([MSBuild]::MakeRelative ('$(MSBuildProjectDirectory)', '%(FullPath)'))</Link>
 			<IsDefaultItem>true</IsDefaultItem>
 		</BundleResource>
 	</ItemGroup>
