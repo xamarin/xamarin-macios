@@ -1094,18 +1094,16 @@ namespace Foundation {
 					}
 					return;
 				}
-                if (sessionHandler.ClientCertificateOptions == ClientCertificateOption.Manual && challenge.ProtectionSpace.AuthenticationMethod == NSUrlProtectionSpace.AuthenticationMethodClientCertificate)
-                {
-					var certificate = System.Net.Security.CertificateHelper.GetEligibleClientCertificate(sessionHandler.ClientCertificates);
-					if (certificate != null)
-					{
-						var cert = new SecCertificate(certificate);
-						var identity = SecIdentity.Import(certificate);
-						var credential = new NSUrlCredential(identity, new SecCertificate[] { cert }, NSUrlCredentialPersistence.ForSession);
-						completionHandler(NSUrlSessionAuthChallengeDisposition.UseCredential, credential);
+				if (sessionHandler.ClientCertificateOptions == ClientCertificateOption.Manual && challenge.ProtectionSpace.AuthenticationMethod == NSUrlProtectionSpace.AuthenticationMethodClientCertificate) {
+					var certificate = CertificateHelper.GetEligibleClientCertificate (sessionHandler.ClientCertificates);
+					if (certificate is not null) {
+						var cert = new SecCertificate (certificate);
+						var identity = SecIdentity.Import (certificate);
+						var credential = new NSUrlCredential (identity, new SecCertificate [] { cert }, NSUrlCredentialPersistence.ForSession);
+						completionHandler (NSUrlSessionAuthChallengeDisposition.UseCredential, credential);
 						return;
 					}
-                }
+				}
 				// case for the basic auth failing up front. As per apple documentation:
 				// The URL Loading System is designed to handle various aspects of the HTTP protocol for you. As a result, you should not modify the following headers using
 				// the addValue(_:forHTTPHeaderField:) or setValue(_:forHTTPHeaderField:) methods:
