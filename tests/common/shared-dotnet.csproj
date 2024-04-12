@@ -74,7 +74,7 @@
 	-->
 	<PropertyGroup>
 		<!-- We want all the trimmer warnings -->
-		<TrimmerSingleWarn Condition="'$(TrimmerSingleWarn)' == ''">true</TrimmerSingleWarn>
+		<TrimmerSingleWarn Condition="'$(TrimmerSingleWarn)' == ''">false</TrimmerSingleWarn>
 		<!-- IL2104: Assembly '...' produced trim warnings -->
 		<NoWarn>$(NoWarn);IL2104</NoWarn>
 	</PropertyGroup>
