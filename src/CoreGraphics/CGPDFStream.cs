@@ -29,6 +29,7 @@
 #nullable enable
 
 using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 using Foundation;
@@ -76,12 +77,15 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static /* CFDataRef */ IntPtr CGPDFStreamCopyData (/* CGPDFStreamRef */ IntPtr stream, /* CGPDFDataFormat* */ out CGPDFDataFormat format);
+		unsafe extern static /* CFDataRef */ IntPtr CGPDFStreamCopyData (/* CGPDFStreamRef */ IntPtr stream, /* CGPDFDataFormat* */ CGPDFDataFormat* format);
 
 		public NSData? GetData (out CGPDFDataFormat format)
 		{
-			IntPtr obj = CGPDFStreamCopyData (Handle, out format);
-			return Runtime.GetNSObject<NSData> (obj, true);
+			format = default;
+			unsafe {
+				IntPtr obj = CGPDFStreamCopyData (Handle, (CGPDFDataFormat*) Unsafe.AsPointer<CGPDFDataFormat> (ref format));
+				return Runtime.GetNSObject<NSData> (obj, true);
+			}
 		}
 	}
 }

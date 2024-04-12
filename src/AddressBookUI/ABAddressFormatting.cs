@@ -27,14 +27,14 @@ namespace AddressBookUI {
 	static public class ABAddressFormatting {
 
 		[DllImport (Constants.AddressBookUILibrary)]
-		static extern IntPtr /* NSString */ ABCreateStringWithAddressDictionary (IntPtr /* NSDictionary */ address, [MarshalAs (UnmanagedType.I1)] bool addCountryName);
+		static extern IntPtr /* NSString */ ABCreateStringWithAddressDictionary (IntPtr /* NSDictionary */ address, byte addCountryName);
 
 		static public string ToString (NSDictionary address, bool addCountryName)
 		{
 			if (address is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (address));
 
-			using (NSString s = new NSString (ABCreateStringWithAddressDictionary (address.Handle, addCountryName)))
+			using (NSString s = new NSString (ABCreateStringWithAddressDictionary (address.Handle, addCountryName ? (byte) 1 : (byte) 0)))
 				return s.ToString ();
 		}
 	}

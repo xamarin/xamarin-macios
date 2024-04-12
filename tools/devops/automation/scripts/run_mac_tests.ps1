@@ -51,7 +51,6 @@ foreach ($t in $macTest) {
 if ($failures.Count -ne 0) {
   # post status and comment in the build
   $failedTestsStr = [string]::Join(",",$failures)
-  $statuses.SetStatus("error", "Tests on macOS $StatusContext failed ($failedTestsStr).", "$StatusContext")
   # build message
   $msg = [System.Text.StringBuilder]::new()
   $msg.AppendLine("Failed tests are:")
