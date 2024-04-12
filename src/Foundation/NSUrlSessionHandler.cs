@@ -1091,7 +1091,7 @@ namespace Foundation {
 				}
                 if (sessionHandler.ClientCertificateOptions == ClientCertificateOption.Manual && challenge.ProtectionSpace.AuthenticationMethod == NSUrlProtectionSpace.AuthenticationMethodClientCertificate)
                 {
-					var certificate = System.Net.Security.CertificateHelper.GetEligibleClientCertificate(sessionHandler.ClientCertificates);
+					var certificate = CertificateHelper.GetEligibleClientCertificate(sessionHandler.ClientCertificates);
 					if (certificate != null)
 					{
 						var cert = new SecCertificate(certificate);
