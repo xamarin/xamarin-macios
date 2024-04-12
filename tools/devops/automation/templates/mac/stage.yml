@@ -48,7 +48,7 @@ stages:
   jobs:
   - job: run_tests
     displayName: 'macOS tests'
-    timeoutInMinutes: 1000
+    timeoutInMinutes: 120
     workspace:
       clean: all
 

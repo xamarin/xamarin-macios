@@ -24,8 +24,12 @@ namespace UIKit {
 
 		public void SetTitleTextAttributes (TextAttributes attributes, UIControlState state)
 		{
-			using (var dict = attributes is null ? null : attributes.Dictionary)
-				_SetTitleTextAttributes (dict, state);
+#if XAMCORE_3_0
+			var dict = attributes?.Dictionary;
+#else
+			using var dict = attributes?.ToDictionary ();
+#endif
+			_SetTitleTextAttributes (dict, state);
 		}
 
 		public TextAttributes GetTitleTextAttributes (UIControlState state)
@@ -40,9 +44,12 @@ namespace UIKit {
 			{
 				if (attributes is null)
 					throw new ArgumentNullException ("attributes");
-				using (var dict = attributes.Dictionary) {
-					_SetTitleTextAttributes (dict, state);
-				}
+#if XAMCORE_3_0
+				var dict = attributes.Dictionary;
+#else
+				using var dict = attributes.ToDictionary ();
+#endif
+				_SetTitleTextAttributes (dict, state);
 			}
 
 			public virtual TextAttributes GetTitleTextAttributes (UIControlState state)

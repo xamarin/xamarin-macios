@@ -1133,18 +1133,24 @@ xamarin_unhandled_exception_handler (MonoObject *exc, gpointer user_data)
 	abort ();
 }
 
+extern "C" {
+	static thread_local int xamarin_handling_unhandled_exceptions = 0;
+}
+
 static void
 exception_handler (NSException *exc)
 {
 	// COOP: We won't get here in coop-mode, because we don't set the uncaught objc exception handler in that case.
 	LOG (PRODUCT ": Received unhandled ObjectiveC exception: %@ %@", [exc name], [exc reason]);
 
-	if (xamarin_is_gc_coop) {
-		PRINT ("Uncaught Objective-C exception: %@", exc);
-		assert (false); // Re-throwing the Objective-C exception will probably just end up with infinite recursion
+	if (xamarin_handling_unhandled_exceptions == 1) {
+		PRINT ("Detected recursion when handling uncaught Objective-C exception: %@", exc);
+		abort ();
 	}
 
+	xamarin_handling_unhandled_exceptions = 1;
 	xamarin_throw_ns_exception (exc);
+	xamarin_handling_unhandled_exceptions = 0;
 }
 
 #if defined (DEBUG)
@@ -2273,10 +2279,30 @@ xamarin_process_nsexception_using_mode (NSException *ns_exception, bool throwMan
 		GCHandle handle;
 		if (exc_handle != NULL) {
 			GCHandle e_handle = [exc_handle getHandle];
+			GCHandle rethrow_exception_gchandle;
 			MONO_ENTER_GC_UNSAFE;
-			MonoObject *exc = xamarin_gchandle_get_target (e_handle);
-			handle = xamarin_gchandle_new (exc, false);
-			xamarin_mono_object_release (&exc);
+
+			//
+			// We want to maintain the original stack trace of the exception, but unfortunately
+			// calling mono_runtime_set_pending_exception directly with the original exception will overwrite
+			// the original stack trace.
+			//
+			// The good news is that the managed ExceptionDispatchInfo class is able to capture
+			// a stack trace for an exception and show it later.
+			//
+			// The xamarin_rethrow_managed_exception method will use ExceptionDispatchInfo
+			// to throw an exception that contains the original stack trace, we will then capture that
+			// exception, and pass it to mono_runtime_set_pending_exception.
+			//
+			xamarin_rethrow_managed_exception (e_handle, &rethrow_exception_gchandle);
+			if (rethrow_exception_gchandle == INVALID_GCHANDLE) {
+				PRINT (PRODUCT ": Did not get a rethrow exception, will throw the original exception. The original stack trace will be lost.");
+				MonoObject *exc = xamarin_gchandle_get_target (e_handle);
+				handle = xamarin_gchandle_new (exc, false);
+				xamarin_mono_object_release (&exc);
+			} else {
+				handle = rethrow_exception_gchandle;
+			}
 			MONO_EXIT_GC_UNSAFE;
 		} else {
 			handle = xamarin_create_ns_exception (ns_exception, &exception_gchandle);
@@ -2368,6 +2394,14 @@ xamarin_process_managed_exception (MonoObject *exception)
 			exception = xamarin_gchandle_get_target (exception_gchandle);
 			xamarin_gchandle_free (exception_gchandle);
 		}
+
+		// If we end up here as part of an unhandled Objective-C exception, we're also trying to detect an infinite loop by
+		// setting the xamarin_handling_unhandled_exceptions variable to 1 before processing the unhandled Objective-C exception,
+		// and clearing it afterwards. However, the clearing of the variable will never happen if Mono unwinds native
+		// stack frames, and then on the next unhandled Objective-C exception we'll think we're recursing when we're really not.
+		// (FWIW this is yet another reason why letting Mono unhandled native frames is a really bad idea).
+		// So here we work around that by clearing the variable before letting Mono unwind native frames.
+		xamarin_handling_unhandled_exceptions = 0;
 
 		mono_raise_exception ((MonoException *) exception);
 #endif

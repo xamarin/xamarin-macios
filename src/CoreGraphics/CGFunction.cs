@@ -62,8 +62,8 @@ namespace CoreGraphics {
 			cbacks.evaluate = &EvaluateCallback;
 			cbacks.release = &ReleaseCallback;
 #else
-			cbacks.evaluate = new CGFunctionEvaluateCallback (EvaluateCallback);
-			cbacks.release = new CGFunctionReleaseCallback (ReleaseCallback);
+			cbacks.evaluate = Marshal.GetFunctionPointerForDelegate (evaluateCallbackDelegate);
+			cbacks.release = Marshal.GetFunctionPointerForDelegate (releaseCallbackDelegate);
 #endif
 		}
 
@@ -116,13 +116,13 @@ namespace CoreGraphics {
 			public unsafe delegate* unmanaged<IntPtr, nfloat*, nfloat*, void> evaluate;
 			public unsafe delegate* unmanaged<IntPtr, void> release;
 #else
-			public CGFunctionEvaluateCallback? evaluate;
-			public CGFunctionReleaseCallback? release;
+			public IntPtr evaluate;
+			public IntPtr release;
 #endif
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static unsafe IntPtr CGFunctionCreate (/* void* */ IntPtr data, /* size_t */ nint domainDimension, /* CGFloat* */ nfloat* domain, nint rangeDimension, /* CGFloat* */ nfloat* range, ref CGFunctionCallbacks callbacks);
+		extern static unsafe IntPtr CGFunctionCreate (/* void* */ IntPtr data, /* size_t */ nint domainDimension, /* CGFloat* */ nfloat* domain, nint rangeDimension, /* CGFloat* */ nfloat* range, CGFunctionCallbacks* callbacks);
 
 		unsafe public delegate void CGFunctionEvaluate (nfloat* data, nfloat* outData);
 
@@ -145,14 +145,17 @@ namespace CoreGraphics {
 			var gch = GCHandle.Alloc (this);
 			unsafe {
 				fixed (nfloat* domainPtr = domain, rangePtr = range) {
-					var handle = CGFunctionCreate (GCHandle.ToIntPtr (gch), domain is not null ? domain.Length / 2 : 0, domainPtr, range is not null ? range.Length / 2 : 0, rangePtr, ref cbacks);
-					InitializeHandle (handle);
+					fixed (CGFunctionCallbacks* cbacksptr = &cbacks) {
+						var handle = CGFunctionCreate (GCHandle.ToIntPtr (gch), domain is not null ? domain.Length / 2 : 0, domainPtr, range is not null ? range.Length / 2 : 0, rangePtr, cbacksptr);
+						InitializeHandle (handle);
+					}
 				}
 			}
 		}
 #if NET
 		[UnmanagedCallersOnly]
 #else
+		static CGFunctionReleaseCallback releaseCallbackDelegate = ReleaseCallback;
 #if !MONOMAC
 		[MonoPInvokeCallback (typeof (CGFunctionReleaseCallback))]
 #endif
@@ -165,6 +168,7 @@ namespace CoreGraphics {
 #if NET
 		[UnmanagedCallersOnly]
 #else
+		unsafe static CGFunctionEvaluateCallback evaluateCallbackDelegate = EvaluateCallback;
 #if !MONOMAC
 		[MonoPInvokeCallback (typeof (CGFunctionEvaluateCallback))]
 #endif

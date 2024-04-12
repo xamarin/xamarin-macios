@@ -60,7 +60,7 @@ namespace CoreFoundation {
 #endif
 
 		[DllImport (Constants.CoreFoundationLibrary)]
-		static extern IntPtr CFPropertyListCreateWithData (IntPtr allocator, IntPtr dataRef, nuint options, out nint format, /* CFError * */ out IntPtr error);
+		unsafe static extern IntPtr CFPropertyListCreateWithData (IntPtr allocator, IntPtr dataRef, nuint options, nint* format, /* CFError * */ IntPtr* error);
 
 		public static (CFPropertyList? PropertyList, CFPropertyListFormat Format, NSError? Error)
 			FromData (NSData data, CFPropertyListMutabilityOptions options = CFPropertyListMutabilityOptions.Immutable)
@@ -72,7 +72,10 @@ namespace CoreFoundation {
 
 			nint fmt;
 			IntPtr error;
-			var ret = CFPropertyListCreateWithData (IntPtr.Zero, data.Handle, (nuint) (ulong) options, out fmt, out error);
+			IntPtr ret;
+			unsafe {
+				ret = CFPropertyListCreateWithData (IntPtr.Zero, data.Handle, (nuint) (ulong) options, &fmt, &error);
+			}
 			if (ret != IntPtr.Zero)
 				return (new CFPropertyList (ret, owns: true), (CFPropertyListFormat) (long) fmt, null);
 			return (null, CFPropertyListFormat.XmlFormat1, new NSError (error));
@@ -87,24 +90,26 @@ namespace CoreFoundation {
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
-		extern static /*CFDataRef*/IntPtr CFPropertyListCreateData (IntPtr allocator, IntPtr propertyList, nint format, nuint options, out IntPtr error);
+		unsafe extern static /*CFDataRef*/IntPtr CFPropertyListCreateData (IntPtr allocator, IntPtr propertyList, nint format, nuint options, IntPtr* error);
 
 		public (NSData? Data, NSError? Error) AsData (CFPropertyListFormat format = CFPropertyListFormat.BinaryFormat1)
 		{
 			IntPtr error;
-			var x = CFPropertyListCreateData (IntPtr.Zero, Handle, (nint) (long) format, 0, out error);
+			IntPtr x;
+			unsafe {
+				x = CFPropertyListCreateData (IntPtr.Zero, Handle, (nint) (long) format, 0, &error);
+			}
 			if (x == IntPtr.Zero)
 				return (null, new NSError (error));
 			return (Runtime.GetNSObject<NSData> (x, owns: true), null);
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool CFPropertyListIsValid (IntPtr plist, nint format);
+		extern static byte CFPropertyListIsValid (IntPtr plist, nint format);
 
 		public bool IsValid (CFPropertyListFormat format)
 		{
-			return CFPropertyListIsValid (Handle, (nint) (long) format);
+			return CFPropertyListIsValid (Handle, (nint) (long) format) != 0;
 		}
 
 		public object? Value {

@@ -1,0 +1,6 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<PropertyGroup>
+		<_IsWorkloadEol>true</_IsWorkloadEol>
+	</PropertyGroup>
+	<Import Project="$(MSBuildThisFileDirectory)..\targets\Microsoft.macOS.Sdk.props" />
+</Project>

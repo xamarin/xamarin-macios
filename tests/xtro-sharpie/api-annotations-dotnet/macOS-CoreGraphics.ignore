@@ -72,13 +72,8 @@
 !missing-pinvoke! CGDisplayUnitNumber is not bound
 !missing-pinvoke! CGDisplayUsesOpenGLAcceleration is not bound
 !missing-pinvoke! CGDisplayVendorNumber is not bound
-!missing-pinvoke! CGEventCreateScrollWheelEvent2 is not bound
 !missing-pinvoke! CGEventGetTypeID is not bound
-!missing-pinvoke! CGEventPostToPid is not bound
-!missing-pinvoke! CGEventSetDoubleValueField is not bound
-!missing-pinvoke! CGEventSetIntegerValueField is not bound
 !missing-pinvoke! CGEventSourceGetTypeID is not bound
-!missing-pinvoke! CGEventTapCreateForPid is not bound
 !missing-pinvoke! CGGetActiveDisplayList is not bound
 !missing-pinvoke! CGGetDisplaysWithOpenGLDisplayMask is not bound
 !missing-pinvoke! CGGetDisplaysWithPoint is not bound
@@ -105,3 +100,6 @@
 !missing-pinvoke! CGWindowServerCreateServerPort is not bound
 !missing-pinvoke! CGPreflightScreenCaptureAccess is not bound
 !missing-pinvoke! CGRequestScreenCaptureAccess is not bound
+
+# We're using CGEventCreateScrollWheelEvent2, which is identical, except not variadic.
+!missing-pinvoke! CGEventCreateScrollWheelEvent is not bound

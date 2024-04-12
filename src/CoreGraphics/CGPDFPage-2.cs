@@ -101,11 +101,11 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static CGAffineTransform CGPDFPageGetDrawingTransform (/* CGPDFPageRef */ IntPtr page, CGPDFBox box, CGRect rect, int rotate, [MarshalAs (UnmanagedType.I1)] bool preserveAspectRatio);
+		extern static CGAffineTransform CGPDFPageGetDrawingTransform (/* CGPDFPageRef */ IntPtr page, CGPDFBox box, CGRect rect, int rotate, byte preserveAspectRatio);
 
 		public CGAffineTransform GetDrawingTransform (CGPDFBox box, CGRect rect, int rotate, bool preserveAspectRatio)
 		{
-			return CGPDFPageGetDrawingTransform (Handle, box, rect, rotate, preserveAspectRatio);
+			return CGPDFPageGetDrawingTransform (Handle, box, rect, rotate, preserveAspectRatio.AsByte ());
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]

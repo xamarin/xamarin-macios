@@ -5,6 +5,11 @@ jobs:
   bump-global-json:
     name: Bump global.json
     runs-on: ubuntu-latest
+    # GITHUB_TOKEN change from read-write to read-only on 2024-02-01 requires permissions block
+    # https://docs.opensource.microsoft.com/github/apps/permission-changes/
+    # https://docs.github.com/en/actions/using-jobs/assigning-permissions-to-jobs
+    permissions:
+      contents: write
     if: contains(github.event.pull_request.title, 'Update dependencies from dotnet/installer') && github.actor == 'dotnet-maestro[bot]'
     steps:
     - name: 'Checkout repo'
