@@ -171,10 +171,6 @@
 		<value>A target framework (--target-framework) must be specified.</value>
 	</data>
 
-	<data name="BI0087" xml:space="preserve">
-		<value>Xamarin.Mac Classic binding projects are not supported anymore. Please upgrade the binding project to a Xamarin.Mac Unified binding project.</value>
-	</data>
-	
 	<data name="BI0088" xml:space="preserve">
 		<value>Internal error: don't know how to create ref/out (input) code for {0} in {1}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).</value>
 	</data>

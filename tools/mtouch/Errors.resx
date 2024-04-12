@@ -30,6 +30,7 @@
 		</value>
 	</data>
 
+	<!-- legacy only error -->
 	<data name="MM0001" xml:space="preserve">
 		<value>This version of Xamarin.Mac requires Mono {0} (the current Mono version is {1}). Please update the Mono.framework from http://mono-project.com/Downloads
 		</value>
@@ -80,6 +81,7 @@
 		</value>
 	</data>
 
+	<!-- legacy only error -->
 	<data name="MT0011" xml:space="preserve">
 		<value>{0} was built against a more recent runtime ({1}) than Xamarin.iOS supports.
 		</value>
@@ -195,10 +197,7 @@
 		</value>
 	</data>
 
-	<data name="MT0033" xml:space="preserve">
-		<value>A Xamarin.iOS project must reference either monotouch.dll or Xamarin.iOS.dll
-		</value>
-	</data>
+	<!-- MT0034 is not in use anymore -->
 
 	<data name="MT0034" xml:space="preserve">
 		<value>Cannot reference '{0}.dll' in a {1} project - it is implicitly referenced by '{2}'.
@@ -210,20 +209,9 @@
 		</value>
 	</data>
 
-	<data name="MT0037" xml:space="preserve">
-		<value>monotouch.dll is not 64-bit compatible. Either reference Xamarin.iOS.dll, or do not build for a 64-bit architecture (ARM64 and/or x86_64).
-		</value>
-	</data>
-
-	<data name="MT0038" xml:space="preserve">
-		<value>The old registrars (--registrar:oldstatic|olddynamic) are not supported when referencing Xamarin.iOS.dll.
-		</value>
-	</data>
-
-	<data name="MT0039" xml:space="preserve">
-		<value>Applications targeting ARMv6 cannot reference Xamarin.iOS.dll.
-		</value>
-	</data>
+	<!-- MT0037 is not in use anymore -->
+	<!-- MT0038 is not in use anymore -->
+	<!-- MT0039 is not in use anymore -->
 
 	<data name="MT0040" xml:space="preserve">
 		<value>Could not find the assembly '\*', referenced by '\*'.
@@ -235,10 +223,7 @@
 		</value>
 	</data>
 
-	<data name="MT0042" xml:space="preserve">
-		<value>No reference to either monotouch.dll or Xamarin.iOS.dll was found. A reference to monotouch.dll will be added.
-		</value>
-	</data>
+	<!-- MT0042 is not in use anymore -->
 
 	<data name="MX0043" xml:space="preserve">
 		<value>The Boehm garbage collector is not supported. The SGen garbage collector has been selected instead.
@@ -335,16 +320,13 @@
 		</value>
 	</data>
 
-	<data name="MT0064" xml:space="preserve">
-		<value>Xamarin.iOS only supports embedded frameworks with Unified projects.
-		</value>
-	</data>
-
+	<!-- legacy only error -->
 	<data name="MT0065" xml:space="preserve">
 		<value>Xamarin.iOS only supports embedded frameworks when deployment target is at least 8.0 (current deployment target: '{0}'; embedded frameworks: '{1}')
 		</value>
 	</data>
 	
+	<!-- legacy only error -->
 	<data name="MT0065_A" xml:space="preserve">
 		<value>Xamarin.iOS only supports embedded frameworks when deployment target is at least 2.0 (current deployment target: '{0}'; embedded frameworks: '{1}')
 		</value>
@@ -385,11 +367,11 @@
 		<value>{4} {0} does not support a deployment target of {1} for {3} (the minimum is {2}). Please select a newer deployment target in your project's Info.plist.
 		</value>
 		<comment>The following are literal names and should not be translated: SDK, Xcode
-{0} - The version number of the Xamarin product.
+{0} - The version number of the .NET SDK.
 {1} - The name of the deployment target such as a device, simulator, etc.
 {2} - The minimum version number.
 {3} - The platform name, such as 'iOS'.
-{4} - The produce name such as Xamarin.iOS or Xamarin.Mac.
+{4} - The produce name such as .NET for iOS or .NET for macOS.
 		</comment>
 	</data>
 
@@ -397,11 +379,11 @@
 		<value>{4} {0} does not support a deployment target of {1} for {3} (the maximum is {2}). Please select an older deployment target in your project's Info.plist or upgrade to a newer version of {4}.
 		</value>
 		<comment>The following are literal names and should not be translated: SDK, Xcode
-{0} - The version number of the Xamarin product.
+{0} - The version number of the .NET SDK product.
 {1} - The name of the deployment target such as a device, simulator, etc.
 {2} - The maximum version number.
 {3} - The platform name, such as 'iOS'.
-{4} - The produce name such as Xamarin.iOS or Xamarin.Mac.
+{4} - The produce name such as .NET for iOS or .NET for macOS.
 		</comment>
 	</data>
 
@@ -430,6 +412,7 @@
 		</value>
 	</data>
 
+	<!-- legacy only error -->
 	<data name="MM0079" xml:space="preserve">
 		<value>No executable was copied into the app bundle.  Please contact 'support@xamarin.com'
 		</value>
@@ -515,10 +498,7 @@
 		</value>
 	</data>
 
-	<data name="MT0096" xml:space="preserve">
-		<value>No reference to Xamarin.iOS.dll was found.
-		</value>
-	</data>
+	<!-- MT0096 is not in use anymore -->
 
 	<data name="MM0097" xml:space="preserve">
 		<value>machine.config file '{0}' can not be found.
@@ -577,10 +557,7 @@
 		</value>
 	</data>
 
-	<data name="MT0110" xml:space="preserve">
-		<value>Incremental builds have been disabled because this version of Xamarin.iOS does not support incremental builds in projects that include third-party binding libraries and that compiles to bitcode.
-		</value>
-	</data>
+	<!-- MT0110 is not in use anymore -->
 
 	<data name="MT0111" xml:space="preserve">
 		<value>Bitcode has been enabled because this version of Xamarin.iOS does not support building watchOS projects using LLVM without enabling bitcode.
@@ -739,7 +716,7 @@
 	</data>
 
 	<data name="MT0127" xml:space="preserve">
-		<value>Incremental builds have been disabled because this version of Xamarin.iOS does not support incremental builds in projects that include more than one third-party binding libraries.
+		<value>Incremental builds have been disabled because incremental builds are currently not supported in projects that include more than one third-party binding library.
 		</value>
 	</data>
 
@@ -1056,6 +1033,7 @@
 		</value>
 	</data>
 	
+	<!-- legacy only error -->
 	<data name="MM1407" xml:space="preserve">
 		<value>Mismatch between Xamarin.Mac reference '{0}' and target framework selected '{1}'.
 		</value>
@@ -1146,6 +1124,7 @@
 		</value>
 	</data>
 
+	<!-- legacy only error -->
 	<data name="MT2006" xml:space="preserve">
 		<value>Can not load mscorlib.dll from: '{0}'. Please reinstall Xamarin.iOS.
 		</value>
@@ -1161,6 +1140,7 @@
 		</value>
 	</data>
 
+	<!-- legacy only error -->
 	<data name="MM2007" xml:space="preserve">
 		<value>Xamarin.Mac Unified API against a full .NET framework does not support linking SDK or All assemblies. Pass either the `-nolink` or `-linkplatform` flag.
 		</value>
@@ -1336,6 +1316,7 @@
 		</value>
 	</data>
 	
+	<!-- legacy only error -->
 	<data name="MM2110" xml:space="preserve">
 		<value>Xamarin.Mac 'Partial Static' registrar does not support linking. Disable linking or use another registrar mode.
 		</value>
@@ -1409,6 +1390,7 @@
 		</value>
 	</data>
 
+	<!-- legacy only error -->
 	<data name="MT3006" xml:space="preserve">
 		<value>Could not compute a complete dependency map for the project. This will result in slower build times because Xamarin.iOS can't properly detect what needs to be rebuilt (and what does not need to be rebuilt). Please review previous warnings for more details.
 		</value>
@@ -1660,7 +1642,7 @@
 	</data>
 	
 	<data name="MT4141" xml:space="preserve">
-		<value>Cannot register the selector '{0}' on the member '{1}.{2}' because Xamarin.iOS implicitly registers this selector.
+		<value>Cannot register the selector '{0}' on the member '{1}.{2}' because this selector is already implicitly registered.
 		</value>
 	</data>
 		
@@ -2002,6 +1984,7 @@
 		</value>
 	</data>
 
+	<!-- legacy only error -->
 	<data name="MM5203" xml:space="preserve">
 		<value>Can't find {0}, likely because of a corrupted Xamarin.Mac installation. Please reinstall Xamarin.Mac.
 		</value>
