@@ -664,8 +664,6 @@ Incremental builds have been disabled because this version of Xamarin.iOS does n
 
 No action is required on your part, this message is purely informational.
 
-For further information see bug #[51710](https://bugzilla.xamarin.com/show_bug.cgi?id=51710).
-
 This warning is not reported anymore.
 
 <a name="MT0111"></a>
@@ -675,8 +673,6 @@ This warning is not reported anymore.
 Bitcode has been enabled automatically because this version of Xamarin.iOS does not support building watchOS projects using LLVM without enabling bitcode.
 
 No action is required on your part, this message is purely informational.
-
-For further information see bug #[51634](https://bugzilla.xamarin.com/show_bug.cgi?id=51634).
 
 <a name="MT0112"></a>
 
@@ -862,7 +858,6 @@ Incremental builds have been disabled automatically because this version of Xama
 
 No action is required, this message is purely informational.
 
-For further information see bug #[52727](https://bugzilla.xamarin.com/show_bug.cgi?id=52727).
 
 <a name="MT0128"></a>
 
