@@ -102,7 +102,7 @@ DOTNET_BINDING_ATTRIBUTES=$(DOTNET_BUILD_DIR)/Xamarin.Apple.BindingAttributes.dl
 #
 # https://github.com/dotnet/roslyn/issues/41605
 NULLABILITY_WARNINGS=nullable
-GENERATOR_WARNASERROR=
+GENERATOR_WARNASERROR=-warnaserror:
 IOS_GENERATOR_WARNASERROR=$(GENERATOR_WARNASERROR)
 WATCH_GENERATOR_WARNASERROR=$(GENERATOR_WARNASERROR)
 TVOS_GENERATOR_WARNASERROR=$(GENERATOR_WARNASERROR)
@@ -186,7 +186,7 @@ IOS_CORE_SOURCES += $(IOS_EXTRA_SOURCES)
 IOS_DOTNET_SOURCES += $(IOS_DOTNET_EXTRA_SOURCES) $(IOS_DOTNET_HTTP_SOURCES)
 IOS_SOURCES += $(IOS_EXTRA_SOURCES) $(IOS_HTTP_SOURCES)
 
-IOS_GENERATOR_FLAGS = -inline-selectors -d:IOS -process-enums -warnaserror:$(IOS_GENERATOR_WARNASERROR)
+IOS_GENERATOR_FLAGS = -inline-selectors -d:IOS -process-enums $(IOS_GENERATOR_WARNASERROR)
 IOS_DEFINES = -define:IPHONE -define:IOS -define:MONOTOUCH -d:__IOS__ -d:SYSTEM_NET_HTTP
 IOS_GENERATOR=$(BUILD_DIR)/common/bgen.exe
 IOS_GENERATE=$(SYSTEM_MONO) --debug $(IOS_GENERATOR)
@@ -545,7 +545,7 @@ $(BUILD_DIR)/mac-$(1).rsp: Makefile Makefile.generator frameworks.sources
 		-compiler:$$(MAC_$(1)_CSC) \
 		-nologo \
 		-process-enums \
-		-warnaserror:$(MACOS_GENERATOR_WARNASERROR) \
+		$(MACOS_GENERATOR_WARNASERROR) \
 		-native-exception-marshalling \
 		-core \
 		-sourceonly:$(MACOS_BUILD_DIR)/$(1)/generated-sources \
@@ -760,7 +760,7 @@ $(BUILD_DIR)/watchos.rsp: Makefile Makefile.generator frameworks.sources
 	$(Q_GEN) echo  \
 		-inline-selectors                                        \
 		-process-enums                                           \
-		-warnaserror:$(WATCH_GENERATOR_WARNASERROR)              \
+		$(WATCH_GENERATOR_WARNASERROR)                           \
 		-core                                                    \
 		-sourceonly=$(WATCH_BUILD_DIR)/watch/generated_sources   \
 		-compiler=$(WATCH_CSC) \
@@ -970,7 +970,7 @@ $(BUILD_DIR)/tvos.rsp: Makefile Makefile.generator frameworks.sources
 	$(Q_GEN) echo \
 		-inline-selectors                                        \
 		-process-enums                                           \
-		-warnaserror:$(TVOS_GENERATOR_WARNASERROR)               \
+		$(TVOS_GENERATOR_WARNASERROR)                            \
 		-core                                                    \
 		-sourceonly=$(TVOS_BUILD_DIR)/tvos/generated_sources     \
 		-compiler=$(TV_CSC) \
@@ -1175,7 +1175,7 @@ $($(2)_DOTNET_BUILD_DIR)/core-$(3).dll: $($(2)_DOTNET_CORE_SOURCES) frameworks.s
 		$($(2)_CORE_DEFINES) \
 		$($(2)_DOTNET_CORE_SOURCES) \
 		-nullable+ \
-		-warnaserror:nullable \
+		-warnaserror+ \
 		-out:$$@
 
 $($(2)_DOTNET_BUILD_DIR)/$(3)-generated-sources: $(DOTNET_GENERATOR) $($(2)_DOTNET_APIS) $($(2)_DOTNET_BUILD_DIR)/core-$(3).dll $(DOTNET_BINDING_ATTRIBUTES) $($(2)_DOTNET_BUILD_DIR)/$(3).rsp | $($(2)_DOTNET_BUILD_DIR)/generated-sources
@@ -1185,7 +1185,7 @@ $($(2)_DOTNET_BUILD_DIR)/$(3).rsp: Makefile Makefile.generator frameworks.source
 	$(Q) echo \
 		$($(2)_GENERATOR_FLAGS) \
 		$(DOTNET_GENERATOR_FLAGS) \
-		-warnaserror:$($(2)_GENERATOR_WARNASERROR) \
+		$($(2)_GENERATOR_WARNASERROR) \
 		-sourceonly=$($(2)_DOTNET_BUILD_DIR)/$(3)-generated-sources \
 		-tmpdir=$($(2)_DOTNET_BUILD_DIR)/generated-sources \
 		-baselib=$($(2)_DOTNET_BUILD_DIR)/core-$(3).dll \
@@ -1294,7 +1294,7 @@ $($(2)_DOTNET_BUILD_DIR)/$(4)/Microsoft.$(1)%dll $($(2)_DOTNET_BUILD_DIR)/$(4)/M
 		@$(RSP_DIR)/dotnet/$(3)-defines-dotnet.rsp \
 		-res:$($(2)_DOTNET_BUILD_DIR)/ILLink.LinkAttributes.xml \
 		-res:$($(2)_DOTNET_BUILD_DIR)/ILLink.Substitutions.xml \
-		-warnaserror:$(NULLABILITY_WARNINGS) \
+		-warnaserror+ \
 		-nullable+ \
 		$$($(2)_DOTNET_SOURCES) \
 		@$($(2)_DOTNET_BUILD_DIR)/$(3)-generated-sources \
