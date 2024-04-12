@@ -6,8 +6,6 @@ using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using NUnit.Framework;
 
-using Xamarin.iOS.Tasks;
-using Xamarin.MacDev;
 using Xamarin.MacDev.Tasks;
 using Xamarin.Utils;
 

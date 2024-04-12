@@ -138,7 +138,11 @@ namespace CoreFoundation {
 			int value = 0;
 			var keyHandle = CFString.CreateNative (key);
 			try {
-				if (!CFNumberGetValue (CFDictionaryGetValue (Handle, keyHandle), /* kCFNumberSInt32Type */ 3, out value))
+				byte rv;
+				unsafe {
+					rv = CFNumberGetValue (CFDictionaryGetValue (Handle, keyHandle), /* kCFNumberSInt32Type */ 3, &value);
+				}
+				if (rv == 0)
 					throw new System.Collections.Generic.KeyNotFoundException (string.Format ("Key {0} not found", key));
 				return value;
 			} finally {
@@ -151,7 +155,11 @@ namespace CoreFoundation {
 			long value = 0;
 			var keyHandle = CFString.CreateNative (key);
 			try {
-				if (!CFNumberGetValue (CFDictionaryGetValue (Handle, keyHandle), /* kCFNumberSInt64Type */ 4, out value))
+				byte rv;
+				unsafe {
+					rv = CFNumberGetValue (CFDictionaryGetValue (Handle, keyHandle), /* kCFNumberSInt64Type */ 4, &value);
+				}
+				if (rv == 0)
 					throw new System.Collections.Generic.KeyNotFoundException (string.Format ("Key {0} not found", key));
 				return value;
 			} finally {
@@ -184,23 +192,20 @@ namespace CoreFoundation {
 		{
 			var keyHandle = CFString.CreateNative (key);
 			try {
-				return CFDictionaryContainsKey (Handle, keyHandle);
+				return CFDictionaryContainsKey (Handle, keyHandle) != 0;
 			} finally {
 				CFString.ReleaseNative (keyHandle);
 			}
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		internal static extern bool CFNumberGetValue (IntPtr number, nint theType, out int value);
+		unsafe internal static extern byte CFNumberGetValue (IntPtr number, nint theType, int* value);
 
 		[DllImport (Constants.CoreFoundationLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		internal static extern bool CFNumberGetValue (IntPtr number, nint theType, out long value);
+		unsafe internal static extern byte CFNumberGetValue (IntPtr number, nint theType, long* value);
 
 		[DllImport (Constants.CoreFoundationLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool CFDictionaryContainsKey (IntPtr theDict, IntPtr key);
+		extern static byte CFDictionaryContainsKey (IntPtr theDict, IntPtr key);
 	}
 
 	static class CFMutableDictionary {

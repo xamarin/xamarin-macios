@@ -77,7 +77,7 @@ namespace CoreGraphics {
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CGShadingRef */ IntPtr CGShadingCreateAxial (/* CGColorSpaceRef */ IntPtr space,
-			CGPoint start, CGPoint end, /* CGFunctionRef */ IntPtr functionHandle, [MarshalAs (UnmanagedType.I1)] bool extendStart, [MarshalAs (UnmanagedType.I1)] bool extendEnd);
+			CGPoint start, CGPoint end, /* CGFunctionRef */ IntPtr functionHandle, byte extendStart, byte extendEnd);
 
 		public static CGShading CreateAxial (CGColorSpace colorspace, CGPoint start, CGPoint end, CGFunction function, bool extendStart, bool extendEnd)
 		{
@@ -86,13 +86,13 @@ namespace CoreGraphics {
 			if (function is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (function));
 
-			return new CGShading (CGShadingCreateAxial (colorspace.GetCheckedHandle (), start, end, function.GetCheckedHandle (), extendStart, extendEnd), true);
+			return new CGShading (CGShadingCreateAxial (colorspace.GetCheckedHandle (), start, end, function.GetCheckedHandle (), extendStart.AsByte (), extendEnd.AsByte ()), true);
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CGShadingRef */ IntPtr CGShadingCreateRadial (/* CGColorSpaceRef */ IntPtr space,
 			CGPoint start, /* CGFloat */ nfloat startRadius, CGPoint end, /* CGFloat */ nfloat endRadius,
-			/* CGFunctionRef */ IntPtr function, [MarshalAs (UnmanagedType.I1)] bool extendStart, [MarshalAs (UnmanagedType.I1)] bool extendEnd);
+			/* CGFunctionRef */ IntPtr function, byte extendStart, byte extendEnd);
 
 		public static CGShading CreateRadial (CGColorSpace colorspace, CGPoint start, nfloat startRadius, CGPoint end, nfloat endRadius,
 							  CGFunction function, bool extendStart, bool extendEnd)
@@ -103,7 +103,7 @@ namespace CoreGraphics {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (function));
 
 			return new CGShading (CGShadingCreateRadial (colorspace.GetCheckedHandle (), start, startRadius, end, endRadius,
-									 function.GetCheckedHandle (), extendStart, extendEnd), true);
+									 function.GetCheckedHandle (), extendStart.AsByte (), extendEnd.AsByte ()), true);
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]

@@ -9,6 +9,7 @@
 #nullable enable
 
 using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 using System.Text;
@@ -98,137 +99,130 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool CGPDFScannerScan (/* CGPDFScannerRef */ IntPtr scanner);
+		extern static byte CGPDFScannerScan (/* CGPDFScannerRef */ IntPtr scanner);
 
 		public bool Scan ()
 		{
-			return CGPDFScannerScan (Handle);
+			return CGPDFScannerScan (Handle) != 0;
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool CGPDFScannerPopObject (/* CGPDFScannerRef */ IntPtr scanner, /* CGPDFObjectRef* */ out IntPtr value);
+		unsafe extern static byte CGPDFScannerPopObject (/* CGPDFScannerRef */ IntPtr scanner, /* CGPDFObjectRef* */ IntPtr* value);
 
 		public bool TryPop (out CGPDFObject? value)
 		{
 			IntPtr ip;
-			if (CGPDFScannerPopObject (Handle, out ip)) {
-				value = new CGPDFObject (ip);
-				return true;
-			} else {
-				value = null;
-				return false;
+			bool rv;
+			unsafe {
+				rv = CGPDFScannerPopObject (Handle, &ip) != 0;
+			}
+			value = rv ? new CGPDFObject (ip) : null;
+			return rv;
+		}
+
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		unsafe extern static byte CGPDFScannerPopBoolean (/* CGPDFScannerRef */ IntPtr scanner, /* CGPDFBoolean* */ byte* value);
+
+		public unsafe bool TryPop (out bool value)
+		{
+			byte bytevalue;
+			var rv = CGPDFScannerPopBoolean (Handle, &bytevalue) != 0;
+			value = bytevalue != 0;
+			return rv;
+		}
+
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		unsafe extern static byte CGPDFScannerPopInteger (/* CGPDFScannerRef */ IntPtr scanner, /* CGPDFInteger* */ nint* value);
+
+		public bool TryPop (out nint value)
+		{
+			value = default;
+			unsafe {
+				return CGPDFScannerPopInteger (Handle, (nint*) Unsafe.AsPointer<nint> (ref value)) != 0;
 			}
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool CGPDFScannerPopBoolean (/* CGPDFScannerRef */ IntPtr scanner, /* CGPDFBoolean* */ [MarshalAs (UnmanagedType.I1)] out bool value);
-
-		public bool TryPop (out bool value)
-		{
-			return CGPDFScannerPopBoolean (Handle, out value);
-		}
-
-		[DllImport (Constants.CoreGraphicsLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool CGPDFScannerPopInteger (/* CGPDFScannerRef */ IntPtr scanner, /* CGPDFInteger* */ out nint value);
-
-		public bool TryPop (out nint value)
-		{
-			return CGPDFScannerPopInteger (Handle, out value);
-		}
-
-		[DllImport (Constants.CoreGraphicsLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool CGPDFScannerPopNumber (/* CGPDFScannerRef */ IntPtr scanner, /* CGPDFReal* */ out nfloat value);
+		unsafe extern static byte CGPDFScannerPopNumber (/* CGPDFScannerRef */ IntPtr scanner, /* CGPDFReal* */ nfloat* value);
 
 		public bool TryPop (out nfloat value)
 		{
-			return CGPDFScannerPopNumber (Handle, out value);
+			value = default;
+			unsafe {
+				return CGPDFScannerPopNumber (Handle, (nfloat*) Unsafe.AsPointer<nfloat> (ref value)) != 0;
+			}
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool CGPDFScannerPopName (/* CGPDFScannerRef */ IntPtr scanner, /* const char** */ out IntPtr value);
+		unsafe extern static byte CGPDFScannerPopName (/* CGPDFScannerRef */ IntPtr scanner, /* const char** */ IntPtr* value);
 		// note: that string is not ours to free
 
 		// not to be confusing with CGPDFScannerPopString (value)
 		public bool TryPopName (out string? name)
 		{
 			IntPtr ip;
-			if (CGPDFScannerPopName (Handle, out ip)) {
-				name = Marshal.PtrToStringAnsi (ip);
-				return true;
-			} else {
-				name = null;
-				return false;
+			bool rv;
+			unsafe {
+				rv = CGPDFScannerPopName (Handle, &ip) != 0;
 			}
+			name = rv ? Marshal.PtrToStringAnsi (ip) : null;
+			return rv;
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool CGPDFScannerPopString (/* CGPDFScannerRef */ IntPtr scanner, /* CGPDFStringRef* */ out IntPtr value);
+		unsafe extern static byte CGPDFScannerPopString (/* CGPDFScannerRef */ IntPtr scanner, /* CGPDFStringRef* */ IntPtr* value);
 
 		public bool TryPop (out string? value)
 		{
 			IntPtr ip;
-			if (CGPDFScannerPopString (Handle, out ip)) {
-				value = CGPDFString.ToString (ip);
-				return true;
-			} else {
-				value = null;
-				return false;
+			bool rv;
+			unsafe {
+				rv = CGPDFScannerPopString (Handle, &ip) != 0;
 			}
+			value = rv ? CGPDFString.ToString (ip) : null;
+			return rv;
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool CGPDFScannerPopArray (/* CGPDFScannerRef */ IntPtr scanner, /* CGPDFArrayRef* */ out IntPtr value);
+		unsafe extern static byte CGPDFScannerPopArray (/* CGPDFScannerRef */ IntPtr scanner, /* CGPDFArrayRef* */ IntPtr* value);
 
 		public bool TryPop (out CGPDFArray? value)
 		{
 			IntPtr ip;
-			if (CGPDFScannerPopArray (Handle, out ip)) {
-				value = new CGPDFArray (ip);
-				return true;
-			} else {
-				value = null;
-				return false;
+			bool rv;
+			unsafe {
+				rv = CGPDFScannerPopArray (Handle, &ip) != 0;
 			}
+			value = rv ? new CGPDFArray (ip) : null;
+			return rv;
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool CGPDFScannerPopDictionary (/* CGPDFScannerRef */ IntPtr scanner, /* CGPDFDictionaryRef* */ out IntPtr value);
+		unsafe extern static byte CGPDFScannerPopDictionary (/* CGPDFScannerRef */ IntPtr scanner, /* CGPDFDictionaryRef* */ IntPtr* value);
 
 		public bool TryPop (out CGPDFDictionary? value)
 		{
 			IntPtr ip;
-			if (CGPDFScannerPopDictionary (Handle, out ip)) {
-				value = new CGPDFDictionary (ip);
-				return true;
-			} else {
-				value = null;
-				return false;
+			bool rv;
+			unsafe {
+				rv = CGPDFScannerPopDictionary (Handle, &ip) != 0;
 			}
+			value = rv ? new CGPDFDictionary (ip) : null;
+			return rv;
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool CGPDFScannerPopStream (/* CGPDFScannerRef */ IntPtr scanner, /* CGPDFStreamRef* */ out IntPtr value);
+		unsafe extern static byte CGPDFScannerPopStream (/* CGPDFScannerRef */ IntPtr scanner, /* CGPDFStreamRef* */ IntPtr* value);
 
 		public bool TryPop (out CGPDFStream? value)
 		{
 			IntPtr ip;
-			if (CGPDFScannerPopStream (Handle, out ip)) {
-				value = new CGPDFStream (ip);
-				return true;
-			} else {
-				value = null;
-				return false;
+			bool rv;
+			unsafe {
+				rv = CGPDFScannerPopStream (Handle, &ip) != 0;
 			}
+			value = rv ? new CGPDFStream (ip) : null;
+			return rv;
 		}
 
 #if NET
