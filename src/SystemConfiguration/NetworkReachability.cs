@@ -12,6 +12,7 @@
 #nullable enable
 
 using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using ObjCRuntime;
 using CoreFoundation;
@@ -47,19 +48,130 @@ namespace SystemConfiguration {
 	// http://developer.apple.com/library/ios/#documentation/SystemConfiguration/Reference/SCNetworkReachabilityRef/Reference/reference.html
 	public class NetworkReachability : NativeObject {
 		// netinet/in.h
-		[StructLayout (LayoutKind.Explicit, Size = 28)]
+		[StructLayout (LayoutKind.Sequential)]
 		struct sockaddr_in {
-			[FieldOffset (0)] byte sin_len;
-			[FieldOffset (1)] byte sin_family;
-			[FieldOffset (2)] short sin_port;
-			[FieldOffset (4)] int sin_addr;
+			// We're defining fields to make the struct the correct size (expected size = 28, so 7 * 4 bytes = 28),
+			// and then we're defining properties that accesses these fields to get and set field values.
+			// This looks a bit convoluted, but the purpose is to avoid .NET's built-in marshaling support,
+			// so that we're able to trim away the corresponding marshalling code in .NET to minimize app size.
+			uint value1;
+			uint value2;
+			uint value3;
+			uint value4;
+			uint value5;
+			uint value6;
+			uint value7;
+
+			unsafe byte sin_len {
+				get {
+					fixed (sockaddr_in* myself = &this) {
+						byte* self = (byte*) myself;
+						return self [0];
+					}
+				}
+				set {
+					fixed (sockaddr_in* myself = &this) {
+						byte* self = (byte*) myself;
+						self [0] = value;
+					}
+				}
+			}
+
+			unsafe byte sin_family {
+				get {
+					fixed (sockaddr_in* myself = &this) {
+						byte* self = (byte*) myself;
+						return self [1];
+					}
+				}
+				set {
+					fixed (sockaddr_in* myself = &this) {
+						byte* self = (byte*) myself;
+						self [1] = value;
+					}
+				}
+			}
+
+			unsafe short sin_port {
+				get {
+					fixed (sockaddr_in* myself = &this) {
+						short* self = (short*) myself;
+						return self [1];
+					}
+				}
+				set {
+					fixed (sockaddr_in* myself = &this) {
+						short* self = (short*) myself;
+						self [1] = value;
+					}
+				}
+			}
+
+			unsafe int sin_addr {
+				get {
+					fixed (sockaddr_in* myself = &this) {
+						int* self = (int*) myself;
+						return self [1];
+					}
+				}
+				set {
+					fixed (sockaddr_in* myself = &this) {
+						int* self = (int*) myself;
+						self [1] = value;
+					}
+				}
+			}
 
 			// IPv6
-			[FieldOffset (4)] uint sin6_flowinfo;
-			[FieldOffset (8)][MarshalAs (UnmanagedType.ByValArray, SizeConst = 16)] public byte [] sin6_addr8;
-			[FieldOffset (24)] uint sin6_scope_id;
+			unsafe uint sin6_flowinfo {
+				get {
+					fixed (sockaddr_in* myself = &this) {
+						uint* self = (uint*) myself;
+						return self [1];
+					}
+				}
+				set {
+					fixed (sockaddr_in* myself = &this) {
+						uint* self = (uint*) myself;
+						self [1] = value;
+					}
+				}
+			}
+
+			unsafe byte [] sin6_addr8 {
+				get {
+					var rv = new byte [16];
+					fixed (sockaddr_in* myself = &this) {
+						byte* self = (byte*) myself;
+						Marshal.Copy ((IntPtr) (self + 8), rv, 0, 16);
+					}
+					return rv;
+				}
+				set {
+					fixed (sockaddr_in* myself = &this) {
+						byte* self = (byte*) myself;
+						Marshal.Copy (value, 0, (IntPtr) (self + 8), 16);
+					}
+				}
+			}
+
+			unsafe uint sin6_scope_id {
+				get {
+					fixed (sockaddr_in* myself = &this) {
+						uint* self = (uint*) myself;
+						return self [6];
+					}
+				}
+				set {
+					fixed (sockaddr_in* myself = &this) {
+						uint* self = (uint*) myself;
+						self [6] = value;
+					}
+				}
+			}
 
 			public sockaddr_in (IPAddress address)
+				: this ()
 			{
 				sin_addr = 0;
 				sin_len = 28;
@@ -108,26 +220,26 @@ namespace SystemConfiguration {
 			/* CFAllocatorRef __nullable */ IntPtr allocator, /* const char* __nonnull */ IntPtr address);
 
 		[DllImport (Constants.SystemConfigurationLibrary)]
-		extern static /* SCNetworkReachabilityRef __nullable */ IntPtr SCNetworkReachabilityCreateWithAddress (
+		unsafe extern static /* SCNetworkReachabilityRef __nullable */ IntPtr SCNetworkReachabilityCreateWithAddress (
 			/* CFAllocatorRef __nullable */ IntPtr allocator,
-			/* const struct sockaddr * __nonnull */ ref sockaddr_in address);
+			/* const struct sockaddr * __nonnull */ sockaddr_in* address);
 
 		[DllImport (Constants.SystemConfigurationLibrary)]
-		extern static /* SCNetworkReachabilityRef __nullable */ IntPtr SCNetworkReachabilityCreateWithAddressPair (
+		unsafe extern static /* SCNetworkReachabilityRef __nullable */ IntPtr SCNetworkReachabilityCreateWithAddressPair (
 			/* CFAllocatorRef __nullable */ IntPtr allocator,
-			/* const struct sockaddr * __nullable */ ref sockaddr_in localAddress,
-			/* const struct sockaddr * __nullable */ ref sockaddr_in remoteAddress);
+			/* const struct sockaddr * __nullable */ sockaddr_in* localAddress,
+			/* const struct sockaddr * __nullable */ sockaddr_in* remoteAddress);
 
 		[DllImport (Constants.SystemConfigurationLibrary)]
-		extern static /* SCNetworkReachabilityRef __nullable */ IntPtr SCNetworkReachabilityCreateWithAddressPair (
+		unsafe extern static /* SCNetworkReachabilityRef __nullable */ IntPtr SCNetworkReachabilityCreateWithAddressPair (
 			/* CFAllocatorRef __nullable */ IntPtr allocator,
 			/* const struct sockaddr * __nullable */ IntPtr localAddress,
-			/* const struct sockaddr * __nullable */ ref sockaddr_in remoteAddress);
+			/* const struct sockaddr * __nullable */ sockaddr_in* remoteAddress);
 
 		[DllImport (Constants.SystemConfigurationLibrary)]
-		extern static /* SCNetworkReachabilityRef __nullable */ IntPtr SCNetworkReachabilityCreateWithAddressPair (
+		unsafe extern static /* SCNetworkReachabilityRef __nullable */ IntPtr SCNetworkReachabilityCreateWithAddressPair (
 			/* CFAllocatorRef __nullable */ IntPtr allocator,
-			/* const struct sockaddr * __nullable */ ref sockaddr_in localAddress,
+			/* const struct sockaddr * __nullable */ sockaddr_in* localAddress,
 			/* const struct sockaddr * __nullable */ IntPtr remoteAddress);
 
 		static IntPtr CheckFailure (IntPtr handle)
@@ -143,7 +255,9 @@ namespace SystemConfiguration {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (ip));
 
 			var s = new sockaddr_in (ip);
-			return CheckFailure (SCNetworkReachabilityCreateWithAddress (IntPtr.Zero, ref s));
+			unsafe {
+				return CheckFailure (SCNetworkReachabilityCreateWithAddress (IntPtr.Zero, &s));
+			}
 		}
 
 		public NetworkReachability (IPAddress ip)
@@ -174,16 +288,22 @@ namespace SystemConfiguration {
 			if (localAddress is null) {
 				var remote = new sockaddr_in (remoteAddress);
 
-				handle = SCNetworkReachabilityCreateWithAddressPair (IntPtr.Zero, IntPtr.Zero, ref remote);
+				unsafe {
+					handle = SCNetworkReachabilityCreateWithAddressPair (IntPtr.Zero, IntPtr.Zero, &remote);
+				}
 			} else if (remoteAddress is null) {
 				var local = new sockaddr_in (localAddress);
 
-				handle = SCNetworkReachabilityCreateWithAddressPair (IntPtr.Zero, ref local, IntPtr.Zero);
+				unsafe {
+					handle = SCNetworkReachabilityCreateWithAddressPair (IntPtr.Zero, &local, IntPtr.Zero);
+				}
 			} else {
 				var local = new sockaddr_in (localAddress);
 				var remote = new sockaddr_in (remoteAddress);
 
-				handle = SCNetworkReachabilityCreateWithAddressPair (IntPtr.Zero, ref local, ref remote);
+				unsafe {
+					handle = SCNetworkReachabilityCreateWithAddressPair (IntPtr.Zero, &local, &remote);
+				}
 			}
 
 			return CheckFailure (handle);
@@ -195,8 +315,8 @@ namespace SystemConfiguration {
 		}
 
 		[DllImport (Constants.SystemConfigurationLibrary)]
-		static extern int SCNetworkReachabilityGetFlags (/* SCNetworkReachabilityRef __nonnull */ IntPtr target,
-			/* SCNetworkReachabilityFlags* __nonnull */ out NetworkReachabilityFlags flags);
+		unsafe static extern int SCNetworkReachabilityGetFlags (/* SCNetworkReachabilityRef __nonnull */ IntPtr target,
+			/* SCNetworkReachabilityFlags* __nonnull */ NetworkReachabilityFlags* flags);
 
 		public bool TryGetFlags (out NetworkReachabilityFlags flags)
 		{
@@ -205,8 +325,12 @@ namespace SystemConfiguration {
 
 		public StatusCode GetFlags (out NetworkReachabilityFlags flags)
 		{
-			return SCNetworkReachabilityGetFlags (Handle, out flags) == 0 ?
-				StatusCodeError.SCError () : StatusCode.OK;
+			flags = default;
+			int rv;
+			unsafe {
+				rv = SCNetworkReachabilityGetFlags (Handle, (NetworkReachabilityFlags*) Unsafe.AsPointer<NetworkReachabilityFlags> (ref flags));
+			}
+			return rv == 0 ? StatusCodeError.SCError () : StatusCode.OK;
 		}
 
 #if !NET
@@ -214,26 +338,14 @@ namespace SystemConfiguration {
 #endif
 
 		[DllImport (Constants.SystemConfigurationLibrary)]
-		[return: MarshalAs (UnmanagedType.U1)]
-		unsafe static extern /* Boolean */ bool SCNetworkReachabilitySetCallback (
+		unsafe static extern /* Boolean */ byte SCNetworkReachabilitySetCallback (
 			/* SCNetworkReachabilityRef __nonnull */ IntPtr handle,
 #if NET
 			/* __nullable SCNetworkReachabilityCallBack */ delegate* unmanaged<IntPtr, NetworkReachabilityFlags, IntPtr, void> callout,
 #else
-			/* __nullable */ SCNetworkReachabilityCallBack? callout,
+			/* __nullable */ IntPtr callout,
 #endif
-			/* __nullable */ ref SCNetworkReachabilityContext context);
-
-		[DllImport (Constants.SystemConfigurationLibrary)]
-		[return: MarshalAs (UnmanagedType.U1)]
-		unsafe static extern /* Boolean */ bool SCNetworkReachabilitySetCallback (
-			/* SCNetworkReachabilityRef __nullable */ IntPtr handle,
-#if NET
-			/* __nullable SCNetworkReachabilityCallBack */ delegate* unmanaged<IntPtr, NetworkReachabilityFlags, IntPtr, void> callout,
-#else
-			/* __nullable */ SCNetworkReachabilityCallBack? callout,
-#endif
-			/* SCNetworkReachabilityContext* __nullable */ IntPtr context);
+			/* __nullable */ SCNetworkReachabilityContext* context);
 
 		public delegate void Notification (NetworkReachabilityFlags flags);
 
@@ -259,6 +371,7 @@ namespace SystemConfiguration {
 
 		public StatusCode SetNotification (Notification callback)
 		{
+			bool rv;
 			if (notification is null) {
 				if (callback is null)
 					return StatusCode.OK;
@@ -273,15 +386,13 @@ namespace SystemConfiguration {
 				}
 #endif
 
-#if NET
 				unsafe {
-					if (!SCNetworkReachabilitySetCallback (Handle, &Callback, ref ctx))
-						return StatusCodeError.SCError ();
-				}
+#if NET
+					rv = SCNetworkReachabilitySetCallback (Handle, &Callback, &ctx) != 0;
 #else
-				if (!SCNetworkReachabilitySetCallback (Handle, callouth, ref ctx))
-					return StatusCodeError.SCError ();
+					rv = SCNetworkReachabilitySetCallback (Handle, Marshal.GetFunctionPointerForDelegate (callouth), &ctx) != 0;
 #endif
+				}
 			} else {
 				if (callback is null) {
 					this.notification = null;
@@ -289,9 +400,14 @@ namespace SystemConfiguration {
 					callouth = null;
 #endif
 					unsafe {
-						if (!SCNetworkReachabilitySetCallback (Handle, null, IntPtr.Zero))
-							return StatusCodeError.SCError ();
+#if NET
+						rv = SCNetworkReachabilitySetCallback (Handle, null, null) != 0;
+#else
+						rv = SCNetworkReachabilitySetCallback (Handle, IntPtr.Zero, null) != 0;
+#endif
 					}
+					if (!rv)
+						return StatusCodeError.SCError ();
 
 					return StatusCode.OK;
 				}
@@ -302,8 +418,7 @@ namespace SystemConfiguration {
 		}
 
 		[DllImport (Constants.SystemConfigurationLibrary)]
-		[return: MarshalAs (UnmanagedType.U1)]
-		extern static /* Boolean */ bool SCNetworkReachabilityScheduleWithRunLoop (
+		extern static /* Boolean */ byte SCNetworkReachabilityScheduleWithRunLoop (
 			/* SCNetworkReachabilityRef __nonnull */ IntPtr target, /* CFRunLoopRef __nonnull */ IntPtr runloop,
 			/* CFStringRef __nonnull */ IntPtr runLoopMode);
 
@@ -317,7 +432,7 @@ namespace SystemConfiguration {
 
 			var modeHandle = CFString.CreateNative (mode);
 			try {
-				return SCNetworkReachabilityScheduleWithRunLoop (Handle, runLoop.Handle, modeHandle);
+				return SCNetworkReachabilityScheduleWithRunLoop (Handle, runLoop.Handle, modeHandle) != 0;
 			} finally {
 				CFString.ReleaseNative (modeHandle);
 			}
@@ -353,14 +468,13 @@ namespace SystemConfiguration {
 		}
 
 		[DllImport (Constants.SystemConfigurationLibrary)]
-		[return: MarshalAs (UnmanagedType.U1)]
-		extern static /* Boolean */ bool SCNetworkReachabilitySetDispatchQueue (
+		extern static /* Boolean */ byte SCNetworkReachabilitySetDispatchQueue (
 			/* SCNetworkReachabilityRef __nonnull */ IntPtr target,
 			/* dispatch_queue_t __nullable */ IntPtr queue);
 
 		public bool SetDispatchQueue (DispatchQueue queue)
 		{
-			return SCNetworkReachabilitySetDispatchQueue (Handle, queue.GetHandle ());
+			return SCNetworkReachabilitySetDispatchQueue (Handle, queue.GetHandle ()) != 0;
 		}
 	}
 }

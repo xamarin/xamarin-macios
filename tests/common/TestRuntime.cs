@@ -136,6 +136,17 @@ partial class TestRuntime {
 		}
 	}
 
+	static bool? is_pull_request;
+	public static bool IsPullRequest {
+		get {
+			if (!is_pull_request.HasValue) {
+				var pr = string.Equals (Environment.GetEnvironmentVariable ("BUILD_REASON"), "PullRequest", StringComparison.Ordinal);
+				is_pull_request = pr;
+			}
+			return is_pull_request.Value;
+		}
+	}
+
 	public static void IgnoreInCI (string message)
 	{
 		if (!IsInCI) {

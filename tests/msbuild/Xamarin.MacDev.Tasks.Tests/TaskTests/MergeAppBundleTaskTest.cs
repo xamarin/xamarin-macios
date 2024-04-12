@@ -8,7 +8,6 @@ using Microsoft.Build.Utilities;
 
 using NUnit.Framework;
 
-using Xamarin.iOS.Tasks;
 using Xamarin.Tests;
 using Xamarin.Utils;
 

@@ -1237,10 +1237,4 @@
             {1}: the exit code of a process
         </comment>
     </data>
-  <data name="E7119" xml:space="preserve">
-        <value>遇到与程序集 {0} 相关的程序集引用周期。</value>
-        <comment>
-            {0}: the path to an assembly
-        </comment>
-    </data>
 </root>

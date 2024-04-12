@@ -71,6 +71,7 @@ ScriptsToProcess = @(
 NestedModules = @(
                'Artifacts.psm1', 
                'GitHub.psm1', 
+               'Governance.psm1',
                'MLaunch.psm1', 
                'RemoteMac.psm1', 
                'StaticPages.psm1', 

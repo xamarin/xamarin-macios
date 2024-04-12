@@ -159,6 +159,6 @@ steps:
         displayName: 'Publish Artifact: All binlogs'
         inputs:
           targetPath: $(Build.ArtifactStagingDirectory)/all-binlogs
-          artifactName: '${{ parameters.uploadPrefix }}all-binlogs-$(Build.BuildId)-$(System.JobAttempt)'
+          artifactName: '${{ parameters.uploadPrefix }}all-binlogs-$(Build.BuildId)-$(System.StageAttempt)-$(System.JobAttempt)'
         continueOnError: true
         condition: succeededOrFailed()

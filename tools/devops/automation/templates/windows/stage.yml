@@ -49,7 +49,7 @@ stages:
   jobs:
   - job: mac_reservation
     dependsOn:
-    displayName: "Reserve bot for tests"
+    displayName: "Reserve macOS bot for tests"
     timeoutInMinutes: 120
     condition: ne(stageDependencies.configure_build.configure.outputs['configure_platforms.ENABLE_DOTNET'],'')
     workspace:
@@ -76,7 +76,7 @@ stages:
     - mac_reservation
     displayName: 'Dotnet tests'
     timeoutInMinutes: 120
-    condition: ne(stageDependencies.configure_build.configure.outputs['configure_platforms.ENABLE_DOTNET'],'')
+    condition: and(succeeded(),ne(stageDependencies.configure_build.configure.outputs['configure_platforms.ENABLE_DOTNET'],''))
     workspace:
       clean: all
 
@@ -103,3 +103,31 @@ stages:
         statusContext: ${{ parameters.statusContext }}
         gitHubToken: ${{ parameters.gitHubToken }}
         xqaCertPass: ${{ parameters.xqaCertPass }}
+
+  - job: mac_reenable
+    dependsOn:
+    - mac_reservation
+    - run_tests
+    displayName: "Re-enable macOS bot for tests"
+    timeoutInMinutes: 120
+    # the condition must be exactly the same as for the mac_reservation job (or if no condition there, then 'always ()')
+    condition: ne(stageDependencies.configure_build.configure.outputs['configure_platforms.ENABLE_DOTNET'],'')
+    workspace:
+      clean: all
+    pool:
+      name: ${{ parameters.windowsPool }}
+      demands:
+      - agent.os -equals Windows_NT
+
+    steps:
+    - template: reenable-mac.yml
+      parameters:
+        isPR: ${{ parameters.isPR }}
+        repositoryAlias: ${{ parameters.repositoryAlias }}
+        commit: ${{ parameters.commit }}
+
+    variables:
+      MAC_AGENT_NAME: $[ dependencies.mac_reservation.outputs['macInfo.AGENT_NAME'] ]
+      MAC_AGENT_POOL: $[ dependencies.mac_reservation.outputs['macInfo.AGENT_POOL'] ]
+      MAC_AGENT_IP: $[ dependencies.mac_reservation.outputs['macInfo.AGENT_IP'] ]
+      MAC_AGENT_USER: builder

@@ -65,6 +65,7 @@ public partial class Generator : IMemberGatherer {
 	public AttributeManager AttributeManager { get { return BindingTouch.AttributeManager; } }
 	NamespaceCache NamespaceCache { get { return BindingTouch.NamespaceCache; } }
 	public TypeCache TypeCache { get { return BindingTouch.TypeCache; } }
+	public DocumentationManager DocumentationManager { get { return BindingTouch.DocumentationManager; } }
 
 	Nomenclator nomenclator;
 	Nomenclator Nomenclator {
@@ -3841,6 +3842,8 @@ public partial class Generator : IMemberGatherer {
 			}
 		}
 
+		WriteDocumentation (pi);
+
 		if (wrap is not null) {
 			print_generated_code ();
 			PrintPropertyAttributes (pi, minfo.type);
@@ -4123,7 +4126,7 @@ public partial class Generator : IMemberGatherer {
 			return "Task";
 		var ttype = GetAsyncTaskType (minfo);
 		if (minfo.HasNSError && (ttype == "bool"))
-			ttype = "Tuple<bool,NSError>";
+			ttype = minfo.IsNSErrorNullable ? "Tuple<bool,NSError?>" : "Tuple<bool,NSError>";
 		return "Task<" + ttype + ">";
 	}
 
@@ -4215,7 +4218,7 @@ public partial class Generator : IMemberGatherer {
 			ttype = GetAsyncTaskType (minfo);
 			tuple = (minfo.HasNSError && (ttype == "bool"));
 			if (tuple)
-				ttype = "Tuple<bool,NSError>";
+				ttype = minfo.IsNSErrorNullable ? "Tuple<bool,NSError?>" : "Tuple<bool,NSError>";
 		}
 		print ("var tcs = new TaskCompletionSource<{0}> ();", ttype);
 		bool ignoreResult = !is_void &&
@@ -4247,7 +4250,7 @@ public partial class Generator : IMemberGatherer {
 		else if (tuple) {
 			var cond_name = minfo.AsyncCompletionParams [0].Name;
 			var var_name = minfo.AsyncCompletionParams.Last ().Name;
-			print ("tcs.SetResult (new Tuple<bool,NSError> ({0}_, {1}_));", cond_name, var_name);
+			print ("tcs.SetResult (new {2} ({0}_, {1}_));", cond_name, var_name, ttype);
 		} else if (minfo.IsSingleArgAsync)
 			print ("tcs.SetResult ({0}_!);", minfo.AsyncCompletionParams [0].Name);
 		else
@@ -4392,6 +4395,12 @@ public partial class Generator : IMemberGatherer {
 			}
 		}
 
+		if (minfo.is_extension_method) {
+			WriteDocumentation ((MemberInfo) GetProperty (minfo.Method) ?? minfo.Method);
+		} else {
+			WriteDocumentation (minfo.Method);
+		}
+
 		PrintDelegateProxy (minfo);
 
 		if (AttributeManager.HasAttribute<NoMethodAttribute> (minfo.mi)) {
@@ -4528,6 +4537,8 @@ public partial class Generator : IMemberGatherer {
 
 				if (shortName.StartsWith ("Func<", StringComparison.Ordinal))
 					continue;
+
+				WriteDocumentation (mi.DeclaringType);
 
 				var del = mi.DeclaringType;
 
@@ -4673,6 +4684,8 @@ public partial class Generator : IMemberGatherer {
 		var optionalInstanceProperties = allProtocolProperties.Where ((v) => !IsRequired (v) && !AttributeManager.HasAttribute<StaticAttribute> (v));
 		var requiredInstanceAsyncMethods = requiredInstanceMethods.Where (m => AttributeManager.HasAttribute<AsyncAttribute> (m)).ToList ();
 
+		WriteDocumentation (type);
+
 		PrintAttributes (type, platform: true, preserve: true, advice: true);
 		print ("[Protocol (Name = \"{1}\", WrapperType = typeof ({0}Wrapper){2}{3})]",
 			   TypeName,
@@ -4812,6 +4825,7 @@ public partial class Generator : IMemberGatherer {
 			var minfo = new MemberInformation (this, this, mi, type, null);
 			var mod = string.Empty;
 
+			WriteDocumentation (mi);
 			PrintMethodAttributes (minfo);
 			print_generated_code ();
 			PrintDelegateProxy (minfo);
@@ -4828,6 +4842,7 @@ public partial class Generator : IMemberGatherer {
 			var mod = string.Empty;
 			minfo.is_export = true;
 
+			WriteDocumentation (pi);
 			print ("[Preserve (Conditional = true)]");
 			PrintAttributes (pi, platform: true);
 
@@ -5203,6 +5218,11 @@ public partial class Generator : IMemberGatherer {
 			PrintRequiresSuperAttribute (mi);
 	}
 
+	void WriteDocumentation (MemberInfo info)
+	{
+		DocumentationManager.WriteDocumentation (sw, indent, info);
+	}
+
 	public void ComputeLibraryName (FieldAttribute fieldAttr, Type type, string propertyName, out string library_name, out string library_path)
 	{
 		library_path = null;
@@ -5361,6 +5381,8 @@ public partial class Generator : IMemberGatherer {
 				print ("namespace {0} {{", type.Namespace);
 				indent++;
 			}
+
+			WriteDocumentation (type);
 
 			bool core_image_filter = false;
 			string class_mod = null;
@@ -5572,6 +5594,15 @@ public partial class Generator : IMemberGatherer {
 
 			if (!is_static_class && !is_partial) {
 				if (!is_model && !external) {
+					if (BindingTouch.SupportsXmlDocumentation) {
+						print ("/// <summary>The Objective-C class handle for this class.</summary>");
+						print ("/// <value>The pointer to the Objective-C class.</value>");
+						print ("/// <remarks>");
+						print ("///     Each managed class mirrors an unmanaged Objective-C class.");
+						print ("///     This value contains the pointer to the Objective-C class.");
+						print ("///     It is similar to calling the managed <see cref=\"ObjCRuntime.Class.GetHandle(string)\" /> or the native <see href=\"https://developer.apple.com/documentation/objectivec/1418952-objc_getclass\">objc_getClass</see> method with the type name.");
+						print ("/// </remarks>");
+					}
 					print ("public {1} {2} ClassHandle {{ get {{ return class_ptr; }} }}\n", objc_type_name, TypeName == "NSObject" ? "virtual" : "override", NativeHandleType);
 				}
 
@@ -6813,12 +6844,17 @@ public partial class Generator : IMemberGatherer {
 	{
 		var pt = p.ParameterType;
 
-		string name;
+		string name = string.Empty;
+		if (AttributeManager.HasAttribute<BlockCallbackAttribute> (p))
+			name = "[BlockCallback] ";
+		else if (AttributeManager.HasAttribute<CCallbackAttribute> (p))
+			name = "[CCallback] ";
+
 		if (pt.IsByRef) {
 			pt = pt.GetElementType ();
-			name = (removeRefTypes ? "" : (p.IsOut ? "out " : "ref ")) + TypeManager.RenderType (pt, p);
+			name += (removeRefTypes ? "" : (p.IsOut ? "out " : "ref ")) + TypeManager.RenderType (pt, p);
 		} else
-			name = TypeManager.RenderType (pt, p);
+			name += TypeManager.RenderType (pt, p);
 		if (!pt.IsValueType && AttributeManager.HasAttribute<NullAllowedAttribute> (p))
 			name += "?";
 		return name;
