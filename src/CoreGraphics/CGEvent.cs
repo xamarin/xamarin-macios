@@ -33,6 +33,7 @@ namespace CoreGraphics {
 	[MacCatalyst (13,1)]
 #endif
 	public sealed class CGEvent : NativeObject {
+#if !COREBUILD
 		public delegate IntPtr CGEventTapCallback (IntPtr tapProxyEvent, CGEventType eventType, IntPtr eventRef, IntPtr userInfo);
 
 		static ConditionalWeakTable<CFMachPort, TapData>? tap_table;
@@ -340,61 +341,128 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary, EntryPoint="CGEventGetIntegerValueField")]
-		internal extern static long GetLong (IntPtr eventHandle, CGEventField eventField);
+		extern static long GetLong (IntPtr eventHandle, CGEventField eventField);
+
+		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary, EntryPoint="CGEventSetIntegerValueField")]
+		extern static void SetLong (IntPtr eventHandle, CGEventField eventField, long value);
 
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary, EntryPoint="CGEventGetDoubleValueField")]
-		internal extern static double GetDouble (IntPtr eventHandle, CGEventField eventField);
+		extern static double GetDouble (IntPtr eventHandle, CGEventField eventField);
 
-		internal long GetLong (CGEventField eventField)
+		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary, EntryPoint="CGEventSetDoubleValueField")]
+		extern static void SetDouble (IntPtr eventHandle, CGEventField eventField, double value);
+
+		/// <summary>Get the 64-bit integer value of the specified event field.</summary>
+		/// <param name="field">The field whose value to get.</param>
+		/// <returns>The 64-bit integer value of the specified event field.</returns>
+		public long GetLongValueField (CGEventField field)
 		{
-			return GetLong (Handle, eventField);
+			return GetLong (Handle, field);
 		}
 
+		/// <summary>Get the double value of the specified event field.</summary>
+		/// <param name="field">The field whose value to get.</param>
+		/// <returns>The double value of the specified event field.</returns>
+		public double GetDoubleValueField (CGEventField field)
+		{
+			return GetDouble (Handle, field);
+		}
+
+		/// <summary>Set a 64-bit integer value for the specified event field.</summary>
+		/// <param name="field">The field whose value to set.</param>
+		/// <param name="value">The value to set.</param>
+		public void SetValueField (CGEventField field, long value)
+		{
+			SetLong (Handle, field, value);
+		}
+
+		/// <summary>Set a double value for the specified event field.</summary>
+		/// <param name="field">The field whose value to set.</param>
+		/// <param name="value">The value to set.</param>
+		public void SetValueField (CGEventField field, double value)
+		{
+			SetDouble (Handle, field, value);
+		}
+
+		/// <summary>The mouse button event number.</summary>
+		/// <remarks>Matching mouse down and mouse up events will have the same event number.</remarks>
 		public long MouseEventNumber {
 			get {
 				return GetLong (Handle, CGEventField.MouseEventNumber);
 			}
+			set {
+				SetLong (Handle, CGEventField.MouseEventNumber, value);
+			}
 		}
 
+		/// <summary>The mouse button click state.</summary>
+		/// <remarks>A value of 1 is a single click, a value of 2 is a double click, and so on.</remarks>
 		public long MouseEventClickState {
 			get {
 				return GetLong (Handle, CGEventField.MouseEventClickState);
 			}
+			set {
+				SetLong (Handle, CGEventField.MouseEventClickState, value);
+			}
 		}
 
+		/// <summary>The mouse button pressure state, ranging from 0 (mouse being up) to 1.</summary>
 		public double MouseEventPressure {
 			get {
 				return GetDouble (Handle, CGEventField.MouseEventPressure);
 			}
+			set {
+				SetDouble (Handle, CGEventField.MouseEventPressure, value);
+			}
 		}
 
+		/// <summary>The mouse button number.</summary>
 		public long MouseEventButtonNumber {
 			get {
 				return GetLong (Handle, CGEventField.MouseEventButtonNumber);
 			}
+			set {
+				SetLong (Handle, CGEventField.MouseEventButtonNumber, value);
+			}
 		}
 
+		/// <summary>The horizontal delta since the last mouse movement event.</summary>
 		public long MouseEventDeltaX {
 			get {
 				return GetLong (Handle, CGEventField.MouseEventDeltaX);
 			}
+			set {
+				SetLong (Handle, CGEventField.MouseEventDeltaX, value);
+			}
 		}
 
+		/// <summary>The vertical delta since the last mouse movement event.</summary>
 		public long MouseEventDeltaY {
 			get {
 				return GetLong (Handle, CGEventField.MouseEventDeltaY);
 			}
-		}
-
-		public bool MouseEventInstantMouser {
-			get {
-				return GetLong (Handle, CGEventField.MouseEventButtonNumber) != 0;
+			set {
+				SetLong (Handle, CGEventField.MouseEventDeltaY, value);
 			}
 		}
 
+		/// <summary>A value indicating whether the event should be ignored by the Inkwell subsystem.</summary>
+		public bool MouseEventInstantMouser {
+			get {
+				return GetLong (Handle, CGEventField.MouseEventInstantMouser) != 0;
+			}
+			set {
+				SetLong (Handle, CGEventField.MouseEventInstantMouser, value ? 1 : 0);
+			}
+		}
+
+		/// <summary>The mouse event subtype.</summary>
 		public long MouseEventSubtype {
 			get {
 				return GetLong (Handle, CGEventField.MouseEventSubtype);
+			}
+			set {
+				SetLong (Handle, CGEventField.MouseEventSubtype, value);
 			}
 		}
 
@@ -656,9 +724,10 @@ namespace CoreGraphics {
 		[Mac (11,0)]
 #endif
 		public static bool RequestPostEventAccess () => CGRequestPostEventAccess () != 0;
-
+#endif // !COREBUILD
 	}
 
+#if !COREBUILD
 #if NET
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("maccatalyst")]
@@ -675,6 +744,7 @@ namespace CoreGraphics {
 		public float /* float */ AvgUsecLatency;
 		public float /* float */ MaxUsecLatency;
 	};
+#endif // !COREBUILD
 
 }
 
