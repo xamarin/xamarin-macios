@@ -1,6 +1,6 @@
 <Project>
   <PropertyGroup>
-    <PackageId>Microsoft.$(_PlatformName).Ref</PackageId>
+    <PackageId>Microsoft.$(_PlatformName).Ref.$(PackageOSTargetVersion)</PackageId>
     <Description>Microsoft $(_PlatformName) reference assemblies. Please do not reference directly.</Description>
     <_CreateFrameworkList>true</_CreateFrameworkList>
   </PropertyGroup>

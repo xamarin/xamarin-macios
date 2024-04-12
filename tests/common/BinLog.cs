@@ -27,6 +27,23 @@ namespace Xamarin.Tests {
 		public string? ProjectFile;
 		public string? Message;
 
+		public BuildLogEvent Clone ()
+		{
+			var rv = new BuildLogEvent {
+				Type = Type,
+				ColumnNumber = ColumnNumber,
+				EndColumnNumber = EndColumnNumber,
+				LineNumber = LineNumber,
+				EndLineNumber = EndLineNumber,
+				Code = Code,
+				SubCategory = SubCategory,
+				File = File,
+				ProjectFile = ProjectFile,
+				Message = Message
+			};
+			return rv;
+		}
+
 		public override string ToString ()
 		{
 			var rv = new StringBuilder ();

@@ -169,8 +169,8 @@ namespace CoreServices
 		}
 
 		[DllImport (Constants.CoreServicesLibrary)]
-		static extern LSResult LSCanURLAcceptURL (IntPtr inItemUrl, IntPtr inTargetUrl,
-			LSRoles inRole, LSAcceptanceFlags inFlags, out byte outAcceptsItem);
+		unsafe static extern LSResult LSCanURLAcceptURL (IntPtr inItemUrl, IntPtr inTargetUrl,
+			LSRoles inRole, LSAcceptanceFlags inFlags, byte* outAcceptsItem);
 
 		// NOTE: intentionally inverting the status results (return bool, with an out
 		// LSResult vs return LSResult with an out bool) to make the API nicer to use
@@ -183,7 +183,9 @@ namespace CoreServices
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (targetUrl));
 
 			byte acceptsItem;
-			result = LSCanURLAcceptURL (itemUrl.Handle, targetUrl.Handle, roles, acceptanceFlags, out acceptsItem);
+			unsafe {
+				result = LSCanURLAcceptURL (itemUrl.Handle, targetUrl.Handle, roles, acceptanceFlags, &acceptsItem);
+			}
 			return acceptsItem != 0;
 		}
 

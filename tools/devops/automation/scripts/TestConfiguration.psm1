@@ -4,44 +4,66 @@ class TestConfiguration {
     [string[]] $enabledPlatforms
     [string] $testsLabels
     [string] $statusContext
-    [string] $testPrefix
 
     TestConfiguration (
         [object] $testConfigurations,
         [object] $supportedPlatforms,
         [string[]] $enabledPlatforms,
         [string] $testsLabels,
-        [string] $statusContext,
-        [string] $testPrefix) {
+        [string] $statusContext) {
         $this.testConfigurations = $testConfigurations
         $this.supportedPlatforms = $supportedPlatforms
         $this.enabledPlatforms = $enabledPlatforms
         $this.testsLabels = $testsLabels
         $this.statusContext = $statusContext
-        $this.testPrefix = $testPrefix
     }
 
     [string] Create() {
         $rv = [ordered]@{}
         foreach ($config in $this.testConfigurations) {
+            $enabledPlatformsForConfig = $this.enabledPlatforms
             $label = $config.label
             $underscoredLabel = $label.Replace('-','_')
             $splitByPlatforms = $config.splitByPlatforms
+            $testPrefix = $config.testPrefix
 
             $vars = [ordered]@{}
             # set common variables
             $vars["LABEL"] = $label
             $vars["TESTS_LABELS"] = "$($this.testsLabels),run-$($label)-tests"
             if ($splitByPlatforms -eq "True") {
-                if ($this.enabledPlatforms.Length -eq 0) {
+                # watchOS is not supported for .NET so it's an outlier.
+                # we're soon removing legacy Xamarin support though, so hard-coding it here is a quick solution
+                # until this code will be removed anyways.
+                if ($config.containsLegacyTests -eq "true") {
+                    Write-Host "Test $label has legacy tests"
+                    $watchConfig = "$($Env:CONFIGURE_PLATFORMS_INCLUDE_WATCH)$($Env:CONFIGURE_PLATFORMS_INCLUDE_XAMARIN_LEGACY)"
+                    if ("$watchConfig" -eq "11") {
+                        Write-Host "Enabling watchOS for $label because watchOS is enabled."
+                        $enabledPlatformsForConfig += "watchOS"
+                    } else {
+                        Write-Host "Not enabling watchOS for $label because watchOS is not enabled ($watchConfig)"
+                        Write-Host "CONFIGURE_PLATFORMS_INCLUDE_WATCH = $($Env:CONFIGURE_PLATFORMS_INCLUDE_WATCH)"
+                        Write-Host "CONFIGURE_PLATFORMS_INCLUDE_XAMARIN_LEGACY = $($Env:CONFIGURE_PLATFORMS_INCLUDE_XAMARIN_LEGACY)"
+                    }
+                } else {
+                    Write-Host "Test $label does not have legacy tests"
+                }
+
+                if ($enabledPlatformsForConfig.Length -eq 0) {
                     Write-Host "No enabled platforms, skipping $label"
                     continue
                 }
-                if ($this.enabledPlatforms.Length -gt 1) {
-                    Write-Host "Multiple platform enabled"
-                    $this.enabledPlatforms += "Multiple"
+
+                if ($enabledPlatformsForConfig.Length -gt 1) {
+                    if ($config.needsMultiplePlatforms -eq "true") {
+                        Write-Host "Multiple platform enabled"
+                        $enabledPlatformsForConfig += "Multiple"
+                    } else {
+                        Write-Host "Test $label has multiple platforms, but does not need a specific multiple test run (needsMultiplePlatforms=$($config.needsMultiplePlatforms))."
+                    }
                 }
-                foreach ($platform in $this.enabledPlatforms) {
+                foreach ($platform in $enabledPlatformsForConfig) {
                     Write-Host "platform: $platform"
                     $platformConfig = $this.supportedPlatforms | Where-Object { $_.platform -eq $platform }
                     $platform = $platformConfig.platform
@@ -68,7 +90,7 @@ class TestConfiguration {
                     # set platform-specific variables
                     $platformVars["LABEL_WITH_PLATFORM"] = "$($label)_$($platform)"
                     $platformVars["STATUS_CONTEXT"] = "$($this.statusContext) - $($label) - $($platform)"
-                    $platformVars["TEST_PREFIX"] = "$($this.testPrefix)$($underscoredLabel)_$($platform.ToLower())"
+                    $platformVars["TEST_PREFIX"] = "$($testPrefix)$($underscoredLabel)_$($platform.ToLower())"
                     if ($platform -eq "Multiple") {
                         $platformVars["TEST_PLATFORM"] = ""
                         $platformVars["TEST_FILTER"] = "Category = MultiPlatform"
@@ -83,7 +105,7 @@ class TestConfiguration {
                 # set non-platform specific variables
                 $vars["LABEL_WITH_PLATFORM"] = "$label"
                 $vars["STATUS_CONTEXT"] = "$($this.statusContext) - $($label)"
-                $vars["TEST_PREFIX"] = "$($this.testPrefix)$($underscoredLabel)"
+                $vars["TEST_PREFIX"] = "$($testPrefix)$($underscoredLabel)"
                 $vars["TEST_PLATFORM"] = ""
                 $rv[$label] = $vars
             }
@@ -114,16 +136,13 @@ function Get-TestConfiguration {
         $TestsLabels,
 
         [string]
-        $StatusContext,
-
-        [string]
-        $TestPrefix
+        $StatusContext
     )
 
     $objTestConfigurations = ConvertFrom-Json -InputObject $TestConfigurations
     $objSupportedPlatforms = ConvertFrom-Json -InputObject $SupportedPlatforms
     $arrEnabledPlatforms = -split $EnabledPlatforms
-    $config = [TestConfiguration]::new($objTestConfigurations, $objSupportedPlatforms, $arrEnabledPlatforms, $TestsLabels, $StatusContext, $TestPrefix)
+    $config = [TestConfiguration]::new($objTestConfigurations, $objSupportedPlatforms, $arrEnabledPlatforms, $TestsLabels, $StatusContext)
     return $config.Create()
 }
 

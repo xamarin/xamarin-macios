@@ -7,6 +7,7 @@
 //
 
 using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 using Foundation;
@@ -71,34 +72,39 @@ namespace CoreMedia {
 		[SupportedOSPlatform ("tvos")]
 #endif
 		[DllImport (Constants.CoreMediaLibrary)]
-		extern static /* OSStatus */ CMClockError CMAudioClockCreate (/* CFAllocatorRef */ IntPtr allocator, /* CMClockRef* */ out IntPtr clockOut);
+		unsafe extern static /* OSStatus */ CMClockError CMAudioClockCreate (/* CFAllocatorRef */ IntPtr allocator, /* CMClockRef* */ IntPtr* clockOut);
 
 		public static CMClock? CreateAudioClock (out CMClockError clockError)
 		{
 			IntPtr ptr;
-			clockError = CMAudioClockCreate (IntPtr.Zero, out ptr);
+			unsafe {
+				clockError = CMAudioClockCreate (IntPtr.Zero, &ptr);
+			}
 			return clockError == CMClockError.None ? new CMClock (ptr, true) : null;
 		}
 #endif
 
 		[DllImport (Constants.CoreMediaLibrary)]
-		extern static /* OSStatus */ CMClockError CMClockGetAnchorTime (/* CMClockRef */ IntPtr clock, out CMTime outClockTime, out CMTime outReferenceClockTime);
+		unsafe extern static /* OSStatus */ CMClockError CMClockGetAnchorTime (/* CMClockRef */ IntPtr clock, CMTime* outClockTime, CMTime* outReferenceClockTime);
 
 		public CMClockError GetAnchorTime (out CMTime clockTime, out CMTime referenceClockTime)
 		{
-			return CMClockGetAnchorTime (Handle, out clockTime, out referenceClockTime);
+			clockTime = default;
+			referenceClockTime = default;
+			unsafe {
+				return CMClockGetAnchorTime (Handle, (CMTime*) Unsafe.AsPointer<CMTime> (ref clockTime), (CMTime*) Unsafe.AsPointer<CMTime> (ref referenceClockTime));
+			}
 		}
 
 		[DllImport (Constants.CoreMediaLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static /* Boolean */ bool CMClockMightDrift (/* CMClockRef */ IntPtr clock, /* CMClockRef */ IntPtr otherClock);
+		extern static /* Boolean */ byte CMClockMightDrift (/* CMClockRef */ IntPtr clock, /* CMClockRef */ IntPtr otherClock);
 
 		public bool MightDrift (CMClock otherClock)
 		{
 			if (otherClock is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (otherClock));
 
-			return CMClockMightDrift (Handle, otherClock.Handle);
+			return CMClockMightDrift (Handle, otherClock.Handle) != 0;
 		}
 
 		[DllImport (Constants.CoreMediaLibrary)]
@@ -156,14 +162,18 @@ namespace CoreMedia {
 		[Deprecated (PlatformName.WatchOS, 6, 0)]
 #endif
 		[DllImport (Constants.CoreMediaLibrary)]
-		extern static /* OSStatus */ CMTimebaseError CMTimebaseCreateWithMasterClock (/* CFAllocatorRef */ IntPtr allocator, /* CMClockRef */ IntPtr masterClock, /* CMTimebaseRef* */ out IntPtr timebaseOut);
+		unsafe extern static /* OSStatus */ CMTimebaseError CMTimebaseCreateWithMasterClock (/* CFAllocatorRef */ IntPtr allocator, /* CMClockRef */ IntPtr masterClock, /* CMTimebaseRef* */ IntPtr* timebaseOut);
 
 		static IntPtr Create (CMClock masterClock)
 		{
 			if (masterClock is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (masterClock));
 
-			var error = CMTimebaseCreateWithMasterClock (IntPtr.Zero, masterClock.Handle, out var handle);
+			CMTimebaseError error;
+			IntPtr handle;
+			unsafe {
+				error = CMTimebaseCreateWithMasterClock (IntPtr.Zero, masterClock.Handle, &handle);
+			}
 			if (error != CMTimebaseError.None)
 				ObjCRuntime.ThrowHelper.ThrowArgumentException (error.ToString ());
 			return handle;
@@ -190,14 +200,18 @@ namespace CoreMedia {
 		[Deprecated (PlatformName.WatchOS, 6, 0)]
 #endif
 		[DllImport (Constants.CoreMediaLibrary)]
-		extern static /* OSStatus */ CMTimebaseError CMTimebaseCreateWithMasterTimebase (/* CFAllocatorRef */ IntPtr allocator, /* CMTimebaseRef */ IntPtr masterTimebase, /* CMTimebaseRef* */ out IntPtr timebaseOut);
+		unsafe extern static /* OSStatus */ CMTimebaseError CMTimebaseCreateWithMasterTimebase (/* CFAllocatorRef */ IntPtr allocator, /* CMTimebaseRef */ IntPtr masterTimebase, /* CMTimebaseRef* */ IntPtr* timebaseOut);
 
 		static IntPtr Create (CMTimebase masterTimebase)
 		{
 			if (masterTimebase is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (masterTimebase));
 
-			var error = CMTimebaseCreateWithMasterTimebase (IntPtr.Zero, masterTimebase.Handle, out var handle);
+			CMTimebaseError error;
+			IntPtr handle;
+			unsafe {
+				error = CMTimebaseCreateWithMasterTimebase (IntPtr.Zero, masterTimebase.Handle, &handle);
+			}
 			if (error != CMTimebaseError.None)
 				ObjCRuntime.ThrowHelper.ThrowArgumentException (error.ToString ());
 			return handle;
@@ -221,14 +235,18 @@ namespace CoreMedia {
 		[MacCatalyst (15, 0)]
 #endif
 		[DllImport (Constants.CoreMediaLibrary)]
-		static extern CMTimebaseError CMTimebaseCreateWithSourceClock (/* [NullAllowed] CFAllocatorRef */ IntPtr allocator, /* CMClock */ IntPtr sourceClock, /* CMTimebase */ out IntPtr timebaseOut);
+		unsafe static extern CMTimebaseError CMTimebaseCreateWithSourceClock (/* [NullAllowed] CFAllocatorRef */ IntPtr allocator, /* CMClock */ IntPtr sourceClock, /* CMTimebase */ IntPtr* timebaseOut);
 
 		static IntPtr Create (CFAllocator? allocator, CMClock sourceClock)
 		{
 			if (sourceClock is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (sourceClock));
 
-			var error = CMTimebaseCreateWithSourceClock (allocator.GetHandle (), sourceClock.Handle, out var handle);
+			CMTimebaseError error;
+			IntPtr handle;
+			unsafe {
+				error = CMTimebaseCreateWithSourceClock (allocator.GetHandle (), sourceClock.Handle, &handle);
+			}
 			if (error != CMTimebaseError.None)
 				ObjCRuntime.ThrowHelper.ThrowArgumentException (error.ToString ());
 			return handle;
@@ -264,14 +282,18 @@ namespace CoreMedia {
 		[MacCatalyst (15, 0)]
 #endif
 		[DllImport (Constants.CoreMediaLibrary)]
-		static extern CMTimebaseError CMTimebaseCreateWithSourceTimebase (/* [NullAllowed] CFAllocatorRef */ IntPtr allocator, /* CMTimebase */ IntPtr sourceTimebase, /* CMTimebase */ out IntPtr timebaseOut);
+		unsafe static extern CMTimebaseError CMTimebaseCreateWithSourceTimebase (/* [NullAllowed] CFAllocatorRef */ IntPtr allocator, /* CMTimebase */ IntPtr sourceTimebase, /* CMTimebase */ IntPtr* timebaseOut);
 
 		static IntPtr Create (CFAllocator? allocator, CMTimebase sourceTimebase)
 		{
 			if (sourceTimebase is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (sourceTimebase));
 
-			var error = CMTimebaseCreateWithSourceTimebase (allocator.GetHandle (), sourceTimebase.Handle, out var handle);
+			CMTimebaseError error;
+			IntPtr handle;
+			unsafe {
+				error = CMTimebaseCreateWithSourceTimebase (allocator.GetHandle (), sourceTimebase.Handle, &handle);
+			}
 			if (error != CMTimebaseError.None)
 				ObjCRuntime.ThrowHelper.ThrowArgumentException (error.ToString ());
 			return handle;
@@ -512,11 +534,15 @@ namespace CoreMedia {
 		}
 
 		[DllImport (Constants.CoreMediaLibrary)]
-		extern static /* OSStatus */ CMTimebaseError CMTimebaseGetTimeAndRate (/* CMTimebaseRef */ IntPtr timebase, out CMTime time, /* Float64* */ out double rate);
+		unsafe extern static /* OSStatus */ CMTimebaseError CMTimebaseGetTimeAndRate (/* CMTimebaseRef */ IntPtr timebase, CMTime* time, /* Float64* */ double* rate);
 
 		public CMTimebaseError GetTimeAndRate (out CMTime time, out double rate)
 		{
-			return CMTimebaseGetTimeAndRate (Handle, out time, out rate);
+			time = default;
+			rate = default;
+			unsafe {
+				return CMTimebaseGetTimeAndRate (Handle, (CMTime*) Unsafe.AsPointer<CMTime> (ref time), (double*) Unsafe.AsPointer<double> (ref rate));
+			}
 		}
 
 		[DllImport (Constants.CoreMediaLibrary)]
@@ -879,12 +905,12 @@ namespace CoreMedia {
 		}
 
 		[DllImport (Constants.CoreMediaLibrary)]
-		extern static /* OSStatus */ CMSyncError CMSyncGetRelativeRateAndAnchorTime (
+		unsafe extern static /* OSStatus */ CMSyncError CMSyncGetRelativeRateAndAnchorTime (
 			/* CMClockOrTimebaseRef */ IntPtr ofClockOrTimebase,
 			/* CMClockOrTimebaseRef */ IntPtr relativeToClockOrTimebase,
-			/* Float64* */ out double outRelativeRate,
-			out CMTime outOfClockOrTimebaseAnchorTime,
-			out CMTime outRelativeToClockOrTimebaseAnchorTime);
+			/* Float64* */ double* outRelativeRate,
+			CMTime* outOfClockOrTimebaseAnchorTime,
+			CMTime* outRelativeToClockOrTimebaseAnchorTime);
 
 		public static CMSyncError GetRelativeRateAndAnchorTime (CMClockOrTimebase clockOrTimebaseA, CMClockOrTimebase clockOrTimebaseB, out double relativeRate, out CMTime timeA, out CMTime timeB)
 		{
@@ -894,7 +920,17 @@ namespace CoreMedia {
 			if (clockOrTimebaseB is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (clockOrTimebaseB));
 
-			return CMSyncGetRelativeRateAndAnchorTime (clockOrTimebaseA.Handle, clockOrTimebaseB.Handle, out relativeRate, out timeA, out timeB);
+			relativeRate = default;
+			timeA = default;
+			timeB = default;
+			unsafe {
+				return CMSyncGetRelativeRateAndAnchorTime (
+					clockOrTimebaseA.Handle,
+					clockOrTimebaseB.Handle,
+					(double*) Unsafe.AsPointer<double> (ref relativeRate),
+					(CMTime*) Unsafe.AsPointer<CMTime> (ref timeA),
+					(CMTime*) Unsafe.AsPointer<CMTime> (ref timeB));
+			}
 		}
 
 		[DllImport (Constants.CoreMediaLibrary)]
@@ -911,8 +947,7 @@ namespace CoreMedia {
 		}
 
 		[DllImport (Constants.CoreMediaLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static /* Boolean */ bool CMSyncMightDrift (/* CMClockOrTimebaseRef */ IntPtr clockOrTimebase1, /* CMClockOrTimebaseRef */ IntPtr clockOrTimebase2);
+		extern static /* Boolean */ byte CMSyncMightDrift (/* CMClockOrTimebaseRef */ IntPtr clockOrTimebase1, /* CMClockOrTimebaseRef */ IntPtr clockOrTimebase2);
 
 		public static bool MightDrift (CMClockOrTimebase clockOrTimebaseA, CMClockOrTimebase clockOrTimebaseB)
 		{
@@ -922,7 +957,7 @@ namespace CoreMedia {
 			if (clockOrTimebaseB is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (clockOrTimebaseB));
 
-			return CMSyncMightDrift (clockOrTimebaseA.Handle, clockOrTimebaseB.Handle);
+			return CMSyncMightDrift (clockOrTimebaseA.Handle, clockOrTimebaseB.Handle) != 0;
 		}
 
 #if NET

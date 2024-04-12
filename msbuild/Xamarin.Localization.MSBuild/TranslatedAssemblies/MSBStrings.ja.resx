@@ -1237,10 +1237,4 @@
             {1}: the exit code of a process
         </comment>
     </data>
-  <data name="E7119" xml:space="preserve">
-        <value>アセンブリ {0} に関連するアセンブリ参照サイクルが発生しました。</value>
-        <comment>
-            {0}: the path to an assembly
-        </comment>
-    </data>
 </root>

@@ -276,5 +276,28 @@ namespace Xamarin.Utils {
 
 			return path.Replace ('\\', '/');
 		}
+
+		public static bool OSSupportsLongPaths {
+			get {
+				if (Environment.OSVersion.Platform != PlatformID.Win32NT)
+					return true;
+
+				return IsLongPathsEnabledRegistry;
+			}
+		}
+
+		const string WINDOWS_FILE_SYSTEM_REGISTRY_KEY = @"SYSTEM\CurrentControlSet\Control\FileSystem";
+		const string WINDOWS_LONG_PATHS_ENABLED_VALUE_NAME = "LongPathsEnabled";
+
+		static bool IsLongPathsEnabledRegistry {
+			get {
+				using (var fileSystemKey = Microsoft.Win32.Registry.LocalMachine.OpenSubKey (WINDOWS_FILE_SYSTEM_REGISTRY_KEY)) {
+					if (fileSystemKey is null)
+						return false;
+					var longPathsEnabledValue = fileSystemKey.GetValue (WINDOWS_LONG_PATHS_ENABLED_VALUE_NAME, 0);
+					return Convert.ToInt32 (longPathsEnabledValue) == 1;
+				}
+			}
+		}
 	}
 }

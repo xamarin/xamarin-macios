@@ -29,6 +29,7 @@
 #nullable enable
 
 using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 
@@ -112,21 +113,19 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static extern bool CGRectIsNull (CGRect rect);
+		static extern byte CGRectIsNull (CGRect rect);
 
 		public static bool IsNull (this CGRect self)
 		{
-			return CGRectIsNull (self);
+			return CGRectIsNull (self) != 0;
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static extern bool CGRectIsInfinite (CGRect rect);
+		static extern byte CGRectIsInfinite (CGRect rect);
 
 		public static bool IsInfinite (this CGRect self)
 		{
-			return CGRectIsInfinite (self);
+			return CGRectIsInfinite (self) != 0;
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
@@ -154,11 +153,17 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		static extern void CGRectDivide (CGRect rect, out CGRect slice, out CGRect remainder, /* GCFloat */ nfloat amount, CGRectEdge edge);
+		unsafe static extern void CGRectDivide (CGRect rect, CGRect* slice, CGRect* remainder, /* GCFloat */ nfloat amount, CGRectEdge edge);
 
+#if !COREBUILD
 		public static void Divide (this CGRect self, nfloat amount, CGRectEdge edge, out CGRect slice, out CGRect remainder)
 		{
-			CGRectDivide (self, out slice, out remainder, amount, edge);
+			slice = default;
+			remainder = default;
+			unsafe {
+				CGRectDivide (self, (CGRect*) Unsafe.AsPointer<CGRect> (ref slice), (CGRect*) Unsafe.AsPointer<CGRect> (ref remainder), amount, edge);
+			}
 		}
+#endif
 	}
 }

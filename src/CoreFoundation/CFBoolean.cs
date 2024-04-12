@@ -80,16 +80,15 @@ namespace CoreFoundation {
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static /* Boolean */ bool CFBooleanGetValue (/* CFBooleanRef */ IntPtr boolean);
+		extern static /* Boolean */ byte CFBooleanGetValue (/* CFBooleanRef */ IntPtr boolean);
 
 		public bool Value {
-			get { return CFBooleanGetValue (Handle); }
+			get { return CFBooleanGetValue (Handle) != 0; }
 		}
 
 		public static bool GetValue (IntPtr boolean)
 		{
-			return CFBooleanGetValue (boolean);
+			return CFBooleanGetValue (boolean) != 0;
 		}
 	}
 }

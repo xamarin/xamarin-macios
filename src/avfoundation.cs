@@ -14530,7 +14530,6 @@ namespace AVFoundation {
 		[Export ("speakUtterance:")]
 		void SpeakUtterance (AVSpeechUtterance utterance);
 
-		[Async]
 		[Watch (6, 0), TV (13, 0), iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("writeUtterance:toBufferCallback:")]
@@ -15845,32 +15844,32 @@ namespace AVFoundation {
 		[Export ("replacementFormatDescription")]
 		CMFormatDescription ReplacementFormatDescription { get; }
 	}
-#if NET
-	delegate /* OSStatus */ int AVAudioSourceNodeRenderHandler (ref bool isSilence, ref AudioTimeStamp timestamp, uint frameCount, ref AudioBuffers outputData);
-#else
-	delegate /* OSStatus */ int AVAudioSourceNodeRenderHandler (bool isSilence, AudioToolbox.AudioTimeStamp timestamp, uint frameCount, ref AudioBuffers outputData);
-	delegate /* OSStatus */ int AVAudioSourceNodeRenderHandler2 (ref bool isSilence, ref AudioTimeStamp timestamp, uint frameCount, ref AudioBuffers outputData);
-#endif
+
+	/// <summary>The delegate that will be called in a callback from <see cref="T:AudioToolbox.AVAudioSourceNode" />.</summary>
+	/// <returns>An OSStatus result code. Return 0 to indicate success.</returns>
+	/// <param name="isSilence">Indicates whether the supplied audio data only contains silence. This is a pointer to a <see cref="T:System.Byte" /> value.</param>
+	/// <param name="timestamp">The timestamp the audio renders (HAL time). This is a pointer to an <see cref="T:AudioToolbox.AudioTimeStamp" /> value.</param>
+	/// <param name="frameCount">The number of frames of audio to supply.</param>
+	/// <param name="outputData">The <see cref="T:AudioToolbox.AudioBuffers" /> that contains the supplied audio data when the callback returns. This is a handle for an <see cref="T:AudioToolbox.AudioBuffers" /> value.</param>
+	delegate /* OSStatus */ int AVAudioSourceNodeRenderHandlerRaw (IntPtr isSilence, IntPtr timestamp, uint frameCount, IntPtr outputData);
+
 	[Watch (6, 0), TV (13, 0), iOS (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (AVAudioNode))]
 	[DisableDefaultCtor]
 	interface AVAudioSourceNode : AVAudioMixing {
+		/// <summary>Creates an <see cref="T:AudioToolbox.AVAudioSourceNode" /> with the specified callback to render audio.</summary>
+		/// <param name="renderHandler">The callback that will be called to supply audio data.</param>
 		[Export ("initWithRenderBlock:")]
 		[DesignatedInitializer]
-#if NET
-		NativeHandle Constructor (AVAudioSourceNodeRenderHandler renderHandler);
-#else
-		NativeHandle Constructor (AVAudioSourceNodeRenderHandler2 renderHandler);
-#endif
+		NativeHandle Constructor (AVAudioSourceNodeRenderHandlerRaw renderHandler);
 
+		/// <summary>Creates an <see cref="T:AudioToolbox.AVAudioSourceNode" /> with the specified callback to render audio.</summary>
+		/// <param name="format">The format of the PCM audio data the callback supplies.</param>
+		/// <param name="renderHandler">The callback that will be called to supply audio data.</param>
 		[Export ("initWithFormat:renderBlock:")]
 		[DesignatedInitializer]
-#if NET
-		NativeHandle Constructor (AVAudioFormat format, AVAudioSourceNodeRenderHandler renderHandler);
-#else
-		NativeHandle Constructor (AVAudioFormat format, AVAudioSourceNodeRenderHandler2 renderHandler);
-#endif
+		NativeHandle Constructor (AVAudioFormat format, AVAudioSourceNodeRenderHandlerRaw renderHandler);
 	}
 
 	delegate int AVAudioSinkNodeReceiverHandlerRaw (IntPtr timestamp, uint frameCount, IntPtr inputData);

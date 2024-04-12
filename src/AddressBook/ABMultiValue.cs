@@ -90,24 +90,19 @@ namespace AddressBook {
 		public static extern IntPtr CreateMutableCopy (IntPtr multiValue);
 
 		[DllImport (Constants.AddressBookLibrary, EntryPoint = "ABMultiValueAddValueAndLabel")]
-		[return: MarshalAs (UnmanagedType.I1)]
-		public static extern bool AddValueAndLabel (IntPtr multiValue, IntPtr value, IntPtr label, out int /* int32_t */ outIdentifier);
+		public unsafe static extern byte AddValueAndLabel (IntPtr multiValue, IntPtr value, IntPtr label, int* /* int32_t */ outIdentifier);
 
 		[DllImport (Constants.AddressBookLibrary, EntryPoint = "ABMultiValueReplaceValueAtIndex")]
-		[return: MarshalAs (UnmanagedType.I1)]
-		public static extern bool ReplaceValueAtIndex (IntPtr multiValue, IntPtr value, nint index);
+		public static extern byte ReplaceValueAtIndex (IntPtr multiValue, IntPtr value, nint index);
 
 		[DllImport (Constants.AddressBookLibrary, EntryPoint = "ABMultiValueReplaceLabelAtIndex")]
-		[return: MarshalAs (UnmanagedType.I1)]
-		public static extern bool ReplaceLabelAtIndex (IntPtr multiValue, IntPtr value, nint index);
+		public static extern byte ReplaceLabelAtIndex (IntPtr multiValue, IntPtr value, nint index);
 
 		[DllImport (Constants.AddressBookLibrary, EntryPoint = "ABMultiValueInsertValueAndLabelAtIndex")]
-		[return: MarshalAs (UnmanagedType.I1)]
-		public static extern bool InsertValueAndLabelAtIndex (IntPtr multiValue, IntPtr value, IntPtr label, nint index, out int /* int32_t */ outIdentifier);
+		public unsafe static extern byte InsertValueAndLabelAtIndex (IntPtr multiValue, IntPtr value, IntPtr label, nint index, int* /* int32_t */ outIdentifier);
 
 		[DllImport (Constants.AddressBookLibrary, EntryPoint = "ABMultiValueRemoveValueAndLabelAtIndex")]
-		[return: MarshalAs (UnmanagedType.I1)]
-		public static extern bool RemoveValueAndLabelAtIndex (IntPtr multiValue, nint index);
+		public static extern byte RemoveValueAndLabelAtIndex (IntPtr multiValue, nint index);
 	}
 
 #if NET
@@ -164,7 +159,7 @@ namespace AddressBook {
 				if (IsReadOnly)
 					throw CreateNotSupportedException ();
 				AssertValid ();
-				if (!ABMultiValue.ReplaceValueAtIndex (self.Handle, ToIntPtr (value), index))
+				if (ABMultiValue.ReplaceValueAtIndex (self.Handle, ToIntPtr (value), index) == 0)
 					throw new ArgumentException ("Value cannot be set");
 			}
 		}
@@ -314,26 +309,28 @@ namespace AddressBook {
 			}
 		}
 
-		public bool Add (T value, NSString? label)
+		public unsafe bool Add (T value, NSString? label)
 		{
+			int _;
 			return ABMultiValue.AddValueAndLabel (Handle,
 						toNative (value),
 						label.GetHandle (),
-						out _);
+						&_) != 0;
 		}
 
-		public bool Insert (nint index, T value, NSString? label)
+		public unsafe bool Insert (nint index, T value, NSString? label)
 		{
+			int _;
 			return ABMultiValue.InsertValueAndLabelAtIndex (Handle,
 					toNative (value),
 					label.GetHandle (),
 					index,
-					out _);
+					&_) != 0;
 		}
 
 		public bool RemoveAt (nint index)
 		{
-			return ABMultiValue.RemoveValueAndLabelAtIndex (Handle, index);
+			return ABMultiValue.RemoveValueAndLabelAtIndex (Handle, index) != 0;
 		}
 	}
 

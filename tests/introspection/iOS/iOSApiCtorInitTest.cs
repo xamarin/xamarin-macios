@@ -261,8 +261,6 @@ namespace Introspection {
 			switch (type.Name) {
 			case "SWRemoveParticipantAlertController":
 				return true;
-			default:
-				return false;
 			}
 
 			return base.SkipCheckShouldReExposeBaseCtor (type);
