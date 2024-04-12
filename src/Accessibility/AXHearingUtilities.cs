@@ -27,9 +27,13 @@ namespace Accessibility {
 		[DllImport (Constants.AccessibilityLibrary)]
 		static extern /* NSArray<NSUUID *> * */ IntPtr AXMFiHearingDevicePairedUUIDs ();
 
-		[DllImport (Constants.AccessibilityLibrary, EntryPoint = "AXSupportsBidirectionalAXMFiHearingDeviceStreaming")]
-		[return: MarshalAs (UnmanagedType.I1)]
-		public static extern bool SupportsBidirectionalStreaming ();
+		[DllImport (Constants.AccessibilityLibrary)]
+		public static extern byte AXSupportsBidirectionalAXMFiHearingDeviceStreaming ();
+
+		public static bool SupportsBidirectionalStreaming ()
+		{
+			return AXSupportsBidirectionalAXMFiHearingDeviceStreaming () != 0;
+		}
 
 		public static AXHearingDeviceEar GetMFiHearingDeviceStreamingEar ()
 		{

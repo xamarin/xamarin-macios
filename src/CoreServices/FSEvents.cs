@@ -128,12 +128,11 @@ namespace CoreServices
 		}
 
 		[DllImport (Constants.CoreServicesLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static extern bool FSEventsPurgeEventsForDeviceUpToEventId (ulong device, ulong eventId);
+		static extern byte FSEventsPurgeEventsForDeviceUpToEventId (ulong device, ulong eventId);
 
 		public static bool PurgeEventsForDeviceUpToEventId (ulong device, ulong eventId)
 		{
-			return FSEventsPurgeEventsForDeviceUpToEventId (device, eventId);
+			return FSEventsPurgeEventsForDeviceUpToEventId (device, eventId) != 0;
 		}
 	}
 
@@ -144,7 +143,7 @@ namespace CoreServices
 #if NET
 		internal unsafe delegate* unmanaged<IntPtr, void> Release; /* CFAllocatorReleaseCallBack __nullable */
 #else
-		internal FSEventStream.ReleaseContextCallback Release; /* CFAllocatorReleaseCallBack __nullable */
+		internal IntPtr Release; /* CFAllocatorReleaseCallBack __nullable */
 #endif
 		IntPtr CopyDescription; /* CFAllocatorCopyDescriptionCallBack __nullable */
 	}
@@ -272,9 +271,9 @@ namespace CoreServices
 #if NET
 			delegate* unmanaged<IntPtr, IntPtr, nint, IntPtr, IntPtr, IntPtr, void> callback,
 #else
-			FSEventStreamCallback callback,
+			IntPtr callback,
 #endif
-			ref FSEventStreamContext context, IntPtr pathsToWatch,
+			FSEventStreamContext* context, IntPtr pathsToWatch,
 			ulong sinceWhen, double latency, FSEventStreamCreateFlags flags);
 
 		[DllImport (Constants.CoreServicesLibrary)]
@@ -282,9 +281,9 @@ namespace CoreServices
 #if NET
 			delegate* unmanaged<IntPtr, IntPtr, nint, IntPtr, IntPtr, IntPtr, void> callback,
 #else
-			FSEventStreamCallback callback,
+			IntPtr callback,
 #endif
-			ref FSEventStreamContext context, ulong deviceToWatch, IntPtr pathsToWatchRelativeToDevice,
+			FSEventStreamContext* context, ulong deviceToWatch, IntPtr pathsToWatchRelativeToDevice,
 			ulong sinceWhen, double latency, FSEventStreamCreateFlags flags);
 
 		public FSEventStream (FSEventStreamCreateOptions options)
@@ -314,7 +313,7 @@ namespace CoreServices
 				context.Release = &FreeGCHandle;
 			}
 #else
-			context.Release = releaseContextCallback;
+			context.Release = Marshal.GetFunctionPointerForDelegate (releaseContextCallback);
 #endif
 
 			var allocator = options.Allocator.GetHandle ();
@@ -330,9 +329,9 @@ namespace CoreServices
 #if NET
 						&EventsCallback,
 #else
-						eventsCallback,
+						Marshal.GetFunctionPointerForDelegate (eventsCallback),
 #endif
-						ref context,
+						&context,
 						options.DeviceToWatch.Value,
 						pathsToWatch.Handle, sinceWhenId, latency, flags);
 				} else {
@@ -341,9 +340,9 @@ namespace CoreServices
 #if NET
 						&EventsCallback,
 #else
-						eventsCallback,
+						Marshal.GetFunctionPointerForDelegate (eventsCallback),
 #endif
-						ref context,
+						&context,
 						pathsToWatch.Handle, sinceWhenId, latency, flags);
 				}
 			}
@@ -425,8 +424,11 @@ namespace CoreServices
 					var fileIdHandle = CFDictionary.GetValue (
 						eventDataHandle,
 						kFSEventStreamEventExtendedFileIDKey.Handle);
-					if (fileIdHandle != IntPtr.Zero)
-						CFDictionary.CFNumberGetValue (fileIdHandle, 4 /*kCFNumberSInt64Type*/, out fileId);
+					if (fileIdHandle != IntPtr.Zero) {
+						unsafe {
+							CFDictionary.CFNumberGetValue (fileIdHandle, 4 /*kCFNumberSInt64Type*/, &fileId);
+						}
+					}
 				}
 
 				events[i] = new FSEvent
@@ -479,12 +481,11 @@ namespace CoreServices
 		}
 
 		[DllImport (Constants.CoreServicesLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static extern bool FSEventStreamStart (IntPtr handle);
+		static extern byte FSEventStreamStart (IntPtr handle);
 
 		public bool Start ()
 		{
-			return FSEventStreamStart (GetCheckedHandle ());
+			return FSEventStreamStart (GetCheckedHandle ()) != 0;
 		}
 
 		[DllImport (Constants.CoreServicesLibrary)]

@@ -11,7 +11,6 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Xml.Linq;
-using Xamarin.iOS.Tasks;
 using Xamarin.Tests;
 
 namespace Xamarin.MacDev.Tasks {

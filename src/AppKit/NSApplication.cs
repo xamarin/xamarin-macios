@@ -62,7 +62,12 @@ namespace AppKit {
 
 			initialized = true;
 
+#if NET
+			if (Runtime.DynamicRegistrationSupported)
+				Runtime.RegisterAssemblies ();
+#else
 			Runtime.RegisterAssemblies ();
+#endif
 
 			// Runtime hosts embedding MonoMac may use a different sync context 
 			// and call NSApplicationMain externally prior to this Init, so only

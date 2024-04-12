@@ -9,6 +9,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -27,8 +28,21 @@ namespace Registrar {
 	// Putting code in either of those classes will increase the executable size,
 	// since unused code will be pulled in by the linker.
 	static class SharedDynamic {
+#if NET
+		// Note that the code in this method shouldn't be called when using any static registrar, so throw an exception in that case.
+		//
+		// IL2070: 'this' argument does not satisfy 'DynamicallyAccessedMemberTypes.Interfaces' in call to 'System.Type.FindInterfaces(TypeFilter, Object)'. The parameter 'type' of method 'Registrar.SharedDynamic.PrepareInterfaceMethodMapping(Type)' does not have matching annotations. The source value must declare at least the same requirements as those declared on the target location it is assigned to.
+		[UnconditionalSuppressMessage ("", "IL2070", Justification = "The APIs this method tries to access are marked by other means, so this is linker-safe.")]
+		// IL2062: Value passed to parameter 'interfaceType' of method 'System.Type.GetInterfaceMap(Type)' can not be statically determined and may not meet 'DynamicallyAccessedMembersAttribute' requirements.
+		[UnconditionalSuppressMessage ("", "IL2062", Justification = "The APIs this method tries to access are marked by other means, so this is linker-safe.")]
+#endif
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static Dictionary<MethodBase, List<MethodBase>> PrepareInterfaceMethodMapping (Type type)
 		{
+			// Note that the code in this method shouldn't be called when using any static registrar, so throw an exception in that case.
+			if (!Runtime.DynamicRegistrationSupported)
+				throw ErrorHelper.CreateError (8026, "The 'DynamicRegistrar' class is not supported when the dynamic registrar has been linked away.");
+
 			Dictionary<MethodBase, List<MethodBase>> rv = null;
 			var ifaces = type.FindInterfaces ((v, o) => {
 				var attribs = v.GetCustomAttributes (typeof (ProtocolAttribute), true);
@@ -107,8 +121,19 @@ namespace Registrar {
 			registered_assemblies.Add (assembly, null);
 		}
 
+#if NET
+		// Note that the code in this method shouldn't be called when using any static registrar, so throw an exception in that case.
+		//
+		// IL2026: Using member 'System.Reflection.Assembly.GetReferencedAssemblies()' which has 'RequiresUnreferencedCodeAttribute' can break functionality when trimming application code. Assembly references might be removed.
+		[UnconditionalSuppressMessage ("", "IL2026", Justification = "The APIs this method tries to access are marked by other means, so this is linker-safe.")]
+#endif
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		protected override bool ContainsPlatformReference (Assembly assembly)
 		{
+			// Note that the code in this method shouldn't be called when using any static registrar, so throw an exception in that case.
+			if (!Runtime.DynamicRegistrationSupported)
+				throw ErrorHelper.CreateError (8026, "The 'DynamicRegistrar' class is not supported when the dynamic registrar has been linked away.");
+
 			var aname = assembly.GetName ().Name;
 
 			if (aname == AssemblyName)
@@ -175,20 +200,55 @@ namespace Registrar {
 				throw exceptions.Count == 1 ? exceptions [0] : new AggregateException (exceptions);
 		}
 
+#if NET
+		// Note that the code in this method shouldn't be called when using any static registrar, so throw an exception in that case.
+		//
+		// IL2070: 'this' argument does not satisfy 'DynamicallyAccessedMemberTypes.PublicMethods', 'DynamicallyAccessedMemberTypes.NonPublicMethods' in call to 'System.Type.GetMethods(BindingFlags)'. The parameter 'type' of method 'Registrar.DynamicRegistrar.FindMethods(Type, String)' does not have matching annotations. The source value must declare at least the same requirements as those declared on the target location it is assigned to.
+		[UnconditionalSuppressMessage ("", "IL2070", Justification = "The APIs this method tries to access are marked by other means, so this is linker-safe.")]
+#endif
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		protected override IEnumerable<MethodBase> FindMethods (Type type, string name)
 		{
+			// Note that the code in this method shouldn't be called when using any static registrar, so throw an exception in that case.
+			if (!Runtime.DynamicRegistrationSupported)
+				throw ErrorHelper.CreateError (8026, "The 'DynamicRegistrar' class is not supported when the dynamic registrar has been linked away.");
+
+			var rv = new List<MethodBase> ();
 			foreach (var method in type.GetMethods (BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance | BindingFlags.DeclaredOnly))
 				if (method.Name == name)
-					yield return method;
+					rv.Add (method);
+			return rv;
 		}
 
+#if NET
+		// Note that the code in this method shouldn't be called when using any static registrar, so throw an exception in that case.
+		//
+		// IL2070: 'this' argument does not satisfy 'DynamicallyAccessedMemberTypes.PublicProperties', 'DynamicallyAccessedMemberTypes.NonPublicProperties' in call to 'System.Type.GetProperty(String, BindingFlags)'. The parameter 'type' of method 'Registrar.DynamicRegistrar.FindProperty(Type, String)' does not have matching annotations. The source value must declare at least the same requirements as those declared on the target location it is assigned to.
+		[UnconditionalSuppressMessage ("", "IL2070", Justification = "The APIs this method tries to access are marked by other means, so this is linker-safe.")]
+#endif
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		protected override PropertyInfo FindProperty (Type type, string name)
 		{
+			// Note that the code in this method shouldn't be called when using any static registrar, so throw an exception in that case.
+			if (!Runtime.DynamicRegistrationSupported)
+				throw ErrorHelper.CreateError (8026, "The 'DynamicRegistrar' class is not supported when the dynamic registrar has been linked away.");
+
 			return type.GetProperty (name, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance | BindingFlags.DeclaredOnly);
 		}
 
+#if NET
+		// Note that the code in this method shouldn't be called when using any static registrar, so throw an exception in that case.
+		//
+		// IL2026: Using member 'System.Reflection.Assembly.GetTypes()' which has 'RequiresUnreferencedCodeAttribute' can break functionality when trimming application code. Types might be removed.
+		[UnconditionalSuppressMessage ("", "IL2026", Justification = "The APIs this method tries to access are marked by other means, so this is linker-safe.")]
+#endif
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		public override Type FindType (Type relative, string @namespace, string name)
 		{
+			// Note that the code in this method shouldn't be called when using any static registrar, so throw an exception in that case.
+			if (!Runtime.DynamicRegistrationSupported)
+				throw ErrorHelper.CreateError (8026, "The 'DynamicRegistrar' class is not supported when the dynamic registrar has been linked away.");
+
 			foreach (var type in relative.Assembly.GetTypes ()) {
 				if (type.Namespace == @namespace && type.Name == name)
 					return type;
@@ -201,23 +261,67 @@ namespace Registrar {
 			return Marshal.SizeOf (type);
 		}
 
+#if NET
+		// Note that the code in this method shouldn't be called when using any static registrar, so throw an exception in that case.
+		//
+		// IL2070: 'this' argument does not satisfy 'DynamicallyAccessedMemberTypes.PublicConstructors', 'DynamicallyAccessedMemberTypes.NonPublicConstructors' in call to 'System.Type.GetConstructors(BindingFlags)'. The parameter 'type' of method 'Registrar.DynamicRegistrar.CollectConstructors(Type)' does not have matching annotations. The source value must declare at least the same requirements as those declared on the target location it is assigned to.
+		[UnconditionalSuppressMessage ("", "IL2070", Justification = "The APIs this method tries to access are marked by other means, so this is linker-safe.")]
+#endif
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		protected override IEnumerable<MethodBase> CollectConstructors (Type type)
 		{
+			// Note that the code in this method shouldn't be called when using any static registrar, so throw an exception in that case.
+			if (!Runtime.DynamicRegistrationSupported)
+				throw ErrorHelper.CreateError (8026, "The 'DynamicRegistrar' class is not supported when the dynamic registrar has been linked away.");
+
 			return type.GetConstructors (BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly);
 		}
 
+#if NET
+		// Note that the code in this method shouldn't be called when using any static registrar, so throw an exception in that case.
+		//
+		// IL2070: 'this' argument does not satisfy 'DynamicallyAccessedMemberTypes.PublicMethods', 'DynamicallyAccessedMemberTypes.NonPublicMethods' in call to 'System.Type.GetMethods(BindingFlags)'. The parameter 'type' of method 'Registrar.DynamicRegistrar.CollectMethods(Type)' does not have matching annotations. The source value must declare at least the same requirements as those declared on the target location it is assigned to.
+		[UnconditionalSuppressMessage ("", "IL2070", Justification = "The APIs this method tries to access are marked by other means, so this is linker-safe.")]
+#endif
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		protected override IEnumerable<MethodBase> CollectMethods (Type type)
 		{
+			// Note that the code in this method shouldn't be called when using any static registrar, so throw an exception in that case.
+			if (!Runtime.DynamicRegistrationSupported)
+				throw ErrorHelper.CreateError (8026, "The 'DynamicRegistrar' class is not supported when the dynamic registrar has been linked away.");
+
 			return type.GetMethods (BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly);
 		}
 
+#if NET
+		// Note that the code in this method shouldn't be called when using any static registrar, so throw an exception in that case.
+		//
+		// IL2070: 'this' argument does not satisfy 'DynamicallyAccessedMemberTypes.PublicProperties', 'DynamicallyAccessedMemberTypes.NonPublicProperties' in call to 'System.Type.GetProperties(BindingFlags)'. The parameter 'type' of method 'Registrar.DynamicRegistrar.CollectProperties(Type)' does not have matching annotations. The source value must declare at least the same requirements as those declared on the target location it is assigned to.
+		[UnconditionalSuppressMessage ("", "IL2070", Justification = "The APIs this method tries to access are marked by other means, so this is linker-safe.")]
+#endif
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		protected override IEnumerable<PropertyInfo> CollectProperties (Type type)
 		{
+			// Note that the code in this method shouldn't be called when using any static registrar, so throw an exception in that case.
+			if (!Runtime.DynamicRegistrationSupported)
+				throw ErrorHelper.CreateError (8026, "The 'DynamicRegistrar' class is not supported when the dynamic registrar has been linked away.");
+
 			return type.GetProperties (BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly);
 		}
 
+#if NET
+		// Note that the code in this method shouldn't be called when using any static registrar, so throw an exception in that case.
+		//
+		// IL2026: Using member 'System.Reflection.Assembly.GetTypes()' which has 'RequiresUnreferencedCodeAttribute' can break functionality when trimming application code. Types might be removed.
+		[UnconditionalSuppressMessage ("", "IL2026", Justification = "The APIs this method tries to access are marked by other means, so this is linker-safe.")]
+#endif
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		protected override IEnumerable<Type> CollectTypes (Assembly assembly)
 		{
+			// Note that the code in this method shouldn't be called when using any static registrar, so throw an exception in that case.
+			if (!Runtime.DynamicRegistrationSupported)
+				throw ErrorHelper.CreateError (8026, "The 'DynamicRegistrar' class is not supported when the dynamic registrar has been linked away.");
+
 			Trace ("Assembly {0} has {1} types", assembly, assembly.GetTypes ().Length);
 			return assembly.GetTypes ();
 		}
@@ -392,8 +496,20 @@ namespace Registrar {
 			return field.Name;
 		}
 
+
+#if NET
+		// Note that the code in this method shouldn't be called when using any static registrar, so throw an exception in that case.
+		//
+		// IL2070: 'this' argument does not satisfy 'DynamicallyAccessedMemberTypes.PublicFields', 'DynamicallyAccessedMemberTypes.NonPublicFields' in call to 'System.Type.GetFields(BindingFlags)'. The parameter 'type' of method 'Registrar.DynamicRegistrar.GetFields(Type)' does not have matching annotations. The source value must declare at least the same requirements as those declared on the target location it is assigned to.
+		[UnconditionalSuppressMessage ("", "IL2070", Justification = "The APIs this method tries to access are marked by other means, so this is linker-safe.")]
+#endif
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		protected override IEnumerable<FieldInfo> GetFields (Type type)
 		{
+			// Note that the code in this method shouldn't be called when using any static registrar, so throw an exception in that case.
+			if (!Runtime.DynamicRegistrationSupported)
+				throw ErrorHelper.CreateError (8026, "The 'DynamicRegistrar' class is not supported when the dynamic registrar has been linked away.");
+
 			return type.GetFields (BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
 		}
 
@@ -463,8 +579,19 @@ namespace Registrar {
 			return type.FullName;
 		}
 
+#if NET
+		// Note that the code in this method shouldn't be called when using any static registrar, so throw an exception in that case.
+		//
+		// IL2055: Call to 'System.Type.MakeGenericType(Type[])' can not be statically analyzed. It's not possible to guarantee the availability of requirements of the generic type.
+		[UnconditionalSuppressMessage ("", "IL2055", Justification = "The APIs this method tries to access are marked by other means, so this is linker-safe.")]
+#endif
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		public override bool VerifyIsConstrainedToNSObject (Type type, out Type constrained_type)
 		{
+			// Note that the code in this method shouldn't be called when using any static registrar, so throw an exception in that case.
+			if (!Runtime.DynamicRegistrationSupported)
+				throw ErrorHelper.CreateError (8026, "The 'DynamicRegistrar' class is not supported when the dynamic registrar has been linked away.");
+
 			constrained_type = null;
 
 			if (!type.IsGenericType && !(type.IsGenericType && !type.ContainsGenericParameters) && !type.IsGenericParameter && !type.IsGenericTypeDefinition)
@@ -534,6 +661,10 @@ namespace Registrar {
 			return mi.ReturnTypeCustomAttributes.IsDefined (typeof (ReleaseAttribute), false);
 		}
 
+#if NET
+		// IL2025: Attribute 'System.Runtime.CompilerServices.ExtensionAttribute' is being referenced in code but the trimmer was instructed to remove all instances of this attribute. If the attribute instances are necessary make sure to either remove the trimmer attribute XML portion which removes the attribute instances, or override the removal by using the trimmer XML descriptor to keep the attribute type (which in turn keeps all of its instances).
+		[UnconditionalSuppressMessage ("", "IL2045", Justification = "The Extension attribute is manually preserved.")]
+#endif
 		public static bool HasThisAttributeImpl (MethodBase method)
 		{
 			var mi = method as MethodInfo;
@@ -663,8 +794,19 @@ namespace Registrar {
 			return method.IsVirtual;
 		}
 
+#if NET
+		// Note that the code in this method shouldn't be called when using any static registrar, so throw an exception in that case.
+		//
+		// IL2070: 'this' argument does not satisfy 'DynamicallyAccessedMemberTypes.Interfaces' in call to 'System.Type.GetInterfaces()'. The parameter 'type' of method 'Registrar.DynamicRegistrar.GetInterfaces(Type)' does not have matching annotations. The source value must declare at least the same requirements as those declared on the target location it is assigned to.
+		[UnconditionalSuppressMessage ("", "IL2070", Justification = "The APIs this method tries to access are marked by other means, so this is linker-safe.")]
+#endif
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		protected override Type [] GetInterfaces (Type type)
 		{
+			// Note that the code in this method shouldn't be called when using any static registrar, so throw an exception in that case.
+			if (!Runtime.DynamicRegistrationSupported)
+				throw ErrorHelper.CreateError (8026, "The 'DynamicRegistrar' class is not supported when the dynamic registrar has been linked away.");
+
 			return type.GetInterfaces ();
 		}
 
@@ -1061,8 +1203,19 @@ namespace Registrar {
 			return null;
 		}
 
+#if NET
+		// Note that the code in this method shouldn't be called when using any static registrar, so throw an exception in that case.
+		//
+		// IL2070: 'this' argument does not satisfy 'DynamicallyAccessedMemberTypes.PublicProperties', 'DynamicallyAccessedMemberTypes.NonPublicProperties' in call to 'System.Type.GetProperties(BindingFlags)'. The parameter 'type' of method 'Registrar.DynamicRegistrar.TryMatchProperty(Type, PropertyInfo)' does not have matching annotations. The source value must declare at least the same requirements as those declared on the target location it is assigned to.
+		[UnconditionalSuppressMessage ("", "IL2070", Justification = "The APIs this method tries to access are marked by other means, so this is linker-safe.")]
+#endif
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		static PropertyInfo TryMatchProperty (Type type, PropertyInfo property)
 		{
+			// Note that the code in this method shouldn't be called when using any static registrar, so throw an exception in that case.
+			if (!Runtime.DynamicRegistrationSupported)
+				throw ErrorHelper.CreateError (8026, "The 'DynamicRegistrar' class is not supported when the dynamic registrar has been linked away.");
+
 			foreach (var candidate in type.GetProperties (BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly))
 				if (PropertyMatch (candidate, property))
 					return candidate;

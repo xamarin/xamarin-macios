@@ -350,8 +350,6 @@ namespace CoreMidi {
 	}
 
 	delegate void MidiCIProfileChangedHandler (MidiCISession session, byte channel, MidiCIProfile profile, bool enabled);
-	delegate void MidiCIPropertyResponseHandler (MidiCISession session, byte channel, NSData response, NSError error);
-	delegate void MidiCIPropertyChangedHandler (MidiCISession session, byte channel, NSData data);
 	delegate void MidiCIProfileSpecificDataHandler (MidiCISession session, byte channel, MidiCIProfile profile, NSData data);
 	delegate void MidiCISessionDisconnectHandler (MidiCISession session, NSError error);
 

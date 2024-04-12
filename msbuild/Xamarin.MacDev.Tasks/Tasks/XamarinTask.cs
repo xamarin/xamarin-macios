@@ -8,6 +8,7 @@ using Microsoft.Build.Tasks;
 using Microsoft.Build.Utilities;
 
 using Xamarin.Localization.MSBuild;
+using Xamarin.Messaging.Build.Client;
 using Xamarin.Utils;
 using static Xamarin.Bundler.FileCopier;
 
@@ -243,6 +244,14 @@ namespace Xamarin.MacDev.Tasks {
 		protected internal static IEnumerable<ITaskItem> CreateItemsForAllFilesRecursively (IEnumerable<ITaskItem>? directories)
 		{
 			return CreateItemsForAllFilesRecursively (directories?.Select (v => v.ItemSpec));
+		}
+
+		internal async global::System.Threading.Tasks.Task CopyFilesToWindowsAsync (TaskRunner runner, IEnumerable<ITaskItem> items)
+		{
+			foreach (var item in items) {
+				Log.LogMessage (MessageImportance.Low, $"Copying {item.ItemSpec} from the remote Mac to Windows");
+				await runner.GetFileAsync (this, item.ItemSpec).ConfigureAwait (false);
+			}
 		}
 	}
 }
