@@ -2073,29 +2073,6 @@ public class RetainAttribute {
 }
 ```
 
-
-### RetainListAttribute
-
-Instructs the generator to keep a managed reference to the parameter or
-remove an internal reference to the parameter. This is used to keep objects
-referenced.
-
-Syntax:
-
-```csharp
-public class RetainListAttribute: Attribute {
-     public RetainListAttribute (bool doAdd, string listName);
-}
-```
-
-If the value of `doAdd` is true, then the parameter is added to the
-`__mt_{0}_var List<NSObject>`. Where `{0}` is replaced with the given
-`listName`. You must declare this backing field in your complementary partial
-class to the API.
-
-For an example see [foundation.cs](https://github.com/mono/maccore/blob/main/src/foundation.cs) and [NSNotificationCenter.cs](https://github.com/mono/maccore/blob/main/src/Foundation/NSNotificationCenter.cs)
-
-
 ### TransientAttribute
 
 This attribute is applied to parameters and is only used
