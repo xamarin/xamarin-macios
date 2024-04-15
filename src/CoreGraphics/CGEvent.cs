@@ -13,15 +13,12 @@
 #if MONOMAC || __MACCATALYST__
 
 using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 using CoreFoundation;
 using ObjCRuntime;
 using Foundation;
-
-#if NET
-using System.Runtime.CompilerServices;
-#endif
 
 #if !NET
 using NativeHandle = System.IntPtr;
@@ -36,13 +33,13 @@ namespace CoreGraphics {
 	[MacCatalyst (13,1)]
 #endif
 	public sealed class CGEvent : NativeObject {
+#if !COREBUILD
 		public delegate IntPtr CGEventTapCallback (IntPtr tapProxyEvent, CGEventType eventType, IntPtr eventRef, IntPtr userInfo);
 
-#if NET
 		static ConditionalWeakTable<CFMachPort, TapData>? tap_table;
 		static object tap_lock = new object ();
 
-		class TapData {
+		class TapData : IDisposable {
 			GCHandle handle;
 			public TapData (CGEventTapCallback cb, IntPtr userInfo)
 			{
@@ -51,9 +48,16 @@ namespace CoreGraphics {
 				handle = GCHandle.Alloc (this, GCHandleType.Weak);
 			}
 
+			public void Dispose ()
+			{
+				if (handle.IsAllocated)
+					handle.Free ();
+				GC.SuppressFinalize (this);
+			}
+
 			~TapData ()
 			{
-				handle.Free ();
+				Dispose ();
 			}
 
 			public CGEventTapCallback Callback { get; private set; }
@@ -61,6 +65,7 @@ namespace CoreGraphics {
 			public IntPtr Handle => GCHandle.ToIntPtr (handle);
 		}
 
+#if NET
 		[UnmanagedCallersOnly]
 		static IntPtr TapCallback (IntPtr tapProxyEvent, CGEventType eventType, IntPtr eventRef, IntPtr userInfo)
 		{
@@ -76,29 +81,42 @@ namespace CoreGraphics {
 		extern static IntPtr CGEventTapCreate (CGEventTapLocation location, CGEventTapPlacement place, CGEventTapOptions options, CGEventMask mask, CGEventTapCallback cback, IntPtr data);
 #endif
 
+		static CFMachPort? CreateMachPortAndAddToTable (IntPtr machPort, TapData data)
+		{
+			if (machPort == IntPtr.Zero) {
+				data.Dispose ();
+				return null;
+			}
+
+			var rv = new CFMachPort (machPort, true);
+			lock (tap_lock) {
+				tap_table = tap_table ?? new ConditionalWeakTable<CFMachPort, TapData> ();
+				tap_table.Add (rv, data);
+			}
+			return rv;
+		}
+
+		/// <summary>Create an event tap</summary>
+		/// <return>A <see cref="T:CoreFoundation.CFMachPort" /> that represents the new tap, or null if the tap couldn't be created.</return>
+		/// <remarks>Calling Dispose on the returned <see cref="T:CoreFoundation.CFMachPort" /> (or letting the GC collect it) will release the tap as well.</remarks>
+		/// <param name="location">The location of the tap.</param>
+		/// <param name="place">The placement of the tap in the list of active taps.</param>
+		/// <param name="options">Any options for the new tap.</param>
+		/// <param name="mask">A mask of the events to monitor.</param>
+		/// <param name="cback">The callback the tap calls when there are events. The callback is called on the run loop the tap was added to.</param>
+		/// <param name="data">Custom data that is passed as-is to the callback.</param>
 		public static CFMachPort? CreateTap (CGEventTapLocation location, CGEventTapPlacement place, CGEventTapOptions options, CGEventMask mask, CGEventTapCallback cback, IntPtr data)
 		{
-#if NET
+			var tapData = new TapData (cback, data);
 			IntPtr r;
+#if NET
 			unsafe {
-				var tapData = new TapData (cback, data);
 				r = CGEventTapCreate (location, place, options, mask, &TapCallback, tapData.Handle);
-				if (r == IntPtr.Zero)
-					return null;
-
-				var rv = new CFMachPort (r, true);
-				lock (tap_lock) {
-					tap_table = tap_table ?? new ConditionalWeakTable<CFMachPort, TapData> ();
-					tap_table.Add (rv, tapData);
-				}
-				return rv;
 			}
 #else
-			var r = CGEventTapCreate (location, place, options, mask, cback, data);
-			if (r == IntPtr.Zero)
-				return null;
-			return new CFMachPort (r, true);
+			r = CGEventTapCreate (location, place, options, mask, cback, tapData.Handle);
 #endif
+			return CreateMachPortAndAddToTable (r, tapData);
 		}
 
 #if NET
@@ -109,29 +127,60 @@ namespace CoreGraphics {
 		extern static IntPtr CGEventTapCreateForPSN (IntPtr processSerialNumer, CGEventTapPlacement place, CGEventTapOptions options, CGEventMask mask, CGEventTapCallback cback, IntPtr data);
 #endif
 		
+#if !XAMCORE_5_0
 		[Obsolete ("The location parameter is not used. Consider using the overload without the location parameter.", false)]
 		[System.ComponentModel.EditorBrowsable (System.ComponentModel.EditorBrowsableState.Never)]
 		public static CFMachPort? CreateTap (IntPtr processSerialNumber, CGEventTapLocation location, CGEventTapPlacement place, CGEventTapOptions options, CGEventMask mask, CGEventTapCallback cback, IntPtr data)
 		{
 			return CreateTap (processSerialNumber, place, options, mask, cback, data);
 		}
+#endif
 
+		/// <summary>Create an event tap monitoring the specified process serial number (psn)</summary>
+		/// <return>A <see cref="T:CoreFoundation.CFMachPort" /> that represents the new tap, or null if the tap couldn't be created.</return>
+		/// <remarks>Calling Dispose on the returned <see cref="T:CoreFoundation.CFMachPort" /> (or letting the GC collect it) will release the tap as well.</remarks>
+		/// <param name="processSerialNumber">The process serial number (psn) to monitor</param>
+		/// <param name="place">The placement of the tap in the list of active taps.</param>
+		/// <param name="options">Any options for the new tap.</param>
+		/// <param name="mask">A mask of the events to monitor.</param>
+		/// <param name="cback">The callback the tap calls when there are events. The callback is called on the run loop the tap was added to.</param>
+		/// <param name="data">Custom data that is passed as-is to the callback.</param>
 		public static CFMachPort? CreateTap (IntPtr processSerialNumber, CGEventTapPlacement place, CGEventTapOptions options, CGEventMask mask, CGEventTapCallback cback, IntPtr data)
 		{
+			var tapData = new TapData (cback, data);
 			unsafe {
 				var psnPtr = new IntPtr (&processSerialNumber);
 #if NET
-				var tapData = new TapData (cback, data);
-				var gch = GCHandle.Alloc (tapData);
-				var r = CGEventTapCreateForPSN (psnPtr, place, options, mask, &TapCallback, GCHandle.ToIntPtr (gch));
+				var r = CGEventTapCreateForPSN (psnPtr, place, options, mask, &TapCallback, tapData.Handle);
 #else
 				var r = CGEventTapCreateForPSN (psnPtr, place, options, mask, cback, data);
 #endif
-				if (r == IntPtr.Zero)
-					return null;
-				return new CFMachPort (r, true);
+				return CreateMachPortAndAddToTable (r, tapData);
 			}
 		}
+
+#if NET
+		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary)]
+		extern static unsafe IntPtr CGEventTapCreateForPid (int pid, CGEventTapPlacement place, CGEventTapOptions options, CGEventMask mask, delegate* unmanaged<IntPtr, CGEventType, IntPtr, IntPtr, IntPtr> cback, IntPtr data);
+
+		/// <summary>Create an event tap monitoring the specified process</summary>
+		/// <return>A <see cref="T:CoreFoundation.CFMachPort" /> that represents the new tap, or null if the tap couldn't be created.</return>
+		/// <remarks>Calling Dispose on the returned <see cref="T:CoreFoundation.CFMachPort" /> (or letting the GC collect it) will release the tap as well.</remarks>
+		/// <param name="pid">The pid to monitor</param>
+		/// <param name="place">The placement of the tap in the list of active taps.</param>
+		/// <param name="options">Any options for the new tap.</param>
+		/// <param name="mask">A mask of the events to monitor.</param>
+		/// <param name="callback">The callback the tap calls when there are events. The callback is called on the run loop the tap was added to.</param>
+		/// <param name="data">Custom data that is passed as-is to the callback.</param>
+		public static CFMachPort? CreateTap (int pid, CGEventTapPlacement place, CGEventTapOptions options, CGEventMask mask, CGEventTapCallback callback, IntPtr data = default (IntPtr))
+		{
+			unsafe {
+				var tapData = new TapData (callback, data);
+				var r = CGEventTapCreateForPid (pid, place, options, mask, &TapCallback, tapData.Handle);
+				return CreateMachPortAndAddToTable (r, tapData);
+			}
+		}
+#endif
 
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary)]
 		extern static IntPtr CGEventCreateFromData (IntPtr allocator, IntPtr nsdataSource);
@@ -292,61 +341,128 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary, EntryPoint="CGEventGetIntegerValueField")]
-		internal extern static long GetLong (IntPtr eventHandle, CGEventField eventField);
+		extern static long GetLong (IntPtr eventHandle, CGEventField eventField);
+
+		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary, EntryPoint="CGEventSetIntegerValueField")]
+		extern static void SetLong (IntPtr eventHandle, CGEventField eventField, long value);
 
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary, EntryPoint="CGEventGetDoubleValueField")]
-		internal extern static double GetDouble (IntPtr eventHandle, CGEventField eventField);
+		extern static double GetDouble (IntPtr eventHandle, CGEventField eventField);
 
-		internal long GetLong (CGEventField eventField)
+		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary, EntryPoint="CGEventSetDoubleValueField")]
+		extern static void SetDouble (IntPtr eventHandle, CGEventField eventField, double value);
+
+		/// <summary>Get the 64-bit integer value of the specified event field.</summary>
+		/// <param name="field">The field whose value to get.</param>
+		/// <returns>The 64-bit integer value of the specified event field.</returns>
+		public long GetLongValueField (CGEventField field)
 		{
-			return GetLong (Handle, eventField);
+			return GetLong (Handle, field);
 		}
 
+		/// <summary>Get the double value of the specified event field.</summary>
+		/// <param name="field">The field whose value to get.</param>
+		/// <returns>The double value of the specified event field.</returns>
+		public double GetDoubleValueField (CGEventField field)
+		{
+			return GetDouble (Handle, field);
+		}
+
+		/// <summary>Set a 64-bit integer value for the specified event field.</summary>
+		/// <param name="field">The field whose value to set.</param>
+		/// <param name="value">The value to set.</param>
+		public void SetValueField (CGEventField field, long value)
+		{
+			SetLong (Handle, field, value);
+		}
+
+		/// <summary>Set a double value for the specified event field.</summary>
+		/// <param name="field">The field whose value to set.</param>
+		/// <param name="value">The value to set.</param>
+		public void SetValueField (CGEventField field, double value)
+		{
+			SetDouble (Handle, field, value);
+		}
+
+		/// <summary>The mouse button event number.</summary>
+		/// <remarks>Matching mouse down and mouse up events will have the same event number.</remarks>
 		public long MouseEventNumber {
 			get {
 				return GetLong (Handle, CGEventField.MouseEventNumber);
 			}
+			set {
+				SetLong (Handle, CGEventField.MouseEventNumber, value);
+			}
 		}
 
+		/// <summary>The mouse button click state.</summary>
+		/// <remarks>A value of 1 is a single click, a value of 2 is a double click, and so on.</remarks>
 		public long MouseEventClickState {
 			get {
 				return GetLong (Handle, CGEventField.MouseEventClickState);
 			}
+			set {
+				SetLong (Handle, CGEventField.MouseEventClickState, value);
+			}
 		}
 
+		/// <summary>The mouse button pressure state, ranging from 0 (mouse being up) to 1.</summary>
 		public double MouseEventPressure {
 			get {
 				return GetDouble (Handle, CGEventField.MouseEventPressure);
 			}
+			set {
+				SetDouble (Handle, CGEventField.MouseEventPressure, value);
+			}
 		}
 
+		/// <summary>The mouse button number.</summary>
 		public long MouseEventButtonNumber {
 			get {
 				return GetLong (Handle, CGEventField.MouseEventButtonNumber);
 			}
+			set {
+				SetLong (Handle, CGEventField.MouseEventButtonNumber, value);
+			}
 		}
 
+		/// <summary>The horizontal delta since the last mouse movement event.</summary>
 		public long MouseEventDeltaX {
 			get {
 				return GetLong (Handle, CGEventField.MouseEventDeltaX);
 			}
+			set {
+				SetLong (Handle, CGEventField.MouseEventDeltaX, value);
+			}
 		}
 
+		/// <summary>The vertical delta since the last mouse movement event.</summary>
 		public long MouseEventDeltaY {
 			get {
 				return GetLong (Handle, CGEventField.MouseEventDeltaY);
 			}
-		}
-
-		public bool MouseEventInstantMouser {
-			get {
-				return GetLong (Handle, CGEventField.MouseEventButtonNumber) != 0;
+			set {
+				SetLong (Handle, CGEventField.MouseEventDeltaY, value);
 			}
 		}
 
+		/// <summary>A value indicating whether the event should be ignored by the Inkwell subsystem.</summary>
+		public bool MouseEventInstantMouser {
+			get {
+				return GetLong (Handle, CGEventField.MouseEventInstantMouser) != 0;
+			}
+			set {
+				SetLong (Handle, CGEventField.MouseEventInstantMouser, value ? 1 : 0);
+			}
+		}
+
+		/// <summary>The mouse event subtype.</summary>
 		public long MouseEventSubtype {
 			get {
 				return GetLong (Handle, CGEventField.MouseEventSubtype);
+			}
+			set {
+				SetLong (Handle, CGEventField.MouseEventSubtype, value);
 			}
 		}
 
@@ -488,7 +604,7 @@ namespace CoreGraphics {
 		extern static void CGEventPostToPSN (IntPtr processSerialNumber, IntPtr handle);
 
 		/// <summary>Post an event to a specific process</summary>
-		/// <remarks>Deprecated, use <see cref="PostToPid" /> instead.</remarks>
+		/// <remarks>Deprecated, use <see cref="PostToPid(CGEvent,int)" /> instead.</remarks>
 		public static void PostToPSN (CGEvent evt, IntPtr processSerialNumber)
 		{
 			if (evt is null)
@@ -498,7 +614,7 @@ namespace CoreGraphics {
 		}
 
 		/// <summary>Post an event to a specific process</summary>
-		/// <remarks>Deprecated, use <see cref="PostToPid" /> instead.</remarks>
+		/// <remarks>Deprecated, use <see cref="PostToPid(int)" /> instead.</remarks>
 		public void PostToPSN (IntPtr processSerialNumber)
 		{
 			PostToPSN (this, processSerialNumber);
@@ -592,9 +708,10 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("maccatalyst")]
 #endif
 		public static bool RequestPostEventAccess () => CGRequestPostEventAccess () != 0;
-
+#endif // !COREBUILD
 	}
 
+#if !COREBUILD
 #if NET
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("maccatalyst")]
@@ -611,6 +728,7 @@ namespace CoreGraphics {
 		public float /* float */ AvgUsecLatency;
 		public float /* float */ MaxUsecLatency;
 	};
+#endif // !COREBUILD
 
 }
 

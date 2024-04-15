@@ -129,10 +129,16 @@ namespace Cecil.Tests {
 				string name;
 
 				if (member is MethodDefinition md) {
+					// It's not possible to add xml documentation to members of delegates, so don't verify those
+					if (IsDelegateType (md.DeclaringType))
+						continue;
 					name = "M:" + GetDocId (md);
 				} else if (member is PropertyDefinition pd) {
 					name = "P:" + GetDocId (pd);
 				} else if (member is FieldDefinition fd) {
+					// It's not possible to add xml documentation to the 'value__' field for enums, so don't verify those
+					if (fd.Name == "value__" && fd.DeclaringType.BaseType.Is ("System", "Enum"))
+						continue;
 					name = "F:" + GetDocId (fd.DeclaringType) + "." + fd.Name;
 				} else if (member is EventDefinition ed) {
 					name = "E:" + GetDocId (ed);
@@ -145,6 +151,18 @@ namespace Cecil.Tests {
 			}
 
 			return rv;
+		}
+
+		static bool IsDelegateType (TypeDefinition? type)
+		{
+			while (type is not null) {
+				if (type.Is ("System", "Delegate"))
+					return true;
+
+				type = type.BaseType is not null ? type.BaseType.Resolve () : null;
+			}
+
+			return false;
 		}
 
 		// https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/xmldoc/#id-strings
