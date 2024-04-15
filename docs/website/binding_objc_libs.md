@@ -1785,7 +1785,7 @@ the "-gcc_flags" option, followed by a quoted string that contains all the extra
 libraries that are required for your program, like this:
 
 ```bash
--gcc_flags "-L${ProjectDir} -lMylibrary -force_load -lSystemLibrary -framework CFNetwork -ObjC"
+-gcc_flags "-L$(MSBuildProjectDirectory) -lMylibrary -force_load -lSystemLibrary -framework CFNetwork -ObjC"
 ```
 
 The above example will link `libMyLibrary.a`, `libSystemLibrary.dylib` and
