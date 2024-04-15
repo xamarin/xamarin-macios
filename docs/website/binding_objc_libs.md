@@ -272,7 +272,7 @@ attribute, like this:
 
 ```csharp
 // A static method, that takes no arguments
-[Static, Export ("refresh")]
+[Static, Export ("beep")]
 void Beep ();
 ```
 
