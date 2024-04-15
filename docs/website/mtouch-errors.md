@@ -170,7 +170,7 @@ instead of this:
 
 <a name="MT0019"></a>
 
-#### MT0019: Only one --[log|install|kill|launch]dev or --[launch|debug]sim option can be used.
+### MT0019: Only one --[log|install|kill|launch]dev or --[launch|debug]sim option can be used.
 
 There are several options for mtouch that can't be used simultaneously:
 
@@ -995,7 +995,7 @@ This warning is shown when `--interpreter` isn't specified explicitly for ARM64_
 
 #### MM0148: Unable to parse the linker flags '{linker_flags}' from the LinkWith attribute for the library {library} in {assembly} : {exception}
 
-# MT1xxx: Project related error messages
+## MT1xxx: Project related error messages
 
 ### MT10xx: Installer / mtouch
 
@@ -1019,8 +1019,6 @@ This warning is shown when `--interpreter` isn't specified explicitly for ARM64_
 <a name="MT1004"></a>
 
 ### MT1004: Could not get the list of installed applications.
-
-## MT1xxx: Project related error messages
 
 <a name="MT1005"></a>
 
@@ -2644,7 +2642,7 @@ If this is an API exposed by Xamarin, please file a new issue on
 [GitHub](https://github.com/xamarin/xamarin-macios/issues/new), if it's a
 third-party binding, please contact the vendor.
 
-# MT5xxx: GCC and toolchain error messages
+## MT5xxx: GCC and toolchain error messages
 
 ### MT51xx: Compilation
 
