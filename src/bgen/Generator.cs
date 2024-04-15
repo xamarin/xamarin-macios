@@ -5770,10 +5770,10 @@ public partial class Generator : IMemberGatherer {
 							sw.WriteLine ("\t\t/// {");
 							sw.WriteLine ("\t\t///     // Invoke the init method now.");
 							sw.WriteLine ("\t\t///     var initWithFrame = new Selector (\"initWithFrame:\").Handle;");
-							sw.WriteLine ("\t\t/// 	   if (IsDirectBinding) {");
-							sw.WriteLine ("\t\t/// 		   Handle = ObjCRuntime.Messaging.IntPtr_objc_msgSend_CGRect (this.Handle, initWithFrame, frame);");
-							sw.WriteLine ("\t\t/// 	   } else {");
-							sw.WriteLine ("\t\t/// 		   Handle = ObjCRuntime.Messaging.IntPtr_objc_msgSendSuper_CGRect (this.SuperHandle, initWithFrame, frame);");
+							sw.WriteLine ("\t\t///     if (IsDirectBinding) {");
+							sw.WriteLine ("\t\t///         Handle = ObjCRuntime.Messaging.IntPtr_objc_msgSend_CGRect (this.Handle, initWithFrame, frame);");
+							sw.WriteLine ("\t\t///     } else {");
+							sw.WriteLine ("\t\t///         Handle = ObjCRuntime.Messaging.IntPtr_objc_msgSendSuper_CGRect (this.SuperHandle, initWithFrame, frame);");
 							sw.WriteLine ("\t\t///     }");
 							sw.WriteLine ("\t\t/// }");
 							sw.WriteLine ("\t\t/// ]]></code>");
