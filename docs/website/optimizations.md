@@ -24,8 +24,8 @@ This optimization will change the following type of code:
 ```csharp
 public virtual void AddChildViewController (UIViewController childController)
 {
-	global::UIKit.UIApplication.EnsureUIThread ();
-	// ...
+    global::UIKit.UIApplication.EnsureUIThread ();
+    // ...
 }
 ```
 
@@ -34,7 +34,7 @@ into the following:
 ```csharp
 public virtual void AddChildViewController (UIViewController childController)
 {
-	// ...
+    // ...
 }
 ```
 
@@ -55,9 +55,9 @@ This optimization will change the following type of code:
 
 ```csharp
 if (IntPtr.Size == 8) {
-	Console.WriteLine ("64-bit platform");
+    Console.WriteLine ("64-bit platform");
 } else {
-	Console.WriteLine ("32-bit platform");
+    Console.WriteLine ("32-bit platform");
 }
 ```
 
@@ -65,9 +65,9 @@ into the following (when building for a 64-bit platform):
 
 ```csharp
 if (8 == 8) {
-	Console.WriteLine ("64-bit platform");
+    Console.WriteLine ("64-bit platform");
 } else {
-	Console.WriteLine ("32-bit platform");
+    Console.WriteLine ("32-bit platform");
 }
 ```
 
@@ -101,27 +101,27 @@ Given only the following code:
 
 ```csharp
 class UIView : NSObject {
-	public virtual string SomeProperty {
-		get {
-			if (IsDirectBinding) {
-				return "true";
-			} else {
-				return "false"
-			}
-		}
-	}
+    public virtual string SomeProperty {
+        get {
+            if (IsDirectBinding) {
+                return "true";
+            } else {
+                return "false"
+            }
+        }
+    }
 }
 
 class NSUrl : NSObject {
-	public virtual string SomeOtherProperty {
-		get {
-			if (IsDirectBinding) {
-				return "true";
-			} else {
-				return "false"
-			}
-		}
-	}
+    public virtual string SomeOtherProperty {
+        get {
+            if (IsDirectBinding) {
+                return "true";
+            } else {
+                return "false"
+            }
+        }
+    }
 }
 
 class MyUIView : UIView {
@@ -153,9 +153,9 @@ is the binding code for `NSUrl.AbsoluteUrl`):
 
 ```csharp
 if (IsDirectBinding) {
-	return Runtime.GetNSObject<NSUrl> (global::ObjCRuntime.Messaging.IntPtr_objc_msgSend (this.Handle, Selector.GetHandle ("absoluteURL")));
+    return Runtime.GetNSObject<NSUrl> (global::ObjCRuntime.Messaging.IntPtr_objc_msgSend (this.Handle, Selector.GetHandle ("absoluteURL")));
 } else {
-	return Runtime.GetNSObject<NSUrl> (global::ObjCRuntime.Messaging.IntPtr_objc_msgSendSuper (this.SuperHandle, Selector.GetHandle ("absoluteURL")));
+    return Runtime.GetNSObject<NSUrl> (global::ObjCRuntime.Messaging.IntPtr_objc_msgSendSuper (this.SuperHandle, Selector.GetHandle ("absoluteURL")));
 }
 ```
 
@@ -164,9 +164,9 @@ into the following (when it can be determined that there are no subclasses of
 
 ```csharp
 if (true) {
-	return Runtime.GetNSObject<NSUrl> (global::ObjCRuntime.Messaging.IntPtr_objc_msgSend (this.Handle, Selector.GetHandle ("absoluteURL")));
+    return Runtime.GetNSObject<NSUrl> (global::ObjCRuntime.Messaging.IntPtr_objc_msgSend (this.Handle, Selector.GetHandle ("absoluteURL")));
 } else {
-	return Runtime.GetNSObject<NSUrl> (global::ObjCRuntime.Messaging.IntPtr_objc_msgSendSuper (this.SuperHandle, Selector.GetHandle ("absoluteURL")));
+    return Runtime.GetNSObject<NSUrl> (global::ObjCRuntime.Messaging.IntPtr_objc_msgSendSuper (this.SuperHandle, Selector.GetHandle ("absoluteURL")));
 }
 ```
 
@@ -187,9 +187,9 @@ This optimization will change the following type of code:
 
 ```csharp
 if (Runtime.Arch == Arch.DEVICE) {
-	Console.WriteLine ("Running on device");
+    Console.WriteLine ("Running on device");
 } else {
-	Console.WriteLine ("Running in the simulator");
+    Console.WriteLine ("Running in the simulator");
 }
 ```
 
@@ -197,9 +197,9 @@ into the following (when building for device):
 
 ```csharp
 if (Arch.DEVICE == Arch.DEVICE) {
-	Console.WriteLine ("Running on device");
+    Console.WriteLine ("Running on device");
 } else {
-	Console.WriteLine ("Running in the simulator");
+    Console.WriteLine ("Running in the simulator");
 }
 ```
 
@@ -218,9 +218,9 @@ This optimization will change the following type of code:
 
 ```csharp
 if (true) {
-	Console.WriteLine ("Doing this");
+    Console.WriteLine ("Doing this");
 } else {
-	Console.WriteLine ("Not doing this");
+    Console.WriteLine ("Not doing this");
 }
 ```
 
@@ -234,9 +234,9 @@ It will also evaluate constant comparisons, like this:
 
 ```csharp
 if (8 == 8) {
-	Console.WriteLine ("Doing this");
+    Console.WriteLine ("Doing this");
 } else {
-	Console.WriteLine ("Not doing this");
+    Console.WriteLine ("Not doing this");
 }
 ```
 
@@ -253,29 +253,29 @@ the binding code for `NFCIso15693ReadMultipleBlocksConfiguration.Range`):
 ```csharp
 NSRange ret;
 if (IsDirectBinding) {
-	if (Runtime.Arch == Arch.DEVICE) {
-		if (IntPtr.Size == 8) {
-			ret = global::ObjCRuntime.Messaging.NSRange_objc_msgSend (this.Handle, Selector.GetHandle ("range"));
-		} else {
-			global::ObjCRuntime.Messaging.NSRange_objc_msgSend_stret (out ret, this.Handle, Selector.GetHandle ("range"));
-		}
-	} else if (IntPtr.Size == 8) {
-		ret = global::ObjCRuntime.Messaging.NSRange_objc_msgSend (this.Handle, Selector.GetHandle ("range"));
-	} else {
-		ret = global::ObjCRuntime.Messaging.NSRange_objc_msgSend (this.Handle, Selector.GetHandle ("range"));
-	}
+    if (Runtime.Arch == Arch.DEVICE) {
+        if (IntPtr.Size == 8) {
+            ret = global::ObjCRuntime.Messaging.NSRange_objc_msgSend (this.Handle, Selector.GetHandle ("range"));
+        } else {
+            global::ObjCRuntime.Messaging.NSRange_objc_msgSend_stret (out ret, this.Handle, Selector.GetHandle ("range"));
+        }
+    } else if (IntPtr.Size == 8) {
+        ret = global::ObjCRuntime.Messaging.NSRange_objc_msgSend (this.Handle, Selector.GetHandle ("range"));
+    } else {
+        ret = global::ObjCRuntime.Messaging.NSRange_objc_msgSend (this.Handle, Selector.GetHandle ("range"));
+    }
 } else {
-	if (Runtime.Arch == Arch.DEVICE) {
-		if (IntPtr.Size == 8) {
-			ret = global::ObjCRuntime.Messaging.NSRange_objc_msgSendSuper (this.SuperHandle, Selector.GetHandle ("range"));
-		} else {
-			global::ObjCRuntime.Messaging.NSRange_objc_msgSendSuper_stret (out ret, this.SuperHandle, Selector.GetHandle ("range"));
-		}
-	} else if (IntPtr.Size == 8) {
-		ret = global::ObjCRuntime.Messaging.NSRange_objc_msgSendSuper (this.SuperHandle, Selector.GetHandle ("range"));
-	} else {
-		ret = global::ObjCRuntime.Messaging.NSRange_objc_msgSendSuper (this.SuperHandle, Selector.GetHandle ("range"));
-	}
+    if (Runtime.Arch == Arch.DEVICE) {
+        if (IntPtr.Size == 8) {
+            ret = global::ObjCRuntime.Messaging.NSRange_objc_msgSendSuper (this.SuperHandle, Selector.GetHandle ("range"));
+        } else {
+            global::ObjCRuntime.Messaging.NSRange_objc_msgSendSuper_stret (out ret, this.SuperHandle, Selector.GetHandle ("range"));
+        }
+    } else if (IntPtr.Size == 8) {
+        ret = global::ObjCRuntime.Messaging.NSRange_objc_msgSendSuper (this.SuperHandle, Selector.GetHandle ("range"));
+    } else {
+        ret = global::ObjCRuntime.Messaging.NSRange_objc_msgSendSuper (this.SuperHandle, Selector.GetHandle ("range"));
+    }
 }
 return ret;
 ```
@@ -323,9 +323,9 @@ It will transform the following [code](https://github.com/xamarin/xamarin-macios
 ```csharp
 public static void RequestGuidedAccessSession (bool enable, Action<bool> completionHandler)
 {
-	// ...
-	block_handler.SetupBlock (callback, completionHandler);
-	// ...
+    // ...
+    block_handler.SetupBlock (callback, completionHandler);
+    // ...
 }
 ```
 
@@ -334,9 +334,9 @@ into:
 ```csharp
 public static void RequestGuidedAccessSession (bool enable, Action<bool> completionHandler)
 {
-	// ...
-	block_handler.SetupBlockImpl (callback, completionHandler, true, "v@?B");
-	// ...
+    // ...
+    block_handler.SetupBlockImpl (callback, completionHandler, true, "v@?B");
+    // ...
 }
 ```
 
@@ -424,9 +424,9 @@ This optimization will change the following type of code:
 
 ```csharp
 if (Runtime.DynamicRegistrationSupported) {
-	Console.WriteLine ("do something");
+    Console.WriteLine ("do something");
 } else {
-	throw new Exception ("dynamic registration is not supported");
+    throw new Exception ("dynamic registration is not supported");
 }
 ```
 
@@ -468,6 +468,7 @@ Given the following Objective-C code:
 -(void) classCallback: (void (^)())completionHandler;
 -(void) callClassCallback;
 @end
+
 @implementation ObjCBlockTester
 -(void) classCallback: (void (^)())completionHandler
 {
@@ -475,10 +476,10 @@ Given the following Objective-C code:
 
 -(void) callClassCallback
 {
-	[self classCallback: ^()
-	{
-		NSLog (@"called!");
-	}];
+    [self classCallback: ^()
+    {
+        NSLog (@"called!");
+    }];
 }
 @end
 ```
@@ -489,8 +490,8 @@ and the following binding code:
 [BaseType (typeof (NSObject))]
 interface ObjCBlockTester
 {
-	[Export ("classCallback:")]
-	void ClassCallback (Action completionHandler);
+    [Export ("classCallback:")]
+    void ClassCallback (Action completionHandler);
 }
 ```
 
@@ -499,86 +500,86 @@ the generator will produce:
 ```csharp
 [Register("ObjCBlockTester", true)]
 public unsafe partial class ObjCBlockTester : NSObject {
-	// unrelated code...
+    // unrelated code...
 
-	[Export ("callClassCallback")]
-	[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
-	public virtual void CallClassCallback ()
-	{
-		if (IsDirectBinding) {
-			ApiDefinition.Messaging.void_objc_msgSend (this.Handle, Selector.GetHandle ("callClassCallback"));
-		} else {
-			ApiDefinition.Messaging.void_objc_msgSendSuper (this.SuperHandle, Selector.GetHandle ("callClassCallback"));
-		}
-	}
-	
-	[Export ("classCallback:")]
-	[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
-	public unsafe virtual void ClassCallback ([BlockProxy (typeof (Trampolines.NIDActionArity1V0))] System.Action completionHandler)
-	{
-		// ...
-		
-	}
+    [Export ("callClassCallback")]
+    [BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
+    public virtual void CallClassCallback ()
+    {
+        if (IsDirectBinding) {
+            ApiDefinition.Messaging.void_objc_msgSend (this.Handle, Selector.GetHandle ("callClassCallback"));
+        } else {
+            ApiDefinition.Messaging.void_objc_msgSendSuper (this.SuperHandle, Selector.GetHandle ("callClassCallback"));
+        }
+    }
+
+    [Export ("classCallback:")]
+    [BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
+    public unsafe virtual void ClassCallback ([BlockProxy (typeof (Trampolines.NIDActionArity1V0))] System.Action completionHandler)
+    {
+        // ...
+
+    }
 }
 
 static class Trampolines
 {
-	[UnmanagedFunctionPointerAttribute (CallingConvention.Cdecl)]
-	[UserDelegateType (typeof (System.Action))]
-	internal delegate void DActionArity1V0 (IntPtr block);
+    [UnmanagedFunctionPointerAttribute (CallingConvention.Cdecl)]
+    [UserDelegateType (typeof (System.Action))]
+    internal delegate void DActionArity1V0 (IntPtr block);
 
-	static internal class SDActionArity1V0 {
-		static internal readonly DActionArity1V0 Handler = Invoke;
-		
-		[MonoPInvokeCallback (typeof (DActionArity1V0))]
-		static unsafe void Invoke (IntPtr block) {
-			var descriptor = (BlockLiteral *) block;
-			var del = (System.Action) (descriptor->Target);
-			if (del != null)
-				del (obj);
-		}
-	}
-	
-	internal class NIDActionArity1V0 {
-		IntPtr blockPtr;
-		DActionArity1V0 invoker;
-		
-		[Preserve (Conditional=true)]
-		[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
-		public unsafe NIDActionArity1V0 (BlockLiteral *block)
-		{
-			blockPtr = _Block_copy ((IntPtr) block);
-			invoker = block->GetDelegateForBlock<DActionArity1V0> ();
-		}
-		
-		[Preserve (Conditional=true)]
-		[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
-		~NIDActionArity1V0 ()
-		{
-			_Block_release (blockPtr);
-		}
-		
-		[Preserve (Conditional=true)]
-		[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
-		public unsafe static System.Action Create (IntPtr block)
-		{
-			if (block == IntPtr.Zero)
-				return null;
-			if (BlockLiteral.IsManagedBlock (block)) {
-				var existing_delegate = ((BlockLiteral *) block)->Target as System.Action;
-				if (existing_delegate != null)
-					return existing_delegate;
-			}
-			return new NIDActionArity1V0 ((BlockLiteral *) block).Invoke;
-		}
-		
-		[Preserve (Conditional=true)]
-		[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
-		unsafe void Invoke ()
-		{
-			invoker (blockPtr);
-		}
-	}
+    static internal class SDActionArity1V0 {
+        static internal readonly DActionArity1V0 Handler = Invoke;
+
+        [MonoPInvokeCallback (typeof (DActionArity1V0))]
+        static unsafe void Invoke (IntPtr block) {
+            var descriptor = (BlockLiteral *) block;
+            var del = (System.Action) (descriptor->Target);
+            if (del != null)
+                del (obj);
+        }
+    }
+
+    internal class NIDActionArity1V0 {
+        IntPtr blockPtr;
+        DActionArity1V0 invoker;
+
+        [Preserve (Conditional=true)]
+        [BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
+        public unsafe NIDActionArity1V0 (BlockLiteral *block)
+        {
+            blockPtr = _Block_copy ((IntPtr) block);
+            invoker = block->GetDelegateForBlock<DActionArity1V0> ();
+        }
+
+        [Preserve (Conditional=true)]
+        [BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
+        ~NIDActionArity1V0 ()
+        {
+            _Block_release (blockPtr);
+        }
+
+        [Preserve (Conditional=true)]
+        [BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
+        public unsafe static System.Action Create (IntPtr block)
+        {
+            if (block == IntPtr.Zero)
+                return null;
+            if (BlockLiteral.IsManagedBlock (block)) {
+                var existing_delegate = ((BlockLiteral *) block)->Target as System.Action;
+                if (existing_delegate != null)
+                    return existing_delegate;
+            }
+            return new NIDActionArity1V0 ((BlockLiteral *) block).Invoke;
+        }
+
+        [Preserve (Conditional=true)]
+        [BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
+        unsafe void Invoke ()
+        {
+            invoker (blockPtr);
+        }
+    }
 }
 ```
 

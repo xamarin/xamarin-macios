@@ -415,13 +415,13 @@ Example:
 ```csharp
 [BaseType (typeof (NSObject))]
 interface MyTree {
-	string Name { get; [NotImplemented] set; }
+    string Name { get; [NotImplemented] set; }
 }
 
 [BaseType (typeof (MyTree))]
 interface MyMutableTree {
-	[Override]
-	string Name { get; set; }
+    [Override]
+    string Name { get; set; }
 }
 ```
 
@@ -539,23 +539,23 @@ generate three supporting classes that vastly improve the way that you
 consume protocols:
 
 ```csharp
-    // Full method implementation, contains all methods
-	class MyProtocol : IMyProtocol {
-		public void Say (string msg);
-		public void Listen (string msg);
-	}
+// Full method implementation, contains all methods
+class MyProtocol : IMyProtocol {
+    public void Say (string msg);
+    public void Listen (string msg);
+}
 
-	// Interface that contains only the required methods
-	interface IMyProtocol: INativeObject, IDisposable {
-		[Export ("say:")]
-		void Say (string msg);
-	}
+// Interface that contains only the required methods
+interface IMyProtocol: INativeObject, IDisposable {
+    [Export ("say:")]
+    void Say (string msg);
+}
 
-	// Extension methods
-	static class IMyProtocol_Extensions {
-		public static void Optional (this IMyProtocol this, string msg);
-		}
-	}
+// Extension methods
+static class IMyProtocol_Extensions {
+    public static void Optional (this IMyProtocol this, string msg);
+    }
+}
 ```
 
 The **class implementation** provides a complete abstract class that
@@ -605,8 +605,8 @@ interface IMyProtocol {}
 
 [BaseType (typeof(NSObject))]
 interface MyTool {
-	[Export ("getProtocol")]
-	IMyProtocol GetProtocol ();
+    [Export ("getProtocol")]
+    IMyProtocol GetProtocol ();
 }
 ```
 
@@ -818,8 +818,8 @@ Example:
 enum MyEnum {}
 
 interface MyType {
-	[Export ("initWithEnum:")]
-	IntPtr Constructor (MyEnum value);
+    [Export ("initWithEnum:")]
+    IntPtr Constructor (MyEnum value);
 }
 ```
 
@@ -832,23 +832,23 @@ Example:
 ```csharp
 enum NSRunLoopMode {
 
-	[DefaultEnumValue]
-	[Field ("NSDefaultRunLoopMode")]
-	Default,
+    [DefaultEnumValue]
+    [Field ("NSDefaultRunLoopMode")]
+    Default,
 
-	[Field ("NSRunLoopCommonModes")]
-	Common,
+    [Field ("NSRunLoopCommonModes")]
+    Common,
 
-	[Field (null)]
-	Other = 1000
+    [Field (null)]
+    Other = 1000
 }
 
 interface MyType {
-	[Export ("performForMode:")]
-	void Perform (NSString mode);
+    [Export ("performForMode:")]
+    void Perform (NSString mode);
 
-	[Wrap ("Perform (mode.GetConstant ())")]
-	void Perform (NSRunLoopMode mode);
+    [Wrap ("Perform (mode.GetConstant ())")]
+    void Perform (NSRunLoopMode mode);
 }
 ```
 
@@ -1070,8 +1070,8 @@ into C# extension methods:
 [BaseType (typeof (UIView))]
 [Category]
 interface MyUIViewExtension {
-	[Export ("makeBackgroundRed")]
-	void MakeBackgroundRed ();
+    [Export ("makeBackgroundRed")]
+    void MakeBackgroundRed ();
 }
 ```
 
@@ -1107,15 +1107,15 @@ interface SocialNetworking {
 [Category]
 [BaseType (typeof (SocialNetworking))]
 interface Twitter {
-	[Export ("postToTwitter:")]
-	void PostToTwitter (Message message);
+    [Export ("postToTwitter:")]
+    void PostToTwitter (Message message);
 }
 
 [Category]
 [BaseType (typeof (SocialNetworking))]
 interface Facebook {
-	[Export ("postToFacebook:andPicture:")]
-	void PostToFacebook (Message message, UIImage picture);
+    [Export ("postToFacebook:andPicture:")]
+    void PostToFacebook (Message message, UIImage picture);
 }
 ```
 
@@ -1124,11 +1124,11 @@ It is just shorter in these cases to merge the categories:
 ```csharp
 [BaseType (typeof (NSObject))]
 interface SocialNetworking {
-	[Export ("postToTwitter:")]
-	void PostToTwitter (Message message);
+    [Export ("postToTwitter:")]
+    void PostToTwitter (Message message);
 
-	[Export ("postToFacebook:andPicture:")]
-	void PostToFacebook (Message message, UIImage picture);
+    [Export ("postToFacebook:andPicture:")]
+    void PostToFacebook (Message message, UIImage picture);
 }
 ```
 

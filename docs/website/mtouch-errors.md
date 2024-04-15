@@ -1470,7 +1470,7 @@ Please set the deployment target in the Info.plist file to at least 8.0 to solve
 ### MT14xx: Crash Reports
 
 <!--
-  MT14xx	CrashReports.cs
+  MT14xx    CrashReports.cs
   -->
 
 <a name="MT1400"></a>
@@ -1602,7 +1602,7 @@ Notes:
 ### MT16xx: MachO
 
 <!--
-  MT16xx	MachO.cs
+  MT16xx    MachO.cs
   -->
 
 <a name="MT1600"></a>
@@ -1700,8 +1700,8 @@ This error means that the managed linker encountered an unexpected error, e.g. a
 
 ```
 error MT2001: Could not link assemblies.
-	Method: `System.Void Todo.TodoListPageCS/<<-ctor>b__1_0>d::SetStateMachine(System.Runtime.CompilerServices.IAsyncStateMachine)`
-	Assembly: `QuickTodo, Version=1.0.6297.28241, Culture=neutral, PublicKeyToken=null`
+    Method: `System.Void Todo.TodoListPageCS/<<-ctor>b__1_0>d::SetStateMachine(System.Runtime.CompilerServices.IAsyncStateMachine)`
+    Assembly: `QuickTodo, Version=1.0.6297.28241, Culture=neutral, PublicKeyToken=null`
 Reason: Value cannot be null.
 Parameter name: instruction
 ```
@@ -2330,14 +2330,14 @@ This occurs when subclassing a framework type, and trying to implement a 'retain
 ```csharp
 class MyNSObject : NSObject
 {
-	[Export ("retain")]
-	new void Retain () {}
+  [Export ("retain")]
+  new void Retain () {}
 
-	[Export ("release")]
-	new void Release () {}
+  [Export ("release")]
+  new void Release () {}
 
-	[Export ("dealloc")]
-	new void Dealloc () {}
+  [Export ("dealloc")]
+  new void Dealloc () {}
 }
 ```
 
@@ -2350,14 +2350,14 @@ class MyNSObject : NSObject
 
 class MyCustomNSObject : MyNSObject
 {
-	[Export ("retain")]
-	new void Retain () {}
+  [Export ("retain")]
+  new void Retain () {}
 
-	[Export ("release")]
-	new void Release () {}
+  [Export ("release")]
+  new void Release () {}
 
-	[Export ("dealloc")]
-	new void Dealloc () {}
+  [Export ("dealloc")]
+  new void Dealloc () {}
 }
 ```
 
@@ -3082,7 +3082,7 @@ Troubleshooting steps:
 - try to run `csharp -e 'System.Net.Dns.GetHostEntry (System.Net.Dns.GetHostName ()).AddressList'` (that should give you an IP address and not an error obviously).
 - try to run "ping \`hostname\`" which might give you more information, like: `cannot resolve MyHost.local: Unknown host`
 
-In some cases, it's a "local network" issue and it can be addressed by adding the unknown host `127.0.0.1	MyHost.local` in `/etc/hosts`.
+In some cases, it's a "local network" issue and it can be addressed by adding the unknown host `127.0.0.1    MyHost.local` in `/etc/hosts`.
 
 <a name="MT7002"></a>
 
