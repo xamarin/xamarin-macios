@@ -2055,7 +2055,7 @@ Sometimes it's possible to work around this by disabling incremental builds in t
 
 <a name="MT3002"></a>
 
-### MT3002: AOT restriction: Method '*' must be static since it is decorated with [MonoPInvokeCallback]. See [https://developer.xamarin.com/guides/ios/advanced_topics/limitations/#Reverse_Callbacks](https://developer.xamarin.com/guides/ios/advanced_topics/limitations/#Reverse_Callbacks)
+### MT3002: AOT restriction: Method '*' must be static since it is decorated with [MonoPInvokeCallback]. See [developer.xamarin.com/guides/ios/advanced_topics/limitations/#Reverse_Callbacks](~/ios/internals/limitations.md#reverse-callbacks)
 
 This error message comes from the AOT compiler.
 
