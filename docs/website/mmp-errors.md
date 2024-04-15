@@ -651,7 +651,7 @@ Possible solutions:
 * Make the type not abstract.
 
 If this is an API exposed by Xamarin, please file a new issue on
-[github](https://github.com/xamarin/xamarin-macios/issues/new), if it's a
+[GitHub](https://github.com/xamarin/xamarin-macios/issues/new), if it's a
 third-party binding, please contact the vendor.
 
 ## MM5xxx: GCC and toolchain
