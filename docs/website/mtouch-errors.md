@@ -1959,7 +1959,7 @@ The assembly causing the issue is named in the error message. To fix this issue 
 
 Mixed-mode assemblies can not be processed by the linker.
 
-See https://msdn.microsoft.com/en-us/library/x0w2664k.aspx for more information on mixed-mode assemblies.
+See [Mixed (native and managed) assemblies](/cpp/dotnet/mixed-native-and-managed-assemblies) for more information on mixed-mode assemblies.
 
 <a name="MT2105"></a>
 
