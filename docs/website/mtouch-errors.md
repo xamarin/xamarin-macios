@@ -3549,7 +3549,7 @@ This indicates something is wrong in the build process. Please file a new issue 
 
 ### MT8009: Unable to locate the block to delegate conversion method for the method *.*'s parameter #*.
 
-This indicates an API wasn't bound correctly. If this is an API exposed by Xamarin, please file a new issue on [GitHub](https://github.com/xamarin/xamarin-macios/issues/new)., if it's a third-party binding, please contact the vendor.
+This indicates an API wasn't bound correctly. If this is an API exposed by Xamarin, please file a new issue on [GitHub](https://github.com/xamarin/xamarin-macios/issues/new). If it's a third-party binding, please contact the vendor.
 
 <a name="MT8010"></a>
 
