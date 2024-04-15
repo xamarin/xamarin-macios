@@ -916,7 +916,7 @@ To build your application, Xamarin.iOS must link against system libraries, some 
 
 The recommended way to fix this error is to upgrade Xcode to get the needed SDK. If you have multiple versions of Xcode installed or want to use an Xcode in a non-default location, make sure to set the correct Xcode location in your IDE's preferences.
 
-Alternatively, enable the managed [linker](https://docs.microsoft.com/en-us/xamarin/ios/deploy-test/linker) to remove unused APIs, including (in most cases) the new ones which require the specified library. However, this will not work if your project requires APIs introduced in a newer SDK than the one your Xcode provides.
+Alternatively, enable the managed [linker](../deploy-test/linker.md) to remove unused APIs, including (in most cases) the new ones which require the specified library. However, this will not work if your project requires APIs introduced in a newer SDK than the one your Xcode provides.
 
 As a last-straw solution, use an older version of Xamarin.iOS that does not require these new SDKs to be present during the build process.
 
@@ -1764,7 +1764,7 @@ To fix this warning, open the project file in a text editor, and remove all `Mto
 
 ### MT2017: Could not process XML description.
 
-This means there is an error on the [custom XML linker configuration file](https://developer.xamarin.com/guides/cross-platform/advanced/custom_linking/) you provided, please review your file.
+This means there is an error on the [custom XML linker configuration file](~/cross-platform/deploy-test/linker.md) you provided, please review your file.
 
 <a name="MT2018"></a>
 
@@ -2203,7 +2203,7 @@ This is always a bug in Xamarin.iOS; please file a new issue on [GitHub](https:/
 
 <a name="MT4112"></a>
 
-### MT4112: The registrar found an invalid type `*`. Registering generic types with Objective-C is not supported, and may lead to random behavior and/or crashes (for backwards compatibility with older versions of Xamarin.iOS it is possible to ignore this error by passing `--unsupported--enable-generics-in-registrar` as an additional mtouch argument in the project's iOS Build options page. See [developer.xamarin.com/guides/ios/advanced_topics/registrar](https://developer.xamarin.com/guides/ios/advanced_topics/registrar) for more information).
+### MT4112: The registrar found an invalid type `*`. Registering generic types with Objective-C is not supported, and may lead to random behavior and/or crashes (for backwards compatibility with older versions of Xamarin.iOS it is possible to ignore this error by passing `--unsupported--enable-generics-in-registrar` as an additional mtouch argument in the project's iOS Build options page. See [developer.xamarin.com/guides/ios/advanced_topics/registrar](~/ios/internals/registrar.md) for more information).
 
 <a name="MT4113"></a>
 

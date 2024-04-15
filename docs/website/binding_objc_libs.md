@@ -1887,4 +1887,4 @@ automatically.
 
 ## Related links
 
-- [Binding Sample](https://developer.xamarin.com/samples/BindingSample/)
+- [Binding Sample](/samples/xamarin/ios-samples/bindingsample/)

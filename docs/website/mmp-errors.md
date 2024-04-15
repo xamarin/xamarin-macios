@@ -206,7 +206,7 @@ The specified optimization was not recognized.
 
 The accepted format is `[+|-]optimization-name`, where `optimization-name` is one of the values listed in the error message.
 
-See [Build optimizations](https://developer.xamarin.com/guides/cross-platform/macios/build-optimizations) for a complete description of each optimization.
+See [Build optimizations](~/cross-platform/macios/optimizations.md) for a complete description of each optimization.
 
 <a name="MM0133"></a>
 
@@ -232,7 +232,7 @@ To build your application, Xamarin.Mac must link against system libraries, some 
 
 The recommended way to fix this error is to upgrade Xcode to get the needed SDK. If you have multiple versions of Xcode installed or want to use an Xcode in a non-default location, make sure to set the correct Xcode location in your IDE's preferences.
 
-Alternatively, enable the managed [linker](https://docs.microsoft.com/xamarin/mac/deploy-test/linker) to remove unused APIs, including (in most cases) the new ones which require the specified library. However, this will not work if your project requires APIs introduced in a newer SDK than the one your Xcode provides.
+Alternatively, enable the managed [linker](../deploy-test/linker.md) to remove unused APIs, including (in most cases) the new ones which require the specified library. However, this will not work if your project requires APIs introduced in a newer SDK than the one your Xcode provides.
 
 As a last-straw solution, use an older version of Xamarin.Mac that does not require these new SDKs to be present during the build process.
 
@@ -446,7 +446,7 @@ The assembly causing the issue is named in the error message. In order to fix th
 
 Mixed-mode assemblies can not be processed by the linker.
 
-See https://msdn.microsoft.com/en-us/library/x0w2664k.aspx for more information on mixed-mode assemblies.
+See /cpp/dotnet/mixed-native-and-managed-assemblies for more information on mixed-mode assemblies.
 
 <a name="MM2106"></a>
 
