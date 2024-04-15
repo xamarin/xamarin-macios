@@ -4509,7 +4509,7 @@ public class Dummy {
 				environment_variables ["SKIP_SIMULATOR_SETUP"] = "1";
 			environment_variables ["USE_TCP_TUNNEL"] = null;
 
-			var executable = Path.Combine (Configuration.RootPath, "tests", "xharness", "bin", "Debug", Configuration.DotNetTfm, "xharness");
+			var executable = Path.Combine (Configuration.RootPath, "tests", "xharness", "bin", "Debug", "xharness");
 			var args = new List<string> ();
 			args.Add ("--run");
 			args.Add (csprojpath);
