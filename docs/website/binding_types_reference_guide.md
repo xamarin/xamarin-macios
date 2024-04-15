@@ -459,8 +459,8 @@ Otherwise, the method will not be registered.
 
 This in general means that when you subclass a class that
 has been flagged with the `ModelAttribute`, you should not call
-the base method.   Calling that method will throw an
-exception, you are supposed to implement the entire behavior
+the base method.   Calling that method will throw the following
+exception: Foundation.You_Should_Not_Call_base_In_This_Method. You are supposed to implement the entire behavior
 on your subclass for any methods you override.
 
 <a name="AbstractAttribute"></a>
