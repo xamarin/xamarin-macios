@@ -1,11 +1,12 @@
 ---
 title: "Binding Objective-C libraries"
-ms.prod: xamarin
+description: "This document provides a high-level overview of how to create C# bindings to Objective-C code, describing how to bind events, methods, custom controls, and more."
+ms.service: xamarin
 ms.assetid: 8A832A76-A770-1A7C-24BA-B3E6F57617A0
-ms.technology: xamarin-cross-platform
-author: bradumbaugh
-ms.author: brumbaug
+author: davidortinau
+ms.author: daortin
 ms.date: 03/06/2018
+no-loc: [Objective-C]
 ---
 
 # Binding Objective-C libraries
@@ -41,7 +42,7 @@ project to experiment with bindings.
 
 ## Getting started
 
-# [Visual Studio for Mac](#tab/vsmac)
+# [Visual Studio for Mac](#tab/macos)
 
 The easiest way to create a binding is to create a Xamarin.iOS Binding Project.
 You can do this from Visual Studio for Mac by selecting the project type,
@@ -49,7 +50,7 @@ You can do this from Visual Studio for Mac by selecting the project type,
 
 [![](objective-c-libraries-images/00-sml.png "Do this from Visual Studio for Mac by selecting the project type, iOS Library Bindings Library")](objective-c-libraries-images/00.png#lightbox)
 
-# [Visual Studio](#tab/vswin)
+# [Visual Studio](#tab/windows)
 
 The easiest way to create a binding is to create a Xamarin.iOS Binding Project.
 You can do this from Visual Studio on Windows by selecting the project type,
@@ -452,7 +453,7 @@ IntPtr Constructor (CGRect frame);
 ### Binding protocols
 
 As described in the API design document, in the section [discussing
-Models and Protocols](~/ios/internals/api-design/index.md#Models),
+Models and Protocols](~/ios/internals/api-design/index.md#models),
 Xamarin.iOS maps the Objective-C protocols into classes that have been
 flagged with the
 [`[Model]`](~/cross-platform/macios/binding/binding-types-reference.md#ModelAttribute)
