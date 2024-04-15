@@ -115,9 +115,9 @@ An error occurred while loading the assemblies from the root assembly references
 
 <a name="MM0071"></a>
 
-#### MM0071: Unknown platform: *. This usually indicates a bug in Xamarin.Mac; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.
+#### MM0071: Unknown platform: *. This usually indicates a bug in Xamarin.Mac; please [file a bug report](https://github.com/xamarin/xamarin-macios/issues/new) with a test case.
 
-This usually indicates a bug in Xamarin.Mac; please file a [bug report](https://github.com/xamarin/xamarin-macios/issues/new) with a test case.
+This usually indicates a bug in Xamarin.Mac; please [file a bug report](https://github.com/xamarin/xamarin-macios/issues/new) with a test case.
 
 <a name="MM0073"></a>
 
@@ -168,7 +168,7 @@ A last-straw solution would be to use an older version of Xamarin.Mac, one that 
 
 <a name="MM0099"></a>
 
-#### MM0099: Internal error {0}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
+#### MM0099: Internal error {0}. Please [file a bug report](https://github.com/xamarin/xamarin-macios/issues/new) with a test case.
 
 <a name="MM0114"></a>
 
@@ -666,7 +666,7 @@ third-party binding, please contact the vendor.
 
 <a name="MM5103"></a>
 
-#### MM5103: Failed to compile. Error code - {0}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
+#### MM5103: Failed to compile. Error code - {0}. Please [file a bug report](https://github.com/xamarin/xamarin-macios/issues/new) with a test case.
 
 <!-- 5104 used by mtouch -->
 <!-- 5107 is used by mtouch-->
@@ -814,7 +814,7 @@ You can silence this warning by adding `--nowarn=5221` to the **Additional mmp a
 
 #### MM8025: Failed to compute the token reference for the type '{type.AssemblyQualifiedName}' because {reasons}
 
-This indicates a bug in Xamarin.Mac. Please file a [bug report](https://github.com/xamarin/xamarin-macios/issues/new).
+This indicates a bug in Xamarin.Mac. Please [file a bug report](https://github.com/xamarin/xamarin-macios/issues/new) with a test case.
 
 A potential workaround would be to disable the `register-protocols`
 optimization, by passing `--optimize:-register-protocols` as an additional mmp
@@ -824,7 +824,7 @@ argument in the project's Mac Build options.
 
 #### MM8026: * is not supported when the dynamic registrar has been linked away.
  
-This usually indicates a bug in Xamarin.Mac, because the dynamic registrar should not be linked away if it's needed. Please file a [bug report](https://github.com/xamarin/xamarin-macios/issues/new).
+This usually indicates a bug in Xamarin.Mac, because the dynamic registrar should not be linked away if it's needed. Please [file a bug report](https://github.com/xamarin/xamarin-macios/issues/new) with a test case.
  
 It's possible to force the linker to keep the dynamic registrar by adding
 `--optimize=-remove-dynamic-registrar` to the additional mmp arguments in
