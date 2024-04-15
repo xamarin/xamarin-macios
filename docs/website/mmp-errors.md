@@ -192,13 +192,13 @@ Please report this issue to the publisher of the assembly package (e.g. NuGet au
 
 #### MM0130: No root assemblies found. You should provide at least one root assembly.
 
-When running --runregistrar, at least one root assembly should be provided.
+When running `--runregistrar`, at least one root assembly should be provided.
 
 <a name="MM0131"></a>
 
 #### MM0131: Product assembly '{0}' not found in assembly list: '{1}'
 
-When running --runregistrar, the assembly list should include the product assembly, Xamarin.Mac, XamMac.
+When running `--runregistrar`, the assembly list should include the product assembly, Xamarin.Mac, XamMac.
 
 <a name="MM0132"></a>
 
@@ -454,9 +454,9 @@ See https://msdn.microsoft.com/en-us/library/x0w2664k.aspx for more information 
 
 #### MM2106: Could not optimize the call to BlockLiteral.SetupBlock[Unsafe] in * at offset * because *.
 
-The linker reports this warning when it can't optimize a call to BlockLiteral.SetupBlock or Block.SetupBlockUnsafe.
+The linker reports this warning when it can't optimize a call to `BlockLiteral.SetupBlock` or `Block.SetupBlockUnsafe`.
 
-The message will point to the method that calls BlockLiteral.SetupBlock[Unsafe], and
+The message will point to the method that calls `BlockLiteral.SetupBlock[Unsafe]`, and
 it may also give clues as to why the call couldn't be optimized.
 
 Please file an [issue](https://github.com/xamarin/xamarin-macios/issues/new)
