@@ -311,7 +311,7 @@ attributes.
 
 When you use the [`[Export]`](~/cross-platform/macios/binding/binding-types-reference.md#ExportAttribute) 
 attribute on a property under the covers btouch-native actually binds two methods: the getter and the setter. The name
-that you provide to export is the **basename** and the the setter is
+that you provide to export is the **basename** and the setter is
 computed by prepending the word "set", turning the first letter of the
 **basename** into upper case and making the selector take an
 argument. This means that `[Export ("label")]` applied on a property

@@ -902,7 +902,7 @@ public class UrlSessionDelegate : NSObject, INSUrlSessionDownloadDelegate {
 	public void DidWriteData (NSUrlSession session, NSUrlSessionDownloadTask downloadTask, long bytesWritten, long totalBytesWritten, long totalBytesExpectedToWrite)
 ```
 
-There is a slight behavior difference between the two at runtime.
+There is a slight behavior difference between the two at runtime:
 
 - Users of the base class (NSUrlSessionDownloadDelegate in example) provides all
 required and optional selectors, returning reasonable default values.
@@ -1307,7 +1307,7 @@ When this attribute is applied to a constructor it will generate the same
 `[DesignatedInitializer]` in the final platform assembly. This is to help
 the IDE indicate which constructor should be used in subclasses.
 
-This should map to ObjC/clang use of `__attribute__((objc_designated_initializer))`.
+This should map to Objective-C/clang use of `__attribute__((objc_designated_initializer))`.
 
 <a name="DisableZeroCopyAttribute"></a>
 
@@ -1860,7 +1860,7 @@ interface DemoDelegate {
 This is how the user would use the weakly-typed version of the Delegate:
 
 ```csharp
-// The weak case, user have to roll their own
+// The weak case, user has to roll his own
 class SomeObject : NSObject {
     [Export ("doDemo")]
     void CallbackForDoDemo () {}
@@ -1900,8 +1900,8 @@ interface XyzPanel {
 }
 ```
 
-When the `[Wrap]` attribute is applied on a method inside a type decorated 
-with a `[Category]` attribute you need to include `This` as
+When the `[Wrap]` attribute is applied on a method inside a type decorated
+with a `[Category]` attribute, you need to include `This` as
 the first argument since an extension method is being generated. For example:
 
 ```csharp
@@ -2449,7 +2449,7 @@ This is a specialized subclass of the `[Advice]` attribute that can be used
 to hint to the developer that overriding a method **requires** a call to 
 the base (overridden) method.
 
-This correspond to `clang` [` __attribute__((objc_requires_super))`](https://clang.llvm.org/docs/AttributeReference.html#objc-requires-super-clang-objc-requires-super)
+This corresponds to `clang` [`__attribute__((objc_requires_super))`](https://clang.llvm.org/docs/AttributeReference.html#objc-requires-super)
 
 ### ZeroCopyStringsAttribute
 

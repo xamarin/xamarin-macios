@@ -180,13 +180,13 @@ A last-straw solution would be to use an older version of Xamarin.Mac, one that 
 
 #### MM0129: Debugging symbol file for '*' does not match the assembly and is ignored.
 
-The debugging symbols, either a .pdb (portable pdb only) or a .mdb file, for the specified assembly could not be loaded.
+The debugging symbols – either a .pdb (portable pdb only) or a .mdb file – for the specified assembly could not be loaded.
 
 This generally means the assembly is newer or older than the symbols. Since they do not match they cannot be used and the symbols are ignored.
 
 This warning won't affect the application being built, however you might not be able to debug it entirely (in particular the code from specified assembly). Also exceptions, stack traces and crash reports might be missing some information.
 
-Please report this issue to the publisher of the assembly package (e.g. nuget author) so this can be fixed in their future releases.
+Please report this issue to the publisher of the assembly package (e.g. NuGet author) so this can be fixed in their future releases.
 
 <a name="MM0130"></a>
 
@@ -302,7 +302,7 @@ Change the architecture in the project's Mac Build options to 'x86_64' in order 
 
 <a name="MM1406"></a>
 
-#### MM1406: Target framework '{0}' is invalid when targetting Xamarin.Mac 4.5 .NET framwork.
+#### MM1406: Target framework '{0}' is invalid when targeting Xamarin.Mac 4.5 .NET framwork.
 
 <a name="MM1407"></a>
 
@@ -438,7 +438,7 @@ Notes:
 
 #### MM2103: Error processing assembly '\*': *
 
-An unexpected error occured when processing an assembly.
+An unexpected error occurred when processing an assembly.
 
 The assembly causing the issue is named in the error message. In order to fix this issue the assembly will need to be provided in a [bug report](https://github.com/xamarin/xamarin-macios/issues/new) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
 
@@ -481,11 +481,11 @@ and safe to do so.
 
 #### MM2108: '{0}' was stripped of architectures except '{1}' to comply with App Store restrictions. This could break existing codesigning signatures. Consider stripping the library with lipo or disabling with --optimize=-trim-architectures");
 
-The App Store now rejects applications which contain libraries and frameworks which contain 32-bit variants. The library was stripped of unused archtectures when copied into the final application bundle.
+The App Store now rejects applications which contain libraries and frameworks which contain 32-bit variants. The library was stripped of unused architectures when copied into the final application bundle.
 
-This is in general safe, and will reduce application bundle size as an added benefit. However, any bundled framework that is code signed will have its signature invalidated (and resigned later if the application is signed).
+This is in general safe and will reduce application bundle size as an added benefit. However, any bundled framework that is code signed will have its signature invalidated (and resigned later if the application is signed).
 
-Consider using `lipo` to remove the unnecessary archtectures permanently from the source library. If the application is not being published to the App Store, this removal can be disabled by passing --optimize=-trim-architectures as Additional MMP Arguments.
+Consider using `lipo` to remove the unnecessary architectures permanently from the source library. If the application is not being published to the App Store, this removal can be disabled by passing `--optimize=-trim-architectures` as Additional MMP Arguments.
 
 <a name="MM2109"></a>
 
@@ -570,16 +570,16 @@ There are currently two possible reasons for this warning:
 
 <a name="MM4174"></a>
 
-#### MM4174: Unable to locate the block to delegate conversion method for the method {method}'s parameter #{parameter}.
+#### MT4174: Unable to locate the block to delegate conversion method for the method {method}'s parameter #{parameter}.
 
 This is a warning indicating that the static registrar couldn't find the
 method to create a delegate for an Objective-C block. An attempt will be made
 at runtime to find the method, but it will likely fail as well (with an MT8009
 exception).
 
-One possible reason for this warning is when manually writing bindings for API
+One possible reason for this warning is manually writing bindings for an API
 that uses blocks. It's recommended to use a binding project to bind
-Objective-C code, in particular when it involves blocks, since it's quite
+Objective-C code – in particular when it involves blocks – since it's quite
 complicated to get it right when doing it manually.
 
 If this is not the case, please file an [issue](https://github.com/xamarin/xamarin-macios/issues/new) with a test case.
