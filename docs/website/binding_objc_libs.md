@@ -895,11 +895,11 @@ Notifications are messages that are posted to the
 `NSNotificationCenter.DefaultCenter` and are used as a mechanism to
 broadcast messages from one part of the application to
 another. Developers subscribe to notifications typically using the
-[NSNotificationCenter](https://developer.xamarin.com/api/type/Foundation.NSNotificationCenter/)'s
-[AddObserver](https://developer.xamarin.com/api/type/Foundation.NSNotificationCenter/M/AddObserver/)
+[NSNotificationCenter](xref:Foundation.NSNotificationCenter)'s
+[AddObserver](xref:Foundation.NSNotificationCenter.AddObserver(Foundation.NSString,System.Action{Foundation.NSNotification}))
 method. When an application posts a message to the notification
 center, it typically contains a payload stored in the
-[NSNotification.UserInfo](https://developer.xamarin.com/api/property/Foundation.NSNotification.UserInfo/)
+[NSNotification.UserInfo](xref:Foundation.NSNotification.UserInfo)
 dictionary. This dictionary is weakly typed, and getting information
 out of it is error prone, as users typically need to read in the
 documentation which keys are available on the dictionary and the types
@@ -946,7 +946,7 @@ public class MyClass {
 
 Users of your code can then easily subscribe to notifications posted
 to the
-[NSDefaultCenter](https://developer.xamarin.com/api/property/Foundation.NSNotificationCenter.DefaultCenter/)
+[NSDefaultCenter](xref:Foundation.NSNotificationCenter.DefaultCenter)
 by using code like this:
 
 ```csharp
@@ -963,7 +963,7 @@ token.Dispose ();
 ```
 
 Or you can call
-[NSNotification.DefaultCenter.RemoveObserver](https://developer.xamarin.com/api/member/Foundation.NSNotificationCenter.RemoveObserver/p/Foundation.NSObject/)
+[NSNotification.DefaultCenter.RemoveObserver](xref:Foundation.NSNotificationCenter.RemoveObserver(Foundation.NSObject))
 and pass the token. If your notification contains parameters, you
 should specify a helper `EventArgs` interface, like this:
 
@@ -990,7 +990,7 @@ interface MyScreenChangedEventArgs {
 
 The above will generate a `MyScreenChangedEventArgs` class with the
 `ScreenX` and `ScreenY` properties that will fetch the data from the
-[NSNotification.UserInfo](https://developer.xamarin.com/api/property/Foundation.NSNotification.UserInfo/)
+[NSNotification.UserInfo](xref:Foundation.NSNotification.UserInfo)
 dictionary using the keys "ScreenXKey" and "ScreenYKey" respectively
 and apply the proper conversions. The `[ProbePresence]` attribute is
 used for the generator to probe if the key is set in the `UserInfo`,
@@ -1229,7 +1229,7 @@ there are scenarios where the value might not be set.
 To do this, you need to do a few things:
 
 * Create a strongly-typed class, that subclasses
-  [DictionaryContainer](https://developer.xamarin.com/api/type/Foundation.DictionaryContainer/) and provides the various getters and setters for each property.
+  [DictionaryContainer](xref:Foundation.DictionaryContainer) and provides the various getters and setters for each property.
 * Declare overloads for the methods taking `NSDictionary` to take the new strongly-typed version.
 
 You can create the strongly-typed class either manually, or use the

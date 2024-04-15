@@ -1554,7 +1554,7 @@ public class MyClass {
 
 Users of your code can then easily subscribe to notifications posted
 to the
-[NSDefaultCenter](https://developer.xamarin.com/api/property/Foundation.NSNotificationCenter.DefaultCenter/)
+[NSDefaultCenter](xref:Foundation.NSNotificationCenter.DefaultCenter)
 by using code like this:
 
 ```csharp
@@ -1578,7 +1578,7 @@ notifications, like this:
 token.Dispose ();
 ```
 
-Or you can call [NSNotification.DefaultCenter.RemoveObserver](https://developer.xamarin.com/api/member/Foundation.NSNotificationCenter.RemoveObserver/p/Foundation.NSObject//)
+Or you can call [NSNotification.DefaultCenter.RemoveObserver](xref:Foundation.NSNotificationCenter.RemoveObserver(Foundation.NSObject))
 and pass the token. If your notification contains parameters, you
 should specify a helper `EventArgs` interface, like this:
 
@@ -1605,7 +1605,7 @@ interface MyScreenChangedEventArgs {
 
 The above will generate a `MyScreenChangedEventArgs` class with the
 `ScreenX` and `ScreenY` properties that will fetch the data from the
-[NSNotification.UserInfo](https://developer.xamarin.com/api/property/Foundation.NSNotification.UserInfo/)
+[NSNotification.UserInfo](xref:Foundation.NSNotification.UserInfo)
 dictionary using the keys `ScreenXKey` and `ScreenYKey`
 respectively and apply the proper conversions. The `[ProbePresence]`
 attribute is used for the generator to probe if the key is set in the
@@ -2501,7 +2501,7 @@ With Xamarin.iOS 8.0 we introduced support for easily creating
 strongly-typed classes that wrap `NSDictionaries`.
 
 While it has always been possible to use the
-[DictionaryContainer](https://developer.xamarin.com/api/type/Foundation.DictionaryContainer/)
+[DictionaryContainer](xref:Foundation.DictionaryContainer)
 data type together with a manual API, it is now a lot simpler to do
 this.  For more information, see [Surfacing Strong
 Types](~/cross-platform/macios/binding/objective-c-libraries.md#Surfacing_Strong_Types).
@@ -2512,7 +2512,7 @@ Types](~/cross-platform/macios/binding/objective-c-libraries.md#Surfacing_Strong
 
 When this attribute is applied to an interface, the generator will
 produce a class with the same name as the interface that derives from
-[DictionaryContainer](https://developer.xamarin.com/api/type/Foundation.DictionaryContainer/)
+[DictionaryContainer](xref:Foundation.DictionaryContainer)
 and turns each property defined in the interface into a strongly-typed
 getter and setter for the dictionary.
 
