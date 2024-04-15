@@ -2392,7 +2392,7 @@ to gcc for each of the listed frameworks.
 link against platform frameworks so that they can optionally use them if they
 are available but do not take a hard dependency on them which is useful if your
 library is meant to add extra features on newer versions of iOS. For more
-information on weak linking, see Apple's documentation on [Weak Linking](http://developer.apple.com/library/mac/#documentation/MacOSX/Conceptual/BPFrameworks/Concepts/WeakLinking.html).
+information on weak linking, see Apple's documentation on [Weak Linking](https://developer.apple.com/library/mac/#documentation/MacOSX/Conceptual/BPFrameworks/Concepts/WeakLinking.html).
 
 Good candidates for weak linking would be `Frameworks` like Accounts,
 `CoreBluetooth`, `CoreImage`, `GLKit`, `NewsstandKit` and `Twitter` since they are only

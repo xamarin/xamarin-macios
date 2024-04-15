@@ -19,7 +19,7 @@ use to bring the iOS and Mac APIs to C#.
 
 This document describes how to bind Objective-C APIs, if you are
 binding just C APIs, you should use the standard .NET mechanism for
-this, [the P/Invoke framework](http://www.mono-project.com/docs/advanced/pinvoke/).
+this, [the P/Invoke framework](https://www.mono-project.com/docs/advanced/pinvoke/).
 Details on how to statically link a C library are available on the
 [Linking Native Libraries](~/ios/platform/native-interop.md)
 page.

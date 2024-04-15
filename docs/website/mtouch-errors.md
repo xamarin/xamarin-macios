@@ -1289,7 +1289,7 @@ This error is reported only together with [MT1036](#MT1036). Please see [MT1036]
 
 Please check if your device is locked.
 
-If you're deploying an enterprise app or using a free provisioning profile, you might have trust the developer (this is explained <a href="http://stackoverflow.com/a/30726375/183422">here</a>).
+If you're deploying an enterprise app or using a free provisioning profile, you might have trust the developer (this is explained <a href="https://stackoverflow.com/a/30726375/183422">here</a>).
 
 <a name="MT1108"></a>
 
@@ -1314,7 +1314,7 @@ Please check if your device is locked.
 
 ### MT1110: Application failed to launch because of iOS security restrictions. Please ensure the developer is trusted.
 
-If you're deploying an enterprise app or using a free provisioning profile, you might have trust the developer (this is explained <a href="http://stackoverflow.com/a/30726375/183422">here</a>).
+If you're deploying an enterprise app or using a free provisioning profile, you might have trust the developer (this is explained <a href="https://stackoverflow.com/a/30726375/183422">here</a>).
 
 <a name="MT1111"></a>
 
