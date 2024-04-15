@@ -156,7 +156,7 @@ One potential, alternative solution, is to enable the managed linker. This will 
 
 To enable the managed linker, go to your project's Mac Build Options, and set `Linker Behavior` to either `Link Framework SDKs only` or `Link All`.
 
-A second potential, alternative solution, is use the dynamic registrar instead. This will impose a startup cost by dynamically registering types but remove the header file requirement. 
+A second potential, alternative solution, is use the dynamic registrar instead. This will impose a startup cost by dynamically registering types but remove the header file requirement.
 
 A last-straw solution would be to use an older version of Xamarin.Mac, one that supports the SDK your project requires.
 
@@ -218,9 +218,9 @@ See [Build optimizations](https://developer.xamarin.com/guides/cross-platform/ma
 
 #### MM0134: 32-bit applications should be migrated to 64-bit.
 
-Apple has announced that it will not allow macOS App Store submissions of 32-bit apps (starting January 2018). 
+Apple has announced that it will not allow macOS App Store submissions of 32-bit apps (starting January 2018).
 
-In addition 32-bit applications will not run on the version of macOS after High Sierra "without compromises". 
+In addition 32-bit applications will not run on the version of macOS after High Sierra "without compromises".
 
 For more details: https://developer.apple.com/news/?id=06282017a
 
