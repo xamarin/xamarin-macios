@@ -1440,8 +1440,13 @@ namespace GeneratorTests {
 			var bgen = BuildFile (Profile.iOS, false, true, "tests/xmldocs.cs");
 			Assert.That (bgen.XmlDocumentation, Does.Exist);
 			var contents = File.ReadAllText (bgen.XmlDocumentation);
+#if NET
+			const string NativeHandleType = "ObjCRuntime.NativeHandle";
+#else
+			const string NativeHandleType = "System.IntPtr";
+#endif
 			var expectedContents =
-@"<?xml version=""1.0""?>
+@$"<?xml version=""1.0""?>
 <doc>
     <assembly>
         <name>api0</name>
@@ -1545,20 +1550,20 @@ namespace GeneratorTests {
             //
             [Export (""initWithFrame:"")]
             public UIView (System.Drawing.RectangleF frame) : base (NSObjectFlag.Empty)
-            {
+            {{
                 // Invoke the init method now.
                 var initWithFrame = new Selector (""initWithFrame:"").Handle;
-                if (IsDirectBinding) {
+                if (IsDirectBinding) {{
                     Handle = ObjCRuntime.Messaging.IntPtr_objc_msgSend_CGRect (this.Handle, initWithFrame, frame);
-                } else {
+                }} else {{
                     Handle = ObjCRuntime.Messaging.IntPtr_objc_msgSendSuper_CGRect (this.SuperHandle, initWithFrame, frame);
-                }
-            }
+                }}
+            }}
             ]]></code>
                 </example>
             </remarks>
         </member>
-        <member name=""M:XmlDocumentation.T1.#ctor(ObjCRuntime.NativeHandle)"">
+        <member name=""M:XmlDocumentation.T1.#ctor({NativeHandleType})"">
             <summary>A constructor used when creating managed representations of unmanaged objects. Called by the runtime.</summary>
             <param name=""handle"">Pointer (handle) to the unmanaged object.</param>
             <remarks>
@@ -1641,20 +1646,20 @@ namespace GeneratorTests {
             //
             [Export (""initWithFrame:"")]
             public UIView (System.Drawing.RectangleF frame) : base (NSObjectFlag.Empty)
-            {
+            {{
                 // Invoke the init method now.
                 var initWithFrame = new Selector (""initWithFrame:"").Handle;
-                if (IsDirectBinding) {
+                if (IsDirectBinding) {{
                     Handle = ObjCRuntime.Messaging.IntPtr_objc_msgSend_CGRect (this.Handle, initWithFrame, frame);
-                } else {
+                }} else {{
                     Handle = ObjCRuntime.Messaging.IntPtr_objc_msgSendSuper_CGRect (this.SuperHandle, initWithFrame, frame);
-                }
-            }
+                }}
+            }}
             ]]></code>
                 </example>
             </remarks>
         </member>
-        <member name=""M:XmlDocumentation.TG1`2.#ctor(ObjCRuntime.NativeHandle)"">
+        <member name=""M:XmlDocumentation.TG1`2.#ctor({NativeHandleType})"">
             <summary>A constructor used when creating managed representations of unmanaged objects. Called by the runtime.</summary>
             <param name=""handle"">Pointer (handle) to the unmanaged object.</param>
             <remarks>
