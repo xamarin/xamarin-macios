@@ -1659,7 +1659,7 @@ namespace Foundation {
 
 			private static bool IsValidForClientAuthenticationEKU (X509EnhancedKeyUsageExtension eku)
 			{
-				foreach (Oid oid in eku.EnhancedKeyUsages) {
+				foreach (System.Security.Cryptography.Oid oid in eku.EnhancedKeyUsages) {
 					if (oid.Value == ClientAuthenticationOID) {
 						return true;
 					}
