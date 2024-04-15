@@ -1089,6 +1089,7 @@ namespace Foundation {
 					}
 					return;
 				}
+#if NET
 				if (sessionHandler.ClientCertificateOptions == ClientCertificateOption.Manual && challenge.ProtectionSpace.AuthenticationMethod == NSUrlProtectionSpace.AuthenticationMethodClientCertificate) {
 					var certificate = CertificateHelper.GetEligibleClientCertificate (sessionHandler.ClientCertificates);
 					if (certificate is not null) {
@@ -1099,6 +1100,8 @@ namespace Foundation {
 						return;
 					}
 				}
+#endif
+
 				// case for the basic auth failing up front. As per apple documentation:
 				// The URL Loading System is designed to handle various aspects of the HTTP protocol for you. As a result, you should not modify the following headers using
 				// the addValue(_:forHTTPHeaderField:) or setValue(_:forHTTPHeaderField:) methods:
@@ -1604,6 +1607,7 @@ namespace Foundation {
 			}
 		}
 
+#if NET
 		private static class CertificateHelper {
 			// Based on https://github.com/dotnet/runtime/blob/c2848c582f5d6ae42c89f5bfe0818687ab3345f0/src/libraries/Common/src/System/Net/Security/CertificateHelper.cs
 			// with the NetEventSource code removed and namespace changed.
@@ -1669,5 +1673,6 @@ namespace Foundation {
 				return (ku.KeyUsages & RequiredUsages) == RequiredUsages;
 			}
 		}
+#endif
 	}
 }
