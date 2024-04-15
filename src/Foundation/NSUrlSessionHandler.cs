@@ -1604,15 +1604,14 @@ namespace Foundation {
 			}
 		}
 
-		private static class CertificateHelper
-		{
+		private static class CertificateHelper {
 			// Based on https://github.com/dotnet/runtime/blob/c2848c582f5d6ae42c89f5bfe0818687ab3345f0/src/libraries/Common/src/System/Net/Security/CertificateHelper.cs
 			// with the NetEventSource code removed and namespace changed.
 			private const string ClientAuthenticationOID = "1.3.6.1.5.5.7.3.2";
 
 			internal static X509Certificate2? GetEligibleClientCertificate (X509CertificateCollection? candidateCerts)
 			{
-				if (candidateCerts == null || candidateCerts.Count == 0) {
+				if (candidateCerts is null || candidateCerts.Count == 0) {
 					return null;
 				}
 
@@ -1624,7 +1623,7 @@ namespace Foundation {
 
 			internal static X509Certificate2? GetEligibleClientCertificate (X509Certificate2Collection? candidateCerts)
 			{
-				if (candidateCerts == null || candidateCerts.Count == 0) {
+				if (candidateCerts is null || candidateCerts.Count == 0) {
 					return null;
 				}
 
