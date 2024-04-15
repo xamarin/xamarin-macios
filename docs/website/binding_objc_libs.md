@@ -38,7 +38,7 @@ You can use the
 [iOS Binding Sample](https://github.com/xamarin/monotouch-samples/tree/main/BindingSample)
 project to experiment with bindings.
 
-<a name="Getting_Started" />
+<a name="Getting_Started"></a>
 
 ## Getting started
 
@@ -76,7 +76,7 @@ limited to C# interfaces and C# delegate declarations. The
 definitions that are required by the interfaces and delegates. This
 includes enumeration values and structures that your code might use.
 
-<a name="Binding_an_API" />
+<a name="Binding_an_API"></a>
 
 ## Binding an API
 
@@ -220,7 +220,7 @@ Sometimes you might find that you need a few enumeration values, delegate
 definitions or other types. Do not place those in the API definitions file, as
 this is merely a contract
 
-<a name="The_API_definition_file" />
+<a name="The_API_definition_file"></a>
 
 ## The API definition file
 
@@ -238,7 +238,7 @@ But since we are using the interface as a skeleton to generate a class
 we had to resort to decorating various parts of the contract with
 attributes to drive the binding.
 
-<a name="Binding_Methods" />
+<a name="Binding_Methods"></a>
 
 ### Binding methods
 
@@ -296,7 +296,7 @@ When exporting a reference type, with the [`[Export]`](~/cross-platform/macios/b
 keyword you can also specify the allocation semantics. This is necessary to ensure that no data is
 leaked.
 
-<a name="Binding_Properties" />
+<a name="Binding_Properties"></a>
 
 ### Binding properties
 
@@ -387,7 +387,7 @@ The following caveats should be considered when setting up the binding for a cus
 
 Failure to observe any of the above listed caveats can result in the binding silently failing at runtime.
 
-<a name="MutablePattern" />
+<a name="MutablePattern"></a>
 
 #### Objective-C mutable pattern and properties
 
@@ -425,7 +425,7 @@ interface MyMutableTree {
 }
 ```
 
-<a name="Binding_Constructors" />
+<a name="Binding_Constructors"></a>
 
 ### Binding constructors
 
@@ -448,7 +448,7 @@ use:
 IntPtr Constructor (CGRect frame);
 ```
 
-<a name="Binding_Protocols" />
+<a name="Binding_Protocols"></a>
 
 ### Binding protocols
 
@@ -516,7 +516,7 @@ interface UIAccelerometer {
 }
 ```
 
-<a name="iOS7ProtocolSupport" />
+<a name="iOS7ProtocolSupport"></a>
 
 **New in MonoTouch 7.0**
 
@@ -641,7 +641,7 @@ class MyDelegate : NSObject, IUITableViewDelegate {
 It does not matter if the interface is implemented
 implicitly or explicitly.
 
-<a name="Binding_Class_Extensions" />
+<a name="Binding_Class_Extensions"></a>
 
 ### Binding class extensions
 
@@ -662,7 +662,7 @@ interface NSStringDrawingExtensions {
 }
 ```
 
-<a name="Binding_Objective-C_Argument_Lists" />
+<a name="Binding_Objective-C_Argument_Lists"></a>
 
 ### Binding Objective-C argument lists
 
@@ -703,7 +703,7 @@ public void AppendWorkers(params Worker[] workers)
 }
 ```
 
-<a name="Binding_Fields" />
+<a name="Binding_Fields"></a>
 
 ### Binding fields
 
@@ -774,7 +774,7 @@ interface LonelyClass {
 }
 ```
 
-<a name="Binding_Enums" />
+<a name="Binding_Enums"></a>
 
 ### Binding enums
 
@@ -887,7 +887,7 @@ CAScroll [] SupportedScrollModes { get; set; }
 Please see the [`[BindAs]`](~/cross-platform/macios/binding/binding-types-reference.md#BindAsAttribute) 
 documentation to see supported conversion types.
 
-<a name="Binding_Notifications" />
+<a name="Binding_Notifications"></a>
 
 ### Binding notifications
 
@@ -1005,7 +1005,7 @@ var token = MyClass.NotificationsObserveScreenChanged ((notification) => {
 });
 ```
 
-<a name="Binding_Categories" />
+<a name="Binding_Categories"></a>
 
 ### Binding categories
 
@@ -1104,7 +1104,7 @@ interface SocialNetworking {
 }
 ```
 
-<a name="Binding_Blocks" />
+<a name="Binding_Blocks"></a>
 
 ### Binding blocks
 
@@ -1159,7 +1159,7 @@ s.Enumerate ((obj, stop) => {
 });
 ```
 
-<a name="GeneratingAsync" />
+<a name="GeneratingAsync"></a>
 
 ### Asynchronous methods
 
@@ -1195,7 +1195,7 @@ The above code will generate both the LoadFile method, as
 Task<string> LoadFileAsync (string file);
 ```
 
-<a name="Surfacing_Strong_Types" />
+<a name="Surfacing_Strong_Types"></a>
 
 ### Surfacing strong types for weak NSDictionary parameters
 
@@ -1355,13 +1355,13 @@ you can decorate the property with an
 [`[Export]`](~/cross-platform/macios/binding/binding-types-reference.md#ExportAttribute) 
 attribute with the name that you want to use.
 
-<a name="Type_mappings" />
+<a name="Type_mappings"></a>
 
 ## Type mappings
 
 This section covers how Objective-C types are mapped to C# types.
 
-<a name="Simple_Types" />
+<a name="Simple_Types"></a>
 
 ### Simple types
 
@@ -1394,7 +1394,7 @@ Objective-C and CocoaTouch world to the Xamarin.iOS world:
 |`CFIndex`|`nint`|
 |`NSGlyph`|`nuint`|
 
-<a name="Arrays" />
+<a name="Arrays"></a>
 
 ### Arrays
 
@@ -1428,7 +1428,7 @@ the actual type of the objects contained in the array.
 In cases where you can not track down the actual most derived type contained
 in the array, you can use `NSObject []` as the return value.
 
-<a name="Selectors" />
+<a name="Selectors"></a>
 
 ### Selectors
 
@@ -1509,7 +1509,7 @@ class DialogPrint : UIViewController {
 }
 ```
 
-<a name="Strings" />
+<a name="Strings"></a>
 
 ### Strings
 
@@ -1527,7 +1527,7 @@ annotate the parameter with the
 [`[PlainString]`](~/cross-platform/macios/binding/binding-types-reference.md#plainstring)
 attribute.
 
-<a name="outref_parameters" />
+<a name="outref_parameters"></a>
 
 ### out/ref parameters
 
@@ -1555,7 +1555,7 @@ void Something (nint foo, out NSError error);
 void SomeString (ref NSObject byref);
 ```
 
-<a name="Memory_management_attributes" />
+<a name="Memory_management_attributes"></a>
 
 ### Memory management attributes
 
@@ -1575,11 +1575,11 @@ semantics available are:
 -  Copy
 -  Retain
 
-<a name="Style_Guidelines" />
+<a name="Style_Guidelines"></a>
 
 ### Style guidelines
 
-<a name="Using_[Internal]" />
+<a name="Using_[Internal]"></a>
 
 #### Using [Internal]
 
@@ -1595,7 +1595,7 @@ generator, for example some advanced scenarios might expose types that
 are not bound and you want to bind in your own way, and you want to
 wrap those types yourself in your own way.
 
-<a name="Event_Handlers_and_Callbacks" />
+<a name="Event_Handlers_and_Callbacks"></a>
 
 ## Event handlers and callbacks
 
@@ -1732,7 +1732,7 @@ will hardcode a return value, while
 [`[DefaultValueFromArgument]`](~/cross-platform/macios/binding/binding-types-reference.md#DefaultValueFromArgumentAttribute)
 is used to specify which input argument will be returned.
 
-<a name="Enumerations_and_Base_Types" />
+<a name="Enumerations_and_Base_Types"></a>
 
 ## Enumerations and base types
 
@@ -1742,7 +1742,7 @@ this, put your enumerations and core types into a separate file and
 include this as part of one of the extra files that you provide to
 btouch.
 
-<a name="Linking_the_Dependencies" />
+<a name="Linking_the_Dependencies"></a>
 
 ## Linking the dependencies
 
@@ -1785,7 +1785,7 @@ does not preserve the metadata required to support categories (the
 linker/compiler dead code elimination strips it) which you need at
 runtime for Xamarin.iOS.
 
-<a name="Assisted_References" />
+<a name="Assisted_References"></a>
 
 ## Assisted references
 
@@ -1842,7 +1842,7 @@ class Demo {
 }
 ```
 
-<a name="Inheriting_Protocols" />
+<a name="Inheriting_Protocols"></a>
 
 ## Inheriting protocols
 
