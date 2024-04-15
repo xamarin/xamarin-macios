@@ -26,13 +26,13 @@ Syntax:
 
 ```csharp
 [BaseType (typeof (BTYPE))
-interface MyType [: Protocol1, Protocol2] {
+interface MyType : [Protocol1, Protocol2] {
      IntPtr Constructor (string foo);
 }
 ```
 
 Every interface in your contract definition that has the 
-[`[BaseType]`](#BaseTypeAttribute) attribute that declares the base type for 
+[`[BaseType]`](#BaseTypeAttribute) attribute declares the base type for 
 the generated object. In the above declaration a `MyType` class C# type will 
 be generated that binds to an Objective-C type called `MyType`.
 

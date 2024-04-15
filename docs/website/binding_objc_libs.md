@@ -626,7 +626,7 @@ class MyDelegate : NSObject, IUITableViewDelegate {
 }
 ```
 
-The implementation for the interface methods automatically gets
+The implementation for the required interface methods gets
 exported with the proper name, so it is equivalent to this:
 
 ```csharp
