@@ -100,7 +100,7 @@ An error occurred while parsing the command line arguments. Please verify that t
 
 <a name="MT0011"></a>
 
-### MT0011: * was built against a more recent runtime (*) than MonoTouch supports.
+### MT0011: \* was built against a more recent runtime (\*) than MonoTouch supports.
 
 This warning is typically reported because the project has a reference to a class library that was not built using the Xamarin.iOS BCL.
 
@@ -122,7 +122,7 @@ SGen (--sgen) must be enabled if profiling (--profiling) is enabled.
 
 <a name="MT0014"></a>
 
-### MT0014: The iOS * SDK does not support building applications targeting *.
+### MT0014: The iOS \* SDK does not support building applications targeting \*.
 
 This can happen in the following circumstances:
 
@@ -213,7 +213,7 @@ The executable assembly's name and the application's name can't match the name o
 
 <a name="MT0026"></a>
 
-### MT0026: Could not parse the command line argument '*': *
+### MT0026: Could not parse the command line argument '\*': \*
 
 <a name="MT0027"></a>
 
@@ -259,7 +259,7 @@ To fix this either change 'Application Name' in the project's Build/iOS Applicat
 
 <a name="MT0036"></a>
 
-### MT0036: Cannot launch a * simulator for a * app. Please enable the correct architecture(s) in your project's iOS Build options (Advanced page).
+### MT0036: Cannot launch a \* simulator for a \* app. Please enable the correct architecture(s) in your project's iOS Build options (Advanced page).
 
 <a name="MT0037"></a>
 
@@ -311,7 +311,7 @@ Install a newer Xcode version.
 
 <a name="MT0049"></a>
 
-### MT0049: *.framework is supported only if deployment target is 8.0 or later. * features might not work correctly.
+### MT0049: \*.framework is supported only if deployment target is 8.0 or later. \* features might not work correctly.
 
 The specified framework is not supported in the iOS version the deployment target refers to. Either update the deployment target to a newer iOS version, or remove usage of the specified framework from the app.
 
@@ -319,7 +319,7 @@ The specified framework is not supported in the iOS version the deployment targe
 
 <a name="MT0051"></a>
 
-### MT0051: Xamarin.iOS * requires Xcode 5.0 or later. The current Xcode version (found in *) is *.
+### MT0051: Xamarin.iOS \* requires Xcode 5.0 or later. The current Xcode version (found in \*) is \*.
 
 Install a newer Xcode.
 
@@ -333,7 +333,7 @@ No action was specified for mtouch.
 
 <a name="MT0054"></a>
 
-### MT0054: Unable to canonicalize the path '*': *
+### MT0054: Unable to canonicalize the path '\*': \*
 
 This is an internal error. If you see this error, please file a new issue on [github](https://github.com/xamarin/xamarin-macios/issues/new).
 
@@ -345,7 +345,7 @@ The Xcode path passed using `--sdkroot` does not exist. Please specify a valid p
 
 <a name="MT0056"></a>
 
-### MT0056: Cannot find Xcode in the default location (/Applications/Xcode.app). Please install Xcode, or pass a custom path using --sdkroot <path>.
+### MT0056: Cannot find Xcode in the default location (/Applications/Xcode.app). Please install Xcode, or pass a custom path using --sdkroot \<path>.
 
 <a name="MT0057"></a>
 
@@ -395,7 +395,7 @@ Xamarin.iOS only supports embedded frameworks when using the Unified API; please
 
 <a name="MT0065"></a>
 
-### MT0065: Xamarin.iOS only supports embedded frameworks when deployment target is at least 8.0 (current deployment target: * embedded frameworks: *)
+### MT0065: Xamarin.iOS only supports embedded frameworks when deployment target is at least 8.0 (current deployment target: \* embedded frameworks: \*)
 
 Xamarin.iOS only supports embedded frameworks when the deployment target is at least 8.0 (because earlier versions of iOS does not support embedded frameworks).
 
@@ -443,7 +443,7 @@ This usually indicates a bug in Xamarin.iOS; please file a new issue on [github]
 
 <a name="MT0073"></a>
 
-### MT0073: Xamarin.iOS * does not support a deployment target of * (the minimum is *). Please select a newer deployment target in your project's Info.plist.
+### MT0073: Xamarin.iOS \* does not support a deployment target of \* (the minimum is \*). Please select a newer deployment target in your project's Info.plist.
 
 The minimum deployment target is the one specified in the error message; please select a newer deployment target in the project's Info.plist.
 
@@ -451,7 +451,7 @@ If updating the deployment target is not possible, then please use an older vers
 
 <a name="MT0074"></a>
 
-### MT0074: Xamarin.iOS * does not support a minimum deployment target of * (the maximum is *). Please select an older deployment target in your project's Info.plist or upgrade to a newer version of Xamarin.iOS.
+### MT0074: Xamarin.iOS \* does not support a minimum deployment target of \* (the maximum is \*). Please select an older deployment target in your project's Info.plist or upgrade to a newer version of Xamarin.iOS.
 
 Xamarin.iOS does not support setting the minimum deployment target to a higher version than the version this particular version of Xamarin.iOS was built for.
 
@@ -459,7 +459,7 @@ Please select an older minimum deployment target in the project's Info.plist, or
 
 <a name="MT0075"></a>
 
-### MT0075: Invalid architecture '*' for * projects. Valid architectures are: *
+### MT0075: Invalid architecture '\*' for \* projects. Valid architectures are: \*
 
 An invalid architecture was specified. Please verify that architecture is valid.
 
@@ -485,7 +485,7 @@ Incremental builds are only supported when the deployment target is at least 8.0
 
 <a name="MT0079"></a>
 
-### MT0079: The recommended Xcode version for Xamarin.iOS * is Xcode * or later. The current Xcode version (found in *) is *.
+### MT0079: The recommended Xcode version for Xamarin.iOS \* is Xcode \* or later. The current Xcode version (found in \*) is \*.
 
 This is a warning informing that the current version of Xcode is not the recommended version of Xcode for this version of Xamarin.iOS.
 
@@ -539,7 +539,7 @@ This indicates a bug in Xamarin.iOS. Please file a new issue on [github](https:/
 
 <a name="MT0091"></a>
 
-### MT0091: This version of Xamarin.iOS requires the * SDK (shipped with Xcode *). Either upgrade Xcode to get the required header files or set the managed linker behaviour to Link Framework SDKs Only (to try to avoid the new APIs).
+### MT0091: This version of Xamarin.iOS requires the \* SDK (shipped with Xcode \*). Either upgrade Xcode to get the required header files or set the managed linker behaviour to Link Framework SDKs Only (to try to avoid the new APIs).
 
 Xamarin.iOS requires the header files, from the SDK version specified in the error message, to build your application. The recommended way to fix this error is to upgrade Xcode to get the required SDK, this will include all the required header files. If you have multiple versions of Xcode installed, or want to use an Xcode in a non-default location, make sure to set the correct Xcode location in your IDE's preferences.
 
@@ -805,7 +805,7 @@ earlier iOS version.
 
 <a name="MT0123"></a>
 
-### MT0123: The executable assembly * does not reference *.
+### MT0123: The executable assembly \* does not reference \*.
 
 No reference could be found to the platform assembly (Xamarin.iOS.dll / Xamarin.TVOS.dll / Xamarin.WatchOS.dll) in the executable assembly.
 
@@ -862,7 +862,7 @@ For further information see bug #[52727](https://bugzilla.xamarin.com/show_bug.c
 
 <a name="MT0128"></a>
 
-### MT0128: Could not touch the file '*': *
+### MT0128: Could not touch the file '\*': \*
 
 A failure occurred when touching a file (which is done to ensure partial builds are done correctly).
 
@@ -1068,7 +1068,7 @@ with your full version information and build log output.
 
 <a name="MT1010"></a>
 
-### MT1010: Could not load the assembly '*': *
+### MT1010: Could not load the assembly '\*': \*
 
 <a name="MT1011"></a>
 
@@ -1076,7 +1076,7 @@ with your full version information and build log output.
 
 <a name="MT1012"></a>
 
-### MT1012: Failed to list the apps on the device '*': *
+### MT1012: Failed to list the apps on the device '\*': \*
 
 <a name="MT1013"></a>
 
@@ -1090,11 +1090,11 @@ This indicates a bug in Xamarin.iOS. Please file a new issue on [github](https:/
 
 <a name="MT1015"></a>
 
-### MT1015: Failed to create the executable '*': *
+### MT1015: Failed to create the executable '\*': \*
 
 <a name="MT1015"></a>
 
-### MT1015: Failed to create the executable '*': *
+### MT1015: Failed to create the executable '\*': \*
 
 <a name="MT1016"></a>
 
@@ -1149,7 +1149,7 @@ A directory could not be copied. The error message from the copy operation has m
 
 <a name="MT1023"></a>
 
-### MT1023: Could not communicate with the device to find the application '*' : *
+### MT1023: Could not communicate with the device to find the application '\*' : \*
 
 An error occurred when trying to lookup an application on device.
 
@@ -1184,7 +1184,7 @@ Things to try to solve this:
 
 <a name="MT1026"></a>
 
-### MT1026: Could not download the crash report * from the device *.
+### MT1026: Could not download the crash report \* from the device \*.
 
 An error occurred when trying to download the crash reports from the device.
 
@@ -1373,7 +1373,7 @@ If you're deploying an enterprise app or using a free provisioning profile, you 
 
 <a name="MT1212"></a>
 
-### MT1212: Failed to create a simulator version where type = * and runtime = *.
+### MT1212: Failed to create a simulator version where type = \* and runtime = \*.
 
 <a name="MT1213"></a>
 
@@ -1447,7 +1447,7 @@ Please review the bulid log for more information about this failure from the nat
 
 <a name="MT1304"></a>
 
-### MT1304: The embedded framework '*' in * is invalid: it does not contain an Info.plist.
+### MT1304: The embedded framework '\*' in \* is invalid: it does not contain an Info.plist.
 
 The specified embedded framework does not contain an Info.plist, and is therefore not a valid framework.
 
@@ -1497,7 +1497,7 @@ Things to try to solve this:
 
 <a name="MT1402"></a>
 
-### MT1402: Could not read file info for *: AFCFileInfoOpen returned *
+### MT1402: Could not read file info for \*: AFCFileInfoOpen returned \*
 
 An error occurred when trying to access crash reports from the device.
 
@@ -1511,7 +1511,7 @@ Things to try to solve this:
 
 <a name="MT1403"></a>
 
-### MT1403: Could not read crash report: AFCDirectoryOpen (*) returned: *
+### MT1403: Could not read crash report: AFCDirectoryOpen (\*) returned: \*
 
 An error occurred when trying to access crash reports from the device.
 
@@ -1525,7 +1525,7 @@ Things to try to solve this:
 
 <a name="MT1404"></a>
 
-### MT1404: Could not read crash report: AFCFileRefOpen (*) returned: *
+### MT1404: Could not read crash report: AFCFileRefOpen (\*) returned: \*
 
 An error occurred when trying to access crash reports from the device.
 
@@ -1539,7 +1539,7 @@ Things to try to solve this:
 
 <a name="MT1405"></a>
 
-### MT1405: Could not read crash report: AFCFileRefRead (*) returned: *
+### MT1405: Could not read crash report: AFCFileRefRead (\*) returned: \*
 
 An error occurred when trying to access crash reports from the device.
 
@@ -1553,7 +1553,7 @@ Things to try to solve this:
 
 <a name="MT1406"></a>
 
-### MT1406: Could not list crash reports: AFCDirectoryOpen (*) returned: *
+### MT1406: Could not list crash reports: AFCDirectoryOpen (\*) returned: \*
 
 An error occurred when trying to access crash reports from the device.
 
@@ -1637,7 +1637,7 @@ The format of a library can be verified using the `file` command from a terminal
 
 <a name="MT1603"></a>
 
-### MT1603: Unknown format for fat entry at position * in *.
+### MT1603: Unknown format for fat entry at position \* in \*.
 
 An error occurred while processing the fat archive in question.
 
@@ -1649,7 +1649,7 @@ The format of a fat archive can be verified using the `file` command from a term
 
 <a name="MT1604"></a>
 
-### MT1604: File of type * is not a MachO file (*).
+### MT1604: File of type \* is not a MachO file (\*).
 
 An error occurred while processing the MachO file in question.
 
@@ -2205,11 +2205,11 @@ This is always a bug in Xamarin.iOS; please file a new issue on [github](https:/
 
 <a name="MT4116"></a>
 
-### MT4116: Could not register the assembly '*': *
+### MT4116: Could not register the assembly '\*': \*
 
 <a name="MT4117"></a>
 
-### MT4117: The registrar found a signature mismatch in the method '*.*' - the selector indicates the method takes * parameters, while the managed method has * parameters.
+### MT4117: The registrar found a signature mismatch in the method '\*.\*' - the selector indicates the method takes \* parameters, while the managed method has \* parameters.
 
 <a name="MT4118"></a>
 
@@ -2239,7 +2239,7 @@ This error indicates a bug in Xamarin.iOS. Please file a new issue on [github](h
 
 <a name="MT4124"></a>
 
-### MT4124: Invalid * found on '*'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
+### MT4124: Invalid \* found on '\*'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
 
 This error indicates a bug in Xamarin.iOS. Please file a new issue on [github](https://github.com/xamarin/xamarin-macios/issues/new).
 
@@ -2281,7 +2281,7 @@ This error indicates a bug in Xamarin.iOS. Please file a new issue on [github](h
 
 <a name="MT4134"></a>
 
-### MT4134: Your application is using the '*' framework, which isn't included in the iOS SDK you're using to build your app (this framework was introduced in iOS *, while you're building with the iOS * SDK.) Please select a newer SDK in your app's iOS Build options.
+### MT4134: Your application is using the '\*' framework, which isn't included in the iOS SDK you're using to build your app (this framework was introduced in iOS \*, while you're building with the iOS \* SDK.) Please select a newer SDK in your app's iOS Build options.
 
 <a name="MT4135"></a>
 
@@ -2303,7 +2303,7 @@ This error indicates a bug in Xamarin.iOS. Please file a new issue on [github](h
 
 <a name="MT4140"></a>
 
-### MT4140: The registrar found a signature mismatch in the method '*.*' - the selector indicates the variadic method takes * parameters, while the managed method has * parameters.
+### MT4140: The registrar found a signature mismatch in the method '\*.\*' - the selector indicates the variadic method takes \* parameters, while the managed method has \* parameters.
 
 <a name="MT4141"></a>
 
@@ -2419,7 +2419,7 @@ Please verify that the `Register` attribute on the managed class mentioned in th
 
 <a name="MT4158"></a>
 
-### MT4158: Cannot register the constructor * in the category * because constructors in categories are not supported.
+### MT4158: Cannot register the constructor \* in the category \* because constructors in categories are not supported.
 
 <a name="MT4159"></a>
 
@@ -3503,7 +3503,7 @@ Where * can be:
 
 <a name="MT8004"></a>
 
-### MT8004: Cannot create an instance of * for the native object 0x* (of type '*'), because another instance already exists for this native object (of type *).
+### MT8004: Cannot create an instance of \* for the native object 0x* (of type '\*'), because another instance already exists for this native object (of type \*).
 
 <a name="MT8005"></a>
 
@@ -3519,7 +3519,7 @@ Where * can be:
 
 <a name="MT8008"></a>
 
-### MT8008: The loaded version of Xamarin.iOS.dll was compiled for * bits, while the process is * bits. Please file a bug at https://github.com/xamarin/xamarin-macios/issues/new
+### MT8008: The loaded version of Xamarin.iOS.dll was compiled for \* bits, while the process is \* bits. Please file a bug at https://github.com/xamarin/xamarin-macios/issues/new
 
 This indicates something is wrong in the build process. Please file a new issue on [github](https://github.com/xamarin/xamarin-macios/issues/new).
 
@@ -3599,7 +3599,7 @@ This indicates a bug in Xamarin.iOS. Please file a new issue on [github](https:/
 
 <a name="MT8020"></a>
 
-### MT8020: Could not find the module with MetadataToken * in the assembly *.
+### MT8020: Could not find the module with MetadataToken \* in the assembly \*.
 
 This indicates a bug in Xamarin.iOS. Please file a new issue on [github](https://github.com/xamarin/xamarin-macios/issues/new).
 
@@ -3611,13 +3611,13 @@ This indicates a bug in Xamarin.iOS. Please file a new issue on [github](https:/
 
 <a name="MT8022"></a>
 
-### MT8022: Expected the token reference * to be a *, but it's a *. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
+### MT8022: Expected the token reference \* to be a \*, but it's a \*.
 
 This indicates a bug in Xamarin.iOS. Please file a new issue on [github](https://github.com/xamarin/xamarin-macios/issues/new).
 
 <a name="MT8023"></a>
 
-### MT8023: An instance object is required to construct a closed generic method for the open generic method: * (token reference: *). Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
+### MT8023: An instance object is required to construct a closed generic method for the open generic method: \* (token reference: \*)..
 
 This indicates a bug in Xamarin.iOS. Please file a new issue on [github](https://github.com/xamarin/xamarin-macios/issues/new).
 
