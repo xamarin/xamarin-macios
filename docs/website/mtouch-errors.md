@@ -431,7 +431,7 @@ An invalid target framework was passed using the --target-framework argument. Pl
 
 <a name="MT0071"></a>
 
-### MT0071: Unknown platform: *. This usually indicates a bug in Xamarin.iOS; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.
+### MT0071: Unknown platform: *. This usually indicates a bug in Xamarin.iOS.
 
 This usually indicates a bug in Xamarin.iOS; please file a new issue on [github](https://github.com/xamarin/xamarin-macios/issues/new) with a test case.
 
@@ -570,7 +570,7 @@ A last-straw solution would be to use an older version of Xamarin.iOS, one that 
 
 <a name="MT0099"></a>
 
-### MT0099: Internal error *. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
+### MT0099: Internal error *.
 
 This error message is reported when an internal consistency check in Xamarin.iOS fails.
 
@@ -578,7 +578,7 @@ This usually indicates a bug in Xamarin.iOS; please file a new issue on [github]
 
 <a name="MT0100"></a>
 
-### MT0100: Invalid assembly build target: '*'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
+### MT0100: Invalid assembly build target: '*'.
 
 This error message is reported when an internal consistency check in Xamarin.iOS fails.
 
@@ -1080,7 +1080,7 @@ with your full version information and build log output.
 
 <a name="MT1013"></a>
 
-### MT1013: Dependency tracking error: no files to compare. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.
+### MT1013: Dependency tracking error: no files to compare.
 
 This indicates a bug in Xamarin.iOS. Please file a new issue on [github](https://github.com/xamarin/xamarin-macios/issues/new) with a test case.
 
@@ -2107,7 +2107,7 @@ An error occurred when generating `main.m`. Please file a new issue on [github](
 
 <a name="MT4002"></a>
 
-### MT4002: Failed to compile the generated code for P/Invoke methods. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
+### MT4002: Failed to compile the generated code for P/Invoke methods.
 
 Failed to compile the generated code for P/Invoke methods. Please file a new issue on [github](https://github.com/xamarin/xamarin-macios/issues/new).
 
@@ -2177,7 +2177,7 @@ If you believe Xamarin.iOS should support the type in question, please file an e
 
 <a name="MT4109"></a>
 
-### MT4109: Failed to compile the generated registrar code. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
+### MT4109: Failed to compile the generated registrar code.
 
 Failed to compile the generated code for the registrar. The build log will contain the output from the native compiler, explaining why the code isn't compiling.
 
@@ -2201,7 +2201,7 @@ This is always a bug in Xamarin.iOS; please file a new issue on [github](https:/
 
 <a name="MT4114"></a>
 
-### MT4114: Unexpected error in the registrar for the method '\*.\*' - Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
+### MT4114: Unexpected error in the registrar for the method '\*.\*' -
 
 <a name="MT4116"></a>
 
@@ -2221,7 +2221,7 @@ This is always a bug in Xamarin.iOS; please file a new issue on [github](https:/
 
 <a name="MT4120"></a>
 
-### MT4120: The registrar found an unknown field type '\*' in field '\*.*'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
+### MT4120: The registrar found an unknown field type '\*' in field '\*.*'.
 
 This error indicates a bug in Xamarin.iOS. Please file a new issue on [github](https://github.com/xamarin/xamarin-macios/issues/new).
 
@@ -2239,7 +2239,7 @@ This error indicates a bug in Xamarin.iOS. Please file a new issue on [github](h
 
 <a name="MT4124"></a>
 
-### MT4124: Invalid \* found on '\*'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
+### MT4124: Invalid \* found on '\*'.
 
 This error indicates a bug in Xamarin.iOS. Please file a new issue on [github](https://github.com/xamarin/xamarin-macios/issues/new).
 
@@ -2357,7 +2357,7 @@ In this case Xamarin.iOS will override `retain`, `release` and `dealloc` on the 
 
 <a name="MT4144"></a>
 
-### MT4144: Cannot register the method '*' since it does not have an associated trampoline. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
+### MT4144: Cannot register the method '*' since it does not have an associated trampoline..
 
 This indicates a bug in Xamarin.iOS. Please file a new issue on [github](https://github.com/xamarin/xamarin-macios/issues/new).
 
@@ -2451,7 +2451,7 @@ As a last-straw solution, use an older version of Xamarin.iOS that does not requ
 
 <a name="MT4163"></a>
 
-### MT4163: Internal error in the registrar (*). Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
+### MT4163: Internal error in the registrar (*).
 
 This error indicates a bug in Xamarin.iOS. Please file a new issue on [github](https://github.com/xamarin/xamarin-macios/issues/new).
 
@@ -2649,11 +2649,11 @@ third-party binding, please contact the vendor.
 
 <a name="MT5102"></a>
 
-### MT5102: Failed to assemble the file '*'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
+### MT5102: Failed to assemble the file '*'.
 
 <a name="MT5103"></a>
 
-### MT5103: Failed to compile the file '*'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
+### MT5103: Failed to compile the file '*'.
 
 <a name="MT5104"></a>
 
@@ -2663,7 +2663,7 @@ third-party binding, please contact the vendor.
 
 <a name="MT5106"></a>
 
-### MT5106: Could not compile the file(s) '*'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
+### MT5106: Could not compile the file(s) '*'.
 
 This usually indicates a bug in Xamarin.iOS; please file a new issue on [github](https://github.com/xamarin/xamarin-macios/issues/new).
 
@@ -2862,7 +2862,7 @@ This is a warning, indicating that a P/Invoke was detected to reference the libr
 
 <a name="MT5216"></a>
 
-### MT5216: Native linking failed for *. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
+### MT5216: Native linking failed for *.
 
 This error is reported when linking the output from the AOT compiler fails.
 
@@ -3519,13 +3519,13 @@ Where * can be:
 
 <a name="MT8008"></a>
 
-### MT8008: The loaded version of Xamarin.iOS.dll was compiled for \* bits, while the process is \* bits. Please file a bug at https://github.com/xamarin/xamarin-macios/issues/new
+### MT8008: The loaded version of Xamarin.iOS.dll was compiled for \* bits, while the process is \* bits.
 
 This indicates something is wrong in the build process. Please file a new issue on [github](https://github.com/xamarin/xamarin-macios/issues/new).
 
 <a name="MT8009"></a>
 
-### MT8009: Unable to locate the block to delegate conversion method for the method *.*'s parameter #*. Please file a bug at https://github.com/xamarin/xamarin-macios/issues/new
+### MT8009: Unable to locate the block to delegate conversion method for the method *.*'s parameter #*.
 
 This indicates an API wasn't bound correctly. If this is an API exposed by Xamarin, please file a new issue on [github](https://github.com/xamarin/xamarin-macios/issues/new)., if it's a third-party binding, please contact the vendor.
 
@@ -3537,7 +3537,7 @@ This indicates something is wrong in the build process. Please file a new issue 
 
 <a name="MT8011"></a>
 
-### MT8011: Unable to locate the delegate to block conversion attribute ([DelegateProxy]) for the return value for the method *.*. Please file a bug at https://github.com/xamarin/xamarin-macios/issues/newn
+### MT8011: Unable to locate the delegate to block conversion attribute ([DelegateProxy]) for the return value for the method *.*.
 
 Xamarin.iOS was unable to locate a required method at runtime (to convert a delegate to a block).
 
@@ -3545,7 +3545,7 @@ This usually indicates a bug in Xamarin.iOS. Please file a new issue on [github]
 
 <a name="MT8012"></a>
 
-### MT8012: Invalid DelegateProxyAttribute for the return value for the method *.*: DelegateType is null. Please file a bug at https://github.com/xamarin/xamarin-macios/issues/new
+### MT8012: Invalid DelegateProxyAttribute for the return value for the method *.*: DelegateType is null.
 
 The DelegateProxy attribute for the method in question is invalid.
 
@@ -3553,7 +3553,7 @@ This usually indicates a bug in Xamarin.iOS. Please file a new issue on [github]
 
 <a name="MT8013"></a>
 
-### MT8013: Invalid DelegateProxyAttribute for the return value for the method *.*: DelegateType ({2}) specifies a type without a 'Handler' field. Please file a bug at https://github.com/xamarin/xamarin-macios/issues/new
+### MT8013: Invalid DelegateProxyAttribute for the return value for the method *.*: DelegateType ({2}) specifies a type without a 'Handler' field.
 
 The `[DelegateProxy]` attribute for the method in question is invalid.
 
@@ -3561,7 +3561,7 @@ This usually indicates a bug in Xamarin.iOS. Please file a new issue on [github]
 
 <a name="MT8014"></a>
 
-### MT8014: Invalid DelegateProxyAttribute for the return value for the method *.*: The DelegateType's ({2}) 'Handler' field is null. Please file a bug at https://github.com/xamarin/xamarin-macios/issues/new
+### MT8014: Invalid DelegateProxyAttribute for the return value for the method *.*: The DelegateType's ({2}) 'Handler' field is null.
 
 The `[DelegateProxy]` attribute for the method in question is invalid.
 
@@ -3569,7 +3569,7 @@ This usually indicates a bug in Xamarin.iOS. Please file a new issue on [github]
 
 <a name="MT8015"></a>
 
-### MT8015: Invalid DelegateProxyAttribute for the return value for the method *.*: The DelegateType's ({2}) 'Handler' field is not a delegate, it's a *. Please file a bug at https://github.com/xamarin/xamarin-macios/issues/new
+### MT8015: Invalid DelegateProxyAttribute for the return value for the method *.*: The DelegateType's ({2}) 'Handler' field is not a delegate, it's a *.
 
 The DelegateProxy attribute for the method in question is invalid.
 
@@ -3577,7 +3577,7 @@ This usually indicates a bug in Xamarin.iOS. Please file a new issue on [github]
 
 <a name="MT8016"></a>
 
-### MT8016: Unable to convert delegate to block for the return value for the method *.*, because the input isn't a delegate, it's a *. Please file a bug at https://github.com/xamarin/xamarin-macios/issues/new
+### MT8016: Unable to convert delegate to block for the return value for the method *.*, because the input isn't a delegate, it's a *.
 
 The `[DelegateProxy]` attribute for the method in question is invalid.
 
@@ -3587,7 +3587,7 @@ This usually indicates a bug in Xamarin.iOS. Please file a new issue on [github]
 
 <a name="MT8018"></a>
 
-### MT8018: Internal consistency error. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
+### MT8018: Internal consistency error.
 
 This indicates a bug in Xamarin.iOS. Please file a new issue on [github](https://github.com/xamarin/xamarin-macios/issues/new).
 
@@ -3623,7 +3623,9 @@ This indicates a bug in Xamarin.iOS. Please file a new issue on [github](https:/
 
 <a name="MT8024"></a>
 
-### MT8024: Could not find a valid extension type for the smart enum '{smart_type}'. Please file a bug at https://github.com/xamarin/xamarin-macios/issues/new
+### MT8024: Could not find a valid extension type for the smart enum '{smart_type}'.
+
+This indicates a bug in Xamarin.iOS. Please file a new issue on [GitHub](https://github.com/xamarin/xamarin-macios/issues/new).
 
 It's possible to force the linker to keep the dynamic registrar by adding
 `--optimize=-remove-dynamic-registrar` to the additional mtouch arguments in
