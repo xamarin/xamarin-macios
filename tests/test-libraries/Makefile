@@ -47,22 +47,22 @@ MACCATALYST_BINARY_INFIX=/Versions/A
 
 define SymlinksTemplate
 
-$(1)_XTEST_TARGETS += \
-	.libs/$(1)/XTest.framework/XTest \
-	.libs/$(1)/XTest.framework/Resources \
-	.libs/$(1)/XTest.framework/Versions/Current \
-	.libs/$(1)/XTest.framework/Versions/A/Resources/Info.plist \
+$(1)_$(4)_TARGETS += \
+	.libs/$(1)/$(3).framework/$(3) \
+	.libs/$(1)/$(3).framework/Resources \
+	.libs/$(1)/$(3).framework/Versions/Current \
+	.libs/$(1)/$(3).framework/Versions/A/Resources/Info.plist \
 
-.libs/$(1)/XTest.framework$($(2)_BINARY_INFIX) .libs/$(1)/XTest.framework$($(2)_INFO_PLIST_INFIX):
+.libs/$(1)/$(3).framework$($(2)_BINARY_INFIX) .libs/$(1)/$(3).framework$($(2)_INFO_PLIST_INFIX):
 	$$(Q) mkdir -p $$@
 
-.libs/$(1)/XTest.framework/XTest: | .libs/$(1)/XTest.framework
-	$$(Q) ln -fs Versions/A/XTest $$@
+.libs/$(1)/$(3).framework/$(3): | .libs/$(1)/$(3).framework
+	$$(Q) ln -fs Versions/A/$(3) $$@
 
-.libs/$(1)/XTest.framework/Resources: | .libs/$(1)/XTest.framework
+.libs/$(1)/$(3).framework/Resources: | .libs/$(1)/$(3).framework
 	$$(Q) ln -fs Versions/Current/Resources $$@
 
-.libs/$(1)/XTest.framework/Versions/Current: | .libs/$(1)/XTest.framework/Versions
+.libs/$(1)/$(3).framework/Versions/Current: | .libs/$(1)/$(3).framework/Versions
 	$$(Q) ln -fs A $$@
 
 x::
@@ -70,10 +70,12 @@ x::
 
 endef
 ifdef INCLUDE_MAC
-$(eval $(call SymlinksTemplate,macos,MACOS))
+$(eval $(call SymlinksTemplate,macos,MACOS,XTest,XTEST))
+$(eval $(call SymlinksTemplate,macos,MACOS,SwiftTest,SWIFTTEST))
 endif
 ifdef INCLUDE_MACCATALYST
-$(eval $(call SymlinksTemplate,maccatalyst,MACCATALYST))
+$(eval $(call SymlinksTemplate,maccatalyst,MACCATALYST,XTest,XTEST))
+$(eval $(call SymlinksTemplate,maccatalyst,MACCATALYST,SwiftTest,SWIFTTEST))
 endif
 
 define Template
@@ -82,8 +84,13 @@ $(1)_XTEST_TARGETS += \
 	.libs/$(1)/XTest.framework$($(2)_BINARY_INFIX)/XTest \
 	.libs/$(1)/XTest.framework$($(2)_INFO_PLIST_INFIX)/Info.plist \
 
+$(1)_SWIFTTEST_TARGETS += \
+	.libs/$(1)/SwiftTest.framework$($(2)_BINARY_INFIX)/SwiftTest \
+	.libs/$(1)/SwiftTest.framework$($(2)_INFO_PLIST_INFIX)/Info.plist \
+
 $(2)_TARGETS = \
 	$$($(1)_XTEST_TARGETS) \
+	$$($(1)_SWIFTTEST_TARGETS) \
 	.libs/$(1)/XStaticObjectTest.framework/XStaticObjectTest \
 	.libs/$(1)/XStaticArTest.framework/XStaticArTest \
 	.libs/$(1)/libtest.dylib \
@@ -91,15 +98,22 @@ $(2)_TARGETS = \
 	.libs/$(1)/libtest.a \
 	.libs/$(1)/libtest-object.a \
 	.libs/$(1)/libtest-ar.a \
+	.libs/$(1)/libSwiftTest.a \
 	$$(foreach arch,$(3),.libs/$(1)/libtest.$$(arch).a) \
 	$$(foreach arch,$(3),.libs/$(1)/libtest-object.$$(arch).a) \
 	$$(foreach arch,$(3),.libs/$(1)/libtest-ar.$$(arch).a) \
+	$$(foreach arch,$(3),.libs/$(1)/libSwiftTest.$$(arch).a) \
 	.libs/$(1)/XTest.framework \
 	.libs/$(1)/XTest.framework.stamp \
+	.libs/$(1)/SwiftTest.framework \
+	.libs/$(1)/SwiftTest.framework.stamp \
 
 all-local:: $$($(2)_TARGETS) $(GENERATED_FILES)
 
 .libs/$(1)/XTest.framework.stamp: $$($(1)_XTEST_TARGETS)
+	$$(Q) touch $$@
+
+.libs/$(1)/SwiftTest.framework.stamp: $$($(1)_SWIFTTEST_TARGETS)
 	$$(Q) touch $$@
 
 clean-$(1):
@@ -112,6 +126,10 @@ EXTRA_DEPENDENCIES = libtest.h $(GENERATED_FILES) rename.h
 .libs/$(1)/libtest-ar.%.o: export EXTRA_DEFINES=-DPREFIX=2
 
 .libs/$(1)/libtest%.a: .libs/$(1)/libtest%.o libtest-object.m libtest-ar.m
+	$(Q) rm -f $$@
+	$$(call Q_2,AR     [$(1)]) $(XCODE_DEVELOPER_ROOT)/Toolchains/XcodeDefault.xctoolchain/usr/bin/ar cru $$@ $$<
+
+.libs/$(1)/libSwiftTest%.a: .libs/$(1)/libSwiftTest%.o
 	$(Q) rm -f $$@
 	$$(call Q_2,AR     [$(1)]) $(XCODE_DEVELOPER_ROOT)/Toolchains/XcodeDefault.xctoolchain/usr/bin/ar cru $$@ $$<
 
@@ -131,6 +149,10 @@ EXTRA_DEPENDENCIES = libtest.h $(GENERATED_FILES) rename.h
 	$(Q) rm -f $$@
 	$$(call Q_2,LIPO   [$(1)]) $(XCODE_DEVELOPER_ROOT)/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo $$^ -create -output $$@
 
+.libs/$(1)/libSwiftTest.a: $$(foreach arch,$(3),.libs/$(1)/libSwiftTest.$$(arch).a)
+	$(Q) rm -f $$@
+	$$(call Q_2,LIPO   [$(1)]) $(XCODE_DEVELOPER_ROOT)/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo $$^ -create -output $$@
+
 COMMON_DYLIB_ARGS=-g -dynamiclib -gdwarf-2 -fms-extensions libframework.m -o $$@ -Wall -framework Foundation -lz
 .libs/$(1)/libtest.x86.dylib: ARCH=i386
 .libs/$(1)/libtest.%.dylib: libframework.m | .libs/$(1)
@@ -146,6 +168,17 @@ COMMON_DYLIB_ARGS=-g -dynamiclib -gdwarf-2 -fms-extensions libframework.m -o $$@
 
 .libs/$(1)/libtest.dylib: $$(foreach arch,$(3),.libs/$(1)/libtest.$$(arch).dylib)
 	$$(call Q_2,LIPO   [$(1)]) $(XCODE_DEVELOPER_ROOT)/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo $$^ -create -output $$@
+
+.libs/$(1)/libSwiftTest.dylib: $$(foreach arch,$(3),.libs/$(1)/libSwiftTest.$$(arch).dylib)
+	$$(call Q_2,LIPO   [$(1)]) $(XCODE_DEVELOPER_ROOT)/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo $$^ -create -output $$@
+
+# SwiftTest is a framework where the binary code is a (fat) dynamic library
+.libs/$(1)/SwiftTest.framework$($(2)_BINARY_INFIX)/SwiftTest: .libs/$(1)/libSwiftTest.dylib | .libs/$(1)/SwiftTest.framework$($(2)_BINARY_INFIX)
+	$$(Q) $(CP) $$^ $$@
+	$$(Q) $(XCODE_DEVELOPER_ROOT)/Toolchains/XcodeDefault.xctoolchain/usr/bin/install_name_tool -id @rpath/SwiftTest.framework/SwiftTest $$@
+
+.libs/$(1)/SwiftTest.framework$($(2)_INFO_PLIST_INFIX)/Info.plist: SwiftTest-Info-$(1).plist | .libs/$(1)/SwiftTest.framework$($(2)_INFO_PLIST_INFIX)
+	$$(Q) $(CP) $$^ $$@
 
 # XTest is a framework where the binary code is a (fat) dynamic library
 .libs/$(1)/XTest.framework$($(2)_BINARY_INFIX)/XTest: .libs/$(1)/libtest.dylib | .libs/$(1)/XTest.framework$($(2)_BINARY_INFIX)
@@ -168,8 +201,10 @@ COMMON_DYLIB_ARGS=-g -dynamiclib -gdwarf-2 -fms-extensions libframework.m -o $$@
 $(1)_DIRECTORIES = \
 	.libs/$(1)/XTest.framework \
 	.libs/$(1)/XTest.framework/Versions \
+	.libs/$(1)/SwiftTest.framework/Versions \
 	.libs/$(1)/XStaticObjectTest.framework \
 	.libs/$(1)/XStaticArTest.framework \
+	.libs/$(1)/SwiftTest.framework \
 
 $$($(1)_DIRECTORIES):
 	$$(Q) mkdir -p $$@
@@ -405,6 +440,16 @@ LIBTEST2_XCFRAMEWORKS += $(foreach platform,$(XCPLATFORMS),.libs/$(platform)/lib
 
 all-local:: .libs/libtest2.xcframework
 
+SWIFTTEST_XCFRAMEWORKS += $(foreach platform,$(XCPLATFORMS),.libs/$(platform)/SwiftTest.framework)
+SWIFTTEST_XCTARGETS += \
+	$(foreach platform,$(XCPLATFORMS),.libs/$(platform)/SwiftTest.framework.stamp) \
+
+.libs/SwiftTest.xcframework: $(SWIFTTEST_XCTARGETS) Makefile
+	$(Q) rm -rf $@
+	$(Q_GEN) $(XCODE_DEVELOPER_ROOT)/usr/bin/xcodebuild -quiet -create-xcframework $(foreach fw,$(SWIFTTEST_XCFRAMEWORKS),-framework $(fw)) -output $@
+
+all-local:: .libs/SwiftTest.xcframework
+
 .libs/XTest.xcframework.zip: .libs/XTest.xcframework
 	$(Q_ZIP) cd .libs && $(ZIP) -r "$(notdir $@)" "$(notdir $<)"
 
@@ -428,6 +473,12 @@ MAC_LDFLAGS = -mmacosx-version-min=$(MIN_MACOS_SDK_VERSION) -framework AppKit
 
 .libs/macos/libtest2.%.o: libtest2.m $(EXTRA_DEPENDENCIES) | .libs/macos
 	$(call Q_2,OBJC,  [mac]) $(MAC_CLANG) -arch $* -c $(MAC_OBJC_CFLAGS) $(MAC_CFLAGS) -o $@ $<
+
+.libs/macos/%.x86_64.o: %.swift $(EXTRA_DEPENDENCIES) | .libs/macos
+	$$(call Q_2,SWIFT, [mac]) $(SWIFTC) $(MACOS_X64_SWIFTFLAGS) -c $< -o $@
+
+.libs/macos/%.arm64.o: %.swift $(EXTRA_DEPENDENCIES) | .libs/macos
+	$$(call Q_2,SWIFT, [mac]) $(SWIFTC) $(MACOS_ARM64_SWIFTFLAGS) -c $< -o $@
 
 .libs/macos:
 	$(Q) mkdir -p $@
