@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -105,6 +106,9 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		}
 
 		[Test]
+#if NET
+		[UnconditionalSuppressMessage ("Trimming", "IL2026", Justification = "This test verifies linker behavior, and as such any behavioral difference when the trimmer is enabled is exactly what it's looking for.")]
+#endif
 		public void RegistrarRemoval ()
 		{
 			// define set by xharness when creating test variations.
@@ -2249,6 +2253,10 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		// This test uses Assembly.LoadFrom, which isn't supported with NativeAOT
 #if __MACOS__ && !NATIVEAOT
 		[Test]
+#if NET
+		[UnconditionalSuppressMessage ("Trimming", "IL2026", Justification = "This test loads an assembly dynamically, so it's expected to not be trimmer safe. It works though, so unless something changes, we're going to assume it's trimmer-compatible.")]
+		[UnconditionalSuppressMessage ("Trimming", "IL2072", Justification = "This test loads an assembly dynamically, so it's expected to not be trimmer safe. It works though, so unless something changes, we're going to assume it's trimmer-compatible.")]
+#endif
 		public void CustomUserTypeWithDynamicallyLoadedAssembly ()
 		{
 			if (!global::Xamarin.Tests.Configuration.TryGetRootPath (out var rootPath))

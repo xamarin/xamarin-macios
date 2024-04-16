@@ -7937,6 +7937,12 @@ namespace AppKit {
 		[Export ("CGEvent")]
 		IntPtr CGEvent { get; }
 
+		/// <summary>The CGEvent object corresponding to this event.</summary>
+		/// <appledoc>https://developer.apple.com/documentation/appkit/nsevent/1530429-cgevent?language=objc</appledoc>
+		[return: NullAllowed]
+		[Wrap ("Runtime.GetINativeObject<CGEvent> (CGEvent, false)")]
+		CGEvent GetCGEventObject ();
+
 		[Static]
 		[Export ("eventWithCGEvent:")]
 		[Obsolete ("Use 'Create (CGEvent)' instead.")]

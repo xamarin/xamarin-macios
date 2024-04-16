@@ -195,6 +195,24 @@ namespace Xharness {
 			}
 		}
 
+		public static void AddTopLevelInclude (this XmlDocument csproj, string type, string link, string include, bool prepend = false)
+		{
+			var type_node = csproj.SelectSingleNode ($"//*[local-name() = '{type}']");
+			var item_group = type_node?.ParentNode ?? csproj.SelectSingleNode ($"/Project/*[local-name() = 'ItemGroup'][last()]")!;
+			var node = csproj.CreateElement (type, csproj.GetNamespace ());
+			var include_attribute = csproj.CreateAttribute ("Include");
+			include_attribute.Value = include;
+			node.Attributes.Append (include_attribute);
+			var linkElement = csproj.CreateElement ("Link", csproj.GetNamespace ());
+			linkElement.InnerText = link;
+			node.AppendChild (linkElement);
+			if (prepend) {
+				item_group.PrependChild (node);
+			} else {
+				item_group.AppendChild (node);
+			}
+		}
+
 		// This is an evolved version of https://github.com/dotnet/xharness/blob/b2297d610df1ae15fc7ba8bd8c9bc0a7192aaefa/src/Microsoft.DotNet.XHarness.iOS.Shared/Utilities/ProjectFileExtensions.cs#L1168
 		public static void ResolveAllPaths (this XmlDocument csproj, string project_path, Dictionary<string, string>? variableSubstitution = null)
 		{
