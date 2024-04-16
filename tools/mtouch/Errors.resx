@@ -371,7 +371,7 @@
 {1} - The name of the deployment target such as a device, simulator, etc.
 {2} - The minimum version number.
 {3} - The platform name, such as 'iOS'.
-{4} - The produce name such as .NET for iOS or .NET for macOS.
+{4} - The product name such as .NET for iOS or .NET for macOS.
 		</comment>
 	</data>
 
@@ -383,7 +383,7 @@
 {1} - The name of the deployment target such as a device, simulator, etc.
 {2} - The maximum version number.
 {3} - The platform name, such as 'iOS'.
-{4} - The produce name such as .NET for iOS or .NET for macOS.
+{4} - The product name such as .NET for iOS or .NET for macOS.
 		</comment>
 	</data>
 
