@@ -147,19 +147,19 @@ namespace Xharness {
 						var windows_file = full_path.Replace ('/', '\\');
 
 						if (file.Contains (".xcasset")) {
-							doc.AddInclude ("ImageAsset", file, windows_file, true);
+							doc.AddTopLevelInclude ("ImageAsset", file, windows_file, true);
 							continue;
 						}
 
 						switch (ext.ToLowerInvariant ()) {
 						case ".cs":
-							doc.AddInclude ("Compile", file, windows_file, true);
+							doc.AddTopLevelInclude ("Compile", file, windows_file, true);
 							break;
 						case ".plist":
-							doc.AddInclude ("None", file, windows_file, true);
+							doc.AddTopLevelInclude ("None", file, windows_file, true);
 							break;
 						case ".storyboard":
-							doc.AddInclude ("InterfaceDefinition", file, windows_file, true);
+							doc.AddTopLevelInclude ("InterfaceDefinition", file, windows_file, true);
 							break;
 						case ".gitignore":
 						case ".csproj":
