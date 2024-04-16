@@ -1502,6 +1502,15 @@ namespace GeneratorTests {
             Summary for T1
             </summary>
         </member>
+        <member name=""P:XmlDocumentation.T1.ClassHandle"">
+            <summary>The Objective-C class handle for this class.</summary>
+            <value>The pointer to the Objective-C class.</value>
+            <remarks>
+                Each managed class mirrors an unmanaged Objective-C class.
+                This value contains the pointer to the Objective-C class.
+                It is similar to calling the managed <see cref=""M:ObjCRuntime.Class.GetHandle(System.String)"" /> or the native <see href=""https://developer.apple.com/documentation/objectivec/1418952-objc_getclass"">objc_getClass</see> method with the type name.
+            </remarks>
+        </member>
         <member name=""M:XmlDocumentation.T1.Method"">
             <summary>
             Summary for T1.Method
@@ -1531,6 +1540,15 @@ namespace GeneratorTests {
             <summary>
             Summary for TG1
             </summary>
+        </member>
+        <member name=""P:XmlDocumentation.TG1`2.ClassHandle"">
+            <summary>The Objective-C class handle for this class.</summary>
+            <value>The pointer to the Objective-C class.</value>
+            <remarks>
+                Each managed class mirrors an unmanaged Objective-C class.
+                This value contains the pointer to the Objective-C class.
+                It is similar to calling the managed <see cref=""M:ObjCRuntime.Class.GetHandle(System.String)"" /> or the native <see href=""https://developer.apple.com/documentation/objectivec/1418952-objc_getclass"">objc_getClass</see> method with the type name.
+            </remarks>
         </member>
         <member name=""M:XmlDocumentation.TG1`2.TGMethod"">
             <summary>
