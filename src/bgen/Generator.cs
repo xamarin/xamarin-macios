@@ -4538,6 +4538,8 @@ public partial class Generator : IMemberGatherer {
 				if (shortName.StartsWith ("Func<", StringComparison.Ordinal))
 					continue;
 
+				WriteDocumentation (mi.DeclaringType);
+
 				var del = mi.DeclaringType;
 
 				if (AttributeManager.HasAttribute (mi.DeclaringType, "MonoNativeFunctionWrapper"))
@@ -5592,6 +5594,15 @@ public partial class Generator : IMemberGatherer {
 
 			if (!is_static_class && !is_partial) {
 				if (!is_model && !external) {
+					if (BindingTouch.SupportsXmlDocumentation) {
+						print ("/// <summary>The Objective-C class handle for this class.</summary>");
+						print ("/// <value>The pointer to the Objective-C class.</value>");
+						print ("/// <remarks>");
+						print ("///     Each managed class mirrors an unmanaged Objective-C class.");
+						print ("///     This value contains the pointer to the Objective-C class.");
+						print ("///     It is similar to calling the managed <see cref=\"ObjCRuntime.Class.GetHandle(string)\" /> or the native <see href=\"https://developer.apple.com/documentation/objectivec/1418952-objc_getclass\">objc_getClass</see> method with the type name.");
+						print ("/// </remarks>");
+					}
 					print ("public {1} {2} ClassHandle {{ get {{ return class_ptr; }} }}\n", objc_type_name, TypeName == "NSObject" ? "virtual" : "override", NativeHandleType);
 				}
 

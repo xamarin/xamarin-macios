@@ -25,10 +25,10 @@ namespace CoreGraphics {
 
 	// CGEventTypes.h:typedef uint32_t CGEventTapLocation;
 #if NET
-	[SupportedOSPlatform ("maccatalyst15.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 #else
-	[MacCatalyst (15,0)]
+	[MacCatalyst (13,1)]
 #endif
 	public enum CGEventTapLocation : int {
 		HID,
@@ -38,10 +38,10 @@ namespace CoreGraphics {
 
 	// CGEventTypes.h:typedef uint32_t CGEventTapPlacement;
 #if NET
-	[SupportedOSPlatform ("maccatalyst15.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 #else
-	[MacCatalyst (15,0)]
+	[MacCatalyst (13,1)]
 #endif
 	public enum CGEventTapPlacement : uint {
 		HeadInsert,
@@ -50,10 +50,10 @@ namespace CoreGraphics {
 
 	// CGEventTypes.h:typedef uint32_t CGEventTapOptions;
 #if NET
-	[SupportedOSPlatform ("maccatalyst15.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 #else
-	[MacCatalyst (15,0)]
+	[MacCatalyst (13,1)]
 #endif
 	public enum CGEventTapOptions : uint {
 		Default, 
@@ -62,10 +62,10 @@ namespace CoreGraphics {
 
 	// CGEventTypes.h:typedef uint32_t CGMouseButton;
 #if NET
-	[SupportedOSPlatform ("maccatalyst15.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 #else
-	[MacCatalyst (15,0)]
+	[MacCatalyst (13,1)]
 #endif
 	public enum CGMouseButton : uint {
 		Left, Right, Center
@@ -73,10 +73,10 @@ namespace CoreGraphics {
 
 	// CGEventTypes.h:typedef uint32_t CGScrollEventUnit;
 #if NET
-	[SupportedOSPlatform ("maccatalyst15.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 #else
-	[MacCatalyst (15,0)]
+	[MacCatalyst (13,1)]
 #endif
 	public enum CGScrollEventUnit : uint {
 		Pixel, Line
@@ -84,10 +84,10 @@ namespace CoreGraphics {
 
 	// CGEventTypes.h:typedef uint64_t CGEventMask;
 #if NET
-	[SupportedOSPlatform ("maccatalyst15.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 #else
-	[MacCatalyst (15,0)]
+	[MacCatalyst (13,1)]
 #endif
 	[Flags]
 	public enum CGEventMask : ulong {
@@ -112,10 +112,10 @@ namespace CoreGraphics {
 
 	// CGEventTypes.h:typedef uint64_t CGEventFlags;
 #if NET
-	[SupportedOSPlatform ("maccatalyst15.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 #else
-	[MacCatalyst (15,0)]
+	[MacCatalyst (13,1)]
 #endif
 	[Flags]
 	public enum CGEventFlags : ulong {
@@ -131,81 +131,259 @@ namespace CoreGraphics {
 	}
 
 	// CGEventTypes.h:typedef uint32_t CGEventField;
+	/// <summary>This enum represents constants used to access specialized fields in low-level events.</summary>
+	/// <remarks>Call <see cref="CGEvent.GetLongValueField" /> or <see cref="CGEvent.GetDoubleValueField" /> to fetch the field values, and <see cref="CGEvent.SetValueField(CGEventField,long)" /> or <see cref="CGEvent.SetValueField(CGEventField,double)" /> to set the field values represented by the constants in this enum.</remarks>
 #if NET
-	[SupportedOSPlatform ("maccatalyst15.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 #else
-	[MacCatalyst (15,0)]
+	[MacCatalyst (13,1)]
 #endif
-	internal enum CGEventField : int {
+	public enum CGEventField : int {
+		/// <summary>The mouse button event number.</summary>
+		/// <remarks>This is an integer field. Matching mouse-down and mouse-up events will have the same event number.</remarks>
 		MouseEventNumber = 0,
+
+		/// <summary>The mouse button click state.</summary>
+		/// <remarks>This is an integer field. A value of 1 is a single click, a value of 2 is a double click, and so on.</remarks>
 		MouseEventClickState = 1,
+
+		/// <summary>The mouse button pressure state, ranging from 0 (mouse being up) to 1.</summary>
+		/// <remarks>This is an integer field.</remarks>
 		MouseEventPressure = 2,
+
+		/// <summary>The mouse button number.</summary>
+		/// <remarks>This is an integer field.</remarks>
 		MouseEventButtonNumber = 3,
+
+		/// <summary>The horizontal delta since the last mouse movement event.</summary>
+		/// <remarks>This is an integer field.</remarks>
 		MouseEventDeltaX = 4,
+
+		/// <summary>The vertical delta since the last mouse movement event.</summary>
+		/// <remarks>This is an integer field.</remarks>
 		MouseEventDeltaY = 5,
+
+		/// <summary>A value indicating whether the event should be ignored by the Inkwell subsystem.</summary>
+		/// <remarks>This is an integer field. A non-zero indicates the event should be ignored.</remarks>
 		MouseEventInstantMouser = 6,
+
+		/// <summary>The mouse event subtype.</summary>
+		/// <remarks>This is an integer field.</remarks>
 		MouseEventSubtype = 7,
+
+		/// <summary>A value indicating whether the key-down event is an autorepeat of a previous key-down event.</summary>
+		/// <remarks>This is an integer field. Zero indicates not an autorepeat, non-zero not an autorepeat.</remarks>
 		KeyboardEventAutorepeat = 8,
+
+		/// <summary>The virtual keycode of the key-down or key-up event.</summary>
+		/// <remarks>This is an integer field.</remarks>
 		KeyboardEventKeycode = 9,
+
+		/// <summary>The keyboard ype identifier</summary>
+		/// <remarks>This is an integer field.</remarks>
 		KeyboardEventKeyboardType = 10,
+
+		/// <summary>A value that represents scrolling data. Typically this is the vertical position change since the last scrolling event.</summary>
+		/// <remarks>This is an integer field.</remarks>
 		ScrollWheelEventDeltaAxis1 = 11,
+
+		/// <summary>A value that represents scrolling data. Typically this is the horizontal position change since the last scrolling event.</summary>
+		/// <remarks>This is an integer field.</remarks>
 		ScrollWheelEventDeltaAxis2 = 12,
+
+		/// <summary>This value is unused.</summary>
 		ScrollWheelEventDeltaAxis3 = 13,
+
+		/// <summary>A value that represents scrolling data. Typically this is the line-based or pixel-based vertical position change since the last scrolling event.</summary>
+		/// <remarks>This field is a fixed-point 16.16 signed integer, but can also be retrieved as a double and will be automatically converted.</remarks>
 		ScrollWheelEventFixedPtDeltaAxis1 = 93,
+
+		/// <summary>A value that represents scrolling data. Typically this is the line-based or pixel-based horizontal position change since the last scrolling event.</summary>
+		/// <remarks>This field is a fixed-point 16.16 signed integer, but can also be retrieved as a double and will be automatically converted.</remarks>
 		ScrollWheelEventFixedPtDeltaAxis2 = 94,
+
+		/// <summary>This value is unused.</summary>
 		ScrollWheelEventFixedPtDeltaAxis3 = 95,
+
+		/// <summary>A value that represents pixel-based scrolling data. Typically this is the vertical position change since the last scrolling event.</summary>
+		/// <remarks>This is an integer field.</remarks>
 		ScrollWheelEventPointDeltaAxis1 = 96,
+
+		/// <summary>A value that represents pixel-based scrolling data. Typically this is the horizontal position change since the last scrolling event.</summary>
+		/// <remarks>This is an integer field.</remarks>
 		ScrollWheelEventPointDeltaAxis2 = 97,
+
+		/// <summary>This value is unused.</summary>
 		ScrollWheelEventPointDeltaAxis3 = 98,
+
+		/// <summary>A value indicating whether the event should be ignored by the Inkwell subsystem.</summary>
+		/// <remarks>This is an integer field. A non-zero indicates the event should be ignored.</remarks>
 		ScrollWheelEventInstantMouser = 14,
+
+		/// <summary>A value that represents the absolute X coordinate in table space at full tablet resolution.</summary>
+		/// <remarks>This is an integer field.</remarks>
 		TabletEventPointX = 15,
+
+		/// <summary>A value that represents the absolute Y coordinate in table space at full tablet resolution.</summary>
+		/// <remarks>This is an integer field.</remarks>
 		TabletEventPointY = 16,
+
+		/// <summary>A value that represents the absolute Z coordinate in table space at full tablet resolution.</summary>
+		/// <remarks>This is an integer field.</remarks>
 		TabletEventPointZ = 17,
+
+		/// <summary>A value that represents the tablet button state.</summary>
+		/// <remarks>This is a bitfield represented by an integer field. Bit 0 is the first button, and a set bit represents a closed or pressed button. A maximum of 16 buttons are supported.</remarks>
 		TabletEventPointButtons = 18,
+
+		/// <summary>A value that represents the tablet pen pressure.</summary>
+		/// <remarks>This is a double field, with values ranging from 0.0 (no pressure) and 1.0 (maximum pressure).</remarks>
 		TabletEventPointPressure = 19,
+
+		/// <summary>A value that represents the horizontal tablet pen tilt.</summary>
+		/// <remarks>This is a double field, with values ranging from 0.0 (no tilt) and 1.0 (maximum tilt).</remarks>
 		TabletEventTiltX = 20,
+
+		/// <summary>A value that represents the vertical tablet pen tilt.</summary>
+		/// <remarks>This is a double field, with values ranging from 0.0 (no tilt) and 1.0 (maximum tilt).</remarks>
 		TabletEventTiltY = 21,
+
+		/// <summary>A value that represents the tablet pen rotation.</summary>
+		/// <remarks>This is a double field.</remarks>
 		TabletEventRotation = 22,
+
+		/// <summary>A value that represents the tangential pressure on a device.</summary>
+		/// <remarks>This is a double field, with values ranging from 0.0 (no pressure) and 1.0 (maximum pressure).</remarks>
 		TabletEventTangentialPressure = 23,
-		TabletEventDeviceID = 24,
+
+		/// <summary>A value that represents the system-assigned unique device id.</summary>
+		/// <remarks>This is an integer field.</remarks>
+		TabletEventDeviceId = 24,
+
+		/// <summary>This is a vendor-specific value.</summary>
+		/// <remarks>This is an integer field.</remarks>
 		TabletEventVendor1 = 25,
+
+		/// <summary>This is a vendor-specific value.</summary>
+		/// <remarks>This is an integer field.</remarks>
 		TabletEventVendor2 = 26,
+
+		/// <summary>This is a vendor-specific value.</summary>
+		/// <remarks>This is an integer field.</remarks>
 		TabletEventVendor3 = 27,
-		TabletProximityEventVendorID = 28,
-		TabletProximityEventTabletID = 29,
-		TabletProximityEventPointerID = 30,
-		TabletProximityEventDeviceID = 31,
-		TabletProximityEventSystemTabletID = 32,
+
+		/// <summary>A value that represents the vendor-defined id, typically the USB vendor id.</summary>
+		/// <remarks>This is an integer field.</remarks>
+		TabletProximityEventVendorId = 28,
+
+		/// <summary>A value that represents the vendor-defined tabled id, typically the USB product id.</summary>
+		/// <remarks>This is an integer field.</remarks>
+		TabletProximityEventTabletId = 29,
+
+		/// <summary>A value that represents the vendor-defined id the pointing device.</summary>
+		/// <remarks>This is an integer field.</remarks>
+		TabletProximityEventPointerId = 30,
+
+		/// <summary>A system-assigned device id for the device.</summary>
+		/// <remarks>This is an integer field.</remarks>
+		TabletProximityEventDeviceId = 31,
+
+		/// <summary>A system-assigned unique tablet id for the device.</summary>
+		/// <remarks>This is an integer field.</remarks>
+		TabletProximityEventSystemTabletId = 32,
+
+		/// <summary>The vendor-assigned pointer type.</summary>
+		/// <remarks>This is an integer field.</remarks>
 		TabletProximityEventVendorPointerType = 33,
+
+		/// <summary>The vendor-defined pointer serial number.</summary>
+		/// <remarks>This is an integer field.</remarks>
 		TabletProximityEventVendorPointerSerialNumber = 34,
-		TabletProximityEventVendorUniqueID = 35,
+
+		/// <summary>The vendor-defined unique id.</summary>
+		/// <remarks>This is an integer field.</remarks>
+		TabletProximityEventVendorUniqueId = 35,
+
+		/// <summary>A value that represents the device capabilities mask.</summary>
+		/// <remarks>This is an integer field.</remarks>
 		TabletProximityEventCapabilityMask = 36,
+
+		/// <summary>A value that represents the pointer type.</summary>
+		/// <remarks>This is an integer field.</remarks>
 		TabletProximityEventPointerType = 37,
+
+		/// <summary>A value that indicates whether the pen is in proximity to the tablet.</summary>
+		/// <remarks>This is an integer field. The value is non-zero if the pen is in proximity to the tablet, and zero otherwise.</remarks>
 		TabletProximityEventEnterProximity = 38,
+
+		/// <summary>The process serial number for the target process.</summary>
+		/// <remarks>This is an integer field.</remarks>
 		EventTargetProcessSerialNumber = 39,
-		EventTargetUnixProcessID = 40,
-		EventSourceUnixProcessID = 41,
+
+		/// <summary>The process id (pid) of the target process.</summary>
+		/// <remarks>This is an integer field.</remarks>
+		EventTargetUnixProcessId = 40,
+
+		/// <summary>The process id (pid) of the target process.</summary>
+		/// <remarks>This is an integer field.</remarks>
+		EventSourceUnixProcessId = 41,
+
+		/// <summary>User-supplied data.</summary>
+		/// <remarks>This is an integer field.</remarks>
 		EventSourceUserData = 42,
-		EventSourceUserID = 43,
-		EventSourceGroupID = 44,
-		EventSourceStateID = 45,
+
+		/// <summary>The Unix effective UID for the event source.</summary>
+		/// <remarks>This is an integer field.</remarks>
+		EventSourceUserId = 43,
+
+		/// <summary>The Unix effective GID for the event source.</summary>
+		/// <remarks>This is an integer field.</remarks>
+		EventSourceGroupId = 44,
+
+		/// <summary>The state id for the event source used to create this event.</summary>
+		/// <remarks>This is an integer field.</remarks>
+		EventSourceStateId = 45,
+
+		/// <summary>A value that indicates whether a scrolling event contains continuous, pixel-based scrolling data.</summary>
+		/// <remarks>This is an integer field. The value is non-zero when the scrolling data is continuous and pixel-based, and zero otherwise (when the scrolling data is line-based).</remarks>
 		ScrollWheelEventIsContinuous = 88,
+
+		// no documentation for this value in the header file.
+		/// <summary>A value that represents the event window under the mouse pointer.</summary>
 		EventWindowUnderMousePointer = 91,
+
+		// no documentation for this value in the header file.
+		/// <summary>A value that represents the event window under the mouse pointer that can handle this event.</summary>
 		EventWindowUnderMousePointerThatCanHandleThisEvent = 92,
+
+		// no documentation for this value in the header file.
+		/// <summary>A value that represnets the scroll wheel's scroll phase.</summary>
 		ScrollWheelEventScrollPhase = 99,
+
+		// no documentation for this value in the header file.
+		/// <summary>A value that represnets the scroll wheel's scroll count.</summary>
 		ScrollWheelEventScrollCount = 100,
+
+		// no documentation for this value in the header file.
+		/// <summary>A value that represnets the scroll wheel's scroll momentum.</summary>
 		ScrollWheelEventMomentumPhase = 123,
+
+		// the header file doesn't say whether this is an integer or a double
+		/// <summary>The unaccelerated pointer movement for the X axis.</summary>
 		EventUnacceleratedPointerMovementX = 170,
+
+		// the header file doesn't say whether this is an integer or a double
+		/// <summary>The unaccelerated pointer movement for the Y axis.</summary>
 		EventUnacceleratedPointerMovementY = 171,
 	}
 
 	// CGEventTypes.h:typedef uint32_t CGEventType;
 #if NET
-	[SupportedOSPlatform ("maccatalyst15.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 #else
-	[MacCatalyst (15,0)]
+	[MacCatalyst (13,1)]
 #endif
 	public enum CGEventType : uint {
 		Null = 0x0,
@@ -231,10 +409,10 @@ namespace CoreGraphics {
 
 	// CGEventTypes.h:typedef uint32_t CGEventMouseSubtype;
 #if NET
-	[SupportedOSPlatform ("maccatalyst15.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 #else
-	[MacCatalyst (15,0)]
+	[MacCatalyst (13,1)]
 #endif
 	public enum CGEventMouseSubtype : uint {
 		Default, TabletPoint, TabletProximity
@@ -242,10 +420,10 @@ namespace CoreGraphics {
 
 	// CGEventTypes.h:typedef uint32_t CGEventSourceStateID;
 #if NET
-	[SupportedOSPlatform ("maccatalyst15.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 #else
-	[MacCatalyst (15,0)]
+	[MacCatalyst (13,1)]
 #endif
 	public enum CGEventSourceStateID : int {
 		Private = -1, CombinedSession = 0, HidSystem = 1
@@ -253,10 +431,10 @@ namespace CoreGraphics {
 
 	// CGRemoteOperation.h:typedef uint32_t CGEventFilterMask;
 #if NET
-	[SupportedOSPlatform ("maccatalyst15.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 #else
-	[MacCatalyst (15,0)]
+	[MacCatalyst (13,1)]
 #endif
 	[Flags]
 	public enum CGEventFilterMask : uint {
@@ -267,10 +445,10 @@ namespace CoreGraphics {
 
 	// CGRemoteOperation.h:typedef uint32_t CGEventSuppressionState;
 #if NET
-	[SupportedOSPlatform ("maccatalyst15.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 #else
-	[MacCatalyst (15,0)]
+	[MacCatalyst (13,1)]
 #endif
 	public enum CGEventSuppressionState : int {
 		SuppressionInterval,
