@@ -568,7 +568,7 @@ namespace Foundation {
 		public bool CheckCertificateRevocationList { get; set; } = false;
 
 
-		private X509CertificateCollection? _clientCertificates;
+		X509CertificateCollection? _clientCertificates;
 
 		public X509CertificateCollection ClientCertificates
 		{
@@ -1608,10 +1608,10 @@ namespace Foundation {
 		}
 
 #if NET
-		private static class CertificateHelper {
+		static class CertificateHelper {
 			// Based on https://github.com/dotnet/runtime/blob/c2848c582f5d6ae42c89f5bfe0818687ab3345f0/src/libraries/Common/src/System/Net/Security/CertificateHelper.cs
 			// with the NetEventSource code removed and namespace changed.
-			private const string ClientAuthenticationOID = "1.3.6.1.5.5.7.3.2";
+			const string ClientAuthenticationOID = "1.3.6.1.5.5.7.3.2";
 
 			internal static X509Certificate2? GetEligibleClientCertificate (X509CertificateCollection? candidateCerts)
 			{
@@ -1643,7 +1643,7 @@ namespace Foundation {
 				return null;
 			}
 
-			private static bool IsValidClientCertificate (X509Certificate2 cert)
+			static bool IsValidClientCertificate (X509Certificate2 cert)
 			{
 				foreach (X509Extension extension in cert.Extensions) {
 					if ((extension is X509EnhancedKeyUsageExtension eku) && !IsValidForClientAuthenticationEKU (eku)) {
@@ -1656,7 +1656,7 @@ namespace Foundation {
 				return true;
 			}
 
-			private static bool IsValidForClientAuthenticationEKU (X509EnhancedKeyUsageExtension eku)
+			static bool IsValidForClientAuthenticationEKU (X509EnhancedKeyUsageExtension eku)
 			{
 				foreach (System.Security.Cryptography.Oid oid in eku.EnhancedKeyUsages) {
 					if (oid.Value == ClientAuthenticationOID) {
@@ -1667,7 +1667,7 @@ namespace Foundation {
 				return false;
 			}
 
-			private static bool IsValidForDigitalSignatureUsage (X509KeyUsageExtension ku)
+			static bool IsValidForDigitalSignatureUsage (X509KeyUsageExtension ku)
 			{
 				const X509KeyUsageFlags RequiredUsages = X509KeyUsageFlags.DigitalSignature;
 				return (ku.KeyUsages & RequiredUsages) == RequiredUsages;
