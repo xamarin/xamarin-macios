@@ -137,6 +137,42 @@
 
 	</PropertyGroup>
 
+	<!-- Now that we know the runtime identifier, we can determine if we're building for a simulator -->
+	<PropertyGroup>
+		<_SdkIsSimulator Condition="$(RuntimeIdentifier.Contains('simulator')) Or $(RuntimeIdentifiers.Contains('simulator'))">true</_SdkIsSimulator>
+		<_SdkIsSimulator Condition="'$(_SdkIsSimulator)' == ''">false</_SdkIsSimulator>
+	</PropertyGroup>
+
+	<!-- Since we know if we're building for a simulator or not, we can determine the default trimming behavior -->
+	<PropertyGroup Condition="'$(TrimMode)' != ''">
+		<!-- If TrimMode is set, then that's the default link mode -->
+		<_DefaultLinkMode>TrimMode</_DefaultLinkMode>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(TrimMode)' == ''">
+		<!-- Linking is always on for all assemblies when using NativeAOT - this is because we need to modify all assemblies in the linker for them to be compatible with NativeAOT -->
+		<_DefaultLinkMode Condition="'$(_UseNativeAot)' == 'true'">Full</_DefaultLinkMode>
+
+		<_DefaultLinkMode Condition="'$(_UseNativeAot)' != 'true' And '$(_PlatformName)' == 'macOS'">None</_DefaultLinkMode> <!-- Linking is off by default for macOS apps -->
+		<_DefaultLinkMode Condition="'$(_UseNativeAot)' != 'true' And '$(_PlatformName)' == 'MacCatalyst' And '$(Configuration)' == 'Release'">SdkOnly</_DefaultLinkMode> <!-- Default linking is on for release builds for Mac Catalyst apps -->
+		<_DefaultLinkMode Condition="'$(_UseNativeAot)' != 'true' And '$(_PlatformName)' == 'MacCatalyst' And '$(Configuration)' != 'Release'">None</_DefaultLinkMode> <!-- Default linking is off for non-release builds for Mac Catalyst apps -->
+		<_DefaultLinkMode Condition="'$(_UseNativeAot)' != 'true' And '$(_PlatformName)' != 'macOS' And '$(_PlatformName)' != 'MacCatalyst' And '$(_SdkIsSimulator)' == 'true'">None</_DefaultLinkMode> <!-- Linking is off by default in the simulator -->
+		<_DefaultLinkMode Condition="'$(_UseNativeAot)' != 'true' And '$(_PlatformName)' != 'macOS' And '$(_PlatformName)' != 'MacCatalyst' And '$(_SdkIsSimulator)' != 'true'">SdkOnly</_DefaultLinkMode> <!-- Linking is SdkOnly for iOS/tvOS/watchOS apps on device -->
+	</PropertyGroup>
+	<PropertyGroup>
+		<_LinkMode Condition="'$(_LinkMode)' == '' And '$(_PlatformName)' == 'macOS'">$(LinkMode)</_LinkMode>
+		<_LinkMode Condition="'$(_LinkMode)' == '' And '$(_PlatformName)' != 'macOS'">$(MtouchLink)</_LinkMode>
+		<_LinkMode Condition="'$(_LinkMode)' == ''">$(_DefaultLinkMode)</_LinkMode>
+		<_LinkMode Condition="'$(_LinkMode)' == '' And '$(_PlatformName)' == 'macOS'">None</_LinkMode> <!-- Linking is off by default for macOS apps -->
+		<_LinkMode Condition="'$(_LinkMode)' == '' And '$(_PlatformName)' != 'macOS'">SdkOnly</_LinkMode> <!-- Default linking is SdkOnly for iOS/tvOS/watchOS apps -->
+
+		<!-- TrimMode specifies what the linker will do with framework assemblies -->
+		<TrimMode Condition="'$(_LinkMode)' == 'TrimMode'">$(TrimMode)</TrimMode>
+		<TrimMode Condition="'$(_LinkMode)' == 'None'">copy</TrimMode>
+		<TrimMode Condition="'$(_LinkMode)' == 'SdkOnly'">partial</TrimMode>
+		<TrimMode Condition="'$(_LinkMode)' == 'Full'">full</TrimMode>
+		<!-- For None link mode we also need to set TrimMode for all assemblies. This is done later -->
+	</PropertyGroup>
+
 	<!-- We're never using any app hosts -->
 	<PropertyGroup>
 		<_RuntimeIdentifierUsesAppHost>false</_RuntimeIdentifierUsesAppHost>

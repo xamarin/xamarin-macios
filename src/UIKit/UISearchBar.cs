@@ -24,9 +24,12 @@ namespace UIKit {
 			if (attributes is null)
 				throw new ArgumentNullException ("attributes");
 
-			using (var dict = attributes.Dictionary) {
-				_SetScopeBarButtonTitle (dict, state);
-			}
+#if XAMCORE_3_0
+			var dict = attributes.Dictionary;
+#else
+			using var dict = attributes.ToDictionary ();
+#endif
+			_SetScopeBarButtonTitle (dict, state);
 		}
 
 		public TextAttributes GetScopeBarButtonTitleTextAttributes (UIControlState state)
@@ -42,9 +45,12 @@ namespace UIKit {
 				if (attributes is null)
 					throw new ArgumentNullException ("attributes");
 
-				using (var dict = attributes.Dictionary) {
-					_SetScopeBarButtonTitle (dict, state);
-				}
+#if XAMCORE_3_0
+				var dict = attributes.Dictionary;
+#else
+				using var dict = attributes.ToDictionary ();
+#endif
+				_SetScopeBarButtonTitle (dict, state);
 			}
 
 			public TextAttributes GetScopeBarButtonTitleTextAttributes (UIControlState state)
