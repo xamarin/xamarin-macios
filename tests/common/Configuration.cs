@@ -49,6 +49,7 @@ namespace Xamarin.Tests {
 		public static bool include_dotnet;
 		public static bool include_legacy_xamarin;
 		public static bool iOSSupports32BitArchitectures;
+		public static bool EnableXamarin;
 
 		static Version xcode_version;
 		public static Version XcodeVersion {
@@ -308,6 +309,7 @@ namespace Xamarin.Tests {
 			DotNetExecutable = GetVariable ("DOTNET", null);
 			DotNetTfm = GetVariable ("DOTNET_TFM", null);
 			iOSSupports32BitArchitectures = !string.IsNullOrEmpty (GetVariable ("IOS_SUPPORTS_32BIT_ARCHITECTURES", ""));
+			EnableXamarin = !string.IsNullOrEmpty (GetVariable ("ENABLE_XAMARIN", ""));
 
 			XcodeVersionString = GetXcodeVersion (xcode_root);
 #if MONOMAC
@@ -1157,6 +1159,13 @@ namespace Xamarin.Tests {
 			Assert.Ignore ($"This test is only applicable on {platform}");
 		}
 
+		public static void IgnoreIfNotXamarinEnabled ()
+		{
+			if (EnableXamarin)
+				return;
+			Assert.Ignore ($"This test is only applicable if Xamarin-specific bits are enabled.");
+		}
+
 		public static string GetTestLibraryDirectory (ApplePlatform platform, bool? simulator = null)
 		{
 			string dir;
@@ -1198,8 +1207,12 @@ namespace Xamarin.Tests {
 		static bool IsAPFS {
 			get {
 				if (!is_apfs.HasValue) {
-					var exit_code = ExecutionHelper.Execute ("/bin/df", new string [] { "-t", "apfs", "/" }, out var output, TimeSpan.FromSeconds (10));
-					is_apfs = exit_code == 0 && output.Trim ().Split ('\n').Length >= 2;
+					if (Environment.OSVersion.Platform == PlatformID.Win32NT) {
+						is_apfs = false;
+					} else {
+						var exit_code = ExecutionHelper.Execute ("/bin/df", new string [] { "-t", "apfs", "/" }, out var output, TimeSpan.FromSeconds (10));
+						is_apfs = exit_code == 0 && output.Trim ().Split ('\n').Length >= 2;
+					}
 				}
 				return is_apfs.Value;
 			}

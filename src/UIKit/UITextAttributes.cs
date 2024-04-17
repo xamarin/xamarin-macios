@@ -22,13 +22,6 @@ namespace UIKit {
 		public UIColor TextShadowColor;
 		public UIOffset TextShadowOffset;
 
-		// This property is intended for compatibility with UIStringAttributes
-		internal NSDictionary Dictionary {
-			get {
-				return ToDictionary ();
-			}
-		}
-
 		public UITextAttributes ()
 		{
 		}

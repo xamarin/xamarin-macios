@@ -10,10 +10,10 @@ namespace CoreGraphics
 {
 
 #if NET
-	[SupportedOSPlatform ("maccatalyst15.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 #else
-	[MacCatalyst (15,0)]
+	[MacCatalyst (13,1)]
 #endif
 	public enum CGCaptureOptions : uint
 	{
@@ -22,10 +22,10 @@ namespace CoreGraphics
 	}
 
 #if NET
-	[SupportedOSPlatform ("maccatalyst15.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 #else
-	[MacCatalyst (15,0)]
+	[MacCatalyst (13,1)]
 #endif
 	public static class CGDisplay
 	{
@@ -86,19 +86,19 @@ namespace CoreGraphics
 		public static extern void RestoreColorSyncSettings ();
 
 #if NET
-		[SupportedOSPlatform ("maccatalyst15.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[ObsoletedOSPlatform ("macos10.9")]
+		[ObsoletedOSPlatform ("maccatalyst13.1")]
 #else
 		[Deprecated (PlatformName.MacOSX, 10, 9)]
 #endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static extern bool CGDisplayIsCaptured (uint display);
+		static extern byte CGDisplayIsCaptured (uint display);
 
 		public static bool IsCaptured (int display)
 		{
-			return CGDisplayIsCaptured ((uint)display);
+			return CGDisplayIsCaptured ((uint)display) != 0;
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]

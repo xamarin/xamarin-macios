@@ -4,21 +4,18 @@ class TestConfiguration {
     [string[]] $enabledPlatforms
     [string] $testsLabels
     [string] $statusContext
-    [string] $testPrefix
 
     TestConfiguration (
         [object] $testConfigurations,
         [object] $supportedPlatforms,
         [string[]] $enabledPlatforms,
         [string] $testsLabels,
-        [string] $statusContext,
-        [string] $testPrefix) {
+        [string] $statusContext) {
         $this.testConfigurations = $testConfigurations
         $this.supportedPlatforms = $supportedPlatforms
         $this.enabledPlatforms = $enabledPlatforms
         $this.testsLabels = $testsLabels
         $this.statusContext = $statusContext
-        $this.testPrefix = $testPrefix
     }
 
     [string] Create() {
@@ -28,6 +25,7 @@ class TestConfiguration {
             $label = $config.label
             $underscoredLabel = $label.Replace('-','_')
             $splitByPlatforms = $config.splitByPlatforms
+            $testPrefix = $config.testPrefix
 
             $vars = [ordered]@{}
             # set common variables
@@ -92,7 +90,7 @@ class TestConfiguration {
                     # set platform-specific variables
                     $platformVars["LABEL_WITH_PLATFORM"] = "$($label)_$($platform)"
                     $platformVars["STATUS_CONTEXT"] = "$($this.statusContext) - $($label) - $($platform)"
-                    $platformVars["TEST_PREFIX"] = "$($this.testPrefix)$($underscoredLabel)_$($platform.ToLower())"
+                    $platformVars["TEST_PREFIX"] = "$($testPrefix)$($underscoredLabel)_$($platform.ToLower())"
                     if ($platform -eq "Multiple") {
                         $platformVars["TEST_PLATFORM"] = ""
                         $platformVars["TEST_FILTER"] = "Category = MultiPlatform"
@@ -107,7 +105,7 @@ class TestConfiguration {
                 # set non-platform specific variables
                 $vars["LABEL_WITH_PLATFORM"] = "$label"
                 $vars["STATUS_CONTEXT"] = "$($this.statusContext) - $($label)"
-                $vars["TEST_PREFIX"] = "$($this.testPrefix)$($underscoredLabel)"
+                $vars["TEST_PREFIX"] = "$($testPrefix)$($underscoredLabel)"
                 $vars["TEST_PLATFORM"] = ""
                 $rv[$label] = $vars
             }
@@ -138,16 +136,13 @@ function Get-TestConfiguration {
         $TestsLabels,
 
         [string]
-        $StatusContext,
-
-        [string]
-        $TestPrefix
+        $StatusContext
     )
 
     $objTestConfigurations = ConvertFrom-Json -InputObject $TestConfigurations
     $objSupportedPlatforms = ConvertFrom-Json -InputObject $SupportedPlatforms
     $arrEnabledPlatforms = -split $EnabledPlatforms
-    $config = [TestConfiguration]::new($objTestConfigurations, $objSupportedPlatforms, $arrEnabledPlatforms, $TestsLabels, $StatusContext, $TestPrefix)
+    $config = [TestConfiguration]::new($objTestConfigurations, $objSupportedPlatforms, $arrEnabledPlatforms, $TestsLabels, $StatusContext)
     return $config.Create()
 }
 

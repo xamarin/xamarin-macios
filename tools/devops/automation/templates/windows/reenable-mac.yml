@@ -22,13 +22,44 @@ steps:
 - pwsh: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/show_env.ps1
   displayName: 'Dump Environment'
 
+- task: AzureKeyVault@2
+  inputs:
+    azureSubscription: 'Xamarin - R&D - XamarinSecurity'
+    KeyVaultName: 'xamarin-ios-vault'
+    SecretsFilter: 'RemoteMacIdRsa'
+  displayName: 'Download id_rsa'
+
+- pwsh: |
+    $idRsaPath = "$(Get-Location)\id_rsa"
+    Write-Host "##vso[task.setvariable variable=ID_RSA_PATH]$idRsaPath"
+    Add-Content -Path "id_rsa"  -Value "$(RemoteMacIdRsa)"
+    # We need to make sure the private key is only accessible by the current user,
+    # otherwise ssh will complain and not use it.
+    icacls id_rsa /inheritance:r
+    $grant="$Env:USERNAME" + ":(R)"
+    icacls id_rsa /grant:r $grant
+  displayName: "Write and verify id_rsa"
+  continueOnError: true
+
+- pwsh: |
+    ssh -v -i "$(ID_RSA_PATH)" -o IdentitiesOnly=yes -o StrictHostKeyChecking=no builder@$Env:MAC_AGENT_IP -- rm -f "/Users/$($Env:MAC_AGENT_USER)/remote_build_testing/BuildId.txt"
+  displayName: 'Remove BuildId from macOS bot'
+  condition: always()
+  continueOnError: true
+
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
     $vsts = New-VSTS -Org "devdiv" -Project "DevDiv" -Token $(MacPoolAccessToken)
 
-    # get the pool and the agent objects and disable the bot
+    # get the pool and the agent objects and enable the bot
     $pool = $vsts.Pools.GetPool("$Env:MAC_AGENT_POOL")
     $agent = $vsts.Agents.GetAgent($pool, $Env:MAC_AGENT_NAME)
     $vsts.Agents.SetEnabled($pool, $agent, $True)
   displayName: 'Re-enabled macOS bot from pool'
   condition: always()
+
+- pwsh: |
+    Remove-Item "$(ID_RSA_PATH)"
+  displayName: "Remove secrets"
+  condition: always()
+  continueOnError: true

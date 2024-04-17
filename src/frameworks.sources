@@ -267,6 +267,7 @@ AVFOUNDATION_SOURCES = \
 	AVFoundation/AVAudioSessionDataSourceDescription.cs \
 	AVFoundation/AVAudioSessionPortDescription.cs \
 	AVFoundation/AVAudioSinkNode.cs \
+	AVFoundation/AVAudioSourceNode.cs \
 	AVFoundation/AVCaptureConnection.cs \
 	AVFoundation/AVCaptureDeviceDiscoverySession.cs \
 	AVFoundation/AVCaptureDeviceInput.cs \
@@ -291,6 +292,7 @@ AVFOUNDATION_SOURCES = \
 	AVFoundation/AVPlayerLayer.cs \
 	AVFoundation/AVPlayerViewController.cs \
 	AVFoundation/AVSampleBufferExtensions.cs \
+	AVFoundation/AVSpeechSynthesizer.cs \
 	AVFoundation/AVTextStyleRule.cs \
 	AVFoundation/Events.cs \
 	AVFoundation/AVPlayerLooper.cs \
@@ -510,6 +512,7 @@ COREGRAPHICS_CORE_SOURCES = \
 	CoreGraphics/CGColorSpace.cs \
 	CoreGraphics/CGContext.cs \
 	CoreGraphics/CGDisplay.cs \
+	CoreGraphics/CGEvent.cs \
 	CoreGraphics/CGGeometry.cs \
 	CoreGraphics/CGGradient.cs \
 	CoreGraphics/CGImage.cs \
@@ -530,7 +533,6 @@ COREGRAPHICS_SOURCES = \
 	CoreGraphics/CGColorConversionInfo.cs \
 	CoreGraphics/CGDataConsumer.cs \
 	CoreGraphics/CGDataProvider.cs \
-	CoreGraphics/CGEvent.cs \
 	CoreGraphics/CGEventSource.cs \
 	CoreGraphics/CGEventTypes.cs \
 	CoreGraphics/CGFont.cs \
@@ -547,6 +549,7 @@ COREGRAPHICS_SOURCES = \
 	CoreGraphics/CGPDFString.cs \
 	CoreGraphics/CGPdfTagType.cs \
 	CoreGraphics/CGShading.cs \
+	CoreGraphics/NativeDrawingMethods.cs \
 
 # CoreHaptics
 
@@ -726,6 +729,19 @@ COREWLAN_SOURCES = \
 	CoreWlan/CWInterface.cs \
 	CoreWlan/CWKeychain.cs \
 
+# DeviceDiscoveryExtension
+
+DEVICEDISCOVERYEXTENSION_API_SOURCES = \
+	DeviceDiscoveryExtension/Enums.cs \
+
+DEVICEDISCOVERYEXTENSION_SOURCES = \
+	DeviceDiscoveryExtension/DDDevice.cs \
+
+# DeviceDiscoveryUI
+
+DEVICEDISCOVERYUI_SOURCES = \
+	DeviceDiscoveryUI/DDDevicePickerViewController.cs \
+
 # EventKit
 
 EVENTKIT_API_SOURCES = \
@@ -826,6 +842,7 @@ FOUNDATION_SOURCES = \
 	Foundation/NSDistributedNotificationCenter.cs \
 	Foundation/NSEnumerator_1.cs \
 	Foundation/NSErrorException.cs \
+	Foundation/NSExceptionError.cs \
 	Foundation/NSExpression.cs \
 	Foundation/NSFastEnumerationState.cs \
 	Foundation/NSFastEnumerator.cs \
@@ -1529,6 +1546,11 @@ SAFARISERVICES_CORE_SOURCES = \
 
 SAFARISERVICES_SOURCES = \
 
+# SafetyKit
+
+SAFETYKIT_API_SOURCES = \
+	SafetyKit/SAEnums.cs \
+
 # SceneKit
 
 SCENEKIT_API_SOURCES = \
@@ -1922,15 +1944,17 @@ SHARED_CORE_SOURCES = \
 	DotNetGlobals.cs \
 	MinimumVersions.cs \
 	MonoPInvokeCallbackAttribute.cs \
-	$(BUILD_DIR)/common/NativeTypes/Drawing.cs \
 	$(BUILD_DIR)/common/NativeTypes/Primitives.cs \
 	ObjCRuntime/ArgumentSemantic.cs \
 	ObjCRuntime/BindAsAttribute.cs \
 	ObjCRuntime/Blocks.cs \
+	ObjCRuntime/BlockCallbackAttribute.cs \
+	ObjCRuntime/CCallbackAttribute.cs \
 	ObjCRuntime/Class.cs \
 	ObjCRuntime/Constants.cs \
 	ObjCRuntime/DisposableObject.cs \
 	ObjCRuntime/ErrorConstants.cs \
+	ObjCRuntime/Extensions.cs \
 	ObjCRuntime/INativeObject.cs \
 	ObjCRuntime/LinkWithAttribute.cs \
 	ObjCRuntime/Messaging.cs \
@@ -2129,6 +2153,7 @@ MACOS_FRAMEWORKS =          \
 	QuickLookUI             \
 	ReplayKit               \
 	SafariServices          \
+	SafetyKit               \
 	ScreenCaptureKit        \
 	ScreenTime              \
 	ScriptingBridge         \
@@ -2189,6 +2214,7 @@ IOS_FRAMEWORKS =         \
 	CoreSpotlight \
 	CoreTelephony \
 	CoreText \
+	DeviceDiscoveryExtension \
 	EventKit \
 	EventKitUI \
 	ExternalAccessory \
@@ -2243,6 +2269,7 @@ IOS_FRAMEWORKS =         \
 	QuickLookThumbnailing \
 	ReplayKit \
 	SafariServices \
+	SafetyKit \
 	ScreenTime \
 	Security \
 	SensitiveContentAnalysis \
@@ -2289,6 +2316,7 @@ WATCHOS_FRAMEWORKS =        \
 	NearbyInteraction       \
 	PassKit                 \
 	PushKit			\
+	SafetyKit               \
 	Security                \
 	UIKit XKit              \
 	UserNotifications       \
@@ -2314,6 +2342,7 @@ TVOS_FRAMEWORKS =           \
 	CoreLocation            \
 	CoreSpotlight			\
 	CoreText                \
+	DeviceDiscoveryUI		\
 	ExternalAccessory       \
 	GLKit                   \
 	GameController          \

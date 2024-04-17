@@ -1,6 +1,7 @@
 #if __MACOS__
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using NUnit.Framework;
@@ -12,6 +13,9 @@ using ObjCRuntime;
 
 namespace Xamarin.Mac.Tests {
 	static class TypeExtension {
+#if NET
+		[UnconditionalSuppressMessage ("Trimming", "IL2070", Justification = "There will always be a most derived property (if the property exists), so this is trimmer-safe.")]
+#endif
 		public static PropertyInfo GetMostDerivedProperty (this Type t, string name)
 		{
 			while (t is not null && t != t.BaseType) {
@@ -27,6 +31,10 @@ namespace Xamarin.Mac.Tests {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class DelegateAndDataSourceTest {
+#if NET
+		[UnconditionalSuppressMessage ("Trimming", "IL2026", Justification = "This test searches for types to tests; if a type has been trimmed away that's OK, just less to test.")]
+		[UnconditionalSuppressMessage ("Trimming", "IL2075", Justification = "This test searches for types to tests; if a type has been trimmed away that's OK, just less to test.")]
+#endif
 		[Test]
 		public void DelegateAndDataSourceAllowsNull ()
 		{
@@ -138,6 +146,8 @@ namespace Xamarin.Mac.Tests {
 			}
 
 			switch (t.Namespace) {
+			case "SafetyKit":
+				return true; // SafetyKit requires a custom entitlement, and will throw exceptions if it's not present.
 			case "QTKit":
 				return true; // QTKit has been removed from macos.
 			}
@@ -149,6 +159,9 @@ namespace Xamarin.Mac.Tests {
 		//		An ArgumentSemantic (Strong, Retain, etc) is required to keep the reference around so the app doesn't crash after a GC.
 		// 		This test scans all bindings looking for instances where bindings don't have the correct ArgumentSemantic
 		[Test]
+#if NET
+		[UnconditionalSuppressMessage ("Trimming", "IL2026", Justification = "This test searches for types to tests; if a type has been trimmed away that's OK, just less to test.")]
+#endif
 		public void DelegateAndDataSourceHaveArgumentSemanticAttribute ()
 		{
 			var failingTypes = new Dictionary<Type, string> ();
@@ -230,6 +243,9 @@ namespace Xamarin.Mac.Tests {
 		}
 
 		[Test]
+#if NET
+		[UnconditionalSuppressMessage ("Trimming", "IL2026", Justification = "This test searches for types to tests; if a type has been trimmed away that's OK, just less to test.")]
+#endif
 		public void TargetArgumentSemanticAttribute ()
 		{
 			var failingTypes = new Dictionary<Type, string> ();

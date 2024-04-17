@@ -6,6 +6,7 @@ using System.Linq;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
+using Xamarin.Localization.MSBuild;
 using Xamarin.Messaging.Build.Client;
 
 #nullable enable
@@ -38,6 +39,8 @@ namespace Xamarin.MacDev.Tasks {
 
 		#endregion
 
+		bool cancelled;
+
 		public override bool Execute ()
 		{
 			if (ShouldExecuteRemotely ())
@@ -48,10 +51,16 @@ namespace Xamarin.MacDev.Tasks {
 			foreach (var item in DirectoryPath) {
 				var path = item.ItemSpec.TrimEnd ('\\', '/');
 				var entriesFullPath = IncludeDirectories ?
-					Directory.GetFileSystemEntries (path, Pattern, searchOption) :
-					Directory.GetFiles (path, Pattern, searchOption);
+					Directory.EnumerateFileSystemEntries (path, Pattern, searchOption) :
+					Directory.EnumerateFiles (path, Pattern, searchOption);
+
+				Log.LogMessage (MessageImportance.Low, $"Searching for {(IncludeDirectories ? "files and directories" : "files")} in {path} with pattern '{Pattern}' and search option {searchOption}. Current directory: {Environment.CurrentDirectory}");
 
 				foreach (var entry in entriesFullPath) {
+					if (cancelled) {
+						Log.LogError (MSBStrings.E7119 /* Task execution was cancelled. */);
+						return false;
+					}
 					var recursiveDir = entry.Substring (path.Length + 1);
 					var newItem = new TaskItem (entry);
 					item.CopyMetadataTo (newItem);
@@ -70,6 +79,7 @@ namespace Xamarin.MacDev.Tasks {
 		{
 			if (ShouldExecuteRemotely ())
 				BuildConnection.CancelAsync (BuildEngine4).Wait ();
+			cancelled = true;
 		}
 
 		public IEnumerable<ITaskItem> GetAdditionalItemsToBeCopied ()

@@ -16,7 +16,7 @@ using Xamarin.Utils;
 #nullable enable
 
 namespace Xamarin.MacDev.Tasks {
-	public class AOTCompile : XamarinTask, ITaskCallback, ICancelableTask {
+	public class AOTCompile : XamarinParallelTask, ITaskCallback, ICancelableTask {
 		public ITaskItem [] AotArguments { get; set; } = Array.Empty<ITaskItem> ();
 
 		[Required]
@@ -223,6 +223,12 @@ namespace Xamarin.MacDev.Tasks {
 
 		public override bool Execute ()
 		{
+			if (Assemblies.Length == 0) {
+				// Not sure how this can happen, since Assemblies is [Required], but it seems to happen once in a while.
+				Log.LogMessage (MessageImportance.Low, "Nothing to AOT-compile");
+				return true;
+			}
+
 			if (ShouldExecuteRemotely ())
 				return new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
 
@@ -308,7 +314,7 @@ namespace Xamarin.MacDev.Tasks {
 				listOfArguments.Add (new (arguments, input));
 			}
 
-			Parallel.ForEach (listOfArguments, (arg) => {
+			ForEach (listOfArguments, (arg) => {
 				ExecuteAsync (AOTCompilerPath, arg.Arguments, sdkDevPath: SdkDevPath, showErrorIfFailure: false /* we show our own error below */)
 					.ContinueWith ((v) => {
 						if (v.Result.ExitCode != 0)

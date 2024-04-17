@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -133,6 +134,17 @@ partial class TestRuntime {
 				is_in_ci = in_ci;
 			}
 			return is_in_ci.Value;
+		}
+	}
+
+	static bool? is_pull_request;
+	public static bool IsPullRequest {
+		get {
+			if (!is_pull_request.HasValue) {
+				var pr = string.Equals (Environment.GetEnvironmentVariable ("BUILD_REASON"), "PullRequest", StringComparison.Ordinal);
+				is_pull_request = pr;
+			}
+			return is_pull_request.Value;
 		}
 	}
 
@@ -1443,6 +1455,9 @@ partial class TestRuntime {
 
 	// Determine if linkall was enabled by checking if an unused class in this assembly is still here.
 	static bool? link_all;
+#if NET
+	[UnconditionalSuppressMessage ("Trimming", "IL2026", Justification = "This property checks whether the trimmer is enabled by checking if a type survived trimming; it's thus trimmer safe in that the any behavioral difference when the trimmer is enabled is exactly what it's looking for.")]
+#endif
 	public static bool IsLinkAll {
 		get {
 			if (!link_all.HasValue)

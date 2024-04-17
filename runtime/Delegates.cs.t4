@@ -97,23 +97,34 @@ namespace ObjCRuntime {
 		[BindingImpl (BindingImplOptions.Optimizable)] // To inline the Runtime.DynamicRegistrationSupported code if possible.
 		unsafe static void RegisterDelegates (InitializationOptions* options)
 		{
-<# foreach (var d in delegates) {
-	if (d.OnlyDynamicUsage) continue; #>
+#if NET
+<# foreach (var d in delegates.NotOnlyDynamic) { #>
 <#
 	if (d.OnlyCoreCLR) {
-		Write ("#if NET\n");
-		Write ("\t\t\tif (IsCoreCLR)\n\t");
+		Write ("\t\t\tif (IsCoreCLR) {\n\t");
 	}
-#>#if NET
+	if (d.SkipManagedStaticRegistrar) {
+		Write ("\t\t\tif (!Runtime.IsManagedStaticRegistrar) {\n\t");
+	}
+#>
 			options->Delegates-><#= d.SimpleEntryPoint #> = (IntPtr) (void *) <#= d.UnmanagedDelegateCast #> &<#= d.SimpleEntryPoint #>;
-#else
-			options->Delegates-><#= d.SimpleEntryPoint #> = GetFunctionPointer (new <#= d.SimpleEntryPoint #>_delegate (<#= d.SimpleEntryPoint #>));
-#endif
 <#
-		if (d.OnlyCoreCLR)
-			Write ("#endif // NET\n");
+	if (d.OnlyCoreCLR) {
+		WriteLine ("\t\t\t}");
+	}
+	if (d.SkipManagedStaticRegistrar) {
+		WriteLine ("\t\t\t}");
+	}
 #>
 <# } #>
+#else
+<# foreach (var d in delegates.NotOnlyDynamic) {
+	if (d.OnlyCoreCLR)
+		continue;
+#>
+			options->Delegates-><#= d.SimpleEntryPoint #> = GetFunctionPointer (new <#= d.SimpleEntryPoint #>_delegate (<#= d.SimpleEntryPoint #>));
+<# } #>
+#endif
 
 			// The linker will remove this condition (and the subsequent method call) if possible
 			if (DynamicRegistrationSupported)
@@ -122,8 +133,7 @@ namespace ObjCRuntime {
 
 		static void RegisterDelegatesDynamic (InitializationOptions* options)
 		{
-<# foreach (var d in delegates) {
-	if (!d.OnlyDynamicUsage) continue; #>
+<# foreach (var d in delegates.OnlyDynamic) { #>
 <#
 	if (d.OnlyCoreCLR) {
 		Write ("#if NET\n");

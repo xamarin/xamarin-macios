@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Xml;
 
 using NUnit.Framework;
 
@@ -665,6 +666,21 @@ namespace Cecil.Tests {
 		{
 			key = tuple.Key;
 			value = tuple.Value;
+		}
+	}
+
+	public static class Extensions {
+		public static void LoadWithoutNetworkAccess (this XmlDocument doc, string filename)
+		{
+			using (var fs = new FileStream (filename, FileMode.Open, FileAccess.Read)) {
+				var settings = new XmlReaderSettings () {
+					XmlResolver = null,
+					DtdProcessing = DtdProcessing.Parse,
+				};
+				using (var reader = XmlReader.Create (fs, settings)) {
+					doc.Load (reader);
+				}
+			}
 		}
 	}
 

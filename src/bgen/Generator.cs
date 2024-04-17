@@ -65,6 +65,7 @@ public partial class Generator : IMemberGatherer {
 	public AttributeManager AttributeManager { get { return BindingTouch.AttributeManager; } }
 	NamespaceCache NamespaceCache { get { return BindingTouch.NamespaceCache; } }
 	public TypeCache TypeCache { get { return BindingTouch.TypeCache; } }
+	public DocumentationManager DocumentationManager { get { return BindingTouch.DocumentationManager; } }
 
 	Nomenclator nomenclator;
 	Nomenclator Nomenclator {
@@ -3841,6 +3842,8 @@ public partial class Generator : IMemberGatherer {
 			}
 		}
 
+		WriteDocumentation (pi);
+
 		if (wrap is not null) {
 			print_generated_code ();
 			PrintPropertyAttributes (pi, minfo.type);
@@ -4123,7 +4126,7 @@ public partial class Generator : IMemberGatherer {
 			return "Task";
 		var ttype = GetAsyncTaskType (minfo);
 		if (minfo.HasNSError && (ttype == "bool"))
-			ttype = "Tuple<bool,NSError>";
+			ttype = minfo.IsNSErrorNullable ? "Tuple<bool,NSError?>" : "Tuple<bool,NSError>";
 		return "Task<" + ttype + ">";
 	}
 
@@ -4215,7 +4218,7 @@ public partial class Generator : IMemberGatherer {
 			ttype = GetAsyncTaskType (minfo);
 			tuple = (minfo.HasNSError && (ttype == "bool"));
 			if (tuple)
-				ttype = "Tuple<bool,NSError>";
+				ttype = minfo.IsNSErrorNullable ? "Tuple<bool,NSError?>" : "Tuple<bool,NSError>";
 		}
 		print ("var tcs = new TaskCompletionSource<{0}> ();", ttype);
 		bool ignoreResult = !is_void &&
@@ -4247,7 +4250,7 @@ public partial class Generator : IMemberGatherer {
 		else if (tuple) {
 			var cond_name = minfo.AsyncCompletionParams [0].Name;
 			var var_name = minfo.AsyncCompletionParams.Last ().Name;
-			print ("tcs.SetResult (new Tuple<bool,NSError> ({0}_, {1}_));", cond_name, var_name);
+			print ("tcs.SetResult (new {2} ({0}_, {1}_));", cond_name, var_name, ttype);
 		} else if (minfo.IsSingleArgAsync)
 			print ("tcs.SetResult ({0}_!);", minfo.AsyncCompletionParams [0].Name);
 		else
@@ -4392,6 +4395,12 @@ public partial class Generator : IMemberGatherer {
 			}
 		}
 
+		if (minfo.is_extension_method) {
+			WriteDocumentation ((MemberInfo) GetProperty (minfo.Method) ?? minfo.Method);
+		} else {
+			WriteDocumentation (minfo.Method);
+		}
+
 		PrintDelegateProxy (minfo);
 
 		if (AttributeManager.HasAttribute<NoMethodAttribute> (minfo.mi)) {
@@ -4528,6 +4537,8 @@ public partial class Generator : IMemberGatherer {
 
 				if (shortName.StartsWith ("Func<", StringComparison.Ordinal))
 					continue;
+
+				WriteDocumentation (mi.DeclaringType);
 
 				var del = mi.DeclaringType;
 
@@ -4673,6 +4684,8 @@ public partial class Generator : IMemberGatherer {
 		var optionalInstanceProperties = allProtocolProperties.Where ((v) => !IsRequired (v) && !AttributeManager.HasAttribute<StaticAttribute> (v));
 		var requiredInstanceAsyncMethods = requiredInstanceMethods.Where (m => AttributeManager.HasAttribute<AsyncAttribute> (m)).ToList ();
 
+		WriteDocumentation (type);
+
 		PrintAttributes (type, platform: true, preserve: true, advice: true);
 		print ("[Protocol (Name = \"{1}\", WrapperType = typeof ({0}Wrapper){2}{3})]",
 			   TypeName,
@@ -4812,6 +4825,7 @@ public partial class Generator : IMemberGatherer {
 			var minfo = new MemberInformation (this, this, mi, type, null);
 			var mod = string.Empty;
 
+			WriteDocumentation (mi);
 			PrintMethodAttributes (minfo);
 			print_generated_code ();
 			PrintDelegateProxy (minfo);
@@ -4828,6 +4842,7 @@ public partial class Generator : IMemberGatherer {
 			var mod = string.Empty;
 			minfo.is_export = true;
 
+			WriteDocumentation (pi);
 			print ("[Preserve (Conditional = true)]");
 			PrintAttributes (pi, platform: true);
 
@@ -5203,6 +5218,11 @@ public partial class Generator : IMemberGatherer {
 			PrintRequiresSuperAttribute (mi);
 	}
 
+	void WriteDocumentation (MemberInfo info)
+	{
+		DocumentationManager.WriteDocumentation (sw, indent, info);
+	}
+
 	public void ComputeLibraryName (FieldAttribute fieldAttr, Type type, string propertyName, out string library_name, out string library_path)
 	{
 		library_path = null;
@@ -5361,6 +5381,8 @@ public partial class Generator : IMemberGatherer {
 				print ("namespace {0} {{", type.Namespace);
 				indent++;
 			}
+
+			WriteDocumentation (type);
 
 			bool core_image_filter = false;
 			string class_mod = null;
@@ -5572,6 +5594,15 @@ public partial class Generator : IMemberGatherer {
 
 			if (!is_static_class && !is_partial) {
 				if (!is_model && !external) {
+					if (BindingTouch.SupportsXmlDocumentation) {
+						print ("/// <summary>The Objective-C class handle for this class.</summary>");
+						print ("/// <value>The pointer to the Objective-C class.</value>");
+						print ("/// <remarks>");
+						print ("///     Each managed class mirrors an unmanaged Objective-C class.");
+						print ("///     This value contains the pointer to the Objective-C class.");
+						print ("///     It is similar to calling the managed <see cref=\"ObjCRuntime.Class.GetHandle(string)\" /> or the native <see href=\"https://developer.apple.com/documentation/objectivec/1418952-objc_getclass\">objc_getClass</see> method with the type name.");
+						print ("/// </remarks>");
+					}
 					print ("public {1} {2} ClassHandle {{ get {{ return class_ptr; }} }}\n", objc_type_name, TypeName == "NSObject" ? "virtual" : "override", NativeHandleType);
 				}
 
@@ -5660,6 +5691,15 @@ public partial class Generator : IMemberGatherer {
 						}
 						var nscoding = ConformToNSCoding (type);
 						if (nscoding) {
+							if (BindingTouch.SupportsXmlDocumentation) {
+								sw.WriteLine ($"\t\t/// <summary>A constructor that initializes the object from the data stored in the unarchiver object.</summary>");
+								sw.WriteLine ($"\t\t/// <param name=\"coder\">The unarchiver object.</param>");
+								sw.WriteLine ($"\t\t/// <remarks>");
+								sw.WriteLine ($"\t\t///   <para>This constructor is provided to allow the class to be initialized from an unarchiver (for example, during NIB deserialization). This is part of the <see cref=\"Foundation.NSCoding\" /> protocol.</para>");
+								sw.WriteLine ($"\t\t///   <para>If developers want to create a subclass of this object and continue to support deserialization from an archive, they should implement a constructor with an identical signature: taking a single parameter of type <see cref=\"Foundation.NSCoder\" /> and decorate it with the <c>[Export(\"initWithCoder:\"]</c> attribute.</para>");
+								sw.WriteLine ($"\t\t///   <para>The state of this object can also be serialized by using the <see cref=\"Foundation.INSCoding.EncodeTo\" /> companion method.</para>");
+								sw.WriteLine ($"\t\t/// </remarks>");
+							}
 							GeneratedCode (sw, 2);
 							sw.WriteLine ("\t\t[DesignatedInitializer]");
 							sw.WriteLine ("\t\t[EditorBrowsable (EditorBrowsableState.Advanced)]");
@@ -5693,6 +5733,53 @@ public partial class Generator : IMemberGatherer {
 						}
 					}
 					if (!is_sealed) {
+						if (BindingTouch.SupportsXmlDocumentation) {
+							sw.WriteLine ("\t\t/// <summary>Constructor to call on derived classes to skip initialization and merely allocate the object.</summary>");
+							sw.WriteLine ("\t\t/// <param name=\"t\">Unused sentinel value, pass NSObjectFlag.Empty.</param>");
+							sw.WriteLine ("\t\t/// <remarks>");
+							sw.WriteLine ("\t\t///     <para>");
+							sw.WriteLine ("\t\t///         This constructor should be called by derived classes when they completely construct the object in managed code and merely want the runtime to allocate and initialize the <see cref=\"Foundation.NSObject\" />.");
+							sw.WriteLine ("\t\t///         This is required to implement the two-step initialization process that Objective-C uses, the first step is to perform the object allocation, the second step is to initialize the object.");
+							sw.WriteLine ("\t\t///         When developers invoke this constructor, they take advantage of a direct path that goes all the way up to <see cref=\"Foundation.NSObject\" /> to merely allocate the object's memory and bind the Objective-C and C# objects together.");
+							sw.WriteLine ("\t\t///         The actual initialization of the object is up to the developer.");
+							sw.WriteLine ("\t\t///     </para>");
+							sw.WriteLine ("\t\t///     <para>");
+							sw.WriteLine ("\t\t///         This constructor is typically used by the binding generator to allocate the object, but prevent the actual initialization to take place.");
+							sw.WriteLine ("\t\t///         Once the allocation has taken place, the constructor has to initialize the object.");
+							sw.WriteLine ("\t\t///         With constructors generated by the binding generator this means that it manually invokes one of the \"init\" methods to initialize the object.");
+							sw.WriteLine ("\t\t///     </para>");
+							sw.WriteLine ("\t\t///     <para>It is the developer's responsibility to completely initialize the object if they chain up using this constructor chain.</para>");
+							sw.WriteLine ("\t\t///     <para>");
+							sw.WriteLine ("\t\t///         In general, if the developer's constructor invokes the corresponding base implementation, then it should also call an Objective-C init method.");
+							sw.WriteLine ("\t\t///         If this is not the case, developers should instead chain to the proper constructor in their class.");
+							sw.WriteLine ("\t\t///     </para>");
+							sw.WriteLine ("\t\t///     <para>");
+							sw.WriteLine ("\t\t///         The argument value is ignored and merely ensures that the only code that is executed is the construction phase is the basic <see cref=\"Foundation.NSObject\" /> allocation and runtime type registration.");
+							sw.WriteLine ("\t\t///         Typically the chaining would look like this:");
+							sw.WriteLine ("\t\t///     </para>");
+							sw.WriteLine ("\t\t///     <example>");
+							sw.WriteLine ("\t\t///             <code lang=\"csharp lang-csharp\"><![CDATA[");
+							sw.WriteLine ("\t\t/// //");
+							sw.WriteLine ("\t\t/// // The NSObjectFlag constructor merely allocates the object and registers the C# class with the Objective-C runtime if necessary.");
+							sw.WriteLine ("\t\t/// // No actual initXxx method is invoked, that is done later in the constructor");
+							sw.WriteLine ("\t\t/// //");
+							sw.WriteLine ("\t\t/// // This is taken from the iOS SDK's source code for the UIView class:");
+							sw.WriteLine ("\t\t/// //");
+							sw.WriteLine ("\t\t/// [Export (\"initWithFrame:\")]");
+							sw.WriteLine ("\t\t/// public UIView (System.Drawing.RectangleF frame) : base (NSObjectFlag.Empty)");
+							sw.WriteLine ("\t\t/// {");
+							sw.WriteLine ("\t\t///     // Invoke the init method now.");
+							sw.WriteLine ("\t\t///     var initWithFrame = new Selector (\"initWithFrame:\").Handle;");
+							sw.WriteLine ("\t\t///     if (IsDirectBinding) {");
+							sw.WriteLine ("\t\t///         Handle = ObjCRuntime.Messaging.IntPtr_objc_msgSend_CGRect (this.Handle, initWithFrame, frame);");
+							sw.WriteLine ("\t\t///     } else {");
+							sw.WriteLine ("\t\t///         Handle = ObjCRuntime.Messaging.IntPtr_objc_msgSendSuper_CGRect (this.SuperHandle, initWithFrame, frame);");
+							sw.WriteLine ("\t\t///     }");
+							sw.WriteLine ("\t\t/// }");
+							sw.WriteLine ("\t\t/// ]]></code>");
+							sw.WriteLine ("\t\t///     </example>");
+							sw.WriteLine ("\t\t/// </remarks>");
+						}
 						GeneratedCode (sw, 2);
 						sw.WriteLine ("\t\t[EditorBrowsable (EditorBrowsableState.Advanced)]");
 						sw.WriteLine ("\t\tprotected {0} (NSObjectFlag t) : base (t)", TypeName);
@@ -5702,6 +5789,17 @@ public partial class Generator : IMemberGatherer {
 						WriteMarkDirtyIfDerived (sw, type);
 						sw.WriteLine ("\t\t}");
 						sw.WriteLine ();
+					}
+
+					if (!is_sealed && BindingTouch.SupportsXmlDocumentation) {
+						sw.WriteLine ("\t\t/// <summary>A constructor used when creating managed representations of unmanaged objects. Called by the runtime.</summary>");
+						sw.WriteLine ("\t\t/// <param name=\"handle\">Pointer (handle) to the unmanaged object.</param>");
+						sw.WriteLine ("\t\t/// <remarks>");
+						sw.WriteLine ("\t\t///     <para>");
+						sw.WriteLine ("\t\t///         This constructor is invoked by the runtime infrastructure (<see cref=\"ObjCRuntime.Runtime.GetNSObject(System.IntPtr)\" />) to create a new managed representation for a pointer to an unmanaged Objective-C object.");
+						sw.WriteLine ("\t\t///         Developers should not invoke this method directly, instead they should call <see cref=\"ObjCRuntime.Runtime.GetNSObject(System.IntPtr)\" /> as it will prevent two instances of a managed object pointing to the same native object.");
+						sw.WriteLine ("\t\t///     </para>");
+						sw.WriteLine ("\t\t/// </remarks>");
 					}
 					GeneratedCode (sw, 2);
 					sw.WriteLine ("\t\t[EditorBrowsable (EditorBrowsableState.Advanced)]");
@@ -6813,12 +6911,17 @@ public partial class Generator : IMemberGatherer {
 	{
 		var pt = p.ParameterType;
 
-		string name;
+		string name = string.Empty;
+		if (AttributeManager.HasAttribute<BlockCallbackAttribute> (p))
+			name = "[BlockCallback] ";
+		else if (AttributeManager.HasAttribute<CCallbackAttribute> (p))
+			name = "[CCallback] ";
+
 		if (pt.IsByRef) {
 			pt = pt.GetElementType ();
-			name = (removeRefTypes ? "" : (p.IsOut ? "out " : "ref ")) + TypeManager.RenderType (pt, p);
+			name += (removeRefTypes ? "" : (p.IsOut ? "out " : "ref ")) + TypeManager.RenderType (pt, p);
 		} else
-			name = TypeManager.RenderType (pt, p);
+			name += TypeManager.RenderType (pt, p);
 		if (!pt.IsValueType && AttributeManager.HasAttribute<NullAllowedAttribute> (p))
 			name += "?";
 		return name;

@@ -13,7 +13,7 @@
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.InstallNameTool" AssemblyFile="$(_XamarinTaskAssembly)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.LinkNativeCode" AssemblyFile="$(_XamarinTaskAssembly)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.MergeAppBundles" AssemblyFile="$(_XamarinTaskAssembly)" />
-	<UsingTask TaskName="Xamarin.MacDev.Tasks.ILStrip" AssemblyFile="$(_XamarinTaskAssembly)" />
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.MobileILStrip" AssemblyFile="$(_XamarinTaskAssembly)" />
 
 	<!-- Project types and how do we distinguish between them
 
@@ -135,6 +135,8 @@
 		<UseSystemResourceKeys Condition="'$(UseSystemResourceKeys)' == '' And '$(_BundlerDebug)' == 'true'">false</UseSystemResourceKeys>
 		<UseNativeHttpHandler Condition="'$(_PlatformName)' != 'macOS' And '$(UseNativeHttpHandler)' == ''">true</UseNativeHttpHandler>
 		<!-- AutoreleasePoolSupport needs to be set earlier, so that illink doesn't override it - https://github.com/dotnet/runtime/pull/86753 - so it's set in Xamarin.Shared.Sdk.props -->
+		<EnableCppCLIHostActivation Condition="'$(EnableCppCLIHostActivation)' == ''">false</EnableCppCLIHostActivation>
+		<_EnableConsumingManagedCodeFromNativeHosting Condition="'$(_EnableConsumingManagedCodeFromNativeHosting)' == ''">false</_EnableConsumingManagedCodeFromNativeHosting>
 		<NullabilityInfoContextSupport Condition="'$(NullabilityInfoContextSupport)' == ''">false</NullabilityInfoContextSupport>
 		<BuiltInComInteropSupport Condition="'$(BuiltInComInteropSupport)' == ''">false</BuiltInComInteropSupport>
 		<!-- Verify DI trimmability at development-time, but turn the validation off for production/trimmed builds. -->
@@ -682,6 +684,7 @@
 			<!-- This would not be needed if LinkContext.GetAssemblies () was exposed to us. -->
 			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" BeforeStep="MarkStep" Type="Xamarin.Linker.CollectAssembliesStep" />
 			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" BeforeStep="MarkStep" Type="MonoTouch.Tuner.CoreTypeMapStep" />
+			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" BeforeStep="MarkStep" Type="MonoTouch.Tuner.ProcessExportedFields" />
 			<!-- The final decision to remove/keep the dynamic registrar must be done before the linking step -->
 			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" BeforeStep="MarkStep" Type="MonoTouch.Tuner.RegistrarRemovalTrackingStep" />
 			<!-- TODO: these steps should probably run after mark. -->
@@ -902,13 +905,13 @@
 				<OutputPath>$([System.String]::Copy('%(OutputPath)').Replace('\', '/'))</OutputPath>
 			</_AssembliesToBeStripped>
 		</ItemGroup>
-		<Xamarin.MacDev.Tasks.ILStrip
+		<MobileILStrip
 			Assemblies="@(_AssembliesToBeStripped)"
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
 			>
 			<Output TaskParameter="StrippedAssemblies" ItemName="_StrippedAssemblies" />
-		</Xamarin.MacDev.Tasks.ILStrip>
+		</MobileILStrip>
 		<ItemGroup>
 			<ResolvedFileToPublish Remove="@(_AssembliesToBeStripped)" />
 			<ResolvedFileToPublish Include="@(_StrippedAssemblies)" />
@@ -983,7 +986,7 @@
 			<_PackageIdInfix Condition="'$(_XamarinRuntime)' == 'NativeAOT'">NativeAOT.</_PackageIdInfix>
 
 			<_MonoNugetPackageId>Microsoft.NETCore.App.Runtime.$(_PackageIdInfix)$(RuntimeIdentifier)</_MonoNugetPackageId>
-			<_XamarinNugetPackageId>Microsoft.$(_PlatformName).Runtime.$(RuntimeIdentifier)</_XamarinNugetPackageId>
+			<_XamarinNugetPackageId>Microsoft.$(_PlatformName).Runtime.$(RuntimeIdentifier).$(_XamarinPackSuffix)</_XamarinNugetPackageId>
 		</PropertyGroup>
 		<ItemGroup>
 			<!-- Look in the ResolvedFrameworkReference for our Microsoft.* package. This should only find a single package. -->
@@ -1258,6 +1261,7 @@
 			Assemblies="@(_AssembliesToAOT)"
 			AOTCompilerPath="$(_XamarinAOTCompiler)"
 			InputDirectory="$(_AOTInputDirectory)"
+			MaxDegreeOfParallelism="$(AotCompileMaxDegreeOfParallelism)"
 			MinimumOSVersion="$(_MinimumOSVersion)"
 			OutputDirectory="$(_AOTOutputDirectory)\%(_AssembliesToAOT.Arch)"
 			SdkDevPath="$(_SdkDevPath)"
@@ -1488,6 +1492,9 @@
 			<!-- CFNetwork is required by xamarin_start_wwan -->
 			<_NativeExecutableFrameworks Include="CFNetwork" Condition="'$(_PlatformName)' == 'iOS'" />
 
+			<!-- libSystem.Security.Cryptography.Native.Apple.a requires the Security framework -->
+			<_NativeExecutableFrameworks Include="Security" />
+
 			<!-- Mono requires zlib, iconv, and the "Compression framework" -->
 			<_MainLinkerFlags Include="-lz" />
 			<_MainLinkerFlags Include="-liconv" />
@@ -1643,29 +1650,6 @@
 			<Output TaskParameter="Lines" ItemName="_UserFrameworksWithoutDebugSymbols" />
 		</ReadItemsFromFile>
 	</Target>
-
-	<Target Name="_ComputeDefaultLinkMode" DependsOnTargets="_DetectSdkLocations">
-		<PropertyGroup Condition="'$(TrimMode)' != ''">
-			<!-- If TrimMode is set, then that's the default link mode -->
-			<_DefaultLinkMode>TrimMode</_DefaultLinkMode>
-		</PropertyGroup>
-		<PropertyGroup Condition="'$(TrimMode)' == ''">
-			<!-- Linking is always on for all assemblies when using NativeAOT - this is because we need to modify all assemblies in the linker for them to be compatible with NativeAOT -->
-			<_DefaultLinkMode Condition="'$(_UseNativeAot)' == 'true'">Full</_DefaultLinkMode>
-
-			<_DefaultLinkMode Condition="'$(_UseNativeAot)' != 'true' And '$(_PlatformName)' == 'macOS'">None</_DefaultLinkMode> <!-- Linking is off by default for macOS apps -->
-			<_DefaultLinkMode Condition="'$(_UseNativeAot)' != 'true' And '$(_PlatformName)' == 'MacCatalyst' And '$(Configuration)' == 'Release'">SdkOnly</_DefaultLinkMode> <!-- Default linking is on for release builds for Mac Catalyst apps -->
-			<_DefaultLinkMode Condition="'$(_UseNativeAot)' != 'true' And '$(_PlatformName)' == 'MacCatalyst' And '$(Configuration)' != 'Release'">None</_DefaultLinkMode> <!-- Default linking is off for non-release builds for Mac Catalyst apps -->
-			<_DefaultLinkMode Condition="'$(_UseNativeAot)' != 'true' And '$(_PlatformName)' != 'macOS' And '$(_PlatformName)' != 'MacCatalyst' And '$(_SdkIsSimulator)' == 'true'">None</_DefaultLinkMode> <!-- Linking is off by default in the simulator -->
-			<_DefaultLinkMode Condition="'$(_UseNativeAot)' != 'true' And '$(_PlatformName)' != 'macOS' And '$(_PlatformName)' != 'MacCatalyst' And '$(_SdkIsSimulator)' != 'true'">SdkOnly</_DefaultLinkMode> <!-- Linking is SdkOnly for iOS/tvOS/watchOS apps on device -->
-		</PropertyGroup>
-	</Target>
-	<PropertyGroup>
-		<_ComputeLinkModeDependsOn>
-			$(_ComputeLinkModeDependsOn);
-			_ComputeDefaultLinkMode;
-		</_ComputeLinkModeDependsOn>
-	</PropertyGroup>
 
 	<PropertyGroup>
 		<_CodesignAppBundleDependsOn Condition="'$(RuntimeIdentifiers)' != ''">
@@ -2075,6 +2059,7 @@
 		<Unzip
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true' Or '$(IsHotRestartBuild)' == 'true'"
+			CopyToWindows="true"
 			ZipFilePath="%(_CompressedXpcServices.Identity)"
 			ExtractionPath="%(_CompressedXpcServices.ExtractionPath)"
 			>

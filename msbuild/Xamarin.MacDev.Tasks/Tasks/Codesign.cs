@@ -17,7 +17,7 @@ using Xamarin.Utils;
 #nullable disable
 
 namespace Xamarin.MacDev.Tasks {
-	public class Codesign : XamarinTask, ITaskCallback, ICancelableTask {
+	public class Codesign : XamarinParallelTask, ITaskCallback, ICancelableTask {
 		const string ToolName = "codesign";
 		const string MacOSDirName = "MacOS";
 		const string CodeSignatureDirName = "_CodeSignature";
@@ -468,7 +468,7 @@ namespace Xamarin.MacDev.Tasks {
 
 			for (var b = 0; b < buckets.Count; b++) {
 				var bucket = buckets [b];
-				Parallel.ForEach (bucket, new ParallelOptions { MaxDegreeOfParallelism = Math.Max (Environment.ProcessorCount / 2, 1) }, (item) => {
+				ForEach (bucket, (item) => {
 					Sign (item);
 
 					var files = GetCodesignedFiles (item.Item);

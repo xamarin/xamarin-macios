@@ -735,20 +735,24 @@ namespace CoreText {
 			return Runtime.GetNSObject<NSObject> (CTFontDescriptorCopyAttribute (Handle, attribute.Handle), true);
 		}
 
-		[DllImport (Constants.CoreTextLibrary)]
-		static extern IntPtr CTFontDescriptorCopyLocalizedAttribute (IntPtr descriptor, IntPtr attribute, IntPtr language);
 		public NSObject? GetLocalizedAttribute (NSString attribute)
 		{
-			return Runtime.GetNSObject<NSObject> (CTFontDescriptorCopyLocalizedAttribute (Handle, attribute.Handle, IntPtr.Zero), true);
+			unsafe {
+				return Runtime.GetNSObject<NSObject> (CTFontDescriptorCopyLocalizedAttribute (Handle, attribute.Handle, null), true);
+			}
 		}
 
 		[DllImport (Constants.CoreTextLibrary)]
-		static extern IntPtr CTFontDescriptorCopyLocalizedAttribute (IntPtr descriptor, IntPtr attribute, out IntPtr language);
+		unsafe static extern IntPtr CTFontDescriptorCopyLocalizedAttribute (IntPtr descriptor, IntPtr attribute, IntPtr* language);
 		public NSObject? GetLocalizedAttribute (NSString attribute, out NSString? language)
 		{
-			var o = Runtime.GetNSObject<NSObject> (CTFontDescriptorCopyLocalizedAttribute (Handle, attribute.Handle, out var lang), true);
+			IntPtr handle;
+			IntPtr lang;
+			unsafe {
+				handle = CTFontDescriptorCopyLocalizedAttribute (Handle, attribute.Handle, &lang);
+			}
 			language = Runtime.GetNSObject<NSString> (lang, true);
-			return o;
+			return Runtime.GetNSObject<NSObject> (handle, true);
 		}
 		#endregion
 #if NET

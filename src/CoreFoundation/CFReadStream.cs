@@ -83,12 +83,11 @@ namespace CoreFoundation {
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static /* Boolean */ bool CFReadStreamOpen (/* CFReadStreamRef */ IntPtr stream);
+		extern static /* Boolean */ byte CFReadStreamOpen (/* CFReadStreamRef */ IntPtr stream);
 
 		protected override bool DoOpen ()
 		{
-			return CFReadStreamOpen (Handle);
+			return CFReadStreamOpen (Handle) != 0;
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
@@ -108,12 +107,11 @@ namespace CoreFoundation {
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static /* Boolean */ bool CFReadStreamHasBytesAvailable (/* CFReadStreamRef */ IntPtr stream);
+		extern static /* Boolean */ byte CFReadStreamHasBytesAvailable (/* CFReadStreamRef */ IntPtr stream);
 
 		public bool HasBytesAvailable ()
 		{
-			return CFReadStreamHasBytesAvailable (Handle);
+			return CFReadStreamHasBytesAvailable (Handle) != 0;
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
@@ -209,14 +207,13 @@ namespace CoreFoundation {
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static /* Boolean */ bool CFReadStreamSetProperty (/* CFReadStreamRef */ IntPtr stream, /* CFStreamRef */ IntPtr propertyName, /* CFTypeRef */ IntPtr propertyValue);
+		extern static /* Boolean */ byte CFReadStreamSetProperty (/* CFReadStreamRef */ IntPtr stream, /* CFStreamRef */ IntPtr propertyName, /* CFTypeRef */ IntPtr propertyValue);
 
 		protected override bool DoSetProperty (NSString name, INativeObject? value)
 		{
 			if (name is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (name));
-			return CFReadStreamSetProperty (Handle, name.Handle, value.GetHandle ());
+			return CFReadStreamSetProperty (Handle, name.Handle, value.GetHandle ()) != 0;
 		}
 	}
 }

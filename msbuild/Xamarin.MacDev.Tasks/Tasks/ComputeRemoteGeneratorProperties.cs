@@ -122,6 +122,10 @@ namespace Xamarin.MacDev.Tasks {
 			arguments.Add (projectPath);
 
 			ExecuteAsync (executable, arguments, environment: environment).Wait ();
+			if (!File.Exists (outputFile)) {
+				Log.LogError (MSBStrings.E7120 /* Unable to compute the remote generator properties. Please file an issue at https://github.com/xamarin/xamarin-macios/issues/new and attach the following file: {0} */, binlog);
+				return;
+			}
 			var computedPropertes = File.ReadAllLines (outputFile);
 			foreach (var line in computedPropertes) {
 				var property = line.Substring (0, line.IndexOf ('='));

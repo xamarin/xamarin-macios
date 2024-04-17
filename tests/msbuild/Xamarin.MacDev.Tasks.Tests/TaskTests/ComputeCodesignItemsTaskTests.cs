@@ -10,7 +10,6 @@ using Microsoft.Build.Utilities;
 
 using NUnit.Framework;
 
-using Xamarin.iOS.Tasks;
 using Xamarin.Utils;
 
 #nullable enable

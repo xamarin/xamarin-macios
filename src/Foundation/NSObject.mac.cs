@@ -110,6 +110,7 @@ namespace Foundation {
 		static IntPtr th = Dlfcn.dlopen (Constants.ThreadNetworkLibrary, 1);
 		static IntPtr ni = Dlfcn.dlopen (Constants.NearbyInteractionLibrary, 1);
 		static IntPtr sm = Dlfcn.dlopen (Constants.ServiceManagementLibrary, 1);
+		static IntPtr sa = Dlfcn.dlopen (Constants.SafetyKitLibrary, 1);
 
 #if !NET
 		[Obsolete ("Use PlatformAssembly for easier code sharing across platforms.")]

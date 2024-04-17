@@ -56,6 +56,23 @@ steps:
     result: '$(Build.SourcesDirectory)/PoliCheck.xml'
     optionsUEPATH: '$(System.DefaultWorkingDirectory)/maccore/tools/devops/PoliCheckExclusions.xml'
 
+- task: SdtReport@2
+  displayName: Create Security Analysis Report
+  inputs:
+    GdnExportAllTools: false
+    GdnExportGdnToolCredScan: true
+    GdnExportGdnToolCredScanSeverity: 'error'
+    GdnExportGdnToolPoliCheck: true
+    GdnExportGdnToolPoliCheckSeverity: 'error'
+
+- task: PublishSecurityAnalysisLogs@3
+  displayName: Publish Security Analysis Logs
+  inputs:
+    ArtifactName: 'CodeAnalysisLogs - General'
+    ArtifactType: 'Container'
+    AllTools: true
+    ToolLogsNotFoundAction: 'Standard'
+
 - task: TSAUpload@2
   inputs:
     GdnPublishTsaOnboard: true

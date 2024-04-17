@@ -10,7 +10,6 @@ using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using Microsoft.Build.Tasks;
 
-using Xamarin.iOS.Tasks;
 using Xamarin.Utils;
 using Xamarin.Localization.MSBuild;
 using Xamarin.Messaging;
