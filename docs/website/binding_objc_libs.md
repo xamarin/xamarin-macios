@@ -638,8 +638,36 @@ class MyDelegate : NSObject, IUITableViewDelegate {
 }
 ```
 
-It does not matter if the interface is implemented
-implicitly or explicitly.
+This will work for all required protocol members, but there
+is a special case with optional selectors to be aware of.
+Optional protocol members are treated identically when using 
+the base class:
+
+```
+public class UrlSessionDelegate : NSUrlSessionDownloadDelegate {
+	public override void DidWriteData (NSUrlSession session, NSUrlSessionDownloadTask downloadTask, long bytesWritten, long totalBytesWritten, long totalBytesExpectedToWrite)
+```
+
+but when using the protocol interface it is required to add
+the [Export]. The IDE will add it via autocomplete when you 
+add it starting with override. 
+
+```
+public class UrlSessionDelegate : NSObject, INSUrlSessionDownloadDelegate {
+	[Export ("URLSession:downloadTask:didWriteData:totalBytesWritten:totalBytesExpectedToWrite:")]
+	public void DidWriteData (NSUrlSession session, NSUrlSessionDownloadTask downloadTask, long bytesWritten, long totalBytesWritten, long totalBytesExpectedToWrite)
+```
+
+There is a slight behavior difference between the two at runtime.
+
+- Users of the base class (NSUrlSessionDownloadDelegate in example) provides all
+required and optional selectors, returning reasonable default values.
+- Users of the interface (INSUrlSessionDownloadDelegate in example) only respond
+to the exact selectors provided.
+
+Some rare classes can behave differently here. In almost all cases however
+it is safe to use either.
+
 
 <a name="Binding_Class_Extensions"></a>
 
