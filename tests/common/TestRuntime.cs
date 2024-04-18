@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -1454,6 +1455,9 @@ partial class TestRuntime {
 
 	// Determine if linkall was enabled by checking if an unused class in this assembly is still here.
 	static bool? link_all;
+#if NET
+	[UnconditionalSuppressMessage ("Trimming", "IL2026", Justification = "This property checks whether the trimmer is enabled by checking if a type survived trimming; it's thus trimmer safe in that the any behavioral difference when the trimmer is enabled is exactly what it's looking for.")]
+#endif
 	public static bool IsLinkAll {
 		get {
 			if (!link_all.HasValue)
