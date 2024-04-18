@@ -570,16 +570,13 @@ namespace Foundation {
 
 		X509CertificateCollection? _clientCertificates;
 
-		public X509CertificateCollection ClientCertificates
-		{
-			get
-			{
-				if (ClientCertificateOptions != ClientCertificateOption.Manual)
-				{
-					throw new InvalidOperationException($"Enable manual options first on {nameof(ClientCertificateOptions)}");
+		public X509CertificateCollection ClientCertificates {
+			get {
+				if (ClientCertificateOptions != ClientCertificateOption.Manual) {
+					throw new InvalidOperationException ($"Enable manual options first on {nameof (ClientCertificateOptions)}");
 				}
 
-                return _clientCertificates ?? (_clientCertificates = new X509CertificateCollection());
+				return _clientCertificates ?? (_clientCertificates = new X509CertificateCollection ());
 			}
 		}
 
