@@ -13,7 +13,7 @@ using NativeHandle = System.IntPtr;
 
 #if !XAMCORE_5_0 && !__MACOS__
 namespace GameplayKit {
-	[Register("GKHybridStrategist", SkipRegistration = true)]
+	[Register ("GKHybridStrategist", SkipRegistration = true)]
 #if NET
 	[UnsupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("maccatalyst")]
