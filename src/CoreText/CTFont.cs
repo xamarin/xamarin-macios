@@ -32,6 +32,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 using ObjCRuntime;
@@ -1711,14 +1712,14 @@ namespace CoreText {
 		}
 
 		#region Font Creation
-		[DllImport (Constants.CoreTextLibrary)]
-		static extern IntPtr CTFontCreateWithName (IntPtr name, nfloat size, IntPtr matrix);
-
 		static IntPtr Create (string name, nfloat size)
 		{
 			var n = CFString.CreateNative (name);
 			try {
-				var handle = CTFontCreateWithName (n, size, IntPtr.Zero);
+				IntPtr handle;
+				unsafe {
+					handle = CTFontCreateWithName (n, size, null);
+				}
 				if (handle == IntPtr.Zero)
 					throw ConstructorError.Unknown (typeof (CTFont));
 				return handle;
@@ -1733,13 +1734,16 @@ namespace CoreText {
 		}
 
 		[DllImport (Constants.CoreTextLibrary)]
-		static extern IntPtr CTFontCreateWithName (IntPtr name, nfloat size, ref CGAffineTransform matrix);
+		unsafe static extern IntPtr CTFontCreateWithName (IntPtr name, nfloat size, CGAffineTransform* matrix);
 
 		static IntPtr Create (string name, nfloat size, ref CGAffineTransform matrix)
 		{
 			var n = CFString.CreateNative (name);
 			try {
-				var handle = CTFontCreateWithName (n, size, ref matrix);
+				IntPtr handle;
+				unsafe {
+					handle = CTFontCreateWithName (n, size, (CGAffineTransform*) Unsafe.AsPointer<CGAffineTransform> (ref matrix));
+				}
 				if (handle == IntPtr.Zero)
 					throw ConstructorError.Unknown (typeof (CTFont));
 				return handle;
@@ -1753,14 +1757,14 @@ namespace CoreText {
 		{
 		}
 
-		[DllImport (Constants.CoreTextLibrary)]
-		static extern IntPtr CTFontCreateWithFontDescriptor (IntPtr descriptor, nfloat size, IntPtr matrix);
-
 		static IntPtr Create (CTFontDescriptor descriptor, nfloat size)
 		{
 			if (descriptor is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (descriptor));
-			var handle = CTFontCreateWithFontDescriptor (descriptor.Handle, size, IntPtr.Zero);
+			IntPtr handle;
+			unsafe {
+				handle = CTFontCreateWithFontDescriptor (descriptor.Handle, size, null);
+			}
 			if (handle == IntPtr.Zero)
 				throw ConstructorError.Unknown (typeof (CTFont));
 			return handle;
@@ -1772,13 +1776,16 @@ namespace CoreText {
 		}
 
 		[DllImport (Constants.CoreTextLibrary)]
-		static extern IntPtr CTFontCreateWithFontDescriptor (IntPtr descriptor, nfloat size, ref CGAffineTransform matrix);
+		unsafe static extern IntPtr CTFontCreateWithFontDescriptor (IntPtr descriptor, nfloat size, CGAffineTransform* matrix);
 
 		static IntPtr Create (CTFontDescriptor descriptor, nfloat size, ref CGAffineTransform matrix)
 		{
 			if (descriptor is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (descriptor));
-			var handle = CTFontCreateWithFontDescriptor (descriptor.Handle, size, ref matrix);
+			IntPtr handle;
+			unsafe {
+				handle = CTFontCreateWithFontDescriptor (descriptor.Handle, size, (CGAffineTransform*) Unsafe.AsPointer<CGAffineTransform> (ref matrix));
+			}
 			if (handle == IntPtr.Zero)
 				throw ConstructorError.Unknown (typeof (CTFont));
 			return handle;
@@ -1789,22 +1796,16 @@ namespace CoreText {
 		{
 		}
 
-#if NET
-		[SupportedOSPlatform ("ios")]
-		[SupportedOSPlatform ("maccatalyst")]
-		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("tvos")]
-#endif
-		[DllImport (Constants.CoreTextLibrary)]
-		static extern IntPtr CTFontCreateWithNameAndOptions (IntPtr name, nfloat size, IntPtr matrix, nuint options);
-
 		static IntPtr Create (string name, nfloat size, CTFontOptions options)
 		{
 			if (name is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (name));
 			var n = CFString.CreateNative (name);
 			try {
-				var handle = CTFontCreateWithNameAndOptions (n, size, IntPtr.Zero, (nuint) (ulong) options);
+				IntPtr handle;
+				unsafe {
+					handle = CTFontCreateWithNameAndOptions (n, size, null, (nuint) (ulong) options);
+				}
 				if (handle == IntPtr.Zero)
 					throw ConstructorError.Unknown (typeof (CTFont));
 				return handle;
@@ -1831,7 +1832,7 @@ namespace CoreText {
 		[SupportedOSPlatform ("tvos")]
 #endif
 		[DllImport (Constants.CoreTextLibrary)]
-		static extern IntPtr CTFontCreateWithNameAndOptions (IntPtr name, nfloat size, ref CGAffineTransform matrix, nuint options);
+		unsafe static extern IntPtr CTFontCreateWithNameAndOptions (IntPtr name, nfloat size, CGAffineTransform* matrix, nuint options);
 
 		static IntPtr Create (string name, nfloat size, ref CGAffineTransform matrix, CTFontOptions options)
 		{
@@ -1839,7 +1840,10 @@ namespace CoreText {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (name));
 			var n = CFString.CreateNative (name);
 			try {
-				var handle = CTFontCreateWithNameAndOptions (n, size, ref matrix, (nuint) (ulong) options);
+				IntPtr handle;
+				unsafe {
+					handle = CTFontCreateWithNameAndOptions (n, size, (CGAffineTransform*) Unsafe.AsPointer<CGAffineTransform> (ref matrix), (nuint) (ulong) options);
+				}
 				if (handle == IntPtr.Zero)
 					throw ConstructorError.Unknown (typeof (CTFont));
 				return handle;
@@ -1859,20 +1863,14 @@ namespace CoreText {
 		{
 		}
 
-#if NET
-		[SupportedOSPlatform ("ios")]
-		[SupportedOSPlatform ("maccatalyst")]
-		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("tvos")]
-#endif
-		[DllImport (Constants.CoreTextLibrary)]
-		static extern IntPtr CTFontCreateWithFontDescriptorAndOptions (IntPtr descriptor, nfloat size, IntPtr matrix, nuint options);
-
 		static IntPtr Create (CTFontDescriptor descriptor, nfloat size, CTFontOptions options)
 		{
 			if (descriptor is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (descriptor));
-			var handle = CTFontCreateWithFontDescriptorAndOptions (descriptor.Handle, size, IntPtr.Zero, (nuint) (ulong) options);
+			IntPtr handle;
+			unsafe {
+				handle = CTFontCreateWithFontDescriptorAndOptions (descriptor.Handle, size, null, (nuint) (ulong) options);
+			}
 			if (handle == IntPtr.Zero)
 				throw ConstructorError.Unknown (typeof (CTFont));
 			return handle;
@@ -1896,13 +1894,16 @@ namespace CoreText {
 		[SupportedOSPlatform ("tvos")]
 #endif
 		[DllImport (Constants.CoreTextLibrary)]
-		static extern IntPtr CTFontCreateWithFontDescriptorAndOptions (IntPtr descriptor, nfloat size, ref CGAffineTransform matrix, nuint options);
+		unsafe static extern IntPtr CTFontCreateWithFontDescriptorAndOptions (IntPtr descriptor, nfloat size, CGAffineTransform* matrix, nuint options);
 
 		static IntPtr Create (CTFontDescriptor descriptor, nfloat size, CTFontOptions options, ref CGAffineTransform matrix)
 		{
 			if (descriptor is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (descriptor));
-			var handle = CTFontCreateWithFontDescriptorAndOptions (descriptor.Handle, size, ref matrix, (nuint) (ulong) options);
+			IntPtr handle;
+			unsafe {
+				handle = CTFontCreateWithFontDescriptorAndOptions (descriptor.Handle, size, (CGAffineTransform*) Unsafe.AsPointer<CGAffineTransform> (ref matrix), (nuint) (ulong) options);
+			}
 			if (handle == IntPtr.Zero)
 				throw ConstructorError.Unknown (typeof (CTFont));
 			return handle;
@@ -1920,23 +1921,23 @@ namespace CoreText {
 		}
 
 		[DllImport (Constants.CoreTextLibrary)]
-		static extern /* CTFontRef __nonnull */ IntPtr CTFontCreateWithGraphicsFont (
+		unsafe static extern /* CTFontRef __nonnull */ IntPtr CTFontCreateWithGraphicsFont (
 			/* CGFontRef __nonnull */ IntPtr cgfontRef, nfloat size,
-			/* const CGAffineTransform * __nullable */ ref CGAffineTransform affine,
+			/* const CGAffineTransform * __nullable */ CGAffineTransform* affine,
 			/* CTFontDescriptorRef __nullable */ IntPtr attrs);
 
 		static IntPtr Create (CGFont font, nfloat size, CGAffineTransform transform, CTFontDescriptor descriptor)
 		{
 			if (font is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (font));
-			var handle = CTFontCreateWithGraphicsFont (font.Handle, size, ref transform, descriptor.GetHandle ());
+			IntPtr handle;
+			unsafe {
+				handle = CTFontCreateWithGraphicsFont (font.Handle, size, &transform, descriptor.GetHandle ());
+			}
 			if (handle == IntPtr.Zero)
 				throw ConstructorError.Unknown (typeof (CTFont));
 			return handle;
 		}
-
-		[DllImport (Constants.CoreTextLibrary, EntryPoint = "CTFontCreateWithGraphicsFont")]
-		static extern IntPtr CTFontCreateWithGraphicsFont2 (IntPtr cgfontRef, nfloat size, IntPtr affine, IntPtr attrs);
 
 		public CTFont (CGFont font, nfloat size, CGAffineTransform transform, CTFontDescriptor descriptor)
 			: base (Create (font, size, transform, descriptor), true)
@@ -1947,7 +1948,10 @@ namespace CoreText {
 		{
 			if (font is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (font));
-			var handle = CTFontCreateWithGraphicsFont2 (font.Handle, size, IntPtr.Zero, descriptor.GetHandle ());
+			IntPtr handle;
+			unsafe {
+				handle = CTFontCreateWithGraphicsFont (font.Handle, size, null, descriptor.GetHandle ());
+			}
 			if (handle == IntPtr.Zero)
 				throw ConstructorError.Unknown (typeof (CTFont));
 			return handle;
@@ -1962,7 +1966,10 @@ namespace CoreText {
 		{
 			if (font is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (font));
-			var handle = CTFontCreateWithGraphicsFont (font.Handle, size, ref transform, IntPtr.Zero);
+			IntPtr handle;
+			unsafe {
+				handle = CTFontCreateWithGraphicsFont (font.Handle, size, &transform, IntPtr.Zero);
+			}
 			if (handle == IntPtr.Zero)
 				throw ConstructorError.Unknown (typeof (CTFont));
 			return handle;
@@ -1994,13 +2001,13 @@ namespace CoreText {
 		{
 		}
 
-		[DllImport (Constants.CoreTextLibrary)]
-		static extern IntPtr CTFontCreateCopyWithAttributes (IntPtr font, nfloat size, IntPtr matrix, IntPtr attributues);
 		public CTFont? WithAttributes (nfloat size, CTFontDescriptor attributes)
 		{
 			if (attributes is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (attributes));
-			return CreateFont (CTFontCreateCopyWithAttributes (Handle, size, IntPtr.Zero, attributes.Handle));
+			unsafe {
+				return CreateFont (CTFontCreateCopyWithAttributes (Handle, size, null, attributes.Handle));
+			}
 		}
 
 		static CTFont? CreateFont (IntPtr h)
@@ -2011,51 +2018,55 @@ namespace CoreText {
 		}
 
 		[DllImport (Constants.CoreTextLibrary)]
-		static extern IntPtr CTFontCreateCopyWithAttributes (IntPtr font, nfloat size, ref CGAffineTransform matrix, IntPtr attributes);
+		unsafe static extern IntPtr CTFontCreateCopyWithAttributes (IntPtr font, nfloat size, CGAffineTransform* matrix, IntPtr attributes);
 		public CTFont? WithAttributes (nfloat size, CTFontDescriptor attributes, ref CGAffineTransform matrix)
 		{
-			return CreateFont (CTFontCreateCopyWithAttributes (Handle, size, ref matrix, attributes.GetHandle ()));
+			unsafe {
+				return CreateFont (CTFontCreateCopyWithAttributes (Handle, size, (CGAffineTransform*) Unsafe.AsPointer<CGAffineTransform> (ref matrix), attributes.GetHandle ()));
+			}
 		}
 
-		[DllImport (Constants.CoreTextLibrary)]
-		static extern IntPtr CTFontCreateCopyWithSymbolicTraits (IntPtr font, nfloat size, IntPtr matrix, CTFontSymbolicTraits symTraitValue, CTFontSymbolicTraits symTraitMask);
 		public CTFont? WithSymbolicTraits (nfloat size, CTFontSymbolicTraits symTraitValue, CTFontSymbolicTraits symTraitMask)
 		{
-			return CreateFont (
-					CTFontCreateCopyWithSymbolicTraits (Handle, size, IntPtr.Zero, symTraitValue, symTraitMask));
+			unsafe {
+				return CreateFont (CTFontCreateCopyWithSymbolicTraits (Handle, size, null, symTraitValue, symTraitMask));
+			}
 		}
 
 		[DllImport (Constants.CoreTextLibrary)]
-		static extern IntPtr CTFontCreateCopyWithSymbolicTraits (IntPtr font, nfloat size, ref CGAffineTransform matrix, CTFontSymbolicTraits symTraitValue, CTFontSymbolicTraits symTraitMask);
+		unsafe static extern IntPtr CTFontCreateCopyWithSymbolicTraits (IntPtr font, nfloat size, CGAffineTransform* matrix, CTFontSymbolicTraits symTraitValue, CTFontSymbolicTraits symTraitMask);
 		public CTFont? WithSymbolicTraits (nfloat size, CTFontSymbolicTraits symTraitValue, CTFontSymbolicTraits symTraitMask, ref CGAffineTransform matrix)
 		{
-			return CreateFont (
-					CTFontCreateCopyWithSymbolicTraits (Handle, size, ref matrix, symTraitValue, symTraitMask));
+			unsafe {
+				return CreateFont (CTFontCreateCopyWithSymbolicTraits (Handle, size, (CGAffineTransform*) Unsafe.AsPointer<CGAffineTransform> (ref matrix), symTraitValue, symTraitMask));
+			}
 		}
 
-		[DllImport (Constants.CoreTextLibrary)]
-		static extern IntPtr CTFontCreateCopyWithFamily (IntPtr font, nfloat size, IntPtr matrix, IntPtr family);
 		public CTFont? WithFamily (nfloat size, string family)
 		{
 			if (family is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (family));
 			var n = CFString.CreateNative (family);
 			try {
-				return CreateFont (CTFontCreateCopyWithFamily (Handle, size, IntPtr.Zero, n));
+				unsafe {
+					return CreateFont (CTFontCreateCopyWithFamily (Handle, size, null, n));
+				}
 			} finally {
 				CFString.ReleaseNative (n);
 			}
 		}
 
 		[DllImport (Constants.CoreTextLibrary)]
-		static extern IntPtr CTFontCreateCopyWithFamily (IntPtr font, nfloat size, ref CGAffineTransform matrix, IntPtr family);
+		unsafe static extern IntPtr CTFontCreateCopyWithFamily (IntPtr font, nfloat size, CGAffineTransform* matrix, IntPtr family);
 		public CTFont? WithFamily (nfloat size, string family, ref CGAffineTransform matrix)
 		{
 			if (family is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (family));
 			var n = CFString.CreateNative (family);
 			try {
-				return CreateFont (CTFontCreateCopyWithFamily (Handle, size, ref matrix, n));
+				unsafe {
+					return CreateFont (CTFontCreateCopyWithFamily (Handle, size, (CGAffineTransform*) Unsafe.AsPointer<CGAffineTransform> (ref matrix), n));
+				}
 			} finally {
 				CFString.ReleaseNative (n);
 			}
@@ -2220,7 +2231,7 @@ namespace CoreText {
 		}
 
 		[DllImport (Constants.CoreTextLibrary)]
-		static extern IntPtr CTFontCopyLocalizedName (IntPtr font, IntPtr nameKey, out IntPtr actualLanguage);
+		unsafe static extern IntPtr CTFontCopyLocalizedName (IntPtr font, IntPtr nameKey, IntPtr* actualLanguage);
 
 		public string? GetLocalizedName (CTFontNameKey nameKey)
 		{
@@ -2230,7 +2241,10 @@ namespace CoreText {
 		public string? GetLocalizedName (CTFontNameKey nameKey, out string? actualLanguage)
 		{
 			IntPtr actual;
-			var ret = CFString.FromHandle (CTFontCopyLocalizedName (Handle, CTFontNameKeyId.ToId (nameKey).GetHandle (), out actual), releaseHandle: true);
+			string? ret;
+			unsafe {
+				ret = CFString.FromHandle (CTFontCopyLocalizedName (Handle, CTFontNameKeyId.ToId (nameKey).GetHandle (), &actual), releaseHandle: true);
+			}
 			actualLanguage = CFString.FromHandle (actual, releaseHandle: true);
 			return ret;
 		}
@@ -2264,8 +2278,7 @@ namespace CoreText {
 		}
 
 		[DllImport (Constants.CoreTextLibrary, CharSet = CharSet.Unicode)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static extern bool CTFontGetGlyphsForCharacters (IntPtr font, char [] characters, CGGlyph [] glyphs, nint count);
+		unsafe static extern byte CTFontGetGlyphsForCharacters (IntPtr font, ushort* characters, CGGlyph* glyphs, nint count);
 
 		public bool GetGlyphsForCharacters (char [] characters, CGGlyph [] glyphs, nint count)
 		{
@@ -2273,7 +2286,13 @@ namespace CoreText {
 			AssertLength ("characters", characters, count);
 			AssertLength ("glyphs", characters, count);
 
-			return CTFontGetGlyphsForCharacters (Handle, characters, glyphs, count);
+			unsafe {
+				fixed (char* charactersPtr = characters) {
+					fixed (CGGlyph* glyphsPtr = glyphs) {
+						return CTFontGetGlyphsForCharacters (Handle, (ushort*) charactersPtr, glyphsPtr, count) != 0;
+					}
+				}
+			}
 		}
 
 		public bool GetGlyphsForCharacters (char [] characters, CGGlyph [] glyphs)
@@ -2483,21 +2502,25 @@ namespace CoreText {
 			CTFontGetVerticalTranslationsForGlyphs (Handle, glyphs, translations, count);
 		}
 
-		[DllImport (Constants.CoreTextLibrary)]
-		static extern IntPtr CTFontCreatePathForGlyph (IntPtr font, CGGlyph glyph, IntPtr transform);
 		public CGPath? GetPathForGlyph (CGGlyph glyph)
 		{
-			var h = CTFontCreatePathForGlyph (Handle, glyph, IntPtr.Zero);
+			IntPtr h;
+			unsafe {
+				h = CTFontCreatePathForGlyph (Handle, glyph, null);
+			}
 			if (h == IntPtr.Zero)
 				return null;
 			return new CGPath (h, true);
 		}
 
 		[DllImport (Constants.CoreTextLibrary)]
-		static extern IntPtr CTFontCreatePathForGlyph (IntPtr font, CGGlyph glyph, ref CGAffineTransform transform);
+		unsafe static extern IntPtr CTFontCreatePathForGlyph (IntPtr font, CGGlyph glyph, CGAffineTransform* transform);
 		public CGPath? GetPathForGlyph (CGGlyph glyph, ref CGAffineTransform transform)
 		{
-			var h = CTFontCreatePathForGlyph (Handle, glyph, ref transform);
+			IntPtr h;
+			unsafe {
+				h = CTFontCreatePathForGlyph (Handle, glyph, (CGAffineTransform*) Unsafe.AsPointer<CGAffineTransform> (ref transform));
+			}
 			if (h == IntPtr.Zero)
 				return null;
 			return new CGPath (h, true);

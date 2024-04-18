@@ -25,3 +25,12 @@ if ls ~/Library/Logs/Xamarin.Messaging* >& /dev/null ; then
 else
 	echo "No logs in ~/Library/Logs/Xamarin.Messaging"
 fi
+
+# Zip up all the logs in /tmp/com.xamarin.*
+if ls /tmp/com.xamarin.* >& /dev/null ; then
+	zip -9r ~/remote_build_testing/windows-remote-logs.zip /tmp/com.xamarin.*
+else
+	echo "No logs in /tmp/com.xamarin.*"
+fi
+
+ps auxww > ~/remote_build_testing/processes.txt || true
