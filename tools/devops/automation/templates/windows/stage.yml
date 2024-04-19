@@ -60,7 +60,7 @@ stages:
       - agent.os -equals Darwin
       - SSH.Enabled -equals True
       - macOS.Architecture -equals arm64
-      - macOS.Name -equals Ventura
+      - macOS.Name -equals Sonoma
 
     steps:
     - template: reserve-mac.yml
