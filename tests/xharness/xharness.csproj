@@ -9,6 +9,7 @@
     <EnableDefaultItems>false</EnableDefaultItems>
     <WarningsAsErrors>Nullable</WarningsAsErrors>
     <!--<Nullable>enable</Nullable>-->
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'Default' ">
