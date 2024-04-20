@@ -1,6 +1,7 @@
 #if __MACOS__
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using NUnit.Framework;
 
@@ -59,6 +60,9 @@ namespace Xamarin.Mac.Tests {
 		}
 
 		[Test]
+#if NET
+		[UnconditionalSuppressMessage ("Trimming", "IL2075", Justification = "This test handles APIs that have been linked away, so it's trimmer-safe.")]
+#endif
 		public void AllItemsWithNSMenuShouldAllowNull ()
 		{
 			// Can't test NSResponder since it is abstract

@@ -8,6 +8,7 @@
 // Copyright 2015 Xamarin Inc. All rights reserved.
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using System.Collections.Generic;
@@ -137,6 +138,9 @@ namespace Xamarin.Tests {
 			return attributeProvider.IsAvailable (PlatformInfo.Host);
 		}
 
+#if NET
+		[UnconditionalSuppressMessage ("Trimming", "IL2045", Justification = "Some of the attributes this method uses may have been linked away, so things might not work. It actually works though, so unless something changes, we're going to assume it's trimmer-compatible.")]
+#endif
 		public static bool IsAvailable (this ICustomAttributeProvider attributeProvider, PlatformInfo targetPlatform)
 		{
 			var customAttributes = attributeProvider.GetCustomAttributes (true);
@@ -201,6 +205,9 @@ namespace Xamarin.Tests {
 			// return attributes.Count () == 0;
 		}
 
+#if NET
+		[UnconditionalSuppressMessage ("Trimming", "IL2045", Justification = "Some of the attributes this method uses may have been linked away, so things might not work. It actually works though, so unless something changes, we're going to assume it's trimmer-compatible.")]
+#endif
 		public static bool? IsAvailable (IEnumerable<(OSPlatformAttribute Attribute, ApplePlatform Platform, Version Version)> attributes, PlatformInfo targetPlatform, ApplePlatform attributePlatform)
 		{
 			// First we check for any unsupported attributes, and only once we know that there aren't any unsupported

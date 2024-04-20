@@ -1804,7 +1804,7 @@ public class TestApp {
 
 				mtouch.FastDev = true;
 				mtouch.AssertExecute (MTouchAction.BuildDev, "first build");
-				mtouch.AssertWarning (127, "Incremental builds have been disabled because this version of Xamarin.iOS does not support incremental builds in projects that include more than one third-party binding libraries.");
+				mtouch.AssertWarning (127, "Incremental builds have been disabled because incremental builds are currently not supported in projects that include more than one third-party binding library.");
 			}
 		}
 
@@ -4509,7 +4509,7 @@ public class Dummy {
 				environment_variables ["SKIP_SIMULATOR_SETUP"] = "1";
 			environment_variables ["USE_TCP_TUNNEL"] = null;
 
-			var executable = Path.Combine (Configuration.RootPath, "tests", "xharness", "bin", "Debug", Configuration.DotNetTfm, "xharness");
+			var executable = Path.Combine (Configuration.RootPath, "tests", "xharness", "bin", "Debug", "xharness");
 			var args = new List<string> ();
 			args.Add ("--run");
 			args.Add (csprojpath);

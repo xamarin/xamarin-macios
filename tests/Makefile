@@ -12,7 +12,7 @@ endif
 
 MTOUCH=$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/bin/mtouch
 
-XHARNESS_EXECUTABLE=xharness/bin/Debug/$(DOTNET_TFM)/xharness.dll
+XHARNESS_EXECUTABLE=xharness/bin/Debug/xharness.dll
 
 export MD_MTOUCH_SDK_ROOT=$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)
 export MSBUILD_EXE_PATH=$(MONO_PREFIX)/lib/mono/msbuild/15.0/bin/MSBuild.dll
