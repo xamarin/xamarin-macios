@@ -28,6 +28,7 @@
 #nullable enable
 
 using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 using ObjCRuntime;
@@ -90,14 +91,17 @@ namespace CoreText {
 
 		#region Frame Sizing
 		[DllImport (Constants.CoreTextLibrary)]
-		static extern CGSize CTFramesetterSuggestFrameSizeWithConstraints (
-				IntPtr framesetter, NSRange stringRange, IntPtr frameAttributes, CGSize constraints, out NSRange fitRange);
+		unsafe static extern CGSize CTFramesetterSuggestFrameSizeWithConstraints (
+				IntPtr framesetter, NSRange stringRange, IntPtr frameAttributes, CGSize constraints, NSRange* fitRange);
 		public CGSize SuggestFrameSize (NSRange stringRange, CTFrameAttributes? frameAttributes, CGSize constraints, out NSRange fitRange)
 		{
-			return CTFramesetterSuggestFrameSizeWithConstraints (
-					Handle, stringRange,
-					frameAttributes.GetHandle (),
-					constraints, out fitRange);
+			fitRange = default;
+			unsafe {
+				return CTFramesetterSuggestFrameSizeWithConstraints (
+						Handle, stringRange,
+						frameAttributes.GetHandle (),
+						constraints, (NSRange*) Unsafe.AsPointer<NSRange> (ref fitRange));
+			}
 		}
 		#endregion
 #if NET
