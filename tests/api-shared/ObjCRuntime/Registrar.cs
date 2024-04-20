@@ -8,6 +8,7 @@
 //
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
@@ -41,6 +42,9 @@ namespace XamarinTests.ObjCRuntime {
 			}
 		}
 
+#if NET
+		[UnconditionalSuppressMessage ("Trimming", "IL2026", Justification = "This test accesses internals, and this code seems to work fine with the trimmer enabled.")]
+#endif
 		public static Registrars CurrentRegistrar {
 			get {
 				var __registrar__ = typeof (Class).Assembly.GetType ("ObjCRuntime.__Registrar__");

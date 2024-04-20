@@ -549,6 +549,7 @@ COREGRAPHICS_SOURCES = \
 	CoreGraphics/CGPDFString.cs \
 	CoreGraphics/CGPdfTagType.cs \
 	CoreGraphics/CGShading.cs \
+	CoreGraphics/NativeDrawingMethods.cs \
 
 # CoreHaptics
 
@@ -1943,7 +1944,6 @@ SHARED_CORE_SOURCES = \
 	DotNetGlobals.cs \
 	MinimumVersions.cs \
 	MonoPInvokeCallbackAttribute.cs \
-	$(BUILD_DIR)/common/NativeTypes/Drawing.cs \
 	$(BUILD_DIR)/common/NativeTypes/Primitives.cs \
 	ObjCRuntime/ArgumentSemantic.cs \
 	ObjCRuntime/BindAsAttribute.cs \
