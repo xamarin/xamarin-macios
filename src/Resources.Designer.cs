@@ -168,15 +168,6 @@ namespace bgen {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Xamarin.Mac Classic binding projects are not supported anymore. Please upgrade the binding project to a Xamarin.Mac Unified binding project..
-        /// </summary>
-        internal static string BI0087 {
-            get {
-                return ResourceManager.GetString("BI0087", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Internal error: don&apos;t know how to create ref/out (input) code for {0} in {1}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new)..
         /// </summary>
         internal static string BI0088 {
