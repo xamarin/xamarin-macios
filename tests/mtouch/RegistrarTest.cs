@@ -459,8 +459,8 @@ class C : NSObject {
 				mtouch.Linker = MTouchLinker.DontLink;
 				mtouch.Registrar = MTouchRegistrar.Static;
 				mtouch.AssertExecuteFailure ();
-				mtouch.AssertError (4141, "Cannot register the selector 'retain' on the member 'C.Retain' because Xamarin.iOS implicitly registers this selector.", "testApp.cs", 5);
-				mtouch.AssertError (4141, "Cannot register the selector 'release' on the member 'C.Release' because Xamarin.iOS implicitly registers this selector.", "testApp.cs", 8);
+				mtouch.AssertError (4141, "Cannot register the selector 'retain' on the member 'C.Retain' because this selector is already implicitly registered.", "testApp.cs", 5);
+				mtouch.AssertError (4141, "Cannot register the selector 'release' on the member 'C.Release' because this selector is already implicitly registered.", "testApp.cs", 8);
 				mtouch.AssertErrorCount (2);
 				mtouch.AssertNoWarnings ();
 			}
