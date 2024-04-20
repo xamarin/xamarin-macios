@@ -399,13 +399,12 @@ namespace CoreText {
 
 		#region Paragraph Style Access
 		[DllImport (Constants.CoreTextLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static extern unsafe bool CTParagraphStyleGetValueForSpecifier (IntPtr paragraphStyle, CTParagraphStyleSpecifier spec, nuint valueBufferSize, void* valueBuffer);
+		static extern unsafe byte CTParagraphStyleGetValueForSpecifier (IntPtr paragraphStyle, CTParagraphStyleSpecifier spec, nuint valueBufferSize, void* valueBuffer);
 
 		public unsafe CTTextTab? []? GetTabStops ()
 		{
 			IntPtr cfArrayRef;
-			if (!CTParagraphStyleGetValueForSpecifier (Handle, CTParagraphStyleSpecifier.TabStops, (uint) IntPtr.Size, (void*) &cfArrayRef))
+			if (CTParagraphStyleGetValueForSpecifier (Handle, CTParagraphStyleSpecifier.TabStops, (uint) IntPtr.Size, (void*) &cfArrayRef) == 0)
 				throw new InvalidOperationException ("Unable to get property value.");
 			if (cfArrayRef == IntPtr.Zero)
 				return Array.Empty<CTTextTab> ();
@@ -419,7 +418,7 @@ namespace CoreText {
 		unsafe byte GetByteValue (CTParagraphStyleSpecifier spec)
 		{
 			byte value;
-			if (!CTParagraphStyleGetValueForSpecifier (Handle, spec, sizeof (byte), &value))
+			if (CTParagraphStyleGetValueForSpecifier (Handle, spec, sizeof (byte), &value) == 0)
 				throw new InvalidOperationException ("Unable to get property value.");
 			return value;
 		}
@@ -447,7 +446,7 @@ namespace CoreText {
 #endif
 		{
 			nfloat value;
-			if (!CTParagraphStyleGetValueForSpecifier (Handle, spec, (nuint) sizeof (nfloat), &value))
+			if (CTParagraphStyleGetValueForSpecifier (Handle, spec, (nuint) sizeof (nfloat), &value) == 0)
 				throw new InvalidOperationException ("Unable to get property value.");
 #if NET
 			return value;

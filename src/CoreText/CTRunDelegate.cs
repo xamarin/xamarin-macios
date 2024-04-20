@@ -59,10 +59,10 @@ namespace CoreText {
 	[StructLayout (LayoutKind.Sequential)]
 	struct CTRunDelegateCallbacks {
 		public /* CFIndex */ nint version;
-		public CTRunDelegateDeallocateCallback dealloc;
-		public CTRunDelegateGetCallback getAscent;
-		public CTRunDelegateGetCallback getDescent;
-		public CTRunDelegateGetCallback getWidth;
+		public IntPtr dealloc;
+		public IntPtr getAscent;
+		public IntPtr getDescent;
+		public IntPtr getWidth;
 	}
 #endif
 	#endregion
@@ -152,10 +152,10 @@ namespace CoreText {
 #else
 				callbacks = new CTRunDelegateCallbacks () {
 					version = 1, // kCTRunDelegateVersion1
-					dealloc = Deallocate,
-					getAscent = GetAscent,
-					getDescent = GetDescent,
-					getWidth = GetWidth,
+					dealloc = Marshal.GetFunctionPointerForDelegate (DeallocateDelegate),
+					getAscent = Marshal.GetFunctionPointerForDelegate (GetAscentDelegate),
+					getDescent = Marshal.GetFunctionPointerForDelegate (GetDescentDelegate),
+					getWidth = Marshal.GetFunctionPointerForDelegate (GetWidthDelegate),
 				};
 #endif
 			}
@@ -165,6 +165,7 @@ namespace CoreText {
 #if NET
 		[UnmanagedCallersOnly]
 #else
+		static CTRunDelegateDeallocateCallback DeallocateDelegate = Deallocate;
 		[MonoPInvokeCallback (typeof (CTRunDelegateDeallocateCallback))]
 #endif
 		static void Deallocate (IntPtr refCon)
@@ -190,6 +191,7 @@ namespace CoreText {
 #if NET
 		[UnmanagedCallersOnly]
 #else
+		static CTRunDelegateGetCallback GetAscentDelegate = GetAscent;
 		[MonoPInvokeCallback (typeof (CTRunDelegateGetCallback))]
 #endif
 		static nfloat GetAscent (IntPtr refCon)
@@ -203,6 +205,7 @@ namespace CoreText {
 #if NET
 		[UnmanagedCallersOnly]
 #else
+		static CTRunDelegateGetCallback GetDescentDelegate = GetDescent;
 		[MonoPInvokeCallback (typeof (CTRunDelegateGetCallback))]
 #endif
 		static nfloat GetDescent (IntPtr refCon)
@@ -216,6 +219,7 @@ namespace CoreText {
 #if NET
 		[UnmanagedCallersOnly]
 #else
+		static CTRunDelegateGetCallback GetWidthDelegate = GetWidth;
 		[MonoPInvokeCallback (typeof (CTRunDelegateGetCallback))]
 #endif
 		static nfloat GetWidth (IntPtr refCon)
@@ -242,7 +246,7 @@ namespace CoreText {
 
 		#region RunDelegate Creation
 		[DllImport (Constants.CoreTextLibrary)]
-		static extern IntPtr CTRunDelegateCreate (ref CTRunDelegateCallbacks callbacks, IntPtr refCon);
+		unsafe static extern IntPtr CTRunDelegateCreate (CTRunDelegateCallbacks* callbacks, IntPtr refCon);
 
 		static IntPtr Create (CTRunDelegateOperations operations)
 		{
@@ -250,7 +254,9 @@ namespace CoreText {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (operations));
 
 			CTRunDelegateCallbacks callbacks = operations.GetCallbacks ();
-			return CTRunDelegateCreate (ref callbacks, operations.Handle);
+			unsafe {
+				return CTRunDelegateCreate (&callbacks, operations.Handle);
+			}
 		}
 
 		public CTRunDelegate (CTRunDelegateOperations operations)
