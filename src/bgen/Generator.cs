@@ -6598,6 +6598,11 @@ public partial class Generator : IMemberGatherer {
 				print ("// Notifications");
 				print ("//");
 
+				print ($"/// <summary>Notifications posted by the <see cref=\"global::{type.FullName}\" /> class.</summary>");
+				print ("/// <remarks>");
+				print ("///    <para>This class contains various helper methods that allow developers to observe events posted in the notification hub (<see cref=\"Foundation.NSNotificationCenter\" />).</para>");
+				print ("///    <para>The methods defined in this class post events that invoke the provided method or lambda with a <see cref=\"Foundation.NSNotificationEventArgs\" /> parameter, which contains strongly typed properties for the notification arguments.</para>");
+				print ("/// </remarks>");
 				print ("public static partial class Notifications {\n");
 				foreach (var property in notifications.OrderBy (p => p.Name, StringComparer.Ordinal)) {
 					string notification_name = GetNotificationName (property);
@@ -6609,10 +6614,47 @@ public partial class Generator : IMemberGatherer {
 
 						if (event_args_type is not null)
 							notification_event_arg_types [event_args_type] = event_args_type;
+
+						print ($"\t/// <summary>Strongly typed notification for the <see cref=\"global::{type.FullName}.{property.Name}\" /> constant.</summary>");
+						print ($"\t/// <param name=\"handler\">The handler that responds to the notification when it occurs.</param>");
+						print ($"\t/// <returns>Token object that can be used to stop receiving notifications by either disposing it or passing it to <see cref=\"Foundation.NSNotificationCenter.RemoveObservers(System.Collections.Generic.IEnumerable{{Foundation.NSObject}})\" />.</returns>");
+						print ($"\t/// <remarks>");
+						print ($"\t///   <para>This method can be used to subscribe to <see cref=\"global::{type.FullName}.{property.Name}\" /> notifications.</para>");
+						print ($"\t///   <example>");
+						print ($"\t///   <code lang=\"csharp lang-csharp\"><![CDATA[");
+						print ($"\t/// // Listen to all notifications posted for any object");
+						print ($"\t/// var token = {type.Name}.Notifications.Observe{notification_name} ((notification) => {{");
+						print ($"\t///   Console.WriteLine (\"Observed {notification_name}Notification!\");");
+						print ($"\t/// }};");
+						print ($"\t/// ");
+						print ($"\t/// // Stop listening for notifications");
+						print ($"\t/// token.Dispose ();");
+						print ($"\t/// ]]></code>");
+						print ($"\t///   </example>");
+						print ($"\t/// </remarks>");
 						print ("\tpublic static NSObject Observe{0} (EventHandler<{1}> handler)", notification_name, event_name);
 						print ("\t{");
 						print ("\t\treturn {0}.AddObserver ({1}, notification => handler (null, new {2} (notification)));", notification_center, property.Name, event_name);
 						print ("\t}");
+
+						print ($"\t/// <summary>Strongly typed notification for the <see cref=\"global::{type.FullName}.{property.Name}\" /> constant.</summary>");
+						print ($"\t/// <param name=\"objectToObserve\">The specific object to observe.</param>");
+						print ($"\t/// <param name=\"handler\">The handler that responds to the notification when it occurs.</param>");
+						print ($"\t/// <returns>Token object that can be used to stop receiving notifications by either disposing it or passing it to <see cref=\"Foundation.NSNotificationCenter.RemoveObservers(System.Collections.Generic.IEnumerable{{Foundation.NSObject}})\" />.</returns>");
+						print ($"\t/// <remarks>");
+						print ($"\t///   <para>This method can be used to subscribe to <see cref=\"global::{type.FullName}.{property.Name}\" /> notifications.</para>");
+						print ($"\t///   <example>");
+						print ($"\t///     <code lang=\"csharp lang-csharp\"><![CDATA[");
+						print ($"\t/// // Listen to all notifications posted for a single object");
+						print ($"\t/// var token = {type.Name}.Notifications.Observe{notification_name} (objectToObserve, (notification) => {{");
+						print ($"\t///   Console.WriteLine ($\"Observed {notification_name}Notification for {{nameof (objectToObserve)}}!\");");
+						print ($"\t/// }};");
+						print ($"\t/// ");
+						print ($"\t/// // Stop listening for notifications");
+						print ($"\t/// token.Dispose ();");
+						print ($"\t/// ]]></code>");
+						print ($"\t///   </example>");
+						print ($"\t/// </remarks>");
 						print ("\tpublic static NSObject Observe{0} (NSObject objectToObserve, EventHandler<{1}> handler)", notification_name, event_name);
 						print ("\t{");
 						print ("\t\treturn {0}.AddObserver ({1}, notification => handler (null, new {2} (notification)), objectToObserve);", notification_center, property.Name, event_name);
