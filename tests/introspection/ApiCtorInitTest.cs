@@ -138,6 +138,10 @@ namespace Introspection {
 			case "PKIdentityButton":
 				return true;
 #endif
+#if !XAMCORE_5_0
+			case "GKHybridStrategist":
+				return true; // GKHybridStrategist has been removed from our bindings
+#endif
 			}
 
 			switch (type.Namespace) {
