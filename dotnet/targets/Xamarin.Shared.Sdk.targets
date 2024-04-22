@@ -1473,8 +1473,24 @@
 			_CompileNativeExecutable;
 			_ReidentifyDynamicLibraries;
 			_ComputeLinkNativeExecutableInputs;
+			_AddSwiftLinkerFlags;
 		</_LinkNativeExecutableDependsOn>
 	</PropertyGroup>
+
+	<Target Name="_AddSwiftLinkerFlags" Condition="'$(LinkWithSwiftSystemLibraries)' == 'true'" DependsOnTargets="_DetectSdkLocations">
+		<PropertyGroup>
+			<_SwiftTargetPlatform Condition="'$(_PlatformName)' == 'iOS' And '$(_SdkIsSimulator)' == 'true'">iphonesimulator</_SwiftTargetPlatform>
+			<_SwiftTargetPlatform Condition="'$(_PlatformName)' == 'iOS' And '$(_SdkIsSimulator)' != 'true'">iphoneos</_SwiftTargetPlatform>
+			<_SwiftTargetPlatform Condition="'$(_PlatformName)' == 'tvOS' And '$(_SdkIsSimulator)' == 'true'">appletvsimulator</_SwiftTargetPlatform>
+			<_SwiftTargetPlatform Condition="'$(_PlatformName)' == 'tvOS' And '$(_SdkIsSimulator)' != 'true'">appletvos</_SwiftTargetPlatform>
+			<_SwiftTargetPlatform Condition="'$(_PlatformName)' == 'MacCatalyst'">macosx</_SwiftTargetPlatform> <!-- yes, 'macosx' and not 'maccatalyst': even though the resulting maccatalyst directory exists, it doesn't have anything useful in it -->
+			<_SwiftTargetPlatform Condition="'$(_PlatformName)' == 'macOS'">macosx</_SwiftTargetPlatform>
+		</PropertyGroup>
+		<ItemGroup>
+			<_MainLinkerFlags Include="-L$(_SdkDevPath)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/$(_SwiftTargetPlatform)/" />
+			<_MainLinkerFlags Include="-L$(_SdkRoot)/usr/lib/swift/" />
+		</ItemGroup>
+	</Target>
 
 	<Target Name="_ComputeLinkNativeExecutableInputs" Condition="'$(IsMacEnabled)' == 'true'">
 		<PropertyGroup>
@@ -1491,6 +1507,9 @@
 
 			<!-- CFNetwork is required by xamarin_start_wwan -->
 			<_NativeExecutableFrameworks Include="CFNetwork" Condition="'$(_PlatformName)' == 'iOS'" />
+
+			<!-- libSystem.Security.Cryptography.Native.Apple.a requires the Security framework -->
+			<_NativeExecutableFrameworks Include="Security" />
 
 			<!-- Mono requires zlib, iconv, and the "Compression framework" -->
 			<_MainLinkerFlags Include="-lz" />
@@ -1647,29 +1666,6 @@
 			<Output TaskParameter="Lines" ItemName="_UserFrameworksWithoutDebugSymbols" />
 		</ReadItemsFromFile>
 	</Target>
-
-	<Target Name="_ComputeDefaultLinkMode" DependsOnTargets="_DetectSdkLocations">
-		<PropertyGroup Condition="'$(TrimMode)' != ''">
-			<!-- If TrimMode is set, then that's the default link mode -->
-			<_DefaultLinkMode>TrimMode</_DefaultLinkMode>
-		</PropertyGroup>
-		<PropertyGroup Condition="'$(TrimMode)' == ''">
-			<!-- Linking is always on for all assemblies when using NativeAOT - this is because we need to modify all assemblies in the linker for them to be compatible with NativeAOT -->
-			<_DefaultLinkMode Condition="'$(_UseNativeAot)' == 'true'">Full</_DefaultLinkMode>
-
-			<_DefaultLinkMode Condition="'$(_UseNativeAot)' != 'true' And '$(_PlatformName)' == 'macOS'">None</_DefaultLinkMode> <!-- Linking is off by default for macOS apps -->
-			<_DefaultLinkMode Condition="'$(_UseNativeAot)' != 'true' And '$(_PlatformName)' == 'MacCatalyst' And '$(Configuration)' == 'Release'">SdkOnly</_DefaultLinkMode> <!-- Default linking is on for release builds for Mac Catalyst apps -->
-			<_DefaultLinkMode Condition="'$(_UseNativeAot)' != 'true' And '$(_PlatformName)' == 'MacCatalyst' And '$(Configuration)' != 'Release'">None</_DefaultLinkMode> <!-- Default linking is off for non-release builds for Mac Catalyst apps -->
-			<_DefaultLinkMode Condition="'$(_UseNativeAot)' != 'true' And '$(_PlatformName)' != 'macOS' And '$(_PlatformName)' != 'MacCatalyst' And '$(_SdkIsSimulator)' == 'true'">None</_DefaultLinkMode> <!-- Linking is off by default in the simulator -->
-			<_DefaultLinkMode Condition="'$(_UseNativeAot)' != 'true' And '$(_PlatformName)' != 'macOS' And '$(_PlatformName)' != 'MacCatalyst' And '$(_SdkIsSimulator)' != 'true'">SdkOnly</_DefaultLinkMode> <!-- Linking is SdkOnly for iOS/tvOS/watchOS apps on device -->
-		</PropertyGroup>
-	</Target>
-	<PropertyGroup>
-		<_ComputeLinkModeDependsOn>
-			$(_ComputeLinkModeDependsOn);
-			_ComputeDefaultLinkMode;
-		</_ComputeLinkModeDependsOn>
-	</PropertyGroup>
 
 	<PropertyGroup>
 		<_CodesignAppBundleDependsOn Condition="'$(RuntimeIdentifiers)' != ''">

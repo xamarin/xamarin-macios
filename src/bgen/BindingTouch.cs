@@ -68,6 +68,8 @@ public class BindingTouch : IDisposable {
 	bool supportsXmlDocumentation = true;
 	List<string> references = new List<string> ();
 
+	public bool SupportsXmlDocumentation { get => supportsXmlDocumentation; }
+
 	public MetadataLoadContext? universe;
 	public Frameworks? Frameworks;
 

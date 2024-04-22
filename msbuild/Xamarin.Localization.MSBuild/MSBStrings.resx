@@ -106,7 +106,6 @@
     <data name="W0020" xml:space="preserve">
         <value>Supported iPhone orientations are not matched pairs
         </value>
-        <comment>The iPhone orientation settings do not match iPad, see: https://xamarin.github.io/bugzilla-archives/85/850/bug.html</comment>
     </data>
     
     <data name="W0021" xml:space="preserve">
@@ -117,7 +116,6 @@
     <data name="W0022" xml:space="preserve">
         <value>Supported iPad orientations are not matched pairs
         </value>
-        <comment>The iPad orientation settings do not match iPhone, see: https://xamarin.github.io/bugzilla-archives/85/850/bug.html</comment>
     </data>
     
     <data name="E0023" xml:space="preserve">
@@ -213,7 +211,7 @@
     </data>
     
     <data name="E0053" xml:space="preserve">
-        <value>Target architecture ARMv6 is no longer supported in Xamarin.iOS. Please select a supported architecture.
+        <value>Target architecture ARMv6 is no longer supported. Please select a supported architecture.
         </value>
     </data>
     
@@ -713,6 +711,11 @@
 {1} - The location the file was found.</comment>
     </data>
     
+    <data name="M0149b" xml:space="preserve">
+        <value>Discarded '{0}' with logical name '{1}' because the logical name does not match '{2}'</value>
+        <comment>{0} - A path to a file.</comment>
+    </data>
+
     <data name="E0150" xml:space="preserve">
         <value>  AssemblyPath cannot be null or empty
         </value>
@@ -876,7 +879,7 @@
     </data>
 
     <data name="E0183" xml:space="preserve">
-        <value>An error occurred while trying to verify the compatibility between Xcode and Xamarin.iOS</value>
+        <value>An error occurred while trying to verify the compatibility between Xcode and the .NET SDK</value>
     </data>
 
     <data name="E0184" xml:space="preserve">
@@ -884,7 +887,7 @@
     </data>
 
     <data name="E0185" xml:space="preserve">
-        <value>An error occurred while trying to verify the compatibility between Xcode and Xamarin.iOS. Details: {0}
+        <value>An error occurred while trying to verify the compatibility between Xcode and the .NET SDK. Details: {0}
         </value>
     </data>
 
@@ -1255,6 +1258,7 @@
     
     <!-- E7068: not in use anymore -->
     
+    <!-- legacy only error -->
     <data name="E7069" xml:space="preserve">
         <value>Xamarin.iOS 14+ does not support watchOS 1 apps. Please migrate your project to watchOS 2+.</value>
     </data>

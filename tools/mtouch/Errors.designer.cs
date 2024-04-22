@@ -728,16 +728,6 @@ namespace Xamarin.Bundler {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to A Xamarin.iOS project must reference either monotouch.dll or Xamarin.iOS.dll
-        ///		.
-        /// </summary>
-        public static string MT0033 {
-            get {
-                return ResourceManager.GetString("MT0033", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Cannot reference &apos;{0}.dll&apos; in a {1} project - it is implicitly referenced by &apos;{2}&apos;.
         ///		.
         /// </summary>
@@ -758,36 +748,6 @@ namespace Xamarin.Bundler {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to monotouch.dll is not 64-bit compatible. Either reference Xamarin.iOS.dll, or do not build for a 64-bit architecture (ARM64 and/or x86_64).
-        ///		.
-        /// </summary>
-        public static string MT0037 {
-            get {
-                return ResourceManager.GetString("MT0037", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The old registrars (--registrar:oldstatic|olddynamic) are not supported when referencing Xamarin.iOS.dll.
-        ///		.
-        /// </summary>
-        public static string MT0038 {
-            get {
-                return ResourceManager.GetString("MT0038", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Applications targeting ARMv6 cannot reference Xamarin.iOS.dll.
-        ///		.
-        /// </summary>
-        public static string MT0039 {
-            get {
-                return ResourceManager.GetString("MT0039", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Could not find the assembly &apos;\*&apos;, referenced by &apos;\*&apos;.
         ///		.
         /// </summary>
@@ -804,16 +764,6 @@ namespace Xamarin.Bundler {
         public static string MT0041 {
             get {
                 return ResourceManager.GetString("MT0041", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to No reference to either monotouch.dll or Xamarin.iOS.dll was found. A reference to monotouch.dll will be added.
-        ///		.
-        /// </summary>
-        public static string MT0042 {
-            get {
-                return ResourceManager.GetString("MT0042", resourceCulture);
             }
         }
         
@@ -944,16 +894,6 @@ namespace Xamarin.Bundler {
         public static string MT0063 {
             get {
                 return ResourceManager.GetString("MT0063", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Xamarin.iOS only supports embedded frameworks with Unified projects.
-        ///		.
-        /// </summary>
-        public static string MT0064 {
-            get {
-                return ResourceManager.GetString("MT0064", resourceCulture);
             }
         }
         
@@ -1188,16 +1128,6 @@ namespace Xamarin.Bundler {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to No reference to Xamarin.iOS.dll was found.
-        ///		.
-        /// </summary>
-        public static string MT0096 {
-            get {
-                return ResourceManager.GetString("MT0096", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Invalid assembly build target: &apos;{0}&apos;. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
         ///		.
         /// </summary>
@@ -1284,16 +1214,6 @@ namespace Xamarin.Bundler {
         public static string MT0109 {
             get {
                 return ResourceManager.GetString("MT0109", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Incremental builds have been disabled because this version of Xamarin.iOS does not support incremental builds in projects that include third-party binding libraries and that compiles to bitcode.
-        ///		.
-        /// </summary>
-        public static string MT0110 {
-            get {
-                return ResourceManager.GetString("MT0110", resourceCulture);
             }
         }
         
@@ -1588,7 +1508,7 @@ namespace Xamarin.Bundler {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Incremental builds have been disabled because this version of Xamarin.iOS does not support incremental builds in projects that include more than one third-party binding libraries.
+        ///   Looks up a localized string similar to Incremental builds have been disabled because incremental builds are currently not supported in projects that include more than one third-party binding library.
         ///		.
         /// </summary>
         public static string MT0127 {
@@ -2646,7 +2566,7 @@ namespace Xamarin.Bundler {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Cannot register the selector &apos;{0}&apos; on the member &apos;{1}.{2}&apos; because Xamarin.iOS implicitly registers this selector.
+        ///   Looks up a localized string similar to Cannot register the selector &apos;{0}&apos; on the member &apos;{1}.{2}&apos; because this selector is already implicitly registered.
         ///		.
         /// </summary>
         public static string MT4141 {

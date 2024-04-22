@@ -267,6 +267,7 @@ AVFOUNDATION_SOURCES = \
 	AVFoundation/AVAudioSessionDataSourceDescription.cs \
 	AVFoundation/AVAudioSessionPortDescription.cs \
 	AVFoundation/AVAudioSinkNode.cs \
+	AVFoundation/AVAudioSourceNode.cs \
 	AVFoundation/AVCaptureConnection.cs \
 	AVFoundation/AVCaptureDeviceDiscoverySession.cs \
 	AVFoundation/AVCaptureDeviceInput.cs \
@@ -511,6 +512,7 @@ COREGRAPHICS_CORE_SOURCES = \
 	CoreGraphics/CGColorSpace.cs \
 	CoreGraphics/CGContext.cs \
 	CoreGraphics/CGDisplay.cs \
+	CoreGraphics/CGEvent.cs \
 	CoreGraphics/CGGeometry.cs \
 	CoreGraphics/CGGradient.cs \
 	CoreGraphics/CGImage.cs \
@@ -531,7 +533,6 @@ COREGRAPHICS_SOURCES = \
 	CoreGraphics/CGColorConversionInfo.cs \
 	CoreGraphics/CGDataConsumer.cs \
 	CoreGraphics/CGDataProvider.cs \
-	CoreGraphics/CGEvent.cs \
 	CoreGraphics/CGEventSource.cs \
 	CoreGraphics/CGEventTypes.cs \
 	CoreGraphics/CGFont.cs \
@@ -548,6 +549,7 @@ COREGRAPHICS_SOURCES = \
 	CoreGraphics/CGPDFString.cs \
 	CoreGraphics/CGPdfTagType.cs \
 	CoreGraphics/CGShading.cs \
+	CoreGraphics/NativeDrawingMethods.cs \
 
 # CoreHaptics
 
@@ -950,6 +952,7 @@ GAMEPLAYKIT_SOURCES = \
 	GameplayKit/GKEntity.cs \
 	GameplayKit/GKGameModel.cs \
 	GameplayKit/GKGridGraph.cs \
+	GameplayKit/GKHybridStrategist.cs \
 	GameplayKit/GKObstacleGraph.cs \
 	GameplayKit/GKPath.cs \
 	GameplayKit/GKPolygonObstacle.cs \
@@ -1942,7 +1945,6 @@ SHARED_CORE_SOURCES = \
 	DotNetGlobals.cs \
 	MinimumVersions.cs \
 	MonoPInvokeCallbackAttribute.cs \
-	$(BUILD_DIR)/common/NativeTypes/Drawing.cs \
 	$(BUILD_DIR)/common/NativeTypes/Primitives.cs \
 	ObjCRuntime/ArgumentSemantic.cs \
 	ObjCRuntime/BindAsAttribute.cs \
