@@ -10,8 +10,9 @@ class APIScanConfiguration {
         $vars = [ordered]@{}
         Write-Host "enabledPlatforms: $($this.enabledPlatforms)"
 
-        if ($vars.count -eq 0)
+        if ($vars.count -eq 0) {
             return "{}"
+        }
 
         foreach ($platform in $this.enabledPlatforms) {
             # each platform has its version in an environment variable, we need to get it, this
