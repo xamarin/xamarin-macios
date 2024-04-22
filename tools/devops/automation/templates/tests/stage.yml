@@ -115,6 +115,9 @@ stages:
 
     templateContext:
       type: validationJob
+      sdl:
+        credscan:
+          suppressionsFile: '$(System.DefaultWorkingDirectory)\\tools\\devops\\CredScanSuppressions.json'
       outputs:
       # Publish the simulator diagnostic logs
       - output: pipelineArtifact

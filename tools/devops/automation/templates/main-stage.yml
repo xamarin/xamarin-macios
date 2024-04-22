@@ -357,6 +357,9 @@ stages:
 
     templateContext:
       type: validationJob
+      sdl:
+        credscan:
+          suppressionsFile: '$(System.DefaultWorkingDirectory)\\tools\\devops\\CredScanSuppressions.json'
       outputs:
       - output: pipelineArtifact
         displayName: 'Publish Artifact: configuration.json'

@@ -96,6 +96,9 @@ stages:
 
     templateContext:
       type: validationJob
+      sdl:
+        credscan:
+          suppressionsFile: '$(System.DefaultWorkingDirectory)\\tools\\devops\\CredScanSuppressions.json'
       outputs:
       # Create HtmlReport artifact. This serves two purposes:
       # 1. It is the way we are going to share the HtmlReport with the publish_html job that is executed on a Windows machine.
