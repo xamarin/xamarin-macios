@@ -59,7 +59,7 @@ The project must be [migrated to a Xamarin.iOS (Unified) project](https://docs.m
 
 This error message is reported when an internal consistency check fails.
 
-This usually indicates a bug in the binding generator; please file a new issue on [github](https://github.com/xamarin/xamarin-macios/issues/new) with a test case.
+This usually indicates a bug in the binding generator; please file a new issue on [GitHub](https://github.com/xamarin/xamarin-macios/issues/new) with a test case.
 
 # BI1xxx: code generation
 
