@@ -43,6 +43,9 @@ steps:
 - checkout: yaml-templates
   clean: true
 
+- checkout: maccore
+  clean: true
+
 - pwsh: |
     if (Test-Path "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/artifacts" -PathType Container) {
       Remove-Item -Path "$Env:BUILD_SOURCESDIRECTORY/artifacts" -Force -Recurse
