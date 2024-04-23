@@ -250,7 +250,6 @@ namespace Cecil.Tests {
 			"System.Int32 AudioUnit.AUGraph::NewAUGraph(System.IntPtr&)",
 			"System.Int32 CoreVideo.CVDisplayLink::CVDisplayLinkTranslateTime(System.IntPtr,CoreVideo.CVTimeStamp,CoreVideo.CVTimeStamp&)",
 			"System.Int32 CoreVideo.CVMetalTextureCache::CVMetalTextureCacheCreate(System.IntPtr,System.IntPtr,System.IntPtr,System.IntPtr,System.IntPtr&)",
-			"System.Int32 Darwin.KernelQueue::kevent(System.Int32,Darwin.KernelEvent*,System.Int32,Darwin.KernelEvent*,System.Int32,Darwin.TimeSpec&)",
 			"System.Int32 ObjCRuntime.Runtime::_NSGetExecutablePath(System.Byte[],System.Int32&)",
 			"System.Int32 Security.Authorization::AuthorizationCreate(Security.AuthorizationItemSet*,Security.AuthorizationItemSet*,Security.AuthorizationFlags,System.IntPtr&)",
 			"System.Int32 Security.SecCertificate::SecCertificateCopyCommonName(System.IntPtr,System.IntPtr&)",
