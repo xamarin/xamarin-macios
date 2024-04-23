@@ -1475,7 +1475,7 @@
 		</_LinkNativeExecutableDependsOn>
 	</PropertyGroup>
 
-	<Target Name="_AddSwiftLinkerFlags" Condition="'$(LinkWithSwiftSystemLibraries)' == 'true'" DependsOnTargets="_DetectSdkLocations">
+	<Target Name="_AddSwiftLinkerFlags" DependsOnTargets="_DetectSdkLocations">
 		<PropertyGroup>
 			<_SwiftTargetPlatform Condition="'$(_PlatformName)' == 'iOS' And '$(_SdkIsSimulator)' == 'true'">iphonesimulator</_SwiftTargetPlatform>
 			<_SwiftTargetPlatform Condition="'$(_PlatformName)' == 'iOS' And '$(_SdkIsSimulator)' != 'true'">iphoneos</_SwiftTargetPlatform>
@@ -1483,8 +1483,15 @@
 			<_SwiftTargetPlatform Condition="'$(_PlatformName)' == 'tvOS' And '$(_SdkIsSimulator)' != 'true'">appletvos</_SwiftTargetPlatform>
 			<_SwiftTargetPlatform Condition="'$(_PlatformName)' == 'MacCatalyst'">macosx</_SwiftTargetPlatform> <!-- yes, 'macosx' and not 'maccatalyst': even though the resulting maccatalyst directory exists, it doesn't have anything useful in it -->
 			<_SwiftTargetPlatform Condition="'$(_PlatformName)' == 'macOS'">macosx</_SwiftTargetPlatform>
+
+			<_HasBindingLibraryWithSwift Condition="@(_BindingLibraryLinkWith->WithMetadataValue('IsSwift', 'true')->Count()) &gt; 0">true</_HasBindingLibraryWithSwift>
+			<_HasFrameworkNativeReferenceWithSwift Condition="@(_FrameworkNativeReference->WithMetadataValue('IsSwift', 'true')->Count()) &gt; 0">true</_HasFrameworkNativeReferenceWithSwift>
+			<_HasFileNativeReferenceWithSwift Condition="@(_FileNativeReference->WithMetadataValue('IsSwift', 'true')->Count()) &gt; 0">true</_HasFileNativeReferenceWithSwift>
+
+			<!-- Automatically link with Swift system libraries if any of the native libraries we link with has IsSwift=true -->
+			<LinkWithSwiftSystemLibraries Condition="'$(LinkWithSwiftSystemLibraries)' == '' And ('$(_HasBindingLibraryWithSwift)' == 'true' Or '$(_HasFrameworkNativeReferenceWithSwift)' == 'true' Or '$(_HasFileNativeReferenceWithSwift)' == 'true')">true</LinkWithSwiftSystemLibraries>
 		</PropertyGroup>
-		<ItemGroup>
+		<ItemGroup Condition="'$(LinkWithSwiftSystemLibraries)' == 'true'">
 			<_MainLinkerFlags Include="-L$(_SdkDevPath)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/$(_SwiftTargetPlatform)/" />
 			<_MainLinkerFlags Include="-L$(_SdkRoot)/usr/lib/swift/" />
 		</ItemGroup>
