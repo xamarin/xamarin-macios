@@ -137,7 +137,7 @@ namespace Xamarin.MacDev.Tasks {
 			return false;
 		}
 
-		string [] NativeReferenceAttributeNames = new string [] { "Kind", "ForceLoad", "SmartLink", "Frameworks", "WeakFrameworks", "LinkerFlags", "NeedsGccExceptionHandling", "IsCxx" };
+		string [] NativeReferenceAttributeNames = new string [] { "Kind", "ForceLoad", "SmartLink", "Frameworks", "WeakFrameworks", "LinkerFlags", "NeedsGccExceptionHandling", "IsCxx", "IsSwift" };
 
 		string CreateManifest (string resourcePath)
 		{

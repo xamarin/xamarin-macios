@@ -119,6 +119,7 @@ namespace Xamarin.MacDev.Tasks {
 		<ForceLoad></ForceLoad>
 		<Frameworks></Frameworks>
 		<IsCxx></IsCxx>
+		<IsSwift></IsSwift>
 		<Kind></Kind>
 		<LinkerFlags></LinkerFlags>
 		<NeedsGccExceptionHandling></NeedsGccExceptionHandling>
@@ -129,6 +130,7 @@ namespace Xamarin.MacDev.Tasks {
 		<ForceLoad></ForceLoad>
 		<Frameworks></Frameworks>
 		<IsCxx></IsCxx>
+		<IsSwift></IsSwift>
 		<Kind></Kind>
 		<LinkerFlags></LinkerFlags>
 		<NeedsGccExceptionHandling></NeedsGccExceptionHandling>
@@ -139,6 +141,7 @@ namespace Xamarin.MacDev.Tasks {
 		<ForceLoad></ForceLoad>
 		<Frameworks></Frameworks>
 		<IsCxx></IsCxx>
+		<IsSwift></IsSwift>
 		<Kind></Kind>
 		<LinkerFlags></LinkerFlags>
 		<NeedsGccExceptionHandling></NeedsGccExceptionHandling>
