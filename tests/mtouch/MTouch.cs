@@ -1804,7 +1804,7 @@ public class TestApp {
 
 				mtouch.FastDev = true;
 				mtouch.AssertExecute (MTouchAction.BuildDev, "first build");
-				mtouch.AssertWarning (127, "Incremental builds have been disabled because this version of Xamarin.iOS does not support incremental builds in projects that include more than one third-party binding libraries.");
+				mtouch.AssertWarning (127, "Incremental builds have been disabled because incremental builds are currently not supported in projects that include more than one third-party binding library.");
 			}
 		}
 

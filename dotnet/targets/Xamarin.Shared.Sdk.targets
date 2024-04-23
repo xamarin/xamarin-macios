@@ -1469,8 +1469,24 @@
 			_CompileNativeExecutable;
 			_ReidentifyDynamicLibraries;
 			_ComputeLinkNativeExecutableInputs;
+			_AddSwiftLinkerFlags;
 		</_LinkNativeExecutableDependsOn>
 	</PropertyGroup>
+
+	<Target Name="_AddSwiftLinkerFlags" Condition="'$(LinkWithSwiftSystemLibraries)' == 'true'" DependsOnTargets="_DetectSdkLocations">
+		<PropertyGroup>
+			<_SwiftTargetPlatform Condition="'$(_PlatformName)' == 'iOS' And '$(_SdkIsSimulator)' == 'true'">iphonesimulator</_SwiftTargetPlatform>
+			<_SwiftTargetPlatform Condition="'$(_PlatformName)' == 'iOS' And '$(_SdkIsSimulator)' != 'true'">iphoneos</_SwiftTargetPlatform>
+			<_SwiftTargetPlatform Condition="'$(_PlatformName)' == 'tvOS' And '$(_SdkIsSimulator)' == 'true'">appletvsimulator</_SwiftTargetPlatform>
+			<_SwiftTargetPlatform Condition="'$(_PlatformName)' == 'tvOS' And '$(_SdkIsSimulator)' != 'true'">appletvos</_SwiftTargetPlatform>
+			<_SwiftTargetPlatform Condition="'$(_PlatformName)' == 'MacCatalyst'">macosx</_SwiftTargetPlatform> <!-- yes, 'macosx' and not 'maccatalyst': even though the resulting maccatalyst directory exists, it doesn't have anything useful in it -->
+			<_SwiftTargetPlatform Condition="'$(_PlatformName)' == 'macOS'">macosx</_SwiftTargetPlatform>
+		</PropertyGroup>
+		<ItemGroup>
+			<_MainLinkerFlags Include="-L$(_SdkDevPath)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/$(_SwiftTargetPlatform)/" />
+			<_MainLinkerFlags Include="-L$(_SdkRoot)/usr/lib/swift/" />
+		</ItemGroup>
+	</Target>
 
 	<Target Name="_ComputeLinkNativeExecutableInputs" Condition="'$(IsMacEnabled)' == 'true'">
 		<PropertyGroup>

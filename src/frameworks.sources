@@ -952,6 +952,7 @@ GAMEPLAYKIT_SOURCES = \
 	GameplayKit/GKEntity.cs \
 	GameplayKit/GKGameModel.cs \
 	GameplayKit/GKGridGraph.cs \
+	GameplayKit/GKHybridStrategist.cs \
 	GameplayKit/GKObstacleGraph.cs \
 	GameplayKit/GKPath.cs \
 	GameplayKit/GKPolygonObstacle.cs \
