@@ -96,7 +96,7 @@ steps:
 
 - pwsh: >-
     ./set_xtro_workloads.ps1
-    -WorkloadPath "$(Build.SourcesDirectory)/artifacts/${{ parameters.uploadPrefix }}WorkloadRollback/WorkloadRollback.json"
+    -WorkloadPath "$(Build.ArtifactStagingDirectory)/${{ parameters.uploadPrefix }}WorkloadRollback/WorkloadRollback.json"
   workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts
   displayName: 'Set workload versions for xtro'
 
@@ -126,9 +126,9 @@ steps:
 
 # expand all the prebuilt test dependencies
 - bash: |
-    ls -Rla@ $(Build.SourcesDirectory)/artifacts
-    xattr -s -c -r $(Build.SourcesDirectory)/artifacts/${{ parameters.uploadPrefix }}package-test-libraries/package-test-libraries.zip
-    unzip -o $(Build.SourcesDirectory)/artifacts/${{ parameters.uploadPrefix }}package-test-libraries/package-test-libraries.zip -d .
+    ls -Rla@ $(Build.ArtifactStagingDirectory)
+    xattr -s -c -r $(Build.ArtifactStagingDirectory)/${{ parameters.uploadPrefix }}package-test-libraries/package-test-libraries.zip
+    unzip -o $(Build.ArtifactStagingDirectory)/${{ parameters.uploadPrefix }}package-test-libraries/package-test-libraries.zip -d .
     ls -Rla@ .
     xattr -s -c -r .
   workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios

@@ -145,19 +145,14 @@ steps:
     AUTH_TOKEN_VSENG_XAMARIN_MAC_DEVICES_P12: ${{ parameters.xqaCertPass }}
     AUTH_TOKEN_VSENG_XAMARIN_MAC_DEVICES_2_P12: ${{ parameters.xqaCertPass }}
 
-- bash: |
-    sudo rm -Rf $(Build.SourcesDirectory)/artifacts
-  displayName: "Remove artifacts"
-  condition: always()
-
 - task: DownloadPipelineArtifact@2
   displayName: Download artifacts
   inputs:
     allowFailedBuilds: true
-    path: $(Build.SourcesDirectory)/artifacts
+    path: $(Build.ArtifactStagingDirectory)
 
 - pwsh: |
-    $dir = "$(Build.SourcesDirectory)/artifacts"
+    $dir = "$(Build.ArtifactStagingDirectory)"
     $versionsPath = "$dir/${{ parameters.uploadPrefix }}PkgsVersions/PkgsVersions.json"
     $versionData = Get-Content $versionsPath | ConvertFrom-Json
 
