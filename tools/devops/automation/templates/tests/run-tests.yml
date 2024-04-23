@@ -179,7 +179,6 @@ steps:
     fi
 
   displayName: 'Collect diagnostic info from simulators'
-  condition: eq(variables['system.debug'], true)
   continueOnError: true
   name: collectSimulatorInfo
   timeoutInMinutes: 30

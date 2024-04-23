@@ -126,7 +126,7 @@ stages:
         path: $(System.DefaultWorkingDirectory)/diagnostic-sim-output
         postValidationJobArtifactName: diagnostic_sim_output_validation
         postValidationJobSourceRepositoryToCheckout: maccore
-        condition: and(eq(variables['system.debug'], true), succeededOrFailed())
+        continueOnError: true
       # Upload TestSummary as an artifact.
       - output: pipelineArtifact
         displayName: 'Publish Artifact: TestSummary'
@@ -153,6 +153,7 @@ stages:
         postValidationJobArtifactName: all_binlogs_test_output_validation
         postValidationJobSourceRepositoryToCheckout: maccore
         condition: succeededOrFailed()
+        continueOnError: true
 
     steps:
     - bash: |
