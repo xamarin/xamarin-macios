@@ -84,9 +84,9 @@ namespace Xamarin.MacDev.Tasks {
 				return false;
 			}
 			var abi = abis [0].ToNativeArchitecture ();
-
+			var linkerExecutable = "clang++";
 			var arguments = new List<string> ();
-			arguments.Add ("clang++");
+			arguments.Add (linkerExecutable);
 
 			var hasEmbeddedFrameworks = false;
 
@@ -216,7 +216,28 @@ namespace Xamarin.MacDev.Tasks {
 					arguments.Add (flag.ItemSpec);
 			}
 
-			ExecuteAsync ("xcrun", arguments, sdkDevPath: SdkDevPath).Wait ();
+			var rv = ExecuteAsync ("xcrun", arguments, sdkDevPath: SdkDevPath, showErrorIfFailure: false).Result;
+			if (rv.ExitCode != 0) {
+				var stderr = rv.StandardError?.ToString ()?.Trim ();
+				if (string.IsNullOrEmpty (stderr)) {
+					Log.LogError (MSBStrings.E0117, /* {0} exited with code {1} */ linkerExecutable, rv.ExitCode);
+				} else {
+					// Don't show any lines with "ld: warning: " in the error message, they're typically confusing.
+					// Also show a max of 25 lines just to not overload the error output, the native linker can
+					// sometimes give a truly staggering amount of error output.
+					var stderrLines = stderr
+										.Split (new char [] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries)
+										.Where (v => !v.StartsWith ("ld: warning: ", StringComparison.Ordinal))
+										.Take (25);
+					var errorOutput = string.Join (Environment.NewLine, stderrLines);
+					if (string.IsNullOrEmpty (errorOutput)) {
+						// Show all lines after all if there's nothing left after removing the "ld: warning: " lines
+						errorOutput = stderr;
+					}
+
+					Log.LogError (MSBStrings.E0118, /* {0} exited with code {1}:\n{2} */ linkerExecutable, rv.ExitCode, errorOutput);
+				}
+			}
 
 			return !Log.HasLoggedErrors;
 		}
