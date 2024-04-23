@@ -44,16 +44,16 @@ steps:
   displayName: Download artifacts
   inputs:
     allowFailedBuilds: true
-    path: $(Build.SourcesDirectory)/artifacts
+    path: $(Build.ArtifactStagingDirectory)
 
 - pwsh: |
-    Get-ChildItem $(Build.SourcesDirectory)/artifacts -Recurse 
+    Get-ChildItem $(Build.ArtifactStagingDirectory) -Recurse 
   displayName: "Debug downloads"
 
 - pwsh: |
     try {
-      Write-Host "Looking in '$(Build.SourcesDirectory)\artifacts"
-      Get-ChildItem "$(Build.SourcesDirectory)\artifacts" -Recurse
+      Write-Host "Looking in '$(Build.ArtifactStagingDirectory)"
+      Get-ChildItem "$(Build.ArtifactStagingDirectory)" -Recurse
     } catch {
       Write-Host "Exception occured: $_"
     }
@@ -159,7 +159,7 @@ steps:
   displayName: 'Install workloads'
 
 - pwsh: |
-    $path = "$(Build.SourcesDirectory)/artifacts/${{ parameters.uploadPrefix }}Build.props/Build.props"
+    $path = "$(Build.ArtifactStagingDirectory)/${{ parameters.uploadPrefix }}Build.props/Build.props"
     Write-Host "Move $path to xamarin-macios"
     mv $path ./xamarin-macios
   displayName: Relocate Build.props
@@ -167,7 +167,7 @@ steps:
 
 # this step replaces the test-libraries dir
 - pwsh: |
-    $zip = "$(Build.SourcesDirectory)/artifacts/${{ parameters.uploadPrefix }}package-test-libraries/package-test-libraries.zip"
+    $zip = "$(Build.ArtifactStagingDirectory)/${{ parameters.uploadPrefix }}package-test-libraries/package-test-libraries.zip"
     $target = "$(Build.SourcesDirectory)/xamarin-macios"
     Expand-Archive -Force $zip -DestinationPath $target
     Get-ChildItem "$target" -Recurse
@@ -233,7 +233,7 @@ steps:
 
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\\xamarin-macios\\tools\\devops\\automation\\scripts\\MaciosCI.psd1
-    $configFile = "$(Build.SourcesDirectory)\\artifacts\\${{ parameters.uploadPrefix }}build-configuration\\configuration.json"
+    $configFile = "$(Build.ArtifactStagingDirectory)\\${{ parameters.uploadPrefix }}build-configuration\\configuration.json"
     $config = Import-BuildConfiguration -ConfigFile $configFile
     $config | Write-Host
   name: configuration

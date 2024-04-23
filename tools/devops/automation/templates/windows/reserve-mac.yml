@@ -100,7 +100,7 @@ steps:
   displayName: Download artifacts
   inputs:
     allowFailedBuilds: true
-    path: $(Build.SourcesDirectory)/artifacts
+    path: $(Build.ArtifactStagingDirectory)
 
 - bash: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/install-workloads.sh
   workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios

@@ -21,7 +21,7 @@ fi
 cd "$BUILD_SOURCESDIRECTORY/xamarin-macios"
 
 # Validate a few things
-ARTIFACTS_PATH=$BUILD_SOURCESDIRECTORY/artifacts
+ARTIFACTS_PATH=$BUILD_ARTIFACTSTAGINGDIRECTORY
 if ! test -d "$ARTIFACTS_PATH"; then
   echo "The path to the artifects ($ARTIFACTS_PATH) does not exist!"
   exit 1
