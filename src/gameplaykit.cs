@@ -1364,20 +1364,6 @@ namespace GameplayKit {
 		bool EnterState (Class stateClass);
 	}
 
-	[NoMac]
-	[MacCatalyst (13, 1)]
-	[BaseType (typeof (NSObject))]
-	interface GKHybridStrategist : GKStrategist {
-		[Export ("budget")]
-		nuint Budget { get; set; }
-
-		[Export ("explorationParameter")]
-		nuint ExplorationParameter { get; set; }
-
-		[Export ("maxLookAheadDepth")]
-		nuint MaxLookAheadDepth { get; set; }
-	}
-
 	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface GKStrategist {
