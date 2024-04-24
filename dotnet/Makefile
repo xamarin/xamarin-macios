@@ -205,6 +205,7 @@ $(DOTNET_NUPKG_DIR)/vs-workload.props: Makefile generate-vs-workload.csharp
 		--shorten Microsoft.NET.Sdk.MacCatalyst.Manifest=Microsoft.MacCatalyst.Manifest \
 		--shorten Microsoft.tvOS.Runtime.tvossimulator=Microsoft.tvOS.Runtime \
 		--tfm $(DOTNET_TFM) \
+		--branch-name $(CURRENT_BRANCH) \
 		--output $@.tmp
 	$(Q) mv $@.tmp $@
 
