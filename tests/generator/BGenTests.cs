@@ -1435,16 +1435,25 @@ namespace GeneratorTests {
 		}
 
 		[Test]
-		public void XmlDocs ()
+		[TestCase (Profile.iOS)]
+#if NET
+		[TestCase (Profile.MacCatalyst)]
+#endif
+		[TestCase (Profile.macOSMobile)]
+		[TestCase (Profile.tvOS)]
+		public void XmlDocs (Profile profile)
 		{
-			var bgen = BuildFile (Profile.iOS, false, true, "tests/xmldocs.cs");
+			var bgen = BuildFile (profile, false, true, "tests/xmldocs.cs");
 			Assert.That (bgen.XmlDocumentation, Does.Exist);
 			var contents = File.ReadAllText (bgen.XmlDocumentation);
 #if NET
-			var expectedContentsPath = Path.Combine (Configuration.SourceRoot, "tests", "generator", "ExpectedXmlDocs.xml");
+			var expectedContentsPath = Path.Combine (Configuration.SourceRoot, "tests", "generator", $"ExpectedXmlDocs.{profile.AsPlatform ().AsString ()}.xml");
 #else
-			var expectedContentsPath = Path.Combine (Configuration.SourceRoot, "tests", "generator", "ExpectedXmlDocs.legacy.xml");
+			var expectedContentsPath = Path.Combine (Configuration.SourceRoot, "tests", "generator", $"ExpectedXmlDocs.{profile.AsPlatform ().AsString ()}.legacy.xml");
 #endif
+			if (!File.Exists (expectedContentsPath))
+				File.WriteAllText (expectedContentsPath, string.Empty);
+
 			var expectedContents = File.ReadAllText (expectedContentsPath);
 
 			// Fix up a few potential whitespace differences we don't care about.
