@@ -98,4 +98,40 @@ namespace XmlDocumentation {
 		[Field ("NSANotification", LibraryName = "__Internal")]
 		NSString ANotification { get; }
 	}
+
+	/// <summary>
+	/// Summary for E2
+	/// </summary>
+	enum E2 {
+		/// <summary>
+		/// Summary for E2.A
+		/// </summary>
+		[Field ("E2A", LibraryName = "__Internal")]
+		A,
+	}
+
+	/// <summary>
+	/// Summary for E3
+	/// </summary>
+	[ErrorDomain ("E3Domain", LibraryName = "__Internal")]
+	enum E3 {
+		/// <summary>
+		/// Summary for E3.ErrorA
+		/// </summary>
+		ErrorA,
+	}
+	/// <summary>
+	/// Summary for E4
+	/// </summary>
+	[Flags]
+	enum E4 {
+		/// <summary>
+		/// Summary for E4.Bit1
+		/// </summary>
+		Bit1 = 1,
+		/// <summary>
+		/// Summary for E4.Bit3
+		/// </summary>
+		Bit3 = 4,
+	}
 }
