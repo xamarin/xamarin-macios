@@ -87,4 +87,15 @@ namespace XmlDocumentation {
 		/// </summary>
 		Value1,
 	}
+
+	/// <summary>
+	/// Summary for Notification1
+	/// </summary>
+	[BaseType (typeof (NSObject))]
+	interface Notification1 {
+		/// <summary>Summary for DocumentedNotification</summary>
+		[Notification]
+		[Field ("NSANotification", LibraryName = "__Internal")]
+		NSString ANotification { get; }
+	}
 }
