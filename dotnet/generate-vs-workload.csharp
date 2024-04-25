@@ -14,6 +14,7 @@ var shorten = new Dictionary<string, string> ();
 var platforms = new List<(string, string)> ();
 var windowsPlatforms = new List<string> ();
 var tfm = string.Empty;
+var branchName = string.Empty;
 var outputPath = string.Empty;
 
 var args = new Queue<string> (Environment.GetCommandLineArgs ());
@@ -46,6 +47,11 @@ while (args.Any ()) {
 	case "--tfm":
 		tfm = args.Dequeue ();
 		break;
+	case "--branch-name":
+		var fullBranch = args.Dequeue ();
+		fullBranch = fullBranch.Substring (fullBranch.LastIndexOf ('/') + 1);
+		branchName = $".{fullBranch}";
+		break;
 	default:
 		Console.Error.WriteLine ($"Unknown argument: {arg}");
 		Environment.Exit (1);
@@ -58,7 +64,7 @@ using (TextWriter writer = new StreamWriter (outputPath)) {
 	writer.WriteLine ($"<Project>");
 	writer.WriteLine ($"  <PropertyGroup>");
 	var allPlatforms = string.Join (".", platforms.Select (v => v.Item1).OrderBy (v => v));
-	writer.WriteLine ($"    <TargetName>Microsoft.NET.Sdk.{allPlatforms}.Workload.{tfm}</TargetName>");
+	writer.WriteLine ($"    <TargetName>Microsoft.NET.Sdk.{allPlatforms}.Workload.{tfm}{branchName}</TargetName>");
 	// Find the iOS version, otherwise use the version of the first platform listed.
 	var iOSPlatform = platforms.Where (v => v.Item1 == "iOS");
 	var manifestBuildVersion = iOSPlatform.Any () ? iOSPlatform.First ().Item2 : platforms.First ().Item2;
