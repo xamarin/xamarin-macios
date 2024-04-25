@@ -11,7 +11,7 @@ class APIScanConfiguration {
         Write-Host "enabledPlatforms: $($this.enabledPlatforms)"
 
         if ($vars.count -eq 0) {
-            return "{}"
+            return ""
         }
 
         foreach ($platform in $this.enabledPlatforms) {
