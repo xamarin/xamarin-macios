@@ -27,7 +27,8 @@ namespace AVFoundation {
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AVAudio3DVectorOrientation {
 #if !COREBUILD
-		public Vector3 Forward, Up;
+		public Vector3 Forward;
+		public Vector3 Up;
 
 		public AVAudio3DVectorOrientation (Vector3 forward, Vector3 up)
 		{
@@ -78,7 +79,9 @@ namespace AVFoundation {
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AVAudio3DAngularOrientation {
 
-		public float Yaw, Pitch, Roll;
+		public float Yaw;
+		public float Pitch;
+		public float Roll;
 
 		public override string ToString ()
 		{
@@ -126,7 +129,9 @@ namespace AVFoundation {
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AVCaptureWhiteBalanceGains {
-		public float RedGain, GreenGain, BlueGain;
+		public float RedGain;
+		public float GreenGain;
+		public float BlueGain;
 
 		public AVCaptureWhiteBalanceGains (float redGain, float greenGain, float blueGain)
 		{
@@ -181,7 +186,8 @@ namespace AVFoundation {
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AVCaptureWhiteBalanceChromaticityValues {
-		public float X, Y;
+		public float X;
+		public float Y;
 
 		public AVCaptureWhiteBalanceChromaticityValues (float x, float y)
 		{
@@ -231,7 +237,8 @@ namespace AVFoundation {
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AVCaptureWhiteBalanceTemperatureAndTintValues {
-		public float Temperature, Tint;
+		public float Temperature;
+		public float Tint;
 
 		public AVCaptureWhiteBalanceTemperatureAndTintValues (float temperature, float tint)
 		{

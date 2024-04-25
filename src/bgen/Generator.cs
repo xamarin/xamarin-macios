@@ -6529,6 +6529,14 @@ public partial class Generator : IMemberGatherer {
 				} else
 					base_class = "UIAppearance";
 
+				if (BindingTouch.SupportsXmlDocumentation) {
+					print ($"/// <summary>Appearance class for objects of type <see cref=\"global::{type.FullName}\" />.</summary>");
+					print ($"/// <remarks>");
+					print ($"///     <para>This appearance class is a strongly typed subclass of UIAppearance that is intended to be used with objects of class <see cref=\"global::{type.FullName}\" />.</para>");
+					print ($"///     <para>You can obtain an instance to this class by either accessing the static <see cref=\"global::{type.FullName}.Appearance\" /> property or by calling <see cref=\"global::{type.FullName}.AppearanceWhenContainedIn(System.Type[])\" /> to get a UIAppearance that is context sensitive.</para>");
+					print ($"/// </remarks>");
+				}
+
 				string appearance_type_name = TypeName + "Appearance";
 				print ("public partial class {0} : {1} {{", appearance_type_name, base_class);
 				indent++;
@@ -6550,16 +6558,62 @@ public partial class Generator : IMemberGatherer {
 
 				indent--;
 				print ("}\n");
+
+				if (BindingTouch.SupportsXmlDocumentation) {
+					print ($"/// <summary>Strongly-typed property that returns the UIAppearance class for this class.</summary>");
+					print ($"/// <remarks>");
+					print ($"///   <para>Setting any appearance properties on this instance will affect the appearance of all instances of <see cref=\"global::{type.FullName}\" />.</para>");
+					print ($"///   <para>If developers want to control the appearance of subclasses of <see cref=\"global::{type.FullName}\" />, they should use the <see cref=\"global::{type.FullName}.GetAppearance&lt;T&gt;(UIKit.UITraitCollection,System.Type[])\" /> method.</para>");
+					print ($"/// </remarks>");
+				}
 				print ("public static {0}{1} Appearance {{", parent_implements_appearance ? "new " : "", appearance_type_name);
 				indent++;
 				print ("get {{ return new {0} (global::{1}.IntPtr_objc_msgSend (class_ptr, {2})); }}", appearance_type_name, NamespaceCache.Messaging, InlineSelectors ? "ObjCRuntime.Selector.GetHandle (\"appearance\")" : "UIAppearance.SelectorAppearance");
 				indent--;
 				print ("}\n");
+
+				if (BindingTouch.SupportsXmlDocumentation) {
+					print ($"/// <summary>Obtains the appearance proxy <see cref=\"global::{type.FullName}.{type.Name}Appearance\" /> for the subclass of <see cref=\"global::{type.FullName}\" />.</summary>");
+					print ($"/// <typeparam name=\"T\">The type for which the <see cref=\"global::UIKit.UIAppearance\" /> proxy must be returned.  This is a subclass of <see cref=\"global::{type.FullName}\" />.</typeparam>");
+					print ($"/// <returns>");
+					print ($"///   <para>An appearance proxy object for the specified type.</para>");
+					print ($"/// </returns>");
+					print ($"/// <remarks>");
+					print ($"///   <para>Setting any appearance properties on the returned object will affect the appearance of all classes and subclasses of the type parameter.</para>");
+					print ($"///   <para>Unlike the <see cref=\"global::{type.FullName}.Appearance\" /> property, or the <see cref=\"global::{type.FullName}.AppearanceWhenContainedIn(System.Type[])\" /> method which only work on instances of this particular class, the proxies returned by this method can be used to change the style of subclasses.</para>");
+					print ($"///   <para>The following example shows how this method works:</para>");
+					print ($"///   <example>");
+					print ($"///   <code lang=\"csharp lang-csharp\"><![CDATA[");
+					print ($"///var myTheme = {type.Name}.GetAppearance<My{type.Name}Subclass> ();");
+					print ($"///myTheme.TintColor = UIColor.Red;");
+					print ($"///]]></code>");
+					print ($"///   </example>");
+					print ($"///   <para>For more information, see the documentation for the <see cref=\"global::UIKit.UIAppearance\" /> class.</para>");
+					print ($"/// </remarks>");
+				}
 				print ("public static {0}{1} GetAppearance<T> () where T: {2} {{", parent_implements_appearance ? "new " : "", appearance_type_name, TypeName);
 				indent++;
 				print ("return new {0} (global::{1}.IntPtr_objc_msgSend (Class.GetHandle (typeof (T)), {2}));", appearance_type_name, NamespaceCache.Messaging, InlineSelectors ? "ObjCRuntime.Selector.GetHandle (\"appearance\")" : "UIAppearance.SelectorAppearance");
 				indent--;
 				print ("}\n");
+
+				if (BindingTouch.SupportsXmlDocumentation) {
+					print ($"/// <param name=\"containers\">List of types that developers want to have as the containers to apply this particular appearance</param>");
+					print ($"/// <summary>Returns a strongly typed <see cref=\"global::UIKit.UIAppearance\" /> for instances of this class when the view is hosted in the specified hierarchy.</summary>");
+					print ($"/// <returns>The appearance proxy object that developers can use to set properties when the given container hierarchy is active</returns>");
+					print ($"/// <remarks>");
+					print ($"///   <para>The returned object represents the <see cref=\"global::UIKit.UIAppearance\" /> proxy where developers can set appearance properties for instances of <see cref=\"global::{type.FullName}\" /> when those instances are contained in the hierarchy specified by the <paramref name=\"containers\" /> parameter.</para>");
+					print ($"///   <para>If developers want to control the appearance of subclasses of <see cref=\"global::{type.FullName}\" />, they should use the <see cref=\"global::{type.FullName}.GetAppearance&lt;T&gt;(UIKit.UITraitCollection,System.Type[])\" /> method.</para>");
+					print ($"///   <para>The following example shows how this method works:</para>");
+					print ($"///   <example>");
+					print ($"///     <code lang=\"csharp lang-csharp\"><![CDATA[");
+					print ($"///var mySliders = UISlider.AppearanceWhenContainedIn (typeof (UINavigationBar), typeof (UIPopoverController));");
+					print ($"///mySliders.TintColor = UIColor.Red;");
+					print ($"///]]></code>");
+					print ($"///   </example>");
+					print ($"///   <para>For more information, see the documentation for the <see cref=\"global::UIKit.UIAppearance\" /> class.</para>");
+					print ($"/// </remarks>");
+				}
 				print ("public static {0}{1} AppearanceWhenContainedIn (params Type [] containers)", parent_implements_appearance ? "new " : "", appearance_type_name);
 				print ("{");
 				indent++;
@@ -6567,24 +6621,106 @@ public partial class Generator : IMemberGatherer {
 				indent--;
 				print ("}\n");
 
+				if (BindingTouch.SupportsXmlDocumentation) {
+					print ($"/// <summary>Obtains the appearance proxy <see cref=\"global::{type.FullName}.{type.Name}Appearance\" /> for <see cref=\"global::{type.FullName}\" />.</summary>");
+					print ($"/// <param name=\"traits\">Trait collection to match.</param>");
+					print ($"/// <returns>");
+					print ($"///   <para>An appearance proxy object for the specified type.</para>");
+					print ($"/// </returns>");
+					print ($"/// <remarks>");
+					print ($"///   <para>The following example shows how this method works:</para>");
+					print ($"///   <example>");
+					print ($"///   <code lang=\"csharp lang-csharp\"><![CDATA[");
+					print ($"///var myTraits = new UITraitCollection ();");
+					print ($"///var myTheme = {type.Name}.GetAppearance (myTraits);");
+					print ($"///myTheme.TintColor = UIColor.Red;");
+					print ($"///]]></code>");
+					print ($"///   </example>");
+					print ($"///   <para>If developers want to control the appearance of subclasses of <see cref=\"global::{type.FullName}\" />, they should use the <see cref=\"global::{type.FullName}.GetAppearance&lt;T&gt;(UIKit.UITraitCollection)\" /> method.</para>");
+					print ($"///   <para>For more information, see the documentation for the <see cref=\"global::UIKit.UIAppearance\" /> class.</para>");
+					print ($"/// </remarks>");
+				}
 				print ("public static {0}{1} GetAppearance (UITraitCollection traits) {{", parent_implements_appearance ? "new " : "", appearance_type_name);
 				indent++;
 				print ("return new {0} (UIAppearance.GetAppearance (class_ptr, traits));", appearance_type_name);
 				indent--;
 				print ("}\n");
 
+				if (BindingTouch.SupportsXmlDocumentation) {
+					print ($"/// <summary>Obtains the appearance proxy <see cref=\"global::{type.FullName}.{type.Name}Appearance\" /> for <see cref=\"global::{type.FullName}\" />.</summary>");
+					print ($"/// <param name=\"traits\">Trait collection to match.</param>");
+					print ($"/// <param name=\"containers\">List of types that the developer wishes to have as the containers to apply this particular appearance.</param>");
+					print ($"/// <returns>");
+					print ($"///   <para>An appearance proxy object for the specified type.</para>");
+					print ($"/// </returns>");
+					print ($"/// <remarks>");
+					print ($"///   <para>The following example shows how this method works:</para>");
+					print ($"///   <example>");
+					print ($"///   <code lang=\"csharp lang-csharp\"><![CDATA[");
+					print ($"///var myTraits = new UITraitCollection ();");
+					print ($"///var myTheme = {type.Name}.GetAppearance (myTraits, typeof (UINavigationBar), typeof (UIPopoverController));");
+					print ($"///myTheme.TintColor = UIColor.Red;");
+					print ($"///]]></code>");
+					print ($"///   </example>");
+					print ($"///   <para>If developers want to control the appearance of subclasses of <see cref=\"global::{type.FullName}\" />, they should use the <see cref=\"global::{type.FullName}.GetAppearance&lt;T&gt;(UIKit.UITraitCollection,System.Type[])\" /> method.</para>");
+					print ($"///   <para>For more information, see the documentation for the <see cref=\"global::UIKit.UIAppearance\" /> class.</para>");
+					print ($"/// </remarks>");
+				}
 				print ("public static {0}{1} GetAppearance (UITraitCollection traits, params Type [] containers) {{", parent_implements_appearance ? "new " : "", appearance_type_name);
 				indent++;
 				print ("return new {0} (UIAppearance.GetAppearance (class_ptr, traits, containers));", appearance_type_name);
 				indent--;
 				print ("}\n");
 
+				if (BindingTouch.SupportsXmlDocumentation) {
+					print ($"/// <summary>Obtains the appearance proxy <see cref=\"global::{type.FullName}.{type.Name}Appearance\" /> for the subclass of <see cref=\"global::{type.FullName}\" />.</summary>");
+					print ($"/// <typeparam name=\"T\">The type for which the <see cref=\"global::UIKit.UIAppearance\" /> proxy must be returned.  This is a subclass of <see cref=\"global::{type.FullName}\" />.</typeparam>");
+					print ($"/// <param name=\"traits\">Trait collection to match.</param>");
+					print ($"/// <returns>");
+					print ($"///   <para>An appearance proxy object for the specified type.</para>");
+					print ($"/// </returns>");
+					print ($"/// <remarks>");
+					print ($"///   <para>Setting any appearance properties on the returned object will affect the appearance of all classes and subclasses of the type parameter.</para>");
+					print ($"///   <para>Unlike the <see cref=\"global::{type.FullName}.Appearance\" /> property, or the <see cref=\"global::{type.FullName}.AppearanceWhenContainedIn(System.Type[])\" /> method which only work on instances of this particular class, the proxies returned by this method can be used to change the style of subclasses.</para>");
+					print ($"///   <para>The following example shows how this method works:</para>");
+					print ($"///   <example>");
+					print ($"///   <code lang=\"csharp lang-csharp\"><![CDATA[");
+					print ($"///var myTraits = new UITraitCollection ();");
+					print ($"///var myTheme = {type.Name}.GetAppearance<My{type.Name}Subclass> (myTraits);");
+					print ($"///myTheme.TintColor = UIColor.Red;");
+					print ($"///]]></code>");
+					print ($"///   </example>");
+					print ($"///   <para>For more information, see the documentation for the <see cref=\"global::UIKit.UIAppearance\" /> class.</para>");
+					print ($"/// </remarks>");
+				}
 				print ("public static {0}{1} GetAppearance<T> (UITraitCollection traits) where T: {2} {{", parent_implements_appearance ? "new " : "", appearance_type_name, TypeName);
 				indent++;
 				print ("return new {0} (UIAppearance.GetAppearance (Class.GetHandle (typeof (T)), traits));", appearance_type_name);
 				indent--;
 				print ("}\n");
 
+				if (BindingTouch.SupportsXmlDocumentation) {
+					print ($"/// <summary>Obtains the appearance proxy <see cref=\"global::{type.FullName}.{type.Name}Appearance\" /> for the subclass of <see cref=\"global::{type.FullName}\" />.</summary>");
+					print ($"/// <typeparam name=\"T\">The type for which the <see cref=\"global::UIKit.UIAppearance\" /> proxy must be returned.  This is a subclass of <see cref=\"global::{type.FullName}\" />.</typeparam>");
+					print ($"/// <param name=\"traits\">Trait collection to match.</param>");
+					print ($"/// <param name=\"containers\">List of types that the developer wishes to have as the containers to apply this particular appearance.</param>");
+					print ($"/// <returns>");
+					print ($"///   <para>An appearance proxy object for the specified type.</para>");
+					print ($"/// </returns>");
+					print ($"/// <remarks>");
+					print ($"///   <para>Setting any appearance properties on the returned object will affect the appearance of all classes and subclasses of the type parameter.</para>");
+					print ($"///   <para>Unlike the <see cref=\"global::{type.FullName}.Appearance\" /> property, or the <see cref=\"global::{type.FullName}.AppearanceWhenContainedIn(System.Type[])\" /> method which only work on instances of this particular class, the proxies returned by this method can be used to change the style of subclasses.</para>");
+					print ($"///   <para>The following example shows how this method works:</para>");
+					print ($"///   <example>");
+					print ($"///   <code lang=\"csharp lang-csharp\"><![CDATA[");
+					print ($"///var myTraits = new UITraitCollection ();");
+					print ($"///var myTheme = {type.Name}.GetAppearance<My{type.Name}Subclass> (myTraits, typeof (UINavigationBar), typeof (UIPopoverController));");
+					print ($"///myTheme.TintColor = UIColor.Red;");
+					print ($"///]]></code>");
+					print ($"///   </example>");
+					print ($"///   <para>For more information, see the documentation for the <see cref=\"global::UIKit.UIAppearance\" /> class.</para>");
+					print ($"/// </remarks>");
+				}
 				print ("public static {0}{1} GetAppearance<T> (UITraitCollection traits, params Type [] containers) where T: {2}{{", parent_implements_appearance ? "new " : "", appearance_type_name, TypeName);
 				indent++;
 				print ("return new {0} (UIAppearance.GetAppearance (Class.GetHandle (typeof (T)), containers));", appearance_type_name);

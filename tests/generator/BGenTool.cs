@@ -453,6 +453,8 @@ namespace Xamarin.Tests {
 				return new string [] { "IOS", "XAMCORE_2_0" };
 			case Profile.MacCatalyst:
 				return new string [] { "MACCATALYST" };
+			case Profile.tvOS:
+				return new string [] { "TVOS", "XAMCORE_2_0" };
 			default:
 				throw new NotImplementedException (profile.ToString ());
 			}
