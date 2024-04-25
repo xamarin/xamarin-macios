@@ -64,7 +64,6 @@ namespace Cecil.Tests {
 			"AVFoundation.AVSampleCursorSyncInfo ObjCRuntime.Messaging::AVSampleCursorSyncInfo_objc_msgSend(System.IntPtr,System.IntPtr)",
 			"AVFoundation.AVSampleCursorSyncInfo ObjCRuntime.Messaging::AVSampleCursorSyncInfo_objc_msgSendSuper_stret(System.IntPtr,System.IntPtr)",
 			"AVFoundation.AVSampleCursorSyncInfo ObjCRuntime.Messaging::AVSampleCursorSyncInfo_objc_msgSendSuper(System.IntPtr,System.IntPtr)",
-			"GLKit.GLKVertexAttributeParameters GLKit.GLKVertexAttributeParameters::FromVertexFormat_(System.UIntPtr)",
 			"MediaToolbox.MTAudioProcessingTapError MediaToolbox.MTAudioProcessingTap::MTAudioProcessingTapCreate(System.IntPtr,MediaToolbox.MTAudioProcessingTap/Callbacks&,MediaToolbox.MTAudioProcessingTapCreationFlags,System.IntPtr&)",
 			"MediaToolbox.MTAudioProcessingTapError MediaToolbox.MTAudioProcessingTap::MTAudioProcessingTapGetSourceAudio(System.IntPtr,System.IntPtr,System.IntPtr,MediaToolbox.MTAudioProcessingTapFlags&,CoreMedia.CMTimeRange&,System.IntPtr&)",
 			"ObjCRuntime.NativeHandle ObjCRuntime.Messaging::NativeHandle_objc_msgSend_AudioComponentDescription_ref_NativeHandle(System.IntPtr,System.IntPtr,AudioUnit.AudioComponentDescription,ObjCRuntime.NativeHandle*)",
