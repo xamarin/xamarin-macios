@@ -135,10 +135,16 @@ public partial class Generator {
 			print ("static {1} partial class {0}Extensions {{", type.Name, visibility);
 			indent++;
 
-			var field = fields.FirstOrDefault ();
-			var fieldAttr = field.Value;
+			if (error is not null) {
+				if (!TryComputeLibraryName (error.LibraryName, type, out library_name, out var _))
+					throw ErrorHelper.CreateError (1087, /* Missing value for the 'LibraryName' property for the '[ErrorDomain]' attribute for {0} (e.g. '[ErrorDomain ("MyDomain", LibraryName = "__Internal")]') */ type.FullName);
+			} else {
+				var field = fields.FirstOrDefault ();
+				var fieldAttr = field.Value;
 
-			ComputeLibraryName (fieldAttr, type, field.Key?.Name, out library_name, out string library_path);
+				if (!TryComputeLibraryName (fieldAttr?.LibraryName, type, out library_name, out var _))
+					throw ErrorHelper.CreateError (1042, /* Missing '[Field (LibraryName=value)]' for {0} (e.g."__Internal") */ type.FullName + "." + field.Key?.Name);
+			}
 		}
 
 		if (error is not null) {

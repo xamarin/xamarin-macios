@@ -91,7 +91,8 @@ namespace AudioToolbox {
 #else
 	public abstract class _MidiData {
 #endif
-		protected int len, start;
+		protected int len;
+		protected int start;
 		protected byte []? data;
 		protected IntPtr buffer;
 
