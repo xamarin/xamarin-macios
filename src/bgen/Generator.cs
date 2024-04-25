@@ -4888,6 +4888,12 @@ public partial class Generator : IMemberGatherer {
 		include_extensions = optionalInstanceMethods.Any () || optionalInstanceProperties.Any () || requiredInstanceAsyncMethods.Any ();
 		if (include_extensions) {
 			// extension methods
+			if (BindingTouch.SupportsXmlDocumentation) {
+				print ($"/// <summary>Extension methods to the <see cref=\"I{TypeName}\" /> interface to support all the methods from the {protocol_name} protocol.</summary>");
+				print ($"/// <remarks>");
+				print ($"///   <para>The extension methods for <see cref=\"I{TypeName}\" /> interface allow developers to treat instances of the interface as having all the optional methods of the original {protocol_name} protocol. Since the interface only contains the required members, these extension methods allow developers to call the optional members of the protocol.</para>");
+				print ($"/// </remarks>");
+			}
 			PrintAttributes (type, preserve: true, advice: true);
 			print ("{1} unsafe static partial class {0}_Extensions {{", TypeName, class_visibility);
 			indent++;
