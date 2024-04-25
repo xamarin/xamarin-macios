@@ -835,7 +835,14 @@ public class ErrorDomainAttribute : Attribute {
 		ErrorDomain = domain;
 	}
 
+	public ErrorDomainAttribute (string domain, string libraryName)
+	{
+		ErrorDomain = domain;
+		LibraryName = libraryName;
+	}
+
 	public string ErrorDomain { get; set; }
+	public string LibraryName { get; set; }
 }
 
 [AttributeUsage (AttributeTargets.Field)]

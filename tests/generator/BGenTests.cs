@@ -1413,6 +1413,13 @@ namespace GeneratorTests {
 			Assert.That (failures, Is.Empty, "Failures");
 		}
 
+		[Test]
+		[TestCase (Profile.iOS)]
+		public void ErrorDomain (Profile profile)
+		{
+			BuildFile (profile, true, true, "tests/errordomain.cs");
+		}
+
 #if !NET
 		[Ignore ("This only applies to .NET")]
 #endif

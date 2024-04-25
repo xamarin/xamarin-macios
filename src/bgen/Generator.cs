@@ -5223,13 +5223,13 @@ public partial class Generator : IMemberGatherer {
 		DocumentationManager.WriteDocumentation (sw, indent, info);
 	}
 
-	public void ComputeLibraryName (FieldAttribute fieldAttr, Type type, string propertyName, out string library_name, out string library_path)
+	public bool TryComputeLibraryName (string attributeLibraryName, Type type, out string library_name, out string library_path)
 	{
 		library_path = null;
 
-		if (fieldAttr is not null && fieldAttr.LibraryName is not null) {
+		if (attributeLibraryName is not null) {
 			// Remapped
-			library_name = fieldAttr.LibraryName;
+			library_name = attributeLibraryName;
 			if (library_name [0] == '+') {
 				switch (library_name) {
 				case "+CoreImage":
@@ -5258,13 +5258,16 @@ public partial class Generator : IMemberGatherer {
 			}
 		} else if (BindThirdPartyLibrary) {
 			// User should provide a LibraryName
-			throw ErrorHelper.CreateError (1042, /* Missing '[Field (LibraryName=value)]' for {0} (e.g."__Internal") */ type.FullName + "." + propertyName);
+			library_name = null;
+			return false;
 		} else {
 			library_name = type.Namespace;
 		}
 
 		if (!libraries.ContainsKey (library_name))
 			libraries.Add (library_name, library_path);
+
+		return true;
 	}
 
 	public string GetSelector (MemberInfo mi)
@@ -5933,7 +5936,8 @@ public partial class Generator : IMemberGatherer {
 			if (field_exports.Count != 0) {
 				foreach (var field_pi in field_exports.OrderBy (f => f.Name, StringComparer.Ordinal)) {
 					var fieldAttr = AttributeManager.GetCustomAttribute<FieldAttribute> (field_pi);
-					ComputeLibraryName (fieldAttr, type, field_pi.Name, out string library_name, out string library_path);
+					if (!TryComputeLibraryName (fieldAttr?.LibraryName, type, out string library_name, out string library_path))
+						throw ErrorHelper.CreateError (1042, /* Missing '[Field (LibraryName=value)]' for {0} (e.g."__Internal") */ type.FullName + "." + field_pi.Name);
 
 					string fieldTypeName;
 					string smartEnumTypeName = null;
