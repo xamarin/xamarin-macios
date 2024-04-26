@@ -98,11 +98,9 @@ $(2)_TARGETS = \
 	.libs/$(1)/libtest.a \
 	.libs/$(1)/libtest-object.a \
 	.libs/$(1)/libtest-ar.a \
-	.libs/$(1)/libSwiftTest.a \
 	$$(foreach arch,$(3),.libs/$(1)/libtest.$$(arch).a) \
 	$$(foreach arch,$(3),.libs/$(1)/libtest-object.$$(arch).a) \
 	$$(foreach arch,$(3),.libs/$(1)/libtest-ar.$$(arch).a) \
-	$$(foreach arch,$(3),.libs/$(1)/libSwiftTest.$$(arch).a) \
 	.libs/$(1)/XTest.framework \
 	.libs/$(1)/XTest.framework.stamp \
 	.libs/$(1)/SwiftTest.framework \
@@ -129,10 +127,6 @@ EXTRA_DEPENDENCIES = libtest.h $(GENERATED_FILES) rename.h
 	$(Q) rm -f $$@
 	$$(call Q_2,AR     [$(1)]) $(XCODE_DEVELOPER_ROOT)/Toolchains/XcodeDefault.xctoolchain/usr/bin/ar cru $$@ $$<
 
-.libs/$(1)/libSwiftTest%.a: .libs/$(1)/libSwiftTest%.o
-	$(Q) rm -f $$@
-	$$(call Q_2,AR     [$(1)]) $(XCODE_DEVELOPER_ROOT)/Toolchains/XcodeDefault.xctoolchain/usr/bin/ar cru $$@ $$<
-
 .libs/$(1)/libtest.a: $$(foreach arch,$(3),.libs/$(1)/libtest.$$(arch).a)
 	$(Q) rm -f $$@
 	$$(call Q_2,LIPO   [$(1)]) $(XCODE_DEVELOPER_ROOT)/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo $$^ -create -output $$@
@@ -146,10 +140,6 @@ EXTRA_DEPENDENCIES = libtest.h $(GENERATED_FILES) rename.h
 	$$(call Q_2,LIPO   [$(1)]) $(XCODE_DEVELOPER_ROOT)/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo $$^ -create -output $$@
 
 .libs/$(1)/libtest-ar.a: $$(foreach arch,$(3),.libs/$(1)/libtest-ar.$$(arch).a)
-	$(Q) rm -f $$@
-	$$(call Q_2,LIPO   [$(1)]) $(XCODE_DEVELOPER_ROOT)/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo $$^ -create -output $$@
-
-.libs/$(1)/libSwiftTest.a: $$(foreach arch,$(3),.libs/$(1)/libSwiftTest.$$(arch).a)
 	$(Q) rm -f $$@
 	$$(call Q_2,LIPO   [$(1)]) $(XCODE_DEVELOPER_ROOT)/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo $$^ -create -output $$@
 
@@ -473,12 +463,6 @@ MAC_LDFLAGS = -mmacosx-version-min=$(MIN_MACOS_SDK_VERSION) -framework AppKit
 
 .libs/macos/libtest2.%.o: libtest2.m $(EXTRA_DEPENDENCIES) | .libs/macos
 	$(call Q_2,OBJC,  [mac]) $(MAC_CLANG) -arch $* -c $(MAC_OBJC_CFLAGS) $(MAC_CFLAGS) -o $@ $<
-
-.libs/macos/%.x86_64.o: %.swift $(EXTRA_DEPENDENCIES) | .libs/macos
-	$$(call Q_2,SWIFT, [mac]) $(SWIFTC) $(MACOS_X64_SWIFTFLAGS) -c $< -o $@
-
-.libs/macos/%.arm64.o: %.swift $(EXTRA_DEPENDENCIES) | .libs/macos
-	$$(call Q_2,SWIFT, [mac]) $(SWIFTC) $(MACOS_ARM64_SWIFTFLAGS) -c $< -o $@
 
 .libs/macos:
 	$(Q) mkdir -p $@
