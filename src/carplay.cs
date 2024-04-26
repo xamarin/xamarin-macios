@@ -872,7 +872,7 @@ namespace CarPlay {
 		[iOS (17, 4), MacCatalyst (17, 4)]
 		[NullAllowed]
 		[Export ("roadFollowingManeuverVariants", ArgumentSemantic.Copy)]
-		string[] RoadFollowingManeuverVariants { get; set; }
+		string [] RoadFollowingManeuverVariants { get; set; }
 
 		[iOS (17, 4), MacCatalyst (17, 4)]
 		[Export ("trafficSide", ArgumentSemantic.Assign)]
@@ -1139,15 +1139,15 @@ namespace CarPlay {
 
 		[iOS (17, 4), MacCatalyst (17, 4)]
 		[Export ("addManeuvers:")]
-		void AddManeuvers (CPManeuver[] maneuvers);
+		void AddManeuvers (CPManeuver [] maneuvers);
 
 		[iOS (17, 4), MacCatalyst (17, 4)]
 		[Export ("addLaneGuidances:")]
-		void AddLaneGuidances (CPLaneGuidance[] laneGuidances);
+		void AddLaneGuidances (CPLaneGuidance [] laneGuidances);
 
 		[iOS (17, 4), MacCatalyst (17, 4)]
 		[Export ("currentRoadNameVariants", ArgumentSemantic.Copy)]
-		string[] CurrentRoadNameVariants { get; set; }
+		string [] CurrentRoadNameVariants { get; set; }
 
 		[iOS (17, 4), MacCatalyst (17, 4)]
 		[Export ("maneuverState", ArgumentSemantic.Assign)]
@@ -1314,7 +1314,7 @@ namespace CarPlay {
 		NSObject UserInfo { get; set; }
 
 		[NullAllowed, Export ("destinationNameVariants", ArgumentSemantic.Copy)]
-		string[] DestinationNameVariants { get; set; }
+		string [] DestinationNameVariants { get; set; }
 	}
 
 	[NoWatch, NoTV, NoMac, iOS (12, 0)]
@@ -1724,7 +1724,7 @@ namespace CarPlay {
 
 		[iOS (17, 4), MacCatalyst (17, 4)]
 		[Export ("initWithText:images:imageTitles:")]
-		NativeHandle Constructor (string text, UIImage[] images, string[] imageTitles);
+		NativeHandle Constructor (string text, UIImage [] images, string [] imageTitles);
 
 		[Export ("gridImages", ArgumentSemantic.Strong)]
 		UIImage [] GridImages { get; }
@@ -1734,7 +1734,7 @@ namespace CarPlay {
 
 		[iOS (17, 4), MacCatalyst (17, 4)]
 		[Export ("imageTitles", ArgumentSemantic.Copy)]
-		string[] ImageTitles { get; set; }
+		string [] ImageTitles { get; set; }
 
 		[NullAllowed, Export ("listImageRowHandler", ArgumentSemantic.Copy)]
 		CPListImageRowItemHandler ListImageRowHandler { get; set; }
@@ -2308,7 +2308,7 @@ namespace CarPlay {
 		NSMeasurement<NSUnitAngle> PrimaryAngle { get; set; }
 
 		[Export ("secondaryAngles", ArgumentSemantic.Strong)]
-		NSMeasurement<NSUnitAngle>[] SecondaryAngles { get; set; }
+		NSMeasurement<NSUnitAngle> [] SecondaryAngles { get; set; }
 	}
 
 	[NoWatch, NoTV, NoMac, iOS (17, 4), MacCatalyst (17, 4)]
@@ -2316,10 +2316,10 @@ namespace CarPlay {
 	interface CPLaneGuidance : NSCopying, NSSecureCoding {
 
 		[Export ("lanes", ArgumentSemantic.Copy)]
-		CPLane[] Lanes { get; set; }
+		CPLane [] Lanes { get; set; }
 
 		[Export ("instructionVariants", ArgumentSemantic.Copy)]
-		string[] InstructionVariants { get; set; }
+		string [] InstructionVariants { get; set; }
 	}
 
 	// @interface CPRouteInformation : NSObject
@@ -2330,16 +2330,16 @@ namespace CarPlay {
 
 		[Export ("initWithManeuvers:laneGuidances:currentManeuvers:currentLaneGuidance:tripTravelEstimates:maneuverTravelEstimates:")]
 		[DesignatedInitializer]
-		NativeHandle Constructor (CPManeuver[] maneuvers, CPLaneGuidance[] laneGuidances, CPManeuver[] currentManeuvers, CPLaneGuidance currentLaneGuidance, CPTravelEstimates tripTravelEstimates, CPTravelEstimates maneuverTravelEstimates);
+		NativeHandle Constructor (CPManeuver [] maneuvers, CPLaneGuidance [] laneGuidances, CPManeuver [] currentManeuvers, CPLaneGuidance currentLaneGuidance, CPTravelEstimates tripTravelEstimates, CPTravelEstimates maneuverTravelEstimates);
 
 		[Export ("maneuvers", ArgumentSemantic.Copy)]
-		CPManeuver[] Maneuvers { get; }
+		CPManeuver [] Maneuvers { get; }
 
 		[Export ("laneGuidances", ArgumentSemantic.Copy)]
-		CPLaneGuidance[] LaneGuidances { get; }
+		CPLaneGuidance [] LaneGuidances { get; }
 
 		[Export ("currentManeuvers", ArgumentSemantic.Copy)]
-		CPManeuver[] CurrentManeuvers { get; }
+		CPManeuver [] CurrentManeuvers { get; }
 
 		[Export ("currentLaneGuidance", ArgumentSemantic.Copy)]
 		CPLaneGuidance CurrentLaneGuidance { get; }
