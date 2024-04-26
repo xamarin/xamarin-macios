@@ -28,10 +28,22 @@ namespace CoreAnimation {
 	[StructLayout (LayoutKind.Sequential)]
 	public struct CATransform3D {
 #if NET
-		public nfloat M11, M12, M13, M14;
-		public nfloat M21, M22, M23, M24;
-		public nfloat M31, M32, M33, M34;
-		public nfloat M41, M42, M43, M44;
+		public nfloat M11;
+		public nfloat M12;
+		public nfloat M13;
+		public nfloat M14;
+		public nfloat M21;
+		public nfloat M22;
+		public nfloat M23;
+		public nfloat M24;
+		public nfloat M31;
+		public nfloat M32;
+		public nfloat M33;
+		public nfloat M34;
+		public nfloat M41;
+		public nfloat M42;
+		public nfloat M43;
+		public nfloat M44;
 #else
 		[Obsolete ("Use 'M11' instead.")]
 		public nfloat m11;
