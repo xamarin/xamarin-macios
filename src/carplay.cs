@@ -22,6 +22,7 @@ namespace CarPlay {
 
 	// Just to please the generator that at this point does not know the hierarchy
 	interface NSUnitLength : NSUnit { }
+	interface NSUnitAngle : NSUnit { }
 
 	[NoWatch, NoTV, NoMac, iOS (12, 0)]
 	[Native]
@@ -190,6 +191,96 @@ namespace CarPlay {
 		Enabled,
 		Disabled,
 		UserPreference,
+	}
+
+	[NoWatch, NoTV, NoMac, iOS (17, 4), MacCatalyst (17, 4)]
+	[Native]
+	public enum CPLaneStatus : long {
+		NotGood = 0,
+		Good,
+		Preferred,
+	}
+
+	[NoWatch, NoTV, NoMac, iOS (17, 4), MacCatalyst (17, 4)]
+	[Native]
+	public enum CPManeuverType : ulong {
+		NoTurn = 0,
+		LeftTurn = 1,
+		RightTurn = 2,
+		StraightAhead = 3,
+		UTurn = 4,
+		FollowRoad = 5,
+		EnterRoundabout = 6,
+		ExitRoundabout = 7,
+		OffRamp = 8,
+		OnRamp = 9,
+		ArriveEndOfNavigation = 10,
+		StartRoute = 11,
+		ArriveAtDestination = 12,
+		KeepLeft = 13,
+		KeepRight = 14,
+		EnterFerry = 15,
+		ExitFerry = 16,
+		ChangeFerry = 17,
+		StartRouteWithUTurn = 18,
+		UTurnAtRoundabout = 19,
+		LeftTurnAtEnd = 20,
+		RightTurnAtEnd = 21,
+		HighwayOffRampLeft = 22,
+		HighwayOffRampRight = 23,
+		ArriveAtDestinationLeft = 24,
+		ArriveAtDestinationRight = 25,
+		UTurnWhenPossible = 26,
+		ArriveEndOfDirections = 27,
+		RoundaboutExit1 = 28,
+		RoundaboutExit2 = 29,
+		RoundaboutExit3 = 30,
+		RoundaboutExit4 = 31,
+		RoundaboutExit5 = 32,
+		RoundaboutExit6 = 33,
+		RoundaboutExit7 = 34,
+		RoundaboutExit8 = 35,
+		RoundaboutExit9 = 36,
+		RoundaboutExit10 = 37,
+		RoundaboutExit11 = 38,
+		RoundaboutExit12 = 39,
+		RoundaboutExit13 = 40,
+		RoundaboutExit14 = 41,
+		RoundaboutExit15 = 42,
+		RoundaboutExit16 = 43,
+		RoundaboutExit17 = 44,
+		RoundaboutExit18 = 45,
+		RoundaboutExit19 = 46,
+		SharpLeftTurn = 47,
+		SharpRightTurn = 48,
+		SlightLeftTurn = 49,
+		SlightRightTurn = 50,
+		ChangeHighway = 51,
+		ChangeHighwayLeft = 52,
+		ChangeHighwayRight = 53,
+	}
+
+	[NoWatch, NoTV, NoMac, iOS (17, 4), MacCatalyst (17, 4)]
+	[Native]
+	public enum CPJunctionType : ulong {
+		Intersection = 0,
+		Roundabout = 1,
+	}
+
+	[NoWatch, NoTV, NoMac, iOS (17, 4), MacCatalyst (17, 4)]
+	[Native]
+	public enum CPTrafficSide : ulong {
+		Right = 0,
+		Left = 1,
+	}
+
+	[NoWatch, NoTV, NoMac, iOS (17, 4), MacCatalyst (17, 4)]
+	[Native]
+	public enum CPManeuverState : long {
+		Continue = 0,
+		Initial,
+		Prepare,
+		Execute,
 	}
 
 	[NoWatch, NoTV, NoMac, iOS (12, 0)]
@@ -773,6 +864,41 @@ namespace CarPlay {
 		[iOS (14, 0)]
 		[Export ("notificationAttributedInstructionVariants", ArgumentSemantic.Copy)]
 		NSAttributedString [] NotificationAttributedInstructionVariants { get; set; }
+
+		[iOS (17, 4), MacCatalyst (17, 4)]
+		[Export ("maneuverType", ArgumentSemantic.Assign)]
+		CPManeuverType ManeuverType { get; set; }
+
+		[iOS (17, 4), MacCatalyst (17, 4)]
+		[NullAllowed]
+		[Export ("roadFollowingManeuverVariants", ArgumentSemantic.Copy)]
+		string[] RoadFollowingManeuverVariants { get; set; }
+
+		[iOS (17, 4), MacCatalyst (17, 4)]
+		[Export ("trafficSide", ArgumentSemantic.Assign)]
+		CPTrafficSide TrafficSide { get; set; }
+
+		[iOS (17, 4), MacCatalyst (17, 4)]
+		[Export ("junctionType", ArgumentSemantic.Assign)]
+		CPJunctionType JunctionType { get; set; }
+
+		[iOS (17, 4), MacCatalyst (17, 4)]
+		[NullAllowed]
+		[Export ("junctionExitAngle", ArgumentSemantic.Copy)]
+		NSMeasurement<NSUnitAngle> JunctionExitAngle { get; set; }
+
+		[iOS (17, 4), MacCatalyst (17, 4)]
+		[NullAllowed]
+		[Export ("junctionElementAngles", ArgumentSemantic.Copy)]
+		NSSet<NSMeasurement<NSUnitAngle>> JunctionElementAngles { get; set; }
+
+		[iOS (17, 4), MacCatalyst (17, 4)]
+		[Export ("linkedLaneGuidance", ArgumentSemantic.Assign)]
+		CPLaneGuidance LinkedLaneGuidance { get; set; }
+
+		[iOS (17, 4), MacCatalyst (17, 4)]
+		[Export ("highwayExitLabel")]
+		string HighwayExitLabel { get; set; }
 	}
 
 	[NoWatch, NoTV, NoMac, iOS (12, 0)]
@@ -876,6 +1002,10 @@ namespace CarPlay {
 #endif
 	[BaseType (typeof (NSObject))]
 	interface CPMapTemplateDelegate {
+
+		[iOS (17, 4), MacCatalyst (17, 4)]
+		[Export ("mapTemplateShouldProvideNavigationMetadata:")]
+		bool ShouldProvideNavigationMetadata (CPMapTemplate mapTemplate);
 
 		[Export ("mapTemplate:shouldShowNotificationForManeuver:")]
 		bool ShouldShowNotificationForManeuver (CPMapTemplate mapTemplate, CPManeuver maneuver);
@@ -990,6 +1120,10 @@ namespace CarPlay {
 		[Export ("pauseTripForReason:description:turnCardColor:")]
 		void PauseTrip (CPTripPauseReason reason, [NullAllowed] string description, [NullAllowed] UIColor turnCardColor);
 
+		[iOS (17, 4), MacCatalyst (17, 4)]
+		[Export ("resumeTripWithUpdatedRouteInformation:")]
+		void ResumeTrip (CPRouteInformation routeInformation);
+
 		[Export ("finishTrip")]
 		void FinishTrip ();
 
@@ -998,6 +1132,26 @@ namespace CarPlay {
 
 		[Export ("upcomingManeuvers", ArgumentSemantic.Copy)]
 		CPManeuver [] UpcomingManeuvers { get; set; }
+
+		[iOS (17, 4), MacCatalyst (17, 4)]
+		[NullAllowed, Export ("currentLaneGuidance", ArgumentSemantic.Copy)]
+		CPLaneGuidance CurrentLaneGuidance { get; set; }
+
+		[iOS (17, 4), MacCatalyst (17, 4)]
+		[Export ("addManeuvers:")]
+		void AddManeuvers (CPManeuver[] maneuvers);
+
+		[iOS (17, 4), MacCatalyst (17, 4)]
+		[Export ("addLaneGuidances:")]
+		void AddLaneGuidances (CPLaneGuidance[] laneGuidances);
+
+		[iOS (17, 4), MacCatalyst (17, 4)]
+		[Export ("currentRoadNameVariants", ArgumentSemantic.Copy)]
+		string[] CurrentRoadNameVariants { get; set; }
+
+		[iOS (17, 4), MacCatalyst (17, 4)]
+		[Export ("maneuverState", ArgumentSemantic.Assign)]
+		CPManeuverState ManeuverState { get; set; }
 
 		[Export ("trip", ArgumentSemantic.Strong)]
 		CPTrip Trip { get; }
@@ -1158,6 +1312,9 @@ namespace CarPlay {
 
 		[NullAllowed, Export ("userInfo", ArgumentSemantic.Strong)]
 		NSObject UserInfo { get; set; }
+
+		[NullAllowed, Export ("destinationNameVariants", ArgumentSemantic.Copy)]
+		string[] DestinationNameVariants { get; set; }
 	}
 
 	[NoWatch, NoTV, NoMac, iOS (12, 0)]
@@ -1299,6 +1456,14 @@ namespace CarPlay {
 		[Export ("initWithDistanceRemaining:timeRemaining:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (NSMeasurement<NSUnitLength> distance, double time);
+
+		[iOS (17, 4), MacCatalyst (17, 4)]
+		[Export ("initWithDistanceRemaining:distanceRemainingToDisplay:timeRemaining:")]
+		[DesignatedInitializer]
+		NativeHandle Constructor (NSMeasurement<NSUnitLength> distanceRemaining, NSMeasurement<NSUnitLength> distanceRemainingToDisplay, double time);
+
+		[Export ("distanceRemainingToDisplay", ArgumentSemantic.Copy)]
+		NSMeasurement<NSUnitLength> DistanceRemainingToDisplay { get; }
 
 		[Export ("distanceRemaining", ArgumentSemantic.Copy)]
 		NSMeasurement<NSUnitLength> DistanceRemaining { get; }
@@ -1557,11 +1722,19 @@ namespace CarPlay {
 		[Export ("initWithText:images:")]
 		NativeHandle Constructor (string text, UIImage [] images);
 
+		[iOS (17, 4), MacCatalyst (17, 4)]
+		[Export ("initWithText:images:imageTitles:")]
+		NativeHandle Constructor (string text, UIImage[] images, string[] imageTitles);
+
 		[Export ("gridImages", ArgumentSemantic.Strong)]
 		UIImage [] GridImages { get; }
 
 		[Export ("updateImages:")]
 		void UpdateImages (UIImage [] gridImages);
+
+		[iOS (17, 4), MacCatalyst (17, 4)]
+		[Export ("imageTitles", ArgumentSemantic.Copy)]
+		string[] ImageTitles { get; set; }
 
 		[NullAllowed, Export ("listImageRowHandler", ArgumentSemantic.Copy)]
 		CPListImageRowItemHandler ListImageRowHandler { get; set; }
@@ -2122,6 +2295,60 @@ namespace CarPlay {
 
 		[Export ("contentStyle")]
 		UIUserInterfaceStyle ContentStyle { get; }
+	}
+
+	[NoWatch, NoTV, NoMac, iOS (17, 4), MacCatalyst (17, 4)]
+	[BaseType (typeof (NSObject))]
+	interface CPLane : NSCopying, NSSecureCoding {
+
+		[Export ("status", ArgumentSemantic.Assign)]
+		CPLaneStatus Status { get; set; }
+
+		[Export ("primaryAngle", ArgumentSemantic.Strong)]
+		NSMeasurement<NSUnitAngle> PrimaryAngle { get; set; }
+
+		[Export ("secondaryAngles", ArgumentSemantic.Strong)]
+		NSMeasurement<NSUnitAngle>[] SecondaryAngles { get; set; }
+	}
+
+	[NoWatch, NoTV, NoMac, iOS (17, 4), MacCatalyst (17, 4)]
+	[BaseType (typeof (NSObject))]
+	interface CPLaneGuidance : NSCopying, NSSecureCoding {
+
+		[Export ("lanes", ArgumentSemantic.Copy)]
+		CPLane[] Lanes { get; set; }
+
+		[Export ("instructionVariants", ArgumentSemantic.Copy)]
+		string[] InstructionVariants { get; set; }
+	}
+
+	// @interface CPRouteInformation : NSObject
+	[NoWatch, NoTV, NoMac, iOS (17, 4), MacCatalyst (17, 4)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface CPRouteInformation {
+
+		[Export ("initWithManeuvers:laneGuidances:currentManeuvers:currentLaneGuidance:tripTravelEstimates:maneuverTravelEstimates:")]
+		[DesignatedInitializer]
+		NativeHandle Constructor (CPManeuver[] maneuvers, CPLaneGuidance[] laneGuidances, CPManeuver[] currentManeuvers, CPLaneGuidance currentLaneGuidance, CPTravelEstimates tripTravelEstimates, CPTravelEstimates maneuverTravelEstimates);
+
+		[Export ("maneuvers", ArgumentSemantic.Copy)]
+		CPManeuver[] Maneuvers { get; }
+
+		[Export ("laneGuidances", ArgumentSemantic.Copy)]
+		CPLaneGuidance[] LaneGuidances { get; }
+
+		[Export ("currentManeuvers", ArgumentSemantic.Copy)]
+		CPManeuver[] CurrentManeuvers { get; }
+
+		[Export ("currentLaneGuidance", ArgumentSemantic.Copy)]
+		CPLaneGuidance CurrentLaneGuidance { get; }
+
+		[Export ("tripTravelEstimates", ArgumentSemantic.Copy)]
+		CPTravelEstimates TripTravelEstimates { get; }
+
+		[Export ("maneuverTravelEstimates", ArgumentSemantic.Copy)]
+		CPTravelEstimates ManeuverTravelEstimates { get; }
 	}
 
 }
