@@ -14,6 +14,65 @@
             Summary for E1.Value1
             </summary>
         </member>
+        <member name="T:XmlDocumentation.E2">
+            <summary>
+            Summary for E2
+            </summary>
+        </member>
+        <member name="F:XmlDocumentation.E2.A">
+            <summary>
+            Summary for E2.A
+            </summary>
+        </member>
+        <member name="T:XmlDocumentation.E2Extensions">
+            <summary>Extension methods for the <see cref="T:XmlDocumentation.E2" /> enumeration.</summary>
+        </member>
+        <member name="M:XmlDocumentation.E2Extensions.GetConstant(XmlDocumentation.E2)">
+            <summary>Retrieves the <see cref="T:Foundation.NSString" /> constant that describes <paramref name="self" />.</summary>
+            <param name="self">The instance on which this method operates.</param>
+        </member>
+        <member name="M:XmlDocumentation.E2Extensions.GetValue(Foundation.NSString)">
+            <summary>Retrieves the <see cref="T:XmlDocumentation.E2" /> value named by <paramref name="constant" />.</summary>
+            <param name="constant">The name of the constant to retrieve.</param>
+        </member>
+        <member name="T:XmlDocumentation.E3">
+            <summary>
+            Summary for E3
+            </summary>
+        </member>
+        <member name="F:XmlDocumentation.E3.ErrorA">
+            <summary>
+            Summary for E3.ErrorA
+            </summary>
+        </member>
+        <member name="T:XmlDocumentation.E3Extensions">
+            <summary>Extension methods for the <see cref="T:XmlDocumentation.E3" /> enumeration.</summary>
+            <remarks>
+              <para>The extension method for the <see cref="T:XmlDocumentation.E3" /> enumeration can be used to fetch the error domain associated with these error codes.</para>
+            </remarks>
+        </member>
+        <member name="M:XmlDocumentation.E3Extensions.GetDomain(XmlDocumentation.E3)">
+            <summary>Returns the error domain associated with the XmlDocumentation.E3 value</summary>
+            <param name="self">The enumeration value</param>
+            <remarks>
+              <para>See the <see cref="T:Foundation.NSError" /> for information on how to use the error domains when reporting errors.</para>
+            </remarks>
+        </member>
+        <member name="T:XmlDocumentation.E4">
+            <summary>
+            Summary for E4
+            </summary>
+        </member>
+        <member name="F:XmlDocumentation.E4.Bit1">
+            <summary>
+            Summary for E4.Bit1
+            </summary>
+        </member>
+        <member name="F:XmlDocumentation.E4.Bit3">
+            <summary>
+            Summary for E4.Bit3
+            </summary>
+        </member>
         <member name="T:XmlDocumentation.Notification1">
             <summary>
             Summary for Notification1
