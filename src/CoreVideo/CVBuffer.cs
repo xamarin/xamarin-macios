@@ -29,6 +29,7 @@
 #nullable enable
 
 using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using CoreFoundation;
 using ObjCRuntime;
@@ -109,7 +110,13 @@ namespace CoreVideo {
 		[Deprecated (PlatformName.WatchOS, 8, 0)]
 #endif
 		[DllImport (Constants.CoreVideoLibrary)]
-		extern static /* CFTypeRef */ IntPtr CVBufferGetAttachment (/* CVBufferRef */ IntPtr buffer, /* CFStringRef */ IntPtr key, out CVAttachmentMode attachmentMode);
+		unsafe extern static /* CFTypeRef */ IntPtr CVBufferGetAttachment (/* CVBufferRef */ IntPtr buffer, /* CFStringRef */ IntPtr key, CVAttachmentMode* attachmentMode);
+
+		unsafe static /* CFTypeRef */ IntPtr CVBufferGetAttachment (/* CVBufferRef */ IntPtr buffer, /* CFStringRef */ IntPtr key, out CVAttachmentMode attachmentMode)
+		{
+			attachmentMode = default;
+			return CVBufferGetAttachment (buffer, key, (CVAttachmentMode*) Unsafe.AsPointer<CVAttachmentMode> (ref attachmentMode));
+		}
 
 		// The new method is the same as the old one but changing the ownership from Get to Copy, so we will use the new version if possible since the
 		// older method has been deprecatd.
@@ -126,7 +133,13 @@ namespace CoreVideo {
 		[MacCatalyst (15, 0)]
 #endif
 		[DllImport (Constants.CoreVideoLibrary)]
-		extern static /* CFTypeRef */ IntPtr CVBufferCopyAttachment (/* CVBufferRef */ IntPtr buffer, /* CFStringRef */ IntPtr key, out CVAttachmentMode attachmentMode);
+		unsafe extern static /* CFTypeRef */ IntPtr CVBufferCopyAttachment (/* CVBufferRef */ IntPtr buffer, /* CFStringRef */ IntPtr key, CVAttachmentMode* attachmentMode);
+
+		unsafe static IntPtr CVBufferCopyAttachment (IntPtr buffer, IntPtr key, out CVAttachmentMode attachmentMode)
+		{
+			attachmentMode = default;
+			return CVBufferCopyAttachment (buffer, key, (CVAttachmentMode*) Unsafe.AsPointer<CVAttachmentMode> (ref attachmentMode));
+		}
 
 		// FIXME: we need to bring the new API to xamcore
 #if !MONOMAC
@@ -257,8 +270,7 @@ namespace CoreVideo {
 		[Watch (8, 0)]
 #endif
 		[DllImport (Constants.CoreVideoLibrary)]
-		[return: MarshalAs (UnmanagedType.U1)]
-		static extern bool CVBufferHasAttachment (/* CVBufferRef */ IntPtr buffer, /* CFStringRef */ IntPtr key);
+		static extern byte CVBufferHasAttachment (/* CVBufferRef */ IntPtr buffer, /* CFStringRef */ IntPtr key);
 
 #if NET
 		[SupportedOSPlatform ("ios15.0")]
@@ -276,7 +288,7 @@ namespace CoreVideo {
 		{
 			if (key is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (key));
-			return CVBufferHasAttachment (Handle, key.Handle);
+			return CVBufferHasAttachment (Handle, key.Handle) != 0;
 		}
 
 #endif // !COREBUILD

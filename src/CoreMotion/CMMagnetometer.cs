@@ -21,7 +21,9 @@ namespace CoreMotion {
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct CMMagneticField {
-		public double X, Y, Z;
+		public double X;
+		public double Y;
+		public double Z;
 
 		public override string ToString ()
 		{

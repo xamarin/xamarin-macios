@@ -129,16 +129,30 @@ public partial class Generator {
 		var error = AttributeManager.GetCustomAttribute<ErrorDomainAttribute> (type);
 		if ((fields.Count > 0) || (error is not null) || (null_field is not null)) {
 			print ("");
+			if (BindingTouch.SupportsXmlDocumentation) {
+				print ($"/// <summary>Extension methods for the <see cref=\"global::{type.FullName}\" /> enumeration.</summary>");
+				if (error is not null) {
+					print ($"/// <remarks>");
+					print ($"///   <para>The extension method for the <see cref=\"global::{type.FullName}\" /> enumeration can be used to fetch the error domain associated with these error codes.</para>");
+					print ($"/// </remarks>");
+				}
+			}
 			// the *Extensions has the same version requirement as the enum itself
 			PrintPlatformAttributes (type);
 			print_generated_code ();
 			print ("static {1} partial class {0}Extensions {{", type.Name, visibility);
 			indent++;
 
-			var field = fields.FirstOrDefault ();
-			var fieldAttr = field.Value;
+			if (error is not null) {
+				if (!TryComputeLibraryName (error.LibraryName, type, out library_name, out var _))
+					throw ErrorHelper.CreateError (1087, /* Missing value for the 'LibraryName' property for the '[ErrorDomain]' attribute for {0} (e.g. '[ErrorDomain ("MyDomain", LibraryName = "__Internal")]') */ type.FullName);
+			} else {
+				var field = fields.FirstOrDefault ();
+				var fieldAttr = field.Value;
 
-			ComputeLibraryName (fieldAttr, type, field.Key?.Name, out library_name, out string library_path);
+				if (!TryComputeLibraryName (fieldAttr?.LibraryName, type, out library_name, out var _))
+					throw ErrorHelper.CreateError (1042, /* Missing '[Field (LibraryName=value)]' for {0} (e.g."__Internal") */ type.FullName + "." + field.Key?.Name);
+			}
 		}
 
 		if (error is not null) {
@@ -146,6 +160,13 @@ public partial class Generator {
 			print ("[Field (\"{0}\", \"{1}\")]", error.ErrorDomain, library_name);
 			print ("static NSString? _domain;");
 			print ("");
+			if (BindingTouch.SupportsXmlDocumentation) {
+				print ($"/// <summary>Returns the error domain associated with the {type.FullName} value</summary>");
+				print ($"/// <param name=\"self\">The enumeration value</param>");
+				print ($"/// <remarks>");
+				print ($"///   <para>See the <see cref=\"global::Foundation.NSError\" /> for information on how to use the error domains when reporting errors.</para>");
+				print ($"/// </remarks>");
+			}
 			print ("public static NSString? GetDomain (this {0} self)", type.Name);
 			print ("{");
 			indent++;
@@ -191,6 +212,10 @@ public partial class Generator {
 				print ("");
 			}
 
+			if (BindingTouch.SupportsXmlDocumentation) {
+				print ($"/// <summary>Retrieves the <see cref=\"global::Foundation.NSString\" /> constant that describes <paramref name=\"self\" />.</summary>");
+				print ($"/// <param name=\"self\">The instance on which this method operates.</param>");
+			}
 			print ("public static NSString? GetConstant (this {0} self)", type.Name);
 			print ("{");
 			indent++;
@@ -219,6 +244,10 @@ public partial class Generator {
 			print ("");
 
 			var nullable = null_field is not null;
+			if (BindingTouch.SupportsXmlDocumentation) {
+				print ($"/// <summary>Retrieves the <see cref=\"global::{type.FullName}\" /> value named by <paramref name=\"constant\" />.</summary>");
+				print ($"/// <param name=\"constant\">The name of the constant to retrieve.</param>");
+			}
 			print ("public static {0} GetValue (NSString{1} constant)", type.Name, nullable ? "?" : "");
 			print ("{");
 			indent++;
@@ -245,6 +274,11 @@ public partial class Generator {
 			print ("}");
 
 			if (isFlagsEnum) {
+				if (BindingTouch.SupportsXmlDocumentation) {
+					print ($"/// <summary>Retrieves all the <see cref=\"global::{type.FullName}\" /> constants named by the flags <paramref name=\"value\" />.</summary>");
+					print ($"/// <param name=\"value\">The flags to retrieve</param>");
+					print ($"/// <remarks>Any flags that are not recognized will be ignored.</remarks>");
+				}
 				print ($"public static NSString[] ToArray (this {type.Name} value)");
 				print ("{");
 				indent++;

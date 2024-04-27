@@ -72,6 +72,11 @@ namespace Introspection {
 			case "CIFilterGenerator":
 				// only present on device :/
 				return TestRuntime.IsSimulatorOrDesktop;
+#if !XAMCORE_5_0
+			case "GKHybridStrategist":
+				// We removed the bindings for this type.
+				return true;
+#endif
 			default:
 				return SkipDueToAttribute (type);
 			}

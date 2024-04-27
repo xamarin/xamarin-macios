@@ -104,7 +104,8 @@ namespace MapKit {
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MKMapPoint {
-		public double X, Y;
+		public double X;
+		public double Y;
 
 		[DllImport (Constants.MapKitLibrary, EntryPoint = "MKMapPointForCoordinate")]
 		public extern static MKMapPoint FromCoordinate (CLLocationCoordinate2D coordinate);
@@ -161,7 +162,8 @@ namespace MapKit {
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MKMapSize {
-		public double Width, Height;
+		public double Width;
+		public double Height;
 
 		// MKMapSizeMake
 		public MKMapSize (double width, double height)
