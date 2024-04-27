@@ -291,6 +291,11 @@ namespace Xamarin.Utils {
 
 		static bool IsLongPathsEnabledRegistry {
 			get {
+#if NET
+				if (!OperatingSystem.IsWindows ())
+					return false;
+#endif
+
 				using (var fileSystemKey = Microsoft.Win32.Registry.LocalMachine.OpenSubKey (WINDOWS_FILE_SYSTEM_REGISTRY_KEY)) {
 					if (fileSystemKey is null)
 						return false;

@@ -21,7 +21,9 @@ namespace CoreMotion {
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct CMAcceleration {
-		public double X, Y, Z;
+		public double X;
+		public double Y;
+		public double Z;
 
 		public CMAcceleration (double x, double y, double z)
 		{
@@ -44,9 +46,15 @@ namespace CoreMotion {
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct CMRotationMatrix {
-		public double m11, m12, m13;
-		public double m21, m22, m23;
-		public double m31, m32, m33;
+		public double m11;
+		public double m12;
+		public double m13;
+		public double m21;
+		public double m22;
+		public double m23;
+		public double m31;
+		public double m32;
+		public double m33;
 	}
 
 	// CMAttitude.h
@@ -57,7 +65,10 @@ namespace CoreMotion {
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct CMQuaternion {
-		public double x, y, z, w;
+		public double x;
+		public double y;
+		public double z;
+		public double w;
 
 		public CMQuaternion (double x, double y, double z, double w)
 		{

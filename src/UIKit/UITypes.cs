@@ -27,7 +27,10 @@ namespace UIKit {
 		[Field ("UIEdgeInsetsZero")] // fake (but helps testing and could also help documentation)
 		public static readonly UIEdgeInsets Zero;
 
-		public nfloat Top, Left, Bottom, Right;
+		public nfloat Top;
+		public nfloat Left;
+		public nfloat Bottom;
+		public nfloat Right;
 
 #if !COREBUILD
 		public UIEdgeInsets (nfloat top, nfloat left, nfloat bottom, nfloat right)
@@ -114,7 +117,8 @@ namespace UIKit {
 	[StructLayout (LayoutKind.Sequential)]
 	public struct UIFloatRange : IEquatable<UIFloatRange> {
 
-		public nfloat Minimum, Maximum;
+		public nfloat Minimum;
+		public nfloat Maximum;
 
 		public UIFloatRange (nfloat minimum, nfloat maximum)
 		{
@@ -167,7 +171,8 @@ namespace UIKit {
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct UIPointerAccessoryPosition {
-		public nfloat Offset, Angle;
+		public nfloat Offset;
+		public nfloat Angle;
 
 		public UIPointerAccessoryPosition (nfloat offset, nfloat angle)
 		{
