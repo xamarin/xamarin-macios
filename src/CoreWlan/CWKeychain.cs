@@ -27,7 +27,7 @@ namespace CoreWlan {
 		[UnsupportedOSPlatform ("maccatalyst")]
 #endif
 		[DllImport (Constants.CoreWlanLibrary)]
-		static extern OSStatus CWKeychainCopyWiFiEAPIdentity (/* CWKeychainDomain */ nint domain, NSDataRef ssid, out SecIdentityRef identity);
+		unsafe static extern OSStatus CWKeychainCopyWiFiEAPIdentity (/* CWKeychainDomain */ nint domain, NSDataRef ssid, SecIdentityRef* identity);
 
 #if NET
 		[SupportedOSPlatform ("macos")]
@@ -37,7 +37,9 @@ namespace CoreWlan {
 		{
 			identity = null;
 			IntPtr outPtr = IntPtr.Zero;
-			status = CWKeychainCopyWiFiEAPIdentity ((nint) (long) domain, ssid.GetHandle (), out outPtr);
+			unsafe {
+				status = CWKeychainCopyWiFiEAPIdentity ((nint) (long) domain, ssid.GetHandle (), &outPtr);
+			}
 			if (status == 0) {
 				identity = new SecIdentity (outPtr, true);
 			}
@@ -105,7 +107,7 @@ namespace CoreWlan {
 		[UnsupportedOSPlatform ("maccatalyst")]
 #endif
 		[DllImport (Constants.CoreWlanLibrary)]
-		static extern OSStatus CWKeychainFindWiFiEAPUsernameAndPassword (/* CWKeychainDomain */ nint domain, NSDataRef ssid, out NSStringRef username, out NSStringRef password);
+		unsafe static extern OSStatus CWKeychainFindWiFiEAPUsernameAndPassword (/* CWKeychainDomain */ nint domain, NSDataRef ssid, NSStringRef* username, NSStringRef* password);
 
 #if NET
 		[SupportedOSPlatform ("macos")]
@@ -117,7 +119,9 @@ namespace CoreWlan {
 			password = null;
 			NSStringRef usernamePtr = IntPtr.Zero;
 			NSStringRef passwordPtr = IntPtr.Zero;
-			status = CWKeychainFindWiFiEAPUsernameAndPassword ((nint) (long) domain, ssid.GetHandle (), out usernamePtr, out passwordPtr);
+			unsafe {
+				status = CWKeychainFindWiFiEAPUsernameAndPassword ((nint) (long) domain, ssid.GetHandle (), &usernamePtr, &passwordPtr);
+			}
 			if (usernamePtr != IntPtr.Zero) {
 				username = Runtime.GetNSObject<NSString> (usernamePtr, false);
 			}
@@ -158,7 +162,7 @@ namespace CoreWlan {
 		[UnsupportedOSPlatform ("maccatalyst")]
 #endif
 		[DllImport (Constants.CoreWlanLibrary)]
-		static extern OSStatus CWKeychainFindWiFiPassword (/* CWKeychainDomain */ nint domain, NSDataRef ssid, out NSStringRef password);
+		unsafe static extern OSStatus CWKeychainFindWiFiPassword (/* CWKeychainDomain */ nint domain, NSDataRef ssid, NSStringRef* password);
 
 #if NET
 		[SupportedOSPlatform ("macos")]
@@ -168,7 +172,9 @@ namespace CoreWlan {
 		{
 			password = null;
 			NSStringRef passwordPtr = IntPtr.Zero;
-			status = CWKeychainFindWiFiPassword ((nint) (long) domain, ssid.GetHandle (), out passwordPtr);
+			unsafe {
+				status = CWKeychainFindWiFiPassword ((nint) (long) domain, ssid.GetHandle (), &passwordPtr);
+			}
 			if (passwordPtr != IntPtr.Zero) {
 				password = Runtime.GetNSObject<NSString> (passwordPtr, false);
 			}

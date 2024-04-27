@@ -32,6 +32,7 @@
 using System;
 using CoreFoundation;
 using ObjCRuntime;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Collections.Generic;
 
@@ -183,10 +184,7 @@ namespace Darwin {
 		}
 
 		[DllImport (Constants.SystemLibrary)]
-		unsafe extern static int /* int */ kevent (int kq, KernelEvent *changeList, int /* int */ nChanges, KernelEvent *eventList, int /* int */ nEvents, IntPtr timeout);
-		
-		[DllImport (Constants.SystemLibrary)]
-		unsafe extern static int /* int */ kevent (int kq, KernelEvent *changeList, int /* int */ nChanges, KernelEvent *eventList, int /* int */ nEvents, ref TimeSpec timeout);
+		unsafe extern static int /* int */ kevent (int kq, KernelEvent *changeList, int /* int */ nChanges, KernelEvent *eventList, int /* int */ nEvents, TimeSpec* timeout);
 
 		public int KEvent (KernelEvent[] changeList, KernelEvent[] eventList, TimeSpan? timeout = null)
 		{
@@ -229,10 +227,10 @@ namespace Darwin {
 				fixed (KernelEvent *cp = changeList)
 					fixed (KernelEvent *ep = eventList) {
 						if (timeout is null) {
-							return kevent (handle, cp, nChanges, ep, nEvents, IntPtr.Zero);
+							return kevent (handle, cp, nChanges, ep, nEvents, null);
 						} else {
 							TimeSpec ts = timeout.Value;
-							return kevent (handle, cp, nChanges, ep, nEvents, ref ts);
+							return kevent (handle, cp, nChanges, ep, nEvents, &ts);
 						}
 					}
 			}
@@ -264,7 +262,7 @@ namespace Darwin {
 			unsafe {
 				fixed (KernelEvent *cp = changeList)
 					fixed (KernelEvent *ep = eventList)
-						return kevent (handle, cp, nChanges, ep, nEvents, ref timeOut) != -1;
+						return kevent (handle, cp, nChanges, ep, nEvents, (TimeSpec *) Unsafe.AsPointer<TimeSpec> (ref timeOut)) != -1;
 			}
 		}
 
@@ -280,7 +278,7 @@ namespace Darwin {
 			unsafe {
 				fixed (KernelEvent *cp = changeList)
 					fixed (KernelEvent *ep = eventList)
-						return kevent (handle, cp, nChanges, ep, nEvents, IntPtr.Zero) != -1;
+						return kevent (handle, cp, nChanges, ep, nEvents, null) != -1;
 			}
 		}
 
@@ -290,7 +288,7 @@ namespace Darwin {
 			unsafe {
 				fixed (KernelEvent *cp = changeList)
 					fixed (KernelEvent *ep = eventList)
-						return kevent (handle, cp, changeList?.Length ?? 0, ep, eventList?.Length ?? 0, ref timeOut) != -1;
+						return kevent (handle, cp, changeList?.Length ?? 0, ep, eventList?.Length ?? 0, (TimeSpec *) Unsafe.AsPointer<TimeSpec> (ref timeOut)) != -1;
 			}
 		}
 #endif
@@ -307,9 +305,9 @@ namespace Darwin {
 				fixed (KernelEvent *cp = changeList)
 					fixed (KernelEvent *ep = eventList)
 #if NET
-						return kevent (handle, cp, changeList?.Length ?? 0, ep, eventList?.Length ?? 0, IntPtr.Zero);
+						return kevent (handle, cp, changeList?.Length ?? 0, ep, eventList?.Length ?? 0, null);
 #else
-						return kevent (handle, cp, changeList?.Length ?? 0, ep, eventList?.Length ?? 0, IntPtr.Zero) != -1;
+						return kevent (handle, cp, changeList?.Length ?? 0, ep, eventList?.Length ?? 0, null) != -1;
 #endif
 			}
 		}

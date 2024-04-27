@@ -27,12 +27,12 @@ namespace CoreVideo {
 
 	public partial class CVMetalTextureCache : NativeObject {
 		[DllImport (Constants.CoreVideoLibrary)]
-		extern static int /* CVReturn = int32_t */ CVMetalTextureCacheCreate (
+		unsafe extern static CVReturn /* CVReturn = int32_t */ CVMetalTextureCacheCreate (
 			/* CFAllocatorRef __nullable */ IntPtr allocator,
 			/* CFDictionaryRef __nullable */ IntPtr cacheAttributes,
 			/* id<MTLDevice> __nonnull */ IntPtr metalDevice,
 			/* CFDictionaryRef __nullable */ IntPtr textureAttributes,
-			/* CVMetalTextureCacheRef __nullable * __nonnull */ out IntPtr cacheOut);
+			/* CVMetalTextureCacheRef __nullable * __nonnull */ IntPtr* cacheOut);
 
 		[Preserve (Conditional = true)]
 		internal CVMetalTextureCache (NativeHandle handle, bool owns)
@@ -45,11 +45,15 @@ namespace CoreVideo {
 			if (metalDevice is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (metalDevice));
 
-			CVReturn err = (CVReturn) CVMetalTextureCacheCreate (IntPtr.Zero,
+			IntPtr handle;
+			CVReturn err;
+			unsafe {
+				err = CVMetalTextureCacheCreate (IntPtr.Zero,
 								IntPtr.Zero, /* change one day to support cache attributes */
 								metalDevice.Handle,
 								textureAttributes.GetHandle (),
-								out var handle);
+								&handle);
+			}
 			if (err == CVReturn.Success)
 				return handle;
 
@@ -66,11 +70,15 @@ namespace CoreVideo {
 			if (metalDevice is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (metalDevice));
 			IntPtr handle;
-			if (CVMetalTextureCacheCreate (IntPtr.Zero,
+			CVReturn err;
+			unsafe {
+				err = CVMetalTextureCacheCreate (IntPtr.Zero,
 							   IntPtr.Zero, /* change one day to support cache attributes */
 							   metalDevice.Handle,
 							   IntPtr.Zero, /* change one day to support texture attribuets */
-							   out handle) == 0)
+							   &handle);
+			}
+			if (err == 0)
 				return new CVMetalTextureCache (handle, true);
 			return null;
 		}
@@ -85,11 +93,13 @@ namespace CoreVideo {
 			if (metalDevice is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (metalDevice));
 			IntPtr handle;
-			creationErr = (CVReturn) CVMetalTextureCacheCreate (IntPtr.Zero,
+			unsafe {
+				creationErr = CVMetalTextureCacheCreate (IntPtr.Zero,
 								IntPtr.Zero, /* change one day to support cache attributes */
 								metalDevice.Handle,
 								textureAttributes.GetHandle (),
-								out handle);
+								&handle);
+			}
 			if (creationErr == CVReturn.Success)
 				return new CVMetalTextureCache (handle, true);
 			return null;
@@ -107,16 +117,18 @@ namespace CoreVideo {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (imageBuffer));
 
 			IntPtr texture;
-			errorCode = CVMetalTextureCacheCreateTextureFromImage (
-				allocator: IntPtr.Zero,
-				textureCache: Handle, /* textureCache dict, one day we might add it */
-				sourceImage: imageBuffer.Handle,
-				textureAttr: IntPtr.Zero,
-				format: (nuint) (ulong) format,
-				width: width,
-				height: height,
-				planeIndex: planeIndex,
-				textureOut: out texture);
+			unsafe {
+				errorCode = CVMetalTextureCacheCreateTextureFromImage (
+					allocator: IntPtr.Zero,
+					textureCache: Handle, /* textureCache dict, one day we might add it */
+					sourceImage: imageBuffer.Handle,
+					textureAttr: IntPtr.Zero,
+					format: (nuint) (ulong) format,
+					width: width,
+					height: height,
+					planeIndex: planeIndex,
+					textureOut: &texture);
+			}
 			if (errorCode != 0)
 				return null;
 			return new CVMetalTexture (texture, true);
@@ -132,7 +144,7 @@ namespace CoreVideo {
 		}
 
 		[DllImport (Constants.CoreVideoLibrary)]
-		extern static CVReturn CVMetalTextureCacheCreateTextureFromImage (
+		unsafe extern static CVReturn CVMetalTextureCacheCreateTextureFromImage (
 			/* CFAllocatorRef __nullable */ IntPtr allocator,
 			/* CVMetalTextureCacheRef __nonnull */ IntPtr textureCache,
 			/* CVImageBufferRef __nonnull */ IntPtr sourceImage,
@@ -141,7 +153,7 @@ namespace CoreVideo {
 			/* size_t */ nint width,
 			/* size_t */ nint height,
 			/* size_t */ nint planeIndex,
-			/* CVMetalTextureRef __nullable * __nonnull */ out IntPtr textureOut);
+			/* CVMetalTextureRef __nullable * __nonnull */ IntPtr* textureOut);
 	}
 }
 

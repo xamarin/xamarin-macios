@@ -1678,7 +1678,8 @@ namespace AudioToolbox {
 	[SupportedOSPlatform ("tvos")]
 #endif
 	public class AudioQueueTimeline : IDisposable {
-		internal protected IntPtr timelineHandle, queueHandle;
+		internal protected IntPtr timelineHandle;
+		internal protected IntPtr queueHandle;
 
 		internal AudioQueueTimeline (IntPtr queueHandle, IntPtr timelineHandle)
 		{

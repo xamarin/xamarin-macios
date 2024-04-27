@@ -1,5 +1,8 @@
 using System;
 using Foundation;
+#if IOS
+using UIKit;
+#endif
 
 namespace XmlDocumentation {
 	/// <summary>
@@ -21,6 +24,21 @@ namespace XmlDocumentation {
 
 		// can't apply xml docs to a getter/setter, only the property itself
 	}
+
+#if IOS
+	/// <summary>
+	/// Summary for TypeWithApparance
+	/// </summary>
+	[BaseType (typeof (NSObject))]
+	interface TypeWithApparance : IUIAppearance {
+		/// <summary>
+		/// Summary for TypeWithApparance.TintColor
+		/// </summary>
+		[Export ("tintColor")]
+		[Appearance]
+		UIColor TintColor { get; set; }
+	}
+#endif // IOS
 
 	/// <summary>
 	/// Summary for P1
@@ -86,5 +104,52 @@ namespace XmlDocumentation {
 		/// Summary for E1.Value1
 		/// </summary>
 		Value1,
+	}
+
+	/// <summary>
+	/// Summary for Notification1
+	/// </summary>
+	[BaseType (typeof (NSObject))]
+	interface Notification1 {
+		/// <summary>Summary for DocumentedNotification</summary>
+		[Notification]
+		[Field ("NSANotification", LibraryName = "__Internal")]
+		NSString ANotification { get; }
+	}
+
+	/// <summary>
+	/// Summary for E2
+	/// </summary>
+	enum E2 {
+		/// <summary>
+		/// Summary for E2.A
+		/// </summary>
+		[Field ("E2A", LibraryName = "__Internal")]
+		A,
+	}
+
+	/// <summary>
+	/// Summary for E3
+	/// </summary>
+	[ErrorDomain ("E3Domain", LibraryName = "__Internal")]
+	enum E3 {
+		/// <summary>
+		/// Summary for E3.ErrorA
+		/// </summary>
+		ErrorA,
+	}
+	/// <summary>
+	/// Summary for E4
+	/// </summary>
+	[Flags]
+	enum E4 {
+		/// <summary>
+		/// Summary for E4.Bit1
+		/// </summary>
+		Bit1 = 1,
+		/// <summary>
+		/// Summary for E4.Bit3
+		/// </summary>
+		Bit3 = 4,
 	}
 }

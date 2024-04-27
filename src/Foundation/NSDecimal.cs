@@ -53,7 +53,14 @@ namespace Foundation {
 		// unsigned int
 		public int fields;
 		// unsigned short [8]
-		public short m1, m2, m3, m4, m5, m6, m7, m8;
+		public short m1;
+		public short m2;
+		public short m3;
+		public short m4;
+		public short m5;
+		public short m6;
+		public short m7;
+		public short m8;
 
 #if !COREBUILD
 		[DllImport (Constants.FoundationLibrary)]
