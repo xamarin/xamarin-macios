@@ -57,17 +57,22 @@ namespace Cecil.Tests {
 					Assert.Fail ($"{doc}: Documented API not found in the platform assembly. This probably indicates that the code to compute the doc name for a given member is incorrect.");
 			});
 
-			var visibleButNotDocumented = dllMembers.Except (xmlMembers).Where (v => v.PubliclyVisible == true).Select (v => v.DocId).OrderBy (v => v).ToList ();
+			var shouldHaveBeenDocumented = dllMembers
+											.Except (xmlMembers)
+											.Where (v => v.PubliclyVisible == true && v.DocsRequired)
+											.Select (v => v.DocId)
+											.OrderBy (v => v)
+											.ToList ();
 			var knownfailuresFilename = $"Documentation.KnownFailures.txt";
 			var knownfailuresPath = Path.Combine (Configuration.SourceRoot, "tests", "cecil-tests", knownfailuresFilename);
 			var knownfailures = File.Exists (knownfailuresPath) ? File.ReadAllLines (knownfailuresPath) : Array.Empty<string> ();
 
-			var unknownFailures = visibleButNotDocumented.Except (knownfailures).ToList ();
-			var fixedFailures = knownfailures.Except (visibleButNotDocumented).ToList ();
+			var unknownFailures = shouldHaveBeenDocumented.Except (knownfailures).ToList ();
+			var fixedFailures = knownfailures.Except (shouldHaveBeenDocumented).ToList ();
 
 			if (unknownFailures.Any () || fixedFailures.Any ()) {
 				if (!string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("WRITE_KNOWN_FAILURES"))) {
-					File.WriteAllLines (knownfailuresPath, visibleButNotDocumented);
+					File.WriteAllLines (knownfailuresPath, shouldHaveBeenDocumented);
 					Assert.Fail ($"Found {unknownFailures.Count} undocumented APIs (not known failures) and {fixedFailures.Count} APIs that were marked as known failures but are now documented. The known failures have been updated, so please commit the results. Re-running the test should now succeed.");
 				} else {
 					if (unknownFailures.Any ()) {
@@ -95,7 +100,7 @@ namespace Cecil.Tests {
 			var doc = new XmlDocument ();
 			doc.LoadWithoutNetworkAccess (xml);
 			foreach (XmlNode node in doc.SelectNodes ("/doc/members/member")!) {
-				rv.Add (new AssemblyApi (node.Attributes! ["name"]!.Value!, null));
+				rv.Add (new AssemblyApi (node.Attributes! ["name"]!.Value!, null, false));
 			}
 			return rv;
 		}
@@ -103,11 +108,13 @@ namespace Cecil.Tests {
 		class AssemblyApi {
 			public string DocId;
 			public bool? PubliclyVisible;
+			public bool DocsRequired;
 
-			public AssemblyApi (string docId, bool? visible)
+			public AssemblyApi (string docId, bool? visible, bool docsRequired)
 			{
 				DocId = docId;
 				PubliclyVisible = visible;
+				DocsRequired = docsRequired;
 			}
 
 			public override int GetHashCode ()
@@ -147,7 +154,12 @@ namespace Cecil.Tests {
 				} else {
 					throw new NotImplementedException ($"Unknown member type: {member.GetType ()}");
 				}
-				rv.Add (new AssemblyApi (name, member.IsPubliclyVisible ()));
+				var docsRequired = true;
+				if (member is ICustomAttributeProvider provider) {
+					if (provider.HasEditorBrowseableNeverAttribute () || provider.IsObsolete ())
+						docsRequired = false;
+				}
+				rv.Add (new AssemblyApi (name, member.IsPubliclyVisible (), docsRequired));
 			}
 
 			return rv;

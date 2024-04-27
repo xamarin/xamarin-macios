@@ -56,7 +56,8 @@ namespace UIKit {
 			static _UIViewStaticCallback shared;
 			public const string start = "start";
 			public const string end = "end";
-			public event Action WillStart, WillEnd;
+			public event Action WillStart;
+			public event Action WillEnd;
 
 			public _UIViewStaticCallback ()
 			{
