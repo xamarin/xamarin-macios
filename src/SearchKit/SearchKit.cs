@@ -21,6 +21,7 @@
 #nullable enable
 
 using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.Versioning;
 using CoreFoundation;
 using ObjCRuntime;
@@ -56,8 +57,7 @@ namespace SearchKit {
 		}
 
 		[DllImport (Constants.SearchKitLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool SKSearchFindMatches (IntPtr handle, nint maxCount, IntPtr ids, IntPtr scores, double time, out nint foundCount);
+		unsafe extern static byte SKSearchFindMatches (IntPtr handle, nint maxCount, IntPtr ids, IntPtr scores, double time, nint* foundCount);
 
 		public bool FindMatches (nint maxCount, ref nint [] ids, double waitTime, out nint foundCount)
 		{
@@ -68,9 +68,10 @@ namespace SearchKit {
 			if (ids.Length != maxCount)
 				throw new ArgumentException ("ids should have as many elements as maxCount");
 
+			foundCount = default;
 			unsafe {
 				fixed (nint* p = ids) {
-					return SKSearchFindMatches (Handle, maxCount, (IntPtr) p, IntPtr.Zero, waitTime, out foundCount);
+					return SKSearchFindMatches (Handle, maxCount, (IntPtr) p, IntPtr.Zero, waitTime, (nint*) Unsafe.AsPointer<nint> (ref foundCount)) != 0;
 				}
 			}
 		}
@@ -90,13 +91,14 @@ namespace SearchKit {
 				if (scores.Length != maxCount)
 					throw new ArgumentException ("scores should have as many elements as maxCount");
 			}
+			foundCount = default;
 			unsafe {
 				fixed (nint* p = ids) {
 					if (scores is null)
-						return SKSearchFindMatches (Handle, maxCount, (IntPtr) p, IntPtr.Zero, waitTime, out foundCount);
+						return SKSearchFindMatches (Handle, maxCount, (IntPtr) p, IntPtr.Zero, waitTime, (nint*) Unsafe.AsPointer<nint> (ref foundCount)) != 0;
 					else {
 						fixed (float* s = scores) {
-							return SKSearchFindMatches (Handle, maxCount, (IntPtr) p, (IntPtr) s, waitTime, out foundCount);
+							return SKSearchFindMatches (Handle, maxCount, (IntPtr) p, (IntPtr) s, waitTime, (nint*) Unsafe.AsPointer<nint> (ref foundCount)) != 0;
 						}
 					}
 				}
@@ -199,7 +201,7 @@ namespace SearchKit {
 		[DllImport (Constants.SearchKitLibrary)]
 		extern static IntPtr SKIndexCreateWithMutableData (IntPtr url, IntPtr str, SKIndexType type, IntPtr dict);
 		[DllImport (Constants.SearchKitLibrary)]
-		extern static IntPtr SKIndexOpenWithURL (IntPtr url, IntPtr str, [MarshalAs (UnmanagedType.I1)] bool writeAccess);
+		extern static IntPtr SKIndexOpenWithURL (IntPtr url, IntPtr str, byte writeAccess);
 		[DllImport (Constants.SearchKitLibrary)]
 		extern static IntPtr SKIndexOpenWithMutableData (IntPtr mutableData, IntPtr str);
 		[DllImport (Constants.SearchKitLibrary)]
@@ -237,7 +239,7 @@ namespace SearchKit {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (indexName));
 			var indexNameHandle = CFString.CreateNative (indexName);
 			try {
-				var handle = SKIndexOpenWithURL (url.Handle, indexNameHandle, writeAccess);
+				var handle = SKIndexOpenWithURL (url.Handle, indexNameHandle, writeAccess.AsByte ());
 				if (handle == IntPtr.Zero)
 					return null;
 				return new SKIndex (handle, true);
@@ -321,8 +323,7 @@ namespace SearchKit {
 		}
 
 		[DllImport (Constants.SearchKitLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool SKIndexAddDocumentWithText (IntPtr h, IntPtr doc, IntPtr str, [MarshalAs (UnmanagedType.I1)] bool canreplace);
+		extern static byte SKIndexAddDocumentWithText (IntPtr h, IntPtr doc, IntPtr str, byte canreplace);
 
 		public bool AddDocumentWithText (SKDocument document, string text, bool canReplace)
 		{
@@ -330,15 +331,14 @@ namespace SearchKit {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (document));
 			var textHandle = CFString.CreateNative (text);
 			try {
-				return SKIndexAddDocumentWithText (Handle, document.Handle, textHandle, canReplace);
+				return SKIndexAddDocumentWithText (Handle, document.Handle, textHandle, canReplace.AsByte ()) != 0;
 			} finally {
 				CFString.ReleaseNative (textHandle);
 			}
 		}
 
 		[DllImport (Constants.SearchKitLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool SKIndexAddDocument (IntPtr h, IntPtr doc, IntPtr mimeHintStr, [MarshalAs (UnmanagedType.I1)] bool canReplace);
+		extern static byte SKIndexAddDocument (IntPtr h, IntPtr doc, IntPtr mimeHintStr, byte canReplace);
 
 		public bool AddDocument (SKDocument document, string mimeHint, bool canReplace)
 		{
@@ -346,7 +346,7 @@ namespace SearchKit {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (document));
 			var mimeHintHandle = CFString.CreateNative (mimeHint);
 			try {
-				return SKIndexAddDocument (Handle, document.Handle, mimeHintHandle, canReplace);
+				return SKIndexAddDocument (Handle, document.Handle, mimeHintHandle, canReplace.AsByte ()) != 0;
 			} finally {
 				CFString.ReleaseNative (mimeHintHandle);
 			}
@@ -356,18 +356,16 @@ namespace SearchKit {
 		public extern static void LoadDefaultExtractorPlugIns ();
 
 		[DllImport (Constants.SearchKitLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool SKIndexFlush (IntPtr h);
+		extern static byte SKIndexFlush (IntPtr h);
 		public bool Flush ()
 		{
-			return SKIndexFlush (Handle);
+			return SKIndexFlush (Handle) != 0;
 		}
 		[DllImport (Constants.SearchKitLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool SKIndexCompact (IntPtr h);
+		extern static byte SKIndexCompact (IntPtr h);
 		public bool Compact ()
 		{
-			return SKIndexCompact (Handle);
+			return SKIndexCompact (Handle) != 0;
 		}
 
 		[DllImport (Constants.SearchKitLibrary)]
@@ -404,33 +402,30 @@ namespace SearchKit {
 		}
 
 		[DllImport (Constants.SearchKitLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool SKIndexMoveDocument (IntPtr h, IntPtr document, IntPtr newParent);
+		extern static byte SKIndexMoveDocument (IntPtr h, IntPtr document, IntPtr newParent);
 		public bool MoveDocument (SKDocument document, SKDocument newParent)
 		{
 			if (document is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (document));
 			if (newParent is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (newParent));
-			return SKIndexMoveDocument (Handle, document.Handle, newParent.Handle);
+			return SKIndexMoveDocument (Handle, document.Handle, newParent.Handle) != 0;
 		}
 
 
 		[DllImport (Constants.SearchKitLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool SKIndexRemoveDocument (IntPtr h, IntPtr doc);
+		extern static byte SKIndexRemoveDocument (IntPtr h, IntPtr doc);
 
 		public bool RemoveDocument (SKDocument document)
 		{
 			if (document is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (document));
-			return SKIndexRemoveDocument (Handle, document.Handle);
+			return SKIndexRemoveDocument (Handle, document.Handle) != 0;
 		}
 
 
 		[DllImport (Constants.SearchKitLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool SKIndexRenameDocument (IntPtr h, IntPtr doc, IntPtr newName);
+		extern static byte SKIndexRenameDocument (IntPtr h, IntPtr doc, IntPtr newName);
 		public bool RenameDocument (SKDocument document, string newName)
 		{
 			if (document is null)
@@ -439,7 +434,7 @@ namespace SearchKit {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (newName));
 			var newNameHandle = CFString.CreateNative (newName);
 			try {
-				return SKIndexRenameDocument (Handle, document.Handle, newNameHandle);
+				return SKIndexRenameDocument (Handle, document.Handle, newNameHandle) != 0;
 			} finally {
 				CFString.ReleaseNative (newNameHandle);
 			}

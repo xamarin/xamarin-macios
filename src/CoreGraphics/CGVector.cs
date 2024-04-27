@@ -46,7 +46,8 @@ namespace CoreGraphics {
 #endif
 	// CGGeometry.h
 	public struct CGVector {
-		public /* CGFloat */ nfloat dx, dy;
+		public /* CGFloat */ nfloat dx;
+		public /* CGFloat */ nfloat dy;
 
 		public CGVector (nfloat dx, nfloat dy)
 		{
