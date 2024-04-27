@@ -83,12 +83,11 @@ namespace CoreVideo {
 		}
 
 		[DllImport (Constants.CoreVideoLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static /* Boolean */ bool CVImageBufferIsFlipped (/* CVImageBufferRef __nonnull */ IntPtr imageBuffer);
+		extern static /* Boolean */ byte CVImageBufferIsFlipped (/* CVImageBufferRef __nonnull */ IntPtr imageBuffer);
 
 		public bool IsFlipped {
 			get {
-				return CVImageBufferIsFlipped (Handle);
+				return CVImageBufferIsFlipped (Handle) != 0;
 			}
 		}
 
