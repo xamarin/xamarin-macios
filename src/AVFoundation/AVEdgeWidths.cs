@@ -40,7 +40,10 @@ namespace AVFoundation {
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AVEdgeWidths {
-		public nfloat /* CGFloat */ Left, Top, Right, Bottom;
+		public nfloat /* CGFloat */ Left;
+		public nfloat /* CGFloat */ Top;
+		public nfloat /* CGFloat */ Right;
+		public nfloat /* CGFloat */ Bottom;
 
 		public AVEdgeWidths (nfloat left, nfloat top, nfloat right, nfloat bottom)
 		{

@@ -204,7 +204,9 @@ namespace AudioToolbox {
 		struct Layout {
 			public PanningMode PanningMode;
 			public AudioChannelFlags CoordinateFlags;
-			public float Coord0, Coord1, Coord2;
+			public float Coord0;
+			public float Coord1;
+			public float Coord2;
 			public float GainScale;
 			public IntPtr OutputChannelMapWeak;
 		}
