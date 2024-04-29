@@ -94,8 +94,12 @@ namespace Accelerate {
 	[StructLayout (LayoutKind.Sequential)]
 	public struct vImageAffineTransformFloat {
 		// all defined as 'float'
-		public float a, b, c, d;
-		public float tx, ty;
+		public float a;
+		public float b;
+		public float c;
+		public float d;
+		public float tx;
+		public float ty;
 
 		// TODO: constructor from CGAffineTransform, vImageAffineTransformDouble
 	}
@@ -109,8 +113,12 @@ namespace Accelerate {
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct vImageAffineTransformDouble {
-		public double a, b, c, d;
-		public double tx, ty;
+		public double a;
+		public double b;
+		public double c;
+		public double d;
+		public double tx;
+		public double ty;
 
 		// TODO: constructor from CGAffineTransform, vImageAffineTransformFloat
 	}
@@ -189,8 +197,10 @@ namespace Accelerate {
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct PixelFFFF {
-		// all defined as 'float'
-		public float A, R, G, B;
+		public float A;
+		public float R;
+		public float G;
+		public float B;
 		public readonly static PixelFFFF Zero;
 	}
 
@@ -202,7 +212,10 @@ namespace Accelerate {
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct Pixel8888 {
-		public byte A, R, G, B;
+		public byte A;
+		public byte R;
+		public byte G;
+		public byte B;
 		public readonly static Pixel8888 Zero;
 	}
 
@@ -214,7 +227,10 @@ namespace Accelerate {
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct PixelARGB16U {
-		public Pixel16U A, R, G, B;
+		public Pixel16U A;
+		public Pixel16U R;
+		public Pixel16U G;
+		public Pixel16U B;
 		public readonly static PixelARGB16U Zero;
 	}
 
@@ -226,7 +242,10 @@ namespace Accelerate {
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct PixelARGB16S {
-		public Pixel16S A, R, G, B;
+		public Pixel16S A;
+		public Pixel16S R;
+		public Pixel16S G;
+		public Pixel16S B;
 		public readonly static PixelARGB16S Zero;
 	}
 

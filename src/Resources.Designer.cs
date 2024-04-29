@@ -971,6 +971,15 @@ namespace bgen {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Missing value for the &apos;LibraryName&apos; property for the &apos;[ErrorDomain]&apos; attribute for {0} (e.g. &apos;[ErrorDomain (&quot;MyDomain&quot;, LibraryName = &quot;__Internal&quot;)]&apos;).
+        /// </summary>
+        internal static string BI1087 {
+            get {
+                return ResourceManager.GetString("BI1087", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Trying to use a string as a [Target].
         /// </summary>
         internal static string BI1101 {
