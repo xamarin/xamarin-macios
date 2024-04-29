@@ -229,7 +229,7 @@ stages:
   parameters:
     xcodeChannel: Stable
     macOSName: ${{ parameters.macOSName }}
-    isPR: false
+    isPR: ${{ parameters.isPR }}
     provisionatorChannel: ${{ parameters.provisionatorChannel }}
     pool: ${{ parameters.pool }}
     runTests: ${{ parameters.runTests }}
