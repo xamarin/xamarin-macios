@@ -10,7 +10,7 @@ class APIScanConfiguration {
         $vars = [ordered]@{}
         Write-Host "enabledPlatforms: $($this.enabledPlatforms)"
 
-        if ($vars.count -eq 0) {
+        if ($this.enabledPlatforms.count -eq 0) {
             return ""
         }
 
