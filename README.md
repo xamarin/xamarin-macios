@@ -1,12 +1,16 @@
-# .NET for iOS & .NET for macOS #
+# .NET for iOS, Mac Catalyst, macOS, tvOS #
 
 ## Welcome!
 
-This module is the main repository for both **.NET for iOS** and **.NET for macOS**.
+This module is the main repository for:
+- **.NET for iOS**
+- **.NET for Mac Catalyst**
+- **.NET for macOS**
+- **.NET for tvOS**
 
-These SDKs allow us to create native iOS, tvOS, watchOS and macOS applications using the same UI controls we would in Objective-C and Xcode, except with the flexibility and elegance of a modern language (C#), the power of the .NET Base Class Library (BCL), and two first-class IDEs&mdash;Visual Studio for Mac and Visual Studio&mdash;at our fingertips.
+These SDKs allow us to create native iOS, Mac Catalyst, macOS and tvOS applications using the same UI controls we would in Objective-C and Xcode, except with the flexibility and elegance of a modern language (C#), the power of the .NET Base Class Library (BCL), and two first-class IDEs&mdash;Visual Studio for Mac and Visual Studio&mdash;at our fingertips.
 
-This repository is where we do development for the .NET for iOS and .NET for macOS SDKs. .NET for iOS and .NET for macOS are an essential part of [.NET MAUI][maui-intro], and is also still fully supported to be used independently for native iOS and macOS development using .NET.
+This repository is where we do development for the .NET for iOS, Mac Catalyst, macOS, and tvOS SDKs. .NET for iOS, Mac Catalyst, macOS, and tvOS are part of [.NET MAUI][maui-intro], and may also be used independently for native iOS and macOS development with .NET.
 
 There are a few ways that you can contribute, for example:
 
@@ -18,13 +22,13 @@ There are a few ways that you can contribute, for example:
 
 ## Support
 
-.NET for iOS and .NET for macOS are now part of .NET 6+ and follow the same support lifecycle as the [MAUI Support Lifecycle][maui-support-lifecycle].
+.NET for iOS, Mac Catalyst, macOS, and tvOS are part of .NET MAUI, since it was introduced in May 2022 as part of .NET 6, and is currently supported as described on the [.NET MAUI Support Policy][maui-support-policy].
 
 Support for Xamarin.iOS and Xamarin.Mac ended on **May 1, 2024** as per the [Xamarin Support Policy][xamarin-support-policy]:
 
 > Xamarin support ended on May 1, 2024 for all Xamarin SDKs including Xamarin.Forms. Android API 34 and Xcode 15 SDKs (iOS and iPadOS 17, macOS 14) are the final versions Xamarin targets from existing Xamarin SDKs (i.e. no new APIs are planned).
 
-[maui-support-lifecycle]: https://dotnet.microsoft.com/en-us/platform/support/policy/maui
+[maui-support-policy]: https://dotnet.microsoft.com/en-us/platform/support/policy/maui
 [xamarin-support-policy]: https://dotnet.microsoft.com/en-us/platform/support/policy/xamarin
 
 ## Contributing
