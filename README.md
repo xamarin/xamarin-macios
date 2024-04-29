@@ -1,18 +1,31 @@
-<img src="banner.png" alt="Xamarin.iOS + Xamarin.Mac logo" height="145" >
-
-# Xamarin.iOS & Xamarin.Mac #
+# .NET for iOS & .NET for macOS #
 
 ## Welcome!
 
-This module is the main repository for both **Xamarin.iOS** and **Xamarin.Mac**.
+This module is the main repository for both **.NET for iOS** and **.NET for macOS**.
 
 These SDKs allow us to create native iOS, tvOS, watchOS and macOS applications using the same UI controls we would in Objective-C and Xcode, except with the flexibility and elegance of a modern language (C#), the power of the .NET Base Class Library (BCL), and two first-class IDEs&mdash;Visual Studio for Mac and Visual Studio&mdash;at our fingertips.
 
-This repository is where we do development for the Xamarin.iOS and Xamarin.Mac SDKs. There are a few ways that you can contribute, for example:
+This repository is where we do development for the .NET for iOS and .NET for macOS SDKs. .NET for iOS and .NET for macOS are an essential part of [.NET MAUI][maui-intro], and is also still fully supported to be used independently for native iOS and macOS development using .NET.
+
+There are a few ways that you can contribute, for example:
 
 - [Submit bugs and feature requests](https://github.com/xamarin/xamarin-macios/wiki/Submitting-Bugs-&-Suggestions)
 - [Review source code changes](https://github.com/xamarin/xamarin-macios/pulls)
 - [Submit pull requests](https://github.com/xamarin/xamarin-macios/wiki/How-to-Contribute#pull-requests) to resolve issues and fix bugs
+
+[maui-intro]: https://learn.microsoft.com/en-us/dotnet/maui/what-is-maui
+
+## Support
+
+.NET for iOS and .NET for macOS are now part of .NET 6+ and follow the same support lifecycle as the [MAUI Support Lifecycle][maui-support-lifecycle].
+
+Support for Xamarin.iOS and Xamarin.Mac ended on **May 1, 2024** as per the [Xamarin Support Policy][xamarin-support-policy]:
+
+> Xamarin support ended on May 1, 2024 for all Xamarin SDKs including Xamarin.Forms. Android API 34 and Xcode 15 SDKs (iOS and iPadOS 17, macOS 14) are the final versions Xamarin targets from existing Xamarin SDKs (i.e. no new APIs are planned).
+
+[maui-support-lifecycle]: https://dotnet.microsoft.com/en-us/platform/support/policy/maui
+[xamarin-support-policy]: https://dotnet.microsoft.com/en-us/platform/support/policy/xamarin
 
 ## Contributing
 
