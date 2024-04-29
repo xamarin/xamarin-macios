@@ -73,7 +73,6 @@ namespace Cecil.Tests {
 			"ObjCRuntime.NativeHandle ObjCRuntime.Messaging::NativeHandle_objc_msgSendSuper_AudioComponentDescription_ref_NativeHandle(System.IntPtr,System.IntPtr,AudioUnit.AudioComponentDescription,ObjCRuntime.NativeHandle*)",
 			"ObjCRuntime.NativeHandle ObjCRuntime.Messaging::NativeHandle_objc_msgSendSuper_AudioComponentDescription_UInt32_ref_NativeHandle(System.IntPtr,System.IntPtr,AudioUnit.AudioComponentDescription,System.UInt32,ObjCRuntime.NativeHandle*)",
 			"ObjCRuntime.NativeHandle ObjCRuntime.Messaging::NativeHandle_objc_msgSendSuper_AudioComponentDescription(System.IntPtr,System.IntPtr,AudioUnit.AudioComponentDescription)",
-			"OpenGL.CGLErrorCode OpenGL.CGLPixelFormat::CGLChoosePixelFormat(OpenGL.CGLPixelFormatAttribute[],System.IntPtr&,System.Int32&)",
 			"PrintCore.PMStatusCode PrintCore.PMPageFormat::PMCreatePageFormat(System.IntPtr&)",
 			"PrintCore.PMStatusCode PrintCore.PMPageFormat::PMCreatePageFormatWithPMPaper(System.IntPtr&,System.IntPtr)",
 			"PrintCore.PMStatusCode PrintCore.PMPageFormat::PMGetAdjustedPageRect(System.IntPtr,PrintCore.PMRect&)",
@@ -289,7 +288,6 @@ namespace Cecil.Tests {
 			"System.Void ObjCRuntime.Protocol::protocol_addMethodDescription(System.IntPtr,System.IntPtr,System.IntPtr,System.Boolean,System.Boolean)",
 			"System.Void ObjCRuntime.Protocol::protocol_addProperty(System.IntPtr,System.IntPtr,System.IntPtr*,System.Int32,System.Boolean,System.Boolean)",
 			"System.Void ObjCRuntime.Runtime::xamarin_switch_gchandle(System.IntPtr,System.Boolean)",
-			"System.Void OpenGLES.EAGLContext::EAGLGetVersion(System.UIntPtr&,System.UIntPtr&)",
 		};
 	}
 }
