@@ -60,11 +60,11 @@ namespace CoreVideo {
 		[NoWatch]
 #endif
 		[DllImport (Constants.CoreVideoLibrary)]
-		extern static CVReturn /* IOSurfaceRef */ CVPixelBufferCreateWithIOSurface (
+		unsafe extern static CVReturn /* IOSurfaceRef */ CVPixelBufferCreateWithIOSurface (
 			/* CFAllocatorRef CV_NULLABLE */ IntPtr allocator,
 			/* IOSurfaceRef CV_NONNULL */ IntPtr surface,
 			/* CFDictionaryRef CV_NULLABLE */ IntPtr pixelBufferAttributes,
-			/* CVPixelBufferRef CV_NULLABLE * CV_NONNULL */ out IntPtr pixelBufferOut
+			/* CVPixelBufferRef CV_NULLABLE * CV_NONNULL */ IntPtr* pixelBufferOut
 		);
 
 #if NET
@@ -81,12 +81,14 @@ namespace CoreVideo {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (surface));
 
 			IntPtr pixelBufferPtr;
-			result = CVPixelBufferCreateWithIOSurface (
-				allocator: IntPtr.Zero,
-				surface: surface.Handle,
-				pixelBufferAttributes: pixelBufferAttributes?.Dictionary.Handle ?? IntPtr.Zero,
-				pixelBufferOut: out pixelBufferPtr
-			);
+			unsafe {
+				result = CVPixelBufferCreateWithIOSurface (
+					allocator: IntPtr.Zero,
+					surface: surface.Handle,
+					pixelBufferAttributes: pixelBufferAttributes?.Dictionary.Handle ?? IntPtr.Zero,
+					pixelBufferOut: &pixelBufferPtr
+				);
+			}
 
 			if (result != CVReturn.Success)
 				return null;
