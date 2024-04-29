@@ -13,7 +13,8 @@ using System;
 
 namespace UIKit {
 	public partial class DraggingEventArgs : EventArgs {
-		public readonly static DraggingEventArgs True, False;
+		public readonly static DraggingEventArgs True;
+		public readonly static DraggingEventArgs False;
 
 		static DraggingEventArgs ()
 		{

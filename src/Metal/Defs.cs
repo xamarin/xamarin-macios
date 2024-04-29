@@ -25,7 +25,10 @@ namespace Metal {
 	[SupportedOSPlatform ("tvos")]
 #endif
 	public struct MTLOrigin {
-		public nint X, Y, Z;
+		public nint X;
+		public nint Y;
+		public nint Z;
+
 		public MTLOrigin (nint x, nint y, nint z)
 		{
 			X = x;
@@ -46,7 +49,9 @@ namespace Metal {
 	[SupportedOSPlatform ("tvos")]
 #endif
 	public struct MTLSize {
-		public nint Width, Height, Depth;
+		public nint Width;
+		public nint Height;
+		public nint Depth;
 
 		public MTLSize (nint width, nint height, nint depth)
 		{
@@ -95,7 +100,10 @@ namespace Metal {
 	[SupportedOSPlatform ("tvos")]
 #endif
 	public struct MTLScissorRect {
-		public nuint X, Y, Width, Height;
+		public nuint X;
+		public nuint Y;
+		public nuint Width;
+		public nuint Height;
 
 		public MTLScissorRect (nuint x, nuint y, nuint width, nuint height)
 		{
@@ -118,7 +126,13 @@ namespace Metal {
 	[SupportedOSPlatform ("tvos")]
 #endif
 	public struct MTLViewport {
-		public double OriginX, OriginY, Width, Height, ZNear, ZFar;
+		public double OriginX;
+		public double OriginY;
+		public double Width;
+		public double Height;
+		public double ZNear;
+		public double ZFar;
+
 		public MTLViewport (double originX, double originY, double width, double height, double znear, double zfar)
 		{
 			OriginX = originX;
@@ -162,7 +176,10 @@ namespace Metal {
 	[SupportedOSPlatform ("tvos")]
 #endif
 	public struct MTLClearColor {
-		public double Red, Green, Blue, Alpha;
+		public double Red;
+		public double Green;
+		public double Blue;
+		public double Alpha;
 
 		public MTLClearColor (double red, double green, double blue, double alpha)
 		{
