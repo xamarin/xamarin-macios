@@ -45,8 +45,13 @@ parameters:
 
 steps:
 - bash: |
+    set -ex
     brew update
-    brew install powershell
+    if [[ "1" == "$(sysctl -n sysctl.proc_translated)" ]]; then
+      arch -arm64 brew install powershell
+    else
+      brew install powershell
+    fi
   displayName: Install powershell
 
 - bash: |
