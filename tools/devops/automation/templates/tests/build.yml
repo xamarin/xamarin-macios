@@ -151,9 +151,17 @@ steps:
   condition: always()
 
 - task: DownloadPipelineArtifact@2
-  displayName: Download artifacts
+  displayName: Download PkgsVersions.json
   inputs:
     allowFailedBuilds: true
+    patterns: '**/PkgsVersions.json'
+    path: $(Build.SourcesDirectory)/artifacts
+
+- task: DownloadPipelineArtifact@2
+  displayName: Download classic pkgs
+  inputs:
+    allowFailedBuilds: true
+    patterns: '**/*.pkg'
     path: $(Build.SourcesDirectory)/artifacts
 
 - pwsh: |
