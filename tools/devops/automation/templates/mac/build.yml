@@ -144,7 +144,7 @@ steps:
     displayName: Download Mac tests
     patterns: '**/mac-test-package.7z'
 
-  # the default locaiton when downloading is $(Pipeline.Workspace)/<pipeline resource identifier>/<artifact name>
+  # the default location when downloading is $(Pipeline.Workspace)/<pipeline resource identifier>/<artifact name>
   - pwsh: |
       $source = "$(Pipeline.Workspace)/macios/MacTests"
       $destination = "$(Build.SourcesDirectory)/artifacts/tmp"
