@@ -8,7 +8,7 @@ This module is the main repository for:
 - **.NET for macOS**
 - **.NET for tvOS**
 
-These SDKs allow us to create native iOS, Mac Catalyst, macOS and tvOS applications using the same UI controls we would in Objective-C and Xcode, except with the flexibility and elegance of a modern language (C#), the power of the .NET Base Class Library (BCL), and two first-class IDEs&mdash;Visual Studio for Mac and Visual Studio&mdash;at our fingertips.
+These SDKs allow us to create native iOS, Mac Catalyst, macOS and tvOS applications using the same UI controls we would in Objective-C and Xcode, except with the flexibility and elegance of a modern language (C#), the power of the .NET Base Class Library (BCL), and first-class IDEs and editors&mdash;Visual Studio and Visual Studio Code&mdash;at our fingertips.
 
 This repository is where we do development for the .NET for iOS, Mac Catalyst, macOS, and tvOS SDKs. .NET for iOS, Mac Catalyst, macOS, and tvOS are part of [.NET MAUI][maui-intro], and may also be used independently for native iOS and macOS development with .NET.
 
