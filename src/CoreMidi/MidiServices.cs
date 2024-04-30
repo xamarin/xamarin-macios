@@ -847,11 +847,11 @@ namespace CoreMidi {
 			byteptr = IntPtr.Zero;
 		}
 
-		internal byte []? ByteArray {
+		public byte []? ByteArray {
 			get { return bytes; }
 		}
 
-		internal IntPtr BytePointer {
+		public IntPtr BytePointer {
 			get { return byteptr; }
 		}
 
