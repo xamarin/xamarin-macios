@@ -140,13 +140,13 @@ steps:
 # Go get the tests!, this depends on how the test was triggered
 - ${{ if or(contains(variables['Build.Reason'], 'ResourceTrigger'), contains(variables['Build.Reason'], 'BuildCompletion')) }}:
   - download: macios
-    artifact: MacTests
+    artifact: mac-test-package
     displayName: Download Mac tests
     patterns: '**/mac-test-package.7z'
 
   # the default locaiton when downloading is $(Pipeline.Workspace)/<pipeline resource identifier>/<artifact name>
   - pwsh: |
-      $source = "$(Pipeline.Workspace)/macios/MacTests"
+      $source = "$(Pipeline.Workspace)/macios/mac-test-package"
       $destination = "$(Build.SourcesDirectory)/artifacts/tmp"
       New-Item -ItemType Directory -Force -Path $destination 
       # move all the files from the source to the destination
