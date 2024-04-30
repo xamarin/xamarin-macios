@@ -27,6 +27,8 @@ namespace Xamarin.MacDev.Tasks {
 
 		public ITaskItem [] CoreMLModels { get; set; } = Array.Empty<ITaskItem> ();
 
+		public ITaskItem [] PartialAppManifests { get; set; } = Array.Empty<ITaskItem> ();
+
 		public ITaskItem [] SceneKitAssets { get; set; } = Array.Empty<ITaskItem> ();
 
 		[Required]
@@ -59,6 +61,7 @@ namespace Xamarin.MacDev.Tasks {
 				new { Name = "CoreMLModel", Items = CoreMLModels },
 				new { Name = "ImageAsset", Items = ImageAssets },
 				new { Name = "InterfaceDefinition", Items = InterfaceDefinitions },
+				new { Name = "PartialAppManifest", Items = PartialAppManifests },
 				new { Name = "SceneKitAsset", Items = SceneKitAssets },
 			};
 

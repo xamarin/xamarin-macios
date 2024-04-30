@@ -495,6 +495,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			CoreMLModels="@(CoreMLModel)"
 			ImageAssets="@(ImageAsset)"
 			InterfaceDefinitions="@(InterfaceDefinition)"
+			PartialAppManifests="@(PartialAppManifest)"
 			ProjectDir="$(MSBuildProjectDirectory)"
 			ResourcePrefix="$(_ResourcePrefix)"
 			SceneKitAssets="@(SceneKitAsset)"
@@ -2045,6 +2046,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			<Output TaskParameter="InterfaceDefinitions" ItemName="InterfaceDefinition" />
 			<Output TaskParameter="ColladaAssets" ItemName="Collada" />
 			<Output TaskParameter="CoreMLModels" ItemName="CoreMLModel" />
+			<Output TaskParameter="PartialAppManifests" ItemName="PartialAppManifest" />
 			<Output TaskParameter="SceneKitAssets" ItemName="SceneKitAsset" />
 		</UnpackLibraryResources>
 
