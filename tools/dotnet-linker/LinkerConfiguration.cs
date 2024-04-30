@@ -270,11 +270,10 @@ namespace Xamarin.Linker {
 					case "Ignore":
 						mode = SymbolMode.Ignore;
 						break;
-					case "Default":
 					case "":
 						break;
 					default:
-						throw new InvalidOperationException ($"Unknown symbol mode '{symbolMode}' for symbol '{symbol}'. Expected 'Default' or 'Ignore'.");
+						throw new InvalidOperationException ($"Unknown symbol mode '{symbolMode}' for symbol '{symbol}'. Expected 'Ignore' or nothing at all.");
 					}
 					switch (symbolType) {
 					case "Function":
