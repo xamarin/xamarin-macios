@@ -171,6 +171,13 @@ steps:
     patterns: '**/*.pkg'
     path: $(Build.SourcesDirectory)/artifacts
 
+- task: DownloadPipelineArtifact@2
+  displayName: Download workloads
+  inputs:
+    allowFailedBuilds: true
+    patterns: '**/not-signed-package/*.nupkg'
+    path: $(Build.SourcesDirectory)/artifacts
+
 - pwsh: |
     $dir = "$(Build.SourcesDirectory)/artifacts"
     $versionsPath = "$dir/${{ parameters.uploadPrefix }}PkgsVersions/PkgsVersions.json"
