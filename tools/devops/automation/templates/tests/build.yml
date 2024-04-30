@@ -158,6 +158,13 @@ steps:
     path: $(Build.SourcesDirectory)/artifacts
 
 - task: DownloadPipelineArtifact@2
+  displayName: Download PkgsVersions.json
+  inputs:
+    allowFailedBuilds: true
+    patterns: '**/WorkloadRollback.json'
+    path: $(Build.SourcesDirectory)/artifacts
+
+- task: DownloadPipelineArtifact@2
   displayName: Download classic pkgs
   inputs:
     allowFailedBuilds: true
