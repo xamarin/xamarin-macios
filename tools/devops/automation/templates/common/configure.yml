@@ -46,13 +46,25 @@ steps:
   name: configure_platforms
   displayName: 'Configure platforms'
 
+- task: AzureCLI@2
+  displayName: 'Get DevOps Token'
+  inputs:
+    azureSubscription: 'VSMobileTools-AzureDevOps'
+    scriptType: pscore
+    scriptLocation: inlineScript
+    inlineScript: |
+      # Note that the resource is specified to limit the token to Azure DevOps
+      $token = az account get-access-token --query accessToken --resource 499b84ac-1321-427f-aa17-267ca6975798 -o tsv
+      Write-Host "Setting AzDO.BearerToken"
+      Write-Host "##vso[task.setvariable variable=AzDO.BearerToken]${token}"
+
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/MaciosCI.psd1
     $jsonPath = Join-Path -Path "$(Build.ArtifactStagingDirectory)" -ChildPath "configuration.json"
     New-BuildConfiguration -ConfigFile $jsonPath
   env:
     GITHUB_TOKEN: $(GitHub.Token)
-    ACCESSTOKEN: $(AzDoBuildAccess.Token)
+    ACCESSTOKEN: $(AzDO.BearerToken)
   name: labels
   displayName: 'Configure build'
 
