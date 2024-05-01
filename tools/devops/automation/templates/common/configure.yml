@@ -88,8 +88,10 @@ steps:
     gci env: | sort | format-table -autosize -wrap
     $apiScanMatrix = Get-APIScanConfiguration -EnabledPlatforms "$Env:CONFIGURE_PLATFORMS_DOTNET_PLATFORMS"
     # compress the json to remove any newlines, because we can't set the variable below if the json has any newlines
-    Write-Host "$apiScanMatrix"
-    $apiScanMatrix = $apiScanMatrix | ConvertFrom-Json | ConvertTo-Json -Compress
+    Write-Host "apiScanMatrix=$apiScanMatrix"
+    if ($apiScanMatrix.length -gt 0) {
+      $apiScanMatrix = $apiScanMatrix | ConvertFrom-Json | ConvertTo-Json -Compress
+    }
     Write-Host "##vso[task.setvariable variable=APISCAN_MATRIX;isOutput=true]$apiScanMatrix"
   name: apiscan_matrix
   displayName: 'Create APIScan matrix'

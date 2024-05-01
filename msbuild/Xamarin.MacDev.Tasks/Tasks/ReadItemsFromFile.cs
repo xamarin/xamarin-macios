@@ -10,9 +10,6 @@ using System.Xml.Linq;
 
 using Xamarin.Messaging.Build.Client;
 
-// Disable until we get around to enable + fix any issues.
-#nullable disable
-
 namespace Xamarin.MacDev.Tasks {
 	public class ReadItemsFromFile : XamarinTask, ITaskCallback {
 		static readonly XNamespace XmlNs = XNamespace.Get ("http://schemas.microsoft.com/developer/msbuild/2003");
@@ -24,14 +21,14 @@ namespace Xamarin.MacDev.Tasks {
 
 		[Output]
 		[Required]
-		public ITaskItem [] File { get; set; }
+		public ITaskItem [] File { get; set; } = Array.Empty<ITaskItem> ();
 
 		#endregion
 
 		#region Outputs
 
 		[Output]
-		public ITaskItem [] Items { get; set; }
+		public ITaskItem [] Items { get; set; } = Array.Empty<ITaskItem> ();
 
 		#endregion
 
