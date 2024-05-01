@@ -156,11 +156,6 @@ namespace Cecil.Tests {
 			"System.Boolean Network.NWWebSocketRequest::nw_ws_request_enumerate_additional_headers(System.IntPtr,ObjCRuntime.BlockLiteral*)",
 			"System.Boolean Network.NWWebSocketRequest::nw_ws_request_enumerate_subprotocols(System.IntPtr,ObjCRuntime.BlockLiteral*)",
 			"System.Boolean Network.NWWebSocketResponse::nw_ws_response_enumerate_additional_headers(System.IntPtr,ObjCRuntime.BlockLiteral*)",
-			"System.Boolean ObjCRuntime.Class::class_addIvar(System.IntPtr,System.IntPtr,System.IntPtr,System.Byte,System.IntPtr)",
-			"System.Boolean ObjCRuntime.Class::class_addMethod(System.IntPtr,System.IntPtr,System.IntPtr,System.IntPtr)",
-			"System.Boolean ObjCRuntime.Class::class_addProperty(System.IntPtr,System.IntPtr,System.IntPtr*,System.Int32)",
-			"System.Boolean ObjCRuntime.Class::class_addProtocol(System.IntPtr,System.IntPtr)",
-			"System.Boolean ObjCRuntime.Selector::sel_isMapped(System.IntPtr)",
 			"System.Boolean Security.SecIdentity2::sec_identity_access_certificates(System.IntPtr,ObjCRuntime.BlockLiteral*)",
 			"System.Boolean Security.SecKey::SecKeyIsAlgorithmSupported(System.IntPtr,System.IntPtr,System.IntPtr)",
 			"System.Boolean Security.SecKey::SecKeyVerifySignature(System.IntPtr,System.IntPtr,System.IntPtr,System.IntPtr,System.IntPtr&)",
@@ -179,7 +174,6 @@ namespace Cecil.Tests {
 			"System.Int32 AudioUnit.AudioUnit::AudioUnitGetProperty(System.IntPtr,AudioUnit.AudioUnitPropertyIDType,AudioUnit.AudioUnitScopeType,System.UInt32,System.UInt32&,System.UInt32&)",
 			"System.Int32 AudioUnit.AudioUnit::AudioUnitSetProperty(System.IntPtr,AudioUnit.AudioUnitPropertyIDType,AudioUnit.AudioUnitScopeType,System.UInt32,AudioToolbox.AudioStreamBasicDescription&,System.UInt32)",
 			"System.Int32 AudioUnit.AUGraph::NewAUGraph(System.IntPtr&)",
-			"System.Int32 ObjCRuntime.Runtime::_NSGetExecutablePath(System.Byte[],System.Int32&)",
 			"System.Int32 Security.Authorization::AuthorizationCreate(Security.AuthorizationItemSet*,Security.AuthorizationItemSet*,Security.AuthorizationFlags,System.IntPtr&)",
 			"System.Int32 Security.SecCertificate::SecCertificateCopyCommonName(System.IntPtr,System.IntPtr&)",
 			"System.Int32 Security.SecCertificate::SecCertificateCopyEmailAddresses(System.IntPtr,System.IntPtr&)",
@@ -237,9 +231,6 @@ namespace Cecil.Tests {
 			"System.Void ObjCRuntime.Messaging::void_objc_msgSendSuper_GCDualSenseAdaptiveTriggerPositionalAmplitudes_float(System.IntPtr,System.IntPtr,GameController.GCDualSenseAdaptiveTriggerPositionalAmplitudes,System.Single)",
 			"System.Void ObjCRuntime.Messaging::void_objc_msgSendSuper_GCDualSenseAdaptiveTriggerPositionalResistiveStrengths(System.IntPtr,System.IntPtr,GameController.GCDualSenseAdaptiveTriggerPositionalResistiveStrengths)",
 			"System.Void ObjCRuntime.Messaging::void_objc_msgSendSuper_NativeHandle_AudioComponentDescription_NativeHandle_UInt32(System.IntPtr,System.IntPtr,ObjCRuntime.NativeHandle,AudioUnit.AudioComponentDescription,ObjCRuntime.NativeHandle,System.UInt32)",
-			"System.Void ObjCRuntime.Protocol::protocol_addMethodDescription(System.IntPtr,System.IntPtr,System.IntPtr,System.Boolean,System.Boolean)",
-			"System.Void ObjCRuntime.Protocol::protocol_addProperty(System.IntPtr,System.IntPtr,System.IntPtr*,System.Int32,System.Boolean,System.Boolean)",
-			"System.Void ObjCRuntime.Runtime::xamarin_switch_gchandle(System.IntPtr,System.Boolean)",
 		};
 	}
 }
