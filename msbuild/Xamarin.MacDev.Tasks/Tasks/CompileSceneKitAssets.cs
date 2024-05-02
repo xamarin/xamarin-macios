@@ -152,8 +152,6 @@ namespace Xamarin.MacDev.Tasks {
 				if (!TryGetScnAssetsPath (asset.ItemSpec, out var scnassets))
 					continue;
 
-				asset.RemoveMetadata ("LogicalName");
-
 				var bundleName = BundleResource.GetLogicalName (ProjectDir, prefixes, asset, !string.IsNullOrEmpty (SessionId));
 				var output = new TaskItem (Path.Combine (intermediate, bundleName));
 
@@ -163,6 +161,13 @@ namespace Xamarin.MacDev.Tasks {
 
 					// .. but we really want it to be for @scnassets, so set ItemSpec accordingly
 					scnassetsItem.ItemSpec = scnassets;
+
+					// .. and set LogicalName, the original one is for @asset
+					if (!TryGetScnAssetsPath (bundleName, out var logicalScnAssetsPath)) {
+						Log.LogError (null, null, null, asset.ItemSpec, $"Unable to compute the path of the *.scnassets path from the item's LogicalName '{bundleName}'");
+						continue;
+					}
+					scnassetsItem.SetMetadata ("LogicalName", logicalScnAssetsPath);
 
 					// .. and remove the @OriginalItemSpec which is for @asset
 					scnassetsItem.RemoveMetadata ("OriginalItemSpec");
