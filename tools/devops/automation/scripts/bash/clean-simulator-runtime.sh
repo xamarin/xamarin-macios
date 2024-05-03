@@ -38,8 +38,8 @@ xcrun simctl runtime list -v
 xcrun simctl runtime match list -v
 
 # try to detach all simulator runtimes
-for dir in $(ls -d /Library/Developer/CoreSimulator/Volumes/*); do
-  diskutil eject $dir || true
+for dir in /Library/Developer/CoreSimulator/Volumes/*; do
+  diskutil eject "$dir" || true
 done
 # kill the com.apple.CoreSimulator.simdiskimaged service
 sudo launchctl kill 9 system/com.apple.CoreSimulator.simdiskimaged || true
