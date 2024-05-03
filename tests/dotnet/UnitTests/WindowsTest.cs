@@ -395,7 +395,7 @@ namespace Xamarin.Tests {
 			RuntimeIdentifiers = runtimeIdentifiers;
 		}
 
-		public byte[] GetFile (string appBundleRelativePath)
+		public byte [] GetFile (string appBundleRelativePath)
 		{
 			Assert.That (GetAppBundleFiles (), Does.Contain (appBundleRelativePath), "File does not exist in app bundle");
 			if (IsRemoteBuild) {

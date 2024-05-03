@@ -842,7 +842,7 @@ namespace Xamarin.Tests {
 			var ad = AssemblyDefinition.ReadAssembly (asm, new ReaderParameters { ReadingMode = ReadingMode.Deferred });
 			var actualResources = ad.MainModule.Resources.Select (v => v.Name).OrderBy (v => v).ToArray ();
 
-			string[] expectedResources;
+			string [] expectedResources;
 
 			var platformPrefix = (platform == ApplePlatform.MacOSX) ? "xammac" : "monotouch";
 			if (actualBundleOriginalResources) {
@@ -978,8 +978,7 @@ namespace Xamarin.Tests {
 			var appBundleInfo = new AppBundleInfo (platform, appPath, remoteWindows, runtimeIdentifiers, config);
 			var appBundleContents = appBundleInfo.GetAppBundleFiles ().ToHashSet ();
 
-			Assert.Multiple (() =>
-			{
+			Assert.Multiple (() => {
 				var resourcesDirectory = GetResourcesDirectory (platform, "");
 
 				var fontDirectory = resourcesDirectory;
