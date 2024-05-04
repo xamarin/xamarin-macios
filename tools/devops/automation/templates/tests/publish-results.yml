@@ -37,11 +37,16 @@ parameters:
   type: string
   default: HEAD
 
+- name: postPipeline
+  type: boolean
+  default: false
+
 stages:
 - stage: ${{ parameters.stageName }}
   displayName: ${{ parameters.displayName }}
   dependsOn:
-  - build_packages
+  - ${{ if eq(parameters.postPipeline, false) }}:
+    - build_macos_tests
   - configure_build
   - simulator_tests
   condition: and(succeededOrFailed(), ${{ parameters.condition }})

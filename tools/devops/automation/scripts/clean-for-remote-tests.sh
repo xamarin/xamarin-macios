@@ -10,6 +10,9 @@ if du -hs ~/Library/Caches/Xamarin; then
 	rm -rf ~/Library/Caches/Xamarin
 fi
 
+# Clean up temporary logs
+rm -rf /tmp/com.xamarin.*
+
 # Make sure we don't have stuff from earlier builds.
 rm -rf ~/remote_build_testing
 
