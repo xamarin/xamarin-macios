@@ -46,10 +46,10 @@ namespace Foundation {
 	public static class NSSearchPath {
 		public static string [] GetDirectories (NSSearchPathDirectory directory, NSSearchPathDomain domainMask, bool expandTilde = true)
 		{
-			return CFArray.StringArrayFromHandle (NSSearchPathForDirectoriesInDomains ((nuint) (ulong) directory, (nuint) (ulong) domainMask, expandTilde));
+			return CFArray.StringArrayFromHandle (NSSearchPathForDirectoriesInDomains ((nuint) (ulong) directory, (nuint) (ulong) domainMask, expandTilde.AsByte ()));
 		}
 
 		[DllImport (Constants.FoundationLibrary)]
-		static extern IntPtr NSSearchPathForDirectoriesInDomains (nuint directory, nuint domainMask, [MarshalAs (UnmanagedType.I1)] bool expandTilde);
+		static extern IntPtr NSSearchPathForDirectoriesInDomains (nuint directory, nuint domainMask, byte expandTilde);
 	}
 }

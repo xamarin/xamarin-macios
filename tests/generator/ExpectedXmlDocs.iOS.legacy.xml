@@ -87,6 +87,9 @@
                 It is similar to calling the managed <see cref="M:ObjCRuntime.Class.GetHandle(System.String)" /> or the native <see href="https://developer.apple.com/documentation/objectivec/1418952-objc_getclass">objc_getClass</see> method with the type name.
             </remarks>
         </member>
+        <member name="M:XmlDocumentation.Notification1.#ctor">
+            <summary>Creates a new <see cref="T:XmlDocumentation.Notification1" /> with default values.</summary>
+        </member>
         <member name="M:XmlDocumentation.Notification1.#ctor(Foundation.NSObjectFlag)">
             <summary>Constructor to call on derived classes to skip initialization and merely allocate the object.</summary>
             <param name="t">Unused sentinel value, pass NSObjectFlag.Empty.</param>
@@ -244,6 +247,9 @@
                 It is similar to calling the managed <see cref="M:ObjCRuntime.Class.GetHandle(System.String)" /> or the native <see href="https://developer.apple.com/documentation/objectivec/1418952-objc_getclass">objc_getClass</see> method with the type name.
             </remarks>
         </member>
+        <member name="M:XmlDocumentation.T1.#ctor">
+            <summary>Creates a new <see cref="T:XmlDocumentation.T1" /> with default values.</summary>
+        </member>
         <member name="M:XmlDocumentation.T1.#ctor(Foundation.NSObjectFlag)">
             <summary>Constructor to call on derived classes to skip initialization and merely allocate the object.</summary>
             <param name="t">Unused sentinel value, pass NSObjectFlag.Empty.</param>
@@ -301,6 +307,11 @@
                 </para>
             </remarks>
         </member>
+        <member name="M:XmlDocumentation.T1.#ctor(System.String)">
+            <summary>
+            Summary for T2.#ctor(String)
+            </summary>
+        </member>
         <member name="M:XmlDocumentation.T1.Method">
             <summary>
             Summary for T1.Method
@@ -339,6 +350,9 @@
                 This value contains the pointer to the Objective-C class.
                 It is similar to calling the managed <see cref="M:ObjCRuntime.Class.GetHandle(System.String)" /> or the native <see href="https://developer.apple.com/documentation/objectivec/1418952-objc_getclass">objc_getClass</see> method with the type name.
             </remarks>
+        </member>
+        <member name="M:XmlDocumentation.TG1`2.#ctor">
+            <summary>Creates a new <see cref="T:XmlDocumentation.TG1`2" /> with default values.</summary>
         </member>
         <member name="M:XmlDocumentation.TG1`2.#ctor(Foundation.NSObjectFlag)">
             <summary>Constructor to call on derived classes to skip initialization and merely allocate the object.</summary>
@@ -420,6 +434,9 @@
                 This value contains the pointer to the Objective-C class.
                 It is similar to calling the managed <see cref="M:ObjCRuntime.Class.GetHandle(System.String)" /> or the native <see href="https://developer.apple.com/documentation/objectivec/1418952-objc_getclass">objc_getClass</see> method with the type name.
             </remarks>
+        </member>
+        <member name="M:XmlDocumentation.TypeWithApparance.#ctor">
+            <summary>Creates a new <see cref="T:XmlDocumentation.TypeWithApparance" /> with default values.</summary>
         </member>
         <member name="M:XmlDocumentation.TypeWithApparance.#ctor(Foundation.NSObjectFlag)">
             <summary>Constructor to call on derived classes to skip initialization and merely allocate the object.</summary>
