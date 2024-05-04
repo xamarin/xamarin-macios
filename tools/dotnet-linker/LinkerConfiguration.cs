@@ -263,11 +263,45 @@ namespace Xamarin.Linker {
 				case "PlatformAssembly":
 					PlatformAssembly = Path.GetFileNameWithoutExtension (value);
 					break;
+				case "ReferenceNativeSymbol": {
+					(string symbolType, string symbolMode, string symbol) = SplitString3 (value, ':');
+					var mode = SymbolMode.Default;
+					switch (symbolMode) {
+					case "Ignore":
+						mode = SymbolMode.Ignore;
+						break;
+					case "":
+						break;
+					default:
+						throw new InvalidOperationException ($"Unknown symbol mode '{symbolMode}' for symbol '{symbol}'. Expected 'Ignore' or nothing at all.");
+					}
+					switch (symbolType) {
+					case "Function":
+						DerivedLinkContext.RequiredSymbols.AddFunction (symbol, mode);
+						break;
+					case "ObjectiveCClass":
+						DerivedLinkContext.RequiredSymbols.AddObjectiveCClass (symbol, mode);
+						break;
+					case "Field":
+						DerivedLinkContext.RequiredSymbols.AddField (symbol, mode);
+						break;
+					default:
+						throw new InvalidOperationException ($"Unknown symbol type '{symbolType}' for symbol '{symbol}'. Expected 'Function', 'ObjectiveCClass', or 'Field'.");
+					}
+					break;
+				}
 				case "RelativeAppBundlePath":
 					RelativeAppBundlePath = value;
 					break;
 				case "Registrar":
 					Application.ParseRegistrar (value);
+					break;
+				case "RequireLinkWithAttributeForObjectiveCClassSearch":
+					if (!string.IsNullOrEmpty (value)) { // The default is 'false'
+						if (!TryParseOptionalBoolean (value, out var require_link_with_attribute_for_objectivec_class_search))
+							throw new InvalidOperationException ($"Unable to parse the {key} value: {value} in {linker_file}");
+						Application.RequireLinkWithAttributeForObjectiveCClassSearch = require_link_with_attribute_for_objectivec_class_search.Value;
+					}
 					break;
 				case "RequirePInvokeWrappers":
 					if (!TryParseOptionalBoolean (value, out var require_pinvoke_wrappers))
@@ -393,6 +427,27 @@ namespace Xamarin.Linker {
 			Application.InitializeCommon ();
 			Application.Initialize ();
 		}
+
+		// Splits a string in three based on the split character.
+		//   "a:b" => "a", "b", ""
+		//   "a:b:c" => "a", "b", "c"
+		//   "a:b:c:d" => "a", "b", "c:d"
+		(string, string, string) SplitString3 (string value, char split)
+		{
+			var idx = value.IndexOf (':');
+			if (idx == -1)
+				return (value, "", "");
+			var a = value [..idx];
+			var idx2 = value.IndexOf (':', idx + 1);
+			if (idx2 == -1) {
+				var bc = value [(idx + 1)..];
+				return (a, bc, "");
+			}
+			var b = value [(idx + 1)..idx2];
+			var c = value [(idx2 + 1)..];
+			return (a, b, c);
+		}
+
 
 		bool TryParseOptionalBoolean (string input, [NotNullWhen (true)] out bool? value)
 		{
