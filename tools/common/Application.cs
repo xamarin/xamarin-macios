@@ -653,6 +653,12 @@ namespace Xamarin.Bundler {
 			}
 		}
 
+#if NET
+		public bool RequireLinkWithAttributeForObjectiveCClassSearch;
+#else
+		public bool RequireLinkWithAttributeForObjectiveCClassSearch = true;
+#endif
+
 		public string PlatformName {
 			get {
 				switch (Platform) {

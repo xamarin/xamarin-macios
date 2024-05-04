@@ -142,17 +142,47 @@ namespace GLKit {
 	public struct GLKVertexAttributeParameters {
 		public uint Type;
 		public uint Size;
+#if XAMCORE_5_0
+		byte normalized;
+		public bool Normalized {
+			get => normalized != 0;
+			set => normalized = value.AsByte ();
+		}
+#else
 		[MarshalAs (UnmanagedType.I1)]
 		public bool Normalized;
+#endif
 
 #if !COREBUILD
 		[DllImport (Constants.GLKitLibrary, EntryPoint = "GLKVertexAttributeParametersFromModelIO")]
+#if XAMCORE_5_0
 		extern static GLKVertexAttributeParameters FromVertexFormat_ (nuint vertexFormat);
+#else
+		extern static GLKVertexAttributeParametersInternal FromVertexFormat_ (nuint vertexFormat);
+#endif
 
 		public static GLKVertexAttributeParameters FromVertexFormat (MDLVertexFormat vertexFormat)
 		{
+#if XAMCORE_5_0
 			return FromVertexFormat_ ((nuint) (ulong) vertexFormat);
+#else
+			var tmp = FromVertexFormat_ ((nuint) (ulong) vertexFormat);
+			var rv = new GLKVertexAttributeParameters ();
+			rv.Type = tmp.Type;
+			rv.Size = tmp.Size;
+			rv.Normalized = tmp.Normalized != 0;
+			return rv;
+#endif
 		}
 #endif
 	}
+
+#if !XAMCORE_5_0
+	[StructLayout (LayoutKind.Sequential)]
+	struct GLKVertexAttributeParametersInternal {
+		public uint Type;
+		public uint Size;
+		public byte Normalized;
+	}
+#endif // !XAMCORE_5_0
 }

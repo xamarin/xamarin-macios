@@ -7,12 +7,9 @@ using System.Linq;
 using Xamarin.MacDev.Tasks;
 using Xamarin.Messaging.Build.Client;
 
-// Disable until we get around to enable + fix any issues.
-#nullable disable
-
 namespace Xamarin.MacDev.Tasks {
 	public class PrepareObjCBindingNativeFrameworks : XamarinTask, ITaskCallback, ICancelableTask {
-		public ITaskItem [] ObjCBindingNativeFrameworks { get; set; }
+		public ITaskItem [] ObjCBindingNativeFrameworks { get; set; } = Array.Empty<ITaskItem> ();
 
 		public override bool Execute ()
 		{
