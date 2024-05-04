@@ -5,27 +5,24 @@ using Microsoft.Build.Framework;
 using Xamarin.Localization.MSBuild;
 using Xamarin.Messaging.Build.Client;
 
-// Disable until we get around to enable + fix any issues.
-#nullable disable
-
 namespace Xamarin.MacDev.Tasks {
 	public class PrepareResourceRules : XamarinTask, ICancelableTask {
 		#region Inputs
 
 		[Required]
-		public string AppBundleDir { get; set; }
+		public string AppBundleDir { get; set; } = string.Empty;
 
-		public string ResourceRules { get; set; }
+		public string ResourceRules { get; set; } = string.Empty;
 
 		[Required]
-		public string SdkVersion { get; set; }
+		public string SdkVersion { get; set; } = string.Empty;
 
 		#endregion
 
 		#region Outputs
 
 		[Output]
-		public string PreparedResourceRules { get; set; }
+		public string PreparedResourceRules { get; set; } = string.Empty;
 
 		#endregion
 
