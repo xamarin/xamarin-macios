@@ -146,8 +146,7 @@ namespace CoreVideo {
 		[MacCatalyst (15, 0)]
 #endif
 		[DllImport (Constants.CoreVideoLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static extern bool CVIsCompressedPixelFormatAvailable (uint pixelFormatType);
+		static extern byte CVIsCompressedPixelFormatAvailable (uint pixelFormatType);
 
 #if NET
 		[SupportedOSPlatform ("tvos15.0")]
@@ -162,7 +161,7 @@ namespace CoreVideo {
 		[MacCatalyst (15, 0)]
 #endif
 		public static bool IsCompressedPixelFormatAvailable (this CVPixelFormatType type)
-			=> CVIsCompressedPixelFormatAvailable ((uint) type);
+			=> CVIsCompressedPixelFormatAvailable ((uint) type) != 0;
 	}
 #endif
 }

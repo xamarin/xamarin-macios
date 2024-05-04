@@ -28,6 +28,7 @@
 #nullable enable
 
 using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Collections.Generic;
 
@@ -77,7 +78,9 @@ namespace OpenGL {
 		extern static void CGLReleasePixelFormat (IntPtr handle);
 
 		[DllImport (Constants.OpenGLLibrary)]
-		extern static CGLErrorCode CGLChoosePixelFormat (CGLPixelFormatAttribute [] attributes, out IntPtr /* CGLPixelFormatObj* */ pix, out int /* GLint* */ npix);
+		unsafe extern static CGLErrorCode CGLChoosePixelFormat (CGLPixelFormatAttribute* attributes, IntPtr* /* CGLPixelFormatObj* */ pix, int* /* GLint* */ npix);
+
+#if !COREBUILD
 		public CGLPixelFormat (CGLPixelFormatAttribute [] attributes, out int npix)
 			: base (Create (attributes, out npix), true)
 		{
@@ -92,7 +95,14 @@ namespace OpenGL {
 
 			Array.Copy (attributes, marshalAttribs, attributes.Length);
 
-			CGLErrorCode ret = CGLChoosePixelFormat (marshalAttribs, out pixelFormatOut, out npix);
+			npix = default;
+
+			CGLErrorCode ret;
+			unsafe {
+				fixed (CGLPixelFormatAttribute* marshalAttribsPtr = marshalAttribs) {
+					ret = CGLChoosePixelFormat (marshalAttribsPtr, &pixelFormatOut, (int*) Unsafe.AsPointer<int> (ref npix));
+				}
+			}
 
 			if (ret != CGLErrorCode.NoError) {
 				throw new Exception ("CGLChoosePixelFormat returned: " + ret);
@@ -178,6 +188,7 @@ namespace OpenGL {
 			}
 			return list.ToArray ();
 		}
+#endif // !COREBUILD
 
 	}
 }

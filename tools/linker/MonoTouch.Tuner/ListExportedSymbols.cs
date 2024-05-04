@@ -16,6 +16,7 @@ using Xamarin.Utils;
 namespace Xamarin.Linker.Steps {
 	public class ListExportedSymbols : BaseStep {
 		PInvokeWrapperGenerator state;
+		bool is_product_assembly;
 #if !NET
 		bool skip_sdk_assemblies;
 #endif
@@ -103,6 +104,12 @@ namespace Xamarin.Linker.Steps {
 			if (!hasSymbols)
 				return;
 
+#if NET
+			is_product_assembly = Configuration.Profile.IsProductAssembly (assembly);
+#else
+			is_product_assembly = Profile.IsProductAssembly (assembly);
+#endif
+
 			var modified = false;
 			foreach (var type in assembly.MainModule.Types)
 				modified |= ProcessType (type);
@@ -128,7 +135,10 @@ namespace Xamarin.Linker.Steps {
 					modified |= ProcessMethod (method);
 			}
 
-			AddRequiredObjectiveCType (type);
+			// There are no Objective-C classes we need to keep from the platform assembly,
+			// so just skip in that case.
+			if (!is_product_assembly)
+				AddRequiredObjectiveCType (type);
 
 			return modified;
 		}
@@ -145,15 +155,17 @@ namespace Xamarin.Linker.Steps {
 			if (DerivedLinkContext.StaticRegistrar.HasProtocolAttribute (type))
 				return;
 
-			Assembly asm;
-			bool has_linkwith_attributes = false;
-			if (DerivedLinkContext.Target.Assemblies.TryGetValue (type.Module.Assembly, out asm))
-				has_linkwith_attributes = asm.HasLinkWithAttributes;
-
-			if (has_linkwith_attributes) {
-				var exportedName = DerivedLinkContext.StaticRegistrar.GetExportedTypeName (type, registerAttribute);
-				DerivedLinkContext.RequiredSymbols.AddObjectiveCClass (exportedName).AddMember (type);
+			if (DerivedLinkContext.App.RequireLinkWithAttributeForObjectiveCClassSearch) {
+				Assembly asm;
+				bool has_linkwith_attributes = false;
+				if (DerivedLinkContext.Target.Assemblies.TryGetValue (type.Module.Assembly, out asm))
+					has_linkwith_attributes = asm.HasLinkWithAttributes;
+				if (!has_linkwith_attributes)
+					return;
 			}
+
+			var exportedName = DerivedLinkContext.StaticRegistrar.GetExportedTypeName (type, registerAttribute);
+			DerivedLinkContext.RequiredSymbols.AddObjectiveCClass (exportedName).AddMember (type);
 		}
 
 		bool ProcessMethod (MethodDefinition method)
