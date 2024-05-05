@@ -83,42 +83,42 @@ steps:
     GitHubToken: $(GitHub.Token)
     ArtifactDirectory: $(Build.SourcesDirectory)/${{ parameters.uploadPrefix }}package-internal
 
-- task: AzureFileCopy@5
+- task: AzureFileCopy@6
   displayName: 'Publish package to Azure'
   name: upload
   inputs:
     SourcePath: $(Build.SourcesDirectory)/artifacts/${{ parameters.uploadPrefix }}package
-    azureSubscription: 'Azure Releng (7b4817ae-218f-464a-bab1-a9df2d99e1e5)'
+    azureSubscription: 'Xamarin - RelEng (BosStorageMirror)'
     Destination: AzureBlob
     storage: ${{ parameters.azureStorage }}
     ContainerName: ${{ parameters.azureContainer }}
     BlobPrefix: $(Build.SourceBranchName)/$(Build.SourceVersion)/$(Build.BuildId)/${{ parameters.uploadPrefix }}package  # ideally, we would use a variable for this
 
-- task: AzureFileCopy@5
+- task: AzureFileCopy@6
   displayName: 'Publish manifest to Azure'
   inputs:
     SourcePath: $(Build.SourcesDirectory)/artifacts/${{ parameters.uploadPrefix }}package/manifest
-    azureSubscription: 'Azure Releng (7b4817ae-218f-464a-bab1-a9df2d99e1e5)'
+    azureSubscription: 'Xamarin - RelEng (BosStorageMirror)'
     Destination: AzureBlob
     storage: ${{ parameters.azureStorage }}
     ContainerName: ${{ parameters.azureContainer }}
     BlobPrefix: jenkins/$(Build.SourceBranchName)/$(Build.SourceVersion)
 
-- task: AzureFileCopy@5
+- task: AzureFileCopy@6
   displayName: 'Publish manifest to Azure as latest'
   inputs:
     SourcePath: $(Build.SourcesDirectory)/artifacts/${{ parameters.uploadPrefix }}package/manifest
-    azureSubscription: 'Azure Releng (7b4817ae-218f-464a-bab1-a9df2d99e1e5)'
+    azureSubscription: 'Xamarin - RelEng (BosStorageMirror)'
     Destination: AzureBlob
     storage: ${{ parameters.azureStorage }}
     ContainerName: ${{ parameters.azureContainer }}
     BlobPrefix: jenkins/$(Build.SourceBranchName)/latest
 
-- task: AzureFileCopy@5
+- task: AzureFileCopy@6
   displayName: 'Publish manifest to Azure per commit'
   inputs:
     SourcePath: $(Build.SourcesDirectory)/artifacts/${{ parameters.uploadPrefix }}package/manifest
-    azureSubscription: 'Azure Releng (7b4817ae-218f-464a-bab1-a9df2d99e1e5)'
+    azureSubscription: 'Xamarin - RelEng (BosStorageMirror)'
     Destination: AzureBlob
     storage: ${{ parameters.azureStorage }}
     ContainerName: ${{ parameters.azureContainer }}
