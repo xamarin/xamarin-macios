@@ -175,7 +175,7 @@ steps:
   displayName: Download workloads
   inputs:
     allowFailedBuilds: true
-    patterns: '**/not-signed-package/*.nupkg'
+    patterns: '**/*.nupkg'
     path: $(Build.SourcesDirectory)/artifacts
 
 - pwsh: |
