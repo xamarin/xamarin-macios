@@ -47,7 +47,7 @@ namespace ObjCRuntime {
 
 		public Selector (NativeHandle sel)
 		{
-			if (!sel_isMapped (sel))
+			if (sel_isMapped (sel) == 0)
 				ObjCRuntime.ThrowHelper.ThrowArgumentException (nameof (sel), "Not a selector handle.");
 
 			this.handle = sel;
@@ -123,7 +123,7 @@ namespace ObjCRuntime {
 		// so this looks better in the debugger watch when no selector is assigned (ref: #10876)
 		public static Selector? FromHandle (NativeHandle sel)
 		{
-			if (!sel_isMapped (sel))
+			if (sel_isMapped (sel) == 0)
 				return null;
 			// create the selector without duplicating the sel_isMapped check
 			return new Selector (sel, false);
@@ -145,7 +145,6 @@ namespace ObjCRuntime {
 
 		// objc/objc.h
 		[DllImport (Messaging.LIBOBJC_DYLIB)]
-		[return: MarshalAs (UnmanagedType.U1)]
-		extern static /* BOOL */ bool sel_isMapped (/* SEL */ IntPtr sel);
+		extern static /* BOOL */ byte sel_isMapped (/* SEL */ IntPtr sel);
 	}
 }
