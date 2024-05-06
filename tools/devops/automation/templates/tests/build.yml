@@ -158,7 +158,7 @@ steps:
     path: $(Build.SourcesDirectory)/artifacts
 
 - task: DownloadPipelineArtifact@2
-  displayName: Download PkgsVersions.json
+  displayName: Download WorkloadRollback.json
   inputs:
     allowFailedBuilds: true
     patterns: '**/WorkloadRollback.json'
@@ -175,8 +175,14 @@ steps:
   displayName: Download workloads
   inputs:
     allowFailedBuilds: true
-    patterns: '**/*.nupkg'
+    artifactName: not-signed-package
     path: $(Build.SourcesDirectory)/artifacts
+
+- pwsh: |
+    Get-ChildItem -Path $(Build.SourcesDirectory)/artifacts -Recurse -Force
+  displayName: 'Display downlods'
+  timeoutInMinutes: 5
+
 
 - pwsh: |
     $dir = "$(Build.SourcesDirectory)/artifacts"
