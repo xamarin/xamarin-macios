@@ -27,6 +27,7 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 using CoreFoundation;
@@ -72,7 +73,7 @@ namespace CoreVideo {
 		[NoMacCatalyst]
 #endif
 		[DllImport (Constants.CoreVideoLibrary)]
-		static extern CVReturn CVDisplayLinkCreateWithCGDisplay (uint displayId, out IntPtr displayLink);
+		unsafe static extern CVReturn CVDisplayLinkCreateWithCGDisplay (uint displayId, IntPtr* displayLink);
 
 #if NET
 		[SupportedOSPlatform ("macos12.0")]
@@ -87,7 +88,10 @@ namespace CoreVideo {
 #endif
 		public static CVDisplayLink? CreateFromDisplayId (uint displayId, out CVReturn error)
 		{
-			error = CVDisplayLinkCreateWithCGDisplay (displayId, out IntPtr handle);
+			IntPtr handle;
+			unsafe {
+				error = CVDisplayLinkCreateWithCGDisplay (displayId, &handle);
+			}
 			if (error != 0)
 				return null;
 
@@ -120,7 +124,7 @@ namespace CoreVideo {
 		[NoMacCatalyst]
 #endif
 		[DllImport (Constants.CoreVideoLibrary)]
-		static extern CVReturn CVDisplayLinkCreateWithCGDisplays (uint[] displayArray, nint count, out IntPtr displayLink);
+		unsafe static extern CVReturn CVDisplayLinkCreateWithCGDisplays (uint* displayArray, nint count, IntPtr* displayLink);
 
 #if NET
 		[SupportedOSPlatform ("macos12.0")]
@@ -139,7 +143,11 @@ namespace CoreVideo {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (displayIds));
 			error = 0;
 			IntPtr handle = IntPtr.Zero;
-			error = CVDisplayLinkCreateWithCGDisplays (displayIds, displayIds.Length, out handle);
+			unsafe {
+				fixed (uint* displayArrayPtrs = displayIds) {
+					error = CVDisplayLinkCreateWithCGDisplays (displayArrayPtrs, displayIds.Length, &handle);
+				}
+			}
 
 			if (error != 0)
 				return null;
@@ -173,7 +181,7 @@ namespace CoreVideo {
 		[NoMacCatalyst]
 #endif
 		[DllImport (Constants.CoreVideoLibrary)]
-		static extern CVReturn CVDisplayLinkCreateWithOpenGLDisplayMask (uint mask, out IntPtr displayLinkOut);
+		unsafe static extern CVReturn CVDisplayLinkCreateWithOpenGLDisplayMask (uint mask, IntPtr* displayLinkOut);
 
 #if NET
 		[SupportedOSPlatform ("macos12.0")]
@@ -188,7 +196,10 @@ namespace CoreVideo {
 #endif
 		public static CVDisplayLink? CreateFromOpenGLMask (uint mask, out CVReturn error)
 		{
-			error = CVDisplayLinkCreateWithOpenGLDisplayMask (mask, out IntPtr handle);
+			IntPtr handle;
+			unsafe {
+				error = CVDisplayLinkCreateWithOpenGLDisplayMask (mask, &handle);
+			}
 			if (error != 0)
 				return null;
 			return new CVDisplayLink (handle, true);
@@ -234,10 +245,14 @@ namespace CoreVideo {
 		}
 
 		[DllImport (Constants.CoreVideoLibrary)]
-		extern static CVReturn CVDisplayLinkCreateWithActiveCGDisplays (out IntPtr displayLinkOut);
+		unsafe extern static CVReturn CVDisplayLinkCreateWithActiveCGDisplays (IntPtr* displayLinkOut);
 		static IntPtr Create ()
 		{
-			var ret = CVDisplayLinkCreateWithActiveCGDisplays (out var handle);
+			CVReturn ret;
+			IntPtr handle;
+			unsafe {
+				ret = CVDisplayLinkCreateWithActiveCGDisplays (&handle);
+			}
 
 			if (ret != CVReturn.Success)
 				throw new Exception ("CVDisplayLink returned: " + ret);
@@ -310,19 +325,22 @@ namespace CoreVideo {
 		}
 			
 		[DllImport (Constants.CoreVideoLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool CVDisplayLinkIsRunning (IntPtr displayLink);
+		extern static byte CVDisplayLinkIsRunning (IntPtr displayLink);
 		public bool IsRunning {
 			get {
-				return CVDisplayLinkIsRunning (Handle);
+				return CVDisplayLinkIsRunning (Handle) != 0;
 			}
 		}
 			
 		[DllImport (Constants.CoreVideoLibrary)]
-		extern static CVReturn CVDisplayLinkGetCurrentTime (IntPtr displayLink, out CVTimeStamp outTime);
+		unsafe extern static CVReturn CVDisplayLinkGetCurrentTime (IntPtr displayLink, CVTimeStamp* outTime);
 		public CVReturn GetCurrentTime (out CVTimeStamp outTime)
 		{
-			CVReturn ret = CVDisplayLinkGetCurrentTime (this.Handle, out outTime);
+			CVReturn ret;
+			outTime = default;
+			unsafe {
+				ret = CVDisplayLinkGetCurrentTime (this.Handle, (CVTimeStamp *) Unsafe.AsPointer<CVTimeStamp> (ref outTime));
+			}
 				
 			return ret;
 		}
@@ -416,7 +434,7 @@ namespace CoreVideo {
 		[NoMacCatalyst]
 #endif
 		[DllImport (Constants.CoreVideoLibrary)]
-		static extern int CVDisplayLinkTranslateTime (IntPtr displayLink, CVTimeStamp inTime, ref CVTimeStamp outTime);
+		unsafe static extern int CVDisplayLinkTranslateTime (IntPtr displayLink, CVTimeStamp inTime, CVTimeStamp* outTime);
 
 #if NET
 		[SupportedOSPlatform ("macos12.0")]
@@ -431,10 +449,9 @@ namespace CoreVideo {
 #endif
 		public bool TryTranslateTime (CVTimeStamp inTime, ref CVTimeStamp outTime)
 		{
-			if (CVDisplayLinkTranslateTime (this.Handle, inTime, ref outTime) == 0) {
-				return true;
+			unsafe {
+				return CVDisplayLinkTranslateTime (this.Handle, inTime, (CVTimeStamp *) Unsafe.AsPointer<CVTimeStamp> (ref outTime)) == 0;
 			}
-			return false;
 		}
 	}
 }

@@ -76,11 +76,16 @@ parameters:
 - name: macOSName
   type: string
 
+- name: postPipeline
+  type: boolean
+  default: false
+
 stages:
 - stage: ${{ parameters.stageName }}
   displayName: ${{ parameters.displayName }}
   dependsOn:
-  - build_packages
+  - ${{ if eq(parameters.postPipeline, false) }}:
+    - build_macos_tests
   - configure_build
   # we need to have the pkgs built and the device sets to be ran, that is decided via the labels or type of build during the build_packages stage
   condition: and(succeeded(), ${{ parameters.condition }})
@@ -89,7 +94,7 @@ stages:
   - job: "tests"
     condition: ne(stageDependencies.configure_build.configure.outputs['labels.skip_all_tests'], 'True')
     displayName: 'T:' 
-    timeoutInMinutes: 1000
+    timeoutInMinutes: 180
     variables:
       # old and ugly env var use by jenkins, we do have parts of the code that use it, contains the PR number
       PR_ID: $[ stageDependencies.configure_build.configure.outputs['labels.pr_number'] ]

@@ -88,7 +88,8 @@ namespace ModelIO {
 			this.MinimumExtent = minimumExtent;
 			this.MaximumExtent = maximumExtent;
 		}
-		public Vector4 MinimumExtent, MaximumExtent;
+		public Vector4 MinimumExtent;
+		public Vector4 MaximumExtent;
 	}
 #endif
 

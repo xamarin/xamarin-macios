@@ -9,49 +9,46 @@ using Xamarin.Localization.MSBuild;
 using Xamarin.Messaging.Build.Client;
 using Xamarin.Utils;
 
-// Disable until we get around to enable + fix any issues.
-#nullable disable
-
 namespace Xamarin.MacDev.Tasks {
 	public class LinkNativeCode : XamarinTask, ITaskCallback {
-		string outputPath;
+		string outputPath = string.Empty;
 
 		#region Inputs
-		public ITaskItem [] LinkerFlags { get; set; }
+		public ITaskItem [] LinkerFlags { get; set; } = Array.Empty<ITaskItem> ();
 
-		public ITaskItem [] LinkWithLibraries { get; set; }
+		public ITaskItem [] LinkWithLibraries { get; set; } = Array.Empty<ITaskItem> ();
 
 		// A path to entitlements to be embedded into the executable
-		public string EntitlementsInExecutable { get; set; }
+		public string EntitlementsInExecutable { get; set; } = string.Empty;
 
 		[Required]
-		public string SdkDevPath { get; set; }
+		public string SdkDevPath { get; set; } = string.Empty;
 
 		[Required]
 		public bool SdkIsSimulator { get; set; }
 
 		[Required]
-		public string SdkRoot { get; set; }
+		public string SdkRoot { get; set; } = string.Empty;
 
 		[Required]
-		public string OutputFile { get; set; }
+		public string OutputFile { get; set; } = string.Empty;
 
 		[Required]
-		public ITaskItem [] ObjectFiles { get; set; }
+		public ITaskItem [] ObjectFiles { get; set; } = Array.Empty<ITaskItem> ();
 
 		[Required]
-		public string MinimumOSVersion { get; set; }
+		public string MinimumOSVersion { get; set; } = string.Empty;
 
 		public ITaskItem [] NativeReferences { get; set; } = Array.Empty<ITaskItem> ();
 
-		public ITaskItem [] Frameworks { get; set; }
+		public ITaskItem [] Frameworks { get; set; } = Array.Empty<ITaskItem> ();
 
-		public string DylibRPath { get; set; }
+		public string DylibRPath { get; set; } = string.Empty;
 
-		public string FrameworkRPath { get; set; }
+		public string FrameworkRPath { get; set; } = string.Empty;
 
 		[Required]
-		public string TargetArchitectures { get; set; }
+		public string TargetArchitectures { get; set; } = string.Empty;
 
 		TargetArchitecture architectures;
 		#endregion
@@ -84,9 +81,9 @@ namespace Xamarin.MacDev.Tasks {
 				return false;
 			}
 			var abi = abis [0].ToNativeArchitecture ();
-
+			var linkerExecutable = "clang++";
 			var arguments = new List<string> ();
-			arguments.Add ("clang++");
+			arguments.Add (linkerExecutable);
 
 			var hasEmbeddedFrameworks = false;
 
@@ -216,7 +213,32 @@ namespace Xamarin.MacDev.Tasks {
 					arguments.Add (flag.ItemSpec);
 			}
 
-			ExecuteAsync ("xcrun", arguments, sdkDevPath: SdkDevPath).Wait ();
+			var rv = ExecuteAsync ("xcrun", arguments, sdkDevPath: SdkDevPath, showErrorIfFailure: false).Result;
+			if (rv.ExitCode != 0) {
+				var stderr = rv.StandardError?.ToString ()?.Trim ();
+#if NET
+				if (string.IsNullOrEmpty (stderr)) {
+#else
+				if (stderr is null || string.IsNullOrEmpty (stderr)) {
+#endif
+					Log.LogError (MSBStrings.E0117, /* {0} exited with code {1} */ linkerExecutable, rv.ExitCode);
+				} else {
+					// Don't show any lines with "ld: warning: " in the error message, they're typically confusing.
+					// Also show a max of 25 lines just to not overload the error output, the native linker can
+					// sometimes give a truly staggering amount of error output.
+					var stderrLines = stderr
+										.Split (new char [] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries)
+										.Where (v => !v.StartsWith ("ld: warning: ", StringComparison.Ordinal))
+										.Take (25);
+					var errorOutput = string.Join (Environment.NewLine, stderrLines);
+					if (string.IsNullOrEmpty (errorOutput)) {
+						// Show all lines after all if there's nothing left after removing the "ld: warning: " lines
+						errorOutput = stderr;
+					}
+
+					Log.LogError (MSBStrings.E0118, /* {0} exited with code {1}:\n{2} */ linkerExecutable, rv.ExitCode, errorOutput);
+				}
+			}
 
 			return !Log.HasLoggedErrors;
 		}
@@ -240,7 +262,7 @@ namespace Xamarin.MacDev.Tasks {
 		static bool EntitlementsRequireLinkerFlags (string path)
 		{
 			try {
-				var plist = PDictionary.FromFile (path);
+				var plist = PDictionary.FromFile (path)!;
 
 				// FIXME: most keys do not require linking in the entitlements file, so we
 				// could probably add some smarter logic here to iterate over all of the

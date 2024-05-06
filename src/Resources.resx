@@ -539,6 +539,10 @@
 		<value>Found {0} {1} attributes on the module {2}. At most one was expected.</value>
 	</data>
 
+	<data name="BI1087" xml:space="preserve">
+		<value>Missing value for the 'LibraryName' property for the '[ErrorDomain]' attribute for {0} (e.g. '[ErrorDomain ("MyDomain", LibraryName = "__Internal")]')</value>
+	</data>
+
 	<data name="BI1101" xml:space="preserve">
 		<value>Trying to use a string as a [Target]</value>
 	</data>

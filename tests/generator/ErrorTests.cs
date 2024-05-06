@@ -974,5 +974,19 @@ namespace BI1066Errors
 			bgen.AssertExecuteError ("build");
 			bgen.AssertError (1018, "No [Export] attribute on property Test.NSTextInputClient.SelectedRange");
 		}
+
+		[Test]
+		[TestCase (Profile.iOS)]
+		public void ErrorDomain_NoLibraryName (Profile profile)
+		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
+			var bgen = new BGenTool ();
+			bgen.Profile = profile;
+			bgen.ProcessEnums = true;
+			bgen.Defines = BGenTool.GetDefaultDefines (profile);
+			bgen.CreateTemporaryBinding (File.ReadAllText (Path.Combine (Configuration.SourceRoot, "tests", "generator", "tests", "errordomain-nolibraryname.cs")));
+			bgen.AssertExecuteError ("build");
+			bgen.AssertError (1087, "Missing value for the 'LibraryName' property for the '[ErrorDomain]' attribute for ErrorDomainNS.EWithDomain (e.g. '[ErrorDomain (\"MyDomain\", LibraryName = \"__Internal\")]')");
+		}
 	}
 }

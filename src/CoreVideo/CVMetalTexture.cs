@@ -47,8 +47,7 @@ namespace CoreVideo {
 			/* CVMetalTextureRef __nonnull */ IntPtr image);
 
 		[DllImport (Constants.CoreVideoLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static /* Boolean */ bool CVMetalTextureIsFlipped (/* CVMetalTextureRef __nonnull */ IntPtr image);
+		extern static /* Boolean */ byte CVMetalTextureIsFlipped (/* CVMetalTextureRef __nonnull */ IntPtr image);
 
 		[DllImport (Constants.CoreVideoLibrary)]
 		extern static void CVMetalTextureGetCleanTexCoords (/* CVMetalTextureRef __nonnull */ IntPtr image,
@@ -63,7 +62,7 @@ namespace CoreVideo {
 
 		public bool IsFlipped {
 			get {
-				return CVMetalTextureIsFlipped (Handle);
+				return CVMetalTextureIsFlipped (Handle) != 0;
 			}
 		}
 

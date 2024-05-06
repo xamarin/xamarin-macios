@@ -11,6 +11,7 @@
 #nullable enable
 
 using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 using ObjCRuntime;
@@ -85,13 +86,17 @@ namespace GameController {
 		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'GCController.GetExtendedGamepadController()' instead.")]
 #endif
 		[DllImport (Constants.GameControllerLibrary)]
-		static extern /* NSData * __nullable */ IntPtr NSDataFromGCExtendedGamepadSnapShotDataV100 (
-			/* GCExtendedGamepadSnapShotDataV100 * __nullable */ ref GCExtendedGamepadSnapShotDataV100 snapshotData);
+		unsafe static extern /* NSData * __nullable */ IntPtr NSDataFromGCExtendedGamepadSnapShotDataV100 (
+			/* GCExtendedGamepadSnapShotDataV100 * __nullable */ GCExtendedGamepadSnapShotDataV100* snapshotData);
 
 		public NSData? ToNSData ()
 		{
-			var p = NSDataFromGCExtendedGamepadSnapShotDataV100 (ref this);
-			return p == IntPtr.Zero ? null : new NSData (p);
+			unsafe {
+				fixed (GCExtendedGamepadSnapShotDataV100* self = &this) {
+					var p = NSDataFromGCExtendedGamepadSnapShotDataV100 (self);
+					return p == IntPtr.Zero ? null : new NSData (p);
+				}
+			}
 		}
 	}
 
@@ -202,8 +207,8 @@ namespace GameController {
 		[iOS (12, 2)]
 #endif
 		[DllImport (Constants.GameControllerLibrary)]
-		static extern /* NSData * __nullable */ IntPtr NSDataFromGCExtendedGamepadSnapshotData (
-			/* GCExtendedGamepadSnapshotData * __nullable */ ref GCExtendedGamepadSnapshotData snapshotData);
+		unsafe static extern /* NSData * __nullable */ IntPtr NSDataFromGCExtendedGamepadSnapshotData (
+			/* GCExtendedGamepadSnapshotData * __nullable */ GCExtendedGamepadSnapshotData* snapshotData);
 
 #if NET
 		[SupportedOSPlatform ("tvos12.2")]
@@ -220,8 +225,12 @@ namespace GameController {
 #endif
 		public NSData? ToNSData ()
 		{
-			var p = NSDataFromGCExtendedGamepadSnapshotData (ref this);
-			return p == IntPtr.Zero ? null : new NSData (p);
+			unsafe {
+				fixed (GCExtendedGamepadSnapshotData* self = &this) {
+					var p = NSDataFromGCExtendedGamepadSnapshotData (self);
+					return p == IntPtr.Zero ? null : new NSData (p);
+				}
+			}
 		}
 	}
 
@@ -229,9 +238,8 @@ namespace GameController {
 
 		// GCExtendedGamepadSnapshot.h
 		[DllImport (Constants.GameControllerLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static extern bool GCExtendedGamepadSnapShotDataV100FromNSData (
-			/* GCExtendedGamepadSnapShotDataV100 * __nullable */ out GCExtendedGamepadSnapShotDataV100 snapshotData,
+		unsafe static extern byte GCExtendedGamepadSnapShotDataV100FromNSData (
+			/* GCExtendedGamepadSnapShotDataV100 * __nullable */ GCExtendedGamepadSnapShotDataV100* snapshotData,
 			/* NSData * __nullable */ IntPtr data);
 
 #if NET
@@ -248,14 +256,16 @@ namespace GameController {
 		[iOS (12, 2)]
 #endif
 		[DllImport (Constants.GameControllerLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static extern bool GCExtendedGamepadSnapshotDataFromNSData (
-			/* GCExtendedGamepadSnapshotData * __nullable */ out GCExtendedGamepadSnapshotData snapshotData,
+		unsafe static extern byte GCExtendedGamepadSnapshotDataFromNSData (
+			/* GCExtendedGamepadSnapshotData * __nullable */ GCExtendedGamepadSnapshotData* snapshotData,
 			/* NSData * __nullable */ IntPtr data);
 
 		public static bool TryGetSnapShotData (NSData? data, out GCExtendedGamepadSnapShotDataV100 snapshotData)
 		{
-			return GCExtendedGamepadSnapShotDataV100FromNSData (out snapshotData, data.GetHandle ());
+			snapshotData = default;
+			unsafe {
+				return GCExtendedGamepadSnapShotDataV100FromNSData ((GCExtendedGamepadSnapShotDataV100*) Unsafe.AsPointer<GCExtendedGamepadSnapShotDataV100> (ref snapshotData), data.GetHandle ()) != 0;
+			}
 		}
 
 #if NET
@@ -273,7 +283,10 @@ namespace GameController {
 #endif
 		public static bool TryGetExtendedSnapShotData (NSData? data, out GCExtendedGamepadSnapshotData snapshotData)
 		{
-			return GCExtendedGamepadSnapshotDataFromNSData (out snapshotData, data.GetHandle ());
+			snapshotData = default;
+			unsafe {
+				return GCExtendedGamepadSnapshotDataFromNSData ((GCExtendedGamepadSnapshotData*) Unsafe.AsPointer<GCExtendedGamepadSnapshotData> (ref snapshotData), data.GetHandle ()) != 0;
+			}
 		}
 	}
 }

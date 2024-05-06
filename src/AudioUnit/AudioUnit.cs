@@ -1337,7 +1337,9 @@ namespace AudioUnit {
 	//
 	// 		public byte Cable;
 	//
-	// 		public byte Data_1, Data_2, Data_3;
+	// 		public byte Data_1;
+	// 		public byte Data_2;
+	// 		public byte Data_3;
 	// 	}
 
 #if NET

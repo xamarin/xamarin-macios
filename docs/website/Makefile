@@ -14,3 +14,10 @@ diff:
 	-diff -u $(WEBSITE_DOCS)/docs/cross-platform/macios/binding/objective-c-libraries.md binding_objc_libs.md
 	-diff -u $(WEBSITE_DOCS)/docs/cross-platform/macios/binding/binding-types-reference.md binding_types_reference_guide.md
 	-diff -u $(WEBSITE_DOCS)/docs/cross-platform/macios/optimizations.md optimizations.md
+
+update:
+	cp $(WEBSITE_DOCS)/docs/ios/troubleshooting/mtouch-errors.md mtouch-errors.md
+	cp $(WEBSITE_DOCS)/docs/mac/troubleshooting/mmp-errors.md mmp-errors.md
+	cp $(WEBSITE_DOCS)/docs/cross-platform/macios/binding/objective-c-libraries.md binding_objc_libs.md
+	cp $(WEBSITE_DOCS)/docs/cross-platform/macios/binding/binding-types-reference.md binding_types_reference_guide.md
+	cp $(WEBSITE_DOCS)/docs/cross-platform/macios/optimizations.md optimizations.md

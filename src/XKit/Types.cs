@@ -49,7 +49,10 @@ namespace UIKit {
 		[Field ("NSDirectionalEdgeInsetsZero")] // fake (but helps testing and could also help documentation)
 		public static readonly NSDirectionalEdgeInsets Zero;
 
-		public nfloat Top, Leading, Bottom, Trailing;
+		public nfloat Top;
+		public nfloat Leading;
+		public nfloat Bottom;
+		public nfloat Trailing;
 
 #if !COREBUILD
 		public NSDirectionalEdgeInsets (nfloat top, nfloat leading, nfloat bottom, nfloat trailing)
