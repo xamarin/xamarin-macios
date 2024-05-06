@@ -35,3 +35,4 @@ do
 done < simruntime-duplicated-runtimes.txt
 
 xcrun simctl runtime list -v
+xcrun simctl runtime match list -v
