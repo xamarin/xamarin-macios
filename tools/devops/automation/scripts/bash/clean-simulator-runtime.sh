@@ -52,4 +52,4 @@ sudo launchctl kill 9 system/com.apple.CoreSimulator.simdiskimaged || true
 pkill -9 com.apple.CoreSimulator.CoreSimulatorService || true
 # the disk image service should now restart when needed, and reload the re-attach all the simulator runtimes.
 
-xcrun simctl runtime match list -v
+xcrun simctl runtime match list -v || true
