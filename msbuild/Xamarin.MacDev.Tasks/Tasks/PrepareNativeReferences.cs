@@ -148,7 +148,7 @@ namespace Xamarin.MacDev.Tasks {
 				text.AppendFormat ("[assembly: ObjCRuntime.LinkWith (\"{0}\"", logicalName);
 				AppendLinkTargetProperty (text, NativeReferences [i]);
 				AppendBooleanProperty (text, NativeReferences [i], "IsCxx");
-				AppendBooleanProperty (text, NativeReferences [i], "IsSwift");
+				AppendBooleanProperty (text, NativeReferences [i], "LinkWithSwiftSystemLibraries");
 				AppendBooleanProperty (text, NativeReferences [i], "NeedsGccExceptionHandling");
 				AppendBooleanProperty (text, NativeReferences [i], "SmartLink", true);
 				AppendBooleanProperty (text, NativeReferences [i], "ForceLoad");

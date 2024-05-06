@@ -106,7 +106,7 @@ namespace ObjCRuntime {
 
 		/// <summary>Determines whether the library uses Swift.</summary>
 		/// <remarks>If this is true, the app will automatically link with the Swift system libraries.</remarks>
-		public bool IsSwift {
+		public bool LinkWithSwiftSystemLibraries {
 			get; set;
 		}
 

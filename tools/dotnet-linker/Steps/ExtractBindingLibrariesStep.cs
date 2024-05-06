@@ -28,7 +28,7 @@ namespace Xamarin.Linker {
 						arg,
 						new Dictionary<string, string> {
 							{ "ForceLoad", asm.ForceLoad ? "true" : "false" },
-							{ "IsSwift", asm.IsSwift ? "true" : "false" },
+							{ "LinkWithSwiftSystemLibraries", asm.LinkWithSwiftSystemLibraries ? "true" : "false" },
 							{ "Assembly", asm.Identity },
 						}
 					);
