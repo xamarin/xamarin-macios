@@ -10,6 +10,8 @@
 #nullable enable
 
 using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.IO;
@@ -65,14 +67,18 @@ namespace PrintCore {
 #endif
 	public class PMPrintSession : PMPrintCoreBase {
 		[DllImport (Constants.PrintCoreLibrary)]
-		extern static PMStatusCode PMCreateSession (out IntPtr session);
+		unsafe extern static PMStatusCode PMCreateSession (IntPtr* session);
 
 		[Preserve (Conditional = true)]
 		internal PMPrintSession (NativeHandle handle, bool owns) : base (handle, owns) { }
 
 		static IntPtr Create ()
 		{
-			var code = PMCreateSession (out var value);
+			PMStatusCode code;
+			IntPtr value;
+			unsafe {
+				code = PMCreateSession (&value);
+			}
 			if (code == PMStatusCode.Ok)
 				return value;
 			throw new PMPrintException (code);
@@ -85,8 +91,11 @@ namespace PrintCore {
 
 		public static PMStatusCode TryCreate (out PMPrintSession? session)
 		{
+			PMStatusCode code;
 			IntPtr value;
-			var code = PMCreateSession (out value);
+			unsafe {
+				code = PMCreateSession (&value);
+			}
 			if (code == PMStatusCode.Ok) {
 				session = new PMPrintSession (value, true);
 				return PMStatusCode.Ok;
@@ -130,10 +139,17 @@ namespace PrintCore {
 		}
 
 		[DllImport (Constants.PrintCoreLibrary)]
-		extern static PMStatusCode PMSessionCreatePrinterList (IntPtr printSession, out IntPtr printerListArray, out int index, out IntPtr printer);
+		unsafe extern static PMStatusCode PMSessionCreatePrinterList (IntPtr printSession, IntPtr* printerListArray, int* index, IntPtr* printer);
 		public PMStatusCode CreatePrinterList (out string? []? printerList, out int index, out PMPrinter? printer)
 		{
-			var code = PMSessionCreatePrinterList (Handle, out var array, out index, out var printerHandle);
+			PMStatusCode code;
+			IntPtr array;
+			IntPtr printerHandle;
+
+			index = default;
+			unsafe {
+				code = PMSessionCreatePrinterList (Handle, &array, (int*) Unsafe.AsPointer<int> (ref index), &printerHandle);
+			}
 			if (code != PMStatusCode.Ok) {
 				printerList = null;
 				printer = null;
@@ -151,14 +167,18 @@ namespace PrintCore {
 		}
 
 		[DllImport (Constants.PrintCoreLibrary)]
-		extern static PMStatusCode PMSessionValidatePrintSettings (IntPtr handle, IntPtr printSettings, out byte changed);
+		unsafe extern static PMStatusCode PMSessionValidatePrintSettings (IntPtr handle, IntPtr printSettings, byte* changed);
 
 		public PMStatusCode ValidatePrintSettings (PMPrintSettings settings, out bool changed)
 		{
 			if (settings is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (settings));
 
-			var code = PMSessionValidatePrintSettings (Handle, settings.Handle, out var c);
+			PMStatusCode code;
+			byte c;
+			unsafe {
+				code = PMSessionValidatePrintSettings (Handle, settings.Handle, &c);
+			}
 			if (code != PMStatusCode.Ok) {
 				changed = false;
 				return code;
@@ -173,7 +193,7 @@ namespace PrintCore {
 #endif
 	public class PMPrintSettings : PMPrintCoreBase {
 		[DllImport (Constants.PrintCoreLibrary)]
-		extern static PMStatusCode PMCreatePrintSettings (out IntPtr session);
+		unsafe extern static PMStatusCode PMCreatePrintSettings (IntPtr* session);
 
 		[Preserve (Conditional = true)]
 		internal PMPrintSettings (NativeHandle handle, bool owns)
@@ -183,7 +203,11 @@ namespace PrintCore {
 
 		static IntPtr Create ()
 		{
-			var code = PMCreatePrintSettings (out var value);
+			PMStatusCode code;
+			IntPtr value;
+			unsafe {
+				code = PMCreatePrintSettings (&value);
+			}
 			if (code == PMStatusCode.Ok)
 				return value;
 			throw new PMPrintException (code);
@@ -196,8 +220,11 @@ namespace PrintCore {
 
 		public static PMStatusCode TryCreate (out PMPrintSettings? settings)
 		{
+			PMStatusCode code;
 			IntPtr value;
-			var code = PMCreatePrintSettings (out value);
+			unsafe {
+				code = PMCreatePrintSettings (&value);
+			}
 			if (code == PMStatusCode.Ok) {
 				settings = new PMPrintSettings (value, true);
 				return PMStatusCode.Ok;
@@ -207,12 +234,15 @@ namespace PrintCore {
 		}
 
 		[DllImport (Constants.PrintCoreLibrary)]
-		extern static PMStatusCode PMGetFirstPage (IntPtr handle, out uint first);
+		unsafe extern static PMStatusCode PMGetFirstPage (IntPtr handle, uint* first);
 		[DllImport (Constants.PrintCoreLibrary)]
 		extern static PMStatusCode PMSetFirstPage (IntPtr handle, uint first, byte lockb);
 		public uint FirstPage {
 			get {
-				PMGetFirstPage (Handle, out var val);
+				uint val;
+				unsafe {
+					PMGetFirstPage (Handle, &val);
+				}
 				return val;
 			}
 			set {
@@ -221,12 +251,15 @@ namespace PrintCore {
 		}
 
 		[DllImport (Constants.PrintCoreLibrary)]
-		extern static PMStatusCode PMGetLastPage (IntPtr handle, out uint last);
+		unsafe extern static PMStatusCode PMGetLastPage (IntPtr handle, uint* last);
 		[DllImport (Constants.PrintCoreLibrary)]
 		extern static PMStatusCode PMSetLastPage (IntPtr handle, uint last, byte lockb);
 		public uint LastPage {
 			get {
-				PMGetLastPage (Handle, out var val);
+				uint val;
+				unsafe {
+					PMGetLastPage (Handle, &val);
+				}
 				return val;
 			}
 			set {
@@ -235,12 +268,16 @@ namespace PrintCore {
 		}
 
 		[DllImport (Constants.PrintCoreLibrary)]
-		extern static PMStatusCode PMGetPageRange (IntPtr handle, out uint minPage, out uint maxPage);
+		unsafe extern static PMStatusCode PMGetPageRange (IntPtr handle, uint* minPage, uint* maxPage);
 		[DllImport (Constants.PrintCoreLibrary)]
 		extern static PMStatusCode PMSetPageRange (IntPtr handle, uint minPage, uint maxPage);
 		public PMStatusCode GetPageRange (out uint minPage, out uint maxPage)
 		{
-			return PMGetPageRange (Handle, out minPage, out maxPage);
+			minPage = default;
+			maxPage = default;
+			unsafe {
+				return PMGetPageRange (Handle, (uint*) Unsafe.AsPointer<uint> (ref minPage), (uint*) Unsafe.AsPointer<uint> (ref maxPage));
+			}
 		}
 
 		public PMStatusCode SetPageRange (uint minPage, uint maxPage)
@@ -260,13 +297,18 @@ namespace PrintCore {
 		}
 
 		[DllImport (Constants.PrintCoreLibrary)]
-		extern static PMStatusCode PMGetCopies (IntPtr handle, out uint copies);
+		unsafe extern static PMStatusCode PMGetCopies (IntPtr handle, uint* copies);
 		[DllImport (Constants.PrintCoreLibrary)]
 		extern static PMStatusCode PMSetCopies (IntPtr handle, uint copies, byte elock);
 
 		public uint Copies {
 			get {
-				if (PMGetCopies (Handle, out var c) == PMStatusCode.Ok)
+				PMStatusCode code;
+				uint c;
+				unsafe {
+					code = PMGetCopies (Handle, &c);
+				}
+				if (code == PMStatusCode.Ok)
 					return c;
 				else
 					return 0;
@@ -277,13 +319,18 @@ namespace PrintCore {
 		}
 
 		[DllImport (Constants.PrintCoreLibrary)]
-		extern static PMStatusCode PMGetCollate (IntPtr handle, out byte collate);
+		unsafe extern static PMStatusCode PMGetCollate (IntPtr handle, byte* collate);
 		[DllImport (Constants.PrintCoreLibrary)]
 		extern static PMStatusCode PMSetCollate (IntPtr handle, byte collate);
 
 		public bool Collate {
 			get {
-				if (PMGetCollate (Handle, out var c) == PMStatusCode.Ok)
+				PMStatusCode code;
+				byte c;
+				unsafe {
+					code = PMGetCollate (Handle, &c);
+				}
+				if (code == PMStatusCode.Ok)
 					return c != 0;
 				else
 					return false;
@@ -294,13 +341,18 @@ namespace PrintCore {
 		}
 
 		[DllImport (Constants.PrintCoreLibrary)]
-		extern static PMStatusCode PMGetDuplex (IntPtr handle, out PMDuplexMode mode);
+		unsafe extern static PMStatusCode PMGetDuplex (IntPtr handle, PMDuplexMode* mode);
 		[DllImport (Constants.PrintCoreLibrary)]
 		extern static PMStatusCode PMSetDuplex (IntPtr handle, PMDuplexMode mode);
 
 		public PMDuplexMode DuplexMode {
 			get {
-				if (PMGetDuplex (Handle, out var c) == PMStatusCode.Ok)
+				PMStatusCode code;
+				PMDuplexMode c;
+				unsafe {
+					code = PMGetDuplex (Handle, &c);
+				}
+				if (code == PMStatusCode.Ok)
 					return c;
 				else
 					return PMDuplexMode.None;
@@ -311,13 +363,18 @@ namespace PrintCore {
 		}
 
 		[DllImport (Constants.PrintCoreLibrary)]
-		extern static PMStatusCode PMGetScale (IntPtr handle, out double mode);
+		unsafe extern static PMStatusCode PMGetScale (IntPtr handle, double* mode);
 		[DllImport (Constants.PrintCoreLibrary)]
 		extern static PMStatusCode PMSetScale (IntPtr handle, double scale);
 
 		public double Scale {
 			get {
-				if (PMGetScale (Handle, out var c) == PMStatusCode.Ok)
+				PMStatusCode code;
+				double c;
+				unsafe {
+					code = PMGetScale (Handle, &c);
+				}
+				if (code == PMStatusCode.Ok)
 					return c;
 				else
 					return 100;
@@ -334,9 +391,9 @@ namespace PrintCore {
 #endif
 	public class PMPageFormat : PMPrintCoreBase {
 		[DllImport (Constants.PrintCoreLibrary)]
-		extern static PMStatusCode PMCreatePageFormat (out IntPtr handle);
+		unsafe extern static PMStatusCode PMCreatePageFormat (IntPtr* handle);
 		[DllImport (Constants.PrintCoreLibrary)]
-		extern static PMStatusCode PMCreatePageFormatWithPMPaper (out IntPtr handle, IntPtr paper);
+		unsafe extern static PMStatusCode PMCreatePageFormatWithPMPaper (IntPtr* handle, IntPtr paper);
 
 		[Preserve (Conditional = true)]
 		internal PMPageFormat (NativeHandle handle, bool owns) : base (handle, owns) { }
@@ -346,9 +403,13 @@ namespace PrintCore {
 			IntPtr value;
 			PMStatusCode code;
 			if (paper is null) {
-				code = PMCreatePageFormat (out value);
+				unsafe {
+					code = PMCreatePageFormat (&value);
+				}
 			} else {
-				code = PMCreatePageFormatWithPMPaper (out value, paper.Handle);
+				unsafe {
+					code = PMCreatePageFormatWithPMPaper (&value, paper.Handle);
+				}
 			}
 			if (code == PMStatusCode.Ok)
 				return value;
@@ -366,10 +427,15 @@ namespace PrintCore {
 			PMStatusCode code;
 			IntPtr value;
 
-			if (paper is null)
-				code = PMCreatePageFormat (out value);
-			else
-				code = PMCreatePageFormatWithPMPaper (out value, paper.Handle);
+			if (paper is null) {
+				unsafe {
+					code = PMCreatePageFormat (&value);
+				}
+			} else {
+				unsafe {
+					code = PMCreatePageFormatWithPMPaper (&value, paper.Handle);
+				}
+			}
 
 			if (code == PMStatusCode.Ok) {
 				pageFormat = new PMPageFormat (value, true);
@@ -382,14 +448,18 @@ namespace PrintCore {
 		[DllImport (Constants.PrintCoreLibrary)]
 		extern static PMStatusCode PMSetOrientation (IntPtr handle, PMOrientation orientation, byte setToFalse);
 		[DllImport (Constants.PrintCoreLibrary)]
-		extern static PMStatusCode PMGetOrientation (IntPtr handle, out PMOrientation orientation);
+		unsafe extern static PMStatusCode PMGetOrientation (IntPtr handle, PMOrientation* orientation);
 
 		public PMOrientation Orientation {
 			get {
-				if (PMGetOrientation (Handle, out var o) == PMStatusCode.Ok)
+				PMStatusCode code;
+				PMOrientation o;
+				unsafe {
+					code = PMGetOrientation (Handle, &o);
+				}
+				if (code == PMStatusCode.Ok)
 					return o;
-				else
-					return PMOrientation.Portrait;
+				return PMOrientation.Portrait;
 			}
 			set {
 				PMSetOrientation (Handle, value, 0);
@@ -397,21 +467,29 @@ namespace PrintCore {
 		}
 
 		[DllImport (Constants.PrintCoreLibrary)]
-		extern static PMStatusCode PMGetAdjustedPageRect (IntPtr pageFormat, out PMRect pageRect);
+		unsafe extern static PMStatusCode PMGetAdjustedPageRect (IntPtr pageFormat, PMRect* pageRect);
 		public PMRect AdjustedPageRect {
 			get {
-				if (PMGetAdjustedPageRect (Handle, out var rect) == PMStatusCode.Ok)
+				PMStatusCode code;
+				PMRect rect;
+				unsafe {
+					code = PMGetAdjustedPageRect (Handle, &rect);
+				}
+				if (code == PMStatusCode.Ok)
 					return rect;
 				return new PMRect (0, 0, 0, 0);
 			}
 		}
 
 		[DllImport (Constants.PrintCoreLibrary)]
-		extern static PMStatusCode PMGetAdjustedPaperRect (IntPtr pageFormat, out PMRect pageRect);
+		unsafe extern static PMStatusCode PMGetAdjustedPaperRect (IntPtr pageFormat, PMRect* pageRect);
 		public PMRect AdjustedPaperRect {
 			get {
-				if (PMGetAdjustedPaperRect (Handle, out var rect) == PMStatusCode.Ok)
-					return rect;
+				PMRect rect;
+				unsafe {
+					if (PMGetAdjustedPaperRect (Handle, &rect) == PMStatusCode.Ok)
+						return rect;
+				}
 				return new PMRect (0, 0, 0, 0);
 			}
 		}
@@ -424,19 +502,23 @@ namespace PrintCore {
 		[Preserve (Conditional = true)]
 		internal PMPaper (NativeHandle handle, bool owns) : base (handle, owns) { }
 		[DllImport (Constants.PrintCoreLibrary)]
-		extern static PMStatusCode PMPaperGetID (IntPtr handle, out IntPtr str);
+		unsafe extern static PMStatusCode PMPaperGetID (IntPtr handle, IntPtr* str);
 		[DllImport (Constants.PrintCoreLibrary)]
-		extern static PMStatusCode PMPaperGetWidth (IntPtr handle, out double v);
+		unsafe extern static PMStatusCode PMPaperGetWidth (IntPtr handle, double* v);
 		[DllImport (Constants.PrintCoreLibrary)]
-		extern static PMStatusCode PMPaperGetHeight (IntPtr handle, out double v);
+		unsafe extern static PMStatusCode PMPaperGetHeight (IntPtr handle, double* v);
 		[DllImport (Constants.PrintCoreLibrary)]
-		extern static PMStatusCode PMPaperGetMargins (IntPtr handle, out PMPaperMargins margins);
+		unsafe extern static PMStatusCode PMPaperGetMargins (IntPtr handle, PMPaperMargins* margins);
 		[DllImport (Constants.PrintCoreLibrary)]
-		extern static PMStatusCode PMPaperCreateLocalizedName (IntPtr handle, IntPtr printer, out IntPtr name);
+		unsafe extern static PMStatusCode PMPaperCreateLocalizedName (IntPtr handle, IntPtr printer, IntPtr* name);
 
 		public string? ID {
 			get {
-				var code = PMPaperGetID (Handle, out var s);
+				PMStatusCode code;
+				IntPtr s;
+				unsafe {
+					code = PMPaperGetID (Handle, &s);
+				}
 				if (code != PMStatusCode.Ok)
 					return null;
 				return CFString.FromHandle (s);
@@ -445,7 +527,11 @@ namespace PrintCore {
 
 		public double Width {
 			get {
-				var code = PMPaperGetWidth (Handle, out var s);
+				PMStatusCode code;
+				double s;
+				unsafe {
+					code = PMPaperGetWidth (Handle, &s);
+				}
 				if (code != PMStatusCode.Ok)
 					return 0;
 				return s;
@@ -454,7 +540,11 @@ namespace PrintCore {
 
 		public double Height {
 			get {
-				var code = PMPaperGetHeight (Handle, out var s);
+				PMStatusCode code;
+				double s;
+				unsafe {
+					code = PMPaperGetHeight (Handle, &s);
+				}
 				if (code != PMStatusCode.Ok)
 					return 0;
 				return s;
@@ -463,7 +553,11 @@ namespace PrintCore {
 
 		public PMPaperMargins? Margins {
 			get {
-				var code = PMPaperGetMargins (Handle, out var margins);
+				PMStatusCode code;
+				PMPaperMargins margins;
+				unsafe {
+					code = PMPaperGetMargins (Handle, &margins);
+				}
 				if (code != PMStatusCode.Ok)
 					return null;
 				return margins;
@@ -474,7 +568,11 @@ namespace PrintCore {
 		{
 			if (printer is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (printer));
-			var code = PMPaperCreateLocalizedName (Handle, printer.Handle, out var name);
+			PMStatusCode code;
+			IntPtr name;
+			unsafe {
+				code = PMPaperCreateLocalizedName (Handle, printer.Handle, &name);
+			}
 			if (code != PMStatusCode.Ok)
 				return null;
 			return CFString.FromHandle (name, true);
@@ -487,7 +585,7 @@ namespace PrintCore {
 #endif
 	public class PMPrinter : PMPrintCoreBase {
 		[DllImport (Constants.PrintCoreLibrary)]
-		extern static PMStatusCode PMCreateGenericPrinter (out IntPtr session);
+		unsafe extern static PMStatusCode PMCreateGenericPrinter (IntPtr* session);
 
 		[DllImport (Constants.PrintCoreLibrary)]
 		extern static IntPtr PMPrinterCreateFromPrinterID (IntPtr id);
@@ -497,7 +595,11 @@ namespace PrintCore {
 
 		static IntPtr Create ()
 		{
-			var code = PMCreateGenericPrinter (out var value);
+			PMStatusCode code;
+			IntPtr value;
+			unsafe {
+				code = PMCreateGenericPrinter (&value);
+			}
 			if (code == PMStatusCode.Ok)
 				return value;
 			throw new PMPrintException (code);
@@ -532,7 +634,10 @@ namespace PrintCore {
 		public static PMStatusCode TryCreate (out PMPrinter? printer)
 		{
 			IntPtr value;
-			var code = PMCreateGenericPrinter (out value);
+			PMStatusCode code;
+			unsafe {
+				code = PMCreateGenericPrinter (&value);
+			}
 			if (code == PMStatusCode.Ok) {
 				printer = new PMPrinter (value, owns: true);
 				return PMStatusCode.Ok;
@@ -556,11 +661,15 @@ namespace PrintCore {
 		public string? Name => CFString.FromHandle (PMPrinterGetName (Handle));
 
 		[DllImport (Constants.PrintCoreLibrary)]
-		extern static PMStatusCode PMPrinterCopyDeviceURI (IntPtr handle, out IntPtr url);
+		unsafe extern static PMStatusCode PMPrinterCopyDeviceURI (IntPtr handle, IntPtr* url);
 
 		public PMStatusCode TryGetDeviceUrl (out NSUrl? url)
 		{
-			var code = PMPrinterCopyDeviceURI (Handle, out var urlH);
+			PMStatusCode code;
+			IntPtr urlH;
+			unsafe {
+				code = PMPrinterCopyDeviceURI (Handle, &urlH);
+			}
 			if (code != PMStatusCode.Ok) {
 				url = null;
 				return code;
@@ -571,20 +680,23 @@ namespace PrintCore {
 
 		public NSUrl? DeviceUrl {
 			get {
-				var code = PMPrinterCopyDeviceURI (Handle, out var urlH);
-				if (code != PMStatusCode.Ok)
+				if (TryGetDeviceUrl (out var url) != PMStatusCode.Ok)
 					return null;
-
-				return Runtime.GetNSObject<NSUrl> (urlH, true);
+				return url;
 			}
 		}
 
 		[DllImport (Constants.PrintCoreLibrary)]
-		extern static PMStatusCode PMPrinterGetMakeAndModelName (IntPtr printer, out IntPtr makeAndModel);
+		unsafe extern static PMStatusCode PMPrinterGetMakeAndModelName (IntPtr printer, IntPtr* makeAndModel);
 
 		public string? MakeAndModel {
 			get {
-				if (PMPrinterGetMakeAndModelName (Handle, out var v) == PMStatusCode.Ok) {
+				PMStatusCode code;
+				IntPtr v;
+				unsafe {
+					code = PMPrinterGetMakeAndModelName (Handle, &v);
+				}
+				if (code == PMStatusCode.Ok) {
 					return CFString.FromHandle (v);
 				}
 				return null;
@@ -592,12 +704,16 @@ namespace PrintCore {
 		}
 
 		[DllImport (Constants.PrintCoreLibrary)]
-		extern static PMStatusCode PMPrinterGetState (IntPtr printer, out PMPrinterState state);
+		unsafe extern static PMStatusCode PMPrinterGetState (IntPtr printer, PMPrinterState* state);
 
 		// Return is overloaded - if negative, a PMStatusCode.
 		public PMPrinterState PrinterState {
 			get {
-				var code = PMPrinterGetState (Handle, out var s);
+				PMStatusCode code;
+				PMPrinterState s;
+				unsafe {
+					code = PMPrinterGetState (Handle, &s);
+				}
 				if (code == PMStatusCode.Ok)
 					return s;
 
@@ -606,11 +722,15 @@ namespace PrintCore {
 		}
 
 		[DllImport (Constants.PrintCoreLibrary)]
-		extern static PMStatusCode PMPrinterGetMimeTypes (IntPtr printer, IntPtr settings, out IntPtr arrayStr);
+		unsafe extern static PMStatusCode PMPrinterGetMimeTypes (IntPtr printer, IntPtr settings, IntPtr* arrayStr);
 
 		public PMStatusCode TryGetMimeTypes (PMPrintSettings settings, out string? []? mimeTypes)
 		{
-			var code = PMPrinterGetMimeTypes (Handle, settings.GetHandle (), out var m);
+			PMStatusCode code;
+			IntPtr m;
+			unsafe {
+				code = PMPrinterGetMimeTypes (Handle, settings.GetHandle (), &m);
+			}
 			if (code != PMStatusCode.Ok) {
 				mimeTypes = null;
 				return code;
@@ -620,10 +740,14 @@ namespace PrintCore {
 		}
 
 		[DllImport (Constants.PrintCoreLibrary)]
-		extern static PMStatusCode PMPrinterGetPaperList (IntPtr printer, out IntPtr arrayStr);
+		unsafe extern static PMStatusCode PMPrinterGetPaperList (IntPtr printer, IntPtr* arrayStr);
 		public PMStatusCode TryGetPaperList (out PMPaper []? paperList)
 		{
-			var code = PMPrinterGetPaperList (Handle, out var m);
+			PMStatusCode code;
+			IntPtr m;
+			unsafe {
+				code = PMPrinterGetPaperList (Handle, &m);
+			}
 			if (code != PMStatusCode.Ok) {
 				paperList = null;
 				return code;
@@ -634,10 +758,9 @@ namespace PrintCore {
 
 		public PMPaper [] PaperList {
 			get {
-				if (PMPrinterGetPaperList (Handle, out var m) != PMStatusCode.Ok)
+				if (TryGetPaperList (out var paperList) != PMStatusCode.Ok)
 					return Array.Empty<PMPaper> ();
-
-				return (PMPaper []) CFArray.ArrayFromHandleFunc<PMPaper> (m, (handle) => new PMPaper (handle, false))!;
+				return paperList!;
 			}
 		}
 
@@ -678,17 +801,20 @@ namespace PrintCore {
 		}
 
 		[DllImport (Constants.PrintCoreLibrary)]
-		extern static PMStatusCode PMPrinterGetOutputResolution (IntPtr printer, IntPtr printSettings, out PMResolution resolutionP);
+		unsafe extern static PMStatusCode PMPrinterGetOutputResolution (IntPtr printer, IntPtr printSettings, PMResolution* resolutionP);
 		[DllImport (Constants.PrintCoreLibrary)]
-		extern static PMStatusCode PMPrinterSetOutputResolution (IntPtr printer, IntPtr printSettings, ref PMResolution resolutionP);
+		unsafe extern static PMStatusCode PMPrinterSetOutputResolution (IntPtr printer, IntPtr printSettings, PMResolution* resolutionP);
 
 		public PMResolution GetOutputResolution (PMPrintSettings settings)
 		{
 			if (settings is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (settings));
 
-			if (PMPrinterGetOutputResolution (Handle, settings.Handle, out var res) == PMStatusCode.Ok)
-				return res;
+			PMResolution res;
+			unsafe {
+				if (PMPrinterGetOutputResolution (Handle, settings.Handle, &res) == PMStatusCode.Ok)
+					return res;
+			}
 			return new PMResolution (0, 0);
 		}
 
@@ -696,7 +822,9 @@ namespace PrintCore {
 		{
 			if (settings is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (settings));
-			PMPrinterSetOutputResolution (Handle, settings.Handle, ref res);
+			unsafe {
+				PMPrinterSetOutputResolution (Handle, settings.Handle, &res);
+			}
 		}
 
 		[DllImport (Constants.PrintCoreLibrary)]
@@ -720,21 +848,27 @@ namespace PrintCore {
 		public bool IsPostScriptCapable => PMPrinterIsPostScriptCapable (Handle) != 0;
 
 		[DllImport (Constants.PrintCoreLibrary)]
-		extern static PMStatusCode PMPrinterIsPostScriptPrinter (IntPtr printer, out byte isps);
+		unsafe extern static PMStatusCode PMPrinterIsPostScriptPrinter (IntPtr printer, byte* isps);
 		public bool IsPostScriptPrinter {
 			get {
-				if (PMPrinterIsPostScriptPrinter (Handle, out var r) == PMStatusCode.Ok)
-					return r != 0;
+				byte r;
+				unsafe {
+					if (PMPrinterIsPostScriptPrinter (Handle, &r) == PMStatusCode.Ok)
+						return r != 0;
+				}
 				return false;
 			}
 		}
 
 		[DllImport (Constants.PrintCoreLibrary)]
-		extern static PMStatusCode PMPrinterIsRemote (IntPtr printer, out byte isrem);
+		unsafe extern static PMStatusCode PMPrinterIsRemote (IntPtr printer, byte* isrem);
 		public bool IsRemote {
 			get {
-				if (PMPrinterIsRemote (Handle, out var r) == PMStatusCode.Ok)
-					return r != 0;
+				byte r;
+				unsafe {
+					if (PMPrinterIsRemote (Handle, &r) == PMStatusCode.Ok)
+						return r != 0;
+				}
 				return false;
 			}
 		}
@@ -749,11 +883,15 @@ namespace PrintCore {
 		}
 
 		[DllImport (Constants.PrintCoreLibrary)]
-		extern static PMStatusCode PMPrinterCopyHostName (IntPtr printer, out IntPtr hostName);
+		unsafe extern static PMStatusCode PMPrinterCopyHostName (IntPtr printer, IntPtr* hostName);
 
 		public string? HostName {
 			get {
-				PMStatusCode code = PMPrinterCopyHostName (Handle, out var hostName);
+				PMStatusCode code;
+				IntPtr hostName;
+				unsafe {
+					code = PMPrinterCopyHostName (Handle, &hostName);
+				}
 				if (code != PMStatusCode.Ok)
 					return null;
 				return CFString.FromHandle (hostName, true);
@@ -780,10 +918,14 @@ namespace PrintCore {
 		}
 
 		[DllImport (Constants.PrintCoreLibrary)]
-		extern static PMStatusCode PMServerCreatePrinterList (IntPtr server, out IntPtr printerListArray);
+		unsafe extern static PMStatusCode PMServerCreatePrinterList (IntPtr server, IntPtr* printerListArray);
 		public static PMStatusCode CreatePrinterList (out PMPrinter []? printerList)
 		{
-			var code = PMServerCreatePrinterList (IntPtr.Zero /* ServerLocal */, out var arr);
+			PMStatusCode code;
+			IntPtr arr;
+			unsafe {
+				code = PMServerCreatePrinterList (IntPtr.Zero /* ServerLocal */, &arr);
+			}
 			if (code != PMStatusCode.Ok) {
 				printerList = null;
 				return code;
