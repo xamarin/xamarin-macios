@@ -429,6 +429,34 @@ namespace Bindings.Test {
 	delegate void InnerBlock (int magic_number);
 	delegate void OuterBlock ([BlockCallback] InnerBlock callback);
 
+#if NET
+	[Protocol]
+	interface ConstructorProtocol {
+		[Abstract]
+		[Export ("initRequired:")]
+		IntPtr Constructor (string p0);
+
+		[Export ("initOptional:")]
+		IntPtr Constructor (NSDate p0);
+	}
+
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface TypeProvidingProtocolConstructors : ConstructorProtocol {
+		[Export ("initRequired:")]
+		new IntPtr Constructor (string p0);
+
+		[Export ("initOptional:")]
+		new IntPtr Constructor (NSDate p0);
+
+		[Export ("stringValue")]
+		string StringValue { get; set; }
+
+		[Export ("dateValue")]
+		NSDate DateValue { get; set; }
+	}
+#endif
+
 	[BaseType (typeof (NSObject))]
 	interface EvilDeallocator {
 		[Export ("evilCallback")]
@@ -456,4 +484,5 @@ namespace Bindings.Test {
 		SimpleCallback MyOptionalStaticProperty { get; set; }
 	}
 	interface IProtocolWithBlockProperties { }
+
 }

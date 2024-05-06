@@ -15,7 +15,7 @@ using Xamarin.Utils;
 namespace GeneratorTests {
 	[TestFixture ()]
 	[Parallelizable (ParallelScope.All)]
-	public class BGenTests {
+	public class BGenTests : BGenBase {
 		// Removing the following variable might make running the unit tests in VSMac fail.
 		static Type variable_to_keep_reference_to_system_runtime_compilerservices_unsafe_assembly = typeof (System.Runtime.CompilerServices.Unsafe);
 
@@ -1521,38 +1521,5 @@ namespace GeneratorTests {
 			bgen.AssertNoWarnings ();
 		}
 #endif
-
-		BGenTool BuildFile (Profile profile, params string [] filenames)
-		{
-			return BuildFile (profile, true, false, filenames);
-		}
-
-		BGenTool BuildFile (Profile profile, bool nowarnings, params string [] filenames)
-		{
-			return BuildFile (profile, nowarnings, false, filenames);
-		}
-
-		BGenTool BuildFile (Profile profile, bool nowarnings, bool processEnums, params string [] filenames)
-		{
-			return BuildFile (profile, nowarnings, processEnums, Enumerable.Empty<string> (), filenames);
-		}
-
-		BGenTool BuildFile (Profile profile, bool nowarnings, bool processEnums, IEnumerable<string> references, params string [] filenames)
-		{
-			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
-			var bgen = new BGenTool ();
-			bgen.Profile = profile;
-			bgen.ProcessEnums = processEnums;
-			bgen.Defines = BGenTool.GetDefaultDefines (bgen.Profile);
-			bgen.References = references.ToList ();
-			TestContext.Out.WriteLine (TestContext.CurrentContext.Test.FullName);
-			foreach (var filename in filenames)
-				TestContext.Out.WriteLine ($"\t{filename}");
-			bgen.CreateTemporaryBinding (filenames.Select ((filename) => File.ReadAllText (Path.Combine (Configuration.SourceRoot, "tests", "generator", filename))).ToArray ());
-			bgen.AssertExecute ("build");
-			if (nowarnings)
-				bgen.AssertNoWarnings ();
-			return bgen;
-		}
 	}
 }

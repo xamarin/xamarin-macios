@@ -67,6 +67,8 @@
     <Compile Include="GeneratorTests.cs" />
     <Compile Include="BGenTests.cs" />
     <Compile Include="Asserts.cs" />
+    <Compile Include="BGenBase.cs" />
+    <Compile Include="ProtocolTests.cs" />
     <Compile Include="..\common\Profile.cs">
       <Link>Profile.cs</Link>
     </Compile>
