@@ -283,7 +283,13 @@ namespace ObjCRuntime {
 
 #if MONOMAC
 		[DllImport (Constants.libcLibrary)]
-		static extern int _NSGetExecutablePath (byte[] buf, ref int bufsize);
+		unsafe static extern int _NSGetExecutablePath (byte* buf, int* bufsize);
+
+		unsafe static int _NSGetExecutablePath (byte[] buf, ref int bufsize)
+		{
+			fixed (byte* bufptr = buf)
+				return _NSGetExecutablePath (bufptr, (int *) Unsafe.AsPointer<int> (ref bufsize));
+		}
 #endif
 
 #if NET
