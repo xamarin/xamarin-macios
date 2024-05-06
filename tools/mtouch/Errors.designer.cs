@@ -4257,5 +4257,14 @@ namespace Xamarin.Bundler {
                 return ResourceManager.GetString("MX8056", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The dynamic registrar does not support calling base Objective-C constructors with arguments (type: %s, selector: %s). Please use any of the static registrars..
+        /// </summary>
+        public static string MX8057 {
+            get {
+                return ResourceManager.GetString("MX8057", resourceCulture);
+            }
+        }
     }
 }
