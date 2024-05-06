@@ -165,14 +165,7 @@ steps:
     path: $(Build.SourcesDirectory)/artifacts
 
 - task: DownloadPipelineArtifact@2
-  displayName: Download classic pkgs
-  inputs:
-    allowFailedBuilds: true
-    patterns: '**/*.pkg'
-    path: $(Build.SourcesDirectory)/artifacts
-
-- task: DownloadPipelineArtifact@2
-  displayName: Download workloads
+  displayName: Download packages 
   inputs:
     allowFailedBuilds: true
     artifactName: not-signed-package
