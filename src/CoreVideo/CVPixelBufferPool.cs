@@ -93,14 +93,18 @@ namespace CoreVideo {
 		}
 
 		[DllImport (Constants.CoreVideoLibrary)]
-		extern static CVReturn CVPixelBufferPoolCreatePixelBuffer (
+		unsafe extern static CVReturn CVPixelBufferPoolCreatePixelBuffer (
 			/* CFAllocatorRef __nullable */ IntPtr allocator,
 			/* CVPixelBufferPoolRef __nonnull */ IntPtr pixelBufferPool,
-			/* CVPixelBufferRef  __nullable * __nonnull */ out IntPtr pixelBufferOut);
+			/* CVPixelBufferRef  __nullable * __nonnull */ IntPtr* pixelBufferOut);
 
 		public CVPixelBuffer CreatePixelBuffer ()
 		{
-			var ret = CVPixelBufferPoolCreatePixelBuffer (IntPtr.Zero, Handle, out var pixelBufferOut);
+			CVReturn ret;
+			IntPtr pixelBufferOut;
+			unsafe {
+				ret = CVPixelBufferPoolCreatePixelBuffer (IntPtr.Zero, Handle, &pixelBufferOut);
+			}
 
 			if (ret != CVReturn.Success)
 				throw new Exception ("CVPixelBufferPoolCreatePixelBuffer returned " + ret.ToString ());
@@ -109,15 +113,18 @@ namespace CoreVideo {
 		}
 
 		[DllImport (Constants.CoreVideoLibrary)]
-		extern static CVReturn CVPixelBufferPoolCreatePixelBufferWithAuxAttributes (
+		unsafe extern static CVReturn CVPixelBufferPoolCreatePixelBufferWithAuxAttributes (
 			/* CFAllocatorRef __nullable */ IntPtr allocator,
 			/* CVPixelBufferPoolRef __nonnull */ IntPtr pixelBufferPool,
 			/* CFDictionaryRef __nullable */ IntPtr auxAttributes,
-			/* CVPixelBufferRef  __nullable * __nonnull */ out IntPtr pixelBufferOut);
+			/* CVPixelBufferRef  __nullable * __nonnull */ IntPtr* pixelBufferOut);
 
 		public CVPixelBuffer? CreatePixelBuffer (CVPixelBufferPoolAllocationSettings? allocationSettings, out CVReturn error)
 		{
-			error = CVPixelBufferPoolCreatePixelBufferWithAuxAttributes (IntPtr.Zero, Handle, allocationSettings.GetHandle (), out var pb);
+			IntPtr pb;
+			unsafe {
+				error = CVPixelBufferPoolCreatePixelBufferWithAuxAttributes (IntPtr.Zero, Handle, allocationSettings.GetHandle (), &pb);
+			}
 			if (error != CVReturn.Success)
 				return null;
 
@@ -125,14 +132,18 @@ namespace CoreVideo {
 		}
 
 		[DllImport (Constants.CoreVideoLibrary)]
-		extern static CVReturn CVPixelBufferPoolCreate (/* CFAllocatorRef __nullable */ IntPtr allocator,
+		unsafe extern static CVReturn CVPixelBufferPoolCreate (/* CFAllocatorRef __nullable */ IntPtr allocator,
 			/* CFDictionaryRef __nullable */ IntPtr poolAttributes,
 			/* CFDictionaryRef __nullable */ IntPtr pixelBufferAttributes,
-			/* CVPixelBufferPoolRef  __nullable * __nonnull */ out IntPtr poolOut);
+			/* CVPixelBufferPoolRef  __nullable * __nonnull */ IntPtr* poolOut);
 
 		static IntPtr Create (NSDictionary? poolAttributes, NSDictionary? pixelBufferAttributes)
 		{
-			var ret = CVPixelBufferPoolCreate (IntPtr.Zero, poolAttributes.GetHandle (), pixelBufferAttributes.GetHandle (), out var handle);
+			CVReturn ret;
+			IntPtr handle;
+			unsafe {
+				ret = CVPixelBufferPoolCreate (IntPtr.Zero, poolAttributes.GetHandle (), pixelBufferAttributes.GetHandle (), &handle);
+			}
 
 			if (ret != CVReturn.Success)
 				throw new Exception ("CVPixelBufferPoolCreate returned " + ret.ToString ());
