@@ -5641,6 +5641,9 @@ public partial class Generator : IMemberGatherer {
 					var is32BitNotSupported = Is64BitiOSOnly (type);
 					if (external) {
 						if (!disable_default_ctor) {
+							if (BindingTouch.SupportsXmlDocumentation) {
+								sw.WriteLine ($"\t\t/// <summary>Creates a new <see cref=\"{class_name.Replace ('<', '{').Replace ('>', '}')}\" /> with default values.</summary>");
+							}
 							GeneratedCode (sw, 2);
 							if (AttributeManager.HasAttribute<DesignatedDefaultCtorAttribute> (type))
 								sw.WriteLine ("\n\n[DesignatedInitializer]");
@@ -5665,6 +5668,9 @@ public partial class Generator : IMemberGatherer {
 						}
 					} else {
 						if (!disable_default_ctor) {
+							if (BindingTouch.SupportsXmlDocumentation) {
+								sw.WriteLine ($"\t\t/// <summary>Creates a new <see cref=\"{class_name.Replace ('<', '{').Replace ('>', '}')}\" /> with default values.</summary>");
+							}
 							GeneratedCode (sw, 2);
 							if (AttributeManager.HasAttribute<DesignatedDefaultCtorAttribute> (type))
 								sw.WriteLine ("\t\t[DesignatedInitializer]");

@@ -5,6 +5,7 @@
 #if !WATCHOS
 
 using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 using ObjCRuntime;
@@ -57,13 +58,17 @@ namespace GameController {
 		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'GCController.GetMicroGamepadController()' instead.")]
 #endif
 		[DllImport (Constants.GameControllerLibrary)]
-		static extern /* NSData * __nullable */ IntPtr NSDataFromGCMicroGamepadSnapShotDataV100 (
-			/* __nullable */ ref GCMicroGamepadSnapShotDataV100 snapshotData);
+		unsafe static extern /* NSData * __nullable */ IntPtr NSDataFromGCMicroGamepadSnapShotDataV100 (
+			/* __nullable */ GCMicroGamepadSnapShotDataV100* snapshotData);
 
 		public NSData? ToNSData ()
 		{
-			var p = NSDataFromGCMicroGamepadSnapShotDataV100 (ref this);
-			return p == IntPtr.Zero ? null : new NSData (p);
+			unsafe {
+				fixed (GCMicroGamepadSnapShotDataV100* self = &this) {
+					var p = NSDataFromGCMicroGamepadSnapShotDataV100 (self);
+					return p == IntPtr.Zero ? null : new NSData (p);
+				}
+			}
 		}
 	}
 
@@ -108,8 +113,8 @@ namespace GameController {
 		[ObsoletedOSPlatform ("ios13.0", "Use 'GCController.GetMicroGamepadController()' instead.")]
 #endif
 		[DllImport (Constants.GameControllerLibrary)]
-		static extern /* NSData * __nullable */ IntPtr NSDataFromGCMicroGamepadSnapshotData (
-			/* __nullable */ ref GCMicroGamepadSnapshotData snapshotData);
+		unsafe static extern /* NSData * __nullable */ IntPtr NSDataFromGCMicroGamepadSnapshotData (
+			/* __nullable */ GCMicroGamepadSnapshotData* snapshotData);
 
 #if NET
 		[SupportedOSPlatform ("tvos")]
@@ -122,8 +127,12 @@ namespace GameController {
 #endif
 		public NSData? ToNSData ()
 		{
-			var p = NSDataFromGCMicroGamepadSnapshotData (ref this);
-			return p == IntPtr.Zero ? null : new NSData (p);
+			unsafe {
+				fixed (GCMicroGamepadSnapshotData* self = &this) {
+					var p = NSDataFromGCMicroGamepadSnapshotData (self);
+					return p == IntPtr.Zero ? null : new NSData (p);
+				}
+			}
 		}
 	}
 
@@ -144,8 +153,7 @@ namespace GameController {
 		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'GCController.GetMicroGamepadController()' instead.")]
 #endif
 		[DllImport (Constants.GameControllerLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static extern bool GCMicroGamepadSnapShotDataV100FromNSData (out GCMicroGamepadSnapShotDataV100 snapshotData, /* NSData */ IntPtr data);
+		unsafe static extern byte GCMicroGamepadSnapShotDataV100FromNSData (GCMicroGamepadSnapShotDataV100* snapshotData, /* NSData */ IntPtr data);
 
 #if NET
 		[SupportedOSPlatform ("macos")]
@@ -162,7 +170,10 @@ namespace GameController {
 #endif
 		public static bool TryGetSnapshotData (NSData? data, out GCMicroGamepadSnapShotDataV100 snapshotData)
 		{
-			return GCMicroGamepadSnapShotDataV100FromNSData (out snapshotData, data.GetHandle ());
+			snapshotData = default;
+			unsafe {
+				return GCMicroGamepadSnapShotDataV100FromNSData ((GCMicroGamepadSnapShotDataV100*) Unsafe.AsPointer<GCMicroGamepadSnapShotDataV100> (ref snapshotData), data.GetHandle ()) != 0;
+			}
 		}
 
 #if NET
@@ -179,8 +190,7 @@ namespace GameController {
 		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'GCController.GetMicroGamepadController()' instead.")]
 #endif
 		[DllImport (Constants.GameControllerLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static extern bool GCMicroGamepadSnapshotDataFromNSData (out GCMicroGamepadSnapshotData snapshotData, /* NSData */ IntPtr data);
+		unsafe static extern byte GCMicroGamepadSnapshotDataFromNSData (GCMicroGamepadSnapshotData* snapshotData, /* NSData */ IntPtr data);
 
 #if NET
 		[SupportedOSPlatform ("tvos")]
@@ -193,7 +203,10 @@ namespace GameController {
 #endif
 		public static bool TryGetSnapshotData (NSData? data, out GCMicroGamepadSnapshotData snapshotData)
 		{
-			return GCMicroGamepadSnapshotDataFromNSData (out snapshotData, data.GetHandle ());
+			snapshotData = default;
+			unsafe {
+				return GCMicroGamepadSnapshotDataFromNSData ((GCMicroGamepadSnapshotData*) Unsafe.AsPointer<GCMicroGamepadSnapshotData> (ref snapshotData), data.GetHandle ()) != 0;
+			}
 		}
 
 	}

@@ -6,15 +6,12 @@ using Microsoft.Build.Utilities;
 
 using Xamarin.Messaging.Build.Client;
 
-// Disable until we get around to enable + fix any issues.
-#nullable disable
-
 namespace Xamarin.MacDev.Tasks {
 	public class SpotlightIndexer : XamarinToolTask {
 		#region Inputs
 
 		[Required]
-		public string Input { get; set; }
+		public string Input { get; set; } = string.Empty;
 
 		#endregion
 
