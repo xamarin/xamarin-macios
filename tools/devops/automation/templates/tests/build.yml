@@ -169,11 +169,11 @@ steps:
   inputs:
     allowFailedBuilds: true
     artifactName: not-signed-package
-    path: $(Build.SourcesDirectory)/artifacts
+    path: $(Build.SourcesDirectory)/artifacts/not-signed-package
 
 - pwsh: |
     Get-ChildItem -Path $(Build.SourcesDirectory)/artifacts -Recurse -Force
-  displayName: 'Display downlods'
+  displayName: 'Display downloads'
   timeoutInMinutes: 5
 
 
