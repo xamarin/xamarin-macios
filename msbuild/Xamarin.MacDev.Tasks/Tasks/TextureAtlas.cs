@@ -10,7 +10,7 @@ using Xamarin.Messaging.Build.Client;
 
 namespace Xamarin.MacDev.Tasks {
 	public class TextureAtlas : XcodeToolTaskBase, ICancelableTask {
-		readonly Dictionary<string, List<ITaskItem>> atlases = new Dictionary<string, List<ITaskItem>> ();
+		readonly Dictionary<string, (string LogicalName, List<ITaskItem> Items)> atlases = new ();
 
 		#region Inputs
 
@@ -68,7 +68,7 @@ namespace Xamarin.MacDev.Tasks {
 			if (!File.Exists (plist))
 				return true;
 
-			var items = atlases [input.ItemSpec];
+			var items = atlases [input.ItemSpec].Items;
 
 			foreach (var item in items) {
 				if (File.GetLastWriteTimeUtc (item.ItemSpec) > File.GetLastWriteTimeUtc (plist))
@@ -86,20 +86,26 @@ namespace Xamarin.MacDev.Tasks {
 			// group the atlas textures by their parent .atlas directories
 			var prefixes = BundleResource.SplitResourcePrefixes (ResourcePrefix);
 			foreach (var item in AtlasTextures) {
-				var atlasName = BundleResource.GetLogicalName (ProjectDir, prefixes, item, !string.IsNullOrEmpty (SessionId));
-				var atlas = Path.GetDirectoryName (atlasName);
-				List<ITaskItem> items;
+				var atlas = Path.GetDirectoryName (BundleResource.GetVirtualProjectPath (ProjectDir, item, !string.IsNullOrEmpty (SessionId)));
 
-				if (!atlases.TryGetValue (atlas, out items)) {
-					items = new List<ITaskItem> ();
-					atlases.Add (atlas, items);
+				if (!atlases.TryGetValue (atlas, out var tuple)) {
+					tuple.Items = new List<ITaskItem> ();
+					var itemLogicalName = BundleResource.GetLogicalName (ProjectDir, prefixes, item, !string.IsNullOrEmpty (SessionId));
+					tuple.LogicalName = Path.GetDirectoryName (itemLogicalName);
+					atlases.Add (atlas, tuple);
 				}
+				var items = tuple.Items;
 
 				items.Add (item);
 			}
 
-			foreach (var atlas in atlases.Keys)
-				yield return new TaskItem (atlas);
+			foreach (var kvp in atlases) {
+				var atlas = kvp.Key;
+				var logicalName = kvp.Value.LogicalName;
+				var rv = new TaskItem (atlas);
+				rv.SetMetadata ("LogicalName", logicalName);
+				yield return rv;
+			}
 
 			yield break;
 		}
