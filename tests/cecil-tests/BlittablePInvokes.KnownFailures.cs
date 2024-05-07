@@ -17,11 +17,6 @@ using Xamarin.Utils;
 namespace Cecil.Tests {
 	public partial class BlittablePInvokes {
 		static HashSet<string> knownFailuresPInvokes = new HashSet<string> {
-			"AudioUnit.AudioComponentDescription ObjCRuntime.Messaging::AudioComponentDescription_objc_msgSend_stret(System.IntPtr,System.IntPtr)",
-			"AudioUnit.AudioComponentDescription ObjCRuntime.Messaging::AudioComponentDescription_objc_msgSend(System.IntPtr,System.IntPtr)",
-			"AudioUnit.AudioComponentDescription ObjCRuntime.Messaging::AudioComponentDescription_objc_msgSendSuper_stret(System.IntPtr,System.IntPtr)",
-			"AudioUnit.AudioComponentDescription ObjCRuntime.Messaging::AudioComponentDescription_objc_msgSendSuper(System.IntPtr,System.IntPtr)",
-			"AudioUnit.AudioComponentStatus AudioUnit.AudioUnit::AudioOutputUnitPublish(AudioUnit.AudioComponentDescription,System.IntPtr,System.UInt32,System.IntPtr)",
 			"AudioUnit.AudioUnitStatus AudioUnit.AudioUnit::AudioComponentInstanceNew(System.IntPtr,System.IntPtr&)",
 			"AudioUnit.AudioUnitStatus AudioUnit.AudioUnit::AudioUnitGetProperty(System.IntPtr,AudioUnit.AudioUnitPropertyIDType,AudioUnit.AudioUnitScopeType,System.UInt32,AudioToolbox.AudioStreamBasicDescription&,System.UInt32&)",
 			"AudioUnit.AudioUnitStatus AudioUnit.AudioUnit::AudioUnitGetProperty(System.IntPtr,AudioUnit.AudioUnitPropertyIDType,AudioUnit.AudioUnitScopeType,System.UInt32,AudioUnit.AudioUnitParameterInfoNative&,System.UInt32&)",
@@ -66,12 +61,6 @@ namespace Cecil.Tests {
 			"AVFoundation.AVSampleCursorSyncInfo ObjCRuntime.Messaging::AVSampleCursorSyncInfo_objc_msgSendSuper(System.IntPtr,System.IntPtr)",
 			"MediaToolbox.MTAudioProcessingTapError MediaToolbox.MTAudioProcessingTap::MTAudioProcessingTapCreate(System.IntPtr,MediaToolbox.MTAudioProcessingTap/Callbacks&,MediaToolbox.MTAudioProcessingTapCreationFlags,System.IntPtr&)",
 			"MediaToolbox.MTAudioProcessingTapError MediaToolbox.MTAudioProcessingTap::MTAudioProcessingTapGetSourceAudio(System.IntPtr,System.IntPtr,System.IntPtr,MediaToolbox.MTAudioProcessingTapFlags&,CoreMedia.CMTimeRange&,System.IntPtr&)",
-			"ObjCRuntime.NativeHandle ObjCRuntime.Messaging::NativeHandle_objc_msgSend_AudioComponentDescription_ref_NativeHandle(System.IntPtr,System.IntPtr,AudioUnit.AudioComponentDescription,ObjCRuntime.NativeHandle*)",
-			"ObjCRuntime.NativeHandle ObjCRuntime.Messaging::NativeHandle_objc_msgSend_AudioComponentDescription_UInt32_ref_NativeHandle(System.IntPtr,System.IntPtr,AudioUnit.AudioComponentDescription,System.UInt32,ObjCRuntime.NativeHandle*)",
-			"ObjCRuntime.NativeHandle ObjCRuntime.Messaging::NativeHandle_objc_msgSend_AudioComponentDescription(System.IntPtr,System.IntPtr,AudioUnit.AudioComponentDescription)",
-			"ObjCRuntime.NativeHandle ObjCRuntime.Messaging::NativeHandle_objc_msgSendSuper_AudioComponentDescription_ref_NativeHandle(System.IntPtr,System.IntPtr,AudioUnit.AudioComponentDescription,ObjCRuntime.NativeHandle*)",
-			"ObjCRuntime.NativeHandle ObjCRuntime.Messaging::NativeHandle_objc_msgSendSuper_AudioComponentDescription_UInt32_ref_NativeHandle(System.IntPtr,System.IntPtr,AudioUnit.AudioComponentDescription,System.UInt32,ObjCRuntime.NativeHandle*)",
-			"ObjCRuntime.NativeHandle ObjCRuntime.Messaging::NativeHandle_objc_msgSendSuper_AudioComponentDescription(System.IntPtr,System.IntPtr,AudioUnit.AudioComponentDescription)",
 			"Security.SecStatusCode Security.SecIdentity::SecIdentityCopyCertificate(System.IntPtr,System.IntPtr&)",
 			"Security.SecStatusCode Security.SecIdentity::SecIdentityCopyPrivateKey(System.IntPtr,System.IntPtr&)",
 			"Security.SecStatusCode Security.SecImportExport::SecPKCS12Import(System.IntPtr,System.IntPtr,System.IntPtr&)",
@@ -223,14 +212,10 @@ namespace Cecil.Tests {
 			"System.Void Network.NWProtocolQuicOptions::nw_quic_set_stream_is_unidirectional(System.IntPtr,System.Boolean)",
 			"System.Void Network.NWWebSocketOptions::nw_ws_options_set_auto_reply_ping(System.IntPtr,System.Boolean)",
 			"System.Void Network.NWWebSocketOptions::nw_ws_options_set_skip_handshake(System.IntPtr,System.Boolean)",
-			"System.Void ObjCRuntime.Messaging::void_objc_msgSend_AudioComponentDescription_UInt32_NativeHandle(System.IntPtr,System.IntPtr,AudioUnit.AudioComponentDescription,System.UInt32,ObjCRuntime.NativeHandle)",
 			"System.Void ObjCRuntime.Messaging::void_objc_msgSend_GCDualSenseAdaptiveTriggerPositionalAmplitudes_float(System.IntPtr,System.IntPtr,GameController.GCDualSenseAdaptiveTriggerPositionalAmplitudes,System.Single)",
 			"System.Void ObjCRuntime.Messaging::void_objc_msgSend_GCDualSenseAdaptiveTriggerPositionalResistiveStrengths(System.IntPtr,System.IntPtr,GameController.GCDualSenseAdaptiveTriggerPositionalResistiveStrengths)",
-			"System.Void ObjCRuntime.Messaging::void_objc_msgSend_NativeHandle_AudioComponentDescription_NativeHandle_UInt32(System.IntPtr,System.IntPtr,ObjCRuntime.NativeHandle,AudioUnit.AudioComponentDescription,ObjCRuntime.NativeHandle,System.UInt32)",
-			"System.Void ObjCRuntime.Messaging::void_objc_msgSendSuper_AudioComponentDescription_UInt32_NativeHandle(System.IntPtr,System.IntPtr,AudioUnit.AudioComponentDescription,System.UInt32,ObjCRuntime.NativeHandle)",
 			"System.Void ObjCRuntime.Messaging::void_objc_msgSendSuper_GCDualSenseAdaptiveTriggerPositionalAmplitudes_float(System.IntPtr,System.IntPtr,GameController.GCDualSenseAdaptiveTriggerPositionalAmplitudes,System.Single)",
 			"System.Void ObjCRuntime.Messaging::void_objc_msgSendSuper_GCDualSenseAdaptiveTriggerPositionalResistiveStrengths(System.IntPtr,System.IntPtr,GameController.GCDualSenseAdaptiveTriggerPositionalResistiveStrengths)",
-			"System.Void ObjCRuntime.Messaging::void_objc_msgSendSuper_NativeHandle_AudioComponentDescription_NativeHandle_UInt32(System.IntPtr,System.IntPtr,ObjCRuntime.NativeHandle,AudioUnit.AudioComponentDescription,ObjCRuntime.NativeHandle,System.UInt32)",
 		};
 	}
 }
