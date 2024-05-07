@@ -1904,9 +1904,9 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	<PropertyGroup>
 		<_UnpackLibraryResourcesDependsOn>
 			$(_UnpackLibraryResourcesDependsOn);
+			BuildOnlySettings;
 			ResolveReferences;
 			_DetectBuildType;
-			_CollectBundleResources;
 			_PrepareUnpackLibraryResources;
 			_BeforeUnpackLibraryResources;
 			_ReadUnpackedLibraryResources;
@@ -1924,16 +1924,6 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			</_UnpackLibraryResourceItems>
 		</ItemGroup>
 	</Target>
-
-	<PropertyGroup>
-		<_UnpackLibraryResourcesDependsOn>
-			BuildOnlySettings;
-			ResolveReferences;
-			_DetectBuildType;
-			_CollectBundleResources;
-			_PrepareUnpackLibraryResources;
-		</_UnpackLibraryResourcesDependsOn>
-	</PropertyGroup>
 
 	<Target Name="_BeforeUnpackLibraryResources"
 		Inputs="@(_UnpackLibraryResourceItems)"
