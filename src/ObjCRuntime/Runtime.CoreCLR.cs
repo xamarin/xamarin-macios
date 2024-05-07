@@ -235,7 +235,7 @@ namespace ObjCRuntime {
 
 			// Make sure the GCHandle we have is a weak one for custom types.
 			if (isCustomType)
-				xamarin_switch_gchandle (handle, true);
+				xamarin_switch_gchandle (handle, 1);
 		}
 
 		static unsafe MonoObject* CreateException (ExceptionType type, IntPtr arg0)
@@ -407,7 +407,7 @@ namespace ObjCRuntime {
 		}
 
 		[DllImport ("__Internal")]
-		static extern void xamarin_switch_gchandle (IntPtr obj, [MarshalAs (UnmanagedType.I1)] bool to_weak);
+		static extern void xamarin_switch_gchandle (IntPtr obj, byte to_weak);
 
 		// Returns a retained MonoObject. Caller must release.
 		static IntPtr GetMonoObject (IntPtr gchandle)
