@@ -184,6 +184,7 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="bgen\Resources.resx">
+      <LogicalName>bgen.Resources.resources</LogicalName>
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>

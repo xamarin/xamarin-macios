@@ -48,9 +48,9 @@ public class BindingException : Exception {
 
 	static string GetMessage (int code)
 	{
-		Type resourceType = Type.GetType ("bgen.Resources");
+		Type resourceType = typeof (bgen.Resources);
 		string errorCode = string.Format ("BI{0:0000}", code);
-		PropertyInfo prop = resourceType.GetProperty (errorCode, BindingFlags.NonPublic |
+		PropertyInfo prop = resourceType.GetProperty (errorCode, BindingFlags.NonPublic | BindingFlags.Public |
 				BindingFlags.Static |
 				BindingFlags.GetProperty);
 
