@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using ObjCRuntime;
 
@@ -10,7 +11,14 @@ namespace OpenGLES {
 		}
 
 		[DllImport (Constants.OpenGLESLibrary)]
-		public extern static void EAGLGetVersion (out nuint major, out nuint minor);
+		unsafe extern static void EAGLGetVersion (nuint* major, nuint* minor);
+
+		public unsafe static void EAGLGetVersion (out nuint major, out nuint minor)
+		{
+			major = default;
+			minor = default;
+			EAGLGetVersion ((nuint*) Unsafe.AsPointer<nuint> (ref major), (nuint*) Unsafe.AsPointer<nuint> (ref minor));
+		}
 
 #if !XAMCORE_3_0
 		[Obsolete ("iOS9 does not allow creating an empty instance")]

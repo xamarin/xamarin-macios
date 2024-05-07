@@ -11,6 +11,12 @@ namespace XmlDocumentation {
 	[BaseType (typeof (NSObject))]
 	interface T1 : P1 {
 		/// <summary>
+		/// Summary for T2.#ctor(String)
+		/// </summary>
+		[Export ("initWithString:")]
+		IntPtr Constructor (string p);
+
+		/// <summary>
 		/// Summary for T1.Method
 		/// </summary>
 		[Export ("method")]

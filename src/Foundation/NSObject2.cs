@@ -327,7 +327,7 @@ namespace Foundation {
 #endif // !NET || !__MACOS__
 
 		[DllImport ("__Internal")]
-		static extern void xamarin_release_managed_ref (IntPtr handle, [MarshalAs (UnmanagedType.I1)] bool user_type);
+		static extern void xamarin_release_managed_ref (IntPtr handle, byte user_type);
 
 		static void RegisterToggleReference (NSObject obj, IntPtr handle, bool isCustomType)
 		{
@@ -404,8 +404,7 @@ namespace Foundation {
 		}
 
 		[DllImport ("__Internal")]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static extern bool xamarin_set_gchandle_with_flags_safe (IntPtr handle, IntPtr gchandle, XamarinGCHandleFlags flags);
+		static extern byte xamarin_set_gchandle_with_flags_safe (IntPtr handle, IntPtr gchandle, XamarinGCHandleFlags flags);
 
 		void CreateManagedRef (bool retain)
 		{
@@ -415,7 +414,7 @@ namespace Foundation {
 				var flags = XamarinGCHandleFlags.HasManagedRef | XamarinGCHandleFlags.InitialSet | XamarinGCHandleFlags.WeakGCHandle;
 				var gchandle = GCHandle.Alloc (this, GCHandleType.WeakTrackResurrection);
 				var h = GCHandle.ToIntPtr (gchandle);
-				if (!xamarin_set_gchandle_with_flags_safe (handle, h, flags)) {
+				if (xamarin_set_gchandle_with_flags_safe (handle, h, flags) == 0) {
 					// A GCHandle already existed: this shouldn't happen, but let's handle it anyway.
 					Runtime.NSLog ($"Tried to create a managed reference from an object that already has a managed reference (type: {GetType ()})");
 					gchandle.Free ();
@@ -435,7 +434,7 @@ namespace Foundation {
 				/* If we're a wrapper type, we need to unregister here, since we won't enter the release trampoline */
 				Runtime.NativeObjectHasDied (handle, this);
 			}
-			xamarin_release_managed_ref (handle, user_type);
+			xamarin_release_managed_ref (handle, user_type.AsByte ());
 			FreeData ();
 		}
 
