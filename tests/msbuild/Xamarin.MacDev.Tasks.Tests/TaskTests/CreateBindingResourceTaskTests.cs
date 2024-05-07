@@ -119,9 +119,9 @@ namespace Xamarin.MacDev.Tasks {
 		<ForceLoad></ForceLoad>
 		<Frameworks></Frameworks>
 		<IsCxx></IsCxx>
-		<LinkWithSwiftSystemLibraries></LinkWithSwiftSystemLibraries>
 		<Kind></Kind>
 		<LinkerFlags></LinkerFlags>
+		<LinkWithSwiftSystemLibraries></LinkWithSwiftSystemLibraries>
 		<NeedsGccExceptionHandling></NeedsGccExceptionHandling>
 		<SmartLink></SmartLink>
 		<WeakFrameworks></WeakFrameworks>
@@ -130,9 +130,9 @@ namespace Xamarin.MacDev.Tasks {
 		<ForceLoad></ForceLoad>
 		<Frameworks></Frameworks>
 		<IsCxx></IsCxx>
-		<LinkWithSwiftSystemLibraries></LinkWithSwiftSystemLibraries>
 		<Kind></Kind>
 		<LinkerFlags></LinkerFlags>
+		<LinkWithSwiftSystemLibraries></LinkWithSwiftSystemLibraries>
 		<NeedsGccExceptionHandling></NeedsGccExceptionHandling>
 		<SmartLink></SmartLink>
 		<WeakFrameworks></WeakFrameworks>
@@ -141,9 +141,9 @@ namespace Xamarin.MacDev.Tasks {
 		<ForceLoad></ForceLoad>
 		<Frameworks></Frameworks>
 		<IsCxx></IsCxx>
-		<LinkWithSwiftSystemLibraries></LinkWithSwiftSystemLibraries>
 		<Kind></Kind>
 		<LinkerFlags></LinkerFlags>
+		<LinkWithSwiftSystemLibraries></LinkWithSwiftSystemLibraries>
 		<NeedsGccExceptionHandling></NeedsGccExceptionHandling>
 		<SmartLink></SmartLink>
 		<WeakFrameworks></WeakFrameworks>
