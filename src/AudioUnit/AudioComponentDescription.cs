@@ -292,17 +292,14 @@ namespace AudioUnit {
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AudioComponentDescription {
-		[MarshalAs (UnmanagedType.U4)]
 		public AudioComponentType ComponentType;
 
-		[MarshalAs (UnmanagedType.U4)]
 #if NET && !COREBUILD
 		public AudioUnitSubType ComponentSubType;
 #else
 		public int ComponentSubType;
 #endif
 
-		[MarshalAs (UnmanagedType.U4)]
 		public AudioComponentManufacturerType ComponentManufacturer;
 
 		public AudioComponentFlag ComponentFlags;
