@@ -151,10 +151,31 @@ steps:
   condition: always()
 
 - task: DownloadPipelineArtifact@2
-  displayName: Download artifacts
+  displayName: Download PkgsVersions.json
   inputs:
     allowFailedBuilds: true
+    patterns: '**/PkgsVersions.json'
     path: $(Build.SourcesDirectory)/artifacts
+
+- task: DownloadPipelineArtifact@2
+  displayName: Download WorkloadRollback.json
+  inputs:
+    allowFailedBuilds: true
+    patterns: '**/WorkloadRollback.json'
+    path: $(Build.SourcesDirectory)/artifacts
+
+- task: DownloadPipelineArtifact@2
+  displayName: Download packages 
+  inputs:
+    allowFailedBuilds: true
+    artifactName: not-signed-package
+    path: $(Build.SourcesDirectory)/artifacts/not-signed-package
+
+- pwsh: |
+    Get-ChildItem -Path $(Build.SourcesDirectory)/artifacts -Recurse -Force
+  displayName: 'Display downloads'
+  timeoutInMinutes: 5
+
 
 - pwsh: |
     $dir = "$(Build.SourcesDirectory)/artifacts"
