@@ -570,6 +570,8 @@ namespace Foundation {
 
 		X509CertificateCollection? _clientCertificates;
 
+		/// <summary>Gets the collection of security certificates that are associated with requests to the server.</summary>
+		/// <remarks>Client certificates are only supported when ClientCertificateOptions is set to ClientCertificateOptions.Manual.</remarks>
 		public X509CertificateCollection ClientCertificates {
 			get {
 				if (ClientCertificateOptions != ClientCertificateOption.Manual) {
