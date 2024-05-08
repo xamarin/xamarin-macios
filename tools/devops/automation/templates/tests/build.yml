@@ -145,43 +145,7 @@ steps:
     AUTH_TOKEN_VSENG_XAMARIN_MAC_DEVICES_P12: ${{ parameters.xqaCertPass }}
     AUTH_TOKEN_VSENG_XAMARIN_MAC_DEVICES_2_P12: ${{ parameters.xqaCertPass }}
 
-- bash: |
-    sudo rm -Rf $(Build.SourcesDirectory)/artifacts
-  displayName: "Remove artifacts"
-  condition: always()
-
-- task: DownloadPipelineArtifact@2
-  displayName: Download PkgsVersions.json
-  inputs:
-    allowFailedBuilds: true
-    patterns: '**/PkgsVersions.json'
-    path: $(Build.SourcesDirectory)/artifacts
-
-- task: DownloadPipelineArtifact@2
-  displayName: Download WorkloadRollback.json
-  inputs:
-    allowFailedBuilds: true
-    patterns: '**/WorkloadRollback.json'
-    path: $(Build.SourcesDirectory)/artifacts
-
-- task: DownloadPipelineArtifact@2
-  displayName: Download packages 
-  inputs:
-    allowFailedBuilds: true
-    artifactName: not-signed-package
-    path: $(Build.SourcesDirectory)/artifacts/not-signed-package
-
-- task: DownloadPipelineArtifact@2
-  displayName: Download test libraries
-  inputs:
-    allowFailedBuilds: true
-    artifactName: package-test-libraries
-    path: $(Build.SourcesDirectory)/artifacts/package-test-libraries
-
-- pwsh: |
-    Get-ChildItem -Path $(Build.SourcesDirectory)/artifacts -Recurse -Force
-  displayName: 'Display downloads'
-  timeoutInMinutes: 5
+- template: ./download-artifacts.yml
 
 
 - pwsh: |
