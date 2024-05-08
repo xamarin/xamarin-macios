@@ -133,7 +133,6 @@
 !missing-field! NSExcludedKeysBinding not bound
 !missing-field! NSFilterPredicateBinding not bound
 !missing-field! NSFindPanelCaseInsensitiveSearch not bound
-!missing-field! NSFindPanelSearchOptionsPboardType not bound
 !missing-field! NSFindPanelSubstringMatch not bound
 !missing-field! NSFontBinding not bound
 !missing-field! NSFontBoldBinding not bound

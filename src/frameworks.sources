@@ -113,6 +113,7 @@ APPKIT_SOURCES = \
 	AppKit/NSDraggingSession.cs \
 	AppKit/NSDraggingItem.cs \
 	AppKit/NSPasteboard.cs \
+	AppKit/NSPasteboardReading.cs \
 	AppKit/NSSharingServiceDelegate.cs \
 	AppKit/NSDocument.cs \
 	AppKit/NSEnumsExtensions.cs \
