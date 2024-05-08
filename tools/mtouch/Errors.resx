@@ -2268,6 +2268,11 @@
 	</data>
 
 	<data name="MX8057" xml:space="preserve">
+		<value>.NET for {0} does not support server garbage collection.</value>
+		<comment>{0}: the platform (iOS, macOS, etc.)</comment>
+	</data>
+
+	<data name="MX8058" xml:space="preserve">
 		<value>The dynamic registrar does not support calling base Objective-C constructors with arguments (type: %s, selector: %s). Please use any of the static registrars.</value>
 	</data>
 </root>

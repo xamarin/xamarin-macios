@@ -109,7 +109,7 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 		if (has_nsobject) {
 			if (strchr (sel_getName (sel), ':') != NULL) {
 				char *msg = xamarin_strdup_printf ("The dynamic registrar does not support calling base Objective-C constructors with arguments (type: %s, selector: %s). Please use any of the static registrars.", class_getName ([self class]), sel_getName (sel));
-				exception_gchandle = xamarin_create_product_exception (8057, msg);
+				exception_gchandle = xamarin_create_product_exception (8058, msg);
 				xamarin_free (msg);
 				xamarin_process_managed_exception_gchandle (exception_gchandle);
 				return;
