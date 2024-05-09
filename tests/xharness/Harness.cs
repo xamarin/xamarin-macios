@@ -386,15 +386,15 @@ namespace Xharness {
 				new { Label = TestLabel.Xcframework, ProjectPath = "xcframework-test", IsFSharp = false, Configurations = noConfigurations, },
 			};
 
-			var iOSSkip = new [] {
+			var iOSSkip = new TestLabel [] {
 				TestLabel.Framework,
 			};
-			var tvOSSkip = new [] {
+			var tvOSSkip = new TestLabel [] {
 				TestLabel.Framework,
 			};
-			var macOSSkip = new [] {
+			var macOSSkip = new TestLabel [] {
 			};
-			var macCatalystSkip = new [] {
+			var macCatalystSkip = new TestLabel [] {
 			};
 
 			// If .NET is not enabled, then ignore, otherwise leave undecided for other code to determine.
