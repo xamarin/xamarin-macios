@@ -1485,6 +1485,34 @@ namespace GeneratorTests {
 		}
 
 		[Test]
+#if !NET
+		[Ignore ("This only applies to .NET")]
+#endif
+		[TestCase (Profile.iOS)]
+		[TestCase (Profile.MacCatalyst)]
+		[TestCase (Profile.macOSMobile)]
+		[TestCase (Profile.tvOS)]
+		public void PreviewAPIs (Profile profile)
+		{
+			var bgen = BuildFile (profile, false, true, "tests/preview.cs");
+
+			// Each Experimental attribute in the api definition has its own diagnostic ID (with an incremental number)
+			// Here we collect all diagnostic IDS for all the Experimental attributes in the compiled assembly,
+			// and assert that they're all present at least once.
+			var module = bgen.ApiAssembly.MainModule;
+			var allExperimentalAttributes = module.GetCustomAttributes ().Where (v => v.AttributeType.Name == "ExperimentalAttribute");
+			var allExperimentalDiagnosticIds = allExperimentalAttributes.Select (v => (string) v.ConstructorArguments [0].Value).ToHashSet ();
+			var previewApiCount = 32;
+			var expectedDiagnosticIds = Enumerable.Range (1, previewApiCount).Select (v => $"BGEN{v:0000}").ToHashSet ();
+
+			var unexpectedDiagnosticIds = allExperimentalDiagnosticIds.Except (expectedDiagnosticIds).OrderBy (v => v);
+			var missingDiagnosticIds = expectedDiagnosticIds.Except (allExperimentalDiagnosticIds).OrderBy (v => v);
+
+			Assert.That (unexpectedDiagnosticIds, Is.Empty, "No unexpected diagnostic IDs"); // you probably need to increase the previewApiCount variable above (if you added more definitions to the tests/preview.cs file).
+			Assert.That (missingDiagnosticIds, Is.Empty, "No missing diagnostic IDs");
+		}
+
+		[Test]
 		public void DelegateParameterAttributes ()
 		{
 			BuildFile (Profile.iOS, "tests/delegate-parameter-attributes.cs");
