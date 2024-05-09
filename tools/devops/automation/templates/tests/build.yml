@@ -171,6 +171,13 @@ steps:
     artifactName: not-signed-package
     path: $(Build.SourcesDirectory)/artifacts/not-signed-package
 
+- task: DownloadPipelineArtifact@2
+  displayName: Download test libraries
+  inputs:
+    allowFailedBuilds: true
+    artifactName: package-test-libraries
+    path: $(Build.SourcesDirectory)/artifacts/package-test-libraries
+
 - pwsh: |
     Get-ChildItem -Path $(Build.SourcesDirectory)/artifacts -Recurse -Force
   displayName: 'Display downloads'
