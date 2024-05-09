@@ -17,11 +17,11 @@ steps:
 
   - download: macios
     displayName: Download packages
-    artifactName: not-signed-package
+    artifact: not-signed-package
 
   - download: macios
     displayName: Download test libraries
-    artifactName: package-test-libraries
+    artifact: package-test-libraries
 
   # the default location when downloading is $(Pipeline.Workspace)/<pipeline resource identifier>/<artifact name>
   - pwsh: |
