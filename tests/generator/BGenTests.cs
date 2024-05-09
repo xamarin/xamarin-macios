@@ -1165,7 +1165,14 @@ namespace GeneratorTests {
 			bgen.AssertNoMethod ("NS.Whatever", "set_IPropAOpt", parameterTypes: "Foundation.NSObject");
 			bgen.AssertMethod ("NS.Whatever", "set_IPropBOpt", parameterTypes: "Foundation.NSObject");
 			bgen.AssertNoMethod ("NS.Whatever", "get_IPropBOpt");
-			bgen.AssertPublicMethodCount ("NS.Whatever", 9); // 6 accessors + 2 constructors + ClassHandle getter
+			bgen.AssertMethod ("NS.Whatever", ".ctor");
+			bgen.AssertMethod ("NS.Whatever", ".ctor", parameterTypes: "Foundation.NSObjectFlag");
+#if NET
+			bgen.AssertMethod ("NS.Whatever", ".ctor", parameterTypes: "ObjCRuntime.NativeHandle");
+#else
+			bgen.AssertMethod ("NS.Whatever", ".ctor", parameterTypes: "System.IntPtr");
+#endif
+			bgen.AssertPublicMethodCount ("NS.Whatever", 10); // 6 accessors + 3 constructors + ClassHandle getter
 
 			bgen.AssertMethod ("NS.IIProtocol", "get_IPropA");
 			bgen.AssertNoMethod ("NS.IIProtocol", "set_IPropA", parameterTypes: "Foundation.NSObject");
