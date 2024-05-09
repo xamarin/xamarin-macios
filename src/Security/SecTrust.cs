@@ -42,7 +42,7 @@ namespace Security {
 		[SupportedOSPlatform ("tvos")]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
-		extern static SecStatusCode /* OSStatus */ SecTrustCopyPolicies (IntPtr /* SecTrustRef */ trust, ref IntPtr /* CFArrayRef* */ policies);
+		unsafe extern static SecStatusCode /* OSStatus */ SecTrustCopyPolicies (IntPtr /* SecTrustRef */ trust, IntPtr* /* CFArrayRef* */ policies);
 
 #if NET
 		[SupportedOSPlatform ("ios")]
@@ -53,7 +53,10 @@ namespace Security {
 		public SecPolicy [] GetPolicies ()
 		{
 			IntPtr p = IntPtr.Zero;
-			SecStatusCode result = SecTrustCopyPolicies (Handle, ref p);
+			SecStatusCode result;
+			unsafe {
+				result = SecTrustCopyPolicies (Handle, &p);
+			}
 			if (result != SecStatusCode.Success)
 				throw new InvalidOperationException (result.ToString ());
 			return NSArray.ArrayFromHandle<SecPolicy> (p);
@@ -102,7 +105,7 @@ namespace Security {
 		[SupportedOSPlatform ("tvos")]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
-		extern static SecStatusCode /* OSStatus */ SecTrustGetNetworkFetchAllowed (IntPtr /* SecTrustRef */ trust, [MarshalAs (UnmanagedType.I1)] out bool /* Boolean* */ allowFetch);
+		unsafe extern static SecStatusCode /* OSStatus */ SecTrustGetNetworkFetchAllowed (IntPtr /* SecTrustRef */ trust, byte* /* Boolean* */ allowFetch);
 
 #if NET
 		[SupportedOSPlatform ("ios")]
@@ -111,7 +114,7 @@ namespace Security {
 		[SupportedOSPlatform ("tvos")]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
-		extern static SecStatusCode /* OSStatus */ SecTrustSetNetworkFetchAllowed (IntPtr /* SecTrustRef */ trust, [MarshalAs (UnmanagedType.I1)] bool /* Boolean */ allowFetch);
+		extern static SecStatusCode /* OSStatus */ SecTrustSetNetworkFetchAllowed (IntPtr /* SecTrustRef */ trust, byte /* Boolean */ allowFetch);
 
 #if NET
 		[SupportedOSPlatform ("ios")]
@@ -121,14 +124,17 @@ namespace Security {
 #endif
 		public bool NetworkFetchAllowed {
 			get {
-				bool value;
-				SecStatusCode result = SecTrustGetNetworkFetchAllowed (Handle, out value);
+				byte value;
+				SecStatusCode result;
+				unsafe {
+					result = SecTrustGetNetworkFetchAllowed (Handle, &value);
+				}
 				if (result != SecStatusCode.Success)
 					throw new InvalidOperationException (result.ToString ());
-				return value;
+				return value != 0;
 			}
 			set {
-				SecStatusCode result = SecTrustSetNetworkFetchAllowed (Handle, value);
+				SecStatusCode result = SecTrustSetNetworkFetchAllowed (Handle, value.AsByte ());
 				if (result != SecStatusCode.Success)
 					throw new InvalidOperationException (result.ToString ());
 			}
@@ -141,7 +147,7 @@ namespace Security {
 		[SupportedOSPlatform ("tvos")]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
-		extern static SecStatusCode /* OSStatus */ SecTrustCopyCustomAnchorCertificates (IntPtr /* SecTrustRef */ trust, out IntPtr /* CFArrayRef* */ anchors);
+		unsafe extern static SecStatusCode /* OSStatus */ SecTrustCopyCustomAnchorCertificates (IntPtr /* SecTrustRef */ trust, IntPtr* /* CFArrayRef* */ anchors);
 
 #if NET
 		[SupportedOSPlatform ("ios")]
@@ -152,7 +158,10 @@ namespace Security {
 		public SecCertificate [] GetCustomAnchorCertificates ()
 		{
 			IntPtr p;
-			SecStatusCode result = SecTrustCopyCustomAnchorCertificates (Handle, out p);
+			SecStatusCode result;
+			unsafe {
+				result = SecTrustCopyCustomAnchorCertificates (Handle, &p);
+			}
 			if (result != SecStatusCode.Success)
 				throw new InvalidOperationException (result.ToString ());
 			return NSArray.ArrayFromHandle<SecCertificate> (p);
@@ -295,7 +304,7 @@ namespace Security {
 		[SupportedOSPlatform ("tvos")]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
-		extern static SecStatusCode /* OSStatus */ SecTrustGetTrustResult (IntPtr /* SecTrustRef */ trust, out SecTrustResult /* SecTrustResultType */ result);
+		unsafe extern static SecStatusCode /* OSStatus */ SecTrustGetTrustResult (IntPtr /* SecTrustRef */ trust, SecTrustResult* /* SecTrustResultType */ result);
 
 #if NET
 		[SupportedOSPlatform ("ios")]
@@ -306,7 +315,10 @@ namespace Security {
 		public SecTrustResult GetTrustResult ()
 		{
 			SecTrustResult trust_result;
-			SecStatusCode result = SecTrustGetTrustResult (Handle, out trust_result);
+			SecStatusCode result;
+			unsafe {
+				result = SecTrustGetTrustResult (Handle, &trust_result);
+			}
 			if (result != SecStatusCode.Success)
 				throw new InvalidOperationException (result.ToString ());
 			return trust_result;
@@ -323,8 +335,7 @@ namespace Security {
 		[iOS (12, 0)]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
-		[return: MarshalAs (UnmanagedType.U1)]
-		static extern bool SecTrustEvaluateWithError (/* SecTrustRef */ IntPtr trust, out /* CFErrorRef** */ IntPtr error);
+		unsafe static extern byte SecTrustEvaluateWithError (/* SecTrustRef */ IntPtr trust, /* CFErrorRef** */ IntPtr* error);
 
 #if NET
 		[SupportedOSPlatform ("tvos12.0")]
@@ -338,7 +349,11 @@ namespace Security {
 #endif
 		public bool Evaluate (out NSError? error)
 		{
-			var result = SecTrustEvaluateWithError (Handle, out var err);
+			IntPtr err;
+			bool result;
+			unsafe {
+				result = SecTrustEvaluateWithError (Handle, &err) != 0;
+			}
 			error = err == IntPtr.Zero ? null : new NSError (err);
 			return result;
 		}
