@@ -4474,7 +4474,7 @@ public partial class Generator : IMemberGatherer {
 
 #if NET
 		var is_abstract = false;
-		var do_not_call_base = minfo.is_abstract || minfo.is_model;
+		var do_not_call_base = (minfo.is_abstract || minfo.is_model) && !(minfo.is_ctor && minfo.is_protocol_member);
 #else
 		var is_abstract = minfo.is_abstract;
 		var do_not_call_base = minfo.is_model;
