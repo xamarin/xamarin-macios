@@ -4257,5 +4257,14 @@ namespace Xamarin.Bundler {
                 return ResourceManager.GetString("MX8056", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .NET for {0} does not support server garbage collection..
+        /// </summary>
+        public static string MX8057 {
+            get {
+                return ResourceManager.GetString("MX8057", resourceCulture);
+            }
+        }
     }
 }

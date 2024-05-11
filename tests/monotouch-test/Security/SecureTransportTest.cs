@@ -146,6 +146,8 @@ namespace MonoTouchFixtures.Security {
 		public void SslSupportedCiphers ()
 		{
 			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 8, throwIfOtherPlatform: false);
+			if (Runtime.IsARM64CallingConvention)
+				Assert.Ignore ("This test does not work on ARM64 because SslCipherSuite has the wrong size on ARM64 (the native enum is an ushort on ARM64, even on desktop, while we've defined our enum as uint on macOS and Mac Catalyst)");
 
 			int ssl_client_ciphers = -1;
 			using (var client = new SslContext (SslProtocolSide.Client, SslConnectionType.Stream)) {
