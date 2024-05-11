@@ -208,6 +208,12 @@
             Summary for PA1.PProperty
             </summary>
         </member>
+        <member name="T:XmlDocumentation.P1_Extensions">
+            <summary>Extension methods to the <see cref="T:XmlDocumentation.IP1" /> interface to support all the methods from the P1 protocol.</summary>
+            <remarks>
+              <para>The extension methods for <see cref="T:XmlDocumentation.IP1" /> interface allow developers to treat instances of the interface as having all the optional methods of the original P1 protocol. Since the interface only contains the required members, these extension methods allow developers to call the optional members of the protocol.</para>
+            </remarks>
+        </member>
         <member name="M:XmlDocumentation.P1_Extensions.PMethod(XmlDocumentation.IP1)">
             <summary>
             Summary for P1.PMethod
