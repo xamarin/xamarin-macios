@@ -35,6 +35,7 @@
 #endif
 
 using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
 using ObjCRuntime;
@@ -325,7 +326,7 @@ namespace Security {
 		[SupportedOSPlatform ("macos")]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
-		static extern /* OSStatus */ int SecCertificateCopyCommonName (IntPtr /* SecCertificateRef */ certificate, out IntPtr /* CFStringRef * __nonnull CF_RETURNS_RETAINED */ commonName);
+		unsafe static extern /* OSStatus */ int SecCertificateCopyCommonName (IntPtr /* SecCertificateRef */ certificate, IntPtr* /* CFStringRef * __nonnull CF_RETURNS_RETAINED */ commonName);
 
 #if NET
 		[SupportedOSPlatform ("ios")]
@@ -335,8 +336,11 @@ namespace Security {
 #endif
 		public string? GetCommonName ()
 		{
-			if (SecCertificateCopyCommonName (Handle, out var cn) == 0)
-				return CFString.FromHandle (cn, releaseHandle: true);
+			IntPtr cn;
+			unsafe {
+				if (SecCertificateCopyCommonName (Handle, &cn) == 0)
+					return CFString.FromHandle (cn, releaseHandle: true);
+			}
 			return null;
 		}
 
@@ -347,7 +351,7 @@ namespace Security {
 		[SupportedOSPlatform ("macos")]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
-		static extern /* OSStatus */ int SecCertificateCopyEmailAddresses (IntPtr /* SecCertificateRef */ certificate, out IntPtr /* CFArrayRef * __nonnull CF_RETURNS_RETAINED */ emailAddresses);
+		unsafe static extern /* OSStatus */ int SecCertificateCopyEmailAddresses (IntPtr /* SecCertificateRef */ certificate, IntPtr* /* CFArrayRef * __nonnull CF_RETURNS_RETAINED */ emailAddresses);
 
 #if NET
 		[SupportedOSPlatform ("ios")]
@@ -357,8 +361,11 @@ namespace Security {
 #endif
 		public string? []? GetEmailAddresses ()
 		{
-			if (SecCertificateCopyEmailAddresses (Handle, out var emails) == 0)
-				return CFArray.StringArrayFromHandle (emails, true);
+			IntPtr emails;
+			unsafe {
+				if (SecCertificateCopyEmailAddresses (Handle, &emails) == 0)
+					return CFArray.StringArrayFromHandle (emails, true);
+			}
 			return null;
 		}
 
@@ -464,7 +471,7 @@ namespace Security {
 		[SupportedOSPlatform ("maccatalyst")]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
-		static extern /* __nullable CFDataRef */ IntPtr SecCertificateCopySerialNumberData (IntPtr /* SecCertificateRef */ certificate, ref IntPtr /* CFErrorRef * */ error);
+		unsafe static extern /* __nullable CFDataRef */ IntPtr SecCertificateCopySerialNumberData (IntPtr /* SecCertificateRef */ certificate, IntPtr* /* CFErrorRef * */ error);
 
 #if NET
 		[SupportedOSPlatform ("ios")]
@@ -475,7 +482,10 @@ namespace Security {
 		public NSData? GetSerialNumber (out NSError? error)
 		{
 			IntPtr err = IntPtr.Zero;
-			IntPtr data = SecCertificateCopySerialNumberData (Handle, ref err);
+			IntPtr data;
+			unsafe {
+				data = SecCertificateCopySerialNumberData (Handle, &err);
+			}
 			error = Runtime.GetNSObject<NSError> (err);
 			return Runtime.GetNSObject<NSData> (data, true);
 		}
@@ -502,11 +512,15 @@ namespace Security {
 		public extern static nint GetTypeID ();
 
 		[DllImport (Constants.SecurityLibrary)]
-		extern static /* OSStatus */ SecStatusCode SecIdentityCopyCertificate (/* SecIdentityRef */ IntPtr identityRef,  /* SecCertificateRef* */ out IntPtr certificateRef);
+		unsafe extern static /* OSStatus */ SecStatusCode SecIdentityCopyCertificate (/* SecIdentityRef */ IntPtr identityRef,  /* SecCertificateRef* */ IntPtr* certificateRef);
 
 		public SecCertificate Certificate {
 			get {
-				SecStatusCode result = SecIdentityCopyCertificate (GetCheckedHandle (), out var cert);
+				SecStatusCode result;
+				IntPtr cert;
+				unsafe {
+					result = SecIdentityCopyCertificate (GetCheckedHandle (), &cert);
+				}
 				if (result != SecStatusCode.Success)
 					throw new InvalidOperationException (result.ToString ());
 				return new SecCertificate (cert, true);
@@ -587,7 +601,7 @@ namespace Security {
 		[Deprecated (PlatformName.WatchOS, 8, 0, message: "Use 'SecKeyCreateRandomKey' instead.")]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
-		extern static SecStatusCode SecKeyGeneratePair (IntPtr dictHandle, out IntPtr pubKey, out IntPtr privKey);
+		unsafe extern static SecStatusCode SecKeyGeneratePair (IntPtr dictHandle, IntPtr* pubKey, IntPtr* privKey);
 
 		// TODO: pull all the TypeRefs needed for the NSDictionary
 
@@ -614,7 +628,10 @@ namespace Security {
 
 			IntPtr pub, priv;
 
-			var res = SecKeyGeneratePair (parameters.Handle, out pub, out priv);
+			SecStatusCode res;
+			unsafe {
+				res = SecKeyGeneratePair (parameters.Handle, &pub, &priv);
+			}
 			if (res == SecStatusCode.Success) {
 				publicKey = new SecKey (pub, true);
 				privateKey = new SecKey (priv, true);
@@ -688,7 +705,7 @@ namespace Security {
 		[Deprecated (PlatformName.WatchOS, 8, 0, message: "Use 'SecKeyCreateSignature' instead.")]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
-		extern static SecStatusCode SecKeyRawSign (IntPtr handle, SecPadding padding, IntPtr dataToSign, nint dataToSignLen, IntPtr sig, ref nint sigLen);
+		unsafe extern static SecStatusCode SecKeyRawSign (IntPtr handle, SecPadding padding, IntPtr dataToSign, nint dataToSignLen, IntPtr sig, nint* sigLen);
 
 #if NET
 		[SupportedOSPlatform ("ios")]
@@ -727,7 +744,7 @@ namespace Security {
 			nint len = 1024;
 			result = new byte [len];
 			fixed (byte* p = result) {
-				status = SecKeyRawSign (GetCheckedHandle (), padding, dataToSign, dataToSignLen, (IntPtr) p, ref len);
+				status = SecKeyRawSign (GetCheckedHandle (), padding, dataToSign, dataToSignLen, (IntPtr) p, &len);
 				Array.Resize (ref result, (int) len);
 			}
 			return status;
@@ -803,7 +820,7 @@ namespace Security {
 		[Deprecated (PlatformName.WatchOS, 8, 0, message: "Use 'SecKeyCreateEncryptedData' instead.")]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
-		extern static SecStatusCode SecKeyEncrypt (IntPtr handle, SecPadding padding, IntPtr plainText, nint plainTextLen, IntPtr cipherText, ref nint cipherTextLengh);
+		unsafe extern static SecStatusCode SecKeyEncrypt (IntPtr handle, SecPadding padding, IntPtr plainText, nint plainTextLen, IntPtr cipherText, nint* cipherTextLengh);
 
 #if NET
 		[SupportedOSPlatform ("ios")]
@@ -821,7 +838,7 @@ namespace Security {
 #endif
 		public unsafe SecStatusCode Encrypt (SecPadding padding, IntPtr plainText, nint plainTextLen, IntPtr cipherText, ref nint cipherTextLen)
 		{
-			return SecKeyEncrypt (GetCheckedHandle (), padding, plainText, plainTextLen, cipherText, ref cipherTextLen);
+			return SecKeyEncrypt (GetCheckedHandle (), padding, plainText, plainTextLen, cipherText, (nint*) Unsafe.AsPointer<nint> (ref cipherTextLen));
 		}
 
 		public SecStatusCode Encrypt (SecPadding padding, byte [] plainText, byte [] cipherText)
@@ -834,7 +851,7 @@ namespace Security {
 				fixed (byte* cp = cipherText)
 				fixed (byte* pp = plainText) {
 					nint len = (nint) cipherText.Length;
-					return SecKeyEncrypt (GetCheckedHandle (), padding, (IntPtr) pp, (nint) plainText.Length, (IntPtr) cp, ref len);
+					return SecKeyEncrypt (GetCheckedHandle (), padding, (IntPtr) pp, (nint) plainText.Length, (IntPtr) cp, &len);
 				}
 			}
 		}
@@ -860,7 +877,7 @@ namespace Security {
 		[Deprecated (PlatformName.WatchOS, 8, 0, message: "Use 'SecKeyCreateDecryptedData' instead.")]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
-		extern static SecStatusCode SecKeyDecrypt (IntPtr handle, SecPadding padding, IntPtr cipherTextLen, nint cipherLen, IntPtr plainText, ref nint plainTextLen);
+		unsafe extern static SecStatusCode SecKeyDecrypt (IntPtr handle, SecPadding padding, IntPtr cipherTextLen, nint cipherLen, IntPtr plainText, nint* plainTextLen);
 
 #if NET
 		[SupportedOSPlatform ("ios")]
@@ -878,7 +895,7 @@ namespace Security {
 #endif
 		public unsafe SecStatusCode Decrypt (SecPadding padding, IntPtr cipherText, nint cipherTextLen, IntPtr plainText, ref nint plainTextLen)
 		{
-			return SecKeyDecrypt (GetCheckedHandle (), padding, cipherText, cipherTextLen, plainText, ref plainTextLen);
+			return SecKeyDecrypt (GetCheckedHandle (), padding, cipherText, cipherTextLen, plainText, (nint*) Unsafe.AsPointer<nint> (ref plainTextLen));
 		}
 
 		SecStatusCode _Decrypt (SecPadding padding, byte [] cipherText, ref byte []? plainText)
@@ -893,7 +910,7 @@ namespace Security {
 					nint len = plainText.Length;
 					SecStatusCode status;
 					fixed (byte* pp = plainText)
-						status = SecKeyDecrypt (GetCheckedHandle (), padding, (IntPtr) cp, (nint) cipherText.Length, (IntPtr) pp, ref len);
+						status = SecKeyDecrypt (GetCheckedHandle (), padding, (IntPtr) cp, (nint) cipherText.Length, (IntPtr) pp, &len);
 					if (len < plainText.Length)
 						Array.Resize<byte> (ref plainText, (int) len);
 					return status;
@@ -914,7 +931,7 @@ namespace Security {
 		[SupportedOSPlatform ("maccatalyst")]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
-		static extern IntPtr /* SecKeyRef _Nullable */ SecKeyCreateRandomKey (IntPtr /* CFDictionaryRef* */ parameters, out IntPtr /* CFErrorRef** */ error);
+		unsafe static extern IntPtr /* SecKeyRef _Nullable */ SecKeyCreateRandomKey (IntPtr /* CFDictionaryRef* */ parameters, IntPtr* /* CFErrorRef** */ error);
 
 #if NET
 		[SupportedOSPlatform ("tvos")]
@@ -928,7 +945,10 @@ namespace Security {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (parameters));
 
 			IntPtr err;
-			var key = SecKeyCreateRandomKey (parameters.Handle, out err);
+			IntPtr key;
+			unsafe {
+				key = SecKeyCreateRandomKey (parameters.Handle, &err);
+			}
 			error = Runtime.GetNSObject<NSError> (err);
 			return key == IntPtr.Zero ? null : new SecKey (key, true);
 		}
@@ -974,7 +994,7 @@ namespace Security {
 		[SupportedOSPlatform ("maccatalyst")]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
-		static extern IntPtr /* SecKeyRef _Nullable */ SecKeyCreateWithData (IntPtr /* CFDataRef* */ keyData, IntPtr /* CFDictionaryRef* */ attributes, out IntPtr /* CFErrorRef** */ error);
+		unsafe static extern IntPtr /* SecKeyRef _Nullable */ SecKeyCreateWithData (IntPtr /* CFDataRef* */ keyData, IntPtr /* CFDictionaryRef* */ attributes, IntPtr* /* CFErrorRef** */ error);
 
 #if NET
 		[SupportedOSPlatform ("tvos")]
@@ -990,7 +1010,10 @@ namespace Security {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (parameters));
 
 			IntPtr err;
-			var key = SecKeyCreateWithData (keyData.Handle, parameters.Handle, out err);
+			IntPtr key;
+			unsafe {
+				key = SecKeyCreateWithData (keyData.Handle, parameters.Handle, &err);
+			}
 			error = Runtime.GetNSObject<NSError> (err);
 			return key == IntPtr.Zero ? null : new SecKey (key, true);
 		}
@@ -1019,7 +1042,7 @@ namespace Security {
 		[SupportedOSPlatform ("maccatalyst")]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
-		static extern IntPtr /* CFDataRef _Nullable */ SecKeyCopyExternalRepresentation (IntPtr /* SecKeyRef* */ key, out IntPtr /* CFErrorRef** */ error);
+		unsafe static extern IntPtr /* CFDataRef _Nullable */ SecKeyCopyExternalRepresentation (IntPtr /* SecKeyRef* */ key, IntPtr* /* CFErrorRef** */ error);
 
 #if NET
 		[SupportedOSPlatform ("tvos")]
@@ -1029,7 +1052,11 @@ namespace Security {
 #endif
 		public NSData? GetExternalRepresentation (out NSError? error)
 		{
-			var data = SecKeyCopyExternalRepresentation (Handle, out var err);
+			IntPtr data;
+			IntPtr err;
+			unsafe {
+				data = SecKeyCopyExternalRepresentation (Handle, &err);
+			}
 			error = Runtime.GetNSObject<NSError> (err);
 			return Runtime.GetNSObject<NSData> (data, true);
 		}
@@ -1042,7 +1069,11 @@ namespace Security {
 #endif
 		public NSData? GetExternalRepresentation ()
 		{
-			var data = SecKeyCopyExternalRepresentation (Handle, out var _);
+			IntPtr data;
+			IntPtr err;
+			unsafe {
+				data = SecKeyCopyExternalRepresentation (Handle, &err);
+			}
 			return Runtime.GetNSObject<NSData> (data, true);
 		}
 
@@ -1095,8 +1126,7 @@ namespace Security {
 		[SupportedOSPlatform ("maccatalyst")]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
-		[return: MarshalAs (UnmanagedType.U1)]
-		static extern bool /* Boolean */ SecKeyIsAlgorithmSupported (IntPtr /* SecKeyRef* */ key, /* SecKeyOperationType */ nint operation, IntPtr /* SecKeyAlgorithm* */ algorithm);
+		static extern byte /* Boolean */ SecKeyIsAlgorithmSupported (IntPtr /* SecKeyRef* */ key, /* SecKeyOperationType */ nint operation, IntPtr /* SecKeyAlgorithm* */ algorithm);
 
 #if NET
 		[SupportedOSPlatform ("tvos")]
@@ -1106,7 +1136,7 @@ namespace Security {
 #endif
 		public bool IsAlgorithmSupported (SecKeyOperationType operation, SecKeyAlgorithm algorithm)
 		{
-			return SecKeyIsAlgorithmSupported (Handle, (int) operation, algorithm.GetConstant ().GetHandle ());
+			return SecKeyIsAlgorithmSupported (Handle, (int) operation, algorithm.GetConstant ().GetHandle ()) != 0;
 		}
 
 #if NET
@@ -1116,7 +1146,7 @@ namespace Security {
 		[SupportedOSPlatform ("maccatalyst")]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
-		static extern /* CFDataRef _Nullable */ IntPtr SecKeyCreateSignature (/* SecKeyRef */ IntPtr key, /* SecKeyAlgorithm */ IntPtr algorithm, /* CFDataRef */ IntPtr dataToSign, /* CFErrorRef* */ out IntPtr error);
+		unsafe static extern /* CFDataRef _Nullable */ IntPtr SecKeyCreateSignature (/* SecKeyRef */ IntPtr key, /* SecKeyAlgorithm */ IntPtr algorithm, /* CFDataRef */ IntPtr dataToSign, /* CFErrorRef* */ IntPtr* error);
 
 #if NET
 		[SupportedOSPlatform ("tvos")]
@@ -1129,7 +1159,11 @@ namespace Security {
 			if (dataToSign is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (dataToSign));
 
-			var data = SecKeyCreateSignature (Handle, algorithm.GetConstant ().GetHandle (), dataToSign.Handle, out var err);
+			IntPtr data;
+			IntPtr err;
+			unsafe {
+				data = SecKeyCreateSignature (Handle, algorithm.GetConstant ().GetHandle (), dataToSign.Handle, &err);
+			}
 			error = Runtime.GetNSObject<NSError> (err);
 			return Runtime.GetNSObject<NSData> (data, true);
 		}
@@ -1141,8 +1175,7 @@ namespace Security {
 		[SupportedOSPlatform ("maccatalyst")]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
-		[return: MarshalAs (UnmanagedType.U1)]
-		static extern /* Boolean */ bool SecKeyVerifySignature (/* SecKeyRef */ IntPtr key, /* SecKeyAlgorithm */ IntPtr algorithm, /* CFDataRef */ IntPtr signedData, /* CFDataRef */ IntPtr signature, /* CFErrorRef* */ out IntPtr error);
+		unsafe static extern /* Boolean */ byte SecKeyVerifySignature (/* SecKeyRef */ IntPtr key, /* SecKeyAlgorithm */ IntPtr algorithm, /* CFDataRef */ IntPtr signedData, /* CFDataRef */ IntPtr signature, /* CFErrorRef* */ IntPtr* error);
 
 #if NET
 		[SupportedOSPlatform ("tvos")]
@@ -1157,7 +1190,11 @@ namespace Security {
 			if (signature is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (signature));
 
-			var result = SecKeyVerifySignature (Handle, algorithm.GetConstant ().GetHandle (), signedData.Handle, signature.Handle, out var err);
+			bool result;
+			IntPtr err;
+			unsafe {
+				result = SecKeyVerifySignature (Handle, algorithm.GetConstant ().GetHandle (), signedData.Handle, signature.Handle, &err) != 0;
+			}
 			error = Runtime.GetNSObject<NSError> (err);
 			return result;
 		}
@@ -1194,7 +1231,7 @@ namespace Security {
 		[SupportedOSPlatform ("maccatalyst")]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
-		static extern /* CFDataRef _Nullable */ IntPtr SecKeyCreateDecryptedData (/* SecKeyRef */ IntPtr key, /* SecKeyAlgorithm */ IntPtr algorithm, /* CFDataRef */ IntPtr ciphertext, /* CFErrorRef* */ out IntPtr error);
+		unsafe static extern /* CFDataRef _Nullable */ IntPtr SecKeyCreateDecryptedData (/* SecKeyRef */ IntPtr key, /* SecKeyAlgorithm */ IntPtr algorithm, /* CFDataRef */ IntPtr ciphertext, /* CFErrorRef* */ IntPtr* error);
 
 #if NET
 		[SupportedOSPlatform ("tvos")]
@@ -1207,7 +1244,11 @@ namespace Security {
 			if (ciphertext is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (ciphertext));
 
-			var data = SecKeyCreateDecryptedData (Handle, algorithm.GetConstant ().GetHandle (), ciphertext.Handle, out var err);
+			IntPtr data;
+			IntPtr err;
+			unsafe {
+				data = SecKeyCreateDecryptedData (Handle, algorithm.GetConstant ().GetHandle (), ciphertext.Handle, &err);
+			}
 			error = Runtime.GetNSObject<NSError> (err);
 			return Runtime.GetNSObject<NSData> (data, true);
 		}
@@ -1219,7 +1260,7 @@ namespace Security {
 		[SupportedOSPlatform ("maccatalyst")]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
-		static extern /* CFDataRef _Nullable */ IntPtr SecKeyCopyKeyExchangeResult (/* SecKeyRef */ IntPtr privateKey, /* SecKeyAlgorithm */ IntPtr algorithm, /* SecKeyRef */ IntPtr publicKey, /* CFDictionaryRef */ IntPtr parameters, /* CFErrorRef* */ out IntPtr error);
+		unsafe static extern /* CFDataRef _Nullable */ IntPtr SecKeyCopyKeyExchangeResult (/* SecKeyRef */ IntPtr privateKey, /* SecKeyAlgorithm */ IntPtr algorithm, /* SecKeyRef */ IntPtr publicKey, /* CFDictionaryRef */ IntPtr parameters, /* CFErrorRef* */ IntPtr* error);
 
 #if NET
 		[SupportedOSPlatform ("tvos")]
@@ -1234,7 +1275,11 @@ namespace Security {
 			if (parameters is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (parameters));
 
-			var data = SecKeyCopyKeyExchangeResult (Handle, algorithm.GetConstant ().GetHandle (), publicKey.Handle, parameters.Handle, out var err);
+			IntPtr data;
+			IntPtr err;
+			unsafe {
+				data = SecKeyCopyKeyExchangeResult (Handle, algorithm.GetConstant ().GetHandle (), publicKey.Handle, parameters.Handle, &err);
+			}
 			error = Runtime.GetNSObject<NSError> (err);
 			return Runtime.GetNSObject<NSData> (data, true);
 		}

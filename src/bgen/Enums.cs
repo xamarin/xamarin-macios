@@ -101,6 +101,7 @@ public partial class Generator {
 			WriteDocumentation (f);
 			PrintPlatformAttributes (f);
 			PrintObsoleteAttributes (f);
+			PrintExperimentalAttribute (f);
 			print ("{0} = {1},", f.Name, f.GetRawConstantValue ());
 			var fa = AttributeManager.GetCustomAttribute<FieldAttribute> (f);
 			if (fa is null)
@@ -139,6 +140,7 @@ public partial class Generator {
 			}
 			// the *Extensions has the same version requirement as the enum itself
 			PrintPlatformAttributes (type);
+			PrintExperimentalAttribute (type);
 			print_generated_code ();
 			print ("static {1} partial class {0}Extensions {{", type.Name, visibility);
 			indent++;
