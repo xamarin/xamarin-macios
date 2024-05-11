@@ -167,7 +167,8 @@ xamarin_dispose_helper (void *a)
 	struct Block_literal *bl = (struct Block_literal *) a;
 	xamarin_gchandle_free (bl->global_handle);
 	bl->global_handle = INVALID_GCHANDLE;
-	if (atomic_fetch_sub (&bl->descriptor->ref_count, 1) == 0) {
+	// atomic_fetch_sub returns the original value before the subtraction
+	if (atomic_fetch_sub (&bl->descriptor->ref_count, 1) == 1) {
 		free (bl->descriptor); // allocated using Marshal.AllocHGlobal.
 	}
 	bl->descriptor = NULL;

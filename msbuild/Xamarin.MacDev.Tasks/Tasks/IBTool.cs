@@ -10,9 +10,6 @@ using Xamarin.Localization.MSBuild;
 using Xamarin.Messaging.Build.Client;
 using Xamarin.Utils;
 
-// Disable until we get around to enable + fix any issues.
-#nullable disable
-
 namespace Xamarin.MacDev.Tasks {
 	public class IBTool : XcodeCompilerToolTask, ICancelableTask {
 		static readonly string [] WatchAppExtensions = { "-glance.plist", "-notification.plist" };
@@ -22,14 +19,14 @@ namespace Xamarin.MacDev.Tasks {
 		public bool EnableOnDemandResources { get; set; }
 
 		[Required]
-		public ITaskItem [] InterfaceDefinitions { get; set; }
+		public ITaskItem [] InterfaceDefinitions { get; set; } = Array.Empty<ITaskItem> ();
 
 		public bool IsWatchApp { get; set; }
 		public bool IsWatch2App { get; set; }
 
 		public bool IsAppExtension { get; set; }
 
-		public string SdkRoot { get; set; }
+		public string SdkRoot { get; set; } = string.Empty;
 
 		#endregion
 
@@ -55,7 +52,7 @@ namespace Xamarin.MacDev.Tasks {
 			get { return AppleSdkSettings.XcodeVersion.Major > 7 || (AppleSdkSettings.XcodeVersion.Major == 7 && AppleSdkSettings.XcodeVersion.Minor >= 2); }
 		}
 
-		protected override void AppendCommandLineArguments (IDictionary<string, string> environment, CommandLineArgumentBuilder args, ITaskItem [] items)
+		protected override void AppendCommandLineArguments (IDictionary<string, string?> environment, CommandLineArgumentBuilder args, ITaskItem [] items)
 		{
 			environment.Add ("IBSC_MINIMUM_COMPATIBILITY_VERSION", MinimumOSVersion);
 			environment.Add ("IBC_MINIMUM_COMPATIBILITY_VERSION", MinimumOSVersion);
@@ -242,7 +239,7 @@ namespace Xamarin.MacDev.Tasks {
 				}
 
 				try {
-					var dict = PDictionary.FromFile (manifest.ItemSpec);
+					var dict = PDictionary.FromFile (manifest.ItemSpec)!;
 
 					LogWarningsAndErrors (dict, item);
 				} catch (Exception ex) {
