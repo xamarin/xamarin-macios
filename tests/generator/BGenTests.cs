@@ -1165,7 +1165,14 @@ namespace GeneratorTests {
 			bgen.AssertNoMethod ("NS.Whatever", "set_IPropAOpt", parameterTypes: "Foundation.NSObject");
 			bgen.AssertMethod ("NS.Whatever", "set_IPropBOpt", parameterTypes: "Foundation.NSObject");
 			bgen.AssertNoMethod ("NS.Whatever", "get_IPropBOpt");
-			bgen.AssertPublicMethodCount ("NS.Whatever", 9); // 6 accessors + 2 constructors + ClassHandle getter
+			bgen.AssertMethod ("NS.Whatever", ".ctor");
+			bgen.AssertMethod ("NS.Whatever", ".ctor", parameterTypes: "Foundation.NSObjectFlag");
+#if NET
+			bgen.AssertMethod ("NS.Whatever", ".ctor", parameterTypes: "ObjCRuntime.NativeHandle");
+#else
+			bgen.AssertMethod ("NS.Whatever", ".ctor", parameterTypes: "System.IntPtr");
+#endif
+			bgen.AssertPublicMethodCount ("NS.Whatever", 10); // 6 accessors + 3 constructors + ClassHandle getter
 
 			bgen.AssertMethod ("NS.IIProtocol", "get_IPropA");
 			bgen.AssertNoMethod ("NS.IIProtocol", "set_IPropA", parameterTypes: "Foundation.NSObject");
@@ -1475,6 +1482,34 @@ namespace GeneratorTests {
 					Assert.AreEqual (expectedContents, contents, $"Xml docs: If this is expected, set the WRITE_KNOWN_FAILURES=1 environment variable, run the test again, and commit the changes to the {expectedContentsPath} file.");
 				}
 			}
+		}
+
+		[Test]
+#if !NET
+		[Ignore ("This only applies to .NET")]
+#endif
+		[TestCase (Profile.iOS)]
+		[TestCase (Profile.MacCatalyst)]
+		[TestCase (Profile.macOSMobile)]
+		[TestCase (Profile.tvOS)]
+		public void PreviewAPIs (Profile profile)
+		{
+			var bgen = BuildFile (profile, false, true, "tests/preview.cs");
+
+			// Each Experimental attribute in the api definition has its own diagnostic ID (with an incremental number)
+			// Here we collect all diagnostic IDS for all the Experimental attributes in the compiled assembly,
+			// and assert that they're all present at least once.
+			var module = bgen.ApiAssembly.MainModule;
+			var allExperimentalAttributes = module.GetCustomAttributes ().Where (v => v.AttributeType.Name == "ExperimentalAttribute");
+			var allExperimentalDiagnosticIds = allExperimentalAttributes.Select (v => (string) v.ConstructorArguments [0].Value).ToHashSet ();
+			var previewApiCount = 32;
+			var expectedDiagnosticIds = Enumerable.Range (1, previewApiCount).Select (v => $"BGEN{v:0000}").ToHashSet ();
+
+			var unexpectedDiagnosticIds = allExperimentalDiagnosticIds.Except (expectedDiagnosticIds).OrderBy (v => v);
+			var missingDiagnosticIds = expectedDiagnosticIds.Except (allExperimentalDiagnosticIds).OrderBy (v => v);
+
+			Assert.That (unexpectedDiagnosticIds, Is.Empty, "No unexpected diagnostic IDs"); // you probably need to increase the previewApiCount variable above (if you added more definitions to the tests/preview.cs file).
+			Assert.That (missingDiagnosticIds, Is.Empty, "No missing diagnostic IDs");
 		}
 
 		[Test]
