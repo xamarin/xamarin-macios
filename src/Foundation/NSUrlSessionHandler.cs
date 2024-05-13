@@ -52,7 +52,7 @@ using UIKit;
 
 #nullable enable
 
-#if !MONOMAC
+#if !MONOMAC && !XAMCORE_5_0
 namespace System.Net.Http {
 #else
 namespace Foundation {

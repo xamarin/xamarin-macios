@@ -97,9 +97,11 @@ namespace Xamarin.MacDev.Tasks {
 
 			var arguments = new List<string> ();
 			var environment = default (Dictionary<string, string?>);
+			string? workingDirectory = null;
 
 			if (IsDotNet) {
 				executable = this.GetDotNetPath ();
+				workingDirectory = Path.GetDirectoryName (executable);
 
 				arguments.Add ("build");
 
@@ -121,7 +123,7 @@ namespace Xamarin.MacDev.Tasks {
 
 			arguments.Add (projectPath);
 
-			ExecuteAsync (executable, arguments, environment: environment).Wait ();
+			ExecuteAsync (executable, arguments, workingDirectory: workingDirectory, environment: environment).Wait ();
 			if (!File.Exists (outputFile)) {
 				Log.LogError (MSBStrings.E7120 /* Unable to compute the remote generator properties. Please file an issue at https://github.com/xamarin/xamarin-macios/issues/new and attach the following file: {0} */, binlog);
 				return;

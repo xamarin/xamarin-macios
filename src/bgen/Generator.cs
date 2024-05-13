@@ -44,6 +44,7 @@ using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Text;
@@ -303,6 +304,17 @@ public partial class Generator : IMemberGatherer {
 
 		return AttributeManager.HasAttribute<ProtocolAttribute> (protocol);
 	}
+
+#if NET
+	public ExperimentalAttribute GetExperimentalAttribute (ICustomAttributeProvider cu)
+	{
+		ExperimentalAttribute rv;
+		if (cu is not null && (rv = AttributeManager.GetCustomAttribute<ExperimentalAttribute> (cu)) is not null)
+			return rv;
+
+		return null;
+	}
+#endif
 
 	public BindAsAttribute GetBindAsAttribute (ICustomAttributeProvider cu)
 	{
@@ -1423,6 +1435,10 @@ public partial class Generator : IMemberGatherer {
 						continue;
 					else if (attr is NoMethodAttribute)
 						continue;
+#if NET
+					else if (attr is ExperimentalAttribute)
+						continue;
+#endif
 					else {
 						switch (attr.GetType ().Name) {
 						case "PreserveAttribute":
@@ -1555,11 +1571,13 @@ public partial class Generator : IMemberGatherer {
 			var parameters = mi.GetParameters ();
 
 			print ("");
+			PrintExperimentalAttribute (ti.Type);
 			print ("[UnmanagedFunctionPointerAttribute (CallingConvention.Cdecl)]");
 			print ("[UserDelegateType (typeof ({0}))]", ti.UserDelegate);
 			print ("unsafe internal delegate {0} {1} ({2});", ti.ReturnType, ti.DelegateName, ti.Parameters);
 			print ("");
 			print ("//\n// This class bridges native block invocations that call into C#\n//");
+			PrintExperimentalAttribute (ti.Type);
 			print ("static internal class {0} {{", ti.StaticName); indent++;
 			// it can't be conditional without fixing https://github.com/mono/linker/issues/516
 			// but we have a workaround in place because we can't fix old, binary bindings so...
@@ -1640,6 +1658,7 @@ public partial class Generator : IMemberGatherer {
 			// Now generate the class that allows us to invoke a Objective-C block from C#
 			//
 			print ("");
+			PrintExperimentalAttribute (ti.Type);
 			print ($"internal sealed class {ti.NativeInvokerName} : TrampolineBlockBase {{");
 			indent++;
 			print ("{0} invoker;", ti.DelegateName);
@@ -4542,6 +4561,7 @@ public partial class Generator : IMemberGatherer {
 
 				var del = mi.DeclaringType;
 
+				PrintExperimentalAttribute (mi.DeclaringType);
 				if (AttributeManager.HasAttribute (mi.DeclaringType, "MonoNativeFunctionWrapper"))
 					print ("[MonoNativeFunctionWrapper]\n");
 
@@ -4888,6 +4908,12 @@ public partial class Generator : IMemberGatherer {
 		include_extensions = optionalInstanceMethods.Any () || optionalInstanceProperties.Any () || requiredInstanceAsyncMethods.Any ();
 		if (include_extensions) {
 			// extension methods
+			if (BindingTouch.SupportsXmlDocumentation) {
+				print ($"/// <summary>Extension methods to the <see cref=\"I{TypeName}\" /> interface to support all the methods from the {protocol_name} protocol.</summary>");
+				print ($"/// <remarks>");
+				print ($"///   <para>The extension methods for <see cref=\"I{TypeName}\" /> interface allow developers to treat instances of the interface as having all the optional methods of the original {protocol_name} protocol. Since the interface only contains the required members, these extension methods allow developers to call the optional members of the protocol.</para>");
+				print ($"/// </remarks>");
+			}
 			PrintAttributes (type, preserve: true, advice: true);
 			print ("{1} unsafe static partial class {0}_Extensions {{", TypeName, class_visibility);
 			indent++;
@@ -4931,9 +4957,11 @@ public partial class Generator : IMemberGatherer {
 		}
 
 		PrintPreserveAttribute (type);
+		PrintExperimentalAttribute (type);
 		print ("internal unsafe sealed class {0}Wrapper : BaseWrapper, I{0} {{", TypeName);
 		indent++;
 		// ctor (IntPtr, bool)
+		PrintExperimentalAttribute (type);
 		print ("[Preserve (Conditional = true)]");
 		print ("public {0}Wrapper ({1} handle, bool owns)", TypeName, NativeHandleType);
 		print ("\t: base (handle, owns)");
@@ -5202,7 +5230,10 @@ public partial class Generator : IMemberGatherer {
 			print (attribstr);
 	}
 
-	public void PrintAttributes (ICustomAttributeProvider mi, bool platform = false, bool preserve = false, bool advice = false, bool notImplemented = false, bool bindAs = false, bool requiresSuper = false, Type inlinedType = null)
+	// Not adding the experimental attribute is bad (it would mean that an API
+	// we meant to be experimental ended up being released as stable), so it's
+	// opt-out instead of opt-in.
+	public void PrintAttributes (ICustomAttributeProvider mi, bool platform = false, bool preserve = false, bool advice = false, bool notImplemented = false, bool bindAs = false, bool requiresSuper = false, Type inlinedType = null, bool experimental = true)
 	{
 		if (platform)
 			PrintPlatformAttributes (mi as MemberInfo, inlinedType);
@@ -5216,6 +5247,18 @@ public partial class Generator : IMemberGatherer {
 			PrintBindAsAttribute (mi);
 		if (requiresSuper)
 			PrintRequiresSuperAttribute (mi);
+		if (experimental)
+			PrintExperimentalAttribute (mi);
+	}
+
+	public void PrintExperimentalAttribute (ICustomAttributeProvider mi)
+	{
+#if NET
+		var e = GetExperimentalAttribute (mi);
+		if (e is null)
+			return;
+		print ($"[Experimental (\"{e.DiagnosticId}\")]");
+#endif
 	}
 
 	void WriteDocumentation (MemberInfo info)
@@ -5641,6 +5684,9 @@ public partial class Generator : IMemberGatherer {
 					var is32BitNotSupported = Is64BitiOSOnly (type);
 					if (external) {
 						if (!disable_default_ctor) {
+							if (BindingTouch.SupportsXmlDocumentation) {
+								sw.WriteLine ($"\t\t/// <summary>Creates a new <see cref=\"{class_name.Replace ('<', '{').Replace ('>', '}')}\" /> with default values.</summary>");
+							}
 							GeneratedCode (sw, 2);
 							if (AttributeManager.HasAttribute<DesignatedDefaultCtorAttribute> (type))
 								sw.WriteLine ("\n\n[DesignatedInitializer]");
@@ -5665,6 +5711,9 @@ public partial class Generator : IMemberGatherer {
 						}
 					} else {
 						if (!disable_default_ctor) {
+							if (BindingTouch.SupportsXmlDocumentation) {
+								sw.WriteLine ($"\t\t/// <summary>Creates a new <see cref=\"{class_name.Replace ('<', '{').Replace ('>', '}')}\" /> with default values.</summary>");
+							}
 							GeneratedCode (sw, 2);
 							if (AttributeManager.HasAttribute<DesignatedDefaultCtorAttribute> (type))
 								sw.WriteLine ("\t\t[DesignatedInitializer]");
