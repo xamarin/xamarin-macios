@@ -158,11 +158,11 @@ steps:
 - ${{ if or(contains(variables['Build.Reason'], 'ResourceTrigger'), contains(variables['Build.Reason'], 'BuildCompletion')) }}:
   - download: macios
     displayName: Download PkgsVersions.json
-    patterns: '**/PkgsVersions.json'
+    artifact: PkgsVersions
 
   - download: macios
     displayName: Download WorkloadRollback.json
-    patterns: '**/WorkloadRollback.json'
+    artifact: WorkloadRollback
 
   - download: macios
     displayName: Download packages
