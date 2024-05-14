@@ -175,7 +175,7 @@ steps:
   # the default location when downloading is $(Pipeline.Workspace)/<pipeline resource identifier>/<artifact name>
   - pwsh: |
       $source = "$(Pipeline.Workspace)/macios"
-      $destination = "$(Build.SourcesDirectory)/artifacts
+      $destination = "$(Build.SourcesDirectory)/artifacts"
       New-Item -ItemType Directory -Force -Path $destination
       Write-Host "Moving content from $source to $destination"
       # move all the files from the source to the destination
