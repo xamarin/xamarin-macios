@@ -172,6 +172,11 @@ steps:
     displayName: Download test libraries
     artifact: package-test-libraries
 
+  - pwsh: |
+      Get-ChildItem -Path "$(Pipeline.Workspace)/macios" -Recurse -Force
+    displayName: 'Display downloads'
+    timeoutInMinutes: 5
+
   # the default location when downloading is $(Pipeline.Workspace)/<pipeline resource identifier>/<artifact name>
   - pwsh: |
       $source = "$(Pipeline.Workspace)/macios"
