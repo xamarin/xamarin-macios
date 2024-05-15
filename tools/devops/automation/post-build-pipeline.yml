@@ -111,7 +111,7 @@ jobs:
   # Iterate over each build we pushed and add it to the default channel.
   - powershell: |
       Write-Host "Processing platforms: '$Env:CONFIGURATION_DOTNET_PLATFORMS'"
-      $versionEndpoint = 'https://maestro-prod.westus2.cloudapp.azure.com/api/assets/darc-version?api-version=2019-01-16'
+      $versionEndpoint = 'https://maestro.dot.net/api/assets/darc-version?api-version=2019-01-16'
       $darcVersion = $(Invoke-WebRequest -Uri $versionEndpoint -UseBasicParsing).Content
       $arcadeServicesSource = 'https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-eng/nuget/v3/index.json'
       $dotnetPlatforms = "$Env:CONFIGURATION_DOTNET_PLATFORMS".Split(' ', [StringSplitOptions]::RemoveEmptyEntries)
@@ -119,7 +119,7 @@ jobs:
       foreach ($platform in $dotnetPlatforms) {
         $envVar = "ENVIRONMENT_REDIRECT_$($platform.ToUpper())_BARBUILDID"
         $barBuildId = [Environment]::GetEnvironmentVariable($envVar)
-        & $(Agent.ToolsDirectory)\darc\darc add-build-to-channel --default-channels --id $barBuildId --publishing-infra-version 3 --skip-assets-publishing --password $(MaestroAccessToken) --azdev-pat $(publishing-dnceng-devdiv-code-r-build-re)
+        & $(Agent.ToolsDirectory)\darc\darc add-build-to-channel --default-channels --id $barBuildId --publishing-infra-version 3 --password $(MaestroAccessToken) --azdev-pat $(publishing-dnceng-devdiv-code-r-build-re)
         Write-Host "Added $($platform) bar build id: $($barBuildId)"
       }
     displayName: Add builds to default darc channel
