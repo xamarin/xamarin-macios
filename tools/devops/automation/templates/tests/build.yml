@@ -155,7 +155,7 @@ steps:
   condition: always()
 
 # use a diff step depending if we have been trigger by a pipeline of by a PR/Commit
-- ${{ if or(contains(variables['Build.Reason'], 'ResourceTrigger'), contains(variables['Build.Reason'], 'BuildCompletion')) }}:
+- ${{ if or(contains(variables['Build.Reason'], 'ResourceTrigger'), contains(variables['Build.Reason'], 'BuildCompletion'), contains(variables['Build.DefinitionName'], 'xamarin-macios-ci-tests'), contains(variables['Build.DefinitionName'], 'xamarin-macios-pr-tests')) }}:
   - download: macios
     displayName: Download PkgsVersions.json
     artifact: PkgsVersions
