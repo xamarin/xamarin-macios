@@ -145,44 +145,80 @@ steps:
     AUTH_TOKEN_VSENG_XAMARIN_MAC_DEVICES_P12: ${{ parameters.xqaCertPass }}
     AUTH_TOKEN_VSENG_XAMARIN_MAC_DEVICES_2_P12: ${{ parameters.xqaCertPass }}
 
+# this could be a template, which would make everything a lot simpler BUT alas we found a bug in Azure Devops (bugs++). 
+# if we use a template here azure devops will throw an exception due to a foreign key constraint error in their PK_Task_tbl_PlanContext.
+# The simplest way to workaround their bad code is to remove the template and that way there wont be a task issue. I suspect that
+# the problem resides in the fact that this is a template within a template within a matrix. 
 - bash: |
     sudo rm -Rf $(Build.SourcesDirectory)/artifacts
   displayName: "Remove artifacts"
   condition: always()
 
-- task: DownloadPipelineArtifact@2
-  displayName: Download PkgsVersions.json
-  inputs:
-    allowFailedBuilds: true
-    patterns: '**/PkgsVersions.json'
-    path: $(Build.SourcesDirectory)/artifacts
+# use a diff step depending if we have been trigger by a pipeline of by a PR/Commit
+- ${{ if or(contains(variables['Build.Reason'], 'ResourceTrigger'), contains(variables['Build.Reason'], 'BuildCompletion')) }}:
+  - download: macios
+    displayName: Download PkgsVersions.json
+    artifact: PkgsVersions
 
-- task: DownloadPipelineArtifact@2
-  displayName: Download WorkloadRollback.json
-  inputs:
-    allowFailedBuilds: true
-    patterns: '**/WorkloadRollback.json'
-    path: $(Build.SourcesDirectory)/artifacts
+  - download: macios
+    displayName: Download WorkloadRollback.json
+    artifact: WorkloadRollback
 
-- task: DownloadPipelineArtifact@2
-  displayName: Download packages 
-  inputs:
-    allowFailedBuilds: true
-    artifactName: not-signed-package
-    path: $(Build.SourcesDirectory)/artifacts/not-signed-package
+  - download: macios
+    displayName: Download packages
+    artifact: not-signed-package
 
-- task: DownloadPipelineArtifact@2
-  displayName: Download test libraries
-  inputs:
-    allowFailedBuilds: true
-    artifactName: package-test-libraries
-    path: $(Build.SourcesDirectory)/artifacts/package-test-libraries
+  - download: macios
+    displayName: Download test libraries
+    artifact: package-test-libraries
 
+  - pwsh: |
+      Get-ChildItem -Path "$(Pipeline.Workspace)/macios" -Recurse -Force
+    displayName: 'Display downloads'
+    timeoutInMinutes: 5
+
+  # the default location when downloading is $(Pipeline.Workspace)/<pipeline resource identifier>/<artifact name>
+  - bash: |
+      source="$PIPELINE_WORKSPACE/macios"
+      destination="$BUILD_SOURCESDIRECTORY/artifacts"
+      # move all the files from the source to the destination
+      mv -fv "$source" "$destination"
+    displayName: Move artifacts to the expected location
+
+- ${{ else }}:
+  - task: DownloadPipelineArtifact@2
+    displayName: Download PkgsVersions.json
+    inputs:
+      allowFailedBuilds: true
+      patterns: '**/PkgsVersions.json'
+      path: $(Build.SourcesDirectory)/artifacts
+
+  - task: DownloadPipelineArtifact@2
+    displayName: Download WorkloadRollback.json
+    inputs:
+      allowFailedBuilds: true
+      patterns: '**/WorkloadRollback.json'
+      path: $(Build.SourcesDirectory)/artifacts
+
+  - task: DownloadPipelineArtifact@2
+    displayName: Download packages
+    inputs:
+      allowFailedBuilds: true
+      artifactName: not-signed-package
+      path: $(Build.SourcesDirectory)/artifacts/not-signed-package
+
+  - task: DownloadPipelineArtifact@2
+    displayName: Download test libraries
+    inputs:
+      allowFailedBuilds: true
+      artifactName: package-test-libraries
+      path: $(Build.SourcesDirectory)/artifacts/package-test-libraries
+
+# print the downloads to make our life easier on debug
 - pwsh: |
     Get-ChildItem -Path $(Build.SourcesDirectory)/artifacts -Recurse -Force
   displayName: 'Display downloads'
   timeoutInMinutes: 5
-
 
 - pwsh: |
     $dir = "$(Build.SourcesDirectory)/artifacts"
