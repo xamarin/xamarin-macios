@@ -46,6 +46,19 @@ steps:
   name: configure_platforms
   displayName: 'Configure platforms'
 
+- ${{ if or(contains(variables['Build.Reason'], 'ResourceTrigger'), contains(variables['Build.Reason'], 'BuildCompletion')) }}:
+  - script: |
+      echo $(resources.pipeline.macios.pipelineID)
+      echo $(resources.pipeline.macios.runName)
+      echo $(resources.pipeline.macios.runID)
+      echo $(resources.pipeline.macios.runURI)
+      echo $(resources.pipeline.macios.sourceBranch)
+      echo $(resources.pipeline.macios.sourceCommit)
+      echo $(resources.pipeline.macios.sourceProvider)
+      echo $(resources.pipeline.macios.requestedFor)
+      echo $(resources.pipeline.macios.requestedForID)
+    displayName: Test Vars trigger
+
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/MaciosCI.psd1
     $jsonPath = Join-Path -Path "$(Build.ArtifactStagingDirectory)" -ChildPath "configuration.json"
