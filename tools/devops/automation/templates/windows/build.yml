@@ -57,6 +57,10 @@ steps:
     displayName: Download not-signed-package
     artifact: not-signed-package
 
+  - download: macios
+    displayName: Download WorkloadRollback.json
+    artifact: WorkloadRollback
+
   - pwsh: |
       Get-ChildItem -Path "$(Pipeline.Workspace)/macios" -Recurse -Force
     displayName: 'Display downloads'
