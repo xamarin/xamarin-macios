@@ -110,6 +110,9 @@ steps:
     displayName: Download build-configuration
     artifact: build-configuration
 
+  - download: macios
+    displayName: Download not-signed-package
+    artifact: not-signed-package
 
   - pwsh: |
       Get-ChildItem -Path "$(Pipeline.Workspace)/macios" -Recurse -Force
