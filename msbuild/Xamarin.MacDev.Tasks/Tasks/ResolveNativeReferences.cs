@@ -190,21 +190,10 @@ namespace Xamarin.MacDev.Tasks {
 
 			// (compressed) xcframework
 			if (name.EndsWith (".xcframework", StringComparison.OrdinalIgnoreCase) || name.EndsWith (".xcframework.zip", StringComparison.OrdinalIgnoreCase)) {
-				if (!TryResolveXCFramework (Log, TargetFrameworkMoniker, SdkIsSimulator, Architectures, name, GetIntermediateDecompressionDir (item), createdFiles, out var frameworkPath))
+				if (!TryResolveXCFramework (Log, TargetFrameworkMoniker, SdkIsSimulator, Architectures, name, GetIntermediateDecompressionDir (item), createdFiles, out var nativeLibraryPath))
 					return;
 				var nr = new TaskItem (item);
-				nr.ItemSpec = GetActualLibrary (frameworkPath);
-				if (nr.ItemSpec.EndsWith (".a", StringComparison.OrdinalIgnoreCase)) {
-					nr.SetMetadata ("Kind", "Static");
-					nr.SetMetadata ("PublishFolderType", "StaticLibrary");
-				} else if (nr.ItemSpec.EndsWith (".dylib", StringComparison.OrdinalIgnoreCase)) {
-					nr.SetMetadata ("Kind", "Dynamic");
-					nr.SetMetadata ("PublishFolderType", "DynamicLibrary");
-				} else {
-					nr.SetMetadata ("Kind", "Framework");
-					nr.SetMetadata ("PublishFolderType", "AppleFramework");
-				}
-				nr.SetMetadata ("RelativePath", Path.Combine (FrameworksDirectory, Path.GetFileName (Path.GetDirectoryName (nr.ItemSpec))));
+				SetMetadataNativeLibrary (nr, nativeLibraryPath);
 				native_frameworks.Add (nr);
 				return;
 			}
@@ -284,6 +273,21 @@ namespace Xamarin.MacDev.Tasks {
 			return true;
 		}
 
+		void SetMetadataNativeLibrary (ITaskItem item, string nativeLibraryPath)
+		{
+			item.ItemSpec = GetActualLibrary (nativeLibraryPath);
+			if (item.ItemSpec.EndsWith (".a", StringComparison.OrdinalIgnoreCase)) {
+				item.SetMetadata ("Kind", "Static");
+				item.SetMetadata ("PublishFolderType", "StaticLibrary");
+			} else if (item.ItemSpec.EndsWith (".dylib", StringComparison.OrdinalIgnoreCase)) {
+				item.SetMetadata ("Kind", "Dynamic");
+				item.SetMetadata ("PublishFolderType", "DynamicLibrary");
+			} else {
+				item.SetMetadata ("Kind", "Framework");
+				item.SetMetadata ("PublishFolderType", "AppleFramework");
+			}
+			item.SetMetadata ("RelativePath", Path.Combine (FrameworksDirectory, Path.GetFileName (Path.GetDirectoryName (item.ItemSpec))));
+		}
 
 		void ProcessSidecar (ITaskItem r, string resources, List<ITaskItem> native_frameworks, List<string> createdFiles)
 		{
@@ -298,12 +302,9 @@ namespace Xamarin.MacDev.Tasks {
 				var name = referenceNode.Attributes ["Name"].Value;
 				switch (Path.GetExtension (name)) {
 				case ".xcframework": {
-					if (!TryResolveXCFramework (Log, TargetFrameworkMoniker, SdkIsSimulator, Architectures, resources, name, GetIntermediateDecompressionDir (resources), createdFiles, out var frameworkPath))
+					if (!TryResolveXCFramework (Log, TargetFrameworkMoniker, SdkIsSimulator, Architectures, resources, name, GetIntermediateDecompressionDir (resources), createdFiles, out var nativeLibraryPath))
 						continue;
-					t.ItemSpec = GetActualLibrary (frameworkPath);
-					t.SetMetadata ("Kind", "Framework");
-					t.SetMetadata ("PublishFolderType", "AppleFramework");
-					t.SetMetadata ("RelativePath", Path.Combine (FrameworksDirectory, Path.GetFileName (Path.GetDirectoryName (t.ItemSpec))));
+					SetMetadataNativeLibrary (t, nativeLibraryPath);
 					break;
 				}
 				case ".framework": {
@@ -362,17 +363,17 @@ namespace Xamarin.MacDev.Tasks {
 		}
 
 		/// <summary>
-		/// Resolve an xcframework into a framework for a given platform. 
+		/// Resolve an xcframework into a native library for a given platform.
 		/// </summary>
 		/// <param name="log">The log to log any errors and/or warnings.</param>
 		/// <param name="isSimulator">If we're targeting the simulator</param>
 		/// <param name="targetFrameworkMoniker">The target framework moniker.</param>
 		/// <param name="architectures">The target architectures</param>
 		/// <param name="path">Either the path to a compressed xcframework (*.xcframework.zip), or an xcframework (*.xcframework).</param>
-		/// <param name="frameworkPath">A full path to the resolved framework within the xcframework. If 'resourcePath' is compressed, this will point to where the framework is decompressed on disk.</param>
+		/// <param name="nativeLibraryPath">A full path to the resolved native library within the xcframework. If 'resourcePath' is compressed, this will point to where the native library is decompressed on disk.</param>
 		/// <param name="intermediateDecompressionDir"></param>
-		/// <returns>True if a framework was succsesfully found. Otherwise false, and an error will have been printed to the log.</returns>
-		public static bool TryResolveXCFramework (TaskLoggingHelper log, string targetFrameworkMoniker, bool isSimulator, string? architectures, string path, string intermediateDecompressionDir, List<string> createdFiles, [NotNullWhen (true)] out string? frameworkPath)
+		/// <returns>True if a native library was successfully found. Otherwise false, and an error will have been printed to the log.</returns>
+		public static bool TryResolveXCFramework (TaskLoggingHelper log, string targetFrameworkMoniker, bool isSimulator, string? architectures, string path, string intermediateDecompressionDir, List<string> createdFiles, [NotNullWhen (true)] out string? nativeLibraryPath)
 		{
 			string resourcePath;
 			string xcframework;
@@ -384,11 +385,11 @@ namespace Xamarin.MacDev.Tasks {
 				resourcePath = Path.GetDirectoryName (path);
 				xcframework = Path.GetFileName (path);
 			}
-			return TryResolveXCFramework (log, targetFrameworkMoniker, isSimulator, architectures, resourcePath, xcframework, intermediateDecompressionDir, createdFiles, out frameworkPath);
+			return TryResolveXCFramework (log, targetFrameworkMoniker, isSimulator, architectures, resourcePath, xcframework, intermediateDecompressionDir, createdFiles, out nativeLibraryPath);
 		}
 
 		/// <summary>
-		/// Resolve an xcframework into a framework for a given platform. 
+		/// Resolve an xcframework into a native library for a given platform.
 		/// </summary>
 		/// <param name="log">The log to log any errors and/or warnings.</param>
 		/// <param name="isSimulator">If we're targeting the simulator</param>
@@ -396,12 +397,12 @@ namespace Xamarin.MacDev.Tasks {
 		/// <param name="architectures">The target architectures</param>
 		/// <param name="resourcePath">Either the path to a compressed xcframework, or the containing directory of an xcframework.</param>
 		/// <param name="xcframework">The name of the xcframework.</param>
-		/// <param name="frameworkPath">A full path to the resolved .framework within the xcframework. If 'resourcePath' is compressed, this will point to where the framework is decompressed on disk.</param>
+		/// <param name="nativeLibraryPath">A full path to the resolved native library within the xcframework. If 'resourcePath' is compressed, this will point to where the native library is decompressed on disk.</param>
 		/// <param name="intermediateDecompressionDir"></param>
-		/// <returns>True if a framework was succsesfully found. Otherwise false, and an error will have been printed to the log.</returns>
-		public static bool TryResolveXCFramework (TaskLoggingHelper log, string targetFrameworkMoniker, bool isSimulator, string? architectures, string resourcePath, string xcframework, string intermediateDecompressionDir, List<string> createdFiles, [NotNullWhen (true)] out string? frameworkPath)
+		/// <returns>True if a native library was successfully found. Otherwise false, and an error will have been printed to the log.</returns>
+		public static bool TryResolveXCFramework (TaskLoggingHelper log, string targetFrameworkMoniker, bool isSimulator, string? architectures, string resourcePath, string xcframework, string intermediateDecompressionDir, List<string> createdFiles, [NotNullWhen (true)] out string? nativeLibraryPath)
 		{
-			frameworkPath = null;
+			nativeLibraryPath = null;
 
 			try {
 				if (!TryGetInfoPlist (log, resourcePath, xcframework, out var plist))
@@ -409,19 +410,19 @@ namespace Xamarin.MacDev.Tasks {
 
 				var isCompressed = CompressionHelper.IsCompressed (resourcePath);
 				var xcframeworkPath = isCompressed ? resourcePath : Path.Combine (resourcePath, xcframework);
-				if (!TryResolveXCFramework (log, plist, xcframeworkPath, targetFrameworkMoniker, isSimulator, architectures!, out var frameworkRelativePath))
+				if (!TryResolveXCFramework (log, plist, xcframeworkPath, targetFrameworkMoniker, isSimulator, architectures!, out var nativeLibraryRelativePath))
 					return false;
 
 				if (!isCompressed) {
-					frameworkPath = Path.Combine (resourcePath, xcframework, frameworkRelativePath);
+					nativeLibraryPath = Path.Combine (resourcePath, xcframework, nativeLibraryRelativePath);
 					return true;
 				}
 
-				var zipResource = Path.Combine (xcframework, Path.GetDirectoryName (frameworkRelativePath));
+				var zipResource = Path.Combine (xcframework, Path.GetDirectoryName (nativeLibraryRelativePath));
 				if (!CompressionHelper.TryDecompress (log, resourcePath, zipResource, intermediateDecompressionDir, createdFiles, out var decompressedPath))
 					return false;
 
-				frameworkPath = Path.Combine (intermediateDecompressionDir, zipResource);
+				nativeLibraryPath = Path.Combine (intermediateDecompressionDir, xcframework, nativeLibraryRelativePath);
 
 				return true;
 			} catch (Exception) {
@@ -432,7 +433,7 @@ namespace Xamarin.MacDev.Tasks {
 		}
 
 		/// <summary>
-		/// Resolve an xcframework into a framework for a given platform. 
+		/// Resolve an xcframework into a native library for a given platform.
 		/// </summary>
 		/// <param name="log">The log to log any errors and/or warnings.</param>
 		/// <param name="plist">The plist inside the xcframework.</param>
@@ -440,11 +441,11 @@ namespace Xamarin.MacDev.Tasks {
 		/// <param name="isSimulator">If we're targeting the simulator</param>
 		/// <param name="targetFrameworkMoniker">The target framework moniker.</param>
 		/// <param name="architectures">The target architectures</param>
-		/// <param name="frameworkPath">A relative path to the resolved framework within the xcframework.</param>
-		/// <returns>True if a framework was succsesfully found. Otherwise false, and an error will have been printed to the log.</returns>
-		internal static bool TryResolveXCFramework (TaskLoggingHelper log, PDictionary plist, string xcframeworkPath, string targetFrameworkMoniker, bool isSimulator, string architectures, [NotNullWhen (true)] out string? frameworkPath)
+		/// <param name="frameworkPath">A relative path to the resolved native library within the xcframework.</param>
+		/// <returns>True if a native library was successfully found. Otherwise false, and an error will have been printed to the log.</returns>
+		internal static bool TryResolveXCFramework (TaskLoggingHelper log, PDictionary plist, string xcframeworkPath, string targetFrameworkMoniker, bool isSimulator, string architectures, [NotNullWhen (true)] out string? nativeLibraryPath)
 		{
-			frameworkPath = null;
+			nativeLibraryPath = null;
 			var platform = PlatformFrameworkHelper.GetFramework (targetFrameworkMoniker);
 			string platformName;
 			switch (platform) {
@@ -507,7 +508,7 @@ namespace Xamarin.MacDev.Tasks {
 				}
 				var library_path = (PString?) item ["LibraryPath"];
 				var library_identifier = (PString?) item ["LibraryIdentifier"];
-				frameworkPath = GetActualLibrary (Path.Combine (library_identifier!, library_path!));
+				nativeLibraryPath = GetActualLibrary (Path.Combine (library_identifier!, library_path!));
 				return true;
 			}
 
