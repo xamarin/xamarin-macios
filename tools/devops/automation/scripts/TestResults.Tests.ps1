@@ -74,6 +74,11 @@ Describe "TestResults tests" {
 "@
         $stageDependencies = @"
 {    
+  "build_macos_tests": {
+    "build_macos_tests_job": {
+      "result": "Succeeded"
+    }
+  },
   "configure_build": {
     "configure": {
       "outputs": {
@@ -152,6 +157,11 @@ Describe "TestResults tests" {
 
         $stageDependenciesWithMissingResults = @"
 {
+  "build_macos_tests": {
+    "build_macos_tests_job": {
+      "result": "Succeeded"
+    }
+  },
   "configure_build": {
     "configure": {
       "outputs": {
@@ -193,6 +203,31 @@ Describe "TestResults tests" {
     }
 }
 "@
+        $stageDependenciesWithBuildFailure = @"
+{
+  "build_macos_tests": {
+    "build_macos_tests_job": {
+      "outputs": {
+        "fix_commit.GIT_HASH": "8a881722232ef37ed73f8926acd113a6ccc8eafd",
+        "configuration.BuildNugets": "True",
+        "configuration.BuildPkgs": "True",
+        "configuration.PR_ID": "20434",
+        "configuration.RunSampleTests": "",
+        "configuration.SignPkgs": "True",
+        "build.TESTS_BOT": "XAMBOT-1001.Sonoma"
+      },
+      "identifier": null,
+      "name": "build_macos_tests_job",
+      "attempt": 1,
+      "startTime": null,
+      "finishTime": null,
+      "state": "NotStarted",
+      "result": "Failed"
+    }
+  }
+}
+"@
+
     }
 
     It "is correctly created" {
@@ -507,6 +542,30 @@ Describe "TestResults tests" {
 :white_check_mark: dotnettests (macOS): All 6 tests passed. [Html Report (VSDrops)](vsdropsIndex/simulator_testsdotnettests_macOS-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-simulator_testsdotnettests_macOS-1&api-version=6.0&`$format=zip)
 :white_check_mark: dotnettests (Multiple platforms): All 7 tests passed. [Html Report (VSDrops)](vsdropsIndex/simulator_testsdotnettests_Multiple-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-simulator_testsdotnettests_Multiple-1&api-version=6.0&`$format=zip)
 :white_check_mark: dotnettests (tvOS): All 4 tests passed. [Html Report (VSDrops)](vsdropsIndex/simulator_testsdotnettests_tvOS-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-simulator_testsdotnettests_tvOS-1&api-version=6.0&`$format=zip)
+
+[comment]: <> (This is a test result report added by Azure DevOps)
+"
+        }
+
+        It "computes the right summary with build failure" {
+            $VerbosePreference = "Continue"
+            $Env:MyVerbosePreference = 'Continue'
+
+
+            $parallelResults = New-ParallelTestsResults -Path "path" -StageDependencies "$stageDependenciesWithBuildFailure" -Context "context" -VSDropsIndex "vsdropsIndex"
+
+            $parallelResults.IsSuccess() | Should -Be $false
+
+            $sb = [System.Text.StringBuilder]::new()
+            $parallelResults.WriteComment($sb)
+
+            $content = $sb.ToString()
+
+            Write-Host $content.Replace("&$", "&``$")
+
+            $content | Should -Be "# :x: Build failure :x:
+
+Build result: [Failed](/_build/index?buildId=)
 
 [comment]: <> (This is a test result report added by Azure DevOps)
 "
