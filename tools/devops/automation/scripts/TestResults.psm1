@@ -247,6 +247,7 @@ class TestResult {
 }
 
 class ParallelTestsResults {
+    [string] $BuildFailureMessage
     [string] $Context
     [string] $TestPrefix
     [string] $VSDropsIndex
@@ -262,6 +263,12 @@ class ParallelTestsResults {
         $this.Context = $context
         $this.TestPrefix = $testPrefix
         $this.VSDropsIndex = $vsDropsIndex
+    }
+
+    ParallelTestsResults (
+        [string] $buildFailureMessage
+    ) {
+        $this.BuildFailureMessage = $buildFailureMessage
     }
 
     [object] GetFailingTests() {
@@ -285,6 +292,9 @@ class ParallelTestsResults {
     }
 
     [bool] IsSuccess() {
+        if (-not [string]::IsNullOrEmpty($this.BuildFailureMessage)) {
+            return $false
+        }
         $failingTests = $this.GetFailingTests()
         return $failingTests.Count -eq 0
     }
@@ -332,6 +342,16 @@ class ParallelTestsResults {
     }
 
     [void] WriteComment($stringBuilder) {
+        if (-not [string]::IsNullOrEmpty($this.BuildFailureMessage)) {
+            $pipelineLink = "$Env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI$Env:SYSTEM_TEAMPROJECT/_build/index?buildId=$Env:BUILD_BUILDID"
+            $stringBuilder.AppendLine("# :x: Build failure :x:")
+            $stringBuilder.AppendLine()
+            $stringBuilder.AppendLine("Build result: [$($this.BuildFailureMessage)]($($pipelineLink))")
+            $stringBuilder.AppendLine()
+            $stringBuilder.AppendLine("[comment]: <> (This is a test result report added by Azure DevOps)")
+            return
+        }
+
         $stringBuilder.AppendLine("# Test results")
         # We need to add a small summary at the top. We check if it was a success, if that is
         # the case, we just need to state it and
@@ -457,6 +477,13 @@ function New-ParallelTestsResults {
     Get-ChildItem $Path -Recurse *.md | Select-Object -Property FullName | Format-Table | Out-String | Write-Host
 
     $stageDep = $StageDependencies | ConvertFrom-Json -AsHashtable
+
+    $buildResult = $stageDep.build_macos_tests.build_macos_tests_job.result
+    Write-Host "Build result: $buildResult"
+    if ($buildResult -ne "Succeeded") {
+        Write-Host "Build did not succeed: $buildResult"
+        return [ParallelTestsResults]::new($buildResult)
+    }
 
     $matrix = $stageDep.configure_build.configure.outputs["test_matrix.TEST_MATRIX"] | ConvertFrom-Json -AsHashtable
     $suites = [System.Collections.SortedList]::new()
