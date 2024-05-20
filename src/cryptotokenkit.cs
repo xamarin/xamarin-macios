@@ -193,7 +193,7 @@ namespace CryptoTokenKit {
 	[Experimental ("APL0001")]
 #endif
 	[iOS (10, 0), Mac (10, 12), MacCatalyst (13, 1), TV (11, 0), Watch (4, 0)]
-	[Protocol]
+	[Protocol, Model]
 	[BaseType (typeof(NSObject))]
 	interface TKTokenDelegate
 	{
@@ -215,7 +215,7 @@ namespace CryptoTokenKit {
 	[Experimental ("APL0001")]
 #endif
 	[iOS (10, 0), Mac (10, 12), MacCatalyst (13, 1), TV (11, 0), Watch (4, 0)]
-	[Protocol]
+	[Protocol, Model]
 	[BaseType (typeof(NSObject))]
 	interface TKTokenDriverDelegate
 	{
@@ -237,7 +237,7 @@ namespace CryptoTokenKit {
 	[Experimental ("APL0001")]
 #endif
 	[iOS (10, 0), Mac (10, 12), MacCatalyst (13, 1), TV (11, 0), Watch (4, 0)]
-	[Protocol]
+	[Protocol, Model]
 	[BaseType (typeof(NSObject))]
 	interface TKTokenSessionDelegate
 	{
