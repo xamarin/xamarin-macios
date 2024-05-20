@@ -365,6 +365,11 @@ namespace Introspection {
 				case "MKPolygonRenderer":
 				case "MKPolylineRenderer":
 				case "AVAudioPcmBuffer":
+				case "TKSmartCardPinFormat":
+				case "TKSmartCardUserInteraction":
+				case "TKSmartCardUserInteractionForPinOperation":
+				case "TKSmartCardUserInteractionForSecurePinChange":
+				case "TKSmartCardUserInteractionForSecurePinVerification":
 					return true;
 				}
 				break;
@@ -534,6 +539,11 @@ namespace Introspection {
 				case "MKPolygonRenderer":
 				case "MKPolylineRenderer":
 				case "AVAudioPcmBuffer":
+				case "TKSmartCardPinFormat":
+				case "TKSmartCardUserInteraction":
+				case "TKSmartCardUserInteractionForPinOperation":
+				case "TKSmartCardUserInteractionForSecurePinChange":
+				case "TKSmartCardUserInteractionForSecurePinVerification":
 					return true;
 				}
 				break;
