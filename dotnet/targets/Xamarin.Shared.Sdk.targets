@@ -2131,6 +2131,12 @@
 		<Error Condition="'$(_IsValidRuntimeIdentifier)' != 'true'" Text="The RuntimeIdentifier '$(RuntimeIdentifier)' is invalid." />
 	</Target>
 
+	<Target Name="_ValidateGarbageCollector"
+		Condition="'$(ServerGarbageCollection)' == 'true'"
+		BeforeTargets="Build;ResolvedFrameworkReference;ResolveRuntimePackAssets">
+		<Error Text=".NET for $(_PlatformName) does not support server garbage collection. Please don't set the 'ServerGarbageCollection' property." />
+	</Target>
+
 	<!-- This target can be removed in .NET 9 (when we stop supporting the compat logic to make the invalid TPV just a warning instead of an error) -->
 	<Target Name="_XamarinValidateTargetPlatformVersion"
 		BeforeTargets="Build;ResolvedFrameworkReference;ResolveRuntimePackAssets"
