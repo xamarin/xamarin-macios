@@ -35,7 +35,7 @@
     <TestLibrariesInput Include="$(TestLibrariesDirectory)\libframework.m" />
     <TestLibrariesOutput Include="$(TestLibrariesDirectory)\.libs\XTest.xcframework" />
 
-    <NativeReference Include="$(TestLibrariesDirectory)\.libs\XTest.xcframework">
+    <NativeReference Include="$(TestLibrariesDirectory)\.libs\XTest.xcframework/">
       <Kind>Framework</Kind>
       <SmartLink>False</SmartLink>
       <Frameworks>CoreLocation ModelIO</Frameworks>
