@@ -76,7 +76,7 @@ public interface Protocol {
     [Export ("initWithValue:")]
     IntPtr Constructor (IntPtr value);
 
-    [BindAs ("Create")]
+    [Bind ("Create")]
     [Export ("initWithPlanet:")]
     IntPtr Constructor ();
 }
