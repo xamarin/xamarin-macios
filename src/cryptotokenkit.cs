@@ -595,6 +595,11 @@ namespace CryptoTokenKit {
 	[BaseType (typeof(TKTokenSession))]
 	interface TKSmartCardTokenSession
 	{
+		// Re-implemented from base class.
+		[Export ("initWithToken:")]
+		[DesignatedInitializer]
+		NativeHandle Constructor (TKToken token);
+
 		[Export ("smartCard")]
 		TKSmartCard SmartCard { get; }
 	}
