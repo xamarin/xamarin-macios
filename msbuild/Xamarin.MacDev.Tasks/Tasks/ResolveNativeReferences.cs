@@ -352,6 +352,7 @@ namespace Xamarin.MacDev.Tasks {
 				t.SetMetadata ("ForceLoad", "False");
 				t.SetMetadata ("NeedsGccExceptionHandling", "False");
 				t.SetMetadata ("IsCxx", "False");
+				t.SetMetadata ("LinkWithSwiftSystemLibraries", "False");
 				t.SetMetadata ("SmartLink", "True");
 
 				// values from manifest, overriding defaults if provided
