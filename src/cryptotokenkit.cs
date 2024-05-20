@@ -544,6 +544,7 @@ namespace CryptoTokenKit {
 #endif
 	[iOS (13, 0), Mac (10, 10), MacCatalyst (13, 1), TV (13, 0), Watch (8, 0)]
 	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
 	interface TKSmartCardSlotManager
 	{
 		[Static]
