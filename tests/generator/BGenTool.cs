@@ -319,12 +319,12 @@ namespace Xamarin.Tests {
 
 			var t = assembly.MainModule.Types.First ((v) => v.FullName == typename);
 			var actual = t.Methods.Where ((v) => {
-				if (v.IsPrivate || v.IsFamily || v.IsFamilyAndAssembly)
+				if (v.IsPrivate || v.IsAssembly || v.IsFamilyAndAssembly)
 					return false;
 				return true;
 			});
 			if (actual.Count () != count) {
-				Assert.Fail ($"Expected {count} publicly accessible method(s) in {typename}, found {actual} publicly accessible method(s): {message}\n\t{string.Join ("\n\t", actual.Select (v => v.FullName).OrderBy (v => v))}");
+				Assert.Fail ($"Expected {count} publicly accessible method(s) in {typename}, found {actual.Count ()} publicly accessible method(s): {message}\n\t{string.Join ("\n\t", actual.Select (v => v.FullName).OrderBy (v => v))}");
 			}
 		}
 

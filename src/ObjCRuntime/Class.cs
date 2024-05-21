@@ -792,29 +792,26 @@ namespace ObjCRuntime {
 		internal static extern void objc_registerClassPair (IntPtr cls);
 
 		[DllImport (Messaging.LIBOBJC_DYLIB)]
-		[return: MarshalAs (UnmanagedType.U1)]
-		static extern bool class_addIvar (IntPtr cls, IntPtr name, IntPtr size, byte alignment, IntPtr types);
+		static extern byte class_addIvar (IntPtr cls, IntPtr name, IntPtr size, byte alignment, IntPtr types);
 
 		internal static bool class_addIvar (IntPtr cls, string name, IntPtr size, byte alignment, string types)
 		{
 			using var namePtr = new TransientString (name);
 			using var typesPtr = new TransientString (types);
-			return class_addIvar (cls, namePtr, size, alignment, typesPtr);
+			return class_addIvar (cls, namePtr, size, alignment, typesPtr) != 0;
 		}
 
 		[DllImport (Messaging.LIBOBJC_DYLIB)]
-		[return: MarshalAs (UnmanagedType.U1)]
-		static extern bool class_addMethod (IntPtr cls, IntPtr name, IntPtr imp, IntPtr types);
+		static extern byte class_addMethod (IntPtr cls, IntPtr name, IntPtr imp, IntPtr types);
 
 		internal static bool class_addMethod (IntPtr cls, IntPtr name, IntPtr imp, string types)
 		{
 			using var typesPtr = new TransientString (types);
-			return class_addMethod (cls, name, imp, typesPtr);
+			return class_addMethod (cls, name, imp, typesPtr) != 0;
 		}
 
 		[DllImport (Messaging.LIBOBJC_DYLIB)]
-		[return: MarshalAs (UnmanagedType.U1)]
-		internal extern static bool class_addProtocol (IntPtr cls, IntPtr protocol);
+		internal extern static byte class_addProtocol (IntPtr cls, IntPtr protocol);
 
 		[DllImport (Messaging.LIBOBJC_DYLIB)]
 		internal static extern IntPtr class_getName (IntPtr cls);
@@ -841,8 +838,7 @@ namespace ObjCRuntime {
 		internal extern static IntPtr class_getInstanceMethod (IntPtr cls, IntPtr sel);
 
 		[DllImport (Messaging.LIBOBJC_DYLIB, CharSet = CharSet.Ansi)]
-		[return: MarshalAs (UnmanagedType.U1)]
-		extern unsafe static bool class_addProperty (IntPtr cls, IntPtr name, IntPtr* attributes, int count);
+		extern unsafe static byte class_addProperty (IntPtr cls, IntPtr name, IntPtr* attributes, int count);
 
 		internal static bool class_addProperty (IntPtr cls, string name, objc_attribute_prop [] attributes, int count)
 		{
@@ -851,7 +847,7 @@ namespace ObjCRuntime {
 			bool retval = false;
 			unsafe {
 				fixed (IntPtr* ptrsPtr = ptrs) {
-					retval = class_addProperty (cls, namePtr, ptrsPtr, count);
+					retval = class_addProperty (cls, namePtr, ptrsPtr, count) != 0;
 				}
 			}
 			FreeStringPtrs (ptrs);

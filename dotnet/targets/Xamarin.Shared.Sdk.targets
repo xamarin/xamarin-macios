@@ -1479,7 +1479,7 @@
 		</_LinkNativeExecutableDependsOn>
 	</PropertyGroup>
 
-	<Target Name="_AddSwiftLinkerFlags" Condition="'$(LinkWithSwiftSystemLibraries)' == 'true'" DependsOnTargets="_DetectSdkLocations">
+	<Target Name="_AddSwiftLinkerFlags" DependsOnTargets="_DetectSdkLocations">
 		<PropertyGroup>
 			<_SwiftTargetPlatform Condition="'$(_PlatformName)' == 'iOS' And '$(_SdkIsSimulator)' == 'true'">iphonesimulator</_SwiftTargetPlatform>
 			<_SwiftTargetPlatform Condition="'$(_PlatformName)' == 'iOS' And '$(_SdkIsSimulator)' != 'true'">iphoneos</_SwiftTargetPlatform>
@@ -1487,8 +1487,15 @@
 			<_SwiftTargetPlatform Condition="'$(_PlatformName)' == 'tvOS' And '$(_SdkIsSimulator)' != 'true'">appletvos</_SwiftTargetPlatform>
 			<_SwiftTargetPlatform Condition="'$(_PlatformName)' == 'MacCatalyst'">macosx</_SwiftTargetPlatform> <!-- yes, 'macosx' and not 'maccatalyst': even though the resulting maccatalyst directory exists, it doesn't have anything useful in it -->
 			<_SwiftTargetPlatform Condition="'$(_PlatformName)' == 'macOS'">macosx</_SwiftTargetPlatform>
+
+			<_HasBindingLibraryWithSwift Condition="@(_BindingLibraryLinkWith->WithMetadataValue('LinkWithSwiftSystemLibraries', 'true')->Count()) &gt; 0">true</_HasBindingLibraryWithSwift>
+			<_HasFrameworkNativeReferenceWithSwift Condition="@(_FrameworkNativeReference->WithMetadataValue('LinkWithSwiftSystemLibraries', 'true')->Count()) &gt; 0">true</_HasFrameworkNativeReferenceWithSwift>
+			<_HasFileNativeReferenceWithSwift Condition="@(_FileNativeReference->WithMetadataValue('LinkWithSwiftSystemLibraries', 'true')->Count()) &gt; 0">true</_HasFileNativeReferenceWithSwift>
+
+			<!-- Automatically link with Swift system libraries if any of the native libraries we link with has LinkWithSwiftSystemLibraries=true -->
+			<LinkWithSwiftSystemLibraries Condition="'$(LinkWithSwiftSystemLibraries)' == '' And ('$(_HasBindingLibraryWithSwift)' == 'true' Or '$(_HasFrameworkNativeReferenceWithSwift)' == 'true' Or '$(_HasFileNativeReferenceWithSwift)' == 'true')">true</LinkWithSwiftSystemLibraries>
 		</PropertyGroup>
-		<ItemGroup>
+		<ItemGroup Condition="'$(LinkWithSwiftSystemLibraries)' == 'true'">
 			<_MainLinkerFlags Include="-L$(_SdkDevPath)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/$(_SwiftTargetPlatform)/" />
 			<_MainLinkerFlags Include="-L$(_SdkRoot)/usr/lib/swift/" />
 		</ItemGroup>
@@ -2122,6 +2129,12 @@
 			<_IsValidRuntimeIdentifier Condition="@(_XamarinValidRuntimeIdentifier->WithMetadataValue('Platform', '$(_PlatformName)')->WithMetadataValue('Filename', '$(RuntimeIdentifier)')->Count()) &gt; 0">true</_IsValidRuntimeIdentifier>
 		</PropertyGroup>
 		<Error Condition="'$(_IsValidRuntimeIdentifier)' != 'true'" Text="The RuntimeIdentifier '$(RuntimeIdentifier)' is invalid." />
+	</Target>
+
+	<Target Name="_ValidateGarbageCollector"
+		Condition="'$(ServerGarbageCollection)' == 'true'"
+		BeforeTargets="Build;ResolvedFrameworkReference;ResolveRuntimePackAssets">
+		<Error Text=".NET for $(_PlatformName) does not support server garbage collection. Please don't set the 'ServerGarbageCollection' property." />
 	</Target>
 
 	<!-- This target can be removed in .NET 9 (when we stop supporting the compat logic to make the invalid TPV just a warning instead of an error) -->
