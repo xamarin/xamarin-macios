@@ -456,4 +456,12 @@ namespace Bindings.Test {
 		SimpleCallback MyOptionalStaticProperty { get; set; }
 	}
 	interface IProtocolWithBlockProperties { }
+
+#if NET
+	[BaseType (typeof (NSObject))]
+	interface SwiftTestClass {
+		[Export ("SayHello")]
+		string SayHello ();
+	}
+#endif
 }
