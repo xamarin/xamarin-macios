@@ -3,6 +3,7 @@
 
 	<PropertyGroup>
 		<XmlLinkerFile>$(MSBuildThisFileDirectory)nunit.framework.xml</XmlLinkerFile>
-	    <AppBundleExtraOptions>--xml=$(XmlLinkerFile) --dlsym:+nunit.framework.dll $(AppBundleExtraOptions)</AppBundleExtraOptions>
+	    <AppBundleExtraOptions>--xml=$(XmlLinkerFile) $(AppBundleExtraOptions)</AppBundleExtraOptions>
+	    <AppBundleExtraOptions Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.Mac'">--dlsym:+nunit.framework.dll $(AppBundleExtraOptions)</AppBundleExtraOptions>
 	</PropertyGroup>
 </Project>
