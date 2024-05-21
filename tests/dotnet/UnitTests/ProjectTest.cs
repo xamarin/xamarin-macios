@@ -843,7 +843,7 @@ namespace Xamarin.Tests {
 					continue;
 
 				var zipContents = ZipHelpers.List (zip).OrderBy (v => v).ToArray ();
-				string[] expectedContents;
+				string [] expectedContents;
 
 				if (rx == "bindings-framework-test") {
 					expectedContents = new string [] {
