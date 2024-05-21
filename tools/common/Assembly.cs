@@ -23,6 +23,7 @@ namespace Xamarin.Bundler {
 		public LinkTarget LinkTarget;
 		public bool NeedsGccExceptionHandling;
 		public bool IsCxx;
+		public bool LinkWithSwiftSystemLibraries;
 		public bool SmartLink;
 		public DlsymOption Dlsym;
 
@@ -39,6 +40,7 @@ namespace Xamarin.Bundler {
 			LinkTarget = attribute.LinkTarget;
 			NeedsGccExceptionHandling = attribute.NeedsGccExceptionHandling;
 			IsCxx = attribute.IsCxx;
+			LinkWithSwiftSystemLibraries = attribute.LinkWithSwiftSystemLibraries;
 			SmartLink = attribute.SmartLink;
 			Dlsym = attribute.Dlsym;
 			Attribute = attribute;
@@ -90,6 +92,7 @@ namespace Xamarin.Bundler {
 		}
 
 		public bool EnableCxx;
+		public bool LinkWithSwiftSystemLibraries;
 		public bool NeedsGccExceptionHandling;
 		public bool ForceLoad;
 		public HashSet<string> Frameworks = new HashSet<string> ();
@@ -203,6 +206,7 @@ namespace Xamarin.Bundler {
 				metadata.LinkerFlags = attributes ["LinkerFlags"];
 				metadata.NeedsGccExceptionHandling = ParseAttributeWithDefault (attributes ["NeedsGccExceptionHandling"], false);
 				metadata.IsCxx = ParseAttributeWithDefault (attributes ["IsCxx"], false);
+				metadata.LinkWithSwiftSystemLibraries = ParseAttributeWithDefault (attributes ["LinkWithSwiftSystemLibraries"], false);
 				metadata.SmartLink = ParseAttributeWithDefault (attributes ["SmartLink"], true);
 
 				// TODO - The project attributes do not contain these bits, is that OK?
@@ -325,6 +329,8 @@ namespace Xamarin.Bundler {
 			if (metadata.IsCxx)
 				EnableCxx = true;
 
+			if (metadata.LinkWithSwiftSystemLibraries)
+				LinkWithSwiftSystemLibraries = true;
 #if MONOTOUCH
 			if (metadata.Dlsym != DlsymOption.Default)
 				App.SetDlsymOption (FullPath, metadata.Dlsym == DlsymOption.Required);
@@ -404,6 +410,7 @@ namespace Xamarin.Bundler {
 			Driver.Log (3, "    ForceLoad: {0}", metadata.ForceLoad);
 			Driver.Log (3, "    Frameworks: {0}", metadata.Frameworks);
 			Driver.Log (3, "    IsCxx: {0}", metadata.IsCxx);
+			Driver.Log (3, "    LinkWithSwiftSystemLibraries: {0}", metadata.LinkWithSwiftSystemLibraries);
 			Driver.Log (3, "    LinkerFlags: {0}", metadata.LinkerFlags);
 			Driver.Log (3, "    LinkTarget: {0}", metadata.LinkTarget);
 			Driver.Log (3, "    NeedsGccExceptionHandling: {0}", metadata.NeedsGccExceptionHandling);
@@ -454,6 +461,9 @@ namespace Xamarin.Bundler {
 					break;
 				case "IsCxx":
 					linkWith.IsCxx = (bool) property.Argument.Value;
+					break;
+				case "LinkWithSwiftSystemLibraries":
+					linkWith.LinkWithSwiftSystemLibraries = (bool) property.Argument.Value;
 					break;
 				case "SmartLink":
 					linkWith.SmartLink = (bool) property.Argument.Value;
