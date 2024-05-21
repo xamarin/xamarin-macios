@@ -193,6 +193,7 @@ namespace Introspection {
 				case "GKPlayer":
 				case "PKDisbursementRequest":
 				case "PKContact":
+				case "TKSmartCardPinFormat":
 					return true;
 				}
 				break;
