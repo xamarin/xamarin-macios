@@ -151,7 +151,7 @@ namespace Security {
 #endif
 	public unsafe class Authorization : DisposableObject {
 		[DllImport (Constants.SecurityLibrary)]
-		extern static int /* OSStatus = int */ AuthorizationCreate (AuthorizationItemSet *rights, AuthorizationItemSet *environment, AuthorizationFlags flags, out IntPtr auth);
+		unsafe extern static int /* OSStatus = int */ AuthorizationCreate (AuthorizationItemSet *rights, AuthorizationItemSet *environment, AuthorizationFlags flags, IntPtr* auth);
 
 #if NET
 		[SupportedOSPlatform ("maccatalyst15.0")]
@@ -272,7 +272,7 @@ namespace Security {
 								EncodeString (ref env.ptrToAuthorization [env.count++], "prompt", parameters.Prompt);
 						}
 					}
-					code = AuthorizationCreate (ppars, penv, flags, out auth);
+					code = AuthorizationCreate (ppars, penv, flags, &auth);
 					if (code != 0)
 						return null;
 					return new Authorization (auth, true);

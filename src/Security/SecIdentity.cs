@@ -20,12 +20,15 @@ namespace Security {
 	public partial class SecIdentity {
 
 		[DllImport (Constants.SecurityLibrary)]
-		extern static SecStatusCode /* OSStatus */ SecIdentityCopyPrivateKey (IntPtr /* SecIdentityRef */ identity, out IntPtr /* SecKeyRef* */ privatekey);
+		unsafe extern static SecStatusCode /* OSStatus */ SecIdentityCopyPrivateKey (IntPtr /* SecIdentityRef */ identity, IntPtr* /* SecKeyRef* */ privatekey);
 
 		public SecKey PrivateKey {
 			get {
 				IntPtr p;
-				SecStatusCode result = SecIdentityCopyPrivateKey (Handle, out p);
+				SecStatusCode result;
+				unsafe {
+					result = SecIdentityCopyPrivateKey (Handle, &p);
+				}
 				if (result != SecStatusCode.Success)
 					throw new InvalidOperationException (result.ToString ());
 				return new SecKey (p, true);
