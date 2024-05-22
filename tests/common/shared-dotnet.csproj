@@ -128,7 +128,7 @@
 		</Zip>
 	</Target>
 
-	<Target Name="VerifyRemoteConnection" AfterTargets="SayHello" Condition="'$(EnsureRemoteConnection)' == 'true'">
+	<Target Name="VerifyRemoteConnection" AfterTargets="_SayHello" Condition="'$(EnsureRemoteConnection)' == 'true'">
 		<Error Condition="'$(IsMacEnabled)' != 'true'" Text="Unable to connect to the remote Mac. Please examine the output of the SayHello target to figure out what happened." />
 	</Target>
 </Project>
