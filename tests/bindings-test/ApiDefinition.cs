@@ -485,4 +485,11 @@ namespace Bindings.Test {
 	}
 	interface IProtocolWithBlockProperties { }
 
+#if NET
+	[BaseType (typeof (NSObject))]
+	interface SwiftTestClass {
+		[Export ("SayHello")]
+		string SayHello ();
+	}
+#endif
 }
