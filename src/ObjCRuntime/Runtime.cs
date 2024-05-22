@@ -83,6 +83,20 @@ namespace ObjCRuntime {
 		}
 #pragma warning restore 649
 
+#if __TVOS__
+		internal const string PlatformName = "tvOS";
+#elif __WATCHOS__
+		internal const string PlatformName = "watchOS";
+#elif __MACCATALYST__
+		internal const string PlatformName = "Mac Catalyst";
+#elif __IOS__
+		internal const string PlatformName = "iOS";
+#elif __MACOS__
+		internal const string PlatformName = "macOS";
+#else
+#error Undetermined platform name
+#endif
+
 		[Flags]
 		internal enum MTTypeFlags : uint {
 			None = 0,
@@ -358,6 +372,14 @@ namespace ObjCRuntime {
 				NSLog (msg);
 				throw ErrorHelper.CreateError (8010, msg);
 			}
+
+#if NET
+			if (System.Runtime.GCSettings.IsServerGC) {
+				var msg = $".NET for {PlatformName} does not support server garbage collection.";
+				NSLog (msg);
+				throw ErrorHelper.CreateError (8057, msg);
+			}
+#endif
 
 #if NET
 			if (options->RegistrationMap is not null && options->RegistrationMap->classHandles is not null) {

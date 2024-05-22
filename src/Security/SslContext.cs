@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -77,7 +78,7 @@ namespace Security {
 		}
 
 		[DllImport (Constants.SecurityLibrary)]
-		extern static /* OSStatus */ SslStatus SSLGetProtocolVersionMax (/* SSLContextRef */ IntPtr context, out SslProtocol maxVersion);
+		unsafe extern static /* OSStatus */ SslStatus SSLGetProtocolVersionMax (/* SSLContextRef */ IntPtr context, SslProtocol* maxVersion);
 
 		[DllImport (Constants.SecurityLibrary)]
 		extern static /* OSStatus */ SslStatus SSLSetProtocolVersionMax (/* SSLContextRef */ IntPtr context, SslProtocol maxVersion);
@@ -85,7 +86,9 @@ namespace Security {
 		public SslProtocol MaxProtocol {
 			get {
 				SslProtocol value;
-				result = SSLGetProtocolVersionMax (Handle, out value);
+				unsafe {
+					result = SSLGetProtocolVersionMax (Handle, &value);
+				}
 				return value;
 			}
 			set {
@@ -94,7 +97,7 @@ namespace Security {
 		}
 
 		[DllImport (Constants.SecurityLibrary)]
-		extern static /* OSStatus */ SslStatus SSLGetProtocolVersionMin (/* SSLContextRef */ IntPtr context, out SslProtocol minVersion);
+		unsafe extern static /* OSStatus */ SslStatus SSLGetProtocolVersionMin (/* SSLContextRef */ IntPtr context, SslProtocol* minVersion);
 
 		[DllImport (Constants.SecurityLibrary)]
 		extern static /* OSStatus */ SslStatus SSLSetProtocolVersionMin (/* SSLContextRef */ IntPtr context, SslProtocol minVersion);
@@ -102,7 +105,9 @@ namespace Security {
 		public SslProtocol MinProtocol {
 			get {
 				SslProtocol value;
-				result = SSLGetProtocolVersionMin (Handle, out value);
+				unsafe {
+					result = SSLGetProtocolVersionMin (Handle, &value);
+				}
 				return value;
 			}
 			set {
@@ -111,18 +116,20 @@ namespace Security {
 		}
 
 		[DllImport (Constants.SecurityLibrary)]
-		extern static /* OSStatus */ SslStatus SSLGetNegotiatedProtocolVersion (/* SSLContextRef */ IntPtr context, out SslProtocol protocol);
+		unsafe extern static /* OSStatus */ SslStatus SSLGetNegotiatedProtocolVersion (/* SSLContextRef */ IntPtr context, SslProtocol* protocol);
 
 		public SslProtocol NegotiatedProtocol {
 			get {
 				SslProtocol value;
-				result = SSLGetNegotiatedProtocolVersion (Handle, out value);
+				unsafe {
+					result = SSLGetNegotiatedProtocolVersion (Handle, &value);
+				}
 				return value;
 			}
 		}
 
 		[DllImport (Constants.SecurityLibrary)]
-		extern static /* OSStatus */ SslStatus SSLGetConnection (/* SSLContextRef */ IntPtr context, /* SSLConnectionRef* */ out IntPtr connection);
+		unsafe extern static /* OSStatus */ SslStatus SSLGetConnection (/* SSLContextRef */ IntPtr context, /* SSLConnectionRef* */ IntPtr* connection);
 
 		[DllImport (Constants.SecurityLibrary)]
 		extern static /* OSStatus */ SslStatus SSLSetConnection (/* SSLContextRef */ IntPtr context, /* SSLConnectionRef */ IntPtr connection);
@@ -142,7 +149,9 @@ namespace Security {
 				if (connection is null)
 					return null;
 				IntPtr value;
-				result = SSLGetConnection (Handle, out value);
+				unsafe {
+					result = SSLGetConnection (Handle, &value);
+				}
 				if (value != connection.ConnectionId)
 					throw new InvalidOperationException ();
 				return connection;
@@ -164,20 +173,24 @@ namespace Security {
 		}
 
 		[DllImport (Constants.SecurityLibrary)]
-		extern static /* OSStatus */ SslStatus SSLGetSessionOption (/* SSLContextRef */ IntPtr context, SslSessionOption option, [MarshalAs (UnmanagedType.I1)] out bool value);
+		unsafe extern static /* OSStatus */ SslStatus SSLGetSessionOption (/* SSLContextRef */ IntPtr context, SslSessionOption option, byte* value);
 
 		public SslStatus GetSessionOption (SslSessionOption option, out bool value)
 		{
-			result = SSLGetSessionOption (Handle, option, out value);
+			byte byteValue;
+			unsafe {
+				result = SSLGetSessionOption (Handle, option, &byteValue);
+			}
+			value = byteValue != 0;
 			return result;
 		}
 
 		[DllImport (Constants.SecurityLibrary)]
-		extern static /* OSStatus */ SslStatus SSLSetSessionOption (/* SSLContextRef */ IntPtr context, SslSessionOption option, [MarshalAs (UnmanagedType.I1)] bool value);
+		extern static /* OSStatus */ SslStatus SSLSetSessionOption (/* SSLContextRef */ IntPtr context, SslSessionOption option, byte value);
 
 		public SslStatus SetSessionOption (SslSessionOption option, bool value)
 		{
-			result = SSLSetSessionOption (Handle, option, value);
+			result = SSLSetSessionOption (Handle, option, value.AsByte ());
 			return result;
 		}
 
@@ -200,27 +213,31 @@ namespace Security {
 		}
 
 		[DllImport (Constants.SecurityLibrary)]
-		extern static /* OSStatus */ SslStatus SSLGetSessionState (/* SSLContextRef */ IntPtr context, ref SslSessionState state);
+		unsafe extern static /* OSStatus */ SslStatus SSLGetSessionState (/* SSLContextRef */ IntPtr context, SslSessionState* state);
 
 		public SslSessionState SessionState {
 			get {
 				var value = SslSessionState.Invalid;
-				result = SSLGetSessionState (Handle, ref value);
+				unsafe {
+					result = SSLGetSessionState (Handle, &value);
+				}
 				return value;
 			}
 		}
 
 		[DllImport (Constants.SecurityLibrary)]
-		extern unsafe static /* OSStatus */ SslStatus SSLGetPeerID (/* SSLContextRef */ IntPtr context, /* const void** */ out IntPtr peerID, /* size_t* */ out nint peerIDLen);
+		extern unsafe static /* OSStatus */ SslStatus SSLGetPeerID (/* SSLContextRef */ IntPtr context, /* const void** */ IntPtr* peerID, /* size_t* */ nint* peerIDLen);
 
 		[DllImport (Constants.SecurityLibrary)]
-		extern unsafe static /* OSStatus */ SslStatus SSLSetPeerID (/* SSLContextRef */ IntPtr context, /* const void* */ byte* peerID, /* size_t */ nint peerIDLen);
+		extern unsafe static /* OSStatus */ SslStatus SSLSetPeerID (/* SSLContextRef */ IntPtr context, /* const void** */ byte* peerID, /* size_t */ nint peerIDLen);
 
 		public unsafe byte []? PeerId {
 			get {
 				nint length;
 				IntPtr id;
-				result = SSLGetPeerID (Handle, out id, out length);
+				unsafe {
+					result = SSLGetPeerID (Handle, &id, &length);
+				}
 				if ((result != SslStatus.Success) || (length == 0))
 					return null;
 				var data = new byte [length];
@@ -236,53 +253,59 @@ namespace Security {
 		}
 
 		[DllImport (Constants.SecurityLibrary)]
-		extern unsafe static /* OSStatus */ SslStatus SSLGetBufferedReadSize (/* SSLContextRef */ IntPtr context, /* size_t* */ out nint bufSize);
+		extern unsafe static /* OSStatus */ SslStatus SSLGetBufferedReadSize (/* SSLContextRef */ IntPtr context, /* size_t* */ nint* bufSize);
 
 		public nint BufferedReadSize {
 			get {
 				nint value;
-				result = SSLGetBufferedReadSize (Handle, out value);
+				unsafe {
+					result = SSLGetBufferedReadSize (Handle, &value);
+				}
 				return value;
 			}
 		}
 
 		[DllImport (Constants.SecurityLibrary)]
-		extern unsafe static /* OSStatus */ SslStatus SSLRead (/* SSLContextRef */ IntPtr context, /* const void* */ byte* data, /* size_t */ nint dataLength, /* size_t* */ out nint processed);
+		extern unsafe static /* OSStatus */ SslStatus SSLRead (/* SSLContextRef */ IntPtr context, /* const void* */ byte* data, /* size_t */ nint dataLength, /* size_t* */ nint* processed);
 
 		internal unsafe SslStatus Read (byte [] data, int offset, int size, out nint processed)
 		{
 			if (data is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (data));
+			processed = default;
 			fixed (byte* d = &data [offset])
-				result = SSLRead (Handle, d, size, out processed);
+				result = SSLRead (Handle, d, size, (nint*) Unsafe.AsPointer<nint> (ref processed));
 			return result;
 		}
 
 		public unsafe SslStatus Read (byte [] data, out nint processed)
 		{
 			int size = data is null ? 0 : data.Length;
+			processed = default;
 			fixed (byte* d = data)
-				result = SSLRead (Handle, d, size, out processed);
+				result = SSLRead (Handle, d, size, (nint*) Unsafe.AsPointer<nint> (ref processed));
 			return result;
 		}
 
 		[DllImport (Constants.SecurityLibrary)]
-		extern unsafe static /* OSStatus */ SslStatus SSLWrite (/* SSLContextRef */ IntPtr context, /* const void* */ byte* data, /* size_t */ nint dataLength, /* size_t* */ out nint processed);
+		extern unsafe static /* OSStatus */ SslStatus SSLWrite (/* SSLContextRef */ IntPtr context, /* const void* */ byte* data, /* size_t */ nint dataLength, /* size_t* */ nint* processed);
 
 		internal unsafe SslStatus Write (byte [] data, int offset, int size, out nint processed)
 		{
 			if (data is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (data));
+			processed = default;
 			fixed (byte* d = &data [offset])
-				result = SSLWrite (Handle, d, size, out processed);
+				result = SSLWrite (Handle, d, size, (nint*) Unsafe.AsPointer<nint> (ref processed));
 			return result;
 		}
 
 		public unsafe SslStatus Write (byte [] data, out nint processed)
 		{
 			int size = data is null ? 0 : data.Length;
+			processed = default;
 			fixed (byte* d = data)
-				result = SSLWrite (Handle, d, size, out processed);
+				result = SSLWrite (Handle, d, size, (nint*) Unsafe.AsPointer<nint> (ref processed));
 			return result;
 		}
 
@@ -359,18 +382,20 @@ namespace Security {
 #endif
 
 		[DllImport (Constants.SecurityLibrary)]
-		extern unsafe static /* OSStatus */ SslStatus SSLGetDatagramWriteSize (/* SSLContextRef */ IntPtr context, /* size_t* */ out nint bufSize);
+		extern unsafe static /* OSStatus */ SslStatus SSLGetDatagramWriteSize (/* SSLContextRef */ IntPtr context, /* size_t* */ nint* bufSize);
 
 		public nint DatagramWriteSize {
 			get {
 				nint value;
-				result = SSLGetDatagramWriteSize (Handle, out value);
+				unsafe {
+					result = SSLGetDatagramWriteSize (Handle, &value);
+				}
 				return value;
 			}
 		}
 
 		[DllImport (Constants.SecurityLibrary)]
-		extern unsafe static /* OSStatus */ SslStatus SSLGetMaxDatagramRecordSize (/* SSLContextRef */ IntPtr context, /* size_t* */ out nint maxSize);
+		extern unsafe static /* OSStatus */ SslStatus SSLGetMaxDatagramRecordSize (/* SSLContextRef */ IntPtr context, /* size_t* */ nint* maxSize);
 
 		[DllImport (Constants.SecurityLibrary)]
 		extern unsafe static /* OSStatus */ SslStatus SSLSetMaxDatagramRecordSize (/* SSLContextRef */ IntPtr context, /* size_t */ nint maxSize);
@@ -378,7 +403,9 @@ namespace Security {
 		public nint MaxDatagramRecordSize {
 			get {
 				nint value;
-				result = SSLGetMaxDatagramRecordSize (Handle, out value);
+				unsafe {
+					result = SSLGetMaxDatagramRecordSize (Handle, &value);
+				}
 				return value;
 			}
 			set {
@@ -398,30 +425,42 @@ namespace Security {
 		}
 
 		[DllImport (Constants.SecurityLibrary)]
-		extern unsafe static /* OSStatus */ SslStatus SSLGetPeerDomainNameLength (/* SSLContextRef */ IntPtr context, /* size_t* */ out nint peerNameLen);
+		extern unsafe static /* OSStatus */ SslStatus SSLGetPeerDomainNameLength (/* SSLContextRef */ IntPtr context, /* size_t* */ nint* peerNameLen);
 
 		[DllImport (Constants.SecurityLibrary)]
-		extern unsafe static /* OSStatus */ SslStatus SSLGetPeerDomainName (/* SSLContextRef */ IntPtr context, /* char* */ byte []? peerName, /* size_t */ ref nint peerNameLen);
+		extern unsafe static /* OSStatus */ SslStatus SSLGetPeerDomainName (/* SSLContextRef */ IntPtr context, /* char* */ byte* peerName, /* size_t */ nint* peerNameLen);
 
 		[DllImport (Constants.SecurityLibrary)]
-		extern unsafe static /* OSStatus */ SslStatus SSLSetPeerDomainName (/* SSLContextRef */ IntPtr context, /* char* */ byte []? peerName, /* size_t */ nint peerNameLen);
+		extern unsafe static /* OSStatus */ SslStatus SSLSetPeerDomainName (/* SSLContextRef */ IntPtr context, /* char* */ byte* peerName, /* size_t */ nint peerNameLen);
 
 		public string PeerDomainName {
 			get {
 				nint length;
-				result = SSLGetPeerDomainNameLength (Handle, out length);
+				unsafe {
+					result = SSLGetPeerDomainNameLength (Handle, &length);
+				}
 				if (result != SslStatus.Success || length == 0)
 					return String.Empty;
 				var bytes = new byte [length];
-				result = SSLGetPeerDomainName (Handle, bytes, ref length);
+				unsafe {
+					fixed (byte* bytesPtr = bytes) {
+						result = SSLGetPeerDomainName (Handle, bytesPtr, &length);
+					}
+				}
 				return result == SslStatus.Success ? Encoding.UTF8.GetString (bytes) : String.Empty;
 			}
 			set {
 				if (value is null) {
-					result = SSLSetPeerDomainName (Handle, null, 0);
+					unsafe {
+						result = SSLSetPeerDomainName (Handle, null, 0);
+					}
 				} else {
 					var bytes = Encoding.UTF8.GetBytes (value);
-					result = SSLSetPeerDomainName (Handle, bytes, bytes.Length);
+					unsafe {
+						fixed (byte* bytesPtr = bytes) {
+							result = SSLSetPeerDomainName (Handle, bytesPtr, bytes.Length);
+						}
+					}
 				}
 			}
 		}
@@ -493,12 +532,14 @@ namespace Security {
 		}
 
 		[DllImport (Constants.SecurityLibrary)]
-		extern unsafe static /* OSStatus */ SslStatus SSLGetClientCertificateState (/* SSLContextRef */ IntPtr context, out SslClientCertificateState clientState);
+		extern unsafe static /* OSStatus */ SslStatus SSLGetClientCertificateState (/* SSLContextRef */ IntPtr context, SslClientCertificateState* clientState);
 
 		public SslClientCertificateState ClientCertificateState {
 			get {
 				SslClientCertificateState value;
-				result = SSLGetClientCertificateState (Handle, out value);
+				unsafe {
+					result = SSLGetClientCertificateState (Handle, &value);
+				}
 				return value;
 			}
 		}
@@ -539,12 +580,14 @@ namespace Security {
 		}
 
 		[DllImport (Constants.SecurityLibrary)]
-		extern unsafe static /* OSStatus */ SslStatus SSLCopyPeerTrust (/* SSLContextRef */ IntPtr context, /* SecTrustRef */ out IntPtr trust);
+		extern unsafe static /* OSStatus */ SslStatus SSLCopyPeerTrust (/* SSLContextRef */ IntPtr context, /* SecTrustRef */ IntPtr* trust);
 
 		public SecTrust? PeerTrust {
 			get {
 				IntPtr value;
-				result = SSLCopyPeerTrust (Handle, out value);
+				unsafe {
+					result = SSLCopyPeerTrust (Handle, &value);
+				}
 				return (value == IntPtr.Zero) ? null : new SecTrust (value, true);
 			}
 		}
@@ -662,7 +705,7 @@ namespace Security {
 		[ObsoletedOSPlatform ("ios13.0", "Use 'Network.framework' instead.")]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
-		static extern /* OSStatus */ SslStatus SSLCopyRequestedPeerName (IntPtr /* SSLContextRef* */ context, byte [] /* char* */ peerName, ref nuint /* size_t */ peerNameLen);
+		unsafe static extern /* OSStatus */ SslStatus SSLCopyRequestedPeerName (IntPtr /* SSLContextRef* */ context, byte* /* char* */ peerName, nuint* /* size_t */ peerNameLen);
 
 #if NET
 		[SupportedOSPlatform ("ios")]
@@ -674,7 +717,7 @@ namespace Security {
 		[ObsoletedOSPlatform ("ios13.0", "Use 'Network.framework' instead.")]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
-		static extern /* OSStatus */ SslStatus SSLCopyRequestedPeerNameLength (IntPtr /* SSLContextRef* */ context, ref nuint /* size_t */ peerNameLen);
+		unsafe static extern /* OSStatus */ SslStatus SSLCopyRequestedPeerNameLength (IntPtr /* SSLContextRef* */ context, nuint* /* size_t */ peerNameLen);
 
 #if NET
 		[SupportedOSPlatform ("ios")]
@@ -689,10 +732,14 @@ namespace Security {
 		{
 			var result = String.Empty;
 			nuint length = 0;
-			if (SSLCopyRequestedPeerNameLength (Handle, ref length) == SslStatus.Success) {
-				var bytes = new byte [length];
-				if (SSLCopyRequestedPeerName (Handle, bytes, ref length) == SslStatus.Success)
-					result = Encoding.UTF8.GetString (bytes);
+			unsafe {
+				if (SSLCopyRequestedPeerNameLength (Handle, &length) == SslStatus.Success) {
+					var bytes = new byte [length];
+					fixed (byte* bytesPtr = bytes) {
+						if (SSLCopyRequestedPeerName (Handle, bytesPtr, &length) == SslStatus.Success)
+							result = Encoding.UTF8.GetString (bytes);
+					}
+				}
 			}
 			return result;
 		}
@@ -707,7 +754,7 @@ namespace Security {
 		[ObsoletedOSPlatform ("ios13.0", "Use 'Network.framework' instead.")]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
-		static extern /* OSStatus */ int SSLSetSessionTicketsEnabled (IntPtr /* SSLContextRef */ context, [MarshalAs (UnmanagedType.I1)] bool /* Boolean */ enabled);
+		static extern /* OSStatus */ int SSLSetSessionTicketsEnabled (IntPtr /* SSLContextRef */ context, byte /* Boolean */ enabled);
 
 #if NET
 		[SupportedOSPlatform ("ios")]
@@ -720,7 +767,7 @@ namespace Security {
 #endif
 		public int SetSessionTickets (bool enabled)
 		{
-			return SSLSetSessionTicketsEnabled (Handle, enabled);
+			return SSLSetSessionTicketsEnabled (Handle, enabled.AsByte ());
 		}
 
 #if NET
@@ -814,7 +861,7 @@ namespace Security {
 		[ObsoletedOSPlatform ("ios13.0", "Use 'Network.framework' instead.")]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
-		static extern /* OSStatus */ int SSLCopyALPNProtocols (IntPtr /* SSLContextRef */ context, ref IntPtr /* CFArrayRef* */ protocols);
+		unsafe static extern /* OSStatus */ int SSLCopyALPNProtocols (IntPtr /* SSLContextRef */ context, IntPtr* /* CFArrayRef* */ protocols);
 
 #if NET
 		[SupportedOSPlatform ("ios")]
@@ -829,7 +876,9 @@ namespace Security {
 		public string? [] GetAlpnProtocols (out int error)
 		{
 			IntPtr protocols = IntPtr.Zero; // must be null, CFArray allocated by SSLCopyALPNProtocols
-			error = SSLCopyALPNProtocols (Handle, ref protocols);
+			unsafe {
+				error = SSLCopyALPNProtocols (Handle, &protocols);
+			}
 			if (protocols == IntPtr.Zero)
 				return Array.Empty<string> ();
 			return CFArray.StringArrayFromHandle (protocols, true)!;

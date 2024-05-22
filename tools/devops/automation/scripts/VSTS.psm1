@@ -628,7 +628,12 @@ function Set-BuildTags {
         $url = Get-TagsRestAPIUrl -Tag $t
         Write-Debug "Uri is $url"
 
-        Invoke-RestMethod -Uri $url -Headers $headers -Method "PUT"  -ContentType 'application/json'
+        try {
+            Invoke-RestMethod -Uri $url -Headers $headers -Method "PUT"  -ContentType 'application/json'
+        } catch {
+            Write-Host "Unable to set the build tags"
+            Write-Host $_
+        }
     }
 }
 
