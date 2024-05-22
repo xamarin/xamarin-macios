@@ -1319,7 +1319,7 @@ namespace CoreML {
 	interface MLComputePlanDeviceUsage {
 
 		[Export ("supportedComputeDevices", ArgumentSemantic.Copy)]
-		IMLComputeDeviceProtocol[] SupportedComputeDevices { get; }
+		IMLComputeDeviceProtocol [] SupportedComputeDevices { get; }
 
 		[Export ("preferredComputeDevice", ArgumentSemantic.Strong)]
 		IMLComputeDeviceProtocol PreferredComputeDevice { get; }
@@ -1354,7 +1354,7 @@ namespace CoreML {
 	interface MLModelStructureNeuralNetwork {
 
 		[Export ("layers", ArgumentSemantic.Copy)]
-		MLModelStructureNeuralNetworkLayer[] Layers { get; }
+		MLModelStructureNeuralNetworkLayer [] Layers { get; }
 	}
 
 	[Watch (10, 4), TV (17, 4), Mac (14, 4), iOS (17, 4), MacCatalyst (17, 4)]
@@ -1369,10 +1369,10 @@ namespace CoreML {
 		string Type { get; }
 
 		[Export ("inputNames", ArgumentSemantic.Copy)]
-		string[] InputNames { get; }
+		string [] InputNames { get; }
 
 		[Export ("outputNames", ArgumentSemantic.Copy)]
-		string[] OutputNames { get; }
+		string [] OutputNames { get; }
 	}
 
 	[Watch (10, 4), TV (17, 4), Mac (14, 4), iOS (17, 4), MacCatalyst (17, 4)]
@@ -1381,10 +1381,10 @@ namespace CoreML {
 	interface MLModelStructurePipeline {
 
 		[Export ("subModelNames", ArgumentSemantic.Copy)]
-		string[] SubModelNames { get; }
+		string [] SubModelNames { get; }
 
 		[Export ("subModels", ArgumentSemantic.Copy)]
-		MLModelStructure[] SubModels { get; }
+		MLModelStructure [] SubModels { get; }
 	}
 
 	[Watch (10, 4), TV (17, 4), Mac (14, 4), iOS (17, 4), MacCatalyst (17, 4)]
@@ -1401,7 +1401,7 @@ namespace CoreML {
 	interface MLModelStructureProgramArgument {
 
 		[Export ("bindings", ArgumentSemantic.Copy)]
-		MLModelStructureProgramBinding[] Bindings { get; }
+		MLModelStructureProgramBinding [] Bindings { get; }
 	}
 
 	[Watch (10, 4), TV (17, 4), Mac (14, 4), iOS (17, 4), MacCatalyst (17, 4)]
@@ -1422,13 +1422,13 @@ namespace CoreML {
 	interface MLModelStructureProgramBlock {
 
 		[Export ("inputs", ArgumentSemantic.Copy)]
-		MLModelStructureProgramNamedValueType[] Inputs { get; }
+		MLModelStructureProgramNamedValueType [] Inputs { get; }
 
 		[Export ("outputNames", ArgumentSemantic.Copy)]
-		string[] OutputNames { get; }
+		string [] OutputNames { get; }
 
 		[Export ("operations", ArgumentSemantic.Copy)]
-		MLModelStructureProgramOperation[] Operations { get; }
+		MLModelStructureProgramOperation [] Operations { get; }
 	}
 
 	[Watch (10, 4), TV (17, 4), Mac (14, 4), iOS (17, 4), MacCatalyst (17, 4)]
@@ -1437,7 +1437,7 @@ namespace CoreML {
 	interface MLModelStructureProgramFunction {
 
 		[Export ("inputs", ArgumentSemantic.Copy)]
-		MLModelStructureProgramNamedValueType[] Inputs { get; }
+		MLModelStructureProgramNamedValueType [] Inputs { get; }
 
 		[Export ("block", ArgumentSemantic.Strong)]
 		MLModelStructureProgramBlock Block { get; }
@@ -1467,10 +1467,10 @@ namespace CoreML {
 		NSDictionary<NSString, MLModelStructureProgramArgument> Inputs { get; }
 
 		[Export ("outputs", ArgumentSemantic.Copy)]
-		MLModelStructureProgramNamedValueType[] Outputs { get; }
+		MLModelStructureProgramNamedValueType [] Outputs { get; }
 
 		[Export ("blocks", ArgumentSemantic.Copy)]
-		MLModelStructureProgramBlock[] Blocks { get; }
+		MLModelStructureProgramBlock [] Blocks { get; }
 	}
 
 	[Watch (10, 4), TV (17, 4), Mac (14, 4), iOS (17, 4), MacCatalyst (17, 4)]
