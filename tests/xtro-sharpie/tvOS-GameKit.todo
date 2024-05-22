@@ -1,3 +1,0 @@
-!deprecated-attribute-missing! GKScoreChallenge::score missing a [Deprecated] attribute
-!missing-enum-value! GKError native value GKErrorAppUnlisted = 37 not bound
-!missing-selector! GKScoreChallenge::leaderboardEntry not bound
