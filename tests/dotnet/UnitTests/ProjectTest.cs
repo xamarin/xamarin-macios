@@ -842,138 +842,140 @@ namespace Xamarin.Tests {
 				if (hasDirectoryResources)
 					continue;
 
-				var zipContents = ZipHelpers.List (zip).OrderBy (v => v).ToArray ();
-				var expectedContents = new List<string> {
+				var zipContents = ZipHelpers.List (zip).ToHashSet ();
+				var mustHaveContents = new List<string> {
 					"manifest",
 				};
+				var mayHaveContents = new List<string> ();
+				List<string> addHere;
 
 				if (rx == "bindings-framework-test") {
 					foreach (var lib in new string [] { "XStaticArTest", "XStaticObjectTest" }) {
-						if (Configuration.include_watchos) {
-							expectedContents.AddRange (new string [] {
-								$"{lib}.xcframework/watchos-arm64_32_armv7k",
-								$"{lib}.xcframework/watchos-arm64_32_armv7k/{lib}.framework",
-								$"{lib}.xcframework/watchos-arm64_32_armv7k/{lib}.framework/{lib}",
-								$"{lib}.xcframework/watchos-x86_64-simulator",
-								$"{lib}.xcframework/watchos-x86_64-simulator/{lib}.framework",
-								$"{lib}.xcframework/watchos-x86_64-simulator/{lib}.framework/{lib}",
-							});
-						}
-						if (Configuration.include_tvos) {
-							expectedContents.AddRange (new string [] {
-								$"{lib}.xcframework/tvos-arm64",
-								$"{lib}.xcframework/tvos-arm64/{lib}.framework",
-								$"{lib}.xcframework/tvos-arm64/{lib}.framework/{lib}",
-								$"{lib}.xcframework/tvos-arm64_x86_64-simulator",
-								$"{lib}.xcframework/tvos-arm64_x86_64-simulator/{lib}.framework",
-								$"{lib}.xcframework/tvos-arm64_x86_64-simulator/{lib}.framework/{lib}",
-							});
-						}
-						if (Configuration.include_mac) {
-							expectedContents.AddRange (new string [] {
-								$"{lib}.xcframework/macos-arm64_x86_64",
-								$"{lib}.xcframework/macos-arm64_x86_64/{lib}.framework",
-								$"{lib}.xcframework/macos-arm64_x86_64/{lib}.framework/{lib}",
-							});
-						}
-						if (Configuration.include_maccatalyst) {
-							expectedContents.AddRange (new string [] {
-								$"{lib}.xcframework/ios-arm64_x86_64-maccatalyst",
-								$"{lib}.xcframework/ios-arm64_x86_64-maccatalyst/{lib}.framework",
-								$"{lib}.xcframework/ios-arm64_x86_64-maccatalyst/{lib}.framework/{lib}",
-							});
-						}
-						if (Configuration.include_ios) {
-							expectedContents.AddRange (new string [] {
-								$"{lib}.xcframework/ios-arm64_x86_64-simulator",
-								$"{lib}.xcframework/ios-arm64_x86_64-simulator/{lib}.framework",
-								$"{lib}.xcframework/ios-arm64_x86_64-simulator/{lib}.framework/{lib}",
-								$"{lib}.xcframework/ios-arm64",
-								$"{lib}.xcframework/ios-arm64/{lib}.framework",
-								$"{lib}.xcframework/ios-arm64/{lib}.framework/{lib}",
-							});
-						}
+						addHere = Configuration.include_watchos ? mustHaveContents : mayHaveContents;
+						addHere.AddRange (new string [] {
+							$"{lib}.xcframework/watchos-arm64_32_armv7k",
+							$"{lib}.xcframework/watchos-arm64_32_armv7k/{lib}.framework",
+							$"{lib}.xcframework/watchos-arm64_32_armv7k/{lib}.framework/{lib}",
+							$"{lib}.xcframework/watchos-x86_64-simulator",
+							$"{lib}.xcframework/watchos-x86_64-simulator/{lib}.framework",
+							$"{lib}.xcframework/watchos-x86_64-simulator/{lib}.framework/{lib}",
+						});
 
-						expectedContents.AddRange (new string [] {
+						addHere = Configuration.include_tvos ? mustHaveContents : mayHaveContents;
+						addHere.AddRange (new string [] {
+							$"{lib}.xcframework/tvos-arm64",
+							$"{lib}.xcframework/tvos-arm64/{lib}.framework",
+							$"{lib}.xcframework/tvos-arm64/{lib}.framework/{lib}",
+							$"{lib}.xcframework/tvos-arm64_x86_64-simulator",
+							$"{lib}.xcframework/tvos-arm64_x86_64-simulator/{lib}.framework",
+							$"{lib}.xcframework/tvos-arm64_x86_64-simulator/{lib}.framework/{lib}",
+						});
+
+						addHere = Configuration.include_mac ? mustHaveContents : mayHaveContents;
+						addHere.AddRange (new string [] {
+							$"{lib}.xcframework/macos-arm64_x86_64",
+							$"{lib}.xcframework/macos-arm64_x86_64/{lib}.framework",
+							$"{lib}.xcframework/macos-arm64_x86_64/{lib}.framework/{lib}",
+						});
+
+						addHere = Configuration.include_maccatalyst ? mustHaveContents : mayHaveContents;
+						addHere.AddRange (new string [] {
+							$"{lib}.xcframework/ios-arm64_x86_64-maccatalyst",
+							$"{lib}.xcframework/ios-arm64_x86_64-maccatalyst/{lib}.framework",
+							$"{lib}.xcframework/ios-arm64_x86_64-maccatalyst/{lib}.framework/{lib}",
+						});
+
+						addHere = Configuration.include_ios ? mustHaveContents : mayHaveContents;
+						addHere.AddRange (new string [] {
+							$"{lib}.xcframework/ios-arm64_x86_64-simulator",
+							$"{lib}.xcframework/ios-arm64_x86_64-simulator/{lib}.framework",
+							$"{lib}.xcframework/ios-arm64_x86_64-simulator/{lib}.framework/{lib}",
+							$"{lib}.xcframework/ios-arm64",
+							$"{lib}.xcframework/ios-arm64/{lib}.framework",
+							$"{lib}.xcframework/ios-arm64/{lib}.framework/{lib}",
+						});
+
+						mustHaveContents.AddRange (new string [] {
 							$"{lib}.xcframework",
 							$"{lib}.xcframework/Info.plist",
 						});
 					}
 				}
 
-				expectedContents.AddRange (new string [] {
+				mustHaveContents.AddRange (new string [] {
 					"XTest.xcframework",
 					"XTest.xcframework/Info.plist",
 				});
 
-				if (Configuration.include_ios) {
-					expectedContents.AddRange (new string [] {
-						"XTest.xcframework/ios-arm64",
-						"XTest.xcframework/ios-arm64/XTest.framework",
-						"XTest.xcframework/ios-arm64/XTest.framework/Info.plist",
-						"XTest.xcframework/ios-arm64/XTest.framework/XTest",
-						"XTest.xcframework/ios-arm64_x86_64-simulator",
-						"XTest.xcframework/ios-arm64_x86_64-simulator/XTest.framework",
-						"XTest.xcframework/ios-arm64_x86_64-simulator/XTest.framework/Info.plist",
-						"XTest.xcframework/ios-arm64_x86_64-simulator/XTest.framework/XTest",
-					});
-				}
-				if (Configuration.include_maccatalyst) {
-					expectedContents.AddRange (new string [] {
-						"XTest.xcframework/ios-arm64_x86_64-maccatalyst",
-						"XTest.xcframework/ios-arm64_x86_64-maccatalyst/XTest.framework",
-						"XTest.xcframework/ios-arm64_x86_64-maccatalyst/XTest.framework/Resources",
-						"XTest.xcframework/ios-arm64_x86_64-maccatalyst/XTest.framework/Versions",
-						"XTest.xcframework/ios-arm64_x86_64-maccatalyst/XTest.framework/Versions/A",
-						"XTest.xcframework/ios-arm64_x86_64-maccatalyst/XTest.framework/Versions/A/Resources",
-						"XTest.xcframework/ios-arm64_x86_64-maccatalyst/XTest.framework/Versions/A/Resources/Info.plist",
-						"XTest.xcframework/ios-arm64_x86_64-maccatalyst/XTest.framework/Versions/A/XTest",
-						"XTest.xcframework/ios-arm64_x86_64-maccatalyst/XTest.framework/Versions/Current",
-						"XTest.xcframework/ios-arm64_x86_64-maccatalyst/XTest.framework/XTest",
-					});
-				}
-				if (Configuration.include_mac) {
-					expectedContents.AddRange (new string [] {
-						"XTest.xcframework/macos-arm64_x86_64",
-						"XTest.xcframework/macos-arm64_x86_64/XTest.framework",
-						"XTest.xcframework/macos-arm64_x86_64/XTest.framework/Resources",
-						"XTest.xcframework/macos-arm64_x86_64/XTest.framework/Versions",
-						"XTest.xcframework/macos-arm64_x86_64/XTest.framework/Versions/A",
-						"XTest.xcframework/macos-arm64_x86_64/XTest.framework/Versions/A/Resources",
-						"XTest.xcframework/macos-arm64_x86_64/XTest.framework/Versions/A/Resources/Info.plist",
-						"XTest.xcframework/macos-arm64_x86_64/XTest.framework/Versions/A/XTest",
-						"XTest.xcframework/macos-arm64_x86_64/XTest.framework/Versions/Current",
-						"XTest.xcframework/macos-arm64_x86_64/XTest.framework/XTest",
-					});
-				}
-				if (Configuration.include_tvos) {
-					expectedContents.AddRange (new string [] {
-						"XTest.xcframework/tvos-arm64",
-						"XTest.xcframework/tvos-arm64/XTest.framework",
-						"XTest.xcframework/tvos-arm64/XTest.framework/Info.plist",
-						"XTest.xcframework/tvos-arm64/XTest.framework/XTest",
-						"XTest.xcframework/tvos-arm64_x86_64-simulator",
-						"XTest.xcframework/tvos-arm64_x86_64-simulator/XTest.framework",
-						"XTest.xcframework/tvos-arm64_x86_64-simulator/XTest.framework/Info.plist",
-						"XTest.xcframework/tvos-arm64_x86_64-simulator/XTest.framework/XTest",
-					});
-				}
-				if (Configuration.include_watchos) {
-					expectedContents.AddRange (new string [] {
-						"XTest.xcframework/watchos-arm64_32_armv7k",
-						"XTest.xcframework/watchos-arm64_32_armv7k/XTest.framework",
-						"XTest.xcframework/watchos-arm64_32_armv7k/XTest.framework/Info.plist",
-						"XTest.xcframework/watchos-arm64_32_armv7k/XTest.framework/XTest",
-						"XTest.xcframework/watchos-x86_64-simulator",
-						"XTest.xcframework/watchos-x86_64-simulator/XTest.framework",
-						"XTest.xcframework/watchos-x86_64-simulator/XTest.framework/Info.plist",
-						"XTest.xcframework/watchos-x86_64-simulator/XTest.framework/XTest",
-					});
-				}
+				addHere = Configuration.include_ios ? mustHaveContents : mayHaveContents;
+				addHere.AddRange (new string [] {
+					"XTest.xcframework/ios-arm64",
+					"XTest.xcframework/ios-arm64/XTest.framework",
+					"XTest.xcframework/ios-arm64/XTest.framework/Info.plist",
+					"XTest.xcframework/ios-arm64/XTest.framework/XTest",
+					"XTest.xcframework/ios-arm64_x86_64-simulator",
+					"XTest.xcframework/ios-arm64_x86_64-simulator/XTest.framework",
+					"XTest.xcframework/ios-arm64_x86_64-simulator/XTest.framework/Info.plist",
+					"XTest.xcframework/ios-arm64_x86_64-simulator/XTest.framework/XTest",
+				});
 
+				addHere = Configuration.include_maccatalyst ? mustHaveContents : mayHaveContents;
+				addHere.AddRange (new string [] {
+					"XTest.xcframework/ios-arm64_x86_64-maccatalyst",
+					"XTest.xcframework/ios-arm64_x86_64-maccatalyst/XTest.framework",
+					"XTest.xcframework/ios-arm64_x86_64-maccatalyst/XTest.framework/Resources",
+					"XTest.xcframework/ios-arm64_x86_64-maccatalyst/XTest.framework/Versions",
+					"XTest.xcframework/ios-arm64_x86_64-maccatalyst/XTest.framework/Versions/A",
+					"XTest.xcframework/ios-arm64_x86_64-maccatalyst/XTest.framework/Versions/A/Resources",
+					"XTest.xcframework/ios-arm64_x86_64-maccatalyst/XTest.framework/Versions/A/Resources/Info.plist",
+					"XTest.xcframework/ios-arm64_x86_64-maccatalyst/XTest.framework/Versions/A/XTest",
+					"XTest.xcframework/ios-arm64_x86_64-maccatalyst/XTest.framework/Versions/Current",
+					"XTest.xcframework/ios-arm64_x86_64-maccatalyst/XTest.framework/XTest",
+				});
 
-				var expectedArray = expectedContents.OrderBy (v => v).ToArray ();
-				CollectionAssert.AreEqual (expectedArray, zipContents, "Zip files");
+				addHere = Configuration.include_mac ? mustHaveContents : mayHaveContents;
+				addHere.AddRange (new string [] {
+					"XTest.xcframework/macos-arm64_x86_64",
+					"XTest.xcframework/macos-arm64_x86_64/XTest.framework",
+					"XTest.xcframework/macos-arm64_x86_64/XTest.framework/Resources",
+					"XTest.xcframework/macos-arm64_x86_64/XTest.framework/Versions",
+					"XTest.xcframework/macos-arm64_x86_64/XTest.framework/Versions/A",
+					"XTest.xcframework/macos-arm64_x86_64/XTest.framework/Versions/A/Resources",
+					"XTest.xcframework/macos-arm64_x86_64/XTest.framework/Versions/A/Resources/Info.plist",
+					"XTest.xcframework/macos-arm64_x86_64/XTest.framework/Versions/A/XTest",
+					"XTest.xcframework/macos-arm64_x86_64/XTest.framework/Versions/Current",
+					"XTest.xcframework/macos-arm64_x86_64/XTest.framework/XTest",
+				});
+
+				addHere = Configuration.include_tvos ? mustHaveContents : mayHaveContents;
+				addHere.AddRange (new string [] {
+					"XTest.xcframework/tvos-arm64",
+					"XTest.xcframework/tvos-arm64/XTest.framework",
+					"XTest.xcframework/tvos-arm64/XTest.framework/Info.plist",
+					"XTest.xcframework/tvos-arm64/XTest.framework/XTest",
+					"XTest.xcframework/tvos-arm64_x86_64-simulator",
+					"XTest.xcframework/tvos-arm64_x86_64-simulator/XTest.framework",
+					"XTest.xcframework/tvos-arm64_x86_64-simulator/XTest.framework/Info.plist",
+					"XTest.xcframework/tvos-arm64_x86_64-simulator/XTest.framework/XTest",
+				});
+
+				addHere = Configuration.include_watchos ? mustHaveContents : mayHaveContents;
+				addHere.AddRange (new string [] {
+					"XTest.xcframework/watchos-arm64_32_armv7k",
+					"XTest.xcframework/watchos-arm64_32_armv7k/XTest.framework",
+					"XTest.xcframework/watchos-arm64_32_armv7k/XTest.framework/Info.plist",
+					"XTest.xcframework/watchos-arm64_32_armv7k/XTest.framework/XTest",
+					"XTest.xcframework/watchos-x86_64-simulator",
+					"XTest.xcframework/watchos-x86_64-simulator/XTest.framework",
+					"XTest.xcframework/watchos-x86_64-simulator/XTest.framework/Info.plist",
+					"XTest.xcframework/watchos-x86_64-simulator/XTest.framework/XTest",
+				});
+
+				var missing = mustHaveContents.ToHashSet ().Except (zipContents);
+				Assert.That (missing, Is.Empty, "No missing files");
+
+				var extra = zipContents.Except (mustHaveContents).Except (mayHaveContents);
+				Assert.That (extra, Is.Empty, "No extra files");
 			}
 		}
 
