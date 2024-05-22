@@ -2619,11 +2619,21 @@ namespace Intents {
 		[Field ("INCarChargingConnectorTypeGBTDC")]
 		Gbtdc,
 
+		[Deprecated (PlatformName.iOS, 17, 4, message: "Use 'INCarChargingConnectorType.NacsDc' instead.")]
+		[Deprecated (PlatformName.WatchOS, 10, 4, message: "Use 'INCarChargingConnectorType.NacsDc' instead.")]
 		[Field ("INCarChargingConnectorTypeTesla")]
 		Tesla,
 
 		[Field ("INCarChargingConnectorTypeMennekes")]
 		Mennekes,
+
+		[Watch (10, 4), iOS (17, 4), MacCatalyst (17, 4)]
+		[Field ("INCarChargingConnectorTypeNACSDC")]
+		NacsDC,
+
+		[Watch (10, 4), iOS (17, 4), MacCatalyst (17, 4)]
+		[Field ("INCarChargingConnectorTypeNACSAC")]
+		NacsAC,
 	}
 
 	// End of enums
