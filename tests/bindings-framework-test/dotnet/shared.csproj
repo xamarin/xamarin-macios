@@ -45,7 +45,7 @@
       <NoDSymUtil>true</NoDSymUtil>
       <NoSymbolStrip>true</NoSymbolStrip>
     </NativeReference>
-    <NativeReference Include="$(TestLibrariesDirectory)\.libs\$(NativeLibName)\XStaticObjectTest.framework">
+    <NativeReference Include="$(TestLibrariesDirectory)\.libs\$(NativeLibName)\XStaticObjectTest.framework\">
       <Kind>Framework</Kind>
       <SmartLink>False</SmartLink>
       <Frameworks>CoreLocation ModelIO</Frameworks>

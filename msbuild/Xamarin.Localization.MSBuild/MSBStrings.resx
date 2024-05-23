@@ -1568,4 +1568,8 @@
         <value>A path exceeding max path was detected. Enabling long paths in Windows may help. For more information see https://learn.microsoft.com/en-us/windows/win32/fileio/maximum-file-path-limitation.</value>
     </data>
 
+    <data name="E7123" xml:space="preserve">
+        <value>The app bundle '{0}' contains a subdirectory named 'Resources'. This is not allowed on this platform. Typically resource files should be in the root directory of the app bundle (or a custom subdirectory, but named anything other than 'Resources').</value>
+        <comment>0: a path</comment>
+    </data>
 </root>
