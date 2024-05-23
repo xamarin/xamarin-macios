@@ -17,20 +17,6 @@ using Xamarin.Utils;
 namespace Cecil.Tests {
 	public partial class BlittablePInvokes {
 		static HashSet<string> knownFailuresPInvokes = new HashSet<string> {
-			"AudioUnit.AUGraphError AudioUnit.AUGraph::AUGraphAddNode(System.IntPtr,AudioUnit.AudioComponentDescription&,System.Int32&)",
-			"AudioUnit.AUGraphError AudioUnit.AUGraph::AUGraphCountNodeInteractions(System.IntPtr,System.Int32,System.UInt32&)",
-			"AudioUnit.AUGraphError AudioUnit.AUGraph::AUGraphGetCPULoad(System.IntPtr,System.Single&)",
-			"AudioUnit.AUGraphError AudioUnit.AUGraph::AUGraphGetIndNode(System.IntPtr,System.UInt32,System.Int32&)",
-			"AudioUnit.AUGraphError AudioUnit.AUGraph::AUGraphGetMaxCPULoad(System.IntPtr,System.Single&)",
-			"AudioUnit.AUGraphError AudioUnit.AUGraph::AUGraphGetNodeCount(System.IntPtr,System.Int32&)",
-			"AudioUnit.AUGraphError AudioUnit.AUGraph::AUGraphGetNumberOfInteractions(System.IntPtr,System.UInt32&)",
-			"AudioUnit.AUGraphError AudioUnit.AUGraph::AUGraphIsInitialized(System.IntPtr,System.Boolean&)",
-			"AudioUnit.AUGraphError AudioUnit.AUGraph::AUGraphIsOpen(System.IntPtr,System.Boolean&)",
-			"AudioUnit.AUGraphError AudioUnit.AUGraph::AUGraphIsRunning(System.IntPtr,System.Boolean&)",
-			"AudioUnit.AUGraphError AudioUnit.AUGraph::AUGraphNodeInfo(System.IntPtr,System.Int32,AudioUnit.AudioComponentDescription&,System.IntPtr&)",
-			"AudioUnit.AUGraphError AudioUnit.AUGraph::AUGraphNodeInfo(System.IntPtr,System.Int32,System.IntPtr,System.IntPtr&)",
-			"AudioUnit.AUGraphError AudioUnit.AUGraph::AUGraphSetNodeInputCallback(System.IntPtr,System.Int32,System.UInt32,AudioUnit.AURenderCallbackStruct&)",
-			"AudioUnit.AUGraphError AudioUnit.AUGraph::AUGraphUpdate(System.IntPtr,System.Boolean&)",
 			"AVFoundation.AVSampleCursorAudioDependencyInfo ObjCRuntime.Messaging::AVSampleCursorAudioDependencyInfo_objc_msgSend(System.IntPtr,System.IntPtr)",
 			"AVFoundation.AVSampleCursorAudioDependencyInfo ObjCRuntime.Messaging::AVSampleCursorAudioDependencyInfo_objc_msgSendSuper(System.IntPtr,System.IntPtr)",
 			"AVFoundation.AVSampleCursorChunkInfo ObjCRuntime.Messaging::AVSampleCursorChunkInfo_objc_msgSend_stret(System.IntPtr,System.IntPtr)",
