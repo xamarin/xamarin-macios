@@ -95,5 +95,15 @@ namespace Xamarin.Tests {
 				completionHandler (42);
 			}
 		}
+
+#if NET
+		[Test]
+		public void SwiftTest ()
+		{
+			TestRuntime.AssertXcodeVersion (13, 0);
+			using var obj = new SwiftTestClass ();
+			Assert.AreEqual ("Hello from Swift", obj.SayHello (), "Hello");
+		}
+#endif
 	}
 }
