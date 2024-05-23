@@ -190,7 +190,7 @@ namespace Xamarin.Tests {
 			// Verify that there's one resource in the binding assembly, and its name
 			var ad = AssemblyDefinition.ReadAssembly (asm, new ReaderParameters { ReadingMode = ReadingMode.Deferred });
 			Assert.That (ad.MainModule.Resources.Count, Is.EqualTo (0), "no embedded resources");
-			var resourceBundle = Path.Combine (project_dir, "bin", "Debug", platform.ToFramework (), assemblyName + ".resources");
+			var resourceBundle = Path.Combine (project_dir, "bin", "Debug", platform.ToFramework (), assemblyName + ".resources.zip");
 			Assert.That (resourceBundle, Does.Exist, "Bundle existence");
 		}
 
@@ -1525,6 +1525,7 @@ namespace Xamarin.Tests {
 			var properties = GetDefaultProperties (runtimeIdentifiers);
 			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
 
+			Clean (project_path);
 			DotNet.AssertBuild (project_path, properties);
 
 			var codesignDirectory = GetRelativeCodesignDirectory (platform);
@@ -1587,6 +1588,40 @@ namespace Xamarin.Tests {
 				Assert.IsFalse (IsDylibSigned (path), $"Unsigned: {path}");
 			}
 			Assert.AreEqual (1, remainingDylibs.Length, "Unsigned count");
+
+			// Verify that a Resources subdirectory causes the build to fail.
+			switch (platform) {
+			case ApplePlatform.iOS:
+			case ApplePlatform.TVOS:
+				var invalidDir = Path.Combine (appPath, "Resources");
+				Directory.CreateDirectory (invalidDir);
+
+				// First verify that we get our customized error message
+				var buildFailure = DotNet.AssertBuildFailure (project_path, properties);
+				var errors = BinLog.GetBuildLogErrors (buildFailure.BinLogPath).ToArray ();
+				AssertErrorMessages (errors, $"The app bundle '{appPath}' contains a subdirectory named 'Resources'. This is not allowed on this platform. Typically resource files should be in the root directory of the app bundle (or a custom subdirectory, but named anything other than 'Resources').");
+
+				// Then disable our customized error message, but the build will still fail, now with codesign's error message
+				properties ["CodesignDisallowResourcesSubdirectoryInAppBundle"] = "false";
+				buildFailure = DotNet.AssertBuildFailure (project_path, properties);
+				errors = BinLog.GetBuildLogErrors (buildFailure.BinLogPath).ToArray ();
+				AssertErrorMessages (errors,
+					$"/usr/bin/codesign exited with code 1:\n" +
+					$"{appPath}: replacing existing signature\n" +
+					$"{appPath}: code object is not signed at all\n" +
+					$"In subcomponent: {appPath}/System.Diagnostics.DiagnosticSource.dll",
+
+					$"Failed to codesign '{appPath}': {appPath}: replacing existing signature\n" +
+					$"{appPath}: code object is not signed at all\n" +
+					$"In subcomponent: {appPath}/System.Diagnostics.DiagnosticSource.dll"
+				);
+
+				// Remove the dir, and now the build should succeed again.
+				properties.Remove ("CodesignDisallowResourcesSubdirectoryInAppBundle");
+				Directory.Delete (invalidDir);
+				DotNet.AssertBuild (project_path, properties);
+				break;
+			}
 		}
 
 		bool IsDylibSigned (string dylib)

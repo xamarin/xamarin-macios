@@ -128,11 +128,25 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</PropertyGroup>
 	</Target>
 
+	<Target Name="_SanitizeNativeReferences">
+		<!-- Remove trailing slashes from native references, so that we treat '.framework' the same as '.framework/'.
+			Ref: https://github.com/xamarin/xamarin-macios/issues/15430
+		-->
+		<ItemGroup>
+			<NativeReference>
+				<IdentityWithoutPathSeparatorSuffix>$([System.String]::Copy('%(Identity)').TrimEnd('/').TrimEnd('\'))</IdentityWithoutPathSeparatorSuffix>
+			</NativeReference>
+			<NativeReferenceWithoutPathSeparatorSuffix Include="@(NativeReference->'%(IdentityWithoutPathSeparatorSuffix)')" />
+			<NativeReference Remove="@(NativeReference)" />
+			<NativeReference Include="@(NativeReferenceWithoutPathSeparatorSuffix)" />
+		</ItemGroup>
+	</Target>
+
 	<!--
 		@(NativeReference) are not safe to use as an Input to a task, as frameworks are a directory and will appears unbuilt every time.
 		So we split it into two camps as a prebuild step
 	-->
-	<Target Name="_ExpandNativeReferences" Condition="'$(DesignTimeBuild)' != 'true'" DependsOnTargets="_DetectSdkLocations;_ComputeTargetArchitectures;_GenerateBundleName">
+	<Target Name="_ExpandNativeReferences" Condition="'$(DesignTimeBuild)' != 'true'" DependsOnTargets="_DetectSdkLocations;_ComputeTargetArchitectures;_GenerateBundleName;_SanitizeNativeReferences">
 		<ItemGroup>
 			<_XCFrameworkNativeReference Include="@(NativeReference -> '%(Identity)/.')" Condition="'%(Extension)' == '.xcframework'" />
 			<_FrameworkNativeReference Include="@(NativeReference -> '%(Identity)/%(Filename)')" Condition="'%(Extension)' == '.framework'" />
@@ -2361,6 +2375,11 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			DependsOnTargets="$(_CodesignAppBundleDependsOn)"
 		>
 
+		<PropertyGroup>
+			<CodesignDisallowResourcesSubdirectoryInAppBundle Condition="'$(CodesignDisallowResourcesSubdirectoryInAppBundle)' == '' And ('$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS')">true</CodesignDisallowResourcesSubdirectoryInAppBundle>
+			<CodesignDisallowResourcesSubdirectoryInAppBundle Condition="'$(CodesignDisallowResourcesSubdirectoryInAppBundle)' == ''">false</CodesignDisallowResourcesSubdirectoryInAppBundle>
+		</PropertyGroup>
+
 		<ComputeCodesignItems
 			Condition="'$(IsMacEnabled)' == 'true'"
 			SessionId="$(BuildSessionId)"
@@ -2379,6 +2398,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		<Codesign
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
+			DisallowResourcesSubdirectoryInAppBundle="$(CodesignDisallowResourcesSubdirectoryInAppBundle)"
 			MaxDegreeOfParallelism="$(CodesignMaxDegreeOfParallelism)"
 			Resources="@(_ComputedCodesignItems)"
 			ToolExe="$(CodesignExe)"
