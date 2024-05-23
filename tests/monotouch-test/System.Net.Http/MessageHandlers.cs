@@ -833,10 +833,9 @@ namespace MonoTests.System.Net.Http {
 			}
 		}
 
-		[TestCase (typeof (NSUrlSessionHandler))]
 #if NET
+		[TestCase (typeof (NSUrlSessionHandler))]
 		[TestCase (typeof (SocketsHttpHandler))]
-#endif
 		public void UpdateRequestUriAfterRedirect (Type handlerType)
 		{
 			// https://github.com/xamarin/xamarin-macios/issues/20629
@@ -861,9 +860,7 @@ namespace MonoTests.System.Net.Http {
 		}
 
 		[TestCase (typeof (NSUrlSessionHandler))]
-#if NET
 		[TestCase (typeof (SocketsHttpHandler))]
-#endif
 		public void RequestUriNotUpdatedIfNotRedirect (Type handlerType)
 		{
 			// https://github.com/xamarin/xamarin-macios/issues/20629
@@ -885,5 +882,6 @@ namespace MonoTests.System.Net.Http {
 				Assert.IsNull (ex, "Exception");
 			}
 		}
+#endif // NET
 	}
 }
