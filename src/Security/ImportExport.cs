@@ -39,7 +39,7 @@ namespace Security {
 	public partial class SecImportExport {
 
 		[DllImport (Constants.SecurityLibrary)]
-		extern static SecStatusCode SecPKCS12Import (IntPtr pkcs12_data, IntPtr options, out IntPtr items);
+		unsafe extern static SecStatusCode SecPKCS12Import (IntPtr pkcs12_data, IntPtr options, IntPtr* items);
 
 		static public SecStatusCode ImportPkcs12 (byte [] buffer, NSDictionary options, out NSDictionary [] array)
 		{
@@ -54,7 +54,10 @@ namespace Security {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (options));
 
 			IntPtr handle;
-			SecStatusCode code = SecPKCS12Import (data.Handle, options.Handle, out handle);
+			SecStatusCode code;
+			unsafe {
+				code = SecPKCS12Import (data.Handle, options.Handle, &handle);
+			}
 			array = NSArray.ArrayFromHandle<NSDictionary> (handle);
 			NSObject.DangerousRelease (handle);
 			return code;

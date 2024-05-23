@@ -35,6 +35,7 @@
 
 using System;
 using System.Collections;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using CoreFoundation;
 using Foundation;
@@ -322,14 +323,14 @@ namespace Security {
 		[Deprecated (PlatformName.MacOSX, 10,10)]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
-		extern static SecStatusCode SecKeychainFindGenericPassword (
+		unsafe extern static SecStatusCode SecKeychainFindGenericPassword (
 			IntPtr keychainOrArray,
 			int serviceNameLength,
-			byte[]? serviceName,
+			byte* serviceName,
 			int accountNameLength,
-			byte[]? accountName,
-			out int passwordLength,
-			out IntPtr passwordData,
+			byte* accountName,
+			int* passwordLength,
+			IntPtr* passwordData,
 			IntPtr itemRef);
 
 #if NET
@@ -361,21 +362,21 @@ namespace Security {
 		[Deprecated (PlatformName.MacOSX, 10,10)]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
-		extern static SecStatusCode SecKeychainFindInternetPassword (
+		unsafe extern static SecStatusCode SecKeychainFindInternetPassword (
 			IntPtr keychain,
 			int serverNameLength,
-			byte[]? serverName,
+			byte* serverName,
 			int securityDomainLength,
-			byte[]? securityDomain,
+			byte* securityDomain,
 			int accountNameLength,
-			byte[]? accountName,
+			byte* accountName,
 			int pathLength,
-			byte[]? path,
+			byte* path,
 			short port,
 			IntPtr protocol,
 			IntPtr authenticationType,
-			out int passwordLength,
-			out IntPtr passwordData,
+			int* passwordLength,
+			IntPtr* passwordData,
 			IntPtr itemRef);
 
 #if NET
@@ -466,22 +467,33 @@ namespace Security {
 				
 				int passwordLength = 0;
 				
-				SecStatusCode code = SecKeychainFindInternetPassword(
-					IntPtr.Zero,
-					serverBytes?.Length ?? 0,
-					serverBytes,
-					securityDomainBytes?.Length ?? 0,
-					securityDomainBytes,
-					accountNameBytes?.Length ?? 0,
-					accountNameBytes,
-					pathBytes?.Length ?? 0,
-					pathBytes,
-					port,
-					SecProtocolKeys.FromSecProtocol(protocolType),
-					KeysAuthenticationType.FromSecAuthenticationType(authenticationType),
-					out passwordLength,
-					out passwordPtr,
-					IntPtr.Zero);
+				SecStatusCode code;
+				unsafe {
+					fixed (byte* serverBytesPtr = serverBytes) {
+						fixed (byte* securityDomainBytesPtr = securityDomainBytes) {
+							fixed (byte* accountNameBytesPtr = accountNameBytes) {
+								fixed (byte* pathBytesPtr = pathBytes) {
+									code = SecKeychainFindInternetPassword(
+										IntPtr.Zero,
+										serverBytes?.Length ?? 0,
+										serverBytesPtr,
+										securityDomainBytes?.Length ?? 0,
+										securityDomainBytesPtr,
+										accountNameBytes?.Length ?? 0,
+										accountNameBytesPtr,
+										pathBytes?.Length ?? 0,
+										pathBytesPtr,
+										port,
+										SecProtocolKeys.FromSecProtocol(protocolType),
+										KeysAuthenticationType.FromSecAuthenticationType(authenticationType),
+										&passwordLength,
+										&passwordPtr,
+										IntPtr.Zero);
+								}
+							}
+						}
+					}
+				}
 				
 				if (code == SecStatusCode.Success && passwordLength > 0) {
 					password = new byte[passwordLength];
@@ -538,16 +550,23 @@ namespace Security {
 				
 				int passwordLength = 0;
 				
-				var code = SecKeychainFindGenericPassword(
-					IntPtr.Zero,
-					serviceNameBytes?.Length ?? 0,
-					serviceNameBytes,
-					accountNameBytes?.Length ?? 0,
-					accountNameBytes,
-					out passwordLength,
-					out passwordPtr,
-					IntPtr.Zero
-					);
+				SecStatusCode code;
+				unsafe {
+					fixed (byte* serviceNameBytesPtr = serviceNameBytes) {
+						fixed (byte* accountNameBytesPtr = accountNameBytes) {
+							code = SecKeychainFindGenericPassword(
+								IntPtr.Zero,
+								serviceNameBytes?.Length ?? 0,
+								serviceNameBytesPtr,
+								accountNameBytes?.Length ?? 0,
+								accountNameBytesPtr,
+								&passwordLength,
+								&passwordPtr,
+								IntPtr.Zero
+								);
+						}
+					}
+				}
 				
 				if (code == SecStatusCode.Success && passwordLength > 0){
 					password = new byte[passwordLength];
@@ -1556,7 +1575,15 @@ namespace Security {
 	internal partial class SecItem {
 
 		[DllImport (Constants.SecurityLibrary)]
-		internal extern static SecStatusCode SecItemCopyMatching (/* CFDictionaryRef */ IntPtr query, /* CFTypeRef* */ out IntPtr result);
+		unsafe extern static SecStatusCode SecItemCopyMatching (/* CFDictionaryRef */ IntPtr query, /* CFTypeRef* */ IntPtr* result);
+
+		internal static SecStatusCode SecItemCopyMatching (/* CFDictionaryRef */ IntPtr query, /* CFTypeRef* */ out IntPtr result)
+		{
+			result = default;
+			unsafe {
+				return SecItemCopyMatching (query, (IntPtr*) Unsafe.AsPointer<IntPtr> (ref result));
+			}
+		}
 
 		[DllImport (Constants.SecurityLibrary)]
 		internal extern static SecStatusCode SecItemAdd (/* CFDictionaryRef */ IntPtr attributes, /* CFTypeRef* */ IntPtr result);
