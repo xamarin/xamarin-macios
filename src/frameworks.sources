@@ -910,6 +910,7 @@ GAMECONTROLLER_SOURCES = \
 	GameController/GCExtendedGamepadSnapshot.cs \
 	GameController/GCGamepadSnapshot.cs \
 	GameController/GCMicroGamepadSnapshot.cs \
+	GameController/GCMouse.cs \
 
 # GameKit
 
