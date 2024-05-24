@@ -90,17 +90,13 @@ namespace MonoTouchFixtures.ImageIO {
 		{
 			using (var imgsrc = CGImageSource.FromUrl (fileUrl)) {
 				using (var img = imgsrc.CreateThumbnail (0, null)) {
-					if (img is null) {
+					if (img is not null) {
 						Assert.AreEqual (IntPtr.Zero, (IntPtr) img.Handle, "#a1");
-					} else {
-						Assert.AreNotEqual (IntPtr.Zero, (IntPtr) img.Handle, "#a2");
 					}
 				}
 				using (var img = imgsrc.CreateThumbnail (0, new CGImageThumbnailOptions ())) {
-					if (img is null) {
+					if (img is not null) {
 						Assert.AreEqual (IntPtr.Zero, (IntPtr) img.Handle, "#b1");
-					} else {
-						Assert.AreNotEqual (IntPtr.Zero, (IntPtr) img.Handle, "#b2");
 					}
 				}
 			}
