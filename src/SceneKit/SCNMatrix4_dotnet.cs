@@ -647,7 +647,7 @@ namespace SceneKit {
 		/// <param name="height">The height of the projection volume.</param>
 		/// <param name="zNear">The near edge of the projection volume.</param>
 		/// <param name="zFar">The far edge of the projection volume.</param>
-		/// <rereturns>The resulting SCNMatrix4 instance.</rereturns>
+		/// <returns>The resulting SCNMatrix4 instance.</returns>
 		public static SCNMatrix4 CreateOrthographic (pfloat width, pfloat height, pfloat zNear, pfloat zFar)
 		{
 			SCNMatrix4 result;
@@ -777,7 +777,7 @@ namespace SceneKit {
 #region CreatePerspectiveOffCenter
 
 		/// <summary>
-		/// Creates an perspective projection matrix.
+		/// Creates a perspective projection matrix.
 		/// </summary>
 		/// <param name="left">Left edge of the view frustum</param>
 		/// <param name="right">Right edge of the view frustum</param>
@@ -818,7 +818,7 @@ namespace SceneKit {
 		}
 
 		/// <summary>
-		/// Creates an perspective projection matrix.
+		/// Creates a perspective projection matrix.
 		/// </summary>
 		/// <param name="left">Left edge of the view frustum</param>
 		/// <param name="right">Right edge of the view frustum</param>
@@ -849,7 +849,7 @@ namespace SceneKit {
 		/// <summary>
 		/// Build a scaling matrix
 		/// </summary>
-		/// <param name="scale">Single scale factor for x,y and z axes</param>
+		/// <param name="scale">Single scale factor for x, y and z axes</param>
 		/// <returns>A scaling matrix</returns>
 		public static SCNMatrix4 Scale (pfloat scale)
 		{
@@ -859,7 +859,7 @@ namespace SceneKit {
 		/// <summary>
 		/// Build a scaling matrix
 		/// </summary>
-		/// <param name="scale">Scale factors for x,y and z axes</param>
+		/// <param name="scale">Scale factors for x, y and z axes</param>
 		/// <returns>A scaling matrix</returns>
 		public static SCNMatrix4 Scale (SCNVector3 scale)
 		{
@@ -1147,7 +1147,7 @@ namespace SceneKit {
 		/// Calculate the inverse of the given matrix
 		/// </summary>
 		/// <param name="matrix">The matrix to invert</param>
-		/// <returns>The inverse of the given matrix if it has one, or the input if it is singular</returns>
+		/// <returns>The inverse of the given matrix if it has one.</returns>
 		/// <exception cref="InvalidOperationException">Thrown if the SCNMatrix4 is singular.</exception>
 		public static SCNMatrix4 Invert (SCNMatrix4 matrix)
 		{
