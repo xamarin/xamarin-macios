@@ -331,6 +331,20 @@ get_type_description_length (const char *desc)
 			if (desc [1] == '?') {
 				// Example: [AVAssetImageGenerator generateCGImagesAsynchronouslyForTimes:completionHandler:] = 'v16@0:4@8@?12'
 				length = 2;
+				if (desc [2] == '<') {
+					length = 3;
+					do {
+						int nestedLength = get_type_description_length (desc + length);
+						length += nestedLength;
+					} while (desc [length] && desc [length] != '>');
+					if (desc [length] == '>')
+						length++;
+				}
+			} else if (desc [1] == '"') {
+				length = 2;
+				while (desc [length] && desc [length] != '"')
+					length++;
+				length++;
 			} else {
 				length = 1;
 			}
