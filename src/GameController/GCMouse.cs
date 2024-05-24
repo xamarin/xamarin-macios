@@ -23,7 +23,6 @@ namespace GameController {
 			}
 		}
 
-		[Export ("encodeWithCoder:")]
 #if NET
 		[SupportedOSPlatform ("ios14.0")]
 		[SupportedOSPlatform ("macos")]
