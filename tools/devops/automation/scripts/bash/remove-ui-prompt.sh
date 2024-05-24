@@ -8,7 +8,7 @@ else
   echo "Security UI-prompt could NOT be removed."
 fi
 
-security unlock-keychain -p "$OSX_KEYCHAIN_PASS" || RC=$?
+security -v -v -v unlock-keychain -p "$OSX_KEYCHAIN_PASS" login.keychain || RC=$?
 if [ $RC -eq 0 ]; then
   echo "Login keychain unlocked."
 else
