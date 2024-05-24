@@ -1,10 +1,11 @@
-#if !__WATCHOS__
+#if !__WATCHOS__ && !BINDINGS_TEST
 #define CAN_SHOW_ASYNC_UI
 #endif
 
 using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -157,8 +158,13 @@ partial class TestRuntime {
 			var vc = new AsyncController (imageToShow);
 
 #if HAS_UIKIT
-			window = UIApplication.SharedApplication.KeyWindow;
-			initialRootViewController = window.RootViewController;
+			// UIApplication.KeyWindow is deprecated, so we have to do this monstruosity instead (https://stackoverflow.com/a/58031897/183422):
+			window = UIApplication
+						.SharedApplication
+						.ConnectedScenes
+						.SelectMany<UIScene, UIWindow> (v => (v as UIWindowScene)?.Windows ?? Array.Empty<UIWindow> ())
+						.Last (v => v.IsKeyWindow);
+			initialRootViewController = window.RootViewController!;
 			navigation = initialRootViewController as UINavigationController;
 
 			// Pushing something to a navigation controller doesn't seem to work on phones
@@ -237,7 +243,7 @@ partial class TestRuntime {
 			}
 
 #if HAS_UIKIT
-			View.BackgroundColor = backgroundColor;
+			View!.BackgroundColor = backgroundColor;
 #else
 			View.WantsLayer = true;
 			View.Layer.BackgroundColor = backgroundColor.CGColor;
@@ -257,7 +263,7 @@ partial class TestRuntime {
 }
 
 namespace Foundation {
-	public static class NSRunLoop_Extensions {
+	static class NSRunLoop_Extensions {
 		// Returns true if task completed before the timeout,
 		// otherwise returns false
 		public static bool RunUntil (this NSRunLoop self, Task task, TimeSpan timeout)
