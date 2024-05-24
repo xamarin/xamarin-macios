@@ -41,8 +41,6 @@ namespace Cecil.Tests {
 			"AVFoundation.AVSampleCursorSyncInfo ObjCRuntime.Messaging::AVSampleCursorSyncInfo_objc_msgSend(System.IntPtr,System.IntPtr)",
 			"AVFoundation.AVSampleCursorSyncInfo ObjCRuntime.Messaging::AVSampleCursorSyncInfo_objc_msgSendSuper_stret(System.IntPtr,System.IntPtr)",
 			"AVFoundation.AVSampleCursorSyncInfo ObjCRuntime.Messaging::AVSampleCursorSyncInfo_objc_msgSendSuper(System.IntPtr,System.IntPtr)",
-			"MediaToolbox.MTAudioProcessingTapError MediaToolbox.MTAudioProcessingTap::MTAudioProcessingTapCreate(System.IntPtr,MediaToolbox.MTAudioProcessingTap/Callbacks&,MediaToolbox.MTAudioProcessingTapCreationFlags,System.IntPtr&)",
-			"MediaToolbox.MTAudioProcessingTapError MediaToolbox.MTAudioProcessingTap::MTAudioProcessingTapGetSourceAudio(System.IntPtr,System.IntPtr,System.IntPtr,MediaToolbox.MTAudioProcessingTapFlags&,CoreMedia.CMTimeRange&,System.IntPtr&)",
 			"System.Boolean Network.NWAdvertiseDescriptor::nw_advertise_descriptor_get_no_auto_rename(System.IntPtr)",
 			"System.Boolean Network.NWBrowserDescriptor::nw_browse_descriptor_get_include_txt_record(System.IntPtr)",
 			"System.Boolean Network.NWConnectionGroup::nw_connection_group_reinsert_extracted_connection(System.IntPtr,System.IntPtr)",
