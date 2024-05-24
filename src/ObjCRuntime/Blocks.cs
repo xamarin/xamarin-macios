@@ -343,6 +343,7 @@ namespace ObjCRuntime {
 				// CS0420: A volatile field references will not be treated as volatile
 				// Documentation says: "A volatile field should not normally be passed using a ref or out parameter, since it will not be treated as volatile within the scope of the function. There are exceptions to this, such as when calling an interlocked API."
 				// So ignoring the warning, since it's a documented exception.
+				// Interlocked.Decrement returns the new value after the subtraction
 				var rc = Interlocked.Decrement (ref xblock_descriptor->ref_count);
 #pragma warning restore 420
 
