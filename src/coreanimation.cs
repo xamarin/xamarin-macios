@@ -1854,7 +1854,7 @@ namespace CoreAnimation {
 		[Export ("seed")]
 		int Seed { get; set; } // unsigned int
 
-		/** `emitterShape' values. **/
+		/* `emitterShape' values. */
 		[Field ("kCAEmitterLayerPoint")]
 		NSString ShapePoint { get; }
 
@@ -1873,7 +1873,7 @@ namespace CoreAnimation {
 		[Field ("kCAEmitterLayerSphere")]
 		NSString ShapeSphere { get; }
 
-		/** `emitterMode' values. **/
+		/* `emitterMode' values. */
 		[Field ("kCAEmitterLayerPoints")]
 		NSString ModePoints { get; }
 
@@ -1886,7 +1886,7 @@ namespace CoreAnimation {
 		[Field ("kCAEmitterLayerVolume")]
 		NSString ModeVolume { get; }
 
-		/** `renderOrder' values. **/
+		/*  `renderOrder' values. */
 		[Field ("kCAEmitterLayerUnordered")]
 		NSString RenderUnordered { get; }
 

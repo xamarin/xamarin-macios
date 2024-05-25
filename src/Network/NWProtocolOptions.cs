@@ -132,35 +132,35 @@ namespace Network {
 #endif // !NET
 
 		[DllImport (Constants.NetworkLibrary)]
-		internal static extern void nw_ip_options_set_use_minimum_mtu (IntPtr options, [MarshalAs (UnmanagedType.I1)] bool use_minimum_mtu);
+		internal static extern void nw_ip_options_set_use_minimum_mtu (IntPtr options, byte use_minimum_mtu);
 
 #if !NET
 		[Obsolete ("Use the 'NWProtocolIPOptions' class instead.")]
 		public void IPSetUseMinimumMtu (bool useMinimumMtu)
 		{
-			nw_ip_options_set_use_minimum_mtu (GetCheckedHandle (), useMinimumMtu);
+			nw_ip_options_set_use_minimum_mtu (GetCheckedHandle (), useMinimumMtu.AsByte ());
 		}
 #endif // !NET
 
 		[DllImport (Constants.NetworkLibrary)]
-		internal static extern void nw_ip_options_set_disable_fragmentation (IntPtr options, [MarshalAs (UnmanagedType.I1)] bool disable_fragmentation);
+		internal static extern void nw_ip_options_set_disable_fragmentation (IntPtr options, byte disable_fragmentation);
 
 #if !NET
 		[Obsolete ("Use the 'NWProtocolIPOptions' class instead.")]
 		public void IPSetDisableFragmentation (bool disableFragmentation)
 		{
-			nw_ip_options_set_disable_fragmentation (GetCheckedHandle (), disableFragmentation);
+			nw_ip_options_set_disable_fragmentation (GetCheckedHandle (), disableFragmentation.AsByte ());
 		}
 #endif // !NET
 
 		[DllImport (Constants.NetworkLibrary)]
-		internal static extern void nw_ip_options_set_calculate_receive_time (IntPtr options, [MarshalAs (UnmanagedType.I1)] bool calculateReceiveTime);
+		internal static extern void nw_ip_options_set_calculate_receive_time (IntPtr options, byte calculateReceiveTime);
 
 #if !NET
 		[Obsolete ("Use the 'NWProtocolIPOptions' class instead.")]
 		public void IPSetCalculateReceiveTime (bool calculateReceiveTime)
 		{
-			nw_ip_options_set_calculate_receive_time (GetCheckedHandle (), calculateReceiveTime);
+			nw_ip_options_set_calculate_receive_time (GetCheckedHandle (), calculateReceiveTime.AsByte ());
 		}
 #endif // !NET
 
@@ -190,35 +190,35 @@ namespace Network {
 		//
 
 		[DllImport (Constants.NetworkLibrary)]
-		internal extern static void nw_tcp_options_set_no_delay (IntPtr handle, [MarshalAs (UnmanagedType.U1)] bool noDelay);
+		internal extern static void nw_tcp_options_set_no_delay (IntPtr handle, byte noDelay);
 
 #if !NET
 		[Obsolete ("Use the 'NWProtocolTcpOptions' class instead.")]
-		public void TcpSetNoDelay (bool noDelay) => nw_tcp_options_set_no_delay (GetCheckedHandle (), noDelay);
+		public void TcpSetNoDelay (bool noDelay) => nw_tcp_options_set_no_delay (GetCheckedHandle (), noDelay.AsByte ());
 #endif // !NET
 
 		[DllImport (Constants.NetworkLibrary)]
-		internal extern static void nw_tcp_options_set_no_push (IntPtr handle, [MarshalAs (UnmanagedType.U1)] bool noPush);
+		internal extern static void nw_tcp_options_set_no_push (IntPtr handle, byte noPush);
 
 #if !NET
 		[Obsolete ("Use the 'NWProtocolTcpOptions' class instead.")]
-		public void TcpSetNoPush (bool noPush) => nw_tcp_options_set_no_push (GetCheckedHandle (), noPush);
+		public void TcpSetNoPush (bool noPush) => nw_tcp_options_set_no_push (GetCheckedHandle (), noPush.AsByte ());
 #endif // !NET
 
 		[DllImport (Constants.NetworkLibrary)]
-		internal extern static void nw_tcp_options_set_no_options (IntPtr handle, [MarshalAs (UnmanagedType.U1)] bool noOptions);
+		internal extern static void nw_tcp_options_set_no_options (IntPtr handle, byte noOptions);
 
 #if !NET
 		[Obsolete ("Use the 'NWProtocolTcpOptions' class instead.")]
-		public void TcpSetNoOptions (bool noOptions) => nw_tcp_options_set_no_options (GetCheckedHandle (), noOptions);
+		public void TcpSetNoOptions (bool noOptions) => nw_tcp_options_set_no_options (GetCheckedHandle (), noOptions.AsByte ());
 #endif // !NET
 
 		[DllImport (Constants.NetworkLibrary)]
-		internal extern static void nw_tcp_options_set_enable_keepalive (IntPtr handle, [MarshalAs (UnmanagedType.U1)] bool enableKeepAlive);
+		internal extern static void nw_tcp_options_set_enable_keepalive (IntPtr handle, byte enableKeepAlive);
 
 #if !NET
 		[Obsolete ("Use the 'NWProtocolTcpOptions' class instead.")]
-		public void TcpSetEnableKeepAlive (bool enableKeepAlive) => nw_tcp_options_set_enable_keepalive (GetCheckedHandle (), enableKeepAlive);
+		public void TcpSetEnableKeepAlive (bool enableKeepAlive) => nw_tcp_options_set_enable_keepalive (GetCheckedHandle (), enableKeepAlive.AsByte ());
 #endif // !NET
 
 		[DllImport (Constants.NetworkLibrary)]
@@ -278,46 +278,46 @@ namespace Network {
 #endif // !NET
 
 		[DllImport (Constants.NetworkLibrary)]
-		internal extern static void nw_tcp_options_set_retransmit_fin_drop (IntPtr handle, [MarshalAs (UnmanagedType.U1)] bool retransmitFinDrop);
+		internal extern static void nw_tcp_options_set_retransmit_fin_drop (IntPtr handle, byte retransmitFinDrop);
 
 #if !NET
 		[Obsolete ("Use the 'NWProtocolTcpOptions' class instead.")]
-		public void TcpSetRetransmitFinDrop (bool retransmitFinDrop) => nw_tcp_options_set_retransmit_fin_drop (GetCheckedHandle (), retransmitFinDrop);
+		public void TcpSetRetransmitFinDrop (bool retransmitFinDrop) => nw_tcp_options_set_retransmit_fin_drop (GetCheckedHandle (), retransmitFinDrop.AsByte ());
 #endif // !NET
 
 		[DllImport (Constants.NetworkLibrary)]
-		internal extern static void nw_tcp_options_set_disable_ack_stretching (IntPtr handle, [MarshalAs (UnmanagedType.U1)] bool disableAckStretching);
+		internal extern static void nw_tcp_options_set_disable_ack_stretching (IntPtr handle, byte disableAckStretching);
 
 #if !NET
 		[Obsolete ("Use the 'NWProtocolTcpOptions' class instead.")]
-		public void TcpSetDisableAckStretching (bool disableAckStretching) => nw_tcp_options_set_disable_ack_stretching (GetCheckedHandle (), disableAckStretching);
+		public void TcpSetDisableAckStretching (bool disableAckStretching) => nw_tcp_options_set_disable_ack_stretching (GetCheckedHandle (), disableAckStretching.AsByte ());
 #endif // !NET
 
 		[DllImport (Constants.NetworkLibrary)]
-		internal extern static void nw_tcp_options_set_enable_fast_open (IntPtr handle, [MarshalAs (UnmanagedType.U1)] bool enableFastOpen);
+		internal extern static void nw_tcp_options_set_enable_fast_open (IntPtr handle, byte enableFastOpen);
 
 #if !NET
 		[Obsolete ("Use the 'NWProtocolTcpOptions' class instead.")]
-		public void TcpSetEnableFastOpen (bool enableFastOpen) => nw_tcp_options_set_enable_fast_open (GetCheckedHandle (), enableFastOpen);
+		public void TcpSetEnableFastOpen (bool enableFastOpen) => nw_tcp_options_set_enable_fast_open (GetCheckedHandle (), enableFastOpen.AsByte ());
 #endif // !NET
 
 		[DllImport (Constants.NetworkLibrary)]
-		internal extern static void nw_tcp_options_set_disable_ecn (IntPtr handle, [MarshalAs (UnmanagedType.U1)] bool disableEcn);
+		internal extern static void nw_tcp_options_set_disable_ecn (IntPtr handle, byte disableEcn);
 
 #if !NET
 		[Obsolete ("Use the 'NWProtocolTcpOptions' class instead.")]
-		public void TcpSetDisableEcn (bool disableEcn) => nw_tcp_options_set_disable_ecn (GetCheckedHandle (), disableEcn);
+		public void TcpSetDisableEcn (bool disableEcn) => nw_tcp_options_set_disable_ecn (GetCheckedHandle (), disableEcn.AsByte ());
 #endif // !NET
 
 		//
 		// UDP Options
 		//
 		[DllImport (Constants.NetworkLibrary)]
-		internal extern static void nw_udp_options_set_prefer_no_checksum (IntPtr handle, [MarshalAs (UnmanagedType.U1)] bool preferNoChecksums);
+		internal extern static void nw_udp_options_set_prefer_no_checksum (IntPtr handle, byte preferNoChecksums);
 
 #if !NET
 		[Obsolete ("Use the 'NWProtocolUdpOptions' class instead.")]
-		public void UdpSetPreferNoChecksum (bool preferNoChecksums) => nw_udp_options_set_prefer_no_checksum (GetCheckedHandle (), preferNoChecksums);
+		public void UdpSetPreferNoChecksum (bool preferNoChecksums) => nw_udp_options_set_prefer_no_checksum (GetCheckedHandle (), preferNoChecksums.AsByte ());
 #endif // !NET
 
 		//
@@ -345,9 +345,8 @@ namespace Network {
 		[MacCatalyst (15, 0)]
 #endif
 		[DllImport (Constants.NetworkLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static extern bool nw_protocol_options_is_quic (IntPtr options);
+		static extern byte nw_protocol_options_is_quic (IntPtr options);
 
-		public bool IsQuic => nw_protocol_options_is_quic (GetCheckedHandle ());
+		public bool IsQuic => nw_protocol_options_is_quic (GetCheckedHandle ()) != 0;
 	}
 }
