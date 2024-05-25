@@ -362,7 +362,7 @@ namespace AudioUnit {
 				cb.Proc = &RenderCallbackImpl;
 			}
 #else
-			cb.Proc = CreateRenderCallback;
+			cb.Proc = Marshal.GetFunctionPointerForDelegate (CreateRenderCallback);
 #endif
 			cb.ProcRefCon = GCHandle.ToIntPtr (gcHandle);
 			return AUGraphSetNodeInputCallback (Handle, destNode, destInputNumber, ref cb);

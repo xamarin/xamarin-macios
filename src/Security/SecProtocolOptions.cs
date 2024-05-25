@@ -523,8 +523,7 @@ namespace Security {
 		[iOS (13, 0)]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static extern bool sec_protocol_options_are_equal (sec_protocol_options_t optionsA, sec_protocol_options_t optionsB);
+		static extern byte sec_protocol_options_are_equal (sec_protocol_options_t optionsA, sec_protocol_options_t optionsB);
 
 		// Equatable would be nice but would fail on earlier OS versions
 #if NET
@@ -541,7 +540,7 @@ namespace Security {
 		{
 			if (other is null)
 				return false;
-			return sec_protocol_options_are_equal (GetCheckedHandle (), other.Handle);
+			return sec_protocol_options_are_equal (GetCheckedHandle (), other.Handle) != 0;
 		}
 
 #if NET
@@ -560,7 +559,7 @@ namespace Security {
 				return (optionsB is null);
 			else if (optionsB is null)
 				return false;
-			return sec_protocol_options_are_equal (optionsA.Handle, optionsB.Handle);
+			return sec_protocol_options_are_equal (optionsA.Handle, optionsB.Handle) != 0;
 		}
 
 #if NET
