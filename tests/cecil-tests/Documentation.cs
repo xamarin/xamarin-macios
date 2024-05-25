@@ -54,7 +54,7 @@ namespace Cecil.Tests {
 			var documentedButNotPresent = xmlMembers.Except (dllMembers).ToList ();
 			Assert.Multiple (() => {
 				foreach (var doc in documentedButNotPresent)
-					Assert.Fail ($"{doc}: Documented API not found in the platform assembly. This probably indicates that the code to compute the doc name for a given member is incorrect.");
+					Assert.Fail ($"{doc.DocId}: Documented API not found in the platform assembly. This probably indicates that the code to compute the doc name for a given member is incorrect.");
 			});
 
 			var shouldHaveBeenDocumented = dllMembers

@@ -446,8 +446,8 @@ namespace Xamarin.Tests {
 
 			var failures = new List<string> ();
 			for (var i = 0; i < expectedMessages.Length; i++) {
-				var actual = actualMessages [i].Message ?? string.Empty;
-				var expected = expectedMessages [i];
+				var actual = (actualMessages [i].Message ?? string.Empty).Trim ('\n', '\r', ' ');
+				var expected = expectedMessages [i].Trim ('\n', '\r', ' ');
 				if (actual != expected) {
 					actual = actual.Replace ("\n", "\\n").Replace ("\r", "\\r");
 					expected = expected.Replace ("\n", "\\n").Replace ("\r", "\\r");

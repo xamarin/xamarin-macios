@@ -63,10 +63,10 @@ namespace Security {
 		public extern static nint GetTypeID ();
 
 		[DllImport (Constants.SecurityLibrary)]
-		extern static SecStatusCode SecTrustCreateWithCertificates (
+		unsafe extern static SecStatusCode SecTrustCreateWithCertificates (
 			/* CFTypeRef */            IntPtr certOrCertArray,
 			/* CFTypeRef __nullable */ IntPtr policies,
-			/* SecTrustRef *__nonull */ out IntPtr sectrustref);
+			/* SecTrustRef *__nonull */ IntPtr* sectrustref);
 
 
 		public SecTrust (X509Certificate certificate, SecPolicy? policy)
@@ -122,7 +122,11 @@ namespace Security {
 
 		void Initialize (IntPtr certHandle, SecPolicy? policy)
 		{
-			SecStatusCode result = SecTrustCreateWithCertificates (certHandle, policy.GetHandle (), out var handle);
+			IntPtr handle;
+			SecStatusCode result;
+			unsafe {
+				result = SecTrustCreateWithCertificates (certHandle, policy.GetHandle (), &handle);
+			}
 			if (result != SecStatusCode.Success)
 				throw new ArgumentException (result.ToString ());
 			InitializeHandle (handle);
@@ -143,7 +147,7 @@ namespace Security {
 		[Deprecated (PlatformName.MacOSX, 10, 14, 1, message: "Use 'SecTrust.Evaluate (out NSError)' instead.")]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
-		extern static SecStatusCode /* OSStatus */ SecTrustEvaluate (IntPtr /* SecTrustRef */ trust, out /* SecTrustResultType */ SecTrustResult result);
+		unsafe extern static SecStatusCode /* OSStatus */ SecTrustEvaluate (IntPtr /* SecTrustRef */ trust, /* SecTrustResultType */ SecTrustResult* result);
 
 #if NET
 		[SupportedOSPlatform ("ios")]
@@ -162,7 +166,10 @@ namespace Security {
 		public SecTrustResult Evaluate ()
 		{
 			SecTrustResult trust;
-			SecStatusCode result = SecTrustEvaluate (GetCheckedHandle (), out trust);
+			SecStatusCode result;
+			unsafe {
+				result = SecTrustEvaluate (GetCheckedHandle (), &trust);
+			}
 			if (result != SecStatusCode.Success)
 				throw new InvalidOperationException (result.ToString ());
 			return trust;
@@ -349,8 +356,7 @@ namespace Security {
 		[SupportedOSPlatform ("tvos")]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
-		[return: MarshalAs (UnmanagedType.U1)]
-		extern static bool SecTrustSetExceptions (IntPtr /* SecTrustRef */ trust, IntPtr /* __nullable CFDataRef */ exceptions);
+		extern static byte SecTrustSetExceptions (IntPtr /* SecTrustRef */ trust, IntPtr /* __nullable CFDataRef */ exceptions);
 
 #if NET
 		[SupportedOSPlatform ("macos")]
@@ -360,7 +366,7 @@ namespace Security {
 #endif
 		public bool SetExceptions (NSData data)
 		{
-			return SecTrustSetExceptions (GetCheckedHandle (), data.GetHandle ());
+			return SecTrustSetExceptions (GetCheckedHandle (), data.GetHandle ()) != 0;
 		}
 
 		[DllImport (Constants.SecurityLibrary)]
@@ -419,11 +425,11 @@ namespace Security {
 		}
 
 		[DllImport (Constants.SecurityLibrary)]
-		extern static SecStatusCode /* OSStatus */ SecTrustSetAnchorCertificatesOnly (IntPtr /* SecTrustRef */ trust, [MarshalAs (UnmanagedType.I1)] bool anchorCertificatesOnly);
+		extern static SecStatusCode /* OSStatus */ SecTrustSetAnchorCertificatesOnly (IntPtr /* SecTrustRef */ trust, byte anchorCertificatesOnly);
 
 		public SecStatusCode SetAnchorCertificatesOnly (bool anchorCertificatesOnly)
 		{
-			return SecTrustSetAnchorCertificatesOnly (GetCheckedHandle (), anchorCertificatesOnly);
+			return SecTrustSetAnchorCertificatesOnly (GetCheckedHandle (), anchorCertificatesOnly.AsByte ());
 		}
 #endif
 	}

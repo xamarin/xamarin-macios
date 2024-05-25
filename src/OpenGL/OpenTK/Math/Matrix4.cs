@@ -471,7 +471,7 @@ namespace OpenTK {
 		/// <param name="height">The height of the projection volume.</param>
 		/// <param name="zNear">The near edge of the projection volume.</param>
 		/// <param name="zFar">The far edge of the projection volume.</param>
-		/// <rereturns>The resulting Matrix4 instance.</rereturns>
+		/// <returns>The resulting Matrix4 instance.</rereturns>
 		public static Matrix4 CreateOrthographic (float width, float height, float zNear, float zFar)
 		{
 			Matrix4 result;
