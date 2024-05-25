@@ -69,7 +69,7 @@ steps:
       Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
       $vsdropsChangeDetectionPrefix = "https://vsdrop.corp.microsoft.com/file/v1/xamarin-macios/detected-changes/$Env:BUILD_BUILDNUMBER/$Env:BUILD_BUILDID-$Env:SYSTEM_JOBATTEMPT/;/"
 
-      $rootDirectory = Join-Path "$Env:BUILD_ARTIFACTSTAGINGDIRECTORY" "change-detection" "results"
+      $rootDirectory = Join-Path "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY" "change-detection" "results"
 
       $inputContentsPath = Join-Path -Path $rootDirectory -ChildPath "gh-comment.md"
       if (Test-Path $inputContentsPath -PathType leaf) {

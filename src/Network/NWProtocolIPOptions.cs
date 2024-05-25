@@ -47,13 +47,13 @@ namespace Network {
 			=> nw_ip_options_set_hop_limit (GetCheckedHandle (), (byte) hopLimit);
 
 		public void SetUseMinimumMtu (bool useMinimumMtu)
-			=> nw_ip_options_set_use_minimum_mtu (GetCheckedHandle (), useMinimumMtu);
+			=> nw_ip_options_set_use_minimum_mtu (GetCheckedHandle (), useMinimumMtu.AsByte ());
 
 		public void SetDisableFragmentation (bool disableFragmentation)
-			=> nw_ip_options_set_disable_fragmentation (GetCheckedHandle (), disableFragmentation);
+			=> nw_ip_options_set_disable_fragmentation (GetCheckedHandle (), disableFragmentation.AsByte ());
 
 		public void SetCalculateReceiveTime (bool shouldCalculateReceiveTime)
-			=> nw_ip_options_set_calculate_receive_time (GetCheckedHandle (), shouldCalculateReceiveTime);
+			=> nw_ip_options_set_calculate_receive_time (GetCheckedHandle (), shouldCalculateReceiveTime.AsByte ());
 
 		public void SetIPLocalAddressPreference (NWIPLocalAddressPreference localAddressPreference)
 			=> nw_ip_options_set_local_address_preference (GetCheckedHandle (), localAddressPreference);
@@ -71,7 +71,7 @@ namespace Network {
 		[MacCatalyst (15, 0)]
 #endif
 		[DllImport (Constants.NetworkLibrary)]
-		static extern void nw_ip_options_set_disable_multicast_loopback (OS_nw_protocol_options options, [MarshalAs (UnmanagedType.I1)] bool disableMulticastLoopback);
+		static extern void nw_ip_options_set_disable_multicast_loopback (OS_nw_protocol_options options, byte disableMulticastLoopback);
 
 #if NET
 		[SupportedOSPlatform ("tvos15.0")]
@@ -86,6 +86,6 @@ namespace Network {
 		[MacCatalyst (15, 0)]
 #endif
 		public void DisableMulticastLoopback (bool disable)
-			=> nw_ip_options_set_disable_multicast_loopback (GetCheckedHandle (), disable);
+			=> nw_ip_options_set_disable_multicast_loopback (GetCheckedHandle (), disable.AsByte ());
 	}
 }

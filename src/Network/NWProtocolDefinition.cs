@@ -43,8 +43,7 @@ namespace Network {
 #endif
 
 		[DllImport (Constants.NetworkLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static extern bool nw_protocol_definition_is_equal (OS_nw_protocol_definition definition1, OS_nw_protocol_definition definition2);
+		static extern byte nw_protocol_definition_is_equal (OS_nw_protocol_definition definition1, OS_nw_protocol_definition definition2);
 
 		public bool Equals (object other)
 		{
@@ -52,7 +51,7 @@ namespace Network {
 				return false;
 			if (!(other is NWProtocolDefinition otherDefinition))
 				return false;
-			return nw_protocol_definition_is_equal (GetCheckedHandle (), otherDefinition.Handle);
+			return nw_protocol_definition_is_equal (GetCheckedHandle (), otherDefinition.Handle) != 0;
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
