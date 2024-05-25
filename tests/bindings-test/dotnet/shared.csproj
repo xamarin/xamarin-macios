@@ -18,6 +18,8 @@
     <!-- We're warning-free, so let's make sure we stay that way -->
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <WarningsAsErrors>Nullable</WarningsAsErrors>
+
+    <DefineConstants>$(DefineConstants);BINDINGS_TEST</DefineConstants>
   </PropertyGroup>
 
   <Import Project="$(RootTestsDirectory)/common/shared-dotnet.csproj" />
@@ -38,6 +40,11 @@
       <Kind>Static</Kind>
       <Frameworks>CoreLocation Foundation ModelIO</Frameworks>
     </NativeReference>
+
+    <NativeReference Include="$(TestLibrariesDirectory)\.libs\SwiftTest.xcframework">
+      <Kind>Framework</Kind>
+      <LinkWithSwiftSystemLibraries>true</LinkWithSwiftSystemLibraries>
+    </NativeReference>
   </ItemGroup>
 
   <ItemGroup>
@@ -51,6 +58,9 @@
     <Compile Include="$(BindingsTestDirectory)\RegistrarBindingTest.cs" />
     <Compile Include="$(RootTestsDirectory)\common\TestRuntime.cs">
       <Link>TestRuntime.cs</Link>
+    </Compile>
+    <Compile Include="$(RootTestsDirectory)\common\TestRuntime.RunAsync.cs">
+      <Link>TestRuntime.RunAsync.cs</Link>
     </Compile>
     <Compile Include="$(RootTestsDirectory)\..\tools\common\ApplePlatform.cs">
       <Link>ApplePlatform.cs</Link>
