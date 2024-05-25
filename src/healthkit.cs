@@ -2487,8 +2487,6 @@ namespace HealthKit {
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	enum HKCategoryTypeIdentifier {
-		/**** HKCategoryType Identifiers ****/
-
 		[Field ("HKCategoryTypeIdentifierSleepAnalysis")]
 		SleepAnalysis,
 
@@ -2810,8 +2808,6 @@ namespace HealthKit {
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	enum HKCharacteristicTypeIdentifier {
-		/**** HKCharacteristicType Identifiers ****/
-
 		[Field ("HKCharacteristicTypeIdentifierBiologicalSex")]
 		BiologicalSex,
 
