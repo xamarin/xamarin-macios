@@ -299,7 +299,7 @@ namespace Xamarin.MacDev.Tasks {
 			document.LoadXmlWithoutNetworkAccess (manifestContents);
 			foreach (XmlNode referenceNode in document.GetElementsByTagName ("NativeReference")) {
 				ITaskItem t = new TaskItem (r);
-				var name = referenceNode.Attributes ["Name"].Value;
+				var name = referenceNode.Attributes ["Name"].Value.Trim ('\\', '/');
 				switch (Path.GetExtension (name)) {
 				case ".xcframework": {
 					if (!TryResolveXCFramework (Log, TargetFrameworkMoniker, SdkIsSimulator, Architectures, resources, name, GetIntermediateDecompressionDir (resources), createdFiles, out var nativeLibraryPath))
@@ -352,6 +352,7 @@ namespace Xamarin.MacDev.Tasks {
 				t.SetMetadata ("ForceLoad", "False");
 				t.SetMetadata ("NeedsGccExceptionHandling", "False");
 				t.SetMetadata ("IsCxx", "False");
+				t.SetMetadata ("LinkWithSwiftSystemLibraries", "False");
 				t.SetMetadata ("SmartLink", "True");
 
 				// values from manifest, overriding defaults if provided

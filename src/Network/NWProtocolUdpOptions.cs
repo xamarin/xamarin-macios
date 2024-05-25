@@ -37,6 +37,6 @@ namespace Network {
 
 		public NWProtocolUdpOptions () : this (nw_udp_create_options (), owns: true) { }
 
-		public void SetPreferNoChecksum (bool preferNoChecksum) => nw_udp_options_set_prefer_no_checksum (GetCheckedHandle (), preferNoChecksum);
+		public void SetPreferNoChecksum (bool preferNoChecksum) => nw_udp_options_set_prefer_no_checksum (GetCheckedHandle (), preferNoChecksum.AsByte ());
 	}
 }
