@@ -119,11 +119,6 @@ namespace Xamarin.Tests {
 				.ToList ();
 
 			// The reference to the bindings-xcframework-test project is skipped on Windows, because we can't build binding projects unless we're connected to a Mac.
-			AddOrAssert (merged, "bindings-xcframework-test.dll");
-			AddOrAssert (merged, "bindings-xcframework-test.pdb");
-			AddOrAssert (merged, Path.Combine ("Frameworks", "XTest.framework")); // XTest.framework comes from bindings-xcframework-test.csproj
-			AddOrAssert (merged, Path.Combine ("Frameworks", "XTest.framework", "Info.plist"));
-			AddOrAssert (merged, Path.Combine ("Frameworks", "XTest.framework", "XTest"));
 
 			// The name of the executable is different.
 			AddOrAssert (merged, project);
