@@ -933,7 +933,7 @@ namespace Xamarin.Bundler {
 			sw.WriteLine ("}");
 		}
 
-		static readonly char[] charsToReplaceAot = new[] { '.', '-', '+', '<', '>' };
+		static readonly char [] charsToReplaceAot = new [] { '.', '-', '+', '<', '>' };
 		static string EncodeAotSymbol (string symbol)
 		{
 			var sb = new StringBuilder ();
