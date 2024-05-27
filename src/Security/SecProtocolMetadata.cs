@@ -159,8 +159,7 @@ namespace Security {
 		public bool EarlyDataAccepted => sec_protocol_metadata_get_early_data_accepted (GetCheckedHandle ()) != 0;
 
 		[DllImport (Constants.SecurityLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool sec_protocol_metadata_challenge_parameters_are_equal (IntPtr metadataA, IntPtr metadataB);
+		extern static byte sec_protocol_metadata_challenge_parameters_are_equal (IntPtr metadataA, IntPtr metadataB);
 
 		public static bool ChallengeParametersAreEqual (SecProtocolMetadata metadataA, SecProtocolMetadata metadataB)
 		{
@@ -168,12 +167,11 @@ namespace Security {
 				return metadataB is null;
 			else if (metadataB is null)
 				return false; // This was tested in a native app. We do copy the behaviour.
-			return sec_protocol_metadata_challenge_parameters_are_equal (metadataA.GetCheckedHandle (), metadataB.GetCheckedHandle ());
+			return sec_protocol_metadata_challenge_parameters_are_equal (metadataA.GetCheckedHandle (), metadataB.GetCheckedHandle ()) != 0;
 		}
 
 		[DllImport (Constants.SecurityLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool sec_protocol_metadata_peers_are_equal (IntPtr metadataA, IntPtr metadataB);
+		extern static byte sec_protocol_metadata_peers_are_equal (IntPtr metadataA, IntPtr metadataB);
 
 		public static bool PeersAreEqual (SecProtocolMetadata metadataA, SecProtocolMetadata metadataB)
 		{
@@ -181,7 +179,7 @@ namespace Security {
 				return metadataB is null;
 			else if (metadataB is null)
 				return false; // This was tested in a native app. We do copy the behaviour.
-			return sec_protocol_metadata_peers_are_equal (metadataA.GetCheckedHandle (), metadataB.GetCheckedHandle ());
+			return sec_protocol_metadata_peers_are_equal (metadataA.GetCheckedHandle (), metadataB.GetCheckedHandle ()) != 0;
 		}
 
 #if !NET
@@ -202,8 +200,7 @@ namespace Security {
 		}
 
 		[DllImport (Constants.SecurityLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		unsafe static extern bool sec_protocol_metadata_access_distinguished_names (IntPtr handle, BlockLiteral* callback);
+		unsafe static extern byte sec_protocol_metadata_access_distinguished_names (IntPtr handle, BlockLiteral* callback);
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void SetDistinguishedNamesForPeerHandler (Action<DispatchData> callback)
@@ -219,7 +216,7 @@ namespace Security {
 				using var block = new BlockLiteral ();
 				block.SetupBlockUnsafe (static_DistinguishedNamesForPeer, callback);
 #endif
-				if (!sec_protocol_metadata_access_distinguished_names (GetCheckedHandle (), &block))
+				if (sec_protocol_metadata_access_distinguished_names (GetCheckedHandle (), &block) == 0)
 					throw new InvalidOperationException ("Distinguished names are not accessible.");
 			}
 		}
@@ -242,8 +239,7 @@ namespace Security {
 		}
 
 		[DllImport (Constants.SecurityLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		unsafe static extern bool sec_protocol_metadata_access_ocsp_response (IntPtr handle, BlockLiteral* callback);
+		unsafe static extern byte sec_protocol_metadata_access_ocsp_response (IntPtr handle, BlockLiteral* callback);
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void SetOcspResponseForPeerHandler (Action<DispatchData> callback)
@@ -259,7 +255,7 @@ namespace Security {
 				using var block = new BlockLiteral ();
 				block.SetupBlockUnsafe (static_OcspReposeForPeer, callback);
 #endif
-				if (!sec_protocol_metadata_access_ocsp_response (GetCheckedHandle (), &block))
+				if (sec_protocol_metadata_access_ocsp_response (GetCheckedHandle (), &block) == 0)
 					throw new InvalidOperationException ("The OSCP response is not accessible.");
 			}
 		}
@@ -282,8 +278,7 @@ namespace Security {
 		}
 
 		[DllImport (Constants.SecurityLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		unsafe static extern bool sec_protocol_metadata_access_peer_certificate_chain (IntPtr handle, BlockLiteral* callback);
+		unsafe static extern byte sec_protocol_metadata_access_peer_certificate_chain (IntPtr handle, BlockLiteral* callback);
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void SetCertificateChainForPeerHandler (Action<SecCertificate> callback)
@@ -299,7 +294,7 @@ namespace Security {
 				using var block = new BlockLiteral ();
 				block.SetupBlockUnsafe (static_CertificateChainForPeer, callback);
 #endif
-				if (!sec_protocol_metadata_access_peer_certificate_chain (GetCheckedHandle (), &block))
+				if (sec_protocol_metadata_access_peer_certificate_chain (GetCheckedHandle (), &block) == 0)
 					throw new InvalidOperationException ("The peer certificates are not accessible.");
 			}
 		}
@@ -321,7 +316,6 @@ namespace Security {
 		}
 
 		[DllImport (Constants.SecurityLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
 		unsafe static extern byte sec_protocol_metadata_access_supported_signature_algorithms (IntPtr handle, BlockLiteral* callback);
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
@@ -411,8 +405,7 @@ namespace Security {
 		[iOS (13, 0)]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
-		[return: MarshalAs (UnmanagedType.U1)]
-		unsafe static extern bool sec_protocol_metadata_access_pre_shared_keys (IntPtr /* sec_protocol_metadata_t */ handle, BlockLiteral* block);
+		unsafe static extern byte sec_protocol_metadata_access_pre_shared_keys (IntPtr /* sec_protocol_metadata_t */ handle, BlockLiteral* block);
 
 		public delegate void SecAccessPreSharedKeysHandler (DispatchData psk, DispatchData pskIdentity);
 
@@ -456,7 +449,7 @@ namespace Security {
 				using var block = new BlockLiteral ();
 				block.SetupBlockUnsafe (presharedkeys, handler);
 #endif
-				return sec_protocol_metadata_access_pre_shared_keys (GetCheckedHandle (), &block);
+				return sec_protocol_metadata_access_pre_shared_keys (GetCheckedHandle (), &block) != 0;
 			}
 		}
 #endif
