@@ -933,10 +933,13 @@ namespace Xamarin.Bundler {
 			sw.WriteLine ("}");
 		}
 
+		static readonly char[] charsToReplaceAot = new[] { '.', '-', '+', '<', '>' };
 		static string EncodeAotSymbol (string symbol)
 		{
 			var sb = new StringBuilder ();
 			/* This mimics what the aot-compiler does */
+			// https://github.com/dotnet/runtime/blob/2f08fcbfece0c09319f237a6aee6f74c4a9e14e8/src/mono/mono/metadata/native-library.c#L1265-L1284
+			// https://github.com/dotnet/runtime/blob/2f08fcbfece0c09319f237a6aee6f74c4a9e14e8/src/tasks/Common/Utils.cs#L419-L445
 			foreach (var b in System.Text.Encoding.UTF8.GetBytes (symbol)) {
 				char c = (char) b;
 				if ((c >= '0' && c <= '9') ||
@@ -944,8 +947,12 @@ namespace Xamarin.Bundler {
 					(c >= 'A' && c <= 'Z')) {
 					sb.Append (c);
 					continue;
+				} else if (charsToReplaceAot.Contains (c)) {
+					sb.Append ('_');
+				} else {
+					// Append the hex representation of b between underscores
+					sb.Append ($"_{b:X}_");
 				}
-				sb.Append ('_');
 			}
 			return sb.ToString ();
 		}
