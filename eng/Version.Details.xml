@@ -1,8 +1,8 @@
 <Dependencies>
   <ProductDependencies>
-    <Dependency Name="VS.Tools.Net.Core.SDK.Resolver" Version="9.0.100-preview.6.24274.13">
+    <Dependency Name="VS.Tools.Net.Core.SDK.Resolver" Version="9.0.100-preview.6.24277.1">
       <Uri>https://github.com/dotnet/sdk</Uri>
-      <Sha>685b52ba06b3acb3658eed68a77891a28041457c</Sha>
+      <Sha>29b15d1fca51ca7f1d4db87c2b15e39dcaf7bb53</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NET.ILLink" Version="9.0.0-alpha.1.23556.4">
       <Uri>https://github.com/dotnet/runtime</Uri>
