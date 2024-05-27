@@ -11713,17 +11713,11 @@ namespace AppKit {
 		FileUrl,
 
 		[Mac (13, 0)]
-		[Field ("NSPasteboardTypeCollaborationMetadata")]
+		[Field ("NSPasteboardTypeCollaborationMetadata", "SharedWithYou")]
 		CollaborationMetadata,
 
 		[Field ("NSFindPanelSearchOptionsPboardType")]
 		FindPanelSearchOptions,
-
-		[Field ("NSPasteboardTypeFindPanelSearchOptionKey")]
-		FindPanelSearchOptionKey,
-
-		[Field ("NSPasteboardTypeTextFinderOptionKey")]
-		TextFinderOptionKey,
 
 		// Deprecated with replacement in all macOS versions we support, so we're not binding them:
 		// NSFilenamesPboardType
@@ -11747,6 +11741,22 @@ namespace AppKit {
 		// NSVCardPboardType
 		// NSGetFileType
 		// NSRTFPboardType
+	}
+
+	enum NSPasteboardTypeTextFinderOptionKey {
+		[Field ("NSTextFinderCaseInsensitiveKey")]
+		CaseInsensitiveKey,
+
+		[Field ("NSTextFinderMatchingTypeKey")]
+		MatchingTypeKey,
+	}
+
+	enum NSPasteboardTypeFindPanelSearchOptionKey {
+		[Field ("NSFindPanelCaseInsensitiveSearch")]
+		CaseInsensitiveSearch,
+
+		[Field ("NSFindPanelSubstringMatch")]
+		SubstringMatch,
 	}
 
 	[NoiOS]
