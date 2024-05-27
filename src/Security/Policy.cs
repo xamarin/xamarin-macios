@@ -57,13 +57,13 @@ namespace Security {
 		}
 
 		[DllImport (Constants.SecurityLibrary)]
-		extern static IntPtr /* SecPolicyRef */ SecPolicyCreateSSL ([MarshalAs (UnmanagedType.I1)] bool server, IntPtr /* CFStringRef */ hostname);
+		extern static IntPtr /* SecPolicyRef */ SecPolicyCreateSSL (byte server, IntPtr /* CFStringRef */ hostname);
 
 		static public SecPolicy CreateSslPolicy (bool server, string hostName)
 		{
 			var handle = CFString.CreateNative (hostName);
 			try {
-				return new SecPolicy (SecPolicyCreateSSL (server, handle), true);
+				return new SecPolicy (SecPolicyCreateSSL (server.AsByte (), handle), true);
 			} finally {
 				CFString.ReleaseNative (handle);
 			}
