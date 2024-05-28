@@ -238,7 +238,7 @@ namespace SceneKit {
 		public static readonly SCNVector3 UnitY = new SCNVector3 (0, 1, 0);
 
 		/// <summary>
-		/// /// Defines a unit-length SCNVector3 that points towards the Z-axis.
+		/// Defines a unit-length SCNVector3 that points towards the Z-axis.
 		/// </summary>
 		public static readonly SCNVector3 UnitZ = new SCNVector3 (0, 0, 1);
 
@@ -733,10 +733,10 @@ namespace SceneKit {
 		#region Transform
 
 #if NET
-        /// <summary>Transform a direction vector by the given Matrix
-        /// Assumes the matrix has a right-most column of (0,0,0,1), that is the translation part is ignored.
-        /// </summary>
-        /// <param name="vec">The column vector to transform</param>
+		/// <summary>Transform a direction vector by the given Matrix
+		/// Assumes the matrix has a right-most column of (0,0,0,1), that is the translation part is ignored.
+		/// </summary>
+		/// <param name="vec">The column vector to transform</param>
 		/// <param name="mat">The desired transformation</param>
 		/// <returns>The transformed vector</returns>
 #else
@@ -754,14 +754,14 @@ namespace SceneKit {
 		}
 
 #if NET
-        /// <summary>Transform a direction vector by the given Matrix
-        /// Assumes the matrix has a right-most column of (0,0,0,1), that is the translation part is ignored.
-        /// </summary>
-        /// <param name="vec">The column vector to transform</param>
+		/// <summary>Transform a direction vector by the given matrix.
+		/// Assumes the matrix has a right-most column of (0,0,0,1), that is the translation part is ignored.
+		/// </summary>
+		/// <param name="vec">The column vector to transform</param>
 		/// <param name="mat">The desired transformation</param>
 		/// <param name="result">The transformed vector</param>
 #else
-		/// <summary>Transform a direction vector by the given Matrix
+		/// <summary>Transform a direction vector by the given matrix.
 		/// Assumes the matrix has a bottom row of (0,0,0,1), that is the translation part is ignored.
 		/// </summary>
 		/// <param name="vec">The row vector to transform</param>

@@ -85,9 +85,6 @@
     <Compile Include="..\..\tools\common\NullableAttributes.cs">
       <Link>external\NullableAttributes.cs</Link>
     </Compile>
-    <Compile Include="..\Versions.g.cs">
-      <Link>Versions.g.cs</Link>
-    </Compile>
     <Compile Remove="Errors.designer.cs" /> <!-- The 'CoreResGen' target will add it again from the EmbeddedResource item, this avoids a warning about the file being compiled twice -->
     <Compile Include="..\..\tools\common\SdkVersions.cs">
       <Link>external\SdkVersions.cs</Link>
