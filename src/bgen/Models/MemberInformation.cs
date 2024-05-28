@@ -33,6 +33,7 @@ public class MemberInformation {
 	public bool is_variadic;
 	public bool is_interface_impl;
 	public bool is_extension_method;
+	public bool is_protocol_member;
 	public bool is_appearance;
 	public bool is_model;
 	public bool is_ctor;
@@ -215,6 +216,8 @@ public class MemberInformation {
 
 		if (is_sealed) {
 			mods += "";
+		} else if (is_ctor && is_protocol_member) {
+			mods += "unsafe static ";
 		} else if (is_static || is_category_extension || is_extension_method) {
 			mods += "static ";
 		} else if (is_abstract) {
