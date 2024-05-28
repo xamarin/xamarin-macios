@@ -11643,6 +11643,7 @@ namespace AppKit {
 		nint PrepareForNewContents (NSPasteboardContentsOptions options);
 	}
 
+	[NoMacCatalyst]
 	enum NSPasteboardName {
 		[Field ("NSPasteboardNameGeneral")]
 		General,
@@ -11660,6 +11661,7 @@ namespace AppKit {
 		Drag,
 	}
 
+	[NoMacCatalyst]
 	enum NSPasteboardType {
 		[Field ("NSFileContentsPboardType")]
 		FileContents,
@@ -11743,6 +11745,7 @@ namespace AppKit {
 		// NSRTFPboardType
 	}
 
+	[NoMacCatalyst]
 	enum NSPasteboardTypeTextFinderOptionKey {
 		[Field ("NSTextFinderCaseInsensitiveKey")]
 		CaseInsensitiveKey,
@@ -11751,6 +11754,7 @@ namespace AppKit {
 		MatchingTypeKey,
 	}
 
+	[NoMacCatalyst]
 	enum NSPasteboardTypeFindPanelSearchOptionKey {
 		[Field ("NSFindPanelCaseInsensitiveSearch")]
 		CaseInsensitiveSearch,
