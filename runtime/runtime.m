@@ -1473,6 +1473,27 @@ objc_skip_type (const char *type)
 	// COOP: no managed memory access: any mode
 	switch (type [0]) {
 		case _C_ID:
+			type++;
+			if (*type == '"') {
+				// https://github.com/xamarin/xamarin-macios/issues/18562
+				// @"..." is an object with the class name inside the quotes.
+				// https://github.com/llvm/llvm-project/blob/24a082878f7baec3651de56d54e5aa2b75a21b5f/clang/lib/AST/ASTContext.cpp#L8505-L8516
+				type++;
+				while (*type && *type != '"')
+					type++;
+				type++;
+			} else if (*type == '?' && type [1] == '<') {
+				// https://github.com/xamarin/xamarin-macios/issues/18562
+				// @?<...> is a block pointer
+				// https://github.com/llvm/llvm-project/blob/24a082878f7baec3651de56d54e5aa2b75a21b5f/clang/lib/AST/ASTContext.cpp#L8405-L8426
+				type += 2;
+				do {
+					type = objc_skip_type (type);
+				} while (*type && *type != '>');
+				if (*type)
+					type++;
+			}
+			return type;
 		case _C_CLASS:
 		case _C_SEL:
 		case _C_CHR:

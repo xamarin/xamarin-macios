@@ -84,5 +84,11 @@
     <Compile Include="..\..\tools\common\SdkVersions.cs">
       <Link>SdkVersions.cs</Link>
     </Compile>
+    <Compile Include="..\generator\BGenBase.cs">
+      <Link>BGenBase.cs</Link>
+    </Compile>
+    <Compile Include="..\generator\ProtocolTests.cs">
+      <Link>ProtocolTest.cs</Link>
+    </Compile>
   </ItemGroup>
 </Project>

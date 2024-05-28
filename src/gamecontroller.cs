@@ -871,7 +871,7 @@ namespace GameController {
 	[iOS (14, 0), TV (14, 0)]
 	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NSObject))]
-	interface GCMouse : GCDevice, NSSecureCoding, NSCoding {
+	interface GCMouse : GCDevice {
 		[NullAllowed, Export ("mouseInput", ArgumentSemantic.Strong)]
 		GCMouseInput MouseInput { get; }
 
