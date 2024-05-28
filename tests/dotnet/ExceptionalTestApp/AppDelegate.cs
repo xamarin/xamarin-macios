@@ -12,7 +12,7 @@ namespace MySimpleApp {
 			var testCaseString = Environment.GetEnvironmentVariable ("EXCEPTIONAL_TEST_CASE");
 			if (string.IsNullOrEmpty (testCaseString)) {
 				Console.WriteLine ($"The environment variable EXCEPTIONAL_TEST_CASE wasn't set.");
-				return 1;
+				return 2;
 			}
 			var testCase = int.Parse (testCaseString);
 			switch (testCase) {
@@ -28,14 +28,10 @@ namespace MySimpleApp {
 				throw new TestCaseException ();
 			default:
 				Console.WriteLine ($"Unknown test case: {testCase}");
-				return 1;
+				return 3;
 			}
 
-			Console.WriteLine (Environment.GetEnvironmentVariable ("MAGIC_WORD"));
-
-
-
-			return args.Length;
+			return 1;
 		}
 	}
 }
