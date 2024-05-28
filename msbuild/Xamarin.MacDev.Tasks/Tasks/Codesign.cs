@@ -25,6 +25,11 @@ namespace Xamarin.MacDev.Tasks {
 
 		#region Inputs
 
+		// Whether we'll check for and show an error if the app bundle we're trying to sign contains a 'Resources' subdirectory.
+		// For iOS and tvOS, a 'Resources' subdirectory confuses codesign, and we end up with rather weird errors.
+		// So try to detect this and show a better error.
+		public bool DisallowResourcesSubdirectoryInAppBundle { get; set; }
+
 		// Can also be specified per resource using the 'CodesignStampFile' metadata
 		public string StampFile { get; set; }
 
@@ -99,6 +104,27 @@ namespace Xamarin.MacDev.Tasks {
 		string GetCodesignAllocate (ITaskItem item)
 		{
 			return GetNonEmptyStringOrFallback (item, "CodesignAllocate", CodesignAllocate, "CodesignAllocate", required: true);
+		}
+
+		bool Validate (SignInfo info)
+		{
+			if (!DisallowResourcesSubdirectoryInAppBundle)
+				return true;
+
+			var path = info.Item.ItemSpec.TrimEnd ('/', '\\');
+			if (!path.EndsWith (".app", StringComparison.OrdinalIgnoreCase))
+				return true;
+
+			// Apple says:
+			// 	"Note: An iOS app bundle cannot include a custom folder named “Resources.”"
+			// Ref: https://developer.apple.com/library/archive/documentation/CoreFoundation/Conceptual/CFBundles/BundleTypes/BundleTypes.html#//apple_ref/doc/uid/10000123i-CH101-SW1
+			var resourcesDirectory = Path.Combine (path, "Resources");
+			if (Directory.Exists (resourcesDirectory)) {
+				Log.LogError (MSBStrings.E7123 /* The app bundle '{0}' contains a subdirectory named 'Resources'. This is not allowed on this platform. Typically resource files should be in the root directory of the app bundle (or a custom subdirectory, but named anything other than 'Resources') */, path);
+				return false;
+			}
+
+			return true;
 		}
 
 		// 'sortedItems' is sorted by length of path, longest first.
@@ -398,9 +424,14 @@ namespace Xamarin.MacDev.Tasks {
 			for (var i = 0; i < resourcesToSign.Length; i++) {
 				var item = resourcesToSign [i];
 				var info = new SignInfo { Item = item };
+				if (!Validate (info))
+					continue;
 				if (NeedsCodesign (resourcesToSign, i, info.GetStampFileContents (this)))
 					itemsToSign.Add (info);
 			}
+
+			if (Log.HasLoggedErrors)
+				return false;
 
 			// Then we need to split the input into buckets, where everything in a bucket can be signed in parallel
 			// (i.e. no item in a bucket depends on any other item in the bucket being signed first).

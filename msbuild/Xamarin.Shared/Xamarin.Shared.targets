@@ -2015,7 +2015,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	<Target Name="_ParseBundlerArguments">
 		<ParseBundlerArguments
 			Aot="@(_AotArguments)"
-			ExtraArgs="$(_BundlerArguments)"
+			ExtraArgs="$(AppBundleExtraOptions)"
 			NoSymbolStrip="$(NoSymbolStrip)"
 			NoDSymUtil="$(NoDSymUtil)"
 			PackageDebugSymbols="$(PackageDebugSymbols)"
@@ -2310,6 +2310,11 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			DependsOnTargets="$(_CodesignAppBundleDependsOn)"
 		>
 
+		<PropertyGroup>
+			<CodesignDisallowResourcesSubdirectoryInAppBundle Condition="'$(CodesignDisallowResourcesSubdirectoryInAppBundle)' == '' And ('$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS')">true</CodesignDisallowResourcesSubdirectoryInAppBundle>
+			<CodesignDisallowResourcesSubdirectoryInAppBundle Condition="'$(CodesignDisallowResourcesSubdirectoryInAppBundle)' == ''">false</CodesignDisallowResourcesSubdirectoryInAppBundle>
+		</PropertyGroup>
+
 		<ComputeCodesignItems
 			Condition="'$(IsMacEnabled)' == 'true'"
 			SessionId="$(BuildSessionId)"
@@ -2328,6 +2333,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		<Codesign
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
+			DisallowResourcesSubdirectoryInAppBundle="$(CodesignDisallowResourcesSubdirectoryInAppBundle)"
 			MaxDegreeOfParallelism="$(CodesignMaxDegreeOfParallelism)"
 			Resources="@(_ComputedCodesignItems)"
 			ToolExe="$(CodesignExe)"

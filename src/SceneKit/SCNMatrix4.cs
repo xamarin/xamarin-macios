@@ -580,7 +580,7 @@ namespace SceneKit {
 		/// <param name="height">The height of the projection volume.</param>
 		/// <param name="zNear">The near edge of the projection volume.</param>
 		/// <param name="zFar">The far edge of the projection volume.</param>
-		/// <rereturns>The resulting SCNMatrix4 instance.</rereturns>
+		/// <returns>The resulting SCNMatrix4 instance.</returns>
 		public static SCNMatrix4 CreateOrthographic (pfloat width, pfloat height, pfloat zNear, pfloat zFar)
 		{
 			SCNMatrix4 result;
