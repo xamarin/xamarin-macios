@@ -17,8 +17,7 @@ namespace MySimpleApp {
 			var testCase = int.Parse (testCaseString);
 			switch (testCase) {
 			case 1:
-				AppDomain.CurrentDomain.UnhandledException += (object sender, UnhandledExceptionEventArgs e) =>
-				{
+				AppDomain.CurrentDomain.UnhandledException += (object sender, UnhandledExceptionEventArgs e) => {
 					if (e.ExceptionObject is TestCaseException) {
 						Console.WriteLine (Environment.GetEnvironmentVariable ("MAGIC_WORD"));
 					} else {
