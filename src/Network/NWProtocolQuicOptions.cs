@@ -54,15 +54,14 @@ namespace Network {
 			=> new SecProtocolOptions (nw_quic_copy_sec_protocol_options (GetCheckedHandle ()), true);
 
 		[DllImport (Constants.NetworkLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static extern bool nw_quic_get_stream_is_unidirectional (OS_nw_protocol_options options);
+		static extern byte nw_quic_get_stream_is_unidirectional (OS_nw_protocol_options options);
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern void nw_quic_set_stream_is_unidirectional (OS_nw_protocol_options options, [MarshalAs (UnmanagedType.I1)] bool isUnidirectional);
+		static extern void nw_quic_set_stream_is_unidirectional (OS_nw_protocol_options options, byte isUnidirectional);
 
 		public bool StreamIsUnidirectional {
-			get => nw_quic_get_stream_is_unidirectional (GetCheckedHandle ());
-			set => nw_quic_set_stream_is_unidirectional (GetCheckedHandle (), value);
+			get => nw_quic_get_stream_is_unidirectional (GetCheckedHandle ()) != 0;
+			set => nw_quic_set_stream_is_unidirectional (GetCheckedHandle (), value.AsByte ());
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
@@ -209,8 +208,7 @@ namespace Network {
 		[Watch (9, 0)]
 #endif
 		[DllImport (Constants.NetworkLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static extern bool nw_quic_get_stream_is_datagram (OS_nw_protocol_options options);
+		static extern byte nw_quic_get_stream_is_datagram (OS_nw_protocol_options options);
 
 #if NET
 		[SupportedOSPlatform ("tvos16.0")]
@@ -224,7 +222,7 @@ namespace Network {
 		[Watch (9, 0)]
 #endif
 		[DllImport (Constants.NetworkLibrary)]
-		static extern void nw_quic_set_stream_is_datagram (OS_nw_protocol_options options, [MarshalAs (UnmanagedType.I1)] bool is_datagram);
+		static extern void nw_quic_set_stream_is_datagram (OS_nw_protocol_options options, byte is_datagram);
 
 #if NET
 		[SupportedOSPlatform ("tvos16.0")]
@@ -238,8 +236,8 @@ namespace Network {
 		[Watch (9, 0)]
 #endif
 		public bool StreamIsDatagram {
-			get => nw_quic_get_stream_is_datagram (GetCheckedHandle ());
-			set => nw_quic_set_stream_is_datagram (GetCheckedHandle (), value);
+			get => nw_quic_get_stream_is_datagram (GetCheckedHandle ()) != 0;
+			set => nw_quic_set_stream_is_datagram (GetCheckedHandle (), value.AsByte ());
 		}
 
 #if NET
