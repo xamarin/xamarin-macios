@@ -4945,6 +4945,7 @@ public partial class Generator : IMemberGatherer {
 			print ("");
 		}
 
+#if NET
 		// C# does not support type constraint on properties, so create Get* and Set* accessors instead.
 		foreach (var pi in staticProperties) {
 			GetAccessorInfo (pi, out var getter, out var setter, out var generate_getter, out var generate_setter);
@@ -4960,6 +4961,7 @@ public partial class Generator : IMemberGatherer {
 				GenerateMethod (type, setter, false, null, false, false, false, ba?.Selector ?? attrib.ToSetter (pi).Selector, is_protocol_member: true);
 			}
 		}
+#endif
 
 		foreach (var pi in requiredInstanceProperties) {
 			var minfo = new MemberInformation (this, this, pi, type);
