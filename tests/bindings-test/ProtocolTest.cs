@@ -9,6 +9,8 @@ using ObjCRuntime;
 
 using NUnit.Framework;
 
+using Bindings.Test;
+
 namespace Xamarin.BindingTests {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
@@ -28,6 +30,77 @@ namespace Xamarin.BindingTests {
 				return true;
 			}
 		}
+
+#if NET
+		[Test]
+		public void Constructors ()
+		{
+			using var dateNow = (NSDate) DateTime.Now;
+
+			using (var obj = IConstructorProtocol.CreateInstance<TypeProvidingProtocolConstructors> ("Hello world")) {
+				Assert.AreEqual ("Hello world", obj.StringValue, "A StringValue");
+				Assert.IsNull (obj.DateValue, "A DateValue");
+			}
+
+			using (var obj = IConstructorProtocol.CreateInstance<TypeProvidingProtocolConstructors> (dateNow)) {
+				Assert.IsNull (obj.StringValue, "B StringValue");
+				Assert.AreEqual (dateNow, obj.DateValue, "B DateValue");
+			}
+
+			using (var obj = IConstructorProtocol.CreateInstance<SubclassedTypeProvidingProtocolConstructors> ("Hello Subclassed")) {
+				Assert.AreEqual ("Hello Subclassed", obj.StringValue, "C1 StringValue");
+				Assert.IsNull (obj.DateValue, "C1 DateValue");
+			}
+
+			using (var obj = IConstructorProtocol.CreateInstance<SubclassedTypeProvidingProtocolConstructors> (dateNow)) {
+				Assert.IsNull (obj.StringValue, "C2 StringValue");
+				Assert.AreEqual (dateNow, obj.DateValue, "C2 DateValue");
+			}
+
+			if (global::XamarinTests.ObjCRuntime.Registrar.IsDynamicRegistrar) {
+				Assert.Throws<RuntimeException> (() => {
+					IConstructorProtocol.CreateInstance<SubclassedTypeProvidingProtocolConstructors2> ("Hello Subclassed 2");
+				}, "D1 Exception");
+			} else {
+				using (var obj = IConstructorProtocol.CreateInstance<SubclassedTypeProvidingProtocolConstructors2> ("Hello Subclassed 2")) {
+					Assert.AreEqual ("Managed interceptor! Hello Subclassed 2", obj.StringValue, "D1 StringValue");
+					Assert.IsNull (obj.DateValue, "D1 DateValue");
+				}
+			}
+
+			if (XamarinTests.ObjCRuntime.Registrar.IsDynamicRegistrar) {
+				Assert.Throws<RuntimeException> (() => {
+					IConstructorProtocol.CreateInstance<SubclassedTypeProvidingProtocolConstructors2> (dateNow);
+				}, "D2 Exception");
+			} else {
+				using (var obj = IConstructorProtocol.CreateInstance<SubclassedTypeProvidingProtocolConstructors2> (dateNow)) {
+					Assert.IsNull (obj.StringValue, "D2 StringValue");
+					Assert.AreEqual (dateNow.AddSeconds (42), obj.DateValue, "D2 DateValue");
+				}
+			}
+		}
+
+		class SubclassedTypeProvidingProtocolConstructors : TypeProvidingProtocolConstructors {
+			SubclassedTypeProvidingProtocolConstructors (NativeHandle handle) : base (handle) {}
+
+		}
+
+		class SubclassedTypeProvidingProtocolConstructors2 : TypeProvidingProtocolConstructors {
+			SubclassedTypeProvidingProtocolConstructors2 (NativeHandle handle) : base (handle) {}
+
+			[Export ("initRequired:")]
+			public SubclassedTypeProvidingProtocolConstructors2 (string value)
+				: base ($"Managed interceptor! " + value)
+			{
+			}
+
+			[Export ("initOptional:")]
+			public SubclassedTypeProvidingProtocolConstructors2 (NSDate value)
+				: base (value.AddSeconds (42))
+			{
+			}
+		}
+#endif
 
 		[Test]
 #if NET
