@@ -113,7 +113,7 @@
   </ItemGroup>
 
   <!-- https://github.com/dotnet/arcade/blob/efc3da96e5ac110513e92ebd9ef87c73f44d8540/Documentation/DependencyFlowOnboardingWithoutArcade.md -->
-  <Target Name="GenerateBuildAssetRegistryManifest" >
+  <Target Name="PushManifestToBuildAssetRegistry" >
     <PropertyGroup>
       <ArtifactsLogDir>$(BarManifestOutputPath)</ArtifactsLogDir>
       <AssetManifestFileName>Assets.xml</AssetManifestFileName>
@@ -123,7 +123,7 @@
     <Error Condition="Exists($(AssetManifestPath))" Text="The manifest file '$(AssetManifestPath)' already exists." />
 
     <ItemGroup>
-      <ItemsToPush Include="$(NupkgPath)\Microsoft*.$(_PlatformName).*.nupkg" />
+      <ItemsToPush Include="$(NupkgPath)\*.nupkg" />
     </ItemGroup>
 
     <Error Condition="'@(ItemsToPush)' == ''" Text="No packages to push." />
@@ -150,22 +150,15 @@
         AssetManifestPath="$(AssetManifestPath)"
         PublishingVersion="3" />
 
-  </Target>
-
-  <Target Name="PushManifestToBuildAssetRegistry" >
-    <PropertyGroup>
-      <VersionPrefix>1.0.0</VersionPrefix>
-    </PropertyGroup>
-
     <MSBuild
         Targets="Restore"
         Projects="$(PkgMicrosoft_DotNet_Arcade_Sdk)\tools\SdkTasks\PublishBuildAssets.proj"
-        Properties="Configuration=$(Configuration);RepoRoot=$(_RepositoryPath);VersionPrefix=$(VersionPrefix);NuGetPackageRoot=$(_RepositoryPath)\packages\"
+        Properties="Configuration=$(Configuration);RepoRoot=$(_RepositoryPath);VersionPrefix=$(_PackageVersion);NuGetPackageRoot=$(_RepositoryPath)\packages\"
     />
 
     <MSBuild
         Projects="$(PkgMicrosoft_DotNet_Arcade_Sdk)\tools\SdkTasks\PublishBuildAssets.proj"
-        Properties="Configuration=$(Configuration);RepoRoot=$(_RepositoryPath);VersionPrefix=$(VersionPrefix);ManifestsPath=$(BarManifestOutputPath);MaestroApiEndpoint=https://maestro.dot.net;NuGetPackageRoot=$(_RepositoryPath)\packages\"
+        Properties="Configuration=$(Configuration);RepoRoot=$(_RepositoryPath);VersionPrefix=$(_PackageVersion);ManifestsPath=$(ArtifactsLogDir)AssetManifest;MaestroApiEndpoint=https://maestro.dot.net;NuGetPackageRoot=$(_RepositoryPath)\packages\"
     />
   </Target>
 

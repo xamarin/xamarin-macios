@@ -44,6 +44,7 @@ resources:
 
 jobs:
 - job: post_build
+  condition: false
   displayName: Post Build
   pool:
     vmImage: windows-2019
