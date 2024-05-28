@@ -11505,7 +11505,7 @@ namespace AppKit {
 		NSString NSHtmlType { get; }
 
 		[Field ("NSPICTPboardType")]
-		[Deprecated (PlatformName.MacOSX, 10, 6 /* Yes, 10.6 */, message: "Do not use, the PICT format was deprecated in macOS 10.4.")]
+		[Deprecated (PlatformName.MacOSX, 10, 6 /* Yes, 10.6 */, message: "Do not use, the PICT format was discontinued a long time ago.")]
 		NSString NSPictType { get; }
 
 		[Field ("NSURLPboardType")]
