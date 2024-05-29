@@ -163,7 +163,7 @@ stages:
       - task: DotNetCoreCLI@2
         displayName: generate and publish BAR manifest
         inputs:
-          projects: $(Build.SourcesDirectory)/xamarin-macios/dotnet/package/Microsoft.iOS.Ref/package.csproj
+          projects: $(Build.SourcesDirectory)/dotnet/package/Microsoft.iOS.Ref/package.csproj
           arguments: >-
             -t:PushManifestToBuildAssetRegistry
             -p:BuildAssetRegistryToken=$(MaestroAccessToken)
