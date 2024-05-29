@@ -48,10 +48,9 @@ namespace Network {
 		internal NWFramer (NativeHandle handle, bool owns) : base (handle, owns) { }
 
 		[DllImport (Constants.NetworkLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static extern bool nw_framer_write_output_no_copy (OS_nw_framer framer, nuint output_length);
+		static extern byte nw_framer_write_output_no_copy (OS_nw_framer framer, nuint output_length);
 
-		public bool WriteOutputNoCopy (nuint outputLength) => nw_framer_write_output_no_copy (GetCheckedHandle (), outputLength);
+		public bool WriteOutputNoCopy (nuint outputLength) => nw_framer_write_output_no_copy (GetCheckedHandle (), outputLength) != 0;
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_framer_write_output_data (OS_nw_framer framer, OS_dispatch_data output_data);
@@ -288,14 +287,13 @@ namespace Network {
 			=> new NWFramerMessage (nw_framer_message_create (GetCheckedHandle ()), owns: true);
 
 		[DllImport (Constants.NetworkLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static extern bool nw_framer_prepend_application_protocol (OS_nw_framer framer, OS_nw_protocol_options protocol_options);
+		static extern byte nw_framer_prepend_application_protocol (OS_nw_framer framer, OS_nw_protocol_options protocol_options);
 
 		public bool PrependApplicationProtocol (NWProtocolOptions options)
 		{
 			if (options is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (options));
-			return nw_framer_prepend_application_protocol (GetCheckedHandle (), options.Handle);
+			return nw_framer_prepend_application_protocol (GetCheckedHandle (), options.Handle) != 0;
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
@@ -319,14 +317,13 @@ namespace Network {
 		public void MarkFailedWithError (int errorCode) => nw_framer_mark_failed_with_error (GetCheckedHandle (), errorCode);
 
 		[DllImport (Constants.NetworkLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static extern bool nw_framer_deliver_input_no_copy (OS_nw_framer framer, nuint input_length, OS_nw_protocol_metadata message, [MarshalAs (UnmanagedType.I1)] bool is_complete);
+		static extern byte nw_framer_deliver_input_no_copy (OS_nw_framer framer, nuint input_length, OS_nw_protocol_metadata message, byte is_complete);
 
 		public bool DeliverInputNoCopy (nuint length, NWFramerMessage message, bool isComplete)
 		{
 			if (message is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (message));
-			return nw_framer_deliver_input_no_copy (GetCheckedHandle (), length, message.Handle, isComplete);
+			return nw_framer_deliver_input_no_copy (GetCheckedHandle (), length, message.Handle, isComplete.AsByte ()) != 0;
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
@@ -372,8 +369,7 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static extern unsafe bool nw_framer_parse_output (OS_nw_framer framer, nuint minimum_incomplete_length, nuint maximum_length, byte* temp_buffer, BlockLiteral* parse);
+		static extern unsafe byte nw_framer_parse_output (OS_nw_framer framer, nuint minimum_incomplete_length, nuint maximum_length, byte* temp_buffer, BlockLiteral* parse);
 
 #if !NET
 		delegate void nw_framer_parse_output_t (IntPtr block, IntPtr buffer, nuint buffer_length, byte is_complete);
@@ -408,13 +404,12 @@ namespace Network {
 				block.SetupBlockUnsafe (static_ParseOutputHandler, handler);
 #endif
 				using (var mh = tempBuffer.Pin ())
-					return nw_framer_parse_output (GetCheckedHandle (), minimumIncompleteLength, maximumLength, (byte*) mh.Pointer, &block);
+					return nw_framer_parse_output (GetCheckedHandle (), minimumIncompleteLength, maximumLength, (byte*) mh.Pointer, &block) != 0;
 			}
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static extern unsafe bool nw_framer_parse_input (OS_nw_framer framer, nuint minimum_incomplete_length, nuint maximum_length, byte* temp_buffer, BlockLiteral* parse);
+		static extern unsafe byte nw_framer_parse_input (OS_nw_framer framer, nuint minimum_incomplete_length, nuint maximum_length, byte* temp_buffer, BlockLiteral* parse);
 
 #if !NET
 		delegate nuint nw_framer_parse_input_t (IntPtr block, IntPtr buffer, nuint buffer_length, byte is_complete);
@@ -450,12 +445,12 @@ namespace Network {
 				block.SetupBlockUnsafe (static_ParseInputHandler, handler);
 #endif
 				using (var mh = tempBuffer.Pin ())
-					return nw_framer_parse_input (GetCheckedHandle (), minimumIncompleteLength, maximumLength, (byte*) mh.Pointer, &block);
+					return nw_framer_parse_input (GetCheckedHandle (), minimumIncompleteLength, maximumLength, (byte*) mh.Pointer, &block) != 0;
 			}
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		unsafe static extern void nw_framer_deliver_input (OS_nw_framer framer, byte* input_buffer, nuint input_length, OS_nw_protocol_metadata message, [MarshalAs (UnmanagedType.I1)] bool is_complete);
+		unsafe static extern void nw_framer_deliver_input (OS_nw_framer framer, byte* input_buffer, nuint input_length, OS_nw_protocol_metadata message, byte is_complete);
 
 		public void DeliverInput (ReadOnlySpan<byte> buffer, NWFramerMessage message, bool isComplete)
 		{
@@ -463,7 +458,7 @@ namespace Network {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (message));
 			unsafe {
 				fixed (byte* mh = buffer)
-					nw_framer_deliver_input (GetCheckedHandle (), mh, (nuint) buffer.Length, message.Handle, isComplete);
+					nw_framer_deliver_input (GetCheckedHandle (), mh, (nuint) buffer.Length, message.Handle, isComplete.AsByte ());
 			}
 		}
 
