@@ -15049,7 +15049,7 @@ namespace AppKit {
 		[Export ("titlebarSeparatorStyle", ArgumentSemantic.Assign)]
 		NSTitlebarSeparatorStyle TitlebarSeparatorStyle { get; set; }
 
-		[Mac (14, 0)]
+		[Mac (10, 14)]
 		[Export ("canCollapseFromWindowResize")]
 		bool CanCollapseFromWindowResize { get; set; }
 
