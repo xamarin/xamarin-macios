@@ -2051,6 +2051,7 @@ COMMON_FRAMEWORKS =         \
 	CoreML                  \
 	CoreMidi                \
 	CoreVideo               \
+	CryptoTokenKit          \
 	Compression             \
 	DeviceCheck             \
 	Foundation              \
