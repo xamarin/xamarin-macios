@@ -61,6 +61,7 @@ stages:
       VAR_DEPENDENCIES: $[ convertToJson(dependencies) ]
       VAR_STAGE_DEPENDENCIES: $[ convertToJson(stageDependencies) ]
     condition: always()
+    continueOnError: true
     steps:
     - checkout: none
     - bash: |
