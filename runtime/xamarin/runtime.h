@@ -223,6 +223,7 @@ void			xamarin_bridge_call_runtime_initialize (struct InitializationOptions* opt
 void			xamarin_bridge_register_product_assembly (GCHandle* exception_gchandle);
 MonoMethod *	xamarin_bridge_get_mono_method (MonoReflectionMethod *method);
 void			xamarin_bridge_free_mono_signature (MonoMethodSignature **signature);
+void			xamarin_bridge_raise_unhandled_exception_event (GCHandle exception_gchandle); // the GCHandle is *not* freed. This method will return after raising the event.
 bool			xamarin_register_monoassembly (MonoAssembly *assembly, GCHandle *exception_gchandle);
 void			xamarin_install_nsautoreleasepool_hooks ();
 void			xamarin_enable_new_refcount ();

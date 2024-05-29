@@ -1143,6 +1143,16 @@ exception_handler (NSException *exc)
 	// COOP: We won't get here in coop-mode, because we don't set the uncaught objc exception handler in that case.
 	LOG (PRODUCT ": Received unhandled ObjectiveC exception: %@ %@", [exc name], [exc reason]);
 
+	XamarinGCHandle* exc_handle = [[exc userInfo] objectForKey: @"XamarinManagedExceptionHandle"];
+	if (exc_handle != NULL) {
+		GCHandle exception_gchandle = [exc_handle getHandle];
+		if (exception_gchandle != INVALID_GCHANDLE) {
+			xamarin_bridge_raise_unhandled_exception_event (exception_gchandle);
+			PRINT ("Received unhandled Objective-C exception that was marshalled from a managed exception: %@", exc);
+			abort ();
+		}
+	}
+
 	if (xamarin_handling_unhandled_exceptions == 1) {
 		PRINT ("Detected recursion when handling uncaught Objective-C exception: %@", exc);
 		abort ();
