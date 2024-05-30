@@ -96,7 +96,11 @@ stages:
       dependsOn: nuget_convert
       condition: "ne(stageDependencies.configure_build.configure.outputs['configure_platforms.ENABLE_DOTNET'],'')"
       variables:
-        skipNugetSecurityAnalysis: true
+      variables:
+      - name: skipNugetSecurityAnalysis
+        value: true
+      - ${{ if eq(parameters.isPR, false) }}:
+        - group: Publish-Build-Assets
       pool:
         vmImage: windows-latest
       steps:

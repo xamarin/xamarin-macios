@@ -1,5 +1,6 @@
 # YAML pipeline for post build operations. 
 # This pipeline will trigger automatically after successful completion of the `prepare_release` stage against the specified branches.
+# NOTE: This pipeline is now deprecated, maestro publishing has been moved to the "Prepare .NET Release" stage
 
 trigger: none
 pr: none
@@ -33,18 +34,15 @@ resources:
     source: xamarin-macios-ci
     trigger:
       branches:
-      - main
       - release/*
       - net7.0
       - net8.0
-      - net9.0
       - release-test/* # this is for testing the release pipeline on branches without GitHub's branch protection (so we can automate tests without requiring commits to go through pull requests, etc.).
       stages:
       - prepare_release
 
 jobs:
 - job: post_build
-  condition: false
   displayName: Post Build
   pool:
     vmImage: windows-2019
