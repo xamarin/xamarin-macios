@@ -1391,6 +1391,25 @@ namespace Xamarin.Tests {
 			var result = DotNet.AssertBuild (project_path, properties);
 		}
 
+		[TestCase (ApplePlatform.iOS, "ios-arm64")]
+		public void PluralRuntimeIdentifiers (ApplePlatform platform, string runtimeIdentifiers)
+		{
+			PluralRuntimeIdentifiersImpl (platform, runtimeIdentifiers);
+		}
+
+		internal static void PluralRuntimeIdentifiersImpl (ApplePlatform platform, string runtimeIdentifiers, Dictionary<string, string>? extraProperties = null)
+		{
+			var project = "MySimpleApp";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
+
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
+			Clean (project_path);
+			var properties = GetDefaultProperties (extraProperties: extraProperties);
+			properties ["RuntimeIdentifiers"] = runtimeIdentifiers;
+			DotNet.AssertBuild (project_path, properties);
+		}
+
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64")]
 		[TestCase (ApplePlatform.iOS, "ios-arm64")]
 		public void CustomizedCodeSigning (ApplePlatform platform, string runtimeIdentifiers)
