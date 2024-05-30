@@ -35,7 +35,7 @@ namespace AudioUnit {
 #if NET
 			public unsafe delegate* unmanaged<IntPtr, IntPtr, AudioUnitStatus, void> CompletionHandler;
 #else
-			public ScheduledAudioFileRegionCompletionHandler CompletionHandler;
+			public IntPtr CompletionHandler;
 #endif
 			public /* void * */ IntPtr CompletionHandlerUserData;
 			public IntPtr AudioFile;
@@ -113,7 +113,7 @@ namespace AudioUnit {
 #if NET
 					ret.CompletionHandler = &ScheduledAudioFileRegionCallback;
 #else
-					ret.CompletionHandler = static_ScheduledAudioFileRegionCompletionHandler;
+					ret.CompletionHandler = Marshal.GetFunctionPointerForDelegate (static_ScheduledAudioFileRegionCompletionHandler);
 #endif
 				}
 			}

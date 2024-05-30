@@ -429,6 +429,34 @@ namespace Bindings.Test {
 	delegate void InnerBlock (int magic_number);
 	delegate void OuterBlock ([BlockCallback] InnerBlock callback);
 
+#if NET
+	[Protocol]
+	interface ConstructorProtocol {
+		[Abstract]
+		[Export ("initRequired:")]
+		IntPtr Constructor (string p0);
+
+		[Export ("initOptional:")]
+		IntPtr Constructor (NSDate p0);
+	}
+
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface TypeProvidingProtocolConstructors : ConstructorProtocol {
+		[Export ("initRequired:")]
+		new IntPtr Constructor (string p0);
+
+		[Export ("initOptional:")]
+		new IntPtr Constructor (NSDate p0);
+
+		[Export ("stringValue")]
+		string StringValue { get; set; }
+
+		[Export ("dateValue")]
+		NSDate DateValue { get; set; }
+	}
+#endif
+
 	[BaseType (typeof (NSObject))]
 	interface EvilDeallocator {
 		[Export ("evilCallback")]
@@ -462,6 +490,21 @@ namespace Bindings.Test {
 	interface SwiftTestClass {
 		[Export ("SayHello")]
 		string SayHello ();
+
+		[Export ("DoSomethingWithMessage:")]
+		string DoSomething (string message);
+
+		[Export ("DoSomethingAsyncWithMessage:completionHandler:")]
+		void DoSomethingAsync (string message, Action<NSString> completionHandler);
+
+		[Export ("DoSomethingComplexAsyncWithMessage:complexParameter:completionHandler:")]
+		// The type for 'complexParameter' is something like: Func<Func<Int16, Int64>, NSString>
+		// But the generator can't handle that, it generates code that doesn't compile.
+		// So just bind it as IntPtr.
+		// This is not a problem for this test, because the point of this test is to verify that
+		// we're able to skip the corresponding objc type encoding, and for that we don't need to
+		// provide an actual argument when calling the method.
+		void DoSomethingComplexAsync (string message, IntPtr complexParameter, Action<NSString> completionHandler);
 	}
 #endif
 }

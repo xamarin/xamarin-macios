@@ -1346,4 +1346,26 @@ static void block_called ()
 	}
 }
 @end
+
+@implementation TypeProvidingProtocolConstructors
+-(id) initRequired: (NSString *) p0
+{
+	self = [super init];
+	if (self) {
+		_stringValue = [p0 copy];
+	}
+	return self;
+}
+
+-(id) initOptional: (NSDate *) p0
+{
+	self = [super init];
+	if (self) {
+		_dateValue = [p0 copy];
+	}
+	return self;
+}
+
+@end
+
 #include "libtest.decompile.m"
