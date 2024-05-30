@@ -6,6 +6,6 @@
 		<Compile Include="../*.cs" />
 		<ProjectReference Include="../../BindingWithDefaultCompileInclude/$(_PlatformName)/BindingWithDefaultCompileInclude.csproj" />
 		<ProjectReference Include="../../BindingWithUncompressedResourceBundle/$(_PlatformName)/BindingWithUncompressedResourceBundle.csproj" />
-		<ProjectReference Include="../../../bindings-framework-test/dotnet/$(_PlatformName)/bindings-framework-test.csproj" />
+		<ProjectReference Include="../../../bindings-xcframework-test/dotnet/$(_PlatformName)/bindings-xcframework-test.csproj" />
 	</ItemGroup>
 </Project>
