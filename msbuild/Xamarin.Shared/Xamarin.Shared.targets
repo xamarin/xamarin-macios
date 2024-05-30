@@ -2080,7 +2080,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	<Target Name="_ParseBundlerArguments">
 		<ParseBundlerArguments
 			Aot="@(_AotArguments)"
-			ExtraArgs="$(_BundlerArguments)"
+			ExtraArgs="$(AppBundleExtraOptions)"
 			NoSymbolStrip="$(NoSymbolStrip)"
 			NoDSymUtil="$(NoDSymUtil)"
 			PackageDebugSymbols="$(PackageDebugSymbols)"

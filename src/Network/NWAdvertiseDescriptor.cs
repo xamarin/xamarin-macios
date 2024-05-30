@@ -140,15 +140,14 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern void nw_advertise_descriptor_set_no_auto_rename (IntPtr handle, [MarshalAs (UnmanagedType.I1)] bool no_auto_rename);
+		static extern void nw_advertise_descriptor_set_no_auto_rename (IntPtr handle, byte no_auto_rename);
 
 		[DllImport (Constants.NetworkLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static extern bool nw_advertise_descriptor_get_no_auto_rename (IntPtr handle);
+		static extern byte nw_advertise_descriptor_get_no_auto_rename (IntPtr handle);
 
 		public bool NoAutoRename {
-			set => nw_advertise_descriptor_set_no_auto_rename (GetCheckedHandle (), value);
-			get => nw_advertise_descriptor_get_no_auto_rename (GetCheckedHandle ());
+			set => nw_advertise_descriptor_set_no_auto_rename (GetCheckedHandle (), value.AsByte ());
+			get => nw_advertise_descriptor_get_no_auto_rename (GetCheckedHandle ()) != 0;
 		}
 
 #if NET

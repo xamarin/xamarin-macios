@@ -11453,6 +11453,7 @@ namespace AppKit {
 		[Export ("stringForType:")]
 		string GetStringForType (string dataType);
 
+#if !XAMCORE_5_0
 		// Pasteboard data types
 
 		[Field ("NSStringPboardType")]
@@ -11487,6 +11488,7 @@ namespace AppKit {
 		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'NSPasteboardTypeRuler' instead.")]
 		NSString NSRulerType { get; }
 
+		[Obsolete ("Use the 'NSPasteboardType' enum instead.")]
 		[Field ("NSFileContentsPboardType")]
 		NSString NSFileContentsType { get; }
 
@@ -11503,6 +11505,7 @@ namespace AppKit {
 		NSString NSHtmlType { get; }
 
 		[Field ("NSPICTPboardType")]
+		[Deprecated (PlatformName.MacOSX, 10, 6 /* Yes, 10.6 */, message: "Do not use, the PICT format was discontinued a long time ago.")]
 		NSString NSPictType { get; }
 
 		[Field ("NSURLPboardType")]
@@ -11547,57 +11550,75 @@ namespace AppKit {
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'NSPasteboardNameDrag' instead.")]
 		NSString NSDragPasteboardName { get; }
 
+		[Obsolete ("Use the 'NSPasteboardName' enum instead.")]
 		[Field ("NSPasteboardNameGeneral")]
 		NSString NSPasteboardNameGeneral { get; }
 
+		[Obsolete ("Use the 'NSPasteboardName' enum instead.")]
 		[Field ("NSPasteboardNameFont")]
 		NSString NSPasteboardNameFont { get; }
 
+		[Obsolete ("Use the 'NSPasteboardName' enum instead.")]
 		[Field ("NSPasteboardNameRuler")]
 		NSString NSPasteboardNameRuler { get; }
 
+		[Obsolete ("Use the 'NSPasteboardName' enum instead.")]
 		[Field ("NSPasteboardNameFind")]
 		NSString NSPasteboardNameFind { get; }
 
+		[Obsolete ("Use the 'NSPasteboardName' enum instead.")]
 		[Field ("NSPasteboardNameDrag")]
 		NSString NSPasteboardNameDrag { get; }
 
+		[Obsolete ("Use the 'NSPasteboardType' enum instead.")]
 		[Field ("NSPasteboardTypeString")]
 		NSString NSPasteboardTypeString { get; }
 
+		[Obsolete ("Use the 'NSPasteboardType' enum instead.")]
 		[Field ("NSPasteboardTypePDF")]
 		NSString NSPasteboardTypePDF { get; }
 
+		[Obsolete ("Use the 'NSPasteboardType' enum instead.")]
 		[Field ("NSPasteboardTypeTIFF")]
 		NSString NSPasteboardTypeTIFF { get; }
 
+		[Obsolete ("Use the 'NSPasteboardType' enum instead.")]
 		[Field ("NSPasteboardTypePNG")]
 		NSString NSPasteboardTypePNG { get; }
 
+		[Obsolete ("Use the 'NSPasteboardType' enum instead.")]
 		[Field ("NSPasteboardTypeRTF")]
 		NSString NSPasteboardTypeRTF { get; }
 
+		[Obsolete ("Use the 'NSPasteboardType' enum instead.")]
 		[Field ("NSPasteboardTypeRTFD")]
 		NSString NSPasteboardTypeRTFD { get; }
 
+		[Obsolete ("Use the 'NSPasteboardType' enum instead.")]
 		[Field ("NSPasteboardTypeHTML")]
 		NSString NSPasteboardTypeHTML { get; }
 
+		[Obsolete ("Use the 'NSPasteboardType' enum instead.")]
 		[Field ("NSPasteboardTypeTabularText")]
 		NSString NSPasteboardTypeTabularText { get; }
 
+		[Obsolete ("Use the 'NSPasteboardType' enum instead.")]
 		[Field ("NSPasteboardTypeFont")]
 		NSString NSPasteboardTypeFont { get; }
 
+		[Obsolete ("Use the 'NSPasteboardType' enum instead.")]
 		[Field ("NSPasteboardTypeRuler")]
 		NSString NSPasteboardTypeRuler { get; }
 
+		[Obsolete ("Use the 'NSPasteboardType' enum instead.")]
 		[Field ("NSPasteboardTypeColor")]
 		NSString NSPasteboardTypeColor { get; }
 
+		[Obsolete ("Use the 'NSPasteboardType' enum instead.")]
 		[Field ("NSPasteboardTypeSound")]
 		NSString NSPasteboardTypeSound { get; }
 
+		[Obsolete ("Use the 'NSPasteboardType' enum instead.")]
 		[Field ("NSPasteboardTypeMultipleTextSelection")]
 		NSString NSPasteboardTypeMultipleTextSelection { get; }
 
@@ -11605,17 +11626,141 @@ namespace AppKit {
 		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'NSPasteboardTypeTextFinderOptions' instead.")]
 		NSString NSPasteboardTypeFindPanelSearchOptions { get; }
 
+		[Obsolete ("Use the 'NSPasteboardType' enum instead.")]
 		[Field ("NSPasteboardTypeTextFinderOptions")]
 		NSString PasteboardTypeTextFinderOptions { get; }
 
+		[Obsolete ("Use the 'NSPasteboardType' enum instead.")]
 		[Field ("NSPasteboardTypeURL")]
 		NSString NSPasteboardTypeUrl { get; }
 
+		[Obsolete ("Use the 'NSPasteboardType' enum instead.")]
 		[Field ("NSPasteboardTypeFileURL")]
 		NSString NSPasteboardTypeFileUrl { get; }
+#endif // !XAMCORE_5_0
 
 		[Export ("prepareForNewContentsWithOptions:")]
 		nint PrepareForNewContents (NSPasteboardContentsOptions options);
+	}
+
+	[NoMacCatalyst]
+	enum NSPasteboardName {
+		[Field ("NSPasteboardNameGeneral")]
+		General,
+
+		[Field ("NSPasteboardNameFont")]
+		Font,
+
+		[Field ("NSPasteboardNameRuler")]
+		Ruler,
+
+		[Field ("NSPasteboardNameFind")]
+		Find,
+
+		[Field ("NSPasteboardNameDrag")]
+		Drag,
+	}
+
+	[NoMacCatalyst]
+	enum NSPasteboardType {
+		[Field ("NSFileContentsPboardType")]
+		FileContents,
+
+		[Field ("NSPasteboardTypeString")]
+		String,
+
+		[Field ("NSPasteboardTypePDF")]
+		Pdf,
+
+		[Field ("NSPasteboardTypeTIFF")]
+		Tiff,
+
+		[Field ("NSPasteboardTypePNG")]
+		Png,
+
+		[Field ("NSPasteboardTypeRTF")]
+		Rtf,
+
+		[Field ("NSPasteboardTypeRTFD")]
+		Rtfd,
+
+		[Field ("NSPasteboardTypeHTML")]
+		Html,
+
+		[Field ("NSPasteboardTypeTabularText")]
+		TabularText,
+
+		[Field ("NSPasteboardTypeFont")]
+		Font,
+
+		[Field ("NSPasteboardTypeRuler")]
+		Ruler,
+
+		[Field ("NSPasteboardTypeColor")]
+		Color,
+
+		[Field ("NSPasteboardTypeSound")]
+		Sound,
+
+		[Field ("NSPasteboardTypeMultipleTextSelection")]
+		MultipleTextSelection,
+
+		[Field ("NSPasteboardTypeTextFinderOptions")]
+		TextFinderOptions,
+
+		[Field ("NSPasteboardTypeURL")]
+		Url,
+
+		[Field ("NSPasteboardTypeFileURL")]
+		FileUrl,
+
+		[Mac (13, 0)]
+		[Field ("NSPasteboardTypeCollaborationMetadata", "SharedWithYou")]
+		CollaborationMetadata,
+
+		[Field ("NSFindPanelSearchOptionsPboardType")]
+		FindPanelSearchOptions,
+
+		// Deprecated with replacement in all macOS versions we support, so we're not binding them:
+		// NSFilenamesPboardType
+		// NSFontPboardType
+		// NSColorPboardType
+		// NSHTMLPboardType
+		// NSMultipleTextSelectionPboardType
+		// NSPDFPboardType
+		// NSPICTPboardType (no replacement, just don't use)
+		// NSRTFDPboardType
+		// NSRTFDPboardType
+		// NSRulerPboardType
+		// NSStringPboardType
+		// NSTIFFPboardType
+		// NSTabularTextPboardType
+		// NSURLPboardType
+		// NSPasteboardTypeFindPanelSearchOptions
+		// NSFilesPromisePboardType
+		// NSInkTextPboardType
+		// NSPostScriptPboardType
+		// NSVCardPboardType
+		// NSGetFileType
+		// NSRTFPboardType
+	}
+
+	[NoMacCatalyst]
+	enum NSPasteboardTypeTextFinderOptionKey {
+		[Field ("NSTextFinderCaseInsensitiveKey")]
+		CaseInsensitiveKey,
+
+		[Field ("NSTextFinderMatchingTypeKey")]
+		MatchingTypeKey,
+	}
+
+	[NoMacCatalyst]
+	enum NSPasteboardTypeFindPanelSearchOptionKey {
+		[Field ("NSFindPanelCaseInsensitiveSearch")]
+		CaseInsensitiveSearch,
+
+		[Field ("NSFindPanelSubstringMatch")]
+		SubstringMatch,
 	}
 
 	[NoiOS]
@@ -11725,9 +11870,13 @@ namespace AppKit {
 		[Export ("readingOptionsForType:pasteboard:")]
 		NSPasteboardReadingOptions GetReadingOptionsForType (string type, NSPasteboard pasteboard);
 
-#if !NET
-		// This binding is just broken, it's an ObjC ctor (init*) bound as a normal method.
 		[Abstract]
+#if NET
+		[Export ("initWithPasteboardPropertyList:ofType:")]
+		NativeHandle Constructor (NSObject propertyList, NSString type);
+
+#else
+		// This binding is just broken, it's an ObjC ctor (init*) bound as a normal method.
 		[Export ("xamarinselector:removed:")]
 		[Obsolete ("It will never be called.")]
 		NSObject InitWithPasteboardPropertyList (NSObject propertyList, string type);
@@ -15049,7 +15198,7 @@ namespace AppKit {
 		[Export ("titlebarSeparatorStyle", ArgumentSemantic.Assign)]
 		NSTitlebarSeparatorStyle TitlebarSeparatorStyle { get; set; }
 
-		[Mac (14, 0)]
+		[Mac (10, 14)]
 		[Export ("canCollapseFromWindowResize")]
 		bool CanCollapseFromWindowResize { get; set; }
 

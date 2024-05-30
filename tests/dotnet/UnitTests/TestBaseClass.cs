@@ -338,28 +338,28 @@ namespace Xamarin.Tests {
 			return csproj;
 		}
 
-		protected string ExecuteWithMagicWordAndAssert (ApplePlatform platform, string runtimeIdentifiers, string executable)
+		protected string ExecuteWithMagicWordAndAssert (ApplePlatform platform, string runtimeIdentifiers, string executable, Dictionary<string, string?>? environment = null)
 		{
 			if (!CanExecute (platform, runtimeIdentifiers))
 				return string.Empty;
 
-			return ExecuteWithMagicWordAndAssert (executable);
+			return ExecuteWithMagicWordAndAssert (executable, environment);
 		}
 
-		protected string ExecuteWithMagicWordAndAssert (string executable)
+		protected string ExecuteWithMagicWordAndAssert (string executable, Dictionary<string, string?>? environment = null)
 		{
 			if (Environment.OSVersion.Platform == PlatformID.Win32NT) {
 				Console.WriteLine ($"Not executing '{executable}' because we're on Windows.");
 				return string.Empty;
 			}
 
-			var rv = Execute (executable, out var output, out string magicWord);
+			var rv = Execute (executable, out var output, out string magicWord, environment);
 			Assert.That (output.ToString (), Does.Contain (magicWord), "Contains magic word");
 			Assert.AreEqual (0, rv.ExitCode, "ExitCode");
 			return output.ToString ();
 		}
 
-		protected Execution Execute (string executable, out StringBuilder output, out string magicWord)
+		protected Execution Execute (string executable, out StringBuilder output, out string magicWord, Dictionary<string, string?>? environment = null)
 		{
 			if (!File.Exists (executable))
 				throw new FileNotFoundException ($"The executable '{executable}' does not exists.");
@@ -369,6 +369,10 @@ namespace Xamarin.Tests {
 				{ "MAGIC_WORD", magicWord },
 				{ "DYLD_FALLBACK_LIBRARY_PATH", null }, // VSMac might set this, which may cause tests to crash.
 			};
+			if (environment is not null) {
+				foreach (var kvp in environment)
+					env [kvp.Key] = kvp.Value;
+			}
 
 			output = new StringBuilder ();
 			return Execution.RunWithStringBuildersAsync (executable, Array.Empty<string> (), environment: env, standardOutput: output, standardError: output, timeout: TimeSpan.FromSeconds (15)).Result;

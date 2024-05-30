@@ -2015,5 +2015,31 @@ namespace Xamarin.Tests {
 
 			Assert.AreEqual ($"sourcelink test passed: {pdbFile}", test.StandardOutput.ToString ().TrimEnd ('\n'));
 		}
+
+
+		[Test]
+		// [TestCase (ApplePlatform.iOS)] // Skipping because we're not executing tvOS apps anyway (but it should work)
+		// [TestCase (ApplePlatform.TVOS)] // Skipping because we're not executing tvOS apps anyway (but it should work)
+		[TestCase (ApplePlatform.MacOSX)] // https://github.com/dotnet/runtime/issues/102730
+		[TestCase (ApplePlatform.MacCatalyst)]
+		public void RaisesAppDomainUnhandledExceptionEvent (ApplePlatform platform)
+		{
+			var project = "ExceptionalTestApp";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+
+			var runtimeIdentifiers = GetDefaultRuntimeIdentifier (platform);
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
+			Clean (project_path);
+			var properties = GetDefaultProperties ();
+			DotNet.AssertBuild (project_path, properties);
+
+			if (CanExecute (platform, runtimeIdentifiers)) {
+				var env = new Dictionary<string, string?> {
+					{ "EXCEPTIONAL_TEST_CASE", "1" },
+				};
+				var appExecutable = GetNativeExecutable (platform, appPath);
+				var output = ExecuteWithMagicWordAndAssert (appExecutable, env);
+			}
+		}
 	}
 }
