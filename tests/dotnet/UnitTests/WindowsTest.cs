@@ -288,6 +288,14 @@ namespace Xamarin.Tests {
 			DotNetProjectTest.PluralRuntimeIdentifiersImpl (platform, runtimeIdentifiers, properties, isUsingHotRestart: true);
 		}
 
+		[Category ("RemoteWindows")]
+		[TestCase (ApplePlatform.iOS, "ios-arm64")]
+		public void PluralRuntimeIdentifiersWithRemoteMac (ApplePlatform platform, string runtimeIdentifiers)
+		{
+			var properties = AddRemoteProperties ();
+			DotNetProjectTest.PluralRuntimeIdentifiersImpl (platform, runtimeIdentifiers, properties);
+		}
+
 		static void AssertWarningsEqual (IList<string> expected, IList<string> actual, string message)
 		{
 			if (expected.Count == actual.Count) {
@@ -368,14 +376,17 @@ namespace Xamarin.Tests {
 			Assert.AreEqual ("3.14", infoPlist.GetString ("CFBundleShortVersionString").Value, "CFBundleShortVersionString");
 		}
 
-		protected void AddRemoteProperties (Dictionary<string, string> properties)
+		protected Dictionary<string, string> AddRemoteProperties (Dictionary<string, string>? properties = null)
 		{
+			properties ??= new Dictionary<string, string> ();
 			properties ["ServerAddress"] = Environment.GetEnvironmentVariable ("MAC_AGENT_IP") ?? string.Empty;
 			properties ["ServerUser"] = Environment.GetEnvironmentVariable ("MAC_AGENT_USER") ?? string.Empty;
 			properties ["ServerPassword"] = Environment.GetEnvironmentVariable ("XMA_PASSWORD") ?? string.Empty;
 
 			if (!string.IsNullOrEmpty (properties ["ServerUser"]))
 				properties ["EnsureRemoteConnection"] = "true";
+
+			return properties;
 		}
 
 		protected Dictionary<string, string> AddHotRestartProperties (Dictionary<string, string>? properties = null)
