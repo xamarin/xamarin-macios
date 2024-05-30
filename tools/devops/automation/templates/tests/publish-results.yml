@@ -59,7 +59,9 @@ stages:
       vmImage: ubuntu-latest
     variables:
       VAR_DEPENDENCIES: $[ convertToJson(dependencies) ]
-      VAR_STAGE_DEPENDENCIES: $[ convertToJson(stageDependencies) ]
+      # Putting stageDependencies into a variable makes the step fail with:
+      #     ##[error]An error occurred trying to start process '/home/vsts/agents/3.240.1/externals/node20_1/bin/node' with working directory '/home/vsts/work/1/s'. Argument list too long
+      # VAR_STAGE_DEPENDENCIES: $[ convertToJson(stageDependencies) ]
     condition: always()
     continueOnError: true
     steps:
