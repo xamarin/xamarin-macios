@@ -52,25 +52,37 @@ stages:
   condition: and(succeededOrFailed(), ${{ parameters.condition }})
 
   jobs:
-  - job: postDebugOutput
-    displayName: 'Post Debug output'
+  - job: postDebugOutputWithDependencies
+    displayName: 'Post Debug output with dependencies'
     timeoutInMinutes: 10
     pool:
       vmImage: ubuntu-latest
     variables:
       VAR_DEPENDENCIES: $[ convertToJson(dependencies) ]
-      VAR_STAGE_DEPENDENCIES: $[ convertToJson(stageDependencies) ]
     condition: always()
-    continueOnError: true
     steps:
     - checkout: none
     - bash: |
         env -0 | sort -z | tr '\0' '\n' || true
         env
-      displayName: 'Dump env'
+      displayName: 'Dump env with dependencies'
       name: DumpEnv
-      env:
-        ENV_DEPENDENCIES: $[ convertToJson(dependencies) ]
+
+  - job: postDebugOutputWithStageDependencies
+    displayName: 'Post Debug output with stage dependencies'
+    timeoutInMinutes: 10
+    pool:
+      vmImage: ubuntu-latest
+    variables:
+      VAR_STAGE_DEPENDENCIES: $[ convertToJson(stageDependencies) ]
+    condition: always()
+    steps:
+    - checkout: none
+    - bash: |
+        env -0 | sort -z | tr '\0' '\n' || true
+        env
+      displayName: 'Dump env with stage dependencies'
+      name: DumpEnv
 
   - job: publish_test_results
     condition: and(ne(stageDependencies.configure_build.configure.outputs['labels.skip_all_tests'], 'True'),  succeededOrFailed())
