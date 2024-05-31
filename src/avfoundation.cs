@@ -123,6 +123,7 @@ namespace AVFoundation {
 #endif
 	delegate void AVAssetImageGenerateAsynchronouslyForTimeCompletionHandler (CGImage imageRef, CMTime actualTime, NSError error);
 	delegate void AVCompletion (bool finished);
+	/// <summary>The delegate for <see cref="M:AVFoundation.AVCaptureDevice.RequestAccessForMediaTypeAsync(Foundation.NSString)" />.</summary>
 	delegate void AVRequestAccessStatus (bool accessGranted);
 	delegate AVAudioBuffer AVAudioConverterInputHandler (uint inNumberOfPackets, out AVAudioConverterInputStatus outStatus);
 
@@ -660,6 +661,9 @@ namespace AVFoundation {
 		NSString PersistentContentKeyType { get; }
 	}
 
+	/// <summary>Encapsulates a range of valid frame-rates, including min/max duration and min/max rate.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/AVFoundation/Reference/AVFrameRateRange_Class/index.html">Apple documentation for <c>AVFrameRateRange</c></related>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoWatch]
 	[NoTV]
@@ -1799,6 +1803,7 @@ namespace AVFoundation {
 		AVAudioTime GetPlayerTimeFromNodeTime (AVAudioTime nodeTime);
 	}
 
+	/// <include file="../docs/api/AVFoundation/AVAudioRecorder.xml" path="/RootNode/Docs[@DocId='T:AVFoundation.AVAudioRecorder']/*" />
 	[BaseType (typeof (NSObject))]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -1891,8 +1896,17 @@ namespace AVFoundation {
 		AVAudioFormat Format { get; }
 	}
 
+	/// <summary>Interface representing the required methods (if any) of the protocol <see cref="T:AVFoundation.AVAudioRecorderDelegate" />.</summary>
+	///     <remarks>
+	///       <para>This interface contains the required methods (if any) from the protocol defined by <see cref="T:AVFoundation.AVAudioRecorderDelegate" />.</para>
+	///       <para>If developers create classes that implement this interface, the implementation methods will automatically be exported to Objective-C with the matching signature from the method defined in the <see cref="T:AVFoundation.AVAudioRecorderDelegate" /> protocol.</para>
+	///       <para>Optional methods (if any) are provided by the <see cref="T:AVFoundation.AVAudioRecorderDelegate_Extensions" /> class as extension methods to the interface, allowing developers to invoke any optional methods on the protocol.</para>
+	///     </remarks>
 	interface IAVAudioRecorderDelegate { }
 
+	/// <summary>Delegate for the AVAudioRecorder class.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/AVFoundation/Reference/AVAudioRecorderDelegate_ProtocolReference/index.html">Apple documentation for <c>AVAudioRecorderDelegate</c></related>
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -1943,6 +1957,7 @@ namespace AVFoundation {
 		AVAudioSessionRouteDescription HintType { get; }
 	}
 
+	/// <summary>The delegate for <see cref="M:AVFoundation.AVAudioSession.RequestRecordPermission(AVFoundation.AVPermissionGranted)" />.</summary>
 	delegate void AVPermissionGranted (bool granted);
 
 	[iOS (14, 5), Watch (7, 4), NoTV, NoMac]
@@ -2861,8 +2876,17 @@ namespace AVFoundation {
 		AVAudioSessionRouteDescription PreviousRoute { get; }
 	}
 
+	/// <summary>Interface representing the required methods (if any) of the protocol <see cref="T:AVFoundation.AVAudioSessionDelegate" />.</summary>
+	///     <remarks>
+	///       <para>This interface contains the required methods (if any) from the protocol defined by <see cref="T:AVFoundation.AVAudioSessionDelegate" />.</para>
+	///       <para>If developers create classes that implement this interface, the implementation methods will automatically be exported to Objective-C with the matching signature from the method defined in the <see cref="T:AVFoundation.AVAudioSessionDelegate" /> protocol.</para>
+	///       <para>Optional methods (if any) are provided by the <see cref="T:AVFoundation.AVAudioSessionDelegate_Extensions" /> class as extension methods to the interface, allowing developers to invoke any optional methods on the protocol.</para>
+	///     </remarks>
 	interface IAVAudioSessionDelegate { }
 
+	/// <summary>Delegate for the AVAudioSession class.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/AVFoundation/Reference/AVAudioSessionDelegate_ProtocolReference/index.html">Apple documentation for <c>AVAudioSessionDelegate</c></related>
 	[NoMac]
 	[Deprecated (PlatformName.iOS, 6, 0)]
 	[BaseType (typeof (NSObject))]
@@ -3722,6 +3746,7 @@ namespace AVFoundation {
 	// Making a class abstract has problems: https://github.com/xamarin/xamarin-macios/issues/4969, so we're not doing this yet
 	// [Abstract] // Abstract superclass.
 #endif
+	/// <summary>Base class for media samples that were captured with <see cref="T:AVFoundation.AVCaptureDataOutputSynchronizer" />.</summary>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoWatch, NoTV]
 	[BaseType (typeof (NSObject))]
@@ -3731,6 +3756,7 @@ namespace AVFoundation {
 		CMTime Timestamp { get; }
 	}
 
+	/// <summary>A collection of simultaneous media capture samples.</summary>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoWatch, NoTV]
 	[BaseType (typeof (NSObject))]
@@ -3761,6 +3787,7 @@ namespace AVFoundation {
 
 	interface IAVCaptureDataOutputSynchronizerDelegate { }
 
+	/// <summary>Delegate for receiving synchronized data for a <see cref="T:AVFoundation.AVCaptureDataOutputSynchronizer" />.</summary>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoWatch, NoTV]
 	[NoMac]
@@ -3772,6 +3799,7 @@ namespace AVFoundation {
 		void DidOutputSynchronizedDataCollection (AVCaptureDataOutputSynchronizer synchronizer, AVCaptureSynchronizedDataCollection synchronizedDataCollection);
 	}
 
+	/// <summary>Combines captured media from multiple sources and passes timestamp-matched data to a single callback.</summary>
 	[NoWatch, NoTV]
 	[NoMac]
 	[MacCatalyst (13, 1)]
@@ -3798,6 +3826,7 @@ namespace AVFoundation {
 		DispatchQueue DelegateCallbackQueue { get; }
 	}
 
+	/// <summary>Contains buffer data that was obtained with synchronized capture..</summary>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoMac, NoWatch, NoTV]
 	[BaseType (typeof (AVCaptureSynchronizedData))]
@@ -3812,6 +3841,7 @@ namespace AVFoundation {
 		AVCaptureOutputDataDroppedReason DroppedReason { get; }
 	}
 
+	/// <summary>Contains metadata that was obtained with synchronized capture.</summary>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoMac, NoWatch, NoTV]
 	[BaseType (typeof (AVCaptureSynchronizedData))]
@@ -3820,6 +3850,7 @@ namespace AVFoundation {
 		AVMetadataObject [] MetadataObjects { get; }
 	}
 
+	/// <summary>Contains depth data that was obtained with synchronized capture.</summary>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoMac, NoWatch, NoTV]
 	[BaseType (typeof (AVCaptureSynchronizedData))]
@@ -9328,6 +9359,7 @@ namespace AVFoundation {
 		CGPoint LensDistortionCenter { get; }
 	}
 
+	/// <summary>Provides data for the  event.</summary>
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	interface AVCaptureSessionRuntimeErrorEventArgs {
@@ -9335,6 +9367,7 @@ namespace AVFoundation {
 		NSError Error { get; }
 	}
 
+	/// <include file="../docs/api/AVFoundation/AVCaptureSession.xml" path="/RootNode/Docs[@DocId='T:AVFoundation.AVCaptureSession']/*" />
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoWatch]
 	[NoTV]
@@ -9545,6 +9578,7 @@ namespace AVFoundation {
 		float HardwareCost { get; }
 	}
 
+	/// <include file="../docs/api/AVFoundation/AVCaptureConnection.xml" path="/RootNode/Docs[@DocId='T:AVFoundation.AVCaptureConnection']/*" />
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoWatch]
 	[NoTV]
@@ -9685,6 +9719,9 @@ namespace AVFoundation {
 
 	}
 
+	/// <summary>An audio channel in a capture connection.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/AVFoundation/Reference/AVCaptureAudioChannel_Class/index.html">Apple documentation for <c>AVCaptureAudioChannel</c></related>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoWatch]
 	[NoTV]
@@ -9705,6 +9742,9 @@ namespace AVFoundation {
 		float Volume { get; set; } /* float intended here */
 	}
 
+	/// <summary>Abstract base class used for classes that provide input to a AVCaptureSession object.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/AVFoundation/Reference/AVCaptureInput_Class/index.html">Apple documentation for <c>AVCaptureInput</c></related>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoWatch]
 	[NoTV]
@@ -9720,6 +9760,9 @@ namespace AVFoundation {
 		NSString PortFormatDescriptionDidChangeNotification { get; }
 	}
 
+	/// <summary>An input source.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/AVFoundation/Reference/AVCaptureInputPort_Class/index.html">Apple documentation for <c>AVCaptureInputPort</c></related>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoWatch]
 	[NoTV]
@@ -9754,8 +9797,15 @@ namespace AVFoundation {
 		AVCaptureDevicePosition SourceDevicePosition { get; }
 	}
 
+	/// <summary>Interface representing the required methods (if any) of the protocol <see cref="T:AVFoundation.AVCaptureDepthDataOutputDelegate" />.</summary>
+	///     <remarks>
+	///       <para>This interface contains the required methods (if any) from the protocol defined by <see cref="T:AVFoundation.AVCaptureDepthDataOutputDelegate" />.</para>
+	///       <para>If developers create classes that implement this interface, the implementation methods will automatically be exported to Objective-C with the matching signature from the method defined in the <see cref="T:AVFoundation.AVCaptureDepthDataOutputDelegate" /> protocol.</para>
+	///       <para>Optional methods (if any) are provided by the <see cref="T:AVFoundation.AVCaptureDepthDataOutputDelegate_Extensions" /> class as extension methods to the interface, allowing developers to invoke any optional methods on the protocol.</para>
+	///     </remarks>
 	interface IAVCaptureDepthDataOutputDelegate { }
 
+	/// <summary>Delegate for receiving captured depth data.</summary>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoWatch, NoTV, NoMac]
 	[Protocol, Model]
@@ -9768,6 +9818,7 @@ namespace AVFoundation {
 		void DidDropDepthData (AVCaptureDepthDataOutput output, AVDepthData depthData, CMTime timestamp, AVCaptureConnection connection, AVCaptureOutputDataDroppedReason reason);
 	}
 
+	/// <summary>Captures depth information for scenes.</summary>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof (AVCaptureOutput))]
@@ -9792,6 +9843,9 @@ namespace AVFoundation {
 		bool FilteringEnabled { [Bind ("isFilteringEnabled")] get; set; }
 	}
 
+	/// <summary>A type of <see cref="T:AVFoundation.AVCaptureInput" /> used to capture data from a <see cref="T:AVFoundation.AVCaptureDevice" /> object.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/AVFoundation/Reference/AVCaptureDeviceInput_Class/index.html">Apple documentation for <c>AVCaptureDeviceInput</c></related>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoWatch]
 	[NoTV]
@@ -9910,6 +9964,9 @@ namespace AVFoundation {
 		NSString ProRes422Lpcm { get; }
 	}
 
+	/// <summary>Abstract base class used for classes that provide output destinations to a AVCaptureSession object.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/AVFoundation/Reference/AVCaptureOutput_Class/index.html">Apple documentation for <c>AVCaptureOutput</c></related>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoWatch]
 	[NoTV]
@@ -9968,6 +10025,9 @@ namespace AVFoundation {
 		bool RemovesDuplicateFrames { get; set; }
 	}
 
+	/// <summary>A <see cref="T:CoreAnimation.CALayer" /> subclass that renders the video as it is being captured.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/AVFoundation/Reference/AVCaptureVideoPreviewLayer_Class/index.html">Apple documentation for <c>AVCaptureVideoPreviewLayer</c></related>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoWatch]
 	[NoTV]
@@ -10067,6 +10127,9 @@ namespace AVFoundation {
 		bool Previewing { [Bind ("isPreviewing")] get; }
 	}
 
+	/// <summary>AVCaptureOutput that captures frames from the video being recorded.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/AVFoundation/Reference/AVCaptureVideoDataOutput_Class/index.html">Apple documentation for <c>AVCaptureVideoDataOutput</c></related>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoTV]
 	[NoWatch]
@@ -10154,6 +10217,19 @@ namespace AVFoundation {
 		bool DeliversPreviewSizedOutputBuffers { get; set; }
 	}
 
+	/// <summary>Delegate class used to notify when a sample buffer has been written.</summary>
+	///     <remarks>
+	///       <para>
+	/// 	See the sample linked on this page for a complete sample showing how to configure this delegate.
+	///       </para>
+	///       <para>
+	/// 	It is worth pointing out that the buffers delivered to the
+	/// 	DidOutputSampleBuffer method come from a small pool of buffers
+	/// 	in AVFoundation, and failure to call Dispose() on the buffers
+	/// 	you receive will block the delivery of further frames.
+	///       </para>
+	///     </remarks>
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/AVFoundation/Reference/AVCaptureVideoDataOutputSampleBufferDelegate_Protocol/index.html">Apple documentation for <c>AVCaptureVideoDataOutputSampleBufferDelegate</c></related>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoWatch]
 	[NoTV]
@@ -10169,8 +10245,17 @@ namespace AVFoundation {
 		void DidDropSampleBuffer (AVCaptureOutput captureOutput, CMSampleBuffer sampleBuffer, AVCaptureConnection connection);
 	}
 
+	/// <summary>Interface representing the required methods (if any) of the protocol <see cref="T:AVFoundation.AVCaptureVideoDataOutputSampleBufferDelegate" />.</summary>
+	///     <remarks>
+	///       <para>This interface contains the required methods (if any) from the protocol defined by <see cref="T:AVFoundation.AVCaptureVideoDataOutputSampleBufferDelegate" />.</para>
+	///       <para>If developers create classes that implement this interface, the implementation methods will automatically be exported to Objective-C with the matching signature from the method defined in the <see cref="T:AVFoundation.AVCaptureVideoDataOutputSampleBufferDelegate" /> protocol.</para>
+	///       <para>Optional methods (if any) are provided by the <see cref="T:AVFoundation.AVCaptureVideoDataOutputSampleBufferDelegate_Extensions" /> class as extension methods to the interface, allowing developers to invoke any optional methods on the protocol.</para>
+	///     </remarks>
 	interface IAVCaptureVideoDataOutputSampleBufferDelegate { }
 
+	/// <summary>A type of <see cref="T:AVFoundation.AVCaptureOutput" /> whose delegate object can process audio sample buffers being captured.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/AVFoundation/Reference/AVCaptureAudioDataOutput_Class/index.html">Apple documentation for <c>AVCaptureAudioDataOutput</c></related>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoWatch]
 	[NoTV]
@@ -10213,6 +10298,9 @@ namespace AVFoundation {
 		AudioSettings AudioSettings { get; set; }
 	}
 
+	/// <summary>A delegate object that allows the application developer to respond to events relating to a <see cref="T:AVFoundation.AVCaptureAudioDataOutput" /> object.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/AVFoundation/Reference/AVCaptureAudioDataOutputSampleBufferDelegate_Protocol/index.html">Apple documentation for <c>AVCaptureAudioDataOutputSampleBufferDelegate</c></related>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoWatch]
 	[NoTV]
@@ -10224,6 +10312,9 @@ namespace AVFoundation {
 		void DidOutputSampleBuffer (AVCaptureOutput captureOutput, CMSampleBuffer sampleBuffer, AVCaptureConnection connection);
 	}
 
+	/// <summary>Settings related to bracketed image capture, base class.</summary>
+	///     <remarks>These settings are created typically with one of the <see cref="T:AVFoundation.AVCaptureManualExposureBracketedStillImageSettings" /> or <see cref="T:AVFoundation.AVCaptureAutoExposureBracketedStillImageSettings" /> factory methods.</remarks>
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/AVFoundation/Reference/AVCaptureBracketedStillImageSettings_Class/index.html">Apple documentation for <c>AVCaptureBracketedStillImageSettings</c></related>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoMac]
 	[NoWatch]
@@ -10235,6 +10326,9 @@ namespace AVFoundation {
 		// Abstract class in obJC
 	}
 
+	/// <summary>A <see cref="T:AVFoundation.AVCaptureBracketedStillImageSettings" /> subclass used when manually bracketing using exposure time and ISO.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/AVFoundation/Reference/AVCaptureManualExposureBracketedStillImageSettings_Class/index.html">Apple documentation for <c>AVCaptureManualExposureBracketedStillImageSettings</c></related>
 	[NoMac]
 	[NoWatch]
 	[NoTV]
@@ -10252,6 +10346,9 @@ namespace AVFoundation {
 		AVCaptureManualExposureBracketedStillImageSettings Create (CMTime duration, float /* float, not CGFloat */ ISO);
 	}
 
+	/// <summary>A <see cref="T:AVFoundation.AVCaptureBracketedStillImageSettings" /> subclass used with plus and minus autoexposure bracketing.</summary>
+	///     <remarks>New instances are typically created with the <see cref="M:AVFoundation.AVCaptureAutoExposureBracketedStillImageSettings.Create(System.Single)" /> factory method.</remarks>
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/AVFoundation/Reference/AVCaptureAutoExposureBracketedStillImageSettings_Class/index.html">Apple documentation for <c>AVCaptureAutoExposureBracketedStillImageSettings</c></related>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoWatch, NoMac]
 	[NoTV]
@@ -10265,10 +10362,25 @@ namespace AVFoundation {
 		AVCaptureAutoExposureBracketedStillImageSettings Create (float /* float, not CGFloat */ exposureTargetBias);
 	}
 
+	/// <summary>Interface representing the required methods (if any) of the protocol <see cref="T:AVFoundation.AVCaptureAudioDataOutputSampleBufferDelegate" />.</summary>
+	///     <remarks>
+	///       <para>This interface contains the required methods (if any) from the protocol defined by <see cref="T:AVFoundation.AVCaptureAudioDataOutputSampleBufferDelegate" />.</para>
+	///       <para>If developers create classes that implement this interface, the implementation methods will automatically be exported to Objective-C with the matching signature from the method defined in the <see cref="T:AVFoundation.AVCaptureAudioDataOutputSampleBufferDelegate" /> protocol.</para>
+	///       <para>Optional methods (if any) are provided by the <see cref="T:AVFoundation.AVCaptureAudioDataOutputSampleBufferDelegate_Extensions" /> class as extension methods to the interface, allowing developers to invoke any optional methods on the protocol.</para>
+	///     </remarks>
 	interface IAVCaptureAudioDataOutputSampleBufferDelegate { }
 
+	/// <summary>Interface representing the required methods (if any) of the protocol <see cref="T:AVFoundation.AVCaptureFileOutputRecordingDelegate" />.</summary>
+	///     <remarks>
+	///       <para>This interface contains the required methods (if any) from the protocol defined by <see cref="T:AVFoundation.AVCaptureFileOutputRecordingDelegate" />.</para>
+	///       <para>If developers create classes that implement this interface, the implementation methods will automatically be exported to Objective-C with the matching signature from the method defined in the <see cref="T:AVFoundation.AVCaptureFileOutputRecordingDelegate" /> protocol.</para>
+	///       <para>Optional methods (if any) are provided by the <see cref="T:AVFoundation.AVCaptureFileOutputRecordingDelegate_Extensions" /> class as extension methods to the interface, allowing developers to invoke any optional methods on the protocol.</para>
+	///     </remarks>
 	interface IAVCaptureFileOutputRecordingDelegate { }
 
+	/// <summary>A class that represents a file-based <see cref="T:AVFoundation.AVCaptureOutput" />. Application developers should use concrete subtypes <see cref="T:AVFoundation.AVCaptureMovieFileOutput" /> or <see cref="T:AVFoundation.AVCaptureAudioDataOutput" />.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/AVFoundation/Reference/AVCaptureFileOutput_Class/index.html">Apple documentation for <c>AVCaptureFileOutput</c></related>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoWatch]
 	[BaseType (typeof (AVCaptureOutput))]
@@ -10323,6 +10435,11 @@ namespace AVFoundation {
 		bool RecordingPaused { [Bind ("isRecordingPaused")] get; }
 	}
 
+	/// <summary>A delegate object that allows the application developer to respond to events in a <see cref="T:AVFoundation.AVCaptureFileOutput" /> object.</summary>
+	///     <remarks>
+	///       <para>As with many AV Foundation methods, starting, stop, and pause commands are asynchronous and it is only here, in the delegate objet, that one can rely on the state of the underlying capture.</para>
+	///     </remarks>
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/AVFoundation/Reference/AVCaptureFileOutputRecordingDelegate_Protocol/index.html">Apple documentation for <c>AVCaptureFileOutputRecordingDelegate</c></related>
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -10350,6 +10467,9 @@ namespace AVFoundation {
 		void WillFinishRecording (AVCaptureFileOutput captureOutput, NSUrl outputFileUrl, AVCaptureConnection [] connections, [NullAllowed] NSError error);
 	}
 
+	/// <summary>An object that intercepts metadata objects produced by a capture connection.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/AVFoundation/Reference/AVCaptureMetadataOutput/index.html">Apple documentation for <c>AVCaptureMetadataOutput</c></related>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoWatch]
 	[NoTV]
@@ -10377,8 +10497,17 @@ namespace AVFoundation {
 
 	}
 
+	/// <summary>Interface representing the required methods (if any) of the protocol <see cref="T:AVFoundation.AVCaptureMetadataOutputObjectsDelegate" />.</summary>
+	///     <remarks>
+	///       <para>This interface contains the required methods (if any) from the protocol defined by <see cref="T:AVFoundation.AVCaptureMetadataOutputObjectsDelegate" />.</para>
+	///       <para>If developers create classes that implement this interface, the implementation methods will automatically be exported to Objective-C with the matching signature from the method defined in the <see cref="T:AVFoundation.AVCaptureMetadataOutputObjectsDelegate" /> protocol.</para>
+	///       <para>Optional methods (if any) are provided by the <see cref="T:AVFoundation.AVCaptureMetadataOutputObjectsDelegate_Extensions" /> class as extension methods to the interface, allowing developers to invoke any optional methods on the protocol.</para>
+	///     </remarks>
 	interface IAVCaptureMetadataOutputObjectsDelegate { }
 
+	/// <summary>A delegate object that allows the application developer to respond to the arrival of metadata capture objects.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/AVFoundation/Reference/AVCaptureMetadataOutputObjectsDelegate_Protocol/index.html">Apple documentation for <c>AVCaptureMetadataOutputObjectsDelegate</c></related>
 	[NoWatch]
 	[NoTV]
 	[NoMac]
@@ -10407,6 +10536,7 @@ namespace AVFoundation {
 	}
 
 
+	/// <summary>A raw format for an embedded thumbnail image.</summary>
 	[NoTV, NoWatch, iOS (12, 0)]
 	[MacCatalyst (13, 1)]
 	[StrongDictionary ("AVCapturePhotoSettingsThumbnailFormatKeys")]
@@ -10416,6 +10546,9 @@ namespace AVFoundation {
 		NSNumber Height { get; set; }
 	}
 
+	/// <summary>Contains settings for capturing photos.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/AVFoundation/AVCapturePhotoSettings">Apple documentation for <c>AVCapturePhotoSettings</c></related>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoWatch]
 	[NoTV]
@@ -10625,6 +10758,9 @@ namespace AVFoundation {
 		CMVideoDimensions MaxPhotoDimensions { get; set; }
 	}
 
+	/// <summary>Contains settings for capturing bracketed images.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/AVFoundation/AVCapturePhotoBracketSettings">Apple documentation for <c>AVCapturePhotoBracketSettings</c></related>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoWatch]
 	[NoTV, NoMac]
@@ -10647,6 +10783,9 @@ namespace AVFoundation {
 		bool IsLensStabilizationEnabled { [Bind ("isLensStabilizationEnabled")] get; set; }
 	}
 
+	/// <summary>Contains settings for in-progress or completed photos.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/AVFoundation/AVCaptureResolvedPhotoSettings">Apple documentation for <c>AVCaptureResolvedPhotoSettings</c></related>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoWatch]
 	[NoTV]
@@ -10730,8 +10869,17 @@ namespace AVFoundation {
 	}
 
 
+	/// <summary>Interface representing the required methods (if any) of the protocol <see cref="T:AVFoundation.AVCapturePhotoCaptureDelegate" />.</summary>
+	///     <remarks>
+	///       <para>This interface contains the required methods (if any) from the protocol defined by <see cref="T:AVFoundation.AVCapturePhotoCaptureDelegate" />.</para>
+	///       <para>If developers create classes that implement this interface, the implementation methods will automatically be exported to Objective-C with the matching signature from the method defined in the <see cref="T:AVFoundation.AVCapturePhotoCaptureDelegate" /> protocol.</para>
+	///       <para>Optional methods (if any) are provided by the <see cref="T:AVFoundation.AVCapturePhotoCaptureDelegate_Extensions" /> class as extension methods to the interface, allowing developers to invoke any optional methods on the protocol.</para>
+	///     </remarks>
 	interface IAVCapturePhotoCaptureDelegate { }
 
+	/// <summary>Delegate object that receives notifications when capturing photos with the <see cref="T:AVFoundation.AVCapturePhotoOutput" /> class.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/AVFoundation/AVCapturePhotoCaptureDelegate">Apple documentation for <c>AVCapturePhotoCaptureDelegate</c></related>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoWatch]
 	[NoTV]
@@ -10779,6 +10927,9 @@ namespace AVFoundation {
 		void DidFinishCapture (AVCapturePhotoOutput captureOutput, AVCaptureResolvedPhotoSettings resolvedSettings, [NullAllowed] NSError error);
 	}
 
+	/// <summary>Provides an interface for capturing still images, Live Photos, RAW capture, wide-gamut color, and bracketed images.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/AVFoundation/AVCapturePhotoOutput">Apple documentation for <c>AVCapturePhotoOutput</c></related>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoWatch]
 	[NoTV]
@@ -11072,6 +11223,9 @@ namespace AVFoundation {
 		bool PreservesLivePhotoCaptureSuspendedOnSessionStop { get; set; }
 	}
 
+	/// <summary>A type of <see cref="T:AVFoundation.AVCaptureFileOutput" /> that captures data to a QuickTime movie.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/AVFoundation/Reference/AVCaptureMovieFileOutput_Class/index.html">Apple documentation for <c>AVCaptureMovieFileOutput</c></related>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[BaseType (typeof (AVCaptureFileOutput))]
 	[NoTV]
@@ -11129,6 +11283,9 @@ namespace AVFoundation {
 		AVCapturePrimaryConstituentDeviceRestrictedSwitchingBehaviorConditions PrimaryConstituentDeviceRestrictedSwitchingBehaviorConditionsForRecording { get; }
 	}
 
+	/// <summary>AVCaptureOutput that captures still images with their metadata.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/AVFoundation/Reference/AVCaptureStillImageOutput_Class/index.html">Apple documentation for <c>AVCaptureStillImageOutput</c></related>
 	[NoTV]
 	[NoWatch]
 	[MacCatalyst (13, 1)]
@@ -11241,6 +11398,7 @@ namespace AVFoundation {
 		NSSet<AVCaptureDevice> [] SupportedMultiCamDeviceSets { get; }
 	}
 
+	/// <summary>Enumerates the types of device that can capture audiovisual data.</summary>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoTV, NoWatch]
 	enum AVCaptureDeviceType {
@@ -11307,6 +11465,11 @@ namespace AVFoundation {
 #if WATCH
 	[Static]
 #endif
+	/// <summary>Support for accessing the audio and video capture hardware for AVCaptureSession.</summary>
+	///     <remarks>
+	///       <para>Once a capture session has begun, application developers must bracket configuration changes with calls to <see cref="M:AVFoundation.AVCaptureDevice.LockForConfiguration(Foundation.NSError@)" /> and <see cref="M:AVFoundation.AVCaptureDevice.UnlockForConfiguration" />.</para>
+	///     </remarks>
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/AVFoundation/Reference/AVCaptureDevice_Class/index.html">Apple documentation for <c>AVCaptureDevice</c></related>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoTV, Watch (6, 0)]
 	[BaseType (typeof (NSObject))]
@@ -12150,6 +12313,9 @@ namespace AVFoundation {
 		AVCaptureSystemPressureFactors Factors { get; }
 	}
 
+	/// <summary>Describes media data, especially video data. (Wraps <see cref="T:CoreMedia.CMFormatDescription" />.)</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/AVFoundation/Reference/AVCaptureDeviceFormat_Class/index.html">Apple documentation for <c>AVCaptureDeviceFormat</c></related>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoWatch]
 	[NoTV]
@@ -12367,6 +12533,7 @@ namespace AVFoundation {
 		NSNumber [] SupportedVideoZoomFactorsForDepthDataDelivery { get; }
 	}
 
+	/// <summary>A delegate for the completion handler of <see cref="M:AVFoundation.AVCaptureStillImageOutput.CaptureStillImageAsynchronously(AVFoundation.AVCaptureConnection,AVFoundation.AVCaptureCompletionHandler)" />.</summary>
 	delegate void AVCaptureCompletionHandler (CMSampleBuffer imageDataSampleBuffer, NSError error);
 
 	[NoWatch, TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
@@ -14582,6 +14749,7 @@ namespace AVFoundation {
 		void WillSpeakRangeOfSpeechString (AVSpeechSynthesizer synthesizer, NSRange characterRange, AVSpeechUtterance utterance);
 	}
 
+	/// <summary>Singleton object that stores policies for purging assets.</summary>
 	[NoWatch, NoTV, Mac (12, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -14599,6 +14767,7 @@ namespace AVFoundation {
 		AVAssetDownloadStorageManagementPolicy GetStorageManagementPolicy (NSUrl downloadStorageUrl);
 	}
 
+	/// <summary>Specifies how downloaded assets will be purged.</summary>
 	[NoWatch, NoTV, Mac (12, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -14625,6 +14794,9 @@ namespace AVFoundation {
 		NSDate ExpirationDate { get; set; }
 	}
 
+	/// <summary>A URL session task for downloading Live Streaming assets.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/AVFoundation/AVAssetDownloadTask">Apple documentation for <c>AVAssetDownloadTask</c></related>
 	[NoWatch]
 	[NoTV]
 	[Mac (12, 0)]
@@ -14650,6 +14822,7 @@ namespace AVFoundation {
 
 	}
 
+	/// <summary>An <see cref="T:Foundation.NSUrlSessionTask" /> that downloads multiple media elements of a single asset.</summary>
 	[Mac (12, 0), NoWatch, NoTV]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSUrlSessionTask))]
@@ -14722,6 +14895,9 @@ namespace AVFoundation {
 		CGSize MinimumRequiredPresentationSize { get; set; }
 	}
 
+	/// <summary>A URL session object that developers use to create <see cref="T:AVFoundation.AVAssetDownloadTask" /> objects.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/AVFoundation/AVAssetDownloadURLSession">Apple documentation for <c>AVAssetDownloadURLSession</c></related>
 	[NoTV]
 	[NoWatch]
 	[Mac (12, 0)]
@@ -14765,8 +14941,17 @@ namespace AVFoundation {
 		AVAssetDownloadTask GetAssetDownloadTask (AVAssetDownloadConfiguration downloadConfiguration);
 	}
 
+	/// <summary>Interface representing the required methods (if any) of the protocol <see cref="T:AVFoundation.AVAssetDownloadDelegate" />.</summary>
+	///     <remarks>
+	///       <para>This interface contains the required methods (if any) from the protocol defined by <see cref="T:AVFoundation.AVAssetDownloadDelegate" />.</para>
+	///       <para>If developers create classes that implement this interface, the implementation methods will automatically be exported to Objective-C with the matching signature from the method defined in the <see cref="T:AVFoundation.AVAssetDownloadDelegate" /> protocol.</para>
+	///       <para>Optional methods (if any) are provided by the <see cref="T:AVFoundation.AVAssetDownloadDelegate_Extensions" /> class as extension methods to the interface, allowing developers to invoke any optional methods on the protocol.</para>
+	///     </remarks>
 	interface IAVAssetDownloadDelegate { }
 
+	/// <summary>Delegate that handles events that can be encountered while downloading an asset.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/AVFoundation/AVAssetDownloadDelegate">Apple documentation for <c>AVAssetDownloadDelegate</c></related>
 	[NoTV]
 	[NoWatch]
 	[Mac (12, 0), MacCatalyst (15, 0)]
@@ -15163,6 +15348,7 @@ namespace AVFoundation {
 	}
 
 	// FIXME: Unsure about if CMMetadataFormatDescription will be an INativeObject and will need manual binding for Classic
+	/// <related type="externalDocumentation" href="https://developer.apple.com/reference/AVFoundation/AVCaptureMetadataInput">Apple documentation for <c>AVCaptureMetadataInput</c></related>
 	[NoMac]
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoWatch]
@@ -15628,6 +15814,7 @@ namespace AVFoundation {
 		NSDictionary<NSString, NSObject> GetReplacementAppleProRawCompressionSettings (AVCapturePhoto photo, NSDictionary<NSString, NSObject> defaultSettings, nint maximumBitDepth);
 	}
 
+	/// <summary>Stores captured photo data.</summary>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoTV, NoWatch]
 	[BaseType (typeof (NSObject))]

@@ -1,0 +1,64 @@
+<Documentation>
+  <Docs DocId="T:GLKit.GLKTextureLoader">
+    <summary>Loads Image and cube maps into OpenGL textures.</summary>
+    <remarks>
+      <para>
+	GLTextureLoader simplifies the process of loading textures and
+	cube maps by providing a high-level API that can load images
+	on a variety of graphic file formats (PNG, JPEG, TIFF and
+	other formats supported by <see cref="N:ImageIO" />.
+	The data can be loaded both synchronously and asynchrously from <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=T:MonoTOuch.CoreGraphics.CGImage&amp;scope=Xamarin" title="T:MonoTOuch.CoreGraphics.CGImage">T:MonoTOuch.CoreGraphics.CGImage</a></format> objects, in-memory
+	binary data, files and arbitrary <see cref="T:Foundation.NSUrl" /> locations.
+
+      </para>
+      <para>
+	You can control how textures are loaded by configuring the
+	<see cref="T:GLKit.GLKTextureOperations" /> object.
+	You can configure whether the texture will be premultiplied by
+	their alpha channel or not, whether mipmaps should be created
+	from the source image when the texture is loaded and whether
+	the image should be flipped when it is loaded.
+
+      </para>
+      <para>
+	To use the texture loader, make an <see cref="T:OpenGLES.EAGLContext" /> current, use one of
+	the loading methods in this class and use the values in the
+	returned <see cref="T:GLKit.GLKTextureInfo" /> which
+	contains the OpenGL object name (an uint), properties such as
+	width, heigh, alpha, origin and mipmapping.
+	
+      </para>
+      <para>
+	To use the texture loaded asynchrously, create the context using the <see cref="T:OpenGLES.EAGLContext" />'s sharegroup.   Then you call one of the 
+      </para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+//
+// if myQueue is null, it dispatches into the main queue.
+void AsyncLoad (EAGLContext context, DispatchQueue myQueue)
+{
+    var shareGroup = context.ShareGroup;
+    var loader = new GLTextureLoader (shareGroup);
+    var textureOperations = new GLKTextureOperations () {
+        ApplyPremultiplication = true,
+        GenerateMipmaps = true
+    }
+
+    loader.BeginTextureLoad ("file.png", textureOperations, myQueue, TextureLoadedCallback);
+}
+
+// 
+// Called on the specified queue.
+//
+void TextureLoadedCallback (GLKTextureInfo textureInfo, NSError error)
+{
+    // Use texture info here.
+}
+]]></code>
+      </example>
+      <para>
+      </para>
+    </remarks>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/GLkit/Reference/GLKTextureLoader_ClassRef/index.html">Apple documentation for <c>GLKTextureLoader</c></related>
+  </Docs>
+</Documentation>

@@ -1,0 +1,29 @@
+<Documentation>
+  <Docs DocId="T:GameKit.GKGameCenterViewController">
+    <summary>Game Center user interface to present leaderboards and achievements.</summary>
+    <remarks>
+      <para>
+	Use this view controller to show leaderboards or achievements.
+	To use it, create an instance of it, then configure the kind
+	of information that you want to show by setting the <see cref="P:GameKit.GKGameCenterViewController.ViewState" /> property and present the controller. 
+	the controller.    
+      </para>
+      <para>
+	This method only works if the local player is authenticated.
+	See the <see cref="T:GameKit.GKLocalPlayer" /> class
+	documentation for details on how to authenticate your user.
+      </para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+var gameCenter = new GKGameCenterViewController ();
+gameCenter.Finished += delegate(object sender, EventArgs e) {
+	gameCenter.DismissViewController (true, delegate {});
+};
+gameCenter.ViewState = GKGameCenterViewControllerState.Default;
+window.RootViewController.PresentViewController (gameCenter, true);
+]]></code>
+      </example>
+    </remarks>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/GameKit/Reference/GKGameCenterViewController_Ref/index.html">Apple documentation for <c>GKGameCenterViewController</c></related>
+  </Docs>
+</Documentation>

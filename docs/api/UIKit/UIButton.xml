@@ -1,0 +1,11 @@
+<Documentation>
+  <Docs DocId="T:UIKit.UIButton">
+    <summary>Button control.</summary>
+    <remarks>A <see cref="T:UIKit.UIControl" /> that receives touch events. <see cref="T:UIKit.UIButton" />s are generally visible and often have a text <see cref="M:UIKit.UIButton.Title(UIKit.UIControlState)" />. </remarks>
+    <related type="recipe" href="https://developer.xamarin.com/ios/Recipes/Standard_Controls/Buttons/Create_Different_Types_of_Buttons">Create Different Types of Buttons</related>
+    <related type="recipe" href="https://developer.xamarin.com/ios/Recipes/Standard_Controls/Buttons/Handle_Clicks">Handle Clicks</related>
+    <related type="recipe" href="https://developer.xamarin.com/ios/Recipes/Standard_Controls/Buttons/Set_Button_Text">Set Button Text</related>
+    <related type="recipe" href="https://developer.xamarin.com/ios/Recipes/Standard_Controls/Buttons/Use_an_Image_for_a_Button">Use an Image for a Button</related>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIButton_Class/index.html">Apple documentation for <c>UIButton</c></related>
+  </Docs>
+</Documentation>

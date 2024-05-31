@@ -1,0 +1,34 @@
+<Documentation>
+  <Docs DocId="T:CoreLocation.CLGeocoder">
+    <summary>Provides support for converting between an address in
+    text form and a location described using latitude and longitude or
+    to convert from a latitue and longitude to a user-friendly
+    location (street, city, state, country).</summary>
+    <remarks>
+      <para>Converting a latitude and longitude into a human-readable address is generally straightforward:</para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+async void GeocodeToConsoleAsync (string address) {
+    var geoCoder = new CLGeocoder();
+    var placemarks = await geoCoder.GeocodeAddressAsync(address);
+    foreach (var placemark in placemarks) {
+	      Console.WriteLine(placemark);
+    }   
+]]></code>
+      </example>
+      <para>As is reverse-geocoding:</para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+async void ReverseGeocodeToConsoleAsync (CLLocation location) {
+    var geoCoder = new CLGeocoder();
+    var placemarks = await geoCoder.ReverseGeocodeLocationAsync(location);
+    foreach (var placemark in placemarks) {
+	      Console.WriteLine(placemark);
+    }          
+}
+          ]]></code>
+      </example>
+    </remarks>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/CoreLocation/Reference/CLGeocoder_class/index.html">Apple documentation for <c>CLGeocoder</c></related>
+  </Docs>
+</Documentation>

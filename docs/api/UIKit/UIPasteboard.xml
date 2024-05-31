@@ -1,0 +1,85 @@
+<Documentation>
+  <Docs DocId="T:UIKit.UIPasteboard">
+    <summary>Support for the system pasteboard  for cut, copy and paste.</summary>
+    <remarks>
+      <format type="text/html">
+        <h2>Pasteboards</h2>
+      </format>
+      <para>
+	Pasteboards allow information to be shared across
+	applications.  The general pasteboard (accessible via the <see cref="P:UIKit.UIPasteboard.General" /> property) is
+	the system-wide pasteboard that applications use by default.
+	Developers can also transfer information across their own
+	applications (those that share their team ID) by creating
+	their own pasteboards.
+      </para>
+      <format type="text/html">
+        <h2>Setting Pasteboard Data</h2>
+      </format>
+      <para>
+	All operations that set the contents of the pasteboard clear any data
+	that is currently stored there.
+      </para>
+      <para>
+	To set the pasteboard contents to <see cref="T:Foundation.NSString" />, <see cref="T:Foundation.NSArray" />, <see cref="T:Foundation.NSDictionary" />, <see cref="T:Foundation.NSDate" />, <see cref="T:Foundation.NSNumber" />, <see cref="T:UIKit.UIImage" /> or <see cref="T:Foundation.NSUrl" /> use
+	the <see cref="M:UIKit.UIPasteboard.SetValue(Foundation.NSObject,System.String)" /> method.
+      </para>
+      <para>
+	To set the pasteboard contents to an image, use the
+	<format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=UIKit%20UIPaste%20Board%20Image&amp;scope=Xamarin" title="P:UIKit.UIPasteBoard.Image">P:UIKit.UIPasteBoard.Image</a></format>.  
+	property.
+      </para>
+      <para>
+	To set the pasteboard contents to a set of images, use the
+	<see cref="P:UIKit.UIPasteboard.Images" />.  
+	property.
+      </para>
+      <para>
+	To set the values to arbitrary data types, use the
+	<format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=UIKit%20UIPaste%20Board%20Set%20Data&amp;scope=Xamarin" title="M:UIKit.UIPasteBoard.SetData*">M:UIKit.UIPasteBoard.SetData*</a></format> method.
+      </para>
+      <para>
+	You can use the convenience properties <see cref="P:UIKit.UIPasteboard.String" />, <see cref="P:UIKit.UIPasteboard.Strings" />, <see cref="P:UIKit.UIPasteboard.Image" />, <see cref="P:UIKit.UIPasteboard.Images" />, <see cref="P:UIKit.UIPasteboard.Url" />, <see cref="P:UIKit.UIPasteboard.Urls" />, <see cref="P:UIKit.UIPasteboard.Color" /> and <see cref="P:UIKit.UIPasteboard.Colors" /> to set and get
+	strings, images, Urls or Colors on the pasteboard.
+      </para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+//
+// Setting the contents of the pasteboard to "Hello World"
+// by specifying the UTI type for text.
+//
+var text = new NSString ("Hello world")
+UIPasteboard.General.SetValue (text, MonoTouch.MobileCoreServices.UTType.Text);
+
+// 
+// Setting the contents of the pasteboard to "So hello"
+// using the convenience property:
+//
+UIPasteboard.General.String = "So hello";
+	]]></code>
+      </example>
+      <format type="text/html">
+        <h2>Pasteboard Types</h2>
+      </format>
+      <para>
+	Whenever possible, you should use an UTI type to set the type
+	of the information that is being stored on the pasteboard.
+	You can find a list of common iOS/Mac UTI types on the <see cref="T:MobileCoreServices.UTType" /> type.
+
+      </para>
+      <para>
+	UTI types are merely strings separated by dots.  For example
+	the UTI type for an image is "public.image".  Apple maintains
+	the "public.*" directory of UTI types.  	
+      </para>
+      <para>
+	Apple recommends that if you need to use your own data type to
+	use an inverse domain to name them.   For example, "com.xamarin.t-shirt-application.sales-information". 
+
+      </para>
+    </remarks>
+    <related type="article" href="https://developer.apple.com/library/mac/documentation/FileManagement/Conceptual/understanding_utis/understand_utis_intro/understand_utis_intro.html">Introduction to Uniform Type Identifiers Overview</related>
+    <related type="article" href="https://en.wikipedia.org/wiki/Uniform_Type_Identifier">"Uniform Type Identifier" on Wikipedia</related>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIPasteboard_Class/index.html">Apple documentation for <c>UIPasteboard</c></related>
+  </Docs>
+</Documentation>

@@ -1,0 +1,32 @@
+<Documentation>
+  <Docs DocId="T:UIKit.UIAccelerometer">
+    <summary>A class that encapsulates the onboard hardware accelerometer and generates <see cref="T:UIKit.UIAcceleration" /> objects.</summary>
+    <remarks>
+      <para>The application developer must always use the <see cref="P:UIKit.UIAccelerometer.SharedAccelerometer" /> property to access the onboard accelerometer. Data in the form of <see cref="T:UIKit.UIAcceleration" /> objects can then be read via the <see cref="E:UIKit.UIAccelerometer.Acceleration" /> event, which will fire every <see cref="P:UIKit.UIAccelerometer.UpdateInterval" /> seconds.</para>
+      <para>In the following example, taken from the "GLPaintGameView" sample, the <see cref="P:UIKit.UIAccelerometer.UpdateInterval" /> is set to 1/25th of a second and the <c>OnAcceleration</c> method is assigned to handle acceleration events. In the handler, the <see cref="T:UIKit.UIAccelerometerEventArgs" /> parameter is used to determine the specifics of acceleration:</para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+      //Configure and enable the accelerometer
+			const int AccelerometerFrequency = 25;
+			UIAccelerometer.SharedAccelerometer.UpdateInterval = 1.0f / AccelerometerFrequency;
+			UIAccelerometer.SharedAccelerometer.Acceleration += OnAccelerated;
+          
+    private void OnAccelerated (object sender, UIAccelerometerEventArgs e)
+		{
+#if LINQ
+			myAccelerometer = new[]{e.Acceleration.X, e.Acceleration.Y, e.Acceleration.Z}
+				.Select((v, i) => v * FilteringFactor + myAccelerometer [i] * (1.0f - FilteringFactor))
+				.ToArray ();
+#else
+			myAccelerometer [0] = e.Acceleration.X * FilteringFactor + myAccelerometer [0] * (1.0 - FilteringFactor);
+			myAccelerometer [1] = e.Acceleration.Y * FilteringFactor + myAccelerometer [1] * (1.0 - FilteringFactor);
+			myAccelerometer [2] = e.Acceleration.Z * FilteringFactor + myAccelerometer [2] * (1.0 - FilteringFactor);
+#endif
+          ... etc ...
+     }
+        ]]></code>
+      </example>
+    </remarks>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIAccelerometer_Class/index.html">Apple documentation for <c>UIAccelerometer</c></related>
+  </Docs>
+</Documentation>

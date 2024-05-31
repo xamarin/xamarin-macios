@@ -1,0 +1,37 @@
+<Documentation>
+  <Docs DocId="T:SpriteKit.SKPhysicsBody">
+    <summary>An object that reacts to the physics simulation of the <see cref="T:SpriteKit.SKScene" />'s <see cref="P:SpriteKit.SKScene.PhysicsWorld" />.</summary>
+    <remarks>
+      <para>The visual appearance of a <see cref="T:SpriteKit.SKScene" /> is determined by its <see cref="T:SpriteKit.SKNode" />s. The physics simulation of a <see cref="T:SpriteKit.SKScene" /> is determined by the <see cref="T:SpriteKit.SKPhysicsWorld" /> object of the <see cref="T:SpriteKit.SKScene" />'s <see cref="P:SpriteKit.SKScene.PhysicsWorld" /> property. The physics of that word are applied to those <see cref="T:SpriteKit.SKNode" />s that have a non-null <see cref="P:SpriteKit.SKNode.PhysicsBody" />.</para>
+      <para>The following example demonstrates a simple dynamic system:</para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+var blockSize = new SizeF(20, 20);
+var node1 = new SKSpriteNode(UIColor.Red, blockSize) {
+	Position = new PointF(100, 100),
+	Name = "Red",
+	PhysicsBody = SKPhysicsBody.BodyWithRectangleOfSize(blockSize),
+};
+var node2 = new SKSpriteNode(UIColor.Green, blockSize) {
+	Position = new PointF(150, 100),
+	Name = "Green",
+	PhysicsBody = SKPhysicsBody.BodyWithRectangleOfSize(blockSize)
+};
+
+//Pin node1 in position and connect node2 to it with a spring
+node1.PhysicsBody.Dynamic = false;
+var joint = SKPhysicsJointSpring.Create(node1.PhysicsBody, node2.PhysicsBody, node1.Position, node2.Position);
+
+//Add nodes to scene
+scene.AddChild(node1);
+scene.AddChild(node2);
+
+//Add the joint to the physics world
+scene.PhysicsWorld.AddJoint(joint);
+          ]]></code>
+      </example>
+      <para>Application developers must add the <see cref="T:SpriteKit.SKNode" />s to the scene-graph prior to setting <see cref="T:SpriteKit.SKPhysicsJoint" />s or Sprite Kit may segfault.</para>
+    </remarks>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/SpriteKit/Reference/SKPhysicsBody_Ref/index.html">Apple documentation for <c>SKPhysicsBody</c></related>
+  </Docs>
+</Documentation>

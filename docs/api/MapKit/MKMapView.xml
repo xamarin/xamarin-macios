@@ -1,0 +1,47 @@
+<Documentation>
+  <Docs DocId="T:MapKit.MKMapView">
+    <summary>Embeddable Map View.</summary>
+    <remarks>
+      <para>The <see cref="T:MapKit.MKMapView" /> provides a zoomable map interface upon which the application developer can add information-bearing <see cref="T:MapKit.MKAnnotation" />s and area-based <see cref="T:MapKit.MKOverlay" />s. </para>
+      <para>In iOS 7 and later, maps support 3D imagery when the <see cref="P:MapKit.MKMapView.MapType" /> property is <see cref="F:MapKit.MKMapType.Standard" />. To view 3D imagery, the <see cref="P:MapKit.MKMapView.ShowsBuildings" /> property must be <see langword="true" /> and the <see cref="P:MapKit.MKMapView.Camera" /> and and <see cref="P:MapKit.MKMapView.PitchEnabled" /> properties must be set to create a non-vertical perspective. The iOS simulator does not render 3D buildings. The following example shows how a camera can be set to provide 3D imagery:</para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+var target = new CLLocationCoordinate2D(37.7952, -122.4028);
+var viewPoint = new CLLocationCoordinate2D(37.8009, -122.4100);
+//Enable 3D buildings
+mapView.ShowsBuildings = true;
+mapView.PitchEnabled = true;
+
+var camera = MKMapCamera.CameraLookingAtCenterCoordinate(target, viewPoint, 500);
+mapView.Camera = camera;
+          ]]></code>
+      </example>
+      <para>
+        <img href="~/MapKit/_images/MKMapCamera.png" alt="Image showing 3D map mode" />
+      </para>
+      <format type="text/html">
+        <h3>Overlays</h3>
+      </format>
+      <para>iOS distinguishes between the <see cref="T:MapKit.MKOverlay" />, which represents the geometry of an overlay, and it's visual presentation. Prior to iOS 7, overlays were rendered using <see cref="T:MapKit.MKOverlayView" />s. In iOS 7, these classes have been deprecated, and overlays now use the more efficient subclasses of <see cref="T:MapKit.MKOverlayRenderer" />. </para>
+      <para>To create an overlay and its renderer, application developers must add the overlay to the <see cref="T:MapKit.MKMapView" /> and return the renderer either using the <see cref="P:MapKit.MKMapView.OverlayRenderer" /> property or by overriding the <see cref="M:MapKit.MKMapViewDelegate.OverlayRenderer(MapKit.MKMapView,MapKit.IMKOverlay)" /> method.</para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+MKPolygon hotelOverlay = MKPolygon.FromCoordinates(coordinates);
+mkMap.AddOverlay (hotelOverlay);
+var polygon = MKPolygon.FromCoordinates(coordinates);
+var renderer = new MKPolygonRenderer(polygon) { FillColor = UIColor.Red, Alpha = 0.5f };
+mkMap.OverlayRenderer = (view, overlay) => renderer;
+          ]]></code>
+      </example>
+      <para>
+        <img href="~/MapKit/_images/MKOverlayRenderer.png" alt="Screenshot showing a custom overlay" />
+      </para>
+    </remarks>
+    <related type="recipe" href="https://developer.xamarin.com/ios/Recipes/Content_Controls/Map_View/Add_an_Annotation_to_a_Map">Add an Annotation to a Map</related>
+    <related type="recipe" href="https://developer.xamarin.com/ios/Recipes/Content_Controls/Map_View/Add_an_Overlay_to_a_Map">Add an Overlay to a Map</related>
+    <related type="recipe" href="https://developer.xamarin.com/ios/Recipes/Content_Controls/Map_View/Change_Map_Modes">Change Map Modes</related>
+    <related type="recipe" href="https://developer.xamarin.com/ios/Recipes/Content_Controls/Map_View/Display_Device_Location">Display Device Location</related>
+    <related type="recipe" href="https://developer.xamarin.com/ios/Recipes/Content_Controls/Map_View/Handle_Annotation_Click">Handle Annotation Click</related>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/MapKit/Reference/MKMapView_Class/index.html">Apple documentation for <c>MKMapView</c></related>
+  </Docs>
+</Documentation>

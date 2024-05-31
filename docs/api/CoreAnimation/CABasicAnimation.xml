@@ -1,0 +1,76 @@
+<Documentation>
+  <Docs DocId="T:CoreAnimation.CABasicAnimation">
+    <summary>Single keyframe based animations.</summary>
+    <remarks>
+      <para>
+	The animation is created by calling the <see cref="M:CoreAnimation.CABasicAnimation.FromKeyPath(System.String)" />
+	method and providing a keyPath that identifies the property on
+	the target that will be animated.   The animation is performed by using the values on the From, To and By properties applied to the keyPath.
+      </para>
+      <para>The interpolation will depend on the values that you choose to set for From, To and By.  The following table shows the effects of setting one or more of those properites on the property referenced by the key path:</para>
+      <list type="table">
+        <listheader>
+          <term>Settings</term>
+          <description>Result</description>
+        </listheader>
+        <item>
+          <term>No values are set</term>
+          <description>Interpolates between old value and new value in the presentation layer.</description>
+        </item>
+        <item>
+          <term>From is set</term>
+          <description>Interpolation is done from the From value to the current value in the presentation layer.</description>
+        </item>
+        <item>
+          <term>To is set</term>
+          <description>Interpolation is done from the current value in the presentation layer to the To value.</description>
+        </item>
+        <item>
+          <term>By is set</term>
+          <description>Interpolation is done between the current value on the presentation layer to the current value plus the value in By.</description>
+        </item>
+        <item>
+          <term>From and To are set</term>
+          <description>Interpolation is done between the From and To values.</description>
+        </item>
+        <item>
+          <term>From and By are set</term>
+          <description>Interpolation is done between the value set in From to From plus By.</description>
+        </item>
+        <item>
+          <term>To and By are set</term>
+          <description>Interpolation is done between To minus By and By.</description>
+        </item>
+      </list>
+      <para>
+	The From, To and By properties all take NSObject parameters.
+	If you need to specify other parameters, like a CGColor, you
+	can use the methods that take INativeObject parameters
+	(GetByAs, GetFromAs, GetToAs, SetBy, SetFrom, SetTo).
+
+      </para>
+      <para>
+	For example, the following will animate the "radius" property
+	for three seconds, from its current value, to the value 120
+	and will repeat this ten times.   
+
+      </para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+var radiusAnimation = CABasicAnimation.FromKeyPath ("radius");
+radiusAnimation.Duration = 3;
+radiusAnimation.To = NSNumber.FromDouble (120);
+radiusAnimation.RepeatCount = 10;]]></code>
+      </example>
+      <para>The above works to set the “To” property to an NSObject, in this case the number 120.   If you want to set this for other kinds of objects, you can use the SetTo method, for example, the following sets the target color to a CGColor:</para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+var radiusAnimation = CABasicAnimation.FromKeyPath ("shadowColor");
+radiusAnimation.Duration = 3;
+radiusAnimation.SetTo (UIColor.Red.CGColor);
+radiusAnimation.RepeatCount = 10;]]></code>
+      </example>
+    </remarks>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/GraphicsImaging/Reference/CABasicAnimation_class/index.html">Apple documentation for <c>CABasicAnimation</c></related>
+  </Docs>
+</Documentation>

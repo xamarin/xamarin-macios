@@ -1,0 +1,55 @@
+<Documentation>
+  <Docs DocId="T:UIKit.UIPageViewController">
+    <summary>Allows the application user to navigation between <see cref="T:UIKit.UIViewController" />s using page-curl and page-scroll transitions.</summary>
+    <remarks>
+      <para>The <see cref="T:UIKit.UIPageViewController" /> presents its <see cref="P:UIKit.UIPageViewController.ViewControllers" /> one or two at a time, transitioning between them using either scrolling or page-curl animations.</para>
+      <para>Like the <see cref="T:UIKit.UINavigationController" /> and <see cref="T:UIKit.UITabBarController" />, the <see cref="T:UIKit.UIPageViewController" /> serves as a container for other <see cref="T:UIKit.UIViewController" />s. It has no visual ornamentation beyond its <see cref="P:UIKit.UIPageViewController.TransitionStyle" /> animation. The following image shows a <see cref="T:UIKit.UIPageViewController" /> displaying 2 pages, sitting inside a parent <see cref="T:UIKit.UIViewController" /> that has a brown background.</para>
+      <para>
+        <img href="~/UIKit/_images/UIKit.UIPageViewController.Structure.png" alt="Diagram of the structure of a UIPageViewController" />
+      </para>
+      <para>To use a <see cref="T:UIKit.UIPageViewController" />, application developers create some number of content <see cref="T:UIKit.UIViewController" />s that are logically connected by the <see cref="M:UIKit.UIPageViewControllerDataSource.GetNextViewController(UIKit.UIPageViewController,UIKit.UIViewController)" /> and <see cref="M:UIKit.UIPageViewControllerDataSource.GetPreviousViewController(UIKit.UIPageViewController,UIKit.UIViewController)" /> methods of the <see cref="T:UIKit.UIPageViewControllerDataSource" /> delegate object and assign the <see cref="T:UIKit.UIPageViewControllerDataSource" /> to the <see cref="P:UIKit.UIPageViewController.DataSource" /> property of the <see cref="T:UIKit.UIPageViewController" />, as shown in the following example:</para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+//Create the UIPageViewController and it's basic style
+var pvController = new UIPageViewController(UIPageViewControllerTransitionStyle.PageCurl, UIPageViewControllerNavigationOrientation.Horizontal);
+//Specify the data source for the pages
+pvController.DataSource = new PageDataSource(pages);
+pvController.View.Frame = View.Bounds;
+//Set the initial content (first pages)
+pvController.SetViewControllers(new UIViewController[] { pages[0], pages[1] }, UIPageViewControllerNavigationDirection.Forward, false, s => {});
+//...etc...
+
+public class PageDataSource : UIPageViewControllerDataSource
+{
+	List&lt;PageController> pages; 
+
+	public PageDataSource(List&lt;PageController> pages)
+	{
+		this.pages = pages;
+	}
+
+	override public UIViewController GetPreviousViewController(UIPageViewController pageViewController, UIViewController referenceViewController)
+	{
+		var currentPage = referenceViewController as PageController;
+		if(currentPage.Index == 0)
+		{
+			return pages[pages.Count - 1];
+		}
+		else
+		{
+			return pages[currentPage.Index - 1];
+		}
+	}
+
+	override public UIViewController GetNextViewController(UIPageViewController pageViewController, UIViewController referenceViewController)
+	{
+		var currentPage = referenceViewController as PageController;
+		return pages[ (currentPage.Index+1) % pages.Count];
+	}
+}          
+          ]]></code>
+      </example>
+    </remarks>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIPageViewControllerClassReferenceClassRef/index.html">Apple documentation for <c>UIPageViewController</c></related>
+  </Docs>
+</Documentation>

@@ -26,6 +26,7 @@ using ObjCRuntime;
 
 namespace NaturalLanguage {
 
+	/// <summary>Enumerates preprocessing options for tags.</summary>
 	[Flags]
 	[Native]
 	[iOS (12, 0), TV (12, 0), Watch (5, 0)]
@@ -39,6 +40,7 @@ namespace NaturalLanguage {
 		JoinContractions = 1uL << 5,
 	}
 
+	/// <summary>Enumerates natural language model types.</summary>
 	[Native]
 	[iOS (12, 0), TV (12, 0), Watch (5, 0)]
 	[MacCatalyst (13, 1)]
@@ -47,6 +49,7 @@ namespace NaturalLanguage {
 		Sequence,
 	}
 
+	/// <summary>Enumerates linguistic units to which tags can be applied.</summary>
 	[Native]
 	[iOS (12, 0), TV (12, 0), Watch (5, 0)]
 	[MacCatalyst (13, 1)]
@@ -58,6 +61,7 @@ namespace NaturalLanguage {
 	}
 
 
+	/// <summary>Enumerates content hints for tokenizers.</summary>
 	[Flags]
 	[Native]
 	[iOS (12, 0), TV (12, 0), Watch (5, 0)]
@@ -68,6 +72,7 @@ namespace NaturalLanguage {
 		Emoji = 1uL << 2,
 	}
 
+	/// <summary>Enumerates languages for which recognition is supported.</summary>
 	[iOS (12, 0), TV (12, 0), Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	public enum NLLanguage {
@@ -194,6 +199,7 @@ namespace NaturalLanguage {
 		Kazakh,
 	}
 
+	/// <summary>Enumerates classes of tags that are returned from a text classifier.</summary>
 	[iOS (12, 0), TV (12, 0), Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	public enum NLTagScheme {

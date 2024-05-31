@@ -1,0 +1,36 @@
+<Documentation>
+  <Docs DocId="T:CoreML.IMLFeatureProvider">
+    <summary>An interface that defines input or output features and allows access to their values.</summary>
+    <remarks>
+      <para>CoreML does not directly read and write system-native data. Rather it uses this class to map strings to values for the inputs and outputs of the <see cref="T:CoreML.MLModel" /> object.</para>
+      <para>The following example shows a <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=T:Monotouch.CoreML.IMLFeatureProvider&amp;scope=Xamarin" title="T:Monotouch.CoreML.IMLFeatureProvider">T:Monotouch.CoreML.IMLFeatureProvider</a></format> that provides 3 inputs variables, all of type <see langword="double" />:</para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+public class MarsHabitatPricerInput : NSObject, IMLFeatureProvider
+{
+	public double SolarPanels { get; set; }
+	public double Greenhouses { get; set; }
+	public double Size { get; set; }
+
+	public NSSet<NSString> FeatureNames => new NSSet<NSString>(new NSString("solarPanels"), new NSString("greenhouses"), new NSString("size"));
+
+	public MLFeatureValue GetFeatureValue(string featureName)
+	{
+		switch (featureName)
+		{
+			case "solarPanels":
+				return MLFeatureValue.Create(SolarPanels);
+			case "greenhouses":
+				return MLFeatureValue.Create(Greenhouses);
+			case "size":
+				return MLFeatureValue.Create(Size);
+			default:
+				return MLFeatureValue.Create(0);
+		}
+	}
+}
+    ]]></code>
+      </example>
+    </remarks>
+  </Docs>
+</Documentation>

@@ -4406,6 +4406,9 @@ namespace WebKit {
 		System,
 	}
 
+	/// <summary>A page within a <see cref="T:WebKit.WKBackForwardList" />.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/WebKit/Reference/WKBackForwardListItem_Ref/index.html">Apple documentation for <c>WKBackForwardListItem</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor ()] // Crashes during deallocation in Xcode 6 beta 2. radar 17377712.
@@ -4422,6 +4425,9 @@ namespace WebKit {
 		NSUrl InitialUrl { get; }
 	}
 
+	/// <summary>The list of pages that can be reached by navigating forward or backward.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/WebKit/Reference/WKBackForwardList_Ref/index.html">Apple documentation for <c>WKBackForwardList</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor ()] // Crashes during deallocation in Xcode 6 beta 2. radar 17377712.
@@ -4450,6 +4456,7 @@ namespace WebKit {
 		WKBackForwardListItem ItemAtIndex (nint index);
 	}
 
+	/// <summary>A list of rules to apply to web content.</summary>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface WKContentRuleList {
@@ -4457,6 +4464,7 @@ namespace WebKit {
 		string Identifier { get; }
 	}
 
+	/// <summary>A store that contents rules for web content.</summary>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface WKContentRuleListStore {
@@ -4485,6 +4493,7 @@ namespace WebKit {
 		void GetAvailableContentRuleListIdentifiers (Action<string []> callback);
 	}
 
+	/// <summary>Manages cookies for a <see cref="T:WebKit.WKWebsiteDataStore" />.</summary>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject), Name = "WKHTTPCookieStore")]
 	[DisableDefaultCtor]
@@ -4520,6 +4529,7 @@ namespace WebKit {
 
 	interface IWKHttpCookieStoreObserver { }
 
+	/// <summary>Interface that represents the required members of the WKHttpCookieStoreObserver protocol.</summary>
 	[MacCatalyst (13, 1)]
 	[Protocol (Name = "WKHTTPCookieStoreObserver")]
 	interface WKHttpCookieStoreObserver {
@@ -4527,6 +4537,9 @@ namespace WebKit {
 		void CookiesDidChangeInCookieStore (WKHttpCookieStore cookieStore);
 	}
 
+	/// <summary>A frame within a page.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/WebKit/Reference/WKFrameInfo_Ref/index.html">Apple documentation for <c>WKFrameInfo</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface WKFrameInfo : NSCopying {
@@ -4546,6 +4559,9 @@ namespace WebKit {
 		WKWebView WebView { get; }
 	}
 
+	/// <summary>Tracks the loading progress of a page.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/WebKit/Reference/WKNavigation_Ref/index.html">Apple documentation for <c>WKNavigation</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface WKNavigation {
@@ -4556,6 +4572,9 @@ namespace WebKit {
 		WKContentMode EffectiveContentMode { get; }
 	}
 
+	/// <summary>Information about a navigation action. Can be used for policy decisions.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/WebKit/Reference/WKNavigationAction_Ref/index.html">Apple documentation for <c>WKNavigationAction</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface WKNavigationAction {
@@ -4590,6 +4609,9 @@ namespace WebKit {
 		bool ShouldPerformDownload { get; }
 	}
 
+	/// <summary>Delegate object for <see cref="T:WebKit.WKNavigation" /> objects, provides methods relating to navigation and load policies.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/WebKit/Reference/WKNavigationDelegate_Ref/index.html">Apple documentation for <c>WKNavigationDelegate</c></related>
 	[MacCatalyst (13, 1)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
@@ -4650,8 +4672,17 @@ namespace WebKit {
 		void NavigationResponseDidBecomeDownload (WKWebView webView, WKNavigationResponse navigationResponse, WKDownload download);
 	}
 
+	/// <summary>Interface representing the required methods (if any) of the protocol <see cref="T:WebKit.WKNavigationDelegate" />.</summary>
+	///     <remarks>
+	///       <para>This interface contains the required methods (if any) from the protocol defined by <see cref="T:WebKit.WKNavigationDelegate" />.</para>
+	///       <para>If developers create classes that implement this interface, the implementation methods will automatically be exported to Objective-C with the matching signature from the method defined in the <see cref="T:WebKit.WKNavigationDelegate" /> protocol.</para>
+	///       <para>Optional methods (if any) are provided by the <see cref="T:WebKit.WKNavigationDelegate_Extensions" /> class as extension methods to the interface, allowing developers to invoke any optional methods on the protocol.</para>
+	///     </remarks>
 	interface IWKNavigationDelegate { }
 
+	/// <summary>Information about a navigation response. Can be used for policy decisions.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/WebKit/Reference/WKNavigationResponse_Ref/index.html">Apple documentation for <c>WKNavigationResponse</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface WKNavigationResponse {
@@ -4666,6 +4697,9 @@ namespace WebKit {
 		bool CanShowMimeType { get; }
 	}
 
+	/// <summary>Preference settings for a <see cref="T:WebKit.WKWebView" />.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/WebKit/Reference/WKPreferences_Ref/index.html">Apple documentation for <c>WKPreferences</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface WKPreferences : NSSecureCoding {
@@ -4735,6 +4769,9 @@ namespace WebKit {
 		WKInactiveSchedulingPolicy InactiveSchedulingPolicy { get; set; }
 	}
 
+	/// <summary>A message sent from a Web page.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/WebKit/Reference/WKScriptMessage/index.html">Apple documentation for <c>WKScriptMessage</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface WKScriptMessage {
@@ -4761,8 +4798,12 @@ namespace WebKit {
 		WKContentWorld World { get; }
 	}
 
+	/// <include file="../docs/api/WebKit/IWKScriptMessageHandler.xml" path="/RootNode/Docs[@DocId='T:WebKit.IWKScriptMessageHandler']/*" />
 	interface IWKScriptMessageHandler { }
 
+	/// <summary>Allows messages from JavaScript to be handled by the app.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/WebKit/Reference/WKScriptMessageHandler_Ref/index.html">Apple documentation for <c>WKScriptMessageHandler</c></related>
 	[MacCatalyst (13, 1)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
@@ -4773,6 +4814,9 @@ namespace WebKit {
 		void DidReceiveScriptMessage (WKUserContentController userContentController, WKScriptMessage message);
 	}
 
+	/// <summary>Describes the hostname, protocol, and port number for a security origin.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/WebKit/Reference/WKSecurityOrigin_Class_Ref/index.html">Apple documentation for <c>WKSecurityOrigin</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -4788,6 +4832,7 @@ namespace WebKit {
 	}
 
 
+	/// <summary>Holds the specification for a snapshot of a Webpage taken with <see cref="M:WebKit.WKWebView.TakeSnapshotAsync(WebKit.WKSnapshotConfiguration)" />.</summary>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface WKSnapshotConfiguration : NSCopying {
@@ -4805,6 +4850,7 @@ namespace WebKit {
 	}
 
 	interface IWKUrlSchemeHandler { }
+	/// <summary>Interface for handling arbitrary URL schemes.</summary>
 	[MacCatalyst (13, 1)]
 	[Protocol (Name = "WKURLSchemeHandler")]
 	interface WKUrlSchemeHandler {
@@ -4819,6 +4865,7 @@ namespace WebKit {
 
 	interface IWKUrlSchemeTask { }
 
+	/// <summary>Interface for a task that loads data from a URL with an arbitrary scheme.</summary>
 	[MacCatalyst (13, 1)]
 	[Protocol (Name = "WKURLSchemeTask")]
 	interface WKUrlSchemeTask {
@@ -4843,6 +4890,9 @@ namespace WebKit {
 		void DidFailWithError (NSError error);
 	}
 
+	/// <summary>Website data group that is identified by the website's domain and suffix.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/WebKit/Reference/WKWebsiteDataRecord_Class_Ref/index.html">Apple documentation for <c>WKWebsiteDataRecord</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface WKWebsiteDataRecord {
@@ -4853,6 +4903,7 @@ namespace WebKit {
 		NSSet<NSString> DataTypes { get; }
 	}
 
+	/// <summary>Contains NSString constants that represent data types for data related to websites.</summary>
 	[MacCatalyst (13, 1)]
 	[Static]
 	interface WKWebsiteDataType {
@@ -4931,6 +4982,9 @@ namespace WebKit {
 		NSString DidChangeSelection { get; }
 	}
 
+	/// <summary>Data that is associated with a website, such as cookies and caches.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/WebKit/Reference/WKWebsiteDataStore_Class_Ref/index.html">Apple documentation for <c>WKWebsiteDataStore</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // NSGenericException Reason: Calling [WKWebsiteDataStore init] is not supported.
@@ -5001,6 +5055,9 @@ namespace WebKit {
 		bool AllowsDirectories { get; }
 	}
 
+	/// <summary>A delegate object that allows presenting native UI elements on behalf of a Web page.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/WebKit/Reference/WKUIDelegate_Ref/index.html">Apple documentation for <c>WKUIDelegate</c></related>
 	[MacCatalyst (13, 1)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
@@ -5100,8 +5157,17 @@ namespace WebKit {
 		void WillDismissEditMenu (WKWebView webView, IUIEditMenuInteractionAnimating animator);
 	}
 
+	/// <summary>Interface representing the required methods (if any) of the protocol <see cref="T:WebKit.WKUIDelegate" />.</summary>
+	///     <remarks>
+	///       <para>This interface contains the required methods (if any) from the protocol defined by <see cref="T:WebKit.WKUIDelegate" />.</para>
+	///       <para>If developers create classes that implement this interface, the implementation methods will automatically be exported to Objective-C with the matching signature from the method defined in the <see cref="T:WebKit.WKUIDelegate" /> protocol.</para>
+	///       <para>Optional methods (if any) are provided by the <see cref="T:WebKit.WKUIDelegate_Extensions" /> class as extension methods to the interface, allowing developers to invoke any optional methods on the protocol.</para>
+	///     </remarks>
 	interface IWKUIDelegate { }
 
+	/// <summary>Allows posting messages and injecting user scripts into a Web page.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/WebKit/Reference/WKUserContentController_Ref/index.html">Apple documentation for <c>WKUserContentController</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface WKUserContentController : NSSecureCoding {
@@ -5159,6 +5225,9 @@ namespace WebKit {
 		void RemoveAllScriptMessageHandlers ();
 	}
 
+	/// <summary>A script that can be injected into a Web page.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/WebKit/Reference/WKUserScript_Ref/index.html">Apple documentation for <c>WKUserScript</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // all properties are getters
@@ -5182,6 +5251,9 @@ namespace WebKit {
 		bool IsForMainFrameOnly { [Bind ("isForMainFrameOnly")] get; }
 	}
 
+	/// <summary>Displays a Web page.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/WebKit/Reference/WKWebView_Ref/index.html">Apple documentation for <c>WKWebView</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (
 #if MONOMAC
@@ -5565,8 +5637,17 @@ namespace WebKit {
 		void StopLoading ([NullAllowed] NSObject sender);
 	}
 
+	/// <param name="result">The result of a successful evaluation. <see langword="null" /> if error occurred.</param>
+	///     <param name="error">The exception that occurred. <see langword="null" /> if evaluation succeeded.</param>
+	///     <summary>The result of evaluating JavaScript code.</summary>
+	///     <remarks>
+	///       <para>If evaluation was successful, <paramref name="error" /> will be <see langword="null" />. If an error occurred, <paramref name="result" /> will be <see langword="null" />.</para>
+	///     </remarks>
 	delegate void WKJavascriptEvaluationResult (NSObject result, NSError error);
 
+	/// <summary>Properties configuring a <see cref="T:WebKit.WKWebView" />.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/WebKit/Reference/WKWebViewConfiguration_Ref/index.html">Apple documentation for <c>WKWebViewConfiguration</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface WKWebViewConfiguration : NSCopying, NSSecureCoding {
@@ -5680,6 +5761,9 @@ namespace WebKit {
 		WKUserInterfaceDirectionPolicy UserInterfaceDirectionPolicy { get; set; }
 	}
 
+	/// <summary>A pool of content processes.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/WebKit/Reference/WKProcessPool_Ref/index.html">Apple documentation for <c>WKProcessPool</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface WKProcessPool : NSSecureCoding {
@@ -5687,6 +5771,9 @@ namespace WebKit {
 		// this interface is completely empty
 	}
 
+	/// <summary>WKWindowFeatures specifies optional attributes for the containing window when a new WKWebView is requested.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/WebKit/Reference/WKWindowFeatures_Ref/index.html">Apple documentation for <c>WKWindowFeatures</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface WKWindowFeatures {
@@ -5731,6 +5818,7 @@ namespace WebKit {
 
 	interface IWKPreviewActionItem { }
 
+	/// <summary>Interface that provides access to the properties of the preview action item for a web view.</summary>
 	[NoMac]
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'TBD' instead.")]
 	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'TBD' instead.")]
@@ -5742,6 +5830,7 @@ namespace WebKit {
 		NSString Identifier { get; }
 	}
 
+	/// <summary>Contains preview action type identifiers.</summary>
 	[NoMac]
 	[Static]
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'TBD' instead.")]
@@ -5761,6 +5850,9 @@ namespace WebKit {
 		NSString Share { get; }
 	}
 
+	/// <summary>Contains the URL for a preview action item.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/WebKit/WKPreviewElementInfo">Apple documentation for <c>WKPreviewElementInfo</c></related>
 	[NoMac]
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'WKContextMenuElementInfo' instead.")]
 	[MacCatalyst (13, 1)]

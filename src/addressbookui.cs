@@ -22,6 +22,9 @@ using NativeHandle = System.IntPtr;
 
 namespace AddressBookUI {
 
+	/// <summary>A view controller used to create a new contact.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/AddressBookUI/Reference/ABNewPersonViewController_Class/index.html">Apple documentation for <c>ABNewPersonViewController</c></related>
 	[Deprecated (PlatformName.iOS, 9, 0, message: "Use the 'Contacts' API instead.")]
 	[BaseType (typeof (UIViewController))]
 	interface ABNewPersonViewController {
@@ -45,6 +48,9 @@ namespace AddressBookUI {
 		NSObject WeakDelegate { get; set; }
 	}
 
+	/// <summary>The delegate object for <see cref="T:AddressBookUI.ABNewPersonViewController" />. Provides an event when data entry is complete.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/AddressBookUI/Reference/ABNewPersonViewControllerDelegate_Protocol/index.html">Apple documentation for <c>ABNewPersonViewControllerDelegate</c></related>
 	[Deprecated (PlatformName.iOS, 9, 0, message: "Use the 'Contacts' API instead.")]
 	[BaseType (typeof (NSObject))]
 	[Model]
@@ -56,8 +62,10 @@ namespace AddressBookUI {
 		void DidCompleteWithNewPerson (ABNewPersonViewController controller, [NullAllowed] ABPerson person);
 	}
 
+	/// <include file="../docs/api/AddressBookUI/IABNewPersonViewControllerDelegate.xml" path="/RootNode/Docs[@DocId='T:AddressBookUI.IABNewPersonViewControllerDelegate']/*" />
 	interface IABNewPersonViewControllerDelegate { }
 
+	/// <include file="../docs/api/AddressBookUI/ABPeoplePickerNavigationController.xml" path="/RootNode/Docs[@DocId='T:AddressBookUI.ABPeoplePickerNavigationController']/*" />
 	[Deprecated (PlatformName.iOS, 9, 0, message: "Use the 'Contacts' API instead.")]
 	[BaseType (typeof (UINavigationController))]
 	interface ABPeoplePickerNavigationController : UIAppearance {
@@ -96,6 +104,9 @@ namespace AddressBookUI {
 		NSPredicate PredicateForSelectionOfProperty { get; set; }
 	}
 
+	/// <summary>A delegate object that allows the application developer to have fine-grained control of events in the life-cycle of a <see cref="T:AddressBookUI.ABPeoplePickerNavigationController" />.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/AddressBookUI/Reference/ABPeoplePickerNavigationControllerDelegate_Protocol/index.html">Apple documentation for <c>ABPeoplePickerNavigationControllerDelegate</c></related>
 	[Deprecated (PlatformName.iOS, 9, 0, message: "Use the 'Contacts' API instead.")]
 #if XAMCORE_3_0
 	[BaseType (typeof (NSObject))]
@@ -123,8 +134,17 @@ namespace AddressBookUI {
 		void DidSelectPerson (ABPeoplePickerNavigationController peoplePicker, ABPerson selectedPerson, int /* ABPropertyId = int32 */ propertyId, int /* ABMultiValueIdentifier = int32 */ identifier);
 	}
 
+	/// <summary>Interface representing the required methods (if any) of the protocol <see cref="T:AddressBookUI.ABPeoplePickerNavigationControllerDelegate" />.</summary>
+	///     <remarks>
+	///       <para>This interface contains the required methods (if any) from the protocol defined by <see cref="T:AddressBookUI.ABPeoplePickerNavigationControllerDelegate" />.</para>
+	///       <para>If developers create classes that implement this interface, the implementation methods will automatically be exported to Objective-C with the matching signature from the method defined in the <see cref="T:AddressBookUI.ABPeoplePickerNavigationControllerDelegate" /> protocol.</para>
+	///       <para>Optional methods (if any) are provided by the <see cref="T:AddressBookUI.ABPeoplePickerNavigationControllerDelegate_Extensions" /> class as extension methods to the interface, allowing developers to invoke any optional methods on the protocol.</para>
+	///     </remarks>
 	interface IABPeoplePickerNavigationControllerDelegate { }
 
+	/// <summary>A <see cref="T:UIKit.UIViewController" /> that displays the data of an <see cref="T:AddressBook.ABPerson" />.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/AddressBookUI/Reference/ABPersonViewController_Class/index.html">Apple documentation for <c>ABPersonViewController</c></related>
 	[Deprecated (PlatformName.iOS, 9, 0, message: "Use the 'Contacts' API instead.")]
 	[BaseType (typeof (UIViewController))]
 	interface ABPersonViewController : UIViewControllerRestoration {
@@ -165,6 +185,9 @@ namespace AddressBookUI {
 		void SetHighlightedItemForProperty (int /* ABPropertyId = int32 */ property, int /* ABMultiValueIdentifier = int32 */ identifier);
 	}
 
+	/// <summary>Constants for use with <see cref="T:AddressBookUI.ABPeoplePickerNavigationController" /> predicate methods (<see cref="P:AddressBookUI.ABPeoplePickerNavigationController.PredicateForEnablingPerson" />,
+	/// 	<see cref="P:AddressBookUI.ABPeoplePickerNavigationController.PredicateForSelectionOfPerson" />
+	/// 	and <see cref="P:AddressBookUI.ABPeoplePickerNavigationController.PredicateForSelectionOfProperty" />).</summary>
 	[Deprecated (PlatformName.iOS, 9, 0, message: "Use the 'Contacts' API instead.")]
 	[Static]
 	interface ABPersonPredicateKey {
@@ -238,6 +261,9 @@ namespace AddressBookUI {
 		NSString UrlAddresses { get; }
 	}
 
+	/// <summary>A delegate object that allows the application developer have fine-grained control of events in the life-cycle of a <see cref="T:AddressBookUI.ABPersonViewController" />.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/AddressBookUI/Reference/ABPersonViewControllerDelegate_Protocol/index.html">Apple documentation for <c>ABPersonViewControllerDelegate</c></related>
 	[Deprecated (PlatformName.iOS, 9, 0, message: "Use the 'Contacts' API instead.")]
 	[BaseType (typeof (NSObject))]
 	[Model]
@@ -249,8 +275,13 @@ namespace AddressBookUI {
 		bool ShouldPerformDefaultActionForPerson (ABPersonViewController personViewController, ABPerson person, int /* ABPropertyID = int32 */ propertyId, int /* ABMultiValueIdentifier = int32 */ identifier);
 	}
 
+	/// <include file="../docs/api/AddressBookUI/IABPersonViewControllerDelegate.xml" path="/RootNode/Docs[@DocId='T:AddressBookUI.IABPersonViewControllerDelegate']/*" />
 	interface IABPersonViewControllerDelegate { }
 
+	/// <summary>A <see cref="T:UIKit.UIViewController" /> that allows the application user to enter data and create a new person record.</summary>
+	///     
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/AddressBookUI/Reference/ABUnknownPersonViewController_Class/index.html">Apple documentation for <c>ABUnknownPersonViewController</c></related>
 	[Deprecated (PlatformName.iOS, 9, 0, message: "Use the 'Contacts' API instead.")]
 	[BaseType (typeof (UIViewController))]
 	interface ABUnknownPersonViewController {
@@ -286,6 +317,9 @@ namespace AddressBookUI {
 		NSObject WeakDelegate { get; set; }
 	}
 
+	/// <summary>A delegate object that allows the application developer have fine-grained control of events in the life-cycle of a <see cref="T:AddressBookUI.ABUnknownPersonViewController" />.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/AddressBookUI/Reference/ABUnknownPersonViewControllerDelegate_Protocol/index.html">Apple documentation for <c>ABUnknownPersonViewControllerDelegate</c></related>
 	[Deprecated (PlatformName.iOS, 9, 0, message: "Use the 'Contacts' API instead.")]
 	[BaseType (typeof (NSObject))]
 	[Model]
@@ -298,5 +332,11 @@ namespace AddressBookUI {
 		[Export ("unknownPersonViewController:shouldPerformDefaultActionForPerson:property:identifier:")]
 		bool ShouldPerformDefaultActionForPerson (ABUnknownPersonViewController personViewController, ABPerson person, int /* ABPropertyID = int32 */ propertyId, int /* ABMultiValueIdentifier = int32 */ identifier);
 	}
+	/// <summary>Interface representing the required methods (if any) of the protocol <see cref="T:AddressBookUI.ABUnknownPersonViewControllerDelegate" />.</summary>
+	///     <remarks>
+	///       <para>This interface contains the required methods (if any) from the protocol defined by <see cref="T:AddressBookUI.ABUnknownPersonViewControllerDelegate" />.</para>
+	///       <para>If developers create classes that implement this interface, the implementation methods will automatically be exported to Objective-C with the matching signature from the method defined in the <see cref="T:AddressBookUI.ABUnknownPersonViewControllerDelegate" /> protocol.</para>
+	///       <para>Optional methods (if any) are provided by the <see cref="T:AddressBookUI.ABUnknownPersonViewControllerDelegate_Extensions" /> class as extension methods to the interface, allowing developers to invoke any optional methods on the protocol.</para>
+	///     </remarks>
 	interface IABUnknownPersonViewControllerDelegate { }
 }

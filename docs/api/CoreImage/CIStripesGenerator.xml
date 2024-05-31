@@ -1,0 +1,49 @@
+<Documentation>
+  <Docs DocId="T:CoreImage.CIStripesGenerator">
+    <summary>Generates hard-edged strips of alternating colors.</summary>
+    <remarks>
+      <para>The following example shows this filter in use</para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+        // Construct the Stripes Generator filter
+var stripeGen = new CIStripesGenerator()
+{
+	Center = new CIVector(150, 100), // Default [150 150]
+	Color0 = new CIColor (UIColor.Blue),
+	Color1 = new CIColor (UIColor.Red),
+	Width = 10,
+};
+
+// The Generator Filters need to be cropped before they can be displayed
+var crop = new CICrop () 
+{ 
+	Image = stripeGen.OutputImage,
+	// Create the Bounds based on the Size of the application Window. (UIWindow)
+	Rectangle = new CIVector (0, 0, window.Bounds.Width, window.Bounds.Height) 
+};
+
+// Get the final output of the Crop filter
+var output = crop.OutputImage;
+	
+// To render the results, we need to create a context, and then
+// use one of the context rendering APIs, in this case, we render the
+// result into a CoreGraphics image, which is merely a useful representation
+//
+var context = CIContext.FromOptions (null);
+
+var cgimage = context.CreateCGImage (output, output.Extent);
+
+// The above cgimage can be added to a screen view, for example, this
+// would add it to a UIImageView on the screen:
+myImageView.Image = UIImage.FromImage (cgimage);
+        ]]></code>
+      </example>
+      <para>
+         Produces the following output:
+      </para>
+      <para>
+        <img href="~/CoreImage/_images/Stripes.png" alt="Result of applying the filter." />
+      </para>
+    </remarks>
+  </Docs>
+</Documentation>

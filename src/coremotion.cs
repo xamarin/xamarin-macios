@@ -15,6 +15,9 @@ using CoreLocation;
 using System;
 
 namespace CoreMotion {
+	/// <summary>An accelerometer event, encapsulates an instance of <see cref="T:CoreMotion.CMAcceleration" /></summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/CoreMotion/Reference/CMAccelerometerData_Class/index.html">Apple documentation for <c>CMAccelerometerData</c></related>
 	[BaseType (typeof (CMLogItem))]
 	[DisableDefaultCtor] // will crash, see Extra.cs for compatibility stubs
 	[MacCatalyst (13, 1)]
@@ -23,6 +26,9 @@ namespace CoreMotion {
 		CMAcceleration Acceleration { get; }
 	}
 
+	/// <summary>Accelerometer data stored by a <see cref="T:CoreMotion.CMSensorRecorder" />.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/CoreMotion/Reference/CMRecordedAccelerometerData_class/index.html">Apple documentation for <c>CMRecordedAccelerometerData</c></related>
 	[NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CMAccelerometerData))]
@@ -35,6 +41,9 @@ namespace CoreMotion {
 		NSDate StartDate { get; }
 	}
 
+	/// <summary>Base class for CMAccelerometerData, CMDeviceMotion and CMGyroData, it is used to attach a timestamp to these events.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/CoreMotion/Reference/CMLogItem_Class/index.html">Apple documentation for <c>CMLogItem</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // will crash, see Extra.cs for compatibility stubs
@@ -43,16 +52,54 @@ namespace CoreMotion {
 		double Timestamp { get; }
 	}
 
+	/// <param name="data">The accelerometer data for this event.</param>
+	///     <param name="error">An error, or null if there have been no errors.</param>
+	///     <summary>A delegate signature used to receive events from <see cref="T:CoreMotion.CMMotionManager" /></summary>
+	///     <remarks>
+	///       <para>
+	/// This signature is used as an argument to the <see cref="T:CoreMotion.CMMotionManager" />'s StartAccelerometerUpdates.  
+	/// </para>
+	///       <example>
+	///         <code lang="csharp lang-csharp"><![CDATA[
+	///      var motionManager = new CMMotionManager ();
+	///      motionManager.AccelerometerUpdateInterval = 0.01; // 100Hz
+	///      motionManager.StartAccelerometerUpdates (NSOperationQueue.CurrentQueue, (data, error) => {
+	///           Console.WriteLine ("Got an acceleration event {0}", data.Acceleration.X);
+	///      });
+	///   ]]></code>
+	///       </example>
+	///     </remarks>
 	[NoMac]
 	[MacCatalyst (13, 1)]
 	delegate void CMAccelerometerHandler (CMAccelerometerData data, NSError error);
+	/// <param name="gyroData">The gyroscope data for this event.</param>
+	///     <param name="error">Error or null if there are no errors.</param>
+	///     <summary>A delegate signature used to receive events from <see cref="T:CoreMotion.CMMotionManager" /></summary>
+	///     <remarks>
+	///       <para>
+	/// This signature is used as an argument to the <see cref="T:CoreMotion.CMMotionManager" />'s StartGyroUpdates.  
+	/// </para>
+	///       <para>
+	/// For example:</para>
+	///       <example>
+	///         <code lang="csharp lang-csharp"><![CDATA[
+	///      var motionManager = new CMMotionManager ();
+	///      motionManager.AccelerometerUpdateInterval = 0.01; // 100Hz
+	///      motionManager.StartDeviceMotionUpdates (NSOperationQueue.CurrentQueue, (gyroData, error) => {
+	///           Console.WriteLine ("RotationRate={0}", gyroData.RotationRate);
+	///      });
+	///   ]]></code>
+	///       </example>
+	///     </remarks>
 	[NoMac]
 	[MacCatalyst (13, 1)]
 	delegate void CMGyroHandler (CMGyroData gyroData, NSError error);
+	/// <include file="../docs/api/CoreMotion/CMDeviceMotionHandler.xml" path="/RootNode/Docs[@DocId='T:CoreMotion.CMDeviceMotionHandler']/*" />
 	[NoMac]
 	[MacCatalyst (13, 1)]
 	delegate void CMDeviceMotionHandler (CMDeviceMotion motion, NSError error);
 
+	/// <include file="../docs/api/CoreMotion/CMMotionManager.xml" path="/RootNode/Docs[@DocId='T:CoreMotion.CMMotionManager']/*" />
 	[NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -161,6 +208,7 @@ namespace CoreMotion {
 		bool ShowsDeviceMovementDisplay { get; set; }
 	}
 
+	/// <include file="../docs/api/CoreMotion/CMAttitude.xml" path="/RootNode/Docs[@DocId='T:CoreMotion.CMAttitude']/*" />
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	//<quote>You access CMAttitude objects through the attitude property of each CMDeviceMotion objects passed to an application.</quote>
@@ -185,6 +233,9 @@ namespace CoreMotion {
 		void MultiplyByInverseOfAttitude (CMAttitude attitude);
 	}
 
+	/// <summary>Encapsulates Attitude, Rotation Rate and Acceleration of the device.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/CoreMotion/Reference/CMDeviceMotion_Class/index.html">Apple documentation for <c>CMDeviceMotion</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CMLogItem))]
 	[DisableDefaultCtor] // will crash, see Extra.cs for compatibility stubs
@@ -216,6 +267,9 @@ namespace CoreMotion {
 		CMDeviceMotionSensorLocation SensorLocation { get; }
 	}
 
+	/// <summary>A single measurement of the device rotation rate.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/CoreMotion/Reference/CMGyroData_Class/index.html">Apple documentation for <c>CMGyroData</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CMLogItem))]
 	[DisableDefaultCtor] // will crash, see Extra.cs for compatibility stubs
@@ -224,6 +278,9 @@ namespace CoreMotion {
 		CMRotationRate RotationRate { get; }
 	}
 
+	/// <summary>A reading from the device magnetometer.</summary>
+	///     <remarks>Instances containing the magnetometer data are delivered to the method provided to the <see cref="M:CoreMotion.CMMotionManager.StartMagnetometerUpdates(Foundation.NSOperationQueue,CoreMotion.CMMagnetometerHandler)" /> method.</remarks>
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/CoreMotion/Reference/CMMagnetometerData_Class/index.html">Apple documentation for <c>CMMagnetometerData</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CMLogItem))]
 	[DisableDefaultCtor] // will crash, see Extra.cs for compatibility stubs
@@ -232,16 +289,37 @@ namespace CoreMotion {
 		CMMagneticField MagneticField { get; }
 	}
 
+	/// <param name="magnetometerData">
+	/// 
+	/// 
+	/// The magnetometer data being provider
+	///   	   
+	///   	   </param>
+	///     <param name="error">
+	/// 
+	/// 
+	/// Error, if any.
+	///   	   
+	///   	   </param>
+	///     <summary>A delegate that is the <c>handler</c> for the <see cref="M:CoreMotion.CMMotionManager.StartMagnetometerUpdates(Foundation.NSOperationQueue,CoreMotion.CMMagnetometerHandler)" /> method.</summary>
+	///     <remarks>Signature for a method that can receive magnetometer data from the CMMotionManager.</remarks>
 	delegate void CMMagnetometerHandler (CMMagnetometerData magnetometerData, NSError error);
 
+	/// <summary>The delegate for use with <see cref="M:CoreMotion.CMStepCounter.QueryStepCount(Foundation.NSDate,Foundation.NSDate,Foundation.NSOperationQueue,CoreMotion.CMStepQueryHandler)" />.</summary>
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	delegate void CMStepQueryHandler (nint numberOfSteps, NSError error);
 
+	/// <summary>The delegate used with <see cref="M:CoreMotion.CMStepCounter.StartStepCountingUpdates(Foundation.NSOperationQueue,System.nint,CoreMotion.CMStepUpdateHandler)" />.</summary>
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	delegate void CMStepUpdateHandler (nint numberOfSteps, NSDate timestamp, NSError error);
 
+	/// <summary>On supported devices, stores the number of steps the user has taken with the device and allows step-counting to be dynamically tracked.</summary>
+	///     <remarks>
+	///       <para>Not all devices support step counting. Application developers should check <see cref="P:CoreMotion.CMStepCounter.IsStepCountingAvailable" />.</para>
+	///     </remarks>
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/CoreMotion/Reference/CMStepCounter_class/index.html">Apple documentation for <c>CMStepCounter</c></related>
 	[NoMac]
 	[NoWatch]
 	[BaseType (typeof (NSObject))]
@@ -265,6 +343,9 @@ namespace CoreMotion {
 		void StopStepCountingUpdates ();
 	}
 
+	/// <summary>Holds data relating to walking and floor-climbing. Generated by <see cref="T:CoreMotion.CMPedometer" />.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/CoreMotion/Reference/CMPedometerData_class/index.html">Apple documentation for <c>CMPedometerData</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface CMPedometerData : NSSecureCoding, NSCopying {
@@ -304,6 +385,9 @@ namespace CoreMotion {
 		NSNumber AverageActivePace { get; }
 	}
 
+	/// <summary>Generates step-counting data, including number of steps and floors climbed/descended.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/CoreMotion/Reference/CMPedometer_class/index.html">Apple documentation for <c>CMPedometer</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface CMPedometer {
@@ -361,14 +445,21 @@ namespace CoreMotion {
 		CMAuthorizationStatus AuthorizationStatus { get; }
 	}
 
+	/// <summary>The delegate that acts as the handler for <see cref="M:CoreMotion.CMMotionActivityManager.QueryActivity(Foundation.NSDate,Foundation.NSDate,Foundation.NSOperationQueue,CoreMotion.CMMotionActivityQueryHandler)" />.</summary>
 	[NoMac]
 	[MacCatalyst (13, 1)]
 	delegate void CMMotionActivityHandler (CMMotionActivity activity);
 
+	/// <summary>The delegate that is the handler for <see cref="M:CoreMotion.CMMotionActivityManager.StartActivityUpdates(Foundation.NSOperationQueue,CoreMotion.CMMotionActivityHandler)" />.</summary>
 	[NoMac]
 	[MacCatalyst (13, 1)]
 	delegate void CMMotionActivityQueryHandler (CMMotionActivity [] activities, NSError error);
 
+	/// <summary>On supported devices, accesses stored motion data and allows monitoring of motion updates.</summary>
+	///     <remarks>
+	///       <para>Not everty device supports stored motion data. Application developers should check <see cref="P:CoreMotion.CMMotionActivityManager.IsActivityAvailable" />.</para>
+	///     </remarks>
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/CoreMotion/Reference/CMMotionActivityManager_class/index.html">Apple documentation for <c>CMMotionActivityManager</c></related>
 	[NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -394,6 +485,10 @@ namespace CoreMotion {
 		CMAuthorizationStatus AuthorizationStatus { get; }
 	}
 
+	/// <summary>A motion update event, including characterization of the likely form (walking, running, automotive).</summary>
+	///     
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/CoreMotion/Reference/CMMotionActivity_class/index.html">Apple documentation for <c>CMMotionActivity</c></related>
 	[NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CMLogItem))]
@@ -425,6 +520,9 @@ namespace CoreMotion {
 		bool Cycling { get; }
 	}
 
+	/// <summary>Holds relative-altitude data, generated by the <see cref="T:CoreMotion.CMAltitudeData" /> class.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/CoreMotion/Reference/CMAltitudeData_class/index.html">Apple documentation for <c>CMAltitudeData</c></related>
 	[NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CMLogItem))]
@@ -437,6 +535,9 @@ namespace CoreMotion {
 		NSNumber Pressure { get; }
 	}
 
+	/// <summary>Interface to the relative-altitude pressure sensor.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/CoreMotion/Reference/CMAltimeter_class/index.html">Apple documentation for <c>CMAltimeter</c></related>
 	[NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -492,6 +593,9 @@ namespace CoreMotion {
 	}
 
 
+	/// <summary>A system-provided list of objects that contain recorded Core Motion accelerometer data.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/CoreMotion/Reference/CMSensorDataList_class/index.html">Apple documentation for <c>CMSensorDataList</c></related>
 	[NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -499,6 +603,9 @@ namespace CoreMotion {
 	{
 	}
 
+	/// <summary>Gathers and retrieves accelerometer data.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/CoreMotion/Reference/CMSensorRecorder_class/index.html">Apple documentation for <c>CMSensorRecorder</c></related>
 	[NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -538,6 +645,7 @@ namespace CoreMotion {
 		Resume
 	}
 
+	/// <related type="externalDocumentation" href="https://developer.apple.com/reference/CoreMotion/CMPedometerEvent">Apple documentation for <c>CMPedometerEvent</c></related>
 	[NoTV]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -646,6 +754,7 @@ namespace CoreMotion {
 		string Version { get; }
 	}
 
+	/// <summary>Type for CoreMotion errors.</summary>
 	[MacCatalyst (13, 1)]
 	[ErrorDomain ("CMErrorDomain")]
 	// untyped enum -> CMError.h
@@ -666,6 +775,7 @@ namespace CoreMotion {
 		Size,
 	}
 
+	/// <summary>An enumeration whose values specify the reference frame from which <see cref="T:CoreMotion.CMAttitude" /> readings are referenced.</summary>
 	[NoMac]
 	[MacCatalyst (13, 1)]
 	// untyped enum -> CMAttitude.h
@@ -679,6 +789,7 @@ namespace CoreMotion {
 		XTrueNorthZVertical = 1 << 3,
 	}
 
+	/// <summary>An enumeration whose values specify the confidence in a <see cref="T:CoreMotion.CMMotionActivity" />.</summary>
 	[NoMac]
 	[MacCatalyst (13, 1)]
 	// NSInteger -> CMMotionActivity.h
