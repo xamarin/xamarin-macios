@@ -1,26 +1,26 @@
 <Dependencies>
   <ProductDependencies>
-    <Dependency Name="VS.Tools.Net.Core.SDK.Resolver" Version="9.0.100-preview.5.24280.3">
+    <Dependency Name="VS.Tools.Net.Core.SDK.Resolver" Version="9.0.100-preview.5.24281.1">
       <Uri>https://github.com/dotnet/sdk</Uri>
-      <Sha>e1eabadb71fdd9286a97e9fdec8ddf96590d8736</Sha>
+      <Sha>59da7b386a9deef4f0b193959ec229d014e4c6d1</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NET.ILLink" Version="9.0.0-alpha.1.23556.4">
       <Uri>https://github.com/dotnet/runtime</Uri>
       <Sha>cf47d9ff6827a3e1d6f2acbf925cd618418f20dd</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.ILLink.Tasks" Version="9.0.0-preview.5.24279.13" CoherentParentDependency="VS.Tools.Net.Core.SDK.Resolver">
+    <Dependency Name="Microsoft.NET.ILLink.Tasks" Version="9.0.0-preview.5.24280.5" CoherentParentDependency="VS.Tools.Net.Core.SDK.Resolver">
       <Uri>https://github.com/dotnet/runtime</Uri>
-      <Sha>062439076e1fc244a9dd243ba2a8ad7c5330f1f1</Sha>
+      <Sha>de6897b3b71c1628329ab586ea3e4ecc6a5a2ab3</Sha>
     </Dependency>
     <!-- Set TRACKING_DOTNET_RUNTIME_SEPARATELY to something in Make.config if removing the CoherentParentDependency on VS.Tools.Net.Core.SDK.Resolver -->
-    <Dependency Name="Microsoft.NETCore.App.Ref" Version="9.0.0-preview.5.24279.13" CoherentParentDependency="VS.Tools.Net.Core.SDK.Resolver">
+    <Dependency Name="Microsoft.NETCore.App.Ref" Version="9.0.0-preview.5.24280.5" CoherentParentDependency="VS.Tools.Net.Core.SDK.Resolver">
       <Uri>https://github.com/dotnet/runtime</Uri>
-      <Sha>062439076e1fc244a9dd243ba2a8ad7c5330f1f1</Sha>
+      <Sha>de6897b3b71c1628329ab586ea3e4ecc6a5a2ab3</Sha>
     </Dependency>
     <!-- This is required for our test apps to build; in some cases Microsoft.AspNetCore.App is pulled in, and when building test apps the build needs to be able to resolve that -->
-    <Dependency Name="Microsoft.AspNetCore.App.Ref" Version="9.0.0-preview.5.24279.1" CoherentParentDependency="VS.Tools.Net.Core.SDK.Resolver">
+    <Dependency Name="Microsoft.AspNetCore.App.Ref" Version="9.0.0-preview.5.24280.2" CoherentParentDependency="VS.Tools.Net.Core.SDK.Resolver">
       <Uri>https://github.com/dotnet/aspnetcore</Uri>
-      <Sha>81106b5354d36a0928ccb5bc941f46277a30b93a</Sha>
+      <Sha>1be2ad87ffe9cac0697eeaebc06f74a86a86a0f1</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NET.Workload.Emscripten.Current.Manifest-9.0.100.Transport" Version="9.0.0-preview.5.24273.1" CoherentParentDependency="Microsoft.NETCore.App.Ref">
       <Uri>https://github.com/dotnet/emsdk</Uri>
