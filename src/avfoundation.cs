@@ -11462,14 +11462,14 @@ namespace AVFoundation {
 		Audio,
 	}
 
-#if WATCH
-	[Static]
-#endif
 	/// <summary>Support for accessing the audio and video capture hardware for AVCaptureSession.</summary>
 	///     <remarks>
 	///       <para>Once a capture session has begun, application developers must bracket configuration changes with calls to <see cref="M:AVFoundation.AVCaptureDevice.LockForConfiguration(Foundation.NSError@)" /> and <see cref="M:AVFoundation.AVCaptureDevice.UnlockForConfiguration" />.</para>
 	///     </remarks>
 	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/AVFoundation/Reference/AVCaptureDevice_Class/index.html">Apple documentation for <c>AVCaptureDevice</c></related>
+#if WATCH
+	[Static]
+#endif
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoTV, Watch (6, 0)]
 	[BaseType (typeof (NSObject))]

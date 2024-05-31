@@ -1330,12 +1330,12 @@ namespace Photos {
 		NSString LocalIdentifierNotFound { get; }
 	}
 
-#if MONOMAC
-	[DisableDefaultCtor] // NS_UNAVAILABLE
-#endif
 	/// <summary>An image that contains motion and sound from the time it was captured.</summary>
 	///     
 	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Photos/PHLivePhoto">Apple documentation for <c>PHLivePhoto</c></related>
+#if MONOMAC
+	[DisableDefaultCtor] // NS_UNAVAILABLE
+#endif
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface PHLivePhoto : NSSecureCoding, NSCopying

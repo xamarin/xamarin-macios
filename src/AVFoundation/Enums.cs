@@ -316,11 +316,11 @@ namespace AVFoundation {
 		Succeeded, Failed, Cancelled
 	}
 
+	/// <summary>An enumeration whose values specify whether a <see cref="T:AVFoundation.AVCaptureDevice" /> is playing or not.</summary>
 #if XAMCORE_3_0
 	[NoiOS]
 	[NoWatch]
 #endif
-	/// <summary>An enumeration whose values specify whether a <see cref="T:AVFoundation.AVCaptureDevice" /> is playing or not.</summary>
 	[Unavailable (PlatformName.MacCatalyst)]
 	[NoTV]
 	[Native]
@@ -329,12 +329,12 @@ namespace AVFoundation {
 		NotPlaying, Playing
 	}
 
-#if XAMCORE_3_0
-	[NoiOS]
-#endif
 	/// <summary>An enumeration whose values specify how interlaced fields should be dealt with.</summary>
 	///     
 	///     <!-- TODO: This should be used with AVCaptureConnection.VideoFieldMode property, but that doesn't appear to exist  -->
+#if XAMCORE_3_0
+	[NoiOS]
+#endif
 	[Unavailable (PlatformName.MacCatalyst)]
 	[NoTV]
 	[NoWatch]
