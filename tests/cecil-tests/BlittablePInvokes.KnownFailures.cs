@@ -44,8 +44,6 @@ namespace Cecil.Tests {
 			"The field CoreMidi.MidiCIDeviceIdentification.RevisionLevel has a [MarshalAs] attribute",
 			"The field GameController.GCDualSenseAdaptiveTriggerPositionalAmplitudes.Values has a [MarshalAs] attribute",
 			"The field GameController.GCDualSenseAdaptiveTriggerPositionalResistiveStrengths.Values has a [MarshalAs] attribute",
-			"The field GameController.GCExtendedGamepadSnapshotData.LeftThumbstickButton has a [MarshalAs] attribute",
-			"The field GameController.GCExtendedGamepadSnapshotData.RightThumbstickButton has a [MarshalAs] attribute",
 			"The field GameController.GCExtendedGamepadSnapshotData.SupportsClickableThumbsticks has a [MarshalAs] attribute",
 			"The field GLKit.GLKVertexAttributeParameters.Normalized has a [MarshalAs] attribute",
 			"The field Metal.MTLQuadTessellationFactorsHalf.EdgeTessellationFactor has a [MarshalAs] attribute",
@@ -56,8 +54,6 @@ namespace Cecil.Tests {
 		};
 #endif
 		static HashSet<string> knownFailuresPInvokes = new HashSet<string> {
-			"System.Byte GameController.GCExtendedGamepadSnapshot::GCExtendedGamepadSnapshotDataFromNSData(GameController.GCExtendedGamepadSnapshotData*,System.IntPtr)",
-			"System.IntPtr GameController.GCExtendedGamepadSnapshotData::NSDataFromGCExtendedGamepadSnapshotData(GameController.GCExtendedGamepadSnapshotData*)",
 		};
 	}
 }
