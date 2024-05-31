@@ -98,6 +98,14 @@ stages:
       variables:
       - name: skipNugetSecurityAnalysis
         value: true
+      - name: INCLUDE_DOTNET_IOS
+        value: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.INCLUDE_DOTNET_IOS'] ]
+      - name: INCLUDE_DOTNET_MACCATALYST
+        value: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.INCLUDE_DOTNET_MACCATALYST'] ]
+      - name: INCLUDE_DOTNET_MACOS
+        value: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.INCLUDE_DOTNET_MACOS'] ]
+      - name: INCLUDE_DOTNET_TVOS
+        value: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.INCLUDE_DOTNET_TVOS'] ]
       - ${{ if eq(parameters.isPR, false) }}:
         - group: Publish-Build-Assets
       pool:
@@ -163,10 +171,20 @@ stages:
       - script: make -C $(Build.SourcesDirectory)/dotnet version-props
         displayName: make version props
 
+      - powershell: |
+          $varMap = @{ "INCLUDE_DOTNET_IOS" = "iOS"; "INCLUDE_DOTNET_MACCATALYST" = "MacCatalyst"; "INCLUDE_DOTNET_MACOS" = "macOS"; "INCLUDE_DOTNET_TVOS" = "tvOS" }
+          foreach ($varName in $varMap.Keys) {
+              if ([Environment]::GetEnvironmentVariable($varName)) {
+                  Write-Host "##vso[task.setvariable variable=MaestroProjectPlatformName]$($varMap[$varName])"
+                  exit 0;
+              }
+          }
+        displayName: Set maestro project variable
+
       - task: DotNetCoreCLI@2
         displayName: generate and publish BAR manifest
         inputs:
-          projects: $(Build.SourcesDirectory)/dotnet/package/Microsoft.iOS.Ref/package.csproj
+          projects: $(Build.SourcesDirectory)/dotnet/package/Microsoft.$(MaestroProjectPlatformName).Ref/package.csproj
           arguments: >-
             -t:PushManifestToBuildAssetRegistry
             -p:BuildAssetRegistryToken=$(MaestroAccessToken)
