@@ -1031,7 +1031,7 @@ namespace Vision {
 	///         <code lang="csharp lang-csharp"><![CDATA[
 	/// var findFacesRequest = new VNDetectFaceRectanglesRequest((request, error) =>
 	/// {
-	///    if (error != null)
+	///    if (error is not null)
 	///    {
 	/// 	   HandleError(error);
 	///    }
