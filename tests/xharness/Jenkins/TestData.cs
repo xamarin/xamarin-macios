@@ -6,7 +6,7 @@ namespace Xharness.Jenkins {
 
 	class TestData {
 		public string Variation;
-		public string BundlerArguments; // MtouchExtraArgs + MonoBundlingExtraArgs
+		public string AppBundleExtraOptions;
 		public KnownIssue KnownFailure;
 		public bool Debug;
 		public bool Profiling;
