@@ -339,7 +339,7 @@ namespace Introspection {
 				}
 				// that does not mean that inlining is not required, i.e. it might be useful, even needed
 				// but it's not a showstopper for subclassing so we'll start with those cases
-				if (designated > 1)
+				if (designated > 0)
 					continue;
 
 				var base_class = t.BaseType;
