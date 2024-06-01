@@ -46,10 +46,10 @@ breaking changes (which happens very rarely).
 ### Static members
 
 Objective-C protocols can have static members. C# didn't allow for static
-members in interfaces until C# 11, so until recently there hasn't been any
-good way to bind static protocol members on a protocol.
+members in interfaces until C# 11, so there wasn't any good way to bind static
+protocol members on a protocol.
 
-Our workaround is to manually inline every static member in all classes that
+Our workaround was to manually inline every static member in all classes that
 implemented a given protocol.
 
 ### Initializers
@@ -61,6 +61,79 @@ In the past we haven't bound any protocol initializer at all, we've completely
 ignored them.
 
 ## Binding in C#
+
+### Static members
+
+Given the following API definition:
+
+```cs
+[Protocol]
+public interface Protocol {
+    [Abstract]
+    [Static]
+    [Export ("requiredStaticMethod")]
+    void RequiredStaticMethod ();
+
+    [Static]
+    [Export ("optionalStaticMethod")]
+    void OptionalStaticMethod ();
+
+    [Abstract]
+    [Static]
+    [Export ("requiredStaticProperty")]
+    IntPtr RequiredStaticProperty { get; set; }
+
+    [Static]
+    [Export ("optionalStaticProperty")]
+    IntPtr OptionalStaticProperty { get; set; }
+}
+```
+
+we're binding it like this:
+
+```cs
+[Protocol ("Protocol")]
+public interface IProtocol : INativeObject {
+    [Export ("requiredStaticMethod")]
+    public static void RequiredStaticMethod<T> () where T: NSObject, IProtocol { /* implementation */ }
+
+    [Export ("optionalStaticMethod")]
+    public static void OptionalStaticMethod<T> () where T: NSObject, IProtocol { /*  implementation */ }
+
+    [Property ("RequiredStaticProperty")]
+    [Export ("requiredStaticProperty")]
+    public static IntPtr GetRequiredStaticProperty<T> () where T: NSObject, IProtocol { /* implementation */ }
+
+    [Property ("RequiredStaticProperty")]
+    [Export ("setRequiredStaticProperty:")]
+    public static void SetRequiredStaticProperty<T> (IntPtr value) where T: NSObject, IProtocol { /* implementation */ }
+
+    [Property ("OptionalStaticProperty")]
+    [Export ("optionalStaticProperty")]
+    public static IntPtr GetOptionalStaticProperty<T> () where T: NSObject, IProtocol { /* implementation */ }
+
+    [Property ("OptionalStaticProperty")]
+    [Export ("setOptionalStaticProperty:")]
+    public static void SetOptionalStaticProperty<T> (IntPtr value) where T: NSObject, IProtocol { /* implementation */ }
+}
+```
+
+There are three points of interest here:
+
+1. Each method has a generic type argument that specifies which type's static
+   member should be called.
+2. Properties have been turned into a pair of Get/Set methods - this is because
+   properties can't have type arguments the way methods can.
+3. There's no difference between optional and required members.
+
+Example consuming code:
+
+```cs
+public class MyClass : NSObject, IProtocol {}
+
+// Call a required method:
+IProtocol.RequiredStaticMethod<MyClass> ();
+```
 
 ### Initializers
 

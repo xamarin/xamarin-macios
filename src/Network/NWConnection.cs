@@ -498,7 +498,7 @@ namespace Network {
 		static extern unsafe void nw_connection_send (IntPtr handle,
 								  IntPtr dispatchData,
 								  IntPtr contentContext,
-								  [MarshalAs (UnmanagedType.U1)] bool isComplete,
+								  byte isComplete,
 								  BlockLiteral* callback);
 
 		//
@@ -511,7 +511,7 @@ namespace Network {
 			nw_connection_send (handle: GetCheckedHandle (),
 						dispatchData: buffer.GetHandle (),
 						contentContext: contentContext,
-						isComplete: isComplete,
+						isComplete: isComplete.AsByte (),
 						callback: callback);
 		}
 
