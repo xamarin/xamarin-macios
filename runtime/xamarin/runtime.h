@@ -223,6 +223,7 @@ void			xamarin_bridge_call_runtime_initialize (struct InitializationOptions* opt
 void			xamarin_bridge_register_product_assembly (GCHandle* exception_gchandle);
 MonoMethod *	xamarin_bridge_get_mono_method (MonoReflectionMethod *method);
 void			xamarin_bridge_free_mono_signature (MonoMethodSignature **signature);
+void			xamarin_bridge_raise_unhandled_exception_event (GCHandle exception_gchandle); // the GCHandle is *not* freed. This method will return after raising the event.
 bool			xamarin_register_monoassembly (MonoAssembly *assembly, GCHandle *exception_gchandle);
 void			xamarin_install_nsautoreleasepool_hooks ();
 void			xamarin_enable_new_refcount ();
@@ -239,7 +240,6 @@ void			xamarin_clear_gchandle (id self);
 GCHandle		xamarin_get_gchandle_with_flags (id self, enum XamarinGCHandleFlags *flags);
 bool			xamarin_set_gchandle_with_flags (id self, GCHandle gchandle, enum XamarinGCHandleFlags flags);
 bool			xamarin_set_gchandle_with_flags_safe (id self, GCHandle gchandle, enum XamarinGCHandleFlags flags);
-void			xamarin_create_gchandle (id self, void *managed_object, enum XamarinGCHandleFlags flags, bool force_weak);
 void            xamarin_release_managed_ref (id self, bool user_type);
 void			xamarin_notify_dealloc (id self, GCHandle gchandle);
 void			xamarin_release_static_dictionaries ();

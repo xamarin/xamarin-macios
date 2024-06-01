@@ -7,6 +7,7 @@
     <Nullable>enable</Nullable>
     <LangVersion>latest</LangVersion>
     <WarningsAsErrors>Nullable</WarningsAsErrors>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
   <PropertyGroup>
     <EnableDefaultEmbeddedResourceItems>false</EnableDefaultEmbeddedResourceItems>
@@ -27,6 +28,9 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Versions.g.cs">
+      <Link>Versions.g.cs</Link>
+    </Compile>
     <EmbeddedResource Include="TranslatedAssemblies/MSBStrings.cs.resx">
       <Link>MSBStrings.cs.resx</Link>
       <ManifestResourceName>Xamarin.Localization.MSBuild.MSBStrings.cs</ManifestResourceName>
