@@ -153,7 +153,7 @@ namespace Xharness.Targets {
 
 				if (System) {
 					props.Add ("TargetFrameworkVersion", "v4.7.1");
-					props.Add ("MonoBundlingExtraArgs", "--embed-mono=no");
+					props.Add ("AppBundleExtraOptions", "--embed-mono=no");
 				} else if (Modern) {
 					props.Add ("TargetFrameworkVersion", "v2.0");
 				} else {

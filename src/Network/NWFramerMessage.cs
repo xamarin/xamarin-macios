@@ -102,8 +102,7 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		unsafe static extern bool nw_framer_message_access_value (OS_nw_protocol_metadata message, IntPtr key, BlockLiteral* access_value);
+		unsafe static extern byte nw_framer_message_access_value (OS_nw_protocol_metadata message, IntPtr key, BlockLiteral* access_value);
 #if !NET
 		delegate byte nw_framer_message_access_value_t (IntPtr block, IntPtr data);
 		static nw_framer_message_access_value_t static_AccessValueHandler = TrampolineAccessValueHandler;
@@ -147,7 +146,7 @@ namespace Network {
 #endif
 				// the callback is inlined!!!
 				using var keyPtr = new TransientString (key);
-				var found = nw_framer_message_access_value (GetCheckedHandle (), keyPtr, &block);
+				var found = nw_framer_message_access_value (GetCheckedHandle (), keyPtr, &block) != 0;
 				if (found) {
 					unsafe {
 						outData = new ReadOnlySpan<byte> ((void*) outPointer, dataLength);

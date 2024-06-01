@@ -386,6 +386,17 @@ namespace Xharness {
 				new { Label = TestLabel.Xcframework, ProjectPath = "xcframework-test", IsFSharp = false, Configurations = noConfigurations, },
 			};
 
+			var iOSSkip = new TestLabel [] {
+				TestLabel.Framework,
+			};
+			var tvOSSkip = new TestLabel [] {
+				TestLabel.Framework,
+			};
+			var macOSSkip = new TestLabel [] {
+			};
+			var macCatalystSkip = new TestLabel [] {
+			};
+
 			// If .NET is not enabled, then ignore, otherwise leave undecided for other code to determine.
 			bool? dotnetIgnored = ENABLE_DOTNET ? null : (bool?) true;
 			foreach (var projectInfo in projects) {
@@ -393,52 +404,60 @@ namespace Xharness {
 				var projectName = Path.GetFileName (projectPath);
 				var projExtension = projectInfo.IsFSharp ? ".fsproj" : ".csproj";
 
-				IOSTestProjects.Add (new iOSTestProject (projectInfo.Label, Path.GetFullPath (Path.Combine (RootDirectory, projectPath, "dotnet", "iOS", projectName + projExtension))) {
-					Name = projectName,
-					IsDotNetProject = true,
-					SkipiOSVariation = false,
-					SkiptvOSVariation = true,
-					SkipwatchOSVariation = true,
-					SkipTodayExtensionVariation = true,
-					SkipDeviceVariations = false,
-					TestPlatform = TestPlatform.iOS_Unified,
-					Ignore = dotnetIgnored,
-					Configurations = projectInfo.Configurations,
-				});
+				if (!iOSSkip.Contains (projectInfo.Label)) {
+					IOSTestProjects.Add (new iOSTestProject (projectInfo.Label, Path.GetFullPath (Path.Combine (RootDirectory, projectPath, "dotnet", "iOS", projectName + projExtension))) {
+						Name = projectName,
+						IsDotNetProject = true,
+						SkipiOSVariation = false,
+						SkiptvOSVariation = true,
+						SkipwatchOSVariation = true,
+						SkipTodayExtensionVariation = true,
+						SkipDeviceVariations = false,
+						TestPlatform = TestPlatform.iOS_Unified,
+						Ignore = dotnetIgnored,
+						Configurations = projectInfo.Configurations,
+					});
+				}
 
-				IOSTestProjects.Add (new iOSTestProject (projectInfo.Label, Path.GetFullPath (Path.Combine (RootDirectory, projectPath, "dotnet", "tvOS", projectName + projExtension))) {
-					Name = projectName,
-					IsDotNetProject = true,
-					SkipiOSVariation = true,
-					SkiptvOSVariation = true,
-					SkipwatchOSVariation = true,
-					SkipTodayExtensionVariation = true,
-					SkipDeviceVariations = false,
-					GenerateVariations = false,
-					TestPlatform = TestPlatform.tvOS,
-					Ignore = dotnetIgnored,
-					Configurations = projectInfo.Configurations,
-				});
+				if (!tvOSSkip.Contains (projectInfo.Label)) {
+					IOSTestProjects.Add (new iOSTestProject (projectInfo.Label, Path.GetFullPath (Path.Combine (RootDirectory, projectPath, "dotnet", "tvOS", projectName + projExtension))) {
+						Name = projectName,
+						IsDotNetProject = true,
+						SkipiOSVariation = true,
+						SkiptvOSVariation = true,
+						SkipwatchOSVariation = true,
+						SkipTodayExtensionVariation = true,
+						SkipDeviceVariations = false,
+						GenerateVariations = false,
+						TestPlatform = TestPlatform.tvOS,
+						Ignore = dotnetIgnored,
+						Configurations = projectInfo.Configurations,
+					});
+				}
 
-				MacTestProjects.Add (new MacTestProject (projectInfo.Label, Path.GetFullPath (Path.Combine (RootDirectory, projectPath, "dotnet", "macOS", projectName + projExtension))) {
-					Name = projectName,
-					IsDotNetProject = true,
-					TargetFrameworkFlavors = MacFlavors.DotNet,
-					Platform = "AnyCPU",
-					Ignore = dotnetIgnored,
-					TestPlatform = TestPlatform.Mac,
-					Configurations = projectInfo.Configurations,
-				});
+				if (!macOSSkip.Contains (projectInfo.Label)) {
+					MacTestProjects.Add (new MacTestProject (projectInfo.Label, Path.GetFullPath (Path.Combine (RootDirectory, projectPath, "dotnet", "macOS", projectName + projExtension))) {
+						Name = projectName,
+						IsDotNetProject = true,
+						TargetFrameworkFlavors = MacFlavors.DotNet,
+						Platform = "AnyCPU",
+						Ignore = dotnetIgnored,
+						TestPlatform = TestPlatform.Mac,
+						Configurations = projectInfo.Configurations,
+					});
+				}
 
-				MacTestProjects.Add (new MacTestProject (projectInfo.Label, Path.GetFullPath (Path.Combine (RootDirectory, projectPath, "dotnet", "MacCatalyst", projectName + projExtension))) {
-					Name = projectName,
-					IsDotNetProject = true,
-					TargetFrameworkFlavors = MacFlavors.MacCatalyst,
-					Platform = "AnyCPU",
-					Ignore = dotnetIgnored,
-					TestPlatform = TestPlatform.MacCatalyst,
-					Configurations = projectInfo.Configurations,
-				});
+				if (!macCatalystSkip.Contains (projectInfo.Label)) {
+					MacTestProjects.Add (new MacTestProject (projectInfo.Label, Path.GetFullPath (Path.Combine (RootDirectory, projectPath, "dotnet", "MacCatalyst", projectName + projExtension))) {
+						Name = projectName,
+						IsDotNetProject = true,
+						TargetFrameworkFlavors = MacFlavors.MacCatalyst,
+						Platform = "AnyCPU",
+						Ignore = dotnetIgnored,
+						TestPlatform = TestPlatform.MacCatalyst,
+						Configurations = projectInfo.Configurations,
+					});
+				}
 			}
 		}
 
