@@ -646,14 +646,15 @@ namespace Xamarin.Tests {
 				expectedWarnings.AddRange (expectedWarnings);
 			}
 
-			var zippedFrameworks = platform == ApplePlatform.MacCatalyst || platform == ApplePlatform.MacOSX;
+			var zippedFrameworks = true; //platform == ApplePlatform.MacCatalyst || platform == ApplePlatform.MacOSX;
+			var xcArch = GetXCFrameworkArchitectures (platform, runtimeIdentifiers);
 			foreach (var rid in rids) {
 				if (zippedFrameworks) {
-					expectedWarnings.Add ($"The framework {Path.Combine ("obj", configuration, tfm, rid, "bindings-framework-test.resources.zip", "XStaticObjectTest.framework")} is a framework of static libraries, and will not be copied to the app.");
-					expectedWarnings.Add ($"The framework {Path.Combine ("obj", configuration, tfm, rid, "bindings-framework-test.resources.zip", "XStaticArTest.framework")} is a framework of static libraries, and will not be copied to the app.");
+					expectedWarnings.Add ($"The framework {Path.Combine ("obj", configuration, tfm, rid, "bindings-framework-test.resources.zip", "XStaticObjectTest.xcframework", xcArch, "XStaticObjectTest.framework")} is a framework of static libraries, and will not be copied to the app.");
+					expectedWarnings.Add ($"The framework {Path.Combine ("obj", configuration, tfm, rid, "bindings-framework-test.resources.zip", "XStaticArTest.xcframework", xcArch, "XStaticArTest.framework")} is a framework of static libraries, and will not be copied to the app.");
 				} else {
-					expectedWarnings.Add ($"The framework {Path.Combine (testsDirectory, "bindings-framework-test", "dotnet", platformString, "bin", configuration, tfm, "bindings-framework-test.resources", "XStaticObjectTest.framework")} is a framework of static libraries, and will not be copied to the app.");
-					expectedWarnings.Add ($"The framework {Path.Combine (testsDirectory, "bindings-framework-test", "dotnet", platformString, "bin", configuration, tfm, "bindings-framework-test.resources", "XStaticArTest.framework")} is a framework of static libraries, and will not be copied to the app.");
+					expectedWarnings.Add ($"The framework {Path.Combine (testsDirectory, "bindings-framework-test", "dotnet", platformString, "bin", configuration, tfm, "bindings-framework-test.resources", "XStaticObjectTest.xcframework", xcArch, "XStaticObjectTest.framework")} is a framework of static libraries, and will not be copied to the app.");
+					expectedWarnings.Add ($"The framework {Path.Combine (testsDirectory, "bindings-framework-test", "dotnet", platformString, "bin", configuration, tfm, "bindings-framework-test.resources", "XStaticArTest.xcframework", xcArch, "XStaticArTest.framework")} is a framework of static libraries, and will not be copied to the app.");
 				}
 			}
 
@@ -704,6 +705,26 @@ namespace Xamarin.Tests {
 			CheckAppBundleContents (platform, appPath, rids, signature, isReleaseBuild);
 			CollectionAssert.AreEqual (expectedWarnings, warningMessages, "Warnings Rebuild 3");
 			ExecuteWithMagicWordAndAssert (platform, runtimeIdentifiers, appExecutable);
+		}
+
+		static string GetXCFrameworkArchitectures (ApplePlatform platform, string runtimeIdentifiers)
+		{
+			switch (platform) {
+			case ApplePlatform.iOS:
+				if (runtimeIdentifiers.Contains ("simulator"))
+					return "ios-arm64_x86_64-simulator";
+				return "ios-arm64";
+			case ApplePlatform.TVOS:
+				if (runtimeIdentifiers.Contains ("simulator"))
+					return "tvossimulator-arm64_x86_64";
+				return "tvos-arm64";
+			case ApplePlatform.MacCatalyst:
+				return "ios-arm64_x86_64-maccatalyst";
+			case ApplePlatform.MacOSX:
+				return "macos-arm64_x86_64";
+			default:
+				throw new NotImplementedException (platform.ToString ());
+			}
 		}
 
 		public static string [] FilterWarnings (IEnumerable<BuildLogEvent> warnings, bool canonicalizePaths = false)

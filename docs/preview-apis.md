@@ -65,8 +65,14 @@ References:
 * https://learn.microsoft.com/en-us/dotnet/api/system.diagnostics.codeanalysis.experimentalattribute?view=net-8.0
 * https://learn.microsoft.com/en-us/dotnet/fundamentals/apicompat/preview-apis#experimentalattribute
 
-## Placeholder header for APL####
+## CryptoTokenKit (APL0001)
 
-Coming soon!
+CryptoTokenKit requires special hardware to test, so it's not trivial for us to do so.
+Thus we need customer input in order to validate the API, and as such we mark every
+type in this framework as preview API for a while.
+
+We've tentatively set .NET 10 as the release when we'll stop marking CryptoTokenKit as preview API.
+
+The diagnostic id for CryptoTokenKit is APL0001.
 
 [1]: https://learn.microsoft.com/en-us/dotnet/api/system.diagnostics.codeanalysis.experimentalattribute?view=net-8.0

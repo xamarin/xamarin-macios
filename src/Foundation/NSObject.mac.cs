@@ -111,6 +111,7 @@ namespace Foundation {
 		static IntPtr ni = Dlfcn.dlopen (Constants.NearbyInteractionLibrary, 1);
 		static IntPtr sm = Dlfcn.dlopen (Constants.ServiceManagementLibrary, 1);
 		static IntPtr sa = Dlfcn.dlopen (Constants.SafetyKitLibrary, 1);
+		static IntPtr cr = Dlfcn.dlopen (Constants.CryptoTokenKitLibrary, 1);
 
 #if !NET
 		[Obsolete ("Use PlatformAssembly for easier code sharing across platforms.")]

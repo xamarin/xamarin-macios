@@ -193,6 +193,7 @@ namespace Introspection {
 				case "GKPlayer":
 				case "PKDisbursementRequest":
 				case "PKContact":
+				case "TKSmartCardPinFormat":
 					return true;
 				}
 				break;
@@ -365,6 +366,11 @@ namespace Introspection {
 				case "MKPolygonRenderer":
 				case "MKPolylineRenderer":
 				case "AVAudioPcmBuffer":
+				case "TKSmartCardPinFormat":
+				case "TKSmartCardUserInteraction":
+				case "TKSmartCardUserInteractionForPinOperation":
+				case "TKSmartCardUserInteractionForSecurePinChange":
+				case "TKSmartCardUserInteractionForSecurePinVerification":
 					return true;
 				// Xcode 15.3, Conformance not in headers
 				case "ASWebAuthenticationSessionCallback":
@@ -537,6 +543,11 @@ namespace Introspection {
 				case "MKPolygonRenderer":
 				case "MKPolylineRenderer":
 				case "AVAudioPcmBuffer":
+				case "TKSmartCardPinFormat":
+				case "TKSmartCardUserInteraction":
+				case "TKSmartCardUserInteractionForPinOperation":
+				case "TKSmartCardUserInteractionForSecurePinChange":
+				case "TKSmartCardUserInteractionForSecurePinVerification":
 					return true;
 				// Xcode 15.3, Conformance not in headers
 				case "ASWebAuthenticationSessionCallback":

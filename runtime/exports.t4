@@ -169,6 +169,12 @@
 			XamarinRuntime = RuntimeMode.MonoVM,
 		},
 
+		new Export ("void", "mono_unhandled_exception",
+			"MonoObject *", "ex"
+		) {
+			XamarinRuntime = RuntimeMode.MonoVM,
+		},
+
 		new Export ("char*", "mono_array_addr_with_size",
 			"MonoArray *", "array",
 			"int", "size",
