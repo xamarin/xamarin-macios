@@ -304,23 +304,39 @@ namespace AVFoundation {
 	}
 #endif
 
-#if MONOMAC || !NET
-
 #if NET
 	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[UnsupportedOSPlatform ("ios")]
-	[UnsupportedOSPlatform ("tvos")]
+	[SupportedOSPlatform ("maccatalyst15.0")]
+	[SupportedOSPlatform ("ios15.0")]
+	[SupportedOSPlatform ("tvos15.0")]
 #else
-	[NoiOS]
-	[NoWatch]
-	[NoTV]
-#endif
-#if !MONOMAC
-	[Obsolete ("This API is not available on this platform.")]
+	[iOS (15, 0)]
+	[Watch (8, 0)]
+	[TV (15, 0)]
+	[MacCatalyst (15, 0)]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AVSampleCursorSyncInfo {
+#if XAMCORE_5_0 || __IOS__ || __TVOS__
+		byte isFullSync;
+		byte isPartialSync;
+		byte isDroppable;
+
+		public bool IsFullSync {
+			get => isFullSync != 0;
+			set => isFullSync = value.AsByte ();
+		}
+
+		public bool IsPartialSync {
+			get => isPartialSync != 0;
+			set => isPartialSync = value.AsByte ();
+		}
+
+		public bool IsDroppable {
+			get => isDroppable != 0;
+			set => isDroppable = value.AsByte ();
+		}
+#else
 		[MarshalAs (UnmanagedType.I1)]
 		public bool IsFullSync;
 
@@ -329,23 +345,95 @@ namespace AVFoundation {
 
 		[MarshalAs (UnmanagedType.I1)]
 		public bool IsDroppable;
+#endif
 	}
+
+#if !(XAMCORE_5_0 || __IOS__ || __TVOS__)
+	[StructLayout (LayoutKind.Sequential)]
+#if COREBUILD
+	public
+#endif
+	struct AVSampleCursorSyncInfo_Blittable {
+		byte isFullSync;
+		public bool IsFullSync {
+			get => isFullSync != 0;
+			set => isFullSync = value.AsByte ();
+		}
+
+		byte isPartialSync;
+		public bool IsPartialSync {
+			get => isPartialSync != 0;
+			set => isPartialSync = value.AsByte ();
+		}
+
+		byte isDroppable;
+		public bool IsDroppable {
+			get => isDroppable != 0;
+			set => isDroppable = value.AsByte ();
+		}
+
+		public AVSampleCursorSyncInfo ToAVSampleCursorSyncInfo ()
+		{
+			var rv = new AVSampleCursorSyncInfo ();
+			rv.IsFullSync = IsFullSync;
+			rv.IsPartialSync = IsPartialSync;
+			rv.IsDroppable = IsDroppable;
+			return rv;
+		}
+	}
+#endif
 
 #if NET
 	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[UnsupportedOSPlatform ("ios")]
-	[UnsupportedOSPlatform ("tvos")]
+	[SupportedOSPlatform ("maccatalyst15.0")]
+	[SupportedOSPlatform ("ios15.0")]
+	[SupportedOSPlatform ("tvos15.0")]
 #else
-	[NoiOS]
-	[NoWatch]
-	[NoTV]
-#endif
-#if !MONOMAC
-	[Obsolete ("This API is not available on this platform.")]
+	[iOS (15, 0)]
+	[Watch (8, 0)]
+	[TV (15, 0)]
+	[MacCatalyst (15, 0)]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AVSampleCursorDependencyInfo {
+#if XAMCORE_5_0 || __IOS__ || __TVOS__
+		byte indicatesWhetherItHasDependentSamples;
+		byte hasDependentSamples;
+		byte indicatesWhetherItDependsOnOthers;
+		byte dependsOnOthers;
+		byte indicatesWhetherItHasRedundantCoding;
+		byte hasRedundantCoding;
+
+		public bool IndicatesWhetherItHasDependentSamples {
+			get => indicatesWhetherItHasDependentSamples != 0;
+			set => indicatesWhetherItHasDependentSamples = value.AsByte ();
+		}
+
+		public bool HasDependentSamples {
+			get => hasDependentSamples != 0;
+			set => hasDependentSamples = value.AsByte ();
+		}
+
+		public bool IndicatesWhetherItDependsOnOthers {
+			get => indicatesWhetherItDependsOnOthers != 0;
+			set => indicatesWhetherItDependsOnOthers = value.AsByte ();
+		}
+
+		public bool DependsOnOthers {
+			get => dependsOnOthers != 0;
+			set => dependsOnOthers = value.AsByte ();
+		}
+
+		public bool IndicatesWhetherItHasRedundantCoding {
+			get => indicatesWhetherItHasRedundantCoding != 0;
+			set => indicatesWhetherItHasRedundantCoding = value.AsByte ();
+		}
+
+		public bool HasRedundantCoding {
+			get => hasRedundantCoding != 0;
+			set => hasRedundantCoding = value.AsByte ();
+		}
+#else
 		[MarshalAs (UnmanagedType.I1)]
 		public bool IndicatesWhetherItHasDependentSamples;
 
@@ -363,20 +451,76 @@ namespace AVFoundation {
 
 		[MarshalAs (UnmanagedType.I1)]
 		public bool HasRedundantCoding;
+#endif
 	}
+
+#if !(XAMCORE_5_0 || __IOS__ || __TVOS__)
+	[StructLayout (LayoutKind.Sequential)]
+#if COREBUILD
+	public
+#endif
+	struct AVSampleCursorDependencyInfo_Blittable {
+		byte indicatesWhetherItHasDependentSamples;
+		byte hasDependentSamples;
+		byte indicatesWhetherItDependsOnOthers;
+		byte dependsOnOthers;
+		byte indicatesWhetherItHasRedundantCoding;
+		byte hasRedundantCoding;
+
+		public bool IndicatesWhetherItHasDependentSamples {
+			get => indicatesWhetherItHasDependentSamples != 0;
+			set => indicatesWhetherItHasDependentSamples = value.AsByte ();
+		}
+
+		public bool HasDependentSamples {
+			get => hasDependentSamples != 0;
+			set => hasDependentSamples = value.AsByte ();
+		}
+
+		public bool IndicatesWhetherItDependsOnOthers {
+			get => indicatesWhetherItDependsOnOthers != 0;
+			set => indicatesWhetherItDependsOnOthers = value.AsByte ();
+		}
+
+		public bool DependsOnOthers {
+			get => dependsOnOthers != 0;
+			set => dependsOnOthers = value.AsByte ();
+		}
+
+		public bool IndicatesWhetherItHasRedundantCoding {
+			get => indicatesWhetherItHasRedundantCoding != 0;
+			set => indicatesWhetherItHasRedundantCoding = value.AsByte ();
+		}
+
+		public bool HasRedundantCoding {
+			get => hasRedundantCoding != 0;
+			set => hasRedundantCoding = value.AsByte ();
+		}
+
+		public AVSampleCursorDependencyInfo ToAVSampleCursorDependencyInfo ()
+		{
+			var rv = new AVSampleCursorDependencyInfo ();
+			rv.IndicatesWhetherItHasDependentSamples = IndicatesWhetherItHasDependentSamples;
+			rv.HasDependentSamples = HasDependentSamples;
+			rv.IndicatesWhetherItDependsOnOthers = IndicatesWhetherItDependsOnOthers;
+			rv.DependsOnOthers = DependsOnOthers;
+			rv.IndicatesWhetherItHasRedundantCoding = IndicatesWhetherItHasRedundantCoding;
+			rv.HasRedundantCoding = HasRedundantCoding;
+			return rv;
+		}
+	}
+#endif // !(XAMCORE_5_0 || __IOS__ || __TVOS__)
 
 #if NET
 	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[UnsupportedOSPlatform ("ios")]
-	[UnsupportedOSPlatform ("tvos")]
+	[SupportedOSPlatform ("maccatalyst15.0")]
+	[SupportedOSPlatform ("ios15.0")]
+	[SupportedOSPlatform ("tvos15.0")]
 #else
-	[NoiOS]
-	[NoWatch]
-	[NoTV]
-#endif
-#if !MONOMAC
-	[Obsolete ("This API is not available on this platform.")]
+	[iOS (15, 0)]
+	[Watch (8, 0)]
+	[TV (15, 0)]
+	[MacCatalyst (15, 0)]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AVSampleCursorStorageRange {
@@ -386,21 +530,39 @@ namespace AVFoundation {
 
 #if NET
 	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[UnsupportedOSPlatform ("ios")]
-	[UnsupportedOSPlatform ("tvos")]
+	[SupportedOSPlatform ("maccatalyst15.0")]
+	[SupportedOSPlatform ("ios15.0")]
+	[SupportedOSPlatform ("tvos15.0")]
 #else
-	[NoiOS]
-	[NoWatch]
-	[NoTV]
-#endif
-#if !MONOMAC
-	[Obsolete ("This API is not available on this platform.")]
+	[iOS (15, 0)]
+	[Watch (8, 0)]
+	[TV (15, 0)]
+	[MacCatalyst (15, 0)]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AVSampleCursorChunkInfo {
 		public long SampleCount;
 
+#if XAMCORE_5_0 || __IOS__ || __TVOS__
+		byte hasUniformSampleSizes;
+		byte hasUniformSampleDurations;
+		byte hasUniformFormatDescriptions;
+
+		public bool HasUniformSampleSizes {
+			get => hasUniformSampleSizes != 0;
+			set => hasUniformSampleSizes = value.AsByte ();
+		}
+
+		public bool HasUniformSampleDurations {
+			get => hasUniformSampleDurations != 0;
+			set => hasUniformSampleDurations = value.AsByte ();
+		}
+
+		public bool HasUniformFormatDescriptions {
+			get => hasUniformFormatDescriptions != 0;
+			set => hasUniformFormatDescriptions = value.AsByte ();
+		}
+#else
 		[MarshalAs (UnmanagedType.I1)]
 		public bool HasUniformSampleSizes;
 
@@ -409,23 +571,95 @@ namespace AVFoundation {
 
 		[MarshalAs (UnmanagedType.I1)]
 		public bool HasUniformFormatDescriptions;
-	}
 #endif
+	}
 
-#if MONOMAC || __MACCATALYST__
+#if !(XAMCORE_5_0 || __IOS__ || __TVOS__)
+	[StructLayout (LayoutKind.Sequential)]
+#if COREBUILD
+	public
+#endif
+	struct AVSampleCursorChunkInfo_Blittable {
+		public long SampleCount;
+
+		byte hasUniformSampleSizes;
+		public bool HasUniformSampleSizes {
+			get => hasUniformSampleSizes != 0;
+			set => hasUniformSampleSizes = value.AsByte ();
+		}
+
+		byte hasUniformSampleDurations;
+		public bool HasUniformSampleDurations {
+			get => hasUniformSampleDurations != 0;
+			set => hasUniformSampleDurations = value.AsByte ();
+		}
+
+		byte hasUniformFormatDescriptions;
+		public bool HasUniformFormatDescriptions {
+			get => hasUniformFormatDescriptions != 0;
+			set => hasUniformFormatDescriptions = value.AsByte ();
+		}
+
+		public AVSampleCursorChunkInfo ToAVSampleCursorChunkInfo ()
+		{
+			var rv = new AVSampleCursorChunkInfo ();
+			rv.HasUniformSampleSizes = HasUniformSampleSizes;
+			rv.HasUniformSampleDurations = HasUniformSampleDurations;
+			rv.HasUniformFormatDescriptions = HasUniformFormatDescriptions;
+			return rv;
+		}
+	}
+#endif // !(XAMCORE_5_0 || __IOS__ || __TVOS__)
 
 #if NET
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("maccatalyst15.0")]
+	[SupportedOSPlatform ("ios15.0")]
+	[SupportedOSPlatform ("tvos15.0")]
+#else
+	[iOS (15, 0)]
+	[Watch (8, 0)]
+	[TV (15, 0)]
+	[MacCatalyst (15, 0)]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AVSampleCursorAudioDependencyInfo {
+#if XAMCORE_5_0 || __IOS__ || __TVOS__
+		byte isIndependentlyDecodable;
+
+		public bool IsIndependentlyDecodable {
+			get => isIndependentlyDecodable != 0;
+			set => isIndependentlyDecodable = value.AsByte ();
+		}
+#else
 		[MarshalAs (UnmanagedType.I1)]
 		public bool IsIndependentlyDecodable;
+#endif
 
 		public nint PacketRefreshCount;
 	}
+
+#if !XAMCORE_5_0 && !__IOS__ && !__TVOS__
+	[StructLayout (LayoutKind.Sequential)]
+#if COREBUILD
+	public
 #endif
+	struct AVSampleCursorAudioDependencyInfo_Blittable {
+		byte isIndependentlyDecodable;
+		public bool IsIndependentlyDecodable {
+			get => isIndependentlyDecodable != 0;
+			set => isIndependentlyDecodable = value.AsByte ();
+		}
+		public nint PacketRefreshCount;
+		public AVSampleCursorAudioDependencyInfo ToAVSampleCursorAudioDependencyInfo ()
+		{
+			var rv = new AVSampleCursorAudioDependencyInfo ();
+			rv.IsIndependentlyDecodable = IsIndependentlyDecodable;
+			rv.PacketRefreshCount = PacketRefreshCount;
+			return rv;
+		}
+	}
+#endif // !XAMCORE_5_0 && !__IOS__ && !__TVOS__
 
 #if MONOMAC
 
