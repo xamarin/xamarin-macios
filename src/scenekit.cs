@@ -3642,7 +3642,7 @@ namespace SceneKit {
 		bool DisableActions { get; set; }
 	}
 
-	/// <summary>An <see cref="T:SceneKit.SCNGeometry" /> that is a cylinder with a hole along its central axis.</summary>
+	/// <summary>An <see cref="T:SceneKit.SCNGeometry" /> that is a cylinder with a circular hole along its central axis.</summary>
 	///     
 	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/SceneKit/Reference/SCNTube_Class/index.html">Apple documentation for <c>SCNTube</c></related>
 	[MacCatalyst (13, 1)]

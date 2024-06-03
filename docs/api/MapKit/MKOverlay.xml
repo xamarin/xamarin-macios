@@ -3,7 +3,7 @@
     <summary>Describes a map annotation that combines a location and a geometric shape.</summary>
     <remarks>
       <para>
-        <see cref="T:MapKit.MKOverlay" />s allow the application developer to layer graphics above an <see cref="T:MapKit.MKMapView" />. The <see cref="T:MapKit.MKOverlay" /> will automatically position, zoom, and orient itself to the underlying <see cref="T:MapKit.MKMapView" />.</para>
+        <see cref="T:MapKit.MKOverlay" />s allow the application developer to layer graphics above an <see cref="T:MapKit.MKMapView" />. The <see cref="T:MapKit.MKOverlay" /> will automatically position, zoom, and redirect itself to the underlying <see cref="T:MapKit.MKMapView" />.</para>
       <para>iOS provides several standard overlays:</para>
       <list type="table">
         <listheader>

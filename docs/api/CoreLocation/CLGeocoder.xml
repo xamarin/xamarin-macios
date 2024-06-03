@@ -3,7 +3,7 @@
     <summary>Provides support for converting between an address in
     text form and a location described using latitude and longitude or
     to convert from a latitue and longitude to a user-friendly
-    location (street, city, state, country).</summary>
+    location (street, city, state, country/region).</summary>
     <remarks>
       <para>Converting a latitude and longitude into a human-readable address is generally straightforward:</para>
       <example>

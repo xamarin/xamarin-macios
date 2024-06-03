@@ -82,7 +82,7 @@
           <term>
             <see cref="T:SceneKit.SCNSphere" />
           </term>
-          <description>A ball.</description>
+          <description>A sphere.</description>
           <description>
             <img href="~/SceneKit/_images/SceneKit.SCNSphere.png" alt="Scene showing SCNSphere geometry" />
           </description>

@@ -54,7 +54,7 @@
         </item>
         <item>
           <term>PostalAddress</term>
-          <description>'street' property, 'subLocality' property, 'city' property, 'subAdministrativeArea' property, 'state' property, 'postalCode' property, 'country' and 'ISOCountryCode'.</description>
+          <description>'street' property, 'subLocality' property, 'city' property, 'subAdministrativeArea' property, 'state' property, 'postalCode' property, 'country/region' and 'ISOCountryCode'.</description>
         </item>
       </list>
       <list type="table">
