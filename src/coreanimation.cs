@@ -158,7 +158,7 @@ namespace CoreAnimation {
 		NativeHandle Constructor (CAConstraintAttribute attribute, string relativeToSource, CAConstraintAttribute srcAttr, nfloat scale, nfloat offset);
 	}
 
-	/// <include file="../docs/api/CoreAnimation/CADisplayLink.xml" path="/RootNode/Docs[@DocId='T:CoreAnimation.CADisplayLink']/*" />
+	/// <include file="../docs/api/CoreAnimation/CADisplayLink.xml" path="/Documentation/Docs[@DocId='T:CoreAnimation.CADisplayLink']/*" />
 	[Mac (14, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -228,7 +228,7 @@ namespace CoreAnimation {
 	}
 
 
-	/// <include file="../docs/api/CoreAnimation/CALayer.xml" path="/RootNode/Docs[@DocId='T:CoreAnimation.CALayer']/*" />
+	/// <include file="../docs/api/CoreAnimation/CALayer.xml" path="/Documentation/Docs[@DocId='T:CoreAnimation.CALayer']/*" />
 	[BaseType (typeof (NSObject))]
 	[Dispose ("OnDispose ();", Optimizable = true)]
 	interface CALayer : CAMediaTiming, NSSecureCoding {
@@ -1303,7 +1303,7 @@ namespace CoreAnimation {
 		void RunAction (string eventKey, NSObject obj, [NullAllowed] NSDictionary arguments);
 	}
 
-	/// <include file="../docs/api/CoreAnimation/CAAnimation.xml" path="/RootNode/Docs[@DocId='T:CoreAnimation.CAAnimation']/*" />
+	/// <include file="../docs/api/CoreAnimation/CAAnimation.xml" path="/Documentation/Docs[@DocId='T:CoreAnimation.CAAnimation']/*" />
 	[BaseType (typeof (NSObject)
 #if NET
 		, Delegates = new string [] {"WeakDelegate"}, Events = new Type [] { typeof (CAAnimationDelegate) }
@@ -1475,7 +1475,7 @@ namespace CoreAnimation {
 		CAValueFunction ValueFunction { get; set; }
 	}
 
-	/// <include file="../docs/api/CoreAnimation/CABasicAnimation.xml" path="/RootNode/Docs[@DocId='T:CoreAnimation.CABasicAnimation']/*" />
+	/// <include file="../docs/api/CoreAnimation/CABasicAnimation.xml" path="/Documentation/Docs[@DocId='T:CoreAnimation.CABasicAnimation']/*" />
 	[BaseType (typeof (CAPropertyAnimation))]
 	interface CABasicAnimation {
 		[Static, New, Export ("animationWithKeyPath:")]

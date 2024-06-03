@@ -182,7 +182,7 @@ namespace CoreML {
 
 	interface IMLFeatureProvider { }
 
-	/// <include file="../docs/api/CoreML/IMLFeatureProvider.xml" path="/RootNode/Docs[@DocId='T:CoreML.IMLFeatureProvider']/*" />
+	/// <include file="../docs/api/CoreML/IMLFeatureProvider.xml" path="/Documentation/Docs[@DocId='T:CoreML.IMLFeatureProvider']/*" />
 	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface MLFeatureProvider {

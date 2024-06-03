@@ -1618,7 +1618,7 @@ namespace MediaPlayer {
 		NSString WirelessRouteActiveDidChangeNotification { get; }
 	}
 
-	/// <include file="../docs/api/MediaPlayer/MPMediaQuerySection.xml" path="/RootNode/Docs[@DocId='T:MediaPlayer.MPMediaQuerySection']/*" />
+	/// <include file="../docs/api/MediaPlayer/MPMediaQuerySection.xml" path="/Documentation/Docs[@DocId='T:MediaPlayer.MPMediaQuerySection']/*" />
 	[NoMac]
 	[NoTV]
 	[NoWatch]

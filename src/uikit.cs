@@ -170,7 +170,7 @@ namespace UIKit {
 		NewData, NoData, Failed
 	}
 
-	/// <include file="../docs/api/UIKit/UIApplicationShortcutIconType.xml" path="/RootNode/Docs[@DocId='T:UIKit.UIApplicationShortcutIconType']/*" />
+	/// <include file="../docs/api/UIKit/UIApplicationShortcutIconType.xml" path="/Documentation/Docs[@DocId='T:UIKit.UIApplicationShortcutIconType']/*" />
 	[NoTV]
 	[NoWatch]
 	[MacCatalyst (13, 1)]
@@ -612,7 +612,7 @@ namespace UIKit {
 		UIOffset DecodeUIOffsetForKey (string key);
 	}
 
-	/// <include file="../docs/api/UIKit/UIAcceleration.xml" path="/RootNode/Docs[@DocId='T:UIKit.UIAcceleration']/*" />
+	/// <include file="../docs/api/UIKit/UIAcceleration.xml" path="/Documentation/Docs[@DocId='T:UIKit.UIAcceleration']/*" />
 	[NoTV, NoWatch]
 	[BaseType (typeof (NSObject))]
 	[Deprecated (PlatformName.iOS, 5, 0, message: "Use 'CoreMotion' instead.")]
@@ -632,7 +632,7 @@ namespace UIKit {
 		double Z { get; }
 	}
 
-	/// <include file="../docs/api/UIKit/UIAccelerometer.xml" path="/RootNode/Docs[@DocId='T:UIKit.UIAccelerometer']/*" />
+	/// <include file="../docs/api/UIKit/UIAccelerometer.xml" path="/Documentation/Docs[@DocId='T:UIKit.UIAccelerometer']/*" />
 	[NoTV, NoWatch]
 	[BaseType (typeof (NSObject), Delegates = new string [] { "WeakDelegate" }, Events = new Type [] { typeof (UIAccelerometerDelegate) })]
 	[Deprecated (PlatformName.iOS, 5, 0, message: "Use 'CoreMotion' instead.")]
@@ -1424,7 +1424,7 @@ namespace UIKit {
 		bool AdjustsImageSizeForAccessibilityContentSizeCategory { get; set; }
 	}
 
-	/// <include file="../docs/api/UIKit/UIActionSheet.xml" path="/RootNode/Docs[@DocId='T:UIKit.UIActionSheet']/*" />
+	/// <include file="../docs/api/UIKit/UIActionSheet.xml" path="/Documentation/Docs[@DocId='T:UIKit.UIActionSheet']/*" />
 	[NoTV, NoWatch]
 	[BaseType (typeof (UIView), KeepRefUntil = "Dismissed", Delegates = new string [] { "WeakDelegate" }, Events = new Type [] { typeof (UIActionSheetDelegate) })]
 	[Deprecated (PlatformName.iOS, 8, 3, message: "Use 'UIAlertController' with 'UIAlertControllerStyle.ActionSheet' instead.")]
@@ -1585,7 +1585,7 @@ namespace UIKit {
 		void Dismissed (UIActionSheet actionSheet, nint buttonIndex);
 	}
 
-	/// <include file="../docs/api/UIKit/UIActivity.xml" path="/RootNode/Docs[@DocId='T:UIKit.UIActivity']/*" />
+	/// <include file="../docs/api/UIKit/UIActivity.xml" path="/Documentation/Docs[@DocId='T:UIKit.UIActivity']/*" />
 	[NoTV, NoWatch]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -1618,7 +1618,7 @@ namespace UIKit {
 		UIActivityCategory Category { get; }
 	}
 
-	/// <include file="../docs/api/UIKit/UIActivityType.xml" path="/RootNode/Docs[@DocId='T:UIKit.UIActivityType']/*" />
+	/// <include file="../docs/api/UIKit/UIActivityType.xml" path="/Documentation/Docs[@DocId='T:UIKit.UIActivityType']/*" />
 	[NoTV, NoWatch]
 	[MacCatalyst (13, 1)]
 	[Static]
@@ -1705,7 +1705,7 @@ namespace UIKit {
 		bool EnableInputClicksWhenVisible { get; }
 	}
 
-	/// <include file="../docs/api/UIKit/UIActivityItemProvider.xml" path="/RootNode/Docs[@DocId='T:UIKit.UIActivityItemProvider']/*" />
+	/// <include file="../docs/api/UIKit/UIActivityItemProvider.xml" path="/Documentation/Docs[@DocId='T:UIKit.UIActivityItemProvider']/*" />
 	[NoTV, NoWatch]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSOperation))]
@@ -1771,7 +1771,7 @@ namespace UIKit {
 		LPLinkMetadata GetLinkMetadata (UIActivityViewController activityViewController);
 	}
 
-	/// <include file="../docs/api/UIKit/UIActivityViewController.xml" path="/RootNode/Docs[@DocId='T:UIKit.UIActivityViewController']/*" />
+	/// <include file="../docs/api/UIKit/UIActivityViewController.xml" path="/Documentation/Docs[@DocId='T:UIKit.UIActivityViewController']/*" />
 	[NoTV, NoWatch]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (UIViewController))]
@@ -1878,7 +1878,7 @@ namespace UIKit {
 	///     </remarks>
 	interface IUIAlertViewDelegate { }
 
-	/// <include file="../docs/api/UIKit/UIAlertView.xml" path="/RootNode/Docs[@DocId='T:UIKit.UIAlertView']/*" />
+	/// <include file="../docs/api/UIKit/UIAlertView.xml" path="/Documentation/Docs[@DocId='T:UIKit.UIAlertView']/*" />
 	[NoTV, NoWatch]
 	[BaseType (typeof (UIView), KeepRefUntil = "Dismissed", Delegates = new string [] { "WeakDelegate" }, Events = new Type [] { typeof (UIAlertViewDelegate) })]
 	[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'UIAlertController' with a 'UIAlertControllerStyle.Alert' type instead.")]
@@ -6245,7 +6245,7 @@ namespace UIKit {
 		void EndedBoundaryContact (UICollisionBehavior behavior, IUIDynamicItem dynamicItem, [NullAllowed] NSObject boundaryIdentifier);
 	}
 
-	/// <include file="../docs/api/UIKit/UIDocument.xml" path="/RootNode/Docs[@DocId='T:UIKit.UIDocument']/*" />
+	/// <include file="../docs/api/UIKit/UIDocument.xml" path="/Documentation/Docs[@DocId='T:UIKit.UIDocument']/*" />
 	[NoWatch, NoTV]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -7589,7 +7589,7 @@ namespace UIKit {
 		UIViewAnimationCurve AnimationCurve { get; }
 	}
 
-	/// <include file="../docs/api/UIKit/UIKeyboard.xml" path="/RootNode/Docs[@DocId='T:UIKit.UIKeyboard']/*" />
+	/// <include file="../docs/api/UIKit/UIKeyboard.xml" path="/Documentation/Docs[@DocId='T:UIKit.UIKeyboard']/*" />
 	[NoTV, NoWatch]
 	[MacCatalyst (13, 1)]
 	[Static]
@@ -10687,7 +10687,7 @@ namespace UIKit {
 		void WillPresentOptionsMenu (UIDocumentInteractionController controller);
 	}
 
-	/// <include file="../docs/api/UIKit/UIImagePickerController.xml" path="/RootNode/Docs[@DocId='T:UIKit.UIImagePickerController']/*" />
+	/// <include file="../docs/api/UIKit/UIImagePickerController.xml" path="/Documentation/Docs[@DocId='T:UIKit.UIImagePickerController']/*" />
 	[NoTV, NoWatch]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (UINavigationController), Delegates = new string [] { "Delegate" }, Events = new Type [] { typeof (UIImagePickerControllerDelegate) })]
@@ -10819,7 +10819,7 @@ namespace UIKit {
 	}
 
 	// UINavigationControllerDelegate, UIImagePickerControllerDelegate
-	/// <include file="../docs/api/UIKit/UIImagePickerControllerDelegate.xml" path="/RootNode/Docs[@DocId='T:UIKit.UIImagePickerControllerDelegate']/*" />
+	/// <include file="../docs/api/UIKit/UIImagePickerControllerDelegate.xml" path="/Documentation/Docs[@DocId='T:UIKit.UIImagePickerControllerDelegate']/*" />
 	[BaseType (typeof (UINavigationControllerDelegate))]
 	[NoTV, NoWatch]
 	[MacCatalyst (13, 1)]
@@ -10886,7 +10886,7 @@ namespace UIKit {
 		bool WriteAdditionalContent (NSObject content, NSUrl absoluteURL, NSUrl absoluteOriginalContentsURL, out NSError error);
 	}
 
-	/// <include file="../docs/api/UIKit/UIMenuController.xml" path="/RootNode/Docs[@DocId='T:UIKit.UIMenuController']/*" />
+	/// <include file="../docs/api/UIKit/UIMenuController.xml" path="/Documentation/Docs[@DocId='T:UIKit.UIMenuController']/*" />
 	[Deprecated (PlatformName.iOS, 16, 0, message: "Use 'UIEditMenuInteraction' instead.")]
 	[NoTV, NoWatch]
 	[MacCatalyst (13, 1)]
@@ -10963,7 +10963,7 @@ namespace UIKit {
 		NSString MenuFrameDidChangeNotification { get; }
 	}
 
-	/// <include file="../docs/api/UIKit/UIMenuItem.xml" path="/RootNode/Docs[@DocId='T:UIKit.UIMenuItem']/*" />
+	/// <include file="../docs/api/UIKit/UIMenuItem.xml" path="/Documentation/Docs[@DocId='T:UIKit.UIMenuItem']/*" />
 	[Deprecated (PlatformName.iOS, 16, 0, message: "Use 'UIEditMenuInteraction' instead.")]
 	[NoTV, NoWatch]
 	[MacCatalyst (13, 1)]
@@ -11778,7 +11778,7 @@ namespace UIKit {
 		string [] TypesRemoved { get; }
 	}
 
-	/// <include file="../docs/api/UIKit/UIPasteboard.xml" path="/RootNode/Docs[@DocId='T:UIKit.UIPasteboard']/*" />
+	/// <include file="../docs/api/UIKit/UIPasteboard.xml" path="/Documentation/Docs[@DocId='T:UIKit.UIPasteboard']/*" />
 	[NoTV, NoWatch]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -12202,7 +12202,7 @@ namespace UIKit {
 		nint GetRowsInComponent (UIPickerView pickerView, nint component);
 	}
 
-	/// <include file="../docs/api/UIKit/IUIPickerViewDataSource.xml" path="/RootNode/Docs[@DocId='T:UIKit.IUIPickerViewDataSource']/*" />
+	/// <include file="../docs/api/UIKit/IUIPickerViewDataSource.xml" path="/Documentation/Docs[@DocId='T:UIKit.IUIPickerViewDataSource']/*" />
 	interface IUIPickerViewDataSource { }
 
 	/// <summary>The model for the UIPickerView.</summary>
@@ -16310,7 +16310,7 @@ namespace UIKit {
 		void WillEnd (UITextView textView, UITextItem textItem, IUIContextMenuInteractionAnimating animator);
 	}
 
-	/// <include file="../docs/api/UIKit/UIToolbar.xml" path="/RootNode/Docs[@DocId='T:UIKit.UIToolbar']/*" />
+	/// <include file="../docs/api/UIKit/UIToolbar.xml" path="/Documentation/Docs[@DocId='T:UIKit.UIToolbar']/*" />
 	[NoTV, NoWatch]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (UIView))]
@@ -18814,7 +18814,7 @@ namespace UIKit {
 		IUIViewControllerTransitionCoordinator GetTransitionCoordinator ();
 	}
 
-	/// <include file="../docs/api/UIKit/UIWebView.xml" path="/RootNode/Docs[@DocId='T:UIKit.UIWebView']/*" />
+	/// <include file="../docs/api/UIKit/UIWebView.xml" path="/Documentation/Docs[@DocId='T:UIKit.UIWebView']/*" />
 	[NoMacCatalyst, NoWatch]
 	[NoTV]
 	[Deprecated (PlatformName.iOS, 12, 0, message: "No longer supported; please adopt 'WKWebView'.")]
@@ -20152,7 +20152,7 @@ namespace UIKit {
 	/// <summary>A delegate executed after printing completes or after a printing error occurs.</summary>
 	delegate void UIPrintInteractionCompletionHandler (UIPrintInteractionController printInteractionController, bool completed, NSError error);
 
-	/// <include file="../docs/api/UIKit/UIPrintInteractionController.xml" path="/RootNode/Docs[@DocId='T:UIKit.UIPrintInteractionController']/*" />
+	/// <include file="../docs/api/UIKit/UIPrintInteractionController.xml" path="/Documentation/Docs[@DocId='T:UIKit.UIPrintInteractionController']/*" />
 	[NoTV, NoWatch]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject), Delegates = new string [] { "WeakDelegate" }, Events = new Type [] { typeof (UIPrintInteractionControllerDelegate) })]
@@ -20879,7 +20879,7 @@ namespace UIKit {
 
 	interface IUIAccessibilityIdentification { }
 
-	/// <include file="../docs/api/UIKit/UIUserNotificationSettings.xml" path="/RootNode/Docs[@DocId='T:UIKit.UIUserNotificationSettings']/*" />
+	/// <include file="../docs/api/UIKit/UIUserNotificationSettings.xml" path="/Documentation/Docs[@DocId='T:UIKit.UIUserNotificationSettings']/*" />
 	[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'UserNotifications.UNNotificationSettings' instead.")]
 	[NoWatch]
 	[NoTV]
@@ -21083,7 +21083,7 @@ namespace UIKit {
 		void AddOption (string title, [NullAllowed] UIImage image, UIDocumentMenuOrder order, Action completionHandler);
 	}
 
-	/// <include file="../docs/api/UIKit/IUIDocumentMenuDelegate.xml" path="/RootNode/Docs[@DocId='T:UIKit.IUIDocumentMenuDelegate']/*" />
+	/// <include file="../docs/api/UIKit/IUIDocumentMenuDelegate.xml" path="/Documentation/Docs[@DocId='T:UIKit.IUIDocumentMenuDelegate']/*" />
 	interface IUIDocumentMenuDelegate { }
 
 	/// <summary>Delegate object for <see cref="T:UIKit.UIDocumentMenuViewController" /> objects. Provides methods called when a document is picked or when the picking has been cancelled.</summary>

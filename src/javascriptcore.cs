@@ -20,7 +20,7 @@ namespace JavaScriptCore {
 	/// <summary>The delegate that can be used as the <see cref="P:JavaScriptCore.JSContext.ExceptionHandler" />.</summary>
 	delegate void JSContextExceptionHandler (JSContext context, JSValue exception);
 
-	/// <include file="../docs/api/JavaScriptCore/JSContext.xml" path="/RootNode/Docs[@DocId='T:JavaScriptCore.JSContext']/*" />
+	/// <include file="../docs/api/JavaScriptCore/JSContext.xml" path="/Documentation/Docs[@DocId='T:JavaScriptCore.JSContext']/*" />
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]

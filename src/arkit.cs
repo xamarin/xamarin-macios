@@ -887,7 +887,7 @@ namespace ARKit {
 
 	delegate void GetGeolocationCallback (CLLocationCoordinate2D coordinate, double altitude, NSError error);
 
-	/// <include file="../docs/api/ARKit/ARSession.xml" path="/RootNode/Docs[@DocId='T:ARKit.ARSession']/*" />
+	/// <include file="../docs/api/ARKit/ARSession.xml" path="/Documentation/Docs[@DocId='T:ARKit.ARSession']/*" />
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof (NSObject))]
 	interface ARSession {

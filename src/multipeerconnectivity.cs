@@ -46,7 +46,7 @@ namespace MultipeerConnectivity {
 	/// <summary>A delegate that serves as the completion handler for <see cref="M:MultipeerConnectivity.MCSession.NearbyConnectionDataForPeer(MultipeerConnectivity.MCPeerID,MultipeerConnectivity.MCSessionNearbyConnectionDataForPeerCompletionHandler)" />.</summary>
 	delegate void MCSessionNearbyConnectionDataForPeerCompletionHandler (NSData connectionData, NSError error);
 
-	/// <include file="../docs/api/MultipeerConnectivity/MCSession.xml" path="/RootNode/Docs[@DocId='T:MultipeerConnectivity.MCSession']/*" />
+	/// <include file="../docs/api/MultipeerConnectivity/MCSession.xml" path="/Documentation/Docs[@DocId='T:MultipeerConnectivity.MCSession']/*" />
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // crash when calling `description` selector
@@ -301,7 +301,7 @@ namespace MultipeerConnectivity {
 	///     </remarks>
 	interface IMCNearbyServiceBrowserDelegate { }
 
-	/// <include file="../docs/api/MultipeerConnectivity/MCBrowserViewController.xml" path="/RootNode/Docs[@DocId='T:MultipeerConnectivity.MCBrowserViewController']/*" />
+	/// <include file="../docs/api/MultipeerConnectivity/MCBrowserViewController.xml" path="/Documentation/Docs[@DocId='T:MultipeerConnectivity.MCBrowserViewController']/*" />
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (UIViewController))]
 	[DisableDefaultCtor] // NSInvalidArgumentException -[MCPeerPickerViewController initWithNibName:bundle:]: unrecognized selector sent to instance 0x15517b90

@@ -176,7 +176,7 @@ namespace ExternalAccessory {
 	}
 
 
-	/// <include file="../docs/api/ExternalAccessory/IEAWiFiUnconfiguredAccessoryBrowserDelegate.xml" path="/RootNode/Docs[@DocId='T:ExternalAccessory.IEAWiFiUnconfiguredAccessoryBrowserDelegate']/*" />
+	/// <include file="../docs/api/ExternalAccessory/IEAWiFiUnconfiguredAccessoryBrowserDelegate.xml" path="/Documentation/Docs[@DocId='T:ExternalAccessory.IEAWiFiUnconfiguredAccessoryBrowserDelegate']/*" />
 	interface IEAWiFiUnconfiguredAccessoryBrowserDelegate { }
 
 	// This class is exposed for tvOS in the headers, but there's no available initializer (so it can't be constructed)

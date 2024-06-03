@@ -88,7 +88,7 @@ namespace QuickLook {
 		void RefreshCurrentPreviewItem ();
 	}
 
-	/// <include file="../docs/api/QuickLook/IQLPreviewControllerDataSource.xml" path="/RootNode/Docs[@DocId='T:QuickLook.IQLPreviewControllerDataSource']/*" />
+	/// <include file="../docs/api/QuickLook/IQLPreviewControllerDataSource.xml" path="/Documentation/Docs[@DocId='T:QuickLook.IQLPreviewControllerDataSource']/*" />
 	interface IQLPreviewControllerDataSource { }
 
 	/// <summary>A class that allows a <see cref="T:QuickLook.QLPreviewController" /> to preview multiple items.</summary>

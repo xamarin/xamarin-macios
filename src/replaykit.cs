@@ -243,7 +243,7 @@ namespace ReplayKit {
 		void LoadBroadcastActivityViewController ([NullAllowed] string preferredExtension, Action<RPBroadcastActivityViewController, NSError> handler);
 	}
 
-	/// <include file="../docs/api/ReplayKit/IRPBroadcastActivityViewControllerDelegate.xml" path="/RootNode/Docs[@DocId='T:ReplayKit.IRPBroadcastActivityViewControllerDelegate']/*" />
+	/// <include file="../docs/api/ReplayKit/IRPBroadcastActivityViewControllerDelegate.xml" path="/Documentation/Docs[@DocId='T:ReplayKit.IRPBroadcastActivityViewControllerDelegate']/*" />
 	interface IRPBroadcastActivityViewControllerDelegate { }
 
 	/// <summary>Responds to changes in the UI that is presented by a <see cref="T:ReplayKit.RPBroadcastActivityViewController" />.</summary>

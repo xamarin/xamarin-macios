@@ -600,7 +600,7 @@ namespace GameplayKit {
 		GKGoal GetGoalToStayOnPath (GKPath path, double maxPredictionTime);
 	}
 
-	/// <include file="../docs/api/GameplayKit/GKGraph.xml" path="/RootNode/Docs[@DocId='T:GameplayKit.GKGraph']/*" />
+	/// <include file="../docs/api/GameplayKit/GKGraph.xml" path="/Documentation/Docs[@DocId='T:GameplayKit.GKGraph']/*" />
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface GKGraph : NSCopying, NSSecureCoding {
@@ -950,7 +950,7 @@ namespace GameplayKit {
 		NativeHandle Constructor (Vector2i gridPosition);
 	}
 
-	/// <include file="../docs/api/GameplayKit/GKMinMaxStrategist.xml" path="/RootNode/Docs[@DocId='T:GameplayKit.GKMinMaxStrategist']/*" />
+	/// <include file="../docs/api/GameplayKit/GKMinMaxStrategist.xml" path="/Documentation/Docs[@DocId='T:GameplayKit.GKMinMaxStrategist']/*" />
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject), Name = "GKMinmaxStrategist")]
 	interface GKMinMaxStrategist : GKStrategist {
@@ -1173,7 +1173,7 @@ namespace GameplayKit {
 		GKRandomDistribution GetD20 ();
 	}
 
-	/// <include file="../docs/api/GameplayKit/GKGaussianDistribution.xml" path="/RootNode/Docs[@DocId='T:GameplayKit.GKGaussianDistribution']/*" />
+	/// <include file="../docs/api/GameplayKit/GKGaussianDistribution.xml" path="/Documentation/Docs[@DocId='T:GameplayKit.GKGaussianDistribution']/*" />
 	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (GKRandomDistribution))]
@@ -1232,7 +1232,7 @@ namespace GameplayKit {
 		bool GetNextBool ();
 	}
 
-	/// <include file="../docs/api/GameplayKit/GKRandomSource.xml" path="/RootNode/Docs[@DocId='T:GameplayKit.GKRandomSource']/*" />
+	/// <include file="../docs/api/GameplayKit/GKRandomSource.xml" path="/Documentation/Docs[@DocId='T:GameplayKit.GKRandomSource']/*" />
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // designated
@@ -1307,7 +1307,7 @@ namespace GameplayKit {
 		NativeHandle Constructor (ulong seed);
 	}
 
-	/// <include file="../docs/api/GameplayKit/GKRuleSystem.xml" path="/RootNode/Docs[@DocId='T:GameplayKit.GKRuleSystem']/*" />
+	/// <include file="../docs/api/GameplayKit/GKRuleSystem.xml" path="/Documentation/Docs[@DocId='T:GameplayKit.GKRuleSystem']/*" />
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // designated

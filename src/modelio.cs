@@ -1100,7 +1100,7 @@ namespace ModelIO {
 		MDLMeshBufferType Type { get; }
 	}
 
-	/// <include file="../docs/api/ModelIO/IMDLMeshBufferAllocator.xml" path="/RootNode/Docs[@DocId='T:ModelIO.IMDLMeshBufferAllocator']/*" />
+	/// <include file="../docs/api/ModelIO/IMDLMeshBufferAllocator.xml" path="/Documentation/Docs[@DocId='T:ModelIO.IMDLMeshBufferAllocator']/*" />
 	interface IMDLMeshBufferAllocator { }
 	[MacCatalyst (13, 1)]
 	[Protocol]

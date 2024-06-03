@@ -1127,7 +1127,7 @@ namespace CoreSpotlight {
 		string [] ProviderInPlaceFileTypeIdentifiers { get; set; }
 	}
 
-	/// <include file="../docs/api/CoreSpotlight/CSSearchQuery.xml" path="/RootNode/Docs[@DocId='T:CoreSpotlight.CSSearchQuery']/*" />
+	/// <include file="../docs/api/CoreSpotlight/CSSearchQuery.xml" path="/Documentation/Docs[@DocId='T:CoreSpotlight.CSSearchQuery']/*" />
 	[NoTV]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]

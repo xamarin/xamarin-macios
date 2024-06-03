@@ -630,7 +630,7 @@ namespace HealthKit {
 	delegate void HKHealthStoreRecoverActiveWorkoutSessionHandler (HKWorkoutSession session, NSError error);
 	delegate void HKHealthStoreCompletionHandler (bool success, NSError error);
 
-	/// <include file="../docs/api/HealthKit/HKHealthStore.xml" path="/RootNode/Docs[@DocId='T:HealthKit.HKHealthStore']/*" />
+	/// <include file="../docs/api/HealthKit/HKHealthStore.xml" path="/Documentation/Docs[@DocId='T:HealthKit.HKHealthStore']/*" />
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -1566,7 +1566,7 @@ namespace HealthKit {
 
 	}
 
-	/// <include file="../docs/api/HealthKit/HKQuantityType.xml" path="/RootNode/Docs[@DocId='T:HealthKit.HKQuantityType']/*" />
+	/// <include file="../docs/api/HealthKit/HKQuantityType.xml" path="/Documentation/Docs[@DocId='T:HealthKit.HKQuantityType']/*" />
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (HKSampleType))]
@@ -1628,7 +1628,7 @@ namespace HealthKit {
 		NSComparisonResult Compare (HKQuantity quantity);
 	}
 
-	/// <include file="../docs/api/HealthKit/HKQuantitySample.xml" path="/RootNode/Docs[@DocId='T:HealthKit.HKQuantitySample']/*" />
+	/// <include file="../docs/api/HealthKit/HKQuantitySample.xml" path="/Documentation/Docs[@DocId='T:HealthKit.HKQuantitySample']/*" />
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (HKSample))]

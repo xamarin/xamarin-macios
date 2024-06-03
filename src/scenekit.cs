@@ -931,7 +931,7 @@ namespace SceneKit {
 		SCNFloor Create ();
 	}
 
-	/// <include file="../docs/api/SceneKit/SCNGeometry.xml" path="/RootNode/Docs[@DocId='T:SceneKit.SCNGeometry']/*" />
+	/// <include file="../docs/api/SceneKit/SCNGeometry.xml" path="/Documentation/Docs[@DocId='T:SceneKit.SCNGeometry']/*" />
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -1021,7 +1021,7 @@ namespace SceneKit {
 		SCNGeometryTessellator Tessellator { get; set; }
 	}
 
-	/// <include file="../docs/api/SceneKit/SCNGeometrySource.xml" path="/RootNode/Docs[@DocId='T:SceneKit.SCNGeometrySource']/*" />
+	/// <include file="../docs/api/SceneKit/SCNGeometrySource.xml" path="/Documentation/Docs[@DocId='T:SceneKit.SCNGeometrySource']/*" />
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface SCNGeometrySource : NSSecureCoding {

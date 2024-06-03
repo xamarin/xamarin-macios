@@ -978,7 +978,7 @@ namespace CoreLocation {
 		CLBeaconIdentityConstraint BeaconIdentityConstraint { get; }
 	}
 
-	/// <include file="../docs/api/CoreLocation/CLBeacon.xml" path="/RootNode/Docs[@DocId='T:CoreLocation.CLBeacon']/*" />
+	/// <include file="../docs/api/CoreLocation/CLBeacon.xml" path="/Documentation/Docs[@DocId='T:CoreLocation.CLBeacon']/*" />
 	[NoWatch]
 	[Mac (11, 0)]
 	[NoTV]

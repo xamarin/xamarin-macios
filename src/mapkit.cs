@@ -1017,7 +1017,7 @@ namespace MapKit {
 		MKPlacemark Placemark { get; }
 	}
 
-	/// <include file="../docs/api/MapKit/IMKReverseGeocoderDelegate.xml" path="/RootNode/Docs[@DocId='T:MapKit.IMKReverseGeocoderDelegate']/*" />
+	/// <include file="../docs/api/MapKit/IMKReverseGeocoderDelegate.xml" path="/Documentation/Docs[@DocId='T:MapKit.IMKReverseGeocoderDelegate']/*" />
 	interface IMKReverseGeocoderDelegate { }
 
 #pragma warning disable 618

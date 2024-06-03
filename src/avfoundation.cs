@@ -1803,7 +1803,7 @@ namespace AVFoundation {
 		AVAudioTime GetPlayerTimeFromNodeTime (AVAudioTime nodeTime);
 	}
 
-	/// <include file="../docs/api/AVFoundation/AVAudioRecorder.xml" path="/RootNode/Docs[@DocId='T:AVFoundation.AVAudioRecorder']/*" />
+	/// <include file="../docs/api/AVFoundation/AVAudioRecorder.xml" path="/Documentation/Docs[@DocId='T:AVFoundation.AVAudioRecorder']/*" />
 	[BaseType (typeof (NSObject))]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -9367,7 +9367,7 @@ namespace AVFoundation {
 		NSError Error { get; }
 	}
 
-	/// <include file="../docs/api/AVFoundation/AVCaptureSession.xml" path="/RootNode/Docs[@DocId='T:AVFoundation.AVCaptureSession']/*" />
+	/// <include file="../docs/api/AVFoundation/AVCaptureSession.xml" path="/Documentation/Docs[@DocId='T:AVFoundation.AVCaptureSession']/*" />
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoWatch]
 	[NoTV]
@@ -9578,7 +9578,7 @@ namespace AVFoundation {
 		float HardwareCost { get; }
 	}
 
-	/// <include file="../docs/api/AVFoundation/AVCaptureConnection.xml" path="/RootNode/Docs[@DocId='T:AVFoundation.AVCaptureConnection']/*" />
+	/// <include file="../docs/api/AVFoundation/AVCaptureConnection.xml" path="/Documentation/Docs[@DocId='T:AVFoundation.AVCaptureConnection']/*" />
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoWatch]
 	[NoTV]

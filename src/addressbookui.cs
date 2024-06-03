@@ -62,10 +62,10 @@ namespace AddressBookUI {
 		void DidCompleteWithNewPerson (ABNewPersonViewController controller, [NullAllowed] ABPerson person);
 	}
 
-	/// <include file="../docs/api/AddressBookUI/IABNewPersonViewControllerDelegate.xml" path="/RootNode/Docs[@DocId='T:AddressBookUI.IABNewPersonViewControllerDelegate']/*" />
+	/// <include file="../docs/api/AddressBookUI/IABNewPersonViewControllerDelegate.xml" path="/Documentation/Docs[@DocId='T:AddressBookUI.IABNewPersonViewControllerDelegate']/*" />
 	interface IABNewPersonViewControllerDelegate { }
 
-	/// <include file="../docs/api/AddressBookUI/ABPeoplePickerNavigationController.xml" path="/RootNode/Docs[@DocId='T:AddressBookUI.ABPeoplePickerNavigationController']/*" />
+	/// <include file="../docs/api/AddressBookUI/ABPeoplePickerNavigationController.xml" path="/Documentation/Docs[@DocId='T:AddressBookUI.ABPeoplePickerNavigationController']/*" />
 	[Deprecated (PlatformName.iOS, 9, 0, message: "Use the 'Contacts' API instead.")]
 	[BaseType (typeof (UINavigationController))]
 	interface ABPeoplePickerNavigationController : UIAppearance {
@@ -275,7 +275,7 @@ namespace AddressBookUI {
 		bool ShouldPerformDefaultActionForPerson (ABPersonViewController personViewController, ABPerson person, int /* ABPropertyID = int32 */ propertyId, int /* ABMultiValueIdentifier = int32 */ identifier);
 	}
 
-	/// <include file="../docs/api/AddressBookUI/IABPersonViewControllerDelegate.xml" path="/RootNode/Docs[@DocId='T:AddressBookUI.IABPersonViewControllerDelegate']/*" />
+	/// <include file="../docs/api/AddressBookUI/IABPersonViewControllerDelegate.xml" path="/Documentation/Docs[@DocId='T:AddressBookUI.IABPersonViewControllerDelegate']/*" />
 	interface IABPersonViewControllerDelegate { }
 
 	/// <summary>A <see cref="T:UIKit.UIViewController" /> that allows the application user to enter data and create a new person record.</summary>

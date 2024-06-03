@@ -153,7 +153,7 @@ namespace SpriteKit {
 	}
 
 
-	/// <include file="../docs/api/SpriteKit/SKNode.xml" path="/RootNode/Docs[@DocId='T:SpriteKit.SKNode']/*" />
+	/// <include file="../docs/api/SpriteKit/SKNode.xml" path="/Documentation/Docs[@DocId='T:SpriteKit.SKNode']/*" />
 	[DisableDefaultCtor] // DesignatedInitializer below
 	[MacCatalyst (13, 1)]
 #if MONOMAC
@@ -576,7 +576,7 @@ namespace SpriteKit {
 		SKFieldNode CreateCustomField (SKFieldForceEvaluator evaluator);
 	}
 
-	/// <include file="../docs/api/SpriteKit/SKScene.xml" path="/RootNode/Docs[@DocId='T:SpriteKit.SKScene']/*" />
+	/// <include file="../docs/api/SpriteKit/SKScene.xml" path="/Documentation/Docs[@DocId='T:SpriteKit.SKScene']/*" />
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (SKEffectNode))]
 	interface SKScene
@@ -2277,7 +2277,7 @@ namespace SpriteKit {
 	/// <summary>The delegate for a custom action, used with <see cref="M:SpriteKit.SKAction.CustomActionWithDuration(System.Double,SpriteKit.SKActionDurationHandler)" />.</summary>
 	delegate void SKActionDurationHandler (SKNode node, nfloat elapsedTime);
 
-	/// <include file="../docs/api/SpriteKit/SKAction.xml" path="/RootNode/Docs[@DocId='T:SpriteKit.SKAction']/*" />
+	/// <include file="../docs/api/SpriteKit/SKAction.xml" path="/Documentation/Docs[@DocId='T:SpriteKit.SKAction']/*" />
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // <quote>To create an action, call the class method for the action you are interested in. </quote>
@@ -2695,7 +2695,7 @@ namespace SpriteKit {
 		SKAction Animate (SKWarpGeometry [] warps, NSNumber [] times, bool restore);
 	}
 
-	/// <include file="../docs/api/SpriteKit/SKPhysicsBody.xml" path="/RootNode/Docs[@DocId='T:SpriteKit.SKPhysicsBody']/*" />
+	/// <include file="../docs/api/SpriteKit/SKPhysicsBody.xml" path="/Documentation/Docs[@DocId='T:SpriteKit.SKPhysicsBody']/*" />
 	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor] // see https://bugzilla.xamarin.com/show_bug.cgi?id=14502
 	[BaseType (typeof (NSObject))]
@@ -2872,7 +2872,7 @@ namespace SpriteKit {
 	///     </remarks>
 	interface ISKPhysicsContactDelegate { }
 
-	/// <include file="../docs/api/SpriteKit/SKPhysicsContactDelegate.xml" path="/RootNode/Docs[@DocId='T:SpriteKit.SKPhysicsContactDelegate']/*" />
+	/// <include file="../docs/api/SpriteKit/SKPhysicsContactDelegate.xml" path="/Documentation/Docs[@DocId='T:SpriteKit.SKPhysicsContactDelegate']/*" />
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[Model]
@@ -2886,12 +2886,12 @@ namespace SpriteKit {
 		void DidEndContact (SKPhysicsContact contact);
 	}
 
-	/// <include file="../docs/api/SpriteKit/SKPhysicsWorldBodiesEnumeratorHandler.xml" path="/RootNode/Docs[@DocId='T:SpriteKit.SKPhysicsWorldBodiesEnumeratorHandler']/*" />
+	/// <include file="../docs/api/SpriteKit/SKPhysicsWorldBodiesEnumeratorHandler.xml" path="/Documentation/Docs[@DocId='T:SpriteKit.SKPhysicsWorldBodiesEnumeratorHandler']/*" />
 	delegate void SKPhysicsWorldBodiesEnumeratorHandler (SKPhysicsBody body, out bool stop);
 	/// <summary>The delegate used for enumerating bodies that fall along a ray when used with <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=M:SpriteKit.SKPhysicsWorld.EnumerateBodies(System.Drawing.PointF,System.Drawing.PointF,SpriteKit.SKPhysicsWorldBodiesAlongRayStartEnumeratorHandler*&amp;scope=Xamarin" title="M:SpriteKit.SKPhysicsWorld.EnumerateBodies(System.Drawing.PointF,System.Drawing.PointF,SpriteKit.SKPhysicsWorldBodiesAlongRayStartEnumeratorHandler*">M:SpriteKit.SKPhysicsWorld.EnumerateBodies(System.Drawing.PointF,System.Drawing.PointF,SpriteKit.SKPhysicsWorldBodiesAlongRayStartEnumeratorHandler*</a></format>.</summary>
 	delegate void SKPhysicsWorldBodiesAlongRayStartEnumeratorHandler (SKPhysicsBody body, CGPoint point, CGVector normal, out bool stop);
 
-	/// <include file="../docs/api/SpriteKit/SKPhysicsWorld.xml" path="/RootNode/Docs[@DocId='T:SpriteKit.SKPhysicsWorld']/*" />
+	/// <include file="../docs/api/SpriteKit/SKPhysicsWorld.xml" path="/Documentation/Docs[@DocId='T:SpriteKit.SKPhysicsWorld']/*" />
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject),
 		   Delegates = new string [] { "WeakContactDelegate" },
@@ -2950,7 +2950,7 @@ namespace SpriteKit {
 		Vector3 SampleFields (/* vector_float3 */ Vector3 position);
 	}
 
-	/// <include file="../docs/api/SpriteKit/SKPhysicsJoint.xml" path="/RootNode/Docs[@DocId='T:SpriteKit.SKPhysicsJoint']/*" />
+	/// <include file="../docs/api/SpriteKit/SKPhysicsJoint.xml" path="/Documentation/Docs[@DocId='T:SpriteKit.SKPhysicsJoint']/*" />
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[Abstract] // <quote>You never instantiate objects of this class directly</quote>
@@ -3325,7 +3325,7 @@ namespace SpriteKit {
 		bool FlipHorizontally { get; set; }
 	}
 
-	/// <include file="../docs/api/SpriteKit/SKTileMapNode.xml" path="/RootNode/Docs[@DocId='T:SpriteKit.SKTileMapNode']/*" />
+	/// <include file="../docs/api/SpriteKit/SKTileMapNode.xml" path="/Documentation/Docs[@DocId='T:SpriteKit.SKTileMapNode']/*" />
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (SKNode))]
 	interface SKTileMapNode : NSCopying, NSSecureCoding {
@@ -3480,7 +3480,7 @@ namespace SpriteKit {
 		CGSize DefaultTileSize { get; set; }
 	}
 
-	/// <include file="../docs/api/SpriteKit/SKTileGroup.xml" path="/RootNode/Docs[@DocId='T:SpriteKit.SKTileGroup']/*" />
+	/// <include file="../docs/api/SpriteKit/SKTileGroup.xml" path="/Documentation/Docs[@DocId='T:SpriteKit.SKTileGroup']/*" />
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface SKTileGroup : NSCopying, NSSecureCoding {

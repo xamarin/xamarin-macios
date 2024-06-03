@@ -1178,7 +1178,7 @@ namespace Photos {
 
 	}
 
-	/// <include file="../docs/api/Photos/IPHPhotoLibraryChangeObserver.xml" path="/RootNode/Docs[@DocId='T:Photos.IPHPhotoLibraryChangeObserver']/*" />
+	/// <include file="../docs/api/Photos/IPHPhotoLibraryChangeObserver.xml" path="/Documentation/Docs[@DocId='T:Photos.IPHPhotoLibraryChangeObserver']/*" />
 	interface IPHPhotoLibraryChangeObserver { }
 
 	/// <summary>Provides methods relating to changes in the <see cref="T:Photos.PHPhotoLibrary" />.</summary>

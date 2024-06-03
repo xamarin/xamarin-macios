@@ -4798,7 +4798,7 @@ namespace WebKit {
 		WKContentWorld World { get; }
 	}
 
-	/// <include file="../docs/api/WebKit/IWKScriptMessageHandler.xml" path="/RootNode/Docs[@DocId='T:WebKit.IWKScriptMessageHandler']/*" />
+	/// <include file="../docs/api/WebKit/IWKScriptMessageHandler.xml" path="/Documentation/Docs[@DocId='T:WebKit.IWKScriptMessageHandler']/*" />
 	interface IWKScriptMessageHandler { }
 
 	/// <summary>Allows messages from JavaScript to be handled by the app.</summary>

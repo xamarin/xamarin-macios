@@ -12,7 +12,7 @@ using NativeHandle = System.IntPtr;
 
 namespace Accounts {
 
-	/// <include file="../docs/api/Accounts/ACAccount.xml" path="/RootNode/Docs[@DocId='T:Accounts.ACAccount']/*" />
+	/// <include file="../docs/api/Accounts/ACAccount.xml" path="/Documentation/Docs[@DocId='T:Accounts.ACAccount']/*" />
 	[Deprecated (PlatformName.iOS, 15, 0, message: "Use the non-Apple SDK relating to your account type instead.")]
 	[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use the non-Apple SDK relating to your account type instead.")]
 	[Deprecated (PlatformName.MacCatalyst, 15, 0, message: "Use the non-Apple SDK relating to your account type instead.")]
@@ -82,7 +82,7 @@ namespace Accounts {
 	/// <summary>A delegate that specifies the handler executed at the completion of calls to <see cref="M:Accounts.ACAccountStore.RequestAccessAsync(Accounts.ACAccountType,Foundation.NSDictionary)" />s.</summary>
 	delegate void ACRequestCompletionHandler (bool granted, NSError error);
 
-	/// <include file="../docs/api/Accounts/ACAccountStore.xml" path="/RootNode/Docs[@DocId='T:Accounts.ACAccountStore']/*" />
+	/// <include file="../docs/api/Accounts/ACAccountStore.xml" path="/Documentation/Docs[@DocId='T:Accounts.ACAccountStore']/*" />
 	[Deprecated (PlatformName.iOS, 15, 0, message: "Use the non-Apple SDK relating to your account type instead.")]
 	[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use the non-Apple SDK relating to your account type instead.")]
 	[Deprecated (PlatformName.MacCatalyst, 15, 0, message: "Use the non-Apple SDK relating to your account type instead.")]

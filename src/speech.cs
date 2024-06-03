@@ -43,7 +43,7 @@ namespace Speech {
 		Confirmation = 3,
 	}
 
-	/// <include file="../docs/api/Speech/SFSpeechRecognizerAuthorizationStatus.xml" path="/RootNode/Docs[@DocId='T:Speech.SFSpeechRecognizerAuthorizationStatus']/*" />
+	/// <include file="../docs/api/Speech/SFSpeechRecognizerAuthorizationStatus.xml" path="/Documentation/Docs[@DocId='T:Speech.SFSpeechRecognizerAuthorizationStatus']/*" />
 	[Native]
 	[MacCatalyst (13, 1)]
 	public enum SFSpeechRecognizerAuthorizationStatus : long {
@@ -241,7 +241,7 @@ namespace Speech {
 		void AvailabilityDidChange (SFSpeechRecognizer speechRecognizer, bool available);
 	}
 
-	/// <include file="../docs/api/Speech/SFSpeechRecognizer.xml" path="/RootNode/Docs[@DocId='T:Speech.SFSpeechRecognizer']/*" />
+	/// <include file="../docs/api/Speech/SFSpeechRecognizer.xml" path="/Documentation/Docs[@DocId='T:Speech.SFSpeechRecognizer']/*" />
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface SFSpeechRecognizer {

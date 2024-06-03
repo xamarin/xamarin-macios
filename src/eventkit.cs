@@ -561,7 +561,7 @@ namespace EventKit {
 
 	}
 
-	/// <include file="../docs/api/EventKit/EKEventStore.xml" path="/RootNode/Docs[@DocId='T:EventKit.EKEventStore']/*" />
+	/// <include file="../docs/api/EventKit/EKEventStore.xml" path="/Documentation/Docs[@DocId='T:EventKit.EKEventStore']/*" />
 	[BaseType (typeof (NSObject))]
 	interface EKEventStore {
 		[iOS (16, 0), MacCatalyst (16, 0), Watch (9, 0), NoTV]

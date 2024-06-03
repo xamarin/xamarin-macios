@@ -38,7 +38,7 @@ namespace CoreGraphics {
 	}
 
 	// untyped enum -> CGContext.h
-	/// <include file="../../docs/api/CoreGraphics/CGPathDrawingMode.xml" path="/RootNode/Docs[@DocId='T:CoreGraphics.CGPathDrawingMode']/*" />
+	/// <include file="../../docs/api/CoreGraphics/CGPathDrawingMode.xml" path="/Documentation/Docs[@DocId='T:CoreGraphics.CGPathDrawingMode']/*" />
 	public enum CGPathDrawingMode {
 		Fill,
 		EOFill,
@@ -83,7 +83,7 @@ namespace CoreGraphics {
 	}
 
 	// untyped enum -> CGContext.h
-	/// <include file="../../docs/api/CoreGraphics/CGBlendMode.xml" path="/RootNode/Docs[@DocId='T:CoreGraphics.CGBlendMode']/*" />
+	/// <include file="../../docs/api/CoreGraphics/CGBlendMode.xml" path="/Documentation/Docs[@DocId='T:CoreGraphics.CGBlendMode']/*" />
 	public enum CGBlendMode {
 		Normal,
 		Multiply,

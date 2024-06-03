@@ -207,7 +207,7 @@ namespace UIKit {
 	}
 
 	// NSUInteger -> NSLayoutConstraint.h
-	/// <include file="../docs/api/UIKit/NSLayoutFormatOptions.xml" path="/RootNode/Docs[@DocId='T:UIKit.NSLayoutFormatOptions']/*" />
+	/// <include file="../docs/api/UIKit/NSLayoutFormatOptions.xml" path="/Documentation/Docs[@DocId='T:UIKit.NSLayoutFormatOptions']/*" />
 	[Native]
 	[Flags]
 	[NoWatch]
@@ -319,7 +319,7 @@ namespace UIKit {
 		Characters = 2,
 	}
 
-	/// <include file="../docs/api/UIKit/NSLayoutManager.xml" path="/RootNode/Docs[@DocId='T:UIKit.NSLayoutManager']/*" />
+	/// <include file="../docs/api/UIKit/NSLayoutManager.xml" path="/Documentation/Docs[@DocId='T:UIKit.NSLayoutManager']/*" />
 	[MacCatalyst (13, 1)]
 	[NoWatch] // Header is not present in watchOS SDK.
 	[DesignatedDefaultCtor]
@@ -2200,7 +2200,7 @@ namespace UIKit {
 		string RepresentedElementKind { get; }
 	}
 
-	/// <include file="../docs/api/UIKit/NSLayoutAnchor`1.xml" path="/RootNode/Docs[@DocId='T:UIKit.NSLayoutAnchor`1']/*" />
+	/// <include file="../docs/api/UIKit/NSLayoutAnchor`1.xml" path="/Documentation/Docs[@DocId='T:UIKit.NSLayoutAnchor`1']/*" />
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -2413,7 +2413,7 @@ namespace UIKit {
 #endif
 	}
 
-	/// <include file="../docs/api/UIKit/NSLayoutConstraint.xml" path="/RootNode/Docs[@DocId='T:UIKit.NSLayoutConstraint']/*" />
+	/// <include file="../docs/api/UIKit/NSLayoutConstraint.xml" path="/Documentation/Docs[@DocId='T:UIKit.NSLayoutConstraint']/*" />
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -2631,7 +2631,7 @@ namespace UIKit {
 		NSTextAttachmentViewProvider GetViewProvider ([NullAllowed] View parentView, INSTextLocation location, [NullAllowed] NSTextContainer textContainer);
 	}
 
-	/// <include file="../docs/api/UIKit/NSTextStorage.xml" path="/RootNode/Docs[@DocId='T:UIKit.NSTextStorage']/*" />
+	/// <include file="../docs/api/UIKit/NSTextStorage.xml" path="/Documentation/Docs[@DocId='T:UIKit.NSTextStorage']/*" />
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSMutableAttributedString), Delegates = new string [] { "Delegate" }, Events = new Type [] { typeof (NSTextStorageDelegate) })]
@@ -3031,7 +3031,7 @@ namespace UIKit {
 		string ElementKind { get; }
 	}
 
-	/// <include file="../docs/api/UIKit/NSDataAsset.xml" path="/RootNode/Docs[@DocId='T:UIKit.NSDataAsset']/*" />
+	/// <include file="../docs/api/UIKit/NSDataAsset.xml" path="/Documentation/Docs[@DocId='T:UIKit.NSDataAsset']/*" />
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // - (instancetype)init NS_UNAVAILABLE;
@@ -3144,7 +3144,7 @@ namespace UIKit {
 		}
 	}
 
-	/// <include file="../docs/api/UIKit/NSTextContainer.xml" path="/RootNode/Docs[@DocId='T:UIKit.NSTextContainer']/*" />
+	/// <include file="../docs/api/UIKit/NSTextContainer.xml" path="/Documentation/Docs[@DocId='T:UIKit.NSTextContainer']/*" />
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]

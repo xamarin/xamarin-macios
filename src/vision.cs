@@ -2517,7 +2517,7 @@ namespace Vision {
 		CIContext CIContext { get; set; }
 	}
 
-	/// <include file="../docs/api/Vision/VNImageRequestHandler.xml" path="/RootNode/Docs[@DocId='T:Vision.VNImageRequestHandler']/*" />
+	/// <include file="../docs/api/Vision/VNImageRequestHandler.xml" path="/Documentation/Docs[@DocId='T:Vision.VNImageRequestHandler']/*" />
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]

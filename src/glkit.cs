@@ -491,7 +491,7 @@ namespace GLKit {
 	///     <summary>Signature used by the asynchrous texture loading methods in <see cref="T:GLKit.GLKTextureLoader" />.</summary>
 	delegate void GLKTextureLoaderCallback (GLKTextureInfo textureInfo, NSError error);
 
-	/// <include file="../docs/api/GLKit/GLKTextureLoader.xml" path="/RootNode/Docs[@DocId='T:GLKit.GLKTextureLoader']/*" />
+	/// <include file="../docs/api/GLKit/GLKTextureLoader.xml" path="/Documentation/Docs[@DocId='T:GLKit.GLKTextureLoader']/*" />
 	[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'Metal' instead.")]
@@ -689,7 +689,7 @@ namespace GLKit {
 		void DrawInRect (GLKView view, CGRect rect);
 	}
 
-	/// <include file="../docs/api/GLKit/GLKViewController.xml" path="/RootNode/Docs[@DocId='T:GLKit.GLKViewController']/*" />
+	/// <include file="../docs/api/GLKit/GLKViewController.xml" path="/Documentation/Docs[@DocId='T:GLKit.GLKViewController']/*" />
 	[NoMac]
 	[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'Metal' instead.")]

@@ -745,7 +745,7 @@ namespace MetalPerformanceShaders {
 
 	// MPSKernel.h
 
-	/// <include file="../docs/api/MetalPerformanceShaders/MPSKernel.xml" path="/RootNode/Docs[@DocId='T:MetalPerformanceShaders.MPSKernel']/*" />
+	/// <include file="../docs/api/MetalPerformanceShaders/MPSKernel.xml" path="/Documentation/Docs[@DocId='T:MetalPerformanceShaders.MPSKernel']/*" />
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]

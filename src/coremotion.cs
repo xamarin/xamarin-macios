@@ -94,12 +94,12 @@ namespace CoreMotion {
 	[NoMac]
 	[MacCatalyst (13, 1)]
 	delegate void CMGyroHandler (CMGyroData gyroData, NSError error);
-	/// <include file="../docs/api/CoreMotion/CMDeviceMotionHandler.xml" path="/RootNode/Docs[@DocId='T:CoreMotion.CMDeviceMotionHandler']/*" />
+	/// <include file="../docs/api/CoreMotion/CMDeviceMotionHandler.xml" path="/Documentation/Docs[@DocId='T:CoreMotion.CMDeviceMotionHandler']/*" />
 	[NoMac]
 	[MacCatalyst (13, 1)]
 	delegate void CMDeviceMotionHandler (CMDeviceMotion motion, NSError error);
 
-	/// <include file="../docs/api/CoreMotion/CMMotionManager.xml" path="/RootNode/Docs[@DocId='T:CoreMotion.CMMotionManager']/*" />
+	/// <include file="../docs/api/CoreMotion/CMMotionManager.xml" path="/Documentation/Docs[@DocId='T:CoreMotion.CMMotionManager']/*" />
 	[NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -208,7 +208,7 @@ namespace CoreMotion {
 		bool ShowsDeviceMovementDisplay { get; set; }
 	}
 
-	/// <include file="../docs/api/CoreMotion/CMAttitude.xml" path="/RootNode/Docs[@DocId='T:CoreMotion.CMAttitude']/*" />
+	/// <include file="../docs/api/CoreMotion/CMAttitude.xml" path="/Documentation/Docs[@DocId='T:CoreMotion.CMAttitude']/*" />
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	//<quote>You access CMAttitude objects through the attitude property of each CMDeviceMotion objects passed to an application.</quote>

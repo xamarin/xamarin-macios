@@ -786,7 +786,7 @@ namespace GameKit {
 		UIViewController ChallengeComposeController ([NullAllowed] string message, [NullAllowed] GKPlayer [] players, [NullAllowed] GKChallengeComposeHandler completionHandler);
 	}
 
-	/// <include file="../docs/api/GameKit/IGKLeaderboardViewControllerDelegate.xml" path="/RootNode/Docs[@DocId='T:GameKit.IGKLeaderboardViewControllerDelegate']/*" />
+	/// <include file="../docs/api/GameKit/IGKLeaderboardViewControllerDelegate.xml" path="/Documentation/Docs[@DocId='T:GameKit.IGKLeaderboardViewControllerDelegate']/*" />
 	interface IGKLeaderboardViewControllerDelegate { }
 
 	/// <summary>A delegate object that allows fine-grained control over <see cref="T:GameKit.GKLeaderboardViewController" /> events.</summary>
@@ -1894,7 +1894,7 @@ namespace GameKit {
 		NSNumber RarityPercent { get; }
 	}
 
-	/// <include file="../docs/api/GameKit/IGKAchievementViewControllerDelegate.xml" path="/RootNode/Docs[@DocId='T:GameKit.IGKAchievementViewControllerDelegate']/*" />
+	/// <include file="../docs/api/GameKit/IGKAchievementViewControllerDelegate.xml" path="/Documentation/Docs[@DocId='T:GameKit.IGKAchievementViewControllerDelegate']/*" />
 	interface IGKAchievementViewControllerDelegate { }
 
 	/// <summary>A delegate object that allows <see cref="T:GameKit.GKAchievementViewController" /> to respond to lifecycle events.</summary>
@@ -2016,7 +2016,7 @@ namespace GameKit {
 		void SetMessage ([NullAllowed] string message);
 	}
 
-	/// <include file="../docs/api/GameKit/IGKFriendRequestComposeViewControllerDelegate.xml" path="/RootNode/Docs[@DocId='T:GameKit.IGKFriendRequestComposeViewControllerDelegate']/*" />
+	/// <include file="../docs/api/GameKit/IGKFriendRequestComposeViewControllerDelegate.xml" path="/Documentation/Docs[@DocId='T:GameKit.IGKFriendRequestComposeViewControllerDelegate']/*" />
 	interface IGKFriendRequestComposeViewControllerDelegate { }
 
 	/// <summary>A delegate object that allows fine-grained response to <see cref="T:GameKit.GKFriendRequestComposeViewController" /> life-cycle events.</summary>

@@ -181,7 +181,7 @@ namespace AVKit {
 		void RestoreUserInterfaceForPictureInPicture (AVPictureInPictureController pictureInPictureController, Action<bool> completionHandler);
 	}
 
-	/// <include file="../docs/api/AVKit/AVPlayerViewController.xml" path="/RootNode/Docs[@DocId='T:AVKit.AVPlayerViewController']/*" />
+	/// <include file="../docs/api/AVKit/AVPlayerViewController.xml" path="/Documentation/Docs[@DocId='T:AVKit.AVPlayerViewController']/*" />
 	[NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (UIViewController))]
