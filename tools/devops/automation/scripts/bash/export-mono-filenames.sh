@@ -23,3 +23,5 @@ MONO_MACCATALYST_FILENAME=$(basename "$MONO_MACCATALYST_FILENAME" ".7z")
 echo "##vso[task.setvariable variable=MONO_IOS_FILENAME;]$MONO_IOS_FILENAME"
 echo "##vso[task.setvariable variable=MONO_MAC_FILENAME;]$MONO_MAC_FILENAME"
 echo "##vso[task.setvariable variable=MONO_MACCATALYST_FILENAME;]$MONO_MACCATALYST_FILENAME"
+
+rm -f "$FILE"
