@@ -1263,13 +1263,13 @@ namespace Xamarin.Tests {
 				Where (v => {
 					if (v.Length < 10)
 						return false;
-					if (v [0] != '/')
+					if (v [0] != '/' && !(char.IsAsciiLetter (v [0]) && v [1] == ':'))
 						return false;
 					if (!v.EndsWith ($"{assemblyName}.dll", StringComparison.Ordinal))
 						return false;
-					if (!v.Contains ("/bin/", StringComparison.Ordinal))
+					if (!(v.Contains ("/bin/", StringComparison.Ordinal) || v.Contains ("\\bin\\", StringComparison.Ordinal)))
 						return false;
-					if (v.Contains ("/ref/", StringComparison.Ordinal))
+					if (v.Contains ("/ref/", StringComparison.Ordinal) || v.Contains ("\\ref\\", StringComparison.Ordinal))
 						return false; // Skip reference assemblies
 					return true;
 				});
