@@ -269,11 +269,13 @@ namespace Cecil.Tests {
 				blitCache [type.Name] = new BlitAndReason (true, "");
 				return true;
 			}
-			if (IsBlittablePointer (type)) {
+			var localResult = new StringBuilder ();
+			if (IsBlittablePointer (assembly, type, provider, localResult, blitCache)) {
 				blitCache [type.Name] = new BlitAndReason (true, "");
 				return true;
 			}
-			var localResult = new StringBuilder ();
+			result.Append (localResult);
+			localResult.Clear ();
 			if (IsBlittableValueType (assembly, type, localResult, blitCache)) {
 				blitCache [type.Name] = new BlitAndReason (true, "");
 				return true;
@@ -308,9 +310,24 @@ namespace Cecil.Tests {
 			return typesWeLike.Contains (t.ToString ());
 		}
 
-		bool IsBlittablePointer (TypeReference type)
+		bool IsBlittablePointer (AssemblyDefinition assembly, TypeReference type, IMarshalInfoProvider provider, StringBuilder result, Dictionary<string, BlitAndReason> blitCache)
 		{
-			return type.IsPointer || type.IsFunctionPointer;
+			if (type.IsFunctionPointer)
+				return true;
+
+			if (!type.IsPointer)
+				return false;
+
+			var localResult = new StringBuilder ();
+			if (!IsTypeBlittable (assembly, type.GetElementType (), provider, result, blitCache)) {
+				var pointerResult = new StringBuilder ();
+				pointerResult.Append ($" {type.Name}: {localResult}");
+				result.Append (pointerResult);
+				blitCache [type.Name] = new BlitAndReason (false, pointerResult.ToString ());
+				return false;
+			}
+
+			return true;
 		}
 
 
