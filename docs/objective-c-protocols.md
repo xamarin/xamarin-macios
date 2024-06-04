@@ -105,10 +105,10 @@ implemented (note that in many cases it's possible to not implement a required
 member in Objective-C - you'll get a compiler warning, but you may get away with
 it at runtime, depending on the code that uses your protocol implementation).
 
-Instead we emit a warning at build time from our own build tools (linker steps),
-that lets the developer know about required members that haven't been
-implemented. It's possible to either ignore these warnings, or make them errors
-[TODO: explain exactly how].
+In the future we plan to emit a warning at build time from our own build tools
+(linker steps), that lets the developer know about required members that
+haven't been implemented. It will be possible to either ignore these warnings,
+or make them errors.
 
 ### Static members
 
@@ -144,31 +144,31 @@ we're binding it like this:
 public interface IProtocol : INativeObject {
     [Required]
     [Export ("requiredStaticMethod")]
-    public static void RequiredStaticMethod<T> () where T: NSObject, IProtocol { /* default implementation */ }
+    public static void RequiredStaticMethod<T> () where T: NSObject, IProtocol { /* implementation */ }
 
     [Optional]
     [Export ("optionalStaticMethod")]
-    public static void OptionalStaticMethod<T> () where T: NSObject, IProtocol { /* default implementation */ }
+    public static void OptionalStaticMethod<T> () where T: NSObject, IProtocol { /* implementation */ }
 
     [Property ("RequiredStaticProperty")]
     [Required]
     [Export ("requiredStaticProperty")]
-    public static IntPtr GetRequiredStaticProperty<T> () where T: NSObject, IProtocol { /* default implementation */ }
-    
+    public static IntPtr GetRequiredStaticProperty<T> () where T: NSObject, IProtocol { /* implementation */ }
+
     [Property ("RequiredStaticProperty")]
     [Required]
     [Export ("setRequiredStaticProperty:")]
-    public static void SetRequiredStaticProperty<T> (IntPtr value) where T: NSObject, IProtocol { /* default implementation */ }
-    
+    public static void SetRequiredStaticProperty<T> (IntPtr value) where T: NSObject, IProtocol { /* implementation */ }
+
     [Property ("OptionalStaticProperty")]
     [Optional]
     [Export ("optionalStaticProperty")]
-    public static IntPtr GetOptionalStaticProperty<T> () where T: NSObject, IProtocol { /* default implementation */ }
+    public static IntPtr GetOptionalStaticProperty<T> () where T: NSObject, IProtocol { /*  implementation */ }
 
     [Property ("OptionalStaticProperty")]
     [Optional]
     [Export ("setOptionalStaticProperty:")]
-    public static void SetOptionalStaticProperty<T> (IntPtr value) where T: NSObject, IProtocol { /* default implementation */ }
+    public static void SetOptionalStaticProperty<T> (IntPtr value) where T: NSObject, IProtocol { /*  implementation */ }
 }
 ```
 
@@ -386,7 +386,6 @@ interface members.
 
 We'll keep generating these attributes for protocols defined with
 `MustBeBackwardsCompatible`.
-
 
 ## Notable consequences
 
