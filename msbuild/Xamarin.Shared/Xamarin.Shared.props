@@ -231,8 +231,8 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 		<_BundlerDebug Condition="'$(_BundlerDebug)' == ''">false</_BundlerDebug>
 
 		<!-- Extra arguments -->
-		<_BundlerArguments Condition="'$(_PlatformName)' == 'macOS'">$(MonoBundlingExtraArgs)</_BundlerArguments>
-		<_BundlerArguments Condition="'$(_PlatformName)' != 'macOS'">$(MtouchExtraArgs)</_BundlerArguments>
+		<AppBundleExtraOptions Condition="'$(_PlatformName)' == 'macOS'">$(AppBundleExtraOptions) $(MonoBundlingExtraArgs)</AppBundleExtraOptions>
+		<AppBundleExtraOptions Condition="'$(_PlatformName)' != 'macOS'">$(AppBundleExtraOptions) $(MtouchExtraArgs)</AppBundleExtraOptions>
 
 		<!-- NoSymbolStrip -->
 		<!-- Xamarin.Mac never had an equivalent for MtouchNoSymbolStrip and was never stripped -> true -->

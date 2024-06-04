@@ -172,12 +172,13 @@ public interface IProtocol : INativeObject {
 }
 ```
 
-There are two points of interest here:
+There are three points of interest here:
 
 1. Each method has a generic type argument that specifies which type's static
    member should be called.
 2. Properties have been turned into a pair of Get/Set methods - this is because
    properties can't have type arguments the way methods can.
+3. There are no differences between optional and required members.
 
 Example consuming code:
 

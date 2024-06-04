@@ -234,7 +234,7 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		unsafe static extern void nw_connection_group_set_receive_handler (OS_nw_connection_group group, uint maximum_message_size, [MarshalAs (UnmanagedType.I1)] bool reject_oversized_messages, BlockLiteral* handler);
+		unsafe static extern void nw_connection_group_set_receive_handler (OS_nw_connection_group group, uint maximum_message_size, byte reject_oversized_messages, BlockLiteral* handler);
 
 #if !NET
 		delegate void nw_connection_group_receive_handler_t (IntPtr block, IntPtr content, IntPtr context, byte isCompleted);
@@ -259,7 +259,7 @@ namespace Network {
 		{
 			unsafe {
 				if (handler is null) {
-					nw_connection_group_set_receive_handler (GetCheckedHandle (), maximumMessageSize, rejectOversizedMessages, null);
+					nw_connection_group_set_receive_handler (GetCheckedHandle (), maximumMessageSize, rejectOversizedMessages.AsByte (), null);
 					return;
 				}
 
@@ -270,7 +270,7 @@ namespace Network {
 				using var block = new BlockLiteral ();
 				block.SetupBlockUnsafe (static_ReceiveHandler, handler);
 #endif
-				nw_connection_group_set_receive_handler (GetCheckedHandle (), maximumMessageSize, rejectOversizedMessages, &block);
+				nw_connection_group_set_receive_handler (GetCheckedHandle (), maximumMessageSize, rejectOversizedMessages.AsByte (), &block);
 			}
 		}
 
@@ -432,8 +432,7 @@ namespace Network {
 		[MacCatalyst (15, 0)]
 #endif
 		[DllImport (Constants.NetworkLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static extern bool nw_connection_group_reinsert_extracted_connection (OS_nw_connection_group group, OS_nw_connection connection);
+		static extern byte nw_connection_group_reinsert_extracted_connection (OS_nw_connection_group group, OS_nw_connection connection);
 
 #if NET
 		[SupportedOSPlatform ("tvos15.0")]
@@ -451,7 +450,7 @@ namespace Network {
 		{
 			if (connection is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (connection));
-			return nw_connection_group_reinsert_extracted_connection (GetCheckedHandle (), connection.Handle);
+			return nw_connection_group_reinsert_extracted_connection (GetCheckedHandle (), connection.Handle) != 0;
 		}
 
 #if NET
