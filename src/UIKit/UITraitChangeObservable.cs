@@ -318,6 +318,38 @@ namespace UIKit {
 		}
 	}
 
+	public partial class UIViewController {
+		[Obsolete ("Use the 'UITraitChangeObservable.RegisterForTraitChanges (Class[], Action<IUITraitEnvironment, UITraitCollection>)' method instead.", false)]
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		[SupportedOSPlatform ("ios17.0")]
+		[SupportedOSPlatform ("tvos17.0")]
+		[SupportedOSPlatform ("maccatalyst17.0")]
+		public unsafe virtual IUITraitChangeRegistration RegisterForTraitChanges (IUITraitDefinition[] traits, global::System.Action<IUITraitEnvironment, UITraitCollection> handler)
+		{
+			return IUITraitChangeObservable._RegisterForTraitChanges (this, IUITraitChangeObservable.ToClasses (traits), handler);
+		}
+
+		[Obsolete ("Use the 'UITraitChangeObservable.RegisterForTraitChanges (Class[], NSObject, Selector)' method instead.", false)]
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		[SupportedOSPlatform ("ios17.0")]
+		[SupportedOSPlatform ("tvos17.0")]
+		[SupportedOSPlatform ("maccatalyst17.0")]
+		public virtual IUITraitChangeRegistration RegisterForTraitChanges (IUITraitDefinition[] traits, NSObject target, Selector action)
+		{
+			return IUITraitChangeObservable._RegisterForTraitChanges (this, IUITraitChangeObservable.ToClasses (traits), target, action);
+		}
+
+		[Obsolete ("Use the 'UITraitChangeObservable.RegisterForTraitChanges (Class[], Selector)' method instead.", false)]
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		[SupportedOSPlatform ("ios17.0")]
+		[SupportedOSPlatform ("tvos17.0")]
+		[SupportedOSPlatform ("maccatalyst17.0")]
+		public virtual IUITraitChangeRegistration RegisterForTraitChanges (IUITraitDefinition[] traits, Selector action)
+		{
+			return IUITraitChangeObservable._RegisterForTraitChanges (this, IUITraitChangeObservable.ToClasses (traits), action);
+		}
+	}
+
 	public partial class UIWindowScene {
 		[Obsolete ("Use the 'UITraitChangeObservable.RegisterForTraitChanges (Class[], Action<IUITraitEnvironment, UITraitCollection>)' method instead.", false)]
 		[EditorBrowsable (EditorBrowsableState.Never)]
