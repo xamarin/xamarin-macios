@@ -319,7 +319,7 @@ namespace Cecil.Tests {
 				return false;
 
 			var localResult = new StringBuilder ();
-			if (!IsTypeBlittable (assembly, type.GetElementType (), provider, result, blitCache)) {
+			if (!IsTypeBlittable (assembly, type.GetElementType (), provider, localResult, blitCache)) {
 				var pointerResult = new StringBuilder ();
 				pointerResult.Append ($" {type.Name}: {localResult}");
 				result.Append (pointerResult);
