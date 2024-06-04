@@ -1206,7 +1206,7 @@ namespace Security {
 		[SupportedOSPlatform ("maccatalyst")]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
-		static extern /* CFDataRef _Nullable */ IntPtr SecKeyCreateEncryptedData (/* SecKeyRef */ IntPtr key, /* SecKeyAlgorithm */ IntPtr algorithm, /* CFDataRef */ IntPtr plaintext, /* CFErrorRef* */ out IntPtr error);
+		unsafe static extern /* CFDataRef _Nullable */ IntPtr SecKeyCreateEncryptedData (/* SecKeyRef */ IntPtr key, /* SecKeyAlgorithm */ IntPtr algorithm, /* CFDataRef */ IntPtr plaintext, /* CFErrorRef* */ IntPtr* error);
 
 #if NET
 		[SupportedOSPlatform ("tvos")]
@@ -1219,7 +1219,11 @@ namespace Security {
 			if (plaintext is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (plaintext));
 
-			var data = SecKeyCreateEncryptedData (Handle, algorithm.GetConstant ().GetHandle (), plaintext.Handle, out var err);
+			IntPtr data;
+			IntPtr err;
+			unsafe {
+				data = SecKeyCreateEncryptedData (Handle, algorithm.GetConstant ().GetHandle (), plaintext.Handle, &err);
+			}
 			error = Runtime.GetNSObject<NSError> (err);
 			return Runtime.GetNSObject<NSData> (data, true);
 		}
