@@ -1918,6 +1918,26 @@ namespace Xamarin.Tests {
 			}
 		}
 
+		bool FindAssembly(string path, string dllName)
+		{
+			try
+			{
+				foreach (string file in Directory.GetFiles(path, "*.dll", SearchOption.AllDirectories))
+				{
+					if (Path.GetFileName(file).Equals(dllName, StringComparison.OrdinalIgnoreCase))
+					{
+						return true;
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine($"An error occurred: {ex.Message}");
+			}
+
+			return false;
+		}
+
 		[Test]
 		[TestCase (ApplePlatform.iOS, "ios-arm64;")]
 		[TestCase (ApplePlatform.MacOSX, "osx-arm64;osx-x64")]
@@ -1936,11 +1956,13 @@ namespace Xamarin.Tests {
 
 			DotNet.AssertBuild (project_path, properties);
 
-			var dllPath = Path.Combine (appPath, "aot-instances.dll");
-			Assert.That (dllPath, Does.Not.Exist, "Dedup optimization shouldn't been enabled for partial AOT compilation");
+			Assert.True (!FindAssembly (appPath, "aot-instances.dll"), "Dedup optimization shouldn't been enabled for partial AOT compilation");
 
 			var appExecutable = GetNativeExecutable (platform, appPath);
-			ExecuteWithMagicWordAndAssert (platform, runtimeIdentifiers, appExecutable);
+
+			if (CanExecute (platform, runtimeIdentifiers)) {
+				var output = ExecuteWithMagicWordAndAssert (appExecutable);
+			}
 		}
 
 		[Test]
@@ -1961,11 +1983,13 @@ namespace Xamarin.Tests {
 
 			DotNet.AssertBuild (project_path, properties);
 
-			var dllPath = Path.Combine (appPath, "aot-instances.dll");
-			Assert.That (dllPath, Does.Not.Exist, "Dedup optimization shouldn't been enabled for partial AOT compilation");
+			Assert.True (!FindAssembly (appPath, "aot-instances.dll"), "Dedup optimization shouldn't been enabled for partial AOT compilation");
 
 			var appExecutable = GetNativeExecutable (platform, appPath);
-			ExecuteWithMagicWordAndAssert (platform, runtimeIdentifiers, appExecutable);
+
+			if (CanExecute (platform, runtimeIdentifiers)) {
+				var output = ExecuteWithMagicWordAndAssert (appExecutable);
+			}
 		}
 	}
 }
