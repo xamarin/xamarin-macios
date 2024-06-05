@@ -2069,8 +2069,6 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 
 	<Target Name="_PackLibraryResources" Condition="'$(_CanOutputAppBundle)' == 'false'" DependsOnTargets="$(_PackLibraryResourcesDependsOn)">
 		<PackLibraryResources
-			Condition="'$(IsMacEnabled)' == 'true'"
-			SessionId="$(BuildSessionId)"
 			Prefix="$(_EmbeddedResourcePrefix)"
 			BundleResourcesWithLogicalNames="@(_BundleResourceWithLogicalName)"
 			BundleOriginalResourcesWithLogicalNames="@(_BundleOriginalResourceWithLogicalName)"
