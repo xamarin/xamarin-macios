@@ -59,12 +59,6 @@ steps:
     MacDeveloper: $(mac-developer)
     HostedMacKeychainPassword: ${{ parameters.keyringPass }}
 
-- task: UseDotNet@2
-  inputs:
-    packageType: sdk
-    version: 5.x
-  displayName: 'Install .NET 5.x SDK'
-
 - task: xamops.azdevex.provisionator-task.provisionator@2
   displayName: 'Provision Brew components'
   inputs:
