@@ -315,6 +315,7 @@ namespace Xamarin.MacDev.Tasks {
 
 				if (escaped) {
 					switch (c) {
+					case 's': c = Path.DirectorySeparatorChar; break;
 					case 'b': c = '\\'; break;
 					case 'f': c = '/'; break;
 					case '_': c = '_'; break;

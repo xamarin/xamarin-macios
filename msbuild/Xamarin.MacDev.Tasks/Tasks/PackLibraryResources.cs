@@ -29,14 +29,14 @@ namespace Xamarin.MacDev.Tasks {
 
 		#endregion
 
-		static string EscapeMangledResource (string name)
+		public static string EscapeMangledResource (string name)
 		{
 			var mangled = new StringBuilder ();
 
 			for (int i = 0; i < name.Length; i++) {
 				switch (name [i]) {
-				case '\\': mangled.Append ("_b"); break;
-				case '/': mangled.Append ("_f"); break;
+				case '\\':
+				case '/': mangled.Append ("_s"); break;
 				case '_': mangled.Append ("__"); break;
 				default: mangled.Append (name [i]); break;
 				}
@@ -45,43 +45,8 @@ namespace Xamarin.MacDev.Tasks {
 			return mangled.ToString ();
 		}
 
-		bool ExecuteRemotely ()
-		{
-			// Fix LogicalName path for the Mac
-			foreach (var resource in BundleResourcesWithLogicalNames) {
-				var logicalName = resource.GetMetadata ("LogicalName");
-
-				if (!string.IsNullOrEmpty (logicalName)) {
-					resource.SetMetadata ("LogicalName", logicalName.Replace ("\\", "/"));
-				}
-			}
-
-			var runner = new TaskRunner (SessionId, BuildEngine4);
-
-			try {
-				var result = runner.RunAsync (this).Result;
-
-				if (result && EmbeddedResources is not null) {
-					// We must get the "real" file that will be embedded in the
-					// compiled assembly in Windows
-					foreach (var embeddedResource in EmbeddedResources.Where (x => runner.ShouldCopyItemAsync (task: this, item: x).Result)) {
-						runner.GetFileAsync (this, embeddedResource.ItemSpec).Wait ();
-					}
-				}
-
-				return result;
-			} catch (Exception ex) {
-				Log.LogErrorFromException (ex);
-
-				return false;
-			}
-		}
-
 		public override bool Execute ()
 		{
-			if (ShouldExecuteRemotely ())
-				return ExecuteRemotely ();
-
 			var results = new List<ITaskItem> ();
 
 			foreach (var item in BundleResourcesWithLogicalNames) {
