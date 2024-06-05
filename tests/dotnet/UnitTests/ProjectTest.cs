@@ -1918,21 +1918,16 @@ namespace Xamarin.Tests {
 			}
 		}
 
-		bool FindAssembly(string path, string dllName)
+		bool FindAssembly (string path, string dllName)
 		{
-			try
-			{
-				foreach (string file in Directory.GetFiles(path, "*.dll", SearchOption.AllDirectories))
-				{
-					if (Path.GetFileName(file).Equals(dllName, StringComparison.OrdinalIgnoreCase))
-					{
+			try {
+				foreach (string file in Directory.GetFiles (path, "*.dll", SearchOption.AllDirectories)) {
+					if (Path.GetFileName (file).Equals (dllName, StringComparison.OrdinalIgnoreCase)) {
 						return true;
 					}
 				}
-			}
-			catch (Exception ex)
-			{
-				Console.WriteLine($"An error occurred: {ex.Message}");
+			} catch (Exception ex) {
+				Console.WriteLine ($"An error occurred: {ex.Message}");
 			}
 
 			return false;
