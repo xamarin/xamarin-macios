@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Xml;
 
 using NUnit.Framework;
@@ -547,6 +548,33 @@ namespace Cecil.Tests {
 			var rv = new TestFixtureData (path);
 			rv.SetArgDisplayNames (Path.GetFileName (path));
 			return rv;
+		}
+
+		// This method renders a string that sorts well - methods in the same
+		// type are sorted next to eachother (the default MethodDefinition.FullName
+		// implementation starts with the return type, so sorting the results
+		// yields ugly results).
+		public static string RenderMethod (this MethodDefinition method)
+		{
+			var sb = new StringBuilder ();
+			sb.Append (method.DeclaringType.FullName);
+			sb.Append ("::");
+			sb.Append (method.Name);
+			sb.Append ('(');
+			if (method.HasParameters) {
+				for (var i = 0; i < method.Parameters.Count; i++) {
+					if (i > 0)
+						sb.Append (',');
+					var pType = method.Parameters [i].ParameterType;
+					sb.Append (pType.FullName);
+				}
+			}
+			sb.Append (')');
+			if (method.IsOperator ()) {
+				sb.Append ("->");
+				sb.Append (method.ReturnType.FullName);
+			}
+			return sb.ToString ();
 		}
 
 		public static string RenderLocation (this IMemberDefinition? member, Instruction? instruction = null)
