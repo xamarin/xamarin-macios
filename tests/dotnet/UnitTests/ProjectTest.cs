@@ -1961,7 +1961,7 @@ namespace Xamarin.Tests {
 			var appExecutable = GetNativeExecutable (platform, appPath);
 
 			if (CanExecute (platform, runtimeIdentifiers)) {
-				var output = ExecuteWithMagicWordAndAssert (appExecutable);
+				ExecuteWithMagicWordAndAssert (appExecutable);
 			}
 		}
 
@@ -1988,7 +1988,7 @@ namespace Xamarin.Tests {
 			var appExecutable = GetNativeExecutable (platform, appPath);
 
 			if (CanExecute (platform, runtimeIdentifiers)) {
-				var output = ExecuteWithMagicWordAndAssert (appExecutable);
+				ExecuteWithMagicWordAndAssert (appExecutable);
 			}
 		}
 	}
