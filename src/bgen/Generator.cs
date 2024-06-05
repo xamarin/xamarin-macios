@@ -4867,6 +4867,7 @@ public partial class Generator : IMemberGatherer {
 		var requiredInstanceMethods = allProtocolMethods.Where ((v) => IsRequired (v) && !AttributeManager.HasAttribute<StaticAttribute> (v)).ToList ();
 		var optionalInstanceMethods = allProtocolMethods.Where ((v) => !IsRequired (v) && !AttributeManager.HasAttribute<StaticAttribute> (v));
 		var staticMethods = allProtocolMethods.Where ((v) => AttributeManager.HasAttribute<StaticAttribute> (v)).ToList ();
+		var instanceMethods = allProtocolMethods.Where ((v) => !AttributeManager.HasAttribute<StaticAttribute> (v)).ToList ();
 		var requiredInstanceProperties = allProtocolProperties.Where ((v) => IsRequired (v) && !AttributeManager.HasAttribute<StaticAttribute> (v)).ToList ();
 		var optionalInstanceProperties = allProtocolProperties.Where ((v) => !IsRequired (v) && !AttributeManager.HasAttribute<StaticAttribute> (v));
 		var requiredInstanceAsyncMethods = requiredInstanceMethods.Where (m => AttributeManager.HasAttribute<AsyncAttribute> (m)).ToList ();
@@ -5035,6 +5036,26 @@ public partial class Generator : IMemberGatherer {
 				GenerateMethod (minfo);
 				print ("");
 			}
+		}
+
+		if (instanceMethods.Any () || instanceProperties.Any ()) {
+			// Tell the trimmer to not remove any instance method/property if the interface itself isn't trimmed away.
+			// These members are required for the registrar to determine if a particular implementing method
+			// implements a member from a protocol or not (and thus expose it to Objective-C).
+			// Note: the non-empty static cctor is somewhat ugly, a better way might be to emit a
+			// linker description file (which supports conditional preservation better).
+			// Ref: https://github.com/dotnet/runtime/issues/37352#issuecomment-644385807
+			var docIds = instanceMethods
+				.Select (mi => DocumentationManager.GetDocId (mi, includeDeclaringType: false, alwaysIncludeParenthesis: true))
+				.Concat (instanceProperties.Select (v => v.Name))
+				.OrderBy (name => name);
+			foreach (var docId in docIds) {
+				print ($"[DynamicDependencyAttribute (\"{docId}\")]");
+			}
+			print ($"static I{TypeName} ()");
+			print ("{");
+			print ("\tGC.KeepAlive (null);"); // need to do _something_ (doesn't seem to matter what), otherwise the static cctor (and the DynamicDependency attributes) are trimmed away.
+			print ("}");
 		}
 #else
 		foreach (var mi in requiredInstanceMethods) {
