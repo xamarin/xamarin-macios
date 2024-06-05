@@ -1917,5 +1917,55 @@ namespace Xamarin.Tests {
 				var output = ExecuteWithMagicWordAndAssert (appExecutable, env);
 			}
 		}
+
+		[Test]
+		[TestCase (ApplePlatform.iOS, "ios-arm64;")]
+		[TestCase (ApplePlatform.MacOSX, "osx-arm64;osx-x64")]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64;")]
+		[TestCase (ApplePlatform.TVOS, "tvos-arm64;")]
+		public void PartialAOTExceptCoreLib (ApplePlatform platform, string runtimeIdentifiers)
+		{
+			var project = "MySimpleApp";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
+
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
+			Clean (project_path);
+			var properties = GetDefaultProperties (runtimeIdentifiers);
+			properties ["MtouchInterpreter"] = "-all,System.Private.CoreLib.dll";
+
+			DotNet.AssertBuild (project_path, properties);
+
+			var dllPath = Path.Combine (appPath, "aot-instances.dll");
+			Assert.That (dllPath, Does.Not.Exist, "Dedup optimization shouldn't been enabled for partial AOT compilation");
+
+			var appExecutable = GetNativeExecutable (platform, appPath);
+			ExecuteWithMagicWordAndAssert (platform, runtimeIdentifiers, appExecutable);
+		}
+
+		[Test]
+		[TestCase (ApplePlatform.iOS, "ios-arm64;")]
+		[TestCase (ApplePlatform.MacOSX, "osx-arm64;osx-x64")]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64;")]
+		[TestCase (ApplePlatform.TVOS, "tvos-arm64;")]
+		public void PartialAOTOnlyCoreLib (ApplePlatform platform, string runtimeIdentifiers)
+		{
+			var project = "MySimpleApp";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
+
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
+			Clean (project_path);
+			var properties = GetDefaultProperties (runtimeIdentifiers);
+			properties ["MtouchInterpreter"] = "all,-System.Private.CoreLib.dll";
+
+			DotNet.AssertBuild (project_path, properties);
+
+			var dllPath = Path.Combine (appPath, "aot-instances.dll");
+			Assert.That (dllPath, Does.Not.Exist, "Dedup optimization shouldn't been enabled for partial AOT compilation");
+
+			var appExecutable = GetNativeExecutable (platform, appPath);
+			ExecuteWithMagicWordAndAssert (platform, runtimeIdentifiers, appExecutable);
+		}
 	}
 }
