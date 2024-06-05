@@ -5293,13 +5293,6 @@ namespace AVFoundation {
 		AVSampleCursorSyncInfo_Blittable CurrentSampleSyncInfo_Blittable { get; }
 #endif
 
-#if !XAMCORE_5_0
-		[Obsolete ("Use 'CurrentSampleDependencyInfo2' instead. The property type of this property is wrong.")]
-		[EditorBrowsable (EditorBrowsableState.Never)]
-		[Export ("currentSampleDependencyInfo")]
-		AVSampleCursorSyncInfo CurrentSampleDependencyInfo { get; }
-#endif
-
 #if XAMCORE_5_0
 		[Export ("currentSampleDependencyInfo")]
 		AVSampleCursorDependencyInfo CurrentSampleDependencyInfo { get; }
@@ -5309,7 +5302,6 @@ namespace AVFoundation {
 
 		[Internal]
 		[Export ("currentSampleDependencyInfo")]
-		[Sealed]
 		AVSampleCursorDependencyInfo_Blittable CurrentSampleDependencyInfo_Blittable { get; }
 #endif
 
