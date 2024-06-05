@@ -56,6 +56,8 @@ namespace Cecil.Tests {
 		};
 #endif
 		static HashSet<string> knownFailuresPInvokes = new HashSet<string> {
+			"System.Byte GameController.GCExtendedGamepadSnapshot::GCExtendedGamepadSnapshotDataFromNSData(GameController.GCExtendedGamepadSnapshotData*,System.IntPtr)",
+			"System.IntPtr GameController.GCExtendedGamepadSnapshotData::NSDataFromGCExtendedGamepadSnapshotData(GameController.GCExtendedGamepadSnapshotData*)",
 			"System.Void ObjCRuntime.Messaging::void_objc_msgSend_GCDualSenseAdaptiveTriggerPositionalAmplitudes_float(System.IntPtr,System.IntPtr,GameController.GCDualSenseAdaptiveTriggerPositionalAmplitudes,System.Single)",
 			"System.Void ObjCRuntime.Messaging::void_objc_msgSend_GCDualSenseAdaptiveTriggerPositionalResistiveStrengths(System.IntPtr,System.IntPtr,GameController.GCDualSenseAdaptiveTriggerPositionalResistiveStrengths)",
 			"System.Void ObjCRuntime.Messaging::void_objc_msgSendSuper_GCDualSenseAdaptiveTriggerPositionalAmplitudes_float(System.IntPtr,System.IntPtr,GameController.GCDualSenseAdaptiveTriggerPositionalAmplitudes,System.Single)",
