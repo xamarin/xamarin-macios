@@ -68,7 +68,7 @@ public class DocumentationManager {
 		var methodName = md.Name.Replace ('.', '#');
 		var name = methodName;
 		if (includeDeclaringType)
-			name = GetDocId (md.DeclaringType!) + "." + methodName + name;
+			name = GetDocId (md.DeclaringType!) + "." + name;
 		if (md.IsGenericMethodDefinition)
 			name += $"``{md.GetGenericArguments ().Length}";
 		var parameters = md.GetParameters ();
