@@ -129,19 +129,17 @@ namespace Network {
 		public bool IsDictionary => nw_txt_record_is_dictionary (GetCheckedHandle ()) != 0;
 
 		[DllImport (Constants.NetworkLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static extern bool nw_txt_record_is_equal (OS_nw_txt_record left, OS_nw_txt_record right);
+		static extern byte nw_txt_record_is_equal (OS_nw_txt_record left, OS_nw_txt_record right);
 
 		public bool Equals (NWTxtRecord other)
 		{
 			if (other is null)
 				return false;
-			return nw_txt_record_is_equal (GetCheckedHandle (), other.GetCheckedHandle ());
+			return nw_txt_record_is_equal (GetCheckedHandle (), other.GetCheckedHandle ()) != 0;
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		unsafe static extern bool nw_txt_record_apply (OS_nw_txt_record txt_record, BlockLiteral* applier);
+		unsafe static extern byte nw_txt_record_apply (OS_nw_txt_record txt_record, BlockLiteral* applier);
 
 #if !NET
 		delegate byte nw_txt_record_apply_t (IntPtr block, IntPtr key, NWTxtRecordFindKey found, IntPtr value, nuint valueLen);
@@ -203,7 +201,7 @@ namespace Network {
 				using var block = new BlockLiteral ();
 				block.SetupBlockUnsafe (static_ApplyHandler, handler);
 #endif
-				return nw_txt_record_apply (GetCheckedHandle (), &block);
+				return nw_txt_record_apply (GetCheckedHandle (), &block) != 0;
 			}
 		}
 
@@ -217,14 +215,13 @@ namespace Network {
 			unsafe {
 				using var block = new BlockLiteral ();
 				block.SetupBlockUnsafe (static_ApplyHandler, handler);
-				return nw_txt_record_apply (GetCheckedHandle (), &block);
+				return nw_txt_record_apply (GetCheckedHandle (), &block) != 0;
 			}
 		}
 #endif
 
 		[DllImport (Constants.NetworkLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static extern unsafe bool nw_txt_record_access_key (OS_nw_txt_record txt_record, IntPtr key, BlockLiteral* access_value);
+		static extern unsafe byte nw_txt_record_access_key (OS_nw_txt_record txt_record, IntPtr key, BlockLiteral* access_value);
 
 #if !NET
 		unsafe delegate void nw_txt_record_access_key_t (IntPtr IntPtr, IntPtr key, NWTxtRecordFindKey found, IntPtr value, nuint valueLen);
@@ -267,13 +264,12 @@ namespace Network {
 				block.SetupBlockUnsafe (static_AccessKeyHandler, handler);
 #endif
 				using var keyPtr = new TransientString (key);
-				return nw_txt_record_access_key (GetCheckedHandle (), keyPtr, &block);
+				return nw_txt_record_access_key (GetCheckedHandle (), keyPtr, &block) != 0;
 			}
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		unsafe static extern bool nw_txt_record_access_bytes (OS_nw_txt_record txt_record, BlockLiteral* access_bytes);
+		unsafe static extern byte nw_txt_record_access_bytes (OS_nw_txt_record txt_record, BlockLiteral* access_bytes);
 
 #if !NET
 		unsafe delegate void nw_txt_record_access_bytes_t (IntPtr block, IntPtr value, nuint valueLen);
@@ -310,7 +306,7 @@ namespace Network {
 				using var block = new BlockLiteral ();
 				block.SetupBlockUnsafe (static_RawBytesHandler, handler);
 #endif
-				return nw_txt_record_access_bytes (GetCheckedHandle (), &block);
+				return nw_txt_record_access_bytes (GetCheckedHandle (), &block) != 0;
 			}
 		}
 	}

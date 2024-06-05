@@ -67,6 +67,14 @@ parameters:
   type: boolean
   default: false # only to be used when testing the CI and we do not need a signed pkg
 
+- name: pushNugets
+  type: boolean
+  default: true
+
+- name: pushNugetsToMaestro
+  type: boolean
+  default: true
+
 - name: isPR
   displayName: Is PR build
   type: boolean
@@ -227,6 +235,8 @@ stages:
     enableAPIDiff: ${{ parameters.enableAPIDiff }}
     forceInsertion: ${{ parameters.forceInsertion }}
     skipESRP: ${{ parameters.skipESRP }}
+    pushNugets: ${{ parameters.pushNugets }}
+    pushNugetsToMaestro: ${{ parameters.pushNugetsToMaestro }}
     ${{ if ne(length(parameters.testConfigurations), 0)}}:
       testConfigurations: ${{ parameters.testConfigurations }}
     deviceTestsConfigurations: ${{ parameters.deviceTestsConfigurations }}

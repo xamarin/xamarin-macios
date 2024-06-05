@@ -53,6 +53,7 @@ partial class Frameworks {
 		"CoreTelephony",
 		"CoreText",
 		"CoreVideo",
+		"CryptoTokenKit",
 		"DeviceCheck",
 		"DeviceDiscoveryExtension",
 		"EventKit",
@@ -190,6 +191,7 @@ partial class Frameworks {
 		"CoreText",
 		"CoreVideo",
 		"CoreWlan",
+		"CryptoTokenKit",
 		"DeviceCheck",
 		"EventKit",
 		"ExecutionPolicy",
@@ -305,6 +307,7 @@ partial class Frameworks {
 		"CoreMotion",
 		"CoreText",
 		"CoreVideo",
+		"CryptoTokenKit",
 		"DeviceCheck",
 		"EventKit",
 		"Foundation",
@@ -369,6 +372,7 @@ partial class Frameworks {
 		"CoreSpotlight",
 		"CoreText",
 		"CoreVideo",
+		"CryptoTokenKit",
 		"DeviceCheck",
 		"DeviceDiscoveryUI",
 		"ExternalAccessory",
@@ -473,6 +477,7 @@ partial class Frameworks {
 		"CoreText",
 		"CoreVideo",
 		"CoreWlan",
+		"CryptoTokenKit",
 		"DeviceCheck",
 		"EventKit",
 		"EventKitUI",
@@ -607,6 +612,7 @@ partial class Frameworks {
 	bool? _CoreText;
 	bool? _CoreVideo;
 	bool? _CoreWlan;
+	bool? _CryptoTokenKit;
 	bool? _DeviceCheck;
 	bool? _DeviceDiscoveryExtension;
 	bool? _DeviceDiscoveryUI;
@@ -775,6 +781,7 @@ partial class Frameworks {
 	public bool HaveCoreText { get { if (!_CoreText.HasValue) _CoreText = GetValue ("CoreText"); return _CoreText.Value; } }
 	public bool HaveCoreVideo { get { if (!_CoreVideo.HasValue) _CoreVideo = GetValue ("CoreVideo"); return _CoreVideo.Value; } }
 	public bool HaveCoreWlan { get { if (!_CoreWlan.HasValue) _CoreWlan = GetValue ("CoreWlan"); return _CoreWlan.Value; } }
+	public bool HaveCryptoTokenKit { get { if (!_CryptoTokenKit.HasValue) _CryptoTokenKit = GetValue ("CryptoTokenKit"); return _CryptoTokenKit.Value; } }
 	public bool HaveDeviceCheck { get { if (!_DeviceCheck.HasValue) _DeviceCheck = GetValue ("DeviceCheck"); return _DeviceCheck.Value; } }
 	public bool HaveDeviceDiscoveryExtension { get { if (!_DeviceDiscoveryExtension.HasValue) _DeviceDiscoveryExtension = GetValue ("DeviceDiscoveryExtension"); return _DeviceDiscoveryExtension.Value; } }
 	public bool HaveDeviceDiscoveryUI { get { if (!_DeviceDiscoveryUI.HasValue) _DeviceDiscoveryUI = GetValue ("DeviceDiscoveryUI"); return _DeviceDiscoveryUI.Value; } }
