@@ -350,6 +350,7 @@ namespace AVFoundation {
 
 #if !XAMCORE_5_0
 	[StructLayout (LayoutKind.Sequential)]
+	[NativeName ("AVSampleCursorSyncInfo")]
 #if COREBUILD
 	public
 #endif
@@ -456,6 +457,7 @@ namespace AVFoundation {
 
 #if !XAMCORE_5_0
 	[StructLayout (LayoutKind.Sequential)]
+	[NativeName ("AVSampleCursorDependencyInfo")]
 #if COREBUILD
 	public
 #endif
@@ -576,6 +578,7 @@ namespace AVFoundation {
 
 #if !XAMCORE_5_0
 	[StructLayout (LayoutKind.Sequential)]
+	[NativeName ("AVSampleCursorChunkInfo")]
 #if COREBUILD
 	public
 #endif
@@ -641,6 +644,7 @@ namespace AVFoundation {
 
 #if !XAMCORE_5_0 && !__IOS__ && !__TVOS__
 	[StructLayout (LayoutKind.Sequential)]
+	[NativeName ("AVSampleCursorAudioDependencyInfo")]
 #if COREBUILD
 	public
 #endif
