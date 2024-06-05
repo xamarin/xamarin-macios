@@ -317,7 +317,7 @@ namespace AVFoundation {
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AVSampleCursorSyncInfo {
-#if XAMCORE_5_0 || __IOS__ || __TVOS__
+#if XAMCORE_5_0
 		byte isFullSync;
 		byte isPartialSync;
 		byte isDroppable;
@@ -348,7 +348,7 @@ namespace AVFoundation {
 #endif
 	}
 
-#if !(XAMCORE_5_0 || __IOS__ || __TVOS__)
+#if !XAMCORE_5_0
 	[StructLayout (LayoutKind.Sequential)]
 #if COREBUILD
 	public
@@ -381,7 +381,7 @@ namespace AVFoundation {
 			return rv;
 		}
 	}
-#endif
+#endif // !XAMCORE_5_0
 
 #if NET
 	[SupportedOSPlatform ("macos")]
@@ -396,7 +396,7 @@ namespace AVFoundation {
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AVSampleCursorDependencyInfo {
-#if XAMCORE_5_0 || __IOS__ || __TVOS__
+#if XAMCORE_5_0
 		byte indicatesWhetherItHasDependentSamples;
 		byte hasDependentSamples;
 		byte indicatesWhetherItDependsOnOthers;
@@ -454,7 +454,7 @@ namespace AVFoundation {
 #endif
 	}
 
-#if !(XAMCORE_5_0 || __IOS__ || __TVOS__)
+#if !XAMCORE_5_0
 	[StructLayout (LayoutKind.Sequential)]
 #if COREBUILD
 	public
@@ -509,7 +509,7 @@ namespace AVFoundation {
 			return rv;
 		}
 	}
-#endif // !(XAMCORE_5_0 || __IOS__ || __TVOS__)
+#endif // !XAMCORE_5_0
 
 #if NET
 	[SupportedOSPlatform ("macos")]
@@ -543,7 +543,7 @@ namespace AVFoundation {
 	public struct AVSampleCursorChunkInfo {
 		public long SampleCount;
 
-#if XAMCORE_5_0 || __IOS__ || __TVOS__
+#if XAMCORE_5_0
 		byte hasUniformSampleSizes;
 		byte hasUniformSampleDurations;
 		byte hasUniformFormatDescriptions;
@@ -574,7 +574,7 @@ namespace AVFoundation {
 #endif
 	}
 
-#if !(XAMCORE_5_0 || __IOS__ || __TVOS__)
+#if !XAMCORE_5_0
 	[StructLayout (LayoutKind.Sequential)]
 #if COREBUILD
 	public
@@ -609,7 +609,7 @@ namespace AVFoundation {
 			return rv;
 		}
 	}
-#endif // !(XAMCORE_5_0 || __IOS__ || __TVOS__)
+#endif // !XAMCORE_5_0
 
 #if NET
 	[SupportedOSPlatform ("macos")]

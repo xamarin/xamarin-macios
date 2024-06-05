@@ -5281,7 +5281,7 @@ namespace AVFoundation {
 		[return: Release]
 		CMFormatDescription CopyCurrentSampleFormatDescription ();
 
-#if XAMCORE_5_0 || IOS || TVOS
+#if XAMCORE_5_0
 		[Export ("currentSampleSyncInfo")]
 		AVSampleCursorSyncInfo CurrentSampleSyncInfo { get; }
 #else
@@ -5294,14 +5294,14 @@ namespace AVFoundation {
 		AVSampleCursorSyncInfo_Blittable CurrentSampleSyncInfo_Blittable { get; }
 #endif
 
-#if !(XAMCORE_5_0 || IOS || TVOS)
+#if !XAMCORE_5_0
 		[Obsolete ("Use 'CurrentSampleDependencyInfo2' instead. The property type of this property is wrong.")]
 		[EditorBrowsable (EditorBrowsableState.Never)]
 		[Export ("currentSampleDependencyInfo")]
 		AVSampleCursorSyncInfo CurrentSampleDependencyInfo { get; }
 #endif
 
-#if XAMCORE_5_0 || IOS || TVOS
+#if XAMCORE_5_0
 		[Export ("currentSampleDependencyInfo")]
 		AVSampleCursorDependencyInfo CurrentSampleDependencyInfo { get; }
 #else
@@ -5325,7 +5325,7 @@ namespace AVFoundation {
 		AVSampleCursorStorageRange CurrentChunkStorageRange { get; }
 
 		[Export ("currentChunkInfo")]
-#if XAMCORE_5_0 || IOS || TVOS
+#if XAMCORE_5_0
 		AVSampleCursorChunkInfo CurrentChunkInfo { get; }
 #else
 		[Internal]
