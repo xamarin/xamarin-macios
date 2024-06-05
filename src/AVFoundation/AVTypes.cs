@@ -627,7 +627,7 @@ namespace AVFoundation {
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AVSampleCursorAudioDependencyInfo {
-#if XAMCORE_5_0 || __IOS__ || __TVOS__
+#if XAMCORE_5_0 || (__IOS__ && !__MACCATALYST__) || __TVOS__
 		byte isIndependentlyDecodable;
 
 		public bool IsIndependentlyDecodable {

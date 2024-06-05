@@ -5285,8 +5285,7 @@ namespace AVFoundation {
 		[Export ("currentSampleSyncInfo")]
 		AVSampleCursorSyncInfo CurrentSampleSyncInfo { get; }
 #else
-		//[Virtual]
-		[Wrap ("CurrentSampleSyncInfo_Blittable.ToAVSampleCursorSyncInfo ()")]
+		[Wrap ("CurrentSampleSyncInfo_Blittable.ToAVSampleCursorSyncInfo ()", IsVirtual = true)]
 		AVSampleCursorSyncInfo CurrentSampleSyncInfo { get; }
 
 		[Internal]
@@ -5331,8 +5330,7 @@ namespace AVFoundation {
 		[Internal]
 		AVSampleCursorChunkInfo_Blittable CurrentChunkInfo_Blittable { get; }
 
-		//[Virtual]
-		[Wrap ("CurrentChunkInfo_Blittable.ToAVSampleCursorChunkInfo ()")]
+		[Wrap ("CurrentChunkInfo_Blittable.ToAVSampleCursorChunkInfo ()", IsVirtual = true)]
 		AVSampleCursorChunkInfo CurrentChunkInfo { get; }
 #endif
 
@@ -5350,8 +5348,7 @@ namespace AVFoundation {
 		[Internal]
 		AVSampleCursorAudioDependencyInfo_Blittable CurrentSampleAudioDependencyInfo_Blittable { get; }
 
-		//[Virtual]
-		[Wrap ("CurrentSampleAudioDependencyInfo_Blittable.ToAVSampleCursorAudioDependencyInfo ()")]
+		[Wrap ("CurrentSampleAudioDependencyInfo_Blittable.ToAVSampleCursorAudioDependencyInfo ()", IsVirtual = true)]
 		AVSampleCursorAudioDependencyInfo CurrentSampleAudioDependencyInfo { get; }
 #endif
 
