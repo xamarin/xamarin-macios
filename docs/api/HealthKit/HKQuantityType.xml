@@ -1,0 +1,22 @@
+<Documentation>
+  <Docs DocId="T:HealthKit.HKQuantityType">
+    <summary>A <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=T:HKSampleType&amp;scope=Xamarin" title="T:HKSampleType">T:HKSampleType</a></format> that represents either a cumulative or discrete sample.</summary>
+    <remarks>
+      <para>Use the factory method Create to create a new instance of this type.</para>
+      <para />
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[if (HKHealthStore.IsHealthDataAvailable) {
+	var bodyTemperature = HKQuantityType.Create (HKQuantityTypeIdentifier.BodyTemperature);
+	var h = new HKHealthStore ();
+	h.RequestAuthorizationToShare (
+		typesToShare: new NSSet (new [] { bodyTemperature }),
+		typesToRead: new NSSet (), 
+		completion: (status, error) => {
+			Console.WriteLine ("{0} {1}", status, error);
+	});
+}]]></code>
+      </example>
+    </remarks>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/HealthKit/Reference/HKQuantityType/index.html">Apple documentation for <c>HKQuantityType</c></related>
+  </Docs>
+</Documentation>

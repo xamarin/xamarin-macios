@@ -1,0 +1,30 @@
+<Documentation>
+  <Docs DocId="T:UIKit.UIUserNotificationSettings">
+    <summary>Permissions for local notifications, as controlled by the application user.</summary>
+    <remarks>
+      <para>Starting with iOS 8, users must give explicit permission for apps that wish to respond to local notifications. </para>
+      <para>Prior to attempting to send local notifications, devs must request permission from the application user to manipulate the app icon badge, play a sound, or display an alert (see <see cref="T:UIKit.UIUserNotificationType" />). Typically, this is done in the <see cref="M:UIKit.UIApplicationDelegate_Extensions.FinishedLaunching(UIKit.IUIApplicationDelegate,UIKit.UIApplication,Foundation.NSDictionary)" /> overridden method:</para>
+      <example>
+        <code lang="F#"><![CDATA[
+UIUserNotificationSettings.GetSettingsForTypes(
+    UIUserNotificationType.Alert 
+    ||| UIUserNotificationType.Badge 
+    ||| UIUserNotificationType.Sound, 
+new NSSet())
+|> UIApplication.SharedApplication.RegisterUserNotificationSettings          
+        ]]></code>
+        <code lang="csharp lang-csharp"><![CDATA[
+var settings = UIUserNotificationSettings.GetSettingsForTypes(
+    UIUserNotificationType.Alert 
+    | UIUserNotificationType.Badge 
+    | UIUserNotificationType.Sound, 
+    new NSSet());
+UIApplication.SharedApplication.RegisterUserNotificationSettings(settings);          
+        ]]></code>
+      </example>
+      <para>The user is presented with a permissions dialog. Once they have made their choices, the system calls <see cref="M:UIKit.UIApplicationDelegate_Extensions.DidRegisterUserNotificationSettings(UIKit.IUIApplicationDelegate,UIKit.UIApplication,UIKit.UIUserNotificationSettings)" />.</para>
+      <para>The current permissions can be read with <see cref="P:UIKit.UIApplication.CurrentUserNotificationSettings" />.</para>
+    </remarks>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIUserNotificationSettings_class/index.html">Apple documentation for <c>UIUserNotificationSettings</c></related>
+  </Docs>
+</Documentation>

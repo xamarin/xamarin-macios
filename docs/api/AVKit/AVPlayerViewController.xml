@@ -1,0 +1,17 @@
+<Documentation>
+  <Docs DocId="T:AVKit.AVPlayerViewController">
+    <summary>A <see cref="T:UIKit.UIViewController" /> that provides a system-standard AV controller user experience.</summary>
+    <remarks>
+      <para>The <see cref="T:AVKit.AVPlayerViewController" /> provides a simple way of displaying a player (<format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=T:AVKit.AVPlayer&amp;scope=Xamarin" title="T:AVKit.AVPlayer">T:AVKit.AVPlayer</a></format>) with some standard controls.</para>
+      <para>
+      </para>
+      <para>Applications can set the <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=T:AVKit.AVPlayer&amp;scope=Xamarin" title="T:AVKit.AVPlayer">T:AVKit.AVPlayer</a></format> by setting the <see cref="P:AVKit.AVPlayerViewController.Player" /> property.</para>
+      <para>
+      </para>
+      <para>Applications can customize the user interface by adding their own user interface elements to the <see cref="P:AVKit.AVPlayerViewController.ContentOverlayView" />.</para>
+      <para>
+      </para>
+    </remarks>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/AVFoundation/Reference/AVPlayerViewController_Class/index.html">Apple documentation for <c>AVPlayerViewController</c></related>
+  </Docs>
+</Documentation>

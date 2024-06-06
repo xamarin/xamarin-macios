@@ -1,0 +1,13 @@
+<Documentation>
+  <Docs DocId="T:MapKit.MKPolygon">
+    <summary>A map annotation that represents a closed polygon overlaid on a specific location.</summary>
+    <remarks>
+      <para>The polygon shape is determined by connecting the points in the order they are passed to the <see cref="M:MapKit.MKPolygon.FromPoints(MapKit.MKMapPoint[],MapKit.MKPolygon[])" /> or <see cref="M:MapKit.MKPolygon.FromCoordinates(CoreLocation.CLLocationCoordinate2D[],MapKit.MKPolygon[])" /> factory methods. The first and final points are automatically connected to close the polygon.</para>
+      <para>Application developers can exclude interior areas with the <see cref="P:MapKit.MKPolygon.InteriorPolygons" /> property. </para>
+      <para>Subclassing <see cref="T:MapKit.MKPolygon" /> is not possible (see <format type="text/html"><a href="https://stackoverflow.com/questions/5286961/objective-c-sub-classing-basics-how-to-add-custom-property" /></format>).</para>
+      <para tool="threads">The members of this class can be used from a background thread.</para>
+    </remarks>
+    
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/MapKit/Reference/MKPolygon_class/index.html">Apple documentation for <c>MKPolygon</c></related>
+  </Docs>
+</Documentation>

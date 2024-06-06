@@ -13,6 +13,7 @@ using NativeHandle = System.IntPtr;
 
 namespace HealthKitUI {
 
+	/// <include file="../docs/api/HealthKitUI/HKActivityRingView.xml" path="/Documentation/Docs[@DocId='T:HealthKitUI.HKActivityRingView']/*" />
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (UIView))]
 	[DisableDefaultCtor] // nil handle (introspection)

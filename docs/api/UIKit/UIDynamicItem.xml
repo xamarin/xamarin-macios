@@ -1,0 +1,35 @@
+<Documentation>
+  <Docs DocId="T:UIKit.UIDynamicItem">
+    <summary>A class that can be affected by <see cref="T:UIKit.UIDynamicBehavior" />s.</summary>
+    <remarks>
+      <para>
+	Describes the elements that can be affected by the animator.
+	Classes that implement the methods of this interface can be
+	controlled by the <see cref="T:UIKit.UIDynamicAnimator" />.
+
+      </para>
+      <para> 
+	iOS 7 introduced UI Dynamics, which provides physics-based
+	animation for UI elements. The overall coordination of UI
+	Dynamics is performed by a <see cref="T:UIKit.UIDynamicAnimator" />, which holds
+	references to a number of <see cref="T:UIKit.UIDynamicBehavior" />s, which define
+	behaviors such as gravity, pushing, and collision
+	detection. Each <see cref="T:UIKit.UIDynamicBehavior" /> holds references
+	to some amount of <see cref="T:UIKit.IUIDynamicItem" />s, which represent the objects to which the physics model is
+	applied.
+      </para>
+      <para> 
+	While this class contains the full protocol definition,
+	and allows for users to override the methods manually in
+	subclasses, if you want to create your own items that can be
+	animated by the physics engine, all you have to do is
+	implement the <see cref="T:UIKit.IUIDynamicItem" />
+	interface in your object.  
+      </para>
+      <para> 
+	Two classes that implement <see cref="T:UIKit.IUIDynamicItem" /> are <see cref="T:UIKit.UIView" /> and <see cref="T:UIKit.UICollectionViewLayoutAttributes" />.
+      </para>
+    </remarks>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIDynamicItem_Protocol/index.html">Apple documentation for <c>UIDynamicItem</c></related>
+  </Docs>
+</Documentation>

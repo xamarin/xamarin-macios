@@ -22,6 +22,9 @@ using NativeHandle = System.IntPtr;
 #endif
 
 namespace Photos {
+	/// <summary>Application-specific "recipe" data for the most recent edit made to a <see cref="T:Photos.PHAsset" />.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Photos/Reference/PHAdjustmentData_Class/index.html">Apple documentation for <c>PHAdjustmentData</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface PHAdjustmentData : NSCoding, NSSecureCoding {
@@ -39,6 +42,9 @@ namespace Photos {
 		NSData Data { get; }
 	}
 
+	/// <summary>A <see cref="T:Photos.PHObject" /> representing a single photo or video.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Photos/Reference/PHAsset_Class/index.html">Apple documentation for <c>PHAsset</c></related>
 	[MacCatalyst (13, 1)]
 #if MONOMAC
 	[DisableDefaultCtor] // Crashes mac introspection test
@@ -165,6 +171,9 @@ namespace Photos {
 		bool HasAdjustments { get; }
 	}
 
+	/// <summary>Used within a Photos change block to create, update, or delete <see cref="T:Photos.PHAsset" /> objects.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Photos/Reference/PHAssetChangeRequest_Class/index.html">Apple documentation for <c>PHAssetChangeRequest</c></related>
 	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor] // Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: -[PHAssetChangeRequest init]: unrecognized selector sent to instance 0x8165d150
 	[BaseType (typeof (PHChangeRequest))]
@@ -219,6 +228,9 @@ namespace Photos {
 
 	}
 
+	/// <summary>An object that can construct a new photo or video asset and add it to the Photos library.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Photos/Reference/PHAssetCreationRequest_Class/index.html">Apple documentation for <c>PHAssetCreationRequest</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (PHAssetChangeRequest))]
 	[DisableDefaultCtor]
@@ -238,10 +250,14 @@ namespace Photos {
 		void AddResource (PHAssetResourceType type, NSData data, [NullAllowed] PHAssetResourceCreationOptions options);
 	}
 
+	/// <summary>Continuation handler for tracking image operation progress.</summary>
 	[NoMac]
 	[MacCatalyst (13, 1)]
 	delegate void PHProgressHandler (double progress, ref bool stop);
 
+	/// <summary>A data resource that can be composed into a <see cref="T:Photos.PHAsset" />.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Photos/Reference/PHAssetResource_Class/index.html">Apple documentation for <c>PHAssetResource</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // crashes: -[PHAssetResource init]: unrecognized selector sent to instance 0x7f9e15884e90
@@ -279,6 +295,9 @@ namespace Photos {
 		nint PixelHeight { get; }
 	}
 
+	/// <summary>Options when creating assets from data resources.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Photos/Reference/PHAssetResourceCreationOptions_Class/index.html">Apple documentation for <c>PHAssetResourceCreationOptions</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface PHAssetResourceCreationOptions : NSCopying {
@@ -292,6 +311,9 @@ namespace Photos {
 		bool ShouldMoveFile { get; set; }
 	}
 
+	/// <summary>Options used when requesting to edit an <see cref="T:Photos.PHAsset" />.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Photos/Reference/PHContentEditingInputRequestOptions_Class/index.html">Apple documentation for <c>PHContentEditingInputRequestOptions</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface PHContentEditingInputRequestOptions {
@@ -315,8 +337,10 @@ namespace Photos {
 		NSString InputErrorKey { get; }
 	}
 
+	/// <summary>Completion handler for the <see cref="M:Photos.PHAssetContentEditingInputExtensions.RequestContentEditingInput(Photos.PHAsset,Photos.PHContentEditingInputRequestOptions,Photos.PHContentEditingHandler)" /> method.</summary>
 	delegate void PHContentEditingHandler (PHContentEditingInput contentEditingInput, NSDictionary requestStatusInfo);
 
+	/// <summary>Extension methods for <see cref="T:Photos.PHAsset" /> objects.</summary>
 	[MacCatalyst (13, 1)]
 	[Category]
 	[BaseType (typeof (PHAsset))]
@@ -329,6 +353,9 @@ namespace Photos {
 		void CancelContentEditingInputRequest (nuint requestID);
 	}
 
+	/// <summary>Used within a Photos change block to create, update, or delete <see cref="T:Photos.PHAssetCollection" /> objects..</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Photos/Reference/PHAssetCollectionChangeRequest_Class/index.html">Apple documentation for <c>PHAssetCollectionChangeRequest</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (PHChangeRequest))]
 	[DisableDefaultCtor] // fails when calling ToString (see below) and there are (static) API to create them
@@ -378,6 +405,9 @@ namespace Photos {
 		void MoveAssets (NSIndexSet fromIndexes, nuint toIndex);
 	}
 
+	/// <summary>Allows manipulation of the data underlying a <see cref="T:Photos.PHAsset" />.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Photos/Reference/PHAssetResourceManager_Class/index.html">Apple documentation for <c>PHAssetResourceManager</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -397,6 +427,9 @@ namespace Photos {
 		void CancelDataRequest (int requestID);
 	}
 
+	/// <summary>Options used when fetching resources with <see cref="T:Photos.PHAssetResourceManager" />.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Photos/Reference/PHAssetResourceRequestOptions_Class/index.html">Apple documentation for <c>PHAssetResourceRequestOptions</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface PHAssetResourceRequestOptions : NSCopying {
@@ -407,6 +440,9 @@ namespace Photos {
 		Action<double> ProgressHandler { get; set; }
 	}
 
+	/// <summary>Sent by the system and encapsulate details about changes to a fetch result (see <see cref="T:Photos.PHFetchResult" />) or <see cref="T:Photos.PHObject" /> instances.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Photos/Reference/PHChange_Class/index.html">Apple documentation for <c>PHChange</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface PHChange {
@@ -420,6 +456,9 @@ namespace Photos {
 		PHFetchResultChangeDetails GetFetchResultChangeDetails (PHFetchResult obj);
 	}
 
+	/// <summary>Holds information between a fetched Photos object and the state of that asset or collection within the Photos library.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Photos/Reference/PHObjectChangeDetails_Class/index.html">Apple documentation for <c>PHObjectChangeDetails</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface PHObjectChangeDetails {
@@ -446,9 +485,13 @@ namespace Photos {
 	// include the availability attributes to any new member (and don't trust the type-level ones)
 	interface PHChangeRequest { }
 
+	/// <summary>Enumerates differences between snapshots of the objec at the specified indices.</summary>
 	[MacCatalyst (13, 1)]
 	delegate void PHChangeDetailEnumerator (nuint fromIndex, nuint toIndex);
 
+	/// <summary>Differences between a fetch previously performed and what would be the results if the same fetch were performed now.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Photos/Reference/PHFetchResultChangeDetails_Class/index.html">Apple documentation for <c>PHFetchResultChangeDetails</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface PHFetchResultChangeDetails {
@@ -494,6 +537,9 @@ namespace Photos {
 		PHFetchResultChangeDetails ChangeDetails (PHFetchResult fromResult, PHFetchResult toResult, PHObject [] changedObjects);
 	}
 
+	/// <summary>Abstract collection of <see cref="T:Photos.PHObject" />s. Concrete subtypes are <see cref="T:Photos.PHAssetCollection" /> and <see cref="T:Photos.PHCollectionList" />.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Photos/Reference/PHCollection_Class/index.html">Apple documentation for <c>PHCollection</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (PHObject))]
 	[DisableDefaultCtor] // not user createable (calling description fails, see below) must be fetched by API
@@ -526,6 +572,9 @@ namespace Photos {
 		PHFetchResult FetchTopLevelUserCollections ([NullAllowed] PHFetchOptions options);
 	}
 
+	/// <summary>A collection of <see cref="T:Photos.PHAsset" />s.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Photos/Reference/PHAssetCollection_Class/index.html">Apple documentation for <c>PHAssetCollection</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (PHCollection))]
 	interface PHAssetCollection {
@@ -601,6 +650,9 @@ namespace Photos {
 		PHAssetCollection GetTransientAssetCollection (PHFetchResult fetchResult, [NullAllowed] string title);
 	}
 
+	/// <summary>A list of <see cref="T:Photos.PHAssetCollection" />s.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Photos/Reference/PHCollectionList_Class/index.html">Apple documentation for <c>PHCollectionList</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (PHCollection))]
 	interface PHCollectionList {
@@ -661,6 +713,9 @@ namespace Photos {
 		PHCollectionList CreateTransientCollectionList (PHFetchResult fetchResult, [NullAllowed] string title);
 	}
 
+	/// <summary>Used within a Photos change block to create, update, or delete <see cref="T:Photos.PHCollectionList" /> objects..</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Photos/Reference/PHCollectionListChangeRequest_Class/index.html">Apple documentation for <c>PHCollectionListChangeRequest</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (PHChangeRequest))]
 	[DisableDefaultCtor] // sometimes crash when calling 'description'
@@ -718,6 +773,9 @@ namespace Photos {
 		void MoveChildCollections (NSIndexSet indexes, nuint toIndex);
 	}
 
+	/// <summary>Describes an editable <see cref="T:Photos.PHAsset" />.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Photos/Reference/PHContentEditingInput_Class/index.html">Apple documentation for <c>PHContentEditingInput</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface PHContentEditingInput {
@@ -780,6 +838,9 @@ namespace Photos {
 		PHAssetPlaybackStyle PlaybackStyle { get; }
 	}
 
+	/// <summary>Describes the result of editing a <see cref="T:Photos.PHAsset" />.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Photos/Reference/PHContentEditingOutput_Class/index.html">Apple documentation for <c>PHContentEditingOutput</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface PHContentEditingOutput : NSCoding, NSSecureCoding {
@@ -811,6 +872,9 @@ namespace Photos {
 		NSUrl GetRenderedContentUrl (UTType type, [NullAllowed] out NSError error);
 	}
 
+	/// <summary>Options used when retrieving objects of type <see cref="T:Photos.PHAsset" />, <see cref="T:Photos.PHCollection" />, <see cref="T:Photos.PHAssetCollection" />, or <see cref="T:Photos.PHCollectionList" />.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Photos/Reference/PHFetchOptions_Class/index.html">Apple documentation for <c>PHFetchOptions</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface PHFetchOptions : NSCopying {
@@ -842,9 +906,13 @@ namespace Photos {
 		nuint FetchLimit { get; set; }
 	}
 
+	/// <summary>Enumerates the assets in a fetch result.</summary>
 	[MacCatalyst (13, 1)]
 	delegate void PHFetchResultEnumerator (NSObject element, nuint elementIndex, out bool stop);
 
+	/// <summary>An ordered list of <see cref="T:Photos.PHObject" /> objects.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Photos/Reference/PHFetchResult_Class/index.html">Apple documentation for <c>PHFetchResult</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // crash when calling 'description' and seems to be only returned from iOS (not user created)
@@ -899,8 +967,12 @@ namespace Photos {
 		nuint CountOfAssetsWithMediaType (PHAssetMediaType mediaType);
 	}
 
+	/// <summary>A continuation handler for that is called by the Photos application to show progress for an image request.</summary>
 	delegate void PHAssetImageProgressHandler (double progress, NSError error, out bool stop, NSDictionary info);
 
+	/// <summary>Options used when retrieving images with the <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=T:PHImageManager&amp;scope=Xamarin" title="T:PHImageManager">T:PHImageManager</a></format> singleton.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Photos/Reference/PHImageRequestOptions_Class/index.html">Apple documentation for <c>PHImageRequestOptions</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface PHImageRequestOptions : NSCopying {
@@ -932,8 +1004,12 @@ namespace Photos {
 		bool AllowSecondaryDegradedImage { get; set; }
 	}
 
+	/// <summary>Delegate type used with <see cref="P:Photos.PHVideoRequestOptions.ProgressHandler" />.</summary>
 	delegate void PHAssetVideoProgressHandler (double progress, NSError error, out bool stop, NSDictionary info);
 
+	/// <summary>Options used when retrieiving videos with the <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=Photos%20PHPhoto%20Manager&amp;scope=Xamarin" title="T:Photos.PHPhotoManager">T:Photos.PHPhotoManager</a></format> singleton.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Photos/Reference/PHVideoRequestOptions_Class/index.html">Apple documentation for <c>PHVideoRequestOptions</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface PHVideoRequestOptions : NSCopying {
@@ -952,6 +1028,7 @@ namespace Photos {
 		PHAssetVideoProgressHandler ProgressHandler { get; set; }
 	}
 
+	/// <summary>Constants indicating results of image loading. Used with <see cref="M:Photos.PHImageManager.RequestImageForAsset(Photos.PHAsset,CoreGraphics.CGSize,Photos.PHImageContentMode,Photos.PHImageRequestOptions,Photos.PHImageResultHandler)" />, defines the keys and values passed to the <see cref="T:Photos.PHImageResultHandler" /> .</summary>
 	[MacCatalyst (13, 1)]
 	[Static]
 	interface PHImageKeys {
@@ -975,19 +1052,29 @@ namespace Photos {
 #if MONOMAC
 	delegate void PHImageResultHandler (NSImage result, NSDictionary info);
 #else
+	/// <param name="result">The requested image.</param>
+	///     <param name="info">Keys and values are defined in <see cref="T:Photos.PHImageKeys" />.</param>
+	///     <summary>Completion handler for the <see cref="M:Photos.PHImageManager.RequestImageForAsset(Photos.PHAsset,CoreGraphics.CGSize,Photos.PHImageContentMode,Photos.PHImageRequestOptions,Photos.PHImageResultHandler)" /> method.</summary>
 	delegate void PHImageResultHandler (UIImage result, NSDictionary info);
 #endif
 
+	/// <summary>Completion handler for the <see cref="M:Photos.PHImageManager.RequestPlayerItem(Photos.PHAsset,Photos.PHVideoRequestOptions,Photos.PHImageManagerRequestPlayerHandler)" /> method.</summary>
 	delegate void PHImageManagerRequestPlayerHandler (AVPlayerItem playerItem, NSDictionary info);
+	/// <summary>Completion handler for the <see cref="M:Photos.PHImageManager.RequestExportSession(Photos.PHAsset,Photos.PHVideoRequestOptions,System.String,Photos.PHImageManagerRequestExportHandler)" /> method.</summary>
 	delegate void PHImageManagerRequestExportHandler (AVAssetExportSession exportSession, NSDictionary info);
 #if NET
+	/// <summary>Completion handle for the <see cref="M:Photos.PHImageManager.RequestAvAsset(Photos.PHAsset,Photos.PHVideoRequestOptions,Photos.PHImageManagerRequestAvAssetHandler)" /> method.</summary>
 	delegate void PHImageManagerRequestAVAssetHandler (AVAsset asset, AVAudioMix audioMix, NSDictionary info);
 #else
 	delegate void PHImageManagerRequestAvAssetHandler (AVAsset asset, AVAudioMix audioMix, NSDictionary info);
 #endif
+	/// <summary>The result handler delegate for calls to <see cref="M:Photos.PHImageManager.RequestLivePhoto(Photos.PHAsset,CoreGraphics.CGSize,Photos.PHImageContentMode,Photos.PHLivePhotoRequestOptions,Photos.PHImageManagerRequestLivePhoto)" />.</summary>
 	delegate void PHImageManagerRequestLivePhoto (PHLivePhoto livePhoto, NSDictionary info);
 	delegate void PHImageManagerRequestImageDataHandler ([NullAllowed] NSData imageData, [NullAllowed] string dataUti, CGImagePropertyOrientation orientation, [NullAllowed] NSDictionary info);
 
+	/// <summary>A singleton object that allows loading <see cref="T:Photos.PHAsset" /> objects.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Photos/Reference/PHImageManager_Class/index.html">Apple documentation for <c>PHImageManager</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface PHImageManager {
@@ -1042,9 +1129,13 @@ namespace Photos {
 #if MONOMAC
 	delegate void PHImageDataHandler (NSData data, NSString dataUti, CGImagePropertyOrientation orientation, NSDictionary info);
 #else
+	/// <summary>Completion handler for the <see cref="M:Photos.PHImageManager.RequestImageData(Photos.PHAsset,Photos.PHImageRequestOptions,Photos.PHImageDataHandler)" /> method.</summary>
 	delegate void PHImageDataHandler (NSData data, NSString dataUti, UIImageOrientation orientation, NSDictionary info);
 #endif
 
+	/// <summary>A <see cref="T:Photos.PHImageManager" /> that fetches or generates image data for <see cref="T:Photos.PHAsset" />s.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Photos/Reference/PHCachingImageManager_Class/index.html">Apple documentation for <c>PHCachingImageManager</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (PHImageManager))]
 	interface PHCachingImageManager {
@@ -1062,6 +1153,9 @@ namespace Photos {
 		void StopCaching ();
 	}
 
+	/// <summary>Abstract class for elements within the Photos library; subclasses are individual <see cref="T:Photos.PHAsset" />s, composite <see cref="T:Photos.PHCollection" />s, or not-yet-created <see cref="T:Photos.PHObjectPlaceholder" />s.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Photos/Reference/PHObject_Class/index.html">Apple documentation for <c>PHObject</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // doc -> "abstract base class"
@@ -1075,14 +1169,21 @@ namespace Photos {
 		string LocalIdentifier { get; }
 	}
 
+	/// <summary>A read-only proxy for an <see cref="T:Photos.PHAsset" /> or <see cref="T:Photos.PHCollectionList" /> that has not yet been created, but will be created via a sequence of change requests.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Photos/Reference/PHObjectPlaceholder_Class/index.html">Apple documentation for <c>PHObjectPlaceholder</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (PHObject))]
 	interface PHObjectPlaceholder {
 
 	}
 
+	/// <include file="../docs/api/Photos/IPHPhotoLibraryChangeObserver.xml" path="/Documentation/Docs[@DocId='T:Photos.IPHPhotoLibraryChangeObserver']/*" />
 	interface IPHPhotoLibraryChangeObserver { }
 
+	/// <summary>Provides methods relating to changes in the <see cref="T:Photos.PHPhotoLibrary" />.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Photos/Reference/PHPhotoLibraryChangeObserver_Protocol/index.html">Apple documentation for <c>PHPhotoLibraryChangeObserver</c></related>
 	[MacCatalyst (13, 1)]
 	[Protocol]
 	[Model]
@@ -1108,6 +1209,9 @@ namespace Photos {
 
 	delegate void PHPhotoLibraryCancellableChangeHandler (out bool cancel);
 
+	/// <summary>The entire set of data managed by the Photos app. This includes both locally stored assets and, if user-enabled, assets stored in iCloud.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Photos/Reference/PHPhotoLibrary_Class/index.html">Apple documentation for <c>PHPhotoLibrary</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // NSInternalInconsistencyException Reason: -[PHPhotoLibrary init] unsupported
@@ -1226,6 +1330,9 @@ namespace Photos {
 		NSString LocalIdentifierNotFound { get; }
 	}
 
+	/// <summary>An image that contains motion and sound from the time it was captured.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Photos/PHLivePhoto">Apple documentation for <c>PHLivePhoto</c></related>
 #if MONOMAC
 	[DisableDefaultCtor] // NS_UNAVAILABLE
 #endif
@@ -1250,6 +1357,9 @@ namespace Photos {
 		void CancelLivePhotoRequest (int requestID);
 	}
 
+	/// <summary>Contains options for requesting live photos from a photo manager.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Photos/PHLivePhotoRequestOptions">Apple documentation for <c>PHLivePhotoRequestOptions</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface PHLivePhotoRequestOptions : NSCopying {
@@ -1267,6 +1377,7 @@ namespace Photos {
 		PHImageRequestOptionsVersion Version { get; set; }
 	}
 
+	/// <summary>Defines keys for the <c>info</c> dictionary passed to the result handler in <see cref="M:Photos.PHLivePhoto.RequestLivePhoto(Foundation.NSUrl[],UIKit.UIImage,CoreGraphics.CGSize,Photos.PHImageContentMode,System.Action{Photos.PHLivePhoto,Foundation.NSDictionary})" />.</summary>
 	[MacCatalyst (13, 1)]
 	[Static]
 	interface PHLivePhotoInfo {
@@ -1281,11 +1392,18 @@ namespace Photos {
 	}
 
 #if NET
+	/// <param name="frame">The video frame to process.</param>
+	///     <param name="error">An error in which to record problems that occurred while processing the frame.</param>
+	///     <summary>Delegate that is called on every frame of a Live Photo as it is processed.</summary>
+	///     <returns>A processed image that represents the frame.</returns>
 	delegate CIImage PHLivePhotoFrameProcessingBlock (IPHLivePhotoFrame frame, ref NSError error);
 #else
 	delegate CIImage PHLivePhotoFrameProcessingBlock2 (IPHLivePhotoFrame frame, ref NSError error);
 #endif
 
+	/// <summary>An editing context for a live photo's image, audio, and video data.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Photos/PHLivePhotoEditingContext">Apple documentation for <c>PHLivePhotoEditingContext</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // NS_UNAVAILABLE
@@ -1358,6 +1476,7 @@ namespace Photos {
 
 	interface IPHLivePhotoFrame { }
 
+	/// <summary>Defines the interface for Live Photo frames that are produced by the system.</summary>
 	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface PHLivePhotoFrame {
@@ -1386,6 +1505,7 @@ namespace Photos {
 		NSString ShouldRenderAtPlaybackTimeKey { get; }
 	}
 
+	/// <summary>Contains a playback option for use when processing or editing a Live Photo.</summary>
 	[MacCatalyst (13, 1)]
 	[StrongDictionary ("PHLivePhotoEditingOptionKeys")]
 	interface PHLivePhotoEditingOption {

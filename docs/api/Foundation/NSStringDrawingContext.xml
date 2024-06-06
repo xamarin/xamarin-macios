@@ -1,0 +1,22 @@
+<Documentation>
+  <Docs DocId="T:Foundation.NSStringDrawingContext">
+    <summary>Configures and track the scale factor and tracking adjustements used when drawing attributed strings.</summary>
+    <remarks>
+      <para>
+	You can use instances of this class to either configure the
+	scale factor or the tracking adjustements used when drawing an
+	attributed string.  
+      </para>
+      <para>
+	You can set the properties up front with
+	the <see cref="P:Foundation.NSStringDrawingContext.MinimumScaleFactor" />
+	and <see cref="P:Foundation.NSStringDrawingContext.MinimumTrackingAdjustment" />.   
+      </para>
+      <para>
+	After drawing you can examine the actual values used by examining the <see cref="P:Foundation.NSStringDrawingContext.ActualScaleFactor" />
+	and <see cref="P:Foundation.NSStringDrawingContext.ActualTrackingAdjustment" /> properties. 
+      </para>
+    </remarks>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/NSStringDrawingContext_class/index.html">Apple documentation for <c>NSStringDrawingContext</c></related>
+  </Docs>
+</Documentation>

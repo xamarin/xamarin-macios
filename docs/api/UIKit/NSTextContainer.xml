@@ -1,0 +1,44 @@
+<Documentation>
+  <Docs DocId="T:UIKit.NSTextContainer">
+    <summary>Models the geometric layout of a page in Text Kit.</summary>
+    <remarks>
+      <para>iOS 7 introduced "Text Kit," a broad set of APIs and modifications of existing classes, built on <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=Core%20Text&amp;scope=Xamarin" title="N:CoreText">N:CoreText</a></format>, that greatly expands the typographical flexibility of iOS.</para>
+      <para>A <see cref="T:UIKit.NSLayoutManager" /> maintains a list of one or more <see cref="T:UIKit.NSTextContainer" />s in its <see cref="P:UIKit.NSLayoutManager.TextContainers" /> property. The <see cref="T:UIKit.NSLayoutManager" /> lays out the text through these <see cref="T:UIKit.NSTextContainer" />s sequentially. Typically, each container will be handed to a <see cref="T:UIKit.UITextView" /> which will be laid out on the display surface sequentially. For text to flow from one <see cref="T:UIKit.UITextView" /> to another, the first <see cref="T:UIKit.UITextView" />'s <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=UIKit%20UIText%20View%20Scroll%20Enabled&amp;scope=Xamarin" title="P:UIKit.UITextView.ScrollEnabled">P:UIKit.UITextView.ScrollEnabled</a></format> property must be set to <see langword="false" />.</para>
+      <para>The following example shows text laid out in a two-column format. </para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+var storage = new NSTextStorage();
+storage.SetString(attributedString);
+
+var layoutManager = new NSLayoutManager();
+storage.AddLayoutManager(layoutManager);
+//NSTextContainer defines a logical block (page, column)
+var leftHandContainer = new NSTextContainer(size);
+layoutManager.AddTextContainer(leftHandContainer);
+
+//Column 1
+var leftHandView = new UITextView(new RectangleF(new PointF(padding, padding), new SizeF(UIScreen.MainScreen.Bounds.Width / 2 - padding * 2, UIScreen.MainScreen.Bounds.Height - padding * 2)), leftHandContainer);
+leftHandView.BackgroundColor = UIColor.Green;
+leftHandView.ScrollEnabled = false;
+AddSubview(leftHandView);
+
+//Column 2
+var rightHandContainer = new NSTextContainer(size);
+layoutManager.AddTextContainer(rightHandContainer);
+var rightHandView = new UITextView(new RectangleF(new PointF(padding * 2 + size.Width, padding), size), rightHandContainer);
+rightHandView.BackgroundColor = UIColor.Red;
+AddSubview(rightHandView);         
+          ]]></code>
+      </example>
+      <para>
+        <img href="~/UIKit/_images/UIKit.NSTextContainer.TwoColumn.png" alt="Screenshot showing two-column layout" />
+      </para>
+      <para>
+        <img href="~/UIKit/_images/UIKit.NSTextContainer.TwoColumnCommunication.png" alt="UML class diagram showing classes related to showing text in two columns" />
+      </para>
+      <para>The preceding diagram illustrates the objects directly involved in the two-column layout. The <see cref="T:UIKit.NSTextStorage" /> is the responsibility of some external model class and the two-column user-interface is specified by a custom <see cref="T:UIKit.UIView" /> (<c>TwoColumnView</c>). </para>
+      <para>A <see cref="T:UIKit.NSTextContainer" /> contains an array of zero or more <see cref="T:UIKit.UIBezierPath" /> objects in its <see cref="P:UIKit.NSTextContainer.ExclusionPaths" /> property. Text will not be placed within these paths.</para>
+    </remarks>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/NSTextContainer_Class_TextKit/index.html">Apple documentation for <c>NSTextContainer</c></related>
+  </Docs>
+</Documentation>
