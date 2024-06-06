@@ -15,6 +15,7 @@ using IdentityLookup;
 
 namespace IdentityLookupUI {
 
+	/// <summary>Extension context for reporting unwanted communication.</summary>
 	[iOS (12, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSExtensionContext))]
@@ -24,6 +25,9 @@ namespace IdentityLookupUI {
 		bool ReadyForClassificationResponse { [Bind ("isReadyForClassificationResponse")] get; set; }
 	}
 
+	/// <summary>Base class for view controllers for Unwanted Communication Reporting extensions.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/documentation/sms_and_call_reporting/sms_and_call_spam_reporting?language=objc">SMS and Call Spam Reporting</related>
 	[iOS (12, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (UIViewController))]

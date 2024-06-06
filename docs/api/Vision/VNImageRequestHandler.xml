@@ -1,0 +1,24 @@
+<Documentation>
+  <Docs DocId="T:Vision.VNImageRequestHandler">
+    <summary>Coordinates the vision requests of a single image.</summary>
+    <remarks>
+      <para>The <see cref="T:Vision.VNImageRequestHandler" /> is the top-level object for single-image vision processing ( see <see cref="T:Vision.VNSequenceRequestHandler" /> for video or image sequences). Developers instantiate a <see cref="T:Vision.VNImageRequestHandler" /> object with an image and image-processing options. Developers call <see cref="M:Vision.VNImageRequestHandler.Perform(Vision.VNRequest[],Foundation.NSError@)" /> with an array containing one or more <see cref="T:Vision.VNImageBasedRequest" /> objects (for instance, a <see cref="T:Vision.VNDetectFaceRectanglesRequest" />). The <see cref="T:Vision.VNRequestCompletionHandler" /> of the <see cref="T:Vision.VNImageBasedRequest" /> is called once for each detected object. For example:</para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+System.Threading.Tasks.Task.Run(() =>
+{
+	using (var requestHandler = new VNImageRequestHandler(img, new NSDictionary()))
+	{
+		var findFacesRequest = new VNDetectFaceRectanglesRequest(faceDetectionHandler);
+		requestHandler.Perform(new[] { findFacesRequest }, out var error);
+		if (error != null)
+		{
+			HandleError(error);
+		}
+	}
+});
+    ]]></code>
+      </example>
+    </remarks>
+  </Docs>
+</Documentation>

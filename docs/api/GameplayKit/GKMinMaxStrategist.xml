@@ -1,0 +1,14 @@
+<Documentation>
+  <Docs DocId="T:GameplayKit.GKMinMaxStrategist">
+    <summary>Game AI that evaluates potential game states, scores them, and attempts to maximize it's own score while minimizing it's opponents.</summary>
+    <remarks>
+      <para>The <see cref="T:GameplayKit.GKMinMaxStrategist" /> class is an implementation of the minimax algorithm, optimized for space efficiency. Developers do not subclass <see cref="T:GameplayKit.GKMinMaxStrategist" />, but instead create game-specific implementations of <see cref="T:GameplayKit.IGKGameModelPlayer" />, <see cref="T:GameplayKit.IGKGameModel" />, and <see cref="T:GameplayKit.IGKGameModelUpdate" />. This is discussed in detail in the "AI Opponent" section of the remarks section of the <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=Gameplay%20Kit&amp;scope=Xamarin" title="N:GameplayKit">N:GameplayKit</a></format> namespace documentation.</para>
+      <para>Perhaps because <see cref="T:GameplayKit.GKMinMaxStrategist" /> is a highly-optimized implementation, it's failure modes are difficult to debug. Typically, a mistake in the configuration of <see cref="T:GameplayKit.GKMinMaxStrategist" /> or in the implementation of the related game classes results in an <see langword="null" /> returned by <see cref="M:GameplayKit.GKMinMaxStrategist.GetBestMove(GameplayKit.IGKGameModelPlayer)" /> with no error message in the console or system log. The following sequence diagram may be of some help in placing breakpoints:</para>
+      <para>
+        <img href="~/GameplayKit/_images/GKMinMaxStrategist.GetBestMoveMove_Sequence.png" alt="Sequence diagram showing the get best move algorithm." />
+      </para>
+      <para>Because <see cref="M:GameplayKit.GKMinMaxStrategist.GetBestMove(GameplayKit.IGKGameModelPlayer)" /> is very expensive, developers should typically call it from a background <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=System%20Threading%20Tasks%20Task&amp;scope=Xamarin" title="T:System.Threading.Tasks.Task">T:System.Threading.Tasks.Task</a></format>.</para>
+    </remarks>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/GameplayKit/Reference/GKMinmaxStrategist_Class/index.html">Apple documentation for <c>GKMinmaxStrategist</c></related>
+  </Docs>
+</Documentation>

@@ -1,0 +1,10 @@
+<Documentation>
+  <Docs DocId="T:UIKit.UIImagePickerControllerDelegate">
+    <summary>A class used to receive notifications from the <see cref="T:UIKit.UIImagePickerController" />.</summary>
+    <remarks>
+      <para>Application developers can implement this delegate in order to handle actions associated with the <see cref="T:UIKit.UIImagePickerController" /> and the capture or selection of images or video. The application developer is responsible for dismissing the <see cref="T:UIKit.UIImagePickerController" /> after the operation (capture, selection, or cancellation) is complete and should do so using the <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=UIKit%20UIView%20Controller%20Dismiss%20Modal%20View%20Controller%20Animated&amp;scope=Xamarin" title="M:UIKit.UIViewController.DismissModalViewControllerAnimated*">M:UIKit.UIViewController.DismissModalViewControllerAnimated*</a></format> method of the parent <see cref="T:UIKit.UIViewController" />. </para>
+    </remarks>
+    
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIImagePickerControllerDelegate_Protocol/index.html">Apple documentation for <c>UIImagePickerControllerDelegate</c></related>
+  </Docs>
+</Documentation>

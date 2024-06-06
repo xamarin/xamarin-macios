@@ -13,6 +13,7 @@ using ObjCRuntime;
 namespace MessageUI {
 
 #if NET
+	/// <summary>The result from composing an email message.</summary>
 	[Native]
 	public enum MFMailComposeResult : long {
 #else
@@ -26,6 +27,7 @@ namespace MessageUI {
 		Failed
 	}
 
+	/// <summary>Details of the composing error.</summary>
 	[ErrorDomain ("MFMailComposeErrorDomain")]
 #if NET
 	[Native]
@@ -40,6 +42,7 @@ namespace MessageUI {
 	}
 
 #if NET
+	/// <summary>An enumeration whose values specify the various results possible from a message being composed.</summary>
 	[Native]
 	public enum MessageComposeResult : long {
 #else

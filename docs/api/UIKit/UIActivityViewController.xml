@@ -1,0 +1,30 @@
+<Documentation>
+  <Docs DocId="T:UIKit.UIActivityViewController">
+    <summary>A standard view controller that connects the application to a number of standard services such as social networks, SMS, etc. </summary>
+    <remarks>
+      <para>
+        The <see cref="T:UIKit.UIActivityViewController" /> allows the application user to easily share data between the current application and services. A number of services such as social networks, email, and SMS are provided by the OS. The application developer can create additional services by implementing custom <see cref="T:UIKit.UIActivity" />s and <see cref="T:UIKit.UIActivityItemProvider" />. Custom activities are not available in other applications.
+      </para>
+      <para>
+        The following example shows how to use the <see cref="T:UIKit.UIActivityViewController" />. In response to a button press, text from a <see cref="T:UIKit.UITextField" /> is made available to the <see cref="T:UIKit.UIActivityViewController" />. The text is wrapped in the <see cref="T:UIKit.UIActivity" /><c>item</c> and this, in turn, is placed into the <c>activityItems</c> array. The application does not have custom <see cref="T:UIKit.UIActivity" />s, so the <c>applicationActivities</c> array is specified as <see langword="null" />. The <see cref="T:UIKit.UIActivityViewController" /> is allocated and presented modally with <see cref="M:UIKit.UIViewController.PresentViewController(UIKit.UIViewController,System.Boolean,System.Action)" />, which is appropriate for the iPhone. On the iPad, a <see cref="T:UIKit.UIPopoverController" /> should be used. The image shows the <see cref="T:UIKit.UIActivityViewController" /> during presentation.
+      </para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+sendButton.TouchUpInside += (sender, e) => {
+	var item = UIActivity.FromObject (textField.Text);
+	var activityItems = new NSObject[] { item };
+	UIActivity[] applicationActivities = null;
+	
+	var activityController = new UIActivityViewController (activityItems, applicationActivities);
+	
+	PresentViewController (activityController, true, null);
+};
+      ]]></code>
+      </example>
+      <para>
+        <img href="~/UIKit/_images/UIKit.UIActivityViewController.Presentation.png" alt="Screenshot of the view controller" />
+      </para>
+    </remarks>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIActivityViewController_Class/index.html">Apple documentation for <c>UIActivityViewController</c></related>
+  </Docs>
+</Documentation>

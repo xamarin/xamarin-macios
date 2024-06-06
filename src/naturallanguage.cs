@@ -32,6 +32,7 @@ using NativeHandle = System.IntPtr;
 
 namespace NaturalLanguage {
 
+	/// <summary>Determines the most likely language in which a text is written.</summary>
 	[iOS (12, 0), TV (12, 0), Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor] // designated
@@ -83,6 +84,7 @@ namespace NaturalLanguage {
 		}
 	}
 
+	/// <summary>Contains a configuration for a <see cref="T:NaturalLanguage.NLModel" />.</summary>
 	[iOS (12, 0), TV (12, 0), Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -108,6 +110,7 @@ namespace NaturalLanguage {
 		nuint GetCurrentRevision (NLModelType type);
 	}
 
+	/// <summary>Imports custom classification and tagging models into the application.</summary>
 	[iOS (12, 0), TV (12, 0), Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor]
@@ -148,8 +151,14 @@ namespace NaturalLanguage {
 		NSDictionary<NSString, NSNumber> [] GetNativePredictedLabelHypotheses (string [] tokens, nuint maximumCount);
 	}
 
+	/// <param name="tokenRange">The range of tokens to which to apply the delegate.</param>
+	///     <param name="flags">Tokenizer hints.</param>
+	///     <param name="stop">
+	///       <see langword="false" /> to stop enumerating.</param>
+	///     <summary>Delegate to apply to tokens as they are enumerated by <see cref="M:NaturalLanguage.NLTokenizer.EnumerateTokens(Foundation.NSRange,NaturalLanguage.NLTokenizerEnumerateContinuationHandler)" />.</summary>
 	delegate void NLTokenizerEnumerateContinuationHandler (NSRange tokenRange, NLTokenizerAttributes flags, out bool stop);
 
+	/// <summary>Breaks a text up into semantic units.</summary>
 	[iOS (12, 0), TV (12, 0), Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor]
@@ -187,8 +196,14 @@ namespace NaturalLanguage {
 		NSRange GetTokenRange (NSRange range);
 	}
 
+	/// <param name="tag">The tag on which to operate.</param>
+	///     <param name="tokenRange">The token range to process.</param>
+	///     <param name="stop">
+	///       <see langword="false" /> to stop enumerating.</param>
+	///     <summary>Delegate to apply to tokens as they are enumerated by <see cref="M:NaturalLanguage.NLTagger.EnumerateTags(Foundation.NSRange,NaturalLanguage.NLTokenUnit,NaturalLanguage.NLTagScheme,NaturalLanguage.NLTaggerOptions,NaturalLanguage.NLTaggerEnumerateTagsContinuationHandler)" />.</summary>
 	delegate void NLTaggerEnumerateTagsContinuationHandler (NSString tag, NSRange tokenRange, out bool stop);
 
+	/// <summary>Analyzes text and produces an enumerable list of tags drawn from a specified set of tag schemas.</summary>
 	[iOS (12, 0), TV (12, 0), Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor]
@@ -342,6 +357,7 @@ namespace NaturalLanguage {
 		NSRange GetTokenRange (NSRange range, NLTokenUnit unit);
 	}
 
+	/// <summary>Enumerates token types.</summary>
 	[iOS (12, 0), TV (12, 0), Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	[Static] // only used to compare with NSString not as input/output
