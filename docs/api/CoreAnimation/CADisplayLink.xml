@@ -1,0 +1,52 @@
+<Documentation>
+  <Docs DocId="T:CoreAnimation.CADisplayLink">
+    <summary>Synchronization object between your animations and the display refresh.</summary>
+    <remarks>
+      <para>
+	The display link object is a timer that can be used to
+	synchronize your drawing with the screen refresh rate.  Once
+	you create your CADisplayLink, you need to add it to a runloop
+	by using the <see cref="M:CoreAnimation.CADisplayLink.AddToRunLoop(Foundation.NSRunLoop,Foundation.NSString)" />
+	method.
+
+      </para>
+      <para>
+	Using the display link ensures that your application will not
+	suffer from display glitches like screen tearing and micro-stuttering. 
+      </para>
+      <para>
+	You can pause the display link by setting the <see cref="P:CoreAnimation.CADisplayLink.Paused" />
+	property.  And you can remove your display link from any
+	registered run loops by calling the <see cref="M:CoreAnimation.CADisplayLink.Invalidate" />
+	method.
+
+      </para>
+      <para>
+	By default the timer is triggered sixty times per second.  If
+	your application does not need this level of precision, set
+	the FrameInterval property to skip one or more updates.  For
+	example, setting FrameInterval to two, would invoke your
+	target method thirty times per second.
+
+      </para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+GLKView myGlView;
+
+void Setup ()
+{
+    CADisplayLink displayLink = CADisplayLink.Create (Display);
+    displayLink.AddToRunLoop (NSRunLoop.Main, NSRunLoop.UITrackingRunLoopMode); 
+}
+
+void Display ()
+{
+    myGLView.Display ();
+}
+
+]]></code>
+      </example>
+    </remarks>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/QuartzCore/Reference/CADisplayLink_ClassRef/index.html">Apple documentation for <c>CADisplayLink</c></related>
+  </Docs>
+</Documentation>

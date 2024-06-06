@@ -1,0 +1,39 @@
+<Documentation>
+  <Docs DocId="T:UIKit.UIMenuItem">
+    <summary>Creates menu items that are attached to the editing menu.</summary>
+    <remarks>
+      <para>
+        <see cref="T:UIKit.UIMenuItem" />s are menu items that appear on the editing menu after the system menu items. <see cref="T:UIKit.UIMenuItem" />s are managed by a <see cref="T:UIKit.UIMenuController" /> and should be added to that object's <see cref="P:UIKit.UIMenuController.MenuItems" /> property. </para>
+      <para>As the following code, taken from the "Touches_GestureRecognizer" sample demonstrates, the <see cref="P:UIKit.UIMenuItem.Action" /> property is used to associate the <see cref="T:UIKit.UIMenuItem" /> with a method decorated with the <see cref="T:Foundation.ExportAttribute" /> attribute.</para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+void ShowResetMenu (UILongPressGestureRecognizer gestureRecognizer)
+{
+  if (gestureRecognizer.State == UIGestureRecognizerState.Began) {
+	    var menuController = UIMenuController.SharedMenuController;
+	    var resetMenuItem = new UIMenuItem ("Reset", new Selector ("ResetImage"));
+	    var location = gestureRecognizer.LocationInView (gestureRecognizer.View);
+	    BecomeFirstResponder ();
+	    menuController.MenuItems = new [] { resetMenuItem };
+	    menuController.SetTargetRect (new RectangleF (location.X, location.Y, 0, 0), gestureRecognizer.View);
+	    menuController.MenuVisible = true;
+	    imageForReset = gestureRecognizer.View;
+	  }
+}
+[Export("ResetImage")]
+void ResetImage (UIMenuController controller)
+{
+  var mid = new PointF ((imageForReset.Bounds.Left + imageForReset.Bounds.Right) / 2, (imageForReset.Bounds.Top + imageForReset.Bounds.Bottom) / 2);
+  var locationInSuperview = imageForReset.ConvertPointToView (mid, imageForReset.Superview);
+  imageForReset.Layer.AnchorPoint = new PointF (0.5f, 0.5f);
+  imageForReset.Center =locationInSuperview;
+
+  UIView.BeginAnimations (null, IntPtr.Zero);
+  imageForReset.Transform = MonoTouch.CoreGraphics.CGAffineTransform.MakeIdentity ();
+  UIView.CommitAnimations ();
+}          ]]></code>
+      </example>
+    </remarks>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIMenuItem_Class/index.html">Apple documentation for <c>UIMenuItem</c></related>
+  </Docs>
+</Documentation>

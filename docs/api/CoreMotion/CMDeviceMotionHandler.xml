@@ -1,0 +1,24 @@
+<Documentation>
+  <Docs DocId="T:CoreMotion.CMDeviceMotionHandler">
+    <param name="motion">The device motion for this event (attitude, rotation rate and acceleration for the device).</param>
+    <param name="error">The error if any, or null if there are no errors to report.</param>
+    <summary>A delegate signature used to receive events from <see cref="T:CoreMotion.CMMotionManager" /></summary>
+    <remarks>
+      <para>
+This signature is used as an argument to the <see cref="T:CoreMotion.CMMotionManager" />'s StartDeviceMotionUpdates.  
+</para>
+      <para>
+		For example:
+	</para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+     var motionManager = new CMMotionManager ();
+     motionManager.AccelerometerUpdateInterval = 0.01; // 100Hz
+     motionManager.StartDeviceMotionUpdates (NSOperationQueue.CurrentQueue, (motion, error) => {
+          Console.WriteLine ("RotationRate={0} Gravity={1} UserAcceleration={2} Attitude={3}", motion.RotationRate, motion.Gravity, motion.UserAcceleration, motion.Attitude);
+     });
+  ]]></code>
+      </example>
+    </remarks>
+  </Docs>
+</Documentation>

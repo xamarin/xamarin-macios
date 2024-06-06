@@ -29,6 +29,7 @@ namespace Messages {
 		Transcript,
 	}
 
+	/// <summary>Enumerates the sizes of stickers.</summary>
 	[MacCatalyst (14, 0)]
 	[Native]
 	public enum MSStickerSize : long {
@@ -37,6 +38,7 @@ namespace Messages {
 		Large
 	}
 
+	/// <summary>Enumerates errors associated with Messages.</summary>
 	[MacCatalyst (14, 0)]
 	[Native]
 	[ErrorDomain ("MSMessagesErrorDomain")]
@@ -55,6 +57,7 @@ namespace Messages {
 		APIUnavailableInPresentationContext,
 	}
 
+	/// <summary>Enumerates iMessage presentation contexts.</summary>
 	[MacCatalyst (14, 0)]
 	[iOS (12, 0)]
 	[Native]
@@ -71,6 +74,9 @@ namespace Messages {
 		CGSize GetContentSizeThatFits (CGSize size);
 	}
 
+	/// <summary>A <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=T:Speech.UIViewController&amp;scope=Xamarin" title="T:Speech.UIViewController">T:Speech.UIViewController</a></format> that, when extended by the developer, is used to present a custom user-experience within the Messages app.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Messages/MSMessagesAppViewController">Apple documentation for <c>MSMessagesAppViewController</c></related>
 	[MacCatalyst (14, 0)]
 	[BaseType (typeof (UIViewController))]
 	interface MSMessagesAppViewController : MSMessagesAppTranscriptPresentation {
@@ -129,6 +135,9 @@ namespace Messages {
 		MSMessagesAppPresentationContext PresentationContext { get; }
 	}
 
+	/// <summary>A sequences of messages between the user and one or more others.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Messages/MSConversation">Apple documentation for <c>MSConversation</c></related>
 	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NSObject))]
 	interface MSConversation {
@@ -178,6 +187,9 @@ namespace Messages {
 		void SendAttachment (NSUrl url, [NullAllowed] string filename, [NullAllowed] Action<NSError> completionHandler);
 	}
 
+	/// <summary>An interactive message object.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Messages/MSMessage">Apple documentation for <c>MSMessage</c></related>
 	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // designated
@@ -219,12 +231,23 @@ namespace Messages {
 		NSError Error { get; set; }
 	}
 
+	/// <summary>Abstract base class for defining the appearance of <see cref="T:Messages.MSMessage" /> objects.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Messages/MSMessageLayout">Apple documentation for <c>MSMessageLayout</c></related>
 	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NSObject))]
 	[Abstract] // as per docs
 	[DisableDefaultCtor]
 	interface MSMessageLayout : NSCopying { }
 
+	/// <summary>Lays out the display of <see cref="T:Messages.MSMessage" /> objects.</summary>
+	///     <remarks>
+	///       <para>The layout of a message template is:</para>
+	///       <para>
+	///         <img href="~/Messages/_images/Messages.MSMessageTemplateLayout.png" alt="Image showing the layout of the message template" />
+	///       </para>
+	///     </remarks>
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Messages/MSMessageTemplateLayout">Apple documentation for <c>MSMessageTemplateLayout</c></related>
 	[MacCatalyst (14, 0)]
 	[BaseType (typeof (MSMessageLayout))]
 	interface MSMessageTemplateLayout {
@@ -253,10 +276,16 @@ namespace Messages {
 		string ImageSubtitle { get; set; }
 	}
 
+	/// <summary>Represents a messaging session in which <see cref="T:Messages.MSMessage" /> objects can be created and updated.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Messages/MSSession">Apple documentation for <c>MSSession</c></related>
 	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NSObject))]
 	interface MSSession : NSSecureCoding { }
 
+	/// <summary>A custom Messages sticker.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Messages/MSSticker">Apple documentation for <c>MSSticker</c></related>
 	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -277,6 +306,9 @@ namespace Messages {
 		string LocalizedDescription { get; }
 	}
 
+	/// <summary>A <see cref="T:UIKit.UIView" /> that displays a developer-defined Messages sticker.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Messages/MSStickerView">Apple documentation for <c>MSStickerView</c></related>
 	[MacCatalyst (14, 0)]
 	[BaseType (typeof (UIView))]
 	interface MSStickerView {
@@ -303,8 +335,10 @@ namespace Messages {
 		bool IsAnimating { get; }
 	}
 
+	/// <include file="../docs/api/Messages/IMSStickerBrowserViewDataSource.xml" path="/Documentation/Docs[@DocId='T:Messages.IMSStickerBrowserViewDataSource']/*" />
 	interface IMSStickerBrowserViewDataSource { }
 
+	/// <related type="externalDocumentation" href="https://developer.apple.com/reference/Messages/MSStickerBrowserViewDataSource">Apple documentation for <c>MSStickerBrowserViewDataSource</c></related>
 	[MacCatalyst (14, 0)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
@@ -318,6 +352,11 @@ namespace Messages {
 		MSSticker GetSticker (MSStickerBrowserView stickerBrowserView, nint index);
 	}
 
+	/// <summary>A <see cref="T:UIKit.UIView" /> that can be extended to provide a custom sticker-selection experience.</summary>
+	///     <remarks>
+	///       <para>Developers who do not need to customize the sticker browsing experience should probably create a "sticker pack" that can be presented by the standard browser. Sticker packs do not require any coding.</para>
+	///     </remarks>
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Messages/MSStickerBrowserView">Apple documentation for <c>MSStickerBrowserView</c></related>
 	[MacCatalyst (14, 0)]
 	[BaseType (typeof (UIView))]
 	interface MSStickerBrowserView {
@@ -348,6 +387,9 @@ namespace Messages {
 		void ReloadData ();
 	}
 
+	/// <summary>A standard <see cref="T:UIKit.UIViewController" /> that presents a virtual roll of user-provided stickers.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Messages/MSStickerBrowserViewController">Apple documentation for <c>MSStickerBrowserViewController</c></related>
 	[MacCatalyst (14, 0)]
 	[BaseType (typeof (UIViewController))]
 	interface MSStickerBrowserViewController : MSStickerBrowserViewDataSource {

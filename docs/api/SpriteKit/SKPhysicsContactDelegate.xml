@@ -1,0 +1,23 @@
+<Documentation>
+  <Docs DocId="T:SpriteKit.SKPhysicsContactDelegate">
+    <summary>A delegate object for <see cref="T:SpriteKit.SKPhysicsWorld" /> that provides events when <see cref="T:SpriteKit.SKPhysicsBody" />s begin and end contact with each other.</summary>
+    <remarks>
+      <para>The following example reverses gravity when a <see cref="T:SpriteKit.SKPhysicsBody" /> named "Sphere" encounters one of the bodies named either "TopWall" or "BottomWall":</para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+public override void DidBeginContact(SKPhysicsContact contact)
+{
+	if(contact.BodyA.Node.Name == "Sphere" || contact.BodyB.Node.Name == "Sphere")
+	{
+		if(contact.BodyA.Node.Name == "BottomWall" || contact.BodyB.Node.Name == "BottomWall" || contact.BodyA.Node.Name == "TopWall" || contact.BodyB.Node.Name == "TopWall")
+		{
+			world.Gravity = new PointF(0, -world.Gravity.Y);
+		}
+	}
+}        
+          ]]></code>
+      </example>
+    </remarks>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/SpriteKit/Reference/SKPhysicsContactDelegate_Ref/index.html">Apple documentation for <c>SKPhysicsContactDelegate</c></related>
+  </Docs>
+</Documentation>

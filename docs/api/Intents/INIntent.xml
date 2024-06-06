@@ -1,0 +1,162 @@
+<Documentation>
+  <Docs DocId="T:Intents.INIntent">
+    <summary>A user-meaningful intention that is handled by the system's Intents system.</summary>
+    <remarks>
+      <para>An <see cref="T:Intents.INIntent" /> represents a user-initiated intention to perform a task in one of the system-defined "Intents" domains. Subclasses hold data specific to the particular domain and intention. For instance, <see cref="T:Intents.INStartWorkoutIntent" /> and <see cref="T:Intents.INCancelWorkoutIntent" /> have a <c>WorkoutName</c> property that could identify a specific workout.</para>
+      <para>The domains for Intents are:</para>
+      <para>Subclasses of <see cref="T:Intents.INIntent" /> are:</para>
+      <list type="table">
+        <listheader>
+          <!-- listheader bolds this row -->
+          <term>Class</term>
+          <description>Description</description>
+        </listheader>
+        <item>
+          <term>Domain: Phone and Video calls</term>
+          <description />
+        </item>
+        <item>
+          <term>INSearchCallHistoryIntent</term>
+          <description>The user wishes to search the call history.</description>
+        </item>
+        <item>
+          <term>INStartAudioCallIntent</term>
+          <description>The user wishes to start an audio call.</description>
+        </item>
+        <item>
+          <term>INStartVideoCallIntent</term>
+          <description>The user wishes to start a video call.</description>
+        </item>
+        <item>
+          <term>Domain: CarPlay</term>
+          <description />
+        </item>
+        <item>
+          <term>INSaveProfileInCarIntent</term>
+          <description>The user wishes to save a user profile.</description>
+        </item>
+        <item>
+          <term>INSetAudioSourceInCarIntent</term>
+          <description>The user wishes to specify the source for audio playback.</description>
+        </item>
+        <item>
+          <term>INSetClimateSettingsInCarIntent</term>
+          <description>The user wishes to control the climate.</description>
+        </item>
+        <item>
+          <term>INSetDefrosterSettingsInCarIntent</term>
+          <description>The user wishes to control the defroster.</description>
+        </item>
+        <item>
+          <term>INSetProfileInCarIntent</term>
+          <description>The user wishes to choose a particular user profile.</description>
+        </item>
+        <item>
+          <term>INSetSeatSettingsInCarIntent</term>
+          <description>The user wishes to modify the seat settings.</description>
+        </item>
+        <item>
+          <term>Domain: Messages</term>
+          <description />
+        </item>
+        <item>
+          <term>INSearchForMessagesIntent</term>
+          <description>The user wishes to search their message history.</description>
+        </item>
+        <item>
+          <term>INSendMessageIntent</term>
+          <description>The user wishes to send a message.</description>
+        </item>
+        <item>
+          <term>INSetMessageAttributeIntent</term>
+          <description>The user wishes to set a message characteristic.</description>
+        </item>
+        <item>
+          <term>Domain: Payments</term>
+          <description />
+        </item>
+        <item>
+          <term>INRequestPaymentIntent</term>
+          <description>The user wishes to request a payment.</description>
+        </item>
+        <item>
+          <term>INSendPaymentIntent</term>
+          <description>The user wishes to make a payment.</description>
+        </item>
+        <item>
+          <term>Domain: Photos</term>
+          <description />
+        </item>
+        <item>
+          <term>INSearchForPhotosIntent</term>
+          <description>The user intends to search for photos.</description>
+        </item>
+        <item>
+          <term>INStartPhotoPlaybackIntent</term>
+          <description>The user wishes to begin a slide show.</description>
+        </item>
+        <item>
+          <term>Domain: Radio</term>
+          <description />
+        </item>
+        <item>
+          <term>INSetRadioStationIntent</term>
+          <description>The user wishes to choose a station.</description>
+        </item>
+        <item>
+          <term>Domain: Restaurants</term>
+          <description />
+        </item>
+        <item>
+          <term>INGetAvailableRestaurantReservationBookingDefaultsIntent</term>
+          <description>The user wishes to receive a list of available reservation times.</description>
+        </item>
+        <item>
+          <term>INGetRestaurantGuestIntent</term>
+          <description>The user wishes to retrieve information about a particular guest making a reservation.</description>
+        </item>
+        <item>
+          <term>Domain: Ridesharing</term>
+          <description />
+        </item>
+        <item>
+          <term>INGetRideStatusIntent</term>
+          <description>The user wishes to get information about the current ride.</description>
+        </item>
+        <item>
+          <term>INListRideOptionsIntent</term>
+          <description>The user wishes to receive a list of available ride options.</description>
+        </item>
+        <item>
+          <term>INRequestRideIntent</term>
+          <description>The users wishes to request a ride.</description>
+        </item>
+        <item>
+          <term>Domain: Workouts</term>
+          <description />
+        </item>
+        <item>
+          <term>INCancelWorkoutIntent</term>
+          <description>The user wishes to cancel the workout.</description>
+        </item>
+        <item>
+          <term>INEndWorkoutIntent</term>
+          <description>The user wishes to finish the workout.</description>
+        </item>
+        <item>
+          <term>INPauseWorkoutIntent</term>
+          <description>The user wishes to pause the workout.</description>
+        </item>
+        <item>
+          <term>INResumeWorkoutIntent</term>
+          <description>The user wishes to resume a paused workout.</description>
+        </item>
+        <item>
+          <term>INStartWorkoutIntent</term>
+          <description>The user wishes to begin a workout.</description>
+        </item>
+      </list>
+    </remarks>
+    <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INIntent">Apple documentation for <c>INIntent</c></related>
+  </Docs>
+</Documentation>

@@ -50,6 +50,9 @@ using NativeHandle = System.IntPtr;
 #endif
 
 namespace AVKit {
+	/// <summary>Provides video playback in a floating, resizable window on larger devices.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/prerelease/ios/documentation/AVKit/Reference/AVPictureInPictureControllerDelegate_Protocol/index.html#//apple_ref/doc/uid/TP40016161">Apple documentation for <c>AVPictureInPictureController</c></related>
 	[TV (14, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -143,8 +146,17 @@ namespace AVKit {
 		AVPictureInPictureControllerContentSource ContentSource { get; set; }
 	}
 
+	/// <summary>Interface representing the required methods (if any) of the protocol <see cref="T:AVKit.AVPictureInPictureControllerDelegate" />.</summary>
+	///     <remarks>
+	///       <para>This interface contains the required methods (if any) from the protocol defined by <see cref="T:AVKit.AVPictureInPictureControllerDelegate" />.</para>
+	///       <para>If developers create classes that implement this interface, the implementation methods will automatically be exported to Objective-C with the matching signature from the method defined in the <see cref="T:AVKit.AVPictureInPictureControllerDelegate" /> protocol.</para>
+	///       <para>Optional methods (if any) are provided by the <see cref="T:AVKit.AVPictureInPictureControllerDelegate_Extensions" /> class as extension methods to the interface, allowing developers to invoke any optional methods on the protocol.</para>
+	///     </remarks>
 	interface IAVPictureInPictureControllerDelegate { }
 
+	/// <summary>Delegate object providing methods for the application's <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=UIKit%20UIView%20Controller%20Delegate&amp;scope=Xamarin" title="T:UIKit.UIViewControllerDelegate">T:UIKit.UIViewControllerDelegate</a></format> at the start and stop of picture-in-picture video playback.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/AVKit/Reference/AVPictureInPictureControllerDelegate_Protocol/index.html">Apple documentation for <c>AVPictureInPictureControllerDelegate</c></related>
 	[TV (14, 0)]
 	[MacCatalyst (13, 1)]
 	[Protocol, Model]
@@ -169,6 +181,7 @@ namespace AVKit {
 		void RestoreUserInterfaceForPictureInPicture (AVPictureInPictureController pictureInPictureController, Action<bool> completionHandler);
 	}
 
+	/// <include file="../docs/api/AVKit/AVPlayerViewController.xml" path="/Documentation/Docs[@DocId='T:AVKit.AVPlayerViewController']/*" />
 	[NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (UIViewController))]
@@ -354,8 +367,17 @@ namespace AVKit {
 		void SelectSpeed (AVPlaybackSpeed speed);
 	}
 
+	/// <summary>Interface representing the required methods (if any) of the protocol <see cref="T:AVKit.AVPlayerViewControllerDelegate" />.</summary>
+	///     <remarks>
+	///       <para>This interface contains the required methods (if any) from the protocol defined by <see cref="T:AVKit.AVPlayerViewControllerDelegate" />.</para>
+	///       <para>If developers create classes that implement this interface, the implementation methods will automatically be exported to Objective-C with the matching signature from the method defined in the <see cref="T:AVKit.AVPlayerViewControllerDelegate" /> protocol.</para>
+	///       <para>Optional methods (if any) are provided by the <see cref="T:AVKit.AVPlayerViewControllerDelegate_Extensions" /> class as extension methods to the interface, allowing developers to invoke any optional methods on the protocol.</para>
+	///     </remarks>
 	interface IAVPlayerViewControllerDelegate { }
 
+	/// <summary>Delegate object for the picture-in-picture controller. When overridden, the methods allow the developer to respond to events relating to p-in-p playback.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/AVKit/Reference/AVPlayerViewControllerDelegate_Protocol/index.html">Apple documentation for <c>AVPlayerViewControllerDelegate</c></related>
 	[NoMac]
 	[MacCatalyst (13, 1)]
 	[Protocol, Model]
@@ -888,6 +910,12 @@ namespace AVKit {
 		Custom,
 	}
 
+	/// <summary>Interface representing the required methods (if any) of the protocol <see cref="T:AVKit.AVRoutePickerViewDelegate" />.</summary>
+	///     <remarks>
+	///       <para>This interface contains the required methods (if any) from the protocol defined by <see cref="T:AVKit.AVRoutePickerViewDelegate" />.</para>
+	///       <para>If developers create classes that implement this interface, the implementation methods will automatically be exported to Objective-C with the matching signature from the method defined in the <see cref="T:AVKit.AVRoutePickerViewDelegate" /> protocol.</para>
+	///       <para>Optional methods (if any) are provided by the <see cref="T:AVKit.AVRoutePickerViewDelegate_Extensions" /> class as extension methods to the interface, allowing developers to invoke any optional methods on the protocol.</para>
+	///     </remarks>
 	interface IAVRoutePickerViewDelegate { }
 
 	[MacCatalyst (13, 1)]

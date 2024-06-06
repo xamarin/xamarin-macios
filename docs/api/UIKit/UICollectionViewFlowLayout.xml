@@ -1,0 +1,19 @@
+<Documentation>
+  <Docs DocId="T:UIKit.UICollectionViewFlowLayout">
+    <summary>A flow-based layout for use with <see cref="T:UIKit.UICollectionView" />s.</summary>
+    <remarks>
+      <para>
+        <see cref="T:UIKit.UICollectionView" />s allow content to be displayed using arbitrary layouts. The <see cref="T:UIKit.UICollectionViewFlowLayout" /> provides an easy-to-use flow-based layout.      
+      </para>
+      <para>The <see cref="T:UIKit.UICollectionViewFlowLayout" /> lays out <see cref="T:UIKit.UICollectionViewCell" />s side-by-side, either horizontally or vertically. Component <see cref="T:UIKit.UICollectionViewCell" />s wrap at the boundaries. Cells are spaced in the direction of layout according to the <see cref="P:UIKit.UICollectionViewFlowLayout.MinimumInteritemSpacing" /> property and rows (whether horizontal or vertical) are separated based on the <see cref="P:UIKit.UICollectionViewFlowLayout.MinimumLineSpacing" /> property.</para>
+      <para>The application developer can use various methods of <see cref="T:UIKit.UICollectionViewDelegateFlowLayout" /> to modify the exact spacing and size of cells within a <see cref="T:UIKit.UICollectionViewFlowLayout" />.</para>
+      <para>The direction of the flow layout is at right angles to the direction of the <see cref="P:UIKit.UICollectionViewFlowLayout.ScrollDirection" /> property. In the following image, the flow layout is left-to-right and the <see cref="P:UIKit.UICollectionViewFlowLayout.ScrollDirection" /> is <see cref="F:UIKit.UICollectionViewScrollDirection.Vertical" />.</para>
+      <para>
+        <img href="~/UIKit/_images/UIKit.UICollectionViewFlowLayout.ScrollDirection.png" alt="Diagram showing the scrolling dynamics of a UICollectionView" />
+      </para>
+    </remarks>
+    
+    <related type="article" href="https://docs.xamarin.com/ios/Guides/User_Interface/Introduction_to_Collection_Views">Introduction to Collection Views</related>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/UICollectionViewFlowLayout_class/index.html">Apple documentation for <c>UICollectionViewFlowLayout</c></related>
+  </Docs>
+</Documentation>

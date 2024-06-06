@@ -1,0 +1,92 @@
+<Documentation>
+  <Docs DocId="T:UIKit.UIAlertController">
+    <summary>Displays an alert message or action sheet to the user, with optional text fields for data entry and action buttons.</summary>
+    <remarks>
+      <para>Starting with iOS 8, this class replaces <see cref="T:UIKit.UIActionSheet" /> and <see cref="T:UIKit.UIAlertView" />.</para>
+      <para>The UIAlertController is a <see cref="T:UIKit.UIViewController" /> that is intended to be used for presenting alerts to the user.   Once you create your alert controller, you add actions using the <see cref="M:UIKit.UIAlertController.AddAction(UIKit.UIAlertAction)" /> method or add input fields text using the <see cref="M:UIKit.UIAlertController.AddTextField(System.Action{UIKit.UITextField})" /> method and then you present it like you would any other view controller.    </para>
+      <para>Text fields are only supported with the Alert style.</para>
+      <para>The following example shows how to configure a simple alarm.   </para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[var alert = UIAlertController.Create ("Alarm", "Wake up sleeping giant!", UIAlertControllerStyle.Alert);
+
+alert.AddAction (UIAlertAction.Create ("Ok", UIAlertActionStyle.Cancel, null));
+alert.AddAction (UIAlertAction.Create ("Snooze", UIAlertActionStyle.Default, action => Snooze ()));
+if (alert.PopoverPresentationController != null)
+    alert.PopoverPresentationController.BarButtonItem = myItem;
+PresentViewController (alert, animated: true, completionHandler: null);
+]]></code>
+      </example>
+      <para>When using the <see cref="F:UIKit.UIAlertControllerStyle.Alert" /> style, the message would be centered in the screen and look like this:</para>
+      <para>
+        <img href="~/UIKit/_images/actioncontroller-alert.png" alt="Image of the alert dialog" />
+      </para>
+      <para>When using the <see cref="F:UIKit.UIAlertControllerStyle.ActionSheet" /> style, the message would show at the bottom of the screen, and look like this:</para>
+      <para>
+        <img href="~/UIKit/_images/action-controller-asheet.png" alt="Screen shot of the action sheet" />
+      </para>
+      <para>When the <see cref="P:UIKit.UIViewController.PopoverPresentationController" /> is not <see langword="null" />, this means that the action sheet is being presented in a way that will require you to specify an anchor point, to produce something like this:</para>
+      <para>
+        <img href="~/UIKit/_images/action-ipad.png" alt="Screenshot showing the location of the action sheet on an iPad" />
+      </para>
+      <para>To achieve this, you must set one of the following properties to a value:</para>
+      <list type="bullet">
+        <item>
+          <term>
+            <see cref="P:UIKit.UIPopoverPresentationController.BarButtonItem" />
+          </term>
+        </item>
+        <item>
+          <term>
+            <see cref="P:UIKit.UIPopoverPresentationController.SourceRect" />
+          </term>
+        </item>
+        <item>
+          <term>
+            <see cref="P:UIKit.UIPopoverPresentationController.SourceView" />
+          </term>
+        </item>
+      </list>
+      <para>
+      </para>
+      <para>Those properties will allow the <see cref="M:UIKit.UIViewController.PresentViewController*" /> determine where to display your action sheet.   If you are responding to a tap from a bar button item (like the screenshot above), you can just cast the sender parameter to a UIBarButtonItem, for example:</para>
+      <para>
+      </para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[void HandleAddButtonItem(NSObject sender)
+{
+    var alert = UIAlertController.Create ("Alarm", "Wake up sleeping giant!", UIAlertControllerStyle.Alert);
+    if (alert.PopoverPresentationController != null)
+        alert.PopoverPresentationController.BarButtonItem = sender as UIBarButtonItem;	
+
+    alert.AddAction (UIAlertAction.Create ("Ok", UIAlertActionStyle.Cancel, action => Ok ()));
+    alert.AddAction (UIAlertAction.Create ("Snooze", UIAlertActionStyle.Default, action => Snooze ()));
+    PresentViewController (alert, animated: true, completionHandler: null);
+}]]></code>
+      </example>
+      <para>
+      </para>
+      <para>Other common idioms include using the sender as <see cref="T:UIKit.UIView" /> and setting the <see cref="P:UIKit.UIPopoverPresentationController.SourceView" /> to it, and the <see cref="P:UIKit.UIPopoverPresentationController.SourceRect" /> to the boundaries of that view for example.</para>
+      <para>When adding text fields, you use the parameter to configure the text field (colors, default text, placeholder text, secure text entry and so on).  </para>
+      <para>
+      </para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[UIAlertController alert = UIAlertController.Create ("Login", "Enter your credentials", UIAlertControllerStyle.Alert);
+
+alert.AddAction (UIAlertAction.Create ("Login", UIAlertActionStyle.Default, action => {
+    // This code is invoked when the user taps on login, and this shows how to access the field values
+    Console.WriteLine ("User: {0}/Password: {1}", alert.TextFields[0].Text, alert.TextFields [1].Text);
+}));
+
+alert.AddAction (UIAlertAction.Create ("Cancel", UIAlertActionStyle.Cancel, myCancel));
+alert.AddTextField ((field) => {
+	field.Placeholder = "email address";
+});
+alert.AddTextField ((field) => {
+	field.SecureTextEntry = true;
+});
+PresentViewController (alert, animated: true, completionHandler: null);]]></code>
+      </example>
+    </remarks>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIAlertController_class/index.html">Apple documentation for <c>UIAlertController</c></related>
+  </Docs>
+</Documentation>

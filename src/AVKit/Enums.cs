@@ -7,6 +7,7 @@ namespace AVKit {
 
 #if !XAMCORE_3_0 || MONOMAC
 	// this enum only exists for OSX (not iOS)
+	/// <summary>Determines which user interface elements are visible in the AVPlayerView</summary>
 	[Native]
 	public enum AVPlayerViewControlsStyle : long {
 		None,
