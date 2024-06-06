@@ -23,6 +23,10 @@ parameters:
   type: string
   default: HEAD
 
+- name: xcodeChannel
+  type: string
+  default: Stable
+
 - name: macOSName
   type: string
 
