@@ -1,0 +1,77 @@
+<Documentation>
+  <Docs DocId="T:SceneKit.SCNGeometrySource">
+    <summary>Provides vertex data that, in conjunction with SCNGeometryElements, define a 3D object.</summary>
+    <remarks>
+      <para>Developers who wish to programmatically generate custom <see cref="T:SceneKit.SCNGeometry" /> objects use the <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=M:SceneKit.SCNGeometry.Create(SceneKit.SCNGeometrySource[], SceneKit.SCNGeometryElement[]*&amp;scope=Xamarin" title="M:SceneKit.SCNGeometry.Create(SceneKit.SCNGeometrySource[], SceneKit.SCNGeometryElement[]*">M:SceneKit.SCNGeometry.Create(SceneKit.SCNGeometrySource[], SceneKit.SCNGeometryElement[]*</a></format> method. The form and number of the <see cref="T:SceneKit.SCNGeometrySource" /> objects varies based on the manner in which the developer is describing the geometry (for instance, whether vertex data comes as a series of triplets describing triangles or a moving series that describes a triangle strip) and whether the geometry will simply be colored or have a texture map.</para>
+      <para>The following code demonstrates the custom code to create a custom four-sided pyramid. This example shows the use of vertices, defining triangles, on which a single texture is mapped. Note how specific index values within <c>locs</c> are used to define <c>indices</c> and how the ordering within <c>locs</c> affects <c>normals</c> and <c>txCoords</c>. Also, notice how the triplets in <c>indices</c> are linked to <c>SCNGeometryPrimitiveType.Triangles</c>.</para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+//Lower-left
+var a = new SCNVector3(-1, -1, 0);
+//Upper-right
+var b = new SCNVector3(1, 1, 0);
+
+var halfX = (c.X + a.X) / 2;
+var halfY = (c.Y + a.Y) / 2;
+var halfZ = (c.Z + a.Z) / 2;
+
+var b = new SCNVector3(a.X, c.Y, halfZ);
+var d = new SCNVector3(c.X, a.Y, halfZ);
+//Elevate the midpoint so that it's clearly a pyramid
+var midPoint = new SCNVector3(halfX, halfY, halfZ + 1.0);
+
+//The vertices of the geometry
+var locs = new [] {
+	a, b, c, d, midPoint
+};
+var locSource = SCNGeometrySource.FromVertices(locs);
+
+//Note that this relies on the ordering of locs above
+//and it defines triangles (could be triangle strips, etc.)
+var indices = new [] {
+	//Triangles are defined counter-clockwise!
+	4, 1, 0,
+	1, 4, 2,
+	2, 4, 3,
+	3, 4, 0
+};
+
+
+var idxArray = new byte[indices.Length][];
+for(int i = 0; i < idxArray.Length; i++)
+{
+	idxArray[i] = BitConverter.GetBytes(indices[i]);
+}
+var idxData = NSData.FromArray(idxArray.SelectMany(id => id).ToArray());
+
+//Note that this relies on indices defining triangles
+var element = SCNGeometryElement.FromData(idxData, SCNGeometryPrimitiveType.Triangles, indices.Length / 3, sizeof(int));
+
+//Normals are relative to geometry
+var normals = new [] {
+	new SCNVector3(0, 0, 1),
+	new SCNVector3(0, 0, 1),
+	new SCNVector3(0, 0, 1),
+	new SCNVector3(0, 0, 1),
+	new SCNVector3(0, 0, 1),
+};;
+var normSource = SCNGeometrySource.FromNormals(normals);
+
+//These texture coords will cause the texture to wrap 
+var txCoords = new [] {
+	new CGPoint(0, 0),
+	new CGPoint(0, 1),
+	new CGPoint(1, 1),
+	new CGPoint(1, 0),
+  new CGPoint(0.5, 0.5)
+};
+
+var txCoordsSource = SCNGeometrySource.FromTextureCoordinates(txCoords);
+
+var geometry = SCNGeometry.Create(new [] { locSource, normSource, txCoordsSource }, new [] { element });
+    ]]></code>
+      </example>
+    </remarks>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/SceneKit/Reference/SCNGeometrySource_Class/index.html">Apple documentation for <c>SCNGeometrySource</c></related>
+  </Docs>
+</Documentation>

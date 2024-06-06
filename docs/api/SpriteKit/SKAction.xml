@@ -1,0 +1,23 @@
+<Documentation>
+  <Docs DocId="T:SpriteKit.SKAction">
+    <summary>Modifies properties on a <see cref="T:SpriteKit.SKNode" />, often animating the changes. Sometimes reversible.</summary>
+    <remarks>
+      <para>Application developers use the static methods of <see cref="T:SpriteKit.SKAction" /> to create actions that can be applied to the <see cref="T:SpriteKit.SKNode" />s of a <see cref="T:SpriteKit.SKScene" />. Generally, animations are animated.</para>
+      <para>The <see cref="M:SpriteKit.SKAction.Group(SpriteKit.SKAction[])" />, <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=Sprite%20Kit%20MKAction%20Repeat%20Action&amp;scope=Xamarin" title="M:SpriteKit.MKAction.RepeatAction*">M:SpriteKit.MKAction.RepeatAction*</a></format> and <see cref="M:SpriteKit.SKAction.RepeatActionForever(SpriteKit.SKAction)" />, and <see cref="M:SpriteKit.SKAction.Sequence(SpriteKit.SKAction[])" /> methods are composite actions that take, as parameters, children <see cref="T:SpriteKit.SKAction" />s. </para>
+      <para>Once a <see cref="T:SpriteKit.SKAction" /> is created, application developers run it with the <see cref="M:SpriteKit.SKNode.RunActionAsync(SpriteKit.SKAction)" /> method, as shown in this example:</para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+var actions = SKAction.Group(
+	new SKAction[] {
+		SKAction.MoveBy(new CGVector(10, 10), 1),
+		SKAction.FadeAlphaTo(0.3f, 1),
+		SKAction.ScaleBy(0.8f, 1)
+});
+
+b.Node.RunAction(actions);          
+          ]]></code>
+      </example>
+    </remarks>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/SpriteKit/Reference/SKAction_Ref/index.html">Apple documentation for <c>SKAction</c></related>
+  </Docs>
+</Documentation>

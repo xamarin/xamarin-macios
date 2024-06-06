@@ -1,0 +1,36 @@
+<Documentation>
+  <Docs DocId="T:UIKit.UIScrollViewIndicatorStyle">
+    <summary>The visual style for a <see cref="T:UIKit.UIScrollView" />'s scroll indicator.</summary>
+    <remarks>
+      <para>Specifies the visual appearance of the scroll indicators in a <see cref="T:UIKit.UIScrollView" />. Values are:</para>
+      <list type="table">
+        <listheader>
+          <term>Constant</term>
+          <description>Description</description>
+        </listheader>
+        <item>
+          <term>
+            <see cref="F:UIKit.UIScrollViewIndicatorStyle.Default" />
+          </term>
+          <description>Black with a white border.</description>
+        </item>
+        <item>
+          <term>
+            <see cref="F:UIKit.UIScrollViewIndicatorStyle.Black" />
+          </term>
+          <description>Black. Narrower than <see cref="F:UIKit.UIScrollViewIndicatorStyle.Default" />.</description>
+        </item>
+        <item>
+          <term>
+            <see cref="F:UIKit.UIScrollViewIndicatorStyle.White" />
+          </term>
+          <description>White. Narrower than <see cref="F:UIKit.UIScrollViewIndicatorStyle.Default" />.</description>
+        </item>
+      </list>
+      <para>The following image shows the three styles in closeup:</para>
+      <para>
+        <img href="~/UIKit/_images/UIKit.UIScrollViewIndicatorStyle.png" alt="Screenshot of the various scrollview indicator styles" />
+      </para>
+    </remarks>
+  </Docs>
+</Documentation>

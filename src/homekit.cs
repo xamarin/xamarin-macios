@@ -248,6 +248,9 @@ namespace HomeKit {
 
 #if !WATCH
 	// __WATCHOS_PROHIBITED
+	/// <summary>Browses and discovers <see cref="T:HomeKit.HMAccessory" /> objects.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/HomeKit/Reference/HMAccessoryBrowser_Class/index.html">Apple documentation for <c>HMAccessoryBrowser</c></related>
 	[NoTV]
 	[NoMacCatalyst]
 	[BaseType (typeof (NSObject), Delegates = new string [] { "WeakDelegate" }, Events = new Type [] { typeof (HMAccessoryBrowserDelegate) })]
@@ -270,8 +273,17 @@ namespace HomeKit {
 		void StopSearchingForNewAccessories ();
 	}
 
+	/// <summary>Interface representing the required methods (if any) of the protocol <see cref="T:HomeKit.HMAccessoryBrowserDelegate" />.</summary>
+	///     <remarks>
+	///       <para>This interface contains the required methods (if any) from the protocol defined by <see cref="T:HomeKit.HMAccessoryBrowserDelegate" />.</para>
+	///       <para>If developers create classes that implement this interface, the implementation methods will automatically be exported to Objective-C with the matching signature from the method defined in the <see cref="T:HomeKit.HMAccessoryBrowserDelegate" /> protocol.</para>
+	///       <para>Optional methods (if any) are provided by the <see cref="T:HomeKit.HMAccessoryBrowserDelegate_Extensions" /> class as extension methods to the interface, allowing developers to invoke any optional methods on the protocol.</para>
+	///     </remarks>
 	interface IHMAccessoryBrowserDelegate { }
 
+	/// <summary>Delegate object for  <see cref="T:HomeKit.HMAccessoryBrowser" /> objects, provides methods called when accessories are discovered or removed.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/HomeKit/Reference/HMAccessoryBrowserDelegate_Protocol/index.html">Apple documentation for <c>HMAccessoryBrowserDelegate</c></related>
 	[NoTV]
 	[NoMacCatalyst]
 	[Model, Protocol]

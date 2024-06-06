@@ -140,6 +140,7 @@ namespace NetworkExtension {
 	}
 
 	// in Xcode7 SDK but marked as 8.0
+	/// <summary>Enumerates errors associated with <see cref="T:NetworkExtension.NEFilterManager" />.</summary>
 	[NoTV]
 	[MacCatalyst (13, 1)]
 	[ErrorDomain ("NEFilterErrorDomain")]
@@ -239,6 +240,7 @@ namespace NetworkExtension {
 		Cancelled = 5
 	}
 
+	/// <summary>Enumerates tunnel routing methods.</summary>
 	[NoTV]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -251,6 +253,7 @@ namespace NetworkExtension {
 	}
 
 #if !MONOMAC
+	/// <summary>Enumerates commands that can be made to a Hotspot Helper to facilitate registering for Wi-Fi access.</summary>
 	[NoTV]
 	[NoMac]
 	[MacCatalyst (13, 1)]
@@ -265,6 +268,7 @@ namespace NetworkExtension {
 		Logoff = 6
 	}
 
+	/// <summary>Enumerates values that describe how likely a Hotspot Helper will be able to handle a network.</summary>
 	[NoTV]
 	[NoMac]
 	[MacCatalyst (13, 1)]
@@ -275,6 +279,7 @@ namespace NetworkExtension {
 		High = 2
 	}
 
+	/// <summary>Enumerates Hotspot Helper command response results.</summary>
 	[NoTV]
 	[NoMac]
 	[MacCatalyst (13, 1)]

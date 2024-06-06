@@ -1,0 +1,10 @@
+<Documentation>
+  <Docs DocId="T:Foundation.NSIndexPath">
+    <summary>Represents the path to a node in a tree. In iOS this class is most commonly used to identify a row in a <see cref="T:UIKit.UITableView" />.</summary>
+    <remarks>
+      <para>The API used in iOS with <see cref="T:UIKit.UITableView" /> consists of a static method to create new objects and two properties. The <see cref="M:Foundation.NSIndexPath.FromRowSection(System.nint,System.nint)" /> method creates a new instance from row and section numbers. The properties <see cref="P:Foundation.NSIndexPath.Row" /> and <see cref="P:Foundation.NSIndexPath.Section" /> return the relevant values from populated instances.</para>
+      <para>This class has other uses beyond <see cref="T:UIKit.UITableView" />, which would involve using the rest of the class's properties and methods.</para>
+    </remarks>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Cocoa/Reference/Foundation/Classes/NSIndexPath_Class/index.html">Apple documentation for <c>NSIndexPath</c></related>
+  </Docs>
+</Documentation>

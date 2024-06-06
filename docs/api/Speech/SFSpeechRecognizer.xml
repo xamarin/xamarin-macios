@@ -1,0 +1,18 @@
+<Documentation>
+  <Docs DocId="T:Speech.SFSpeechRecognizer">
+    <summary>Encapsulates the speech recognition facilities.</summary>
+    <remarks>
+      <para>An <see cref="T:Speech.SFSpeechRecognizer" /> asynchronously processes <see cref="T:Speech.SFSpeechRecognitionRequest" /> objects, generating <see cref="T:Speech.SFSpeechRecognitionResult" /> objects. </para>
+      <para>Apps that use speech recognition must add the following key, with appropriate descriptions, in their <c>info.plist</c> file:</para>
+      <example>
+        <code lang="XML"><![CDATA[
+		<key>NSSpeechRecognitionUsageDescription</key>
+	<string>Speech recognition will be used to determine which words you speak into this device's microphone.</string>          
+          ]]></code>
+      </example>
+      <para>If an application does not have this key, the operating system will execute a "silent" shutdown at runtime, with no exception or ability to log the mistake.</para>
+      <para>Additionally, if the app uses the <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=AVFoundation%20AVEngine&amp;scope=Xamarin" title="T:AVFoundation.AVEngine">T:AVFoundation.AVEngine</a></format> to access the microphone, the app must also contain a <c><![CDATA[<key>NSMicrophoneUsageDescription</key>]]></c> key.</para>
+    </remarks>
+    <related type="externalDocumentation" href="https://developer.apple.com/reference/Speech/SFSpeechRecognizer">Apple documentation for <c>SFSpeechRecognizer</c></related>
+  </Docs>
+</Documentation>

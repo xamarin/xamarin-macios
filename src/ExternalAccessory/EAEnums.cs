@@ -9,6 +9,7 @@ using ObjCRuntime;
 
 namespace ExternalAccessory {
 
+	/// <summary>Enumerates unconfigured but supported features.</summary>
 	[NoMac]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -19,6 +20,7 @@ namespace ExternalAccessory {
 		SupportsHomeKit = (1 << 2), // iOS 8 beta 5
 	}
 
+	/// <summary>Enumerates the possible states of unconfigured accessory browsers.</summary>
 	[NoMac]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -30,6 +32,7 @@ namespace ExternalAccessory {
 	}
 
 	// NSInteger -> EAWiFiUnconfiguredAccessoryBrowser.h
+	/// <summary>Enumerates the possible states encountered while configuring accessory browsers.</summary>
 	[NoMac]
 	[MacCatalyst (13, 1)]
 	[Native]

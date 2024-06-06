@@ -18,6 +18,7 @@ using System;
 
 namespace AssetsLibrary {
 
+	/// <summary>Provides data for the  event.</summary>
 	[Deprecated (PlatformName.iOS, 9, 0, message: "Use the 'Photos' API instead.")]
 	interface ALAssetLibraryChangedEventArgs {
 		[Export ("ALAssetLibraryUpdatedAssetsKey")]
@@ -33,6 +34,9 @@ namespace AssetsLibrary {
 		NSSet DeletedAssetGroupsKey { get; }
 	}
 
+	/// <summary>A class that encapsulates access to the video and media of the "Photos" application.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/AssetsLibrary/Reference/ALAssetsLibrary_Class/index.html">Apple documentation for <c>ALAssetsLibrary</c></related>
 	[Deprecated (PlatformName.iOS, 9, 0, message: "Use the 'Photos' API instead.")]
 	[BaseType (typeof (NSObject))]
 	interface ALAssetsLibrary {
@@ -93,9 +97,13 @@ namespace AssetsLibrary {
 		NSString DeletedAssetGroupsKey { get; }
 	}
 
+	/// <summary>A delegate that is used as the <c>enumerationBlock</c> parameter in calls to the <see cref="M:AssetsLibrary.ALAssetsLibrary.Enumerate(AssetsLibrary.ALAssetsGroupType,AssetsLibrary.ALAssetsLibraryGroupsEnumerationResultsDelegate,System.Action{Foundation.NSError})" /> method.</summary>
 	[Deprecated (PlatformName.iOS, 9, 0, message: "Use the 'Photos' API instead.")]
 	delegate void ALAssetsLibraryGroupsEnumerationResultsDelegate (ALAssetsGroup group, ref bool stop);
 
+	/// <summary>An asset managed by the Photo application (videos and photos).</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/AssetsLibrary/Reference/ALAsset_Class/index.html">Apple documentation for <c>ALAsset</c></related>
 	[Deprecated (PlatformName.iOS, 9, 0, message: "Use the 'Photos' API instead.")]
 	[BaseType (typeof (NSObject))]
 	interface ALAsset {
@@ -170,6 +178,9 @@ namespace AssetsLibrary {
 		void SetVideoAtPath (NSUrl videoPathURL, [NullAllowed] Action<NSUrl, NSError> completionBlock);
 	}
 
+	/// <summary>A specific representation of an asset.</summary>
+	///     <remarks>Some assets can have more than one representation.   Consider images that are stored in two different formats for example, this class represents a particular reprensetation of the asset.</remarks>
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/AssetsLibrary/Reference/ALAssetRepresentation_Class/index.html">Apple documentation for <c>ALAssetRepresentation</c></related>
 	[BaseType (typeof (NSObject))]
 	[Deprecated (PlatformName.iOS, 9, 0, message: "Use the 'Photos' API instead.")]
 	interface ALAssetRepresentation {
@@ -213,6 +224,9 @@ namespace AssetsLibrary {
 		CGSize Dimensions { get; }
 	}
 
+	/// <summary>Keys used to limit asset enumeration by a specific kind.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/AssetsLibrary/Reference/ALAssetsFilter_Class/index.html">Apple documentation for <c>ALAssetsFilter</c></related>
 	[Deprecated (PlatformName.iOS, 9, 0, message: "Use the 'Photos' API instead.")]
 	[BaseType (typeof (NSObject))]
 	interface ALAssetsFilter {
@@ -226,9 +240,16 @@ namespace AssetsLibrary {
 		ALAssetsFilter AllAssets { get; }
 	}
 
+	/// <param name="result">The asset.</param>
+	///     <param name="index">The index of this asset.</param>
+	///     <param name="stop">If set to true, the enumeration process will stop.</param>
+	///     <summary>Signature for delegates participating in asset enumeration.</summary>
 	[Deprecated (PlatformName.iOS, 9, 0, message: "Use the 'Photos' API instead.")]
 	delegate void ALAssetsEnumerator (ALAsset result, nint index, ref bool stop);
 
+	/// <summary>Sets of assets managed by the Photo application.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/AssetsLibrary/Reference/ALAssetsGroup_Class/index.html">Apple documentation for <c>ALAssetsGroup</c></related>
 	[Deprecated (PlatformName.iOS, 9, 0, message: "Use the 'Photos' API instead.")]
 	[BaseType (typeof (NSObject))]
 	interface ALAssetsGroup {
