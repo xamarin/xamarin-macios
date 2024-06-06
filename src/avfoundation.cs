@@ -77,9 +77,6 @@ using AppKit;
 using UIImage = AppKit.NSImage;
 #else
 using UIKit;
-using AVSampleCursorChunkInfo = Foundation.NSObject;
-using AVSampleCursorStorageRange = Foundation.NSObject;
-using AVSampleCursorSyncInfo = Foundation.NSObject;
 #endif
 
 #if !NET
@@ -5275,8 +5272,8 @@ namespace AVFoundation {
 		void LoadSegment (CMTime trackTime, Action<AVAssetTrackSegment, NSError> completionHandler);
 	}
 
-	[NoiOS, NoTV, NoWatch]
-	[NoMacCatalyst]
+	[iOS (16, 0), TV (16, 0), Watch (9, 0)]
+	[MacCatalyst (16, 0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	interface AVSampleCursor : NSCopying {
@@ -5315,15 +5312,29 @@ namespace AVFoundation {
 		[return: Release]
 		CMFormatDescription CopyCurrentSampleFormatDescription ();
 
-#pragma warning disable 0618 // warning CS0618: 'AVSampleCursorSyncInfo' is obsolete: 'This API is not available on this platform.'
+#if XAMCORE_5_0
 		[Export ("currentSampleSyncInfo")]
 		AVSampleCursorSyncInfo CurrentSampleSyncInfo { get; }
-#pragma warning restore
+#else
+		[Wrap ("CurrentSampleSyncInfo_Blittable.ToAVSampleCursorSyncInfo ()", IsVirtual = true)]
+		AVSampleCursorSyncInfo CurrentSampleSyncInfo { get; }
 
-#pragma warning disable 0618 // warning CS0618: 'AVSampleCursorSyncInfo' is obsolete: 'This API is not available on this platform.'
+		[Internal]
+		[Export ("currentSampleSyncInfo")]
+		AVSampleCursorSyncInfo_Blittable CurrentSampleSyncInfo_Blittable { get; }
+#endif
+
+#if XAMCORE_5_0
 		[Export ("currentSampleDependencyInfo")]
-		AVSampleCursorSyncInfo CurrentSampleDependencyInfo { get; }
-#pragma warning restore
+		AVSampleCursorDependencyInfo CurrentSampleDependencyInfo { get; }
+#else
+		[Wrap ("CurrentSampleDependencyInfo_Blittable.ToAVSampleCursorDependencyInfo ()")]
+		AVSampleCursorDependencyInfo CurrentSampleDependencyInfo2 { get; }
+
+		[Internal]
+		[Export ("currentSampleDependencyInfo")]
+		AVSampleCursorDependencyInfo_Blittable CurrentSampleDependencyInfo_Blittable { get; }
+#endif
 
 		[Export ("samplesRequiredForDecoderRefresh")]
 		nint SamplesRequiredForDecoderRefresh { get; }
@@ -5332,33 +5343,38 @@ namespace AVFoundation {
 		[Export ("currentChunkStorageURL")]
 		NSUrl CurrentChunkStorageUrl { get; }
 
-#pragma warning disable 0618 // warning CS0618: 'AVSampleCursorStorageRange' is obsolete: 'This API is not available on this platform.'
 		[Export ("currentChunkStorageRange")]
 		AVSampleCursorStorageRange CurrentChunkStorageRange { get; }
-#pragma warning restore
 
-#pragma warning disable 0618 // warning CS0618: 'AVSampleCursorChunkInfo' is obsolete: 'This API is not available on this platform.'
 		[Export ("currentChunkInfo")]
+#if XAMCORE_5_0
 		AVSampleCursorChunkInfo CurrentChunkInfo { get; }
-#pragma warning restore
+#else
+		[Internal]
+		AVSampleCursorChunkInfo_Blittable CurrentChunkInfo_Blittable { get; }
+
+		[Wrap ("CurrentChunkInfo_Blittable.ToAVSampleCursorChunkInfo ()", IsVirtual = true)]
+		AVSampleCursorChunkInfo CurrentChunkInfo { get; }
+#endif
 
 		[Export ("currentSampleIndexInChunk")]
 		long CurrentSampleIndexInChunk { get; }
 
-#pragma warning disable 0618 // warning CS0618: 'AVSampleCursorStorageRange' is obsolete: 'This API is not available on this platform.'
 		[Export ("currentSampleStorageRange")]
 		AVSampleCursorStorageRange CurrentSampleStorageRange { get; }
-#pragma warning restore
 
-#if MONOMAC
-		[NoiOS][NoWatch][NoTV]
+
 		[Export ("currentSampleAudioDependencyInfo")]
+#if XAMCORE_5_0 || IOS || TVOS
+		AVSampleCursorAudioDependencyInfo CurrentSampleAudioDependencyInfo { get; }
+#else
+		[Internal]
+		AVSampleCursorAudioDependencyInfo_Blittable CurrentSampleAudioDependencyInfo_Blittable { get; }
+
+		[Wrap ("CurrentSampleAudioDependencyInfo_Blittable.ToAVSampleCursorAudioDependencyInfo ()", IsVirtual = true)]
 		AVSampleCursorAudioDependencyInfo CurrentSampleAudioDependencyInfo { get; }
 #endif
 
-		[NoiOS]
-		[NoWatch]
-		[NoTV]
 		[NullAllowed]
 		[Mac (12, 0)]
 		[Export ("currentSampleDependencyAttachments")]
