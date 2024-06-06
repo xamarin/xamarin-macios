@@ -1,0 +1,24 @@
+<Documentation>
+  <Docs DocId="T:AVFoundation.AVPlayer">
+    <summary>Encapsulates the control and UI of a component that plays back single or multiple items.</summary>
+    <remarks>
+      <para>An <see cref="T:AVFoundation.AVPlayer" /> links the visual presentation, control, and dynamic state of one or more <see cref="T:AVFoundation.AVAsset" />s.</para>
+      <para>The visual element of the display is done by a <see cref="T:AVFoundation.AVPlayerLayer" />, while it's current state (current time, etc.) is held in an <see cref="T:AVFoundation.AVPlayerItem" />, which in turn references an <see cref="T:AVFoundation.AVAsset" />.</para>
+      <para>
+        <img href="~/AVFoundation/_images/AVFoundation.AssetPlayerItemPlayer.png" alt="Class diagram showing the important classes related to AssetPlayerItemPlayer" />
+      </para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+var asset = AVAsset.FromUrl(NSUrl.FromFilename("sample.m4v"));
+var playerItem = new AVPlayerItem(asset);
+var player = new AVPlayer(playerItem);
+var playerLayer = AVPlayerLayer.FromPlayer(player);
+View.Layer.AddSublayer(playerLayer);
+player.Play();
+          ]]></code>
+      </example>
+    </remarks>
+    
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/AVFoundation/Reference/AVPlayer_Class/index.html">Apple documentation for <c>AVPlayer</c></related>
+  </Docs>
+</Documentation>

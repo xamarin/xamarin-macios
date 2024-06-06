@@ -1,0 +1,29 @@
+<Documentation>
+  <Docs DocId="T:AVFoundation.AVAudioEnvironmentDistanceAttenuationModel">
+    <summary>Enumerates attenuation models used by <see cref="T:AVFoundation.AVAudioEnvironmentDistanceAttenuationParameters" />.</summary>
+    <remarks>
+      <para>Graph of <c>Gain</c> as Distance ranges from 0 to 10 with: <c>ReferenceDistance = 5</c>, <c>RolloffFactor = 0.5</c>, and <c>MaximumDistance = 20</c></para>
+      <para>
+        <see cref="F:AVFoundation.AVAudioEnvironmentDistanceAttenuationModel.Exponential" />
+      </para>
+      <para>
+        <img href="~/AVFoundation/_images/AVFoundation.AVAudioEnvironmentDistanceAttenuationModel.Exponential.png" alt="Graph of exponential attenuation">
+        </img>
+      </para>
+      <para>
+        <see cref="F:AVFoundation.AVAudioEnvironmentDistanceAttenuationModel.Inverse" />
+      </para>
+      <para>
+        <img href="~/AVFoundation/_images/AVFoundation.AVAudioEnvironmentDistanceAttenuationModel.Inverse.png" alt="Graph of inverse attenuation">
+        </img>
+      </para>
+      <para>
+        <see cref="F:AVFoundation.AVAudioEnvironmentDistanceAttenuationModel.Linear" />
+      </para>
+      <para>
+        <img href="~/AVFoundation/_images/AVFoundation.AVAudioEnvironmentDistanceAttenuationModel.Linear.png" alt="Graph of linear attenuation">
+        </img>
+      </para>
+    </remarks>
+  </Docs>
+</Documentation>

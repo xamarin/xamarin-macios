@@ -1,0 +1,216 @@
+<Documentation>
+  <Docs DocId="T:CoreAnimation.CALayer">
+    <summary>Layers hold the images that are rendered into the screen.</summary>
+    <remarks>
+      <para>
+	CALayers hold the image content that is rendered into the
+	screen.  They encapsulate position, styling, size and
+	transformation components.  They also implement the
+	CAMediaTiming methods which allows them to participate in
+	animations.
+      </para>
+      <para>
+	There are several subclasses of CALayer that developers can use:
+	<see cref="T:CoreAnimation.CAEmitterLayer" />, 
+	<see cref="T:CoreAnimation.CAGradientLayer" />, 
+	<format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=T:CoreAnimation.CAEAGLLayer/CAOpenGLLayer&amp;scope=Xamarin" title="T:CoreAnimation.CAEAGLLayer/CAOpenGLLayer">T:CoreAnimation.CAEAGLLayer/CAOpenGLLayer</a></format>, 
+	<see cref="T:CoreAnimation.CAReplicatorLayer" />, 
+	<see cref="T:CoreAnimation.CAScrollLayer" />, 
+	<see cref="T:CoreAnimation.CAShapeLayer" />, 
+	<see cref="T:CoreAnimation.CATextLayer" />, 
+	<see cref="T:CoreAnimation.CATiledLayer" />, 
+	<see cref="T:CoreAnimation.CATransformLayer" /> and 
+	<format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=Core%20Animation%20QCComposition%20Layer&amp;scope=Xamarin" title="T:CoreAnimation.QCCompositionLayer">T:CoreAnimation.QCCompositionLayer</a></format>.
+
+      </para>
+      <format type="text/html">
+        <h2>Layer Content</h2>
+      </format>
+      <para>
+	There are three ways of providing content to a layer:
+	subclassing the layer class and overriding the draw methods,
+	using a layer delegate to implement the drawing or assigning a
+	static image to the layer.  
+      </para>
+      <para>
+	To set the contents of the layer with a static image or from one of the rendering approaches, app devs must
+	assign a <see cref="T:CoreGraphics.CGImage" /> to the
+	<see cref="P:CoreAnimation.CALayer.Contents" />
+	property.   For static content, they can just assign this property and the changes will be reflected directly.
+      </para>
+      <format type="text/html">
+        <h3>Contents by Subclassing CALayer</h3>
+      </format>
+      <para>
+	If you choose to subclass the CALayer class, you can either
+	subclass the <see cref="M:CoreAnimation.CALayer.Display" /> method
+	which is then requires to set the <see cref="P:CoreAnimation.CALayer.Contents" /> property
+	or you can override the <see cref="M:CoreAnimation.CALayer.DrawInContext(CoreGraphics.CGContext)" /> method which provides you with a graphics context that you
+	can use to render into the display.
+
+      </para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+// Overriding DrawInContext
+public class DemoLayer : CALayer {
+  public override void DrawInContext (CGContext context)
+  {
+     base.DrawInContext (context);
+  
+     // Fill in circle
+     context.SetFillColor (Color);
+     context.SetShadowWithColor (SizeF.Empty, 10.0f, glowColor);
+     context.EOFillPath();
+  }
+}
+
+// Overriding Display
+public class DemoLayer2 : CALayer {
+  CGImage image =  UIImage.FromBundle ("demo.png").CGImage;
+
+  public override void Display ()
+  {
+     Contents = image;
+  }
+}
+]]></code>
+      </example>
+      <format type="text/html">
+        <h3>Contents by Providing a CALayerDelegate</h3>
+      </format>
+      <para>
+
+	This approach can be used if the developer does not want to change the
+	class used for their CALayer rendering, and all they need to do is
+	assign the <see cref="P:CoreAnimation.CALayer.Delegate" /> property
+	to an instance of a subclass of <see cref="T:CoreAnimation.CALayerDelegate" /> where they
+	either override the <see cref="M:CoreAnimation.CALayerDelegate.DisplayLayer(CoreAnimation.CALayer)" />
+	method in which they must set the <see cref="P:CoreAnimation.CALayer.Contents" /> property,
+	or they override the <see cref="M:CoreAnimation.CALayerDelegate.DrawLayer(CoreAnimation.CALayer,CoreGraphics.CGContext)" />
+	method and provide their own rendering code there.
+
+      </para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+// Overriding DisplayLayer
+public class DemoLayerDelegate : CALayerDelegate {
+  CGImage image =  UIImage.FromBundle ("demo.png").CGImage;
+
+  public override void DisplayLayer (CALayer layer)
+  {
+     layer.Contents = image;
+  }
+}
+
+// Overriding DrawLayer
+public class DemoLayerDelegate2 : CALayerDelegate {
+  public override DrawLayer (CALayer layer, CGContext context)
+  {
+     // Fill in circle
+     context.SetFillColor (Color);
+     context.SetShadowWithColor (SizeF.Empty, 10.0f, glowColor);
+     context.EOFillPath();
+  }
+}
+
+// To use the code:
+
+void SetupViews (UIView view, UIView view2)
+{
+    view.Layer.Delegate = new DemoLayerDelegate ();
+    view2.Layer.Delegate = new DemoLayerDelegate2 ();
+}
+]]></code>
+      </example>
+      <format type="text/html">
+        <h2>Using Custom Layers with your UIViews or NSViews.</h2>
+      </format>
+      <para>
+	On iOS, every UIView automatically has a CALayer associated
+	with it.  When you want to use one of the CALayer subclasses
+	as your UIView's backing layer, you need to add the following
+	code snippet to your class:
+      </para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+class MyView : UIView {
+    //
+    // This instructs the runtime that whenever a MyView is created
+    // that it should instantiate a CATiledLayer and assign that to the
+    // UIView.Layer property
+    //
+    [Export ("layerClass")]
+    public static Class LayerClass () {
+        return new Class (typeof (CATiledLayer));
+    }
+}
+  ]]></code>
+      </example>
+      <para>
+	If you want to subclass the CALayer class, you must provide a
+	constructor that takes a CALayer and is annotated with an
+	[Export ("initWithLayer:")] attribute.  When you do this, you
+	should also override the <see cref="M:CoreAnimation.CALayer.Clone(CoreAnimation.CALayer)" /> as these
+	two are used to create copies of your layer state on demand in
+	response to CoreAnimation creating a mirror of your object
+	hierarchy if anyone accesses the <see cref="P:CoreAnimation.CALayer.PresentationLayer" />
+	property.
+
+      </para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+public class MyLayer : CALayer {
+	UIColor FirstColor, SecondColor;
+
+	//
+	// Invoked by CoreAnimation if it needs to create a copy of your layer
+	// with a specific state in response to the user fetching the PresentationLayer
+	// property
+	//
+	[Export ("initWithLayer:")]
+	public MyLayer (Mylayer other) : base (layer)
+	{
+		// Do nothing, since we override Clone, but we could
+		// just clone the data here as well if we wanted to.
+	}
+
+	//
+	// This is the constructor you would use to create your new CALayer
+	public MyLayer (UIColor firstColor, UIColor secondColor)
+	{
+		FirstColor = firstColor;
+		SecondColor = secondColor;
+	}
+
+	// We must copy our own state here from the original layer
+	public override void Clone (CALayer _other)
+	{
+		MyLayer other = (MyLayer) _other;
+		FirstColor = other.FirstColor;
+		SecondColor = other.SecondColor;
+	}
+}
+	]]></code>
+      </example>
+      <para>
+	On macOS, CALayers are optional.  To enable them, you must set
+	the <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=App%20Kit%20NSView%20Wants%20Layer&amp;scope=Xamarin" title="P:AppKit.NSView.WantsLayer">P:AppKit.NSView.WantsLayer</a></format> property
+	to true.  You can change the layer for an NSView by setting
+	the <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=App%20Kit%20NSView%20Layer&amp;scope=Xamarin" title="P:AppKit.NSView.Layer">P:AppKit.NSView.Layer</a></format> property.
+
+      </para>
+      <para>
+	On macOS, to change the default layer class used for a given
+	NSView, you can override the <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=App%20Kit%20Make%20Backing%20Layer&amp;scope=Xamarin" title="M:AppKit.MakeBackingLayer*">M:AppKit.MakeBackingLayer*</a></format> method.
+
+      </para>
+    </remarks>
+    <related type="recipe" href="https://developer.xamarin.com/ios/Recipes/Animation/CoreAnimation/Animate_a_UIView_using_UIKit">Animate a UIView using UIKit</related>
+    <related type="recipe" href="https://developer.xamarin.com/ios/Recipes/Animation/CoreAnimation/Animate_Using_Blocks">Animate Using Blocks</related>
+    <related type="recipe" href="https://developer.xamarin.com/ios/Recipes/Animation/CoreAnimation/Create_a_Keyframe_Animation">Create a Keyframe Animation</related>
+    <related type="recipe" href="https://developer.xamarin.com/ios/Recipes/Animation/CoreAnimation/Create_an_Animation_Block">Create an Animation Block</related>
+    <related type="recipe" href="https://developer.xamarin.com/ios/Recipes/Animation/CoreAnimation/Create_An_Explicit_Animation">Create An Explicit Animation</related>
+    <related type="recipe" href="https://developer.xamarin.com/ios/Recipes/Animation/CoreAnimation/Create_an_Implicit_Animation">Create an Implicit Animation</related>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/GraphicsImaging/Reference/CALayer_class/index.html">Apple documentation for <c>CALayer</c></related>
+  </Docs>
+</Documentation>

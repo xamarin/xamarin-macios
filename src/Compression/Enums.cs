@@ -6,6 +6,7 @@ using ObjCRuntime;
 namespace Compression {
 
 	// this enum as per the headers is an int NOT an NSInteger
+	/// <summary>Specifies the algorithm to use to compress or decompress the underlying stream.</summary>
 	public enum CompressionAlgorithm {
 		/// <summary>The LZ4 compression format.</summary>
 		LZ4 = 0x100,

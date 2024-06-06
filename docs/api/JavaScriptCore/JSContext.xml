@@ -1,0 +1,175 @@
+<Documentation>
+  <Docs DocId="T:JavaScriptCore.JSContext">
+    <summary>Encapsulates a JavaScript engine.</summary>
+    <remarks>
+      <para>The <see cref="T:JavaScriptCore.JSContext" /> is the central object of the <c>JavaScriptCore</c> namespace. The <see cref="T:JavaScriptCore.JSContext" /> maintains a JavaScript environment (manipulated by the <see cref="P:JavaScriptCore.JSContext.Item(Foundation.NSObject)" /> property) and evaluates scripts with the <see cref="M:JavaScriptCore.JSContext.EvaluateScript(System.String,Foundation.NSUrl)" /> method.</para>
+      <para>Application developers will often want to assign a delegate to the <see cref="P:JavaScriptCore.JSContext.ExceptionHandler" /> property to gain access, in their Xamarin.iOS code, of exceptions raised in the JavaScript realm.</para>
+      <para>The following example shows the basic use of <see cref="T:JavaScriptCore.JSContext" />. The context is instantiated and a simple exception handler is assigned. One of the <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=Java%20Script%20Core%20JSValue%20From&amp;scope=Xamarin" title="M:JavaScriptCore.JSValue.From*">M:JavaScriptCore.JSValue.From*</a></format> method overloads is used to assign values to the JavaScript variables <c>arg1</c> and <c>arg2</c>. The <see cref="M:JavaScriptCore.JSContext.EvaluateScript(System.String,Foundation.NSUrl)" /> method evaluates the JavaScript and returns the result, which is converted back into a .NET object with the <see cref="M:JavaScriptCore.JSValue.ToInt32" /> method. </para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+jsContext = new JSContext();
+
+jsContext.ExceptionHandler = (context, exception) => {
+	Console.WriteLine(exception);
+};
+
+jsContext[new NSString("arg1")] = JSValue.From(2, jsContext);
+jsContext[new NSString("arg2")] = JSValue.From(2, jsContext);
+
+var jsResult = jsContext.EvaluateScript("arg1 + arg2;");
+
+var four = jsResult.ToInt32();
+          ]]></code>
+      </example>
+      <para>The <see cref="T:JavaScriptCore.JSContext" /> contains the global JavaScript context, including variables set by JavaScript calculations, as shown in the following example:</para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+jsContext.EvaluateScript("sum = 2 + 2;");
+var four = jsContext[(NSString)"sum"].ToInt32();
+          ]]></code>
+      </example>
+      <format type="text/html">
+        <h3>Calling C# code from JavaScript</h3>
+      </format>
+      <para>Developers can extend the <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=T:JavascriptCore.IJSExport&amp;scope=Xamarin" title="T:JavascriptCore.IJSExport">T:JavascriptCore.IJSExport</a></format> interface to define methods that can be called from JavaScript. Developers must mark that interface with the <see cref="T:Foundation.ProtocolAttribute" /> attribute and must mark JavaScript-callable methods with the <see cref="T:Foundation.ExportAttribute" /> attribute. They must also add <c>--registrar:static</c> to the arguments used by <c>mtouch</c> during the build. For example:</para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+[Protocol ()]
+interface IMyJSVisibleProtocol : IJSExport {
+    [Export ("myFunc")]
+    int MyFunc ();
+
+    [Export ("Arity2:With:")]
+    NSObject Arity2With(NSObject arg1, NSObject arg2);
+}
+
+class MyJSExporter : NSObject, IMyJSVisibleProtocol
+{
+    public int MyFunc ()
+    {
+        Console.WriteLine ("Called!");
+        return 42;
+    }
+
+    public NSObject Arity2With(NSObject arg1, NSObject arg2)
+    {
+        Console.WriteLine ("Arity 2 function called with " + arg1 + " " + arg2);
+        return (NSNumber) 42;
+    }
+}
+    ]]></code>
+      </example>
+      <para>The above example:
+      <list type="bullet"><item><term>Defines <c>IMyJSVisibleProtocol</c> as extending <see cref="T:JavaScriptCore.IJSExport" />;</term></item><item><term>Decorates <c>IMyJSVisibleProtocol</c> and it's method <c>MyFunc</c> with the <see cref="T:Foundation.ProtocolAttribute" /> and <see cref="T:Foundation.ExportAttribute" /> attributes;</term></item><item><term>Implements the interface</term></item></list></para>
+      <para>To expose the <c>IMyJSVisibleProtocol</c> to JavaScript, the developer could use code like the following in the <see cref="M:UIKit.UIViewController.ViewDidLoad" /> method of their <see cref="T:UIKit.UIViewController" />:</para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+webView = new UIWebView(UIScreen.MainScreen.Bounds);
+var context = (JSContext) webView.ValueForKeyPath ((NSString) "documentView.webView.mainFrame.javaScriptContext");
+context.ExceptionHandler = (JSContext context2, JSValue exception) => 
+    {
+        Console.WriteLine ("JS exception: {0}", exception);
+    };
+var myExporter = new MyJSExporter ();
+context [(NSString) "myCSharpObject"] = JSValue.From (myExporter, context);
+webView.LoadRequest(NSUrlRequest.FromUrl(new NSUrl("MyHtmlFile.html", false)));
+    ]]></code>
+      </example>
+      <para>The above C# code:
+        <list type="bullet"><item><term>Creates a <see cref="T:UIKit.UIWebView" /> which will be displayed to the end user;</term></item><item><term>Gets the <see cref="T:JavaScriptCore.JSContext" /> of the <see cref="T:UIKit.UIWebView" /> object's main frame;</term></item><item><term>Adds an exception handler so that JavaScript trouble will be visible to the Xamarin project;</term></item><item><term>Instantiates a new <c>MyJSExporter</c> object that, as described above, implements the <c>IMyJSVisibleProtocol</c>;</term></item><item><term>Adds that object to the <see cref="T:JavaScriptCore.JSContext" /> with the name <c>myCSharpObject</c>;</term></item><item><term>Loads an HTML file (see below)</term></item></list></para>
+      <para>Finally, the HTML file that is loaded into the <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=T:UIKIt.UIWebView&amp;scope=Xamarin" title="T:UIKIt.UIWebView">T:UIKIt.UIWebView</a></format> and into whose <see cref="T:JavaScriptCore.JSContext" /> the <c>MyJSExporter</c> object has been placed can access the object from within JavaScript:</para>
+      <example>
+        <code lang="HTML"><![CDATA[
+<html>
+    <head>
+        <title></title>
+        <script type="text/javascript">
+            function callXamObject() {
+                // `myCSharpObject` injected into JS context by C# code `context [(NSString) "myCSharpObject"] = JSValue.From (...etc...`
+                var resultCalculatedInCSharp = myCSharpObject.myFunc();
+                document.getElementById("Output").innerHTML = resultCalculatedInCSharp;
+            }
+
+            function callArity2Method() {
+                //Note how this is mapped by [Export ("Arity2:With:")]
+                var result = myCSharpObject.Arity2With("foo", "bar");
+            }
+        </script>
+    </head>
+    <body>
+        <div onclick="callXamObject()" class="button">
+            Click Me
+        </div>
+        <div id="Output">Value</div>
+    </body>
+</html>
+    ]]></code>
+      </example>
+      <para>In order to export a C# object so that it is visible to JavaScript, the developer must add the <c>--registrar:static</c> argument to the arguments used by <c>mtouch</c>. In Xamarin Studio, this is done in the Project Options dialog, in the Build Options / iOS Build pane:</para>
+      <para>
+        <img href="~/JavaScriptCore/_images/JSContext.StaticRegistrar.png" alt="Screenshot of compiler options" />
+      </para>
+      <para>Another technique for calling C# code from Xamarin.iOS is to use REST, as shown in the  following: </para>
+      <para>In the JavaScript code, use <c>XMLHttpRequest</c> and standard JSON techniques to post and parse a query to a REST service running on the local device:</para>
+      <example>
+        <code lang="JavaScript"><![CDATA[
+<html>
+    <head>
+        <title></title>
+        <script type="text/javascript">
+           function callCSharp(msg) {
+                var request = new XMLHttpRequest();
+                request.open('GET','http://127.0.0.1:1711/', false);
+                request.send();
+
+                if(request.status == 200){
+                    alert(JSON.parse(request.responseText));
+                }else{
+                    alert("Error");
+                }
+            }
+        </script>
+    </head>
+    <body>
+        <div onclick="callCSharp('this is a test')" class="button">
+            Click Me
+        </div>
+    </body>
+</html>
+        ]]></code>
+      </example>
+      <para>In the application, use <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=System%20Net%20Http%20Listener&amp;scope=Xamarin" title="T:System.Net.HttpListener">T:System.Net.HttpListener</a></format> to listen and respond to that request: </para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+//Wire up listener
+listener = new HttpListener();
+listener.Prefixes.Add("http://*:1711/");
+listener.Start();
+listener.BeginGetContext(new AsyncCallback(Callback), listener);
+
+//....etc...
+
+void Callback(IAsyncResult result)
+{
+	//Get the listener context
+	var context = listener.EndGetContext(result);
+
+	//Start listening for the next request
+	listener.BeginGetContext(new AsyncCallback(Callback), listener);
+
+	var response = CalculateResponse();
+	var responseBytes = System.Text.Encoding.UTF8.GetBytes(response);
+
+	context.Response.ContentType = "text/json";
+	context.Response.StatusCode = HttpStatusCode.OK;
+	context.Response.ContentLength64 = responseBytes.Length;
+	context.Response.OutputStream.Write(responseBytes, 0, responseBytes.Length);
+	context.Response.OutputStream.Close();
+}
+          ]]></code>
+      </example>
+      <para>Finally, a third technique is to poll the <see cref="T:JavaScriptCore.JSContext" /> for a flag set by a JavaScript calculation.</para>
+    </remarks>
+    <related type="externalDocumentation" href="https://developer.apple.com/reference/JavaScriptCore/JSContext">Apple documentation for <c>JSContext</c></related>
+  </Docs>
+</Documentation>

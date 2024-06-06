@@ -1,0 +1,68 @@
+<Documentation>
+  <Docs DocId="T:Foundation.NSDictionary">
+    <summary>Dictionary that provides mapping from keys to values.</summary>
+    <remarks>
+      <para>
+	This is an immutable dictionary, to create mutable ones, use the <see cref="T:Foundation.NSMutableDictionary" /> type.
+      </para>
+      <para>
+      </para>
+      <para>
+	There is a convenient constructor that takes at least one key
+	and one value, with optional values that will create the
+	dictionary by pairing each key with a value.  If you use .NET
+	objects, the keys and values will first be boxed into
+	NSObjects using <see cref="M:Foundation.NSObject.FromObject(System.Object)" />.
+
+      </para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+//
+// Using C# objects, strings and ints, produces
+// a dictionary with 2 NSString keys, "key1" and "key2"
+// and two NSNumbers with the values 1 and 2
+//
+var dict = new NSDictionary ("key1", 1, "key2", 2);
+
+//
+// Using NSObjects directly, gives you fine control
+//
+var key1 = new NSString ("key1");
+var value1 = new NSNumber ((byte) 1);
+var key2 = new NSString ("key2");
+var value2 = new NSNumber ((byte) 2);
+
+var dict2 = new NSDictionary (key1, value1, key2, value2);
+]]></code>
+      </example>
+      <para>
+	Sometimes, you might have already an array of keys and values,
+	so you can use the following factory methods:
+      </para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+var keys = new object [] { "key1", "key2" };
+var values = new object [] { "value1", "value2" }:
+
+var dict = NSDictionary.FromObjectsAndKeys (values, keys);
+]]></code>
+      </example>
+      <para>
+	The NSDictionary type implements the ICollection, IDictionary
+	and the generic ICollection and IDictionary interfaces, which
+	makes it convenient to use with existing .NET APIs and also
+	provides indexers that take an NSObject, an NSString or a C#
+	string as well as an enumerator.
+
+      </para>
+      <para>
+	In some cases, where you might be iterating over a loop, or
+	you have not surfaced a bound type, but you have the handle to
+	the key, you can use the <see cref="M:Foundation.NSDictionary.LowlevelObjectForKey(System.IntPtr)" />
+	which takes a handle for the key and returns a handle for the returned object. 
+
+      </para>
+    </remarks>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Cocoa/Reference/Foundation/Classes/NSDictionary_Class/index.html">Apple documentation for <c>NSDictionary</c></related>
+  </Docs>
+</Documentation>

@@ -119,6 +119,11 @@ stages:
     strategy:
       matrix: $[ stageDependencies.configure_build.configure.outputs['test_matrix.TEST_MATRIX'] ]
     steps:
+
+    - bash: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/scripts/disable-codeql-arm64.sh
+      displayName: 'Disable CodeQL on arm64'
+      name: disableCodeQLOnArm64
+
     - bash: |
         env | sort
         env

@@ -1,0 +1,42 @@
+<Documentation>
+  <Docs DocId="T:UIKit.UIActivity">
+    <summary>Abstract base class of activities to which the <see cref="T:UIKit.UIActivityViewController" /> can send data.</summary>
+    <remarks>
+      <para>The <see cref="T:UIKit.UIActivityViewController" /> can be used to send data to services such as social networks, email, SMS, etc. The operating system provides a number of these, such as <see cref="P:UIKit.UIActivityType.PostToFacebook" />, <see cref="P:UIKit.UIActivityType.Mail" />, and <see cref="P:UIKit.UIActivityType.Message" />. </para>
+      <para>You can create a new service by subclassing <see cref="T:UIKit.UIActivity" /> and, optionally, <see cref="T:UIKit.UIActivityItemProvider" />. This service will only be available to your own application; there is no way to make for non-Apple developers to make a <see cref="T:UIKit.UIActivity" /> that is available across apps.</para>
+      <para>
+	When subclassing, you should override the 
+	<see cref="P:UIKit.UIActivity.Image" />, 
+	<see cref="P:UIKit.UIActivity.Title" />, 
+	<see cref="P:UIKit.UIActivity.Type" />, 
+	<see cref="M:UIKit.UIActivity.Prepare(Foundation.NSObject[])" /> and 
+	<see cref="M:UIKit.UIActivity.CanPerform(Foundation.NSObject[])" />.
+      </para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+//
+// Share an image 
+//
+var imageToShare = UIImage.FromFile ("demo.png");
+var activityItems = new NSObject[] { imageToShare };
+var controller = new UIActivityViewController (activityItems, null);
+this.PresentViewController(controller, true, null)
+
+// 
+// Now share the image, but explicitly exclude posting as a message
+//
+controller = new UIActivityViewController (activityItems, null) {
+    ExcludedActivityTypes = new NSString[] {
+        UIActivityType.PostToWeibo,
+        UIActivityType.Message
+    }
+};
+this.PresentViewController(controller, true, null)
+
+	]]></code>
+      </example>
+    </remarks>
+    
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIActivity_Class/index.html">Apple documentation for <c>UIActivity</c></related>
+  </Docs>
+</Documentation>

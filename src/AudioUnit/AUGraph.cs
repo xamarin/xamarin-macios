@@ -88,7 +88,11 @@ namespace AudioUnit {
 
 		static IntPtr Create ()
 		{
-			int err = NewAUGraph (out var handle);
+			IntPtr handle;
+			int err;
+			unsafe {
+				err = NewAUGraph (&handle);
+			}
 			if (err != 0)
 				throw new InvalidOperationException (String.Format ("Cannot create new AUGraph. Error code: {0}", err));
 			return handle;
@@ -101,7 +105,10 @@ namespace AudioUnit {
 
 		public static AUGraph? Create (out int errorCode)
 		{
-			errorCode = NewAUGraph (out var handle);
+			IntPtr handle;
+			unsafe {
+				errorCode = NewAUGraph (&handle);
+			}
 
 			if (errorCode != 0)
 				return null;
@@ -483,7 +490,7 @@ namespace AudioUnit {
 		}
 
 		[DllImport (Constants.AudioToolboxLibrary, EntryPoint = "NewAUGraph")]
-		static extern int /* OSStatus */ NewAUGraph (out IntPtr outGraph);
+		unsafe static extern int /* OSStatus */ NewAUGraph (IntPtr* outGraph);
 
 		[DllImport (Constants.AudioToolboxLibrary, EntryPoint = "AUGraphOpen")]
 		static extern int /* OSStatus */ AUGraphOpen (IntPtr inGraph);
