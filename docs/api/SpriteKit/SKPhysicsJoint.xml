@@ -1,0 +1,51 @@
+<Documentation>
+  <Docs DocId="T:SpriteKit.SKPhysicsJoint">
+    <summary>Base class for subtypes that join bodies in the physics engine.</summary>
+    <remarks>
+      <para>Joints must be added to the <see cref="T:SpriteKit.SKScene" />'s <see cref="P:SpriteKit.SKScene.PhysicsWorld" /> after the <see cref="T:SpriteKit.SKPhysicsBody" />s of the <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=Sprite%20Kit%20SKJoint&amp;scope=Xamarin" title="T:SpriteKit.SKPhysicsJoint">T:SpriteKit.SKPhysicsJoint</a></format>. Adding the joint prior to adding the <see cref="T:SpriteKit.SKPhysicsBody" />s will result in a segfault.</para>
+      <para>Subclasses of <see cref="T:SpriteKit.SKPhysicsJoint" /> have a <c>Create</c> static method that should be used to construct instances.</para>
+      <para>
+        <img href="~/SpriteKit/_images/SKPhysicsJoint.Hierarchy.png" alt="Class diagram of the SKPhysicsJoint hierarchy" />
+      </para>
+      <para>
+        <list type="table">
+          <listheader>
+            <term>Class</term>
+            <description>Description</description>
+          </listheader>
+          <item>
+            <term>
+              <see cref="T:SpriteKit.SKPhysicsJointFixed" />
+            </term>
+            <description>Fuses two bodies without allowing movement.</description>
+          </item>
+          <item>
+            <term>
+              <see cref="T:SpriteKit.SKPhysicsJointLimit" />
+            </term>
+            <description>Limits the maximum distance between two bodies.</description>
+          </item>
+          <item>
+            <term>
+              <see cref="T:SpriteKit.SKPhysicsJointPin" />
+            </term>
+            <description>Allows two bodies to rotate around an anchor point.</description>
+          </item>
+          <item>
+            <term>
+              <see cref="T:SpriteKit.SKPhysicsJointSliding" />
+            </term>
+            <description>Allows two bodies to move along an axis.</description>
+          </item>
+          <item>
+            <term>
+              <see cref="T:SpriteKit.SKPhysicsJointSpring" />
+            </term>
+            <description>Connects two bodies with a spring.</description>
+          </item>
+        </list>
+      </para>
+    </remarks>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/SpriteKit/Reference/SKPhysicsJoint_Ref/index.html">Apple documentation for <c>SKPhysicsJoint</c></related>
+  </Docs>
+</Documentation>

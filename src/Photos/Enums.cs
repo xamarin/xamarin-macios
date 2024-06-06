@@ -4,6 +4,7 @@ using Foundation;
 
 namespace Photos {
 	// NSInteger -> PHImageManager.h
+	/// <summary>Enumerates values that control how images are displayed.</summary>
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum PHImageContentMode : long {
@@ -13,6 +14,7 @@ namespace Photos {
 	}
 
 	// NSInteger -> PHImageManager.h
+	/// <summary>Enumerates values that control whether to retrieve edited or unedited versions of images.</summary>
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum PHImageRequestOptionsVersion : long {
@@ -22,6 +24,7 @@ namespace Photos {
 	}
 
 	// NSInteger -> PHImageManager.h
+	/// <summary>Enumerates values that control the desired balance between speed and quality when retrieving image data.</summary>
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum PHImageRequestOptionsDeliveryMode : long {
@@ -31,6 +34,7 @@ namespace Photos {
 	}
 
 	// NSInteger -> PHImageManager.h
+	/// <summary>Enumerates values that control the speed and accuracy of image resizing operations.</summary>
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum PHImageRequestOptionsResizeMode : long {
@@ -40,6 +44,7 @@ namespace Photos {
 	}
 
 	// NSInteger -> PHImageManager.h
+	/// <summary>Enumerates values that control whether to return the edited or original version of a video asset.</summary>
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum PHVideoRequestOptionsVersion : long {
@@ -48,6 +53,7 @@ namespace Photos {
 	}
 
 	// NSInteger -> PHImageManager.h
+	/// <summary>Enumerates values that balance the load time and quality of video when requesting video data.</summary>
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum PHVideoRequestOptionsDeliveryMode : long {
@@ -58,6 +64,7 @@ namespace Photos {
 	}
 
 	// NSInteger -> PhotosTypes.h
+	/// <summary>Enumerates values that indicate whether a collection is a moment list, folder, or smart folder.</summary>
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum PHCollectionListType : long {
@@ -70,6 +77,7 @@ namespace Photos {
 		SmartFolder = 3
 	}
 
+	/// <summary>Enumerates values that indicate the subtype of the collection.</summary>
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum PHCollectionListSubtype : long {
@@ -101,6 +109,7 @@ namespace Photos {
 	}
 
 	// NSUInteger -> PhotosTypes.h
+	/// <summary>Enumerates values that describe the editing operations that can be performed on a collection.</summary>
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum PHCollectionEditOperation : long {
@@ -115,6 +124,7 @@ namespace Photos {
 	}
 
 	// NSInteger -> PhotosTypes.h
+	/// <summary>Enumerates varieties of <see cref="T:Photos.PHAssetCollection" />.</summary>
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum PHAssetCollectionType : long {
@@ -129,6 +139,7 @@ namespace Photos {
 	}
 
 	// NSInteger -> PhotosTypes.h
+	/// <summary>Enumerates values that describe the particular subtype (For example, time lapses, bursts, shared collections in the cloud, and etc.) of an asset collection.</summary>
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum PHAssetCollectionSubtype : long {
@@ -174,6 +185,7 @@ namespace Photos {
 	}
 
 	// NSUInteger -> PhotosTypes.h
+	/// <summary>Enumerates values that indicate whether an operation edits or deletes an asset, changes its properties, or performs no action on the asset.</summary>
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum PHAssetEditOperation : long {
@@ -184,6 +196,7 @@ namespace Photos {
 	}
 
 	// NSInteger -> PhotosTypes.h
+	/// <summary>Enumerates the forms of <see cref="T:Photos.PHAsset" />.</summary>
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum PHAssetMediaType : long {
@@ -194,6 +207,7 @@ namespace Photos {
 	}
 
 	// NSUInteger -> PhotosTypes.h
+	/// <summary>Enumerates values that describe media subtypes. (HDR, panorama, streaming video, and etc.)</summary>
 	[MacCatalyst (13, 1)]
 	[Native]
 	[Flags]
@@ -214,6 +228,7 @@ namespace Photos {
 	}
 
 	// NSUInteger -> PhotosTypes.h
+	/// <summary>Indicates whether the Photos app or the user selected an asset as a favorite.</summary>
 	[MacCatalyst (13, 1)]
 	[Native]
 	[Flags]
@@ -223,6 +238,7 @@ namespace Photos {
 		UserPick = (1 << 1)
 	}
 
+	/// <summary>Enumerates the current authorization allowed by the application user.</summary>
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum PHAuthorizationStatus : long {
@@ -237,6 +253,7 @@ namespace Photos {
 		Limited,
 	}
 
+	/// <summary>Enumerates types of <see cref="T:Photos.PHAssetResource" /> data.</summary>
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum PHAssetResourceType : long {
@@ -264,6 +281,7 @@ namespace Photos {
 		PhotoProxy = 19,
 	}
 
+	/// <summary>Enumerates the means by which an asset entered the Photos library.</summary>
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum PHAssetSourceType : ulong {
@@ -273,6 +291,7 @@ namespace Photos {
 		iTunesSynced = (1 << 2)
 	}
 
+	/// <summary>Enumerates Live Photo frame types.</summary>
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum PHLivePhotoFrameType : long {

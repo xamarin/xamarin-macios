@@ -1,0 +1,38 @@
+<Documentation>
+  <Docs DocId="T:Foundation.NSNumber">
+    <summary>Binding to Objective-C API to box numbers (value types).</summary>
+    <remarks>
+      <para>
+	NSNumber provides explicit operator conversions that allow you
+	to cast an NSNumber into any of the core .NET types (float,
+	double, int, uint, short, ushort, byte, sbyte and bool).   
+
+      </para>
+      <para>
+	NSNumber also provides implicit operator conversions that
+	allow you to create NSNumber instances from the core .NET types (float,
+	double, int, uint, short, ushort, byte, sbyte and bool).   
+
+
+      </para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+// Creates an NSNumber that contains the integer value 4.
+NSNumber d = 4;
+
+// Obtains a float from an NSNumber using explicit casts:
+float asFloat = (float) d;
+
+// Passes a float to a method taking an NSNumber implicitly:
+void RunForSeconds (NSNumber seconds)
+{
+...
+}
+[...]
+RunForSeconds (4);
+	]]></code>
+      </example>
+    </remarks>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Cocoa/Reference/Foundation/Classes/NSNumber_Class/index.html">Apple documentation for <c>NSNumber</c></related>
+  </Docs>
+</Documentation>

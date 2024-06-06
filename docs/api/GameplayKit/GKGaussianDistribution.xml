@@ -1,0 +1,16 @@
+<Documentation>
+  <Docs DocId="T:GameplayKit.GKGaussianDistribution">
+    <summary>A <see cref="T:GameplayKit.GKRandomDistribution" /> that produces a Gaussian (normal) distribution.</summary>
+    <remarks>
+      <para>The Gaussian (aka normal) distribution is defined as</para>
+      <para>
+        <img href="~/GameplayKit/_images/GKGaussianDistributionEq.png" alt="The equation for calculating a Gaussian distribution." />
+      </para>
+      <para>where μ is <see cref="P:GameplayKit.GKGaussianDistribution.Mean" /> and σ is <see cref="P:GameplayKit.GKGaussianDistribution.Deviation" />. The following shows the distribution with a <see cref="P:GameplayKit.GKGaussianDistribution.Mean" /> of 0 and <see cref="P:GameplayKit.GKGaussianDistribution.Deviation" />s of 0.75 (narrow, tall), 1.0, and 2.0 (wide, short).</para>
+      <para>
+        <img href="~/GameplayKit/_images/GKGaussianDistribution.png" alt="Illustration of gaussian distributions with different variances" />
+      </para>
+    </remarks>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/GameplayKit/Reference/GKGaussianDistribution_Class/index.html">Apple documentation for <c>GKGaussianDistribution</c></related>
+  </Docs>
+</Documentation>

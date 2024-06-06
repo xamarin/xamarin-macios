@@ -1,0 +1,11 @@
+<Documentation>
+  <Docs DocId="T:MultipeerConnectivity.MCBrowserViewController">
+    <summary>A standard <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=T:MultipeerConnectivity.UIViewController&amp;scope=Xamarin" title="T:MultipeerConnectivity.UIViewController">T:MultipeerConnectivity.UIViewController</a></format> that provides a user experience for browsing for peers.</summary>
+    <remarks>
+      <para>Multipeer connectivity's discovery phase involves two roles: browsing and advertising. When an application searches for peers with which to connect, it is browsing. Browsing may be controlled by either a <see cref="T:MultipeerConnectivity.MCBrowserViewController" /> or can be fully customized with a <see cref="T:MultipeerConnectivity.MCNearbyServiceBrowser" />. For a discussion of the discovery process, see the remarks for <see cref="T:MultipeerConnectivity.MCSession" />.</para>
+    </remarks>
+    
+    
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/MultipeerConnectivity/Reference/MCBrowserViewController_class/index.html">Apple documentation for <c>MCBrowserViewController</c></related>
+  </Docs>
+</Documentation>

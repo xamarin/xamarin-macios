@@ -13,6 +13,7 @@ using ObjCRuntime;
 namespace SpriteKit {
 
 	// NSInteger -> SKKeyframeSequence.h
+	/// <summary>An enumeration whose values specify the interpolation mode of a <see cref="T:SpriteKit.SKKeyframeSequence" />.</summary>
 	[Native]
 	public enum SKInterpolationMode : long {
 		Linear = 1,
@@ -21,6 +22,7 @@ namespace SpriteKit {
 	}
 
 	// NSInteger -> SKKeyframeSequence.h
+	/// <summary>An enumeration whose values specify whether the time value of a <see cref="T:SpriteKit.SKKeyframeSequence" /> should cycle.</summary>
 	[Native]
 	public enum SKRepeatMode : long {
 		Clamp = 1,
@@ -28,6 +30,7 @@ namespace SpriteKit {
 	}
 
 	// NSInteger -> SKAction.h
+	/// <summary>An enumeration whose values specify the time-varying behavior of a <see cref="T:SpriteKit.SKAction" />. Used with <see cref="P:SpriteKit.SKAction.TimingMode" />.</summary>
 	[Native]
 	public enum SKActionTimingMode : long {
 		Linear = 0,
@@ -37,6 +40,8 @@ namespace SpriteKit {
 	}
 
 	// NSInteger -> SKLabelNode.h
+	/// <summary>
+	///  An enumeration whose values specify vertical alignment of a <see cref="T:SpriteKit.SKLabelNode" />. Used with <see cref="P:SpriteKit.SKLabelNode.VerticalAlignmentMode" /></summary>
 	[Native]
 	public enum SKLabelVerticalAlignmentMode : long {
 		Baseline = 0,
@@ -46,6 +51,7 @@ namespace SpriteKit {
 	}
 
 	// NSInteger -> SKLabelNode.h
+	/// <summary>An enumeration whose values specify horizontal alignment of a <see cref="T:SpriteKit.SKLabelNode" />. Used with <see cref="P:SpriteKit.SKLabelNode.HorizontalAlignmentMode" /></summary>
 	[Native]
 	public enum SKLabelHorizontalAlignmentMode : long {
 		Center = 0,
@@ -54,6 +60,7 @@ namespace SpriteKit {
 	}
 
 	// NSInteger -> SKNode.h
+	/// <summary>An enumeration whose values specify options for blending of visual <see cref="T:SpriteKit.SKNode" />s or particles.</summary>
 	[Native]
 	public enum SKBlendMode : long {
 		Alpha = 0,
@@ -67,6 +74,7 @@ namespace SpriteKit {
 	}
 
 	// NSInteger -> SKScene.h
+	/// <summary>An enumeration whose values specify the way in which a <see cref="T:SpriteKit.SKScene" /> scales to the view in which it is being displayed.</summary>
 	[Native]
 	public enum SKSceneScaleMode : long {
 		Fill = 0,
@@ -76,6 +84,7 @@ namespace SpriteKit {
 	}
 
 	// NSInteger -> SKTexture.h
+	/// <summary>An enumeration whose values specify how a <see cref="T:SpriteKit.SKTexture" /> is rendered on a <see cref="T:SpriteKit.SKSpriteNode" /> of a different size.</summary>
 	[Native]
 	public enum SKTextureFilteringMode : long {
 		Nearest = 0,
@@ -83,6 +92,7 @@ namespace SpriteKit {
 	}
 
 	// NSInteger -> SKTransition.h
+	/// <summary>An enumeration of directions for use with <see cref="T:SpriteKit.SKTransition" />s.</summary>
 	[Native]
 	public enum SKTransitionDirection : long {
 		Up = 0,
@@ -91,6 +101,7 @@ namespace SpriteKit {
 		Left = 3
 	}
 
+	/// <summary>Contains values that describe the data with which an <see cref="T:SpriteKit.SKUniform" /> was initialized.</summary>
 	[Native]
 	public enum SKUniformType : long {
 		None,
@@ -104,6 +115,7 @@ namespace SpriteKit {
 		Texture,
 	}
 
+	/// <summary>Enumerates values used with <see cref="P:SpriteKit.SKEmitterNode.ParticleRenderOrder" />.</summary>
 	[Native]
 	public enum SKParticleRenderOrder : ulong {
 		OldestLast,
@@ -111,6 +123,7 @@ namespace SpriteKit {
 		DontCare,
 	}
 
+	/// <summary>Enumeration of valid types for <see cref="T:SpriteKit.SKAttribute" /> values.</summary>
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum SKAttributeType : long {
@@ -125,6 +138,7 @@ namespace SpriteKit {
 		VectorHalfFloat4 = 8,
 	}
 
+	/// <summary>Enumerates how a <see cref="T:SpriteKit.SKTileDefinition" /> kind may be rotated.</summary>
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum SKTileDefinitionRotation : ulong {
@@ -134,6 +148,7 @@ namespace SpriteKit {
 		Angle270,
 	}
 
+	/// <summary>Enumerates supported tiling schemes.</summary>
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum SKTileSetType : ulong {
@@ -143,6 +158,7 @@ namespace SpriteKit {
 		HexagonalPointy,
 	}
 
+	/// <summary>Enumerates how neighboring tiles may be automatically placed.</summary>
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum SKTileAdjacencyMask : ulong {
@@ -183,6 +199,7 @@ namespace SpriteKit {
 		UpperLeftCorner = Up | UpperRight | Right | Down | LowerLeft | Left | UpperLeft,
 	}
 
+	/// <summary>Enumerates the various ways a <see cref="T:SpriteKit.SKNode" /> may be focusable.</summary>
 	[NoMac]
 	[Watch (9, 0)]
 	[MacCatalyst (13, 1)]

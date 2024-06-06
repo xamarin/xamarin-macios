@@ -1,0 +1,23 @@
+<Documentation>
+  <Docs DocId="T:UIKit.UIImagePickerController">
+    <summary>Provides access to the system image and video capturing and selection facilities.</summary>
+    <remarks>
+      <para>
+        The <see cref="T:UIKit.UIImagePickerController" /> is used both for taking images and movies and for selecting previously saved images and movies. The appearance and behavior of the <see cref="T:UIKit.UIImagePickerController" /> is determined by the <see cref="P:UIKit.UIImagePickerController.SourceType" /> property. 
+      </para>
+      <para>Before using the <see cref="T:UIKit.UIImagePickerController" /> the application developer should verify the capabilities of the application user's device by checking:</para>
+      <list type="bullet">
+        <item>
+          <term>Sources via the <see cref="M:UIKit.UIImagePickerController.IsSourceTypeAvailable(UIKit.UIImagePickerControllerSourceType)" /> method;</term>
+        </item>
+        <item>
+          <term>Cameras and flash via the <see cref="M:UIKit.UIImagePickerController.IsCameraDeviceAvailable(UIKit.UIImagePickerControllerCameraDevice)" /> and <see cref="M:UIKit.UIImagePickerController.IsFlashAvailableForCameraDevice(UIKit.UIImagePickerControllerCameraDevice)" /> methods; and</term>
+        </item>
+        <item>
+          <term>Media types via the <see cref="M:UIKit.UIImagePickerController.AvailableMediaTypes(UIKit.UIImagePickerControllerSourceType)" /> method.</term>
+        </item>
+      </list>
+    </remarks>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIImagePickerController_Class/index.html">Apple documentation for <c>UIImagePickerController</c></related>
+  </Docs>
+</Documentation>

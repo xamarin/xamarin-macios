@@ -21,6 +21,9 @@ using NativeHandle = System.IntPtr;
 
 namespace OpenGLES {
 
+	/// <summary>Manages resources that can be used by more than one EAGLContext (textures, buffers, framebuffers, renderbuffers, shaders and programs).</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/OpenGLES/Reference/EAGLSharegroup_ClassRef/index.html">Apple documentation for <c>EAGLSharegroup</c></related>
 	[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'Metal' instead.")]
 	[BaseType (typeof (NSObject))]
@@ -33,6 +36,9 @@ namespace OpenGLES {
 		string DebugLabel { get; set; }
 	}
 
+	/// <summary>Holds the state necessary to render using OpenGL ES.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/OpenGLES/Reference/EAGLContext_ClassRef/index.html">Apple documentation for <c>EAGLContext</c></related>
 	[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'Metal' instead.")]
 	[BaseType (typeof (NSObject))]
