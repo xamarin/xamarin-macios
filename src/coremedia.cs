@@ -10,6 +10,9 @@ using ObjCRuntime;
 
 namespace CoreMedia {
 
+	/// <summary>Class that manages the repetitive allocation and deallocation of large blocks of memory.</summary>
+	///     
+	///     <!-- TODO: No Apple documentation on this as of 2013-05-01 -->
 	[Watch (6, 0)]
 	[MacCatalyst (13, 1)]
 	[Partial]
@@ -203,6 +206,7 @@ namespace CoreMedia {
 		NSString Hdr10PlusPerFrameDataKey { get; }
 	}
 
+	/// <summary>The keys for <see cref="T:CoreMedia.CMSampleBuffer" /> attachments.</summary>
 	[Watch (6, 0)]
 	[MacCatalyst (13, 1)]
 	[StrongDictionary ("CMSampleAttachmentKey")]

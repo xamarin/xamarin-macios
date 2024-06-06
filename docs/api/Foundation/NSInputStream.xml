@@ -1,0 +1,59 @@
+<Documentation>
+  <Docs DocId="T:Foundation.NSInputStream">
+    <summary>A read-only input NSStream.</summary>
+    <remarks>
+      <para>
+        <format type="text/html">
+          <h3>Subclassing NSInputStream.</h3>
+        </format>
+		
+		NSInputStream is a concrete subclass of NSStream you can use to give read-only 
+		access to stream data. For most cases this is sufficient, however if you want
+		more control over the data, you can subclass NSInputStream. If you subclass NSInputStream
+		you must provide an implementation of the following methods:
+		<list type="bullet"><item><term><format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=M:Foundation.NSInputStream.Read(IntPtr,uint)&amp;scope=Xamarin" title="M:Foundation.NSInputStream.Read(IntPtr,uint)">M:Foundation.NSInputStream.Read(IntPtr,uint)</a></format>: In this
+					method you must write bytes to the provided buffer. You can use
+					<format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=System%20Runtime%20Interop%20Services%20Marshal%20Copy(byte[]%20,int%20,Int%20Ptr%20,int%20)&amp;scope=Xamarin" title="M:System.Runtime.InteropServices.Marshal.Copy(byte[],int,IntPtr,int)">M:System.Runtime.InteropServices.Marshal.Copy(byte[],int,IntPtr,int)</a></format>
+					to write from a byte array to the provided buffer. Return the number of bytes
+					actually written.
+				</term></item><item><term><see cref="M:Foundation.NSInputStream.GetBuffer(System.IntPtr@,System.nuint@)" />: Return
+					a pointer to a buffer where bytes can be read. You can return false from this
+					method and just implement <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=M:Foundation.NSInputStream.Read(IntPtr,uint)&amp;scope=Xamarin" title="M:Foundation.NSInputStream.Read(IntPtr,uint)">M:Foundation.NSInputStream.Read(IntPtr,uint)</a></format>.
+				</term></item><item><term><see cref="M:Foundation.NSInputStream.HasBytesAvailable" />: Use
+					this method to indicate when your stream has data to be read.
+				</term></item></list></para>
+      <format type="text/html">
+        <h3>Providing a toll-free bridged NSInputStream subclass.</h3>
+      </format>
+      <para>
+        <format type="text/html">
+          <b>The methods required to provide a toll-free bridged NSInputStream subclass are considered private API,
+			and may cause Apple to reject your app from the App Store.</b>
+        </format>
+      </para>
+      <para>
+		An simple NSInputStream subclass will not work for all API that takes an NSInputStream.
+		This is the case with <see cref="T:Foundation.NSMutableUrlRequest" /> for
+		instance, which actually expects an instance of a CFReadStream object. For this to work
+		our NSInputStream subclass needs to be toll-free bridged to CFReadStream. This is
+		done by overriding the following methods:
+		<list type="bullet"><item><term><see cref="M:Foundation.NSInputStream.SetCFClientFlags(CoreFoundation.CFStreamEventType,System.IntPtr,System.IntPtr)" />: 
+					This method is called to register a client to notify of events in your
+					stream. You must call the base implementation, with the exact arguments passed
+					in.
+				</term></item><item><term><format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=Foundation%20NSInput%20Stream%20Schedule%20In%20CFRun%20Loop(%20Int%20Ptr%20,string%20)&amp;scope=Xamarin" title="M:Foundation.NSInputStream.ScheduleInCFRunLoop(IntPtr,string)">M:Foundation.NSInputStream.ScheduleInCFRunLoop(IntPtr,string)</a></format>:
+					Depending on what you're doing to provide the data, you will need to schedule
+					in a run loop when this method is called. You should not call the base
+					implementation for this method.
+				</term></item><item><term><format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=Foundation%20NSInput%20Stream%20Unschedule%20In%20CFRun%20Loop(%20Int%20Ptr%20,string%20)&amp;scope=Xamarin" title="M:Foundation.NSInputStream.UnscheduleInCFRunLoop(IntPtr,string)">M:Foundation.NSInputStream.UnscheduleInCFRunLoop(IntPtr,string)</a></format>:
+					This is called when you need to unschedule from a run loop. You should not call
+					the base implementation for this method.
+				</term></item></list>
+		You must call also <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=M:Foundation.NSInputStream.Notify((valuetype CoreFoundation.CFStreamEventType)&amp;scope=Xamarin" title="M:Foundation.NSInputStream.Notify((valuetype CoreFoundation.CFStreamEventType)">M:Foundation.NSInputStream.Notify((valuetype CoreFoundation.CFStreamEventType)</a></format>
+		to inform the client when you have data available (or when you have any other relevant
+		event), otherwise your input stream won't be read from.
+	</para>
+    </remarks>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Cocoa/Reference/Foundation/Classes/NSInputStream_Class/index.html">Apple documentation for <c>NSInputStream</c></related>
+  </Docs>
+</Documentation>

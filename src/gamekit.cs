@@ -37,16 +37,20 @@ using NativeHandle = System.IntPtr;
 
 namespace GameKit {
 
+	/// <summary>A delegate used with <see cref="M:GameKit.GKLocalPlayer.LoadFriends(GameKit.GKFriendsHandler)" /> and <see cref="M:GameKit.GKMatchmaker.FindPlayers(GameKit.GKMatchRequest,GameKit.GKFriendsHandler)" /> that defines behavior after the request completes.</summary>
 	delegate void GKFriendsHandler (string [] friends, NSError error);
 	delegate void GKPlayersHandler (GKPlayer [] players, NSError error);
 	delegate void GKLeaderboardsHandler (GKLeaderboard [] leaderboards, NSError error);
 	delegate void GKScoresLoadedHandler (GKScore [] scoreArray, NSError error);
 	delegate void GKNotificationMatch (GKMatch match, NSError error);
+	/// <summary>A delegate that is used to define behavior after a response to a <see cref="T:GameKit.GKInvite" />.</summary>
 	delegate void GKInviteHandler (GKInvite invite, string [] playerIDs);
 	delegate void GKQueryHandler (nint activity, NSError error);
 	delegate void GKCompletionHandler (GKAchievement [] achivements, NSError error);
 	delegate void GKAchievementDescriptionHandler (GKAchievementDescription [] descriptions, NSError error);
+	/// <summary>A delegate that is called by <see cref="M:GameKit.GKLeaderboard.LoadCategories(GameKit.GKCategoryHandler)" />.</summary>
 	delegate void GKCategoryHandler (string [] categories, string [] titles, NSError error);
+	/// <summary>A delegate used with <see cref="P:GameKit.GKVoiceChat.PlayerStateUpdateHandler" /> that specifies behavior when the player's <see cref="T:GameKit.GKVoiceChatPlayerState" /> changes.</summary>
 	delegate void GKPlayerStateUpdateHandler (string playerId, GKVoiceChatPlayerState state);
 	delegate void GKIdentityVerificationSignatureHandler (NSUrl publicKeyUrl, NSData signature, NSData salt, ulong timestamp, NSError error);
 	delegate void GKLeaderboardSetsHandler (GKLeaderboardSet [] leaderboardSets, NSError error);
@@ -73,8 +77,17 @@ namespace GameKit {
 	interface UIWindow {}
 #endif
 
+	/// <summary>Interface representing the required methods (if any) of the protocol <see cref="T:GameKit.GKVoiceChatClient" />.</summary>
+	///     <remarks>
+	///       <para>This interface contains the required methods (if any) from the protocol defined by <see cref="T:GameKit.GKVoiceChatClient" />.</para>
+	///       <para>If developers create classes that implement this interface, the implementation methods will automatically be exported to Objective-C with the matching signature from the method defined in the <see cref="T:GameKit.GKVoiceChatClient" /> protocol.</para>
+	///       <para>Optional methods (if any) are provided by the <see cref="T:GameKit.GKVoiceChatClient_Extensions" /> class as extension methods to the interface, allowing developers to invoke any optional methods on the protocol.</para>
+	///     </remarks>
 	interface IGKVoiceChatClient { }
 
+	/// <summary>The model that GKVoiceChatService uses.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/GameKit/Reference/GKVoiceChatClient_Protocol/index.html">Apple documentation for <c>GKVoiceChatClient</c></related>
 	[NoMac]
 	[NoWatch] // only exposed thru GKVoiceChatService (not in 3.0)
 	[NoTV]
@@ -109,6 +122,9 @@ namespace GameKit {
 		void ReceivedInvitation (GKVoiceChatService voiceChatService, string participantID, nint callID);
 	}
 
+	/// <summary>Provides voice chat over connected iPhones/iPads.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/GameKit/Reference/GKVoiceChatService_Class/index.html">Apple documentation for <c>GKVoiceChatService</c></related>
 	[NoMac]
 	[NoWatch] // deprecated in 2.0 (but framework not added before 3.0)
 	[NoTV]
@@ -167,6 +183,9 @@ namespace GameKit {
 		bool IsVoIPAllowed { get; }
 	}
 
+	/// <summary>Provides the functionality necessary to discover and connect to nearby iPhones and iPads over Bluetooth.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/GameKit/Reference/GKSession_Class/index.html">Apple documentation for <c>GKSession</c></related>
 	[NoTV]
 	[NoWatch] // deprecated in 2.0 (but framework not added before 3.0)
 	[BaseType (typeof (NSObject))]
@@ -767,8 +786,12 @@ namespace GameKit {
 		UIViewController ChallengeComposeController ([NullAllowed] string message, [NullAllowed] GKPlayer [] players, [NullAllowed] GKChallengeComposeHandler completionHandler);
 	}
 
+	/// <include file="../docs/api/GameKit/IGKLeaderboardViewControllerDelegate.xml" path="/Documentation/Docs[@DocId='T:GameKit.IGKLeaderboardViewControllerDelegate']/*" />
 	interface IGKLeaderboardViewControllerDelegate { }
 
+	/// <summary>A delegate object that allows fine-grained control over <see cref="T:GameKit.GKLeaderboardViewController" /> events.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/GameKit/Reference/GKLeaderboardViewControllerDelegate_Ref/index.html">Apple documentation for <c>GKLeaderboardViewControllerDelegate</c></related>
 	[NoWatch]
 	[NoTV]
 	[NoMacCatalyst]
@@ -784,6 +807,11 @@ namespace GameKit {
 		void DidFinish (GKLeaderboardViewController viewController);
 	}
 
+	/// <summary>A <see cref="T:GameKit.GKGameCenterViewController" /> that presents leaderboards to the player.</summary>
+	///     <remarks>
+	///       <para>Application developers should use <see cref="T:GameKit.GKGameCenterViewController" /> instead of this class.</para>
+	///     </remarks>
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/GameKit/Reference/GKLeaderboardViewController_Ref/index.html">Apple documentation for <c>GKLeaderboardViewController</c></related>
 	[NoTV]
 	[NoWatch]
 	[NoMacCatalyst]
@@ -1043,6 +1071,10 @@ namespace GameKit {
 		void LoadFriendsList (string [] identifiers, Action<GKPlayer [], NSError> completionHandler);
 	}
 
+	/// <summary>Contains information that is needed to locate and load a saved game.</summary>
+	///     
+	///     <!-- Apple undocumented 2014-09-08 -->
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/GameKit/Reference/GKSavedGame_Ref/index.html">Apple documentation for <c>GKSavedGame</c></related>
 	[NoWatch]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -1065,6 +1097,9 @@ namespace GameKit {
 		void LoadData ([NullAllowed] Action<NSData, NSError> handler);
 	}
 
+	/// <summary>Application developers override this class to respond to conflicts or player modifications in saved games.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/GameKit/Reference/GKSavedGameListener_Ref/index.html">Apple documentation for <c>GKSavedGameListener</c></related>
 	[NoWatch]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -1859,8 +1894,12 @@ namespace GameKit {
 		NSNumber RarityPercent { get; }
 	}
 
+	/// <include file="../docs/api/GameKit/IGKAchievementViewControllerDelegate.xml" path="/Documentation/Docs[@DocId='T:GameKit.IGKAchievementViewControllerDelegate']/*" />
 	interface IGKAchievementViewControllerDelegate { }
 
+	/// <summary>A delegate object that allows <see cref="T:GameKit.GKAchievementViewController" /> to respond to lifecycle events.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/GameKit/Reference/GKAchievementViewControllerDelegate_Ref/index.html">Apple documentation for <c>GKAchievementViewControllerDelegate</c></related>
 	[NoWatch]
 	[NoTV]
 	[NoMacCatalyst]
@@ -1876,6 +1915,11 @@ namespace GameKit {
 		void DidFinish (GKAchievementViewController viewController);
 	}
 
+	/// <summary>A <see cref="T:GameKit.GKGameCenterViewController" /> that presents a standard user experience to display achievement progress.</summary>
+	///     <remarks>
+	///       <para>Application developers should use <see cref="T:GameKit.GKGameCenterViewController" /> instead of this class.</para>
+	///     </remarks>
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/GameKit/Reference/GKAchievementViewController_Ref/index.html">Apple documentation for <c>GKAchievementViewController</c></related>
 	[NoTV]
 	[NoWatch]
 	[NoMacCatalyst]
@@ -1921,6 +1965,9 @@ namespace GameKit {
 		GKDialogController SharedDialogController { get; }
 	}
 
+	/// <summary>A <see cref="T:UIKit.UINavigationController" /> that presents a screen for sending friend requests.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/GameKit/Reference/GKFriendRequestComposeViewController_Ref/index.html">Apple documentation for <c>GKFriendRequestComposeViewController</c></related>
 	[Deprecated (PlatformName.MacOSX, 10, 12)]
 	[Deprecated (PlatformName.iOS, 10, 0)]
 	[NoMacCatalyst]
@@ -1969,8 +2016,12 @@ namespace GameKit {
 		void SetMessage ([NullAllowed] string message);
 	}
 
+	/// <include file="../docs/api/GameKit/IGKFriendRequestComposeViewControllerDelegate.xml" path="/Documentation/Docs[@DocId='T:GameKit.IGKFriendRequestComposeViewControllerDelegate']/*" />
 	interface IGKFriendRequestComposeViewControllerDelegate { }
 
+	/// <summary>A delegate object that allows fine-grained response to <see cref="T:GameKit.GKFriendRequestComposeViewController" /> life-cycle events.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/GameKit/Reference/GKFriendRequestComposeViewControllerDelegate_Ref/index.html">Apple documentation for <c>GKFriendRequestComposeViewControllerDelegate</c></related>
 	[NoWatch]
 	[NoTV]
 	[BaseType (typeof (NSObject))]
@@ -2035,8 +2086,17 @@ namespace GameKit {
 		NSDate TimeoutDate { get; }
 	}
 
+	/// <summary>Interface representing the required methods (if any) of the protocol <see cref="T:GameKit.GKTurnBasedEventHandlerDelegate" />.</summary>
+	///     <remarks>
+	///       <para>This interface contains the required methods (if any) from the protocol defined by <see cref="T:GameKit.GKTurnBasedEventHandlerDelegate" />.</para>
+	///       <para>If developers create classes that implement this interface, the implementation methods will automatically be exported to Objective-C with the matching signature from the method defined in the <see cref="T:GameKit.GKTurnBasedEventHandlerDelegate" /> protocol.</para>
+	///       <para>Optional methods (if any) are provided by the <see cref="T:GameKit.GKTurnBasedEventHandlerDelegate_Extensions" /> class as extension methods to the interface, allowing developers to invoke any optional methods on the protocol.</para>
+	///     </remarks>
 	interface IGKTurnBasedEventHandlerDelegate { }
 
+	/// <summary>A delegate object that is allows fine-grained response to <see cref="T:GameKit.GKTurnBasedEventHandler" /> events.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/GameKit/Reference/GKTurnBasedEventHandlerDelegate_Ref/index.html">Apple documentation for <c>GKTurnBasedEventHandlerDelegate</c></related>
 	[NoTV]
 	[BaseType (typeof (NSObject))]
 	[Model]
@@ -2075,6 +2135,11 @@ namespace GameKit {
 		void HandleTurnEvent (GKTurnBasedMatch match, bool activated);
 	}
 
+	/// <summary>A singleton object used to respond to important messages relating to turn-based matches.</summary>
+	///     <remarks>
+	///       <para>Application Developers should not instantiate this class, but rather use the <see cref="P:GameKit.GKTurnBasedEventHandler.SharedTurnBasedEventHandler" /> singleton.</para>
+	///     </remarks>
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/GameKit/Reference/GKTurnBasedEventHandler_Ref/index.html">Apple documentation for <c>GKTurnBasedEventHandler</c></related>
 	[NoTV]
 	[Deprecated (PlatformName.iOS, 7, 0, message: "Use GKLocalPlayer.RegisterListener with an object that implements IGKTurnBasedEventListener.")]
 	[Deprecated (PlatformName.MacOSX, 10, 10, message: "Use GKLocalPlayer.RegisterListener with an object that implements IGKTurnBasedEventListener.")]
@@ -2533,6 +2598,11 @@ namespace GameKit {
 		void Finished (GKGameCenterViewController controller);
 	}
 
+	/// <summary>The singleton <see cref="P:GameKit.GKChallengeEventHandler.Instance" /> is used to respond to events relating to <see cref="T:GameKit.GKChallenge" />s.</summary>
+	///     <remarks>
+	///       <para>Application developers should not instantiate new instances of this close. Rather, they should use the <see cref="P:GameKit.GKChallengeEventHandler.Instance" /> singleton.</para>
+	///     </remarks>
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/GameKit/Reference/GKChallengeEventHandler_Ref/index.html">Apple documentation for <c>GKChallengeEventHandler</c></related>
 	[NoWatch]
 	[NoTV]
 	[Deprecated (PlatformName.iOS, 7, 0, message: "Implement the 'IGKChallengeListener' interface and register a listener with 'GKLocalPlayer'.")]
@@ -2552,8 +2622,17 @@ namespace GameKit {
 		GKChallengeEventHandler Instance { get; }
 	}
 
+	/// <summary>Interface representing the required methods (if any) of the protocol <see cref="T:GameKit.GKChallengeEventHandlerDelegate" />.</summary>
+	///     <remarks>
+	///       <para>This interface contains the required methods (if any) from the protocol defined by <see cref="T:GameKit.GKChallengeEventHandlerDelegate" />.</para>
+	///       <para>If developers create classes that implement this interface, the implementation methods will automatically be exported to Objective-C with the matching signature from the method defined in the <see cref="T:GameKit.GKChallengeEventHandlerDelegate" /> protocol.</para>
+	///       <para>Optional methods (if any) are provided by the <see cref="T:GameKit.GKChallengeEventHandlerDelegate_Extensions" /> class as extension methods to the interface, allowing developers to invoke any optional methods on the protocol.</para>
+	///     </remarks>
 	interface IGKChallengeEventHandlerDelegate { }
 
+	/// <summary>A delegate object that allows the application developer fine-grained response to life-cycle events relating to <see cref="T:GameKit.GKChallenge" />s, such as receiving or completing a challenge.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/GLkit/Reference/GKChallengeEventHandlerDelegate_Ref/index.html">Apple documentation for <c>GKChallengeEventHandlerDelegate</c></related>
 	[NoWatch]
 	[NoTV]
 	[Deprecated (PlatformName.iOS, 7, 0, message: "Implement the 'IGKChallengeListener' interface and register a listener with 'GKLocalPlayer'.")]
@@ -2956,8 +3035,17 @@ namespace GameKit {
 	interface GKViewController {
 	}
 
+	/// <summary>Interface representing the required methods (if any) of the protocol <see cref="T:GameKit.GKSessionDelegate" />.</summary>
+	///     <remarks>
+	///       <para>This interface contains the required methods (if any) from the protocol defined by <see cref="T:GameKit.GKSessionDelegate" />.</para>
+	///       <para>If developers create classes that implement this interface, the implementation methods will automatically be exported to Objective-C with the matching signature from the method defined in the <see cref="T:GameKit.GKSessionDelegate" /> protocol.</para>
+	///       <para>Optional methods (if any) are provided by the <see cref="T:GameKit.GKSessionDelegate_Extensions" /> class as extension methods to the interface, allowing developers to invoke any optional methods on the protocol.</para>
+	///     </remarks>
 	interface IGKSessionDelegate { }
 
+	/// <summary>Delegate for the GKSession class.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/GameKit/Reference/GKSessionDelegate_Protocol/index.html">Apple documentation for <c>GKSessionDelegate</c></related>
 	[NoTV]
 	[NoWatch] // only exposed thru GKSession (not in 3.0)
 	[Deprecated (PlatformName.iOS, 7, 0, message: "Use 'MultipeerConnectivity.MCSessionDelegate' instead.")]

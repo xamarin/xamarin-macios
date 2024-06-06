@@ -7,6 +7,7 @@ namespace Security {
 
 	// Security.framework/Headers/SecureTransport.h
 	// untyped enum
+	/// <summary>Enumerates SSL protocols.</summary>
 	[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'TlsProtocolVersion' instead.")]
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'TlsProtocolVersion' instead.")]
 	[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use 'TlsProtocolVersion' instead.")]
@@ -89,6 +90,7 @@ namespace Security {
 	}
 
 	// subset of OSStatus (int)
+	/// <summary>Enumerates SSL connection status.</summary>
 	public enum SslStatus {
 		Success = 0,        // errSecSuccess in SecBase.h
 		Protocol = -9800,
@@ -172,6 +174,7 @@ namespace Security {
 
 	// Security.framework/Headers/SecureTransport.h
 	// untyped enum
+	/// <summary>Enumerates SSL session behavior options.</summary>
 	[Deprecated (PlatformName.MacOSX, 10, 15, message: Constants.UseNetworkInstead)]
 	[Deprecated (PlatformName.iOS, 13, 0, message: Constants.UseNetworkInstead)]
 	[Deprecated (PlatformName.TvOS, 13, 0, message: Constants.UseNetworkInstead)]
@@ -205,6 +208,7 @@ namespace Security {
 
 	// Security.framework/Headers/SecureTransport.h
 	// untyped enum
+	/// <summary>Enumerates values that control when to use SSL.</summary>
 	[Deprecated (PlatformName.MacOSX, 10, 15, message: Constants.UseNetworkInstead)]
 	[Deprecated (PlatformName.iOS, 13, 0, message: Constants.UseNetworkInstead)]
 	[Deprecated (PlatformName.TvOS, 13, 0, message: Constants.UseNetworkInstead)]
@@ -218,6 +222,7 @@ namespace Security {
 
 	// Security.framework/Headers/SecureTransport.h
 	// untyped enum
+	/// <summary>Enumerates values that indicate whether a server side or client side <see cref="T:Security.SslContext" /> should be created.</summary>
 	[Deprecated (PlatformName.MacOSX, 10, 15, message: Constants.UseNetworkInstead)]
 	[Deprecated (PlatformName.iOS, 13, 0, message: Constants.UseNetworkInstead)]
 	[Deprecated (PlatformName.TvOS, 13, 0, message: Constants.UseNetworkInstead)]
@@ -230,6 +235,7 @@ namespace Security {
 
 	// Security.framework/Headers/SecureTransport.h
 	// untyped enum
+	/// <summary>Enumerates types of SSL connections.</summary>
 	[Deprecated (PlatformName.MacOSX, 10, 15, message: Constants.UseNetworkInstead)]
 	[Deprecated (PlatformName.iOS, 13, 0, message: Constants.UseNetworkInstead)]
 	[Deprecated (PlatformName.TvOS, 13, 0, message: Constants.UseNetworkInstead)]
@@ -242,6 +248,7 @@ namespace Security {
 
 	// Security.framework/Headers/SecureTransport.h
 	// untyped enum
+	/// <summary>Enumerates stages in the SSL session life cycle.</summary>
 	[Deprecated (PlatformName.MacOSX, 10, 15, message: Constants.UseNetworkInstead)]
 	[Deprecated (PlatformName.iOS, 13, 0, message: Constants.UseNetworkInstead)]
 	[Deprecated (PlatformName.TvOS, 13, 0, message: Constants.UseNetworkInstead)]
@@ -271,6 +278,7 @@ namespace Security {
 
 	// Security.framework/Headers/SecureTransport.h
 	// untyped enum
+	/// <summary>Enumerates stages in an SSL client certificate exchange.</summary>
 	[Deprecated (PlatformName.MacOSX, 10, 15, message: Constants.UseNetworkInstead)]
 	[Deprecated (PlatformName.iOS, 13, 0, message: Constants.UseNetworkInstead)]
 	[Deprecated (PlatformName.TvOS, 13, 0, message: Constants.UseNetworkInstead)]

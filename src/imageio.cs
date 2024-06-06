@@ -34,6 +34,7 @@ using System;
 
 namespace ImageIO {
 
+	/// <summary>Known properties of various metadata prefixes. Most often used with <see cref="M:ImageIO.CGImageMetadata.CopyTagMatchingImageProperty(Foundation.NSString,Foundation.NSString)" />.</summary>
 	[Static]
 	// Bad name should end with Keys
 	interface CGImageProperties {
@@ -2773,6 +2774,7 @@ namespace ImageIO {
 		NSString OpenExrCompression { get; }
 	}
 
+	/// <summary>Holds constants specifying standard metadata namespaces. Primarily used with <see cref="P:ImageIO.CGImageMetadataTag.Namespace" />.</summary>
 	[Static]
 	interface CGImageMetadataTagNamespaces {
 		[Field ("kCGImageMetadataNamespaceExif")]
@@ -2802,6 +2804,7 @@ namespace ImageIO {
 		NSString IPTCExtension { get; }
 	}
 
+	/// <summary>Constants defining standard prefixes. Primarily used with <see cref="P:ImageIO.CGImageMetadataTag.Prefix" />.</summary>
 	[Static]
 	interface CGImageMetadataTagPrefixes {
 		[Field ("kCGImageMetadataPrefixExif")]
@@ -2836,6 +2839,7 @@ namespace ImageIO {
 		NSString ErrorDomain { get; }
 	}
 
+	/// <summary>Use an instance of this class to configure the CGImageSource.</summary>
 	[Partial]
 	interface CGImageOptions {
 		[Internal]
@@ -2856,6 +2860,7 @@ namespace ImageIO {
 		IntPtr kShouldAllowFloat { get; }
 	}
 
+	/// <summary>Configuration options used when loading thumbnails using CGImageSource.</summary>
 	[Partial]
 	interface CGImageThumbnailOptions {
 		[Internal]
@@ -2900,6 +2905,7 @@ namespace ImageIO {
 		IntPtr DecodeRequestOptions { get; }
 	}
 
+	/// <summary>Specifies whether the callback in <see cref="M:ImageIO.CGImageMetadata.EnumerateTags(Foundation.NSString,ImageIO.CGImageMetadataEnumerateOptions,ImageIO.CGImageMetadataTagBlock)" /> is recursive.</summary>
 	[Partial]
 	interface CGImageMetadataEnumerateOptions {
 		[Internal]
@@ -2915,6 +2921,10 @@ namespace ImageIO {
 	interface CGImagePropertiesGps { }
 	interface CGImagePropertiesIptc { }
 
+	/// <summary>Use an instance of this class to configure how an image is added to a <see cref="T:ImageIO.CGImageDestination" />.</summary>
+	///     <remarks>
+	///       <para>Use this class to configure the parameters when you add an image to CGImageDestination.</para>
+	///     </remarks>
 	[StrongDictionary ("CGImageDestinationOptionsKeys")]
 	interface CGImageDestinationOptions {
 
@@ -2997,6 +3007,7 @@ namespace ImageIO {
 		bool PreserveGainMap { get; set; }
 	}
 
+	/// <summary>Contains keys that index image destination options.</summary>
 	[Static]
 	interface CGImageDestinationOptionsKeys {
 
@@ -3105,6 +3116,7 @@ namespace ImageIO {
 		NSString PreserveGainMapKey { get; }
 	}
 
+	/// <summary>Class that contains options for copying image sources.</summary>
 	[Partial]
 	interface CGCopyImageSourceOptions {
 

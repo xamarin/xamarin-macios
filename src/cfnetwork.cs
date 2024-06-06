@@ -15,6 +15,7 @@ namespace CFNetwork {
 namespace CoreServices {
 #endif
 
+	/// <summary>A <see cref="T:CoreFoundation.CFReadStream" /> that reads HTTP stream data.</summary>
 	[Partial]
 	interface CFHTTPStream {
 
@@ -68,6 +69,7 @@ namespace CoreServices {
 		NSString _ShouldAutoredirect { get; }
 	}
 
+	/// <summary>An HTTP message.</summary>
 	[Partial]
 	interface CFHTTPMessage {
 

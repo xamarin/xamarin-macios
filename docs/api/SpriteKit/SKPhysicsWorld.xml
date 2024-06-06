@@ -1,0 +1,26 @@
+<Documentation>
+  <Docs DocId="T:SpriteKit.SKPhysicsWorld">
+    <summary>Manages the physics for a <see cref="T:SpriteKit.SKScene" />.</summary>
+    <remarks>
+      <para>Every <see cref="T:SpriteKit.SKScene" /> has a <see cref="P:SpriteKit.SKScene.PhysicsWorld" /> property that holds a <see cref="T:SpriteKit.SKPhysicsWorld" /> object that manages the physics for that scene.</para>
+      <para>The <see cref="T:SpriteKit.SKPhysicsWorld" /> has several responsibilities:</para>
+      <para>
+        <list type="bullet">
+          <item>
+            <term>Providing global values such as <see cref="P:SpriteKit.SKPhysicsWorld.Gravity" />.</term>
+          </item>
+          <item>
+            <term>Connecting <see cref="T:SpriteKit.SKPhysicsBody" />s with the <see cref="M:SpriteKit.SKPhysicsWorld.AddJoint(SpriteKit.SKPhysicsJoint)" /> method.</term>
+          </item>
+          <item>
+            <term>Raising events when <see cref="T:SpriteKit.SKPhysicsBody" /> begin or end contact with each other (see the <see cref="P:SpriteKit.SKPhysicsWorld.ContactDelegate" /> property and the <see cref="E:SpriteKit.SKPhysicsWorld.DidBeginContact" /> and <see cref="E:SpriteKit.SKPhysicsWorld.DidEndContact" /> methods).</term>
+          </item>
+          <item>
+            <term>Enumerating bodies that intersect geometry (<see cref="M:SpriteKit.SKPhysicsWorld.EnumerateBodies(CoreGraphics.CGPoint,CoreGraphics.CGPoint,SpriteKit.SKPhysicsWorldBodiesAlongRayStartEnumeratorHandler)" /> and <see cref="M:SpriteKit.SKPhysicsWorld.GetBody(CoreGraphics.CGPoint,CoreGraphics.CGPoint)" /> methods).</term>
+          </item>
+        </list>
+      </para>
+    </remarks>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/SpriteKit/Reference/SKPhysicsWorld_Ref/index.html">Apple documentation for <c>SKPhysicsWorld</c></related>
+  </Docs>
+</Documentation>

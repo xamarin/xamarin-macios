@@ -1,0 +1,46 @@
+<Documentation>
+  <Docs DocId="T:AVFoundation.AVMetadataItem">
+    <summary>An immutable item of metadata for an <see cref="T:AVFoundation.AVAsset" />.</summary>
+    <remarks>
+      <para>Metadata uses the concept of a "Key Space" that is a group of related identifiers, something like a programmatic namespace. These key spaces are defined in <see cref="T:AVFoundation.AVMetadata" />:</para>
+      <list type="table">
+        <listheader>
+          <term>Key Space</term>
+          <description>Constant</description>
+        </listheader>
+        <item>
+          <term>Common (contains standard version of most keys in most key spaces)</term>
+          <description>
+            <see cref="P:AVFoundation.AVMetadata.KeySpaceCommon" />
+          </description>
+        </item>
+        <item>
+          <term>ID 3</term>
+          <description>
+            <see cref="P:AVFoundation.AVMetadata.KeySpaceID3" />
+          </description>
+        </item>
+        <item>
+          <term>iTunes</term>
+          <description>
+            <see cref="P:AVFoundation.AVMetadata.KeySpaceiTunes" />
+          </description>
+        </item>
+        <item>
+          <term>QuickTime User Data</term>
+          <description>
+            <see cref="P:AVFoundation.AVMetadata.KeySpaceQuickTimeUserData" />
+          </description>
+        </item>
+        <item>
+          <term>QuickTime Metadata</term>
+          <description>
+            <see cref="P:AVFoundation.AVMetadata.KeySpaceQuickTimeMetadata" />
+          </description>
+        </item>
+      </list>
+    </remarks>
+    
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/AVFoundation/Reference/AVMetadataItem_Class/index.html">Apple documentation for <c>AVMetadataItem</c></related>
+  </Docs>
+</Documentation>

@@ -19,6 +19,7 @@ using NativeHandle = System.IntPtr;
 
 namespace ClassKit {
 
+	/// <summary>Enumerates activity outcome types.</summary>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoWatch, NoTV, Mac (11, 0), iOS (11, 4)]
 	[Native]
@@ -31,6 +32,7 @@ namespace ClassKit {
 		CorrectIncorrect,
 	}
 
+	/// <summary>Enumerates curriculum units.</summary>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoWatch, NoTV, Mac (11, 0), iOS (11, 4)]
 	[Native]
@@ -59,6 +61,7 @@ namespace ClassKit {
 		Custom,
 	}
 
+	/// <summary>Enumerates ClassKit error codes.</summary>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoWatch, NoTV, Mac (11, 0), iOS (11, 4)]
 	[Native]
@@ -78,6 +81,7 @@ namespace ClassKit {
 	}
 
 
+	/// <summary>Enumerates topics for contexts.</summary>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoWatch, NoTV, Mac (11, 0), iOS (11, 4)]
 	enum CLSContextTopic {
@@ -114,6 +118,7 @@ namespace ClassKit {
 		Score,
 	}
 
+	/// <summary>Contains keys for accessing error data.</summary>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoWatch, NoTV, Mac (11, 0), iOS (11, 4)]
 	[Static]
@@ -130,6 +135,7 @@ namespace ClassKit {
 		NSString SuccessfulObjectsKey { get; }
 	}
 
+	/// <summary>Enumerates key paths for retrieving ClassKit contexts.</summary>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoWatch, NoTV, Mac (11, 0), iOS (11, 4)]
 	[Static]
@@ -153,6 +159,7 @@ namespace ClassKit {
 		NSString Parent { get; }
 	}
 
+	/// <summary>Base class for ClassKit objects.</summary>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoWatch, NoTV, Mac (11, 0), iOS (11, 4)]
 	[BaseType (typeof (NSObject))]
@@ -166,6 +173,7 @@ namespace ClassKit {
 		NSDate DateLastModified { get; }
 	}
 
+	/// <summary>Encapsulates and interaction between the student and a task for a context.</summary>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoWatch, NoTV, Mac (11, 0), iOS (11, 4)]
 	[BaseType (typeof (CLSObject))]
@@ -209,6 +217,7 @@ namespace ClassKit {
 		void RemoveAllActivityItems ();
 	}
 
+	/// <summary>Base class for activity items.</summary>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoWatch, NoTV, Mac (11, 0), iOS (11, 4)]
 	[BaseType (typeof (CLSObject))]
@@ -239,6 +248,7 @@ namespace ClassKit {
 		NativeHandle Constructor (string identifier, string title, CLSBinaryValueType valueType);
 	}
 
+	/// <summary>A node in a ClassKit context hierarchy.</summary>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoWatch, NoTV, Mac (11, 0), iOS (11, 4)]
 	[BaseType (typeof (CLSObject))]
@@ -376,6 +386,10 @@ namespace ClassKit {
 
 	interface ICLSDataStoreDelegate { }
 
+	/// <summary>Delegate for requesting data store contexts.</summary>
+	///     <remarks>
+	///       <para>ClassKit contexts are used to arrange nested content, such as chapters and sections of a lesson plan, in order to organize and track student progress and tests. ClassKit supports a maximum of 8 layers of content nesting.</para>
+	///     </remarks>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoWatch, NoTV, Mac (11, 0), iOS (11, 4)]
 	[Protocol, Model]
@@ -388,6 +402,7 @@ namespace ClassKit {
 		CLSContext CreateContext (string identifier, CLSContext parentContext, string [] parentIdentifierPath);
 	}
 
+	/// <summary>Manages ClassKit data by operating on hierarchical contexts, such as acts, chapters, sections, and so on.</summary>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoWatch, NoTV, Mac (11, 0), iOS (11, 4)]
 	[BaseType (typeof (NSObject))]
@@ -444,6 +459,7 @@ namespace ClassKit {
 		void FetchActivity (NSUrl url, Action<CLSActivity, NSError> completion);
 	}
 
+	/// <summary>Represents a quantitative data item.</summary>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoWatch, NoTV, Mac (11, 0), iOS (11, 4)]
 	[BaseType (typeof (CLSActivityItem))]
@@ -458,6 +474,7 @@ namespace ClassKit {
 		NativeHandle Constructor (string identifier, string title);
 	}
 
+	/// <summary>Represents a score for a test or quiz.</summary>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoWatch, NoTV, Mac (11, 0), iOS (11, 4)]
 	[BaseType (typeof (CLSActivityItem))]
