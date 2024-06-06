@@ -143,6 +143,9 @@ public class DocumentationManager {
 				name.Append ("0:"); // C# always produces multidimensional arrays with lower bound = 0 and no upper bound.
 			}
 			name.Append (']');
+		} else if (tr.IsByRef) {
+			name.Append (GetDocId (tr.GetElementType ()!));
+			name.Append ('@');
 		} else {
 			if (tr.IsNested) {
 				var decl = tr.DeclaringType!;
@@ -171,9 +174,6 @@ public class DocumentationManager {
 					name.Append (GetDocId (genericArguments [i]));
 				}
 				name.Append ('}');
-			} else if (tr.IsByRef) {
-				name.Append (tr.GetElementType ()!.Name);
-				name.Append ('@');
 			} else {
 				name.Append (tr.Name);
 			}
