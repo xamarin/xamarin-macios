@@ -14,6 +14,7 @@ using ObjCRuntime;
 #nullable enable
 
 namespace WebKit {
+	/// <summary>Enumerates the types of action that can cause navigation.</summary>
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum WKNavigationType : long {
@@ -25,6 +26,7 @@ namespace WebKit {
 		Other = -1
 	}
 
+	/// <summary>Contains values that enumerate whether to cancel or allow navigation actions.</summary>
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum WKNavigationActionPolicy : long {
@@ -35,6 +37,7 @@ namespace WebKit {
 		Download,
 	}
 
+	/// <summary>Contains values that enumerate whether the response delegate should cancel or allow navigation.</summary>
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum WKNavigationResponsePolicy : long {
@@ -45,6 +48,7 @@ namespace WebKit {
 		Download,
 	}
 
+	/// <summary>Enumerates values that indicate when to inject a script.</summary>
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum WKUserScriptInjectionTime : long {
@@ -52,6 +56,7 @@ namespace WebKit {
 		AtDocumentEnd
 	}
 
+	/// <summary>Enumerates WebKit errors.</summary>
 	[MacCatalyst (13, 1)]
 	[Native]
 	[ErrorDomain ("WKErrorDomain")]
@@ -81,6 +86,7 @@ namespace WebKit {
 	}
 
 #if NET
+	/// <summary>Enumerates values the controls how selections are created.</summary>
 	[NoMac]
 #endif
 	[MacCatalyst (13, 1)]
@@ -89,6 +95,7 @@ namespace WebKit {
 		Dynamic, Character
 	}
 
+	/// <summary>Enumerates the kinds of data that are detected and converted to links.</summary>
 	[NoMac]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -106,6 +113,7 @@ namespace WebKit {
 		All = UInt64.MaxValue
 	}
 
+	/// <summary>Enumerates media types.</summary>
 	[MacCatalyst (13, 1)]
 	[Native]
 	[Flags]

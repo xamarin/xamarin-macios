@@ -23,6 +23,7 @@ using NativeHandle = System.IntPtr;
 
 namespace FileProviderUI {
 
+	/// <summary>Enumerates file provider UI extension errors.</summary>
 	[ErrorDomain ("FPUIErrorDomain")]
 	[Native]
 	enum FPUIExtensionErrorCode : ulong {
@@ -30,6 +31,7 @@ namespace FileProviderUI {
 		Failed
 	}
 
+	/// <summary>File Provider UI extension context.</summary>
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSExtensionContext))]
 	interface FPUIActionExtensionContext {
@@ -45,6 +47,7 @@ namespace FileProviderUI {
 	}
 
 #if IOS
+	/// <summary>A user action UI.</summary>
 	[BaseType (typeof (UIViewController))]
 #else
 	[BaseType (typeof (NSViewController))]

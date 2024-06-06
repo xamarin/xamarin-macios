@@ -3,6 +3,9 @@ using ObjCRuntime;
 using System;
 
 namespace CoreTelephony {
+	/// <summary>Encapsulates a unique identifier for a call and it's state.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/NetworkingInternet/Reference/CTCall/index.html">Apple documentation for <c>CTCall</c></related>
 	[MacCatalyst (14, 0)]
 	[Deprecated (PlatformName.MacCatalyst, 14, 0, message: Constants.UseCallKitInstead)]
 	[Deprecated (PlatformName.iOS, 10, 0, message: Constants.UseCallKitInstead)]
@@ -16,6 +19,7 @@ namespace CoreTelephony {
 
 	}
 
+	/// <related type="externalDocumentation" href="https://developer.apple.com/reference/CoreTelephony/CTCellularData">Apple documentation for <c>CTCellularData</c></related>
 	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	interface CTCellularData {
@@ -26,6 +30,7 @@ namespace CoreTelephony {
 		CTCellularDataRestrictedState RestrictedState { get; }
 	}
 
+	/// <summary>Defines constants describing various telephone radio technogies.</summary>
 	[MacCatalyst (14, 0)]
 	[Static]
 	interface CTRadioAccessTechnology {
@@ -89,6 +94,9 @@ namespace CoreTelephony {
 		void DataServiceIdentifierDidChange (string identifier);
 	}
 
+	/// <summary>A class that holds information on the application user's cellular service provider.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/NetworkingInternet/Reference/CTTelephonyNetworkInfo/index.html">Apple documentation for <c>CTTelephonyNetworkInfo</c></related>
 	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NSObject))]
 	interface CTTelephonyNetworkInfo {
@@ -151,6 +159,9 @@ namespace CoreTelephony {
 		NSObject WeakDelegate { get; set; }
 	}
 
+	/// <summary>Holds a list of current calls and triggers events when their states change.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/NetworkingInternet/Reference/CTCallCenter/index.html">Apple documentation for <c>CTCallCenter</c></related>
 	[MacCatalyst (14, 0)]
 	[Deprecated (PlatformName.MacCatalyst, 14, 0, message: Constants.UseCallKitInstead)]
 	[Deprecated (PlatformName.iOS, 10, 0, message: Constants.UseCallKitInstead)]
@@ -166,6 +177,9 @@ namespace CoreTelephony {
 
 	}
 
+	/// <summary>Contains information about the application user's home cellular service provider.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/NetworkingInternet/Reference/CTCarrier/index.html">Apple documentation for <c>CTCarrier</c></related>
 	[Deprecated (PlatformName.MacCatalyst, 16, 0, message: Constants.UseCallKitInstead)]
 	[Deprecated (PlatformName.iOS, 16, 0, message: Constants.UseCallKitInstead)]
 	[MacCatalyst (14, 0)]
@@ -201,6 +215,9 @@ namespace CoreTelephony {
 		void SubscriberTokenRefreshed (CTSubscriber subscriber);
 	}
 
+	/// <summary>Carrier information for a subscriber.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/CoreTelephony/Reference/CTSubscriber/index.html">Apple documentation for <c>CTSubscriber</c></related>
 	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	partial interface CTSubscriber {
@@ -221,6 +238,9 @@ namespace CoreTelephony {
 		ICTSubscriberDelegate Delegate { get; set; }
 	}
 
+	/// <summary>Information on a subscriber to a telephone service.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/CoreTelephony/CTSubscriberInfo">Apple documentation for <c>CTSubscriberInfo</c></related>
 	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	partial interface CTSubscriberInfo {

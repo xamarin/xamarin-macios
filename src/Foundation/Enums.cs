@@ -5,6 +5,7 @@ namespace Foundation {
 
 #if !XAMCORE_5_0
 	// Utility enum, ObjC uses NSString
+	/// <summary>An enumeration of known document types. Used with the <see cref="P:Foundation.NSAttributedStringDocumentAttributes.DocumentType" /> property.</summary>
 	public enum NSDocumentType {
 		Unknown = -1,
 		PlainText,
@@ -27,12 +28,14 @@ namespace Foundation {
 #endif // !XAMCORE_5_0
 
 	// Utility enum, ObjC uses NSString
+	/// <summary>An enumeration that specifies how a document is being viewed. Used with the <see cref="P:Foundation.NSAttributedStringDocumentAttributes.ViewMode" /> property.</summary>
 	public enum NSDocumentViewMode {
 		Normal,
 		PageLayout
 
 	}
 
+	/// <summary>Run loop modes for <see cref="T:Foundation.NSRunLoop" />.</summary>
 	public enum NSRunLoopMode {
 
 		[DefaultEnumValue]
@@ -61,6 +64,7 @@ namespace Foundation {
 		Other = 1000
 	}
 
+	/// <summary>Enumerates download status values.</summary>
 	[MacCatalyst (13, 1)]
 	public enum NSItemDownloadingStatus {
 		[Field (null)]
@@ -137,6 +141,7 @@ namespace Foundation {
 		Aggregate = 3,
 	}
 
+	/// <summary>Enumerates classes of tags that are returned from a text classifier.</summary>
 	public enum NSLinguisticTagScheme {
 		[Field ("NSLinguisticTagSchemeTokenType")]
 		Token,
@@ -163,6 +168,8 @@ namespace Foundation {
 #if !NET
 	public enum NSLinguisticTagUnit {
 #else
+	/// <summary>Contains read-only static properties corresponding to the parts of speech recognized by a <see cref="T:Foundation.NSLinguisticTagger" />.</summary>
+	/// <summary>Enumerates tag values for linguistic units.</summary>
 	public enum NSLinguisticTag {
 #endif
 		[Field ("NSLinguisticTagWord")]

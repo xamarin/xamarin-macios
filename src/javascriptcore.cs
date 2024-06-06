@@ -17,8 +17,10 @@ using NativeHandle = System.IntPtr;
 
 namespace JavaScriptCore {
 
+	/// <summary>The delegate that can be used as the <see cref="P:JavaScriptCore.JSContext.ExceptionHandler" />.</summary>
 	delegate void JSContextExceptionHandler (JSContext context, JSValue exception);
 
+	/// <include file="../docs/api/JavaScriptCore/JSContext.xml" path="/Documentation/Docs[@DocId='T:JavaScriptCore.JSContext']/*" />
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -98,6 +100,9 @@ namespace JavaScriptCore {
 	[MacCatalyst (13, 1)]
 	delegate void JSPromiseCreationExecutor (JSValue resolve, JSValue rejected);
 
+	/// <summary>Holds a JavaScript value and provides type-testing and conversion functions.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/JavaScriptCore/JSValue">Apple documentation for <c>JSValue</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // invalid (null) Handle is returned
@@ -329,6 +334,9 @@ namespace JavaScriptCore {
 		bool IsSymbol { get; }
 	}
 
+	/// <summary>Class that maintains a binding between a JavaScript and Objective-C value.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/JavaScriptCore/JSManagedValue">Apple documentation for <c>JSManagedValue</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 #if XAMCORE_3_0
@@ -349,6 +357,12 @@ namespace JavaScriptCore {
 		JSValue Value { get; }
 	}
 
+	/// <summary>The JavaScript Virtual Machine, allowing explicit reference-management.</summary>
+	///     <remarks>
+	///       <para>This class can be used by application developers to add and remove references to .NET objects, thus preventing the JavaScript VM from garbage-collecting plugins.</para>
+	///       <para>The <see cref="T:JavaScriptCore.JSVirtualMachine" /> is the unit of locking granularity for multithreaded JavaScript.</para>
+	///     </remarks>
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/JavaScriptCore/JSVirtualMachine">Apple documentation for <c>JSVirtualMachine</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -364,6 +378,7 @@ namespace JavaScriptCore {
 		void RemoveManagedReference (NSObject obj, NSObject owner);
 	}
 
+	/// <summary>Contains keys that index property descriptors.</summary>
 	[MacCatalyst (13, 1)]
 	[Static]
 	interface JSPropertyDescriptorKeys {
@@ -387,6 +402,9 @@ namespace JavaScriptCore {
 		NSString Set { get; }
 	}
 
+	/// <summary>Protocol for exporting Objective-C classes as JavaScript classes.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/JavaScriptCore/JSExport">Apple documentation for <c>JSExport</c></related>
 	[MacCatalyst (13, 1)]
 #if NET
 	[Protocol, Model]

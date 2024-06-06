@@ -81,6 +81,7 @@ namespace Foundation {
 	[Native]
 	public enum NSBundleExecutableArchitecture : long {
 #else
+	/// <summary>The bundle's architecture.</summary>
 	[NoiOS][NoTV][NoMacCatalyst]
 	public enum NSBundleExecutableArchitecture {
 #endif

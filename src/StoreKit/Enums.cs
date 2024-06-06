@@ -6,6 +6,7 @@ namespace StoreKit {
 
 	// typedef NSInteger SKPaymentTransactionState;
 	// StoreKit.framework/Headers/SKPaymentTransaction.h
+	/// <summary>Transaction state.</summary>
 	[Watch (6, 2)]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -21,6 +22,7 @@ namespace StoreKit {
 	// untyped enum and not used in API - so it _could_ be an `int`
 	// OTOH it's meant to be used with NSError.Code which is an NSInteger/nint
 	// StoreKit.framework/Headers/SKError.h
+	/// <summary>An enumeration whose values specify various errors relating to StoreKit.</summary>
 	[Native ("SKErrorCode")]
 	[ErrorDomain ("SKErrorDomain")]
 	public enum SKError : long {
@@ -59,6 +61,7 @@ namespace StoreKit {
 
 	// typedef NSInteger SKDownloadState;
 	// StoreKit.framework/Headers/SKDownload.h
+	/// <summary>An enumeration whose values specify the state of an <see cref="T:StoreKit.SKDownload" /> object. Used with the <see cref="P:StoreKit.SKDownload.DownloadState" /> property.</summary>
 	[Watch (6, 2)]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -66,6 +69,7 @@ namespace StoreKit {
 		Waiting, Active, Paused, Finished, Failed, Cancelled
 	}
 
+	/// <summary>Enumerates authorization states for music store access.</summary>
 	[Watch (7, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -76,6 +80,7 @@ namespace StoreKit {
 		Authorized
 	}
 
+	/// <summary>Enumerates flags that describe the user's local music library capabilities..</summary>
 	[Watch (7, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -88,6 +93,7 @@ namespace StoreKit {
 		AddToCloudMusicLibrary = 1 << 8
 	}
 
+	/// <summary>Enumerates visiblity settings for a promoted product.</summary>
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -97,6 +103,7 @@ namespace StoreKit {
 		Hide,
 	}
 
+	/// <summary>Defines the natural period for a subscription.</summary>
 	[Watch (6, 2)]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -107,6 +114,7 @@ namespace StoreKit {
 		Year,
 	}
 
+	/// <summary>Enumerates how a discount price is applied.</summary>
 	[Watch (6, 2)]
 	[MacCatalyst (13, 1)]
 	[Native]

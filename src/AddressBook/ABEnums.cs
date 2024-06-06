@@ -34,6 +34,15 @@ using CoreFoundation;
 using ObjCRuntime;
 
 namespace AddressBook {
+	/// <summary>Possible <see cref="T:AddressBook.ABAddressBook" /> errors.</summary>
+	///     <remarks>
+	///       When the <see cref="P:CoreFoundation.CFException.Domain" />
+	///       property is set to
+	///       <see cref="F:AddressBook.ABAddressBook.ErrorDomain" />,
+	///       then <see cref="P:CoreFoundation.CFException.Code" />
+	///       will be one of the
+	///       <see cref="T:AddressBook.ABAddressBookError" /> values.
+	///     </remarks>
 	[Deprecated (PlatformName.iOS, 9, 0, message: "Use the 'Contacts' API instead.")]
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[Deprecated (PlatformName.MacCatalyst, 14, 0, message: "Use the 'Contacts' API instead.")]
@@ -48,6 +57,7 @@ namespace AddressBook {
 		OperationNotPermittedByUserError
 	}
 
+	/// <summary>An enumeration whose values specify the possible results of the <see cref="M:AddressBook.ABAddressBook.GetAuthorizationStatus" /> method.</summary>
 	[Deprecated (PlatformName.iOS, 9, 0, message: "Use the 'Contacts' API instead.")]
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[Deprecated (PlatformName.MacCatalyst, 14, 0, message: "Use the 'Contacts' API instead.")]
@@ -59,6 +69,7 @@ namespace AddressBook {
 		Authorized
 	}
 
+	/// <summary>How to sort records.</summary>
 	[Deprecated (PlatformName.iOS, 9, 0, message: "Use the 'Contacts' API instead.")]
 	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use the 'Contacts' API instead.")]
 	public enum ABPersonSortBy : uint /* uint32_t */ {
@@ -66,6 +77,15 @@ namespace AddressBook {
 		LastName = 1,
 	}
 
+	/// <summary>
+	///       The format to use for a person's composite name.
+	///     </summary>
+	///     <remarks>
+	///       <para>
+	///         The composite name controls the output of
+	///         <see cref="M:AddressBook.ABRecord.ToString" />.
+	///       </para>
+	///     </remarks>
 	[Deprecated (PlatformName.iOS, 9, 0, message: "Use the 'Contacts' API instead.")]
 	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use the 'Contacts' API instead.")]
 	public enum ABPersonCompositeNameFormat : uint /* uint32_t */ {
@@ -73,6 +93,10 @@ namespace AddressBook {
 		LastNameFirst = 1,
 	}
 
+	/// <summary>
+	///       The <see cref="T:AddressBook.ABPerson" />
+	///       properties.
+	///     </summary>
 	[Deprecated (PlatformName.iOS, 9, 0, message: "Use the 'Contacts' API instead.")]
 	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use the 'Contacts' API instead.")]
 	public enum ABPersonProperty {
@@ -103,6 +127,7 @@ namespace AddressBook {
 		SocialProfile,
 	}
 
+	/// <summary>An enumeration whose values specify whether the form of the image requested from the <see cref="M:AddressBook.ABPerson.GetImage(AddressBook.ABPersonImageFormat)" /> method.</summary>
 	[Deprecated (PlatformName.iOS, 9, 0, message: "Use the 'Contacts' API instead.")]
 	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use the 'Contacts' API instead.")]
 #if NET
@@ -115,6 +140,10 @@ namespace AddressBook {
 		OriginalSize = 2,
 	}
 
+	/// <summary>
+	///       Specifies whether a <see cref="T:AddressBook.ABPerson" />
+	///       represents a human being or an organization.
+	///     </summary>
 	[Deprecated (PlatformName.iOS, 9, 0, message: "Use the 'Contacts' API instead.")]
 	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use the 'Contacts' API instead.")]
 	public enum ABPersonKind {
@@ -123,6 +152,7 @@ namespace AddressBook {
 		Person,
 	}
 
+	/// <summary>Potential record types.</summary>
 	[Deprecated (PlatformName.iOS, 9, 0, message: "Use the 'Contacts' API instead.")]
 	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use the 'Contacts' API instead.")]
 	public enum ABRecordType : uint /* uint32_t */ {
@@ -131,6 +161,7 @@ namespace AddressBook {
 		Source = 2,
 	}
 
+	/// <summary>Record property types.</summary>
 	[Deprecated (PlatformName.iOS, 9, 0, message: "Use the 'Contacts' API instead.")]
 	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use the 'Contacts' API instead.")]
 	public enum ABPropertyType : uint /* uint32_t */ {
@@ -150,6 +181,7 @@ namespace AddressBook {
 	}
 
 	// note: not a true flag
+	/// <summary>An enumeration whose values specify various kinds of <see cref="T:AddressBook.ABSourceType" />.</summary>
 	[Deprecated (PlatformName.iOS, 9, 0, message: "Use the 'Contacts' API instead.")]
 	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use the 'Contacts' API instead.")]
 	public enum ABSourceType : int /* typedef int */ {
@@ -164,6 +196,9 @@ namespace AddressBook {
 		SearchableMask = 0x01000000,
 	};
 
+	/// <summary>For internal use.</summary>
+	///     
+	///     <!-- TODO: Unused? Can't find any references -->
 	[Deprecated (PlatformName.iOS, 9, 0, message: "Use the 'Contacts' API instead.")]
 	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use the 'Contacts' API instead.")]
 	public enum ABSourceProperty {

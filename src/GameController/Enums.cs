@@ -56,6 +56,7 @@ namespace GameController {
 		Disabled,
 	}
 
+	/// <summary>Enumerates player controller indices.</summary>
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum GCControllerPlayerIndex : long {

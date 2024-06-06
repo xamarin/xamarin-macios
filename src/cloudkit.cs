@@ -2023,6 +2023,9 @@ namespace CloudKit {
 		Action<NSError> Completed { get; set; }
 	}
 
+	/// <summary>An operation that gets all of the discoverable users in the system's address book.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/CloudKit/CKDiscoverAllUserIdentitiesOperation">Apple documentation for <c>CKDiscoverAllUserIdentitiesOperation</c></related>
 	[Deprecated (PlatformName.MacOSX, 14, 0)]
 	[Deprecated (PlatformName.iOS, 17, 0)]
 	[Deprecated (PlatformName.MacCatalyst, 17, 0)]

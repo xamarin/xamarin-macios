@@ -70,6 +70,7 @@ using NativeHandle = System.IntPtr;
 
 namespace GLKit {
 
+	/// <summary>Defines values whose values represent constant values relating to errors.</summary>
 	[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'Metal' instead.")]
@@ -83,6 +84,9 @@ namespace GLKit {
 		NSString Key { get; }
 	}
 
+	/// <summary>A class that provides a variety of shaders based on the OpenGL ES 1.1 lighting and shading model.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/GLkit/Reference/GLKBaseEffect_ClassRef/index.html">Apple documentation for <c>GLKBaseEffect</c></related>
 	[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'Metal' instead.")]
@@ -140,6 +144,9 @@ namespace GLKit {
 		bool LightModelTwoSided { get; set; }
 	}
 
+	/// <summary>A base class whose subtypes define properties for graphic effects.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/GLkit/Reference/GLKEffectProperty_ClassRef/index.html">Apple documentation for <c>GLKEffectProperty</c></related>
 	[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'Metal' instead.")]
@@ -147,6 +154,9 @@ namespace GLKit {
 	interface GLKEffectProperty {
 	}
 
+	/// <summary>A class that holds properties that configure how fog is applied to an effect.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/GLkit/Reference/GLKEffectPropertyFog_ClassRef/index.html">Apple documentation for <c>GLKEffectPropertyFog</c></related>
 	[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'Metal' instead.")]
@@ -171,6 +181,9 @@ namespace GLKit {
 		bool Enabled { get; set; }
 	}
 
+	/// <summary>A class that holds properties that configure how a single light is applied to an effect.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/GLkit/Reference/GLKEffectPropertyLight_ClassRef/index.html">Apple documentation for <c>GLKEffectPropertyLight</c></related>
 	[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'Metal' instead.")]
@@ -215,6 +228,9 @@ namespace GLKit {
 
 	}
 
+	/// <summary>A class that holds properties that configure the characteristics of a surface being lit.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/GLkit/Reference/GLKEffectPropertyMaterial_ClassRef/index.html">Apple documentation for <c>GLKEffectPropertyMaterial</c></related>
 	[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'Metal' instead.")]
@@ -236,6 +252,9 @@ namespace GLKit {
 		Vector4 AmbientColor { [Align (16)] get; set; }
 	}
 
+	/// <summary>A class that holds properties that configure an OpenGL texturing operation.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/GLkit/Reference/GLKEffectPropertyTexture_ClassRef/index.html">Apple documentation for <c>GLKEffectPropertyTexture</c></related>
 	[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'Metal' instead.")]
@@ -255,6 +274,9 @@ namespace GLKit {
 
 	}
 
+	/// <summary>A class that holds properties that configure the coordinate transforms to be applied when rendering an effect.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/GLkit/Reference/GLKEffectPropertyTransform_ClassRef/index.html">Apple documentation for <c>GLKEffectPropertyTransform</c></related>
 	[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'Metal' instead.")]
@@ -270,6 +292,7 @@ namespace GLKit {
 		Matrix4 ProjectionMatrix { [Align (16)] get; set; }
 	}
 
+	/// <related type="externalDocumentation" href="https://developer.apple.com/reference/GLKit/GLKMesh">Apple documentation for <c>GLKMesh</c></related>
 	[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'Metal' instead.")]
@@ -302,6 +325,7 @@ namespace GLKit {
 		string Name { get; }
 	}
 
+	/// <related type="externalDocumentation" href="https://developer.apple.com/reference/GLKit/GLKMeshBuffer">Apple documentation for <c>GLKMeshBuffer</c></related>
 	[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'Metal' instead.")]
@@ -315,6 +339,7 @@ namespace GLKit {
 		nuint Offset { get; }
 	}
 
+	/// <related type="externalDocumentation" href="https://developer.apple.com/reference/GLKit/GLKMeshBufferAllocator">Apple documentation for <c>GLKMeshBufferAllocator</c></related>
 	[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'Metal' instead.")]
@@ -323,6 +348,9 @@ namespace GLKit {
 	interface GLKMeshBufferAllocator : MDLMeshBufferAllocator {
 	}
 
+	/// <summary>A class that allows pre-drawing initialization for an effect.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/GLkit/Reference/GLKNamedEffect_ProtocolRef/index.html">Apple documentation for <c>GLKNamedEffect</c></related>
 	[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'Metal' instead.")]
@@ -335,6 +363,9 @@ namespace GLKit {
 		void PrepareToDraw ();
 	}
 
+	/// <summary>A type of <see cref="T:GLKit.GLKBaseEffect" /> that has a reflection-mapping texturing stage.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/GLkit/Reference/GLKReflectionEffect_ClassRef/index.html">Apple documentation for <c>GLKReflectionMapEffect</c></related>
 	[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'Metal' instead.")]
@@ -347,6 +378,9 @@ namespace GLKit {
 		Matrix3 Matrix { get; set; }
 	}
 
+	/// <summary>A skybox effect.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/GLkit/Reference/GLKSkyboxEffect_ClassRef/index.html">Apple documentation for <c>GLKSkyboxEffect</c></related>
 	[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'Metal' instead.")]
@@ -379,6 +413,7 @@ namespace GLKit {
 		void Draw ();
 	}
 
+	/// <related type="externalDocumentation" href="https://developer.apple.com/reference/GLKit/GLKSubmesh">Apple documentation for <c>GLKSubmesh</c></related>
 	[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'Metal' instead.")]
@@ -412,6 +447,9 @@ namespace GLKit {
 		string Name { get; }
 	}
 
+	/// <summary>Encapsulates the information relating to a texture.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/GLkit/Reference/GLKTextureInfo_Ref/index.html">Apple documentation for <c>GLKTextureInfo</c></related>
 	[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'Metal' instead.")]
@@ -448,8 +486,12 @@ namespace GLKit {
 		uint Depth { get; }
 	}
 
+	/// <param name="textureInfo">The infromation about the texture loaded, or null on error.</param>
+	///     <param name="error">On success, this value is null.   Otherwise it contains the error information.</param>
+	///     <summary>Signature used by the asynchrous texture loading methods in <see cref="T:GLKit.GLKTextureLoader" />.</summary>
 	delegate void GLKTextureLoaderCallback (GLKTextureInfo textureInfo, NSError error);
 
+	/// <include file="../docs/api/GLKit/GLKTextureLoader.xml" path="/Documentation/Docs[@DocId='T:GLKit.GLKTextureLoader']/*" />
 	[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'Metal' instead.")]
@@ -563,6 +605,10 @@ namespace GLKit {
 		NSString GLErrorKey { get; }
 	}
 
+	/// <summary>A <see cref="T:UIKit.UIView" /> that supports OpenGL ES rendering.</summary>
+	///     
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/GLkit/Reference/GLKView_ClassReference/index.html">Apple documentation for <c>GLKView</c></related>
 	[NoMac]
 	[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'Metal' instead.")]
@@ -618,8 +664,19 @@ namespace GLKit {
 		void DeleteDrawable ();
 	}
 
+	/// <summary>Interface representing the required methods (if any) of the protocol <see cref="T:GLKit.GLKViewDelegate" />.</summary>
+	///     <remarks>
+	///       <para>This interface contains the required methods (if any) from the protocol defined by <see cref="T:GLKit.GLKViewDelegate" />.</para>
+	///       <para>If developers create classes that implement this interface, the implementation methods will automatically be exported to Objective-C with the matching signature from the method defined in the <see cref="T:GLKit.GLKViewDelegate" /> protocol.</para>
+	///       <para>Optional methods (if any) are provided by the <see cref="T:GLKit.GLKViewDelegate_Extensions" /> class as extension methods to the interface, allowing developers to invoke any optional methods on the protocol.</para>
+	///     </remarks>
 	interface IGLKViewDelegate { }
 
+	/// <summary>A class that acts like a delegate object for instances of <see cref="T:GLKit.GLKView" />.</summary>
+	///     <remarks>
+	///       <para>The specific use-case supported by this class is to customize the <see cref="M:GLKit.IGLKViewDelegate.DrawInRect(GLKit.GLKView,CoreGraphics.CGRect)" /> method without subclassing <see cref="T:GLKit.GLKView" />.</para>
+	///     </remarks>
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/GLkit/Reference/GLKViewDelegate_ProtocolRef/index.html">Apple documentation for <c>GLKViewDelegate</c></related>
 	[NoMac]
 	[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'Metal' instead.")]
@@ -632,6 +689,7 @@ namespace GLKit {
 		void DrawInRect (GLKView view, CGRect rect);
 	}
 
+	/// <include file="../docs/api/GLKit/GLKViewController.xml" path="/Documentation/Docs[@DocId='T:GLKit.GLKViewController']/*" />
 	[NoMac]
 	[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'Metal' instead.")]
@@ -682,8 +740,17 @@ namespace GLKit {
 		void Update ();
 	}
 
+	/// <summary>Interface representing the required methods (if any) of the protocol <see cref="T:GLKit.GLKViewControllerDelegate" />.</summary>
+	///     <remarks>
+	///       <para>This interface contains the required methods (if any) from the protocol defined by <see cref="T:GLKit.GLKViewControllerDelegate" />.</para>
+	///       <para>If developers create classes that implement this interface, the implementation methods will automatically be exported to Objective-C with the matching signature from the method defined in the <see cref="T:GLKit.GLKViewControllerDelegate" /> protocol.</para>
+	///       <para>Optional methods (if any) are provided by the <see cref="T:GLKit.GLKViewControllerDelegate_Extensions" /> class as extension methods to the interface, allowing developers to invoke any optional methods on the protocol.</para>
+	///     </remarks>
 	interface IGLKViewControllerDelegate { }
 
+	/// <summary>A delegate object that gives the application developer fine-grained control over events relating to the life-cycle of a <see cref="T:GLKit.GLKViewController" /> object.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/GLkit/Reference/GLKViewControllerDelegate_ProtocolRef/index.html">Apple documentation for <c>GLKViewControllerDelegate</c></related>
 	[NoMac]
 	[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'Metal' instead.")]

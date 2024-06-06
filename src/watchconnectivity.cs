@@ -14,9 +14,14 @@ using Foundation;
 
 namespace WatchConnectivity {
 
+	/// <summary>The reply handler for use with <see cref="M:WatchConnectivity.WCSessionDelegate_Extensions.DidReceiveMessageData(WatchConnectivity.IWCSessionDelegate,WatchConnectivity.WCSession,Foundation.NSData,WatchConnectivity.WCSessionReplyDataHandler)" />.</summary>
 	delegate void WCSessionReplyHandler (NSDictionary<NSString, NSObject> replyMessage);
+	/// <summary>The reply handler for use with <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=Watch%20Connectivity%20WCSession%20Delegate%20Did%20Receive%20Message%20Data&amp;scope=Xamarin" title="M:WatchConnectivity.WCSessionDelegate.DidReceiveMessageData*">M:WatchConnectivity.WCSessionDelegate.DidReceiveMessageData*</a></format>.</summary>
 	delegate void WCSessionReplyDataHandler (NSData replyMessage);
 
+	/// <summary>Mediates the transfer of information between a WatchKit extension app and the container app on the device.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/WatchConnectivity/Reference/WCSession_class/index.html">Apple documentation for <c>WCSession</c></related>
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface WCSession {
@@ -109,8 +114,17 @@ namespace WatchConnectivity {
 		bool CompanionAppInstalled { [Bind ("isCompanionAppInstalled")] get; }
 	}
 
+	/// <summary>Interface representing the required methods (if any) of the protocol <see cref="T:WatchConnectivity.WCSessionDelegate" />.</summary>
+	///     <remarks>
+	///       <para>This interface contains the required methods (if any) from the protocol defined by <see cref="T:WatchConnectivity.WCSessionDelegate" />.</para>
+	///       <para>If developers create classes that implement this interface, the implementation methods will automatically be exported to Objective-C with the matching signature from the method defined in the <see cref="T:WatchConnectivity.WCSessionDelegate" /> protocol.</para>
+	///       <para>Optional methods (if any) are provided by the <see cref="T:WatchConnectivity.WCSessionDelegate_Extensions" /> class as extension methods to the interface, allowing developers to invoke any optional methods on the protocol.</para>
+	///     </remarks>
 	interface IWCSessionDelegate { }
 
+	/// <summary>Delegate object whose methods, when overridden, allow the app developer to respond to messages sent between a WatchKit extension app and it's container app.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/WatchConnectivity/Reference/WCSessionDelegate_protocol/index.html">Apple documentation for <c>WCSessionDelegate</c></related>
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	interface WCSessionDelegate {
@@ -176,6 +190,9 @@ namespace WatchConnectivity {
 		void CompanionAppInstalledDidChange (WCSession session);
 	}
 
+	/// <summary>Holds data relating to a file being transferred between a WatchKit extension app and it's container app.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/WatchConnectivity/Reference/WCSessionFile_class/index.html">Apple documentation for <c>WCSessionFile</c></related>
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // no handle, doc: You do not create instances of this class directly.
 	interface WCSessionFile {
@@ -188,6 +205,9 @@ namespace WatchConnectivity {
 		NSDictionary<NSString, NSObject> Metadata { get; }
 	}
 
+	/// <summary>Represents an ongoing file transfer between a WatchKit extension app and it's container app.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/WatchConnectivity/Reference/WCSessionFileTransfer_class/index.html">Apple documentation for <c>WCSessionFileTransfer</c></related>
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // no handle, doc: You do not create instances of this class yourself.
 	interface WCSessionFileTransfer {
@@ -206,6 +226,9 @@ namespace WatchConnectivity {
 		NSProgress Progress { get; }
 	}
 
+	/// <summary>Represents an ongoing data transfer between a WatchKit extension app and it's container app.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/WatchConnectivity/Reference/WCSessionUserInfoTransfer_class/index.html">Apple documentation for <c>WCSessionUserInfoTransfer</c></related>
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // no handle, doc: You do not create instances of this class yourself.
 	interface WCSessionUserInfoTransfer : NSSecureCoding {

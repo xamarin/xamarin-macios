@@ -1,0 +1,49 @@
+<Documentation>
+  <Docs DocId="T:UIKit.NSDataAsset">
+    <summary>Platform-specific data object stored in an asset catalog.</summary>
+    <remarks>
+      <para>Asset catalogs are often used for icons and images, but may be used to deliver any kind of data in a platform-specific manner.</para>
+      <para>Within an asset catalog, there is one folder per data object. That folder contains platform-specific data files and a <c>Contents.json</c> file that maps platform characteristics to specific datafiles. For example:</para>
+      <para>
+        <img href="~/UIKit/_images/UIKit.NSDataAsset_FolderStructure.png" alt="Image showing the folder structure." />
+      </para>
+      <para>Where <c>Contents.json</c> contains:</para>
+      <example>
+        <code lang="json"><![CDATA[
+{
+  "info" : {
+    "version" : 1,
+    "author" : "xcode"
+  },
+  "data" : [
+    {
+      "idiom" : "iphone",
+      "filename" : "iphone.wav",
+      "universal-type-identifier" : "com.microsoft.waveform-audio"
+    },
+    {
+      "idiom" : "ipad",
+      "filename" : "ipad.wav",
+      "universal-type-identifier" : "com.microsoft.waveform-audio"
+    }
+  ]
+}
+    ]]></code>
+      </example>
+      <para>To load an asset, call <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=C:UIKit.NSDataAsset(String)&amp;scope=Xamarin" title="C:UIKit.NSDataAsset(String)">C:UIKit.NSDataAsset(String)</a></format> or <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=C:UIKit.NSDataAsset(String,Foundation.NSBundle)&amp;scope=Xamarin" title="C:UIKit.NSDataAsset(String,Foundation.NSBundle)">C:UIKit.NSDataAsset(String,Foundation.NSBundle)</a></format> passing the name of the folder. For instance:</para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+var assetCatalog = new NSDataAsset ("FolderName");
+var data = assetCatalog.Data;
+var uti = assetCatalog.TypeIdentifier;
+
+NSError error = null;
+var player = new AVAudioPlayer (data, uti, out error);
+if (player != null) { //...etc
+    ]]></code>
+      </example>
+      <para>The appropriate datafile for the hardware device will be loaded.</para>
+    </remarks>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/NSDataAsset_Class/index.html">Apple documentation for <c>NSDataAsset</c></related>
+  </Docs>
+</Documentation>

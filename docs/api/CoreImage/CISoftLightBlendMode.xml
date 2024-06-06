@@ -1,0 +1,56 @@
+<Documentation>
+  <Docs DocId="T:CoreImage.CISoftLightBlendMode">
+    <summary>The CISoftLightBlendMode CoreImage filter</summary>
+    <remarks>
+      <para>The following example shows this filter in use</para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+// Create CIImages from Files.
+CIImage clouds = CIImage.FromCGImage (UIImage.FromFile ("clouds.jpg").CGImage);
+CIImage heron = CIImage.FromCGImage (UIImage.FromFile ("heron.jpg").CGImage);
+
+// Construct the SoftLight filter
+var softLightBlend = new CISoftLightBlendMode()
+{
+	Image = heron,
+	BackgroundImage = clouds
+};
+
+// Get the composite image from the filter
+var output = softLightBlend.OutputImage;
+	
+// To render the results, we need to create a context, and then
+// use one of the context rendering APIs, in this case, we render the
+// result into a CoreGraphics image, which is merely a useful representation
+//
+var context = CIContext.FromOptions (null);
+
+var cgimage = context.CreateCGImage (output, output.Extent);
+
+// The above cgimage can be added to a screen view, for example, this
+// would add it to a UIImageView on the screen:
+myImageView.Image = UIImage.FromImage (cgimage);
+        ]]></code>
+      </example>
+      <para>
+		With the following source:
+      </para>
+      <para>
+        <img href="~/CoreImage/_images/heron.jpg" alt="Photograph of a heron." />
+      </para>
+      <para>
+        <img href="~/CoreImage/_images/clouds.jpg" alt="Photograph of clouds and sunbeams." />
+      </para>
+      <para>
+         Produces the following output:
+      </para>
+      <para>
+        <img href="~/CoreImage/_images/SoftLightBlend.png" alt="Result of applying the filter." />
+      </para>
+      <para>
+		"Sunrise near Atkeison Plateau" © 2012 Charles Atkeison, used under a Creative Commons Attribution-ShareAlike license: https://creativecommons.org/licenses/by-sa/3.0/ 
+		"canon" © 2012 cuatrok77 hernandez, used under a Creative Commons Attribution-ShareAlike license: https://creativecommons.org/licenses/by-sa/3.0/ 
+      </para>
+    </remarks>
+  </Docs>
+</Documentation>

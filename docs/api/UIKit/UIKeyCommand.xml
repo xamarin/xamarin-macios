@@ -1,0 +1,31 @@
+<Documentation>
+  <Docs DocId="T:UIKit.UIKeyCommand">
+    <summary>Maps hardware key presses to custom actions.</summary>
+    <remarks>
+      <para>
+        <see cref="T:UIKit.UIKeyCommand" /> objects are only generated with an attached hardware keyboard.</para>
+      <para>To create keyboard accelerators, developers must create a <see cref="T:ObjCRuntime.Selector" /> that is associated with 
+        a method of type <c><![CDATA[Action<UIKeyCommand>]]></c> with an appropriate <see cref="T:Foundation.ExportAttribute" />:</para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+[Export("NewFileAccelerator:")]
+void NewFileAccelerator(UIKeyCommand cmd)
+{
+   //etc...
+}
+
+public override void ViewDidLoad ()
+{
+    base.ViewDidLoad ();
+
+    var actionSelector = new Selector("NewFileAccelerator:");
+    accelerator = UIKeyCommand.Create((NSString) "N", UIKeyModifierFlags.Command, actionSelector);
+
+    AddKeyCommand(accelerator);
+}
+    ]]></code>
+      </example>
+    </remarks>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIKeyCommand_class/index.html">Apple documentation for <c>UIKeyCommand</c></related>
+  </Docs>
+</Documentation>

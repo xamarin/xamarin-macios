@@ -176,10 +176,14 @@ namespace ExternalAccessory {
 	}
 
 
+	/// <include file="../docs/api/ExternalAccessory/IEAWiFiUnconfiguredAccessoryBrowserDelegate.xml" path="/Documentation/Docs[@DocId='T:ExternalAccessory.IEAWiFiUnconfiguredAccessoryBrowserDelegate']/*" />
 	interface IEAWiFiUnconfiguredAccessoryBrowserDelegate { }
 
 	// This class is exposed for tvOS in the headers, but there's no available initializer (so it can't be constructed)
 	// The API is also clearly unusable (you can list the unconfigured accessories, but you can't search for them first...)
+	/// <summary>Provides the MFI Wireless Accessory Configuration process, including scanning, connecting, and configuring compatible accessories.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/ExternalAccessory/Reference/EAWiFiUnconfiguredAccessoryBrowser_Class/index.html">Apple documentation for <c>EAWiFiUnconfiguredAccessoryBrowser</c></related>
 	[NoTV] // 
 	[NoMac]
 	[MacCatalyst (13, 1)]
@@ -234,6 +238,9 @@ namespace ExternalAccessory {
 #endif
 	}
 
+	/// <summary>Delegate object for <see cref="T:ExternalAccessory.EAWiFiUnconfiguredAccessoryBrowser" />, providing events related to scanning, connecting, and configuring compatible accessories.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/ExternalAccessory/Reference/EAWiFiUnconfiguredAccessoryBrowserDelegate_Protocol/index.html">Apple documentation for <c>EAWiFiUnconfiguredAccessoryBrowserDelegate</c></related>
 	[NoMac]
 	[NoTV] // no member is available
 	[MacCatalyst (13, 1)]

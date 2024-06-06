@@ -1,0 +1,62 @@
+<Documentation>
+  <Docs DocId="T:CoreImage.CIBlendWithMask">
+    <summary>A <see cref="T:CoreImage.CIBlendFilter" /> that uses a grayscale mask to blends its foreground and background images.</summary>
+    <remarks>
+      <para>The following example shows this filter in use</para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+// Create the CIImages from a file
+CIImage flower = CIImage.FromCGImage (UIImage.FromFile ("flower.png").CGImage);
+CIImage clouds = CIImage.FromCGImage (UIImage.FromFile ("clouds.jpg").CGImage);
+CIImage xamarin = CIImage.FromCGImage (UIImage.FromFile ("Xamarin.png").CGImage);
+
+// Create a CIBlendWithMask filter with our three input images 
+var blend_with_mask = new CIBlendWithMask () {
+	BackgroundImage = clouds,
+	Image = flower,
+	Mask = xamarin
+};
+
+// Get the blended image from the filter
+var output = blend_with_mask.OutputImage;
+
+// To render the results, we need to create a context, and then
+// use one of the context rendering APIs, in this case, we render the
+// result into a CoreGraphics image, which is merely a useful representation
+//
+var context = CIContext.FromOptions (null);
+
+var cgimage = context.CreateCGImage (output, output.Extent);
+
+// The above cgimage can be added to a screen view, for example, this
+// would add it to a UIImageView on the screen:
+myImageView.Image = UIImage.FromImage (cgimage);
+        ]]></code>
+      </example>
+      <para>
+        With the following background, image and mask inputs:
+      </para>
+      <para>
+        <img href="~/CoreImage/_images/clouds.jpg" alt="Photograph of clouds and sunbeams." />
+      </para>
+      <para>
+        <img href="~/CoreImage/_images/flower.png" alt="Photograph of a sunflower." />
+      </para>
+      <para>
+        <img href="~/CoreImage/_images/Xamarin.png" alt="Result of applying the filter." />
+      </para>
+      <para>
+         Produces the following output:
+      </para>
+      <para>
+        <img href="~/CoreImage/_images/blend_with_mask.png" alt="Result of applying the filter." />
+      </para>
+      <para>
+        "Sunrise near Atkeison Plateau" © 2012 Charles Atkeison, used under a Creative Commons Attribution-ShareAlike license: https://creativecommons.org/licenses/by-sa/3.0/
+      </para>
+      <para>
+        "Flower" © 2012 Milica Sekulic, used under a Creative Commons Attribution-ShareAlike license: https://creativecommons.org/licenses/by-sa/3.0/
+      </para>
+    </remarks>
+  </Docs>
+</Documentation>

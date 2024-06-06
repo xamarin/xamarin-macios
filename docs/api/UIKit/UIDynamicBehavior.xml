@@ -1,0 +1,66 @@
+<Documentation>
+  <Docs DocId="T:UIKit.UIDynamicBehavior">
+    <summary>The base class for items that describe the physics-like behaviors of UIKit Dynamics, introduced in iOS 7.</summary>
+    <remarks>
+      <para>A number of <see cref="T:UIKit.UIDynamicBehavior" />s are associated with a <see cref="T:UIKit.UIDynamicAnimator" />, which is responsible for the overall context. Any given <see cref="T:UIKit.UIDynamicBehavior" /> is associated with some amount of <see cref="T:UIKit.IUIDynamicItem" />s (such as <see cref="T:UIKit.UIView" />s and <see cref="T:UIKit.UICollectionViewLayoutAttributes" />); most subclasses of <see cref="T:UIKit.UIDynamicBehavior" /> expose these in an <c>Items</c> property or application developers can retrieve them with <see cref="M:UIKit.UIDynamicAnimator.GetDynamicItems(CoreGraphics.CGRect)" />.</para>
+      <para>There are a number of predefined subclasses of <see cref="T:UIKit.UIDynamicBehavior" />:</para>
+      <para>
+        <list type="table">
+          <listheader>
+            <term>Subclass</term>
+            <description>Behavior</description>
+          </listheader>
+          <item>
+            <term>
+              <see cref="T:UIKit.UIAttachmentBehavior" />
+            </term>
+            <description>
+            Attachment: Specifies a dynamic connection between two <see cref="T:UIKit.IUIDynamicItem" />s or between a <see cref="T:UIKit.IUIDynamicItem" /> and a fixed point.
+          </description>
+          </item>
+          <item>
+            <term>
+              <see cref="T:UIKit.UICollisionBehavior" />
+            </term>
+            <description>
+            Collision: Detects when the boundaries of a <see cref="T:UIKit.IUIDynamicItem" /> meet another boundary.
+          </description>
+          </item>
+          <item>
+            <term>
+              <see cref="T:UIKit.UIGravityBehavior" />
+            </term>
+            <description>
+            Gravity: Accelerates the <see cref="T:UIKit.IUIDynamicItem" /> towards the bottom of the screen.
+          </description>
+          </item>
+          <item>
+            <term>
+              <see cref="T:UIKit.UIDynamicItemBehavior" />
+            </term>
+            <description>
+            Animation: Specifies an animation configuration to apply to one or more <see cref="T:UIKit.IUIDynamicItem" />s.
+          </description>
+          </item>
+          <item>
+            <term>
+              <see cref="T:UIKit.UIPushBehavior" />
+            </term>
+            <description>
+            Pushing: Applies a continuous or instantaneous force vector to a <see cref="T:UIKit.IUIDynamicItem" />.
+          </description>
+          </item>
+          <item>
+            <term>
+              <see cref="T:UIKit.UISnapBehavior" />
+            </term>
+            <description>
+            Snapping: Specifies a magnetism-like attraction between a <see cref="T:UIKit.IUIDynamicItem" /> and a fixed point. Includes a rebounding effect.
+          </description>
+          </item>
+        </list>
+      </para>
+    </remarks>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIDynamicBehavior_Class/index.html">Apple documentation for <c>UIDynamicBehavior</c></related>
+  </Docs>
+</Documentation>

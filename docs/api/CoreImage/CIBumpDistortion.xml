@@ -1,0 +1,52 @@
+<Documentation>
+  <Docs DocId="T:CoreImage.CIBumpDistortion">
+    <summary>A <see cref="T:CoreImage.CIDistortionFilter" /> that creates a bump at the specified center point.</summary>
+    <remarks>
+      <para>The following example shows this filter in use</para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+// Create the CIImage from a file
+CIImage xamarinCheck = CIImage.FromCGImage (UIImage.FromFile ("XamarinCheck.png").CGImage);
+
+var width = xamarinCheck.Extent.Width;
+var height = xamarinCheck.Extent.Height;
+
+// Create a CIBumpDistortion filter with the input image, center raduis and scale
+var bump_distortion = new CIBumpDistortion () {
+	Image = xamarinCheck,
+	Center = new CIVector (width/2f, height/2f),
+	Radius = .4f * height,
+	Scale = .5f
+};
+
+// Get the distorted image from the filter
+var output = bump_distortion.OutputImage;
+
+// To render the results, we need to create a context, and then
+// use one of the context rendering APIs, in this case, we render the
+// result into a CoreGraphics image, which is merely a useful representation
+//
+var context = CIContext.FromOptions (null);
+
+var cgimage = context.CreateCGImage (output, output.Extent);
+
+// The above cgimage can be added to a screen view, for example, this
+// would add it to a UIImageView on the screen:
+myImageView.Image = UIImage.FromImage (cgimage);
+	]]></code>
+      </example>
+      <para>
+        With the following input:
+      </para>
+      <para>
+        <img href="~/CoreImage/_images/XamarinCheck.png" alt="Logo on a checkered background" />
+      </para>
+      <para>
+         Produces the following output:
+      </para>
+      <para>
+        <img href="~/CoreImage/_images/bump_distortion.png" alt="Result of applying the filter." />
+      </para>
+    </remarks>
+  </Docs>
+</Documentation>

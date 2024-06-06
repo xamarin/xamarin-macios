@@ -1,0 +1,85 @@
+<Documentation>
+  <Docs DocId="T:AVFoundation.AVMetadataMachineReadableCodeObject">
+    <summary>A <see cref="T:AVFoundation.AVMetadataObject" /> that contains barcode information.</summary>
+    <remarks>
+      <para>The following barcode types can be natively recognized in iOS 7:</para>
+      <list type="table">
+        <listheader>
+          <term>Barcode type</term>
+          <description>Constant for use with <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=AVFoundation%20AVMetadata%20Output%20Metadata%20Object%20Type&amp;scope=Xamarin" title="P:AVFoundation.AVMetadataOutput.MetadataObjectType">P:AVFoundation.AVMetadataOutput.MetadataObjectType</a></format></description>
+        </listheader>
+        <item>
+          <term>Aztec</term>
+          <description>
+            <see cref="P:AVFoundation.AVMetadataObject.TypeAztecCode" />
+          </description>
+        </item>
+        <item>
+          <term>Code 39</term>
+          <description>
+            <see cref="P:AVFoundation.AVMetadataObject.TypeCode39Code" />
+          </description>
+        </item>
+        <item>
+          <term>Code 39 mod 43</term>
+          <description>
+            <see cref="P:AVFoundation.AVMetadataObject.TypeCode39Mod43Code" />
+          </description>
+        </item>
+        <item>
+          <term>Code 93</term>
+          <description>
+            <see cref="P:AVFoundation.AVMetadataObject.TypeCode93Code" />
+          </description>
+        </item>
+        <item>
+          <term>Code 128</term>
+          <description>
+            <see cref="P:AVFoundation.AVMetadataObject.TypeCode128Code" />
+          </description>
+        </item>
+        <item>
+          <term>PDF417</term>
+          <description>
+            <see cref="P:AVFoundation.AVMetadataObject.TypePDF417Code" />
+          </description>
+        </item>
+        <item>
+          <term>QR</term>
+          <description>
+            <see cref="P:AVFoundation.AVMetadataObject.TypeQRCode" />
+          </description>
+        </item>
+        <item>
+          <term>UPC-E</term>
+          <description>
+            <see cref="P:AVFoundation.AVMetadataObject.TypeUPCECode" />
+          </description>
+        </item>
+      </list>
+      <para>To recognize a barcode, application developers assign to the <see cref="P:AVFoundation.AVCaptureMetadataOutput.MetadataObjectTypes" /> property. This must be done after the <see cref="T:AVFoundation.AVCaptureMetadataOutput" /> has been added to the <see cref="P:AVFoundation.AVCaptureSession.Outputs" /> of a <see cref="T:AVFoundation.AVCaptureSession" /> object, as shown in the following code:</para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+session = new AVCaptureSession();
+var camera = AVCaptureDevice.DefaultDeviceWithMediaType(AVMediaType.Video);
+var input = AVCaptureDeviceInput.FromDevice(camera);
+
+//Add the metadata output channel
+metadataOutput = new AVCaptureMetadataOutput();
+var metadataDelegate = new MyMetadataOutputDelegate();
+metadataOutput.SetDelegate(metadataDelegate, DispatchQueue.MainQueue);
+session.AddOutput(metadataOutput);
+
+//Confusing! *After* adding to session, tell output what to recognize...
+metadataOutput.MetadataObjectTypes = new NSString[] {
+	AVMetadataObject.TypeQRCode,
+	AVMetadataObject.TypeEAN13Code
+};
+
+session.StartRunning();
+          ]]></code>
+      </example>
+    </remarks>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/AVFoundation/Reference/AVMetadataMachineReadableCodeObject_Class/index.html">Apple documentation for <c>AVMetadataMachineReadableCodeObject</c></related>
+  </Docs>
+</Documentation>

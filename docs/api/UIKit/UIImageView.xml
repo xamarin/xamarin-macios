@@ -1,0 +1,16 @@
+<Documentation>
+  <Docs DocId="T:UIKit.UIImageView">
+    <summary>A <see cref="T:UIKit.UIView" /> that can render a single image or animate a series of images.</summary>
+    <remarks>
+      <para>New UIImageView objects ignore user-input (eg. touches) by default. To handle events in a subclass, set <see cref="P:UIKit.UIView.UserInteractionEnabled" /> = true after the object has been created.</para>
+      <para>The image is scaled, sized to fit or positioned in the UIImageView according to the <see cref="P:UIKit.UIView.ContentMode" /> property. If either <see cref="P:UIKit.UIImage.LeftCapWidth" /> or <see cref="P:UIKit.UIImage.TopCapHeight" /> are set, the image is stretched according to those values instead. </para>
+      <para>This view is aware of stretchable images created with <see cref="M:UIKit.UIImage.CreateResizableImage(UIKit.UIEdgeInsets)" /></para>
+      <para>The class provides controls to set the duration and frequency when animating multiple images. It also allows you to stop and start the animation. All images associated with a UIImageView object should use the same scale.</para>
+    </remarks>
+    <related type="recipe" href="https://developer.xamarin.com/ios/Recipes/Standard_Controls/Image_View/Animate_an_ImageView">Animate an ImageView</related>
+    <related type="recipe" href="https://developer.xamarin.com/ios/Recipes/Standard_Controls/Image_View/Load_an_Image">Load an Image</related>
+    <related type="recipe" href="https://developer.xamarin.com/ios/Recipes/Media/Images/Merge_Images">Merge Images</related>
+    <related type="recipe" href="https://developer.xamarin.com/ios/Recipes/Media/Images/Rotate_An_Image">Rotate An Image</related>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIImageView_Class/index.html">Apple documentation for <c>UIImageView</c></related>
+  </Docs>
+</Documentation>

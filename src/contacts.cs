@@ -18,6 +18,12 @@ using NativeHandle = System.IntPtr;
 
 namespace Contacts {
 
+	/// <summary>Interface representing the required methods (if any) of the protocol <see cref="T:Contacts.ICNKeyDescriptor" />.</summary>
+	///     <remarks>
+	///       <para>This interface contains the required methods (if any) from the protocol defined by <see cref="T:Contacts.ICNKeyDescriptor" />.</para>
+	///       <para>If you create objects that implement this interface, the implementation methods will automatically be exported to Objective-C with the matching signature from the method defined in the <see cref="T:Contacts.ICNKeyDescriptor" /> protocol.</para>
+	///       <para>Optional methods (if any) are provided by the <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=Contacts%20CNKey%20Descriptor_%20Extensions&amp;scope=Xamarin" title="T:Contacts.CNKeyDescriptor_Extensions">T:Contacts.CNKeyDescriptor_Extensions</a></format> class as extension methods to the interface, allowing you to invoke any optional methods on the protocol.</para>
+	///     </remarks>
 	interface ICNKeyDescriptor { }
 
 	[MacCatalyst (13, 1)]
@@ -26,6 +32,9 @@ namespace Contacts {
 	interface CNKeyDescriptor : NSObjectProtocol, NSSecureCoding, NSCopying {
 	}
 
+	/// <summary>Represents a contact such as a person or business and holds their data, such as name, phone numbers, etc.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Contacts/Reference/CNContact_Class/index.html">Apple documentation for <c>CNContact</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface CNContact : NSCopying, NSMutableCopying, NSSecureCoding, NSItemProviderReading, NSItemProviderWriting {
@@ -190,6 +199,7 @@ namespace Contacts {
 		NSPredicate GetPredicateForContactsInContainer (string containerIdentifier);
 	}
 
+	/// <summary>Provides string constants whose values are the names of the possibly-available keys for <see cref="T:Contacts.CNContact" /> objects.</summary>
 	[MacCatalyst (13, 1)]
 	[Static]
 	[EditorBrowsable (EditorBrowsableState.Advanced)]
@@ -288,6 +298,9 @@ namespace Contacts {
 		NSString InstantMessageAddresses { get; }
 	}
 
+	/// <summary>Holds the parameters for a search request of the <see cref="T:Contacts.CNContactStore" />.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Contacts/Reference/CNContactFetchRequest_Class/index.html">Apple documentation for <c>CNContactFetchRequest</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CNFetchRequest))]
 	[DisableDefaultCtor] // using init raises an exception according to docs
@@ -318,6 +331,9 @@ namespace Contacts {
 		CNContactSortOrder SortOrder { get; set; }
 	}
 
+	/// <summary>A custom formatter for <see cref="T:Contacts.CNContact" /> objects.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Contacts/Reference/CNContactFormatter_Class/index.html">Apple documentation for <c>CNContactFormatter</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSFormatter))]
 	interface CNContactFormatter : NSSecureCoding {
@@ -371,6 +387,9 @@ namespace Contacts {
 		ICNKeyDescriptor RequiredKeysForNameOrder { get; }
 	}
 
+	/// <summary>A tuple of values for a contact property, including the contact, the property's key and value and, for labeled values, the identifier and label.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Contacts/Reference/CNContactProperty_Class/index.html">Apple documentation for <c>CNContactProperty</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface CNContactProperty : NSCopying, NSSecureCoding {
@@ -394,6 +413,9 @@ namespace Contacts {
 		string Label { get; }
 	}
 
+	/// <summary>Defines a relationship between two <see cref="T:Contacts.CNContact" /> objects, as specified by a <see cref="T:Contacts.CNLabelContactRelationKey" />.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Contacts/Reference/CNContactRelation_Class/index.html">Apple documentation for <c>CNContactRelation</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface CNContactRelation : NSCopying, NSSecureCoding, INSCopying, INSSecureCoding {
@@ -409,6 +431,7 @@ namespace Contacts {
 		string Name { get; }
 	}
 
+	/// <summary>Defines string constants whose values define various interpersonal relationships.</summary>
 	[MacCatalyst (13, 1)]
 	[Static]
 	[EditorBrowsable (EditorBrowsableState.Advanced)]
@@ -1472,6 +1495,7 @@ namespace Contacts {
 
 	}
 
+	/// <summary>Completion handler for calls to <see cref="M:Contacts.CNContactStore.RequestAccess(Contacts.CNEntityType,Contacts.CNContactStoreRequestAccessHandler)" /></summary>
 	delegate void CNContactStoreRequestAccessHandler (bool granted, NSError error);
 #if !NET
 	delegate void CNContactStoreEnumerateContactsHandler (CNContact contact, bool stop);
@@ -1688,6 +1712,9 @@ namespace Contacts {
 		NSData CurrentHistoryToken { get; }
 	}
 
+	/// <summary>The system's contact database.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Contacts/Reference/CNContactStore_Class/index.html">Apple documentation for <c>CNContactStore</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface CNContactStore {
@@ -1768,6 +1795,12 @@ namespace Contacts {
 		NSString NotificationDidChange { get; }
 	}
 
+	/// <summary>Holds default values, such as <see cref="P:Contacts.CNContactsUserDefaults.CountryCode" />, for <see cref="T:Contacts.CNContact" /> objects.</summary>
+	///     <remarks>
+	///       <para>(More documentation for this node is coming)</para>
+	///       <para tool="threads">The members of this class can be used from a background thread.</para>
+	///     </remarks>
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Contacts/CNContactsUserDefaults">Apple documentation for <c>CNContactsUserDefaults</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[ThreadSafe (false)]
@@ -1784,6 +1817,9 @@ namespace Contacts {
 		string CountryCode { get; }
 	}
 
+	/// <summary>Provides vCard serialization for <see cref="T:Contacts.CNContact" /> objects.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Contacts/Reference/CNContactVCardSerialization_Class/index.html">Apple documentation for <c>CNContactVCardSerialization</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface CNContactVCardSerialization {
@@ -1827,6 +1863,11 @@ namespace Contacts {
 	}
 #endif
 
+	/// <summary>An object such as an Exchange or CalDAV account that contains zero or more <see cref="T:Contacts.CNContact" /> objects.</summary>
+	///     <remarks>
+	///       <para> A <see cref="T:Contacts.CNContact" /> may be a member of only one <see cref="T:Contacts.CNContainer" />. This is in contrast to <see cref="T:Contacts.CNGroup" /> objects.</para>
+	///     </remarks>
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Contacts/Reference/CNContainer_Class/index.html">Apple documentation for <c>CNContainer</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface CNContainer : NSCopying, NSSecureCoding {
@@ -1867,6 +1908,7 @@ namespace Contacts {
 		#endregion
 	}
 
+	/// <summary>Provides string constants whose values should be used as keys when referencing properties of <see cref="T:Contacts.CNContainer" /> objects.</summary>
 	[MacCatalyst (13, 1)]
 	[Static]
 	[EditorBrowsable (EditorBrowsableState.Advanced)]
@@ -1882,6 +1924,7 @@ namespace Contacts {
 		NSString Type { get; }
 	}
 
+	/// <summary>Provides string constants whose values identify the form of an error.</summary>
 	[MacCatalyst (13, 1)]
 	[Static]
 	[EditorBrowsable (EditorBrowsableState.Advanced)]
@@ -1926,6 +1969,9 @@ namespace Contacts {
 	}
 #endif
 
+	/// <summary>A group that contains <see cref="T:Contacts.CNContact" /> objects.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Contacts/Reference/CNGroup_Class/index.html">Apple documentation for <c>CNGroup</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface CNGroup : NSCopying, NSMutableCopying, NSSecureCoding {
@@ -1966,6 +2012,7 @@ namespace Contacts {
 		#endregion
 	}
 
+	/// <summary>Provides string constants whose values are the names of properties common to all <see cref="T:Contacts.CNGroup" /> objects.</summary>
 	[MacCatalyst (13, 1)]
 	[Static]
 	[EditorBrowsable (EditorBrowsableState.Advanced)]
@@ -1978,6 +2025,9 @@ namespace Contacts {
 		NSString Name { get; }
 	}
 
+	/// <summary>Defines an address for an instant-message service.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Contacts/Reference/CNInstantMessageAddress_Class/index.html">Apple documentation for <c>CNInstantMessageAddress</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface CNInstantMessageAddress : NSCopying, NSSecureCoding, INSCopying, INSSecureCoding {
@@ -2000,6 +2050,7 @@ namespace Contacts {
 		string LocalizeService (NSString service);
 	}
 
+	/// <summary>Provides string constants whose values are the common properties of all instant-message providers.</summary>
 	[MacCatalyst (13, 1)]
 	[Static]
 	[EditorBrowsable (EditorBrowsableState.Advanced)]
@@ -2012,6 +2063,7 @@ namespace Contacts {
 		NSString Service { get; }
 	}
 
+	/// <summary>Provides string constants whose values are the names of common providers of instant messaging services.</summary>
 	[MacCatalyst (13, 1)]
 	[Static]
 	[EditorBrowsable (EditorBrowsableState.Advanced)]
@@ -2048,6 +2100,9 @@ namespace Contacts {
 		NSString Yahoo { get; }
 	}
 
+	/// <summary>An object that holds a value and the label for that value.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Contacts/Reference/CNLabeledValue_Class/index.html">Apple documentation for <c>CNLabeledValue</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface CNLabeledValue<ValueType> : NSCopying, NSSecureCoding
@@ -2085,6 +2140,7 @@ namespace Contacts {
 		string LocalizeLabel (NSString labelKey);
 	}
 
+	/// <summary>Defines string constants whose values define the names of various <see cref="T:Contacts.CNLabeledValue`1" /> objects.</summary>
 	[MacCatalyst (13, 1)]
 	[Static]
 	[EditorBrowsable (EditorBrowsableState.Advanced)]
@@ -2114,6 +2170,9 @@ namespace Contacts {
 		NSString DateAnniversary { get; }
 	}
 
+	/// <summary>A <see cref="T:Contacts.CNContact" /> that can be modified after creation.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Contacts/Reference/CNMutableContact_Class/index.html">Apple documentation for <c>CNMutableContact</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CNContact))]
 	interface CNMutableContact {
@@ -2231,6 +2290,9 @@ namespace Contacts {
 		CNLabeledValue<NSDateComponents> [] Dates { get; set; }
 	}
 
+	/// <summary>A <see cref="T:Contacts.CNGroup" /> whose values can change after initialization.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Contacts/Reference/CNMutableGroup_Class/index.html">Apple documentation for <c>CNMutableGroup</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CNGroup))]
 	interface CNMutableGroup {
@@ -2240,6 +2302,9 @@ namespace Contacts {
 		string Name { get; set; }
 	}
 
+	/// <summary>A <see cref="T:Contacts.CNPostalAddress" /> whose values can be modified after initialization.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Contacts/Reference/CNMutablePostalAddress_Class/index.html">Apple documentation for <c>CNMutablePostalAddress</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CNPostalAddress))]
 	interface CNMutablePostalAddress {
@@ -2279,6 +2344,9 @@ namespace Contacts {
 		string IsoCountryCode { get; set; }
 	}
 
+	/// <summary>An immutable phone number.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Contacts/Reference/CNPhoneNumber_Class/index.html">Apple documentation for <c>CNPhoneNumber</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // Apple doc: no handle (nil) if no string (or nil string) is given
@@ -2295,6 +2363,7 @@ namespace Contacts {
 		string StringValue { get; }
 	}
 
+	/// <summary>Defines string constants whose values are labels for various types of phones.</summary>
 	[MacCatalyst (13, 1)]
 	[Static]
 	[EditorBrowsable (EditorBrowsableState.Advanced)]
@@ -2327,6 +2396,9 @@ namespace Contacts {
 		NSString Pager { get; }
 	}
 
+	/// <summary>A mailing address for a contact.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Contacts/Reference/CNPostalAddress_Class/index.html">Apple documentation for <c>CNPostalAddress</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface CNPostalAddress : NSCopying, NSMutableCopying, NSSecureCoding, INSCopying, INSSecureCoding {
@@ -2397,6 +2469,7 @@ namespace Contacts {
 	}
 #endif
 
+	/// <summary>Enumeration of properties of a <see cref="T:Contacts.CNPostalAddress" />.</summary>
 	[MacCatalyst (13, 1)]
 	public enum CNPostalAddressKeyOption {
 		[Field ("CNPostalAddressStreetKey")]
@@ -2421,6 +2494,9 @@ namespace Contacts {
 		SubAdministrativeArea,
 	}
 
+	/// <summary>Formats postal addresses in the manner appropriate to the addresses.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Contacts/Reference/CNPostalAddressFormatter_Class/index.html">Apple documentation for <c>CNPostalAddressFormatter</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSFormatter))]
 	interface CNPostalAddressFormatter {
@@ -2450,6 +2526,9 @@ namespace Contacts {
 	}
 
 #if !WATCH
+	/// <summary>A request that performs a save operation for contacts.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Contacts/Reference/CNSaveRequest_Class/index.html">Apple documentation for <c>CNSaveRequest</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface CNSaveRequest {
@@ -2498,6 +2577,9 @@ namespace Contacts {
 	}
 #endif // !WATCH
 
+	/// <summary>A profile for a social network, such as Facebook or Twitter.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Contacts/Reference/CNSocialProfile_Class/index.html">Apple documentation for <c>CNSocialProfile</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface CNSocialProfile : NSCopying, NSSecureCoding, INSCopying, INSSecureCoding {
@@ -2531,6 +2613,7 @@ namespace Contacts {
 		string LocalizeService (NSString service);
 	}
 
+	/// <summary>Provides string constants whose values specify the properties of social services that are always fetched.</summary>
 	[MacCatalyst (13, 1)]
 	[Static]
 	[EditorBrowsable (EditorBrowsableState.Advanced)]
@@ -2549,6 +2632,7 @@ namespace Contacts {
 		NSString Service { get; }
 	}
 
+	/// <summary>Provides string constants naming known social networks.</summary>
 	[MacCatalyst (13, 1)]
 	[Static]
 	[EditorBrowsable (EditorBrowsableState.Advanced)]

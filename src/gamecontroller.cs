@@ -34,6 +34,9 @@ using NativeHandle = System.IntPtr;
 
 namespace GameController {
 
+	/// <summary>The base class for input elements of a game controller.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/GameController/Reference/GCControllerElement_Ref/index.html">Apple documentation for <c>GCControllerElement</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // The GCControllerElement class is never instantiated directly.
@@ -84,8 +87,14 @@ namespace GameController {
 		GCSystemGestureState PreferredSystemGestureState { get; set; }
 	}
 
+	/// <summary>The delegate used as the value-changed handler for <see cref="P:GameController.GCControllerAxisInput.ValueChangedHandler" />.</summary>
 	delegate void GCControllerAxisValueChangedHandler (GCControllerAxisInput axis, float /* float, not CGFloat */ value);
 
+	/// <summary>A <see cref="T:GameController.GCControllerElement" /> representing a joystick.</summary>
+	///     
+	///     
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/GameController/Reference/GCControllerAxisInput_Ref/index.html">Apple documentation for <c>GCControllerAxisInput</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (GCControllerElement))]
 	[DisableDefaultCtor] // return nil handle -> only exposed as getter
@@ -105,9 +114,13 @@ namespace GameController {
 		}
 	}
 
+	/// <summary>Handler that can be passed to the <see cref="M:GameController.GCControllerButtonInput.SetPressedChangedHandler(GameController.GCControllerButtonValueChanged)" /> method to respond to changes to button states.</summary>
 	delegate void GCControllerButtonValueChanged (GCControllerButtonInput button, float /* float, not CGFloat */ buttonValue, bool pressed);
 	delegate void GCControllerButtonTouchedChanged (GCControllerButtonInput button, float value, bool pressed, bool touched);
 
+	/// <summary>A <see cref="T:GameController.GCControllerElement" /> representing a game-controller button.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/GameController/Reference/GCControllerButtonInput_Ref/index.html">Apple documentation for <c>GCControllerButtonInput</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (GCControllerElement))]
 	[DisableDefaultCtor] // return nil handle -> only exposed as getter
@@ -157,8 +170,12 @@ namespace GameController {
 		bool Touched { [Bind ("isTouched")] get; }
 	}
 
+	/// <summary>The delegate used as the value-changed handler for <see cref="P:GameController.GCControllerDirectionPad.ValueChangedHandler" />.</summary>
 	delegate void GCControllerDirectionPadValueChangedHandler (GCControllerDirectionPad dpad, float /* float, not CGFloat */ xValue, float /* float, not CGFloat */ yValue);
 
+	/// <summary>A <see cref="T:GameController.GCControllerElement" /> representing a direction-pad.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/GameController/Reference/GCControllerDirectionPad_Ref/index.html">Apple documentation for <c>GCControllerDirectionPad</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (GCControllerElement))]
 	[DisableDefaultCtor] // return nil handle -> only exposed as getter
@@ -193,8 +210,12 @@ namespace GameController {
 		void SetValue (float xAxis, float yAxis);
 	}
 
+	/// <summary>The delegate used as the value-changed handler for <see cref="P:GameController.GCGamepad.ValueChangedHandler" />.</summary>
 	delegate void GCGamepadValueChangedHandler (GCGamepad gamepad, GCControllerElement element);
 
+	/// <summary>A gamepad with two shoulder buttons, a D-Pad, and a directional button array..</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/GameController/Reference/GCGamePad_Ref/index.html">Apple documentation for <c>GCGamepad</c></related>
 	[Deprecated (PlatformName.MacOSX, 10, 12, message: "Use 'GCExtendedGamepad' instead.")]
 	[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'GCExtendedGamepad' instead.")]
 	[Deprecated (PlatformName.TvOS, 10, 0, message: "Use 'GCExtendedGamepad' instead.")]
@@ -236,6 +257,9 @@ namespace GameController {
 		GCControllerButtonInput RightShoulder { get; }
 	}
 
+	/// <summary>A serializable snapshot of the game controller's state.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/GameController/Reference/GCGamePadSnapshot_Ref/index.html">Apple documentation for <c>GCGamepadSnapshot</c></related>
 	[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'GCExtendedGamepad' instead.")]
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'GCExtendedGamepad' instead.")]
 	[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'GCExtendedGamepad' instead.")]
@@ -255,8 +279,14 @@ namespace GameController {
 		NativeHandle Constructor (GCController controller, NSData data);
 	}
 
+	/// <summary>The delegate used as the value-changed handler for <see cref="P:GameController.GCExtendedGamepad.ValueChangedHandler" />.</summary>
 	delegate void GCExtendedGamepadValueChangedHandler (GCExtendedGamepad gamepad, GCControllerElement element);
 
+	/// <summary>A gamepad with two shoulder buttons, two triggers, two thumbsticks, a D-Pad, and a directional button array.</summary>
+	///     <remarks>
+	///       <para>Application developers should not instantiate this class. Rather, they should use the instance read from the <see cref="P:GameController.GCController.ExtendedGamepad" /> property.</para>
+	///     </remarks>
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/GameController/Reference/GCExtendedGamePad_Ref/index.html">Apple documentation for <c>GCExtendedGamepad</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (GCPhysicalInputProfile))]
 	[DisableDefaultCtor] // return nil handle -> only exposed as getter
@@ -338,6 +368,10 @@ namespace GameController {
 		GCControllerButtonInput ButtonHome { get; }
 	}
 
+	/// <summary>A serializable snapshot of the game controller's state.</summary>
+	///     
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/GameController/Reference/GCExtendedGamePadSnapshot_Ref/index.html">Apple documentation for <c>GCExtendedGamepadSnapshot</c></related>
 	[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'GCController.GetExtendedGamepadController()' instead.")]
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'GCController.GetExtendedGamepadController()' instead.")]
 	[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'GCController.GetExtendedGamepadController()' instead.")]
@@ -365,6 +399,9 @@ namespace GameController {
 		GCExtendedGamepadSnapshotDataVersion DataVersion { get; }
 	}
 
+	/// <summary>A game controller, either form-fitting or extended wireless.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/GameController/Reference/GCController_Ref/index.html">Apple documentation for <c>GCController</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	partial interface GCController : GCDevice {
@@ -499,6 +536,9 @@ namespace GameController {
 		bool ShouldMonitorBackgroundEvents { get; set; }
 	}
 
+	/// <summary>Holds position data of a game controller.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/GameController/Reference/GCMotion_Ref/index.html">Apple documentation for <c>GCMotion</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // access thru GCController.Motion - returns a nil Handle
@@ -612,9 +652,20 @@ namespace GameController {
 		GCAcceleration Acceleration { get; set; }
 	}
 
+	/// <param name="gamepad">The profile that contains the changed element.</param>
+	///     <param name="element">The element that changed.</param>
+	///     <summary>A handler that is called whenever any single element of a controller changes.</summary>
+	///     <remarks>
+	///       <para>This handler is called once for each element change. It is only called for directly attached elements.</para>
+	///     </remarks>
 	[MacCatalyst (13, 1)]
 	delegate void GCMicroGamepadValueChangedHandler (GCMicroGamepad gamepad, GCControllerElement element);
 
+	/// <summary>A logical mapping of hardware controller controls to a set of in-game elements.</summary>
+	///     <remarks>
+	///       <para>This type is implemented by the Apple TV remote. It maps an <c>A</c> button, an <c>X</c> button, and an analog D-pad as a touchpad.</para>
+	///     </remarks>
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/GameController/GCMicroGamepad">Apple documentation for <c>GCMicroGamepad</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (GCPhysicalInputProfile))]
 	[DisableDefaultCtor]
@@ -658,6 +709,9 @@ namespace GameController {
 		void SetState (GCMicroGamepad microGamepad);
 	}
 
+	/// <summary>Gets snapshots of the state of a micro gamepad.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/GameController/GCMicroGamepadSnapshot">Apple documentation for <c>GCMicroGamepadSnapshot</c></related>
 	[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'GCController.Capture()' instead.")]
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'GCController.Capture()' instead.")]
 	[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'GCController.Capture()' instead.")]
@@ -683,6 +737,9 @@ namespace GameController {
 		GCMicroGamepadSnapshotDataVersion DataVersion { get; }
 	}
 
+	/// <summary>View controller that can switch event delivery between the responder chain and the game controller.</summary>
+	///     <remarks>Developers can use this class as the root view controller in order to smoothly respond to both game UI inputs and game control inputs.</remarks>
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/GameController/GCEventViewController">Apple documentation for <c>GCEventViewController</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (UIViewController))]
 	interface GCEventViewController {

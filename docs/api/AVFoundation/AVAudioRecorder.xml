@@ -1,0 +1,29 @@
+<Documentation>
+  <Docs DocId="T:AVFoundation.AVAudioRecorder">
+    <summary>Audio recording class.</summary>
+    <remarks>
+      <para>
+	To create instances of this class use the factory method <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=AVFoundation%20AVRecorder%20To%20Url(%20Foundation%20NSUrl%20, %20AVFoundation%20AVAudio%20Recorder%20Settings%20,Foundation%20NSError%20)&amp;scope=Xamarin" title="M:AVFoundation.AVRecorder.ToUrl(Foundation.NSUrl, AVFoundation.AVAudioRecorderSettings,Foundation.NSError)">M:AVFoundation.AVRecorder.ToUrl(Foundation.NSUrl, AVFoundation.AVAudioRecorderSettings,Foundation.NSError)</a></format></para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+var settings = new AVAudioRecorderSettings () {
+	AudioFormat = AudioFormatType.LinearPCM,
+	AudioQuality = AVAudioQuality.High,
+	SampleRate = 44100f,
+	NumberChannels = 1
+};
+var recorder = AVAudioRecorder.ToUrl (url, settings, out error);
+if (recorder == null){
+    Console.WriteLine (error);
+    return;
+}
+recorder.PrepareToRecord ();            
+recorder.Record ();
+]]></code>
+      </example>
+    </remarks>
+    <related type="recipe" href="https://developer.xamarin.com/ios/Recipes/Media/Sound/Play_Sound">Play Sound</related>
+    <related type="recipe" href="https://developer.xamarin.com/ios/Recipes/Media/Sound/Record_Sound">Record Sound</related>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/AVFoundation/Reference/AVAudioRecorder_ClassReference/index.html">Apple documentation for <c>AVAudioRecorder</c></related>
+  </Docs>
+</Documentation>
