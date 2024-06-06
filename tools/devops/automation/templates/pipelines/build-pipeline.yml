@@ -27,11 +27,6 @@ parameters:
   type: boolean
   default: true
 
-- name: enableAPIDiff
-  displayName: Enable API diff generation
-  type: boolean
-  default: true
-
 - name: forceInsertion
   displayName: Force Insertion 
   type: boolean
@@ -216,7 +211,6 @@ stages:
     provisionatorChannel: ${{ parameters.provisionatorChannel }}
     pool: ${{ parameters.pool }}
     runGovernanceTests: ${{ parameters.runGovernanceTests }}
-    enableAPIDiff: ${{ parameters.enableAPIDiff }}
     forceInsertion: ${{ parameters.forceInsertion }}
     skipESRP: ${{ parameters.skipESRP }}
     pushNugets: ${{ parameters.pushNugets }}
