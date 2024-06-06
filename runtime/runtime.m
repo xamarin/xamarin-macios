@@ -2075,7 +2075,7 @@ get_method_block_wrapper_creator (MonoMethod *method, int par, GCHandle *excepti
 		return INVALID_GCHANDLE;
 	// PRINT ("New value: %x", (int) res);
 
-	nmp = (MethodAndPar *) malloc (sizeof (MethodAndPar));
+	nmp = (MethodAndPar *) calloc (1, sizeof (MethodAndPar));
 	*nmp = mp;
 
 	MONO_ENTER_GC_SAFE;
