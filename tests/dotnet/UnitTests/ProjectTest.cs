@@ -1938,7 +1938,7 @@ namespace Xamarin.Tests {
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64", "all,-System.Private.CoreLib.dll")]
 		[TestCase (ApplePlatform.TVOS, "tvos-arm64;", "-all,System.Private.CoreLib.dll")]
 		[TestCase (ApplePlatform.TVOS, "tvos-arm64;", "all,-System.Private.CoreLib.dll")]
-		public void PartialAOTTest(ApplePlatform platform, string runtimeIdentifiers, string mtouchInterpreter)
+		public void PartialAOTTest (ApplePlatform platform, string runtimeIdentifiers, string mtouchInterpreter)
 		{
 			var project = "MySimpleApp";
 			Configuration.IgnoreIfIgnoredPlatform (platform);
@@ -1955,8 +1955,7 @@ namespace Xamarin.Tests {
 
 			var appExecutable = GetNativeExecutable (platform, appPath);
 
-			if (CanExecute (platform, runtimeIdentifiers))
-			{
+			if (CanExecute (platform, runtimeIdentifiers)) {
 				ExecuteWithMagicWordAndAssert (appExecutable);
 			}
 		}
