@@ -1930,14 +1930,14 @@ namespace Xamarin.Tests {
 		}
 
 		[Test]
-		[TestCase (ApplePlatform.iOS, "ios-arm64;", "-all,System.Private.CoreLib.dll")]
-		[TestCase (ApplePlatform.iOS, "ios-arm64;", "all,-System.Private.CoreLib.dll")]
-		[TestCase (ApplePlatform.MacOSX, "osx-arm64;osx-x64", "-all,System.Private.CoreLib.dll")]
-		[TestCase (ApplePlatform.MacOSX, "osx-arm64;osx-x64", "all,-System.Private.CoreLib.dll")]
-		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64", "-all,System.Private.CoreLib.dll")]
-		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64", "all,-System.Private.CoreLib.dll")]
-		[TestCase (ApplePlatform.TVOS, "tvos-arm64;", "-all,System.Private.CoreLib.dll")]
-		[TestCase (ApplePlatform.TVOS, "tvos-arm64;", "all,-System.Private.CoreLib.dll")]
+		[TestCase (ApplePlatform.iOS, "ios-arm64;", "-all,System.Private.CoreLib")]
+		[TestCase (ApplePlatform.iOS, "ios-arm64;", "all,-System.Private.CoreLib")]
+		[TestCase (ApplePlatform.MacOSX, "osx-arm64;osx-x64", "-all,System.Private.CoreLib")]
+		[TestCase (ApplePlatform.MacOSX, "osx-arm64;osx-x64", "all,-System.Private.CoreLib")]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64", "-all,System.Private.CoreLib")]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64", "all,-System.Private.CoreLib")]
+		[TestCase (ApplePlatform.TVOS, "tvos-arm64;", "-all,System.Private.CoreLib")]
+		[TestCase (ApplePlatform.TVOS, "tvos-arm64;", "all,-System.Private.CoreLib")]
 		public void PartialAOTTest(ApplePlatform platform, string runtimeIdentifiers, string mtouchInterpreter)
 		{
 			var project = "MySimpleApp";
@@ -1947,7 +1947,7 @@ namespace Xamarin.Tests {
 			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
 			Clean (project_path);
 			var properties = GetDefaultProperties (runtimeIdentifiers);
-			properties ["MtouchInterpreter"] = mtouchInterpreter;
+			properties ["MtouchInterpreter"] = $"\"{mtouchInterpreter}\"";
 
 			DotNet.AssertBuild (project_path, properties);
 
