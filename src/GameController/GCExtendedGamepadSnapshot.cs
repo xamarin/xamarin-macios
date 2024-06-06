@@ -238,7 +238,8 @@ namespace GameController {
 			unsafe {
 #if !XAMCORE_5_0
 				var blittable = ToBlittable ();
-				GCExtendedGamepadSnapshotData_Blittable* self = &blittable; {
+				GCExtendedGamepadSnapshotData_Blittable* self = &blittable;
+				{
 #else
 				fixed (GCExtendedGamepadSnapshotData* self = &this) {
 #endif
