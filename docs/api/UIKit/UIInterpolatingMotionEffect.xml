@@ -1,0 +1,55 @@
+<Documentation>
+  <Docs DocId="T:UIKit.UIInterpolatingMotionEffect">
+    <summary>A <see cref="T:UIKit.UIMotionEffect" /> that maps the device vertical and horizontal tilt into values on a keypath.</summary>
+    <remarks>
+      <para>
+	Objects of the instance UIInterpolatingMotionEffect take the
+	values of the hardware tilt and map those into a range
+	(specified by the properties MinimumRelativeValue and
+	MaximumRelativeValue) and then it applies that to the property
+	referenced by the keypath.
+
+      </para>
+      <para>
+	The delta computed is then applied to the property.
+      </para>
+      <para>
+	The following example adds two square views, a reference one,
+	and a semi-transparent one that has two interpolating motion
+	effect handlers, one for the center.X position and one for
+	center.y.
+
+      </para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+class MotionSquareViewController : UIViewController {
+	public MotionSquareViewController () : base() {
+	}
+
+	public override void ViewDidLoad ()
+	{
+		var reference = new UIView (new RectangleF (110, 110, 90, 90)) {
+			BackgroundColor =  UIColor.Blue
+		};
+		var tracking = new UIView (new RectangleF (100, 100, 100, 100)) {
+			BackgroundColor =  UIColor.FromRGBA (.5f, .5f, .5f, .5f)
+		};
+		View.AddSubviews (reference, tracking);
+		var mx = new UIInterpolatingMotionEffect ("center.x", UIInterpolatingMotionEffectType.TiltAlongHorizontalAxis) {
+			MinimumRelativeValue = new NSNumber (-100),
+			MaximumRelativeValue = new NSNumber (100)
+		};
+		var my = new UIInterpolatingMotionEffect ("center.y", UIInterpolatingMotionEffectType.TiltAlongVerticalAxis) {
+			MinimumRelativeValue = new NSNumber (-100),
+			MaximumRelativeValue = new NSNumber (100)
+		};
+		tracking.AddMotionEffect (mx);
+		tracking.AddMotionEffect (my);
+	}
+}
+	]]></code>
+      </example>
+    </remarks>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIInterpolatingMotionEffect_class/index.html">Apple documentation for <c>UIInterpolatingMotionEffect</c></related>
+  </Docs>
+</Documentation>

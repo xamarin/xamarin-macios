@@ -1,0 +1,26 @@
+<Documentation>
+  <Docs DocId="T:MapKit.MKMapCamera">
+    <summary>The viewpoint that defines the perspective of the map.</summary>
+    <remarks>
+      <para>Application developers can assign a <see cref="T:MapKit.MKMapCamera" /> to the <see cref="P:MapKit.MKMapView.Camera" /> property or use the <see cref="M:MapKit.MKMapView.SetCamera(MapKit.MKMapCamera,System.Boolean)" /> method to cause the <see cref="T:MapKit.MKMapView" /> to render at an angle, with the <see cref="P:MapKit.MKMapCamera.CenterCoordinate" /> in the middle of the view. The <see cref="P:MapKit.MKMapView.Region" /> and <see cref="P:MapKit.MKMapView.VisibleMapRect" /> will be properly set based on the camera perspective.</para>
+      <para>The <see cref="T:MapKit.MKMapView" /> has a maximum tilt that is determined by the operating system. Setting the <see cref="P:MapKit.MKMapCamera.Altitude" /> property to a value too low will result in the camera perspective at the height appropriate to the maximum tilt.</para>
+      <para>The following example shows how to position the camera and render 3D buildings:</para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+var target = new CLLocationCoordinate2D(37.7952, -122.4028);
+var viewPoint = new CLLocationCoordinate2D(37.8009, -122.4100);
+//Enable 3D buildings
+mapView.ShowsBuildings = true;
+mapView.PitchEnabled = true;
+
+var camera = MKMapCamera.CameraLookingAtCenterCoordinate(target, viewPoint, 500);
+mapView.Camera = camera;
+        ]]></code>
+      </example>
+      <para>
+        <img href="~/MapKit/_images/MKMapCamera.png" alt="Image showing 3D map mode" />
+      </para>
+    </remarks>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/MapKit/Reference/MKMapCamera_class/index.html">Apple documentation for <c>MKMapCamera</c></related>
+  </Docs>
+</Documentation>

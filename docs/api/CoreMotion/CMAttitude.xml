@@ -1,0 +1,60 @@
+<Documentation>
+  <Docs DocId="T:CoreMotion.CMAttitude">
+    <summary>Used to pull spacial information from the device in either quaternion, rotation matrix or with 3D angles (roll, pitch and yaw).</summary>
+    <remarks>
+      <para>This class describes the attitude of the device (see <see cref="T:CoreMotion.CMAttitude" />) relative to an initial attitude (see <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=M:CoreMotion.CMMotionManager.StartDeviceMotionUpdates(CMAttitudeReferenceFrame)&amp;scope=Xamarin" title="M:CoreMotion.CMMotionManager.StartDeviceMotionUpdates(CMAttitudeReferenceFrame)">M:CoreMotion.CMMotionManager.StartDeviceMotionUpdates(CMAttitudeReferenceFrame)</a></format>). The axes of rotation are defined as:</para>
+      <para>
+        <img href="~/CoreMotion/_images/CoreMotion.CMAttitude.Axes.png" alt="Illustration of the axes relative to device orientation" />
+      </para>
+      <para>If a device's original orientation is lying flat on a table, with the bottom of the device facing the user:</para>
+      <list type="table">
+        <listheader>
+          <term>Change:</term>
+          <description>Rotation Around:</description>
+          <description>Caused By:</description>
+        </listheader>
+        <item>
+          <term>+Yaw</term>
+          <description>Z</description>
+          <description>The device is rotated counter-clockwise without lifting any edges.</description>
+        </item>
+        <item>
+          <term>+Pitch</term>
+          <description>X</description>
+          <description>The device is rotated towards its bottom.</description>
+        </item>
+        <item>
+          <term>+Roll</term>
+          <description>Y</description>
+          <description>The device is rotated towards its right side.</description>
+        </item>
+      </list>
+      <para>The attitude can be retrieved using either:</para>
+      <list type="table">
+        <listheader>
+          <term>Form</term>
+          <description>Property:</description>
+        </listheader>
+        <item>
+          <term>Euler Angles</term>
+          <description>
+            <see cref="P:CoreMotion.CMAttitude.Roll" />, <see cref="P:CoreMotion.CMAttitude.Pitch" />, <see cref="P:CoreMotion.CMAttitude.Yaw" />.</description>
+        </item>
+        <item>
+          <term>Rotation Matrix</term>
+          <description>
+            <see cref="P:CoreMotion.CMAttitude.RotationMatrix" />.</description>
+        </item>
+        <item>
+          <term>Quaternion</term>
+          <description>
+            <format type="text/html">
+              <a href="https://docs.microsoft.com/en-us/search/index?search=Core%20Motion%20Quaternion&amp;scope=Xamarin" title="P:CoreMotion.Quaternion">P:CoreMotion.Quaternion</a>
+            </format>
+          </description>
+        </item>
+      </list>
+    </remarks>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/CoreMotion/Reference/CMAttitude_Class/index.html">Apple documentation for <c>CMAttitude</c></related>
+  </Docs>
+</Documentation>

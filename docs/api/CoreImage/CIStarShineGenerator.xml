@@ -1,0 +1,51 @@
+<Documentation>
+  <Docs DocId="T:CoreImage.CIStarShineGenerator">
+    <summary>A <see cref="T:CoreImage.CIFilter" /> that simulates lens flare.</summary>
+    <remarks>
+      <para>The following example shows this filter in use</para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+// Create a CIStarShineGenerator filter with the input image
+var star_shine_generator = new CIStarShineGenerator () {
+	Radius = 20,
+};
+
+// Get the altered image from the filter
+var output = new CICrop {
+	Image = star_shine_generator.OutputImage,
+	Rectangle = new CIVector (0, 0, 400, 300)
+}.OutputImage;
+
+// Give the image a black background
+output = new CISourceAtopCompositing {
+	BackgroundImage = new CICrop {
+		Image = new CIConstantColorGenerator {
+			Color = new CIColor (UIColor.FromRGB (1, 1, 1)),
+		}.OutputImage,
+		Rectangle = new CIVector (0, 0, 400, 300),
+	}.OutputImage,
+	Image = output
+}.OutputImage;
+
+// To render the results, we need to create a context, and then
+// use one of the context rendering APIs, in this case, we render the
+// result into a CoreGraphics image, which is merely a useful representation
+//
+var context = CIContext.FromOptions (null);
+
+var cgimage = context.CreateCGImage (output, output.Extent);
+
+// The above cgimage can be added to a screen view, for example, this
+// would add it to a UIImageView on the screen:
+myImageView.Image = UIImage.FromImage (cgimage);
+        ]]></code>
+      </example>
+      <para>
+         Produces the following output:
+      </para>
+      <para>
+        <img href="~/CoreImage/_images/star_shine_generator.png" alt="Result of applying the filter." />
+      </para>
+    </remarks>
+  </Docs>
+</Documentation>

@@ -1,0 +1,25 @@
+<Documentation>
+  <Docs DocId="T:UIKit.UITraitCollection">
+    <summary>Holds the horizontal and vertical size classes, as well as the user interface idiom and the display scale.</summary>
+    <remarks>
+      <para>
+	This class holds the elements describing the user interface
+	traits to use to render a view or view controller.  This
+	contains components like the size class for the vertical or
+	horizontal orientations (which is either compact or regular)
+	as well as the user interface idiom (iPad or iPhone form
+	factor) as well as the display scale.
+
+      </para>
+      <para>
+	This is typically used by developers when implementing their
+	own <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=T:UIKIt.UIViewController&amp;scope=Xamarin" title="T:UIKIt.UIViewController">T:UIKIt.UIViewController</a></format> as well
+	by a handful of classes that are UITraitCollection aware, like
+	<format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=T:UIKIt.UIImage&amp;scope=Xamarin" title="T:UIKIt.UIImage">T:UIKIt.UIImage</a></format> and <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=T:UIKIt.UIImageAsset&amp;scope=Xamarin" title="T:UIKIt.UIImageAsset">T:UIKIt.UIImageAsset</a></format>.
+
+      </para>
+    </remarks>
+    
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/UITraitSet_ClassReference/index.html">Apple documentation for <c>UITraitCollection</c></related>
+  </Docs>
+</Documentation>

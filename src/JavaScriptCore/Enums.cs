@@ -12,6 +12,7 @@ using ObjCRuntime;
 
 namespace JavaScriptCore {
 	// untyped enum -> JSValueRef.h
+	/// <summary>An enumeration whose values specify JavaScript types, including <c>Object</c> and <c>undefined</c>.</summary>
 	public enum JSType {
 		Undefined,
 		Null,
@@ -25,6 +26,7 @@ namespace JavaScriptCore {
 	}
 
 	// typedef unsigned -> JSObjectRef.h
+	/// <summary>Enumerates attributes of properties.</summary>
 	[Flags]
 	public enum JSPropertyAttributes : uint {
 		None = 0,
@@ -34,6 +36,7 @@ namespace JavaScriptCore {
 	}
 
 	// typedef unsigned -> JSObjectRef.h
+	/// <summary>Enumerates class attributes.</summary>
 	[Flags]
 	public enum JSClassAttributes : uint {
 		None = 0,

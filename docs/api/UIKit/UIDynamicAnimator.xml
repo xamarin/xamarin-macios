@@ -1,0 +1,74 @@
+<Documentation>
+  <Docs DocId="T:UIKit.UIDynamicAnimator">
+    <summary>Coordinates the UIKit Dynamics of a set of <see cref="T:UIKit.IUIDynamicItem" />s and <see cref="T:UIKit.UIDynamicBehavior" />s.</summary>
+    <remarks>
+      <para>
+	The dynamic animator is responsible for coordinating physics
+	simulations attached to a UIView.  These physics simulations
+	are implemented as subclasses of the <see cref="T:UIKit.UIDynamicBehavior" /> class, and
+	include various predefined simulations for gravity, collision
+	detection, attaching, snapping, forces and controling item
+	properties.
+
+      </para>
+      <para>
+        <see cref="T:UIKit.UIDynamicAnimator" /> It provides the overall context for managing the physics
+	simulation attached to a UIView. Additionally, it defines the
+	coordinate system for the dynamics and wraps the underlying
+	animation engine. Finally, it keeps track of the <see cref="T:UIKit.UIDynamicBehavior" />s and <see cref="T:UIKit.IUIDynamicItem" /> that define the
+	particular behaviors and items for which dynamics are desired.
+	</para>
+      <para>
+	Adding behaviors to a dynamic animator will cause the behavior
+	to run as part of the physics simulation that UIKit runs.  To
+	stop a behavior from running (and be part of the simulation),
+	you must remove the behavior from the dynamic animator (use
+	<see cref="M:UIKit.UIDynamicAnimator.RemoveBehavior(UIKit.UIDynamicBehavior)" /> or <see cref="M:UIKit.UIDynamicAnimator.RemoveAllBehaviors" />.
+      </para>
+      <para>It is the application developer's responsibility to create a configuration that can be solved by the physics-like behavior of UI Dynamics.</para>
+      <para>The following example shows how you can add a couple of behaviors to an animator:</para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+public override void ViewDidLoad ()
+{
+	base.ViewDidLoad ();
+
+	// Create a dynamic animator for the specified UIView
+	// in this case, the property "View" of UIViewController
+	//
+	animator = new UIDynamicAnimator (View);
+	
+	// Creates two dynamic behaviors
+
+	// Create a gravity behavior that operates on the `square' UIView
+	var gravityBehavior = new UIGravityBehavior (square);
+
+	// Create a collision behavior that operates on the same `square' UIVew
+	var collisionBehavior = new UICollisionBehavior (square) {
+		TranslatesReferenceBoundsIntoBoundary = true
+	};
+
+	// Detect collision, hook up to the events raised by that behavior
+	collisionBehavior.BeganBoundaryContact += BeganContact;
+	collisionBehavior.EndedBoundaryContact += EndedContact;
+
+	// Add the two behaviors to the dynamic animator
+	animator.AddBehaviors (gravityBehavior, collisionBehavior);
+
+	// The simulation will start running
+}
+]]></code>
+      </example>
+      <para>
+	These are the predefined behaviors that extend the <see cref="T:UIKit.UIDynamicBehavior" /> class:
+	<see cref="T:UIKit.UIAttachmentBehavior" />,
+	<see cref="T:UIKit.UICollisionBehavior" />,
+	<see cref="T:UIKit.UIDynamicItemBehavior" />,
+	<see cref="T:UIKit.UIGravityBehavior" />,
+	<see cref="T:UIKit.UIPushBehavior" /> and
+	<see cref="T:UIKit.UISnapBehavior" />.
+      </para>
+    </remarks>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIDynamicAnimator_Class/index.html">Apple documentation for <c>UIDynamicAnimator</c></related>
+  </Docs>
+</Documentation>

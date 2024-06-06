@@ -1,0 +1,11 @@
+<Documentation>
+  <Docs DocId="T:SpriteKit.SKTileGroup">
+    <summary>A collection of related <see cref="T:SpriteKit.SKTileDefinition" /> objects.</summary>
+    <remarks>
+      <para>
+      A <see cref="T:SpriteKit.SKTileSet" /> contains one or more <see cref="T:SpriteKit.SKTileGroup" /> objects. An <see cref="T:SpriteKit.SKTileGroup" /> may contain a single <see cref="T:SpriteKit.SKTileDefinition" /> (use <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=C:SpriteKit.SKTileGroup.SKTileGroup (SpriteKit.SKTileDefinition)&amp;scope=Xamarin" title="C:SpriteKit.SKTileGroup.SKTileGroup (SpriteKit.SKTileDefinition)">C:SpriteKit.SKTileGroup.SKTileGroup (SpriteKit.SKTileDefinition)</a></format> or <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=M:SpriteKit.SKTileGroup.Create(SKTileDefinition)&amp;scope=Xamarin" title="M:SpriteKit.SKTileGroup.Create(SKTileDefinition)">M:SpriteKit.SKTileGroup.Create(SKTileDefinition)</a></format>) or may contain an array of <see cref="T:SpriteKit.SKTileGroupRule" /> objects that define placement rules for tiles.
+      </para>
+    </remarks>
+    <related type="externalDocumentation" href="https://developer.apple.com/reference/SpriteKit/SKTileGroup">Apple documentation for <c>SKTileGroup</c></related>
+  </Docs>
+</Documentation>

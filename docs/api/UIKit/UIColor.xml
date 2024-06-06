@@ -1,0 +1,24 @@
+<Documentation>
+  <Docs DocId="T:UIKit.UIColor">
+    <summary>Colors and Patterns as used in MonoTouch.UIKit.</summary>
+    <remarks>
+      <para> 
+	Basic representation for colors in UIKit.  UIColors can
+	be created from various color representations as well as
+	encoding an alpha transparency channel.  In addition to solid
+	or transparent colors, it is possible to create a UIColor
+	instance from an image, and use the resulting UIColor as a
+	brush whenever a UIKit UIColor is used.</para>
+      <para>
+	  In addition to providing various constructors and some
+	  common colors, the following colors represent system colors:
+	  <see cref="P:UIKit.UIColor.LightTextColor" />, <see cref="P:UIKit.UIColor.DarkTextColor" />, <see cref="P:UIKit.UIColor.GroupTableViewBackgroundColor" />,
+	  <see cref="P:UIKit.UIColor.ViewFlipsideBackgroundColor" />,
+	  <see cref="P:UIKit.UIColor.ScrollViewTexturedBackgroundColor" />
+	  and <see cref="P:UIKit.UIColor.UnderPageBackgroundColor" />.
+	</para>
+      <para tool="threads">The members of this class can be used from a background thread.</para>
+    </remarks>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIColor_Class/index.html">Apple documentation for <c>UIColor</c></related>
+  </Docs>
+</Documentation>

@@ -1,0 +1,40 @@
+<Documentation>
+  <Docs DocId="T:UIKit.UIImage">
+    <summary>Image representation in UIKit, with support for loading, saving and manipulating images.</summary>
+    <remarks>
+      <para>
+	Image objects do not provide direct access to the underlying
+	image - they are immutable. The methods <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=M:UIKit.UIImage.AsJPEG()&amp;scope=Xamarin" title="M:UIKit.UIImage.AsJPEG()">M:UIKit.UIImage.AsJPEG()</a></format> or <see cref="M:UIKit.UIImage.AsPNG" /> will provide the
+	underlying image data as a JPEG or PNG.
+      </para>
+      <para>
+	To avoid issues with excessive memory use, UIImages objects
+	should not be larger than 1024x1024 in size. Code-based
+	manipulations such as resizing are not subject to this
+	restriction.
+      </para>
+      <para>
+	It is possible that the system may purge UIImage objects to
+	free up memory. If the UIImage is required later on by an
+	application, it will be loaded again from its source file.
+      </para>
+      <para>
+	The following image formats are supported by the UIImage
+	class:
+
+      <list type="bullet"><item><term>.tiff</term></item><item><term>.jpg, .jpeg</term></item><item><term>.gif</term></item><item><term>.bmp</term></item><item><term>.ico</term></item><item><term>.cur</term></item><item><term>.xbm</term></item></list></para>
+      <para>
+	Starting with iOS 8, the <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=M:UIKIt.UIImage.FromBundle(System.String,Foundation.NSBundle,UIKIt.UITraitCollection)&amp;scope=Xamarin" title="M:UIKIt.UIImage.FromBundle(System.String,Foundation.NSBundle,UIKIt.UITraitCollection)">M:UIKIt.UIImage.FromBundle(System.String,Foundation.NSBundle,UIKIt.UITraitCollection)</a></format>
+	method can be used to load a UIImage that takes into
+	consideration a <see cref="T:UIKit.UITraitCollection" />.  This can
+	automatically load the proper image for the specified
+	resolution.
+
+      </para>
+      <para>Most of the members of this class can be used from a background thread, with a couple of exceptions (FromBundle methods that retrieve images from the bundle and use the built-in memory cache).</para>
+    </remarks>
+    <related type="recipe" href="https://developer.xamarin.com/ios/Recipes/Media/Images/Merge_Images">Merge Images</related>
+    <related type="recipe" href="https://developer.xamarin.com/ios/Recipes/Media/Images/Rotate_An_Image">Rotate An Image</related>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIImage_Class/index.html">Apple documentation for <c>UIImage</c></related>
+  </Docs>
+</Documentation>

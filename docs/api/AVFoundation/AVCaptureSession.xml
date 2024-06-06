@@ -1,0 +1,185 @@
+<Documentation>
+  <Docs DocId="T:AVFoundation.AVCaptureSession">
+    <summary>Coordinates a recording session.</summary>
+    <remarks>
+      <para>
+	The AVCaptureSession object coordinates the recording of video
+	or audio input and passing the recorded information to one or
+	more output objects.  As the iOS line has advanced, different devices have gained multiple capture devices (in particular, gained multiple cameras). Application developers can use <see cref="M:AVFoundation.AVCaptureDevice.DefaultDeviceWithMediaType(System.String)" /> or <see cref="M:AVFoundation.AVCaptureDevice.DevicesWithMediaType(System.String)" />, passing in the constants defined in <see cref="T:AVFoundation.AVMediaType" />.
+      </para>
+      <para>
+        Configuring capture consists of setting the <see cref="P:AVFoundation.AVCaptureSession.Inputs" /> and <see cref="P:AVFoundation.AVCaptureSession.Outputs" /> properties of the <see cref="T:AVFoundation.AVCaptureSession" />. Notice that multiple <see cref="T:AVFoundation.AVCaptureInput" />s and <see cref="T:AVFoundation.AVCaptureOutput" />s are possible. For instance, to capture both audio and video, one would use two capture inputs:</para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+var session = new AVCaptureSession();
+
+var camera = AVCaptureDevice.DefaultDeviceWithMediaType(AVMediaType.Video);
+var mic = AVCaptureDevice.DefaultDeviceWithMediaType(AVMediaType.Audio);
+if(camera == null || mic == null){
+    throw new Exception("Can't find devices");
+}
+
+var cameraInput = AVCaptureDeviceInput.FromDevice (camera);
+//info.plist _must_ contain NSMicrophoneUsageDescription key
+var micInput = AVCaptureDeviceInput.FromDevice (mic);
+
+if(session.CanAddInput(cameraInput)){
+    session.AddInput(cameraInput);
+}
+if(session.CanAddInput(micInput)){
+   session.AddInput(micInput);
+}
+          ]]></code>
+      </example>
+      <para>Note that permission to access the microphone (and in some regions, the camera) must be given by the user, requiring the developer to add the <c>NSMicrophoneUsageDescription</c> to the application's info.plist file.</para>
+      <para>Video can be captured directly to file with <see cref="T:AVFoundation.AVCaptureMovieFileOutput" />. However, this class has no display-able data and cannot be used simultaneously with <see cref="T:AVFoundation.AVCaptureVideoDataOutput" />. Instead, application developers can use it in combination with a <see cref="T:AVFoundation.AVCaptureVideoPreviewLayer" />, as shown in the following example:</para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+var layer = new AVCaptureVideoPreviewLayer (session);
+layer.VideoGravity = AVLayerVideoGravity.ResizeAspectFill;
+
+var cameraView = new UIView ();
+cameraView.Layer.AddSublayer (layer);
+
+var filePath = Path.Combine (Path.GetTempPath (), "temporary.mov");
+var fileUrl = NSUrl.FromFilename (filePath);
+
+var movieFileOutput = new AVCaptureMovieFileOutput ();
+var recordingDelegate = new MyRecordingDelegate ();
+session.AddOutput (movieFileOutput);
+
+movieFileOutput.StartRecordingToOutputFile (fileUrl, recordingDelegate);
+          ]]></code>
+      </example>
+      <para>Application developers should note that the function <see cref="M:AVFoundation.AVCaptureFileOutput.StopRecording" /> is asynchronous; developers should wait until the <see cref="M:AVFoundation.AVCaptureFileOutputRecordingDelegate.FinishedRecording(AVFoundation.AVCaptureFileOutput,Foundation.NSUrl,Foundation.NSObject[],Foundation.NSError)" /> delegate method before manipulating the file (for instance, before saving it to the Photos album with <see cref="M:UIKit.UIVideo.SaveToPhotosAlbum(System.String,UIKit.UIVideo.SaveStatus)" /> or <see cref="M:AssetsLibrary.ALAssetsLibrary.WriteVideoToSavedPhotosAlbumAsync(Foundation.NSUrl)" />).</para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+public class MyRecordingDelegate : AVCaptureFileOutputRecordingDelegate
+{
+    public override void FinishedRecording (AVCaptureFileOutput captureOutput, NSUrl outputFileUrl, NSObject [] connections, NSError error)
+    {
+        if (UIVideo.IsCompatibleWithSavedPhotosAlbum (outputFileUrl.Path))
+        {
+            var library = new ALAssetsLibrary ();
+            library.WriteVideoToSavedPhotosAlbum (outputFileUrl, (path, e2) =>
+            {
+                if (e2 != null)
+                {
+                    new UIAlertView ("Error", e2.ToString (), null, "OK", null).Show ();
+                }
+                else
+                {
+                    new UIAlertView ("Saved", "Saved to Photos", null, "OK", null).Show ();
+                    File.Delete (outputFileUrl.Path);
+                }
+            });
+        }
+        else
+        {
+            new UIAlertView ("Incompatible", "Incompatible", null, "OK", null).Show ();
+        }
+
+    }
+}          ]]></code>
+      </example>
+      <para>
+	Application developers can configure one or more output ports for the
+	captured data, and these can be still frames, video frames
+	with timing information, audio samples, quicktime movie files, or can be rendered directly to a CoreAnimation layer.
+
+      </para>
+      <para>
+	Once the input and output components of
+	the session are set, the actual processing is begun by calling the
+	<see cref="M:AVFoundation.AVCaptureSession.StartRunning" />
+	method.
+
+      </para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+
+void SetupCapture ()
+	/ configure the capture session for low resolution, change this if your code
+	// can cope with more data or volume
+	session = new AVCaptureSession () {
+	        SessionPreset = AVCaptureSession.PresetMedium
+	};
+	
+	// create a device input and attach it to the session
+	var captureDevice = AVCaptureDevice.DefaultDeviceWithMediaType (AVMediaType.Video);
+	var input = AVCaptureDeviceInput.FromDevice (captureDevice);
+	if (input == null){
+	        Console.WriteLine ("No video input device");
+	        return false;
+	}
+	session.AddInput (input);
+	
+	// create a VideoDataOutput and add it to the sesion
+	var output = new AVCaptureVideoDataOutput () {
+	        VideoSettings = new AVVideoSettings (CVPixelFormatType.CV32BGRA),
+	
+	        // If you want to cap the frame rate at a given speed, in this sample: 15 frames per second
+	        MinFrameDuration = new CMTime (1, 15)
+	};
+	
+	// configure the output
+	queue = new MonoTouch.CoreFoundation.DispatchQueue ("myQueue");
+	outputRecorder = new OutputRecorder ();
+	output.SetSampleBufferDelegateAndQueue (outputRecorder, queue);
+	session.AddOutput (output);
+	
+	session.StartRunning ();
+}
+
+public class OutputRecorder : AVCaptureVideoDataOutputSampleBufferDelegate {
+        public override void DidOutputSampleBuffer (AVCaptureOutput captureOutput, CMSampleBuffer sampleBuffer, AVCaptureConnection connection)
+        {
+                try {
+                        var image = ImageFromSampleBuffer (sampleBuffer);
+
+                        // Do something with the image, we just stuff it in our main view.
+                        AppDelegate.ImageView.BeginInvokeOnMainThread (delegate {
+                                AppDelegate.ImageView.Image = image;
+                        });
+
+                        //
+                        // Although this looks innocent "Oh, he is just optimizing this case away"
+                        // this is incredibly important to call on this callback, because the AVFoundation
+                        // has a fixed number of buffers and if it runs out of free buffers, it will stop
+                        // delivering frames.
+                        //
+                        sampleBuffer.Dispose ();
+                } catch (Exception e){
+                        Console.WriteLine (e);
+                }
+        }
+
+        UIImage ImageFromSampleBuffer (CMSampleBuffer sampleBuffer)
+        {
+                // Get the CoreVideo image
+                using (var pixelBuffer = sampleBuffer.GetImageBuffer () as CVPixelBuffer){
+                        // Lock the base address
+                        pixelBuffer.Lock (0);
+                        // Get the number of bytes per row for the pixel buffer
+                        var baseAddress = pixelBuffer.BaseAddress;
+                        int bytesPerRow = pixelBuffer.BytesPerRow;
+                        int width = pixelBuffer.Width;
+                        int height = pixelBuffer.Height;
+                        var flags = CGBitmapFlags.PremultipliedFirst | CGBitmapFlags.ByteOrder32Little;
+                        // Create a CGImage on the RGB colorspace from the configured parameter above
+                        using (var cs = CGColorSpace.CreateDeviceRGB ())
+                        using (var context = new CGBitmapContext (baseAddress,width, height, 8, bytesPerRow, cs, (CGImageAlphaInfo) flags))
+                        using (var cgImage = context.ToImage ()){
+                                pixelBuffer.Unlock (0);
+                                return UIImage.FromImage (cgImage);
+                        }
+                }
+        }
+}
+
+	]]></code>
+      </example>
+    </remarks>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/AVFoundation/Reference/AVCaptureSession_Class/index.html">Apple documentation for <c>AVCaptureSession</c></related>
+  </Docs>
+</Documentation>
