@@ -21,6 +21,7 @@ using UserNotifications;
 
 namespace UserNotificationsUI {
 
+	/// <summary>Enumerates the kinds of media control button sets that the system will provide for playable notification content.</summary>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[Unavailable (PlatformName.WatchOS)]
 	[Unavailable (PlatformName.TvOS)]
@@ -31,6 +32,7 @@ namespace UserNotificationsUI {
 		Overlay
 	}
 
+	/// <summary>Enumerates preferred notification responses.</summary>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[Unavailable (PlatformName.WatchOS)]
 	[Unavailable (PlatformName.TvOS)]
@@ -43,6 +45,7 @@ namespace UserNotificationsUI {
 
 	interface IUNNotificationContentExtension { }
 
+	/// <summary>Interface that contains the mandatory methods, if any, for the <see cref="T:UserNotifications.UNNotificationContent" /> protocol, which is required for displaying notification content from a view controller's view with custom UI.</summary>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[Unavailable (PlatformName.WatchOS)]
 	[Unavailable (PlatformName.TvOS)]
@@ -72,6 +75,7 @@ namespace UserNotificationsUI {
 		void PauseMedia ();
 	}
 
+	/// <summary>Content extension for presenting notification UI, including UI for playable content.</summary>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[Unavailable (PlatformName.WatchOS)]
 	[Unavailable (PlatformName.TvOS)]

@@ -25,6 +25,7 @@ using NativeHandle = System.IntPtr;
 
 namespace CoreNFC {
 
+	/// <summary>Enumerates errors relating to NFC tag detection and reading.</summary>
 	[MacCatalyst (13, 1)]
 	[ErrorDomain ("NFCErrorDomain")]
 	[Native]
@@ -58,6 +59,7 @@ namespace CoreNFC {
 	}
 
 	//[NoTV, NoWatch, NoMac]
+	/// <summary>Enumerates the kinds of NFC tags that can be read (currently only ISO-15693).</summary>
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum NFCTagType : ulong {
@@ -74,6 +76,7 @@ namespace CoreNFC {
 	}
 
 	//[NoTV, NoWatch, NoMac]
+	/// <summary>Enumerates the kinds of content-type available to <see cref="T:CoreNFC.NFCNdefPayload" /> objects.</summary>
 	[MacCatalyst (13, 1)]
 	public enum NFCTypeNameFormat : byte { // uint8_t
 		Empty = 0x00,
@@ -86,6 +89,7 @@ namespace CoreNFC {
 	}
 
 	//[NoTV, NoWatch, NoMac]
+	/// <summary>A <see cref="T:CoreNFC.NFCReaderSession" /> for reading ISO-15693 vicinity cards.</summary>
 	[Deprecated (PlatformName.iOS, 17, 0)]
 	[Deprecated (PlatformName.MacCatalyst, 17, 0)]
 	[MacCatalyst (13, 1)]
@@ -109,6 +113,7 @@ namespace CoreNFC {
 	}
 
 	//[NoTV, NoWatch, NoMac]
+	/// <summary>Subclass of <see cref="T:CoreNFC.NFCTagCommandConfiguration" /> that contains further configuration for commands to ISO-15693 tags.</summary>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NFCTagCommandConfiguration), Name = "NFCISO15693CustomCommandConfiguration")]
 	interface NFCIso15693CustomCommandConfiguration {
@@ -157,6 +162,7 @@ namespace CoreNFC {
 	delegate void NFCIso15693TagGetSystemInfoAndUidCallback (NSData uid, nint dsfid, nint afi, nint blockSize, nint blockCount, nint icReference, NSError error);
 
 	//[NoTV, NoWatch, NoMac]
+	/// <summary>Implements <see cref="T:CoreNFC.INFCTag" /> with data associated with an ISO-15693 vicinity card.</summary>
 	[MacCatalyst (13, 1)]
 	[Protocol (Name = "NFCISO15693Tag")]
 	interface NFCIso15693Tag : NFCTag, NFCNdefTag {
@@ -423,6 +429,7 @@ namespace CoreNFC {
 
 	}
 
+	/// <summary>An element that helps comprise an <see cref="T:CoreNFC.NFCNdefMessage" />.</summary>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject), Name = "NFCNDEFPayload")]
 	[DisableDefaultCtor]
@@ -483,6 +490,7 @@ namespace CoreNFC {
 		NativeHandle Constructor (NFCTypeNameFormat format, NSData type, NSData identifier, NSData payload, nuint chunkSize);
 	}
 
+	/// <summary>An NDEF message, consisting of an array of <see cref="T:CoreNFC.NFCNdefPayload" /> objects.</summary>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject), Name = "NFCNDEFMessage")]
 	[DisableDefaultCtor]
@@ -509,8 +517,10 @@ namespace CoreNFC {
 		nuint Length { get; }
 	}
 
+	/// <summary>Defines the delegate-object interface for <see cref="T:CoreNFC.NFCNdefReaderSession" /> objects.</summary>
 	interface INFCNdefReaderSessionDelegate { }
 
+	/// <summary>Delegate object for <see cref="T:CoreNFC.NFCNdefReaderSession" /> objects, allowing the developer to respond to detection of NFC tags and session invalidation.</summary>
 	[MacCatalyst (13, 1)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject), Name = "NFCNDEFReaderSessionDelegate")]
@@ -535,6 +545,7 @@ namespace CoreNFC {
 		void DidBecomeActive (NFCNdefReaderSession session);
 	}
 
+	/// <summary>Subclass of <see cref="T:CoreNFC.NFCReaderSession" /> that works with NFC Data Exchange Format (NDEF) tags.</summary>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NFCReaderSession), Name = "NFCNDEFReaderSession")]
 	[DisableDefaultCtor]
@@ -560,6 +571,7 @@ namespace CoreNFC {
 		void ConnectToTag (INFCNdefTag tag, Action<NSError> completionHandler);
 	}
 
+	/// <summary>Abstract class implementing <see cref="T:CoreNFC.INFCReaderSessionContract" /> and base class for <see cref="T:CoreNFC.NFCNdefReaderSession" />. A session for detecting and reading NFC tags.</summary>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -580,6 +592,7 @@ namespace CoreNFC {
 
 	interface INFCReaderSessionContract { }
 
+	/// <summary>Interface defining the methods for an NFC detection- and reading- session.</summary>
 	[MacCatalyst (13, 1)]
 	[Protocol (Name = "NFCReaderSession")]
 	interface NFCReaderSessionContract {
@@ -609,9 +622,11 @@ namespace CoreNFC {
 		void InvalidateSession (string errorMessage);
 	}
 
+	/// <summary>The delegate-object interface for <see cref="T:CoreNFC.NFCReaderSession" /> objects.</summary>
 	interface INFCReaderSessionDelegate { }
 
 	//[NoTV, NoWatch, NoMac]
+	/// <summary>Delegate object for <see cref="T:CoreNFC.NFCReaderSession" /> objects.</summary>
 	[MacCatalyst (13, 1)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
@@ -634,6 +649,7 @@ namespace CoreNFC {
 
 	interface INFCTag { }
 
+	/// <summary>Interface defining the common features of all NFC tags.</summary>
 	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface NFCTag : NSSecureCoding, NSCopying {
@@ -700,6 +716,7 @@ namespace CoreNFC {
 	}
 
 	//[NoTV, NoWatch, NoMac]
+	/// <summary>Parameters for sending a command to an NFC tag.</summary>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface NFCTagCommandConfiguration : NSCopying {

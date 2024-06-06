@@ -1,0 +1,36 @@
+<Documentation>
+  <Docs DocId="T:MediaPlayer.MPMediaQuerySection">
+    <summary>A subset of the values returned by a <see cref="T:MediaPlayer.MPMediaQuery" />, as specified by the <see cref="P:MediaPlayer.MPMediaQuery.ItemSections" /> or <see cref="P:MediaPlayer.MPMediaQuery.CollectionSections" /> properties.</summary>
+    <remarks>
+      <para>
+        <see cref="T:MediaPlayer.MPMediaQuerySection" />s represent a subset of results of a <see cref="T:MediaPlayer.MPMediaQuery" />. You can control the grouping by specifying the <see cref="P:MediaPlayer.MPMediaQuery.GroupingType" /> as shown in the following example, which outputs the songs from albums whose title's start with the letter 'S':
+      </para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+          var mq = new MPMediaQuery();
+          mq.GroupingType = MPMediaGrouping.Album;
+          
+          var value = NSNumber.FromInt32((int)MPMediaType.Music);
+          var predicate = MPMediaPropertyPredicate.PredicateWithValue(value, MPMediaItem.MediaTypeProperty);
+          mq.AddFilterPredicate(predicate);
+          var items = mq.Items;
+          var secs = mq.ItemSections;
+          
+          if(secs != null)
+          {
+             var songsFromSAlbums = 
+                from sSection in 
+                from sec in secs where sec.Title == "S" select sec
+                from song in items.Skip(sSection.Range.Location).Take(sSection.Range.Length) select song;
+             foreach(var song in songsFromSAlbums)
+             {
+                Console.WriteLine(song.Title + ": " + song.AlbumTitle);
+             }
+          }
+          ]]></code>
+      </example>
+    </remarks>
+    
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/MediaPlayer/Reference/MPMediaQuerySection_ClassReference/index.html">Apple documentation for <c>MPMediaQuerySection</c></related>
+  </Docs>
+</Documentation>

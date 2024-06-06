@@ -29,8 +29,15 @@ namespace UIKit {
 #else
 namespace FileProvider {
 #endif
+	/// <summary>Delegate for handling a thumbnail fetch operation.</summary>
 	delegate void NSFileProviderExtensionFetchThumbnailsHandler (NSString identifier, [NullAllowed] NSData imageData, [NullAllowed] NSError error);
 
+	/// <summary>Subclasses of <see cref="T:UIKit.NSFileProviderExtension" /> implement the move and open functionality for extensions of type <see cref="T:UIKit.UIDocumentPickerViewController" />.</summary>
+	///     <remarks>
+	///       <para>(More documentation for this node is coming)</para>
+	///       <para tool="threads">The members of this class can be used from a background thread.</para>
+	///     </remarks>
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/NSFileProviderExtension_Class/index.html">Apple documentation for <c>NSFileProviderExtension</c></related>
 	[NoWatch]
 	[NoTV]
 	[NoMac]
@@ -155,6 +162,7 @@ namespace FileProvider {
 
 namespace FileProvider {
 
+	/// <summary>Enumerates errors relating to providing files.</summary>
 	[Unavailable (PlatformName.MacCatalyst)]
 	[Advice ("This API is not available when using Catalyst on macOS.")]
 	[ErrorDomain ("NSFileProviderErrorDomain")]
@@ -192,6 +200,7 @@ namespace FileProvider {
 		PreserveDownloadedUserData = 2,
 	}
 
+	/// <summary>Defines constants regarding errors regarding keys of the file provider enumeration.</summary>
 	[Unavailable (PlatformName.MacCatalyst)]
 	[Advice ("This API is not available when using Catalyst on macOS.")]
 	[Static]
@@ -220,6 +229,7 @@ namespace FileProvider {
 		ulong Unranked { get; }
 	}
 
+	/// <summary>Uniquely identifies a File Provider-managed item.</summary>
 	[NoMacCatalyst]
 	[Static]
 	interface NSFileProviderItemIdentifier {
@@ -235,6 +245,7 @@ namespace FileProvider {
 		NSString TrashContainer { get; }
 	}
 
+	/// <summary>Defines the actions the user can perform within the document browser.</summary>
 	[MacCatalyst (13, 1)]
 	[Native]
 	[Flags]
@@ -290,6 +301,7 @@ namespace FileProvider {
 		DownloadEagerlyAndKeepDownloaded,
 	}
 
+	/// <summary>A batch of data to return from an enumerator.</summary>
 	[NoMacCatalyst]
 	[Static]
 	interface NSFileProviderPage {
@@ -311,6 +323,7 @@ namespace FileProvider {
 		NSData InitialPageSortedByDate { get; }
 	}
 
+	/// <summary>Partitions the file provider's data along user-meaningful lines, such as accounts or locations.</summary>
 	[Unavailable (PlatformName.MacCatalyst)]
 	[Advice ("This API is not available when using Catalyst on macOS.")]
 	[DisableDefaultCtor]
@@ -399,6 +412,7 @@ namespace FileProvider {
 
 	interface INSFileProviderChangeObserver { }
 
+	/// <summary>Observes changes and deletions of the enumerated files from a <see cref="T:FileProvider.INSFileProviderEnumerator" />.</summary>
 	[NoMacCatalyst]
 	[Protocol]
 	interface NSFileProviderChangeObserver {
@@ -426,6 +440,7 @@ namespace FileProvider {
 
 	interface INSFileProviderEnumerator { }
 
+	/// <summary>Enumerates items from an <see cref="T:FileProvider.INSFileProvider" />.</summary>
 	[NoMacCatalyst]
 	[Protocol]
 	interface NSFileProviderEnumerator {
@@ -445,6 +460,7 @@ namespace FileProvider {
 		void CurrentSyncAnchor (Action<NSData> completionHandler);
 	}
 
+	/// <summary>An item provided by an <see cref="T:FileProvider.INSFileProviderItem" />. (A type alias for <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=File%20Provider%20NSFile%20Provider%20Item%20Protocol&amp;scope=Xamarin" title="T:FileProvider.NSFileProviderItemProtocol">T:FileProvider.NSFileProviderItemProtocol</a></format>.)</summary>
 	interface INSFileProviderItem { }
 
 	[NoMacCatalyst]
@@ -588,6 +604,7 @@ namespace FileProvider {
 		NSFileProviderContentPolicy ContentPolicy { get; }
 	}
 
+	/// <summary>A shared object that is accessible from both the containing app and the extension.</summary>
 	[Unavailable (PlatformName.MacCatalyst)]
 	[Advice ("This API is not available when using Catalyst on macOS.")]
 	[BaseType (typeof (NSObject))]
@@ -809,6 +826,7 @@ namespace FileProvider {
 
 	interface INSFileProviderServiceSource { }
 
+	/// <summary>Provides a communication channel between host applications and file provider extensions.</summary>
 	[Unavailable (PlatformName.MacCatalyst)]
 	[Advice ("This API is not available when using Catalyst on macOS.")]
 	[Protocol]

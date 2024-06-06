@@ -1,0 +1,52 @@
+<Documentation>
+  <Docs DocId="T:CoreImage.CICircleSplashDistortion">
+    <summary>Makes the pixels at the circumference of a circle spread out to the boundaries of the image.</summary>
+    <remarks>
+      <para>The following example shows this filter in use</para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+// Create the CIImage from a file
+CIImage heron = CIImage.FromCGImage (UIImage.FromFile ("heron.jpg").CGImage);
+
+// Create a CICircleSplashDistortion filter with the input image
+var circle_splash_distortion = new CICircleSplashDistortion () {
+	Image = heron,
+};
+
+// Get the distorted image from the filter
+var output = new CICrop {
+	Image = circle_splash_distortion.OutputImage,
+	Rectangle = new CIVector (0, 0, heron.Extent.Width, heron.Extent.Height)
+}.OutputImage;
+
+// To render the results, we need to create a context, and then
+// use one of the context rendering APIs, in this case, we render the
+// result into a CoreGraphics image, which is merely a useful representation
+//
+var context = CIContext.FromOptions (null);
+
+var cgimage = context.CreateCGImage (output, output.Extent);
+
+// The above cgimage can be added to a screen view, for example, this
+// would add it to a UIImageView on the screen:
+myImageView.Image = UIImage.FromImage (cgimage);
+        ]]></code>
+      </example>
+      <para>
+        With the following image input:
+      </para>
+      <para>
+        <img href="~/CoreImage/_images/heron.jpg" alt="Photograph of a heron." />
+      </para>
+      <para>
+         Produces the following output:
+      </para>
+      <para>
+        <img href="~/CoreImage/_images/circle_splash_distortion.png" alt="Result of applying the filter." />
+      </para>
+      <para>
+      	"canon" © 2012 cuatrok77 hernandez, used under a Creative Commons Attribution-ShareAlike license: https://creativecommons.org/licenses/by-sa/3.0/ 
+      </para>
+    </remarks>
+  </Docs>
+</Documentation>

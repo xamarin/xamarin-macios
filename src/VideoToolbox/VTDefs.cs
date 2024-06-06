@@ -15,6 +15,7 @@ using ObjCRuntime;
 namespace VideoToolbox {
 
 	// untyped enum -> VTErrors.h
+	/// <summary>Possible VideoToolbox API errors.</summary>
 	public enum VTStatus {
 		Ok,
 		PropertyNotSupported = -12900,
@@ -64,6 +65,7 @@ namespace VideoToolbox {
 	}
 
 	// uint32_t -> VTErrors.h
+	/// <summary>Flags to control encoder in a decompression session</summary>
 	[Flags]
 	public enum VTDecodeFrameFlags : uint {
 		EnableAsynchronousDecompression = 1 << 0,
@@ -73,6 +75,7 @@ namespace VideoToolbox {
 	}
 
 	// UInt32 -> VTErrors.h
+	/// <summary>Flags for status reporting in decoding sessions.</summary>
 	[Flags]
 	public enum VTDecodeInfoFlags : uint {
 		Asynchronous = 1 << 0,
@@ -81,6 +84,7 @@ namespace VideoToolbox {
 	}
 
 	// UInt32 -> VTErrors.h
+	/// <summary>Encoding status flags.</summary>
 	[Flags]
 	public enum VTEncodeInfoFlags : uint {
 		Asynchronous = 1 << 0,
@@ -88,12 +92,14 @@ namespace VideoToolbox {
 	}
 
 	// uint32_t -> VTCompressionSession.h
+	/// <summary>Flags to control encoder in multi pass compression sessions</summary>
 	[Flags]
 	public enum VTCompressionSessionOptionFlags : uint {
 		BeginFinalPass = 1 << 0
 	}
 
 	// Strongly Typed VTProfileLevelKey
+	/// <summary>Strongly typed set of options used by <see cref="P:VideoToolbox.VTCompressionProperties.ProfileLevel" />.</summary>
 	public enum VTProfileLevel {
 		Unset,
 		H264Baseline13,
@@ -151,6 +157,7 @@ namespace VideoToolbox {
 	}
 
 	// Strongly Typed VTH264EntropyModeKeys
+	/// <summary>Strongly typed set of options used by <see cref="P:VideoToolbox.VTCompressionProperties.H264EntropyMode" />.</summary>
 	public enum VTH264EntropyMode {
 		Unset,
 		Cavlc,
@@ -158,12 +165,14 @@ namespace VideoToolbox {
 	}
 
 	// Strongly Typed kVTCompressionPropertyKey_FieldCount
+	/// <summary>Frame encoding options.</summary>
 	public enum VTFieldCount {
 		Progressive = 1,
 		Interlaced = 2
 	}
 
 	// Strongly Typed kVTCompressionPropertyKey_FieldDetail
+	/// <summary>Field ordering options.</summary>
 	public enum VTFieldDetail {
 		Unset,
 		TemporalTopFirst,
@@ -173,6 +182,7 @@ namespace VideoToolbox {
 	}
 
 	// Strongly Typed kVTCompressionPropertyKey_ColorPrimaries
+	/// <summary>Represents color primaries in compressed sample buffers</summary>
 	public enum VTColorPrimaries {
 		Unset,
 		ItuR7092,
@@ -182,6 +192,7 @@ namespace VideoToolbox {
 	}
 
 	// Strongly Typed kVTCompressionPropertyKey_TransferFunction
+	/// <summary>Strongly typed set of options used by <see cref="P:VideoToolbox.VTCompressionProperties.TransferFunction" />.</summary>
 	public enum VTTransferFunction {
 		Unset,
 		ItuR7092,
@@ -190,6 +201,7 @@ namespace VideoToolbox {
 	}
 
 	// Strongly Typed kVTCompressionPropertyKey_YCbCrMatrix
+	/// <summary>Colorimetry for compressed content.</summary>
 	public enum VTYCbCrMatrix {
 		Unset,
 		ItuR7092,
@@ -198,6 +210,7 @@ namespace VideoToolbox {
 	}
 
 	// Strongly Typed kVTDecompressionPropertyKey_FieldMode
+	/// <summary>Decoder field mode options.</summary>
 	public enum VTFieldMode {
 		Unset,
 		BothFields,
@@ -208,6 +221,7 @@ namespace VideoToolbox {
 	}
 
 	// Strongly Typed kVTDecompressionPropertyKey_DeinterlaceMode
+	/// <summary>Deinterlacing techniques.</summary>
 	public enum VTDeinterlaceMode {
 		Unset,
 		VerticalFilter,
@@ -215,6 +229,7 @@ namespace VideoToolbox {
 	}
 
 	// Strongly Typed kVTDecompressionPropertyKey_OnlyTheseFrames
+	/// <summary>Strongly typed set of options used by <see cref="P:VideoToolbox.VTDecompressionProperties.OnlyTheseFrames" />.</summary>
 	public enum VTOnlyTheseFrames {
 		Unset,
 		AllFrames,
@@ -224,6 +239,7 @@ namespace VideoToolbox {
 	}
 
 	// Strongly Typed kVTPropertyTypeKey
+	/// <summary>Strongly typed set of options.</summary>
 	public enum VTPropertyType {
 		Unset,
 		Enumeration,
@@ -232,6 +248,7 @@ namespace VideoToolbox {
 	}
 
 	// Strongly Typed kVTPropertyReadWriteStatusKey
+	/// <summary>Strongly typed set of options used by <see cref="P:VideoToolbox.VTPropertyOptions.ReadWriteStatus" />.</summary>
 	public enum VTReadWriteStatus {
 		Unset,
 		ReadOnly,
@@ -249,6 +266,7 @@ namespace VideoToolbox {
 		}
 	}
 
+	/// <summary>Image scaling options.</summary>
 	[MacCatalyst (13, 1)]
 	public enum VTScalingMode {
 		Unset,
@@ -258,6 +276,7 @@ namespace VideoToolbox {
 		Trim
 	}
 
+	/// <summary>Chroma downsampling techniques.</summary>
 	[MacCatalyst (13, 1)]
 	public enum VTDownsamplingMode {
 		Unset,

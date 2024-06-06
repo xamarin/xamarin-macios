@@ -1,0 +1,50 @@
+<Documentation>
+  <Docs DocId="T:CoreImage.CIRadialGradient">
+    <summary>Generates a gradient between two colors as if reflected on a sphere.</summary>
+    <remarks>
+      <para>The following example shows this filter in use</para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+var center = new CIVector(100, 100); // Default [150 150]
+var radGradient = new CIRadialGradient()
+{
+	Center = center,
+	Radius0 = 10F, // Default 5
+	Radius1 = 150F, // Default 100
+	Color0 = new CIColor(new CGColor(0, 255F, 0)), // Green
+	Color1 = new CIColor(new CGColor(0, 0, 0)) // Black
+};
+
+// The Generator Filters need to be cropped before they can be displayed
+var crop = new CICrop () 
+{ 
+ Image = radGradient.OutputImage,
+ // Create the Bounds based on the Size of the application Window. (UIWindow)
+ Rectangle = new CIVector (0, 0, window.Bounds.Width, window.Bounds.Height) 
+};		
+
+// Get the Gradient image from the crop filter.
+var output = crop.OutputImage;
+	
+// To render the results, we need to create a context, and then
+// use one of the context rendering APIs, in this case, we render the
+// result into a CoreGraphics image, which is merely a useful representation
+//
+var context = CIContext.FromOptions (null);
+
+var cgimage = context.CreateCGImage (output, output.Extent);
+
+// The above cgimage can be added to a screen view, for example, this
+// would add it to a UIImageView on the screen:
+myImageView.Image = UIImage.FromImage (cgimage);
+        ]]></code>
+      </example>
+      <para>
+         Produces the following output:
+      </para>
+      <para>
+        <img href="~/CoreImage/_images/RadialGradient.png" alt="Result of applying the filter." />
+      </para>
+    </remarks>
+  </Docs>
+</Documentation>

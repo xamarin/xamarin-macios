@@ -1,0 +1,13 @@
+<Documentation>
+  <Docs DocId="T:UIKit.UIAcceleration">
+    <summary>A class that stores the data from an acceleration event.</summary>
+    <remarks>
+      <para>
+      The iOS accelerometer (see <see cref="T:UIKit.UIAccelerometer" />) reports acceleration events as a triplet of vectors. Looking at the face of an iOS device, positive X is to the right, positive Y is to the top, and positive Z is towards the viewer. The value of each vector is a <see langword="double" /> whose units are g-force. 
+      </para>
+      <para>Application developers should not rely on the accuracy of a single acceleration event but rather should rather average or otherwise interpolate from a series of readings.</para>
+      <para>The <see cref="F:UIKit.UIEventSubtype.MotionShake" /> event subtype can be used to detect a shake gesture. (See <see cref="T:UIKit.UIEvent" />.)</para>
+    </remarks>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIAcceleration_Class/index.html">Apple documentation for <c>UIAcceleration</c></related>
+  </Docs>
+</Documentation>

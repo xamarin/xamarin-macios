@@ -4,6 +4,7 @@ using Foundation;
 
 namespace HomeKit {
 
+	/// <summary>Enumerates possible failures in Home Kit operations.</summary>
 	[MacCatalyst (14, 0)]
 	[Native ("HMErrorCode")]
 	public enum HMError : long {
@@ -120,6 +121,7 @@ namespace HomeKit {
 
 
 	// conveniance enum (ObjC uses NSString)
+	/// <summary>Enumerates known types of <see cref="T:HomeKit.HMCharacteristic" />.</summary>
 	[MacCatalyst (14, 0)]
 	public enum HMCharacteristicType {
 		None,
@@ -626,6 +628,7 @@ namespace HomeKit {
 	}
 
 	// conveniance enum (ObjC uses NSString)
+	/// <summary>Enumerates units of measure that might be associated with a <see cref="T:HomeKit.HMCharacteristic" />.</summary>
 	[MacCatalyst (13, 1)]
 	public enum HMCharacteristicMetadataUnits {
 		None,
@@ -644,6 +647,7 @@ namespace HomeKit {
 	}
 
 	// conveniance enum (ObjC uses NSString)
+	/// <summary>Enumerates known types of <see cref="T:HomeKit.HMService" />.</summary>
 	[MacCatalyst (14, 0)]
 	[Flags]
 	public enum HMServiceType {
@@ -819,6 +823,7 @@ namespace HomeKit {
 	}
 
 	// conveniance enum (ObjC uses NSString)
+	/// <summary>Enumerates the data types that can represent characteristics.</summary>
 	[MacCatalyst (13, 1)]
 	public enum HMCharacteristicMetadataFormat {
 		None,
@@ -836,6 +841,7 @@ namespace HomeKit {
 		Tlv8
 	}
 
+	/// <summary>Enumerates the states that a door can be in.</summary>
 	[MacCatalyst (14, 0)]
 	[Native]
 	public enum HMCharacteristicValueDoorState : long {
@@ -846,6 +852,7 @@ namespace HomeKit {
 		Stopped
 	}
 
+	/// <summary>Enumerates the states that an indoor climate control unit can be in.</summary>
 	[MacCatalyst (14, 0)]
 	[Native]
 	public enum HMCharacteristicValueHeatingCooling : long {
@@ -855,6 +862,7 @@ namespace HomeKit {
 		Auto
 	}
 
+	/// <summary>Enumerates rotation directions.</summary>
 	[MacCatalyst (14, 0)]
 	[Native]
 	public enum HMCharacteristicValueRotationDirection : long {
@@ -862,6 +870,7 @@ namespace HomeKit {
 		CounterClockwise
 	}
 
+	/// <summary>Enumerates two common temperature measurement systems.</summary>
 	[MacCatalyst (14, 0)]
 	[Native]
 	public enum HMCharacteristicValueTemperatureUnit : long {
@@ -869,6 +878,7 @@ namespace HomeKit {
 		Fahrenheit
 	}
 
+	/// <summary>Enumerates the states that a lock can be in.</summary>
 	[MacCatalyst (14, 0)]
 	[Native]
 	public enum HMCharacteristicValueLockMechanismState : long {
@@ -878,6 +888,7 @@ namespace HomeKit {
 		Unknown
 	}
 
+	/// <summary>Enumerates values that describe the last known action that was taken on a lock.</summary>
 	[MacCatalyst (14, 0)]
 	[Native ("HMCharacteristicValueLockMechanismLastKnownAction")]
 	// in iOS 8.3 this was renamed HMCharacteristicValueLockMechanismLastKnownAction but that would be a breaking change for us
@@ -895,6 +906,7 @@ namespace HomeKit {
 		LastKnownActionUnsecuredUsingPhysicalMovement,
 	}
 
+	/// <summary>Enumerates the particulate sizes supported by HomeKit.</summary>
 	[MacCatalyst (14, 0)]
 	[Native ("HMCharacteristicValueAirParticulateSize")]
 	public enum HMCharacteristicValueAirParticulate : long {
@@ -902,6 +914,7 @@ namespace HomeKit {
 		Size10
 	}
 
+	/// <summary>Enumerates the states of a security system.</summary>
 	[MacCatalyst (14, 0)]
 	[Native]
 	public enum HMCharacteristicValueCurrentSecuritySystemState : long {
@@ -912,6 +925,7 @@ namespace HomeKit {
 		Triggered
 	}
 
+	/// <summary>Enumerates the states of an object that opens and closes.</summary>
 	[MacCatalyst (14, 0)]
 	[Native]
 	public enum HMCharacteristicValuePositionState : long {
@@ -920,6 +934,7 @@ namespace HomeKit {
 		Stopped
 	}
 
+	/// <summary>Enumerates the status of a security system.</summary>
 	[MacCatalyst (14, 0)]
 	[Native]
 	public enum HMCharacteristicValueTargetSecuritySystemState : long {
@@ -929,6 +944,7 @@ namespace HomeKit {
 		Disarm
 	}
 
+	/// <summary>Enumerates the valid battery status values.</summary>
 	[MacCatalyst (14, 0)]
 	[Native]
 	public enum HMCharacteristicValueBatteryStatus : long {
@@ -936,6 +952,7 @@ namespace HomeKit {
 		Low
 	}
 
+	/// <summary>Enumerates the state of a jammed device.</summary>
 	[MacCatalyst (14, 0)]
 	[Native]
 	public enum HMCharacteristicValueJammedStatus : long {
@@ -943,6 +960,7 @@ namespace HomeKit {
 		Jammed
 	}
 
+	/// <summary>Enumerates the states of a device that detected tampering.</summary>
 	[MacCatalyst (14, 0)]
 	[Native]
 	public enum HMCharacteristicValueTamperedStatus : long {
@@ -950,6 +968,7 @@ namespace HomeKit {
 		Tampered
 	}
 
+	/// <summary>Enumerates the values of a device that detects leaks.</summary>
 	[MacCatalyst (14, 0)]
 	[Native]
 	public enum HMCharacteristicValueLeakStatus : long {
@@ -957,6 +976,7 @@ namespace HomeKit {
 		Detected
 	}
 
+	/// <summary>Enumerates the state of a smoke detector.</summary>
 	[MacCatalyst (14, 0)]
 	[Native]
 	public enum HMCharacteristicValueSmokeDetectionStatus : long {
@@ -964,6 +984,7 @@ namespace HomeKit {
 		Detected
 	}
 
+	/// <summary>Enumerates the state of battery charging.</summary>
 	[MacCatalyst (14, 0)]
 	[Native]
 	public enum HMCharacteristicValueChargingState : long {
@@ -974,6 +995,7 @@ namespace HomeKit {
 		NotChargeable,
 	}
 
+	/// <summary>Enumerates whether contact is detected.</summary>
 	[MacCatalyst (14, 0)]
 	[Native]
 	public enum HMCharacteristicValueContactState : long {
@@ -981,6 +1003,7 @@ namespace HomeKit {
 		None,
 	}
 
+	/// <summary>Enumerates fault states.</summary>
 	[MacCatalyst (14, 0)]
 	[Native]
 	public enum HMCharacteristicValueStatusFault : long {
@@ -988,6 +1011,7 @@ namespace HomeKit {
 		GeneralFault
 	}
 
+	/// <summary>Enumerates detection values.</summary>
 	[MacCatalyst (14, 0)]
 	[Native]
 	public enum HMCharacteristicValueCarbonMonoxideDetectionStatus : long {
@@ -995,6 +1019,7 @@ namespace HomeKit {
 		Detected
 	}
 
+	/// <summary>Enumerates detection values.</summary>
 	[MacCatalyst (14, 0)]
 	[Native]
 	public enum HMCharacteristicValueCarbonDioxideDetectionStatus : long {
@@ -1002,6 +1027,7 @@ namespace HomeKit {
 		Detected
 	}
 
+	/// <summary>Enumerates values for occupancy.</summary>
 	[MacCatalyst (14, 0)]
 	[Native]
 	public enum HMCharacteristicValueOccupancyStatus : long {
@@ -1009,6 +1035,7 @@ namespace HomeKit {
 		Occupied
 	}
 
+	/// <summary>Enumerates the security system alarm type.</summary>
 	[MacCatalyst (14, 0)]
 	[Native]
 	public enum HMCharacteristicValueSecuritySystemAlarmType : long {
@@ -1017,6 +1044,7 @@ namespace HomeKit {
 	}
 
 	// conveniance enum (ObjC uses NSString)
+	/// <summary>Enumerates the different kinds of <see cref="T:HomeKit.HMActionSet" />.</summary>
 	[MacCatalyst (13, 1)]
 	public enum HMActionSetType {
 		Unknown = -1,
@@ -1029,6 +1057,7 @@ namespace HomeKit {
 		TriggerOwned,
 	}
 
+	/// <summary>Enumerates the kind of accessories supported by HomeKit.</summary>
 	[MacCatalyst (14, 0)]
 	// conveniance enum (ObjC uses NSString)
 	public enum HMAccessoryCategoryType {
@@ -1137,6 +1166,7 @@ namespace HomeKit {
 		ShowerHead,
 	}
 
+	/// <summary>Enumerates events such as sunrise and sunset.</summary>
 	[MacCatalyst (14, 0)]
 	public enum HMSignificantEvent {
 
@@ -1156,6 +1186,7 @@ namespace HomeKit {
 		Authorized = 1 << 2,
 	}
 
+	/// <summary>Enumerates air quality values.</summary>
 	[MacCatalyst (14, 0)]
 	[Native]
 	public enum HMCharacteristicValueAirQuality : long {
@@ -1167,6 +1198,7 @@ namespace HomeKit {
 		Poor
 	}
 
+	/// <summary>Enumerates the states of an <see cref="T:HomeKit.HMCameraStream" />.</summary>
 	[MacCatalyst (14, 0)]
 	[Native]
 	public enum HMCameraStreamState : ulong {
@@ -1176,6 +1208,7 @@ namespace HomeKit {
 		NotStreaming = 4
 	}
 
+	/// <summary>Settings for camera's with audio devices. Used with <see cref="P:HomeKit.HMCameraStream.AudioStreamSetting" />.</summary>
 	[MacCatalyst (14, 0)]
 	[Native]
 	public enum HMCameraAudioStreamSetting : ulong {
@@ -1184,6 +1217,7 @@ namespace HomeKit {
 		BidirectionalAudioAllowed = 3
 	}
 
+	/// <summary>Enumerates the possible values of a <see cref="T:HomeKit.HMCharacteristic" /> that may either be locked or unlocked.</summary>
 	[Watch (3, 1, 1)]
 	[MacCatalyst (14, 0)]
 	[Native]
@@ -1192,6 +1226,7 @@ namespace HomeKit {
 		Locked,
 	}
 
+	/// <summary>Enumerates the possible values of a <see cref="T:HomeKit.HMCharacteristic" /> that describes the states of an air purifier.</summary>
 	[Watch (3, 1, 1)]
 	[MacCatalyst (14, 0)]
 	[Native]
@@ -1201,6 +1236,7 @@ namespace HomeKit {
 		Active,
 	}
 
+	/// <summary>Enumerates the possible values of a <see cref="T:HomeKit.HMCharacteristic" /> of an air purifier.</summary>
 	[Watch (3, 1, 1)]
 	[MacCatalyst (14, 0)]
 	[Native]
@@ -1209,6 +1245,7 @@ namespace HomeKit {
 		Automatic,
 	}
 
+	/// <summary>Enumerates the possible values of a <see cref="T:HomeKit.HMCharacteristic" /> that describes the states of an oscillating slat.</summary>
 	[Watch (3, 1, 1)]
 	[MacCatalyst (14, 0)]
 	[Native]
@@ -1218,6 +1255,7 @@ namespace HomeKit {
 		Oscillating,
 	}
 
+	/// <summary>Enumerates the possible values of a <see cref="T:HomeKit.HMCharacteristic" /> that describe a vertical or horizontal slat.</summary>
 	[Watch (3, 1, 1)]
 	[MacCatalyst (14, 0)]
 	[Native]
@@ -1226,6 +1264,7 @@ namespace HomeKit {
 		Vertical,
 	}
 
+	/// <summary>Enumerates the possible values of a <see cref="T:HomeKit.HMCharacteristic" /> that describes the states of a filter that must be periodically changed.</summary>
 	[Watch (3, 1, 1)]
 	[MacCatalyst (14, 0)]
 	[Native]
@@ -1234,6 +1273,7 @@ namespace HomeKit {
 		Needed,
 	}
 
+	/// <summary>Enumerates the possible values of a <see cref="T:HomeKit.HMCharacteristic" /> that describes the states of a fan.</summary>
 	[Watch (3, 1, 1)]
 	[MacCatalyst (14, 0)]
 	[Native]
@@ -1243,6 +1283,7 @@ namespace HomeKit {
 		Active,
 	}
 
+	/// <summary>Enumerates the possible states of a <see cref="T:HomeKit.HMCharacteristic" /> of a fan.</summary>
 	[Watch (3, 1, 1)]
 	[MacCatalyst (14, 0)]
 	[Native]
@@ -1251,6 +1292,7 @@ namespace HomeKit {
 		Automatic,
 	}
 
+	/// <summary>Enumerates the possible values of a <see cref="T:HomeKit.HMCharacteristic" /> that describes the states of a heat exchanger.</summary>
 	[Watch (3, 1, 1)]
 	[MacCatalyst (14, 0)]
 	[Native]
@@ -1261,6 +1303,7 @@ namespace HomeKit {
 		Cooling,
 	}
 
+	/// <summary>Enumerates the possible states of a <see cref="T:HomeKit.HMCharacteristic" /> of a heater / cooler.</summary>
 	[Watch (3, 1, 1)]
 	[MacCatalyst (14, 0)]
 	[Native]
@@ -1270,6 +1313,7 @@ namespace HomeKit {
 		Cool,
 	}
 
+	/// <summary>Enumerates the possible values of a <see cref="T:HomeKit.HMCharacteristic" /> that describes the states of a humidifier or dehumidifier.</summary>
 	[Watch (3, 1, 1)]
 	[MacCatalyst (14, 0)]
 	[Native]
@@ -1280,6 +1324,7 @@ namespace HomeKit {
 		Dehumidifying,
 	}
 
+	/// <summary>Enumerates the possible states of a <see cref="T:HomeKit.HMCharacteristic" /> of a humidifier or dehumidifier.</summary>
 	[Watch (3, 1, 1)]
 	[MacCatalyst (14, 0)]
 	[Native]
@@ -1289,6 +1334,7 @@ namespace HomeKit {
 		Dehumidify,
 	}
 
+	/// <summary>Enumerates the possible values of a <see cref="T:HomeKit.HMCharacteristic" /> that describe a swing that can be enabled or disabled.</summary>
 	[Watch (3, 1, 1)]
 	[MacCatalyst (14, 0)]
 	[Native]
@@ -1297,6 +1343,7 @@ namespace HomeKit {
 		Enabled,
 	}
 
+	/// <summary>Enumerates the possible values of a <see cref="T:HomeKit.HMCharacteristic" /> that can be active or inactive.</summary>
 	[Watch (3, 1, 1)]
 	[MacCatalyst (14, 0)]
 	[Native]
@@ -1305,6 +1352,7 @@ namespace HomeKit {
 		Active,
 	}
 
+	/// <summary>Enumerates the possible values of a <see cref="T:HomeKit.HMCharacteristic" /> that describes the forms of a button press.</summary>
 	[MacCatalyst (14, 0)]
 	[Native]
 	public enum HMCharacteristicValueInputEvent : long {
@@ -1313,6 +1361,7 @@ namespace HomeKit {
 		LongPress,
 	}
 
+	/// <summary>Enumerates the possible values of a <see cref="T:HomeKit.HMCharacteristic" /> that may either be a dot or a numeral.</summary>
 	[MacCatalyst (14, 0)]
 	[Native]
 	public enum HMCharacteristicValueLabelNamespace : long {
@@ -1320,6 +1369,7 @@ namespace HomeKit {
 		Numeral,
 	}
 
+	/// <summary>Enumerates the possible states of a <see cref="T:HomeKit.HMEventTrigger" /> including reasons why it might not be enabled.</summary>
 	[MacCatalyst (14, 0)]
 	[Native]
 	public enum HMEventTriggerActivationState : ulong {
@@ -1330,6 +1380,7 @@ namespace HomeKit {
 		Enabled = 4,
 	}
 
+	/// <summary>Enumerates the possible states of the HomeKit hub.</summary>
 	[MacCatalyst (14, 0)]
 	[Native]
 	public enum HMHomeHubState : ulong {
@@ -1338,6 +1389,7 @@ namespace HomeKit {
 		Disconnected,
 	}
 
+	/// <summary>Enumerates the type of change in presence that the <see cref="T:HomeKit.HMPresenceEvent" /> represents.</summary>
 	[MacCatalyst (14, 0)]
 	[Native]
 	public enum HMPresenceEventType : ulong {
@@ -1349,6 +1401,7 @@ namespace HomeKit {
 		NotAtHome = LastExit,
 	}
 
+	/// <summary>Enumerates the types of users whose presence or absence is associated with a <see cref="T:HomeKit.HMPresenceEvent" />.</summary>
 	[MacCatalyst (14, 0)]
 	[Native]
 	public enum HMPresenceEventUserType : ulong {
@@ -1357,6 +1410,7 @@ namespace HomeKit {
 		CustomUsers = 3,
 	}
 
+	/// <summary>Enumerates the possible values of a <see cref="T:HomeKit.HMCharacteristic" /> that can be scheduled or manually overriden.</summary>
 	[Watch (4, 2), MacCatalyst (14, 0)]
 	[Native]
 	public enum HMCharacteristicValueProgramMode : long {
@@ -1365,6 +1419,7 @@ namespace HomeKit {
 		ScheduleOverriddenToManual,
 	}
 
+	/// <summary>Enumerates the possible states of a <see cref="T:HomeKit.HMCharacteristic" /> of a device that can be in use or out of use.</summary>
 	[Watch (4, 2), MacCatalyst (14, 0)]
 	[Native]
 	public enum HMCharacteristicValueUsageState : long {
@@ -1372,6 +1427,7 @@ namespace HomeKit {
 		InUse,
 	}
 
+	/// <summary>Enumerates the known types of valve.</summary>
 	[Watch (4, 2), MacCatalyst (14, 0)]
 	[Native]
 	public enum HMCharacteristicValueValveType : long {
@@ -1381,6 +1437,7 @@ namespace HomeKit {
 		WaterFaucet,
 	}
 
+	/// <summary>Enumerates the possible values of a <see cref="T:HomeKit.HMCharacteristic" /> that can be configured or not.</summary>
 	[Watch (4, 2), MacCatalyst (14, 0)]
 	[Native]
 	public enum HMCharacteristicValueConfigurationState : long {

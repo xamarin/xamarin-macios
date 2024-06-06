@@ -27,6 +27,9 @@ using NativeHandle = System.IntPtr;
 namespace ContactsUI {
 
 #if !MONOMAC
+	/// <summary>A standard <see cref="T:UIKit.UIViewController" /> that allows the user to select a <see cref="T:Contacts.CNContact" /> from a list of contacts.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/ContactsUI/Reference/CNContactPickerViewController_Class/index.html">Apple documentation for <c>CNContactPickerViewController</c></related>
 	[NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (UIViewController))]
@@ -57,6 +60,12 @@ namespace ContactsUI {
 	}
 #endif
 
+	/// <summary>Interface representing the required methods (if any) of the protocol <see cref="T:ContactsUI.CNContactPickerDelegate" />.</summary>
+	///     <remarks>
+	///       <para>This interface contains the required methods (if any) from the protocol defined by <see cref="T:ContactsUI.CNContactPickerDelegate" />.</para>
+	///       <para>If developers create classes that implement this interface, the implementation methods will automatically be exported to Objective-C with the matching signature from the method defined in the <see cref="T:ContactsUI.CNContactPickerDelegate" /> protocol.</para>
+	///       <para>Optional methods (if any) are provided by the <see cref="T:ContactsUI.CNContactPickerDelegate_Extensions" /> class as extension methods to the interface, allowing developers to invoke any optional methods on the protocol.</para>
+	///     </remarks>
 	interface ICNContactPickerDelegate { }
 
 #if MONOMAC
@@ -78,6 +87,9 @@ namespace ContactsUI {
 		void DidClose (CNContactPicker picker);
 	}
 #else
+	/// <summary>Delegate object that provides methods relating to picking a contact from a <see cref="T:ContactsUI.CNContactPickerViewController" />.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/ContactsUI/Reference/CNContactPickerDelegate_Protocol/index.html">Apple documentation for <c>CNContactPickerDelegate</c></related>
 	[NoMac]
 	[MacCatalyst (13, 1)]
 	[Protocol, Model]
@@ -101,6 +113,9 @@ namespace ContactsUI {
 	}
 #endif // MONOMAC
 
+	/// <summary>A standard <see cref="T:UIKit.UIViewController" /> that allows the user to view or edit a <see cref="T:Contacts.CNContact" />.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/ContactsUI/Reference/CNContactViewController_Class/index.html">Apple documentation for <c>CNContactViewController</c></related>
 	[MacCatalyst (13, 1)]
 #if MONOMAC
 	[BaseType (typeof (NSViewController))]
@@ -214,8 +229,17 @@ namespace ContactsUI {
 		void HighlightProperty (NSString key, [NullAllowed] string identifier);
 	}
 
+	/// <summary>Interface representing the required methods (if any) of the protocol <see cref="T:ContactsUI.CNContactViewControllerDelegate" />.</summary>
+	///     <remarks>
+	///       <para>This interface contains the required methods (if any) from the protocol defined by <see cref="T:ContactsUI.CNContactViewControllerDelegate" />.</para>
+	///       <para>If developers create classes that implement this interface, the implementation methods will automatically be exported to Objective-C with the matching signature from the method defined in the <see cref="T:ContactsUI.CNContactViewControllerDelegate" /> protocol.</para>
+	///       <para>Optional methods (if any) are provided by the <see cref="T:ContactsUI.CNContactViewControllerDelegate_Extensions" /> class as extension methods to the interface, allowing developers to invoke any optional methods on the protocol.</para>
+	///     </remarks>
 	interface ICNContactViewControllerDelegate { }
 
+	/// <summary>Delegate object that provides methods relating to viewing or editing a contact with a <see cref="T:ContactsUI.CNContactViewController" />.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/ContactsUI/Reference/CNContactViewControllerDelegate_Protocol/index.html">Apple documentation for <c>CNContactViewControllerDelegate</c></related>
 	[NoMac]
 	[MacCatalyst (13, 1)]
 	[Protocol, Model]

@@ -37,6 +37,7 @@ using ObjCRuntime;
 namespace CoreLocation {
 
 	// NSInteger -> CLError.h
+	/// <summary>Errors returned by the CLLocationManager.</summary>
 	[Native]
 	public enum CLError : long {
 		LocationUnknown = 0,
@@ -75,6 +76,7 @@ namespace CoreLocation {
 	}
 
 	// untyped enum -> CLLocationManager.h
+	/// <summary>An enumeration whose values represent the device's physical orientation.</summary>
 	public enum CLDeviceOrientation : uint {
 		Unknown,
 		Portrait,
@@ -86,6 +88,7 @@ namespace CoreLocation {
 	}
 
 	// untyped enum -> CLLocationManager.h
+	/// <summary>An enumeration whose values specify the current status of authorization to use location services.</summary>
 	public enum CLAuthorizationStatus : uint {
 		NotDetermined = 0,
 		Restricted,
@@ -100,6 +103,10 @@ namespace CoreLocation {
 	}
 
 	// NSInteger -> CLLocationManager.h
+	/// <summary>An enumeration whose values specify different types of activity.</summary>
+	///     <remarks>
+	///       <para>By assigning <see cref="P:CoreLocation.CLLocationManager.ActivityType" />, the system can make intelligent choices regarding location update frequency vs. power consumption. </para>
+	///     </remarks>
 	[Native]
 	public enum CLActivityType : long {
 		Other = 1,

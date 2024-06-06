@@ -7,6 +7,7 @@ using Metal;
 
 namespace MetalPerformanceShaders {
 
+	/// <summary>Enumerates ORable kernel options that improve performance in certain cases.</summary>
 	[Introduced (PlatformName.MacCatalyst, 13, 0)]
 	[Native] // NSUInteger
 	[Flags] // NS_OPTIONS
@@ -26,6 +27,7 @@ namespace MetalPerformanceShaders {
 #endif
 	}
 
+	/// <summary>Enumerates shader behavior at the edges of regions and images.</summary>
 	[Introduced (PlatformName.MacCatalyst, 13, 0)]
 	[Native] // NSUInteger
 	public enum MPSImageEdgeMode : ulong {
@@ -39,6 +41,7 @@ namespace MetalPerformanceShaders {
 		Constant,
 	}
 
+	/// <summary>Enumerates values that indicate if and what kind of color premultiplication will be applied to color values.</summary>
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum MPSAlphaType : ulong {
@@ -47,6 +50,7 @@ namespace MetalPerformanceShaders {
 		Premultiplied = 2,
 	}
 
+	/// <summary>Enumerates values that specify floating point data types.</summary>
 	[Introduced (PlatformName.MacCatalyst, 13, 0)]
 	public enum MPSDataType : uint { // uint32_t
 		Invalid = 0,
@@ -94,6 +98,7 @@ namespace MetalPerformanceShaders {
 		PreferNonTemporaryMemory = 1uL << 3,
 	}
 
+	/// <summary>Enumerates image channel descriptions.</summary>
 	[Introduced (PlatformName.MacCatalyst, 13, 0)]
 	[Native]
 	public enum MPSImageFeatureChannelFormat : ulong {
@@ -109,6 +114,7 @@ namespace MetalPerformanceShaders {
 		//Count, // must always be last, and because of this it will cause breaking changes.
 	}
 
+	/// <summary>Enumerates the result forms of a matrix decomposition.</summary>
 	[Introduced (PlatformName.MacCatalyst, 13, 0)]
 	public enum MPSMatrixDecompositionStatus {
 		Success = 0,
@@ -129,6 +135,7 @@ namespace MetalPerformanceShaders {
 		Normal = Default | Uniform,
 	}
 
+	/// <summary>Enumerates the propagation direction in a layer in a recurrent neural net.</summary>
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum MPSRnnSequenceDirection : ulong {
@@ -136,6 +143,7 @@ namespace MetalPerformanceShaders {
 		Backward,
 	}
 
+	/// <summary>Enumerates how input matrices or images should be combined in a recurrent neural net.</summary>
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum MPSRnnBidirectionalCombineMode : ulong {
@@ -144,6 +152,7 @@ namespace MetalPerformanceShaders {
 		Concatenate,
 	}
 
+	/// <summary>Enumerates the available activation functions of a neuron.</summary>
 	[MacCatalyst (13, 1)]
 	public enum MPSCnnNeuronType {
 		None = 0,
@@ -173,6 +182,7 @@ namespace MetalPerformanceShaders {
 #endif
 	}
 
+	/// <summary>Flagging enumeration for options available to binary convolution kernels.</summary>
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum MPSCnnBinaryConvolutionFlags : ulong {
@@ -180,6 +190,7 @@ namespace MetalPerformanceShaders {
 		UseBetaScaling = 1 << 0,
 	}
 
+	/// <summary>Enumerates the operation used in a binary convolution.</summary>
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum MPSCnnBinaryConvolutionType : ulong {
@@ -188,6 +199,7 @@ namespace MetalPerformanceShaders {
 		And,
 	}
 
+	/// <summary>Options for how a neural network graph will pad results.</summary>
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum MPSNNPaddingMethod : ulong {
@@ -209,6 +221,7 @@ namespace MetalPerformanceShaders {
 		ExcludeEdges = (1 << 15),
 	}
 
+	/// <summary>Enumerates whether a data buffer is row- or column-major</summary>
 	[Introduced (PlatformName.MacCatalyst, 13, 0)]
 	[Native]
 	public enum MPSDataLayout : ulong {

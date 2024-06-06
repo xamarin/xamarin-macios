@@ -29,6 +29,9 @@ using NativeHandle = System.IntPtr;
 
 namespace ReplayKit {
 
+	/// <summary>A view controller for previewing and editing a ReplayKit recording.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/ReplayKit/RPPreviewViewController">Apple documentation for <c>RPPreviewViewController</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (UIViewController))]
 	interface RPPreviewViewController {
@@ -47,8 +50,17 @@ namespace ReplayKit {
 		RPPreviewViewControllerMode Mode { get; set; }
 	}
 
+	/// <summary>Interface representing the required methods (if any) of the protocol <see cref="T:ReplayKit.RPPreviewViewControllerDelegate" />.</summary>
+	///     <remarks>
+	///       <para>This interface contains the required methods (if any) from the protocol defined by <see cref="T:ReplayKit.RPPreviewViewControllerDelegate" />.</para>
+	///       <para>If developers create classes that implement this interface, the implementation methods will automatically be exported to Objective-C with the matching signature from the method defined in the <see cref="T:ReplayKit.RPPreviewViewControllerDelegate" /> protocol.</para>
+	///       <para>Optional methods (if any) are provided by the <see cref="T:ReplayKit.RPPreviewViewControllerDelegate_Extensions" /> class as extension methods to the interface, allowing developers to invoke any optional methods on the protocol.</para>
+	///     </remarks>
 	interface IRPPreviewViewControllerDelegate { }
 
+	/// <summary>The view controller protocol for previewing and editing a ReplayKit recording.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/ReplayKit/Reference/RPPreviewViewControllerDelegate_Ref/index.html">Apple documentation for <c>RPPreviewViewControllerDelegate</c></related>
 	[MacCatalyst (13, 1)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
@@ -63,6 +75,9 @@ namespace ReplayKit {
 		void DidFinish (RPPreviewViewController previewController, NSSet<NSString> activityTypes);
 	}
 
+	/// <summary>Enables the user to record visual and audio output of applications, with simultaneous recorded audio (screencasts).</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/ReplayKit/Reference/RPScreenRecorder_Ref/index.html">Apple documentation for <c>RPScreenRecorder</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -164,8 +179,17 @@ namespace ReplayKit {
 		void StopClipBuffering ([NullAllowed] Action<NSError> completionHandler);
 	}
 
+	/// <summary>Interface representing the required methods (if any) of the protocol <see cref="T:ReplayKit.RPScreenRecorderDelegate" />.</summary>
+	///     <remarks>
+	///       <para>This interface contains the required methods (if any) from the protocol defined by <see cref="T:ReplayKit.RPScreenRecorderDelegate" />.</para>
+	///       <para>If developers create classes that implement this interface, the implementation methods will automatically be exported to Objective-C with the matching signature from the method defined in the <see cref="T:ReplayKit.RPScreenRecorderDelegate" /> protocol.</para>
+	///       <para>Optional methods (if any) are provided by the <see cref="T:ReplayKit.RPScreenRecorderDelegate_Extensions" /> class as extension methods to the interface, allowing developers to invoke any optional methods on the protocol.</para>
+	///     </remarks>
 	interface IRPScreenRecorderDelegate { }
 
+	/// <summary>Protocol for enabling the user to record visual and audio output of applications, with simultaneous recorded audio (screencasts)..</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/ReplayKit/Reference/RPScreenRecorderDelegate_Ref/index.html">Apple documentation for <c>RPScreenRecorderDelegate</c></related>
 	[MacCatalyst (13, 1)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
@@ -187,6 +211,9 @@ namespace ReplayKit {
 		void DidChangeAvailability (RPScreenRecorder screenRecorder);
 	}
 
+	/// <summary>Presents a user interface for choosing third-party broadcast services.</summary>
+	///     <remarks>The view controller displays the currently installed broadcast services.</remarks>
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/ReplayKit/RPBroadcastActivityViewController">Apple documentation for <c>RPBroadcastActivityViewController</c></related>
 	[NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (UIViewController))]
@@ -212,8 +239,12 @@ namespace ReplayKit {
 		void LoadBroadcastActivityViewController ([NullAllowed] string preferredExtension, Action<RPBroadcastActivityViewController, NSError> handler);
 	}
 
+	/// <include file="../docs/api/ReplayKit/IRPBroadcastActivityViewControllerDelegate.xml" path="/Documentation/Docs[@DocId='T:ReplayKit.IRPBroadcastActivityViewControllerDelegate']/*" />
 	interface IRPBroadcastActivityViewControllerDelegate { }
 
+	/// <summary>Responds to changes in the UI that is presented by a <see cref="T:ReplayKit.RPBroadcastActivityViewController" />.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/ReplayKit/RPBroadcastActivityViewControllerDelegate">Apple documentation for <c>RPBroadcastActivityViewControllerDelegate</c></related>
 	[NoMac]
 	[MacCatalyst (13, 1)]
 	[Protocol, Model]
@@ -224,6 +255,9 @@ namespace ReplayKit {
 		void DidFinish (RPBroadcastActivityViewController broadcastActivityViewController, [NullAllowed] RPBroadcastController broadcastController, [NullAllowed] NSError error);
 	}
 
+	/// <summary>Manages an audio or video broadcast stream.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/ReplayKit/RPBroadcastController">Apple documentation for <c>RPBroadcastController</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface RPBroadcastController {
@@ -266,8 +300,17 @@ namespace ReplayKit {
 		void FinishBroadcast (Action<NSError> handler);
 	}
 
+	/// <summary>Interface representing the required methods (if any) of the protocol <see cref="T:ReplayKit.RPBroadcastControllerDelegate" />.</summary>
+	///     <remarks>
+	///       <para>This interface contains the required methods (if any) from the protocol defined by <see cref="T:ReplayKit.RPBroadcastControllerDelegate" />.</para>
+	///       <para>If developers create classes that implement this interface, the implementation methods will automatically be exported to Objective-C with the matching signature from the method defined in the <see cref="T:ReplayKit.RPBroadcastControllerDelegate" /> protocol.</para>
+	///       <para>Optional methods (if any) are provided by the <see cref="T:ReplayKit.RPBroadcastControllerDelegate_Extensions" /> class as extension methods to the interface, allowing developers to invoke any optional methods on the protocol.</para>
+	///     </remarks>
 	interface IRPBroadcastControllerDelegate { }
 
+	/// <summary>Delegate object that responds to changes in a broadcast.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/ReplayKit/RPBroadcastControllerDelegate">Apple documentation for <c>RPBroadcastControllerDelegate</c></related>
 	[MacCatalyst (13, 1)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
@@ -283,6 +326,7 @@ namespace ReplayKit {
 		void DidUpdateBroadcastUrl (RPBroadcastController broadcastController, NSUrl broadcastUrl);
 	}
 
+	/// <related type="externalDocumentation" href="https://developer.apple.com/reference/ReplayKit/RPBroadcastConfiguration">Apple documentation for <c>RPBroadcastConfiguration</c></related>
 	[Deprecated (PlatformName.TvOS, 11, 0)]
 	[Deprecated (PlatformName.iOS, 11, 0)]
 	[NoMac]
@@ -297,6 +341,10 @@ namespace ReplayKit {
 		NSDictionary<NSString, INSSecureCoding> WeakVideoCompressionProperties { get; set; }
 	}
 
+	/// <param name="bundleID">The bundle ID of the newly loaded broadcasting service.</param>
+	///     <param name="displayName">The display name of the newly loaded broadcasting service.</param>
+	///     <param name="appIcon">The application icon of the newly loaded broadcasting service.</param>
+	///     <summary>Delegate that specifies the signature of the completion handler in calls to the <see cref="M:ReplayKit.NSExtensionContext_RPBroadcastExtension.LoadBroadcastingApplicationInfo(Foundation.NSExtensionContext,ReplayKit.LoadBroadcastingHandler)" /> method.</summary>
 	delegate void LoadBroadcastingHandler (string bundleID, string displayName, UIImage appIcon);
 
 	[MacCatalyst (13, 1)]
@@ -319,6 +367,9 @@ namespace ReplayKit {
 		void CompleteRequest (NSUrl broadcastURL, [NullAllowed] NSDictionary<NSString, INSCoding> setupInfo);
 	}
 
+	/// <summary>Base class for managing Replay Kit broadcasts.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/ReplayKit/RPBroadcastHandler">Apple documentation for <c>RPBroadcastHandler</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface RPBroadcastHandler : NSExtensionRequestHandling {
@@ -332,6 +383,7 @@ namespace ReplayKit {
 		//void UpdateBroadcastUrl (NSUrl broadcastUrl);
 	}
 
+	/// <related type="externalDocumentation" href="https://developer.apple.com/reference/ReplayKit/RPBroadcastMP4ClipHandler">Apple documentation for <c>RPBroadcastMP4ClipHandler</c></related>
 	[NoMac]
 	[Deprecated (PlatformName.TvOS, 11, 0, message: "Use 'RPBroadcastSampleHandler' instead.")]
 	[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'RPBroadcastSampleHandler' instead.")]
@@ -346,6 +398,9 @@ namespace ReplayKit {
 		void FinishedProcessingMP4Clip ([NullAllowed] RPBroadcastConfiguration broadcastConfiguration, [NullAllowed] NSError error);
 	}
 
+	/// <summary>Processes ReplayKit buffer obects as they arrive.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/ReplayKit/RPBroadcastSampleHandler">Apple documentation for <c>RPBroadcastSampleHandler</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (RPBroadcastHandler))]
 	interface RPBroadcastSampleHandler {

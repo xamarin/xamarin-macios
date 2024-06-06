@@ -1,0 +1,997 @@
+<Documentation>
+  <Docs DocId="T:UIKit.UIView">
+    <summary>Base class used for components that want to render themselves and respond to events.</summary>
+    <remarks>
+      <para>
+        The UIView class is a rectangular area on the screen that is
+        responsible for displaying content and handling user interactions
+        with that content. It can also contain other views, allowing the developer to
+        create complex interactive controls.  UIView can thus be used as
+        either a standalone control, or as a full screen of content built from
+        many other independent UIViews. 
+      </para>
+      <para>Views have three major responsibilities:</para>
+      <list type="bullet">
+        <item>
+          <term>
+            Visualization: UIView instances are responsible for displaying
+            their content, typically this is done by implementing a draw
+            method using either <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=Core%20Graphics&amp;scope=Xamarin" title="N:CoreGraphics">N:CoreGraphics</a></format>,
+            OpenGL or customizing some of their visual properties.  Views 
+            also have built-in support for animating elements of the view.  
+          </term>
+        </item>
+        <item>
+          <term>
+            Managing Layout and Subviews: UIViews are responsible for
+            managing their layout in response to changes in size and
+            orientation. This includes re-drawing any content they manage,
+            as well as repositioning children views. This is most often in
+            response to size of the UIView. For instance, if a view
+            represents a button, the location of corners would change
+            according to size. Or, if the device was rotated, the view might
+            get resized (or it might resize its child views).
+          </term>
+        </item>
+        <item>
+          <term>
+            Event Handling: UIViews are a natural place to handle touch
+            events since they are self-contained user interface elements.
+            UIViews subclass the <see cref="T:UIKit.UIResponder" />
+            class, so they participate both on system events (like motion
+            and actions) as well as being able to process touch events.
+            
+          </term>
+        </item>
+      </list>
+      <format type="text/html">
+        <h2>Event Handling</h2>
+      </format>
+      <para>
+        UIViews can handle touch events in two ways.  Developers use the
+        high-level gesture recognizer API to detect and handle gestures, or roll their own event handling by using the low-level
+        interface that provides detailed touch events as they happen: every
+        time a finger touches the screen or is lifted as well as motion of
+        those fingers.  Both are covered below
+      </para>
+      <para>
+        To cause the UIView to respond to user input by updating its
+        display, developers should call the
+        <see cref="M:UIKit.UIView.SetNeedsDisplayInRect(CoreGraphics.CGRect)" /> or
+        <see cref="M:UIKit.UIView.SetNeedsDisplayInRect(CoreGraphics.CGRect)" /> which will queue a call to the developer's
+        <see cref="M:UIKit.UIView.Draw(CoreGraphics.CGRect)" /> method
+        where the developer has implemented logic to re-render the control with the new state.
+      </para>
+      <para>
+        Event delivery can be turned off either by setting the
+        <see cref="P:UIKit.UIView.UserInteractionEnabled" /> to false or you can
+        disable them temporarily at the application level by calling
+        <see cref="M:UIKit.UIApplication.BeginIgnoringInteractionEvents" />.  In
+        both cases, events destined for the view are dropped and are not
+        delivered to the views.
+      </para>
+      <para>
+        Events are disabled while animation are playing back.  Devs can
+        change this behavior when using explicit animations by using the
+        <see cref="T:UIKit.UIViewAnimationOptions" />'s AllowUserInteraction
+        flag in the animation.
+      </para>
+      <format type="text/html">
+        <h3>Event Handling with Gesture Recognizers</h3>
+      </format>
+      <para>
+        Interacting with touch interfaces has lead to a series of common
+        gesture idioms that are used everywhere.  Gestures like swiping,
+        panning, long-presses, pinching rotating and tapping.  iOS makes the
+        process of detecting these common gesture idioms very easy by
+        providing Gesture Recognizers.  These are objects that inherit from
+        the UIGestureRecognizer class and can detect various standard
+        gesture idioms.  The built-in recognizers include:
+      </para>
+      <list type="bullet">
+        <item>
+          <term>
+            <see cref="T:UIKit.UILongPressGestureRecognizer" />
+          </term>
+        </item>
+        <item>
+          <term>
+            <see cref="T:UIKit.UIPanGestureRecognizer" />
+          </term>
+        </item>
+        <item>
+          <term>
+            <see cref="T:UIKit.UIPinchGestureRecognizer" />
+          </term>
+        </item>
+        <item>
+          <term>
+            <see cref="T:UIKit.UIRotationGestureRecognizer" />
+          </term>
+        </item>
+        <item>
+          <term>
+            <see cref="T:UIKit.UISwipeGestureRecognizer" />
+          </term>
+        </item>
+        <item>
+          <term>
+            <see cref="T:UIKit.UITapGestureRecognizer" />
+          </term>
+        </item>
+      </list>
+      <para>
+        In addition, developers can create their own custom gesture recognizer by
+        subclassing <see cref="T:UIKit.UIGestureRecognizer" />.
+      </para>
+      <para>
+        Developers use the recognizer by creating an instance of the
+        specific kind of recognizer that is needed, optionally setting some
+        parameters, and adding it to the view by calling
+        AddGestureRecognizer.  It is possible to attach multiple gesture
+        recognizers to a single view.
+      </para>
+      <para>
+        For example, the following code creates a gesture recognizer that
+        detects a panning gesture and assigns it to myView:
+        
+      </para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+var recognizer = new UIPanGestureRecognizer ((g) => {
+  Console.WriteLine ("Panning detected");
+  Console.WriteLine ("Gesture recognizer state: {0}", g.State);
+});
+
+myView.AddGestureRecognizer (recognizer);
+        ]]></code>
+      </example>
+      <para>
+        The parameter passed to the lambda (the "g" parameter in the above code)
+        is an instance of the gesture recognizer that detected the gesture.
+        The developr can query the parameters of the recognized query by looking at
+        the properties in the recognizer; the
+        <see cref="P:UIKit.UIGestureRecognizer.State" /> property contains the
+        recognizer state.
+        
+      </para>
+      <format type="text/html">
+        <h3>Event Handling with method Overrides</h3>
+      </format>
+      <para>
+        Although Gesture Recognizers provide a high-level and convenient way
+        of capturing many touch events, they do not cover every
+        possibility. For those cases, developers should subclass UIView and
+        override one or more of the following methods inherited from
+        UIResponder:
+      </para>
+      <list type="bullet">
+        <item>
+          <term>
+            <see cref="M:UIKit.UIResponder.TouchesBegan(Foundation.NSSet,UIKit.UIEvent)" />:
+            sent when one or more fingers touch the screen.
+          </term>
+        </item>
+        <item>
+          <term>
+            <see cref="M:UIKit.UIResponder.TouchesMoved(Foundation.NSSet,UIKit.UIEvent)" />:
+            sent when one or more fingers move.
+          </term>
+        </item>
+        <item>
+          <term>
+            <see cref="M:UIKit.UIResponder.TouchesEnded(Foundation.NSSet,UIKit.UIEvent)" />:
+            sent when one or more fingers are lifted from the screen.
+          </term>
+        </item>
+        <item>
+          <term>
+            <see cref="M:UIKit.UIResponder.TouchesCancelled(Foundation.NSSet,UIKit.UIEvent)" />:
+            sent when the touch is cancelled by the system (for example if
+            the phone interrupts your application).
+          </term>
+        </item>
+      </list>
+      <para>
+        UIViews by default only handle a single touch event at once.  If you
+        want your view to handle multiple touches, you must set the
+        <see cref="P:UIKit.UIView.MultipleTouchEnabled" /> to true.
+      </para>
+      <para>
+        iOS creates a <see cref="T:UIKit.UIEvent" /> object any time a finger
+        touches the screen, moves or is removed from the screen.  The <see cref="T:UIKit.UIEvent" /> encapsulates all of the touches
+        that are taking place on the screen at this point, even those that
+        do not belong to this view.  In addition to the <see cref="T:UIKit.UIEvent" />, there is an <see cref="T:Foundation.NSSet" /> containing <see cref="T:UIKit.UITouch" /> objects that represent the state
+        of each finger on the screen for this particular view.
+      </para>
+      <para>
+        If the application handles touches directly, developers can
+        override the <see cref="M:UIKit.UIView.GestureRecognizerShouldBegin(UIKit.UIGestureRecognizer)" />
+        method to control whether an associated
+        <see cref="T:UIKit.UIGestureRecognizer" /> should execute or not.
+        
+      </para>
+      <format type="text/html">
+        <h2>Creating Views</h2>
+      </format>
+      <para>
+        UIViews are typically created by invoking the constructor that takes
+        a frame as its parameter (the frame is of type
+        <see cref="T:System.Drawing.RectangleF" />), for example:
+      </para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+var myView = new UIView (new RectangleF (0, 0, 100, 100));
+]]></code>
+      </example>
+      <para>
+        Most subclasses of UIView will provide a constructor that takes the
+        initial frame, just like UIView.  The section below on subclassing
+        UIView has more information on how to do
+        this.
+      </para>
+      <para>
+         The developer should configure the
+        <see cref="P:UIKit.UIView.AutoresizingMask" /> property, which determines how the
+        view will be resized when
+        <see cref="M:UIKit.UIView.SetNeedsLayout" /> is invoked or when the geometry of the
+        view container changes (for example, in response to a device
+        rotation).
+      </para>
+      <para>
+        After creating a view, the developer adds it to a containing view.
+        On the main screen, this could be a UIWindow or it could be the
+        <see cref="P:UIKit.UIViewController.View" /> property of the current
+        <see cref="T:UIKit.UIViewController" />. This is done using one of the
+        following methods:
+      </para>
+      <list type="bullet">
+        <item>
+          <term>
+            <see cref="M:UIKit.UIView.AddSubview(UIKit.UIView)" />
+          </term>
+        </item>
+        <item>
+          <term>
+            <see cref="M:UIKit.UIView.InsertSubview(UIKit.UIView,System.nint)" />
+          </term>
+        </item>
+        <item>
+          <term>
+            <see cref="M:UIKit.UIView.InsertSubviewAbove(UIKit.UIView,UIKit.UIView)" />
+          </term>
+        </item>
+        <item>
+          <term>
+            <see cref="M:UIKit.UIView.InsertSubviewBelow(UIKit.UIView,UIKit.UIView)" />
+          </term>
+        </item>
+      </list>
+      <para>
+        Although developers can use the above APIs to add subviews to any
+        UIView, Apple advises against extending
+        existing high-level views by adding subviews to them.  Instead developers should use the public API those high-level
+        views expose.
+      </para>
+      <format type="text/html">
+        <h2>Bounds and Sizes</h2>
+      </format>
+      <para>
+        Each view is created with an initial <see cref="P:UIKit.UIView.Frame" />.  The Frame is a
+        <see cref="T:System.Drawing.RectangleF" /> structure that represents both the size and the initial
+        position for the view.  The coordinates for the Frame are used to
+        specify the position relative to its superview.
+      </para>
+      <para>
+        You can resize and move views around using the frame.  Every time
+        you set the frame the view will layout its subviews. If you are
+        purely moving the view, using frame can cause performance issues, as
+        it relays out the view and all its subviews.
+      </para>
+      <para>
+        The <see cref="P:UIKit.UIView.Bounds" /> is the usable
+        frame of the view.  Unlike the <see cref="P:UIKit.UIView.Frame" />, the <see cref="P:UIKit.UIView.Bounds" /> do not use the container's
+        coordinate space, but instead represent the size in the view's own
+        coordinate space.  By default the <see cref="P:UIKit.UIView.Bounds" /> location is (0,0).
+      </para>
+      <para>
+        When the developer updates the <see cref="P:UIKit.UIView.Bounds" />
+        property, it will modify the <see cref="P:UIKit.UIView.Frame" /> based on the value of the
+        <see cref="P:UIKit.UIView.Center" />.  Developers can also change the position of a view by updating the <see cref="P:UIKit.UIView.Center" /> property.
+        
+      </para>
+      <para>
+        When the <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=UIKit%20UIView%20Bound&amp;scope=Xamarin" title="P:UIKit.UIView.Bound">P:UIKit.UIView.Bound</a></format> property is changed, the size of the view is affected
+        relative to the <see cref="P:UIKit.UIView.Center" /> property.
+      </para>
+      <format type="text/html">
+        <h2>Animation</h2>
+      </format>
+      <para>Apple recommends that app developers use the <see cref="T:UIKit.UIViewPropertyAnimator" /> class to implement animations on their <see cref="T:UIKit.UIView" /> objects. Apple also discourages, but has not deprecated, any other animation APIs on the <see cref="T:UIKit.UIView" /> class. Additionally, developers can implement implicit animations for some or all properties by creating a custom views that has a custom <see cref="P:UIKit.UIView.Layer" /> property that provides animation actions for animation keys.</para>
+      <para>Developers can animate changes in the geometry or appearance of a UIView by creating a new <see cref="T:UIKit.UIViewPropertyAnimator" />, configuring it, and calling its <see cref="M:UIKit.UIViewPropertyAnimator.StartAnimation(System.Double)" /> method. Developers can update the animations (for example, to cancel it) by calling the <see cref="M:UIKit.UIViewPropertyAnimator.AddAnimations(System.Action,System.nfloat)" /> method while the animation is in progress. The <format type="text/html"><a href="https://developer.xamarin.com/recipes/ios/animation/coreanimation/animate_a_uiview_using_uikit/">Animate a UIView using UIKit</a></format> recipe shows how to create an cancel an animation by using the <see cref="T:UIKit.UIViewPropertyAnimator" /> class.</para>
+      <para>
+        Alternatively, developers can create animations by calling the
+        <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=M:UIKit.UIView.BeginAnimations(string)&amp;scope=Xamarin" title="M:UIKit.UIView.BeginAnimations(string)">M:UIKit.UIView.BeginAnimations(string)</a></format> method, configuring the animation, making the
+        changes to the animatable properties and then completing the
+        transaction by calling <see cref="M:UIKit.UIView.CommitAnimations" />.
+      </para>
+      <para>
+        After the developer calls <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=M:UIKit.UIView.BeginAnimations(string)&amp;scope=Xamarin" title="M:UIKit.UIView.BeginAnimations(string)">M:UIKit.UIView.BeginAnimations(string)</a></format>, they can
+        call the following methods to configure the animation:
+      </para>
+      <list type="bullet">
+        <item>
+          <term>
+            <see cref="M:UIKit.UIView.SetAnimationDuration(System.Double)" />
+          </term>
+        </item>
+        <item>
+          <term>
+            <see cref="M:UIKit.UIView.SetAnimationCurve(UIKit.UIViewAnimationCurve)" />
+          </term>
+        </item>
+        <item>
+          <term>
+            <see cref="M:UIKit.UIView.SetAnimationDelay(System.Double)" />
+          </term>
+        </item>
+        <item>
+          <term>
+            <see cref="M:UIKit.UIView.SetAnimationDelegate(Foundation.NSObject)" />
+          </term>
+        </item>
+        <item>
+          <term>
+            <see cref="M:UIKit.UIView.SetAnimationRepeatAutoreverses(System.Boolean)" />
+          </term>
+        </item>
+        <item>
+          <term>
+            <see cref="M:UIKit.UIView.SetAnimationRepeatCount(System.Single)" />
+          </term>
+        </item>
+        <item>
+          <term>
+            <see cref="M:UIKit.UIView.SetAnimationDidStopSelector(ObjCRuntime.Selector)" />
+          </term>
+        </item>
+      </list>
+      <para>
+        The following example shows how to use these methods in a
+        transaction:
+      </para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+UIView.BeginAnimations (null);
+UIView.SetAnimationDuration (5);
+UIView.SetAnimationCurve (UIViewAnimationCurve.EaseOut);
+view.Bounds = new RectangleF (0, 0, 100, 100);
+view.Position = new PointF (200, 200);
+UIView.CommitAnimations ();
+]]></code>
+      </example>
+      <para>
+        Alternatively, developers can create transactions and set configuration
+        options in the <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=UIKit%20UIView%20Animate&amp;scope=Xamarin" title="M:UIKit.UIView.Animate*">M:UIKit.UIView.Animate*</a></format> collection of methods. These methods take, in a single call, the delay, the duration, an animation block, and an action to be invoked when the animation
+        completes. However, Apple also discourages the use of these APIs. Their use is shown below:
+      </para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+UIView.Animate (duration, delay, UIViewAnimationOption.Autoreverse,
+  delegate {
+      view.Bounds = new RectangleF (0, 0, 100, 100);
+      view.Position = new PointF (200, 200);
+   },
+   delegate {
+       Console.WriteLine ("Animation completed");
+   }
+);
+          ]]></code>
+      </example>
+      <para>
+        The above is the basic set of animations that are directly supported by the UIView class. For finer control over animations, developers can use the  <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=Core%20Animation&amp;scope=Xamarin" title="N:CoreAnimation">N:CoreAnimation</a></format> API to animate properties on their UI elements. While implicit animation is disabled for the default layer of a UIView, developers can extend the <see cref="T:UIKit.UIView" /> class to create a derived UIView that contain a derived <see cref="T:CoreAnimation.CALayer" /> that handles animation action keys correctly. Developers should note that animated properties that are changed when adding a subview will be animated during the addition if their default value differs from the final value. For example, the "bounds" and "position" keys, if captured and animated, will cause added subviews to animate in from the origin of the screen.
+      </para>
+      <example>
+        <para>To enable implicit animation, the developer first creates a custom layer that supplies customized animations for the keys or combinations of keys that the layer will handle. The following custom layer example animates the corner radius and transparency for custom views that use it:</para>
+        <code lang="csharp lang-csharp"><![CDATA[
+public class CustomLayer : CALayer
+{
+  public CustomLayer(IntPtr ptr) : base(ptr)
+  {
+
+  }
+
+  public override CAAnimation AnimationForKey(string key)
+  {
+      CABasicAnimation animation = CABasicAnimation.FromKeyPath(key);
+      animation.From = this.ValueForKey(new NSString(key));
+      animation.Duration = 1f;
+      return animation;
+  }
+
+  override public NSObject ActionForKey(string key)
+  {
+      if (key == "cornerRadius" || key == "opacity")
+      {
+          return this.AnimationForKey(key);
+      }
+      else
+      {
+          return base.ActionForKey(key);
+      }
+  }
+}
+]]></code>
+        <para>Then, the developer extends UIView, exporting the "layerClass" selector to return a class for the custom layer created above:</para>
+        <code lang="csharp lang-csharp"><![CDATA[
+public class CustomView : UIView
+{
+  public CustomView(CGRect r) : base(r)
+  {
+  }
+
+  [Export("layerClass")]
+  public static ObjCRuntime.Class GetLayerClass()
+  {
+      return new ObjCRuntime.Class(typeof(CustomLayer));
+  }
+}]]></code>
+        <para>Finally, when the property is set, the changed property is animated with the animation properties that were specified by the custom layer:</para>
+        <code lang="csharp lang-csharp"><![CDATA[
+fadeAndRound = () =>
+          {
+              redView.Layer.CornerRadius = 40;
+              redView.Alpha = 0.5f;
+          };]]></code>
+      </example>
+      <format type="text/html">
+        <h2>Threading</h2>
+      </format>
+      <para>
+        UIView methods are not thread safe. Developers should avoid configuring
+        or invoking any of the UIView static methods from any thread that is
+        not the main thread.  Newer versions of MonoTouch catch these
+        mistakes in Debug builds by throwing an exception.  See the
+        <see cref="F:UIKit.UIApplication.CheckForIllegalCrossThreadCalls" /> for
+        more information.
+      </para>
+      <para>
+        To perform some work in a background thread that must
+        update any of the UIView properties, or to invoke any of the
+        UIView static methods, developers should use either the
+        <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=M:Foundation.NSObject.BeginInvokeOnMainThread()&amp;scope=Xamarin" title="M:Foundation.NSObject.BeginInvokeOnMainThread()">M:Foundation.NSObject.BeginInvokeOnMainThread()</a></format> or
+        <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=M:Foundation.NSObject.InvokeOnMainThread()&amp;scope=Xamarin" title="M:Foundation.NSObject.InvokeOnMainThread()">M:Foundation.NSObject.InvokeOnMainThread()</a></format> methods.  Both
+        methods take a C# delegate or lambda that is invoked on the main
+        thread.
+      </para>
+      <para>
+        The <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=M:Foundation.NSObject.InvokeOnMainThread()&amp;scope=Xamarin" title="M:Foundation.NSObject.InvokeOnMainThread()">M:Foundation.NSObject.InvokeOnMainThread()</a></format> method will
+        invoke the specified delegate method synchronously on the main
+        thread. The
+        <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=M:Foundation.NSObject.BeginInvokeOnMainThread()&amp;scope=Xamarin" title="M:Foundation.NSObject.BeginInvokeOnMainThread()">M:Foundation.NSObject.BeginInvokeOnMainThread()</a></format> will queue
+        the action to be executed on the main thread.
+      </para>
+      <para>
+        Example:
+      </para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+//
+// This performs an expensive computation in the background, and then
+// updates the main UI when done.
+//
+void DoSomeWork (UIView view)
+{
+  double sum = 0;
+  for (int i = 0; i &lt; Int32.MaxValue; i++)
+      sum += i * i;
+
+  // Now invoke the update on the main UI.
+  view.BeginInvokeOnMainThread (delegate {
+      view.BackgroundColor = UIColor.Green;
+      statusLabel.Text = "Sum is: " + sum;
+  });
+}
+          ]]></code>
+      </example>
+      <para>
+        The following example shows a helper method that can be used to run
+        the provided action on the main thread. It is optimized for calling from the main thread already, and avoids
+        a trip to the main loop pump:
+      </para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+static NSObject Invoker = new NSObject();
+public static void EnsureInvokedOnMainThread (Action action)
+{
+    if (NSThread.Current.IsMainThread) {
+        action ();
+        return;
+    }
+    Invoker.BeginInvokeOnMainThread (() => action());
+}
+        ]]></code>
+      </example>
+      <format type="text/html">
+        <h2>How to Subclass UIView</h2>
+      </format>
+      <para>
+        Developers will often subclass UIView to provide their own custom
+        views to use. This section discusses the different classes of
+        members that developers would overwrite to create their custom
+        classes.
+      </para>
+      <format type="text/html">
+        <h3>Initialization</h3>
+      </format>
+      <para>
+        Subclasses of UIView should chain into either the UIView
+        constructor that is initialized with an initial frame (<format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=C:UIKit.UIView(System.Drawing.RectangleF)&amp;scope=Xamarin" title="C:UIKit.UIView(System.Drawing.RectangleF)">C:UIKit.UIView(System.Drawing.RectangleF)</a></format>). The following code shows one way to do this:
+      </para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+public class MyView : UIView {
+    public MyView (RectangleF frame) : base (frame)
+    {
+        // Your initialization code goes here
+    }
+}
+          ]]></code>
+      </example>
+      <para>
+        In an object that will be deserialized from an archive produced by the
+        UI designer, the developer must chain to the <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=C:UIKit.UIView(Foundation.NSCoder)&amp;scope=Xamarin" title="C:UIKit.UIView(Foundation.NSCoder)">C:UIKit.UIView(Foundation.NSCoder)</a></format>
+        constructor and  flag the constructor as being the one
+        implementing the selector "initWithCoder:", as shown in the code below:
+      </para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+public class MyView : UIView {
+    [Export ("initWithCoder:")]
+    public MyView (NSCoder coder) : base (coder)
+    {
+        // Your initialization code goes here
+    }
+}
+          ]]></code>
+      </example>
+      <para>
+        By default UIViews will use a <see cref="T:CoreAnimation.CALayer" /> instance for their
+        backing store.  The section on "Changing the CALayer" below has both
+        information on how to make this change and a sample.
+      </para>
+      <para>
+        The developer should initialize child views in the constructor for the parent view.
+      </para>
+      <format type="text/html">
+        <h3>Custom Drawing</h3>
+      </format>
+      <para>
+        To implement custom drawing code in a view, developers can subclass the
+        UIView and override the <see cref="M:UIKit.UIView.Draw(CoreGraphics.CGRect)" />
+        method. The drawing code placed in the Draw method can use <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=Core%20Graphics&amp;scope=Xamarin" title="N:CoreGraphics">N:CoreGraphics</a></format> to draw with. The steps to draw
+        with Core Graphics are:
+      </para>
+      <list type="bullet">
+        <item>
+          <term>Obtain a reference to the current graphics context.</term>
+        </item>
+        <item>
+          <term>Set up any desired drawing attributes, such as fill and stroke colors for instance.</term>
+        </item>
+        <item>
+          <term>Create geometry from Core Graphics primitives.</term>
+        </item>
+        <item>
+          <term>Draw the geometry.</term>
+        </item>
+      </list>
+      <para>
+        For example, the following code shows an implementation of an
+        overridden Draw method that draws a triangle:
+      </para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+public override void Draw (RectangleF rect)
+{
+    base.Draw (rect);
+
+    var context = UIGraphics.GetCurrentContext ();
+
+    context.SetLineWidth(4);
+    UIColor.Red.SetFill ();
+    UIColor.Blue.SetStroke ();
+
+    var path = new CGPath ();
+
+    path.AddLines(new PointF[]{
+        new PointF(100,200),
+        new PointF(160,100), 
+        new PointF(220,200)
+    });
+
+    path.CloseSubpath();
+
+    context.AddPath(path);		
+    context.DrawPath(CGPathDrawingMode.FillStroke);
+}
+          ]]></code>
+      </example>
+      <para>
+        The developer should not call <see cref="M:UIKit.UIView.Draw(CoreGraphics.CGRect)" /> directly. iOS calls it
+        during run loop processing. iOS first calls it the first time through the run loop, and then whenever the view
+        has been marked as needing display with a call to <see cref="M:UIKit.UIView.SetNeedsDisplayInRect(CoreGraphics.CGRect)" /> or
+        <see cref="M:UIKit.UIView.SetNeedsDisplayInRect(CoreGraphics.CGRect)" />.
+      </para>
+      <para>
+        Core Graphics uses device independent points rather than
+        pixels. This allows drawing code to scale between different
+        resolutions. For example, on a Retina display, 1 point is equivalent
+        to 2 pixels, while on non-Retina displays, 1 point corresponds to 1
+        pixel.
+      </para>
+      <format type="text/html">
+        <h3>Printing</h3>
+      </format>
+      <para>
+        UIViews can be printed.  The default behavior is for the contents of
+        the UIView as rendered by the <see cref="M:UIKit.UIView.Draw(CoreGraphics.CGRect)" />
+        method to be printed.
+      </para>
+      <para>
+        Developers can provide a different rendering for the view when
+        printed by overriding the <see cref="M:UIKit.UIView.DrawRect(CoreGraphics.CGRect,UIKit.UIViewPrintFormatter)" />
+        method.
+      </para>
+      <format type="text/html">
+        <h3>Constraints</h3>
+      </format>
+      <para>
+        To use the constraint-based
+        layout system i(ntroduced with iOS 6.0) in a subclassed view, the developer must
+        respond to the requiresConstraintBasedLayout selector, as shown in the following example:
+      </para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+class MyView : UIView {
+    [Export ("requiresConstraintBasedLayout")]
+    bool UseNewLayout ()
+    {
+        return true;
+    }
+}
+          ]]></code>
+      </example>
+      <para>
+        To use constraints to layout the subviews of a view, developers must override the <see cref="M:UIKit.UIView.UpdateConstraints" /> method. This method is
+        called before the constraints-based layout is performed.
+      </para>
+      <para>
+        Constraints-based layout is performed on the alignment rectangle
+        instead of the view's <see cref="P:UIKit.UIView.Frame" />.
+        The alignment rectangle by default is computed as the <see cref="P:UIKit.UIView.Frame" /> modified by the <see cref="P:UIKit.UIView.AlignmentRectInsets" />.  Developers can
+        change that behavior and provide a custom alignment rectangle by
+        overriding the <see cref="M:UIKit.UIView.AlignmentRectForFrame(CoreGraphics.CGRect)" />
+        and <see cref="M:UIKit.UIView.FrameForAlignmentRect(CoreGraphics.CGRect)" />
+        methods.
+      </para>
+      <format type="text/html">
+        <h3>Layout</h3>
+      </format>
+      <para>
+        The default layout system for UIViews is very simple.  UIViews are
+        created with an initial <see cref="P:UIKit.UIView.Frame" />
+        and an <see cref="P:UIKit.UIView.AutoresizingMask" /> that
+        determines how the view will be resized in response to changes in
+        the container's boundaries.
+      </para>
+      <para>
+        Developers should set the default <see cref="P:UIKit.UIView.AutoresizingMask" /> property after
+        initialization.
+      </para>
+      <para>
+        For views the will be a container for other views, developers should
+        configure their <see cref="P:UIKit.UIView.AutoresizingMask" /> property.  If the
+        layout behavior provided is not sufficient, the developer should override the
+        <see cref="M:UIKit.UIView.LayoutSubviews" /> method.
+        This method is responsible for updating the <see cref="P:UIKit.UIView.Frame" /> property of each of the
+        subviews.
+      </para>
+      <para>
+        For views that change their state in response to some API calls,
+        developers should call the <see cref="M:UIKit.UIView.SetNeedsLayout" />, instead of laying out the view themselves. The layout event will then be processed
+        the next time the main loop runs.  By using this approach, develoers can
+        coalesce multiple changes to the layout in a single pass.
+      </para>
+      <para>
+        UIViews can implement the <see cref="M:UIKit.UIView.SizeThatFits(CoreGraphics.CGSize)" />
+        method to report back what is their desired size based on the
+        contents of the view.
+      </para>
+      <para>
+        Developers can override the <see cref="M:UIKit.UIView.SubviewAdded(UIKit.UIView)" />
+        and the <see cref="M:UIKit.UIView.WillRemoveSubview(UIKit.UIView)" />
+        to track when subviews are added or removed to a UIView.
+      </para>
+      <para>
+        Developers can override the <see cref="M:UIKit.UIView.WillMoveToWindow(UIKit.UIWindow)" />
+        and the <see cref="M:UIKit.UIView.MovedToWindow" /> to
+        track when views are moved from one <see cref="T:UIKit.UIWindow" /> to another.
+      </para>
+      <para>
+        Developers can override the <see cref="M:UIKit.UIView.WillMoveToSuperview(UIKit.UIView)" />
+        and the <see cref="M:UIKit.UIView.MovedToSuperview" /> to
+        track when views are added or removed from a superview.
+      </para>
+      <format type="text/html">
+        <h2>Constraints Based Layout</h2>
+      </format>
+      <para>
+        A constraints-based layout system was added in iOS 6.0.  This system
+        differs from the traditional layout system in that it uses rules
+        (constraints) that describe the relationships between subviews that
+        should be preserved.  When views change in size (for example a label
+        is updated) or the size of the container changes (for example, after
+        a rotation), the new positions and sizes for the subviews are
+        computed based on these constraints.
+      </para>
+      <para>
+        To opt into this system, a subclass of UIView should expose a static
+        method that is exported as "requiresConstraintBasedLayout" and
+        returns true, like this:
+      </para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+class MyView : UIView {
+    [Export ("requiresConstraintBasedLayout")]
+    static bool RequiresConstraintBasedLayout ()
+    {
+        return true;
+    }
+}
+          ]]></code>
+      </example>
+      <format type="text/html">
+        <h3>Event Handling</h3>
+      </format>
+      <para>
+        When using gesture recognizers, developers can add those directly to
+        the constructor at initialization time.
+      </para>
+      <para>
+        To perform low-level touch event handling, developers override the <see cref="M:UIKit.UIResponder.TouchesBegan(Foundation.NSSet,UIKit.UIEvent)" />, <see cref="M:UIKit.UIResponder.TouchesMoved(Foundation.NSSet,UIKit.UIEvent)" />, <see cref="M:UIKit.UIResponder.TouchesEnded(Foundation.NSSet,UIKit.UIEvent)" /> and <see cref="M:UIKit.UIResponder.TouchesCancelled(Foundation.NSSet,UIKit.UIEvent)" /> methods.
+      </para>
+      <para>Since iOS 9.0, <see cref="M:UIKit.UIResponder.TouchesMoved(Foundation.NSSet,UIKit.UIEvent)" /> events are raised on supported hardware and configurations for changes in user-applied pressure. The <see cref="P:UIKit.UITouch.Force" /> property of the <see cref="T:UIKit.UITouch" /> object in the <c>touches</c> set argument contains the magnitude of the touch that raised the event. The following example shows a basic use:</para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+if (TraitCollection.ForceTouchCapability == UIForceTouchCapability.Available) {
+    UITouch t = touches.AnyObject as UITouch;
+    ForceLabel.Text = "Force: " + t.Force.ToString ();
+}
+else {
+    ForceLabel.Text = "Force Not Active";
+}]]></code>
+      </example>
+      <para>
+        Application developers do not need to call the base methods for any of the above
+        methods if they are overriding UIView directly.  But they should call base when deriving from another UIView subclass.
+      </para>
+      <para>
+        Application developers can control whether a gesture recognizer is activated by
+        overriding the <see cref="M:UIKit.UIView.GestureRecognizerShouldBegin(UIKit.UIGestureRecognizer)" />
+        method.
+      </para>
+      <format type="text/html">
+        <h2>Views and CALayers</h2>
+      </format>
+      <para>
+        Each UIView is backed by a <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=Core%20Animation&amp;scope=Xamarin" title="N:CoreAnimation">N:CoreAnimation</a></format> Layer (<see cref="T:CoreAnimation.CALayer" />).  A CALayer
+        represents the GPU-backed bitmap that is used to render the view
+        into the screen.  Painting into a UIView  actually
+        paints into the CALayer.
+      </para>
+      <para>
+        While the appearance of a UIView can be controlled by setting its
+        <see cref="P:UIKit.UIView.Frame" />, <see cref="P:UIKit.UIView.Alpha" />, <see cref="P:UIKit.UIView.BackgroundColor" />, or by overriding its <see cref="M:UIKit.UIView.Draw(CoreGraphics.CGRect)" /> method, all
+        those properties and functions are in fact modifying the <see cref="T:CoreAnimation.CALayer" />
+        owned by the view.
+      </para>
+      <para>
+        The <see cref="P:UIKit.UIView.Layer" /> property is a reference to the
+        CALayer owned by the view. Developers change the appearance of the view
+        by modifying the properties of that layer.
+      </para>
+      <para>
+        For example, modifyng the <see cref="P:CoreAnimation.CALayer.CornerRadius" /> property of a view's layer change the corner radius of the view:
+      </para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+view.Layer.CornerRadius = 4;
+        ]]></code>
+      </example>
+      <para>
+        Developers can add drop shadows:
+      </para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+view.Layer.ShadowColor = new CGColor (1, 0, 0);
+view.Layer.ShadowOpacity = 1.0f;
+view.Layer.ShadowOffset = new SizeF (0, 4);
+        ]]></code>
+      </example>
+      <para>
+        Developers can also apply a 3D transformation to the layer:
+      </para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+view.Layer.Transform = CATransform3D.MakeRotation ((float)(Math.PI / 2), 1, 1, 1);
+        ]]></code>
+      </example>
+      <para>
+        This transformation is a full 3D transform, with a
+        perspective element, and is more versatile than UIView's 2D
+        Transform property. The Frame property is no longer useful after a 3D transformation of this kind.
+      </para>
+      <format type="text/html">
+        <h3>Changing the CALayer</h3>
+      </format>
+      <para>
+        The <see cref="P:UIKit.UIView.Layer" /> owned by a view is automatically
+        created and assigned to the view by UIKit and it defaults to be a
+        <see cref="T:CoreAnimation.CALayer" /> instance.   You can control the type
+        of layer that is created for a view by responding to the "layerClass" 
+        selector in a static method.
+      </para>
+      <para>
+        Here is an example of a UIView subclass that uses a custom <see cref="T:CoreAnimation.CALayer" /> to do its drawing. This
+        layer, and therefore the view, always displays the color blue:
+      </para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+public class BlueView : UIView
+{
+    [Export ("layerClass")]
+    public static Class GetLayerClass ()
+    {
+        return new Class (typeof (BlueLayer));
+    }
+
+    public override void Draw (RectangleF rect)
+    {
+        // Do nothing, the Layer will do all the drawing
+    }
+}
+
+public class BlueLayer : CALayer
+{
+    public override void DrawInContext (CGContext ctx)
+    {
+        ctx.SetFillColor (0, 0, 1, 1);
+        ctx.FillRect (Bounds);
+    }
+}
+          ]]></code>
+      </example>
+      <para>
+        In this example, a new UIView class called "BlueView" is created. It
+        exports a static method called "GetLayerClass" that tells UIKit the
+        type of layer that this view wishes to own. In this example, the
+        BlueView wishes to own a BlueLayer.
+      </para>
+      <para>
+        It is now up to the BlueLayer to provide the visual representation
+        of the view. It does this by executing CoreGraphics drawing code in
+        its <see cref="M:CoreAnimation.CALayer.DrawInContext(CoreGraphics.CGContext)" />
+        method. This method is very similar to a UIView's Draw method but is used to fill the layer.
+        
+      </para>
+      <para>
+        Even though the BlueLayer will do all drawing for the BlueView, the
+        view must still override its Draw method. This override should do
+        nothing and is just a signal to UIKit that the Layer will do all the
+        work.
+      </para>
+      <format type="text/html">
+        <h2>Motion Effects</h2>
+      </format>
+      <para> Motion Effects are a family of effects that can be
+	  applied to UIViews in response to external events, typically
+	  the device tilt.  </para>
+      <para>
+	  Developers can tie to motion effects the same properties that are
+	  animatable already.  UIKit ships with <see cref="T:UIKit.UIInterpolatingMotionEffect" /> which
+	  allows control over a single property in response to a device tilt.
+
+	</para>
+      <para>
+	  After the developer creates an effect, they attach it to a view by
+	  calling the <see cref="M:UIKit.UIView.AddMotionEffect(UIKit.UIMotionEffect)" /> method and
+	  remove it by calling the <see cref="M:UIKit.UIView.RemoveMotionEffect(UIKit.UIMotionEffect)" /> method.
+	  The <see cref="P:UIKit.UIView.MotionEffects" />
+	  property can also be used to query or set a number of motion
+	  effects at once.
+
+	</para>
+      <para>
+	  The developer can also create custom motion effects by subclassing the <see cref="T:UIKit.UIMotionEffect" />.
+	</para>
+      <format type="text/html">
+        <h2>Tint Color</h2>
+      </format>
+      <para>
+	Starting with iOS 7, the <see cref="P:UIKit.UIView.TintColor" /> property will now
+	propagate to subviews.  This allows the developer to set a
+	global tint color, and the color will be passed down to
+	subviews for views that matter.  Some UIViews will respond
+	specially based on the TintColor.  Developers should also set the
+	<see cref="P:UIKit.UIView.TintAdjustmentMode" /> to
+	control the desaturation when some views are no longer active.
+
+      </para>
+      <!--
+      <format type="text/html">
+        <h2>Dynamics</h2>
+      </format>
+-->
+      <format type="text/html">
+        <h2>View Hierarchies</h2>
+      </format>
+      <para>iOS user interfaces are built from <see cref="T:UIKit.UIView" /> hierarchies. Parent-child relationships determine not only the visual aspects of the UI, but determine how the application responds to touch events and orientation changes.</para>
+      <para>View relationships may be built programmatically or via XIB files. <see cref="T:UIKit.UIView" />s may have many <see cref="P:UIKit.UIView.Subviews" /> but only one <see cref="P:UIKit.UIView.Superview" />.</para>
+      <para>The most common way to add subviews is to use <see cref="M:UIKit.UIView.AddSubview(UIKit.UIView)" />, which appends the child view to the list of <see cref="P:UIKit.UIView.Subviews" />. More precise control of ordering during insertion may be done with the <see cref="M:UIKit.UIView.InsertSubview(UIKit.UIView,System.nint)" />, <see cref="M:UIKit.UIView.InsertSubviewAbove(UIKit.UIView,UIKit.UIView)" />, and <see cref="M:UIKit.UIView.InsertSubviewBelow(UIKit.UIView,UIKit.UIView)" /> methods.</para>
+      <para>The ordering of <see cref="P:UIKit.UIView.Subviews" /> may be manipulated with the <see cref="M:UIKit.UIView.BringSubviewToFront(UIKit.UIView)" />, <see cref="M:UIKit.UIView.SendSubviewToBack(UIKit.UIView)" />, and <see cref="M:UIKit.UIView.ExchangeSubview(System.nint,System.nint)" /> methods.</para>
+      <format type="text/html">
+        <h2>Focus</h2>
+      </format>
+      <para>On handheld iOS devices, the user interacts directly with screen objects. On tvOS, a remote is used to navigate through the elements on the screen and only one <see cref="T:UIKit.UIView" /> has "focus." Focus-related APIs include:</para>
+      <list type="bullet">
+        <item>
+          <term>
+            <see cref="P:UIKit.UIView.CanBecomeFocused" />
+          </term>
+          <description>
+            <see langword="true" /> if the <see cref="T:UIKit.UIView" /> may become the focused view. (See discussion below about additional requirements.)</description>
+        </item>
+        <item>
+          <term>
+            <see cref="M:UIKit.UIView.DidUpdateFocus(UIKit.UIFocusUpdateContext,UIKit.UIFocusAnimationCoordinator)" />
+          </term>
+          <description>Called after the <see cref="T:UIKit.UIView" /> has either lost or received focus. (See also <see cref="M:UIKit.UIView.ShouldUpdateFocus(UIKit.UIFocusUpdateContext)" />.)</description>
+        </item>
+        <item>
+          <term>
+            <see cref="P:UIKit.UIView.Focused" />
+          </term>
+          <description>Whether the <see cref="T:UIKit.UIView" /> is the focused view.</description>
+        </item>
+        <item>
+          <term>
+            <see cref="P:UIKit.UIView.PreferredFocusedView" />
+          </term>
+          <description>Returns the <see cref="T:UIKit.UIView" /> that should actually be focused. (For instance, a child <see cref="T:UIKit.UIView" />.)</description>
+        </item>
+        <item>
+          <term>
+            <see cref="M:UIKit.UIView.SetNeedsFocusUpdate" />
+          </term>
+          <description>When this is the active focus environment, requests a focus update, which can potentially change the <see cref="P:UIKit.UIViewController.PreferredFocusedView" />. (See also <see cref="M:UIKit.UIViewController.UpdateFocusIfNeeded" />.)</description>
+        </item>
+        <item>
+          <term>
+            <see cref="M:UIKit.UIView.ShouldUpdateFocus(UIKit.UIFocusUpdateContext)" />
+          </term>
+          <description>Called prior to the <see cref="T:UIKit.UIView" /> either losing or receiving focus. If either focus environment returns <see langword="false" />, the focus update is canceled.</description>
+        </item>
+        <item>
+          <term>
+            <see cref="M:UIKit.UIViewController.UpdateFocusIfNeeded" />
+          </term>
+          <description>If any focus environment has a pending update, this method forces an immediate focus update. Unlike <see cref="M:UIKit.UIView.SetNeedsFocusUpdate" />, this method may be called by any <see cref="T:UIKit.UIView" />, whether it currently contains focus or not.</description>
+        </item>
+      </list>
+      <para>In addition to <see cref="P:UIKit.UIView.CanBecomeFocused" /> returning <see langword="true" />, for a <see cref="T:UIKit.UIView" /> to be focused, it must have a <see cref="P:UIKit.UIView.Hidden" /> value of <see langword="false" />, a <see cref="P:UIKit.UIView.UserInteractionEnabled" /> value of <see langword="true" />, a <see cref="P:UIKit.UIView.Alpha" /> value greater than 0, and it must not be obscured by another <see cref="T:UIKit.UIView" />. </para>
+    </remarks>
+    <related type="recipe" href="https://developer.xamarin.com/ios/Recipes/Animation/CoreAnimation/Animate_a_UIView_using_UIKit">Animate a UIView using UIKit</related>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIView_Class/index.html">Apple documentation for <c>UIView</c></related>
+  </Docs>
+</Documentation>

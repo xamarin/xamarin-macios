@@ -1,0 +1,23 @@
+<Documentation>
+  <Docs DocId="T:MapKit.MKOverlayRenderer">
+    <summary>The visual representation of a <see cref="T:MapKit.MKOverlay" />.</summary>
+    <remarks>
+      <para>This class, introduced in iOS 7, replaces <see cref="T:MapKit.MKOverlayView" />. It has higher performance and renders the overlay beneath map labels. The map-related methods are the same as that of <see cref="T:MapKit.MKOverlayView" />.</para>
+      <para>iOS distinguishes between the <see cref="T:MapKit.MKOverlay" />, which represents the geometry of an overlay, and it's visual presentation. Prior to iOS 7, overlays were rendered using <see cref="T:MapKit.MKOverlayView" />s. In iOS 7, these classes have been deprecated, and overlays now use the more efficient subclasses of <see cref="T:MapKit.MKOverlayRenderer" />. </para>
+      <para>To create an overlay and its renderer, application developers must add the overlay to the <see cref="T:MapKit.MKMapView" /> and return the renderer either using the <see cref="P:MapKit.MKMapView.OverlayRenderer" /> property or by overriding the <see cref="M:MapKit.MKMapViewDelegate.OverlayRenderer(MapKit.MKMapView,MapKit.IMKOverlay)" /> method.</para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+MKPolygon hotelOverlay = MKPolygon.FromCoordinates(coordinates);
+mkMap.AddOverlay (hotelOverlay);
+var polygon = MKPolygon.FromCoordinates(coordinates);
+var renderer = new MKPolygonRenderer(polygon) { FillColor = UIColor.Red, Alpha = 0.5f };
+mkMap.OverlayRenderer = (view, overlay) => renderer;
+          ]]></code>
+      </example>
+      <para>
+        <img href="~/MapKit/_images/MKOverlayRenderer.png" alt="Screenshot showing a custom overlay" />
+      </para>
+    </remarks>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/MapKit/Reference/MKOverlayRenderer_class/index.html">Apple documentation for <c>MKOverlayRenderer</c></related>
+  </Docs>
+</Documentation>

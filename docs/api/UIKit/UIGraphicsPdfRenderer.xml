@@ -1,0 +1,25 @@
+<Documentation>
+  <Docs DocId="T:UIKit.UIGraphicsPdfRenderer">
+    <summary>A <see cref="T:UIKit.UIGraphicsRenderer" /> that creates PDFs.</summary>
+    <remarks>
+      <para>
+      Introduced in iOS 10, the <see cref="T:UIKit.UIGraphicsPdfRenderer" /> allows custom drawing code that utilitizes wide color and outputs its results in PDF format.
+      </para>
+      <para>The common way to use <see cref="T:UIKit.UIGraphicsPdfRenderer" /> is to call <see cref="M:UIKit.UIGraphicsPdfRenderer.CreatePdf(System.Action{UIKit.UIGraphicsPdfRendererContext})" />, which takes an <c>Action</c> as an argument, allowing the developer to either pass in drawing code or use a lambda expression:</para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+var pageRect = new CGRect (0, 0, width: 8.5 * 72, height: 11 * 72);
+var renderer = new UIGraphicsPdfRenderer (pageRect, new UIGraphicsPdfRendererFormat ());
+
+var pdfData = renderer.CreatePdf (ctx => {
+    ctx.BeginPage ();
+    var text = new NSString ("Hello Wrold!");
+    text.DrawString (new CGPoint (0, 0), UIFont.BoldSystemFontOfSize (72));
+});
+    ]]></code>
+      </example>
+      <para>The new drawing method is still based on manipulating the state of a "current context" but instead of a <see cref="T:CoreGraphics.CGContext" /> it is now a subclass of <see cref="T:UIKit.UIGraphicsRendererContext" /> (either <see cref="T:UIKit.UIGraphicsImageRendererContext" /> or <see cref="T:UIKit.UIGraphicsPdfRendererContext" />). If necessary, developers can retrieve the current context as a <see cref="T:CoreGraphics.CGContext" /> using <see cref="M:UIKit.UIGraphicsRenderer.GetContext(UIKit.UIGraphicsRendererFormat)" />.</para>
+    </remarks>
+    <related type="externalDocumentation" href="https://developer.apple.com/reference/UIKit/UIGraphicsPDFRenderer">Apple documentation for <c>UIGraphicsPDFRenderer</c></related>
+  </Docs>
+</Documentation>

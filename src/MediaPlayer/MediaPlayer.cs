@@ -16,6 +16,7 @@ using ObjCRuntime;
 
 namespace MediaPlayer {
 	// NSInteger -> MPMoviePlayerController.h
+	/// <summary>An enumeration of possible states in which the <see cref="T:MediaPlayer.MPMoviePlayerController" /> may be. Used with the <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=Media%20Player%20MPMovie%20Cotnroller%20Playback%20State&amp;scope=Xamarin" title="P:MediaPlayer.MPMovieCotnroller.PlaybackState">P:MediaPlayer.MPMovieCotnroller.PlaybackState</a></format> property.</summary>
 	[NoMac]
 	[NoTV]
 	[NoWatch]
@@ -33,6 +34,7 @@ namespace MediaPlayer {
 	}
 
 	// NSInteger -> MPMoviePlayerController.h
+	/// <summary>An enumeration whose values reflect a movie's load state. Used in the <see cref="P:MediaPlayer.MPMoviePlayerController.LoadState" /> property.</summary>
 	[NoMac]
 	[NoTV]
 	[NoWatch]
@@ -48,6 +50,7 @@ namespace MediaPlayer {
 	}
 
 	// NSInteger -> MPMoviePlayerController.h
+	/// <summary>An enumeration that specifies whether a movie should repeat or not. Used with the <see cref="P:MediaPlayer.MPMoviePlayerController.RepeatMode" /> property.</summary>
 	[NoMac]
 	[NoTV]
 	[NoWatch]
@@ -60,6 +63,7 @@ namespace MediaPlayer {
 	}
 
 	// NSInteger -> MPMoviePlayerController.h
+	/// <summary>An enumeration whose values specify various modes for the <see cref="P:MediaPlayer.MPMoviePlayerController.ControlStyle" /> property.</summary>
 	[NoMac]
 	[NoTV]
 	[NoWatch]
@@ -72,6 +76,7 @@ namespace MediaPlayer {
 	}
 
 	// NSInteger -> MPMoviePlayerController.h
+	/// <summary>An enumeration whose values specify various ways a movie may have finished.</summary>
 	[NoMac]
 	[NoTV]
 	[NoWatch]
@@ -84,6 +89,7 @@ namespace MediaPlayer {
 	}
 
 	// NSInteger -> MPMoviePlayerController.h
+	/// <summary>An enumeration that specifies the movie's media types. Used with the <see cref="P:MediaPlayer.MPMoviePlayerController.MovieMediaTypes" /> property.</summary>
 	[NoMac]
 	[NoTV]
 	[NoWatch]
@@ -99,6 +105,7 @@ namespace MediaPlayer {
 	}
 
 	// NSInteger -> MPMoviePlayerController.h
+	/// <summary>An enumeration that specifies whether a movie's data is provided by a file or streaming. Used with the <see cref="P:MediaPlayer.MPMoviePlayerController.SourceType" /> property.</summary>
 	[NoMac]
 	[NoTV]
 	[NoWatch]
@@ -111,6 +118,7 @@ namespace MediaPlayer {
 	}
 
 	// NSInteger -> MPMoviePlayerController.h
+	/// <summary>An enumeration that specifies which frame to use when generating thumbnails.</summary>
 	[NoMac]
 	[NoTV]
 	[NoWatch]
@@ -153,6 +161,7 @@ namespace MediaPlayer {
 	}
 
 	// NSInteger -> MPMediaPlaylist.h
+	/// <summary>An enumeration whose values specify various types of playlist.</summary>
 	[NoMac]
 	[NoTV]
 	[NoWatch]
@@ -167,6 +176,7 @@ namespace MediaPlayer {
 	};
 
 	// NSInteger -> MPMediaQuery.h
+	/// <summary>An enumeration whose values specify various ways in which media can be logically grouped.</summary>
 	[NoMac]
 	[NoTV]
 	[NoWatch]
@@ -184,6 +194,7 @@ namespace MediaPlayer {
 	}
 
 	// NSInteger -> MPMediaQuery.h
+	/// <summary>An enumeration whose values specifies a comparison-type to be used with a <see cref="T:MediaPlayer.MPMediaPredicate" />.</summary>
 	[NoMac]
 	[NoTV]
 	[NoWatch]
@@ -195,6 +206,7 @@ namespace MediaPlayer {
 	}
 
 	// NSInteger -> MPMoviePlayerController.h
+	/// <summary>An enumeration of video scaling modes. Used with the <see cref="P:MediaPlayer.MPMoviePlayerController.ScalingMode" /> property.</summary>
 	[NoMac]
 	[NoTV]
 	[NoWatch]
@@ -334,6 +346,7 @@ namespace MediaPlayer {
 		RequestTimedOut,
 	}
 
+	/// <summary>Enumerates the status of the application's permission to access the media library.</summary>
 	[NoMac]
 	[NoTV]
 	[NoWatch]

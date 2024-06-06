@@ -93,7 +93,9 @@ namespace UIKit {
 #endif
 
 #if NET || MONOMAC
+	/// <summary>A delegate used as the callback in <see cref="M:UIKit.NSLayoutManager.EnumerateLineFragments(Foundation.NSRange,UIKit.NSTextLayoutEnumerateLineFragments)" />.</summary>
 	delegate void NSTextLayoutEnumerateLineFragments (CGRect rect, CGRect usedRectangle, NSTextContainer textContainer, NSRange glyphRange, out bool stop);
+	/// <summary>A delegate used as the callback in <see cref="M:UIKit.NSLayoutManager.EnumerateEnclosingRects(Foundation.NSRange,Foundation.NSRange,UIKit.NSTextContainer,UIKit.NSTextLayoutEnumerateEnclosingRects)" />.</summary>
 	delegate void NSTextLayoutEnumerateEnclosingRects (CGRect rect, out bool stop);
 #else
 	delegate void NSTextLayoutEnumerateLineFragments (CGRect rect, CGRect usedRectangle, NSTextContainer textContainer, NSRange glyphRange, ref bool stop);
@@ -101,6 +103,7 @@ namespace UIKit {
 #endif
 
 	// NSInteger -> NSLayoutManager.h
+	/// <summary>An enumeration whose values specify actions caused by control characters.</summary>
 	[Native]
 	[Flags]
 	[NoWatch]
@@ -142,6 +145,7 @@ namespace UIKit {
 	}
 
 	// NSInteger -> NSLayoutManager.h
+	/// <summary>An enumeration whose values specify characteristics of a glyph.</summary>
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -153,6 +157,8 @@ namespace UIKit {
 	}
 
 	// NSInteger -> NSLayoutConstraint.h
+	/// <summary>An enumeration of attributes for use with constraint-based layouts.</summary>
+	///     <remarks>Values used to specify particular constraint attributes in constraint-based layouts. These values are primarily used by methods in the <see cref="T:UIKit.NSLayoutConstraint" /> class. </remarks>
 	[Native]
 	[NoWatch]
 	[MacCatalyst (13, 1)]
@@ -201,6 +207,7 @@ namespace UIKit {
 	}
 
 	// NSUInteger -> NSLayoutConstraint.h
+	/// <include file="../docs/api/UIKit/NSLayoutFormatOptions.xml" path="/Documentation/Docs[@DocId='T:UIKit.NSLayoutFormatOptions']/*" />
 	[Native]
 	[Flags]
 	[NoWatch]
@@ -244,6 +251,8 @@ namespace UIKit {
 	}
 
 	// NSInteger -> UITextInput.h
+	/// <summary>An enumeration that specifies the relation between two attributes in a <see cref="T:UIKit.NSLayoutConstraint" /></summary>
+	///     <remarks>Constraint-based layouts are based on relationships between the values of two <see cref="T:UIKit.NSLayoutAttribute" />s. Constraints can be made more flexible by allowing relationships other than strict equality, that is, <see cref="F:UIKit.NSLayoutRelation.GreaterThanOrEqual" /> or <see cref="F:UIKit.NSLayoutRelation.LessThanOrEqual" />. With relations other than <see cref="F:UIKit.NSLayoutRelation.Equal" /> the constraint solver will attempt to minimize the difference in attributes. If <see cref="F:UIKit.NSLayoutRelation.Equal" /> is specified and the constraint solver cannot solve the system of constraints, the constraint solver will throw an exception. </remarks>
 	[Native]
 	[NoWatch]
 	[MacCatalyst (13, 1)]
@@ -290,6 +299,7 @@ namespace UIKit {
 	}
 
 	// NSInteger -> NSLayoutManager.h
+	/// <summary>An enumeration whose values specify the direction in which text is laid out. Used with <see cref="P:UIKit.NSTextContainer.LayoutOrientation" />.</summary>
 	[Native]
 	[NoWatch]
 	[MacCatalyst (13, 1)]
@@ -299,6 +309,7 @@ namespace UIKit {
 	}
 
 	// NSUInteger -> NSTextStorage.h
+	/// <summary>A flagging enumeration whose values are used by Text Kit to specify whether actions pertain to attributes, characters, or both.</summary>
 	[Native]
 	[Flags]
 	[NoWatch]
@@ -308,6 +319,7 @@ namespace UIKit {
 		Characters = 2,
 	}
 
+	/// <include file="../docs/api/UIKit/NSLayoutManager.xml" path="/Documentation/Docs[@DocId='T:UIKit.NSLayoutManager']/*" />
 	[MacCatalyst (13, 1)]
 	[NoWatch] // Header is not present in watchOS SDK.
 	[DesignatedDefaultCtor]
@@ -1457,8 +1469,17 @@ namespace UIKit {
 		NSTextView GetTextViewForBeginningOfSelection ();
 	}
 
+	/// <summary>Interface representing the required methods (if any) of the protocol <see cref="T:UIKit.NSLayoutManagerDelegate" />.</summary>
+	///     <remarks>
+	///       <para>This interface contains the required methods (if any) from the protocol defined by <see cref="T:UIKit.NSLayoutManagerDelegate" />.</para>
+	///       <para>If developers create classes that implement this interface, the implementation methods will automatically be exported to Objective-C with the matching signature from the method defined in the <see cref="T:UIKit.NSLayoutManagerDelegate" /> protocol.</para>
+	///       <para>Optional methods (if any) are provided by the <see cref="T:UIKit.NSLayoutManagerDelegate_Extensions" /> class as extension methods to the interface, allowing developers to invoke any optional methods on the protocol.</para>
+	///     </remarks>
 	interface INSLayoutManagerDelegate { }
 
+	/// <summary>A delegate object that exposes events for <see cref="T:UIKit.NSLayoutManager" />s.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/NSLayoutManagerDelegate_Protocol_TextKit/index.html">Apple documentation for <c>NSLayoutManagerDelegate</c></related>
 	[NoWatch] // Header not present in watchOS SDK.
 	[BaseType (typeof (NSObject))]
 	[Model]
@@ -1665,6 +1686,9 @@ namespace UIKit {
 		void ReloadSections (SectionIdentifierType [] sectionIdentifiers);
 	}
 
+	/// <summary>A class that specifies paragraph-relevant attributes of an <see cref="T:Foundation.NSAttributedString" />.</summary>
+	///     <remarks>An immutable set of attributes associated with the display of an <see cref="T:Foundation.NSAttributedString" />. Important: the application developer must use the subtype <see cref="T:UIKit.NSMutableParagraphStyle" /> if they modify the paragraph style after assignment to a <see cref="T:Foundation.NSAttributedString" />. Modifying an attribute of an assigned <see cref="T:UIKit.NSParagraphStyle" /> may result in a program crash.<para tool="threads">The members of this class can be used from a background thread.</para></remarks>
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Cocoa/Reference/ApplicationKit/Classes/NSParagraphStyle_Class/index.html">Apple documentation for <c>NSParagraphStyle</c></related>
 	[ThreadSafe]
 	[BaseType (typeof (NSObject))]
 	[MacCatalyst (13, 1)]
@@ -1773,6 +1797,13 @@ namespace UIKit {
 		NSLineBreakStrategy LineBreakStrategy { get; [NotImplemented] set; }
 	}
 
+	/// <summary>A class that extends <see cref="T:UIKit.NSParagraphStyle" /> to allow changing subattributes.</summary>
+	///     <remarks>
+	///       <para>
+	///       </para>
+	///       <para tool="threads">The members of this class can be used from a background thread.</para>
+	///     </remarks>
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Cocoa/Reference/ApplicationKit/Classes/NSMutableParagraphStyle_Class/index.html">Apple documentation for <c>NSMutableParagraphStyle</c></related>
 	[ThreadSafe]
 	[BaseType (typeof (NSParagraphStyle))]
 	[MacCatalyst (13, 1)]
@@ -2168,6 +2199,7 @@ namespace UIKit {
 		string RepresentedElementKind { get; }
 	}
 
+	/// <include file="../docs/api/UIKit/NSLayoutAnchor`1.xml" path="/Documentation/Docs[@DocId='T:UIKit.NSLayoutAnchor`1']/*" />
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -2244,6 +2276,9 @@ namespace UIKit {
 		NSLayoutConstraint [] ConstraintsAffectingLayout { get; }
 	}
 
+	/// <summary>An <see cref="T:UIKit.NSLayoutAnchor`1" /> whose methods create horizontal <see cref="T:UIKit.NSLayoutConstraint" /> objects.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/AppKit/Reference/NSLayoutXAxisAnchor/index.html">Apple documentation for <c>NSLayoutXAxisAnchor</c></related>
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSLayoutAnchor<NSLayoutXAxisAnchor>))]
@@ -2270,6 +2305,9 @@ namespace UIKit {
 		NSLayoutConstraint ConstraintLessThanOrEqualToSystemSpacingAfterAnchor (NSLayoutXAxisAnchor anchor, nfloat multiplier);
 	}
 
+	/// <summary>An <see cref="T:UIKit.NSLayoutAnchor`1" /> whose methods create vertical <see cref="T:UIKit.NSLayoutConstraint" /> objects.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/AppKit/Reference/NSLayoutYAxisAnchor/index.html">Apple documentation for <c>NSLayoutYAxisAnchor</c></related>
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSLayoutAnchor<NSLayoutYAxisAnchor>))]
@@ -2296,6 +2334,9 @@ namespace UIKit {
 		NSLayoutConstraint ConstraintLessThanOrEqualToSystemSpacingBelowAnchor (NSLayoutYAxisAnchor anchor, nfloat multiplier);
 	}
 
+	/// <summary>An <see cref="T:UIKit.NSLayoutAnchor`1" /> whose methods create dimensional <see cref="T:UIKit.NSLayoutConstraint" /> objects.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/AppKit/Reference/NSLayoutDimension_ClassReference/index.html">Apple documentation for <c>NSLayoutDimension</c></related>
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSLayoutAnchor<NSLayoutDimension>))]
@@ -2365,6 +2406,7 @@ namespace UIKit {
 #endif
 	}
 
+	/// <include file="../docs/api/UIKit/NSLayoutConstraint.xml" path="/Documentation/Docs[@DocId='T:UIKit.NSLayoutConstraint']/*" />
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -2444,6 +2486,9 @@ namespace UIKit {
 		string Identifier { get; set; }
 	}
 
+	/// <summary>Defines the relationship between <see cref="T:UIKit.NSTextAttachment" />s and a <see cref="T:UIKit.NSLayoutManager" />.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/NSTextAttachmentContainer_Protocol/index.html">Apple documentation for <c>NSTextAttachmentContainer</c></related>
 	[Watch (9, 0)]
 	[Introduced (PlatformName.iOS)]
 	[MacCatalyst (13, 1)]
@@ -2469,6 +2514,10 @@ namespace UIKit {
 		CGRect GetAttachmentBounds ([NullAllowed] NSTextContainer textContainer, CGRect proposedLineFragment, CGPoint glyphPosition, nuint characterIndex);
 	}
 
+	/// <summary>An attachment to a <see cref="T:Foundation.NSAttributedString" />.</summary>
+	///     
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/NSTextAttachment_Class_TextKit/index.html">Apple documentation for <c>NSTextAttachment</c></related>
 	[MacCatalyst (13, 1)]
 	[NoWatch]
 	[BaseType (typeof (NSObject))]
@@ -2575,6 +2624,7 @@ namespace UIKit {
 		NSTextAttachmentViewProvider GetViewProvider ([NullAllowed] View parentView, INSTextLocation location, [NullAllowed] NSTextContainer textContainer);
 	}
 
+	/// <include file="../docs/api/UIKit/NSTextStorage.xml" path="/Documentation/Docs[@DocId='T:UIKit.NSTextStorage']/*" />
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSMutableAttributedString), Delegates = new string [] { "Delegate" }, Events = new Type [] { typeof (NSTextStorageDelegate) })]
@@ -2672,8 +2722,17 @@ namespace UIKit {
 		INSTextStorageObserving TextStorageObserver { get; set; }
 	}
 
+	/// <summary>Interface representing the required methods (if any) of the protocol <see cref="T:UIKit.NSTextStorageDelegate" />.</summary>
+	///     <remarks>
+	///       <para>This interface contains the required methods (if any) from the protocol defined by <see cref="T:UIKit.NSTextStorageDelegate" />.</para>
+	///       <para>If developers create classes that implement this interface, the implementation methods will automatically be exported to Objective-C with the matching signature from the method defined in the <see cref="T:UIKit.NSTextStorageDelegate" /> protocol.</para>
+	///       <para>Optional methods (if any) are provided by the <see cref="T:UIKit.NSTextStorageDelegate_Extensions" /> class as extension methods to the interface, allowing developers to invoke any optional methods on the protocol.</para>
+	///     </remarks>
 	interface INSTextStorageDelegate { }
 
+	/// <summary>A delegate object that provides events relating to processing editing for <see cref="T:UIKit.NSTextStorage" />.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/NSTextStorageDelegate_Protocol_TextKit/index.html">Apple documentation for <c>NSTextStorageDelegate</c></related>
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[Model]
@@ -2965,6 +3024,7 @@ namespace UIKit {
 		string ElementKind { get; }
 	}
 
+	/// <include file="../docs/api/UIKit/NSDataAsset.xml" path="/Documentation/Docs[@DocId='T:UIKit.NSDataAsset']/*" />
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // - (instancetype)init NS_UNAVAILABLE;
@@ -2986,6 +3046,11 @@ namespace UIKit {
 		NSString TypeIdentifier { get; }
 	}
 
+	/// <summary>The visual attributes associated with a drop shadow.</summary>
+	///     <remarks>
+	///       <para>The <see cref="T:UIKit.NSShadow" /> class encapsulates the visual attributes of a drop shadow.</para>
+	///     </remarks>
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Cocoa/Reference/ApplicationKit/Classes/NSShadow_Class/index.html">Apple documentation for <c>NSShadow</c></related>
 	[MacCatalyst (13, 1)]
 	[Watch (6, 0)]
 	[BaseType (typeof (NSObject))]
@@ -3012,6 +3077,9 @@ namespace UIKit {
 		NSColor ShadowColor { get; set; }
 	}
 
+	/// <summary>Represents a tab location in Text Kit.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/NSTextTab_Class_TextKit/index.html">Apple documentation for <c>NSTextTab</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface NSTextTab : NSSecureCoding, NSCopying {
@@ -3069,6 +3137,7 @@ namespace UIKit {
 		}
 	}
 
+	/// <include file="../docs/api/UIKit/NSTextContainer.xml" path="/Documentation/Docs[@DocId='T:UIKit.NSTextContainer']/*" />
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -3163,6 +3232,7 @@ namespace UIKit {
 		NSTextLayoutManager TextLayoutManager { get; }
 	}
 
+	/// <summary>String drawing extension methods for <see cref="T:Foundation.NSString" />.</summary>
 	[ThreadSafe]
 	[Category, BaseType (typeof (NSString))]
 	interface NSExtendedStringDrawing {

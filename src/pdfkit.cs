@@ -521,6 +521,7 @@ namespace PdfKit {
 		NSDictionary WeakAppearanceCharacteristicsKeyValues { get; }
 	}
 
+	/// <summary>Base class for actions that can be performed on a PDF.</summary>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject), Name = "PDFAction")]
 	[Abstract]
@@ -533,6 +534,7 @@ namespace PdfKit {
 		string Type { get; }
 	}
 
+	/// <summary>An action that contains data for going to a location within a PDF.</summary>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (PdfAction), Name = "PDFActionGoTo")]
 	interface PdfActionGoTo {
@@ -545,6 +547,7 @@ namespace PdfKit {
 		PdfDestination Destination { get; set; }
 	}
 
+	/// <summary>An named PDF action.</summary>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (PdfAction), Name = "PDFActionNamed")]
 	interface PdfActionNamed {
@@ -557,6 +560,7 @@ namespace PdfKit {
 		PdfActionNamedName Name { get; set; }
 	}
 
+	/// <summary>An action that contains data for going to a location in another document.</summary>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (PdfAction), Name = "PDFActionRemoteGoTo")]
 	interface PdfActionRemoteGoTo {
@@ -575,6 +579,7 @@ namespace PdfKit {
 		NSUrl Url { get; set; }
 	}
 
+	/// <summary>An action that resets a form in a PDF.</summary>
 	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (PdfAction), Name = "PDFActionResetForm")]
@@ -592,6 +597,7 @@ namespace PdfKit {
 		bool FieldsIncludedAreCleared { get; set; }
 	}
 
+	/// <summary>A PDF action for visiting a URL.</summary>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (PdfAction), Name = "PDFActionURL")]
 	interface PdfActionUrl {
@@ -604,6 +610,7 @@ namespace PdfKit {
 		NSUrl Url { get; set; }
 	}
 
+	/// <summary>Notes, highlights, or other additions to a PDF file.</summary>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject), Name = "PDFAnnotation")]
 	interface PdfAnnotation : NSCoding, NSCopying {
@@ -1155,6 +1162,7 @@ namespace PdfKit {
 		bool IsMultiline { get; set; }
 	}
 
+	/// <summary>A border that may be drawn within the rectangle of an annotation.</summary>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject), Name = "PDFBorder")]
 	interface PdfBorder : NSCoding, NSCopying {
@@ -1175,6 +1183,7 @@ namespace PdfKit {
 		void Draw (CGRect rect);
 	}
 
+	/// <summary>A destination for a go-to PDF action.</summary>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject), Name = "PDFDestination")]
 	interface PdfDestination : NSCopying {
@@ -1203,6 +1212,7 @@ namespace PdfKit {
 	}
 
 	//Add attributes for delegates/events
+	/// <summary>Class for working with PDF documents.</summary>
 	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject), Name = "PDFDocument", Delegates = new string [] { "WeakDelegate" }, Events = new Type [] { typeof (PdfDocumentDelegate) })]
@@ -1486,8 +1496,15 @@ namespace PdfKit {
 #pragma warning restore
 	}
 
+	/// <summary>Interface representing the required methods (if any) of the protocol <see cref="T:PdfKit.PdfDocumentDelegate" />.</summary>
+	///     <remarks>
+	///       <para>This interface contains the required methods (if any) from the protocol defined by <see cref="T:PdfKit.PdfDocumentDelegate" />.</para>
+	///       <para>If developers create classes that implement this interface, the implementation methods will automatically be exported to Objective-C with the matching signature from the method defined in the <see cref="T:PdfKit.PdfDocumentDelegate" /> protocol.</para>
+	///       <para>Optional methods (if any) are provided by the <see cref="T:PdfKit.PdfDocumentDelegate_Extensions" /> class as extension methods to the interface, allowing developers to invoke any optional methods on the protocol.</para>
+	///     </remarks>
 	interface IPdfDocumentDelegate { }
 
+	/// <summary>Delegate object for the <see cref="T:PdfKit.PdfDocument" /> class, presenting methods relating to search process and results.</summary>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject), Name = "PDFDocumentDelegate")]
 #if IOS
@@ -1538,6 +1555,7 @@ namespace PdfKit {
 		void MatchFound (NSNotification notification);
 	}
 
+	/// <summary>A node in a logical outline of a PDF document.</summary>
 	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject), Name = "PDFOutline")]
@@ -1586,6 +1604,7 @@ namespace PdfKit {
 		PdfAction Action { get; set; }
 	}
 
+	/// <summary>Class for working with and rendering PDF pages.</summary>
 	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject), Name = "PDFPage")]
@@ -1715,6 +1734,7 @@ namespace PdfKit {
 		NSData DataRepresentation { get; }
 	}
 
+	/// <summary>A text selection in a PDF document.</summary>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject), Name = "PDFSelection")]
 	[DisableDefaultCtor] // An uncaught exception was raised: init: not a valid initializer for PDFSelection
@@ -1771,6 +1791,7 @@ namespace PdfKit {
 		void Draw (PdfPage page, PdfDisplayBox box, bool active);
 	}
 
+	/// <summary>A list of thumbnail images for each page of a document.</summary>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSView), Name = "PDFThumbnailView")]
 	interface PdfThumbnailView : NSCoding {
@@ -1828,6 +1849,7 @@ namespace PdfKit {
 		PdfPage [] SelectedPages { get; }
 	}
 
+	/// <summary>A viewer for PDF files.</summary>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSView), Name = "PDFView", Delegates = new string [] { "WeakDelegate" }, Events = new Type [] { typeof (PdfViewDelegate) })]
 	interface PdfView :
@@ -2185,6 +2207,7 @@ namespace PdfKit {
 		bool FindInteractionEnabled { [Bind ("isFindInteractionEnabled")] get; set; }
 	}
 
+	/// <summary>Provides data for the  event.</summary>
 	[NoiOS]
 	[NoMacCatalyst]
 	interface PdfViewAnnotationHitEventArgs {
@@ -2192,10 +2215,17 @@ namespace PdfKit {
 		PdfAnnotation AnnotationHit { get; }
 	}
 
+	/// <summary>Interface representing the required methods (if any) of the protocol <see cref="T:PdfKit.PdfViewDelegate" />.</summary>
+	///     <remarks>
+	///       <para>This interface contains the required methods (if any) from the protocol defined by <see cref="T:PdfKit.PdfViewDelegate" />.</para>
+	///       <para>If developers create classes that implement this interface, the implementation methods will automatically be exported to Objective-C with the matching signature from the method defined in the <see cref="T:PdfKit.PdfViewDelegate" /> protocol.</para>
+	///       <para>Optional methods (if any) are provided by the <see cref="T:PdfKit.PdfViewDelegate_Extensions" /> class as extension methods to the interface, allowing developers to invoke any optional methods on the protocol.</para>
+	///     </remarks>
 	interface IPdfViewDelegate { }
 
 	//Verify delegate methods.  There are default actions (not just return null ) that should occur
 	//if the delegate does not implement the method.
+	/// <summary>Delegate object for <see cref="T:PdfKit.PdfView" /> objects, allowing the developer to respond to navigation, printing, and linking events.</summary>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject), Name = "PDFViewDelegate")]
 #if IOS

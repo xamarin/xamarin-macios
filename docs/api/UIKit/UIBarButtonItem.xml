@@ -1,0 +1,23 @@
+<Documentation>
+  <Docs DocId="T:UIKit.UIBarButtonItem">
+    <summary>A button item hosted in either a <see cref="T:UIKit.UIToolbar" /> or a <see cref="T:UIKit.UINavigationBar" />.</summary>
+    <remarks>
+      <para>UIBarButtonItems are special buttons designed to be placed in either a <see cref="T:UIKit.UIToolbar" /> or a <see cref="T:UIKit.UINavigationBar" />. They show either a title or an image and change their appearance when pressed. UIBarButtonItems can also be set to a number of system provided button styles available in the <see cref="T:UIKit.UIBarButtonSystemItem" /> enumeration.
+      </para>
+      <para>In iOS 11, the layout strategy for <see cref="T:UIKit.UIBarButtonItem" /> objects changed from autoresizing to constraints. Developers who embed other elements in their <see cref="T:UIKit.UIBarButtonItem" /> objects (such as an embedded <see cref="T:UIKit.UIButton" />) should explicitly set constraints, as shown in the following example:</para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+var btn = new UIButton();
+btn.TranslatesAutoresizingMaskIntoConstraints = false;
+btn.WidthAnchor.ConstraintEqualTo(32.0f).Active = true;
+btn.HeightAnchor.ConstraintEqualTo(32.0f).Active = true;
+
+var barButtonItem = new UIBarButtonItem(btn);
+    ]]></code>
+      </example>
+    </remarks>
+    
+    
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIBarButtonItem_Class/index.html">Apple documentation for <c>UIBarButtonItem</c></related>
+  </Docs>
+</Documentation>

@@ -66,6 +66,7 @@ namespace CoreData {
 		NSString DeferredLightweightMigrationOptionKey { get; }
 	}
 
+	/// <summary>Enumerates valid keys for the user information dictionary used in <see cref="P:CoreData.NSPersistentStoreCoordinator.StoresWillChangeNotification" /> and <see cref="P:CoreData.NSPersistentStoreCoordinator.StoresDidChangeNotification" />.</summary>
 	[NoWatch]
 	[NoTV]
 	[Native] // NUInteger -> NSPersistentStoreCoordinator.h

@@ -34,6 +34,7 @@ using MTLAccelerationStructureSizes = Foundation.NSObject;
 
 namespace Metal {
 
+	/// <summary>Completion handler for deallocating a buffer.</summary>
 	delegate void MTLDeallocator (IntPtr pointer, nuint length);
 
 	delegate void MTLNewComputePipelineStateWithReflectionCompletionHandler (IMTLComputePipelineState computePipelineState, MTLComputePipelineReflection reflection, NSError error);
@@ -44,6 +45,9 @@ namespace Metal {
 
 	interface IMTLCommandEncoder { }
 
+	/// <summary>Encapsulates a single parameter to a Metal function.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Metal/Reference/MTLArgument_Ref/index.html">Apple documentation for <c>MTLArgument</c></related>
 	[Deprecated (PlatformName.MacOSX, 13, 0)]
 	[Deprecated (PlatformName.iOS, 16, 0)]
 	[Deprecated (PlatformName.TvOS, 16, 0)]
@@ -107,6 +111,9 @@ namespace Metal {
 		MTLPointerType BufferPointerType { get; }
 	}
 
+	/// <summary>Encapsulates the details of an array argument to a Metal function.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Metal/Reference/MTLArrayType_Ref/index.html">Apple documentation for <c>MTLArrayType</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (MTLType))]
 	interface MTLArrayType {
@@ -143,6 +150,7 @@ namespace Metal {
 		MTLPointerType ElementPointerType { get; }
 	}
 
+	/// <summary>System protocol for enqueuing and writing commands into a buffer.</summary>
 	[MacCatalyst (13, 1)]
 	[Protocol] // From Apple Docs: Your app does not define classes that implement this protocol. Model is not needed
 	partial interface MTLCommandEncoder {
@@ -167,6 +175,7 @@ namespace Metal {
 
 	interface IMTLBuffer { }
 
+	/// <summary>System protocol for raw data that is accessible in strides.</summary>
 	[MacCatalyst (13, 1)]
 	[Protocol] // From Apple Docs: Your app does not define classes that implement this protocol. Model is not needed
 	partial interface MTLBuffer : MTLResource {
@@ -261,6 +270,7 @@ namespace Metal {
 
 	interface IMTLCommandBuffer { }
 
+	/// <summary>Protocol for commands that are run on a GPU</summary>
 	[MacCatalyst (13, 1)]
 	[Protocol] // From Apple Docs: Your app does not define classes that implement this protocol. Model is not needed
 	partial interface MTLCommandBuffer {
@@ -493,6 +503,7 @@ namespace Metal {
 
 	interface IMTLCommandQueue { }
 
+	/// <summary>System protocol for objects that can queue command buffers for running on a GPU.</summary>
 	[MacCatalyst (13, 1)]
 	[Protocol] // From Apple Docs: Your app does not define classes that implement this protocol. Model is not needed
 	partial interface MTLCommandQueue {
@@ -532,6 +543,7 @@ namespace Metal {
 
 	interface IMTLComputeCommandEncoder { }
 
+	/// <summary>Protocol for encoding and running parallel commands on a GPU.</summary>
 	[MacCatalyst (13, 1)]
 	[Protocol] // From Apple Docs: Your app does not define classes that implement this protocol. Model is not needed
 	partial interface MTLComputeCommandEncoder : MTLCommandEncoder {
@@ -842,6 +854,9 @@ namespace Metal {
 
 	}
 
+	/// <summary>Encapsulates the details of the arguments of the compute function used to create an <see cref="T:Metal.IMTLComputePipelineState" /> object.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Metal/Reference/MTLComputePipelineReflection_Ref/index.html">Apple documentation for <c>MTLComputePipelineReflection</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface MTLComputePipelineReflection {
@@ -863,6 +878,7 @@ namespace Metal {
 	}
 
 	interface IMTLComputePipelineState { }
+	/// <summary>System protocol that represents a compiled compute program.</summary>
 	[MacCatalyst (13, 1)]
 	[Protocol] // From Apple Docs: Your app does not define classes that implement this protocol. Model is not needed
 	partial interface MTLComputePipelineState {
@@ -990,6 +1006,7 @@ namespace Metal {
 
 	interface IMTLBlitCommandEncoder { }
 
+	/// <summary>Protocol for writing data into frame buffers.</summary>
 	[MacCatalyst (13, 1)]
 	[Protocol] // From Apple Docs: Your app does not define classes that implement this protocol. Model is not needed
 	partial interface MTLBlitCommandEncoder : MTLCommandEncoder {
@@ -1173,6 +1190,7 @@ namespace Metal {
 
 	interface IMTLDevice { }
 
+	/// <summary>System protocol for interacting with a single graphics device.</summary>
 	[MacCatalyst (13, 1)]
 	[Protocol] // From Apple Docs: Your app does not define classes that implement this protocol. Model is not needed
 	partial interface MTLDevice {
@@ -2196,7 +2214,20 @@ namespace Metal {
 
 	}
 
+	/// <summary>Interface representing the required methods (if any) of the protocol <see cref="T:Metal.MTLDrawable" />.</summary>
+	///     <remarks>
+	///       <para>This interface contains the required methods (if any) from the protocol defined by <see cref="T:Metal.MTLDrawable" />.</para>
+	///       <para>If developers create classes that implement this interface, the implementation methods will automatically be exported to Objective-C with the matching signature from the method defined in the <see cref="T:Metal.MTLDrawable" /> protocol.</para>
+	///       <para>Optional methods (if any) are provided by the <see cref="T:Metal.MTLDrawable_Extensions" /> class as extension methods to the interface, allowing developers to invoke any optional methods on the protocol.</para>
+	///     </remarks>
+	/// <summary>Extension methods to the <see cref="T:Metal.IMTLDrawable" /> interface to support all the methods from the <see cref="T:Metal.MTLDrawable" /> protocol.</summary>
+	///     <remarks>
+	///       <para>The extension methods for <see cref="T:Metal.IMTLDrawable" /> allow developers to treat instances of the interface as having all the optional methods of the original <see cref="T:Metal.MTLDrawable" /> protocol.   Since the interface only contains the required members, these extension methods allow developers to call the optional members of the protocol.</para>
+	///     </remarks>
 	interface IMTLDrawable { }
+	/// <summary>Interface definition for objects that can receive rendering commands.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Metal/Reference/MTLDrawable_Ref/index.html">Apple documentation for <c>MTLDrawable</c></related>
 	[MacCatalyst (13, 1)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
@@ -2244,6 +2275,7 @@ namespace Metal {
 
 	// Apple added several new *required* members in iOS 9,
 	// but that breaks our binary compat, so we can't do that in our existing code.
+	/// <summary>System protocol for image data that is used by vertex shaders, fragment shaders, and compute kernels.</summary>
 	[MacCatalyst (13, 1)]
 	[Protocol] // From Apple Docs: Your app does not define classes that implement this protocol. Model is not needed
 	partial interface MTLTexture : MTLResource {
@@ -2490,6 +2522,9 @@ namespace Metal {
 	}
 
 
+	/// <summary>Configuration for <see cref="T:Metal.IMTLTexture" /> objects.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Metal/Reference/MTLTextureDescriptor_Ref/index.html">Apple documentation for <c>MTLTextureDescriptor</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	partial interface MTLTextureDescriptor : NSCopying {
@@ -2566,6 +2601,9 @@ namespace Metal {
 		MTLTextureSwizzleChannels Swizzle { get; set; }
 	}
 
+	/// <summary>Configures a sampler (see <see cref="T:Metal.IMTLSamplerState" />).</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Metal/Reference/MTLSamplerDescriptor_Ref/index.html">Apple documentation for <c>MTLSamplerDescriptor</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	partial interface MTLSamplerDescriptor : NSCopying {
@@ -2624,6 +2662,7 @@ namespace Metal {
 	}
 
 	interface IMTLSamplerState { }
+	/// <summary>System protocol the way that shaders or compute kernels will sample textures.</summary>
 	[MacCatalyst (13, 1)]
 	[Protocol] // From Apple Docs: Your app does not define classes that implement this protocol. Model is not needed
 	partial interface MTLSamplerState {
@@ -2642,6 +2681,9 @@ namespace Metal {
 		MTLResourceId GpuResourceId { get; }
 	}
 
+	/// <summary>Configures a rendering pipeline with rasterization properties, visibility, blending, and shader functions.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Metal/Reference/MTLRenderPipelineDescriptor_Ref/index.html">Apple documentation for <c>MTLRenderPipelineDescriptor</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	partial interface MTLRenderPipelineDescriptor : NSCopying {
@@ -2793,6 +2835,9 @@ namespace Metal {
 		MTLLinkedFunctions FragmentLinkedFunctions { get; set; }
 	}
 
+	/// <summary>An array of <see cref="T:Metal.MTLRenderPipelineColorAttachmentDescriptor" /> objects.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Metal/Reference/MTLRenderPipelineColorAttachmentDescriptorArray_Ref/index.html">Apple documentation for <c>MTLRenderPipelineColorAttachmentDescriptorArray</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface MTLRenderPipelineColorAttachmentDescriptorArray {
@@ -2806,6 +2851,7 @@ namespace Metal {
 
 	interface IMTLRenderPipelineState { }
 
+	/// <summary>System protocol for encoding the state of a rendering pipeline.</summary>
 	[MacCatalyst (13, 1)]
 	[Protocol] // From Apple Docs: Your app does not define classes that implement this protocol. Model is not needed
 	partial interface MTLRenderPipelineState {
@@ -2972,6 +3018,9 @@ namespace Metal {
 		nuint ObjectThreadExecutionWidth { get; }
 	}
 
+	/// <summary>Configures how vertex and attribute data are fetched by a vertex shader function.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Metal/Reference/MTLVertexBufferLayoutDescriptor_Ref/index.html">Apple documentation for <c>MTLVertexBufferLayoutDescriptor</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface MTLVertexBufferLayoutDescriptor : NSCopying {
@@ -2985,6 +3034,9 @@ namespace Metal {
 		nuint StepRate { get; set; }
 	}
 
+	/// <summary>Holds an array of <see cref="T:Metal.MTLVertexBufferLayoutDescriptor" /> objects.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Metal/Reference/MTLVertexBufferLayoutDescriptorArray_Ref/index.html">Apple documentation for <c>MTLVertexBufferLayoutDescriptorArray</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface MTLVertexBufferLayoutDescriptorArray {
@@ -3045,6 +3097,9 @@ namespace Metal {
 		void SetObject ([NullAllowed] MTLAttributeDescriptor attributeDesc, nuint index);
 	}
 
+	/// <summary>An attribute for per-vertex input for a vertex shader function.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Metal/Reference/MTLVertexAttributeDescriptor_Ref/index.html">Apple documentation for <c>MTLVertexAttributeDescriptor</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface MTLVertexAttributeDescriptor : NSCopying {
@@ -3058,6 +3113,9 @@ namespace Metal {
 		nuint BufferIndex { get; set; }
 	}
 
+	/// <summary>Holds an array of <see cref="T:Metal.MTLVertexAttributeDescriptor" /> objects.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Metal/Reference/MTLVertexAttributeDescriptorArray_Ref/index.html">Apple documentation for <c>MTLVertexAttributeDescriptorArray</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface MTLVertexAttributeDescriptorArray {
@@ -3068,6 +3126,9 @@ namespace Metal {
 		void SetObject ([NullAllowed] MTLVertexAttributeDescriptor attributeDesc, nuint index);
 	}
 
+	/// <summary>Maps vertex data in memory to attributes in a vertex shader.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Metal/Reference/MTLVertexDescriptor_Ref/index.html">Apple documentation for <c>MTLVertexDescriptor</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	partial interface MTLVertexDescriptor : NSCopying {
@@ -3084,6 +3145,9 @@ namespace Metal {
 		MTLVertexAttributeDescriptorArray Attributes { get; }
 	}
 
+	/// <summary>An attribute for per-vertex input to a vertex shader function.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Metal/Reference/MTLVertexAttribute_Ref/index.html">Apple documentation for <c>MTLVertexAttribute</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	partial interface MTLVertexAttribute {
@@ -3151,6 +3215,7 @@ namespace Metal {
 	}
 
 	interface IMTLFunction { }
+	/// <summary>System protocol for shader functions that are suitable for use on a GPU in a shader or compute function.</summary>
 	[MacCatalyst (13, 1)]
 	[Protocol] // // From Apple Docs: Your app does not define classes that implement this protocol. Model is not needed
 	partial interface MTLFunction {
@@ -3245,6 +3310,7 @@ namespace Metal {
 
 	interface IMTLLibrary { }
 
+	/// <summary>System protocol for libraries of shaders.</summary>
 	[MacCatalyst (13, 1)]
 	[Protocol] // From Apple Docs: Your app does not define classes that implement this protocol. Model is not needed
 	partial interface MTLLibrary {
@@ -3356,6 +3422,9 @@ namespace Metal {
 		string InstallName { get; }
 	}
 
+	/// <summary>Configures the compilation of a Metal shader library.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Metal/Reference/MTLCompileOptions_Ref/index.html">Apple documentation for <c>MTLCompileOptions</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	partial interface MTLCompileOptions : NSCopying {
@@ -3412,6 +3481,9 @@ namespace Metal {
 		nuint MaxTotalThreadsPerThreadgroup { get; set; }
 	}
 
+	/// <summary>Configures a stencil test operation.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Metal/Reference/MTLStencilDescriptor_Ref/index.html">Apple documentation for <c>MTLStencilDescriptor</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	partial interface MTLStencilDescriptor : NSCopying {
@@ -3434,6 +3506,9 @@ namespace Metal {
 		uint WriteMask { get; set; } /* uint32_t */
 	}
 
+	/// <summary>Describes a single field within a <see cref="T:Metal.MTLStructType" /> struct.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Metal/Reference/MTLStructMember_Ref/index.html">Apple documentation for <c>MTLStructMember</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface MTLStructMember {
@@ -3480,6 +3555,9 @@ namespace Metal {
 		MTLPointerType PointerType { get; }
 	}
 
+	/// <summary>Defines a type representing a struct, which can be passed as an argument to Metal functions.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Metal/Reference/MTLStructType_Ref/index.html">Apple documentation for <c>MTLStructType</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (MTLType))]
 	interface MTLStructType {
@@ -3493,6 +3571,7 @@ namespace Metal {
 
 	interface IMTLDepthStencilState { }
 
+	/// <summary>System protocol for describing how the depth stencil should interact with the depth buffer during rendering.</summary>
 	[MacCatalyst (13, 1)]
 	[Protocol] // From Apple Docs: Your app does not define classes that implement this protocol. Model is not needed
 	partial interface MTLDepthStencilState {
@@ -3505,6 +3584,9 @@ namespace Metal {
 		IMTLDevice Device { get; }
 	}
 
+	/// <summary>Configures a depth stencil test operation.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Metal/Reference/MTLDepthStencilDescriptor_Ref/index.html">Apple documentation for <c>MTLDepthStencilDescriptor</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	partial interface MTLDepthStencilDescriptor : NSCopying {
@@ -3530,6 +3612,11 @@ namespace Metal {
 
 	interface IMTLParallelRenderCommandEncoder { }
 
+	/// <summary>System protocol for breaking a single rendering pass into parallel command sets.</summary>
+	/// <summary>Extension methods to the <see cref="T:Metal.IMTLParallelRenderCommandEncoder" /> interface to support all the methods from the <see cref="T:Metal.IMTLParallelRenderCommandEncoder" /> protocol.</summary>
+	///     <remarks>
+	///       <para>The extension methods for <see cref="T:Metal.IMTLParallelRenderCommandEncoder" /> allow developers to treat instances of the interface as having all the optional methods of the original <see cref="T:Metal.IMTLParallelRenderCommandEncoder" /> protocol.   Since the interface only contains the required members, these extension methods allow developers to call the optional members of the protocol.</para>
+	///     </remarks>
 	[MacCatalyst (13, 1)]
 	[Protocol] // From Apple Docs: Your app does not define classes that implement this protocol. Model is not needed
 	interface MTLParallelRenderCommandEncoder : MTLCommandEncoder {
@@ -3590,6 +3677,7 @@ namespace Metal {
 
 	interface IMTLRenderCommandEncoder { }
 
+	/// <summary>System protocol for encoding render commands and state into a buffer.</summary>
 	[MacCatalyst (13, 1)]
 	[Protocol] // From Apple Docs: Your app does not define classes that implement this protocol. Model is not needed
 	partial interface MTLRenderCommandEncoder : MTLCommandEncoder {
@@ -4617,6 +4705,9 @@ namespace Metal {
 		void SetObjectThreadgroupMemoryLength (nuint length, nuint index);
 	}
 
+	/// <summary>Configures a color attachment associated with a rendering pipeline.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Metal/Reference/MTLRenderPipelineColorAttachmentDescriptor_Ref/index.html">Apple documentation for <c>MTLRenderPipelineColorAttachmentDescriptor</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface MTLRenderPipelineColorAttachmentDescriptor : NSCopying {
@@ -4649,6 +4740,9 @@ namespace Metal {
 		MTLColorWriteMask WriteMask { get; set; }
 	}
 
+	/// <summary>The arguments (see <see cref="T:Metal.MTLArgument" />) of a vertex or fragment function within a <see cref="T:Metal.IMTLRenderPipelineState" />.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Metal/Reference/MTLRenderPipelineReflection_Ref/index.html">Apple documentation for <c>MTLRenderPipelineReflection</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface MTLRenderPipelineReflection {
@@ -4707,6 +4801,9 @@ namespace Metal {
 		IMTLBinding [] MeshBindings { get; }
 	}
 
+	/// <summary>Configures a render target of a framebuffer.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Metal/Reference/MTLRenderPassAttachmentDescriptor_Ref/index.html">Apple documentation for <c>MTLRenderPassAttachmentDescriptor</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface MTLRenderPassAttachmentDescriptor : NSCopying {
@@ -4749,6 +4846,9 @@ namespace Metal {
 		MTLStoreActionOptions StoreActionOptions { get; set; }
 	}
 
+	/// <summary>A <see cref="T:Metal.MTLRenderPassAttachmentDescriptor" /> that holds the clear color for the rendering pass.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Metal/Reference/MTLRenderPassColorAttachmentDescriptor_Ref/index.html">Apple documentation for <c>MTLRenderPassColorAttachmentDescriptor</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (MTLRenderPassAttachmentDescriptor))]
 	interface MTLRenderPassColorAttachmentDescriptor {
@@ -4756,6 +4856,9 @@ namespace Metal {
 		MTLClearColor ClearColor { get; set; }
 	}
 
+	/// <summary>A <see cref="T:Metal.MTLRenderPassAttachmentDescriptor" /> that holds the clear depth for a rendering pass.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Metal/Reference/MTLRenderPassDepthAttachmentDescriptor_Ref/index.html">Apple documentation for <c>MTLRenderPassDepthAttachmentDescriptor</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (MTLRenderPassAttachmentDescriptor))]
 	interface MTLRenderPassDepthAttachmentDescriptor {
@@ -4768,6 +4871,9 @@ namespace Metal {
 		MTLMultisampleDepthResolveFilter DepthResolveFilter { get; set; }
 	}
 
+	/// <summary>A <see cref="T:Metal.MTLRenderPassAttachmentDescriptor" /> that holds the clear stencil for a rendering pass.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/help/MTLRenderPassStencilAttachmentDescriptor_Ref/index.html">Apple documentation for <c>MTLRenderPassStencilAttachmentDescriptor</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (MTLRenderPassAttachmentDescriptor))]
 	interface MTLRenderPassStencilAttachmentDescriptor {
@@ -4781,6 +4887,9 @@ namespace Metal {
 		MTLMultisampleStencilResolveFilter StencilResolveFilter { get; set; }
 	}
 
+	/// <summary>Holds an array of <see cref="T:Metal.MTLRenderPassColorAttachmentDescriptor" /> objects.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Metal/Reference/MTLRenderPassColorAttachmentDescriptorArray_Ref/index.html">Apple documentation for <c>MTLRenderPassColorAttachmentDescriptorArray</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface MTLRenderPassColorAttachmentDescriptorArray {
@@ -4791,6 +4900,9 @@ namespace Metal {
 		void SetObject ([NullAllowed] MTLRenderPassColorAttachmentDescriptor attachment, nuint attachmentIndex);
 	}
 
+	/// <summary>Defines the rendering target for pixels generated by a rendering pass.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Metal/Reference/MTLRenderPassDescriptor_Ref/index.html">Apple documentation for <c>MTLRenderPassDescriptor</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface MTLRenderPassDescriptor : NSCopying {
@@ -5057,6 +5169,11 @@ namespace Metal {
 
 	interface IMTLResource { }
 	interface IMTLHeap { }
+	/// <summary>System protocol for for allocated segments of GPU memory.</summary>
+	/// <summary>Extension methods to the <see cref="T:Metal.IMTLResource" /> interface to support all the methods from the <see cref="T:Metal.IMTLResource" /> protocol.</summary>
+	///     <remarks>
+	///       <para>The extension methods for <see cref="T:Metal.IMTLResource" /> allow developers to treat instances of the interface as having all the optional methods of the original <see cref="T:Metal.IMTLResource" /> protocol.   Since the interface only contains the required members, these extension methods allow developers to call the optional members of the protocol.</para>
+	///     </remarks>
 	[MacCatalyst (13, 1)]
 	[Protocol] // From Apple Docs: Your app does not define classes that implement this protocol. Model is not needed
 	partial interface MTLResource {
@@ -5137,6 +5254,9 @@ namespace Metal {
 		MTLHazardTrackingMode HazardTrackingMode { get; }
 	}
 
+	/// <summary>Describes the compute state used during a compute operation pass. (See also <see cref="T:Metal.IMTLComputePipelineState" />.)</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Metal/Reference/MTLComputePipelineDescriptor_ClassReference/index.html">Apple documentation for <c>MTLComputePipelineDescriptor</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface MTLComputePipelineDescriptor : NSCopying {
@@ -5287,6 +5407,7 @@ namespace Metal {
 	[MacCatalyst (13, 1)]
 	interface IMTLCaptureScope { }
 
+	/// <summary>Custom capture scope boundary for debugging from Xcode.</summary>
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 #if NET
@@ -5318,6 +5439,7 @@ namespace Metal {
 	}
 
 
+	/// <summary>Manages GPU captures for apps launched from Xcode.</summary>
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -5376,6 +5498,7 @@ namespace Metal {
 		bool StartCapture (MTLCaptureDescriptor descriptor, [NullAllowed] out NSError error);
 	}
 
+	/// <summary>Contains a mutability description for a buffer.</summary>
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -5384,6 +5507,7 @@ namespace Metal {
 		MTLMutability Mutability { get; set; }
 	}
 
+	/// <summary>An array of buffer mutability descriptors.</summary>
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -5397,6 +5521,7 @@ namespace Metal {
 		void SetObject ([NullAllowed] MTLPipelineBufferDescriptor buffer, nuint bufferIndex);
 	}
 
+	/// <summary>An description of an argument inside an argument buffer.</summary>
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -5426,6 +5551,7 @@ namespace Metal {
 
 	interface IMTLArgumentEncoder { }
 
+	/// <summary>Encodes data into argument buffers.</summary>
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[Protocol]
