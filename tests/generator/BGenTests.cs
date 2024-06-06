@@ -1302,8 +1302,9 @@ namespace GeneratorTests {
 				},
 				new {
 					Type = "IIProtocol",
-					MethodCount = 16,
+					MethodCount = 17,
 					Methods = new [] {
+						new { Method = ".cctor", Attributes = "" },
 						new { Method = "get_IPropA", Attributes = "" },
 						new { Method = "_GetIPropA", Attributes = "" },
 						new { Method = "set_IPropB", Attributes = "[SupportedOSPlatform(\"tvos150.0\")]" },
@@ -1334,8 +1335,9 @@ namespace GeneratorTests {
 				},
 				new {
 					Type = "IIProtocolLower",
-					MethodCount = 16,
+					MethodCount = 17,
 					Methods = new [] {
+						new { Method = ".cctor", Attributes = "" },
 						new { Method = "get_IPropD", Attributes = "" },
 						new { Method = "_GetIPropD", Attributes = "" },
 						new { Method = "set_IPropE", Attributes = "[SupportedOSPlatform(\"tvos110.0\")]" },
