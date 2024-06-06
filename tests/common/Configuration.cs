@@ -1249,7 +1249,7 @@ namespace Xamarin.Tests {
 
 		public static IEnumerable<string> CallNM (string file, string nmArguments, string arch = null)
 		{
-			var arguments = new List<string> (new [] { nmArguments , file });
+			var arguments = new List<string> (new [] { nmArguments, file });
 			if (!string.IsNullOrEmpty (arch)) {
 				arguments.Add ("-arch");
 				arguments.Add (arch);
