@@ -933,7 +933,9 @@ namespace Xamarin.Bundler {
 			sw.WriteLine ("}");
 		}
 
+#if NET
 		static readonly char [] charsToReplaceAot = new [] { '.', '-', '+', '<', '>' };
+#endif
 		static string EncodeAotSymbol (string symbol)
 		{
 			var sb = new StringBuilder ();
@@ -947,12 +949,17 @@ namespace Xamarin.Bundler {
 					(c >= 'A' && c <= 'Z')) {
 					sb.Append (c);
 					continue;
+#if NET
 				} else if (charsToReplaceAot.Contains (c)) {
 					sb.Append ('_');
 				} else {
 					// Append the hex representation of b between underscores
 					sb.Append ($"_{b:X}_");
+#endif
 				}
+#if !NET
+				sb.Append ('_');
+#endif
 			}
 			return sb.ToString ();
 		}
