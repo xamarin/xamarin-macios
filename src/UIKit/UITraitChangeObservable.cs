@@ -12,6 +12,7 @@
 using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using Foundation;
 using ObjCRuntime;
@@ -146,7 +147,6 @@ namespace UIKit {
 		}
 
 
-#if !XAMCORE_5_0
 #if !NET
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public IUITraitChangeRegistration RegisterForTraitChanges (Class [] traits, global::System.Action<IUITraitEnvironment, UITraitCollection> handler)
@@ -154,26 +154,6 @@ namespace UIKit {
 			// The manual block code is somewhat annoying to implement, so at least don't do it twice (once for .NET and once for legacy Xamarin) unless we really need to.
 			throw new NotImplementedException ("This API has not been implemented for legacy Xamarin. Please upgrade to .NET");
 		}
-#else
-		/// <summary>
-		/// Registers a selector that will be called on the specified object when any of the specified traits changes.
-		/// </summary>
-		/// <param name="traits">The traits to observe.</param>
-		/// <param name="handler">The callback to execute when any of the specified traits changes.</param>
-		/// <returns>A token that can be used to unregister the callback by calling <see cref="M:UnregisterForTraitChanges" />.</returns>
-		[BindingImpl (BindingImplOptions.Optimizable)]
-		public unsafe IUITraitChangeRegistration RegisterForTraitChanges (Class [] traits, [BlockProxy (typeof (ObjCRuntime.Trampolines.IUITraitChangeObservable_RegisterForTraitChanges_NIDAction))] global::System.Action<IUITraitEnvironment, UITraitCollection> handler)
-		{
-			global::UIKit.UIApplication.EnsureUIThread ();
-			if (traits is null)
-				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (traits));
-			if (handler is null)
-				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
-			using var nsa_traits = NSArray.FromNSObjects (traits);
-			using var block_handler = Trampolines.IUITraitChangeObservable_RegisterForTraitChanges_SDAction.CreateBlock (handler);
-			return Runtime.GetINativeObject<IUITraitChangeRegistration> (NativeHandle_objc_msgSend_NativeHandle_BlockLiteral (this.Handle, Selector.GetHandle ("registerForTraitChanges:withHandler:"), nsa_traits.Handle, &block_handler), false)!;
-		}
-#endif
 
 		/// <summary>
 		/// Registers a selector that will be called on the specified object when any of the specified traits changes.
@@ -210,6 +190,7 @@ namespace UIKit {
 			using var nsa_traits = NSArray.FromNSObjects (traits);
 			return Runtime.GetINativeObject<IUITraitChangeRegistration> (NativeHandle_objc_msgSend_NativeHandle_NativeHandle (this.Handle, Selector.GetHandle ("registerForTraitChanges:withAction:"), nsa_traits.Handle, action.Handle), false)!;
 		}
+#endif // !NET
 
 #if XAMCORE_5_0
 		private static Class [] ToClasses (IUITraitDefinition [] traits)
@@ -270,68 +251,169 @@ namespace UIKit {
 		[EditorBrowsable (EditorBrowsableState.Never)]
 		public extern static NativeHandle NativeHandle_objc_msgSend_NativeHandle_NativeHandle_NativeHandle (IntPtr receiver, IntPtr selector, NativeHandle arg1, NativeHandle arg2, NativeHandle arg3);
 #endif
-#endif // !XAMCORE_5_0
 	}
-}
 
 #if !XAMCORE_5_0 && NET
-namespace ObjCRuntime {
-	using UIKit;
-	static partial class Trampolines {
-		[UnmanagedFunctionPointerAttribute (CallingConvention.Cdecl)]
-		[UserDelegateType (typeof (global::System.Action<global::UIKit.IUITraitEnvironment, global::UIKit.UITraitCollection>))]
-		unsafe internal delegate void IUITraitChangeObservable_RegisterForTraitChanges_Callback (IntPtr block, NativeHandle arg1, NativeHandle arg2);
-
-		static internal class IUITraitChangeObservable_RegisterForTraitChanges_SDAction {
-			[Preserve (Conditional = true)]
-			[UnmanagedCallersOnly]
-			internal static unsafe void Invoke (IntPtr block, NativeHandle arg1, NativeHandle arg2)
-			{
-				var del = BlockLiteral.GetTarget<global::System.Action<global::UIKit.IUITraitEnvironment, global::UIKit.UITraitCollection>> (block);
-				if (del is not null) {
-					del (Runtime.GetINativeObject<UIKit.IUITraitEnvironment> (arg1, false)!, Runtime.GetNSObject<UITraitCollection> (arg2)!);
-				}
-			}
-			internal static unsafe BlockLiteral CreateNullableBlock (global::System.Action<global::UIKit.IUITraitEnvironment, global::UIKit.UITraitCollection>? callback)
-			{
-				if (callback is null)
-					return default (BlockLiteral);
-				return CreateBlock (callback);
-			}
-			[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
-			internal static unsafe BlockLiteral CreateBlock (global::System.Action<global::UIKit.IUITraitEnvironment, global::UIKit.UITraitCollection> callback)
-			{
-				delegate* unmanaged<IntPtr, NativeHandle, NativeHandle, void> trampoline = &Invoke;
-				return new BlockLiteral (trampoline, callback, typeof (IUITraitChangeObservable_RegisterForTraitChanges_SDAction), nameof (Invoke));
-			}
+	public partial class UIPresentationController {
+		[Obsolete ("Use the 'UITraitChangeObservable.RegisterForTraitChanges (Class[], Action<IUITraitEnvironment, UITraitCollection>)' method instead.", false)]
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		[SupportedOSPlatform ("ios17.0")]
+		[SupportedOSPlatform ("tvos17.0")]
+		[SupportedOSPlatform ("maccatalyst17.0")]
+		public unsafe virtual IUITraitChangeRegistration RegisterForTraitChanges (IUITraitDefinition[] traits, global::System.Action<IUITraitEnvironment, UITraitCollection> handler)
+		{
+			return IUITraitChangeObservable._RegisterForTraitChanges (this, IUITraitChangeObservable.ToClasses (traits), handler);
 		}
 
-		internal sealed class IUITraitChangeObservable_RegisterForTraitChanges_NIDAction : TrampolineBlockBase {
-			IUITraitChangeObservable_RegisterForTraitChanges_Callback invoker;
-			[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
-			public unsafe IUITraitChangeObservable_RegisterForTraitChanges_NIDAction (BlockLiteral* block) : base (block)
-			{
-				invoker = block->GetDelegateForBlock<IUITraitChangeObservable_RegisterForTraitChanges_Callback> ();
-			}
-			[Preserve (Conditional = true)]
-			[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
-			public unsafe static global::System.Action<global::UIKit.IUITraitEnvironment, global::UIKit.UITraitCollection>? Create (IntPtr block)
-			{
-				if (block == IntPtr.Zero)
-					return null;
-				var del = (global::System.Action<global::UIKit.IUITraitEnvironment, global::UIKit.UITraitCollection>) GetExistingManagedDelegate (block);
-				return del ?? new IUITraitChangeObservable_RegisterForTraitChanges_NIDAction ((BlockLiteral*) block).Invoke;
-			}
-			[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
-			unsafe void Invoke (global::UIKit.IUITraitEnvironment arg1, global::UIKit.UITraitCollection arg2)
-			{
-				var arg1__handle__ = arg1.GetHandle ();
-				var arg2__handle__ = arg2.GetHandle ();
-				invoker (BlockPointer, arg1__handle__, arg2__handle__);
-			}
+		[Obsolete ("Use the 'UITraitChangeObservable.RegisterForTraitChanges (Class[], NSObject, Selector)' method instead.", false)]
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		[SupportedOSPlatform ("ios17.0")]
+		[SupportedOSPlatform ("tvos17.0")]
+		[SupportedOSPlatform ("maccatalyst17.0")]
+		public virtual IUITraitChangeRegistration RegisterForTraitChanges (IUITraitDefinition[] traits, NSObject target, Selector action)
+		{
+			return IUITraitChangeObservable._RegisterForTraitChanges (this, IUITraitChangeObservable.ToClasses (traits), target, action);
+		}
+
+		[Obsolete ("Use the 'UITraitChangeObservable.RegisterForTraitChanges (Class[], Selector)' method instead.", false)]
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		[SupportedOSPlatform ("ios17.0")]
+		[SupportedOSPlatform ("tvos17.0")]
+		[SupportedOSPlatform ("maccatalyst17.0")]
+		public virtual IUITraitChangeRegistration RegisterForTraitChanges (IUITraitDefinition[] traits, Selector action)
+		{
+			return IUITraitChangeObservable._RegisterForTraitChanges (this, IUITraitChangeObservable.ToClasses (traits), action);
 		}
 	}
+
+	public partial class UIView {
+		[Obsolete ("Use the 'UITraitChangeObservable.RegisterForTraitChanges (Class[], Action<IUITraitEnvironment, UITraitCollection>)' method instead.", false)]
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		[SupportedOSPlatform ("ios17.0")]
+		[SupportedOSPlatform ("tvos17.0")]
+		[SupportedOSPlatform ("maccatalyst17.0")]
+		public unsafe virtual IUITraitChangeRegistration RegisterForTraitChanges (IUITraitDefinition[] traits, global::System.Action<IUITraitEnvironment, UITraitCollection> handler)
+		{
+			return IUITraitChangeObservable._RegisterForTraitChanges (this, IUITraitChangeObservable.ToClasses (traits), handler);
+		}
+
+		[Obsolete ("Use the 'UITraitChangeObservable.RegisterForTraitChanges (Class[], NSObject, Selector)' method instead.", false)]
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		[SupportedOSPlatform ("ios17.0")]
+		[SupportedOSPlatform ("tvos17.0")]
+		[SupportedOSPlatform ("maccatalyst17.0")]
+		public virtual IUITraitChangeRegistration RegisterForTraitChanges (IUITraitDefinition[] traits, NSObject target, Selector action)
+		{
+			return IUITraitChangeObservable._RegisterForTraitChanges (this, IUITraitChangeObservable.ToClasses (traits), target, action);
+		}
+
+		[Obsolete ("Use the 'UITraitChangeObservable.RegisterForTraitChanges (Class[], Selector)' method instead.", false)]
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		[SupportedOSPlatform ("ios17.0")]
+		[SupportedOSPlatform ("tvos17.0")]
+		[SupportedOSPlatform ("maccatalyst17.0")]
+		public virtual IUITraitChangeRegistration RegisterForTraitChanges (IUITraitDefinition[] traits, Selector action)
+		{
+			return IUITraitChangeObservable._RegisterForTraitChanges (this, IUITraitChangeObservable.ToClasses (traits), action);
+		}
+	}
+
+	public partial class UIViewController {
+		[Obsolete ("Use the 'UITraitChangeObservable.RegisterForTraitChanges (Class[], Action<IUITraitEnvironment, UITraitCollection>)' method instead.", false)]
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		[SupportedOSPlatform ("ios17.0")]
+		[SupportedOSPlatform ("tvos17.0")]
+		[SupportedOSPlatform ("maccatalyst17.0")]
+		public unsafe virtual IUITraitChangeRegistration RegisterForTraitChanges (IUITraitDefinition[] traits, global::System.Action<IUITraitEnvironment, UITraitCollection> handler)
+		{
+			return IUITraitChangeObservable._RegisterForTraitChanges (this, IUITraitChangeObservable.ToClasses (traits), handler);
+		}
+
+		[Obsolete ("Use the 'UITraitChangeObservable.RegisterForTraitChanges (Class[], NSObject, Selector)' method instead.", false)]
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		[SupportedOSPlatform ("ios17.0")]
+		[SupportedOSPlatform ("tvos17.0")]
+		[SupportedOSPlatform ("maccatalyst17.0")]
+		public virtual IUITraitChangeRegistration RegisterForTraitChanges (IUITraitDefinition[] traits, NSObject target, Selector action)
+		{
+			return IUITraitChangeObservable._RegisterForTraitChanges (this, IUITraitChangeObservable.ToClasses (traits), target, action);
+		}
+
+		[Obsolete ("Use the 'UITraitChangeObservable.RegisterForTraitChanges (Class[], Selector)' method instead.", false)]
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		[SupportedOSPlatform ("ios17.0")]
+		[SupportedOSPlatform ("tvos17.0")]
+		[SupportedOSPlatform ("maccatalyst17.0")]
+		public virtual IUITraitChangeRegistration RegisterForTraitChanges (IUITraitDefinition[] traits, Selector action)
+		{
+			return IUITraitChangeObservable._RegisterForTraitChanges (this, IUITraitChangeObservable.ToClasses (traits), action);
+		}
+	}
+
+	public partial class UIWindowScene {
+		[Obsolete ("Use the 'UITraitChangeObservable.RegisterForTraitChanges (Class[], Action<IUITraitEnvironment, UITraitCollection>)' method instead.", false)]
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		[SupportedOSPlatform ("ios17.0")]
+		[SupportedOSPlatform ("tvos17.0")]
+		[SupportedOSPlatform ("maccatalyst17.0")]
+		public unsafe virtual IUITraitChangeRegistration RegisterForTraitChanges (IUITraitDefinition[] traits, global::System.Action<IUITraitEnvironment, UITraitCollection> handler)
+		{
+			return IUITraitChangeObservable._RegisterForTraitChanges (this, IUITraitChangeObservable.ToClasses (traits), handler);
+		}
+
+		[Obsolete ("Use the 'UITraitChangeObservable.RegisterForTraitChanges (Class[], NSObject, Selector)' method instead.", false)]
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		[SupportedOSPlatform ("ios17.0")]
+		[SupportedOSPlatform ("tvos17.0")]
+		[SupportedOSPlatform ("maccatalyst17.0")]
+		public virtual IUITraitChangeRegistration RegisterForTraitChanges (IUITraitDefinition[] traits, NSObject target, Selector action)
+		{
+			return IUITraitChangeObservable._RegisterForTraitChanges (this, IUITraitChangeObservable.ToClasses (traits), target, action);
+		}
+
+		[Obsolete ("Use the 'UITraitChangeObservable.RegisterForTraitChanges (Class[], Selector)' method instead.", false)]
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		[SupportedOSPlatform ("ios17.0")]
+		[SupportedOSPlatform ("tvos17.0")]
+		[SupportedOSPlatform ("maccatalyst17.0")]
+		public virtual IUITraitChangeRegistration RegisterForTraitChanges (IUITraitDefinition[] traits, Selector action)
+		{
+			return IUITraitChangeObservable._RegisterForTraitChanges (this, IUITraitChangeObservable.ToClasses (traits), action);
+		}
+	}
+
+	public static partial class UITraitChangeObservable_Extensions {
+		[Obsolete ("Use the 'UITraitChangeObservable.RegisterForTraitChanges (Class[], Action<IUITraitEnvironment, UITraitCollection>)' method instead.", false)]
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		[SupportedOSPlatform ("ios17.0")]
+		[SupportedOSPlatform ("tvos17.0")]
+		[SupportedOSPlatform ("maccatalyst17.0")]
+		public unsafe static IUITraitChangeRegistration RegisterForTraitChanges (this IUITraitChangeObservable This, IUITraitDefinition[] traits, global::System.Action<IUITraitEnvironment, UITraitCollection> handler)
+		{
+			return IUITraitChangeObservable._RegisterForTraitChanges (This, IUITraitChangeObservable.ToClasses (traits), handler);
+		}
+
+		[Obsolete ("Use the 'UITraitChangeObservable.RegisterForTraitChanges (Class[], NSObject, Selector)' method instead.", false)]
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		[SupportedOSPlatform ("ios17.0")]
+		[SupportedOSPlatform ("tvos17.0")]
+		[SupportedOSPlatform ("maccatalyst17.0")]
+		public static IUITraitChangeRegistration RegisterForTraitChanges (this IUITraitChangeObservable This, IUITraitDefinition[] traits, NSObject target, Selector action)
+		{
+			return IUITraitChangeObservable._RegisterForTraitChanges (This, IUITraitChangeObservable.ToClasses (traits), target, action);
+		}
+
+		[Obsolete ("Use the 'UITraitChangeObservable.RegisterForTraitChanges (Class[], Selector)' method instead.", false)]
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		[SupportedOSPlatform ("ios17.0")]
+		[SupportedOSPlatform ("tvos17.0")]
+		[SupportedOSPlatform ("maccatalyst17.0")]
+		public static IUITraitChangeRegistration RegisterForTraitChanges (this IUITraitChangeObservable This, IUITraitDefinition[] traits, Selector action)
+		{
+			return IUITraitChangeObservable._RegisterForTraitChanges (This, IUITraitChangeObservable.ToClasses (traits), action);
+		}
+	}
+#endif
 }
-#endif // !XAMCORE_5_0 && NET
 
 #endif // !__WATCHOS__
