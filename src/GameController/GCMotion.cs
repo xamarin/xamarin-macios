@@ -111,6 +111,7 @@ namespace GameController {
 #endif
 	public struct GCDualSenseAdaptiveTriggerPositionalAmplitudes {
 #else
+	[NativeName ("GCDualSenseAdaptiveTriggerPositionalAmplitudes")]
 #if COREBUILD
 	public
 #endif
@@ -223,6 +224,7 @@ namespace GameController {
 #endif
 	public struct GCDualSenseAdaptiveTriggerPositionalResistiveStrengths {
 #else
+	[NativeName ("GCDualSenseAdaptiveTriggerPositionalResistiveStrengths")]
 #if COREBUILD
 	public
 #endif
