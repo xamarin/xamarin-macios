@@ -481,6 +481,9 @@ namespace Xamarin.MacDev.Tasks {
 				return false;
 			}
 
+			if (SdkIsSimulator)
+				return ExecuteSimulator ();
+
 			if (!string.IsNullOrEmpty (ProvisioningProfile)) {
 				if ((profile = GetMobileProvision (platform, ProvisioningProfile)) is null) {
 					Log.LogError (MSBStrings.E0049, ProvisioningProfile);
@@ -530,6 +533,34 @@ namespace Xamarin.MacDev.Tasks {
 			} else {
 				EntitlementsInSignature = CompiledEntitlements;
 			}
+
+			return !Log.HasLoggedErrors;
+		}
+
+		bool ExecuteSimulator ()
+		{
+			if (!string.IsNullOrEmpty (ProvisioningProfile))
+				Log.LogWarning (null, null, null, ProvisioningProfile, 0, 0, 0, 0, MSBStrings.W7124 /* A provisioning profile has been specified, but this value is ignored for the simulator. */);
+
+			if (!string.IsNullOrEmpty (Entitlements))
+				Log.LogWarning (null, null, null, Entitlements, 0, 0, 0, 0, MSBStrings.W7125 /* A file with codesigning entitlements has been specified, but this value is ignored for the simulator. */);
+
+			// No matter what, I've only been able to make Xcode apply a single entitlement to simulator builds: com.apple.security.get-task-allow
+			var compiled = new PDictionary ();
+			compiled.Add ("com.apple.security.get-task-allow", new PBoolean (true));
+
+			// Still apply custom entitlements, just to offer a way out if we're wrong about com.apple.security.get-task-allow being the only entitlement.
+			AddCustomEntitlements (compiled, null);
+
+			try {
+				Directory.CreateDirectory (Path.GetDirectoryName (CompiledEntitlements!.ItemSpec));
+				WriteXcent (compiled, CompiledEntitlements.ItemSpec);
+			} catch (Exception ex) {
+				Log.LogError (MSBStrings.E0114, CompiledEntitlements, ex.Message);
+				return false;
+			}
+
+			EntitlementsInExecutable = CompiledEntitlements;
 
 			return !Log.HasLoggedErrors;
 		}

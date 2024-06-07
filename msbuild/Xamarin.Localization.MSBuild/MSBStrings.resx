@@ -1572,4 +1572,12 @@
         <value>The app bundle '{0}' contains a subdirectory named 'Resources'. This is not allowed on this platform. Typically resource files should be in the root directory of the app bundle (or a custom subdirectory, but named anything other than 'Resources').</value>
         <comment>0: a path</comment>
     </data>
+
+    <data name="W7124" xml:space="preserve">
+        <value>A provisioning profile has been specified, but this value is ignored for the simulator.</value>
+    </data>
+
+    <data name="W7125" xml:space="preserve">
+        <value>A file with codesigning entitlements has been specified, but this value is ignored for the simulator.</value>
+    </data>
 </root>
