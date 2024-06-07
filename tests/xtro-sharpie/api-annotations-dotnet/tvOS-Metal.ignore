@@ -1,5 +1,4 @@
 # has to wait for XAMCORE_5_0
-!incorrect-protocol-member! MTLIndirectRenderCommand::setVertexBuffer:offset:attributeStride:atIndex: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLRenderCommandEncoder::drawMeshThreadgroups:threadsPerObjectThreadgroup:threadsPerMeshThreadgroup: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLRenderCommandEncoder::drawMeshThreadgroupsWithIndirectBuffer:indirectBufferOffset:threadsPerObjectThreadgroup:threadsPerMeshThreadgroup: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLRenderCommandEncoder::drawMeshThreads:threadsPerObjectThreadgroup:threadsPerMeshThreadgroup: is REQUIRED and should be abstract

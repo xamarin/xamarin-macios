@@ -6,6 +6,9 @@ using ObjCRuntime;
 namespace Accounts {
 
 	// untyped enum -> ACError.h
+	/// <summary>An enumeration whose values indicate various errors relating to accessing accounts.</summary>
+	///     
+	///     <!-- TODO: Confirm that this value is used somewhere -->
 	[ErrorDomain ("ACErrorDomain")]
 	public enum ACErrorCode {
 		Unknown = 1,
@@ -42,6 +45,7 @@ namespace Accounts {
 	}
 
 	// NSInteger -> ACAccountStore.h
+	/// <summary>An enumeration whose values indicate the result of a credential renewal request (see <see cref="M:Accounts.ACAccountStore.RenewCredentials(Accounts.ACAccount,System.Action{Accounts.ACAccountCredentialRenewResult,Foundation.NSError})" />).</summary>
 	[Native]
 	public enum ACAccountCredentialRenewResult : long {
 		Renewed, Rejected, Failed

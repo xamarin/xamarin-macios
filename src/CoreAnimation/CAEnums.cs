@@ -39,6 +39,7 @@ namespace CoreAnimation {
 
 	// untyped enum -> CALayer.h
 	// note: edgeAntialiasingMask is an `unsigned int` @property
+	/// <summary>Flags used to determine what side of a layer should be antialiased.</summary>
 	[Flags]
 	public enum CAEdgeAntialiasingMask : uint {
 		LeftEdge = 1 << 0,

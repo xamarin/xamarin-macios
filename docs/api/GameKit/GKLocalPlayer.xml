@@ -1,0 +1,61 @@
+<Documentation>
+  <Docs DocId="T:GameKit.GKLocalPlayer">
+    <summary>Represents the authenticated local player.</summary>
+    <remarks>
+      <para>
+	Represents the authenticated player for this device.   
+      </para>
+      <para>
+	On iOS 6.0 and newer, to authenticate the user, set the <see cref="P:GameKit.GKLocalPlayer.AuthenticateHandler" />
+	property to a delegate that takes both a UIViewController and
+	an NSError parameters.  This will trigger the authentication
+	to take place.  For older versions of iOS, you should call the
+	<see cref="M:GameKit.GKLocalPlayer.Authenticate(System.Action{Foundation.NSError})" />
+	method.  The difference is that with iOS 6.0 your callback
+	receives a UIViewController that you can present to your user,
+	while the old API would present the API and invoke your
+	callback on an arbitrary thread.
+
+      </para>
+      <para>
+	GameKit will call <see cref="P:GameKit.GKLocalPlayer.AuthenticateHandler" />
+	on demand as your application transitions from background and
+	foreground.  It is important that you update any internal
+	state when authenticated as the user might have logged off,
+	and logged in with a different account.
+
+      </para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+//
+// This shows how to authenticate on both iOS 6.0 and older versions
+//
+if (UIDevice.CurrentDevice.CheckSystemVersion (6, 0)) {
+    //
+    // iOS 6.0 and newer
+    //
+    GKLocalPlayer.LocalPlayer.AuthenticateHandler = (ui, error) => {
+
+        // If ui is null, that means the user is already authenticated,
+	// for example, if the user used Game Center directly to log in
+
+	if (ui != null)
+            current.PresentModalViewController (ui, true);
+	else {
+	    // Check if you are authenticated:
+	    var authenticated = GKLocalPlayer.LocalPlayer.Authenticated;
+	}
+	Console.WriteLine ("Authentication result: {0}",err);
+    };
+} else {
+    // Versions prior to iOS 6.0
+    GKLocalPlayer.LocalPlayer.Authenticate ((err) => {
+        Console.WriteLine ("Authentication result: {0}",err);
+    });
+};
+]]></code>
+      </example>
+    </remarks>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/GameKit/Reference/GKLocalPlayer_Ref/index.html">Apple documentation for <c>GKLocalPlayer</c></related>
+  </Docs>
+</Documentation>

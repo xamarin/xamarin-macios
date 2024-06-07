@@ -12,6 +12,7 @@ namespace EventKit {
 
 	// untyped enum -> EKTypes.h
 	// iOS 9 promoted this to an NSInteger - which breaks compatibility
+	/// <summary>Specifies the type of a calendar.</summary>
 	[Native]
 	public enum EKCalendarType : long {
 		Local, CalDav, Exchange, Subscription, Birthday
@@ -19,6 +20,7 @@ namespace EventKit {
 
 	// untyped enum -> EKTypes.h
 	// iOS 9 promoted this to an NSInteger - which breaks compatibility
+	/// <summary>The kind of participant to the event.</summary>
 	[Native]
 	public enum EKParticipantType : long {
 		Unknown, Person, Room, Resource, Group
@@ -26,6 +28,7 @@ namespace EventKit {
 
 	// untyped enum -> EKTypes.h
 	// iOS 9 promoted this to an NSInteger - which breaks compatibility
+	/// <summary>The role of an <see cref="T:EventKit.EKParticipant" /></summary>
 	[Native]
 	public enum EKParticipantRole : long {
 		Unknown, Required, Optional, Chair, NonParticipant
@@ -33,6 +36,7 @@ namespace EventKit {
 
 	// untyped enum -> EKTypes.h
 	// iOS 9 promoted this to an NSInteger - which breaks compatibility
+	/// <summary>The status of a participant.</summary>
 	[Native]
 	public enum EKParticipantStatus : long {
 		Unknown, Pending, Accepted, Declined,
@@ -41,6 +45,7 @@ namespace EventKit {
 
 	// untyped enum -> EKError.h
 	// iOS 9 promoted this to an NSInteger - which breaks compatibility
+	/// <summary>Errors returned by Event Kit.</summary>
 	[Native]
 	[ErrorDomain ("EKErrorDomain")]
 	public enum EKErrorCode : long {
@@ -85,6 +90,7 @@ namespace EventKit {
 
 	// untyped enum -> EKTypes.h
 	// Special note: some API (like `dayOfWeek:` and `dayOfWeek:weekNumber:` use an `NSInteger` instead of the enum
+	/// <summary>Enumeration of the days of the week.</summary>
 	[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'EKWeekday'.")]
 	[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'EKWeekday'.")]
 	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'EKWeekday'.")]
@@ -94,6 +100,7 @@ namespace EventKit {
 		Monday, Tuesday, Wednesday, Thursday, Friday, Saturday
 	}
 
+	/// <summary>Enumerates the days of the week.</summary>
 	[MacCatalyst (13, 1)]
 	[Native] // NSInteger (size change from previously untyped enum)
 	public enum EKWeekday : long {
@@ -109,6 +116,7 @@ namespace EventKit {
 
 	// untyped enum -> EKTypes.h
 	// iOS 9 promoted this to an NSInteger - which breaks compatibility
+	/// <summary>The recurring frequency for the event.</summary>
 	[Native]
 	public enum EKRecurrenceFrequency : long {
 		Daily, Weekly, Monthly, Yearly
@@ -116,12 +124,14 @@ namespace EventKit {
 
 	// untyped enum -> EKEventStore.h
 	// iOS 9 promoted this to an NSInteger - which breaks compatibility
+	/// <summary>Determines how changes to an event will be applied, either it affects a single instance or affects all instances.</summary>
 	[Native]
 	public enum EKSpan : long {
 		ThisEvent, FutureEvents
 	}
 
 	// NSUInteger -> EKTypes.h
+	/// <summary>Specifies the types of availability information the calendar is capable of providing for its associated events.</summary>
 	[Native ("EKCalendarEventAvailabilityMask")]
 	[Flags]
 	public enum EKCalendarEventAvailability : ulong {
@@ -134,6 +144,7 @@ namespace EventKit {
 
 	// untyped enum -> EKEvent.h
 	// iOS 9 promoted this to an NSInteger - which breaks compatibility
+	/// <summary>Types of availability </summary>
 	[Native]
 	public enum EKEventAvailability : long {
 		NotSupported = -1,
@@ -142,6 +153,7 @@ namespace EventKit {
 
 	// untyped enum -> EKEvent.h
 	// iOS 9 promoted this to an NSInteger - which breaks compatibility
+	/// <summary>The event status.</summary>
 	[Native]
 	public enum EKEventStatus : long {
 		None, Confirmed, Tentative, Cancelled
@@ -149,18 +161,21 @@ namespace EventKit {
 
 	// untyped enum -> EKTypes.h
 	// iOS 9 promoted this to an NSInteger - which breaks compatibility
+	/// <summary>An enumeration whose values indicate the type of a <see cref="T:EventKit.EKSource" /> object.</summary>
 	[Native]
 	public enum EKSourceType : long {
 		Local, Exchange, CalDav, MobileMe, Subscribed, Birthdays
 	}
 
 	// NSInteger -> EKTypes.h
+	/// <summary>An enumeration whose values specify whether an event was raised by entering or leaving a region.</summary>
 	[Native]
 	public enum EKAlarmProximity : long {
 		None, Enter, Leave
 	}
 
 	// NSUInteger -> EKTypes.h
+	/// <summary>An enumeration whose values represent the allowed entity types for a <see cref="T:EventKit.EKCalendar" />.</summary>
 	[Native]
 	[Flags]
 	public enum EKEntityMask : ulong {
@@ -169,6 +184,7 @@ namespace EventKit {
 	}
 
 	// NSUInteger -> EKTypes.h
+	/// <summary>An enumeration that specifies whether an entity is an event or a reminder.</summary>
 	[Native]
 	public enum EKEntityType : ulong {
 		Event,
@@ -184,6 +200,7 @@ namespace EventKit {
 	}
 #endif
 	// NSInteger -> EKEventStore.h
+	/// <summary>An enumeration whose values specify the restrictions on access to the <see cref="T:EventKit.EKEventStore" />. Retrieved by calling the <see cref="M:EventKit.EKEventStore.GetAuthorizationStatus(EventKit.EKEntityType)" /> method.</summary>
 	[Native]
 	public enum EKAuthorizationStatus : long {
 		NotDetermined = 0,

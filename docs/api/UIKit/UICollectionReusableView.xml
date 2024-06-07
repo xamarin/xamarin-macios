@@ -1,0 +1,35 @@
+<Documentation>
+  <Docs DocId="T:UIKit.UICollectionReusableView">
+    <summary>The base class for <see cref="T:UIKit.UIView" />s that are reused in a <see cref="T:UIKit.UICollectionView" />.</summary>
+    <remarks>
+      <para>The <see cref="T:UIKit.UICollectionView" /> class is designed to work with large datasets while respecting the resource limitations of iOS devices. To do this, the <see cref="T:UIKit.UICollectionView" /> maintains a reuse queue of component views of type <see cref="T:UIKit.UICollectionReusableView" />, instantiating only as many as are strictly necessary and replacing values in <see cref="T:UIKit.UICollectionReusableView" />s that are no longer visible with values appropriate to <see cref="T:UIKit.UICollectionReusableView" />s that are about to scroll onto the screen. (See <see cref="T:UIKit.UICollectionView" /> for an extended discussion of the reuse queue.)</para>
+      <para>The cells in a <see cref="T:UIKit.UICollectionView" /> are expected to be of type <see cref="T:UIKit.UICollectionViewCell" />, which is a subtype of <see cref="T:UIKit.UICollectionReusableView" />. Supplementary views, though, are likely to be direct subtypes of <see cref="T:UIKit.UICollectionReusableView" />.</para>
+      <para>Supplementary Views are views that present information associated with each section of a <see cref="T:UIKit.UICollectionView" />. Like <see cref="T:UIKit.UICollectionViewCell" />s, Supplementary Views are data-driven. Where <see cref="T:UIKit.UICollectionViewCell" />s present the item data from a data source, Supplementary Views present the section data, such as the categories of book in a bookshelf or the genre of music in a music library.</para>
+      <para>
+        For example, a Supplementary View could be used to present a header for a particular section, as shown in this figure taken from the "Introduction to Collection Views" guide:
+      </para>
+      <para>
+        <img href="~/UIKit/_images/UIKit.UICollectionReusableView.png" alt="Screenshot of the app" />
+      </para>
+      <para>
+        However, Supplementary Views are more generic than just headers and footers. They can be positioned anywhere in the collection view and can be comprised of any views, making their appearance fully customizable.
+      </para>
+      <para>Supplementary Views are associated with specific sections within the <see cref="T:UIKit.UICollectionView" />. Since the <see cref="T:UIKit.UICollectionView" /> manages the reuse queue and will reuse an off-screen supplementary view, the application developer can use the <see cref="M:UIKit.UICollectionViewDataSource.GetViewForSupplementaryElement(UIKit.UICollectionView,Foundation.NSString,Foundation.NSIndexPath)" /> method to coordinate the visual attributes of a supplementary view with domain data from a model element. In the following code, a <see cref="T:UIKit.UILabel" />'s <see cref="P:UIKit.UILabel.Text" /> property is set to the value of the <see cref="P:Foundation.NSIndexPath.Section" /> property.</para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+          public override UICollectionReusableView GetViewForSupplementaryElement (UICollectionView collectionView, NSString elementKind, NSIndexPath indexPath)
+          {
+            var headerView = (Header) collectionView.DequeueReusableSupplementaryView (elementKind, headerId, indexPath);
+            headerView.Text = "Supplementary View Section " + indexPath.Section.ToString ();
+            return headerView;
+          }
+        ]]></code>
+      </example>
+    </remarks>
+    
+    
+    
+    <related type="article" href="https://docs.xamarin.com/ios/Guides/User_Interface/Introduction_to_CollectionViews">Introduction to Collection Views</related>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/UICollectionReusableView_class/index.html">Apple documentation for <c>UICollectionReusableView</c></related>
+  </Docs>
+</Documentation>

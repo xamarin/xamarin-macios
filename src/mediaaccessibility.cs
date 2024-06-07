@@ -7,6 +7,7 @@ using Surface = IOSurface.IOSurface;
 namespace MediaAccessibility {
 
 #if NET
+	/// <summary>Class that contains static methods and fields for accessing and controlling information about the appearance and language of accessibility features on the device.</summary>
 	[Static]
 	interface MACaptionAppearance {
 		[MacCatalyst (13, 1)]
@@ -16,6 +17,7 @@ namespace MediaAccessibility {
 	}
 #endif
 
+	/// <summary>Defines the constant associated with <c>kMAudibleMediaSettingsChangedNotification</c> and accessibility preferred characteristics.</summary>
 	[Static]
 	interface MAAudibleMedia {
 		[MacCatalyst (13, 1)]

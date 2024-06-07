@@ -1,0 +1,28 @@
+<Documentation>
+  <Docs DocId="T:Foundation.NSUrlSessionDownloadTask">
+    <summary>Developers should use <see cref="T:Foundation.NSUrlDownloadSessionResponse" /> rather than this deprecated type.</summary>
+    <remarks>
+      <para>The following example shows a basic asynchronous background download:</para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+var config = NSUrlSessionConfiguration.BackgroundSessionConfiguration(Guid.NewGuid().ToString());
+var session = NSUrlSession.FromConfiguration(config, new SimpleSessionDelegate(), new NSOperationQueue());
+var downloadTask = session.CreateDownloadTask(NSUrlRequest.FromUrl(url));
+//Begin download, asynchronously
+downloadTask.Resume();
+ ... 
+class SimpleSessionDelegate : NSUrlSessionDownloadDelegate
+{
+  public override void DidFinishDownloading(NSUrlSession session, NSUrlSessionDownloadTask downloadTask, NSUrl location)
+	{
+		var file = File.OpenRead(location.Path);
+     ...
+	}
+}
+       ]]></code>
+      </example>
+    </remarks>
+    
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Foundation/Reference/NSURLSessionDownloadTask_class/index.html">Apple documentation for <c>NSURLSessionDownloadTask</c></related>
+  </Docs>
+</Documentation>

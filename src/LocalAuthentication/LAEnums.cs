@@ -4,6 +4,7 @@ using Foundation;
 
 namespace LocalAuthentication {
 
+	/// <summary>Authentication policies.</summary>
 	[NoTV]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -29,6 +30,7 @@ namespace LocalAuthentication {
 		DeviceOwnerAuthenticationWithWristDetection = 5,
 	}
 
+	/// <summary>Status and error codes returned by methods in LocalAuthentication.</summary>
 	[NoTV]
 	[MacCatalyst (13, 1)]
 	[Native ("LAError")]
@@ -83,6 +85,7 @@ namespace LocalAuthentication {
 		NotInteractive = -1004,
 	}
 
+	/// <summary>Enumerates local authentication credential types.</summary>
 	[NoTV]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -93,6 +96,7 @@ namespace LocalAuthentication {
 		SmartCardPin = -3,
 	}
 
+	/// <summary>Enumerates access control operations for the <see cref="M:LocalAuthentication.LAContext.EvaluateAccessControl(Security.SecAccessControl,LocalAuthentication.LAAccessControlOperation,System.String,System.Action{System.Boolean,Foundation.NSError})" /> method.</summary>
 	[NoTV]
 	[MacCatalyst (13, 1)]
 	[Native]

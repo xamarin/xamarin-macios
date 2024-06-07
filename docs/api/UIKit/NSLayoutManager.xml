@@ -1,0 +1,10 @@
+<Documentation>
+  <Docs DocId="T:UIKit.NSLayoutManager">
+    <summary>Responsible for layout of text stored in a <see cref="T:UIKit.NSTextStorage" /> object.</summary>
+    <remarks>
+      <para>iOS 7 introduced "Text Kit," a broad set of APIs and modifications of existing classes, built on <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=Core%20Text&amp;scope=Xamarin" title="N:CoreText">N:CoreText</a></format>, that greatly expands the typographical flexibility of iOS.</para>
+      <para>The <see cref="T:UIKit.NSLayoutManager" />'s <see cref="P:UIKit.NSLayoutManager.TextStorage" /> property holds a reference to a <see cref="T:UIKit.NSTextStorage" /> object, that holds a potentially large amount of styled text. The <see cref="T:UIKit.NSLayoutManager" />'s <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=UIKit%20NSLayout%20Manager%20NSText%20Containers&amp;scope=Xamarin" title="P:UIKit.NSLayoutManager.NSTextContainers">P:UIKit.NSLayoutManager.NSTextContainers</a></format> property holds an ordered array of <see cref="T:UIKit.NSTextContainer" /> objects in which it lays out text. The <see cref="T:UIKit.NSTextContainer" />s, in turn, hold references to <see cref="T:UIKit.UITextView" /> objects, which actually display the text.</para>
+    </remarks>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/NSLayoutManager_Class_TextKit/index.html">Apple documentation for <c>NSLayoutManager</c></related>
+  </Docs>
+</Documentation>

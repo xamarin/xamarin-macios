@@ -63,15 +63,19 @@ public class DocumentationManager {
 	// There's already an implementation in Roslyn, but that's a rather heavy dependency,
 	// so we're implementing this in our own code instead.
 
-	static string GetDocId (MethodInfo md)
+	public static string GetDocId (MethodInfo md, bool includeDeclaringType = true, bool alwaysIncludeParenthesis = false)
 	{
 		var methodName = md.Name.Replace ('.', '#');
-		var name = GetDocId (md.DeclaringType!) + "." + methodName;
+		var name = methodName;
+		if (includeDeclaringType)
+			name = GetDocId (md.DeclaringType!) + "." + name;
 		if (md.IsGenericMethodDefinition)
 			name += $"``{md.GetGenericArguments ().Length}";
 		var parameters = md.GetParameters ();
 		if (parameters.Length > 0) {
 			name += "(" + string.Join (",", parameters.Select (p => GetDocId (p.ParameterType))) + ")";
+		} else if (alwaysIncludeParenthesis) {
+			name += "()";
 		}
 
 		if (md.Name == "op_Explicit" || md.Name == "op_Implicit") {
@@ -139,6 +143,9 @@ public class DocumentationManager {
 				name.Append ("0:"); // C# always produces multidimensional arrays with lower bound = 0 and no upper bound.
 			}
 			name.Append (']');
+		} else if (tr.IsByRef) {
+			name.Append (GetDocId (tr.GetElementType ()!));
+			name.Append ('@');
 		} else {
 			if (tr.IsNested) {
 				var decl = tr.DeclaringType!;
@@ -167,9 +174,6 @@ public class DocumentationManager {
 					name.Append (GetDocId (genericArguments [i]));
 				}
 				name.Append ('}');
-			} else if (tr.IsByRef) {
-				name.Append (tr.GetElementType ()!.Name);
-				name.Append ('@');
 			} else {
 				name.Append (tr.Name);
 			}

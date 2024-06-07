@@ -162,6 +162,9 @@ namespace CoreMidi {
 		JitterReductionTimestamp = 2,
 	}
 
+	/// <summary>A remote MIDI host.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/CoreMidi/Reference/MIDINetworkHost_ClassReference/index.html">Apple documentation for <c>MIDINetworkHost</c></related>
 	[NoTV]
 	[NoWatch]
 	[MacCatalyst (13, 1)]
@@ -201,6 +204,7 @@ namespace CoreMidi {
 		bool HasSameAddressAs (MidiNetworkHost other);
 	}
 
+	/// <summary>Global methods and constants for using CoreMidi.</summary>
 	[NoTV]
 	[NoWatch]
 	[MacCatalyst (13, 1)]
@@ -218,6 +222,9 @@ namespace CoreMidi {
 		NSString NetworkBonjourServiceType { get; }
 	}
 
+	/// <summary>A connection to a MIDI network host, using a <see cref="T:CoreMidi.MidiNetworkSession" />.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/CoreMidi/Reference/MIDINetworkConnection_ClassReference/index.html">Apple documentation for <c>MIDINetworkConnection</c></related>
 	[NoTV]
 	[NoWatch]
 	[MacCatalyst (13, 1)]
@@ -231,6 +238,9 @@ namespace CoreMidi {
 		MidiNetworkConnection FromHost (MidiNetworkHost host);
 	}
 
+	/// <summary>A singleton class that maintains the <see cref="T:CoreMidi.MidiNetworkConnection" />s between various MIDI entities.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/CoreMidi/Reference/MIDINetworkSession_ClassReference/index.html">Apple documentation for <c>MIDINetworkSession</c></related>
 	[NoTV]
 	[NoWatch]
 	[MacCatalyst (13, 1)]
