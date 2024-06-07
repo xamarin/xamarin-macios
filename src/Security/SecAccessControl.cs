@@ -15,6 +15,7 @@
 #nullable enable
 
 using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using ObjCRuntime;
 using CoreFoundation;
@@ -157,7 +158,13 @@ namespace Security {
 		public SecAccessControlCreateFlags Flags { get; private set; }
 
 		[DllImport (Constants.SecurityLibrary)]
-		extern static IntPtr SecAccessControlCreateWithFlags (IntPtr allocator, /* CFTypeRef */ IntPtr protection, /* SecAccessControlCreateFlags */ nint flags, out IntPtr error);
+		unsafe extern static IntPtr SecAccessControlCreateWithFlags (IntPtr allocator, /* CFTypeRef */ IntPtr protection, /* SecAccessControlCreateFlags */ nint flags, IntPtr* error);
+
+		unsafe static IntPtr SecAccessControlCreateWithFlags (IntPtr allocator, /* CFTypeRef */ IntPtr protection, /* SecAccessControlCreateFlags */ nint flags, out IntPtr error)
+		{
+			error = default;
+			return SecAccessControlCreateWithFlags (allocator, protection, flags, (IntPtr*) Unsafe.AsPointer<IntPtr> (ref error));
+		}
 #endif
 	}
 }

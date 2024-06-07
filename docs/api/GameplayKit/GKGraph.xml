@@ -1,0 +1,32 @@
+<Documentation>
+  <Docs DocId="T:GameplayKit.GKGraph">
+    <summary>A mathematical graph used for navigability and pathfinding.</summary>
+    <remarks>
+      <para>The following demonstrates pathfinding on a simple graph:</para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+var a = GKGraphNode2D.FromPoint (new Vector2 (0, 5));
+var b = GKGraphNode2D.FromPoint (new Vector2 (3, 0));
+var c = GKGraphNode2D.FromPoint (new Vector2 (2, 6));
+var d = GKGraphNode2D.FromPoint (new Vector2 (4, 6));
+var e = GKGraphNode2D.FromPoint (new Vector2 (2, 5));
+var f = GKGraphNode2D.FromPoint (new Vector2 (2, 2));
+
+a.AddConnections (new [] { b, c }, false);
+b.AddConnections (new [] { e, f }, false);
+c.AddConnections (new [] { d }, false);
+d.AddConnections (new [] { e, f }, false);
+
+var graph = GKGraph.FromNodes(new [] { a, b, c, d, e, f });
+
+var a2e = graph.FindPath (a, e); // [ a, c, d, e ]
+var a2f = graph.FindPath (a, f); // [ a, b, f ]
+          ]]></code>
+      </example>
+      <para>
+        <img href="~/GameplayKit/_images/GKPathFindPath.png" alt="Illustration of the path finding algorithm" />
+      </para>
+    </remarks>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/GameplayKit/Reference/GKGraph_Class/index.html">Apple documentation for <c>GKGraph</c></related>
+  </Docs>
+</Documentation>

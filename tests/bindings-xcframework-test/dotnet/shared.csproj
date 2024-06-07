@@ -33,9 +33,25 @@
       <Link>libframework.h</Link>
     </None>
     <TestLibrariesInput Include="$(TestLibrariesDirectory)\libframework.m" />
+    <TestLibrariesOutput Include="$(TestLibrariesDirectory)\.libs\XStaticArTest.xcframework" />
+    <TestLibrariesOutput Include="$(TestLibrariesDirectory)\.libs\XStaticObjectTest.xcframework" />
     <TestLibrariesOutput Include="$(TestLibrariesDirectory)\.libs\XTest.xcframework" />
 
-    <NativeReference Include="$(TestLibrariesDirectory)\.libs\XTest.xcframework">
+    <NativeReference Include="$(TestLibrariesDirectory)\.libs\XStaticArTest.xcframework">
+      <Kind>Framework</Kind>
+      <SmartLink>False</SmartLink>
+      <Frameworks>CoreLocation ModelIO</Frameworks>
+      <NoDSymUtil>true</NoDSymUtil>
+      <NoSymbolStrip>true</NoSymbolStrip>
+    </NativeReference>
+    <NativeReference Include="$(TestLibrariesDirectory)\.libs\XStaticObjectTest.xcframework">
+      <Kind>Framework</Kind>
+      <SmartLink>False</SmartLink>
+      <Frameworks>CoreLocation ModelIO</Frameworks>
+      <NoDSymUtil>true</NoDSymUtil>
+      <NoSymbolStrip>true</NoSymbolStrip>
+    </NativeReference>
+    <NativeReference Include="$(TestLibrariesDirectory)\.libs\XTest.xcframework/">
       <Kind>Framework</Kind>
       <SmartLink>False</SmartLink>
       <Frameworks>CoreLocation ModelIO</Frameworks>

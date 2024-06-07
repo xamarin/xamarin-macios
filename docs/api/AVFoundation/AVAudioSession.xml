@@ -1,0 +1,67 @@
+<Documentation>
+  <Docs DocId="T:AVFoundation.AVAudioSession">
+    <summary>Coordinates an audio playback or capture session.</summary>
+    <remarks>
+      <para> Application developers should use the singleton object
+	retrieved by <see cref="M:AVFoundation.AVAudioSession.SharedInstance" />.
+      </para>
+      <para> 
+	Because the audio hardware of an iOS device is shared
+	between all apps, audio settings can only be "preferred" (see
+	<c>SetPreferred*</c> methods) and the application developer
+	must account for use-cases where these preferences are
+	overridden. 
+      </para>
+      <para> 
+	The interaction of an app with other apps and system
+	services is determined by your audio category.   You can use the <see cref="M:AVFoundation.AVAudioSession.SetCategory(System.String,System.String,AVFoundation.AVAudioSessionRouteSharingPolicy,AVFoundation.AVAudioSessionCategoryOptions,Foundation.NSError@)" /> method to set this
+      </para>
+      <para>
+	You should also control the Mode (using <see cref="M:AVFoundation.AVAudioSession.SetMode(Foundation.NSString,Foundation.NSError@)" /> to
+	describe how your application will use audio.
+
+      </para>
+      <para>
+	As is common in AV Foundation, many methods in <see cref="T:AVFoundation.AVAudioSession" /> are
+	asynchronous and properties may take some time to reflect
+	their final status. Application developers should be familiar
+	with asynchronous programming techniques.
+      </para>
+      <para>
+	The <see cref="T:AVFoundation.AVAudioSession" />,
+	like the <see cref="T:AVFoundation.AVCaptureSession" /> and <see cref="T:AVFoundation.AVAssetExportSession" /> is a
+	coordinating object between some number of <see cref="P:AVFoundation.AVAudioSession.InputDataSources" />
+	and <see cref="P:AVFoundation.AVAudioSession.OutputDataSources" />.
+	</para>
+      <para>
+	  You can register to a few notifications that are posted by the audio system, by using the convenience methods in <see cref="T:AVFoundation.AVAudioSession.Notifications" />. 
+
+	</para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+void Setup ()
+{
+	AVAudioSession.SharedInstance ().Init ();
+	NSError error;
+	if (!AVAudioSession.SharedInstance ().SetCategory (AVAudioSessionCategory.Playback, out error)) {
+		ReportError (error);
+		return;
+	}
+	AVAudioSession.Notifications.ObserveInterruption (ToneInterruptionListener);
+	
+	if (!AVAudioSession.SharedInstance ().SetActive (true, out error)) {
+		ReportError (error);
+		return;
+	}
+	
+	void ToneInterruptionListener (object sender, AVAudioSessionInterruptionEventArgs interruptArgs)
+	{
+		//
+	}
+}
+]]></code>
+      </example>
+    </remarks>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/AVFoundation/Reference/AVAudioSession_ClassReference/index.html">Apple documentation for <c>AVAudioSession</c></related>
+  </Docs>
+</Documentation>

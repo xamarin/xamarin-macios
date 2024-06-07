@@ -33,6 +33,10 @@ steps:
 - checkout: maccore
   persistCredentials: true  # hugely important, else there are some scripts that check a single file from maccore that will fail
 
+- bash: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/scripts/disable-codeql-arm64.sh
+  displayName: 'Disable CodeQL on arm64'
+  name: disableCodeQLOnArm64
+
 - pwsh: |
     $macip=$(ipconfig getifaddr en0)
     echo "##vso[task.setvariable variable=AGENT_NAME;isOutput=true]$(Agent.Name)"
@@ -96,11 +100,47 @@ steps:
   displayName: "Autorize id_rsa.pub"
   continueOnError: true
 
-- task: DownloadPipelineArtifact@2
-  displayName: Download artifacts
-  inputs:
-    allowFailedBuilds: true
-    path: $(Build.SourcesDirectory)/artifacts
+- ${{ if or(contains(variables['Build.Reason'], 'ResourceTrigger'), contains(variables['Build.Reason'], 'BuildCompletion'), contains(variables['Build.DefinitionName'], 'xamarin-macios-ci-tests'), contains(variables['Build.DefinitionName'], 'xamarin-macios-pr-tests')) }}:
+
+  - download: macios
+    displayName: Download Build.props
+    artifact: Build.props
+
+  - download: macios
+    displayName: Download package-test-libraries
+    artifact: package-test-libraries
+
+  - download: macios
+    displayName: Download build-configuration
+    artifact: build-configuration
+
+  - download: macios
+    displayName: Download not-signed-package
+    artifact: not-signed-package
+
+  - download: macios
+    displayName: Download WorkloadRollback.json
+    artifact: WorkloadRollback
+
+  - pwsh: |
+      Get-ChildItem -Path "$(Pipeline.Workspace)/macios" -Recurse -Force
+    displayName: 'Display downloads'
+    timeoutInMinutes: 5
+
+  # the default location when downloading is $(Pipeline.Workspace)/<pipeline resource identifier>/<artifact name>
+  - bash: |
+      source="$PIPELINE_WORKSPACE/macios"
+      destination="$BUILD_SOURCESDIRECTORY/artifacts"
+      # move all the files from the source to the destination
+      mv -fv "$source" "$destination"
+    displayName: Move artifacts to the expected location
+
+- ${{ else }}:
+  - task: DownloadPipelineArtifact@2
+    displayName: Download artifacts
+    inputs:
+      allowFailedBuilds: true
+      path: $(Build.SourcesDirectory)/artifacts
 
 - bash: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/install-workloads.sh
   workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios

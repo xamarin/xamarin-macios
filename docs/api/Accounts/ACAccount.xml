@@ -1,0 +1,21 @@
+<Documentation>
+  <Docs DocId="T:Accounts.ACAccount">
+    <summary>Represents a user account stored in the Accounts database.</summary>
+    <remarks>
+      <para>iOS stores account information for certain social-network accounts in a system-wide database. A <see cref="T:Accounts.ACAccount" /> represents a single account.</para>
+      <para>Accounts can either be retrieved based on account-type or via a known identifier (see <see cref="P:Accounts.ACAccount.Identifier" />): </para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+          var store = new ACAccountStore();
+          var type = store.FindAccountType(ACAccountType.Twitter);
+          var accounts = store.FindAccounts(type));
+          if(accounts != null && accounts.Count() > 0){...}
+          
+          var account = store.FindAccount("21A78660-FFFF-FFFF-FFFF-027EB7E3FF5F");
+        ]]></code>
+      </example>
+    </remarks>
+    
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Accounts/Reference/ACAccountClassRef/index.html">Apple documentation for <c>ACAccount</c></related>
+  </Docs>
+</Documentation>

@@ -1,0 +1,27 @@
+<Documentation>
+  <Docs DocId="T:HealthKit.HKQuantitySample">
+    <summary>A <see cref="T:HealthKit.HKSample" /> that has a magnitude (see <see cref="P:HealthKit.HKQuantitySample.Quantity" />).</summary>
+    <remarks>
+      <para>The following examples show how you can create a HKQuantitySample, one using standard C#, and another using named parameters to make their use more obvious:</para>
+      <para />
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[var bodyTemperature = HKQuantityType.Create (HKQuantityTypeIdentifier.BodyTemperature);
+var temp = HKQuantity.FromQuantity (HKUnit.DegreeFahrenheit, 99);
+var sample = HKQuantitySample.FromType (bodyTemperature, temp, NSDate.Now, NSDate.Now, new HKMetadata () {
+	BodyTemperatureSensorLocation = HKBodyTemperatureSensorLocation.Mouth
+});
+
+        var sample2 = HKQuantitySample.FromType (
+    quantityType: HKQuantityType.Create (HKQuantityTypeIdentifier.BodyTemperature),
+    quantity: HKQuantity.FromQuantity (HKUnit.DegreeFahrenheit, 99),
+    startDate: NSDate.Now, 
+    endDate: NSDate.Now, 
+    metadata: new HKMetadata () {
+	BodyTemperatureSensorLocation = HKBodyTemperatureSensorLocation.Mouth
+    }
+);]]></code>
+      </example>
+    </remarks>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/HealthKit/Reference/HKQuantitySample_Class/index.html">Apple documentation for <c>HKQuantitySample</c></related>
+  </Docs>
+</Documentation>

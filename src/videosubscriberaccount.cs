@@ -23,6 +23,7 @@ using NativeHandle = System.IntPtr;
 
 namespace VideoSubscriberAccount {
 
+	/// <summary>Encapsulates errors that may occur during attempts to verify credentials.</summary>
 	[Native]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoMacCatalyst]
@@ -38,6 +39,7 @@ namespace VideoSubscriberAccount {
 		Unsupported = 7,
 	}
 
+	/// <summary>Enumerates the types of access the app has to the user's subscription.</summary>
 	[Native]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoMacCatalyst]
@@ -111,8 +113,15 @@ namespace VideoSubscriberAccount {
 		string AccountProviderResponse { get; }
 	}
 
+	/// <summary>Interface representing the required methods (if any) of the protocol <see cref="T:VideoSubscriberAccount.VSAccountManagerDelegate" />.</summary>
+	///     <remarks>
+	///       <para>This interface contains the required methods (if any) from the protocol defined by <see cref="T:VideoSubscriberAccount.VSAccountManagerDelegate" />.</para>
+	///       <para>If developers create classes that implement this interface, the implementation methods will automatically be exported to Objective-C with the matching signature from the method defined in the <see cref="T:VideoSubscriberAccount.VSAccountManagerDelegate" /> protocol.</para>
+	///       <para>Optional methods (if any) are provided by the <see cref="T:VideoSubscriberAccount.VSAccountManagerDelegate_Extensions" /> class as extension methods to the interface, allowing developers to invoke any optional methods on the protocol.</para>
+	///     </remarks>
 	interface IVSAccountManagerDelegate { }
 
+	/// <related type="externalDocumentation" href="https://developer.apple.com/reference/VideoSubscriberAccount/VSAccountManagerDelegate">Apple documentation for <c>VSAccountManagerDelegate</c></related>
 	[Protocol, Model]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoMacCatalyst]
@@ -141,6 +150,9 @@ namespace VideoSubscriberAccount {
 		bool ShouldAuthenticateAccountProvider (VSAccountManager accountManager, string accountProviderIdentifier);
 	}
 
+	/// <summary>Coordinates access to the user's subscription.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/VideoSubscriberAccount/VSAccountManager">Apple documentation for <c>VSAccountManager</c></related>
 	[Unavailable (PlatformName.WatchOS)]
 	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
@@ -176,6 +188,7 @@ namespace VideoSubscriberAccount {
 		NSString CheckAccessOptionPrompt { get; }
 	}
 
+	/// <summary>A <see cref="T:Foundation.DictionaryContainer" /> holding keys appropriate to <see cref="M:VideoSubscriberAccount.VSAccountManager.CheckAccessStatusAsync(VideoSubscriberAccount.VSAccountManagerAccessOptions)" /> and <see cref="M:VideoSubscriberAccount.VSAccountManager.CheckAccessStatusAsync(VideoSubscriberAccount.VSAccountManagerAccessOptions)" />.</summary>
 	[Unavailable (PlatformName.WatchOS)]
 	[NoMacCatalyst]
 	[StrongDictionary ("VSCheckAccessOptionKeys")]
@@ -185,6 +198,9 @@ namespace VideoSubscriberAccount {
 		bool CheckAccessOptionPrompt { get; set; }
 	}
 
+	/// <summary>Represents a cancellable request that is still "in flight".</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/VideoSubscriberAccount/VSAccountManagerResult">Apple documentation for <c>VSAccountManagerResult</c></related>
 	[Unavailable (PlatformName.WatchOS)]
 	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
@@ -195,6 +211,9 @@ namespace VideoSubscriberAccount {
 		void Cancel ();
 	}
 
+	/// <summary>Information about a subscription.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/VideoSubscriberAccount/VSAccountMetadata">Apple documentation for <c>VSAccountMetadata</c></related>
 	[Unavailable (PlatformName.WatchOS)]
 	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
@@ -216,6 +235,9 @@ namespace VideoSubscriberAccount {
 		VSAccountProviderResponse AccountProviderResponse { get; }
 	}
 
+	/// <summary>Specifies information being requested from the subscriber's account.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/VideoSubscriberAccount/VSAccountMetadataRequest">Apple documentation for <c>VSAccountMetadataRequest</c></related>
 	[Unavailable (PlatformName.WatchOS)]
 	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]

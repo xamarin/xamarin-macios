@@ -95,6 +95,12 @@ public class AttributeManager {
 			return typeof (Foundation.ProtocolAttribute);
 		case "Foundation.RegisterAttribute":
 			return typeof (Foundation.RegisterAttribute);
+#if NET
+		case "Foundation.RequiredMemberAttribute":
+			return typeof (Foundation.RequiredMemberAttribute);
+		case "Foundation.OptionalMemberAttribute":
+			return typeof (Foundation.OptionalMemberAttribute);
+#endif
 		case "IgnoredInDelegateAttribute":
 			return typeof (IgnoredInDelegateAttribute);
 		case "InternalAttribute":
@@ -223,6 +229,8 @@ public class AttributeManager {
 		case "WrapAttribute":
 			return typeof (WrapAttribute);
 #if NET
+		case "System.Diagnostics.CodeAnalysis.ExperimentalAttribute":
+			return typeof (System.Diagnostics.CodeAnalysis.ExperimentalAttribute);
 		case "System.Runtime.Versioning.SupportedOSPlatformAttribute":
 			return typeof (System.Runtime.Versioning.SupportedOSPlatformAttribute);
 		case "System.Runtime.Versioning.UnsupportedOSPlatformAttribute":
@@ -335,6 +343,9 @@ public class AttributeManager {
 		case "AvailabilityAttribute":
 			return AttributeConversionManager.ConvertAvailability (attribute);
 #if NET
+		case "ExperimentalAttribute":
+			var earg = attribute.ConstructorArguments [0].Value as string;
+			return new System.Diagnostics.CodeAnalysis.ExperimentalAttribute (earg).Yield ();
 		case "SupportedOSPlatformAttribute":
 			var sarg = attribute.ConstructorArguments [0].Value as string;
 			(var sp, var sv) = ParseOSPlatformAttribute (sarg);
@@ -571,6 +582,11 @@ public class AttributeManager {
 		if (rv.Length == 1)
 			return rv [0];
 
+		throw GetTooManyAttributeFoundException<T> (provider, rv.Length);
+	}
+
+	Exception GetTooManyAttributeFoundException<T> (ICustomAttributeProvider provider, int count)
+	{
 		int code;
 		object [] args;
 		// each type of provider has its own error. This is because each exception has its own message that 
@@ -579,31 +595,48 @@ public class AttributeManager {
 		case ParameterInfo pi:
 			code = 1083;
 			args = new object [] {
-				rv.Length, typeof (T).FullName, $"{pi.Member.DeclaringType.FullName}.{pi.Member.Name}", pi.Position, pi.Name
+				count, typeof (T).FullName, $"{pi.Member.DeclaringType.FullName}.{pi.Member.Name}", pi.Position, pi.Name
 			};
 			break;
 		case Type type:
 			code = 1084;
-			args = new object [] { rv.Length, typeof (T).FullName, type.FullName };
+			args = new object [] { count, typeof (T).FullName, type.FullName };
 			break;
 		case MemberInfo mi:
 			code = 1059;
-			args = new object [] { rv.Length, typeof (T).FullName, $"{mi.DeclaringType?.FullName}.{mi.Name}" };
+			args = new object [] { count, typeof (T).FullName, $"{mi.DeclaringType?.FullName}.{mi.Name}" };
 			break;
 		case Assembly assm:
 			code = 1085;
-			args = new object [] { rv.Length, typeof (T).FullName, $"{assm.FullName}" };
+			args = new object [] { count, typeof (T).FullName, $"{assm.FullName}" };
 			break;
 		case Module mod:
 			code = 1086;
-			args = new object [] { rv.Length, typeof (T).FullName, $"{mod.FullyQualifiedName}" };
+			args = new object [] { count, typeof (T).FullName, $"{mod.FullyQualifiedName}" };
 			break;
 		default:
 			code = 1059;
-			args = new object [] { rv.Length, typeof (T).FullName, provider.ToString () };
+			args = new object [] { count, typeof (T).FullName, provider.ToString () };
 			break;
 		}
-		throw ErrorHelper.CreateError (code, args);
+		return ErrorHelper.CreateError (code, args);
+	}
+
+	public virtual T GetCustomAttribute<T> (ICustomAttributeProvider provider, Attribute [] attributes) where T : System.Attribute
+	{
+		if (attributes is null)
+			return GetCustomAttribute<T> (provider);
+
+		T attrib = null;
+		foreach (var a in attributes) {
+			if (a is T t) {
+				if (attrib is not null)
+					throw GetTooManyAttributeFoundException<T> (provider, attributes.Length);
+				attrib = t;
+			}
+		}
+
+		return attrib;
 	}
 
 	public virtual bool HasNativeAttribute (ICustomAttributeProvider provider)
@@ -625,4 +658,16 @@ public class AttributeManager {
 		return false;
 	}
 
+	public bool IsStatic (ICustomAttributeProvider provider)
+	{
+		if (HasAttribute<StaticAttribute> (provider))
+			return true;
+		var method = provider as MethodInfo;
+		if (method is not null) {
+			var property = Generator.GetProperyFromGetSetMethod (method);
+			if (property is not null && HasAttribute<StaticAttribute> (property))
+				return true;
+		}
+		return false;
+	}
 }

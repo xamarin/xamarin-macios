@@ -103,6 +103,7 @@ namespace MonoTests.System.Net.Http {
 			public static string GetAbsoluteRedirectUrl (int count) => $"{Url}/absolute-redirect/{count}";
 			public static string GetRedirectUrl (int count) => $"{Url}/redirect/{count}";
 			public static string GetRelativeRedirectUrl (int count) => $"{Url}/relative-redirect/{count}";
+			public static string GetRedirectToUrl (string redirectTo) => $"{Url}/redirect-to?url={Uri.EscapeDataString (redirectTo)}";
 			public static string GetStatusCodeUrl (HttpStatusCode status) => $"{HttpUrl}/status/{(int) status}";
 			public static string GetSetCookieUrl (string cookie, string value) => $"{Url}/cookies/set?{cookie}={value}";
 			public static string GetBasicAuthUrl (string username, string password) => $"{Url}/basic-auth/{username}/{password}";

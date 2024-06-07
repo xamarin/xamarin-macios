@@ -113,6 +113,7 @@ APPKIT_SOURCES = \
 	AppKit/NSDraggingSession.cs \
 	AppKit/NSDraggingItem.cs \
 	AppKit/NSPasteboard.cs \
+	AppKit/NSPasteboardReading.cs \
 	AppKit/NSSharingServiceDelegate.cs \
 	AppKit/NSDocument.cs \
 	AppKit/NSEnumsExtensions.cs \
@@ -292,6 +293,7 @@ AVFOUNDATION_SOURCES = \
 	AVFoundation/AVPlayerLayer.cs \
 	AVFoundation/AVPlayerViewController.cs \
 	AVFoundation/AVSampleBufferExtensions.cs \
+	AVFoundation/AVSampleCursor.cs \
 	AVFoundation/AVSpeechSynthesizer.cs \
 	AVFoundation/AVTextStyleRule.cs \
 	AVFoundation/Events.cs \
@@ -927,6 +929,7 @@ GAMECONTROLLER_SOURCES = \
 	GameController/GCExtendedGamepadSnapshot.cs \
 	GameController/GCGamepadSnapshot.cs \
 	GameController/GCMicroGamepadSnapshot.cs \
+	GameController/GCMouse.cs \
 
 # GameKit
 
@@ -2050,6 +2053,7 @@ COMMON_FRAMEWORKS =         \
 	CoreML                  \
 	CoreMidi                \
 	CoreVideo               \
+	CryptoTokenKit          \
 	Compression             \
 	DeviceCheck             \
 	Foundation              \

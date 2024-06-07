@@ -40,6 +40,9 @@ using NativeHandle = System.IntPtr;
 
 namespace EventKit {
 
+	/// <summary>The base-class for persistent Event Kit classes.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/EventKit/Reference/EKObjectClassRef/index.html">Apple documentation for <c>EKObject</c></related>
 	[iOS (13, 0), MacCatalyst (13, 1), Watch (6, 0), NoTV]
 	[BaseType (typeof (NSObject))]
 	[Abstract]
@@ -60,6 +63,9 @@ namespace EventKit {
 		bool Refresh ();
 	}
 
+	/// <summary>The base class for calendar events and reminders.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/EventKit/Reference/EKCalendarItemClassRef/index.html">Apple documentation for <c>EKCalendarItem</c></related>
 	[BaseType (typeof (EKObject))]
 #if NET
 	[Abstract] // "The EKCalendarItem class is a an abstract superclass ..." from Apple docs.
@@ -147,6 +153,9 @@ namespace EventKit {
 		string CalendarItemExternalIdentifier { get; }
 	}
 
+	/// <summary>Encapsulates an account that a calendar reflects.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/EventKit/Reference/EKSourceClassRef/index.html">Apple documentation for <c>EKSource</c></related>
 	[BaseType (typeof (EKObject))]
 	interface EKSource {
 		[Export ("sourceType")]
@@ -173,6 +182,9 @@ namespace EventKit {
 		bool IsDelegate { get; }
 	}
 
+	/// <summary>A 'geofence' that can trigger a calendar item.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/EventKit/Reference/EKStructuredLocationClassRef/index.html">Apple documentation for <c>EKStructuredLocation</c></related>
 	[BaseType (typeof (EKObject))]
 	interface EKStructuredLocation : NSCopying {
 		[NullAllowed] // by default this property is null
@@ -195,6 +207,9 @@ namespace EventKit {
 		EKStructuredLocation FromMapItem (MKMapItem mapItem);
 	}
 
+	/// <summary>An alarm in the user's <see cref="T:EventKit.EKCalendar" />.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/EventKit/Reference/EKAlarmClassRef/index.html">Apple documentation for <c>EKAlarm</c></related>
 	[BaseType (typeof (EKObject))]
 	[DisableDefaultCtor] // Documentation says to use the static methods FromDate/FromTimeInterval to create instances
 	interface EKAlarm : NSCopying {
@@ -253,6 +268,9 @@ namespace EventKit {
 		NSUrl Url { get; set; }
 	}
 
+	/// <summary>A user's calendar.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/DataManagement/Reference/EKCalendarClassRef/index.html">Apple documentation for <c>EKCalendar</c></related>
 	[BaseType (typeof (EKObject))]
 	[DisableDefaultCtor]
 	interface EKCalendar {
@@ -306,6 +324,9 @@ namespace EventKit {
 		EKCalendar Create (EKEntityType entityType, EKEventStore eventStore);
 	}
 
+	/// <summary>An event in a user's calendar.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/EventKit/Reference/EKEventClassRef/index.html">Apple documentation for <c>EKEvent</c></related>
 	[BaseType (typeof (EKCalendarItem))]
 	// Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: You must use [EKEvent eventWithStore:] to create an event
 	[DisableDefaultCtor]
@@ -373,6 +394,9 @@ namespace EventKit {
 		string BirthdayContactIdentifier { get; }
 	}
 
+	/// <summary>Person invited to an event.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/EventKit/Reference/EKParticipantClassRef/index.html">Apple documentation for <c>EKParticipant</c></related>
 	[BaseType (typeof (EKObject))]
 #if XAMCORE_3_0
 	[DisableDefaultCtor]
@@ -412,6 +436,9 @@ namespace EventKit {
 		NSPredicate ContactPredicate { get; }
 	}
 
+	/// <summary>Represents how the EKRecurrence ends.   Either by number of ocurrences or using a specific date.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/EventKit/Reference/EKRecurrenceEndClassRef/index.html">Apple documentation for <c>EKRecurrenceEnd</c></related>
 	[BaseType (typeof (NSObject))]
 	interface EKRecurrenceEnd : NSCopying, NSSecureCoding {
 		[NullAllowed]
@@ -430,6 +457,9 @@ namespace EventKit {
 		EKRecurrenceEnd FromOccurrenceCount (nint occurrenceCount);
 	}
 
+	/// <summary>Represents a day of the week for use with EKRecurrenceRule.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/EventKit/Reference/EKRecurrenceDayOfWeekClassRef/index.html">Apple documentation for <c>EKRecurrenceDayOfWeek</c></related>
 	[BaseType (typeof (NSObject))]
 	interface EKRecurrenceDayOfWeek : NSCopying, NSSecureCoding {
 		[Export ("dayOfTheWeek")]
@@ -468,6 +498,9 @@ namespace EventKit {
 #endif
 	}
 
+	/// <summary>Describes the recurring rule for an event.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/EventKit/Reference/EKRecurrenceRuleClassRef/index.html">Apple documentation for <c>EKRecurrenceRule</c></related>
 	[BaseType (typeof (EKObject))]
 	interface EKRecurrenceRule : NSCopying {
 		[Export ("calendarIdentifier")]
@@ -528,6 +561,7 @@ namespace EventKit {
 
 	}
 
+	/// <include file="../docs/api/EventKit/EKEventStore.xml" path="/Documentation/Docs[@DocId='T:EventKit.EKEventStore']/*" />
 	[BaseType (typeof (NSObject))]
 	interface EKEventStore {
 		[iOS (16, 0), MacCatalyst (16, 0), Watch (9, 0), NoTV]
@@ -702,8 +736,15 @@ namespace EventKit {
 	}
 
 	delegate void EKEventStoreRequestAccessCompletionHandler (bool didRequestAccess, NSError error);
+	/// <param name="theEvent">The matching event.</param>
+	///     <param name="stop">If you set this ref value to true, the enumeration will stop.</param>
+	///     <summary>Delegate signature for the event enumeration method in <see cref="T:EventKit.EKEventStore" /></summary>
+	///     <remarks>The method will be invoked repeatedly, once for each event that matches the provided NSPredicate.</remarks>
 	delegate void EKEventSearchCallback (EKEvent theEvent, ref bool stop);
 
+	/// <summary>A calendar reminder.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/EventKit/Reference/EKReminderClassRef/index.html">Apple documentation for <c>EKReminder</c></related>
 	[BaseType (typeof (EKCalendarItem))]
 	[DisableDefaultCtor]
 	interface EKReminder {

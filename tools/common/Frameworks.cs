@@ -427,6 +427,7 @@ public class Frameworks : Dictionary<string, Framework> {
 
 				{ "BackgroundTasks", "BackgroundTasks", 13, 0 },
 				{ "CoreHaptics", "CoreHaptics", 13, 0 },
+				{ "CryptoTokenKit", "CryptoTokenKit", 13, 0 },
 				{ "LinkPresentation", "LinkPresentation", 13, 0 },
 				{ "MetricKit", "MetricKit", 13, 0 },
 				{ "PencilKit", "PencilKit", 13, 0 },
@@ -544,6 +545,7 @@ public class Frameworks : Dictionary<string, Framework> {
 				{ "Chip", "CHIP", new Version (8, 0), NotAvailableInSimulator /* no headers in beta 2 */ },
 #endif
 				{ "CoreMidi", "CoreMIDI", 8,0 },
+				{ "CryptoTokenKit", "CryptoTokenKit", 8, 0 },
 				{ "NearbyInteraction", "NearbyInteraction", 8,0 },
 				{ "OSLog", "OSLog", 8,0 },
 				{ "ShazamKit", "ShazamKit", new Version (8, 0), NotAvailableInSimulator},
@@ -632,6 +634,7 @@ public class Frameworks : Dictionary<string, Framework> {
 					{ "TVUIKit", "TVUIKit", 12,0 },
 
 					{ "AuthenticationServices", "AuthenticationServices", 13,0 },
+					{ "CryptoTokenKit", "CryptoTokenKit", 13, 0 },
 					{ "SoundAnalysis", "SoundAnalysis", 13,0 },
 					{ "BackgroundTasks", "BackgroundTasks", 13, 0 },
 
