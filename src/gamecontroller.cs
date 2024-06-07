@@ -2118,7 +2118,7 @@ namespace GameController {
 #if XAMCORE_5_0
 		[Export ("setModeFeedbackWithResistiveStrengths:")]
 #else
-		[Wrap ("_SetModeFeedback (positionalResistiveStrengths.ToBlittable ())")]
+		[Wrap ("_SetModeFeedback (positionalResistiveStrengths.ToBlittable ())", IsVirtual = true)]
 #endif
 		void SetModeFeedback (GCDualSenseAdaptiveTriggerPositionalResistiveStrengths positionalResistiveStrengths);
 
@@ -2139,7 +2139,7 @@ namespace GameController {
 #if XAMCORE_5_0
 		[Export ("setModeVibrationWithAmplitudes:frequency:")]
 #else
-		[Wrap ("_SetModeVibration (positionalAmplitudes.ToBlittable (), frequency)")]
+		[Wrap ("_SetModeVibration (positionalAmplitudes.ToBlittable (), frequency)", IsVirtual = true)]
 #endif
 		void SetModeVibration (GCDualSenseAdaptiveTriggerPositionalAmplitudes positionalAmplitudes, float frequency);
 
