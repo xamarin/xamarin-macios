@@ -1174,4 +1174,11 @@ mono_string_new (MonoDomain *domain, const char *text)
 	return rv;
 }
 
+void
+xamarin_bridge_raise_unhandled_exception_event (GCHandle exception_gchandle)
+{
+	// There's no way to raise the AppDomain.UnhandledException event.
+	// https://github.com/dotnet/runtime/issues/102730
+}
+
 #endif // CORECLR_RUNTIME

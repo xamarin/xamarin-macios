@@ -1,0 +1,63 @@
+<Documentation>
+  <Docs DocId="T:CoreLocation.CLBeacon">
+    <summary>Represents a local-area device that can be used for fine-grained location monitoring.</summary>
+    <remarks>
+      <para>Beacons are Bluetooth (often Bluetooth LE) devices that can be detected by apps. Currently, beacons are iOS devices, but Apple has stated that they intend to release a Bluetooth profile for beacons. (Current non-Apple iBeacon devices use formats apparently based on reverse-engineered signals.) </para>
+      <para>Beacons can be used to created <see cref="T:CoreLocation.CLRegion" />s that can be monitored for entry and exit, as shown in the following code:</para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+locationManager = new CLLocationManager();
+NSUuid beaconId = new NSUuid("E437C1AF-36CE-4BBC-BBE2-6CE802977C46");
+var beaconRegion = new CLBeaconRegion(beaconId, "My Beacon");
+locationManager.RegionEntered += (s,e) => {
+	if(e.Region.Identifier == "My Beacon")
+	{
+		Console.WriteLine("Found My Beacon");
+	}
+};
+locationManager.StartMonitoring(beaconRegion);            
+            ]]></code>
+      </example>
+      <para>iBeacons also support "ranging" for determining physical proximity with a higher precision with the <see cref="P:CoreLocation.CLBeacon.Proximity" /> property. The following example shows the basic use of ranging:</para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+locationManager.StartRangingBeacons(beaconRegion);
+locationManager.DidRangeBeacons += (lm, rangeEvents) => {
+				switch(rangeEvents.Beacons[0].Proximity)
+				{
+				case CLProximity.Far : 
+					Console.WriteLine("You're getting colder!");
+					break;
+				case CLProximity.Near :
+					Console.WriteLine("You're getting warmer!");
+					break;
+				case CLProximity.Immediate :
+					Console.WriteLine("You're red hot!");
+					break;
+				case CLProximity.Unknown : 
+					Console.WriteLine("I can't tell");
+					break;
+				default:
+					throw new ArgumentOutOfRangeException();
+				}
+			};
+            ]]></code>
+        <code lang="F#"><![CDATA[
+locationManager.DidRangeBeacons.Add(fun rangeEvents ->
+    let s = match rangeEvents.Beacons.[0].Proximity with
+        | CLProximity.Far  -> "You're getting colder!"
+        | CLProximity.Near -> "You're getting warmer!"
+        | CLProximity.Immediate -> "You're red hot!"
+        | CLProximity.Unknown -> "I can't tell"
+        | _ -> raise(ArgumentOutOfRangeException("Unknown argument"))
+    Console.WriteLine(s)   
+)
+locationManager.StartRangingBeacons(beaconRegion)       
+        ]]></code>
+      </example>
+      <para>Applications can broadcast themselves as beacons by passing the <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=Core%20Location%20CLBeacon%20Region%20Peripheral%20Data&amp;scope=Xamarin" title="P:CoreLocation.CLBeaconRegion.PeripheralData">P:CoreLocation.CLBeaconRegion.PeripheralData</a></format> property of a <see cref="T:CoreLocation.CLBeaconRegion" /> to <see cref="M:CoreBluetooth.CBPeripheralManager.StartAdvertising(Foundation.NSDictionary)" />.</para>
+    </remarks>
+    <related type="article" href="https://blog.xamarin.com/play-find-the-monkey-with-ios7-ibeacons">Play 'Find the Monkey' with iOS 7 iBeacons</related>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/CoreLocation/Reference/CLBeacon_class/index.html">Apple documentation for <c>CLBeacon</c></related>
+  </Docs>
+</Documentation>

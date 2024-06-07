@@ -19,6 +19,7 @@ using CoreFoundation;
 namespace GameKit {
 
 	// NSUInteger -> GKPeerPickerController.h
+	/// <summary>An enumeration whose values specify acceptable ping for peer-to-peer connections.</summary>
 	[NoMac]
 	[NoWatch]
 #if NET

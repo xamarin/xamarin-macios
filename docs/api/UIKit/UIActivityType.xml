@@ -1,0 +1,34 @@
+<Documentation>
+  <Docs DocId="T:UIKit.UIActivityType">
+    <summary>Identifiers for iOS-provided activities.</summary>
+    <remarks>
+      <para>These identifiers correspond to the <see cref="P:UIKit.UIActivity.Type" /> property of the iOS-provided <see cref="T:UIKit.UIActivity" />s. </para>
+      <para>They are typically used as values for the <see cref="P:UIKit.UIActivity.Type" /> or as parameters in the constructor for <see cref="C:UIKit.UIActivityViewController" />.</para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+//
+// Share an image 
+//
+var imageToShare = UIImage.FromFile ("demo.png");
+var activityItems = new NSObject[] { imageToShare };
+var controller = new UIActivityViewController (activityItems, null);
+this.PresentViewController(controller, true, null)
+
+// 
+// Now share the image, but explicitly exclude posting as a message
+//
+controller = new UIActivityViewController (activityItems, null) {
+    ExcludedActivityTypes = new NSString[] {
+        UIActivityType.PostToWeibo,
+        UIActivityType.Message
+    }
+};
+this.PresentViewController(controller, true, null)
+
+	]]></code>
+      </example>
+    </remarks>
+    
+    
+  </Docs>
+</Documentation>

@@ -7,6 +7,7 @@ using System;
 
 namespace CloudKit {
 	// NSInteger -> CKContainer.h
+	/// <summary>Enumerates values that indicate whether a user's iCloud account is available.</summary>
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CKAccountStatus : long {
@@ -19,6 +20,7 @@ namespace CloudKit {
 	}
 
 	// NSUInteger -> CKContainer.h
+	/// <summary>Enumerates a value that indicates that other app users can discover the current user by email address.</summary>
 	[MacCatalyst (13, 1)]
 	[Native]
 	[Flags]
@@ -27,6 +29,7 @@ namespace CloudKit {
 	}
 
 	// NSInteger -> CKContainer.h
+	/// <summary>Enumerates the states that an application can have when attempting to obtain a permission.</summary>
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CKApplicationPermissionStatus : long {
@@ -37,6 +40,7 @@ namespace CloudKit {
 	}
 
 	// NSInteger -> CKError.h
+	/// <summary>Enumerates CloudKit error conditions.</summary>
 	[MacCatalyst (13, 1)]
 	[Native]
 	[ErrorDomain ("CKErrorDomain")]
@@ -81,6 +85,7 @@ namespace CloudKit {
 	}
 
 	// NSInteger -> CKModifyRecordsOperation.h
+	/// <summary>Enumerates policies that control when or if a record should be saved.</summary>
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CKRecordSavePolicy : long {
@@ -90,6 +95,7 @@ namespace CloudKit {
 	}
 
 	// NSInteger -> CKNotification.h
+	/// <summary>Enumerates the events that can generate a push notification.</summary>
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CKNotificationType : long {
@@ -101,6 +107,7 @@ namespace CloudKit {
 	}
 
 	// NSInteger -> CKNotification.h
+	/// <summary>Enumerates the persistent storage events that can trigger data lifecycle notifications.</summary>
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CKQueryNotificationReason : long {
@@ -110,6 +117,7 @@ namespace CloudKit {
 	}
 
 	// NSUInteger -> CKRecordZone.h
+	/// <summary>Enumerates the special operations that a zone is capable of.</summary>
 	[MacCatalyst (13, 1)]
 	[Flags]
 	[Native]
@@ -125,6 +133,7 @@ namespace CloudKit {
 	}
 
 	// NSUInteger -> CKReference.h
+	/// <summary>Enumerates values that control whether a reference should delete itself when its target record is deleted.</summary>
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CKReferenceAction : ulong {
@@ -133,6 +142,7 @@ namespace CloudKit {
 	}
 
 	// NSInteger -> CKSubscription.h
+	/// <summary>Enumerates subscription types.</summary>
 	[Watch (6, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -161,6 +171,7 @@ namespace CloudKit {
 	}
 #endif
 
+	/// <summary>Enumerates values that tell whether a database is private, shared, or public.</summary>
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CKDatabaseScope : long {
@@ -169,6 +180,7 @@ namespace CloudKit {
 		Shared,
 	}
 
+	/// <summary>Enumerates responses to share participation requests.</summary>
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CKShareParticipantAcceptanceStatus : long {
@@ -178,6 +190,7 @@ namespace CloudKit {
 		Removed,
 	}
 
+	/// <summary>Enumerates user share permissions.</summary>
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CKShareParticipantPermission : long {
@@ -187,6 +200,7 @@ namespace CloudKit {
 		ReadWrite,
 	}
 
+	/// <summary>Enumerates share participant types.</summary>
 	[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'CKShareParticipantRole' instead.")]
 	[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'CKShareParticipantRole' instead.")]
 	[Deprecated (PlatformName.WatchOS, 5, 0, message: "Use 'CKShareParticipantRole' instead.")]
@@ -201,6 +215,7 @@ namespace CloudKit {
 		PublicUser = 4,
 	}
 
+	/// <summary>Enumerates the time or times when a <see cref="T:CloudKit.CKSubscription" /> fires a notification.</summary>
 	[Watch (6, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]

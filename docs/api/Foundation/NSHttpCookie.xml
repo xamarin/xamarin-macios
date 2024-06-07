@@ -1,0 +1,64 @@
+<Documentation>
+  <Docs DocId="T:Foundation.NSHttpCookie">
+    <summary>HTTP Cookie</summary>
+    <remarks>
+      <para>
+	For uses that only require a name and a value, with optional
+	paths and domains, you can use one of the NSHTTPCookie
+	constructors.   
+      </para>
+      <para>
+	For more complex scenarios that also require one or more of
+	comments, expiration, a port, a secure setting and a version,
+	you can either use the constructor that takes an
+	<format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=System%20Net%20Cookie&amp;scope=Xamarin" title="T:System.Net.Cookie">T:System.Net.Cookie</a></format>.
+      </para>
+      <para>
+	Alternatively, you can create it by passing an
+	NSDictionary to either the NSHttpCookie constructor or the
+	<see cref="M:Foundation.NSHttpCookie.CookieFromProperties(Foundation.NSDictionary)" />
+	method.
+      </para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+var firstCookie = new NSHttpCookie ("visited", "yes");
+
+// More advanced, initialize from a .NET cookie and 
+// make it expire in 10 hours
+var secondCookie = new NSHttpCookie (new Cookie () {
+	Name = "visited",
+	Value = "yes",
+	Expires = DateTime.UtcNow + TimeSpan.FromHours (10);
+});
+	]]></code>
+      </example>
+      <para>
+	The actual keys have to be one the public Key static fields
+	from this class (<see cref="P:Foundation.NSHttpCookie.KeyName" />, <see cref="P:Foundation.NSHttpCookie.KeyValue" />, <see cref="P:Foundation.NSHttpCookie.KeyOriginUrl" />,
+	<see cref="P:Foundation.NSHttpCookie.KeyVersion" />,
+	<see cref="P:Foundation.NSHttpCookie.KeyDomain" />,
+	<see cref="P:Foundation.NSHttpCookie.KeyPath" />,
+	<see cref="P:Foundation.NSHttpCookie.KeySecure" />,
+	<see cref="P:Foundation.NSHttpCookie.KeyExpires" />,
+	<see cref="P:Foundation.NSHttpCookie.KeyComment" />,
+	<see cref="P:Foundation.NSHttpCookie.KeyCommentUrl" />,
+	<see cref="P:Foundation.NSHttpCookie.KeyDiscard" />,
+	<see cref="P:Foundation.NSHttpCookie.KeyMaximumAge" /> and
+	<see cref="P:Foundation.NSHttpCookie.KeyPort" />).
+      </para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+
+// Long winded example using NSDictionary.
+
+var properties = new NSDictionary (
+    NSHttpCookie.KeyName, "visited-site", 
+    NSHttpCookie.KeyValue, "yes", 
+    NSHttpCookie.Comment,  "my-comment" );
+var cookie = new NSHttpCookie (properties);
+	]]></code>
+      </example>
+    </remarks>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Cocoa/Reference/Foundation/Classes/NSHTTPCookie_Class/index.html">Apple documentation for <c>NSHTTPCookie</c></related>
+  </Docs>
+</Documentation>

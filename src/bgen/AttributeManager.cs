@@ -630,4 +630,16 @@ public class AttributeManager {
 		return false;
 	}
 
+	public bool IsStatic (ICustomAttributeProvider provider)
+	{
+		if (HasAttribute<StaticAttribute> (provider))
+			return true;
+		var method = provider as MethodInfo;
+		if (method is not null) {
+			var property = Generator.GetProperyFromGetSetMethod (method);
+			if (property is not null && HasAttribute<StaticAttribute> (property))
+				return true;
+		}
+		return false;
+	}
 }

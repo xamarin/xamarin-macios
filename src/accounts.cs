@@ -12,6 +12,7 @@ using NativeHandle = System.IntPtr;
 
 namespace Accounts {
 
+	/// <include file="../docs/api/Accounts/ACAccount.xml" path="/Documentation/Docs[@DocId='T:Accounts.ACAccount']/*" />
 	[Deprecated (PlatformName.iOS, 15, 0, message: "Use the non-Apple SDK relating to your account type instead.")]
 	[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use the non-Apple SDK relating to your account type instead.")]
 	[Deprecated (PlatformName.MacCatalyst, 15, 0, message: "Use the non-Apple SDK relating to your account type instead.")]
@@ -52,6 +53,9 @@ namespace Accounts {
 		string UserFullName { get; }
 	}
 
+	/// <summary>Encapsulates information needed to authenticate a user.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Accounts/Reference/ACAccountCredentialClassRef/index.html">Apple documentation for <c>ACAccountCredential</c></related>
 	[Deprecated (PlatformName.iOS, 15, 0, message: "Use the non-Apple SDK relating to your account type instead.")]
 	[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use the non-Apple SDK relating to your account type instead.")]
 	[Deprecated (PlatformName.MacCatalyst, 15, 0, message: "Use the non-Apple SDK relating to your account type instead.")]
@@ -68,10 +72,17 @@ namespace Accounts {
 		string OAuthToken { get; set; }
 	}
 
+	/// <summary>A delegate that specifies the completion handler in calls to the <see cref="M:Accounts.ACAccountStore.SaveAccount(Accounts.ACAccount,Accounts.ACAccountStoreSaveCompletionHandler)" /> method.</summary>
 	delegate void ACAccountStoreSaveCompletionHandler (bool success, NSError error);
+	/// <param name="success">
+	///       <see langword="true" /> if the account was removed. Otherwise, <see langword="false" />.</param>
+	///     <param name="error">The error that was encountered, or <see langword="null" /> if no error was encountered.</param>
+	///     <summary>A handler to be run when an attempt is made to remove an account from the store.</summary>
 	delegate void ACAccountStoreRemoveCompletionHandler (bool success, NSError error);
+	/// <summary>A delegate that specifies the handler executed at the completion of calls to <see cref="M:Accounts.ACAccountStore.RequestAccessAsync(Accounts.ACAccountType,Foundation.NSDictionary)" />s.</summary>
 	delegate void ACRequestCompletionHandler (bool granted, NSError error);
 
+	/// <include file="../docs/api/Accounts/ACAccountStore.xml" path="/Documentation/Docs[@DocId='T:Accounts.ACAccountStore']/*" />
 	[Deprecated (PlatformName.iOS, 15, 0, message: "Use the non-Apple SDK relating to your account type instead.")]
 	[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use the non-Apple SDK relating to your account type instead.")]
 	[Deprecated (PlatformName.MacCatalyst, 15, 0, message: "Use the non-Apple SDK relating to your account type instead.")]
@@ -128,6 +139,18 @@ namespace Accounts {
 		void RemoveAccount (ACAccount account, ACAccountStoreRemoveCompletionHandler completionHandler);
 	}
 
+	/// <summary>A class that contains information about <see cref="T:Accounts.ACAccount" />s of a particular type.</summary>
+	///     <remarks>
+	///       <para>Application developers do not instantiate <see cref="T:Accounts.ACAccountType" /> directly. Rather, they can retrieve an appropriate object with the <see cref="M:Accounts.ACAccountStore.FindAccountType(System.String)" /> method.
+	/// 	</para>
+	///       <example>
+	///         <code lang="csharp lang-csharp"><![CDATA[
+	/// 		ACAccountStore objStore = new ACAccountStore();
+	/// 		objStore.RequestAccess(objStore.FindAccountType(ACAccountType.Twitter), new AccountStoreOptions(), (granted, error) => { });
+	/// 	]]></code>
+	///       </example>
+	///     </remarks>
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Accounts/Reference/ACAccountTypeClassRef/index.html">Apple documentation for <c>ACAccountType</c></related>
 	[Deprecated (PlatformName.iOS, 15, 0, message: "Use the non-Apple SDK relating to your account type instead.")]
 	[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use the non-Apple SDK relating to your account type instead.")]
 	[Deprecated (PlatformName.MacCatalyst, 15, 0, message: "Use the non-Apple SDK relating to your account type instead.")]
@@ -176,6 +199,7 @@ namespace Accounts {
 		NSString LinkedIn { get; }
 	}
 
+	/// <summary>A class that encapsulates keys necessary for Facebook requests. Used with <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=M:Accounts.ACAccountStore.RequestAccess (Accounts.ACAccountType,Accounts.AccountStoreOptions,Accounts.ACRequestCompletionHandler)&amp;scope=Xamarin" title="M:Accounts.ACAccountStore.RequestAccess (Accounts.ACAccountType,Accounts.AccountStoreOptions,Accounts.ACRequestCompletionHandler)">M:Accounts.ACAccountStore.RequestAccess (Accounts.ACAccountType,Accounts.AccountStoreOptions,Accounts.ACRequestCompletionHandler)</a></format>.</summary>
 	[Deprecated (PlatformName.iOS, 11, 0, message: "Use Facebook SDK instead.")]
 	[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use Facebook SDK instead.")]
 	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use Facebook SDK instead.")]
@@ -192,6 +216,7 @@ namespace Accounts {
 		NSString Audience { get; }
 	}
 
+	/// <summary>An enumeration whose values specify the visibility of a post to Facebook.</summary>
 	[Deprecated (PlatformName.iOS, 11, 0, message: "Use Facebook SDK instead.")]
 	[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use Facebook SDK instead.")]
 	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use Facebook SDK instead.")]
@@ -207,6 +232,7 @@ namespace Accounts {
 		NSString OnlyMe { get; }
 	}
 
+	/// <summary>Key to use when accessing Tencent Weibo accounts. Used with <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=M:Accounts.ACAccountStore.RequestAccess (Accounts.ACAccountType,Accounts.AccountStoreOptions,Accounts.ACRequestCompletionHandler)&amp;scope=Xamarin" title="M:Accounts.ACAccountStore.RequestAccess (Accounts.ACAccountType,Accounts.AccountStoreOptions,Accounts.ACRequestCompletionHandler)">M:Accounts.ACAccountStore.RequestAccess (Accounts.ACAccountType,Accounts.AccountStoreOptions,Accounts.ACRequestCompletionHandler)</a></format>.</summary>
 	[Deprecated (PlatformName.iOS, 11, 0, message: "Use Tencent Weibo SDK instead.")]
 	[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use Tencent Weibo SDK instead.")]
 	[MacCatalyst (13, 1)]

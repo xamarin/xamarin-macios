@@ -42,6 +42,7 @@ using Foundation;
 #nullable enable
 
 namespace AudioUnit {
+	/// <summary>An enumeration whose values specify the status of an <see cref="T:AudioUnit.AudioUnit" />.</summary>
 	public enum AudioUnitStatus { // Implictly cast to OSType
 		NoError = 0,
 		OK = NoError,
@@ -75,6 +76,7 @@ namespace AudioUnit {
 		ExtensionNotFound = -66744,
 	}
 
+	/// <summary>Enumerates status values returned by <see cref="M:AudioUnit.AudioUnit.AudioOutputUnitPublish(AudioUnit.AudioComponentDescription,System.String,System.UInt32)" />.</summary>
 	public enum AudioComponentStatus { // Implictly cast to OSType
 		OK = 0,
 		DuplicateDescription = -66752,
@@ -88,12 +90,14 @@ namespace AudioUnit {
 		RenderTimeout = -66745,
 	}
 
+	/// <summary>An enumeration whose values specify whether to use a hardware or software encoder.</summary>
 	public enum AudioCodecManufacturer : uint  // Implictly cast to OSType in CoreAudio.framework - CoreAudioTypes.h
 	{
 		AppleSoftware = 0x6170706c, // 'appl'
 		AppleHardware = 0x61706877, // 'aphw'
 	}
 
+	/// <summary>Enumerates instrument types.</summary>
 	public enum InstrumentType : byte // UInt8 in AUSamplerInstrumentData
 	{
 		DLSPreset = 1,
@@ -103,6 +107,7 @@ namespace AudioUnit {
 		EXS24 = 4,
 	}
 
+	/// <summary>The unit of measure used by an audio unit parameter.</summary>
 	public enum AudioUnitParameterUnit // UInt32 AudioUnitParameterUnit
 	{
 		Generic = 0,
@@ -136,6 +141,7 @@ namespace AudioUnit {
 		MIDI2Controller = 27,
 	}
 
+	/// <summary>Flagging enumeration used with <see cref="P:AudioUnit.AudioUnitParameterInfo.Flags" />.</summary>
 	[Flags]
 	public enum AudioUnitParameterFlag : uint // UInt32 in AudioUnitParameterInfo
 	{
@@ -170,6 +176,7 @@ namespace AudioUnit {
 		IsWritable = ((uint) 1 << 31),
 	}
 
+	/// <summary>Enumerates values used by <see cref="T:AudioUnit.AudioUnitParameterInfo" />. Currenty reserved for system use.</summary>
 	public enum AudioUnitClumpID // UInt32 in AudioUnitParameterInfo
 	{
 		System = 0,
@@ -253,6 +260,7 @@ namespace AudioUnit {
 	}
 
 #if XAMCORE_3_0
+	/// <summary>An enumeration whose values specify a kind of <see cref="T:AudioUnit.AudioUnit" />.</summary>
 	[Internal]
 #else
 	[Obsolete ("Please use the strongly typed properties instead.")]
@@ -482,6 +490,7 @@ namespace AudioUnit {
 #endif // MONOMAC
 	}
 
+	/// <summary>An enumeration whose values represent adjustable attributes such as pitch or volume.</summary>
 	public enum AudioUnitParameterType // UInt32 in AudioUnitParameterInfo
 	{
 		// AUMixer3D unit
@@ -691,6 +700,7 @@ namespace AudioUnit {
 		ObstructionAttenuation = 11,
 	}
 
+	/// <summary>Enumerates attenuation modes.</summary>
 	[MacCatalyst (13, 1)]
 	public enum SpatialMixerAttenuation {
 		Power = 0,
@@ -699,6 +709,7 @@ namespace AudioUnit {
 		Linear = 3,
 	}
 
+	/// <summary>Flagging enumeration used to control spatial mixing.</summary>
 	[Flags]
 	[MacCatalyst (13, 1)]
 	public enum SpatialMixerRenderingFlags {
@@ -710,6 +721,7 @@ namespace AudioUnit {
 		DistanceAttenuation = (1 << 2),
 	}
 
+	/// <summary>Enumerates timing flags for rendering audio slices.</summary>
 	[Flags]
 	public enum ScheduledAudioSliceFlag {
 		Complete = 0x01,
@@ -724,6 +736,7 @@ namespace AudioUnit {
 		InterruptAtLoop = 0x20,
 	}
 
+	/// <summary>An enumeration whose values specify roles and contexts for audio unit properties.</summary>
 	public enum AudioUnitScopeType { // UInt32 AudioUnitScope
 		Global = 0,
 		Input = 1,
@@ -735,6 +748,7 @@ namespace AudioUnit {
 		LayerItem = 7,
 	}
 
+	/// <summary>An enumeration whose values specify configuration flags for audio-unit rendering.</summary>
 	[Flags]
 	public enum AudioUnitRenderActionFlags { // UInt32 AudioUnitRenderActionFlags
 		PreRender = (1 << 2),
@@ -747,6 +761,7 @@ namespace AudioUnit {
 		DoNotCheckRenderArgs = (1 << 9),
 	}
 
+	/// <summary>Enumerates events relating to remote control commands.</summary>
 	public enum AudioUnitRemoteControlEvent // Unused?
 	{
 		TogglePlayPause = 1,
@@ -760,6 +775,7 @@ namespace AudioUnit {
 		Output = 2,
 	}
 
+	/// <summary>Enumerates flag values that describe the state of an audio transport.</summary>
 	[Native]
 	public enum AUHostTransportStateFlags : ulong {
 		Changed = 1,
@@ -772,6 +788,7 @@ namespace AudioUnit {
 		Immediate = unchecked((long) 0xffffffff00000000),
 	}
 
+	/// <summary>Enumerates options that can be used while instantiating a <see cref="T:AudioUnit.AUAudioUnit" />.</summary>
 	[MacCatalyst (13, 1)]
 	public enum AudioComponentInstantiationOptions : uint {
 		OutOfProcess = 1,
@@ -782,6 +799,7 @@ namespace AudioUnit {
 		LoadedRemotely = 1u << 31,
 	}
 
+	/// <summary>Enumerates audio unit bus input-ouput capabilities.</summary>
 	[Native]
 	public enum AUAudioUnitBusType : long {
 		Input = 1,
@@ -878,6 +896,7 @@ namespace AudioUnit {
 		UseOutputType = 7,
 	}
 
+	/// <summary>Enumerates attentuation curve types.</summary>
 	public enum AU3DMixerAttenuationCurve : uint {
 		Power = 0,
 		Exponential = 1,

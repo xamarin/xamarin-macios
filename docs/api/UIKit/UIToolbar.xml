@@ -1,0 +1,29 @@
+<Documentation>
+  <Docs DocId="T:UIKit.UIToolbar">
+    <summary>A <see cref="T:UIKit.UIView" /> that displays a toolbar.</summary>
+    <remarks>
+      <para>To set  <see cref="T:UIKit.UIBarButtonItem" /> items in a <see cref="T:UIKit.UIToolbar" />, assign to the <see cref="P:UIKit.UIToolbar.Items" /> property of the <see cref="T:UIKit.UIToolbar" />. To space items, use <see cref="F:UIKit.UIBarButtonSystemItem.FlexibleSpace" /> as shown in the following example:</para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+var tb = new UIToolbar(toolbarFrame);
+var bbs = new UIBarButtonItem[] {
+    new UIBarButtonItem(UIBarButtonSystemItem.FlexibleSpace),
+    new UIBarButtonItem(UIBarButtonSystemItem.Action),
+    new UIBarButtonItem(UIBarButtonSystemItem.FlexibleSpace),
+    new UIBarButtonItem(UIBarButtonSystemItem.Add),
+    new UIBarButtonItem(UIBarButtonSystemItem.FlexibleSpace),
+
+    new UIBarButtonItem(UIBarButtonSystemItem.Bookmarks),
+    new UIBarButtonItem(UIBarButtonSystemItem.FlexibleSpace)
+};
+tb.SetItems(bbs, false);
+          ]]></code>
+      </example>
+      <para>The previous code creates a toolbar that looks like this:</para>
+      <para>
+        <img href="~/UIKit/_images/UIKit.UIBarButtonItem.Toolbar.png" alt="Screenshot showing the toolbar" />
+      </para>
+    </remarks>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIToolbar_Class/index.html">Apple documentation for <c>UIToolbar</c></related>
+  </Docs>
+</Documentation>

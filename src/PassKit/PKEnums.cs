@@ -21,6 +21,7 @@ namespace PassKit {
 #endif
 
 	// NSInteger -> PKPass.h
+	/// <summary>An enumeration whose values specify errors relating to the passes and passbook functionality.</summary>
 	[MacCatalyst (13, 1)]
 	[ErrorDomain ("PKPassKitErrorDomain")]
 	[Native]
@@ -34,6 +35,7 @@ namespace PassKit {
 	}
 
 	// NSInteger -> PKPassLibrary.h
+	/// <summary>An enumeration whose values define possible results when passes are added.</summary>
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum PKPassLibraryAddPassesStatus : long {
@@ -42,6 +44,7 @@ namespace PassKit {
 		DidCancelAddPasses
 	}
 
+	/// <summary>Enumeration of pass types (whether a pass is a barcode or presents a payment card).</summary>
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum PKPassType : ulong {
@@ -56,6 +59,7 @@ namespace PassKit {
 		Any = ulong.MaxValue,
 	}
 
+	/// <summary>Enumeration of results of authorization requests.</summary>
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum PKPaymentAuthorizationStatus : long {
@@ -91,6 +95,7 @@ namespace PassKit {
 		PinLockout
 	}
 
+	/// <summary>Enumeration of valid states of a <see cref="T:PassKit.PKPaymentPass" /> payment card.</summary>
 	[NoMac]
 	[Deprecated (PlatformName.iOS, 13, 4, message: "Use 'PKSecureElementPassActivationState' instead.")]
 	[Deprecated (PlatformName.WatchOS, 6, 2, message: "Use 'PKSecureElementPassActivationState' instead.")]
@@ -112,6 +117,7 @@ namespace PassKit {
 		Deactivated,
 	}
 
+	/// <summary>Payment processing capabilities of a merchant.</summary>
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum PKMerchantCapability : ulong {
@@ -123,6 +129,7 @@ namespace PassKit {
 		InstantFundsOut = 1 << 7,
 	}
 
+	/// <summary>Holds address information for billing or shipping purposes.</summary>
 	[NoMac]
 	[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'PKContactField' instead.")]
 	[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'PKContactField' instead.")]
@@ -140,6 +147,7 @@ namespace PassKit {
 		All = PostalAddress | Phone | Email | Name
 	}
 
+	/// <summary>Enumerates available styles for <see cref="T:PassKit.PKPaymentButton" /> objects.</summary>
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -152,6 +160,7 @@ namespace PassKit {
 		Automatic = 3,
 	}
 
+	/// <summary>Enumerates the types of <see cref="T:PassKit.PKPaymentButton" /> objects.</summary>
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -212,6 +221,7 @@ namespace PassKit {
 #endif // !NET
 	}
 
+	/// <summary>Enumerates shipping methods.</summary>
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum PKShippingType : ulong {
@@ -221,6 +231,7 @@ namespace PassKit {
 		ServicePickup,
 	}
 
+	/// <summary>Enumerates error codes relating to PassKit operations.</summary>
 	[Watch (6, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -230,6 +241,7 @@ namespace PassKit {
 		SystemCancelled
 	}
 
+	/// <summary>Enumerates results that are used in calls to <see cref="M:PassKit.PKPassLibrary.RequestAutomaticPassPresentationSuppression(System.Action{PassKit.PKAutomaticPassPresentationSuppressionResult})" />.</summary>
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -241,6 +253,7 @@ namespace PassKit {
 		Success
 	}
 
+	/// <summary>Enumerates the types of cards available to Apple Pay.</summary>
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum PKPaymentMethodType : ulong {
@@ -252,6 +265,7 @@ namespace PassKit {
 		EMoney,
 	}
 
+	/// <summary>Enumerates whether a payment associated with a <see cref="T:PassKit.PKShippingMethod" /> is pending or final.</summary>
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum PKPaymentSummaryItemType : ulong {
@@ -259,6 +273,7 @@ namespace PassKit {
 		Pending
 	}
 
+	/// <summary>Enumerates Pass Button styles.</summary>
 	[NoWatch]
 	[NoMac] // under `#if TARGET_OS_IOS`
 	[MacCatalyst (13, 1)]
@@ -268,6 +283,7 @@ namespace PassKit {
 		Outline
 	}
 
+	/// <summary>Enumerates error conditions for payment operations.</summary>
 	[MacCatalyst (13, 1)]
 	[ErrorDomain ("PKPaymentErrorDomain")]
 	[Native]

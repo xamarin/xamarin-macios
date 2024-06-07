@@ -87,6 +87,7 @@ namespace MapKit {
 	}
 
 	// NSUInteger -> MKTypes.h
+	/// <summary>An enumeration of valid states for a dragged <see cref="T:MapKit.MKAnnotationView" />.</summary>
 	[NoTV]
 	[NoWatch]
 	[MacCatalyst (13, 1)]
@@ -96,6 +97,7 @@ namespace MapKit {
 	}
 
 	// NSUInteger -> MKTypes.h
+	/// <summary>Color for map pins.</summary>
 	[NoTV]
 	[NoWatch]
 	[Native]

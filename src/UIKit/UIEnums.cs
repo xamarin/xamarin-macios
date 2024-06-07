@@ -14,6 +14,7 @@ using ObjCRuntime;
 
 namespace UIKit {
 	// NSInteger -> UIImagePickerController.h
+	/// <summary>An enumeration of values used to specify video quality.</summary>
 	[Native]
 	[NoTV]
 	[NoWatch]
@@ -54,6 +55,12 @@ namespace UIKit {
 	}
 
 	// NSInteger -> UIAlertView.h
+	/// <summary>The visual style for a <see cref="T:UIKit.UIAlertView" />.</summary>
+	///     <remarks>
+	///       <para>
+	///         The values other than <see cref="F:UIKit.UIAlertViewStyle.Default" /> allow the user to enter text, including the option to obscure the text as it is being entered.
+	///       </para>
+	///     </remarks>
 	[Native]
 	[NoTV]
 	[NoWatch]
@@ -370,6 +377,8 @@ namespace UIKit {
 	}
 
 	// NSInteger -> UIDatePicker.h
+	/// <summary>An enumeration of modes available to the <see cref="T:UIKit.UIDatePicker" />.</summary>
+	///     <remarks>Valid modes for the <see cref="T:UIKit.UIDatePicker" />.</remarks>
 	[Native]
 	[NoTV]
 	[NoWatch]
@@ -382,6 +391,8 @@ namespace UIKit {
 	}
 
 	// NSInteger -> UIDevice.h
+	/// <summary>An enumeration of device orientations.</summary>
+	///     <remarks>The current device orientation.</remarks>
 	[Native]
 	[NoTV]
 	[NoWatch]
@@ -397,6 +408,10 @@ namespace UIKit {
 	}
 
 	// NSInteger -> UIDevice.h
+	/// <summary>An enumeration of values indicating the state of the battery.</summary>
+	///     <remarks>
+	///       <para>This is a qualitative description of the battery state (e.g., <see cref="F:UIKit.UIDeviceBatteryState.Charging" />). For a quantitative view of battery charge level, use <see cref="P:UIKit.UIDevice.BatteryLevel" />.</para>
+	///     </remarks>
 	[Native]
 	[NoTV]
 	[NoWatch]
@@ -409,6 +424,7 @@ namespace UIKit {
 	}
 
 	// NSInteger -> UIDocument.h
+	/// <summary>An enumeration indicating what kind of change has occurred to a <see cref="T:UIKit.UIDocument" />.</summary>
 	[Native]
 	[NoTV]
 	[NoWatch]
@@ -418,6 +434,10 @@ namespace UIKit {
 	}
 
 	// NSInteger -> UIDocument.h
+	/// <summary>An enumeration indicating whether the <see cref="T:UIKit.UIDocument" /> is being saved for the first time or should overwrite an existing save.</summary>
+	///     <remarks>
+	///       <para>One of these enumerated values is used as a parameter to <see cref="T:UIKit.UIDocument" />s various save-oriented functions (e.g., <see cref="M:UIKit.UIDocument.Save(Foundation.NSUrl,UIKit.UIDocumentSaveOperation,UIKit.UIOperationHandler)" />, <see cref="M:UIKit.UIDocument.GetFileAttributesToWrite(Foundation.NSUrl,UIKit.UIDocumentSaveOperation,Foundation.NSError@)" />, etc.).</para>
+	///     </remarks>
 	[Native]
 	[NoTV]
 	[NoWatch]
@@ -427,6 +447,7 @@ namespace UIKit {
 	}
 
 	// NSUInteger -> UIDocument.h
+	/// <summary>An enumeration indicating the editing/saving state of a <see cref="T:UIKit.UIDocument" />.</summary>
 	[Native]
 	[Flags]
 	[NoTV]
@@ -442,6 +463,7 @@ namespace UIKit {
 	}
 
 	// NSInteger -> UIImagePickerController.h
+	/// <summary>An enumeration of values used to specify the source using by the <see cref="T:UIKit.UIImagePickerController" />.</summary>
 	[Native]
 	[NoWatch]
 	[NoTV]
@@ -457,6 +479,10 @@ namespace UIKit {
 	}
 
 	// NSInteger -> UIImagePickerController.h
+	/// <summary>An enumeration of values used by <see cref="T:UIKit.UIImagePickerControllerCameraCaptureMode" />.</summary>
+	///     <remarks>
+	///       <para>Specifies whether the camera will capture still images or video.</para>
+	///     </remarks>
 	[Native]
 	[NoWatch]
 	[NoTV]
@@ -466,6 +492,8 @@ namespace UIKit {
 	}
 
 	// NSInteger -> UIImagePickerController.h
+	/// <summary>An enumeration of values used by <see cref="P:UIKit.UIImagePickerController.CameraDevice" /> and related functions.</summary>
+	///     <remarks>Used to differentiate between front (screen-side) and rear cameras.</remarks>
 	[Native]
 	[NoWatch]
 	[NoTV]
@@ -476,6 +504,8 @@ namespace UIKit {
 	}
 
 	// NSInteger -> UIImagePickerController.h
+	/// <summary>An enumeration of values used by <see cref="P:UIKit.UIImagePickerController.CameraFlashMode" /></summary>
+	///     <remarks>Determines whether the flash will be on, off, or as-needed.</remarks>
 	[Native]
 	[NoWatch]
 	[NoTV]
@@ -485,6 +515,10 @@ namespace UIKit {
 	}
 
 	// NSInteger -> UIInterface.h
+	/// <summary>The visual style for a navigation, search, or tool bar.</summary>
+	///     <remarks>
+	///       <para>The style used for <see cref="T:UIKit.UINavigationBar" />, <see cref="T:UIKit.UISearchBar" />, and <see cref="T:UIKit.UIToolbar" />.</para>
+	///     </remarks>
 	[Native]
 	[NoWatch]
 	[NoTV]
@@ -568,6 +602,7 @@ namespace UIKit {
 	}
 
 	// NSInteger -> UISegmentedControl.h
+	/// <summary>The visual style for a <see cref="T:UIKit.UISegmentedControl" />.</summary>
 	[Native]
 	[NoTV]
 	[NoWatch]
@@ -639,6 +674,7 @@ namespace UIKit {
 	}
 
 	// #defines over UIBarPosition -> NSInteger -> UIBarCommon.h
+	/// <summary>An enumeration of the valid positions for a <see cref="T:UIKit.UIToolbar" />.</summary>
 	[Native]
 	[NoTV]
 	[NoWatch]
@@ -725,6 +761,8 @@ namespace UIKit {
 	}
 
 	// NSInteger -> UITableViewCell.h
+	/// <summary>The visual style of a <see cref="T:UIKit.UITableView" />'s cell separator.</summary>
+	///     <remarks>The cell separator style is set via a table view's <see cref="P:UIKit.UITableView.SeparatorStyle" /> property.</remarks>
 	[Native]
 	[NoTV]
 	[NoWatch]
@@ -824,6 +862,11 @@ namespace UIKit {
 	}
 
 	// NSInteger -> UIApplication.h
+	/// <summary>An enumeration of values that specify the orientation of the user interface.</summary>
+	///     <remarks>
+	///       <para>The <see cref="T:UIKit.UIInterfaceOrientation" /> represents the rotation of the user interface and, in portrait modes, is the opposite of the <see cref="P:UIKit.UIDevice.Orientation" /> property. For instance, if the device is rotated 90 degrees clockwise from normal portrait mode such that the home button is to the left, the <see cref="P:UIKit.UIViewController.InterfaceOrientation" /> property will be  <see cref="F:UIKit.UIInterfaceOrientation.LandscapeLeft" /> but the <see cref="P:UIKit.UIDevice.Orientation" /> property will be <see cref="F:UIKit.UIDeviceOrientation.LandscapeRight" />.
+	///         </para>
+	///     </remarks>
 	[Native]
 	[NoTV]
 	[NoWatch]
@@ -837,6 +880,10 @@ namespace UIKit {
 	}
 
 	// NSUInteger -> UIApplication.h
+	/// <summary>An enumeration of values that specify the available orientations of the user interface.</summary>
+	///     <remarks>
+	///       <para>A <see cref="T:UIKit.UIViewController" /> may support more than one <see cref="T:UIKit.UIInterfaceOrientation" />. This value, returned from <see cref="M:UIKit.UIViewController.GetSupportedInterfaceOrientations" /> and <see cref="M:UIKit.UIApplication.SupportedInterfaceOrientationsForWindow(UIKit.UIWindow)" />, specifies which orientations are supported by the application.</para>
+	///     </remarks>
 	[Native]
 	[Flags]
 	[NoTV]
@@ -854,6 +901,7 @@ namespace UIKit {
 	}
 
 	// NSInteger -> UIApplication.h
+	/// <summary>An enumeration of navigation types for use in a <see cref="T:UIKit.UIWebView" />.</summary>
 	[Native]
 	[NoWatch]
 	[NoTV]
@@ -868,6 +916,8 @@ namespace UIKit {
 	}
 
 	// NSUInteger -> UIApplication.h
+	/// <summary>An enumeration of values that are automatically detected in text.</summary>
+	///     <remarks>The types of text that are automatically detected in text content.   If the types are detected in the content, the text is converted into clickable content.   When clicked the application that is bound to handle that kind of data type is invoked (Web browser for HTTP links, Phone application for phone numbers).</remarks>
 	[Native ("UIDataDetectorTypes")]
 	[Flags]
 	[NoTV]
@@ -895,6 +945,14 @@ namespace UIKit {
 	}
 
 	// NSInteger -> UIActionSheet.h
+	/// <summary>The visual style for a <see cref="T:UIKit.UIActionSheet" />.</summary>
+	///     <remarks>
+	///       <para>The values of <see cref="F:UIKit.UIActionSheetStyle.Automatic" /> and <see cref="F:UIKit.UIActionSheetStyle.Default" /> are the same.</para>
+	///       <para>In this image, the left phone is displaying with <see cref="F:UIKit.UIActionSheetStyle.BlackTranslucent" /> style and the right with <see cref="F:UIKit.UIActionSheetStyle.BlackOpaque" /> style.</para>
+	///       <para>
+	///         <img href="~/UIKit/_images/UIKit.UIActionSheetStyle.png" alt="Screenshot showing alternate styles for the UIActionSheet" />
+	///       </para>
+	///     </remarks>
 	[Native]
 	[NoTV]
 	[NoWatch]
@@ -909,6 +967,10 @@ namespace UIKit {
 	}
 
 	// NSInteger -> UIApplication.h
+	/// <summary>The visual style of the status bar.</summary>
+	///     <remarks>
+	///       <para>Starting in iOS 7, the status bar does not have background content, so application developers must ensure that the style of the status bar works with the content of the <see cref="T:UIKit.UIView" /> that will appear behind it. The <see cref="F:UIKit.UIStatusBarStyle.Default" /> style of the status bar presents dark content (i.e., its text and content are dark). If the underlying view has dark content, the status bar will be more legible if the application developer overrides <see cref="M:UIKit.UIViewController.PreferredStatusBarStyle" /> so that it returns <see cref="F:UIKit.UIStatusBarStyle.LightContent" />.</para>
+	///     </remarks>
 	[Native]
 	[NoTV]
 	[NoWatch]
@@ -932,6 +994,7 @@ namespace UIKit {
 	}
 
 	// NSInteger -> UIApplication.h
+	/// <summary>An enumeration of animations available when the status bar is hidden or made visible.</summary>
 	[Native]
 	[NoTV]
 	[NoWatch]
@@ -958,6 +1021,7 @@ namespace UIKit {
 	}
 
 	// NSUInteger -> UIApplication.h
+	/// <summary>An enumeration of remote notification types.</summary>
 	[Native]
 	[Flags]
 	[NoTV]
@@ -1057,6 +1121,7 @@ namespace UIKit {
 	};
 
 	// NSInteger -> UIMenuController.h
+	/// <summary>An enumeration indicating in which direction the arrow of the <see cref="T:UIKit.UIMenuController" /> points.</summary>
 	[Native]
 	[NoTV]
 	[NoWatch]
@@ -1156,6 +1221,7 @@ namespace UIKit {
 
 	// untyped (and unamed) enum -> UIPrintError.h
 	// note: it looks unused by any API
+	/// <summary>An enumeration of error codes from the printing system.</summary>
 	[NoTV]
 	[NoWatch]
 	[MacCatalyst (13, 1)]
@@ -1168,6 +1234,7 @@ namespace UIKit {
 	}
 
 	// NSInteger -> UIPrintInfo.h
+	/// <summary>An enumeration of duplex modes supported by the printer.</summary>
 	[Native]
 	[NoTV]
 	[NoWatch]
@@ -1179,6 +1246,7 @@ namespace UIKit {
 	}
 
 	// NSInteger -> UIPrintInfo.h
+	/// <summary>An enumeration of printing orientations.</summary>
 	[Native]
 	[NoTV]
 	[NoWatch]
@@ -1189,6 +1257,7 @@ namespace UIKit {
 	}
 
 	// NSInteger -> UIPrintInfo.h
+	/// <summary>An enumeration of print content types (e.g., general, photo, grayscale).</summary>
 	[Native]
 	[NoTV]
 	[NoWatch]
@@ -1480,6 +1549,10 @@ namespace UIKit {
 	}
 
 	// NSInteger -> UIActivity.h
+	/// <summary>An enumeration whose values specify a category for a <see cref="T:UIKit.UIActivity" />.</summary>
+	///     <remarks>
+	///       <para>Application developers may choose to group activities in their UI based on this value.</para>
+	///     </remarks>
 	[Native]
 	[NoTV]
 	[NoWatch]
@@ -1572,6 +1645,7 @@ namespace UIKit {
 	}
 
 	// NSInteger -> UIWebView.h
+	/// <summary>An enumeration whose values specify whether a <see cref="T:UIKit.UIWebView" />'s <see cref="P:UIKit.UIWebView.PaginationMode" /> should break by columns or page.</summary>
 	[NoWatch]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -1581,6 +1655,7 @@ namespace UIKit {
 	}
 
 	// NSInteger -> UIWebView.h
+	/// <summary>An enumeration whose values specify valid page-break modes for the <see cref="T:UIKit.UIWebView" />'s <see cref="P:UIKit.UIWebView.PaginationMode" /> property.</summary>
 	[NoWatch]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -1772,6 +1847,7 @@ namespace UIKit {
 		SystemChromeMaterialDark,
 	}
 
+	/// <summary>Enumerates various types of printing tasks. Used with <see cref="P:UIKit.UIPrinter.SupportedJobTypes" />.</summary>
 	[Native]
 	[NoTV]
 	[NoWatch]
@@ -1788,6 +1864,7 @@ namespace UIKit {
 		Postcard = 1 << 7
 	}
 
+	/// <summary>Enumerates the various types of user notification. Can be "OR"ed together as flags.</summary>
 	[NoTV]
 	[NoWatch]
 	[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'UNAuthorizationOptions' instead.")]
@@ -1802,6 +1879,7 @@ namespace UIKit {
 		Alert = 1 << 2
 	}
 
+	/// <summary>Whether a <see cref="T:UIKit.UIUserNotificationAction" /> should run the app in foreground or background mode.</summary>
 	[NoTV]
 	[NoWatch]
 	[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'UNNotificationActionOptions' instead.")]
@@ -1813,6 +1891,7 @@ namespace UIKit {
 		Background
 	}
 
+	/// <summary>Enumerates the amount of space available for a <see cref="T:UIKit.UIUserNotificationAction" />. Used with <see cref="M:UIKit.UIMutableUserNotificationCategory.SetActions(UIKit.UIUserNotificationAction[],UIKit.UIUserNotificationActionContext)" /></summary>
 	[NoTV]
 	[NoWatch]
 	[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'UNNotificationCategory.Actions' instead.")]
@@ -1824,6 +1903,7 @@ namespace UIKit {
 		Minimal
 	}
 
+	/// <summary>Enumerates the insertion points for custom menu items.</summary>
 	[Deprecated (PlatformName.iOS, 11, 0)]
 	[NoTV]
 	[NoWatch]
@@ -1835,6 +1915,7 @@ namespace UIKit {
 		Last
 	}
 
+	/// <summary>Enumerates the types of file transfer operations used by the document picker.</summary>
 	[Deprecated (PlatformName.iOS, 14, 0, message: "Use the designated constructors instead.")]
 	[NoTV]
 	[NoWatch]
@@ -1897,6 +1978,7 @@ namespace UIKit {
 		PrimaryOverlay = OneOverSecondary,
 	}
 
+	/// <summary>Enumerates characteristics of the button displayed in a table row. Used with the <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=C:UIKit.UITableViewRowAction(UIKit.UITableViewRowActionStyle,string ,Action`1,Foundation.NSIndexPath)&amp;scope=Xamarin" title="C:UIKit.UITableViewRowAction(UIKit.UITableViewRowActionStyle,string ,Action`1,Foundation.NSIndexPath)">C:UIKit.UITableViewRowAction(UIKit.UITableViewRowActionStyle,string ,Action`1,Foundation.NSIndexPath)</a></format> constructor.</summary>
 	[Native]
 	[NoTV]
 	[NoWatch]
@@ -1969,6 +2051,7 @@ namespace UIKit {
 		Override = 1 << 1
 	}
 
+	/// <summary>Enumerates desired page cutting behavior for roll-feed printers.</summary>
 	[NoTV]
 	[NoWatch]
 	[MacCatalyst (13, 1)]
@@ -1981,6 +2064,7 @@ namespace UIKit {
 		CutAfterEachJob
 	}
 
+	/// <summary>Enumerates whether the user may respond to a user notification with text input.</summary>
 	[NoTV]
 	[NoWatch]
 	[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'UNNotificationAction' or 'UNTextInputNotificationAction' instead.")]
@@ -2132,6 +2216,7 @@ namespace UIKit {
 		Composed
 	}
 
+	/// <summary>Enumerates the ear (or ears) for which the accessibility device is paired.</summary>
 	[NoWatch]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -2152,6 +2237,7 @@ namespace UIKit {
 	}
 
 #if NET
+	/// <summary>Flagging enumeration for the permission options for Cloud sharing.</summary>
 	[NoTV]
 #else
 	// Xcode 8.2 beta 1 added __TVOS_PROHIBITED but we need to keep it for binary compatibility
@@ -2261,6 +2347,7 @@ namespace UIKit {
 		Landmark
 	}
 
+	/// <summary>Enumerates drag activity drop resolutions.</summary>
 	[NoWatch, NoTV]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -2271,6 +2358,7 @@ namespace UIKit {
 		Move = 3
 	}
 
+	/// <summary>Enumerates behaviors when dragging text.</summary>
 	[NoWatch, NoTV]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -2280,6 +2368,7 @@ namespace UIKit {
 		StripTextColorFromPreviews = (1 << 0)
 	}
 
+	/// <summary>Enumerates behaviors in response to dropped text.</summary>
 	[NoWatch, NoTV]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -2289,6 +2378,7 @@ namespace UIKit {
 		ReplaceAll
 	}
 
+	/// <summary>Enumerates text drop progress notification styles.</summary>
 	[NoWatch, NoTV]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -2297,6 +2387,7 @@ namespace UIKit {
 		Custom
 	}
 
+	/// <summary>Enumerates behaviors for noneditable views when receiving dropped text.</summary>
 	[NoWatch, NoTV]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -2306,6 +2397,7 @@ namespace UIKit {
 		Yes
 	}
 
+	/// <summary>Enumerates collection view reorganization speeds for drop animations.</summary>
 	[NoWatch, NoTV]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -2315,6 +2407,7 @@ namespace UIKit {
 		Slow
 	}
 
+	/// <summary>Enumerates drop actions.</summary>
 	[NoWatch, NoTV]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -2324,6 +2417,7 @@ namespace UIKit {
 		InsertIntoDestinationIndexPath
 	}
 
+	/// <summary>Enumerates drag operation states.</summary>
 	[NoWatch, NoTV]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -2333,6 +2427,7 @@ namespace UIKit {
 		Dragging
 	}
 
+	/// <summary>Enumerates presets for exporting images.</summary>
 	[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'PHPicker' instead.")]
 	[NoWatch]
 	[NoTV]
@@ -2344,6 +2439,7 @@ namespace UIKit {
 		Current
 	}
 
+	/// <summary>Enumerates action button styles.</summary>
 	[NoWatch]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -2353,6 +2449,7 @@ namespace UIKit {
 		Destructive
 	}
 
+	/// <summary>Enumerates cell states while the cell is involved in a drag operation.</summary>
 	[NoWatch, NoTV]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -2370,6 +2467,7 @@ namespace UIKit {
 		AutomaticInsets
 	}
 
+	/// <summary>Enumerates drop handling options.</summary>
 	[NoWatch, NoTV]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -2388,6 +2486,7 @@ namespace UIKit {
 		Trailing
 	}
 
+	/// <summary>Enumerates drop progress indicator styles.</summary>
 	[NoWatch, NoTV]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -2396,6 +2495,7 @@ namespace UIKit {
 		Default
 	}
 
+	/// <summary>Enumerates states for spring-loaded interactions.</summary>
 	[NoWatch, NoTV]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -2406,6 +2506,7 @@ namespace UIKit {
 		Activated
 	}
 
+	/// <summary>Enumerates the import modes of the document browser.</summary>
 	[NoWatch]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -2416,6 +2517,7 @@ namespace UIKit {
 		Move
 	}
 
+	/// <summary>Enumerates document browser styles.</summary>
 	[NoWatch]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -2426,6 +2528,7 @@ namespace UIKit {
 		Dark
 	}
 
+	/// <summary>Enumerates allowable action locations.</summary>
 	[NoWatch]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -2436,6 +2539,7 @@ namespace UIKit {
 		NavigationBar = 1 << 1
 	}
 
+	/// <summary>Enumerates the type responsible for the drop operation.</summary>
 	[NoWatch, NoTV]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -2464,6 +2568,7 @@ namespace UIKit {
 		LayoutMargins,
 	}
 
+	/// <summary>Enumerates how the data from a <see cref="T:Foundation.NSItemProvider" /> should be presented.</summary>
 	[NoWatch]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -2474,6 +2579,7 @@ namespace UIKit {
 		Attachment,
 	}
 
+	/// <summary>Enumerates the document browser error code.</summary>
 	[NoWatch, NoTV, NoMac]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -2493,6 +2599,7 @@ namespace UIKit {
 		Standard,
 	}
 
+	/// <summary>Enumerates print failure reasons.</summary>
 	[NoTV, NoWatch]
 	[MacCatalyst (13, 1)]
 	[Native]

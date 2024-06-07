@@ -1,0 +1,109 @@
+<Documentation>
+  <Docs DocId="T:GLKit.GLKViewController">
+    
+    <remarks>
+      <para>
+	UIViewController specifically designed to host OpenGL content,
+	in particular animated content rendered on a GLKView.  It
+	automatically sets up a CADisplayLink to synchornize the
+	updates with the screen refresh.
+
+      </para>
+      <para>
+	This view controller drives the animation of the main thread
+	of your application.  You should configure the View property
+	(which is guaranteed to be of type GLKView) appropriately to
+	draw its contents and you should override the Update methods
+	to keep track of time (it will be called just before the frame
+	is displayed).
+
+      </para>
+      <para>
+	You should determine appropriate frame rate for your
+	application and set the PreferredFramesPerSecond property.
+
+      </para>
+      <para>
+	The view controller can automatically stop animation when the
+	view is obscured.  See the PauseOnWillResignActive and Pause
+	properties.
+
+
+      </para>
+      <para>
+	Since iOS 4.0, rotation is handled by the UIViewController.
+	In addition to overriding the methods that control the
+	orientation capabilities of your application, you should
+	reallocate your framebuffer objects on the LayoutSubviews
+	method.
+
+      </para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+public override LayoutSubviews ()
+{
+    DeleteFramebuffer ();
+    CreateFramebuffer ();
+}
+  ]]></code>
+      </example>
+      <para>
+	As with other C# bindings, you can choose to either subclass
+	the GLKViewControllerDelegate class and assign it to the
+	Delegate property, or you can use the mapped C# style events.   
+
+      </para>
+      <para>
+	The following shows how to create your subclass of
+	GLKViewController and do the basic setup.  You should allocate
+	your GL resources in the ViewDidLoad method and release them
+	in ViewDidUnload.
+
+      </para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+public class RippleViewController : GLKViewController {
+                     
+    public override void ViewDidLoad ()
+    {
+        base.ViewDidLoad ();
+
+	// create rendering context
+        context = new EAGLContext (EAGLRenderingAPI.OpenGLES2);
+
+	// Get the nested GLKView and configure it.
+        glkView = (GLKView) View;
+        glkView.Context = context;
+        glkView.MultipleTouchEnabled = true;
+
+	// Hook up the rendering method.
+        glkView.DrawInRect += Draw;
+        
+	// Configure the GLKViewController properties
+        PreferredFramesPerSecond = 60;
+
+	// Your own setup
+        SetupGL ();
+    }
+                
+    void Draw (object sender, GLKViewDrawEventArgs args)
+    {
+        GL.Clear ((int)All.ColorBufferBit);
+	// More GL code here.
+    }
+
+    // Called before each frame is displayed, use to collect
+    // information to compute data for the next frame to be
+    // rendered.
+    public override void Update ()
+    {
+
+    }
+
+}
+]]></code>
+      </example>
+    </remarks>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/GLkit/Reference/GLKViewController_ClassRef/index.html">Apple documentation for <c>GLKViewController</c></related>
+  </Docs>
+</Documentation>

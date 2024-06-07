@@ -1,0 +1,320 @@
+<Documentation>
+  <Docs DocId="T:UIKit.UICollectionView">
+    <summary>Efficiently presents multiple <see cref="T:UIKit.UIView" />s on the screen using flexible layouts.</summary>
+    <remarks>
+      <para>The <see cref="T:UIKit.UICollectionView" /> is a container view that allows the application developer to lay out multiple items on the screen with more flexibility than is provided by a <see cref="T:UIKit.UITableView" />. It is a subtype of <see cref="T:UIKit.UIScrollView" />, so the layouts can span multiple pages. The layout used by the <see cref="T:UIKit.UICollectionView" /> is controlled by it's <see cref="P:UIKit.UICollectionView.CollectionViewLayout" /> property.</para>
+      <para>A <see cref="T:UIKit.UICollectionView" /> must have a <see cref="T:UIKit.UICollectionViewLayout" />. The most commonly-used <see cref="T:UIKit.UICollectionViewLayout" /> is <see cref="T:UIKit.UICollectionViewFlowLayout" />, which lays out its content views either horizontally or vertically until it reaches the bounds and then wraps around.</para>
+      <para>These grid-like layouts are very flexible and customizable, but because <see cref="T:UIKit.UICollectionView" /> and <see cref="T:UIKit.UICollectionViewLayout" /> are independent, simply providing a different <see cref="T:UIKit.UICollectionViewLayout" /> can easily change the presentation style of the <see cref="T:UIKit.UICollectionView" />. The application developer can create custom layouts to support whatever layout can be imagined.</para>
+      <para>
+        The patterns for providing data to a <see cref="T:UIKit.UICollectionView" /> to create items and interact with those items follow the same delegation and data source patterns commonly used in iOS development.
+      </para>
+      <para>Collection Views are more powerful than <see cref="T:UIKit.UITableView" />s, which are limited to a single column, but are also more complex. <see cref="T:UIKit.UITableView" /> has certain built-in behaviors such as an editing mode, row animations, and easy-to-use headers and footers. If a <see cref="T:UIKit.UITableView" /> satisfies the application's UI requirements, the application developer should prefer to use the <see cref="T:UIKit.UITableView" />. 
+      </para>
+      <para>A <see cref="T:UIKit.UICollectionView" /> user interface involves a collaboration of different objects with different concerns:</para>
+      <para>
+        <list type="table">
+          <listheader>
+            <term>Concern</term>
+            <description>Description</description>
+            <description>Types</description>
+          </listheader>
+          <item>
+            <term>Content Management</term>
+            <description>The overall contents of the user interface</description>
+            <description>
+              <para>
+                <see cref="T:UIKit.UICollectionView" />, <see cref="T:UIKit.UICollectionViewController" /></para>
+            </description>
+          </item>
+          <item>
+            <term>Layout</term>
+            <description>Position and layout attributes of various component views</description>
+            <description>
+              <para>
+                <see cref="T:UIKit.UICollectionViewLayout" />,
+		<see cref="T:UIKit.UICollectionViewLayoutAttributes" />,
+		<see cref="T:UIKit.UICollectionViewUpdateItem" /></para>
+            </description>
+          </item>
+          <item>
+            <term>Data Management</term>
+            <description>Data and event-management</description>
+            <description>
+              <para>
+                <see cref="T:UIKit.UICollectionViewDataSource" />, <see cref="T:UIKit.UICollectionViewDelegate" /></para>
+            </description>
+          </item>
+          <item>
+            <term>Reusable views</term>
+            <description>Define component elements of the overall <see cref="T:UIKit.UICollectionView" /></description>
+            <description>
+              <para>
+                <see cref="T:UIKit.UICollectionViewCell" />, <see cref="T:UIKit.UICollectionReusableView" /></para>
+            </description>
+          </item>
+        </list>
+      </para>
+      <para>
+        <format type="text/html">
+          <h2>UICollectionView Basics</h2>
+        </format>
+      </para>
+      <para>A <see cref="T:UIKit.UICollectionView" /> is made up of three different types of <see cref="T:UIKit.UIView" />s:</para>
+      <list type="table">
+        <listheader>
+          <term>Role</term>
+          <description>Description</description>
+          <description>Type</description>
+        </listheader>
+        <item>
+          <term>Cells</term>
+          <description>Data-driven views, each of a single item in the data set.</description>
+          <description>
+            <see cref="T:UIKit.UICollectionViewCell" />
+          </description>
+        </item>
+        <item>
+          <term>Supplementary views</term>
+          <description>Data-driven views, each associated with a section. For example, header and footer views.</description>
+          <description>
+            <see cref="T:UIKit.UICollectionReusableView" />
+          </description>
+        </item>
+        <item>
+          <term>Decoration views</term>
+          <description>Non-data-driven views associated with the layout and overall view appearance. For example, the scrolling bookshelves background in the iBooks app and the Newsstand.</description>
+          <description>
+            <see cref="T:UIKit.UICollectionReusableView" />
+          </description>
+        </item>
+      </list>
+      <para>The relationship between these three types of views is shown in the following image, based on the "Introduction to Collection Views" article. The cells are the orange-and-white rectangles and are laid out in a line. An instance of a supplementary view with a <see cref="P:UIKit.UIView.BackgroundColor" /> of <see cref="P:UIKit.UIColor.Yellow" /> separates sections, while a single decoration view provides a background for the entire <see cref="T:UIKit.UICollectionView" />.</para>
+      <para>
+        <img href="~/UIKit/_images/UIKit.UICollectionView.Components.png" alt="Image with the various components of a UICollectionView labeled" />
+      </para>
+      <para>(Background image by NASA, https://visibleearth.nasa.gov/)</para>
+      <para>
+        <format type="text/html">
+          <h2>Understanding the reuse queue</h2>
+        </format>
+      </para>
+      <para>The <see cref="T:UIKit.UICollectionView" /> is designed to work with large datasets. The two major attributes of this design are the "reuse queue" for component views and the <see cref="T:UIKit.UICollectionViewDataSource" /> interface. The reuse queue is a system-managed collection of component views that minimizes memory consumption by only allocating those views that are on-screen and a handful of "next visible" screens. The following illustration, based on a variation of the code from the "Introduction to Collection Views" sample, shows how efficient this reuse queue is: 204 views are visible but the reuse queue only consists of 217 instances of the <c>AnimalCell</c> subtype of <see cref="T:UIKit.UICollectionViewCell" />. The dataset numbers in the thousands, but the number of actually allocated view components is minimal.</para>
+      <para>
+        <img href="~/UIKit/_images/UIKit.UICollectionView.ReuseQueue.png" alt="Screenshot of an app using the reuse queue" />
+      </para>
+      <para>Not only does the reuse queue only have a minimal number of component views, it reuses component views rather than allocating and releasing off-screen views. This helps greatly with performance, but has important consequences for the application developer:</para>
+      <para>
+        <list type="bullet">
+          <item>
+            <term>Component view types (or nibs) are registered with the <see cref="T:UIKit.UICollectionView" />, which is responsible for their memory.</term>
+          </item>
+          <item>
+            <term>Component view instances are reused and have their values re-assigned. Application developers must be cautious about assumptions made about references to such values, which will change as the application user scrolls.</term>
+          </item>
+          <item>
+            <term>The application developer must write the functions that (re-)assign these values: <see cref="M:UIKit.UICollectionViewDataSource.GetCell(UIKit.UICollectionView,Foundation.NSIndexPath)" /> and, if supplementary views are desired, <see cref="M:UIKit.UICollectionViewDataSource.GetViewForSupplementaryElement(UIKit.UICollectionView,Foundation.NSString,Foundation.NSIndexPath)" />.</term>
+          </item>
+        </list>
+      </para>
+      <para>The following code, from the "Introduction to Collection Views" sample, shows how component view types are registered and reassigned. Each component role type has an <see cref="T:Foundation.NSString" /> identifier (for instance, the type <c>AnimalCell</c>, which is used for the cell role, has the identifier "AnimalCell", the others are not shown). The methods <see cref="M:UIKit.UICollectionView.RegisterClassForCell(System.Type,System.String)" /> and <see cref="M:UIKit.UICollectionView.RegisterClassForSupplementaryView(System.Type,UIKit.UICollectionElementKindSection,System.String)" /> register the classes for the cell and supplementary view roles, while the method <see cref="M:UIKit.UICollectionViewLayout.RegisterClassForDecorationView(System.Type,Foundation.NSString)" /> registers the decoration view with the  <see cref="T:UIKit.UICollectionViewLayout" /> that is the <see cref="T:UIKit.UICollectionView" />'s' <see cref="P:UIKit.UICollectionView.CollectionViewLayout" /> property.</para>
+      <para>
+	It is very important that you provide a constructor that takes a RectangleF argument in any subclasses that you register with UICollectionView.   This is required because the classes are actually allocated by the Objective-C runtime, and you must initialize them.   The following example shows the expected constructor that you should provide:
+      </para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+public class AnimalCell : UICollectionViewCell
+{
+[Export ("initWithFrame:")]
+  public AnimalCell (RectangleF frame) : base (frame) {}
+}
+]]></code>
+      </example>
+      <para>The overridden methods <see cref="M:UIKit.UICollectionViewDataSource.GetCell(UIKit.UICollectionView,Foundation.NSIndexPath)" /> and <see cref="M:UIKit.UICollectionViewSource.GetViewForSupplementaryElement(UIKit.UICollectionView,Foundation.NSString,Foundation.NSIndexPath)" /> show the re-assignment code. The <see cref="T:Foundation.NSIndexPath" /> that is passed as the <c>indexPath</c> argument contains the <see cref="P:Foundation.NSIndexPath.Section" /> and <see cref="P:Foundation.NSIndexPath.Item" /> integers that allow the application developer to locate a specific data item and appropriately assign the cell's relevant visual elements. (Application developers familiar with <see cref="T:UIKit.UITableView" /> will note that <see cref="P:Foundation.NSIndexPath.Item" /> and <see cref="P:Foundation.NSIndexPath.Row" /> are the same value.)</para>
+      <para>Since these methods, particularly the <see cref="M:UIKit.UICollectionViewDataSource.GetCell(UIKit.UICollectionView,Foundation.NSIndexPath)" /> method, are called many times during scrolling, the application developer should avoid unnecessary processing during these calls.</para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+public class AnimalCell : UICollectionViewCell
+{
+  private static NSString classId = new NSString ("AnimalCell");
+  public static NSString ClassId { get { return classId; } }
+
+[Export ("initWithFrame:")]
+  public AnimalCell (RectangleF frame) : base (frame) {}
+
+//..etc...
+}
+
+
+public class SimpleCollectionViewController : UICollectionViewController
+{
+  public override void ViewDidLoad ()
+  {
+    Base.ViewDidLoad ();
+
+    var cv = CollectionView;
+
+    cv.RegisterClassForCell (typeof(AnimalCell), AnimalCell.ClassId);
+    cv.RegisterClassForSupplementaryView (typeof(HeaderView), UICollectionElementKindSection.Header, HeaderView.ClassId);
+    cv.CollectionViewLayout.RegisterClassForDecorationView (typeof(DecorationView), DecorationView.ClassId);
+  }
+
+  public override UICollectionViewCell GetCell (UICollectionView collectionView, MonoTouch.Foundation.NSIndexPath indexPath)
+  {
+    var animalCell = (AnimalCell)collectionView.DequeueReusableCell (AnimalCell.ClassId, indexPath);
+    var animal = animals [indexPath.Section * (animals.Count / SectionCount) + indexPath.Item];
+
+    animalCell.Image = animal.Image;
+
+    return animalCell;
+  }
+
+
+  public override UICollectionReusableView GetViewForSupplementaryElement (UICollectionView collectionView, NSString elementKind, NSIndexPath indexPath)
+  {
+    var headerView = (HeaderView)collectionView.DequeueReusableSupplementaryView (elementKind, HeaderView.ClassId, indexPath);
+    headerView.Text = "Supplementary View Section " + indexPath.Section.ToString ();
+    return headerView;
+  }
+  //...etc...
+}
+        ]]></code>
+      </example>
+      <para>Rather than registering program classes, application developers may choose to register nibs defined with XCode's Interface Builder. The relevant methods are shown in the following table.</para>
+      <para>
+        <list type="table">
+          <listheader>
+            <term>Role</term>
+            <description>Class Registration Method</description>
+            <description>Nib Registration Method</description>
+          </listheader>
+          <item>
+            <term>Cell</term>
+            <description>
+              <see cref="M:UIKit.UICollectionView.RegisterClassForCell(System.Type,System.String)" />
+            </description>
+            <description>
+              <see cref="M:UIKit.UICollectionView.RegisterNibForCell(UIKit.UINib,System.String)" />
+            </description>
+          </item>
+          <item>
+            <term>Supplementary View</term>
+            <description>
+              <see cref="M:UIKit.UICollectionView.RegisterClassForSupplementaryView(System.Type,UIKit.UICollectionElementKindSection,System.String)" />
+            </description>
+            <description>
+              <see cref="M:UIKit.UICollectionView.RegisterNibForSupplementaryView(UIKit.UINib,UIKit.UICollectionElementKindSection,System.String)" />
+            </description>
+          </item>
+          <item>
+            <term>Decoration View</term>
+            <description>
+              <see cref="M:UIKit.UICollectionViewLayout.RegisterClassForDecorationView(System.Type,Foundation.NSString)" />
+            </description>
+            <description>
+              <see cref="M:UIKit.UICollectionViewLayout.RegisterNibForDecorationView(UIKit.UINib,Foundation.NSString)" />
+            </description>
+          </item>
+        </list>
+      </para>
+      <para>
+        <format type="text/html">
+          <h2>Handling events</h2>
+        </format>
+      </para>
+      <para>To handle events associated with a <see cref="T:UIKit.UICollectionView" />, the application developer may subtype <see cref="T:UIKit.UICollectionViewDelegate" /> and assign an instance to the <see cref="P:UIKit.UICollectionView.Delegate" /> property.</para>
+      <para>
+        <see cref="T:UIKit.UICollectionView" /> is a subtype of <see cref="T:UIKit.UIScrollView" /> and <see cref="T:UIKit.UIScrollViewDelegate" /> contains many of the same methods as <see cref="T:UIKit.UIScrollViewDelegate" /> but is not a subtype of that class.</para>
+      <para>Selecting and highlighting in a <see cref="T:UIKit.UICollectionView" /> follows this sequence:</para>
+      <list type="table">
+        <listheader>
+          <term>User Action</term>
+          <description>UICollectionViewDelegate Methods</description>
+          <description>UICollectionViewCell Properties</description>
+        </listheader>
+        <item>
+          <term>Nothing touched</term>
+          <description />
+          <description>
+            <c>Highlighted == <see langword="false" />; Selected == <see langword="false" /></c>
+          </description>
+        </item>
+        <item>
+          <term>Finger down in cell</term>
+          <description>
+            <see cref="M:UIKit.UICollectionViewDelegate.ShouldHighlightItem(UIKit.UICollectionView,Foundation.NSIndexPath)" /> is called. If it returns <see langword="false" />, processing stops. 
+          </description>
+          <description />
+        </item>
+        <item>
+          <term />
+          <description>
+            <see cref="M:UIKit.UICollectionViewDelegate.ItemHighlighted(UIKit.UICollectionView,Foundation.NSIndexPath)" /> is called.
+          </description>
+          <description>
+            <c>Highlighted == <see langword="true" />; Selected == <see langword="false" /></c>
+          </description>
+        </item>
+        <item>
+          <term>Finger up</term>
+          <description>
+            <see cref="M:UIKit.UICollectionViewDelegate.ShouldSelectItem(UIKit.UICollectionView,Foundation.NSIndexPath)" /> is called. If it returns <see langword="false" />, processing stops.
+          </description>
+          <description />
+        </item>
+        <item>
+          <term />
+          <description>
+            <see cref="M:UIKit.UICollectionViewDelegate.ItemSelected(UIKit.UICollectionView,Foundation.NSIndexPath)" /> is called. <see cref="M:UIKit.UICollectionViewDelegate.ItemUnhighlighted(UIKit.UICollectionView,Foundation.NSIndexPath)" /> is called.
+            
+          </description>
+          <description>
+            <c>Highlighted == <see langword="false" />; Selected == <see langword="true" /></c>
+          </description>
+        </item>
+      </list>
+      <para>
+        <img href="~/UIKit/_images/UIKit.UICollectionView.HighlightAndSelect.png" alt="Sequence diagram showing user actions, UICollectionViewDelegate events, and UICollectionView Cell properties" />
+      </para>
+      <para>Deselecting a <see cref="T:UIKit.UICollectionViewCell" /> follows a similar sequence:</para>
+      <list type="table">
+        <listheader>
+          <term>User Action</term>
+          <description>UICollectionViewDelegate Methods</description>
+          <description>UICollectionViewCell Properties</description>
+        </listheader>
+        <item>
+          <term>Nothing touched while some <see cref="T:UIKit.UICollectionViewCell" /> is highlighted.</term>
+          <description />
+          <description>
+            <c>Highlighted == <see langword="false" />; Selected == <see langword="true" /></c>
+          </description>
+        </item>
+        <item>
+          <term>Finger taps cell (Deselect gesture)</term>
+          <description>
+            <see cref="M:UIKit.UICollectionViewDelegate.ShouldDeselectItem(UIKit.UICollectionView,Foundation.NSIndexPath)" /> is called. If it returns <see langword="false" />, processing stops. 
+          </description>
+          <description />
+        </item>
+        <item>
+          <term />
+          <description>
+            <see cref="M:UIKit.UICollectionViewDelegate.ItemDeselected(UIKit.UICollectionView,Foundation.NSIndexPath)" /> is called.
+          </description>
+          <description>
+            <c>Highlighted == <see langword="false" />; Selected == <see langword="false" /></c>
+          </description>
+        </item>
+      </list>
+    </remarks>
+    
+    
+    
+    
+    
+    
+    
+    <related type="article" href="https://docs.xamarin.com/ios/Guides/User_Interface/Introduction_to_Collection_Views">Introduction to Collection Views</related>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/UICollectionView_class/index.html">Apple documentation for <c>UICollectionView</c></related>
+  </Docs>
+</Documentation>

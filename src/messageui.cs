@@ -17,6 +17,9 @@ using UIKit;
 
 namespace MessageUI {
 
+	/// <summary>Provides a user interface for composing and sending email messages.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/MessageUI/Reference/MFMailComposeViewController_class/index.html">Apple documentation for <c>MFMailComposeViewController</c></related>
 	[BaseType (typeof (UINavigationController))]
 	interface MFMailComposeViewController : UIAppearance {
 		[Static, Export ("canSendMail")]
@@ -52,11 +55,20 @@ namespace MessageUI {
 		void SetPreferredSendingEmailAddress (string emailAddress);
 	}
 
+	/// <summary>Interface representing the required methods (if any) of the protocol <see cref="T:MessageUI.MFMailComposeViewControllerDelegate" />.</summary>
+	///     <remarks>
+	///       <para>This interface contains the required methods (if any) from the protocol defined by <see cref="T:MessageUI.MFMailComposeViewControllerDelegate" />.</para>
+	///       <para>If developers create classes that implement this interface, the implementation methods will automatically be exported to Objective-C with the matching signature from the method defined in the <see cref="T:MessageUI.MFMailComposeViewControllerDelegate" /> protocol.</para>
+	///       <para>Optional methods (if any) are provided by the <see cref="T:MessageUI.MFMailComposeViewControllerDelegate_Extensions" /> class as extension methods to the interface, allowing developers to invoke any optional methods on the protocol.</para>
+	///     </remarks>
 	interface IMFMailComposeViewControllerDelegate { }
 
 #if XAMCORE_3_0
 	[BaseType (typeof (NSObject))]
 #else
+	/// <summary>Used to receive notifications from the MFMailComposeViewController class.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/MessageUI/Reference/MFMailComposeViewControllerDelegate_protocol/index.html">Apple documentation for <c>MFMailComposeViewControllerDelegate</c></related>
 	[BaseType (typeof (UINavigationControllerDelegate))]
 #endif
 	[Model]
@@ -66,11 +78,15 @@ namespace MessageUI {
 		void Finished (MFMailComposeViewController controller, MFMailComposeResult result, [NullAllowed] NSError error);
 	}
 
+	/// <summary>Provides data for the  event.</summary>
 	interface MFMessageAvailabilityChangedEventArgs {
 		[Export ("MFMessageComposeViewControllerTextMessageAvailabilityKey")]
 		bool TextMessageAvailability { get; }
 	}
 
+	/// <summary>Provides a user interface for composing and sending messages.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/MessageUI/Reference/MFMessageComposeViewController_class/index.html">Apple documentation for <c>MFMessageComposeViewController</c></related>
 	[BaseType (typeof (UINavigationController))]
 	interface MFMessageComposeViewController : UIAppearance {
 		[Export ("messageComposeDelegate", ArgumentSemantic.Weak), NullAllowed]
@@ -147,8 +163,17 @@ namespace MessageUI {
 		void SetUpiVerificationCodeSendCompletion (Action<bool> completion);
 	}
 
+	/// <summary>Interface representing the required methods (if any) of the protocol <see cref="T:MessageUI.MFMessageComposeViewControllerDelegate" />.</summary>
+	///     <remarks>
+	///       <para>This interface contains the required methods (if any) from the protocol defined by <see cref="T:MessageUI.MFMessageComposeViewControllerDelegate" />.</para>
+	///       <para>If developers create classes that implement this interface, the implementation methods will automatically be exported to Objective-C with the matching signature from the method defined in the <see cref="T:MessageUI.MFMessageComposeViewControllerDelegate" /> protocol.</para>
+	///       <para>Optional methods (if any) are provided by the <see cref="T:MessageUI.MFMessageComposeViewControllerDelegate_Extensions" /> class as extension methods to the interface, allowing developers to invoke any optional methods on the protocol.</para>
+	///     </remarks>
 	interface IMFMessageComposeViewControllerDelegate { }
 
+	/// <summary>Used to receive notifications from the MFMessageComposeViewController class.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/MessageUI/Reference/MFMessageComposeViewControllerDelegate_protocol/index.html">Apple documentation for <c>MFMessageComposeViewControllerDelegate</c></related>
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]

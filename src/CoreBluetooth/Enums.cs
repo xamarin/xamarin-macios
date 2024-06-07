@@ -27,6 +27,7 @@ namespace CoreBluetooth {
 	}
 
 	// NSInteger -> CBCentralManager.h
+	/// <summary>Enumerates possible states of a <see cref="T:CoreBluetooth.CBCentralManager" />.</summary>
 	[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'CBManagerState' instead.")]
 	[NoWatch]
 	[MacCatalyst (13, 1)]
@@ -42,6 +43,7 @@ namespace CoreBluetooth {
 	}
 
 	// NSInteger -> CBPeripheralManager.h
+	/// <summary>Enumerates the possible states of the <see cref="T:CoreBluetooth.CBPeripheralManager" />.</summary>
 	[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'CBManagerState' instead.")]
 	[NoWatch]
 	[MacCatalyst (13, 1)]
@@ -57,6 +59,7 @@ namespace CoreBluetooth {
 	}
 
 	// NSInteger -> CBPeripheralManager.h
+	/// <summary>Enumerates the possible connection states of a <see cref="T:CoreBluetooth.CBPeripheral" />.</summary>
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CBPeripheralState : long {
@@ -79,6 +82,7 @@ namespace CoreBluetooth {
 #endif // !NET
 
 	// NSUInteger -> CBCharacteristic.h
+	/// <summary>The possible properties of a characteristic. A characteristic may have multiple properties.</summary>
 	[MacCatalyst (13, 1)]
 	[Flags]
 	[Native]
@@ -97,6 +101,7 @@ namespace CoreBluetooth {
 		IndicateEncryptionRequired = 0x200
 	}
 
+	/// <summary>Errors possible during Bluetooth LE transactions.</summary>
 	[MacCatalyst (13, 1)]
 	[ErrorDomain ("CBErrorDomain")]
 	[Native] // NSInteger -> CBError.h
@@ -123,6 +128,7 @@ namespace CoreBluetooth {
 		LEGattNearBackgroundNotificationLimit = 18,
 	}
 
+	/// <summary>Errors returned by a GATT server.</summary>
 	[MacCatalyst (13, 1)]
 	[ErrorDomain ("CBATTErrorDomain")]
 	[Native] // NSInteger -> CBError.h
@@ -148,6 +154,7 @@ namespace CoreBluetooth {
 	}
 
 	// NSInteger -> CBPeripheral.h
+	/// <summary>Enumerates the possible types of writes to a characteristic's value.</summary>
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CBCharacteristicWriteType : long {
@@ -156,6 +163,7 @@ namespace CoreBluetooth {
 	}
 
 	// NSUInteger -> CBCharacteristic.h
+	/// <summary>Enumerates the read, write, and encryption permissions for a characteristic's values.</summary>
 	[MacCatalyst (13, 1)]
 	[Flags]
 	[Native]
@@ -167,6 +175,7 @@ namespace CoreBluetooth {
 	}
 
 	// NSInteger -> CBPeripheralManager.h
+	/// <summary>The connection latency of the <see cref="T:CoreBluetooth.CBPeripheralManager" />.</summary>
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CBPeripheralManagerConnectionLatency : long {

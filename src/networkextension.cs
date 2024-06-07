@@ -30,6 +30,7 @@ namespace NetworkExtension {
 	interface NWInterface { }
 	interface NWParameters { }
 
+	/// <summary>Enumerates errors relating to a DNS proxy.</summary>
 	[NoTV]
 	[ErrorDomain ("NEDNSProxyErrorDomain")]
 	[MacCatalyst (13, 1)]
@@ -41,6 +42,7 @@ namespace NetworkExtension {
 		CannotBeRemoved = 4,
 	}
 
+	/// <summary>Enumerates the actions to be taken when a <see cref="T:NetworkExtension.NEFilterVerdict" /> is that a report should be made.</summary>
 	[NoTV]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -94,6 +96,7 @@ namespace NetworkExtension {
 		Tls1_2 = 2,
 	}
 
+	/// <summary>Enumerates errors relating to network hostpot configuration.</summary>
 	[NoTV]
 	[NoMac]
 	[MacCatalyst (13, 1)]
@@ -221,6 +224,9 @@ namespace NetworkExtension {
 	}
 
 
+	/// <summary>Provides IO over a network socket.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/NetworkExtension/Reference/NEAppProxyFlowClassRef/index.html">Apple documentation for <c>NEAppProxyFlow</c></related>
 	[NoTV]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -281,6 +287,9 @@ namespace NetworkExtension {
 #endif
 	}
 
+	/// <summary>Provides sockets by creating <see cref="T:NetworkExtension.NEAppProxyFlow" /> objects.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/NetworkExtension/Reference/NEAppProxyProviderClassRef/index.html">Apple documentation for <c>NEAppProxyProvider</c></related>
 	[NoTV]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NETunnelProvider))]
@@ -306,6 +315,9 @@ namespace NetworkExtension {
 		bool HandleNewUdpFlow (NEAppProxyUdpFlow flow, NWEndpoint remoteEndpoint);
 	}
 
+	/// <summary>Configures and controls network tunnels received from an App Proxy Provider extension.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/NetworkExtension/Reference/NEAppProxyProviderManagerClassRef/index.html">Apple documentation for <c>NEAppProxyProviderManager</c></related>
 	[NoTV]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NETunnelProviderManager))]
@@ -317,6 +329,9 @@ namespace NetworkExtension {
 		void LoadAllFromPreferences (Action<NSArray, NSError> completionHandler);
 	}
 
+	/// <summary>Provides IO over a TCP socket.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/NetworkExtension/Reference/NEAppProxyTCPFlowClassRef/index.html">Apple documentation for <c>NEAppProxyTCPFlow</c></related>
 	[NoTV]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NEAppProxyFlow), Name = "NEAppProxyTCPFlow")]
@@ -336,6 +351,9 @@ namespace NetworkExtension {
 
 	delegate void NEDatagramRead (NSData [] datagrams, NWEndpoint [] remoteEndpoints, NSError error);
 
+	/// <summary>Provides IO over a UDP socket.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/NetworkExtension/Reference/NEAppProxyUDPFlowClassRef/index.html">Apple documentation for <c>NEAppProxyUDPFlow</c></related>
 	[NoTV]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NEAppProxyFlow), Name = "NEAppProxyUDPFlow")]
@@ -353,6 +371,9 @@ namespace NetworkExtension {
 		NWEndpoint LocalEndpoint { get; }
 	}
 
+	/// <summary>Defines a rule that select network connections based on application signing identifier, application path, and/or hostname domain.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/NetworkExtension/Reference/NEAppRuleClassRef/index.html">Apple documentation for <c>NEAppRule</c></related>
 	[NoTV]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -423,6 +444,9 @@ namespace NetworkExtension {
 		NSString ConfigurationDidChangeNotification { get; }
 	}
 
+	/// <summary>Provides filter flow control information to a <see cref="T:NetworkExtension.NEFilterDataProvider" />.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/NetworkExtension/Reference/NEFilterControlProviderClassRef/index.html">Apple documentation for <c>NEFilterControlProvider</c></related>
 	[NoTV]
 	[NoMac]
 	[MacCatalyst (13, 1)]
@@ -451,6 +475,9 @@ namespace NetworkExtension {
 		void NotifyRulesChanged ();
 	}
 
+	/// <summary>Represents a Filter Control Provider decision about network data flow.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/NetworkExtension/Reference/NEFilterControlVerdictClassRef/index.html">Apple documentation for <c>NEFilterControlVerdict</c></related>
 	[NoTV]
 	[NoMac]
 	[MacCatalyst (13, 1)]
@@ -469,6 +496,9 @@ namespace NetworkExtension {
 		NEFilterControlVerdict UpdateRules ();
 	}
 
+	/// <summary>Filters network data.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/NetworkExtension/Reference/NEFilterDataProviderClassRef/index.html">Apple documentation for <c>NEFilterDataProvider</c></related>
 	[NoTV]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NEFilterProvider))]
@@ -513,6 +543,9 @@ namespace NetworkExtension {
 		void UpdateFlow (NEFilterSocketFlow flow, NEFilterDataVerdict verdict, NETrafficDirection direction);
 	}
 
+	/// <summary>Represents a Filter Data Provider decision about network data flow.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/NetworkExtension/Reference/NEFilterDataVerdictClassRef/index.html">Apple documentation for <c>NEFilterDataVerdict</c></related>
 	[NoTV]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NEFilterVerdict))]
@@ -547,6 +580,9 @@ namespace NetworkExtension {
 		NEFilterDataVerdict PauseVerdict ();
 	}
 
+	/// <summary>Contains information about a network data flow.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/NetworkExtension/Reference/NEFilterFlowClassRef/index.html">Apple documentation for <c>NEFilterFlow</c></related>
 	[NoTV]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -586,6 +622,9 @@ namespace NetworkExtension {
 		NSUuid Identifier { get; }
 	}
 
+	/// <summary>Manages content filter configurations.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/NetworkExtension/Reference/NEFilterManagerClassRef/index.html">Apple documentation for <c>NEFilterManager</c></related>
 	[NoTV]
 	// according to Xcode7 SDK this was available (in parts) in iOS8
 	[MacCatalyst (13, 1)]
@@ -633,6 +672,9 @@ namespace NetworkExtension {
 #endif
 	}
 
+	/// <summary>Represents a Filter Provider decision about network data flow the first time that the data is seen.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/NetworkExtension/Reference/NEFilterNewFlowVerdictClassRef/index.html">Apple documentation for <c>NEFilterNewFlowVerdict</c></related>
 	[NoTV]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NEFilterVerdict))]
@@ -671,6 +713,9 @@ namespace NetworkExtension {
 		NEFilterDataVerdict PauseVerdict ();
 	}
 
+	/// <summary>Base class for data and control filter providers.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/NetworkExtension/Reference/NEFilterProviderClassRef/index.html">Apple documentation for <c>NEFilterProvider</c></related>
 	[NoTV]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NEProvider))]
@@ -707,6 +752,9 @@ namespace NetworkExtension {
 		NSString RemediationMapRemediationUrls { get; }
 	}
 
+	/// <summary>Contains Filter Provider configuration data.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/NetworkExtension/Reference/NEFilterProviderConfigurationClassRef/index.html">Apple documentation for <c>NEFilterProviderConfiguration</c></related>
 	[NoTV]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -752,6 +800,9 @@ namespace NetworkExtension {
 		string FilterPacketProviderBundleIdentifier { get; set; }
 	}
 
+	/// <summary>Represents a Filter Data Provider decision about network data flow after the user requests access.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/NetworkExtension/Reference/NEFilterRemediationVerdictClassRef/index.html">Apple documentation for <c>NEFilterRemediationVerdict</c></related>
 	[NoTV]
 	[NoMac]
 	[MacCatalyst (13, 1)]
@@ -770,6 +821,9 @@ namespace NetworkExtension {
 		NEFilterRemediationVerdict NeedRulesVerdict ();
 	}
 
+	/// <summary>Base class for content filter verdicts.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/NetworkExtension/Reference/NEFilterVerdictClassRef/index.html">Apple documentation for <c>NEFilterVerdict</c></related>
 	[NoTV]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -779,6 +833,9 @@ namespace NetworkExtension {
 		bool ShouldReport { get; set; }
 	}
 
+	/// <summary>Contains additional data about a network data flow.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/NetworkExtension/Reference/NEFlowMetaDataClassRef/index.html">Apple documentation for <c>NEFlowMetaData</c></related>
 	[NoTV]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -799,10 +856,14 @@ namespace NetworkExtension {
 		NSUuid FilterFlowIdentifier { get; }
 	}
 
+	/// <summary>A command handler block for a Hotspot Helper.</summary>
 	[NoMac]
 	[MacCatalyst (13, 1)]
 	delegate void NEHotspotHelperHandler (NEHotspotHelperCommand cmd);
 
+	/// <summary>Enables registration for Wi-Fi hotspots.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/NetworkExtension/Reference/NEHotspotHelperClassRef/index.html">Apple documentation for <c>NEHotspotHelper</c></related>
 	[NoTV]
 	[NoMac]
 	[MacCatalyst (13, 1)]
@@ -826,6 +887,7 @@ namespace NetworkExtension {
 		NEHotspotNetwork [] SupportedNetworkInterfaces { get; }
 	}
 
+	/// <summary>Holds the name of the network handled by the applications.</summary>
 	[NoTV]
 	[Static]
 	[NoMac]
@@ -835,6 +897,7 @@ namespace NetworkExtension {
 		NSString DisplayName { get; }
 	}
 
+	/// <summary>A reusable request for registering Wi-Fi hotspots.</summary>
 	[NoTV]
 	[NoMac]
 	[MacCatalyst (13, 1)]
@@ -845,6 +908,9 @@ namespace NetworkExtension {
 		void BindTo (NEHotspotHelperCommand command);
 	}
 
+	/// <summary>Represents commands to a Hotspot Helper.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/NetworkExtension/Reference/NEHotspotHelperCommandClassRef/index.html">Apple documentation for <c>NEHotspotHelperCommand</c></related>
 	[NoTV]
 	[NoMac]
 	[MacCatalyst (13, 1)]
@@ -869,6 +935,9 @@ namespace NetworkExtension {
 		NWUdpSession CreateUdpSession (NWEndpoint endpoint);
 	}
 
+	/// <summary>Contains a Hotspot Helper command response.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/NetworkExtension/Reference/NEHotspotHelperResponseClassRef/index.html">Apple documentation for <c>NEHotspotHelperResponse</c></related>
 	[NoTV]
 	[NoMac]
 	[MacCatalyst (13, 1)]
@@ -884,6 +953,9 @@ namespace NetworkExtension {
 		void Deliver ();
 	}
 
+	/// <summary>Contains information about a Wi-Fi network hotspot.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/NetworkExtension/Reference/NEHotspotNetworkClassRef/index.html">Apple documentation for <c>NEHotspotNetwork</c></related>
 	[NoTV]
 	[NoMac]
 	[MacCatalyst (13, 1)]
@@ -1774,6 +1846,9 @@ namespace NetworkExtension {
 		void Cancel ();
 	}
 
+	/// <summary>Contains information about a WebKit browser network data flow.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/NetworkExtension/Reference/NEFilterBrowserFlowClassRef/index.html">Apple documentation for <c>NEFilterBrowserFlow</c></related>
 	[NoTV]
 	[NoMac]
 	[MacCatalyst (13, 1)]
@@ -1793,6 +1868,9 @@ namespace NetworkExtension {
 		NSUrl ParentUrl { get; }
 	}
 
+	/// <summary>Contains information about network data flow over a socket.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/NetworkExtension/Reference/NEFilterSocketFlowClassRef/index.html">Apple documentation for <c>NEFilterSocketFlow</c></related>
 	[NoTV]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NEFilterFlow))]
@@ -1839,6 +1917,7 @@ namespace NetworkExtension {
 		string RemoteHostname { get; }
 	}
 
+	/// <summary>A reporting action taken on a filtered data flow.</summary>
 	[NoTV]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -1980,6 +2059,7 @@ namespace NetworkExtension {
 		NETrafficDirection Direction { get; }
 	}
 
+	/// <summary>Encapsulates a DNS proxy.</summary>
 	[NoTV]
 	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor]
@@ -2016,6 +2096,7 @@ namespace NetworkExtension {
 		bool Enabled { [Bind ("isEnabled")] get; set; }
 	}
 
+	/// <summary>The main class for intercepting DNS traffic originating on the device.</summary>
 	[NoTV]
 	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor]
@@ -2045,6 +2126,7 @@ namespace NetworkExtension {
 		bool HandleNewUdpFlow (NEAppProxyUdpFlow flow, NWEndpoint remoteEndpoint);
 	}
 
+	/// <summary>Configuration settings for <see cref="T:NetworkExtension.NEDnsProxyProvider" /> objects.</summary>
 	[NoTV]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NEVpnProtocol), Name = "NEDNSProxyProviderProtocol")]
@@ -2120,6 +2202,7 @@ namespace NetworkExtension {
 		bool SetTrustedServerCertificates (NSObject [] certificates);
 	}
 
+	/// <summary>Configuration settings for a network hotspot.</summary>
 	[NoTV]
 	[NoMac]
 	[MacCatalyst (13, 1)]
@@ -2173,6 +2256,7 @@ namespace NetworkExtension {
 		string SsidPrefix { get; }
 	}
 
+	/// <summary>Manages the application or removal of <see cref="T:NetworkExtension.NEHotspotConfiguration" />.</summary>
 	[NoTV]
 	[NoMac]
 	[MacCatalyst (13, 1)]
