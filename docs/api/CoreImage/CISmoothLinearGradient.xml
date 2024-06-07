@@ -1,0 +1,46 @@
+<Documentation>
+  <Docs DocId="T:CoreImage.CISmoothLinearGradient">
+    <summary>A filter that produces a gradient along a linear axis between two endpoints.</summary>
+    <remarks>
+      <para>The following example shows this filter in use</para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+// Create a CISmoothLinearGradient filter with the input image
+var point0 = new CIVector(0, 0); // Default [0 0]
+var point1 = new CIVector(250, 250); // Default [200 200]
+var smoothLinear_gradient = new CISmoothLinearGradient()
+{
+	Point0 = point0,
+	Point1 = point1,
+	Color0 = new CIColor (UIColor.Red),
+	Color1 = new CIColor (UIColor.Blue)
+};
+
+// Get the altered image from the filter
+var output = new CICrop {
+	Image = smoothLinear_gradient.OutputImage,
+	Rectangle = new CIVector (0, 0, 400, 300)
+}.OutputImage;
+
+// To render the results, we need to create a context, and then
+// use one of the context rendering APIs, in this case, we render the
+// result into a CoreGraphics image, which is merely a useful representation
+//
+var context = CIContext.FromOptions (null);
+
+var cgimage = context.CreateCGImage (output, output.Extent);
+
+// The above cgimage can be added to a screen view, for example, this
+// would add it to a UIImageView on the screen:
+myImageView.Image = UIImage.FromImage (cgimage);
+        ]]></code>
+      </example>
+      <para>
+         Produces the following output:
+      </para>
+      <para>
+        <img href="~/CoreImage/_images/smoothLinear_gradient.png" alt="Result of applying the filter." />
+      </para>
+    </remarks>
+  </Docs>
+</Documentation>

@@ -81,15 +81,14 @@ namespace Network {
 		public string? Identifier => Marshal.PtrToStringAnsi (nw_content_context_get_identifier (GetCheckedHandle ()));
 
 		[DllImport (Constants.NetworkLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool nw_content_context_get_is_final (IntPtr handle);
+		extern static byte nw_content_context_get_is_final (IntPtr handle);
 
 		[DllImport (Constants.NetworkLibrary)]
-		extern static void nw_content_context_set_is_final (IntPtr handle, [MarshalAs (UnmanagedType.I1)] bool is_final);
+		extern static void nw_content_context_set_is_final (IntPtr handle, byte is_final);
 
 		public bool IsFinal {
-			get => nw_content_context_get_is_final (GetCheckedHandle ());
-			set => nw_content_context_set_is_final (GetCheckedHandle (), value);
+			get => nw_content_context_get_is_final (GetCheckedHandle ()) != 0;
+			set => nw_content_context_set_is_final (GetCheckedHandle (), value.AsByte ());
 		}
 
 		[DllImport (Constants.NetworkLibrary)]

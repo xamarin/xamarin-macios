@@ -34,6 +34,7 @@ using NativeHandle = System.IntPtr;
 
 namespace AuthenticationServices {
 
+	/// <summary>Enumerates error codes associated with authentication service store requests.</summary>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoTV]
 	[NoWatch]
@@ -45,6 +46,7 @@ namespace AuthenticationServices {
 		StoreBusy = 2,
 	}
 
+	/// <summary>Error codes associated with Authentication Services extensions.</summary>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoTV]
 	[NoWatch]
@@ -73,6 +75,7 @@ namespace AuthenticationServices {
 		NSString LocalizedFailureReasonErrorKey { get; }
 	}
 
+	/// <summary>Enumerates the types of service identified.</summary>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoTV]
 	[NoWatch]
@@ -163,8 +166,10 @@ namespace AuthenticationServices {
 		PasskeyAssertion,
 	}
 
+	/// <summary>Delegate used in callbacks by <see cref="T:AuthenticationServices.ASCredentialIdentityStore" />.</summary>
 	delegate void ASCredentialIdentityStoreCompletionHandler (bool success, NSError error);
 
+	/// <summary>A class whose shared instance (see <see cref="P:AuthenticationServices.ASCredentialIdentityStore.SharedStore" />) holds credentials across providers.</summary>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoTV]
 	[NoWatch]
@@ -220,6 +225,7 @@ namespace AuthenticationServices {
 		void RemoveCredentialIdentityEntries (IASCredentialIdentity [] credentialIdentities, [NullAllowed] Action<bool, NSError> completion);
 	}
 
+	/// <summary>Data related to the availability and capability of the credential identity store.</summary>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoTV]
 	[NoWatch]
@@ -233,8 +239,11 @@ namespace AuthenticationServices {
 		bool SupportsIncrementalUpdates { get; }
 	}
 
+	/// <summary>Delegate object for completion handlers in methods within <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=Authentication%20Services%20ASCredential%20Provider%20Extension&amp;scope=Xamarin" title="T:AuthenticationServices.ASCredentialProviderExtension">T:AuthenticationServices.ASCredentialProviderExtension</a></format>.</summary>
 	delegate void ASCredentialProviderExtensionRequestCompletionHandler (bool expired);
 
+	/// <summary>
+	///       <see cfref="T:Foundation.NSExtensionContext" /> subclass that provides context for a credential provider.</summary>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoTV]
 	[NoWatch]
@@ -261,6 +270,7 @@ namespace AuthenticationServices {
 		void CompleteAssertionRequest (ASPasskeyAssertionCredential credential, [NullAllowed] Action<bool> completionHandler);
 	}
 
+	/// <summary>Holds the identification for a credential service.</summary>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoTV]
 	[NoWatch]
@@ -277,6 +287,7 @@ namespace AuthenticationServices {
 		ASCredentialServiceIdentifierType Type { get; }
 	}
 
+	/// <summary>Associates a <see cref="P:AuthenticationServices.ASPasswordCredentialIdentity.User" /> string with a record in the developer's credential database.</summary>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoTV]
 	[NoWatch]
@@ -304,6 +315,7 @@ namespace AuthenticationServices {
 		new nint Rank { get; set; }
 	}
 
+	/// <summary>System-provided standard <see cref="T:UIKit.UIViewController" /> for presenting a credential provider extension.</summary>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoTV]
 	[NoWatch]

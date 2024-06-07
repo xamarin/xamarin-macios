@@ -34,6 +34,7 @@
 using System;
 using System.Text;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading;
 
@@ -87,7 +88,11 @@ namespace AudioUnit {
 
 		static IntPtr Create ()
 		{
-			int err = NewAUGraph (out var handle);
+			IntPtr handle;
+			int err;
+			unsafe {
+				err = NewAUGraph (&handle);
+			}
 			if (err != 0)
 				throw new InvalidOperationException (String.Format ("Cannot create new AUGraph. Error code: {0}", err));
 			return handle;
@@ -100,7 +105,10 @@ namespace AudioUnit {
 
 		public static AUGraph? Create (out int errorCode)
 		{
-			errorCode = NewAUGraph (out var handle);
+			IntPtr handle;
+			unsafe {
+				errorCode = NewAUGraph (&handle);
+			}
 
 			if (errorCode != 0)
 				return null;
@@ -110,19 +118,28 @@ namespace AudioUnit {
 
 		public bool IsInitialized {
 			get {
-				return AUGraphIsInitialized (Handle, out var b) == AUGraphError.OK && b;
+				byte b;
+				unsafe {
+					return AUGraphIsInitialized (Handle, &b) == AUGraphError.OK && b != 0;
+				}
 			}
 		}
 
 		public bool IsOpen {
 			get {
-				return AUGraphIsOpen (Handle, out var b) == AUGraphError.OK && b;
+				byte b;
+				unsafe {
+					return AUGraphIsOpen (Handle, &b) == AUGraphError.OK && b != 0;
+				}
 			}
 		}
 
 		public bool IsRunning {
 			get {
-				return AUGraphIsRunning (Handle, out var b) == AUGraphError.OK && b;
+				byte b;
+				unsafe {
+					return AUGraphIsRunning (Handle, &b) == AUGraphError.OK && b != 0;
+				}
 			}
 		}
 
@@ -239,7 +256,11 @@ namespace AudioUnit {
 
 		public int AddNode (AudioComponentDescription description)
 		{
-			var err = AUGraphAddNode (Handle, ref description, out var node);
+			AUGraphError err;
+			int node;
+			unsafe {
+				err = AUGraphAddNode (Handle, &description, &node);
+			}
 			if (err != 0)
 				throw new ArgumentException (String.Format ("Error code: {0}", err));
 
@@ -253,22 +274,34 @@ namespace AudioUnit {
 
 		public AUGraphError GetCPULoad (out float averageCPULoad)
 		{
-			return AUGraphGetCPULoad (Handle, out averageCPULoad);
+			averageCPULoad = default;
+			unsafe {
+				return AUGraphGetCPULoad (Handle, (float*) Unsafe.AsPointer<float> (ref averageCPULoad));
+			}
 		}
 
 		public AUGraphError GetMaxCPULoad (out float maxCPULoad)
 		{
-			return AUGraphGetMaxCPULoad (Handle, out maxCPULoad);
+			maxCPULoad = default;
+			unsafe {
+				return AUGraphGetMaxCPULoad (Handle, (float*) Unsafe.AsPointer<float> (ref maxCPULoad));
+			}
 		}
 
 		public AUGraphError GetNode (uint index, out int node)
 		{
-			return AUGraphGetIndNode (Handle, index, out node);
+			node = default;
+			unsafe {
+				return AUGraphGetIndNode (Handle, index, (int*) Unsafe.AsPointer<int> (ref node));
+			}
 		}
 
 		public AUGraphError GetNodeCount (out int count)
 		{
-			return AUGraphGetNodeCount (Handle, out count);
+			count = default;
+			unsafe {
+				return AUGraphGetNodeCount (Handle, (int*) Unsafe.AsPointer<int> (ref count));
+			}
 		}
 
 		public AudioUnit GetNodeInfo (int node)
@@ -287,7 +320,10 @@ namespace AudioUnit {
 
 		public AudioUnit? GetNodeInfo (int node, out AUGraphError error)
 		{
-			error = AUGraphNodeInfo (GetCheckedHandle (), node, IntPtr.Zero, out var ptr);
+			IntPtr ptr;
+			unsafe {
+				error = AUGraphNodeInfo (GetCheckedHandle (), node, null, &ptr);
+			}
 
 			if (error != AUGraphError.OK || ptr == IntPtr.Zero)
 				return null;
@@ -299,7 +335,11 @@ namespace AudioUnit {
 		// Following current Api behaviour of returning an AudioUnit instead of an error
 		public AudioUnit? GetNodeInfo (int node, out AudioComponentDescription cd, out AUGraphError error)
 		{
-			error = AUGraphNodeInfo (GetCheckedHandle (), node, out cd, out var ptr);
+			IntPtr ptr;
+			cd = default;
+			unsafe {
+				error = AUGraphNodeInfo (GetCheckedHandle (), node, (AudioComponentDescription*) Unsafe.AsPointer<AudioComponentDescription> (ref cd), &ptr);
+			}
 
 			if (error != AUGraphError.OK || ptr == IntPtr.Zero)
 				return null;
@@ -309,12 +349,18 @@ namespace AudioUnit {
 
 		public AUGraphError GetNumberOfInteractions (out uint interactionsCount)
 		{
-			return AUGraphGetNumberOfInteractions (Handle, out interactionsCount);
+			interactionsCount = default;
+			unsafe {
+				return AUGraphGetNumberOfInteractions (Handle, (uint*) Unsafe.AsPointer<uint> (ref interactionsCount));
+			}
 		}
 
 		public AUGraphError GetNumberOfInteractions (int node, out uint interactionsCount)
 		{
-			return AUGraphCountNodeInteractions (Handle, node, out interactionsCount);
+			interactionsCount = default;
+			unsafe {
+				return AUGraphCountNodeInteractions (Handle, node, (uint*) Unsafe.AsPointer<uint> (ref interactionsCount));
+			}
 		}
 
 		/*
@@ -357,15 +403,15 @@ namespace AudioUnit {
 			nodesCallbacks [destInputNumber] = renderDelegate;
 
 			var cb = new AURenderCallbackStruct ();
-#if NET
 			unsafe {
+#if NET
 				cb.Proc = &RenderCallbackImpl;
-			}
 #else
-			cb.Proc = Marshal.GetFunctionPointerForDelegate (CreateRenderCallback);
+				cb.Proc = Marshal.GetFunctionPointerForDelegate (CreateRenderCallback);
 #endif
-			cb.ProcRefCon = GCHandle.ToIntPtr (gcHandle);
-			return AUGraphSetNodeInputCallback (Handle, destNode, destInputNumber, ref cb);
+				cb.ProcRefCon = GCHandle.ToIntPtr (gcHandle);
+				return AUGraphSetNodeInputCallback (Handle, destNode, destInputNumber, &cb);
+			}
 		}
 #if NET
 		[UnmanagedCallersOnly]
@@ -415,7 +461,10 @@ namespace AudioUnit {
 
 		public bool Update ()
 		{
-			return AUGraphUpdate (Handle, out var isUpdated) == AUGraphError.OK && isUpdated;
+			byte isUpdated;
+			unsafe {
+				return AUGraphUpdate (Handle, &isUpdated) == AUGraphError.OK && isUpdated != 0;
+			}
 		}
 
 		// Quote from Learning CoreAudio Book:
@@ -441,28 +490,25 @@ namespace AudioUnit {
 		}
 
 		[DllImport (Constants.AudioToolboxLibrary, EntryPoint = "NewAUGraph")]
-		static extern int /* OSStatus */ NewAUGraph (out IntPtr outGraph);
+		unsafe static extern int /* OSStatus */ NewAUGraph (IntPtr* outGraph);
 
 		[DllImport (Constants.AudioToolboxLibrary, EntryPoint = "AUGraphOpen")]
 		static extern int /* OSStatus */ AUGraphOpen (IntPtr inGraph);
 
 		[DllImport (Constants.AudioToolboxLibrary)]
-		static extern AUGraphError AUGraphAddNode (IntPtr inGraph, ref AudioComponentDescription inDescription, out int /* AUNode = SInt32* */ outNode);
+		unsafe static extern AUGraphError AUGraphAddNode (IntPtr inGraph, AudioComponentDescription* inDescription, int* /* AUNode = SInt32* */ outNode);
 
 		[DllImport (Constants.AudioToolboxLibrary)]
 		static extern AUGraphError AUGraphRemoveNode (IntPtr inGraph, int /* AUNode = SInt32 */ inNode);
 
 		[DllImport (Constants.AudioToolboxLibrary)]
-		static extern AUGraphError AUGraphGetNodeCount (IntPtr inGraph, out int /* UInt32* */ outNumberOfNodes);
+		unsafe static extern AUGraphError AUGraphGetNodeCount (IntPtr inGraph, int* /* UInt32* */ outNumberOfNodes);
 
 		[DllImport (Constants.AudioToolboxLibrary)]
-		static extern AUGraphError AUGraphGetIndNode (IntPtr inGraph, uint /* UInt32 */ inIndex, out int /* AUNode = SInt32* */ outNode);
+		unsafe static extern AUGraphError AUGraphGetIndNode (IntPtr inGraph, uint /* UInt32 */ inIndex, int* /* AUNode = SInt32* */ outNode);
 
 		[DllImport (Constants.AudioToolboxLibrary)]
-		static extern AUGraphError AUGraphNodeInfo (IntPtr inGraph, int /* AUNode = SInt32 */ inNode, IntPtr outDescription, out IntPtr outAudioUnit);
-
-		[DllImport (Constants.AudioToolboxLibrary)]
-		static extern AUGraphError AUGraphNodeInfo (IntPtr inGraph, int /* AUNode = SInt32 */ inNode, out AudioComponentDescription outDescription, out IntPtr outAudioUnit);
+		unsafe static extern AUGraphError AUGraphNodeInfo (IntPtr inGraph, int /* AUNode = SInt32 */ inNode, AudioComponentDescription* outDescription, IntPtr* outAudioUnit);
 
 		[DllImport (Constants.AudioToolboxLibrary)]
 		static extern AUGraphError AUGraphClearConnections (IntPtr inGraph);
@@ -474,10 +520,10 @@ namespace AudioUnit {
 		static extern AUGraphError AUGraphDisconnectNodeInput (IntPtr inGraph, int /* AUNode = SInt32 */ inDestNode, uint /* UInt32 */ inDestInputNumber);
 
 		[DllImport (Constants.AudioToolboxLibrary)]
-		static extern AUGraphError AUGraphGetNumberOfInteractions (IntPtr inGraph, out uint /* UInt32* */ outNumInteractions);
+		unsafe static extern AUGraphError AUGraphGetNumberOfInteractions (IntPtr inGraph, uint* /* UInt32* */ outNumInteractions);
 
 		[DllImport (Constants.AudioToolboxLibrary)]
-		static extern AUGraphError AUGraphCountNodeInteractions (IntPtr inGraph, int /* AUNode = SInt32 */ inNode, out uint /* UInt32* */ outNumInteractions);
+		unsafe static extern AUGraphError AUGraphCountNodeInteractions (IntPtr inGraph, int /* AUNode = SInt32 */ inNode, uint* /* UInt32* */ outNumInteractions);
 
 		[DllImport (Constants.AudioToolboxLibrary)]
 		static extern AUGraphError AUGraphInitialize (IntPtr inGraph);
@@ -513,25 +559,25 @@ namespace AudioUnit {
 		static extern int /* OSStatus */ DisposeAUGraph (IntPtr inGraph);
 
 		[DllImport (Constants.AudioToolboxLibrary)]
-		static extern AUGraphError AUGraphIsOpen (IntPtr inGraph, [MarshalAs (UnmanagedType.I1)] out bool outIsOpen);
+		unsafe static extern AUGraphError AUGraphIsOpen (IntPtr inGraph, byte* outIsOpen);
 
 		[DllImport (Constants.AudioToolboxLibrary)]
-		static extern AUGraphError AUGraphIsInitialized (IntPtr inGraph, [MarshalAs (UnmanagedType.I1)] out bool outIsInitialized);
+		unsafe static extern AUGraphError AUGraphIsInitialized (IntPtr inGraph, byte* outIsInitialized);
 
 		[DllImport (Constants.AudioToolboxLibrary)]
-		static extern AUGraphError AUGraphIsRunning (IntPtr inGraph, [MarshalAs (UnmanagedType.I1)] out bool outIsRunning);
+		unsafe static extern AUGraphError AUGraphIsRunning (IntPtr inGraph, byte* outIsRunning);
 
 		[DllImport (Constants.AudioToolboxLibrary)]
-		static extern AUGraphError AUGraphGetCPULoad (IntPtr inGraph, out float /* Float32* */ outAverageCPULoad);
+		unsafe static extern AUGraphError AUGraphGetCPULoad (IntPtr inGraph, float* /* Float32* */ outAverageCPULoad);
 
 		[DllImport (Constants.AudioToolboxLibrary)]
-		static extern AUGraphError AUGraphGetMaxCPULoad (IntPtr inGraph, out float /* Float32* */ outMaxLoad);
+		unsafe static extern AUGraphError AUGraphGetMaxCPULoad (IntPtr inGraph, float* /* Float32* */ outMaxLoad);
 
 		[DllImport (Constants.AudioToolboxLibrary)]
-		static extern AUGraphError AUGraphSetNodeInputCallback (IntPtr inGraph, int /* AUNode = SInt32 */ inDestNode, uint /* UInt32 */ inDestInputNumber, ref AURenderCallbackStruct inInputCallback);
+		unsafe static extern AUGraphError AUGraphSetNodeInputCallback (IntPtr inGraph, int /* AUNode = SInt32 */ inDestNode, uint /* UInt32 */ inDestInputNumber, AURenderCallbackStruct* inInputCallback);
 
 		[DllImport (Constants.AudioToolboxLibrary)]
-		static extern AUGraphError AUGraphUpdate (IntPtr inGraph, [MarshalAs (UnmanagedType.I1)] out bool outIsUpdated);
+		unsafe static extern AUGraphError AUGraphUpdate (IntPtr inGraph, byte* outIsUpdated);
 
 		[DllImport (Constants.AudioToolboxLibrary)]
 		static extern void CAShow (IntPtr handle);

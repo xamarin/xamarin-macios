@@ -34,14 +34,11 @@ namespace Xamarin.Tests {
 
 		[Test]
 		[Category ("Multiplatform")]
-		[TestCase (ApplePlatform.iOS, true)]
-		[TestCase (ApplePlatform.iOS, false)]
 		[TestCase (ApplePlatform.MacCatalyst, true)]
 		[TestCase (ApplePlatform.MacCatalyst, false)]
-		[TestCase (ApplePlatform.TVOS, true)]
-		[TestCase (ApplePlatform.TVOS, false)]
 		[TestCase (ApplePlatform.MacOSX, true)]
 		[TestCase (ApplePlatform.MacOSX, false)]
+		// The bindings-framework-test project doesn't work on iOS or tvOS.
 		public void BindingFrameworksProject (ApplePlatform platform, bool noBindingEmbedding)
 		{
 			var project = "bindings-framework-test";

@@ -71,6 +71,7 @@ namespace ReplayKit {
 		AudioMic
 	}
 
+	/// <summary>Enumerates camera locations on the device.</summary>
 	[Native]
 	[NoTV]
 	[MacCatalyst (13, 1)]

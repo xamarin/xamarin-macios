@@ -68,8 +68,7 @@ namespace Network {
 		public NWWebSocketResponseStatus Status => nw_ws_response_get_status (GetCheckedHandle ());
 
 		[DllImport (Constants.NetworkLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		unsafe static extern bool nw_ws_response_enumerate_additional_headers (OS_nw_ws_response response, BlockLiteral* enumerator);
+		unsafe static extern byte nw_ws_response_enumerate_additional_headers (OS_nw_ws_response response, BlockLiteral* enumerator);
 
 #if !NET
 		delegate void nw_ws_response_enumerate_additional_headers_t (IntPtr block, IntPtr header, IntPtr value);
@@ -103,7 +102,7 @@ namespace Network {
 				using var block = new BlockLiteral ();
 				block.SetupBlockUnsafe (static_EnumerateHeadersHandler, handler);
 #endif
-				return nw_ws_response_enumerate_additional_headers (GetCheckedHandle (), &block);
+				return nw_ws_response_enumerate_additional_headers (GetCheckedHandle (), &block) != 0;
 			}
 		}
 

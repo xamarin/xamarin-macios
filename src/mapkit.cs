@@ -259,6 +259,9 @@ namespace MapKit {
 		#endregion
 	}
 
+	/// <summary>The visual representation of a <see cref="T:MapKit.MKCircle" />. Developers targeting iOS 7 and later should instead use <see cref="T:MapKit.MKCircleRenderer" />.</summary>
+	///     <remarks>Developers targeting iOS 7 and later should instead use <see cref="T:MapKit.MKCircleRenderer" />.</remarks>
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/MapKit/Reference/MKCircleView_class/index.html">Apple documentation for <c>MKCircleView</c></related>
 	[NoMac]
 	[NoTV]
 	[BaseType (typeof (MKOverlayPathView))]
@@ -915,6 +918,7 @@ namespace MapKit {
 	}
 
 	// This requires the AddressBook framework, which afaict isn't bound on Mac, tvOS and watchOS yet
+	/// <summary>Class that contains address data for a place mark.</summary>
 	[NoMac]
 	[NoWatch]
 	[NoTV]
@@ -965,6 +969,9 @@ namespace MapKit {
 		string CountryCode { get; }
 	}
 
+	/// <summary>Provides conversion between a specific location to information about that location (e.g., street address).</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/MapKit/Reference/MKReverseGeocoder_Class/index.html">Apple documentation for <c>MKReverseGeocoder</c></related>
 	[NoMac]
 	[NoWatch]
 	[NoTV]
@@ -1007,9 +1014,13 @@ namespace MapKit {
 		MKPlacemark Placemark { get; }
 	}
 
+	/// <include file="../docs/api/MapKit/IMKReverseGeocoderDelegate.xml" path="/Documentation/Docs[@DocId='T:MapKit.IMKReverseGeocoderDelegate']/*" />
 	interface IMKReverseGeocoderDelegate { }
 
 #pragma warning disable 618
+	/// <summary>When overridden, allows customization of events relating to the lifecycle of a <see cref="T:MapKit.MKReverseGeocoder" />.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/MapKit/Reference/MKReverseGeocoderDelegate_Protocol/index.html">Apple documentation for <c>MKReverseGeocoderDelegate</c></related>
 	[NoMac]
 	[NoWatch]
 	[NoTV]
@@ -1030,6 +1041,12 @@ namespace MapKit {
 	}
 #pragma warning restore 618
 
+	/// <summary>The visual representation of a <see cref="T:MapKit.MKOverlay" />. <see cref="T:MapKit.MKOverlayRenderer" /> should be used instead of this class in apps targeting iOS 7 and later.</summary>
+	///     <remarks>
+	///       <para>Application developers targeting iOS 7 and later should prefer to use <see cref="T:MapKit.MKOverlayRenderer" />. That class has higher performance and places overlays beneath labels.</para>
+	///     </remarks>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/MapKit/Reference/MKOverlayView_class/index.html">Apple documentation for <c>MKOverlayView</c></related>
 	[NoMac]
 	[NoWatch]
 	[NoTV]
@@ -1078,6 +1095,9 @@ namespace MapKit {
 		void SetNeedsDisplay (MKMapRect mapRect, /* MKZoomScale */ nfloat zoomScale);
 	}
 
+	/// <summary>A <see cref="T:MapKit.MKOverlayView" /> whose visual reprepresentation is a <see cref="T:CoreGraphics.CGPath" />. Developers targeting iOS 7 and later should instead use <see cref="T:MapKit.MKOverlayPathRenderer" />.</summary>
+	///     <remarks>Developers targeting iOS 7 and later should instead use <see cref="T:MapKit.MKOverlayPathRenderer" />.</remarks>
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/MapKit/Reference/MKOverlayPathView_class/index.html">Apple documentation for <c>MKOverlayPathView</c></related>
 	[NoMac]
 	[NoWatch]
 	[NoTV]
@@ -1175,6 +1195,9 @@ namespace MapKit {
 		CLLocationCoordinate2D Coordinate { get; set; }
 	}
 
+	/// <summary>The visual representation of an <see cref="T:MapKit.MKPolygon" /> annotation. Developers targeting iOS 7 and later should instead use <see cref="T:MapKit.MKPolygonRenderer" />.</summary>
+	///     <remarks>Developers targeting iOS 7 and later should instead use <see cref="T:MapKit.MKPolygonRenderer" />.</remarks>
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/MapKit/Reference/MKPolygonView_class/index.html">Apple documentation for <c>MKPolygonView</c></related>
 	[NoMac]
 	[NoTV]
 	[NoWatch]
@@ -1251,6 +1274,11 @@ namespace MapKit {
 		#endregion
 	}
 
+	/// <summary>The visual representation of an <see cref="T:MapKit.MKPolyline" />. Application developers targeting iOS 7 and later should prefer to use <see cref="T:MapKit.MKPolylineRenderer" />.</summary>
+	///     <remarks>
+	///       <para>Application developers targeting iOS 7 and later should use the higher-performing, better-displaying <see cref="T:MapKit.MKPolylineRenderer" /> class.</para>
+	///     </remarks>
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/MapKit/Reference/MKPolylineView_class/index.html">Apple documentation for <c>MKPolylineView</c></related>
 	[NoMac]
 	[NoTV]
 	[NoWatch]
@@ -1324,6 +1352,9 @@ namespace MapKit {
 		CLHeading Heading { get; }
 	}
 
+	/// <summary>A specialized <see cref="T:UIKit.UIBarButtonItem" /> that allows the user to see and control the active <see cref="T:MapKit.MKUserTrackingMode" /> .</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/MapKit/Reference/MKUserTrackingBarButtonItemClassRef/index.html">Apple documentation for <c>MKUserTrackingBarButtonItem</c></related>
 	[NoMac]
 	[NoWatch]
 	[NoTV]
@@ -2211,6 +2242,7 @@ namespace MapKit {
 		MKScaleViewAlignment LegendAlignment { get; set; }
 	}
 
+	/// <summary>A button for toggling the tracking mode.</summary>
 	[NoTV]
 	[NoWatch]
 	[NoMac]

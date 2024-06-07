@@ -1,0 +1,10 @@
+<Documentation>
+  <Docs DocId="T:SpriteKit.SKPhysicsWorldBodiesEnumeratorHandler">
+    
+    
+    <summary>The delegate used to enumerate <see cref="T:SpriteKit.SKPhysicsBody" />s with <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=M:SpriteKit.SKPhysicsWorld.EnumerateBodies(System.Drawing.PointF,SpriteKit.SKPhysicsWorldBodiesEnumeratorHandler*&amp;scope=Xamarin" title="M:SpriteKit.SKPhysicsWorld.EnumerateBodies(System.Drawing.PointF,SpriteKit.SKPhysicsWorldBodiesEnumeratorHandler*">M:SpriteKit.SKPhysicsWorld.EnumerateBodies(System.Drawing.PointF,SpriteKit.SKPhysicsWorldBodiesEnumeratorHandler*</a></format> and <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=M:SpriteKit.SKPhysicsWorld.EnumerateBodies(System.Drawing.RectangleFF,SpriteKit.SKPhysicsWorldBodiesEnumeratorHandler*&amp;scope=Xamarin" title="M:SpriteKit.SKPhysicsWorld.EnumerateBodies(System.Drawing.RectangleFF,SpriteKit.SKPhysicsWorldBodiesEnumeratorHandler*">M:SpriteKit.SKPhysicsWorld.EnumerateBodies(System.Drawing.RectangleFF,SpriteKit.SKPhysicsWorldBodiesEnumeratorHandler*</a></format></summary>
+    <remarks>
+      <para> Note that because <paramref name="stop" /> is an <c>out</c> parameter, this cannot be specified using lambda syntax.</para>
+    </remarks>
+  </Docs>
+</Documentation>

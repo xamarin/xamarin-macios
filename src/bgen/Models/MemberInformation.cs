@@ -33,6 +33,7 @@ public class MemberInformation {
 	public bool is_variadic;
 	public bool is_interface_impl;
 	public bool is_extension_method;
+	public bool is_protocol_member;
 	public bool is_appearance;
 	public bool is_model;
 	public bool is_ctor;
@@ -58,7 +59,7 @@ public class MemberInformation {
 		is_override = AttributeManager.HasAttribute<OverrideAttribute> (mi) || !Generator.MemberBelongsToType (mi.DeclaringType, type);
 		is_new = AttributeManager.HasAttribute<NewAttribute> (mi);
 		is_sealed = AttributeManager.HasAttribute<SealedAttribute> (mi);
-		is_static = AttributeManager.HasAttribute<StaticAttribute> (mi);
+		is_static = AttributeManager.IsStatic (mi);
 		is_thread_static = AttributeManager.HasAttribute<IsThreadStaticAttribute> (mi);
 		is_autorelease = AttributeManager.HasAttribute<AutoreleaseAttribute> (mi);
 		is_wrapper = !AttributeManager.HasAttribute<SyntheticAttribute> (mi.DeclaringType);
@@ -108,9 +109,16 @@ public class MemberInformation {
 		: this (generator, gather, mi, type, isInterfaceImpl, isExtensionMethod, isAppearance, isModel)
 	{
 		is_basewrapper_protocol_method = isBaseWrapperProtocolMethod;
-		foreach (ParameterInfo pi in mi.GetParameters ())
-			if (pi.ParameterType.IsSubclassOf (Generator.TypeCache.System_Delegate))
+		foreach (ParameterInfo pi in mi.GetParameters ()) {
+			if (pi.ParameterType.IsSubclassOf (Generator.TypeCache.System_Delegate)) {
 				is_unsafe = true;
+				break;
+			}
+			if (pi.ParameterType.IsByRef) {
+				is_unsafe = true;
+				break;
+			}
+		}
 
 		if (!is_unsafe && mi.ReturnType.IsSubclassOf (Generator.TypeCache.System_Delegate))
 			is_unsafe = true;
@@ -215,6 +223,8 @@ public class MemberInformation {
 
 		if (is_sealed) {
 			mods += "";
+		} else if (is_ctor && is_protocol_member) {
+			mods += "static ";
 		} else if (is_static || is_category_extension || is_extension_method) {
 			mods += "static ";
 		} else if (is_abstract) {

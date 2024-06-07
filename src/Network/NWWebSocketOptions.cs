@@ -72,13 +72,13 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern void nw_ws_options_set_auto_reply_ping (OS_nw_protocol_options options, [MarshalAs (UnmanagedType.I1)] bool auto_reply_ping);
+		static extern void nw_ws_options_set_auto_reply_ping (OS_nw_protocol_options options, byte auto_reply_ping);
 
 		public bool AutoReplyPing {
 			get { return autoReplyPing; }
 			set {
 				autoReplyPing = value;
-				nw_ws_options_set_auto_reply_ping (GetCheckedHandle (), value);
+				nw_ws_options_set_auto_reply_ping (GetCheckedHandle (), value.AsByte ());
 			}
 		}
 
@@ -94,13 +94,13 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern void nw_ws_options_set_skip_handshake (OS_nw_protocol_options options, [MarshalAs (UnmanagedType.I1)] bool skip_handshake);
+		static extern void nw_ws_options_set_skip_handshake (OS_nw_protocol_options options, byte skip_handshake);
 
 		public bool SkipHandShake {
 			get { return skipHandShake; }
 			set {
 				skipHandShake = value;
-				nw_ws_options_set_skip_handshake (GetCheckedHandle (), value);
+				nw_ws_options_set_skip_handshake (GetCheckedHandle (), value.AsByte ());
 			}
 		}
 

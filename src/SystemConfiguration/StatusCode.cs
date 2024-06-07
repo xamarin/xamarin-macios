@@ -15,6 +15,7 @@ using ObjCRuntime;
 namespace SystemConfiguration {
 
 	// untyped enum -> SystemConfiguration.framework/Headers/SystemConfiguration.h
+	/// <summary>An enumeration whose values specify various statuses relating to network reachability.</summary>
 	[ErrorDomain ("kCFErrorDomainSystemConfiguration")]
 	public enum StatusCode {
 		OK = 0,

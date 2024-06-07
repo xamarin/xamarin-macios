@@ -1,0 +1,14 @@
+<Documentation>
+  <Docs DocId="T:AVFoundation.AVAsset">
+    <summary>Base class for timed video and audio.</summary>
+    <remarks>
+      <para>An <see cref="T:AVFoundation.AVAsset" /> represents one or more media assets. These are held in its <see cref="P:AVFoundation.AVAsset.Tracks" /> property. Additionally, <see cref="T:AVFoundation.AVAsset" />s include metadata, track grouping, and preferences about the media.</para>
+      <para>Because media assets such as movies are large, instantiating an <see cref="T:AVFoundation.AVAsset" /> will not automatically load the file. Properties are loaded when they are queried or via explicit calls to <see cref="M:AVFoundation.AVAsset.LoadValuesTaskAsync(System.String[])" /> or <see cref="M:AVFoundation.AVAsset.LoadValuesAsynchronously(System.String[],System.Action)" />.</para>
+      <para>During playback, the current presentation state of an <see cref="T:AVFoundation.AVAsset" /> is represented by an <see cref="T:AVFoundation.AVPlayerItem" /> object, and the playback is controlled by a <see cref="T:AVFoundation.AVPlayer" />:</para>
+      <para>
+        <img href="~/AVFoundation/_images/AVFoundation.AssetPlayerItemPlayer.png" alt="UML Class Diagram illustrating classes relating to AVAsset" />
+      </para>
+    </remarks>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/AVFoundation/Reference/AVAsset_Class/index.html">Apple documentation for <c>AVAsset</c></related>
+  </Docs>
+</Documentation>

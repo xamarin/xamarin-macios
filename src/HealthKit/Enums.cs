@@ -5,6 +5,7 @@ using System;
 
 namespace HealthKit {
 	// NSInteger -> HKDefines.h
+	/// <summary>Enumerates the frequences for background delivery of data (see <see cref="M:HealthKit.HKHealthStore.EnableBackgroundDelivery(HealthKit.HKObjectType,HealthKit.HKUpdateFrequency,System.Action{System.Boolean,Foundation.NSError})" />).</summary>
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -16,6 +17,7 @@ namespace HealthKit {
 	}
 
 	// NSInteger -> HKDefines.h
+	/// <summary>Enumerates the permission of the app to read or write health data.</summary>
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -26,6 +28,7 @@ namespace HealthKit {
 	}
 
 	// NSInteger -> HKDefines.h
+	/// <summary>Enumerates the biological sexes.</summary>
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -38,6 +41,7 @@ namespace HealthKit {
 	}
 
 	// NSInteger -> HKDefines.h
+	/// <summary>Enumerates known blood types.</summary>
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -54,6 +58,7 @@ namespace HealthKit {
 	}
 
 	// NSInteger -> HKMetadata.h
+	/// <summary>Enumerates the positions at which a thermometer takes its reading.</summary>
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -73,6 +78,7 @@ namespace HealthKit {
 	}
 
 	// NSInteger -> HKMetadata.h
+	/// <summary>Enumerates the locations at which a heart rate monitor is attached.</summary>
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -87,6 +93,7 @@ namespace HealthKit {
 	}
 
 	// NSInteger -> HKObjectType.h
+	/// <summary>Enumerates whether an <see cref="T:HealthKit.HKQuantityType" /> is a cumulative measure (for instance, "active energy burned") or a discrete value (such as "blood alcohol content").</summary>
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -108,6 +115,7 @@ namespace HealthKit {
 	}
 
 	// NSInteger -> HKObjectType.h
+	/// <summary>Enumerates the states of the slumberer: whether they are asleep or merely resting in bed.</summary>
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -125,6 +133,7 @@ namespace HealthKit {
 	}
 
 	// NSUInteger -> HKQuery.h
+	/// <summary>Enumerates options available for use with the <see cref="M:HealthKit.HKQuery.GetPredicateForSamples(Foundation.NSDate,Foundation.NSDate,HealthKit.HKQueryOptions)" /> method.</summary>
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -136,6 +145,7 @@ namespace HealthKit {
 	}
 
 	// NSUInteger -> HKStatistics.h
+	/// <summary>Enumerates options applicable to <see cref="T:HealthKit.HKStatisticsQuery" /> and <see cref="T:HealthKit.HKStatisticsCollectionQuery" /> objets.</summary>
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -156,6 +166,7 @@ namespace HealthKit {
 	}
 
 	// NSInteger -> HKUnit.h
+	/// <summary>Enumerates metric prefixes, e.g., Centi-, Deca-, Deci-. Used with factory methods of <see cref="T:HealthKit.HKUnit" />.</summary>
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -178,6 +189,7 @@ namespace HealthKit {
 		Femto,
 	}
 
+	/// <summary>Enumerates various activities that are considered workouts.</summary>
 	[Native]
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
@@ -311,6 +323,7 @@ namespace HealthKit {
 		Other = 3000
 	}
 
+	/// <summary>Enumerates events that can occur during a workout (Pause, Resume).</summary>
 	[Native]
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
@@ -331,6 +344,7 @@ namespace HealthKit {
 		PauseOrResumeRequest,
 	}
 
+	/// <summary>Contains a single value that indicates that a category value is not applicable to the category.</summary>
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -338,6 +352,7 @@ namespace HealthKit {
 		NotApplicable = 0
 	}
 
+	/// <summary>Enumerates the user's cervical mucus quality.</summary>
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -350,6 +365,7 @@ namespace HealthKit {
 		EggWhite
 	}
 
+	/// <summary>Enumerates the amount of menstrual flow.</summary>
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -364,6 +380,7 @@ namespace HealthKit {
 		None,
 	}
 
+	/// <summary>Enumerates the results of an ovulation test.</summary>
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -383,6 +400,7 @@ namespace HealthKit {
 		EstrogenSurge = 4,
 	}
 
+	/// <summary>Enumerates whether the user stood or not during an hour.</summary>
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -400,6 +418,7 @@ namespace HealthKit {
 		LoudEnvironment = 1,
 	}
 
+	/// <summary>Enumerates skin types using the Fitzpatrick scale.</summary>
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -413,6 +432,7 @@ namespace HealthKit {
 		VI
 	}
 
+	/// <summary>Enumerates constants that describe wheelchair use.</summary>
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -422,6 +442,7 @@ namespace HealthKit {
 		Yes,
 	}
 
+	/// <summary>Enumerates weather types.</summary>
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -479,6 +500,7 @@ namespace HealthKit {
 		Kickboard = 6,
 	}
 
+	/// <summary>Enumerates the reasons for why insulin was provided.</summary>
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -493,6 +515,7 @@ namespace HealthKit {
 #endif
 	}
 
+	/// <summary>Enumerates values that tell whether a blood glucose level was taken before or after a meal.</summary>
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -507,6 +530,7 @@ namespace HealthKit {
 #endif
 	}
 
+	/// <summary>Enumerates the testing process used for establishing VO2 Max.</summary>
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -516,6 +540,7 @@ namespace HealthKit {
 		PredictionNonExercise,
 	}
 
+	/// <summary>Enumerates Fast Healthcare Interoperability Resources (FHIR) types.</summary>
 	[NoWatch, Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	public enum HKFhirResourceType {
@@ -551,6 +576,7 @@ namespace HealthKit {
 		DocumentReference,
 	}
 
+	/// <summary>Enumerates clinical record type identifiers.</summary>
 	[Watch (5, 0), Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	public enum HKClinicalTypeIdentifier {
@@ -579,6 +605,7 @@ namespace HealthKit {
 		ClinicalNoteRecord,
 	}
 
+	/// <summary>Enumerates values that tell when an app should request user permission for access.</summary>
 	[Watch (5, 0), Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]

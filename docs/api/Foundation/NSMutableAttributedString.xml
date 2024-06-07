@@ -1,0 +1,41 @@
+<Documentation>
+  <Docs DocId="T:Foundation.NSMutableAttributedString">
+    <summary>Mutable strings that can be annotated with a set of attributes.</summary>
+    <remarks>
+      <para>
+	The NSMutableAttributedString holds a mutable string that can
+	has a series of overlapping attributes applied to ranges of
+	the string.
+
+      </para>
+      <para>
+        <img href="~/Foundation/_images/NSMutableAttributedString.png" alt="Diagram showing elements within a mutated attributed string." />
+      </para>
+      <para>
+	Unlike the <see cref="T:Foundation.NSAttributedString" /> both the
+	contents of the string as well as the attributes applied to it
+	can be changed after the string has been constructed.
+
+      </para>
+      <para> 
+	These types typically are used to attach information to
+	elements of the string that dictate the font and colors to use
+	as well as rendering attributes like kerning or how to render
+	ligatures on a specific run of code.
+      </para>
+      <para> These classes do not dictate the meaning or behavior of
+	the attributes on a string, they merely keep track of the
+	attributes.  The actual meaning of these attributes is
+	interpreted by the consumer of these objects.   
+      </para>
+      <para> If you are performing multiple changes to an
+	NSMutableAttributedString, you can optimize the performance by
+	surrounding your changes with calls to <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=Foundation%20Begin%20Editing(%20)&amp;scope=Xamarin" title="M:Foundation.BeginEditing()">M:Foundation.BeginEditing()</a></format> and <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=Foundation%20End%20Editing(%20)&amp;scope=Xamarin" title="M:Foundation.EndEditing()">M:Foundation.EndEditing()</a></format>.  This will
+	prevent the internal data structures to be updated on every
+	change and delay the internal changes until the <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=Foundation%20End%20Editing(%20)&amp;scope=Xamarin" title="M:Foundation.EndEditing()">M:Foundation.EndEditing()</a></format> method is called.
+	</para>
+    </remarks>
+    
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/NSMutableAttributedString_UIKit_Additions/index.html">Apple documentation for <c>NSMutableAttributedString</c></related>
+  </Docs>
+</Documentation>

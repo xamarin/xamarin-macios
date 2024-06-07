@@ -99,6 +99,7 @@ namespace PdfKit {
 	}
 
 #if NET
+	/// <summary>Enumerates print scaling behaviors.</summary>
 	[NoiOS]
 #elif IOS
 	[Obsolete (Constants.UnavailableOniOS)]

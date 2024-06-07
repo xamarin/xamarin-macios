@@ -1143,6 +1143,16 @@ exception_handler (NSException *exc)
 	// COOP: We won't get here in coop-mode, because we don't set the uncaught objc exception handler in that case.
 	LOG (PRODUCT ": Received unhandled ObjectiveC exception: %@ %@", [exc name], [exc reason]);
 
+	XamarinGCHandle* exc_handle = [[exc userInfo] objectForKey: @"XamarinManagedExceptionHandle"];
+	if (exc_handle != NULL) {
+		GCHandle exception_gchandle = [exc_handle getHandle];
+		if (exception_gchandle != INVALID_GCHANDLE) {
+			xamarin_bridge_raise_unhandled_exception_event (exception_gchandle);
+			PRINT ("Received unhandled Objective-C exception that was marshalled from a managed exception: %@", exc);
+			abort ();
+		}
+	}
+
 	if (xamarin_handling_unhandled_exceptions == 1) {
 		PRINT ("Detected recursion when handling uncaught Objective-C exception: %@", exc);
 		abort ();
@@ -1473,6 +1483,27 @@ objc_skip_type (const char *type)
 	// COOP: no managed memory access: any mode
 	switch (type [0]) {
 		case _C_ID:
+			type++;
+			if (*type == '"') {
+				// https://github.com/xamarin/xamarin-macios/issues/18562
+				// @"..." is an object with the class name inside the quotes.
+				// https://github.com/llvm/llvm-project/blob/24a082878f7baec3651de56d54e5aa2b75a21b5f/clang/lib/AST/ASTContext.cpp#L8505-L8516
+				type++;
+				while (*type && *type != '"')
+					type++;
+				type++;
+			} else if (*type == '?' && type [1] == '<') {
+				// https://github.com/xamarin/xamarin-macios/issues/18562
+				// @?<...> is a block pointer
+				// https://github.com/llvm/llvm-project/blob/24a082878f7baec3651de56d54e5aa2b75a21b5f/clang/lib/AST/ASTContext.cpp#L8405-L8426
+				type += 2;
+				do {
+					type = objc_skip_type (type);
+				} while (*type && *type != '>');
+				if (*type)
+					type++;
+			}
+			return type;
 		case _C_CLASS:
 		case _C_SEL:
 		case _C_CHR:
@@ -1732,29 +1763,6 @@ xamarin_objc_type_size (const char *type)
  * 
  */
 //#define DEBUG_REF_COUNTING
-void
-xamarin_create_gchandle (id self, void *managed_object, enum XamarinGCHandleFlags flags, bool force_weak)
-{
-	// COOP: reads managed memory: unsafe mode
-	MONO_ASSERT_GC_UNSAFE;
-	
-	// force_weak is to avoid calling retainCount unless needed, since some classes (UIWebView in iOS 5)
-	// will crash if retainCount is called before init. See bug #9261.
-	bool weak = force_weak || ([self retainCount] == 1);
-	GCHandle gchandle;
-
-	if (weak) {
-		gchandle = xamarin_gchandle_new_weakref ((MonoObject *) managed_object, TRUE);
-		flags = (enum XamarinGCHandleFlags) (flags | XamarinGCHandleFlags_WeakGCHandle);
-	} else {
-		gchandle = xamarin_gchandle_new ((MonoObject *) managed_object, FALSE);
-		flags = (enum XamarinGCHandleFlags) (flags & ~XamarinGCHandleFlags_WeakGCHandle);
-	}
-	set_gchandle (self, gchandle, flags);
-#if defined(DEBUG_REF_COUNTING)
-	PRINT ("\tGCHandle created for %p: %d (flags: %p) = %s managed object: %p\n", self, gchandle, GINT_TO_POINTER (flags), weak ? "weak" : "strong", managed_object);
-#endif
-}
 
 void
 xamarin_switch_gchandle (id self, bool to_weak)

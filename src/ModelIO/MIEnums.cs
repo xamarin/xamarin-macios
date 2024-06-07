@@ -18,6 +18,7 @@ using ObjCRuntime;
 #nullable enable
 
 namespace ModelIO {
+	/// <summary>Enumerates vertex data descriptions.</summary>
 	[Native]
 	public enum MDLVertexFormat : ulong {
 		Invalid = 0,
@@ -100,6 +101,7 @@ namespace ModelIO {
 		UInt1010102Normalized = UIntBits | PackedBits | 4,
 	}
 
+	/// <summary>Enumerates mesh buffer data types.</summary>
 	[Native]
 	public enum MDLMeshBufferType : ulong {
 		Vertex = 1,
@@ -108,6 +110,7 @@ namespace ModelIO {
 		Custom = 3,
 	}
 
+	/// <summary>Enumerates the geometric primitives to use for rendering.</summary>
 	[Native]
 	public enum MDLGeometryType : long {
 		Points = 0,
@@ -118,6 +121,7 @@ namespace ModelIO {
 		VariableTopology,
 	}
 
+	/// <summary>Enumerates bit depths for <see cref="T:ModelIO.MDLSubmesh" /> index buffers.</summary>
 	[Native]
 	public enum MDLIndexBitDepth : ulong {
 		Invalid,
@@ -126,6 +130,7 @@ namespace ModelIO {
 		UInt32 = 32,
 	}
 
+	/// <summary>Enumerates the semantics of an <see cref="T:ModelIO.MDLMaterialProperty" />.</summary>
 	[Native]
 	public enum MDLMaterialSemantic : ulong {
 		BaseColor = 0,
@@ -156,6 +161,7 @@ namespace ModelIO {
 		UserDefined = 0x8001
 	}
 
+	/// <summary>Enumerates material property types.</summary>
 	[Native]
 	public enum MDLMaterialPropertyType : ulong {
 		None,
@@ -172,23 +178,27 @@ namespace ModelIO {
 		Buffer,
 	}
 
+	/// <summary>Enumerates procedures for handling texture coordinates outside of the range <c>[0.0,1.0]</c>.</summary>
 	[Native]
 	public enum MDLMaterialTextureWrapMode : ulong {
 		Clamp, Repeat, Mirror
 	}
 
+	/// <summary>Enumerates values that control how to sample between texels.</summary>
 	[Native]
 	public enum MDLMaterialTextureFilterMode : ulong {
 		Nearest,
 		Linear
 	}
 
+	/// <summary>Enumerates values that control texture sampling between mipmap levels.</summary>
 	[Native]
 	public enum MDLMaterialMipMapFilterMode : ulong {
 		Nearest,
 		Linear
 	}
 
+	/// <summary>Enumerates values that specify data types and sizes for texel channels.</summary>
 	[Native]
 	public enum MDLTextureChannelEncoding : long {
 		UInt8 = 1,
@@ -200,6 +210,7 @@ namespace ModelIO {
 		Float32 = 260
 	}
 
+	/// <summary>Enumerates the types of <see cref="T:ModelIO.MDLLight" />.</summary>
 	[Native]
 	public enum MDLLightType : ulong {
 		Unknown = 0,
@@ -216,6 +227,7 @@ namespace ModelIO {
 		Environment
 	}
 
+	/// <summary>Enumerates camera projections.</summary>
 	[Native]
 	public enum MDLCameraProjection : ulong {
 		Perspective = 0,

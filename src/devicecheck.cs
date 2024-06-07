@@ -26,10 +26,14 @@ namespace DeviceCheck {
 		ServerUnavailable,
 	}
 
+	/// <param name="token">The generated token.</param>
+	///     <param name="error">The error that was encountered, or <see langword="null" /> if no error occurred.</param>
+	///     <summary>A completion handler for DeviceCheck token generation.</summary>
 	[Watch (9, 0)]
 	[MacCatalyst (13, 1)]
 	delegate void DCDeviceGenerateTokenCompletionHandler ([NullAllowed] NSData token, [NullAllowed] NSError error);
 
+	/// <summary>A device representation for associating users and devices with tracking data.</summary>
 	[Watch (9, 0)]
 	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor] // From the documentation it seems the only way to create a usable instance is to use the static CurrentDevice property.

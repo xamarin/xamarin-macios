@@ -2394,7 +2394,7 @@ public partial class Generator : IMemberGatherer {
 	}
 
 	// This assumes the compiler implements property methods as get_ or set_ prefixes
-	static PropertyInfo GetProperyFromGetSetMethod (MethodInfo method)
+	public static PropertyInfo GetProperyFromGetSetMethod (MethodInfo method)
 	{
 		string name = method.Name;
 		if (name.StartsWith ("get_", StringComparison.Ordinal) || name.StartsWith ("set_", StringComparison.Ordinal)) {
@@ -2543,11 +2543,14 @@ public partial class Generator : IMemberGatherer {
 		}
 	}
 
-	public string SelectorField (string s, bool ignore_inline_directive = false)
+	public string SelectorField (string s, bool ignore_inline_directive = false, bool force_gethandle = false)
 	{
 		string name;
 
 		if (InlineSelectors && !ignore_inline_directive)
+			force_gethandle = true;
+
+		if (force_gethandle)
 			return "Selector.GetHandle (\"" + s + "\")";
 
 		if (selector_names.TryGetValue (s, out name))
@@ -2654,17 +2657,38 @@ public partial class Generator : IMemberGatherer {
 		return AttributeManager.HasAttribute<ProtocolAttribute> (type);
 	}
 
+	public string GetMethodName (MemberInformation minfo, bool is_async)
+	{
+		var mi = minfo.Method;
+		string name;
+		if (minfo.is_ctor) {
+			if (minfo.is_protocol_member) {
+				var bindAttribute = GetBindAttribute (mi);
+				name = bindAttribute?.Selector ?? "CreateInstance";
+			} else {
+				name = Nomenclator.GetGeneratedTypeName (mi.DeclaringType);
+			}
+		} else if (is_async) {
+			name = GetAsyncName (mi);
+		} else {
+			name = mi.Name;
+		}
+		return name;
+	}
+
 	public string MakeSignature (MemberInformation minfo, bool is_async, ParameterInfo [] parameters, string extra = "", bool alreadyPreserved = false)
 	{
 		var mi = minfo.Method;
 		var category_class = minfo.category_extension_type;
 		StringBuilder sb = new StringBuilder ();
-		string name = minfo.is_ctor ? Nomenclator.GetGeneratedTypeName (mi.DeclaringType) : is_async ? GetAsyncName (mi) : mi.Name;
+		string name = GetMethodName (minfo, is_async);
 
 		// Some codepaths already write preservation info
 		PrintAttributes (minfo.mi, preserve: !alreadyPreserved, advice: true, bindAs: true, requiresSuper: true);
 
-		if (!minfo.is_ctor && !is_async) {
+		if (minfo.is_ctor && minfo.is_protocol_member) {
+			sb.Append ("T? ");
+		} else if (!minfo.is_ctor && !is_async) {
 			var prefix = "";
 			if (!BindThirdPartyLibrary) {
 				if (minfo.Method.ReturnType.IsArray) {
@@ -2693,13 +2717,20 @@ public partial class Generator : IMemberGatherer {
 
 			sb.Append (" ");
 		}
-		if (minfo.is_extension_method && minfo.Method.IsSpecialName) {
+		if ((minfo.is_extension_method || minfo.is_protocol_member) && minfo.Method.IsSpecialName) {
 			if (name.StartsWith ("get_", StringComparison.Ordinal))
 				name = "Get" + name.Substring (4);
 			else if (name.StartsWith ("set_", StringComparison.Ordinal))
 				name = "Set" + name.Substring (4);
 		}
 		sb.Append (name);
+
+		if (minfo.is_protocol_member) {
+			if (minfo.is_ctor || minfo.is_static) {
+				sb.Append ("<T>");
+			}
+		}
+
 		sb.Append (" (");
 
 		bool comma = false;
@@ -2718,6 +2749,14 @@ public partial class Generator : IMemberGatherer {
 		MakeSignatureFromParameterInfo (comma, sb, mi, minfo.type, parameters);
 		sb.Append (extra);
 		sb.Append (")");
+
+		if (minfo.is_protocol_member) {
+			if (minfo.is_static || minfo.is_ctor) {
+				sb.Append (" where T: NSObject, ");
+				sb.Append ("I").Append (minfo.Method.DeclaringType.Name);
+			}
+		}
+
 		return sb.ToString ();
 	}
 
@@ -2929,10 +2968,10 @@ public partial class Generator : IMemberGatherer {
 		if (minfo.is_interface_impl || minfo.is_extension_method) {
 			var tmp = InlineSelectors;
 			InlineSelectors = true;
-			selector_field = SelectorField (selector);
+			selector_field = SelectorField (selector, force_gethandle: minfo.is_protocol_member);
 			InlineSelectors = tmp;
 		} else {
-			selector_field = SelectorField (selector);
+			selector_field = SelectorField (selector, force_gethandle: minfo.is_protocol_member);
 		}
 
 		if (ShouldMarshalNativeExceptions (mi))
@@ -2946,6 +2985,12 @@ public partial class Generator : IMemberGatherer {
 				print ("{0} ({5}, {1}{2}, {3}{4});", sig, target_name, handle, selector_field, args, ret_val);
 
 			print ("aligned_assigned = true;");
+		} else if (minfo.is_protocol_member && mi.Name == "Constructor") {
+			const string handleName = "__handle__";
+			print ($"IntPtr {handleName};");
+			print ($"{handleName} = global::{NamespaceCache.Messaging}.IntPtr_objc_msgSend (Class.GetHandle (typeof (T)), Selector.GetHandle (\"alloc\"));");
+			print ($"{handleName} = {sig} ({handleName}, {selector_field}{args});");
+			print ($"{(assign_to_temp ? "ret = " : "return ")} global::ObjCRuntime.Runtime.GetINativeObject<T> ({handleName}, true);");
 		} else {
 			bool returns = mi.ReturnType != TypeCache.System_Void && mi.Name != "Constructor";
 			string cast_a = "", cast_b = "";
@@ -3462,6 +3507,10 @@ public partial class Generator : IMemberGatherer {
 
 		GenerateTypeLowering (mi, null_allowed_override, out var args, out var convs, out var disposes, out var by_ref_processing, out var by_ref_init, propInfo);
 
+		if (minfo.is_protocol_member && minfo.is_static) {
+			print ("var class_ptr = Class.GetHandle (typeof (T));");
+		}
+
 		var argsArray = args.ToString ();
 
 		if (by_ref_init.Length > 0)
@@ -3510,7 +3559,8 @@ public partial class Generator : IMemberGatherer {
 			(IsNativeEnum (mi.ReturnType)) ||
 			(mi.ReturnType == TypeCache.System_Boolean) ||
 			(mi.ReturnType == TypeCache.System_Char) ||
-			(mi.Name != "Constructor" && by_ref_processing.Length > 0 && mi.ReturnType != TypeCache.System_Void);
+			minfo.is_protocol_member && disposes.Length > 0 && mi.Name == "Constructor" ||
+			((mi.Name != "Constructor" || minfo.is_protocol_member) && by_ref_processing.Length > 0 && mi.ReturnType != TypeCache.System_Void);
 
 		if (use_temp_return) {
 			// for properties we (most often) put the attribute on the property itself, not the getter/setter methods
@@ -3530,6 +3580,8 @@ public partial class Generator : IMemberGatherer {
 				print ("byte ret;");
 			} else if (mi.ReturnType == TypeCache.System_Char) {
 				print ("ushort ret;");
+			} else if (minfo.is_ctor && minfo.is_protocol_member) {
+				print ($"T? ret;");
 			} else {
 				var isClassType = mi.ReturnType.IsClass || mi.ReturnType.IsInterface;
 				var nullableReturn = isClassType ? "?" : string.Empty;
@@ -3540,7 +3592,7 @@ public partial class Generator : IMemberGatherer {
 		bool needs_temp = use_temp_return || disposes.Length > 0;
 		if (minfo.is_virtual_method || mi.Name == "Constructor") {
 			//print ("if (this.GetType () == TypeManager.{0}) {{", type.Name);
-			if (external || minfo.is_interface_impl || minfo.is_extension_method) {
+			if (external || minfo.is_interface_impl || minfo.is_extension_method || minfo.is_protocol_member) {
 				GenerateNewStyleInvoke (false, mi, minfo, sel, argsArray, needs_temp, category_type);
 			} else {
 				var may_throw = shouldMarshalNativeExceptions;
@@ -3655,6 +3707,8 @@ public partial class Generator : IMemberGatherer {
 				print ("return ret != 0;");
 			} else if (mi.ReturnType == TypeCache.System_Char) {
 				print ("return (char) ret;");
+			} else if (minfo.is_ctor && minfo.is_protocol_member) {
+				print ("return ret;");
 			} else {
 				// we can't be 100% confident that the ObjC API annotations are correct so we always null check inside generated code
 				print ("return ret!;");
@@ -4036,7 +4090,7 @@ public partial class Generator : IMemberGatherer {
 					print ("Console.WriteLine (\"In {0}\");", pi.GetGetMethod ());
 				if (is_model)
 					print ("\tthrow new ModelNotImplementedException ();");
-				else if (minfo.is_abstract)
+				else if (minfo.is_abstract && !minfo.is_protocol_member)
 					print ("throw new You_Should_Not_Call_base_In_This_Method ();");
 				else {
 					if (minfo.is_autorelease) {
@@ -4243,14 +4297,15 @@ public partial class Generator : IMemberGatherer {
 		bool ignoreResult = !is_void &&
 			asyncKind == AsyncMethodKind.Plain &&
 			AttributeManager.GetCustomAttribute<AsyncAttribute> (mi).PostNonResultSnippet is null;
-		print ("{6}{5}{4}{0}({1}{2}({3}) => {{",
+		print ("{6}{5}{4}{0}{7}({1}{2}({3}) => {{",
 			mi.Name,
 			GetInvokeParamList (minfo.AsyncInitialParams, false),
 			minfo.AsyncInitialParams.Length > 0 ? ", " : "",
 			GetInvokeParamList (minfo.AsyncCompletionParams),
 			minfo.is_extension_method || minfo.is_category_extension ? "This." : string.Empty,
 			is_void || ignoreResult ? string.Empty : minfo.GetUniqueParamName ("result") + " = ",
-			is_void || ignoreResult ? string.Empty : (asyncKind == AsyncMethodKind.WithResultOutParameter ? string.Empty : "var ")
+			is_void || ignoreResult ? string.Empty : (asyncKind == AsyncMethodKind.WithResultOutParameter ? string.Empty : "var "),
+			minfo.is_protocol_member && minfo.is_static ? "<T>" : string.Empty
 		);
 
 		indent++;
@@ -4334,9 +4389,10 @@ public partial class Generator : IMemberGatherer {
 	}
 
 
-	void GenerateMethod (Type type, MethodInfo mi, bool is_model, Type category_extension_type, bool is_appearance, bool is_interface_impl = false, bool is_extension_method = false, string selector = null, bool isBaseWrapperProtocolMethod = false)
+	void GenerateMethod (Type type, MethodInfo mi, bool is_model = false, Type category_extension_type = null, bool is_appearance = false, bool is_interface_impl = false, bool is_extension_method = false, string selector = null, bool isBaseWrapperProtocolMethod = false, bool is_protocol_member = false)
 	{
 		var minfo = new MemberInformation (this, this, mi, type, category_extension_type, is_interface_impl, is_extension_method, is_appearance, is_model, selector, isBaseWrapperProtocolMethod);
+		minfo.is_protocol_member = is_protocol_member;
 		GenerateMethod (minfo);
 	}
 
@@ -4363,6 +4419,9 @@ public partial class Generator : IMemberGatherer {
 
 	void PrintExport (MemberInformation minfo)
 	{
+		if (minfo.is_ctor && minfo.is_protocol_member)
+			return;
+
 		if (minfo.is_export)
 			print ("[Export (\"{0}\"{1})]", minfo.selector, minfo.is_variadic ? ", IsVariadic = true" : string.Empty);
 	}
@@ -4440,7 +4499,16 @@ public partial class Generator : IMemberGatherer {
 
 #if NET
 		var is_abstract = false;
-		var do_not_call_base = minfo.is_abstract || minfo.is_model;
+		bool do_not_call_base;
+		if (minfo.is_ctor && minfo.is_protocol_member) {
+			do_not_call_base = false;
+		} else if (minfo.is_static && minfo.is_protocol_member) {
+			do_not_call_base = false;
+		} else if (minfo.is_abstract || minfo.is_model) {
+			do_not_call_base = true;
+		} else {
+			do_not_call_base = false;
+		}
 #else
 		var is_abstract = minfo.is_abstract;
 		var do_not_call_base = minfo.is_model;
@@ -4454,7 +4522,7 @@ public partial class Generator : IMemberGatherer {
 
 
 		if (!is_abstract) {
-			if (minfo.is_ctor) {
+			if (minfo.is_ctor && !minfo.is_protocol_member) {
 				indent++;
 				print (": {0}", minfo.wrap_method is null ? "base (NSObjectFlag.Empty)" : minfo.wrap_method);
 				indent--;
@@ -4580,7 +4648,7 @@ public partial class Generator : IMemberGatherer {
 		}
 	}
 
-	IEnumerable<MethodInfo> SelectProtocolMethods (Type type, bool? @static = null, bool? required = null)
+	IEnumerable<MethodInfo> SelectProtocolMethods (Type type, bool? @static = null, bool? required = null, bool selectConstructors = false)
 	{
 		var list = type.GetMethods (BindingFlags.Public | BindingFlags.Instance);
 
@@ -4588,7 +4656,7 @@ public partial class Generator : IMemberGatherer {
 			if (m.IsSpecialName)
 				continue;
 
-			if (m.Name == "Constructor")
+			if ((m.Name == "Constructor") != selectConstructors)
 				continue;
 
 			var attrs = AttributeManager.GetCustomAttributes<Attribute> (m);
@@ -4686,6 +4754,7 @@ public partial class Generator : IMemberGatherer {
 	{
 		var allProtocolMethods = new List<MethodInfo> ();
 		var allProtocolProperties = new List<PropertyInfo> ();
+		var allProtocolConstructors = new List<MethodInfo> ();
 		var ifaces = (IEnumerable<Type>) type.GetInterfaces ().Concat (new Type [] { ReflectionExtensions.GetBaseType (type, this) }).OrderBy (v => v.FullName, StringComparer.Ordinal);
 
 		if (type.Namespace is not null) {
@@ -4697,12 +4766,15 @@ public partial class Generator : IMemberGatherer {
 
 		allProtocolMethods.AddRange (SelectProtocolMethods (type));
 		allProtocolProperties.AddRange (SelectProtocolProperties (type));
+		allProtocolConstructors.AddRange (SelectProtocolMethods (type, selectConstructors: true));
 
 		var requiredInstanceMethods = allProtocolMethods.Where ((v) => IsRequired (v) && !AttributeManager.HasAttribute<StaticAttribute> (v)).ToList ();
 		var optionalInstanceMethods = allProtocolMethods.Where ((v) => !IsRequired (v) && !AttributeManager.HasAttribute<StaticAttribute> (v));
+		var staticMethods = allProtocolMethods.Where ((v) => AttributeManager.HasAttribute<StaticAttribute> (v)).ToList ();
 		var requiredInstanceProperties = allProtocolProperties.Where ((v) => IsRequired (v) && !AttributeManager.HasAttribute<StaticAttribute> (v)).ToList ();
 		var optionalInstanceProperties = allProtocolProperties.Where ((v) => !IsRequired (v) && !AttributeManager.HasAttribute<StaticAttribute> (v));
 		var requiredInstanceAsyncMethods = requiredInstanceMethods.Where (m => AttributeManager.HasAttribute<AsyncAttribute> (m)).ToList ();
+		var staticProperties = allProtocolProperties.Where (v => AttributeManager.HasAttribute<StaticAttribute> (v));
 
 		WriteDocumentation (type);
 
@@ -4838,6 +4910,22 @@ public partial class Generator : IMemberGatherer {
 
 		print ("{");
 		indent++;
+
+#if NET
+		foreach (var ctor in allProtocolConstructors) {
+			var minfo = new MemberInformation (this, this, ctor, type, null);
+			minfo.is_protocol_member = true;
+			GenerateMethod (minfo);
+			print ("");
+		}
+
+		foreach (var mi in staticMethods) {
+			var minfo = new MemberInformation (this, this, mi, type, null);
+			minfo.is_protocol_member = true;
+			GenerateMethod (minfo);
+			print ("");
+		}
+#endif
 		foreach (var mi in requiredInstanceMethods) {
 			if (AttributeManager.HasAttribute<StaticAttribute> (mi))
 				continue;
@@ -4856,6 +4944,24 @@ public partial class Generator : IMemberGatherer {
 			print ("{0}{1};", mod, MakeSignature (minfo, true));
 			print ("");
 		}
+
+#if NET
+		// C# does not support type constraint on properties, so create Get* and Set* accessors instead.
+		foreach (var pi in staticProperties) {
+			GetAccessorInfo (pi, out var getter, out var setter, out var generate_getter, out var generate_setter);
+			var attrib = GetExportAttribute (pi);
+			if (generate_getter) {
+				PrintAttributes (pi, preserve: true, advice: true);
+				var ba = GetBindAttribute (getter);
+				GenerateMethod (type, getter, false, null, false, false, false, ba?.Selector ?? attrib.ToGetter (pi).Selector, is_protocol_member: true);
+			}
+			if (generate_setter) {
+				PrintAttributes (pi, preserve: true, advice: true);
+				var ba = GetBindAttribute (setter);
+				GenerateMethod (type, setter, false, null, false, false, false, ba?.Selector ?? attrib.ToSetter (pi).Selector, is_protocol_member: true);
+			}
+		}
+#endif
 
 		foreach (var pi in requiredInstanceProperties) {
 			var minfo = new MemberInformation (this, this, pi, type);

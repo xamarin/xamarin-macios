@@ -16,6 +16,7 @@ using Foundation;
 namespace Contacts {
 
 	// NSInteger -> CNContact.h
+	/// <summary>Enumerates whether a contact represents an individual or an organization.</summary>
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CNContactType : long {
@@ -24,6 +25,7 @@ namespace Contacts {
 	}
 
 	// NSInteger -> CNContact.h
+	/// <summary>Enumerates the manner in which contacts should be sorted.</summary>
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CNContactSortOrder : long {
@@ -34,6 +36,7 @@ namespace Contacts {
 	}
 
 	// NSInteger -> CNContactFormatter.h
+	/// <summary>Enumerates whether or not a contact name should be spelled out phonetically.</summary>
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CNContactFormatterStyle : long {
@@ -42,6 +45,7 @@ namespace Contacts {
 	}
 
 	// NSInteger -> CNContactFormatter.h
+	/// <summary>Enumerates how contacts should be sorted for display.</summary>
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CNContactDisplayNameOrder : long {
@@ -51,6 +55,7 @@ namespace Contacts {
 	}
 
 	// NSInteger -> CNContactStore.h
+	/// <summary>An enumeration whose only value (<see cref="F:Contacts.CNEntityType.Contacts" />) is used by some methods in <see cref="T:Contacts.CNContactStore" />.</summary>
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CNEntityType : long {
@@ -58,6 +63,7 @@ namespace Contacts {
 	}
 
 	// NSInteger -> CNContactStore.h
+	/// <summary>Enumerates the application's current authorization to access the <see cref="T:Contacts.CNContactStore" />.</summary>
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CNAuthorizationStatus : long {
@@ -68,6 +74,7 @@ namespace Contacts {
 	}
 
 	// NSInteger -> CNContainer.h
+	/// <summary>Enumerates known <see cref="T:Contacts.CNContainer" /> types.</summary>
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CNContainerType : long {
@@ -78,6 +85,7 @@ namespace Contacts {
 	}
 
 	// NSInteger -> CNError.h
+	/// <summary>Enumerates kinds of error encountered while working with contacts.</summary>
 	[MacCatalyst (13, 1)]
 	[Native]
 	[ErrorDomain ("CNErrorDomain")]
@@ -113,12 +121,14 @@ namespace Contacts {
 	}
 
 	// NSInteger -> CNPostalAddressFormatter.h
+	/// <summary>Enumerates postal address formatter styles.</summary>
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CNPostalAddressFormatterStyle : long {
 		MailingAddress,
 	}
 
+	/// <summary>Flagging enumeration that specifies keys that can be checked with <see cref="M:Contacts.CNContact.IsKeyAvailable(Foundation.NSString)" /> and <see cref="M:Contacts.CNContact.AreKeysAvailable``1(``0[])" />.</summary>
 	[MacCatalyst (13, 1)]
 	[Flags]
 	public enum CNContactOptions : long {
