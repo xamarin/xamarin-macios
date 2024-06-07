@@ -19,10 +19,9 @@ namespace Xamarin.Messaging.Build {
 
 				if (File.Exists (targetPath)) {
 					File.Delete (targetPath);
-				}
-				else {
+				} else {
 					var directoryName = Path.GetDirectoryName (targetPath);
-					if (directoryName != null && !Directory.Exists (directoryName))
+					if (directoryName is not null && !Directory.Exists (directoryName))
 						Directory.CreateDirectory (directoryName);
 				}
 
