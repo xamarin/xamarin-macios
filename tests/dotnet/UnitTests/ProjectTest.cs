@@ -850,76 +850,76 @@ namespace Xamarin.Tests {
 					$"__{platformPrefix}_content_A.ttc",
 					$"__{platformPrefix}_content_B.otf",
 					$"__{platformPrefix}_content_C.ttf",
-					$"__{platformPrefix}_item_AtlasTexture_Archer__Attack.atlas_farcher__attack__0001.png",
-					$"__{platformPrefix}_item_AtlasTexture_Archer__Attack.atlas_farcher__attack__0002.png",
-					$"__{platformPrefix}_item_AtlasTexture_Archer__Attack.atlas_farcher__attack__0003.png",
-					$"__{platformPrefix}_item_AtlasTexture_Archer__Attack.atlas_farcher__attack__0004.png",
-					$"__{platformPrefix}_item_AtlasTexture_Archer__Attack.atlas_farcher__attack__0005.png",
-					$"__{platformPrefix}_item_AtlasTexture_Archer__Attack.atlas_farcher__attack__0006.png",
-					$"__{platformPrefix}_item_AtlasTexture_Archer__Attack.atlas_farcher__attack__0007.png",
-					$"__{platformPrefix}_item_AtlasTexture_Archer__Attack.atlas_farcher__attack__0008.png",
-					$"__{platformPrefix}_item_AtlasTexture_Archer__Attack.atlas_farcher__attack__0009.png",
-					$"__{platformPrefix}_item_AtlasTexture_Archer__Attack.atlas_farcher__attack__0010.png",
+					$"__{platformPrefix}_item_AtlasTexture_Archer__Attack.atlas_sarcher__attack__0001.png",
+					$"__{platformPrefix}_item_AtlasTexture_Archer__Attack.atlas_sarcher__attack__0002.png",
+					$"__{platformPrefix}_item_AtlasTexture_Archer__Attack.atlas_sarcher__attack__0003.png",
+					$"__{platformPrefix}_item_AtlasTexture_Archer__Attack.atlas_sarcher__attack__0004.png",
+					$"__{platformPrefix}_item_AtlasTexture_Archer__Attack.atlas_sarcher__attack__0005.png",
+					$"__{platformPrefix}_item_AtlasTexture_Archer__Attack.atlas_sarcher__attack__0006.png",
+					$"__{platformPrefix}_item_AtlasTexture_Archer__Attack.atlas_sarcher__attack__0007.png",
+					$"__{platformPrefix}_item_AtlasTexture_Archer__Attack.atlas_sarcher__attack__0008.png",
+					$"__{platformPrefix}_item_AtlasTexture_Archer__Attack.atlas_sarcher__attack__0009.png",
+					$"__{platformPrefix}_item_AtlasTexture_Archer__Attack.atlas_sarcher__attack__0010.png",
 					$"__{platformPrefix}_item_BundleResource_A.ttc",
 					$"__{platformPrefix}_item_BundleResource_B.otf",
 					$"__{platformPrefix}_item_BundleResource_C.ttf",
 					$"__{platformPrefix}_item_Collada_scene.dae",
 					$"__{platformPrefix}_item_CoreMLModel_SqueezeNet.mlmodel",
-					$"__{platformPrefix}_item_ImageAsset_Images.xcassets_fContents.json",
-					$"__{platformPrefix}_item_ImageAsset_Images.xcassets_fImage.imageset_fContents.json",
-					$"__{platformPrefix}_item_ImageAsset_Images.xcassets_fImage.imageset_fIcon16.png",
-					$"__{platformPrefix}_item_ImageAsset_Images.xcassets_fImage.imageset_fIcon32.png",
-					$"__{platformPrefix}_item_ImageAsset_Images.xcassets_fImage.imageset_fIcon64.png",
+					$"__{platformPrefix}_item_ImageAsset_Images.xcassets_sContents.json",
+					$"__{platformPrefix}_item_ImageAsset_Images.xcassets_sImage.imageset_sContents.json",
+					$"__{platformPrefix}_item_ImageAsset_Images.xcassets_sImage.imageset_sIcon16.png",
+					$"__{platformPrefix}_item_ImageAsset_Images.xcassets_sImage.imageset_sIcon32.png",
+					$"__{platformPrefix}_item_ImageAsset_Images.xcassets_sImage.imageset_sIcon64.png",
 					$"__{platformPrefix}_item_InterfaceDefinition_Main.storyboard",
 					$"__{platformPrefix}_item_PartialAppManifest_shared.plist",
-					$"__{platformPrefix}_item_SceneKitAsset_art.scnassets_fscene.scn",
-					$"__{platformPrefix}_item_SceneKitAsset_art.scnassets_ftexture.png",
-					$"__{platformPrefix}_item_SceneKitAsset_DirWithResources_flinkedArt.scnassets_fscene.scn",
-					$"__{platformPrefix}_item_SceneKitAsset_DirWithResources_flinkedArt.scnassets_ftexture.png",
+					$"__{platformPrefix}_item_SceneKitAsset_art.scnassets_sscene.scn",
+					$"__{platformPrefix}_item_SceneKitAsset_art.scnassets_stexture.png",
+					$"__{platformPrefix}_item_SceneKitAsset_DirWithResources_slinkedArt.scnassets_sscene.scn",
+					$"__{platformPrefix}_item_SceneKitAsset_DirWithResources_slinkedArt.scnassets_stexture.png",
 				};
 			} else {
 				var expectedList = new List<string> ();
 				expectedList.Add ($"__{platformPrefix}_content_A.ttc");
-				expectedList.Add ($"__{platformPrefix}_content_Archer__Attack.atlasc_fArcher__Attack.plist");
-				expectedList.Add ($"__{platformPrefix}_content_art.scnassets_fscene.scn");
-				expectedList.Add ($"__{platformPrefix}_content_art.scnassets_ftexture.png");
+				expectedList.Add ($"__{platformPrefix}_content_Archer__Attack.atlasc_sArcher__Attack.plist");
+				expectedList.Add ($"__{platformPrefix}_content_art.scnassets_sscene.scn");
+				expectedList.Add ($"__{platformPrefix}_content_art.scnassets_stexture.png");
 				expectedList.Add ($"__{platformPrefix}_content_Assets.car");
 				expectedList.Add ($"__{platformPrefix}_content_B.otf");
 				expectedList.Add ($"__{platformPrefix}_content_C.ttf");
-				expectedList.Add ($"__{platformPrefix}_content_DirWithResources_flinkedArt.scnassets_fscene.scn");
-				expectedList.Add ($"__{platformPrefix}_content_DirWithResources_flinkedArt.scnassets_ftexture.png");
+				expectedList.Add ($"__{platformPrefix}_content_DirWithResources_slinkedArt.scnassets_sscene.scn");
+				expectedList.Add ($"__{platformPrefix}_content_DirWithResources_slinkedArt.scnassets_stexture.png");
 				expectedList.Add ($"__{platformPrefix}_content_scene.dae");
 				switch (platform) {
 				case ApplePlatform.iOS:
-					expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_fBYZ-38-t0r-view-8bC-Xf-vdC.nib");
-					expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_fInfo.plist");
-					expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_fUIViewController-BYZ-38-t0r.nib");
+					expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_sBYZ-38-t0r-view-8bC-Xf-vdC.nib");
+					expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_sInfo.plist");
+					expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_sUIViewController-BYZ-38-t0r.nib");
 					break;
 				case ApplePlatform.TVOS:
-					expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_f1-view-2.nib");
-					expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_fInfo.plist");
-					expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_fUIViewController-1.nib");
+					expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_s1-view-2.nib");
+					expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_sInfo.plist");
+					expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_sUIViewController-1.nib");
 					break;
 				case ApplePlatform.MacCatalyst:
-					expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_f1-view-2.nib");
-					expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_fInfo.plist");
-					expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_fUIViewController-1.nib");
+					expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_s1-view-2.nib");
+					expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_sInfo.plist");
+					expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_sUIViewController-1.nib");
 					break;
 				case ApplePlatform.MacOSX:
-					expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_fInfo.plist");
-					expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_fMainMenu.nib");
-					expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_fNSWindowController-B8D-0N-5wS.nib");
-					expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_fXfG-lQ-9wD-view-m2S-Jp-Qdl.nib");
+					expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_sInfo.plist");
+					expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_sMainMenu.nib");
+					expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_sNSWindowController-B8D-0N-5wS.nib");
+					expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_sXfG-lQ-9wD-view-m2S-Jp-Qdl.nib");
 					break;
 				}
-				expectedList.Add ($"__{platformPrefix}_content_SqueezeNet.mlmodelc_fanalytics_fcoremldata.bin");
-				expectedList.Add ($"__{platformPrefix}_content_SqueezeNet.mlmodelc_fcoremldata.bin");
-				expectedList.Add ($"__{platformPrefix}_content_SqueezeNet.mlmodelc_fmetadata.json");
-				expectedList.Add ($"__{platformPrefix}_content_SqueezeNet.mlmodelc_fmodel.espresso.net");
-				expectedList.Add ($"__{platformPrefix}_content_SqueezeNet.mlmodelc_fmodel.espresso.shape");
-				expectedList.Add ($"__{platformPrefix}_content_SqueezeNet.mlmodelc_fmodel.espresso.weights");
-				expectedList.Add ($"__{platformPrefix}_content_SqueezeNet.mlmodelc_fmodel_fcoremldata.bin");
-				expectedList.Add ($"__{platformPrefix}_content_SqueezeNet.mlmodelc_fneural__network__optionals_fcoremldata.bin");
+				expectedList.Add ($"__{platformPrefix}_content_SqueezeNet.mlmodelc_sanalytics_scoremldata.bin");
+				expectedList.Add ($"__{platformPrefix}_content_SqueezeNet.mlmodelc_scoremldata.bin");
+				expectedList.Add ($"__{platformPrefix}_content_SqueezeNet.mlmodelc_smetadata.json");
+				expectedList.Add ($"__{platformPrefix}_content_SqueezeNet.mlmodelc_smodel.espresso.net");
+				expectedList.Add ($"__{platformPrefix}_content_SqueezeNet.mlmodelc_smodel.espresso.shape");
+				expectedList.Add ($"__{platformPrefix}_content_SqueezeNet.mlmodelc_smodel.espresso.weights");
+				expectedList.Add ($"__{platformPrefix}_content_SqueezeNet.mlmodelc_smodel_scoremldata.bin");
+				expectedList.Add ($"__{platformPrefix}_content_SqueezeNet.mlmodelc_sneural__network__optionals_scoremldata.bin");
 				expectedResources = expectedList.ToArray ();
 			}
 			CollectionAssert.AreEquivalent (expectedResources, actualResources, "Resources");
