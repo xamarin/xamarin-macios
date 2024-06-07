@@ -22,6 +22,16 @@
 			"LciFile": "",
 			"Parser": "",
 			"LssFiles": []
+		  },
+		  {
+			"SourceFile": "@WORKING_DIRECTORY@/../../src/bgen/Resources.resx",
+			"Languages": "",
+			"CopyOption": "LangIDOnName",
+			"OutputPath": "@WORKING_DIRECTORY@/../../src/bgen/TranslatedAssemblies",
+			"LclFile": "",
+			"LciFile": "",
+			"Parser": "",
+			"LssFiles": []
 		  }
 		],
 		"LssFiles": [],
