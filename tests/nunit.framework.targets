@@ -3,7 +3,7 @@
 
 	<PropertyGroup>
 		<XmlLinkerFile>$(MSBuildThisFileDirectory)nunit.framework.xml</XmlLinkerFile>
-	    <MonoBundlingExtraArgs>--xml=$(XmlLinkerFile) $(MonoBundlingExtraArgs)</MonoBundlingExtraArgs>
-	    <MtouchExtraArgs>--xml=$(XmlLinkerFile) --dlsym:+nunit.framework.dll $(MtouchExtraArgs)</MtouchExtraArgs>
+	    <AppBundleExtraOptions>--xml=$(XmlLinkerFile) $(AppBundleExtraOptions)</AppBundleExtraOptions>
+	    <AppBundleExtraOptions Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.Mac'">--dlsym:+nunit.framework.dll $(AppBundleExtraOptions)</AppBundleExtraOptions>
 	</PropertyGroup>
 </Project>

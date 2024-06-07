@@ -1,0 +1,295 @@
+<Documentation>
+  <Docs DocId="T:Foundation.NSObject">
+    <summary>Base class for all bound objects that map to Objective-C objects.</summary>
+    <remarks>
+      <para>
+	This is the base class that is used to bind Objective-C classes
+	to C# classes.  Merely subclassing from NSObject will produce a
+	class that can be passed to Objective-C.   
+      </para>
+      <para>
+	The C# NSObject class and their subclasses are managed
+	representations of the underlying Objective-C instances.  The
+	pointer to the unmanaged code Objective-C object is stored in
+	the <see cref="P:Foundation.NSObject.Handle" />
+	property.
+
+      </para>
+      <para>
+	It is important to note that currently, the compiler does not
+	support generic subclasses of NSObject.   
+
+      </para>
+      <format type="text/html">
+        <h2>Class Registration</h2>
+      </format>
+      <para>
+	When you create a subclass of NSObject this subclass is
+	registered with the Objective-C runtime with a name based on
+	the full .NET typename which is an implementation detail.  If
+	you need to ensure that a C# class is exposed with a specific
+	name in the Objective-C runtime, you can apply the <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=T:ObjCRuntime.RegisterAttribute&amp;scope=Xamarin" title="T:ObjCRuntime.RegisterAttribute">T:ObjCRuntime.RegisterAttribute</a></format> to the
+	class and specify the name that you want your class to have.
+
+      </para>
+      <para>
+	The above is typically used in cases where either you want to
+	reference the class by name on some Objective-C code, when
+	using Interface Builder XIB and Storyboard files or when you
+	are using an Objective-C serialization setup (for example when
+	using <see cref="T:Foundation.NSCoder" />).
+
+      </para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+//
+// This exposes the C# class _MySampleView as the Objective-C MyView
+//
+[Export ("MyView")]
+public class _MySampleView : UIView {
+
+}
+]]></code>
+      </example>
+      <format type="text/html">
+        <h2>Objective-C Methods</h2>
+      </format>
+      <para>
+	In general, MonoTouch classes map one to one to the underlying
+	Objective-C classes.  For example, the C# class
+	"MonoTouch.Foundation.NSObject" maps to the Objective-C
+	"NSObject" class.  But methods are different.  The Objective-C
+	methods do not translate well to C# methods, so they have been
+	in general been altered to match both the C# language, the C#
+	idioms and the .NET Framework Design Guidelines.   
+
+      </para>
+      <para>
+	Objective-C methods are surfaced to C# as virtual methods that
+	have the special <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=T:ObjCRuntime.ExportAttribute&amp;scope=Xamarin" title="T:ObjCRuntime.ExportAttribute">T:ObjCRuntime.ExportAttribute</a></format> applied to
+	them.  This attribute is used by the compiler to map C# names
+	to Objective-C names.  These attributes are shown in the API
+	documentation on top of each function, to help you identify
+	which Objective-C method a particular C# method is calling.
+
+      </para>
+      <para>
+	To alter the behavior of a class you use the standard C#
+	idioms: create a subclass and override the methods that you
+	want to alter and use the "base." language feature to
+	optionally call into your base class.
+
+      </para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+public class MyView : UISlider {
+	public override void Draw (RectangleF rect)
+	{
+		// Let the base class draw first
+		base.Draw (rect);
+	
+		// Our custom code
+		var ctx = UIGraphics.GetCurrentContext ();
+		UIColor.Gray.SetColor ();
+		ctx.StrokeEllipseInRect (rect);
+	}
+}
+]]></code>
+      </example>
+      <para>
+	By default, only methods that have been overwritten will be
+	exposed to the Objective-C world.  If you want to expose an
+	arbitrary C# method to the Objective-C world, you need to
+	apply the <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=T:ObjCRuntime.ExportAttribute&amp;scope=Xamarin" title="T:ObjCRuntime.ExportAttribute">T:ObjCRuntime.ExportAttribute</a></format> to your
+	public method.  And this can be done to both static and
+	instance methods.  Once the attribute is applied, the method
+	will be exposed to Objective-C and the standard data type
+	marshalling operations that are supported by the runtime are
+	made available to those methods.
+
+      </para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+//
+// Exposes the class StringUtilities to Objective-C with the 
+// method:
+//    - (NSString *) joinArray:(NSArray *) stringArray withSeparator:(NSString *sep);
+//
+// Used like this:
+//   id utilities = [[StringUtilities alloc] init];
+//   NSLog (@"Joined: %@", [utilities joinArray:users withSeparator:@", "]);
+//
+public class StringUtilities : NSObject {
+	[Export ("joinArray:withSeparator:")]
+	public string Join (string [] array, string separator)
+	{
+		return string.Join (separator, array);
+	}
+}
+]]></code>
+      </example>
+      <format type="text/html">
+        <h2>Lifecycle</h2>
+      </format>
+      <para>
+	The C# NSObject and their subclasses are managed wrappers for
+	the underlying Objective-C object.  These are created either
+	from C#, when you create a new instance by using the "new"
+	operator or when an existing unmanaged object is surfaced to the C# world.
+      </para>
+      <para>
+	When you create an object from C# using the "new" operator,
+	the object will initially be owned by C#, and C# will retain a
+	reference to the object.  This reference will only be dropped
+	when the garbage collector determines that there are no
+	pending managed references to it, or when you manually call
+	the Dispose method on the object.
+
+      </para>
+      <para>
+	C# NSObjects are also created on demand when you invoke a
+	method or a property that returns an NSObject.  At this point,
+	the runtime will look into an object cache and determine
+	whether a given Objective-C NSObject has already been surfaced
+	to the managed world or not.  If the object has been surfaced,
+	the existing object will be returned, otherwise a constructor
+	that takes an IntPtr as a parameter is invoked to construct
+	the object.   
+
+      </para>
+      <para>
+	Pure "peers" to framework objects (those objects
+	that are merely C# representations of an Objective-C object
+	and have no extra managed associated state) can be recreated
+	by the runtime on demand by using the constructor mentioned before.   
+
+      </para>
+      <para>
+	User-subclasses of NSObjects often contain C# state so
+	whenever the Objective-C runtime performs a "retain" operation
+	on one of these objects, the runtime creates a GCHandle that
+	keeps the managed object alive, even if there are no C#
+	visible references to the object.  This simplifies bookeeping
+	a lot, since the state will be preserved automatically for
+	you.
+
+      </para>
+      <para>
+	The Dispose operation on an NSObject will always drop the
+	reference to the underlying Objective-C object, but will not
+	destroy the managed state, this will only happen when both the
+	managed code and the unmanaged code have both released the
+	objects.  This is slightly different from .NET, because on
+	.NET once an object is disposed, it is not possible to invoke
+	any methods on the object, as it is deemed to be useless.  That is not the case with NSObjects. 
+
+      </para>
+      <format type="text/html">
+        <h2>Adopting Protocols</h2>
+      </format>
+      <para>
+	In MonoTouch, most Objective-C protocols are mapped to classes
+	that have the <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=T:ObjCRuntime.ModelAttribute&amp;scope=Xamarin" title="T:ObjCRuntime.ModelAttribute">T:ObjCRuntime.ModelAttribute</a></format> applied to
+	them.  And the way that you adopt a protocol is by subclassing
+	and overwriting the methods that you want to adopt.
+
+      </para>
+      <para>
+	There are some rare cases, where you want to adopt an ad-hoc
+	protocol on your own.  If you need to adopt an Objective-C
+	protocol, you should use the <see cref="T:ObjCRuntime.AdoptsAttribute" /> on your class
+	and provide the name of the protocol that you want to adopt.
+	Typically, when adopting a protocol, you will also have to
+	list all of the Objective-C selectors that you are adopting
+	using the <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=T:ObjCRuntime.ExportAttribute&amp;scope=Xamarin" title="T:ObjCRuntime.ExportAttribute">T:ObjCRuntime.ExportAttribute</a></format>.
+
+      </para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+[Adopts ("NSLocking")]
+public class MyLockeingObject : NSObject {
+	[Export ("lock")]
+	public void Lock ()
+	{
+		// ...
+	}
+
+	[Export ("unlock")]
+	public void Unlock ()
+	{
+		// ...
+	}
+}
+]]></code>
+      </example>
+      <format type="text/html">
+        <h2>Key Value Coding</h2>
+      </format>
+      <para>
+	Key Value coding is a mechanism that allows you to access
+	properties of an object by their name, as opposed to accessing
+	them directly with a C# method.
+      </para>
+      <para>
+	To expose a C# property to the Key-Value coding system all you
+	need to do is add the <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=T:ObjCRuntime.ExportAttribute&amp;scope=Xamarin" title="T:ObjCRuntime.ExportAttribute">T:ObjCRuntime.ExportAttribute</a></format> to your
+	property. The names must only contain ASCII characters, start
+	with a lowercase letter, and must not contain any spaces.
+
+      </para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+public class CircleLayer : CALayer {
+	[Export ("radius")]
+	public double Radius { get; set; }
+
+	// ...
+}
+]]></code>
+      </example>
+      <para>
+	You use the <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=M:Foundation.ValueForKey(Foundation.NSString);*&amp;scope=Xamarin" title="M:Foundation.ValueForKey(Foundation.NSString);*">M:Foundation.ValueForKey(Foundation.NSString);*</a></format>
+	methods to lookup a property using a name, and you use the of
+	functions <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=M:Foundation.ValueForKey(Foundation.NSObject,Foundation.NSString);*&amp;scope=Xamarin" title="M:Foundation.SetValueForKey(Foundation.NSObject,&#xA; Foundation.NSString)">M:Foundation.SetValueForKey(Foundation.NSObject,
+ Foundation.NSString);*"</a></format> methods to set the value for the
+	specified property.  For example, you could call
+	foo.ValueForKey ("user") to grab the value of the user
+	property in an object.  
+
+      </para>
+      <para>
+	In addition, you can use Key Paths to have the runtime
+	repeatedly call the ValueForKey or SetValueForKey for you.
+	You separate the keys by using a dot.  For example the keypath
+	"user.address.phone.mobile" would request the user property,
+	and then request the address property on the user, then it
+	would request the phone property on the address and finally
+	request the mobile property on the phone and finally use the
+	result as the value.  You use the <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=M:Foundation.ValueForKeyPath(Foundation.NSString);*&amp;scope=Xamarin" title="M:Foundation.ValueForKeyPath(Foundation.NSString);*">M:Foundation.ValueForKeyPath(Foundation.NSString);*</a></format> to lookup a property using
+	a keypath, and you use the <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=M:Foundation.SetValueForKeyPath(Foundation.NSObject, Foundation.NSString);*&amp;scope=Xamarin" title="M:Foundation.SetValueForKeyPath(Foundation.NSObject, Foundation.NSString);*">M:Foundation.SetValueForKeyPath(Foundation.NSObject, Foundation.NSString);*</a></format> to set a value using a
+	keypath.
+
+      </para>
+      <para> When using keypaths, if a lookup fails, the <see cref="M:Foundation.NSObject.SetValueForUndefinedKey(Foundation.NSObject,Foundation.NSString)" />
+	will be invoked when setting a value, and the <see cref="M:Foundation.NSObject.ValueForUndefinedKey(Foundation.NSString)" />
+	will be invoked when looking up a value.  Both methods by
+	default raise an Objective-C exception, you can alter that behavior by overriding the methods. 
+	</para>
+      <format type="text/html">
+        <h2>Key Value Observing</h2>
+      </format>
+      <para>
+	Key value observing is a mechanism implemented by NSObject
+	that can be used to monitor changes being done to an NSObject
+	through the Key Value Coding system.
+      </para>
+      <para>
+	For your class to observe a notification, you must override
+	the <see cref="M:Foundation.NSObject.ObserveValue(Foundation.NSString,Foundation.NSObject,Foundation.NSDictionary,System.IntPtr)" />
+	method which will be invoked with the information about the value changes for a specific keypath.   Then you use the <see cref="M:Foundation.NSObject.AddObserver(Foundation.NSObject,Foundation.NSString,Foundation.NSKeyValueObservingOptions,System.IntPtr)" /> to start observing changes and the <see cref="M:Foundation.NSObject.RemoveObserver(Foundation.NSObject,Foundation.NSString,System.IntPtr)" /> method to stop receiving notifications. 
+
+      </para>
+    </remarks>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Cocoa/Reference/Foundation/Protocols/NSObject_Protocol/index.html">Apple documentation for <c>NSObject</c></related>
+  </Docs>
+</Documentation>

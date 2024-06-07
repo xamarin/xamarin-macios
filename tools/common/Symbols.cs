@@ -21,6 +21,7 @@ namespace Xamarin.Bundler {
 
 	public class Symbol {
 		public SymbolType Type;
+		public SymbolMode Mode;
 		public bool Ignore;
 		public Abi? ValidAbis;
 
@@ -86,11 +87,12 @@ namespace Xamarin.Bundler {
 			store.Add (symbol.Name, symbol);
 		}
 
-		public Symbol AddObjectiveCClass (string class_name)
+		public Symbol AddObjectiveCClass (string class_name, SymbolMode mode = SymbolMode.Default)
 		{
 			var symbol = new Symbol {
 				Type = SymbolType.ObjectiveCClass,
 				ObjectiveCName = class_name,
+				Mode = mode,
 			};
 			var existing = Find (symbol.Name);
 			if (existing is not null)
@@ -99,21 +101,21 @@ namespace Xamarin.Bundler {
 			return symbol;
 		}
 
-		public Symbol AddField (string name)
+		public Symbol AddField (string name, SymbolMode mode = SymbolMode.Default)
 		{
 			Symbol rv = Find (name);
 			if (rv is null) {
-				rv = new Symbol { Name = name, Type = SymbolType.Field };
+				rv = new Symbol { Name = name, Type = SymbolType.Field, Mode = mode };
 				Add (rv);
 			}
 			return rv;
 		}
 
-		public Symbol AddFunction (string name)
+		public Symbol AddFunction (string name, SymbolMode mode = SymbolMode.Default)
 		{
 			Symbol rv = Find (name);
 			if (rv is null) {
-				rv = new Symbol { Name = name, Type = SymbolType.Function };
+				rv = new Symbol { Name = name, Type = SymbolType.Function, Mode = mode };
 				Add (rv);
 			}
 			return rv;

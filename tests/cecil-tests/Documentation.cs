@@ -54,7 +54,7 @@ namespace Cecil.Tests {
 			var documentedButNotPresent = xmlMembers.Except (dllMembers).ToList ();
 			Assert.Multiple (() => {
 				foreach (var doc in documentedButNotPresent)
-					Assert.Fail ($"{doc}: Documented API not found in the platform assembly. This probably indicates that the code to compute the doc name for a given member is incorrect.");
+					Assert.Fail ($"{doc.DocId}: Documented API not found in the platform assembly. This probably indicates that the code to compute the doc name for a given member is incorrect.");
 			});
 
 			var shouldHaveBeenDocumented = dllMembers
@@ -138,6 +138,9 @@ namespace Cecil.Tests {
 				if (member is MethodDefinition md) {
 					// It's not possible to add xml documentation to members of delegates, so don't verify those
 					if (IsDelegateType (md.DeclaringType))
+						continue;
+					// It's not possible to add xml documentation to getters/setters (it's added to the property itself), so don't verify those.
+					if (md.IsPropertyAccessor ())
 						continue;
 					name = "M:" + GetDocId (md);
 				} else if (member is PropertyDefinition pd) {

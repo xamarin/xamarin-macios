@@ -3,6 +3,11 @@ using ObjCRuntime;
 
 namespace MobileCoreServices {
 
+	/// <summary>Defines constants for Uniform Type Identifiers (UTIs) which are strings that identify a given class of type or item.</summary>
+	///     <remarks>
+	///       <para>Uniform Type Identifiers (UTIs) are Apple's method for identifying data types.</para>
+	///       <para>UTIs use a reverse-DNS naming structure.  UTIs support multiple inheritance, allowing files to be identified with any number of relevant types, as appropriate to the contained data.</para>
+	///     </remarks>
 	[Deprecated (PlatformName.iOS, 14, 0, message: "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
 	[Deprecated (PlatformName.TvOS, 14, 0, message: "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
 	[Deprecated (PlatformName.WatchOS, 7, 0, message: "Use the 'UniformTypeIdentifiers.UTType' API instead.")]

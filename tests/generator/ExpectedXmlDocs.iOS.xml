@@ -87,6 +87,9 @@
                 It is similar to calling the managed <see cref="M:ObjCRuntime.Class.GetHandle(System.String)" /> or the native <see href="https://developer.apple.com/documentation/objectivec/1418952-objc_getclass">objc_getClass</see> method with the type name.
             </remarks>
         </member>
+        <member name="M:XmlDocumentation.Notification1.#ctor">
+            <summary>Creates a new <see cref="T:XmlDocumentation.Notification1" /> with default values.</summary>
+        </member>
         <member name="M:XmlDocumentation.Notification1.#ctor(Foundation.NSObjectFlag)">
             <summary>Constructor to call on derived classes to skip initialization and merely allocate the object.</summary>
             <param name="t">Unused sentinel value, pass NSObjectFlag.Empty.</param>
@@ -195,15 +198,41 @@
             Summary for P1
             </summary>
         </member>
+        <member name="M:XmlDocumentation.IP1.PMethod">
+            <summary>
+            Summary for P1.PMethod
+            </summary>
+        </member>
+        <member name="M:XmlDocumentation.IP1._PMethod(XmlDocumentation.IP1)">
+            <summary>
+            Summary for P1.PMethod
+            </summary>
+        </member>
         <member name="M:XmlDocumentation.IP1.PAMethod">
             <summary>
             Summary for PA1.PMethod
+            </summary>
+        </member>
+        <member name="M:XmlDocumentation.IP1._PAMethod(XmlDocumentation.IP1)">
+            <summary>
+            Summary for PA1.PMethod
+            </summary>
+        </member>
+        <member name="P:XmlDocumentation.IP1.PProperty">
+            <summary>
+            Summary for P1.PProperty
             </summary>
         </member>
         <member name="P:XmlDocumentation.IP1.PAProperty">
             <summary>
             Summary for PA1.PProperty
             </summary>
+        </member>
+        <member name="T:XmlDocumentation.P1_Extensions">
+            <summary>Extension methods to the <see cref="T:XmlDocumentation.IP1" /> interface to support all the methods from the P1 protocol.</summary>
+            <remarks>
+              <para>The extension methods for <see cref="T:XmlDocumentation.IP1" /> interface allow developers to treat instances of the interface as having all the optional methods of the original P1 protocol. Since the interface only contains the required members, these extension methods allow developers to call the optional members of the protocol.</para>
+            </remarks>
         </member>
         <member name="M:XmlDocumentation.P1_Extensions.PMethod(XmlDocumentation.IP1)">
             <summary>
@@ -243,6 +272,9 @@
                 This value contains the pointer to the Objective-C class.
                 It is similar to calling the managed <see cref="M:ObjCRuntime.Class.GetHandle(System.String)" /> or the native <see href="https://developer.apple.com/documentation/objectivec/1418952-objc_getclass">objc_getClass</see> method with the type name.
             </remarks>
+        </member>
+        <member name="M:XmlDocumentation.T1.#ctor">
+            <summary>Creates a new <see cref="T:XmlDocumentation.T1" /> with default values.</summary>
         </member>
         <member name="M:XmlDocumentation.T1.#ctor(Foundation.NSObjectFlag)">
             <summary>Constructor to call on derived classes to skip initialization and merely allocate the object.</summary>
@@ -301,6 +333,11 @@
                 </para>
             </remarks>
         </member>
+        <member name="M:XmlDocumentation.T1.#ctor(System.String)">
+            <summary>
+            Summary for T2.#ctor(String)
+            </summary>
+        </member>
         <member name="M:XmlDocumentation.T1.Method">
             <summary>
             Summary for T1.Method
@@ -339,6 +376,9 @@
                 This value contains the pointer to the Objective-C class.
                 It is similar to calling the managed <see cref="M:ObjCRuntime.Class.GetHandle(System.String)" /> or the native <see href="https://developer.apple.com/documentation/objectivec/1418952-objc_getclass">objc_getClass</see> method with the type name.
             </remarks>
+        </member>
+        <member name="M:XmlDocumentation.TG1`2.#ctor">
+            <summary>Creates a new <see cref="T:XmlDocumentation.TG1`2" /> with default values.</summary>
         </member>
         <member name="M:XmlDocumentation.TG1`2.#ctor(Foundation.NSObjectFlag)">
             <summary>Constructor to call on derived classes to skip initialization and merely allocate the object.</summary>
@@ -420,6 +460,9 @@
                 This value contains the pointer to the Objective-C class.
                 It is similar to calling the managed <see cref="M:ObjCRuntime.Class.GetHandle(System.String)" /> or the native <see href="https://developer.apple.com/documentation/objectivec/1418952-objc_getclass">objc_getClass</see> method with the type name.
             </remarks>
+        </member>
+        <member name="M:XmlDocumentation.TypeWithApparance.#ctor">
+            <summary>Creates a new <see cref="T:XmlDocumentation.TypeWithApparance" /> with default values.</summary>
         </member>
         <member name="M:XmlDocumentation.TypeWithApparance.#ctor(Foundation.NSObjectFlag)">
             <summary>Constructor to call on derived classes to skip initialization and merely allocate the object.</summary>

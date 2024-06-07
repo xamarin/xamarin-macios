@@ -1,0 +1,50 @@
+<Documentation>
+  <Docs DocId="T:CoreImage.CIStraightenFilter">
+    <summary>The CIStraightenFilter CoreImage filter</summary>
+    <remarks>
+      <para>The following example shows this filter in use</para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+// Create a CIImage from a file.
+CIImage heron = CIImage.FromCGImage (UIImage.FromFile ("heron.jpg").CGImage);
+        
+// Construct the Straighten Filter 
+var straightFilter = new CIStraightenFilter() {
+	Image = heron,
+	Angle = Convert.ToSingle(Math.PI / 4.0) // Change by 45 degrees = pi/4 Radians.
+};
+		
+// Get the output image of the Straighten Filter
+var output = straightFilter.OutputImage;
+	
+// To render the results, we need to create a context, and then
+// use one of the context rendering APIs, in this case, we render the
+// result into a CoreGraphics image, which is merely a useful representation
+//
+var context = CIContext.FromOptions (null);
+
+var cgimage = context.CreateCGImage (output, output.Extent);
+
+// The above cgimage can be added to a screen view, for example, this
+// would add it to a UIImageView on the screen:
+myImageView.Image = UIImage.FromImage (cgimage);
+        ]]></code>
+      </example>
+      <para>
+		With the following source:
+      </para>
+      <para>
+        <img href="~/CoreImage/_images/heron.jpg" alt="Photograph of a heron." />
+      </para>
+      <para>
+         Produces the following output:
+      </para>
+      <para>
+        <img href="~/CoreImage/_images/Straighten.png" alt="Result of applying the filter." />
+      </para>
+      <para>
+		"canon" © 2012 cuatrok77 hernandez, used under a Creative Commons Attribution-ShareAlike license: https://creativecommons.org/licenses/by-sa/3.0/ 
+      </para>
+    </remarks>
+  </Docs>
+</Documentation>

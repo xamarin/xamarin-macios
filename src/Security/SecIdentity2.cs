@@ -102,8 +102,7 @@ namespace Security {
 		[iOS (13, 0)]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		unsafe static extern bool sec_identity_access_certificates (IntPtr identity, BlockLiteral* block);
+		unsafe static extern byte sec_identity_access_certificates (IntPtr identity, BlockLiteral* block);
 
 #if !NET
 		internal delegate void AccessCertificatesHandler (IntPtr block, IntPtr cert);
@@ -145,7 +144,7 @@ namespace Security {
 				using var block = new BlockLiteral ();
 				block.SetupBlockUnsafe (access, handler);
 #endif
-				return sec_identity_access_certificates (GetCheckedHandle (), &block);
+				return sec_identity_access_certificates (GetCheckedHandle (), &block) != 0;
 			}
 		}
 #endif

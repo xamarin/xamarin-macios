@@ -100,6 +100,9 @@ namespace ModelIO {
 
 	delegate void MDLObjectHandler (MDLObject mdlObject, ref bool stop);
 
+	/// <summary>A basic high-performance light for illuminating scenes from a lit shape.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/ModelIO/Reference/MDLAreaLight_Class/index.html">Apple documentation for <c>MDLAreaLight</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (MDLPhysicallyPlausibleLight))]
 	[DisableDefaultCtor]
@@ -119,6 +122,9 @@ namespace ModelIO {
 		float Aspect { get; set; }
 	}
 
+	/// <summary>A container that stores 3D assets as an indexed collection of <see cref="T:ModelIO.MDLObject" /> trees.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/ModelIO/Reference/MDLAsset_Class/index.html">Apple documentation for <c>MDLAsset</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface MDLAsset : NSCopying {
@@ -273,9 +279,16 @@ namespace ModelIO {
 		MDLLightProbe [] PlaceLightProbes (float density, MDLProbePlacement type, IMDLLightProbeIrradianceDataSource dataSource);
 	}
 
+	/// <summary>Interface representing the required methods (if any) of the protocol <see cref="T:ModelIO.MDLLightProbeIrradianceDataSource" />.</summary>
+	///     <remarks>
+	///       <para>This interface contains the required methods (if any) from the protocol defined by <see cref="T:ModelIO.MDLLightProbeIrradianceDataSource" />.</para>
+	///       <para>If developers create classes that implement this interface, the implementation methods will automatically be exported to Objective-C with the matching signature from the method defined in the <see cref="T:ModelIO.MDLLightProbeIrradianceDataSource" /> protocol.</para>
+	///       <para>Optional methods (if any) are provided by the <see cref="T:ModelIO.MDLLightProbeIrradianceDataSource_Extensions" /> class as extension methods to the interface, allowing developers to invoke any optional methods on the protocol.</para>
+	///     </remarks>
 	interface IMDLLightProbeIrradianceDataSource { }
 
 	// Added in iOS 10 SDK but it is supposed to be present in iOS 9.
+	/// <related type="externalDocumentation" href="https://developer.apple.com/reference/ModelIO/MDLLightProbeIrradianceDataSource">Apple documentation for <c>MDLLightProbeIrradianceDataSource</c></related>
 	[MacCatalyst (13, 1)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
@@ -292,6 +305,9 @@ namespace ModelIO {
 		NSData GetSphericalHarmonicsCoefficients (Vector3 position);
 	}
 
+	/// <summary>A point of view that looks into a 3D scence, and that can simulate certain aspects of a physical camera.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/ModelIO/Reference/MDLCamera_Class/index.html">Apple documentation for <c>MDLCamera</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (MDLObject))]
 	interface MDLCamera {
@@ -430,6 +446,9 @@ namespace ModelIO {
 		MDLCamera FromSceneCamera (SCNCamera sceneCamera);
 	}
 
+	/// <summary>Procedurally generates a checkerboard texture on demand, and caches the result.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/ModelIO/Reference/MDLCheckerboardTexture_Class/index.html">Apple documentation for <c>MDLCheckerboardTexture</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (MDLTexture))]
 	[DisableDefaultCtor]
@@ -455,6 +474,9 @@ namespace ModelIO {
 		CGColor Color2 { get; set; }
 	}
 
+	/// <summary>Texture that contains a gradient between two colors.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/ModelIO/Reference/MDLColorSwatchTexture_Class/index.html">Apple documentation for <c>MDLColorSwatchTexture</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (MDLTexture))]
 	[DisableDefaultCtor]
@@ -473,6 +495,9 @@ namespace ModelIO {
 	}
 
 
+	/// <summary>Base class for light sources.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/ModelIO/Reference/MDLLight_Class/index.html">Apple documentation for <c>MDLLight</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (MDLObject))]
 	interface MDLLight {
@@ -497,6 +522,9 @@ namespace ModelIO {
 		MDLLight FromSceneLight (SCNLight sceneLight);
 	}
 
+	/// <summary>A light source that defines the color and intensity of its light in all directions.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/ModelIO/Reference/MDLLightProbe_Class/index.html">Apple documentation for <c>MDLLightProbe</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (MDLLight))]
 	interface MDLLightProbe {
@@ -527,6 +555,9 @@ namespace ModelIO {
 		MDLLightProbe Create (nint textureSize, MDLTransform transform, MDLLight [] lightsToConsider, MDLObject [] objectsToConsider, [NullAllowed] MDLTexture reflectiveCubemap, [NullAllowed] MDLTexture irradianceCubemap);
 	}
 
+	/// <summary>Defines how a surface should appear when rendered.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/ModelIO/Reference/MDLMaterial_Class/index.html">Apple documentation for <c>MDLMaterial</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface MDLMaterial : MDLNamed, INSFastEnumeration {
@@ -590,6 +621,9 @@ namespace ModelIO {
 		MDLMaterial FromSceneMaterial (SCNMaterial material);
 	}
 
+	/// <summary>Defines a specific parameter that controls the rendering of a material surface.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/ModelIO/Reference/MDLMaterialProperty_Class/index.html">Apple documentation for <c>MDLMaterialProperty</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -720,6 +754,7 @@ namespace ModelIO {
 		float Luminance { get; set; }
 	}
 
+	/// <related type="externalDocumentation" href="https://developer.apple.com/reference/ModelIO/MDLMaterialPropertyConnection">Apple documentation for <c>MDLMaterialPropertyConnection</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -734,6 +769,7 @@ namespace ModelIO {
 		MDLMaterialProperty Input { get; }
 	}
 
+	/// <related type="externalDocumentation" href="https://developer.apple.com/reference/ModelIO/MDLMaterialPropertyNode">Apple documentation for <c>MDLMaterialPropertyNode</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -751,6 +787,7 @@ namespace ModelIO {
 		MDLMaterialProperty [] Outputs { get; }
 	}
 
+	/// <related type="externalDocumentation" href="https://developer.apple.com/reference/ModelIO/MDLMaterialPropertyGraph">Apple documentation for <c>MDLMaterialPropertyGraph</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (MDLMaterialPropertyNode))]
 	[DisableDefaultCtor]
@@ -768,6 +805,9 @@ namespace ModelIO {
 		MDLMaterialPropertyConnection [] Connections { get; }
 	}
 
+	/// <summary>A collection of <see cref="T:ModelIO.MDLSubmesh" /> objects that, together, define the geometric and material properties for rendering a 3D object.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/ModelIO/Reference/MDLMesh_Class/index.html">Apple documentation for <c>MDLMesh</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (MDLObject))]
 	interface MDLMesh {
@@ -1012,6 +1052,16 @@ namespace ModelIO {
 		MDLMesh FromGeometry (SCNGeometry geometry, [NullAllowed] IMDLMeshBufferAllocator bufferAllocator);
 	}
 
+	/// <summary>Interface representing the required methods (if any) of the protocol <see cref="T:ModelIO.IMDLMeshBuffer" />.</summary>
+	///     <remarks>
+	///       <para>This interface contains the required methods (if any) from the protocol defined by <see cref="T:ModelIO.IMDLMeshBuffer" />.</para>
+	///       <para>If you create objects that implement this interface, the implementation methods will automatically be exported to Objective-C with the matching signature from the method defined in the <see cref="T:ModelIO.IMDLMeshBuffer" /> protocol.</para>
+	///       <para>Optional methods (if any) are provided by the <see cref="T:ModelIO.MDLMeshBuffer_Extensions" /> class as extension methods to the interface, allowing you to invoke any optional methods on the protocol.</para>
+	///     </remarks>
+	/// <summary>Extension methods to the <see cref="T:ModelIO.IMDLMeshBuffer" /> interface to support all the methods from the <see cref="T:ModelIO.IMDLMeshBuffer" /> protocol.</summary>
+	///     <remarks>
+	///       <para>The extension methods for <see cref="T:ModelIO.IMDLMeshBuffer" /> allow developers to treat instances of the interface as having all the optional methods of the original <see cref="T:ModelIO.IMDLMeshBuffer" /> protocol.   Since the interface only contains the required members, these extension methods allow developers to call the optional members of the protocol.</para>
+	///     </remarks>
 	interface IMDLMeshBuffer { }
 	[MacCatalyst (13, 1)]
 	[Protocol]
@@ -1050,6 +1100,7 @@ namespace ModelIO {
 		MDLMeshBufferType Type { get; }
 	}
 
+	/// <include file="../docs/api/ModelIO/IMDLMeshBufferAllocator.xml" path="/Documentation/Docs[@DocId='T:ModelIO.IMDLMeshBufferAllocator']/*" />
 	interface IMDLMeshBufferAllocator { }
 	[MacCatalyst (13, 1)]
 	[Protocol]
@@ -1081,12 +1132,18 @@ namespace ModelIO {
 		IMDLMeshBuffer CreateBuffer ([NullAllowed] IMDLMeshBufferZone zone, NSData data, MDLMeshBufferType type);
 	}
 
+	/// <summary>An implementation of <see cref="T:ModelIO.IMDLMeshBufferAllocator" /> that allocates mesh buffer data space within main memory, not GPU memory.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/ModelIO/Reference/MDLMeshBufferDataAllocator_Class/index.html">Apple documentation for <c>MDLMeshBufferDataAllocator</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface MDLMeshBufferDataAllocator : MDLMeshBufferAllocator {
 
 	}
 
+	/// <summary>A default implementation of a <see cref="T:ModelIO.IMDLMeshBufferZone" />.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/ModelIO/Reference/MDLMeshBufferZoneDefault_Class/index.html">Apple documentation for <c>MDLMeshBufferZoneDefault</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface MDLMeshBufferZoneDefault : MDLMeshBufferZone {
@@ -1098,6 +1155,9 @@ namespace ModelIO {
 		// IMDLMeshBufferAllocator Allocator { get; }
 	}
 
+	/// <summary>Provides storage for vertex and index data for a <see cref="T:ModelIO.MDLMesh" /> object.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/ModelIO/Reference/MDLMeshBufferData_Class/index.html">Apple documentation for <c>MDLMeshBufferData</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface MDLMeshBufferData : MDLMeshBuffer, NSCopying {
@@ -1111,6 +1171,16 @@ namespace ModelIO {
 		NSData Data { get; }
 	}
 
+	/// <summary>Interface representing the required methods (if any) of the protocol <see cref="T:ModelIO.IMDLMeshBufferZone" />.</summary>
+	///     <remarks>
+	///       <para>This interface contains the required methods (if any) from the protocol defined by <see cref="T:ModelIO.IMDLMeshBufferZone" />.</para>
+	///       <para>If you create objects that implement this interface, the implementation methods will automatically be exported to Objective-C with the matching signature from the method defined in the <see cref="T:ModelIO.IMDLMeshBufferZone" /> protocol.</para>
+	///       <para>Optional methods (if any) are provided by the <see cref="T:ModelIO.MDLMeshBufferZone_Extensions" /> class as extension methods to the interface, allowing you to invoke any optional methods on the protocol.</para>
+	///     </remarks>
+	/// <summary>Extension methods to the <see cref="T:ModelIO.IMDLMeshBufferZone" /> interface to support all the methods from the <see cref="T:ModelIO.IMDLMeshBufferZone" /> protocol.</summary>
+	///     <remarks>
+	///       <para>The extension methods for <see cref="T:ModelIO.IMDLMeshBufferZone" /> allow developers to treat instances of the interface as having all the optional methods of the original <see cref="T:ModelIO.IMDLMeshBufferZone" /> protocol.   Since the interface only contains the required members, these extension methods allow developers to call the optional members of the protocol.</para>
+	///     </remarks>
 	interface IMDLMeshBufferZone { }
 	[MacCatalyst (13, 1)]
 	[Protocol]
@@ -1128,6 +1198,7 @@ namespace ModelIO {
 		IMDLMeshBufferAllocator Allocator { get; }
 	}
 
+	/// <summary>Interface whose implementers define a <see cref="P:ModelIO.IMDLNamed.Name" /> property.</summary>
 	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface MDLNamed {
@@ -1136,6 +1207,9 @@ namespace ModelIO {
 		string Name { get; set; }
 	}
 
+	/// <summary>Class that generates a texture that consists of random color or direction noise.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/ModelIO/Reference/MDLNoiseTexture_Class/index.html">Apple documentation for <c>MDLNoiseTexture</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (MDLTexture))]
 	[DisableDefaultCtor]
@@ -1160,6 +1234,9 @@ namespace ModelIO {
 		IntPtr InitCellularNoiseWithFrequency (float frequency, [NullAllowed] string name, Vector2i textureDimensions, MDLTextureChannelEncoding channelEncoding);
 	}
 
+	/// <summary>Class that generates a texture that contains surface normal data.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/ModelIO/Reference/MDLNormalMapTexture_Class/index.html">Apple documentation for <c>MDLNormalMapTexture</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (MDLTexture))]
 	[DisableDefaultCtor]
@@ -1172,6 +1249,9 @@ namespace ModelIO {
 		NativeHandle Constructor (MDLTexture sourceTexture, [NullAllowed] string name, float smoothness, float contrast);
 	}
 
+	/// <summary>Base class for objects in a <see cref="T:ModelIO.MDLAsset" />.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/ModelIO/Reference/MDLObject_Class/index.html">Apple documentation for <c>MDLObject</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface MDLObject : MDLNamed {
@@ -1251,11 +1331,24 @@ namespace ModelIO {
 		MDLObject FromNode (SCNNode node, [NullAllowed] IMDLMeshBufferAllocator bufferAllocator);
 	}
 
+	/// <summary>A default implementation of the abstract <see cref="T:ModelIO.IMDLObjectContainerComponent" /> class.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/ModelIO/Reference/MDLObjectContainer_Class/index.html">Apple documentation for <c>MDLObjectContainer</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface MDLObjectContainer : MDLObjectContainerComponent {
 	}
 
+	/// <summary>Interface representing the required methods (if any) of the protocol <see cref="T:ModelIO.IMDLObjectContainerComponent" />.</summary>
+	///     <remarks>
+	///       <para>This interface contains the required methods (if any) from the protocol defined by <see cref="T:ModelIO.IMDLObjectContainerComponent" />.</para>
+	///       <para>If you create objects that implement this interface, the implementation methods will automatically be exported to Objective-C with the matching signature from the method defined in the <see cref="T:ModelIO.IMDLObjectContainerComponent" /> protocol.</para>
+	///       <para>Optional methods (if any) are provided by the <see cref="T:ModelIO.MDLObjectContainerComponent_Extensions" /> class as extension methods to the interface, allowing you to invoke any optional methods on the protocol.</para>
+	///     </remarks>
+	/// <summary>Extension methods to the <see cref="T:ModelIO.IMDLObjectContainerComponent" /> interface to support all the methods from the <see cref="T:ModelIO.IMDLObjectContainerComponent" /> protocol.</summary>
+	///     <remarks>
+	///       <para>The extension methods for <see cref="T:ModelIO.IMDLObjectContainerComponent" /> allow developers to treat instances of the interface as having all the optional methods of the original <see cref="T:ModelIO.IMDLObjectContainerComponent" /> protocol.   Since the interface only contains the required members, these extension methods allow developers to call the optional members of the protocol.</para>
+	///     </remarks>
 	interface IMDLObjectContainerComponent { }
 	[MacCatalyst (13, 1)]
 	[Protocol]
@@ -1287,6 +1380,12 @@ namespace ModelIO {
 		MDLObject [] Objects { get; }
 	}
 
+	/// <summary>Interface representing the required methods (if any) of the protocol <see cref="T:ModelIO.IMDLComponent" />.</summary>
+	///     <remarks>
+	///       <para>This interface contains the required methods (if any) from the protocol defined by <see cref="T:ModelIO.IMDLComponent" />.</para>
+	///       <para>If you create objects that implement this interface, the implementation methods will automatically be exported to Objective-C with the matching signature from the method defined in the <see cref="T:ModelIO.IMDLComponent" /> protocol.</para>
+	///       <para>Optional methods (if any) are provided by the <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=Model%20IOMDLComponent_%20Extensions&amp;scope=Xamarin" title="T:ModelIO.MDLComponent_Extensions">T:ModelIO.MDLComponent_Extensions</a></format> class as extension methods to the interface, allowing you to invoke any optional methods on the protocol.</para>
+	///     </remarks>
 	interface IMDLComponent { }
 
 	[MacCatalyst (13, 1)]
@@ -1294,6 +1393,9 @@ namespace ModelIO {
 	interface MDLComponent {
 	}
 
+	/// <summary>Represents a light that is derived from photometric data.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/ModelIO/Reference/MDLPhotometricLight_Class/index.html">Apple documentation for <c>MDLPhotometricLight</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (MDLPhysicallyPlausibleLight))]
 	interface MDLPhotometricLight {
@@ -1320,6 +1422,9 @@ namespace ModelIO {
 		NSData SphericalHarmonicsCoefficients { get; }
 	}
 
+	/// <summary>Represents a light that plausibly attenutates and can represent black-body incandescence.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/ModelIO/Reference/MDLPhysicallyPlausibleLight_Class/index.html">Apple documentation for <c>MDLPhysicallyPlausibleLight</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (MDLLight))]
 	interface MDLPhysicallyPlausibleLight {
@@ -1345,6 +1450,9 @@ namespace ModelIO {
 		float AttenuationEndDistance { get; set; }
 	}
 
+	/// <summary>Represents a bidirectional reflectance distribution function to use when rendering a <see cref="T:ModelIO.MDLMaterialTextureWrapMode" />.</summary>
+	///     <remarks>The properties on this object, except for <see cref="P:ModelIO.MDLPhysicallyPlausibleScatteringFunction.Version" /> have valid values only in the range [0.0, 1.0].</remarks>
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/ModelIO/Reference/MDLPhysicallyPlausibleScatteringFunction_Class/index.html">Apple documentation for <c>MDLPhysicallyPlausibleScatteringFunction</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (MDLScatteringFunction))]
 	interface MDLPhysicallyPlausibleScatteringFunction {
@@ -1385,6 +1493,9 @@ namespace ModelIO {
 		MDLMaterialProperty ClearcoatGloss { get; }
 	}
 
+	/// <summary>Represents a Bidirectional Reflectance Distribution Funcion (BRDF) that defines a material's response to lighting conditions.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/ModelIO/Reference/MDLScatteringFunction_Class/index.html">Apple documentation for <c>MDLScatteringFunction</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface MDLScatteringFunction : MDLNamed {
@@ -1413,6 +1524,9 @@ namespace ModelIO {
 		MDLMaterialProperty AmbientOcclusionScale { get; }
 	}
 
+	/// <summary>A texture that represents a realistic sunlit sky.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/ModelIO/Reference/MDLSkyCubeTexture_Class/index.html">Apple documentation for <c>MDLSkyCubeTexture</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (MDLTexture))]
 	[DisableDefaultCtor]
@@ -1480,6 +1594,9 @@ namespace ModelIO {
 		}
 	}
 
+	/// <summary>A camera that can be used to render stereoscopic views of a scene.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/ModelIO/Reference/MDLStereoscopicCamera_Class/index.html">Apple documentation for <c>MDLStereoscopicCamera</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (MDLCamera))]
 	interface MDLStereoscopicCamera {
@@ -1568,6 +1685,9 @@ namespace ModelIO {
 #endif
 	}
 
+	/// <summary>Indexes and identifies a portion of an MDLMesh, and contains material information about the indexed portion.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/ModelIO/Reference/MDLSubmesh_Class/index.html">Apple documentation for <c>MDLSubmesh</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface MDLSubmesh : MDLNamed {
@@ -1619,6 +1739,9 @@ namespace ModelIO {
 		MDLSubmesh FromGeometryElement (SCNGeometryElement element, [NullAllowed] IMDLMeshBufferAllocator bufferAllocator);
 	}
 
+	/// <summary>Represents texel data for surface rendering.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/ModelIO/Reference/MDLTexture_Class/index.html">Apple documentation for <c>MDLTexture</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // designated
@@ -1750,6 +1873,9 @@ namespace ModelIO {
 		bool HasAlphaValues { get; set; }
 	}
 
+	/// <summary>Describes filtering modes for rendering by sampling a texture.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/ModelIO/Reference/MDLTextureFilter_Class/index.html">Apple documentation for <c>MDLTextureFilter</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface MDLTextureFilter {
@@ -1772,6 +1898,9 @@ namespace ModelIO {
 		MDLMaterialMipMapFilterMode MipFilter { get; set; }
 	}
 
+	/// <summary>Represents a texture and sampling parameters to use when rendering the texture.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/ModelIO/Reference/MDLTextureSampler_Class/index.html">Apple documentation for <c>MDLTextureSampler</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface MDLTextureSampler {
@@ -1785,6 +1914,9 @@ namespace ModelIO {
 		MDLTransform Transform { get; set; }
 	}
 
+	/// <summary>Represents static and animated coordinate transformations.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/ModelIO/Reference/MDLTransform_Class/index.html">Apple documentation for <c>MDLTransform</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DesignatedDefaultCtor]
@@ -1923,6 +2055,12 @@ namespace ModelIO {
 		}
 	}
 
+	/// <summary>Interface representing the required methods (if any) of the protocol <see cref="T:ModelIO.IMDLTransformComponent" />.</summary>
+	///     <remarks>
+	///       <para>This interface contains the required methods (if any) from the protocol defined by <see cref="T:ModelIO.IMDLTransformComponent" />.</para>
+	///       <para>If you create objects that implement this interface, the implementation methods will automatically be exported to Objective-C with the matching signature from the method defined in the <see cref="T:ModelIO.IMDLTransformComponent" /> protocol.</para>
+	///       <para>Optional methods (if any) are provided by the <see cref="T:ModelIO.MDLTransformComponent_Extensions" /> class as extension methods to the interface, allowing you to invoke any optional methods on the protocol.</para>
+	///     </remarks>
 	interface IMDLTransformComponent { }
 	[MacCatalyst (13, 1)]
 	[Protocol]
@@ -1980,6 +2118,9 @@ namespace ModelIO {
 		Matrix4 CreateGlobalTransform (MDLObject obj, double atTime);
 	}
 
+	/// <summary>Encapsulates on-demand loading of a texture at a URL.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/ModelIO/Reference/MDLURLTexture_Class/index.html">Apple documentation for <c>MDLURLTexture</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (MDLTexture), Name = "MDLURLTexture")]
 	[DisableDefaultCtor]
@@ -1995,6 +2136,9 @@ namespace ModelIO {
 		NSUrl Url { get; set; }
 	}
 
+	/// <summary>Describes the physical layout and semantic content of vertex data in an index buffer.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/ModelIO/Reference/MDLVertexAttribute_Class/index.html">Apple documentation for <c>MDLVertexAttribute</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface MDLVertexAttribute : NSCopying {
@@ -2026,6 +2170,9 @@ namespace ModelIO {
 		}
 	}
 
+	/// <summary>Provides convenient access to vertex data for a specific <see cref="T:ModelIO.MDLMesh" /> object.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/ModelIO/Reference/MDLVertexAttributeData_Class/index.html">Apple documentation for <c>MDLVertexAttributeData</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // apple headers: created by MDLMesh's vertexAttributeData selector
@@ -2047,6 +2194,9 @@ namespace ModelIO {
 		nuint BufferSize { get; set; }
 	}
 
+	/// <summary>Class that provides temporary access to mesh data in shared memory.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/ModelIO/Reference/MDLMeshBufferMap_Class/index.html">Apple documentation for <c>MDLMeshBufferMap</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface MDLMeshBufferMap {
@@ -2058,6 +2208,9 @@ namespace ModelIO {
 		IntPtr Bytes { get; }
 	}
 
+	/// <summary>Describes the format of vertices in a mesh buffer.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/ModelIO/Reference/MDLVertexDescriptor_Class/index.html">Apple documentation for <c>MDLVertexDescriptor</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface MDLVertexDescriptor : NSCopying {
@@ -2091,6 +2244,9 @@ namespace ModelIO {
 		void SetPackedOffsets ();
 	}
 
+	/// <summary>Models a 3D object as a collection of volumetric elements, called voxels.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/ModelIO/Reference/MDLVoxelArray_Class/index.html">Apple documentation for <c>MDLVoxelArray</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (MDLObject))]
 	[DisableDefaultCtor]
@@ -2278,6 +2434,7 @@ namespace ModelIO {
 		MDLMesh GetCoarseMeshUsingAllocator ([NullAllowed] IMDLMeshBufferAllocator allocator);
 	}
 
+	/// <summary>Contains valid vertex attribute names.</summary>
 	[Static]
 	[MacCatalyst (13, 1)]
 	interface MDLVertexAttributes {
@@ -2327,6 +2484,9 @@ namespace ModelIO {
 		NSString TextureCoordinate { get; }
 	}
 
+	/// <summary>Describes the layout of vertices in a mesh buffer object.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/ModelIO/Reference/MDLVertexBufferLayout_Class/index.html">Apple documentation for <c>MDLVertexBufferLayout</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface MDLVertexBufferLayout : NSCopying {
@@ -2338,6 +2498,9 @@ namespace ModelIO {
 		nuint Stride { get; set; }
 	}
 
+	/// <summary>Describes the topology of the vertices that are indexed by a submesh's index buffers.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/ModelIO/Reference/MDLSubmeshTopology_Class/index.html">Apple documentation for <c>MDLSubmeshTopology</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface MDLSubmeshTopology {

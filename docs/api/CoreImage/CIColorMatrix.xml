@@ -1,0 +1,63 @@
+<Documentation>
+  <Docs DocId="T:CoreImage.CIColorMatrix">
+    <summary>The CIColorMatrix CoreImage filter.</summary>
+    <remarks>
+      <para>The following example shows this filter in use</para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+// Create a CIImage from a file
+CIImage flower = CIImage.FromCGImage (UIImage.FromFile ("flower.png").CGImage);
+
+// Setup our Vectors used by the CIColorMatrix Filter
+var rVector = new CIVector (.5F, 0F, 0F); // Multiple the Red Values by .5 (s.r = dot(s, rVector))
+var gVector = new CIVector (0F, 1.5F, 0F); // Multiple the Green Vector by 1.5 (s.g = dot(s, gVector))
+var bVector = new CIVector (0F, 0F, .75F); // Multiple the Blue Vector by .75 (s.b = dot(s, bVector))
+var aVector = new CIVector (0F, 0F, 0F, 1.25F); // Multiple the Alpha values by 1.25 (s.a = dot(s, bVector))
+var biasVector = new CIVector (0, 1, 0, 0); // A Bias to be Added to each Color Vector (s = s + bias)
+
+// Constructor the CIColorMatrix Filter
+var colorMatrix = new CIColorMatrix ()
+{
+	Image = flower,
+	RVector = rVector,
+	GVector = gVector,
+	BVector = bVector,
+	AVector = aVector,
+	BiasVector = biasVector
+};
+
+var output = colorMatrix.OutputImage;
+	
+// To render the results, we need to create a context, and then
+// use one of the context rendering APIs, in this case, we render the
+// result into a CoreGraphics image, which is merely a useful representation
+//
+var context = CIContext.FromOptions (null);
+
+var cgimage = context.CreateCGImage (output, output.Extent);
+
+// The above cgimage can be added to a screen view, for example, this
+// would add it to a UIImageView on the screen:
+myImageView.Image = UIImage.FromImage (cgimage);
+        ]]></code>
+      </example>
+      <para>
+		With the following source:
+      </para>
+      <para>
+        <img href="~/CoreImage/_images/flower.png" alt="Photograph of a sunflower." />
+      </para>
+      <para>
+         Produces the following output:
+      </para>
+      <para>
+        <img href="~/CoreImage/_images/ColorMatrix.png" alt="Result of applying the filter." />
+      </para>
+      <para>
+      	"Flower" © 2012 Milica Sekulic, used under a Creative Commons Attribution-ShareAlike license: https://creativecommons.org/licenses/by-sa/3.0/ 
+		"Sunrise near Atkeison Plateau" © 2012 Charles Atkeison, used under a Creative Commons Attribution-ShareAlike license: https://creativecommons.org/licenses/by-sa/3.0/ 
+		"canon" © 2012 cuatrok77 hernandez, used under a Creative Commons Attribution-ShareAlike license: https://creativecommons.org/licenses/by-sa/3.0/ 
+      </para>
+    </remarks>
+  </Docs>
+</Documentation>

@@ -47,7 +47,7 @@ namespace ObjCRuntime {
 
 		public Selector (NativeHandle sel)
 		{
-			if (!sel_isMapped (sel))
+			if (sel_isMapped (sel) == 0)
 				ObjCRuntime.ThrowHelper.ThrowArgumentException (nameof (sel), "Not a selector handle.");
 
 			this.handle = sel;
@@ -123,7 +123,7 @@ namespace ObjCRuntime {
 		// so this looks better in the debugger watch when no selector is assigned (ref: #10876)
 		public static Selector? FromHandle (NativeHandle sel)
 		{
-			if (!sel_isMapped (sel))
+			if (sel_isMapped (sel) == 0)
 				return null;
 			// create the selector without duplicating the sel_isMapped check
 			return new Selector (sel, false);
@@ -139,13 +139,23 @@ namespace ObjCRuntime {
 		extern static /* const char* */ IntPtr sel_getName (/* SEL */ IntPtr sel);
 
 		// objc/runtime.h
+		[DllImport (Messaging.LIBOBJC_DYLIB)]
+		extern static /* SEL */ IntPtr sel_registerName (/* const char* */ IntPtr name);
+
+		// objc/runtime.h
 		// Selector.GetHandle is optimized by the AOT compiler, and the current implementation only supports IntPtr, so we can't switch to NativeHandle quite yet (the AOT compiler crashes).
-		[DllImport (Messaging.LIBOBJC_DYLIB, EntryPoint = "sel_registerName")]
-		public extern static /* SEL */ IntPtr GetHandle (/* const char* */ string name);
+		public static IntPtr GetHandle (string name)
+		{
+			var ptr = Marshal.StringToHGlobalAnsi (name);
+			try {
+				return sel_registerName (ptr);
+			} finally {
+				Marshal.FreeHGlobal (ptr);
+			}
+		}
 
 		// objc/objc.h
 		[DllImport (Messaging.LIBOBJC_DYLIB)]
-		[return: MarshalAs (UnmanagedType.U1)]
-		extern static /* BOOL */ bool sel_isMapped (/* SEL */ IntPtr sel);
+		extern static /* BOOL */ byte sel_isMapped (/* SEL */ IntPtr sel);
 	}
 }

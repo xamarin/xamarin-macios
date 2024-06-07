@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 using Mono.Cecil;
@@ -20,7 +21,7 @@ namespace Xamarin {
 			base.TryEndProcess ();
 
 			var app = Configuration.Application;
-			var required_symbols = Configuration.DerivedLinkContext.RequiredSymbols;
+			var required_symbols = Configuration.DerivedLinkContext.RequiredSymbols.Where (v => v.Mode != SymbolMode.Ignore);
 			var items = new List<MSBuildItem> ();
 
 			switch (app.SymbolMode) {
@@ -37,10 +38,11 @@ namespace Xamarin {
 				break;
 			case SymbolMode.Linker:
 				foreach (var symbol in required_symbols) {
-					var item = new MSBuildItem ("-u" + symbol.Prefix + symbol.Name);
+					var item = new MSBuildItem (symbol.Prefix + symbol.Name);
+					item.Metadata ["SymbolType"] = symbol.Type.ToString ();
 					items.Add (item);
 				}
-				Configuration.WriteOutputForMSBuild ("_ReferencesLinkerFlags", items);
+				Configuration.WriteOutputForMSBuild ("ReferenceNativeSymbol", items);
 				break;
 			default:
 				throw ErrorHelper.CreateError (99, Errors.MX0099, $"invalid symbol mode: {app.SymbolMode}");

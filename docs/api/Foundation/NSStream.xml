@@ -1,0 +1,14 @@
+<Documentation>
+  <Docs DocId="T:Foundation.NSStream">
+    <summary>Abstract class for Foundation Streams. </summary>
+    <remarks>
+      <para>
+	There are a number of properties that can be set on an NSStream by using the indexer on the stream and setting one of the available properties.   This is an abstract class, you will usually consume one of the concrete subclasses <see cref="T:Foundation.NSInputStream" /> or <see cref="T:Foundation.NSOutputStream" />.</para>
+      <format type="text/html">
+        <h2>Using Streams</h2>
+        <div>Unless the application is polling for data to become available on the stream, NSStreams can be used as event-driven stream sources. To use a stream, application developers create it and set its <see cref="P:Foundation.NSStream.Delegate" /> property to point to a <see cref="T:Foundation.NSStreamDelegate" /> instance. This delegate will receive notifications when the connection has opened, when data can be written or read, and when the connection has terminated. Once this is setup, the developer registers the stream with a run loop, and waits for the notifications to be delivered to the delegate. Developers must call the Open method for the stream to start operating.</div>
+      </format>
+    </remarks>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Cocoa/Reference/Foundation/Classes/NSStream_Class/index.html">Apple documentation for <c>NSStream</c></related>
+  </Docs>
+</Documentation>

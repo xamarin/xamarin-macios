@@ -43,13 +43,13 @@ namespace Network {
 
 		public NWProtocolTcpOptions () : this (nw_tcp_create_options (), owns: true) { }
 
-		public void SetNoDelay (bool noDelay) => nw_tcp_options_set_no_delay (GetCheckedHandle (), noDelay);
+		public void SetNoDelay (bool noDelay) => nw_tcp_options_set_no_delay (GetCheckedHandle (), noDelay.AsByte ());
 
-		public void SetNoPush (bool noPush) => nw_tcp_options_set_no_push (GetCheckedHandle (), noPush);
+		public void SetNoPush (bool noPush) => nw_tcp_options_set_no_push (GetCheckedHandle (), noPush.AsByte ());
 
-		public void SetNoOptions (bool noOptions) => nw_tcp_options_set_no_options (GetCheckedHandle (), noOptions);
+		public void SetNoOptions (bool noOptions) => nw_tcp_options_set_no_options (GetCheckedHandle (), noOptions.AsByte ());
 
-		public void SetEnableKeepAlive (bool enableKeepAlive) => nw_tcp_options_set_enable_keepalive (GetCheckedHandle (), enableKeepAlive);
+		public void SetEnableKeepAlive (bool enableKeepAlive) => nw_tcp_options_set_enable_keepalive (GetCheckedHandle (), enableKeepAlive.AsByte ());
 
 		public void SetKeepAliveCount (uint keepAliveCount) => nw_tcp_options_set_keepalive_count (GetCheckedHandle (), keepAliveCount);
 
@@ -71,14 +71,14 @@ namespace Network {
 		public void SetRetransmitConnectionDropTime (TimeSpan connectionDropTime)
 			=> nw_tcp_options_set_retransmit_connection_drop_time (GetCheckedHandle (), (uint) connectionDropTime.Seconds);
 
-		public void SetRetransmitFinDrop (bool retransmitFinDrop) => nw_tcp_options_set_retransmit_fin_drop (GetCheckedHandle (), retransmitFinDrop);
+		public void SetRetransmitFinDrop (bool retransmitFinDrop) => nw_tcp_options_set_retransmit_fin_drop (GetCheckedHandle (), retransmitFinDrop.AsByte ());
 
 		public void SetDisableAckStretching (bool disableAckStretching)
-			=> nw_tcp_options_set_disable_ack_stretching (GetCheckedHandle (), disableAckStretching);
+			=> nw_tcp_options_set_disable_ack_stretching (GetCheckedHandle (), disableAckStretching.AsByte ());
 
-		public void SetEnableFastOpen (bool enableFastOpen) => nw_tcp_options_set_enable_fast_open (GetCheckedHandle (), enableFastOpen);
+		public void SetEnableFastOpen (bool enableFastOpen) => nw_tcp_options_set_enable_fast_open (GetCheckedHandle (), enableFastOpen.AsByte ());
 
-		public void SetDisableEcn (bool disableEcn) => nw_tcp_options_set_disable_ecn (GetCheckedHandle (), disableEcn);
+		public void SetDisableEcn (bool disableEcn) => nw_tcp_options_set_disable_ecn (GetCheckedHandle (), disableEcn.AsByte ());
 
 #if NET
 		[SupportedOSPlatform ("tvos15.0")]

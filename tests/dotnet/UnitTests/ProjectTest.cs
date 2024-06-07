@@ -190,7 +190,7 @@ namespace Xamarin.Tests {
 			// Verify that there's one resource in the binding assembly, and its name
 			var ad = AssemblyDefinition.ReadAssembly (asm, new ReaderParameters { ReadingMode = ReadingMode.Deferred });
 			Assert.That (ad.MainModule.Resources.Count, Is.EqualTo (0), "no embedded resources");
-			var resourceBundle = Path.Combine (project_dir, "bin", "Debug", platform.ToFramework (), assemblyName + ".resources");
+			var resourceBundle = Path.Combine (project_dir, "bin", "Debug", platform.ToFramework (), assemblyName + ".resources.zip");
 			Assert.That (resourceBundle, Does.Exist, "Bundle existence");
 		}
 
@@ -820,21 +820,6 @@ namespace Xamarin.Tests {
 				Path.Combine ("BindingWithUncompressedResourceBundle.resources", "manifest"),
 			};
 
-			switch (platform) {
-			case ApplePlatform.iOS:
-			case ApplePlatform.TVOS:
-				bindingResourcePackages.Add (Path.Combine ("bindings-framework-test.resources", "XStaticArTest.framework", "XStaticArTest"));
-				bindingResourcePackages.Add (Path.Combine ("bindings-framework-test.resources", "XStaticObjectTest.framework", "XStaticObjectTest"));
-				bindingResourcePackages.Add (Path.Combine ("bindings-framework-test.resources", "XTest.framework", "Info.plist"));
-				bindingResourcePackages.Add (Path.Combine ("bindings-framework-test.resources", "XTest.framework", "XTest"));
-				bindingResourcePackages.Add (Path.Combine ("bindings-framework-test.resources", "manifest"));
-				break;
-			case ApplePlatform.MacCatalyst:
-			case ApplePlatform.MacOSX:
-				bindingResourcePackages.Add ("bindings-framework-test.resources.zip");
-				break;
-			}
-
 			foreach (var brp in bindingResourcePackages) {
 				var file = Path.Combine (bindir, brp);
 				Assert.That (file, Does.Exist, "Existence");
@@ -846,10 +831,152 @@ namespace Xamarin.Tests {
 			// then we won't create an xcframework with symlinks, which means that building the binding project for iOS and tvOS
 			// will produce a non-compressed binding package. Thus we assert that we either have a non-compressed or a compressed
 			// package here.
-			var hasCompressedResources = File.Exists (Path.Combine (bindir, "BindingWithDefaultCompileInclude.resources.zip"));
-			var hasDirectoryResources = Directory.Exists (Path.Combine (bindir, "BindingWithDefaultCompileInclude.resources"));
-			if (!hasDirectoryResources && !hasCompressedResources)
-				Assert.Fail ($"Could not find either BindingWithDefaultCompileInclude.resources.zip or BindingWithDefaultCompileInclude.resources in {bindir}");
+			foreach (var rx in new string [] { "BindingWithDefaultCompileInclude", "bindings-framework-test" }) {
+				var zip = Path.Combine (bindir, $"{rx}.resources.zip");
+				var hasCompressedResources = File.Exists (zip);
+				var hasDirectoryResources = Directory.Exists (Path.Combine (bindir, $"{rx}.resources"));
+				if (!hasDirectoryResources && !hasCompressedResources)
+					Assert.Fail ($"Could not find either {rx}.resources.zip or {rx}.resources in {bindir}");
+
+
+				if (hasDirectoryResources)
+					continue;
+
+				var zipContents = ZipHelpers.List (zip).ToHashSet ();
+				var mustHaveContents = new List<string> {
+					"manifest",
+				};
+				var mayHaveContents = new List<string> ();
+				List<string> addHere;
+
+				if (rx == "bindings-framework-test") {
+					foreach (var lib in new string [] { "XStaticArTest", "XStaticObjectTest" }) {
+						addHere = Configuration.include_watchos ? mustHaveContents : mayHaveContents;
+						addHere.AddRange (new string [] {
+							$"{lib}.xcframework/watchos-arm64_32_armv7k",
+							$"{lib}.xcframework/watchos-arm64_32_armv7k/{lib}.framework",
+							$"{lib}.xcframework/watchos-arm64_32_armv7k/{lib}.framework/{lib}",
+							$"{lib}.xcframework/watchos-x86_64-simulator",
+							$"{lib}.xcframework/watchos-x86_64-simulator/{lib}.framework",
+							$"{lib}.xcframework/watchos-x86_64-simulator/{lib}.framework/{lib}",
+						});
+
+						addHere = Configuration.include_tvos ? mustHaveContents : mayHaveContents;
+						addHere.AddRange (new string [] {
+							$"{lib}.xcframework/tvos-arm64",
+							$"{lib}.xcframework/tvos-arm64/{lib}.framework",
+							$"{lib}.xcframework/tvos-arm64/{lib}.framework/{lib}",
+							$"{lib}.xcframework/tvos-arm64_x86_64-simulator",
+							$"{lib}.xcframework/tvos-arm64_x86_64-simulator/{lib}.framework",
+							$"{lib}.xcframework/tvos-arm64_x86_64-simulator/{lib}.framework/{lib}",
+						});
+
+						addHere = Configuration.include_mac ? mustHaveContents : mayHaveContents;
+						addHere.AddRange (new string [] {
+							$"{lib}.xcframework/macos-arm64_x86_64",
+							$"{lib}.xcframework/macos-arm64_x86_64/{lib}.framework",
+							$"{lib}.xcframework/macos-arm64_x86_64/{lib}.framework/{lib}",
+						});
+
+						addHere = Configuration.include_maccatalyst ? mustHaveContents : mayHaveContents;
+						addHere.AddRange (new string [] {
+							$"{lib}.xcframework/ios-arm64_x86_64-maccatalyst",
+							$"{lib}.xcframework/ios-arm64_x86_64-maccatalyst/{lib}.framework",
+							$"{lib}.xcframework/ios-arm64_x86_64-maccatalyst/{lib}.framework/{lib}",
+						});
+
+						addHere = Configuration.include_ios ? mustHaveContents : mayHaveContents;
+						addHere.AddRange (new string [] {
+							$"{lib}.xcframework/ios-arm64_x86_64-simulator",
+							$"{lib}.xcframework/ios-arm64_x86_64-simulator/{lib}.framework",
+							$"{lib}.xcframework/ios-arm64_x86_64-simulator/{lib}.framework/{lib}",
+							$"{lib}.xcframework/ios-arm64",
+							$"{lib}.xcframework/ios-arm64/{lib}.framework",
+							$"{lib}.xcframework/ios-arm64/{lib}.framework/{lib}",
+						});
+
+						mustHaveContents.AddRange (new string [] {
+							$"{lib}.xcframework",
+							$"{lib}.xcframework/Info.plist",
+						});
+					}
+				}
+
+				mustHaveContents.AddRange (new string [] {
+					"XTest.xcframework",
+					"XTest.xcframework/Info.plist",
+				});
+
+				addHere = Configuration.include_ios ? mustHaveContents : mayHaveContents;
+				addHere.AddRange (new string [] {
+					"XTest.xcframework/ios-arm64",
+					"XTest.xcframework/ios-arm64/XTest.framework",
+					"XTest.xcframework/ios-arm64/XTest.framework/Info.plist",
+					"XTest.xcframework/ios-arm64/XTest.framework/XTest",
+					"XTest.xcframework/ios-arm64_x86_64-simulator",
+					"XTest.xcframework/ios-arm64_x86_64-simulator/XTest.framework",
+					"XTest.xcframework/ios-arm64_x86_64-simulator/XTest.framework/Info.plist",
+					"XTest.xcframework/ios-arm64_x86_64-simulator/XTest.framework/XTest",
+				});
+
+				addHere = Configuration.include_maccatalyst ? mustHaveContents : mayHaveContents;
+				addHere.AddRange (new string [] {
+					"XTest.xcframework/ios-arm64_x86_64-maccatalyst",
+					"XTest.xcframework/ios-arm64_x86_64-maccatalyst/XTest.framework",
+					"XTest.xcframework/ios-arm64_x86_64-maccatalyst/XTest.framework/Resources",
+					"XTest.xcframework/ios-arm64_x86_64-maccatalyst/XTest.framework/Versions",
+					"XTest.xcframework/ios-arm64_x86_64-maccatalyst/XTest.framework/Versions/A",
+					"XTest.xcframework/ios-arm64_x86_64-maccatalyst/XTest.framework/Versions/A/Resources",
+					"XTest.xcframework/ios-arm64_x86_64-maccatalyst/XTest.framework/Versions/A/Resources/Info.plist",
+					"XTest.xcframework/ios-arm64_x86_64-maccatalyst/XTest.framework/Versions/A/XTest",
+					"XTest.xcframework/ios-arm64_x86_64-maccatalyst/XTest.framework/Versions/Current",
+					"XTest.xcframework/ios-arm64_x86_64-maccatalyst/XTest.framework/XTest",
+				});
+
+				addHere = Configuration.include_mac ? mustHaveContents : mayHaveContents;
+				addHere.AddRange (new string [] {
+					"XTest.xcframework/macos-arm64_x86_64",
+					"XTest.xcframework/macos-arm64_x86_64/XTest.framework",
+					"XTest.xcframework/macos-arm64_x86_64/XTest.framework/Resources",
+					"XTest.xcframework/macos-arm64_x86_64/XTest.framework/Versions",
+					"XTest.xcframework/macos-arm64_x86_64/XTest.framework/Versions/A",
+					"XTest.xcframework/macos-arm64_x86_64/XTest.framework/Versions/A/Resources",
+					"XTest.xcframework/macos-arm64_x86_64/XTest.framework/Versions/A/Resources/Info.plist",
+					"XTest.xcframework/macos-arm64_x86_64/XTest.framework/Versions/A/XTest",
+					"XTest.xcframework/macos-arm64_x86_64/XTest.framework/Versions/Current",
+					"XTest.xcframework/macos-arm64_x86_64/XTest.framework/XTest",
+				});
+
+				addHere = Configuration.include_tvos ? mustHaveContents : mayHaveContents;
+				addHere.AddRange (new string [] {
+					"XTest.xcframework/tvos-arm64",
+					"XTest.xcframework/tvos-arm64/XTest.framework",
+					"XTest.xcframework/tvos-arm64/XTest.framework/Info.plist",
+					"XTest.xcframework/tvos-arm64/XTest.framework/XTest",
+					"XTest.xcframework/tvos-arm64_x86_64-simulator",
+					"XTest.xcframework/tvos-arm64_x86_64-simulator/XTest.framework",
+					"XTest.xcframework/tvos-arm64_x86_64-simulator/XTest.framework/Info.plist",
+					"XTest.xcframework/tvos-arm64_x86_64-simulator/XTest.framework/XTest",
+				});
+
+				addHere = Configuration.include_watchos ? mustHaveContents : mayHaveContents;
+				addHere.AddRange (new string [] {
+					"XTest.xcframework/watchos-arm64_32_armv7k",
+					"XTest.xcframework/watchos-arm64_32_armv7k/XTest.framework",
+					"XTest.xcframework/watchos-arm64_32_armv7k/XTest.framework/Info.plist",
+					"XTest.xcframework/watchos-arm64_32_armv7k/XTest.framework/XTest",
+					"XTest.xcframework/watchos-x86_64-simulator",
+					"XTest.xcframework/watchos-x86_64-simulator/XTest.framework",
+					"XTest.xcframework/watchos-x86_64-simulator/XTest.framework/Info.plist",
+					"XTest.xcframework/watchos-x86_64-simulator/XTest.framework/XTest",
+				});
+
+				var missing = mustHaveContents.ToHashSet ().Except (zipContents);
+				Assert.That (missing, Is.Empty, "No missing files");
+
+				var extra = zipContents.Except (mustHaveContents).Except (mayHaveContents);
+				Assert.That (extra, Is.Empty, "No extra files");
+			}
 		}
 
 		void AssertAppContents (ApplePlatform platform, string app_directory)
@@ -1274,6 +1401,7 @@ namespace Xamarin.Tests {
 			var properties = GetDefaultProperties (runtimeIdentifiers);
 			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
 
+			Clean (project_path);
 			DotNet.AssertBuild (project_path, properties);
 
 			var codesignDirectory = GetRelativeCodesignDirectory (platform);
@@ -1336,6 +1464,40 @@ namespace Xamarin.Tests {
 				Assert.IsFalse (IsDylibSigned (path), $"Unsigned: {path}");
 			}
 			Assert.AreEqual (1, remainingDylibs.Length, "Unsigned count");
+
+			// Verify that a Resources subdirectory causes the build to fail.
+			switch (platform) {
+			case ApplePlatform.iOS:
+			case ApplePlatform.TVOS:
+				var invalidDir = Path.Combine (appPath, "Resources");
+				Directory.CreateDirectory (invalidDir);
+
+				// First verify that we get our customized error message
+				var buildFailure = DotNet.AssertBuildFailure (project_path, properties);
+				var errors = BinLog.GetBuildLogErrors (buildFailure.BinLogPath).ToArray ();
+				AssertErrorMessages (errors, $"The app bundle '{appPath}' contains a subdirectory named 'Resources'. This is not allowed on this platform. Typically resource files should be in the root directory of the app bundle (or a custom subdirectory, but named anything other than 'Resources').");
+
+				// Then disable our customized error message, but the build will still fail, now with codesign's error message
+				properties ["CodesignDisallowResourcesSubdirectoryInAppBundle"] = "false";
+				buildFailure = DotNet.AssertBuildFailure (project_path, properties);
+				errors = BinLog.GetBuildLogErrors (buildFailure.BinLogPath).ToArray ();
+				AssertErrorMessages (errors,
+					$"/usr/bin/codesign exited with code 1:\n" +
+					$"{appPath}: replacing existing signature\n" +
+					$"{appPath}: code object is not signed at all\n" +
+					$"In subcomponent: {appPath}/System.Diagnostics.DiagnosticSource.dll",
+
+					$"Failed to codesign '{appPath}': {appPath}: replacing existing signature\n" +
+					$"{appPath}: code object is not signed at all\n" +
+					$"In subcomponent: {appPath}/System.Diagnostics.DiagnosticSource.dll"
+				);
+
+				// Remove the dir, and now the build should succeed again.
+				properties.Remove ("CodesignDisallowResourcesSubdirectoryInAppBundle");
+				Directory.Delete (invalidDir);
+				DotNet.AssertBuild (project_path, properties);
+				break;
+			}
 		}
 
 		bool IsDylibSigned (string dylib)
@@ -1728,6 +1890,72 @@ namespace Xamarin.Tests {
 			var test = DotNet.RunTool (Path.Combine (toolPath, tool), "test", pdbFile!);
 
 			Assert.AreEqual ($"sourcelink test passed: {pdbFile}", test.StandardOutput.ToString ().TrimEnd ('\n'));
+		}
+
+
+		[Test]
+		// [TestCase (ApplePlatform.iOS)] // Skipping because we're not executing tvOS apps anyway (but it should work)
+		// [TestCase (ApplePlatform.TVOS)] // Skipping because we're not executing tvOS apps anyway (but it should work)
+		[TestCase (ApplePlatform.MacOSX)] // https://github.com/dotnet/runtime/issues/102730
+		[TestCase (ApplePlatform.MacCatalyst)]
+		public void RaisesAppDomainUnhandledExceptionEvent (ApplePlatform platform)
+		{
+			var project = "ExceptionalTestApp";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+
+			var runtimeIdentifiers = GetDefaultRuntimeIdentifier (platform);
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
+			Clean (project_path);
+			var properties = GetDefaultProperties ();
+			DotNet.AssertBuild (project_path, properties);
+
+			if (CanExecute (platform, runtimeIdentifiers)) {
+				var env = new Dictionary<string, string?> {
+					{ "EXCEPTIONAL_TEST_CASE", "1" },
+				};
+				var appExecutable = GetNativeExecutable (platform, appPath);
+				var output = ExecuteWithMagicWordAndAssert (appExecutable, env);
+			}
+		}
+
+		bool FindAssembly (string path, string dllName)
+		{
+			foreach (string file in Directory.GetFiles (path, "*.dll", SearchOption.AllDirectories)) {
+				if (Path.GetFileName (file).Equals (dllName, StringComparison.OrdinalIgnoreCase)) {
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		[Test]
+		[TestCase (ApplePlatform.iOS, "ios-arm64;", "-all,System.Private.CoreLib")]
+		[TestCase (ApplePlatform.iOS, "ios-arm64;", "all,-System.Private.CoreLib")]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64", "-all,System.Private.CoreLib")]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64", "all,-System.Private.CoreLib")]
+		[TestCase (ApplePlatform.TVOS, "tvos-arm64;", "-all,System.Private.CoreLib")]
+		[TestCase (ApplePlatform.TVOS, "tvos-arm64;", "all,-System.Private.CoreLib")]
+		public void PartialAOTTest (ApplePlatform platform, string runtimeIdentifiers, string mtouchInterpreter)
+		{
+			var project = "MySimpleApp";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
+
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
+			Clean (project_path);
+			var properties = GetDefaultProperties (runtimeIdentifiers);
+			properties ["MtouchInterpreter"] = $"\"{mtouchInterpreter}\"";
+
+			DotNet.AssertBuild (project_path, properties);
+
+			Assert.True (!FindAssembly (appPath, "aot-instances.dll"), "Dedup optimization shouldn't been enabled for partial AOT compilation");
+
+			var appExecutable = GetNativeExecutable (platform, appPath);
+
+			if (CanExecute (platform, runtimeIdentifiers)) {
+				ExecuteWithMagicWordAndAssert (appExecutable);
+			}
 		}
 	}
 }

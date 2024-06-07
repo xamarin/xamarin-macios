@@ -847,11 +847,13 @@ namespace CoreMidi {
 			byteptr = IntPtr.Zero;
 		}
 
-		internal byte []? ByteArray {
+		/// <summary>Returns the 'bytes' array passed to the <see cref="MidiPacket(long,byte[])" /> constructor or the <see cref="MidiPacket(long,byte[],int,int)" /> constructor.</summary>
+		public byte []? ByteArray {
 			get { return bytes; }
 		}
 
-		internal IntPtr BytePointer {
+		/// <summary>Returns the 'bytes' pointer passed to the <see cref="MidiPacket(long,ushort,IntPtr)" /> constructor.</summary>
+		public IntPtr BytePointer {
 			get { return byteptr; }
 		}
 

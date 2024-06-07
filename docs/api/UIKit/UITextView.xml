@@ -1,0 +1,104 @@
+<Documentation>
+  <Docs DocId="T:UIKit.UITextView">
+    <summary>A <see cref="T:UIKit.UIControl" /> that displays a scrollable multi-line text editor.</summary>
+    <remarks>
+      <para>The <see cref="T:UIKit.UITextView" /> is a scrollable, multi-line text view that can display styled text and can be editable.</para>
+      <format type="text/html">
+        <h2>Editing</h2>
+      </format>
+      <para>If <see cref="P:UIKit.UITextView.Editable" /> is <see langword="true" />, the text view will be editable by the application user. When the application user taps on the view, it becomes the first responder and displays the system keyboard. It is the application developer's responsibility to ensure that the keyboard does not obscure functionality (e.g., by scrolling or rearranging views). To make the keyboard disappear, the application developer must have the <see cref="T:UIKit.UITextView" /> resign first responder status (by calling <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=UIKit%20UIResponder%20Resign%20First%20Responder&amp;scope=Xamarin" title="M:UIKit.UIResponder.ResignFirstResponder*">M:UIKit.UIResponder.ResignFirstResponder*</a></format>).</para>
+      <para>Application developers can use <see cref="T:UIKit.UIKeyboard.Notifications" /> to calculate the necessary scrolling or rearranging of views associated with the appearance and disappearance of the keyboard. </para>
+      <para>Since the <see cref="T:UIKit.UITextView" /> is multiline, unlike the <see cref="T:UIKit.UITextField" />, the keyboard's <c>return</c> key cannot be replaced by a <c>done</c> key and there is no equivalent to the <see cref="P:UIKit.UITextField.ShouldReturn" /> property. A common idiom for a <see cref="T:UIKit.UITextView" /> is to "end editing when the user touches anywhere outside the text field." This can be done by overriding <see cref="M:UIKit.UIResponder.TouchesBegan(Foundation.NSSet,UIKit.UIEvent)" /> in the containing <see cref="T:UIKit.UIView" /> and calling <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=UIKit%20UIView%20End%20Editing&amp;scope=Xamarin" title="M:UIKit.UIView.EndEditing*">M:UIKit.UIView.EndEditing*</a></format>, as shown in the following example:</para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+public class MyView : UIView
+{
+	UITextView textView;
+
+	public MyView()
+	{
+		textView = new UITextView(new RectangleF(10, 44, UIScreen.MainScreen.Bounds.Width - 20, 300)){
+			Editable = true
+		};
+		AddSubview(textView);
+	}
+
+	public override void TouchesBegan(NSSet touches, UIEvent evt)
+	{
+		EndEditing(true);
+	}
+}
+          ]]></code>
+      </example>
+      <format type="text/html">
+        <h2>Text Kit</h2>
+      </format>
+      <para>iOS 7 introduced "Text Kit," a broad set of APIs and modifications of existing classes, built on <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=Core%20Text&amp;scope=Xamarin" title="N:CoreText">N:CoreText</a></format>, that greatly expands the typographical flexibility of iOS.</para>
+      <para>
+        <see cref="T:UIKit.UITextView" />s are intended to display large amounts of text. The text is stored in <see cref="T:UIKit.NSTextStorage" /> objects and layout of the text is managed by a <see cref="T:UIKit.NSLayoutManager" />, which lays out the text in an area defined by <see cref="T:UIKit.NSTextContainer" /> objects. </para>
+      <para>Mapped to the Model-View-Controller pattern, the <see cref="T:UIKit.NSLayoutManager" /> is the Controller, the <see cref="T:UIKit.UITextView" /> is the View, and <see cref="T:UIKit.NSTextStorage" /> and <see cref="T:UIKit.NSTextContainer" />s are Model elements.</para>
+      <para>
+        <see cref="T:UIKit.NSTextStorage" /> is a subclass of <see cref="T:Foundation.NSMutableAttributedString" /> and is responsible for holding the string, with various text styles. <see cref="T:UIKit.NSTextContainer" /> objects are responsible for modeling the geometric layout of the page. The <see cref="T:UIKit.NSLayoutManager" /> translates characters in the <see cref="T:UIKit.NSTextStorage" /> into glyphs, lays those out in lines according to the constraints of the <see cref="T:UIKit.NSTextContainer" />s, and coordinates the display of one or more <see cref="T:UIKit.UITextView" /> objects.</para>
+      <para>The following example shows the basic use of two important Text Kit features: multiple text styles and exclusion paths:</para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+	var size = UIScreen.MainScreen.Bounds.Size;
+
+	var atts = new UIStringAttributes();
+	atts.ForegroundColor = UIColor.Blue;
+	var txt = "\nText Kit.\n Lorem ipsum dolor ...  auctor.";
+	var attributedString = new NSMutableAttributedString(txt, atts);
+	attributedString.BeginEditing();
+	attributedString.AddAttribute(UIStringAttributeKey.ForegroundColor, UIColor.Red, new NSRange(0, 10));
+	attributedString.AddAttribute(UIStringAttributeKey.Font, UIFont.PreferredFontForTextStyle(UIFontTextStyle.Headline), new NSRange(0, 10));
+	attributedString.EndEditing();
+
+	//NSTextStorage == MVC Model (partial)
+	var storage = new NSTextStorage();
+	storage.SetString(attributedString);
+
+	//NSLayoutManager == MVC Controller
+	var layoutManager = new NSLayoutManager();
+	storage.AddLayoutManager(layoutManager);
+	//NSTextContainer defines a logical block (page, column)
+	var container = new NSTextContainer(size);
+	layoutManager.AddTextContainer(container);
+
+	//UITextView == MVC View
+	TextView = new UITextView(new RectangleF(new PointF(0, 0), size), container);
+	TextView.AttributedText = attributedString;
+	TextView.ScrollEnabled = false;
+	TextView.Editable = false;
+	TextView.UserInteractionEnabled = false;
+	AddSubview(TextView);
+
+	//Add an image overlay, with exclusion path..
+	var logoRect = new RectangleF(96, 195, 95, 90);
+	var img = UIImage.FromBundle("xam.png");
+	var imgView = new UIImageView(logoRect);
+	imgView.Image = img;
+	AddSubview(imgView);
+
+	//Note exclusion path in container coordinate system...
+	var xRect = TextView.ConvertRectFromView(logoRect, this);
+	var hexPath = HexPath(xRect);
+	container.ExclusionPaths = new UIBezierPath[] { hexPath };
+}
+            ]]></code>
+      </example>
+      <para>iOS 6 added multiple text-style capability to <see cref="T:UIKit.UITextView" />. To use multiple styles, application developers must use the <see cref="P:UIKit.UITextView.AttributedText" /> property. The <see cref="P:UIKit.UITextView.Font" />, <see cref="P:UIKit.UITextView.TextColor" />, and <see cref="P:UIKit.UITextView.TextAlignment" /> properties apply to all the text in the <see cref="T:UIKit.UITextView" />.</para>
+      <format type="text/html">
+        <br />
+      </format>
+      <para>
+        The Xamarin API supports two styles of event notification: the Objective-C style that uses a delegate class or the C# style using event notifications.  
+      </para>
+      <para>
+        The C# style allows the user to add or remove event handlers at runtime by assigning to the events of properties of this class.    Event handlers can be anyone of a method, an anonymous methods or a lambda expression.  Using the C# style events or properties will override any manual settings to the Objective-C Delegate or WeakDelegate settings.
+      </para>
+      <para>The Objective-C style requires the user to create a new class derived from <see cref="T:UIKit.UITextViewDelegate" /> class and assign it to the <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=UIKit%20Delegate&amp;scope=Xamarin" title="P:UIKit.Delegate">P:UIKit.Delegate</a></format> property.   Alternatively, for low-level control, by creating a class derived from <see cref="T:Foundation.NSObject" /> which has every entry point properly decorated with an [Export] attribute.   The instance of this object can then be assigned to the <see cref="P:UIKit.UITextView.WeakDelegate" /> property.   
+      </para>
+    </remarks>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/UITextView_Class/index.html">Apple documentation for <c>UITextView</c></related>
+  </Docs>
+</Documentation>

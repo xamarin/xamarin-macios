@@ -52,7 +52,7 @@ using UIKit;
 
 #nullable enable
 
-#if !MONOMAC
+#if !MONOMAC && !XAMCORE_5_0
 namespace System.Net.Http {
 #else
 namespace Foundation {
@@ -889,7 +889,9 @@ namespace Foundation {
 						Content = content,
 						RequestMessage = inflight.Request
 					};
-					httpResponse.RequestMessage.RequestUri = absoluteUri;
+					var wasRedirected = dataTask.CurrentRequest?.Url?.AbsoluteString != dataTask.OriginalRequest?.Url?.AbsoluteString;
+					if (wasRedirected)
+						httpResponse.RequestMessage.RequestUri = absoluteUri;
 
 					foreach (var v in urlResponse.AllHeaderFields) {
 						// NB: Cocoa trolling us so hard by giving us back dummy dictionary entries

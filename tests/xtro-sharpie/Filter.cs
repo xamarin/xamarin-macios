@@ -20,7 +20,6 @@ namespace Extrospection {
 			case "Collaboration":
 			case "ColorSync":
 			case "CommonPanels":
-			case "CryptoTokenKit":
 			case "DictionaryServices":
 			case "DirectoryService":
 			case "DiskArbitration":

@@ -64,6 +64,9 @@ using NativeHandle = System.IntPtr;
 
 namespace CoreImage {
 
+	/// <summary>A Core Image color, including both color values and a reference to a color space.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIColor_Class/index.html">Apple documentation for <c>CIColor</c></related>
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface CIColor : NSSecureCoding, NSCopying {
@@ -197,6 +200,19 @@ namespace CoreImage {
 		NativeHandle Constructor (Color color);
 	}
 
+	/// <summary>Orchestrates the rendering of a CIFilter pipeline.</summary>
+	///     <remarks>
+	///       <para>
+	/// 	The CIContext class is used to orchestrate the rendering of a
+	/// 	pipeline of filters into one of the supported output surfaces.
+	///       </para>
+	///       <para>
+	/// 	The CGContext can render its results into a CoreGraphics
+	/// 	CGImage, render directly into the screen with one of the
+	/// 	various Draw methods, into a CoreVideo CVPixelBuffer or into a CoreGraphics context.
+	///       </para>
+	///     </remarks>
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/GraphicsImaging/Reference/QuartzCoreFramework/Classes/CIContext_Class/index.html">Apple documentation for <c>CIContext</c></related>
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface CIContext {
@@ -434,6 +450,7 @@ namespace CoreImage {
 		NSData GetOpenEXRRepresentation (CIImage image, NSDictionary<NSString, NSObject> options, [NullAllowed] out NSError errorPtr);
 	}
 
+	/// <summary>Extension methods for <see cref="T:CoreImage.CIContext" /> that can generate common image formats.</summary>
 	[Category]
 	[BaseType (typeof (CIContext))]
 	interface CIContext_ImageRepresentation {
@@ -570,6 +587,7 @@ namespace CoreImage {
 		CIFilter GetDepthBlurEffectFilter (CIImage image, CIImage disparityImage, [NullAllowed] CIImage portraitEffectsMatte, [NullAllowed] CIImage hairSemanticSegmentation, [NullAllowed] CIImage glassesMatte, [NullAllowed] CIImage gainMap, CGImagePropertyOrientation orientation, [NullAllowed] NSDictionary options);
 	}
 
+	/// <include file="../docs/api/CoreImage/CIFilter.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIFilter']/*" />
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] //  In iOS8 they expose custom filters, we expose a protected one in CIFilter.cs
 	interface CIFilter : NSSecureCoding, NSCopying {
@@ -1075,6 +1093,7 @@ namespace CoreImage {
 		NSString ActiveKeysKey { get; }
 	}
 
+	/// <summary>Settings for use with <see cref="M:CoreImage.CIFilter.CreateRawFilter(CoreVideo.CVPixelBuffer,Foundation.NSDictionary,Foundation.NSDictionary)" />.</summary>
 	[Deprecated (PlatformName.iOS, 15, 0, message: "Use 'CIRawFilter' instead.")]
 	[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'CIRawFilter' instead.")]
 	[Deprecated (PlatformName.TvOS, 15, 0, message: "Use 'CIRawFilter' instead.")]
@@ -1166,12 +1185,15 @@ namespace CoreImage {
 		NSSet ActiveKeys { get; }
 	}
 
+	/// <summary>Keys that can be used to get output results out of a CIFilter.</summary>
+	///     <remarks>At this point, this only includes the CIFilterOutputKey</remarks>
 	[Static]
 	interface CIFilterOutputKey {
 		[Field ("kCIOutputImageKey", "+CoreImage")]
 		NSString Image { get; }
 	}
 
+	/// <summary>Keys that can be used to configure the CIFilter input values.</summary>
 	[Static]
 	interface CIFilterInputKey {
 		[Field ("kCIInputBackgroundImageKey", "+CoreImage")]
@@ -1277,6 +1299,7 @@ namespace CoreImage {
 		NSString Amount { get; }
 	}
 
+	/// <summary>Constants used for CIFilter's attributes</summary>
 	[Static]
 	interface CIFilterAttributes {
 		[Field ("kCIAttributeFilterName", "+CoreImage")]
@@ -1392,6 +1415,7 @@ namespace CoreImage {
 		NSString Available_iOS { get; }
 	}
 
+	/// <summary>Constants used for CIFilter filtering facilities to find filters by category.</summary>
 	[Static]
 	interface CIFilterCategory {
 		[Field ("kCICategoryDistortionEffect", "+CoreImage")]
@@ -1459,6 +1483,7 @@ namespace CoreImage {
 		NSString FilterGenerator { get; }
 	}
 
+	/// <summary>Interface for classes that create named filters.</summary>
 	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface CIFilterConstructor {
@@ -1470,6 +1495,7 @@ namespace CoreImage {
 
 	interface ICIFilterConstructor { }
 
+	/// <summary>Contains options for core image filter user interfaces.</summary>
 	[Static]
 	[MacCatalyst (13, 1)]
 	interface CIUIParameterSet {
@@ -1567,6 +1593,9 @@ namespace CoreImage {
 		NSString ExportedKeyName { get; }
 	}
 
+	/// <summary>Masks filter operations to areas composed of the intersections, unions, and affine transformations of rectangles and other similarly constructed filter shapes.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/GraphicsImaging/Reference/QuartzCoreFramework/Classes/CIFilterShape_Class/index.html">Apple documentation for <c>CIFilterShape</c></related>
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	[MacCatalyst (13, 1)]
@@ -1600,6 +1629,7 @@ namespace CoreImage {
 		CGRect Extent { get; }
 	}
 
+	/// <summary>Options that can be used when initializing a new <see cref="T:CoreImage.CIImage" />.</summary>
 	[StrongDictionary ("CIImageInitializationOptionsKeys")]
 	interface CIImageInitializationOptions {
 		// Bug #60726: [Generator] Support INativeObject in StrongDictionary
@@ -1721,6 +1751,7 @@ namespace CoreImage {
 
 	}
 
+	/// <include file="../docs/api/CoreImage/CIImage.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIImage']/*" />
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface CIImage : NSSecureCoding, NSCopying {
@@ -2516,6 +2547,7 @@ namespace CoreImage {
 
 	interface ICIImageProcessorInput { }
 
+	/// <summary>The input to a <see cref="T:CoreImage.CIImageProcessorKernel" />.</summary>
 	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface CIImageProcessorInput {
@@ -2574,6 +2606,7 @@ namespace CoreImage {
 
 	interface ICIImageProcessorOutput { }
 
+	/// <summary>The output of a <see cref="T:CoreImage.CIImageProcessorKernel" />.</summary>
 	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface CIImageProcessorOutput {
@@ -2620,6 +2653,7 @@ namespace CoreImage {
 		ulong Digest { get; }
 	}
 
+	/// <summary>Options used in various calls to <see cref="T:CoreImage.CIImage" /> involving <see cref="T:CoreImage.ICIImageProvider" /> objects.</summary>
 	[MacCatalyst (13, 1)]
 	[StrongDictionary ("CIImageProviderKeys")]
 	interface CIImageProviderOptions {
@@ -2641,6 +2675,7 @@ namespace CoreImage {
 	interface ICIImageProvider { }
 
 	// Informal protocol
+	/// <summary>Interface defining an image provider.</summary>
 	[Protocol (IsInformal = true)]
 	interface CIImageProvider {
 		[Abstract]
@@ -2648,8 +2683,12 @@ namespace CoreImage {
 		unsafe void ProvideImageData (IntPtr data, nuint rowbytes, nuint x, nuint y, nuint width, nuint height, [NullAllowed] NSObject info);
 	}
 
+	/// <summary>Completion handler for deterimining a region of interest in the source image.</summary>
 	delegate CGRect CIKernelRoiCallback (int /* int, not NSInteger */ index, CGRect rect);
 
+	/// <summary>A kernel for filters that use custom GPU steps.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/GraphicsImaging/Reference/QuartzCoreFramework/Classes/CIKernel_Class/index.html">Apple documentation for <c>CIKernel</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // avoid crashes
@@ -2713,6 +2752,10 @@ namespace CoreImage {
 		CIImage ApplyWithExtent (CGRect extent, CIKernelRoiCallback callback, [NullAllowed] NSObject [] args);
 	}
 
+	/// <summary>Kernel for a GPU process that only operates on color data.</summary>
+	///     
+	///     <!-- 2014-09-08 Apple undocumented. Relates to https://developer.apple.com/library/prerelease/ios/documentation/GraphicsImaging/Conceptual/CoreImaging/ci_custom_filters/ci_custom_filters.html#//apple_ref/doc/uid/TP30001185-CH6-CJBFHGGC but no real route forward. -->
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/CoreImage/Reference/CIColorKernel_Class/index.html">Apple documentation for <c>CIColorKernel</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIKernel))]
 	[DisableDefaultCtor] // returns a nil handle -> instances of this type are returned from `kernel[s]WithString:`
@@ -2732,6 +2775,9 @@ namespace CoreImage {
 		CIColorKernel FromProgramSingle (string coreImageShaderProgram);
 	}
 
+	/// <summary>A kernel for GPU transforms that operate only on geometry.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/CoreImage/Reference/CIWarpKernel_Class/index.html">Apple documentation for <c>CIWarpKernel</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIKernel))]
 	[DisableDefaultCtor] // returns a nil handle -> instances of this type are returned from `kernel[s]WithString:`
@@ -2751,6 +2797,9 @@ namespace CoreImage {
 		CIWarpKernel FromProgramSingle (string coreImageShaderProgram);
 	}
 
+	/// <summary>A feedback image processor.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/GraphicsImaging/Reference/QuartzCoreFramework/Classes/CIImageAccumulator_Class/index.html">Apple documentation for <c>CIImageAccumulator</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // does not work in iOS 11 beta 4
@@ -2833,6 +2882,9 @@ namespace CoreImage {
 		void LoadPlugIn (NSUrl pluginUrl, bool allowNonExecutable);
 	}
 
+	/// <summary>Samples images for processing by a <see cref="T:CoreImage.CISampler" />.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/GraphicsImaging/Reference/QuartzCoreFramework/Classes/CISampler_Class/index.html">Apple documentation for <c>CISampler</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -2883,6 +2935,9 @@ namespace CoreImage {
 		NSString ColorSpace { get; }
 	}
 
+	/// <summary>A vector for use with Core Image objects such as <see cref="T:CoreImage.CIFilter" />.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/GraphicsImaging/Reference/QuartzCoreFramework/Classes/CIVector_Class/index.html">Apple documentation for <c>CIVector</c></related>
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface CIVector : NSSecureCoding, NSCopying {
@@ -2990,6 +3045,7 @@ namespace CoreImage {
 
 	}
 
+	/// <include file="../docs/api/CoreImage/CIDetector.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIDetector']/*" />
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface CIDetector {
@@ -3065,6 +3121,9 @@ namespace CoreImage {
 		NSString TypeText { get; }
 	}
 
+	/// <summary>An area of an image in which a <see cref="T:CoreImage.CIDetector" /> has detected a match.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/CoreImage/Reference/CIFeature_Ref/index.html">Apple documentation for <c>CIFeature</c></related>
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface CIFeature {
@@ -3090,6 +3149,9 @@ namespace CoreImage {
 		NSString TypeText { get; }
 	}
 
+	/// <summary>Locations of the eyes and mouths in a detected face. In video sequences, attempts to maintain a consistent <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=Core%20Image%20CIFace%20Feature%20Tracking%20ID&amp;scope=Xamarin" title="P:CoreImage.CIFaceFeature.TrackingID">P:CoreImage.CIFaceFeature.TrackingID</a></format>.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/CoreImage/Reference/CIFaceFeature/index.html">Apple documentation for <c>CIFaceFeature</c></related>
 	[BaseType (typeof (CIFeature))]
 	[DisableDefaultCtor]
 	interface CIFaceFeature {
@@ -3148,6 +3210,9 @@ namespace CoreImage {
 		bool RightEyeClosed { get; }
 	}
 
+	/// <summary>A <see cref="T:CoreImage.CIFeature" /> an image space rectange that contains a detected physical rectangle.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/QuartzCore/Reference/CIRectangleFeature/index.html">Apple documentation for <c>CIRectangleFeature</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIFeature))]
 	interface CIRectangleFeature {
@@ -3167,6 +3232,9 @@ namespace CoreImage {
 		CGPoint BottomRight { get; }
 	}
 
+	/// <summary>A detected QR code.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/QuartzCore/Reference/CIQRCodeFeature/index.html">Apple documentation for <c>CIQRCodeFeature</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIFeature))]
 	partial interface CIQRCodeFeature : NSSecureCoding, NSCopying {
@@ -3195,6 +3263,9 @@ namespace CoreImage {
 		CIQRCodeDescriptor SymbolDescriptor { get; }
 	}
 
+	/// <summary>A detected text feature.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/CoreImage/Reference/CITextFeature_Class/index.html">Apple documentation for <c>CITextFeature</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIFeature))]
 	interface CITextFeature {
@@ -3218,6 +3289,9 @@ namespace CoreImage {
 		CIFeature [] SubFeatures { get; }
 	}
 
+	/// <summary>Base class for image-processing classes whose processing can be inserted into the CoreImage processing pipeline.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/CoreImage/CIImageProcessorKernel">Apple documentation for <c>CIImageProcessorKernel</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface CIImageProcessorKernel {
@@ -3257,6 +3331,7 @@ namespace CoreImage {
 		CIVector [] GetRoiTileArray (int input, [NullAllowed] NSDictionary<NSString, NSObject> arguments, CGRect outputRect);
 	}
 
+	/// <summary>Animates a transition by creating an accordion-fold effect on the source image.</summary>
 	[CoreImageFilter]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIFilter))]
@@ -3269,6 +3344,7 @@ namespace CoreImage {
 #endif
 	}
 
+	/// <summary>An abstract <see cref="T:CoreImage.CIFilter" /> that composites two images.</summary>
 	[CoreImageFilter (IntPtrCtorVisibility = MethodAttributes.Family)] // was already protected in classic
 	[Abstract]
 	[BaseType (typeof (CIFilter))]
@@ -3281,11 +3357,13 @@ namespace CoreImage {
 		CIImage BackgroundImage { get; set; }
 	}
 
+	/// <include file="../docs/api/CoreImage/CIAdditionCompositing.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIAdditionCompositing']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CICompositingFilter))]
 	interface CIAdditionCompositing {
 	}
 
+	/// <summary>An abstract class that defines a <see cref="T:CoreImage.CIFilter" /> that performs an affine transform on an image and then performs a filtering operation on the transformed image.</summary>
 	[CoreImageFilter (IntPtrCtorVisibility = MethodAttributes.Family)] // was already protected in classic
 	[Abstract]
 	[BaseType (typeof (CIFilter))]
@@ -3299,16 +3377,19 @@ namespace CoreImage {
 #endif
 	}
 
+	/// <include file="../docs/api/CoreImage/CIAffineClamp.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIAffineClamp']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CIAffineFilter))]
 	interface CIAffineClamp : CIAffineClampProtocol {
 	}
 
+	/// <include file="../docs/api/CoreImage/CIAffineTile.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIAffineTile']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CIAffineFilter))]
 	interface CIAffineTile : CIAffineTileProtocol {
 	}
 
+	/// <include file="../docs/api/CoreImage/CIAffineTransform.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIAffineTransform']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CIAffineFilter))]
 	interface CIAffineTransform {
@@ -3328,6 +3409,7 @@ namespace CoreImage {
 	interface CIAreaAverageProtocol : CIFilterProtocol {
 	}
 
+	/// <summary>Produces a single-pixel image. The pixel is the average color of the input extent.</summary>
 	[CoreImageFilter]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIReductionFilter))]
@@ -3374,6 +3456,10 @@ namespace CoreImage {
 		nint InputCount { get; set; }
 	}
 
+	/// <summary>Creates histogram data for a given image and rectangle of interest.</summary>
+	///     <remarks>
+	///       <para>The <see cref="P:CoreImage.CIFilter.OutputImage" /> of this filter is a single-pixel high image of width <see cref="P:CoreImage.CIAreaHistogram.Count" />. </para>
+	///     </remarks>
 	[CoreImageFilter]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIFilter))]
@@ -3423,6 +3509,7 @@ namespace CoreImage {
 	interface CIAreaMaximumProtocol : CIAreaReductionFilterProtocol {
 	}
 
+	/// <summary>Produces a single-pixel image. The pixel's components are set to the maximum of that component within the input extent.</summary>
 	[CoreImageFilter (StringCtorVisibility = MethodAttributes.Public)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIReductionFilter))]
@@ -3437,6 +3524,7 @@ namespace CoreImage {
 	interface CIAreaMaximumAlphaProtocol : CIAreaReductionFilterProtocol {
 	}
 
+	/// <summary>Returns a single-pixel image. The color is that of the pixel in the input extent with the greatest alpha value.</summary>
 	[CoreImageFilter]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIReductionFilter))]
@@ -3451,6 +3539,7 @@ namespace CoreImage {
 	interface CIAreaMinimumProtocol : CIAreaReductionFilterProtocol {
 	}
 
+	/// <summary>Returns a single-pixel image. The pixel's components are set to the minimum of that component within the input extent.</summary>
 	[CoreImageFilter]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIReductionFilter))]
@@ -3465,12 +3554,14 @@ namespace CoreImage {
 	interface CIAreaMinimumAlphaProtocol : CIAreaReductionFilterProtocol {
 	}
 
+	/// <summary>Returns a single-pixel image. The color is that of the pixel in the input extent with the lowest alpha value.</summary>
 	[CoreImageFilter]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIReductionFilter))]
 	interface CIAreaMinimumAlpha : CIAreaReductionFilterProtocol {
 	}
 
+	/// <summary>Base class for code generators.</summary>
 	[CoreImageFilter (StringCtorVisibility = MethodAttributes.Public)]
 	[Abstract]
 	[BaseType (typeof (CIFilter))]
@@ -3479,6 +3570,10 @@ namespace CoreImage {
 		NSData Message { get; set; }
 	}
 
+	/// <summary>Generates an Aztec code for the specified <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=Core%20Image%20CIAztec%20Code%20Generator%20Message&amp;scope=Xamarin" title="P:CoreImage.CIAztecCodeGenerator.Message">P:CoreImage.CIAztecCodeGenerator.Message</a></format>.</summary>
+	///     <remarks>
+	///       <para>The Aztec code is defined at <format type="text/html"><a href="https://www.iso.org/iso/iso_catalogue/catalogue_tc/catalogue_detail.htm?csnumber=41548">www.iso.org/iso/iso_catalogue/catalogue_tc/catalogue_detail.htm?csnumber=41548</a></format>.</para>
+	///     </remarks>
 	[CoreImageFilter]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CICodeGenerator))]
@@ -3498,12 +3593,14 @@ namespace CoreImage {
 		CGImage OutputCGImage { get; }
 	}
 
+	/// <summary>A <see cref="T:CoreImage.CITransitionFilter" /> that animates a transition between two images.</summary>
 	[CoreImageFilter (IntPtrCtorVisibility = MethodAttributes.Family)] // was already protected in classic
 	[Abstract]
 	[BaseType (typeof (CIFilter))]
 	interface CITransitionFilter : CITransitionFilterProtocol {
 	}
 
+	/// <include file="../docs/api/CoreImage/CIBarsSwipeTransition.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIBarsSwipeTransition']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CITransitionFilter))]
 	interface CIBarsSwipeTransition {
@@ -3518,12 +3615,14 @@ namespace CoreImage {
 		float BarOffset { get; set; }
 	}
 
+	/// <include file="../docs/api/CoreImage/CIBlendWithAlphaMask.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIBlendWithAlphaMask']/*" />
 	[CoreImageFilter]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIBlendWithMask))]
 	interface CIBlendWithAlphaMask {
 	}
 
+	/// <include file="../docs/api/CoreImage/CIBlendWithMask.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIBlendWithMask']/*" />
 	[CoreImageFilter (DefaultCtorVisibility = MethodAttributes.Public, StringCtorVisibility = MethodAttributes.Public)]
 	[BaseType (typeof (CIBlendFilter))]
 	interface CIBlendWithMask : CIBlendWithMaskProtocol {
@@ -3536,17 +3635,20 @@ namespace CoreImage {
 #endif
 	}
 
+	/// <include file="../docs/api/CoreImage/CIBloom.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIBloom']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CIFilter))]
 	interface CIBloom : CIBloomProtocol {
 	}
 
+	/// <summary>Applies a blur created with a box-shaped convolution kernel.</summary>
 	[CoreImageFilter]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIFilter))]
 	interface CIBoxBlur : CIBoxBlurProtocol {
 	}
 
+	/// <summary>An abstract <see cref="T:CoreImage.CIFilter" /> for distortions.</summary>
 	[CoreImageFilter (IntPtrCtorVisibility = MethodAttributes.Family)] // was already protected in classic
 	[Abstract]
 	[BaseType (typeof (CIFilter))]
@@ -3589,6 +3691,7 @@ namespace CoreImage {
 		float Scale { get; set; }
 	}
 
+	/// <include file="../docs/api/CoreImage/CIBumpDistortion.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIBumpDistortion']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CIDistortionFilter))]
 	interface CIBumpDistortion : CIBumpDistortionProtocol {
@@ -3622,11 +3725,13 @@ namespace CoreImage {
 		float Scale { get; set; }
 	}
 
+	/// <include file="../docs/api/CoreImage/CIBumpDistortionLinear.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIBumpDistortionLinear']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CIDistortionFilter))]
 	interface CIBumpDistortionLinear : CIBumpDistortionLinearProtocol {
 	}
 
+	/// <include file="../docs/api/CoreImage/CICheckerboardGenerator.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CICheckerboardGenerator']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CIFilter))]
 	interface CICheckerboardGenerator : CICheckerboardGeneratorProtocol {
@@ -3658,11 +3763,13 @@ namespace CoreImage {
 		float Radius { get; set; }
 	}
 
+	/// <include file="../docs/api/CoreImage/CICircleSplashDistortion.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CICircleSplashDistortion']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CIDistortionFilter))]
 	interface CICircleSplashDistortion : CICircleSplashDistortionProtocol {
 	}
 
+	/// <summary>A <see cref="T:CoreImage.CIFilter" /> that mimics halftone screens.</summary>
 	[CoreImageFilter (IntPtrCtorVisibility = MethodAttributes.Family)] // was already protected in classic
 	[Abstract]
 	[BaseType (typeof (CIFilter))]
@@ -3684,6 +3791,7 @@ namespace CoreImage {
 		float Width { get; set; }
 	}
 
+	/// <include file="../docs/api/CoreImage/CICircularScreen.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CICircularScreen']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CIScreenFilter))]
 	interface CICircularScreen : CICircularScreenProtocol {
@@ -3713,6 +3821,7 @@ namespace CoreImage {
 		float Angle { get; set; }
 	}
 
+	/// <summary>Distorts the input image so that it appears as if wrapped around a transparent circle.</summary>
 	[CoreImageFilter]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIFilter))]
@@ -3725,6 +3834,7 @@ namespace CoreImage {
 #endif
 	}
 
+	/// <summary>Produce a color half-tone image built from cyan, magenta, yellow, and black 'inks'.</summary>
 	[CoreImageFilter]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIFilter), Name = "CICMYKHalftone")]
@@ -3742,6 +3852,7 @@ namespace CoreImage {
 #endif
 	}
 
+	/// <summary>Generates a Code 128 barcode.</summary>
 	[CoreImageFilter]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CICodeGenerator))]
@@ -3751,6 +3862,7 @@ namespace CoreImage {
 		CIImage OutputCGImage { get; }
 	}
 
+	/// <summary>An abstract <see cref="T:CoreImage.CIFilter" /> that combines a background and foreground image.</summary>
 	[CoreImageFilter (IntPtrCtorVisibility = MethodAttributes.Family)] // was already protected in classic
 	[Abstract]
 	[BaseType (typeof (CIFilter))]
@@ -3763,16 +3875,19 @@ namespace CoreImage {
 		CIImage BackgroundImage { get; set; }
 	}
 
+	/// <include file="../docs/api/CoreImage/CIColorBlendMode.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIColorBlendMode']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CIBlendFilter))]
 	interface CIColorBlendMode {
 	}
 
+	/// <include file="../docs/api/CoreImage/CIColorBurnBlendMode.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIColorBurnBlendMode']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CIBlendFilter))]
 	interface CIColorBurnBlendMode {
 	}
 
+	/// <include file="../docs/api/CoreImage/CIColorClamp.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIColorClamp']/*" />
 	[CoreImageFilter]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIFilter))]
@@ -3791,59 +3906,70 @@ namespace CoreImage {
 #endif
 	}
 
+	/// <include file="../docs/api/CoreImage/CIColorControls.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIColorControls']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CIFilter))]
 	interface CIColorControls : CIColorControlsProtocol {
 	}
 
+	/// <include file="../docs/api/CoreImage/CIColorCrossPolynomial.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIColorCrossPolynomial']/*" />
 	[CoreImageFilter (DefaultCtorVisibility = MethodAttributes.Public, StringCtorVisibility = MethodAttributes.Public)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIFilter))]
 	interface CIColorCrossPolynomial : CIColorCrossPolynomialProtocol {
 	}
 
+	/// <include file="../docs/api/CoreImage/CIColorCube.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIColorCube']/*" />
 	[CoreImageFilter (DefaultCtorVisibility = MethodAttributes.Public, StringCtorVisibility = MethodAttributes.Public)]
 	[BaseType (typeof (CIFilter))]
 	interface CIColorCube : CIColorCubeProtocol {
 	}
 
+	/// <include file="../docs/api/CoreImage/CIColorCubeWithColorSpace.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIColorCubeWithColorSpace']/*" />
 	[CoreImageFilter]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIColorCube))]
 	interface CIColorCubeWithColorSpace : CIColorCubeWithColorSpaceProtocol {
 	}
 
+	/// <include file="../docs/api/CoreImage/CIColorDodgeBlendMode.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIColorDodgeBlendMode']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CIBlendFilter))]
 	interface CIColorDodgeBlendMode {
 	}
 
+	/// <include file="../docs/api/CoreImage/CIColorInvert.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIColorInvert']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CIFilter))]
 	interface CIColorInvert : CIColorInvertProtocol {
 	}
 
+	/// <include file="../docs/api/CoreImage/CIColorMap.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIColorMap']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CIFilter))]
 	interface CIColorMap : CIColorMapProtocol {
 	}
 
+	/// <include file="../docs/api/CoreImage/CIColorMatrix.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIColorMatrix']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CIFilter))]
 	interface CIColorMatrix : CIColorMatrixProtocol {
 	}
 
+	/// <include file="../docs/api/CoreImage/CIColorMonochrome.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIColorMonochrome']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CIFilter))]
 	interface CIColorMonochrome : CIColorMonochromeProtocol {
 	}
 
+	/// <include file="../docs/api/CoreImage/CIColorPolynomial.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIColorPolynomial']/*" />
 	[CoreImageFilter]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIColorCrossPolynomial))]
 	interface CIColorPolynomial : CIColorPolynomialProtocol {
 	}
 
+	/// <include file="../docs/api/CoreImage/CIColorPosterize.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIColorPosterize']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CIFilter))]
 	interface CIColorPosterize : CIColorPosterizeProtocol {
@@ -3857,18 +3983,21 @@ namespace CoreImage {
 	interface CIColumnAverageProtocol : CIAreaReductionFilterProtocol {
 	}
 
+	/// <summary>Returns a 1-pixel high image with the same width as the input image. Every pixel is the average color of the corresponding column in the input image.</summary>
 	[CoreImageFilter]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIReductionFilter))]
 	interface CIColumnAverage : CIColumnAverageProtocol {
 	}
 
+	/// <summary>Produces an image with outlined edges and a color halftone effect.</summary>
 	[CoreImageFilter]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIFilter))]
 	interface CIComicEffect : CIComicEffectProtocol {
 	}
 
+	/// <include file="../docs/api/CoreImage/CIConstantColorGenerator.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIConstantColorGenerator']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CIFilter))]
 	interface CIConstantColorGenerator {
@@ -3877,6 +4006,10 @@ namespace CoreImage {
 		CIColor Color { get; set; }
 	}
 
+	/// <summary>An abstract class that is the base for convolution filters.</summary>
+	///     <remarks>
+	///       <para>Convolution filters generate a pixel value by summing the pixel values in a neighborhood (the size of the neighborhood may be 3x3, 5x5, or 9 pixels horizontally or vertically) and then by adding a bias. To maintain brightness, the sum of values in the convolution kernel must sum to 1.0.</para>
+	///     </remarks>
 	[CoreImageFilter (StringCtorVisibility = MethodAttributes.Public)]
 	[Abstract]
 	[BaseType (typeof (CIFilter))]
@@ -3892,36 +4025,42 @@ namespace CoreImage {
 		float Bias { get; set; }
 	}
 
+	/// <include file="../docs/api/CoreImage/CIConvolution3X3.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIConvolution3X3']/*" />
 	[CoreImageFilter]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIConvolutionCore))]
 	interface CIConvolution3X3 {
 	}
 
+	/// <include file="../docs/api/CoreImage/CIConvolution5X5.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIConvolution5X5']/*" />
 	[CoreImageFilter]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIConvolutionCore))]
 	interface CIConvolution5X5 {
 	}
 
+	/// <summary>A filter that performs a custom 7x7 matrix convolution.</summary>
 	[CoreImageFilter]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIConvolutionCore))]
 	interface CIConvolution7X7 {
 	}
 
+	/// <include file="../docs/api/CoreImage/CIConvolution9Horizontal.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIConvolution9Horizontal']/*" />
 	[CoreImageFilter]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIConvolutionCore))]
 	interface CIConvolution9Horizontal {
 	}
 
+	/// <include file="../docs/api/CoreImage/CIConvolution9Vertical.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIConvolution9Vertical']/*" />
 	[CoreImageFilter]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIConvolutionCore))]
 	interface CIConvolution9Vertical {
 	}
 
+	/// <include file="../docs/api/CoreImage/CICopyMachineTransition.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CICopyMachineTransition']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CITransitionFilter))]
 	interface CICopyMachineTransition {
@@ -3942,6 +4081,7 @@ namespace CoreImage {
 		CIVector Extent { get; set; }
 	}
 
+	/// <include file="../docs/api/CoreImage/CICrop.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CICrop']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CIFilter))]
 	interface CICrop {
@@ -3953,6 +4093,7 @@ namespace CoreImage {
 		CIVector Rectangle { get; set; }
 	}
 
+	/// <summary>Creates irregular blocks of average color from the source image.</summary>
 	[CoreImageFilter]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIFilter))]
@@ -3965,22 +4106,26 @@ namespace CoreImage {
 #endif
 	}
 
+	/// <include file="../docs/api/CoreImage/CIDarkenBlendMode.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIDarkenBlendMode']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CIBlendFilter))]
 	interface CIDarkenBlendMode {
 	}
 
+	/// <include file="../docs/api/CoreImage/CIDifferenceBlendMode.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIDifferenceBlendMode']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CIBlendFilter))]
 	interface CIDifferenceBlendMode {
 	}
 
+	/// <summary>Applies a blur created with a disc-shaped convolution kernel.</summary>
 	[CoreImageFilter]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIFilter))]
 	interface CIDiscBlur : CIDiscBlurProtocol {
 	}
 
+	/// <include file="../docs/api/CoreImage/CIDisintegrateWithMaskTransition.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIDisintegrateWithMaskTransition']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CITransitionFilter))]
 	interface CIDisintegrateWithMaskTransition : CIDisintegrateWithMaskTransitionProtocol {
@@ -4016,23 +4161,27 @@ namespace CoreImage {
 		float Scale { get; set; }
 	}
 
+	/// <summary>Textures the input image by the grayscale value of the corresponding pixels in the displacement image.</summary>
 	[CoreImageFilter]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIFilter))]
 	interface CIDisplacementDistortion : CIDisplacementDistortionProtocol {
 	}
 
+	/// <include file="../docs/api/CoreImage/CIDissolveTransition.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIDissolveTransition']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CITransitionFilter))]
 	interface CIDissolveTransition {
 	}
 
+	/// <summary>A <see cref="T:CoreImage.CIBlendFilter" /> that divides the color values of its <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=CIBlend%20Filter%20Image&amp;scope=Xamarin" title="P:CIBlendFilter.Image">P:CIBlendFilter.Image</a></format> and <see cref="P:CoreImage.CIBlendFilter.BackgroundImage" />.</summary>
 	[CoreImageFilter]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIBlendFilter))]
 	interface CIDivideBlendMode {
 	}
 
+	/// <include file="../docs/api/CoreImage/CIDotScreen.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIDotScreen']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CIScreenFilter))]
 	interface CIDotScreen : CIDotScreenProtocol {
@@ -4074,6 +4223,7 @@ namespace CoreImage {
 		float Zoom { get; set; }
 	}
 
+	/// <summary>Creates a series of increasingly smaller boxes repeating a portion of the image.</summary>
 	[CoreImageFilter]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIFilter))]
@@ -4090,18 +4240,21 @@ namespace CoreImage {
 #endif
 	}
 
+	/// <summary>Creates a colorized edge-detection effect.</summary>
 	[CoreImageFilter]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIFilter))]
 	interface CIEdges : CIEdgesProtocol {
 	}
 
+	/// <summary>Creates a black and white woodblock effect.</summary>
 	[CoreImageFilter]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIFilter))]
 	interface CIEdgeWork : CIEdgeWorkProtocol {
 	}
 
+	/// <summary>A <see cref="T:CoreImage.CIFilter" /> that applies a filter and then tiles the results.</summary>
 	[CoreImageFilter (IntPtrCtorVisibility = MethodAttributes.Family)] // was already protected in classic
 	[Abstract]
 	[BaseType (typeof (CIFilter))]
@@ -4123,26 +4276,31 @@ namespace CoreImage {
 		float Width { get; set; }
 	}
 
+	/// <include file="../docs/api/CoreImage/CIEightfoldReflectedTile.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIEightfoldReflectedTile']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CITileFilter))]
 	interface CIEightfoldReflectedTile : CIEightfoldReflectedTileProtocol {
 	}
 
+	/// <include file="../docs/api/CoreImage/CIExclusionBlendMode.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIExclusionBlendMode']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CIBlendFilter))]
 	interface CIExclusionBlendMode {
 	}
 
+	/// <include file="../docs/api/CoreImage/CIExposureAdjust.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIExposureAdjust']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CIFilter))]
 	interface CIExposureAdjust : CIExposureAdjustProtocol {
 	}
 
+	/// <include file="../docs/api/CoreImage/CIFalseColor.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIFalseColor']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CIFilter))]
 	interface CIFalseColor : CIFalseColorProtocol {
 	}
 
+	/// <include file="../docs/api/CoreImage/CIFlashTransition.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIFlashTransition']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CITransitionFilter))]
 	interface CIFlashTransition : CIFlashTransitionProtocol {
@@ -4168,31 +4326,37 @@ namespace CoreImage {
 #endif
 	}
 
+	/// <include file="../docs/api/CoreImage/CIFourfoldReflectedTile.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIFourfoldReflectedTile']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CITileFilter))]
 	interface CIFourfoldReflectedTile : CIFourfoldReflectedTileProtocol {
 	}
 
+	/// <include file="../docs/api/CoreImage/CIFourfoldRotatedTile.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIFourfoldRotatedTile']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CITileFilter))]
 	interface CIFourfoldRotatedTile : CIFourfoldRotatedTileProtocol {
 	}
 
+	/// <include file="../docs/api/CoreImage/CIFourfoldTranslatedTile.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIFourfoldTranslatedTile']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CITileFilter))]
 	interface CIFourfoldTranslatedTile : CIFourfoldTranslatedTileProtocol {
 	}
 
+	/// <include file="../docs/api/CoreImage/CIGammaAdjust.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIGammaAdjust']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CIFilter))]
 	interface CIGammaAdjust : CIGammaAdjustProtocol {
 	}
 
+	/// <include file="../docs/api/CoreImage/CIGaussianBlur.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIGaussianBlur']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CIFilter))]
 	interface CIGaussianBlur : CIGaussianBlurProtocol {
 	}
 
+	/// <include file="../docs/api/CoreImage/CIGaussianGradient.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIGaussianGradient']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CIFilter))]
 	interface CIGaussianGradient : CIGaussianGradientProtocol {
@@ -4228,6 +4392,7 @@ namespace CoreImage {
 		float Scale { get; set; }
 	}
 
+	/// <summary>Distorts the input image so that it appears viewed through glass blocks whose geometry corresponds to the <see cref="P:CoreImage.CIGlassDistortion.Texture" /> image.</summary>
 	[CoreImageFilter]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIFilter))]
@@ -4268,6 +4433,7 @@ namespace CoreImage {
 		float Refraction { get; set; }
 	}
 
+	/// <summary>Creates an effect as if a lozenge-shaped lens were placed on the input image.</summary>
 	[CoreImageFilter]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIFilter))]
@@ -4284,32 +4450,38 @@ namespace CoreImage {
 #endif
 	}
 
+	/// <include file="../docs/api/CoreImage/CIGlideReflectedTile.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIGlideReflectedTile']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CITileFilter))]
 	interface CIGlideReflectedTile : CIGlideReflectedTileProtocol {
 	}
 
+	/// <include file="../docs/api/CoreImage/CIGloom.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIGloom']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CIFilter))]
 	interface CIGloom : CIGloomProtocol {
 	}
 
+	/// <include file="../docs/api/CoreImage/CIHardLightBlendMode.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIHardLightBlendMode']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CIBlendFilter))]
 	interface CIHardLightBlendMode {
 	}
 
+	/// <include file="../docs/api/CoreImage/CIHatchedScreen.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIHatchedScreen']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CIScreenFilter))]
 	interface CIHatchedScreen : CIHatchedScreenProtocol {
 	}
 
+	/// <summary>Creates a continuous height field from a grayscale mask. Use with <see cref="T:CoreImage.CIShadedMaterial" /> to create realistic dropshadows.</summary>
 	[CoreImageFilter]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIFilter))]
 	interface CIHeightFieldFromMask : CIHeightFieldFromMaskProtocol {
 	}
 
+	/// <summary>Pixellates the image with hexagonals based on the average color of pixels within the hexagon.</summary>
 	[CoreImageFilter]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIFilter))]
@@ -4322,6 +4494,7 @@ namespace CoreImage {
 #endif
 	}
 
+	/// <include file="../docs/api/CoreImage/CIHighlightShadowAdjust.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIHighlightShadowAdjust']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CIFilter))]
 	interface CIHighlightShadowAdjust : CIHighlightShadowAdjustProtocol {
@@ -4351,6 +4524,27 @@ namespace CoreImage {
 		float LowLimit { get; set; }
 	}
 
+	/// <summary>Renders a one-dimensional <see cref="P:CoreImage.CIFilter.Image" /> histogram as a typical two-dimensional histogram.</summary>
+	///     <remarks>
+	///       <para>This filter can be used in conjunction with <see cref="T:CoreImage.CIAreaHistogram" /> to create a user-meaningful histogram, as shown in the following example.</para>
+	///       <example>
+	///         <code lang="csharp lang-csharp"><![CDATA[
+	/// var histogram = new CIAreaHistogram () {
+	/// 	Image = heron, 
+	/// 	Extent = new CIVector(new RectangleF(0, 0, 567, 267)),
+	/// 	Count = 256, 
+	/// 	Scale = 25.0f
+	/// 
+	/// };
+	/// 		
+	/// //Pass 1-D histogram to CIHistogramDisplayFilter for display
+	/// var histogramDisplay = new CIHistogramDisplayFilter () {
+	/// 	Image = histogram.OutputImage,
+	/// };          
+	///           ]]></code>
+	///       </example>
+	///       <para>Which results in the following histogram: <img href="~/CoreImage/_images/CoreImage.CIHistogramDisplayFilter.png" alt="Result of applying the filter." />.</para>
+	///     </remarks>
 	[CoreImageFilter]
 	[MacCatalyst (13, 1)]
 	// incorrect version string for OSX: '10.?' Double-check documentation
@@ -4390,21 +4584,25 @@ namespace CoreImage {
 		float Radius { get; set; }
 	}
 
+	/// <include file="../docs/api/CoreImage/CIHoleDistortion.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIHoleDistortion']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CIDistortionFilter))]
 	interface CIHoleDistortion : CIHoleDistortionProtocol {
 	}
 
+	/// <include file="../docs/api/CoreImage/CIHueAdjust.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIHueAdjust']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CIFilter))]
 	interface CIHueAdjust : CIHueAdjustProtocol {
 	}
 
+	/// <include file="../docs/api/CoreImage/CIHueBlendMode.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIHueBlendMode']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CIBlendFilter))]
 	interface CIHueBlendMode {
 	}
 
+	/// <summary>Produces a kaleidoscopic, 12-way-symmetrical, image.</summary>
 	[CoreImageFilter]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIFilter))]
@@ -4421,11 +4619,13 @@ namespace CoreImage {
 #endif
 	}
 
+	/// <include file="../docs/api/CoreImage/CILanczosScaleTransform.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CILanczosScaleTransform']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CIFilter))]
 	interface CILanczosScaleTransform : CILanczosScaleTransformProtocol {
 	}
 
+	/// <summary>Creates an artificial lens-flare.</summary>
 	[CoreImageFilter]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIFilter))]
@@ -4438,6 +4638,7 @@ namespace CoreImage {
 #endif
 	}
 
+	/// <include file="../docs/api/CoreImage/CILightenBlendMode.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CILightenBlendMode']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CIBlendFilter))]
 	interface CILightenBlendMode {
@@ -4467,6 +4668,7 @@ namespace CoreImage {
 		float Radius { get; set; }
 	}
 
+	/// <include file="../docs/api/CoreImage/CILightTunnel.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CILightTunnel']/*" />
 	[CoreImageFilter]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIFilter))]
@@ -4479,18 +4681,21 @@ namespace CoreImage {
 #endif
 	}
 
+	/// <summary>Darkens the image based on the colors of the background image.</summary>
 	[CoreImageFilter]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIBlendFilter))]
 	interface CILinearBurnBlendMode {
 	}
 
+	/// <summary>Darkens the image based on the colors of the background image.</summary>
 	[CoreImageFilter]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIBlendFilter))]
 	interface CILinearDodgeBlendMode {
 	}
 
+	/// <include file="../docs/api/CoreImage/CILinearGradient.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CILinearGradient']/*" />
 	[CoreImageFilter (DefaultCtorVisibility = MethodAttributes.Public, StringCtorVisibility = MethodAttributes.Public)]
 	[BaseType (typeof (CIFilter))]
 	interface CILinearGradient : CILinearGradientProtocol {
@@ -4506,59 +4711,70 @@ namespace CoreImage {
 #endif
 	}
 
+	/// <include file="../docs/api/CoreImage/CILinearToSRGBToneCurve.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CILinearToSRGBToneCurve']/*" />
 	[CoreImageFilter]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIFilter))]
 	interface CILinearToSRGBToneCurve : CILinearToSrgbToneCurveProtocol {
 	}
 
+	/// <summary>Produces a black-and-white sketch-like image via edge detection.</summary>
 	[CoreImageFilter]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIFilter))]
 	interface CILineOverlay : CILineOverlayProtocol {
 	}
 
+	/// <include file="../docs/api/CoreImage/CILineScreen.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CILineScreen']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CIScreenFilter))]
 	interface CILineScreen : CILineScreenProtocol {
 	}
 
+	/// <include file="../docs/api/CoreImage/CILuminosityBlendMode.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CILuminosityBlendMode']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CIBlendFilter))]
 	interface CILuminosityBlendMode {
 	}
 
+	/// <include file="../docs/api/CoreImage/CIMaskToAlpha.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIMaskToAlpha']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CIFilter))]
 	interface CIMaskToAlpha : CIMaskToAlphaProtocol {
 	}
 
+	/// <include file="../docs/api/CoreImage/CIMaximumComponent.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIMaximumComponent']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CIFilter))]
 	interface CIMaximumComponent : CIMaximumComponentProtocol {
 	}
 
+	/// <include file="../docs/api/CoreImage/CIMaximumCompositing.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIMaximumCompositing']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CICompositingFilter))]
 	interface CIMaximumCompositing {
 	}
 
+	/// <summary>Replaces pixel values with the median of neighboring pixel values, thus reducing noise in the input image.</summary>
 	[CoreImageFilter]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIFilter))]
 	interface CIMedianFilter : CIMedianProtocol {
 	}
 
+	/// <include file="../docs/api/CoreImage/CIMinimumComponent.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIMinimumComponent']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CIFilter))]
 	interface CIMinimumComponent : CIMinimumComponentProtocol {
 	}
 
+	/// <include file="../docs/api/CoreImage/CIMinimumCompositing.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIMinimumCompositing']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CICompositingFilter))]
 	interface CIMinimumCompositing {
 	}
 
+	/// <include file="../docs/api/CoreImage/CIModTransition.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIModTransition']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CITransitionFilter))]
 	interface CIModTransition : CIModTransitionProtocol {
@@ -4569,39 +4785,46 @@ namespace CoreImage {
 #endif
 	}
 
+	/// <summary>Applies a blur that simulates the motion of a camera during capture.</summary>
 	[CoreImageFilter]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CILinearBlur))]
 	interface CIMotionBlur : CIMotionBlurProtocol {
 	}
 
+	/// <include file="../docs/api/CoreImage/CIMultiplyBlendMode.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIMultiplyBlendMode']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CIBlendFilter))]
 	interface CIMultiplyBlendMode {
 	}
 
+	/// <include file="../docs/api/CoreImage/CIMultiplyCompositing.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIMultiplyCompositing']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CICompositingFilter))]
 	interface CIMultiplyCompositing {
 	}
 
+	/// <summary>Reduces noise by detecting luminance variations. Small luminance variations are locally blurred, large variations are locally sharpened.</summary>
 	[CoreImageFilter]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIFilter))]
 	interface CINoiseReduction : CINoiseReductionProtocol {
 	}
 
+	/// <summary>Creates an 'op art' effect by tiling, scaling, and rotating regions of the image.</summary>
 	[CoreImageFilter]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CITileFilter))]
 	interface CIOpTile : CIOpTileProtocol {
 	}
 
+	/// <include file="../docs/api/CoreImage/CIOverlayBlendMode.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIOverlayBlendMode']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CIBlendFilter))]
 	interface CIOverlayBlendMode {
 	}
 
+	/// <summary>Animates a page curl transition between images.</summary>
 	[CoreImageFilter]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CITransitionFilter))]
@@ -4613,6 +4836,7 @@ namespace CoreImage {
 #endif
 	}
 
+	/// <summary>Animates a page curl transition, with a shadow, between images.</summary>
 	[CoreImageFilter]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIFilter))]
@@ -4634,12 +4858,14 @@ namespace CoreImage {
 #endif
 	}
 
+	/// <summary>Warps an image into a parallelogram and then tiles the result.</summary>
 	[CoreImageFilter]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CITileFilter))]
 	interface CIParallelogramTile : CIParallelogramTileProtocol {
 	}
 
+	/// <summary>Generator for 2-dimensional PDF417 bar codes.</summary>
 	[CoreImageFilter]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CICodeGenerator), Name = "CIPDF417BarcodeGenerator")]
@@ -4674,12 +4900,14 @@ namespace CoreImage {
 		CGImage OutputCGImage { get; }
 	}
 
+	/// <summary>A <see cref="T:CoreImage.CIPerspectiveTransform" /> that is cropped according to the perspective control points, but whose pixels are not transformed.</summary>
 	[CoreImageFilter]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIPerspectiveTransform))]
 	interface CIPerspectiveCorrection : CIPerspectiveCorrectionProtocol {
 	}
 
+	/// <include file="../docs/api/CoreImage/CIPerspectiveTile.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIPerspectiveTile']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CIFilter))]
 	interface CIPerspectiveTile : CIPerspectiveTileProtocol {
@@ -4702,6 +4930,7 @@ namespace CoreImage {
 #endif
 	}
 
+	/// <include file="../docs/api/CoreImage/CIPerspectiveTransform.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIPerspectiveTransform']/*" />
 	[CoreImageFilter (DefaultCtorVisibility = MethodAttributes.Public, StringCtorVisibility = MethodAttributes.Public)]
 	[BaseType (typeof (CIFilter))]
 	interface CIPerspectiveTransform : CIPerspectiveTransformProtocol {
@@ -4727,6 +4956,7 @@ namespace CoreImage {
 		CGAffineTransform OutputTransform { get; }
 	}
 
+	/// <include file="../docs/api/CoreImage/CIPerspectiveTransformWithExtent.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIPerspectiveTransformWithExtent']/*" />
 	[CoreImageFilter]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIPerspectiveTransform))]
@@ -4738,6 +4968,7 @@ namespace CoreImage {
 #endif
 	}
 
+	/// <summary>The base class for photo effect filters.</summary>
 	[CoreImageFilter (StringCtorVisibility = MethodAttributes.Public)]
 	[MacCatalyst (13, 1)]
 	[Abstract]
@@ -4745,48 +4976,56 @@ namespace CoreImage {
 	interface CIPhotoEffect : CIPhotoEffectProtocol {
 	}
 
+	/// <include file="../docs/api/CoreImage/CIPhotoEffectChrome.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIPhotoEffectChrome']/*" />
 	[CoreImageFilter]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIPhotoEffect))]
 	interface CIPhotoEffectChrome {
 	}
 
+	/// <include file="../docs/api/CoreImage/CIPhotoEffectFade.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIPhotoEffectFade']/*" />
 	[CoreImageFilter]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIPhotoEffect))]
 	interface CIPhotoEffectFade {
 	}
 
+	/// <include file="../docs/api/CoreImage/CIPhotoEffectInstant.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIPhotoEffectInstant']/*" />
 	[CoreImageFilter]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIPhotoEffect))]
 	interface CIPhotoEffectInstant {
 	}
 
+	/// <include file="../docs/api/CoreImage/CIPhotoEffectMono.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIPhotoEffectMono']/*" />
 	[CoreImageFilter]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIPhotoEffect))]
 	interface CIPhotoEffectMono {
 	}
 
+	/// <include file="../docs/api/CoreImage/CIPhotoEffectNoir.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIPhotoEffectNoir']/*" />
 	[CoreImageFilter]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIPhotoEffect))]
 	interface CIPhotoEffectNoir {
 	}
 
+	/// <include file="../docs/api/CoreImage/CIPhotoEffectProcess.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIPhotoEffectProcess']/*" />
 	[CoreImageFilter]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIPhotoEffect))]
 	interface CIPhotoEffectProcess {
 	}
 
+	/// <include file="../docs/api/CoreImage/CIPhotoEffectTonal.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIPhotoEffectTonal']/*" />
 	[CoreImageFilter]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIPhotoEffect))]
 	interface CIPhotoEffectTonal {
 	}
 
+	/// <include file="../docs/api/CoreImage/CIPhotoEffectTransfer.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIPhotoEffectTransfer']/*" />
 	[CoreImageFilter]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIPhotoEffect))]
@@ -4817,6 +5056,7 @@ namespace CoreImage {
 		float Scale { get; set; }
 	}
 
+	/// <include file="../docs/api/CoreImage/CIPinchDistortion.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIPinchDistortion']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CIDistortionFilter))]
 	interface CIPinchDistortion : CIPinchDistortionProtocol {
@@ -4825,12 +5065,18 @@ namespace CoreImage {
 		// float Scale { get; set; }
 	}
 
+	/// <summary>Replaces image colors with the bright colors from the background image.</summary>
+	///     <remarks>
+	///       <para>If the <see cref="P:CoreImage.CIBlendFilter.BackgroundImage" /> pixel is more than half of the maximum brightness, that pixel is substituted for the pixel in the <see cref="P:CoreImage.CIFilter.Image" />. Also, even if the background pixel is less than 50% brightness, it will be substituted if the image pixel is lighter than the background pixel.</para>
+	///       <para>This filter can be used to make an image look as if it were drawn with powder pastels.</para>
+	///     </remarks>
 	[CoreImageFilter]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIBlendFilter))]
 	interface CIPinLightBlendMode {
 	}
 
+	/// <include file="../docs/api/CoreImage/CIPixellate.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIPixellate']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CIFilter))]
 	interface CIPixellate : CIPixellateProtocol {
@@ -4841,6 +5087,7 @@ namespace CoreImage {
 #endif
 	}
 
+	/// <summary>Creates an effect mimicking artistic pointillization.</summary>
 	[CoreImageFilter]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIFilter))]
@@ -4852,6 +5099,7 @@ namespace CoreImage {
 #endif
 	}
 
+	/// <include file="../docs/api/CoreImage/CIQRCodeGenerator.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIQRCodeGenerator']/*" />
 	[CoreImageFilter]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CICodeGenerator))]
@@ -4861,6 +5109,7 @@ namespace CoreImage {
 		CGImage OutputCGImage { get; }
 	}
 
+	/// <include file="../docs/api/CoreImage/CIRadialGradient.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIRadialGradient']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CIFilter))]
 	interface CIRadialGradient : CIRadialGradientProtocol {
@@ -4872,11 +5121,13 @@ namespace CoreImage {
 #endif
 	}
 
+	/// <include file="../docs/api/CoreImage/CIRandomGenerator.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIRandomGenerator']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CIFilter))]
 	interface CIRandomGenerator : CIRandomGeneratorProtocol {
 	}
 
+	/// <summary>Animates a ripple transition between images.</summary>
 	[CoreImageFilter]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CITransitionFilter))]
@@ -4900,6 +5151,7 @@ namespace CoreImage {
 	interface CIRowAverageProtocol : CIAreaReductionFilterProtocol {
 	}
 
+	/// <summary>Returns a 1-pixel-high image, the pixels of which are the average color for the corresponding row in the input image.</summary>
 	[CoreImageFilter]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIFilter))]
@@ -4912,42 +5164,50 @@ namespace CoreImage {
 #endif
 	}
 
+	/// <include file="../docs/api/CoreImage/CISaturationBlendMode.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CISaturationBlendMode']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CIBlendFilter))]
 	interface CISaturationBlendMode {
 	}
 
+	/// <include file="../docs/api/CoreImage/CIScreenBlendMode.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIScreenBlendMode']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CIBlendFilter))]
 	interface CIScreenBlendMode {
 	}
 
+	/// <include file="../docs/api/CoreImage/CISepiaTone.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CISepiaTone']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CIFilter))]
 	interface CISepiaTone : CISepiaToneProtocol {
 	}
 
+	/// <summary>Produces a shaded image from a height field, such as that produced by <see cref="T:CoreImage.CIHeightFieldFromMask" />.</summary>
 	[CoreImageFilter]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIFilter))]
 	interface CIShadedMaterial : CIShadedMaterialProtocol {
 	}
 
+	/// <include file="../docs/api/CoreImage/CISharpenLuminance.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CISharpenLuminance']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CIFilter))]
 	interface CISharpenLuminance : CISharpenLuminanceProtocol {
 	}
 
+	/// <include file="../docs/api/CoreImage/CISixfoldReflectedTile.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CISixfoldReflectedTile']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CITileFilter))]
 	interface CISixfoldReflectedTile : CISixfoldReflectedTileProtocol {
 	}
 
+	/// <include file="../docs/api/CoreImage/CISixfoldRotatedTile.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CISixfoldRotatedTile']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CITileFilter))]
 	interface CISixfoldRotatedTile : CISixfoldRotatedTileProtocol {
 	}
 
+	/// <include file="../docs/api/CoreImage/CISmoothLinearGradient.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CISmoothLinearGradient']/*" />
 	[CoreImageFilter]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CILinearGradient))]
@@ -4963,49 +5223,58 @@ namespace CoreImage {
 #endif
 	}
 
+	/// <include file="../docs/api/CoreImage/CISoftLightBlendMode.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CISoftLightBlendMode']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CIBlendFilter))]
 	interface CISoftLightBlendMode {
 	}
 
+	/// <include file="../docs/api/CoreImage/CISourceAtopCompositing.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CISourceAtopCompositing']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CICompositingFilter))]
 	interface CISourceAtopCompositing {
 	}
 
+	/// <include file="../docs/api/CoreImage/CISourceInCompositing.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CISourceInCompositing']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CICompositingFilter))]
 	interface CISourceInCompositing {
 	}
 
+	/// <include file="../docs/api/CoreImage/CISourceOutCompositing.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CISourceOutCompositing']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CICompositingFilter))]
 	interface CISourceOutCompositing {
 	}
 
+	/// <include file="../docs/api/CoreImage/CISourceOverCompositing.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CISourceOverCompositing']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CICompositingFilter))]
 	interface CISourceOverCompositing {
 	}
 
+	/// <summary>Replaces color ranges with specified replacement colors.</summary>
 	[CoreImageFilter]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIFilter))]
 	interface CISpotColor : CISpotColorProtocol {
 	}
 
+	/// <summary>Produces an effect mimicking that of a directional spotlight.</summary>
 	[CoreImageFilter]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIFilter))]
 	interface CISpotLight : CISpotLightProtocol {
 	}
 
+	/// <include file="../docs/api/CoreImage/CISRGBToneCurveToLinear.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CISRGBToneCurveToLinear']/*" />
 	[CoreImageFilter]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIFilter))]
 	interface CISRGBToneCurveToLinear : CISrgbToneCurveToLinearProtocol {
 	}
 
+	/// <include file="../docs/api/CoreImage/CIStarShineGenerator.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIStarShineGenerator']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CIFilter))]
 	interface CIStarShineGenerator : CIStarShineGeneratorProtocol {
@@ -5016,6 +5285,7 @@ namespace CoreImage {
 #endif
 	}
 
+	/// <include file="../docs/api/CoreImage/CIStraightenFilter.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIStraightenFilter']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CIFilter))]
 	interface CIStraightenFilter : CIStraightenProtocol {
@@ -5045,6 +5315,7 @@ namespace CoreImage {
 		float CenterStretchAmount { get; set; }
 	}
 
+	/// <summary>Stretches and crops an image.</summary>
 	[CoreImageFilter]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIFilter))]
@@ -5057,6 +5328,7 @@ namespace CoreImage {
 #endif
 	}
 
+	/// <include file="../docs/api/CoreImage/CIStripesGenerator.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIStripesGenerator']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CIFilter))]
 	interface CIStripesGenerator : CIStripesGeneratorProtocol {
@@ -5067,12 +5339,14 @@ namespace CoreImage {
 #endif
 	}
 
+	/// <summary>Subtracts the background image pixels from those in the <see cref="P:CoreImage.CIFilter.Image" />.</summary>
 	[CoreImageFilter]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIBlendFilter))]
 	interface CISubtractBlendMode {
 	}
 
+	/// <include file="../docs/api/CoreImage/CISwipeTransition.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CISwipeTransition']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CITransitionFilter))]
 	interface CISwipeTransition {
@@ -5093,11 +5367,13 @@ namespace CoreImage {
 		CIVector Extent { get; set; }
 	}
 
+	/// <include file="../docs/api/CoreImage/CITemperatureAndTint.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CITemperatureAndTint']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CIFilter))]
 	interface CITemperatureAndTint : CITemperatureAndTintProtocol {
 	}
 
+	/// <include file="../docs/api/CoreImage/CIToneCurve.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIToneCurve']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CIFilter))]
 	interface CIToneCurve : CIToneCurveProtocol {
@@ -5152,6 +5428,7 @@ namespace CoreImage {
 		float Refraction { get; set; }
 	}
 
+	/// <summary>Produces an effect as if a toroidal lens were placed on the input image.</summary>
 	[CoreImageFilter]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIFilter))]
@@ -5164,6 +5441,7 @@ namespace CoreImage {
 #endif
 	}
 
+	/// <include file="../docs/api/CoreImage/CITriangleKaleidoscope.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CITriangleKaleidoscope']/*" />
 	[CoreImageFilter]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIFilter))]
@@ -5175,12 +5453,14 @@ namespace CoreImage {
 #endif
 	}
 
+	/// <summary>Tiles the image with a triangular region of the input image.</summary>
 	[CoreImageFilter]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CITileFilter))]
 	interface CITriangleTile : CITriangleTileProtocol {
 	}
 
+	/// <include file="../docs/api/CoreImage/CITwelvefoldReflectedTile.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CITwelvefoldReflectedTile']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CITileFilter))]
 	interface CITwelvefoldReflectedTile : CITwelvefoldReflectedTileProtocol {
@@ -5210,6 +5490,7 @@ namespace CoreImage {
 		float Angle { get; set; }
 	}
 
+	/// <include file="../docs/api/CoreImage/CITwirlDistortion.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CITwirlDistortion']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CIDistortionFilter))]
 	interface CITwirlDistortion : CITwirlDistortionProtocol {
@@ -5218,22 +5499,26 @@ namespace CoreImage {
 		// float Angle { get; set; }
 	}
 
+	/// <include file="../docs/api/CoreImage/CIUnsharpMask.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIUnsharpMask']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CIFilter))]
 	interface CIUnsharpMask : CIUnsharpMaskProtocol {
 	}
 
+	/// <include file="../docs/api/CoreImage/CIVibrance.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIVibrance']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CIFilter))]
 	interface CIVibrance : CIVibranceProtocol {
 	}
 
+	/// <include file="../docs/api/CoreImage/CIVignette.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIVignette']/*" />
 	[CoreImageFilter]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIFilter))]
 	interface CIVignette : CIVignetteProtocol {
 	}
 
+	/// <include file="../docs/api/CoreImage/CIVignetteEffect.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIVignetteEffect']/*" />
 	[CoreImageFilter]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIFilter))]
@@ -5270,6 +5555,7 @@ namespace CoreImage {
 		float Angle { get; set; }
 	}
 
+	/// <include file="../docs/api/CoreImage/CIVortexDistortion.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIVortexDistortion']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CIDistortionFilter))]
 	interface CIVortexDistortion : CIVortexDistortionProtocol {
@@ -5278,11 +5564,13 @@ namespace CoreImage {
 		// float Angle { get; set; }
 	}
 
+	/// <include file="../docs/api/CoreImage/CIWhitePointAdjust.xml" path="/Documentation/Docs[@DocId='T:CoreImage.CIWhitePointAdjust']/*" />
 	[CoreImageFilter]
 	[BaseType (typeof (CIFilter))]
 	interface CIWhitePointAdjust : CIWhitePointAdjustProtocol {
 	}
 
+	/// <summary>Applies a blur that simulates a camera zoom during capture.</summary>
 	[CoreImageFilter]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIFilter))]
@@ -5294,6 +5582,7 @@ namespace CoreImage {
 #endif
 	}
 
+	/// <summary>Simulates a blurred depth of field and applies a saturation effect to the 'in-focus' region.</summary>
 	[CoreImageFilter]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIFilter))]
@@ -5312,6 +5601,7 @@ namespace CoreImage {
 #endif
 	}
 
+	/// <summary>Creates an artificial sun and light-ray effect.</summary>
 	[CoreImageFilter]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIFilter))]
@@ -5329,11 +5619,16 @@ namespace CoreImage {
 #endif
 	}
 
+	/// <summary>The CIFaceBalance CoreImage filter</summary>
 	[CoreImageFilter (DefaultCtorVisibility = MethodAttributes.PrivateScope)]
 	[BaseType (typeof (CIFilter))]
 	interface CIFaceBalance {
 	}
 
+	/// <summary>A <see cref="T:CoreImage.CIFilter" /> that blurs based on a black-and-white mask.</summary>
+	///     <remarks>
+	///       <para>The blur radius varies from 0 to <see cref="P:CoreImage.CIMaskedVariableBlur.Radius" />. In the mask image, pure black is 0 radius (no blur) and white is maximum radius (blurriest).</para>
+	///     </remarks>
 	[MacCatalyst (13, 1)]
 	[CoreImageFilter]
 	[BaseType (typeof (CIFilter))]
@@ -5352,6 +5647,7 @@ namespace CoreImage {
 		CIVector Extent { get; set; }
 	}
 
+	/// <summary>Creates a gradient specified using HSV.</summary>
 	[CoreImageFilter]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIFilter))]
@@ -5481,6 +5777,7 @@ namespace CoreImage {
 		CIVector Extent { get; set; }
 	}
 
+	/// <summary>A <see cref="T:CoreImage.CIFilter" /> that generates images.</summary>
 	[CoreImageFilter]
 	[Abstract]
 	[MacCatalyst (13, 1)]
@@ -5490,12 +5787,14 @@ namespace CoreImage {
 		float ScaleFactor { get; set; }
 	}
 
+	/// <summary>A <see cref="T:CoreImage.CIImageGenerator" /> that generates an image from attributed text.</summary>
 	[CoreImageFilter]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIImageGenerator))]
 	interface CIAttributedTextImageGenerator : CIAttributedTextImageGeneratorProtocol {
 	}
 
+	/// <summary>A <see cref="T:CoreImage.CIFilter" /> that generates barcodes.</summary>
 	[CoreImageFilter]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIFilter))]
@@ -5543,6 +5842,7 @@ namespace CoreImage {
 		float Radius { get; set; }
 	}
 
+	/// <summary>A blur simulating the the unfocused background of a larger-aperture camera with an iris shutter.</summary>
 	[CoreImageFilter]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CILinearBlur))]
@@ -5661,6 +5961,7 @@ namespace CoreImage {
 	interface CILabDeltaE : CILabDeltaEProtocol {
 	}
 
+	/// <summary>A <see cref="T:CoreImage.CIImageGenerator" /> that generates an image from text.</summary>
 	[CoreImageFilter]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIImageGenerator))]
@@ -5704,6 +6005,7 @@ namespace CoreImage {
 	[BaseType (typeof (CIBlendWithMask))]
 	interface CIBlendWithRedMask { }
 
+	/// <summary>Base class for barcode descriptions. Subclasses for specific schemes define relevant properties.</summary>
 	[MacCatalyst (13, 1)]
 	[Abstract]
 	[BaseType (typeof (NSObject))]
@@ -5711,6 +6013,7 @@ namespace CoreImage {
 		// empty
 	}
 
+	/// <summary>A <see cref="T:CoreImage.CIBarcodeDescriptor" /> for QR codes.</summary>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIBarcodeDescriptor))]
 	interface CIQRCodeDescriptor {
@@ -5736,6 +6039,7 @@ namespace CoreImage {
 		CIQRCodeDescriptor CreateDescriptor (NSData errorCorrectedPayload, nint symbolVersion, byte maskPattern, CIQRCodeErrorCorrectionLevel errorCorrectionLevel);
 	}
 
+	/// <summary>A <see cref="T:CoreImage.CIBarcodeDescriptor" /> for the Aztec barcode scheme.</summary>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIBarcodeDescriptor))]
 	interface CIAztecCodeDescriptor {
@@ -5761,6 +6065,7 @@ namespace CoreImage {
 		CIAztecCodeDescriptor CreateDescriptor (NSData errorCorrectedPayload, bool isCompact, nint layerCount, nint dataCodewordCount);
 	}
 
+	/// <summary>A <see cref="T:CoreImage.CIBarcodeDescriptor" /> for the CIPDF417 barcode scheme.</summary>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIBarcodeDescriptor), Name = "CIPDF417CodeDescriptor")]
 	interface CIPdf417CodeDescriptor {
@@ -5786,6 +6091,7 @@ namespace CoreImage {
 		CIPdf417CodeDescriptor CreateDescriptor (NSData errorCorrectedPayload, bool isCompact, nint rowCount, nint columnCount);
 	}
 
+	/// <summary>A <see cref="T:CoreImage.CIBarcodeDescriptor" /> for the Data Matrix barcode scheme.</summary>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIBarcodeDescriptor))]
 	interface CIDataMatrixCodeDescriptor {
@@ -5811,6 +6117,7 @@ namespace CoreImage {
 		CIDataMatrixCodeDescriptor CreateDescriptor (NSData errorCorrectedPayload, nint rowCount, nint columnCount, CIDataMatrixCodeEccVersion eccVersion);
 	}
 
+	/// <summary>A <see cref="T:CoreImage.CIColorKernel" /> that blends images using the GPU.</summary>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIColorKernel))]
 	[DisableDefaultCtor] // Handle is nil for `init`
@@ -6054,6 +6361,7 @@ namespace CoreImage {
 		bool BlendsInDestinationColorSpace { get; set; }
 	}
 
+	/// <summary>Holds information about a render pass, including timing information and number of pixels processed.</summary>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // no docs, but only returned from CIRenderTask.WaitUntilCompleted. Handle is null if created thru `init`

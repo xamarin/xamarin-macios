@@ -2227,9 +2227,7 @@
 		<value>Unable to find the method '{0}' in the type '{1}'</value>
 	</data>
 
-	<data name="MX8047" xml:space="preserve">
-		<value>The trampoline method {0} does not match the function pointer 0x{1} for the trampolineMethod argument (they're don't refer to the same method).</value>
-	</data>
+	<!-- MX8047: unused -->
 
 	<data name="MX8048" xml:space="preserve">
 		<value>The trampoline method {0} must have at least one parameter.</value>
@@ -2265,5 +2263,14 @@
 
 	<data name="MX8056" xml:space="preserve">
 		<value>Failed to marshal the Objective-C object 0x{0} (type: {1}). Could not find an existing managed instance for this object, nor was it possible to create a new managed instance of generic type {2}.</value>
+	</data>
+
+	<data name="MX8057" xml:space="preserve">
+		<value>.NET for {0} does not support server garbage collection.</value>
+		<comment>{0}: the platform (iOS, macOS, etc.)</comment>
+	</data>
+
+	<data name="MX8058" xml:space="preserve">
+		<value>The dynamic registrar does not support calling base Objective-C constructors with arguments (type: %s, selector: %s). Please use any of the static registrars.</value>
 	</data>
 </root>

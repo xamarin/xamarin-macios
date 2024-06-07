@@ -1,0 +1,40 @@
+<Documentation>
+  <Docs DocId="T:UIKit.UICollectionViewLayoutAttributes">
+    <summary>Provides layout attributes for <see cref="T:UIKit.UICollectionViewLayout" />s.</summary>
+    <remarks>
+      <para>
+        Application developers who override this class in order to provide additional layout parameters should also override <see cref="M:UIKit.UICollectionReusableView.ApplyLayoutAttributes(UIKit.UICollectionViewLayoutAttributes)" /> to apply them.
+      </para>
+      <para>
+        In order to get a layout attributes object for a subclass of this class, you must call <see cref="M:UIKit.UICollectionViewLayoutAttributes.CreateForCell(Foundation.NSIndexPath)" /> and specify the type of the subclass, like this:
+      </para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+// A custom UICollectionViewLayoutAttributes class with one extra property
+public class CustomCollectionViewLayoutAttributes : UICollectionViewLayoutAttributes {
+  public int SomeProperty { get; set; }
+  public override NSObject Copy ()
+  {
+    // It is required to override Copy, iOS will call this method to clone your object.
+    var copy = (CustomCollectionViewLayoutAttributes) base.Copy ();
+    copy.SomeProperty = SomeProperty;
+    return copy;
+  }
+}
+public class CircleLayout : UICollectionViewLayout {
+  public override UICollectionViewLayoutAttributes LayoutAttributesForItem (NSIndexPath path)
+  {
+    var attributes = UICollectionViewLayoutAttributes.CreateForCell&lt;CustomCollectionViewLayoutAttributes&gt; (path);
+    attributes.SomeProperty = 1;
+    return attributes;
+  }
+ }
+          ]]></code>
+      </example>
+      <para>
+        <see cref="T:UIKit.UICollectionViewLayoutAttributes" /> implements <see cref="T:UIKit.IUIDynamicItem" /> and thus can be used with UI Dynamics.</para>
+    </remarks>
+    <related type="article" href="https://docs.xamarin.com/ios/Guides/User_Interface/Introduction_to_Collection_Views">Introduction to Collection Views</related>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/UICollectionViewLayoutAttributes_class/index.html">Apple documentation for <c>UICollectionViewLayoutAttributes</c></related>
+  </Docs>
+</Documentation>

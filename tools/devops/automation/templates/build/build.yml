@@ -1,8 +1,4 @@
 parameters:
-- name: runDeviceTests
-  type: boolean
-  default: true
-
 - name: vsdropsPrefix
   type: string
 
@@ -62,12 +58,6 @@ steps:
     IphoneDeveloper: $(iphone-developer)
     MacDeveloper: $(mac-developer)
     HostedMacKeychainPassword: ${{ parameters.keyringPass }}
-
-- task: UseDotNet@2
-  inputs:
-    packageType: sdk
-    version: 5.x
-  displayName: 'Install .NET 5.x SDK'
 
 - task: xamops.azdevex.provisionator-task.provisionator@2
   displayName: 'Provision Brew components'
@@ -173,6 +163,32 @@ steps:
   - bash: |
       xcodebuild -downloadPlatform iOS
     displayName: 'Provision simulators'
+
+# downloding mono takes time and has been shown to be problematic when we have network issues. This is why we 
+# are using the cache. Mono does not get bump a lot of times if any (after dotnet)
+
+- bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/export-mono-filenames.sh
+  displayName: "Export mono download filenames"
+  workingDirectory: "$(Build.SourcesDirectory)/xamarin-macios"
+  timeoutInMinutes: 5
+
+- task: Cache@2
+  displayName: 'Cache iOS Mono download'
+  inputs:
+    key: "$(MONO_IOS_FILENAME)"
+    path: "$(Build.SourcesDirectory)/xamarin-macios/builds/downloads/$(MONO_IOS_FILENAME)"
+
+- task: Cache@2
+  displayName: 'Cache macOS Mono download'
+  inputs:
+    key: "$(MONO_MAC_FILENAME)"
+    path: "$(Build.SourcesDirectory)/xamarin-macios/builds/downloads/$(MONO_MAC_FILENAME)"
+
+- task: Cache@2
+  displayName: 'Cache MacCatalsyt Mono download'
+  inputs:
+    key: "$(MONO_MACCATALYST_FILENAME)"
+    path: "$(Build.SourcesDirectory)/xamarin-macios/builds/downloads/$(MONO_MACCATALYST_FILENAME)"
 
 # Actual build of the project
 - bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/build-macios.sh

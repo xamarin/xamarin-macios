@@ -1,0 +1,19 @@
+<Documentation>
+  <Docs DocId="T:AVFoundation.AVSpeechSynthesizer">
+    <summary>Synthesizes speech and raises events relating to text-to-speech.</summary>
+    <remarks>
+      <para>In its simplest form, text-to-speech can be done with just two classes:</para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+var ss = new AVSpeechSynthesizer();
+var su = new AVSpeechUtterance("Microphone check. One, two, one two.") {
+	Rate = 0.25f
+};
+ss.SpeakUtterance(su);          
+          ]]></code>
+      </example>
+      <para>The <see cref="T:AVFoundation.AVSpeechSynthesizer" /> maintains an internal queue of <see cref="T:AVFoundation.AVSpeechUtterance" />s. The queue is not accessible to application developers, but the synthesizer can be paused or stopped with <see cref="M:AVFoundation.AVSpeechSynthesizer.PauseSpeaking(AVFoundation.AVSpeechBoundary)" /> and <see cref="M:AVFoundation.AVSpeechSynthesizer.StopSpeaking(AVFoundation.AVSpeechBoundary)" />. Events such as <see cref="E:AVFoundation.AVSpeechSynthesizer.DidStartSpeechUtterance" /> or <see cref="E:AVFoundation.AVSpeechSynthesizer.WillSpeakRangeOfSpeechString" /> are opportunities for the application developer to modify previously-enqueued sequences.</para>
+    </remarks>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/AVFoundation/Reference/AVSpeechSynthesizer_Ref/index.html">Apple documentation for <c>AVSpeechSynthesizer</c></related>
+  </Docs>
+</Documentation>
