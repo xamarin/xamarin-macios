@@ -1,0 +1,40 @@
+<Documentation>
+  <Docs DocId="T:CoreGraphics.CGBlendMode">
+    <summary>Blending mode used during composition.</summary>
+    <remarks>
+      <para>The blend modes are used when composing images, the operations combine the color data with an alpha channel.   The operations are called the Porter-Duff blending operations.</para>
+      <para>
+For a detailed explanation see the PDF reference manual.
+</para>
+      <para>In the explanation below, the following variables are used:</para>
+      <para>
+        <list type="table">
+          <listheader>
+            <term>Term</term>
+            <description>Description</description>
+          </listheader>
+          <item>
+            <term>R</term>
+            <description>Premultiplied result color</description>
+          </item>
+          <item>
+            <term>S</term>
+            <description>Source Color</description>
+          </item>
+          <item>
+            <term>D</term>
+            <description>Destination Color</description>
+          </item>
+          <item>
+            <term>Sa</term>
+            <description>Source alpha value</description>
+          </item>
+          <item>
+            <term>Da</term>
+            <description>Destination alpha value</description>
+          </item>
+        </list>
+      </para>
+    </remarks>
+  </Docs>
+</Documentation>

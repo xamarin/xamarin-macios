@@ -288,27 +288,25 @@ namespace Network {
 		public NWProtocolStack ProtocolStack => new NWProtocolStack (nw_parameters_copy_default_protocol_stack (GetCheckedHandle ()), owns: true);
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern void nw_parameters_set_local_only (nw_parameters_t parameters, [MarshalAs (UnmanagedType.I1)] bool local_only);
+		static extern void nw_parameters_set_local_only (nw_parameters_t parameters, byte local_only);
 
 		[DllImport (Constants.NetworkLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static extern bool nw_parameters_get_local_only (nw_parameters_t parameters);
+		static extern byte nw_parameters_get_local_only (nw_parameters_t parameters);
 
 		public bool LocalOnly {
-			get => nw_parameters_get_local_only (GetCheckedHandle ());
-			set => nw_parameters_set_local_only (GetCheckedHandle (), value);
+			get => nw_parameters_get_local_only (GetCheckedHandle ()) != 0;
+			set => nw_parameters_set_local_only (GetCheckedHandle (), value.AsByte ());
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern void nw_parameters_set_prefer_no_proxy (nw_parameters_t parameters, [MarshalAs (UnmanagedType.I1)] bool prefer_no_proxy);
+		static extern void nw_parameters_set_prefer_no_proxy (nw_parameters_t parameters, byte prefer_no_proxy);
 
 		[DllImport (Constants.NetworkLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static extern bool nw_parameters_get_prefer_no_proxy (nw_parameters_t parameters);
+		static extern byte nw_parameters_get_prefer_no_proxy (nw_parameters_t parameters);
 
 		public bool PreferNoProxy {
-			get => nw_parameters_get_prefer_no_proxy (GetCheckedHandle ());
-			set => nw_parameters_set_prefer_no_proxy (GetCheckedHandle (), value);
+			get => nw_parameters_get_prefer_no_proxy (GetCheckedHandle ()) != 0;
+			set => nw_parameters_set_prefer_no_proxy (GetCheckedHandle (), value.AsByte ());
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
@@ -461,39 +459,36 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static extern bool nw_parameters_get_prohibit_expensive (IntPtr handle);
+		static extern byte nw_parameters_get_prohibit_expensive (IntPtr handle);
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern void nw_parameters_set_prohibit_expensive (IntPtr handle, [MarshalAs (UnmanagedType.I1)] bool prohibit_expensive);
+		static extern void nw_parameters_set_prohibit_expensive (IntPtr handle, byte prohibit_expensive);
 
 		public bool ProhibitExpensive {
-			get => nw_parameters_get_prohibit_expensive (GetCheckedHandle ());
-			set => nw_parameters_set_prohibit_expensive (GetCheckedHandle (), value);
+			get => nw_parameters_get_prohibit_expensive (GetCheckedHandle ()) != 0;
+			set => nw_parameters_set_prohibit_expensive (GetCheckedHandle (), value.AsByte ());
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static extern bool nw_parameters_get_reuse_local_address (IntPtr handle);
+		static extern byte nw_parameters_get_reuse_local_address (IntPtr handle);
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern void nw_parameters_set_reuse_local_address (IntPtr handle, [MarshalAs (UnmanagedType.I1)] bool reuse_local_address);
+		static extern void nw_parameters_set_reuse_local_address (IntPtr handle, byte reuse_local_address);
 
 		public bool ReuseLocalAddress {
-			get => nw_parameters_get_reuse_local_address (GetCheckedHandle ());
-			set => nw_parameters_set_reuse_local_address (GetCheckedHandle (), value);
+			get => nw_parameters_get_reuse_local_address (GetCheckedHandle ()) != 0;
+			set => nw_parameters_set_reuse_local_address (GetCheckedHandle (), value.AsByte ());
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static extern bool nw_parameters_get_fast_open_enabled (IntPtr handle);
+		static extern byte nw_parameters_get_fast_open_enabled (IntPtr handle);
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern void nw_parameters_set_fast_open_enabled (IntPtr handle, [MarshalAs (UnmanagedType.I1)] bool fast_open_enabled);
+		static extern void nw_parameters_set_fast_open_enabled (IntPtr handle, byte fast_open_enabled);
 
 		public bool FastOpenEnabled {
-			get => nw_parameters_get_fast_open_enabled (GetCheckedHandle ());
-			set => nw_parameters_set_fast_open_enabled (GetCheckedHandle (), value);
+			get => nw_parameters_get_fast_open_enabled (GetCheckedHandle ()) != 0;
+			set => nw_parameters_set_fast_open_enabled (GetCheckedHandle (), value.AsByte ());
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
@@ -529,15 +524,14 @@ namespace Network {
 
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern void nw_parameters_set_include_peer_to_peer (IntPtr handle, [MarshalAs (UnmanagedType.I1)] bool includePeerToPeer);
+		static extern void nw_parameters_set_include_peer_to_peer (IntPtr handle, byte includePeerToPeer);
 
 		[DllImport (Constants.NetworkLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static extern bool nw_parameters_get_include_peer_to_peer (IntPtr handle);
+		static extern byte nw_parameters_get_include_peer_to_peer (IntPtr handle);
 
 		public bool IncludePeerToPeer {
-			get => nw_parameters_get_include_peer_to_peer (GetCheckedHandle ());
-			set => nw_parameters_set_include_peer_to_peer (GetCheckedHandle (), value);
+			get => nw_parameters_get_include_peer_to_peer (GetCheckedHandle ()) != 0;
+			set => nw_parameters_set_include_peer_to_peer (GetCheckedHandle (), value.AsByte ());
 		}
 
 #if NET
@@ -550,8 +544,7 @@ namespace Network {
 		[iOS (13, 0)]
 #endif
 		[DllImport (Constants.NetworkLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static extern bool nw_parameters_get_prohibit_constrained (IntPtr parameters);
+		static extern byte nw_parameters_get_prohibit_constrained (IntPtr parameters);
 
 #if NET
 		[SupportedOSPlatform ("tvos13.0")]
@@ -563,7 +556,7 @@ namespace Network {
 		[iOS (13, 0)]
 #endif
 		[DllImport (Constants.NetworkLibrary)]
-		static extern void nw_parameters_set_prohibit_constrained (IntPtr parameters, [MarshalAs (UnmanagedType.I1)] bool prohibit_constrained);
+		static extern void nw_parameters_set_prohibit_constrained (IntPtr parameters, byte prohibit_constrained);
 
 #if NET
 		[SupportedOSPlatform ("tvos13.0")]
@@ -575,8 +568,8 @@ namespace Network {
 		[iOS (13, 0)]
 #endif
 		public bool ProhibitConstrained {
-			get => nw_parameters_get_prohibit_constrained (GetCheckedHandle ());
-			set => nw_parameters_set_prohibit_constrained (GetCheckedHandle (), value);
+			get => nw_parameters_get_prohibit_constrained (GetCheckedHandle ()) != 0;
+			set => nw_parameters_set_prohibit_constrained (GetCheckedHandle (), value.AsByte ());
 		}
 
 #if NET
@@ -708,9 +701,8 @@ namespace Network {
 		[iOS (16, 0)]
 		[Watch (9, 0)]
 #endif
-		[return: MarshalAs (UnmanagedType.I1)]
 		[DllImport (Constants.NetworkLibrary)]
-		static extern bool nw_parameters_requires_dnssec_validation (OS_nw_parameters parameters);
+		static extern byte nw_parameters_requires_dnssec_validation (OS_nw_parameters parameters);
 
 #if NET
 		[SupportedOSPlatform ("tvos16.0")]
@@ -724,7 +716,7 @@ namespace Network {
 		[Watch (9, 0)]
 #endif
 		[DllImport (Constants.NetworkLibrary)]
-		static extern void nw_parameters_set_requires_dnssec_validation (OS_nw_parameters parameters, [MarshalAs (UnmanagedType.I1)] bool requires_dnssec_validation);
+		static extern void nw_parameters_set_requires_dnssec_validation (OS_nw_parameters parameters, byte requires_dnssec_validation);
 
 #if NET
 		[SupportedOSPlatform ("tvos16.0")]
@@ -738,8 +730,8 @@ namespace Network {
 		[Watch (9, 0)]
 #endif
 		public bool RequiresDnssecValidation {
-			get => nw_parameters_requires_dnssec_validation (GetCheckedHandle ());
-			set => nw_parameters_set_requires_dnssec_validation (GetCheckedHandle (), value);
+			get => nw_parameters_requires_dnssec_validation (GetCheckedHandle ()) != 0;
+			set => nw_parameters_set_requires_dnssec_validation (GetCheckedHandle (), value.AsByte ());
 		}
 	}
 }

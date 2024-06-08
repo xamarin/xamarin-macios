@@ -1,0 +1,30 @@
+<Documentation>
+  <Docs DocId="T:HealthKitUI.HKActivityRingView">
+    <summary>A <see cref="T:UIKit.UIView" /> that shows the data in a <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=Health%20Kit%20HKSummary&amp;scope=Xamarin" title="T:HealthKit.HKSummary">T:HealthKit.HKSummary</a></format>.</summary>
+    <remarks>
+      <para>Developers can set the values within the <see cref="T:HealthKitUI.HKActivityRingView" /> using a <see cref="T:HealthKit.HKActivitySummary" /> object, as shown in the following example:</para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+var view = new HKActivityRingView (new CGRect (10, 10, 200, 200));
+
+var summary = new HKActivitySummary ();
+//Outer ring (Red)
+summary.ActiveEnergyBurnedGoal = HKQuantity.FromQuantity (HKUnit.Kilocalorie, 200.0);
+summary.ActiveEnergyBurned = HKQuantity.FromQuantity (HKUnit.Kilocalorie, 150.0);
+
+//Middle ring (Green)
+summary.AppleExerciseTime = HKQuantity.FromQuantity (HKUnit.Hour, 0.5);
+summary.AppleExerciseTimeGoal = HKQuantity.FromQuantity (HKUnit.Hour, 1.0);
+
+//Inner ring (Blue)
+summary.AppleStandHours = HKQuantity.FromQuantity (HKUnit.Count, 2);
+summary.AppleStandHoursGoal = HKQuantity.FromQuantity (HKUnit.Count, 8);
+    ]]></code>
+      </example>
+      <para>
+        <img href="~/HealthKitUI/_images/HealthKitUI.HKActivityRingView.png" alt="Screenshot showing the HKActivityRingView" />
+      </para>
+    </remarks>
+    <related type="externalDocumentation" href="https://developer.apple.com/reference/HealthKitUI/HKActivityRingView">Apple documentation for <c>HKActivityRingView</c></related>
+  </Docs>
+</Documentation>

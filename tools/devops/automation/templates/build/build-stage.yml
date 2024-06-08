@@ -1,16 +1,8 @@
 # template that contains all the different steps to create a pkgs, publish the results and provide feedback to the
 # developers in github.
 parameters:
-- name: runTests
-  type: boolean
-  default: true
-
 - name: vsdropsPrefix
   type: string
-
-- name: runDeviceTests
-  type: boolean
-  default: true
 
 - name: keyringPass
   type: string
@@ -103,8 +95,6 @@ jobs:
       isPR: ${{ parameters.isPR }}
       repositoryAlias: ${{ parameters.repositoryAlias }}
       commit: ${{ parameters.commit }}
-      runTests: ${{ parameters.runTests }}
-      runDeviceTests: ${{ parameters.runDeviceTests }}
       vsdropsPrefix: ${{ parameters.vsdropsPrefix }}
       keyringPass: ${{ parameters.keyringPass }}
       gitHubToken: ${{ parameters.gitHubToken }}

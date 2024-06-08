@@ -1,0 +1,10 @@
+<Documentation>
+  <Docs DocId="T:CloudKit.CKContainer">
+    <summary>Encapsulates content associated with an app, including shared and per-user private data.</summary>
+    <remarks>
+      <para>The <see cref="T:CloudKit.CKContainer" /> class is the highest-level class in the <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=Cloud%20Kit&amp;scope=Xamarin" title="N:CloudKit">N:CloudKit</a></format> namespace. A CloudKit Container (sometimes referred to in Apple documentation as a "Ubiquity container") is an information store identified with a particular name. Apple advises using a name of the form "iCloud.{reverse DNS}.{appName}", for instance, "iCloud.com.mycompany.MyApp". Developers must create and configure their containers using the iCloud Dashboard, available by way of the Apple developer portal. To retrieve a container, developers use the static <see cref="M:CloudKit.CKContainer.FromIdentifier(System.String)" /> method.</para>
+      <para>A single <see cref="T:CloudKit.CKContainer" /> may contain both public data, which is shared between all instances of the app (see <see cref="P:CloudKit.CKContainer.PublicCloudDatabase" />), and private data, which contains user-specific data (see <see cref="P:CloudKit.CKContainer.PrivateCloudDatabase" />). Within iCloud, public data is stored in the app's iCloud storage while private data is stored in the user's private iCloud storage. The public <see cref="T:CloudKit.CKDatabase" /> is available to all connected users of the app, whether or not they are logged in to iCloud. The private <see cref="T:CloudKit.CKDatabase" /> is only if the user is logged in to iCloud. Developers must write their code such that it reacts gracefully to changes in the user's login or connection status.</para>
+    </remarks>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/CloudKit/Reference/CKContainer_class/index.html">Apple documentation for <c>CKContainer</c></related>
+  </Docs>
+</Documentation>

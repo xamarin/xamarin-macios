@@ -1,0 +1,173 @@
+<Documentation>
+  <Docs DocId="T:UIKit.UIViewContentMode">
+    <summary>An enumeration indicating how the cached bitmap of a view must be rendered when the view's bounds change.</summary>
+    <remarks>
+      <para>
+      The contents of the <see cref="T:UIKit.UIView" /> are cached in a bitmap, the values in this enumeration determine what happens to a view when the bounds of that view change.   With these you can control whether the bitmap is stretched or whether the view is redrawn.
+      </para>
+      <para>The following table shows the behavior as it works placing this {638, 475} image in a <see cref="T:UIKit.UIImageView" /> of size {280, 100}.</para>
+      <para>
+        <img href="~/CoreImage/_images/flower.png" alt="Photograph of a sunflower." />
+      </para>
+      <list type="table">
+        <listheader>
+          <term>Value</term>
+          <description>Behavior</description>
+          <description />
+        </listheader>
+        <item>
+          <term>
+            <see cref="F:UIKit.UIViewContentMode.Bottom" />
+          </term>
+          <description>Aligns the content to the bottom of the view.</description>
+          <description>
+            <img href="~/UIKit/_images/UIViewContentMode.Bottom.png" alt="Image layout for the specified content mode" />
+          </description>
+        </item>
+        <item>
+          <term>
+            <see cref="F:UIKit.UIViewContentMode.BottomLeft" />
+          </term>
+          <description>Aligns the content to the bottom left of the view.</description>
+          <description>
+            <img href="~/UIKit/_images/UIViewContentMode.BottomLeft.png" alt="Image layout for the specified content mode" />
+          </description>
+        </item>
+        <item>
+          <term>
+            <see cref="F:UIKit.UIViewContentMode.BottomLeft" />
+          </term>
+          <description>Aligns the content to the bottom left of the view.</description>
+          <description>
+            <img href="~/UIKit/_images/UIViewContentMode.BottomLeft.png" alt="Image layout for the specified content mode" />
+          </description>
+        </item>
+        <item>
+          <term>
+            <see cref="F:UIKit.UIViewContentMode.BottomLeft" />
+          </term>
+          <description>Aligns the content to the bottom left of the view.</description>
+          <description>
+            <img href="~/UIKit/_images/UIViewContentMode.BottomLeft.png" alt="Image layout for the specified content mode" />
+          </description>
+        </item>
+        <item>
+          <term>
+            <see cref="F:UIKit.UIViewContentMode.BottomLeft" />
+          </term>
+          <description>Aligns the content to the bottom left of the view.</description>
+          <description>
+            <img href="~/UIKit/_images/UIViewContentMode.BottomLeft.png" alt="Image layout for the specified content mode" />
+          </description>
+        </item>
+        <item>
+          <term>
+            <see cref="F:UIKit.UIViewContentMode.BottomLeft" />
+          </term>
+          <description>Aligns the content to the bottom left of the view.</description>
+          <description>
+            <img href="~/UIKit/_images/UIViewContentMode.BottomLeft.png" alt="Image layout for the specified content mode" />
+          </description>
+        </item>
+        <item>
+          <term>
+            <see cref="F:UIKit.UIViewContentMode.BottomRight" />
+          </term>
+          <description>Aligns the content to the bottom right of the view.</description>
+          <description>
+            <img href="~/UIKit/_images/UIViewContentMode.BottomRight.png" alt="Image layout for the specified content mode" />
+          </description>
+        </item>
+        <item>
+          <term>
+            <see cref="F:UIKit.UIViewContentMode.Center" />
+          </term>
+          <description>Center the content in the view.</description>
+          <description>
+            <img href="~/UIKit/_images/UIViewContentMode.Center.png" alt="Image layout for the specified content mode" />
+          </description>
+        </item>
+        <item>
+          <term>
+            <see cref="F:UIKit.UIViewContentMode.Left" />
+          </term>
+          <description>Aligns the content to the left of the view.</description>
+          <description>
+            <img href="~/UIKit/_images/UIViewContentMode.Left.png" alt="Image layout for the specified content mode" />
+          </description>
+        </item>
+        <item>
+          <term>
+            <see cref="F:UIKit.UIViewContentMode.Redraw" />
+          </term>
+          <description>Forces a redraw when the <see cref="P:UIKit.UIView.Frame" /> of an object changes.</description>
+          <description>
+          </description>
+        </item>
+        <item>
+          <term>
+            <see cref="F:UIKit.UIViewContentMode.Right" />
+          </term>
+          <description>Aligns the content to the right of the view.</description>
+          <description>
+            <img href="~/UIKit/_images/UIViewContentMode.Right.png" alt="Image layout for the specified content mode" />
+          </description>
+        </item>
+        <item>
+          <term>
+            <see cref="F:UIKit.UIViewContentMode.ScaleAspectFill" />
+          </term>
+          <description>Scales the contents to fill the new bounaries of the view, while preserving the aspect ratio.   This means that the contents might be clipped.</description>
+          <description>
+            <img href="~/UIKit/_images/UIViewContentMode.ScaleAspectFill.png" alt="Image layout for the specified content mode" />
+          </description>
+        </item>
+        <item>
+          <term>
+            <see cref="F:UIKit.UIViewContentMode.ScaleAspectFit" />
+          </term>
+          <description>Scales the contents so that everything is visible, while preserving the aspect ratio.   Any areas that are not filled become transparent. (In the image, the <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=UIKit%20UIImage%20Background%20Color&amp;scope=Xamarin" title="P:UIKit.UIImage.BackgroundColor">P:UIKit.UIImage.BackgroundColor</a></format> was set to black to emphasize the scaling behavior.)</description>
+          <description>
+            <img href="~/UIKit/_images/UIViewContentMode.ScaleAspectFit.png" alt="Image layout for the specified content mode" />
+          </description>
+        </item>
+        <item>
+          <term>
+            <see cref="F:UIKit.UIViewContentMode.ScaleToFill" />
+          </term>
+          <description>Scales the contents to fit the new bounds, this might distort the contents.</description>
+          <description>
+            <img href="~/UIKit/_images/UIViewContentMode.ScaleToFill.png" alt="Image layout for the specified content mode" />
+          </description>
+        </item>
+        <item>
+          <term>
+            <see cref="F:UIKit.UIViewContentMode.Top" />
+          </term>
+          <description>Aligns the content to the top of the view.</description>
+          <description>
+            <img href="~/UIKit/_images/UIViewContentMode.Top.png" alt="Image layout for the specified content mode" />
+          </description>
+        </item>
+        <item>
+          <term>
+            <see cref="F:UIKit.UIViewContentMode.TopLeft" />
+          </term>
+          <description>Aligns the content to the top left of the view.</description>
+          <description>
+            <img href="~/UIKit/_images/UIViewContentMode.TopLeft.png" alt="Image layout for the specified content mode" />
+          </description>
+        </item>
+        <item>
+          <term>
+            <see cref="F:UIKit.UIViewContentMode.TopRight" />
+          </term>
+          <description>Aligns the content to the top right of the view.</description>
+          <description>
+            <img href="~/UIKit/_images/UIViewContentMode.TopRight.png" alt="Image layout for the specified content mode" />
+          </description>
+        </item>
+      </list>
+    </remarks>
+  </Docs>
+</Documentation>

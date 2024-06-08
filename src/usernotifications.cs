@@ -43,6 +43,7 @@ namespace UserNotifications {
 		BadgeInputInvalid = 1600,
 	}
 
+	/// <summary>Enumerates behavior options for notification actions.</summary>
 	[Unavailable (PlatformName.TvOS)]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -54,6 +55,7 @@ namespace UserNotifications {
 		Foreground = (1 << 2)
 	}
 
+	/// <summary>Contains flags that control whether a custom dismiss action is used, and whether the category is allowed in CarPlay application.</summary>
 	[Unavailable (PlatformName.TvOS)]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -96,6 +98,7 @@ namespace UserNotifications {
 		Enabled
 	}
 
+	/// <summary>Enumerates the kinds of alerts that notifications display.</summary>
 	[Unavailable (PlatformName.TvOS)]
 	[Unavailable (PlatformName.WatchOS)]
 	[MacCatalyst (13, 1)]
@@ -165,6 +168,7 @@ namespace UserNotifications {
 		Banner = (1 << 4),
 	}
 
+	/// <summary>Enumerates times when notification previews are shown.</summary>
 	[NoWatch, NoTV]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -216,6 +220,9 @@ namespace UserNotifications {
 		UNNotificationRequest Request { get; }
 	}
 
+	/// <summary>An action that can be performed in response to a notification.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/UserNotifications/UNNotificationAction">Apple documentation for <c>UNNotificationAction</c></related>
 	[Unavailable (PlatformName.TvOS)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -245,6 +252,9 @@ namespace UserNotifications {
 		UNNotificationActionIcon Icon { get; }
 	}
 
+	/// <summary>An action that accepts text input from the user before the response is given to the app.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/UserNotifications/UNTextInputNotificationAction">Apple documentation for <c>UNTextInputNotificationAction</c></related>
 	[Unavailable (PlatformName.TvOS)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (UNNotificationAction))]
@@ -267,6 +277,9 @@ namespace UserNotifications {
 		string TextInputPlaceholder { get; }
 	}
 
+	/// <summary>Audio, video, or images that are displayed with notifications.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/UserNotifications/UNNotificationAttachment">Apple documentation for <c>UNNotificationAttachment</c></related>
 	[Unavailable (PlatformName.TvOS)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -307,6 +320,7 @@ namespace UserNotifications {
 		NSString ThumbnailTime { get; }
 	}
 
+	/// <summary>A dictionary of values that control aspects of notification behavior.</summary>
 	[Unavailable (PlatformName.TvOS)]
 	[MacCatalyst (13, 1)]
 	[StrongDictionary ("UNNotificationAttachmentOptionsKeys")]
@@ -333,6 +347,9 @@ namespace UserNotifications {
 		double ThumbnailTimeInSeconds { get; set; }
 	}
 
+	/// <summary>Implements a group of actions and options that comprise a category of notifications.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/UserNotifications/UNNotificationCategory">Apple documentation for <c>UNNotificationCategory</c></related>
 	[Unavailable (PlatformName.TvOS)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -573,6 +590,9 @@ namespace UserNotifications {
 		NSString Dismiss { get; }
 	}
 
+	/// <summary>A system-created object that contains information about how a user responded to a notification.</summary>
+	///     <remarks>This class is not related to <see cref="T:UserNotifications.UNNotificationRequest" />, which represents the data needed to request a notification from the system.</remarks>
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/UserNotifications/UNNotificationResponse">Apple documentation for <c>UNNotificationResponse</c></related>
 	[Unavailable (PlatformName.TvOS)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -600,6 +620,9 @@ namespace UserNotifications {
 		UIScene TargetScene { get; }
 	}
 
+	/// <summary>System-created object that contains a user response to a <see cref="T:UserNotifications.UNTextInputNotificationAction" />.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/UserNotifications/UNTextInputNotificationResponse">Apple documentation for <c>UNTextInputNotificationResponse</c></related>
 	[Unavailable (PlatformName.TvOS)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (UNNotificationResponse))]
@@ -610,6 +633,9 @@ namespace UserNotifications {
 		string UserText { get; }
 	}
 
+	/// <summary>Class for processing push notification payloads before delivery.</summary>
+	///     <remarks>Developers can use this class to, for example, replace a payload, download a large payload in parts, or etc.</remarks>
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/UserNotifications/UNNotificationServiceExtension">Apple documentation for <c>UNNotificationServiceExtension</c></related>
 	[Watch (6, 0)]
 	[Unavailable (PlatformName.TvOS)]
 	[MacCatalyst (13, 1)]
@@ -697,6 +723,9 @@ namespace UserNotifications {
 		UNNotificationSetting DirectMessagesSetting { get; }
 	}
 
+	/// <summary>Contains a Linear PCM, MA4, µLaw, or aLaw sound to play when a notification is delivered.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/UserNotifications/UNNotificationSound">Apple documentation for <c>UNNotificationSound</c></related>
 	[Unavailable (PlatformName.TvOS)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -796,6 +825,9 @@ namespace UserNotifications {
 		NSDate NextTriggerDate { get; }
 	}
 
+	/// <summary>Triggers the delivery of a notification when the device enters or leaves a geographic area.</summary>
+	///     <remarks>Application developers can set <see cref="P:CoreLocation.CLRegion.NotifyOnEntry" /> and <see cref="P:CoreLocation.CLRegion.NotifyOnExit" /> to control when the trigger is activated.</remarks>
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/UserNotifications/UNLocationNotificationTrigger">Apple documentation for <c>UNLocationNotificationTrigger</c></related>
 	[NoMac]
 	[NoMacCatalyst]
 	[Unavailable (PlatformName.TvOS)]

@@ -1,0 +1,58 @@
+<Documentation>
+  <Docs DocId="T:UIKit.UIFontDescriptor">
+    <summary>Describes properties of a font, use to create fonts with certain features.   Provides ways of finding fonts matching a description as well.</summary>
+    <remarks>
+      <para> Developers create UIFontDescriptors with a set of
+	parameters they are interested in (font faces, font families,
+	font attributes, fallbacks).  You can consider these
+	descriptors queries, which you can later use to create a
+	concrete UIFont wit by using the <see cref="M:UIKit.UIFont.FromDescriptor(UIKit.UIFontDescriptor,System.nfloat)" /> method.
+      </para>
+      <para>
+	These objects are immutable, once created, they can not be
+	changed.  But given a UIFontDescriptor, you can create a more
+	precise font descriptor instance with new information.  You
+	can create a new UIFontDescriptor with more detailed font
+	attributes using the <see cref="M:UIKit.UIFontDescriptor.CreateWithAttributes(UIKit.UIFontAttributes)" />
+	method, extend one by explicitly setting a font face or font family using the <see cref="M:UIKit.UIFontDescriptor.CreateWithFace(System.String)" /> and <see cref="M:UIKit.UIFontDescriptor.CreateWithFamily(System.String)" /> methods, specify a desired font size or a transformation matrix with the <see cref="M:UIKit.UIFontDescriptor.CreateWithSize(System.nfloat)" /> and <see cref="M:UIKit.UIFontDescriptor.CreateWithMatrix(CoreGraphics.CGAffineTransform)" /> methods, or request that certain stylistic traits be present with <see cref="M:UIKit.UIFontDescriptor.CreateWithTraits(UIKit.UIFontDescriptorSymbolicTraits)" />.
+
+      </para>
+      <para>
+	This class exposes various static properties that return the
+	UIFontDescriptor that matches the user's global preferences
+	(font sizes) as well as the system font.   These properties are: 
+	<see cref="P:UIKit.UIFontDescriptor.PreferredHeadline" />,
+	<see cref="P:UIKit.UIFontDescriptor.PreferredBody" />,
+	<see cref="P:UIKit.UIFontDescriptor.PreferredSubheadline" />,
+	<see cref="P:UIKit.UIFontDescriptor.PreferredFootnote" />,
+	<see cref="P:UIKit.UIFontDescriptor.PreferredCaption1" /> and
+	<see cref="P:UIKit.UIFontDescriptor.PreferredCaption2" />.
+      </para>
+      <para> You can use the <see cref="M:UIKit.UIFontDescriptor.GetMatchingFontDescriptors(UIKit.UIFontDescriptorAttribute[])" /> method to get a set of UIFontDescriptors that match your
+	font explicitly, or you can use <see cref="M:UIKit.UIFontDescriptor.CreateWithTraits(UIKit.UIFontDescriptorSymbolicTraits)" />
+	and <see cref="M:UIKit.UIFont.FromDescriptor(UIKit.UIFontDescriptor,System.nfloat)" />
+	methods to match implicitly.
+      </para>
+      <para>
+	The following example shows how to create two fonts: one with
+	the preferred font for body text, and then a bold version of
+	the same font:
+      </para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+
+// Creates a UIFont for the body text
+var bodyDescriptor = UIFontDescriptor.PreferredBody;
+UIFont bodyFont = UIFont.FromDescriptor (bodyDescriptor, 0);
+	  
+// Creates a bold version of it:
+var boldDescriptor = bodyDescriptor.CreateWithTraits (UIFontDescriptorSymbolicTraits.Bold);
+UIFont boldBodyFont = UIFont.FromDescriptor (boldDescriptor, 0);
+
+]]></code>
+      </example>
+      <para tool="threads">The members of this class can be used from a background thread.</para>
+    </remarks>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIFontDescriptor_Class/index.html">Apple documentation for <c>UIFontDescriptor</c></related>
+  </Docs>
+</Documentation>

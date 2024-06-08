@@ -1,0 +1,299 @@
+<Documentation>
+  <Docs DocId="T:UIKit.UIScrollView">
+    <summary>A <see cref="T:UIKit.UIView" /> that can scroll, pan, and page its children.</summary>
+    <remarks>
+      <para>
+                The <see cref="T:UIKit.UIScrollView" /> class is a container that provides scrolling, zooming, and panning functionality of its content
+                view. Because the <see cref="T:UIKit.UIScrollView" /> class provides out-of-the-box functionality for   scrolling and paging, it is generally used as the basis for <see cref="T:UIKit.UIView" />s whose content is larger than the <see cref="T:UIKit.UIScrollView" />'s <see cref="P:UIKit.UIView.Frame" />. The need for and range of scrolling is specified by the application developer setting the <see cref="T:UIKit.UIScrollView" />'s <see cref="P:UIKit.UIScrollView.ContentSize" /> to a <see cref="T:System.Drawing.SizeF" />
+                greater than the <see cref="T:UIKit.UIScrollView" />'s <see cref="P:UIKit.UIView.Frame" />.
+            </para>
+      <para>
+                The most common ways to use the <see cref="T:UIKit.UIScrollView" /> are to either:
+            </para>
+      <list type="bullet">
+        <item>
+          <term>
+                        Add a single large subview, generally with a <see cref="P:UIKit.UIView.Frame" /> whose <see cref="P:System.Drawing.RectangleF.Location" />
+                        is [0,0] and whose <see cref="T:System.Drawing.SizeF" /> is the same as the  <see cref="T:UIKit.UIScrollView" />'s <see cref="P:UIKit.UIScrollView.ContentSize" />; or 
+                    </term>
+        </item>
+        <item>
+          <term>
+                        Arrange multiple subviews within the <see cref="T:UIKit.UIScrollView" />'s 
+                        <see cref="P:UIKit.UIScrollView.ContentSize" /> and use the <see cref="T:UIKit.UIScrollView" /> to scroll between them or, by
+                        setting <see cref="P:UIKit.UIScrollView.PagingEnabled" /> to <see langword="true" />, to page between them. This is often done in
+                        conjunction with a <see cref="T:UIKit.UIPageControl" />; or
+                    </term>
+        </item>
+        <item>
+          <term>
+                        Subclass <see cref="T:UIKit.UIScrollView" /> and extend it's functionality. In fact, the <see cref="T:UIKit.UIScrollView" /> is
+                        the base class of such commonly-used classes as <see cref="T:UIKit.UITextField" /> and <see cref="T:UIKit.UITableView" />.
+                    </term>
+        </item>
+      </list>
+      <format type="text/html">
+        <h2>Using A Single Large Subview</h2>
+      </format>
+      <para>
+                The following image, drawn from the "Scroll View" demo in the "iOS Standard Controls" sample, illustrates the simplest use-case: a single large subview (in this case, a <see cref="T:UIKit.UIImageView" />) whose image size
+                matches the <see cref="T:UIKit.UIScrollView" />'s <see cref="P:UIKit.UIScrollView.ContentSize" />. The <see cref="P:UIKit.UIScrollView.ContentOffset" /> of the  <see cref="T:UIKit.UIScrollView" /> corresponds to the image pixel showing
+                at the origin of the <see cref="T:UIKit.UIImageView" /> (e.g., <see cref="T:System.Drawing.PointF" /> [215, 145]). The <see cref="P:UIKit.UIScrollView.ContentSize" /> of the <see cref="T:UIKit.UIScrollView" /> defines the scroll limits. When the <see cref="P:UIKit.UIScrollView.ContentSize" /> is larger than the <see cref="T:UIKit.UIScrollView" />'s <see cref="P:UIKit.UIView.Frame" />, one gets scrolling behavior. If <see cref="P:UIKit.UIScrollView.ContentSize" /> is not set or is
+                set to too small a <see cref="T:System.Drawing.RectangleF" />, one doesn't (however, <see cref="P:UIKit.UIScrollView.AlwaysBounceVertical" /> and <see cref="P:UIKit.UIScrollView.AlwaysBounceHorizontal" /> can be used to allow dragging even in this situation.)
+            </para>
+      <para>
+        <img href="~/UIKit/_images/UIKit.UIScrollView.Slide2.png" alt="Diagram of content size in a scroll view" />
+      </para>
+      <para>
+                As the following code shows, it's straightforward to create and use a <see cref="T:UIKit.UIScrollView" /> in this manner. The
+                <c>imageView</c> is initialized from a file. The <see cref="T:UIKit.UIScrollView" />'s <see cref="P:UIKit.UIScrollView.ContentSize" /> is set to  the size of the image  (which happens to be 512 x 512 pixels and thus large enough
+                to require scrolling unless zoomed out) and the <c>imageView</c> is added as a subview. 
+            </para>
+      <para>
+                The delegate for the <see cref="P:UIKit.UIScrollView.ViewForZoomingInScrollView" /> property allows the <see cref="T:UIKit.UIScrollView" /> to automatically handle pinch-to-zoom gestures: 
+            </para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+// create our scroll view
+scrollView = new UIScrollView (
+new RectangleF (0, 0, this.View.Frame.Width, this.View.Frame.Height - this.NavigationController.NavigationBar.Frame.Height));
+this.View.AddSubview (scrollView);
+
+// create our image view
+imageView = new UIImageView (UIImage.FromFile ("Images/Icons/512_icon.png"));
+scrollView.ContentSize = imageView.Image.Size;
+scrollView.MaximumZoomScale = 3f;
+scrollView.MinimumZoomScale = .1f;
+scrollView.AddSubview (imageView);
+
+scrollView.ViewForZoomingInScrollView += (UIScrollView sv) => { return imageView; };
+                ]]></code>
+      </example>
+      <para>
+                The <see cref="T:UIKit.UIScrollView" /> tracks the location of the application-user's fingers and updates the <see cref="T:UIKit.UIScrollView" />'s <see cref="P:UIKit.UIScrollView.ContentSize" /> and 
+                
+                <see cref="P:UIKit.UIScrollView.ZoomScale" /> as they drag, swipe, and make pinch-to-zoom gestures. The <see cref="T:UIKit.UIScrollView" /> draws the
+                
+                briefly-visible scroll-location indicators, shows the content clipped from its subviews, and animates the scrolling, panning, and zooming
+                transitions. As the gesture or animation proceeds, the <see cref="T:UIKit.UIScrollView" /> adjusts the <see cref="P:UIKit.UIScrollView.ContentOffset" /> and <see cref="P:UIKit.UIScrollView.ZoomScale" /> appropriately and repeatedly
+                fires the <see cref="E:UIKit.UIScrollView.Scrolled" /> event.  
+            </para>
+      <format type="text/html">
+        <h2>Panning and Paging</h2>
+      </format>
+      <para>
+                The next image, from the "Page Control" demo in the iOS Standard Controls sample, illustrates multiple subviews aligned within the
+                boundaries of the <see cref="T:UIKit.UIScrollView" />'s <see cref="P:UIKit.UIScrollView.ContentSize" />. The illustration shows
+                the application in the middle of a swiping animation; portions of both the white and gray subviews are visible. 
+            </para>
+      <para>
+        <img href="~/UIKit/_images/UIKit.UIScrollView.Slide1.png" alt="Sequence diagram of user actions and UIScrollView events" />
+      </para>
+      <para>
+                If <see cref="P:UIKit.UIScrollView.PagingEnabled" /> is set to <see langword="true" /> or if the gesture attempts to scroll to an area
+                outside the <see cref="T:UIKit.UIScrollView" />'s <see cref="P:UIKit.UIScrollView.ContentSize" />, at the end of the gesture the
+                selected subview will "bounce" into alignment with the <see cref="T:UIKit.UIScrollView" />'s <see cref="P:UIKit.UIView.Frame" />. 
+            </para>
+      <para>
+                It is up to the application developer to synchronize with the <see cref="T:UIKit.UIPageControl" /> if one is used. A common way to do this
+                is to handle the <see cref="T:UIKit.UIScrollView" />'s <see cref="E:UIKit.UIScrollView.Scrolled" /> event and change
+                the model value that is observed by the <see cref="T:UIKit.UIPageControl" /> (or one can imperatively set the <see cref="T:UIKit.UIPageControl" />'s <see cref="P:UIKit.UIPageControl.CurrentPage" />).
+            </para>
+      <para>
+                In the paging demo, the <see cref="P:UIKit.UIView.Frame" />s of the individual subviews and the <see cref="P:UIKit.UIScrollView.ContentSize" /> of the <see cref="T:UIKit.UIScrollView" /> are calculated, aligned, and set using the
+                following code, taken from the "iOS Standard Controls" sample:
+            </para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+// instantiate and add the controllers to our list
+controllers.Add (new Controller_1 ());
+controllers.Add (new Controller_2 ());
+controllers.Add (new Controller_3 ());
+
+for (int i = 0; i &lt; controllers.Count; i++)
+{
+	// set their location and size, each one is moved to the 
+	// right by the width of the previous
+	RectangleF viewFrame = new RectangleF (
+	scrlMain.Frame.Width * i,
+	scrlMain.Frame.Y,
+	scrlMain.Frame.Width,
+	scrlMain.Frame.Height);
+	controllers[i].View.Frame = viewFrame;
+
+	// add the view to the scrollview
+	scrlMain.AddSubview (controllers[i].View);
+}
+
+// set our scroll view content size (width = number of pages * scroll view width)
+scrlMain.ContentSize = new SizeF (
+scrlMain.Frame.Width * controllers.Count, scrlMain.Frame.Height);
+                ]]></code>
+      </example>
+      <format type="text/html">
+        <h2>Tap-To-Zoom</h2>
+      </format>
+      <para>
+                The "tap-to-zoom" gesture consists of the application user double-tapping the scrolling area. To enable this, the developer  needs to create a
+                <see cref="T:UIKit.UITapGestureRecognizer" />, configure it for two taps, give it a unique <see cref="T:ObjCRuntime.Selector" />, and add it to the <see cref="T:UIKit.UIScrollView" />.
+                Then, the developer has to implement a method with an  <see cref="T:Foundation.ExportAttribute" /> configured to the <c>Selector</c> identifier.
+            </para>
+      <para>
+                The following code from the "Implement Tap-To-Zoom Recipe" shows the essential steps:
+                
+            </para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+UITapGestureRecognizer doubletap = new UITapGestureRecognizer();
+doubletap.NumberOfTapsRequired = 2; // double tap
+doubletap.AddTarget (this, new MonoTouch.ObjCRuntime.Selector("DoubleTapSelector"));
+scrollView.AddGestureRecognizer(doubletap); // detect when the scrollView is double-tapped
+//...etc...
+
+[MonoTouch.Foundation.Export("DoubleTapSelector")]
+public void OnDoubleTap (UIGestureRecognizer sender) {
+if (scrollView.ZoomScale >= 1)
+   scrollView.SetZoomScale(0.25f, true);
+else
+   scrollView.SetZoomScale(2f, true);
+}
+                ]]></code>
+      </example>
+      <format type="text/html">
+        <h2>Touch Delays Associated with UIScrollView</h2>
+      </format>
+      <para> 
+                Because scrolling and zooming gestures can begin anywhere on the screen, the <see cref="T:UIKit.UIScrollView" /> intercepts touch events
+                and waits briefly to see if the application user is making a scrolling or zooming gesture. This introduces a small delay but the default behavior
+                can be customized by overriding the <see cref="T:UIKit.UIScrollView" />'s <see cref="M:UIKit.UIScrollView.TouchesShouldBegin(Foundation.NSSet,UIKit.UIEvent,UIKit.UIView)" />
+                and <see cref="M:UIKit.UIScrollView.TouchesShouldCancelInContentView(UIKit.UIView)" /> methods.
+            </para>
+      <format type="text/html">
+        <h2>Subview Frames</h2>
+      </format>
+      <para>
+                Although generally the <see cref="P:UIKit.UIView.Frame" />s of the content <see cref="T:UIKit.UIView" />s are aligned with the
+                extent of the <see cref="T:UIKit.UIScrollView" />'s <see cref="P:UIKit.UIScrollView.ContentSize" /> and each other, this is not
+                a requirement. Setting the <see cref="P:UIKit.UIView.Frame" /> so that it extends beyond the boundaries of the <see cref="P:UIKit.UIScrollView.ContentSize" /> may make drawing geometry easier or more consistent. If, by misaligning subviews, one displays
+                an area within the <see cref="P:UIKit.UIScrollView.ContentSize" /> of the <see cref="T:UIKit.UIScrollView" /> that does not
+                contain a <see cref="T:UIKit.UIView" />, gestures for scrolling and zooming occurring in the blank area will not work: the application
+                must have an underlying <see cref="T:UIKit.UIView" /> to get the expected behavior.
+            </para>
+      <para>
+                Some domains, such as maps and gameboards, may seem to suggest a design in which a <see cref="T:UIKit.UIScrollView" /> has a large number
+                of tiled subviews. However, all subviews -- whether visible or not -- are rendered and this can be resource- and processor-intensive. In such
+                cases, it is the application developer's responsibility to add or remove subviews appropriately.
+            </para>
+      <format type="text/html">
+        <h2>Event Sequence</h2>
+      </format>
+      <para>
+                The following illustration shows the user actions and resulting <see cref="T:UIKit.UIScrollView" /> event sequence associated with a dragging or swiping gesture:
+            </para>
+      <list type="bullet">
+        <item>
+          <term>The user touches the screen;</term>
+        </item>
+        <item>
+          <term>The user begins dragging;</term>
+        </item>
+        <item>
+          <term>The <see cref="E:UIKit.UIScrollView.DraggingStarted" /> event is raised;</term>
+        </item>
+        <item>
+          <term>As long as the user continues dragging...</term>
+        </item>
+        <item>
+          <term>The <see cref="E:UIKit.UIScrollView.Scrolled" /> event is raised repeatedly;</term>
+        </item>
+        <item>
+          <term>The user raises their finger...</term>
+        </item>
+        <item>
+          <term>The <see cref="E:UIKit.UIScrollView.WillEndDragging" /> event is raised;</term>
+        </item>
+        <item>
+          <term>The <see cref="E:UIKit.UIScrollView.DraggingEnded" /> event is raised;</term>
+        </item>
+        <item>
+          <term>The <see cref="E:UIKit.UIScrollView.DecelerationStarted" /> event is raised;</term>
+        </item>
+        <item>
+          <term>As long as the scrolling animation continues...</term>
+        </item>
+        <item>
+          <term>The <see cref="E:UIKit.UIScrollView.Scrolled" /> event is raised repeatedly;</term>
+        </item>
+        <item>
+          <term>The <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=UIKit%20UIScroll%20Develeration%20Ended&amp;scope=Xamarin" title="E:UIKit.UIScroll.DevelerationEnded">E:UIKit.UIScroll.DevelerationEnded</a></format> event is raised.</term>
+        </item>
+      </list>
+      <para>
+        <img href="~/UIKit/_images/UIKit.UIScrollView.DragEventSequence.png" alt="Diagram of events relating to dragging in a UIScrollView" />
+      </para>
+      <para>
+                The following illustration shows the user actions and resulting <see cref="T:UIKit.UIScrollView" /> event sequence associated with a pinch-to-zoom gesture:</para>
+      <list type="bullet">
+        <item>
+          <term>The user touches the screen with two fingers;</term>
+        </item>
+        <item>
+          <term>The user begins the pinch-to-zoom gesture;</term>
+        </item>
+        <item>
+          <term>The <see cref="E:UIKit.UIScrollView.ZoomingStarted" /> event is raised;</term>
+        </item>
+        <item>
+          <term>As long as the user continues pinching...</term>
+        </item>
+        <item>
+          <term>The <see cref="E:UIKit.UIScrollView.Scrolled" /> event is raised repeatedly because the zooming is effecting the origin of the displayed content;</term>
+        </item>
+        <item>
+          <term>The <see cref="E:UIKit.UIScrollView.DidZoom" /> event is raised repeatedly;</term>
+        </item>
+        <item>
+          <term>The user raises their fingers...</term>
+        </item>
+        <item>
+          <term>The <see cref="E:UIKit.UIScrollView.ZoomingEnded" /> event is raised;</term>
+        </item>
+        <item>
+          <term>The <see cref="E:UIKit.UIScrollView.Scrolled" /> event is raised as the content view bounces into alignment;</term>
+        </item>
+      </list>
+      <para>
+        <img href="~/UIKit/_images/UIKit.UIScrollView.ZoomEventSequence.png" alt="Sequence of events related to zooming" />
+      </para>
+      <format type="text/html">
+        <h2>State Preservation and Restoration</h2>
+      </format>
+      <para>
+                In iOS 6 or later, if the <see cref="P:UIKit.UIView.RestorationIdentifier" /> property is set, on restoration the <see cref="T:UIKit.UIScrollView" />'s <see cref="P:UIKit.UIScrollView.ZoomScale" />, <see cref="P:UIKit.UIScrollView.ContentOffset" />, and <see cref="P:UIKit.UIScrollView.ContentInset" /> properties will be restored. 
+            </para>
+      <format type="text/html">
+        <h2>Event-handling</h2>
+      </format>
+      <para>
+                The Xamarin API supports two styles of event notification: the
+                Objective-C style that uses a delegate class or the C# style using event notifications.  
+            </para>
+      <para>
+                The C# style allows the user to add or remove event handlers at runtime by assigning to the events of properties of this class.    Event handlers
+                can be anyone of a method, an anonymous methods or a lambda expression.  Using the C# style events or properties will override any manual settings
+                to the Objective-C Delegate or <see cref="P:UIKit.UIScrollView.WeakDelegate" /> settings.
+            </para>
+      <para>
+                The Objective-C style requires the user to create a new class derived from <see cref="T:UIKit.UIScrollViewDelegate" /> class and assign it
+                to
+                the <see cref="P:UIKit.UIScrollView.Delegate" /> property.   Alternatively, for
+                low-level control, by creating a class derived from 
+                <see cref="T:Foundation.NSObject" /> which has every entry point properly decorated with an [Export] attribute (see <see cref="T:Foundation.ExportAttribute" />).   The instance of this object
+                can then be assigned to the <see cref="P:UIKit.UIScrollView.WeakDelegate" /> property.
+            </para>
+    </remarks>
+    <related type="recipe" href="https://developer.xamarin.com/ios/Recipes/Content_Controls/Scroll_View/Implement_Tap-to-Zoom">Implement Tap-to-Zoom Recipe</related>
+    <related type="recipe" href="https://developer.xamarin.com/ios/Recipes/Content_Controls/Scroll_View/Create_a_Horizontal_Scrolling_Button_List">Create a Horizontal Scrolling Button List</related>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIScrollView_Class/index.html">Apple documentation for <c>UIScrollView</c></related>
+  </Docs>
+</Documentation>

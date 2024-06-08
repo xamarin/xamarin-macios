@@ -1,0 +1,49 @@
+<Documentation>
+  <Docs DocId="T:CoreImage.CIGloom">
+    <summary>A <see cref="T:CoreImage.CIFilter" /> that dulls the highlights of the source image.</summary>
+    <remarks>
+      <para>The following example shows this filter in use</para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+// Create the CIImage from a file
+CIImage flower = CIImage.FromCGImage (UIImage.FromFile ("flower.png").CGImage);
+
+// Create a CIGloom filter with the input image
+var gloom = new CIGloom () {
+	Image = flower
+};
+
+// Get the altered image from the filter
+var output = gloom.OutputImage;
+
+// To render the results, we need to create a context, and then
+// use one of the context rendering APIs, in this case, we render the
+// result into a CoreGraphics image, which is merely a useful representation
+//
+var context = CIContext.FromOptions (null);
+
+var cgimage = context.CreateCGImage (output, output.Extent);
+
+// The above cgimage can be added to a screen view, for example, this
+// would add it to a UIImageView on the screen:
+myImageView.Image = UIImage.FromImage (cgimage);
+        ]]></code>
+      </example>
+      <para>
+        With the following image input:
+      </para>
+      <para>
+        <img href="~/CoreImage/_images/flower.png" alt="Photograph of a sunflower." />
+      </para>
+      <para>
+         Produces the following output:
+      </para>
+      <para>
+        <img href="~/CoreImage/_images/gloom.png" alt="Result of applying the filter." />
+      </para>
+      <para>
+      	"Flower" © 2012 Milica Sekulic, used under a Creative Commons Attribution-ShareAlike license: https://creativecommons.org/licenses/by-sa/3.0/ 
+      </para>
+    </remarks>
+  </Docs>
+</Documentation>

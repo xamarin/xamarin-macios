@@ -1,0 +1,11 @@
+<Documentation>
+  <Docs DocId="T:AVFoundation.AVCaptureConnection">
+    <summary>The link between capture input and capture output objects during a capture session.</summary>
+    <remarks>
+      <para>A <see cref="T:AVFoundation.AVCaptureConnection" /> encapsulates the link between an <see cref="T:AVFoundation.AVCaptureInput" /> (more specifically, between an individual <see cref="T:AVFoundation.AVCaptureInputPort" /> in the <see cref="P:AVFoundation.AVCaptureInput.Ports" /> property of the <see cref="T:AVFoundation.AVCaptureInput" /> and the <see cref="T:AVFoundation.AVCaptureOutput" />).</para>
+      <para>
+        <see cref="T:AVFoundation.AVCaptureConnection" />s are formed automatically when inputs and outputs are added via <see cref="M:AVFoundation.AVCaptureSession.AddInput(AVFoundation.AVCaptureInput)" /> and <see cref="M:AVFoundation.AVCaptureSession.AddOutput(AVFoundation.AVCaptureOutput)" />.</para>
+    </remarks>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/AVFoundation/Reference/AVCaptureConnection_Class/index.html">Apple documentation for <c>AVCaptureConnection</c></related>
+  </Docs>
+</Documentation>

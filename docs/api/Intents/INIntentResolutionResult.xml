@@ -1,0 +1,44 @@
+<Documentation>
+  <Docs DocId="T:Intents.INIntentResolutionResult">
+    <summary>Abstract base class for the binding of values to parameters in an <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=T:Intent.INIntent&amp;scope=Xamarin" title="T:Intent.INIntent">T:Intent.INIntent</a></format>.</summary>
+    <remarks>
+      <para>An <see cref="T:Intents.INIntent" /> may require certain data to complete (for instance, an <see cref="T:Intents.INSendMessageIntent" /> might need an <see cref="T:Intents.INPerson" /> or perhaps a string containing a phone number). Such data may or may not be provided the first time the user interacts with Siri or might be data the extension can provide or might be something for which the user is prompted. The <see cref="T:Intents.INIntentResolutionResult" /> hierarchy allows the developer to specify what data is needed and what data requires user interaction. </para>
+      <para>The following example shows how an implementer of the <see cref="T:Intents.IINSearchForMessagesIntentHandling" /> interface might overload the <see cref="M:Intents.INSearchForMessagesIntentHandling_Extensions.ResolveRecipients(Intents.IINSearchForMessagesIntentHandling,Intents.INSearchForMessagesIntent,System.Action{Intents.INPersonResolutionResult[]})" /> method, in certain scenarios calling the <c>completion</c> handler with <see cref="P:Intents.INIntentResolutionResult.NeedsValue" />, <see cref="P:Intents.INIntentResolutionResult.Unsupported" />, <see cref="M:Intents.INPersonResolutionResult.GetSuccess(Intents.INPerson)" />, or <see cref="M:Intents.INPersonResolutionResult.GetDisambiguation(Intents.INPerson[])" /> as the situation dictates:</para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+[Export ("resolveRecipientsForSearchForMessages:withCompletion:")]
+public void ResolveRecipients (INSendMessageIntent intent, Action<INPersonResolutionResult []> completion)
+{
+    var recipients = intent.Recipients;
+    // If no recipients were provided we'll need to prompt for a value.
+    if (recipients.Length == 0)
+    {
+        completion (new INPersonResolutionResult [] { (Intents.INPersonResolutionResult)INIntentResolutionResult.NeedsValue });
+        return;
+    }
+
+    var resolutionResults = new List<INPersonResolutionResult> ();
+
+    foreach (var recipient in recipients)
+    {
+        var matchingContacts = new INPerson [] { recipient }; // Implement your contact matching logic here to create an array of matching contacts
+        if (matchingContacts.Length > 1)
+        {
+            // We need Siri's help to ask user to pick one from the matches.
+            resolutionResults.Add (INPersonResolutionResult.GetDisambiguation (matchingContacts));
+        }
+        else if (matchingContacts.Length == 1)
+        {
+            // We have exactly one matching contact
+            resolutionResults.Add (INPersonResolutionResult.GetSuccess (recipient));
+        }
+        else {
+            // We have no contacts matching the description provided
+            resolutionResults.Add ((Intents.INPersonResolutionResult)INIntentResolutionResult.Unsupported);
+        }
+}    ]]></code>
+      </example>
+    </remarks>
+    <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INIntentResolutionResult">Apple documentation for <c>INIntentResolutionResult</c></related>
+  </Docs>
+</Documentation>

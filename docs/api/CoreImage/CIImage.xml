@@ -1,0 +1,76 @@
+<Documentation>
+  <Docs DocId="T:CoreImage.CIImage">
+    <summary>Represents a set of instructions to create an image for use by CoreImage.</summary>
+    <remarks>
+      <para>
+	Unlike CoreGraphics images (<see cref="T:CoreGraphics.CGImage" />) that are objects
+	that hold the actual image data to be processed, CIImages
+	represents a set of instructions to obtain an image.  These
+	recipes are used during the CoreImage filtering, analysis or rendering
+	pipeline to actually create the bitmap representation.   
+
+      </para>
+      <para>
+	CIImages are either the result of loading an image from disk,
+	an NSData array, a CoreVideo buffer a CoreGraphics image, or
+	the result of processing an image pipeline by CoreImage.
+
+      </para>
+      <para>
+	CIImages for example are used when chaining various filters
+	(<see cref="T:CoreImage.CIFilter" />) together and
+	only their abstract representation is passed between the
+	output of one filter and the input to another one.  The image
+	might not even reside in the main memory, it could reside
+	entirely on the GPU space as an intermediate step between two
+	filters.
+
+      </para>
+      <format type="text/html">
+        <h2>Auto Enhancement Filters</h2>
+      </format>
+      <para>
+	The <see cref="M:CoreImage.CIImage.GetAutoAdjustmentFilters(CoreImage.CIAutoAdjustmentFilterOptions)" />
+	method can be used to obtain a list of CIImage filters that
+	can be used to correct various problems found in photos.
+
+      </para>
+      <para>
+	These typically include:
+
+	<list type="bullet"><item><term>
+	      Adjusts the shadow details (using the <see cref="T:CoreImage.CIHighlightShadowAdjust" /> filter).
+	    </term></item><item><term>
+	      Adjusts the image contrast (using the <see cref="T:CoreImage.CIToneCurve" /> filter).
+	    </term></item><item><term>
+	      Adjusts the image saturation (using the <see cref="T:CoreImage.CIVibrance" /> filter).
+	    </term></item><item><term>
+	      Adjusts the face color balance, adjust the tone of the skin (using the <see cref="T:CoreImage.CIFaceBalance" /> filter).
+	    </term></item><item><term>
+	      Red Eye Correction (using the <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=Core%20Image%20CIRed%20Eye%20Correction&amp;scope=Xamarin" title="T:CoreImage.CIRedEyeCorrection">T:CoreImage.CIRedEyeCorrection</a></format> filter).
+	    </term></item></list></para>
+      <para>
+	You can configure which kind of filters you want to get or
+	configure by setting the properties of an <see cref="T:CoreImage.CIAutoAdjustmentFilterOptions" />
+	instance and then calling the appropriate method.
+
+      </para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+void PrepareFixes (CIImage img)
+{
+    var opt = new CIAutoAdjustmentFilterOptions () {
+    	RedEye = true,
+    	AutoAdjustCrop = true
+    };
+    foreach (var filter in img.GetAutoAdjustmentFilters (opt)) {
+    	filter.Image = img;
+    	img = filter.OutputImage;
+    }
+}
+]]></code>
+      </example>
+    </remarks>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIImage_Class/index.html">Apple documentation for <c>CIImage</c></related>
+  </Docs>
+</Documentation>
