@@ -122,7 +122,9 @@ namespace Cecil.Tests {
 			"vsprintf", "vswprintf", "wcscat", "wcscpy", "wcslen", "wcsncat", "wcsncpy",
 			"wcstok", "wmemcpy", "wnsprintf", "wnsprintfa", "wnsprintfw", "wscanf", "wsprintf",
 			"wsprintfa", "wsprintfw", "wvnsprintf", "wvnsprintfa", "wvnsprintfw", "wvsprintf",
-			"wvsprintfa", "wvsprintfw"
+			"wvsprintfa", "wvsprintfw",
+			"malloc", // not banned by binscope, but we want to use calloc instead
+			// keep up-to-date with the 'bannedCApi' list in tests/mtouch/MiscTests.cs
 		};
 
 		[TestCaseSource (typeof (Helper), nameof (Helper.PlatformAssemblyDefinitions))]

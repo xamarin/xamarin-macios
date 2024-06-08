@@ -8,6 +8,7 @@ namespace Security {
 
 	// this is a subset of OSStatus -> SInt32 -> signed int - see CoreFoundation.framework/Headers/CFBase.h
 	// values are defined in Security.framework/Headers/SecBase.h 
+	/// <summary>Status return from the SecKeyChain operations.</summary>
 	public enum SecStatusCode {
 		Success = 0,
 		Unimplemented = -4,
@@ -400,6 +401,7 @@ namespace Security {
 
 	// typedef uint32_t SecPadding;
 	// values are defined in Security.framework/Headers/SecKey.h 
+	/// <summary>An enumeration whose values specify the type of padding to be used in encryption and decryption.</summary>
 	public enum SecPadding {
 		None = 0,
 		PKCS1 = 1,
@@ -441,6 +443,8 @@ namespace Security {
 
 	// typedef uint32_t SecTrustResultType;
 	// values are defined in Security.framework/Headers/SecTrust.h 
+	/// <summary>Result code for SecTrust.Evaluate</summary>
+	///     <remarks>In general both Proceed and Unspecified means you can trust the certificate, other values means it should not be trusted.</remarks>
 	[NativeName ("SecTrustResultType")]
 	public enum SecTrustResult {
 		Invalid,
@@ -459,6 +463,7 @@ namespace Security {
 	}
 
 	// convenience enum mapping to kSecUseAuthenticationUI* fields
+	/// <summary>Enumeration whose values represent valid options for <see cref="P:Security.SecRecord.AuthenticationUI" />.</summary>
 	[MacCatalyst (13, 1)]
 	public enum SecAuthenticationUI {
 		NotSet = -1,
@@ -483,6 +488,7 @@ namespace Security {
 		Skip
 	}
 
+	/// <summary>Enumeration defining valid options for <see cref="P:Security.SecRecord.TokenID" />.</summary>
 	[MacCatalyst (13, 1)]
 	public enum SecTokenID {
 		None = 0,
@@ -503,6 +509,7 @@ namespace Security {
 
 	// untyped enum in Security.framework/Headers/SecPolicy.h but the API use CFOptionFlags
 	// which is defined as in CFBase.h (do not trust Apple web documentation)
+	/// <summary>Enumerates certificate revocation methods.</summary>
 	[Flags]
 	[Native]
 	public enum SecRevocation : ulong {

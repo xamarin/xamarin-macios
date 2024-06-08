@@ -1,0 +1,24 @@
+<Documentation>
+  <Docs DocId="T:HealthKit.HKHealthStore">
+    <summary>MonoTouch.HealthKit.HKHealthStore A connection to the system-wide database of health-related information.</summary>
+    <remarks>
+      <para>Individual <see cref="T:HealthKit.HKHealthStore" /> instances represent connections to the underlying data store. Instantiating a <see cref="T:HealthKit.HKHealthStore" /> does not necessarily imply that the user has granted any amount of access for reading or querying data. App devs must call <see cref="M:HealthKit.HKHealthStore.RequestAuthorizationToShare(Foundation.NSSet,Foundation.NSSet,System.Action{System.Boolean,Foundation.NSError})" /> or <see cref="M:HealthKit.HKHealthStore.RequestAuthorizationToShareAsync(Foundation.NSSet,Foundation.NSSet)" /> prior to access.</para>
+      <para>The result of <see cref="M:HealthKit.HKHealthStore.RequestAuthorizationToShareAsync(Foundation.NSSet,Foundation.NSSet)" /> or <see cref="M:HealthKit.HKHealthStore.RequestAuthorizationToShare(Foundation.NSSet,Foundation.NSSet,System.Action{System.Boolean,Foundation.NSError})" /> does not indicate that the user allowed access to the requested data; it indicates only that the user interacted with the permissions dialog (or that an error occurred while presenting that dialog). To validate access to a particular data type, developers must use the <see cref="M:HealthKit.HKHealthStore.GetAuthorizationStatus(HealthKit.HKObjectType)" /> method:</para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+var temperatureKey = HKQuantityTypeIdentifierKey.BodyTemperature;
+var tempQuantityType = HKObjectType.GetQuantityType (temperatureKey);
+
+var hks = new HKHealthStore ();
+var success = await hks.RequestAuthorizationToShareAsync (new NSSet (new [] { tempQuantityType }), new NSSet ());
+if (success)
+{
+   var access = hks.GetAuthorizationStatus (tempQuantityType);
+   if (access.HasFlag (HKAuthorizationStatus.SharingAuthorized)) {
+	 //...etc...
+          ]]></code>
+      </example>
+    </remarks>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/HealthKit/Reference/HKHealthStore_Class/index.html">Apple documentation for <c>HKHealthStore</c></related>
+  </Docs>
+</Documentation>

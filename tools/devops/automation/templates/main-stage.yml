@@ -12,30 +12,10 @@ parameters:
   - ci
   - automatic
 
-- name: runTests
-  type: boolean
-  default: true
-
-- name: runDeviceTests
-  type: boolean
-  default: false
-
-- name: runOldMacOSTests
-  type: boolean
-  default: true
-
-- name: runWindowsIntegration
-  type: boolean
-  default: true
-
 - name: runGovernanceTests
   type: boolean
   default: true
 
-- name: runSamples
-  type: boolean
-  default: false
-  
 - name: enableLegacySigning
   type: boolean
   default: true
@@ -46,7 +26,7 @@ parameters:
 
 - name: forceInsertion
   type: boolean
-  default: false 
+  default: false
 
 - name: skipESRP
   type: boolean
@@ -55,6 +35,10 @@ parameters:
 - name: pushNugets
   type: boolean
   default: true # default to true until otherwhise
+
+- name: pushNugetsToMaestro
+  type: boolean
+  default: true
 
 - name: isPR
   type: boolean
@@ -358,7 +342,7 @@ stages:
         testsLabels: '--label=skip-all-tests,run-ios-tests,run-ios-simulator-tests,run-tvos-tests,run-watchos-tests,run-mac-tests,run-maccatalyst-tests,run-dotnet-tests,run-system-permission-tests,run-legacy-xamarin-tests'
         statusContext: 'VSTS: simulator tests' 
         uploadArtifacts: true
-        
+
 - stage: build_packages
   displayName: '${{ parameters.stageDisplayNamePrefix }}Build'
   dependsOn: [ configure_build ]
@@ -371,8 +355,6 @@ stages:
       repositoryAlias: ${{ parameters.repositoryAlias }}
       commit: ${{ parameters.commit }}
       vsdropsPrefix: ${{ variables.vsdropsPrefix }}
-      runTests: ${{ and(parameters.runTests, ne(variables['Build.Reason'], 'Schedule'))}}
-      runDeviceTests: ${{ and(parameters.runDeviceTests, ne(variables['Build.Reason'], 'Schedule')) }}
       keyringPass: $(pass--lab--mac--builder--keychain)
       gitHubToken: $(Github.Token)
       xqaCertPass: $(xqa--certificates--password)
@@ -438,6 +420,7 @@ stages:
         repositoryAlias: ${{ parameters.repositoryAlias }}
         commit: ${{ parameters.commit }}
         pushNugets: ${{ parameters.pushNugets }}
+        pushNugetsToMaestro: ${{ parameters.pushNugetsToMaestro }}
 
 - stage: funnel
   displayName: '${{ parameters.stageDisplayNamePrefix }}Collect signed artifacts'
@@ -474,112 +457,3 @@ stages:
         gitHubToken: $(Github.Token)
         xqaCertPass: $(xqa--certificates--password)
         pool: ${{ parameters.pool }}
-
-# Test stages
-
-# always run simulator tests
-- template: ./tests/stage.yml
-  parameters:
-    xcodeChannel: ${{ parameters.xcodeChannel }}
-    macOSName: ${{ parameters.macOSName }}
-    isPR: ${{ parameters.isPR }}
-    repositoryAlias: ${{ parameters.repositoryAlias }}
-    commit: ${{ parameters.commit }}
-    testConfigurations: ${{ parameters.testConfigurations }}
-    supportedPlatforms: ${{ parameters.supportedPlatforms }}
-    stageName: 'simulator_tests'
-    displayName: '${{ parameters.stageDisplayNamePrefix }}Simulator tests'
-    testPool: '' # use the default
-    useXamarinStorage: false
-    statusContext: 'VSTS: simulator tests'
-    makeTarget: 'jenkins'
-    vsdropsPrefix: ${{ variables.vsdropsPrefix }}
-    keyringPass: $(pass--lab--mac--builder--keychain)
-    gitHubToken: $(Github.Token)
-    xqaCertPass: $(xqa--certificates--password)
-    condition: ${{ parameters.runTests }}
-
-- template: ./tests/publish-results.yml
-  parameters:
-    displayName: '${{ parameters.stageDisplayNamePrefix }}Publish Test Results'
-    stageName: 'publish_test_results'
-    statusContext: 'VSTS: test results'
-    vsdropsPrefix: ${{ variables.vsdropsPrefix }}
-    condition: ${{ parameters.runTests }}
-    testConfigurations: ${{ parameters.testConfigurations }}
-    supportedPlatforms: ${{ parameters.supportedPlatforms }}
-    isPR: ${{ parameters.isPR }}
-    repositoryAlias: ${{ parameters.repositoryAlias }}
-    commit: ${{ parameters.commit }}
-
-# devices are optional and will only be ran when we set them OR in CI
-# Disabled since they are broken after the device lab moved from BOS to SEA
-# - ${{ if eq(parameters.runDeviceTests, true) }}:
-#   - ${{ if and(ne(variables['Build.Reason'], 'Schedule'), or(eq(variables['Build.Reason'], 'IndividualCI'), eq(variables['Build.Reason'], 'Manual'))) }}:
-#     - ${{ each config in parameters.deviceTestsConfigurations }}:
-#       - template: ./tests/stage.yml
-#         parameters:
-#           xcodeChannel: ${{ parameters.xcodeChannel }}
-#           isPR: ${{ parameters.isPR }}
-#           repositoryAlias: ${{ parameters.repositoryAlias }}
-#           commit: ${{ parameters.commit }}
-#           testPrefix: ${{ config.testPrefix }} 
-#           stageName: ${{ config.stageName }} 
-#           displayName: '${{ parameters.stageDisplayNamePrefix }}${{ config.displayName }}'
-#           testPool: ${{ config.testPool }} 
-#           useXamarinStorage: ${{ config.useXamarinStorage }} 
-#           testsLabels: ${{ config.testsLabels }} 
-#           statusContext: ${{ config.statusContext }} 
-#           extraBotDemands: ${{ config.extraBotDemands }} 
-#           makeTarget: ${{ config.makeTarget }} 
-#           vsdropsPrefix: ${{ variables.vsdropsPrefix }}
-#           keyringPass: $(pass-XamarinQA-bot-login) 
-#           gitHubToken: $(Github.Token)
-#           xqaCertPass: $(xqa--certificates--password)
-#           condition: ${{ parameters.runDeviceTests }}
-#           parseLabels: false
-
-- ${{ if eq(parameters.runOldMacOSTests, true) }}:
-  - ${{ each config in parameters.macTestsConfigurations }}:
-    - template: ./mac/stage.yml
-      parameters:
-        isPR: ${{ parameters.isPR }}
-        repositoryAlias: ${{ parameters.repositoryAlias }}
-        commit: ${{ parameters.commit }}
-        stageName: ${{ config.stageName }}
-        displayName: ' ${{ parameters.stageDisplayNamePrefix }}${{ config.displayName }}'
-        macPool: ${{ config.macPool }}
-        useImage: ${{ config.useImage }}
-        statusContext: ${{ config.statusContext }}
-        keyringPass: $(pass--lab--mac--builder--keychain)
-        demands: ${{ config.demands }}
-
-- ${{ if eq(parameters.runWindowsIntegration, true) }}:
-  - template: ./windows/stage.yml
-    parameters:
-      isPR: ${{ parameters.isPR }}
-      repositoryAlias: ${{ parameters.repositoryAlias }}
-      commit: ${{ parameters.commit }}
-      stageName: windows_integration
-      displayName: '${{ parameters.stageDisplayNamePrefix }}Windows Integration Tests'
-      pool: 'VSEng-Xamarin-Mac-Devices' # currently ignored until the VS team provides a real one
-      statusContext: 'Windows Integration Tests'
-      gitHubToken: $(Github.Token)
-      xqaCertPass: $(xqa--certificates--password)
-
-- ${{ if eq(parameters.runSamples, true) }}:
-  # TODO: Not the real step
-  - stage: sample_testing
-    displayName: '${{ stageDisplayNamePrefix }}Sample testing'
-    dependsOn:
-    - build_packages
-    condition: and(succeeded(), contains (stageDependencies.build_packages.build.outputs['configuration.RunSampleTests'], 'True'))
-    jobs:
-    - job: sample_testing
-      pool:
-        vmImage: ubuntu-latest
-      steps:
-      # TODO: do parse labels
-      - bash: |
-          echo "Samples!"
-        displayName: 'Sample testing'

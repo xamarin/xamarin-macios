@@ -1,0 +1,42 @@
+<Documentation>
+  <Docs DocId="T:CoreImage.CIQRCodeGenerator">
+    <summary>Generates a QR code.</summary>
+    <remarks>
+      <para>The following example shows this filter in use</para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+// Create a CIQRCodeGenerator filter with the input image
+var qr_code_generator = new CIQRCodeGenerator () 
+{
+	Message = NSData.FromString ("https://xamarin.com"),
+	CorrectionLevel = "M",
+};
+
+// Get the altered image from the filter
+var output = new CILanczosScaleTransform {
+	Image = qr_code_generator.OutputImage,
+	Scale = 4
+}.OutputImage;
+
+// To render the results, we need to create a context, and then
+// use one of the context rendering APIs, in this case, we render the
+// result into a CoreGraphics image, which is merely a useful representation
+//
+var context = CIContext.FromOptions (null);
+
+var cgimage = context.CreateCGImage (output, output.Extent);
+
+// The above cgimage can be added to a screen view, for example, this
+// would add it to a UIImageView on the screen:
+myImageView.Image = UIImage.FromImage (cgimage);
+        ]]></code>
+      </example>
+      <para>
+         Produces the following output:
+      </para>
+      <para>
+        <img href="~/CoreImage/_images/qr_code_generator.png" alt="Result of applying the filter." />
+      </para>
+    </remarks>
+  </Docs>
+</Documentation>

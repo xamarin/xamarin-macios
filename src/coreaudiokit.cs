@@ -43,6 +43,10 @@ namespace CoreAudioKit {
 		ParametersDisplay = 1u << 2,
 	}
 
+	/// <summary>
+	///       <see cref="T:UIKit.UIViewController" /> class that handles extension requests to support audio unit extensions that have a UI.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/CoreAudioKit/AUViewController">Apple documentation for <c>AUViewController</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (AUViewControllerBase))]
 	interface AUViewController {
@@ -154,6 +158,9 @@ namespace CoreAudioKit {
 	}
 
 #if !MONOMAC
+	/// <summary>A <see cref="T:UIKit.UIViewController" /> that allows discovery and connection to MIDI over Bluetooth peripherals.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/CoreAudioKit/Reference/CABTMIDICentralViewController_Ref/index.html">Apple documentation for <c>CABTMIDICentralViewController</c></related>
 	[NoMac]
 	[MacCatalyst (13, 1)]
 	// in iOS 8.3 (Xcode 6.3 SDK) the base type was changed from UIViewController to UITableViewController
@@ -168,6 +175,9 @@ namespace CoreAudioKit {
 		NativeHandle Constructor (UITableViewStyle withStyle);
 	}
 
+	/// <summary>A <see cref="T:UIKit.UIViewController" /> that allows the iOS device to serve as a Midi-over-Bluetooth peripheral.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/CoreAudioKit/Reference/CABTMIDILocalPeripheralViewController/index.html">Apple documentation for <c>CABTMIDILocalPeripheralViewController</c></related>
 	[NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (UIViewController), Name = "CABTMIDILocalPeripheralViewController")]
@@ -177,6 +187,9 @@ namespace CoreAudioKit {
 		NativeHandle Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
 	}
 
+	/// <summary>A <see cref="T:UIKit.UIView" /> that defines the standard inter-app audio user interface.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/CoreAudioKit/CAInterAppAudioSwitcherView">Apple documentation for <c>CAInterAppAudioSwitcherView</c></related>
 	[NoMac]
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'AudioUnit' instead.")]
 	[NoMacCatalyst]
@@ -196,6 +209,9 @@ namespace CoreAudioKit {
 		nfloat ContentWidth ();
 	}
 
+	/// <summary>A <see cref="T:UIKit.UIView" /> that shows the standard inter-app audio transport view (rewind, play, record, time, etc.).</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/CoreAudioKit/CAInterAppAudioTransportView">Apple documentation for <c>CAInterAppAudioTransportView</c></related>
 	[NoMac]
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'AudioUnit' instead.")]
 	[NoMacCatalyst]

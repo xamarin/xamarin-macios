@@ -34,6 +34,8 @@ using NativeHandle = System.IntPtr;
 #endif
 
 namespace Social {
+	/// <summary>NSString constants with the various service types supported by the Social framework</summary>
+	///     <remarks>These constants are used typically when interacting with low-level Objective-C APIs.   In general, you can just use the higher level APIs that use strongly typed enumerations of type <see cref="T:Social.SLServiceKind" />.</remarks>
 	[Static]
 	interface SLServiceType {
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use Facebook SDK instead.")]
@@ -68,6 +70,9 @@ namespace Social {
 		NSString LinkedIn { get; }
 	}
 
+	/// <summary>A request made to a social service.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Social/Reference/SLRequest_Class/index.html">Apple documentation for <c>SLRequest</c></related>
 	[BaseType (typeof (NSObject))]
 	// init -> Objective-C exception thrown.  Name: NSInternalInconsistencyException Reason: SLRequestMultiPart must be obtained through!
 	[DisableDefaultCtor]
@@ -108,6 +113,9 @@ namespace Social {
 		void PerformRequest (Action<NSData, NSHttpUrlResponse, NSError> handler);
 	}
 
+	/// <summary>A <see cref="T:UIKit.UIViewController" /> that manages the user experience for the composition of a post for a social service.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/NetworkingInternet/Reference/SLComposeViewController_Class/index.html">Apple documentation for <c>SLComposeViewController</c></related>
 	[NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (SocialViewController))]
@@ -148,6 +156,9 @@ namespace Social {
 		bool RemoveAllUrls ();
 	}
 
+	/// <summary>A standard UIViewController for composing data for social sharing.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Social/Reference/SLComposeServiceViewController_Class/index.html">Apple documentation for <c>SLComposeServiceViewController</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (SocialViewController))]
 	interface SLComposeServiceViewController : SocialTextViewDelegate {
@@ -220,6 +231,9 @@ namespace Social {
 	}
 
 
+	/// <summary>Allows users to configure properties of a post for social sharing.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Social/Reference/SLComposeSheetConfigurationItem_Class/index.html">Apple documentation for <c>SLComposeSheetConfigurationItem</c></related>
 	[NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]

@@ -637,6 +637,9 @@ namespace StoreKit {
 		void ReceivedResponse (SKProductsRequest request, SKProductsResponse response);
 	}
 
+	/// <summary>A subclass of <see cref="T:UIKit.UIViewController" /> that presents a store allowing the application user to purchase an item from the App Store.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/StoreKit/Reference/SKITunesProductViewController_Ref/index.html">Apple documentation for <c>SKStoreProductViewController</c></related>
 	[Mac (11, 0), NoTV, NoWatch]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (UIViewController),
@@ -678,8 +681,17 @@ namespace StoreKit {
 		void LoadProduct (StoreProductParameters parameters, SKAdImpression impression, [NullAllowed] Action<bool, NSError> callback);
 	}
 
+	/// <summary>Interface representing the required methods (if any) of the protocol <see cref="T:StoreKit.SKStoreProductViewControllerDelegate" />.</summary>
+	///     <remarks>
+	///       <para>This interface contains the required methods (if any) from the protocol defined by <see cref="T:StoreKit.SKStoreProductViewControllerDelegate" />.</para>
+	///       <para>If developers create classes that implement this interface, the implementation methods will automatically be exported to Objective-C with the matching signature from the method defined in the <see cref="T:StoreKit.SKStoreProductViewControllerDelegate" /> protocol.</para>
+	///       <para>Optional methods (if any) are provided by the <see cref="T:StoreKit.SKStoreProductViewControllerDelegate_Extensions" /> class as extension methods to the interface, allowing developers to invoke any optional methods on the protocol.</para>
+	///     </remarks>
 	interface ISKStoreProductViewControllerDelegate { }
 
+	/// <summary>A delegate object that allows the application developer to customize the behavior of a <see cref="T:StoreKit.SKStoreProductViewController" />.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/StoreKit/Reference/SKITunesProductViewControllerDelegate_ProtocolRef/index.html">Apple documentation for <c>SKStoreProductViewControllerDelegate</c></related>
 	[Mac (11, 0), NoTV, NoWatch]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -812,6 +824,7 @@ namespace StoreKit {
 		NSString CustomProductPageIdentifier { get; }
 	}
 
+	/// <summary>A view controller for setting up cloud services.</summary>
 	[NoMac]
 	[NoWatch]
 	[NoTV] // __TVOS_PROHIBITED
@@ -830,10 +843,17 @@ namespace StoreKit {
 		void Load (SKCloudServiceSetupOptions options, Action<bool, NSError> completionHandler);
 	}
 
+	/// <summary>Interface representing the required methods (if any) of the protocol <see cref="T:StoreKit.SKCloudServiceSetupViewControllerDelegate" />.</summary>
+	///     <remarks>
+	///       <para>This interface contains the required methods (if any) from the protocol defined by <see cref="T:StoreKit.SKCloudServiceSetupViewControllerDelegate" />.</para>
+	///       <para>If developers create classes that implement this interface, the implementation methods will automatically be exported to Objective-C with the matching signature from the method defined in the <see cref="T:StoreKit.SKCloudServiceSetupViewControllerDelegate" /> protocol.</para>
+	///       <para>Optional methods (if any) are provided by the <see cref="T:StoreKit.SKCloudServiceSetupViewControllerDelegate_Extensions" /> class as extension methods to the interface, allowing developers to invoke any optional methods on the protocol.</para>
+	///     </remarks>
 	[NoMac]
 	[MacCatalyst (13, 1)]
 	interface ISKCloudServiceSetupViewControllerDelegate { }
 
+	/// <summary>Contains methods to report the status of a cloud service setup view.</summary>
 	[NoMac]
 	[NoWatch]
 	[NoTV] // __TVOS_PROHIBITED on the only member + SKCloudServiceSetupViewController is not in tvOS
@@ -845,6 +865,7 @@ namespace StoreKit {
 		void DidDismiss (SKCloudServiceSetupViewController cloudServiceSetupViewController);
 	}
 
+	/// <summary>Contains cloud service setup options.</summary>
 	[NoMac]
 	[NoWatch, NoTV]
 	[MacCatalyst (13, 1)]
@@ -894,6 +915,7 @@ namespace StoreKit {
 		NSString MessageIdentifierKey { get; }
 	}
 
+	/// <summary>Enumerates Cloud Service setup actions.</summary>
 	[NoMac]
 	[NoWatch, NoTV]
 	[MacCatalyst (13, 1)]
@@ -996,6 +1018,7 @@ namespace StoreKit {
 		void Update (SKProduct [] storePromotionOrder, [NullAllowed] Action<NSError> completionHandler);
 	}
 
+	/// <summary>Contains a method that requests a review.</summary>
 	[NoTV]
 	[NoWatch]
 	[MacCatalyst (13, 1)]

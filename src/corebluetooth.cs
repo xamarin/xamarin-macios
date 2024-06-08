@@ -20,6 +20,9 @@ using NativeHandle = System.IntPtr;
 
 namespace CoreBluetooth {
 
+	/// <summary>Class that uniquely identifies a Bluetooth device.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/CoreBluetooth/CBAttribute">Apple documentation for <c>CBAttribute</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface CBAttribute {
@@ -27,6 +30,7 @@ namespace CoreBluetooth {
 		CBUUID UUID { get; [NotImplemented] set; }
 	}
 
+	/// <summary>Contains options for initializing a Bluetooth central manager.</summary>
 	[MacCatalyst (13, 1)]
 	[StrongDictionary ("CBCentralManager")]
 	interface CBCentralInitOptions {
@@ -39,6 +43,7 @@ namespace CoreBluetooth {
 		string RestoreIdentifier { get; set; }
 	}
 
+	/// <related type="externalDocumentation" href="https://developer.apple.com/reference/CoreBluetooth/CBManager">Apple documentation for <c>CBManager</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -132,6 +137,9 @@ namespace CoreBluetooth {
 		NSString EnableAutoReconnectKey { get; }
 	}
 
+	/// <summary>Represents the local central device in Bluetooth LE.  Use the CBCentralManager to scan, discover and connect to remote peripherals.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/CoreBluetooth/Reference/CBCentralManager_Class/index.html">Apple documentation for <c>CBCentralManager</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CBManager), Delegates = new [] { "WeakDelegate" }, Events = new [] { typeof (CBCentralManagerDelegate) })]
 	[DisableDefaultCtor] // crash (at dispose time) on OSX
@@ -299,6 +307,7 @@ namespace CoreBluetooth {
 		NSString SolicitedServiceUuidsKey { get; }
 	}
 
+	/// <summary>Possible values for the options parameter in calls to <see cref="M:CoreBluetooth.CBCentralManager.ScanForPeripherals(CoreBluetooth.CBUUID[],Foundation.NSDictionary)" />.</summary>
 	[MacCatalyst (13, 1)]
 	[StrongDictionary ("PeripheralScanningOptionsKeys")]
 	interface PeripheralScanningOptions { }
@@ -327,8 +336,17 @@ namespace CoreBluetooth {
 		NSString ScanOptionsKey { get; }
 	}
 
+	/// <summary>Interface representing the required methods (if any) of the protocol <see cref="T:CoreBluetooth.CBCentralManagerDelegate" />.</summary>
+	///     <remarks>
+	///       <para>This interface contains the required methods (if any) from the protocol defined by <see cref="T:CoreBluetooth.CBCentralManagerDelegate" />.</para>
+	///       <para>If developers create classes that implement this interface, the implementation methods will automatically be exported to Objective-C with the matching signature from the method defined in the <see cref="T:CoreBluetooth.CBCentralManagerDelegate" /> protocol.</para>
+	///       <para>Optional methods (if any) are provided by the <see cref="T:CoreBluetooth.CBCentralManagerDelegate_Extensions" /> class as extension methods to the interface, allowing developers to invoke any optional methods on the protocol.</para>
+	///     </remarks>
 	interface ICBCentralManagerDelegate { }
 
+	/// <summary>Delegate objects for <see cref="T:CoreBluetooth.CBCentralManager" /> objects.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/CoreBluetooth/Reference/CBCentralManagerDelegate_Protocol/index.html">Apple documentation for <c>CBCentralManagerDelegate</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[Model]
@@ -394,6 +412,7 @@ namespace CoreBluetooth {
 		void DidDisconnectPeripheral (CBCentralManager central, CBPeripheral peripheral, double timestamp, bool isReconnecting, [NullAllowed] NSError error);
 	}
 
+	/// <summary>Keys used to lookup dictionary values from the NSDictionary received as a parameter in <see cref="M:CoreBluetooth.CBCentralManagerDelegate.DiscoveredPeripheral(CoreBluetooth.CBCentralManager,CoreBluetooth.CBPeripheral,Foundation.NSDictionary,Foundation.NSNumber)" />.</summary>
 	[MacCatalyst (13, 1)]
 	[Static]
 	interface CBAdvertisement {
@@ -426,6 +445,9 @@ namespace CoreBluetooth {
 
 	}
 
+	/// <summary>Characteristics of a remote peripheral.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/CoreBluetooth/Reference/CBCharacteristic_Class/index.html">Apple documentation for <c>CBCharacteristic</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CBAttribute))]
 	[DisableDefaultCtor] // crash (at dispose time) on OSX
@@ -457,6 +479,9 @@ namespace CoreBluetooth {
 		CBService Service { get; }
 	}
 
+	/// <summary>A mutable <see cref="T:CoreBluetooth.CBCharacteristic" />.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/CoreBluetooth/Reference/CBMutableCharacteristic_Class/index.html">Apple documentation for <c>CBMutableCharacteristic</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CBCharacteristic))]
 	[DisableDefaultCtor]
@@ -493,6 +518,9 @@ namespace CoreBluetooth {
 		CBCentral [] SubscribedCentrals { get; }
 	}
 
+	/// <summary>An immutable description of a peripheral's characteristic. See also <see cref="T:CoreBluetooth.CBMutableDescriptor" />.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/CoreBluetooth/Reference/CBDescriptor_Class/index.html">Apple documentation for <c>CBDescriptor</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CBAttribute))]
 	[DisableDefaultCtor] // crash (at dispose time) on OSX
@@ -507,6 +535,9 @@ namespace CoreBluetooth {
 		CBCharacteristic Characteristic { get; }
 	}
 
+	/// <summary>A mutable <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=T:Corebluetooth.CBDescriptor&amp;scope=Xamarin" title="T:Corebluetooth.CBDescriptor">T:Corebluetooth.CBDescriptor</a></format>.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/CoreBluetooth/Reference/CBMutableDescriptor_Class/index.html">Apple documentation for <c>CBMutableDescriptor</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CBDescriptor))]
 	[DisableDefaultCtor]
@@ -521,6 +552,14 @@ namespace CoreBluetooth {
 		NativeHandle Constructor (CBUUID uuid, [NullAllowed] NSObject descriptorValue);
 	}
 
+	/// <summary>Represents a CoreBluetooth peripheral.</summary>
+	///     <remarks>
+	///       <para>
+	/// 	CBPeripherals represent a remote peripheral that the device
+	/// 	has discovered or has discovered and connected to.
+	///       </para>
+	///     </remarks>
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/CoreBluetooth/Reference/CBPeripheral_Class/index.html">Apple documentation for <c>CBPeripheral</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CBPeer), Delegates = new string [] { "WeakDelegate" }, Events = new Type [] { typeof (CBPeripheralDelegate) })]
 	[DisableDefaultCtor] // crash (at dispose time) on OSX
@@ -611,8 +650,17 @@ namespace CoreBluetooth {
 		bool AncsAuthorized { get; }
 	}
 
+	/// <summary>Interface representing the required methods (if any) of the protocol <see cref="T:CoreBluetooth.CBPeripheralDelegate" />.</summary>
+	///     <remarks>
+	///       <para>This interface contains the required methods (if any) from the protocol defined by <see cref="T:CoreBluetooth.CBPeripheralDelegate" />.</para>
+	///       <para>If developers create classes that implement this interface, the implementation methods will automatically be exported to Objective-C with the matching signature from the method defined in the <see cref="T:CoreBluetooth.CBPeripheralDelegate" /> protocol.</para>
+	///       <para>Optional methods (if any) are provided by the <see cref="T:CoreBluetooth.CBPeripheralDelegate_Extensions" /> class as extension methods to the interface, allowing developers to invoke any optional methods on the protocol.</para>
+	///     </remarks>
 	interface ICBPeripheralDelegate { }
 
+	/// <summary>Delegate object for <see cref="T:CoreBluetooth.CBPeripheral" />. Provides methods called on events relating to discovery, exploration, and interaction with a remote peripheral.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/CoreBluetooth/Reference/CBPeripheralDelegate_Protocol/index.html">Apple documentation for <c>CBPeripheralDelegate</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[Model]
@@ -690,6 +738,9 @@ namespace CoreBluetooth {
 		void IsReadyToSendWriteWithoutResponse (CBPeripheral peripheral);
 	}
 
+	/// <summary>Represents the services of a remote peripheral.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/CoreBluetooth/Reference/CBService_Class/index.html">Apple documentation for <c>CBService</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CBAttribute))]
 	[DisableDefaultCtor] // crash (at dispose time) on OSX
@@ -716,6 +767,9 @@ namespace CoreBluetooth {
 
 	}
 
+	/// <summary>A mutable <see cref="T:CoreBluetooth.CBService" />.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/CoreBluetooth/Reference/CBMutableService_Class/index.html">Apple documentation for <c>CBMutableService</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CBService))]
 	[DisableDefaultCtor]
@@ -739,6 +793,9 @@ namespace CoreBluetooth {
 		CBCharacteristic [] Characteristics { get; set; }   // TODO: check array type
 	}
 
+	/// <summary>Universal Unique Identifiers for the Bluetooth stack.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/CoreBluetooth/Reference/CBUUID_Class/index.html">Apple documentation for <c>CBUUID</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // crash (at dispose time) on OSX
@@ -861,6 +918,9 @@ namespace CoreBluetooth {
 		string Uuid { get; }
 	}
 
+	/// <summary>An Attribute Protocol request for reading or writing.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/CoreBluetooth/Reference/CBATTRequest_class/index.html">Apple documentation for <c>CBATTRequest</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -879,6 +939,9 @@ namespace CoreBluetooth {
 		NSData Value { get; set; }
 	}
 
+	/// <summary>Used to identify centrals (that are not the current device).</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/CoreBluetooth/Reference/CBCentral_Class/index.html">Apple documentation for <c>CBCentral</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CBPeer))]
 	// `delloc` a default instance crash applications and a default instance, without the ability to change the UUID, does not make sense
@@ -896,6 +959,9 @@ namespace CoreBluetooth {
 		nuint MaximumUpdateValueLength { get; }
 	}
 
+	/// <summary>Manages published services per the <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=T:Coreblutooth.CBPeripheral&amp;scope=Xamarin" title="T:Coreblutooth.CBPeripheral">T:Coreblutooth.CBPeripheral</a></format> device's GATT database.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/CoreBluetooth/Reference/CBPeripheralManager_Class/index.html">Apple documentation for <c>CBPeripheralManager</c></related>
 	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (CBManager), Delegates = new [] { "WeakDelegate" }, Events = new [] { typeof (CBPeripheralManagerDelegate) })]
@@ -987,8 +1053,17 @@ namespace CoreBluetooth {
 #endif // !NET
 	}
 
+	/// <summary>Interface representing the required methods (if any) of the protocol <see cref="T:CoreBluetooth.CBPeripheralManagerDelegate" />.</summary>
+	///     <remarks>
+	///       <para>This interface contains the required methods (if any) from the protocol defined by <see cref="T:CoreBluetooth.CBPeripheralManagerDelegate" />.</para>
+	///       <para>If developers create classes that implement this interface, the implementation methods will automatically be exported to Objective-C with the matching signature from the method defined in the <see cref="T:CoreBluetooth.CBPeripheralManagerDelegate" /> protocol.</para>
+	///       <para>Optional methods (if any) are provided by the <see cref="T:CoreBluetooth.CBPeripheralManagerDelegate_Extensions" /> class as extension methods to the interface, allowing developers to invoke any optional methods on the protocol.</para>
+	///     </remarks>
 	interface ICBPeripheralManagerDelegate { }
 
+	/// <summary>Delegate object for <see cref="T:CoreBluetooth.CBPeripheralManager" />. Adds methods for events relating to availability, publishing, advertising, and subscription.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/CoreBluetooth/Reference/CBPeripheralManagerDelegate_Protocol/index.html">Apple documentation for <c>CBPeripheralManagerDelegate</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[Model]
@@ -1038,6 +1113,9 @@ namespace CoreBluetooth {
 		void DidPublishL2CapChannel (CBPeripheralManager peripheral, ushort psm, [NullAllowed] NSError error);
 	}
 
+	/// <summary>Class that represents a central or perhipheral Bluetooth device.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/CoreBluetooth/CBPeer">Apple documentation for <c>CBPeer</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // CBPeer.h: - (instancetype)init NS_UNAVAILABLE;
