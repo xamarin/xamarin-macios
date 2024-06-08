@@ -1,0 +1,10 @@
+<Documentation>
+  <Docs DocId="T:AddressBookUI.IABPersonViewControllerDelegate">
+    <summary>Interface representing the required methods (if any) of the protocol <see cref="T:AddressBookUI.ABPersonViewControllerDelegate" />.</summary>
+    <remarks>
+      <para>This interface contains the required methods (if any) from the protocol defined by <see cref="T:AddressBookUI.ABPersonViewControllerDelegate" />.</para>
+      <para>If developers create classes that implement this interface, the implementation methods will automatically be exported to Objective-C with the matching signature from the method defined in the <see cref="T:AddressBookUI.ABPersonViewControllerDelegate" /> protocol.</para>
+      <para>Optional methods (if any) are provided by the <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=Address%20Book%20UIABPerson%20View%20Controller%20Delegate_%20Extensions&amp;scope=Xamarin" title="T:AddressBookUI.ABPersonViewControllerDelegate_Extensions">T:AddressBookUI.ABPersonViewControllerDelegate_Extensions</a></format> class as extension methods to the interface, allowing developers to invoke any optional methods on the protocol.</para>
+    </remarks>
+  </Docs>
+</Documentation>

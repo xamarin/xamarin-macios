@@ -45,16 +45,14 @@ namespace Network {
 		internal NWEstablishmentReport (NativeHandle handle, bool owns) : base (handle, owns) { }
 
 		[DllImport (Constants.NetworkLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static extern bool nw_establishment_report_get_used_proxy (OS_nw_establishment_report report);
+		static extern byte nw_establishment_report_get_used_proxy (OS_nw_establishment_report report);
 
-		public bool UsedProxy => nw_establishment_report_get_used_proxy (GetCheckedHandle ());
+		public bool UsedProxy => nw_establishment_report_get_used_proxy (GetCheckedHandle ()) != 0;
 
 		[DllImport (Constants.NetworkLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static extern bool nw_establishment_report_get_proxy_configured (OS_nw_establishment_report report);
+		static extern byte nw_establishment_report_get_proxy_configured (OS_nw_establishment_report report);
 
-		public bool ProxyConfigured => nw_establishment_report_get_proxy_configured (GetCheckedHandle ());
+		public bool ProxyConfigured => nw_establishment_report_get_proxy_configured (GetCheckedHandle ()) != 0;
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern uint nw_establishment_report_get_previous_attempt_count (OS_nw_establishment_report report);

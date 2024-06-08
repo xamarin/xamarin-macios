@@ -1,0 +1,56 @@
+<Documentation>
+  <Docs DocId="T:CoreImage.CIGaussianGradient">
+    <summary>Generates a gradient that fades via a 2D Gaussian distribution</summary>
+    <remarks>
+      <para>The following example shows this filter in use</para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+// Create the Vector that represents the Center of the gradient 
+var centerVector = new CIVector (100, 100); // Default is [150 150]
+
+// Create the two colors to form the Gradient.
+var color1 = CIColor.FromRgba (1, 0, 1, 1);
+var color0 = CIColor.FromRgba (0, 1, 1, 1);
+
+// Constructor the actual GaussianGradient filter
+var gaussGradient = new CIGaussianGradient ()
+{
+	Center = centerVector,
+	Color0 = color0,
+	Color1 = color1,
+	Radius = 280f // Default is 300
+};
+
+// The Generator Filters need to be cropped before they can be displayed
+var crop = new CICrop () 
+{ 
+	Image = gaussGradient.OutputImage,
+	// Create the Bounds based on the Size of the application Window. (UIWindow)
+	Rectangle = new CIVector (0, 0, window.Bounds.Width, window.Bounds.Height) 
+};	
+
+// Get the Final Cropped Image
+var output = crop.OutputImage;
+	
+// To render the results, we need to create a context, and then
+// use one of the context rendering APIs, in this case, we render the
+// result into a CoreGraphics image, which is merely a useful representation
+//
+var context = CIContext.FromOptions (null);
+
+var cgimage = context.CreateCGImage (output, output.Extent);
+
+// The above cgimage can be added to a screen view, for example, this
+// would add it to a UIImageView on the screen:
+myImageView.Image = UIImage.FromImage (cgimage);
+        ]]></code>
+      </example>
+      <para>
+         Produces the following output:
+      </para>
+      <para>
+        <img href="~/CoreImage/_images/GaussianGradient.png" alt="Result of applying the filter." />
+      </para>
+    </remarks>
+  </Docs>
+</Documentation>

@@ -881,7 +881,7 @@ xamarin_set_gchandle_trampoline (id self, SEL sel, GCHandle gc_handle, enum Xama
 	if (gc_handle == INVALID_GCHANDLE) {
 		CFDictionaryRemoveValue (gchandle_hash, self);
 	} else {
-		struct gchandle_dictionary_entry *entry = (struct gchandle_dictionary_entry *) malloc (sizeof (struct gchandle_dictionary_entry));
+		struct gchandle_dictionary_entry *entry = (struct gchandle_dictionary_entry *) calloc (1, sizeof (struct gchandle_dictionary_entry));
 		entry->gc_handle = gc_handle;
 		entry->flags = flags;
 		CFDictionarySetValue (gchandle_hash, self, entry);
@@ -1813,7 +1813,7 @@ xamarin_convert_managed_to_nsarray_with_func (MonoArray *array, xamarin_managed_
 	if (length == 0)
 		return [NSArray array];
 
-	buf = (id *) malloc (sizeof (id) * length);
+	buf = (id *) calloc (sizeof (id), length);
 
 #if !defined (CORECLR_RUNTIME)
 	MonoClass *object_class = mono_object_get_class ((MonoObject *) array);

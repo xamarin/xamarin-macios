@@ -24,6 +24,12 @@ using NativeHandle = System.IntPtr;
 
 namespace MultipeerConnectivity {
 
+	/// <summary>Identifies a device in a multipeer connectivity network.</summary>
+	///     <remarks>
+	///       <para>
+	///         <see cref="P:MultipeerConnectivity.MCPeerID.DisplayName" /> must be unique among peers.</para>
+	///     </remarks>
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/MultipeerConnectivity/Reference/MCPeerID_class/index.html">Apple documentation for <c>MCPeerID</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: -[MCPeerID init]: unrecognized selector sent to instance 0x7d721090
@@ -37,8 +43,10 @@ namespace MultipeerConnectivity {
 		string DisplayName { get; }
 	}
 
+	/// <summary>A delegate that serves as the completion handler for <see cref="M:MultipeerConnectivity.MCSession.NearbyConnectionDataForPeer(MultipeerConnectivity.MCPeerID,MultipeerConnectivity.MCSessionNearbyConnectionDataForPeerCompletionHandler)" />.</summary>
 	delegate void MCSessionNearbyConnectionDataForPeerCompletionHandler (NSData connectionData, NSError error);
 
+	/// <include file="../docs/api/MultipeerConnectivity/MCSession.xml" path="/Documentation/Docs[@DocId='T:MultipeerConnectivity.MCSession']/*" />
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // crash when calling `description` selector
@@ -109,8 +117,19 @@ namespace MultipeerConnectivity {
 		#endregion
 	}
 
+	/// <summary>Interface representing the required methods (if any) of the protocol <see cref="T:MultipeerConnectivity.MCSessionDelegate" />.</summary>
+	///     <remarks>
+	///       <para>This interface contains the required methods (if any) from the protocol defined by <see cref="T:MultipeerConnectivity.MCSessionDelegate" />.</para>
+	///       <para>If developers create classes that implement this interface, the implementation methods will automatically be exported to Objective-C with the matching signature from the method defined in the <see cref="T:MultipeerConnectivity.MCSessionDelegate" /> protocol.</para>
+	///       <para>Optional methods (if any) are provided by the <see cref="T:MultipeerConnectivity.MCSessionDelegate_Extensions" /> class as extension methods to the interface, allowing developers to invoke any optional methods on the protocol.</para>
+	///     </remarks>
 	interface IMCSessionDelegate { }
 
+	/// <summary>A delegate object whose functions relate to events in the <see cref="T:MultipeerConnectivity.MCSession" /> life-cycle, such as connection status changes and data reception.</summary>
+	///     <remarks>
+	///       <para>Callbacks to the <see cref="T:MultipeerConnectivity.MCSessionDelegate" /> object are likely to be made on background threads. Application developers who wish to update the display must use, for instance, <see cref="M:Foundation.NSObject.InvokeOnMainThread(ObjCRuntime.Selector,Foundation.NSObject)" />.</para>
+	///     </remarks>
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/MultipeerConnectivity/Reference/MCSessionDelegateRef/index.html">Apple documentation for <c>MCSessionDelegate</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[Model]
@@ -140,6 +159,13 @@ namespace MultipeerConnectivity {
 		bool DidReceiveCertificate (MCSession session, [NullAllowed] SecCertificate [] certificate, MCPeerID peerID, Action<bool> certificateHandler);
 	}
 
+	/// <summary>Provides programmatic control for advertising the device for multipeer connectivity.</summary>
+	///     <remarks>
+	///       <para>Multipeer connectivity's discovery phase involves two roles: browsing and advertising. When an application makes itself available for connection, it is advertising. Advertising may be controlled by either a <see cref="T:MultipeerConnectivity.MCAdvertiserAssistant" /> or can be fully customized with a <see cref="T:MultipeerConnectivity.MCNearbyServiceAdvertiser" />. For a discussion of the discovery process, see the remarks for <see cref="T:MultipeerConnectivity.MCSession" />.</para>
+	///     </remarks>
+	///     
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/MultipeerConnectivity/Reference/MCNearbyServiceAdvertiserClassRef/index.html">Apple documentation for <c>MCNearbyServiceAdvertiser</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // NSInvalidArgumentException -[MCNearbyServiceAdvertiser init]: unrecognized selector sent to instance 0x19195e50
@@ -172,10 +198,25 @@ namespace MultipeerConnectivity {
 		string ServiceType { get; }
 	}
 
+	/// <param name="accept">
+	///       <see langword="true" /> if the invitation should be accepted.</param>
+	///     <param name="session">The session to which the peer shouldbe connected.</param>
+	///     <summary>The delegate that serves as the invitation handler in calls to <see cref="M:MultipeerConnectivity.MCNearbyServiceAdvertiserDelegate.DidReceiveInvitationFromPeer(MultipeerConnectivity.MCNearbyServiceAdvertiser,MultipeerConnectivity.MCPeerID,Foundation.NSData,MultipeerConnectivity.MCNearbyServiceAdvertiserInvitationHandler)" />.</summary>
 	delegate void MCNearbyServiceAdvertiserInvitationHandler (bool accept, [NullAllowed] MCSession session);
 
+	/// <summary>Interface representing the required methods (if any) of the protocol <see cref="T:MultipeerConnectivity.MCNearbyServiceAdvertiserDelegate" />.</summary>
+	///     <remarks>
+	///       <para>This interface contains the required methods (if any) from the protocol defined by <see cref="T:MultipeerConnectivity.MCNearbyServiceAdvertiserDelegate" />.</para>
+	///       <para>If developers create classes that implement this interface, the implementation methods will automatically be exported to Objective-C with the matching signature from the method defined in the <see cref="T:MultipeerConnectivity.MCNearbyServiceAdvertiserDelegate" /> protocol.</para>
+	///       <para>Optional methods (if any) are provided by the <see cref="T:MultipeerConnectivity.MCNearbyServiceAdvertiserDelegate_Extensions" /> class as extension methods to the interface, allowing developers to invoke any optional methods on the protocol.</para>
+	///     </remarks>
 	interface IMCNearbyServiceAdvertiserDelegate { }
 
+	/// <summary>A delegate object that exposes events relating to advertising and invitations for multipeer connectivity for a <see cref="T:MultipeerConnectivity.MCNearbyServiceAdvertiser" /> object.</summary>
+	///     <remarks>
+	///       <para>For a discussion of the discovery process, see the remarks for <see cref="T:MultipeerConnectivity.MCSession" />.</para>
+	///     </remarks>
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/MultipeerConnectivity/Reference/MCNearbyServiceAdvertiserDelegateProtocolRef/index.html">Apple documentation for <c>MCNearbyServiceAdvertiserDelegate</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[Model]
@@ -190,6 +231,13 @@ namespace MultipeerConnectivity {
 		void DidNotStartAdvertisingPeer (MCNearbyServiceAdvertiser advertiser, NSError error);
 	}
 
+	/// <summary>Allows programmatic browsing for devices advertising for multipeer connetivity.</summary>
+	///     <remarks>
+	///       <para>Multipeer connectivity's discovery phase involves two roles: browsing and advertising. When an application searches for peers with which to connect, it is browsing. Browsing may be controlled by either a <see cref="T:MultipeerConnectivity.MCBrowserViewController" /> or can be fully customized with a <see cref="T:MultipeerConnectivity.MCNearbyServiceBrowser" />. For a discussion of the discovery process, see the remarks for <see cref="T:MultipeerConnectivity.MCSession" />.</para>
+	///     </remarks>
+	///     
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/MultipeerConnectivity/Reference/MCNearbyServiceBrowserClassRef/index.html">Apple documentation for <c>MCNearbyServiceBrowser</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // NSInvalidArgumentException -[MCNearbyServiceBrowser init]: unrecognized selector sent to instance 0x15519a70
@@ -221,6 +269,12 @@ namespace MultipeerConnectivity {
 		string ServiceType { get; }
 	}
 
+	/// <summary>A delegate object that exposes peer-discovery events for a <see cref="T:MultipeerConnectivity.MCNearbyServiceBrowser" /> object.</summary>
+	///     <remarks>
+	///       <para>For a discussion of peer discovery and connection, see <see cref="T:MultipeerConnectivity.MCSession" /> remarks.</para>
+	///       <para>Methods of <see cref="T:MultipeerConnectivity.MCNearbyServiceBrowserDelegate" /> are typically called by the system on a background thread. Application developers who wish to modify the user interface must use, for instance, <see cref="M:Foundation.NSObject.InvokeOnMainThread(ObjCRuntime.Selector,Foundation.NSObject)" />.</para>
+	///     </remarks>
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/MultipeerConnectivity/Reference/MCNearbyServiceBrowserDelegateRef/index.html">Apple documentation for <c>MCNearbyServiceBrowserDelegate</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[Model]
@@ -239,8 +293,15 @@ namespace MultipeerConnectivity {
 		void DidNotStartBrowsingForPeers (MCNearbyServiceBrowser browser, NSError error);
 	}
 
+	/// <summary>Interface representing the required methods (if any) of the protocol <see cref="T:MultipeerConnectivity.MCNearbyServiceBrowserDelegate" />.</summary>
+	///     <remarks>
+	///       <para>This interface contains the required methods (if any) from the protocol defined by <see cref="T:MultipeerConnectivity.MCNearbyServiceBrowserDelegate" />.</para>
+	///       <para>If developers create classes that implement this interface, the implementation methods will automatically be exported to Objective-C with the matching signature from the method defined in the <see cref="T:MultipeerConnectivity.MCNearbyServiceBrowserDelegate" /> protocol.</para>
+	///       <para>Optional methods (if any) are provided by the <see cref="T:MultipeerConnectivity.MCNearbyServiceBrowserDelegate_Extensions" /> class as extension methods to the interface, allowing developers to invoke any optional methods on the protocol.</para>
+	///     </remarks>
 	interface IMCNearbyServiceBrowserDelegate { }
 
+	/// <include file="../docs/api/MultipeerConnectivity/MCBrowserViewController.xml" path="/Documentation/Docs[@DocId='T:MultipeerConnectivity.MCBrowserViewController']/*" />
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (UIViewController))]
 	[DisableDefaultCtor] // NSInvalidArgumentException -[MCPeerPickerViewController initWithNibName:bundle:]: unrecognized selector sent to instance 0x15517b90
@@ -278,8 +339,17 @@ namespace MultipeerConnectivity {
 		MCSession Session { get; }
 	}
 
+	/// <summary>Interface representing the required methods (if any) of the protocol <see cref="T:MultipeerConnectivity.MCBrowserViewControllerDelegate" />.</summary>
+	///     <remarks>
+	///       <para>This interface contains the required methods (if any) from the protocol defined by <see cref="T:MultipeerConnectivity.MCBrowserViewControllerDelegate" />.</para>
+	///       <para>If developers create classes that implement this interface, the implementation methods will automatically be exported to Objective-C with the matching signature from the method defined in the <see cref="T:MultipeerConnectivity.MCBrowserViewControllerDelegate" /> protocol.</para>
+	///       <para>Optional methods (if any) are provided by the <see cref="T:MultipeerConnectivity.MCBrowserViewControllerDelegate_Extensions" /> class as extension methods to the interface, allowing developers to invoke any optional methods on the protocol.</para>
+	///     </remarks>
 	interface IMCBrowserViewControllerDelegate { }
 
+	/// <summary>A delegate object that provides events relating to the presentation of discovered peers and the application user's selection or cancellation of them.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/MultipeerConnectivity/Reference/MCBrowserViewControllerDelegate/index.html">Apple documentation for <c>MCBrowserViewControllerDelegate</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[Model]
@@ -300,6 +370,13 @@ namespace MultipeerConnectivity {
 		bool ShouldPresentNearbyPeer (MCBrowserViewController browserViewController, MCPeerID peerID, [NullAllowed] NSDictionary info);
 	}
 
+	/// <summary>A convenience class that manages the process of advertising for multipeer connectivity and interacting with the application user.</summary>
+	///     <remarks>
+	///       <para>Multipeer connectivity's discovery phase involves two roles: browsing and advertising. When an application makes itself available for connection, it is advertising. Advertising may be controlled by either a <see cref="T:MultipeerConnectivity.MCAdvertiserAssistant" /> or can be fully customized with a <see cref="T:MultipeerConnectivity.MCNearbyServiceAdvertiser" />. For a discussion of the discovery process, see the remarks for <see cref="T:MultipeerConnectivity.MCSession" />.</para>
+	///     </remarks>
+	///     
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/MultipeerConnectivity/Reference/MCAdvertiserAssistant_class/index.html">Apple documentation for <c>MCAdvertiserAssistant</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: -[MCAdvertiserAssistant init]: unrecognized selector sent to instance 0x7ea7fa40
@@ -332,8 +409,17 @@ namespace MultipeerConnectivity {
 		void Stop ();
 	}
 
+	/// <summary>Interface representing the required methods (if any) of the protocol <see cref="T:MultipeerConnectivity.MCAdvertiserAssistantDelegate" />.</summary>
+	///     <remarks>
+	///       <para>This interface contains the required methods (if any) from the protocol defined by <see cref="T:MultipeerConnectivity.MCAdvertiserAssistantDelegate" />.</para>
+	///       <para>If developers create classes that implement this interface, the implementation methods will automatically be exported to Objective-C with the matching signature from the method defined in the <see cref="T:MultipeerConnectivity.MCAdvertiserAssistantDelegate" /> protocol.</para>
+	///       <para>Optional methods (if any) are provided by the <see cref="T:MultipeerConnectivity.MCAdvertiserAssistantDelegate_Extensions" /> class as extension methods to the interface, allowing developers to invoke any optional methods on the protocol.</para>
+	///     </remarks>
 	interface IMCAdvertiserAssistantDelegate { }
 
+	/// <summary>A delegate object that provides events for the presentation or dismissal of an invitation by a <see cref="T:MultipeerConnectivity.MCAdvertiserAssistant" />.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/MultipeerConnectivity/Reference/MCAdvertiserAssistantDelegate_class/index.html">Apple documentation for <c>MCAdvertiserAssistantDelegate</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[Model]

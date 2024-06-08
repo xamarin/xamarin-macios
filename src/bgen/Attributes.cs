@@ -314,6 +314,13 @@ public class TransientAttribute : Attribute {
 [AttributeUsage (AttributeTargets.Method | AttributeTargets.Property | AttributeTargets.Interface, AllowMultiple = true)]
 public class AbstractAttribute : Attribute {
 	public AbstractAttribute () { }
+#if !XAMCORE_5_0
+	// We don't generate extension methods for required members by default,
+	// but we might have to in order to keep backwards compatibility for
+	// members that switched from optional to required (because we used to
+	// generate the extension method because the member was optional).
+	public bool GenerateExtensionMethod { get; set; }
+#endif
 }
 
 // Used for mandatory methods that must be implemented in a [Model].

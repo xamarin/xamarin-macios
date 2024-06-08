@@ -1,0 +1,87 @@
+<Documentation>
+  <Docs DocId="T:UIKit.UIApplication">
+    <summary>Encapsulates the main processing loop for a MonoTouch application.</summary>
+    <remarks>
+      <para> 
+	The <see cref="T:UIKit.UIApplication" />
+	encapsulates the central administrative properties of an
+	application running on iOS. Application developers must not
+	instantiate new <see cref="T:UIKit.UIApplication" />s using constructors, but instead must use the static <see cref="P:UIKit.UIApplication.SharedApplication" />
+        singleton property. Application developers may subclass <see cref="T:UIKit.UIApplication" /> and use the <c>principalClassName</c> argument to the <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=M:UIKit.UIApplication.Main(string[],string,string)&amp;scope=Xamarin" title="M:UIKit.UIApplication.Main(string[],string,string)">M:UIKit.UIApplication.Main(string[],string,string)</a></format> method to specify their subclass. In that situation, developers must create a public constructor for their subclass that the runtime will call appropriately. Subsequently, the <see cref="P:UIKit.UIApplication.SharedApplication" /> singleton will refer to the instance of their subclass.</para>
+      <para> 
+	Unlike with most classes in the <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=UIKit&amp;scope=Xamarin" title="N:UIKit">N:UIKit</a></format> namespace, events relating to the
+        <see cref="T:UIKit.UIApplication" /> cannot be
+        handled using C#-style events but rather only by the
+        Objective-C style <see cref="T:UIKit.UIApplicationDelegate" /> delegate
+        style.  </para>
+      <para> 
+	The <see cref="T:UIKit.UIApplication" /> object
+        is responsible for maintaining the highest-level context of
+        the application, such as the <see cref="P:UIKit.UIApplication.ApplicationState" />,
+        the set of open windows (<see cref="P:UIKit.UIApplication.Windows" />), and
+        functions relating to notifications (see also <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=T:UIKit.UIAppearance+Notifications.xml&amp;scope=Xamarin" title="T:UIKit.UIAppearance+Notifications.xml">T:UIKit.UIAppearance+Notifications.xml</a></format>). Additionally, the <see cref="M:UIKit.UIApplication.#ctor" /> method may
+        be used to launch another application.  </para>
+      <para> 
+	The <see cref="T:UIKit.UIApplication" /> class
+        contains methods relating to background processing, such as
+        <see cref="M:UIKit.UIApplication.EnsureUIThread" />,
+        <see cref="M:UIKit.UIApplication.BeginBackgroundTask(System.String,System.Action)" />,
+        and <see cref="M:UIKit.UIApplication.EndBackgroundTask(System.nint)" />.
+        </para>
+      <format type="text/html">
+        <h2>Background Fetch</h2>
+      </format>
+      <para> 
+	Starting with iOS 7, applications can request that they be
+	woken up to download data from the server in the background.
+	When this feature is enabled, the operating system will resume
+	the application or launch the application at some point to
+	allow the application to download any new contents it needs
+	from the server.
+
+      </para>
+      <para>
+	To use this, applications need to have the "fetch" background
+	operation requested on their requested Entitlements as well as
+	calling the <see cref="M:UIKit.UIApplication.SetMinimumBackgroundFetchInterval(System.Double)" />
+	method with the desired wake up interval at launch.   
+
+      </para>
+      <para>
+	When the operating system determines that the application
+	should be resumed to download data, the <see cref="M:UIKit.UIApplicationDelegate.PerformFetch(UIKit.UIApplication,System.Action{UIKit.UIBackgroundFetchResult})" />
+	method will be invoked.  This method should perform any
+	downloads and then notify the operating system of the result
+	of the operation.
+
+      </para>
+      <para>
+	Applications do not really have control of when the
+	application will be launched.  The actual launch time is
+	determined by a set of heuristics based that the operating
+	system tracks based on how the user uses the application, as
+	well as tracking the status of previous download operations
+	that the application has done.
+
+      </para>
+      <format type="text/html">
+        <h2>Remote Notifications</h2>
+      </format>
+      <para> 
+	Starting with iOS 7, applications can request that they be
+	woken up when a remote notification is received.  When this
+	feature is enabled, the operating system will resume the
+	application and invoke the <see cref="M:UIKit.UIApplicationDelegate_Extensions.DidReceiveRemoteNotification(UIKit.IUIApplicationDelegate,UIKit.UIApplication,Foundation.NSDictionary,System.Action{UIKit.UIBackgroundFetchResult})" />
+	overload that takes a completion handler parameter and let it
+	run.
+
+      </para>
+      <para>
+	To use this, applications need to have the "remote-notification" background
+	operation requested on their requested Entitlements as.
+
+      </para>
+    </remarks>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIApplication_Class/index.html">Apple documentation for <c>UIApplication</c></related>
+  </Docs>
+</Documentation>

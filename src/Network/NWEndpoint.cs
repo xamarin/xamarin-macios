@@ -211,7 +211,7 @@ namespace Network {
 		[Watch (9, 0)]
 #endif
 		[DllImport (Constants.NetworkLibrary)]
-		static extern unsafe byte* nw_endpoint_get_signature (OS_nw_endpoint endpoint, out nuint out_signature_length);
+		static extern unsafe byte* nw_endpoint_get_signature (OS_nw_endpoint endpoint, nuint* out_signature_length);
 
 #if NET
 		[SupportedOSPlatform ("tvos16.0")]
@@ -227,7 +227,8 @@ namespace Network {
 		public ReadOnlySpan<byte> Signature {
 			get {
 				unsafe {
-					var data = nw_endpoint_get_signature (GetCheckedHandle (), out var length);
+					nuint length;
+					var data = nw_endpoint_get_signature (GetCheckedHandle (), &length);
 					var mValue = new ReadOnlySpan<byte> (data, (int) length);
 					// we do not know who manages the byte array, so we return a copy, is more expensive but
 					// safer until we know what is the mem management.
