@@ -309,6 +309,9 @@ namespace MediaPlayer {
 		CGRect ImageCropRectangle { get; }
 	}
 
+	/// <summary>A sorted set of <see cref="T:MediaPlayer.MPMediaItem" />s.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/MediaPlayer/Reference/MPMediaItemCollection_ClassReference/index.html">Apple documentation for <c>MPMediaItemCollection</c></related>
 	[NoMac]
 	[NoTV]
 	[NoWatch]
@@ -349,6 +352,9 @@ namespace MediaPlayer {
 		MPMediaType MediaTypes { get; }
 	}
 
+	/// <summary>Represents the synced set of <see cref="T:MediaPlayer.MPMediaItem" />s on a device.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/MediaPlayer/Reference/MPMediaLibrary_ClassReference/index.html">Apple documentation for <c>MPMediaLibrary</c></related>
 	[NoMac]
 	[NoTV]
 	[NoWatch]
@@ -397,6 +403,9 @@ namespace MediaPlayer {
 		void GetPlaylist (NSUuid uuid, [NullAllowed] MPMediaPlaylistCreationMetadata creationMetadata, Action<MPMediaPlaylist, NSError> completionHandler);
 	}
 
+	/// <summary>A <see cref="T:UIKit.UIViewController" /> that allows the application user to select a media item.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/MediaPlayer/Reference/MPMediaPickerController_ClassReference/index.html">Apple documentation for <c>MPMediaPickerController</c></related>
 	[NoTV]
 	[NoMac]
 	[NoWatch]
@@ -431,8 +440,17 @@ namespace MediaPlayer {
 		bool ShowsItemsWithProtectedAssets { get; set; }
 	}
 
+	/// <summary>Interface representing the required methods (if any) of the protocol <see cref="T:MediaPlayer.MPMediaPickerControllerDelegate" />.</summary>
+	///     <remarks>
+	///       <para>This interface contains the required methods (if any) from the protocol defined by <see cref="T:MediaPlayer.MPMediaPickerControllerDelegate" />.</para>
+	///       <para>If developers create classes that implement this interface, the implementation methods will automatically be exported to Objective-C with the matching signature from the method defined in the <see cref="T:MediaPlayer.MPMediaPickerControllerDelegate" /> protocol.</para>
+	///       <para>Optional methods (if any) are provided by the <see cref="T:MediaPlayer.MPMediaPickerControllerDelegate_Extensions" /> class as extension methods to the interface, allowing developers to invoke any optional methods on the protocol.</para>
+	///     </remarks>
 	interface IMPMediaPickerControllerDelegate { }
 
+	/// <summary>A delegate object for the <see cref="T:MediaPlayer.MPMediaPickerController" /> class. Application developers can use this deelegate to respond to events relating to media-item selection.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/MediaPlayer/Reference/MPMediaPickerControllerDelegate_ProtocolReference/index.html">Apple documentation for <c>MPMediaPickerControllerDelegate</c></related>
 	[NoTV]
 	[NoMac]
 	[NoWatch]
@@ -448,6 +466,9 @@ namespace MediaPlayer {
 		void MediaPickerDidCancel (MPMediaPickerController sender);
 	}
 
+	/// <summary>A playable collection of <see cref="T:MediaPlayer.MPMediaItem" />s.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/MediaPlayer/Reference/MPMediaPlaylist_ClassReference/index.html">Apple documentation for <c>MPMediaPlaylist</c></related>
 	[NoMac]
 	[NoTV]
 	[NoWatch]
@@ -539,6 +560,9 @@ namespace MediaPlayer {
 		NSString CloudGlobalId { get; }
 	}
 
+	/// <summary>Allows the application developer to programmatically search an <see cref="T:MediaPlayer.MPMediaLibrary" /> by applying zero-or-more <see cref="T:MediaPlayer.MPMediaPredicate" />s and an optional <see cref="T:MediaPlayer.MPMediaGrouping" />.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/MediaPlayer/Reference/MPMediaQuery_ClassReference/index.html">Apple documentation for <c>MPMediaQuery</c></related>
 	[NoMac]
 	[NoTV]
 	[NoWatch]
@@ -615,6 +639,9 @@ namespace MediaPlayer {
 		MPMediaQuerySection [] ItemSections { get; }
 	}
 
+	/// <summary>A base class for types that specify filters for <see cref="T:MediaPlayer.MPMediaQuery" /> queries.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/MediaPlayer/Reference/MPMediaPredicate_ClassReference/index.html">Apple documentation for <c>MPMediaPredicate</c></related>
 	[NoMac]
 	[NoTV]
 	[NoWatch]
@@ -623,6 +650,9 @@ namespace MediaPlayer {
 	interface MPMediaPredicate : NSSecureCoding {
 	}
 
+	/// <summary>A type of <see cref="T:MediaPlayer.MPMediaPredicate" /> that evaluates <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=Media%20Player%20MPMedia%20Item%20Property&amp;scope=Xamarin" title="T:MediaPlayer.MPMediaItemProperty">T:MediaPlayer.MPMediaItemProperty</a></format>s.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/MediaPlayer/Reference/MPMediaPropertyPredicate_ClassReference/index.html">Apple documentation for <c>MPMediaPropertyPredicate</c></related>
 	[NoMac]
 	[NoTV]
 	[NoWatch]
@@ -646,6 +676,9 @@ namespace MediaPlayer {
 		MPMediaPredicateComparison ComparisonType { get; }
 	}
 
+	/// <summary>Logs metrics relating to streaming playback of a movie.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/MediaPlayer/Reference/MPMovieAccessLog_Class/index.html">Apple documentation for <c>MPMovieAccessLog</c></related>
 	[NoMac]
 	[NoTV]
 	[NoWatch]
@@ -664,6 +697,9 @@ namespace MediaPlayer {
 		NSData ExtendedLogData { get; }
 	}
 
+	/// <summary>A log of errors that occurred during network resources.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/MediaPlayer/Reference/MPMovieErrorLog_Class/index.html">Apple documentation for <c>MPMovieErrorLog</c></related>
 	[NoMac]
 	[NoTV]
 	[NoWatch]
@@ -682,6 +718,10 @@ namespace MediaPlayer {
 		NSData ExtendedLogData { get; }
 	}
 
+	/// <summary>Represents a specific metric or event that occurred during network playback of a movie.</summary>
+	///     
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/MediaPlayer/Reference/MPMovieAccessLogEvent_Class/index.html">Apple documentation for <c>MPMovieAccessLogEvent</c></related>
 	[NoMac]
 	[NoTV]
 	[NoWatch]
@@ -733,6 +773,9 @@ namespace MediaPlayer {
 		nint DroppedVideoFrameCount { get; }
 	}
 
+	/// <summary>An event documenting a network playback error.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/MediaPlayer/Reference/MPMovieErrorLogEvent_Class/index.html">Apple documentation for <c>MPMovieErrorLogEvent</c></related>
 	[NoMac]
 	[NoTV]
 	[NoWatch]
@@ -763,6 +806,7 @@ namespace MediaPlayer {
 		string ErrorComment { get; }
 	}
 
+	/// <summary>Provides data for the  event.</summary>
 	[NoMac]
 	[NoWatch]
 	[Deprecated (PlatformName.iOS, 9, 0)]
@@ -773,6 +817,7 @@ namespace MediaPlayer {
 		MPMovieFinishReason FinishReason { get; }
 	}
 
+	/// <summary>Provides data for the  event.</summary>
 	[NoMac]
 	[NoWatch]
 	[Deprecated (PlatformName.iOS, 9, 0)]
@@ -786,6 +831,7 @@ namespace MediaPlayer {
 		UIViewAnimationCurve AnimationCurve { get; }
 	}
 
+	/// <summary>Provides data for the  event.</summary>
 	[NoMac]
 	[NoWatch]
 	[Deprecated (PlatformName.iOS, 9, 0)]
@@ -802,6 +848,7 @@ namespace MediaPlayer {
 		NSError Error { get; }
 	}
 
+	/// <summary>Provides data for the  event.</summary>
 	[NoMac]
 	[NoWatch]
 	[Deprecated (PlatformName.iOS, 9, 0)]
@@ -865,6 +912,10 @@ namespace MediaPlayer {
 		void EndSeeking ();
 	}
 
+	/// <summary>A class that manages the playback of a movie from a file or via streaming.</summary>
+	///     
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/MediaPlayer/Reference/MPMoviePlayerController_Class/index.html">Apple documentation for <c>MPMoviePlayerController</c></related>
 	[NoMac]
 	[NoTV]
 	[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'AVPlayerViewController' (AVKit) instead.")]
@@ -1285,6 +1336,9 @@ namespace MediaPlayer {
 		NSString MPMoviePlayerIsAirPlayVideoActiveDidChangeNotification { get; }
 	}
 
+	/// <summary>Encapsulates timed metadata for use with time-based HTTP media streams.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/MediaPlayer/Reference/MPTimedMetadata_Class/index.html">Apple documentation for <c>MPTimedMetadata</c></related>
 	[NoMac]
 	[NoTV]
 	[NoWatch]
@@ -1315,6 +1369,10 @@ namespace MediaPlayer {
 		NSDictionary AllMetadata { get; }
 	}
 
+	/// <summary>A subclass of <see cref="T:UIKit.UIViewController" /> that can present and play a movie.</summary>
+	///     
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/MediaPlayer/Reference/MPMoviePlayerViewController_class/index.html">Apple documentation for <c>MPMoviePlayerViewController</c></related>
 	[NoTV]
 	[NoMac]
 	[NoWatch]
@@ -1560,6 +1618,7 @@ namespace MediaPlayer {
 		NSString WirelessRouteActiveDidChangeNotification { get; }
 	}
 
+	/// <include file="../docs/api/MediaPlayer/MPMediaQuerySection.xml" path="/Documentation/Docs[@DocId='T:MediaPlayer.MPMediaQuerySection']/*" />
 	[NoMac]
 	[NoTV]
 	[NoWatch]
@@ -1723,6 +1782,9 @@ namespace MediaPlayer {
 		bool Playable { [Bind ("isPlayable")] get; set; }
 	}
 
+	/// <summary>Provides media metadata information to external media players.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/MediaPlayer/Reference/MPPlayableContentDataSource_Ref/index.html">Apple documentation for <c>MPPlayableContentDataSource</c></related>
 	[NoMac]
 	[NoTV]
 	[NoWatch]
@@ -1760,11 +1822,26 @@ namespace MediaPlayer {
 		void GetContentItem (string identifier, Action<MPContentItem, NSError> completionHandler);
 	}
 
+	/// <summary>Interface representing the required methods (if any) of the protocol <see cref="T:MediaPlayer.MPPlayableContentDataSource" />.</summary>
+	///     <remarks>
+	///       <para>This interface contains the required methods (if any) from the protocol defined by <see cref="T:MediaPlayer.MPPlayableContentDataSource" />.</para>
+	///       <para>If developers create classes that implement this interface, the implementation methods will automatically be exported to Objective-C with the matching signature from the method defined in the <see cref="T:MediaPlayer.MPPlayableContentDataSource" /> protocol.</para>
+	///       <para>Optional methods (if any) are provided by the <see cref="T:MediaPlayer.MPPlayableContentDataSource_Extensions" /> class as extension methods to the interface, allowing developers to invoke any optional methods on the protocol.</para>
+	///     </remarks>
 	interface IMPPlayableContentDataSource {
 	}
 
+	/// <summary>Interface representing the required methods (if any) of the protocol <see cref="T:MediaPlayer.MPPlayableContentDelegate" />.</summary>
+	///     <remarks>
+	///       <para>This interface contains the required methods (if any) from the protocol defined by <see cref="T:MediaPlayer.MPPlayableContentDelegate" />.</para>
+	///       <para>If developers create classes that implement this interface, the implementation methods will automatically be exported to Objective-C with the matching signature from the method defined in the <see cref="T:MediaPlayer.MPPlayableContentDelegate" /> protocol.</para>
+	///       <para>Optional methods (if any) are provided by the <see cref="T:MediaPlayer.MPPlayableContentDelegate_Extensions" /> class as extension methods to the interface, allowing developers to invoke any optional methods on the protocol.</para>
+	///     </remarks>
 	interface IMPPlayableContentDelegate { }
 
+	/// <summary>Delegate object providing methods for external media players to send playback commands to the app.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/MediaPlayer/Reference/MPPlayableContentDelegate_Ref/index.html">Apple documentation for <c>MPPlayableContentDelegate</c></related>
 	[NoMac]
 	[NoTV]
 	[NoWatch]
@@ -1798,6 +1875,9 @@ namespace MediaPlayer {
 		void InitializePlaybackQueue (MPPlayableContentManager contentManager, [NullAllowed] MPContentItem [] contentItems, Action<NSError> completionHandler);
 	}
 
+	/// <summary>Controls interactions between the app and external media players.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/MediaPlayer/Reference/MPPlayableContentManager_Ref/index.html">Apple documentation for <c>MPPlayableContentManager</c></related>
 	[NoMac]
 	[NoTV]
 	[NoWatch]
@@ -1844,6 +1924,7 @@ namespace MediaPlayer {
 		string [] NowPlayingIdentifiers { get; set; }
 	}
 
+	/// <related type="externalDocumentation" href="https://developer.apple.com/reference/MediaPlayer/MPPlayableContentManagerContext">Apple documentation for <c>MPPlayableContentManagerContext</c></related>
 	[NoMac]
 	[NoTV]
 	[NoWatch]
@@ -2244,6 +2325,7 @@ namespace MediaPlayer {
 		double PositionTime { get; }
 	}
 
+	/// <related type="externalDocumentation" href="https://developer.apple.com/reference/MediaPlayer/MPMediaPlaylistCreationMetadata">Apple documentation for <c>MPMediaPlaylistCreationMetadata</c></related>
 	[NoMac]
 	[NoTV]
 	[NoWatch]
@@ -2281,6 +2363,7 @@ namespace MediaPlayer {
 		NativeHandle Constructor ();
 	}
 
+	/// <summary>Operates on media player queues.</summary>
 	[NoMac]
 	[NoTV]
 	[NoWatch]
@@ -2409,6 +2492,7 @@ namespace MediaPlayer {
 
 	interface IMPSystemMusicPlayerController { }
 
+	/// <summary>Protocol for playing videos with the Music app.</summary>
 	[NoTV]
 	[NoMac] // headers have no availability macros on the protocol itself but the only member is not available on macOS
 	[Watch (5, 0)]

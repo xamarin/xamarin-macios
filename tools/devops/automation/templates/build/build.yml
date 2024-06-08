@@ -1,8 +1,4 @@
 parameters:
-- name: runDeviceTests
-  type: boolean
-  default: true
-
 - name: vsdropsPrefix
   type: string
 

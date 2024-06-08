@@ -9,6 +9,7 @@ using NativeHandle = System.IntPtr;
 
 namespace LocalAuthentication {
 
+	/// <summary>Enumerates supported biometric authentication types.</summary>
 	[NoWatch]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -27,9 +28,14 @@ namespace LocalAuthentication {
 		OpticId = 1L << 2,
 	}
 
+	/// <summary>Signature for a function to be invoked in response to a <see cref="M:LocalAuthentication.LAContext.EvaluatePolicy(LocalAuthentication.LAPolicy,System.String,LocalAuthentication.LAContextReplyHandler)" /> invocation.</summary>
+	///     <remarks>The method when invoked returns a boolean indicating if the policy evaluation was successful, and on failure a detailed description of the error in the error parameter.</remarks>
 	[MacCatalyst (13, 1)]
 	delegate void LAContextReplyHandler (bool success, NSError error);
 
+	/// <summary>The context in which authentication policies are evaluated.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/LocalAuthentication/Reference/LAContext_Class/index.html">Apple documentation for <c>LAContext</c></related>
 	[NoTV] // ".objc_class_name_LAContext", referenced from: '' not found
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]

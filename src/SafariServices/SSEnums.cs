@@ -16,6 +16,7 @@ using ObjCRuntime;
 namespace SafariServices {
 
 	// NSInteger -> SSReadingList.h
+	/// <summary>An enumeration that specify possible errors associated with adding a URL to the Safari Reading List.</summary>
 	[NoMac]
 	[MacCatalyst (14, 0)]
 	[Native ("SSReadingListErrorCode")]
@@ -37,6 +38,7 @@ namespace SafariServices {
 		LoadingInterrupted = 3
 	}
 
+	/// <summary>Enumerates errors that that Safari can encounter when working with content blockers or app extensions.</summary>
 	[Introduced (PlatformName.MacCatalyst, 13, 4)]
 	[Native]
 	[ErrorDomain ("SFErrorDomain")]

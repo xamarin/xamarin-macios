@@ -1,0 +1,223 @@
+<Documentation>
+  <Docs DocId="T:CoreLocation.CLLocationManager">
+    <summary>Manages the delivery of location, region, and heading events to your application.</summary>
+    <remarks>
+      <format type="text/html">
+        <h2>Requesting Authorization</h2>
+      </format>
+      <para> Starting with iOS 8, developers that want to request
+	access to the location information must request permission
+	from the user to do so before they can receive events. This is
+	done by calling either the <see cref="M:CoreLocation.CLLocationManager.RequestWhenInUseAuthorization" />
+	or the <see cref="M:CoreLocation.CLLocationManager.RequestAlwaysAuthorization" />
+	methods. When these methods are invoked, the system will
+	prompt the user for authorization, and if he grants it, the <see cref="E:CoreLocation.CLLocationManager.AuthorizationChanged" /> event
+	will be raised if set (or if you are using the Delegate idiom,
+	the <see cref="M:CoreLocation.CLLocationManagerDelegate.AuthorizationChanged(CoreLocation.CLLocationManager,CoreLocation.CLAuthorizationStatus)" /> method
+	will be invoked.
+      </para>
+      <para>
+        Additionally, developers must add one or both of the keys 
+        <c>NSLocationWhenInUseUsageDescription</c> and 
+        <c>NSLocationAlwaysUsageDescription</c> in their app's <c>info.plist</c>. 
+        These keys are strings that can be used to describe why the app needs location
+        access.
+      </para>
+      <para>
+	Developers should use
+	an idiom like this:
+      </para>
+      <example>
+        <code lang="c#"><![CDATA[
+var manager = new CLLocationManager();
+manager.AuthorizationChanged += (sender, args) => {
+	Console.WriteLine ("Authorization changed to: {0}", args.Status);
+};
+if (UIDevice.CurrentDevice.CheckSystemVersion(8,0))
+    manager.RequestWhenInUseAuthorization();
+]]></code>
+      </example>
+      <format type="text/html">
+        <h2>Tracking the device's location</h2>
+      </format>
+      <para>The most common use-case for the <see cref="T:CoreLocation.CLLocationManager" /> is tracking the device while the application is in the foreground. (See also "Background Updating and Deferred Mode" below.)</para>
+      <para>Application developers may use either C#-style events or Apple's delegate-object pattern to track foreground location updating. For C#-style events, developers can use the <see cref="E:CoreLocation.CLLocationManager.LocationsUpdated" /> event:</para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+var mgr = new CLLocationManager();
+mgr.LocationsUpdated += (sender, e) => {
+	foreach(var loc in e.Locations)
+	{
+		Console.WriteLine(loc);
+	}
+};
+mgr.StartUpdatingLocation();
+          ]]></code>
+        <code lang="F#"><![CDATA[
+let mgr = new CLLocationManager()
+mgr.LocationsUpdated.Add( fun e ->
+    e.Locations |> Seq.map Console.WriteLine |> ignore )
+mgr.StartUpdatingLocations()          
+          ]]></code>
+      </example>
+      <para>While C#-style events are more concise, the <see cref="T:CoreLocation.CLLocationManager" /> must use the delegate-object pattern for certain behaviors (for instance, deferred updating), and it may be more consistent for an application to use the delegate-object pattern even when C#-style events are available. The delegate-object pattern consists of assigning a customized <see cref="T:CoreLocation.CLLocationManagerDelegate" /> object to the <see cref="P:CoreLocation.CLLocationManager.Delegate" /> property of the <see cref="T:CoreLocation.CLLocationManager" />:</para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+var mgr = new CLLocationManager();
+mgr.Delegate = new MyLocationDelegate();
+mgr.StartUpdatingLocation();
+//...etc...
+
+public class MyLocationDelegate : CLLocationManagerDelegate {
+	public override void LocationsUpdated (CLLocationManager manager, CLLocation[] locations) {
+		foreach(var loc in locations) {
+			Console.WriteLine(loc);
+		}
+	}
+}          
+          ]]></code>
+        <code lang="F#"><![CDATA[
+let mgr = new CLLocationManager()
+mgr.Delegate <- new MyLocationDelegate()
+mgr.StartUpdatingLocation()
+//...etc...
+
+type MyLocationDelegate () = inherit CLLocationManagerDelegate()
+    override this.LocationsUpdated ( manager : CLLocationManager, locations : CLLocation[] ) = 
+        locations 
+        |> Seq.map Console.WriteLine
+        |> ignore          
+          ]]></code>
+      </example>
+      <format type="text/html">
+        <h2>Region monitoring (Geofencing)</h2>
+      </format>
+      <para>The <see cref="T:CoreLocation.CLLocationManager" /> can track the device's entry and exit from geographical regions (geofences). A region will be a subtype of <see cref="T:CoreLocation.CLRegion" /> : either a <see cref="T:CoreLocation.CLCircularRegion" /> or a region associated with an iBeacon, of type <see cref="T:CoreLocation.CLBeaconRegion" />.</para>
+      <para>
+        <see cref="T:CoreLocation.CLRegion" /> identity should only be compared via the <see cref="P:CoreLocation.CLRegion.Identifier" /> property. Regions are monitored at the operating-system level and new <see cref="T:CoreLocation.CLRegion" /> objects with the specified <see cref="P:CoreLocation.CLRegion.Identifier" /> may be instantiated by the system when the device enters or exists an area; these <see cref="T:CoreLocation.CLRegion" />s will be different objects (<c>myExpectedRegion != myReceivedRegion</c>) but will have the same <see cref="P:CoreLocation.CLRegion.Identifier" /> (<c>myExpectedRegion.Identifier.Equals(myReceivedRegion.Identifier, StringComparison.Ordinal)</c>).</para>
+      <para>Application developers can use either C#-style events or Apple's delegate-object pattern:</para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+var rgn = new CLCircularRegion(new CLLocationCoordinate2D(latitude, longitude), 50, "target");
+mgr = new CLLocationManager();
+mgr.RegionEntered += (s,e) => Console.WriteLine("Entered region " + e.Region.Identifier);
+mgr.RegionLeft += (s,e) => Console.WriteLine("Left region " + e.Region.Identifier);
+mgr.StartMonitoring(rgn);
+          ]]></code>
+        <code lang="F#"><![CDATA[
+let rgn = new CLCircularRegion(new CLLocationCoordinate2D(latitude, longitude), 50, "target")     
+let mgr = new CLLocationManager()
+mgr.RegionEntered.Add( fun e -> Console.WriteLine("Entered region " + e.Region.Identifier))
+mgr.RegionLeft.Add( fun e -> Console.WriteLine("Left region " + e.Region.Identifier))
+mgr.StartMonitoring(rgn)
+          ]]></code>
+      </example>
+      <code lang="csharp lang-csharp"><![CDATA[
+var rgn = new CLCircularRegion(new CLLocationCoordinate2D(latitude, longitude), 50, "target");
+mgr = new CLLocationManager();
+var del = new MyLocationDelegate();
+mgr.Delegate = del;
+mgr.StartMonitoring(rgn);
+//...etc...
+
+public class MyLocationDelegate : CLLocationManagerDelegate {
+    public override void RegionEntered (CLLocationManager mgr, CLRegion rgn) {
+        Console.WriteLine ("Entered region " + rgn.Identifier);
+    }
+
+    public override void RegionLeft (CLLocationManager mgr, CLRegion rgn) {
+        Console.WriteLine ("Left region " + rgn.Identifier);
+    }
+}
+       ]]></code>
+      <code lang="F#"><![CDATA[
+let rgn = new CLCircularRegion(new CLLocationCoordinate2D(latitude, longitude), 50, "target")
+let mgr = new CLLocationManager()
+mgr.Delegate <- new MyLocationDelegate()
+mgr.StartMonitoring(rgn)
+//...etc...
+
+type MyLocationDelegate () = inherit CLLocationManagerDelegate()
+    override this.RegionEntered ( mgr : CLLocationManager, rgn : CLRegion ) = 
+        Console.WriteLine ("Entered region " + rgn.Identifier)
+
+    override this.RegionLeft ( mgr : CLLocationManager, rgn : CLRegion ) =
+        Console.WriteLine ("Left region " + rgn.Identifier)
+        
+        ]]></code>
+      <format type="text/html">
+        <h2>iBeacon Ranging</h2>
+      </format>
+      <para>In iOS 7, Apple introduced iBeacons, which combine region-processing using server and GPS services and nearby promixity ranging using Bluetooth Low-Energy (BLE) signaling.</para>
+      <para>Once within a <see cref="T:CoreLocation.CLBeaconRegion" /> (see previous section), applications may track "ranging" events relating to fine-grained changes in the distance between the device and nearby iBeacons. iBeacon ranging is primarily a function of radio signal strength, which can vary significantly based on environment, electrical noise, etc. Application developers should not attempt to estimate precise distances from the <see cref="P:CoreLocation.CLBeacon.Proximity" /> or <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=Core%20Location%20CLBeacon%20RSSI&amp;scope=Xamarin" title="P:CoreLocation.CLBeacon.RSSI">P:CoreLocation.CLBeacon.RSSI</a></format> properties.</para>
+      <para>Ranging is done with code similar to:</para>
+      <para>iBeacons also support "ranging" for determining physical proximity with a higher precision with the <see cref="P:CoreLocation.CLBeacon.Proximity" /> property. The following example shows how ranging should be used as a qualitative measure:</para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+locationManager.DidRangeBeacons += (lm, rangeEvents) => {
+    switch(rangeEvents.Beacons[0].Proximity){
+    case CLProximity.Far : 
+        Console.WriteLine("You're getting colder!");
+        break;
+    case CLProximity.Near :
+        Console.WriteLine("You're getting warmer!");
+        break;
+    case CLProximity.Immediate :
+        Console.WriteLine("You're red hot!");
+        break;]]></code>
+        <code lang="F#"><![CDATA[
+locationManager.DidRangeBeacons.Add(fun rangeEvents ->
+    let s = match rangeEvents.Beacons.[0].Proximity with
+        | CLProximity.Far  -> "You're getting colder!"
+        | CLProximity.Near -> "You're getting warmer!"
+        | CLProximity.Immediate -> "You're red hot!"
+        | CLProximity.Unknown -> "I can't tell"
+        | _ -> raise(ArgumentOutOfRangeException("Unknown argument"))
+    Console.WriteLine(s)   
+)
+locationManager.StartRangingBeacons(beaconRegion)       
+        ]]></code>
+      </example>
+      <block subset="none" type="behaviors">
+        <format type="text/html">
+          <h2>Background Updating and Deferred Mode</h2>
+        </format>
+        <para>Locations can be updated while the application is in the background. This requires that the <c>info.plist</c> be modified using either Xamarin Studio's visual editor:</para>
+        <para>
+          <img href="~/CoreLocation/_images/CoreLocation.CLLocationManager.BackgroundModesEnabled.png" alt="Screenshot of configuration dialog showing Enable Background Modes option" />
+        </para>
+        <para>Or by adding the key manually:</para>
+        <example>
+          <code lang="csharp lang-csharp"><![CDATA[
+<key>UIBackgroundModes</key>
+<array>
+    <string>location</string>
+</array>            
+]]></code>
+        </example>
+        <para>Power consumption is an important consideration for all backgrounding scenarios. In the case of location data, GPS-enabled hardware may be able to record and cache accurate location but defer the delivery to the application for some amount of time. This "deferred mode" has several constraints:  </para>
+        <list type="bullet">
+          <item>
+            <term>GPS hardware must be available</term>
+          </item>
+          <item>
+            <term>The <see cref="P:CoreLocation.CLLocationManager.Delegate" /> property must be assigned to an object whose class implements the <see cref="M:CoreLocation.CLLocationManagerDelegate.LocationsUpdated(CoreLocation.CLLocationManager,CoreLocation.CLLocation[])" /> method.</term>
+          </item>
+          <item>
+            <term>The <see cref="P:CoreLocation.CLLocationManager.DesiredAccuracy" /> property must be set to <see cref="P:CoreLocation.CLLocation.AccuracyBest" /> or <see cref="P:CoreLocation.CLLocation.AccurracyBestForNavigation" />.</term>
+          </item>
+        </list>
+        <para>If those conditions are satisfied, the application can request deferred delivery when backgrounded by calling the <see cref="M:CoreLocation.CLLocationManager.AllowDeferredLocationUpdatesUntil(System.Double,System.Double)" /> method.</para>
+      </block>
+      <block subset="none" type="behaviors">
+        <format type="text/html">
+          <h2>Importance of Delegate object</h2>
+        </format>
+        <para>Generally, when using Xamarin.iOS, developers can freely choose whether to use C# <c>event</c>s or Apple-style "delegate objects" to react to object lifecycle events. Several <see cref="T:CoreLocation.CLLocationManager" /> methods, however, require the delegate-object pattern. For instance, <see cref="M:CoreLocation.CLLocationManager.AllowDeferredLocationUpdatesUntil(System.Double,System.Double)" /> will raise a runtime exception if the <see cref="P:CoreLocation.CLLocationManager.Delegate" /> property is not set to an object whose class implements <see cref="M:CoreLocation.CLLocationManagerDelegate.LocationsUpdated(CoreLocation.CLLocationManager,CoreLocation.CLLocation[])" /> method.</para>
+      </block>
+    </remarks>
+    <related type="article" href="https://docs.xamarin.com/guides/cross-platform/application_fundamentals/backgrounding/part_4_ios_backgrounding_walkthroughs/location_walkthrough/">Background Location Walkthrough</related>
+    <related type="article" href="https://blog.xamarin.com/play-find-the-monkey-with-ios7-ibeacons">Play 'Find the Monkey' with iOS 7 iBeacons</related>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/CoreLocation/Reference/CLLocationManager_Class/index.html">Apple documentation for <c>CLLocationManager</c></related>
+  </Docs>
+</Documentation>

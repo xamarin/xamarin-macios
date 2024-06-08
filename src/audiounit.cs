@@ -51,9 +51,18 @@ namespace AudioUnit {
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	delegate int AUMidiOutputEventBlock (long eventSampleTime, byte cable, nint length, IntPtr midiBytes);
+	/// <param name="param">The parameter that changed.</param>
+	///     <param name="value">The new parameter value.</param>
+	///     <summary>A delegate that notifies the audio unit when a parameter value changes.</summary>
 	delegate void AUImplementorValueObserver (AUParameter param, float value);
+	/// <param name="param">The parameter whose value to get.</param>
+	///     <summary>A delegate that retrieves a parameter value.</summary>
+	///     <returns>The value of the parameter that is identified by <paramref name="param" />.</returns>
 	delegate float AUImplementorValueProvider (AUParameter param);
 
+	/// <param name="address">The parameter address.</param>
+	///     <param name="value">The current parameter value.</param>
+	///     <summary>Observer that notifies an audio unit when a parameter value changes.</summary>
 	delegate void AUParameterObserver (ulong address, float value);
 
 	delegate void AUVoiceIOMutedSpeechActivityEventListener (AUVoiceIOSpeechActivityEvent activityEvent);
@@ -68,17 +77,48 @@ namespace AudioUnit {
 	delegate string AUImplementorStringFromValueCallback (AUParameter param, ref float? value);
 #endif
 
+	/// <param name="node">The parameter node for which to get a possibly shortened name.</param>
+	///     <param name="desiredLength">The maximum desired length of the display name.</param>
+	///     <summary>A delegate that returns the display name, possibly shortened to <paramref name="desiredLength" /> characters.</summary>
+	///     <returns>The display name, possibly shortened to <paramref name="desiredLength" /> characters.</returns>
 	delegate string AUImplementorDisplayNameWithLengthCallback (AUParameterNode node, nint desiredLength);
+	/// <param name="numberOfEvents">The number of automation events.</param>
+	///     <param name="events">The delivered events.</param>
+	///     <summary>Delegate that records parameter changes as automation events.</summary>
 	delegate void AUParameterRecordingObserver (nint numberOfEvents, ref AURecordedParameterEvent events);
+	/// <param name="actionFlags">The action flags that configure the audio unit rendering process.</param>
+	///     <param name="timestamp">The unconverted, uncompressed HAL time when the input will render.</param>
+	///     <param name="frameCount">The number of available audio frames.</param>
+	///     <param name="inputBusNumber">The input bus index.</param>
+	///     <summary>Delegate that tells an I/O host when input is available.</summary>
 	delegate void AUInputHandler (ref AudioUnitRenderActionFlags actionFlags, ref AudioTimeStamp timestamp, uint frameCount, nint inputBusNumber);
+	/// <param name="transportStateFlags">The state of the audio transport.</param>
+	///     <param name="currentSamplePosition">The host sample position, in audio unit samples.</param>
+	///     <param name="cycleStartBeatPosition">The starting beat position for the cycle. <see langword="null" /> if not cycling.</param>
+	///     <param name="cycleEndBeatPosition">The ending beat position for the cycle. <see langword="null" /> if not cycling.</param>
+	///     <summary>A delegate block that a host uses to provide information about its transport state.</summary>
+	///     <returns>
+	///       <para>
+	///         <see langword="true" /> if the state was successfully retrieved. Otherwise, <see langword="false" />.</para>
+	///     </returns>
+	///     <remarks>
+	///       <para>Developers may optionally assign an instance of this class to the <see cref="P:AudioUnit.AUAudioUnit.TransportStateBlock" /> property so that they can call it at the beginning of render cycles to get the transport state at the cycle start.</para>
+	///     </remarks>
 	delegate bool AUHostTransportStateBlock (ref AUHostTransportStateFlags transportStateFlags, ref double currentSamplePosition, ref double cycleStartBeatPosition, ref double cycleEndBeatPosition);
 	delegate void AURenderObserver (AudioUnitRenderActionFlags actionFlags, ref AudioTimeStamp timestamp, uint frameCount, nint outputBusNumber);
+	/// <param name="param">The parameter that will be assigned to the value that is converted from <paramref name="str" />.</param>
+	///     <param name="str">The string to convert.</param>
+	///     <summary>Converts <paramref name="str" /> to the appropriate type and assigns it to <paramref name="param" />.</summary>
+	///     <returns>The new audio unit value.</returns>
 	delegate float AUImplementorValueFromStringCallback (AUParameter param, string str);
 	[NoTV]
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	delegate void AUMidiCIProfileChangedCallback (byte cable, byte channel, MidiCIProfile profile, bool enabled);
 
+	/// <summary>A subclass of <see cref="T:AVFoundation.AVAudioNode" /> whose subclasses process audio.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/AudioUnit/Reference/AUAudioUnit_ClassReference/index.html">Apple documentation for <c>AUAudioUnit</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -352,6 +392,7 @@ namespace AudioUnit {
 
 	// kept separate from AUAudioUnit, quote:
 	// These methods will fail if the audio unit is not an input/output audio unit.
+	/// <summary>Defines the interface of a host to an audio unit.</summary>
 	[MacCatalyst (13, 1)]
 	[Category]
 	[BaseType (typeof (AUAudioUnit))]
@@ -421,6 +462,9 @@ namespace AudioUnit {
 		bool IsRunning ();
 	}
 
+	/// <summary>An input or output connection to an audio unit.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/AudioUnit/Reference/AUAudioUnitBus_ClassReference/index.html">Apple documentation for <c>AUAudioUnitBus</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface AUAudioUnitBus {
@@ -466,6 +510,9 @@ namespace AudioUnit {
 		bool ShouldAllocateBuffer { get; set; }
 	}
 
+	/// <summary>A container that holds <see cref="T:AudioUnit.AUAudioUnitBus" /> objects for an audio unit.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/AudioUnit/Reference/AUAudioUnitBusArray_ClassReference/index.html">Apple documentation for <c>AUAudioUnitBusArray</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -509,6 +556,9 @@ namespace AudioUnit {
 		void ReplaceBusses (AUAudioUnitBus [] busArray);
 	}
 
+	/// <summary>A name and identifier for a custom parameter preset.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/AudioUnit/Reference/AUAudioUnitPreset_ClassReference/index.html">Apple documentation for <c>AUAudioUnitPreset</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface AUAudioUnitPreset : NSSecureCoding {
@@ -519,6 +569,9 @@ namespace AudioUnit {
 		string Name { get; set; }
 	}
 
+	/// <summary>An audio unit parameter.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/AudioUnit/Reference/AUParameter_ClassReference/index.html">Apple documentation for <c>AUParameter</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (AUParameterNode))]
 	interface AUParameter : NSSecureCoding {
@@ -586,6 +639,9 @@ namespace AudioUnit {
 	[MacCatalyst (13, 1)]
 	delegate void AUParameterAutomationObserver (ulong address, float value);
 
+	/// <summary>A node which represents a parameter or parameter group in an <see cref="T:AudioUnit.AUParameterTree" />.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/AudioUnit/Reference/AUParameterNode_ClassReference/index.html">Apple documentation for <c>AUParameterNode</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface AUParameterNode {
@@ -646,6 +702,9 @@ namespace AudioUnit {
 		AUParameterObserverToken GetToken (AUParameterAutomationObserver observer);
 	}
 
+	/// <summary>A group of <see cref="T:AudioUnit.AUParameter" /> objects for an audio unit.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/AudioUnit/Reference/AUParameterGroup_ClassReference/index.html">Apple documentation for <c>AUParameterGroup</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (AUParameterNode))]
 	interface AUParameterGroup : NSSecureCoding {
@@ -656,6 +715,9 @@ namespace AudioUnit {
 		AUParameter [] AllParameters { get; }
 	}
 
+	/// <summary>A tree that contains all of the audio unit parameters for an audio unit.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/AudioUnit/Reference/AUParameterTree_ClassReference/index.html">Apple documentation for <c>AUParameterTree</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (AUParameterGroup))]
 	interface AUParameterTree : NSSecureCoding {
@@ -689,6 +751,10 @@ namespace AudioUnit {
 		AUParameterTree CreateTree (AUParameterNode [] children);
 	}
 
+	/// <summary>Interface that version 3 Audio Unit extensions must implement.</summary>
+	///     <remarks>
+	///       <para>Developers who want to create a version 3 Audio Unit extension must implement this interface on a class that inherits from <see cref="T:Foundation.NSObject" /> or <see cref="T:CoreAudioKit.AUViewController" />.</para>
+	///     </remarks>
 	[Protocol]
 	interface AUAudioUnitFactory : NSExtensionRequestHandling {
 		[Abstract]

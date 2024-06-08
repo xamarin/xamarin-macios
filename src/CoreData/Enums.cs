@@ -29,6 +29,7 @@ using ObjCRuntime;
 namespace CoreData {
 
 	// NUInteger -> NSEntityMapping.h
+	/// <summary>Enumerates specific types of entity mapping.</summary>
 	[Native]
 	public enum NSEntityMappingType : ulong {
 		Undefined = 0x00,
@@ -40,6 +41,7 @@ namespace CoreData {
 	}
 
 	// NUInteger -> NSAttributeDescription.h
+	/// <summary>An enumeration whose values define the valid types for <see cref="T:CoreData.NSAttributeType" /> objects.</summary>
 	[Native]
 	public enum NSAttributeType : ulong {
 		Undefined = 0,
@@ -64,6 +66,7 @@ namespace CoreData {
 	}
 
 	// NUInteger -> NSFetchRequest.h
+	/// <summary>Enumerates possible result types from a fetch.</summary>
 	[Flags]
 	[Native]
 	public enum NSFetchRequestResultType : ulong {
@@ -74,6 +77,7 @@ namespace CoreData {
 	}
 
 	// NUInteger -> NSRelationshipDescription.h
+	/// <summary>An enumeration whose values specify cascade options after deletion of an object.</summary>
 	[Native]
 	public enum NSDeleteRule : ulong {
 		NoAction,
@@ -83,6 +87,7 @@ namespace CoreData {
 	}
 
 	// NUInteger -> NSPersistentStoreRequest.h
+	/// <summary>Constants defining the types of a fetch request.</summary>
 	[Native]
 	public enum NSPersistentStoreRequestType : ulong {
 		Fetch = 1,
@@ -97,18 +102,21 @@ namespace CoreData {
 	}
 
 	// NUInteger -> NSManagedObjectContext.h
+	/// <summary>Enumerates types of concurrenty patterns that can be used by a <see cref="T:CoreData.NSManagedObjectContext" />.</summary>
 	[Native]
 	public enum NSManagedObjectContextConcurrencyType : ulong {
 		Confinement, PrivateQueue, MainQueue
 	}
 
 	// NUInteger -> NSManagedObjectContext.h
+	/// <summary>Enumerates policies for merging.</summary>
 	[Native]
 	public enum NSMergePolicyType : ulong {
 		Error, PropertyStoreTrump, PropertyObjectTrump, Overwrite, RollbackMerge
 	}
 
 	// NUInteger -> NSFetchedResultsController.h
+	/// <summary>Enumerates kinds of batch requests.</summary>
 	[Native]
 	public enum NSFetchedResultsChangeType : ulong {
 		Insert = 1,
@@ -117,6 +125,7 @@ namespace CoreData {
 		Update = 4
 	}
 
+	/// <summary>Enumerates the kind of results that can be returned from a batched update request.</summary>
 	[Native]
 	public enum NSBatchUpdateRequestResultType : ulong {
 		StatusOnly = 0,
@@ -124,6 +133,7 @@ namespace CoreData {
 		UpdatedObjectsCount = 2
 	}
 
+	/// <summary>Enumerates the form of the result of a <see cref="T:CoreData.NSBatchDeleteRequest" />.</summary>
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum NSBatchDeleteRequestResultType : ulong {
@@ -132,6 +142,7 @@ namespace CoreData {
 		Count = 2
 	}
 
+	/// <summary>Enumerates errors that can be encountered during validation.</summary>
 	[Native]
 	public enum ValidationErrorType : ulong {
 		ManagedObjectValidation = 1550,
@@ -152,6 +163,7 @@ namespace CoreData {
 		InvalidUri = 1690,
 	}
 
+	/// <summary>Enumerates error codes that can be encountered while working with object graphs.</summary>
 	[Native]
 	public enum ObjectGraphManagementErrorType : ulong {
 		ManagedObjectContextLocking = 132000,
@@ -161,6 +173,7 @@ namespace CoreData {
 		ManagedObjectMerge = 133020
 	}
 
+	/// <summary>Enumerates error codes that can be encountered while working with persistent stores.</summary>
 	[Native]
 	public enum PersistentStoreErrorType : ulong {
 		InvalidType = 134000,
@@ -175,6 +188,7 @@ namespace CoreData {
 		IncompatibleVersionHash = 134100
 	}
 
+	/// <summary>Enumerates error codes that can be encountered while migrating stores.</summary>
 	[Native]
 	public enum MigrationErrorType {
 		Migration = 134110,
@@ -190,6 +204,7 @@ namespace CoreData {
 		HistoryTokenExpired = 134301,
 	}
 
+	/// <summary>Enumerates index types.</summary>
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum NSFetchIndexElementType : ulong {
