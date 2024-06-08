@@ -1,0 +1,67 @@
+<Documentation>
+  <Docs DocId="T:UIKit.UIKeyboard">
+    <summary>The iPhone virtual keyboard.</summary>
+    <remarks>
+      <para>
+	The UIKeyboard class contains constants and methods to track
+	the visibility of the iPhone virtual keyboard.  iOS posts a
+	number of notifications when the keyboard is shown, hidden or
+	moved in the screen.   
+
+      </para>
+      <para>
+	The preferred way of receiving UIKeyboard notification is to
+	use the <see cref="T:UIKit.UIKeyboard.Notifications" /> class,
+	which provides a strongly-typed set of APIs to track the
+	changes to the keyboard state and provides strongly-typed
+	accessors to the various parameters of the keyboard changes.
+
+      </para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+//
+// Lambda style
+//
+
+// listening
+notification = UIKeyboard.Notifications.ObserveDidChangeFrame ((sender, args) => {
+    /* Access strongly typed args */
+    Console.WriteLine ("Notification: {0}", args.Notification);
+
+    Console.WriteLine ("FrameBegin", args.FrameBegin);
+    Console.WriteLine ("FrameEnd", args.FrameEnd);
+    Console.WriteLine ("AnimationDuration", args.AnimationDuration);
+    Console.WriteLine ("AnimationCurve", args.AnimationCurve);
+});
+
+// To stop listening:
+notification.Dispose ();
+
+//
+// Method style
+//
+NSObject notification;
+void Callback (object sender, UIKit.UIKeyboardEventArgs args)
+{
+    // Access strongly typed args
+    Console.WriteLine ("Notification: {0}", args.Notification);
+
+    Console.WriteLine ("FrameBegin", args.FrameBegin);
+    Console.WriteLine ("FrameEnd", args.FrameEnd);
+    Console.WriteLine ("AnimationDuration", args.AnimationDuration);
+    Console.WriteLine ("AnimationCurve", args.AnimationCurve);
+}
+
+void Setup ()
+{
+    notification = UIKeyboard.Notifications.ObserveDidChangeFrame (Callback);
+}
+
+void Teardown ()
+{
+    notification.Dispose ();
+}]]></code>
+      </example>
+    </remarks>
+  </Docs>
+</Documentation>

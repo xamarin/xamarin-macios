@@ -10,6 +10,10 @@ steps:
   parameters:
     CleanseProcesses: true
 
+- bash: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/scripts/disable-codeql-arm64.sh
+  displayName: 'Disable CodeQL on arm64'
+  name: disableCodeQLOnArm64
+
 - bash: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/fix-github-ssh-key.sh
   displayName: 'Fix GitHub SSH host key'
 

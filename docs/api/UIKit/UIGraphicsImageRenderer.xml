@@ -1,0 +1,45 @@
+<Documentation>
+  <Docs DocId="T:UIKit.UIGraphicsImageRenderer">
+    <summary>A <see cref="T:UIKit.UIGraphicsRenderer" /> that produces images (see <see cref="T:UIKit.UIGraphicsPdfRendererFormat" />).</summary>
+    <remarks>
+      <para>
+      Introduced in iOS 10, the <see cref="T:UIKit.UIGraphicsImageRenderer" /> allows custom drawing code that utilitizes wide color.
+      </para>
+      <para>In versions prior to iOS 10, custom drawing was done by retrieving a <see cref="T:CoreGraphics.CGContext" />, manipulating its state, and then retrieving the custom image. Now, the standard technique is to use <see cref="M:UIKit.UIGraphicsImageRenderer.CreateImage(System.Action{UIKit.UIGraphicsImageRendererContext})" />, which takes an <c>Action</c> as an argument, allowing the developer to either pass in drawing code or use a lambda expression:</para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+// Pre-iOS 10 drawing pattern
+var size = new CGSize (100, 100);
+UIGraphics.BeginImageContext (size);
+
+// ... drawing statements here ...
+
+UIGraphics.EndImageContext ();
+image = UIGraphics.GetImageFromCurrentImageContext ();
+
+// iOS 10 drawing model:
+
+var r = new UIGraphicsImageRenderer(new CGSize(100, 100));
+
+var img = r.CreateImage((UIGraphicsImageRendererContext ctxt) => 
+    {
+        var superRed = UIColor.FromDisplayP3(1.358f, -0.074f, -0.012f, 1.0f);
+        superRed.SetFill();
+
+        UIColor.Black.SetStroke();
+
+        var path = new UIBezierPath();
+        path.MoveTo(new CGPoint(10,10));
+        path.AddLineTo(new CGPoint(90, 10));
+        path.AddLineTo(new CGPoint(45, 90));
+        path.ClosePath();
+        path.Stroke();
+        path.Fill();
+    });
+    ]]></code>
+      </example>
+      <para>The new drawing method is still based on manipulating the state of a "current context" but instead of a <see cref="T:CoreGraphics.CGContext" /> it is now a subclass of <see cref="T:UIKit.UIGraphicsRendererContext" /> (either <see cref="T:UIKit.UIGraphicsImageRendererContext" /> or <see cref="T:UIKit.UIGraphicsPdfRendererContext" />). If necessary, developers can retrieve the current context as a <see cref="T:CoreGraphics.CGContext" /> using <see cref="M:UIKit.UIGraphicsRenderer.GetContext(UIKit.UIGraphicsRendererFormat)" />.</para>
+    </remarks>
+    <related type="externalDocumentation" href="https://developer.apple.com/reference/UIKit/UIGraphicsImageRenderer">Apple documentation for <c>UIGraphicsImageRenderer</c></related>
+  </Docs>
+</Documentation>

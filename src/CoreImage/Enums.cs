@@ -30,6 +30,10 @@ namespace CoreImage {
 
 	// convenience enum for values used with kCGImagePropertyOrientation (key) as NSNumber
 	// values are part of the header file (CGImageProperties.h) as comments (not constants or fields)
+	/// <summary>An enumeration whose values specify the origin of the <see cref="T:CoreImage.CIImage" />.</summary>
+	///     <remarks>
+	///       <para>The enumeration values are equal to those of the EXIF and TIFF specifications.</para>
+	///     </remarks>
 	public enum CIImageOrientation {
 		TopLeft = 1,
 		TopRight = 2,
@@ -42,6 +46,7 @@ namespace CoreImage {
 	}
 
 	// convenience enum (fields are used) but also a `typedef int` -> CIImage.h
+	/// <summary>An enumeration whose values specify pixel formats.</summary>
 	public enum CIFormat {
 		ARGB8 = 0,
 		RGBAh = 1,
@@ -76,6 +81,7 @@ namespace CoreImage {
 		RGf = 22
 	}
 
+	/// <summary>Enumerates the error correction levels for QR codes.</summary>
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CIQRCodeErrorCorrectionLevel : long {
@@ -85,6 +91,7 @@ namespace CoreImage {
 		H = 72,
 	}
 
+	/// <summary>Enumerates the ECC versions for the Data Matrix barcode scheme.</summary>
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CIDataMatrixCodeEccVersion : long {

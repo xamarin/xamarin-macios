@@ -1,0 +1,78 @@
+<Documentation>
+  <Docs DocId="T:UIKit.UIApplicationDelegate">
+    <summary>A class used to receive events raised by a <see cref="T:UIKit.UIApplication" />.</summary>
+    <remarks>
+      <para>A strongly typed implementation of a class that can be used to respond to events raised by the <see cref="T:UIKit.UIApplication" />.</para>
+      <para>
+       Application developers will generally override the <see cref="M:UIKit.UIApplicationDelegate_Extensions.FinishedLaunching(UIKit.IUIApplicationDelegate,UIKit.UIApplication,Foundation.NSDictionary)" /> method, configure the application's main <see cref="T:UIKit.UIWindow" />, instantiate the top-level
+       <see cref="T:UIKit.UIViewController" />, and assign
+       it to the <see cref="P:UIKit.UIWindow.RootViewController" />.
+
+      </para>
+      <para>
+	This is what a minimal UIApplicationDelegate class looks like:
+      </para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+[Register ("AppDelegate")]
+public partial class AppDelegate : UIApplicationDelegate
+{
+	UIWindow window;
+
+	public override bool FinishedLaunching (UIApplication app, NSDictionary options)
+	{
+		window = new UIWindow (UIScreen.MainScreen.Bounds);
+		window.RootViewController = new UIViewController ();
+		window.MakeKeyAndVisible ();
+		
+		return true;
+	}
+}
+]]></code>
+      </example>
+      <block subset="none" type="behaviors">UIApplicationDelegate and the Application Lifecycle</block>
+      <para>The <see cref="T:UIKit.UIApplicationDelegate" /> provides overridable methods for the entire application lifecycle:</para>
+      <para>
+        <img href="~/UIKit/_images/UIApplicationDelegate.Lifecycle.png" alt="Sequence diagram showing the UIApplicationDelegate lifecycle" />
+      </para>
+      <para>Applications have four major modes:</para>
+      <list type="bullet">
+        <item>
+          <term>Launching, involving the methods <see cref="M:UIKit.UIApplicationDelegate.WillFinishLaunching(UIKit.UIApplication,Foundation.NSDictionary)" />, <see cref="M:UIKit.UIApplicationDelegate_Extensions.FinishedLaunching(UIKit.IUIApplicationDelegate,UIKit.UIApplication,Foundation.NSDictionary)" />, and perhaps <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=UIKit%20UIApplication%20Open%20URL&amp;scope=Xamarin" title="M:UIKit.UIApplication.OpenURL*">M:UIKit.UIApplication.OpenURL*</a></format> (if the application was launched or foregrounded with <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=UIKit%20UIApplication%20Open%20URL&amp;scope=Xamarin" title="M:UIKit.UIApplication.OpenURL*">M:UIKit.UIApplication.OpenURL*</a></format>).</term>
+        </item>
+        <item>
+          <term>Foreground processing, book-ended by the methods <see cref="M:UIKit.UIApplicationDelegate.OnActivated(UIKit.UIApplication)" /> and <see cref="M:UIKit.UIApplicationDelegate.OnResignActivation(UIKit.UIApplication)" />.</term>
+        </item>
+        <item>
+          <term>Background processing or suspension, which begins with a call to <see cref="M:UIKit.UIApplicationDelegate.DidEnterBackground(UIKit.UIApplication)" /> and ends when the application returns to the foreground after executing <see cref="M:UIKit.UIApplicationDelegate.WillEnterForeground(UIKit.UIApplication)" /> or when the application is about to terminate.</term>
+        </item>
+        <item>
+          <term>Terminating, which is preceded by a call to <see cref="M:UIKit.UIApplicationDelegate.WillTerminate(UIKit.UIApplication)" />.</term>
+        </item>
+      </list>
+      <para>As mentioned previously, the most commonly overridden method is <see cref="M:UIKit.UIApplicationDelegate_Extensions.FinishedLaunching(UIKit.IUIApplicationDelegate,UIKit.UIApplication,Foundation.NSDictionary)" />, which is the standard place to initialize the application's <see cref="T:UIKit.UIWindow" /> and that window's <see cref="P:UIKit.UIWindow.RootViewController" />.</para>
+      <para>iOS applications should be designed to be long-lived, with many transitions between foreground processing and being suspended or backgrounded. </para>
+      <block subset="none" type="Note">Assigning a UIApplicationDelegate</block>
+      <para>The <see cref="T:UIKit.UIApplicationDelegate" /> of an application is typically set as one of few, or only, things done by the application's <c>Main</c> method. The <see cref="T:UIKit.UIApplicationDelegate" /> exports a string using the <see cref="T:Foundation.RegisterAttribute" /> and this string is used as the <c>delegateClassName</c> argument to the <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=M:UIKit.UIApplication.Main(string[],string,string)&amp;scope=Xamarin" title="M:UIKit.UIApplication.Main(string[],string,string)">M:UIKit.UIApplication.Main(string[],string,string)</a></format> method, as shown in the following example:</para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+public class Application 
+{
+		static void Main(string[] args)
+		{
+			UIApplication.Main(args, null, "AppDelegate");
+		}
+	}
+
+[Register ("AppDelegate")]
+public partial class AppDelegate : UIApplicationDelegate
+{
+//...etc
+}
+]]></code>
+      </example>
+      <para>Application's that are launched from a XIB or storyboard use the <see cref="T:UIKit.UIApplicationDelegate" /> specified in the XIB or storyboard.</para>
+    </remarks>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIApplicationDelegate_Protocol/index.html">Apple documentation for <c>UIApplicationDelegate</c></related>
+  </Docs>
+</Documentation>

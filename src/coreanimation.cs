@@ -65,6 +65,9 @@ using NativeHandle = System.IntPtr;
 
 namespace CoreAnimation {
 
+	/// <summary>Provides a hierarchical timing system, with support for repetition and sequencing.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/GraphicsImaging/Reference/CAMediaTiming_protocol/index.html">Apple documentation for <c>CAMediaTiming</c></related>
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -102,6 +105,12 @@ namespace CoreAnimation {
 		string FillMode { get; set; }
 	}
 
+	/// <summary>Interface representing the required methods (if any) of the protocol <see cref="T:CoreAnimation.CAMediaTiming" />.</summary>
+	///     <remarks>
+	///       <para>This interface contains the required methods (if any) from the protocol defined by <see cref="T:CoreAnimation.CAMediaTiming" />.</para>
+	///       <para>If developers create classes that implement this interface, the implementation methods will automatically be exported to Objective-C with the matching signature from the method defined in the <see cref="T:CoreAnimation.CAMediaTiming" /> protocol.</para>
+	///       <para>Optional methods (if any) are provided by the <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=Core%20Animation%20CAMedia%20Timing_%20Extensions&amp;scope=Xamarin" title="T:CoreAnimation.CAMediaTiming_Extensions">T:CoreAnimation.CAMediaTiming_Extensions</a></format> class as extension methods to the interface, allowing developers to invoke any optional methods on the protocol.</para>
+	///     </remarks>
 	interface ICAMediaTiming { }
 
 	[NoiOS]
@@ -149,6 +158,7 @@ namespace CoreAnimation {
 		NativeHandle Constructor (CAConstraintAttribute attribute, string relativeToSource, CAConstraintAttribute srcAttr, nfloat scale, nfloat offset);
 	}
 
+	/// <include file="../docs/api/CoreAnimation/CADisplayLink.xml" path="/Documentation/Docs[@DocId='T:CoreAnimation.CADisplayLink']/*" />
 	[Mac (14, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -218,6 +228,7 @@ namespace CoreAnimation {
 	}
 
 
+	/// <include file="../docs/api/CoreAnimation/CALayer.xml" path="/Documentation/Docs[@DocId='T:CoreAnimation.CALayer']/*" />
 	[BaseType (typeof (NSObject))]
 	[Dispose ("OnDispose ();", Optimizable = true)]
 	interface CALayer : CAMediaTiming, NSSecureCoding {
@@ -674,6 +685,7 @@ namespace CoreAnimation {
 
 	interface ICAMetalDrawable { }
 
+	/// <summary>Interface that defines a protocol for a display buffer at the metal layer.</summary>
 	[Protocol]
 	[MacCatalyst (13, 1)]
 	interface CAMetalDrawable : MTLDrawable {
@@ -686,6 +698,9 @@ namespace CoreAnimation {
 		CAMetalLayer Layer { get; }
 	}
 
+	/// <summary>A <see cref="T:CoreAnimation.CALayer" /> that is rendered using Metal functions.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Animation/Reference/CAMetalLayer_Ref/index.html">Apple documentation for <c>CAMetalLayer</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CALayer))]
 	interface CAMetalLayer {
@@ -768,6 +783,28 @@ namespace CoreAnimation {
 		NSDictionary DeveloperHudProperties { get; set; }
 	}
 
+	/// <summary>Layer whose content can be provided asynchronously, and with multiple levels of detail.</summary>
+	///     <remarks>
+	///       <para>
+	///    When you want to use one of the CALayer subclasses as your UIView's backing layer, you need to add the following code snippet to your class:
+	/// </para>
+	///       <example>
+	///         <code lang="csharp lang-csharp"><![CDATA[
+	/// class MyView : UIView {
+	///     //
+	///     // This instructs the runtime that whenever a MyView is created
+	///     // that it should instantiate a CATiledLayer and assign that to the
+	///     // UIView.Layer property
+	///     //
+	///     [Export ("layerClass")]
+	///     public static Class LayerClass () {
+	///         return new Class (typeof (CATilerLayer));
+	///     }
+	/// }
+	///   ]]></code>
+	///       </example>
+	///     </remarks>
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/GraphicsImaging/Reference/CATiledLayer_class/index.html">Apple documentation for <c>CATiledLayer</c></related>
 	[BaseType (typeof (CALayer))]
 	interface CATiledLayer {
 		[Export ("layer"), New, Static]
@@ -787,6 +824,28 @@ namespace CoreAnimation {
 		CGSize TileSize { get; set; }
 	}
 
+	/// <summary>A layer that replicates an existing layer, with some attributes (color, transform) altered.</summary>
+	///     <remarks>
+	///       <para>
+	///    When you want to use one of the CALayer subclasses as your UIView's backing layer, you need to add the following code snippet to your class:
+	/// </para>
+	///       <example>
+	///         <code lang="csharp lang-csharp"><![CDATA[
+	/// class MyView : UIView {
+	///     //
+	///     // This instructs the runtime that whenever a MyView is created
+	///     // that it should instantiate a CAReplicatorLayer and assign that to the
+	///     // UIView.Layer property
+	///     //
+	///     [Export ("layerClass")]
+	///     public static Class LayerClass () {
+	///         return new Class (typeof (CAReplicatorLayer));
+	///     }
+	/// }
+	///   ]]></code>
+	///       </example>
+	///     </remarks>
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/GraphicsImaging/Reference/CAReplicatorLayer_class/index.html">Apple documentation for <c>CAReplicatorLayer</c></related>
 	[BaseType (typeof (CALayer))]
 	interface CAReplicatorLayer {
 		[Export ("layer"), New, Static]
@@ -822,6 +881,28 @@ namespace CoreAnimation {
 	}
 
 
+	/// <summary>Layer used to show portions of another layer.</summary>
+	///     <remarks>
+	///       <para>
+	///    When you want to use one of the CALayer subclasses as your UIView's backing layer, you need to add the following code snippet to your class:
+	/// </para>
+	///       <example>
+	///         <code lang="csharp lang-csharp"><![CDATA[
+	/// class MyView : UIView {
+	///     //
+	///     // This instructs the runtime that whenever a MyView is created
+	///     // that it should instantiate a CAScrollLayer and assign that to the
+	///     // UIView.Layer property
+	///     //
+	///     [Export ("layerClass")]
+	///     public static Class LayerClass () {
+	///         return new Class (typeof (CAScrollLayer));
+	///     }
+	/// }
+	///   ]]></code>
+	///       </example>
+	///     </remarks>
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/GraphicsImaging/Reference/CAScrollLayer_class/index.html">Apple documentation for <c>CAScrollLayer</c></related>
 	[BaseType (typeof (CALayer))]
 	interface CAScrollLayer {
 		[Export ("layer"), New, Static]
@@ -850,6 +931,7 @@ namespace CoreAnimation {
 		void ScrollToRect (CGRect r);
 	}
 
+	/// <summary>Enumerates scrolling directions.</summary>
 	enum CAScroll {
 
 		[Field ("kCAScrollNone")]
@@ -865,6 +947,28 @@ namespace CoreAnimation {
 		Both,
 	}
 
+	/// <summary>Draws a bezier curve and composes the result with its first sublayer.</summary>
+	///     <remarks>
+	///       <para>
+	///    When you want to use one of the CALayer subclasses as your UIView's backing layer, you need to add the following code snippet to your class:
+	/// </para>
+	///       <example>
+	///         <code lang="csharp lang-csharp"><![CDATA[
+	/// class MyView : UIView {
+	///     //
+	///     // This instructs the runtime that whenever a MyView is created
+	///     // that it should instantiate a CAShapeLayer and assign that to the
+	///     // UIView.Layer property
+	///     //
+	///     [Export ("layerClass")]
+	///     public static Class LayerClass () {
+	///         return new Class (typeof (CAShapeLayer));
+	///     }
+	/// }
+	///   ]]></code>
+	///       </example>
+	///     </remarks>
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/GraphicsImaging/Reference/CAShapeLayer_class/index.html">Apple documentation for <c>CAShapeLayer</c></related>
 	[BaseType (typeof (CALayer))]
 	interface CAShapeLayer {
 		[Export ("layer"), New, Static]
@@ -935,6 +1039,28 @@ namespace CoreAnimation {
 		NSString FillRuleEvenOdd { get; }
 	}
 
+	/// <summary>3D compositing layer.</summary>
+	///     <remarks>
+	///       <para>
+	///    When you want to use one of the CALayer subclasses as your UIView's backing layer, you need to add the following code snippet to your class:
+	/// </para>
+	///       <example>
+	///         <code lang="csharp lang-csharp"><![CDATA[
+	/// class MyView : UIView {
+	///     //
+	///     // This instructs the runtime that whenever a MyView is created
+	///     // that it should instantiate a CATransformLayer and assign that to the
+	///     // UIView.Layer property
+	///     //
+	///     [Export ("layerClass")]
+	///     public static Class LayerClass () {
+	///         return new Class (typeof (CATransformLayer));
+	///     }
+	/// }
+	///   ]]></code>
+	///       </example>
+	///     </remarks>
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/GraphicsImaging/Reference/CATransformLayer_class/index.html">Apple documentation for <c>CATransformLayer</c></related>
 	[BaseType (typeof (CALayer))]
 	interface CATransformLayer {
 		[Export ("layer"), New, Static]
@@ -975,6 +1101,28 @@ namespace CoreAnimation {
 		Natural,
 	}
 
+	/// <summary>Simple text layour and rendering of regular or attributed text.</summary>
+	///     <remarks>
+	///       <para>
+	///    When you want to use one of the CALayer subclasses as your UIView's backing layer, you need to add the following code snippet to your class:
+	/// </para>
+	///       <example>
+	///         <code lang="csharp lang-csharp"><![CDATA[
+	/// class MyView : UIView {
+	///     //
+	///     // This instructs the runtime that whenever a MyView is created
+	///     // that it should instantiate a CATextLayer and assign that to the
+	///     // UIView.Layer property
+	///     //
+	///     [Export ("layerClass")]
+	///     public static Class LayerClass () {
+	///         return new Class (typeof (CATextLayer));
+	///     }
+	/// }
+	///   ]]></code>
+	///       </example>
+	///     </remarks>
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/GraphicsImaging/Reference/CATextLayer_class/index.html">Apple documentation for <c>CATextLayer</c></related>
 	[BaseType (typeof (CALayer))]
 	interface CATextLayer {
 		[Export ("layer"), New, Static]
@@ -1063,8 +1211,17 @@ namespace CoreAnimation {
 		bool AllowsFontSubpixelQuantization { get; set; }
 	}
 
+	/// <summary>Interface representing the required methods (if any) of the protocol <see cref="T:CoreAnimation.CALayerDelegate" />.</summary>
+	///     <remarks>
+	///       <para>This interface contains the required methods (if any) from the protocol defined by <see cref="T:CoreAnimation.CALayerDelegate" />.</para>
+	///       <para>If developers create classes that implement this interface, the implementation methods will automatically be exported to Objective-C with the matching signature from the method defined in the <see cref="T:CoreAnimation.CALayerDelegate" /> protocol.</para>
+	///       <para>Optional methods (if any) are provided by the <see cref="T:CoreAnimation.CALayerDelegate_Extensions" /> class as extension methods to the interface, allowing developers to invoke any optional methods on the protocol.</para>
+	///     </remarks>
 	interface ICALayerDelegate { }
 
+	/// <summary>Delegate class for the CALayer.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/CoreAnimation/CALayerDelegate">Apple documentation for <c>CALayerDelegate</c></related>
 	[BaseType (typeof (NSObject))]
 	[Model]
 #if IOS || TVOS
@@ -1096,6 +1253,29 @@ namespace CoreAnimation {
 	}
 
 #if HAS_OPENGLES
+	/// <summary>Layer
+	///  used to render OpenGL content.</summary>
+	///     <remarks>
+	///       <para>
+	///    When you want to use one of the CALayer subclasses as your UIView's backing layer, you need to add the following code snippet to your class:
+	/// </para>
+	///       <example>
+	///         <code lang="csharp lang-csharp"><![CDATA[
+	/// class MyView : UIView {
+	///     //
+	///     // This instructs the runtime that whenever a MyView is created
+	///     // that it should instantiate a CAEAGLLayer and assign that to the
+	///     // UIView.Layer property
+	///     //
+	///     [Export ("layerClass")]
+	///     public static Class LayerClass () {
+	///         return new Class (typeof (CAEAGLLayer));
+	///     }
+	/// }
+	///   ]]></code>
+	///       </example>
+	///     </remarks>
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/QuartzCore/Reference/CAEAGLLayer_Class/index.html">Apple documentation for <c>CAEAGLLayer</c></related>
 	[NoMac][NoMacCatalyst]
 	[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'CAMetalLayer' instead.")]
 	[Deprecated (PlatformName.WatchOS, 5, 0, message: "Use 'CAMetalLayer' instead.")]
@@ -1110,6 +1290,9 @@ namespace CoreAnimation {
 	}
 #endif
 
+	/// <summary>An interface implemented by objects that participate in animations coordinated by a CALayer.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/GraphicsImaging/Reference/CAAction_protocol/index.html">Apple documentation for <c>CAAction</c></related>
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -1120,6 +1303,7 @@ namespace CoreAnimation {
 		void RunAction (string eventKey, NSObject obj, [NullAllowed] NSDictionary arguments);
 	}
 
+	/// <include file="../docs/api/CoreAnimation/CAAnimation.xml" path="/Documentation/Docs[@DocId='T:CoreAnimation.CAAnimation']/*" />
 	[BaseType (typeof (NSObject)
 #if NET
 		, Delegates = new string [] {"WeakDelegate"}, Events = new Type [] { typeof (CAAnimationDelegate) }
@@ -1246,6 +1430,7 @@ namespace CoreAnimation {
 
 	interface ICAAnimationDelegate { }
 
+	/// <summary>Delegate for responding to animation lifecycle events.</summary>
 	[BaseType (typeof (NSObject))]
 #if IOS || TVOS
 	[Protocol (FormalSince = "10.0")]
@@ -1266,6 +1451,9 @@ namespace CoreAnimation {
 
 	}
 
+	/// <summary>An animation that can animate object properties.</summary>
+	///     <remarks>For a list of common properties to animate, see the documentation for <see cref="P:CoreAnimation.CAPropertyAnimation.KeyPath" /></remarks>
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/GraphicsImaging/Reference/CAPropertyAnimation_class/index.html">Apple documentation for <c>CAPropertyAnimation</c></related>
 	[BaseType (typeof (CAAnimation))]
 	interface CAPropertyAnimation {
 		[Static]
@@ -1287,6 +1475,7 @@ namespace CoreAnimation {
 		CAValueFunction ValueFunction { get; set; }
 	}
 
+	/// <include file="../docs/api/CoreAnimation/CABasicAnimation.xml" path="/Documentation/Docs[@DocId='T:CoreAnimation.CABasicAnimation']/*" />
 	[BaseType (typeof (CAPropertyAnimation))]
 	interface CABasicAnimation {
 		[Static, New, Export ("animationWithKeyPath:")]
@@ -1320,6 +1509,9 @@ namespace CoreAnimation {
 		NSObject By { get; set; }
 	}
 
+	/// <summary>A spring animation with stiffness, mass, and damping.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/CoreAnimation/CASpringAnimation">Apple documentation for <c>CASpringAnimation</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CABasicAnimation))]
 	interface CASpringAnimation {
@@ -1342,6 +1534,9 @@ namespace CoreAnimation {
 		double /* CFTimeInterval */ SettlingDuration { get; }
 	}
 
+	/// <summary>Keyframe-based animation support.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/GraphicsImaging/Reference/CAKeyframeAnimation_class/index.html">Apple documentation for <c>CAKeyframeAnimation</c></related>
 	[BaseType (typeof (CAPropertyAnimation), Name = "CAKeyframeAnimation")]
 	interface CAKeyFrameAnimation {
 		[Static, Export ("animationWithKeyPath:")]
@@ -1389,6 +1584,9 @@ namespace CoreAnimation {
 		NSNumber [] BiasValues { get; set; }
 	}
 
+	/// <summary>Transition animations for a layer.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/GraphicsImaging/Reference/CATransition_class/index.html">Apple documentation for <c>CATransition</c></related>
 	[BaseType (typeof (CAAnimation))]
 	interface CATransition {
 		[Export ("animation"), Static, New]
@@ -1412,6 +1610,8 @@ namespace CoreAnimation {
 		NSObject Filter { get; set; }
 	}
 
+	/// <summary>Constants used for the FillMode property in CAAnimation and CALayer, used to control the behavior of objects once the animation has completed.</summary>
+	///     <remarks>These are used in the FillMode property of CAAnimation and CALayer.</remarks>
 	[Static]
 	interface CAFillMode {
 		[Field ("kCAFillModeForwards")]
@@ -1427,6 +1627,9 @@ namespace CoreAnimation {
 		NSString Removed { get; }
 	}
 
+	/// <summary>Framework to synchronize multiple transformation operations.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/GraphicsImaging/Reference/CATransaction_class/index.html">Apple documentation for <c>CATransaction</c></related>
 	[BaseType (typeof (NSObject))]
 	interface CATransaction {
 		[Static]
@@ -1486,6 +1689,9 @@ namespace CoreAnimation {
 		NSString CompletionBlockKey { get; }
 	}
 
+	/// <summary>Groups and orchestrates multiple animations.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/GraphicsImaging/Reference/CAAnimationGroup_class/index.html">Apple documentation for <c>CAAnimationGroup</c></related>
 	[BaseType (typeof (CAAnimation))]
 	interface CAAnimationGroup {
 		[NullAllowed] // by default this property is null
@@ -1496,6 +1702,28 @@ namespace CoreAnimation {
 		CAAnimationGroup CreateAnimation ();
 	}
 
+	/// <summary>Layer that renders a gradient over its background.</summary>
+	///     <remarks>
+	///       <para>
+	///    When you want to use one of the CALayer subclasses as your UIView's backing layer, you need to add the following code snippet to your class:
+	/// </para>
+	///       <example>
+	///         <code lang="csharp lang-csharp"><![CDATA[
+	/// class MyView : UIView {
+	///     //
+	///     // This instructs the runtime that whenever a MyView is created
+	///     // that it should instantiate a CAGradientLayer and assign that to the
+	///     // UIView.Layer property
+	///     //
+	///     [Export ("layerClass")]
+	///     public static Class LayerClass () {
+	///         return new Class (typeof (CAGradientLayer));
+	///     }
+	/// }
+	///   ]]></code>
+	///       </example>
+	///     </remarks>
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/GraphicsImaging/Reference/CAGradientLayer_class/index.html">Apple documentation for <c>CAGradientLayer</c></related>
 	[BaseType (typeof (CALayer))]
 	interface CAGradientLayer {
 		[Export ("layer"), New, Static]
@@ -1563,6 +1791,9 @@ namespace CoreAnimation {
 		Conic,
 	}
 
+	/// <summary>Defines the pacing of an animation.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Cocoa/Reference/CAMediaTimingFunction_class/index.html">Apple documentation for <c>CAMediaTimingFunction</c></related>
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface CAMediaTimingFunction : NSSecureCoding {
@@ -1596,6 +1827,9 @@ namespace CoreAnimation {
 		NSString Default { get; }
 	}
 
+	/// <summary>Class used to apply functions to property values during an animation.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/GraphicsImaging/Reference/CAValueFunction_class/index.html">Apple documentation for <c>CAValueFunction</c></related>
 	[BaseType (typeof (NSObject))]
 	interface CAValueFunction : NSSecureCoding {
 		[Export ("functionWithName:"), Static]
@@ -1672,6 +1906,9 @@ namespace CoreAnimation {
 		void Release (CGLContext glContext);
 	}
 
+	/// <summary>A source of particles emitted by a <see cref="T:CoreAnimation.CAEmitterLayer" /> instance.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/GraphicsImaging/Reference/CAEmitterCell_class/index.html">Apple documentation for <c>CAEmitterCell</c></related>
 	[BaseType (typeof (NSObject))]
 	interface CAEmitterCell : CAMediaTiming, NSSecureCoding {
 		[NullAllowed] // by default this property is null
@@ -1803,6 +2040,9 @@ namespace CoreAnimation {
 		nfloat ContentsScale { get; set; }
 	}
 
+	/// <summary>A particle-system emitter. Particle types are defined by <see cref="T:CoreAnimation.CAEmitterCell" />.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/GraphicsImaging/Reference/CAEmitterLayer_class/index.html">Apple documentation for <c>CAEmitterLayer</c></related>
 	[BaseType (typeof (CALayer))]
 	interface CAEmitterLayer {
 		[Export ("layer"), New, Static]

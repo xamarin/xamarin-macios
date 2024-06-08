@@ -47,34 +47,29 @@ namespace Network {
 		public NWPathStatus Status => nw_path_get_status (GetCheckedHandle ());
 
 		[DllImport (Constants.NetworkLibrary)]
-		[return: MarshalAs (UnmanagedType.U1)]
-		extern static bool nw_path_is_expensive (IntPtr handle);
+		extern static byte nw_path_is_expensive (IntPtr handle);
 
-		public bool IsExpensive => nw_path_is_expensive (GetCheckedHandle ());
-
-		[DllImport (Constants.NetworkLibrary)]
-		[return: MarshalAs (UnmanagedType.U1)]
-		extern static bool nw_path_has_ipv4 (IntPtr handle);
-
-		public bool HasIPV4 => nw_path_has_ipv4 (GetCheckedHandle ());
+		public bool IsExpensive => nw_path_is_expensive (GetCheckedHandle ()) != 0;
 
 		[DllImport (Constants.NetworkLibrary)]
-		[return: MarshalAs (UnmanagedType.U1)]
-		extern static bool nw_path_has_ipv6 (IntPtr handle);
+		extern static byte nw_path_has_ipv4 (IntPtr handle);
 
-		public bool HasIPV6 => nw_path_has_ipv6 (GetCheckedHandle ());
-
-		[DllImport (Constants.NetworkLibrary)]
-		[return: MarshalAs (UnmanagedType.U1)]
-		extern static bool nw_path_has_dns (IntPtr handle);
-
-		public bool HasDns => nw_path_has_dns (GetCheckedHandle ());
+		public bool HasIPV4 => nw_path_has_ipv4 (GetCheckedHandle ()) != 0;
 
 		[DllImport (Constants.NetworkLibrary)]
-		[return: MarshalAs (UnmanagedType.U1)]
-		extern static bool nw_path_uses_interface_type (IntPtr handle, NWInterfaceType type);
+		extern static byte nw_path_has_ipv6 (IntPtr handle);
 
-		public bool UsesInterfaceType (NWInterfaceType type) => nw_path_uses_interface_type (GetCheckedHandle (), type);
+		public bool HasIPV6 => nw_path_has_ipv6 (GetCheckedHandle ()) != 0;
+
+		[DllImport (Constants.NetworkLibrary)]
+		extern static byte nw_path_has_dns (IntPtr handle);
+
+		public bool HasDns => nw_path_has_dns (GetCheckedHandle ()) != 0;
+
+		[DllImport (Constants.NetworkLibrary)]
+		extern static byte nw_path_uses_interface_type (IntPtr handle, NWInterfaceType type);
+
+		public bool UsesInterfaceType (NWInterfaceType type) => nw_path_uses_interface_type (GetCheckedHandle (), type) != 0;
 
 		[DllImport (Constants.NetworkLibrary)]
 		extern static IntPtr nw_path_copy_effective_local_endpoint (IntPtr handle);
@@ -101,15 +96,14 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		[return: MarshalAs (UnmanagedType.U1)]
-		extern static bool nw_path_is_equal (IntPtr p1, IntPtr p2);
+		extern static byte nw_path_is_equal (IntPtr p1, IntPtr p2);
 
 		public bool EqualsTo (NWPath other)
 		{
 			if (other is null)
 				return false;
 
-			return nw_path_is_equal (GetCheckedHandle (), other.Handle);
+			return nw_path_is_equal (GetCheckedHandle (), other.Handle) != 0;
 		}
 
 		// Returning 'byte' since 'bool' isn't blittable
@@ -177,8 +171,7 @@ namespace Network {
 		[iOS (13, 0)]
 #endif
 		[DllImport (Constants.NetworkLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static extern bool nw_path_is_constrained (IntPtr path);
+		static extern byte nw_path_is_constrained (IntPtr path);
 
 #if NET
 		[SupportedOSPlatform ("tvos13.0")]
@@ -189,7 +182,7 @@ namespace Network {
 		[TV (13, 0)]
 		[iOS (13, 0)]
 #endif
-		public bool IsConstrained => nw_path_is_constrained (GetCheckedHandle ());
+		public bool IsConstrained => nw_path_is_constrained (GetCheckedHandle ()) != 0;
 
 #if NET
 		[SupportedOSPlatform ("tvos13.0")]

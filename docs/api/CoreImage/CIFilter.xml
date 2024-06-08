@@ -1,0 +1,66 @@
+<Documentation>
+  <Docs DocId="T:CoreImage.CIFilter">
+    <summary>CoreImage image filter.</summary>
+    <remarks>
+      <para>
+        On iOS 7.0, the following are the built-in filters:
+      </para>
+      <para>
+        Compositing Filters:
+        <list type="bullet"><item><term><see cref="T:CoreImage.CIAdditionCompositing" /></term></item><item><term><see cref="T:CoreImage.CIMaximumCompositing" /></term></item><item><term><see cref="T:CoreImage.CIMinimumCompositing" /></term></item><item><term><see cref="T:CoreImage.CIMultiplyCompositing" /></term></item><item><term><see cref="T:CoreImage.CISourceAtopCompositing" /></term></item><item><term><see cref="T:CoreImage.CISourceInCompositing" /></term></item><item><term><see cref="T:CoreImage.CISourceOutCompositing" /></term></item><item><term><see cref="T:CoreImage.CISourceOverCompositing" /></term></item></list></para>
+      <para>
+        Affine Filters (<see cref="T:CoreImage.CIAffineFilter" />):
+        <list type="bullet"><item><term><see cref="T:CoreImage.CIAffineClamp" /></term></item><item><term><see cref="T:CoreImage.CIAffineTile" /></term></item><item><term><see cref="T:CoreImage.CIAffineTransform" /></term></item></list></para>
+      <para>
+        Blend Filters (<see cref="T:CoreImage.CIBlendFilter" />):
+        <list type="bullet"><item><term><see cref="T:CoreImage.CIBlendWithMask" /></term></item><item><term><see cref="T:CoreImage.CIColorBlendMode" /></term></item><item><term><see cref="T:CoreImage.CIColorBurnBlendMode" /></term></item><item><term><see cref="T:CoreImage.CIColorDodgeBlendMode" /></term></item><item><term><see cref="T:CoreImage.CIDarkenBlendMode" /></term></item><item><term><see cref="T:CoreImage.CIDifferenceBlendMode" /></term></item><item><term><see cref="T:CoreImage.CIExclusionBlendMode" /></term></item><item><term><see cref="T:CoreImage.CIHardLightBlendMode" /></term></item><item><term><see cref="T:CoreImage.CIHueBlendMode" /></term></item><item><term><see cref="T:CoreImage.CILightenBlendMode" /></term></item><item><term><see cref="T:CoreImage.CILuminosityBlendMode" /></term></item><item><term><see cref="T:CoreImage.CIMultiplyBlendMode" /></term></item><item><term><see cref="T:CoreImage.CIOverlayBlendMode" /></term></item><item><term><see cref="T:CoreImage.CISaturationBlendMode" /></term></item><item><term><see cref="T:CoreImage.CIScreenBlendMode" /></term></item><item><term><see cref="T:CoreImage.CISoftLightBlendMode" /></term></item></list></para>
+      <para>
+        Compositing Filters (<see cref="T:CoreImage.CICompositingFilter" />):
+        <list type="bullet"><item><term><see cref="T:CoreImage.CIAdditionCompositing" /></term></item><item><term><see cref="T:CoreImage.CIMaximumCompositing" /></term></item><item><term><see cref="T:CoreImage.CIMinimumCompositing" /></term></item><item><term><see cref="T:CoreImage.CIMultiplyCompositing" /></term></item><item><term><see cref="T:CoreImage.CISourceAtopCompositing" /></term></item><item><term><see cref="T:CoreImage.CISourceInCompositing" /></term></item><item><term><see cref="T:CoreImage.CISourceOutCompositing" /></term></item><item><term><see cref="T:CoreImage.CISourceOverCompositing" /></term></item></list></para>
+      <para>
+        Convolution Filters (<see cref="T:CoreImage.CIConvolutionCore" />):
+        <list type="bullet"><item><term><see cref="T:CoreImage.CIConvolution3X3" /></term></item><item><term><see cref="T:CoreImage.CIConvolution5X5" /></term></item><item><term><see cref="T:CoreImage.CIConvolution9Horizontal" /></term></item><item><term><see cref="T:CoreImage.CIConvolution9Vertical" /></term></item></list></para>
+      <para>
+        Distortion Filters (<see cref="T:CoreImage.CIDistortionFilter" />):
+        <list type="bullet"><item><term><see cref="T:CoreImage.CIBumpDistortion" /></term></item><item><term><see cref="T:CoreImage.CIBumpDistortionLinear" /></term></item><item><term><see cref="T:CoreImage.CICircleSplashDistortion" /></term></item><item><term><see cref="T:CoreImage.CIHoleDistortion" /></term></item><item><term><see cref="T:CoreImage.CIPinchDistortion" /></term></item><item><term><see cref="T:CoreImage.CITwirlDistortion" /></term></item><item><term><see cref="T:CoreImage.CIVortexDistortion" /></term></item></list></para>
+      <para>
+        Photo Effects (<see cref="T:CoreImage.CIPhotoEffect" />):
+        <list type="bullet"><item><term><see cref="T:CoreImage.CIPhotoEffectChrome" /></term></item><item><term><see cref="T:CoreImage.CIPhotoEffectFade" /></term></item><item><term><see cref="T:CoreImage.CIPhotoEffectInstant" /></term></item><item><term><see cref="T:CoreImage.CIPhotoEffectMono" /></term></item><item><term><see cref="T:CoreImage.CIPhotoEffectNoir" /></term></item><item><term><see cref="T:CoreImage.CIPhotoEffectProcess" /></term></item><item><term><see cref="T:CoreImage.CIPhotoEffectTonal" /></term></item><item><term><see cref="T:CoreImage.CIPhotoEffectTransfer" /></term></item></list></para>
+      <para>
+        Transition Filters (<see cref="T:CoreImage.CITransitionFilter" />):
+        <list type="bullet"><item><term><see cref="T:CoreImage.CIBarsSwipeTransition" /></term></item><item><term><see cref="T:CoreImage.CICopyMachineTransition" /></term></item><item><term><see cref="T:CoreImage.CIDisintegrateWithMaskTransition" /></term></item><item><term><see cref="T:CoreImage.CIDissolveTransition" /></term></item><item><term><see cref="T:CoreImage.CIFlashTransition" /></term></item><item><term><see cref="T:CoreImage.CIModTransition" /></term></item><item><term><see cref="T:CoreImage.CISwipeTransition" /></term></item></list></para>
+      <para>Specialized Filters:
+        <list type="bullet"><item><term><see cref="T:CoreImage.CIBloom" /></term></item><item><term><see cref="T:CoreImage.CICheckerboardGenerator" /></term></item><item><term><see cref="T:CoreImage.CIColorClamp" /></term></item><item><term><see cref="T:CoreImage.CIColorControls" /></term></item><item><term><see cref="T:CoreImage.CIColorCrossPolynomial" /></term></item><item><term><see cref="T:CoreImage.CIColorCube" /></term></item><item><term><see cref="T:CoreImage.CIColorInvert" /></term></item><item><term><see cref="T:CoreImage.CIColorMap" /></term></item><item><term><see cref="T:CoreImage.CIColorMatrix" /></term></item><item><term><see cref="T:CoreImage.CIColorMonochrome" /></term></item><item><term><see cref="T:CoreImage.CIColorPosterize" /></term></item><item><term><see cref="T:CoreImage.CIConstantColorGenerator" /></term></item><item><term><see cref="T:CoreImage.CICrop" /></term></item><item><term><see cref="T:CoreImage.CIExposureAdjust" /></term></item><item><term><see cref="T:CoreImage.CIFaceBalance" /></term></item><item><term><see cref="T:CoreImage.CIFalseColor" /></term></item><item><term><see cref="T:CoreImage.CIGammaAdjust" /></term></item><item><term><see cref="T:CoreImage.CIGaussianBlur" /></term></item><item><term><see cref="T:CoreImage.CIGaussianGradient" /></term></item><item><term><see cref="T:CoreImage.CIGloom" /></term></item><item><term><see cref="T:CoreImage.CIHighlightShadowAdjust" /></term></item><item><term><see cref="T:CoreImage.CIHueAdjust" /></term></item><item><term><see cref="T:CoreImage.CILanczosScaleTransform" /></term></item><item><term><see cref="T:CoreImage.CILightTunnel" /></term></item><item><term><see cref="T:CoreImage.CILinearGradient" /></term></item><item><term><see cref="T:CoreImage.CILinearToSRGBToneCurve" /></term></item><item><term><see cref="T:CoreImage.CIMaskToAlpha" /></term></item><item><term><see cref="T:CoreImage.CIMaximumComponent" /></term></item><item><term><see cref="T:CoreImage.CIMinimumComponent" /></term></item><item><term><see cref="T:CoreImage.CIPerspectiveTile" /></term></item><item><term><see cref="T:CoreImage.CIPerspectiveTransform" /></term></item><item><term><see cref="T:CoreImage.CIPixellate" /></term></item><item><term><see cref="T:CoreImage.CIQRCodeGenerator" /></term></item><item><term><see cref="T:CoreImage.CIRadialGradient" /></term></item><item><term><see cref="T:CoreImage.CIRandomGenerator" /></term></item><item><term><see cref="T:CoreImage.CIScreenFilter" /></term></item><item><term><see cref="T:CoreImage.CISepiaTone" /></term></item><item><term><see cref="T:CoreImage.CISharpenLuminance" /></term></item><item><term><see cref="T:CoreImage.CISRGBToneCurveToLinear" /></term></item><item><term><see cref="T:CoreImage.CIStarShineGenerator" /></term></item><item><term><see cref="T:CoreImage.CIStraightenFilter" /></term></item><item><term><see cref="T:CoreImage.CIStripesGenerator" /></term></item><item><term><see cref="T:CoreImage.CITemperatureAndTint" /></term></item><item><term><see cref="T:CoreImage.CITileFilter" /></term></item><item><term><see cref="T:CoreImage.CIToneCurve" /></term></item><item><term><see cref="T:CoreImage.CITriangleKaleidoscope" /></term></item><item><term><see cref="T:CoreImage.CIUnsharpMask" /></term></item><item><term><see cref="T:CoreImage.CIVibrance" /></term></item><item><term><see cref="T:CoreImage.CIVignette" /></term></item><item><term><see cref="T:CoreImage.CIVignetteEffect" /></term></item><item><term><see cref="T:CoreImage.CIWhitePointAdjust" /></term></item></list></para>
+      <para>
+        To create a filter of the specified type, instantiate an
+        instance of one of the above types, assign values to their
+        properties and extract the result by using the OutputImage
+        property.
+        
+      </para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+          var sepiaFilter = new CISepiaTone () {
+          Image = mySourceImage,
+          Intensity = 0.8f
+          };
+        ]]></code>
+      </example>
+      <para>
+        You can chain your filters as well:
+      </para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+          var sepiaFilter = new CISepiaTone () {
+          Image = mySourceImage,
+          Intensity = .8f
+          };
+          var invert = new CIColorInvert () {
+          Image = sepia.OutputImage
+          };
+        ]]></code>
+      </example>
+    </remarks>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/GraphicsImaging/Reference/QuartzCoreFramework/Classes/CIFilter_Class/index.html">Apple documentation for <c>CIFilter</c></related>
+  </Docs>
+</Documentation>

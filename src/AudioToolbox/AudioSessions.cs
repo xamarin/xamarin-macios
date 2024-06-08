@@ -36,6 +36,7 @@ using ObjCRuntime;
 
 namespace AudioToolbox {
 
+	/// <summary>An enumeration whose values can be returned by the <see cref="M:AudioToolbox.AudioSession.SetActive(System.Boolean,AudioToolbox.AudioSessionActiveFlags)" /> method or the <see cref="P:AudioToolbox.AudioSessionException.ErrorCode" /> property.</summary>
 	public enum AudioSessionErrors { // Implictly cast to OSType 
 		None = 0,
 		NotInitialized = 0x21696e69, // '!ini',
@@ -50,11 +51,13 @@ namespace AudioToolbox {
 		UnspecifiedError = 0x77686371, // 'what'
 	}
 
+	/// <summary>An enumeration whose values represent the beginning and end of an audio session interruption.</summary>
 	public enum AudioSessionInterruptionState { // UInt32 in AudioSessionInterruptionListener
 		End = 0,
 		Begin = 1,
 	}
 
+	/// <summary>Categories for your audio session.</summary>
 	public enum AudioSessionCategory { // UInt32 AudioSessionPropertyID
 		AmbientSound = 0x616d6269, // 'ambi'
 		SoloAmbientSound = 0x736f6c6f, // 'solo'
@@ -64,11 +67,13 @@ namespace AudioToolbox {
 		AudioProcessing = 0x70726f63  // 'proc'
 	}
 
+	/// <summary>Possible values to override the audio route</summary>
 	public enum AudioSessionRoutingOverride { // UInt32 AudioSessionPropertyID
 		None = 0,
 		Speaker = 0x73706b72, // 'spkr'
 	}
 
+	/// <summary>The reason for AudioSession route change event to be raised.</summary>
 	public enum AudioSessionRouteChangeReason { // UInt32 AudioSessionPropertyID
 		Unknown = 0,
 		NewDeviceAvailable = 1,
@@ -80,12 +85,14 @@ namespace AudioToolbox {
 		RouteConfigurationChange = 8
 	}
 
+	/// <summary>An enumeration whose values indicate whether the application should resume after an interruption. Returned by the <see cref="P:AudioToolbox.AudioSession.InterruptionType" /> property.</summary>
 	public enum AudioSessionInterruptionType { // UInt32 AudioSessionInterruptionType
 		ShouldResume = 1769108333, // 'irsm'
 		ShouldNotResume = 561148781, // '!rsm'
 	}
 
 	// Should be internal with AudioSessionPropertyListener public
+	/// <summary>An enumeration whose values specify properties for audio sessions.</summary>
 	public enum AudioSessionProperty { // typedef UInt32 AudioSessionPropertyID
 		PreferredHardwareSampleRate = 0x68777372,
 		PreferredHardwareIOBufferDuration = 0x696f6264,
@@ -126,6 +133,16 @@ namespace AudioToolbox {
 		AudioRouteDescription = 0x63726172,     // 'crar'
 	}
 
+	/// <summary>The fine detail over the audio mode, an extension to the AudioSession Category</summary>
+	///     <remarks>	    This property is used to do the fine-level control over
+	/// 	    the audio session.  The major component is determined by
+	/// 	    the <see cref="P:AudioToolbox.AudioSession.Category" />
+	/// 	    property and this is used to tune whether the session
+	/// 	    behaves in the default mode (what every app got in the pre
+	/// 	    iOS 5.0 days), Voice Chat, Video Recording or is being
+	/// 	    used in Measurement mode (where you get raw data, without
+	/// 	    any gain changes for Audio).
+	/// </remarks>
 	public enum AudioSessionMode { // UInt32 AudioSessionPropertyID
 		Default = 0x64666c74,
 		VoiceChat = 0x76636374,
@@ -134,6 +151,7 @@ namespace AudioToolbox {
 		GameChat = 0x676d6374,  // 'gmct'
 	}
 
+	/// <summary>Flags passed to AudioSession's SetActive method.</summary>
 	[Deprecated (PlatformName.iOS, 6, 0)]
 	[Deprecated (PlatformName.TvOS, 9, 0)]
 	[Deprecated (PlatformName.MacCatalyst, 13, 1)]
@@ -142,6 +160,7 @@ namespace AudioToolbox {
 		NotifyOthersOnDeactivation = (1 << 0)
 	}
 
+	/// <summary>The available audio input sources on the device.</summary>
 	public enum AudioSessionInputRouteKind { // UInt32 AudioSessionPropertyID
 		None,
 		LineIn,
@@ -151,6 +170,7 @@ namespace AudioToolbox {
 		USBAudio,
 	}
 
+	/// <summary>An enumeration whose values specify different kinds of output routes. </summary>
 	public enum AudioSessionOutputRouteKind { // UInt32           (set only) in AudioSession.h
 		None,
 		LineOut,

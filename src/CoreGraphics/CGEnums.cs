@@ -21,6 +21,8 @@ namespace CoreGraphics {
 	}
 
 	// untyped enum -> CGPath.h
+	/// <summary>Join type for drawing operations.</summary>
+	///     <remarks>Specifies how to join consecutive line or curve segments in a figure.</remarks>
 	public enum CGLineJoin {
 		Miter,
 		Round,
@@ -28,6 +30,7 @@ namespace CoreGraphics {
 	}
 
 	// untyped enum -> CGPath.h
+	/// <summary>Style for line caps.</summary>
 	public enum CGLineCap {
 		Butt,
 		Round,
@@ -35,6 +38,7 @@ namespace CoreGraphics {
 	}
 
 	// untyped enum -> CGContext.h
+	/// <include file="../../docs/api/CoreGraphics/CGPathDrawingMode.xml" path="/Documentation/Docs[@DocId='T:CoreGraphics.CGPathDrawingMode']/*" />
 	public enum CGPathDrawingMode {
 		Fill,
 		EOFill,
@@ -44,6 +48,8 @@ namespace CoreGraphics {
 	}
 
 	// untyped enum -> CGContext.h
+	/// <summary>Text drawing mode used by Quartz.</summary>
+	///     <remarks>These drawing modes are used with the <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=Core%20Graphics%20CGContext%20Set%20Drawing%20Mode&amp;scope=Xamarin" title="M:CoreGraphics.CGContext.SetDrawingMode*">M:CoreGraphics.CGContext.SetDrawingMode*</a></format> method and they specify how the glyphs that make up the text should be drawn.   </remarks>
 	public enum CGTextDrawingMode : uint {
 		Fill,
 		Stroke,
@@ -56,6 +62,7 @@ namespace CoreGraphics {
 	}
 
 	// untyped enum -> CGContext.h
+	/// <summary>Text encoding, this enumeration is deprecated, use CoreText APIs instead.</summary>
 	[Deprecated (PlatformName.iOS, 7, 0)]
 	[Deprecated (PlatformName.TvOS, 9, 0)]
 	[Deprecated (PlatformName.MacOSX, 10, 9)]
@@ -66,6 +73,7 @@ namespace CoreGraphics {
 	}
 
 	// untyped enum -> CGContext.h
+	/// <summary>Quality of interpolation for drawing images.</summary>
 	public enum CGInterpolationQuality {
 		Default,
 		None,
@@ -75,6 +83,7 @@ namespace CoreGraphics {
 	}
 
 	// untyped enum -> CGContext.h
+	/// <include file="../../docs/api/CoreGraphics/CGBlendMode.xml" path="/Documentation/Docs[@DocId='T:CoreGraphics.CGBlendMode']/*" />
 	public enum CGBlendMode {
 		Normal,
 		Multiply,
@@ -162,6 +171,7 @@ namespace CoreGraphics {
 	}
 
 	// untyped enum -> CGPDFObject.h
+	/// <summary>Enumerates the various types of values that are found in a PDF document.</summary>
 	public enum CGPDFObjectType {
 		Null = 1,
 		Boolean,

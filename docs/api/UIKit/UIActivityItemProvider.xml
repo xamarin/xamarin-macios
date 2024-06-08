@@ -1,0 +1,15 @@
+<Documentation>
+  <Docs DocId="T:UIKit.UIActivityItemProvider">
+    <summary>Abstract class that, when subtyped, can be a proxy for the data of a <see cref="T:UIKit.UIActivity" />.</summary>
+    <remarks>
+      <para>This class can be used to provide lightweight proxy data to a <see cref="T:UIKit.UIActivityViewController" />. Difference services represented by <see cref="T:UIKit.UIActivity" /> classes might require additional processing of the data being sent (for example, one service might take text wrapped in HTML tags while another might require straight text, a service might require images to be converted to a certain format or size, etc.). Rather than perform all that potentially expensive processing for every possible service, a <see cref="T:UIKit.UIActivityItemProvider" /> can be used. Once a the particular service is chosen, the <see cref="P:UIKit.UIActivityItemProvider.Item" /> property is accessed and the needed processing can be performed by the application.</para>
+      <para>If processing is minimal, application developers may choose to implement <see cref="T:UIKit.UIActivityItemSource" /> rather than subclass <see cref="T:UIKit.UIActivityItemProvider" />.</para>
+      <para tool="threads">The members of this class can be used from a background thread.</para>
+    </remarks>
+    <!-- TODO: Hmm.... Typically, "expensive processing" and property don't go together -->
+    
+    
+    
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIActivityItemProvider_Class/index.html">Apple documentation for <c>UIActivityItemProvider</c></related>
+  </Docs>
+</Documentation>
