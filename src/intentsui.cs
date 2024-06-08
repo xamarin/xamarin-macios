@@ -77,6 +77,7 @@ namespace IntentsUI {
 		void ConfigureView (NSSet<INParameter> parameters, INInteraction interaction, INUIInteractiveBehavior interactiveBehavior, INUIHostedViewContext context, INUIHostedViewControllingConfigureViewHandler completionHandler);
 	}
 
+	/// <summary>Interface for presenting custom map and Siri content.</summary>
 	[NoMac]
 	[MacCatalyst (13, 1)]
 	[Category]
@@ -203,6 +204,7 @@ namespace IntentsUI {
 		void DidCancel (INUIEditVoiceShortcutViewController controller);
 	}
 
+	/// <summary>A button that is used to add a Siri shortcut.</summary>
 	[NoWatch, NoTV, Mac (12, 0), iOS (12, 0)]
 	[MacCatalyst (13, 1)]
 #if MONOMAC

@@ -1,0 +1,62 @@
+<Documentation>
+  <Docs DocId="T:CoreImage.CIToneCurve">
+    <summary>The CIToneCurve CoreImage filter</summary>
+    <remarks>
+      <para>The following example shows this filter in use</para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+// Create a CIImage from a file.
+CIImage flower = CIImage.FromCGImage (UIImage.FromFile ("flower.png").CGImage);
+        
+// Create the points used to create the tone curve.
+var point0 = new CIVector(0,0); // Default [0 0]
+var point1 = new CIVector(.1F, .5F); // Default [.25 .25]
+var point2 = new CIVector(.3F, .15F); // Default [.3 .15]
+var point3 = new CIVector(.6F, .6F); // Default [.75 .75]
+var point4 = new CIVector(1.1F, 1F); // Default [1 1]
+
+// Construct the ToneCurve filter
+var toneCurve = new CIToneCurve()
+{
+	Image = flower,
+	Point0 = point0,
+	Point1 = point1,
+	Point2 = point2,
+	Point3 = point3,
+	Point4 = point4,
+};
+
+// Get the adjusted image from the filter.
+var output = toneCurve.OutputImage;
+	
+// To render the results, we need to create a context, and then
+// use one of the context rendering APIs, in this case, we render the
+// result into a CoreGraphics image, which is merely a useful representation
+//
+var context = CIContext.FromOptions (null);
+
+var cgimage = context.CreateCGImage (output, output.Extent);
+
+// The above cgimage can be added to a screen view, for example, this
+// would add it to a UIImageView on the screen:
+myImageView.Image = UIImage.FromImage (cgimage);
+        ]]></code>
+      </example>
+      <para>
+		With the following source:
+      </para>
+      <para>
+        <img href="~/CoreImage/_images/flower.png" alt="Photograph of a sunflower." />
+      </para>
+      <para>
+         Produces the following output:
+      </para>
+      <para>
+        <img href="~/CoreImage/_images/ToneCurve.png" alt="Result of applying the filter." />
+      </para>
+      <para>
+      	"Flower" © 2012 Milica Sekulic, used under a Creative Commons Attribution-ShareAlike license: https://creativecommons.org/licenses/by-sa/3.0/ 
+      </para>
+    </remarks>
+  </Docs>
+</Documentation>

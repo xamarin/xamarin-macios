@@ -14,6 +14,7 @@ using Metal;
 
 namespace CoreVideo {
 
+	/// <summary>Manages pixel buffer pool allocation settings.</summary>
 	[Partial]
 	interface CVPixelBufferPoolAllocationSettings {
 
@@ -22,6 +23,7 @@ namespace CoreVideo {
 		NSString ThresholdKey { get; }
 	}
 
+	/// <summary>A Core Video data buffer, containing video, audio, or other type of data.</summary>
 	[Partial]
 	interface CVBuffer {
 
@@ -41,6 +43,7 @@ namespace CoreVideo {
 		NSString NonPropagatedAttachmentsKey { get; }
 	}
 
+	/// <summary>A <see cref="T:CoreVideo.CVBuffer" /> that stores image data.</summary>
 	[Partial]
 	interface CVImageBuffer : CVBuffer {
 
@@ -391,6 +394,7 @@ namespace CoreVideo {
 		ItuR2020,
 	}
 
+	/// <summary>A <see cref="T:CoreVideo.CVImageBuffer" /> that holds pixels.</summary>
 	[Partial]
 	interface CVPixelBuffer {
 
@@ -501,6 +505,7 @@ namespace CoreVideo {
 		NSString MetadataExtension { get; }
 	}
 
+	/// <summary>A reusable set of <see cref="T:CoreVideo.CVPixelBuffer" />s.</summary>
 	[Partial]
 #if XAMCORE_3_0
 	interface CVPixelBufferPool {
@@ -514,6 +519,7 @@ namespace CoreVideo {
 		NSString MaximumBufferAgeKey { get; }
 	}
 
+	/// <summary>Cache to manage CVMetalTexture objects.</summary>
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[Partial]

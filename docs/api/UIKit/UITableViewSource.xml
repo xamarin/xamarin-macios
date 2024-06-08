@@ -1,0 +1,17 @@
+<Documentation>
+  <Docs DocId="T:UIKit.UITableViewSource">
+    <summary>Joint <see cref="T:UIKit.UITableViewDataSource" /> and <see cref="T:UIKit.UITableViewDelegate" />  base class. Preferred way to provide data and handle lifecycle events for <see cref="T:UIKit.UITableView" />s.</summary>
+    <remarks>
+      <para>
+        <see cref="T:UIKit.UITableViewSource" /> merges both the <see cref="T:UIKit.UITableViewDataSource" /> and the <see cref="T:UIKit.UITableViewDelegate" /> into a single class. It is more cohesive than subclassing those independently, but there is no technical barrier to application developers working with those types directly.
+      </para>
+      <para>
+        Application developers must subtype this class,  override the methods as necessary, and assign an instance of this object to the <see cref="P:UIKit.UITableView.Source" /> property. 
+      </para>
+      <para>The methods merged from <see cref="T:UIKit.UITableViewDataSource" /> provide the table view with all the information it requires to display its data - such as informing it of the number of sections and rows, and what cell view to use for each row.  The methods merged from <see cref="T:UIKit.UITableViewDelegate" /> provide the table view with the ability to manage selection, configure section headers and footers, delete and reorder cells and control the editing menu.</para>
+    </remarks>
+    
+    
+    
+  </Docs>
+</Documentation>

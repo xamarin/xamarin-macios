@@ -1,0 +1,25 @@
+<Documentation>
+  <Docs DocId="T:UIKit.UIMotionEffect">
+    <summary>The base class for motion-based visual effects on views linked to the device tilt.</summary>
+    <remarks>
+      <para>
+	This is an abstract class for doing motion effects on your
+	application.  When subclassing, you must at least implement
+	the <see cref="M:UIKit.UIMotionEffect.ComputeKeyPathsAndRelativeValues(UIKit.UIOffset)" />
+	method which returns a dictionary of changes that contain a
+	list of keypaths along with the new value that will be applied
+	to the view that this effect is attached to.
+      </para>
+      <para>
+	In general, you will want to use the <see cref="T:UIKit.UIInterpolatingMotionEffect" /> class
+	which provides a way of interpolating the device tilt values
+	to a linear value.
+      </para>
+      <para>
+	This class maps the hardware tilt into the range -1 to 1.
+      </para>
+    </remarks>
+    
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIMotionEffect_class/index.html">Apple documentation for <c>UIMotionEffect</c></related>
+  </Docs>
+</Documentation>

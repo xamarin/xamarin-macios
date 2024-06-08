@@ -15,6 +15,7 @@ using Foundation;
 
 namespace CoreSpotlight {
 	// NSInteger -> CNContact.h
+	/// <summary>Enumerates possible errors associated with using Core Spotlight and searching.</summary>
 	[NoTV] // CS_TVOS_UNAVAILABLE
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -29,6 +30,8 @@ namespace CoreSpotlight {
 		IndexingUnsupported = -1005,
 	}
 
+	/// <summary>Enumerates errors that can occur while running a Core Spotlight query with <see cref="M:CoreSpotlight.CSSearchQuery.Start" />.</summary>
+	///     <remarks>Developers can use the <see cref="M:CoreSpotlight.CSSearchQueryErrorCodeExtensions.GetDomain(CoreSpotlight.CSSearchQueryErrorCode)" /> extension method to get the error domain.</remarks>
 	[NoTV]
 	[MacCatalyst (13, 1)]
 	[ErrorDomain ("CSSearchQueryErrorDomain")]
@@ -40,6 +43,7 @@ namespace CoreSpotlight {
 		Cancelled = -2003
 	}
 
+	/// <summary>Enumerates file protection options in calls to <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=Core%20Spotlight%20CSSearchable%20Index%20From%20Name&amp;scope=Xamarin" title="M:CoreSpotlight.CSSearchableIndex.FromName*">M:CoreSpotlight.CSSearchableIndex.FromName*</a></format>.</summary>
 	[NoTV]
 	[NoMac]
 	[MacCatalyst (13, 1)]

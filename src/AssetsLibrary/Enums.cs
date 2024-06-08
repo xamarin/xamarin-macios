@@ -6,6 +6,7 @@ using ObjCRuntime;
 namespace AssetsLibrary {
 
 	// NSInteger -> ALAssetsLibrary.h
+	/// <summary>The orientation of the asset.</summary>
 	[Deprecated (PlatformName.iOS, 9, 0, message: "Use the 'Photos' API instead.")]
 	[Native]
 	public enum ALAssetOrientation : long {
@@ -20,6 +21,7 @@ namespace AssetsLibrary {
 	}
 
 	// NSUInteger -> ALAssetsLibrary.h
+	/// <summary>Describes the group type.</summary>
 	[Deprecated (PlatformName.iOS, 9, 0, message: "Use the 'Photos' API instead.")]
 	[Native]
 	[Flags]
@@ -34,6 +36,9 @@ namespace AssetsLibrary {
 	}
 
 	// untyped enum -> ALAssetsLibrary.h
+	/// <summary>An enumeration whose values specify various errors relating to <see cref="T:AssetsLibrary.ALAsset" />s.</summary>
+	///     
+	///     <!-- TODO: Unused? -->
 	[Deprecated (PlatformName.iOS, 9, 0, message: "Use the 'Photos' API instead.")]
 	[ErrorDomain ("ALAssetsLibraryErrorDomain")]
 	public enum ALAssetsError {
@@ -50,6 +55,7 @@ namespace AssetsLibrary {
 	}
 
 	// NSInteger -> ALAssetsLibrary.h
+	/// <summary>An enumeration whose values specify the authorization status of a <see cref="T:AssetsLibrary.ALAssetsLibrary" />. Retrieved by the <see cref="P:AssetsLibrary.ALAssetsLibrary.AuthorizationStatus" /> property.</summary>
 	[Deprecated (PlatformName.iOS, 9, 0, message: "Use the 'Photos' API instead.")]
 	[Native]
 	public enum ALAuthorizationStatus : long {
@@ -60,6 +66,7 @@ namespace AssetsLibrary {
 	}
 
 	// internally used (not exposed by ObjC)
+	/// <summary>The asset type.</summary>
 	[Deprecated (PlatformName.iOS, 9, 0, message: "Use the 'Photos' API instead.")]
 	public enum ALAssetType {
 		Video,

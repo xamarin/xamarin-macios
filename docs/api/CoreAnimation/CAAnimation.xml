@@ -1,0 +1,23 @@
+<Documentation>
+  <Docs DocId="T:CoreAnimation.CAAnimation">
+    <summary>Base class for animations.</summary>
+    <remarks>
+      <para>Layer-based animations are disabled by <see cref="T:UIKit.UIView" />s except within <see cref="T:UIKit.UIView" /> animation blocks. Layer-based animations within such blocks ignore the blocks' duration and operate at their own specified duration, either the implicit default of 0.25 seconds or an explicit length. This is shown in the following example, in which the <see cref="T:UIKit.UIView" /> animation block's duration is 1.0, but in actuality, the layer-based implicit opacity animation ends in 0.25 seconds and the re-positioning runs for 10 seconds.</para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+UIView.AnimateAsync(1.0, () => {
+	imgView.Layer.Opacity = 0.0f;
+
+	var theAnim = CABasicAnimation.FromKeyPath("position");
+	theAnim.From = NSObject.FromObject(firstPosition);
+	theAnim.To =  NSObject.FromObject(secondPosition);
+	theAnim.Duration = 10.0;
+
+	imgView.Layer.AddAnimation(theAnim, "AnimateFrame");
+});
+          ]]></code>
+      </example>
+    </remarks>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/GraphicsImaging/Reference/CAAnimation_class/index.html">Apple documentation for <c>CAAnimation</c></related>
+  </Docs>
+</Documentation>

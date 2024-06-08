@@ -1,0 +1,96 @@
+<Documentation>
+  <Docs DocId="T:UIKit.UIPrintInteractionController">
+    <summary>Main driver for the printing process on iOS.</summary>
+    <remarks>
+      <para>
+	The UIPrintInteractionController provides access to the
+	printing framework on iOS.  To print on iOS, you configure the
+	<see cref="P:UIKit.UIPrintInteractionController.SharedPrintController" /> 
+	singleton by specifying your print task, optionally hook up to
+	events and then you invoke the <see cref="M:UIKit.UIPrintInteractionController.Present(System.Boolean,UIKit.UIPrintInteractionCompletionHandler)" />
+	method to allow the user to select a printer and to print.
+
+    </para>
+      <para> This class offers a number of mechanisms for printing, you
+      can print using one of these configuration, based on your needs
+      </para>
+      <list type="bullet">
+        <item>
+          <term>
+            <para>Ready to print PDF file.  You can print it by
+	  assigning to the <see cref="P:UIKit.UIPrintInteractionController.PrintingItem" />
+	  property the NSUrl pointing to the file or the NSData that
+	  contains the PDF in memory.</para>
+          </term>
+        </item>
+        <item>
+          <term>
+            <para>Ready to print image.  You can print it by assigning
+	  to the <see cref="P:UIKit.UIPrintInteractionController.PrintingItem" />
+	  property the UIImage or a photo ALAsset (the ALAsset with an
+	  AssetType of ALAssetType.Photo).
+	  </para>
+          </term>
+        </item>
+        <item>
+          <term>
+            <para>Ready to print collection of images and PDF files.  You can print it by assigning
+	  the mix of elements to the  <see cref="P:UIKit.UIPrintInteractionController.PrintingItems" />
+	  property an array of objects containing NSUrl, UIImage, NSData or ALAsset values.   
+	  </para>
+          </term>
+        </item>
+        <item>
+          <term>
+            <para> To layout information using using one of the built-in
+	    print formatters you would assign your print formatter to
+	    the <see cref="P:UIKit.UIPrintInteractionController.PrintFormatter" />
+	    property.  The built-in print formatters include the <see cref="T:UIKit.UISimpleTextPrintFormatter" />
+	    which can be used for simple rending text across multiple
+	    pages and has control for font, color, alignment and line
+	    breaking modes; For more advanced text printing you can
+	    use the <see cref="T:UIKit.UIMarkupTextPrintFormatter" />; For
+	    printing UIViews, you use the <see cref="T:UIKit.UIViewPrintFormatter" /> which has
+	    a bulit-in ability to print the contents of a UIWebView,
+	    UITextView and MKMapView objects.
+	  </para>
+          </term>
+        </item>
+        <item>
+          <term>
+            <para> For more advanced uses, where you might want to
+	    control the actual rendering of the page, you must
+	    implement a subclass of <see cref="T:UIKit.UIPrintPageRenderer" /> and assign
+	    the instance of your renderer to the <see cref="P:UIKit.UIPrintInteractionController.PrintPageRenderer" />
+	    property.</para>
+          </term>
+        </item>
+      </list>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+	//
+	// Print a PDF file, simple API
+	//
+        NSUrl url = NSUrl.FromFilename ("SomeFile.pdf");           
+	var printInfo = UIPrintInfo.PrintInfo;
+
+        printInfo.OutputType = UIPrintInfoOutputType.General;
+        printInfo.JobName = "Test: PDF Print";
+
+        var printer = UIPrintInteractionController.SharedPrintController;
+
+        printer.PrintInfo = printInfo;
+        printer.PrintingItem = url;
+        printer.ShowsPageRange = true;
+
+        printer.Present (true, (handler, completed, err) =&gt; {
+            if (!completed &amp; err != null){
+                Console.WriteLine ("error");
+            }
+        });
+]]></code>
+      </example>
+    </remarks>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIPrintInteractionController_Class/index.html">Apple documentation for <c>UIPrintInteractionController</c></related>
+  </Docs>
+</Documentation>

@@ -1,0 +1,194 @@
+<Documentation>
+  <Docs DocId="T:SceneKit.SCNGeometry">
+    <summary>Base class for SceneKit geometry objects</summary>
+    <remarks>
+      <para>All geometry in SceneKit is described by subclasses of <see cref="T:SceneKit.SCNGeometry" />:</para>
+      <list type="table">
+        <item>
+          <term>
+            <see cref="T:SceneKit.SCNCapsule" />
+          </term>
+          <description>A pill-shaped capsule with adjustable end caps</description>
+          <description>
+            <img href="~/SceneKit/_images/SceneKit.SCNCapsule.png" alt="Scene showing SCNCapsule geometry" />
+          </description>
+        </item>
+        <item>
+          <term>
+            <see cref="T:SceneKit.SCNCone" />
+          </term>
+          <description>A cone whose top can be truncated</description>
+          <description>
+            <img href="~/SceneKit/_images/SceneKit.SCNCone.png" alt="Scene showing SCNCone geometry" />
+          </description>
+        </item>
+        <item>
+          <term>
+            <format type="text/html">
+              <a href="https://docs.microsoft.com/en-us/search/index?search=Scene%20Kit%20SCNCube&amp;scope=Xamarin" title="T:SceneKit.SCNBox">T:SceneKit.SCNBox</a>
+            </format>
+          </term>
+          <description>A rectangular box.</description>
+          <description>
+            <img href="~/SceneKit/_images/SceneKit.SCNBox.png" alt="Scene showing SCNBox geometry" />
+          </description>
+        </item>
+        <item>
+          <term>
+            <see cref="T:SceneKit.SCNCylinder" />
+          </term>
+          <description>A cylinder.</description>
+          <description>
+            <img href="~/SceneKit/_images/SceneKit.SCNCylinder.png" alt="Image showing a SceneKit cylinder." />
+          </description>
+        </item>
+        <item>
+          <term>
+            <see cref="T:SceneKit.SCNFloor" />
+          </term>
+          <description>An infinite plane with the ability to reflect the geometry above it.</description>
+          <description>
+            <img href="~/SceneKit/_images/SceneKit.SCNFloor.png" alt="Scene showing SCNFloor geometry" />
+          </description>
+        </item>
+        <item>
+          <term>
+            <see cref="T:SceneKit.SCNPlane" />
+          </term>
+          <description>A one-sided rectangle.</description>
+          <description>
+            <img href="~/SceneKit/_images/SceneKit.SCNPlane.png" alt="Scene showing SCNPlane geometry" />
+          </description>
+        </item>
+        <item>
+          <term>
+            <see cref="T:SceneKit.SCNPyramid" />
+          </term>
+          <description>A tetrahedron.</description>
+          <description>
+            <img href="~/SceneKit/_images/SceneKit.SCNPyramid.png" alt="Scene showing SCNPyramid geometry" />
+          </description>
+        </item>
+        <item>
+          <term>
+            <see cref="T:SceneKit.SCNShape" />
+          </term>
+          <description>A 2D shape that has been extruded into the 3rd dimension.</description>
+          <description>
+            <img href="~/SceneKit/_images/SceneKit.SCNShape.png" alt="Scene showing SCNShape geometry" />
+          </description>
+        </item>
+        <item>
+          <term>
+            <see cref="T:SceneKit.SCNSphere" />
+          </term>
+          <description>A sphere.</description>
+          <description>
+            <img href="~/SceneKit/_images/SceneKit.SCNSphere.png" alt="Scene showing SCNSphere geometry" />
+          </description>
+        </item>
+        <item>
+          <term>
+            <see cref="T:SceneKit.SCNText" />
+          </term>
+          <description>Extruded text.</description>
+          <description>
+            <img href="~/SceneKit/_images/SceneKit.SCNText.png" alt="Scene showing SCNText geometry" />
+          </description>
+        </item>
+        <item>
+          <term>
+            <see cref="T:SceneKit.SCNTorus" />
+          </term>
+          <description>A donut shape.</description>
+          <description>
+            <img href="~/SceneKit/_images/SceneKit.SCNTorus.png" alt="Scene showing SCNTorus geometry" />
+          </description>
+        </item>
+        <item>
+          <term>
+            <see cref="T:SceneKit.SCNTube" />
+          </term>
+          <description>An uncapped cylinder.</description>
+          <description>
+            <img href="~/SceneKit/_images/SceneKit.SCNCylinder.png" alt="Scene showing SCNCylinder geometry" />
+          </description>
+        </item>
+      </list>
+      <para>Subclasses are typically instantiated with a static <c>Create</c> factory method rather than a constructor.</para>
+      <para>In addition, SceneKit can load entire scenes from .DAE files with the <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=Scene%20Kit%20SCNScene%20From%20File&amp;scope=Xamarin" title="M:SceneKit.SCNScene.FromFile*">M:SceneKit.SCNScene.FromFile*</a></format> method.</para>
+      <para>Developers can create geometry from a ModelIO mesh using <see cref="M:SceneKit.SCNGeometry.FromMesh(ModelIO.MDLMesh)" />.</para>
+      <para>Finally, developers can create custom geometry using the <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=M:SceneKit.SCNGeometry.Create(SceneKit.SCNGeometrySource[], SceneKit.SCNGeometryElement[]*&amp;scope=Xamarin" title="M:SceneKit.SCNGeometry.Create(SceneKit.SCNGeometrySource[], SceneKit.SCNGeometryElement[]*">M:SceneKit.SCNGeometry.Create(SceneKit.SCNGeometrySource[], SceneKit.SCNGeometryElement[]*</a></format> method with arrays of appropriate <see cref="T:SceneKit.SCNGeometrySource" /> and <see cref="T:SceneKit.SCNGeometryElement" /> objects. The following shows the creation of a custom pyramid:</para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+//Lower-left
+var a = new SCNVector3(-1, -1, 0);
+//Upper-right
+var b = new SCNVector3(1, 1, 0);
+
+var halfX = (c.X + a.X) / 2;
+var halfY = (c.Y + a.Y) / 2;
+var halfZ = (c.Z + a.Z) / 2;
+
+var b = new SCNVector3(a.X, c.Y, halfZ);
+var d = new SCNVector3(c.X, a.Y, halfZ);
+//Elevate the midpoint so that it's clearly a pyramid
+var midPoint = new SCNVector3(halfX, halfY, halfZ + 1.0);
+
+//The vertices of the geometry
+var locs = new [] {
+	a, b, c, d, midPoint
+};
+var locSource = SCNGeometrySource.FromVertices(locs);
+
+//Note that this relies on the ordering of locs above
+//and it defines triangles (could be triangle strips, etc.)
+var indices = new [] {
+	//Triangles are defined counter-clockwise!
+	4, 1, 0,
+	1, 4, 2,
+	2, 4, 3,
+	3, 4, 0
+};
+
+
+var idxArray = new byte[indices.Length][];
+for(int i = 0; i < idxArray.Length; i++)
+{
+	idxArray[i] = BitConverter.GetBytes(indices[i]);
+}
+var idxData = NSData.FromArray(idxArray.SelectMany(id => id).ToArray());
+
+//Note that this relies on indices defining triangles
+var element = SCNGeometryElement.FromData(idxData, SCNGeometryPrimitiveType.Triangles, indices.Length / 3, sizeof(int));
+
+//Normals are relative to geometry
+var normals = new [] {
+	new SCNVector3(0, 0, 1),
+	new SCNVector3(0, 0, 1),
+	new SCNVector3(0, 0, 1),
+	new SCNVector3(0, 0, 1),
+	new SCNVector3(0, 0, 1),
+};;
+var normSource = SCNGeometrySource.FromNormals(normals);
+
+//These texture coords will cause the texture to wrap 
+var txCoords = new [] {
+	new CGPoint(-1, -1),
+	new CGPoint(-1, 1),
+	new CGPoint(1, 1),
+	new CGPoint(1, -1)
+};
+
+var txCoordsSource = SCNGeometrySource.FromTextureCoordinates(txCoords);
+
+var geometry = SCNGeometry.Create(new [] { locSource, normSource, txCoordsSource }, new [] { element });
+    ]]></code>
+      </example>
+      <para>
+        <img href="~/SceneKit/_images/SceneKit.CustomGeometry.png" alt="An example of custom geometry." />
+      </para>
+    </remarks>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/SceneKit/Reference/SCNGeometry_Class/index.html">Apple documentation for <c>SCNGeometry</c></related>
+  </Docs>
+</Documentation>

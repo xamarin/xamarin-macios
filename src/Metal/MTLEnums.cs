@@ -18,6 +18,7 @@ using ObjCRuntime;
 
 namespace Metal {
 
+	/// <summary>Argument values for use with <see cref="T:Metal.MTLBlendOperation" />.</summary>
 	[Native]
 	public enum MTLBlendFactor : ulong {
 		Zero = 0,
@@ -45,6 +46,7 @@ namespace Metal {
 		OneMinusSource1Alpha = 18,
 	}
 
+	/// <summary>How the source and destination values are combined.</summary>
 	[Native]
 	public enum MTLBlendOperation : ulong {
 		Add = 0,
@@ -54,6 +56,7 @@ namespace Metal {
 		Max = 4,
 	}
 
+	/// <summary>Permits or restricts writing to specific color channels.</summary>
 	[Native]
 	[Flags]
 	public enum MTLColorWriteMask : ulong {
@@ -65,6 +68,7 @@ namespace Metal {
 		All = 0xf
 	}
 
+	/// <summary>The state of the command-buffer state-machine. Enqueued-&gt;Committed-&gt;Scheduled-&gt;Completed.</summary>
 	[Native]
 	public enum MTLCommandBufferStatus : ulong {
 		NotEnqueued,
@@ -75,6 +79,7 @@ namespace Metal {
 		Error
 	}
 
+	/// <summary>Enumeration of error codes describing why a command buffer has failed.</summary>
 	[Native]
 	[ErrorDomain ("MTLCommandBufferErrorDomain")]
 	public enum MTLCommandBufferError : ulong {
@@ -91,11 +96,13 @@ namespace Metal {
 		StackOverflow = 12,
 	}
 
+	/// <summary>An action performed at the start of a rendering pass.</summary>
 	[Native]
 	public enum MTLLoadAction : ulong {
 		DontCare, Load, Clear
 	}
 
+	/// <summary>The action to be performed at the end of a rendering pass.</summary>
 	[Native]
 	public enum MTLStoreAction : ulong {
 		DontCare, Store, MultisampleResolve,
@@ -110,6 +117,7 @@ namespace Metal {
 		CustomSampleDepthStore,
 	}
 
+	/// <summary>The dimensionality of each texture and how multiple images are arranged.</summary>
 	[Native]
 	public enum MTLTextureType : ulong {
 		k1D = 0,
@@ -129,11 +137,13 @@ namespace Metal {
 		kTextureBuffer = 9,
 	}
 
+	/// <summary>Options for calculating the pixel value returned within a mipmap level.</summary>
 	[Native]
 	public enum MTLSamplerMinMagFilter : ulong {
 		Nearest, Linear
 	}
 
+	/// <summary>Options for calculating the pixel value returned with multiple mipmap levels.</summary>
 	[Native]
 	public enum MTLSamplerMipFilter : ulong {
 		NotMipmapped,
@@ -141,6 +151,7 @@ namespace Metal {
 		Linear
 	}
 
+	/// <summary>The wrapping mode. Used when a fetch falls outside the bounds of a texture.</summary>
 	[Native]
 	public enum MTLSamplerAddressMode : ulong {
 		ClampToEdge = 0,
@@ -156,6 +167,7 @@ namespace Metal {
 		ClampToBorderColor = 5,
 	}
 
+	/// <summary>Enumerates vertex data formats (type and number).</summary>
 	[Native]
 	public enum MTLVertexFormat : ulong {
 		Invalid = 0,
@@ -252,6 +264,7 @@ namespace Metal {
 		FloatRgb9E5 = 55,
 	}
 
+	/// <summary>The format used by pixels, including color, depth, compression technigue, and data type for components.</summary>
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum MTLPixelFormat : ulong {
@@ -553,6 +566,7 @@ namespace Metal {
 		BGR10_XR_sRGB = 555,
 	}
 
+	/// <summary>The type of a Metal function.</summary>
 	[Native]
 	public enum MTLFunctionType : ulong {
 		Vertex = 1,
@@ -574,6 +588,7 @@ namespace Metal {
 		Object = 8,
 	}
 
+	/// <summary>Enumerates errors possible in the creation of an MTLLibrary or MTLFunction object.</summary>
 	[Native]
 	[ErrorDomain ("MTLLibraryErrorDomain")]
 	public enum MTLLibraryError : ulong {
@@ -593,6 +608,7 @@ namespace Metal {
 	}
 #endif
 
+	/// <summary>Holds a comparison test. When the comparison test passes, the incoming fragment is compared to the stored data at the specified location.</summary>
 	[Native]
 	public enum MTLCompareFunction : ulong {
 		Never = 0,
@@ -606,6 +622,7 @@ namespace Metal {
 	}
 
 
+	/// <summary>What to do if a stencil value passes or fails a comparison test.</summary>
 	[Native]
 	public enum MTLStencilOperation : ulong {
 		Keep = 0,
@@ -618,6 +635,7 @@ namespace Metal {
 		DecrementWrap = 7
 	}
 
+	/// <summary>Enumerates the primitive geometry used for drawing commands.</summary>
 	[Native]
 	public enum MTLPrimitiveType : ulong {
 		Point = 0,
@@ -627,11 +645,13 @@ namespace Metal {
 		TriangleStrip = 4
 	}
 
+	/// <summary>The index type for an index buffer.</summary>
 	[Native]
 	public enum MTLIndexType : ulong {
 		UInt16, UInt32
 	}
 
+	/// <summary>Enumerates values that control how and whether to monitor samples that pass depth and stencil tests.</summary>
 	[Native]
 	public enum MTLVisibilityResultMode : ulong {
 		Disabled = 0,
@@ -639,6 +659,7 @@ namespace Metal {
 		Counting = 2,
 	}
 
+	/// <summary>Enumerates modes for culling and which types of primitives are culled.</summary>
 	[Native]
 	public enum MTLCullMode : ulong {
 		None = 0,
@@ -646,16 +667,19 @@ namespace Metal {
 		Back = 2
 	}
 
+	/// <summary>Vertex winding rule for front-facing primitives.</summary>
 	[Native]
 	public enum MTLWinding : ulong {
 		Clockwise = 0, CounterClockwise = 1
 	}
 
+	/// <summary>How to rasterize triangle and triangle-strip primitives.</summary>
 	[Native]
 	public enum MTLTriangleFillMode : ulong {
 		Fill, Lines
 	}
 
+	/// <summary>The purgeable state of the resource.</summary>
 	[Native]
 	public enum MTLPurgeableState : ulong {
 		KeepCurrent = 1,
@@ -664,11 +688,13 @@ namespace Metal {
 		Empty = 4
 	}
 
+	/// <summary>Enumerates what cache mode is used for CPU mapping of a resource.</summary>
 	[Native]
 	public enum MTLCpuCacheMode : ulong {
 		DefaultCache, WriteCombined
 	}
 
+	/// <summary>Enumerates the ways in which a <see cref="T:Metal.IMTLTexture" /> may be used.</summary>
 	[MacCatalyst (13, 1)]
 	[Native]
 	[Flags]
@@ -687,6 +713,7 @@ namespace Metal {
 		ShaderAtomic = 0x20,
 	}
 
+	/// <summary>Holds options used by buffer and texture objects.</summary>
 	[MacCatalyst (13, 1)]
 	[Native]
 	[Flags]
@@ -718,6 +745,7 @@ namespace Metal {
 	}
 
 	// MTLVertexDescriptor.h
+	/// <summary>The frequency at which the vertex shader function should fetch attribute data.</summary>
 	[Native]
 	public enum MTLVertexStepFunction : ulong {
 		Constant, PerVertex, PerInstance,
@@ -729,6 +757,7 @@ namespace Metal {
 		PerPatchControlPoint = 4,
 	}
 
+	/// <summary>The data type of a function argument, as used in the shader language code.</summary>
 	[Native]
 	public enum MTLDataType : ulong {
 
@@ -881,6 +910,7 @@ namespace Metal {
 		BFloat4 = 124,
 	}
 
+	/// <summary>The resource type of an argument of a function.</summary>
 	[Native]
 	public enum MTLArgumentType : ulong {
 		Buffer = 0,
@@ -920,6 +950,7 @@ namespace Metal {
 	}
 
 #if !XAMCORE_5_0
+	/// <summary>Function access restrictions of argument data in the shader code.</summary>
 	[Deprecated (PlatformName.MacOSX, 14, 0)]
 	[Deprecated (PlatformName.iOS, 17, 0)]
 	[Deprecated (PlatformName.TvOS, 17, 0)]
@@ -930,6 +961,7 @@ namespace Metal {
 	}
 #endif
 
+	/// <summary>Options relating to argument information in the creation of a pipeline.</summary>
 	[Native]
 	[Flags]
 	public enum MTLPipelineOption : ulong {
@@ -943,6 +975,7 @@ namespace Metal {
 		FailOnBinaryArchiveMiss = 4,
 	}
 
+	/// <summary>Enumerates the hardware feature sets that are available on a device.</summary>
 	[Native]
 	public enum MTLFeatureSet : ulong {
 		[NoTV, NoMac]
@@ -1047,6 +1080,7 @@ namespace Metal {
 		tvOS_GPUFamily2_v2 = 30005,
 	}
 
+	/// <summary>Enumerates Metal shader programming language versions.</summary>
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum MTLLanguageVersion : ulong {
@@ -1077,6 +1111,7 @@ namespace Metal {
 		v3_1 = (3uL << 16) + 1,
 	}
 
+	/// <summary>Enumerates values that indicate whether to clip or clamp depth values.</summary>
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum MTLDepthClipMode : ulong {
@@ -1084,6 +1119,7 @@ namespace Metal {
 		Clamp = 1
 	}
 
+	/// <summary>Enumerates blitting options.</summary>
 	[MacCatalyst (13, 1)]
 	[Native]
 	[Flags]
@@ -1096,6 +1132,7 @@ namespace Metal {
 		RowLinearPvrtc = 1 << 2
 	}
 
+	/// <summary>Enumerates CPU cache modes for resource mapping.</summary>
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum MTLStorageMode : ulong {
@@ -1111,6 +1148,7 @@ namespace Metal {
 		Memoryless = 3,
 	}
 
+	/// <summary>Enumerates MSAA dept resolve filter operations.</summary>
 	[Native]
 	public enum MTLMultisampleDepthResolveFilter : ulong {
 		Sample0, Min, Max
@@ -1182,6 +1220,7 @@ namespace Metal {
 		Quad = 2
 	}
 
+	/// <summary>Enumerates formats for function attributes.</summary>
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -1294,6 +1333,7 @@ namespace Metal {
 		Mesh = (1uL << 4),
 	}
 
+	/// <summary>Enumerates resource usage patterns.</summary>
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[Native, Flags]
@@ -1303,6 +1343,7 @@ namespace Metal {
 		Sample = 1 << 2,
 	}
 
+	/// <summary>Enumerates buffer mutability descriptions.</summary>
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -1321,6 +1362,7 @@ namespace Metal {
 		Two = 2,
 	}
 
+	/// <summary>Enumerates argument buffer tiers.</summary>
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -1329,6 +1371,7 @@ namespace Metal {
 		Two = 1,
 	}
 
+	/// <summary>Enumerates store action options.</summary>
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[Native, Flags]
