@@ -139,9 +139,20 @@ namespace ObjCRuntime {
 		extern static /* const char* */ IntPtr sel_getName (/* SEL */ IntPtr sel);
 
 		// objc/runtime.h
+		[DllImport (Messaging.LIBOBJC_DYLIB)]
+		extern static /* SEL */ IntPtr sel_registerName (/* const char* */ IntPtr name);
+
+		// objc/runtime.h
 		// Selector.GetHandle is optimized by the AOT compiler, and the current implementation only supports IntPtr, so we can't switch to NativeHandle quite yet (the AOT compiler crashes).
-		[DllImport (Messaging.LIBOBJC_DYLIB, EntryPoint = "sel_registerName")]
-		public extern static /* SEL */ IntPtr GetHandle (/* const char* */ string name);
+		public static IntPtr GetHandle (string name)
+		{
+			var ptr = Marshal.StringToHGlobalAnsi (name);
+			try {
+				return sel_registerName (ptr);
+			} finally {
+				Marshal.FreeHGlobal (ptr);
+			}
+		}
 
 		// objc/objc.h
 		[DllImport (Messaging.LIBOBJC_DYLIB)]

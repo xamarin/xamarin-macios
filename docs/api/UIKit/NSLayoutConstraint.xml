@@ -1,0 +1,34 @@
+<Documentation>
+  <Docs DocId="T:UIKit.NSLayoutConstraint">
+    <summary>A relationship between two layout attributes used in a constraint-based layout.</summary>
+    <remarks>
+      <para>An <see cref="T:UIKit.NSLayoutConstraint" /> specifies the relationship between two layout attributes (<see cref="P:UIKit.NSLayoutConstraint.FirstAttribute" /> and <see cref="P:UIKit.NSLayoutConstraint.SecondAttribute" />, both of which are of type <see cref="T:UIKit.NSLayoutAttribute" />) in a constraint-based layout.</para>
+      <para>The relationship consists of:</para>
+      <list type="bullet">
+        <item>
+          <term>A <see cref="T:UIKit.NSLayoutRelation" /> (e.g., <see cref="F:UIKit.NSLayoutRelation.GreaterThanOrEqual" />)</term>
+        </item>
+        <item>
+          <term>A floating point <see cref="P:UIKit.NSLayoutConstraint.Multiplier" /></term>
+        </item>
+        <item>
+          <term>A single-precision floating point <see cref="P:UIKit.NSLayoutConstraint.Constant" /></term>
+        </item>
+        <item>
+          <term>A floating point <see cref="P:UIKit.NSLayoutConstraint.Priority" />. Constraints with higher priorities are satisfied before constraints with lower priorities.</term>
+        </item>
+      </list>
+      <para>The constraint engine will set the value of the <see cref="P:UIKit.NSLayoutConstraint.FirstAttribute" /> such that it satisfies the constraint <c>FirstAttribute &lt;Relation&gt; &lt;Constant&gt; + &lt;Multiplier&gt; * &lt;SecondAttribute&gt;</c>.  For instance, in the following code from the "Media Notes" sample, <c>tconstraint2</c> is a constraint that specifies that the top of the <c>toolbar</c> is going to be equal to the top of the <c>View</c> plus the value of the <c>toolbarVerticalOffset</c>, while <c>tconstraint1</c> specifies that the width of the <c>toolbar</c> will be equal to the width of the <c>View</c>. Both of these constraints have a <see cref="P:UIKit.NSLayoutConstraint.Priority" /> of <c>1.0</c>.</para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+var tconstraint2 = NSLayoutConstraint.Create (toolbar, NSLayoutAttribute.Top, NSLayoutRelation.Equal,
+                                                View, NSLayoutAttribute.Top, 1.0f, toolbarVerticalOffset);
+toolbarTopConstraint = tconstraint2;
+var tconstraint1 = NSLayoutConstraint.Create (toolbar, NSLayoutAttribute.Width, NSLayoutRelation.Equal,
+                                                View, NSLayoutAttribute.Width, 1.0f, 0.0f);
+]]></code>
+      </example>
+    </remarks>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/AppKit/Reference/NSLayoutConstraint_Class/index.html">Apple documentation for <c>NSLayoutConstraint</c></related>
+  </Docs>
+</Documentation>

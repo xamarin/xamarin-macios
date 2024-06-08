@@ -10,6 +10,7 @@ using ObjCRuntime;
 
 namespace CoreFoundation {
 
+	/// <summary>A class that allows for explicit allocation and de-allocation of memory.</summary>
 	[Partial]
 	interface CFAllocator {
 
@@ -54,6 +55,8 @@ namespace CoreFoundation {
 		IntPtr FalseHandle { get; }
 	}
 
+	/// <summary>Main loop implementation for Cocoa and CocoaTouch applications.</summary>
+	///     <remarks>Run loops can be executed recursively.</remarks>
 	[Partial]
 	interface CFRunLoop {
 
@@ -72,6 +75,7 @@ namespace CoreFoundation {
 	}
 
 #if !WATCH
+	/// <summary>Provides the necessary methods needed for accessing the system's global proxy configuration settings and resolving a list of proxies to use for connecting to a URL.</summary>
 	[Partial]
 	interface CFNetwork {
 

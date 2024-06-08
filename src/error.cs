@@ -96,6 +96,11 @@ public static class ErrorHelper {
 		return new ProductException (code, true, args);
 	}
 
+	public static ProductException CreateWarning (int code, params object [] args)
+	{
+		return new ProductException (code, false, args);
+	}
+
 	public static void Warning (int code)
 	{
 		Show (new ProductException (code, false));

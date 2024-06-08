@@ -1,0 +1,30 @@
+<Documentation>
+  <Docs DocId="T:UIKit.NSTextStorage">
+    <summary>A subclass of <see cref="T:Foundation.NSMutableAttributedString" /> that supports Core Text layout management.</summary>
+    <remarks>
+      <para>iOS 7 introduced "Text Kit," a broad set of APIs and modifications of existing classes, built on <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=Core%20Text&amp;scope=Xamarin" title="N:CoreText">N:CoreText</a></format>, that greatly expands the typographical flexibility of iOS.</para>
+      <para> 
+	An <see cref="T:UIKit.NSTextStorage" /> object holds
+	the text that is to be displayed. As with <see cref="T:Foundation.NSMutableAttributedString" />,
+	application developers can manipulate text styles using <see cref="M:Foundation.NSMutableAttributedString.AddAttribute(Foundation.NSString,Foundation.NSObject,Foundation.NSRange)" /> or <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=Foundation%20NSMutable%20Attributed%20String%20Add%20Attributes&amp;scope=Xamarin" title="M:Foundation.NSMutableAttributedString.AddAttributes*">M:Foundation.NSMutableAttributedString.AddAttributes*</a></format>. The key addition to <see cref="T:UIKit.NSTextStorage" /> is that it maintains
+	references to one or more <see cref="T:UIKit.NSLayoutManager" />s (<see cref="P:UIKit.NSTextStorage.LayoutManagers" />) ,
+	which are responsible for converting text characters into
+	glyphs and laying them out in accordance with the <see cref="T:UIKit.NSLayoutManager" />s' associated <see cref="T:UIKit.UITextView" /> and <see cref="T:UIKit.NSTextContainer" /> objects.
+
+      </para>
+      <para>
+	If you subclass NSTextStorage, you must override four methods.  Two from NSAttributedString (<see cref="P:Foundation.NSAttributedString.LowLevelValue" /> and <see cref="M:Foundation.NSAttributedString.LowLevelGetAttributes(System.nint,Foundation.NSRange@)" />) and two from NSMutableAttributedString (<see cref="M:Foundation.NSMutableAttributedString.LowLevelSetAttributes(System.IntPtr,Foundation.NSRange)" /> and <see cref="M:Foundation.NSMutableAttributedString.Replace(Foundation.NSRange,System.String)" />). 
+      </para>
+      <para>
+	The reason why you must override the low-level methods is
+	because NSTextStorage is a very chatty interface that likes to
+	call those methods up to thousands of times for each character
+	that the user enters.  So it important to use the low-level
+	interface.  You can review some of Xamarin's samples to see
+	how to implement those if you have questions on how to do this.
+
+      </para>
+    </remarks>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/NSTextStorage_Class_TextKit/index.html">Apple documentation for <c>NSTextStorage</c></related>
+  </Docs>
+</Documentation>

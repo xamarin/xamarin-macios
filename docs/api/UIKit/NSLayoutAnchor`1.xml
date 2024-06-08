@@ -1,0 +1,30 @@
+<Documentation>
+  <Docs DocId="T:UIKit.NSLayoutAnchor`1">
+    <typeparam name="AnchorType">Whether the generating anchor is an <see cref="T:UIKit.NSLayoutXAxisAnchor" />, an <see cref="T:UIKit.NSLayoutYAxisAnchor" />, or an <see cref="T:UIKit.NSLayoutDimension" />.</typeparam>
+    <summary>Generates <see cref="T:UIKit.NSLayoutConstraint" /> objects based on the value of the <see cref="T:UIKit.NSLayoutConstraint" /> associated with <c>this</c>.</summary>
+    <remarks>
+      <para>The <see cref="T:UIKit.NSLayoutAnchor`1" /> class, introduced in iOS 9, allows layout constraints to be specified in code, in a fluent manner. For example:</para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+blueView = new ContentView(UIColor.Blue);
+view.AddSubview(blueView);
+
+blueView.TranslatesAutoresizingMaskIntoConstraints = false;
+var blueConstraints = new []
+{ 
+    blueView.LeadingAnchor.ConstraintEqualTo(greenView.LeadingAnchor),
+    blueView.TrailingAnchor.ConstraintEqualTo(greenView.TrailingAnchor),
+    blueView.TopAnchor.ConstraintEqualTo(greenView.BottomAnchor, 10.0f),
+    blueView.HeightAnchor.ConstraintEqualTo(greenView.HeightAnchor),
+    blueView.WidthAnchor.ConstraintEqualTo(greenView.WidthAnchor)
+};
+
+NSLayoutConstraint.ActivateConstraints(blueConstraints);
+
+    ]]></code>
+      </example>
+      <para>In this example, the newly-created <c>blueView</c><see cref="T:UIKit.UIView" /> has its height, width, leading, and trailing anchors defined as equal to that of a previously-defined <c>greenView</c> while its <see cref="P:UIKit.UIView.TopAnchor" /> is set to be 10 logical pixels below the <c>greenView</c>'s <see cref="P:UIKit.UIView.BottomAnchor" />.</para>
+    </remarks>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/AppKit/Reference/NSLayoutAnchor_ClassReference/index.html">Apple documentation for <c>NSLayoutAnchor</c></related>
+  </Docs>
+</Documentation>

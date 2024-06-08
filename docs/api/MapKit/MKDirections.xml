@@ -1,0 +1,46 @@
+<Documentation>
+  <Docs DocId="T:MapKit.MKDirections">
+    <summary>An Apple-provided route to a destination.</summary>
+    <remarks>
+      <para>Application developers should be aware that sending too many routing requests from the same device may lead to a throttling error (see <see cref="F:MapKit.MKErrorCode.LoadingThrottled" />).</para>
+      <para>To request routing, application developers must set the <c>MKDirectionsApplicationSupportedModes</c> key in the application's <c>info.plist</c> file. The following example shows an automobile routing request:</para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+var gg = new CLLocationCoordinate2D(37.8197, -122.4786);
+var sfo = new CLLocationCoordinate2D(37.6189, -122.3750);
+var ggAnnotation = new MKPointAnnotation() { Title = "Golden Gate Bridge", Coordinate = gg };
+var sfoAnnotation = new MKPointAnnotation() { Title = "SFO", Coordinate = sfo };
+
+mapView.ShowAnnotations(new MKPointAnnotation[] { ggAnnotation, sfoAnnotation }, false);
+
+var emptyDict = new NSDictionary();
+var req = new MKDirectionsRequest() {
+	Source = new MKMapItem(new MKPlacemark(gg, emptyDict)),
+	Destination = new MKMapItem(new MKPlacemark(sfo, emptyDict)),
+	TransportType = MKDirectionsTransportType.Automobile
+};
+
+var dir = new MKDirections(req);
+dir.CalculateDirections((response, error) => { 
+	if(error == null){
+		var route = response.Routes[0];
+		var rteLine = new MKPolylineRenderer(route.Polyline) {
+			LineWidth = 5.0f,
+			StrokeColor = UIColor.Purple
+		};
+
+		mapView.GetRendererForOverlay = (mv, ol) => rteLine;
+		mapView.AddOverlay(route.Polyline, MKOverlayLevel.AboveRoads);
+	}else{
+		Console.WriteLine(error);
+	}
+});
+]]></code>
+      </example>
+      <para>
+        <img href="~/MapKit/_images/MKDirections.png" alt="Screenshot showing map routing" />
+      </para>
+    </remarks>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/MapKit/Reference/MKDirections_class/index.html">Apple documentation for <c>MKDirections</c></related>
+  </Docs>
+</Documentation>

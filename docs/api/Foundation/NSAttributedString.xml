@@ -1,0 +1,134 @@
+<Documentation>
+  <Docs DocId="T:Foundation.NSAttributedString">
+    <summary>Strings that can be annotated with a set of attributes.</summary>
+    <remarks>
+      <para>
+	The NSAttributedString type represents a string that has a
+	series of attributes applied uniformly.  
+      </para>
+      <para>
+        <img href="~/Foundation/_images/NSAttributedString.png" alt="Diagram showing an attributed string." />
+      </para>
+      <para> The companion <see cref="T:Foundation.NSMutableAttributedString" /> type
+	can be used to create attributed strings that have overlapping
+	attributes and whose contents can be modified after creation.
+      </para>
+      <para> 
+	These types typically are used to attach information to
+	elements of the string that dictate the font and colors to use
+	as well as rendering attributes like kerning or how to render
+	ligatures on a specific run of code.
+      </para>
+      <para> These classes do not dictate the meaning or behavior of
+	the attributes on a string, they merely keep track of the
+	attributes.  The actual meaning of these attributes is
+	interpreted by the consumer of these objects.   
+      </para>
+      <para> 
+	NSAttributedStrings are created with a string and a set
+	of attributes.  The default constructor takes a string and an
+	NSDictionary object where the keys represent the attributes
+	and the values on each element represent the value of that
+	attribute. 
+      </para>
+      <para>To simplify many common scenarios, MonoTouch
+	provides constructors with strong-types to easily create
+	attributed strings for use with CoreText or UIKit.   These
+	constructors provide type-safety and eliminate programming
+	errors caused by accidentally creating attributes that are not
+	recognized by a backend. 
+      </para>
+      <para>
+	To create NSAttributedStrings that you can use with CoreText's
+	rendering, you create an instance of the <see cref="T:CoreText.CTStringAttributes" /> class, set its
+	properties to the attributes that you desire, and then invoke
+	the NSAttributedString constructor with it.   
+      </para>
+      <para>
+	To create NSAttributedStrings that you can use with UIKit's
+	rendering, you create an instance of the <see cref="T:UIKit.UIStringAttributes" /> class, set its
+	properties to the attributes that you desire, and then invoke
+	the NSAttributedString constructor with it.   
+      </para>
+      <para>
+	The examples below show how to use the C# object initializer
+	syntax to initialize the CTStringAttributes and the
+	UIStringAttributes to setup your attributes.   You can later
+	use these attributes multiple times with different attributed
+	strings: 
+      </para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+// 
+// Using NSAttributedString with CoreText
+//
+var attributedString = new NSAttributedString ("Hello, world",
+       new CTStringAttributes () {
+              ForegroundColorFromContext =  true,
+              Font = new CTFont ("Arial", 24)
+       });
+
+// Pass the NSAttributedString to a CTLine and draw the CTLine.
+using (var textLine = new CTLine (attributedString)) {
+       textLine.Draw (gctx);
+}
+
+// 
+// Using NSAttributedString with UIKit
+//
+var myText = new NSAttributedString ("Hello, world",
+       new UIStringAttributes () {
+              ForegroundColor =  UIColor.Red,
+	      KerningAdjustment = 3
+       });
+label.AttributedText = myText;
+	]]></code>
+      </example>
+      <para>
+	While both <see cref="T:CoreText.CTStringAttributes" /> and <see cref="T:UIKit.UIStringAttributes" /> are useful to
+	create attributes that can later be used with attributed
+	strings, it is also possible to use the <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=C:Foundation.NSAttributedString(string,UIKit.UIFont,UIKit.UIColor,UIKit.UIColor,UIKit.UIColor,UIKit.NSParagraphStyle,Foundation.NSLigatureType,float,Foundation.NSUnderlineStyle,UIKit.NSShadow,float,Foundation.NSUnderlineStyle&amp;scope=Xamarin" title="C:Foundation.NSAttributedString(string,UIKit.UIFont,UIKit.UIColor,UIKit.UIColor,UIKit.UIColor,UIKit.NSParagraphStyle,Foundation.NSLigatureType,float,Foundation.NSUnderlineStyle,UIKit.NSShadow,float,Foundation.NSUnderlineStyle">C:Foundation.NSAttributedString(string,UIKit.UIFont,UIKit.UIColor,UIKit.UIColor,UIKit.UIColor,UIKit.NSParagraphStyle,Foundation.NSLigatureType,float,Foundation.NSUnderlineStyle,UIKit.NSShadow,float,Foundation.NSUnderlineStyle</a></format> constructor
+	with C# named parameters for quickly creating attributed
+	strings inline.
+      </para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+//
+// This example shows how to create an NSAttributedString for
+// use with UIKit without creating the attributes separately
+//
+var text = new NSAttributedString (
+    "Hello, World",
+    font: UIFont.FromName ("HoeflerText-Regular", 24.0f),
+    foregroundColor: UIColor.Red,
+    strokeWidth: 4
+);
+	]]></code>
+      </example>
+      <para>
+	It is also possible to create NSAttributedStrings with the
+	NSDictionary API, although that does not offer any type safety
+	nor prevents common errors.   To use it, you typically use
+	the various NSString properties that end in "AttributedName"
+	that are part of this class.
+      </para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+//
+// This example shows how to create an NSAttributedString for
+// use with UIKit using NSDictionaries
+//
+var dict = new NSMutableDictionary () {
+    { NSAttributedString.FontAttributeName, UIFont.FromName ("HoeflerText-Regular", 24.0f), },
+    { NSAttributedString.ForegroundColorAttributeName, UIColor.Black }
+};
+
+var text = new NSAttributedString (
+	"Hello, World", dict);
+	]]></code>
+      </example>
+    </remarks>
+    
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Cocoa/Reference/Foundation/Classes/NSAttributedString_Class/index.html">Apple documentation for <c>NSAttributedString</c></related>
+  </Docs>
+</Documentation>

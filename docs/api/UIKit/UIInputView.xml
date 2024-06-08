@@ -1,0 +1,21 @@
+<Documentation>
+  <Docs DocId="T:UIKit.UIInputView">
+    <summary>A <see cref="T:UIKit.UIView" /> that matches the appearance of the system keyboard.</summary>
+    <remarks>
+      <para>Application developers who wish to customize the appearance of the system keyboard can inherit from this class and add appropriate subviews.</para>
+      <para>To use a custom <see cref="T:UIKit.UIInputView" />, application developers should assign the custom class to the <see cref="P:UIKit.UITextView.InputView" /> property:</para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+var textField = new UITextField(new RectangleF(20, 40, 300, 41));
+var inputView = new MyCustomInputView(new RectangleF(0, 0, UIScreen.MainScreen.Bounds.Width, 80), UIInputViewStyle.Keyboard);
+textField.InputView = inputView;
+          ]]></code>
+      </example>
+      <para>
+        <img href="~/UIKit/_images/UITextView.InputView.png" alt="Ilustration of a UIView with an input view" />
+      </para>
+      <para>Notifications relating to keyboard display (<format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=E:UIKit.UIKeyboard.Notifications.ObserveWillShow&amp;scope=Xamarin" title="E:UIKit.UIKeyboard.Notifications.ObserveWillShow">E:UIKit.UIKeyboard.Notifications.ObserveWillShow</a></format>, <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=E:UIKit.UIKeyboard.Notifications.ObserveDidShow&amp;scope=Xamarin" title="E:UIKit.UIKeyboard.Notifications.ObserveDidShow">E:UIKit.UIKeyboard.Notifications.ObserveDidShow</a></format>, <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=E:UIKit.UIKeyboard.Notifications.ObserveWillHide&amp;scope=Xamarin" title="E:UIKit.UIKeyboard.Notifications.ObserveWillHide">E:UIKit.UIKeyboard.Notifications.ObserveWillHide</a></format>, <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=E:UIKit.UIKeyboard.Notifications.ObserveDidHide&amp;scope=Xamarin" title="E:UIKit.UIKeyboard.Notifications.ObserveDidHide">E:UIKit.UIKeyboard.Notifications.ObserveDidHide</a></format> ) will continue to be sent for custom input views. The <c>Frame</c> value in those methods accounts for both the <see cref="T:UIKit.UIInputView" /> and the <see cref="P:UIKit.UITextField.InputAccessoryView" /> (if one is assigned).</para>
+    </remarks>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIInputView_class/index.html">Apple documentation for <c>UIInputView</c></related>
+  </Docs>
+</Documentation>

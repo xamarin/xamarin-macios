@@ -15,6 +15,7 @@ namespace ImageIO {
 
 	// untyped enum -> CGImageMetadata.h
 	// note: not used in any API
+	/// <summary>Enumeration of errors relating to metadata manipulation.</summary>
 	[ErrorDomain ("kCFErrorDomainCGImageMetadata")]
 	public enum CGImageMetadataErrors {
 		Unknown = 0,
@@ -25,6 +26,7 @@ namespace ImageIO {
 	}
 
 	// untyped enum -> CGImageMetadata.h
+	/// <summary>Enumerates the type-forms of image metadata.</summary>
 	public enum CGImageMetadataType {
 		Invalid = -1,
 		Default = 0,
@@ -36,6 +38,7 @@ namespace ImageIO {
 		Structure = 6
 	}
 
+	/// <summary>Enumerates orientation values.</summary>
 	public enum CGImagePropertyOrientation {
 		Up = 1,
 		UpMirrored,
@@ -49,6 +52,7 @@ namespace ImageIO {
 
 	// untyped enum / #defines
 	// used with kCGImagePropertyPNGCompressionFilter
+	/// <summary>Enumerates the style of a PNG compression filter.</summary>
 	[MacCatalyst (13, 1)]
 	[Flags]
 	public enum CGImagePropertyPngFilters {

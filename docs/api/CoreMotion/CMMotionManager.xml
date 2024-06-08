@@ -1,0 +1,35 @@
+<Documentation>
+  <Docs DocId="T:CoreMotion.CMMotionManager">
+    <summary>Core class that provides access to the motion services in iOS.</summary>
+    <remarks>
+      <para>Core Motion was introduced in iOS 7 and is not available on all devices (the iPhone 5S was the first phone to have the necessary coprocessor and the iPad Air 2 was the first tablet). Developers can check if Core Motion is available with <see cref="P:CoreMotion.CMMotionManager.DeviceMotionAvailable" />.</para>
+      <para>Applications that wish to access Core Motion must have an <c>entitlements.plist</c> file.</para>
+      <para>Users must explicitly grant access to Core Motion via a standard privacy dialog. Unlike most functions that require user permissions, there is not a corresponding API to check status. However, applications can perform a query and, if authorization is not available, will receive an error of type <see cref="F:CoreMotion.CMError.MotionActivityNotAuthorized" />. This technique is shown in the following example:</para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+var stepCounter = new CMStepCounter ();
+stepCounter.QueryStepCount(
+	NSDate.FromTimeIntervalSinceNow(-60 * 60 * 24),
+	NSDate.Now,
+	NSOperationQueue.MainQueue, ((steps, error) => {
+		if(error != null && error.Code == (int) CMError.MotionActivityNotAuthorized)
+		{
+			motionStatus = "Not Authorized";
+			UpdateStatus();
+		}
+		else
+		{
+			motionStatus = "Available";
+			var stepMsg = String.Format("You have taken {0} steps in the past 24 hours", steps);
+			InvokeOnMainThread(() => {
+				stepsMessage.Text = stepMsg;
+				UpdateStatus();
+			});
+		}
+	}));
+          ]]></code>
+      </example>
+    </remarks>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/CoreMotion/Reference/CMMotionManager_Class/index.html">Apple documentation for <c>CMMotionManager</c></related>
+  </Docs>
+</Documentation>

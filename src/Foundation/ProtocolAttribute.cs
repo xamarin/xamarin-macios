@@ -49,6 +49,15 @@ namespace Foundation {
 				informal_until = value;
 			}
 		}
+
+#if !XAMCORE_5_0
+		/// <summary>
+		///	  <para>This property indicates whether the binding generator will generate backwards-compatible code for the protocol in question.</para>
+		///	  <para>In particular, if this property is true, then the binding generator will generate extension methods for optional members and <see cref="ProtocolMemberAttribute" /> attributes on the protocol interface for all protocol members.</para>
+		/// </summary>
+		/// <remarks>This property is by default true.</remarks>
+		public bool BackwardsCompatibleCodeGeneration { get; set; } = true;
+#endif
 	}
 
 	[AttributeUsage (AttributeTargets.Interface, AllowMultiple = true)]
@@ -71,5 +80,18 @@ namespace Foundation {
 		public string? GetterSelector { get; set; }
 		public string? SetterSelector { get; set; }
 		public ArgumentSemantic ArgumentSemantic { get; set; }
+	}
+
+	/// <summary>This attribute is added by the binding generator to members that bind required protocol members.</summary>
+	[AttributeUsage (AttributeTargets.Method | AttributeTargets.Property, AllowMultiple = false)]
+	public sealed class RequiredMemberAttribute : Attribute {
+	}
+
+	// There's already an OptionalAttribute in System.Runtime.InteropServices, so I went with
+	// "OptionalMemberAttribute" - and in that case it prefered "RequiredMemberAttribute" instead
+	// of "RequiredAttribute" just to keep the symmetry.
+	/// <summary>This attribute is added by the binding generator to members that bind optional protocol members.</summary>
+	[AttributeUsage (AttributeTargets.Method | AttributeTargets.Property, AllowMultiple = false)]
+	public sealed class OptionalMemberAttribute : Attribute {
 	}
 }

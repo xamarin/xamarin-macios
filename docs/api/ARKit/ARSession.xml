@@ -1,0 +1,16 @@
+<Documentation>
+  <Docs DocId="T:ARKit.ARSession">
+    <summary>Manages the camera capture, motion processing, and image analysis necessary to create a mixed-reality experience.</summary>
+    <remarks>
+      <para>An <see cref="T:ARKit.ARSession" /> object represents the system resources required for a mixed-reality experience. The <see cref="M:ARKit.ARSession.Run(ARKit.ARConfiguration,ARKit.ARSessionRunOptions)" /> method must be passed an <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=ARKit%20ARSession%20Configuration&amp;scope=Xamarin" title="T:ARKit.ARSessionConfiguration">T:ARKit.ARSessionConfiguration</a></format> object that controls specific ebhaviors. </para>
+      <para>Developers who use the <see cref="T:ARKit.ARSCNView" /> to present their AR imagery do not need to instantiate their own <see cref="T:ARKit.ARSession" /> object but instead should call <see cref="M:ARKit.ARSession.Run(ARKit.ARConfiguration,ARKit.ARSessionRunOptions)" /> on the <see cref="P:ARKit.ARSCNView.Session" /> property. For example:</para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+var arView = new ARSCNView();
+var arConfig = new ARWorldTrackingSessionConfiguration { PlaneDetection = ARPlaneDetection.Horizontal };
+arView.Session.Run (arConfig);
+    ]]></code>
+      </example>
+    </remarks>
+  </Docs>
+</Documentation>

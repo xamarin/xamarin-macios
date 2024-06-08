@@ -932,7 +932,7 @@ monotouch_connect_wifi (NSMutableArray *ips)
 		return;
 	}
 	
-	sockets = (int *) malloc (sizeof (int) * ip_count);
+	sockets = (int *) calloc (sizeof (int), ip_count);
 	for (i = 0; i < ip_count; i++)
 		sockets[i] = -2;
 	
@@ -1457,7 +1457,7 @@ int monotouch_debug_connect (NSMutableArray *ips, int debug_port, int output_por
 		return 2;
 	}
 	
-	sockets = (int *) malloc (sizeof (int) * ip_count);
+	sockets = (int *) calloc (sizeof (int), ip_count);
 	for (i = 0; i < ip_count; i++)
 		sockets[i] = -1;
 	

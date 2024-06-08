@@ -1,0 +1,7 @@
+<Documentation>
+  <Docs DocId="T:UIKit.NSLayoutFormatOptions">
+    <summary>An enumeration of values used by <see cref="M:UIKit.NSLayoutConstraint.FromVisualFormat(System.String,UIKit.NSLayoutFormatOptions,Foundation.NSDictionary,Foundation.NSDictionary)" /></summary>
+    <remarks>The method <see cref="M:UIKit.NSLayoutConstraint.FromVisualFormat(System.String,UIKit.NSLayoutFormatOptions,Foundation.NSDictionary,Foundation.NSDictionary)" /> takes as a parameter a <see cref="T:UIKit.NSLayoutFormatOptions" /> value. This specifies which alignment instruction (e.g., <see cref="F:UIKit.NSLayoutFormatOptions.AlignAllLeft" />) is to be used with the visual format string. For more on the visual format syntax, refer to the Apple document "Visual Format Language" (<format type="text/html"><a href="https://developer.apple.com/library/mac/#documentation/UserExperience/Conceptual/AutolayoutPG/Articles/formatLanguage.html">https://developer.apple.com/library/mac/#documentation/UserExperience/Conceptual/AutolayoutPG/Articles/formatLanguage.html</a></format>). </remarks>
+    <!-- TODO: No MonoTouch samples use FromVisualFormat -->
+  </Docs>
+</Documentation>
