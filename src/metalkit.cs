@@ -21,6 +21,7 @@ namespace MetalKit {
 	interface NSDisplayGamut { }
 #endif
 
+	/// <summary>Static class that contains MetalKit constants related to MetalKit Model errors.</summary>
 	[MacCatalyst (13, 1)]
 	[Static]
 	interface MTKModel {
@@ -32,6 +33,9 @@ namespace MetalKit {
 		NSString ErrorKey { get; }
 	}
 
+	/// <summary>A <see cref="T:UIKit.UIView" /> that is Metal-aware.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/MetalKit/Reference/MTKView_ClassReference/index.html">Apple documentation for <c>MTKView</c></related>
 	[MacCatalyst (13, 1)]
 #if MONOMAC
 	[BaseType (typeof (AppKit.NSView))]
@@ -145,8 +149,17 @@ namespace MetalKit {
 		MTLStorageMode DepthStencilStorageMode { get; set; }
 	}
 
+	/// <summary>Interface representing the required methods (if any) of the protocol <see cref="T:MetalKit.MTKViewDelegate" />.</summary>
+	///     <remarks>
+	///       <para>This interface contains the required methods (if any) from the protocol defined by <see cref="T:MetalKit.MTKViewDelegate" />.</para>
+	///       <para>If developers create classes that implement this interface, the implementation methods will automatically be exported to Objective-C with the matching signature from the method defined in the <see cref="T:MetalKit.MTKViewDelegate" /> protocol.</para>
+	///       <para>Optional methods (if any) are provided by the <see cref="T:MetalKit.MTKViewDelegate_Extensions" /> class as extension methods to the interface, allowing developers to invoke any optional methods on the protocol.</para>
+	///     </remarks>
 	interface IMTKViewDelegate { }
 
+	/// <summary>Delegate object for <see cref="T:MetalKit.MTKView" /> objects. Provides methods called when the view is drawn and laid out.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/MetalKit/Reference/MTKViewDelegate_ProtocolReference/index.html">Apple documentation for <c>MTKViewDelegate</c></related>
 	[MacCatalyst (13, 1)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
@@ -160,6 +173,7 @@ namespace MetalKit {
 		void Draw (MTKView view);
 	}
 
+	/// <summary>Key and domain strings for working with texture loading errors.</summary>
 	[MacCatalyst (13, 1)]
 	[Static]
 	interface MTKTextureLoaderError {
@@ -225,6 +239,7 @@ namespace MetalKit {
 		FlippedVertically,
 	}
 
+	/// <summary>Contains a dictionary of texture loading options and exposes them as discoverably named properties.</summary>
 	[StrongDictionary ("MTKTextureLoaderKeys")]
 	interface MTKTextureLoaderOptions {
 		bool AllocateMipmaps { get; set; }
@@ -238,12 +253,16 @@ namespace MetalKit {
 		bool LoadAsArray { get; set; }
 	}
 
+	/// <summary>Completion handler for textures loaded with <see cref="T:MetalKit.MTKTextureLoader" />.</summary>
 	[MacCatalyst (13, 1)]
 	delegate void MTKTextureLoaderCallback ([NullAllowed] IMTLTexture texture, [NullAllowed] NSError error);
 
 	[MacCatalyst (13, 1)]
 	delegate void MTKTextureLoaderArrayCallback (IMTLTexture [] textures, [NullAllowed] NSError error);
 
+	/// <summary>Creates <see cref="T:Metal.IMTLTexture" /> objects from common image formats.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/MetalKit/Reference/MTKTextureLoader_ClassReference/index.html">Apple documentation for <c>MTKTextureLoader</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -410,6 +429,9 @@ namespace MetalKit {
 		IMTLTexture FromName (string name, nfloat scaleFactor, NSDisplayGamut displayGamut, [NullAllowed] NSBundle bundle, [NullAllowed] MTKTextureLoaderOptions options, [NullAllowed] out NSError error);
 	}
 
+	/// <summary>An <see cref="T:ModelIO.IMDLMeshBufferAllocator" /> that allocates a <see cref="T:MetalKit.MTKMeshBuffer" /> suitable for use with <see cref="T:ModelIO.MDLAsset" /> objects.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/MetalKit/Reference/MTKMeshBufferAllocator_ClassReference/index.html">Apple documentation for <c>MTKMeshBufferAllocator</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // init is NS_UNAVAILABLE
@@ -421,6 +443,9 @@ namespace MetalKit {
 		IMTLDevice Device { get; }
 	}
 
+	/// <summary>A Metal buffer for holding vertex and index data for ModelIO meshes and submeshes.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/MetalKit/Reference/MTKMeshBuffer_ClassReference/index.html">Apple documentation for <c>MTKMeshBuffer</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -432,6 +457,9 @@ namespace MetalKit {
 		nuint Offset { get; }
 	}
 
+	/// <summary>A segment of mesh data that can be rendered in a single draw call. Submesh vertex data is held in the parent <see cref="T:MetalKit.MTKMesh" />.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/MetalKit/Reference/MTKSubmesh_ClassReference/index.html">Apple documentation for <c>MTKSubmesh</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -455,6 +483,9 @@ namespace MetalKit {
 		string Name { get; set; }
 	}
 
+	/// <summary>Holds vertex data for rendering with Metal.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/MetalKit/Reference/MTKMesh_ClassReference/index.html">Apple documentation for <c>MTKMesh</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // init NS_UNAVAILABLE

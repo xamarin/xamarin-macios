@@ -1,0 +1,37 @@
+<Documentation>
+  <Docs DocId="T:MapKit.MKOverlay">
+    <summary>Describes a map annotation that combines a location and a geometric shape.</summary>
+    <remarks>
+      <para>
+        <see cref="T:MapKit.MKOverlay" />s allow the application developer to layer graphics above an <see cref="T:MapKit.MKMapView" />. The <see cref="T:MapKit.MKOverlay" /> will automatically position, zoom, and redirect itself to the underlying <see cref="T:MapKit.MKMapView" />.</para>
+      <para>iOS provides several standard overlays:</para>
+      <list type="table">
+        <listheader>
+          <term>Class</term>
+          <description>Description</description>
+        </listheader>
+        <item>
+          <term>
+            <see cref="T:MapKit.MKCircle" />
+          </term>
+          <description>A circular region</description>
+        </item>
+        <item>
+          <term>
+            <see cref="T:MapKit.MKPolygon" />
+          </term>
+          <description>A closed polygonal area.</description>
+        </item>
+        <item>
+          <term>
+            <see cref="T:MapKit.MKPolyline" />
+          </term>
+          <description>An area defined by points in which the first and final points are not automatically joined.</description>
+        </item>
+      </list>
+    </remarks>
+    <related type="article" href="https://docs.xamarin.com/guides/ios/platform_features/ios_maps">iOS Maps</related>
+    <related type="recipe" href="https://docs.xamarin.com/recipes/ios/content_controls/map_view/add_an_overlay_to_a_map">Add an Overlay to a Map</related>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/MapKit/Reference/MKOverlay_protocol/index.html">Apple documentation for <c>MKOverlay</c></related>
+  </Docs>
+</Documentation>

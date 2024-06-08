@@ -1,0 +1,34 @@
+<Documentation>
+  <Docs DocId="T:GameKit.GKMatchRequest">
+    <summary>Contains the parameters for a new match.</summary>
+    <remarks>
+      <para>After instantiating a <see cref="T:GameKit.GKMatchRequest" />, application developers should pass it to the following classes, depending on the type of match desired:</para>
+      <list type="table">
+        <listheader>
+          <term />
+          <description>Real-Time Match</description>
+          <description>Turn-based Match</description>
+        </listheader>
+        <item>
+          <term>Using standard matchmaking interface</term>
+          <description>
+            <see cref="T:GameKit.GKMatchmakerViewController" />
+          </description>
+          <description>
+            <see cref="T:GameKit.GKTurnBasedMatch" />
+          </description>
+        </item>
+        <item>
+          <term>Using application-provided UI</term>
+          <description>
+            <see cref="T:GameKit.GKMatchmaker" />
+          </description>
+          <description>
+            <see cref="T:GameKit.GKTurnBasedMatchmakerViewController" />
+          </description>
+        </item>
+      </list>
+    </remarks>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/GameKit/Reference/GKMatchRequest_Ref/index.html">Apple documentation for <c>GKMatchRequest</c></related>
+  </Docs>
+</Documentation>

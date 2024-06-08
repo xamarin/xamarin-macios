@@ -1,0 +1,67 @@
+<Documentation>
+  <Docs DocId="T:UIKit.UINavigationBar">
+    <summary>A <see cref="T:UIKit.UIView" /> that displays the standard hierarchical navigation metaphor for iOS.</summary>
+    <remarks>
+      <para>
+        The Xamarin API supports two styles of event notification: the Objective-C style that uses a delegate class or the C# style using event notifications.  
+      </para>
+      <para>
+        The C# style allows the user to add or remove event handlers at runtime by assigning to the events of properties of this class.    Event handlers can be anyone of a method, an anonymous methods or a lambda expression.  Using the C# style events or properties will override any manual settings to the Objective-C Delegate or WeakDelegate settings.
+      </para>
+      <para>The Objective-C style requires the user to create a new class derived from <see cref="T:UIKit.UINavigationBarDelegate" /> class and assign it to the <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=UIKit%20Delegate&amp;scope=Xamarin" title="P:UIKit.Delegate">P:UIKit.Delegate</a></format> property.   Alternatively, for low-level control, by creating a class derived from <see cref="T:Foundation.NSObject" /> which has every entry point properly decorated with an [Export] attribute.   The instance of this object can then be assigned to the <see cref="P:UIKit.UINavigationBar.WeakDelegate" /> property.   
+      </para>
+      <format type="text/html">
+        <h2>Structure</h2>
+      </format>
+      <para>The <see cref="T:UIKit.UINavigationBar" /> maintains a stack of <see cref="T:UIKit.UINavigationItem" />s. The <see cref="T:UIKit.UINavigationBar" /> displays the <see cref="P:UIKit.UINavigationBar.TopItem" /><see cref="T:UIKit.UINavigationItem" />. You can push and pop <see cref="T:UIKit.UINavigationItem" />s using <see cref="M:UIKit.UINavigationBar.PushNavigationItem(UIKit.UINavigationItem,System.Boolean)" /> and <see cref="M:UIKit.UINavigationBar.PopNavigationItem(System.Boolean)" />.</para>
+      <para>The <see cref="T:UIKit.UINavigationBar" /> is most commonly seen in conjunction with a <see cref="T:UIKit.UINavigationController" />, which manages the <see cref="T:UIKit.UINavigationBar" /> and pushes and pops the necessary <see cref="T:UIKit.UINavigationItem" />s.</para>
+      <para>Each <see cref="T:UIKit.UINavigationItem" /> defines left, center, and right subviews. The left and right subviews are expected to be of type <see cref="T:UIKit.UIBarButtonItem" />, while the center subview by default displays the value of the <see cref="P:UIKit.UINavigationItem.Title" /> property. The center view can be further customized by assigning to the <see cref="P:UIKit.UINavigationItem.TitleView" /> property.</para>
+      <para>When used with a <see cref="T:UIKit.UINavigationController" />, the current <see cref="T:UIKit.UIViewController" />'s <see cref="P:UIKit.UIViewController.NavigationItem" /> property is used to manipulate the <see cref="T:UIKit.UINavigationBar" />, as shown in the following example.</para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+          public class MyViewController : UIViewController
+          {
+             public override void ViewDidLoad ()
+             {
+                base.ViewDidLoad ();
+          
+                this.NavigationItem.Title = "NavigationItem.Title";
+                this.NavigationItem.RightBarButtonItem = new UIBarButtonItem(UIBarButtonSystemItem.Action, OnAction);
+                //...etc....
+          ]]></code>
+      </example>
+      <para>
+        <img href="~/UIKit/_images/UIKit.UINavigationBar.Simple.png" alt="Screenshot showing the UINavigationBar" />
+      </para>
+      <para>Application developers who wish to customize the behavior of the <see cref="T:UIKit.UINavigationController" />'s uniquely-styled '"Back" button when using a <see cref="T:UIKit.UINavigationController" /> can use the following technique:</para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+          public class MyViewController : UIViewController
+          {
+             public override void ViewWillDisappear(bool animated)
+             {
+                base.ViewWillDisappear(animated);
+                //If `this` not in stack, we've been popped via "Back" button
+                if(NavigationController.ViewControllers.Contains(this) == false)
+                {
+                   Console.WriteLine("Custom behavior");
+                }
+             }
+          }
+          ]]></code>
+      </example>
+    </remarks>
+    
+    
+    
+    <related type="recipe" href="https://developer.xamarin.com/ios/Recipes/Content_Controls/Navigation_Controller/Add_a_Nav_Bar_Bottom_ToolBar">Add a Nav Bar Bottom ToolBar</related>
+    <related type="recipe" href="https://developer.xamarin.com/ios/Recipes/Content_Controls/Navigation_Controller/Add_a_Nav_Bar_Right_Button">Add a Nav Bar Right Button</related>
+    <related type="recipe" href="https://developer.xamarin.com/ios/Recipes/Content_Controls/Navigation_Controller/Change_the_Back_Button">Change the Back Button</related>
+    <related type="recipe" href="https://developer.xamarin.com/ios/Recipes/Content_Controls/Navigation_Controller/Change_the_Nav_Bar_Color">Change the Nav Bar Color</related>
+    <related type="recipe" href="https://developer.xamarin.com/ios/Recipes/Content_Controls/Navigation_Controller/Change_the_Nav_Bar_Style">Change the Nav Bar Style</related>
+    <related type="recipe" href="https://developer.xamarin.com/ios/Recipes/Content_Controls/Navigation_Controller/Change_the_Nav_Bar_Title">Change the Nav Bar Title</related>
+    <related type="recipe" href="https://developer.xamarin.com/ios/Recipes/Content_Controls/Navigation_Controller/Change_the_Nav_Bar_Transparency">Change the Nav Bar Transparency</related>
+    <related type="recipe" href="https://developer.xamarin.com/ios/Recipes/Content_Controls/Navigation_Controller/Make_the_Nav_Bar_Disappear">Make the Nav Bar Disappear</related>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/UINavigationBar_Class/index.html">Apple documentation for <c>UINavigationBar</c></related>
+  </Docs>
+</Documentation>

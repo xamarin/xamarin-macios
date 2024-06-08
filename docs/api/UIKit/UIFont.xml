@@ -1,0 +1,109 @@
+<Documentation>
+  <Docs DocId="T:UIKit.UIFont">
+    <summary>Font representation for MonoTouch.UIKit classes.</summary>
+    <remarks>
+      <para>
+        UIFont object are not instantiated directly, but instead are created from static methods on this class.  Starting with iOS 7.0 you can use the 
+        <see cref="P:UIKit.UIFont.PreferredBody" />,
+        <see cref="P:UIKit.UIFont.PreferredCaption1" />,
+        <see cref="P:UIKit.UIFont.PreferredCaption2" />,
+        <see cref="P:UIKit.UIFont.PreferredHeadline" />,
+        <see cref="P:UIKit.UIFont.PreferredSubheadline" /> properties to get the preferred system fonts for the corresponding use case.
+        
+        
+      </para>
+      <para>
+        Use the static <see cref="M:UIKit.UIFont.FromName(System.String,System.nfloat)" /> method to create new fonts of a particular font.   
+      </para>
+      <para>
+        You can use the <see cref="P:UIKit.UIFont.FamilyNames" /> property to get a
+        list of all family names available and then the <see cref="M:UIKit.UIFont.FontNamesForFamilyName(System.String)" />
+        method to get a list of the fonts available in a particular font family.
+      </para>
+      <format type="text/html">
+        <h2>System Information and Fonts</h2>
+      </format>
+      <para>
+        To get a normal, italic of bold fonts representing the system
+        font, use the static methods <see cref="M:UIKit.UIFont.SystemFontOfSize(System.nfloat,UIKit.UIFontWeight)" />, <see cref="M:UIKit.UIFont.ItalicSystemFontOfSize(System.nfloat)" /> and
+        <see cref="M:UIKit.UIFont.BoldSystemFontOfSize(System.nfloat)" />.
+      </para>
+      <para>
+        You can query some common font parameters by using the <see cref="P:UIKit.UIFont.ButtonFontSize" />, <see cref="P:UIKit.UIFont.LabelFontSize" />, <see cref="P:UIKit.UIFont.SmallSystemFontSize" /> and <see cref="P:UIKit.UIFont.SystemFontSize" />.
+        
+      </para>
+      <format type="text/html">
+        <h2>Activating Typographic Features</h2>
+      </format>
+      <para> Starting with iOS7, you can retrieve a new font based on
+	an existing font instance by using font descriptors.  To do
+	this, you fetch the immutable <see cref="P:UIKit.UIFont.FontDescriptor" /> property from
+	your font and use it to create a new font descriptor with your
+	desired changes, which then you use to can pass to the <see cref="M:UIKit.UIFont.FromDescriptor(UIKit.UIFontDescriptor,System.nfloat)" /> method to
+	create the altered font.  
+      </para>
+      <para> The following example shows how to alter the existing
+	font to set enable the CoreText typographic features for
+	proportional numbers and to use the character alternative:
+	</para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+UIFont CustomizeFont (UIFont font)
+{
+    var originalDescriptor = font.FontDescriptor;
+
+    // This font has a character alternative, at index 1, use that:
+    const int characterAlternative = 1;
+
+    var attributes = new UIFontAttributes (
+	new UIFontFeature (CTFontFeatureNumberSpacing.Selector.ProportionalNumbers),
+	new UIFontFeature (characterAlternative));
+    var newDesc = originalDescriptor.CreateWithAttributes (attributes);
+    return UIFont.FromDescriptor (newDesc, 80);
+}
+        ]]></code>
+      </example>
+      <format type="text/html">
+        <h2>Limiting Character Coverage of a Font</h2>
+      </format>
+      <para>
+	The following example alters a font descriptor by altering the
+	character set supported by the font and forces the system to
+	use a glyph from the list of fallback fonts in the system.
+	For example, if you were to use the Menlo font, the following
+	example would remove the use of the Melon Snowman character
+	(At Unicode 0x2603), and fall back to the system snowman:
+
+      </para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+var label = new UILabel (new RectangleF (0, 300, 200, 100)) {
+	Text = "Hello \u2603 there!",
+	TextColor = UIColor.White,
+	Font = MyFonts.Menlo
+};
+
+var originalDescriptor = label.Font.FontDescriptor;
+var originalCharSet = originalDescriptor.CharacterSet;
+
+// Make a copy of the character set to modify
+var charSetCopy = originalCharSet.MutableCopy () as NSMutableCharacterSet;
+
+// Remove the snowman
+charSetCopy.RemoveCharacters (new NSRange (0x2603, 1));
+
+// Create new descriptor
+var removedSnowmanDescriptor = originalDescriptor.CreateWithAttributes (new UIFontAttributes () { 
+	CharacterSet =  originalCharSet
+});
+
+// Create the font and set it on our label
+label.Font = UIFont.FromDescriptor (removedSnowmanDescriptor, 0);
+	]]></code>
+      </example>
+      <para tool="threads">The members of this class can be used from a background thread.</para>
+    </remarks>
+    <related type="recipe" href="https://developer.xamarin.com/ios/Recipes/Standard_Controls/Fonts/Enumerate_Fonts">Enumerate Fonts</related>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIFont_Class/index.html">Apple documentation for <c>UIFont</c></related>
+  </Docs>
+</Documentation>

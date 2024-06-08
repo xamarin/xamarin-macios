@@ -11858,6 +11858,7 @@ namespace Foundation {
 		NSDate LockDate { get; }
 	}
 
+	/// <summary>Allows notifications to be sent to objects in other tasks.</summary>
 	[NoiOS]
 	[NoTV]
 	[NoWatch]

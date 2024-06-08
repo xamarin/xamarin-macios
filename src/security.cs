@@ -95,6 +95,7 @@ namespace Security {
 		NSString TeamIdentifier { get; }
 	}
 
+	/// <summary>Represents shared user name and password for a Website.</summary>
 	[Static]
 	[NoWatch]
 	[Mac (11, 0)]

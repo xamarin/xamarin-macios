@@ -36,12 +36,14 @@ using ObjCRuntime;
 namespace CoreVideo {
 
 	// uint32_t -> CVBuffer.h
+	/// <summary>An enumeration whose values specify whether a buffer attachment should or should not propagate.</summary>
 	[MacCatalyst (13, 1)]
 	public enum CVAttachmentMode : uint {
 		ShouldNotPropagate = 0,
 		ShouldPropagate = 1,
 	}
 
+	/// <summary>An enumeration that flags whether a <see cref="T:CoreVideo.CVPixelBuffer" /> is read-only or not.</summary>
 	[Flags]
 	[MacCatalyst (13, 1)]
 #if NET
@@ -56,6 +58,7 @@ namespace CoreVideo {
 	}
 
 	// int32_t -> CVReturn.h
+	/// <summary>Possible status codes for CoreVideo functions.</summary>
 	[MacCatalyst (13, 1)]
 	public enum CVReturn : int {
 		Success = 0,
@@ -82,17 +85,20 @@ namespace CoreVideo {
 
 
 	// uint64_t -> CVBase.h
+	/// <summary>A flagging enumeration. Currently only contains a <c>None</c> value of 0.</summary>
 	[MacCatalyst (13, 1)]
 	public enum CVOptionFlags : long {
 		None = 0,
 	}
 
+	/// <summary>An enumeration that can flag whether a <see cref="T:CoreVideo.CVTime" /> is unknown.</summary>
 	[Flags]
 	[MacCatalyst (13, 1)]
 	public enum CVTimeFlags : int {
 		IsIndefinite = 1 << 0,
 	}
 
+	/// <summary>An enumeration whose values can flag validity of a timestamp or field in a <see cref="T:CoreVideo.CVTimeStamp" />.</summary>
 	[Flags]
 	[MacCatalyst (13, 1)]
 	public enum CVTimeStampFlags : ulong {
@@ -107,6 +113,7 @@ namespace CoreVideo {
 		IsInterlaced = (TopField | BottomField),
 	}
 
+	/// <summary>An enumeration whose values specify the SMPTE time state.</summary>
 	[Flags]
 	[MacCatalyst (13, 1)]
 	public enum CVSMPTETimeFlags : uint {
@@ -114,6 +121,7 @@ namespace CoreVideo {
 		Running = (1 << 1)
 	}
 
+	/// <summary>An enumeration whose values specify SMPTE timecode types.</summary>
 	[MacCatalyst (13, 1)]
 	public enum CVSMPTETimeType : uint {
 		Type24 = 0,
@@ -127,6 +135,7 @@ namespace CoreVideo {
 	}
 
 	// CVOptionFlags (uint64_t) -> CVPixelBufferPool.h
+	/// <summary>Defines an option for <see cref="M:CoreVideo.CVPixelBufferPool.Flush(CoreVideo.CVPixelBufferPoolFlushFlags)" />.</summary>
 	[MacCatalyst (13, 1)]
 	public enum CVPixelBufferPoolFlushFlags : ulong {
 		FlushExcessBuffers = 1,

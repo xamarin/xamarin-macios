@@ -18,6 +18,7 @@ using NativeHandle = System.IntPtr;
 
 namespace IdentityLookup {
 
+	/// <summary>Enumerates actions that can be taken in response to a message.</summary>
 	[NoMac]
 	[NoWatch]
 	[NoTV]
@@ -53,6 +54,7 @@ namespace IdentityLookup {
 		RedundantNetworkDeferral = 5,
 	}
 
+	/// <summary>Enumerates message classification actions.</summary>
 	[iOS (12, 0)]
 	[NoMac]
 	[NoWatch]
@@ -84,6 +86,7 @@ namespace IdentityLookup {
 		PromotionalCoupons = 20002,
 	}
 
+	/// <summary>Base class for message filter extensions.</summary>
 	[NoMac]
 	[NoWatch]
 	[NoTV]
@@ -93,6 +96,7 @@ namespace IdentityLookup {
 	interface ILMessageFilterExtension {
 	}
 
+	/// <summary>Represents the extension context for a message filter.</summary>
 	[NoMac]
 	[NoWatch]
 	[NoTV]
@@ -108,6 +112,7 @@ namespace IdentityLookup {
 
 	interface IILMessageFilterQueryHandling { }
 
+	/// <summary>Interface that is used by a message filter extension to respond to queries.</summary>
 	[NoMac]
 	[NoWatch]
 	[NoTV]
@@ -120,6 +125,7 @@ namespace IdentityLookup {
 		void HandleQueryRequest (ILMessageFilterQueryRequest queryRequest, ILMessageFilterExtensionContext context, Action<ILMessageFilterQueryResponse> completion);
 	}
 
+	/// <summary>Represents a request to a message filter to examine a message from an unknown sender for filtering.</summary>
 	[NoMac]
 	[NoWatch]
 	[NoTV]
@@ -139,6 +145,7 @@ namespace IdentityLookup {
 		string ReceiverIsoCountryCode { get; }
 	}
 
+	/// <summary>Represents a message query response.</summary>
 	[NoMac]
 	[NoWatch]
 	[NoTV]
@@ -155,6 +162,7 @@ namespace IdentityLookup {
 		ILMessageFilterSubAction SubAction { get; set; }
 	}
 
+	/// <summary>Represents a response to a network request by the filter extension.</summary>
 	[NoMac]
 	[NoWatch]
 	[NoTV]
@@ -170,6 +178,7 @@ namespace IdentityLookup {
 		NSData Data { get; }
 	}
 
+	/// <summary>A classification request.</summary>
 	[iOS (12, 0)]
 	[NoMac]
 	[NoWatch]
@@ -183,6 +192,7 @@ namespace IdentityLookup {
 		ILCallCommunication [] CallCommunications { get; }
 	}
 
+	/// <summary>An incoming call.</summary>
 	[iOS (12, 0)]
 	[NoMac]
 	[NoWatch]
@@ -196,6 +206,7 @@ namespace IdentityLookup {
 		bool IsEqualTo (ILCallCommunication communication);
 	}
 
+	/// <summary>Base class for classes that support users in reporting unwanted communications.</summary>
 	[Abstract]
 	[iOS (12, 0)]
 	[NoMac]
@@ -208,6 +219,7 @@ namespace IdentityLookup {
 
 	}
 
+	/// <summary>Handles the classification of messages to mark them as junk, mark them as not junk, and/or to block the sender.</summary>
 	[iOS (12, 0)]
 	[NoMac]
 	[NoWatch]
@@ -234,6 +246,7 @@ namespace IdentityLookup {
 		NativeHandle Constructor (ILClassificationAction action);
 	}
 
+	/// <summary>Base class for incoming calls and messages.</summary>
 	[Abstract]
 	[iOS (12, 0)]
 	[NoMac]
@@ -254,6 +267,7 @@ namespace IdentityLookup {
 		bool IsEqualTo (ILCommunication communication);
 	}
 
+	/// <summary>A request to report a message.</summary>
 	[iOS (12, 0)]
 	[NoMac]
 	[NoWatch]
@@ -267,6 +281,7 @@ namespace IdentityLookup {
 		ILMessageCommunication [] MessageCommunications { get; }
 	}
 
+	/// <summary>An incoming SMS message.</summary>
 	[iOS (12, 0)]
 	[NoMac]
 	[NoWatch]

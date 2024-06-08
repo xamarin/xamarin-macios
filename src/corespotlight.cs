@@ -19,6 +19,9 @@ using NativeHandle = System.IntPtr;
 
 namespace CoreSpotlight {
 
+	/// <summary>Handler for communication between the application and the index on the device. The app does not need to be running for this communication to occur.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/CoreSpotlight/Reference/CSIndexExtensionRequestHandler_Class/index.html">Apple documentation for <c>CSIndexExtensionRequestHandler</c></related>
 	[NoTV] // CS_TVOS_UNAVAILABLE
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -26,6 +29,9 @@ namespace CoreSpotlight {
 
 	}
 
+	/// <summary>An author or a recipient stored in a <see cref="T:CoreSpotlight.CSSearchableItemAttributeSet" />.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/CoreSpotlight/Reference/CSPerson_Class/index.html">Apple documentation for <c>CSPerson</c></related>
 	[NoTV] // CS_TVOS_UNAVAILABLE
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -49,6 +55,11 @@ namespace CoreSpotlight {
 		string ContactIdentifier { get; set; }
 	}
 
+	/// <summary>A search index used by Spotlight.</summary>
+	///     <remarks>
+	///       <para>Typically, developers should use <see cref="P:CoreSpotlight.CSSearchableIndex.DefaultSearchableIndex" /> to index their application data.</para>
+	///     </remarks>
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/CoreSpotlight/Reference/CSSearchableIndex_Class/index.html">Apple documentation for <c>CSSearchableIndex</c></related>
 	[NoTV] // CS_TVOS_UNAVAILABLE
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -112,8 +123,10 @@ namespace CoreSpotlight {
 		void FetchData (string bundleIdentifier, string itemIdentifier, UTType contentType, Action<NSData, NSError> completionHandler);
 	}
 
+	/// <summary>Completion handler used in <see cref="M:CoreSpotlight.CSSearchableIndex_CSOptionalBatchingExtension.FetchLastClientState(CoreSpotlight.CSSearchableIndex,CoreSpotlight.CSSearchableIndexFetchHandler)" />.</summary>
 	delegate void CSSearchableIndexFetchHandler (NSData clientState, NSError error);
 
+	/// <summary>Extension methods for <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=T:CoreServices.CSSearchableIndex&amp;scope=Xamarin" title="T:CoreServices.CSSearchableIndex">T:CoreServices.CSSearchableIndex</a></format>.</summary>
 	[NoTV] // CS_TVOS_UNAVAILABLE
 	[MacCatalyst (13, 1)]
 	[Category]
@@ -130,8 +143,17 @@ namespace CoreSpotlight {
 		void FetchLastClientState (CSSearchableIndexFetchHandler completionHandler);
 	}
 
+	/// <summary>Interface representing the required methods (if any) of the protocol <see cref="T:CoreSpotlight.CSSearchableIndexDelegate" />.</summary>
+	///     <remarks>
+	///       <para>This interface contains the required methods (if any) from the protocol defined by <see cref="T:CoreSpotlight.CSSearchableIndexDelegate" />.</para>
+	///       <para>If developers create classes that implement this interface, the implementation methods will automatically be exported to Objective-C with the matching signature from the method defined in the <see cref="T:CoreSpotlight.CSSearchableIndexDelegate" /> protocol.</para>
+	///       <para>Optional methods (if any) are provided by the <see cref="T:CoreSpotlight.CSSearchableIndexDelegate_Extensions" /> class as extension methods to the interface, allowing developers to invoke any optional methods on the protocol.</para>
+	///     </remarks>
 	interface ICSSearchableIndexDelegate { }
 
+	/// <summary>Delegate object providing members that are called when reindexing the index.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/CoreSpotlight/Reference/CSSearchableIndexDelegate_Protocol/index.html">Apple documentation for <c>CSSearchableIndexDelegate</c></related>
 	[NoTV] // CS_TVOS_UNAVAILABLE
 	[MacCatalyst (13, 1)]
 	[Protocol, Model]
@@ -165,6 +187,9 @@ namespace CoreSpotlight {
 		NSUrl GetFileUrl (CSSearchableIndex searchableIndex, string itemIdentifier, string typeIdentifier, bool inPlace, out NSError outError);
 	}
 
+	/// <summary>A uniquely identifiable, searchable object in a <see cref="T:CoreSpotlight.CSSearchableIndex" />.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/CoreSpotlight/Reference/CSSearchableItem_Class/index.html">Apple documentation for <c>CSSearchableItem</c></related>
 	[NoTV] // CS_TVOS_UNAVAILABLE
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -206,6 +231,9 @@ namespace CoreSpotlight {
 		NSComparisonResult CompareByRank (CSSearchableItem other);
 	}
 
+	/// <summary>Represents a string-like object that returns a locale-specific version of a string.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/CoreSpotlight/Reference/CSLocalizedString_Class/index.html">Apple documentation for <c>CSLocalizedString</c></related>
 	[NoTV] // CS_TVOS_UNAVAILABLE
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSString))]
@@ -219,6 +247,9 @@ namespace CoreSpotlight {
 		string GetLocalizedString ();
 	}
 
+	/// <summary>A key that app developers can associate with metadata for an indexable item that can appear in user search results.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/CoreSpotlight/Reference/CSCustomAttributeKey_Class/index.html">Apple documentation for <c>CSCustomAttributeKey</c></related>
 	[NoTV] // CS_TVOS_UNAVAILABLE
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -272,6 +303,9 @@ namespace CoreSpotlight {
 		NSString Archive { get; }
 	}
 
+	/// <summary>Holds the actual content to be indexed for search.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/CoreSpotlight/Reference/CSSearchableItemAttributeSet_Class/index.html">Apple documentation for <c>CSSearchableItemAttributeSet</c></related>
 	[NoTV]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -1093,6 +1127,7 @@ namespace CoreSpotlight {
 		string [] ProviderInPlaceFileTypeIdentifiers { get; set; }
 	}
 
+	/// <include file="../docs/api/CoreSpotlight/CSSearchQuery.xml" path="/Documentation/Docs[@DocId='T:CoreSpotlight.CSSearchQuery']/*" />
 	[NoTV]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]

@@ -1,0 +1,32 @@
+<Documentation>
+  <Docs DocId="T:UIKit.UIApplicationState">
+    <summary>An enumeration indicating the current application state.</summary>
+    <remarks>
+      <para> 
+	When the user taps on the app icon, the app briefly
+	goes through a transitional state of
+	UIApplicationState.Inactive on its way to becoming
+	UIApplicationState.Active. This is where the app gets
+	itself ready to display to the user.
+      </para>
+      <para>
+	When the app is open, the application state is UIApplicationState.Active.
+      </para>
+      <para>
+	If the user presses the home button, and is returned to
+	the springboard (home screen), or the application is
+	interrupted by something, such as a phone call, the
+	application state transitions back to
+	UIApplicationState.Inactive.
+      </para>
+      <para> 
+	For the application state of your app to become
+	UIApplicationState.Background, your application would have
+	to register for a background process. 
+      </para>
+      <para>
+	Reference: https://stackoverflow.com/questions/7937400/need-clarification-about-uiapplicationstate
+      </para>
+    </remarks>
+  </Docs>
+</Documentation>

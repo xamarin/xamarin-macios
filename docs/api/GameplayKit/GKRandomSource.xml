@@ -1,0 +1,9 @@
+<Documentation>
+  <Docs DocId="T:GameplayKit.GKRandomSource">
+    <summary>Base class for game-appropriate pseudo-random number generators. Do not use for cryptographic or security purposes.</summary>
+    <remarks>
+      <para>GameplayKit provides a number of pseudo-random number generators with a common interface for retrieving randomly-valued booleans, integers, and floats. There are also functions that shuffle properly. A <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=T:GameKit.GKRandomSource&amp;scope=Xamarin" title="T:GameKit.GKRandomSource">T:GameKit.GKRandomSource</a></format> instance can be used to construct a <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=T:GameKit.GKRandomDistribution&amp;scope=Xamarin" title="T:GameKit.GKRandomDistribution">T:GameKit.GKRandomDistribution</a></format> instance with a high-quality uniform, Gaussian, or shuffled distribution. <see cref="T:GameplayKit.GKRandomSource" /> functions are not appropriate for use in cryptographic or security scenarios.</para>
+    </remarks>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/GameplayKit/Reference/GKRandomSource_Class/index.html">Apple documentation for <c>GKRandomSource</c></related>
+  </Docs>
+</Documentation>
