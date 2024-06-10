@@ -539,11 +539,15 @@ namespace Xamarin.MacDev.Tasks {
 
 		bool ExecuteSimulator ()
 		{
-			if (!string.IsNullOrEmpty (ProvisioningProfile))
-				Log.LogWarning (null, null, null, ProvisioningProfile, 0, 0, 0, 0, MSBStrings.W7124 /* A provisioning profile has been specified, but this value is ignored for the simulator. */);
-
-			if (!string.IsNullOrEmpty (Entitlements))
-				Log.LogWarning (null, null, null, Entitlements, 0, 0, 0, 0, MSBStrings.W7125 /* A file with codesigning entitlements has been specified, but this value is ignored for the simulator. */);
+			// The problem with these warnings is that it's hard to avoid them.
+			// It would require setting the Entitlements property conditionally depending on whether the build is targeting the simulator or not,
+			// and that's non possible in a top-level project property.
+			//
+			// if (!string.IsNullOrEmpty (ProvisioningProfile))
+			// 	Log.LogWarning (null, null, null, ProvisioningProfile, 0, 0, 0, 0, MSBStrings.W7124 /* A provisioning profile has been specified, but this value is ignored for the simulator. */);
+			//
+			// if (!string.IsNullOrEmpty (Entitlements))
+			// 	Log.LogWarning (null, null, null, Entitlements, 0, 0, 0, 0, MSBStrings.W7125 /* A file with codesigning entitlements has been specified, but this value is ignored for the simulator. */);
 
 			// No matter what, I've only been able to make Xcode apply a single entitlement to simulator builds: com.apple.security.get-task-allow
 			var compiled = new PDictionary ();
