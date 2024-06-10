@@ -1,4 +1,4 @@
-name: Bump global.json for dotnet/installer bumps
+name: Bump global.json for dotnet/sdk bumps
 on: pull_request_target
 
 jobs:
@@ -10,7 +10,7 @@ jobs:
     # https://docs.github.com/en/actions/using-jobs/assigning-permissions-to-jobs
     permissions:
       contents: write
-    if: contains(github.event.pull_request.title, 'Update dependencies from dotnet/installer') && github.actor == 'dotnet-maestro[bot]'
+    if: contains(github.event.pull_request.title, 'Update dependencies from dotnet/sdk') && github.actor == 'dotnet-maestro[bot]'
     steps:
     - name: 'Checkout repo'
       uses: actions/checkout@v4
@@ -20,6 +20,9 @@ jobs:
         ref: ${{ github.event.pull_request.head.sha }}
 
     - name: 'Update global.json'
+      env:
+        PR_NUMBER: ${{ github.event.number }}
+        PR_TITLE: ${{ github.event.pull_request.title }}
       run: |
         set -exo pipefail
         touch Make.config.inc # create a dummy file to avoid logic we don't need executed here
@@ -32,5 +35,5 @@ jobs:
         git config --global user.email "github-actions@xamarin.com"
         git config --global user.name "GitHub Actions"
         git checkout "$GITHUB_HEAD_REF"
-        git commit -m "Re-generate global.json"
+        git commit -m "Re-generate global.json for PR #$PR_NUMBER: $PR_TITLE"
         git push
