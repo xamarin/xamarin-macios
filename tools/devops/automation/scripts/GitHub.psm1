@@ -621,20 +621,6 @@ function Get-TargetUrl {
 
 <#
     .SYNOPSIS
-        Returns the url to the Html Report index page stored in xamarin-storage.
-#>
-function Get-XamarinStorageIndexUrl {
-    param (
-        [Parameter(Mandatory)]
-        [String]
-        $Path
-    )
-
-    return "http://xamarin-storage/$Path/jenkins-results/tests/index.html"
-}
-
-<#
-    .SYNOPSIS
         Add a new comment for the commit on GitHub.
 
     .PARAMETER Header
