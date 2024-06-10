@@ -11,7 +11,7 @@
 			enclosed in brackets.
 
 		-->
-		<MessagingVersion>[1.14.16-diagnose-cancelled-posts]</MessagingVersion>
+		<MessagingVersion>[1.14.28-diagnose-cancelled-posts]</MessagingVersion>
 		<HotRestartVersion>[1.1.7]</HotRestartVersion>
 	</PropertyGroup>
 	<Import Project="$(MSBuildThisFileDirectory)../Directory.Build.props" />
