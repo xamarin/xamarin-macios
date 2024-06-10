@@ -2496,7 +2496,7 @@ namespace UIKit {
 	/// <summary>Defines the relationship between <see cref="T:UIKit.NSTextAttachment" />s and a <see cref="T:UIKit.NSLayoutManager" />.</summary>
 	///     
 	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/NSTextAttachmentContainer_Protocol/index.html">Apple documentation for <c>NSTextAttachmentContainer</c></related>
-	[Watch (9, 0)]
+	[NoWatch]
 	[Introduced (PlatformName.iOS)]
 	[MacCatalyst (13, 1)]
 	[Model]
