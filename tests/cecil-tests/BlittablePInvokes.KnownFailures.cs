@@ -44,8 +44,6 @@ namespace Cecil.Tests {
 			"The field CoreMidi.MidiCIDeviceIdentification.RevisionLevel has a [MarshalAs] attribute",
 			"The field GameController.GCDualSenseAdaptiveTriggerPositionalAmplitudes.Values has a [MarshalAs] attribute",
 			"The field GameController.GCDualSenseAdaptiveTriggerPositionalResistiveStrengths.Values has a [MarshalAs] attribute",
-			"The field GameController.GCExtendedGamepadSnapshotData.LeftThumbstickButton has a [MarshalAs] attribute",
-			"The field GameController.GCExtendedGamepadSnapshotData.RightThumbstickButton has a [MarshalAs] attribute",
 			"The field GameController.GCExtendedGamepadSnapshotData.SupportsClickableThumbsticks has a [MarshalAs] attribute",
 			"The field GLKit.GLKVertexAttributeParameters.Normalized has a [MarshalAs] attribute",
 			"The field Metal.MTLQuadTessellationFactorsHalf.EdgeTessellationFactor has a [MarshalAs] attribute",
@@ -56,12 +54,6 @@ namespace Cecil.Tests {
 		};
 #endif
 		static HashSet<string> knownFailuresPInvokes = new HashSet<string> {
-			"System.Byte GameController.GCExtendedGamepadSnapshot::GCExtendedGamepadSnapshotDataFromNSData(GameController.GCExtendedGamepadSnapshotData*,System.IntPtr)",
-			"System.IntPtr GameController.GCExtendedGamepadSnapshotData::NSDataFromGCExtendedGamepadSnapshotData(GameController.GCExtendedGamepadSnapshotData*)",
-			"System.Void ObjCRuntime.Messaging::void_objc_msgSend_GCDualSenseAdaptiveTriggerPositionalAmplitudes_float(System.IntPtr,System.IntPtr,GameController.GCDualSenseAdaptiveTriggerPositionalAmplitudes,System.Single)",
-			"System.Void ObjCRuntime.Messaging::void_objc_msgSend_GCDualSenseAdaptiveTriggerPositionalResistiveStrengths(System.IntPtr,System.IntPtr,GameController.GCDualSenseAdaptiveTriggerPositionalResistiveStrengths)",
-			"System.Void ObjCRuntime.Messaging::void_objc_msgSendSuper_GCDualSenseAdaptiveTriggerPositionalAmplitudes_float(System.IntPtr,System.IntPtr,GameController.GCDualSenseAdaptiveTriggerPositionalAmplitudes,System.Single)",
-			"System.Void ObjCRuntime.Messaging::void_objc_msgSendSuper_GCDualSenseAdaptiveTriggerPositionalResistiveStrengths(System.IntPtr,System.IntPtr,GameController.GCDualSenseAdaptiveTriggerPositionalResistiveStrengths)",
 		};
 	}
 }
