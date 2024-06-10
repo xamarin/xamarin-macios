@@ -167,7 +167,11 @@ namespace GeneratorTests {
 				.Union (allTypes.SelectMany ((type) => type.Properties));
 
 			var preserves = allMembers.Count ((v) => v.HasCustomAttributes && v.CustomAttributes.Any ((ca) => ca.AttributeType.Name == "PreserveAttribute"));
+#if NET
+			Assert.AreEqual (36, preserves, "Preserve attribute count"); // If you modified code that generates PreserveAttributes please update the preserve count
+#else
 			Assert.AreEqual (28, preserves, "Preserve attribute count"); // If you modified code that generates PreserveAttributes please update the preserve count
+#endif
 		}
 
 		[Test]
@@ -335,6 +339,12 @@ namespace GeneratorTests {
 	UIKit.UIView Bug35176.FooInterface_Extensions::GetBarView(Bug35176.IFooInterface): [SupportedOSPlatform(""ios14.4"")]
 	UIKit.UIView Bug35176.FooInterface_Extensions::GetBarView(Bug35176.IFooInterface): [SupportedOSPlatform(""maccatalyst14.4"")]
 	UIKit.UIView Bug35176.FooInterface_Extensions::GetBarView(Bug35176.IFooInterface): [SupportedOSPlatform(""macos11.2"")]
+	UIKit.UIView Bug35176.IFooInterface::_GetBarView(Bug35176.IFooInterface): [SupportedOSPlatform(""ios14.4"")]
+	UIKit.UIView Bug35176.IFooInterface::_GetBarView(Bug35176.IFooInterface): [SupportedOSPlatform(""maccatalyst14.4"")]
+	UIKit.UIView Bug35176.IFooInterface::_GetBarView(Bug35176.IFooInterface): [SupportedOSPlatform(""macos11.2"")]
+	UIKit.UIView Bug35176.IFooInterface::get_BarView(): [SupportedOSPlatform(""ios14.4"")]
+	UIKit.UIView Bug35176.IFooInterface::get_BarView(): [SupportedOSPlatform(""maccatalyst14.4"")]
+	UIKit.UIView Bug35176.IFooInterface::get_BarView(): [SupportedOSPlatform(""macos11.2"")]
 ";
 #else
 			string expectedAttributes =
@@ -422,7 +432,11 @@ namespace GeneratorTests {
 				.Union (allTypes.SelectMany ((type) => type.Properties));
 
 			var preserves = allMembers.Sum ((v) => v.CustomAttributes.Count ((ca) => ca.AttributeType.Name == "AdviceAttribute"));
+#if NET
+			Assert.AreEqual (33, preserves, "Advice attribute count"); // If you modified code that generates AdviceAttributes please update the attribute count
+#else
 			Assert.AreEqual (24, preserves, "Advice attribute count"); // If you modified code that generates AdviceAttributes please update the attribute count
+#endif
 		}
 
 		[Test]
@@ -617,7 +631,11 @@ namespace GeneratorTests {
 				.Union (allTypes.SelectMany ((type) => type.Fields))
 				.Union (allTypes.SelectMany ((type) => type.Properties));
 
+#if NET
+			Assert.AreEqual (2, allMembers.Count ((member) => member.Name == "RequiredMethodAsync"), "Expected 2 RequiredMethodAsync members in generated code. If you modified code that generates RequiredMethodAsync (AsyncAttribute) please update the RequiredMethodAsync count.");
+#else
 			Assert.AreEqual (1, allMembers.Count ((member) => member.Name == "RequiredMethodAsync"), "Expected 1 RequiredMethodAsync members in generated code. If you modified code that generates RequiredMethodAsync (AsyncAttribute) please update the RequiredMethodAsync count.");
+#endif
 
 			var attribs = MethodAttributes.Public | MethodAttributes.Static | MethodAttributes.HideBySig;
 			bgen.AssertMethod ("NoAsyncInternalWrapperTests.MyFooDelegate_Extensions", "RequiredMethodAsync", attribs, "System.Threading.Tasks.Task", "NoAsyncInternalWrapperTests.IMyFooDelegate", "System.Int32");
@@ -1175,10 +1193,20 @@ namespace GeneratorTests {
 			bgen.AssertPublicMethodCount ("NS.Whatever", 10); // 6 accessors + 3 constructors + ClassHandle getter
 
 			bgen.AssertMethod ("NS.IIProtocol", "get_IPropA");
+#if NET
+			bgen.AssertMethod ("NS.IIProtocol", "get_IPropAOpt");
+#endif
 			bgen.AssertNoMethod ("NS.IIProtocol", "set_IPropA", parameterTypes: "Foundation.NSObject");
 			bgen.AssertMethod ("NS.IIProtocol", "set_IPropB", parameterTypes: "Foundation.NSObject");
+#if NET
+			bgen.AssertMethod ("NS.IIProtocol", "set_IPropBOpt", parameterTypes: "Foundation.NSObject");
+#endif
 			bgen.AssertNoMethod ("NS.IIProtocol", "get_IPropB");
+#if NET
+			bgen.AssertPublicMethodCount ("NS.IIProtocol", 4);
+#else
 			bgen.AssertPublicMethodCount ("NS.IIProtocol", 2);
+#endif
 
 			bgen.AssertMethod ("NS.IProtocol_Extensions", "GetIPropAOpt", parameterTypes: "NS.IIProtocol");
 			bgen.AssertMethod ("NS.IProtocol_Extensions", "SetIPropBOpt", parameterTypes: new string [] { "NS.IIProtocol", "Foundation.NSObject" });
@@ -1274,12 +1302,25 @@ namespace GeneratorTests {
 				},
 				new {
 					Type = "IIProtocol",
-					MethodCount = 4,
+					MethodCount = 17,
 					Methods = new [] {
+						new { Method = ".cctor", Attributes = "" },
 						new { Method = "get_IPropA", Attributes = "" },
+						new { Method = "_GetIPropA", Attributes = "" },
 						new { Method = "set_IPropB", Attributes = "[SupportedOSPlatform(\"tvos150.0\")]" },
+						new { Method = "_SetIPropB", Attributes = "[SupportedOSPlatform(\"tvos150.0\")]" },
 						new { Method = "get_IPropC", Attributes = "" },
+						new { Method = "_GetIPropC", Attributes = "" },
 						new { Method = "set_IPropC", Attributes = "" },
+						new { Method = "_SetIPropC", Attributes = "" },
+						new { Method = "get_IPropAOpt", Attributes = "" },
+						new { Method = "_GetIPropAOpt", Attributes = "" },
+						new { Method = "set_IPropBOpt", Attributes = "[SupportedOSPlatform(\"tvos150.0\")]" },
+						new { Method = "_SetIPropBOpt", Attributes = "[SupportedOSPlatform(\"tvos150.0\")]" },
+						new { Method = "get_IPropCOpt", Attributes = "" },
+						new { Method = "get_IPropCOpt", Attributes = "" },
+						new { Method = "set_IPropCOpt", Attributes = "" },
+						new { Method = "_SetIPropCOpt", Attributes = "" },
 					},
 				},
 				new {
@@ -1294,12 +1335,25 @@ namespace GeneratorTests {
 				},
 				new {
 					Type = "IIProtocolLower",
-					MethodCount = 4,
+					MethodCount = 17,
 					Methods = new [] {
+						new { Method = ".cctor", Attributes = "" },
 						new { Method = "get_IPropD", Attributes = "" },
+						new { Method = "_GetIPropD", Attributes = "" },
 						new { Method = "set_IPropE", Attributes = "[SupportedOSPlatform(\"tvos110.0\")]" },
+						new { Method = "_SetIPropE", Attributes = "[SupportedOSPlatform(\"tvos110.0\")]" },
 						new { Method = "get_IPropF", Attributes = "" },
+						new { Method = "_GetIPropF", Attributes = "" },
 						new { Method = "set_IPropF", Attributes = "" },
+						new { Method = "_SetIPropF", Attributes = "" },
+						new { Method = "get_IPropDOpt", Attributes = "" },
+						new { Method = "_GetIPropDOpt", Attributes = "" },
+						new { Method = "set_IPropEOpt", Attributes = "[SupportedOSPlatform(\"tvos110.0\")]" },
+						new { Method = "_SetIPropEOpt", Attributes = "[SupportedOSPlatform(\"tvos110.0\")]" },
+						new { Method = "get_IPropFOpt", Attributes = "" },
+						new { Method = "_GetIPropFOpt", Attributes = "" },
+						new { Method = "set_IPropFOpt", Attributes = "" },
+						new { Method = "_SetIPropFOpt", Attributes = "" },
 					},
 				},
 				new {
@@ -1335,11 +1389,14 @@ namespace GeneratorTests {
 				},
 				new {
 					Type = "IIProtocol",
-					PropertyCount = 3,
+					PropertyCount = 6,
 					Properties = new [] {
 						new { Property = "IPropA", Attributes = "[SupportedOSPlatform(\"tvos140.0\")]" },
 						new { Property = "IPropB", Attributes = "" },
 						new { Property = "IPropC", Attributes = "" },
+						new { Property = "IPropAOpt", Attributes = "[SupportedOSPlatform(\"tvos140.0\")]" },
+						new { Property = "IPropBOpt", Attributes = "" },
+						new { Property = "IPropCOpt", Attributes = "" },
 					},
 				},
 				new {
@@ -1351,11 +1408,14 @@ namespace GeneratorTests {
 				},
 				new {
 					Type = "IIProtocolLower",
-					PropertyCount = 3,
+					PropertyCount = 6,
 					Properties = new [] {
 						new { Property = "IPropD", Attributes = "[SupportedOSPlatform(\"tvos100.0\")]" },
 						new { Property = "IPropE", Attributes = "" },
 						new { Property = "IPropF", Attributes = "" },
+						new { Property = "IPropDOpt", Attributes = "[SupportedOSPlatform(\"tvos100.0\")]" },
+						new { Property = "IPropEOpt", Attributes = "" },
+						new { Property = "IPropFOpt", Attributes = "" },
 					},
 				},
 				new {
@@ -1369,53 +1429,62 @@ namespace GeneratorTests {
 
 			var failures = new List<string> ();
 
-			foreach (var expected in expectedMethods) {
-				var type = bgen.ApiAssembly.MainModule.Types.FirstOrDefault (v => v.Name == expected.Type);
-				Assert.IsNotNull (type, $"Type not found: {expected.Type}");
-				Assert.AreEqual (expected.MethodCount, type.Methods.Count, $"Unexpected method count.\n\tActual methods:\n\t\t{string.Join ("\n\t\t", type.Methods.Select (v => v.FullName))}");
-				if (expected.MethodCount == 0)
-					continue;
-				foreach (var expectedMember in expected.Methods) {
-					var member = type.Methods.SingleOrDefault (v => v.Name == expectedMember.Method);
-					Assert.IsNotNull (member, $"Method not found: {expectedMember.Method} in {type.FullName}");
-					var renderedAttributes = RenderSupportedOSPlatformAttributes (member);
-					var expectedAttributes = expectedMember.Attributes.Replace ("\r", string.Empty);
-					if (renderedAttributes != expectedAttributes) {
-						var msg =
-							$"Property: {type.FullName}::{member.Name}\n" +
-							$"\tExpected attributes:\n" +
-							$"\t\t{string.Join ("\n\t\t", expectedMember.Attributes.Split ('\n'))}\n" +
-							$"\tActual attributes:\n" +
-							$"\t\t{string.Join ("\n\t\t", renderedAttributes.Split ('\n'))}";
-						failures.Add (msg);
-						Console.WriteLine ($"❌ {msg}");
-					}
-				}
-			}
+			Assert.Multiple (() => {
 
-			foreach (var expected in expectedProperties) {
-				var type = bgen.ApiAssembly.MainModule.Types.FirstOrDefault (v => v.Name == expected.Type);
-				Assert.IsNotNull (type, $"Type not found: {expected.Type}");
-				Assert.AreEqual (expected.PropertyCount, type.Properties.Count, $"Unexpected property count.\n\tActual properties:\n\t\t{string.Join ("\n\t\t", type.Properties.Select (v => v.Name))}");
-				if (expected.PropertyCount == 0)
-					continue;
-				foreach (var expectedMember in expected.Properties) {
-					var member = type.Properties.SingleOrDefault (v => v.Name == expectedMember.Property);
-					Assert.IsNotNull (member, $"Property not found: {expectedMember.Property} in {type.FullName}");
-					var renderedAttributes = RenderSupportedOSPlatformAttributes (member);
-					var expectedAttributes = expectedMember.Attributes.Replace ("\r", string.Empty);
-					if (renderedAttributes != expectedAttributes) {
-						var msg =
-							$"Property: {type.FullName}::{member.Name}\n" +
-							$"\tExpected attributes:\n" +
-							$"\t\t{string.Join ("\n\t\t", expectedMember.Attributes.Split ('\n'))}\n" +
-							$"\tActual attributes:\n" +
-							$"\t\t{string.Join ("\n\t\t", renderedAttributes.Split ('\n'))}";
-						failures.Add (msg);
-						Console.WriteLine ($"❌ {msg}");
+				foreach (var expected in expectedMethods) {
+					var type = bgen.ApiAssembly.MainModule.Types.FirstOrDefault (v => v.Name == expected.Type);
+					Assert.IsNotNull (type, $"Type not found: {expected.Type}");
+					if (type is null)
+						continue;
+					Assert.AreEqual (expected.MethodCount, type.Methods.Count, $"Unexpected method count for {expected.Type}.\n\tActual methods:\n\t\t{string.Join ("\n\t\t", type.Methods.Select (v => v.FullName))}");
+					if (expected.MethodCount == 0)
+						continue;
+					foreach (var expectedMember in expected.Methods) {
+						var member = type.Methods.SingleOrDefault (v => v.Name == expectedMember.Method);
+						Assert.IsNotNull (member, $"Method not found: {expectedMember.Method} in {type.FullName}");
+						var renderedAttributes = RenderSupportedOSPlatformAttributes (member);
+						var expectedAttributes = expectedMember.Attributes.Replace ("\r", string.Empty);
+						if (renderedAttributes != expectedAttributes) {
+							var msg =
+								$"Property: {type.FullName}::{member.Name}\n" +
+								$"\tExpected attributes:\n" +
+								$"\t\t{string.Join ("\n\t\t", expectedMember.Attributes.Split ('\n'))}\n" +
+								$"\tActual attributes:\n" +
+								$"\t\t{string.Join ("\n\t\t", renderedAttributes.Split ('\n'))}";
+							failures.Add (msg);
+							Console.WriteLine ($"❌ {msg}");
+						}
 					}
 				}
-			}
+
+				foreach (var expected in expectedProperties) {
+					var type = bgen.ApiAssembly.MainModule.Types.FirstOrDefault (v => v.Name == expected.Type);
+					Assert.IsNotNull (type, $"Type not found: {expected.Type}");
+					if (type is null)
+						continue;
+					Assert.AreEqual (expected.PropertyCount, type.Properties.Count, $"Unexpected property count for {expected.Type}.\n\tActual properties:\n\t\t{string.Join ("\n\t\t", type.Properties.Select (v => v.Name))}");
+					if (expected.PropertyCount == 0)
+						continue;
+					foreach (var expectedMember in expected.Properties) {
+						var member = type.Properties.SingleOrDefault (v => v.Name == expectedMember.Property);
+						Assert.IsNotNull (member, $"Property not found: {expectedMember.Property} in {type.FullName}");
+						if (member is null)
+							continue;
+						var renderedAttributes = RenderSupportedOSPlatformAttributes (member);
+						var expectedAttributes = expectedMember.Attributes.Replace ("\r", string.Empty);
+						if (renderedAttributes != expectedAttributes) {
+							var msg =
+								$"Property: {type.FullName}::{member.Name}\n" +
+								$"\tExpected attributes:\n" +
+								$"\t\t{string.Join ("\n\t\t", expectedMember.Attributes.Split ('\n'))}\n" +
+								$"\tActual attributes:\n" +
+								$"\t\t{string.Join ("\n\t\t", renderedAttributes.Split ('\n'))}";
+							failures.Add (msg);
+							Console.WriteLine ($"❌ {msg}");
+						}
+					}
+				}
+			});
 
 			Assert.That (failures, Is.Empty, "Failures");
 		}

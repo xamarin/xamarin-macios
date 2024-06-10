@@ -1251,9 +1251,9 @@ namespace Xamarin.Tests {
 		[DllImport ("libc")]
 		static extern int sysctlbyname (string name, ref int value, ref IntPtr size, IntPtr zero, IntPtr zeroAgain);
 
-		public static IEnumerable<string> GetNativeSymbols (string file, string arch = null)
+		public static IEnumerable<string> CallNM (string file, string nmArguments, string arch = null)
 		{
-			var arguments = new List<string> (new [] { "-gUjA", file });
+			var arguments = new List<string> (new [] { nmArguments, file });
 			if (!string.IsNullOrEmpty (arch)) {
 				arguments.Add ("-arch");
 				arguments.Add (arch);
@@ -1267,6 +1267,16 @@ namespace Xamarin.Tests {
 					return v;
 				return v.Substring (idx + 2);
 			});
+		}
+
+		public static IEnumerable<string> GetNativeSymbols (string file, string arch = null)
+		{
+			return CallNM (file, "-gUjA", arch);
+		}
+
+		public static IEnumerable<string> GetUndefinedNativeSymbols (string file, string arch = null)
+		{
+			return CallNM (file, "-gujA", arch);
 		}
 	}
 }
