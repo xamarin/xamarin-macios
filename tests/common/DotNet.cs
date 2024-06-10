@@ -268,7 +268,7 @@ namespace Xamarin.Tests {
 					if (rv.ExitCode != 0) {
 						var msg = new StringBuilder ();
 						if (rv.TimedOut) {
-							msg.AppendLine ($"'dotnet {verb}' timed out after {timeout.TotalMinutes} minutes with exit code {rv.ExitCode}");
+							msg.AppendLine ($"'dotnet {verb}' timed out after {timeout?.TotalMinutes} minutes with exit code {rv.ExitCode}");
 							msg.AppendLine ($"Full command: {Executable} {StringUtils.FormatArguments (args)}");
 						} else {
 							msg.AppendLine ($"'dotnet {verb}' failed with exit code {rv.ExitCode}");
