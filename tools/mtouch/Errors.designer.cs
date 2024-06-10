@@ -3035,6 +3035,15 @@ namespace Xamarin.Bundler {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The class &apos;{0}&apos; will not be registered because the {1} framework has been deprecated from the {2} SDK..
+        /// </summary>
+        public static string MT4190 {
+            get {
+                return ResourceManager.GetString("MT4190", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Missing &apos;{0}&apos; compiler. Please install Xcode &apos;Command-Line Tools&apos; component
         ///		.
         /// </summary>
