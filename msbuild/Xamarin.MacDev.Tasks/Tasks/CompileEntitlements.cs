@@ -138,7 +138,7 @@ namespace Xamarin.MacDev.Tasks {
 			}
 		}
 
-		PString MergeEntitlementString (PString pstr, MobileProvision? profile, bool expandWildcards)
+		PString MergeEntitlementString (PString pstr, MobileProvision? profile, bool expandWildcards, string key)
 		{
 			string TeamIdentifierPrefix;
 			string AppIdentifierPrefix;
@@ -148,12 +148,12 @@ namespace Xamarin.MacDev.Tasks {
 
 			if (profile is null) {
 				if (!warnedTeamIdentifierPrefix && pstr.Value.Contains ("$(TeamIdentifierPrefix)")) {
-					Log.LogWarning (null, null, null, Entitlements, 0, 0, 0, 0, MSBStrings.W0108);
+					Log.LogWarning (null, null, null, Entitlements, 0, 0, 0, 0, "Cannot expand $(TeamIdentifierPrefix) in Entitlements.plist without a provisioning profile for key {0} with value {1}", key, pstr.Value);
 					warnedTeamIdentifierPrefix = true;
 				}
 
 				if (!warnedAppIdentifierPrefix && pstr.Value.Contains ("$(AppIdentifierPrefix)")) {
-					Log.LogWarning (null, null, null, Entitlements, 0, 0, 0, 0, MSBStrings.W0109);
+					Log.LogWarning (null, null, null, Entitlements, 0, 0, 0, 0, "Cannot expand $(AppIdentifierPrefix) in Entitlements.plist without a provisioning profile for key {0} with value {1}", key, pstr.Value);
 					warnedAppIdentifierPrefix = true;
 				}
 			}
@@ -456,7 +456,7 @@ namespace Xamarin.MacDev.Tasks {
 			MobileProvision? profile;
 			PDictionary template;
 			PDictionary compiled;
-			PDictionary archived;
+			PDictionary? archived = null;
 			string path;
 
 			switch (SdkPlatform) {
@@ -480,9 +480,6 @@ namespace Xamarin.MacDev.Tasks {
 				Log.LogError (MSBStrings.E0048, SdkPlatform);
 				return false;
 			}
-
-			if (SdkIsSimulator)
-				return ExecuteSimulator ();
 
 			if (!string.IsNullOrEmpty (ProvisioningProfile)) {
 				if ((profile = GetMobileProvision (platform, ProvisioningProfile)) is null) {
@@ -512,49 +509,27 @@ namespace Xamarin.MacDev.Tasks {
 			}
 
 			compiled = GetCompiledEntitlements (profile, template);
-			archived = GetArchivedExpandedEntitlements (template, compiled);
 
-			try {
-				Directory.CreateDirectory (Path.GetDirectoryName (CompiledEntitlements!.ItemSpec));
-				WriteXcent (compiled, CompiledEntitlements.ItemSpec);
-			} catch (Exception ex) {
-				Log.LogError (MSBStrings.E0114, CompiledEntitlements, ex.Message);
-				return false;
-			}
+			Directory.CreateDirectory (Path.GetDirectoryName (CompiledEntitlements!.ItemSpec));
 
-			SaveArchivedExpandedEntitlements (archived);
-
-			if (Platform == Utils.ApplePlatform.MacCatalyst) {
-				EntitlementsInSignature = CompiledEntitlements;
-			} else if (SdkIsSimulator) {
-				if (compiled.Count > 0) {
-					EntitlementsInExecutable = CompiledEntitlements;
+			if (SdkIsSimulator) {
+				var simulatedEntitlements = compiled;
+				var simulatedXcent = Path.ChangeExtension (CompiledEntitlements.ItemSpec, "").TrimEnd ('.') + "-Simulated.xcent";
+				try {
+					WriteXcent (simulatedEntitlements, simulatedXcent);
+				} catch (Exception ex) {
+					Log.LogError (MSBStrings.E0114, simulatedXcent, ex.Message);
+					return false;
 				}
+
+				EntitlementsInExecutable = new TaskItem (simulatedXcent);
+
+				// No matter what, I've only been able to make Xcode apply a single entitlement to simulator builds: com.apple.security.get-task-allow
+				compiled = new PDictionary ();
+				compiled.Add ("com.apple.security.get-task-allow", new PBoolean (true));
 			} else {
-				EntitlementsInSignature = CompiledEntitlements;
+				archived = GetArchivedExpandedEntitlements (template, compiled);
 			}
-
-			return !Log.HasLoggedErrors;
-		}
-
-		bool ExecuteSimulator ()
-		{
-			// The problem with these warnings is that it's hard to avoid them.
-			// It would require setting the Entitlements property conditionally depending on whether the build is targeting the simulator or not,
-			// and that's non possible in a top-level project property.
-			//
-			// if (!string.IsNullOrEmpty (ProvisioningProfile))
-			// 	Log.LogWarning (null, null, null, ProvisioningProfile, 0, 0, 0, 0, MSBStrings.W7124 /* A provisioning profile has been specified, but this value is ignored for the simulator. */);
-			//
-			// if (!string.IsNullOrEmpty (Entitlements))
-			// 	Log.LogWarning (null, null, null, Entitlements, 0, 0, 0, 0, MSBStrings.W7125 /* A file with codesigning entitlements has been specified, but this value is ignored for the simulator. */);
-
-			// No matter what, I've only been able to make Xcode apply a single entitlement to simulator builds: com.apple.security.get-task-allow
-			var compiled = new PDictionary ();
-			compiled.Add ("com.apple.security.get-task-allow", new PBoolean (true));
-
-			// Still apply custom entitlements, just to offer a way out if we're wrong about com.apple.security.get-task-allow being the only entitlement.
-			AddCustomEntitlements (compiled, null);
 
 			try {
 				Directory.CreateDirectory (Path.GetDirectoryName (CompiledEntitlements!.ItemSpec));
@@ -564,7 +539,10 @@ namespace Xamarin.MacDev.Tasks {
 				return false;
 			}
 
-			EntitlementsInExecutable = CompiledEntitlements;
+			if (archived is not null)
+				SaveArchivedExpandedEntitlements (archived);
+
+			EntitlementsInSignature = CompiledEntitlements;
 
 			return !Log.HasLoggedErrors;
 		}

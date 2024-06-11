@@ -15,7 +15,7 @@
     <LinkMode>None</LinkMode>
     <!-- Don't remove native symbols, because it makes debugging native crashes harder -->
     <MtouchNoSymbolStrip>true</MtouchNoSymbolStrip>
-    <CodesignEntitlements Condition="'$(Platform)' == 'iPhoneSimulator'">$(MonoTouchTestDirectory)\Entitlements.plist</CodesignEntitlements>
+    <CodesignEntitlements>$(MonoTouchTestDirectory)\Entitlements.plist</CodesignEntitlements>
 
     <DefineConstants Condition="'$(Configuration)' == 'Debug'">$(DefineConstants);DEBUG</DefineConstants>
 
