@@ -100,7 +100,7 @@ xamarin_timezone_get_data (const char *name, uint32_t *size)
 	}
 	NSData *data = [tz data];
 	*size = (uint32_t) [data length];
-	void* result = malloc (*size);
+	void* result = calloc (1, *size);
 	[data getBytes: result length: *size];
 	return result;
 }
@@ -111,7 +111,7 @@ xamarin_timezone_get_names (uint32_t *count)
 	// COOP: no managed memory access: any mode.
 	NSArray *array = [NSTimeZone knownTimeZoneNames];
 	*count = (uint32_t) array.count;
-	char** result = (char**) malloc (sizeof (char*) * (*count));
+	char** result = (char**) calloc (sizeof (char*), *count);
 	for (unsigned long i = 0; i < *count; i++) {
 		NSString *s = [array objectAtIndex: i];
 		result [i] = strdup (s.UTF8String);

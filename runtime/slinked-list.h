@@ -11,7 +11,7 @@ typedef struct SList SList;
 static inline SList *
 s_list_prepend (SList *list, void *value)
 {
-	SList *first = (SList *) malloc (sizeof (SList));
+	SList *first = (SList *) calloc (1, sizeof (SList));
 	first->next = list;
 	first->data = value;
 	return first;

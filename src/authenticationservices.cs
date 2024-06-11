@@ -2416,7 +2416,7 @@ namespace AuthenticationServices {
 	}
 
 	[NoWatch, NoTV, iOS (17, 4), MacCatalyst (17, 4), Mac (14, 4)]
-	[Protocol]
+	[Protocol (BackwardsCompatibleCodeGeneration = false)]
 	interface ASAuthorizationWebBrowserSecurityKeyPublicKeyCredentialAssertionRequest {
 
 		[Abstract]
@@ -2425,7 +2425,7 @@ namespace AuthenticationServices {
 	}
 
 	[NoWatch, NoTV, iOS (17, 4), MacCatalyst (17, 4), Mac (14, 4)]
-	[Protocol]
+	[Protocol (BackwardsCompatibleCodeGeneration = false)]
 	interface ASAuthorizationWebBrowserSecurityKeyPublicKeyCredentialProvider {
 
 		[Abstract]
@@ -2438,7 +2438,7 @@ namespace AuthenticationServices {
 	}
 
 	[NoWatch, NoTV, iOS (17, 4), MacCatalyst (17, 4), Mac (14, 4)]
-	[Protocol]
+	[Protocol (BackwardsCompatibleCodeGeneration = false)]
 	interface ASAuthorizationWebBrowserSecurityKeyPublicKeyCredentialRegistrationRequest {
 
 		[Abstract]

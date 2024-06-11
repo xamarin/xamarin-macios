@@ -2115,8 +2115,19 @@ namespace GameController {
 		void SetModeFeedback (float startPosition, float resistiveStrength);
 
 		[TV (15, 4), Mac (12, 3), iOS (15, 4), MacCatalyst (15, 4)]
+#if XAMCORE_5_0
 		[Export ("setModeFeedbackWithResistiveStrengths:")]
+#else
+		[Wrap ("_SetModeFeedback (positionalResistiveStrengths.ToBlittable ())", IsVirtual = true)]
+#endif
 		void SetModeFeedback (GCDualSenseAdaptiveTriggerPositionalResistiveStrengths positionalResistiveStrengths);
+
+#if !XAMCORE_5_0
+		[Internal]
+		[TV (15, 4), Mac (12, 3), iOS (15, 4), MacCatalyst (15, 4)]
+		[Export ("setModeFeedbackWithResistiveStrengths:")]
+		void _SetModeFeedback (GCDualSenseAdaptiveTriggerPositionalResistiveStrengths_Blittable positionalResistiveStrengths);
+#endif
 
 		[Export ("setModeWeaponWithStartPosition:endPosition:resistiveStrength:")]
 		void SetModeWeapon (float startPosition, float endPosition, float resistiveStrength);
@@ -2125,8 +2136,19 @@ namespace GameController {
 		void SetModeVibration (float startPosition, float amplitude, float frequency);
 
 		[TV (15, 4), Mac (12, 3), iOS (15, 4), MacCatalyst (15, 4)]
+#if XAMCORE_5_0
 		[Export ("setModeVibrationWithAmplitudes:frequency:")]
+#else
+		[Wrap ("_SetModeVibration (positionalAmplitudes.ToBlittable (), frequency)", IsVirtual = true)]
+#endif
 		void SetModeVibration (GCDualSenseAdaptiveTriggerPositionalAmplitudes positionalAmplitudes, float frequency);
+
+#if !XAMCORE_5_0
+		[Internal]
+		[TV (15, 4), Mac (12, 3), iOS (15, 4), MacCatalyst (15, 4)]
+		[Export ("setModeVibrationWithAmplitudes:frequency:")]
+		void _SetModeVibration (GCDualSenseAdaptiveTriggerPositionalAmplitudes_Blittable positionalAmplitudes, float frequency);
+#endif
 
 		[Export ("setModeOff")]
 		void SetModeOff ();

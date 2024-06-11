@@ -126,6 +126,7 @@ namespace Cecil.Tests {
 			"CoreLocation.CLAuthorizationStatus CoreLocation.CLAuthorizationStatus::AuthorizedWhenInUse",
 			"CoreLocation.CLLocationManagerDelegate_Extensions.UpdatedLocation(CoreLocation.ICLLocationManagerDelegate, CoreLocation.CLLocationManager, CoreLocation.CLLocation, CoreLocation.CLLocation)",
 			"CoreLocation.CLLocationManagerDelegate.UpdatedLocation(CoreLocation.CLLocationManager, CoreLocation.CLLocation, CoreLocation.CLLocation)",
+			"CoreLocation.ICLLocationManagerDelegate.UpdatedLocation(CoreLocation.CLLocationManager, CoreLocation.CLLocation, CoreLocation.CLLocation)",
 			"CoreMedia.CMTime AVFoundation.AVCaptureConnection::VideoMaxFrameDuration()",
 			"CoreMedia.CMTime AVFoundation.AVCaptureConnection::VideoMinFrameDuration()",
 			"CoreMedia.CMTime AVFoundation.AVCaptureVideoDataOutput::MinFrameDuration()",
@@ -454,6 +455,7 @@ namespace Cecil.Tests {
 				case "Intents.INSendMessageIntent..ctor(Intents.INPerson[], System.String, System.String, System.String, Intents.INPerson)":
 				case "Intents.INSendMessageIntent.get_GroupName()":
 				case "Intents.INSendMessageIntentHandling_Extensions.ResolveGroupName(Intents.IINSendMessageIntentHandling, Intents.INSendMessageIntent, System.Action`1<Intents.INStringResolutionResult>)":
+				case "Intents.IINSendMessageIntentHandling.ResolveGroupName(Intents.INSendMessageIntent, System.Action`1<Intents.INStringResolutionResult>)":
 				case "Security.SecSharedCredential.RequestSharedWebCredential(System.String, System.String, System.Action`2<Security.SecSharedCredentialInfo[],Foundation.NSError>)":
 				case "System.String Intents.INSendMessageIntent::GroupName()":
 					return true;
