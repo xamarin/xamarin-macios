@@ -978,6 +978,10 @@ namespace Xamarin.Tests {
 			var appBundleInfo = new AppBundleInfo (platform, appPath, remoteWindows, runtimeIdentifiers, config);
 			var appBundleContents = appBundleInfo.GetAppBundleFiles ().ToHashSet ();
 
+			Console.WriteLine ($"App bundle contents:");
+			foreach (var abc in appBundleContents.OrderBy (v => v))
+				Console.WriteLine ($"    {abc}");
+
 			Assert.Multiple (() => {
 				var resourcesDirectory = GetResourcesDirectory (platform, "");
 

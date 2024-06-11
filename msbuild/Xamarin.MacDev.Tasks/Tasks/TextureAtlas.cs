@@ -28,6 +28,7 @@ namespace Xamarin.MacDev.Tasks {
 
 		protected override void AppendCommandLineArguments (IDictionary<string, string> environment, CommandLineBuilder args, ITaskItem input, ITaskItem output)
 		{
+			Log.LogWarning ($"AppendCommandLineArguments ({input.ItemSpec}, {output.ItemSpec}) => {input.GetMetadata ("FullPath")} {output.GetMetadata ("FullPath")}");
 			args.AppendFileNameIfNotNull (input.GetMetadata ("FullPath"));
 			args.AppendFileNameIfNotNull (Path.GetDirectoryName (output.GetMetadata ("FullPath")));
 		}
@@ -35,7 +36,9 @@ namespace Xamarin.MacDev.Tasks {
 		protected override string GetBundleRelativeOutputPath (IList<string> prefixes, ITaskItem input)
 		{
 			// Note: if the relative input dir is "relative/texture.atlas", then the relative output path will be "relative/texture.atlasc"
-			return Path.ChangeExtension (base.GetBundleRelativeOutputPath (prefixes, input), ".atlasc");
+			var rv = Path.ChangeExtension (base.GetBundleRelativeOutputPath (prefixes, input), ".atlasc");
+			Log.LogWarning ($"GetBundleRelativeOutputPath ({input.ItemSpec}) => {rv}");
+			return rv;
 		}
 
 		protected override IEnumerable<ITaskItem> GetCompiledBundleResources (ITaskItem input, ITaskItem output)
@@ -54,6 +57,8 @@ namespace Xamarin.MacDev.Tasks {
 
 				item.SetMetadata ("LogicalName", logical);
 				item.SetMetadata ("Optimize", "false");
+
+				Log.LogWarning ($"GetCompiledBundleResources ({input.ItemSpec}, {output.ItemSpec}) => {item.ItemSpec} LogicalName={logical}");
 
 				yield return item;
 			}
