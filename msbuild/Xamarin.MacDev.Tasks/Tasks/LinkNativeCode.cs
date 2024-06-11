@@ -257,7 +257,7 @@ namespace Xamarin.MacDev.Tasks {
 			return rv;
 		}
 
-		public static string[] GetEmbedEntitlementsInExecutableLinkerFlags (string entitlements)
+		public static string [] GetEmbedEntitlementsInExecutableLinkerFlags (string entitlements)
 		{
 			if (string.IsNullOrEmpty (entitlements))
 				return Array.Empty<string> ();
