@@ -17,7 +17,7 @@ using static Xamarin.Bundler.FileCopier;
 
 namespace Xamarin.MacDev.Tasks {
 	// This is the same as XamarinToolTask, except that it subclasses Task instead.
-	public abstract class XamarinTask : Task {
+	public abstract class XamarinTask : Task, IHasSessionId {
 
 		public string SessionId { get; set; } = string.Empty;
 

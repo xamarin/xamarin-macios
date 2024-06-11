@@ -13,7 +13,7 @@ using Xamarin.Localization.MSBuild;
 using Xamarin.Messaging.Build.Client;
 
 namespace Xamarin.MacDev.Tasks {
-	public class Metal : XamarinTask {
+	public class Metal : XamarinTask, IHasProjectDir, IHasResourcePrefix {
 		CancellationTokenSource? cancellationTokenSource;
 
 		#region Inputs
@@ -70,9 +70,8 @@ namespace Xamarin.MacDev.Tasks {
 				{ "SDKROOT", SdkRoot },
 			};
 
-			var prefixes = BundleResource.SplitResourcePrefixes (ResourcePrefix);
 			var intermediate = Path.Combine (IntermediateOutputPath, MetalPath);
-			var logicalName = BundleResource.GetLogicalName (ProjectDir, prefixes, SourceFile!, !string.IsNullOrEmpty (SessionId));
+			var logicalName = BundleResource.GetLogicalName (this, SourceFile!);
 			var path = Path.Combine (intermediate, logicalName);
 			var args = new List<string> ();
 			var dir = Path.GetDirectoryName (path);
