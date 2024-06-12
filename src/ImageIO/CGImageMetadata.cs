@@ -43,7 +43,6 @@ namespace ImageIO {
 		}
 	}
 
-	[return: MarshalAs (UnmanagedType.I1)]
 	public delegate bool CGImageMetadataTagBlock (NSString path, CGImageMetadataTag tag);
 
 	// CGImageMetadata.h
