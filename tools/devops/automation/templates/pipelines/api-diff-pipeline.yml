@@ -1,0 +1,86 @@
+# template that can be extended by pipelines that will be used to build the project. This
+# allows to share te parameters and resources. 
+
+parameters:
+
+- name: provisionatorChannel
+  displayName: Provisionator channel to use 
+  type: string
+  default: 'latest'
+
+- name: macOSName # comes from the build agent demand named macOS.Name
+  displayName: Name of the version of macOS to use
+  type: string
+  default: 'Sonoma'
+
+- name: pool
+  type: string
+  displayName: Bot pool to use
+  default: automatic
+  values:
+  - pr
+  - ci
+  - automatic
+
+- name: isPR
+  displayName: Is PR build
+  type: boolean
+  default: false
+
+- name: testConfigurations
+  displayName: Test configurations to run
+  type: object
+  default: []
+
+resources:
+  repositories:
+  - repository: self
+    checkoutOptions:
+      submodules: true
+
+  - repository: yaml-templates
+    type: github
+    name: xamarin/yaml-templates
+    ref: refs/heads/main
+    endpoint: xamarin
+
+  - repository: sdk-insertions
+    type: github
+    name: xamarin/sdk-insertions
+    ref: refs/heads/main
+    endpoint: xamarin
+
+  - repository: maccore
+    type: github
+    name: xamarin/maccore
+    ref: refs/heads/main
+    endpoint: xamarin
+
+  - repository: release-scripts
+    type: github
+    name: xamarin/release-scripts
+    ref: refs/heads/only_codesign
+    endpoint: xamarin
+
+variables:
+- ${{ if eq(parameters.isPR, false) }}:
+  - ${{ if contains(variables['Build.DefinitionName'], 'private') }}:
+    - template: ../vsts-variables.yml
+  - template: ../variables.yml
+  - name: MaciosUploadPrefix
+    value: ''
+  - name: DisablePipelineConfigDetector
+    value: true
+- ${{ else }}:
+  - template: ../variables.yml
+  - name: MaciosUploadPrefix
+    value: ''
+
+stages:
+- template: ../api-diff-stage.yml
+  parameters:
+    xcodeChannel: Stable
+    macOSName: ${{ parameters.macOSName }}
+    isPR: ${{ parameters.isPR }}
+    provisionatorChannel: ${{ parameters.provisionatorChannel }}
+    pool: ${{ parameters.pool }}
