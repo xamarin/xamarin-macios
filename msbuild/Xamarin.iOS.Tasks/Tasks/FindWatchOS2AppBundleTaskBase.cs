@@ -30,7 +30,7 @@ namespace Xamarin.iOS.Tasks {
 		{
 			if (ShouldExecuteRemotely ()) {
 				var taskRunner = new TaskRunner (SessionId, BuildEngine4);
-				taskRunner.FixReferencedItems (WatchAppReferences);
+				taskRunner.FixReferencedItems (this, WatchAppReferences);
 				return taskRunner.RunAsync (this).Result;
 			}
 
