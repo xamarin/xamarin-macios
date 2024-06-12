@@ -20,10 +20,6 @@ parameters:
   type: string
   default: ''
 
-- name: useXamarinStorage
-  type: boolean
-  default: false  # xamarin-storage will disappear, so by default do not use it
-
 - name: vsdropsPrefix
   type: string
 
@@ -140,7 +136,7 @@ steps:
   displayName: Expand test libraries.
   timeoutInMinutes: 10
 
-# Run tests. If we are using xamarin-storage add a periodic command to be executed by xharness, else, since we are using vsdrops do nothing.
+# Run tests.
 - bash: |
     set -x
     set -e
@@ -162,7 +158,6 @@ steps:
   env:
     TEST_PREFIX: ${{ upper(parameters.testPrefix) }}
     TESTS_EXTRA_ARGUMENTS: ${{ parameters.testsLabels }}
-    USE_XAMARIN_STORAGE: ${{ parameters.useXamarinStorage }}
     USE_TCP_TUNNEL: 'true'
     PARAMETERS_TESTPREFIX: '${{ parameters.testPrefix }}'
   workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios

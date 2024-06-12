@@ -43,6 +43,10 @@ steps:
   parameters:
     CleanseProcesses: true
 
+- bash: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/scripts/disable-codeql-arm64.sh
+  displayName: 'Disable CodeQL on arm64'
+  name: disableCodeQLOnArm64
+
 # Write a generic failure message to the failure comment file, so a failure will be reported
 # if something goes wrong before we successfully complete the tests (in which case we delete the file).
 - pwsh: |
@@ -225,6 +229,6 @@ steps:
     SYSTEM_ACCESSTOKEN: $(System.AccessToken)
     TEST_BOT: $(Agent.Name)
     ${{ if eq(parameters.repositoryAlias, 'self') }}:
-      COMMENT_HASH: $(GIT_HASH)
+      COMMENT_HASH: $(fix_commit.GIT_HASH)
     ${{ else }}:
       COMMENT_HASH: $(Build.SourceVersion)
