@@ -2919,7 +2919,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			ProjectName="$(MSBuildProjectName)"
 			ProjectTypeGuids="$(ProjectTypeGuids)"
 			SigningKey="$(_CodeSigningKey)"
-			SolutionPath="$(SolutionPath)"
+			RuntimeIdentifiers="$(RuntimeIdentifiers);$(RuntimeIdentifier)"
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
 			WatchAppReferences="@(_ResolvedWatchAppReferences)"
 			>
