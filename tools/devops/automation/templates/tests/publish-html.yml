@@ -97,7 +97,7 @@ steps:
     TESTS_SUMMARY: $(TEST_SUMMARY_PATH)
     ACCESSTOKEN: $(System.AccessToken)
     ${{ if eq(parameters.repositoryAlias, 'self') }}:
-      COMMENT_HASH: $(GIT_HASH)
+      COMMENT_HASH: $(fix_commit.GIT_HASH)
     ${{ else }}:
       COMMENT_HASH: $(Build.SourceVersion)
   displayName: 'Add summaries'
