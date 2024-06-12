@@ -253,7 +253,18 @@ class GitHubComments {
     }
 
     static [bool] IsPR() {
-        return $Env:BUILD_REASON -eq "PullRequest"
+        if ($Env:BUILD_REASON -eq "PullRequest") {
+            return $true;
+        }
+
+        if (($Env:BUILD_REASON -eq "ResourceTrigger")) {
+            $sourceBranch = $Env:BUILD_SOURCEBRANCH
+            if ($sourceBranch.StartsWith("refs/pull/") -and $sourceBranch.EndsWith("/merge")) {
+                return $true
+            }
+        }
+
+        return $false
     }
 
     static [string] GetPRID() {
