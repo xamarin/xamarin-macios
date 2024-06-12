@@ -19,10 +19,6 @@ parameters:
   type: object
   default: []
 
-- name: useXamarinStorage
-  type: boolean
-  default: false
-
 - name: vsdropsPrefix
   type: string
 
@@ -135,7 +131,6 @@ stages:
         testsLabels: $(TESTS_LABELS)
         statusContext: $(STATUS_CONTEXT)
         testPlatform:  $(TEST_PLATFORM)
-        useXamarinStorage: ${{ parameters.useXamarinStorage }}
         vsdropsPrefix: ${{ parameters.vsdropsPrefix }}
         keyringPass: ${{ parameters.keyringPass }}
         testPrefix: $(TEST_PREFIX)
