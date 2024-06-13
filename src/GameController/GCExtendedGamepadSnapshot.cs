@@ -153,8 +153,16 @@ namespace GameController {
 		[ObsoletedOSPlatform ("ios13.0", "Use 'GCController.GetExtendedGamepadController()' instead.")]
 		[ObsoletedOSPlatform ("maccatalyst13.1", "Use 'GCExtendedGamepadSnapshotData' instead.")]
 #endif
+#if XAMCORE_5_0
+		byte supportsClickableThumbsticks;
+		public bool SupportsClickableThumbsticks {
+			get => supportsClickableThumbsticks != 0;
+			set => supportsClickableThumbsticks = value.AsByte ();
+		}
+#else
 		[MarshalAs (UnmanagedType.I1)]
 		public bool SupportsClickableThumbsticks;
+#endif
 
 #if NET
 		[SupportedOSPlatform ("tvos")]
@@ -166,8 +174,7 @@ namespace GameController {
 		[ObsoletedOSPlatform ("ios13.0", "Use 'GCController.GetExtendedGamepadController()' instead.")]
 		[ObsoletedOSPlatform ("maccatalyst13.1", "Use 'GCExtendedGamepadSnapshotData' instead.")]
 #endif
-		[MarshalAs (UnmanagedType.I1)]
-		bool LeftThumbstickButton;
+		byte LeftThumbstickButton;
 
 #if NET
 		[SupportedOSPlatform ("tvos")]
@@ -179,8 +186,7 @@ namespace GameController {
 		[ObsoletedOSPlatform ("ios13.0", "Use 'GCController.GetExtendedGamepadController()' instead.")]
 		[ObsoletedOSPlatform ("maccatalyst13.1", "Use 'GCExtendedGamepadSnapshotData' instead.")]
 #endif
-		[MarshalAs (UnmanagedType.I1)]
-		bool RightThumbstickButton;
+		byte RightThumbstickButton;
 
 #if NET
 		[SupportedOSPlatform ("tvos")]
@@ -194,7 +200,11 @@ namespace GameController {
 #endif
 		[DllImport (Constants.GameControllerLibrary)]
 		unsafe static extern /* NSData * __nullable */ IntPtr NSDataFromGCExtendedGamepadSnapshotData (
+#if XAMCORE_5_0
 			/* GCExtendedGamepadSnapshotData * __nullable */ GCExtendedGamepadSnapshotData* snapshotData);
+#else
+			/* GCExtendedGamepadSnapshotData * __nullable */ GCExtendedGamepadSnapshotData_Blittable* snapshotData);
+#endif
 
 #if NET
 		[SupportedOSPlatform ("tvos")]
@@ -209,13 +219,95 @@ namespace GameController {
 		public NSData? ToNSData ()
 		{
 			unsafe {
+#if !XAMCORE_5_0
+				var blittable = ToBlittable ();
+				GCExtendedGamepadSnapshotData_Blittable* self = &blittable;
+				{
+#else
 				fixed (GCExtendedGamepadSnapshotData* self = &this) {
+#endif
 					var p = NSDataFromGCExtendedGamepadSnapshotData (self);
 					return p == IntPtr.Zero ? null : new NSData (p);
 				}
 			}
 		}
+
+#if !XAMCORE_5_0
+		internal GCExtendedGamepadSnapshotData_Blittable ToBlittable ()
+		{
+			var blittable = new GCExtendedGamepadSnapshotData_Blittable ();
+			blittable.Version = Version;
+			blittable.Size = Size;
+			blittable.DPadX = DPadX;
+			blittable.DPadY = DPadY;
+			blittable.ButtonA = ButtonA;
+			blittable.ButtonB = ButtonB;
+			blittable.ButtonX = ButtonX;
+			blittable.ButtonY = ButtonY;
+			blittable.LeftShoulder = LeftShoulder;
+			blittable.RightShoulder = RightShoulder;
+			blittable.LeftThumbstickX = LeftThumbstickX;
+			blittable.LeftThumbstickY = LeftThumbstickY;
+			blittable.RightThumbstickX = RightThumbstickX;
+			blittable.RightThumbstickY = RightThumbstickY;
+			blittable.LeftTrigger = LeftTrigger;
+			blittable.RightTrigger = RightTrigger;
+			blittable.SupportsClickableThumbsticks = SupportsClickableThumbsticks.AsByte ();
+			blittable.LeftThumbstickButton = LeftThumbstickButton;
+			blittable.RightThumbstickButton = RightThumbstickButton;
+			return blittable;
+		}
+
+		internal GCExtendedGamepadSnapshotData (GCExtendedGamepadSnapshotData_Blittable blittable)
+		{
+			Version = blittable.Version;
+			Size = blittable.Size;
+			DPadX = blittable.DPadX;
+			DPadY = blittable.DPadY;
+			ButtonA = blittable.ButtonA;
+			ButtonB = blittable.ButtonB;
+			ButtonX = blittable.ButtonX;
+			ButtonY = blittable.ButtonY;
+			LeftShoulder = blittable.LeftShoulder;
+			RightShoulder = blittable.RightShoulder;
+			LeftThumbstickX = blittable.LeftThumbstickX;
+			LeftThumbstickY = blittable.LeftThumbstickY;
+			RightThumbstickX = blittable.RightThumbstickX;
+			RightThumbstickY = blittable.RightThumbstickY;
+			LeftTrigger = blittable.LeftTrigger;
+			RightTrigger = blittable.RightTrigger;
+			SupportsClickableThumbsticks = blittable.SupportsClickableThumbsticks != 0;
+			LeftThumbstickButton = blittable.LeftThumbstickButton;
+			RightThumbstickButton = blittable.RightThumbstickButton;
+		}
+#endif
 	}
+
+
+#if !XAMCORE_5_0
+	[StructLayout (LayoutKind.Sequential, Pack = 1)]
+	struct GCExtendedGamepadSnapshotData_Blittable {
+		public ushort Version;
+		public ushort Size;
+		public float DPadX;
+		public float DPadY;
+		public float ButtonA;
+		public float ButtonB;
+		public float ButtonX;
+		public float ButtonY;
+		public float LeftShoulder;
+		public float RightShoulder;
+		public float LeftThumbstickX;
+		public float LeftThumbstickY;
+		public float RightThumbstickX;
+		public float RightThumbstickY;
+		public float LeftTrigger;
+		public float RightTrigger;
+		public byte SupportsClickableThumbsticks;
+		public byte LeftThumbstickButton;
+		public byte RightThumbstickButton;
+	}
+#endif // !XAMORE_5_0
 
 	public partial class GCExtendedGamepadSnapshot {
 
@@ -237,7 +329,11 @@ namespace GameController {
 #endif
 		[DllImport (Constants.GameControllerLibrary)]
 		unsafe static extern byte GCExtendedGamepadSnapshotDataFromNSData (
+#if XAMCORE_5_0
 			/* GCExtendedGamepadSnapshotData * __nullable */ GCExtendedGamepadSnapshotData* snapshotData,
+#else
+			/* GCExtendedGamepadSnapshotData * __nullable */ GCExtendedGamepadSnapshotData_Blittable* snapshotData,
+#endif
 			/* NSData * __nullable */ IntPtr data);
 
 		public static bool TryGetSnapShotData (NSData? data, out GCExtendedGamepadSnapShotDataV100 snapshotData)
@@ -262,7 +358,14 @@ namespace GameController {
 		{
 			snapshotData = default;
 			unsafe {
+#if XAMCORE_5_0
 				return GCExtendedGamepadSnapshotDataFromNSData ((GCExtendedGamepadSnapshotData*) Unsafe.AsPointer<GCExtendedGamepadSnapshotData> (ref snapshotData), data.GetHandle ()) != 0;
+#else
+				GCExtendedGamepadSnapshotData_Blittable blittableData = snapshotData.ToBlittable ();
+				var rv = GCExtendedGamepadSnapshotDataFromNSData (&blittableData, data.GetHandle ()) != 0;
+				snapshotData = new GCExtendedGamepadSnapshotData (blittableData);
+				return rv;
+#endif
 			}
 		}
 	}

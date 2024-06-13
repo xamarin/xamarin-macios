@@ -23,11 +23,10 @@ namespace AVFoundation {
 
         [iOS (14, 5), TV (14, 5), Watch (7,4)]
         [DllImport (Constants.AVFoundationLibrary)]
-        [return: MarshalAs (UnmanagedType.I1)]
-        static extern /* BOOL */ bool AVSampleBufferAttachContentKey (
+        unsafe static extern /* BOOL */ byte AVSampleBufferAttachContentKey (
             /* CMSampleBufferRef */ CMSampleBufferRef sbuf,
             /* AVContentKey */ AVContentKey contentKey,
-            /* NSError * _Nullable * _Nullable */ out NSErrorPtr outError);
+            /* NSError * _Nullable * _Nullable */ IntPtr* outError);
         
         [iOS (14, 5), TV (14, 5), Watch (7,4)]
         public static bool AttachContentKey (this CMSampleBuffer sampleBuffer, AVContentKey contentKey, out NSError error)
@@ -39,9 +38,12 @@ namespace AVFoundation {
                 ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (contentKey));
             
             IntPtr outerr;
-            var retVal = AVSampleBufferAttachContentKey (sampleBuffer.Handle, contentKey.Handle, out outerr);
+            byte retVal;
+            unsafe {
+				retVal = AVSampleBufferAttachContentKey (sampleBuffer.Handle, contentKey.Handle, &outerr);
+            }
             error = Runtime.GetNSObject<NSError> (outerr);
-            return retVal;
+            return retVal != 0;
         }
     }
 }

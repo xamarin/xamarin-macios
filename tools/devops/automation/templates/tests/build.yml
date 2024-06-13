@@ -28,10 +28,6 @@ parameters:
   type: boolean
   default: false
 
-- name: useXamarinStorage
-  type: boolean
-  default: false  # xamarin-storage will disappear, so by default do not use it
-
 - name: vsdropsPrefix
   type: string
 
