@@ -1917,5 +1917,45 @@ namespace Xamarin.Tests {
 				var output = ExecuteWithMagicWordAndAssert (appExecutable, env);
 			}
 		}
+
+		bool FindAssembly (string path, string dllName)
+		{
+			foreach (string file in Directory.GetFiles (path, "*.dll", SearchOption.AllDirectories)) {
+				if (Path.GetFileName (file).Equals (dllName, StringComparison.OrdinalIgnoreCase)) {
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		[Test]
+		[TestCase (ApplePlatform.iOS, "ios-arm64;", "-all,System.Private.CoreLib")]
+		[TestCase (ApplePlatform.iOS, "ios-arm64;", "all,-System.Private.CoreLib")]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64", "-all,System.Private.CoreLib")]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64", "all,-System.Private.CoreLib")]
+		[TestCase (ApplePlatform.TVOS, "tvos-arm64;", "-all,System.Private.CoreLib")]
+		[TestCase (ApplePlatform.TVOS, "tvos-arm64;", "all,-System.Private.CoreLib")]
+		public void PartialAOTTest (ApplePlatform platform, string runtimeIdentifiers, string mtouchInterpreter)
+		{
+			var project = "MySimpleApp";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
+
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
+			Clean (project_path);
+			var properties = GetDefaultProperties (runtimeIdentifiers);
+			properties ["MtouchInterpreter"] = $"\"{mtouchInterpreter}\"";
+
+			DotNet.AssertBuild (project_path, properties);
+
+			Assert.True (!FindAssembly (appPath, "aot-instances.dll"), "Dedup optimization shouldn't been enabled for partial AOT compilation");
+
+			var appExecutable = GetNativeExecutable (platform, appPath);
+
+			if (CanExecute (platform, runtimeIdentifiers)) {
+				ExecuteWithMagicWordAndAssert (appExecutable);
+			}
+		}
 	}
 }
