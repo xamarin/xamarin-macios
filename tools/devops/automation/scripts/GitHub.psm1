@@ -104,7 +104,7 @@ class GitHubStatuses {
     }
 
     [string] GetStatusPrefix() {
-        if ($Env:BUILD_REASON -eq "PullRequest") {
+        if ($Env:BUILD_REASON -eq "PullRequest" -or $Env:IS_PR -eq "true") {
             return "[PR]"
         } else {
             return "[CI]"
@@ -264,7 +264,7 @@ class GitHubComments {
             }
         }
 
-        return $false
+        return Env:IS_PR -eq "true"
     }
 
     static [string] GetPRID() {
@@ -283,7 +283,7 @@ class GitHubComments {
             return
         }
 
-        if ([string]::IsNullOrEmpty($Env:PR_ID)) {
+        if ([string]::IsNullOrEmpty($Env:PR_ID) -or $Env:IS_PR -eq "false") {
             $prefix = "[CI Build]"
         } else {
             $prefix = "[PR Build]"
@@ -639,7 +639,7 @@ function Get-TargetUrl {
 
     .PARAMETER Description
         A show description to be added in the comment, this will show as a short version of the comment on GitHub.
-    
+
     .PARAMETER Message
         A longer string that contains the full comment message. Will be shown when the comment is expanded.
 
@@ -665,7 +665,7 @@ function New-GitHubComment {
         [Parameter(Mandatory)]
         [String]
         $Header,
-        
+
         [String]
         $Description,
 
@@ -1038,9 +1038,9 @@ function Convert-Markdown {
 # module exports, any other functions are private and should not be used outside the module.
 Export-ModuleMember -Function New-GitHubComment
 Export-ModuleMember -Function Get-GitHubPRInfo
-Export-ModuleMember -Function New-GistWithFiles 
-Export-ModuleMember -Function New-GistObjectDefinition 
-Export-ModuleMember -Function New-GistWithContent 
+Export-ModuleMember -Function New-GistWithFiles
+Export-ModuleMember -Function New-GistObjectDefinition
+Export-ModuleMember -Function New-GistWithContent
 Export-ModuleMember -Function Convert-Markdown
 
 # new future API that uses objects.
