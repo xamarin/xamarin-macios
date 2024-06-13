@@ -54,11 +54,13 @@ get_stacktrace (void **addresses, int frames)
 	// get the symbols for the addresses
 	char** strs = backtrace_symbols (addresses, frames);
 
+	const int max_symbol_length = 512; // this is just to have a maximum value, so that we can use strnlen instead of strlen
+
 	// compute the total length of all the symbols, adding 1 for every line (for the newline)
 	size_t length = 0;
 	int i;
 	for (i = 0; i < frames; i++)
-		length += strlen (strs [i]) + 1;
+		length += strnlen (strs [i], max_symbol_length) + 1;
 	length++;
 
 	// format the symbols as one long string with newlines
@@ -67,7 +69,7 @@ get_stacktrace (void **addresses, int frames)
 	size_t left = length;
 	for (i = 0; i < frames; i++) {
 		snprintf (buffer, left, "%s\n", strs [i]);
-		size_t slen = strlen (strs [i]) + 1;
+		size_t slen = strnlen (strs [i], max_symbol_length) + 1;
 		left -= slen;
 		buffer += slen;
 	}

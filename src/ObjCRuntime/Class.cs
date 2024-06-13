@@ -872,10 +872,9 @@ namespace ObjCRuntime {
 			}
 		}
 
-		[StructLayout (LayoutKind.Sequential, CharSet = CharSet.Ansi)]
 		internal struct objc_attribute_prop {
-			[MarshalAs (UnmanagedType.LPStr)] internal string name;
-			[MarshalAs (UnmanagedType.LPStr)] internal string value;
+			internal string name;
+			internal string value;
 		}
 #endif // !COREBUILD
 	}
