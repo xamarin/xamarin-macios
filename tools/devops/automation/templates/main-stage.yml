@@ -20,10 +20,6 @@ parameters:
   type: boolean
   default: true
 
-- name: enableAPIDiff
-  type: boolean
-  default: true
-
 - name: forceInsertion
   type: boolean
   default: false
@@ -306,7 +302,7 @@ stages:
   ${{ if and(ne(parameters.dependsOn, ''), ne(parameters.dependsOnResult, '')) }}:
     condition: eq(dependencies.${{ parameters.dependsOn }}.result, '${{ parameters.dependsOnResult }}')
   jobs:
-  
+
   - ${{ if eq(parameters.pool, 'automatic') }}:
     - job: AgentPoolSelector       # https://docs.microsoft.com/en-us/azure/devops/pipelines/process/phases?view=azure-devops&tabs=yaml
       pool:                        # Consider using an agentless (server) job here, but would need to host selection logic as an Azure function: https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#server
@@ -439,21 +435,3 @@ stages:
       packages: # flatten the pkgs for the parameter
       - ${{ each pkg in parameters.legacyPackageJobs }}:
         - ${{ pkg }}
-
-- ${{ if eq(parameters.enableAPIDiff, true) }}:
-  - stage: generate_api_diff
-    displayName: '${{ parameters.stageDisplayNamePrefix }}API diff'
-    dependsOn: [ configure_build ]
-    jobs:
-    - template: ./build/api-diff-stage.yml
-      parameters:
-        xcodeChannel: ${{ parameters.xcodeChannel }}
-        macOSName: ${{ parameters.macOSName }}
-        isPR: ${{ parameters.isPR }}
-        repositoryAlias: ${{ parameters.repositoryAlias }}
-        commit: ${{ parameters.commit }}
-        vsdropsPrefix: ${{ variables.vsdropsPrefix }}
-        keyringPass: $(pass--lab--mac--builder--keychain)
-        gitHubToken: $(Github.Token)
-        xqaCertPass: $(xqa--certificates--password)
-        pool: ${{ parameters.pool }}
