@@ -246,7 +246,7 @@ extends:
         - repository: sdk-insertions
         - repository: release-scripts
     stages:
-    - template: ../main-stage.yml
+    - template: templates/main-stage.yml
       parameters:
         xcodeChannel: Stable
         macOSName: ${{ parameters.macOSName }}
