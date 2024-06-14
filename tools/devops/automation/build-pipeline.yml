@@ -176,9 +176,9 @@ resources:
 
 variables:
 - ${{ if contains(variables['Build.DefinitionName'], 'private') }}:
-  - template: ../vsts-variables.yml
+  - template: templates/vsts-variables.yml
 - template: templates/common/vs-release-vars.yml@sdk-insertions
-- template: ../variables.yml
+- template: templates/variables.yml
 - name: MicrobuildConnector
   value: 'MicroBuild Signing Task (DevDiv)'
 - name: MaciosUploadPrefix
