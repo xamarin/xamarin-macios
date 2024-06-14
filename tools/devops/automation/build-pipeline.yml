@@ -173,6 +173,9 @@ resources:
     ref: refs/heads/only_codesign
     endpoint: xamarin
 
+  - repository: CustomPipelineTemplates
+    type: git
+    name: 1ESPipelineTemplates/MicroBuildTemplate
 
 variables:
 - ${{ if contains(variables['Build.DefinitionName'], 'private') }}:
