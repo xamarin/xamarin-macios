@@ -48,10 +48,6 @@ parameters:
   type: boolean
   default: true
 
-- name: signingSetupSteps
-  type: stepList
-  default: []
-
 - name: testConfigurations
   displayName: Test configurations to run
   type: object
@@ -265,7 +261,7 @@ extends:
         macTestsConfigurations: ${{ parameters.macTestsConfigurations }}
         azureStorage: ${{ variables['azureStorage'] }}
         azureContainer: ${{ variables['azureContainer'] }}
-        signingSetupSteps: ${{ parameters.signingSetupSteps }}
+        signingSetupSteps:
           - template: ./templates/sign-and-notarized/setup.yml
             parameters:
               isPR: false
