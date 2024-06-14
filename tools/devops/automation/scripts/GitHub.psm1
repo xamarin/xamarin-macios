@@ -104,7 +104,7 @@ class GitHubStatuses {
     }
 
     [string] GetStatusPrefix() {
-        if ($Env:BUILD_REASON -eq "PullRequest" -or $Env:IS_PR -eq "true") {
+        if ($Env:BUILD_REASON -eq "PullRequest" -or $Env:IS_PR -eq "True") {
             return "[PR]"
         } else {
             return "[CI]"
@@ -264,7 +264,7 @@ class GitHubComments {
             }
         }
 
-        return Env:IS_PR -eq "true"
+        return $Env:IS_PR -eq "True"
     }
 
     static [string] GetPRID() {
@@ -283,7 +283,7 @@ class GitHubComments {
             return
         }
 
-        if ([string]::IsNullOrEmpty($Env:PR_ID) -or $Env:IS_PR -eq "false") {
+        if ([string]::IsNullOrEmpty($Env:PR_ID) -or $Env:IS_PR -ne "True") {
             $prefix = "[CI Build]"
         } else {
             $prefix = "[PR Build]"
