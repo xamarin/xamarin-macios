@@ -202,23 +202,58 @@ variables:
   - name: Packaging.EnableSBOMSigning
     value: false
 
-stages:
-- template: ../main-stage.yml
+extends:
+  template: azure-pipelines/MicroBuild.1ES.Official.yml@CustomPipelineTemplates
   parameters:
-    xcodeChannel: Stable
-    macOSName: ${{ parameters.macOSName }}
-    isPR: ${{ parameters.isPR }}
-    provisionatorChannel: ${{ parameters.provisionatorChannel }}
-    pool: ${{ parameters.pool }}
-    runGovernanceTests: ${{ parameters.runGovernanceTests }}
-    forceInsertion: ${{ parameters.forceInsertion }}
-    skipESRP: ${{ parameters.skipESRP }}
-    pushNugets: ${{ parameters.pushNugets }}
-    pushNugetsToMaestro: ${{ parameters.pushNugetsToMaestro }}
-    ${{ if ne(length(parameters.testConfigurations), 0)}}:
-      testConfigurations: ${{ parameters.testConfigurations }}
-    deviceTestsConfigurations: ${{ parameters.deviceTestsConfigurations }}
-    macTestsConfigurations: ${{ parameters.macTestsConfigurations }}
-    azureStorage: ${{ variables['azureStorage'] }}
-    azureContainer: ${{ variables['azureContainer'] }}
-    signingSetupSteps: ${{ parameters.signingSetupSteps }}
+    pool:  # default pool to be used forvalidation jobs
+      name: AzurePipelines-EO
+      image: 1ESPT-Windows2022
+      os: windows
+    sdl:
+      baseline:
+        baselineFile: '$(System.DefaultWorkingDirectory)\\maccore\\tools\\devops\\baselines.gdnbaselines'
+      suppression:
+        suppressionFile: '$(System.DefaultWorkingDirectory)\\maccore\\tools\\devops\\suppress.gdnsuppress'
+      sourceAnalysisPool:
+        name: AzurePipelines-EO
+        image: 1ESPT-Windows2022
+        os: windows
+      tsa:
+        configFile: '$(System.DefaultWorkingDirectory)\\maccore\\tools\\devops\\tsa_config.gdntsa'
+      sbom:
+        enabled: false  # we run our on sbom generation
+      credscan:
+        suppressionsFile: '$(System.DefaultWorkingDirectory)\\maccore\\tools\\devops\\CredScanSuppressions.json'
+        outputFormat: sarif
+        debugMode: false
+        batchSize: 16
+      policheck:
+        exclusionsFile: '$(System.DefaultWorkingDirectory)\\maccore\\tools\\devops\\PoliCheckExclusions.xml'
+      sourceRepositoriesToScan:
+        runInSingleJob: true # run both maccore and macios in the same job
+        include:
+        - repository: maccore
+        exclude:
+        - repository: yaml-templates
+        - repository: sdk-insertions
+        - repository: release-scripts
+    stages:
+    - template: ../main-stage.yml
+      parameters:
+        xcodeChannel: Stable
+        macOSName: ${{ parameters.macOSName }}
+        isPR: ${{ parameters.isPR }}
+        provisionatorChannel: ${{ parameters.provisionatorChannel }}
+        pool: ${{ parameters.pool }}
+        runGovernanceTests: ${{ parameters.runGovernanceTests }}
+        forceInsertion: ${{ parameters.forceInsertion }}
+        skipESRP: ${{ parameters.skipESRP }}
+        pushNugets: ${{ parameters.pushNugets }}
+        pushNugetsToMaestro: ${{ parameters.pushNugetsToMaestro }}
+        ${{ if ne(length(parameters.testConfigurations), 0)}}:
+          testConfigurations: ${{ parameters.testConfigurations }}
+        deviceTestsConfigurations: ${{ parameters.deviceTestsConfigurations }}
+        macTestsConfigurations: ${{ parameters.macTestsConfigurations }}
+        azureStorage: ${{ variables['azureStorage'] }}
+        azureContainer: ${{ variables['azureContainer'] }}
+        signingSetupSteps: ${{ parameters.signingSetupSteps }}
