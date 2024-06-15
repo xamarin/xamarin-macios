@@ -1,7 +1,6 @@
 variables:
 - ${{ if contains(variables['Build.DefinitionName'], 'private') }}:
   - template: templates/vsts-variables.yml
-- template: templates/common/vs-release-vars.yml@sdk-insertions  # used for the insertion steps
 - group: xamops-azdev-secrets
 - group: Xamarin-Secrets
 - group: Xamarin Signing
