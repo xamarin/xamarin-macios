@@ -27,11 +27,6 @@ parameters:
   type: boolean
   default: true
 
-- name: enableAPIDiff
-  displayName: Enable API diff generation
-  type: boolean
-  default: true
-
 - name: forceInsertion
   displayName: Force Insertion 
   type: boolean
@@ -73,7 +68,6 @@ parameters:
       stageName: 'ios64b_device',
       displayName: 'iOS64 Device Tests',
       testPool: 'VSEng-Xamarin-Mac-Devices',
-      useXamarinStorage: false,
       testsLabels: '--label=run-ios-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests',
       statusContext: 'VSTS: device tests iOS',
       makeTarget: 'vsts-device-tests',
@@ -86,7 +80,6 @@ parameters:
       stageName: 'tvos_device',
       displayName: 'tvOS Device Tests',
       testPool: 'VSEng-Xamarin-Mac-Devices',
-      useXamarinStorage: false,
       testsLabels: '--label=run-tvos-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests',
       statusContext: 'VSTS: device tests tvOS',
       makeTarget: 'vsts-device-tests',
@@ -191,6 +184,7 @@ variables:
 - ${{ if eq(parameters.isPR, false) }}:
   - ${{ if contains(variables['Build.DefinitionName'], 'private') }}:
     - template: ../vsts-variables.yml
+  - template: templates/common/vs-release-vars.yml@sdk-insertions
   - template: ../variables.yml
   - name: MicrobuildConnector
     value: 'MicroBuild Signing Task (DevDiv)'
@@ -200,6 +194,7 @@ variables:
     value: true
 - ${{ else }}:
   - template: ../variables.yml
+  - template: templates/common/vs-release-vars.yml@sdk-insertions
   - name: MicrobuildConnector
     value: ''
   - name: MaciosUploadPrefix
@@ -216,7 +211,6 @@ stages:
     provisionatorChannel: ${{ parameters.provisionatorChannel }}
     pool: ${{ parameters.pool }}
     runGovernanceTests: ${{ parameters.runGovernanceTests }}
-    enableAPIDiff: ${{ parameters.enableAPIDiff }}
     forceInsertion: ${{ parameters.forceInsertion }}
     skipESRP: ${{ parameters.skipESRP }}
     pushNugets: ${{ parameters.pushNugets }}

@@ -418,15 +418,62 @@ namespace Metal {
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MTLQuadTessellationFactorsHalf {
+#if XAMCORE_5_0
+		ushort edgeTessellationFactor0;
+		ushort edgeTessellationFactor1;
+		ushort edgeTessellationFactor2;
+		ushort edgeTessellationFactor3;
+		ushort insideTessellationFactor0;
+		ushort insideTessellationFactor1;
+
+		public ushort [] EdgeTessellationFactor {
+			get => new ushort [] { edgeTessellationFactor0, edgeTessellationFactor1, edgeTessellationFactor2, edgeTessellationFactor3 };
+			set {
+				if (value.Length > 4)
+					throw new ArgumentOutOfRangeException ($"The '{nameof (value)}' array length can't be greater than 4.");
+
+				edgeTessellationFactor0 = value.Length >= 1 ? value [0] : 0;
+				edgeTessellationFactor1 = value.Length >= 2 ? value [1] : 0;
+				edgeTessellationFactor2 = value.Length >= 3 ? value [2] : 0;
+				edgeTessellationFactor3 = value.Length >= 4 ? value [3] : 0;
+			}
+		}
+
+		public ushort [] InsideTessellationFactor {
+			get => new ushort [] { insideTessellationFactor0, insideTessellationFactor1 };
+			set {
+				if (value.Length > 2)
+					throw new ArgumentOutOfRangeException ($"The '{nameof (value)}' array length can't be greater than 2.");
+
+				insideTessellationFactor0 = value.Length >= 1 ? value [0] : 0;
+				insideTessellationFactor1 = value.Length >= 2 ? value [1] : 0;
+			}
+		}
+#else
 		[MarshalAs (UnmanagedType.ByValArray, SizeConst = 4)]
 		public ushort [] EdgeTessellationFactor;
 		[MarshalAs (UnmanagedType.ByValArray, SizeConst = 2)]
 		public ushort [] InsideTessellationFactor;
+#endif
 
 		public MTLQuadTessellationFactorsHalf (ushort [] edgeTessellationFactor, ushort [] insideTessellationFactor)
 		{
+			if (edgeTessellationFactor.Length > 4)
+				throw new ArgumentOutOfRangeException ($"The '{nameof (edgeTessellationFactor)}' array length can't be greater than 4.");
+
+			if (insideTessellationFactor.Length > 2)
+				throw new ArgumentOutOfRangeException ($"The '{nameof (insideTessellationFactor)}' array length can't be greater than 2.");
+#if XAMCORE_5_0
+			edgeTessellationFactor0 = edgeTessellationFactor.Length >= 1 ? edgeTessellationFactor [0] : 0;
+			edgeTessellationFactor1 = edgeTessellationFactor.Length >= 2 ? edgeTessellationFactor [1] : 0;
+			edgeTessellationFactor2 = edgeTessellationFactor.Length >= 3 ? edgeTessellationFactor [2] : 0;
+			edgeTessellationFactor3 = edgeTessellationFactor.Length >= 4 ? edgeTessellationFactor [3] : 0;
+			insideTessellationFactor0 = insideTessellationFactor.Length >= 1 ? insideTessellationFactor [0] : 0;
+			insideTessellationFactor1 = insideTessellationFactor.Length >= 2 ? insideTessellationFactor [1] : 0;
+#else
 			EdgeTessellationFactor = edgeTessellationFactor;
 			InsideTessellationFactor = insideTessellationFactor;
+#endif
 		}
 
 	}
@@ -441,13 +488,38 @@ namespace Metal {
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MTLTriangleTessellationFactorsHalf {
+#if XAMCORE_5_0
+		ushort edgeTessellationFactor0;
+		ushort edgeTessellationFactor1;
+		ushort edgeTessellationFactor2;
+
+		public ushort [] EdgeTessellationFactor {
+			get => new ushort [] { edgeTessellationFactor0, edgeTessellationFactor1, edgeTessellationFactor2 };
+			set {
+				if (value.Length > 3)
+					throw new ArgumentOutOfRangeException ($"The '{nameof (value)}' array length can't be greater than 3.");
+				edgeTessellationFactor0 = value.Length >= 1 ? value [0] : 0;
+				edgeTessellationFactor1 = value.Length >= 2 ? value [1] : 0;
+				edgeTessellationFactor2 = value.Length >= 3 ? value [2] : 0;
+			}
+		}
+#else
 		[MarshalAs (UnmanagedType.ByValArray, SizeConst = 3)]
 		public ushort [] EdgeTessellationFactor;
+#endif
 		public ushort InsideTessellationFactor;
 
 		public MTLTriangleTessellationFactorsHalf (ushort [] edgeTessellationFactor, ushort insideTessellationFactor)
 		{
+			if (edgeTessellationFactor.Length > 3)
+				throw new ArgumentOutOfRangeException ($"The '{nameof (edgeTessellationFactor)}' array length can't be greater than 3.");
+#if XAMCORE_5_0
+			edgeTessellationFactor0 = edgeTessellationFactor.Length >= 1 ? edgeTessellationFactor [0] : 0;
+			edgeTessellationFactor1 = edgeTessellationFactor.Length >= 2 ? edgeTessellationFactor [1] : 0;
+			edgeTessellationFactor2 = edgeTessellationFactor.Length >= 3 ? edgeTessellationFactor [2] : 0;
+#else
 			EdgeTessellationFactor = edgeTessellationFactor;
+#endif
 			InsideTessellationFactor = insideTessellationFactor;
 		}
 	}
