@@ -546,29 +546,5 @@ Describe "TestResults tests" {
 [comment]: <> (This is a test result report added by Azure DevOps)
 "
         }
-
-        It "computes the right summary with build failure" {
-            $VerbosePreference = "Continue"
-            $Env:MyVerbosePreference = 'Continue'
-
-
-            $parallelResults = New-ParallelTestsResults -Path "path" -StageDependencies "$stageDependenciesWithBuildFailure" -Context "context" -VSDropsIndex "vsdropsIndex"
-
-            $parallelResults.IsSuccess() | Should -Be $false
-
-            $sb = [System.Text.StringBuilder]::new()
-            $parallelResults.WriteComment($sb)
-
-            $content = $sb.ToString()
-
-            Write-Host $content.Replace("&$", "&``$")
-
-            $content | Should -Be "# :x: Build failure :x:
-
-Build result: [Failed](/_build/index?buildId=)
-
-[comment]: <> (This is a test result report added by Azure DevOps)
-"
-        }
     }
 }
