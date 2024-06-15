@@ -229,6 +229,6 @@ steps:
     SYSTEM_ACCESSTOKEN: $(System.AccessToken)
     TEST_BOT: $(Agent.Name)
     ${{ if eq(parameters.repositoryAlias, 'self') }}:
-      COMMENT_HASH: $(GIT_HASH)
+      COMMENT_HASH: $(fix_commit.GIT_HASH)
     ${{ else }}:
       COMMENT_HASH: $(Build.SourceVersion)
