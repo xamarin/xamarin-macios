@@ -240,7 +240,7 @@ namespace Xamarin.Tests {
 				"snscanf", "snwscanf", "sprintf", "sprintfa", "sprintfw", "sscanf", "strcat",
 				"strcata", "strcatbuff", "strcatbuffa", "strcatbuffw", "strcatchainw",
 				"strcatn", "strcatna", "strcatnw", "strcatw", "strcpy", "strcpya", "strcpyn",
-				"strcpyna", "strcpynw", "strcpyw", /* "strlen" , */ "strncat", "strncata", "strncatw", // strlen is banned, but we use it a bunch, and so does dotnet/runtime
+				"strcpyna", "strcpynw", "strcpyw", "strlen", "strncat", "strncata", "strncatw",
 				"strncpy", "strncpya", "strncpyw", "strtok", "swprintf", "swscanf", "vsnprintf",
 				"vsprintf", "vswprintf", "wcscat", "wcscpy", "wcslen", "wcsncat", "wcsncpy",
 				"wcstok", "wmemcpy", "wnsprintf", "wnsprintfa", "wnsprintfw", "wscanf", "wsprintf",
