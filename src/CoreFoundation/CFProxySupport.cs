@@ -721,9 +721,9 @@ namespace CoreFoundation {
 
 #if NET
 					unsafe {
-					using (var loopSource = new CFRunLoopSource (factory (&ExecutePacCallback, ref clientContext), false))
+					using (var loopSource = new CFRunLoopSource (factory (&ExecutePacCallback, ref clientContext), true))
 #else
-					using (var loopSource = new CFRunLoopSource (factory (ExecutePacCallback, ref clientContext), false))
+					using (var loopSource = new CFRunLoopSource (factory (ExecutePacCallback, ref clientContext), true))
 #endif
 					using (var mode = new NSString ("Xamarin.iOS.Proxy")) {
 
@@ -785,9 +785,9 @@ namespace CoreFoundation {
 
 #if NET
 				unsafe {
-				using (var loopSource = new CFRunLoopSource (factory (&ExecutePacCallback, ref clientContext), false))
+				using (var loopSource = new CFRunLoopSource (factory (&ExecutePacCallback, ref clientContext), true))
 #else
-				using (var loopSource = new CFRunLoopSource (factory (ExecutePacCallback, ref clientContext), false))
+				using (var loopSource = new CFRunLoopSource (factory (ExecutePacCallback, ref clientContext), true))
 #endif
 				using (var mode = new NSString ("Xamarin.iOS.Proxy")) {
 					runLoop.AddSource (loopSource, mode);

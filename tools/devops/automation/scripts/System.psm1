@@ -171,8 +171,6 @@ function Clear-XamarinProcesses {
     Write-Debug "mlaunch terminated"
     Start-Process -FilePath "pkill" -ArgumentList "-9 -f mono.*xharness.exe" -NoNewWindow -PassThru -Wait
     Write-Debug "xharness terminated"
-    Start-Process -FilePath "pkill" -ArgumentList "-9 -f ssh.*rsync.*xamarin-storage" -NoNewWindow -PassThru -Wait
-    Write-Debug "rsync terminater"
 }
 
 <#
