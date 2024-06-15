@@ -253,7 +253,18 @@ class GitHubComments {
     }
 
     static [bool] IsPR() {
-        return $Env:BUILD_REASON -eq "PullRequest"
+        if ($Env:BUILD_REASON -eq "PullRequest") {
+            return $true;
+        }
+
+        if (($Env:BUILD_REASON -eq "ResourceTrigger")) {
+            $sourceBranch = $Env:BUILD_SOURCEBRANCH
+            if ($sourceBranch.StartsWith("refs/pull/") -and $sourceBranch.EndsWith("/merge")) {
+                return $true
+            }
+        }
+
+        return $false
     }
 
     static [string] GetPRID() {
@@ -617,20 +628,6 @@ function New-GitHubCommentsObjectFromUrl {
 function Get-TargetUrl {
     $targetUrl = $Env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI + "$Env:SYSTEM_TEAMPROJECT/_build/index?buildId=$Env:BUILD_BUILDID&view=ms.vss-test-web.test-result-details"
     return $targetUrl
-}
-
-<#
-    .SYNOPSIS
-        Returns the url to the Html Report index page stored in xamarin-storage.
-#>
-function Get-XamarinStorageIndexUrl {
-    param (
-        [Parameter(Mandatory)]
-        [String]
-        $Path
-    )
-
-    return "http://xamarin-storage/$Path/jenkins-results/tests/index.html"
 }
 
 <#
