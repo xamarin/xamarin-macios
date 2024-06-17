@@ -4,6 +4,9 @@ using System.Threading.Tasks;
 using Xamarin.Messaging.Build.Contracts;
 using Xamarin.Messaging.Client;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Xamarin.Messaging.Build {
 	public class BuildAgent : Agent {
 		readonly AgentInfo buildAgentInfo;
