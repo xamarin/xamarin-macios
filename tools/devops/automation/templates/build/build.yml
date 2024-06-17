@@ -39,6 +39,10 @@ parameters:
   type: number
   default: 3
 
+- name: use1ES
+  type: boolean
+  default: false
+
 steps:
 
 - template: ../common/checkout.yml
@@ -207,7 +211,7 @@ steps:
 - template: ../common/teardown.yml
   parameters:
     keyringPass: ${{ parameters.keyringPass }}
-    use1ES: true
+    use1ES: ${{ parameters.use1ES }}
 
 # if we failed, write a comment and set the pipeline to failure. In this case, we do not want to hide the fact that we failed but we also want
 # to write a comment.
