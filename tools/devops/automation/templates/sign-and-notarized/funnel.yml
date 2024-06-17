@@ -106,11 +106,11 @@ jobs:
       allowFailedBuilds: true
       path: $(Build.SourcesDirectory)/package-internal
 
-  - task: PublishPipelineArtifact@1
-    displayName: 'Publish Build Internal Artifacts'
+  - task: 1ES.PublishPipelineArtifact@1
+    displayName: 'Publish Build Artifacts (notarized)'
     inputs:
-      targetPath: $(Build.SourcesDirectory)/package-internal
-      artifactName: '${{ parameters.uploadPrefix }}package-internal'
+      path: $(Build.SourcesDirectory)/package-internal
+      artifact: '${{ parameters.uploadPrefix }}package-internal'
     continueOnError: true
 
   # download msbuild.zip and bundle.zip to the 'package' dir, so that they're uploaded into the 'package' artifact,

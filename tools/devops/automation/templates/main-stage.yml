@@ -345,6 +345,7 @@ stages:
         testsLabels: '--label=skip-all-tests,run-ios-tests,run-ios-simulator-tests,run-tvos-tests,run-watchos-tests,run-mac-tests,run-maccatalyst-tests,run-dotnet-tests,run-system-permission-tests,run-legacy-xamarin-tests'
         statusContext: 'VSTS: simulator tests' 
         uploadArtifacts: true
+        use1ES: true
 
 - stage: build_packages
   displayName: '${{ parameters.stageDisplayNamePrefix }}Build'
