@@ -213,7 +213,7 @@ trigger:
 extends:
   template: azure-pipelines/MicroBuild.1ES.Official.yml@CustomPipelineTemplates
   parameters:
-    pool:  # default pool to be used forvalidation jobs
+    pool:  # default pool to be used for validation jobs
       name: AzurePipelines-EO
       image: 1ESPT-Windows2022
       os: windows

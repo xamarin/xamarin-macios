@@ -145,7 +145,7 @@ jobs:
 - job: upload_azure_blob
   displayName: 'Upload packages to Azure & SBOM'
   timeoutInMinutes: 1000
-  templateContext: # disable some of the sdl tasks for this kjob
+  templateContext: # disable some of the sdl tasks for this job
     sdl:
       credscan: # run in the sdl stage 
         suppressionsFile: '$(System.DefaultWorkingDirectory)\\maccore\\tools\\devops\\CredScanSuppressions.json'
@@ -154,7 +154,7 @@ jobs:
         enabled: false
       eslint: # no js or anything similar
         enabled: false
-      bandit: # we have no pyhon
+      bandit: # we have no python
         enabled: false
   dependsOn:
   - funnel_job
