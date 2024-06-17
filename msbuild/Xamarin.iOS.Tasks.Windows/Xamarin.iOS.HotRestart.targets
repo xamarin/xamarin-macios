@@ -13,7 +13,7 @@
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Messaging.Apple.targets" Condition="Exists('$(MSBuildThisFileDirectory)Xamarin.Messaging.Apple.targets') And '$(MessagingAppleTargetsImported)' != 'true'" />
 	
 	<Target Name="_ValidateHotRestartState" BeforeTargets="Build">
-		<Error Condition="'$(RuntimeIdentifiers)' != ''" Text="Hot Restart is not supported when 'RuntimeIdentifiers' (plural) is set. Use 'RuntimeIdentifier' instead." />
+		<Error Condition="'$(RuntimeIdentifiers)' != ''" Text="Hot Restart is not supported when 'RuntimeIdentifiers' (plural) is set. Use 'RuntimeIdentifier' (singular) instead." />
 	</Target>
 
 	<Target Name="_GenerateHotRestartBuildSessionId">

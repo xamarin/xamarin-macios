@@ -285,7 +285,7 @@ namespace Xamarin.Tests {
 		public void PluralRuntimeIdentifiersWithHotRestart (ApplePlatform platform, string runtimeIdentifiers)
 		{
 			var properties = AddHotRestartProperties ();
-			DotNetProjectTest.PluralRuntimeIdentifiersImpl (platform, runtimeIdentifiers, properties);
+			DotNetProjectTest.PluralRuntimeIdentifiersImpl (platform, runtimeIdentifiers, properties, isUsingHotRestart: true);
 		}
 
 		[Category ("RemoteWindows")]
@@ -395,6 +395,7 @@ namespace Xamarin.Tests {
 			properties ["IsHotRestartBuild"] = "true";
 			properties ["IsHotRestartEnvironmentReady"] = "true";
 			properties ["EnableCodeSigning"] = "false"; // Skip code signing, since that would require making sure we have code signing configured on bots.
+			properties ["_IsAppSigned"] = "false";
 			properties ["_AppIdentifier"] = "placeholder_AppIdentifier"; // This needs to be set to a placeholder value because DetectSigningIdentity usually does it (and we've disabled signing)
 			properties ["_BundleIdentifier"] = "placeholder_BundleIdentifier"; // This needs to be set to a placeholder value because DetectSigningIdentity usually does it (and we've disabled signing)
 			return properties;
