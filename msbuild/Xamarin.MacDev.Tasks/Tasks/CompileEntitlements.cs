@@ -138,6 +138,22 @@ namespace Xamarin.MacDev.Tasks {
 			}
 		}
 
+		bool IsDeviceOrDesktop {
+			get	{
+				switch (Platform) {
+				case ApplePlatform.iOS:
+				case ApplePlatform.TVOS:
+				case ApplePlatform.WatchOS:
+					return !SdkIsSimulator;
+				case ApplePlatform.MacOSX:
+				case ApplePlatform.MacCatalyst:
+					return true;
+				default:
+					throw new InvalidOperationException (string.Format (MSBStrings.InvalidPlatform, Platform));
+				}
+			}
+		}
+
 		PString MergeEntitlementString (PString pstr, MobileProvision? profile, bool expandWildcards, string? key)
 		{
 			string TeamIdentifierPrefix;
@@ -146,14 +162,14 @@ namespace Xamarin.MacDev.Tasks {
 			if (string.IsNullOrEmpty (pstr.Value))
 				return (PString) pstr.Clone ();
 
-			if (profile is null) {
+			if (profile is null && IsDeviceOrDesktop) {
 				if (!warnedTeamIdentifierPrefix && pstr.Value.Contains ("$(TeamIdentifierPrefix)")) {
-					Log.LogWarning (null, null, null, Entitlements, 0, 0, 0, 0, "Cannot expand $(TeamIdentifierPrefix) in Entitlements.plist without a provisioning profile for key {0} with value {1}", key, pstr.Value);
+					Log.LogWarning (null, null, null, Entitlements, 0, 0, 0, 0, "Cannot expand $(TeamIdentifierPrefix) in Entitlements.plist without a provisioning profile for key '{0}' with value '{1}'", key, pstr.Value);
 					warnedTeamIdentifierPrefix = true;
 				}
 
 				if (!warnedAppIdentifierPrefix && pstr.Value.Contains ("$(AppIdentifierPrefix)")) {
-					Log.LogWarning (null, null, null, Entitlements, 0, 0, 0, 0, "Cannot expand $(AppIdentifierPrefix) in Entitlements.plist without a provisioning profile for key {0} with value {1}", key, pstr.Value);
+					Log.LogWarning (null, null, null, Entitlements, 0, 0, 0, 0, "Cannot expand $(AppIdentifierPrefix) in Entitlements.plist without a provisioning profile for key '{0}' with value '{1}'", key, pstr.Value);
 					warnedAppIdentifierPrefix = true;
 				}
 			}
