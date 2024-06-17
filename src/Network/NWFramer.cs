@@ -30,7 +30,7 @@ using NativeHandle = System.IntPtr;
 
 namespace Network {
 
-	public delegate nuint NWFramerParseCompletionDelegate (Memory<byte> buffer, [MarshalAs (UnmanagedType.I1)] bool isCompleted);
+	public delegate nuint NWFramerParseCompletionDelegate (Memory<byte> buffer, bool isCompleted);
 	public delegate nuint NWFramerInputDelegate (NWFramer framer);
 
 #if NET
