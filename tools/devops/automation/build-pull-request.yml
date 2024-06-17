@@ -195,20 +195,20 @@ pr:
   autoCancel: true
   branches:
     include:
-      - '*'  # yes, you do need the quote, * has meaning in yamls
+    - '*'  # yes, you do need the quote, * has meaning in yamls
   paths:
     exclude:
-      - .github
-      - docs
-      - CODEOWNERS
-      - ISSUE_TEMPLATE.md
-      - LICENSE
-      - NOTICE.txt
-      - SECURITY.MD
-      - README.md
-      - src/README.md
-      - tools/mtouch/README.md
-      - msbuild/Xamarin.Localization.MSBuild/README.md
+    - .github
+    - docs
+    - CODEOWNERS
+    - ISSUE_TEMPLATE.md
+    - LICENSE
+    - NOTICE.txt
+    - SECURITY.MD
+    - README.md
+    - src/README.md
+    - tools/mtouch/README.md
+    - msbuild/Xamarin.Localization.MSBuild/README.md
 
 extends:
   template: azure-pipelines/MicroBuild.1ES.Official.yml@CustomPipelineTemplates
@@ -265,6 +265,6 @@ extends:
         azureStorage: ${{ variables['azureStorage'] }}
         azureContainer: ${{ variables['azureContainer'] }}
         signingSetupSteps:
-          - template: ./templates/sign-and-notarized/setup.yml
-            parameters:
-              isPR: true
+        - template: ./templates/sign-and-notarized/setup.yml
+          parameters:
+            isPR: true
