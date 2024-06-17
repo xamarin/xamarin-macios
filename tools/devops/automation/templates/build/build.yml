@@ -207,6 +207,7 @@ steps:
 - template: ../common/teardown.yml
   parameters:
     keyringPass: ${{ parameters.keyringPass }}
+    use1ES: true
 
 # if we failed, write a comment and set the pipeline to failure. In this case, we do not want to hide the fact that we failed but we also want
 # to write a comment.
