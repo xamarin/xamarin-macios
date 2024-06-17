@@ -27,11 +27,6 @@ parameters:
   type: boolean
   default: true
 
-- name: enableAPIDiff
-  displayName: Enable API diff generation
-  type: boolean
-  default: true
-
 - name: forceInsertion
   displayName: Force Insertion 
   type: boolean
@@ -189,6 +184,7 @@ variables:
 - ${{ if eq(parameters.isPR, false) }}:
   - ${{ if contains(variables['Build.DefinitionName'], 'private') }}:
     - template: ../vsts-variables.yml
+  - template: templates/common/vs-release-vars.yml@sdk-insertions
   - template: ../variables.yml
   - name: MicrobuildConnector
     value: 'MicroBuild Signing Task (DevDiv)'
@@ -198,6 +194,7 @@ variables:
     value: true
 - ${{ else }}:
   - template: ../variables.yml
+  - template: templates/common/vs-release-vars.yml@sdk-insertions
   - name: MicrobuildConnector
     value: ''
   - name: MaciosUploadPrefix
@@ -214,7 +211,6 @@ stages:
     provisionatorChannel: ${{ parameters.provisionatorChannel }}
     pool: ${{ parameters.pool }}
     runGovernanceTests: ${{ parameters.runGovernanceTests }}
-    enableAPIDiff: ${{ parameters.enableAPIDiff }}
     forceInsertion: ${{ parameters.forceInsertion }}
     skipESRP: ${{ parameters.skipESRP }}
     pushNugets: ${{ parameters.pushNugets }}
