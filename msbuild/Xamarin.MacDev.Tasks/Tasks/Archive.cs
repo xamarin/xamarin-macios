@@ -44,6 +44,8 @@ namespace Xamarin.MacDev.Tasks {
 
 		public string RuntimeIdentifiers { get; set; }
 
+		public string SolutionPath { get; set; }
+
 		public string SigningKey { get; set; }
 
 		public ITaskItem [] WatchAppReferences { get; set; }
@@ -244,6 +246,11 @@ namespace Xamarin.MacDev.Tasks {
 
 				if (!string.IsNullOrEmpty (ProjectTypeGuids))
 					arInfo.Add ("ProjectTypeGuids", new PString (ProjectTypeGuids));
+
+				if (!string.IsNullOrEmpty (SolutionPath)) {
+					arInfo.Add ("SolutionName", new PString (Path.GetFileNameWithoutExtension (SolutionPath)));
+					arInfo.Add ("SolutionPath", new PString (SolutionPath));
+				}
 
 				if (!string.IsNullOrEmpty (InsightsApiKey))
 					arInfo.Add ("InsightsApiKey", new PString (InsightsApiKey));
