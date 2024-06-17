@@ -139,7 +139,7 @@ namespace Xamarin.MacDev.Tasks {
 		}
 
 		bool IsDeviceOrDesktop {
-			get	{
+			get {
 				switch (Platform) {
 				case ApplePlatform.iOS:
 				case ApplePlatform.TVOS:
