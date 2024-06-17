@@ -190,7 +190,7 @@ namespace Xamarin.MacDev.Tasks {
 				//arInfo.Add ("AppStoreFileSize", new PNumber (65535));
 				var props = new PDictionary ();
 				props.Add ("ApplicationPath", new PString (string.Format ("Applications/{0}", Path.GetFileName (AppBundleDir.ItemSpec))));
-				if (!string.IsNullOrEmpty (RuntimeIdentifiers)) {
+				if (!string.IsNullOrEmpty (RuntimeIdentifiers) && IsDotNet) {
 					var rids = RuntimeIdentifiers.Split (new char [] { ';' }, StringSplitOptions.RemoveEmptyEntries);
 					var array = new PArray ();
 					foreach (var rid in rids) {
