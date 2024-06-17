@@ -184,6 +184,7 @@ variables:
 - ${{ if eq(parameters.isPR, false) }}:
   - ${{ if contains(variables['Build.DefinitionName'], 'private') }}:
     - template: ../vsts-variables.yml
+  - template: templates/common/vs-release-vars.yml@sdk-insertions
   - template: ../variables.yml
   - name: MicrobuildConnector
     value: 'MicroBuild Signing Task (DevDiv)'
@@ -193,6 +194,7 @@ variables:
     value: true
 - ${{ else }}:
   - template: ../variables.yml
+  - template: templates/common/vs-release-vars.yml@sdk-insertions
   - name: MicrobuildConnector
     value: ''
   - name: MaciosUploadPrefix
