@@ -148,7 +148,6 @@ jobs:
   templateContext: # disable some of the sdl tasks for this kjob
     sdl:
       credscan: # run in the sdl stage 
-        suppressionsFile: '$(System.DefaultWorkingDirectory)\\maccore\\tools\\devops\\CredScanSuppressions.json'
         enabled: false
       binskim: # job does not compile anything
         enabled: false
