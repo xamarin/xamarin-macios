@@ -231,10 +231,10 @@ stages:
         workingDirectory: $(Build.SourcesDirectory)\..
         condition: and(succeeded(), eq('${{ parameters.pushNugetsToMaestro }}', 'true'))
 
-      - task: PublishPipelineArtifact@1
+      - task: 1ES.PublishPipelineArtifact@1
         displayName: 'Publish Artifact: maestro-binlogs'
         inputs:
-          targetPath: $(Build.ArtifactStagingDirectory)/maestro-binlogs
-          artifactName: ${{ parameters.uploadPrefix }}maestro-binlogs-$(System.JobAttempt)
+          path: $(Build.ArtifactStagingDirectory)/maestro-binlogs
+          artifact: ${{ parameters.uploadPrefix }}maestro-binlogs-$(System.JobAttempt)
         condition: and(succeededOrFailed(), eq('${{ parameters.pushNugetsToMaestro }}', 'true'))
         continueOnError: true
