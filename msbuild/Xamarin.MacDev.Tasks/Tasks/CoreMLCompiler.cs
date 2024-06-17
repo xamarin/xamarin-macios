@@ -167,8 +167,8 @@ namespace Xamarin.MacDev.Tasks {
 			var bundleResources = new List<ITaskItem> ();
 			var partialPlists = new List<ITaskItem> ();
 
-			Log.LogWarning ($"IntermediateOutputPath: {IntermediateOutputPath}");
-			Log.LogWarning ($"CoreML output dir: {coremlcOutputDir}");
+			// Log.LogWarning ($"IntermediateOutputPath: {IntermediateOutputPath}");
+			// Log.LogWarning ($"CoreML output dir: {coremlcOutputDir}");
 
 			if (Models.Length > 0) {
 				Directory.CreateDirectory (coremlcOutputDir);
