@@ -31,11 +31,12 @@ GENERATED_FILES_PATTERN = \
 	RegistrarTest.generated%cs \
 	TrampolineTest.generated%cs \
 
-testgenerator.exe: testgenerator.cs Makefile
-	$(Q) $(SYSTEM_CSC) -out:$@ $<
+TESTGENERATOR=bin/Debug/testgenerator.dll
+$(TESTGENERATOR): testgenerator.cs Makefile
+	$(Q) $(DOTNET) build testgenerator.csproj $(DOTNET_BUILD_VERBOSITY)
 
-$(GENERATED_FILES_PATTERN): testgenerator.exe
-	$(Q) mono --debug $<
+$(GENERATED_FILES_PATTERN): $(TESTGENERATOR)
+	$(Q) $(DOTNET) exec $<
 
 libtest-object.m libtest-ar.m:
 	$(Q) ln -fhs libtest.m $@
