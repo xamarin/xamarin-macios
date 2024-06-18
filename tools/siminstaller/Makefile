@@ -1,11 +1,11 @@
 TOP=../..
 include $(TOP)/Make.config
 
-all-local:: bin/Debug/siminstaller.exe
+EXECUTABLE=bin/Debug/siminstaller.dll
+
+all-local:: $(EXECUTABLE)
 
 install-local:: all-local
-
-EXECUTABLE=bin/Debug/siminstaller.dll
 
 # we build using the system .NET, because we might execute before we've downloaded our own version of .NET (i.e. while provisioning dependencies)
 $(EXECUTABLE): $(wildcard *.cs) $(wildcard *.csproj) Makefile
