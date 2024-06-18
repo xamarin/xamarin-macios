@@ -24,7 +24,7 @@ namespace xsiminstaller {
 			}
 		}
 
-		static bool TryExecuteAndCapture (out string stdout, string filename, params string[] arguments)
+		static bool TryExecuteAndCapture (out string stdout, string filename, params string [] arguments)
 		{
 			var rv = TryExecuteAndCapture (out stdout, out var stderr, filename, arguments);
 			if (!rv)
@@ -32,7 +32,7 @@ namespace xsiminstaller {
 			return rv;
 		}
 
-		static bool TryExecuteAndCapture (out string stdout, out string stderr, string filename, params string[] arguments)
+		static bool TryExecuteAndCapture (out string stdout, out string stderr, string filename, params string [] arguments)
 		{
 			using (var p = new Process ()) {
 				p.StartInfo.FileName = filename;
@@ -386,7 +386,7 @@ namespace xsiminstaller {
 
 				using var responseStream = await response.Content.ReadAsStreamAsync ();
 
-				var buffer = new byte[40960];
+				var buffer = new byte [40960];
 				long totalBytesRead = 0;
 				int bytesRead;
 				while ((bytesRead = await responseStream.ReadAsync (buffer, 0, buffer.Length)) > 0) {
