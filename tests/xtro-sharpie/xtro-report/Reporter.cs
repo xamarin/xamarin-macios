@@ -5,8 +5,8 @@ using System.IO;
 namespace Extrospection {
 	class Reporter {
 
-		static string InputDirectory { get; set; }
-		static string ReportFolder { get; set; }
+		static string InputDirectory { get; set; } = ".";
+		static string ReportFolder { get; set; } = "report";
 
 		static SortedSet<string> Frameworks = new SortedSet<string> (StringComparer.OrdinalIgnoreCase);
 
