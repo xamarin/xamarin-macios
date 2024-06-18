@@ -313,6 +313,32 @@ class BuildConfiguration {
         return $config
     }
 
+    [PSCustomObject] Update([string] $configKey, [string] $configValue, [string] $configFile) {
+        if (-not (Test-Path -Path $configFile -PathType Leaf)) {
+          throw [System.InvalidOperationException]::new("Configuration file $configFile is missing")
+        }
+
+        $config = Get-Content $configFile | ConvertFrom-Json
+
+        if (-not $config) {
+          throw [System.InvalidOperationException]::new("Failed to load configuration file $configFile")
+        }
+
+        $configuration | Add-Member -NotePropertyName $configKey -NotePropertyValue $configValue
+
+        $jsonConfiguration = $configuration | ConvertTo-Json
+
+        Write-Host "Build configuration:"
+        Write-Host $jsonConfiguration
+
+        if ($configFile) {
+            Write-Host "Writing configuration to: $configFile"
+            Set-Content -Path $configFile -Value $jsonConfiguration
+        }
+
+        return $config
+    }
+
     [PSCustomObject] Create([bool] $addTags, [string] $configFile) {
         # we are going to use a custom object to store all the configuration of the build, this later
         # will be uploaded as an artifact so that it can be easily shared with the cascade pipelines, we will
@@ -753,6 +779,27 @@ function Import-BuildConfiguration {
     return $buildConfiguration.Import($ConfigFile)
 }
 
+function Edit-BuildConfiguration {
+    param
+    (
+
+        [Parameter(Mandatory)]
+        [string]
+        $ConfigKey,
+
+        [Parameter(Mandatory)]
+        [string]
+        $ConfigValue,
+
+        [Parameter(Mandatory)]
+        [string]
+        $ConfigFile
+    )
+    $buildConfiguration = [BuildConfiguration]::new()
+    return $buildConfiguration.Update($ConfigKey, $ConfigValue, $ConfigFile)
+}
+
+
 # export public functions, other functions are private and should not be used ouside the module.
 Export-ModuleMember -Function Stop-Pipeline
 Export-ModuleMember -Function Set-PipelineResult
@@ -760,4 +807,5 @@ Export-ModuleMember -Function Set-BuildTags
 Export-ModuleMember -Function New-VSTS
 Export-ModuleMember -Function New-BuildConfiguration
 Export-ModuleMember -Function Import-BuildConfiguration
+Export-ModuleMember -Function Edit-BuildConfiguration
 Export-ModuleMember -Function Get-YamlPreview
