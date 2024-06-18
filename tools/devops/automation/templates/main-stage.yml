@@ -81,6 +81,12 @@ parameters:
       #   splitByPlatforms: false,
       # },
       {
+        label: windows,
+        splitByPlatforms: false,
+        testPrefix: 'windows_integration',
+        testStage: 'windows_integration'
+      },
+      {
         label: cecil,
         splitByPlatforms: false,
         testPrefix: 'simulator_tests',

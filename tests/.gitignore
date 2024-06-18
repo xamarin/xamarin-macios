@@ -33,3 +33,5 @@ logs
 *.generated.cs
 x86
 *.7z
+TestSummary.md
+

@@ -97,7 +97,13 @@ steps:
 
 - task: UseDotNet@2
   inputs:
-    version: 7.0.102
+    version: 8.x
+
+- pwsh: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/scripts/initialize-test-output-variables.ps1
+  displayName: Set output variables
+  env:
+    TESTS_LABEL: windows
+    # TESTS_PLATFORM:
 
 - pwsh: |
     & dotnet --version
@@ -271,6 +277,30 @@ steps:
 
 - pwsh: $(System.DefaultWorkingDirectory)/$(BUILD_REPOSITORY_TITLE)/tools/devops/automation/scripts/run-generator-tests-on-windows.ps1
   displayName: 'Run generator tests'
+
+- pwsh: $(Build.SourcesDirectory)\xamarin-macios\tools\devops\automation\scripts\prepare-windows-test-results.ps1
+  displayName: 'Prepare tests results and Html Report'
+  timeoutInMinutes: 5
+  condition: always()
+
+# Upload TestSummary as an artifact.
+- task: PublishPipelineArtifact@1
+  displayName: 'Publish Artifact: TestSummary'
+  inputs:
+    targetPath: 'xamarin-macios/tests/TestSummary.md'
+    artifactName: '${{ parameters.uploadPrefix }}TestSummary-windows-integration-$(System.JobAttempt)'
+  continueOnError: true
+  condition: succeededOrFailed()
+
+- pwsh: |
+    $summaryName = "TestSummary-windows-integration.md"
+    $summaryPath = "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tests/TestSummary.md"
+    if (Test-Path -Path $summaryPath -PathType Leaf) {
+      Write-Host "##vso[task.addattachment type=Distributedtask.Core.Summary;name=$summaryName;]$summaryPath"
+    }
+  displayName: Set TestSummary
+  continueOnError: true
+  condition: succeededOrFailed()
 
 # Archive files for the Html Report so that the report can be easily uploaded as artifacts of the build.
 - task: ArchiveFiles@1

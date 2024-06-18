@@ -26,11 +26,13 @@ class TestConfiguration {
             $underscoredLabel = $label.Replace('-','_')
             $splitByPlatforms = $config.splitByPlatforms
             $testPrefix = $config.testPrefix
+            $testStage = $config.testStage ? $config.testStage : $config.testPrefix
 
             $vars = [ordered]@{}
             # set common variables
             $vars["LABEL"] = $label
             $vars["TESTS_LABELS"] = "$($this.testsLabels),run-$($label)-tests"
+            $vars["TEST_STAGE"] = $testStage
             if ($splitByPlatforms -eq "True") {
                 if ($enabledPlatformsForConfig.Length -eq 0) {
                     Write-Host "No enabled platforms, skipping $label"
@@ -111,7 +113,7 @@ function Get-TestConfiguration {
 
     $objTestConfigurations = ConvertFrom-Json -InputObject $TestConfigurations
     $objSupportedPlatforms = ConvertFrom-Json -InputObject $SupportedPlatforms
-    $arrEnabledPlatforms = -split $EnabledPlatforms
+    $arrEnabledPlatforms = -split $EnabledPlatforms | Where { $_ }
     $config = [TestConfiguration]::new($objTestConfigurations, $objSupportedPlatforms, $arrEnabledPlatforms, $TestsLabels, $StatusContext)
     return $config.Create()
 }
