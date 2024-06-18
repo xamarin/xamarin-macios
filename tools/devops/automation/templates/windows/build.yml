@@ -97,7 +97,7 @@ steps:
 
 - task: UseDotNet@2
   inputs:
-    version: 7.0.102
+    version: 8.x
 
 - pwsh: |
     & dotnet --version
@@ -231,28 +231,17 @@ steps:
     Get-Content -Path $(Build.SourcesDirectory)/xamarin-macios/tests/dotnet/Windows/config.runsettings | Write-Host
   displayName: 'Create runsettings for .NET tests'
 
-- pwsh: |
-    $Env:PATH = "$(Build.SourcesDirectory)\xamarin-macios\tests\dotnet\Windows\bin\dotnet;$env:PATH"
-    $Env:DOTNET = "$(Build.SourcesDirectory)\xamarin-macios\tests\dotnet\Windows\bin\dotnet\dotnet.exe"
-    & $(Build.SourcesDirectory)\xamarin-macios\tests\dotnet\Windows\bin\dotnet\dotnet.exe `
-        test `
-        "$(Build.SourcesDirectory)/xamarin-macios/tests/dotnet/UnitTests/DotNetUnitTests.csproj" `
-        --filter Category=Windows `
-        --verbosity quiet `
-        --settings $(Build.SourcesDirectory)/xamarin-macios/tests/dotnet/Windows/config.runsettings `
-        "--results-directory:$(Build.SourcesDirectory)/xamarin-macios/jenkins-results/" `
-        "--logger:console;verbosity=detailed" `
-        "--logger:trx;LogFileName=$(Build.SourcesDirectory)/xamarin-macios/jenkins-results/windows-dotnet-tests.trx" `
-        "--logger:html;LogFileName=$(Build.SourcesDirectory)/xamarin-macios/jenkins-results/windows-dotnet-tests.html" `
-        "-bl:$(Build.SourcesDirectory)/xamarin-macios/tests/dotnet/Windows/run-dotnet-tests.binlog"
+- pwsh: $(Build.SourcesDirectory)\xamarin-macios\tools\devops\automation\scripts\run-windows-tests.ps1
   displayName: 'Run .NET tests'
   timeoutInMinutes: 30
+  continueOnError: true
   ${{ if not(parameters.isPR) }}:
     retryCountOnTaskFailure: ${{ parameters.retryCount }}
 
 - pwsh: $(Build.SourcesDirectory)\xamarin-macios\tools\devops\automation\scripts\run-remote-windows-tests.ps1
   displayName: 'Run .NET tests remotely'
   timeoutInMinutes: 120
+  continueOnError: true
   ${{ if not(parameters.isPR) }}:
     retryCountOnTaskFailure: ${{ parameters.retryCount }}
   env:
@@ -278,6 +267,30 @@ steps:
 
 - pwsh: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/run-generator-tests-on-windows.ps1
   displayName: 'Run generator tests'
+
+- pwsh: $(Build.SourcesDirectory)\xamarin-macios\tools\devops\automation\scripts\create-html-index-file.ps1
+  displayName: 'Create Html Report'
+  timeoutInMinutes: 5
+  condition: always()
+
+# Upload TestSummary as an artifact.
+- task: PublishPipelineArtifact@1
+  displayName: 'Publish Artifact: TestSummary'
+  inputs:
+    targetPath: 'xamarin-macios/tests/TestSummary.md'
+    artifactName: '${{ parameters.uploadPrefix }}TestSummary-${{ parameters.testPrefix }}-$(System.JobAttempt)'
+  continueOnError: true
+  condition: succeededOrFailed()
+
+- pwsh: |
+    $summaryName = "TestSummary-${{ parameters.testPrefix }}.md"
+    $summaryPath = "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tests/TestSummary.md"
+    if (Test-Path -Path $summaryPath -PathType Leaf) {
+      Write-Host "##vso[task.addattachment type=Distributedtask.Core.Summary;name=$summaryName;]$summaryPath"
+    }
+  displayName: Set TestSummary
+  continueOnError: true
+  condition: succeededOrFailed()
 
 # Archive files for the Html Report so that the report can be easily uploaded as artifacts of the build.
 - task: ArchiveFiles@1

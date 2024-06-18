@@ -23,3 +23,6 @@ Invoke-SshDownload `
   -RemoteUserName "$Env:MAC_AGENT_USER" `
   -Source "/Users/$Env:MAC_AGENT_USER/remote_build_testing/windows-remote-logs.zip" `
   -Target "$Env:BUILD_ARTIFACTSTAGINGDIRECTORY\windows-binlogs\windows-remote-logs.zip"
+
+# Copy the binlogs to the html report
+Copy-Item "$Env:BUILD_ARTIFACTSTAGINGDIRECTORY\windows-binlogs\windows-remote-logs.zip" -Destination "$Env:BUILD_SOURCESDIRECTORY\xamarin-macios\jenkins-results"
