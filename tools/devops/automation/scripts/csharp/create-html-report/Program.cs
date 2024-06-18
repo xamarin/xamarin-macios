@@ -39,18 +39,18 @@ public class Program {
 		return text;
 	}
 
-	public static int Main (string[] args)
+	public static int Main (string [] args)
 	{
-		var sourcesDirectory = Environment.GetEnvironmentVariable("BUILD_SOURCESDIRECTORY");
-		if (string.IsNullOrEmpty(sourcesDirectory)) {
-			Console.Error.WriteLine($"The environment variable BUILD_SOURCESDIRECTORY is not set.");
+		var sourcesDirectory = Environment.GetEnvironmentVariable ("BUILD_SOURCESDIRECTORY");
+		if (string.IsNullOrEmpty (sourcesDirectory)) {
+			Console.Error.WriteLine ($"The environment variable BUILD_SOURCESDIRECTORY is not set.");
 			return 1;
 		}
 
 		var allTestsSucceeded = true;
-		var outputDirectory = Path.Combine(sourcesDirectory, "jenkins-results");
-		var indexFile = Path.Combine(outputDirectory, "index.html");
-		var summaryFile = Path.Combine(sourcesDirectory, "tests", "TestSummary.md");
+		var outputDirectory = Path.Combine (sourcesDirectory, "jenkins-results");
+		var indexFile = Path.Combine (outputDirectory, "index.html");
+		var summaryFile = Path.Combine (sourcesDirectory, "tests", "TestSummary.md");
 
 		var trxFiles = new [] {
 			new { Name = "Remote .NET tests", TestResults = Path.Combine(outputDirectory, "windows-remote-dotnet-tests.trx") },
@@ -62,11 +62,11 @@ public class Program {
 			Path.Combine(outputDirectory, "windows-remote-logs.zip"),
 		};
 
-		var indexContents = new StringBuilder();
-		var summaryContents = new StringBuilder();
+		var indexContents = new StringBuilder ();
+		var summaryContents = new StringBuilder ();
 
 		indexContents.AppendLine ($"<!DOCTYPE html>");
-		indexContents.AppendLine($"<html>");
+		indexContents.AppendLine ($"<html>");
 		indexContents.AppendLine ($"  <head>");
 		indexContents.AppendLine ($"    <meta charset=\"utf-8\"/>");
 		indexContents.AppendLine ($"    <title>Test results</title>");
@@ -88,7 +88,7 @@ public class Program {
 			try {
 				var xml = new XmlDocument ();
 				xml.Load (path);
-				outcome = xml.SelectSingleNode ("/*[local-name() = 'TestRun']/*[local-name() = 'ResultSummary']")?.Attributes?["outcome"]?.Value;
+				outcome = xml.SelectSingleNode ("/*[local-name() = 'TestRun']/*[local-name() = 'ResultSummary']")?.Attributes? ["outcome"]?.Value;
 				if (outcome is null) {
 					outcome = $"Could not find outcome in trx file {path}";
 				} else {
@@ -119,7 +119,7 @@ public class Program {
 					var relativeHtmlPath = Path.GetRelativePath (outputDirectory, htmlPath);
 					messageLines.Add ($"Html results: <a href='{relativeHtmlPath}'>{Path.GetFileName (relativeHtmlPath)}</a>");
 				}
-			}catch (Exception e) {
+			} catch (Exception e) {
 				outcome = "Failed to parse test results";
 				messageLines.Add ($"<div>{FormatHtml (e.ToString ())}</div>");
 				allTestsSucceeded = false;
@@ -133,7 +133,7 @@ public class Program {
 				indexContents.AppendLine ("    </div>");
 			}
 		}
-		var existingExtraFiles = extraFiles.Where (File.Exists).ToList (); 
+		var existingExtraFiles = extraFiles.Where (File.Exists).ToList ();
 		if (existingExtraFiles.Any ()) {
 			indexContents.AppendLine ($"    <div class='pdiv'>Extra files:</div>");
 			indexContents.AppendLine ($"    <ul>");
@@ -144,22 +144,22 @@ public class Program {
 			indexContents.AppendLine ($"    </ul>");
 		}
 		indexContents.AppendLine ($"  </body>");
-		indexContents.AppendLine($"</html>");
+		indexContents.AppendLine ($"</html>");
 
 		if (allTestsSucceeded) {
 			summaryContents.AppendLine ($"# :tada: All {trxFiles.Length} tests passed :tada:");
 		} else {
 			summaryContents.AppendLine ($"# :tada: All {trxFiles.Length} tests passed :tada:");
 		}
-	
+
 
 		Directory.CreateDirectory (outputDirectory);
-		File.WriteAllText (indexFile, indexContents.ToString());
-		File.WriteAllText (summaryFile, summaryContents.ToString());
+		File.WriteAllText (indexFile, indexContents.ToString ());
+		File.WriteAllText (summaryFile, summaryContents.ToString ());
 
-		Console.WriteLine($"Created {indexFile} successfully.");
+		Console.WriteLine ($"Created {indexFile} successfully.");
 		Console.WriteLine (indexContents);
-		Console.WriteLine($"Created {summaryFile} successfully.");
+		Console.WriteLine ($"Created {summaryFile} successfully.");
 		Console.WriteLine (summaryContents);
 		Console.WriteLine ($"All tests succeeded: {allTestsSucceeded}");
 		return allTestsSucceeded ? 0 : 1;
