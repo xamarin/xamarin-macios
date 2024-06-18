@@ -45,10 +45,10 @@ bin/Debug/xtro-sharpie.exe $(XTRO_REPORT) $(XTRO_SANITY) build: .stamp-build
 	$(Q) touch $@
 
 $(XTRO_REPORT): $(wildcard xtro-report/*.cs) $(wildcard xtro-report/*.csproj) Filter.cs Makefile
-	$(Q_GEN) $(DOTNET) build xtro-report/xtro-report.csproj /bl:xtro-report.binlog $(DOTNET_BUILD_VERBOSITY)
+	$(Q_GEN) unset MSBUILD_EXE_PATH && $(DOTNET) build xtro-report/xtro-report.csproj /bl:xtro-report.binlog $(DOTNET_BUILD_VERBOSITY)
 
 $(XTRO_SANITY): $(wildcard xtro-sanity/*.cs) $(wildcard xtro-sanity/*.csproj) $(wildcard $(TOP)/tools/common/*.cs) Makefile
-	$(Q_GEN) $(DOTNET) build xtro-sanity/xtro-sanity.csproj /bl:xtro-sanity.binlog $(DOTNET_BUILD_VERBOSITY)
+	$(Q_GEN) unset MSBUILD_EXE_PATH && $(DOTNET) build xtro-sanity/xtro-sanity.csproj /bl:xtro-sanity.binlog $(DOTNET_BUILD_VERBOSITY)
 
 XIOS ?= $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/64bits/iOS/Xamarin.iOS.dll
 XIOS_LIBDIR ?= $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.iOS
@@ -304,7 +304,7 @@ remove-empty-files:
 
 U2TODO = u2todo/bin/Debug/u2todo.dll
 $(U2TODO): $(wildcard u2todo/*.cs u2todo/*.csproj Filter.cs)
-	$(Q) $(DOTNET) build $(DOTNET_BUILD_VERBOSITY) /bl:$@.binlog
+	$(Q) unset MSBUILD_EXE_PATH && $(DOTNET) build $(DOTNET_BUILD_VERBOSITY) /bl:$@.binlog
 	$(Q) touch $@
 
 unclassified2todo-classic: $(U2TODO)
