@@ -324,9 +324,9 @@ class BuildConfiguration {
           throw [System.InvalidOperationException]::new("Failed to load configuration file $configFile")
         }
 
-        $configuration | Add-Member -NotePropertyName $configKey -NotePropertyValue $configValue
+        $config | Add-Member -NotePropertyName $configKey -NotePropertyValue $configValue
 
-        $jsonConfiguration = $configuration | ConvertTo-Json
+        $jsonConfiguration = $config | ConvertTo-Json
 
         Write-Host "Build configuration:"
         Write-Host $jsonConfiguration
