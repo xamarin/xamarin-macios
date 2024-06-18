@@ -33,8 +33,10 @@ clean-local::
 	rm -f *.tmp
 	rm -rf *os*.pch*
 
-XTRO_REPORT=xtro-report/bin/Debug/xtro-report.dll
-XTRO_SANITY=xtro-sanity/bin/Debug/xtro-sanity.dll
+XTRO_REPORT=xtro-report/bin/Debug/xtro-report
+XTRO_REPORT_EXEC=$(XTRO_REPORT)
+XTRO_SANITY=xtro-sanity/bin/Debug/xtro-sanity
+XTRO_SANITY_EXEC=$(XTRO_SANITY)
 
 bin/Debug/xtro-sharpie.exe $(XTRO_REPORT) $(XTRO_SANITY) build: .stamp-build
 
@@ -200,16 +202,16 @@ dotnet-wrench:
 
 ifdef INCLUDE_XAMARIN_LEGACY
 report/index.html: $(XTRO_REPORT) .stamp-classify
-	rm -rf report/
-	$(DOTNET) exec $< $(ANNOTATIONS_DIR) report
+	$(Q) rm -rf report/
+	$(Q_GEN) $(XTRO_REPORT_EXEC) $(ANNOTATIONS_DIR) report
 
 report: report/index.html
 endif
 
 ifdef ENABLE_DOTNET
 report-dotnet/index.html: $(XTRO_REPORT) .stamp-dotnet-classify
-	rm -rf report-dotnet
-	$(DOTNET) exec $< $(DOTNET_ANNOTATIONS_DIR) report-dotnet
+	$(Q) rm -rf report-dotnet
+	$(Q_GEN) $(XTRO_REPORT_EXEC) $< $(DOTNET_ANNOTATIONS_DIR) report-dotnet
 
 dotnet-report: report-dotnet/index.html
 endif
@@ -266,7 +268,7 @@ endif
 
 ifdef INCLUDE_XAMARIN_LEGACY
 .stamp-classify: $(XTRO_SANITY) $(CLASSIFY)
-	$(DOTNET) exec $< $(abspath $(ANNOTATIONS_DIR)) "$(ALL_PLATFORMS)" $(INCLUDED_PLATFORMS)
+	$(Q_GEN) $(XTRO_SANITY_EXEC) $(abspath $(ANNOTATIONS_DIR)) "$(ALL_PLATFORMS)" $(INCLUDED_PLATFORMS)
 	$(Q) touch $@
 
 classify: .stamp-classify
@@ -274,7 +276,7 @@ endif
 
 ifdef ENABLE_DOTNET
 .stamp-dotnet-classify: $(XTRO_SANITY) $(DOTNET_CLASSIFY)
-	$(DOTNET) exec $< $(abspath $(DOTNET_ANNOTATIONS_DIR)) "$(ALL_DOTNET_PLATFORMS)" $(XTRO_DOTNET_PLATFORMS)
+	$(Q_GEN) $(XTRO_SANITY_EXEC) $(abspath $(DOTNET_ANNOTATIONS_DIR)) "$(ALL_DOTNET_PLATFORMS)" $(XTRO_DOTNET_PLATFORMS)
 	$(Q) touch $@
 
 dotnet-classify: .stamp-dotnet-classify
