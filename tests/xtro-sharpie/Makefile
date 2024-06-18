@@ -211,7 +211,7 @@ endif
 ifdef ENABLE_DOTNET
 report-dotnet/index.html: $(XTRO_REPORT) .stamp-dotnet-classify
 	$(Q) rm -rf report-dotnet
-	$(Q_GEN) $(XTRO_REPORT_EXEC) $< $(DOTNET_ANNOTATIONS_DIR) report-dotnet
+	$(Q_GEN) $(XTRO_REPORT_EXEC) $(DOTNET_ANNOTATIONS_DIR) report-dotnet
 
 dotnet-report: report-dotnet/index.html
 endif
