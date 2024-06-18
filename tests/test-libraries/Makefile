@@ -33,7 +33,7 @@ GENERATED_FILES_PATTERN = \
 
 TESTGENERATOR=bin/Debug/testgenerator.dll
 $(TESTGENERATOR): testgenerator.cs Makefile
-	$(Q) $(DOTNET) build testgenerator.csproj $(DOTNET_BUILD_VERBOSITY)
+	$(Q) unset MSBUILD_EXE_PATH && $(DOTNET) build testgenerator.csproj $(DOTNET_BUILD_VERBOSITY)
 
 $(GENERATED_FILES_PATTERN): $(TESTGENERATOR)
 	$(Q) $(DOTNET) exec $<
