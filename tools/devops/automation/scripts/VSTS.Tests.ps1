@@ -248,6 +248,18 @@ Describe 'New-BuildConfiguration' {
             # Write-Host $buildConfiguration
             $buildConfiguration | Should -Be "{
   ""DOTNET_PLATFORMS"": ""iOS tvOS"",
+  ""PARENT_BUILD_BUILD_BUILDID"": ""BUILD_BUILDID"",
+  ""PARENT_BUILD_BUILD_BUILDNUMBER"": null,
+  ""PARENT_BUILD_BUILD_BUILDURI"": null,
+  ""PARENT_BUILD_BUILD_BINARIESDIRECTORY"": null,
+  ""PARENT_BUILD_BUILD_DEFINITIONNAME"": null,
+  ""PARENT_BUILD_BUILD_REASON"": ""BUILD_REASON"",
+  ""PARENT_BUILD_BUILD_REPOSITORY_ID"": null,
+  ""PARENT_BUILD_BUILD_REPOSITORY_NAME"": null,
+  ""PARENT_BUILD_BUILD_REPOSITORY_PROVIDER"": null,
+  ""PARENT_BUILD_BUILD_REPOSITORY_URI"": null,
+  ""PARENT_BUILD_BUILD_SOURCEBRANCH"": ""BUILD_SOURCEBRANCH"",
+  ""PARENT_BUILD_BUILD_SOURCEBRANCHNAME"": ""BUILD_SOURCEBRANCHNAME"",
   ""INCLUDE_DOTNET_IOS"": null,
   ""IOS_NUGET_VERSION_NO_METADATA"": null,
   ""IOS_NUGET_SDK_NAME"": ""iOSNuGetSdkName"",
@@ -262,8 +274,7 @@ Describe 'New-BuildConfiguration' {
   ""tvos-arm64_NUGET_RUNTIME_NAME"": null,
   ""Commit"": ""BUILD_SOURCEVERSION"",
   ""Tags"": [
-    ""ciBuild"",
-    ""BUILD_SOURCEBRANCHNAME""
+    ""ciBuild""
   ]
 }
 "
