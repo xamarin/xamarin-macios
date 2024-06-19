@@ -247,10 +247,6 @@ Describe 'New-BuildConfiguration' {
 
             # Write-Host $buildConfiguration
             $buildConfiguration | Should -Be "{
-  ""BuildReason"": ""BUILD_REASON"",
-  ""BuildSourceBranchName"": ""BUILD_SOURCEBRANCHNAME"",
-  ""BuildSourceBranch"": ""BUILD_SOURCEBRANCH"",
-  ""BuildId"": ""BUILD_BUILDID"",
   ""DOTNET_PLATFORMS"": ""iOS tvOS"",
   ""INCLUDE_DOTNET_IOS"": null,
   ""IOS_NUGET_VERSION_NO_METADATA"": null,
