@@ -239,8 +239,7 @@ Describe 'New-BuildConfiguration' {
   ""Commit"": ""BUILD_SOURCEVERSION"",
   ""Tags"": [
     ""ciBuild""
-  ]
-}
+  ]}
 "
         }
 
