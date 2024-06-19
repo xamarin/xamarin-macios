@@ -278,12 +278,12 @@ steps:
   displayName: 'Publish Artifact: TestSummary'
   inputs:
     targetPath: 'xamarin-macios/tests/TestSummary.md'
-    artifactName: '${{ parameters.uploadPrefix }}TestSummary-${{ parameters.testPrefix }}-$(System.JobAttempt)'
+    artifactName: '${{ parameters.uploadPrefix }}TestSummary-windows-integration-$(System.JobAttempt)'
   continueOnError: true
   condition: succeededOrFailed()
 
 - pwsh: |
-    $summaryName = "TestSummary-${{ parameters.testPrefix }}.md"
+    $summaryName = "TestSummary-windows-integration.md"
     $summaryPath = "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tests/TestSummary.md"
     if (Test-Path -Path $summaryPath -PathType Leaf) {
       Write-Host "##vso[task.addattachment type=Distributedtask.Core.Summary;name=$summaryName;]$summaryPath"
