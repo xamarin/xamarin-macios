@@ -1663,7 +1663,7 @@
 			<Output TaskParameter="Lines" ItemName="_AllExecutableSymbols" />
 		</ReadLinesFromFile>
 		<WriteLinesToFile
-			SessionId="$(BuildSessionId"
+			SessionId="$(BuildSessionId)"
 			File="$(_MtouchSymbolsList)"
 			Lines="@(_AllExecutableSymbols->DistinctWithCase())"
 			Overwrite="true" />
