@@ -49,16 +49,6 @@ namespace Xamarin.Tests {
 			Assert.That (count, Is.EqualTo (0), "zero mono-native libraries.");
 		}
 
-		void CheckSymlinkedLibrary ()
-		{
-			AssertShouldExist ("libmono-native.dylib");
-			AssertShouldNotExist ("libmono-native-compat.dylib");
-			AssertShouldNotExist ("libmono-native-unified.dylib");
-
-			var count = CountFiles ("libmono-native*");
-			Assert.That (count, Is.EqualTo (1), "exactly one mono-native library.");
-		}
-
 		[Test]
 		public void CheckLibrary ()
 		{
@@ -68,9 +58,6 @@ namespace Xamarin.Tests {
 				break;
 			case MonoNativeLinkMode.Static:
 				CheckStaticLibrary ();
-				break;
-			case MonoNativeLinkMode.Symlink:
-				CheckSymlinkedLibrary ();
 				break;
 			default:
 				Assert.Fail ($"Unknown link mode: {MonoNativeConfig.LinkMode}");
