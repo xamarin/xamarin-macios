@@ -4249,15 +4249,6 @@ namespace Xamarin.Bundler {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The trampoline method {0} does not match the function pointer 0x{1} for the trampolineMethod argument (they&apos;re don&apos;t refer to the same method)..
-        /// </summary>
-        public static string MX8047 {
-            get {
-                return ResourceManager.GetString("MX8047", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to The trampoline method {0} must have at least one parameter..
         /// </summary>
         public static string MX8048 {

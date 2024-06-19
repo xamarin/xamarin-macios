@@ -162,11 +162,6 @@ namespace ObjCRuntime {
 			if (!Runtime.DynamicRegistrationSupported)
 				throw ErrorHelper.CreateError (8050, Errors.MX8050 /* BlockLiteral.GetBlockSignature is not supported when the dynamic registrar has been linked away. */);
 
-			// Verify that the function pointer matches the trampoline
-			var functionPointer = trampolineMethod.MethodHandle.GetFunctionPointer ();
-			if (functionPointer != (IntPtr) trampoline)
-				throw ErrorHelper.CreateError (8047, Errors.MX8047 /* The trampoline method {0} does not match the function pointer 0x{1} for the trampolineMethod argument (they're don't refer to the same method) */, trampolineMethod.DeclaringType.FullName + "." + trampolineMethod.Name, ((IntPtr) trampoline).ToString ("x"));
-
 			// Verify that there's at least one parameter, and it must be System.IntPtr, void* or ObjCRuntime.BlockLiteral*.
 			var parameters = trampolineMethod.GetParameters ();
 			if (parameters.Length < 1)
