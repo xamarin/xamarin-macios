@@ -38,6 +38,10 @@ steps:
     persistCredentials: true
     path: s/xamarin-macios
 
+- checkout: maccore
+  clean: true
+  persistCredentials: true  # hugely important, else there are some scripts that check a single file from maccore that will fail
+
 # checkout an extra repo to ensure that we have the same tree structure in the working directory in all pipelines.
 # if you delete this checkout the unified pipeline will have issues.
 - checkout: yaml-templates
