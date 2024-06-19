@@ -53,6 +53,9 @@ steps:
       version: 3.x
     displayName: 'Install .NET Core SDK 3.x needed for ESRP'
 
+  - pwsh: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/show_env.ps1
+    displayName: 'Show Environment'
+
   - task: MicroBuildSigningPlugin@4
     displayName: 'Install Signing Plugin'
     inputs:
