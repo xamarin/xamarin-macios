@@ -40,7 +40,7 @@ XTRO_SANITY_EXEC=$(XTRO_SANITY)
 
 bin/Debug/xtro-sharpie.exe $(XTRO_REPORT) $(XTRO_SANITY) build: .stamp-build
 
-.stamp-build: $(wildcard *.cs) pch-info.proj
+.stamp-build: $(wildcard *.cs) pch-info.proj $(XTRO_REPORT) $(XTRO_SANITY)
 	$(Q_BUILD) $(SYSTEM_MSBUILD) $(MSBUILD_VERBOSITY) xtro-sharpie.csproj /r /bl:$@.binlog
 	$(Q) touch $@
 
