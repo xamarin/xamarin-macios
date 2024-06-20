@@ -102,7 +102,7 @@ decode_qstring (unsigned char **in, unsigned char qchar)
 		len++;
 	}
 
-	v = value = (char *) malloc (len + 1);
+	v = value = (char *) calloc (1, len + 1);
 	while (start < inptr) {
 		if (*start == '\\')
 			start++;
@@ -162,7 +162,7 @@ get_mono_env_options (int *count)
 			break;
 		}
 
-		node = (ListNode *) malloc (sizeof (ListNode));
+		node = (ListNode *) calloc (1, sizeof (ListNode));
 		node->value = value;
 		node->next = NULL;
 		n++;
@@ -185,7 +185,7 @@ get_mono_env_options (int *count)
 	if (n == 0)
 		return NULL;
 
-	argv = (char **) malloc (sizeof (char *) * ((unsigned long) n + 1));
+	argv = (char **) calloc (sizeof (char *), (unsigned long) n + 1);
 	i = 0;
 
 	while (list != NULL) {
@@ -608,7 +608,7 @@ int xamarin_main (int argc, char **argv, enum XamarinLaunchMode launch_mode)
 		if (xamarin_mac_modern)
 			new_argc += 1;
 
-		char **new_argv = (char **) malloc (sizeof (char *) * ((unsigned long) new_argc + 1 /* null terminated */));
+		char **new_argv = (char **) calloc (sizeof (char *), (unsigned long) new_argc + 1 /* null terminated */);
 		const char **ptr = (const char **) new_argv;
 		// binary
 		*ptr++ = argv [0];

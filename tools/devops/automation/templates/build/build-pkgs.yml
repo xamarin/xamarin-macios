@@ -1,12 +1,4 @@
 parameters:
-- name: runTests
-  type: boolean
-  default: true
-
-- name: runDeviceTests
-  type: boolean
-  default: true
-
 - name: vsdropsPrefix
   type: string
 
@@ -52,7 +44,6 @@ steps:
     isPR: ${{ parameters.isPR }}
     repositoryAlias: ${{ parameters.repositoryAlias }}
     commit: ${{ parameters.commit }}
-    runDeviceTests: ${{ parameters.runDeviceTests }}
     vsdropsPrefix: ${{ parameters.vsdropsPrefix }}
     keyringPass: ${{ parameters.keyringPass }}
     gitHubToken: ${{ parameters.gitHubToken }}

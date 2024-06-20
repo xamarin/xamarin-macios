@@ -29057,33 +29057,33 @@ namespace UIKit {
 	[NoWatch, TV (17, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[Protocol]
 	interface UITraitChangeObservable {
-#if XAMCORE_5_0
-		[Abstract]
+#if NET
+		[Abstract (GenerateExtensionMethod = true)]
 #endif
 		[Export ("registerForTraitChanges:withHandler:")]
-#if XAMCORE_5_0
+#if NET
 		IUITraitChangeRegistration RegisterForTraitChanges (Class [] traits, Action<IUITraitEnvironment, UITraitCollection> handler);
 #else
 		[Obsolete ("Use the 'UITraitChangeObservable.RegisterForTraitChanges (Class[], Action<IUITraitEnvironment, UITraitCollection>)' method instead.")]
 		IUITraitChangeRegistration RegisterForTraitChanges (IUITraitDefinition [] traits, Action<IUITraitEnvironment, UITraitCollection> handler);
 #endif
 
-#if XAMCORE_5_0
-		[Abstract]
+#if NET
+		[Abstract (GenerateExtensionMethod = true)]
 #endif
 		[Export ("registerForTraitChanges:withTarget:action:")]
-#if XAMCORE_5_0
+#if NET
 		IUITraitChangeRegistration RegisterForTraitChanges (Class [] traits, NSObject target, Selector action);
 #else
 		[Obsolete ("Use the 'UITraitChangeObservable.RegisterForTraitChanges (Class[], NSObject, Selector)' method instead.")]
 		IUITraitChangeRegistration RegisterForTraitChanges (IUITraitDefinition [] traits, NSObject target, Selector action);
 #endif
 
-#if XAMCORE_5_0
-		[Abstract]
+#if NET
+		[Abstract (GenerateExtensionMethod = true)]
 #endif
 		[Export ("registerForTraitChanges:withAction:")]
-#if XAMCORE_5_0
+#if NET
 		IUITraitChangeRegistration RegisterForTraitChanges (Class [] traits, Selector action);
 #else
 		[Obsolete ("Use the 'UITraitChangeObservable.RegisterForTraitChanges (Class[], Selector)' method instead.")]

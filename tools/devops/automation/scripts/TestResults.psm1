@@ -478,13 +478,6 @@ function New-ParallelTestsResults {
 
     $stageDep = $StageDependencies | ConvertFrom-Json -AsHashtable
 
-    $buildResult = $stageDep.build_macos_tests.build_macos_tests_job.result
-    Write-Host "Build result: $buildResult"
-    if ($buildResult -ne "Succeeded") {
-        Write-Host "Build did not succeed: $buildResult"
-        return [ParallelTestsResults]::new($buildResult)
-    }
-
     $matrix = $stageDep.configure_build.configure.outputs["test_matrix.TEST_MATRIX"] | ConvertFrom-Json -AsHashtable
     $suites = [System.Collections.SortedList]::new()
     foreach ($title in $matrix.Keys) {

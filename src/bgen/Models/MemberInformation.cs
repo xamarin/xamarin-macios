@@ -34,6 +34,8 @@ public class MemberInformation {
 	public bool is_interface_impl;
 	public bool is_extension_method;
 	public bool is_protocol_member;
+	// This is used to determine whether printing [RequiredMember], [OptionalMember] or nothing at all for methods and properties.
+	public bool? is_protocol_member_required;
 	public bool is_appearance;
 	public bool is_model;
 	public bool is_ctor;
@@ -41,8 +43,20 @@ public class MemberInformation {
 	public bool is_type_sealed;
 	public string? selector;
 	public string? wrap_method;
+	// When generating a method implementation, the generating code needs to
+	// know whether the code is for the internal static method implementing a
+	// protocol member (in which case this property is true), or if it's other
+	// locations (such as a default interface member or an inlined protocol
+	// member) that's calling said internal static method (in which case this
+	// property is false).
+	public bool is_protocol_implementation_method;
+	// When generating a method implementation, the generating code needs to
+	// know whether the code is to call the internal static method implementing a
+	// protocol member (in which case this property is true). See also is_protocol_implementation_method.
+	public bool call_protocol_implementation_method;
 	public string is_forced_owns;
 	public bool is_bindAs => Generator.HasBindAsAttribute (mi);
+	public bool generate_is_async_overload;
 
 	public MethodInfo? Method { get { return mi as MethodInfo; } }
 	public PropertyInfo? Property { get { return mi as PropertyInfo; } }
@@ -66,6 +80,7 @@ public class MemberInformation {
 		is_type_sealed = AttributeManager.HasAttribute<SealedAttribute> (mi.DeclaringType);
 		is_return_release = methodInfo is not null && AttributeManager.HasAttribute<ReleaseAttribute> (methodInfo.ReturnParameter);
 		is_forced = Generator.HasForcedAttribute (mi, out is_forced_owns);
+		generate_is_async_overload = AttributeManager.HasAttribute<AsyncAttribute> (mi);
 
 		var tsa = AttributeManager.GetCustomAttribute<ThreadSafeAttribute> (mi);
 		// if there's an attribute then it overrides the parent (e.g. type attribute) or namespace default
@@ -204,6 +219,9 @@ public class MemberInformation {
 
 	public string GetVisibility ()
 	{
+		if (is_protocol_implementation_method)
+			return "internal";
+
 		if (is_interface_impl || is_extension_method)
 			return "public";
 
@@ -225,8 +243,10 @@ public class MemberInformation {
 			mods += "";
 		} else if (is_ctor && is_protocol_member) {
 			mods += "static ";
-		} else if (is_static || is_category_extension || is_extension_method) {
+		} else if (is_static || is_category_extension || is_extension_method || is_protocol_implementation_method) {
 			mods += "static ";
+		} else if (is_protocol_member) {
+			mods += "virtual ";
 		} else if (is_abstract) {
 #if NET
 			mods += "virtual ";

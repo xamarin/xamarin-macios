@@ -825,8 +825,8 @@ namespace Metal {
 		void SetAccelerationStructure ([NullAllowed] IMTLAccelerationStructure accelerationStructure, nuint bufferIndex);
 
 		[Mac (14, 0), iOS (17, 0), TV (17, 0), MacCatalyst (17, 0)]
-#if XAMCORE_5_0
-		[Abstract]
+#if NET
+		[Abstract (GenerateExtensionMethod = true)]
 #endif
 		[Export ("setBuffer:offset:attributeStride:atIndex:")]
 		void SetBuffer (IMTLBuffer buffer, nuint offset, nuint stride, nuint index);
@@ -2167,6 +2167,7 @@ namespace Metal {
 		[Abstract]
 #endif
 		[Export ("newArgumentEncoderWithBufferBinding:")]
+		[return: Release]
 		IMTLArgumentEncoder CreateArgumentEncoder (IMTLBufferBinding bufferBinding);
 
 		[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0), TV (16, 0)]
@@ -2175,6 +2176,7 @@ namespace Metal {
 #endif
 		[Export ("newRenderPipelineStateWithMeshDescriptor:options:reflection:error:")]
 		[return: NullAllowed]
+		[return: Release]
 		IMTLRenderPipelineState CreateRenderPipelineState (MTLMeshRenderPipelineDescriptor descriptor, MTLPipelineOption options, [NullAllowed] out MTLRenderPipelineReflection reflection, [NullAllowed] out NSError error);
 
 		[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0), TV (16, 0)]
@@ -5984,57 +5986,57 @@ namespace Metal {
 		void Reset ();
 
 		[Mac (14, 0), iOS (17, 0), TV (17, 0), MacCatalyst (17, 0)]
-#if XAMCORE_5_0
-		[Abstract]
+#if NET
+		[Abstract (GenerateExtensionMethod = true)]
 #endif
 		[Export ("setVertexBuffer:offset:attributeStride:atIndex:")]
 		void SetVertexBuffer (IMTLBuffer buffer, nuint offset, nuint stride, nuint index);
 
 		[NoMac, iOS (17, 0), NoTV, MacCatalyst (17, 0)]
-#if XAMCORE_5_0
-		[Abstract]
+#if NET
+		[Abstract (GenerateExtensionMethod = true)]
 #endif
 		[Export ("setObjectThreadgroupMemoryLength:atIndex:")]
 		void SetObjectThreadgroupMemoryLength (nuint length, nuint index);
 
 		[NoMac, iOS (17, 0), NoTV, MacCatalyst (17, 0)]
-#if XAMCORE_5_0
-		[Abstract]
+#if NET
+		[Abstract (GenerateExtensionMethod = true)]
 #endif
 		[Export ("setObjectBuffer:offset:atIndex:")]
 		void SetObjectBuffer (IMTLBuffer buffer, nuint offset, nuint index);
 
 		[NoMac, iOS (17, 0), NoTV, MacCatalyst (17, 0)]
-#if XAMCORE_5_0
-		[Abstract]
+#if NET
+		[Abstract (GenerateExtensionMethod = true)]
 #endif
 		[Export ("setMeshBuffer:offset:atIndex:")]
 		void SetMeshBuffer (IMTLBuffer buffer, nuint offset, nuint index);
 
 		[NoMac, iOS (17, 0), NoTV, MacCatalyst (17, 0)]
-#if XAMCORE_5_0
-		[Abstract]
+#if NET
+		[Abstract (GenerateExtensionMethod = true)]
 #endif
 		[Export ("drawMeshThreadgroups:threadsPerObjectThreadgroup:threadsPerMeshThreadgroup:")]
 		void DrawMeshThreadgroups (MTLSize threadgroupsPerGrid, MTLSize threadsPerObjectThreadgroup, MTLSize threadsPerMeshThreadgroup);
 
 		[NoMac, iOS (17, 0), NoTV, MacCatalyst (17, 0)]
-#if XAMCORE_5_0
-		[Abstract]
+#if NET
+		[Abstract (GenerateExtensionMethod = true)]
 #endif
 		[Export ("drawMeshThreads:threadsPerObjectThreadgroup:threadsPerMeshThreadgroup:")]
 		void DrawMeshThreads (MTLSize threadsPerGrid, MTLSize threadsPerObjectThreadgroup, MTLSize threadsPerMeshThreadgroup);
 
 		[NoMac, iOS (17, 0), NoTV, MacCatalyst (17, 0)]
-#if XAMCORE_5_0
-		[Abstract]
+#if NET
+		[Abstract (GenerateExtensionMethod = true)]
 #endif
 		[Export ("setBarrier")]
 		void SetBarrier ();
 
 		[NoMac, iOS (17, 0), NoTV, MacCatalyst (17, 0)]
-#if XAMCORE_5_0
-		[Abstract]
+#if NET
+		[Abstract (GenerateExtensionMethod = true)]
 #endif
 		[Export ("clearBarrier")]
 		void ClearBarrier ();
