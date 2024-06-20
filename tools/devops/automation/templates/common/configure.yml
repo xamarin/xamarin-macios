@@ -7,6 +7,10 @@ parameters:
   type: boolean
   default: false
 
+- name: use1ES
+  type: boolean
+  default: false
+
 - name: repositoryAlias
   type: string
   default: self
@@ -98,9 +102,17 @@ steps:
 
 # upload config to be consumed later
 - ${{ if eq(parameters.uploadArtifacts, true) }}:
-  - task: PublishPipelineArtifact@1
-    displayName: 'Publish Artifact: configuration.json'
-    inputs:
-      targetPath: '$(Build.ArtifactStagingDirectory)/configuration.json'
-      artifactName: '${{ parameters.uploadPrefix }}build-configuration'
-    continueOnError: true
+  - ${{ if eq(parameters.use1ES, true) }}:
+    - task: 1ES.PublishPipelineArtifact@1
+      displayName: 'Publish Artifact: configuration.json'
+      inputs:
+        path: '$(Build.ArtifactStagingDirectory)/configuration.json'
+        artifact: '${{ parameters.uploadPrefix }}build-configuration'
+      continueOnError: true
+  - ${{ else }}:
+    - task: PublishPipelineArtifact@1
+      displayName: 'Publish Artifact: configuration.json'
+      inputs:
+        targetPath: '$(Build.ArtifactStagingDirectory)/configuration.json'
+        artifactName: '${{ parameters.uploadPrefix }}build-configuration'
+      continueOnError: true
