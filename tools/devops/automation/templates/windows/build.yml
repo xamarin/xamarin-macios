@@ -99,6 +99,12 @@ steps:
   inputs:
     version: 8.x
 
+- pwsh: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/scripts/initialize-test-output-variables.ps1
+  displayName: Set output variables
+  env:
+    TESTS_LABEL: windows
+    # TESTS_PLATFORM:
+
 - pwsh: |
     & dotnet --version
     & dotnet --info
@@ -268,8 +274,8 @@ steps:
 - pwsh: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/run-generator-tests-on-windows.ps1
   displayName: 'Run generator tests'
 
-- pwsh: $(Build.SourcesDirectory)\xamarin-macios\tools\devops\automation\scripts\create-html-index-file.ps1
-  displayName: 'Create Html Report'
+- pwsh: $(Build.SourcesDirectory)\xamarin-macios\tools\devops\automation\scripts\prepare-windows-test-results.ps1
+  displayName: 'Prepare tests results and Html Report'
   timeoutInMinutes: 5
   condition: always()
 

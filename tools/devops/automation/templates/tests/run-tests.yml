@@ -50,17 +50,11 @@ steps:
     fi
   displayName: Install powershell
 
-- bash: |
-    set -e
-    # don't do "set -x" here, because the duplicate vso output might confuse Azure DevOps
-    echo "Running tests on $AGENT_NAME"
-    echo "##vso[task.setvariable variable=TESTS_BOT;isOutput=true]$AGENT_NAME"
-    echo "##vso[task.setvariable variable=TESTS_LABEL;isOutput=true]${{ parameters.label }}"
-    echo "##vso[task.setvariable variable=TESTS_PLATFORM;isOutput=true]${{ parameters.testPlatform }}"
-    echo "##vso[task.setvariable variable=TESTS_ATTEMPT;isOutput=true]$SYSTEM_JOBATTEMPT"
-    # assume something is going to fail
-    echo "##vso[task.setvariable variable=TESTS_JOBSTATUS;isOutput=true]Failed"
+- pwsh: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/scripts/initialize-test-output-variables.ps1
   displayName: Set output variables
+  env:
+    TESTS_LABEL: ${{ parameters.label }}
+    TESTS_PLATFORM: ${{ parameters.testPlatform }}
 
 - pwsh: |
     Write-Host "##vso[task.setvariable variable=MAC_DESTDIR]/"
