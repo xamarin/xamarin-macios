@@ -404,7 +404,7 @@ class BuildConfiguration {
 
         # calculate the commit to later share it with the cascade pipelines
         if ($Env:BUILD_REASON -eq "PullRequest") {
-            $changeId = $configuration.BuildSourceBranch.Replace("refs/pull/", "").Replace("/merge", "")
+            $changeId = $configuration.PARENT_BUILD_BUILD_SOURCEBRANCH.Replace("refs/pull/", "").Replace("/merge", "")
         } else {
             $changeId = $Env:BUILD_SOURCEVERSION
         }
@@ -418,12 +418,12 @@ class BuildConfiguration {
             $tags.Add("cronjob")
         }
 
-        if ($configuration.BuildReason -eq "PullRequest" -or (($configuration.BuildReason -eq "Manual") -and ($configuration.BuildSourceBranchName -eq "merge")) ) {
+        if ($configuration.BuildReason -eq "PullRequest" -or (($configuration.BuildReason -eq "Manual") -and ($configuration.PARENT_BUILD_BUILD_SOURCEBRANCH -eq "merge")) ) {
           Write-Host "Configuring build from PR."
           # This is an interesting step, we do know we are dealing with a PR, but we need the PR id to
           # be able to get the labels, the buildSourceBranch follows the pattern: refs/pull/{ChangeId}/merge
           # we could use a regexp but then we would have two problems instead of one
-          $changeId = $configuration.BuildSourceBranch.Replace("refs/pull/", "").Replace("/merge", "")
+          $changeId = $configuration.PARENT_BUILD_BUILD_SOURCEBRANCH.Replace("refs/pull/", "").Replace("/merge", "")
 
           # add a var with the change id, which can be later consumed by some of the old scripts from
           # jenkins
@@ -476,7 +476,7 @@ class BuildConfiguration {
             $tags.Add("ciBuild")
           }
           # set the name of the branch under build
-          $tags.Add("$($configuration.BuildSourceBranchName)")
+          $tags.Add("$($configuration.PARENT_BUILD_BUILD_SOURCEBRANCHNAME)")
           Write-Host "##vso[task.setvariable variable=prBuild;isOutput=true]False"
         }
         # Remove empty entries
