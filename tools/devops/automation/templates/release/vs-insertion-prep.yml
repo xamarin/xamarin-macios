@@ -53,6 +53,7 @@ stages:
   - template: sign-artifacts/jobs/v2.yml@yaml-templates
     parameters:
       use1ESTemplate: true
+      enabledCredScan: false
       signedArtifactName: '${{ parameters.uploadPrefix }}nuget-signed'
       artifactName: '${{ parameters.uploadPrefix }}not-signed-package'
       signType: Real
