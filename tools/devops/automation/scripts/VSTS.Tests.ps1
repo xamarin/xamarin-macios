@@ -238,7 +238,8 @@ Describe 'New-BuildConfiguration' {
   ""tvos-arm64_NUGET_RUNTIME_NAME"": null,
   ""Commit"": ""BUILD_SOURCEVERSION"",
   ""Tags"": [
-    ""ciBuild""
+    ""ciBuild"",
+    ""BUILD_SOURCEBRANCHNAME""
   ]
 }"
         }
@@ -281,7 +282,8 @@ Describe 'New-BuildConfiguration' {
   ""tvos-arm64_NUGET_RUNTIME_NAME"": null,
   ""Commit"": ""BUILD_SOURCEVERSION"",
   ""Tags"": [
-    ""ciBuild""
+    ""ciBuild"",
+    ""BUILD_SOURCEBRANCHNAME""
   ]
 }
 "
