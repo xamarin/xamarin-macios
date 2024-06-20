@@ -1,0 +1,41 @@
+parameters:
+
+- name: use1ES
+  type: boolean
+  default: false
+
+- name: displayName
+  type: string
+
+- name: path
+  type: string
+
+- name: artifact
+  type: string
+
+- name: continueOnError
+  type: boolean
+  default: false
+
+- name: condition
+  type: boolean
+  default: always()
+
+steps:
+- ${{ if eq(parameters.use1ES, true) }}:
+  - task: 1ES.PublishPipelineArtifact@1
+    displayName: ${{ parameters.displayName }}
+    condition: ${{ parameters.condition }}
+    inputs:
+      path: ${{ parameters.path }}
+      artifact: ${{ parameters.artifact }}
+    continueOnError: ${{ parameters.continueOnError }}
+- ${{ else }}:
+  - task: PublishPipelineArtifact@1
+    displayName: ${{ parameters.displayName }}
+    condition: ${{ parameters.condition }}
+    inputs:
+      targetPath: ${{ parameters.path }}
+      artifactName: ${{ parameters.artifact }}
+    continueOnError: ${{ parameters.continueOnError }}
+
