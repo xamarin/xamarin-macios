@@ -50,7 +50,7 @@ steps:
     verbosityLevel: standard
     preserveLogsFolder: true
   env:
-    AzureServicesAuthConnectionString: RunAs=App;AppId=$(CLIENT_ID);
+    AzureServicesAuthConnectionString: RunAs=App;AppId=$(CLIENT_ID)
 
 - task: PublishSecurityAnalysisLogs@3
   displayName: Publish Security Analysis Logs
