@@ -239,8 +239,8 @@ Describe 'New-BuildConfiguration' {
   ""Commit"": ""BUILD_SOURCEVERSION"",
   ""Tags"": [
     ""ciBuild""
-  ]}
-"
+  ]
+}"
         }
 
         It 'writes the file' {
