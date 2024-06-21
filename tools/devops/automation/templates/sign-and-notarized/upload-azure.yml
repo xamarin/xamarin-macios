@@ -38,6 +38,10 @@ steps:
     persistCredentials: true
     path: s/xamarin-macios
 
+- checkout: maccore
+  clean: true
+  persistCredentials: true  # hugely important, else there are some scripts that check a single file from maccore that will fail
+
 # checkout an extra repo to ensure that we have the same tree structure in the working directory in all pipelines.
 # if you delete this checkout the unified pipeline will have issues.
 - checkout: yaml-templates
@@ -88,7 +92,7 @@ steps:
   name: upload
   inputs:
     SourcePath: $(Build.SourcesDirectory)/artifacts/${{ parameters.uploadPrefix }}package
-    azureSubscription: 'Xamarin - RelEng (BosStorageMirror)'
+    azureSubscription: 'Azure Releng (7b4817ae-218f-464a-bab1-a9df2d99e1e5)'
     Destination: AzureBlob
     storage: ${{ parameters.azureStorage }}
     ContainerName: ${{ parameters.azureContainer }}
@@ -98,7 +102,7 @@ steps:
   displayName: 'Publish manifest to Azure'
   inputs:
     SourcePath: $(Build.SourcesDirectory)/artifacts/${{ parameters.uploadPrefix }}package/manifest
-    azureSubscription: 'Xamarin - RelEng (BosStorageMirror)'
+    azureSubscription: 'Azure Releng (7b4817ae-218f-464a-bab1-a9df2d99e1e5)'
     Destination: AzureBlob
     storage: ${{ parameters.azureStorage }}
     ContainerName: ${{ parameters.azureContainer }}
@@ -108,7 +112,7 @@ steps:
   displayName: 'Publish manifest to Azure as latest'
   inputs:
     SourcePath: $(Build.SourcesDirectory)/artifacts/${{ parameters.uploadPrefix }}package/manifest
-    azureSubscription: 'Xamarin - RelEng (BosStorageMirror)'
+    azureSubscription: 'Azure Releng (7b4817ae-218f-464a-bab1-a9df2d99e1e5)'
     Destination: AzureBlob
     storage: ${{ parameters.azureStorage }}
     ContainerName: ${{ parameters.azureContainer }}
@@ -118,7 +122,7 @@ steps:
   displayName: 'Publish manifest to Azure per commit'
   inputs:
     SourcePath: $(Build.SourcesDirectory)/artifacts/${{ parameters.uploadPrefix }}package/manifest
-    azureSubscription: 'Xamarin - RelEng (BosStorageMirror)'
+    azureSubscription: 'Azure Releng (7b4817ae-218f-464a-bab1-a9df2d99e1e5)'
     Destination: AzureBlob
     storage: ${{ parameters.azureStorage }}
     ContainerName: ${{ parameters.azureContainer }}
@@ -162,11 +166,11 @@ steps:
 
 # upload the artifacts.json to the build pipeline artifacts so that it can be consumed by other jobs to
 # get the required urls
-- task: PublishPipelineArtifact@1
+- task: 1ES.PublishPipelineArtifact@1
   displayName: 'Publish Build Artifacts'
   inputs:
-    targetPath: $(Build.SourcesDirectory)/artifacts/${{ parameters.uploadPrefix }}package/artifacts.json
-    artifactName: '${{ parameters.uploadPrefix }}pkg-info'
+    path: $(Build.SourcesDirectory)/artifacts/${{ parameters.uploadPrefix }}package/artifacts.json
+    artifact: '${{ parameters.uploadPrefix }}pkg-info'
   continueOnError: true
 
 - pwsh: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/show_env.ps1
@@ -393,9 +397,9 @@ steps:
     }
   displayName: 'SBOM: Cleanup'
 
-- task: PublishBuildArtifacts@1
+- task: 1ES.PublishPipelineArtifact@1
   displayName: 'SBOM: Publish'
   inputs:
-    artifactName: '${{ parameters.uploadPrefix }}sbom'
-    pathToPublish: $(Build.ArtifactStagingDirectory)/sbom
+    artifact: '${{ parameters.uploadPrefix }}sbom'
+    path: $(Build.ArtifactStagingDirectory)/sbom
   condition: succeeded()

@@ -1017,11 +1017,12 @@ function check_simulators ()
 
 	IFS=', ' read -r -a SIMS <<< "$EXTRA_SIMULATORS"
 	arraylength=${#SIMS[@]}
+	INSTALL_SIMULATORS=
 	for (( i=1; i<arraylength+1; i++ ));	do
-		SIMS[$i-1]="--install=${SIMS[$i-1]}"
+		INSTALL_SIMULATORS="$INSTALL_SIMULATORS --install=${SIMS[$i-1]}"
 	done
 
-	if ! FAILED_SIMULATORS=$(mono --debug tools/siminstaller/bin/Debug/siminstaller.exe -q --xcode "$XCODE" --only-check "${SIMS[@]}"); then
+	if ! FAILED_SIMULATORS=$(make -C tools/siminstaller only-check INSTALL_SIMULATORS="$INSTALL_SIMULATORS" 2>/dev/null); then
 		local action=warn
 		if test -z $OPTIONAL_SIMULATORS; then
 			action=fail
@@ -1034,7 +1035,7 @@ function check_simulators ()
 			$action "    Another possibility is that Apple is not shipping any simulators (yet?) for the new version of Xcode (if the previous list shows no simulators)."
 		else
 			if ! test -z $PROVISION_SIMULATORS; then
-				if ! mono --debug tools/siminstaller/bin/Debug/siminstaller.exe -q --xcode "$XCODE" "${SIMS[@]}"; then
+				if ! make -C tools/siminstaller install-simulators INSTALL_SIMULATORS="$INSTALL_SIMULATORS"; then
 					$action "Failed to install extra simulators."
 				else
 					ok "Extra simulators installed successfully: '${FAILED_SIMULATORS//$'\n'/', '}'"
