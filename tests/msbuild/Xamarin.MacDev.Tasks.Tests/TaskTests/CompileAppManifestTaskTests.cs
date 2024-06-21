@@ -138,13 +138,13 @@ namespace Xamarin.MacDev.Tasks {
 		}
 
 		[Test]
-		[TestCase (ApplePlatform.iOS, true)]
-		[TestCase (ApplePlatform.iOS, false)]
-		[TestCase (ApplePlatform.MacCatalyst, false)]
-		[TestCase (ApplePlatform.TVOS, true)]
-		[TestCase (ApplePlatform.TVOS, false)]
-		[TestCase (ApplePlatform.MacOSX, false)]
-		public void XcodeVariables (ApplePlatform platform, bool isSimulator)
+		[TestCase (ApplePlatform.iOS, true, "iphonesimulator")]
+		[TestCase (ApplePlatform.iOS, false, "iphoneos")]
+		[TestCase (ApplePlatform.MacCatalyst, false, "macosx")]
+		[TestCase (ApplePlatform.TVOS, true, "appletvsimulator")]
+		[TestCase (ApplePlatform.TVOS, false, "appletvos")]
+		[TestCase (ApplePlatform.MacOSX, false, "macosx")]
+		public void XcodeVariables (ApplePlatform platform, bool isSimulator, string expectedDTPlatformName)
 		{
 			var task = CreateTask (platform: platform);
 			task.SdkIsSimulator = isSimulator;
@@ -165,6 +165,7 @@ namespace Xamarin.MacDev.Tasks {
 				var value = plist.GetString (variable)?.Value;
 				Assert.That (value, Is.Not.Null.And.Not.Empty, variable);
 			}
+			Assert.AreEqual (expectedDTPlatformName, plist.GetString ("DTPlatformName")?.Value, "Expected DTPlatformName");
 		}
 	}
 }
