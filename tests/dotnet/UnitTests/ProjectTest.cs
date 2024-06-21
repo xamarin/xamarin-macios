@@ -1667,8 +1667,8 @@ namespace Xamarin.Tests {
 			var warnings = BinLog.GetBuildLogWarnings (rv.BinLogPath).ToArray ();
 
 			Assert.AreEqual (1, warnings.Length, "Warning count");
-			Assert.AreEqual (warnings[0].Code, "IL2075", "Warning code");
-			Assert.AreEqual (warnings[0].Message, "'this' argument does not satisfy 'DynamicallyAccessedMemberTypes.PublicProperties' in call to 'System.Type.GetProperties()'. The return value of method 'System.Object.GetType()' does not have matching annotations. The source value must declare at least the same requirements as those declared on the target location it is assigned to.");
+			Assert.AreEqual (warnings [0].Code, "IL2075", "Warning code");
+			Assert.AreEqual (warnings [0].Message, "'this' argument does not satisfy 'DynamicallyAccessedMemberTypes.PublicProperties' in call to 'System.Type.GetProperties()'. The return value of method 'System.Object.GetType()' does not have matching annotations. The source value must declare at least the same requirements as those declared on the target location it is assigned to.");
 		}
 
 		[Test]

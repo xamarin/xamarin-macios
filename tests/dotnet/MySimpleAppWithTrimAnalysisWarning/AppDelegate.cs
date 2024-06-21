@@ -15,13 +15,12 @@ namespace MySimpleApp {
 		}
 	}
 
-	internal class MyClass
-	{
+	internal class MyClass {
 		public object X { get; set; }
 
-		public MyClass(object x)
+		public MyClass (object x)
 		{
-			X = x.GetType().GetProperties();
+			X = x.GetType ().GetProperties ();
 		}
 	}
 }
