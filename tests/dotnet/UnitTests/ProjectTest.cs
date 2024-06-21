@@ -1649,6 +1649,30 @@ namespace Xamarin.Tests {
 
 		[Test]
 		[TestCase (ApplePlatform.iOS, "ios-arm64")]
+		[TestCase (ApplePlatform.iOS, "iossimulator-arm64")]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64")]
+		public void PublishAotWithWarningInDebugBuild (ApplePlatform platform, string runtimeIdentifiers)
+		{
+			var project = "MySimpleAppWithTrimAnalysisWarning";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
+
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
+			Clean (project_path);
+			var properties = GetDefaultProperties (runtimeIdentifiers);
+			properties ["PublishAot"] = "true";
+			var rv = DotNet.AssertBuild (project_path, properties);
+
+			// We expect to get a warning from the trim analzyer in Debug build
+			var warnings = BinLog.GetBuildLogWarnings (rv.BinLogPath).ToArray ();
+
+			Assert.AreEqual (1, warnings.Length, "Warning count");
+			Assert.AreEqual (warnings[0].Code, "IL2075", "Warning code");
+			Assert.AreEqual (warnings[0].Message, "'this' argument does not satisfy 'DynamicallyAccessedMemberTypes.PublicProperties' in call to 'System.Type.GetProperties()'. The return value of method 'System.Object.GetType()' does not have matching annotations. The source value must declare at least the same requirements as those declared on the target location it is assigned to.");
+		}
+
+		[Test]
+		[TestCase (ApplePlatform.iOS, "ios-arm64")]
 		[TestCase (ApplePlatform.MacOSX, "osx-x64")]
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64")]
 		[TestCase (ApplePlatform.TVOS, "tvossimulator-x64")]
