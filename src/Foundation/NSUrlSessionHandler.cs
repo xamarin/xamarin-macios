@@ -158,7 +158,9 @@ namespace Foundation {
 			allowsCellularAccess = configuration.AllowsCellularAccess;
 			AllowAutoRedirect = true;
 
+#pragma warning disable SYSLIB0014 // 'ServicePointManager' is obsolete: 'WebRequest, HttpWebRequest, ServicePoint, and WebClient are obsolete. Use HttpClient instead. Settings on ServicePointManager no longer affect SslStream or HttpClient.' (https://aka.ms/dotnet-warnings/SYSLIB0014)
 			var sp = ServicePointManager.SecurityProtocol;
+#pragma warning restore SYSLIB0014
 			if ((sp & SecurityProtocolType.Ssl3) != 0)
 				configuration.TLSMinimumSupportedProtocol = SslProtocol.Ssl_3_0;
 			else if ((sp & SecurityProtocolType.Tls) != 0)
