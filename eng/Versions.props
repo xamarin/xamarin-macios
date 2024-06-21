@@ -3,15 +3,15 @@
   <PropertyGroup>
     <!-- Versions updated by maestro -->
     <!-- NOTE: $(VSToolsNetCoreSDKResolverPackageVersion) may be temporary -->
-    <VSToolsNetCoreSDKResolverPackageVersion>9.0.100-preview.6.24316.4</VSToolsNetCoreSDKResolverPackageVersion>
-    <MicrosoftNETILLinkTasksPackageVersion>9.0.0-preview.6.24307.2</MicrosoftNETILLinkTasksPackageVersion>
+    <VSToolsNetCoreSDKResolverPackageVersion>9.0.100-preview.6.24320.12</VSToolsNetCoreSDKResolverPackageVersion>
+    <MicrosoftNETILLinkTasksPackageVersion>9.0.0-preview.6.24319.11</MicrosoftNETILLinkTasksPackageVersion>
     <MicrosoftNETILLinkPackageVersion>9.0.0-alpha.1.23556.4</MicrosoftNETILLinkPackageVersion>
     <MicrosoftDotNetBuildTasksFeedPackageVersion>8.0.0-beta.24225.1</MicrosoftDotNetBuildTasksFeedPackageVersion>
-    <MicrosoftNETCoreAppRefPackageVersion>9.0.0-preview.6.24307.2</MicrosoftNETCoreAppRefPackageVersion>
+    <MicrosoftNETCoreAppRefPackageVersion>9.0.0-preview.6.24319.11</MicrosoftNETCoreAppRefPackageVersion>
     <MicrosoftNETWorkloadEmscriptenCurrentManifest80100TransportVersion>8.0.0-rtm.23511.3</MicrosoftNETWorkloadEmscriptenCurrentManifest80100TransportVersion>
     <MicrosoftNETRuntimeMonoTargetsSdkPackageVersion>9.0.0-alpha.1.23556.4</MicrosoftNETRuntimeMonoTargetsSdkPackageVersion>
     <MicrosoftTemplateEngineTasksVersion>7.0.100-alpha.1.21601.1</MicrosoftTemplateEngineTasksVersion>
-    <MicrosoftDotNetCecilPackageVersion>0.11.4-alpha.24230.1</MicrosoftDotNetCecilPackageVersion>
+    <MicrosoftDotNetCecilPackageVersion>0.11.4-alpha.24313.1</MicrosoftDotNetCecilPackageVersion>
     <MicrosoftDotNetXHarnessiOSSharedPackageVersion>9.0.0-prerelease.24304.1</MicrosoftDotNetXHarnessiOSSharedPackageVersion>
     <!-- Manually updated versions -->
     <Emscriptennet7WorkloadVersion>$(MicrosoftNETWorkloadEmscriptenCurrentManifest80100Version)</Emscriptennet7WorkloadVersion>
