@@ -1,0 +1,103 @@
+parameters:
+
+- name: provisionatorChannel
+  type: string
+  default: 'latest'
+
+- name: pool
+  type: string
+  default: automatic
+  values:
+  - pr
+  - ci
+  - automatic
+
+- name: isPR
+  type: boolean
+
+- name: repositoryAlias
+  type: string
+  default: self
+
+- name: commit
+  type: string
+  default: HEAD
+
+- name: xcodeChannel
+  type: string
+  default: Stable
+
+- name: macOSName
+  type: string
+
+
+
+stages:
+
+- ${{ if parameters.isPR }}:
+  - stage: clean
+    displayName: 'Clean up'
+    dependsOn: []
+    jobs:
+    - job:
+      displayName: 'Clean comments'
+      pool:
+        vmImage: windows-latest
+      steps:
+      - template: ./common/clean.yml
+
+- stage: configure_build
+  displayName: 'Configure'
+  jobs:
+
+  - ${{ if eq(parameters.pool, 'automatic') }}:
+    - job: AgentPoolSelector       # https://docs.microsoft.com/en-us/azure/devops/pipelines/process/phases?view=azure-devops&tabs=yaml
+      pool:                        # Consider using an agentless (server) job here, but would need to host selection logic as an Azure function: https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#server
+        vmImage: ubuntu-latest
+      steps:
+      - checkout: none             # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#checkout
+
+      # Selects appropriate agent pool based on trigger type (PR or CI); manually triggered builds target the PR pool
+      - template: azure-devops-pools/agent-pool-selector.yml@yaml-templates
+        parameters:
+          agentPoolPR: $(PRBuildPool)
+          agentPoolPRUrl: $(PRBuildPoolUrl)
+          agentPoolCI: $(CIBuildPool)
+          agentPoolCIUrl: $(CIBuildPoolUrl)
+
+  - job: configure
+    displayName: 'Configure build'
+    pool:
+      vmImage: windows-latest
+
+    variables:
+      isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
+      isScheduled: $[eq(variables['Build.Reason'], 'Schedule')]
+      BRANCH_NAME: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', '') ]
+
+    steps:
+    - template: common/configure.yml
+      parameters: 
+        repositoryAlias: ${{ parameters.repositoryAlias }}
+        commit: ${{ parameters.commit }}
+        testsLabels: '--label=skip-all-tests,run-ios-tests,run-ios-simulator-tests,run-tvos-tests,run-watchos-tests,run-mac-tests,run-maccatalyst-tests,run-dotnet-tests,run-system-permission-tests,run-legacy-xamarin-tests'
+        statusContext: 'VSTS: simulator tests' 
+        uploadArtifacts: true
+        use1ES: false
+
+- stage: generate_api_diff
+  displayName: 'API diff'
+  dependsOn: [ configure_build ]
+  jobs:
+  - template: ./build/api-diff-stage.yml
+    parameters:
+      xcodeChannel: ${{ parameters.xcodeChannel }}
+      macOSName: ${{ parameters.macOSName }}
+      isPR: ${{ parameters.isPR }}
+      repositoryAlias: ${{ parameters.repositoryAlias }}
+      commit: ${{ parameters.commit }}
+      vsdropsPrefix: ${{ variables.vsdropsPrefix }}
+      keyringPass: $(pass--lab--mac--builder--keychain)
+      gitHubToken: $(Github.Token)
+      xqaCertPass: $(xqa--certificates--password)
+      pool: ${{ parameters.pool }}
