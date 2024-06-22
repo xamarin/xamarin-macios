@@ -7,6 +7,10 @@ parameters:
   type: boolean
   default: false
 
+- name: use1ES
+  type: boolean
+  default: false
+
 - name: repositoryAlias
   type: string
   default: self
@@ -49,6 +53,7 @@ steps:
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/MaciosCI.psd1
     $jsonPath = Join-Path -Path "$(Build.ArtifactStagingDirectory)" -ChildPath "configuration.json"
+    Write-Host "##vso[task.setvariable variable=CONFIG_PATH]$jsonPath"
     New-BuildConfiguration -ConfigFile $jsonPath
   env:
     GITHUB_TOKEN: $(GitHub.Token)
@@ -77,6 +82,9 @@ steps:
     Write-Host "$testMatrix"
     $testMatrix = $testMatrix | ConvertFrom-Json | ConvertTo-Json -Compress
     Write-Host "##vso[task.setvariable variable=TEST_MATRIX;isOutput=true]$testMatrix"
+    # update the config file so that we do not recalculate the matrix in other pipelines
+    Edit-BuildConfiguration -ConfigKey TEST_MATRIX -ConfigValue $testMatrix -ConfigFile $Env:CONFIG_PATH
+    #CONFIG_PATH
   name: test_matrix
   displayName: 'Create tests strategy matrix'
   env:
@@ -93,14 +101,23 @@ steps:
       $apiScanMatrix = $apiScanMatrix | ConvertFrom-Json | ConvertTo-Json -Compress
     }
     Write-Host "##vso[task.setvariable variable=APISCAN_MATRIX;isOutput=true]$apiScanMatrix"
+    Edit-BuildConfiguration -ConfigKey APISCAN_MATRIX -ConfigValue $apiScanMatrix -ConfigFile $Env:CONFIG_PATH
   name: apiscan_matrix
   displayName: 'Create APIScan matrix'
 
 # upload config to be consumed later
 - ${{ if eq(parameters.uploadArtifacts, true) }}:
-  - task: PublishPipelineArtifact@1
-    displayName: 'Publish Artifact: configuration.json'
-    inputs:
-      targetPath: '$(Build.ArtifactStagingDirectory)/configuration.json'
-      artifactName: '${{ parameters.uploadPrefix }}build-configuration'
-    continueOnError: true
+  - ${{ if eq(parameters.use1ES, true) }}:
+    - task: 1ES.PublishPipelineArtifact@1
+      displayName: 'Publish Artifact: configuration.json'
+      inputs:
+        path: '$(Build.ArtifactStagingDirectory)/configuration.json'
+        artifact: '${{ parameters.uploadPrefix }}build-configuration'
+      continueOnError: true
+  - ${{ else }}:
+    - task: PublishPipelineArtifact@1
+      displayName: 'Publish Artifact: configuration.json'
+      inputs:
+        targetPath: '$(Build.ArtifactStagingDirectory)/configuration.json'
+        artifactName: '${{ parameters.uploadPrefix }}build-configuration'
+      continueOnError: true

@@ -91,16 +91,7 @@ namespace Xamarin.BindingMethods.Generator {
 		{
 			var data = new List<FunctionData> ();
 
-			Types.NativeHandleType = isDotNet ? Types.NativeHandle : Types.IntPtr;
-			Types.Vector2d = isDotNet ? Types.NVector2d : Types.OpenTK_Vector2d;
-			Types.Vector4d = isDotNet ? Types.NVector4d : Types.OpenTK_Vector4d;
-			Types.Vector2i = isDotNet ? Types.NVector2i : Types.OpenTK_Vector2i;
-			Types.Vector3i = isDotNet ? Types.NVector3i : Types.OpenTK_Vector3i;
-			Types.Vector4i = isDotNet ? Types.NVector4i : Types.OpenTK_Vector4i;
-			Types.Matrix3f = isDotNet ? Types.RMatrix3f : Types.OpenTK_Matrix3f;
-			Types.Matrix4f = isDotNet ? Types.Numerics_Matrix4f : Types.OpenTK_Matrix4f;
-			Types.QuatD = isDotNet ? Types.NQuaterniond : Types.OpenTK_QuatD;
-			Types.MDLVoxelIndexExtent = isDotNet ? Types.MDLVoxelIndexExtent_DotNet : Types.MDLVoxelIndexExtent2;
+			Types.IsDotNet = isDotNet;
 
 			data.Add (
 				new FunctionData {
@@ -2992,7 +2983,7 @@ namespace Xamarin.BindingMethods.Generator {
 			return funcName.ToString ();
 		}
 
-		static void WriteParametersMarshal (StringWriter writer, ParameterData [] ps)
+		static void WriteParametersMarshal (StringWriter writer, ParameterData []? ps)
 		{
 			if (ps is null)
 				return;
@@ -3007,7 +2998,7 @@ namespace Xamarin.BindingMethods.Generator {
 			}
 		}
 
-		static void WriteParametersInvoke (StringWriter writer, ParameterData [] ps)
+		static void WriteParametersInvoke (StringWriter writer, ParameterData []? ps)
 		{
 			if (ps is null)
 				return;
@@ -3025,7 +3016,7 @@ namespace Xamarin.BindingMethods.Generator {
 			}
 		}
 
-		static void WriteParametersNativeDeclaration (StringWriter writer, ParameterData [] parameters, bool isTypedef, FunctionData func)
+		static void WriteParametersNativeDeclaration (StringWriter writer, ParameterData []? parameters, bool isTypedef, FunctionData func)
 		{
 			if (parameters is null)
 				return;
@@ -3122,7 +3113,7 @@ namespace Xamarin.BindingMethods.Generator {
 			// body
 			writer.WriteLine ("{");
 			if (tmpReturnValue) {
-				writer.WriteLine ("\t{0} rv;", func.ReturnType.NativeType);
+				writer.WriteLine ("\t{0} rv;", func.ReturnType!.NativeType);
 			}
 
 			// marshal managed parameters to native format
@@ -3185,7 +3176,7 @@ namespace Xamarin.BindingMethods.Generator {
 			// body
 			writer.WriteLine ("{");
 			if (tmpReturnValue) {
-				writer.WriteLine ("\t{0} rv;", func.ReturnType.NativeType);
+				writer.WriteLine ("\t{0} rv;", func.ReturnType!.NativeType);
 			}
 
 			// marshal managed parameters to native format
@@ -3354,6 +3345,7 @@ namespace Xamarin.BindingMethods.Generator {
 		}
 
 		public static class Types {
+			public static bool IsDotNet;
 			public static TypeData Vector2 = new TypeData {
 				ManagedType = "Vector2",
 				NativeType = "vector_float2",
@@ -3385,7 +3377,7 @@ namespace Xamarin.BindingMethods.Generator {
 				NativeWrapperType = "struct Vector4f",
 				RequireMarshal = true,
 			};
-			public static TypeData Vector2i;
+			public static TypeData Vector2i { get => IsDotNet ? Types.NVector2i : Types.OpenTK_Vector2i; }
 			public static TypeData OpenTK_Vector2i = new TypeData {
 				ManagedType = "Vector2i",
 				NativeType = "vector_int2",
@@ -3400,7 +3392,7 @@ namespace Xamarin.BindingMethods.Generator {
 				RequireMarshal = true,
 				IsX86Stret = true,
 			};
-			public static TypeData Vector3i;
+			public static TypeData Vector3i { get => IsDotNet ? Types.NVector3i : Types.OpenTK_Vector3i; }
 			public static TypeData OpenTK_Vector3i = new TypeData {
 				ManagedType = "Vector3i",
 				NativeType = "vector_int3",
@@ -3413,7 +3405,7 @@ namespace Xamarin.BindingMethods.Generator {
 				NativeWrapperType = "struct Vector3i",
 				RequireMarshal = true,
 			};
-			public static TypeData Vector4i;
+			public static TypeData Vector4i { get => IsDotNet ? Types.NVector4i : Types.OpenTK_Vector4i; }
 			public static TypeData OpenTK_Vector4i = new TypeData {
 				ManagedType = "Vector4i",
 				NativeType = "vector_int4",
@@ -3426,7 +3418,7 @@ namespace Xamarin.BindingMethods.Generator {
 				NativeWrapperType = "struct Vector4i",
 				RequireMarshal = true,
 			};
-			public static TypeData Vector2d;
+			public static TypeData Vector2d { get => IsDotNet ? NVector2d : OpenTK_Vector2d; }
 			public static TypeData OpenTK_Vector2d = new TypeData {
 				ManagedType = "Vector2d",
 				NativeType = "vector_double2",
@@ -3451,7 +3443,7 @@ namespace Xamarin.BindingMethods.Generator {
 				NativeWrapperType = "struct Vector4d", // Yes, Vector4d, since NVector3d has 4 doubles.
 				RequireMarshal = true,
 			};
-			public static TypeData Vector4d;
+			public static TypeData Vector4d { get => IsDotNet ? Types.NVector4d : Types.OpenTK_Vector4d; }
 			public static TypeData OpenTK_Vector4d = new TypeData {
 				ManagedType = "Vector4d",
 				NativeType = "vector_double4",
@@ -3482,7 +3474,7 @@ namespace Xamarin.BindingMethods.Generator {
 				IsX86Stret = true,
 				IsX64Stret = false,
 			};
-			public static TypeData Matrix3f;
+			public static TypeData Matrix3f { get => IsDotNet ? Types.RMatrix3f : Types.OpenTK_Matrix3f; }
 			public static TypeData OpenTK_Matrix3f = new TypeData {
 				ManagedType = "Matrix3",
 				NativeType = "matrix_float3x3",
@@ -3510,7 +3502,7 @@ namespace Xamarin.BindingMethods.Generator {
 				IsX86Stret = true,
 				IsX64Stret = true,
 			};
-			public static TypeData Matrix4f;
+			public static TypeData Matrix4f { get => IsDotNet ? Types.Numerics_Matrix4f : Types.OpenTK_Matrix4f; }
 			public static TypeData OpenTK_Matrix4f = new TypeData {
 				ManagedType = "Matrix4",
 				NativeType = "matrix_float4x4",
@@ -3570,7 +3562,7 @@ namespace Xamarin.BindingMethods.Generator {
 				NativeWrapperType = "void *",
 				RequireMarshal = false,
 			};
-			public static TypeData NativeHandleType;
+			public static TypeData NativeHandleType { get => IsDotNet ? NativeHandle : IntPtr; }
 			public static TypeData NativeHandle = new TypeData {
 				ManagedType = "NativeHandle",
 				NativeType = "void *",
@@ -3708,7 +3700,7 @@ namespace Xamarin.BindingMethods.Generator {
 				RequireMarshal = true,
 			};
 
-			public static TypeData QuatD;
+			public static TypeData QuatD { get => IsDotNet ? Types.NQuaterniond : Types.OpenTK_QuatD; }
 			public static TypeData OpenTK_QuatD = new TypeData {
 				ManagedType = "Quaterniond",
 				NativeType = "simd_quatd",
@@ -3734,7 +3726,7 @@ namespace Xamarin.BindingMethods.Generator {
 				IsX64Stret = true,
 			};
 
-			public static TypeData MDLVoxelIndexExtent;
+			public static TypeData MDLVoxelIndexExtent { get => IsDotNet ? Types.MDLVoxelIndexExtent_DotNet : Types.MDLVoxelIndexExtent2; }
 
 			public static TypeData MDLVoxelIndexExtent_DotNet = new TypeData {
 				ManagedType = "MDLVoxelIndexExtent",
@@ -3777,9 +3769,9 @@ namespace Xamarin.BindingMethods.Generator {
 	}
 
 	class TypeData {
-		public string ManagedType;
-		public string NativeWrapperType;
-		public string NativeType;
+		public string ManagedType = string.Empty;
+		public string NativeWrapperType = string.Empty;
+		public string NativeType = string.Empty;
 		public bool RequireMarshal;
 		public bool IsX86Stret;
 #pragma warning disable 649
@@ -3790,8 +3782,8 @@ namespace Xamarin.BindingMethods.Generator {
 #pragma warning restore 649
 		public bool IsAnyStret { get { return IsX86Stret || IsX64Stret || IsARMStret; } }
 		public bool IsNativeType;
-		public TypeData Bit32Type;
-		public TypeData Bit64Type;
+		public TypeData? Bit32Type;
+		public TypeData? Bit64Type;
 
 		public TypeData AsSpecificNativeType (bool as32bit)
 		{
@@ -3802,21 +3794,22 @@ namespace Xamarin.BindingMethods.Generator {
 	}
 
 	class ParameterData {
-		public TypeData TypeData;
+		TypeData? typeData;
+		public TypeData TypeData { get => typeData!; set => typeData = value; }
 		public bool IsRef;
 	}
 
 	class FunctionData {
-		public string Comment;
+		public string? Comment;
 		public string Prefix = string.Empty;
 		// Variants is a [Flags] enum, specifying which of the objc_msgSend variants
 		// should be generated. You'll usually use "All", which will generate all 4,
 		// or "NonStret", which will just generate objc_msgSend and objc_msgSendSuper.
 		public Variants Variants;
 		// The return type of the function. Use null for void.
-		public TypeData ReturnType;
+		public TypeData? ReturnType;
 		// The parameters. Use null for void.
-		public ParameterData [] Parameters;
+		public ParameterData []? Parameters;
 		public bool MarshalExceptions;
 
 		public bool HasNativeType {
