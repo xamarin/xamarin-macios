@@ -1,12 +1,22 @@
 TOP=../..
 include $(TOP)/Make.config
 
-all-local:: bin/Debug/siminstaller.exe
+EXECUTABLE=bin/Debug/siminstaller.dll
+
+all-local:: $(EXECUTABLE)
 
 install-local:: all-local
 
-bin/Debug/siminstaller.exe: $(wildcard *.cs) $(wildcard *.csproj) Makefile
-	$(Q_BUILD) $(SYSTEM_MSBUILD) "/bl:$@.binlog" /restore $(MSBUILD_VERBOSITY) $(wildcard *.csproj)
+# we build using the system .NET, because we might execute before we've downloaded our own version of .NET (i.e. while provisioning dependencies)
+$(EXECUTABLE): $(wildcard *.cs) $(wildcard *.csproj) Makefile
+	$(Q_BUILD) cd $(HOME) && dotnet build $(abspath $(CURDIR))/*.csproj "/bl:$(abspath $@.binlog)" $(DOTNET_BUILD_VERBOSITY)
+	$(Q) touch $@
 
-print-simulators: bin/Debug/siminstaller.exe
-	mono $< --print-simulators --xcode=$(abspath $(XCODE_DEVELOPER_ROOT)/../..)
+print-simulators: $(EXECUTABLE)
+	$(Q) cd $(HOME) && dotnet exec $(abspath $<) --xcode=$(abspath $(XCODE_DEVELOPER_ROOT)/../..) --print-simulators
+
+only-check: $(EXECUTABLE)
+	$(Q) cd $(HOME) && dotnet exec $(abspath $<) --xcode=$(abspath $(XCODE_DEVELOPER_ROOT)/../..) -q $(INSTALL_SIMULATORS) --only-check
+
+install-simulators: $(EXECUTABLE)
+	$(Q) cd $(HOME) && dotnet exec $(abspath $<) --xcode=$(abspath $(XCODE_DEVELOPER_ROOT)/../..) -q $(INSTALL_SIMULATORS)

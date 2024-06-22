@@ -60,11 +60,12 @@ delegates.%: delegates.%.t4 delegates.t4
 Delegates.generated.cs: Delegates.cs.t4 delegates.t4
 	$(Q_GEN) $(TT) $< -o $@
 
-bindings-generator.exe: bindings-generator.cs
-	$(Q) $(SYSTEM_CSC) $< -out:$@ -debug:full -features:strict 
+BINDINGS_GENERATOR=bin/Debug/bindings-generator.dll
+$(BINDINGS_GENERATOR): bindings-generator.cs bindings-generator.csproj
+	$(Q) $(DOTNET) build bindings-generator.csproj $(DOTNET_BUILD_VERBOSITY)
 
-bindings-generated.m: bindings-generator.exe
-	$(Q_GEN) $(SYSTEM_MONO) --debug $< $@
+bindings-generated.m: $(BINDINGS_GENERATOR)
+	$(Q_GEN) $(DOTNET) exec $< $@
 
 # our makefiles don't support building the same source file multiple times with different defines,
 # so just symlink extension-main.m to another file and compile that instead.
