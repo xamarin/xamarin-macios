@@ -253,6 +253,32 @@ class BuildConfiguration {
           throw [System.InvalidOperationException]::new("Failed to load configuration file $configFile")
         }
 
+        $defaultBuildVariables = @(
+            "BUILD_BUILDID",
+            "BUILD_BUILDNUMBER",
+            "BUILD_BUILDURI",
+            "BUILD_BINARIESDIRECTORY",
+            "BUILD_DEFINITIONNAME",
+            "BUILD_REASON",
+            "BUILD_REPOSITORY_ID",
+            "BUILD_REPOSITORY_NAME",
+            "BUILD_REPOSITORY_PROVIDER",
+            "BUILD_REPOSITORY_URI",
+            "BUILD_SOURCEBRANCH",
+            "BUILD_SOURCEBRANCHNAME"
+        )
+
+        # load the variable name from the parent
+        foreach ($buildVariable in $defaultBuildVariables) {
+            $variableName = "PARENT_BUILD_$buildVariable"
+            $variableValue = $config.$variableName
+            if ($variableValue) {
+                Write-Host "##vso[task.setvariable variable=$variableName;isOutput=true]$variableValue"
+            } else {
+                Write-Debug "Ignoring variable $variableName"
+            }
+        }
+
         $dotnetPlatforms = $config.DOTNET_PLATFORMS.Split(' ', [StringSplitOptions]::RemoveEmptyEntries)
         Write-Host "##vso[task.setvariable variable=DOTNET_PLATFORMS;isOutput=true]$dotnetPlatforms"
         foreach ($platform in $dotnetPlatforms) {
@@ -287,15 +313,62 @@ class BuildConfiguration {
         return $config
     }
 
+    [PSCustomObject] Update([string] $configKey, [string] $configValue, [string] $configFile) {
+        if (-not (Test-Path -Path $configFile -PathType Leaf)) {
+          throw [System.InvalidOperationException]::new("Configuration file $configFile is missing")
+        }
+
+        $config = Get-Content $configFile | ConvertFrom-Json
+
+        if (-not $config) {
+          throw [System.InvalidOperationException]::new("Failed to load configuration file $configFile")
+        }
+
+        $config | Add-Member -NotePropertyName $configKey -NotePropertyValue $configValue
+
+        $jsonConfiguration = $config | ConvertTo-Json
+
+        Write-Host "Build configuration:"
+        Write-Host $jsonConfiguration
+
+        if ($configFile) {
+            Write-Host "Writing configuration to: $configFile"
+            Set-Content -Path $configFile -Value $jsonConfiguration
+        }
+
+        return $config
+    }
+
     [PSCustomObject] Create([bool] $addTags, [string] $configFile) {
         # we are going to use a custom object to store all the configuration of the build, this later
-        # will be uploaded as an artifact so that it can be easily shared with the cascade pipelines
+        # will be uploaded as an artifact so that it can be easily shared with the cascade pipelines, we will
+        # uses a special prefix for the default variable names so that we do not step on the cascading pipeline
+        # settings
+
         $configuration = [PSCustomObject]@{
-          BuildReason = "$Env:BUILD_REASON"
-          BuildSourceBranchName = "$Env:BUILD_SOURCEBRANCHNAME"
-          BuildSourceBranch = "$Env:BUILD_SOURCEBRANCH"
-          BuildId = "$Env:BUILD_BUILDID"
           DOTNET_PLATFORMS = "$Env:CONFIGURE_PLATFORMS_DOTNET_PLATFORMS"
+        }
+
+        $defaultBuildVariables = @(
+            "BUILD_BUILDID",
+            "BUILD_BUILDNUMBER",
+            "BUILD_BUILDURI",
+            "BUILD_BINARIESDIRECTORY",
+            "BUILD_DEFINITIONNAME",
+            "BUILD_REASON",
+            "BUILD_REPOSITORY_ID",
+            "BUILD_REPOSITORY_NAME",
+            "BUILD_REPOSITORY_PROVIDER",
+            "BUILD_REPOSITORY_URI",
+            "BUILD_SOURCEBRANCH",
+            "BUILD_SOURCEBRANCHNAME"
+        )
+
+        # loop over the default build enviroments and add them with a prefix to the configuration objects
+        foreach ($buildVariable in $defaultBuildVariables) {
+            $variableName = "PARENT_BUILD_$buildVariable"
+            $variableValue = [Environment]::GetEnvironmentVariable($buildVariable)
+            $configuration | Add-Member -NotePropertyName $variableName -NotePropertyValue $variableValue
         }
 
         # For each .NET platform we support, add a INCLUDE_DOTNET_<platform> variable specifying whether that platform is enabled or not.
@@ -331,7 +404,7 @@ class BuildConfiguration {
 
         # calculate the commit to later share it with the cascade pipelines
         if ($Env:BUILD_REASON -eq "PullRequest") {
-            $changeId = $configuration.BuildSourceBranch.Replace("refs/pull/", "").Replace("/merge", "")
+            $changeId = $configuration.PARENT_BUILD_BUILD_SOURCEBRANCH.Replace("refs/pull/", "").Replace("/merge", "")
         } else {
             $changeId = $Env:BUILD_SOURCEVERSION
         }
@@ -345,12 +418,12 @@ class BuildConfiguration {
             $tags.Add("cronjob")
         }
 
-        if ($configuration.BuildReason -eq "PullRequest" -or (($configuration.BuildReason -eq "Manual") -and ($configuration.BuildSourceBranchName -eq "merge")) ) {
+        if ($configuration.BuildReason -eq "PullRequest" -or (($configuration.BuildReason -eq "Manual") -and ($configuration.PARENT_BUILD_BUILD_SOURCEBRANCH -eq "merge")) ) {
           Write-Host "Configuring build from PR."
           # This is an interesting step, we do know we are dealing with a PR, but we need the PR id to
           # be able to get the labels, the buildSourceBranch follows the pattern: refs/pull/{ChangeId}/merge
           # we could use a regexp but then we would have two problems instead of one
-          $changeId = $configuration.BuildSourceBranch.Replace("refs/pull/", "").Replace("/merge", "")
+          $changeId = $configuration.PARENT_BUILD_BUILD_SOURCEBRANCH.Replace("refs/pull/", "").Replace("/merge", "")
 
           # add a var with the change id, which can be later consumed by some of the old scripts from
           # jenkins
@@ -403,7 +476,7 @@ class BuildConfiguration {
             $tags.Add("ciBuild")
           }
           # set the name of the branch under build
-          $tags.Add("$($configuration.BuildSourceBranchName)")
+          $tags.Add("$($configuration.PARENT_BUILD_BUILD_SOURCEBRANCHNAME)")
           Write-Host "##vso[task.setvariable variable=prBuild;isOutput=true]False"
         }
         # Remove empty entries
@@ -706,6 +779,27 @@ function Import-BuildConfiguration {
     return $buildConfiguration.Import($ConfigFile)
 }
 
+function Edit-BuildConfiguration {
+    param
+    (
+
+        [Parameter(Mandatory)]
+        [string]
+        $ConfigKey,
+
+        [Parameter(Mandatory)]
+        [string]
+        $ConfigValue,
+
+        [Parameter(Mandatory)]
+        [string]
+        $ConfigFile
+    )
+    $buildConfiguration = [BuildConfiguration]::new()
+    return $buildConfiguration.Update($ConfigKey, $ConfigValue, $ConfigFile)
+}
+
+
 # export public functions, other functions are private and should not be used ouside the module.
 Export-ModuleMember -Function Stop-Pipeline
 Export-ModuleMember -Function Set-PipelineResult
@@ -713,4 +807,5 @@ Export-ModuleMember -Function Set-BuildTags
 Export-ModuleMember -Function New-VSTS
 Export-ModuleMember -Function New-BuildConfiguration
 Export-ModuleMember -Function Import-BuildConfiguration
+Export-ModuleMember -Function Edit-BuildConfiguration
 Export-ModuleMember -Function Get-YamlPreview
