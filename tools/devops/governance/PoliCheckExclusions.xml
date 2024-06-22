@@ -1,0 +1,7 @@
+<PoliCheckExclusions>
+  <!-- All strings must be UPPER CASE -->
+  <!--Each of these exclusions is a folder name -if \[name]\exists in the file path, it will be skipped -->
+  <Exclusion Type="FolderPathFull">EXTERNAL|OPENTK</Exclusion>
+  <!--The specified file names will be skipped during the scan regardless which folder they are in -->
+  <Exclusion Type="FileName">SAMPLE.JSON|LICENSE.TXT</Exclusion>
+</PoliCheckExclusions>
