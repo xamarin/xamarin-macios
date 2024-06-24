@@ -1651,7 +1651,7 @@ namespace Xamarin.Tests {
 		[TestCase (ApplePlatform.iOS, "ios-arm64")]
 		[TestCase (ApplePlatform.iOS, "iossimulator-arm64")]
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64")]
-		public void PublishAotWithWarningInDebugBuild (ApplePlatform platform, string runtimeIdentifiers)
+		public void PublishAotWithTrimAnalyzerWarningBuild (ApplePlatform platform, string runtimeIdentifiers)
 		{
 			var project = "MySimpleAppWithTrimAnalysisWarning";
 			Configuration.IgnoreIfIgnoredPlatform (platform);
