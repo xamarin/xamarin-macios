@@ -276,14 +276,6 @@ parameters:
 
 stages:
 
-- ${{ if eq(parameters.runGovernanceTests, true) }}:
-  - template: ./governance/stage.yml
-    parameters:
-      isPR: ${{ parameters.isPR }}
-      repositoryAlias: ${{ parameters.repositoryAlias }}
-      commit: ${{ parameters.commit }}
-      stageDisplayNamePrefix: ${{ parameters.stageDisplayNamePrefix }}
-
 - ${{ if parameters.isPR }}:
   - stage: clean
     displayName: '${{ parameters.stageDisplayNamePrefix }}Clean up'
