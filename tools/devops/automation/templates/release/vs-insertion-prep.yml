@@ -52,6 +52,8 @@ stages:
   # Check - "xamarin-macios (Prepare Release Sign NuGets)"
   - template: sign-artifacts/jobs/v2.yml@yaml-templates
     parameters:
+      use1ESTemplate: true
+      enabledCredScan: false
       signedArtifactName: '${{ parameters.uploadPrefix }}nuget-signed'
       artifactName: '${{ parameters.uploadPrefix }}not-signed-package'
       signType: Real
@@ -61,6 +63,7 @@ stages:
   # Check - "xamarin-macios (Prepare Release Convert NuGet to MSI)"
   - template: nuget-msi-convert/job/v3.yml@yaml-templates
     parameters:
+      use1ESTemplate: true
       yamlResourceName: yaml-templates
       dependsOn: signing
       artifactName: '${{ parameters.uploadPrefix }}nuget-signed'
@@ -109,7 +112,9 @@ stages:
       - ${{ if eq(parameters.isPR, false) }}:
         - group: Publish-Build-Assets
       pool:
-        vmImage: windows-latest
+        name: AzurePipelines-EO
+        demands:
+        - ImageOverride -equals 1ESPT-Windows2022
       steps:
       - task: DownloadPipelineArtifact@2
         inputs:
@@ -118,12 +123,34 @@ stages:
           patterns: |
             *.nupkg
 
+      - task: 1ES.PublishNuget@1
+        displayName: Publish Nugets package
+        inputs:
+          useDotNetTask: false # The default is false to use the NuGetCommand task. Set to true to use the DotNetCoreCLI task to publish packages.
+          packagesToPush: '$(Build.SourcesDirectory)/package/*.nupkg'
+          packageParentPath: '$(Build.SourcesDirectory)/package'
+          nuGetFeedType: external
+          allowPackageConflicts: true # Optional. NuGetCommand task only.
+          publishPackageMetadata: true # Optional
+          publishFeedCredentials: dnceng-dotnet8
+
       - task: DownloadPipelineArtifact@2
         inputs:
           artifactName: '${{ parameters.uploadPrefix }}vs-msi-nugets'
           downloadPath: '$(Build.SourcesDirectory)/${{ parameters.uploadPrefix}}vs-msi-nugets'
           patterns: |
             *.nupkg
+
+      - task: 1ES.PublishNuget@1
+        displayName: Publish MSI Nugets package
+        inputs:
+          useDotNetTask: false 
+          packagesToPush: '$(Build.SourcesDirectory)/${{ parameters.uploadPrefix }}vs-msi-nugets/*.nupkg'
+          packageParentPath: '$(Build.SourcesDirectory)/${{ parameters.uploadPrefix }}vs-msi-nugets'
+          nuGetFeedType: external
+          allowPackageConflicts: true
+          publishPackageMetadata: true
+          publishFeedCredentials: dnceng-dotnet8
 
       - pwsh: |
           mkdir $(Build.SourcesDirectory)/nugets-blob
@@ -205,10 +232,10 @@ stages:
         workingDirectory: $(Build.SourcesDirectory)\..
         condition: and(succeeded(), eq('${{ parameters.pushNugetsToMaestro }}', 'true'))
 
-      - task: PublishPipelineArtifact@1
+      - task: 1ES.PublishPipelineArtifact@1
         displayName: 'Publish Artifact: maestro-binlogs'
         inputs:
-          targetPath: $(Build.ArtifactStagingDirectory)/maestro-binlogs
-          artifactName: ${{ parameters.uploadPrefix }}maestro-binlogs-$(System.JobAttempt)
+          path: $(Build.ArtifactStagingDirectory)/maestro-binlogs
+          artifact: ${{ parameters.uploadPrefix }}maestro-binlogs-$(System.JobAttempt)
         condition: and(succeededOrFailed(), eq('${{ parameters.pushNugetsToMaestro }}', 'true'))
         continueOnError: true
