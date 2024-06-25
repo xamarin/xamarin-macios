@@ -1,0 +1,128 @@
+# This job will parse all the labels present in a PR, will set
+# the tags for the build AND will set a number of configuration
+# variables to be used by the rest of the projects
+parameters:
+
+- name: uploadArtifacts
+  type: boolean
+  default: false
+
+- name: use1ES
+  type: boolean
+  default: false
+
+- name: repositoryAlias
+  type: string
+  default: self
+
+- name: commit
+  type: string
+  default: HEAD
+
+- name: uploadPrefix
+  type: string
+  default: '$(MaciosUploadPrefix)'
+
+- name: testConfigurations
+  type: object
+  default: []
+
+- name: supportedPlatforms
+  type: object
+  default: []
+
+- name: testsLabels
+  type: string
+  default: ''
+
+- name: statusContext
+  type: string
+  default: ''
+
+steps:
+- template: checkout.yml
+  parameters:
+    isPR: true
+    repositoryAlias: ${{ parameters.repositoryAlias }}
+    commit: ${{ parameters.commit }}
+
+- download: macios
+  displayName: Download Build Config
+  artifact: build-configuration
+
+- bash: ./xamarin-macios/tools/devops/automation/scripts/bash/configure-platforms.sh
+  name: configure_platforms
+  displayName: 'Configure platforms'
+
+- pwsh: |
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/MaciosCI.psd1
+    $jsonPath = Join-Path -Path "$(Build.ArtifactStagingDirectory)" -ChildPath "configuration.json"
+    Write-Host "##vso[task.setvariable variable=CONFIG_PATH]$jsonPath"
+    New-BuildConfiguration -ConfigFile $jsonPath
+  env:
+    GITHUB_TOKEN: $(GitHub.Token)
+    ACCESSTOKEN: $(AzDoBuildAccess.Token)
+  name: labels
+  displayName: 'Configure build'
+
+- bash: ./xamarin-macios/tools/devops/automation/scripts/bash/configure-decisions.sh
+  name: decisions
+  displayName: 'Make decisions'
+
+- pwsh: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/show_env.ps1
+  displayName: 'Show Environment'
+
+- pwsh: |
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/MaciosCI.psd1
+    gci env: | sort | format-table -autosize -wrap
+    $jsonPath = Join-Path -Path "$(Build.ArtifactStagingDirectory)" -ChildPath "configuration.json"
+    $testMatrix = Get-TestConfiguration `
+      -TestConfigurations "$Env:TEST_CONFIGURATIONS" `
+      -SupportedPlatforms "$Env:SUPPORTED_PLATFORMS" `
+      -EnabledPlatforms "$Env:CONFIGURE_PLATFORMS_DOTNET_PLATFORMS" `
+      -TestsLabels "${{ parameters.testsLabels }}" `
+      -StatusContext "${{ parameters.statusContext }}" `
+    # compress the json to remove any newlines, because we can't set the variable below if the json has any newlines
+    Write-Host "$testMatrix"
+    $testMatrix = $testMatrix | ConvertFrom-Json | ConvertTo-Json -Compress
+    Write-Host "##vso[task.setvariable variable=TEST_MATRIX;isOutput=true]$testMatrix"
+    # update the config file so that we do not recalculate the matrix in other pipelines
+    Edit-BuildConfiguration -ConfigKey TEST_MATRIX -ConfigValue $testMatrix -ConfigFile $Env:CONFIG_PATH
+    #CONFIG_PATH
+  name: test_matrix
+  displayName: 'Create tests strategy matrix'
+  env:
+    TEST_CONFIGURATIONS: ${{ convertToJson(parameters.testConfigurations) }}
+    SUPPORTED_PLATFORMS: ${{ convertToJson(parameters.supportedPlatforms) }}
+
+- pwsh: |
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/MaciosCI.psd1
+    gci env: | sort | format-table -autosize -wrap
+    $apiScanMatrix = Get-APIScanConfiguration -EnabledPlatforms "$Env:CONFIGURE_PLATFORMS_DOTNET_PLATFORMS"
+    # compress the json to remove any newlines, because we can't set the variable below if the json has any newlines
+    Write-Host "apiScanMatrix=$apiScanMatrix"
+    if ($apiScanMatrix.length -gt 0) {
+      $apiScanMatrix = $apiScanMatrix | ConvertFrom-Json | ConvertTo-Json -Compress
+    }
+    Write-Host "##vso[task.setvariable variable=APISCAN_MATRIX;isOutput=true]$apiScanMatrix"
+    Edit-BuildConfiguration -ConfigKey APISCAN_MATRIX -ConfigValue $apiScanMatrix -ConfigFile $Env:CONFIG_PATH
+  name: apiscan_matrix
+  displayName: 'Create APIScan matrix'
+
+# upload config to be consumed later
+- ${{ if eq(parameters.uploadArtifacts, true) }}:
+  - ${{ if eq(parameters.use1ES, true) }}:
+    - task: 1ES.PublishPipelineArtifact@1
+      displayName: 'Publish Artifact: configuration.json'
+      inputs:
+        path: '$(Build.ArtifactStagingDirectory)/configuration.json'
+        artifact: '${{ parameters.uploadPrefix }}build-configuration'
+      continueOnError: true
+  - ${{ else }}:
+    - task: PublishPipelineArtifact@1
+      displayName: 'Publish Artifact: configuration.json'
+      inputs:
+        targetPath: '$(Build.ArtifactStagingDirectory)/configuration.json'
+        artifactName: '${{ parameters.uploadPrefix }}build-configuration'
+      continueOnError: true
+
