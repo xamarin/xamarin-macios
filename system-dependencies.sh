@@ -327,6 +327,8 @@ function download_xcode_platforms ()
 
 	log "Xcode has additional platforms that must be downloaded ($MUST_INSTALL_RUNTIMES), so installing those."
 
+	log "Executing '$SUDO pkill -9 -f CoreSimulator.framework'"
+	$SUDO pkill -9 -f "CoreSimulator.framework" || true
 	log "Executing '$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -downloadAllPlatforms'"
 	if ! "$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -downloadAllPlatforms; then
 		pstree || true
