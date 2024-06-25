@@ -128,15 +128,10 @@ namespace xsiminstaller {
 			if (!TryExecuteAndCapture (out var xcodeVersion, "/usr/libexec/PlistBuddy", $"-c", "Print :DTXcode", plist))
 				return 1;
 			xcodeVersion = xcodeVersion.Trim ();
-
-			if (!TryExecuteAndCapture (out var xcodeUuid, "/usr/libexec/PlistBuddy", "-c", "Print :DVTPlugInCompatibilityUUID", plist))
-				return 1;
-			xcodeUuid = xcodeUuid.Trim ();
-
 			xcodeVersion = xcodeVersion.Insert (xcodeVersion.Length - 2, ".");
 			xcodeVersion = xcodeVersion.Insert (xcodeVersion.Length - 1, ".");
 
-			var indexName = $"index2-{xcodeVersion}.dvtdownloadableindex";
+			var indexName = $"index-{xcodeVersion}.dvtdownloadableindex";
 			var tmpfile = Path.Combine (TempDirectory, indexName);
 			if (!File.Exists (tmpfile)) {
 				var urls = new string [] {
