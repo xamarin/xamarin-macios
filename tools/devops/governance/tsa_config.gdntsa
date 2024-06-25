@@ -1,0 +1,19 @@
+{
+    "codebaseName": "xamarin-macios",
+    "notificationAliases": [
+        "xamarin-macios@microsoft.com"
+    ],
+    "codebaseAdmins": [
+        "NORTHAMERICA\\mandel",
+        "NORTHAMERICA\\alexsoto"
+    ],
+    "instanceUrl": "https://devdiv.visualstudio.com",
+    "projectName": "DevDiv",
+    "areaPath": "DevDiv\\VS Client - Runtime SDKs\\iOS and Mac",
+    "iterationPath": "DevDiv",
+    "tools": [
+        "ApiScan", 
+        "CredScan",
+        "PoliCheck"
+    ]
+}

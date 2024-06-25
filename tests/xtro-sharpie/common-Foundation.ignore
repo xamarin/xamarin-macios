@@ -290,12 +290,6 @@
 !missing-selector! +NSBundle::preferredLocalizationsFromArray:forPreferences: not bound
 !missing-selector! +NSCalendar::autoupdatingCurrentCalendar not bound
 !missing-selector! +NSCalendar::calendarWithIdentifier: not bound
-!missing-selector! +NSCharacterSet::URLFragmentAllowedCharacterSet not bound
-!missing-selector! +NSCharacterSet::URLHostAllowedCharacterSet not bound
-!missing-selector! +NSCharacterSet::URLPasswordAllowedCharacterSet not bound
-!missing-selector! +NSCharacterSet::URLPathAllowedCharacterSet not bound
-!missing-selector! +NSCharacterSet::URLQueryAllowedCharacterSet not bound
-!missing-selector! +NSCharacterSet::URLUserAllowedCharacterSet not bound
 !missing-selector! +NSDate::dateWithTimeInterval:sinceDate: not bound
 !missing-selector! +NSDate::timeIntervalSinceReferenceDate not bound
 !missing-selector! +NSDecimalNumber::decimalNumberWithDecimal: not bound
@@ -947,7 +941,6 @@
 !missing-null-allowed! 'Foundation.NSBundle Foundation.NSBundle::FromUrl(Foundation.NSUrl)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSCachedUrlResponse Foundation.NSUrlCache::CachedResponseForRequest(Foundation.NSUrlRequest)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSCachedUrlResponse Foundation.NSUrlProtocol::get_CachedResponse()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSCharacterSet Foundation.NSCharacterSet::FromFile(System.String)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSData Foundation.NSData::FromFile(System.String)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSData Foundation.NSData::FromFile(System.String,Foundation.NSDataReadingOptions,Foundation.NSError&)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSData Foundation.NSData::FromUrl(Foundation.NSUrl)' is missing an [NullAllowed] on return type

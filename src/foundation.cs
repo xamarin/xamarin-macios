@@ -1424,6 +1424,7 @@ namespace Foundation {
 		[Static, Export ("characterSetWithCharactersInString:")]
 		NSCharacterSet FromString (string aString);
 
+		[return: NullAllowed]
 		[Static, Export ("characterSetWithContentsOfFile:")]
 		NSCharacterSet FromFile (string path);
 
@@ -1486,6 +1487,30 @@ namespace Foundation {
 
 		[Export ("longCharacterIsMember:")]
 		bool Contains (uint /* UTF32Char = UInt32 */ theLongChar);
+
+		[Static]
+		[Export ("URLFragmentAllowedCharacterSet", ArgumentSemantic.Copy)]
+		NSCharacterSet UrlFragmentAllowed { get; }
+
+		[Static]
+		[Export ("URLHostAllowedCharacterSet", ArgumentSemantic.Copy)]
+		NSCharacterSet UrlHostAllowed { get; }
+
+		[Static]
+		[Export ("URLPasswordAllowedCharacterSet", ArgumentSemantic.Copy)]
+		NSCharacterSet UrlPasswordAllowed { get; }
+
+		[Static]
+		[Export ("URLPathAllowedCharacterSet", ArgumentSemantic.Copy)]
+		NSCharacterSet UrlPathAllowed { get; }
+
+		[Static]
+		[Export ("URLQueryAllowedCharacterSet", ArgumentSemantic.Copy)]
+		NSCharacterSet UrlQueryAllowed { get; }
+
+		[Static]
+		[Export ("URLUserAllowedCharacterSet", ArgumentSemantic.Copy)]
+		NSCharacterSet UrlUserAllowed { get; }
 	}
 
 	[MacCatalyst (13, 1)]

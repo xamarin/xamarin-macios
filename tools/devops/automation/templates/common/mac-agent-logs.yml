@@ -33,6 +33,10 @@ parameters:
   type: string
   default: '$(MaciosUploadPrefix)'
 
+- name: use1ES
+  type: boolean
+  default: false
+
 steps:
 
 - pwsh: >-
@@ -49,14 +53,26 @@ steps:
 
 # only upload when told so
 - ${{ if eq(parameters.uploadLogs, true) }}:
-  - task: PublishPipelineArtifact@1
-    displayName: 'Publish Artifact: Agent logs'
-    condition: always()
-    inputs:
-      # add or not the working dir to the upload
-      ${{ if eq(parameters.workingDirectory, '') }}:
-        targetPath: ${{ parameters.outputPath }}
-      ${{ else }}:
-        targetPath: ${{ parameters.workingDirectory }}/${{ parameters.outputPath }} 
-      artifactName: '${{ parameters.uploadPrefix }}$(Agent.Name)-$(System.JobName)-$(System.JobId)-${{ parameters.outputPath }}'
-    continueOnError: true
+  - ${{ if eq(parameters.use1ES, true) }}:
+    - task: 1ES.PublishPipelineArtifact@1
+      displayName: 'Publish Artifact: Agent logs'
+      condition: always()
+      inputs:
+        ${{ if eq(parameters.workingDirectory, '') }}:
+          path: ${{ parameters.outputPath }}
+        ${{ else }}:
+          path: ${{ parameters.workingDirectory }}/${{ parameters.outputPath }} 
+        artifact: '${{ parameters.uploadPrefix }}$(Agent.Name)-$(System.JobName)-$(System.JobId)-${{ parameters.outputPath }}'
+      continueOnError: true
+  - ${{ else }}:
+    - task: PublishPipelineArtifact@1
+      displayName: 'Publish Artifact: Agent logs'
+      condition: always()
+      inputs:
+        # add or not the working dir to the upload
+        ${{ if eq(parameters.workingDirectory, '') }}:
+          targetPath: ${{ parameters.outputPath }}
+        ${{ else }}:
+          targetPath: ${{ parameters.workingDirectory }}/${{ parameters.outputPath }} 
+        artifactName: '${{ parameters.uploadPrefix }}$(Agent.Name)-$(System.JobName)-$(System.JobId)-${{ parameters.outputPath }}'
+      continueOnError: true

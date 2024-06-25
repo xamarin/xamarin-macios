@@ -1,0 +1,127 @@
+{
+  "hydrated": false,
+  "properties": {
+    "helpUri": "https://eng.ms/docs/microsoft-security/security/azure-security/cloudai-security-fundamentals-engineering/security-integration/guardian-wiki/microsoft-guardian/general/baselines",
+    "hydrationStatus": "This file does not contain identifying data. It is safe to check into your repo. To hydrate this file with identifying data, run `guardian hydrate --help` and follow the guidance."
+  },
+  "version": "1.0.0",
+  "baselines": {
+    "default": {
+      "name": "default",
+      "createdDate": "2024-02-26 23:21:09Z",
+      "lastUpdatedDate": "2024-02-26 23:21:09Z"
+    }
+  },
+  "results": {
+    "5bfe7b64543acba3f04cf06473f454f534c681d035e1880706c675bcbf2a113a": {
+      "signature": "5bfe7b64543acba3f04cf06473f454f534c681d035e1880706c675bcbf2a113a",
+      "alternativeSignatures": [
+        "b3463f284d1d50e828dc74bf242d16b7d75f056e87884a540220b4a64b851e16"
+      ],
+      "memberOf": [
+        "default"
+      ],
+      "createdDate": "2024-02-26 23:21:09Z"
+    },
+    "6460bd0d0ae3c3abd84d1b932d3d50efe43a839ca39ba8fc8c82f2884bec03e0": {
+      "signature": "6460bd0d0ae3c3abd84d1b932d3d50efe43a839ca39ba8fc8c82f2884bec03e0",
+      "alternativeSignatures": [
+        "c891b899c263256f6945b163b8081181cd69d217bc5f83a88f6e28d80625e8aa"
+      ],
+      "memberOf": [
+        "default"
+      ],
+      "createdDate": "2024-02-26 23:21:09Z"
+    },
+    "2bc38a8affa25c44e59be8f7333ef145adad3f169f8b3b328168ee14b11e7042": {
+      "signature": "2bc38a8affa25c44e59be8f7333ef145adad3f169f8b3b328168ee14b11e7042",
+      "alternativeSignatures": [
+        "d7adab12bd9358b3f526ae33fa68aa0e6a12d9f4ff3e61d7deff6d76e9730b78"
+      ],
+      "memberOf": [
+        "default"
+      ],
+      "createdDate": "2024-02-26 23:21:09Z"
+    },
+    "56373da5b7a0a5bdf6f2b7c1f0ab602096b2e0ff4260ac26befb8e1761213bbc": {
+      "signature": "56373da5b7a0a5bdf6f2b7c1f0ab602096b2e0ff4260ac26befb8e1761213bbc",
+      "alternativeSignatures": [
+        "25b435d2a88adfa812a28781f8a868fb2bbac1721861c3f1d0f635432c03e975"
+      ],
+      "memberOf": [
+        "default"
+      ],
+      "createdDate": "2024-02-26 23:21:09Z"
+    },
+    "983f6b09df3eeac83858b1e7b9a020de0422c71ce2895e16acb779b8bebc09c2": {
+      "signature": "983f6b09df3eeac83858b1e7b9a020de0422c71ce2895e16acb779b8bebc09c2",
+      "alternativeSignatures": [
+        "6f577c0990a9d84fb921c67fb849aa238ea30723aa2cbf002813787a55fd0de6"
+      ],
+      "memberOf": [
+        "default"
+      ],
+      "createdDate": "2024-02-26 23:21:09Z"
+    },
+    "d511eb73fc60ed3083f24a7c317e72790c75ff873133679b03d679030d57a637": {
+      "signature": "d511eb73fc60ed3083f24a7c317e72790c75ff873133679b03d679030d57a637",
+      "alternativeSignatures": [
+        "b68f84c3d0d226c6781d0a99ee954a3877030fd50b3a60cf2d83fed6853cf0b3"
+      ],
+      "memberOf": [
+        "default"
+      ],
+      "createdDate": "2024-02-26 23:21:09Z"
+    },
+    "7714c68685ca3a216dfa6748ca603d42e6bac9b31546064faa2e28b0b183d927": {
+      "signature": "7714c68685ca3a216dfa6748ca603d42e6bac9b31546064faa2e28b0b183d927",
+      "alternativeSignatures": [
+        "fc36cfff6406e27041af0f09f30819818ab4c054507d31d58ed645ff033b0c75"
+      ],
+      "memberOf": [
+        "default"
+      ],
+      "createdDate": "2024-02-26 23:21:09Z"
+    },
+    "f5e832c2a0285109108f3c71fd7e1f71bf73628669fea863de3a7318d84c2227": {
+      "signature": "f5e832c2a0285109108f3c71fd7e1f71bf73628669fea863de3a7318d84c2227",
+      "alternativeSignatures": [
+        "593b4c0b30f2931ec72f92916be95fc00f5bc5b0d974fedfbff09da322c7624b"
+      ],
+      "memberOf": [
+        "default"
+      ],
+      "createdDate": "2024-02-26 23:21:09Z"
+    },
+    "cf36d387e3f106a4da49eecae99a1ffd1dec398cf42d144ed19569d8e9b92fca": {
+      "signature": "cf36d387e3f106a4da49eecae99a1ffd1dec398cf42d144ed19569d8e9b92fca",
+      "alternativeSignatures": [
+        "f730744e034ada13851e9a7756b4f6b5c96191f72a29b1a5e7680b2e10b6e211"
+      ],
+      "memberOf": [
+        "default"
+      ],
+      "createdDate": "2024-02-26 23:21:09Z"
+    },
+    "b2fd71c6a486b070977a960c2861511d8681f067cb794241f8c80c922ddc9308": {
+      "signature": "b2fd71c6a486b070977a960c2861511d8681f067cb794241f8c80c922ddc9308",
+      "alternativeSignatures": [
+        "6dbc8a0fad384b58507197a08507be02400ae9da16daa9d9623214538cb7d8aa"
+      ],
+      "memberOf": [
+        "default"
+      ],
+      "createdDate": "2024-02-26 23:21:09Z"
+    },
+    "861cb54eda1c02892adfd49721cdb698d1f7163a63813b7a8ed24f946f778666": {
+      "signature": "861cb54eda1c02892adfd49721cdb698d1f7163a63813b7a8ed24f946f778666",
+      "alternativeSignatures": [
+        "4473a569ca2bb9b6dbc20a918cedf5d1898fe6dbbe0856271cba0f9076a05670"
+      ],
+      "memberOf": [
+        "default"
+      ],
+      "createdDate": "2024-02-26 23:21:09Z"
+    }
+  }
+}
