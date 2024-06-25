@@ -14,7 +14,7 @@
     </resheader>
     
     <data name="M0001" xml:space="preserve">
-        <value>Tool {0} execution started with arguments: {1}
+        <value>Tool {0} execution started with working directory '{2}' and arguments: {1}
         </value>
     </data>
     
