@@ -329,6 +329,8 @@ function download_xcode_platforms ()
 
 	log "Executing '$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -downloadAllPlatforms'"
 	if ! "$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -downloadAllPlatforms; then
+		pstree || true
+		ps aux
 		"$XCODE_DEVELOPER_ROOT/usr/bin/simctl" runtime list -v
 		# Don't exit here, just hope for the best instead.
 		set +x
@@ -342,11 +344,11 @@ function download_xcode_platforms ()
 	fi
 
 	log "Executing '$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -downloadAllPlatforms' (second time)"
-	"$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -downloadAllPlatforms
+	"$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -downloadAllPlatforms || true
 	log "Executing '$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -downloadAllPlatforms' (third time)"
-	"$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -downloadAllPlatforms
+	"$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -downloadAllPlatforms || true
 	log "Executing '$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -downloadAllPlatforms' (fourth time)"
-	"$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -downloadAllPlatforms
+	"$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -downloadAllPlatforms || true
 
 	log "Executing '$SUDO $XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -runFirstLaunch'"
 	$SUDO "$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -runFirstLaunch
