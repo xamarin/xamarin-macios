@@ -217,7 +217,7 @@ extends:
       sbom:
         enabled: false  # we run our on sbom generation
       credscan:
-        suppressionsFile: '$(Build.Repository.LocalPath)\\tools\\devops\\governance\\CredScanSuppressions.json'
+        suppressionsFile: '$(Build.Repository.LocalPath)\\$(Build.Repository.Name)\\tools\\devops\\governance\\CredScanSuppressions.json'
       policheck:
         exclusionsFile: '$(System.DefaultWorkingDirectory)\\xamarin-macios\\tools\\devops\\governance\\PoliCheckExclusions.xml'
       sourceRepositoriesToScan:
