@@ -55,6 +55,7 @@ stages:
       use1ESTemplate: true
       enabledCredScan: false
       checkoutType: self
+      checkoutPath: 's\xamarin-macios'
       signedArtifactName: '${{ parameters.uploadPrefix }}nuget-signed'
       artifactName: '${{ parameters.uploadPrefix }}not-signed-package'
       signType: Real
