@@ -28127,8 +28127,10 @@ namespace UIKit {
 	}
 
 	[NoWatch, NoTV, iOS (17, 0), MacCatalyst (17, 0)]
+	[DisableDefaultCtor] // It crashes the app.
 #if XAMCORE_5_0
 	[BaseType (typeof(UIViewController))]
+	[Abstract] // "UIDocumentViewController is an abstract base class that is meant to be subclassed."
 	interface UIDocumentViewController
 #else
 	[BaseType (typeof (UIViewController), Name = "UIDocumentViewController")]
