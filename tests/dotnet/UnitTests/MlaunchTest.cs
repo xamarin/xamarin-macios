@@ -50,9 +50,9 @@ namespace Xamarin.Tests {
 		}
 
 		[Test]
-		[TestCase (ApplePlatform.iOS, "iossimulator-x64;iossimulator-arm64", ":v2:runtime=com.apple.CoreSimulator.SimRuntime.iOS-17-2,devicetype=com.apple.CoreSimulator.SimDeviceType.iPhone-15-Pro")]
+		[TestCase (ApplePlatform.iOS, "iossimulator-x64;iossimulator-arm64", ":v2:runtime=com.apple.CoreSimulator.SimRuntime.iOS-%TPV%,devicetype=com.apple.CoreSimulator.SimDeviceType.iPhone-15-Pro")]
 		[TestCase (ApplePlatform.iOS, "ios-arm64", "")]
-		[TestCase (ApplePlatform.TVOS, "tvossimulator-arm64", ":v2:runtime=com.apple.CoreSimulator.SimRuntime.tvOS-17-2,devicetype=com.apple.CoreSimulator.SimDeviceType.Apple-TV-4K-3rd-generation-1080p")]
+		[TestCase (ApplePlatform.TVOS, "tvossimulator-arm64", ":v2:runtime=com.apple.CoreSimulator.SimRuntime.tvOS-%TPV%,devicetype=com.apple.CoreSimulator.SimDeviceType.Apple-TV-4K-3rd-generation-1080p")]
 		public void GetMlaunchRunArguments (ApplePlatform platform, string runtimeIdentifiers, string device)
 		{
 			var project = "MySimpleApp";
@@ -83,7 +83,7 @@ namespace Xamarin.Tests {
 			expectedArguments.Append (appPath.Substring (Path.GetDirectoryName (project_path)!.Length + 1)).Append ('/');
 			if (isSim) {
 				expectedArguments.Append (" --device \"");
-				expectedArguments.Append (device);
+				expectedArguments.Append (device.Replace ("%TPV%", platform.GetTargetPlatformVersion ().Replace ('.', '-')));
 				expectedArguments.Append ('"');
 			}
 			expectedArguments.Append ($" --wait-for-exit:true");
