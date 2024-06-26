@@ -1439,6 +1439,8 @@ namespace NS {
 				foreach (var line in mtouch.OutputLines) {
 					if (line.Contains ("warning: method 'paymentAuthorizationViewController:didAuthorizePayment:handler:' in protocol 'PKPaymentAuthorizationViewControllerDelegate' not implemented [-Wprotocol]"))
 						continue; // Xcode 9 beta 1: this method changed from optional to required.
+					if (line.Contains ("warning: -ld_classic is deprecated and will be removed in a future release"))
+						continue;
 					Assert.That (line, Does.Not.Match ("warning:"), "no warnings");
 				}
 			}
