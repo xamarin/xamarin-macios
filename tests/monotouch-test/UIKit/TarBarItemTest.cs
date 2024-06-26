@@ -51,7 +51,11 @@ namespace MonoTouchFixtures.UIKit {
 				Assert.Null (tbi.FinishedSelectedImage, "FinishedSelectedImage");
 				Assert.Null (tbi.FinishedUnselectedImage, "FinishedUnselectedImage");
 #endif
-				Assert.Null (tbi.Image, "Image");
+				if (TestRuntime.CheckXcodeVersion (16, 0)) {
+					Assert.NotNull (tbi.Image, "Image");
+				} else {
+					Assert.Null (tbi.Image, "Image");
+				}
 				Assert.That (tbi.ImageInsets, Is.EqualTo (UIEdgeInsets.Zero), "ImageInsets");
 				Assert.That (tbi.Tag, Is.EqualTo (nint.MaxValue), "Tag");
 				Assert.Null (tbi.Title, "Title");
