@@ -218,9 +218,6 @@ extends:
         enabled: false  # we run our on sbom generation
       credscan:
         suppressionsFile: '$(System.DefaultWorkingDirectory)\\xamarin-macios\\tools\\devops\\governance\\CredScanSuppressions.json'
-        outputFormat: sarif
-        debugMode: false
-        batchSize: 16
       policheck:
         exclusionsFile: '$(System.DefaultWorkingDirectory)\\xamarin-macios\\tools\\devops\\governance\\PoliCheckExclusions.xml'
       sourceRepositoriesToScan:
