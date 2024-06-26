@@ -138,7 +138,7 @@ resources:
   - repository: yaml-templates
     type: github
     name: xamarin/yaml-templates
-    ref: refs/heads/dev/alex/checkout-path
+    ref: refs/heads/main
     endpoint: xamarin
 
   - repository: sdk-insertions
@@ -217,7 +217,7 @@ extends:
       sbom:
         enabled: false  # we run our on sbom generation
       credscan:
-        suppressionsFile: '$(System.DefaultWorkingDirectory)\\xamarin-macios\\tools\\devops\\governance\\CredScanSuppressions.json'
+        suppressionsFile: '$(Build.Repository.LocalPath)\\tools\\devops\\governance\\CredScanSuppressions.json'
       policheck:
         exclusionsFile: '$(System.DefaultWorkingDirectory)\\xamarin-macios\\tools\\devops\\governance\\PoliCheckExclusions.xml'
       sourceRepositoriesToScan:
