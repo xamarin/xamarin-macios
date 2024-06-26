@@ -205,21 +205,21 @@ extends:
       os: windows
     sdl:
       baseline:
-        baselineFile: '$(System.DefaultWorkingDirectory)\\xamarin-macios\\tools\\devops\\governance\\baselines.gdnbaselines'
+        baselineFile: '$(Pipeline.Workspace)\\s\\xamarin-macios\\tools\\devops\\governance\\baselines.gdnbaselines'
       suppression:
-        suppressionFile: '$(System.DefaultWorkingDirectory)\\xamarin-macios\\tools\\devops\\governance\\suppress.gdnsuppress'
+        suppressionFile: '$(Pipeline.Workspace)\\s\\xamarin-macios\\tools\\devops\\governance\\suppress.gdnsuppress'
       sourceAnalysisPool:
         name: AzurePipelines-EO
         image: 1ESPT-Windows2022
         os: windows
       tsa:
-        configFile: '$(System.DefaultWorkingDirectory)\\xamarin-macios\\tools\\devops\\governance\\tsa_config.gdntsa'
+        configFile: '$(Pipeline.Workspace)\\s\\xamarin-macios\\tools\\devops\\governance\\tsa_config.gdntsa'
       sbom:
         enabled: false  # we run our on sbom generation
       credscan:
-        suppressionsFile: '$(Build.Repository.LocalPath)\\$(Build.Repository.Name)\\tools\\devops\\governance\\CredScanSuppressions.json'
+        suppressionsFile: '$(Pipeline.Workspace)\\s\\xamarin-macios\\tools\\devops\\governance\\CredScanSuppressions.json'
       policheck:
-        exclusionsFile: '$(System.DefaultWorkingDirectory)\\xamarin-macios\\tools\\devops\\governance\\PoliCheckExclusions.xml'
+        exclusionsFile: '$(Pipeline.Workspace)\\s\\xamarin-macios\\tools\\devops\\governance\\PoliCheckExclusions.xml'
       sourceRepositoriesToScan:
         runInSingleJob: true # run both maccore and macios in the same job
         include:
