@@ -60,7 +60,7 @@ stages:
       usePipelineArtifactTasks: true
       condition: "ne(stageDependencies.configure_build.configure.outputs['configure_platforms.ENABLE_DOTNET'],'')"
       setupSteps:
-      - template: ../common/checkout.yml
+      - template: tools/devops/automation/templates/common/checkout.yml@${{ parameters.repositoryAlias }}
         parameters:
           isPR: ${{ parameters.isPR }}
           repositoryAlias: ${{ parameters.repositoryAlias }}
@@ -82,7 +82,7 @@ stages:
       useDateTimeVersion: true
       condition: "ne(stageDependencies.configure_build.configure.outputs['configure_platforms.ENABLE_DOTNET'],'')"
       setupSteps:
-      - template: ../common/checkout.yml
+      - template: tools/devops/automation/templates/common/checkout.yml@${{ parameters.repositoryAlias }}
         parameters:
           isPR: ${{ parameters.isPR }}
           repositoryAlias: ${{ parameters.repositoryAlias }}
