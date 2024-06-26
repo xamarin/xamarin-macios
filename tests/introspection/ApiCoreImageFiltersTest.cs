@@ -567,6 +567,13 @@ namespace Introspection {
 							continue;
 						}
 						break;
+					case "CIToneMapHeadroom":
+						switch (key) {
+						case "outputValue:":
+							// no doc for argument
+							continue;
+						}
+						break;
 					}
 
 					var cap = Char.ToUpperInvariant (key [0]) + key.Substring (1);
