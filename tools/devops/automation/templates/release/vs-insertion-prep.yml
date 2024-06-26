@@ -59,6 +59,12 @@ stages:
       signType: Real
       usePipelineArtifactTasks: true
       condition: "ne(stageDependencies.configure_build.configure.outputs['configure_platforms.ENABLE_DOTNET'],'')"
+      setupSteps:
+      - template: ../common/checkout.yml
+        parameters:
+          isPR: ${{ parameters.isPR }}
+          repositoryAlias: ${{ parameters.repositoryAlias }}
+          commit: ${{ parameters.commit }}
 
   # Check - "xamarin-macios (Prepare Release Convert NuGet to MSI)"
   - template: nuget-msi-convert/job/v3.yml@yaml-templates
@@ -75,6 +81,14 @@ stages:
       signType: Real
       useDateTimeVersion: true
       condition: "ne(stageDependencies.configure_build.configure.outputs['configure_platforms.ENABLE_DOTNET'],'')"
+      setupSteps:
+      - template: ../common/checkout.yml
+        parameters:
+          isPR: ${{ parameters.isPR }}
+          repositoryAlias: ${{ parameters.repositoryAlias }}
+          commit: ${{ parameters.commit }}
+
+
       postConvertSteps:
       - task: DownloadPipelineArtifact@2
         inputs:
