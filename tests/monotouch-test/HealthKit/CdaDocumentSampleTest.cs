@@ -10,6 +10,7 @@
 
 using System;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 using Foundation;
 using ObjCRuntime;
@@ -63,7 +64,7 @@ namespace MonoTouchFixtures.HealthKit {
 						"startDate.*and endDate.*exceed the maximum allowed duration for this sample type",
 						"Objective-C exception thrown.  Name: _HKObjectValidationFailureException Reason: Type HKSample can not have endDate of NSDate.distantFuture",
 					};
-					var success = possibleMessages.Any (v => ex.Message.StartsWith (v));
+					var success = possibleMessages.Any (v => Regex.IsMatch (ex.Message, v, RegexOptions.IgnoreCase));
 					Assert.IsTrue (success, $"The exception message:\n{ex.Message}\nDoes not match any of the expected messages:\n\t{string.Join ("\n\t", possibleMessages)}");
 				} else {
 					action ();
