@@ -85,7 +85,7 @@ stages:
       setupSteps:
       - pwsh: |
           New-Item "$(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/governance" -ItemType Directory -ea 0
-          New-Item -Path "$(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/governance" -Name "CredScanSuppressions.json"
+          New-Item -Path "$(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/governance" -Name "CredScanSuppressions.json" -Value '{"tool":"Crendential Scanner", "supressions":[]}'
         displayName: Create credscan dummy ignore file
 
       postConvertSteps:
