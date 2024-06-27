@@ -65,6 +65,7 @@ stages:
   - template: nuget-msi-convert/job/v3.yml@yaml-templates
     parameters:
       use1ESTemplate: true
+      checkoutType: self
       yamlResourceName: yaml-templates
       dependsOn: signing
       artifactName: '${{ parameters.uploadPrefix }}nuget-signed'
