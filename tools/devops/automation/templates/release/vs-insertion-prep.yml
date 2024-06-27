@@ -84,7 +84,8 @@ stages:
       condition: "ne(stageDependencies.configure_build.configure.outputs['configure_platforms.ENABLE_DOTNET'],'')"
       setupSteps:
       - bash: |
-          touch "$(System.DefaultWorkingDirectory)\\xamarin-macios\\tools\\devops\\governance\\CredScanSuppressions.json"
+          mkdir -p"$(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/governance"
+          touch "$(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/governance/CredScanSuppressions.json"
         displayName: Create credscan dummy ignore file
 
       postConvertSteps:
