@@ -440,7 +440,11 @@ namespace Xamarin.BindingTests {
 
 		static string property_getAttributes (IntPtr property)
 		{
-			return Marshal.PtrToStringAuto (_property_getAttributes (property));
+			var v = Marshal.PtrToStringAuto (_property_getAttributes (property));
+
+			// Ignore any "?" attributes, apparently it's a new property attribute in Xcode 16, but since there's no documentation about it yet, just ignore it.
+			var attribs = v.Split (',').Where (v => v != "?").ToArray ();
+			return string.Join (",", attribs);
 		}
 
 		[DllImport ("/usr/lib/libobjc.dylib", EntryPoint = "property_copyAttributeList")]
@@ -450,17 +454,20 @@ namespace Xamarin.BindingTests {
 		{
 			int count;
 			IntPtr list = _property_copyAttributeList (property, out count);
-			var rv = new objc_property_attribute [count];
+			var rv = new List<objc_property_attribute> (count);
 			try {
 				for (int i = 0; i < count; i++) {
 					var attrib = new objc_property_attribute ();
-					rv [i] = attrib;
 					IntPtr n = Marshal.ReadIntPtr (list, (IntPtr.Size * 2) * i);
 					IntPtr v = Marshal.ReadIntPtr (list, (IntPtr.Size * 2) * i + IntPtr.Size);
 					attrib.Name = Marshal.PtrToStringAuto (n);
 					attrib.Value = Marshal.PtrToStringAuto (v);
+					// Ignore any "?" attributes, apparently it's a new property attribute in Xcode 16, but since there's no documentation about it yet, just ignore it.
+					if (attrib.Name == "?" && string.IsNullOrEmpty (attrib.Value))
+						continue;
+					rv.Add (attrib);
 				}
-				return rv;
+				return rv.ToArray ();
 			} finally {
 				free (list);
 			}
