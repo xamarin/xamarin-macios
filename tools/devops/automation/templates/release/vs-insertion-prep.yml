@@ -83,12 +83,9 @@ stages:
       useDateTimeVersion: true
       condition: "ne(stageDependencies.configure_build.configure.outputs['configure_platforms.ENABLE_DOTNET'],'')"
       setupSteps:
-      - template: tools/devops/automation/templates/common/checkout.yml@${{ parameters.repositoryAlias }}
-        parameters:
-          isPR: ${{ parameters.isPR }}
-          repositoryAlias: ${{ parameters.repositoryAlias }}
-          commit: ${{ parameters.commit }}
-
+      - bash: |
+          touch "$(System.DefaultWorkingDirectory)\\xamarin-macios\\tools\\devops\\governance\\CredScanSuppressions.json"
+        displayName: Create credscan dummy ignore file
 
       postConvertSteps:
       - task: DownloadPipelineArtifact@2
