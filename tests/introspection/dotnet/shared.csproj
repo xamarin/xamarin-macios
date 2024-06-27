@@ -54,7 +54,7 @@
       <Link>ApiCMAttachmentTest.cs</Link>
     </Compile>
 
-    <InterfaceDefinition Include="$(IntrospectionTestDirectory)\iOS\LaunchScreen.storyboard" />
+    <InterfaceDefinition Include="$(IntrospectionTestDirectory)\iOS\LaunchScreen.storyboard" Condition="'$(_PlatformName)' != 'tvOS'" />
 
     <ImageAsset Include="$(IntrospectionTestDirectory)\iOS\Assets.xcassets\AppIcons.appiconset\Contents.json" />
     <ImageAsset Include="$(IntrospectionTestDirectory)\iOS\Assets.xcassets\AppIcons.appiconset\Icon-app-60%403x.png" />
