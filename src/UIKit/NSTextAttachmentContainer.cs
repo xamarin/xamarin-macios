@@ -30,13 +30,13 @@ using NativeHandle = System.IntPtr;
 
 namespace UIKit {
 	[EditorBrowsable (EditorBrowsableState.Never)]
-	[Obsolete ("This type is not available on this platform")]
+	[Obsolete ("This type is not available on this platform.")]
 	public partial interface INSTextAttachmentContainer : INativeObject, IDisposable
 	{
 	}
 
 	[EditorBrowsable (EditorBrowsableState.Never)]
-	[Obsolete ("This type is not available on this platform")]
+	[Obsolete ("This type is not available on this platform.")]
 	public class NSTextAttachmentContainer : NSObject, INSTextAttachmentContainer {
 		public NSTextAttachmentContainer () : base (NSObjectFlag.Empty)
 		{
