@@ -52,6 +52,12 @@ namespace Xamarin.Tests {
 						return false;
 					}
 					break;
+				case 5203:
+					switch (msg.Message) {
+					case "Native linking warning: warning: -ld_classic is deprecated and will be removed in a future release":
+						return false;
+					}
+					break;
 				}
 
 				return true;

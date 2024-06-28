@@ -9,6 +9,8 @@
 #if HAS_HEALTHKIT
 
 using System;
+using System.Linq;
+using System.Text.RegularExpressions;
 
 using Foundation;
 using ObjCRuntime;
@@ -58,15 +60,12 @@ namespace MonoTouchFixtures.HealthKit {
 					var ex = Assert.Throws<MonoTouchException> (action, "Exception");
 #endif
 
-#if MONOMAC
-					Assert.That (ex.Message, Does.Match ("startDate.*and endDate.*exceed the maximum allowed duration for this sample type"), "Exception Message");
-#else
-					if (TestRuntime.CheckXcodeVersion (15, 0)) {
-						Assert.That (ex.Message, Does.Match ("Objective-C exception thrown.  Name: _HKObjectValidationFailureException Reason: Type HKSample can not have endDate of NSDate.distantFuture"), "Exception Message");
-					} else {
-						Assert.That (ex.Message, Does.Match ("startDate.*and endDate.*exceed the maximum allowed duration for this sample type"), "Exception Message");
-					}
-#endif
+					var possibleMessages = new string [] {
+						"startDate.*and endDate.*exceed the maximum allowed duration for this sample type",
+						"Objective-C exception thrown.  Name: _HKObjectValidationFailureException Reason: Type HKSample can not have endDate of NSDate.distantFuture",
+					};
+					var success = possibleMessages.Any (v => Regex.IsMatch (ex.Message, v, RegexOptions.IgnoreCase));
+					Assert.IsTrue (success, $"The exception message:\n{ex.Message}\nDoes not match any of the expected messages:\n\t{string.Join ("\n\t", possibleMessages)}");
 				} else {
 					action ();
 				}

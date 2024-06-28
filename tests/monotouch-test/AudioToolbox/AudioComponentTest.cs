@@ -6,6 +6,7 @@ using System.Drawing;
 using System.IO;
 using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 using Foundation;
 using AudioToolbox;
 using AudioUnit;
@@ -146,24 +147,36 @@ namespace MonoTouchFixtures.AudioToolbox {
 		public void TestValidation ()
 		{
 			TestRuntime.AssertXcodeVersion (14, 0);
-			var resources = new ResourceUsageInfo ();
-			resources.IOKitUserClient = new string [] { "CustomUserClient1" };
-			resources.MachLookUpGlobalName = new string [] { "MachServiceName1" };
-			resources.NetworkClient = false;
-			resources.TemporaryExceptionReadWrite = false;
 
-			var componentInfo = new AudioComponentInfo ();
-			componentInfo.Type = AudioTypeOutput.Generic.ToString ();
-			componentInfo.Subtype = "XMPL";
-			componentInfo.Name = "XMPL";
-			componentInfo.Version = 1;
-			componentInfo.ResourceUsage = resources;
-			using var component = AudioComponent.FindComponent (AudioTypeOutput.Generic);
-			Assert.IsNotNull (component);
-			// validate and break
-			var validation = component.Validate (null);
-			Assert.Contains (validation,
-				new List<AudioComponentValidationResult> () { AudioComponentValidationResult.Unknown, AudioComponentValidationResult.Passed }, "validation");
+			var tcs = new TaskCompletionSource<bool> ();
+			var thread = new Thread (() => {
+				try {
+					var resources = new ResourceUsageInfo ();
+					resources.IOKitUserClient = new string [] { "CustomUserClient1" };
+					resources.MachLookUpGlobalName = new string [] { "MachServiceName1" };
+					resources.NetworkClient = false;
+					resources.TemporaryExceptionReadWrite = false;
+
+					var componentInfo = new AudioComponentInfo ();
+					componentInfo.Type = AudioTypeOutput.Generic.ToString ();
+					componentInfo.Subtype = "XMPL";
+					componentInfo.Name = "XMPL";
+					componentInfo.Version = 1;
+					componentInfo.ResourceUsage = resources;
+					using var component = AudioComponent.FindComponent (AudioTypeOutput.Generic);
+					Assert.IsNotNull (component);
+					// validate and break
+					var validation = component.Validate (null);
+					Assert.Contains (validation,
+						new List<AudioComponentValidationResult> () { AudioComponentValidationResult.Unknown, AudioComponentValidationResult.Passed }, "validation");
+					tcs.SetResult (true);
+				} catch (Exception e) {
+					tcs.SetException (e);
+				}
+			});
+			thread.IsBackground = true;
+			thread.Start ();
+			Assert.IsTrue (tcs.Task.Wait (TimeSpan.FromSeconds (20)), "Timed out");
 		}
 
 		[Test]
