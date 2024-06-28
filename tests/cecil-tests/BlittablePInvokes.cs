@@ -268,13 +268,16 @@ namespace Cecil.Tests {
 			var failures = new Dictionary<string, NonBlittablePInvokesFailure> ();
 			var pinvokes = new List<(AssemblyDefinition Assembly, MethodDefinition Method)> ();
 
-			foreach (var info in Helper.NetPlatformImplementationAssemblyDefinitions)
+			var blitCaches = new Dictionary<AssemblyDefinition, Dictionary<string, BlitAndReason>> ();
+			foreach (var info in Helper.NetPlatformImplementationAssemblyDefinitions) {
 				pinvokes.AddRange (AllPInvokes (info.Assembly).Select (v => (info.Assembly, v)));
+
+				blitCaches [info.Assembly] = new Dictionary<string, BlitAndReason> ();
+			}
 
 			Assert.That (pinvokes.Count, Is.GreaterThan (0), "Must have some P/Invokes at least");
 
-			var blitCache = new Dictionary<string, BlitAndReason> ();
-			var results = pinvokes.Select (pi => IsMethodBlittable (pi.Assembly, pi.Method, blitCache)).Where (r => !r.IsBlittable).ToArray ();
+			var results = pinvokes.Select (pi => IsMethodBlittable (pi.Assembly, pi.Method, blitCaches [pi.Assembly])).Where (r => !r.IsBlittable).ToArray ();
 			foreach (var result in results) {
 				failures [result.Method.FullName] = new (result.Method.FullName, result.Method.RenderLocation (), result.Result.ToString ());
 			}
