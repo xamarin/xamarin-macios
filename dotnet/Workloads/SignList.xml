@@ -108,7 +108,7 @@
     <FirstParty Include="Broker.exe" />
     <FirstParty Include="Broker.resources.dll" />
     <!-- Build.zip -->
-    <FirstParty Include="Build.exe" />
+    <FirstParty Include="Build.dll" />
     <FirstParty Include="Microsoft.Build*.dll" />
     <FirstParty Include="Microsoft.NET.StringTools.dll" />
     <FirstParty Include="System.IO.Abstractions.dll" />
