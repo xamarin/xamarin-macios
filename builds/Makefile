@@ -108,7 +108,7 @@ print-dotnet-pkg-urls: dotnet-install.sh
 	$(Q) rm -f $@-found-it.stamp
 
 dotnet-install.sh: Makefile
-	$(Q) $(CURL_RETRY) https://dot.net/v1/dotnet-install.sh --output $@.tmp
+	$(Q) $(CURL_RETRY) https://raw.githubusercontent.com/dotnet/install-scripts/main/src/dotnet-install.sh --output $@.tmp
 	$(Q) chmod +x $@.tmp
 	$(Q) mv $@.tmp $@
 
