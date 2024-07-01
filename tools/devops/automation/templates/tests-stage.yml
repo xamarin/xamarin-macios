@@ -31,7 +31,7 @@ parameters:
 - name: runSamples
   type: boolean
   default: false
-  
+
 - name: isPR
   type: boolean
 

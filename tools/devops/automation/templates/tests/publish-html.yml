@@ -96,6 +96,7 @@ steps:
     TESTS_JOBSTATUS: $(TESTS_JOBSTATUS) # set by the runTests step
     TESTS_SUMMARY: $(TEST_SUMMARY_PATH)
     ACCESSTOKEN: $(System.AccessToken)
+    IS_PR: "${{ parameters.isPR }}"
     ${{ if eq(parameters.repositoryAlias, 'self') }}:
       COMMENT_HASH: $(fix_commit.GIT_HASH)
     ${{ else }}:
