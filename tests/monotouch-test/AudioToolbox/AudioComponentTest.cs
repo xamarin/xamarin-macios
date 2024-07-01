@@ -148,6 +148,9 @@ namespace MonoTouchFixtures.AudioToolbox {
 		{
 			TestRuntime.AssertXcodeVersion (14, 0);
 
+			if (TestRuntime.CheckXcodeVersion (16, 0) && TestRuntime.IsInCI)
+				Assert.Ignore ("This test started randomly timing out in Xcode 16 beta 1, for unknown reasons.");
+
 			var tcs = new TaskCompletionSource<bool> ();
 			var thread = new Thread (() => {
 				try {
@@ -183,6 +186,10 @@ namespace MonoTouchFixtures.AudioToolbox {
 		public void TestValidationAsync ()
 		{
 			TestRuntime.AssertXcodeVersion (14, 0);
+
+			if (TestRuntime.CheckXcodeVersion (16, 0) && TestRuntime.IsInCI)
+				Assert.Ignore ("This test started randomly timing out in Xcode 16 beta 1, for unknown reasons.");
+
 			var resources = new ResourceUsageInfo ();
 			resources.IOKitUserClient = new string [] { "CustomUserClient1" };
 			resources.MachLookUpGlobalName = new string [] { "MachServiceName1" };

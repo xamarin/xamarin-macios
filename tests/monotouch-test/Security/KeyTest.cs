@@ -509,7 +509,7 @@ namespace MonoTouchFixtures.Security {
 
 #if __MACCATALYST__
 								var badDecrypt = !TestRuntime.CheckXcodeVersion (15, 0);
-#elif __IOS__
+#elif __IOS__ || __TVOS__
 								var badDecrypt = !TestRuntime.CheckXcodeVersion (16, 0);
 #else
 								var badDecrypt = true;
