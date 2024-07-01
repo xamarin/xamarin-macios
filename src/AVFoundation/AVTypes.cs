@@ -642,7 +642,7 @@ namespace AVFoundation {
 		public nint PacketRefreshCount;
 	}
 
-#if !XAMCORE_5_0 && !__IOS__ && !__TVOS__
+#if !XAMCORE_5_0 && !(__IOS__ && !__MACCATALYST__) && !__TVOS__
 	[StructLayout (LayoutKind.Sequential)]
 	[NativeName ("AVSampleCursorAudioDependencyInfo")]
 #if COREBUILD
