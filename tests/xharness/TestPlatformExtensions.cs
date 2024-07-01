@@ -37,20 +37,6 @@ namespace Xharness {
 			}
 		}
 
-		public static bool CanSymlink (this TestPlatform platform)
-		{
-			switch (platform) {
-			case TestPlatform.iOS:
-			case TestPlatform.iOS_TodayExtension64:
-			case TestPlatform.iOS_Unified:
-			case TestPlatform.iOS_Unified32:
-			case TestPlatform.iOS_Unified64:
-				return true;
-			default:
-				return false;
-			}
-		}
-
 		// This must match our $(_PlatformName) variable in our MSBuild logic.
 		public static string ToPlatformName (this TestPlatform platform)
 		{

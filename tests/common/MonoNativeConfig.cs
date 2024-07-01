@@ -9,7 +9,6 @@ namespace Xamarin.Tests {
 		Static,
 		Dynamic,
 		Framework,
-		Symlink,
 	}
 
 	public enum MonoNativeFlavor {
@@ -24,8 +23,6 @@ namespace Xamarin.Tests {
 				return MonoNativeLinkMode.Static;
 #elif MONO_NATIVE_DYNAMIC
 				return MonoNativeLinkMode.Dynamic;
-#elif MONO_NATIVE_SYMLINK
-				return MonoNativeLinkMode.Symlink;
 #else
 				return MonoNativeLinkMode.None;
 #endif
@@ -76,8 +73,6 @@ namespace Xamarin.Tests {
 				return null;
 			case MonoNativeLinkMode.Dynamic:
 				return GetDynamicLibraryName (flavor);
-			case MonoNativeLinkMode.Symlink:
-				return "libmono-native.dylib";
 			default:
 				Assert.Fail ($"Invalid link mode: {MonoNativeConfig.LinkMode}");
 				throw new NotImplementedException ();

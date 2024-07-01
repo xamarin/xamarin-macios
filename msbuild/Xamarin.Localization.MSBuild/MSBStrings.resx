@@ -1573,9 +1573,16 @@
         <comment>0: a path</comment>
     </data>
 
-    <data name="E7124" xml:space="preserve">
+    <data name="W7124" xml:space="preserve">
+        <value>A provisioning profile has been specified, but this value is ignored for the simulator.</value>
+    </data>
+
+    <data name="W7125" xml:space="preserve">
+        <value>A file with codesigning entitlements has been specified, but this value is ignored for the simulator.</value>
+    </data>
+
+    <data name="E7126" xml:space="preserve">
         <value>Can't compute the architecture for the archive for the RuntimeIdentifier '{0}' (unknown value)</value>
         <comment>RuntimeIdentifier: don't translate (it's the name of a MSBuild property)</comment>
     </data>
-
 </root>

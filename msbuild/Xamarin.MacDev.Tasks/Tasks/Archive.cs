@@ -202,7 +202,7 @@ namespace Xamarin.MacDev.Tasks {
 						} else if (rid.EndsWith ("-arm64", StringComparison.Ordinal)) {
 							architecture = "arm64";
 						} else {
-							Log.LogError (MSBStrings.E7124 /* Can't compute the architecture for the archive for the RuntimeIdentifier '{0}' (unknown value) */, rid);
+							Log.LogError (MSBStrings.E7126 /* Can't compute the architecture for the archive for the RuntimeIdentifier '{0}' (unknown value) */, rid);
 							continue;
 						}
 						array.Add (new PString (architecture));

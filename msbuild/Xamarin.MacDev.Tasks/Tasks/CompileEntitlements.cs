@@ -138,7 +138,23 @@ namespace Xamarin.MacDev.Tasks {
 			}
 		}
 
-		PString MergeEntitlementString (PString pstr, MobileProvision? profile, bool expandWildcards)
+		bool IsDeviceOrDesktop {
+			get {
+				switch (Platform) {
+				case ApplePlatform.iOS:
+				case ApplePlatform.TVOS:
+				case ApplePlatform.WatchOS:
+					return !SdkIsSimulator;
+				case ApplePlatform.MacOSX:
+				case ApplePlatform.MacCatalyst:
+					return true;
+				default:
+					throw new InvalidOperationException (string.Format (MSBStrings.InvalidPlatform, Platform));
+				}
+			}
+		}
+
+		PString MergeEntitlementString (PString pstr, MobileProvision? profile, bool expandWildcards, string? key)
 		{
 			string TeamIdentifierPrefix;
 			string AppIdentifierPrefix;
@@ -146,14 +162,14 @@ namespace Xamarin.MacDev.Tasks {
 			if (string.IsNullOrEmpty (pstr.Value))
 				return (PString) pstr.Clone ();
 
-			if (profile is null) {
+			if (profile is null && IsDeviceOrDesktop) {
 				if (!warnedTeamIdentifierPrefix && pstr.Value.Contains ("$(TeamIdentifierPrefix)")) {
-					Log.LogWarning (null, null, null, Entitlements, 0, 0, 0, 0, MSBStrings.W0108);
+					Log.LogWarning (null, null, null, Entitlements, 0, 0, 0, 0, "Cannot expand $(TeamIdentifierPrefix) in Entitlements.plist without a provisioning profile for key '{0}' with value '{1}'", key, pstr.Value);
 					warnedTeamIdentifierPrefix = true;
 				}
 
 				if (!warnedAppIdentifierPrefix && pstr.Value.Contains ("$(AppIdentifierPrefix)")) {
-					Log.LogWarning (null, null, null, Entitlements, 0, 0, 0, 0, MSBStrings.W0109);
+					Log.LogWarning (null, null, null, Entitlements, 0, 0, 0, 0, "Cannot expand $(AppIdentifierPrefix) in Entitlements.plist without a provisioning profile for key '{0}' with value '{1}'", key, pstr.Value);
 					warnedAppIdentifierPrefix = true;
 				}
 			}
@@ -198,7 +214,7 @@ namespace Xamarin.MacDev.Tasks {
 			return new PString (expanded);
 		}
 
-		PArray? MergeEntitlementArray (PArray array, MobileProvision? profile)
+		PArray? MergeEntitlementArray (PArray array, MobileProvision? profile, string? key)
 		{
 			var result = new PArray ();
 
@@ -206,11 +222,11 @@ namespace Xamarin.MacDev.Tasks {
 				PObject? value;
 
 				if (item is PDictionary)
-					value = MergeEntitlementDictionary ((PDictionary) item, profile);
+					value = MergeEntitlementDictionary ((PDictionary) item, profile, key);
 				else if (item is PString)
-					value = MergeEntitlementString ((PString) item, profile, false);
+					value = MergeEntitlementString ((PString) item, profile, false, key);
 				else if (item is PArray)
-					value = MergeEntitlementArray ((PArray) item, profile);
+					value = MergeEntitlementArray ((PArray) item, profile, key);
 				else
 					value = item.Clone ();
 
@@ -224,7 +240,7 @@ namespace Xamarin.MacDev.Tasks {
 			return null;
 		}
 
-		PDictionary MergeEntitlementDictionary (PDictionary dict, MobileProvision? profile)
+		PDictionary MergeEntitlementDictionary (PDictionary dict, MobileProvision? profile, string? key)
 		{
 			var result = new PDictionary ();
 
@@ -232,11 +248,11 @@ namespace Xamarin.MacDev.Tasks {
 				PObject? value = item.Value;
 
 				if (value is PDictionary)
-					value = MergeEntitlementDictionary ((PDictionary) value, profile);
+					value = MergeEntitlementDictionary ((PDictionary) value, profile, item.Key);
 				else if (value is PString)
-					value = MergeEntitlementString ((PString) value, profile, false);
+					value = MergeEntitlementString ((PString) value, profile, false, item.Key);
 				else if (value is PArray)
-					value = MergeEntitlementArray ((PArray) value, profile);
+					value = MergeEntitlementArray ((PArray) value, profile, item.Key);
 				else
 					value = value.Clone ();
 
@@ -286,7 +302,7 @@ namespace Xamarin.MacDev.Tasks {
 					dict [entitlement] = new PBoolean (booleanValue);
 					break;
 				case "string":
-					dict [entitlement] = MergeEntitlementString (new PString (value), profile, entitlement == ApplicationIdentifierKey);
+					dict [entitlement] = MergeEntitlementString (new PString (value), profile, entitlement == ApplicationIdentifierKey, entitlement);
 					break;
 				case "stringarray":
 					var arraySeparator = item.GetMetadata ("ArraySeparator");
@@ -295,7 +311,7 @@ namespace Xamarin.MacDev.Tasks {
 					var arrayContent = value.Split (new string [] { arraySeparator }, StringSplitOptions.None);
 					var parray = new PArray ();
 					foreach (var element in arrayContent)
-						parray.Add (MergeEntitlementString (new PString (element), profile, entitlement == ApplicationIdentifierKey));
+						parray.Add (MergeEntitlementString (new PString (element), profile, entitlement == ApplicationIdentifierKey, entitlement));
 					dict [entitlement] = parray;
 					break;
 				default:
@@ -358,11 +374,11 @@ namespace Xamarin.MacDev.Tasks {
 					if (key == "com.apple.developer.icloud-container-environment")
 						value = new PString ("Development");
 					else if (value is PDictionary)
-						value = MergeEntitlementDictionary ((PDictionary) value, profile);
+						value = MergeEntitlementDictionary ((PDictionary) value, profile, key);
 					else if (value is PString)
-						value = MergeEntitlementString ((PString) value, profile, item.Key == ApplicationIdentifierKey);
+						value = MergeEntitlementString ((PString) value, profile, item.Key == ApplicationIdentifierKey, key);
 					else if (value is PArray)
-						value = MergeEntitlementArray ((PArray) value, profile);
+						value = MergeEntitlementArray ((PArray) value, profile, key);
 					else
 						value = value.Clone ();
 
@@ -393,11 +409,11 @@ namespace Xamarin.MacDev.Tasks {
 				}
 
 				if (value is PDictionary)
-					value = MergeEntitlementDictionary ((PDictionary) value, profile);
+					value = MergeEntitlementDictionary ((PDictionary) value, profile, key);
 				else if (value is PString)
-					value = MergeEntitlementString ((PString) value, profile, key == ApplicationIdentifierKey);
+					value = MergeEntitlementString ((PString) value, profile, key == ApplicationIdentifierKey, key);
 				else if (value is PArray)
-					value = MergeEntitlementArray ((PArray) value, profile);
+					value = MergeEntitlementArray ((PArray) value, profile, key);
 				else
 					value = value.Clone ();
 
@@ -456,7 +472,7 @@ namespace Xamarin.MacDev.Tasks {
 			MobileProvision? profile;
 			PDictionary template;
 			PDictionary compiled;
-			PDictionary archived;
+			PDictionary? archived = null;
 			string path;
 
 			switch (SdkPlatform) {
@@ -509,7 +525,27 @@ namespace Xamarin.MacDev.Tasks {
 			}
 
 			compiled = GetCompiledEntitlements (profile, template);
-			archived = GetArchivedExpandedEntitlements (template, compiled);
+
+			Directory.CreateDirectory (Path.GetDirectoryName (CompiledEntitlements!.ItemSpec));
+
+			if (SdkIsSimulator) {
+				var simulatedEntitlements = compiled;
+				var simulatedXcent = Path.ChangeExtension (CompiledEntitlements.ItemSpec, "").TrimEnd ('.') + "-Simulated.xcent";
+				try {
+					WriteXcent (simulatedEntitlements, simulatedXcent);
+				} catch (Exception ex) {
+					Log.LogError (MSBStrings.E0114, simulatedXcent, ex.Message);
+					return false;
+				}
+
+				EntitlementsInExecutable = new TaskItem (simulatedXcent);
+
+				// No matter what, I've only been able to make Xcode apply a single entitlement to simulator builds: com.apple.security.get-task-allow
+				compiled = new PDictionary ();
+				compiled.Add ("com.apple.security.get-task-allow", new PBoolean (true));
+			} else {
+				archived = GetArchivedExpandedEntitlements (template, compiled);
+			}
 
 			try {
 				Directory.CreateDirectory (Path.GetDirectoryName (CompiledEntitlements!.ItemSpec));
@@ -519,17 +555,10 @@ namespace Xamarin.MacDev.Tasks {
 				return false;
 			}
 
-			SaveArchivedExpandedEntitlements (archived);
+			if (archived is not null)
+				SaveArchivedExpandedEntitlements (archived);
 
-			if (Platform == Utils.ApplePlatform.MacCatalyst) {
-				EntitlementsInSignature = CompiledEntitlements;
-			} else if (SdkIsSimulator) {
-				if (compiled.Count > 0) {
-					EntitlementsInExecutable = CompiledEntitlements;
-				}
-			} else {
-				EntitlementsInSignature = CompiledEntitlements;
-			}
+			EntitlementsInSignature = CompiledEntitlements;
 
 			return !Log.HasLoggedErrors;
 		}

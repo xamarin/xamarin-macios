@@ -426,8 +426,11 @@ namespace Xamarin.MacDev.Tasks {
 				var info = new SignInfo { Item = item };
 				if (!Validate (info))
 					continue;
-				if (NeedsCodesign (resourcesToSign, i, info.GetStampFileContents (this)))
+				if (NeedsCodesign (resourcesToSign, i, info.GetStampFileContents (this))) {
 					itemsToSign.Add (info);
+				} else {
+					resourcesToSign [i] = null;
+				}
 			}
 
 			if (Log.HasLoggedErrors)
