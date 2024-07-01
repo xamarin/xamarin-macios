@@ -2900,7 +2900,7 @@ namespace Registrar {
 
 				if (Driver.XcodeVersion.Major >= 16) {
 					if (@class.Type.Namespace == "AssetsLibrary") {
-						exceptions.Add (ErrorHelper.CreateWarning (4190, $"The class '{@class.Type.FullName}' will not be registered because the {@class.Type.Namespace} framework has been deprecated from the {App.Platform} SDK.."));
+						exceptions.Add (ErrorHelper.CreateWarning (4190, $"The class '{@class.Type.FullName}' will not be registered because the {@class.Type.Namespace} framework has been deprecated from the {App.Platform} SDK."));
 						continue;
 					}
 				}

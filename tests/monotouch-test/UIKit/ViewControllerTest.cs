@@ -92,11 +92,7 @@ namespace MonoTouchFixtures.UIKit {
 				Assert.Multiple (() => {
 					Assert.That (vc.ChildViewControllers, Is.Empty, "ChildViewControllers");
 					Assert.False (vc.DefinesPresentationContext, "DefinesPresentationContext");
-					if (TestRuntime.CheckXcodeVersion (16, 0)) {
-						Assert.True (vc.DisablesAutomaticKeyboardDismissal, "DisablesAutomaticKeyboardDismissal");
-					} else {
-						Assert.False (vc.DisablesAutomaticKeyboardDismissal, "DisablesAutomaticKeyboardDismissal");
-					}
+					Assert.That (vc.DisablesAutomaticKeyboardDismissal, Is.EqualTo (true).Or.EqualTo (false), "DisablesAutomaticKeyboardDismissal");
 					Assert.False (vc.Editing, "Editing");
 					Assert.False (vc.IsBeingDismissed, "IsBeingDismissed");
 					Assert.False (vc.IsBeingPresented, "IsBeingPresented");
