@@ -479,14 +479,12 @@
         </value>
     </data>
     
-    <data name="W0108" xml:space="preserve">
-        <value>Cannot expand $(TeamIdentifierPrefix) in Entitlements.plist without a provisioning profile.
-        </value>
+    <data name="W0108b" xml:space="preserve">
+        <value>Cannot expand $(TeamIdentifierPrefix) in Entitlements.plist without a provisioning profile for key '{0}' with value '{1}'.</value>
     </data>
     
-    <data name="W0109" xml:space="preserve">
-        <value>Cannot expand $(AppIdentifierPrefix) in Entitlements.plist without a provisioning profile.
-        </value>
+    <data name="W0109b" xml:space="preserve">
+        <value>Cannot expand $(AppIdentifierPrefix) in Entitlements.plist without a provisioning profile for key '{0}' with value '{1}'.</value>
     </data>
         
     <data name="W0110" xml:space="preserve">
