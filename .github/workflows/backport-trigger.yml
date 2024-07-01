@@ -20,11 +20,12 @@ jobs:
     steps:
       - name: Parse Comment
         id: parse_comment
+        shell: pwsh
         run: |
           Write-Host "Parsing $env:COMMENT"
           ($botName, $backport, $backportTargetBranch) = [System.Text.RegularExpressions.Regex]::Split("$env:COMMENT", "\s+")
-          echo "::set-output name=target_branch::$backportTargetBranch"
-        shell: pwsh
+          Write-Host "GITHUB_OUTPUT: ${env:GITHUB_OUTPUT}"
+          [IO.File]::AppendAllText($env:GITHUB_OUTPUT, "target_branch=${backportTargetBranch}$([Environment]::NewLine)")                 # Equivalent to the deprecated ::set-output command: https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idoutputs
         env:
           COMMENT: "${{ github.event.comment.body }}"
 
