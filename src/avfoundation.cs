@@ -5355,7 +5355,7 @@ namespace AVFoundation {
 
 
 		[Export ("currentSampleAudioDependencyInfo")]
-#if XAMCORE_5_0 || IOS || TVOS
+#if XAMCORE_5_0 || (IOS && !__MACCATALYST__) || TVOS
 		AVSampleCursorAudioDependencyInfo CurrentSampleAudioDependencyInfo { get; }
 #else
 		[Internal]
