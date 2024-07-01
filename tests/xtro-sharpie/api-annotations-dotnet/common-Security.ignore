@@ -18,13 +18,6 @@
 
 ## the following are manualy bound as NativeObject
 
-## xcode10.0 backlog
-!missing-pinvoke! sec_protocol_options_set_challenge_block is not bound
-!missing-pinvoke! sec_protocol_options_set_verify_block is not bound
-
-## xcode11.0 backlog
-!missing-pinvoke! sec_protocol_options_set_pre_shared_key_selection_block is not bound
-
 ## extra value for initialization
 !extra-enum-value! Managed value -1 for SslSessionState.Invalid not found in native headers
 

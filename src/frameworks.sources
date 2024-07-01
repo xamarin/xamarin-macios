@@ -1346,6 +1346,11 @@ NATURALLANGUAGE_SOURCES = \
 NETWORK_API_SOURCES = \
 	Network/NWEnums.cs \
 
+NETWORK_CORE_SOURCES = \
+	Network/NWEndpoint.cs			\
+	Network/NWInterface.cs			\
+	Network/NWParameters.cs			\
+
 NETWORK_SOURCES = \
 	Network/NWAdvertiseDescriptor.cs	\
 	Network/NWBrowserDescriptor.cs	\
@@ -1357,20 +1362,17 @@ NETWORK_SOURCES = \
 	Network/NWDataTransferReport.cs 	\
 	Network/NWEthernetChannel.cs 	\
 	Network/NWEstablishmentReport.cs	\
-	Network/NWEndpoint.cs			\
 	Network/NWError.cs			\
 	Network/NWFramer.cs			\
 	Network/NWFramerMessage.cs			\
 	Network/NWMulticastGroup.cs		\
 	Network/NWMultiplexGroup.cs		\
-	Network/NWInterface.cs			\
 	Network/NWIPMetadata.cs			\
 	Network/NWListener.cs			\
 	Network/NWPrivacyContext.cs	\
 	Network/NWProtocolFramerOptions.cs \
 	Network/NWProtocolIPOptions.cs	\
 	Network/NWProxyConfig.cs	\
-	Network/NWParameters.cs			\
 	Network/NWPath.cs			\
 	Network/NWPathMonitor.cs		\
 	Network/NWPrivacyContext.cs		\

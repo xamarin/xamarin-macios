@@ -1214,12 +1214,14 @@ namespace Security {
 	// Respond with the identity to use for this challenge.
 	delegate void SecProtocolChallengeComplete (SecIdentity2 identity);
 
+	delegate void SecProtocolPreSharedKeySelectionComplete ([NullAllowed] DispatchData psk_identity);
 	//
 	// These are fake NSObject types, used purely for the generator to do all the heavy lifting with block generation
 	//
 	delegate void SecProtocolKeyUpdate (SecProtocolMetadata metadata, [BlockCallback] Action complete);
 	delegate void SecProtocolChallenge (SecProtocolMetadata metadata, [BlockCallback] SecProtocolChallengeComplete challengeComplete);
 	delegate void SecProtocolVerify (SecProtocolMetadata metadata, SecTrust2 trust, [BlockCallback] SecProtocolVerifyComplete verifyComplete);
+	delegate void SecProtocolPreSharedKeySelection (SecProtocolMetadata metadata, [NullAllowed] DispatchData psk_identity_hint, [BlockCallback] SecProtocolPreSharedKeySelectionComplete complete);
 
 	[Internal]
 	[Partial]
@@ -1235,5 +1237,9 @@ namespace Security {
 		[Export ("options:protocolVerify:verifyQueue:")]
 		[NoMethod]
 		void SetVerifyBlock (SecProtocolOptions options, [BlockCallback] SecProtocolVerify verifyBlock, DispatchQueue verifyQueue);
+
+		[Export ("options:pskSelectionBlock:pskSelectionQueue:")]
+		[NoMethod]
+		void SetProtocolPreSharedKeySelectionBlock (SecProtocolOptions options, [BlockCallback] SecProtocolPreSharedKeySelection pskSelectionBlock, DispatchQueue pskSelectionQueue);
 	}
 }
