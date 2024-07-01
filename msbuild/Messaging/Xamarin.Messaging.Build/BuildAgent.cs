@@ -49,6 +49,9 @@ namespace Xamarin.Messaging.Build {
 				.ConfigureAwait (continueOnCapturedContext: false);
 			await TryRegisterHandlerAsync (new GetItemMessageHandler ())
 			   .ConfigureAwait (continueOnCapturedContext: false);
+
+			await TryRegisterHandlerAsync (new VerifyXcodeVersionMessageHandler ())
+				.ConfigureAwait (continueOnCapturedContext: false);
 			await TryRegisterHandlerAsync (new GetUniversalTargetIdentifierMessageHandler ())
 				.ConfigureAwait (continueOnCapturedContext: false);
 		}
