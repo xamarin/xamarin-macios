@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<COLLADA xmlns="http://www.collada.org/2005/11/COLLADASchema" version="1.4.1">
+ <asset>
+  <contributor>
+   <authoring_tool>SceneKit Collada Exporter v1.0</authoring_tool>
+  </contributor>
+  <created>2021-09-23T09:36:40Z</created>
+  <modified>2021-09-23T09:36:40Z</modified>
+  <unit meter="1.000000"/>
+  <up_axis>Y_UP</up_axis>
+ </asset>
+ <library_cameras>
+  <camera id="camera" name="camera">
+   <optics>
+    <technique_common>
+     <perspective>
+      <yfov>45</yfov>
+      <znear>0.111134</znear>
+      <zfar>27.7834</zfar>
+     </perspective>
+    </technique_common>
+   </optics>
+  </camera>
+ </library_cameras>
+ <library_visual_scenes>
+  <visual_scene id="scene1">
+   <node id="node2" name="camera">
+    <matrix>0.9999999 0 0 0 0 1 0 0.3 0 0 0.9999999 2.5 0 0 0 1 </matrix>
+    <instance_camera url="#camera"/>
+   </node>
+  </visual_scene>
+ </library_visual_scenes>
+ <scene>
+  <instance_visual_scene url="#scene1"/>
+ </scene>
+</COLLADA>
+

@@ -20,7 +20,18 @@ namespace Xamarin.Tests {
 			var rv = new Dictionary<string, string> (verbosity);
 			if (!string.IsNullOrEmpty (runtimeIdentifiers))
 				SetRuntimeIdentifiers (rv, runtimeIdentifiers);
+			if (Configuration.IsBuildingRemotely)
+				AddRemoteProperties (rv);
 			return rv;
+		}
+
+		protected void AddRemoteProperties (Dictionary<string, string> properties)
+		{
+			properties ["ServerAddress"] = Environment.GetEnvironmentVariable ("MAC_AGENT_IP") ?? string.Empty;
+			properties ["ServerUser"] = Environment.GetEnvironmentVariable ("MAC_AGENT_USER") ?? string.Empty;
+			properties ["ServerPassword"] = Environment.GetEnvironmentVariable ("XMA_PASSWORD") ?? string.Empty;
+			if (!string.IsNullOrEmpty (properties ["ServerUser"]))
+				properties ["EnsureRemoteConnection"] = "true";
 		}
 
 		protected void SetRuntimeIdentifiers (Dictionary<string, string> properties, string runtimeIdentifiers)
@@ -51,12 +62,12 @@ namespace Xamarin.Tests {
 			return GetBinOrObjDir ("bin", projectPath, platform, runtimeIdentifiers, configuration);
 		}
 
-		protected string GetObjDir (string projectPath, ApplePlatform platform, string runtimeIdentifiers, string configuration = "Debug")
+		internal static protected string GetObjDir (string projectPath, ApplePlatform platform, string runtimeIdentifiers, string configuration = "Debug")
 		{
 			return GetBinOrObjDir ("obj", projectPath, platform, runtimeIdentifiers, configuration);
 		}
 
-		protected string GetBinOrObjDir (string binOrObj, string projectPath, ApplePlatform platform, string runtimeIdentifiers, string configuration = "Debug")
+		internal static protected string GetBinOrObjDir (string binOrObj, string projectPath, ApplePlatform platform, string runtimeIdentifiers, string configuration = "Debug")
 		{
 			var appPathRuntimeIdentifier = runtimeIdentifiers.IndexOf (';') >= 0 ? "" : runtimeIdentifiers;
 			return Path.Combine (Path.GetDirectoryName (projectPath)!, binOrObj, configuration, platform.ToFramework (), appPathRuntimeIdentifier);
