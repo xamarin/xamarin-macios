@@ -19,6 +19,7 @@ namespace MonoTests.System.Net.Http {
 		public static string XamarinHttpUrl => AssertNetworkConnection ("http://dotnet.microsoft.com/apps/xamarin");
 		public static Uri XamarinUri => new Uri (XamarinUrl);
 		public static string StatsUrl => AssertNetworkConnection ("https://api.imgur.com/2/stats");
+		public static string EchoClientCertificateUrl = "https://corefx-net-tls.azurewebsites.net/EchoClientCertificate.ashx";
 
 		public static string [] HttpsUrls => new [] {
 			MicrosoftUrl,
