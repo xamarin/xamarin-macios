@@ -206,7 +206,7 @@ namespace Xamarin.MacDev.Tasks {
 				PObject? value;
 
 				if (item is PDictionary)
-					value = MergeEntitlementDictionary ((PDictionary) item, profile, key);
+					value = MergeEntitlementDictionary ((PDictionary) item, profile);
 				else if (item is PString)
 					value = MergeEntitlementString ((PString) item, profile, false, key);
 				else if (item is PArray)
@@ -224,7 +224,7 @@ namespace Xamarin.MacDev.Tasks {
 			return null;
 		}
 
-		PDictionary MergeEntitlementDictionary (PDictionary dict, MobileProvision? profile, string? key)
+		PDictionary MergeEntitlementDictionary (PDictionary dict, MobileProvision? profile)
 		{
 			var result = new PDictionary ();
 
@@ -232,7 +232,7 @@ namespace Xamarin.MacDev.Tasks {
 				PObject? value = item.Value;
 
 				if (value is PDictionary)
-					value = MergeEntitlementDictionary ((PDictionary) value, profile, item.Key);
+					value = MergeEntitlementDictionary ((PDictionary) value, profile);
 				else if (value is PString)
 					value = MergeEntitlementString ((PString) value, profile, false, item.Key);
 				else if (value is PArray)
@@ -358,7 +358,7 @@ namespace Xamarin.MacDev.Tasks {
 					if (key == "com.apple.developer.icloud-container-environment")
 						value = new PString ("Development");
 					else if (value is PDictionary)
-						value = MergeEntitlementDictionary ((PDictionary) value, profile, key);
+						value = MergeEntitlementDictionary ((PDictionary) value, profile);
 					else if (value is PString)
 						value = MergeEntitlementString ((PString) value, profile, item.Key == ApplicationIdentifierKey, key);
 					else if (value is PArray)
@@ -393,7 +393,7 @@ namespace Xamarin.MacDev.Tasks {
 				}
 
 				if (value is PDictionary)
-					value = MergeEntitlementDictionary ((PDictionary) value, profile, key);
+					value = MergeEntitlementDictionary ((PDictionary) value, profile);
 				else if (value is PString)
 					value = MergeEntitlementString ((PString) value, profile, key == ApplicationIdentifierKey, key);
 				else if (value is PArray)
