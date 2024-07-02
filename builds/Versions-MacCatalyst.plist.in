@@ -25,6 +25,7 @@
 			<string>16.4</string>
 			<string>17.0</string>
 			<string>17.2</string>
+			<string>18.0</string>
 		</array>
 	</dict>
 	<key>SupportedTargetPlatformVersions</key>
@@ -51,6 +52,7 @@
 			<string>16.4</string>
 			<string>17.0</string>
 			<string>17.2</string>
+			<string>18.0</string>
 		</array>
 	</dict>
 	<key>MacCatalystVersionMap</key>

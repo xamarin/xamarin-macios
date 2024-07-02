@@ -73,6 +73,8 @@ namespace Introspection {
 			case "CIConvertLabToRGB":
 			case "CIConvertRGBtoLab":
 				return true;
+			case "CIAreaAlphaWeightedHistogram": // not in Xcode 16 b1 or b2 headers.
+				return true;
 			}
 		}
 

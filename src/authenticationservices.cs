@@ -2260,7 +2260,7 @@ namespace AuthenticationServices {
 
 	[NoWatch, NoTV, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[BaseType (typeof (NSObject))]
-	interface ASAuthorizationPublicKeyCredentialLargeBlobRegistrationOutput {
+	interface ASAuthorizationPublicKeyCredentialLargeBlobRegistrationOutput : NSCopying, NSSecureCoding {
 		[Export ("isSupported")]
 		bool IsSupported { get; }
 	}

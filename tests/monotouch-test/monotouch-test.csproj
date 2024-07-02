@@ -264,7 +264,7 @@
     <Content Include="access-granted.html" />
   </ItemGroup>
   <ItemGroup>
-    <InterfaceDefinition Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.WatchOS'" Include="LaunchScreen.storyboard" />
+    <InterfaceDefinition Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.WatchOS' And '$(TargetFrameworkIdentifier)' != 'Xamarin.TVOS'" Include="LaunchScreen.storyboard" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EmbeddedResources\EmbeddedResources.csproj">

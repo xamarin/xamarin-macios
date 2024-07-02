@@ -242,9 +242,9 @@ else
 $(eval $(call Template,watchsimulator,WATCHSIMULATOR,x86_64,WatchSimulator,-mwatchos-simulator-version-min=$(MIN_WATCH_OS_VERSION) -isysroot $(SIMULATORWATCH_SDK)))
 endif
 ifdef WATCHOS_SUPPORTS_32BIT_DEVICE_ARCHITECTURES
-$(eval $(call Template,watchos,WATCHOS,armv7k arm64_32,WatchOS,-mwatchos-version-min=$(MIN_WATCHOS_SDK_VERSION) -fembed-bitcode -isysroot $(DEVICEWATCH_SDK)))
+$(eval $(call Template,watchos,WATCHOS,armv7k arm64_32,WatchOS,-mwatchos-version-min=$(MIN_WATCHOS_SDK_VERSION) -isysroot $(DEVICEWATCH_SDK)))
 else
-$(eval $(call Template,watchos,WATCHOS,arm64_32,WatchOS,-mwatchos-version-min=$(MIN_WATCHOS_SDK_VERSION) -fembed-bitcode -isysroot $(DEVICEWATCH_SDK)))
+$(eval $(call Template,watchos,WATCHOS,arm64_32,WatchOS,-mwatchos-version-min=$(MIN_WATCHOS_SDK_VERSION) -isysroot $(DEVICEWATCH_SDK)))
 endif
 endif
 ifdef INCLUDE_MAC

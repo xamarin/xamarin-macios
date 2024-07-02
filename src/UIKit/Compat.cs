@@ -9,6 +9,8 @@
 //
 
 using System;
+using System.ComponentModel;
+
 using CoreGraphics;
 using Foundation;
 using ObjCRuntime;
@@ -204,6 +206,21 @@ namespace UIKit {
 		public virtual void TextContainerChangedTextView (NSTextContainer container)
 		{
 			throw new NotSupportedException ();
+		}
+	}
+#endif
+
+#if !XAMCORE_5_0 && IOS
+	public partial class UIDocViewController {
+		[Obsolete ("Do not use; this constructor doesn't work.")]
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		public UIDocViewController ()
+			: base (ThrowInvalidOperationException ())
+		{
+		}
+		static NSObjectFlag ThrowInvalidOperationException ()
+		{
+			throw new InvalidOperationException ("Do not call this constructor, it may crash the app.");
 		}
 	}
 #endif

@@ -165,6 +165,9 @@ namespace Xamarin.MacDev.Tasks {
 			if (watch)
 				yield return "watch";
 
+			if ((devices & IPhoneDeviceType.TV) != 0)
+				yield return "tv";
+
 			yield break;
 		}
 

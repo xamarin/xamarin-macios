@@ -129,6 +129,13 @@ namespace Xamarin.Bundler {
 					throw ErrorHelper.CreateError (26, ex, Errors.MX0026, "--nowarn", ex.Message);
 				}
 			});
+			options.Add ("warn:", "An optional comma-separated list of warning codes to report as warnings (if no warnings are specified all warnings reported).", v => {
+				try {
+					ErrorHelper.ParseWarningLevel (ErrorHelper.WarningLevel.Warning, v);
+				} catch (Exception ex) {
+					throw ErrorHelper.CreateError (26, ex, Errors.MX0026, "--warn", ex.Message);
+				}
+			});
 			options.Add ("coop:", "If the GC should run in cooperative mode.", v => { app.EnableCoopGC = ParseBool (v, "coop"); }, hidden: true);
 			options.Add ("sgen-conc", "Enable the *experimental* concurrent garbage collector.", v => { app.EnableSGenConc = true; });
 			options.Add ("marshal-objectivec-exceptions:", "Specify how Objective-C exceptions should be marshalled. Valid values: default, unwindmanagedcode, throwmanagedexception, abort and disable. The default depends on the target platform (on watchOS the default is 'throwmanagedexception', while on all other platforms it's 'disable').", v => {

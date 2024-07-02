@@ -507,7 +507,8 @@ namespace Xamarin.Bundler {
 
 		void GetBitcodeCompilerFlags (CompilerFlags flags)
 		{
-			flags.AddOtherFlag (App.EnableMarkerOnlyBitCode ? "-fembed-bitcode-marker" : "-fembed-bitcode");
+			if (Driver.XcodeVersion.Major < 14)
+				flags.AddOtherFlag (App.EnableMarkerOnlyBitCode ? "-fembed-bitcode-marker" : "-fembed-bitcode");
 		}
 
 		protected override async Task ExecuteAsync ()
