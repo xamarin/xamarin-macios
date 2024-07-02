@@ -530,6 +530,11 @@
 			<!-- Suppress trimmer warnings unless we're trimming all assemblies -->
 			<SuppressTrimAnalysisWarnings Condition="'$(SuppressTrimAnalysisWarnings)' == '' And '$(TrimMode)' == 'full'">false</SuppressTrimAnalysisWarnings>
 			<SuppressTrimAnalysisWarnings Condition="'$(SuppressTrimAnalysisWarnings)' == ''">true</SuppressTrimAnalysisWarnings>
+			<!--
+				In the case of NativeAOT builds, the trim warnings will be produced either by the ILLink roslyn analyzer in Debug builds
+				or by the ILC when publishing. We want to suppress the ILLink warnings in all build configurations to avoid duplicates.
+			-->
+			<SuppressTrimAnalysisWarnings Condition="'$(PublishAot)' == 'true'">true</SuppressTrimAnalysisWarnings>
 
 			<!-- Pass the custom options to our custom steps -->
 			<_CustomLinkerOptionsFile>$([System.IO.Path]::GetFullPath('$(IntermediateOutputPath)custom-linker-options.txt'))</_CustomLinkerOptionsFile>
@@ -651,6 +656,9 @@
 
 			<!-- If we're using NativeAOT, tell ILLink to not remove dependency attributes (DynamicDependencyAttribute), because NativeAOT's trimmer also needs to see them. -->
 			<_ExtraTrimmerArgs Condition="'$(_UseNativeAot)' == 'true'">$(_ExtraTrimmerArgs) --keep-dep-attributes</_ExtraTrimmerArgs>
+
+			<!-- Ensure ILLink respects the value of SuppressTrimAnalysisWarnings -->
+			<_ExtraTrimmerArgs Condition="'$(SuppressTrimAnalysisWarnings)' == 'true'">$(_ExtraTrimmerArgs) --notrimwarn</_ExtraTrimmerArgs>
 
 			<!-- We always want the linker to process debug symbols, even when building in Release mode, because the AOT compiler uses the managed debug symbols to output DWARF debugging symbols -->
 			<TrimmerRemoveSymbols Condition="'$(TrimmerRemoveSymbols)' == ''">false</TrimmerRemoveSymbols>
