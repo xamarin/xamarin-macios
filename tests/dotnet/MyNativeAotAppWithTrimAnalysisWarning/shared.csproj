@@ -3,14 +3,16 @@
 	<PropertyGroup>
 		<OutputType>Exe</OutputType>
 
-		<ApplicationTitle>MySimpleAppWithTrimAnalysisWarning</ApplicationTitle>
-		<ApplicationId>com.xamarin.mysimpleappwithtrimanalysiswarning</ApplicationId>
+		<ApplicationTitle>MyNativeAotAppWithTrimAnalysisWarning</ApplicationTitle>
+		<ApplicationId>com.xamarin.mynativeaotappwithtrimanalysiswarning</ApplicationId>
 		<ApplicationVersion>3.14</ApplicationVersion>
+
+		<PublishAot>true</PublishAot>
 	</PropertyGroup>
 
 	<Import Project="../../common/shared-dotnet.csproj" />
 
 	<ItemGroup>
-		<Compile Include="../*.cs" />
+		<Compile Include="$(MSBuildThisFileDirectory)AppDelegate.cs" />
 	</ItemGroup>
 </Project>

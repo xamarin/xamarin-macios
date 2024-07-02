@@ -1651,16 +1651,15 @@ namespace Xamarin.Tests {
 		[TestCase (ApplePlatform.iOS, "ios-arm64")]
 		[TestCase (ApplePlatform.iOS, "iossimulator-arm64")]
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64")]
-		public void PublishAotWithTrimAnalyzerWarningBuild (ApplePlatform platform, string runtimeIdentifiers)
+		public void BuildMyNativeAotAppWithTrimAnalysisWarning (ApplePlatform platform, string runtimeIdentifiers)
 		{
-			var project = "MySimpleAppWithTrimAnalysisWarning";
+			var project = "MyNativeAotAppWithTrimAnalysisWarning";
 			Configuration.IgnoreIfIgnoredPlatform (platform);
 			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
 
 			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
 			Clean (project_path);
 			var properties = GetDefaultProperties (runtimeIdentifiers);
-			properties ["PublishAot"] = "true";
 			var rv = DotNet.AssertBuild (project_path, properties);
 
 			// We expect to get a warning from the trim analzyer in Debug build

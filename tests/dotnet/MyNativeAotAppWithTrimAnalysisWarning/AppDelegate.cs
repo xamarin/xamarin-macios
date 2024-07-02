@@ -11,6 +11,9 @@ namespace MySimpleApp {
 
 			Console.WriteLine (Environment.GetEnvironmentVariable ("MAGIC_WORD"));
 
+			var myObject = new MyClass (typeof (MyClass));
+			Console.WriteLine (myObject.X);
+
 			return args.Length;
 		}
 	}

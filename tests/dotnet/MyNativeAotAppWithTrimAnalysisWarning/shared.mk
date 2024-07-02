@@ -1,3 +1,3 @@
 TOP=../../../..
-TESTNAME=MySimpleAppWithTrimAnalysisWarning
+TESTNAME=MyNativeAotAppWithTrimAnalysisWarning
 include $(TOP)/tests/common/shared-dotnet.mk
