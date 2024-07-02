@@ -989,6 +989,14 @@ namespace Introspection {
 					return TestRuntime.CheckXcodeVersion (14, 3);
 				}
 				break;
+			case "ASAuthorizationPublicKeyCredentialLargeBlobRegistrationOutput":
+				// Added protocol conformance to NSCopying/NSSecureCoding in Xcode 16.0
+				switch (selectorName) {
+				case "copyWithZone:":
+				case "encodeWithCoder:":
+					return !TestRuntime.CheckXcodeVersion (16, 0);
+				}
+				break;
 			}
 
 			// old binding mistake
