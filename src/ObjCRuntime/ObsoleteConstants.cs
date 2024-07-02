@@ -48,6 +48,8 @@ namespace ObjCRuntime {
 
 		internal const string NewsstandKitRemoved = "The NewsstandKit framework has been removed from iOS.";
 
+		internal const string AssetsLibraryRemoved = "The AssetsLibrary framework has been removed from iOS, use the 'Photos' API instead.";
+
 		internal const string TypeRemovedAllPlatforms = "This type has been removed from all platforms.";
 	}
 }

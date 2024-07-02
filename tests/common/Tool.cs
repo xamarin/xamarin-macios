@@ -49,6 +49,11 @@ namespace Xamarin.Tests {
 					case "The class 'NewsstandKit.NKAssetDownload' will not be registered because the NewsstandKit framework has been removed from the iOS SDK.":
 					case "The class 'NewsstandKit.NKLibrary' will not be registered because the NewsstandKit framework has been removed from the iOS SDK.":
 					case "The class 'NewsstandKit.NKIssue' will not be registered because the NewsstandKit framework has been removed from the iOS SDK.":
+					case "The class 'AssetsLibrary.ALAssetRepresentation' will not be registered because the AssetsLibrary framework has been removed from the iOS SDK.":
+					case "The class 'AssetsLibrary.ALAssetsFilter' will not be registered because the AssetsLibrary framework has been removed from the iOS SDK.":
+					case "The class 'AssetsLibrary.ALAssetsGroup' will not be registered because the AssetsLibrary framework has been removed from the iOS SDK.":
+					case "The class 'AssetsLibrary.ALAssetsLibrary' will not be registered because the AssetsLibrary framework has been removed from the iOS SDK.":
+					case "The class 'AssetsLibrary.ALAsset' will not be registered because the AssetsLibrary framework has been removed from the iOS SDK.":
 						return false;
 					}
 					break;

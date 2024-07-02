@@ -16,9 +16,6 @@ using UIKit;
 using ObjCRuntime;
 using Photos;
 using CoreGraphics;
-#if HAS_ASSETSLIBRARY
-using AssetsLibrary;
-#endif
 using NUnit.Framework;
 using Xamarin.Utils;
 
@@ -31,17 +28,9 @@ namespace MonoTouchFixtures.Photos {
 		[SetUp]
 		public void Setup ()
 		{
-			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 8, 0, throwIfOtherPlatform: false);
-#if HAS_ASSETSLIBRARY
-			if (ALAssetsLibrary.AuthorizationStatus != ALAuthorizationStatus.Authorized)
-				Assert.Inconclusive ("Requires access to the photo library");
-#elif __MACCATALYST__
-			TestRuntime.AssertSystemVersion (ApplePlatform.MacCatalyst, 14, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertXcodeVersion (12, 0);
 			if (PHPhotoLibrary.GetAuthorizationStatus (PHAccessLevel.ReadWrite) != PHAuthorizationStatus.Authorized)
 				Assert.Inconclusive ("Requires access to the photo library");
-#else
-#error Add authorization check for the platform
-#endif
 		}
 
 		[Test]

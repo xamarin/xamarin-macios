@@ -972,6 +972,8 @@ namespace Introspection {
 				return m.DeclaringType.Name == "NSFileProviderManager";
 			case "Synchronize": // comes from a protocol implementation
 				return m.DeclaringType.Name == "NSTextContentManager";
+			case "AccommodatePresentedItemEviction": // comes from a protocol implementation
+				return m.DeclaringType.Name == "NSFilePresenter" || m.DeclaringType.Name == "UIDocument";
 			}
 			return false;
 		}

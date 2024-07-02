@@ -4879,11 +4879,13 @@ public partial class Generator : IMemberGatherer {
 		WriteDocumentation (type);
 
 		PrintAttributes (type, platform: true, preserve: true, advice: true);
-		print ("[Protocol (Name = \"{1}\", WrapperType = typeof ({0}Wrapper){2}{3})]",
+		print ("[Protocol (Name = \"{1}\", WrapperType = typeof ({0}Wrapper){2}{3}{4})]",
 			   TypeName,
 			   protocol_name,
 			   protocolAttribute.IsInformal ? ", IsInformal = true" : string.Empty,
-			   protocolAttribute.FormalSince is not null ? $", FormalSince = \"{protocolAttribute.FormalSince}\"" : string.Empty);
+			   protocolAttribute.FormalSince is not null ? $", FormalSince = \"{protocolAttribute.FormalSince}\"" : string.Empty,
+			   backwardsCompatibleCodeGeneration ? string.Empty : ", BackwardsCompatibleCodeGeneration = false"
+			   );
 
 		var sb = new StringBuilder ();
 

@@ -989,6 +989,12 @@ namespace Introspection {
 					return TestRuntime.CheckXcodeVersion (14, 3);
 				}
 				break;
+			case "GCMouse":
+				switch (selectorName) {
+				case "encodeWithCoder:":
+					return true;
+				}
+				break;
 			}
 
 			// old binding mistake

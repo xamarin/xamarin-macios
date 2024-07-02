@@ -2478,9 +2478,17 @@ namespace GameKit {
 	[BaseType (typeof (GKChallenge))]
 	interface GKScoreChallenge {
 
+		[Deprecated (PlatformName.iOS, 17, 4, message: "Use 'GKScoreChallenge.LeaderboardEntry' instead.")]
+		[Deprecated (PlatformName.MacOSX, 14, 4, message: "Use 'GKScoreChallenge.LeaderboardEntry' instead.")]
+		[Deprecated (PlatformName.TvOS, 17, 4, message: "Use 'GKScoreChallenge.LeaderboardEntry' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 17, 4, message: "Use 'GKScoreChallenge.LeaderboardEntry' instead.")]
 		[Export ("score", ArgumentSemantic.Retain)]
 		[NullAllowed]
 		GKScore Score { get; }
+
+		[TV (17, 4), Mac (14, 4), iOS (17, 4), MacCatalyst (17, 4)]
+		[NullAllowed, Export ("leaderboardEntry", ArgumentSemantic.Retain)]
+		GKLeaderboardEntry LeaderboardEntry { get; }
 	}
 
 	[NoWatch]

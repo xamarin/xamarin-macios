@@ -1,0 +1,8 @@
+!deprecated-attribute-missing! SCNetworkReachabilityCreateWithAddress missing a [Deprecated] attribute
+!deprecated-attribute-missing! SCNetworkReachabilityCreateWithAddressPair missing a [Deprecated] attribute
+!deprecated-attribute-missing! SCNetworkReachabilityCreateWithName missing a [Deprecated] attribute
+!deprecated-attribute-missing! SCNetworkReachabilityGetFlags missing a [Deprecated] attribute
+!deprecated-attribute-missing! SCNetworkReachabilityScheduleWithRunLoop missing a [Deprecated] attribute
+!deprecated-attribute-missing! SCNetworkReachabilitySetCallback missing a [Deprecated] attribute
+!deprecated-attribute-missing! SCNetworkReachabilitySetDispatchQueue missing a [Deprecated] attribute
+!deprecated-attribute-missing! SCNetworkReachabilityUnscheduleFromRunLoop missing a [Deprecated] attribute

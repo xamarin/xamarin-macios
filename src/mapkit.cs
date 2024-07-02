@@ -378,6 +378,17 @@ namespace MapKit {
 		[Export ("openMapsWithItems:launchOptions:fromScene:completionHandler:")]
 		void OpenMaps (MKMapItem [] mapItems, [NullAllowed] NSDictionary launchOptions, [NullAllowed] UIScene fromScene, [NullAllowed] Action<NSError> completionHandler);
 
+		[NoWatch, NoTV, NoiOS, NoMacCatalyst, Mac (14, 4)]
+		[Async]
+		[Export ("openInMapsWithLaunchOptions:completionHandler:")]
+		void OpenInMaps ([NullAllowed] NSDictionary launchOptions, [NullAllowed] Action<bool> completion);
+
+		[NoWatch, NoTV, NoiOS, NoMacCatalyst, Mac (14, 4)]
+		[Static]
+		[Async]
+		[Export ("openMapsWithItems:launchOptions:completionHandler:")]
+		void OpenMaps (MKMapItem [] mapItems, [NullAllowed] NSDictionary launchOptions, [NullAllowed] Action<bool> completion);
+
 		[NoTV]
 		[MacCatalyst (13, 1)]
 		[Field ("MKLaunchOptionsDirectionsModeKey"), Internal]

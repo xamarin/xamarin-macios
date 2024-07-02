@@ -1,0 +1,47 @@
+!missing-field! UITextContentTypeCellularEID not bound
+!missing-field! UITextContentTypeCellularIMEI not bound
+!missing-protocol! UIItemProviderReadingAugmentationDesignating not bound
+!missing-protocol! UIItemProviderReadingAugmentationProviding not bound
+!missing-protocol-member! UITextInput::caretTransformForPosition: not found
+!missing-selector! NSItemProvider::_availableTypes not bound
+!missing-selector! UIControl::performPrimaryAction not bound
+!missing-selector! UIMenu::displayPreferences not bound
+!missing-selector! UIMenu::setDisplayPreferences: not bound
+!missing-selector! UIMenuDisplayPreferences::maximumNumberOfTitleLines not bound
+!missing-selector! UIMenuDisplayPreferences::setMaximumNumberOfTitleLines: not bound
+!missing-selector! UIScrollView::bouncesHorizontally not bound
+!missing-selector! UIScrollView::bouncesVertically not bound
+!missing-selector! UIScrollView::contentAlignmentPoint not bound
+!missing-selector! UIScrollView::isScrollAnimating not bound
+!missing-selector! UIScrollView::isZoomAnimating not bound
+!missing-selector! UIScrollView::setBouncesHorizontally: not bound
+!missing-selector! UIScrollView::setBouncesVertically: not bound
+!missing-selector! UIScrollView::setContentAlignmentPoint: not bound
+!missing-selector! UIScrollView::setTransfersHorizontalScrollingToParent: not bound
+!missing-selector! UIScrollView::setTransfersVerticalScrollingToParent: not bound
+!missing-selector! UIScrollView::stopScrollingAndZooming not bound
+!missing-selector! UIScrollView::transfersHorizontalScrollingToParent not bound
+!missing-selector! UIScrollView::transfersVerticalScrollingToParent not bound
+!missing-selector! UIScrollView::withScrollIndicatorsShownForContentOffsetChanges: not bound
+!missing-selector! UITextCursorDropPositionAnimator::animateAlongsideChanges:completion: not bound
+!missing-selector! UITextCursorDropPositionAnimator::cursorView not bound
+!missing-selector! UITextCursorDropPositionAnimator::initWithTextCursorView:textInput: not bound
+!missing-selector! UITextCursorDropPositionAnimator::placeCursorAtPosition:animated: not bound
+!missing-selector! UITextCursorDropPositionAnimator::setCursorVisible:animated: not bound
+!missing-selector! UITextCursorDropPositionAnimator::textInput not bound
+!missing-selector! UITextSelectionRect::transform not bound
+!missing-type! UIMenuDisplayPreferences not bound
+!missing-type! UIStandardTextCursorView not bound
+!missing-type! UITextCursorDropPositionAnimator not bound
+!unknown-field! UIPasteboardDetectionPatternCalendarEvent bound
+!unknown-field! UIPasteboardDetectionPatternEmailAddress bound
+!unknown-field! UIPasteboardDetectionPatternFlightNumber bound
+!unknown-field! UIPasteboardDetectionPatternLink bound
+!unknown-field! UIPasteboardDetectionPatternMoneyAmount bound
+!unknown-field! UIPasteboardDetectionPatternNumber bound
+!unknown-field! UIPasteboardDetectionPatternPhoneNumber bound
+!unknown-field! UIPasteboardDetectionPatternPostalAddress bound
+!unknown-field! UIPasteboardDetectionPatternProbableWebSearch bound
+!unknown-field! UIPasteboardDetectionPatternProbableWebURL bound
+!unknown-field! UIPasteboardDetectionPatternShipmentTrackingNumber bound
+!unknown-native-enum! UIPasteControlDisplayMode bound

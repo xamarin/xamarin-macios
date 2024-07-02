@@ -5,3 +5,5 @@
 !missing-protocol-member! MTLIndirectRenderCommand::setMeshBuffer:offset:atIndex: not found
 !missing-protocol-member! MTLIndirectRenderCommand::setObjectBuffer:offset:atIndex: not found
 !missing-protocol-member! MTLIndirectRenderCommand::setObjectThreadgroupMemoryLength:atIndex: not found
+!missing-protocol-member! MTLResource::setOwnerWithIdentity: not found
+!missing-protocol-member! MTLSharedEvent::waitUntilSignaledValue:timeoutMS: not found

@@ -36,8 +36,6 @@
 !missing-pinvoke! CGDisplayCopyAllDisplayModes is not bound
 !missing-pinvoke! CGDisplayCopyColorSpace is not bound
 !missing-pinvoke! CGDisplayCopyDisplayMode is not bound
-!missing-pinvoke! CGDisplayCreateImage is not bound
-!missing-pinvoke! CGDisplayCreateImageForRect is not bound
 !missing-pinvoke! CGDisplayFade is not bound
 !missing-pinvoke! CGDisplayGetDrawingContext is not bound
 !missing-pinvoke! CGDisplayIsActive is not bound
