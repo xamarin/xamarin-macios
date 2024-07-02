@@ -195,6 +195,14 @@ namespace Introspection {
 				case "PKContact":
 				case "TKSmartCardPinFormat":
 					return true;
+				// Xcode 16, conformance not in headers
+				case "PKAddCarKeyPassConfiguration":
+				case "PKAddSecureElementPassConfiguration":
+				case "PKAddShareablePassConfiguration":
+				case "ASAuthorizationPublicKeyCredentialLargeBlobAssertionInput":
+				case "ASAuthorizationPublicKeyCredentialLargeBlobAssertionOutput":
+				case "ASAuthorizationPublicKeyCredentialLargeBlobRegistrationInput":
+					return true;
 				}
 				break;
 			case "NSMutableCopying":
@@ -372,6 +380,23 @@ namespace Introspection {
 				case "TKSmartCardUserInteractionForSecurePinChange":
 				case "TKSmartCardUserInteractionForSecurePinVerification":
 					return true;
+				// Xcode 16, conformance not in headers
+				case "QLFileThumbnailRequest":
+				case "QLThumbnailReply":
+				case "PHPickerResult":
+				case "ASAuthorizationPublicKeyCredentialLargeBlobAssertionInput":
+				case "ASAuthorizationPublicKeyCredentialLargeBlobAssertionOutput":
+				case "ASAuthorizationPublicKeyCredentialLargeBlobRegistrationInput":
+				case "UIGestureRecognizer":
+				case "UIRotationGestureRecognizer":
+				case "UILongPressGestureRecognizer":
+				case "UITapGestureRecognizer":
+				case "UIPanGestureRecognizer":
+				case "UIPinchGestureRecognizer":
+				case "UISwipeGestureRecognizer":
+				case "UIScreenEdgePanGestureRecognizer":
+				case "UIHoverGestureRecognizer":
+					return true;
 				}
 				break;
 			case "NSSecureCoding":
@@ -546,6 +571,23 @@ namespace Introspection {
 				case "TKSmartCardUserInteractionForSecurePinChange":
 				case "TKSmartCardUserInteractionForSecurePinVerification":
 					return true;
+				// Xcode 16, conformance not in headers
+				case "QLFileThumbnailRequest":
+				case "QLThumbnailReply":
+				case "PHPickerResult":
+				case "ASAuthorizationPublicKeyCredentialLargeBlobAssertionInput":
+				case "ASAuthorizationPublicKeyCredentialLargeBlobAssertionOutput":
+				case "ASAuthorizationPublicKeyCredentialLargeBlobRegistrationInput":
+				case "UIGestureRecognizer":
+				case "UIRotationGestureRecognizer":
+				case "UILongPressGestureRecognizer":
+				case "UITapGestureRecognizer":
+				case "UIPanGestureRecognizer":
+				case "UIPinchGestureRecognizer":
+				case "UISwipeGestureRecognizer":
+				case "UIScreenEdgePanGestureRecognizer":
+				case "UIHoverGestureRecognizer":
+					return true;
 				}
 				break;
 			// conformance added in Xcode 8 (iOS 10 / macOS 10.12)
@@ -635,6 +677,11 @@ namespace Introspection {
 				break;
 			case "QLPreviewItem":
 				if (type.Name == "NSUrl")
+					return true;
+				break;
+			case "NSTextAttachmentContainer":
+				// NSTextAttachment implementing the NSTextAttachmentContainer protocol was deprecated in Xcode 16 beta 1.
+				if (type.Name == "NSTextAttachment")
 					return true;
 				break;
 			}
