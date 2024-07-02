@@ -1,34 +1,34 @@
 <Dependencies>
   <ProductDependencies>
-    <Dependency Name="VS.Tools.Net.Core.SDK.Resolver" Version="9.0.100-preview.7.24351.1">
+    <Dependency Name="VS.Tools.Net.Core.SDK.Resolver" Version="9.0.100-preview.7.24352.3">
       <Uri>https://github.com/dotnet/sdk</Uri>
-      <Sha>02c06d398a1a8fe2e28e6d3c4580e1bcc299b3a6</Sha>
+      <Sha>110670f4d3cea63521f9460a42db1123810b51f5</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NET.ILLink" Version="9.0.0-alpha.1.23556.4">
       <Uri>https://github.com/dotnet/runtime</Uri>
       <Sha>cf47d9ff6827a3e1d6f2acbf925cd618418f20dd</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.ILLink.Tasks" Version="9.0.0-preview.7.24328.10" CoherentParentDependency="VS.Tools.Net.Core.SDK.Resolver">
+    <Dependency Name="Microsoft.NET.ILLink.Tasks" Version="9.0.0-preview.7.24351.4" CoherentParentDependency="VS.Tools.Net.Core.SDK.Resolver">
       <Uri>https://github.com/dotnet/runtime</Uri>
-      <Sha>a900bbf6fcf33fa2e799ed599ab86e00d6124c05</Sha>
+      <Sha>5044e936ce154fcf3223cbe6f5e2ad66605cea9f</Sha>
     </Dependency>
     <!-- Set TRACKING_DOTNET_RUNTIME_SEPARATELY to something in Make.config if removing the CoherentParentDependency on VS.Tools.Net.Core.SDK.Resolver -->
-    <Dependency Name="Microsoft.NETCore.App.Ref" Version="9.0.0-preview.7.24328.10" CoherentParentDependency="VS.Tools.Net.Core.SDK.Resolver">
+    <Dependency Name="Microsoft.NETCore.App.Ref" Version="9.0.0-preview.7.24351.4" CoherentParentDependency="VS.Tools.Net.Core.SDK.Resolver">
       <Uri>https://github.com/dotnet/runtime</Uri>
-      <Sha>a900bbf6fcf33fa2e799ed599ab86e00d6124c05</Sha>
+      <Sha>5044e936ce154fcf3223cbe6f5e2ad66605cea9f</Sha>
     </Dependency>
     <!-- This is required for our test apps to build; in some cases Microsoft.AspNetCore.App is pulled in, and when building test apps the build needs to be able to resolve that -->
-    <Dependency Name="Microsoft.AspNetCore.App.Ref" Version="9.0.0-preview.7.24328.7" CoherentParentDependency="VS.Tools.Net.Core.SDK.Resolver">
+    <Dependency Name="Microsoft.AspNetCore.App.Ref" Version="9.0.0-preview.7.24329.2" CoherentParentDependency="VS.Tools.Net.Core.SDK.Resolver">
       <Uri>https://github.com/dotnet/aspnetcore</Uri>
-      <Sha>77994c64cee73e0093fe25cd434bee8bd2580b4e</Sha>
+      <Sha>d301328737c4912b95f236c4b349cf46ef7a473a</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NET.Workload.Emscripten.Current.Manifest-9.0.100.Transport" Version="9.0.0-preview.7.24319.4" CoherentParentDependency="Microsoft.NETCore.App.Ref">
       <Uri>https://github.com/dotnet/emsdk</Uri>
       <Sha>ffe9afdc046cf7a6f82cc7c5796aade54047af64</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.DotNet.Cecil" Version="0.11.4-alpha.24313.1" CoherentParentDependency="Microsoft.NETCore.App.Ref">
+    <Dependency Name="Microsoft.DotNet.Cecil" Version="0.11.5-alpha.24324.1" CoherentParentDependency="Microsoft.NETCore.App.Ref">
       <Uri>https://github.com/dotnet/cecil</Uri>
-      <Sha>d145726036eb9c09a0e3cf03c4f70effd3b31cd7</Sha>
+      <Sha>7e4af02521473d89d6144b3da58fef253e498974</Sha>
     </Dependency>
     <!-- This is a subscription of the .NET 8 versions of our packages -->
     <Dependency Name="Microsoft.MacCatalyst.Sdk" Version="17.2.8078">
