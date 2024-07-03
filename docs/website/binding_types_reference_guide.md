@@ -2239,6 +2239,19 @@ Call (NSRunLoopModeExtensions.GetValue (constant)); // will return 1000
 
 If no `null` value is present then an `ArgumentNullException` will be thrown.
 
+### BackingFieldTypeAttribute
+
+Typically the Objective-C type for each enum element in a strongly typed enum
+is an `NSString`, but this attribute makes it possible to select another
+backing type for the backing field.
+
+Currently, these types are supported:
+
+* `nint`
+* `nuint`
+* `NSNumber`
+* `NSString` (this is the default if none is specified)
+
 ## Global attributes
 
 Global attributes are either applied using the `[assembly:]` attribute modifier

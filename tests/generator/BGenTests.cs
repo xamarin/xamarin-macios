@@ -1625,5 +1625,27 @@ namespace GeneratorTests {
 			bgen.AssertNoWarnings ();
 		}
 #endif
+
+		[Test]
+		public void BackingFieldType ()
+		{
+			var bgen = BuildFile (Profile.iOS, true, true, "tests/backingfieldtype.cs");
+
+			var nsNumberGetConstant = bgen.ApiAssembly.MainModule.GetType ("BackingField", "NSNumberFieldTypeExtensions").Methods.First ((v) => v.Name == "GetConstant");
+			Assert.AreEqual ("Foundation.NSNumber", nsNumberGetConstant.ReturnType.FullName, "NSNumber #1");
+			var nsNumberGetValue = bgen.ApiAssembly.MainModule.GetType ("BackingField", "NSNumberFieldTypeExtensions").Methods.First ((v) => v.Name == "GetValue");
+			Assert.AreEqual ("Foundation.NSNumber", nsNumberGetValue.Parameters [0].ParameterType.FullName, "NSNumber #2");
+
+			var nsNSIntegerGetConstant = bgen.ApiAssembly.MainModule.GetType ("BackingField", "NSIntegerFieldTypeExtensions").Methods.First ((v) => v.Name == "GetConstant");
+			Assert.AreEqual ("System.Nullable`1<System.IntPtr>", nsNSIntegerGetConstant.ReturnType.FullName, "NSInteger #1");
+			var nsNSIntegerGetValue = bgen.ApiAssembly.MainModule.GetType ("BackingField", "NSIntegerFieldTypeExtensions").Methods.First ((v) => v.Name == "GetValue");
+			Assert.AreEqual ("System.IntPtr", nsNSIntegerGetValue.Parameters [0].ParameterType.FullName, "NSInteger #2");
+
+			var nsNSUIntegerGetConstant = bgen.ApiAssembly.MainModule.GetType ("BackingField", "NSUIntegerFieldTypeExtensions").Methods.First ((v) => v.Name == "GetConstant");
+			Assert.AreEqual ("System.Nullable`1<System.UIntPtr>", nsNSUIntegerGetConstant.ReturnType.FullName, "NSUInteger #1");
+			var nsNSUIntegerGetValue = bgen.ApiAssembly.MainModule.GetType ("BackingField", "NSUIntegerFieldTypeExtensions").Methods.First ((v) => v.Name == "GetValue");
+			Assert.AreEqual ("System.UIntPtr", nsNSUIntegerGetValue.Parameters [0].ParameterType.FullName, "NSUInteger #2");
+		}
+
 	}
 }
