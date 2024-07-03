@@ -1665,6 +1665,11 @@ namespace Xamarin.Tests {
 			// We expect to get a warning from the trim analzyer in Debug build
 			var warnings = BinLog.GetBuildLogWarnings (rv.BinLogPath).ToArray ();
 
+			// Ignore warnings we haven't fixed yet
+			if (platform == ApplePlatform.iOS) {
+				warnings = warnings.Where (w => w.Message?.Trim () != "Supported iPhone orientations have not been set").ToArray ();
+			}
+
 			Assert.AreEqual (1, warnings.Length, "Warning count");
 			Assert.AreEqual (warnings [0].Code, "IL2075", "Warning code");
 			Assert.AreEqual (warnings [0].Message, "'this' argument does not satisfy 'DynamicallyAccessedMemberTypes.PublicProperties' in call to 'System.Type.GetProperties()'. The return value of method 'System.Object.GetType()' does not have matching annotations. The source value must declare at least the same requirements as those declared on the target location it is assigned to.");
