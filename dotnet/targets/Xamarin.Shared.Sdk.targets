@@ -527,9 +527,13 @@
 			<!-- Yep, we want to run ILLink as well, because we need our custom steps to run (NativeAOT sets this to false, so set it back to true) -->
 			<RunILLink Condition="'$(PublishAot)' == 'true'">true</RunILLink>
 
-			<!-- Suppress trimmer warnings unless we're trimming all assemblies -->
-			<SuppressTrimAnalysisWarnings Condition="'$(SuppressTrimAnalysisWarnings)' == '' And '$(TrimMode)' == 'full'">false</SuppressTrimAnalysisWarnings>
-			<SuppressTrimAnalysisWarnings Condition="'$(SuppressTrimAnalysisWarnings)' == ''">true</SuppressTrimAnalysisWarnings>
+			<!--
+				In the case of NativeAOT builds, the trim warnings will be produced either by the ILLink roslyn analyzer in Debug builds
+				or by the ILC when publishing. We want to suppress the ILLink warnings in all build configurations to avoid duplicates.
+				We choose not to suppress the ILLink warnings when TrimMode is set to 'full' and we're not publishing. In this scenario
+				ILC will not run at a later stage of the build.
+			-->
+			<SuppressTrimAnalysisWarnings Condition="'$(PublishAot)' == 'true' And '$(_IsPublishing)' != 'true' And '$(TrimMode)' != 'full'">true</SuppressTrimAnalysisWarnings>
 
 			<!-- Pass the custom options to our custom steps -->
 			<_CustomLinkerOptionsFile>$([System.IO.Path]::GetFullPath('$(IntermediateOutputPath)custom-linker-options.txt'))</_CustomLinkerOptionsFile>
@@ -651,6 +655,9 @@
 
 			<!-- If we're using NativeAOT, tell ILLink to not remove dependency attributes (DynamicDependencyAttribute), because NativeAOT's trimmer also needs to see them. -->
 			<_ExtraTrimmerArgs Condition="'$(_UseNativeAot)' == 'true'">$(_ExtraTrimmerArgs) --keep-dep-attributes</_ExtraTrimmerArgs>
+
+			<!-- Ensure ILLink respects the value of SuppressTrimAnalysisWarnings -->
+			<_ExtraTrimmerArgs Condition="'$(SuppressTrimAnalysisWarnings)' == 'true'">$(_ExtraTrimmerArgs) --notrimwarn</_ExtraTrimmerArgs>
 
 			<!-- We always want the linker to process debug symbols, even when building in Release mode, because the AOT compiler uses the managed debug symbols to output DWARF debugging symbols -->
 			<TrimmerRemoveSymbols Condition="'$(TrimmerRemoveSymbols)' == ''">false</TrimmerRemoveSymbols>
