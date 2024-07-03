@@ -30,13 +30,24 @@ namespace Cecil.Tests {
 						continue;
 					var hasProtocolAttribute = false;
 					var hasProtocolMemberAttribute = false;
+					bool? isBackwardsCompatible = null;
 					foreach (var ca in type.CustomAttributes) {
-						hasProtocolAttribute |= ca.AttributeType.Is ("Foundation", "ProtocolAttribute");
+						if (ca.AttributeType.Is ("Foundation", "ProtocolAttribute")) {
+							hasProtocolAttribute = true;
+							foreach (var prop in ca.Properties) {
+								if (prop.Name == "BackwardsCompatibleCodeGeneration") {
+									isBackwardsCompatible = (bool) prop.Argument.Value;
+									break;
+								}
+							}
+						}
 						hasProtocolMemberAttribute |= ca.AttributeType.Is ("Foundation", "ProtocolMemberAttribute");
 					}
 					if (!hasProtocolAttribute)
 						continue;
 					if (!hasProtocolMemberAttribute)
+						continue; // doesn't need to be compatible if it doesn't have any members.
+					if (isBackwardsCompatible == false)
 						continue;
 					found.Add (type.FullName);
 				}
@@ -1146,7 +1157,12 @@ namespace Cecil.Tests {
 			};
 			var unexpectedFailures = found.Except (expectedFailures);
 
-			Assert.That (unexpectedFailures, Is.Empty, $"{found.Count} new protocols found where 'BackwardsCompatibleCodeGeneration' should be set to 'false'.");
+			if (unexpectedFailures.Any ()) {
+				Console.WriteLine ("Protocols missing 'BackwardsCompatibleCodeGeneration = false':");
+				foreach (var f in unexpectedFailures.OrderBy (v => v))
+					Console.WriteLine ($"    {f}");
+			}
+			Assert.That (unexpectedFailures, Is.Empty, $"{unexpectedFailures.Count ()} new protocols found where 'BackwardsCompatibleCodeGeneration' should be set to 'false'.");
 		}
 	}
 }
