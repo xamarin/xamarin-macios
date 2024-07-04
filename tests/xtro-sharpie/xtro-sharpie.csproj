@@ -109,6 +109,10 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Target Name="AfterBuild">
-    <Copy SourceFiles="\Library\Frameworks\ObjectiveSharpie.framework\Versions\Current\bin\libclang-mono.dylib" DestinationFolder="$(TargetDir)" />
+    <PropertyGroup>
+      <LibClangMonoPath Condition="'$(SHARPIE)' != 'sharpie'">$(SHARPIE)/../bin/x64/Release/libclang-mono.dylib</LibClangMonoPath>
+      <LibClangMonoPath Condition="'$(SHARPIE)' == 'sharpie'">/Library/Frameworks/ObjectiveSharpie.framework/Versions/Current/bin/libclang-mono.dylib</LibClangMonoPath>
+    </PropertyGroup>
+    <Copy SourceFiles="$(LibClangMonoPath)" DestinationFolder="$(TargetDir)" />
   </Target>
 </Project>

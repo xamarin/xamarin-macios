@@ -35,6 +35,7 @@ clean-local::
 
 bin/Debug/xtro-sharpie.exe xtro-report/bin/Debug/xtro-report.exe xtro-sanity/bin/Debug/xtro-sanity.exe build: .stamp-build
 
+.stamp-build: export SHARPIE:=$(SHARPIE)
 .stamp-build: $(wildcard *.cs) pch-info.proj
 	$(Q_BUILD) $(SYSTEM_MSBUILD) $(MSBUILD_VERBOSITY) xtro-sharpie.sln /r /bl:$@.binlog
 	$(Q) touch $@
