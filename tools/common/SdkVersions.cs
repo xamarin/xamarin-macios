@@ -43,10 +43,10 @@ namespace Xamarin {
 		public const string LegacyMinWatchOS = "4.0";
 		public const string LegacyMinTVOS = "11.0";
 
-		public const string MiniOSSimulator = "14.3";
-		public const string MinWatchOSSimulator = "7.1";
-		public const string MinWatchOSCompanionSimulator = "14.5";
-		public const string MinTVOSSimulator = "14.0";
+		public const string MiniOSSimulator = "15.0";
+		public const string MinWatchOSSimulator = "8.0";
+		public const string MinWatchOSCompanionSimulator = "15.0";
+		public const string MinTVOSSimulator = "15.0";
 
 		public const string MaxiOSSimulator = "18.0";
 		public const string MaxWatchOSSimulator = "11.0";
