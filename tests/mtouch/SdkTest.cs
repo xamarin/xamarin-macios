@@ -324,6 +324,7 @@ namespace Xamarin.Linker {
 		[TestCaseSource ("GetWatchOSAssemblies")]
 		public void NoLLVMFailuresInWatchOS (string asm)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (Profile.watchOS.AsPlatform ());
 			MTouch.AssertDeviceAvailable ();
 
 			// Run LLVM on every assembly we ship in watchOS, using the arguments we usually use when done from mtouch.

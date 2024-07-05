@@ -30,6 +30,8 @@ namespace Xamarin.ApiTest {
 			// * BlockLiteral.SetupBlockImpl
 			// * Runtime.get_DynamicRegistrationSupported
 
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
+
 			var dll = Configuration.GetBaseLibrary (profile);
 			var asm = AssemblyDefinition.ReadAssembly (dll);
 

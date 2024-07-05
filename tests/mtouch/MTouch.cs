@@ -40,6 +40,7 @@ namespace Xamarin {
 		[TestCase (Profile.watchOS)]
 		public void Profiling (Profile profile)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
 			using (var mtouch = new MTouchTool ()) {
 				var tmpdir = mtouch.CreateTemporaryDirectory ();
 				MTouchTool ext = null;
@@ -735,6 +736,8 @@ public class B : A {}
 		[TestCase (Profile.watchOS, Profile.tvOS)]
 		public void MT0041 (Profile profile, Profile other)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
+			Configuration.IgnoreIfIgnoredPlatform (other.AsPlatform ());
 			using (var mtouch = new MTouchTool ()) {
 				mtouch.Profile = profile;
 				mtouch.CreateTemporaryApp ();
@@ -794,6 +797,8 @@ public class B : A {}
 		[TestCase (Profile.watchOS, Profile.tvOS)]
 		public void MT0034 (Profile exe_profile, Profile dll_profile)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (exe_profile.AsPlatform ());
+			Configuration.IgnoreIfIgnoredPlatform (dll_profile.AsPlatform ());
 			using (var mtouch = new MTouchTool ()) {
 				var app = mtouch.CreateTemporaryAppDirectory ();
 				var testDir = Path.GetDirectoryName (app);
@@ -889,6 +894,7 @@ public class B : A {}
 		[TestCase (Profile.tvOS)]
 		public void MT0025 (Profile profile)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
 			using (var mtouch = new MTouchTool ()) {
 				mtouch.Profile = profile;
 				mtouch.CreateTemporaryApp ();
@@ -1065,6 +1071,7 @@ public class B : A {}
 		[TestCase (Profile.iOS)]
 		public void MT0085 (Profile profile)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
 			using (var mtouch = new MTouchTool ()) {
 				mtouch.Profile = profile;
 				mtouch.CreateTemporaryApp ();
@@ -1967,6 +1974,7 @@ public class TestApp {
 		[TestCase (Profile.watchOS, MTouchBitcode.Marker)]
 		public void StripBitcodeFromFrameworks (Profile profile, MTouchBitcode bitcode)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
 			using (var mtouch = new MTouchTool ()) {
 				mtouch.Profile = profile;
 				if (profile == Profile.watchOS) {
@@ -2488,6 +2496,7 @@ public class TestApp {
 		[TestCase (Profile.watchOS)]
 		public void FastDev_WithSpace (Profile profile)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
 			using (var mtouch = new MTouchTool ()) {
 				mtouch.Profile = profile;
 				mtouch.AppPath = Path.Combine (mtouch.CreateTemporaryDirectory (), "with spaces");
@@ -2672,6 +2681,7 @@ public class TestApp {
 		[Test]
 		public void Architectures_WatchOS_Invalid ()
 		{
+			Configuration.IgnoreIfIgnoredPlatform (Profile.watchOS.AsPlatform ());
 			AssertDeviceAvailable ();
 
 			using (var mtouch = new MTouchTool ()) {
@@ -3094,6 +3104,7 @@ public class TestApp {
 		[Test]
 		public void MT2105 ()
 		{
+			Configuration.IgnoreIfIgnoredPlatform (Profile.watchOS.AsPlatform ());
 
 			using (var ext = new MTouchTool ()) {
 				var code = @"
@@ -3443,6 +3454,7 @@ class Test {
 		[Test]
 		public void PInvokeWrapperGenerationTest ()
 		{
+			Configuration.IgnoreIfIgnoredPlatform (Profile.watchOS.AsPlatform ());
 			using (var tool = new MTouchTool ()) {
 				tool.Profile = Profile.watchOS;
 				tool.CreateTemporaryCacheDirectory ();
@@ -3533,6 +3545,7 @@ class C {
 		[Test]
 		public void WatchExtensionWithFramework ()
 		{
+			Configuration.IgnoreIfIgnoredPlatform (Profile.watchOS.AsPlatform ());
 			using (var exttool = new MTouchTool ()) {
 				exttool.Profile = Profile.watchOS;
 				exttool.CreateTemporaryCacheDirectory ();
@@ -3820,6 +3833,7 @@ public partial class NotificationService : UNNotificationServiceExtension
 		[Test]
 		public void MT2015 ()
 		{
+			Configuration.IgnoreIfIgnoredPlatform (Profile.watchOS.AsPlatform ());
 			using (var mtouch = new MTouchTool ()) {
 				mtouch.Profile = Profile.watchOS;
 				mtouch.CreateTemporaryWatchKitExtension ();
@@ -4225,6 +4239,7 @@ public partial class KeyboardViewController : UIKit.UIInputViewController
 		[Test]
 		public void WatchOSExtensionsWithExtensions ()
 		{
+			Configuration.IgnoreIfIgnoredPlatform (Profile.watchOS.AsPlatform ());
 			using (var intents_extension = new MTouchTool ()) {
 				intents_extension.Profile = Profile.watchOS;
 				intents_extension.CreateTemporaryWatchOSIntentsExtension ();

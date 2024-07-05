@@ -118,6 +118,7 @@ namespace Xamarin {
 		[TestCase (Profile.watchOS, "5.0", "libmono-native-unified.dylib", SdkVersions.MinWatchOS)]
 		public void TestDeviceDylib (Profile profile, string version, string mono_native_dylib, string min_version)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
 			if (mono_native_dylib.Contains ("compat") && Version.Parse (min_version) > Version.Parse (version))
 				Assert.Ignore ("No OS versions that require compat libmono-unified are supported anymore");
 			if (Version.Parse (min_version) > Version.Parse (version))
