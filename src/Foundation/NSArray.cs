@@ -476,7 +476,9 @@ namespace Foundation {
 			return ToArray<NSObject> ();
 		}
 
-		IEnumerator<NSObject> IEnumerable<NSObject>.GetEnumerator ()
+		/// <summary>Returns an enumerator that iterates through the array.</summary>
+		/// <returns>An enumerator that can be used to iterate through the array.</returns>
+		public IEnumerator<NSObject> GetEnumerator ()
 		{
 			return new NSFastEnumerator<NSObject> (this);
 		}

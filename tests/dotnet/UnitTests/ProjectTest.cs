@@ -190,8 +190,10 @@ namespace Xamarin.Tests {
 			// Verify that there's one resource in the binding assembly, and its name
 			var ad = AssemblyDefinition.ReadAssembly (asm, new ReaderParameters { ReadingMode = ReadingMode.Deferred });
 			Assert.That (ad.MainModule.Resources.Count, Is.EqualTo (0), "no embedded resources");
-			var resourceBundle = Path.Combine (project_dir, "bin", "Debug", platform.ToFramework (), assemblyName + ".resources.zip");
-			Assert.That (resourceBundle, Does.Exist, "Bundle existence");
+			var resourceBundle = Path.Combine (project_dir, "bin", "Debug", platform.ToFramework (), assemblyName + ".resources");
+			var resourceZip = resourceBundle + ".zip";
+			if (!Directory.Exists (resourceBundle) && !File.Exists (resourceZip))
+				Assert.Fail ($"Neither the sidecar {resourceBundle} or the zipped sidecar {resourceZip} exists.");
 		}
 
 		[TestCase (ApplePlatform.iOS)]
@@ -1389,6 +1391,31 @@ namespace Xamarin.Tests {
 			var customAppBundleDir = Path.Combine (Cache.CreateTemporaryDirectory (), project + ".app");
 			properties ["AppBundleDir"] = customAppBundleDir;
 			var result = DotNet.AssertBuild (project_path, properties);
+		}
+
+		[TestCase (ApplePlatform.iOS, "ios-arm64")]
+		public void PluralRuntimeIdentifiers (ApplePlatform platform, string runtimeIdentifiers)
+		{
+			PluralRuntimeIdentifiersImpl (platform, runtimeIdentifiers);
+		}
+
+		internal static void PluralRuntimeIdentifiersImpl (ApplePlatform platform, string runtimeIdentifiers, Dictionary<string, string>? extraProperties = null, bool isUsingHotRestart = false)
+		{
+			var project = "MySimpleApp";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
+
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
+			Clean (project_path);
+			var properties = GetDefaultProperties (extraProperties: extraProperties);
+			properties ["RuntimeIdentifiers"] = runtimeIdentifiers;
+			if (isUsingHotRestart) {
+				var rv = DotNet.AssertBuildFailure (project_path, properties);
+				var errors = BinLog.GetBuildLogErrors (rv.BinLogPath).ToArray ();
+				AssertErrorMessages (errors, $"Hot Restart is not supported when 'RuntimeIdentifiers' (plural) is set. Use 'RuntimeIdentifier' (singular) instead.");
+			} else {
+				DotNet.AssertBuild (project_path, properties);
+			}
 		}
 
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64")]

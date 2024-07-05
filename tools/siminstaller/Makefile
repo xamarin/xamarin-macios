@@ -9,7 +9,7 @@ install-local:: all-local
 
 # we build using the system .NET, because we might execute before we've downloaded our own version of .NET (i.e. while provisioning dependencies)
 $(EXECUTABLE): $(wildcard *.cs) $(wildcard *.csproj) Makefile
-	$(Q_BUILD) cd $(HOME) && dotnet build $(abspath $(CURDIR))/*.csproj "/bl:$(abspath $@.binlog)" $(DOTNET_BUILD_VERBOSITY)
+	$(Q_BUILD) cd $(HOME) && dotnet build $(abspath $(CURDIR))/*.csproj "/bl:$(abspath $@.binlog)" /p:UseSharedCompilation=false $(DOTNET_BUILD_VERBOSITY)
 	$(Q) touch $@
 
 print-simulators: $(EXECUTABLE)
