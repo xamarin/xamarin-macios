@@ -279,7 +279,7 @@ steps:
 - bash: |
     set -x
     set -e
-    $(Build.SourcesDirectory)/xamarin-macios/system-dependencies.sh --provision-simulators --ignore-shellcheck --ignore-yamllint
+    $(Build.SourcesDirectory)/xamarin-macios/system-dependencies.sh --provision-simulators --provision-old-simulators --ignore-shellcheck --ignore-yamllint
   displayName: 'Provision simulators'
   timeoutInMinutes: 250
 
