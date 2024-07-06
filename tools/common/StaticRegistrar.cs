@@ -1427,6 +1427,11 @@ namespace Registrar {
 						throw ErrorHelper.CreateError (4147, Errors.MT4147, "ProtocolAttribute", type.FullName);
 					rv.FormalSinceVersion = version;
 					break;
+#if !XAMCORE_5_0
+				case "BackwardsCompatibleCodeGeneration":
+					rv.BackwardsCompatibleCodeGeneration = (bool) prop.Argument.Value;
+					break;
+#endif
 				default:
 					throw ErrorHelper.CreateError (4147, Errors.MT4147, "ProtocolAttribute", type.FullName);
 				}
@@ -5790,6 +5795,9 @@ namespace Registrar {
 		public string Name { get; set; }
 		public bool IsInformal { get; set; }
 		public Version FormalSinceVersion { get; set; }
+#if !XAMCORE_5_0
+		public bool BackwardsCompatibleCodeGeneration { get; set; }
+#endif
 	}
 
 	class BlockProxyAttribute : Attribute {
