@@ -27,12 +27,7 @@ namespace Xamarin.Tests {
 			var properties = GetDefaultProperties (runtimeIdentifiers);
 			if (!string.IsNullOrWhiteSpace (configuration))
 				properties ["Configuration"] = configuration;
-			properties ["IsHotRestartBuild"] = "true";
-			properties ["IsHotRestartEnvironmentReady"] = "true";
-			properties ["EnableCodeSigning"] = "false"; // Skip code signing, since that would require making sure we have code signing configured on bots.
-			properties ["_AppIdentifier"] = "placeholder_AppIdentifier"; // This needs to be set to a placeholder value because DetectSigningIdentity usually does it (and we've disabled signing)
-			properties ["_BundleIdentifier"] = "placeholder_BundleIdentifier"; // This needs to be set to a placeholder value because DetectSigningIdentity usually does it (and we've disabled signing)
-			properties ["_IsAppSigned"] = "false";
+			AddHotRestartProperties (properties);
 
 			// Redirect hot restart output to a place we can control from here
 			var hotRestartOutputDir = Path.Combine (tmpdir, "out");
@@ -284,6 +279,15 @@ namespace Xamarin.Tests {
 			ExecuteWithMagicWordAndAssert (platform, runtimeIdentifiers, appExecutable);
 		}
 
+		[Category ("Windows")]
+		[Category ("RemoteWindows")]
+		[TestCase (ApplePlatform.iOS, "ios-arm64")]
+		public void PluralRuntimeIdentifiersWithHotRestart (ApplePlatform platform, string runtimeIdentifiers)
+		{
+			var properties = AddHotRestartProperties ();
+			DotNetProjectTest.PluralRuntimeIdentifiersImpl (platform, runtimeIdentifiers, properties, isUsingHotRestart: true);
+		}
+
 		static void AssertWarningsEqual (IList<string> expected, IList<string> actual, string message)
 		{
 			if (expected.Count == actual.Count) {
@@ -372,6 +376,18 @@ namespace Xamarin.Tests {
 
 			if (!string.IsNullOrEmpty (properties ["ServerUser"]))
 				properties ["EnsureRemoteConnection"] = "true";
+		}
+
+		protected Dictionary<string, string> AddHotRestartProperties (Dictionary<string, string>? properties = null)
+		{
+			properties ??= new Dictionary<string, string> ();
+			properties ["IsHotRestartBuild"] = "true";
+			properties ["IsHotRestartEnvironmentReady"] = "true";
+			properties ["EnableCodeSigning"] = "false"; // Skip code signing, since that would require making sure we have code signing configured on bots.
+			properties ["_IsAppSigned"] = "false";
+			properties ["_AppIdentifier"] = "placeholder_AppIdentifier"; // This needs to be set to a placeholder value because DetectSigningIdentity usually does it (and we've disabled signing)
+			properties ["_BundleIdentifier"] = "placeholder_BundleIdentifier"; // This needs to be set to a placeholder value because DetectSigningIdentity usually does it (and we've disabled signing)
+			return properties;
 		}
 	}
 }
