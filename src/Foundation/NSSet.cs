@@ -66,6 +66,8 @@ namespace Foundation {
 		}
 
 		#region IEnumerable<T>
+		/// <summary>Returns an enumerator that iterates through the set.</summary>
+		/// <returns>An enumerator that can be used to iterate through the set.</returns>
 		public IEnumerator<NSObject> GetEnumerator ()
 		{
 			var enumerator = _GetEnumerator ();
