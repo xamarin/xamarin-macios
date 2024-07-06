@@ -185,6 +185,8 @@ namespace Foundation {
 		}
 
 		#region IEnumerable<T> implementation
+		/// <summary>Returns an enumerator that iterates through the array.</summary>
+		/// <returns>An enumerator that can be used to iterate through the array.</returns>
 		public IEnumerator<TValue> GetEnumerator ()
 		{
 			return new NSFastEnumerator<TValue> (this);
