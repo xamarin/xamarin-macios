@@ -92,6 +92,8 @@ stages:
     displayName: 'T:' 
     timeoutInMinutes: 180
     variables:
+      # disable governance checks in the tests 
+      skipComponentGovernanceDetection: true
       # old and ugly env var use by jenkins, we do have parts of the code that use it, contains the PR number
       PR_ID: $[ stageDependencies.configure_build.configure.outputs['labels.pr_number'] ]
       # set the branch variable name, this is required by jenkins and we have a lot of scripts that depend on it

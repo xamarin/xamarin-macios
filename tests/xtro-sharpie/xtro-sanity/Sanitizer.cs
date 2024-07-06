@@ -8,8 +8,8 @@ using Xamarin.Utils;
 namespace Extrospection {
 	class Sanitizer {
 
-		static List<string> Platforms;
-		static List<string> AllPlatforms;
+		static List<string> Platforms = new List<string> ();
+		static List<string> AllPlatforms = new List<string> ();
 		static bool Autosanitize = !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("AUTO_SANITIZE"));
 
 		static bool IsEntry (string line)
@@ -165,7 +165,7 @@ namespace Extrospection {
 			}
 		}
 
-		static string directory;
+		static string directory = ".";
 		static Dictionary<string, List<string>> commons = new Dictionary<string, List<string>> ();
 		static int count;
 
@@ -178,8 +178,8 @@ namespace Extrospection {
 		public static int Main (string [] args)
 		{
 			directory = args.Length == 0 ? "." : args [0];
-			AllPlatforms = args.Skip (1).First ().Split (' ').ToList ();
-			Platforms = args.Skip (2).ToList ();
+			AllPlatforms.AddRange (args.Skip (1).First ().Split (' '));
+			Platforms.AddRange (args.Skip (2));
 
 			// cache stuff
 			foreach (var file in Directory.GetFiles (directory, "common-*.ignore")) {
@@ -237,9 +237,7 @@ namespace Extrospection {
 				var raws = new RawInfo [Platforms.Count];
 				for (int i = 0; i < raws.Length; i++) {
 					var fname = Path.Combine (directory, $"{Platforms [i]}-{fx}.raw");
-					raws [i] = new RawInfo () {
-						Platform = Platforms [i],
-					};
+					raws [i] = new RawInfo (Platforms [i]);
 					if (File.Exists (fname))
 						raws [i].Entries = new HashSet<string> (File.ReadAllLines (fname));
 				}
@@ -332,8 +330,8 @@ namespace Extrospection {
 			return sanitizedOrSkippedSanity ? 0 : count;
 		}
 
-		static List<Frameworks> frameworks; // the frameworks for the selected platforms
-		static List<Frameworks> all_frameworks; // the frameworks for all platforms
+		static List<Frameworks>? frameworks; // the frameworks for the selected platforms
+		static List<Frameworks>? all_frameworks; // the frameworks for all platforms
 
 		// If the given framework is skipped in all the currently building platforms.
 		static bool IsFrameworkIncludedInAnySelectedPlatform (string framework)
@@ -391,5 +389,10 @@ namespace Extrospection {
 	class RawInfo {
 		public string Platform;
 		public HashSet<string> Entries = new HashSet<string> ();
+
+		public RawInfo (string platform)
+		{
+			Platform = platform;
+		}
 	}
 }
