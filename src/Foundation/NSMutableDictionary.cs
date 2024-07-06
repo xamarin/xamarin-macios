@@ -311,6 +311,8 @@ namespace Foundation {
 		#endregion
 
 		#region IEnumerable<K,V>
+		/// <summary>Returns an enumerator that iterates through the dictionary.</summary>
+		/// <returns>An enumerator that can be used to iterate through the dictionary.</returns>
 		public IEnumerator<KeyValuePair<NSObject, NSObject>> GetEnumerator ()
 		{
 			foreach (var key in Keys) {

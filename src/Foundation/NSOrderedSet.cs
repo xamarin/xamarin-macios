@@ -72,6 +72,8 @@ namespace Foundation {
 			return (NSOrderedSet) Runtime.GetNSObject (ObjCRuntime.Messaging.IntPtr_objc_msgSend_IntPtr (class_ptr, Selector.GetHandle (selSetWithArray), a.Handle));
 		}
 
+		/// <summary>Returns an enumerator that iterates through the set.</summary>
+		/// <returns>An enumerator that can be used to iterate through the set.</returns>
 		public IEnumerator<NSObject> GetEnumerator ()
 		{
 			var enumerator = _GetEnumerator ();
