@@ -3,7 +3,7 @@
   <PropertyGroup>
     <!-- Versions updated by maestro -->
     <!-- NOTE: $(VSToolsNetCoreSDKResolverPackageVersion) may be temporary -->
-    <VSToolsNetCoreSDKResolverPackageVersion>9.0.100-preview.7.24355.2</VSToolsNetCoreSDKResolverPackageVersion>
+    <VSToolsNetCoreSDKResolverPackageVersion>9.0.100-preview.7.24355.6</VSToolsNetCoreSDKResolverPackageVersion>
     <MicrosoftNETILLinkTasksPackageVersion>9.0.0-preview.7.24352.15</MicrosoftNETILLinkTasksPackageVersion>
     <MicrosoftNETILLinkPackageVersion>9.0.0-alpha.1.23556.4</MicrosoftNETILLinkPackageVersion>
     <MicrosoftDotNetBuildTasksFeedPackageVersion>8.0.0-beta.24225.1</MicrosoftDotNetBuildTasksFeedPackageVersion>
