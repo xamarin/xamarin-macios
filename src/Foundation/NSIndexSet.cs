@@ -47,6 +47,8 @@ namespace Foundation {
 			}
 		}
 
+		/// <summary>Returns an enumerator that iterates through the set.</summary>
+		/// <returns>An enumerator that can be used to iterate through the set.</returns>
 		public IEnumerator<nuint> GetEnumerator ()
 		{
 			if (this.Count == 0)

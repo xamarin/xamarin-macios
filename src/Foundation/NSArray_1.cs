@@ -77,7 +77,9 @@ namespace Foundation {
 		}
 
 		#region IEnumerable<TKey>
-		IEnumerator<TKey> IEnumerable<TKey>.GetEnumerator ()
+		/// <summary>Returns an enumerator that iterates through the array.</summary>
+		/// <returns>An enumerator that can be used to iterate through the array.</returns>
+		public new IEnumerator<TKey> GetEnumerator ()
 		{
 			return new NSFastEnumerator<TKey> (this);
 		}

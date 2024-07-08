@@ -17,13 +17,10 @@ namespace Xamarin.Messaging.Build {
 					message.SessionId,
 					PlatformPath.GetPathForCurrentPlatform (message.ItemSpec)));
 
-				if (File.Exists (targetPath)) {
+				if (File.Exists (targetPath))
 					File.Delete (targetPath);
-				} else {
-					var directoryName = Path.GetDirectoryName (targetPath);
-					if (directoryName is not null && !Directory.Exists (directoryName))
-						Directory.CreateDirectory (directoryName);
-				}
+				else if (!Directory.Exists (Path.GetDirectoryName (targetPath)))
+					Directory.CreateDirectory (Path.GetDirectoryName (targetPath));
 
 				using (var file = File.Create (targetPath))
 				using (var stream = new MemoryStream (message.Content))
