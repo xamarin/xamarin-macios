@@ -1,0 +1,2 @@
+!deprecated-attribute-missing! ASAuthorizationProviderExtensionLoginManager::loginUserName missing a [Deprecated] attribute
+!deprecated-attribute-missing! ASAuthorizationProviderExtensionLoginManager::setLoginUserName: missing a [Deprecated] attribute
