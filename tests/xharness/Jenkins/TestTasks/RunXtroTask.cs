@@ -24,10 +24,10 @@ namespace Xharness.Jenkins.TestTasks {
 		{
 			using (var resource = await NotifyAndAcquireDesktopResourceAsync ()) {
 				using (var proc = new Process ()) {
-					proc.StartInfo.FileName = "/Library/Frameworks/Mono.framework/Commands/mono";
-					var reporter = System.IO.Path.Combine (WorkingDirectory, "xtro-report/bin/Debug/xtro-report.exe");
+					var reporter = System.IO.Path.Combine (WorkingDirectory, "xtro-report", "bin", "Debug", "xtro-report");
 					var results = System.IO.Path.Combine (Logs.Directory, $"xtro-{Timestamp}");
-					proc.StartInfo.Arguments = $"--debug {reporter} {AnnotationsDirectory} {results}";
+					proc.StartInfo.FileName = reporter;
+					proc.StartInfo.Arguments = $"{AnnotationsDirectory} {results}";
 
 					Jenkins.MainLog.WriteLine ("Executing {0} ({1})", TestName, Mode);
 					var log = Logs.Create ($"execute-xtro-{Timestamp}.txt", LogType.ExecutionLog.ToString ());
