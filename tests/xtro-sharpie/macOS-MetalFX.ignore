@@ -1,2 +1,5 @@
 !missing-protocol-conformance! MTLFXSpatialScalerDescriptor should conform to NSCopying
 !missing-protocol-conformance! MTLFXTemporalScalerDescriptor should conform to NSCopying
+!incorrect-protocol-member! MTLFXTemporalScaler::reactiveMaskTexture is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLFXTemporalScaler::reactiveTextureUsage is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLFXTemporalScaler::setReactiveMaskTexture: is REQUIRED and should be abstract
