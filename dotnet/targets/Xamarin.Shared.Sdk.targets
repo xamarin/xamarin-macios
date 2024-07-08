@@ -166,6 +166,11 @@
 	</PropertyGroup>
 
 	<PropertyGroup>
+		<_GlobalizationDataFile Condition="'$(_PlatformName)' != 'macOS' And '$(InvariantGlobalization)' != 'true' And '$(HybridGlobalization)' != 'true' And '$(_GlobalizationDataFile)' == ''">icudt.dat</_GlobalizationDataFile>
+		<_GlobalizationDataFile Condition="'$(_PlatformName)' != 'macOS' And '$(InvariantGlobalization)' != 'true' And '$(HybridGlobalization)' == 'true' And '$(_GlobalizationDataFile)' == ''">icudt_hybrid.dat</_GlobalizationDataFile>
+	</PropertyGroup>
+
+	<PropertyGroup>
 		<TargetPlatformSupported Condition=" '$(TargetPlatformIdentifier)' == '$(_PlatformName)' ">true</TargetPlatformSupported>
 	</PropertyGroup>
 
@@ -413,6 +418,8 @@
 		<ItemGroup>
 			<!-- If we're creating a runtimeconfig.json file, then the resulting binary runtimeconfig.bin file can be put in the architecture-specific subdirectory -->
 			<_ArchitectureSpecificFiles Include="$(_RuntimeConfigurationFile)" Condition="'$(GenerateRuntimeConfigurationFiles)' != ''" />
+			<!-- The globalization data file can be put in the architecture-specific subdirectory -->
+			<_ArchitectureSpecificFiles Include="$(_GlobalizationDataFile)" Condition="'$(_GlobalizationDataFile)' != ''" />
 		</ItemGroup>
 
 		<MergeAppBundles
@@ -509,6 +516,9 @@
 		<!-- Validate the linker mode -->
 		<Error Text="Invalid link mode: '$(_LinkMode)'. Valid link modes are: 'None', 'SdkOnly' and 'Full'" Condition="'$(_LinkMode)' != 'None' And '$(_LinkMode)' != 'SdkOnly' And '$(_LinkMode)' != 'Full' And '$(_LinkMode)' != 'TrimMode'" />
 
+		<!-- it's invariant or it's one of the ICU data files, not both -->
+		<Error Text="Can not set values for both InvariantGlobalization '$(InvariantGlobalization)' and _GlobalizationDataFile '$(_GlobalizationDataFile)'" Condition="'$(_GlobalizationDataFile)' != '' And '$(InvariantGlobalization)' == 'true'" />
+
 		<Error Text="The only valid registrar when using NativeAOT is 'managed-static' (current value: '$(Registrar)'). Please either delete the 'Registrar' property, or change it to be 'managed-static'." Condition="'$(_UseNativeAot)' == 'true' And '$(Registrar)' != '' And '$(Registrar)' != 'managed-static'" />
 
 		<Warning Text="All assemblies must be processed by the linker when using NativeAOT. Please don't set neither the '$(_LinkModeProperty)' nor the 'TrimMode' property, so that the build can default to linking all assemblies." Condition="'$(_UseNativeAot)' == 'true' And '$(_LinkMode)' != 'Full'" />
@@ -565,6 +575,7 @@
 				EnableSGenConc=$(EnableSGenConc)
 				@(_BundlerEnvironmentVariables -> 'EnvironmentVariable=%(Identity)=%(Value)')
 				@(_XamarinFrameworkAssemblies -> 'FrameworkAssembly=%(Filename)')
+				GlobalizationDataFile=$(_GlobalizationDataFile)
 				Interpreter=$(MtouchInterpreter)
 				IntermediateLinkDir=$(IntermediateLinkDir)
 				InvariantGlobalization=$(InvariantGlobalization)
@@ -1783,6 +1794,17 @@
 				            '%(ResolvedFileToPublish.NuGetPackageId)' == '$(_MonoNugetPackageId)'
 				            "
 				PublishFolderType="None"
+			/>
+			<!-- add back the one we want (if any) - macOS is using CoreCLR, so that's not handled here -  by setting PublishFolderType = Assembly (so that it's next to where we store the assemblies, which is where we're currently looking for it at runtime) -->
+			<ResolvedFileToPublish
+				Update="@(ResolvedFileToPublish)"
+				RelativePath="$(_AssemblyPublishDir)\%(Filename)%(Extension)"
+				Condition=" '$(_PlatformName)' != 'macOS' And
+				            '$(InvariantGlobalization)' != 'true' And
+				            '%(ResolvedFileToPublish.Filename)%(ResolvedFileToPublish.Extension)' == '$(_GlobalizationDataFile)' And
+				            '%(ResolvedFileToPublish.NuGetPackageId)' == '$(_MonoNugetPackageId)'
+				            "
+				PublishFolderType="Assembly"
 			/>
 
 			<!-- Remove the libxamarin-*.dylib files we don't want -->
