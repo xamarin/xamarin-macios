@@ -109,7 +109,7 @@ stages:
     # Check - "xamarin-macios (Prepare Release Push NuGets)"
     - job: push_signed_nugets
       displayName: Push NuGets
-      dependsOn: nuget_convert
+      dependsOn: [signing, nuget_convert]
       condition: "ne(stageDependencies.configure_build.configure.outputs['configure_platforms.ENABLE_DOTNET'],'')"
       variables:
       - name: skipNugetSecurityAnalysis
