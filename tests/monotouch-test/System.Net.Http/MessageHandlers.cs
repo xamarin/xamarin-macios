@@ -470,7 +470,9 @@ namespace MonoTests.System.Net.Http {
 					// return false, since we want to test that the exception is raised
 					return false;
 				};
+#pragma warning disable SYSLIB0014 // 'ServicePointManager' is obsolete: 'WebRequest, HttpWebRequest, ServicePoint, and WebClient are obsolete. Use HttpClient instead. Settings on ServicePointManager no longer affect SslStream or HttpClient.' (https://aka.ms/dotnet-warnings/SYSLIB0014)
 				ServicePointManager.ServerCertificateValidationCallback = (sender, certificate, chain, errors) => {
+#pragma warning restore SYSLIB0014
 					invalidServicePointManagerCbWasExcuted = true;
 					return false;
 				};
@@ -511,7 +513,9 @@ namespace MonoTests.System.Net.Http {
 					client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue ("Basic", Convert.ToBase64String (byteArray));
 					result = await client.GetAsync (NetworkResources.Httpbin.GetRedirectUrl (3));
 				} finally {
+#pragma warning disable SYSLIB0014 // 'ServicePointManager' is obsolete: 'WebRequest, HttpWebRequest, ServicePoint, and WebClient are obsolete. Use HttpClient instead. Settings on ServicePointManager no longer affect SslStream or HttpClient.' (https://aka.ms/dotnet-warnings/SYSLIB0014)
 					ServicePointManager.ServerCertificateValidationCallback = null;
+#pragma warning restore SYSLIB0014
 				}
 			}, out var ex);
 
@@ -551,7 +555,9 @@ namespace MonoTests.System.Net.Http {
 					return true;
 				};
 			} else {
+#pragma warning disable SYSLIB0014 // 'ServicePointManager' is obsolete: 'WebRequest, HttpWebRequest, ServicePoint, and WebClient are obsolete. Use HttpClient instead. Settings on ServicePointManager no longer affect SslStream or HttpClient.' (https://aka.ms/dotnet-warnings/SYSLIB0014)
 				ServicePointManager.ServerCertificateValidationCallback = (sender, certificate, chain, errors) => {
+#pragma warning restore SYSLIB0014
 					// servicePointManagerCbWasExcuted = true;
 					return true;
 				};
@@ -565,7 +571,9 @@ namespace MonoTests.System.Net.Http {
 					client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue ("Basic", Convert.ToBase64String (byteArray));
 					var result = await client.GetAsync (NetworkResources.Httpbin.GetRedirectUrl (3));
 				} finally {
+#pragma warning disable SYSLIB0014 // 'ServicePointManager' is obsolete: 'WebRequest, HttpWebRequest, ServicePoint, and WebClient are obsolete. Use HttpClient instead. Settings on ServicePointManager no longer affect SslStream or HttpClient.' (https://aka.ms/dotnet-warnings/SYSLIB0014)
 					ServicePointManager.ServerCertificateValidationCallback = null;
+#pragma warning restore SYSLIB0014
 				}
 			}, out var ex);
 

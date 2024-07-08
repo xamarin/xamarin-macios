@@ -226,12 +226,12 @@ namespace MapKit {
 		[RequiresSuper]
 		void PrepareForDisplay ();
 
-		[TV (14, 0), NoWatch, Mac (11, 0), iOS (14, 0)]
+		[TV (14, 0), NoWatch, iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[Export ("zPriority")]
 		float ZPriority { get; set; }
 
-		[TV (14, 0), NoWatch, Mac (11, 0), iOS (14, 0)]
+		[TV (14, 0), NoWatch, iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[Export ("selectedZPriority")]
 		float SelectedZPriority { get; set; }
@@ -625,12 +625,10 @@ namespace MapKit {
 		[Export ("annotationsInMapRect:")]
 		NSSet GetAnnotations (MKMapRect mapRect);
 
-		[Mac (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("userTrackingMode")]
 		MKUserTrackingMode UserTrackingMode { get; set; }
 
-		[Mac (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("setUserTrackingMode:animated:")]
 		void SetUserTrackingMode (MKUserTrackingMode trackingMode, bool animated);
@@ -739,7 +737,7 @@ namespace MapKit {
 		MKPointOfInterestFilter PointOfInterestFilter { get; set; }
 
 		[Introduced (PlatformName.MacCatalyst, 14, 0)]
-		[NoWatch, NoTV, NoiOS, Mac (11, 0)]
+		[NoWatch, NoTV, NoiOS]
 		[Export ("showsPitchControl")]
 		bool ShowsPitchControl { get; set; }
 
@@ -846,7 +844,6 @@ namespace MapKit {
 		[Export ("mapView:didUpdateUserLocation:"), EventArgs ("MKUserLocation")]
 		void DidUpdateUserLocation (MKMapView mapView, MKUserLocation userLocation);
 
-		[Mac (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("mapView:didChangeUserTrackingMode:animated:"), EventArgs ("MMapViewUserTracking")]
 		void DidChangeUserTrackingMode (MKMapView mapView, MKUserTrackingMode mode, bool animated);
@@ -1314,12 +1311,12 @@ namespace MapKit {
 		[Export ("getCoordinates:range:"), Internal]
 		void GetCoords (IntPtr dest, NSRange range);
 
-		[TV (14, 0), NoWatch, Mac (11, 0), iOS (14, 0)]
+		[TV (14, 0), NoWatch, iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[Export ("locationAtPointIndex:")]
 		nfloat GetLocation (nuint pointIndex);
 
-		[TV (14, 0), NoWatch, Mac (11, 0), iOS (14, 0)]
+		[TV (14, 0), NoWatch, iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[return: BindAs (typeof (nfloat []))]
 		[Export ("locationsAtPointIndexes:")]
@@ -1388,7 +1385,7 @@ namespace MapKit {
 		[Export ("initWithRequest:")]
 		NativeHandle Constructor (MKLocalSearchRequest request);
 
-		[TV (14, 0), NoWatch, Mac (11, 0), iOS (14, 0)]
+		[TV (14, 0), NoWatch, iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[Export ("initWithPointsOfInterestRequest:")]
 		[DesignatedInitializer]
@@ -1472,12 +1469,12 @@ namespace MapKit {
 		[Export ("circle")]
 		MKCircle Circle { get; }
 
-		[TV (14, 0), NoWatch, Mac (11, 0), iOS (14, 0)]
+		[TV (14, 0), NoWatch, iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[Export ("strokeStart")]
 		nfloat StrokeStart { get; set; }
 
-		[TV (14, 0), NoWatch, Mac (11, 0), iOS (14, 0)]
+		[TV (14, 0), NoWatch, iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[Export ("strokeEnd")]
 		nfloat StrokeEnd { get; set; }
@@ -1944,12 +1941,12 @@ namespace MapKit {
 		[Export ("polygon")]
 		MKPolygon Polygon { get; }
 
-		[TV (14, 0), NoWatch, Mac (11, 0), iOS (14, 0)]
+		[TV (14, 0), NoWatch, iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[Export ("strokeStart")]
 		nfloat StrokeStart { get; set; }
 
-		[TV (14, 0), NoWatch, Mac (11, 0), iOS (14, 0)]
+		[TV (14, 0), NoWatch, iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[Export ("strokeEnd")]
 		nfloat StrokeEnd { get; set; }
@@ -1966,19 +1963,19 @@ namespace MapKit {
 		[Export ("polyline")]
 		MKPolyline Polyline { get; }
 
-		[TV (14, 0), NoWatch, Mac (11, 0), iOS (14, 0)]
+		[TV (14, 0), NoWatch, iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[Export ("strokeStart")]
 		nfloat StrokeStart { get; set; }
 
-		[TV (14, 0), NoWatch, Mac (11, 0), iOS (14, 0)]
+		[TV (14, 0), NoWatch, iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[Export ("strokeEnd")]
 		nfloat StrokeEnd { get; set; }
 	}
 
 	[NoWatch]
-	[TV (14, 0), NoWatch, Mac (11, 0), iOS (14, 0)]
+	[TV (14, 0), NoWatch, iOS (14, 0)]
 	[MacCatalyst (14, 0)]
 	[BaseType (typeof (MKPolylineRenderer))]
 	partial interface MKGradientPolylineRenderer {
@@ -2168,7 +2165,6 @@ namespace MapKit {
 	}
 
 	[NoTV]
-	[Mac (11, 0)]
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (UIView))]
@@ -2186,7 +2182,6 @@ namespace MapKit {
 	}
 
 	[NoWatch]
-	[Mac (11, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (MKAnnotationView))]
 	interface MKMarkerAnnotationView {
@@ -2415,7 +2410,7 @@ namespace MapKit {
 		MKMultiPolyline MultiPolyline { get; }
 	}
 
-	[TV (14, 0), NoWatch, Mac (11, 0), iOS (14, 0)]
+	[TV (14, 0), NoWatch, iOS (14, 0)]
 	[MacCatalyst (14, 0)]
 	[BaseType (typeof (MKAnnotationView))]
 	interface MKUserLocationView {
@@ -2427,7 +2422,7 @@ namespace MapKit {
 		NativeHandle Constructor (CGRect frame);
 	}
 
-	[TV (14, 0), NoWatch, Mac (11, 0), iOS (14, 0)]
+	[TV (14, 0), NoWatch, iOS (14, 0)]
 	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -2457,7 +2452,7 @@ namespace MapKit {
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[NoWatch, NoTV, NoiOS, Mac (11, 0)]
+	[NoWatch, NoTV, NoiOS]
 	[DisableDefaultCtor]
 	[BaseType (typeof (UIView))]
 	interface MKPitchControl {
@@ -2474,7 +2469,7 @@ namespace MapKit {
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[NoWatch, NoTV, NoiOS, Mac (11, 0)]
+	[NoWatch, NoTV, NoiOS]
 	[DisableDefaultCtor]
 	[BaseType (typeof (UIView))]
 	interface MKZoomControl {

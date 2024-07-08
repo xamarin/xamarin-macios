@@ -596,32 +596,32 @@ namespace HomeKit {
 		[Field ("HMCharacteristicTypeColorTemperature")]
 		ColorTemperature,
 
-		[Watch (4, 2), TV (11, 2), iOS (11, 2)]
+		[Watch (4, 2)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypeProgramMode")]
 		ProgramMode,
 
-		[Watch (4, 2), TV (11, 2), iOS (11, 2)]
+		[Watch (4, 2)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypeInUse")]
 		InUse,
 
-		[Watch (4, 2), TV (11, 2), iOS (11, 2)]
+		[Watch (4, 2)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypeSetDuration")]
 		SetDuration,
 
-		[Watch (4, 2), TV (11, 2), iOS (11, 2)]
+		[Watch (4, 2)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypeRemainingDuration")]
 		RemainingDuration,
 
-		[Watch (4, 2), TV (11, 2), iOS (11, 2)]
+		[Watch (4, 2)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypeValveType")]
 		ValveType,
 
-		[Watch (4, 2), TV (11, 2), iOS (11, 2)]
+		[Watch (4, 2)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypeIsConfigured")]
 		IsConfigured,
@@ -806,17 +806,17 @@ namespace HomeKit {
 		[Field ("HMServiceTypeLabel")]
 		Label,
 
-		[Watch (4, 2), TV (11, 2), iOS (11, 2)]
+		[Watch (4, 2)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMServiceTypeIrrigationSystem")]
 		IrrigationSystem,
 
-		[Watch (4, 2), TV (11, 2), iOS (11, 2)]
+		[Watch (4, 2)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMServiceTypeValve")]
 		Valve,
 
-		[Watch (4, 2), TV (11, 2), iOS (11, 2)]
+		[Watch (4, 2)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMServiceTypeFaucet")]
 		Faucet,
@@ -1150,17 +1150,17 @@ namespace HomeKit {
 		[Field ("HMAccessoryCategoryTypeAirDehumidifier")]
 		AirDehumidifier,
 
-		[Watch (4, 2), TV (11, 2), iOS (11, 2)]
+		[Watch (4, 2)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMAccessoryCategoryTypeSprinkler")]
 		Sprinkler,
 
-		[Watch (4, 2), TV (11, 2), iOS (11, 2)]
+		[Watch (4, 2)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMAccessoryCategoryTypeFaucet")]
 		Faucet,
 
-		[Watch (4, 2), TV (11, 2), iOS (11, 2)]
+		[Watch (4, 2)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMAccessoryCategoryTypeShowerHead")]
 		ShowerHead,
@@ -1411,7 +1411,7 @@ namespace HomeKit {
 	}
 
 	/// <summary>Enumerates the possible values of a <see cref="T:HomeKit.HMCharacteristic" /> that can be scheduled or manually overriden.</summary>
-	[Watch (4, 2), TV (11, 2), iOS (11, 2), MacCatalyst (14, 0)]
+	[Watch (4, 2), MacCatalyst (14, 0)]
 	[Native]
 	public enum HMCharacteristicValueProgramMode : long {
 		NotScheduled = 0,
@@ -1420,7 +1420,7 @@ namespace HomeKit {
 	}
 
 	/// <summary>Enumerates the possible states of a <see cref="T:HomeKit.HMCharacteristic" /> of a device that can be in use or out of use.</summary>
-	[Watch (4, 2), TV (11, 2), iOS (11, 2), MacCatalyst (14, 0)]
+	[Watch (4, 2), MacCatalyst (14, 0)]
 	[Native]
 	public enum HMCharacteristicValueUsageState : long {
 		NotInUse = 0,
@@ -1428,7 +1428,7 @@ namespace HomeKit {
 	}
 
 	/// <summary>Enumerates the known types of valve.</summary>
-	[Watch (4, 2), TV (11, 2), iOS (11, 2), MacCatalyst (14, 0)]
+	[Watch (4, 2), MacCatalyst (14, 0)]
 	[Native]
 	public enum HMCharacteristicValueValveType : long {
 		GenericValve = 0,
@@ -1438,7 +1438,7 @@ namespace HomeKit {
 	}
 
 	/// <summary>Enumerates the possible values of a <see cref="T:HomeKit.HMCharacteristic" /> that can be configured or not.</summary>
-	[Watch (4, 2), TV (11, 2), iOS (11, 2), MacCatalyst (14, 0)]
+	[Watch (4, 2), MacCatalyst (14, 0)]
 	[Native]
 	public enum HMCharacteristicValueConfigurationState : long {
 		NotConfigured = 0,

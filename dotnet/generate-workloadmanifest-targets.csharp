@@ -26,9 +26,9 @@ var platformLowerCase = platform.ToLowerInvariant ();
 var tfm = currentApiVersion;
 
 var supportedTFMs = new List<string> ();
-supportedTFMs.AddRange (olderApiVersions.Split (' '));
 supportedTFMs.AddRange (supportedApiVersions.Split (' ').Select (v => v.Replace ('-', '_')));
 supportedTFMs.Sort ();
+supportedTFMs.AddRange (olderApiVersions.Split (' '));
 
 var supportedTFVs = new List<string> ();
 
@@ -54,11 +54,11 @@ using (var writer = new StreamWriter (outputPath)) {
 			writer.WriteLine ($"		<Import Project=\"Sdk.props\" Sdk=\"Microsoft.{platform}.Sdk.{workloadVersion}\" />");
 		} else {
 			writer.WriteLine ($"	<ImportGroup Condition=\" '$(TargetPlatformIdentifier)' == '{platform}' And '$(UsingAppleNETSdk)' != 'true' And $([MSBuild]::VersionEquals($(TargetFrameworkVersion), '{tfv}'))\">");
-			writer.WriteLine ($"		<Import Project=\"Sdk.props\" Sdk=\"Microsoft.{platform}.Sdk.{workloadVersion}\" />");
+			writer.WriteLine ($"		<Import Project=\"Sdk.props\" Sdk=\"Microsoft.{platform}.Sdk.{(workloadVersion == "net8.0" ? "net8" : tfm)}\" />");
 		}
 
 		if (hasWindows) {
-			writer.WriteLine ($"		<Import Project=\"Sdk.props\" Sdk=\"Microsoft.{platform}.Windows.Sdk.Aliased.{workloadVersion}\" Condition=\" $([MSBuild]::IsOSPlatform('windows'))\" />");
+			writer.WriteLine ($"		<Import Project=\"Sdk.props\" Sdk=\"Microsoft.{platform}.Windows.Sdk.Aliased.{(workloadVersion == "net8.0" ? "net8" : tfm)}\" Condition=\" $([MSBuild]::IsOSPlatform('windows'))\" />");
 		}
 
 		writer.WriteLine ($"	</ImportGroup>");

@@ -8,15 +8,6 @@
 	<dict>
 		<key>MacCatalyst</key>
 		<array>
-			<string>13.1</string>
-			<string>13.2</string>
-			<string>13.3</string>
-			<string>13.4</string>
-			<string>13.5</string>
-			<string>14.2</string>
-			<string>14.3</string>
-			<string>14.4</string>
-			<string>14.5</string>
 			<string>15.0</string>
 			<string>15.2</string>
 			<string>15.4</string>

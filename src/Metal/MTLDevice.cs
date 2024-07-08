@@ -58,7 +58,7 @@ namespace Metal {
 #if MONOMAC || __MACCATALYST__
 
 #if NET
-		[SupportedOSPlatform ("maccatalyst15.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("tvos")]
@@ -69,7 +69,7 @@ namespace Metal {
 		unsafe static extern IntPtr MTLCopyAllDevices ();
 
 #if NET
-		[SupportedOSPlatform ("maccatalyst15.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("tvos")]

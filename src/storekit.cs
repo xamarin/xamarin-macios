@@ -62,8 +62,6 @@ namespace StoreKit {
 	[BaseType (typeof (NSObject))]
 	partial interface SKDownload {
 
-		[iOS (12, 0)]
-		[TV (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("state")]
 		SKDownloadState State { get; }
@@ -186,8 +184,6 @@ namespace StoreKit {
 		[Export ("simulatesAskToBuyInSandbox")]
 		bool SimulatesAskToBuyInSandbox { get; [NotImplemented ("Not available on SKPayment, only available on SKMutablePayment")] set; }
 
-		[iOS (12, 2)]
-		[TV (12, 2)]
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("paymentDiscount", ArgumentSemantic.Copy)]
 		SKPaymentDiscount PaymentDiscount { get; [NotImplemented ("Not available on SKPayment, only available on SKMutablePayment")] set; }
@@ -235,8 +231,6 @@ namespace StoreKit {
 		[Export ("simulatesAskToBuyInSandbox")]
 		bool SimulatesAskToBuyInSandbox { get; set; }
 
-		[iOS (12, 2)]
-		[TV (12, 2)]
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("paymentDiscount", ArgumentSemantic.Copy)]
 		SKPaymentDiscount PaymentDiscount { get; set; }
@@ -339,7 +333,7 @@ namespace StoreKit {
 		[Export ("presentCodeRedemptionSheet")]
 		void PresentCodeRedemptionSheet ();
 
-		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[Watch (7, 0), TV (14, 0), iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[Export ("transactionObservers")]
 		ISKPaymentTransactionObserver [] TransactionObservers { get; }
@@ -409,28 +403,23 @@ namespace StoreKit {
 		[Export ("downloadContentVersion")]
 		string DownloadContentVersion { get; }
 
-		[iOS (11, 2), TV (11, 2)]
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("subscriptionPeriod")]
 		SKProductSubscriptionPeriod SubscriptionPeriod { get; }
 
-		[iOS (11, 2), TV (11, 2)]
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("introductoryPrice")]
 		SKProductDiscount IntroductoryPrice { get; }
 
-		[iOS (12, 0), TV (12, 0)]
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("subscriptionGroupIdentifier")]
 		string SubscriptionGroupIdentifier { get; }
 
-		[iOS (12, 2)]
-		[TV (12, 2)]
 		[MacCatalyst (13, 1)]
 		[Export ("discounts")]
 		SKProductDiscount [] Discounts { get; }
 
-		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[Watch (7, 0), TV (14, 0), iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[Export ("isFamilyShareable")]
 		bool IsFamilyShareable { get; }
@@ -466,7 +455,6 @@ namespace StoreKit {
 		[Export ("paymentQueue:updatedDownloads:")]
 		void UpdatedDownloads (SKPaymentQueue queue, SKDownload [] downloads);
 
-		[Mac (11, 0)]
 		[NoWatch]
 		[MacCatalyst (13, 1)]
 		[Export ("paymentQueue:shouldAddStorePayment:forProduct:")]
@@ -478,7 +466,7 @@ namespace StoreKit {
 		[Export ("paymentQueueDidChangeStorefront:")]
 		void DidChangeStorefront (SKPaymentQueue queue);
 
-		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[Watch (7, 0), TV (14, 0), iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[Export ("paymentQueue:didRevokeEntitlementsForProductIdentifiers:")]
 		void DidRevokeEntitlements (SKPaymentQueue queue, string [] productIdentifiers);
@@ -640,7 +628,7 @@ namespace StoreKit {
 	/// <summary>A subclass of <see cref="T:UIKit.UIViewController" /> that presents a store allowing the application user to purchase an item from the App Store.</summary>
 	///     
 	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/StoreKit/Reference/SKITunesProductViewController_Ref/index.html">Apple documentation for <c>SKStoreProductViewController</c></related>
-	[Mac (11, 0), NoTV, NoWatch]
+	[NoTV, NoWatch]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (UIViewController),
 		   Delegates = new string [] { "WeakDelegate" },
@@ -692,7 +680,7 @@ namespace StoreKit {
 	/// <summary>A delegate object that allows the application developer to customize the behavior of a <see cref="T:StoreKit.SKStoreProductViewController" />.</summary>
 	///     
 	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/StoreKit/Reference/SKITunesProductViewControllerDelegate_ProtocolRef/index.html">Apple documentation for <c>SKStoreProductViewControllerDelegate</c></related>
-	[Mac (11, 0), NoTV, NoWatch]
+	[NoTV, NoWatch]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[Model]
@@ -703,7 +691,6 @@ namespace StoreKit {
 	}
 
 	[NoWatch]
-	[Mac (11, 0)]
 	[MacCatalyst (13, 1)]
 	[StrongDictionary ("SKStoreProductParameterKey")]
 	interface StoreProductParameters {
@@ -716,27 +703,27 @@ namespace StoreKit {
 		[Export ("ProviderToken")]
 		string ProviderToken { get; set; }
 
-		[iOS (11, 3), TV (11, 3), NoMac]
+		[NoMac]
 		[MacCatalyst (13, 1)]
 		[Export ("AdNetworkAttributionSignature")]
 		string AdNetworkAttributionSignature { get; set; }
 
-		[iOS (11, 3), TV (11, 3), NoMac]
+		[NoMac]
 		[MacCatalyst (13, 1)]
 		[Export ("AdNetworkCampaignIdentifier")]
 		uint AdNetworkCampaignIdentifier { get; set; }
 
-		[iOS (11, 3), TV (11, 3), NoMac]
+		[NoMac]
 		[MacCatalyst (13, 1)]
 		[Export ("AdNetworkIdentifier")]
 		string AdNetworkIdentifier { get; set; }
 
-		[iOS (11, 3), TV (11, 3), NoMac]
+		[NoMac]
 		[MacCatalyst (13, 1)]
 		[Export ("AdNetworkNonce")]
 		NSUuid AdNetworkNonce { get; set; }
 
-		[iOS (11, 3), TV (11, 3), NoMac]
+		[NoMac]
 		[MacCatalyst (13, 1)]
 		[Export ("AdNetworkTimestamp")]
 		uint AdNetworkTimestamp { get; set; }
@@ -753,7 +740,6 @@ namespace StoreKit {
 	}
 
 	[NoWatch]
-	[Mac (11, 0)]
 	[MacCatalyst (13, 1)]
 	[Static]
 	interface SKStoreProductParameterKey {
@@ -780,12 +766,12 @@ namespace StoreKit {
 		[Field ("SKStoreProductParameterAdvertisingPartnerToken")]
 		NSString AdvertisingPartnerToken { get; }
 
-		[iOS (11, 3), TV (11, 3), NoMac]
+		[NoMac]
 		[MacCatalyst (13, 1)]
 		[Field ("SKStoreProductParameterAdNetworkAttributionSignature")]
 		NSString AdNetworkAttributionSignature { get; }
 
-		[iOS (11, 3), TV (11, 3), NoMac]
+		[NoMac]
 		[MacCatalyst (13, 1)]
 		[Field ("SKStoreProductParameterAdNetworkCampaignIdentifier")]
 		NSString AdNetworkCampaignIdentifier { get; }
@@ -794,17 +780,17 @@ namespace StoreKit {
 		[Field ("SKStoreProductParameterAdNetworkSourceIdentifier")]
 		NSString AdNetworkSourceIdentifier { get; }
 
-		[iOS (11, 3), TV (11, 3), NoMac]
+		[NoMac]
 		[MacCatalyst (13, 1)]
 		[Field ("SKStoreProductParameterAdNetworkIdentifier")]
 		NSString AdNetworkIdentifier { get; }
 
-		[iOS (11, 3), TV (11, 3), NoMac]
+		[NoMac]
 		[MacCatalyst (13, 1)]
 		[Field ("SKStoreProductParameterAdNetworkNonce")]
 		NSString AdNetworkNonce { get; }
 
-		[iOS (11, 3), TV (11, 3), NoMac]
+		[NoMac]
 		[MacCatalyst (13, 1)]
 		[Field ("SKStoreProductParameterAdNetworkTimestamp")]
 		NSString AdNetworkTimestamp { get; }
@@ -819,7 +805,7 @@ namespace StoreKit {
 		[Field ("SKStoreProductParameterAdNetworkVersion")]
 		NSString AdNetworkVersion { get; }
 
-		[Mac (12, 0), iOS (15, 0), TV (15, 0), MacCatalyst (15, 0)]
+		[iOS (15, 0), TV (15, 0), MacCatalyst (15, 0)]
 		[Field ("SKStoreProductParameterCustomProductPageIdentifier")]
 		NSString CustomProductPageIdentifier { get; }
 	}
@@ -938,7 +924,7 @@ namespace StoreKit {
 		PlayMusic,
 	}
 
-	[Mac (11, 0), Watch (7, 0)]
+	[Watch (7, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface SKCloudServiceController {
@@ -993,7 +979,7 @@ namespace StoreKit {
 
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[NoWatch, Mac (11, 0)]
+	[NoWatch]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // static Default property is the only documented way to get the controller
 	interface SKProductStorePromotionController {
@@ -1039,7 +1025,7 @@ namespace StoreKit {
 		void RequestReview (UIWindowScene windowScene);
 	}
 
-	[Watch (6, 2), iOS (11, 2), TV (11, 2)]
+	[Watch (6, 2)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface SKProductSubscriptionPeriod {
@@ -1051,7 +1037,7 @@ namespace StoreKit {
 		SKProductPeriodUnit Unit { get; }
 	}
 
-	[Watch (6, 2), iOS (11, 2), TV (11, 2)]
+	[Watch (6, 2)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface SKProductDiscount {
@@ -1062,8 +1048,6 @@ namespace StoreKit {
 		[Export ("priceLocale")]
 		NSLocale PriceLocale { get; }
 
-		[iOS (12, 2)]
-		[TV (12, 2)]
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("identifier")]
 		string Identifier { get; }
@@ -1077,14 +1061,12 @@ namespace StoreKit {
 		[Export ("paymentMode")]
 		SKProductDiscountPaymentMode PaymentMode { get; }
 
-		[iOS (12, 2)]
-		[TV (12, 2)]
 		[MacCatalyst (13, 1)]
 		[Export ("type")]
 		SKProductDiscountType Type { get; }
 	}
 
-	[iOS (11, 3), NoTV, NoMac, NoWatch]
+	[NoTV, NoMac, NoWatch]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -1139,8 +1121,6 @@ namespace StoreKit {
 		void UpdatePostback (nint conversionValue, [BindAs (typeof (SKAdNetworkCoarseConversionValue))] NSString coarseValue, bool lockWindow, [NullAllowed] Action<NSError?> completion);
 	}
 
-	[iOS (12, 2)]
-	[TV (12, 2)]
 	[Watch (6, 2)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -1166,8 +1146,6 @@ namespace StoreKit {
 	}
 
 	[Watch (6, 2)]
-	[iOS (12, 2)]
-	[TV (12, 2)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum SKProductDiscountType : long {

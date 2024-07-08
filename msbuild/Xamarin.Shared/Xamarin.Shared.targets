@@ -2357,6 +2357,18 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			<_LinkMode Condition="'$(_LinkMode)' == '' And '$(_PlatformName)' == 'macOS'">None</_LinkMode> <!-- Linking is off by default for macOS apps -->
 			<_LinkMode Condition="'$(_LinkMode)' == '' And '$(_PlatformName)' != 'macOS'">SdkOnly</_LinkMode> <!-- Default linking is SdkOnly for iOS/tvOS/watchOS apps -->
 		</PropertyGroup>
+
+		<PropertyGroup>
+			<!-- Determine if any assemblies are actually trimmed, or if we're in a "Don't link" scenario -->
+			<!-- We're in a "Don't link" scenario if both of the following are true:
+					1. The global TrimMode property is set to 'copy'
+					2. No assembly has the TrimMode metadata (unless it's set to 'copy')
+			-->
+			<_AssembliesWithCustomTrimMode>@(ManagedAssemblyToLink->HasMetadata('TrimMode')->Count())</_AssembliesWithCustomTrimMode>
+			<_AssembliesWithCopyTrimMode>@(ManagedAssemblyToLink->WithMetadataValue('TrimMode', 'copy')->Count())</_AssembliesWithCopyTrimMode>
+			<_AreAnyAssembliesTrimmed Condition="'$(_AreAnyAssembliesTrimmed)' == '' And '$(TrimMode)' == 'copy' And '$(_AssembliesWithCustomTrimMode)' == '$(_AssembliesWithCopyTrimMode)'">false</_AreAnyAssembliesTrimmed>
+			<_AreAnyAssembliesTrimmed Condition="'$(_AreAnyAssembliesTrimmed)' == ''">true</_AreAnyAssembliesTrimmed>
+		</PropertyGroup>
 	</Target>
 
 	<Target Name="_ExtendAppExtensionReferences" DependsOnTargets="_ResolveAppExtensionReferences;_DetectSigningIdentity" Condition=" '@(AdditionalAppExtensions)' != ''">

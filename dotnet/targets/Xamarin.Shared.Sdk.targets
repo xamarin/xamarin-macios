@@ -129,7 +129,8 @@
 		<EventSourceSupport Condition="'$(EventSourceSupport)' == ''">false</EventSourceSupport>
 		<HttpActivityPropagationSupport Condition="'$(HttpActivityPropagationSupport)' == ''">false</HttpActivityPropagationSupport>
 		<InvariantGlobalization Condition="'$(InvariantGlobalization)' == ''">false</InvariantGlobalization>
-		<HybridGlobalization Condition="'$(HybridGlobalization)' == ''">false</HybridGlobalization>
+		<!-- Enable HybridGlobalization by default-->
+		<HybridGlobalization Condition="'$(InvariantGlobalization)' != 'true'">true</HybridGlobalization>
 		<StartupHookSupport Condition="'$(StartupHookSupport)' == ''">false</StartupHookSupport>
 		<UseSystemResourceKeys Condition="'$(UseSystemResourceKeys)' == '' And '$(_BundlerDebug)' != 'true'">true</UseSystemResourceKeys>
 		<UseSystemResourceKeys Condition="'$(UseSystemResourceKeys)' == '' And '$(_BundlerDebug)' == 'true'">false</UseSystemResourceKeys>
@@ -144,6 +145,7 @@
 		<VerifyDependencyInjectionOpenGenericServiceTrimmability Condition="'$(VerifyDependencyInjectionOpenGenericServiceTrimmability)' == ''">true</VerifyDependencyInjectionOpenGenericServiceTrimmability>
 		<!-- This should be set by dotnet/sdk instead, once https://github.com/dotnet/sdk/issues/25392 gets resolved.  -->
 		<DynamicCodeSupport Condition="'$(DynamicCodeSupport)' == '' And '$(MtouchInterpreter)' == '' And ('$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'MacCatalyst')">false</DynamicCodeSupport>
+		<_ComObjectDescriptorSupport Condition="'$(_ComObjectDescriptorSupport)' == ''">false</_ComObjectDescriptorSupport>
 
 		<!-- We don't need to generate reference assemblies for apps or app extensions -->
 		<ProduceReferenceAssembly Condition="'$(ProduceReferenceAssembly)' == '' And ('$(OutputType)' == 'Exe' Or '$(IsAppExtension)' == 'true')">false</ProduceReferenceAssembly>
@@ -482,7 +484,7 @@
 			_DetectAppManifest;
 			_ReadAppManifest;
 			_WriteAppManifest;
-			_ComputeLinkerFeatures;
+			SelectRegistrar;
 		</_ComputeLinkerArgumentsDependsOn>
 	</PropertyGroup>
 
@@ -490,36 +492,24 @@
 		<IlcCompileDependsOn>Compile;_ComputeLinkerArguments;_ComputeManagedAssemblyToLink;SetupOSSpecificProps;PrepareForILLink;_XamarinComputeIlcCompileInputs</IlcCompileDependsOn>
 	</PropertyGroup>
 
-	<Target Name="_ComputeLinkerFeatures">
-		<PropertyGroup Condition="'$(PublishAot)' == 'true'">
-			<!-- Yep, we want to run ILLink as well, because we need our custom steps to run (NativeAOT sets this to false, so set it back to true) -->
-			<RunILLink>true</RunILLink>
-		</PropertyGroup>
-
-		<PropertyGroup Condition="'$(_UseNativeAot)' == 'true'">
-			<!-- The one and only registrar is 'managed-static' when using NativeAOT -->
-			<Registrar Condition="'$(Registrar)' == ''">managed-static</Registrar>
-		</PropertyGroup>
-
+	<Target Name="SelectRegistrar" DependsOnTargets="_ComputeLinkMode">
 		<PropertyGroup>
-			<!-- Set linker feature flags for device/simulator builds -->
-			<_IsSimulatorFeature Condition="('$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS') And '$(_SdkIsSimulator)' == 'true'">true</_IsSimulatorFeature>
-			<_IsSimulatorFeature Condition="'$(_IsSimulatorFeature)' == ''">false</_IsSimulatorFeature>
-
-			<!-- Set managed static registrar value -->
-			<_IsManagedStaticRegistrarFeature Condition="'$(Registrar)' == 'managed-static'">true</_IsManagedStaticRegistrarFeature>
-			<_IsManagedStaticRegistrarFeature Condition="'$(Registrar)' != 'managed-static'">false</_IsManagedStaticRegistrarFeature>
-
-			<!-- Set NativeAOT value -->
-			<_IsNativeAOTFeature Condition="'$(_XamarinRuntime)' == 'NativeAOT'">true</_IsNativeAOTFeature>
-			<_IsNativeAOTFeature Condition="'$(_XamarinRuntime)' != 'NativeAOT'">false</_IsNativeAOTFeature>
+			<!--
+			Registrar configuration:
+				- Set 'managed-static' for:
+					- NativeAOT supported platforms in all configurations
+					- ios/tvos device builds in all configurations
+					- macOS/MacCatalyst builds in release configuration
+				- Set 'partial-static' for:
+					- when no assemblies are trimmed and when _MarshalManagedExceptionMode is default (or not set)
+				- Otherwise set 'dynamic' 
+			-->
+			<Registrar Condition="'$(Registrar)' == '' And '$(_UseNativeAot)' == 'true'">managed-static</Registrar>
+			<Registrar Condition="'$(Registrar)' == '' And '$(_SdkIsSimulator)' != 'true' And ('$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS')">managed-static</Registrar>
+			<Registrar Condition="'$(Registrar)' == '' And '$(_BundlerDebug)' != 'true' And ('$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst')">managed-static</Registrar>
+			<Registrar Condition="'$(Registrar)' == '' And '$(_AreAnyAssembliesTrimmed)' != 'true' And ('$(_MarshalManagedExceptionMode)' == '' Or '$(_MarshalManagedExceptionMode)' == 'default')">partial-static</Registrar>
+			<Registrar Condition="'$(Registrar)' == ''">dynamic</Registrar>
 		</PropertyGroup>
-
-		<ItemGroup>
-			<RuntimeHostConfigurationOption Include="ObjCRuntime.Runtime.Arch.IsSimulator" Value="$(_IsSimulatorFeature)" Trim="true" />
-			<RuntimeHostConfigurationOption Include="ObjCRuntime.Runtime.IsManagedStaticRegistrar" Value="$(_IsManagedStaticRegistrarFeature)" Trim="true" />
-			<RuntimeHostConfigurationOption Include="ObjCRuntime.Runtime.IsNativeAOT" Value="$(_IsNativeAOTFeature)" Trim="true" />
-		</ItemGroup>
 	</Target>
 
 	<Target Name="_ComputeLinkerArguments" DependsOnTargets="$(_ComputeLinkerArgumentsDependsOn)">
@@ -531,10 +521,20 @@
 
 		<Error Text="The only valid registrar when using NativeAOT is 'managed-static' (current value: '$(Registrar)'). Please either delete the 'Registrar' property, or change it to be 'managed-static'." Condition="'$(_UseNativeAot)' == 'true' And '$(Registrar)' != '' And '$(Registrar)' != 'managed-static'" />
 
-		<Warning Text="Only the managed static registrar is supported when using NativeAOT." Condition="'$(_UseNativeAot)' == 'true' And '$(Registrar)' != 'managed-static'" />
 		<Warning Text="All assemblies must be processed by the linker when using NativeAOT. Please don't set neither the '$(_LinkModeProperty)' nor the 'TrimMode' property, so that the build can default to linking all assemblies." Condition="'$(_UseNativeAot)' == 'true' And '$(_LinkMode)' != 'Full'" />
 
 		<PropertyGroup>
+			<!-- Yep, we want to run ILLink as well, because we need our custom steps to run (NativeAOT sets this to false, so set it back to true) -->
+			<RunILLink Condition="'$(PublishAot)' == 'true'">true</RunILLink>
+
+			<!--
+				In the case of NativeAOT builds, the trim warnings will be produced either by the ILLink roslyn analyzer in Debug builds
+				or by the ILC when publishing. We want to suppress the ILLink warnings in all build configurations to avoid duplicates.
+				We choose not to suppress the ILLink warnings when TrimMode is set to 'full' and we're not publishing. In this scenario
+				ILC will not run at a later stage of the build.
+			-->
+			<SuppressTrimAnalysisWarnings Condition="'$(PublishAot)' == 'true' And '$(_IsPublishing)' != 'true' And '$(TrimMode)' != 'full'">true</SuppressTrimAnalysisWarnings>
+
 			<!-- Pass the custom options to our custom steps -->
 			<_CustomLinkerOptionsFile>$([System.IO.Path]::GetFullPath('$(IntermediateOutputPath)custom-linker-options.txt'))</_CustomLinkerOptionsFile>
 			<_CustomLinkerOptionsFile Condition="'$(BuildSessionId)' != ''">$(IntermediateOutputPath)custom-linker-options.txt</_CustomLinkerOptionsFile>
@@ -547,22 +547,17 @@
 			<_LinkerCacheDirectory>$([System.IO.Path]::GetFullPath('$(IntermediateOutputPath)linker-cache'))</_LinkerCacheDirectory>
 			<_LinkerCacheDirectory Condition="'$(BuildSessionId)' != ''">$(IntermediateOutputPath)linker-cache</_LinkerCacheDirectory>
 
-			<!-- TrimMode specifies what the linker will do with framework assemblies -->
-			<TrimMode Condition="'$(_LinkMode)' == 'TrimMode'">$(TrimMode)</TrimMode>
-			<TrimMode Condition="'$(_LinkMode)' == 'None'">copy</TrimMode>
-			<TrimMode Condition="'$(_LinkMode)' == 'SdkOnly'">partial</TrimMode>
-			<TrimMode Condition="'$(_LinkMode)' == 'Full'">full</TrimMode>
-			<!-- For None link mode we also need to set TrimMode for all assemblies. This is done further below -->
+			<!-- Set linker feature flags for device/simulator builds -->
+			<_IsSimulatorFeature Condition="('$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS') And '$(_SdkIsSimulator)' == 'true'">true</_IsSimulatorFeature>
+			<_IsSimulatorFeature Condition="'$(_IsSimulatorFeature)' == ''">false</_IsSimulatorFeature>
 
-			<!-- Determine if any assemblies are actually trimmed, or if we're in a "Don't link" scenario -->
-			<!-- We're in a "Don't link" scenario if both of the following are true:
-				 1. The global TrimMode property is set to 'copy'
-				 2. No assembly has the TrimMode metadata (unless it's set to 'copy')
-			-->
-			<_AssembliesWithCustomTrimMode>@(ManagedAssemblyToLink->HasMetadata('TrimMode')->Count())</_AssembliesWithCustomTrimMode>
-			<_AssembliesWithCopyTrimMode>@(ManagedAssemblyToLink->WithMetadataValue('TrimMode', 'copy')->Count())</_AssembliesWithCopyTrimMode>
-			<_AreAnyAssembliesTrimmed Condition="'$(_AreAnyAssembliesTrimmed)' == '' And '$(TrimMode)' == 'copy' And '$(_AssembliesWithCustomTrimMode)' == '$(_AssembliesWithCopyTrimMode)'">false</_AreAnyAssembliesTrimmed>
-			<_AreAnyAssembliesTrimmed Condition="'$(_AreAnyAssembliesTrimmed)' == ''">true</_AreAnyAssembliesTrimmed>
+			<!-- Set managed static registrar value -->
+			<_IsManagedStaticRegistrarFeature Condition="'$(Registrar)' == 'managed-static'">true</_IsManagedStaticRegistrarFeature>
+			<_IsManagedStaticRegistrarFeature Condition="'$(Registrar)' != 'managed-static'">false</_IsManagedStaticRegistrarFeature>
+
+			<!-- Set NativeAOT value -->
+			<_IsNativeAOTFeature Condition="'$(_XamarinRuntime)' == 'NativeAOT'">true</_IsNativeAOTFeature>
+			<_IsNativeAOTFeature Condition="'$(_XamarinRuntime)' != 'NativeAOT'">false</_IsNativeAOTFeature>
 
 			<_CustomLinkerOptions>
 				AreAnyAssembliesTrimmed=$(_AreAnyAssembliesTrimmed)
@@ -661,6 +656,9 @@
 			<!-- If we're using NativeAOT, tell ILLink to not remove dependency attributes (DynamicDependencyAttribute), because NativeAOT's trimmer also needs to see them. -->
 			<_ExtraTrimmerArgs Condition="'$(_UseNativeAot)' == 'true'">$(_ExtraTrimmerArgs) --keep-dep-attributes</_ExtraTrimmerArgs>
 
+			<!-- Ensure ILLink respects the value of SuppressTrimAnalysisWarnings -->
+			<_ExtraTrimmerArgs Condition="'$(SuppressTrimAnalysisWarnings)' == 'true'">$(_ExtraTrimmerArgs) --notrimwarn</_ExtraTrimmerArgs>
+
 			<!-- We always want the linker to process debug symbols, even when building in Release mode, because the AOT compiler uses the managed debug symbols to output DWARF debugging symbols -->
 			<TrimmerRemoveSymbols Condition="'$(TrimmerRemoveSymbols)' == ''">false</TrimmerRemoveSymbols>
 
@@ -670,6 +668,11 @@
 		</PropertyGroup>
 
 		<ItemGroup>
+			<!-- Configure linker features -->
+			<RuntimeHostConfigurationOption Include="ObjCRuntime.Runtime.Arch.IsSimulator" Value="$(_IsSimulatorFeature)" Trim="true" />
+			<RuntimeHostConfigurationOption Include="ObjCRuntime.Runtime.IsManagedStaticRegistrar" Value="$(_IsManagedStaticRegistrarFeature)" Trim="true" />
+			<RuntimeHostConfigurationOption Include="ObjCRuntime.Runtime.IsNativeAOT" Value="$(_IsNativeAOTFeature)" Trim="true" />
+
 			<!-- Mark all assemblies to be copied if we're not linking any assemblies -->
 			<ResolvedFileToPublish
 				Update="@(ResolvedFileToPublish)"
@@ -1521,10 +1524,11 @@
 			<!-- libSystem.Security.Cryptography.Native.Apple.a requires the Security framework -->
 			<_NativeExecutableFrameworks Include="Security" />
 
-			<!-- Mono requires zlib, iconv, and the "Compression framework" -->
+			<!-- Mono requires zlib, iconv, icucore, and the "Compression framework" -->
 			<_MainLinkerFlags Include="-lz" />
 			<_MainLinkerFlags Include="-liconv" />
 			<_MainLinkerFlags Include="-lcompression" />
+			<_MainLinkerFlags Include="-licucore" />
 
 			<!-- In some cases ld may crash if -lobjc isn't passed -->
 			<_MainLinkerFlags Include="-lobjc" />

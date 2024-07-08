@@ -27,13 +27,11 @@ using NativeHandle = System.IntPtr;
 namespace Security {
 
 #if NET
-	[SupportedOSPlatform ("tvos12.0")]
+	[SupportedOSPlatform ("tvos")]
 	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("ios12.0")]
+	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
-	[TV (12, 0)]
-	[iOS (12, 0)]
 	[Watch (5, 0)]
 #endif
 	public class SecProtocolOptions : NativeObject {
@@ -97,9 +95,9 @@ namespace Security {
 		public void AddTlsCipherSuite (TlsCipherSuite cipherSuite) => sec_protocol_options_append_tls_ciphersuite (GetCheckedHandle (), cipherSuite);
 
 #if NET
-		[SupportedOSPlatform ("tvos12.0")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[ObsoletedOSPlatform ("macos10.15", "Use 'AddTlsCipherSuiteGroup (TlsCipherSuiteGroup)' instead.")]
 		[ObsoletedOSPlatform ("tvos13.0", "Use 'AddTlsCipherSuiteGroup (TlsCipherSuiteGroup)' instead.")]
@@ -114,9 +112,9 @@ namespace Security {
 		static extern void sec_protocol_options_add_tls_ciphersuite_group (sec_protocol_options_t handle, SslCipherSuiteGroup cipherSuiteGroup);
 
 #if NET
-		[SupportedOSPlatform ("tvos12.0")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[ObsoletedOSPlatform ("macos10.15", "Use 'AddTlsCipherSuiteGroup (TlsCipherSuiteGroup)' instead.")]
 		[ObsoletedOSPlatform ("tvos13.0", "Use 'AddTlsCipherSuiteGroup (TlsCipherSuiteGroup)' instead.")]
@@ -155,9 +153,9 @@ namespace Security {
 		public void AddTlsCipherSuiteGroup (TlsCipherSuiteGroup cipherSuiteGroup) => sec_protocol_options_append_tls_ciphersuite_group (GetCheckedHandle (), cipherSuiteGroup);
 
 #if NET
-		[SupportedOSPlatform ("tvos12.0")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[ObsoletedOSPlatform ("macos10.15", "Use 'SetTlsMinVersion (TlsProtocolVersion)' instead.")]
 		[ObsoletedOSPlatform ("tvos13.0", "Use 'SetTlsMinVersion (TlsProtocolVersion)' instead.")]
@@ -173,9 +171,9 @@ namespace Security {
 		static extern void sec_protocol_options_set_tls_min_version (sec_protocol_options_t handle, SslProtocol protocol);
 
 #if NET
-		[SupportedOSPlatform ("tvos12.0")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[ObsoletedOSPlatform ("macos10.15", "Use 'SetTlsMinVersion (TlsProtocolVersion)' instead.")]
 		[ObsoletedOSPlatform ("tvos13.0", "Use 'SetTlsMinVersion (TlsProtocolVersion)' instead.")]
@@ -216,9 +214,9 @@ namespace Security {
 		public void SetTlsMinVersion (TlsProtocolVersion protocol) => sec_protocol_options_set_min_tls_protocol_version (GetCheckedHandle (), protocol);
 
 #if NET
-		[SupportedOSPlatform ("tvos12.0")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[ObsoletedOSPlatform ("macos10.15", "Use 'SetTlsMaxVersion (TlsProtocolVersion)' instead.")]
 		[ObsoletedOSPlatform ("tvos13.0", "Use 'SetTlsMaxVersion (TlsProtocolVersion)' instead.")]
@@ -234,9 +232,9 @@ namespace Security {
 		static extern void sec_protocol_options_set_tls_max_version (sec_protocol_options_t handle, SslProtocol protocol);
 
 #if NET
-		[SupportedOSPlatform ("tvos12.0")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[ObsoletedOSPlatform ("macos10.15", "Use 'SetTlsMaxVersion (TlsProtocolVersion)' instead.")]
 		[ObsoletedOSPlatform ("tvos13.0", "Use 'SetTlsMaxVersion (TlsProtocolVersion)' instead.")]
@@ -400,9 +398,9 @@ namespace Security {
 		}
 
 #if NET
-		[SupportedOSPlatform ("tvos12.0")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[ObsoletedOSPlatform ("macos10.15", "Use non-DHE cipher suites instead.")]
 		[ObsoletedOSPlatform ("tvos13.0", "Use non-DHE cipher suites instead.")]
@@ -418,9 +416,9 @@ namespace Security {
 		static extern void sec_protocol_options_set_tls_diffie_hellman_parameters (IntPtr handle, IntPtr dispatchDataParameter);
 
 #if NET
-		[SupportedOSPlatform ("tvos12.0")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[ObsoletedOSPlatform ("macos10.15", "Use non-DHE cipher suites instead.")]
 		[ObsoletedOSPlatform ("tvos13.0", "Use non-DHE cipher suites instead.")]
