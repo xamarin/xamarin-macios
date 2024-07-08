@@ -1,2 +1,0 @@
-!missing-protocol-member! MTLResource::setOwnerWithIdentity: not found
-!missing-protocol-member! MTLSharedEvent::waitUntilSignaledValue:timeoutMS: not found
