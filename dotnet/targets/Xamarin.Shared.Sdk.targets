@@ -164,8 +164,8 @@
 	</PropertyGroup>
 
 	<PropertyGroup>
-		<_GlobalizationDataFile Condition="'$(_PlatformName)' != 'macOS' And '$(InvariantGlobalization)' != 'true' And '$(HybridGlobalization)' != 'true' And '$(_GlobalizationDataFile)' == ''">icudt.dat</_GlobalizationDataFile>
-		<_GlobalizationDataFile Condition="'$(_PlatformName)' != 'macOS' And '$(InvariantGlobalization)' != 'true' And '$(HybridGlobalization)' == 'true' And '$(_GlobalizationDataFile)' == ''">icudt_hybrid.dat</_GlobalizationDataFile>
+        <_GlobalizationDataFile Condition="'$(_PlatformName)' != 'macOS' And '$(InvariantGlobalization)' != 'true' And '$(HybridGlobalization)' != 'true' And '$(_GlobalizationDataFile)' == '' And $([MSBuild]::VersionLessThan($(TargetFrameworkVersion), '9.0'))">icudt.dat</_GlobalizationDataFile>
+		<_GlobalizationDataFile Condition="'$(_PlatformName)' != 'macOS' And '$(InvariantGlobalization)' != 'true' And '$(HybridGlobalization)' == 'true' And '$(_GlobalizationDataFile)' == '' And $([MSBuild]::VersionLessThan($(TargetFrameworkVersion), '9.0'))">icudt_hybrid.dat</_GlobalizationDataFile>
 	</PropertyGroup>
 
 	<PropertyGroup>
