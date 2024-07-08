@@ -267,21 +267,26 @@ namespace Xamarin.Tests {
 					Console.WriteLine (outputStr);
 					if (rv.ExitCode != 0) {
 						var msg = new StringBuilder ();
-						msg.AppendLine ($"'dotnet {verb}' failed with exit code {rv.ExitCode}");
-						msg.AppendLine ($"Full command: {Executable} {StringUtils.FormatArguments (args)}");
+						if (rv.TimedOut) {
+							msg.AppendLine ($"'dotnet {verb}' timed out after {timeout?.TotalMinutes} minutes with exit code {rv.ExitCode}");
+							msg.AppendLine ($"Full command: {Executable} {StringUtils.FormatArguments (args)}");
+						} else {
+							msg.AppendLine ($"'dotnet {verb}' failed with exit code {rv.ExitCode}");
+							msg.AppendLine ($"Full command: {Executable} {StringUtils.FormatArguments (args)}");
 #if !MSBUILD_TASKS
-						try {
-							var errors = BinLog.GetBuildLogErrors (binlogPath).ToArray ();
-							if (errors.Any ()) {
-								var errorsToList = errors.Take (10).ToArray ();
-								msg.AppendLine ($"Listing first {errorsToList.Length} error(s) (of {errors.Length} error(s)):");
-								foreach (var error in errorsToList)
-									msg.AppendLine ($"    {string.Join ($"{Environment.NewLine}        ", error.ToString ().Split ('\n', '\r'))}");
+							try {
+								var errors = BinLog.GetBuildLogErrors (binlogPath).ToArray ();
+								if (errors.Any ()) {
+									var errorsToList = errors.Take (10).ToArray ();
+									msg.AppendLine ($"Listing first {errorsToList.Length} error(s) (of {errors.Length} error(s)):");
+									foreach (var error in errorsToList)
+										msg.AppendLine ($"    {string.Join ($"{Environment.NewLine}        ", error.ToString ().Split ('\n', '\r'))}");
+								}
+							} catch (Exception e) {
+								msg.AppendLine ($"Failed to list errors in the binlog {binlogPath}: {e}");
 							}
-						} catch (Exception e) {
-							msg.AppendLine ($"Failed to list errors in the binlog {binlogPath}: {e}");
-						}
 #endif
+						}
 						Assert.Fail (msg.ToString ());
 					}
 					Assert.AreEqual (0, rv.ExitCode, $"Exit code: {Executable} {StringUtils.FormatArguments (args)}");
