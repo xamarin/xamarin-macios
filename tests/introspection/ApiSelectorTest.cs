@@ -995,6 +995,15 @@ namespace Introspection {
 					return true;
 				}
 				break;
+			case "SRFaceMetrics":
+				switch (selectorName) {
+				case "faceAnchor":
+					// This selector does not exist in the simulator
+					if (TestRuntime.IsSimulatorOrDesktop)
+						return true;
+					break;
+				}
+				break;
 			}
 
 			// old binding mistake
