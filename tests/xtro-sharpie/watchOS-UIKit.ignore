@@ -32,5 +32,4 @@
 !missing-null-allowed! 'UIKit.UIFontDescriptor UIKit.UIFontDescriptor::CreateWithTraits(UIKit.UIFontDescriptorSymbolicTraits)' is missing an [NullAllowed] on return type
 
 !unknown-field! UIUserNotificationActionResponseTypedTextKey bound
-!missing-selector! NSItemProvider::_availableTypes not bound
 !missing-protocol! UIItemProviderReadingAugmentationDesignating not bound
