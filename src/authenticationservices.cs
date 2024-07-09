@@ -1438,6 +1438,10 @@ namespace AuthenticationServices {
 		[Sealed]
 		[Export ("allowedCredentials", ArgumentSemantic.Copy)]
 		ASAuthorizationSecurityKeyPublicKeyCredentialDescriptor [] SecurityAllowedCredentials { get; set; }
+
+		[Mac (14, 5), iOS (17, 5), MacCatalyst (17, 5)]
+		[NullAllowed, Export ("appID")]
+		string AppId { get; set; }
 	}
 
 	interface IASAuthorizationPublicKeyCredentialAssertionRequest { }
@@ -1674,12 +1678,21 @@ namespace AuthenticationServices {
 	[NoWatch, NoTV, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (NSObject))]
 	interface ASAuthorizationSecurityKeyPublicKeyCredentialAssertion : ASAuthorizationPublicKeyCredentialAssertion {
+
+		[Mac (14, 5), iOS (17, 5),  MacCatalyst (17, 5)]
+		[Export ("appID")]
+		bool AppId { get; }
 	}
 
 	[NoWatch, NoTV, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface ASAuthorizationSecurityKeyPublicKeyCredentialRegistration : ASAuthorizationPublicKeyCredentialRegistration {
+
+		[Mac (14, 5), iOS (17, 5), MacCatalyst (17, 5)]
+		[Export ("transports", ArgumentSemantic.Assign)]
+		[BindAs (typeof (ASAuthorizationSecurityKeyPublicKeyCredentialDescriptorTransport []))]
+		NSString [] Transports { get; }
 	}
 
 	[NoWatch, TV (16, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]

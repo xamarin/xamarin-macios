@@ -1259,6 +1259,14 @@ namespace PassKit {
 		[Watch (10, 4), Mac (14, 4), iOS (17, 4), NoTV, MacCatalyst (17, 4)]
 		[Field ("PKPaymentNetworkMeeza")]
 		NSString Meeza { get; }
+
+		[Watch (10, 5), Mac (14, 5), iOS (17, 5), NoTV, MacCatalyst (17, 5)]
+		[Field ("PKPaymentNetworkBankAxept")]
+		NSString BankAxept { get; }
+
+		[Watch (10, 5), Mac (14, 5), iOS (17, 5), NoTV, MacCatalyst (17, 5)]
+		[Field ("PKPaymentNetworkNAPAS")]
+		NSString Napas { get; }
 	}
 
 #if !WATCH

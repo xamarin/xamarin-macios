@@ -25,6 +25,8 @@ namespace AutomaticAssessmentConfiguration {
 	public enum AEAssessmentErrorCode : long {
 		Unknown = 1,
 		UnsupportedPlatform = 2,
+		MultipleParticipantsNotSupported = 3,
+		ConfigurationUpdatesNotSupported = 4,
 	}
 
 	[iOS (14, 0)]
@@ -86,19 +88,19 @@ namespace AutomaticAssessmentConfiguration {
 		[Export ("allowsContinuousPathKeyboard")]
 		bool AllowsContinuousPathKeyboard { get; set; }
 
-		[NoiOS, Mac (12, 0), MacCatalyst (15, 0)]
+		[iOS (17, 5), Mac (12, 0), MacCatalyst (15, 0)]
 		[Export ("configurationsByApplication", ArgumentSemantic.Copy)]
 		NSDictionary<AEAssessmentApplication, AEAssessmentParticipantConfiguration> ConfigurationsByApplication { get; }
 
-		[NoiOS, Mac (12, 0), MacCatalyst (15, 0)]
+		[iOS (17, 5), Mac (12, 0), MacCatalyst (15, 0)]
 		[Export ("mainParticipantConfiguration", ArgumentSemantic.Strong)]
 		AEAssessmentParticipantConfiguration MainParticipantConfiguration { get; }
 
-		[NoiOS, Mac (12, 0), MacCatalyst (15, 0)]
+		[iOS (17, 5), Mac (12, 0), MacCatalyst (15, 0)]
 		[Export ("removeApplication:")]
 		void Remove (AEAssessmentApplication application);
 
-		[NoiOS, Mac (12, 0), MacCatalyst (15, 0)]
+		[iOS (17, 5), Mac (12, 0), MacCatalyst (15, 0)]
 		[Export ("setConfiguration:forApplication:")]
 		void SetConfiguration (AEAssessmentParticipantConfiguration configuration, AEAssessmentApplication application);
 	}
@@ -108,6 +110,16 @@ namespace AutomaticAssessmentConfiguration {
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface AEAssessmentSession {
+
+		[MacCatalyst (17, 5), Mac (14, 5), iOS (17, 5)]
+		[Static]
+		[Export ("supportsMultipleParticipants")]
+		bool SupportsMultipleParticipants { get; }
+
+		[MacCatalyst (17, 5), Mac (14, 5), iOS (17, 5)]
+		[Static]
+		[Export ("supportsConfigurationUpdates")]
+		bool SupportsConfigurationUpdates { get; }
 
 		[Wrap ("WeakDelegate")]
 		[NullAllowed]
@@ -126,7 +138,7 @@ namespace AutomaticAssessmentConfiguration {
 		[Export ("configuration", ArgumentSemantic.Copy)]
 		AEAssessmentConfiguration Configuration { get; }
 
-		[Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+		[Mac (12, 0), iOS (17, 5), MacCatalyst (15, 0)]
 		[Export ("updateToConfiguration:")]
 		void Update (AEAssessmentConfiguration configuration);
 
@@ -161,11 +173,11 @@ namespace AutomaticAssessmentConfiguration {
 		[Export ("assessmentSessionDidEnd:")]
 		void DidEnd (AEAssessmentSession session);
 
-		[NoiOS, Mac (12, 0), MacCatalyst (15, 0)]
+		[iOS (17,5), Mac (12, 0), MacCatalyst (15, 0)]
 		[Export ("assessmentSessionDidUpdate:")]
 		void DidUpdate (AEAssessmentSession session);
 
-		[NoiOS, Mac (12, 0), MacCatalyst (15, 0)]
+		[iOS (17,5), Mac (12, 0), MacCatalyst (15, 0)]
 		[Export ("assessmentSession:failedToUpdateToConfiguration:error:")]
 		void FailedToUpdate (AEAssessmentSession session, AEAssessmentConfiguration configuration, NSError error);
 	}
@@ -176,7 +188,7 @@ namespace AutomaticAssessmentConfiguration {
 	[DisableDefaultCtor]
 #endif
 	interface AEAssessmentApplication : NSCopying {
-		[NoiOS]
+		[iOS (17, 5)]
 		[MacCatalyst (15, 0)]
 		[Export ("initWithBundleIdentifier:")]
 		NativeHandle Constructor (string bundleIdentifier);
@@ -196,7 +208,7 @@ namespace AutomaticAssessmentConfiguration {
 		bool RequiresSignatureValidation { get; set; }
 	}
 
-	[Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[Mac (12, 0), iOS (17, 5), MacCatalyst (15, 0)]
 	[BaseType (typeof (NSObject))]
 	interface AEAssessmentParticipantConfiguration : NSCopying {
 		[Export ("allowsNetworkAccess")]

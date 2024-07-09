@@ -331,7 +331,17 @@ namespace UIKit {
 	[DisableDefaultCtor]
 	[Abstract] // abstract class that should not be used directly
 	[BaseType (typeof (NSObject))]
+#if IOS && IOS17_5_OR_GREATER
+	interface UIFeedbackGenerator : UIInteraction {
+#else
 	interface UIFeedbackGenerator {
+#endif
+		// intancetype -> UIFeedbackGenerator, inlined as subclasses should return the same type as the instance
+		[iOS (17, 5), MacCatalyst (17, 5)]
+		[Static]
+		[Internal]
+		[Export ("feedbackGeneratorForView:")]
+		NativeHandle _GetFeedbackGenerator (UIView forView);
 
 		[Export ("prepare")]
 		void Prepare ();
@@ -344,16 +354,37 @@ namespace UIKit {
 	[BaseType (typeof (UIFeedbackGenerator))]
 	interface UIImpactFeedbackGenerator {
 
+		[iOS (17, 5), MacCatalyst (17, 5)]
+		[Static]
+		[Export ("feedbackGeneratorWithStyle:forView:")]
+		UIImpactFeedbackGenerator GetFeedbackGenerator (UIImpactFeedbackStyle style, UIView view);
+		
+		[Deprecated (PlatformName.iOS, 17, 5, message: "Use 'GetFeedbackGenerator' method instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 17, 5, message: "Use 'GetFeedbackGenerator' method instead.")]
 		[Export ("initWithStyle:")]
 		NativeHandle Constructor (UIImpactFeedbackStyle style);
 
 		[Export ("impactOccurred")]
 		void ImpactOccurred ();
 
+		[iOS (17, 5), MacCatalyst (17, 5)]
+		[Export ("impactOccurredAtLocation:")]
+		void ImpactOccurred (CGPoint atLocation);
+
 		[iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("impactOccurredWithIntensity:")]
 		void ImpactOccurred (nfloat intensity);
+
+		[iOS (17, 5), MacCatalyst (17, 5)]
+		[Export ("impactOccurredWithIntensity:atLocation:")]
+		void ImpactOccurred (nfloat intensity, CGPoint location);
+
+		// Inlined from parent class
+		[iOS (17, 5), MacCatalyst (17, 5)]
+		[Static]
+		[Wrap ("Runtime.GetNSObject<UIImpactFeedbackGenerator> (UIFeedbackGenerator._GetFeedbackGenerator (forView))!")]
+		UIImpactFeedbackGenerator GetFeedbackGenerator (UIView forView);
 	}
 
 	/// <summary>A <see cref="T:UIKit.UIFeedbackGenerator" /> that generates haptics relating to successes, failures, and warnings.</summary>
@@ -364,6 +395,16 @@ namespace UIKit {
 
 		[Export ("notificationOccurred:")]
 		void NotificationOccurred (UINotificationFeedbackType notificationType);
+
+		[iOS (17, 5), MacCatalyst (17, 5)]
+		[Export ("notificationOccurred:atLocation:")]
+		void NotificationOccurred (UINotificationFeedbackType notificationType, CGPoint location);
+
+		// Inlined from parent class
+		[iOS (17, 5), MacCatalyst (17, 5)]
+		[Static]
+		[Wrap ("Runtime.GetNSObject<UINotificationFeedbackGenerator> (UIFeedbackGenerator._GetFeedbackGenerator (forView))!")]
+		UINotificationFeedbackGenerator GetFeedbackGenerator (UIView forView);
 	}
 
 	/// <summary>A <see cref="T:UIKit.UIFeedbackGenerator" /> that produces haptic feedback.</summary>
@@ -374,6 +415,16 @@ namespace UIKit {
 
 		[Export ("selectionChanged")]
 		void SelectionChanged ();
+
+		[iOS (17, 5), MacCatalyst (17, 5)]
+		[Export ("selectionChangedAtLocation:")]
+		void SelectionChanged (CGPoint location);
+
+		// Inlined from parent class
+		[iOS (17, 5), MacCatalyst (17, 5)]
+		[Static]
+		[Wrap ("Runtime.GetNSObject<UISelectionFeedbackGenerator> (UIFeedbackGenerator._GetFeedbackGenerator (forView))!")]
+		UISelectionFeedbackGenerator GetFeedbackGenerator (UIView forView);
 	}
 
 	interface IUISheetPresentationControllerDelegate { }
@@ -16569,6 +16620,10 @@ namespace UIKit {
 		[MacCatalyst (13, 1)]
 		[Export ("estimatedPropertiesExpectingUpdates")]
 		UITouchProperties EstimatedPropertiesExpectingUpdates { get; }
+
+		[NoWatch, NoTV, iOS (17, 5), MacCatalyst (17 ,5)]
+		[Export ("rollAngle")]
+		nfloat RollAngle { get; }
 	}
 
 	/// <summary>A Video Editor Controller.</summary>
@@ -23451,6 +23506,20 @@ namespace UIKit {
 		ShowColorPalette,
 		[iOS (16, 0), MacCatalyst (16, 0)]
 		ShowInkAttributes,
+		[iOS (17, 5), MacCatalyst (17, 5)]
+		ShowContextualPalette,
+		[iOS (17, 5), MacCatalyst (17, 5)]
+		RunSystemShortcut,
+	}
+
+	[NoWatch, NoTV, iOS (17, 5), MacCatalyst (17, 5)]
+	[Native]
+	public enum UIPencilInteractionPhase : ulong
+	{
+		Began,
+		Changed,
+		Ended,
+		Cancelled,
 	}
 
 	[iOS (12, 1)]
@@ -23463,11 +23532,25 @@ namespace UIKit {
 		[Export ("preferredTapAction")]
 		UIPencilPreferredAction PreferredTapAction { get; }
 
+		[iOS (17, 5), MacCatalyst (17, 5)]
+		[Static]
+		[Export ("preferredSqueezeAction")]
+		UIPencilPreferredAction PreferredSqueezeAction { get; }
+
 		[iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[Static]
 		[Export ("prefersPencilOnlyDrawing")]
 		bool PrefersPencilOnlyDrawing { get; }
+
+		[iOS (17, 5), MacCatalyst (17, 5)]
+		[Static]
+		[Export ("prefersHoverToolPreview")]
+		bool PrefersHoverToolPreview { get; }
+
+		[iOS (17,5)]
+		[Export ("initWithDelegate:")]
+		NativeHandle Constructor (IUIPencilInteractionDelegate @delegate);
 
 		[Wrap ("WeakDelegate")]
 		[NullAllowed]
@@ -23480,6 +23563,57 @@ namespace UIKit {
 		bool Enabled { [Bind ("isEnabled")] get; set; }
 	}
 
+	[NoWatch, NoTV, iOS (17, 5), MacCatalyst (17, 5)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface UIPencilHoverPose {
+
+		[Export ("location", ArgumentSemantic.Assign)]
+		CGPoint Location { get; }
+
+		[Export ("zOffset")]
+		nfloat ZOffset { get; }
+
+		[Export ("azimuthAngle")]
+		nfloat AzimuthAngle { get; }
+
+		[Export ("azimuthUnitVector", ArgumentSemantic.Assign)]
+		CGVector AzimuthUnitVector { get; }
+
+		[Export ("altitudeAngle")]
+		nfloat AltitudeAngle { get; }
+
+		[Export ("rollAngle")]
+		nfloat RollAngle { get; }
+	}
+
+	[NoWatch, NoTV, iOS (17, 5), MacCatalyst (17, 5)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface UIPencilInteractionTap {
+
+		[Export ("timestamp")]
+		double Timestamp { get; }
+
+		[NullAllowed, Export ("hoverPose", ArgumentSemantic.Strong)]
+		UIPencilHoverPose HoverPose { get; }
+	}
+
+	[NoWatch, NoTV, iOS (17, 5), MacCatalyst (17, 5)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface UIPencilInteractionSqueeze {
+
+		[Export ("timestamp")]
+		double Timestamp { get; }
+
+		[Export ("phase", ArgumentSemantic.Assign)]
+		UIPencilInteractionPhase Phase { get; }
+
+		[NullAllowed, Export ("hoverPose", ArgumentSemantic.Strong)]
+		UIPencilHoverPose HoverPose { get; }
+	}
+
 	interface IUIPencilInteractionDelegate { }
 
 	[iOS (12, 1)]
@@ -23489,8 +23623,19 @@ namespace UIKit {
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	interface UIPencilInteractionDelegate {
+
+		[Deprecated (PlatformName.iOS, 17, 5, message: "Use 'DidReceiveTap' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 17, 5, message: "Use 'DidReceiveTap' instead.")]
 		[Export ("pencilInteractionDidTap:")]
 		void DidTap (UIPencilInteraction interaction);
+
+		[iOS (17, 5), MacCatalyst (17, 5)]
+		[Export ("pencilInteraction:didReceiveTap:")]
+		void DidReceiveTap (UIPencilInteraction interaction, UIPencilInteractionTap tap);
+
+		[iOS (17, 5), MacCatalyst (17, 5)]
+		[Export ("pencilInteraction:didReceiveSqueeze:")]
+		void DidReceiveSqueeze (UIPencilInteraction interaction, UIPencilInteractionSqueeze squeeze);
 	}
 
 	[iOS (13, 0), TV (13, 0), NoWatch]
@@ -24134,6 +24279,10 @@ namespace UIKit {
 		[iOS (16, 4), MacCatalyst (16, 4)]
 		[Export ("altitudeAngle")]
 		nfloat AltitudeAngle { get; }
+
+		[iOS (17, 5), MacCatalyst (17, 5)]
+		[Export ("rollAngle")]
+		nfloat RollAngle { get; }
 	}
 
 	interface IUILargeContentViewerItem { }
@@ -29241,6 +29390,24 @@ namespace UIKit {
 
 		[Export ("initWithFrame:")]
 		NativeHandle Constructor (CGRect frame);
+	}
+
+	[NoWatch, NoTV, iOS (17, 5), MacCatalyst (17, 5)]
+	[BaseType (typeof (UIFeedbackGenerator))]
+	[DisableDefaultCtor]
+	interface UICanvasFeedbackGenerator {
+
+		[Export ("alignmentOccurredAtLocation:")]
+		void AlignmentOccurred (CGPoint atLocation);
+
+		[Export ("pathCompletedAtLocation:")]
+		void PathCompleted (CGPoint atLocation);
+
+		// Inlined from parent class
+		[iOS (17, 5), MacCatalyst (17, 5)]
+		[Static]
+		[Wrap ("Runtime.GetNSObject<UICanvasFeedbackGenerator> (UIFeedbackGenerator._GetFeedbackGenerator (forView))!")]
+		UICanvasFeedbackGenerator GetFeedbackGenerator (UIView forView);
 	}
 
 }

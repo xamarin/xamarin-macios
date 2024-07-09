@@ -727,6 +727,8 @@ namespace UIKit {
 		Azimuth = (1 << 1),
 		Altitude = (1 << 2),
 		Location = (1 << 3),
+		[iOS (17, 5), MacCatalyst (17, 5), NoTV]
+		Roll = (1L << 4),
 	}
 
 	//
