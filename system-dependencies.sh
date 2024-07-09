@@ -11,6 +11,7 @@ VERBOSE=
 
 OPTIONAL_SHARPIE=1
 OPTIONAL_SIMULATORS=1
+OPTIONAL_OLD_SIMULATORS=1
 
 # parse command-line arguments
 while ! test -z $1; do
@@ -75,6 +76,12 @@ while ! test -z $1; do
 			unset IGNORE_SIMULATORS
 			shift
 			;;
+		--provision-old-simulators)
+			PROVISION_OLD_SIMULATORS=1
+			unset OPTIONAL_OLD_SIMULATORS
+			unset IGNORE_OLD_SIMULATORS
+			shift
+			;;
 		--provision-dotnet)
 			PROVISION_DOTNET=1
 			unset IGNORE_DOTNET
@@ -109,6 +116,8 @@ while ! test -z $1; do
 			unset IGNORE_SHARPIE
 			PROVISION_SIMULATORS=1
 			unset IGNORE_SIMULATORS
+			PROVISION_OLD_SIMULATORS=1
+			unset IGNORE_OLD_SIMULATORS
 			PROVISION_PYTHON3=1
 			unset IGNORE_PYTHON3
 			PROVISION_DOTNET=1
@@ -994,9 +1003,9 @@ function check_objective_sharpie () {
 	fi
 }
 
-function check_simulators ()
+function check_old_simulators ()
 {
-	if test -n "$IGNORE_SIMULATORS"; then return; fi
+	if test -n "$IGNORE_OLD_SIMULATORS"; then return; fi
 
 	local EXTRA_SIMULATORS
 	local XCODE
@@ -1024,7 +1033,7 @@ function check_simulators ()
 
 	if ! FAILED_SIMULATORS=$(make -C tools/siminstaller only-check INSTALL_SIMULATORS="$INSTALL_SIMULATORS" 2>/dev/null); then
 		local action=warn
-		if test -z $OPTIONAL_SIMULATORS; then
+		if test -z $OPTIONAL_OLD_SIMULATORS; then
 			action=fail
 		fi
 		if [[ "$FAILED_SIMULATORS" =~ "Unknown simulators:" ]]; then
@@ -1034,7 +1043,7 @@ function check_simulators ()
 			$action "    and then update the ${COLOR_MAGENTA}MIN_<OS>_SIMULATOR_VERSION${COLOR_RESET} and ${COLOR_MAGENTA}EXTRA_SIMULATORS${COLOR_RESET} variables in Make.config to the earliest available simulators."
 			$action "    Another possibility is that Apple is not shipping any simulators (yet?) for the new version of Xcode (if the previous list shows no simulators)."
 		else
-			if ! test -z $PROVISION_SIMULATORS; then
+			if ! test -z $PROVISION_OLD_SIMULATORS; then
 				if ! make -C tools/siminstaller install-simulators INSTALL_SIMULATORS="$INSTALL_SIMULATORS"; then
 					$action "Failed to install extra simulators."
 				else
@@ -1063,7 +1072,7 @@ check_mono
 check_cmake
 check_7z
 check_objective_sharpie
-check_simulators
+check_old_simulators
 if test -z "$IGNORE_DOTNET"; then
 	ok "Installed .NET SDKs:"
 	(IFS=$'\n'; for i in $(/usr/local/share/dotnet/dotnet --list-sdks); do log "$i"; done)
