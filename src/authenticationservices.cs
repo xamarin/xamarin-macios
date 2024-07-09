@@ -2397,7 +2397,12 @@ namespace AuthenticationServices {
 		[NullAllowed, Export ("excludedCredentials", ArgumentSemantic.Copy)]
 		ASAuthorizationPlatformPublicKeyCredentialDescriptor [] ExcludedCredentials { get; set; }
 
-		[NoiOS, NoMacCatalyst]
+#if XAMCORE_5_0
+		[NoMacCatalyst]
+#else
+		[MacCatalyst (17, 0)] // not true, it's not available on Mac Catalyst, but we've released it this way so we need to keep it.
+#endif
+		[NoiOS]
 		[Abstract]
 		[Export ("shouldShowHybridTransport")]
 		bool ShouldShowHybridTransport { get; set; }
