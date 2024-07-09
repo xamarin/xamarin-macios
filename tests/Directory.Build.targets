@@ -8,4 +8,21 @@
 		<KnownFrameworkReference Update="Microsoft.NETCore.App.Mono" TargetingPackVersion="$(CUSTOM_DOTNET_VERSION)" />
 		<KnownFrameworkReference Update="Microsoft.NETCore.App.Mono" RuntimeFrameworkVersion="$(CUSTOM_DOTNET_VERSION)" />
 	</ItemGroup>
+
+	<ItemGroup Condition="'$(TRACKING_DOTNET_RUNTIME_SEPARATELY)' != ''">
+		<KnownFrameworkReference Update="Microsoft.NETCore.App">
+			<RuntimeFrameworkVersion>$(MicrosoftNETCoreAppRefPackageVersion)</RuntimeFrameworkVersion>
+		</KnownFrameworkReference>
+	</ItemGroup>
+
+	<Target
+			Name="UpdateKnownRuntimePackWithCustomRuntime"
+			Condition="'$(TRACKING_DOTNET_RUNTIME_SEPARATELY)' != ''"
+			BeforeTargets="ProcessFrameworkReferences">
+		<ItemGroup>
+				<KnownRuntimePack Update="Microsoft.NETCore.App">
+					<LatestRuntimeFrameworkVersion>$(MicrosoftNETCoreAppRefPackageVersion)</LatestRuntimeFrameworkVersion>
+			</KnownRuntimePack>
+		</ItemGroup>
+	</Target>
 </Project>
