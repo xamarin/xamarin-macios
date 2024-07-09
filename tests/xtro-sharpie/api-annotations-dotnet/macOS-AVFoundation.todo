@@ -507,3 +507,9 @@
 !missing-selector! AVVideoPerformanceMetrics::totalAccumulatedFrameDelay not bound
 !missing-selector! AVVideoPerformanceMetrics::totalNumberOfFrames not bound
 !missing-type! AVVideoPerformanceMetrics not bound
+!deprecated-attribute-missing! AVAudioEngine::connectMIDI:to:format:block: missing a [Deprecated] attribute
+!deprecated-attribute-missing! AVAudioEngine::connectMIDI:toNodes:format:block: missing a [Deprecated] attribute
+!deprecated-attribute-missing! AVCaptureConnection::isVideoOrientationSupported missing a [Deprecated] attribute
+!deprecated-attribute-missing! AVCaptureConnection::setVideoOrientation: missing a [Deprecated] attribute
+!deprecated-attribute-missing! AVCaptureConnection::videoOrientation missing a [Deprecated] attribute
+!deprecated-attribute-missing! AVSampleBufferGenerator::createSampleBufferForRequest: missing a [Deprecated] attribute
