@@ -9625,7 +9625,7 @@ namespace UIKit {
 		[Export ("removeActionForIdentifier:forControlEvents:")]
 		void RemoveAction (string actionIdentifier, UIControlEvent controlEvents);
 
-		[iOS (17 ,4), TV (17, 4), MacCatalyst (17, 4)]
+		[iOS (17, 4), TV (17, 4), MacCatalyst (17, 4)]
 		[Export ("performPrimaryAction")]
 		void PerformPrimaryAction ();
 
@@ -29219,7 +29219,7 @@ namespace UIKit {
 	[NoWatch, TV (17, 4), iOS (17, 4), MacCatalyst (17, 4)]
 	[Protocol (BackwardsCompatibleCodeGeneration = false)]
 	interface UIItemProviderReadingAugmentationProviding {
-		
+
 		[Static, Abstract]
 		[Export ("objectWithItemProviderData:typeIdentifier:requestedClass:error:")]
 		[return: NullAllowed]
@@ -29227,11 +29227,11 @@ namespace UIKit {
 
 		[Static, Abstract]
 		[Export ("additionalLeadingReadableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
-		string[] AdditionalLeadingReadableTypeIdentifiersForItemProvider { get; }
+		string [] AdditionalLeadingReadableTypeIdentifiersForItemProvider { get; }
 
 		[Static, Abstract]
 		[Export ("additionalTrailingReadableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
-		string[] AdditionalTrailingReadableTypeIdentifiersForItemProvider { get; }
+		string [] AdditionalTrailingReadableTypeIdentifiersForItemProvider { get; }
 	}
 
 	[NoWatch, TV (17, 4), iOS (17, 4), MacCatalyst (17, 4)]

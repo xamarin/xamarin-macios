@@ -388,7 +388,7 @@ namespace UIKit {
 		Date,
 		DateAndTime,
 		CountDownTimer,
-		[iOS (17 ,4), MacCatalyst (17, 4)]
+		[iOS (17, 4), MacCatalyst (17, 4)]
 		YearAndMonth,
 	}
 
@@ -3358,9 +3358,9 @@ namespace UIKit {
 #if XAMCORE_5_0
 		[iOS (14, 0), TV (14, 0), NoWatch, NoMacCatalyst]
 #else
-		[iOS (14, 0), TV (14, 0), NoWatch]
-		[MacCatalyst (14, 0)]
-		[Obsoleted (PlatformName.MacCatalyst, 17, 4, message: Constants.ApiRemovedGeneral)]
+	[iOS (14, 0), TV (14, 0), NoWatch]
+	[MacCatalyst (14, 0)]
+	[Obsoleted (PlatformName.MacCatalyst, 17, 4, message: Constants.ApiRemovedGeneral)]
 #endif
 	public enum UIPasteboardDetectionPattern {
 		[Field ("UIPasteboardDetectionPatternProbableWebURL")]
