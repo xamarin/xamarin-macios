@@ -18,3 +18,55 @@
 !missing-pinvoke! VTIsStereoMVHEVCEncodeSupported is not bound
 !missing-field! kVTCompressionPropertyKey_HasLeftStereoEyeView not bound
 !missing-field! kVTCompressionPropertyKey_HasRightStereoEyeView not bound
+!missing-field! kVTCompressionPropertyKey_CalculateMeanSquaredError not bound
+!missing-field! kVTCompressionPropertyKey_HorizontalFieldOfView not bound
+!missing-field! kVTCompressionPropertyKey_ProjectionKind not bound
+!missing-field! kVTCompressionPropertyKey_SpatialAdaptiveQPLevel not bound
+!missing-field! kVTCompressionPropertyKey_SuggestedLookAheadFrameCount not bound
+!missing-field! kVTCompressionPropertyKey_ViewPackingKind not bound
+!missing-field! kVTDecoderExtensionProperties_ContainingBundleNameKey not bound
+!missing-field! kVTDecoderExtensionProperties_ContainingBundleURLKey not bound
+!missing-field! kVTDecoderExtensionProperties_ExtensionNameKey not bound
+!missing-field! kVTDecoderExtensionProperties_ExtensionURLKey not bound
+!missing-field! kVTHDRPerFrameMetadataGenerationHDRFormatType_DolbyVision not bound
+!missing-field! kVTHDRPerFrameMetadataGenerationOptionsKey_HDRFormats not bound
+!missing-field! kVTProfileLevel_HEVC_Monochrome_AutoLevel not bound
+!missing-field! kVTProfileLevel_HEVC_Monochrome10_AutoLevel not bound
+!missing-field! kVTRAWProcessingParameter_CameraValue not bound
+!missing-field! kVTRAWProcessingParameter_CurrentValue not bound
+!missing-field! kVTRAWProcessingParameter_Description not bound
+!missing-field! kVTRAWProcessingParameter_Enabled not bound
+!missing-field! kVTRAWProcessingParameter_InitialValue not bound
+!missing-field! kVTRAWProcessingParameter_Key not bound
+!missing-field! kVTRAWProcessingParameter_ListArray not bound
+!missing-field! kVTRAWProcessingParameter_MaximumValue not bound
+!missing-field! kVTRAWProcessingParameter_MinimumValue not bound
+!missing-field! kVTRAWProcessingParameter_Name not bound
+!missing-field! kVTRAWProcessingParameter_NeutralValue not bound
+!missing-field! kVTRAWProcessingParameter_SubGroup not bound
+!missing-field! kVTRAWProcessingParameter_ValueType not bound
+!missing-field! kVTRAWProcessingParameterListElement_Description not bound
+!missing-field! kVTRAWProcessingParameterListElement_Label not bound
+!missing-field! kVTRAWProcessingParameterListElement_ListElementID not bound
+!missing-field! kVTRAWProcessingParameterValueType_Boolean not bound
+!missing-field! kVTRAWProcessingParameterValueType_Float not bound
+!missing-field! kVTRAWProcessingParameterValueType_Integer not bound
+!missing-field! kVTRAWProcessingParameterValueType_List not bound
+!missing-field! kVTRAWProcessingParameterValueType_SubGroup not bound
+!missing-field! kVTRAWProcessingPropertyKey_MetalDeviceRegistryID not bound
+!missing-field! kVTSampleAttachmentKey_QualityMetrics not bound
+!missing-field! kVTSampleAttachmentQualityMetricsKey_ChromaBlueMeanSquaredError not bound
+!missing-field! kVTSampleAttachmentQualityMetricsKey_ChromaRedMeanSquaredError not bound
+!missing-field! kVTSampleAttachmentQualityMetricsKey_LumaMeanSquaredError not bound
+!missing-pinvoke! VTCopyVideoDecoderExtensionProperties is not bound
+!missing-pinvoke! VTHDRPerFrameMetadataGenerationSessionAttachMetadata is not bound
+!missing-pinvoke! VTHDRPerFrameMetadataGenerationSessionCreate is not bound
+!missing-pinvoke! VTHDRPerFrameMetadataGenerationSessionGetTypeID is not bound
+!missing-pinvoke! VTRAWProcessingSessionCompleteFrames is not bound
+!missing-pinvoke! VTRAWProcessingSessionCopyProcessingParameters is not bound
+!missing-pinvoke! VTRAWProcessingSessionCreate is not bound
+!missing-pinvoke! VTRAWProcessingSessionGetTypeID is not bound
+!missing-pinvoke! VTRAWProcessingSessionInvalidate is not bound
+!missing-pinvoke! VTRAWProcessingSessionProcessFrame is not bound
+!missing-pinvoke! VTRAWProcessingSessionSetParameterChangedHander is not bound
+!missing-pinvoke! VTRAWProcessingSessionSetProcessingParameters is not bound

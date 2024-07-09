@@ -28,3 +28,4 @@
 !missing-selector! CATapDescription::stream not bound
 !missing-selector! CATapDescription::UUID not bound
 !missing-type! CATapDescription not bound
+!missing-selector! CATapDescription::initExcludingProcesses:andDeviceUID:withStream: not bound

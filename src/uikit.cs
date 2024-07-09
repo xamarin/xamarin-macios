@@ -17335,7 +17335,7 @@ namespace UIKit {
 		UIHoverStyle HoverStyle { get; set; }
 
 		[Async]
-		[iOS (17, 0), MacCatalyst (17, 0)]
+		[iOS (17, 0), MacCatalyst (17, 0), TV (17, 0)]
 		[Static]
 		[Export ("animateWithSpringDuration:bounce:initialSpringVelocity:delay:options:animations:completion:")]
 		void Animate (double duration, nfloat bounce, nfloat velocity, double delay, UIViewAnimationOptions options, Action animations, [NullAllowed] Action<bool> completion);
@@ -19086,55 +19086,55 @@ namespace UIKit {
 		[Field ("UITextContentTypeDateTime")]
 		NSString DateTime { get; }
 
-		[iOS (17, 0), MacCatalyst (17, 0)]
+		[iOS (17, 0), MacCatalyst (17, 0), TV (17, 0)]
 		[Field ("UITextContentTypeBirthdate")]
 		NSString Birthdate { get; }
 
-		[iOS (17, 0), MacCatalyst (17, 0)]
+		[iOS (17, 0), MacCatalyst (17, 0), TV (17, 0)]
 		[Field ("UITextContentTypeBirthdateDay")]
 		NSString BirthdateDay { get; }
 
-		[iOS (17, 0), MacCatalyst (17, 0)]
+		[iOS (17, 0), MacCatalyst (17, 0), TV (17, 0)]
 		[Field ("UITextContentTypeBirthdateMonth")]
 		NSString BirthdateMonth { get; }
 
-		[iOS (17, 0), MacCatalyst (17, 0)]
+		[iOS (17, 0), MacCatalyst (17, 0), TV (17, 0)]
 		[Field ("UITextContentTypeBirthdateYear")]
 		NSString BirthdateYear { get; }
 
-		[iOS (17, 0), MacCatalyst (17, 0)]
+		[iOS (17, 0), MacCatalyst (17, 0), TV (17, 0)]
 		[Field ("UITextContentTypeCreditCardSecurityCode")]
 		NSString CreditCardSecurityCode { get; }
 
-		[iOS (17, 0), MacCatalyst (17, 0)]
+		[iOS (17, 0), MacCatalyst (17, 0), TV (17, 0)]
 		[Field ("UITextContentTypeCreditCardName")]
 		NSString CreditCardName { get; }
 
-		[iOS (17, 0), MacCatalyst (17, 0)]
+		[iOS (17, 0), MacCatalyst (17, 0), TV (17, 0)]
 		[Field ("UITextContentTypeCreditCardGivenName")]
 		NSString CreditCardGivenName { get; }
 
-		[iOS (17, 0), MacCatalyst (17, 0)]
+		[iOS (17, 0), MacCatalyst (17, 0), TV (17, 0)]
 		[Field ("UITextContentTypeCreditCardMiddleName")]
 		NSString CreditCardMiddleName { get; }
 
-		[iOS (17, 0), MacCatalyst (17, 0)]
+		[iOS (17, 0), MacCatalyst (17, 0), TV (17, 0)]
 		[Field ("UITextContentTypeCreditCardFamilyName")]
 		NSString CreditCardFamilyName { get; }
 
-		[iOS (17, 0), MacCatalyst (17, 0)]
+		[iOS (17, 0), MacCatalyst (17, 0), TV (17, 0)]
 		[Field ("UITextContentTypeCreditCardExpiration")]
 		NSString CreditCardExpiration { get; }
 
-		[iOS (17, 0), MacCatalyst (17, 0)]
+		[iOS (17, 0), MacCatalyst (17, 0), TV (17, 0)]
 		[Field ("UITextContentTypeCreditCardExpirationMonth")]
 		NSString CreditCardExpirationMonth { get; }
 
-		[iOS (17, 0), MacCatalyst (17, 0)]
+		[iOS (17, 0), MacCatalyst (17, 0), TV (17, 0)]
 		[Field ("UITextContentTypeCreditCardExpirationYear")]
 		NSString CreditCardExpirationYear { get; }
 
-		[iOS (17, 0), MacCatalyst (17, 0)]
+		[iOS (17, 0), MacCatalyst (17, 0), TV (17, 0)]
 		[Field ("UITextContentTypeCreditCardType")]
 		NSString CreditCardType { get; }
 	}
@@ -28127,8 +28127,10 @@ namespace UIKit {
 	}
 
 	[NoWatch, NoTV, iOS (17, 0), MacCatalyst (17, 0)]
+	[DisableDefaultCtor] // It crashes the app.
 #if XAMCORE_5_0
 	[BaseType (typeof(UIViewController))]
+	[Abstract] // "UIDocumentViewController is an abstract base class that is meant to be subclassed."
 	interface UIDocumentViewController
 #else
 	[BaseType (typeof (UIViewController), Name = "UIDocumentViewController")]

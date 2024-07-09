@@ -1,1 +1,9 @@
 !missing-enum-value! LPErrorCode native value LPErrorMetadataFetchNotAllowed = 5 not bound
+!missing-selector! LPMetadataProvider::cancel not bound
+!missing-selector! LPMetadataProvider::setShouldFetchSubresources: not bound
+!missing-selector! LPMetadataProvider::setTimeout: not bound
+!missing-selector! LPMetadataProvider::shouldFetchSubresources not bound
+!missing-selector! LPMetadataProvider::startFetchingMetadataForRequest:completionHandler: not bound
+!missing-selector! LPMetadataProvider::startFetchingMetadataForURL:completionHandler: not bound
+!missing-selector! LPMetadataProvider::timeout not bound
+!missing-type! LPMetadataProvider not bound

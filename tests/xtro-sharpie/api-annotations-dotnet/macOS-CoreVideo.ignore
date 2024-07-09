@@ -1,6 +1,3 @@
 # opengl was deprecated
 !missing-field! kCVPixelBufferIOSurfaceOpenGLFBOCompatibilityKey not bound
 !missing-field! kCVPixelBufferIOSurfaceOpenGLTextureCompatibilityKey not bound
-
-# not clear if it is a relacement for CVDisplayLinkSetOutputCallback or not 
-!missing-pinvoke! CVDisplayLinkSetOutputHandler is not bound

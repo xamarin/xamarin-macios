@@ -1,1 +1,19 @@
 !missing-pinvoke! MIDIEventListForEachEvent is not bound
+!missing-enum! MIDICICategoryBitmap not bound
+!missing-enum! MIDICIDeviceType not bound
+!missing-enum! MIDICIManagementMessageType not bound
+!missing-enum! MIDICIProcessInquiryMessageType not bound
+!missing-enum! MIDICIProfileMessageType not bound
+!missing-enum! MIDICIProfileType not bound
+!missing-enum! MIDICIPropertyExchangeMessageType not bound
+!missing-enum! MIDIUMPCIObjectBackingType not bound
+!missing-enum! MIDIUMPFunctionBlockDirection not bound
+!missing-enum! MIDIUMPFunctionBlockMIDI1Info not bound
+!missing-enum! MIDIUMPFunctionBlockUIHint not bound
+!missing-enum! MIDIUMPProtocolBitmap not bound
+!missing-enum! UMPStreamMessageFormat not bound
+!missing-enum! UMPStreamMessageStatus not bound
+!missing-enum-value! MidiMessageType native value kMIDIMessageTypeFlexData = 13 not bound
+!missing-enum-value! MidiMessageType native value kMIDIMessageTypeInvalid = 255 not bound
+!missing-enum-value! MidiUtilityStatus native value kMIDIUtilityStatusDeltaClockstampTicksPerQuarterNote = 3 not bound
+!missing-enum-value! MidiUtilityStatus native value kMIDIUtilityStatusTicksSinceLastEvent = 4 not bound

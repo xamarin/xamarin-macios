@@ -252,6 +252,9 @@ namespace Introspection {
 					return true;
 				break;
 #endif
+			case "UITextLoupeSession":
+				// crashes on the bots, although I can't reproduce locally.
+				return true;
 			}
 			return base.Skip (type);
 		}

@@ -336,21 +336,30 @@ function download_xcode_platforms ()
 
 	log "Xcode has additional platforms that must be downloaded ($MUST_INSTALL_RUNTIMES), so installing those."
 
+	log "Executing '$SUDO pkill -9 -f CoreSimulator.framework'"
+	$SUDO pkill -9 -f "CoreSimulator.framework" || true
 	log "Executing '$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -downloadAllPlatforms'"
-	if ! $SUDO "$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -downloadAllPlatforms; then
+	if ! "$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -downloadAllPlatforms; then
+		pstree || true
+		ps aux
 		"$XCODE_DEVELOPER_ROOT/usr/bin/simctl" runtime list -v
 		# Don't exit here, just hope for the best instead.
 		set +x
 		echo "##vso[task.logissue type=warning;sourcepath=system-dependencies.sh]Failed to download all simulator platforms, this may result in problems executing tests in the simulator."
 		set -x
 	else
+		log "Executing '$XCODE_DEVELOPER_ROOT/usr/bin/simctl runtime list -v"
 		"$XCODE_DEVELOPER_ROOT/usr/bin/simctl" runtime list -v
+		log "Executing '$XCODE_DEVELOPER_ROOT/usr/bin/simctl list -v"
 		"$XCODE_DEVELOPER_ROOT/usr/bin/simctl" list -v
 	fi
-	
-	$SUDO "$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -downloadAllPlatforms
-	$SUDO "$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -downloadAllPlatforms
-	$SUDO "$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -downloadAllPlatforms
+
+	log "Executing '$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -downloadAllPlatforms' (second time)"
+	"$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -downloadAllPlatforms || true
+	log "Executing '$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -downloadAllPlatforms' (third time)"
+	"$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -downloadAllPlatforms || true
+	log "Executing '$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -downloadAllPlatforms' (fourth time)"
+	"$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -downloadAllPlatforms || true
 
 	log "Executing '$SUDO $XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -runFirstLaunch'"
 	$SUDO "$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -runFirstLaunch

@@ -1,0 +1,15 @@
+!missing-enum! CGToneMapping not bound
+!missing-field! kCGEXRToneMappingGammaDefog not bound
+!missing-field! kCGEXRToneMappingGammaExposure not bound
+!missing-field! kCGEXRToneMappingGammaKneeHigh not bound
+!missing-field! kCGEXRToneMappingGammaKneeLow not bound
+!missing-field! kCGSkipBoostToHDR not bound
+!missing-field! kCGUse100nitsHLGOOTF not bound
+!missing-field! kCGUseBT1886ForCoreVideoGamma not bound
+!missing-pinvoke! CGContextDrawImageApplyingToneMapping is not bound
+!missing-pinvoke! CGContextGetEDRTargetHeadroom is not bound
+!missing-pinvoke! CGContextSetEDRTargetHeadroom is not bound
+!missing-pinvoke! CGImageContainsImageSpecificToneMappingMetadata is not bound
+!missing-pinvoke! CGImageCreateWithEDRHeadroom is not bound
+!missing-pinvoke! CGImageGetContentHeadroom is not bound
+!missing-pinvoke! CGImageShouldToneMap is not bound
