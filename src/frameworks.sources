@@ -731,6 +731,15 @@ COREWLAN_SOURCES = \
 	CoreWlan/CWInterface.cs \
 	CoreWlan/CWKeychain.cs \
 
+# DARWIN
+
+DARWIN_CORE_SOURCES = \
+	Darwin/TimeSpec.cs \
+
+DARWIN_SOURCES = \
+	Darwin/KernelNotification.cs \
+	Darwin/SystemLog.cs \
+
 # DeviceDiscoveryExtension
 
 DEVICEDISCOVERYEXTENSION_API_SOURCES = \
@@ -2101,6 +2110,7 @@ MACOS_FRAMEWORKS =          \
 	CoreSpotlight           \
 	CoreText                \
 	CoreWlan                \
+	Darwin                  \
 	EventKit                \
 	ExecutionPolicy		\
 	ExtensionKit		\
