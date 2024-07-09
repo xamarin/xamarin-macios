@@ -53,6 +53,8 @@ stages:
   - template: sign-artifacts/jobs/v2.yml@yaml-templates
     parameters:
       use1ESTemplate: true
+      uploadBinlogs: true
+      uploadPrefix: ${{ parameters.uploadPrefix }}
       enabledCredScan: false
       checkoutType: ${{ parameters.repositoryAlias }}
       signedArtifactName: '${{ parameters.uploadPrefix }}nuget-signed'
