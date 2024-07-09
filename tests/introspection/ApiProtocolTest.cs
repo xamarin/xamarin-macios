@@ -374,6 +374,7 @@ namespace Introspection {
 					return true;
 				// Xcode 15.3, Conformance not in headers
 				case "ASWebAuthenticationSessionCallback":
+				case "VSAppleSubscription":
 					return true;
 				}
 				break;
@@ -551,6 +552,7 @@ namespace Introspection {
 					return true;
 				// Xcode 15.3, Conformance not in headers
 				case "ASWebAuthenticationSessionCallback":
+				case "VSAppleSubscription":
 					return true;
 				}
 				break;
