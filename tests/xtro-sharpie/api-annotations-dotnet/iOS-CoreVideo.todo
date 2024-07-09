@@ -1,0 +1,9 @@
+!missing-field! kCVImageBufferSceneIlluminationKey not bound
+!missing-field! kCVMetalBufferCacheMaximumBufferAgeKey not bound
+!missing-field! kCVPixelFormatBitsPerComponent not bound
+!missing-pinvoke! CVMetalBufferCacheCreate is not bound
+!missing-pinvoke! CVMetalBufferCacheCreateBufferFromImage is not bound
+!missing-pinvoke! CVMetalBufferCacheFlush is not bound
+!missing-pinvoke! CVMetalBufferCacheGetTypeID is not bound
+!missing-pinvoke! CVMetalBufferGetBuffer is not bound
+!missing-pinvoke! CVMetalBufferGetTypeID is not bound

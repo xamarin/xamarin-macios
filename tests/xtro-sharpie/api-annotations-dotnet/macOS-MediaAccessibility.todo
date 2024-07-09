@@ -1,0 +1,7 @@
+!missing-field! MAMusicHapticsManagerActiveStatusDidChangeNotification not bound
+!missing-selector! +MAMusicHapticsManager::sharedManager not bound
+!missing-selector! MAMusicHapticsManager::addStatusObserver: not bound
+!missing-selector! MAMusicHapticsManager::checkHapticTrackAvailabilityForMediaMatchingCode:completionHandler: not bound
+!missing-selector! MAMusicHapticsManager::isActive not bound
+!missing-selector! MAMusicHapticsManager::removeStatusObserver: not bound
+!missing-type! MAMusicHapticsManager not bound

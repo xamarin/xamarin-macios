@@ -1,0 +1,4 @@
+!deprecated-attribute-missing! PDFView::enableDataDetectors missing a [Deprecated] attribute
+!deprecated-attribute-missing! PDFView::setEnableDataDetectors: missing a [Deprecated] attribute
+!missing-enum! PDFSelectionGranularity not bound
+!missing-selector! PDFDocument::selectionFromPage:atPoint:toPage:atPoint:withGranularity: not bound

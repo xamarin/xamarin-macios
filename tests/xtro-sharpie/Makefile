@@ -309,7 +309,7 @@ remove-empty-files:
 
 U2TODO = u2todo/bin/Debug/u2todo.dll
 $(U2TODO): $(wildcard u2todo/*.cs u2todo/*.csproj Filter.cs)
-	$(Q) unset MSBUILD_EXE_PATH && $(DOTNET) build $(DOTNET_BUILD_VERBOSITY) /bl:$@.binlog
+	$(Q) unset MSBUILD_EXE_PATH && $(DOTNET) build $(DOTNET_BUILD_VERBOSITY) u2todo/u2todo.csproj /bl:$@.binlog
 	$(Q) touch $@
 
 unclassified2todo-classic: $(U2TODO)

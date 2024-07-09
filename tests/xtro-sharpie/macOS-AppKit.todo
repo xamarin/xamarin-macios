@@ -18,3 +18,105 @@
 !deprecated-attribute-missing! NSSpeechSynthesizerDelegate::speechSynthesizer:willSpeakPhoneme: missing a [Deprecated] attribute
 !deprecated-attribute-missing! NSSpeechSynthesizerDelegate::speechSynthesizer:willSpeakWord:ofString: missing a [Deprecated] attribute
 !deprecated-attribute-missing! NSViewController::presentViewControllerInWidget: missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSDocument::shouldRunSavePanelWithAccessoryView missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSToolbar::configurationDictionary missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSToolbar::setConfigurationFromDictionary: missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSToolbar::setShowsBaselineSeparator: missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSToolbar::showsBaselineSeparator missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSToolbarItem::allowsDuplicatesInToolbar missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSWindow::disableScreenUpdatesUntilFlush missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSWindow::setShowsResizeIndicator: missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSWindow::showsResizeIndicator missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSWindow::windowRef missing a [Deprecated] attribute
+!extra-enum-value! Managed value 2 for NSWindowSharingType.ReadWrite not found in native headers
+!missing-enum! NSCursorFrameResizeDirections not bound
+!missing-enum! NSCursorFrameResizePosition not bound
+!missing-enum! NSHorizontalDirections not bound
+!missing-enum! NSSharingCollaborationMode not bound
+!missing-enum! NSVerticalDirections not bound
+!missing-enum! NSWritingToolsAllowedInputOptions not bound
+!missing-enum! NSWritingToolsBehavior not bound
+!missing-field! NSAdaptiveImageGlyphAttributeName not bound
+!missing-field! NSTextHighlightColorSchemeAttributeName not bound
+!missing-field! NSTextHighlightColorSchemeBlue not bound
+!missing-field! NSTextHighlightColorSchemeDefault not bound
+!missing-field! NSTextHighlightColorSchemeMint not bound
+!missing-field! NSTextHighlightColorSchemeOrange not bound
+!missing-field! NSTextHighlightColorSchemePink not bound
+!missing-field! NSTextHighlightColorSchemePurple not bound
+!missing-field! NSTextHighlightStyleAttributeName not bound
+!missing-field! NSTextHighlightStyleDefault not bound
+!missing-field! NSToolbarNewIndexKey not bound
+!missing-protocol-member! NSOpenSavePanelDelegate::panel:didSelectType: not found
+!missing-protocol-member! NSOpenSavePanelDelegate::panel:displayNameForType: not found
+!missing-protocol-member! NSSharingServicePickerDelegate::sharingServicePickerCollaborationModeRestrictions: not found
+!missing-protocol-member! NSTextInputClient::insertAdaptiveImageGlyph:replacementRange: not found
+!missing-protocol-member! NSTextInputClient::supportsAdaptiveImageGlyph not found
+!missing-protocol-member! NSTextInputTraits::mathExpressionCompletionType not found
+!missing-protocol-member! NSTextInputTraits::setMathExpressionCompletionType: not found
+!missing-protocol-member! NSTextInputTraits::setWritingToolsAllowedInputOptions: not found
+!missing-protocol-member! NSTextInputTraits::setWritingToolsBehavior: not found
+!missing-protocol-member! NSTextInputTraits::writingToolsAllowedInputOptions not found
+!missing-protocol-member! NSTextInputTraits::writingToolsBehavior not found
+!missing-protocol-member! NSTextViewDelegate::textView:writingToolsIgnoredRangesInEnclosingRange: not found
+!missing-protocol-member! NSTextViewDelegate::textViewWritingToolsDidEnd: not found
+!missing-protocol-member! NSTextViewDelegate::textViewWritingToolsWillBegin: not found
+!missing-protocol-member! NSWindowDelegate::windowForSharingRequestFromWindow: not found
+!missing-selector! +NSAdaptiveImageGlyph::contentType not bound
+!missing-selector! +NSAttributedString::attributedStringWithAdaptiveImageGlyph:attributes: not bound
+!missing-selector! +NSAttributedString::attributedStringWithAttachment:attributes: not bound
+!missing-selector! +NSCursor::columnResizeCursor not bound
+!missing-selector! +NSCursor::columnResizeCursorInDirections: not bound
+!missing-selector! +NSCursor::frameResizeCursorFromPosition:inDirections: not bound
+!missing-selector! +NSCursor::rowResizeCursor not bound
+!missing-selector! +NSCursor::rowResizeCursorInDirections: not bound
+!missing-selector! +NSCursor::zoomInCursor not bound
+!missing-selector! +NSCursor::zoomOutCursor not bound
+!missing-selector! +NSPopUpButton::popUpButtonWithMenu:target:action: not bound
+!missing-selector! +NSPopUpButton::pullDownButtonWithImage:menu: not bound
+!missing-selector! +NSPopUpButton::pullDownButtonWithTitle:image:menu: not bound
+!missing-selector! +NSPopUpButton::pullDownButtonWithTitle:menu: not bound
+!missing-selector! NSAdaptiveImageGlyph::contentDescription not bound
+!missing-selector! NSAdaptiveImageGlyph::contentIdentifier not bound
+!missing-selector! NSAdaptiveImageGlyph::imageContent not bound
+!missing-selector! NSAdaptiveImageGlyph::initWithCoder: not bound
+!missing-selector! NSAdaptiveImageGlyph::initWithImageContent: not bound
+!missing-selector! NSAttributedString::prefersRTFDInRange: not bound
+!missing-selector! NSDocument::savePanelShowsFileFormatsControl not bound
+!missing-selector! NSPopUpButton::altersStateOfSelectedItem not bound
+!missing-selector! NSPopUpButton::setAltersStateOfSelectedItem: not bound
+!missing-selector! NSPopUpButton::setUsesItemFromMenu: not bound
+!missing-selector! NSPopUpButton::usesItemFromMenu not bound
+!missing-selector! NSSavePanel::currentContentType not bound
+!missing-selector! NSSavePanel::setCurrentContentType: not bound
+!missing-selector! NSSavePanel::setShowsContentTypes: not bound
+!missing-selector! NSSavePanel::showsContentTypes not bound
+!missing-selector! NSSharingCollaborationModeRestriction::alertDismissButtonTitle not bound
+!missing-selector! NSSharingCollaborationModeRestriction::alertMessage not bound
+!missing-selector! NSSharingCollaborationModeRestriction::alertRecoverySuggestionButtonLaunchURL not bound
+!missing-selector! NSSharingCollaborationModeRestriction::alertRecoverySuggestionButtonTitle not bound
+!missing-selector! NSSharingCollaborationModeRestriction::alertTitle not bound
+!missing-selector! NSSharingCollaborationModeRestriction::disabledMode not bound
+!missing-selector! NSSharingCollaborationModeRestriction::initWithDisabledMode: not bound
+!missing-selector! NSSharingCollaborationModeRestriction::initWithDisabledMode:alertTitle:alertMessage: not bound
+!missing-selector! NSSharingCollaborationModeRestriction::initWithDisabledMode:alertTitle:alertMessage:alertDismissButtonTitle: not bound
+!missing-selector! NSSharingCollaborationModeRestriction::initWithDisabledMode:alertTitle:alertMessage:alertDismissButtonTitle:alertRecoverySuggestionButtonTitle:alertRecoverySuggestionButtonLaunchURL: not bound
+!missing-selector! NSTextView::drawTextHighlightBackgroundForTextRange:origin: not bound
+!missing-selector! NSTextView::highlight: not bound
+!missing-selector! NSTextView::isWritingToolsActive not bound
+!missing-selector! NSTextView::mathExpressionCompletionType not bound
+!missing-selector! NSTextView::setMathExpressionCompletionType: not bound
+!missing-selector! NSTextView::setTextHighlightAttributes: not bound
+!missing-selector! NSTextView::textHighlightAttributes not bound
+!missing-selector! NSToolbar::allowsDisplayModeCustomization not bound
+!missing-selector! NSToolbar::itemIdentifiers not bound
+!missing-selector! NSToolbar::removeItemWithItemIdentifier: not bound
+!missing-selector! NSToolbar::setAllowsDisplayModeCustomization: not bound
+!missing-selector! NSToolbar::setItemIdentifiers: not bound
+!missing-selector! NSToolbarItem::isHidden not bound
+!missing-selector! NSToolbarItem::setHidden: not bound
+!missing-selector! NSWindow::beginDraggingSessionWithItems:event:source: not bound
+!missing-selector! NSWindow::requestSharingOfWindow:completionHandler: not bound
+!missing-selector! NSWindow::requestSharingOfWindowUsingPreview:title:completionHandler: not bound
+!missing-type! NSAdaptiveImageGlyph not bound
+!missing-type! NSSharingCollaborationModeRestriction not bound

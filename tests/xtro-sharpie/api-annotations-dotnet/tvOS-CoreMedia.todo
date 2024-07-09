@@ -101,3 +101,8 @@
 !missing-pinvoke! CMVideoFormatDescriptionCopyTagCollectionArray is not bound
 !missing-field! kCMFormatDescriptionExtension_LogTransferFunction not bound
 !missing-field! kCMFormatDescriptionLogTransferFunction_AppleLog not bound
+!missing-field! kCMMetadataDataType_QuickTimeMetadataMilliLux not bound
+!missing-field! kCMMetadataDataType_QuickTimeMetadataUUID not bound
+!missing-field! kCMMetadataIdentifier_QuickTimeMetadataSceneIlluminance not bound
+!missing-field! kCMMetadataIdentifier_QuickTimeMetadataSegmentIdentifier not bound
+!missing-field! kCMTagProjectionTypeHalfEquirectangular not bound

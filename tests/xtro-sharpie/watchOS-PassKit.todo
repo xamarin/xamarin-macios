@@ -2,3 +2,13 @@
 !missing-selector! +PKPassLibrary::endAutomaticPassPresentationSuppressionWithRequestToken: not bound
 !missing-selector! +PKPassLibrary::isSuppressingAutomaticPassPresentation not bound
 !missing-selector! +PKPassLibrary::requestAutomaticPassPresentationSuppressionWithResponseHandler: not bound
+!deprecated-attribute-missing! PKPass::relevantDate missing a [Deprecated] attribute
+!missing-enum! PKIdentityError not bound
+!missing-field! PKIdentityErrorDomain not bound
+!missing-field! PKMerchantCategoryCodeNone not bound
+!missing-field! PKPaymentNetworkBankAxept not bound
+!missing-field! PKPaymentNetworkMeeza not bound
+!missing-field! PKPaymentNetworkNAPAS not bound
+!missing-selector! PKPass::relevantDates not bound
+!missing-selector! PKPaymentRequest::merchantCategoryCode not bound
+!missing-selector! PKPaymentRequest::setMerchantCategoryCode: not bound
