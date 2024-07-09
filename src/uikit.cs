@@ -358,7 +358,7 @@ namespace UIKit {
 		[Static]
 		[Export ("feedbackGeneratorWithStyle:forView:")]
 		UIImpactFeedbackGenerator GetFeedbackGenerator (UIImpactFeedbackStyle style, UIView view);
-		
+
 		[Deprecated (PlatformName.iOS, 17, 5, message: "Use 'GetFeedbackGenerator' method instead.")]
 		[Deprecated (PlatformName.MacCatalyst, 17, 5, message: "Use 'GetFeedbackGenerator' method instead.")]
 		[Export ("initWithStyle:")]
@@ -16621,7 +16621,7 @@ namespace UIKit {
 		[Export ("estimatedPropertiesExpectingUpdates")]
 		UITouchProperties EstimatedPropertiesExpectingUpdates { get; }
 
-		[NoWatch, NoTV, iOS (17, 5), MacCatalyst (17 ,5)]
+		[NoWatch, NoTV, iOS (17, 5), MacCatalyst (17, 5)]
 		[Export ("rollAngle")]
 		nfloat RollAngle { get; }
 	}
@@ -23514,8 +23514,7 @@ namespace UIKit {
 
 	[NoWatch, NoTV, iOS (17, 5), MacCatalyst (17, 5)]
 	[Native]
-	public enum UIPencilInteractionPhase : ulong
-	{
+	public enum UIPencilInteractionPhase : ulong {
 		Began,
 		Changed,
 		Ended,
@@ -23548,7 +23547,7 @@ namespace UIKit {
 		[Export ("prefersHoverToolPreview")]
 		bool PrefersHoverToolPreview { get; }
 
-		[iOS (17,5)]
+		[iOS (17, 5)]
 		[Export ("initWithDelegate:")]
 		NativeHandle Constructor (IUIPencilInteractionDelegate @delegate);
 

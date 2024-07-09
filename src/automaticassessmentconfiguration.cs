@@ -173,11 +173,11 @@ namespace AutomaticAssessmentConfiguration {
 		[Export ("assessmentSessionDidEnd:")]
 		void DidEnd (AEAssessmentSession session);
 
-		[iOS (17,5), Mac (12, 0), MacCatalyst (15, 0)]
+		[iOS (17, 5), Mac (12, 0), MacCatalyst (15, 0)]
 		[Export ("assessmentSessionDidUpdate:")]
 		void DidUpdate (AEAssessmentSession session);
 
-		[iOS (17,5), Mac (12, 0), MacCatalyst (15, 0)]
+		[iOS (17, 5), Mac (12, 0), MacCatalyst (15, 0)]
 		[Export ("assessmentSession:failedToUpdateToConfiguration:error:")]
 		void FailedToUpdate (AEAssessmentSession session, AEAssessmentConfiguration configuration, NSError error);
 	}

@@ -1679,7 +1679,7 @@ namespace AuthenticationServices {
 	[BaseType (typeof (NSObject))]
 	interface ASAuthorizationSecurityKeyPublicKeyCredentialAssertion : ASAuthorizationPublicKeyCredentialAssertion {
 
-		[Mac (14, 5), iOS (17, 5),  MacCatalyst (17, 5)]
+		[Mac (14, 5), iOS (17, 5), MacCatalyst (17, 5)]
 		[Export ("appID")]
 		bool AppId { get; }
 	}
