@@ -452,10 +452,10 @@ namespace VideoSubscriberAccount {
 		string CustomerID { get; set; }
 
 		[Export ("productCodes", ArgumentSemantic.Strong)]
-		string[] ProductCodes { get; set; }
+		string [] ProductCodes { get; set; }
 
 		[Export ("initWithCustomerID:productCodes:")]
-		NativeHandle Constructor (string customerId, string[] productCodes);
+		NativeHandle Constructor (string customerId, string [] productCodes);
 	}
 
 }
