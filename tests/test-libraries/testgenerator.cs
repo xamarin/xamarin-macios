@@ -803,6 +803,8 @@ using Bindings.Test;
 using XamarinTests.ObjCRuntime;
 using Xamarin.Utils;
 
+#if !__WATCHOS__
+
 namespace MonoTouchFixtures.ObjCRuntime {
 
 	[TestFixture]
@@ -1412,6 +1414,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 
 		w.AppendLine (@"	}
 }");
+		w.AppendLine ("#endif // __WATCHOS__");
 
 		File.WriteAllText ("RegistrarTest.generated.cs", w.ToString ());
 	}
