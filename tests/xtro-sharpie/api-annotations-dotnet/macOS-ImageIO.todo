@@ -14,3 +14,10 @@
 !missing-field! kIIOStereoAggressors_SubTypeURI not bound
 !missing-field! kIIOStereoAggressors_Type not bound
 !missing-pinvoke! CGImageSourceSetAllowableTypes is not bound
+!missing-field! kCGImageDestinationEncodeBaseIsSDR not bound
+!missing-field! kCGImageDestinationEncodeRequest not bound
+!missing-field! kCGImageDestinationEncodeRequestOptions not bound
+!missing-field! kCGImageDestinationEncodeToISOGainmap not bound
+!missing-field! kCGImageDestinationEncodeToISOHDR not bound
+!missing-field! kCGImageDestinationEncodeTonemapMode not bound
+!missing-field! kCGImageDestinationEncodeToSDR not bound

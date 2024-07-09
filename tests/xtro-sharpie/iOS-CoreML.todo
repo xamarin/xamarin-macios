@@ -76,3 +76,10 @@
 !unknown-field! MLModelCollectionDidChangeNotification bound
 !unknown-type! MLModelCollection bound
 !unknown-type! MLModelCollectionEntry bound
+!missing-enum! MLSpecializationStrategy not bound
+!missing-selector! +MLModelAsset::modelAssetWithSpecificationData:blobMapping:error: not bound
+!missing-selector! MLModelAsset::functionNamesWithCompletionHandler: not bound
+!missing-selector! MLMultiArray::initWithShape:dataType:strides: not bound
+!missing-selector! MLMultiArray::transferToMultiArray: not bound
+!missing-selector! MLOptimizationHints::setSpecializationStrategy: not bound
+!missing-selector! MLOptimizationHints::specializationStrategy not bound
