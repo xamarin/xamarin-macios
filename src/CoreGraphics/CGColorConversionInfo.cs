@@ -86,9 +86,9 @@ namespace CoreGraphics {
 
 			var varArgs = new IntPtr [(triples.Length - 1) * 3];
 			for (var i = 1; i < triples.Length; i++) {
-				varArgs [i * 3] = triples [i].Space.GetHandle ();
-				varArgs [i * 3 + 1] = (IntPtr) triples [i].Transform;
-				varArgs [i * 3 + 2] = (IntPtr) triples [i].Intent;
+				varArgs [(i - 1) * 3] = triples [i].Space.GetHandle ();
+				varArgs [(i - 1) * 3 + 1] = (IntPtr) triples [i].Transform;
+				varArgs [(i - 1) * 3 + 2] = (IntPtr) triples [i].Intent;
 			}
 
 			// The first triple is not a varargs, but the subsequent ones are
