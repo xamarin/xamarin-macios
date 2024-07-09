@@ -570,3 +570,20 @@
 !incorrect-protocol-member! UITraitChangeObservable::registerForTraitChanges:withAction: is REQUIRED and should be abstract
 !incorrect-protocol-member! UITraitChangeObservable::registerForTraitChanges:withHandler: is REQUIRED and should be abstract
 !incorrect-protocol-member! UITraitChangeObservable::registerForTraitChanges:withTarget:action: is REQUIRED and should be abstract
+
+!missing-selector! NSItemProvider::_availableTypes not bound
+!missing-protocol! UIItemProviderReadingAugmentationDesignating not bound
+
+# Will be removed in XAMCORE_5
+!unknown-field! UIPasteboardDetectionPatternCalendarEvent bound
+!unknown-field! UIPasteboardDetectionPatternEmailAddress bound
+!unknown-field! UIPasteboardDetectionPatternFlightNumber bound
+!unknown-field! UIPasteboardDetectionPatternLink bound
+!unknown-field! UIPasteboardDetectionPatternMoneyAmount bound
+!unknown-field! UIPasteboardDetectionPatternNumber bound
+!unknown-field! UIPasteboardDetectionPatternPhoneNumber bound
+!unknown-field! UIPasteboardDetectionPatternPostalAddress bound
+!unknown-field! UIPasteboardDetectionPatternProbableWebSearch bound
+!unknown-field! UIPasteboardDetectionPatternProbableWebURL bound
+!unknown-field! UIPasteboardDetectionPatternShipmentTrackingNumber bound
+!unknown-native-enum! UIPasteControlDisplayMode bound
