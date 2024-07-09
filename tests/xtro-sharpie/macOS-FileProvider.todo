@@ -1,0 +1,28 @@
+!missing-enum! NSFileProviderKnownFolders not bound
+!missing-enum! NSFileProviderVolumeUnsupportedReason not bound
+!missing-enum-value! NSFileProviderError native value NSFileProviderErrorApplicationExtensionNotFound = -2014 not bound
+!missing-enum-value! NSFileProviderError native value NSFileProviderErrorProviderDomainNotFound = -2013 not bound
+!missing-enum-value! NSFileProviderError native value NSFileProviderErrorProviderDomainTemporarilyUnavailable = -2012 not bound
+!missing-protocol! NSFileProviderExternalVolumeHandling not bound
+!missing-protocol! NSFileProviderKnownFolderSupporting not bound
+!missing-selector! +NSFileProviderManager::checkDomainsCanBeStored:onVolumeAtURL:unsupportedReason:error: not bound
+!missing-selector! NSFileProviderDomain::initWithDisplayName:userInfo:volumeURL: not bound
+!missing-selector! NSFileProviderDomain::replicatedKnownFolders not bound
+!missing-selector! NSFileProviderDomain::setSupportedKnownFolders: not bound
+!missing-selector! NSFileProviderDomain::setUserInfo: not bound
+!missing-selector! NSFileProviderDomain::supportedKnownFolders not bound
+!missing-selector! NSFileProviderDomain::userInfo not bound
+!missing-selector! NSFileProviderKnownFolderLocation::initWithExistingItemIdentifier: not bound
+!missing-selector! NSFileProviderKnownFolderLocation::initWithParentItemIdentifier:filename: not bound
+!missing-selector! NSFileProviderKnownFolderLocations::desktopLocation not bound
+!missing-selector! NSFileProviderKnownFolderLocations::documentsLocation not bound
+!missing-selector! NSFileProviderKnownFolderLocations::init not bound
+!missing-selector! NSFileProviderKnownFolderLocations::setDesktopLocation: not bound
+!missing-selector! NSFileProviderKnownFolderLocations::setDocumentsLocation: not bound
+!missing-selector! NSFileProviderKnownFolderLocations::setShouldCreateBinaryCompatibilitySymlink: not bound
+!missing-selector! NSFileProviderKnownFolderLocations::shouldCreateBinaryCompatibilitySymlink not bound
+!missing-selector! NSFileProviderManager::claimNSFileProviderManager:localizedReason:completionHandler: not bound
+!missing-selector! NSFileProviderManager::releaseNSFileProviderManager:localizedReason:completionHandler: not bound
+!missing-selector! NSFileProviderManager::stateDirectoryURLWithError: not bound
+!missing-type! NSFileProviderKnownFolderLocation not bound
+!missing-type! NSFileProviderKnownFolderLocations not bound

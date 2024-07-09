@@ -342,3 +342,18 @@
 !wrong-base-type! MPSGraphTensor expected MPSGraphObject actual NSObject
 !wrong-base-type! MPSGraphTensorData expected MPSGraphObject actual NSObject
 !wrong-base-type! MPSGraphType expected MPSGraphObject actual NSObject
+!missing-selector! MPSGraph::callSymbolName:inputTensors:outputTypes:name: not bound
+!missing-selector! MPSGraph::dequantizeTensor:LUTTensor:axis:name: not bound
+!missing-selector! MPSGraph::dequantizeTensor:LUTTensor:name: not bound
+!missing-selector! MPSGraph::dequantizeTensor:scaleTensor:dataType:name: not bound
+!missing-selector! MPSGraph::dequantizeTensor:scaleTensor:zeroPointTensor:dataType:name: not bound
+!missing-selector! MPSGraph::scaledDotProductAttentionWithQueryTensor:keyTensor:valueTensor:maskTensor:scale:name: not bound
+!missing-selector! MPSGraph::scaledDotProductAttentionWithQueryTensor:keyTensor:valueTensor:scale:name: not bound
+!missing-selector! MPSGraph::sliceUpdateDataTensor:updateTensor:starts:ends:strides:name: not bound
+!missing-selector! MPSGraph::sliceUpdateDataTensor:updateTensor:starts:ends:strides:startMask:endMask:squeezeMask:name: not bound
+!missing-selector! MPSGraph::sliceUpdateDataTensor:updateTensor:startsTensor:endsTensor:stridesTensor:name: not bound
+!missing-selector! MPSGraph::sliceUpdateDataTensor:updateTensor:startsTensor:endsTensor:stridesTensor:startMask:endMask:squeezeMask:name: not bound
+!missing-selector! MPSGraph::variableFromTensorWithTensor:name: not bound
+!missing-selector! MPSGraphCompilationDescriptor::callables not bound
+!missing-selector! MPSGraphCompilationDescriptor::setCallables: not bound
+!missing-selector! MPSGraphExecutable::initWithCoreMLPackageAtURL:compilationDescriptor: not bound

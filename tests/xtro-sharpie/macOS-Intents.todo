@@ -1,0 +1,13 @@
+!deprecated-attribute-missing! INCallRecord::initWithIdentifier:dateCreated:caller:callRecordType:callCapability:callDuration:unseen:numberOfCalls: missing a [Deprecated] attribute
+!deprecated-attribute-wrong! INSendMessageIntent::initWithRecipients:content:speakableGroupName:conversationIdentifier:serviceName:sender: has 12.0 not 11.0 on [Deprecated] attribute
+!missing-enum! INMessageReactionType not bound
+!missing-enum! INStickerType not bound
+!missing-selector! INMessageReaction::emoji not bound
+!missing-selector! INMessageReaction::initWithReactionType:reactionDescription:emoji: not bound
+!missing-selector! INMessageReaction::reactionDescription not bound
+!missing-selector! INMessageReaction::reactionType not bound
+!missing-selector! INSticker::emoji not bound
+!missing-selector! INSticker::initWithType:emoji: not bound
+!missing-selector! INSticker::type not bound
+!missing-type! INMessageReaction not bound
+!missing-type! INSticker not bound

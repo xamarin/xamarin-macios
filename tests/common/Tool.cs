@@ -100,6 +100,11 @@ namespace Xamarin.Tests {
 			}
 		}
 
+		public void FilterUnrelatedWarnings ()
+		{
+			messages = messages.FilterUnrelatedWarnings ().ToList ();
+		}
+
 		public int Execute (IList<string> arguments)
 		{
 			return Execute (ToolPath, arguments, false);

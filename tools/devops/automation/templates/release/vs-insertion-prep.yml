@@ -54,11 +54,18 @@ stages:
     parameters:
       use1ESTemplate: true
       enabledCredScan: false
+      checkoutType: ${{ parameters.repositoryAlias }}
       signedArtifactName: '${{ parameters.uploadPrefix }}nuget-signed'
       artifactName: '${{ parameters.uploadPrefix }}not-signed-package'
       signType: Real
       usePipelineArtifactTasks: true
       condition: "ne(stageDependencies.configure_build.configure.outputs['configure_platforms.ENABLE_DOTNET'],'')"
+      setupSteps:
+      - template: tools/devops/automation/templates/common/checkout.yml@${{ parameters.repositoryAlias }}
+        parameters:
+          isPR: ${{ parameters.isPR }}
+          repositoryAlias: ${{ parameters.repositoryAlias }}
+          commit: ${{ parameters.commit }}
 
   # Check - "xamarin-macios (Prepare Release Convert NuGet to MSI)"
   - template: nuget-msi-convert/job/v3.yml@yaml-templates
@@ -75,6 +82,12 @@ stages:
       signType: Real
       useDateTimeVersion: true
       condition: "ne(stageDependencies.configure_build.configure.outputs['configure_platforms.ENABLE_DOTNET'],'')"
+      setupSteps:
+      - pwsh: |
+          New-Item "$(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/governance" -ItemType Directory -ea 0
+          New-Item -Path "$(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/governance" -Name "CredScanSuppressions.json" -Value '{"tool":"Crendential Scanner", "supressions":[]}'
+        displayName: Create credscan dummy ignore file
+
       postConvertSteps:
       - task: DownloadPipelineArtifact@2
         inputs:
@@ -96,8 +109,8 @@ stages:
     # Check - "xamarin-macios (Prepare Release Push NuGets)"
     - job: push_signed_nugets
       displayName: Push NuGets
-      dependsOn: nuget_convert
-      condition: "ne(stageDependencies.configure_build.configure.outputs['configure_platforms.ENABLE_DOTNET'],'')"
+      dependsOn: [signing, nuget_convert]
+      condition: "and(eq(dependencies.signing.result, 'Succeeded'),eq(dependencies.nuget_convert.result, 'Succeeded'), ne(stageDependencies.configure_build.configure.outputs['configure_platforms.ENABLE_DOTNET'],''))"
       variables:
       - name: skipNugetSecurityAnalysis
         value: true
@@ -116,6 +129,11 @@ stages:
         demands:
         - ImageOverride -equals 1ESPT-Windows2022
       steps:
+      - pwsh: |
+          New-Item "$(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/governance" -ItemType Directory -ea 0
+          New-Item -Path "$(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/governance" -Name "CredScanSuppressions.json" -Value '{"tool":"Crendential Scanner", "supressions":[]}'
+        displayName: Create credscan dummy ignore file
+
       - task: DownloadPipelineArtifact@2
         inputs:
           artifactName: '${{ parameters.uploadPrefix }}nuget-signed'

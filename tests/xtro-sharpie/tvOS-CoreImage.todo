@@ -1,0 +1,4 @@
+!missing-selector! +CIFilter::areaAlphaWeightedHistogramFilter not bound
+!missing-selector! +CIFilter::areaBoundsRedFilter not bound
+!missing-selector! +CIFilter::maximumScaleTransformFilter not bound
+!missing-selector! +CIFilter::toneMapHeadroomFilter not bound

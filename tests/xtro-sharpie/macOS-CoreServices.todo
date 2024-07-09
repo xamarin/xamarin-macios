@@ -1,0 +1,2 @@
+!deprecated-attribute-missing! FSEventStreamScheduleWithRunLoop missing a [Deprecated] attribute
+!deprecated-attribute-missing! FSEventStreamUnscheduleFromRunLoop missing a [Deprecated] attribute

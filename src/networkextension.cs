@@ -1357,7 +1357,7 @@ namespace NetworkExtension {
 		NSString ConfigurationChangeNotification { get; }
 	}
 
-	[MacCatalyst (13, 1)]
+	[MacCatalyst (13, 1), TV (17, 0)]
 	[BaseType (typeof (NSObject), Name = "NEVPNConnection")]
 	interface NEVpnConnection {
 
@@ -2495,7 +2495,7 @@ namespace NetworkExtension {
 		void Start ();
 	}
 
-	[NoWatch, Mac (11, 0), iOS (14, 0)]
+	[NoWatch, Mac (11, 0), iOS (14, 0), TV (17, 0)]
 	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NEDnsSettings), Name = "NEDNSOverHTTPSSettings")]
 	interface NEDnsOverHttpsSettings {
@@ -2509,7 +2509,7 @@ namespace NetworkExtension {
 		NSData IdentityReference { get; set; }
 	}
 
-	[NoWatch, Mac (11, 0), iOS (14, 0)]
+	[NoWatch, Mac (11, 0), iOS (14, 0), TV (17, 0)]
 	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NEDnsSettings), Name = "NEDNSOverTLSSettings")]
 	interface NEDnsOverTlsSettings {

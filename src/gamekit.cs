@@ -1387,15 +1387,15 @@ namespace GameKit {
 		[Export ("restrictToAutomatch")]
 		bool RestrictToAutomatch { get; set; }
 
-		[TV (17, 2), Mac (14, 2), iOS (17, 2), MacCatalyst (17, 2)]
+		[TV (17, 2), Mac (14, 2), iOS (17, 2), MacCatalyst (17, 2), Watch (10, 2)]
 		[NullAllowed, Export ("queueName")]
 		string QueueName { get; set; }
 
-		[TV (17, 2), Mac (14, 2), iOS (17, 2), MacCatalyst (17, 2)]
+		[TV (17, 2), Mac (14, 2), iOS (17, 2), MacCatalyst (17, 2), Watch (10, 2)]
 		[NullAllowed, Export ("properties", ArgumentSemantic.Copy)]
 		NSDictionary<NSString, NSObject> Properties { get; set; }
 
-		[TV (17, 2), Mac (14, 2), iOS (17, 2), MacCatalyst (17, 2)]
+		[TV (17, 2), Mac (14, 2), iOS (17, 2), MacCatalyst (17, 2), Watch (10, 2)]
 		[NullAllowed, Export ("recipientProperties", ArgumentSemantic.Copy)]
 		NSDictionary<GKPlayer, NSDictionary<NSString, NSObject>> RecipientProperties { get; set; }
 	}
