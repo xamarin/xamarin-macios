@@ -108,3 +108,4 @@
 !missing-type! ASPasskeyRegistrationCredentialExtensionOutput not bound
 !missing-type! ASPublicKeyCredentialClientData not bound
 !missing-type! ASWebAuthenticationSessionCallback not bound
+!missing-selector! +ASSettingsHelper::requestCredentialProviderExtensionEnablementWithCompletionHandler: not bound
