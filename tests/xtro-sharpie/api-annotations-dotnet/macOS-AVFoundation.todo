@@ -706,3 +706,4 @@
 !missing-type! AVPlayerItemSegment not bound
 !missing-type! AVRenderedCaptionImage not bound
 !missing-type! AVVideoPerformanceMetrics not bound
+!missing-selector! AVMediaExtensionProperties::extensionIdentifier not bound

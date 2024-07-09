@@ -9,3 +9,6 @@
 !missing-selector! CMHeadphoneActivityManager::stopActivityUpdates not bound
 !missing-selector! CMHeadphoneActivityManager::stopStatusUpdates not bound
 !missing-type! CMHeadphoneActivityManager not bound
+!missing-selector! CMHeadphoneMotionManager::isConnectionStatusActive not bound
+!missing-selector! CMHeadphoneMotionManager::startConnectionStatusUpdates not bound
+!missing-selector! CMHeadphoneMotionManager::stopConnectionStatusUpdates not bound

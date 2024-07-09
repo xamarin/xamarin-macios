@@ -10,7 +10,6 @@
 !deprecated-attribute-missing! MIDICIProfileState::initWithChannel:enabledProfiles:disabledProfiles: missing a [Deprecated] attribute
 !deprecated-attribute-missing! MIDICIResponder missing a [Deprecated] attribute
 !deprecated-attribute-missing! MIDICISession missing a [Deprecated] attribute
-!missing-enum! MIDICICategoryBitmap not bound
 !missing-enum! MIDICIDeviceType not bound
 !missing-enum! MIDICIManagementMessageType not bound
 !missing-enum! MIDICIProcessInquiryMessageType not bound
@@ -21,7 +20,6 @@
 !missing-enum! MIDIUMPFunctionBlockDirection not bound
 !missing-enum! MIDIUMPFunctionBlockMIDI1Info not bound
 !missing-enum! MIDIUMPFunctionBlockUIHint not bound
-!missing-enum! MIDIUMPProtocolBitmap not bound
 !missing-enum! UMPStreamMessageFormat not bound
 !missing-enum! UMPStreamMessageStatus not bound
 !missing-enum-value! MidiMessageType native value kMIDIMessageTypeFlexData = 13 not bound
@@ -34,14 +32,11 @@
 !missing-field! MIDICIDeviceWasAddedNotification not bound
 !missing-field! MIDICIDeviceWasRemovedNotification not bound
 !missing-field! MIDICIProfileObjectKey not bound
-!missing-field! MIDICIProfileStateChangedNotification not bound
 !missing-field! MIDICIProfileWasRemovedNotification not bound
 !missing-field! MIDIUMPEndpointObjectKey not bound
-!missing-field! MIDIUMPEndpointUpdatedNotification not bound
 !missing-field! MIDIUMPEndpointWasAddedNotification not bound
 !missing-field! MIDIUMPEndpointWasRemovedNotification not bound
 !missing-field! MIDIUMPFunctionBlockObjectKey not bound
-!missing-field! MIDIUMPFunctionBlockUpdatedNotification not bound
 !missing-selector! +MIDICIDeviceManager::sharedInstance not bound
 !missing-selector! +MIDIUMPEndpointManager::sharedInstance not bound
 !missing-selector! MIDI2DeviceInfo::family not bound
@@ -115,3 +110,8 @@
 !missing-type! MIDIUMPFunctionBlock not bound
 !missing-type! MIDIUMPMutableEndpoint not bound
 !missing-type! MIDIUMPMutableFunctionBlock not bound
+!missing-enum! MIDICICategoryOptions not bound
+!missing-enum! MIDIUMPProtocolOptions not bound
+!missing-field! MIDICIProfileWasUpdatedNotification not bound
+!missing-field! MIDIUMPEndpointWasUpdatedNotification not bound
+!missing-field! MIDIUMPFunctionBlockWasUpdatedNotification not bound
