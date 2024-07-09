@@ -67,7 +67,8 @@ stages:
           repositoryAlias: ${{ parameters.repositoryAlias }}
           commit: ${{ parameters.commit }}
 
-      - bash: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/scripts/disable-codeql-arm64.sh
+      - pwsh: |
+            Write-Host "##vso[task.setvariable variable=DYLD_INSERT_LIBRARIES]"
         displayName: 'Disable CodeQL'
         name: disableCodeQLOnArm64
 
