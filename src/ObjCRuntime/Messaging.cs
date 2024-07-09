@@ -154,9 +154,7 @@ namespace ObjCRuntime {
 			// ARM64: 8 arguments in registers, the rest is on the stack. This is where iOS/ARM64 expects the first varargs arguments.
 			var varArgsStartIndex = Runtime.IsARM64CallingConvention ? 8 : argCount;
 
-			for (var i = 0; i < varArguments.Length; i++) {
-				rv [varArgsStartIndex + i] = varArguments [i];
-			}
+			Array.Copy (varArguments, 0, rv, varArgsStartIndex, varArguments.Length);
 
 			return rv;
 		}
