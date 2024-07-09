@@ -29,16 +29,27 @@ CORETELEPHONY_HEADERS = \
 all-local::
 
 clean-local::
-	rm -f xtro-report/bin/Debug/xtro-report.exe bin/Debug/xtro-sharpie.exe
+	rm -rf */bin */obj
 	rm -f *.tmp
 	rm -rf *os*.pch*
 
-bin/Debug/xtro-sharpie.exe xtro-report/bin/Debug/xtro-report.exe xtro-sanity/bin/Debug/xtro-sanity.exe build: .stamp-build
+XTRO_REPORT=xtro-report/bin/Debug/xtro-report
+XTRO_REPORT_EXEC=$(XTRO_REPORT)
+XTRO_SANITY=xtro-sanity/bin/Debug/xtro-sanity
+XTRO_SANITY_EXEC=$(XTRO_SANITY)
+
+bin/Debug/xtro-sharpie.exe $(XTRO_REPORT) $(XTRO_SANITY) build: .stamp-build
 
 .stamp-build: export SHARPIE:=$(SHARPIE)
-.stamp-build: $(wildcard *.cs) pch-info.proj
-	$(Q_BUILD) $(SYSTEM_MSBUILD) $(MSBUILD_VERBOSITY) xtro-sharpie.sln /r /bl:$@.binlog
+.stamp-build: $(wildcard *.cs) pch-info.proj $(XTRO_REPORT) $(XTRO_SANITY)
+	$(Q_BUILD) $(SYSTEM_MSBUILD) $(MSBUILD_VERBOSITY) xtro-sharpie.csproj /r /bl:$@.binlog
 	$(Q) touch $@
+
+$(XTRO_REPORT): $(wildcard xtro-report/*.cs) $(wildcard xtro-report/*.csproj) Filter.cs Makefile
+	$(Q_GEN) unset MSBUILD_EXE_PATH && $(DOTNET) build xtro-report/xtro-report.csproj /bl:xtro-report.binlog $(DOTNET_BUILD_VERBOSITY)
+
+$(XTRO_SANITY): $(wildcard xtro-sanity/*.cs) $(wildcard xtro-sanity/*.csproj) $(wildcard $(TOP)/tools/common/*.cs) Makefile
+	$(Q_GEN) unset MSBUILD_EXE_PATH && $(DOTNET) build xtro-sanity/xtro-sanity.csproj /bl:xtro-sanity.binlog $(DOTNET_BUILD_VERBOSITY)
 
 XIOS ?= $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/64bits/iOS/Xamarin.iOS.dll
 XIOS_LIBDIR ?= $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.iOS
@@ -191,17 +202,17 @@ dotnet-wrench:
 	$(MAKE) -j8 dotnet-classify
 
 ifdef INCLUDE_XAMARIN_LEGACY
-report/index.html: xtro-report/bin/Debug/xtro-report.exe .stamp-classify
-	rm -rf report/
-	$(MONO) xtro-report/bin/Debug/xtro-report.exe $(ANNOTATIONS_DIR) report
+report/index.html: $(XTRO_REPORT) .stamp-classify
+	$(Q) rm -rf report/
+	$(Q_GEN) $(XTRO_REPORT_EXEC) $(ANNOTATIONS_DIR) report
 
 report: report/index.html
 endif
 
 ifdef ENABLE_DOTNET
-report-dotnet/index.html: xtro-report/bin/Debug/xtro-report.exe .stamp-dotnet-classify
-	rm -rf report-dotnet
-	$(MONO) xtro-report/bin/Debug/xtro-report.exe $(DOTNET_ANNOTATIONS_DIR) report-dotnet
+report-dotnet/index.html: $(XTRO_REPORT) .stamp-dotnet-classify
+	$(Q) rm -rf report-dotnet
+	$(Q_GEN) $(XTRO_REPORT_EXEC) $(DOTNET_ANNOTATIONS_DIR) report-dotnet
 
 dotnet-report: report-dotnet/index.html
 endif
@@ -257,16 +268,16 @@ CLASSIFY+=.stamp-classify-macos
 endif
 
 ifdef INCLUDE_XAMARIN_LEGACY
-.stamp-classify: xtro-sanity/bin/Debug/xtro-sanity.exe $(CLASSIFY)
-	$(MONO) xtro-sanity/bin/Debug/xtro-sanity.exe $(abspath $(ANNOTATIONS_DIR)) "$(ALL_PLATFORMS)" $(INCLUDED_PLATFORMS)
+.stamp-classify: $(XTRO_SANITY) $(CLASSIFY)
+	$(Q_GEN) $(XTRO_SANITY_EXEC) $(abspath $(ANNOTATIONS_DIR)) "$(ALL_PLATFORMS)" $(INCLUDED_PLATFORMS)
 	$(Q) touch $@
 
 classify: .stamp-classify
 endif
 
 ifdef ENABLE_DOTNET
-.stamp-dotnet-classify: xtro-sanity/bin/Debug/xtro-sanity.exe $(DOTNET_CLASSIFY)
-	$(MONO) xtro-sanity/bin/Debug/xtro-sanity.exe $(abspath $(DOTNET_ANNOTATIONS_DIR)) "$(ALL_DOTNET_PLATFORMS)" $(XTRO_DOTNET_PLATFORMS)
+.stamp-dotnet-classify: $(XTRO_SANITY) $(DOTNET_CLASSIFY)
+	$(Q_GEN) $(XTRO_SANITY_EXEC) $(abspath $(DOTNET_ANNOTATIONS_DIR)) "$(ALL_DOTNET_PLATFORMS)" $(XTRO_DOTNET_PLATFORMS)
 	$(Q) touch $@
 
 dotnet-classify: .stamp-dotnet-classify
@@ -292,19 +303,18 @@ endif
 remove-empty-files:
 	find . -empty -exec git rm -f {} \;
 
-U2TODO = u2todo/bin/Debug/u2todo.exe
+U2TODO = u2todo/bin/Debug/u2todo.dll
 $(U2TODO): $(wildcard u2todo/*.cs u2todo/*.csproj Filter.cs)
-	$(Q) $(SYSTEM_MSBUILD) $(MSBUILD_VERBOSITY) /bl:$@.binlog /r
+	$(Q) unset MSBUILD_EXE_PATH && $(DOTNET) build $(DOTNET_BUILD_VERBOSITY) /bl:$@.binlog
 	$(Q) touch $@
 
 unclassified2todo-classic: $(U2TODO)
-	cd $(ANNOTATIONS_DIR) && $(MONO) $(abspath $(U2TODO))
+	cd $(ANNOTATIONS_DIR) && $(DOTNET) exec $(abspath $(U2TODO))
 	@for filename in $(git status -s | cut -c4- | grep .todo); do \
 		sort -o "$filename" "$filename"; \
 	done
 
 unclassified2todo-dotnet: $(U2TODO)
-	$(SYSTEM_CSC) -features:strict Filter.cs u2todo/u2todo.cs
-	cd $(DOTNET_ANNOTATIONS_DIR) && $(MONO) $(abspath $(U2TODO))
+	cd $(DOTNET_ANNOTATIONS_DIR) && $(DOTNET) exec $(abspath $(U2TODO))
 
 unclassified2todo: unclassified2todo-classic unclassified2todo-dotnet
