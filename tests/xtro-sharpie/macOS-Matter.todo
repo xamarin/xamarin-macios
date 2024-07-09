@@ -11197,3 +11197,7 @@
 !missing-selector! MTRDeviceStorageBehaviorConfiguration::timeBetweenReportsTooShortMinThreshold not bound
 !missing-selector! MTRDeviceStorageBehaviorConfiguration::timeBetweenReportsTooShortThreshold not bound
 !missing-type! MTRDeviceStorageBehaviorConfiguration not bound
+!missing-selector! +MTRServerAttribute::newFeatureMapAttributeWithInitialValue: not bound
+!missing-selector! MTRDevice::addDelegate:queue: not bound
+!missing-selector! MTRDevice::addDelegate:queue:interestedPathsForAttributes:interestedPathsForEvents: not bound
+!missing-selector! MTRDevice::removeDelegate: not bound

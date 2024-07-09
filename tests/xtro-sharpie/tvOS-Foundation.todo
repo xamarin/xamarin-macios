@@ -20,3 +20,4 @@
 !missing-type! NSKeyValueSharedObservers not bound
 !missing-type! NSKeyValueSharedObserversSnapshot not bound
 !missing-type! NSLocalizedNumberFormatRule not bound
+!missing-selector! +NSTermOfAddress::currentUser not bound
