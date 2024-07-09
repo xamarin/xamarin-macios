@@ -189,8 +189,7 @@ namespace SensorKit {
 
 	[NoWatch, NoTV, NoMac, iOS (17, 4), MacCatalyst (17, 4)]
 	[Native]
-	public enum SRElectrocardiogramSessionGuidance : long
-	{
+	public enum SRElectrocardiogramSessionGuidance : long {
 		Guided = 1,
 		Unguided,
 	}
@@ -211,7 +210,7 @@ namespace SensorKit {
 
 	[Flags, NoWatch, NoTV, NoMac, iOS (17, 0), MacCatalyst (17, 0)]
 	[Native]
-	public enum SRWristTemperatureCondition : ulong{
+	public enum SRWristTemperatureCondition : ulong {
 		None = 0x0,
 		OffWrist = 1uL << 0,
 		OnCharger = 1uL << 1,
@@ -1214,10 +1213,10 @@ namespace SensorKit {
 		ARFaceAnchor FaceAnchor { get; }
 
 		[Export ("wholeFaceExpressions", ArgumentSemantic.Copy)]
-		SRFaceMetricsExpression[] WholeFaceExpressions { get; }
+		SRFaceMetricsExpression [] WholeFaceExpressions { get; }
 
 		[Export ("partialFaceExpressions", ArgumentSemantic.Copy)]
-		SRFaceMetricsExpression[] PartialFaceExpressions { get; }
+		SRFaceMetricsExpression [] PartialFaceExpressions { get; }
 	}
 
 	[NoWatch, NoTV, NoMac, iOS (17, 4), MacCatalyst (17, 4)]
@@ -1250,7 +1249,7 @@ namespace SensorKit {
 		SRElectrocardiogramLead Lead { get; }
 
 		[Export ("data", ArgumentSemantic.Copy)]
-		SRElectrocardiogramData[] Data { get; }
+		SRElectrocardiogramData [] Data { get; }
 	}
 
 	[NoWatch, NoTV, NoMac, iOS (17, 4), MacCatalyst (17, 4)]
@@ -1323,7 +1322,7 @@ namespace SensorKit {
 		NSNumber BackgroundNoiseOffset { get; }
 
 		[Export ("conditions", ArgumentSemantic.Copy)]
-		NSString[] Conditions { get; }
+		NSString [] Conditions { get; }
 	}
 
 	[NoWatch, NoTV, NoMac, iOS (17, 4), MacCatalyst (17, 4)]
@@ -1360,7 +1359,7 @@ namespace SensorKit {
 	}
 
 	[NoWatch, NoTV, NoMac, iOS (17, 4), MacCatalyst (17, 4)]
-	[BaseType (typeof(NSObject))]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface SRPhotoplethysmogramSample : NSCopying, NSSecureCoding {
 
@@ -1371,13 +1370,13 @@ namespace SensorKit {
 		long NanosecondsSinceStart { get; }
 
 		[Export ("usage", ArgumentSemantic.Copy)]
-		NSString[] Usage { get; }
+		NSString [] Usage { get; }
 
 		[Export ("opticalSamples", ArgumentSemantic.Copy)]
-		SRPhotoplethysmogramOpticalSample[] OpticalSamples { get; }
+		SRPhotoplethysmogramOpticalSample [] OpticalSamples { get; }
 
 		[Export ("accelerometerSamples", ArgumentSemantic.Copy)]
-		SRPhotoplethysmogramAccelerometerSample[] AccelerometerSamples { get; }
+		SRPhotoplethysmogramAccelerometerSample [] AccelerometerSamples { get; }
 
 		[NullAllowed, Export ("temperature", ArgumentSemantic.Strong)]
 		NSMeasurement<NSUnitTemperature> Temperature { get; }

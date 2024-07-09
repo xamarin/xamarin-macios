@@ -454,7 +454,7 @@ namespace ScreenCaptureKit {
 		[Export ("stream:didStopWithError:")]
 		void DidStop (SCStream stream, NSError error);
 
-		[Mac (14,4)]
+		[Mac (14, 4)]
 		[Export ("userDidStopStream:")]
 		void UserDidStop (SCStream stream);
 
