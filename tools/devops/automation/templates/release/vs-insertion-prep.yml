@@ -110,7 +110,7 @@ stages:
     - job: push_signed_nugets
       displayName: Push NuGets
       dependsOn: [signing, nuget_convert]
-      condition: "ne(stageDependencies.configure_build.configure.outputs['configure_platforms.ENABLE_DOTNET'],'')"
+      condition: "and(or(eq(dependencies.signing.result, 'Succeeded'),eq(dependencies.nuget_convert.result, 'Succeeded')), ne(stageDependencies.configure_build.configure.outputs['configure_platforms.ENABLE_DOTNET'],''))"
       variables:
       - name: skipNugetSecurityAnalysis
         value: true
