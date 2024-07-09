@@ -1402,6 +1402,31 @@ namespace Xamarin.Tests {
 			var result = DotNet.AssertBuild (project_path, properties);
 		}
 
+		[TestCase (ApplePlatform.iOS, "ios-arm64")]
+		public void PluralRuntimeIdentifiers (ApplePlatform platform, string runtimeIdentifiers)
+		{
+			PluralRuntimeIdentifiersImpl (platform, runtimeIdentifiers);
+		}
+
+		internal static void PluralRuntimeIdentifiersImpl (ApplePlatform platform, string runtimeIdentifiers, Dictionary<string, string>? extraProperties = null, bool isUsingHotRestart = false)
+		{
+			var project = "MySimpleApp";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
+
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
+			Clean (project_path);
+			var properties = GetDefaultProperties (extraProperties: extraProperties);
+			properties ["RuntimeIdentifiers"] = runtimeIdentifiers;
+			if (isUsingHotRestart) {
+				var rv = DotNet.AssertBuildFailure (project_path, properties);
+				var errors = BinLog.GetBuildLogErrors (rv.BinLogPath).ToArray ();
+				AssertErrorMessages (errors, $"Hot Restart is not supported when 'RuntimeIdentifiers' (plural) is set. Use 'RuntimeIdentifier' (singular) instead.");
+			} else {
+				DotNet.AssertBuild (project_path, properties);
+			}
+		}
+
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64")]
 		[TestCase (ApplePlatform.iOS, "ios-arm64")]
 		public void CustomizedCodeSigning (ApplePlatform platform, string runtimeIdentifiers)
