@@ -305,6 +305,16 @@ function install_mono () {
 	rm -f $MONO_PKG
 }
 
+function xcodebuild_download_selected_platforms ()
+{
+	log "Executing '$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -downloadPlatform iOS' $1"
+	"$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -downloadPlatform iOS
+	log "Executing '$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -downloadPlatform tvOS' $1"
+	"$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -downloadPlatform tvOS
+	log "Executing '$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -downloadPlatform watchOS' $1"
+	"$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -downloadPlatform watchOS
+}
+
 function download_xcode_platforms ()
 {
 	if test -n "$IGNORE_SIMULATORS"; then return; fi
@@ -327,21 +337,25 @@ function download_xcode_platforms ()
 
 	log "Xcode has additional platforms that must be downloaded ($MUST_INSTALL_RUNTIMES), so installing those."
 
-	log "Executing '$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -downloadAllPlatforms'"
-	if ! $SUDO "$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -downloadAllPlatforms; then
+	log "Executing '$SUDO pkill -9 -f CoreSimulator.framework'"
+	$SUDO pkill -9 -f "CoreSimulator.framework" || true
+	if ! xcodebuild_download_selected_platforms; then
+		log "Executing '$XCODE_DEVELOPER_ROOT/usr/bin/simctl runtime list -v"
 		"$XCODE_DEVELOPER_ROOT/usr/bin/simctl" runtime list -v
 		# Don't exit here, just hope for the best instead.
 		set +x
 		echo "##vso[task.logissue type=warning;sourcepath=system-dependencies.sh]Failed to download all simulator platforms, this may result in problems executing tests in the simulator."
 		set -x
 	else
+		log "Executing '$XCODE_DEVELOPER_ROOT/usr/bin/simctl runtime list -v"
 		"$XCODE_DEVELOPER_ROOT/usr/bin/simctl" runtime list -v
+		log "Executing '$XCODE_DEVELOPER_ROOT/usr/bin/simctl list -v"
 		"$XCODE_DEVELOPER_ROOT/usr/bin/simctl" list -v
 	fi
-	
-	$SUDO "$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -downloadAllPlatforms
-	$SUDO "$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -downloadAllPlatforms
-	$SUDO "$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -downloadAllPlatforms
+
+	xcodebuild_download_selected_platforms "(second time)" || true
+	xcodebuild_download_selected_platforms "(third time)" || true
+	xcodebuild_download_selected_platforms "(fourth time)" || true
 
 	log "Executing '$SUDO $XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -runFirstLaunch'"
 	$SUDO "$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -runFirstLaunch
@@ -359,7 +373,7 @@ function download_xcode_platforms ()
 	pkill -9 "Xcode" || log "Xcode was not running."
 	log "Executed 'open xcpref://Xcode.PreferencePane.Platforms'"
 
-	log "Executed '$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -downloadAllPlatforms'"
+	log "Finished installing Xcode platforms"
 }
 
 function run_xcode_first_launch ()
