@@ -13127,7 +13127,7 @@ namespace UIKit {
 
 		[TV (17, 4), iOS (17, 4), MacCatalyst (17, 4)]
 		[Export ("withScrollIndicatorsShownForContentOffsetChanges:")]
-		void WithScrollIndicatorsShownForContentOffsetChanges (Action changes);
+		void WithScrollIndicatorsShown (Action forContentOffsetChanges);
 
 		[Export ("delaysContentTouches")]
 		bool DelaysContentTouches { get; set; }

@@ -198,14 +198,14 @@ namespace SensorKit {
 	[Native]
 	public enum SRFaceMetricsContext : ulong {
 		DeviceUnlock = 1uL << 0,
-		MessagingAppUsage = 1uL << 1
+		MessagingAppUsage = 1uL << 1,
 	}
 
 	[Flags, NoWatch, NoTV, NoMac, iOS (17, 0), MacCatalyst (17, 0)]
 	[Native]
 	public enum SRSpeechMetricsSessionFlags : ulong {
 		Default = 0x0,
-		BypassVoiceProcessing = (1uL << 0)
+		BypassVoiceProcessing = (1uL << 0),
 	}
 
 	[Flags, NoWatch, NoTV, NoMac, iOS (17, 0), MacCatalyst (17, 0)]
@@ -214,7 +214,7 @@ namespace SensorKit {
 		None = 0x0,
 		OffWrist = 1uL << 0,
 		OnCharger = 1uL << 1,
-		InMotion = 1uL << 2
+		InMotion = 1uL << 2,
 	}
 
 	[NoWatch, NoTV, NoMac]
