@@ -201,5 +201,9 @@ namespace AutomaticAssessmentConfiguration {
 	interface AEAssessmentParticipantConfiguration : NSCopying {
 		[Export ("allowsNetworkAccess")]
 		bool AllowsNetworkAccess { get; set; }
+
+		[Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("configurationInfo", ArgumentSemantic.Copy)]
+		NSDictionary<NSString, NSObject> ConfigurationInfo { get; set; }
 	}
 }
