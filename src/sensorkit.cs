@@ -1302,22 +1302,27 @@ namespace SensorKit {
 		long NanosecondsSinceStart { get; }
 
 		[NullAllowed]
+		[BindAs (typeof (double?))]
 		[Export ("normalizedReflectance", ArgumentSemantic.Strong)]
 		NSNumber NormalizedReflectance { get; }
 
 		[NullAllowed]
+		[BindAs (typeof (double?))]
 		[Export ("whiteNoise", ArgumentSemantic.Strong)]
 		NSNumber WhiteNoise { get; }
 
 		[NullAllowed]
+		[BindAs (typeof (double?))]
 		[Export ("pinkNoise", ArgumentSemantic.Strong)]
 		NSNumber PinkNoise { get; }
 
 		[NullAllowed]
+		[BindAs (typeof (double?))]
 		[Export ("backgroundNoise", ArgumentSemantic.Strong)]
 		NSNumber BackgroundNoise { get; }
 
 		[NullAllowed]
+		[BindAs (typeof (double?))]
 		[Export ("backgroundNoiseOffset", ArgumentSemantic.Strong)]
 		NSNumber BackgroundNoiseOffset { get; }
 
