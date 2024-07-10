@@ -70,3 +70,4 @@
 !missing-pinvoke! VTRAWProcessingSessionProcessFrame is not bound
 !missing-pinvoke! VTRAWProcessingSessionSetParameterChangedHander is not bound
 !missing-pinvoke! VTRAWProcessingSessionSetProcessingParameters is not bound
+!missing-field! kVTDecoderExtensionProperties_ExtensionIdentifierKey not bound

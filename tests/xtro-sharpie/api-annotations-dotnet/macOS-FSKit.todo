@@ -4,8 +4,6 @@
 !missing-selector! +FSEntityIdentifier::identifierWithUUID:byteQualifier: not bound
 !missing-selector! +FSEntityIdentifier::identifierWithUUID:longByteQualifier: not bound
 !missing-selector! +FSFileName::nameWithCString: not bound
-!missing-selector! +FSKitConstants::forceLoadOption not bound
-!missing-selector! +FSKitConstants::moduleExtensionPointName not bound
 !missing-selector! +FSProbeResult::resultWithResult:name:containerID: not bound
 !missing-selector! FSEntityIdentifier::initWithBytes:length: not bound
 !missing-selector! FSEntityIdentifier::initWithUUID:byteQualifier: not bound
@@ -17,7 +15,6 @@
 !missing-selector! FSProbeResult::containerID not bound
 !missing-selector! FSProbeResult::name not bound
 !missing-selector! FSProbeResult::result not bound
-!missing-type! FSKitConstants not bound
 !missing-type! FSProbeResult not bound
 !missing-enum! FSContainerState not bound
 !missing-enum! FSExtentType not bound
@@ -33,6 +30,8 @@
 !missing-enum! FSVolumeState not bound
 !missing-field! FSKitVersionNumber not bound
 !missing-field! FSKitVersionString not bound
+!missing-field! FSTaskParameterConstantForceLoad not bound
+!missing-field! FSTaskParameterConstantReadOnly not bound
 !missing-pinvoke! fs_errorForCocoaError is not bound
 !missing-pinvoke! fs_errorForMachError is not bound
 !missing-pinvoke! fs_errorForPOSIXError is not bound
@@ -253,6 +252,8 @@
 !missing-selector! FSMessageConnection::logLocalizedMessage:table:bundle:array: not bound
 !missing-selector! FSModuleIdentity::attributes not bound
 !missing-selector! FSModuleIdentity::bundleIdentifier not bound
+!missing-selector! FSModuleIdentity::isEnabled not bound
+!missing-selector! FSModuleIdentity::isSystem not bound
 !missing-selector! FSModuleIdentity::url not bound
 !missing-selector! FSMutableFileDataBuffer::capacity not bound
 !missing-selector! FSMutableFileDataBuffer::initWithCapacity: not bound

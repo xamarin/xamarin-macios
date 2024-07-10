@@ -10,6 +10,13 @@
 !missing-pinvoke! CGContextGetEDRTargetHeadroom is not bound
 !missing-pinvoke! CGContextSetEDRTargetHeadroom is not bound
 !missing-pinvoke! CGImageContainsImageSpecificToneMappingMetadata is not bound
-!missing-pinvoke! CGImageCreateWithEDRHeadroom is not bound
 !missing-pinvoke! CGImageGetContentHeadroom is not bound
 !missing-pinvoke! CGImageShouldToneMap is not bound
+!missing-enum-value! CGPdfTagType native value CGPDFTagTypeObject = 800 not bound
+!missing-field! kCGColorSpaceCoreMedia709 not bound
+!missing-field! kCGDefaultHDRImageContentHeadroom not bound
+!missing-pinvoke! CGImageCreateCopyWithContentHeadroom is not bound
+!missing-pinvoke! CGImageCreateWithContentHeadroom is not bound
+!missing-pinvoke! CGPDFContextSetIDTree is not bound
+!missing-pinvoke! CGPDFContextSetPageTagStructureTree is not bound
+!missing-pinvoke! CGPDFContextSetParentTree is not bound

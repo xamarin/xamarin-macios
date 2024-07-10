@@ -32,3 +32,4 @@
 !missing-selector! NSTextAttachment::setImage: not bound
 !missing-selector! NSTextAttachment::setLineLayoutPadding: not bound
 !missing-type! NSTextAttachment not bound
+!missing-enum! UIAccessibilityExpandedStatus not bound
