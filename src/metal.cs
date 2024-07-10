@@ -5259,7 +5259,9 @@ namespace Metal {
 		bool IsAliasable { get; }
 
 		[Watch (10, 4), TV (17, 4), Mac (14, 4), iOS (17, 4), MacCatalyst (17, 4)]
+#if NET
 		[Abstract]
+#endif
 		[Export ("setOwnerWithIdentity:")]
 		int SetOwnerWithIdentity (uint taskIdToken);
 
@@ -5970,7 +5972,9 @@ namespace Metal {
 		ulong SignaledValue { get; set; }
 
 		[Mac (14, 4), iOS (17, 4), TV (17, 4), MacCatalyst (17, 4)]
+#if NET
 		[Abstract]
+#endif
 		[Export ("waitUntilSignaledValue:timeoutMS:")]
 		bool WaitUntilSignaledValue (ulong value, ulong milliseconds);
 	}

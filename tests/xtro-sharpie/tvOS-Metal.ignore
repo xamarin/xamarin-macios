@@ -34,6 +34,8 @@
 !incorrect-protocol-member! MTLRenderCommandEncoder::executeCommandsInBuffer:indirectBuffer:indirectBufferOffset: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLTexture::isShareable is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLTexture::newSharedTextureHandle is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLResource::setOwnerWithIdentity: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLSharedEvent::waitUntilSignaledValue:timeoutMS: is REQUIRED and should be abstract
 
 # Selectors missing reported by introspection: https://github.com/xamarin/maccore/issues/1978
 
@@ -174,8 +176,6 @@
 !incorrect-protocol-member! MTLFunction::options is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLHeap::newAccelerationStructureWithDescriptor: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLBuffer::gpuAddress is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLResource::setOwnerWithIdentity: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLSharedEvent::waitUntilSignaledValue:timeoutMS: is REQUIRED and should be abstract
 
 # deprecated but cannot be removed
 !unknown-native-enum! MTLArgumentAccess bound
