@@ -62,6 +62,7 @@ stages:
       signType: Real
       usePipelineArtifactTasks: true
       timeoutInMinutes: 180
+      debug: true
       condition: "ne(stageDependencies.configure_build.configure.outputs['configure_platforms.ENABLE_DOTNET'],'')"
       setupSteps:
       - template: tools/devops/automation/templates/common/checkout.yml@${{ parameters.repositoryAlias }}
