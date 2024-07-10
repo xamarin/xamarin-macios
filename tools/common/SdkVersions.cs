@@ -54,7 +54,7 @@ namespace Xamarin {
 		public const string MaxTVOSSimulator = "17.5";
 
 		public const string MaxiOSDeploymentTarget = "17.5";
-		public const string MaxWatchDeploymentTarget = "10.4";
+		public const string MaxWatchDeploymentTarget = "10.5";
 		public const string MaxTVOSDeploymentTarget = "17.5";
 
 		public const string TargetPlatformVersioniOS = "17.5";
