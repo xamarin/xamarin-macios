@@ -426,7 +426,7 @@ namespace MonoTouchFixtures.Security {
 #if NET
 			using (var cert = X509CertificateLoader.LoadCertificate (mail_google_com)) {
 #else
-			using (var cert = new X509Certificate2 (mail_google_com)) {
+			using (var cert = new X509Certificate (mail_google_com)) {
 #endif
 				/*
 				 * This X509Certificate constructor will use SecCertificateCreateWithData() and
