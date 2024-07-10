@@ -58,6 +58,9 @@
 		<NoWarn Condition="'$(IncludeCS1416Warnigs)' != 'true'">CA1416;$(NoWarn)</NoWarn>
 
 		<CustomBeforeMicrosoftCommonTargets>$(CustomBeforeMicrosoftCommonTargets);$(MSBuildThisFileDirectory)SupportedOSPlatformVersions.targets</CustomBeforeMicrosoftCommonTargets>
+
+		<!-- Determine whether we're building for the simulator (not device nor desktop) -->
+		<_IsSimulatorBuild Condition="'$(RuntimeIdentifier)$(RuntimeIdentifiers)' == '' Or $(RuntimeIdentifier.Contains('simulator')) Or $(RuntimeIdentifiers.Contains('simulator'))">true</_IsSimulatorBuild>
 	</PropertyGroup>
 
 	<!-- Logic for NativeAOT -->
