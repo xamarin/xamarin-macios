@@ -650,6 +650,7 @@ namespace Introspection {
 				case "UIFeedbackGenerator":
 					if (!TestRuntime.CheckXcodeVersion (15, 4))
 						return true;
+					break;
 				}
 				break;
 			}

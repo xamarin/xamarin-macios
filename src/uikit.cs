@@ -332,12 +332,11 @@ namespace UIKit {
 	[Abstract] // abstract class that should not be used directly
 	[BaseType (typeof (NSObject))]
 	interface UIFeedbackGenerator : UIInteraction {
-		// intancetype -> UIFeedbackGenerator, inlined as subclasses should return the same type as the instance
+
 		[iOS (17, 5), MacCatalyst (17, 5)]
 		[Static]
-		[Internal]
 		[Export ("feedbackGeneratorForView:")]
-		NativeHandle _GetFeedbackGenerator (UIView forView);
+		UIFeedbackGenerator GetFeedbackGenerator (UIView forView);
 
 		[Export ("prepare")]
 		void Prepare ();
@@ -376,10 +375,10 @@ namespace UIKit {
 		[Export ("impactOccurredWithIntensity:atLocation:")]
 		void ImpactOccurred (nfloat intensity, CGPoint location);
 
-		// Inlined from parent class
 		[iOS (17, 5), MacCatalyst (17, 5)]
+		[New] // kind of overloading a static member, make it return 'instancetype'
 		[Static]
-		[Wrap ("Runtime.GetNSObject<UIImpactFeedbackGenerator> (UIFeedbackGenerator._GetFeedbackGenerator (forView))!")]
+		[Export ("feedbackGeneratorForView:")]
 		UIImpactFeedbackGenerator GetFeedbackGenerator (UIView forView);
 	}
 
@@ -396,10 +395,10 @@ namespace UIKit {
 		[Export ("notificationOccurred:atLocation:")]
 		void NotificationOccurred (UINotificationFeedbackType notificationType, CGPoint location);
 
-		// Inlined from parent class
 		[iOS (17, 5), MacCatalyst (17, 5)]
+		[New] // kind of overloading a static member, make it return 'instancetype'
 		[Static]
-		[Wrap ("Runtime.GetNSObject<UINotificationFeedbackGenerator> (UIFeedbackGenerator._GetFeedbackGenerator (forView))!")]
+		[Export ("feedbackGeneratorForView:")]
 		UINotificationFeedbackGenerator GetFeedbackGenerator (UIView forView);
 	}
 
@@ -416,10 +415,10 @@ namespace UIKit {
 		[Export ("selectionChangedAtLocation:")]
 		void SelectionChanged (CGPoint location);
 
-		// Inlined from parent class
 		[iOS (17, 5), MacCatalyst (17, 5)]
+		[New] // kind of overloading a static member, make it return 'instancetype'
 		[Static]
-		[Wrap ("Runtime.GetNSObject<UISelectionFeedbackGenerator> (UIFeedbackGenerator._GetFeedbackGenerator (forView))!")]
+		[Export ("feedbackGeneratorForView:")]
 		UISelectionFeedbackGenerator GetFeedbackGenerator (UIView forView);
 	}
 
@@ -29398,10 +29397,10 @@ namespace UIKit {
 		[Export ("pathCompletedAtLocation:")]
 		void PathCompleted (CGPoint atLocation);
 
-		// Inlined from parent class
 		[iOS (17, 5), MacCatalyst (17, 5)]
+		[New] // kind of overloading a static member, make it return 'instancetype'
 		[Static]
-		[Wrap ("Runtime.GetNSObject<UICanvasFeedbackGenerator> (UIFeedbackGenerator._GetFeedbackGenerator (forView))!")]
+		[Export ("feedbackGeneratorForView:")]
 		UICanvasFeedbackGenerator GetFeedbackGenerator (UIView forView);
 	}
 
