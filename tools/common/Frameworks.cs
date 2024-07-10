@@ -474,6 +474,8 @@ public class Frameworks : Dictionary<string, Framework> {
 				{ "Symbols", "Symbols", 17, 0 },
 				{ "SensitiveContentAnalysis", "SensitiveContentAnalysis", 17, 0 },
 
+				{ "AccessorySetupKit", "AccessorySetupKit", 18, 0 },
+
 				// the above MUST be kept in sync with simlauncher
 				// see tools/mtouch/Makefile
 				// please also keep it sorted to ease comparison
