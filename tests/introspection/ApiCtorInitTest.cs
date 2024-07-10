@@ -275,6 +275,10 @@ namespace Introspection {
 				if (SkipDueToAttribute (ctor))
 					continue;
 
+				// Don't test methods that have [UnsupportedOSPlatform] + [EditorBrowsable (Never)]
+				if (SkipDueToInvisibleAndUnsupported (ctor))
+					continue;
+
 				if ((ctor is null) || ctor.IsAbstract) {
 					if (LogUntestedTypes)
 						Console.WriteLine ("[WARNING] {0} was skipped because it had no default constructor", t);
