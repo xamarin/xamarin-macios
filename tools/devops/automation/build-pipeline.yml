@@ -154,7 +154,7 @@ resources:
   - repository: yaml-templates
     type: github
     name: xamarin/yaml-templates
-    ref: refs/heads/main
+    ref: refs/heads/dev/mandel/adios-msbuild
     endpoint: xamarin
 
   - repository: sdk-insertions
