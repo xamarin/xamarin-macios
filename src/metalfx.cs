@@ -105,9 +105,7 @@ namespace MetalFX {
 		MTLTextureUsage MotionTextureUsage { get; }
 
 		[Mac (14, 4), iOS (17, 4), MacCatalyst (17, 4)]
-#if XAMCORE_5_0
 		[Abstract]
-#endif
 		[Export ("reactiveTextureUsage")]
 		MTLTextureUsage ReactiveTextureUsage { get; }
 
@@ -144,9 +142,7 @@ namespace MetalFX {
 		IMTLTexture ExposureTexture { get; set; }
 
 		[Mac (14, 4), iOS (17, 4), MacCatalyst (17, 4)]
-#if XAMCORE_5_0
 		[Abstract]
-#endif
 		[NullAllowed, Export ("reactiveMaskTexture", ArgumentSemantic.Retain)]
 		IMTLTexture ReactiveMaskTexture { get; set; }
 

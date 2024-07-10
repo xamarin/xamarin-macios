@@ -449,7 +449,7 @@ namespace VideoSubscriberAccount {
 	interface VSAppleSubscription {
 
 		[Export ("customerID", ArgumentSemantic.Strong)]
-		string CustomerID { get; set; }
+		string CustomerId { get; set; }
 
 		[Export ("productCodes", ArgumentSemantic.Strong)]
 		string [] ProductCodes { get; set; }

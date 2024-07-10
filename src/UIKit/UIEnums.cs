@@ -3358,7 +3358,7 @@ namespace UIKit {
 	}
 
 #if XAMCORE_5_0
-		[iOS (14, 0), TV (14, 0), NoWatch, NoMacCatalyst]
+	[iOS (14, 0), TV (14, 0), NoWatch, NoMacCatalyst]
 #else
 	[iOS (14, 0), TV (14, 0), NoWatch]
 	[MacCatalyst (14, 0)]

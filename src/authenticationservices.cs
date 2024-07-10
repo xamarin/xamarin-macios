@@ -192,7 +192,7 @@ namespace AuthenticationServices {
 		TouchIdOrWatchCurrentSet = 1uL << 0,
 		TouchIdOrWatchAny = 1uL << 1,
 		ReuseDuringUnlock = 1uL << 2,
-		PasswordFallback = 1uL << 3
+		PasswordFallback = 1uL << 3,
 	}
 
 	/// <summary>Delegate used in callbacks by <see cref="T:AuthenticationServices.ASCredentialIdentityStore" />.</summary>
