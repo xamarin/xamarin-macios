@@ -1063,22 +1063,36 @@ namespace Xamarin.Tests {
 		}
 
 
-		[TestCase (ApplePlatform.iOS)]
-		[TestCase (ApplePlatform.TVOS)]
-		[TestCase (ApplePlatform.MacOSX)]
+		[TestCase (ApplePlatform.iOS, "ios-arm64", false)]
+		[TestCase (ApplePlatform.iOS, "ios-arm64", true)]
+		[TestCase (ApplePlatform.iOS, "iossimulator-x64", false)]
+		[TestCase (ApplePlatform.iOS, "iossimulator-x64", true)]
+		[TestCase (ApplePlatform.TVOS, "tvossimulator-x64", false)]
+		[TestCase (ApplePlatform.TVOS, "tvossimulator-x64", true)]
+		[TestCase (ApplePlatform.MacOSX, "osx-x64", false)]
+		[TestCase (ApplePlatform.MacOSX, "osx-x64", true)]
+		[TestCase (ApplePlatform.MacOSX, "osx-x64;osx-arm64", false)]
+		[TestCase (ApplePlatform.MacOSX, "osx-x64;osx-arm64", true)]
 		// [TestCase ("MacCatalyst", "")] - No extension support yet
-		public void BuildProjectsWithExtensions (ApplePlatform platform)
+		public void BuildProjectsWithExtensions (ApplePlatform platform, string runtimeIdentifier, bool isNativeAot)
 		{
 			Configuration.IgnoreIfIgnoredPlatform (platform);
-			var consumingProjectDir = GetProjectPath ("ExtensionConsumer", platform: platform);
+			var consumingProjectDir = GetProjectPath ("ExtensionConsumer", runtimeIdentifier, platform, out var appPath);
 			var extensionProjectDir = GetProjectPath ("ExtensionProject", platform: platform);
 
 			Clean (extensionProjectDir);
 			Clean (consumingProjectDir);
 
-			DotNet.AssertBuild (consumingProjectDir, verbosity);
+			var properties = GetDefaultProperties (runtimeIdentifier);
 
-			var extensionPath = Path.Combine (Path.GetDirectoryName (consumingProjectDir)!, "bin", "Debug", platform.ToFramework (), GetDefaultRuntimeIdentifier (platform), "MySimpleApp.app", GetPlugInsRelativePath (platform), "ExtensionProject.appex");
+			if (isNativeAot) {
+				properties ["PublishAot"] = "true";
+				properties ["_IsPublishing"] = "true";
+			}
+
+			DotNet.AssertBuild (consumingProjectDir, properties);
+
+			var extensionPath = Path.Combine (Path.GetDirectoryName (consumingProjectDir)!, "bin", "Debug", platform.ToFramework (), runtimeIdentifier, "ExtensionConsumer.app", GetPlugInsRelativePath (platform), "ExtensionProject.appex");
 			Assert.That (Directory.Exists (extensionPath), $"App extension directory does not exist: {extensionPath}");
 
 			var pathToSearch = Path.Combine (Path.GetDirectoryName (consumingProjectDir)!, "bin", "Debug");
@@ -1086,23 +1100,34 @@ namespace Xamarin.Tests {
 			Assert.AreNotEqual (0, configFiles.Length, "runtimeconfig.json file does not exist");
 		}
 
-		[TestCase (ApplePlatform.iOS)]
-		[TestCase (ApplePlatform.TVOS)]
-		[TestCase (ApplePlatform.MacOSX)]
+		[TestCase (ApplePlatform.iOS, "iossimulator-x64", false)]
+		[TestCase (ApplePlatform.iOS, "iossimulator-x64", true)]
+		[TestCase (ApplePlatform.TVOS, "tvossimulator-x64", false)]
+		[TestCase (ApplePlatform.TVOS, "tvossimulator-x64", true)]
+		[TestCase (ApplePlatform.MacOSX, "osx-x64", false)]
+		[TestCase (ApplePlatform.MacOSX, "osx-x64", true)]
+		[TestCase (ApplePlatform.MacOSX, "osx-x64;osx-arm64", false)]
+		[TestCase (ApplePlatform.MacOSX, "osx-x64;osx-arm64", true)]
 		// [TestCase ("MacCatalyst", "")] - No extension support yet
-		public void BuildProjectsWithExtensionsAndFrameworks (ApplePlatform platform)
+		public void BuildProjectsWithExtensionsAndFrameworks (ApplePlatform platform, string runtimeIdentifier, bool isNativeAot)
 		{
 			Configuration.IgnoreIfIgnoredPlatform (platform);
-			var runtimeIdentifiers = GetDefaultRuntimeIdentifier (platform);
-			var consumingProjectDir = GetProjectPath ("ExtensionConsumerWithFrameworks", runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
+			var consumingProjectDir = GetProjectPath ("ExtensionConsumerWithFrameworks", runtimeIdentifiers: runtimeIdentifier, platform: platform, out var appPath);
 			var extensionProjectDir = GetProjectPath ("ExtensionProjectWithFrameworks", platform: platform);
 
 			Clean (extensionProjectDir);
 			Clean (consumingProjectDir);
 
-			DotNet.AssertBuild (consumingProjectDir, verbosity);
+			var properties = GetDefaultProperties (runtimeIdentifier);
 
-			var extensionPath = Path.Combine (Path.GetDirectoryName (consumingProjectDir)!, "bin", "Debug", platform.ToFramework (), GetDefaultRuntimeIdentifier (platform), "ExtensionConsumerWithFrameworks.app", GetPlugInsRelativePath (platform), "ExtensionProjectWithFrameworks.appex");
+			if (isNativeAot) {
+				properties ["PublishAot"] = "true";
+				properties ["_IsPublishing"] = "true";
+			}
+
+			DotNet.AssertBuild (consumingProjectDir, properties);
+
+			var extensionPath = Path.Combine (Path.GetDirectoryName (consumingProjectDir)!, "bin", "Debug", platform.ToFramework (), runtimeIdentifier, "ExtensionConsumerWithFrameworks.app", GetPlugInsRelativePath (platform), "ExtensionProjectWithFrameworks.appex");
 			Assert.That (Directory.Exists (extensionPath), $"App extension directory does not exist: {extensionPath}");
 			var extensionFrameworksPath = Path.Combine (extensionPath, GetFrameworksRelativePath (platform));
 			Assert.IsFalse (Directory.Exists (extensionFrameworksPath), $"App extension framework directory exists when it shouldn't: {extensionFrameworksPath}");
@@ -1119,7 +1144,7 @@ namespace Xamarin.Tests {
 			Assert.That (File.Exists (Path.Combine (appFrameworksPath, "UnknownE.framework", "UnknownE")), "UnknownE");
 
 			var appExecutable = GetNativeExecutable (platform, appPath);
-			ExecuteWithMagicWordAndAssert (platform, runtimeIdentifiers, appExecutable);
+			ExecuteWithMagicWordAndAssert (platform, runtimeIdentifier, appExecutable);
 		}
 
 
