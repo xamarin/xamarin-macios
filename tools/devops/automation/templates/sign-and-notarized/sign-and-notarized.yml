@@ -77,6 +77,10 @@ steps:
   condition: ${{ parameters.condition }}
   timeoutInMinutes: 180
 
+- bash: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/scripts/disable-codeql-arm64.sh
+  displayName: 'Disable CodeQL'
+  name: disableCodeQLOnArm64
+
 - ${{ if and(eq(parameters.skipESRP, false), eq(parameters.isPR, false)) }}:
   - bash: |
       set -exo pipefail
