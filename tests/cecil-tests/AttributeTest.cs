@@ -593,7 +593,7 @@ namespace Cecil.Tests {
 
 		bool IsSupportedAttribute (CustomAttribute attribute) => attribute.AttributeType.Name == "SupportedOSPlatformAttribute";
 
-		static char[] versionCharacters = new char [] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.' };
+		static char [] versionCharacters = new char [] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.' };
 		bool IsUnsupportedAttribute (CustomAttribute attribute, bool onlyWithVersion = false)
 		{
 			if (attribute.AttributeType.Name != "UnsupportedOSPlatformAttribute")
