@@ -645,6 +645,13 @@ namespace Introspection {
 				if (type.Name == "NSUrl")
 					return true;
 				break;
+			case "UIInteraction":
+				switch (type.Name) {
+				case "UIFeedbackGenerator":
+					if (!TestRuntime.CheckXcodeVersion (15, 4))
+						return true;
+				}
+				break;
 			}
 			return false;
 		}

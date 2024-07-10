@@ -331,11 +331,7 @@ namespace UIKit {
 	[DisableDefaultCtor]
 	[Abstract] // abstract class that should not be used directly
 	[BaseType (typeof (NSObject))]
-#if IOS && IOS17_5_OR_GREATER
 	interface UIFeedbackGenerator : UIInteraction {
-#else
-	interface UIFeedbackGenerator {
-#endif
 		// intancetype -> UIFeedbackGenerator, inlined as subclasses should return the same type as the instance
 		[iOS (17, 5), MacCatalyst (17, 5)]
 		[Static]
@@ -23547,7 +23543,7 @@ namespace UIKit {
 		[Export ("prefersHoverToolPreview")]
 		bool PrefersHoverToolPreview { get; }
 
-		[iOS (17, 5)]
+		[iOS (17, 5), MacCatalyst (17, 5)]
 		[Export ("initWithDelegate:")]
 		NativeHandle Constructor (IUIPencilInteractionDelegate @delegate);
 
