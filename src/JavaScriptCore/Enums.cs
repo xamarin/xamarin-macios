@@ -50,6 +50,6 @@ namespace JavaScriptCore {
 		Undefined,
 		Equal,
 		GreaterThan,
-		LessThan
+		LessThan,
 	}
 }
