@@ -94,18 +94,23 @@ namespace AccessorySetupKit {
 		[Export ("invalidate")]
 		void Invalidate ();
 
+		[Async]
 		[Export ("showPickerWithCompletionHandler:")]
 		void ShowPicker (ASAccessorySessionCompletionHandler completionHandler);
 
+		[Async]
 		[Export ("showPickerForDisplayItems:completionHandler:")]
 		void ShowPicker (ASPickerDisplayItem [] displayItems, ASAccessorySessionCompletionHandler completionHandler);
 
+		[Async]
 		[Export ("finishAuthorization:settings:completionHandler:")]
 		void FinishAuthorization (ASAccessory accessory, ASAccessorySettings settings, ASAccessorySessionCompletionHandler completionHandler);
 
+		[Async]
 		[Export ("removeAccessory:completionHandler:")]
 		void RemoveAccessory (ASAccessory accessory, ASAccessorySessionCompletionHandler completionHandler);
 
+		[Async]
 		[Export ("renameAccessory:options:completionHandler:")]
 		void RenameAccessory (ASAccessory accessory, ASAccessoryRenameOptions renameOptions, ASAccessorySessionCompletionHandler completionHandler);
 	}
@@ -179,7 +184,7 @@ namespace AccessorySetupKit {
 		ASAccessoryRenameOptions RenameOptions { get; set; }
 
 		[Export ("name", ArgumentSemantic.Copy)]
-		NSString Name { get; set; }
+		string Name { get; set; }
 
 		[Export ("productImage", ArgumentSemantic.Copy)]
 		UIImage ProductImage { get; set; }
