@@ -1474,7 +1474,7 @@ namespace FileProvider {
 		void GetKnownFolderLocations (NSFileProviderKnownFolders knownFolders, NSFileProviderKnownFolderLocationCallback completionHandler);
 	}
 
-	interface INSFileProviderKnownFolderSupporting {}
+	interface INSFileProviderKnownFolderSupporting { }
 
 	[NoTV, NoWatch, NoiOS, NoMacCatalyst, Mac (15, 0)]
 	[Category]
@@ -1488,13 +1488,13 @@ namespace FileProvider {
 	[NoTV, NoWatch, NoiOS, NoMacCatalyst, Mac (15, 0)]
 	[Native]
 	public enum NSFileProviderVolumeUnsupportedReason : ulong {
-		None           = 0,
-		Unknown        = 1 << 0,
-		NonAPFS        = 1 << 1,
-		NonEncrypted   = 1 << 2,
-		ReadOnly       = 1 << 3,
-		Network        = 1 << 4,
-		Quarantined    = 1 << 5,
+		None = 0,
+		Unknown = 1 << 0,
+		NonAPFS = 1 << 1,
+		NonEncrypted = 1 << 2,
+		ReadOnly = 1 << 3,
+		Network = 1 << 4,
+		Quarantined = 1 << 5,
 	}
 
 	[NoTV, NoWatch, NoiOS, NoMacCatalyst, Mac (15, 0)]
