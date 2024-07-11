@@ -82,6 +82,20 @@ namespace DeviceDiscoveryExtension {
 		[iOS (17, 0)]
 		[Export ("supportsGrouping")]
 		bool SupportsGrouping { get; set; }
+
+		[iOS (18, 0)]
+		[Export ("deviceSupports", ArgumentSemantic.Assign)]
+		DDDeviceSupports DeviceSupports { get; set; }
+
+		[iOS (18, 0)]
+		[NullAllowed]
+		[Export ("displayImageName", ArgumentSemantic.Copy)]
+		string DisplayImageName { get; set; }
+
+		[iOS (18, 0)]
+		[NullAllowed]
+		[Export ("SSID", ArgumentSemantic.Copy)]
+		string Ssid { get; set; }
 	}
 
 	[NoMac, iOS (16, 0), NoMacCatalyst, NoWatch, NoTV]
