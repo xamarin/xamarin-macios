@@ -345,6 +345,10 @@ namespace FileProvider {
 		[Export ("initWithIdentifier:displayName:")]
 		NativeHandle Constructor (string identifier, string displayName);
 
+		[Mac (15, 0), NoiOS]
+		[Export ("initWithDisplayName:userInfo:volumeURL:")]
+		NativeHandle Constructor (string displayName, NSDictionary userInfo, [NullAllowed] NSUrl volumeUrl);
+
 		[Export ("identifier")]
 		string Identifier { get; }
 
@@ -385,13 +389,25 @@ namespace FileProvider {
 		[Export ("replicated")]
 		bool Replicated { [Bind ("isReplicated")] get; }
 
-		[NoWatch, NoTV, NoMacCatalyst, NoiOS, Mac (13, 0)]
+		[NoWatch, NoTV, NoMacCatalyst, iOS (18, 0), Mac (13, 0)]
 		[Export ("supportsSyncingTrash")]
 		bool SupportsSyncingTrash { get; set; }
 
 		[NoWatch, NoTV, NoMacCatalyst, Mac (13, 3), iOS (16, 4)]
 		[NullAllowed, Export ("volumeUUID")]
 		NSUuid VolumeUuid { get; }
+
+		[Mac (15, 0), NoiOS]
+		[Export ("userInfo", ArgumentSemantic.Copy), NullAllowed]
+		NSDictionary<NSString, NSObject> UserInfo { get; set; }
+
+		[Mac (15, 0), NoiOS]
+		[Export ("replicatedKnownFolders", ArgumentSemantic.Assign)]
+		NSFileProviderKnownFolders ReplicatedKnownFolders { get; }
+
+		[Mac (15, 0), NoiOS]
+		[Export ("supportedKnownFolders", ArgumentSemantic.Assign)]
+		NSFileProviderKnownFolders SupportedKnownFolders { get; set; }
 	}
 
 	interface INSFileProviderEnumerationObserver { }
@@ -1401,5 +1417,91 @@ namespace FileProvider {
 		[Abstract]
 		[Export ("fetchPartialContentsForItemWithIdentifier:version:request:minimalRange:aligningTo:options:completionHandler:")]
 		NSProgress FetchPartialContents (string itemIdentifier, NSFileProviderItemVersion requestedVersion, NSFileProviderRequest request, NSRange requestedRange, nuint alignment, NSFileProviderFetchContentsOptions options, NSFileProviderPartialContentFetchingCompletionHandler completionHandler);
+	}
+
+	[NoTV, NoWatch, iOS (18, 0), MacCatalyst (18, 0), Mac (15, 0)]
+	[Native]
+	public enum NSFileProviderKnownFolders : ulong {
+		Desktop = 1 << 0,
+		Documents = 1 << 1,
+	}
+
+	[NoTV, NoWatch, NoiOS, NoMacCatalyst, Mac (15, 0)]
+	[BaseType (typeof (NSObject))]
+	interface NSFileProviderKnownFolderLocation {
+		[Export ("initWithParentItemIdentifier:filename:")]
+		NativeHandle Constructor (string parentItemIdentifier, string filename);
+
+		[Export ("initWithExistingItemIdentifier:")]
+		NativeHandle Constructor (string existing);
+	}
+
+	[NoTV, NoWatch, NoiOS, NoMacCatalyst, Mac (15, 0)]
+	[BaseType (typeof (NSObject))]
+	interface NSFileProviderKnownFolderLocations {
+		[Export ("shouldCreateBinaryCompatibilitySymlink", ArgumentSemantic.Assign)]
+		bool ShouldCreateBinaryCompatibilitySymlink { get; set; }
+
+		[Export ("desktopLocation", ArgumentSemantic.Strong), NullAllowed]
+		NSFileProviderKnownFolderLocation DesktopLocation { get; set; }
+
+		[Export ("documentsLocation", ArgumentSemantic.Strong), NullAllowed]
+		NSFileProviderKnownFolderLocation DocumentsLocation { get; set; }
+	}
+
+	[NoTV, NoWatch, NoiOS, NoMacCatalyst, Mac (15, 0)]
+	delegate void NSFileProviderManagerKnownFoldersCallback ([NullAllowed] NSError error);
+
+	[NoTV, NoWatch, NoiOS, NoMacCatalyst, Mac (15, 0)]
+	[Category]
+	[BaseType (typeof (NSFileProviderManager))]
+	interface NSFileProviderManager_KnownFolders {
+		[Export ("claimKnownFolders:localizedReason:completionHandler:")]
+		void ClaimKnownFolders (NSFileProviderKnownFolderLocations knownFolders, string localizedReason, NSFileProviderManagerKnownFoldersCallback completionHandler);
+
+		[Export ("releaseKnownFolders:localizedReason:completionHandler:")]
+		void ReleaseKnownFolders (NSFileProviderKnownFolderLocations knownFolders, string localizedReason, NSFileProviderManagerKnownFoldersCallback completionHandler);
+	}
+
+	[NoTV, NoWatch, NoiOS, NoMacCatalyst, Mac (15, 0)]
+	delegate void NSFileProviderKnownFolderLocationCallback (INSFileProviderKnownFolderSupporting result, [NullAllowed] NSError error);
+
+	[NoTV, NoWatch, NoiOS, NoMacCatalyst, Mac (15, 0)]
+	[Protocol (BackwardsCompatibleCodeGeneration = false)]
+	interface NSFileProviderKnownFolderSupporting {
+		[Abstract]
+		[Export ("getKnownFolderLocations:completionHandler:")]
+		void GetKnownFolderLocations (NSFileProviderKnownFolders knownFolders, NSFileProviderKnownFolderLocationCallback completionHandler);
+	}
+
+	interface INSFileProviderKnownFolderSupporting { }
+
+	[NoTV, NoWatch, NoiOS, NoMacCatalyst, Mac (15, 0)]
+	[Category]
+	[BaseType (typeof (NSFileProviderManager))]
+	interface NSFileProviderManager_StateDirectory {
+		[Export ("stateDirectoryURLWithError:")]
+		[return: NullAllowed]
+		NSUrl GetStateDirectoryUrl (out NSError error);
+	}
+
+	[NoTV, NoWatch, NoiOS, NoMacCatalyst, Mac (15, 0)]
+	[Native]
+	public enum NSFileProviderVolumeUnsupportedReason : ulong {
+		None = 0,
+		Unknown = 1 << 0,
+		NonAPFS = 1 << 1,
+		NonEncrypted = 1 << 2,
+		ReadOnly = 1 << 3,
+		Network = 1 << 4,
+		Quarantined = 1 << 5,
+	}
+
+	[NoTV, NoWatch, NoiOS, NoMacCatalyst, Mac (15, 0)]
+	[Category]
+	[BaseType (typeof (NSFileProviderManager))]
+	interface NSFileProviderManager_ExternalDomain {
+		[Export ("checkDomainsCanBeStored:onVolumeAtURL:unsupportedReason:error:")]
+		unsafe bool CheckDomainsCanBeStored (out bool eligible, NSUrl volumeAtUrl, NSFileProviderVolumeUnsupportedReason* unsupportedReason, [NullAllowed] out NSError error);
 	}
 }
