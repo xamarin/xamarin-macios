@@ -188,6 +188,9 @@ namespace FileProvider {
 		VersionNoLongerAvailable = -2009,
 		ExcludedFromSync = -2010,
 		DomainDisabled = -2011,
+		ProviderDomainTemporarilyUnavailable = -2012,
+		ProviderDomainNotFound = -2013,
+		ApplicationExtensionNotFound = -2014,
 	}
 
 	[iOS (16, 0), NoMacCatalyst]

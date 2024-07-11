@@ -92,6 +92,8 @@ namespace PencilKit {
 	public enum PKContentVersion : long {
 		Version1 = 1,
 		Version2 = 2,
+		[iOS (17, 4), Mac (14, 4), MacCatalyst (17, 4)]
+		Version3 = 3,
 	}
 
 	[iOS (13, 0), NoMac]

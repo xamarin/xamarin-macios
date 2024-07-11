@@ -1799,5 +1799,18 @@ namespace Xamarin.Bundler {
 
 			return dynamic;
 		}
+
+		static Application ()
+		{
+			SetDefaultHiddenWarnings ();
+		}
+
+		public static void SetDefaultHiddenWarnings ()
+		{
+			// People don't like these warnings (#20670), and they also complicate our tests, so ignore them.
+			ErrorHelper.ParseWarningLevel (ErrorHelper.WarningLevel.Disable, "4178"); // The class '{0}' will not be registered because the {1} framework has been removed from the {2} SDK.
+			ErrorHelper.ParseWarningLevel (ErrorHelper.WarningLevel.Disable, "4189"); // The class '{0}' will not be registered because it has been removed from the {1} SDK.
+			ErrorHelper.ParseWarningLevel (ErrorHelper.WarningLevel.Disable, "4190"); // The class '{0}' will not be registered because the {1} framework has been deprecated from the {2} SDK.
+		}
 	}
 }

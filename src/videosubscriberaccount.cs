@@ -434,8 +434,27 @@ namespace VideoSubscriberAccount {
 		[Export ("deviceCategory")]
 		VSOriginatingDeviceCategory DeviceCategory { get; }
 
+		[TV (17, 4), NoWatch, NoMacCatalyst, Mac (14, 4), iOS (17, 4)]
+		[NullAllowed, Export ("appleSubscription", ArgumentSemantic.Strong)]
+		VSAppleSubscription AppleSubscription { get; set; }
+
 		[Export ("initWithAccountType:updateURL:")]
 		NativeHandle Constructor (VSUserAccountType accountType, [NullAllowed] NSUrl url);
+	}
+
+	[TV (17, 4), NoWatch, NoMacCatalyst, Mac (14, 4), iOS (17, 4)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface VSAppleSubscription {
+
+		[Export ("customerID", ArgumentSemantic.Strong)]
+		string CustomerId { get; set; }
+
+		[Export ("productCodes", ArgumentSemantic.Strong)]
+		string [] ProductCodes { get; set; }
+
+		[Export ("initWithCustomerID:productCodes:")]
+		NativeHandle Constructor (string customerId, string [] productCodes);
 	}
 
 }
