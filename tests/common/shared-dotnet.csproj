@@ -9,6 +9,8 @@
 		<NativeLibName>ios-fat</NativeLibName>
 		<!-- We need this because we'd otherwise default to the latest OS version we support, and we'll want to execute on earlier versions -->
 		<CompilerResponseFile>$(MSBuildThisFileDirectory)\..\..\src\rsp\dotnet\ios-defines-dotnet.rsp</CompilerResponseFile>
+		<!-- Determine whether we're building for the simulator (not device nor desktop) -->
+		<_IsSimulatorBuild Condition="'$(RuntimeIdentifier)$(RuntimeIdentifiers)' == '' Or $(RuntimeIdentifier.Contains('simulator')) Or $(RuntimeIdentifiers.Contains('iossimulator'))">true</_IsSimulatorBuild>
 	</PropertyGroup>
 	<ItemGroup Condition="'$(_PlatformName)' == 'iOS'">
 	</ItemGroup>
@@ -18,6 +20,8 @@
 		<AssetTargetFallback>xamarintvos10;$(AssetTargetFallback)</AssetTargetFallback>
 		<NativeLibName>tvos-fat</NativeLibName>
 		<CompilerResponseFile>$(MSBuildThisFileDirectory)\..\..\src\rsp\dotnet\tvos-defines-dotnet.rsp</CompilerResponseFile>
+		<!-- Determine whether we're building for the simulator (not device nor desktop) -->
+		<_IsSimulatorBuild Condition="'$(RuntimeIdentifier)$(RuntimeIdentifiers)' == '' Or $(RuntimeIdentifier.Contains('simulator')) Or $(RuntimeIdentifiers.Contains('tvossimulator'))">true</_IsSimulatorBuild>
 	</PropertyGroup>
 	<ItemGroup Condition="$(TargetFramework.EndsWith('-tvos'))">
 	</ItemGroup>
@@ -58,9 +62,6 @@
 		<NoWarn Condition="'$(IncludeCS1416Warnigs)' != 'true'">CA1416;$(NoWarn)</NoWarn>
 
 		<CustomBeforeMicrosoftCommonTargets>$(CustomBeforeMicrosoftCommonTargets);$(MSBuildThisFileDirectory)SupportedOSPlatformVersions.targets</CustomBeforeMicrosoftCommonTargets>
-
-		<!-- Determine whether we're building for the simulator (not device nor desktop) -->
-		<_IsSimulatorBuild Condition="'$(RuntimeIdentifier)$(RuntimeIdentifiers)' == '' Or $(RuntimeIdentifier.Contains('simulator')) Or $(RuntimeIdentifiers.Contains('simulator'))">true</_IsSimulatorBuild>
 	</PropertyGroup>
 
 	<!-- Logic for NativeAOT -->
