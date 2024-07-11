@@ -38,3 +38,6 @@
 
 ## manually bound
 !missing-field! UIListSeparatorAutomaticInsets not bound
+
+!missing-selector! NSItemProvider::_availableTypes not bound
+!missing-protocol! UIItemProviderReadingAugmentationDesignating not bound

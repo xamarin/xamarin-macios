@@ -657,3 +657,6 @@
 !incorrect-protocol-member! UITraitChangeObservable::registerForTraitChanges:withAction: is REQUIRED and should be abstract
 !incorrect-protocol-member! UITraitChangeObservable::registerForTraitChanges:withHandler: is REQUIRED and should be abstract
 !incorrect-protocol-member! UITraitChangeObservable::registerForTraitChanges:withTarget:action: is REQUIRED and should be abstract
+
+!missing-selector! NSItemProvider::_availableTypes not bound
+!missing-protocol! UIItemProviderReadingAugmentationDesignating not bound

@@ -8477,6 +8477,14 @@ namespace Foundation {
 		[Export ("canRedo")]
 		bool CanRedo { get; }
 
+		[Watch (10, 4), TV (17, 4), Mac (14, 4), iOS (17, 4), MacCatalyst (17, 4)]
+		[Export ("undoCount")]
+		nuint UndoCount { get; }
+
+		[Watch (10, 4), TV (17, 4), Mac (14, 4), iOS (17, 4), MacCatalyst (17, 4)]
+		[Export ("redoCount")]
+		nuint RedoCount { get; }
+
 		[Export ("isUndoing")]
 		bool IsUndoing { get; }
 
@@ -14014,6 +14022,10 @@ namespace Foundation {
 		[Export ("accommodatePresentedItemDeletionWithCompletionHandler:")]
 		void AccommodatePresentedItemDeletion (Action<NSError> completionHandler);
 
+		[NoWatch, NoTV, Mac (14, 4), iOS (17, 4), MacCatalyst (17, 4)]
+		[Export ("accommodatePresentedItemEvictionWithCompletionHandler:")]
+		void AccommodatePresentedItemEviction (Action<NSError> completionHandler);
+
 		[Export ("presentedItemDidMoveToURL:")]
 		void PresentedItemMoved (NSUrl newURL);
 
@@ -15809,6 +15821,11 @@ namespace Foundation {
 		[NoMacCatalyst]
 		[Export ("currentDirectoryURL")]
 		NSUrl CurrentDirectoryUrl { get; set; }
+
+		[NullAllowed]
+		[Mac (14, 4), MacCatalyst (17, 4)]
+		[Export ("launchRequirementData", ArgumentSemantic.Copy)]
+		NSData LaunchRequirementData { get; set; }
 
 		[NullAllowed]
 		[Export ("standardInput", ArgumentSemantic.Retain)]
