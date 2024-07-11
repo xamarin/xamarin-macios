@@ -184,10 +184,10 @@ namespace AccessorySetupKit {
 		ASAccessoryRenameOptions RenameOptions { get; set; }
 
 		[Export ("name", ArgumentSemantic.Copy)]
-		string Name { get; set; }
+		string Name { get; }
 
 		[Export ("productImage", ArgumentSemantic.Copy)]
-		UIImage ProductImage { get; set; }
+		UIImage ProductImage { get; }
 
 		[Export ("descriptor", ArgumentSemantic.Copy)]
 		ASDiscoveryDescriptor Descriptor { get; set; }
@@ -207,6 +207,10 @@ namespace AccessorySetupKit {
 		[Export ("hotspotSSID", ArgumentSemantic.Copy), NullAllowed]
 		string HotspotSsid { get; set; }
 
+		// re-exposed from base
+		[Export ("initWithName:productImage:descriptor:")]
+		[DesignatedInitializer]
+		NativeHandle Constructor (string name, UIImage productImage, ASDiscoveryDescriptor descriptor);
 	}
 }
 
