@@ -372,6 +372,10 @@ namespace Introspection {
 				case "TKSmartCardUserInteractionForSecurePinChange":
 				case "TKSmartCardUserInteractionForSecurePinVerification":
 					return true;
+				// Xcode 15.3, Conformance not in headers
+				case "ASWebAuthenticationSessionCallback":
+				case "VSAppleSubscription":
+					return true;
 				}
 				break;
 			case "NSSecureCoding":
@@ -545,6 +549,10 @@ namespace Introspection {
 				case "TKSmartCardUserInteractionForPinOperation":
 				case "TKSmartCardUserInteractionForSecurePinChange":
 				case "TKSmartCardUserInteractionForSecurePinVerification":
+					return true;
+				// Xcode 15.3, Conformance not in headers
+				case "ASWebAuthenticationSessionCallback":
+				case "VSAppleSubscription":
 					return true;
 				}
 				break;
