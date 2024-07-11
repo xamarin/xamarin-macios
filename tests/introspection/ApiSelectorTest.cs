@@ -1004,6 +1004,15 @@ namespace Introspection {
 					break;
 				}
 				break;
+			case "UIFeedbackGenerator":
+				switch (selectorName) {
+				case "didMoveToView:":
+				case "willMoveToView:":
+				case "view":
+					return !TestRuntime.CheckXcodeVersion (15, 4);
+					break;
+				}
+				break;
 			}
 
 			// old binding mistake
