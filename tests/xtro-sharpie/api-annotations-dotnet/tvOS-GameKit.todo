@@ -1,11 +1,2 @@
-!deprecated-attribute-missing! GKMatch::voiceChatWithName: missing a [Deprecated] attribute
 !deprecated-attribute-missing! GKScoreChallenge::score missing a [Deprecated] attribute
-!deprecated-attribute-missing! GKVoiceChat missing a [Deprecated] attribute
-!missing-enum-value! GKError native value GKErrorAppUnlisted = 37 not bound
-!missing-selector! GKAccessPoint::triggerAccessPointWithAchievementID:handler: not bound
-!missing-selector! GKAccessPoint::triggerAccessPointWithLeaderboardID:playerScope:timeScope:handler: not bound
-!missing-selector! GKAccessPoint::triggerAccessPointWithLeaderboardSetID:handler: not bound
-!missing-selector! GKAccessPoint::triggerAccessPointWithPlayer:handler: not bound
-!missing-selector! GKGameCenterViewControllerGKGameCenterViewController::initWithLeaderboardSetID: not bound
-!missing-selector! GKGameCenterViewControllerGKGameCenterViewController::initWithPlayer: not bound
 !missing-selector! GKScoreChallenge::leaderboardEntry not bound

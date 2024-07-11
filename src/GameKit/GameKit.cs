@@ -153,6 +153,7 @@ namespace GameKit {
 		ApiObsolete = 34,
 		ICloudUnavailable = 35,
 		LockdownMode = 36,
+		AppUnlisted = 37,
 		FriendListDescriptionMissing = 100,
 		FriendListRestricted = 101,
 		FriendListDenied = 102,
@@ -221,6 +222,10 @@ namespace GameKit {
 	}
 
 	// NSInteger -> GKVoiceChat.h
+	[Deprecated (PlatformName.iOS, 18, 0, message: "No longer supported.")]
+	[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "No longer supported.")]
+	[Deprecated (PlatformName.TvOS, 18, 0, message: "No longer supported.")]
+	[Deprecated (PlatformName.MacOSX, 15, 0, message: "No longer supported.")]
 	[Native]
 	public enum GKVoiceChatPlayerState : long {
 		Connected,
