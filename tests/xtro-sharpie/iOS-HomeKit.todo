@@ -9,7 +9,6 @@
 !missing-enum! HMCharacteristicValueRouterStatus not bound
 !missing-enum! HMCharacteristicValueTargetVisibilityState not bound
 !missing-enum! HMCharacteristicValueWiFiSatelliteStatus not bound
-!missing-enum-value! HMError native value HMErrorCodePartialCommunicationFailure = 104 not bound
 !missing-field! HMAccessoryCategoryTypeAirPort not bound
 !missing-field! HMAccessoryCategoryTypeAudioReceiver not bound
 !missing-field! HMAccessoryCategoryTypeSpeaker not bound

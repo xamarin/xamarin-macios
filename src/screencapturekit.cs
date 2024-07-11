@@ -214,6 +214,12 @@ namespace ScreenCaptureKit {
 		[Export ("getShareableContentWithCompletionHandler:")]
 		void GetShareableContent (Action<SCShareableContent, NSError> completionHandler);
 
+		[Mac (14, 4)]
+		[Async]
+		[Static]
+		[Export ("getCurrentProcessShareableContentWithCompletionHandler:")]
+		void GetCurrentProcessShareableContent (Action<SCShareableContent, NSError> completionHandler);
+
 		[Async]
 		[Static]
 		[Export ("getShareableContentExcludingDesktopWindows:onScreenWindowsOnly:completionHandler:")]
@@ -447,6 +453,10 @@ namespace ScreenCaptureKit {
 
 		[Export ("stream:didStopWithError:")]
 		void DidStop (SCStream stream, NSError error);
+
+		[Mac (14, 4)]
+		[Export ("userDidStopStream:")]
+		void UserDidStop (SCStream stream);
 
 		[Mac (14, 0)]
 		[Export ("outputVideoEffectDidStartForStream:")]

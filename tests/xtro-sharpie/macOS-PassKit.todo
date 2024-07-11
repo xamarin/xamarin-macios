@@ -4,7 +4,6 @@
 !missing-field! PKDisbursementErrorDomain not bound
 !missing-field! PKMerchantCategoryCodeNone not bound
 !missing-field! PKPaymentNetworkBankAxept not bound
-!missing-field! PKPaymentNetworkMeeza not bound
 !missing-field! PKPaymentNetworkNAPAS not bound
 !missing-selector! +PKAddIdentityDocumentConfiguration::configurationForMetadata:completion: not bound
 !missing-selector! +PKAddPassMetadataPreview::previewWithPassThumbnail:localizedDescription: not bound

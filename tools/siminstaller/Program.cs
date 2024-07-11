@@ -134,7 +134,6 @@ namespace xsiminstaller {
 			var indexName = $"index-{xcodeVersion}.dvtdownloadableindex";
 			var tmpfile = Path.Combine (TempDirectory, indexName);
 			if (!File.Exists (tmpfile)) {
-				// Try multiple urls
 				var urls = new string [] {
 					/*
 					 * The following url was found while debugging Xcode, the "index2" part is actually hardcoded:
