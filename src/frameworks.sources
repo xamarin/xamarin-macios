@@ -946,6 +946,7 @@ GAMEKIT_API_SOURCES = \
 	GameKit/GameKit.cs \
 
 GAMEKIT_SOURCES = \
+	GameKit/GKGameCenterViewController.cs \
 	GameKit/GKLocalPlayerListener.cs \
 	GameKit/GameKit2.cs \
 	GameKit/GKCompat.cs \

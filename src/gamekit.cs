@@ -1160,6 +1160,10 @@ namespace GameKit {
 		[Export ("disconnect")]
 		void Disconnect ();
 
+		[Deprecated (PlatformName.iOS, 18, 0, message: "No longer supported.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "No longer supported.")]
+		[Deprecated (PlatformName.TvOS, 18, 0, message: "No longer supported.")]
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "No longer supported.")]
 		[Export ("voiceChatWithName:")]
 		[return: NullAllowed]
 		GKVoiceChat VoiceChatWithName (string name);
@@ -1254,6 +1258,10 @@ namespace GameKit {
 		void DataReceivedForRecipient (GKMatch match, NSData data, GKPlayer recipient, GKPlayer player);
 	}
 
+	[Deprecated (PlatformName.iOS, 18, 0, message: "No longer supported.")]
+	[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "No longer supported.")]
+	[Deprecated (PlatformName.TvOS, 18, 0, message: "No longer supported.")]
+	[Deprecated (PlatformName.MacOSX, 15, 0, message: "No longer supported.")]
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -2530,12 +2538,22 @@ namespace GameKit {
 		[TV (14, 0), NoWatch, Mac (11, 0), iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[Export ("initWithAchievementID:")]
-		NativeHandle Constructor (string achievementId);
+		[Internal]
+		NativeHandle _InitWithAchievementId (string achievementId);
 
 		[TV (14, 0), NoWatch, Mac (11, 0), iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[Export ("initWithState:")]
 		NativeHandle Constructor (GKGameCenterViewControllerState state);
+
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0), NoWatch]
+		[Export ("initWithLeaderboardSetID:")]
+		[Internal]
+		NativeHandle _InitWithLeaderboardSetId (string leaderboardSetId);
+
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0), NoWatch]
+		[Export ("initWithPlayer:")]
+		NativeHandle Constructor (GKPlayer player);
 
 		[Export ("gameCenterDelegate", ArgumentSemantic.Weak), NullAllowed]
 		NSObject WeakDelegate { get; set; }
@@ -3102,6 +3120,22 @@ namespace GameKit {
 
 		[Export ("triggerAccessPointWithState:handler:")]
 		void TriggerAccessPoint (GKGameCenterViewControllerState state, Action handler);
+
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("triggerAccessPointWithAchievementID:handler:")]
+		void TriggerAccessPointWithAchievementId (string achievementId, [NullAllowed] Action handler);
+
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("triggerAccessPointWithLeaderboardSetID:handler:")]
+		void TriggerAccessPointWithLeaderboardSetId (string leaderboardSetId, [NullAllowed] Action handler);
+
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("triggerAccessPointWithLeaderboardID:playerScope:timeScope:handler:")]
+		void TriggerAccessPoint (string leaderboardId, GKLeaderboardPlayerScope playerScope, GKLeaderboardTimeScope timeScope, [NullAllowed] Action handler);
+
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("triggerAccessPointWithPlayer:handler:")]
+		void TriggerAccessPoint (GKPlayer player, [NullAllowed] Action handler);
 	}
 
 	[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]

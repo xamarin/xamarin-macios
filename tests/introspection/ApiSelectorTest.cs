@@ -1253,6 +1253,9 @@ namespace Introspection {
 			// DDDevicePickerViewController
 			case "initWithBrowseDescriptor:parameters:":
 				return true;
+			// GKGameCenterViewController
+			case "initWithAchievementID:":
+				return true;
 			default:
 				return false;
 			}
