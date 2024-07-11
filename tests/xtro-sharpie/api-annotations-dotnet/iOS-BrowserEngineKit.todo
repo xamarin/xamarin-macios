@@ -132,3 +132,7 @@
 !missing-type! BETextInteraction not bound
 !missing-type! BETextSuggestion not bound
 !missing-type! BEWebContentProcess not bound
+!missing-selector! BEWebAppManifest::initWithJSONData:manifestURL: not bound
+!missing-selector! BEWebAppManifest::jsonData not bound
+!missing-selector! BEWebAppManifest::manifestURL not bound
+!missing-type! BEWebAppManifest not bound
