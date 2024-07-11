@@ -4,8 +4,6 @@
 !missing-field! kCGImagePropertyGroupImageIsMonoscopicImage not bound
 !missing-field! kCGImagePropertyGroupImageStereoAggressors not bound
 !missing-field! kCGImagePropertyGroupMonoscopicImageLocation not bound
-!missing-field! kCGImagePropertyTIFFXPosition not bound
-!missing-field! kCGImagePropertyTIFFYPosition not bound
 !missing-field! kIIOMonoscopicImageLocation_Center not bound
 !missing-field! kIIOMonoscopicImageLocation_Left not bound
 !missing-field! kIIOMonoscopicImageLocation_Right not bound
@@ -13,7 +11,6 @@
 !missing-field! kIIOStereoAggressors_Severity not bound
 !missing-field! kIIOStereoAggressors_SubTypeURI not bound
 !missing-field! kIIOStereoAggressors_Type not bound
-!missing-pinvoke! CGImageSourceSetAllowableTypes is not bound
 !missing-field! kCGImageDestinationEncodeBaseIsSDR not bound
 !missing-field! kCGImageDestinationEncodeRequest not bound
 !missing-field! kCGImageDestinationEncodeRequestOptions not bound

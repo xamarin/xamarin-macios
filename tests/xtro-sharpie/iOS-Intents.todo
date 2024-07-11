@@ -3,8 +3,6 @@
 !missing-enum! INStickerType not bound
 !missing-enum-value! INMessageType native value INMessageTypeMediaAnimatedImage = 27 not bound
 !missing-enum-value! INMessageType native value INMessageTypeThirdPartyAttachment = 28 not bound
-!missing-field! INCarChargingConnectorTypeNACSAC not bound
-!missing-field! INCarChargingConnectorTypeNACSDC not bound
 !missing-selector! INAggregatedMessageReaction::emoji not bound
 !missing-selector! INAggregatedMessageReaction::initWithReactionType:emoji:senders:reactionCount: not bound
 !missing-selector! INAggregatedMessageReaction::reactionCount not bound

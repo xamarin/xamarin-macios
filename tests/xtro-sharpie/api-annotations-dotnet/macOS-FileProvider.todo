@@ -1,8 +1,5 @@
 !missing-enum! NSFileProviderKnownFolders not bound
 !missing-enum! NSFileProviderVolumeUnsupportedReason not bound
-!missing-enum-value! NSFileProviderError native value NSFileProviderErrorApplicationExtensionNotFound = -2014 not bound
-!missing-enum-value! NSFileProviderError native value NSFileProviderErrorProviderDomainNotFound = -2013 not bound
-!missing-enum-value! NSFileProviderError native value NSFileProviderErrorProviderDomainTemporarilyUnavailable = -2012 not bound
 !missing-protocol! NSFileProviderExternalVolumeHandling not bound
 !missing-protocol! NSFileProviderKnownFolderSupporting not bound
 !missing-selector! +NSFileProviderManager::checkDomainsCanBeStored:onVolumeAtURL:unsupportedReason:error: not bound

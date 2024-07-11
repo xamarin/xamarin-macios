@@ -1,6 +1,5 @@
 !deprecated-attribute-missing! PKToolPicker::selectedTool missing a [Deprecated] attribute
 !deprecated-attribute-missing! PKToolPicker::setSelectedTool: missing a [Deprecated] attribute
-!missing-enum-value! PKContentVersion native value PKContentVersionLatest = 3 not bound
 !missing-protocol-member! PKToolPickerObserver::toolPickerSelectedToolItemDidChange: not found
 !missing-selector! PKCanvasView::isDrawingEnabled not bound
 !missing-selector! PKCanvasView::setDrawingEnabled: not bound

@@ -989,6 +989,21 @@ namespace Introspection {
 					return TestRuntime.CheckXcodeVersion (14, 3);
 				}
 				break;
+			case "GCMouse":
+				switch (selectorName) {
+				case "encodeWithCoder:":
+					return true;
+				}
+				break;
+			case "SRFaceMetrics":
+				switch (selectorName) {
+				case "faceAnchor":
+					// This selector does not exist in the simulator
+					if (TestRuntime.IsSimulatorOrDesktop)
+						return true;
+					break;
+				}
+				break;
 			case "ASAuthorizationPublicKeyCredentialLargeBlobRegistrationOutput":
 				// Added protocol conformance to NSCopying/NSSecureCoding in Xcode 16.0
 				switch (selectorName) {
