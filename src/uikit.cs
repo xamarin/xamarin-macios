@@ -19196,11 +19196,11 @@ namespace UIKit {
 		[Field ("UITextContentTypeCreditCardType")]
 		NSString CreditCardType { get; }
 
-		[iOS (17, 4), MacCatalyst (17, 4)]
+		[iOS (17, 4), MacCatalyst (17, 4), TV (17, 4)]
 		[Field ("UITextContentTypeCellularEID")]
 		NSString CellularEid { get; }
 
-		[iOS (17, 4), MacCatalyst (17, 4)]
+		[iOS (17, 4), MacCatalyst (17, 4), TV (17, 4)]
 		[Field ("UITextContentTypeCellularIMEI")]
 		NSString CellularImei { get; }
 	}
