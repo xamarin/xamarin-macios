@@ -1354,6 +1354,7 @@ namespace CarPlay {
 		[NullAllowed, Export ("userInfo", ArgumentSemantic.Strong)]
 		NSObject UserInfo { get; set; }
 
+		[iOS (17, 4), MacCatalyst (17, 4)]
 		[NullAllowed, Export ("destinationNameVariants", ArgumentSemantic.Copy)]
 		string [] DestinationNameVariants { get; set; }
 	}
@@ -1506,6 +1507,7 @@ namespace CarPlay {
 		[DesignatedInitializer]
 		NativeHandle Constructor (NSMeasurement<NSUnitLength> distanceRemaining, NSMeasurement<NSUnitLength> distanceRemainingToDisplay, double time);
 
+		[iOS (17, 4), MacCatalyst (17, 4)]
 		[Export ("distanceRemainingToDisplay", ArgumentSemantic.Copy)]
 		NSMeasurement<NSUnitLength> DistanceRemainingToDisplay { get; }
 
