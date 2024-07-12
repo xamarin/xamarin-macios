@@ -248,7 +248,7 @@ public partial class Generator {
 				print ("}");
 			}
 			if (isBackingFieldValueType) {
-				print ("if (ptr == null)");
+				print ("if (ptr is null)");
 				print ("\t return null;");
 				print ("return *ptr;");
 			} else {
