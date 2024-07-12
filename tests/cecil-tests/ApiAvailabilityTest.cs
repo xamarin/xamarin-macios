@@ -457,6 +457,7 @@ namespace Cecil.Tests {
 				case "Intents.IINSendMessageIntentHandling.ResolveGroupName(Intents.INSendMessageIntent, System.Action`1<Intents.INStringResolutionResult>)":
 				case "Security.SecSharedCredential.RequestSharedWebCredential(System.String, System.String, System.Action`2<Security.SecSharedCredentialInfo[],Foundation.NSError>)":
 				case "System.String Intents.INSendMessageIntent::GroupName()":
+				case "AVFoundation.AVAudioSessionInterruptionReason AVFoundation.AVAudioSessionInterruptionReason::AppWasSuspended":
 					return true;
 				}
 				break;
