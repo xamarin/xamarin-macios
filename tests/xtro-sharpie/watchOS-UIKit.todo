@@ -8,7 +8,6 @@
 !missing-field! NSTextHighlightColorSchemePurple not bound
 !missing-field! NSTextHighlightStyleAttributeName not bound
 !missing-field! NSTextHighlightStyleDefault not bound
-!missing-protocol! UIItemProviderReadingAugmentationDesignating not bound
 !missing-protocol! UIItemProviderReadingAugmentationProviding not bound
 !missing-protocol-member! NSTextAttachmentLayout::attachmentBoundsForAttributes:location:textContainer:proposedLineFragment:position: not found
 !missing-protocol-member! NSTextAttachmentLayout::imageForBounds:attributes:location:textContainer: not found
