@@ -42,7 +42,9 @@ XTRO_SHARPIE_EXEC=$(MONO) --debug $(XTRO_SHARPIE)
 
 build: $(XTRO_SHARPIE) $(XTRO_REPORT) $(XTRO_SANITY)
 
+.stamp-build: export SHARPIE:=$(SHARPIE)
 .stamp-build: $(wildcard *.cs) pch-info.proj $(XTRO_REPORT) $(XTRO_SANITY) $(XTRO_SHARPIE)
+	$(Q_BUILD) $(SYSTEM_MSBUILD) $(MSBUILD_VERBOSITY) xtro-sharpie.csproj /r /bl:$@.binlog
 	$(Q) touch $@
 
 $(XTRO_SHARPIE): $(wildcard xtro-sharpie/*.cs) $(wildcard xtro-sharpie/*.csproj) pch-info.proj $(XTRO_REPORT)
