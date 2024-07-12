@@ -584,4 +584,20 @@ namespace SafariServices {
 		void ClearWebsiteData ([NullAllowed] Action completion);
 	}
 
+	[iOS (17, 4), MacCatalyst (17, 4), NoMac, NoTV, NoWatch]
+	[Protocol (BackwardsCompatibleCodeGeneration = false)]
+	interface SFAddToHomeScreenActivityItem {
+
+		[Abstract]
+		[Export ("URL")]
+		NSUrl Url { get; }
+
+		[Abstract]
+		[Export ("title")]
+		string Title { get; }
+
+		[NullAllowed, Export ("iconItemProvider")]
+		NSItemProvider IconItemProvider { get; }
+	}
+
 }

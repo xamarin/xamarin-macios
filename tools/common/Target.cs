@@ -286,6 +286,12 @@ namespace Xamarin.Bundler {
 								continue;
 							}
 							break;
+						case "AssetsLibrary":
+							if (Driver.XcodeVersion.Major >= 16 || (Driver.XcodeVersion.Major == 15 && Driver.XcodeVersion.Minor >= 3)) {
+								Driver.Log (3, "Not linking with the framework {0} because it's not available when using Xcode 15.3+.", framework.Name);
+								continue;
+							}
+							break;
 						default:
 							if (App.IsSimulatorBuild && !App.IsFrameworkAvailableInSimulator (framework.Name)) {
 								if (App.AreAnyAssembliesTrimmed) {

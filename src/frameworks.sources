@@ -178,12 +178,8 @@ ARKIT_SOURCES = \
 
 # AssetsLibrary
 
-ASSETSLIBRARY_API_SOURCES = \
-	AssetsLibrary/Enums.cs \
-
 ASSETSLIBRARY_SOURCES = \
-	AssetsLibrary/ALAsset.cs \
-	AssetsLibrary/ALAssetsGroup.cs \
+	AssetsLibrary/Compat.cs \
 
 # AudioToolbox
 
@@ -730,6 +726,15 @@ COREWLAN_SOURCES = \
 	CoreWlan/CWConfiguration.cs \
 	CoreWlan/CWInterface.cs \
 	CoreWlan/CWKeychain.cs \
+
+# DARWIN
+
+DARWIN_CORE_SOURCES = \
+	Darwin/TimeSpec.cs \
+
+DARWIN_SOURCES = \
+	Darwin/KernelNotification.cs \
+	Darwin/SystemLog.cs \
 
 # DeviceDiscoveryExtension
 
@@ -2101,6 +2106,7 @@ MACOS_FRAMEWORKS =          \
 	CoreSpotlight           \
 	CoreText                \
 	CoreWlan                \
+	Darwin                  \
 	EventKit                \
 	ExecutionPolicy		\
 	ExtensionKit		\

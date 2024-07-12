@@ -2020,5 +2020,37 @@ namespace Xamarin.Tests {
 				ExecuteWithMagicWordAndAssert (appExecutable);
 			}
 		}
+
+		[Test]
+		[TestCase (ApplePlatform.MacOSX, "osx-arm64;osx-x64")]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64")]
+		public void AppendRuntimeIdentifierToOutputPath_DisableCommandLine (ApplePlatform platform, string runtimeIdentifiers)
+		{
+			var project = "MySimpleApp";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
+
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
+			Clean (project_path);
+			var properties = GetDefaultProperties (runtimeIdentifiers);
+			properties ["cmdline:AppendRuntimeIdentifierToOutputPath"] = "false";
+			DotNet.AssertBuild (project_path, properties);
+		}
+
+		[Test]
+		[TestCase (ApplePlatform.MacOSX, "osx-arm64;osx-x64")]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64")]
+		public void AppendRuntimeIdentifierToOutputPath_DisableDirectoryBuildProps (ApplePlatform platform, string runtimeIdentifiers)
+		{
+			var project = "MySimpleApp";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
+
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
+			Clean (project_path);
+			var properties = GetDefaultProperties (runtimeIdentifiers);
+			properties ["SetAppendRuntimeIdentifierToOutputPathToFalse"] = "true";
+			DotNet.AssertBuild (project_path, properties);
+		}
 	}
 }

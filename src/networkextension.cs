@@ -1463,6 +1463,11 @@ namespace NetworkExtension {
 		[Export ("excludeAPNs")]
 		bool ExcludeApns { get; set; }
 
+		[NoWatch, NoTV, Mac (14, 4), iOS (17, 4), MacCatalyst (17, 4)]
+		[Export ("excludeDeviceCommunication")]
+		bool ExcludeDeviceCommunication { get; set; }
+
+		[Mac (11, 0)]
 		[iOS (14, 2)]
 		[MacCatalyst (14, 2)]
 		[Export ("enforceRoutes")]

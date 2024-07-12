@@ -41,6 +41,8 @@ using CoreGraphics;
 using NativeHandle = System.IntPtr;
 #endif
 
+using OSStatus = System.Int32;
+
 namespace ImageIO {
 
 #if !COREBUILD
@@ -409,6 +411,39 @@ namespace ImageIO {
 		public nuint GetPrimaryImageIndex ()
 		{
 			return CGImageSourceGetPrimaryImageIndex (Handle);
+		}
+#endif
+
+#if !COREBUILD
+#if NET
+		[SupportedOSPlatform ("macos14.4")]
+		[SupportedOSPlatform ("ios17.4")]
+		[SupportedOSPlatform ("tvos17.4")]
+		[SupportedOSPlatform ("maccatalyst17.4")]
+#else
+		[Watch (10, 4), TV (17, 4), Mac (14, 4), iOS (17, 4)]
+#endif
+		[DllImport (Constants.ImageIOLibrary)]
+		static extern OSStatus CGImageSourceSetAllowableTypes (IntPtr allowableTypes);
+
+#if NET
+		[SupportedOSPlatform ("macos14.4")]
+		[SupportedOSPlatform ("ios17.4")]
+		[SupportedOSPlatform ("tvos17.4")]
+		[SupportedOSPlatform ("maccatalyst17.4")]
+#else
+		[Watch (10, 4), TV (17, 4), Mac (14, 4), iOS (17, 4)]
+#endif
+		public static void SetAllowableTypes (string [] allowableTypes)
+		{
+			if (allowableTypes is null || allowableTypes.Length == 0)
+				throw new ArgumentException ($"{nameof (allowableTypes)} cannot be null or empty.");
+
+			using (var array = NSArray.FromStrings (allowableTypes)) {
+				var errorCode = CGImageSourceSetAllowableTypes (array.Handle);
+				if (errorCode != 0)
+					throw new InvalidOperationException ($"Unable to set allowable types, error code: 0x{errorCode:x}");
+			}
 		}
 #endif
 	}

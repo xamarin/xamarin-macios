@@ -76,6 +76,9 @@ parameters:
   type: number
   default: 3
 
+- name: XcodeChannel
+  type: string
+
 steps:
 
 - template: ../common/checkout.yml
@@ -279,9 +282,18 @@ steps:
 - bash: |
     set -x
     set -e
-    $(Build.SourcesDirectory)/xamarin-macios/system-dependencies.sh --provision-simulators --ignore-shellcheck --ignore-yamllint
+    ARGS=()
+    ARGS+=(--provision-simulators)
+    if [[ "$XCODE_CHANNEL" == "Beta" ]]; then
+      ARGS+=(--provision-old-simulators)
+    fi
+    ARGS+=(--ignore-shellcheck)
+    ARGS+=(--ignore-yamllint)
+    $(Build.SourcesDirectory)/xamarin-macios/system-dependencies.sh "${ARGS[@]}"
   displayName: 'Provision simulators'
   timeoutInMinutes: 250
+  env:
+    XCODE_CHANNEL: ${{ parameters.XcodeChannel }}
 
 # clean sims incase we were left in a strange state
 - bash: |

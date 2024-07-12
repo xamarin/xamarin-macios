@@ -12,7 +12,6 @@
     <TestFrameworksDirectory>$(RootTestDirectory)/test-libraries</TestFrameworksDirectory>
   </PropertyGroup>
 
-  <Import Project="..\..\..\..\eng\Versions.props" />
   <!-- Code to automatically create FrameworkList.xml or RuntimeList.xml -->
 
   <ItemGroup>

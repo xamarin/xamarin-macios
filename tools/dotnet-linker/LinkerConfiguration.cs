@@ -350,6 +350,13 @@ namespace Xamarin.Linker {
 						throw new InvalidOperationException ($"Invalid Verbosity '{value}' in {linker_file}");
 					Driver.Verbosity += verbosity;
 					break;
+				case "Warn":
+					try {
+						ErrorHelper.ParseWarningLevel (ErrorHelper.WarningLevel.Warning, value);
+					} catch (Exception ex) {
+						throw new InvalidOperationException ($"Invalid Warn '{value}' in {linker_file}", ex);
+					}
+					break;
 				case "WarnAsError":
 					try {
 						ErrorHelper.ParseWarningLevel (ErrorHelper.WarningLevel.Error, value);

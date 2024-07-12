@@ -52,7 +52,6 @@
     <EmbeddedResource Include="Samples\NUnitV3SampleSuccess.xml" />
     <EmbeddedResource Include="Samples\NUnitV3SampleFailure.xml" />
   </ItemGroup>
-  <Import Project="../../../eng/Versions.props" />
   <ItemGroup>
     <ProjectReference Include="..\xharness.csproj">
       <Project>{e1f53f80-8399-499b-8017-c414b9cd263b}</Project>
