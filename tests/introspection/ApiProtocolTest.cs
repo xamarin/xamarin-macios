@@ -372,6 +372,10 @@ namespace Introspection {
 				case "TKSmartCardUserInteractionForSecurePinChange":
 				case "TKSmartCardUserInteractionForSecurePinVerification":
 					return true;
+				// Xcode 15.3, Conformance not in headers
+				case "ASWebAuthenticationSessionCallback":
+				case "VSAppleSubscription":
+					return true;
 				}
 				break;
 			case "NSSecureCoding":
@@ -546,6 +550,10 @@ namespace Introspection {
 				case "TKSmartCardUserInteractionForSecurePinChange":
 				case "TKSmartCardUserInteractionForSecurePinVerification":
 					return true;
+				// Xcode 15.3, Conformance not in headers
+				case "ASWebAuthenticationSessionCallback":
+				case "VSAppleSubscription":
+					return true;
 				}
 				break;
 			// conformance added in Xcode 8 (iOS 10 / macOS 10.12)
@@ -636,6 +644,17 @@ namespace Introspection {
 			case "QLPreviewItem":
 				if (type.Name == "NSUrl")
 					return true;
+				break;
+			case "UIInteraction":
+				switch (type.Name) {
+				case "UIFeedbackGenerator":
+				case "UIImpactFeedbackGenerator":
+				case "UINotificationFeedbackGenerator":
+				case "UISelectionFeedbackGenerator":
+					if (!TestRuntime.CheckXcodeVersion (15, 4))
+						return true;
+					break;
+				}
 				break;
 			}
 			return false;

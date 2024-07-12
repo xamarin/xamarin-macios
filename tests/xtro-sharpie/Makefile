@@ -37,14 +37,18 @@ XTRO_REPORT=xtro-report/bin/Debug/xtro-report
 XTRO_REPORT_EXEC=$(XTRO_REPORT)
 XTRO_SANITY=xtro-sanity/bin/Debug/xtro-sanity
 XTRO_SANITY_EXEC=$(XTRO_SANITY)
+XTRO_SHARPIE=xtro-sharpie/bin/Debug/xtro-sharpie.exe
+XTRO_SHARPIE_EXEC=$(MONO) --debug $(XTRO_SHARPIE)
 
-bin/Debug/xtro-sharpie.exe $(XTRO_REPORT) $(XTRO_SANITY) build: .stamp-build
+build: $(XTRO_SHARPIE) $(XTRO_REPORT) $(XTRO_SANITY)
 
-.stamp-build: $(wildcard *.cs) pch-info.proj $(XTRO_REPORT) $(XTRO_SANITY)
-	$(Q_BUILD) $(SYSTEM_MSBUILD) $(MSBUILD_VERBOSITY) xtro-sharpie.csproj /r /bl:$@.binlog
+.stamp-build: $(wildcard *.cs) pch-info.proj $(XTRO_REPORT) $(XTRO_SANITY) $(XTRO_SHARPIE)
 	$(Q) touch $@
 
-$(XTRO_REPORT): $(wildcard xtro-report/*.cs) $(wildcard xtro-report/*.csproj) Filter.cs Makefile
+$(XTRO_SHARPIE): $(wildcard xtro-sharpie/*.cs) $(wildcard xtro-sharpie/*.csproj) pch-info.proj $(XTRO_REPORT)
+	$(Q_BUILD) $(SYSTEM_MSBUILD) $(MSBUILD_VERBOSITY) xtro-sharpie/xtro-sharpie.csproj /r /bl:$@.binlog
+
+$(XTRO_REPORT): $(wildcard xtro-report/*.cs) $(wildcard xtro-report/*.csproj) xtro-sharpie/Filter.cs Makefile
 	$(Q_GEN) unset MSBUILD_EXE_PATH && $(DOTNET) build xtro-report/xtro-report.csproj /bl:xtro-report.binlog $(DOTNET_BUILD_VERBOSITY)
 
 $(XTRO_SANITY): $(wildcard xtro-sanity/*.cs) $(wildcard xtro-sanity/*.csproj) $(wildcard $(TOP)/tools/common/*.cs) Makefile
@@ -62,6 +66,8 @@ $(XIOS_PCH): .stamp-check-sharpie
 	-exclude FactoryOTAWifiUtils \
 	-exclude FactoryOTALogger \
 	-exclude FactoryOTANetworkUtils \
+	-exclude AssetsLibrary \
+	-exclude _CoreNFC_UIKit \
 	-i ThreadNetwork/THClient.h \
 	$(CORETELEPHONY_HEADERS) \
 
@@ -73,7 +79,8 @@ XWATCHOS_ARCH = armv7
 XWATCHOS_PCH = watchos$(WATCH_SDK_VERSION)-$(XWATCHOS_ARCH).pch
 
 $(XWATCHOS_PCH): .stamp-check-sharpie
-	$(SHARPIE) sdk-db --xcode $(XCODE) -s watchos$(WATCH_SDK_VERSION) -a $(XWATCHOS_ARCH)
+	$(SHARPIE) sdk-db --xcode $(XCODE) -s watchos$(WATCH_SDK_VERSION) -a $(XWATCHOS_ARCH) \
+	-exclude BrowserEngineKit \
 
 XTVOS ?= $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/64bits/tvOS/Xamarin.TVOS.dll
 XTVOS_LIBDIR ?= $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.TVOS/
@@ -105,6 +112,7 @@ $(XMACCATALYST_PCH): .stamp-check-sharpie
 	$(SHARPIE) sdk-db --xcode $(XCODE) -s ios$(MACCATALYST_SDK_VERSION)-macabi -a $(XMACCATALYST_ARCH) \
 	-exclude AGL \
 	-exclude AudioVideoBridging \
+	-exclude AssetsLibrary \
 	-exclude CalendarStore \
 	-exclude Carbon \
 	-exclude ClockKit \
@@ -220,10 +228,10 @@ report-short:
 	JENKINS_SERVER_COOKIE=1 make report
 
 define DotNetClassify
-.stamp-dotnet-classify-$(1): bin/Debug/xtro-sharpie.exe $$(X$(2)_PCH) $$(X$(2)_DOTNET)
-	rm -f $$(DOTNET_ANNOTATIONS_DIR)/$(1)-*.raw
-	$(MONO) bin/Debug/xtro-sharpie.exe --output-directory $$(DOTNET_ANNOTATIONS_DIR) --lib $(DOTNET_BCL_DIR) $$(X$(2)_PCH) $$(X$(2)_DOTNET)
-	touch $$@
+.stamp-dotnet-classify-$(1): $(XTRO_SHARPIE) $$(X$(2)_PCH) $$(X$(2)_DOTNET)
+	$(Q) rm -f $$(DOTNET_ANNOTATIONS_DIR)/$(1)-*.raw
+	$(Q_GEN) $(XTRO_SHARPIE_EXEC) --output-directory $$(DOTNET_ANNOTATIONS_DIR) --lib $(DOTNET_BCL_DIR) $$(X$(2)_PCH) $$(X$(2)_DOTNET)
+	$(Q) touch $$@
 
 dotnet-classify-$(1): .stamp-dotnet-classify-$(1)
 DOTNET_CLASSIFY += .stamp-dotnet-classify-$(1)
@@ -233,36 +241,36 @@ $(foreach platform,$(XTRO_DOTNET_PLATFORMS),$(eval $(call DotNetClassify,$(platf
 ifdef INCLUDE_IOS
 INCLUDED_PLATFORMS+=iOS
 CLASSIFY+=.stamp-classify-ios
-.stamp-classify-ios: bin/Debug/xtro-sharpie.exe $(XIOS_PCH) $(XIOS) $(XIOS_GL)
-	rm -f $(ANNOTATIONS_DIR)/iOS-*.raw
-	$(MONO) bin/Debug/xtro-sharpie.exe --output-directory $(ANNOTATIONS_DIR) --lib $(XIOS_LIBDIR) $(XIOS_PCH) $(XIOS) $(XIOS_GL)
+.stamp-classify-ios: $(XTRO_SHARPIE) $(XIOS_PCH) $(XIOS) $(XIOS_GL)
+	$(Q) rm -f $(ANNOTATIONS_DIR)/iOS-*.raw
+	$(Q_GEN) $(XTRO_SHARPIE_EXEC) --output-directory $(ANNOTATIONS_DIR) --lib $(XIOS_LIBDIR) $(XIOS_PCH) $(XIOS) $(XIOS_GL)
 	$(Q) touch $@
 endif
 
 ifdef INCLUDE_TVOS
 INCLUDED_PLATFORMS+=tvOS
 CLASSIFY+=.stamp-classify-tvos
-.stamp-classify-tvos: bin/Debug/xtro-sharpie.exe $(XTVOS_PCH) $(XTVOS) $(XTVOS_GL)
-	rm -f $(ANNOTATIONS_DIR)/tvOS-*.raw
-	$(MONO) bin/Debug/xtro-sharpie.exe --output-directory $(ANNOTATIONS_DIR) --lib $(XTVOS_LIBDIR) $(XTVOS_PCH) $(XTVOS) $(XTVOS_GL)
+.stamp-classify-tvos: $(XTRO_SHARPIE) $(XTVOS_PCH) $(XTVOS) $(XTVOS_GL)
+	$(Q) rm -f $(ANNOTATIONS_DIR)/tvOS-*.raw
+	$(Q_GEN) $(XTRO_SHARPIE_EXEC) --output-directory $(ANNOTATIONS_DIR) --lib $(XTVOS_LIBDIR) $(XTVOS_PCH) $(XTVOS) $(XTVOS_GL)
 	$(Q) touch $@
 endif
 
 ifdef INCLUDE_WATCH
 INCLUDED_PLATFORMS+=watchOS
 CLASSIFY+=.stamp-classify-watchos
-.stamp-classify-watchos: bin/Debug/xtro-sharpie.exe $(XWATCHOS_PCH) $(XWATCHOS)
-	rm -f $(ANNOTATIONS_DIR)/watchOS-*.raw
-	$(MONO) bin/Debug/xtro-sharpie.exe --output-directory $(ANNOTATIONS_DIR) --lib $(XWATCHOS_LIBDIR) $(XWATCHOS_PCH) $(XWATCHOS)
+.stamp-classify-watchos: $(XTRO_SHARPIE) $(XWATCHOS_PCH) $(XWATCHOS)
+	$(Q) rm -f $(ANNOTATIONS_DIR)/watchOS-*.raw
+	$(Q_GEN) $(XTRO_SHARPIE_EXEC) --output-directory $(ANNOTATIONS_DIR) --lib $(XWATCHOS_LIBDIR) $(XWATCHOS_PCH) $(XWATCHOS)
 	$(Q) touch $@
 endif
 
 ifdef INCLUDE_MAC
 INCLUDED_PLATFORMS+=macOS
 CLASSIFY+=.stamp-classify-macos
-.stamp-classify-macos: bin/Debug/xtro-sharpie.exe $(XMACOS_PCH) $(XMACOS)
-	rm -f $(ANNOTATIONS_DIR)/macOS-*.raw
-	$(MONO) bin/Debug/xtro-sharpie.exe --output-directory $(ANNOTATIONS_DIR) --lib $(XMACOS_LIBDIR) $(XMACOS_PCH) $(XMACOS)
+.stamp-classify-macos: $(XTRO_SHARPIE) $(XMACOS_PCH) $(XMACOS)
+	$(Q) rm -f $(ANNOTATIONS_DIR)/macOS-*.raw
+	$(Q_GEN) $(XTRO_SHARPIE_EXEC) --output-directory $(ANNOTATIONS_DIR) --lib $(XMACOS_LIBDIR) $(XMACOS_PCH) $(XMACOS)
 	$(Q) touch $@
 endif
 
@@ -303,8 +311,8 @@ remove-empty-files:
 	find . -empty -exec git rm -f {} \;
 
 U2TODO = u2todo/bin/Debug/u2todo.dll
-$(U2TODO): $(wildcard u2todo/*.cs u2todo/*.csproj Filter.cs)
-	$(Q) unset MSBUILD_EXE_PATH && $(DOTNET) build $(DOTNET_BUILD_VERBOSITY) /bl:$@.binlog
+$(U2TODO): $(wildcard u2todo/*.cs u2todo/*.csproj xtro-sharpie/Filter.cs)
+	$(Q) unset MSBUILD_EXE_PATH && $(DOTNET) build u2todo/u2todo.csproj $(DOTNET_BUILD_VERBOSITY) /bl:$@.binlog
 	$(Q) touch $@
 
 unclassified2todo-classic: $(U2TODO)

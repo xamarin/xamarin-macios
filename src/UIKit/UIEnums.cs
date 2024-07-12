@@ -387,7 +387,9 @@ namespace UIKit {
 		Time,
 		Date,
 		DateAndTime,
-		CountDownTimer
+		CountDownTimer,
+		[iOS (17, 4), MacCatalyst (17, 4)]
+		YearAndMonth,
 	}
 
 	// NSInteger -> UIDevice.h
@@ -725,6 +727,8 @@ namespace UIKit {
 		Azimuth = (1 << 1),
 		Altitude = (1 << 2),
 		Location = (1 << 3),
+		[iOS (17, 5), MacCatalyst (17, 5), NoTV]
+		Roll = (1L << 4),
 	}
 
 	//
@@ -3353,8 +3357,13 @@ namespace UIKit {
 		Minimal = 2,
 	}
 
+#if XAMCORE_5_0
+	[iOS (14, 0), TV (14, 0), NoWatch, NoMacCatalyst]
+#else
 	[iOS (14, 0), TV (14, 0), NoWatch]
 	[MacCatalyst (14, 0)]
+	[Obsoleted (PlatformName.MacCatalyst, 17, 4, message: Constants.ApiRemovedGeneral)]
+#endif
 	public enum UIPasteboardDetectionPattern {
 		[Field ("UIPasteboardDetectionPatternProbableWebURL")]
 		ProbableWebUrl,
@@ -3362,28 +3371,68 @@ namespace UIKit {
 		ProbableWebSearch,
 		[Field ("UIPasteboardDetectionPatternNumber")]
 		Number,
+#if XAMCORE_5_0
+		[iOS (15, 0), TV (15, 0), NoMacCatalyst]
+#else
 		[iOS (15, 0), TV (15, 0), MacCatalyst (15, 0)]
+		[Obsoleted (PlatformName.MacCatalyst, 17, 4, message: Constants.ApiRemovedGeneral)]
+#endif
 		[Field ("UIPasteboardDetectionPatternLink")]
 		Link,
+#if XAMCORE_5_0
+		[iOS (15, 0), TV (15, 0), NoMacCatalyst]
+#else
 		[iOS (15, 0), TV (15, 0), MacCatalyst (15, 0)]
+		[Obsoleted (PlatformName.MacCatalyst, 17, 4, message: Constants.ApiRemovedGeneral)]
+#endif
 		[Field ("UIPasteboardDetectionPatternPhoneNumber")]
 		PhoneNumber,
+#if XAMCORE_5_0
+		[iOS (15, 0), TV (15, 0), NoMacCatalyst]
+#else
 		[iOS (15, 0), TV (15, 0), MacCatalyst (15, 0)]
+		[Obsoleted (PlatformName.MacCatalyst, 17, 4, message: Constants.ApiRemovedGeneral)]
+#endif
 		[Field ("UIPasteboardDetectionPatternEmailAddress")]
 		EmailAddress,
+#if XAMCORE_5_0
+		[iOS (15, 0), TV (15, 0), NoMacCatalyst]
+#else
 		[iOS (15, 0), TV (15, 0), MacCatalyst (15, 0)]
+		[Obsoleted (PlatformName.MacCatalyst, 17, 4, message: Constants.ApiRemovedGeneral)]
+#endif
 		[Field ("UIPasteboardDetectionPatternPostalAddress")]
 		PostalAddress,
+#if XAMCORE_5_0
+		[iOS (15, 0), TV (15, 0), NoMacCatalyst]
+#else
 		[iOS (15, 0), TV (15, 0), MacCatalyst (15, 0)]
+		[Obsoleted (PlatformName.MacCatalyst, 17, 4, message: Constants.ApiRemovedGeneral)]
+#endif
 		[Field ("UIPasteboardDetectionPatternCalendarEvent")]
 		CalendarEvent,
+#if XAMCORE_5_0
+		[iOS (15, 0), TV (15, 0), NoMacCatalyst]
+#else
 		[iOS (15, 0), TV (15, 0), MacCatalyst (15, 0)]
+		[Obsoleted (PlatformName.MacCatalyst, 17, 4, message: Constants.ApiRemovedGeneral)]
+#endif
 		[Field ("UIPasteboardDetectionPatternShipmentTrackingNumber")]
 		ShipmentTrackingNumber,
+#if XAMCORE_5_0
+		[iOS (15, 0), TV (15, 0), NoMacCatalyst]
+#else
 		[iOS (15, 0), TV (15, 0), MacCatalyst (15, 0)]
+		[Obsoleted (PlatformName.MacCatalyst, 17, 4, message: Constants.ApiRemovedGeneral)]
+#endif
 		[Field ("UIPasteboardDetectionPatternFlightNumber")]
 		FlightNumber,
+#if XAMCORE_5_0
+		[iOS (15, 0), TV (15, 0), NoMacCatalyst]
+#else
 		[iOS (15, 0), TV (15, 0), MacCatalyst (15, 0)]
+		[Obsoleted (PlatformName.MacCatalyst, 17, 4, message: Constants.ApiRemovedGeneral)]
+#endif
 		[Field ("UIPasteboardDetectionPatternMoneyAmount")]
 		MoneyAmount,
 	}

@@ -18,3 +18,9 @@
 !missing-pinvoke! VTIsStereoMVHEVCEncodeSupported is not bound
 !missing-field! kVTCompressionPropertyKey_HasLeftStereoEyeView not bound
 !missing-field! kVTCompressionPropertyKey_HasRightStereoEyeView not bound
+!missing-field! kVTCompressionPropertyKey_CalculateMeanSquaredError not bound
+!missing-field! kVTCompressionPropertyKey_HorizontalFieldOfView not bound
+!missing-field! kVTSampleAttachmentKey_QualityMetrics not bound
+!missing-field! kVTSampleAttachmentQualityMetricsKey_ChromaBlueMeanSquaredError not bound
+!missing-field! kVTSampleAttachmentQualityMetricsKey_ChromaRedMeanSquaredError not bound
+!missing-field! kVTSampleAttachmentQualityMetricsKey_LumaMeanSquaredError not bound

@@ -117,6 +117,7 @@ namespace HomeKit {
 		FailedToJoinNetwork = 102,
 		// iOS 15
 		AccessoryIsSuspended = 103,
+		PartialCommunicationFailure = 104,
 	}
 
 
