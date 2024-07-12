@@ -410,11 +410,17 @@ namespace Xamarin.BindingTests {
 		[DllImport ("/usr/lib/libobjc.dylib", EntryPoint = "protocol_copyPropertyList")]
 		internal extern static IntPtr _protocol_copyPropertyList (IntPtr protocol, out int count);
 
+		static void Trace (string message)
+		{
+			TestRuntime.NSLog (message);
+		}
+
 		static objc_property [] protocol_copyPropertyList (IntPtr protocol)
 		{
 			int count;
 			IntPtr list = _protocol_copyPropertyList (protocol, out count);
 			var rv = new objc_property [count];
+			Trace ($"Protocol {new Protocol (protocol)} has {rv} properties");
 			try {
 				for (int i = 0; i < count; i++) {
 					var prop = new objc_property ();
@@ -423,6 +429,7 @@ namespace Xamarin.BindingTests {
 					prop.Name = property_getName (p);
 					prop.Attributes = property_getAttributes (p);
 					prop.AttributeList = property_copyAttributeList (p);
+					Trace ($"    #{i + 1}: Name={prop.Name} Attributes={prop.Attributes} AttributeList={prop.AttributeList}");
 				}
 				return rv;
 			} finally {
