@@ -9,5 +9,3 @@
 !missing-selector! AEAssessmentConfiguration::mainParticipantConfiguration not bound
 !missing-selector! AEAssessmentConfiguration::removeApplication: not bound
 !missing-selector! AEAssessmentConfiguration::setConfiguration:forApplication: not bound
-!missing-selector! AEAssessmentParticipantConfiguration::configurationInfo not bound
-!missing-selector! AEAssessmentParticipantConfiguration::setConfigurationInfo: not bound
