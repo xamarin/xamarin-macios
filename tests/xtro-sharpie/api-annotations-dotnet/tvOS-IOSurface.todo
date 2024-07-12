@@ -2,4 +2,3 @@
 !missing-enum! IOSurfaceMemoryLedgerTags not bound
 !missing-field! kIOSurfaceContentHeadroom not bound
 !missing-pinvoke! IOSurfaceSetOwnershipIdentity is not bound
-!missing-selector! IOSurface::surfaceID not bound
