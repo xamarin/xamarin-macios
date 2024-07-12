@@ -473,6 +473,7 @@ namespace Cecil.Tests {
 			switch (fullname) {
 			case "GameKit.GKScore.ReportLeaderboardScores(GameKit.GKLeaderboardScore[], GameKit.GKChallenge[], System.Action`1<Foundation.NSError>)":
 			case "GameKit.GKScore.ReportLeaderboardScoresAsync(GameKit.GKLeaderboardScore[], GameKit.GKChallenge[])":
+			case "Intents.INMessageReactionType Intents.INMessageReactionType::EmojiReaction":
 				return true;
 			}
 
