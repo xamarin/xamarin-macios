@@ -594,7 +594,7 @@ namespace Xamarin.Tests {
 		// Debug
 		[TestCase (ApplePlatform.iOS, "ios-arm64", CodeSignature.All, "Debug")]
 		[TestCase (ApplePlatform.iOS, "ios-arm64;ios-arm", CodeSignature.All, "Debug")]
-		[TestCase (ApplePlatform.iOS, "iossimulator-x64", CodeSignature.Frameworks, "Debug")]
+		[TestCase (ApplePlatform.iOS, "iossimulator-x64", CodeSignature.All, "Debug")]
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64", CodeSignature.All, "Debug")]
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64;maccatalyst-arm64", CodeSignature.All, "Debug")]
 		[TestCase (ApplePlatform.MacOSX, "osx-x64", CodeSignature.Frameworks, "Debug")]

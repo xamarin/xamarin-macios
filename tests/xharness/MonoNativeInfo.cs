@@ -35,7 +35,6 @@ namespace Xharness {
 		None,
 		Static,
 		Dynamic,
-		Symlink,
 	}
 
 	public static class MonoNativeHelper {
@@ -47,9 +46,6 @@ namespace Xharness {
 				break;
 			case MonoNativeLinkMode.Dynamic:
 				project.AddTopLevelProperty ("MonoNativeMode", "MONO_NATIVE_DYNAMIC");
-				break;
-			case MonoNativeLinkMode.Symlink:
-				project.AddTopLevelProperty ("MonoNativeMode", "MONO_NATIVE_SYMLINK");
 				break;
 			default:
 				throw new Exception ($"Unknown MonoNativeLinkMode: {link}");

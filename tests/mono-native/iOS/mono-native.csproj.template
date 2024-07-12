@@ -20,7 +20,6 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup>
-    <MonoNativeMode Condition="'$(TargetFrameworkIdentifier)|$(Configuration)|$(Platform)' == 'Xamarin.iOS|Debug|iPhoneSimulator'">MONO_NATIVE_SYMLINK</MonoNativeMode>
     <MonoNativeMode Condition="'$(MonoNativeMode)' == ''">MONO_NATIVE_STATIC</MonoNativeMode>
     <DefineConstants>$(MonoNativeMode);$(DefineConstants)</DefineConstants>
   </PropertyGroup>

@@ -203,7 +203,7 @@ namespace Xamarin.MacDev.Tasks {
 				foreach (var obj in ObjectFiles)
 					arguments.Add (Path.GetFullPath (obj.ItemSpec));
 
-			arguments.AddRange (GetEmbedEntitlementsInExecutableLinkerFlags (EntitlementsInExecutable));
+			arguments.AddRange (GetEmbedEntitlementsWithDerInExecutableLinkerFlags (EntitlementsInExecutable));
 
 			arguments.Add ("-o");
 			arguments.Add (Path.GetFullPath (OutputFile));
@@ -243,6 +243,20 @@ namespace Xamarin.MacDev.Tasks {
 			return !Log.HasLoggedErrors;
 		}
 
+		IEnumerable<string> GetEmbedEntitlementsWithDerInExecutableLinkerFlags (string entitlements)
+		{
+			var rv = GetEmbedEntitlementsInExecutableLinkerFlags (entitlements).ToList ();
+			if (rv.Count > 0) {
+				rv.AddRange (new string [] {
+					"-Xlinker", "-sectcreate",
+					"-Xlinker", "__TEXT",
+					"-Xlinker", "__ents_der",
+					"-Xlinker", ConvertEntitlementsToDerEntitlements (Path.GetFullPath (entitlements)),
+				});
+			}
+			return rv;
+		}
+
 		public static string [] GetEmbedEntitlementsInExecutableLinkerFlags (string entitlements)
 		{
 			if (string.IsNullOrEmpty (entitlements))
@@ -257,6 +271,21 @@ namespace Xamarin.MacDev.Tasks {
 				"-Xlinker", "__entitlements",
 				"-Xlinker", Path.GetFullPath (entitlements),
 			};
+		}
+
+		string ConvertEntitlementsToDerEntitlements (string entitlements)
+		{
+			var derEntitlements = entitlements + ".der";
+			var arguments = new List<string> () {
+				"derq",
+				"query",
+				"-f", "xml",
+				"-i", entitlements,
+				"-o", derEntitlements,
+				"--raw",
+			};
+			ExecuteAsync ("xcrun", arguments, sdkDevPath: SdkDevPath).Wait ();
+			return derEntitlements;
 		}
 
 		static bool EntitlementsRequireLinkerFlags (string path)
