@@ -1,5 +1,3 @@
-!missing-selector! CTSubscriber::isSIMInserted not bound
-!missing-selector! CTSubscriber::refreshCarrierToken not bound
 !unknown-native-enum! CTCellularDataRestrictedState bound
 !unknown-native-enum! CTCellularPlanProvisioningAddPlanResult bound
 !unknown-type! CTCellularData bound

@@ -4,9 +4,6 @@
 # as per the header comments, the following enum has to be ignored on tvOS
 !missing-enum! AVAudioSessionIOType not bound
 
-# not used on tvOS
-!missing-enum! AVAudioSessionInterruptionReason not bound
-
 ### deprecated in iOS8
 !missing-protocol-member! AVAudioPlayerDelegate::audioPlayerEndInterruption:withFlags: not found
 
