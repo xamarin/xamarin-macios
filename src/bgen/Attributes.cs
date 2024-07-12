@@ -860,6 +860,16 @@ public class DefaultEnumValueAttribute : Attribute {
 	}
 }
 
+[AttributeUsage (AttributeTargets.Enum)]
+public class BackingFieldTypeAttribute : Attribute {
+
+	public BackingFieldTypeAttribute (Type type)
+	{
+		BackingFieldType = type;
+	}
+
+	public Type BackingFieldType { get; set; }
+}
 //
 // This prevents the generator from generating the managed proxy to
 // the method being called, this is done when we are interested in
