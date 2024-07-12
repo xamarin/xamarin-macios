@@ -502,6 +502,16 @@ namespace Metal {
 #endif
 		[Export ("accelerationStructureCommandEncoderWithDescriptor:")]
 		IMTLAccelerationStructureCommandEncoder CreateAccelerationStructureCommandEncoder (MTLAccelerationStructurePassDescriptor descriptor);
+
+		[Abstract]
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("useResidencySet:")]
+		void UseResidencySet (IMTLResidencySet residencySet);
+
+		[Abstract]
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("useResidencySets:count:")]
+		void UseResidencySets (IntPtr /* const id <MTLResidencySet> _Nonnull[_Nonnull] */ residencySets, nuint count);
 	}
 
 	interface IMTLCommandQueue { }
@@ -542,6 +552,26 @@ namespace Metal {
 		[Export ("commandBufferWithDescriptor:")]
 		[return: NullAllowed]
 		IMTLCommandBuffer CreateCommandBuffer (MTLCommandBufferDescriptor descriptor);
+
+		[Abstract]
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("addResidencySet:")]
+		void AddResidencySet (IMTLResidencySet residencySet);
+
+		[Abstract]
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("addResidencySets:count:")]
+		void AddResidencySets (IntPtr residencySets, nuint count);
+
+		[Abstract]
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("removeResidencySet:")]
+		void RemoveResidencySet (IMTLResidencySet residencySet);
+
+		[Abstract]
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("removeResidencySets:count:")]
+		void RemoveResidencySets (IntPtr residencySets, nuint count);
 	}
 
 	interface IMTLComputeCommandEncoder { }
@@ -1009,6 +1039,10 @@ namespace Metal {
 #endif
 		[Export ("gpuResourceID")]
 		MTLResourceId GpuResourceId { get; }
+
+		[Abstract]
+		[Export ("shaderValidation")]
+		MTLShaderValidation ShaderValidation { get; }
 	}
 
 	interface IMTLBlitCommandEncoder { }
@@ -2235,6 +2269,22 @@ namespace Metal {
 		[Export ("shouldMaximizeConcurrentCompilation")]
 		bool ShouldMaximizeConcurrentCompilation { get; set; }
 
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Abstract]
+		[Export ("newLogStateWithDescriptor:error:")]
+		[return: NullAllowed]
+		IMTLLogState GetNewLogState (MTLLogStateDescriptor descriptor, out NSError error);
+
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Abstract]
+		[Export ("newCommandQueueWithDescriptor:")]
+		[return: NullAllowed]
+		IMTLCommandQueue CreateCommandQueue (MTLCommandQueueDescriptor descriptor);
+
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[return: NullAllowed]
+		[Export ("newResidencySetWithDescriptor:error:")]
+		IMTLResidencySet CreateResidencySet (MTLResidencySetDescriptor descriptor, out NSError error);
 	}
 
 	/// <summary>Interface representing the required methods (if any) of the protocol <see cref="T:Metal.MTLDrawable" />.</summary>
@@ -2862,6 +2912,10 @@ namespace Metal {
 		[Mac (12, 0), iOS (15, 0), TV (15, 0), MacCatalyst (15, 0), NoWatch]
 		[NullAllowed, Export ("fragmentLinkedFunctions", ArgumentSemantic.Copy)]
 		MTLLinkedFunctions FragmentLinkedFunctions { get; set; }
+
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("shaderValidation")]
+		MTLShaderValidation ShaderValidation { get; set; }
 	}
 
 	/// <summary>An array of <see cref="T:Metal.MTLRenderPipelineColorAttachmentDescriptor" /> objects.</summary>
@@ -3046,6 +3100,11 @@ namespace Metal {
 #endif
 		[Export ("objectThreadExecutionWidth")]
 		nuint ObjectThreadExecutionWidth { get; }
+
+		[Abstract]
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("shaderValidation")]
+		MTLShaderValidation ShaderValidation { get; }
 	}
 
 	/// <summary>Configures how vertex and attribute data are fetched by a vertex shader function.</summary>
@@ -3467,6 +3526,10 @@ namespace Metal {
 		NSDictionary PreprocessorMacros { get; set; }
 #endif
 
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'MathMode' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'MathMode' instead.")]
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'MathMode' instead.")]
+		[Deprecated (PlatformName.TvOS, 18, 0, message: "Use 'MathMode' instead.")]
 		[Export ("fastMathEnabled")]
 		bool FastMathEnabled { get; set; }
 
@@ -3509,6 +3572,18 @@ namespace Metal {
 		[Mac (13, 3), iOS (16, 4), MacCatalyst (16, 4), TV (16, 4)]
 		[Export ("maxTotalThreadsPerThreadgroup")]
 		nuint MaxTotalThreadsPerThreadgroup { get; set; }
+
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("mathMode")]
+		MTLMathMode MathMode { get; set; }
+
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("mathFloatingPointFunction")]
+		MTLMathFloatingPointFunctions MathFloatingPointFunctions { get; set; }
+
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("enableLogging")]
+		bool EnableLogging { get; set; }
 	}
 
 	/// <summary>Configures a stencil test operation.</summary>
@@ -5074,7 +5149,7 @@ namespace Metal {
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[Protocol] // From Apple Docs: Your app does not define classes that implement this protocol. Model is not needed
-	interface MTLHeap {
+	interface MTLHeap : MTLAllocation {
 		[Abstract]
 		[NullAllowed, Export ("label")]
 		string Label { get; set; }
@@ -5213,7 +5288,7 @@ namespace Metal {
 	///     </remarks>
 	[MacCatalyst (13, 1)]
 	[Protocol] // From Apple Docs: Your app does not define classes that implement this protocol. Model is not needed
-	partial interface MTLResource {
+	partial interface MTLResource : MTLAllocation {
 
 		[Abstract, Export ("label")]
 		string Label { get; set; }
@@ -5264,7 +5339,7 @@ namespace Metal {
 		[Abstract]
 #endif
 		[Export ("allocatedSize")]
-		nuint AllocatedSize { get; }
+		new nuint AllocatedSize { get; }
 
 #if NET
 		[Abstract]
@@ -5364,6 +5439,10 @@ namespace Metal {
 		[Mac (12, 0), iOS (15, 0), TV (15, 0), NoWatch, MacCatalyst (15, 0)]
 		[Export ("preloadedLibraries", ArgumentSemantic.Copy)]
 		IMTLDynamicLibrary [] PreloadedLibraries { get; set; }
+
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("shaderValidation")]
+		MTLShaderValidation ShaderValidation { get; set; }
 	}
 
 	[NoWatch]
@@ -5858,6 +5937,14 @@ namespace Metal {
 		[Mac (12, 0), iOS (15, 0), TV (15, 0), MacCatalyst (15, 0), NoWatch]
 		[Export ("addFunctionWithDescriptor:library:error:")]
 		bool AddFunctionWithDescriptor (MTLFunctionDescriptor descriptor, IMTLLibrary library, [NullAllowed] out NSError error);
+
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("addMeshRenderPipelineFunctionsWithDescriptor:error:")]
+		bool AddMeshRenderPipelineFunctions (MTLMeshRenderPipelineDescriptor descriptor, out NSError error);
+
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("addLibraryWithDescriptor:error:")]
+		bool AddLibrary (MTLStitchedLibraryDescriptor descriptor, out NSError error);
 	}
 
 
@@ -5913,6 +6000,10 @@ namespace Metal {
 		[Mac (12, 0), iOS (15, 0), TV (15, 0), MacCatalyst (15, 0), NoWatch]
 		[NullAllowed, Export ("linkedFunctions", ArgumentSemantic.Copy)]
 		MTLLinkedFunctions LinkedFunctions { get; set; }
+
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("shaderValidation")]
+		MTLShaderValidation ShaderValidation { get; set; }
 	}
 
 	interface IMTLEvent { }
@@ -6649,6 +6740,10 @@ namespace Metal {
 		[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0), TV (16, 0)]
 		[Export ("transformationMatrixBufferOffset")]
 		nuint TransformationMatrixBufferOffset { get; set; }
+
+		[Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0), NoTV]
+		[Export ("transformationMatrixLayout")]
+		MTLMatrixLayout TransformationMatrixLayout { get; set; }
 	}
 
 	[Mac (11, 0), iOS (14, 0), TV (14, 0)]
@@ -6709,6 +6804,11 @@ namespace Metal {
 
 		[Export ("errorOptions", ArgumentSemantic.Assign)]
 		MTLCommandBufferErrorOption ErrorOptions { get; set; }
+
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("logState", ArgumentSemantic.Retain), NullAllowed]
+		IMTLLogState LogState { get; set; }
+
 	}
 
 	[Mac (11, 0), iOS (14, 0), TV (14, 0)]
@@ -6817,6 +6917,18 @@ namespace Metal {
 		[Mac (12, 0), iOS (15, 0), NoWatch, MacCatalyst (15, 0)]
 		[Export ("motionTransformCount")]
 		nuint MotionTransformCount { get; set; }
+
+		[Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0), NoTV]
+		[Export ("instanceTransformationMatrixLayout")]
+		MTLMatrixLayout InstanceTransformationMatrixLayout { get; set; }
+
+		[Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0), NoTV]
+		[Export ("motionTransformType")]
+		MTLTransformType MotionTransformType { get; set; }
+
+		[Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0), NoTV]
+		[Export ("motionTransformStride")]
+		nuint MotionTransformStride { get; set; }
 	}
 
 	[Mac (11, 0), iOS (14, 0), TV (16, 0)]
@@ -7216,7 +7328,7 @@ namespace Metal {
 	[Mac (11, 0), iOS (14, 0), TV (14, 0)]
 	[MacCatalyst (14, 0)]
 	[Protocol]
-	interface MTLLogContainer {
+	interface MTLLogContainer : INSFastEnumeration {
 
 	}
 
@@ -7272,6 +7384,14 @@ namespace Metal {
 
 		[Export ("functions", ArgumentSemantic.Copy)]
 		IMTLFunction [] Functions { get; set; }
+
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("binaryArchives", ArgumentSemantic.Copy), NullAllowed]
+		IMTLBinaryArchive [] BinaryArchives { get; }
+
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("options")]
+		MTLStitchedLibraryOptions Options { get; set; }
 	}
 
 	[Mac (12, 0), iOS (15, 0), TV (16, 0), MacCatalyst (15, 0), NoWatch]
@@ -7336,7 +7456,7 @@ namespace Metal {
 		[Export ("nodes", ArgumentSemantic.Copy)]
 		MTLFunctionStitchingFunctionNode [] Nodes { get; set; }
 
-		[NullAllowed, Export ("outputNode", ArgumentSemantic.Copy)]
+		[NullAllowed, Export ("outputNode", ArgumentSemantic.Retain)]
 		MTLFunctionStitchingFunctionNode OutputNode { get; set; }
 
 		[Export ("attributes", ArgumentSemantic.Copy)]
@@ -7399,6 +7519,10 @@ namespace Metal {
 		[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 		[Export ("transformationMatrixBufferOffset")]
 		nuint TransformationMatrixBufferOffset { get; set; }
+
+		[Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0), NoTV]
+		[Export ("transformationMatrixLayout")]
+		MTLMatrixLayout TransformationMatrixLayout { get; set; }
 	}
 
 	[Mac (12, 0), iOS (15, 0), TV (16, 0), MacCatalyst (15, 0), NoWatch]
@@ -7668,6 +7792,18 @@ namespace Metal {
 		[Static]
 		[Export ("descriptor")]
 		MTLIndirectInstanceAccelerationStructureDescriptor GetDescriptor ();
+
+		[Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0), NoTV]
+		[Export ("instanceTransformationMatrixLayout")]
+		MTLMatrixLayout InstanceTransformationMatrixLayout { get; set; }
+
+		[Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0), NoTV]
+		[Export ("motionTransformType")]
+		MTLTransformType MotionTransformType { get; set; }
+
+		[Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0), NoTV]
+		[Export ("motionTransformStride")]
+		nuint MotionTransformStride { get; set; }
 	}
 
 	[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
@@ -7754,6 +7890,14 @@ namespace Metal {
 
 		[Export ("reset")]
 		void Reset ();
+
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("binaryArchives", ArgumentSemantic.Copy), NullAllowed]
+		IMTLBinaryArchive [] BinaryArchives { get; set; }
+
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("shaderValidation")]
+		MTLShaderValidation ShaderValidation { get; set; }
 	}
 
 	[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
@@ -7802,5 +7946,210 @@ namespace Metal {
 		nuint ThreadgroupMemoryDataSize { get; }
 	}
 
+	[Native]
+	[Mac (15, 0), NoTV, iOS (18, 0), MacCatalyst (18, 0)]
+	enum MTLMatrixLayout : long {
+		ColumnMajor = 0,
+		RowMajor = 1,
+	}
 
+	[Native]
+	[Mac (15, 0), NoTV, iOS (18, 0), MacCatalyst (18, 0)]
+	enum MTLTransformType : long {
+		PackedFloat4x3 = 0,
+		Component = 1,
+	}
+
+	[Protocol (BackwardsCompatibleCodeGeneration = false)]
+	[Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0), TV (18, 0)]
+	interface MTLAllocation {
+		[Abstract]
+		[Export ("allocatedSize")]
+		nuint AllocatedSize { get; }
+	}
+
+	interface IMTLAllocation { }
+
+	[Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0), TV (18, 0)]
+	[BaseType (typeof (NSObject))]
+	interface MTLCommandQueueDescriptor : NSCopying {
+		[Export ("maxCommandBufferCount")]
+		nuint MaxCommandBufferCount { get; set; }
+
+		[Export ("logState", ArgumentSemantic.Retain), NullAllowed]
+		IMTLLogState LogState { get; set; }
+	}
+
+	[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[BackingFieldType (typeof (nint))]
+	enum NSDeviceCertification {
+		[Field ("NSDeviceCertificationiPhonePerformanceGaming")]
+		iPhonePerformanceGaming,
+	}
+
+	[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[BackingFieldType (typeof (nint))]
+	enum NSProcessPerformanceProfile {
+		[Field ("NSProcessPerformanceProfileDefault")]
+		Default,
+
+		[Field ("NSProcessPerformanceProfileSustained")]
+		Sustained,
+	}
+
+	[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[Category]
+	[BaseType (typeof (NSProcessInfo))]
+	interface NSProcessInfo_NSDeviceCertification {
+		[Export ("isDeviceCertifiedFor:")]
+		bool IsDeviceCertifiedFor (NSDeviceCertification performanceTier);
+
+		[Export ("hasPerformanceProfile:")]
+		bool HasPerformanceProfile (NSProcessPerformanceProfile performanceProfile);
+	}
+
+	[Flags]
+	[Native]
+	[Mac (15, 0), TV (18, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	enum MTLStitchedLibraryOptions : ulong {
+		None = 0,
+		FailOnBinaryArchiveMiss = 1 << 0,
+		StoreLibraryInMetalScript = 1 << 1,
+	}
+
+	[Native]
+	[Mac (15, 0), TV (18, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	enum MTLMathMode : long {
+		Safe = 0,
+		Relaxed = 1,
+		Fast = 2,
+	}
+
+	[Native]
+	[Mac (15, 0), TV (18, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	enum MTLMathFloatingPointFunctions : long {
+		Fast = 0,
+		Precise = 1,
+	}
+
+	[Native]
+	[Mac (15, 0), TV (18, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	enum MTLLogLevel : long {
+		Undefined,
+		Debug,
+		Info,
+		Notice,
+		Error,
+		Fault,
+	}
+
+	delegate void MTLLogStateLogHandler ([NullAllowed] string subSystem, [NullAllowed] string category, MTLLogLevel logLevel, string message);
+
+	[Protocol (BackwardsCompatibleCodeGeneration = false)]
+	[Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0), TV (18, 0)]
+	interface MTLLogState {
+		[Export ("addLogHandler:")]
+		void AddLogHandler (MTLLogStateLogHandler handler);
+	}
+
+	interface IMTLLogState { }
+
+	[Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0), TV (18, 0)]
+	[BaseType (typeof (NSObject))]
+	interface MTLLogStateDescriptor : NSCopying {
+		[Export ("level", ArgumentSemantic.Assign)]
+		MTLLogLevel Level { get; set; }
+
+		[Export ("bufferSize", ArgumentSemantic.Assign)]
+		nint BufferSize { get; set; }
+	}
+
+	[Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0), TV (18, 0)]
+	[ErrorDomain ("MTLLogStateErrorDomain")]
+	[Native]
+	enum MTLLogStateError : ulong {
+		InvalidSize = 1,
+		Invalid = 2,
+	}
+
+	[Native]
+	[Mac (15, 0), TV (18, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	enum MTLShaderValidation : long {
+		Default = 0,
+		Enabled = 1,
+		Disabled = 2,
+	}
+
+	[Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0), TV (18, 0)]
+	[BaseType (typeof (NSObject))]
+	interface MTLResidencySetDescriptor : NSCopying {
+		[Export ("label", ArgumentSemantic.Copy), NullAllowed]
+		string Label { get; set; }
+
+		[Export ("initialCapacity")]
+		nuint InitialCapacity { get; set; }
+	}
+
+	[Protocol (BackwardsCompatibleCodeGeneration = false)]
+	[Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0), TV (18, 0)]
+	interface MTLResidencySet {
+		[Abstract]
+		[Export ("device")]
+		IMTLDevice Device { get; }
+
+		[Abstract]
+		[Export ("label"), NullAllowed]
+		string Label { get; }
+
+		[Abstract]
+		[Export ("allocatedSize")]
+		ulong AllocatedSize { get; }
+
+		[Abstract]
+		[Export ("requestResidency")]
+		void RequestResidency ();
+
+		[Abstract]
+		[Export ("endResidency")]
+		void EndResidency ();
+
+		[Abstract]
+		[Export ("addAllocation:")]
+		void AddAllocation (IMTLAllocation allocation);
+
+		[Abstract]
+		[Export ("addAllocations:count:")]
+		void AddAllocations (IntPtr allocations, nuint count);
+		// FIXME: better method
+
+		[Abstract]
+		[Export ("removeAllocation:")]
+		void RemoveAllocation (IMTLAllocation allocation);
+
+		[Abstract]
+		[Export ("removeAllocations:count:")]
+		void RemoveAllocations (IntPtr allocations, nuint count);
+
+		[Abstract]
+		[Export ("removeAllAllocations")]
+		void RemoveAllAllocations ();
+
+		[Abstract]
+		[Export ("containsAllocation:")]
+		bool ContainsAllocation (IMTLAllocation allocation);
+
+		[Abstract]
+		[Export ("allAllocations", ArgumentSemantic.Copy)]
+		IMTLAllocation [] AllAllocations { get; }
+
+		[Abstract]
+		[Export ("allocationCount")]
+		nuint AllocationCount { get; }
+
+		[Abstract]
+		[Export ("commit")]
+		void Commit ();
+	}
+
+	interface IMTLResidencySet { }
 }
