@@ -52,16 +52,9 @@ namespace UIKit {
 			return !(a == b);
 		}
 
-		static NativeHandle [] TypesToPointers (Type [] whenFoundIn)
+		static IntPtr [] TypesToPointers (Type [] whenFoundIn)
 		{
-#if TVOS
-			var ptrs = new NativeHandle [whenFoundIn.Length];
-#else
-			if (whenFoundIn.Length > 4)
-				throw new ArgumentException ("Only 4 parameters supported currently");
-
-			var ptrs = new NativeHandle [5]; // creating an array of 5 when we support only 4 ensures that the last one is IntPtr.Zero.
-#endif
+			var ptrs = new IntPtr [whenFoundIn.Length];
 			for (int i = 0; i < whenFoundIn.Length; i++) {
 				if (whenFoundIn [i] is null)
 					throw new ArgumentException (String.Format ("Parameter {0} was null, must specify a valid type", i));
@@ -113,33 +106,15 @@ namespace UIKit {
 		{
 			var ptrs = TypesToPointers (whenFoundIn);
 
-			if (Runtime.IsARM64CallingConvention) {
-				// The native function takes a variable number of arguments ('appearanceWhenContainedIn:'), terminated with a nil value.
-				// Unfortunately iOS/ARM64 (not the general ARM64 ABI as published by ARM) has a different calling convention for varargs methods
-				// than regular methods: all variable arguments are passed on the stack, no matter how many normal arguments there are.
-				// Normally 8 arguments are passed in registers, then the subsequent ones are passed on the stack, so what we do is to provide
-				// 6 dummy arguments (remember that Objective-C always has two hidden arguments (id, SEL), which are the two first arguments
-				// here), in order to push the arguments we care about to the stack.
-				return IntPtr_objc_msgSend_IntPtr_IntPtr_IntPtr_IntPtr_IntPtr_IntPtr_IntPtr_IntPtr_IntPtr_IntPtr_IntPtr (
-					class_ptr, // x0
-					Selector.GetHandle (UIAppearance.selAppearanceWhenContainedIn), // x1
-					ptrs [0], // x2
-					IntPtr.Zero, // x3
-					IntPtr.Zero, // x4
-					IntPtr.Zero, // x5
-					IntPtr.Zero, // x6
-					IntPtr.Zero, // x7
-					ptrs [1], // the rest is on the stack. This is where iOS/ARM64 expects the first varargs arguments.
-					ptrs [2], ptrs [3], ptrs [4], IntPtr.Zero);
-			} else {
-#if NET
-				return Messaging.NativeHandle_objc_msgSend_NativeHandle_NativeHandle_NativeHandle_NativeHandle_NativeHandle (class_ptr, Selector.GetHandle (UIAppearance.selAppearanceWhenContainedIn),
-					ptrs [0], ptrs [1], ptrs [2], ptrs [3], ptrs [4]);
-#else
-				return Messaging.IntPtr_objc_msgSend_IntPtr_IntPtr_IntPtr_IntPtr_IntPtr (class_ptr, Selector.GetHandle (UIAppearance.selAppearanceWhenContainedIn),
-					ptrs [0], ptrs [1], ptrs [2], ptrs [3], ptrs [4]);
-#endif
-			}
+			// The first type is not a varargs, but the subsequent ones are
+			var firstPtr = ptrs [0];
+			Array.Copy (ptrs, 1, ptrs, 0, ptrs.Length - 1);
+			Array.Resize (ref ptrs, ptrs.Length - 1);
+			return Messaging.objc_msgSend_3_vargs (
+				class_ptr,
+				Selector.GetHandle (UIAppearance.selAppearanceWhenContainedIn),
+				firstPtr,
+				ptrs);
 		}
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
@@ -150,32 +125,16 @@ namespace UIKit {
 
 			var ptrs = TypesToPointers (whenFoundIn);
 
-			if (Runtime.IsARM64CallingConvention) {
-				// The native function takes a variable number of arguments ('appearanceWhenContainedIn:'), terminated with a nil value.
-				// Unfortunately iOS/ARM64 (not the general ARM64 ABI as published by ARM) has a different calling convention for varargs methods
-				// than regular methods: all variable arguments are passed on the stack, no matter how many normal arguments there are.
-				// Normally 8 arguments are passed in registers, then the subsequent ones are passed on the stack, so what we do is to provide
-				// 6 dummy arguments (remember that Objective-C always has two hidden arguments (id, SEL), which are the two first arguments
-				// here), in order to push the arguments we care about to the stack.
-				return IntPtr_objc_msgSend_IntPtr_IntPtr_IntPtr_IntPtr_IntPtr_IntPtr_IntPtr_IntPtr_IntPtr_IntPtr_IntPtr (
-					class_ptr, // x0
-					Selector.GetHandle (UIAppearance.selAppearanceForTraitCollectionWhenContainedIn), // x1
-					traits.Handle, // x2
-					ptrs [0], // x3
-					IntPtr.Zero, // x4
-					IntPtr.Zero, // x5
-					IntPtr.Zero, // x6
-					IntPtr.Zero, // x7
-					ptrs [1], // the rest is on the stack. This is where iOS/ARM64 expects the first varargs arguments.
-					ptrs [2], ptrs [3], ptrs [4], IntPtr.Zero);
-			} else {
-#if NET
-				return Messaging.NativeHandle_objc_msgSend_NativeHandle_NativeHandle_NativeHandle_NativeHandle_NativeHandle (class_ptr, Selector.GetHandle (UIAppearance.selAppearanceForTraitCollectionWhenContainedIn),
-#else
-				return Messaging.IntPtr_objc_msgSend_IntPtr_IntPtr_IntPtr_IntPtr_IntPtr (class_ptr, Selector.GetHandle (UIAppearance.selAppearanceForTraitCollectionWhenContainedIn),
-#endif
-													 traits.Handle, ptrs [0], ptrs [1], ptrs [2], ptrs [3]);
-			}
+			// The first type is not a varargs, but the subsequent ones are
+			var firstPtr = ptrs [0];
+			Array.Copy (ptrs, 1, ptrs, 0, ptrs.Length - 1);
+			Array.Resize (ref ptrs, ptrs.Length - 1);
+			return Messaging.objc_msgSend_4_vargs (
+				class_ptr,
+				Selector.GetHandle (UIAppearance.selAppearanceForTraitCollectionWhenContainedIn),
+				traits.Handle,
+				firstPtr,
+				ptrs);
 		}
 
 		[DllImport (Messaging.LIBOBJC_DYLIB, EntryPoint = "objc_msgSend")]

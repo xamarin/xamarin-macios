@@ -7,7 +7,7 @@
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="..\Filter.cs">
+    <Compile Include="../xtro-sharpie/Filter.cs">
       <Link>Filter.cs</Link>
     </Compile>
   </ItemGroup>

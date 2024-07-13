@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "xtro-sharpie", "xtro-sharpie.csproj", "{D890A042-93C2-4B4B-ABF8-7ECBCBF059D8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "xtro-sharpie", "xtro-sharpie\xtro-sharpie.csproj", "{D890A042-93C2-4B4B-ABF8-7ECBCBF059D8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "xtro-report", "xtro-report\xtro-report.csproj", "{F3CFAA8D-3D2D-4F7F-9C71-5488CFEB5EB3}"
 EndProject
