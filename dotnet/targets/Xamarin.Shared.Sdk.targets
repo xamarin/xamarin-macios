@@ -386,10 +386,12 @@
 		</PropertyGroup>
 
 		<!-- Execute the inner builds -->
+		<!-- We force AppendRuntimeIdentifierToOutputPath=true because otherwise the inner builds might end up writing to the same directory -->
 		<MSBuild
 			Projects="$(MSBuildProjectFile)"
 			Targets="_BuildRidSpecificAppBundle"
 			Properties="
+				AppendRuntimeIdentifierToOutputPath=true;
 				RuntimeIdentifier=%(_RuntimeIdentifiersAsItems.Identity);
 				_CodesignItemsPath=%(_RuntimeIdentifiersAsItems.RidSpecificCodesignItemsPath);
 				_MtouchSymbolsList=%(_RuntimeIdentifiersAsItems.RidSpecificSymbolsListPath);
@@ -613,6 +615,7 @@
 				TargetFramework=$(_ComputedTargetFrameworkMoniker)
 				UseLlvm=$(MtouchUseLlvm)
 				Verbosity=$(_BundlerVerbosity)
+				Warn=$(_BundlerWarn)
 				WarnAsError=$(_BundlerWarnAsError)
 				XamarinNativeLibraryDirectory=$(_XamarinNativeLibraryDirectory)
 				XamarinRuntime=$(_XamarinRuntime)

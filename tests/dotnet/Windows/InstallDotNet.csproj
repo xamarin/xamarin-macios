@@ -54,8 +54,6 @@
     </Task>
   </UsingTask>
 
-  <Import Project="$(RootSourceDirectory)/eng/Versions.props" />
-
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <IsPackable>false</IsPackable>
