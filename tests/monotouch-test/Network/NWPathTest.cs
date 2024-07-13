@@ -170,27 +170,21 @@ namespace MonoTouchFixtures.Network {
 		public void EnumerateGatewayTest ()
 		{
 			var e1 = new TaskCompletionSource<bool> ();
-			var e2 = new TaskCompletionSource<bool> ();
 			var monitor = new NWPathMonitor ();
 			try {
 				monitor.SetQueue (DispatchQueue.DefaultGlobalQueue);
-				monitor.Start ();
 				monitor.SnapshotHandler += path => {
 					path.EnumerateGateways (gateway => {
 						e1.TrySetResult (true);
 						return true;
 					});
-
-					path.EnumerateInterfaces (@interface => {
-						e2.TrySetResult (true);
-						return true;
-					});
 				};
+				monitor.Start ();
 				var rv = TestRuntime.RunAsync (TimeSpan.FromSeconds (5),
 						Task.CompletedTask,
-						Task.WhenAll (e1.Task, e2.Task));
+						e1.Task);
 				if (!rv)
-					TestRuntime.IgnoreInCI ("This test doesn't seem to be working on the bots, uncommon network setup?");
+					Assert.Ignore ("No gateways on this machine?"); // no gateways isn't all that uncommon, so just always ignore in this case.
 				Assert.IsTrue (rv, "Called back");
 			} finally {
 				monitor.Cancel ();

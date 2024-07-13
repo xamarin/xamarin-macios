@@ -20,7 +20,7 @@ namespace Extrospection {
 			case Platforms.iOS:
 				return version.Major < 6;
 			case Platforms.macOS:
-				return version.Minor < 7;
+				return version.Major < 10 || (version.Major == 10 && version.Minor < 7);
 			case Platforms.tvOS:
 				return version.Major < 9;
 			case Platforms.watchOS:
