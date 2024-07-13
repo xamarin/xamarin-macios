@@ -34,3 +34,7 @@ else
 fi
 
 ps auxww > ~/remote_build_testing/processes.txt || true
+
+ls -la ~/Library/Caches/Xamarin/XMA/SDKs/dotnet/ >> ~/remote_build_testing/dotnet-debug.txt 2>&1 || true
+cat ~/Library/Caches/Xamarin/XMA/SDKs/dotnet/NuGet.config >> ~/remote_build_testing/dotnet-debug.txt 2>&1 || true
+cat ~/Library/Caches/Xamarin/XMA/SDKs/.home/.nuget/NuGet/NuGet.Config >> ~/remote_build_testing/dotnet-debug.txt 2>&1  || true
