@@ -192,6 +192,7 @@ partial class Frameworks {
 		"CoreVideo",
 		"CoreWlan",
 		"CryptoTokenKit",
+		"Darwin",
 		"DeviceCheck",
 		"EventKit",
 		"ExecutionPolicy",
@@ -613,6 +614,7 @@ partial class Frameworks {
 	bool? _CoreVideo;
 	bool? _CoreWlan;
 	bool? _CryptoTokenKit;
+	bool? _Darwin;
 	bool? _DeviceCheck;
 	bool? _DeviceDiscoveryExtension;
 	bool? _DeviceDiscoveryUI;
@@ -782,6 +784,7 @@ partial class Frameworks {
 	public bool HaveCoreVideo { get { if (!_CoreVideo.HasValue) _CoreVideo = GetValue ("CoreVideo"); return _CoreVideo.Value; } }
 	public bool HaveCoreWlan { get { if (!_CoreWlan.HasValue) _CoreWlan = GetValue ("CoreWlan"); return _CoreWlan.Value; } }
 	public bool HaveCryptoTokenKit { get { if (!_CryptoTokenKit.HasValue) _CryptoTokenKit = GetValue ("CryptoTokenKit"); return _CryptoTokenKit.Value; } }
+	public bool HaveDarwin { get { if (!_Darwin.HasValue) _Darwin = GetValue ("Darwin"); return _Darwin.Value; } }
 	public bool HaveDeviceCheck { get { if (!_DeviceCheck.HasValue) _DeviceCheck = GetValue ("DeviceCheck"); return _DeviceCheck.Value; } }
 	public bool HaveDeviceDiscoveryExtension { get { if (!_DeviceDiscoveryExtension.HasValue) _DeviceDiscoveryExtension = GetValue ("DeviceDiscoveryExtension"); return _DeviceDiscoveryExtension.Value; } }
 	public bool HaveDeviceDiscoveryUI { get { if (!_DeviceDiscoveryUI.HasValue) _DeviceDiscoveryUI = GetValue ("DeviceDiscoveryUI"); return _DeviceDiscoveryUI.Value; } }

@@ -41,13 +41,6 @@ using NativeHandle = System.IntPtr;
 #endif
 
 namespace Darwin {
-
-	[StructLayout (LayoutKind.Sequential)]
-	public struct TimeSpec {
-		public nint Seconds;
-		public nint NanoSeconds;
-	}
-	
 	[StructLayout (LayoutKind.Sequential)]
 	public struct KernelEvent {
 		public IntPtr /* uintptr_tr */ Ident;
