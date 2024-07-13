@@ -453,15 +453,11 @@ MACOS_CORE_SOURCES += \
 MACOS_DOTNET_SOURCES += \
 	$(MAC_DOTNET_EXTRA_CORE_SOURCES) \
 	$(MACOS_BUILD_DIR)/AssemblyInfo.cs \
-	Darwin/KernelNotification.cs \
-	Darwin/SystemLog.cs \
 	$(SHARED_DESIGNER_CS) \
 
 MACOS_SOURCES += \
 	$(MAC_EXTRA_CORE_SOURCES) \
 	$(MACOS_BUILD_DIR)/AssemblyInfo.cs \
-	Darwin/KernelNotification.cs \
-	Darwin/SystemLog.cs \
 	$(SHARED_DESIGNER_CS) \
 
 # CFNetwork is shipped:

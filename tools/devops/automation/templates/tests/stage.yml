@@ -139,3 +139,4 @@ stages:
         makeTarget: ${{ parameters.makeTarget }}
         gitHubToken: ${{ parameters.gitHubToken }}
         xqaCertPass: ${{ parameters.xqaCertPass }}
+        XcodeChannel: ${{ parameters.XcodeChannel }}
