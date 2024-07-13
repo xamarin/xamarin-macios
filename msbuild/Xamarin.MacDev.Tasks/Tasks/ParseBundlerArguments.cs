@@ -68,6 +68,9 @@ namespace Xamarin.MacDev.Tasks {
 		public int Verbosity { get; set; }
 
 		[Output]
+		public string Warn { get; set; }
+
+		[Output]
 		public string WarnAsError { get; set; }
 
 		[Output]
@@ -231,6 +234,15 @@ namespace Xamarin.MacDev.Tasks {
 							NoWarn = value;
 						} else {
 							NoWarn += "," + value;
+						}
+						break;
+					case "warn":
+						if (!hasValue)
+							value = "-1"; // all warnings
+						if (string.IsNullOrEmpty (Warn)) {
+							Warn = value;
+						} else {
+							Warn += "," + value;
 						}
 						break;
 					default:
