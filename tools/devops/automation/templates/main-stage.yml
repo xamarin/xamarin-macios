@@ -32,10 +32,6 @@ parameters:
   type: boolean
   default: true # default to true until otherwhise
 
-- name: pushNugetsToMaestro
-  type: boolean
-  default: true
-
 - name: isPR
   type: boolean
 
@@ -423,7 +419,6 @@ stages:
         repositoryAlias: ${{ parameters.repositoryAlias }}
         commit: ${{ parameters.commit }}
         pushNugets: ${{ parameters.pushNugets }}
-        pushNugetsToMaestro: ${{ parameters.pushNugetsToMaestro }}
 
 - stage: funnel
   displayName: '${{ parameters.stageDisplayNamePrefix }}Collect signed artifacts'

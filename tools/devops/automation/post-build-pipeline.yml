@@ -1,6 +1,5 @@
 # YAML pipeline for post build operations. 
 # This pipeline will trigger automatically after successful completion of the `prepare_release` stage against the specified branches.
-# NOTE: This pipeline is now deprecated, maestro publishing has been moved to the "Prepare .NET Release" stage
 
 trigger: none
 pr: none
@@ -34,9 +33,11 @@ resources:
     source: xamarin-macios-ci
     trigger:
       branches:
+      - main
       - release/*
       - net7.0
       - net8.0
+      - net9.0
       - release-test/* # this is for testing the release pipeline on branches without GitHub's branch protection (so we can automate tests without requiring commits to go through pull requests, etc.).
       stages:
       - prepare_release
@@ -110,7 +111,7 @@ jobs:
   # Iterate over each build we pushed and add it to the default channel.
   - powershell: |
       Write-Host "Processing platforms: '$Env:CONFIGURATION_DOTNET_PLATFORMS'"
-      $versionEndpoint = 'https://maestro.dot.net/api/assets/darc-version?api-version=2019-01-16'
+      $versionEndpoint = 'https://maestro-prod.westus2.cloudapp.azure.com/api/assets/darc-version?api-version=2019-01-16'
       $darcVersion = $(Invoke-WebRequest -Uri $versionEndpoint -UseBasicParsing).Content
       $arcadeServicesSource = 'https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-eng/nuget/v3/index.json'
       $dotnetPlatforms = "$Env:CONFIGURATION_DOTNET_PLATFORMS".Split(' ', [StringSplitOptions]::RemoveEmptyEntries)
@@ -118,7 +119,7 @@ jobs:
       foreach ($platform in $dotnetPlatforms) {
         $envVar = "ENVIRONMENT_REDIRECT_$($platform.ToUpper())_BARBUILDID"
         $barBuildId = [Environment]::GetEnvironmentVariable($envVar)
-        & $(Agent.ToolsDirectory)\darc\darc add-build-to-channel --default-channels --id $barBuildId --publishing-infra-version 3 --password $(MaestroAccessToken) --azdev-pat $(publishing-dnceng-devdiv-code-r-build-re)
+        & $(Agent.ToolsDirectory)\darc\darc add-build-to-channel --default-channels --id $barBuildId --publishing-infra-version 3 --skip-assets-publishing --password $(MaestroAccessToken) --azdev-pat $(publishing-dnceng-devdiv-code-r-build-re)
         Write-Host "Added $($platform) bar build id: $($barBuildId)"
       }
     displayName: Add builds to default darc channel
