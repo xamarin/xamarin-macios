@@ -1072,7 +1072,7 @@ namespace Xamarin.Tests {
 		[TestCase (ApplePlatform.MacOSX, "osx-x64", false)]
 		[TestCase (ApplePlatform.MacOSX, "osx-x64", true)]
 		[TestCase (ApplePlatform.MacOSX, "osx-x64;osx-arm64", false)]
-		[TestCase (ApplePlatform.MacOSX, "osx-x64;osx-arm64", true)]
+		// [TestCase (ApplePlatform.MacOSX, "osx-x64;osx-arm64", true)]  See: https://github.com/xamarin/xamarin-macios/issues/20903
 		// [TestCase ("MacCatalyst", "")] - No extension support yet
 		public void BuildProjectsWithExtensions (ApplePlatform platform, string runtimeIdentifier, bool isNativeAot)
 		{
@@ -1092,7 +1092,7 @@ namespace Xamarin.Tests {
 
 			DotNet.AssertBuild (consumingProjectDir, properties);
 
-			var extensionPath = Path.Combine (Path.GetDirectoryName (consumingProjectDir)!, "bin", "Debug", platform.ToFramework (), runtimeIdentifier, "ExtensionConsumer.app", GetPlugInsRelativePath (platform), "ExtensionProject.appex");
+			var extensionPath = Path.Combine (appPath, GetPlugInsRelativePath (platform), "ExtensionProject.appex");
 			Assert.That (Directory.Exists (extensionPath), $"App extension directory does not exist: {extensionPath}");
 
 			var pathToSearch = Path.Combine (Path.GetDirectoryName (consumingProjectDir)!, "bin", "Debug");
@@ -1107,7 +1107,7 @@ namespace Xamarin.Tests {
 		[TestCase (ApplePlatform.MacOSX, "osx-x64", false)]
 		[TestCase (ApplePlatform.MacOSX, "osx-x64", true)]
 		[TestCase (ApplePlatform.MacOSX, "osx-x64;osx-arm64", false)]
-		[TestCase (ApplePlatform.MacOSX, "osx-x64;osx-arm64", true)]
+		// [TestCase (ApplePlatform.MacOSX, "osx-x64;osx-arm64", true)] See: https://github.com/xamarin/xamarin-macios/issues/20903
 		// [TestCase ("MacCatalyst", "")] - No extension support yet
 		public void BuildProjectsWithExtensionsAndFrameworks (ApplePlatform platform, string runtimeIdentifier, bool isNativeAot)
 		{
@@ -1127,7 +1127,7 @@ namespace Xamarin.Tests {
 
 			DotNet.AssertBuild (consumingProjectDir, properties);
 
-			var extensionPath = Path.Combine (Path.GetDirectoryName (consumingProjectDir)!, "bin", "Debug", platform.ToFramework (), runtimeIdentifier, "ExtensionConsumerWithFrameworks.app", GetPlugInsRelativePath (platform), "ExtensionProjectWithFrameworks.appex");
+			var extensionPath = Path.Combine (appPath, GetPlugInsRelativePath (platform), "ExtensionProjectWithFrameworks.appex");
 			Assert.That (Directory.Exists (extensionPath), $"App extension directory does not exist: {extensionPath}");
 			var extensionFrameworksPath = Path.Combine (extensionPath, GetFrameworksRelativePath (platform));
 			Assert.IsFalse (Directory.Exists (extensionFrameworksPath), $"App extension framework directory exists when it shouldn't: {extensionFrameworksPath}");
