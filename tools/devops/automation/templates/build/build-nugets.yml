@@ -42,7 +42,7 @@ steps:
     displayName: 'Generate Build Asset Registry Manifest for ${{ platform.platform }}'
     condition: and(succeeded(), contains(variables['configuration.BuildNugets'], 'True'), ne(variables['${{ platform.conditionVariable }}'],''))
 
-- task: PublishPipelineArtifact@1
+- task: 1ES.PublishPipelineArtifact@1
   displayName: 'Publish Artifact: AssetManifests'
   inputs:
     targetPath: $(Build.SourcesDirectory)/xamarin-macios/_build/nupkgs/bar-manifests
@@ -50,7 +50,7 @@ steps:
   continueOnError: true
   condition: and(succeededOrFailed(), contains(variables['configuration.BuildNugets'], 'True'), ne(variables['ENABLE_DOTNET'],''))
 
-- task: PublishPipelineArtifact@1
+- task: 1ES.PublishPipelineArtifact@1
   displayName: 'Publish Artifact: build-binlogs'
   inputs:
     targetPath: $(Build.ArtifactStagingDirectory)/build-binlogs
