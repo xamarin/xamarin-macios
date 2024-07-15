@@ -28,7 +28,6 @@ var versionsPropsPath = args [argumentIndex++];
 var platformLowerCase = platform.ToLowerInvariant ();
 
 var allApiVersions = new List<string> (supportedApiVersions);
-allApiVersions.Add ("net8.0");
 allApiVersions = allApiVersions.Select (v => v.Replace ('-', '_')).ToList ();
 
 var versionsPropsTable = File.ReadAllLines (versionsPropsPath).

@@ -1521,11 +1521,11 @@ namespace Xamarin.Tests {
 					$"/usr/bin/codesign exited with code 1:\n" +
 					$"{appPath}: replacing existing signature\n" +
 					$"{appPath}: code object is not signed at all\n" +
-					$"In subcomponent: {appPath}/System.Diagnostics.DiagnosticSource.dll",
+					$"In subcomponent: {appPath}/System.Collections.NonGeneric.aotdata.arm64",
 
 					$"Failed to codesign '{appPath}': {appPath}: replacing existing signature\n" +
 					$"{appPath}: code object is not signed at all\n" +
-					$"In subcomponent: {appPath}/System.Diagnostics.DiagnosticSource.dll"
+					$"In subcomponent: {appPath}/System.Collections.NonGeneric.aotdata.arm64"
 				);
 
 				// Remove the dir, and now the build should succeed again.
