@@ -1,0 +1,61 @@
+TOP=../..
+
+include $(TOP)/Make.config
+include $(TOP)/mk/xamarin.mk
+
+DOTNET_PLATFORMS_MOBILE=$(filter-out macOS MacCatalyst,$(DOTNET_PLATFORMS))
+
+DOWNLOAD_STAMP_FILE=.download-$(XCSYNC_NUGET_VERSION).stamp
+
+ifdef INCLUDE_XAMARIN_LEGACY
+ifdef INCLUDE_IOS
+TARGETS += $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/bin/xcsync
+endif
+endif
+
+TARGETS += $(foreach platform,$(DOTNET_PLATFORMS_MOBILE),$(DOTNET_DESTDIR)/Microsoft.$(platform).Sdk/tools/bin/xcsync)
+
+$(DOWNLOAD_STAMP_FILE):
+	$(Q) $(DOTNET) restore download-xcsync.csproj /bl:$@.binlog $(NSBUILD_VERBOSITY) /p:XcsyncNuGetVersion=$(XCSYNC_NUGET_VERSION)
+	$(Q) touch $@
+
+$(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/bin/xcsync: $(DOWNLOAD_STAMP_FILE)
+	$(Q) rm -Rf $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/bin/xcsync
+	$(Q) rm -Rf $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/xcsync
+	$(Q) mkdir -p $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/bin/
+	$(Q) mkdir -p $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/xcsync
+	$(Q) $(CP) -R $(TOP)/packages/microsoft.tools.xcsync/$(XCSYNC_NUGET_VERSION)/bin/xcsync $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/bin/
+	$(Q) $(CP) -R $(TOP)/packages/microsoft.tools.xcsync/$(XCSYNC_NUGET_VERSION)/lib/. $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/xcsync
+	$(Q) chmod a+x $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/bin/xcsync
+	$(Q) chmod a+x $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/xcsync/xcsync
+
+define DotNetInstall
+$$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/tools/bin/xcsync: $$(DOWNLOAD_STAMP_FILE)
+	$$(Q) rm -rf $$(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/tools/bin/xcsync
+	$$(Q) rm -rf $$(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/tools/lib/xcsync
+	$$(Q) mkdir -p $$(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/tools/bin
+	$$(Q) mkdir -p $$(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/tools/lib/xcsync
+	$$(Q) $$(CP) -R $(TOP)/packages/microsoft.tools.xcsync/$$(XCSYNC_NUGET_VERSION)/bin/xcsync $$(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/tools/bin/xcsync
+	$$(Q) $$(CP) -R $(TOP)/packages/microsoft.tools.xcsync/$$(XCSYNC_NUGET_VERSION)/lib/. $$(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/tools/lib/xcsync
+	$$(Q) chmod a+x $$(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/tools/bin/xcsync
+	$$(Q) chmod a+x $$(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/tools/lib/xcsync/xcsync
+endef
+
+$(foreach platform,$(DOTNET_PLATFORMS_MOBILE),$(eval $(call DotNetInstall,$(platform))))
+
+clean-local::
+ifdef INCLUDE_XAMARIN_LEGACY
+ifdef INCLUDE_IOS
+	$(Q) rm -rf $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/bin/xcsync
+	$(Q) rm -rf $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/xcsync
+endif
+endif
+ifdef ENABLE_DOTNET
+	$(Q) rm -rf $(foreach platform,$(DOTNET_PLATFORMS_MOBILE),$(DOTNET_DESTDIR)/$($(platform)_NUGET_SDK_NAME)/tools/bin/xcsync)
+	$(Q) rm -rf $(foreach platform,$(DOTNET_PLATFORMS_MOBILE),$(DOTNET_DESTDIR)/$($(platform)_NUGET_SDK_NAME)/tools/lib/xcsync)
+endif
+	$(Q) rm -rf .*.stamp obj .*.binlog
+
+all-local:: $(TARGETS)
+install-local:: $(TARGETS)
+download: $(DOWNLOAD_STAMP_FILE)
