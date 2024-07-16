@@ -1,278 +1,278 @@
+# yamllint disable rule:line-length
 parameters:
+  - name: provisionatorChannel
+    type: string
+    default: 'latest'
 
-- name: provisionatorChannel
-  type: string
-  default: 'latest'
+  - name: pool
+    type: string
+    default: automatic
+    values:
+      - pr
+      - ci
+      - automatic
 
-- name: pool
-  type: string
-  default: automatic
-  values:
-  - pr
-  - ci
-  - automatic
+  - name: runGovernanceTests
+    type: boolean
+    default: true
 
-- name: runGovernanceTests
-  type: boolean
-  default: true
+  - name: enableLegacySigning
+    type: boolean
+    default: true
 
-- name: enableLegacySigning
-  type: boolean
-  default: true
+  - name: forceInsertion
+    type: boolean
+    default: false
 
-- name: forceInsertion
-  type: boolean
-  default: false
+  - name: skipESRP
+    type: boolean
+    default: false # only to be used when testing the CI and we do not need a signed pkg
 
-- name: skipESRP
-  type: boolean
-  default: false # only to be used when testing the CI and we do not need a signed pkg
+  - name: pushNugets
+    type: boolean
+    default: true # default to true until otherwhise
 
-- name: pushNugets
-  type: boolean
-  default: true # default to true until otherwhise
+  - name: pushNugetsToMaestro
+    type: boolean
+    default: true
 
-- name: pushNugetsToMaestro
-  type: boolean
-  default: true
+  - name: isPR
+    type: boolean
 
-- name: isPR
-  type: boolean
+  - name: repositoryAlias
+    type: string
+    default: self
 
-- name: repositoryAlias
-  type: string
-  default: self
+  - name: commit
+    type: string
+    default: HEAD
 
-- name: commit
-  type: string
-  default: HEAD
+  - name: xcodeChannel
+    type: string
 
-- name: xcodeChannel
-  type: string
+  - name: macOSName
+    type: string
 
-- name: macOSName
-  type: string
+  # Ideally we should read/get the list of platforms from somewhere else, instead of hardcoding them here.
+  # Note that this is _all_ the platforms we support (not just the enabled ones).
+  - name: supportedPlatforms
+    type: object
+    default: [
+      {
+        platform: iOS,
+        isDotNetPlatform: true,
+        isLegacyPlatform: true
+      },
+      {
+        platform: macOS,
+        isDotNetPlatform: true,
+        isLegacyPlatform: true
+      },
+      {
+        platform: tvOS,
+        isDotNetPlatform: true,
+        isLegacyPlatform: true
+      },
+      {
+        platform: watchOS,
+        isDotNetPlatform: false,
+        isLegacyPlatform: true
+      },
+      {
+        platform: MacCatalyst,
+        isDotNetPlatform: true,
+        isLegacyPlatform: false
+      },
+      {
+        # when running platform-specific test runs, we also need a special test run that executes tests that only runs when multiple platforms are enabled
+        platform: Multiple,
+        isDotNetPlatform: true,
+        isLegacyPlatform: true
+      }
+    ]
 
-# Ideally we should read/get the list of platforms from somewhere else, instead of hardcoding them here.
-# Note that this is _all_ the platforms we support (not just the enabled ones).
-- name: supportedPlatforms
-  type: object
-  default: [
-    {
-      platform: iOS,
-      isDotNetPlatform: true,
-      isLegacyPlatform: true
-    },
-    {
-      platform: macOS,
-      isDotNetPlatform: true,
-      isLegacyPlatform: true
-    },
-    {
-      platform: tvOS,
-      isDotNetPlatform: true,
-      isLegacyPlatform: true
-    },
-    {
-      platform: watchOS,
-      isDotNetPlatform: false,
-      isLegacyPlatform: true
-    },
-    {
-      platform: MacCatalyst,
-      isDotNetPlatform: true,
-      isLegacyPlatform: false
-    },
-    {
-      # when running platform-specific test runs, we also need a special test run that executes tests that only runs when multiple platforms are enabled
-      platform: Multiple,
-      isDotNetPlatform: true,
-      isLegacyPlatform: true
-    }
-  ]
+  - name: testConfigurations
+    type: object
+    default: [
+      # Disabled by default #
+      # {
+      #   label: bcl,
+      #   splitByPlatforms: false,
+      # },
+      {
+        label: cecil,
+        splitByPlatforms: false,
+        containsDotNetTests: true,
+        containsLegacyTests: false,
+        testPrefix: 'simulator_tests',
+      },
+      {
+        label: dotnettests,
+        splitByPlatforms: true,
+        containsDotNetTests: true,
+        containsLegacyTests: false,
+        needsMultiplePlatforms: true,
+        testPrefix: 'simulator_tests',
+      },
+      {
+        label: fsharp,
+        splitByPlatforms: false,
+        containsDotNetTests: true,
+        containsLegacyTests: true,
+        testPrefix: 'simulator_tests',
+      },
+      {
+        label: framework,
+        splitByPlatforms: false,
+        containsDotNetTests: true,
+        containsLegacyTests: true,
+        testPrefix: 'simulator_tests',
+      },
+      {
+        label: generator,
+        splitByPlatforms: false,
+        containsDotNetTests: true,
+        containsLegacyTests: true,
+        testPrefix: 'simulator_tests',
+      },
+      {
+        label: interdependent-binding-projects,
+        splitByPlatforms: false,
+        containsDotNetTests: true,
+        containsLegacyTests: true,
+        testPrefix: 'simulator_tests',
+      },
+      {
+        label: install-source,
+        splitByPlatforms: false,
+        containsDotNetTests: false,
+        containsLegacyTests: true,
+        testPrefix: 'simulator_tests',
+      },
+      {
+        label: introspection,
+        splitByPlatforms: false,
+        containsDotNetTests: true,
+        containsLegacyTests: true,
+        testPrefix: 'simulator_tests',
+      },
+      {
+        label: linker,
+        splitByPlatforms: false,
+        containsDotNetTests: true,
+        containsLegacyTests: true,
+        testPrefix: 'simulator_tests',
+      },
+      {
+        label: mac-binding-project,
+        splitByPlatforms: false,
+        containsDotNetTests: false,
+        containsLegacyTests: true,
+        testPrefix: 'simulator_tests',
+      },
+      {
+        label: mmp,
+        splitByPlatforms: false,
+        containsDotNetTests: false,
+        containsLegacyTests: true,
+        testPrefix: 'simulator_tests',
+      },
+      {
+        label: mononative,
+        splitByPlatforms: false,
+        containsDotNetTests: false,
+        containsLegacyTests: true,
+        testPrefix: 'simulator_tests',
+      },
+      {
+        label: monotouch,
+        splitByPlatforms: true,
+        containsDotNetTests: true,
+        containsLegacyTests: true,
+        needsMultiplePlatforms: false,
+        testPrefix: 'simulator_tests',
+      },
+      {
+        label: msbuild,
+        splitByPlatforms: false,
+        containsDotNetTests: true,
+        containsLegacyTests: true,
+        testPrefix: 'simulator_tests',
+      },
+      {
+        label: mtouch,
+        splitByPlatforms: false,
+        containsDotNetTests: false,
+        containsLegacyTests: true,
+        testPrefix: 'simulator_tests',
+      },
+      {
+        label: xammac,
+        splitByPlatforms: false,
+        containsDotNetTests: false,
+        containsLegacyTests: true,
+        testPrefix: 'simulator_tests',
+      },
+      {
+        label: xcframework,
+        splitByPlatforms: false,
+        containsDotNetTests: true,
+        containsLegacyTests: true,
+        testPrefix: 'simulator_tests',
+      },
+      {
+        label: xtro,
+        splitByPlatforms: false,
+        containsDotNetTests: true,
+        containsLegacyTests: true,
+        testPrefix: 'simulator_tests',
+      },
+    ]
 
-- name: testConfigurations
-  type: object
-  default: [
-    # Disabled by default #
-    # {
-    #   label: bcl,
-    #   splitByPlatforms: false,
-    # },
-    {
-      label: cecil,
-      splitByPlatforms: false,
-      containsDotNetTests: true,
-      containsLegacyTests: false,
-      testPrefix: 'simulator_tests',
-    },
-    {
-      label: dotnettests,
-      splitByPlatforms: true,
-      containsDotNetTests: true,
-      containsLegacyTests: false,
-      needsMultiplePlatforms: true,
-      testPrefix: 'simulator_tests',
-    },
-    {
-      label: fsharp,
-      splitByPlatforms: false,
-      containsDotNetTests: true,
-      containsLegacyTests: true,
-      testPrefix: 'simulator_tests',
-    },
-    {
-      label: framework,
-      splitByPlatforms: false,
-      containsDotNetTests: true,
-      containsLegacyTests: true,
-      testPrefix: 'simulator_tests',
-    },
-    {
-      label: generator,
-      splitByPlatforms: false,
-      containsDotNetTests: true,
-      containsLegacyTests: true,
-      testPrefix: 'simulator_tests',
-    },
-    {
-      label: interdependent-binding-projects,
-      splitByPlatforms: false,
-      containsDotNetTests: true,
-      containsLegacyTests: true,
-      testPrefix: 'simulator_tests',
-    },
-    {
-      label: install-source,
-      splitByPlatforms: false,
-      containsDotNetTests: false,
-      containsLegacyTests: true,
-      testPrefix: 'simulator_tests',
-    },
-    {
-      label: introspection,
-      splitByPlatforms: false,
-      containsDotNetTests: true,
-      containsLegacyTests: true,
-      testPrefix: 'simulator_tests',
-    },
-    {
-      label: linker,
-      splitByPlatforms: false,
-      containsDotNetTests: true,
-      containsLegacyTests: true,
-      testPrefix: 'simulator_tests',
-    },
-    {
-      label: mac-binding-project,
-      splitByPlatforms: false,
-      containsDotNetTests: false,
-      containsLegacyTests: true,
-      testPrefix: 'simulator_tests',
-    },
-    {
-      label: mmp,
-      splitByPlatforms: false,
-      containsDotNetTests: false,
-      containsLegacyTests: true,
-      testPrefix: 'simulator_tests',
-    },
-    {
-      label: mononative,
-      splitByPlatforms: false,
-      containsDotNetTests: false,
-      containsLegacyTests: true,
-      testPrefix: 'simulator_tests',
-    },
-    {
-      label: monotouch,
-      splitByPlatforms: true,
-      containsDotNetTests: true,
-      containsLegacyTests: true,
-      needsMultiplePlatforms: false,
-      testPrefix: 'simulator_tests',
-    },
-    {
-      label: msbuild,
-      splitByPlatforms: false,
-      containsDotNetTests: true,
-      containsLegacyTests: true,
-      testPrefix: 'simulator_tests',
-    },
-    {
-      label: mtouch,
-      splitByPlatforms: false,
-      containsDotNetTests: false,
-      containsLegacyTests: true,
-      testPrefix: 'simulator_tests',
-    },
-    {
-      label: xammac,
-      splitByPlatforms: false,
-      containsDotNetTests: false,
-      containsLegacyTests: true,
-      testPrefix: 'simulator_tests',
-    },
-    {
-      label: xcframework,
-      splitByPlatforms: false,
-      containsDotNetTests: true,
-      containsLegacyTests: true,
-      testPrefix: 'simulator_tests',
-    },
-    {
-      label: xtro,
-      splitByPlatforms: false,
-      containsDotNetTests: true,
-      containsLegacyTests: true,
-      testPrefix: 'simulator_tests',
-    },
-  ]
+  - name: deviceTestsConfigurations
+    type: object
 
-- name: deviceTestsConfigurations
-  type: object
+  - name: macTestsConfigurations
+    type: object
 
-- name: macTestsConfigurations
-  type: object
+  - name: signingSetupSteps
+    type: stepList
+    default: []
 
-- name: signingSetupSteps
-  type: stepList
-  default: []
+  - name: legacyPackageJobs
+    type: object
+    default: [
+      {
+        job: 'xamarin_ios_sign_notarize',
+        name: 'Xamarin.iOS',
+        pattern: 'xamarin.ios-*',
+        conditionVariable: "INCLUDE_LEGACY_IOS",
+      },
+      {
+        job: 'xamarin_mac_sing_notarie',
+        name: 'Xamarin.Mac',
+        pattern: 'xamarin.mac-*',
+        conditionVariable: "INCLUDE_LEGACY_MAC",
+      }
+    ]
 
-- name: legacyPackageJobs
-  type: object
-  default: [
-    {
-      job: 'xamarin_ios_sign_notarize',
-      name: 'Xamarin.iOS',
-      pattern: 'xamarin.ios-*',
-      conditionVariable: "INCLUDE_LEGACY_IOS",
-    },
-    {
-      job: 'xamarin_mac_sing_notarie',
-      name: 'Xamarin.Mac',
-      pattern: 'xamarin.mac-*',
-      conditionVariable: "INCLUDE_LEGACY_MAC",
-    }
-  ]
+  - name: azureStorage
+    type: string
 
-- name: azureStorage
-  type: string
+  - name: azureContainer
+    type: string
 
-- name: azureContainer
-  type: string
+  - name: stageDisplayNamePrefix
+    type: string
+    default: ''
 
-- name: stageDisplayNamePrefix
-  type: string
-  default: ''
+  - name: dependsOn
+    type: string
+    default: ''
 
-- name: dependsOn
-  type: string
-  default: ''
-
-- name: dependsOnResult
-  type: string
-  default: ''
+  - name: dependsOnResult
+    type: string
+    default: ''
 
 stages:
 
