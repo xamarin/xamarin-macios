@@ -166,6 +166,8 @@ steps:
         displayName: 'Provision simulators (system-dependencies.sh)'
   - ${{ else }}:
       - bash: |
+          xcode-select -p
+          xcodebuild -runFirstLaunch
           xcodebuild -downloadPlatform iOS
         displayName: 'Provision simulators (xcodebuild)'
 
