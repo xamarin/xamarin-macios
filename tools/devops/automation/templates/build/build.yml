@@ -166,6 +166,15 @@ steps:
         displayName: 'Provision simulators (system-dependencies.sh)'
   - ${{ else }}:
       - bash: |
+           curl -o index.xml https://devimages-cdn.apple.com/downloads/xcode/simulators/index2.dvtdownloadableindex
+           cat index.xml
+        displayName: 'Test index download'
+
+      - bash: |
+           curl -o ios.dmg https://devimages-cdn.apple.com/downloads/xcode/simulators/com.apple.pkg.iPhoneSimulatorSDK12_4-12.4.1.1568665771.dmg
+        displayName: 'Test image download'
+
+      - bash: |
           set -x
           echo "xcode-select path"
           xcode-select -p
