@@ -28,7 +28,6 @@
 !missing-field! UIActivityItemsConfigurationMetadataKeyShareRecipients not bound
 !missing-field! UIDocumentCreationIntentDefault not bound
 !missing-protocol! UICalendarSelectionWeekOfYearDelegate not bound
-!missing-protocol! UIItemProviderReadingAugmentationDesignating not bound
 !missing-protocol! UITabBarControllerSidebarDelegate not bound
 !missing-protocol-member! UIActivityItemSource::activityViewControllerShareRecipients: not found
 !missing-protocol-member! UIMutableTraits::listEnvironment not found

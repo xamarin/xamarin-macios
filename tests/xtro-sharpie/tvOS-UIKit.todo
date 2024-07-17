@@ -15,7 +15,6 @@
 !missing-field! NSTextHighlightColorSchemePurple not bound
 !missing-field! NSTextHighlightStyleAttributeName not bound
 !missing-field! NSTextHighlightStyleDefault not bound
-!missing-protocol! UIItemProviderReadingAugmentationDesignating not bound
 !missing-protocol-member! UIFocusItem::isTransparentFocusItem not found
 !missing-protocol-member! UIMutableTraits::listEnvironment not found
 !missing-protocol-member! UIMutableTraits::setListEnvironment: not found
@@ -157,18 +156,6 @@
 !missing-type! UIUpdateActionPhase not bound
 !missing-type! UIUpdateInfo not bound
 !missing-type! UIUpdateLink not bound
-!unknown-field! UIPasteboardDetectionPatternCalendarEvent bound
-!unknown-field! UIPasteboardDetectionPatternEmailAddress bound
-!unknown-field! UIPasteboardDetectionPatternFlightNumber bound
-!unknown-field! UIPasteboardDetectionPatternLink bound
-!unknown-field! UIPasteboardDetectionPatternMoneyAmount bound
-!unknown-field! UIPasteboardDetectionPatternNumber bound
-!unknown-field! UIPasteboardDetectionPatternPhoneNumber bound
-!unknown-field! UIPasteboardDetectionPatternPostalAddress bound
-!unknown-field! UIPasteboardDetectionPatternProbableWebSearch bound
-!unknown-field! UIPasteboardDetectionPatternProbableWebURL bound
-!unknown-field! UIPasteboardDetectionPatternShipmentTrackingNumber bound
-!unknown-native-enum! UIPasteControlDisplayMode bound
 !missing-enum! UIAccessibilityExpandedStatus not bound
 !missing-field! UIAccessibilityCustomActionCategoryEdit not bound
 !missing-selector! +UIViewControllerTransition::coverVerticalTransition not bound
