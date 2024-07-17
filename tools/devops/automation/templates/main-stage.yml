@@ -297,7 +297,7 @@ stages:
                 - ImageOverride -equals 1ESPT-Windows2022
 
             steps:
-             - template: ./common/clean.yml
+              - template: ./common/clean.yml
 
   - stage: configure_build
     displayName: '${{ parameters.stageDisplayNamePrefix }}Configure'
@@ -312,15 +312,15 @@ stages:
               demands:
                 - ImageOverride -equals 1ESPT-Windows2022
             steps:
-            - checkout: none             # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#checkout
+              - checkout: none  # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#checkout
 
-            # Selects appropriate agent pool based on trigger type (PR or CI); manually triggered builds target the PR pool
-            - template: azure-devops-pools/agent-pool-selector.yml@yaml-templates
-              parameters:
-                agentPoolPR: $(PRBuildPool)
-                agentPoolPRUrl: $(PRBuildPoolUrl)
-                agentPoolCI: $(CIBuildPool)
-                agentPoolCIUrl: $(CIBuildPoolUrl)
+              # Selects appropriate agent pool based on trigger type (PR or CI); manually triggered builds target the PR pool
+              - template: azure-devops-pools/agent-pool-selector.yml@yaml-templates
+                parameters:
+                  agentPoolPR: $(PRBuildPool)
+                  agentPoolPRUrl: $(PRBuildPoolUrl)
+                  agentPoolCI: $(CIBuildPool)
+                  agentPoolCIUrl: $(CIBuildPoolUrl)
 
       - job: configure
         displayName: 'Configure build'
