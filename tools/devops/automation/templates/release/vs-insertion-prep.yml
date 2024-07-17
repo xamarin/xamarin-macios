@@ -82,9 +82,6 @@ stages:
       dependsOn: signing
       artifactName: '${{ parameters.uploadPrefix }}nuget-signed'
       propsArtifactName: ${{ parameters.uploadPrefix }}not-signed-package
-      vsDropArtifactName: ${{ parameters.uploadPrefix }}vsdrop-signed
-      vsDropMultiTargetArtifactName: ${{ parameters.uploadPrefix }}vsdrop-multitarget-signed
-      msiNuGetArtifactName: ${{ parameters.uploadPrefix }}vs-msi-nugets
       binlogsArtifactName: ${{ parameters.uploadPrefix }}nuget-msi-convert-binlogs
       signType: Real
       condition: "ne(stageDependencies.configure_build.configure.outputs['configure_platforms.ENABLE_DOTNET'],'')"
@@ -106,8 +103,9 @@ stages:
         displayName: verify signed msi content
         inputs:
           TargetFolders: |
-            $(Build.StagingDirectory)\bin\manifests
-            $(Build.StagingDirectory)\bin\manifests-multitarget
+            $(Build.ArtifactStagingDirectory)\bin\manifests
+            $(Build.ArtifactStagingDirectory)\bin\manifests-packs
+            $(Build.ArtifactStagingDirectory)\bin\msi-nupkgs
           ExcludeSNVerify: true
           ApprovalListPathForCerts: $(Build.StagingDirectory)\sign-verify\SignVerifyIgnore.txt
 
