@@ -14080,6 +14080,10 @@ namespace AVFoundation {
 
 		[Export ("errorComment"), NullAllowed]
 		string ErrorComment { get; }
+
+		[Watch (10, 5), TV (17, 5), Mac (14, 5), iOS (17, 5), MacCatalyst (17, 5)]
+		[NullAllowed, Export ("allHTTPResponseHeaderFields")]
+		NSDictionary<NSString, NSString> AllHttpResponseHeaderFields { get; }
 	}
 
 	interface IAVPlayerItemMetadataCollectorPushDelegate { }

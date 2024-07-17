@@ -1,1 +1,1 @@
-!missing-protocol! SFAddToHomeScreenActivityItem not bound
+!missing-protocol-member! SFAddToHomeScreenActivityItem::getWebAppManifestWithCompletionHandler: not found

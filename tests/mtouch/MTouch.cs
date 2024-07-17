@@ -2256,6 +2256,7 @@ public class TestApp {
 				Asserts.DoesNotContain ("SafariServices", load_commands, "SafariServices");
 				Asserts.DoesNotContain ("GameController", load_commands, "GameController");
 				Asserts.DoesNotContain ("NewsstandKit", load_commands, "NewsstandKit");
+				Asserts.DoesNotContain ("AssetsLibrary", load_commands, "AssetsLibrary");
 
 				// Try again with the static registrar
 				mtouch.Registrar = MTouchRegistrar.Static;
@@ -2266,6 +2267,7 @@ public class TestApp {
 				Asserts.DoesNotContain ("GameController", load_commands, "GameController");
 				Asserts.DoesNotContain ("QuickLook", load_commands, "QuickLook");
 				Asserts.DoesNotContain ("NewsstandKit", load_commands, "NewsstandKit");
+				Asserts.DoesNotContain ("AssetsLibrary", load_commands, "AssetsLibrary");
 			}
 		}
 
@@ -2635,7 +2637,7 @@ public class TestApp {
 		[TestCase (Target.Dev, null, "ARMv7k", MTouchBitcode.Unspecified)]
 		[TestCase (Target.Dev, "arm64_32+llvm", "ARM64_32", MTouchBitcode.Unspecified)]
 		[TestCase (Target.Dev, "armv7k+llvm,arm64_32+llvm", "ARMv7k,ARM64_32", MTouchBitcode.Full)]
-		[TestCase (Target.Sim, null, "i386", MTouchBitcode.Unspecified)]
+		[TestCase (Target.Sim, null, "x86_64", MTouchBitcode.Unspecified)]
 		[TestCase (Target.Sim, "x86_64", "x86_64", MTouchBitcode.Unspecified)]
 		/* clang crashes in Xcode 16 beta 1 with:
 

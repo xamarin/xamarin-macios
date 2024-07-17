@@ -1,3 +1,1 @@
 !extra-designated-initializer! INMessage::initWithIdentifier:conversationIdentifier:content:dateSent:sender:recipients:groupName:messageType: is incorrectly decorated with an [DesignatedInitializer] attribute
-!missing-field! INCarChargingConnectorTypeNACSAC not bound
-!missing-field! INCarChargingConnectorTypeNACSDC not bound
