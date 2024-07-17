@@ -118,6 +118,7 @@
       <ArtifactsLogDir>$(BarManifestOutputPath)</ArtifactsLogDir>
       <AssetManifestFileName>Assets.xml</AssetManifestFileName>
       <AssetManifestPath>$(ArtifactsLogDir)AssetManifest\$(AssetManifestFileName)</AssetManifestPath>
+      <IsStableBuild Condition=" '$(IsStableBuild)' == '' ">false</IsStableBuild>
     </PropertyGroup>
 
     <Error Condition="Exists($(AssetManifestPath))" Text="The manifest file '$(AssetManifestPath)' already exists." />
@@ -142,6 +143,7 @@
 
     <PushToAzureDevOpsArtifacts
         ItemsToPush="@(ItemsToPush)"
+        IsStableBuild="$(IsStableBuild)"
         ManifestBuildData="@(ManifestBuildData)"
         ManifestRepoUri="$(BUILD_REPOSITORY_NAME)"
         ManifestBranch="$(BUILD_SOURCEBRANCH)"

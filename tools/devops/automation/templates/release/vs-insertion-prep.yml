@@ -230,9 +230,6 @@ stages:
               artifactName: ${{ parameters.uploadPrefix }}vsdrop-multitarget-signed
               downloadPath: $(Build.StagingDirectory)\$(MultiTargetVSDropCommitStatusName)
 
-      - script: make -C $(Build.SourcesDirectory)/dotnet version-props
-        displayName: make version props
-
       - powershell: |
           $varMap = @{ "INCLUDE_DOTNET_IOS" = "iOS"; "INCLUDE_DOTNET_MACCATALYST" = "MacCatalyst"; "INCLUDE_DOTNET_MACOS" = "macOS"; "INCLUDE_DOTNET_TVOS" = "tvOS" }
           foreach ($varName in $varMap.Keys) {
@@ -243,16 +240,13 @@ stages:
           }
         displayName: Set maestro project variable
 
-      - task: DotNetCoreCLI@2
-        displayName: generate and publish BAR manifest
-        inputs:
-          projects: $(Build.SourcesDirectory)/dotnet/package/Microsoft.$(MaestroProjectPlatformName).Ref/package.csproj
-          arguments: >-
-            -t:PushManifestToBuildAssetRegistry
-            -p:BuildAssetRegistryToken=$(MaestroAccessToken)
-            -p:NupkgPath=$(Build.SourcesDirectory)/nugets-blob
-            -bl:$(Build.ArtifactStagingDirectory)/maestro-binlogs/generate-bar-manifest.binlog
-          workingDirectory: $(Build.SourcesDirectory)\..
+      - script: >-
+          make -C $(Build.SourcesDirectory)/dotnet publish-bar-manifest
+          PUBLISH_BAR_MANIFEST_WORKING_DIR=$(Build.SourcesDirectory)/..
+          BAR_MANIFEST_PLATFORM_NAME=$(MaestroProjectPlatformName)
+          BAR_MANIFEST_MSBUILD_ARGS='-p:BuildAssetRegistryToken=$(MaestroAccessToken) -p:NupkgPath=$(Build.SourcesDirectory)/nugets-blob -bl:$(Build.ArtifactStagingDirectory)/maestro-binlogs/generate-bar-manifest.binlog'
+        workingDirectory: $(Build.SourcesDirectory)\..
+        displayName: make publish-bar-manifest
         condition: and(succeeded(), eq('${{ parameters.pushNugetsToMaestro }}', 'true'))
 
       - powershell: |
