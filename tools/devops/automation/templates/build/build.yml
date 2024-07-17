@@ -166,9 +166,18 @@ steps:
         displayName: 'Provision simulators (system-dependencies.sh)'
   - ${{ else }}:
       - bash: |
+          set -x
+          echo "xcode-select path"
           xcode-select -p
+          echo "xcodebuild version"
+          xcodebuild -version
+          echo  "First run needed"
+          xcodebuild -checkFirstLaunchStatus
           xcodebuild -runFirstLaunch
-          xcodebuild -downloadPlatform iOS
+          echo "Show SDKs"
+          xcodebuild -showsdks
+          echo "Downloading simulators"
+          xcodebuild -verbose -downloadPlatform iOS
         displayName: 'Provision simulators (xcodebuild)'
 
   # downloding mono takes time and has been shown to be problematic when we have network issues. This is why we
