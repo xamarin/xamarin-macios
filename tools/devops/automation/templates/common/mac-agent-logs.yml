@@ -14,7 +14,7 @@ parameters:
 
 - name: predicate
   type: string
-  default: ''
+  default: 'default'
 
 - name: style
   type: string

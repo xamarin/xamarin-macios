@@ -179,7 +179,6 @@ steps:
            pkill -9 "Xcode" || echo "Xcode was not running."
            echo "Executed 'open xcpref://Xcode.PreferencePane.Platforms'"
 
-           echo "Finished installing Xcode platforms"
            xcodebuild -downloadPlatform iOS
         displayName: 'Provision simulators (xcoebuild)'
 
