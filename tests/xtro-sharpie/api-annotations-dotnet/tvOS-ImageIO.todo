@@ -1,3 +1,0 @@
-!missing-field! kCGImagePropertyTIFFXPosition not bound
-!missing-field! kCGImagePropertyTIFFYPosition not bound
-!missing-pinvoke! CGImageSourceSetAllowableTypes is not bound

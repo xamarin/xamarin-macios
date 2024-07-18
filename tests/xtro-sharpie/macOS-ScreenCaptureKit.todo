@@ -4,7 +4,6 @@
 !missing-enum-value! SCStreamErrorCode native value SCStreamErrorSystemStoppedStream = -3821 not bound
 !missing-enum-value! SCStreamOutputType native value SCStreamOutputTypeMicrophone = 2 not bound
 !missing-protocol! SCRecordingOutputDelegate not bound
-!missing-selector! +SCShareableContent::getCurrentProcessShareableContentWithCompletionHandler: not bound
 !missing-selector! +SCStreamConfiguration::streamConfigurationWithPreset: not bound
 !missing-selector! SCRecordingOutput::initWithConfiguration:delegate: not bound
 !missing-selector! SCRecordingOutput::recordedDuration not bound
@@ -29,3 +28,4 @@
 !missing-selector! SCStreamConfiguration::showMouseClicks not bound
 !missing-type! SCRecordingOutput not bound
 !missing-type! SCRecordingOutputConfiguration not bound
+!extra-protocol-member! unexpected selector SCStreamDelegate::userDidStopStream: found

@@ -680,6 +680,12 @@ namespace ImageIO {
 		NSString TIFFXResolution { get; }
 		[Field ("kCGImagePropertyTIFFYResolution")]
 		NSString TIFFYResolution { get; }
+		[Mac (14, 4), iOS (17, 4), MacCatalyst (17, 4), TV (17, 4), Watch (10, 4)]
+		[Field ("kCGImagePropertyTIFFXPosition")]
+		NSString TIFFXPosition { get; }
+		[Mac (14, 4), iOS (17, 4), MacCatalyst (17, 4), TV (17, 4), Watch (10, 4)]
+		[Field ("kCGImagePropertyTIFFYPosition")]
+		NSString TIFFYPosition { get; }
 		[Field ("kCGImagePropertyTIFFResolutionUnit")]
 		NSString TIFFResolutionUnit { get; }
 		[Field ("kCGImagePropertyTIFFSoftware")]
