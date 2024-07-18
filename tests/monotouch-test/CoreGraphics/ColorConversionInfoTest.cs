@@ -104,7 +104,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 		public void CreateTooMany ()
 		{
 			TestRuntime.AssertXcodeVersion (8, 0);
-			Assert.Throws<ArgumentException> (() => new CGColorConversionInfo ((CGColorConversionOptions) null, new GColorConversionInfoTriple [4]));
+			Assert.Throws<ArgumentException> (() => new CGColorConversionInfo ((CGColorConversionOptions) null, new GColorConversionInfoTriple [5]));
 		}
 
 		[Test]
