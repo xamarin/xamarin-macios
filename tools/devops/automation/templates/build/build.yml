@@ -172,22 +172,8 @@ steps:
 
       - bash: |
            curl -o ios.dmg https://devimages-cdn.apple.com/downloads/xcode/simulators/com.apple.pkg.iPhoneSimulatorSDK12_4-12.4.1.1568665771.dmg
-        displayName: 'Test image download'
-
-      - bash: |
-          set -x
-          echo "xcode-select path"
-          xcode-select -p
-          echo "xcodebuild version"
-          xcodebuild -version
-          echo  "First run needed"
-          xcodebuild -checkFirstLaunchStatus
-          xcodebuild -runFirstLaunch
-          echo "Show SDKs"
-          xcodebuild -showsdks
-          echo "Downloading simulators"
-          xcodebuild -verbose -downloadPlatform iOS
-        displayName: 'Provision simulators (xcodebuild)'
+           xcrun simctl runtime add "ios.dmg"
+        displayName: 'Download and install iOS simulator'
 
   # downloding mono takes time and has been shown to be problematic when we have network issues. This is why we
   # are using the cache. Mono does not get bump a lot of times if any (after dotnet)
