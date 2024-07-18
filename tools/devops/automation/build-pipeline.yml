@@ -140,7 +140,7 @@ resources:
   - repository: yaml-templates
     type: github
     name: xamarin/yaml-templates
-    ref: refs/heads/dev/pjc/v4drop-metadata
+    ref: refs/heads/main
     endpoint: xamarin
 
   - repository: sdk-insertions
