@@ -166,6 +166,20 @@ steps:
         displayName: 'Provision simulators (system-dependencies.sh)'
   - ${{ else }}:
       - bash: |
+           # This is a workaround for a bug in Xcode 15 where we need to open the platforms panel for it to register the simulators.
+           echo "Executing 'open xcpref://Xcode.PreferencePane.Platforms'"
+           echo "Killing Xcode"
+           pkill -9 "Xcode" || echo "Xcode was not running."
+
+           echo "Opening Xcode preferences panel"
+           open xcpref://Xcode.PreferencePane.Platforms
+           echo "waiting 10 secs for Xcode to open the preferences panel"
+           sleep 10
+           echo "Killing Xcode"
+           pkill -9 "Xcode" || echo "Xcode was not running."
+           echo "Executed 'open xcpref://Xcode.PreferencePane.Platforms'"
+
+           echo "Finished installing Xcode platforms"
            xcodebuild -downloadPlatform iOS
         displayName: 'Provision simulators (xcoebuild)'
 
