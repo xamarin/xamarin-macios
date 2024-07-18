@@ -29,6 +29,7 @@ $headers = @{Authorization = "Basic {0}" -f $base64AuthInfo}
 $url= $Env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI + "$Env:SYSTEM_TEAMPROJECT/_apis/build/builds/" + $Env:BUILD_BUILDID + "?api-version=5.1"
 $buildPipeline= Invoke-RestMethod -Uri $url -Headers $headers -Method Get
 
+Write-host "Build pipeline start time: $($buildPipeline.startTime)"
 $start=[DateTime]::Parse($buildPipeline.startTime).ToString("yyyy-MM-dd HH:mm:ss")
 
 $end=Get-Date -Format "yyyy-MM-dd HH:mm:ss"
