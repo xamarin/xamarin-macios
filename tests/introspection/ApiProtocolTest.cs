@@ -380,6 +380,10 @@ namespace Introspection {
 				case "TKSmartCardUserInteractionForSecurePinChange":
 				case "TKSmartCardUserInteractionForSecurePinVerification":
 					return true;
+				// Xcode 15.3, Conformance not in headers
+				case "ASWebAuthenticationSessionCallback":
+				case "VSAppleSubscription":
+					return true;
 				// Xcode 16, conformance not in headers
 				case "QLFileThumbnailRequest":
 				case "QLThumbnailReply":
@@ -571,6 +575,10 @@ namespace Introspection {
 				case "TKSmartCardUserInteractionForSecurePinChange":
 				case "TKSmartCardUserInteractionForSecurePinVerification":
 					return true;
+				// Xcode 15.3, Conformance not in headers
+				case "ASWebAuthenticationSessionCallback":
+				case "VSAppleSubscription":
+					return true;
 				// Xcode 16, conformance not in headers
 				case "QLFileThumbnailRequest":
 				case "QLThumbnailReply":
@@ -678,6 +686,17 @@ namespace Introspection {
 			case "QLPreviewItem":
 				if (type.Name == "NSUrl")
 					return true;
+				break;
+			case "UIInteraction":
+				switch (type.Name) {
+				case "UIFeedbackGenerator":
+				case "UIImpactFeedbackGenerator":
+				case "UINotificationFeedbackGenerator":
+				case "UISelectionFeedbackGenerator":
+					if (!TestRuntime.CheckXcodeVersion (15, 4))
+						return true;
+					break;
+				}
 				break;
 			case "NSTextAttachmentContainer":
 				// NSTextAttachment implementing the NSTextAttachmentContainer protocol was deprecated in Xcode 16 beta 1.

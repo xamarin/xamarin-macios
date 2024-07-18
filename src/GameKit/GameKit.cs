@@ -153,6 +153,7 @@ namespace GameKit {
 		ApiObsolete = 34,
 		ICloudUnavailable = 35,
 		LockdownMode = 36,
+		AppUnlisted = 37,
 		FriendListDescriptionMissing = 100,
 		FriendListRestricted = 101,
 		FriendListDenied = 102,

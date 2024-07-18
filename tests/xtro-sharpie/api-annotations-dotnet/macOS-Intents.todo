@@ -1,6 +1,4 @@
 !deprecated-attribute-missing! INCallRecord::initWithIdentifier:dateCreated:caller:callRecordType:callCapability:callDuration:unseen:numberOfCalls: missing a [Deprecated] attribute
-!missing-enum! INMessageReactionType not bound
-!missing-enum! INStickerType not bound
 !missing-selector! INMessageReaction::emoji not bound
 !missing-selector! INMessageReaction::initWithReactionType:reactionDescription:emoji: not bound
 !missing-selector! INMessageReaction::reactionDescription not bound

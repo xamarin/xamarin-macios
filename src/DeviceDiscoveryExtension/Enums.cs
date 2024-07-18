@@ -31,6 +31,8 @@ namespace DeviceDiscoveryExtension {
 		Tv = 3,
 		LaptopComputer = 4,
 		DesktopComputer = 5,
+		[iOS (18, 0)]
+		AccessorySetup = 6,
 	}
 
 	[NoMac, iOS (16, 0), NoMacCatalyst, NoWatch, NoTV]
@@ -73,5 +75,13 @@ namespace DeviceDiscoveryExtension {
 		DeviceFound = 40,
 		DeviceLost = 41,
 		DeviceChanged = 42,
+	}
+
+	[NoMac, iOS (18, 0), NoMacCatalyst, NoWatch, NoTV]
+	[Native]
+	[Flags]
+	public enum DDDeviceSupports : ulong {
+		BluetoothPairingLE = 1 << 1,
+		BluetoothTransportBridging = 1 << 2,
 	}
 }
