@@ -62,10 +62,7 @@ steps:
       timeoutInMinutes: 180
 
     # build nugets
-    - bash: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/build-nugets.sh
-      displayName: 'Build Nugets'
-      condition: and(succeeded(), contains(variables['configuration.BuildNugets'], 'True'), ne(variables['ENABLE_DOTNET'], ''))
-      timeoutInMinutes: 180
+    - template: build-nugets.yml
 
     - bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/generate-workload-rollback.sh
       name: workload_file
