@@ -32,8 +32,10 @@ $buildPipeline= Invoke-RestMethod -Uri $url -Headers $headers -Method Get
 Write-host "Build pipeline start time: $($buildPipeline.startTime)"
 $start=[DateTime]::Parse($buildPipeline.startTime).ToString("yyyy-MM-dd HH:mm:ss")
 
-$end=Get-Date -Format "yyyy-MM-dd HH:mm:ss"
-Write-Host "end time: $end"
+# hack to get the end time
+$date = Get-Date
+$end=$date.ToString("yyyy-MM-dd HH:mm:ss")
+$start=$date.AddHours(-1).ToString("yyyy-MM-dd HH:mm:ss")
 
 if (-not $Predicate) {
     Write-Host "Executing: log show --style $Style --start `"$start`" --end `"$end`" > $Output"
