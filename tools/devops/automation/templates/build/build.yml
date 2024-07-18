@@ -160,25 +160,19 @@ steps:
       AUTH_TOKEN_VSENG_XAMARIN_MAC_DEVICES_P12: ${{ parameters.xqaCertPass }}
       AUTH_TOKEN_VSENG_XAMARIN_MAC_DEVICES_2_P12: ${{ parameters.xqaCertPass }}
 
+  - bash: |
+       set -x
+       set -e
+       rm -rf ~/Library/Developer/Xcode/DerivedData/*
+       rm -rf ~/Library/Caches/com.apple.dt.Xcode
+    displayName: 'Clear Xcode cache'
+
   # only install all the simulators when working on a PR, EO machines do not allow use to perform this step
   - ${{ if parameters.isPR }}:
       - bash: $(Build.SourcesDirectory)/xamarin-macios/system-dependencies.sh --provision-simulators --ignore-shellcheck --ignore-yamllint
         displayName: 'Provision simulators (system-dependencies.sh)'
   - ${{ else }}:
       - bash: |
-           # This is a workaround for a bug in Xcode 15 where we need to open the platforms panel for it to register the simulators.
-           echo "Executing 'open xcpref://Xcode.PreferencePane.Platforms'"
-           echo "Killing Xcode"
-           pkill -9 "Xcode" || echo "Xcode was not running."
-
-           echo "Opening Xcode preferences panel"
-           open xcpref://Xcode.PreferencePane.Platforms
-           echo "waiting 10 secs for Xcode to open the preferences panel"
-           sleep 10
-           echo "Killing Xcode"
-           pkill -9 "Xcode" || echo "Xcode was not running."
-           echo "Executed 'open xcpref://Xcode.PreferencePane.Platforms'"
-
            xcodebuild -downloadPlatform iOS
         displayName: 'Provision simulators (xcoebuild)'
 
