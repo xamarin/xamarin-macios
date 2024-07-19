@@ -173,9 +173,7 @@ steps:
         displayName: 'Provision simulators (system-dependencies.sh)'
   - ${{ else }}:
       - bash: |
-           ls /Library/Developer/CoreSimulator/Profiles/Runtimes
-           rm -Rf /Library/Developer/CoreSimulator/Profiles/Runtimes/*
-           xcodebuild -downloadPlatform iOS
+           xcodebuild -verbose -downloadPlatform iOS
         displayName: 'Provision simulators (xcoebuild)'
 
   # downloding mono takes time and has been shown to be problematic when we have network issues. This is why we
