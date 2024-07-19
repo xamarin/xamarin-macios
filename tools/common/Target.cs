@@ -897,6 +897,13 @@ namespace Xamarin.Bundler {
 			sw.WriteLine ("\treturn rv;");
 			sw.WriteLine ("}");
 
+			// Add an empty __managed__Main function when building class lib app extensions with NativeAOT to workaround static reference to this symbol from nativeaot-bridge.m
+			if (app.IsExtension && app.XamarinRuntime == XamarinRuntime.NativeAOT) {
+				sw.WriteLine ();
+				sw.Write ("extern \"C\" int __managed__Main (int argc, const char** argv) { return 0; } ");
+				sw.WriteLine ();
+			}
+
 			string extension_main = null;
 			if (app.Platform == ApplePlatform.WatchOS && app.IsWatchExtension) {
 				// We're building a watch extension, and we have multiple scenarios, depending on the watchOS version we're executing on:
