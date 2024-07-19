@@ -173,6 +173,8 @@ steps:
         displayName: 'Provision simulators (system-dependencies.sh)'
   - ${{ else }}:
       - bash: |
+           ls /Library/Developer/CoreSimulator/Profiles/Runtimes
+           rm -Rf /Library/Developer/CoreSimulator/Profiles/Runtimes/*
            xcodebuild -downloadPlatform iOS
         displayName: 'Provision simulators (xcoebuild)'
 
