@@ -173,7 +173,7 @@ steps:
         displayName: 'Provision simulators (system-dependencies.sh)'
   - ${{ else }}:
       - bash: |
-           xcodebuild -downloadAllPlatforms
+           xcodebuild -downloadPlatform iOS
         displayName: 'Provision simulators (xcoebuild)'
 
   # downloding mono takes time and has been shown to be problematic when we have network issues. This is why we
