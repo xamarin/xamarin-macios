@@ -1,8 +1,8 @@
 <Dependencies>
   <ProductDependencies>
-    <Dependency Name="VS.Tools.Net.Core.SDK.Resolver" Version="9.0.100-preview.7.24368.5">
+    <Dependency Name="VS.Tools.Net.Core.SDK.Resolver" Version="9.0.100-preview.7.24369.5">
       <Uri>https://github.com/dotnet/sdk</Uri>
-      <Sha>a8758549c2c45b3eb553b9f9e3aef638eba6e770</Sha>
+      <Sha>f86f5456206178bbbbc2a3fb9b9f0f212fdbf6a9</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NET.ILLink" Version="9.0.0-alpha.1.23556.4">
       <Uri>https://github.com/dotnet/runtime</Uri>
@@ -18,9 +18,9 @@
       <Sha>1f70f0cc663b5d45f77840e9728386e5fa7944f9</Sha>
     </Dependency>
     <!-- This is required for our test apps to build; in some cases Microsoft.AspNetCore.App is pulled in, and when building test apps the build needs to be able to resolve that -->
-    <Dependency Name="Microsoft.AspNetCore.App.Ref" Version="9.0.0-preview.7.24366.8" CoherentParentDependency="VS.Tools.Net.Core.SDK.Resolver">
+    <Dependency Name="Microsoft.AspNetCore.App.Ref" Version="9.0.0-preview.7.24368.11" CoherentParentDependency="VS.Tools.Net.Core.SDK.Resolver">
       <Uri>https://github.com/dotnet/aspnetcore</Uri>
-      <Sha>ec1594438c33702e564c36252ed11d024b5e6aad</Sha>
+      <Sha>662d200bc4feb11a01895e675fbfee8517c6fe2a</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NET.Workload.Emscripten.Current.Manifest-9.0.100.Transport" Version="9.0.0-preview.7.24365.1" CoherentParentDependency="Microsoft.NETCore.App.Ref">
       <Uri>https://github.com/dotnet/emsdk</Uri>
