@@ -173,7 +173,7 @@ steps:
         displayName: 'Provision simulators (system-dependencies.sh)'
   - ${{ else }}:
       - bash: |
-          curl -o iOS_18_beta_3_Simulator_Runtime.dmg https://dalexsotofiles.blob.core.windows.net/xcode/iOS_18_beta_3_Simulator_Runtime.dmg
+          curl -o iOS_18_beta_3_Simulator_Runtime.dmg https://dl.internalx.com/internal-files/xcode.simulator-runtimes/iOS_18_beta_3_Simulator_Runtime.dmg
         workingDirectory: "$(Build.ArtifactStagingDirectory)"
         displayName: 'Download simulator runtime'
 
