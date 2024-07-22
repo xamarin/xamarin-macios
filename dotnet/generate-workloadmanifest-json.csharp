@@ -49,12 +49,12 @@ using (TextWriter writer = new StreamWriter (outputPath)) {
 	writer.WriteLine ($"			\"description\": \".NET SDK Workload for building {platform} applications.\",");
 	writer.WriteLine ($"			\"packs\": [");
 	foreach (var tfm in allApiVersions) {
-		writer.WriteLine ($"				\"Microsoft.{platform}.Sdk.{tfm}\",");
+		writer.WriteLine ($"				\"Microsoft.{platform}.Sdk.{(tfm == "net8.0" ? "net8" : tfm)}\",");
 	}
 	writer.WriteLine ($"				\"Microsoft.{platform}.Sdk.net7\",");
 	if (hasWindows) {
         foreach (var tfm in allApiVersions) {
-            writer.WriteLine ($"				\"Microsoft.{platform}.Windows.Sdk.Aliased.{tfm}\",");
+            writer.WriteLine ($"				\"Microsoft.{platform}.Windows.Sdk.Aliased.{(tfm == "net8.0" ? "net8" : tfm)}\",");
         }
 		writer.WriteLine ($"				\"Microsoft.{platform}.Windows.Sdk.Aliased.net7\",");
 	}
@@ -88,12 +88,12 @@ using (TextWriter writer = new StreamWriter (outputPath)) {
 				failed = true;
 			}
 		}
-		writer.WriteLine ($"		\"Microsoft.{platform}.Sdk.{tfm}\": {{");
+		writer.WriteLine ($"		\"Microsoft.{platform}.Sdk.{(tfm == "net8.0" ? "net8" : tfm)}\": {{");
 		writer.WriteLine ($"			\"kind\": \"sdk\",");
 		writer.WriteLine ($"			\"version\": \"{apiVersion}\",");
 		writer.WriteLine ($"		}},");
 		if (hasWindows) {
-			writer.WriteLine ($"		\"Microsoft.{platform}.Windows.Sdk.Aliased.{tfm}\": {{");
+			writer.WriteLine ($"		\"Microsoft.{platform}.Windows.Sdk.Aliased.{(tfm == "net8.0" ? "net8" : tfm)}\": {{");
 			writer.WriteLine ($"			\"kind\": \"sdk\",");
 			writer.WriteLine ($"			\"version\": \"{apiVersion}\",");
 			writer.WriteLine ($"			\"alias-to\": {{");
