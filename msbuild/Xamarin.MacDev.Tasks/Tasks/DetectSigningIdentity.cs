@@ -287,7 +287,7 @@ namespace Xamarin.MacDev.Tasks {
 		void ReportDetectedCodesignInfo ()
 		{
 			Log.LogMessage (MessageImportance.High, MSBStrings.M0125);
-			if (codesignCommonName is not null)
+			if (codesignCommonName is not null || !string.IsNullOrEmpty (DetectedCodeSigningKey))
 				Log.LogMessage (MessageImportance.High, "  Code Signing Key: \"{0}\" ({1})", codesignCommonName, DetectedCodeSigningKey);
 			if (provisioningProfileName is not null)
 				Log.LogMessage (MessageImportance.High, "  Provisioning Profile: \"{0}\" ({1})", provisioningProfileName, DetectedProvisioningProfile);
@@ -572,6 +572,13 @@ namespace Xamarin.MacDev.Tasks {
 
 			identity.BundleId = BundleIdentifier;
 			DetectedAppId = BundleIdentifier; // default value that can be changed below
+
+			// If the developer chooses to use the placeholder codesigning key, accept that.
+			if (SigningKey == "-") {
+				DetectedCodeSigningKey = SigningKey;
+				ReportDetectedCodesignInfo ();
+				return !Log.HasLoggedErrors;
+			}
 
 			if (Platform == ApplePlatform.MacOSX) {
 				if (!RequireCodeSigning || !string.IsNullOrEmpty (DetectedCodeSigningKey)) {

@@ -75,21 +75,17 @@ stages:
         name: disableCodeQLOnArm64
 
   # Check - "xamarin-macios (Prepare Release Convert NuGet to MSI)"
-  - template: nuget-msi-convert/job/v3.yml@yaml-templates
+  - template: nuget-msi-convert/job/v4.yml@yaml-templates
     parameters:
       use1ESTemplate: true
       yamlResourceName: yaml-templates
       dependsOn: signing
       artifactName: '${{ parameters.uploadPrefix }}nuget-signed'
       propsArtifactName: ${{ parameters.uploadPrefix }}not-signed-package
-      vsDropArtifactName: ${{ parameters.uploadPrefix }}vsdrop-signed
-      vsDropMultiTargetArtifactName: ${{ parameters.uploadPrefix }}vsdrop-multitarget-signed
-      msiNuGetArtifactName: ${{ parameters.uploadPrefix }}vs-msi-nugets
       binlogsArtifactName: ${{ parameters.uploadPrefix }}nuget-msi-convert-binlogs
       signType: Real
-      useDateTimeVersion: true
       condition: "ne(stageDependencies.configure_build.configure.outputs['configure_platforms.ENABLE_DOTNET'],'')"
-      setupSteps:
+      preConvertSteps:
       - pwsh: |
           New-Item "$(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/governance" -ItemType Directory -ea 0
           New-Item -Path "$(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/governance" -Name "CredScanSuppressions.json" -Value '{"tool":"Crendential Scanner", "supressions":[]}'
@@ -107,8 +103,9 @@ stages:
         displayName: verify signed msi content
         inputs:
           TargetFolders: |
-            $(Build.StagingDirectory)\bin\manifests
-            $(Build.StagingDirectory)\bin\manifests-multitarget
+            $(Build.ArtifactStagingDirectory)\bin\manifests
+            $(Build.ArtifactStagingDirectory)\bin\manifests-packs
+            $(Build.ArtifactStagingDirectory)\bin\msi-nupkgs
           ExcludeSNVerify: true
           ApprovalListPathForCerts: $(Build.StagingDirectory)\sign-verify\SignVerifyIgnore.txt
 
@@ -153,82 +150,23 @@ stages:
 
       - task: DownloadPipelineArtifact@2
         inputs:
-          artifactName: '${{ parameters.uploadPrefix }}nuget-signed'
-          downloadPath: $(Build.SourcesDirectory)/package
-          patterns: |
-            *.nupkg
+          artifactName: DropMetadata-$(Build.BuildId)-nugets-$(System.JobAttempt)
+          downloadPath: $(Build.StagingDirectory)\metadata
+        displayName: Download nugets drop metadata
 
-      - task: 1ES.PublishNuget@1
-        displayName: Publish Nugets package
+      - powershell: |
+          $jsonContent = Get-Content -Path "$(Build.StagingDirectory)\metadata\VSTSDrop.json" -Raw | ConvertFrom-Json
+          $dropPrefix = $jsonContent.VstsDropBuildArtifact.VstsDropUrl -replace 'https://devdiv.artifacts.visualstudio.com/DefaultCollection/_apis/drop/drops/' -replace '/nugets'
+          Write-Host "##vso[task.setvariable variable=ReleaseDropPrefix]$dropPrefix"
+        displayName: Set variable ReleaseDropPrefix
+
+      # Download nugets drop created by nuget-msi-convert/job/v4.yml and publish to maestro
+      - task: ms-vscs-artifact.build-tasks.artifactDropDownloadTask-1.artifactDropDownloadTask@1
+        displayName: Download $(ReleaseDropPrefix)/nugets
         inputs:
-          useDotNetTask: false # The default is false to use the NuGetCommand task. Set to true to use the DotNetCoreCLI task to publish packages.
-          packagesToPush: '$(Build.SourcesDirectory)/package/*.nupkg'
-          packageParentPath: '$(Build.SourcesDirectory)/package'
-          nuGetFeedType: external
-          allowPackageConflicts: true # Optional. NuGetCommand task only.
-          publishPackageMetadata: true # Optional
-          publishFeedCredentials: dnceng-dotnet8
-
-      - task: DownloadPipelineArtifact@2
-        inputs:
-          artifactName: '${{ parameters.uploadPrefix }}vs-msi-nugets'
-          downloadPath: '$(Build.SourcesDirectory)/${{ parameters.uploadPrefix}}vs-msi-nugets'
-          patterns: |
-            *.nupkg
-
-      - task: 1ES.PublishNuget@1
-        displayName: Publish MSI Nugets package
-        inputs:
-          useDotNetTask: false 
-          packagesToPush: '$(Build.SourcesDirectory)/${{ parameters.uploadPrefix }}vs-msi-nugets/*.nupkg'
-          packageParentPath: '$(Build.SourcesDirectory)/${{ parameters.uploadPrefix }}vs-msi-nugets'
-          nuGetFeedType: external
-          allowPackageConflicts: true
-          publishPackageMetadata: true
-          publishFeedCredentials: dnceng-dotnet8
-
-      - pwsh: |
-          mkdir $(Build.SourcesDirectory)/nugets-blob
-          cp $(Build.SourcesDirectory)/package/* $(Build.SourcesDirectory)/nugets-blob
-          cp $(Build.SourcesDirectory)/${{ parameters.uploadPrefix}}vs-msi-nugets/* $(Build.SourcesDirectory)/nugets-blob
-        displayName: "Copy content for the nugets blob."
-
-      - template: templates/common/upload-vs-insertion-artifacts.yml@sdk-insertions
-        parameters:
-          yamlResourceName: yaml-templates
-          githubToken: $(GitHub.Token)
-          githubContext: $(NupkgCommitStatusName)
-          blobName: $(NupkgCommitStatusName)
-          packagePrefix: xamarin-macios
-          artifactsPath: $(Build.SourcesDirectory)/nugets-blob
-
-      - template: templates/common/upload-vs-insertion-artifacts.yml@sdk-insertions
-        parameters:
-          yamlResourceName: yaml-templates
-          githubToken: $(GitHub.Token)
-          githubContext: $(VSDropCommitStatusName)
-          blobName: $(VSDropCommitStatusName)
-          packagePrefix: xamarin-macios
-          artifactsPath: $(Build.SourcesDirectory)/vs-insertion
-          downloadSteps:
-          - task: DownloadPipelineArtifact@2
-            inputs:
-              artifactName: ${{ parameters.uploadPrefix }}vsdrop-signed
-              downloadPath: $(Build.SourcesDirectory)/vs-insertion
-
-      - template: templates/common/upload-vs-insertion-artifacts.yml@sdk-insertions
-        parameters:
-          yamlResourceName: yaml-templates
-          githubToken: $(GitHub.Token)
-          githubContext: $(MultiTargetVSDropCommitStatusName)
-          blobName: $(MultiTargetVSDropCommitStatusName)
-          packagePrefix: xamarin-macios
-          artifactsPath: $(Build.StagingDirectory)\$(MultiTargetVSDropCommitStatusName)
-          downloadSteps:
-          - task: DownloadPipelineArtifact@2
-            inputs:
-              artifactName: ${{ parameters.uploadPrefix }}vsdrop-multitarget-signed
-              downloadPath: $(Build.StagingDirectory)\$(MultiTargetVSDropCommitStatusName)
+          dropServiceURI: https://devdiv.artifacts.visualstudio.com/DefaultCollection
+          buildNumber: $(ReleaseDropPrefix)/nugets
+          destinationPath: $(Build.StagingDirectory)\nuget-signed
 
       - powershell: |
           $varMap = @{ "INCLUDE_DOTNET_IOS" = "iOS"; "INCLUDE_DOTNET_MACCATALYST" = "MacCatalyst"; "INCLUDE_DOTNET_MACOS" = "macOS"; "INCLUDE_DOTNET_TVOS" = "tvOS" }
@@ -244,7 +182,7 @@ stages:
           make -C $(Build.SourcesDirectory)/dotnet publish-bar-manifest
           PUBLISH_BAR_MANIFEST_WORKING_DIR=$(Build.SourcesDirectory)/..
           BAR_MANIFEST_PLATFORM_NAME=$(MaestroProjectPlatformName)
-          BAR_MANIFEST_MSBUILD_ARGS='-p:BuildAssetRegistryToken=$(MaestroAccessToken) -p:NupkgPath=$(Build.SourcesDirectory)/nugets-blob -bl:$(Build.ArtifactStagingDirectory)/maestro-binlogs/generate-bar-manifest.binlog'
+          BAR_MANIFEST_MSBUILD_ARGS='-p:BuildAssetRegistryToken=$(MaestroAccessToken) -p:NupkgPath=$(Build.SourcesDirectory)/nugets-signed -bl:$(Build.ArtifactStagingDirectory)/maestro-binlogs/generate-bar-manifest.binlog'
         workingDirectory: $(Build.SourcesDirectory)\..
         displayName: make publish-bar-manifest
         condition: and(succeeded(), eq('${{ parameters.pushNugetsToMaestro }}', 'true'))

@@ -229,7 +229,12 @@
 		<!-- Disable our own assembly IL stripping logic, because ILC does that already -->
 		<EnableAssemblyILStripping>false</EnableAssemblyILStripping>
 
-		<!-- We're using our own native main function when using NativeAOT -->
-		<CustomNativeMain>true</CustomNativeMain>
+		<!--
+			We're using our own native main function when using NativeAOT.
+			This is true for both: managed executables and app extensions (which are libraries).
+			Since ILC expects to find a managed main function whenever NativeLib=static and CustomNativeMain=true,
+			we are only setting this flag when we are building executables. (Class libraries do not have a managed Main)
+		-->
+		<CustomNativeMain Condition="'$(OutputType)' == 'Exe'">true</CustomNativeMain>
 	</PropertyGroup>
 </Project>

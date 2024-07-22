@@ -14,8 +14,9 @@
     <_LinkMode>None</_LinkMode>
     <UseInterpreter>true</UseInterpreter>
     <MtouchExtraArgs>--registrar:dynamic</MtouchExtraArgs>
-    <!-- disable code signing unless we're building in CI, to avoid requiring code signing during developer builds (who will usually never need the prebuilt app) -->
-    <EnableCodeSigning Condition="'$(BUILD_REVISION)' == ''">false</EnableCodeSigning>
+    <!-- Use a placeholder signing key, which simplifies our build (no need for an actual certificate). -->
+    <!-- The app will have to be signed on the end user machine anyway, so this shouldn't have any real effect. -->
+    <CodesignKey>-</CodesignKey>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Xamarin.iOS.HotRestart.Application" Version="1.1.5" />
