@@ -41,6 +41,6 @@ if (-not $Predicate) {
     Write-Host "Executing: log show --style $Style --start `"$start`" --end `"$end`" > $Output"
     log show --style $Style --start "$start" --end "$end" > $Output
 } else {
-    Write-Hos "Executing: log show --predicate $Predicate --style $Style --start `"$start`" --end `"$end`" > $Output"
+    Write-Host "Executing: log show --predicate $Predicate --style $Style --start `"$start`" --end `"$end`" > $Output"
     log show --predicate $Predicate --style $Style --start "$start" --end "$end" > $Output
 }
