@@ -19,7 +19,7 @@ endif
 # Available versions can be seen here:
 # https://dev.azure.com/dnceng/public/_artifacts/feed/dotnet-eng/NuGet/Microsoft.Tools.Mlaunch/versions
 MLAUNCH_NUGET_VERSION=1.0.142
-XCSYNC_NUGET_VERSION=1.0.20-beta
+XCSYNC_NUGET_VERSION=1.0.28-beta
 
 define CheckVersionTemplate
 check-$(1)::
