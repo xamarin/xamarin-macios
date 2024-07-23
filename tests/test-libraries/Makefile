@@ -31,11 +31,12 @@ GENERATED_FILES_PATTERN = \
 	RegistrarTest.generated%cs \
 	TrampolineTest.generated%cs \
 
-testgenerator.exe: testgenerator.cs Makefile
-	$(Q) $(SYSTEM_CSC) -out:$@ $<
+TESTGENERATOR=bin/Debug/testgenerator.dll
+$(TESTGENERATOR): testgenerator.cs Makefile
+	$(Q) unset MSBUILD_EXE_PATH && $(DOTNET) build testgenerator.csproj $(DOTNET_BUILD_VERBOSITY)
 
-$(GENERATED_FILES_PATTERN): testgenerator.exe
-	$(Q) mono --debug $<
+$(GENERATED_FILES_PATTERN): $(TESTGENERATOR)
+	$(Q) $(DOTNET) exec $<
 
 libtest-object.m libtest-ar.m:
 	$(Q) ln -fhs libtest.m $@
@@ -84,6 +85,12 @@ $(1)_XTEST_TARGETS += \
 	.libs/$(1)/XTest.framework$($(2)_BINARY_INFIX)/XTest \
 	.libs/$(1)/XTest.framework$($(2)_INFO_PLIST_INFIX)/Info.plist \
 
+$(1)_XSTATICARTEST_TARGETS += \
+	.libs/$(1)/XStaticArTest.framework/XStaticArTest \
+
+$(1)_XSTATICOBJECTTEST_TARGETS += \
+	.libs/$(1)/XStaticObjectTest.framework/XStaticObjectTest \
+
 $(1)_SWIFTTEST_TARGETS += \
 	.libs/$(1)/SwiftTest.framework$($(2)_BINARY_INFIX)/SwiftTest \
 	.libs/$(1)/SwiftTest.framework$($(2)_INFO_PLIST_INFIX)/Info.plist \
@@ -103,12 +110,20 @@ $(2)_TARGETS = \
 	$$(foreach arch,$(3),.libs/$(1)/libtest-ar.$$(arch).a) \
 	.libs/$(1)/XTest.framework \
 	.libs/$(1)/XTest.framework.stamp \
+	.libs/$(1)/XStaticArTest.framework.stamp \
+	.libs/$(1)/XStaticObjectTest.framework.stamp \
 	.libs/$(1)/SwiftTest.framework \
 	.libs/$(1)/SwiftTest.framework.stamp \
 
 all-local:: $$($(2)_TARGETS) $(GENERATED_FILES)
 
 .libs/$(1)/XTest.framework.stamp: $$($(1)_XTEST_TARGETS)
+	$$(Q) touch $$@
+
+.libs/$(1)/XStaticArTest.framework.stamp: $$($(1)_XSTATICARTEST_TARGETS)
+	$$(Q) touch $$@
+
+.libs/$(1)/XStaticObjectTest.framework.stamp: $$($(1)_XSTATICOBJECTTEST_TARGETS)
 	$$(Q) touch $$@
 
 .libs/$(1)/SwiftTest.framework.stamp: $$($(1)_SWIFTTEST_TARGETS)
@@ -413,6 +428,26 @@ XTEST_XCTARGETS += \
 	$(Q_GEN) $(XCODE_DEVELOPER_ROOT)/usr/bin/xcodebuild -quiet -create-xcframework $(foreach fw,$(XTEST_XCFRAMEWORKS),-framework $(fw)) -output $@
 
 all-local:: .libs/XTest.xcframework
+
+XSTATICARTEST_XCFRAMEWORKS += $(foreach platform,$(XCPLATFORMS),.libs/$(platform)/XStaticArTest.framework)
+XSTATICARTEST_XCTARGETS += \
+	$(foreach platform,$(XCPLATFORMS),.libs/$(platform)/XStaticArTest.framework.stamp) \
+
+.libs/XStaticArTest.xcframework: $(XSTATICARTEST_XCTARGETS) Makefile
+	$(Q) rm -rf $@
+	$(Q_GEN) $(XCODE_DEVELOPER_ROOT)/usr/bin/xcodebuild -quiet -create-xcframework $(foreach fw,$(XSTATICARTEST_XCFRAMEWORKS),-framework $(fw)) -output $@
+
+all-local:: .libs/XStaticArTest.xcframework
+
+XSTATICOBJECTTEST_XCFRAMEWORKS += $(foreach platform,$(XCPLATFORMS),.libs/$(platform)/XStaticObjectTest.framework)
+XSTATICOBJECTTEST_XCTARGETS += \
+	$(foreach platform,$(XCPLATFORMS),.libs/$(platform)/XStaticObjectTest.framework.stamp) \
+
+.libs/XStaticObjectTest.xcframework: $(XSTATICOBJECTTEST_XCTARGETS) Makefile
+	$(Q) rm -rf $@
+	$(Q_GEN) $(XCODE_DEVELOPER_ROOT)/usr/bin/xcodebuild -quiet -create-xcframework $(foreach fw,$(XSTATICOBJECTTEST_XCFRAMEWORKS),-framework $(fw)) -output $@
+
+all-local:: .libs/XStaticObjectTest.xcframework
 
 LIBTEST_XCFRAMEWORKS += $(foreach platform,$(XCPLATFORMS),.libs/$(platform)/libtest.a)
 

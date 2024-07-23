@@ -35,7 +35,6 @@
     <StartAction>Project</StartAction>
     <StartArguments>--configure --autoconf --rootdir ../../../..</StartArguments>
   </PropertyGroup>
-  <Import Project="../../eng/Versions.props" />
   <ItemGroup>
     <PackageReference Include="Microsoft.DotNet.XHarness.iOS.Shared" Version="$(MicrosoftDotNetXHarnessiOSSharedPackageVersion)" />
     <PackageReference Include="Mono.Cecil" Version="$(MonoCecilPackageVersion)" />

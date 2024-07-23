@@ -60,6 +60,7 @@ namespace Intents {
 		FailureRequiringAppLaunchServiceTemporarilyUnavailable
 	}
 
+	/// <summary>Flagging enumeration of the types of calls supported by the device.</summary>
 	[Mac (12, 0)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -93,6 +94,7 @@ namespace Intents {
 		OnHold,
 	}
 
+	/// <summary>Enumerates results codes for the <see cref="T:Intents.INCancelWorkoutIntent" />.</summary>
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -116,6 +118,7 @@ namespace Intents {
 		Success,
 	}
 
+	/// <summary>Enumerates how air is circulated through the car.</summary>
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Unavailable (PlatformName.MacOSX)] // xtro mac !unknown-native-enum! INCarAirCirculationMode bound
 	[NoTV]
@@ -128,6 +131,7 @@ namespace Intents {
 		RecirculateAir
 	}
 
+	/// <summary>Enumerates inputs to the car sound system.</summary>
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Unavailable (PlatformName.MacOSX)] // xtro mac !unknown-native-enum! INCarAudioSource bound
 	[NoTV]
@@ -147,6 +151,7 @@ namespace Intents {
 		HardDrive
 	}
 
+	/// <summary>Enumerates defroster locations.</summary>
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Unavailable (PlatformName.MacOSX)] // xtro mac !unknown-native-enum! INCarDefroster bound
 	[NoTV]
@@ -160,6 +165,7 @@ namespace Intents {
 		All,
 	}
 
+	/// <summary>Enumerates car seat positions.</summary>
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Unavailable (PlatformName.MacOSX)] // xtro mac !unknown-native-enum! INCarSeat bound
 	[NoTV]
@@ -183,6 +189,7 @@ namespace Intents {
 	}
 
 #if NET
+	/// <summary>Enumerates operators to be used with search predicates.</summary>
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -196,6 +203,7 @@ namespace Intents {
 		None
 	}
 
+	/// <summary>Enumerates results codes for the <see cref="T:Intents.INEndWorkoutIntent" />.</summary>
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -246,6 +254,7 @@ namespace Intents {
 		Failure
 	}
 
+	/// <summary>Enumerates results codes for the <see cref="T:Intents.INGetRideStatusIntent" />.</summary>
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -339,6 +348,7 @@ namespace Intents {
 		Incoming
 	}
 
+	/// <summary>Enumerates results codes for the <see cref="T:Intents.INListRideOptionsIntent" />.</summary>
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -362,6 +372,7 @@ namespace Intents {
 	}
 
 #if NET
+	/// <summary>Enumerates the attributes of a message.</summary>
 	[NoMac]
 #endif
 	[NoTV]
@@ -381,6 +392,7 @@ namespace Intents {
 	}
 
 #if NET
+	/// <summary>Enumerates the statuses of a message.</summary>
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -401,6 +413,7 @@ namespace Intents {
 		Played = (1UL << 4),
 	}
 
+	/// <summary>Enumerates results codes for the <see cref="T:Intents.INPauseWorkoutIntent" />.</summary>
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -424,6 +437,7 @@ namespace Intents {
 		Success,
 	}
 
+	/// <summary>Enumeates payment categories.</summary>
 	[NoTV, Mac (11, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -439,6 +453,7 @@ namespace Intents {
 		ApplePay
 	}
 
+	/// <summary>Enumerates the states of a payment.</summary>
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -452,6 +467,7 @@ namespace Intents {
 		Unpaid
 	}
 
+	/// <summary>Enumerates the source of the data for a <see cref="T:Intents.INPerson" /> (see <see cref="P:Intents.INPerson.SuggestionType" />).</summary>
 	[Mac (11, 0), NoTV]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -463,6 +479,7 @@ namespace Intents {
 		InstantMessageAddress,
 	}
 
+	/// <summary>Enumerates various photo options.</summary>
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Deprecated (PlatformName.WatchOS, 8, 0)]
 	[Unavailable (PlatformName.MacOSX)] // xtro mac !unknown-native-enum! INPhotoAttributeOptions bound
@@ -513,6 +530,7 @@ namespace Intents {
 		LongExposurePhoto = (1uL << 28),
 	}
 
+	/// <summary>Enumerates the types of radio supported by Intents.</summary>
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Unavailable (PlatformName.MacOSX)] // xtro mac !unknown-native-enum! INRadioType bound
 	[NoTV]
@@ -528,6 +546,7 @@ namespace Intents {
 		Dab
 	}
 
+	/// <summary>Enumerates a qualitative sequential movement.</summary>
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
@@ -540,6 +559,7 @@ namespace Intents {
 		Previous
 	}
 
+	/// <summary>Enumerates qualitative increases or decreased quantities.</summary>
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
@@ -554,6 +574,7 @@ namespace Intents {
 		Highest
 	}
 
+	/// <summary>Enumerates results codes for the <see cref="T:Intents.INRequestPaymentIntent" />.</summary>
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -579,6 +600,7 @@ namespace Intents {
 		FailureTermsAndConditionsAcceptanceRequired,
 	}
 
+	/// <summary>Enumerates results codes for the <see cref="T:Intents.INRequestRideIntent" />.</summary>
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -611,6 +633,7 @@ namespace Intents {
 		Denied
 	}
 
+	/// <summary>Enumerates results codes for the <see cref="T:Intents.INResumeWorkoutIntent" />.</summary>
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -634,6 +657,7 @@ namespace Intents {
 		Success,
 	}
 
+	/// <summary>Enumerates the state of a ride in a vehicle.</summary>
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -648,6 +672,7 @@ namespace Intents {
 		Pickup
 	}
 
+	/// <summary>Enumerates results codes for the <see cref="T:Intents.INSaveProfileInCarIntent" />.</summary>
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
@@ -665,6 +690,7 @@ namespace Intents {
 	}
 
 #if NET
+	/// <summary>Enumerates results codes for the <see cref="T:Intents.INSearchCallHistoryIntent" />.</summary>
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -690,6 +716,7 @@ namespace Intents {
 	}
 
 #if NET
+	/// <summary>Enumerates results codes for the <see cref="T:Intents.INSearchForMessagesIntent" />.</summary>
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -711,6 +738,7 @@ namespace Intents {
 		FailureRequiringInAppAuthentication,
 	}
 
+	/// <summary>Enumerates results codes for the <see cref="T:Intents.INSearchForPhotosIntent" />.</summary>
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Deprecated (PlatformName.WatchOS, 8, 0)]
 	[Unavailable (PlatformName.MacOSX)]
@@ -728,6 +756,7 @@ namespace Intents {
 		FailureAppConfigurationRequired,
 	}
 
+	/// <summary>Enumerates results codes for the <see cref="T:Intents.INSendMessageIntentResponse" />.</summary>
 	[Mac (12, 0)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -743,6 +772,7 @@ namespace Intents {
 		FailureRequiringInAppAuthentication,
 	}
 
+	/// <summary>Enumerates results codes for the <see cref="T:Intents.INSendPaymentIntent" />.</summary>
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -767,6 +797,7 @@ namespace Intents {
 		FailureTermsAndConditionsAcceptanceRequired,
 	}
 
+	/// <summary>Enumerates results codes for the <see cref="T:Intents.INSetAudioSourceInCarIntent" />.</summary>
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
@@ -783,6 +814,7 @@ namespace Intents {
 		FailureRequiringAppLaunch
 	}
 
+	/// <summary>Enumerates results codes for the <see cref="T:Intents.INSetClimateSettingsInCarIntent" />.</summary>
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
@@ -799,6 +831,7 @@ namespace Intents {
 		FailureRequiringAppLaunch
 	}
 
+	/// <summary>Enumerates results codes for the <see cref="T:Intents.INSetDefrosterSettingsInCarIntentResponseCode" />.</summary>
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
@@ -816,6 +849,7 @@ namespace Intents {
 	}
 
 #if NET
+	/// <summary>Enumerates results codes for the <see cref="T:Intents.INSetMessageAttributeIntent" />.</summary>
 	[NoMac]
 #endif
 	[Unavailable (PlatformName.WatchOS)]
@@ -833,6 +867,7 @@ namespace Intents {
 		FailureMessageAttributeNotSet
 	}
 
+	/// <summary>Enumerates results codes for the <see cref="T:Intents.INSetProfileInCarIntent" />.</summary>
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
@@ -849,6 +884,7 @@ namespace Intents {
 		FailureRequiringAppLaunch
 	}
 
+	/// <summary>Enumerates results codes for the <see cref="T:Intents.INSetRadioStationIntent" />.</summary>
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
@@ -866,6 +902,7 @@ namespace Intents {
 		FailureNotSubscribed
 	}
 
+	/// <summary>Enumerates results codes for the <see cref="T:Intents.INSetSeatSettingsInCarIntent" />.</summary>
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
@@ -893,6 +930,7 @@ namespace Intents {
 	}
 
 #if NET
+	/// <summary>Enumerates results codes for the <see cref="T:Intents.INStartAudioCallIntent" />.</summary>
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -919,6 +957,7 @@ namespace Intents {
 		FailureNoValidNumber,
 	}
 
+	/// <summary>Enumerates results codes for the <see cref="T:Intents.INStartPhotoPlaybackIntent" />.</summary>
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Deprecated (PlatformName.WatchOS, 8, 0)]
 	[Unavailable (PlatformName.MacOSX)]
@@ -937,6 +976,7 @@ namespace Intents {
 	}
 
 #if NET
+	/// <summary>Enumerates results codes for the <see cref="T:Intents.INStartVideoCallIntent" />.</summary>
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -964,6 +1004,7 @@ namespace Intents {
 		FailureInvalidNumber,
 	}
 
+	/// <summary>Enumerates results codes for the <see cref="T:Intents.INStartWorkoutIntent" />.</summary>
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -1029,6 +1070,7 @@ namespace Intents {
 		MediaShowTitle,
 	}
 
+	/// <summary>Enumerates the kind of goal the workout is striving for.</summary>
 	[Unavailable (PlatformName.MacOSX)] // xtro mac !unknown-native-enum! INWorkoutGoalUnitType bound
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -1047,6 +1089,7 @@ namespace Intents {
 		KiloCalorie
 	}
 
+	/// <summary>Enumerates where the workout is occurring.</summary>
 	[Unavailable (PlatformName.MacOSX)] // xtro mac !unknown-native-enum! INWorkoutLocationType bound
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -1057,6 +1100,7 @@ namespace Intents {
 		Indoor
 	}
 
+	/// <summary>Enumerates the types of values that are associated with a <see cref="T:Intents.INPersonHandle" />.</summary>
 	[NoTV]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -1066,6 +1110,7 @@ namespace Intents {
 		PhoneNumber
 	}
 
+	/// <summary>Enumerates types of payment accounts.</summary>
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -1081,6 +1126,7 @@ namespace Intents {
 		Saving,
 	}
 
+	/// <summary>Enumerates the results of an <see cref="T:Intents.INActivateCarSignalIntent" />.</summary>
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -1094,6 +1140,7 @@ namespace Intents {
 		FailureRequiringAppLaunch,
 	}
 
+	/// <summary>Enumerates bill-amount types.</summary>
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -1111,6 +1158,7 @@ namespace Intents {
 		StatementBalance,
 	}
 
+	/// <summary>Enumerates common bills.</summary>
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Deprecated (PlatformName.WatchOS, 8, 0)]
 	[Unavailable (PlatformName.MacOSX)]
@@ -1144,6 +1192,7 @@ namespace Intents {
 		Water,
 	}
 
+	/// <summary>Enumerates the manners in which a car can make itself known.</summary>
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -1154,6 +1203,7 @@ namespace Intents {
 		Visible = (1 << 1),
 	}
 
+	/// <summary>Enumerates the results of an <see cref="T:Intents.INGetCarLockStatusIntent" />.</summary>
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -1167,6 +1217,7 @@ namespace Intents {
 		FailureRequiringAppLaunch,
 	}
 
+	/// <summary>Enumerates the results of an <see cref="T:Intents.INGetCarPowerLevelStatusIntent" />.</summary>
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -1180,6 +1231,7 @@ namespace Intents {
 		FailureRequiringAppLaunch,
 	}
 
+	/// <summary>Enumerates the results of an <see cref="T:Intents.INPayBillIntent" />.</summary>
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Deprecated (PlatformName.WatchOS, 8, 0)]
 	[Unavailable (PlatformName.MacOSX)]
@@ -1198,6 +1250,7 @@ namespace Intents {
 		FailureInsufficientFunds,
 	}
 
+	/// <summary>Enumerates the results of an <see cref="T:Intents.INSearchForBillsIntent" />.</summary>
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Deprecated (PlatformName.WatchOS, 8, 0)]
 	[Unavailable (PlatformName.MacOSX)]
@@ -1216,6 +1269,7 @@ namespace Intents {
 		FailureBillNotFound,
 	}
 
+	/// <summary>Enumerates the results of an <see cref="T:Intents.INSetCarLockStatusIntent" />.</summary>
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -1229,6 +1283,7 @@ namespace Intents {
 		FailureRequiringAppLaunch,
 	}
 
+	/// <summary>Enumerates results codes for the <see cref="T:Intents.INAddTasksIntent" />.</summary>
 	[NoTV, NoMac]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -1241,6 +1296,7 @@ namespace Intents {
 		FailureRequiringAppLaunch,
 	}
 
+	/// <summary>Enumerates results codes for the <see cref="T:Intents.INAppendToNoteIntent" />.</summary>
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Deprecated (PlatformName.WatchOS, 8, 0)]
 	[NoTV, NoMac]
@@ -1257,6 +1313,7 @@ namespace Intents {
 		FailureCannotUpdatePasswordProtectedNote,
 	}
 
+	/// <summary>Enumerates balance units.</summary>
 	[NoTV, NoMac]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -1267,6 +1324,7 @@ namespace Intents {
 		Miles,
 	}
 
+	/// <summary>Enumerates call capabilities.</summary>
 	[Mac (12, 0)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -1277,6 +1335,7 @@ namespace Intents {
 		VideoCall,
 	}
 
+	/// <summary>Enumerates call destination types.</summary>
 	[Mac (12, 0)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -1292,6 +1351,7 @@ namespace Intents {
 		CallBack,
 	}
 
+	/// <summary>Flags that enumerate call types to search for.</summary>
 	[Mac (12, 0)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -1314,6 +1374,7 @@ namespace Intents {
 		OnHold = (1 << 7),
 	}
 
+	/// <summary>Enumerates results codes for the <see cref="T:Intents.INCancelRideIntent" />.</summary>
 	[NoWatch, NoMac, NoTV]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -1324,6 +1385,7 @@ namespace Intents {
 		Failure,
 	}
 
+	/// <summary>Enumerates results codes for the <see cref="T:Intents.INCreateNoteIntent" />.</summary>
 	[NoTV, NoMac]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -1336,6 +1398,7 @@ namespace Intents {
 		FailureRequiringAppLaunch,
 	}
 
+	/// <summary>Enumerates results codes for the <see cref="T:Intents.INCreateTaskListIntent" />.</summary>
 	[NoTV, NoMac]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -1348,6 +1411,7 @@ namespace Intents {
 		FailureRequiringAppLaunch,
 	}
 
+	/// <summary>Enumerates date types for a search.</summary>
 	[NoTV, NoMac]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -1358,6 +1422,7 @@ namespace Intents {
 		ByCreatedDate,
 	}
 
+	/// <summary>Enumerates results codes for the <see cref="T:Intents.INGetVisualCodeIntent" />.</summary>
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Deprecated (PlatformName.WatchOS, 8, 0)]
 	[NoTV, NoMac]
@@ -1375,6 +1440,7 @@ namespace Intents {
 		FailureAppConfigurationRequired,
 	}
 
+	/// <summary>Enumerates location-based search types.</summary>
 	[NoTV, NoMac]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -1384,6 +1450,7 @@ namespace Intents {
 	}
 
 #if NET
+	/// <summary>Enumerates message content types.</summary>
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -1436,6 +1503,7 @@ namespace Intents {
 		Reaction,
 	}
 
+	/// <summary>Enumerates note content types.</summary>
 	[NoTV, NoMac]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -1445,6 +1513,7 @@ namespace Intents {
 		Image,
 	}
 
+	/// <summary>Enumerates notebook item types to include in search results.</summary>
 	[NoTV, NoMac]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -1455,6 +1524,7 @@ namespace Intents {
 		Task,
 	}
 
+	/// <summary>Enumerates repetition frequencies.</summary>
 	[NoTV]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -1468,6 +1538,7 @@ namespace Intents {
 		Yearly,
 	}
 
+	/// <summary>Enumerates reasons that a currency transfer amount is not supported.</summary>
 	[NoTV, NoMac]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -1477,6 +1548,7 @@ namespace Intents {
 		CurrencyUnsupported,
 	}
 
+	/// <summary>Enumerates reasons that a payer could not be resolved.</summary>
 	[NoTV, NoMac]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -1488,6 +1560,7 @@ namespace Intents {
 		NoValidHandle,
 	}
 
+	/// <summary>Enumerates feedback requirements for a ride.</summary>
 	[NoTV, NoMac]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -1496,6 +1569,7 @@ namespace Intents {
 		Tip = (1 << 1),
 	}
 
+	/// <summary>Enumerates results codes for the <see cref="T:Intents.INSearchForAccountsIntent" />.</summary>
 	[NoTV, NoMac]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -1512,6 +1586,7 @@ namespace Intents {
 		FailureNotEligible,
 	}
 
+	/// <summary>Enumerates results codes for the <see cref="T:Intents.INSearchForNotebookItemsIntent" />.</summary>
 	[NoTV, NoMac]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -1524,6 +1599,7 @@ namespace Intents {
 		FailureRequiringAppLaunch,
 	}
 
+	/// <summary>Enumerates reasons that a recipient was not supported.</summary>
 	[Mac (12, 0)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -1539,6 +1615,7 @@ namespace Intents {
 		RequiringInAppAuthentication,
 	}
 
+	/// <summary>Enumerates reasons that a transaction amount was not supported.</summary>
 	[NoTV, NoMac]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -1548,6 +1625,7 @@ namespace Intents {
 		CurrencyUnsupported,
 	}
 
+	/// <summary>Enumerates reason that a payee was not supported for a payment.</summary>
 	[NoTV, NoMac]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -1560,6 +1638,7 @@ namespace Intents {
 		NoValidHandle,
 	}
 
+	/// <summary>Enumerates results codes for the <see cref="T:Intents.INSendRideFeedbackIntent" />.</summary>
 	[NoWatch, NoTV, NoMac]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -1570,6 +1649,7 @@ namespace Intents {
 		Failure,
 	}
 
+	/// <summary>Enumerates results codes for the <see cref="T:Intents.INSetTaskAttributeIntent" />.</summary>
 	[NoTV, NoMac]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -1582,6 +1662,7 @@ namespace Intents {
 		FailureRequiringAppLaunch,
 	}
 
+	/// <summary>Enumerates search result sort orders.</summary>
 	[NoTV, NoMac]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -1591,6 +1672,7 @@ namespace Intents {
 		ByDate,
 	}
 
+	/// <summary>Enumerates conditions for spatial event triggers.</summary>
 	[NoTV, NoMac]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -1600,6 +1682,7 @@ namespace Intents {
 		Depart,
 	}
 
+	/// <summary>Enumerates task completion statuses.</summary>
 	[NoTV, NoMac]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -1618,6 +1701,7 @@ namespace Intents {
 		Completable,
 	}
 
+	/// <summary>Enumerates results codes for the <see cref="T:Intents.INTransferMoneyIntent" />.</summary>
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Deprecated (PlatformName.WatchOS, 8, 0)]
 	[NoTV, NoMac]
@@ -1635,6 +1719,7 @@ namespace Intents {
 		FailureInsufficientFunds,
 	}
 
+	/// <summary>Enumerates visual code semantics.</summary>
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Deprecated (PlatformName.WatchOS, 8, 0)]
 	[NoTV, NoMac]
@@ -2231,6 +2316,7 @@ namespace Intents {
 		FailureNoCallToHangUp,
 	}
 
+	/// <summary>Enumerates Intents / SiriKit intent types.</summary>
 	[NoTV]
 	[MacCatalyst (13, 1)]
 	public enum INIntentIdentifier {
@@ -2365,6 +2451,7 @@ namespace Intents {
 		HangUpCall,
 	}
 
+	/// <summary>Enumerates the types of information associated with a particular value of a <see cref="T:Intents.INPersonHandleType" />.</summary>
 	[NoTV]
 	[MacCatalyst (13, 1)]
 	enum INPersonHandleLabel {
@@ -2404,6 +2491,7 @@ namespace Intents {
 		School,
 	}
 
+	/// <summary>Enumerates known interpersonal relationships.</summary>
 	[NoTV]
 	[MacCatalyst (13, 1)]
 	enum INPersonRelationship {
@@ -2520,6 +2608,7 @@ namespace Intents {
 		Daughter,
 	}
 
+	/// <summary>Enumerates known training types.</summary>
 	[NoTV]
 	[Unavailable (PlatformName.MacOSX)]
 	[MacCatalyst (13, 1)]
@@ -2619,11 +2708,21 @@ namespace Intents {
 		[Field ("INCarChargingConnectorTypeGBTDC")]
 		Gbtdc,
 
+		[Deprecated (PlatformName.iOS, 17, 4, message: "Use 'INCarChargingConnectorType.NacsDc' instead.")]
+		[Deprecated (PlatformName.WatchOS, 10, 4, message: "Use 'INCarChargingConnectorType.NacsDc' instead.")]
 		[Field ("INCarChargingConnectorTypeTesla")]
 		Tesla,
 
 		[Field ("INCarChargingConnectorTypeMennekes")]
 		Mennekes,
+
+		[Watch (10, 4), iOS (17, 4), MacCatalyst (17, 4)]
+		[Field ("INCarChargingConnectorTypeNACSDC")]
+		NacsDC,
+
+		[Watch (10, 4), iOS (17, 4), MacCatalyst (17, 4)]
+		[Field ("INCarChargingConnectorTypeNACSAC")]
+		NacsAC,
 	}
 
 	// End of enums
@@ -2641,6 +2740,10 @@ namespace Intents {
 		CLPlacemark _GetPlacemark (CLLocation location, [NullAllowed] string name, [NullAllowed] CNPostalAddress postalAddress);
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResolutionResult" /> for resolving parameters in reservation-related interactions.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INBookRestaurantReservationIntent">Apple documentation for <c>INBookRestaurantReservationIntent</c></related>
 	[NoTV]
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
@@ -2713,6 +2816,10 @@ namespace Intents {
 		void ResolveGuestProvidedSpecialRequest (INBookRestaurantReservationIntent intent, Action<INStringResolutionResult> completion);
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResponse" /> subclass that developers of <see cref="T:Intents.IINBookRestaurantReservationIntentHandling" /> interface implementations populate with their extension's results.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INBookRestaurantReservationIntentResponse">Apple documentation for <c>INBookRestaurantReservationIntentResponse</c></related>
 	[NoTV]
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
@@ -2778,6 +2885,10 @@ namespace Intents {
 		INBooleanResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResolutionResult" /> for resolving parameters in interactions involving call records.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INCallRecordTypeResolutionResult">Apple documentation for <c>INCallRecordTypeResolutionResult</c></related>
 	[Mac (12, 0)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -2848,6 +2959,9 @@ namespace Intents {
 		INCallRecordTypeResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
 	}
 
+	/// <summary>An <see cref="T:Intents.INIntent" /> indicating the user wishes to cancel the workout.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INCancelWorkoutIntent">Apple documentation for <c>INCancelWorkoutIntent</c></related>
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -2885,6 +2999,10 @@ namespace Intents {
 		void ResolveWorkoutName (INCancelWorkoutIntent intent, Action<INSpeakableStringResolutionResult> completion);
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResponse" /> subclass that developers of <see cref="T:Intents.IINCancelWorkoutIntentHandling" /> interface implementations populate with their extension's results.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INCancelWorkoutIntentResponse">Apple documentation for <c>INCancelWorkoutIntentResponse</c></related>
 	[Unavailable (PlatformName.MacOSX)]
 	[BaseType (typeof (INIntentResponse))]
 	[NoTV]
@@ -2900,6 +3018,10 @@ namespace Intents {
 		INCancelWorkoutIntentResponseCode Code { get; }
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResolutionResult" /> for resolving parameters in interactions involving air conditioning.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INCarAirCirculationModeResolutionResult">Apple documentation for <c>INCarAirCirculationModeResolutionResult</c></related>
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Unavailable (PlatformName.MacOSX)] // xtro mac !unknown-type! INCarAirCirculationModeResolutionResult bound
 	[NoWatch]
@@ -2968,6 +3090,10 @@ namespace Intents {
 		INCarAirCirculationModeResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResolutionResult" /> for resolving parameters in interactions involving car audio systems.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INCarAudioSourceResolutionResult">Apple documentation for <c>INCarAudioSourceResolutionResult</c></related>
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Unavailable (PlatformName.MacOSX)] // xtro mac !unknown-type! INCarAudioSourceResolutionResult bound
 	[BaseType (typeof (INIntentResolutionResult))]
@@ -3037,6 +3163,10 @@ namespace Intents {
 		INCarAudioSourceResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResolutionResult" /> for resolving parameters in interactions involving car defrosters and their settings.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INCarDefrosterResolutionResult">Apple documentation for <c>INCarDefrosterResolutionResult</c></related>
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Unavailable (PlatformName.MacOSX)] // xtro mac !unknown-type! INCarDefrosterResolutionResult bound
 	[BaseType (typeof (INIntentResolutionResult))]
@@ -3106,6 +3236,10 @@ namespace Intents {
 		INCarDefrosterResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResolutionResult" /> for resolving parameters in interactions involving car seats and their settings.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INCarSeatResolutionResult">Apple documentation for <c>INCarSeatResolutionResult</c></related>
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Unavailable (PlatformName.MacOSX)] // xtro mac !unknown-type! INCarSeatResolutionResult bound
 	[BaseType (typeof (INIntentResolutionResult))]
@@ -3175,6 +3309,9 @@ namespace Intents {
 		INCarSeatResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
 	}
 
+	/// <summary>An amount of money.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INCurrencyAmount">Apple documentation for <c>INCurrencyAmount</c></related>
 	[Mac (12, 0)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -3193,6 +3330,10 @@ namespace Intents {
 		string CurrencyCode { get; }
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResolutionResult" /> for resolving parameters in interactions involving payments.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INCurrencyAmountResolutionResult">Apple documentation for <c>INCurrencyAmountResolutionResult</c></related>
 	[NoTV]
 	[NoMac]
 	[MacCatalyst (13, 1)]
@@ -3292,6 +3433,10 @@ namespace Intents {
 	}
 
 #if NET
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResolutionResult" /> for resolving parameters in interactions involving a range of dates.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INDateComponentsRangeResolutionResult">Apple documentation for <c>INDateComponentsRangeResolutionResult</c></related>
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -3348,6 +3493,7 @@ namespace Intents {
 	}
 
 #if NET
+	/// <summary> Interface combining several interfaces related to various phone-call intents.</summary>
 	[NoMac]
 #endif
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Implement 'INStartAudioCallIntentHandling, INStartVideoCallIntentHandling and INSearchCallHistoryIntentHandling' instead.")]
@@ -3364,6 +3510,7 @@ namespace Intents {
 #endif
 	}
 
+	/// <summary>Interface combining several interfaces related to various car-related intents.</summary>
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Implement 'INActivateCarSignalIntentHandling, INSetCarLockStatusIntentHandling, INGetCarLockStatusIntentHandling and INGetCarPowerLevelStatusIntentHandling' instead.")]
 	[Deprecated (PlatformName.WatchOS, 6, 0, message: "Implement 'INActivateCarSignalIntentHandling, INSetCarLockStatusIntentHandling, INGetCarLockStatusIntentHandling and INGetCarPowerLevelStatusIntentHandling' instead.")]
 	[Unavailable (PlatformName.MacOSX)]
@@ -3374,6 +3521,7 @@ namespace Intents {
 	interface INCarCommandsDomainHandling : INActivateCarSignalIntentHandling, INSetCarLockStatusIntentHandling, INGetCarLockStatusIntentHandling, INGetCarPowerLevelStatusIntentHandling {
 	}
 
+	/// <summary>Interface combining several interfaces related to various CarPlay intents.</summary>
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Implement 'INSetAudioSourceInCarIntentHandling, INSetClimateSettingsInCarIntentHandling, INSetDefrosterSettingsInCarIntentHandling, INSetSeatSettingsInCarIntentHandling, INSetProfileInCarIntentHandling and INSaveProfileInCarIntentHandling' instead.")]
 	[Unavailable (PlatformName.WatchOS)]
 	[Unavailable (PlatformName.MacOSX)]
@@ -3384,6 +3532,7 @@ namespace Intents {
 	interface INCarPlayDomainHandling : INSetAudioSourceInCarIntentHandling, INSetClimateSettingsInCarIntentHandling, INSetDefrosterSettingsInCarIntentHandling, INSetSeatSettingsInCarIntentHandling, INSetProfileInCarIntentHandling, INSaveProfileInCarIntentHandling {
 	}
 
+	/// <summary>Interface combining several interfaces related to various workout-related intents.</summary>
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Implement 'INStartWorkoutIntentHandling, INPauseWorkoutIntentHandling, INEndWorkoutIntentHandling, INCancelWorkoutIntentHandling and INResumeWorkoutIntentHandling' instead.")]
 	[Deprecated (PlatformName.WatchOS, 6, 0, message: "Implement 'INStartWorkoutIntentHandling, INPauseWorkoutIntentHandling, INEndWorkoutIntentHandling, INCancelWorkoutIntentHandling and INResumeWorkoutIntentHandling' instead.")]
 	[Unavailable (PlatformName.MacOSX)]
@@ -3394,6 +3543,7 @@ namespace Intents {
 	interface INWorkoutsDomainHandling : INStartWorkoutIntentHandling, INPauseWorkoutIntentHandling, INEndWorkoutIntentHandling, INCancelWorkoutIntentHandling, INResumeWorkoutIntentHandling {
 	}
 
+	/// <summary>Interface combining several interfaces related to various radio-related intents.</summary>
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Implement 'INSetRadioStationIntentHandling' instead.")]
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
@@ -3404,6 +3554,7 @@ namespace Intents {
 	interface INRadioDomainHandling : INSetRadioStationIntentHandling {
 	}
 
+	/// <summary>Interface combining several interfaces related to various Message-related intents.</summary>
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Implement 'INSendMessageIntentHandling, INSearchForMessagesIntentHandling and INSetMessageAttributeIntentHandling' instead.")]
 	[Deprecated (PlatformName.WatchOS, 13, 0, message: "Implement 'INSendMessageIntentHandling and INSearchForMessagesIntentHandling' instead.")]
 	[Unavailable (PlatformName.MacOSX)]
@@ -3419,6 +3570,7 @@ namespace Intents {
 #endif
 	}
 
+	/// <summary>Interface combining several interfaces related to various payment-related intents.</summary>
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Implement 'INSendPaymentIntentHandling, INRequestPaymentIntentHandling, INPayBillIntentHandling, INSearchForBillsIntentHandling, INSearchForAccountsIntentHandling and INTransferMoneyIntentHandling' instead.")]
 	[Deprecated (PlatformName.WatchOS, 6, 0, message: "Implement 'INSendPaymentIntentHandling and INRequestPaymentIntentHandling' instead.")]
 	[Unavailable (PlatformName.MacOSX)]
@@ -3433,6 +3585,7 @@ namespace Intents {
 	{
 	}
 
+	/// <summary>Interface combining several interfaces related to various photo-related intents.</summary>
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Implement 'INSearchForPhotosIntentHandling and INStartPhotoPlaybackIntentHandling' instead.")]
 	[Deprecated (PlatformName.WatchOS, 6, 0, message: "Implement 'INSearchForPhotosIntentHandling and INStartPhotoPlaybackIntentHandling' instead.")]
 	[Unavailable (PlatformName.MacOSX)]
@@ -3443,6 +3596,7 @@ namespace Intents {
 	interface INPhotosDomainHandling : INSearchForPhotosIntentHandling, INStartPhotoPlaybackIntentHandling {
 	}
 
+	/// <summary>Interface combining several interfaces related to various ridesharing intents.</summary>
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Implement 'INListRideOptionsIntentHandling, INRequestRideIntentHandling, INGetRideStatusIntentHandling, INCancelRideIntentHandling and INSendRideFeedbackIntentHandling' instead.")]
 	[Deprecated (PlatformName.WatchOS, 6, 0, message: "Implement 'INListRideOptionsIntentHandling, INRequestRideIntentHandling, INGetRideStatusIntentHandling, INCancelRideIntentHandling and INSendRideFeedbackIntentHandling' instead.")]
 	[Unavailable (PlatformName.MacOSX)]
@@ -3457,6 +3611,7 @@ namespace Intents {
 	{
 	}
 
+	/// <summary>Composite interface for adopting all of lists and notes protocols.</summary>
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Implement 'INCreateNoteIntentHandling, INAppendToNoteIntentHandling, INAddTasksIntentHandling, INCreateTaskListIntentHandling, INSetTaskAttributeIntentHandling and INSearchForNotebookItemsIntentHandling' instead.")]
 	[Deprecated (PlatformName.WatchOS, 6, 0, message: "Implement 'INCreateNoteIntentHandling, INAppendToNoteIntentHandling, INAddTasksIntentHandling, INCreateTaskListIntentHandling, INSetTaskAttributeIntentHandling and INSearchForNotebookItemsIntentHandling' instead.")]
 	[NoMac, NoTV]
@@ -3466,6 +3621,7 @@ namespace Intents {
 	interface INNotebookDomainHandling : INCreateNoteIntentHandling, INAppendToNoteIntentHandling, INAddTasksIntentHandling, INCreateTaskListIntentHandling, INSetTaskAttributeIntentHandling, INSearchForNotebookItemsIntentHandling {
 	}
 
+	/// <summary>Composite interface for adopting all of the visual codes protocols.</summary>
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Implement 'INGetVisualCodeIntentHandling' instead.")]
 	[Deprecated (PlatformName.WatchOS, 6, 0, message: "Implement 'INGetVisualCodeIntentHandling' instead.")]
 	[NoMac, NoTV]
@@ -3523,6 +3679,10 @@ namespace Intents {
 		INDoubleResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResolutionResult" /> for resolving parameters in interactions involving dates.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INDateComponentsResolutionResult">Apple documentation for <c>INDateComponentsResolutionResult</c></related>
 	[Mac (11, 0)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -3575,6 +3735,9 @@ namespace Intents {
 		INDateComponentsResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
 	}
 
+	/// <summary>An <see cref="T:Intents.INIntent" /> indicating the user wishes to finish the workout.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INEndWorkoutIntent">Apple documentation for <c>INEndWorkoutIntent</c></related>
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -3612,6 +3775,10 @@ namespace Intents {
 		void ResolveWorkoutName (INEndWorkoutIntent intent, Action<INSpeakableStringResolutionResult> completion);
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResponse" /> subclass that developers of <see cref="T:Intents.IINEndWorkoutIntentHandling" /> interface implementations populate with their extension's results.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INEndWorkoutIntentResponse">Apple documentation for <c>INEndWorkoutIntentResponse</c></related>
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -3644,6 +3811,9 @@ namespace Intents {
 	interface INExtension : INIntentHandlerProviding {
 	}
 
+	/// <summary>An <see cref="T:Intents.INIntent" /> indicating the user wishes to receive a list of available reservation times.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INGetAvailableRestaurantReservationBookingDefaultsIntent">Apple documentation for <c>INGetAvailableRestaurantReservationBookingDefaultsIntent</c></related>
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
@@ -3683,6 +3853,10 @@ namespace Intents {
 		void ResolveAvailableRestaurantReservationBookingDefaults (INGetAvailableRestaurantReservationBookingDefaultsIntent intent, Action<INRestaurantResolutionResult> completion);
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResponse" /> subclass that developers of <see cref="T:Intents.IINGetAvailableRestaurantReservationBookingDefaultsIntentHandling" /> interface implementations populate with their extension's results.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INGetAvailableRestaurantReservationBookingDefaultsIntentResponse">Apple documentation for <c>INGetAvailableRestaurantReservationBookingDefaultsIntentResponse</c></related>
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
@@ -3713,6 +3887,9 @@ namespace Intents {
 		INGetAvailableRestaurantReservationBookingDefaultsIntentResponseCode Code { get; }
 	}
 
+	/// <summary>An intention to retrieve restaurant availability.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INGetAvailableRestaurantReservationBookingsIntent">Apple documentation for <c>INGetAvailableRestaurantReservationBookingsIntent</c></related>
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
@@ -3773,6 +3950,10 @@ namespace Intents {
 		void ResolvePreferredBookingDateAvailableRestaurantReservationBookings (INGetAvailableRestaurantReservationBookingsIntent intent, Action<INDateComponentsResolutionResult> completion);
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResponse" /> subclass that developers of <see cref="T:Intents.IINGetAvailableRestaurantReservationBookingsIntentHandling" /> interface implementations populate with their extension's results.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INGetAvailableRestaurantReservationBookingsIntentResponse">Apple documentation for <c>INGetAvailableRestaurantReservationBookingsIntentResponse</c></related>
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
@@ -3800,6 +3981,9 @@ namespace Intents {
 		INRestaurantReservationBooking [] AvailableBookings { get; }
 	}
 
+	/// <summary>An <see cref="T:Intents.INIntent" /> indicating the user wishes to retrieve information about a particular guest making a reservation.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INGetRestaurantGuestIntent">Apple documentation for <c>INGetRestaurantGuestIntent</c></related>
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
@@ -3829,6 +4013,10 @@ namespace Intents {
 		(INGetRestaurantGuestIntent guestIntent, Action<INGetRestaurantGuestIntentResponse> completion);
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResponse" /> subclass that developers of <see cref="T:Intents.IINGetRestaurantGuestIntentHandling" /> interface implementations populate with their extension's results.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INGetRestaurantGuestIntentResponse">Apple documentation for <c>INGetRestaurantGuestIntentResponse</c></related>
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
@@ -3850,6 +4038,9 @@ namespace Intents {
 		INGetRestaurantGuestIntentResponseCode Code { get; }
 	}
 
+	/// <summary>An <see cref="T:Intents.INIntent" /> indicating the user wishes to get information about the current ride.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INGetRideStatusIntent">Apple documentation for <c>INGetRideStatusIntent</c></related>
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -3892,6 +4083,7 @@ namespace Intents {
 
 	interface IINGetRideStatusIntentResponseObserver { }
 
+	/// <summary>Receives periodic updates on ride status.</summary>
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -3903,6 +4095,10 @@ namespace Intents {
 		void DidUpdateRideStatus (INGetRideStatusIntentResponse response);
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResponse" /> subclass that developers of <see cref="T:Intents.IINGetRideStatusIntentHandling" /> interface implementations populate with their extension's results.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INGetRideStatusIntentResponse">Apple documentation for <c>INGetRideStatusIntentResponse</c></related>
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -3921,6 +4117,9 @@ namespace Intents {
 		INRideStatus RideStatus { get; set; }
 	}
 
+	/// <summary>A request to retrieve the user's current restaurant reservations.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INGetUserCurrentRestaurantReservationBookingsIntent">Apple documentation for <c>INGetUserCurrentRestaurantReservationBookingsIntent</c></related>
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
@@ -3973,6 +4172,10 @@ namespace Intents {
 		void ResolveUserCurrentRestaurantReservationBookings (INGetUserCurrentRestaurantReservationBookingsIntent intent, Action<INRestaurantResolutionResult> completion);
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResponse" /> subclass that developers of <see cref="T:Intents.IINGetUserCurrentRestaurantReservationBookingsIntentHandling" /> interface implementations populate with their extension's results.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INGetUserCurrentRestaurantReservationBookingsIntentResponse">Apple documentation for <c>INGetUserCurrentRestaurantReservationBookingsIntentResponse</c></related>
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
@@ -4271,6 +4474,9 @@ namespace Intents {
 		IntPtr _GetParameterValue (INParameter parameter);
 	}
 
+	/// <summary>An <see cref="T:Intents.INIntent" /> indicating the user wishes to receive a list of available ride options.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INListRideOptionsIntent">Apple documentation for <c>INListRideOptionsIntent</c></related>
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -4314,6 +4520,10 @@ namespace Intents {
 		void ResolveDropOffLocation (INListRideOptionsIntent intent, Action<INPlacemarkResolutionResult> completion);
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResponse" /> subclass that developers of <see cref="T:Intents.IINListRideOptionsIntentHandling" /> interface implementations populate with their extension's results.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INListRideOptionsIntentResponse">Apple documentation for <c>INListRideOptionsIntentResponse</c></related>
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -4339,6 +4549,9 @@ namespace Intents {
 	}
 
 #if NET
+	/// <summary>Encapsulates Intents / SiriKit information regarding a messaging-service message.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INMessage">Apple documentation for <c>INMessage</c></related>
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -4440,6 +4653,10 @@ namespace Intents {
 	}
 
 #if NET
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResolutionResult" /> for resolving parameters in interactions involving messages.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INMessageAttributeOptionsResolutionResult">Apple documentation for <c>INMessageAttributeOptionsResolutionResult</c></related>
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -4514,6 +4731,10 @@ namespace Intents {
 	}
 
 #if NET
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResolutionResult" /> for resolving parameters in interactions involving messages.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INMessageAttributeResolutionResult">Apple documentation for <c>INMessageAttributeResolutionResult</c></related>
 	[NoMac]
 #endif
 	[NoTV]
@@ -4582,6 +4803,9 @@ namespace Intents {
 		INMessageAttributeResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
 	}
 
+	/// <summary>An <see cref="T:Intents.INIntent" /> indicating the user wishes to pause the workout.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INPauseWorkoutIntent">Apple documentation for <c>INPauseWorkoutIntent</c></related>
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -4619,6 +4843,10 @@ namespace Intents {
 		void ResolveWorkoutName (INPauseWorkoutIntent intent, Action<INSpeakableStringResolutionResult> completion);
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResponse" /> subclass that developers of <see cref="T:Intents.IINPauseWorkoutIntentHandling" /> interface implementations populate with their extension's results.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INPauseWorkoutIntentResponse">Apple documentation for <c>INPauseWorkoutIntentResponse</c></related>
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -4634,6 +4862,9 @@ namespace Intents {
 		INPauseWorkoutIntentResponseCode Code { get; }
 	}
 
+	/// <summary>Encapsulates data about a form of payment.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INPaymentMethod">Apple documentation for <c>INPaymentMethod</c></related>
 	[NoTV, Mac (11, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -4661,6 +4892,9 @@ namespace Intents {
 		INPaymentMethod ApplePayPaymentMethod { get; }
 	}
 
+	/// <summary>Encapsulates details about a payment.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INPaymentRecord">Apple documentation for <c>INPaymentRecord</c></related>
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -4697,6 +4931,9 @@ namespace Intents {
 		INCurrencyAmount FeeAmount { get; }
 	}
 
+	/// <summary>Encapsulates a person's data, for the purposes of Intents / SiriKit.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INPerson">Apple documentation for <c>INPerson</c></related>
 	[NoTV]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -4778,6 +5015,9 @@ namespace Intents {
 		bool ContactSuggestion { [Bind ("isContactSuggestion")] get; }
 	}
 
+	/// <summary>The user of the application.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INPersonHandle">Apple documentation for <c>INPersonHandle</c></related>
 	[NoTV]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -4811,6 +5051,10 @@ namespace Intents {
 		NativeHandle Constructor ([NullAllowed] string value, INPersonHandleType type);
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResolutionResult" /> for resolving parameters in interactions involving known people (contacts).</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INPersonResolutionResult">Apple documentation for <c>INPersonResolutionResult</c></related>
 	[NoTV]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResolutionResult))]
@@ -4862,6 +5106,10 @@ namespace Intents {
 		INPersonResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResolutionResult" /> for resolving parameters in interactions involving named locations.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INPlacemarkResolutionResult">Apple documentation for <c>INPlacemarkResolutionResult</c></related>
 	[NoTV]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResolutionResult))]
@@ -4940,6 +5188,9 @@ namespace Intents {
 		string SiriLanguageCode { get; }
 	}
 
+	/// <summary>Holds information about a pair of prices.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INPriceRange">Apple documentation for <c>INPriceRange</c></related>
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -4972,6 +5223,10 @@ namespace Intents {
 		string CurrencyCode { get; }
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResolutionResult" /> for resolving parameters in interactions involving radio formats.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INRadioTypeResolutionResult">Apple documentation for <c>INRadioTypeResolutionResult</c></related>
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Unavailable (PlatformName.MacOSX)] // xtro mac !unknown-type! INRadioTypeResolutionResult bound
 	[NoWatch]
@@ -5041,6 +5296,10 @@ namespace Intents {
 		INRadioTypeResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResolutionResult" /> for resolving parameters in interactions involving relative locations.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INRelativeReferenceResolutionResult">Apple documentation for <c>INRelativeReferenceResolutionResult</c></related>
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoWatch]
@@ -5110,6 +5369,10 @@ namespace Intents {
 		INRelativeReferenceResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResolutionResult" /> for resolving parameters in interactions involving values that have relative settings (higher / lower, more / less).</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INRelativeSettingResolutionResult">Apple documentation for <c>INRelativeSettingResolutionResult</c></related>
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoWatch]
@@ -5179,6 +5442,9 @@ namespace Intents {
 		INRelativeSettingResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
 	}
 
+	/// <summary>An <see cref="T:Intents.INIntent" /> indicating the user wishes to request a payment.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INRequestPaymentIntent">Apple documentation for <c>INRequestPaymentIntent</c></related>
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -5242,6 +5508,10 @@ namespace Intents {
 		void ResolveNote (INRequestPaymentIntent intent, Action<INStringResolutionResult> completion);
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResponse" /> subclass that developers of <see cref="T:Intents.IINRequestPaymentIntentHandling" /> interface implementations populate with their extension's results.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INRequestPaymentIntentResponse">Apple documentation for <c>INRequestPaymentIntentResponse</c></related>
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -5260,6 +5530,9 @@ namespace Intents {
 		INPaymentRecord PaymentRecord { get; set; }
 	}
 
+	/// <summary>An <see cref="T:Intents.INIntent" /> indicating the user wishes to request a ride.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INRequestRideIntent">Apple documentation for <c>INRequestRideIntent</c></related>
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -5333,6 +5606,10 @@ namespace Intents {
 		void ResolveScheduledPickupTime (INRequestRideIntent intent, Action<INDateComponentsRangeResolutionResult> completion);
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResponse" /> subclass that developers of <see cref="T:Intents.IINRequestRideIntentHandling" /> interface implementations populate with their extension's results.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INRequestRideIntentResponse">Apple documentation for <c>INRequestRideIntentResponse</c></related>
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -5351,6 +5628,9 @@ namespace Intents {
 		INRideStatus RideStatus { get; set; }
 	}
 
+	/// <summary>Data about a specific restaurant location.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INRestaurant">Apple documentation for <c>INRestaurant</c></related>
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
@@ -5375,6 +5655,9 @@ namespace Intents {
 		string RestaurantIdentifier { get; set; }
 	}
 
+	/// <summary>A <see cref="T:Intents.INPerson" /> expected at a restaurant reservation.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INRestaurantGuest">Apple documentation for <c>INRestaurantGuest</c></related>
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
@@ -5394,6 +5677,9 @@ namespace Intents {
 		string EmailAddress { get; set; }
 	}
 
+	/// <summary>Encapsulates the preferred configuration for presenting guest information for Intents relating to restaurants.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INRestaurantGuestDisplayPreferences">Apple documentation for <c>INRestaurantGuestDisplayPreferences</c></related>
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
@@ -5426,6 +5712,10 @@ namespace Intents {
 		bool PhoneNumberEditable { get; set; }
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResolutionResult" /> for resolving parameters in interactions involving restaurant reservations.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INRestaurantGuestResolutionResult">Apple documentation for <c>INRestaurantGuestResolutionResult</c></related>
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
@@ -5479,6 +5769,9 @@ namespace Intents {
 		INRestaurantGuestResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
 	}
 
+	/// <summary>Encapsulates special offers and promotions.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INRestaurantOffer">Apple documentation for <c>INRestaurantOffer</c></related>
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
@@ -5496,6 +5789,9 @@ namespace Intents {
 		string OfferIdentifier { get; set; }
 	}
 
+	/// <summary>A potential restaurant reservation (see also <see cref="T:Intents.INRestaurantReservationUserBooking" />).</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INRestaurantReservationBooking">Apple documentation for <c>INRestaurantReservationBooking</c></related>
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
@@ -5541,6 +5837,9 @@ namespace Intents {
 		bool RequiresPhoneNumber { get; set; }
 	}
 
+	/// <summary>A restaurant reservation.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INRestaurantReservationUserBooking">Apple documentation for <c>INRestaurantReservationUserBooking</c></related>
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
@@ -5574,6 +5873,10 @@ namespace Intents {
 		NSDate DateStatusModified { get; set; }
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResolutionResult" /> for resolving parameters in interactions involving restaurant names.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INRestaurantResolutionResult">Apple documentation for <c>INRestaurantResolutionResult</c></related>
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
@@ -5627,6 +5930,9 @@ namespace Intents {
 		INRestaurantResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
 	}
 
+	/// <summary>An <see cref="T:Intents.INIntent" /> indicating the user wishes to resume a paused workout.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INResumeWorkoutIntent">Apple documentation for <c>INResumeWorkoutIntent</c></related>
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -5664,6 +5970,10 @@ namespace Intents {
 		void ResolveWorkoutName (INResumeWorkoutIntent intent, Action<INSpeakableStringResolutionResult> completion);
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResponse" /> subclass that developers of <see cref="T:Intents.IINResumeWorkoutIntentHandling" /> interface implementations populate with their extension's results.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INResumeWorkoutIntentResponse">Apple documentation for <c>INResumeWorkoutIntentResponse</c></related>
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -5679,6 +5989,9 @@ namespace Intents {
 		INResumeWorkoutIntentResponseCode Code { get; }
 	}
 
+	/// <summary>Holds data relating to finished rides, including the completion reason and payment information.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INRideCompletionStatus">Apple documentation for <c>INRideCompletionStatus</c></related>
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -5742,6 +6055,9 @@ namespace Intents {
 		NSSet<INCurrencyAmount> DefaultTippingOptions { get; set; }
 	}
 
+	/// <summary>Information of the driver of a requested ride.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INRideDriver">Apple documentation for <c>INRideDriver</c></related>
 	[Unavailable (PlatformName.MacOSX)] // xtro mac !unknown-type! INRideDriver bound
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -5767,6 +6083,9 @@ namespace Intents {
 		string PhoneNumber { get; }
 	}
 
+	/// <summary>A ride-related charge.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INRideFareLineItem">Apple documentation for <c>INRideFareLineItem</c></related>
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -5788,6 +6107,9 @@ namespace Intents {
 		string CurrencyCode { get; }
 	}
 
+	/// <summary>Holds options relating to a vehicle ride.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INRideOption">Apple documentation for <c>INRideOption</c></related>
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -5834,6 +6156,9 @@ namespace Intents {
 		NSUserActivity UserActivityForBookingInApplication { get; set; }
 	}
 
+	/// <summary>Holds the data associated with the number of passengers in a ride.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INRidePartySizeOption">Apple documentation for <c>INRidePartySizeOption</c></related>
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -5855,6 +6180,9 @@ namespace Intents {
 		INPriceRange PriceRange { get; }
 	}
 
+	/// <summary>Encapsulates the state of a ride.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INRideStatus">Apple documentation for <c>INRideStatus</c></related>
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -5909,6 +6237,9 @@ namespace Intents {
 		NSUserActivity [] AdditionalActionActivities { get; set; }
 	}
 
+	/// <summary>The vehicle used for a requested ride.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INRideVehicle">Apple documentation for <c>INRideVehicle</c></related>
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -5931,6 +6262,9 @@ namespace Intents {
 		INImage MapAnnotationImage { get; set; }
 	}
 
+	/// <summary>An <see cref="T:Intents.INIntent" /> indicating the user wishes to save a user profile.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INSaveProfileInCarIntent">Apple documentation for <c>INSaveProfileInCarIntent</c></related>
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
@@ -5992,6 +6326,10 @@ namespace Intents {
 		void ResolveProfileName (INSaveProfileInCarIntent intent, Action<INStringResolutionResult> completion);
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResponse" /> subclass that developers of <see cref="T:Intents.IINSaveProfileInCarIntentHandling" /> interface implementations populate with their extension's results.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INSaveProfileInCarIntentResponse">Apple documentation for <c>INSaveProfileInCarIntentResponse</c></related>
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
@@ -6011,6 +6349,9 @@ namespace Intents {
 	}
 
 #if NET
+	/// <summary>An <see cref="T:Intents.INIntent" /> indicating the user wishes to search the call history.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INSearchCallHistoryIntent">Apple documentation for <c>INSearchCallHistoryIntent</c></related>
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -6113,6 +6454,10 @@ namespace Intents {
 	}
 
 #if NET
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResponse" /> subclass that developers of <see cref="T:Intents.IINSearchCallHistoryIntentHandling" /> interface implementations populate with their extension's results.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INSearchCallHistoryIntentResponse">Apple documentation for <c>INSearchCallHistoryIntentResponse</c></related>
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -6139,6 +6484,9 @@ namespace Intents {
 	}
 
 #if NET
+	/// <summary>An <see cref="T:Intents.INIntent" /> indicating the user wishes to search their message history.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INSearchForMessagesIntent">Apple documentation for <c>INSearchForMessagesIntent</c></related>
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -6286,6 +6634,10 @@ namespace Intents {
 	}
 
 #if NET
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResponse" /> subclass that developers of <see cref="T:Intents.IINSearchForMessagesIntentHandling" /> interface implementations populate with their extension's results.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INSearchForMessagesIntentResponse">Apple documentation for <c>INSearchForMessagesIntentResponse</c></related>
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -6307,6 +6659,9 @@ namespace Intents {
 		INMessage [] Messages { get; set; }
 	}
 
+	/// <summary>An <see cref="T:Intents.INIntent" /> indicating the user wishes to search for photos.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INSearchForPhotosIntent">Apple documentation for <c>INSearchForPhotosIntent</c></related>
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Deprecated (PlatformName.WatchOS, 8, 0)]
 	[Unavailable (PlatformName.MacOSX)]
@@ -6387,6 +6742,10 @@ namespace Intents {
 		void ResolvePeopleInPhoto (INSearchForPhotosIntent intent, Action<INPersonResolutionResult []> completion);
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResponse" /> subclass that developers of <see cref="T:Intents.IINSearchForPhotosIntentHandling" /> interface implementations populate with their extension's results.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INSearchForPhotosIntentResponse">Apple documentation for <c>INSearchForPhotosIntentResponse</c></related>
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Deprecated (PlatformName.WatchOS, 8, 0)]
 	[Unavailable (PlatformName.MacOSX)]
@@ -6408,6 +6767,9 @@ namespace Intents {
 		NSNumber SearchResultsCount { get; set; }
 	}
 
+	/// <summary>An <see cref="T:Intents.INIntent" /> indicating the user wishes to send a message.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INSendMessageIntent">Apple documentation for <c>INSendMessageIntent</c></related>
 	[Mac (12, 0)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -6548,6 +6910,10 @@ namespace Intents {
 		void ResolveSpeakableGroupName (INSendMessageIntent intent, Action<INSpeakableStringResolutionResult> completion);
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResponse" /> subclass that developers of <see cref="T:Intents.IINSendMessageIntentHandling" /> interface implementations populate with their extension's results.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INSendMessageIntentResponse">Apple documentation for <c>INSendMessageIntentResponse</c></related>
 	[Mac (12, 0)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -6579,6 +6945,9 @@ namespace Intents {
 		INMessage [] SentMessages { get; set; }
 	}
 
+	/// <summary>An <see cref="T:Intents.INIntent" /> indicating the user wishes to make a payment.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INSendPaymentIntent">Apple documentation for <c>INSendPaymentIntent</c></related>
 	[NoTV]
 	[Unavailable (PlatformName.MacOSX)]
 	[MacCatalyst (13, 1)]
@@ -6642,6 +7011,10 @@ namespace Intents {
 		void ResolveNote (INSendPaymentIntent intent, Action<INStringResolutionResult> completion);
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResponse" /> subclass that developers of <see cref="T:Intents.IINSendPaymentIntentHandling" /> interface implementations populate with their extension's results.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INSendPaymentIntentResponse">Apple documentation for <c>INSendPaymentIntentResponse</c></related>
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -6660,6 +7033,9 @@ namespace Intents {
 		INPaymentRecord PaymentRecord { get; set; }
 	}
 
+	/// <summary>An <see cref="T:Intents.INIntent" /> indicating the user wishes to specify the source for audio playback.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INSetAudioSourceInCarIntent">Apple documentation for <c>INSetAudioSourceInCarIntent</c></related>
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
@@ -6709,6 +7085,10 @@ namespace Intents {
 		void ResolveRelativeAudioSourceReference (INSetAudioSourceInCarIntent intent, Action<INRelativeReferenceResolutionResult> completion);
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResponse" /> subclass that developers of <see cref="T:Intents.IINSetAudioSourceInCarIntentHandling" /> interface implementations populate with their extension's results.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INSetAudioSourceInCarIntentResponse">Apple documentation for <c>INSetAudioSourceInCarIntentResponse</c></related>
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
@@ -6727,6 +7107,9 @@ namespace Intents {
 		INSetAudioSourceInCarIntentResponseCode Code { get; }
 	}
 
+	/// <summary>An <see cref="T:Intents.INIntent" /> indicating the user wishes to control the climate.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INSetClimateSettingsInCarIntent">Apple documentation for <c>INSetClimateSettingsInCarIntent</c></related>
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
@@ -6858,6 +7241,10 @@ namespace Intents {
 		void ResolveCarName (INSetClimateSettingsInCarIntent intent, Action<INSpeakableStringResolutionResult> completion);
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResponse" /> subclass that developers of <see cref="T:Intents.IINSetClimateSettingsInCarIntentHandling" /> interface implementations populate with their extension's results.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INSetClimateSettingsInCarIntentResponse">Apple documentation for <c>INSetClimateSettingsInCarIntentResponse</c></related>
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
@@ -6876,6 +7263,9 @@ namespace Intents {
 		INSetClimateSettingsInCarIntentResponseCode Code { get; }
 	}
 
+	/// <summary>An <see cref="T:Intents.INIntent" /> indicating the user wishes to control the defroster.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INSetDefrosterSettingsInCarIntent">Apple documentation for <c>INSetDefrosterSettingsInCarIntent</c></related>
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
@@ -6944,6 +7334,10 @@ namespace Intents {
 		void ResolveCarName (INSetDefrosterSettingsInCarIntent intent, Action<INSpeakableStringResolutionResult> completion);
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResponse" /> subclass that developers of <see cref="T:Intents.IINSetDefrosterSettingsInCarIntentHandling" /> interface implementations populate with their extension's results.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INSetDefrosterSettingsInCarIntentResponse">Apple documentation for <c>INSetDefrosterSettingsInCarIntentResponse</c></related>
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
@@ -6962,6 +7356,9 @@ namespace Intents {
 		INSetDefrosterSettingsInCarIntentResponseCode Code { get; }
 	}
 
+	/// <summary>An <see cref="T:Intents.INIntent" /> indicating the user wishes to set a message characteristic.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INSetMessageAttributeIntent">Apple documentation for <c>INSetMessageAttributeIntent</c></related>
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
@@ -7004,6 +7401,10 @@ namespace Intents {
 		void ResolveAttribute (INSetMessageAttributeIntent intent, Action<INMessageAttributeResolutionResult> completion);
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResponse" /> subclass that developers of <see cref="T:Intents.IINSetMessageAttributeIntentHandling" /> interface implementations populate with their extension's results.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INSetMessageAttributeIntentResponse">Apple documentation for <c>INSetMessageAttributeIntentResponse</c></related>
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
@@ -7020,6 +7421,9 @@ namespace Intents {
 		INSetMessageAttributeIntentResponseCode Code { get; }
 	}
 
+	/// <summary>An <see cref="T:Intents.INIntent" /> indicating the user wishes to choose a particular user profile.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INSetProfileInCarIntent">Apple documentation for <c>INSetProfileInCarIntent</c></related>
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
@@ -7111,6 +7515,10 @@ namespace Intents {
 		void ResolveProfileName (INSetProfileInCarIntent intent, Action<INStringResolutionResult> completion);
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResponse" /> subclass that developers of <see cref="T:Intents.IINSetProfileInCarIntentHandling" /> interface implementations populate with their extension's results.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INSetProfileInCarIntentResponse">Apple documentation for <c>INSetProfileInCarIntentResponse</c></related>
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
@@ -7129,6 +7537,9 @@ namespace Intents {
 		INSetProfileInCarIntentResponseCode Code { get; }
 	}
 
+	/// <summary>An <see cref="T:Intents.INIntent" /> indicating the user wishes to choose a station.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INSetRadioStationIntent">Apple documentation for <c>INSetRadioStationIntent</c></related>
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
@@ -7196,6 +7607,10 @@ namespace Intents {
 		void ResolvePresetNumber (INSetRadioStationIntent intent, Action<INIntegerResolutionResult> completion);
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResponse" /> subclass that developers of <see cref="T:Intents.IINSetRadioStationIntentHandling" /> interface implementations populate with their extension's results.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INSetRadioStationIntentResponse">Apple documentation for <c>INSetRadioStationIntentResponse</c></related>
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
@@ -7214,6 +7629,9 @@ namespace Intents {
 		INSetRadioStationIntentResponseCode Code { get; }
 	}
 
+	/// <summary>An <see cref="T:Intents.INIntent" /> indicating the user wishes to modify the seat settings.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INSetSeatSettingsInCarIntent">Apple documentation for <c>INSetSeatSettingsInCarIntent</c></related>
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
@@ -7311,6 +7729,10 @@ namespace Intents {
 		void ResolveCarName (INSetSeatSettingsInCarIntent intent, Action<INSpeakableStringResolutionResult> completion);
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResponse" /> subclass that developers of <see cref="T:Intents.IINSetSeatSettingsInCarIntentHandling" /> interface implementations populate with their extension's results.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INSetSeatSettingsInCarIntentResponse">Apple documentation for <c>INSetSeatSettingsInCarIntentResponse</c></related>
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
@@ -7441,6 +7863,10 @@ namespace Intents {
 	}
 
 #if NET
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResolutionResult" /> for resolving parameters in interactions involving arbitrary strings.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INSpeakableStringResolutionResult">Apple documentation for <c>INSpeakableStringResolutionResult</c></related>
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -7497,6 +7923,9 @@ namespace Intents {
 	}
 
 #if NET
+	/// <summary>An <see cref="T:Intents.INIntent" /> indicating the user wishes to start an audio call.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INStartAudioCallIntent">Apple documentation for <c>INStartAudioCallIntent</c></related>
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -7564,6 +7993,10 @@ namespace Intents {
 	}
 
 #if NET
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResponse" /> subclass that developers of <see cref="T:Intents.IINStartAudioCallIntentHandling" /> interface implementations populate with their extension's results.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INStartAudioCallIntentResponse">Apple documentation for <c>INStartAudioCallIntentResponse</c></related>
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -7585,6 +8018,9 @@ namespace Intents {
 		INStartAudioCallIntentResponseCode Code { get; }
 	}
 
+	/// <summary>An <see cref="T:Intents.INIntent" /> indicating the user wishes to begin a slide show.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INStartPhotoPlaybackIntent">Apple documentation for <c>INStartPhotoPlaybackIntent</c></related>
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Deprecated (PlatformName.WatchOS, 8, 0)]
 	[Unavailable (PlatformName.MacOSX)]
@@ -7661,6 +8097,10 @@ namespace Intents {
 		void ResolvePeopleInPhoto (INStartPhotoPlaybackIntent intent, Action<INPersonResolutionResult []> completion);
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResponse" /> subclass that developers of <see cref="T:Intents.IINStartPhotoPlaybackIntentHandling" /> interface implementations populate with their extension's results.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INStartPhotoPlaybackIntentResponse">Apple documentation for <c>INStartPhotoPlaybackIntentResponse</c></related>
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Deprecated (PlatformName.WatchOS, 8, 0)]
 	[Unavailable (PlatformName.MacOSX)]
@@ -7683,6 +8123,9 @@ namespace Intents {
 	}
 
 #if NET
+	/// <summary>An <see cref="T:Intents.INIntent" /> indicating the user wishes to start a video call.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INStartVideoCallIntent">Apple documentation for <c>INStartVideoCallIntent</c></related>
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -7736,6 +8179,10 @@ namespace Intents {
 	}
 
 #if NET
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResponse" /> subclass that developers of <see cref="T:Intents.IINStartVideoCallIntentHandling" /> interface implementations populate with their extension's results.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INStartVideoCallIntentResponse">Apple documentation for <c>INStartVideoCallIntentResponse</c></related>
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -7758,6 +8205,9 @@ namespace Intents {
 		INStartVideoCallIntentResponseCode Code { get; }
 	}
 
+	/// <summary>An <see cref="T:Intents.INIntent" /> indicating the user wishes to begin a workout.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INStartWorkoutIntent">Apple documentation for <c>INStartWorkoutIntent</c></related>
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -7821,6 +8271,10 @@ namespace Intents {
 		void ResolveIsOpenEnded (INStartWorkoutIntent intent, Action<INBooleanResolutionResult> completion);
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResponse" /> subclass that developers of <see cref="T:Intents.IINStartWorkoutIntentHandling" /> interface implementations populate with their extension's results.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INStartWorkoutIntentResponse">Apple documentation for <c>INStartWorkoutIntentResponse</c></related>
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -7836,6 +8290,10 @@ namespace Intents {
 		INStartWorkoutIntentResponseCode Code { get; }
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResolutionResult" /> for resolving parameters in interactions involving arbitrary strings.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INStringResolutionResult">Apple documentation for <c>INStringResolutionResult</c></related>
 	[NoTV]
 	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor]
@@ -7887,6 +8345,10 @@ namespace Intents {
 		INStringResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResolutionResult" /> for resolving parameters in temperature-related  interactions.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INTemperatureResolutionResult">Apple documentation for <c>INTemperatureResolutionResult</c></related>
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[Deprecated (PlatformName.MacOSX, 12, 0)]
@@ -7942,6 +8404,9 @@ namespace Intents {
 		INTemperatureResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
 	}
 
+	/// <summary>Holds terms and conditions relevant to restaurant reservations.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INTermsAndConditions">Apple documentation for <c>INTermsAndConditions</c></related>
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
@@ -7986,6 +8451,10 @@ namespace Intents {
 		void RemoveAllVocabularyStrings ();
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResolutionResult" /> for resolving parameters in workout-related  interactions.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INWorkoutGoalUnitTypeResolutionResult">Apple documentation for <c>INWorkoutGoalUnitTypeResolutionResult</c></related>
 	[Unavailable (PlatformName.MacOSX)] // xtro mac !unknown-type! INWorkoutGoalUnitTypeResolutionResult bound
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -8054,6 +8523,10 @@ namespace Intents {
 		INWorkoutGoalUnitTypeResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResolutionResult" /> for resolving parameters in workout-related  interactions.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INWorkoutLocationTypeResolutionResult">Apple documentation for <c>INWorkoutLocationTypeResolutionResult</c></related>
 	[Unavailable (PlatformName.MacOSX)] // xtro mac !unknown-type! INWorkoutLocationTypeResolutionResult bound
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -8156,6 +8629,7 @@ namespace Intents {
 		void SetShortcutAvailability (INShortcutAvailabilityOptions shortcutAvailabilityOptions);
 	}
 
+	/// <summary>An <see cref="T:Intents.INIntent" /> for causing a car to make its presence known by flashing its lights or honking its horn.</summary>
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -8200,6 +8674,7 @@ namespace Intents {
 		void ResolveSignals (INActivateCarSignalIntent intent, Action<INCarSignalOptionsResolutionResult> completion);
 	}
 
+	/// <summary>Information relating to a bill.</summary>
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Deprecated (PlatformName.WatchOS, 8, 0)]
 	[Unavailable (PlatformName.MacOSX)]
@@ -8239,6 +8714,7 @@ namespace Intents {
 		NSDateComponents PaymentDate { get; set; }
 	}
 
+	/// <summary>The entity to which a bill payment is made.</summary>
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Deprecated (PlatformName.WatchOS, 8, 0)]
 	[Unavailable (PlatformName.MacOSX)]
@@ -8263,6 +8739,8 @@ namespace Intents {
 		INSpeakableString OrganizationName { get; }
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResolutionResult" /> for resolving parameters in interactions involving bill payments.</summary>
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Deprecated (PlatformName.WatchOS, 8, 0)]
 	[Unavailable (PlatformName.MacOSX)]
@@ -8318,6 +8796,8 @@ namespace Intents {
 		INBillPayeeResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResolutionResult" /> for resolving parameters in interactions involving bill payments.</summary>
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Deprecated (PlatformName.WatchOS, 8, 0)]
 	[Unavailable (PlatformName.MacOSX)]
@@ -8389,6 +8869,8 @@ namespace Intents {
 		INBillTypeResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResolutionResult" /> for resolving parameters in interactions involving a car signaling its whereabouts.</summary>
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -8457,6 +8939,7 @@ namespace Intents {
 		INCarSignalOptionsResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
 	}
 
+	/// <summary>An <see cref="T:Intents.INIntent" /> for retrieving information on a car’s locks.</summary>
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -8495,6 +8978,8 @@ namespace Intents {
 		void ResolveCarName (INGetCarLockStatusIntent intent, Action<INSpeakableStringResolutionResult> completion);
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResponse" /> subclass that developers of <see cref="T:Intents.IINGetCarLockStatusIntentHandling" /> interface implementations populate with their extension's results.</summary>
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -8517,6 +9002,7 @@ namespace Intents {
 		NSNumber _Locked { get; set; }
 	}
 
+	/// <summary>An <see cref="T:Intents.INIntent" /> for retrieving the current power level of a car.</summary>
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -8580,6 +9066,8 @@ namespace Intents {
 	// Just to please the generator that at this point does not know the hierarchy
 	interface NSUnitLength : NSUnit { }
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResponse" /> subclass that developers of <see cref="T:Intents.IINSendPaymentIntentHandling" /> interface implementations populate with their extension's results.</summary>
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -8690,6 +9178,7 @@ namespace Intents {
 		NSMeasurement<NSUnitEnergy> MinimumBatteryCapacity { get; set; }
 	}
 
+	/// <summary>An <see cref="T:Intents.INIntent" /> for paying a bill.</summary>
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Deprecated (PlatformName.WatchOS, 8, 0)]
 	[Unavailable (PlatformName.MacOSX)]
@@ -8772,6 +9261,8 @@ namespace Intents {
 		void ResolveDueDate (INPayBillIntent intent, Action<INDateComponentsRangeResolutionResult> completion);
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResponse" /> subclass that developers of <see cref="T:Intents.IINPayBillIntentHandling" /> interface implementations populate with their extension's results.</summary>
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Deprecated (PlatformName.WatchOS, 8, 0)]
 	[Unavailable (PlatformName.MacOSX)]
@@ -8805,6 +9296,7 @@ namespace Intents {
 		string TransactionNote { get; set; }
 	}
 
+	/// <summary>Account details for a payment intent.</summary>
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -8844,6 +9336,8 @@ namespace Intents {
 		INBalanceAmount SecondaryBalance { get; }
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResolutionResult" /> for resolving parameters in interactions involving payments.</summary>
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -8896,6 +9390,7 @@ namespace Intents {
 		INPaymentAccountResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
 	}
 
+	/// <summary>Details on the amount of a payment intention.</summary>
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -8914,6 +9409,8 @@ namespace Intents {
 		INAmountType AmountType { get; }
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResolutionResult" /> for resolving parameters in interactions involving payments.</summary>
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -8966,6 +9463,8 @@ namespace Intents {
 		INPaymentAmountResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResolutionResult" /> for resolving parameters in interactions involving payments.</summary>
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -9034,6 +9533,7 @@ namespace Intents {
 		INPaymentStatusResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
 	}
 
+	/// <summary>An <see cref="T:Intents.INIntent" /> for locating bills.</summary>
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Deprecated (PlatformName.WatchOS, 8, 0)]
 	[Unavailable (PlatformName.MacOSX)]
@@ -9104,6 +9604,8 @@ namespace Intents {
 		void ResolveDueDateRange (INSearchForBillsIntent intent, Action<INDateComponentsRangeResolutionResult> completion);
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResponse" /> subclass that developers of <see cref="T:Intents.IINSearchForBillsIntentHandling" /> interface implementations populate with their extension's results.</summary>
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Deprecated (PlatformName.WatchOS, 8, 0)]
 	[Unavailable (PlatformName.MacOSX)]
@@ -9125,6 +9627,7 @@ namespace Intents {
 		INBillDetails [] Bills { get; set; }
 	}
 
+	/// <summary>The name and desired locked/unlocked state of a car.</summary>
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -9174,6 +9677,8 @@ namespace Intents {
 		void ResolveCarName (INSetCarLockStatusIntent intent, Action<INSpeakableStringResolutionResult> completion);
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResponse" /> subclass that developers of <see cref="T:Intents.IINSetCarLockStatusIntentHandling" /> interface implementations populate with their extension's results.</summary>
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -9189,6 +9694,8 @@ namespace Intents {
 		INSetCarLockStatusIntentResponseCode Code { get; }
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResponse" /> subclass that developers of <see cref="T:Intents.IINActivateCarSignalIntentHandling" /> interface implementations populate with their extension's results.</summary>
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -9207,6 +9714,8 @@ namespace Intents {
 		INCarSignalOptions Signals { get; set; }
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResolutionResult" /> for resolving parameters in account-related interactions.</summary>
 	[NoTV, NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResolutionResult))]
@@ -9254,6 +9763,7 @@ namespace Intents {
 		INAccountTypeResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
 	}
 
+	/// <summary>An <see cref="T:Intents.INIntent" /> indicating the user wishes to add a task to a list.</summary>
 	[NoMac, NoTV]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntent))]
@@ -9335,6 +9845,8 @@ namespace Intents {
 		void ResolvePriority (INAddTasksIntent intent, Action<INTaskPriorityResolutionResult> completion);
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResponse" /> subclass that developers of <see cref="T:Intents.IINAddTasksIntentHandling" /> interface implementations populate with their extension's results.</summary>
 	[NoTV, NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResponse))]
@@ -9355,6 +9867,7 @@ namespace Intents {
 		INTask [] AddedTasks { get; set; }
 	}
 
+	/// <summary>An <see cref="T:Intents.INIntent" /> indicating the user wishes to append content to a note.</summary>
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Deprecated (PlatformName.WatchOS, 8, 0)]
 	[NoMac, NoTV]
@@ -9396,6 +9909,8 @@ namespace Intents {
 		void ResolveContentForAppend (INAppendToNoteIntent intent, Action<INNoteContentResolutionResult> completion);
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResponse" /> subclass that developers of <see cref="T:Intents.IINAppendToNoteIntentHandling" /> interface implementations populate with their extension's results.</summary>
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Deprecated (PlatformName.WatchOS, 8, 0)]
 	[NoTV, NoMac]
@@ -9416,6 +9931,7 @@ namespace Intents {
 		INNote Note { get; set; }
 	}
 
+	/// <summary>A balance for an account.</summary>
 	[NoTV, NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -9440,6 +9956,8 @@ namespace Intents {
 		string CurrencyCode { get; }
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResolutionResult" /> for resolving parameters in interactions related to account balances.</summary>
 	[NoTV, NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResolutionResult))]
@@ -9487,6 +10005,8 @@ namespace Intents {
 		INBalanceTypeResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResolutionResult" /> for resolving parameters in interactions related to call destinations.</summary>
 	[Mac (12, 0)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -9535,6 +10055,7 @@ namespace Intents {
 		INCallDestinationTypeResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
 	}
 
+	/// <summary>Information about a past call.</summary>
 	[Mac (12, 0)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -9619,6 +10140,8 @@ namespace Intents {
 		INPerson [] Participants { get; }
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResolutionResult" /> for resolving parameters in call recording-related interactions.</summary>
 	[Mac (12, 0)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -9667,6 +10190,7 @@ namespace Intents {
 		INCallRecordTypeOptionsResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
 	}
 
+	/// <summary>An <see cref="T:Intents.INIntent" /> indicating the user wishes to cancel a ride.</summary>
 	[NoWatch, NoMac, NoTV]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntent))]
@@ -9694,6 +10218,8 @@ namespace Intents {
 		void Confirm (INCancelRideIntent intent, Action<INCancelRideIntentResponse> completion);
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResponse" /> subclass that developers of <see cref="T:Intents.IINCancelRideIntentHandling" /> interface implementations populate with their extension's results.</summary>
 	[NoWatch, NoMac, NoTV]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResponse))]
@@ -9714,6 +10240,7 @@ namespace Intents {
 		NSDateComponents CancellationFeeThreshold { get; set; }
 	}
 
+	/// <summary>An <see cref="T:Intents.INIntent" /> indicating the user wishes to create a new note.</summary>
 	[NoTV, NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntent))]
@@ -9756,6 +10283,8 @@ namespace Intents {
 		void ResolveGroupName (INCreateNoteIntent intent, Action<INSpeakableStringResolutionResult> completion);
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResponse" /> subclass that developers of <see cref="T:Intents.IINCreateNoteIntentHandling" /> interface implementations populate with their extension's results.</summary>
 	[NoTV, NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResponse))]
@@ -9773,6 +10302,7 @@ namespace Intents {
 		INNote CreatedNote { get; set; }
 	}
 
+	/// <summary>An <see cref="T:Intents.INIntent" /> indicating the user wishes to create a new task list.</summary>
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Deprecated (PlatformName.WatchOS, 8, 0)]
 	[NoTV, NoMac]
@@ -9821,6 +10351,8 @@ namespace Intents {
 		void ResolveGroupName (INCreateTaskListIntent intent, Action<INSpeakableStringResolutionResult> completion);
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResponse" /> subclass that developers of <see cref="T:Intents.IINCreateTaskListIntentHandling" /> interface implementations populate with their extension's results.</summary>
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Deprecated (PlatformName.WatchOS, 8, 0)]
 	[NoTV, NoMac]
@@ -9888,6 +10420,7 @@ namespace Intents {
 		INDateSearchTypeResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
 	}
 
+	/// <summary>An <see cref="T:Intents.INIntent" /> indicating the user wishes to get a bar or QR code for payment or contact information.</summary>
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Deprecated (PlatformName.WatchOS, 8, 0)]
 	[NoTV, NoMac]
@@ -9924,6 +10457,8 @@ namespace Intents {
 		void ResolveVisualCodeType (INGetVisualCodeIntent intent, Action<INVisualCodeTypeResolutionResult> completion);
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResponse" /> subclass that developers of <see cref="T:Intents.IINGetVisualCodeIntentHandling" /> interface implementations populate with their extension's results.</summary>
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Deprecated (PlatformName.WatchOS, 8, 0)]
 	[NoTV, NoMac]
@@ -9944,6 +10479,7 @@ namespace Intents {
 		INImage VisualCodeImage { get; set; }
 	}
 
+	/// <summary>Represents an image within a note.</summary>
 	[NoTV, NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INNoteContent))]
@@ -9956,6 +10492,8 @@ namespace Intents {
 		INImage Image { get; }
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResolutionResult" /> for resolving parameters in location search-related interactions.</summary>
 	[NoTV, NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResolutionResult))]
@@ -10003,6 +10541,7 @@ namespace Intents {
 		INLocationSearchTypeResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
 	}
 
+	/// <summary>Note content for a single note in an app.</summary>
 	[NoTV, NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -10031,12 +10570,15 @@ namespace Intents {
 		string Identifier { get; }
 	}
 
+	/// <summary>Base class for note content.</summary>
 	[NoTV, NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface INNoteContent : NSSecureCoding, NSCopying {
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResolutionResult" /> for resolving parameters in note content-related interactions.</summary>
 	[NoTV, NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResolutionResult))]
@@ -10088,6 +10630,8 @@ namespace Intents {
 		INNoteContentResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResolutionResult" /> for resolving parameters in note content type-related interactions.</summary>
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Not used anymore.")]
 	[Deprecated (PlatformName.WatchOS, 6, 0, message: "Not used anymore.")]
 	[NoTV, NoMac]
@@ -10137,6 +10681,8 @@ namespace Intents {
 		INNoteContentTypeResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResolutionResult" /> for resolving parameters in note-related interactions.</summary>
 	[NoTV, NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResolutionResult))]
@@ -10187,6 +10733,8 @@ namespace Intents {
 		INNoteResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResolutionResult" /> for resolving parameters in notebook item type-related interactions.</summary>
 	[NoTV, NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResolutionResult))]
@@ -10238,6 +10786,7 @@ namespace Intents {
 	}
 
 #if NET
+	/// <summary>Represents a custom interface parameter for a developer-defined Siri interaction.</summary>
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -10276,6 +10825,7 @@ namespace Intents {
 	}
 
 #if NET
+	/// <summary>A repetition rule for date ranges.</summary>
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -10307,6 +10857,8 @@ namespace Intents {
 		INDayOfWeekOptions WeeklyRecurrenceDays { get; }
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResolutionResult" /> for resolving parameters in currency-related interactions.</summary>
 	[NoTV, NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INCurrencyAmountResolutionResult))]
@@ -10353,6 +10905,8 @@ namespace Intents {
 		INRequestPaymentCurrencyAmountResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResolutionResult" /> for resolving parameters in payer-related interactions.</summary>
 	[NoTV, NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INPersonResolutionResult))]
@@ -10415,6 +10969,7 @@ namespace Intents {
 		INRequestPaymentPayerResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
 	}
 
+	/// <summary>An <see cref="T:Intents.INIntent" /> indicating the user wishes to search for accounts information.</summary>
 	[NoTV, NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntent))]
@@ -10462,6 +11017,8 @@ namespace Intents {
 		void ResolveRequestedBalanceType (INSearchForAccountsIntent intent, Action<INBalanceTypeResolutionResult> completion);
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResponse" /> subclass that developers of <see cref="T:Intents.IINSearchForAccountsIntentHandling" /> interface implementations populate with their extension's results.</summary>
 	[NoTV, NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResponse))]
@@ -10479,6 +11036,7 @@ namespace Intents {
 		INPaymentAccount [] Accounts { get; set; }
 	}
 
+	/// <summary>An <see cref="T:Intents.INIntent" /> indicating the user wishes to search for notes, tasks, or reminders.</summary>
 	[NoTV, NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntent))]
@@ -10591,6 +11149,8 @@ namespace Intents {
 		void ResolveTaskPriority (INSearchForNotebookItemsIntent intent, Action<INTaskPriorityResolutionResult> completion);
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResponse" /> subclass that developers of <see cref="T:Intents.IINSearchForNotebookItemsIntentHandling" /> interface implementations populate with their extension's results.</summary>
 	[NoTV, NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResponse))]
@@ -10617,6 +11177,8 @@ namespace Intents {
 		INSortType SortType { get; set; }
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResolutionResult" /> for resolving parameters in recipient-related message send interactions.</summary>
 	[Mac (12, 0)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -10680,6 +11242,8 @@ namespace Intents {
 		INSendMessageRecipientResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResolutionResult" /> for resolving parameters in currency-related interactions for sending payments.</summary>
 	[NoTV, NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INCurrencyAmountResolutionResult))]
@@ -10726,6 +11290,8 @@ namespace Intents {
 		INSendPaymentCurrencyAmountResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResolutionResult" /> for resolving parameters in payee-related interactions for sending payments.</summary>
 	[NoTV, NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INPersonResolutionResult))]
@@ -10788,6 +11354,7 @@ namespace Intents {
 		INSendPaymentPayeeResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
 	}
 
+	/// <summary>An <see cref="T:Intents.INIntent" /> indicating the user wishes to send feedback about a ride.</summary>
 	[NoWatch, NoTV, NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntent))]
@@ -10821,6 +11388,8 @@ namespace Intents {
 		void Confirm (INSendRideFeedbackIntent sendRideFeedbackIntent, Action<INSendRideFeedbackIntentResponse> completion);
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResponse" /> subclass that developers of <see cref="T:Intents.IINSendRideFeedbackIntentHandling" /> interface implementations populate with their extension's results.</summary>
 	[NoWatch, NoTV, NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResponse))]
@@ -10835,6 +11404,7 @@ namespace Intents {
 		INSendRideFeedbackIntentResponseCode Code { get; }
 	}
 
+	/// <summary>An <see cref="T:Intents.INIntent" /> indicating the user wishes to modify a task attribute, for example, by marking a task complete.</summary>
 	[NoTV, NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntent))]
@@ -10918,6 +11488,8 @@ namespace Intents {
 		void ResolveTemporalEventTrigger (INSetTaskAttributeIntent intent, Action<INSetTaskAttributeTemporalEventTriggerResolutionResult> completionHandler);
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResponse" /> subclass that developers of <see cref="T:Intents.IINSetTaskAttributeIntentHandling" /> interface implementations populate with their extension's results.</summary>
 	[NoTV, NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResponse))]
@@ -10952,6 +11524,8 @@ namespace Intents {
 		INSpatialEvent Event { get; }
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResolutionResult" /> for resolving parameters in spatial event trigger-related interactions.</summary>
 	[NoTV, NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResolutionResult))]
@@ -11003,6 +11577,7 @@ namespace Intents {
 		INSpatialEventTriggerResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
 	}
 
+	/// <summary>A task for the user.</summary>
 	[NoTV, NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -11048,6 +11623,7 @@ namespace Intents {
 		INTaskPriority Priority { get; }
 	}
 
+	/// <summary>A list of tasks for the user.</summary>
 	[NoTV, NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -11077,6 +11653,8 @@ namespace Intents {
 		string Identifier { get; }
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResolutionResult" /> for resolving parameters in task list-related interactions.</summary>
 	[NoTV, NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResolutionResult))]
@@ -11128,6 +11706,8 @@ namespace Intents {
 		INTaskListResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResolutionResult" /> for resolving parameters in task-related interactions.</summary>
 	[NoTV, NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResolutionResult))]
@@ -11179,6 +11759,8 @@ namespace Intents {
 		INTaskResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResolutionResult" /> for resolving parameters in task status-related interactions.</summary>
 	[NoTV, NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResolutionResult))]
@@ -11226,6 +11808,7 @@ namespace Intents {
 		INTaskStatusResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
 	}
 
+	/// <summary>A time-based reminder trigger for a user task.</summary>
 	[NoTV, NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -11240,6 +11823,8 @@ namespace Intents {
 		INDateComponentsRange DateComponentsRange { get; }
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResolutionResult" /> for resolving parameters in temporal event trigger-related interactions.</summary>
 	[NoTV, NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResolutionResult))]
@@ -11291,6 +11876,7 @@ namespace Intents {
 		INTemporalEventTriggerResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
 	}
 
+	/// <summary>The text of a note.</summary>
 	[NoTV, NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INNoteContent))]
@@ -11304,6 +11890,7 @@ namespace Intents {
 		string Text { get; }
 	}
 
+	/// <summary>An <see cref="T:Intents.INIntent" /> indicating the user wishes to transfer funds.</summary>
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Deprecated (PlatformName.WatchOS, 8, 0)]
 	[NoTV, NoMac]
@@ -11364,6 +11951,8 @@ namespace Intents {
 		void ResolveTransactionNote (INTransferMoneyIntent intent, Action<INStringResolutionResult> completion);
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResponse" /> subclass that developers of <see cref="T:Intents.IINTransferMoneyIntentHandling" /> interface implementations populate with their extension's results.</summary>
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Deprecated (PlatformName.WatchOS, 8, 0)]
 	[NoTV, NoMac]
@@ -11399,6 +11988,8 @@ namespace Intents {
 		INCurrencyAmount TransferFee { get; set; }
 	}
 
+	/// <summary>
+	///       <see cref="T:Intents.INIntentResolutionResult" /> for resolving parameters in visual code type-related interactions.</summary>
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Deprecated (PlatformName.WatchOS, 8, 0)]
 	[NoTV, NoMac]

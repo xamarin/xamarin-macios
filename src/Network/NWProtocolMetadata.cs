@@ -73,28 +73,24 @@ namespace Network {
 		public NWProtocolDefinition ProtocolDefinition => new NWProtocolDefinition (nw_protocol_metadata_copy_definition (GetCheckedHandle ()), owns: true);
 
 		[DllImport (Constants.NetworkLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		internal static extern bool nw_protocol_metadata_is_ip (OS_nw_protocol_metadata metadata);
+		internal static extern byte nw_protocol_metadata_is_ip (OS_nw_protocol_metadata metadata);
 
-		public bool IsIP => nw_protocol_metadata_is_ip (GetCheckedHandle ());
-
-		[DllImport (Constants.NetworkLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		internal static extern bool nw_protocol_metadata_is_udp (OS_nw_protocol_metadata metadata);
-
-		public bool IsUdp => nw_protocol_metadata_is_udp (GetCheckedHandle ());
+		public bool IsIP => nw_protocol_metadata_is_ip (GetCheckedHandle ()) != 0;
 
 		[DllImport (Constants.NetworkLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		internal static extern bool nw_protocol_metadata_is_tls (OS_nw_protocol_metadata metadata);
+		internal static extern byte nw_protocol_metadata_is_udp (OS_nw_protocol_metadata metadata);
 
-		public bool IsTls => nw_protocol_metadata_is_tls (GetCheckedHandle ());
+		public bool IsUdp => nw_protocol_metadata_is_udp (GetCheckedHandle ()) != 0;
 
 		[DllImport (Constants.NetworkLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		internal static extern bool nw_protocol_metadata_is_tcp (OS_nw_protocol_metadata metadata);
+		internal static extern byte nw_protocol_metadata_is_tls (OS_nw_protocol_metadata metadata);
 
-		public bool IsTcp => nw_protocol_metadata_is_tcp (GetCheckedHandle ());
+		public bool IsTls => nw_protocol_metadata_is_tls (GetCheckedHandle ()) != 0;
+
+		[DllImport (Constants.NetworkLibrary)]
+		internal static extern byte nw_protocol_metadata_is_tcp (OS_nw_protocol_metadata metadata);
+
+		public bool IsTcp => nw_protocol_metadata_is_tcp (GetCheckedHandle ()) != 0;
 
 #if NET
 		[SupportedOSPlatform ("tvos15.0")]
@@ -109,8 +105,7 @@ namespace Network {
 		[MacCatalyst (15, 0)]
 #endif
 		[DllImport (Constants.NetworkLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static extern bool nw_protocol_metadata_is_quic (OS_nw_protocol_metadata metadata);
+		static extern byte nw_protocol_metadata_is_quic (OS_nw_protocol_metadata metadata);
 
 #if NET
 		[SupportedOSPlatform ("tvos15.0")]
@@ -124,7 +119,7 @@ namespace Network {
 		[iOS (15, 0)]
 		[MacCatalyst (15, 0)]
 #endif
-		public bool IsQuic => nw_protocol_metadata_is_quic (GetCheckedHandle ());
+		public bool IsQuic => nw_protocol_metadata_is_quic (GetCheckedHandle ()) != 0;
 
 		[DllImport (Constants.NetworkLibrary)]
 		internal static extern IntPtr nw_tls_copy_sec_protocol_metadata (IntPtr handle);
@@ -253,8 +248,7 @@ namespace Network {
 		[iOS (13, 0)]
 #endif
 		[DllImport (Constants.NetworkLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		internal static extern bool nw_protocol_metadata_is_framer_message (OS_nw_protocol_metadata metadata);
+		internal static extern byte nw_protocol_metadata_is_framer_message (OS_nw_protocol_metadata metadata);
 
 #if NET
 		[SupportedOSPlatform ("tvos13.0")]
@@ -265,7 +259,7 @@ namespace Network {
 		[TV (13, 0)]
 		[iOS (13, 0)]
 #endif
-		public bool IsFramerMessage => nw_protocol_metadata_is_framer_message (GetCheckedHandle ());
+		public bool IsFramerMessage => nw_protocol_metadata_is_framer_message (GetCheckedHandle ()) != 0;
 
 #if NET
 		[SupportedOSPlatform ("tvos13.0")]
@@ -277,8 +271,7 @@ namespace Network {
 		[iOS (13, 0)]
 #endif
 		[DllImport (Constants.NetworkLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		internal static extern bool nw_protocol_metadata_is_ws (OS_nw_protocol_metadata metadata);
+		internal static extern byte nw_protocol_metadata_is_ws (OS_nw_protocol_metadata metadata);
 
 #if NET
 		[SupportedOSPlatform ("tvos13.0")]
@@ -289,6 +282,6 @@ namespace Network {
 		[TV (13, 0)]
 		[iOS (13, 0)]
 #endif
-		public bool IsWebSocket => nw_protocol_metadata_is_ws (GetCheckedHandle ());
+		public bool IsWebSocket => nw_protocol_metadata_is_ws (GetCheckedHandle ()) != 0;
 	}
 }

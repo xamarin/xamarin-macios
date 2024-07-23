@@ -1,0 +1,143 @@
+<Documentation>
+  <Docs DocId="T:Foundation.NSNotificationCenter">
+    <summary>A notification hub for the application.</summary>
+    <remarks>
+      <para>
+	The NSNotificationCenter is a hub that is used to listen to
+	broadcast messages and post broadcast messages in an
+	application.    The messages that are posted are synchronous.
+      </para>
+      <para> 
+	The NSNotificationCenter.DefaultCenter plays a central
+	role in the application as this is where system notifications
+	are posted for interesting system-level events.  
+      </para>
+      <para>
+	Posting a notification is a synchronous process, which means
+	that invoking one of the Post messages on the notification
+	center will block execution until all of the notification handlers have completed running. 
+
+      </para>
+      <para>
+	Notifications are posted on the same thread as the calling
+	thread which could have undesired effects.  If you need to
+	deliver notifications from a background thread, use the <see cref="M:Foundation.NSObject.BeginInvokeOnMainThread(System.Action)" /> method to wrap your posting into a delegate that is
+	invoked on the main thread.
+
+      </para>
+      <para>
+	When subscribing to a notification, it is possible to
+	subscribe only to a certain kind of notification by specifying
+	the notification name (or null to listen to all notifications
+	posted to the notification center).  It is also possible to
+	subscribe only to notifications issued by a specific object.
+	This can be used to filter the amount of notifications
+	received.
+
+      </para>
+      <para>
+	Notifications are usually NSString fields that are hosted in
+	some class, for example the Objective-C
+	UITextViewTextDidChangeNotification is found in the class
+	UITextView as the <see cref="P:UIKit.UITextView.TextDidChangeNotification" />.
+	For convenience there are overloads that take C# strings.
+
+      </para>
+      <para>
+	To register for notifications, you can use the AddObserver
+	method.  We recommend that you use the C# versions of these
+	methods, as you can directly connect delegates, lambdas and
+	methods directly into your code.  When you use any of the
+	AddObserver methods in this class that take an
+	Action&lt;NSNotification;&gt; parameter, the AddObserver will
+	return a token.  This token is then used as the parameter to
+	RemoveNotification when you want to stop listening to a
+	particular event.
+
+      </para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+NSObject notificationToken;
+
+void Setup ()
+{
+	notificationToken = NSNotificationCenter.DefaultCenter.AddObserver (FooBar.ClockNotification, OnClockChange);
+}
+
+void OnClockChange (NSNotification notification)
+{
+	Console.WriteLine ("The ClockNotification message was posted");
+}
+
+void Teardown ()
+{
+	NSNotificationCenter.DefaultCenter.RemoveObserver (notificationToken);
+}
+]]></code>
+      </example>
+      <para>
+	Starting with MonoTouch 5.4, calling Dispose on the returned
+	notification token will also remove the observer for you,
+	making the code shorter.   For example:
+
+      </para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+NSObject notificationToken;
+
+void Setup ()
+{
+	notificationToken = NSNotificationCenter.DefaultCenter.AddObserver (FooBar.ClockNotification, OnClockChange);
+}
+
+void OnClockChange (NSNotification notification)
+{
+	Console.WriteLine ("The ClockNotification message was posted");
+}
+
+void Teardown ()
+{
+	notificationToken.Dispose ();
+}
+]]></code>
+      </example>
+      <para>
+        Similarly, if your object implements <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=System%20IDisposable&amp;scope=Xamarin" title="T:System.IDisposable">T:System.IDisposable</a></format> (including any object derived from <see cref="T:Foundation.NSObject" />)
+        you MUST call <see cref="M:Foundation.NSNotificationCenter.RemoveObservers(System.Collections.Generic.IEnumerable{Foundation.NSObject})" /> or <c>notificationToken.Dispose()</c> in your <c>Dispose</c> function: 
+      </para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+class MyClass : NSObject
+{
+      private NSObject notificationToken; 
+
+      MyClass()
+      { 
+         notificationToken = NSNotificationCenter.DefaultCenter.AddObserver(notificationName, NotificationHandler);
+      }
+
+      void NotificationHandler(NSNotification notification)
+      {
+         // ... etc ...
+      }
+
+      private bool disposed = false;
+      override protected void Dispose(bool disposing)
+      {
+         if (!disposed)
+         {
+               if (disposing)
+               {
+                  notificationToken.Dispose();
+               }
+               disposed = true;
+               base.Dispose();
+         }
+      }
+}
+    ]]></code>
+      </example>
+    </remarks>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Cocoa/Reference/Foundation/Classes/NSNotificationCenter_Class/index.html">Apple documentation for <c>NSNotificationCenter</c></related>
+  </Docs>
+</Documentation>

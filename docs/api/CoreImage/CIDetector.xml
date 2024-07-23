@@ -1,0 +1,36 @@
+<Documentation>
+  <Docs DocId="T:CoreImage.CIDetector">
+    <summary>Image analysis class for face detection.</summary>
+    <remarks>
+      <para>
+	CIDetector is a general API to perform image analysis on an
+	image, but as of iOS5 only face detection is supported.  You
+	initiate the face detection by calling the static method <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=M:CoreImage.CIDetector.CreateFaceDetector(CoreImage.CIContext,bool)&amp;scope=Xamarin" title="M:CoreImage.CIDetector.CreateFaceDetector(CoreImage.CIContext,bool)">M:CoreImage.CIDetector.CreateFaceDetector(CoreImage.CIContext,bool)</a></format>
+	and then get the results by calling one of the FeaturesInImage
+	overloads.
+      </para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+var imageFile = "photoFace2.jpg";
+var image = new UIImage(imageFile);
+
+var context = new CIContext ();
+var detector = CIDetector.CreateFaceDetector (context, true);
+var ciImage = CIImage.FromCGImage (image.CGImage);
+var features = detector.GetFeatures (ciImage);
+
+Console.WriteLine ("Found " + features.Length + " faces (origin bottom-left)");
+foreach (var feature in features){
+    var facefeature = (CIFaceFeature) feature;
+
+    Console.WriteLine ("Left eye  {0} {1}\n", facefeature.HasLeftEyePosition,  facefeature.LeftEyePosition);
+    Console.WriteLine ("Right eye {0} {1}\n", facefeature.HasRightEyePosition, facefeature.RightEyePosition);
+    Console.WriteLine ("Mouth     {0} {1}\n", facefeature.HasMouthPosition,    facefeature.MouthPosition);
+}
+	]]></code>
+      </example>
+      <para>Instances of <see cref="T:CoreImage.CIDetector" /> are expensive to initialize, so application developers should prefer to re-use existing instances rather than frequently creating new ones.</para>
+    </remarks>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/CoreImage/Reference/CIDetector_Ref/index.html">Apple documentation for <c>CIDetector</c></related>
+  </Docs>
+</Documentation>

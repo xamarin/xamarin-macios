@@ -1140,5 +1140,14 @@ namespace bgen {
                 return ResourceManager.GetString("BI1119", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The type &apos;{0}&apos; is trying to inline the methods binding the selector &apos;{1}&apos; from the protocols &apos;{2}&apos; and &apos;{3}&apos;, using methods with different signatures (&apos;{4}&apos; vs &apos;{5}&apos;). These methods will be ignored..
+        /// </summary>
+        internal static string BI1120 {
+            get {
+                return ResourceManager.GetString("BI1120", resourceCulture);
+            }
+        }
     }
 }

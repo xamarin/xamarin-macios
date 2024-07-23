@@ -31,6 +31,7 @@ using NativeHandle = System.IntPtr;
 
 namespace HealthKit {
 
+	/// <summary>Enumerates HealthKit document types.</summary>
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	public enum HKDocumentTypeIdentifier {
@@ -39,6 +40,7 @@ namespace HealthKit {
 	}
 
 	// NSInteger -> HKDefines.h
+	/// <summary>Enumerates common errors made when accessing health data.</summary>
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[ErrorDomain ("HKErrorDomain")]
@@ -61,6 +63,7 @@ namespace HealthKit {
 		BackgroundWorkoutSessionNotAllowed,
 	}
 
+	/// <summary>Enumerates workout locations.</summary>
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -88,6 +91,7 @@ namespace HealthKit {
 		Stopped,
 	}
 
+	/// <summary>Enumerates the possible activity-levels associated with a heart-rate sample.</summary>
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -182,6 +186,8 @@ namespace HealthKit {
 	}
 
 #if NET
+	/// <summary>The completion handler for <see cref="M:HealthKit.HKAnchoredObjectQuery.#ctor(HealthKit.HKSampleType,Foundation.NSPredicate,System.nuint,System.nuint,HealthKit.HKAnchoredObjectResultHandler2)" />.</summary>
+	/// <summary>Completion handler for anchored object queries.</summary>
 	delegate void HKAnchoredObjectResultHandler (HKAnchoredObjectQuery query, HKSample[] results, nuint newAnchor, NSError error);
 #else
 	delegate void HKAnchoredObjectResultHandler2 (HKAnchoredObjectQuery query, HKSample [] results, nuint newAnchor, NSError error);
@@ -194,6 +200,9 @@ namespace HealthKit {
 
 	delegate void HKWorkoutRouteBuilderDataHandler (HKWorkoutRouteQuery query, CLLocation [] routeData, bool done, NSError error);
 
+	/// <summary>An <see cref="T:HealthKit.HKQuery" /> that on its initial call returns the most recent result and in subsequent calls returns only data added after the initial call.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/HealthKit/Reference/HKAnchoredObjectQuery_Class/index.html">Apple documentation for <c>HKAnchoredObjectQuery</c></related>
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (HKQuery))]
@@ -232,6 +241,7 @@ namespace HealthKit {
 		HKAnchoredObjectUpdateHandler UpdateHandler { get; set; }
 	}
 
+	/// <summary>Contains constants that represent keys that identify predicate key paths for selecting HealthKit values.</summary>
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[Static]
@@ -452,6 +462,9 @@ namespace HealthKit {
 		NSString ValidationError { get; }
 	}
 
+	/// <summary>An <see cref="T:HealthKit.HKSample" /> whose value is one of an enumerated type.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/HealthKit/Reference/HKCategorySample_Class/index.html">Apple documentation for <c>HKCategorySample</c></related>
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor] // - (instancetype)init NS_UNAVAILABLE;
@@ -482,6 +495,9 @@ namespace HealthKit {
 		HKCategorySample FromType (HKCategoryType type, nint value, NSDate startDate, NSDate endDate, [NullAllowed] HKDevice device, [NullAllowed] NSDictionary<NSString, NSObject> metadata);
 	}
 
+	/// <summary>Abstract HealthKit store health document.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/HealthKit/HKDocumentSample">Apple documentation for <c>HKDocumentSample</c></related>
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (HKSample))]
@@ -494,6 +510,9 @@ namespace HealthKit {
 		HKDocumentType DocumentType { get; }
 	}
 
+	/// <summary>Contains the information that is represented in XML in a HealthKit store health document.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/HealthKit/HKCDADocumentSample">Apple documentation for <c>HKCDADocumentSample</c></related>
 	[NoWatch, Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (HKDocumentSample), Name = "HKCDADocumentSample")]
@@ -514,6 +533,9 @@ namespace HealthKit {
 		HKCdaDocumentSample Create (NSData documentData, NSDate startDate, NSDate endDate, HKMetadata metadata, out NSError validationError);
 	}
 
+	/// <summary>Contains the information that is represented in XML in a HealthKit store health document.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/HealthKit/HKCDADocument">Apple documentation for <c>HKCDADocument</c></related>
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject), Name = "HKCDADocument")]
@@ -535,6 +557,9 @@ namespace HealthKit {
 		string CustodianName { get; }
 	}
 
+	/// <summary>A correlation between two pieces of health data (for instance, blood pressure).</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/HealthKit/Reference/HKCorrelation_Class/index.html">Apple documentation for <c>HKCorrelation</c></related>
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (HKSample))]
@@ -566,8 +591,12 @@ namespace HealthKit {
 		HKCorrelation Create (HKCorrelationType correlationType, NSDate startDate, NSDate endDate, NSSet<HKSample> objects, [NullAllowed] HKDevice device, [NullAllowed] NSDictionary<NSString, NSObject> metadata);
 	}
 
+	/// <summary>Completion handler for <see cref="T:HealthKit.HKCorrelationQuery" />.</summary>
 	delegate void HKCorrelationQueryResultHandler (HKCorrelationQuery query, HKCorrelation [] correlations, NSError error);
 
+	/// <summary>An <see cref="T:HealthKit.HKQuery" /> that returns only data that had been stored with correlations. (Note: Systolic and diastolic blood pressure readings are not correlated.)</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/HealthKit/Reference/HKCorrelationQuery_Class/index.html">Apple documentation for <c>HKCorrelationQuery</c></related>
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (HKQuery))]
@@ -583,6 +612,9 @@ namespace HealthKit {
 		NSDictionary SamplePredicates { get; }
 	}
 
+	/// <summary>An <see cref="T:HealthKit.HKSampleType" /> that specifies a correlation between two types of data (for instance, blood pressure).</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/HealthKit/Reference/HKCorrelationType_Class/index.html">Apple documentation for <c>HKCorrelationType</c></related>
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (HKSampleType))]
@@ -591,10 +623,14 @@ namespace HealthKit {
 
 	}
 
+	/// <param name="requestStatus">The resulting request status.</param>
+	///     <param name="error">The error, if one occurred..</param>
+	///     <summary>Handler to pass to <see cref="M:HealthKit.HKHealthStore.GetRequestStatusForAuthorizationToShare(Foundation.NSSet{HealthKit.HKSampleType},Foundation.NSSet{HealthKit.HKObjectType},HealthKit.HKHealthStoreGetRequestStatusForAuthorizationToShareHandler)" />.</summary>
 	delegate void HKHealthStoreGetRequestStatusForAuthorizationToShareHandler (HKAuthorizationRequestStatus requestStatus, NSError error);
 	delegate void HKHealthStoreRecoverActiveWorkoutSessionHandler (HKWorkoutSession session, NSError error);
 	delegate void HKHealthStoreCompletionHandler (bool success, NSError error);
 
+	/// <include file="../docs/api/HealthKit/HKHealthStore.xml" path="/Documentation/Docs[@DocId='T:HealthKit.HKHealthStore']/*" />
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -809,8 +845,12 @@ namespace HealthKit {
 		UIViewController AuthorizationViewControllerPresenter { get; set; }
 	}
 
+	/// <summary>Completion handler for <see cref="M:HealthKit.HKHealthStore.AddSamples(HealthKit.HKSample[],HealthKit.HKWorkout,HealthKit.HKStoreSampleAddedCallback)" />.</summary>
 	delegate void HKStoreSampleAddedCallback (bool success, NSError error);
 
+	/// <summary>Returned by <see cref="M:HealthKit.HKHealthStore.GetBiologicalSex(Foundation.NSError@)" />.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/HealthKit/Reference/HKBiologicalSexObject_Class/index.html">Apple documentation for <c>HKBiologicalSexObject</c></related>
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -819,6 +859,9 @@ namespace HealthKit {
 		HKBiologicalSex BiologicalSex { get; }
 	}
 
+	/// <summary>Returned by <see cref="M:HealthKit.HKHealthStore.GetBloodType(Foundation.NSError@)" /></summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/help/HKBloodTypeObject_Class/index.html">Apple documentation for <c>HKBloodTypeObject</c></related>
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -835,6 +878,7 @@ namespace HealthKit {
 	[DisableDefaultCtor]
 	interface HKAudiogramSampleType { }
 
+	/// <summary>A key-value store for various types of health-related metadata.</summary>
 	[StrongDictionary ("HKMetadataKey")]
 	interface HKMetadata {
 		[Export ("FoodType")]
@@ -996,6 +1040,7 @@ namespace HealthKit {
 		HKQuantity HeartRateEventThreshold { get; set; }
 	}
 
+	/// <summary>Defines the keys in the <see cref="T:HealthKit.HKMetadata" /> key-value dictionary.</summary>
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[Static]
@@ -1282,6 +1327,9 @@ namespace HealthKit {
 		NSString WaterSalinity { get; }
 	}
 
+	/// <summary>Base class to <see cref="T:HealthKit.HKSample" />, which defines sampling data.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/HealthKit/Reference/HKObject_Class/index.html">Apple documentation for <c>HKObject</c></related>
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 #if NET
@@ -1313,6 +1361,9 @@ namespace HealthKit {
 		HKDevice Device { get; }
 	}
 
+	/// <summary>Base class for types of data storable in the Health Kit database.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/HealthKit/Reference/HKObjectType_Class/index.html">Apple documentation for <c>HKObjectType</c></related>
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 #if NET
@@ -1435,6 +1486,9 @@ namespace HealthKit {
 
 	}
 
+	/// <summary>An <see cref="T:HealthKit.HKObjectType" /> that specifies a permanent aspect of the user.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/HealthKit/Reference/HKCharacteristicType_Class/index.html">Apple documentation for <c>HKCharacteristicType</c></related>
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (HKObjectType))]
@@ -1443,6 +1497,9 @@ namespace HealthKit {
 
 	}
 
+	/// <summary>An <see cref="T:HealthKit.HKObject" /> that represents data that is sampled at a specific time or sampled over a time period.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/HealthKit/Reference/HKSampleType_Class/index.html">Apple documentation for <c>HKSampleType</c></related>
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: The -init method is not available on HKSampleType
@@ -1475,6 +1532,7 @@ namespace HealthKit {
 		bool AllowsRecalibrationForEstimates { get; }
 	}
 
+	/// <summary>A sample type for a clinical record.</summary>
 	[Watch (5, 0)]
 	[iOS (12, 0)]
 	[Mac (13, 0)]
@@ -1485,6 +1543,9 @@ namespace HealthKit {
 
 	}
 
+	/// <summary>An <see cref="T:HealthKit.HKSampleType" /> that currently has only one form: sleep analysis.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/HealthKit/Reference/HKCategoryType_Class/index.html">Apple documentation for <c>HKCategoryType</c></related>
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (HKSampleType))]
@@ -1493,6 +1554,9 @@ namespace HealthKit {
 
 	}
 
+	/// <summary>Contains a constant that identifies the CDA document type.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/HealthKit/HKDocumentType">Apple documentation for <c>HKDocumentType</c></related>
 	[NoWatch] // marked as iOS-only (confirmed by Apple) even if some watchOS 3 API returns this type, rdar #27865614
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
@@ -1502,6 +1566,7 @@ namespace HealthKit {
 
 	}
 
+	/// <include file="../docs/api/HealthKit/HKQuantityType.xml" path="/Documentation/Docs[@DocId='T:HealthKit.HKQuantityType']/*" />
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (HKSampleType))]
@@ -1514,12 +1579,16 @@ namespace HealthKit {
 		bool IsCompatible (HKUnit unit);
 	}
 
+	/// <summary>Update handler for <see cref="T:HealthKit.HKObserverQuery" /> objects.</summary>
 	delegate void HKObserverQueryUpdateHandler (HKObserverQuery query, [BlockCallback] Action completion, NSError error);
 
 	[Watch (8, 0), iOS (15, 0)]
 	[MacCatalyst (15, 0)]
 	delegate void HKObserverQueryDescriptorUpdateHandler (HKObserverQuery query, NSSet<HKSampleType> samples, [BlockCallback] Action completion, NSError error);
 
+	/// <summary>An <see cref="T:HealthKit.HKQuery" /> that runs once initially and then is automatically executed when relevant data is added to the database .</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/HealthKit/Reference/HKObserverQuery_Class/index.html">Apple documentation for <c>HKObserverQuery</c></related>
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (HKQuery))]
@@ -1537,6 +1606,9 @@ namespace HealthKit {
 		NativeHandle Constructor (HKQueryDescriptor [] queryDescriptors, HKObserverQueryDescriptorUpdateHandler updateHandler);
 	}
 
+	/// <summary>Represents a measurable quantity of a certain type of unit, with a <see langword="double" /> value and a <see cref="T:HealthKit.HKUnit" /> type.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/HealthKit/Reference/HKQuantity_Class/index.html">Apple documentation for <c>HKQuantity</c></related>
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor] // - (instancetype)init NS_UNAVAILABLE;
@@ -1556,6 +1628,7 @@ namespace HealthKit {
 		NSComparisonResult Compare (HKQuantity quantity);
 	}
 
+	/// <include file="../docs/api/HealthKit/HKQuantitySample.xml" path="/Documentation/Docs[@DocId='T:HealthKit.HKQuantitySample']/*" />
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (HKSample))]
@@ -1591,6 +1664,9 @@ namespace HealthKit {
 		nint Count { get; }
 	}
 
+	/// <summary>Base class for querying Health Kit databases.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/HealthKit/Reference/HKQuery_Class/index.html">Apple documentation for <c>HKQuery</c></related>
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor] // - (instancetype)init NS_UNAVAILABLE;
@@ -1835,6 +1911,9 @@ namespace HealthKit {
 		NSPredicate GetPredicateForWorkouts (NSPredicate activityPredicate);
 	}
 
+	/// <summary>A measurement of health information. Base class for <see cref="T:HealthKit.HKQuantitySample" /> and <see cref="T:HealthKit.HKCategorySample" />.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/HealthKit/Reference/HKSample_Class/index.html">Apple documentation for <c>HKSample</c></related>
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (HKObject))]
@@ -1867,8 +1946,12 @@ namespace HealthKit {
 		bool HasUndeterminedDuration { get; }
 	}
 
+	/// <summary>Result handler for <see cref="C:HealthKit.HKSampleQuery" />.</summary>
 	delegate void HKSampleQueryResultsHandler (HKSampleQuery query, [NullAllowed] HKSample [] results, [NullAllowed] NSError error);
 
+	/// <summary>An <see cref="T:HealthKit.HKQuery" /> that retrieves <see cref="T:HealthKit.HKSampleType" /> data from the database.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/HealthKit/Reference/HKSampleQuery_Class/index.html">Apple documentation for <c>HKSampleQuery</c></related>
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (HKQuery))]
@@ -1895,6 +1978,9 @@ namespace HealthKit {
 		NativeHandle Constructor (HKQueryDescriptor [] queryDescriptors, nint limit, NSSortDescriptor [] sortDescriptors, HKSampleQueryResultsHandler resultsHandler);
 	}
 
+	/// <summary>A provider of health data, such as a particular sensor or application.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/HealthKit/Reference/HKSource_Class/index.html">Apple documentation for <c>HKSource</c></related>
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor] // - (instancetype)init NS_UNAVAILABLE;
@@ -1911,8 +1997,13 @@ namespace HealthKit {
 		HKSource GetDefaultSource { get; }
 	}
 
+	/// <summary>Completion handler for <see cref="C:HealthKit.HKSourceQuery" />.</summary>
 	delegate void HKSourceQueryCompletionHandler (HKSourceQuery query, NSSet sources, NSError error);
 
+	/// <summary>Class that represents a query for HealthKit data.</summary>
+	///     
+	///     <!-- Apple undocumented 2014-08-27 -->
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/HealthKit/Reference/HKSourceQuery_Class/index.html">Apple documentation for <c>HKSourceQuery</c></related>
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (HKQuery))]
@@ -1923,6 +2014,9 @@ namespace HealthKit {
 		NativeHandle Constructor (HKSampleType sampleType, [NullAllowed] NSPredicate objectPredicate, HKSourceQueryCompletionHandler completionHandler);
 	}
 
+	/// <summary>Provides basic statistical operations on health information.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/HealthKit/Reference/HKStatistics_Class/index.html">Apple documentation for <c>HKStatistics</c></related>
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor] // - (instancetype)init NS_UNAVAILABLE;
@@ -2006,8 +2100,12 @@ namespace HealthKit {
 		HKQuantity GetDuration (HKSource source);
 	}
 
+	/// <summary>Delegate handler for <see cref="M:HealthKit.HKStatisticsCollection.EnumerateStatistics(Foundation.NSDate,Foundation.NSDate,HealthKit.HKStatisticsCollectionEnumerator)" />.</summary>
 	delegate void HKStatisticsCollectionEnumerator (HKStatistics result, bool stop);
 
+	/// <summary>A group of related statistics (generally representing a time series).</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/HealthKit/Reference/HKStatisticsCollection_Class/index.html">Apple documentation for <c>HKStatisticsCollection</c></related>
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor] // - (instancetype)init NS_UNAVAILABLE;
@@ -2028,10 +2126,14 @@ namespace HealthKit {
 		NSSet Sources { get; }
 	}
 
+	/// <summary>Results handler for <see cref="M:HealthKit.HKStatisticsCollectionQuery.SetInitialResultsHandler(HealthKit.HKStatisticsCollectionQueryInitialResultsHandler)" /> and <see cref="M:HealthKit.HKStatisticsCollectionQuery.SetStatisticsUpdateHandler(HealthKit.HKStatisticsCollectionQueryInitialResultsHandler)" />.</summary>
 	delegate void HKStatisticsCollectionQueryInitialResultsHandler (HKStatisticsCollectionQuery query, HKStatisticsCollection result, NSError error);
 	delegate void HKStatisticsCollectionQueryStatisticsUpdateHandler (HKStatisticsCollectionQuery query, HKStatistics statistics, HKStatisticsCollection collection, NSError error);
 
 
+	/// <summary>An <see cref="T:HealthKit.HKQuery" /> that produces a collection of statistics (for instance, number of steps per day for the previous month).</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/HealthKit/Reference/HKStatisticsCollectionQuery_Class/index.html">Apple documentation for <c>HKStatisticsCollectionQuery</c></related>
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (HKQuery))]
@@ -2057,8 +2159,12 @@ namespace HealthKit {
 		NativeHandle Constructor (HKQuantityType quantityType, [NullAllowed] NSPredicate quantitySamplePredicate, HKStatisticsOptions options, NSDate anchorDate, NSDateComponents intervalComponents);
 	}
 
+	/// <summary>Results handler for <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=C:HKStatisticsQuery&amp;scope=Xamarin" title="C:HKStatisticsQuery">C:HKStatisticsQuery</a></format>.</summary>
 	delegate void HKStatisticsQueryHandler (HKStatisticsQuery query, HKStatistics result, NSError error);
 
+	/// <summary>An <see cref="T:HealthKit.HKQuery" /> that can calculate basic statistics (such as the sum and mean) on its constituent data.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/HealthKit/Reference/HKStatisticsQuery_Class/index.html">Apple documentation for <c>HKStatisticsQuery</c></related>
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (HKQuery))]
@@ -2069,6 +2175,7 @@ namespace HealthKit {
 		NativeHandle Constructor (HKQuantityType quantityType, [NullAllowed] NSPredicate quantitySamplePredicate, HKStatisticsOptions options, HKStatisticsQueryHandler handler);
 	}
 
+	/// <summary>Enumerates the types of <see cref="T:HealthKit.HKQuantityType" />.</summary>
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	enum HKQuantityTypeIdentifier {
@@ -2467,6 +2574,7 @@ namespace HealthKit {
 		TimeInDaylight,
 	}
 
+	/// <summary>Contains constants that identify HealthKit correlation types.</summary>
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	enum HKCorrelationTypeIdentifier {
@@ -2484,11 +2592,10 @@ namespace HealthKit {
 		HeartbeatSeries,
 	}
 
+	/// <summary>Enumerates the types of <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=Health%20Kit%20HKCategory&amp;scope=Xamarin" title="T:HealthKit.HKCategory">T:HealthKit.HKCategory</a></format>; currently there is only the one form (Sleep Analysis).</summary>
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	enum HKCategoryTypeIdentifier {
-		/**** HKCategoryType Identifiers ****/
-
 		[Field ("HKCategoryTypeIdentifierSleepAnalysis")]
 		SleepAnalysis,
 
@@ -2807,11 +2914,10 @@ namespace HealthKit {
 		ProlongedMenstrualPeriods,
 	}
 
+	/// <summary>Enumerates the forms of <see cref="T:HealthKit.HKCharacteristicType" />.</summary>
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	enum HKCharacteristicTypeIdentifier {
-		/**** HKCharacteristicType Identifiers ****/
-
 		[Field ("HKCharacteristicTypeIdentifierBiologicalSex")]
 		BiologicalSex,
 
@@ -2835,6 +2941,9 @@ namespace HealthKit {
 		ActivityMoveMode,
 	}
 
+	/// <summary>Definitions and utility methods for manipulating measurements of mass, length, volume, and energy.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/HealthKit/Reference/HKUnit_Class/index.html">Apple documentation for <c>HKUnit</c></related>
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor] // - (instancetype)init NS_UNAVAILABLE;
@@ -3186,6 +3295,9 @@ namespace HealthKit {
 		HKUnit Lux { get; }
 	}
 
+	/// <summary>An <see cref="T:HealthKit.HKSample" /> that represents a physical workout.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/HealthKit/Reference/HKWorkout_Class/index.html">Apple documentation for <c>HKWorkout</c></related>
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (HKSample))]
@@ -3317,6 +3429,9 @@ namespace HealthKit {
 		HKStatistics GetStatistics (HKQuantityType quantityType);
 	}
 
+	/// <summary>A pause or resumption of a workout.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/HealthKit/Reference/HKWorkoutEvent_Class/index.html">Apple documentation for <c>HKWorkoutEvent</c></related>
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -3377,6 +3492,9 @@ namespace HealthKit {
 		NSDateInterval DateInterval { get; }
 	}
 
+	/// <summary>An <see cref="T:HealthKit.HKSampleType" /> representing a workout.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/HealthKit/Reference/HKWorkoutType_Class/index.html">Apple documentation for <c>HKWorkoutType</c></related>
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (HKSampleType))]
@@ -3386,6 +3504,9 @@ namespace HealthKit {
 		NSString Identifier { get; }
 	}
 
+	/// <summary>Represents samples that have been deleted from the store.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/HealthKit/Reference/HKDeletedObject_ClassReference/index.html">Apple documentation for <c>HKDeletedObject</c></related>
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -3403,6 +3524,9 @@ namespace HealthKit {
 		HKMetadata Metadata { get; }
 	}
 
+	/// <summary>Hardware that generates or consumes HealthKit data.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/HealthKit/Reference/HKDevice_ClassReference/index.html">Apple documentation for <c>HKDevice</c></related>
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -3441,6 +3565,9 @@ namespace HealthKit {
 		HKDevice LocalDevice { get; }
 	}
 
+	/// <summary>Queries for documents in the HealthKit store.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/HealthKit/HKDocumentQuery">Apple documentation for <c>HKDocumentQuery</c></related>
 	[NoWatch, Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (HKQuery))]
@@ -3459,6 +3586,7 @@ namespace HealthKit {
 		NativeHandle Constructor (HKDocumentType documentType, [NullAllowed] NSPredicate predicate, nuint limit, [NullAllowed] NSSortDescriptor [] sortDescriptors, bool includeDocumentData, Action<HKDocumentQuery, HKDocumentSample [], bool, NSError> resultsHandler);
 	}
 
+	/// <summary>Holds keys whose constant values relate to properties of a <see cref="T:HealthKit.HKDevice" />.</summary>
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[Static]
@@ -3488,6 +3616,9 @@ namespace HealthKit {
 		NSString UdiDeviceIdentifier { get; }
 	}
 
+	/// <summary>Holds skin-type data.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/HealthKit/Reference/HKFitzpatrickSkinTypeObject_ClassReference/index.html">Apple documentation for <c>HKFitzpatrickSkinTypeObject</c></related>
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -3496,6 +3627,9 @@ namespace HealthKit {
 		HKFitzpatrickSkinType SkinType { get; }
 	}
 
+	/// <summary>Contains an enumeration that describes wheelchair use.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/HealthKit/HKWheelchairUseObject">Apple documentation for <c>HKWheelchairUseObject</c></related>
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -3504,6 +3638,9 @@ namespace HealthKit {
 		HKWheelchairUse WheelchairUse { get; }
 	}
 
+	/// <summary>Wraps <see cref="T:HealthKit.HKSource" />, adding version information.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/HealthKit/Reference/HKSourceRevision_ClassReference/index.html">Apple documentation for <c>HKSourceRevision</c></related>
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -3552,6 +3689,9 @@ namespace HealthKit {
 		//NSOperatingSystemVersion AnyOperatingSystem { get; }
 	}
 
+	/// <summary>Represents the most recent sample that was returned by a previous anchored object query.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/HealthKit/HKQueryAnchor">Apple documentation for <c>HKQueryAnchor</c></related>
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -3712,6 +3852,9 @@ namespace HealthKit {
 		void DidDisconnect (HKWorkoutSession workoutSession, [NullAllowed] NSError error);
 	}
 
+	/// <summary>Summarizes user activity for a specific day.</summary>
+	///     <remarks>Developers use a <see cref="T:HealthKit.HKActivitySummaryQuery" /> object to get a <see cref="T:HealthKit.HKActivitySummary" /> instance for a specific day. While developers can create <see cref="T:HealthKit.HKActivitySummary" /> themselves, they cannot save these to the store. Developers can display an active summary on iOS with the <see cref="T:HealthKitUI.HKActivityRingView" /> class.</remarks>
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/HealthKit/HKActivitySummary">Apple documentation for <c>HKActivitySummary</c></related>
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -3767,6 +3910,9 @@ namespace HealthKit {
 		HKQuantity StandHoursGoal { get; set; }
 	}
 
+	/// <summary>Gets <see cref="T:HealthKit.HKActivitySummary" /> instances that match an <see cref="T:Foundation.NSPredicate" />.</summary>
+	///     <remarks>Developers can use the methods of the <see cref="T:HealthKit.HKQuery" /> class to create predicates that will call the handler in the <see cref="P:HealthKit.HKActivitySummaryQuery.UpdateHandler" /> property when a summary matches the query.</remarks>
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/HealthKit/HKActivitySummaryQuery">Apple documentation for <c>HKActivitySummaryQuery</c></related>
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (HKQuery))]
@@ -3779,6 +3925,9 @@ namespace HealthKit {
 		NativeHandle Constructor ([NullAllowed] NSPredicate predicate, Action<HKActivitySummaryQuery, HKActivitySummary [], NSError> handler);
 	}
 
+	/// <summary>Obect that is used to request permission to read <see cref="T:HealthKit.HKActivitySummary" /> objects.</summary>
+	///     <remarks>Developers use the <see cref="P:HealthKit.HKObjectType.ActivitySummaryType" /> method.</remarks>
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/HealthKit/HKActivitySummaryType">Apple documentation for <c>HKActivitySummaryType</c></related>
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (HKObjectType))]
@@ -3786,6 +3935,9 @@ namespace HealthKit {
 	interface HKActivitySummaryType {
 	}
 
+	/// <summary>Contains workout configuration information.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/HealthKit/HKWorkoutConfiguration">Apple documentation for <c>HKWorkoutConfiguration</c></related>
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -3852,7 +4004,11 @@ namespace HealthKit {
 		NSString TypeIdentifier { get; }
 	}
 
+	/// <param name="success">Whether the operation succeeded.</param>
+	///     <param name="error">The error that occurred, if <paramref name="success" /> was <see langword="false" />.</param>
+	///     <summary>Completion handler for adding metadata with <see cref="M:HealthKit.HKWorkoutRouteQuery.#ctor(HealthKit.HKWorkoutRoute,HealthKit.HKWorkoutRouteBuilderDataHandler)" />.</summary>
 	delegate void HKWorkoutRouteBuilderAddMetadataHandler (bool success, NSError error);
+	/// <summary>A class for adding geographical data to a workout as the user's location changes.</summary>
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (HKSeriesBuilder))]
@@ -3896,7 +4052,11 @@ namespace HealthKit {
 		NativeHandle Constructor (HKWorkoutRoute workoutRoute, NSDateInterval dateInterval, HKWorkoutRouteQueryDataHandler dataHandler);
 	}
 
+	/// <param name="success">Whether the operation succeeded.</param>
+	///     <param name="error">The error that occurred, if <paramref name="success" /> was <see langword="false" />.</param>
+	///     <summary>Completion handler for adding metadata with <see cref="M:HealthKit.HKWorkoutRouteQuery.#ctor(HealthKit.HKWorkoutRoute,HealthKit.HKWorkoutRouteBuilderDataHandler)" />.</summary>
 	delegate void HKWorkoutBuilderCompletionHandler (bool success, NSError error);
+	/// <summary>Builds a workout from workout data as it is added.</summary>
 	[Watch (5, 0), iOS (12, 0), Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -3993,9 +4153,11 @@ namespace HealthKit {
 		void UpdateActivity (NSUuid uuid, NSDictionary<NSString, NSObject> metadata, HKWorkoutBuilderCompletionHandler completion);
 	}
 
+	/// <summary>A handler to pass to <see cref="M:HealthKit.HKQuantitySeriesSampleQuery.#ctor(HealthKit.HKQuantitySample,HealthKit.HKQuantitySeriesSampleQueryQuantityDelegate)" />.</summary>
 	delegate void HKQuantitySeriesSampleQueryQuantityDelegate (HKQuantitySeriesSampleQuery query, HKQuantity quantity, NSDate date, bool done, NSError error);
 	delegate void HKQuantitySeriesSampleQueryQuantityHandler (HKQuantitySeriesSampleQuery query, HKQuantity quantity, NSDateInterval date, bool done, NSError error);
 
+	/// <summary>Queries series data in a quantity sample.</summary>
 	[Watch (5, 0), iOS (12, 0), Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (HKQuery))]
@@ -4022,8 +4184,12 @@ namespace HealthKit {
 		NativeHandle Constructor (HKQuantitySample quantitySample, HKQuantitySeriesSampleQueryQuantityDelegate quantityHandler);
 	}
 
+	/// <param name="samples">The samples that were added.</param>
+	///     <param name="error">The error, if one occurred.</param>
+	///     <summary>Completion handler for <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=Health%20Kit%20HKQuantity%20Series%20Sample%20Builder%20Finish%20Series&amp;scope=Xamarin" title="T:HealthKit.HKQuantitySeriesSampleBuilder.FinishSeries">T:HealthKit.HKQuantitySeriesSampleBuilder.FinishSeries</a></format>.</summary>
 	delegate void HKQuantitySeriesSampleBuilderFinishSeriesDelegate (HKQuantitySample [] samples, NSError error);
 
+	/// <summary>Builds quantity sample series.</summary>
 	[Watch (5, 0), iOS (12, 0), Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -4093,6 +4259,7 @@ namespace HealthKit {
 		void DisableCollection (HKQuantityType quantityType);
 	}
 
+	/// <summary>Represents a Fast Healthcare Interoperability Resources (FHIR) resource.</summary>
 	[NoWatch, iOS (12, 0), Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject), Name = "HKFHIRResource")]
@@ -4119,6 +4286,7 @@ namespace HealthKit {
 		HKFhirVersion FhirVersion { get; }
 	}
 
+	/// <summary>A cumulative data series.</summary>
 	[Watch (5, 0), iOS (12, 0), Mac (13, 0)]
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Use HKCumulativeQuantitySample instead.")]
 	[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use HKCumulativeQuantitySample instead.")]
@@ -4141,6 +4309,7 @@ namespace HealthKit {
 		HKQuantity SumQuantity { get; }
 	}
 
+	/// <summary>A sample for clinical records.</summary>
 	[NoWatch, iOS (12, 0), Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor]

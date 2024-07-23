@@ -19,6 +19,9 @@ using NativeHandle = System.IntPtr;
 #endif
 
 namespace NotificationCenter {
+	/// <summary>Coordinates the display of a widget's content with its containing app.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/NotificationCenter/Reference/NCWidgetController_Class/index.html">Apple documentation for <c>NCWidgetController</c></related>
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // not meant to be user created
 	[Deprecated (PlatformName.iOS, 14, 0)]
@@ -33,6 +36,9 @@ namespace NotificationCenter {
 		void SetHasContent (bool flag, string bundleID);
 	}
 
+	/// <summary>Customizes the appearance and behavior of a widget.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/NotificationCenter/Reference/NCWidgetProviding_Protocol/index.html">Apple documentation for <c>NCWidgetProviding</c></related>
 	[Deprecated (PlatformName.iOS, 14, 0)]
 	[Deprecated (PlatformName.MacOSX, 11, 0)]
 	[Protocol, Model]
@@ -69,6 +75,7 @@ namespace NotificationCenter {
 		void WidgetActiveDisplayModeDidChange (NCWidgetDisplayMode activeDisplayMode, CGSize maxSize);
 	}
 
+	/// <summary>Defines the appropriate vibrancy effect for widgets (extensions) displayed in the Today view.</summary>
 	[NoMac]
 	[BaseType (typeof (UIVibrancyEffect))]
 #if NET
@@ -86,6 +93,7 @@ namespace NotificationCenter {
 		UIVibrancyEffect NotificationCenterVibrancyEffect ();
 	}
 
+	/// <summary>Extension context methods and properties for an NDWidget.</summary>
 	[NoMac]
 	[Deprecated (PlatformName.iOS, 14, 0)]
 	[Category]

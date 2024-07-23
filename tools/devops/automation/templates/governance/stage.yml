@@ -19,7 +19,7 @@ parameters:
 
 stages:
 - stage: governance_checks
-  displayName: '${{ parameters.stageDisplayNamePrefix }}Governance Checks'
+  displayName: '${{ parameters.stageDisplayNamePrefix }}API Scan'
   dependsOn: [ configure_build, build_packages]
 
   jobs:
@@ -31,24 +31,11 @@ stages:
       demands:
       - ImageOverride -equals 1ESPT-Windows2022
 
-    condition: ne(stageDependencies.configure_build.configure.outputs['apiscan_matrix.APISCAN_MATRIX'],'')
     strategy:
       matrix: $[ stageDependencies.configure_build.configure.outputs['apiscan_matrix.APISCAN_MATRIX'] ]
 
     steps:
     - template: ./apiscan.yml
-      parameters:
-        isPR: ${{ parameters.isPR }}
-        repositoryAlias: ${{ parameters.repositoryAlias }}
-        commit: ${{ parameters.commit }}
-
-  - job: general_governance
-    displayName: 'Governance Checks'
-    pool:
-      vmImage: windows-latest
-
-    steps:
-    - template: ./general.yml
       parameters:
         isPR: ${{ parameters.isPR }}
         repositoryAlias: ${{ parameters.repositoryAlias }}

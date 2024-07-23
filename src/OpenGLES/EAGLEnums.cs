@@ -3,6 +3,7 @@ using ObjCRuntime;
 namespace OpenGLES {
 
 	// NSUInteger -> EAGL.h
+	/// <summary>The rendering API supported.</summary>
 	[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'Metal' instead.")]
 	[Native]

@@ -11,30 +11,34 @@ using Xamarin.Tests;
 namespace Xamarin.Tests {
 	[TestFixture]
 	public abstract class TestBaseClass {
-		protected Dictionary<string, string> verbosity = new Dictionary<string, string> {
+		protected static Dictionary<string, string> verbosity = new Dictionary<string, string> {
 			{ "_BundlerVerbosity", "1" },
 		};
 
-		protected Dictionary<string, string> GetDefaultProperties (string? runtimeIdentifiers = null)
+		protected static Dictionary<string, string> GetDefaultProperties (string? runtimeIdentifiers = null, Dictionary<string, string>? extraProperties = null)
 		{
 			var rv = new Dictionary<string, string> (verbosity);
 			if (!string.IsNullOrEmpty (runtimeIdentifiers))
 				SetRuntimeIdentifiers (rv, runtimeIdentifiers);
+			if (extraProperties is not null) {
+				foreach (var kvp in extraProperties)
+					rv [kvp.Key] = kvp.Value;
+			}
 			return rv;
 		}
 
-		protected void SetRuntimeIdentifiers (Dictionary<string, string> properties, string runtimeIdentifiers)
+		protected static void SetRuntimeIdentifiers (Dictionary<string, string> properties, string runtimeIdentifiers)
 		{
 			var multiRid = runtimeIdentifiers.IndexOf (';') >= 0 ? "RuntimeIdentifiers" : "RuntimeIdentifier";
 			properties [multiRid] = runtimeIdentifiers;
 		}
 
-		protected string GetProjectPath (string project, string runtimeIdentifiers, ApplePlatform platform, out string appPath, string? subdir = null, string configuration = "Debug", string? netVersion = null)
+		protected static string GetProjectPath (string project, string runtimeIdentifiers, ApplePlatform platform, out string appPath, string? subdir = null, string configuration = "Debug", string? netVersion = null)
 		{
 			return GetProjectPath (project, null, runtimeIdentifiers, platform, out appPath, configuration, netVersion);
 		}
 
-		protected string GetProjectPath (string project, string? subdir, string runtimeIdentifiers, ApplePlatform platform, out string appPath, string configuration = "Debug", string? netVersion = null)
+		protected static string GetProjectPath (string project, string? subdir, string runtimeIdentifiers, ApplePlatform platform, out string appPath, string configuration = "Debug", string? netVersion = null)
 		{
 			var rv = GetProjectPath (project, subdir, platform);
 			appPath = Path.Combine (GetOutputPath (project, subdir, runtimeIdentifiers, platform, configuration, netVersion), project + ".app");
@@ -62,7 +66,7 @@ namespace Xamarin.Tests {
 			return Path.Combine (Path.GetDirectoryName (projectPath)!, binOrObj, configuration, platform.ToFramework (), appPathRuntimeIdentifier);
 		}
 
-		protected string GetOutputPath (string project, string? subdir, string runtimeIdentifiers, ApplePlatform platform, string configuration = "Debug", string? netVersion = null)
+		protected static string GetOutputPath (string project, string? subdir, string runtimeIdentifiers, ApplePlatform platform, string configuration = "Debug", string? netVersion = null)
 		{
 			var rv = GetProjectPath (project, subdir, platform);
 			if (string.IsNullOrEmpty (runtimeIdentifiers))
@@ -71,7 +75,7 @@ namespace Xamarin.Tests {
 			return Path.Combine (Path.GetDirectoryName (rv)!, "bin", configuration, platform.ToFramework (netVersion), appPathRuntimeIdentifier);
 		}
 
-		protected string GetDefaultRuntimeIdentifier (ApplePlatform platform, string configuration = "Debug")
+		protected static string GetDefaultRuntimeIdentifier (ApplePlatform platform, string configuration = "Debug")
 		{
 			var arch = Configuration.CanRunArm64 ? "arm64" : "x64";
 			switch (platform) {
@@ -92,7 +96,7 @@ namespace Xamarin.Tests {
 			}
 		}
 
-		protected string GetProjectPath (string project, string? subdir = null, ApplePlatform? platform = null)
+		protected static string GetProjectPath (string project, string? subdir = null, ApplePlatform? platform = null)
 		{
 			var project_dir = Path.Combine (Configuration.SourceRoot, "tests", "dotnet", project);
 			if (!string.IsNullOrEmpty (subdir))
@@ -143,7 +147,7 @@ namespace Xamarin.Tests {
 			}
 		}
 
-		protected void Clean (string project_path)
+		protected static void Clean (string project_path)
 		{
 			var dirs = Directory.GetDirectories (Path.GetDirectoryName (project_path)!, "*", SearchOption.AllDirectories);
 			dirs = dirs.OrderBy (v => v.Length).Reverse ().ToArray (); // If we have nested directories, make sure to delete the nested one first
@@ -327,28 +331,28 @@ namespace Xamarin.Tests {
 			return csproj;
 		}
 
-		protected string ExecuteWithMagicWordAndAssert (ApplePlatform platform, string runtimeIdentifiers, string executable)
+		protected string ExecuteWithMagicWordAndAssert (ApplePlatform platform, string runtimeIdentifiers, string executable, Dictionary<string, string?>? environment = null)
 		{
 			if (!CanExecute (platform, runtimeIdentifiers))
 				return string.Empty;
 
-			return ExecuteWithMagicWordAndAssert (executable);
+			return ExecuteWithMagicWordAndAssert (executable, environment);
 		}
 
-		protected string ExecuteWithMagicWordAndAssert (string executable)
+		protected string ExecuteWithMagicWordAndAssert (string executable, Dictionary<string, string?>? environment = null)
 		{
 			if (Environment.OSVersion.Platform == PlatformID.Win32NT) {
 				Console.WriteLine ($"Not executing '{executable}' because we're on Windows.");
 				return string.Empty;
 			}
 
-			var rv = Execute (executable, out var output, out string magicWord);
+			var rv = Execute (executable, out var output, out string magicWord, environment);
 			Assert.That (output.ToString (), Does.Contain (magicWord), "Contains magic word");
 			Assert.AreEqual (0, rv.ExitCode, "ExitCode");
 			return output.ToString ();
 		}
 
-		protected Execution Execute (string executable, out StringBuilder output, out string magicWord)
+		protected Execution Execute (string executable, out StringBuilder output, out string magicWord, Dictionary<string, string?>? environment = null)
 		{
 			if (!File.Exists (executable))
 				throw new FileNotFoundException ($"The executable '{executable}' does not exists.");
@@ -358,6 +362,10 @@ namespace Xamarin.Tests {
 				{ "MAGIC_WORD", magicWord },
 				{ "DYLD_FALLBACK_LIBRARY_PATH", null }, // VSMac might set this, which may cause tests to crash.
 			};
+			if (environment is not null) {
+				foreach (var kvp in environment)
+					env [kvp.Key] = kvp.Value;
+			}
 
 			output = new StringBuilder ();
 			return Execution.RunWithStringBuildersAsync (executable, Array.Empty<string> (), environment: env, standardOutput: output, standardError: output, timeout: TimeSpan.FromSeconds (15)).Result;

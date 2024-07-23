@@ -1,0 +1,39 @@
+<Documentation>
+  <Docs DocId="T:Accounts.ACAccountStore">
+    <summary>Encapsulates the Accounts database, providing access to <see cref="T:Accounts.ACAccount" /> objects.</summary>
+    <remarks>
+      <para>The Accounts database on iOS provides account information for social networks. The social networks stored in the database are:</para>
+      <list type="bullet">
+        <item>
+          <term>
+            <see cref="P:Accounts.ACAccountType.Facebook" />
+          </term>
+        </item>
+        <item>
+          <term>
+            <see cref="P:Accounts.ACAccountType.SinaWeibo" />
+          </term>
+        </item>
+        <item>
+          <term>
+            <see cref="P:Accounts.ACAccountType.Twitter" />
+          </term>
+        </item>
+      </list>
+      <para>
+        The following example shows the basic structure of code accessing the <see cref="T:Accounts.ACAccountStore" /> object, requesting access to a specific account, and retrieving credentials: 
+      </para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+          var store = new ACAccountStore();
+          var type = store.FindAccountType(ACAccountType.Twitter);
+          
+          store.RequestAccess(type, null, (granted, error) => {
+          if(granted){
+        ]]></code>
+      </example>
+    </remarks>
+    
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Accounts/Reference/ACAccountStoreClassRef/index.html">Apple documentation for <c>ACAccountStore</c></related>
+  </Docs>
+</Documentation>

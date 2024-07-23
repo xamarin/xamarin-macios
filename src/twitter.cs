@@ -18,8 +18,12 @@ using NativeHandle = System.IntPtr;
 
 namespace Twitter {
 
+	/// <summary>A delegate that is used as the <c>handler</c> in calls to <see cref="M:Twitter.TWRequest.PerformRequest(Twitter.TWRequestHandler)" />.</summary>
 	delegate void TWRequestHandler (NSData responseData, NSHttpUrlResponse urlResponse, NSError error);
 
+	/// <summary>A Twitter request.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Twitter/Reference/TWRequestClassRef/index.html">Apple documentation for <c>TWRequest</c></related>
 	[Deprecated (PlatformName.iOS, 6, 0, message: "Use the 'Social' framework.")]
 	[BaseType (typeof (NSObject))]
 	interface TWRequest {
@@ -51,6 +55,10 @@ namespace Twitter {
 		void PerformRequest (TWRequestHandler handler);
 	}
 
+	/// <summary>A <see cref="T:UIKit.UIViewController" /> that manages the user experience of composing a tweet.</summary>
+	///     
+	///     <related type="recipe" href="https://developer.xamarin.com/ios/Recipes/Shared_Resources/Twitter/Send_a_Tweet">Send a Tweet</related>
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Twitter/Reference/TWTweetSheetViewControllerClassRef/index.html">Apple documentation for <c>TWTweetComposeViewController</c></related>
 	[Deprecated (PlatformName.iOS, 6, 0, message: "Use the 'Social' framework.")]
 	[BaseType (typeof (UIViewController))]
 	interface TWTweetComposeViewController {

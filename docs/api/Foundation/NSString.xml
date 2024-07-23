@@ -1,0 +1,41 @@
+<Documentation>
+  <Docs DocId="T:Foundation.NSString">
+    <summary>The Foundation String class.</summary>
+    <remarks>
+      <para>
+	This is a mapping to the Objective-C NSString class.
+	Generally, in .NET languages you use the native <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=System%20String&amp;scope=Xamarin" title="T:System.String">T:System.String</a></format> type in your code.  In general, it is
+	not worth using NSString in C#/Mono code as the cost of
+	marshalling is higher when creating NSStrings manually from a
+	C# string than letting the runtime marshal it.   
+
+      </para>
+      <para>
+	There are a few cases where you will deal with NSString
+	objects in MonoTouch.  Those are cases where the NSString is
+	used as a handle or token.  That means that the underlying
+	platform code is using the address of an NSString as a special
+	handle (the code compares strings not by content, but by the
+	address).  In those cases, the NSString has been surfaced in
+	the MonoTouch binding.  You will typically find those as
+	Notification constants or key constants.
+
+      </para>
+      <para>
+	Another use for NSStrings in C# code is when you want to use
+	some localization APIs exposed in NSStrings that map directly
+	to the underlying platform localization tables.
+
+      </para>
+      <para>
+	Code that interoperates with Objective-C automatically converts
+	the internal C# string into an NSString.  Sometimes by doing a
+	copy of the string, although the runtime supports zero-copy
+	marshaling of .NET strings as NSStrings as well
+      </para>
+    </remarks>
+    
+    
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Cocoa/Reference/Foundation/Classes/NSString_Class/index.html">Apple documentation for <c>NSString</c></related>
+  </Docs>
+</Documentation>

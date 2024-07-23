@@ -1,0 +1,30 @@
+<Documentation>
+  <Docs DocId="T:MediaPlayer.MPMediaItem">
+    <summary>A single piece of media, such as a song or video.</summary>
+    <remarks>
+      <para>
+	Instances of this object expose high-level properties that can
+	be consumed from C# to explore the metadata associated with
+	this media item.
+
+      </para>
+      <para> 
+	Media Items have persistent identifiers that can be used as
+	unique identifiers across application launches and as long as
+	the media item has not been changed or synchronized again with
+	the host computer.  The <see cref="P:MediaPlayer.MPMediaItem.PersistentID" /> is
+	the persistent ID for the media item.  There are also
+	persistent identifiers for the album, the composer, podcast,
+	genre and artists.
+
+      </para>
+      <para>
+	For low-level access to the metadat, this class exposes the
+	low-level <see cref="M:MediaPlayer.MPMediaItemCollection.ValueForProperty(Foundation.NSString)" />
+	method and various static properties with the suffix
+	"Property" and the return type NSString.
+      </para>
+    </remarks>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/MediaPlayer/Reference/MPMediaItem_ClassReference/index.html">Apple documentation for <c>MPMediaItem</c></related>
+  </Docs>
+</Documentation>

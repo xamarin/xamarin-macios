@@ -42,6 +42,8 @@ namespace Xamarin.MacDev.Tasks {
 
 		public string ProjectTypeGuids { get; set; }
 
+		public string RuntimeIdentifiers { get; set; }
+
 		public string SolutionPath { get; set; }
 
 		public string SigningKey { get; set; }
@@ -190,6 +192,23 @@ namespace Xamarin.MacDev.Tasks {
 				//arInfo.Add ("AppStoreFileSize", new PNumber (65535));
 				var props = new PDictionary ();
 				props.Add ("ApplicationPath", new PString (string.Format ("Applications/{0}", Path.GetFileName (AppBundleDir.ItemSpec))));
+				if (!string.IsNullOrEmpty (RuntimeIdentifiers) && IsDotNet) {
+					var rids = RuntimeIdentifiers.Split (new char [] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+					var array = new PArray ();
+					foreach (var rid in rids) {
+						string architecture;
+						if (rid.EndsWith ("-x64", StringComparison.Ordinal)) {
+							architecture = "x86_64";
+						} else if (rid.EndsWith ("-arm64", StringComparison.Ordinal)) {
+							architecture = "arm64";
+						} else {
+							Log.LogError (MSBStrings.E7124 /* Can't compute the architecture for the archive for the RuntimeIdentifier '{0}' (unknown value) */, rid);
+							continue;
+						}
+						array.Add (new PString (architecture));
+					}
+					props.Add ("Architectures", array);
+				}
 				props.Add ("CFBundleIdentifier", new PString (plist.GetCFBundleIdentifier ()));
 
 				var version = plist.GetCFBundleShortVersionString ();
@@ -220,6 +239,7 @@ namespace Xamarin.MacDev.Tasks {
 				arInfo.Add ("ArchiveVersion", new PNumber (2));
 				arInfo.Add ("CreationDate", new PDate (Now.ToUniversalTime ()));
 				arInfo.Add ("Name", new PString (plist.GetCFBundleName () ?? plist.GetCFBundleDisplayName ()));
+				arInfo.Add ("SchemeName", new PString (plist.GetCFBundleName () ?? plist.GetCFBundleDisplayName ()));
 
 				if (!string.IsNullOrEmpty (ProjectGuid))
 					arInfo.Add ("ProjectGuid", new PString (ProjectGuid));

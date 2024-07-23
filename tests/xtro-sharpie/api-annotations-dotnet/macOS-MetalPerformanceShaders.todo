@@ -440,3 +440,8 @@
 !missing-enum! MPSFloatDataTypeBit not bound
 !missing-enum! MPSFloatDataTypeShift not bound
 !missing-enum-value! MPSDataType native value MPSDataTypeBFloat16 = 2415919120 not bound
+!deprecated-attribute-missing! MPSAccelerationStructure missing a [Deprecated] attribute
+!deprecated-attribute-missing! MPSAccelerationStructureGroup missing a [Deprecated] attribute
+!deprecated-attribute-missing! MPSInstanceAccelerationStructure missing a [Deprecated] attribute
+!deprecated-attribute-missing! MPSRayIntersector missing a [Deprecated] attribute
+!deprecated-attribute-missing! MPSTriangleAccelerationStructure missing a [Deprecated] attribute

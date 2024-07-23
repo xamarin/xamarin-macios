@@ -13,6 +13,13 @@ using System;
 
 namespace AdSupport {
 
+	/// <summary>Provides a device identifier, only to be used for serving advertisements.</summary>
+	///     <remarks>
+	///       <para>This class provides a device identifier that is shared by all vendors. This identifier may change over time, for example if the user erases the device, and applications should not cache it.</para>
+	///       <para>This identifier should only be used for the purpose of serving advertisements.</para>
+	///       <para>Application developers should use the static <see cref="P:AdSupport.ASIdentifierManager.SharedManager" /> in order to gain access to the <see cref="P:AdSupport.ASIdentifierManager.AdvertisingIdentifier" />. Application developers must respect the <see cref="P:AdSupport.ASIdentifierManager.IsAdvertisingTrackingEnabled" /> value.</para>
+	///     </remarks>
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/AdSupport/Reference/ASIdentifierManager_Ref/index.html">Apple documentation for <c>ASIdentifierManager</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]

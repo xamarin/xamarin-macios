@@ -21,6 +21,10 @@ parameters:
   type: boolean
   default: true
 
+- name: pushNugetsToMaestro
+  type: boolean
+  default: true
+
 - name: stageDisplayNamePrefix
   type: string
   default: ''
@@ -48,15 +52,32 @@ stages:
   # Check - "xamarin-macios (Prepare Release Sign NuGets)"
   - template: sign-artifacts/jobs/v2.yml@yaml-templates
     parameters:
+      use1ESTemplate: true
+      uploadBinlogs: true
+      uploadPrefix: ${{ parameters.uploadPrefix }}
+      enabledCredScan: false
+      checkoutType: ${{ parameters.repositoryAlias }}
       signedArtifactName: '${{ parameters.uploadPrefix }}nuget-signed'
       artifactName: '${{ parameters.uploadPrefix }}not-signed-package'
       signType: Real
       usePipelineArtifactTasks: true
       condition: "ne(stageDependencies.configure_build.configure.outputs['configure_platforms.ENABLE_DOTNET'],'')"
+      setupSteps:
+      - template: tools/devops/automation/templates/common/checkout.yml@${{ parameters.repositoryAlias }}
+        parameters:
+          isPR: ${{ parameters.isPR }}
+          repositoryAlias: ${{ parameters.repositoryAlias }}
+          commit: ${{ parameters.commit }}
+
+      - pwsh: |
+            Write-Host "##vso[task.setvariable variable=DYLD_INSERT_LIBRARIES]"
+        displayName: 'Disable CodeQL'
+        name: disableCodeQLOnArm64
 
   # Check - "xamarin-macios (Prepare Release Convert NuGet to MSI)"
   - template: nuget-msi-convert/job/v3.yml@yaml-templates
     parameters:
+      use1ESTemplate: true
       yamlResourceName: yaml-templates
       dependsOn: signing
       artifactName: '${{ parameters.uploadPrefix }}nuget-signed'
@@ -68,6 +89,12 @@ stages:
       signType: Real
       useDateTimeVersion: true
       condition: "ne(stageDependencies.configure_build.configure.outputs['configure_platforms.ENABLE_DOTNET'],'')"
+      setupSteps:
+      - pwsh: |
+          New-Item "$(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/governance" -ItemType Directory -ea 0
+          New-Item -Path "$(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/governance" -Name "CredScanSuppressions.json" -Value '{"tool":"Crendential Scanner", "supressions":[]}'
+        displayName: Create credscan dummy ignore file
+
       postConvertSteps:
       - task: DownloadPipelineArtifact@2
         inputs:
@@ -89,13 +116,41 @@ stages:
     # Check - "xamarin-macios (Prepare Release Push NuGets)"
     - job: push_signed_nugets
       displayName: Push NuGets
-      dependsOn: nuget_convert
-      condition: "ne(stageDependencies.configure_build.configure.outputs['configure_platforms.ENABLE_DOTNET'],'')"
+      dependsOn: [signing, nuget_convert]
+      condition: and(
+          or(
+            eq(dependencies.signing.result, 'Succeeded'), 
+            eq(dependencies.signing.result, 'SucceededWithIssues')
+          ),
+          or(
+            eq(dependencies.nuget_convert.result, 'Succeeded'), 
+            eq(dependencies.nuget_convert.result, 'SucceededWithIssues')
+          ),
+          ne(stageDependencies.configure_build.configure.outputs['configure_platforms.ENABLE_DOTNET'],'')
+        )
       variables:
-        skipNugetSecurityAnalysis: true
+      - name: skipNugetSecurityAnalysis
+        value: true
+      - name: INCLUDE_DOTNET_IOS
+        value: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.INCLUDE_DOTNET_IOS'] ]
+      - name: INCLUDE_DOTNET_MACCATALYST
+        value: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.INCLUDE_DOTNET_MACCATALYST'] ]
+      - name: INCLUDE_DOTNET_MACOS
+        value: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.INCLUDE_DOTNET_MACOS'] ]
+      - name: INCLUDE_DOTNET_TVOS
+        value: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.INCLUDE_DOTNET_TVOS'] ]
+      - ${{ if eq(parameters.isPR, false) }}:
+        - group: Publish-Build-Assets
       pool:
-        vmImage: windows-latest
+        name: AzurePipelines-EO
+        demands:
+        - ImageOverride -equals 1ESPT-Windows2022
       steps:
+      - pwsh: |
+          New-Item "$(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/governance" -ItemType Directory -ea 0
+          New-Item -Path "$(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/governance" -Name "CredScanSuppressions.json" -Value '{"tool":"Crendential Scanner", "supressions":[]}'
+        displayName: Create credscan dummy ignore file
+
       - task: DownloadPipelineArtifact@2
         inputs:
           artifactName: '${{ parameters.uploadPrefix }}nuget-signed'
@@ -103,12 +158,15 @@ stages:
           patterns: |
             *.nupkg
 
-      - task: NuGetCommand@2
-        displayName: Publish Nugets to dotnet8
+      - task: 1ES.PublishNuget@1
+        displayName: Publish Nugets package
         inputs:
-          command: push
+          useDotNetTask: false # The default is false to use the NuGetCommand task. Set to true to use the DotNetCoreCLI task to publish packages.
           packagesToPush: '$(Build.SourcesDirectory)/package/*.nupkg'
+          packageParentPath: '$(Build.SourcesDirectory)/package'
           nuGetFeedType: external
+          allowPackageConflicts: true # Optional. NuGetCommand task only.
+          publishPackageMetadata: true # Optional
           publishFeedCredentials: dnceng-dotnet8
 
       - task: DownloadPipelineArtifact@2
@@ -118,12 +176,15 @@ stages:
           patterns: |
             *.nupkg
 
-      - task: NuGetCommand@2
-        displayName: Publish VS MSI Nugets to dotnet8
+      - task: 1ES.PublishNuget@1
+        displayName: Publish MSI Nugets package
         inputs:
-          command: push
+          useDotNetTask: false 
           packagesToPush: '$(Build.SourcesDirectory)/${{ parameters.uploadPrefix }}vs-msi-nugets/*.nupkg'
+          packageParentPath: '$(Build.SourcesDirectory)/${{ parameters.uploadPrefix }}vs-msi-nugets'
           nuGetFeedType: external
+          allowPackageConflicts: true
+          publishPackageMetadata: true
           publishFeedCredentials: dnceng-dotnet8
 
       - pwsh: |
@@ -168,3 +229,48 @@ stages:
             inputs:
               artifactName: ${{ parameters.uploadPrefix }}vsdrop-multitarget-signed
               downloadPath: $(Build.StagingDirectory)\$(MultiTargetVSDropCommitStatusName)
+
+      - script: make -C $(Build.SourcesDirectory)/dotnet version-props
+        displayName: make version props
+
+      - powershell: |
+          $varMap = @{ "INCLUDE_DOTNET_IOS" = "iOS"; "INCLUDE_DOTNET_MACCATALYST" = "MacCatalyst"; "INCLUDE_DOTNET_MACOS" = "macOS"; "INCLUDE_DOTNET_TVOS" = "tvOS" }
+          foreach ($varName in $varMap.Keys) {
+              if ([Environment]::GetEnvironmentVariable($varName)) {
+                  Write-Host "##vso[task.setvariable variable=MaestroProjectPlatformName]$($varMap[$varName])"
+                  exit 0;
+              }
+          }
+        displayName: Set maestro project variable
+
+      - task: DotNetCoreCLI@2
+        displayName: generate and publish BAR manifest
+        inputs:
+          projects: $(Build.SourcesDirectory)/dotnet/package/Microsoft.$(MaestroProjectPlatformName).Ref/package.csproj
+          arguments: >-
+            -t:PushManifestToBuildAssetRegistry
+            -p:BuildAssetRegistryToken=$(MaestroAccessToken)
+            -p:NupkgPath=$(Build.SourcesDirectory)/nugets-blob
+            -bl:$(Build.ArtifactStagingDirectory)/maestro-binlogs/generate-bar-manifest.binlog
+          workingDirectory: $(Build.SourcesDirectory)\..
+        condition: and(succeeded(), eq('${{ parameters.pushNugetsToMaestro }}', 'true'))
+
+      - powershell: |
+          $versionEndpoint = 'https://maestro.dot.net/api/assets/darc-version?api-version=2019-01-16'
+          $darcVersion = $(Invoke-WebRequest -Uri $versionEndpoint -UseBasicParsing).Content
+          $arcadeServicesSource = 'https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-eng/nuget/v3/index.json'
+          & dotnet tool update microsoft.dotnet.darc --version "$darcVersion" --add-source "$arcadeServicesSource" --tool-path $(Agent.ToolsDirectory)\darc -v n
+          & $(Agent.ToolsDirectory)\darc\darc add-build-to-channel --default-channels --id $(BARBuildId) --publishing-infra-version 3 --password $(MaestroAccessToken) --azdev-pat $(publishing-dnceng-devdiv-code-r-build-re)
+        displayName: Add builds to default darc channel
+        # We can't use the global.json located in the root of our repo, because makes it required to use the exact .NET version we're referencing in our eng/Versions.Details.xml file.
+        # So in order to not use it, we set the working directory to the parent directory of xamarin-macios.
+        workingDirectory: $(Build.SourcesDirectory)\..
+        condition: and(succeeded(), eq('${{ parameters.pushNugetsToMaestro }}', 'true'))
+
+      - task: 1ES.PublishPipelineArtifact@1
+        displayName: 'Publish Artifact: maestro-binlogs'
+        inputs:
+          path: $(Build.ArtifactStagingDirectory)/maestro-binlogs
+          artifact: ${{ parameters.uploadPrefix }}maestro-binlogs-$(System.JobAttempt)
+        condition: and(succeededOrFailed(), eq('${{ parameters.pushNugetsToMaestro }}', 'true'))
+        continueOnError: true

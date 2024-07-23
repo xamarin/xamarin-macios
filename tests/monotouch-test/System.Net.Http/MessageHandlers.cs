@@ -863,5 +863,56 @@ namespace MonoTests.System.Net.Http {
 				}
 			}
 		}
+
+#if NET
+		[TestCase (typeof (NSUrlSessionHandler))]
+		[TestCase (typeof (SocketsHttpHandler))]
+		public void UpdateRequestUriAfterRedirect (Type handlerType)
+		{
+			// https://github.com/xamarin/xamarin-macios/issues/20629
+
+			var done = TestRuntime.TryRunAsync (TimeSpan.FromSeconds (30), async () => {
+				var client = new HttpClient (GetHandler (handlerType));
+				var postRequestUri = NetworkResources.Httpbin.Url + "/";
+				var initialRequestUri = NetworkResources.Httpbin.GetRedirectToUrl (postRequestUri);
+				var request = new HttpRequestMessage (HttpMethod.Get, initialRequestUri);
+				Assert.AreEqual (initialRequestUri, request.RequestUri.ToString (), "Initial RequestUri");
+				var response = await client.SendAsync (request);
+				TestRuntime.IgnoreInCIIfBadNetwork (response.StatusCode);
+				Assert.AreEqual (postRequestUri, request.RequestUri.ToString (), "Post RequestUri");
+			}, out var ex);
+
+			if (!done) { // timeouts happen in the bots due to dns issues, connection issues etc. we do not want to fail
+				Assert.Inconclusive ("Request timedout.");
+			} else {
+				TestRuntime.IgnoreInCIIfBadNetwork (ex);
+				Assert.IsNull (ex, "Exception");
+			}
+		}
+
+		[TestCase (typeof (NSUrlSessionHandler))]
+		[TestCase (typeof (SocketsHttpHandler))]
+		public void RequestUriNotUpdatedIfNotRedirect (Type handlerType)
+		{
+			// https://github.com/xamarin/xamarin-macios/issues/20629
+
+			var done = TestRuntime.TryRunAsync (TimeSpan.FromSeconds (30), async () => {
+				var client = new HttpClient (GetHandler (handlerType));
+				var requestUri = NetworkResources.Httpbin.Uri + "?stuffHere=[]{}";
+				var request = new HttpRequestMessage (HttpMethod.Get, requestUri);
+				Assert.AreEqual (requestUri, request.RequestUri.ToString (), "Initial RequestUri");
+				var response = await client.SendAsync (request);
+				TestRuntime.IgnoreInCIIfBadNetwork (response.StatusCode);
+				Assert.AreEqual (requestUri, request.RequestUri.ToString (), "Post RequestUri");
+			}, out var ex);
+
+			if (!done) { // timeouts happen in the bots due to dns issues, connection issues etc. we do not want to fail
+				Assert.Inconclusive ("Request timedout.");
+			} else {
+				TestRuntime.IgnoreInCIIfBadNetwork (ex);
+				Assert.IsNull (ex, "Exception");
+			}
+		}
+#endif // NET
 	}
 }

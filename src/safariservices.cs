@@ -34,6 +34,11 @@ using NativeHandle = System.IntPtr;
 namespace SafariServices {
 	delegate void SFExtensionValidationHandler (bool shouldHide, NSString text);
 
+	/// <summary>Represents the enabled state of a content blocker extension.</summary>
+	///     <remarks>
+	///       <para>This class has one read-only property, <see cref="P:SafariServices.SFContentBlockerState.Enabled" />, which tells whether or not the associated content blocker extension is enabled.</para>
+	///     </remarks>
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/SafariServices/SFContentBlockerState">Apple documentation for <c>SFContentBlockerState</c></related>
 	[Introduced (PlatformName.MacCatalyst, 13, 4)]
 	[BaseType (typeof (NSObject))]
 	interface SFContentBlockerState {
@@ -41,6 +46,9 @@ namespace SafariServices {
 		bool Enabled { [Bind ("isEnabled")] get; }
 	}
 
+	/// <summary>Coordinates with Safari to load extension blocking rules.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/SafariServices/SFContentBlockerManager">Apple documentation for <c>SFContentBlockerManager</c></related>
 	[Introduced (PlatformName.MacCatalyst, 13, 4)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
@@ -63,6 +71,9 @@ namespace SafariServices {
 		void GetStateOfContentBlocker (string identifier, Action<SFContentBlockerState, NSError> completionHandler);
 	}
 
+	/// <summary>Provides write-access to the Safari Reading List.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/SafariServices/SSReadingList">Apple documentation for <c>SSReadingList</c></related>
 	[NoMac]
 	[Introduced (PlatformName.MacCatalyst, 13, 4)]
 	[BaseType (typeof (NSObject))]
@@ -87,6 +98,9 @@ namespace SafariServices {
 #endif
 	}
 
+	/// <summary>User interface for web browsing.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Miscellaneous/Reference/SFSafariViewController_Ref/index.html">Apple documentation for <c>SFSafariViewController</c></related>
 	[NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (UIViewController))]
@@ -141,8 +155,17 @@ namespace SafariServices {
 		SFSafariViewControllerPrewarmingToken PrewarmConnections (NSUrl [] urls);
 	}
 
+	/// <summary>Interface representing the required methods (if any) of the protocol <see cref="T:SafariServices.SFSafariViewControllerDelegate" />.</summary>
+	///     <remarks>
+	///       <para>This interface contains the required methods (if any) from the protocol defined by <see cref="T:SafariServices.SFSafariViewControllerDelegate" />.</para>
+	///       <para>If developers create classes that implement this interface, the implementation methods will automatically be exported to Objective-C with the matching signature from the method defined in the <see cref="T:SafariServices.SFSafariViewControllerDelegate" /> protocol.</para>
+	///       <para>Optional methods (if any) are provided by the <see cref="T:SafariServices.SFSafariViewControllerDelegate_Extensions" /> class as extension methods to the interface, allowing developers to invoke any optional methods on the protocol.</para>
+	///     </remarks>
 	interface ISFSafariViewControllerDelegate { }
 
+	/// <summary>Protocol for presenting a user interface for web browsing.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/SafariServices/SFSafariViewControllerDelegate">Apple documentation for <c>SFSafariViewControllerDelegate</c></related>
 	[NoMac]
 	[MacCatalyst (13, 1)]
 	[Model]
@@ -172,6 +195,7 @@ namespace SafariServices {
 		void WillOpenInBrowser (SFSafariViewController controller);
 	}
 
+	/// <summary>Configuration options for Safari view controllers.</summary>
 	[NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -193,10 +217,15 @@ namespace SafariServices {
 		UIEventAttribution EventAttribution { get; set; }
 	}
 
+	/// <param name="callbackUrl">A custom URL scheme.</param>
+	///     <param name="error">The error object if an error occurred.</param>
+	///     
+	///     <summary>Delegate for handling the result of a user action in a <see cref="T:SafariServices.SFAuthenticationSession" />.</summary>
 	[NoMac]
 	[MacCatalyst (13, 1)]
 	delegate void SFAuthenticationCompletionHandler ([NullAllowed] NSUrl callbackUrl, [NullAllowed] NSError error);
 
+	/// <summary>A one-time web service login, shared between Safari, an app, and other associated apps.</summary>
 	[NoMac]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -553,6 +582,22 @@ namespace SafariServices {
 		[Async]
 		[Export ("clearWebsiteDataWithCompletionHandler:")]
 		void ClearWebsiteData ([NullAllowed] Action completion);
+	}
+
+	[iOS (17, 4), MacCatalyst (17, 4), NoMac, NoTV, NoWatch]
+	[Protocol (BackwardsCompatibleCodeGeneration = false)]
+	interface SFAddToHomeScreenActivityItem {
+
+		[Abstract]
+		[Export ("URL")]
+		NSUrl Url { get; }
+
+		[Abstract]
+		[Export ("title")]
+		string Title { get; }
+
+		[NullAllowed, Export ("iconItemProvider")]
+		NSItemProvider IconItemProvider { get; }
 	}
 
 }

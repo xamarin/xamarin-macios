@@ -2015,7 +2015,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	<Target Name="_ParseBundlerArguments">
 		<ParseBundlerArguments
 			Aot="@(_AotArguments)"
-			ExtraArgs="$(_BundlerArguments)"
+			ExtraArgs="$(AppBundleExtraOptions)"
 			NoSymbolStrip="$(NoSymbolStrip)"
 			NoDSymUtil="$(NoDSymUtil)"
 			PackageDebugSymbols="$(PackageDebugSymbols)"
@@ -2039,6 +2039,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			<Output TaskParameter="SkipMarkingNSObjectsInUserAssemblies" PropertyName="_SkipMarkingNSObjectsInUserAssemblies" />
 			<Output TaskParameter="Verbosity" PropertyName="_BundlerVerbosity" />
 			<Output TaskParameter="WarnAsError" PropertyName="_BundlerWarnAsError" />
+			<Output TaskParameter="Warn" PropertyName="_BundlerWarn" />
 			<Output TaskParameter="XmlDefinitions" ItemName="_BundlerXmlDefinitions" />
 			<Output TaskParameter="NoStrip" PropertyName="EnableAssemblyILStripping" />
 		</ParseBundlerArguments>
@@ -2920,6 +2921,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			ProjectTypeGuids="$(ProjectTypeGuids)"
 			SigningKey="$(_CodeSigningKey)"
 			SolutionPath="$(SolutionPath)"
+			RuntimeIdentifiers="$(RuntimeIdentifiers);$(RuntimeIdentifier)"
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
 			WatchAppReferences="@(_ResolvedWatchAppReferences)"
 			>

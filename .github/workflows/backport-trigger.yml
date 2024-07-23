@@ -20,17 +20,26 @@ jobs:
     steps:
       - name: Parse Comment
         id: parse_comment
+        shell: pwsh
         run: |
           Write-Host "Parsing $env:COMMENT"
           ($botName, $backport, $backportTargetBranch) = [System.Text.RegularExpressions.Regex]::Split("$env:COMMENT", "\s+")
-          echo "::set-output name=target_branch::$backportTargetBranch"
-        shell: pwsh
+          Write-Host "GITHUB_OUTPUT: ${env:GITHUB_OUTPUT}"
+          [IO.File]::AppendAllText($env:GITHUB_OUTPUT, "target_branch=${backportTargetBranch}$([Environment]::NewLine)")                 # Equivalent to the deprecated ::set-output command: https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idoutputs
         env:
           COMMENT: "${{ github.event.comment.body }}"
 
   launchBackportBuild:
     needs: setupBackport
-    uses: xamarin/backport-bot-action/.github/workflows/backport-action.yml@v1.1
+    uses: xamarin/backport-bot-action/.github/workflows/backport-action.yml@v2.0
+    # GITHUB_TOKEN change from read-write to read-only on 2024-02-01 requiring permissions block
+    # https://docs.opensource.microsoft.com/github/apps/permission-changes/
+    # https://docs.github.com/en/actions/using-jobs/assigning-permissions-to-jobs
+    permissions:
+      actions: none
+      contents: read
+      security-events: none
+      id-token: write           # The backport-action template being invoked requires this permission
     with:
       pull_request_url: ${{ github.event.issue.pull_request.url }}
       target_branch: ${{ needs.setupBackport.outputs.target_branch }}
@@ -38,8 +47,10 @@ jobs:
       github_repository: ${{ github.repository }}
       use_fork: true
     secrets:
+      azure_tenant_id: ${{ secrets.BACKPORT_AZURE_TENANT_ID }}
+      azure_subscription_id: ${{ secrets.BACKPORT_AZURE_SUBSCRIPTION_ID }}
+      azure_client_id: ${{ secrets.BACKPORT_AZURE_CLIENT_ID }}
       ado_organization: ${{ secrets.ADO_PROJECTCOLLECTION }}
       ado_project: ${{ secrets.ADO_PROJECT }}
       backport_pipeline_id: ${{ secrets.BACKPORT_PIPELINEID }}
-      ado_build_pat: ${{ secrets.ADO_BUILDPAT }}
       github_account_pat: ${{ secrets.SERVICEACCOUNT_PAT }}

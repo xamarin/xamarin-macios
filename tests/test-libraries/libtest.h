@@ -277,6 +277,23 @@ typedef void (^outerBlock) (innerBlock callback);
 	// And Apple does (see UIAppearance appearanceWhenContainedInInstancesOfClasses for an example).
 @end
 
+@protocol ConstructorProtocol
+@required
+	-(id) initRequired: (NSString *) p0;
+@optional
+	-(id) initOptional: (NSDate *) p0;
+@end
+
+@interface TypeProvidingProtocolConstructors : NSObject <ConstructorProtocol> {
+}
+	-(id) initRequired: (NSString *) p0;
+	-(id) initOptional: (NSDate *) p0;
+
+@property (copy) NSString* stringValue;
+@property (copy) NSDate* dateValue;
+
+@end
+
 #ifdef __cplusplus
 } /* extern "C" */
 #endif

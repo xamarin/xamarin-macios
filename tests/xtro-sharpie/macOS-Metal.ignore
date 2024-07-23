@@ -70,6 +70,8 @@
 !incorrect-protocol-member! MTLDevice::supportsRasterizationRateMapWithLayerCount: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLDevice::supportsVertexAmplificationCount: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLRenderCommandEncoder::setVertexAmplificationCount:viewMappings: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLResource::setOwnerWithIdentity: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLSharedEvent::waitUntilSignaledValue:timeoutMS: is REQUIRED and should be abstract
 
 # Selectors missing reported by introspection: https://github.com/xamarin/maccore/issues/1978
 

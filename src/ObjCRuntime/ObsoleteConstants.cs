@@ -5,6 +5,13 @@ namespace ObjCRuntime {
 	// we use this to avoid multiple similar strings for the same purpose
 	// which reduce the size of the metadata inside our platform assemblies
 	// once adopted everywhere then updating  strings will be much easier
+	/// <summary>Global constants to system libraries.</summary>
+	///     <remarks>
+	///       <para>The constants on this namespace contain the full path
+	///     names to various iOS framework libraries.  The path names
+	///     are typically used in DllImport declarations when you need to
+	///     P/Invoke code yourself.</para>
+	///     </remarks>
 	partial class Constants {
 
 		internal const string UseCallKitInstead = "Use the 'CallKit' API instead.";
@@ -40,6 +47,8 @@ namespace ObjCRuntime {
 		internal const string RemovedFromPassKit = "This API has been removed from the 'PassKit' framework.";
 
 		internal const string NewsstandKitRemoved = "The NewsstandKit framework has been removed from iOS.";
+
+		internal const string AssetsLibraryRemoved = "The AssetsLibrary framework has been removed from iOS, use the 'Photos' API instead.";
 
 		internal const string TypeRemovedAllPlatforms = "This type has been removed from all platforms.";
 	}

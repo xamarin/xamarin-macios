@@ -113,6 +113,7 @@ APPKIT_SOURCES = \
 	AppKit/NSDraggingSession.cs \
 	AppKit/NSDraggingItem.cs \
 	AppKit/NSPasteboard.cs \
+	AppKit/NSPasteboardReading.cs \
 	AppKit/NSSharingServiceDelegate.cs \
 	AppKit/NSDocument.cs \
 	AppKit/NSEnumsExtensions.cs \
@@ -177,12 +178,8 @@ ARKIT_SOURCES = \
 
 # AssetsLibrary
 
-ASSETSLIBRARY_API_SOURCES = \
-	AssetsLibrary/Enums.cs \
-
 ASSETSLIBRARY_SOURCES = \
-	AssetsLibrary/ALAsset.cs \
-	AssetsLibrary/ALAssetsGroup.cs \
+	AssetsLibrary/Compat.cs \
 
 # AudioToolbox
 
@@ -292,6 +289,7 @@ AVFOUNDATION_SOURCES = \
 	AVFoundation/AVPlayerLayer.cs \
 	AVFoundation/AVPlayerViewController.cs \
 	AVFoundation/AVSampleBufferExtensions.cs \
+	AVFoundation/AVSampleCursor.cs \
 	AVFoundation/AVSpeechSynthesizer.cs \
 	AVFoundation/AVTextStyleRule.cs \
 	AVFoundation/Events.cs \
@@ -729,6 +727,15 @@ COREWLAN_SOURCES = \
 	CoreWlan/CWInterface.cs \
 	CoreWlan/CWKeychain.cs \
 
+# DARWIN
+
+DARWIN_CORE_SOURCES = \
+	Darwin/TimeSpec.cs \
+
+DARWIN_SOURCES = \
+	Darwin/KernelNotification.cs \
+	Darwin/SystemLog.cs \
+
 # DeviceDiscoveryExtension
 
 DEVICEDISCOVERYEXTENSION_API_SOURCES = \
@@ -927,6 +934,7 @@ GAMECONTROLLER_SOURCES = \
 	GameController/GCExtendedGamepadSnapshot.cs \
 	GameController/GCGamepadSnapshot.cs \
 	GameController/GCMicroGamepadSnapshot.cs \
+	GameController/GCMouse.cs \
 
 # GameKit
 
@@ -2050,6 +2058,7 @@ COMMON_FRAMEWORKS =         \
 	CoreML                  \
 	CoreMidi                \
 	CoreVideo               \
+	CryptoTokenKit          \
 	Compression             \
 	DeviceCheck             \
 	Foundation              \
@@ -2097,6 +2106,7 @@ MACOS_FRAMEWORKS =          \
 	CoreSpotlight           \
 	CoreText                \
 	CoreWlan                \
+	Darwin                  \
 	EventKit                \
 	ExecutionPolicy		\
 	ExtensionKit		\

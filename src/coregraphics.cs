@@ -10,6 +10,7 @@ using ObjCRuntime;
 
 namespace CoreGraphics {
 
+	/// <summary>Specifies various boxes for the <see cref="M:CoreGraphics.CGContextPDF.BeginPage(CoreGraphics.CGPDFPageInfo)" /> method.</summary>
 	[Partial]
 	interface CGPDFPageInfo {
 
@@ -34,6 +35,7 @@ namespace CoreGraphics {
 		IntPtr kCGPDFContextArtBox { get; }
 	}
 
+	/// <summary>Auxiliary parameters for constructing a <see cref="T:CoreGraphics.CGContextPDF" />.</summary>
 	[Partial]
 	interface CGPDFInfo {
 
@@ -112,6 +114,7 @@ namespace CoreGraphics {
 		IntPtr kCGPDFContextCreatePDFA { get; }
 	}
 
+	/// <summary>Provides string constants whose values are known color spaces.</summary>
 	[Static]
 	[MacCatalyst (13, 1)]
 	interface CGColorSpaceNames {

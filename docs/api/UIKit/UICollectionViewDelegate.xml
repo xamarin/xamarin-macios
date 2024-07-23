@@ -1,0 +1,120 @@
+<Documentation>
+  <Docs DocId="T:UIKit.UICollectionViewDelegate">
+    <summary>Used to receive notices relating to a <see cref="T:UIKit.UICollectionView" />. </summary>
+    <remarks>
+      <para>Methods within <see cref="T:UIKit.UICollectionViewDelegate" /> are called in reaction to events occurring within an associated <see cref="T:UIKit.UICollectionView" />. To use this class, you must derive from it and override its method to respond to events.</para>
+      <para>Although <see cref="T:UIKit.UICollectionView" /> is a subtype of <see cref="T:UIKit.UIScrollView" />, <see cref="T:UIKit.UICollectionViewDelegate" /> is not a subtype of <see cref="T:UIKit.UIScrollViewDelegate" />. Nonetheless, many of the methods in <see cref="T:UIKit.UICollectionViewDelegate" /> mirror those of <see cref="T:UIKit.UIScrollViewDelegate" /> and application developers may find it useful to consult the documentation of that class for a more detailed discussion of methods relating to scrolling.</para>
+      <para>The <see cref="T:UIKit.UICollectionViewSource" /> class provides an alternative to this class, combining the <see cref="T:UIKit.UICollectionViewDelegate" /> API and the <see cref="T:UIKit.UICollectionViewDataSource" /> APIs. It is available via the <see cref="P:UIKit.UICollectionView.Source" /> property. </para>
+      <para>
+        <format type="text/html">
+          <h2>Selecting and Highlighting</h2>
+        </format>
+      </para>
+      <para>Selecting and highlighting in a <see cref="T:UIKit.UICollectionView" /> follows this sequence:</para>
+      <list type="table">
+        <listheader>
+          <term>User Action</term>
+          <description>UICollectionViewDelegate Methods</description>
+          <description>UICollectionViewCell Properties</description>
+        </listheader>
+        <item>
+          <term>Nothing touched</term>
+          <description>
+          </description>
+          <description>
+            <para>
+              <c>Highlighted == <see langword="false" />; Selected == <see langword="false" /></c>
+            </para>
+          </description>
+        </item>
+        <item>
+          <term>Finger down in cell</term>
+          <description>
+            <para>
+              <see cref="M:UIKit.UICollectionViewDelegate.ShouldHighlightItem(UIKit.UICollectionView,Foundation.NSIndexPath)" /> is called. If it returns <see langword="false" />,
+            processing stops.
+	    </para>
+          </description>
+          <description>
+          </description>
+        </item>
+        <item>
+          <term />
+          <description>
+            <see cref="M:UIKit.UICollectionViewDelegate.ItemHighlighted(UIKit.UICollectionView,Foundation.NSIndexPath)" /> is called.
+          </description>
+          <description>
+            <para>
+              <c>Highlighted == <see langword="true" />; Selected == <see langword="false" /></c>
+            </para>
+          </description>
+        </item>
+        <item>
+          <term>Finger up</term>
+          <description>
+            <see cref="M:UIKit.UICollectionViewDelegate.ShouldSelectItem(UIKit.UICollectionView,Foundation.NSIndexPath)" /> is called. If it returns <see langword="false" />, processing stops.
+          </description>
+          <description>
+          </description>
+        </item>
+        <item>
+          <term />
+          <description>
+            <see cref="M:UIKit.UICollectionViewDelegate.ItemSelected(UIKit.UICollectionView,Foundation.NSIndexPath)" /> is called. <see cref="M:UIKit.UICollectionViewDelegate.ItemUnhighlighted(UIKit.UICollectionView,Foundation.NSIndexPath)" /> is called.
+            
+          </description>
+          <description>
+            <para>
+              <c>Highlighted == <see langword="false" />; Selected == <see langword="true" /></c>
+            </para>
+          </description>
+        </item>
+      </list>
+      <para>
+        <img href="~/UIKit/_images/UIKit.UICollectionView.HighlightAndSelect.png" alt="Sequence diagram showing user actions, UICollectionViewDelegate events, and UICollectionView Cell properties" />
+      </para>
+      <para>Deselecting a <see cref="T:UIKit.UICollectionViewCell" /> follows a similar sequence:</para>
+      <para>
+        <list type="table">
+          <listheader>
+            <term>User Action</term>
+            <description>UICollectionViewDelegate Methods</description>
+            <description>UICollectionViewCell Properties</description>
+          </listheader>
+          <item>
+            <term>Nothing touched while some <see cref="T:UIKit.UICollectionViewCell" /> is highlighted.</term>
+            <description>
+            </description>
+            <description>
+              <para>
+                <c>Highlighted == <see langword="false" />; Selected == <see langword="true" /></c>
+              </para>
+            </description>
+          </item>
+          <item>
+            <term>Finger taps cell (Deselect gesture)</term>
+            <description>
+              <see cref="M:UIKit.UICollectionViewDelegate.ShouldDeselectItem(UIKit.UICollectionView,Foundation.NSIndexPath)" /> is called. If it returns <see langword="false" />, processing stops. 
+          </description>
+            <description>
+            </description>
+          </item>
+          <item>
+            <term />
+            <description>
+              <see cref="M:UIKit.UICollectionViewDelegate.ItemDeselected(UIKit.UICollectionView,Foundation.NSIndexPath)" /> is called.
+          </description>
+            <description>
+              <para>
+                <c>Highlighted == <see langword="false" />; Selected == <see langword="false" /></c>
+              </para>
+            </description>
+          </item>
+        </list>
+      </para>
+    </remarks>
+    
+    <related type="article" href="https://docs.xamarin.com/ios/Guides/User_Interface/Introduction_to_Collection_Views">Introduction to Collection Views</related>
+    <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/UICollectionViewDelegate_protocol/index.html">Apple documentation for <c>UICollectionViewDelegate</c></related>
+  </Docs>
+</Documentation>

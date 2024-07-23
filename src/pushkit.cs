@@ -8,6 +8,9 @@ using NativeHandle = System.IntPtr;
 #endif
 
 namespace PushKit {
+	/// <summary>Holds the <see cref="P:PushKit.PKPushCredentials.Token" /> that holds the user's credentials.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/PushKit/Reference/PKPushCredentials_Class/index.html">Apple documentation for <c>PKPushCredentials</c></related>
 	[Watch (6, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -20,6 +23,9 @@ namespace PushKit {
 		NSData Token { get; }
 	}
 
+	/// <summary>Contains a dictionary of data for a push operation.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/PushKit/Reference/PKPushPayload_Class/index.html">Apple documentation for <c>PKPushPayload</c></related>
 	[Watch (6, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -32,6 +38,9 @@ namespace PushKit {
 		NSDictionary DictionaryPayload { get; }
 	}
 
+	/// <summary>Allows the developer to register for remote pushes.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/PushKit/Reference/PKPushRegistry_Class/index.html">Apple documentation for <c>PKPushRegistry</c></related>
 	[Watch (6, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -57,6 +66,7 @@ namespace PushKit {
 		NativeHandle Constructor ([NullAllowed] DispatchQueue queue);
 	}
 
+	/// <summary>Holds the transports available for Push Kit (currently only Voice Over IP).</summary>
 	[MacCatalyst (13, 1)]
 	[Static]
 	interface PKPushType {
@@ -81,8 +91,17 @@ namespace PushKit {
 		NSString FileProvider { get; }
 	}
 
+	/// <summary>Interface representing the required methods (if any) of the protocol <see cref="T:PushKit.PKPushRegistryDelegate" />.</summary>
+	///     <remarks>
+	///       <para>This interface contains the required methods (if any) from the protocol defined by <see cref="T:PushKit.PKPushRegistryDelegate" />.</para>
+	///       <para>If developers create classes that implement this interface, the implementation methods will automatically be exported to Objective-C with the matching signature from the method defined in the <see cref="T:PushKit.PKPushRegistryDelegate" /> protocol.</para>
+	///       <para>Optional methods (if any) are provided by the <see cref="T:PushKit.PKPushRegistryDelegate_Extensions" /> class as extension methods to the interface, allowing developers to invoke any optional methods on the protocol.</para>
+	///     </remarks>
 	interface IPKPushRegistryDelegate { }
 
+	/// <summary>Completion handler for registering a push operation.</summary>
+	///     
+	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/PushKit/Reference/PKPushRegistryDelegate_Protocol/index.html">Apple documentation for <c>PKPushRegistryDelegate</c></related>
 	[Watch (6, 0)]
 	[MacCatalyst (13, 1)]
 	[Model]

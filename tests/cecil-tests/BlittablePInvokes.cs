@@ -205,19 +205,79 @@ namespace Cecil.Tests {
 			}
 		}
 
+		public record NoMarshalAsFailure : IComparable {
+			public string Message { get; }
+			public string Location { get; }
+
+			public NoMarshalAsFailure (string message, string location)
+			{
+				Message = message;
+				Location = location;
+			}
+
+			public override string ToString ()
+			{
+				if (string.IsNullOrEmpty (Location))
+					return Message;
+				return $"{Message} at {Location}";
+			}
+
+			public int CompareTo (object? obj)
+			{
+				if (obj is NoMarshalAsFailure other)
+					return ToString ().CompareTo (other.ToString ());
+				return -1;
+			}
+		}
+
+		[Test]
+		public void NoMarshalAsAttributes ()
+		{
+			var failures = new Dictionary<string, NoMarshalAsFailure> ();
+			var marshalProviders = new List<IMarshalInfoProvider> ();
+			foreach (var info in Helper.NetPlatformImplementationAssemblyDefinitions) {
+				var assembly = info.Assembly;
+				foreach (var field in assembly.EnumerateFields ()) {
+					if (field.HasMarshalInfo) {
+						var failure = new NoMarshalAsFailure ($"The field {field.DeclaringType.FullName}.{field.Name} has a [MarshalAs] attribute", "");
+						failures [failure.Message] = failure;
+					}
+				}
+
+				foreach (var method in assembly.EnumerateMethods ()) {
+					if (method.HasParameters) {
+						foreach (var p in method.Parameters) {
+							if (p.HasMarshalInfo) {
+								var failure = new NoMarshalAsFailure ($"For the method {method.RenderMethod ()} the parameter #{p.Index} ({p.Name}) has a [MarshalAs] attribute", method.RenderLocation ());
+								failures [failure.Message] = failure;
+							}
+						}
+					}
+					if (method.MethodReturnType.HasMarshalInfo) {
+						var failure = new NoMarshalAsFailure ($"For the method {method.RenderMethod ()} the return type has a [MarshalAs] attribute", method.RenderLocation ());
+						failures [failure.Message] = failure;
+					}
+				}
+			}
+			Helper.AssertFailures (failures, knownFailuresMarshalAs, nameof (knownFailuresMarshalAs), "APIs with [MarshalAs] attributes.", (v) => $"{v.Location}: {v.Message}");
+		}
+
 		[Test]
 		public void CheckForNonBlittablePInvokes ()
 		{
 			var failures = new Dictionary<string, NonBlittablePInvokesFailure> ();
 			var pinvokes = new List<(AssemblyDefinition Assembly, MethodDefinition Method)> ();
 
-			foreach (var info in Helper.NetPlatformImplementationAssemblyDefinitions)
+			var blitCaches = new Dictionary<AssemblyDefinition, Dictionary<string, BlitAndReason>> ();
+			foreach (var info in Helper.NetPlatformImplementationAssemblyDefinitions) {
 				pinvokes.AddRange (AllPInvokes (info.Assembly).Select (v => (info.Assembly, v)));
+
+				blitCaches [info.Assembly] = new Dictionary<string, BlitAndReason> ();
+			}
 
 			Assert.That (pinvokes.Count, Is.GreaterThan (0), "Must have some P/Invokes at least");
 
-			var blitCache = new Dictionary<string, BlitAndReason> ();
-			var results = pinvokes.Select (pi => IsMethodBlittable (pi.Assembly, pi.Method, blitCache)).Where (r => !r.IsBlittable).ToArray ();
+			var results = pinvokes.Select (pi => IsMethodBlittable (pi.Assembly, pi.Method, blitCaches [pi.Assembly])).Where (r => !r.IsBlittable).ToArray ();
 			foreach (var result in results) {
 				failures [result.Method.FullName] = new (result.Method.FullName, result.Method.RenderLocation (), result.Result.ToString ());
 			}
@@ -269,11 +329,13 @@ namespace Cecil.Tests {
 				blitCache [type.Name] = new BlitAndReason (true, "");
 				return true;
 			}
-			if (IsBlittablePointer (type)) {
+			var localResult = new StringBuilder ();
+			if (IsBlittablePointer (assembly, type, provider, localResult, blitCache)) {
 				blitCache [type.Name] = new BlitAndReason (true, "");
 				return true;
 			}
-			var localResult = new StringBuilder ();
+			result.Append (localResult);
+			localResult.Clear ();
 			if (IsBlittableValueType (assembly, type, localResult, blitCache)) {
 				blitCache [type.Name] = new BlitAndReason (true, "");
 				return true;
@@ -308,9 +370,24 @@ namespace Cecil.Tests {
 			return typesWeLike.Contains (t.ToString ());
 		}
 
-		bool IsBlittablePointer (TypeReference type)
+		bool IsBlittablePointer (AssemblyDefinition assembly, TypeReference type, IMarshalInfoProvider provider, StringBuilder result, Dictionary<string, BlitAndReason> blitCache)
 		{
-			return type.IsPointer || type.IsFunctionPointer;
+			if (type.IsFunctionPointer)
+				return true;
+
+			if (!type.IsPointer)
+				return false;
+
+			var localResult = new StringBuilder ();
+			if (!IsTypeBlittable (assembly, type.GetElementType (), provider, localResult, blitCache)) {
+				var pointerResult = new StringBuilder ();
+				pointerResult.Append ($" {type.Name}: {localResult}");
+				result.Append (pointerResult);
+				blitCache [type.Name] = new BlitAndReason (false, pointerResult.ToString ());
+				return false;
+			}
+
+			return true;
 		}
 
 

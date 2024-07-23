@@ -1,0 +1,48 @@
+<Documentation>
+  <Docs DocId="T:CoreImage.CILinearGradient">
+    <summary>A gradient that fades one color linearly into another.</summary>
+    <remarks>
+      <para>The following example shows this filter in use</para>
+      <example>
+        <code lang="csharp lang-csharp"><![CDATA[
+var point0 = new CIVector(0, 0); // Default [0 0]
+var point1 = new CIVector(250, 250); // Default [200 200]
+var linearGrad = new CILinearGradient() {
+	Point0 = point0,
+	Point1 = point1,
+	Color0 = new CIColor (UIColor.Red),
+	Color1 = new CIColor (UIColor.Blue)
+};
+		
+// The Generator Filters need to be cropped before they can be displayed
+var crop = new CICrop () {
+	Image = linearGrad.OutputImage,
+	// Create the Bounds based on the Size of the application Window. (UIWindow)
+	Rectangle = new CIVector (0, 0, window.Bounds.Width, window.Bounds.Height) 
+};		
+		
+// Get the final Generated image from the Crop filter
+var output = crop.OutputImage;
+		
+// To render the results, we need to create a context, and then
+// use one of the context rendering APIs, in this case, we render the
+// result into a CoreGraphics image, which is merely a useful representation
+//
+var context = CIContext.FromOptions (null);
+
+var cgimage = context.CreateCGImage (output, output.Extent);
+
+// The above cgimage can be added to a screen view, for example, this
+// would add it to a UIImageView on the screen:
+myImageView.Image = UIImage.FromImage (cgimage);
+       ]]></code>
+      </example>
+      <para>
+         Produces the following output:
+      </para>
+      <para>
+        <img href="~/CoreImage/_images/LinearGradient.png" alt="Result of applying the filter." />
+      </para>
+    </remarks>
+  </Docs>
+</Documentation>

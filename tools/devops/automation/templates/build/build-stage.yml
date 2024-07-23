@@ -1,112 +1,102 @@
+# yamllint disable rule:line-length
 # template that contains all the different steps to create a pkgs, publish the results and provide feedback to the
 # developers in github.
 parameters:
-- name: runTests
-  type: boolean
-  default: true
+  - name: vsdropsPrefix
+    type: string
 
-- name: vsdropsPrefix
-  type: string
+  - name: keyringPass
+    type: string
 
-- name: runDeviceTests
-  type: boolean
-  default: true
+  - name: gitHubToken
+    type: string
 
-- name: keyringPass
-  type: string
+  - name: xqaCertPass
+    type: string
 
-- name: gitHubToken
-  type: string
+  - name: skipESRP
+    type: boolean
+    default: false  # only to be used when testing the CI and we do not need a signed pkg
 
-- name: xqaCertPass
-  type: string
+  - name: pool
+    type: string
+    default: automatic
 
-- name: skipESRP
-  type: boolean
-  default: false # only to be used when testing the CI and we do not need a signed pkg
+  - name: isPR
+    type: boolean
 
-- name: pool
-  type: string
-  default: automatic
+  - name: repositoryAlias
+    type: string
+    default: self
 
-- name: isPR
-  type: boolean
+  - name: commit
+    type: string
+    default: HEAD
 
-- name: repositoryAlias
-  type: string
-  default: self
+  - name: xcodeChannel
+    type: string
 
-- name: commit
-  type: string
-  default: HEAD
-
-- name: xcodeChannel
-  type: string
-
-- name: macOSName
-  type: string
+  - name: macOSName
+    type: string
 
 jobs:
-# This job performs the build of the nuget pkgs and the framework pkgs. There are two interesting dependencies in this job:
-- job: build
-  displayName: 'Build packages'
-  timeoutInMinutes: 1000
-  variables:
-    DOTNET_PLATFORMS: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.DOTNET_PLATFORMS'] ]
-    ENABLE_DOTNET: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.ENABLE_DOTNET'] ]
-    INCLUDE_DOTNET_IOS: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.INCLUDE_DOTNET_IOS'] ]
-    INCLUDE_DOTNET_MACCATALYST: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.INCLUDE_DOTNET_MACCATALYST'] ]
-    INCLUDE_DOTNET_MACOS: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.INCLUDE_DOTNET_MACOS'] ]
-    INCLUDE_DOTNET_TVOS: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.INCLUDE_DOTNET_TVOS'] ]
-    INCLUDE_LEGACY_IOS: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.INCLUDE_LEGACY_IOS'] ]
-    INCLUDE_LEGACY_MAC: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.INCLUDE_LEGACY_MAC'] ]
-    INCLUDE_LEGACY_TVOS: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.INCLUDE_LEGACY_TVOS'] ]
-    INCLUDE_LEGACY_WATCH: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.INCLUDE_LEGACY_WATCH'] ]
-    INCLUDE_XAMARIN_LEGACY: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.INCLUDE_XAMARIN_LEGACY'] ]
-    ${{ if eq(parameters.pool, 'automatic') }}:
-      AgentPoolComputed: $[ stageDependencies.configure_build.AgentPoolSelector.outputs['setAgentPool.AgentPoolComputed'] ]
-    ${{ if eq(parameters.pool, 'ci') }}:
-      AgentPoolComputed: $(CIBuildPool)
-    ${{ if eq(parameters.pool, 'pr') }}:
-      AgentPoolComputed: $(PRBuildPool)
-    # add all the variables that have been parsed by the configuration step. Could we have a less verbose way??
-    #
-    # build-package
-    # skip-packages
-    # skip-nugets
-    # skip-signing
-    # run-sample-tests
-    BuildPackage: $[ stageDependencies.configure_build.configure.outputs['labels.build_package'] ]
-    SkipPackages: $[ stageDependencies.configure_build.configure.outputs['labels.skip_packages'] ]
-    SkipNugets: $[ stageDependencies.configure_build.configure.outputs['labels.skip_nugets'] ]
-    SkipSigning: $[ stageDependencies.configure_build.configure.outputs['labels.skip_signing'] ]
-    RunSampleTests: $[ stageDependencies.configure_build.configure.outputs['labels.run_sample_tests'] ]
-    SkipApiComparison: $[ stageDependencies.configure_build.configure.outputs['labels.skip_api_comparison'] ]
-    # old and ugly env var use by jenkins, we do have parts of the code that use it, contains the PR number
-    PR_ID: $[ stageDependencies.configure_build.configure.outputs['labels.pr_number'] ]
-    # set the branch variable name, this is required by jenkins and we have a lot of scripts that depend on it
-    BRANCH_NAME: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', '') ]
-    XHARNESS_LABELS: $[ stageDependencies.configure_build.configure.outputs['labels.xharness_labels'] ]
-    RUN_MAC_TESTS: $[ stageDependencies.configure_build.configure.outputs['decisions.RUN_MAC_TESTS'] ]
-  pool:
-    name: $(AgentPoolComputed)
-    demands:
-    - Agent.OS -equals Darwin
-    - macOS.Name -equals ${{ parameters.macOSName }}
-    - XcodeChannel -equals ${{ parameters.xcodeChannel }}
-  workspace:
-    clean: all
+  # This job performs the build of the nuget pkgs and the framework pkgs. There are two interesting dependencies in this job:
+  - job: build
+    displayName: 'Build packages'
+    timeoutInMinutes: 1000
+    variables:
+      DOTNET_PLATFORMS: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.DOTNET_PLATFORMS'] ]
+      ENABLE_DOTNET: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.ENABLE_DOTNET'] ]
+      INCLUDE_DOTNET_IOS: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.INCLUDE_DOTNET_IOS'] ]
+      INCLUDE_DOTNET_MACCATALYST: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.INCLUDE_DOTNET_MACCATALYST'] ]
+      INCLUDE_DOTNET_MACOS: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.INCLUDE_DOTNET_MACOS'] ]
+      INCLUDE_DOTNET_TVOS: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.INCLUDE_DOTNET_TVOS'] ]
+      INCLUDE_LEGACY_IOS: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.INCLUDE_LEGACY_IOS'] ]
+      INCLUDE_LEGACY_MAC: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.INCLUDE_LEGACY_MAC'] ]
+      INCLUDE_LEGACY_TVOS: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.INCLUDE_LEGACY_TVOS'] ]
+      INCLUDE_LEGACY_WATCH: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.INCLUDE_LEGACY_WATCH'] ]
+      INCLUDE_XAMARIN_LEGACY: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.INCLUDE_XAMARIN_LEGACY'] ]
+      ${{ if eq(parameters.pool, 'automatic') }}:
+        AgentPoolComputed: $[ stageDependencies.configure_build.AgentPoolSelector.outputs['setAgentPool.AgentPoolComputed'] ]
+      ${{ if eq(parameters.pool, 'ci') }}:
+        AgentPoolComputed: $(CIBuildPool)
+      ${{ if eq(parameters.pool, 'pr') }}:
+        AgentPoolComputed: $(PRBuildPool)
+      # add all the variables that have been parsed by the configuration step. Could we have a less verbose way??
+      #
+      # build-package
+      # skip-packages
+      # skip-nugets
+      # skip-signing
+      # run-sample-tests
+      BuildPackage: $[ stageDependencies.configure_build.configure.outputs['labels.build_package'] ]
+      SkipPackages: $[ stageDependencies.configure_build.configure.outputs['labels.skip_packages'] ]
+      SkipNugets: $[ stageDependencies.configure_build.configure.outputs['labels.skip_nugets'] ]
+      SkipSigning: $[ stageDependencies.configure_build.configure.outputs['labels.skip_signing'] ]
+      RunSampleTests: $[ stageDependencies.configure_build.configure.outputs['labels.run_sample_tests'] ]
+      SkipApiComparison: $[ stageDependencies.configure_build.configure.outputs['labels.skip_api_comparison'] ]
+      # old and ugly env var use by jenkins, we do have parts of the code that use it, contains the PR number
+      PR_ID: $[ stageDependencies.configure_build.configure.outputs['labels.pr_number'] ]
+      # set the branch variable name, this is required by jenkins and we have a lot of scripts that depend on it
+      BRANCH_NAME: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', '') ]
+      XHARNESS_LABELS: $[ stageDependencies.configure_build.configure.outputs['labels.xharness_labels'] ]
+      RUN_MAC_TESTS: $[ stageDependencies.configure_build.configure.outputs['decisions.RUN_MAC_TESTS'] ]
+    pool:
+      os: macOS
+      name: $(AgentPoolComputed)
+      demands:
+        - Agent.OS -equals Darwin
+        - macOS.Name -equals ${{ parameters.macOSName }}
+        - XcodeChannel -equals ${{ parameters.xcodeChannel }}
 
-  steps:
-  - template: build-pkgs.yml
-    parameters:
-      isPR: ${{ parameters.isPR }}
-      repositoryAlias: ${{ parameters.repositoryAlias }}
-      commit: ${{ parameters.commit }}
-      runTests: ${{ parameters.runTests }}
-      runDeviceTests: ${{ parameters.runDeviceTests }}
-      vsdropsPrefix: ${{ parameters.vsdropsPrefix }}
-      keyringPass: ${{ parameters.keyringPass }}
-      gitHubToken: ${{ parameters.gitHubToken }}
-      xqaCertPass: ${{ parameters.xqaCertPass }}
-      skipESRP: ${{ parameters.skipESRP }}
+    steps:
+      - template: build-pkgs.yml
+        parameters:
+          isPR: ${{ parameters.isPR }}
+          repositoryAlias: ${{ parameters.repositoryAlias }}
+          commit: ${{ parameters.commit }}
+          vsdropsPrefix: ${{ parameters.vsdropsPrefix }}
+          keyringPass: ${{ parameters.keyringPass }}
+          gitHubToken: ${{ parameters.gitHubToken }}
+          xqaCertPass: ${{ parameters.xqaCertPass }}
+          skipESRP: ${{ parameters.skipESRP }}

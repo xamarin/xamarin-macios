@@ -563,4 +563,11 @@ xamarin_enable_new_refcount ()
 	mono_profiler_install_gc (gc_event_callback, NULL);
 }
 
+void
+xamarin_bridge_raise_unhandled_exception_event (GCHandle exception_gchandle)
+{
+	MonoObject *exc = xamarin_gchandle_get_target (exception_gchandle);
+	mono_unhandled_exception (exc);
+}
+
 #endif // !CORECLR_RUNTIME
