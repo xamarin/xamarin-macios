@@ -2020,11 +2020,17 @@ namespace Xamarin.Tests {
 		[Test]
 		[TestCase (ApplePlatform.iOS, "ios-arm64;", "-all,System.Private.CoreLib")]
 		[TestCase (ApplePlatform.iOS, "ios-arm64;", "all,-System.Private.CoreLib")]
+		[TestCase (ApplePlatform.iOS, "ios-arm64;", "-all")]
+		[TestCase (ApplePlatform.iOS, "ios-arm64;", "")]
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64", "-all,System.Private.CoreLib")]
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64", "all,-System.Private.CoreLib")]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64", "-all")]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64", "")]
 		[TestCase (ApplePlatform.TVOS, "tvos-arm64;", "-all,System.Private.CoreLib")]
 		[TestCase (ApplePlatform.TVOS, "tvos-arm64;", "all,-System.Private.CoreLib")]
-		public void PartialAOTTest (ApplePlatform platform, string runtimeIdentifiers, string mtouchInterpreter)
+		[TestCase (ApplePlatform.TVOS, "tvos-arm64;", "-all")]
+		[TestCase (ApplePlatform.TVOS, "tvos-arm64;", "")]
+		public void DedupEnabledTest (ApplePlatform platform, string runtimeIdentifiers, string mtouchInterpreter)
 		{
 			var project = "MySimpleApp";
 			Configuration.IgnoreIfIgnoredPlatform (platform);
@@ -2037,7 +2043,7 @@ namespace Xamarin.Tests {
 
 			DotNet.AssertBuild (project_path, properties);
 
-			Assert.True (!FindAssembly (appPath, "aot-instances.dll"), "Dedup optimization shouldn't been enabled for partial AOT compilation");
+			Assert.True (FindAssembly (appPath, "aot-instances.dll"), "Dedup optimization should be always enabled for AOT compilation");
 
 			var appExecutable = GetNativeExecutable (platform, appPath);
 
