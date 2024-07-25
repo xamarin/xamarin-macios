@@ -2048,7 +2048,7 @@ namespace Xamarin.Tests {
 
 			DotNet.AssertBuild (project_path, properties);
 
-			var objDir = GetObjDir(project_path, platform, runtimeIdentifiers);
+			var objDir = GetObjDir (project_path, platform, runtimeIdentifiers);
 			Assert.True (FindAOTedAssemblyFile (objDir, "aot-instances.dll"), "Dedup optimization should be always enabled for AOT compilation");
 
 			var appExecutable = GetNativeExecutable (platform, appPath);
