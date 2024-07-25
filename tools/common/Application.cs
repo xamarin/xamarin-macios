@@ -1546,7 +1546,7 @@ namespace Xamarin.Bundler {
 			bool enable_debug = app.EnableDebug;
 			bool enable_debug_symbols = app.PackageManagedDebugSymbols;
 			bool llvm_only = app.EnableLLVMOnlyBitCode;
-			bool interp = app.IsInterpreted (Assembly.GetIdentity (filename)) && !(isDedupAssembly.HasValue && isDedupAssembly.Value);
+			bool interp = app.IsInterpreted (Assembly.GetIdentity (filename));
 			bool interp_full = !interp && app.UseInterpreter;
 			bool is32bit = (abi & Abi.Arch32Mask) > 0;
 			string arch = abi.AsArchString ();
