@@ -24,19 +24,17 @@ namespace Xamarin.Linker {
 			var isDedupEnabled = Configuration.Target.Assemblies.Any (asm => Path.GetFileName (asm.FullPath) == dedupFileName);
 
 			foreach (var asm in Configuration.Target.Assemblies) {
-				var input = asm.FullPath;
-				bool? isDedupAssembly = null;
-				if (isDedupEnabled) {
-					isDedupAssembly = Path.GetFileName (input) == dedupFileName;
-				}
-
-				var processingDedupAssembly = isDedupAssembly.HasValue && isDedupAssembly.Value;
-				var isAOTCompiled = processingDedupAssembly ? true : asm.IsAOTCompiled; // Dedup assemblies are always AOT compiled
+				var isAOTCompiled = asm.IsAOTCompiled;
 				if (!isAOTCompiled)
 					continue;
 
 				var item = new MSBuildItem (Path.Combine (Configuration.IntermediateLinkDir, asm.FileName));
 
+				var input = asm.FullPath;
+				bool? isDedupAssembly = null;
+				if (isDedupEnabled) {
+					isDedupAssembly = Path.GetFileName (input) == dedupFileName;
+				}
 				var abis = app.Abis.Select (v => v.AsString ()).ToArray ();
 				foreach (var abi in app.Abis) {
 					var abiString = abi.AsString ();
@@ -54,8 +52,8 @@ namespace Xamarin.Linker {
 					item.Metadata.Add ("AOTAssembly", aotAssembly);
 					item.Metadata.Add ("LLVMFile", llvmFile);
 					item.Metadata.Add ("ObjectFile", objectFile);
-					if (processingDedupAssembly)
-						item.Metadata.Add ("IsDedupAssembly", processingDedupAssembly.ToString ());
+					if (isDedupAssembly.HasValue && isDedupAssembly.Value)
+						item.Metadata.Add ("IsDedupAssembly", isDedupAssembly.Value.ToString ());
 				}
 
 				assembliesToAOT.Add (item);
