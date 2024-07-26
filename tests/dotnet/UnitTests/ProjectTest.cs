@@ -2045,16 +2045,13 @@ namespace Xamarin.Tests {
 			DotNet.AssertBuild (project_path, properties);
 
 			var objDir = GetObjDir (project_path, platform, runtimeIdentifiers);
-			if (platform == ApplePlatform.MacCatalyst)
-			{
+			if (platform == ApplePlatform.MacCatalyst) {
 				var objDirMacCatalystArm64 = Path.Combine (objDir, "maccatalyst-arm64");
 				Assert.True (FindAOTedAssemblyFile (objDirMacCatalystArm64, "aot-instances.dll"), $"Dedup optimization should be enabled for AOT compilation on: {platform} with RID: maccatalyst-arm64");
 
 				var objDirMacCatalystx64 = Path.Combine (objDir, "maccatalyst-x64");
 				Assert.False (FindAOTedAssemblyFile (objDirMacCatalystx64, "aot-instances.dll"), $"Dedup optimization should not be enabled for AOT compilation on: {platform} with RID: maccatalyst-x64");
-			}
-			else
-			{
+			} else {
 				Assert.True (FindAOTedAssemblyFile (objDir, "aot-instances.dll"), $"Dedup optimization should be enabled for AOT compilation on: {platform} with RID: {runtimeIdentifiers}");
 			}
 
