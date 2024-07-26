@@ -2006,10 +2006,11 @@ namespace Xamarin.Tests {
 			}
 		}
 
-		bool FindAssembly (string path, string dllName)
+		bool FindAOTedAssemblyFile (string path, string dllName)
 		{
-			foreach (string file in Directory.GetFiles (path, "*.dll", SearchOption.AllDirectories)) {
-				if (Path.GetFileName (file).Equals (dllName, StringComparison.OrdinalIgnoreCase)) {
+			var aotedAssemblyFileName = $"{dllName}.o";
+			foreach (string file in Directory.GetFiles (path, "*.o", SearchOption.AllDirectories)) {
+				if (Path.GetFileName (file).Equals (aotedAssemblyFileName, StringComparison.OrdinalIgnoreCase)) {
 					return true;
 				}
 			}
@@ -2020,11 +2021,17 @@ namespace Xamarin.Tests {
 		[Test]
 		[TestCase (ApplePlatform.iOS, "ios-arm64;", "-all,System.Private.CoreLib")]
 		[TestCase (ApplePlatform.iOS, "ios-arm64;", "all,-System.Private.CoreLib")]
+		[TestCase (ApplePlatform.iOS, "ios-arm64;", "-all")]
+		[TestCase (ApplePlatform.iOS, "ios-arm64;", "")]
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64", "-all,System.Private.CoreLib")]
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64", "all,-System.Private.CoreLib")]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64", "-all")]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64", "")]
 		[TestCase (ApplePlatform.TVOS, "tvos-arm64;", "-all,System.Private.CoreLib")]
 		[TestCase (ApplePlatform.TVOS, "tvos-arm64;", "all,-System.Private.CoreLib")]
-		public void PartialAOTTest (ApplePlatform platform, string runtimeIdentifiers, string mtouchInterpreter)
+		[TestCase (ApplePlatform.TVOS, "tvos-arm64;", "-all")]
+		[TestCase (ApplePlatform.TVOS, "tvos-arm64;", "")]
+		public void DedupEnabledTest (ApplePlatform platform, string runtimeIdentifiers, string mtouchInterpreter)
 		{
 			var project = "MySimpleApp";
 			Configuration.IgnoreIfIgnoredPlatform (platform);
@@ -2037,7 +2044,16 @@ namespace Xamarin.Tests {
 
 			DotNet.AssertBuild (project_path, properties);
 
-			Assert.True (!FindAssembly (appPath, "aot-instances.dll"), "Dedup optimization shouldn't been enabled for partial AOT compilation");
+			var objDir = GetObjDir (project_path, platform, runtimeIdentifiers);
+			if (platform == ApplePlatform.MacCatalyst) {
+				var objDirMacCatalystArm64 = Path.Combine (objDir, "maccatalyst-arm64");
+				Assert.True (FindAOTedAssemblyFile (objDirMacCatalystArm64, "aot-instances.dll"), $"Dedup optimization should be enabled for AOT compilation on: {platform} with RID: maccatalyst-arm64");
+
+				var objDirMacCatalystx64 = Path.Combine (objDir, "maccatalyst-x64");
+				Assert.False (FindAOTedAssemblyFile (objDirMacCatalystx64, "aot-instances.dll"), $"Dedup optimization should not be enabled for AOT compilation on: {platform} with RID: maccatalyst-x64");
+			} else {
+				Assert.True (FindAOTedAssemblyFile (objDir, "aot-instances.dll"), $"Dedup optimization should be enabled for AOT compilation on: {platform} with RID: {runtimeIdentifiers}");
+			}
 
 			var appExecutable = GetNativeExecutable (platform, appPath);
 

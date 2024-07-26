@@ -1091,8 +1091,14 @@
 
 			<_AOTInputDirectory>$(_IntermediateNativeLibraryDir)aot-input/</_AOTInputDirectory>
 			<_AOTOutputDirectory>$(_IntermediateNativeLibraryDir)aot-output/</_AOTOutputDirectory>
-			<!-- Enable dedup optimization only in FullAOT mode -->
-			<_IsDedupEnabled Condition="'$(_IsDedupEnabled)' == '' And '$(_RunAotCompiler)' == 'true' And '$(MtouchInterpreter)' == '' And '$(IsMacEnabled)' == 'true'">true</_IsDedupEnabled>
+
+			<!-- 
+				Enable dedup optimization whenever we run AOT compiler
+				The only exception is maccatalyst-x64 which uses AOT when the interpreter is also enabled.
+				In such setup, during runtime, AOT images are loaded but marked as unusuable as they are compiled with `full` compiler switch and the code fallsback to interpreter.
+				Dedup AOT image is specially handled by the AOT runtime and it is not allowed to have it marked as unusuable.
+			-->
+			<_IsDedupEnabled Condition="'$(_IsDedupEnabled)' == '' And '$(_RunAotCompiler)' == 'true' And '$(IsMacEnabled)' == 'true' And '$(RuntimeIdentifier)' != 'maccatalyst-x64'">true</_IsDedupEnabled>
 			<_DedupAssembly Condition="'$(_IsDedupEnabled)' == 'true'">$(IntermediateOutputPath)aot-instances.dll</_DedupAssembly>
 
 			<!-- default to 'static' for Mac Catalyst to work around https://github.com/xamarin/xamarin-macios/issues/14686 -->
