@@ -1,0 +1,29 @@
+#!/bin/bash -e
+
+# This script is meant to be executed inside a working copy of xamarin/xamarin-macios,
+# and it will execute the locally installed 'dotnet' executable.
+#
+# Usage: same as 'dotnet'
+#
+
+#source ~/bin/colors.sh
+
+TOPLEVEL=$(git rev-parse --show-superproject-working-tree 2>/dev/null || true)
+if test -z "$TOPLEVEL"; then
+	if ! TOPLEVEL=$(git rev-parse --show-toplevel 2>/dev/null); then
+		echo "${RED}🍩 The current directory ${BLUE}$(pwd)${RED} is not a git repository. Can't find 🍩"
+		exit 1
+	fi
+fi
+
+if ! test -f "$TOPLEVEL/tests/test.config"; then
+	make test.config -C "$TOPLEVEL/tests"
+fi
+
+DONUT=$(grep ^DOTNET= "$TOPLEVEL/tests/test.config" | sed 's/^DOTNET=//')
+
+echo "🍩 Using ${BLUE}dotnet${CLEAR} from: ${BLUE}$DONUT${CLEAR}"
+echo ""
+
+echo "$ ${MAGENTA}$DONUT${CLEAR} $@"
+$DONUT "$@"
