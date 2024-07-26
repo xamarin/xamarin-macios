@@ -2420,11 +2420,11 @@ global using nfloat = global::System.Runtime.InteropServices.NFloat%3B
 	</Target>
 
 	<Target Name="xcsync-generate" DependsOnTargets="_DetectSdkLocations;ComputeXcsyncArguments">
-		<Exec SessionId="$(BuildSessionId)" Command="$(XcsyncPath) generate $(XcsyncGenerateArguments)" />
+		<Exec SessionId="$(BuildSessionId)" Command="$(DOTNET_HOST_PATH) $(XcsyncPath) generate $(XcsyncGenerateArguments)" />
 	</Target>
 
 	<Target Name="xcsync-sync" DependsOnTargets="_DetectSdkLocations;ComputeXcsyncArguments">
-		<Exec SessionId="$(BuildSessionId)" Command="$(XcsyncPath) sync $(XcsyncSyncArguments)" />
+		<Exec SessionId="$(BuildSessionId)" Command="$(DOTNET_HOST_PATH) $(XcsyncPath) sync $(XcsyncSyncArguments)" />
 	</Target>
 
 	<!-- Import existing targets -->
