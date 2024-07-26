@@ -2417,14 +2417,30 @@ global using nfloat = global::System.Runtime.InteropServices.NFloat%3B
 	</Target>
 
 	<Target Name="ComputeXcsyncArguments">
+		<PropertyGroup>
+			<xcSyncExecute>$(DOTNET_HOST_PATH) $(XcsyncPath)</xcSyncExecute>
+			<xcSyncProjectFile Condition="'$(xcSyncProjectFile)' == ''">$(MSBuildProjectDirectory)/$(MSBuildProjectFile)</xcSyncProjectFile>
+			<xcSyncXcodeFolder Condition="'$(xcSyncXcodeFolder)' == ''">$(IntermediateOutputPath)/xcode</xcSyncXcodeFolder>
+			<xcSyncTargetFrameworkMoniker Condition="'$(xcSyncTargetFrameworkMoniker)' == ''">$(TargetFramework)</xcSyncTargetFrameworkMoniker>
+			<xcSyncVerbosity Condition="'$(xcSyncVerbosity)' == ''">Diagnostic</xcSyncVerbosity>
+
+			<XcsyncCommonArguments Condition="'$(xcSyncProjectFile)' != ''">$(XcsyncCommonArguments) -p $(xcSyncProjectFile)</XcsyncCommonArguments>
+			<XcsyncCommonArguments Condition="'$(xcSyncXcodeFolder)' != ''">$(XcsyncCommonArguments) -t $(xcSyncXcodeFolder)</XcsyncCommonArguments>
+			<XcsyncCommonArguments Condition="'$(xcSyncTargetFrameworkMoniker)' != ''">$(XcsyncCommonArguments) -tfm $(xcSyncTargetFrameworkMoniker)</XcsyncCommonArguments>
+			<XcsyncCommonArguments Condition="'$(xcSyncVerbosity)' != ''">$(XcsyncCommonArguments) -v $(xcSyncVerbosity)</XcsyncCommonArguments>
+
+			<XcsyncGenerateArguments>$(XcsyncCommonArguments) -f</XcsyncGenerateArguments>
+
+			<XcsyncSyncArguments>$(XcsyncCommonArguments)</XcsyncSyncArguments>
+		</PropertyGroup>
 	</Target>
 
-	<Target Name="xcsync-generate" DependsOnTargets="_DetectSdkLocations;ComputeXcsyncArguments">
-		<Exec SessionId="$(BuildSessionId)" Command="$(DOTNET_HOST_PATH) $(XcsyncPath) generate $(XcsyncGenerateArguments)" />
+	<Target Name="xcsync-generate" DependsOnTargets="ComputeXcsyncArguments">
+		<Exec SessionId="$(BuildSessionId)" Command="$(xcSyncExecute) generate $(XcsyncGenerateArguments)" />
 	</Target>
 
-	<Target Name="xcsync-sync" DependsOnTargets="_DetectSdkLocations;ComputeXcsyncArguments">
-		<Exec SessionId="$(BuildSessionId)" Command="$(DOTNET_HOST_PATH) $(XcsyncPath) sync $(XcsyncSyncArguments)" />
+	<Target Name="xcsync-sync" DependsOnTargets="ComputeXcsyncArguments">
+		<Exec SessionId="$(BuildSessionId)" Command="$(xcSyncExecute) sync $(XcsyncSyncArguments)" />
 	</Target>
 
 	<!-- Import existing targets -->
