@@ -8,7 +8,7 @@ DOWNLOAD_STAMP_FILE=.download-$(XCSYNC_NUGET_VERSION).stamp
 TARGETS += $(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_DESTDIR)/Microsoft.$(platform).Sdk/tools/bin/xcsync)
 
 $(DOWNLOAD_STAMP_FILE):
-	$(Q) $(DOTNET) restore download-xcsync.csproj /bl:$@.binlog $(NSBUILD_VERBOSITY) /p:XcsyncNuGetVersion=$(XCSYNC_NUGET_VERSION)
+	$(Q) $(DOTNET) restore download-xcsync.csproj /bl:$@.binlog $(MSBUILD_VERBOSITY) /p:XcsyncNuGetVersion=$(XCSYNC_NUGET_VERSION)
 	$(Q) touch $@
 
 define DotNetInstall
