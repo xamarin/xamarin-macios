@@ -2023,7 +2023,7 @@ namespace Xamarin.Tests {
 		[TestCase (ApplePlatform.iOS, "ios-arm64;", "all,-System.Private.CoreLib")]
 		[TestCase (ApplePlatform.iOS, "ios-arm64;", "-all")]
 		[TestCase (ApplePlatform.iOS, "ios-arm64;", "")]
-		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64", "-all,System.Private.CoreLib")] // Should be reenalbed once https://github.com/dotnet/runtime/issues/105510 gets fixed
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64", "-all,System.Private.CoreLib")]
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64", "all,-System.Private.CoreLib")]
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64", "-all")]
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64", "")]
@@ -2045,7 +2045,18 @@ namespace Xamarin.Tests {
 			DotNet.AssertBuild (project_path, properties);
 
 			var objDir = GetObjDir (project_path, platform, runtimeIdentifiers);
-			Assert.True (FindAOTedAssemblyFile (objDir, "aot-instances.dll"), "Dedup optimization should be always enabled for AOT compilation");
+			if (platform == ApplePlatform.MacCatalyst)
+			{
+				var objDirMacCatalystArm64 = Path.Combine (objDir, "maccatalyst-arm64");
+				Assert.True (FindAOTedAssemblyFile (objDirMacCatalystArm64, "aot-instances.dll"), $"Dedup optimization should be enabled for AOT compilation on: {platform} with RID: maccatalyst-arm64");
+
+				var objDirMacCatalystx64 = Path.Combine (objDir, "maccatalyst-x64");
+				Assert.False (FindAOTedAssemblyFile (objDirMacCatalystx64, "aot-instances.dll"), $"Dedup optimization should not be enabled for AOT compilation on: {platform} with RID: maccatalyst-x64");
+			}
+			else
+			{
+				Assert.True (FindAOTedAssemblyFile (objDir, "aot-instances.dll"), $"Dedup optimization should be enabled for AOT compilation on: {platform} with RID: {runtimeIdentifiers}");
+			}
 
 			var appExecutable = GetNativeExecutable (platform, appPath);
 
