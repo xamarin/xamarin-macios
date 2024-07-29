@@ -1507,6 +1507,8 @@
 		<PropertyGroup>
 			<_ExportedSymbolsFile Condition="'$(_ExportedSymbolsFile)' == '' and '$(_MtouchSymbolsList)' == ''">/dev/null</_ExportedSymbolsFile> <!-- nothing to export -->
 			<_ExportedSymbolsFile Condition="'$(_ExportedSymbolsFile)' == ''">$(_MtouchSymbolsList)</_ExportedSymbolsFile>
+			<!-- Runtime now requires swift https://github.com/dotnet/runtime/commit/2c70e36356e8dfb50e6b32c8b7c9ce1a8e9f1331 -->
+			<LinkWithSwiftSystemLibraries>true</LinkWithSwiftSystemLibraries>
 		</PropertyGroup>
 		<ItemGroup>
 			<_XamarinMainLibraries Include="$(_XamarinNativeLibraryDirectory)/$(_LibXamarinName)" />
