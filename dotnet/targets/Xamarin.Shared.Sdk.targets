@@ -1101,9 +1101,9 @@
 			<_AOTOutputDirectory>$(_IntermediateNativeLibraryDir)aot-output/</_AOTOutputDirectory>
 
 			<!-- 
-				Enable dedup optimization whenever we run AOT compiler
-				The only exception is maccatalyst-x64 which uses AOT when the interpreter is also enabled.
-				In such setup, during runtime, AOT images are loaded but marked as unusuable as they are compiled with `full` compiler switch and the code fallsback to interpreter.
+				Enable dedup optimization when we run AOT compiler and target ARM64 architecture.
+				Target architecture condition is required since when we target x86_64 we utilize MONO_AOT_MODE_INTERP_ONLY mode (AOT + interpreter).
+				In such setup, during runtime, AOT images are loaded but marked as unusuable as they are compiled with `full` compiler switch and the code falls back to interpreter.
 				Dedup AOT image is specially handled by the AOT runtime and it is not allowed to have it marked as unusuable.
 			-->
 			<_IsDedupEnabled Condition="'$(_IsDedupEnabled)' == '' And '$(_RunAotCompiler)' == 'true' And '$(IsMacEnabled)' == 'true' And '$(TargetArchitectures)' == 'ARM64'">true</_IsDedupEnabled>
