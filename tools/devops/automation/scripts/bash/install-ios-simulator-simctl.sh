@@ -7,7 +7,7 @@ SIMULATOR_FILENAME=iOS_18_beta_3_Simulator_Runtime.dmg
 SIMULATOR_VERSION=22A5307f
 
 xcrun simctl runtime list
-if xcrun simctl runtime list|grep iOS.*'('$SIMULATOR_VERSION')'; then
+if xcrun simctl runtime list | grep "iOS.*($SIMULATOR_VERSION)"; then
 	echo "The iOS Simulator runtime $SIMULATOR_VERSION is already installed."
 	exit 0
 fi
