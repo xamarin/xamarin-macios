@@ -180,7 +180,6 @@ stages:
 
       - script: >-
           make -C $(Build.SourcesDirectory)/dotnet publish-bar-manifest
-          PUBLISH_BAR_MANIFEST_WORKING_DIR=$(Build.SourcesDirectory)/..
           BAR_MANIFEST_PLATFORM_NAME=$(MaestroProjectPlatformName)
           BAR_MANIFEST_MSBUILD_ARGS='-p:BuildAssetRegistryToken=$(MaestroAccessToken) -p:NupkgPath=$(Build.SourcesDirectory)/nugets-signed -bl:$(Build.ArtifactStagingDirectory)/maestro-binlogs/generate-bar-manifest.binlog'
         workingDirectory: $(Build.SourcesDirectory)\..
