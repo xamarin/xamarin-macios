@@ -20,7 +20,7 @@ endif
 # https://dev.azure.com/dnceng/public/_artifacts/feed/dotnet-eng/NuGet/Microsoft.Tools.Mlaunch/versions
 # https://dev.azure.com/dnceng/public/_artifacts/feed/dotnet-eng/NuGet/Microsoft.Tools.xcsync/versions
 MLAUNCH_NUGET_VERSION=1.0.142
-XCSYNC_NUGET_VERSION=1.0.52
+XCSYNC_NUGET_VERSION=1.0.78
 
 define CheckVersionTemplate
 check-$(1)::
