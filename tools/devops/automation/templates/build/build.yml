@@ -172,17 +172,11 @@ steps:
       - bash: $(Build.SourcesDirectory)/xamarin-macios/system-dependencies.sh --provision-simulators --ignore-shellcheck --ignore-yamllint
         displayName: 'Provision simulators (system-dependencies.sh)'
   - ${{ else }}:
-      - bash: |
-          curl -L -H "Authorization: token ${{ parameters.gitHubToken }}" https://dl.internalx.com/internal-files/xcode.simulator-runtimes/iOS_18_beta_3_Simulator_Runtime.dmg --output iOS_18_beta_3_Simulator_Runtime.dmg
-        workingDirectory: "$(Build.ArtifactStagingDirectory)"
-        displayName: 'Download simulator runtime'
-
-      - bash: |
-           # this is a workaround for the fact that xcodebuild -downloadPlatform iOS does not work on EO machines
-           xcodebuild -runFirstLaunch 
-           xcrun simctl runtime add "iOS_18_beta_3_Simulator_Runtime.dmg"
+      - bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/install-ios-simulator-simctl.sh
         workingDirectory: "$(Build.ArtifactStagingDirectory)"
         displayName: 'Provision simulators (simctl)'
+        env:
+          GITHUB_TOKEN: ${{ parameters.gitHubToken }}
 
   # downloding mono takes time and has been shown to be problematic when we have network issues. This is why we
   # are using the cache. Mono does not get bump a lot of times if any (after dotnet)
