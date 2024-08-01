@@ -295,6 +295,7 @@ define InstallWorkload
 .stamp-workload-replace-$1-$(DOTNET_VERSION):
 	$(Q) echo "Removing existing workload shipped with .NET $(DOTNET_VERSION): $(shell echo $(DOTNET_SDK_MANIFESTS_PATH)/*/microsoft.net.sdk.$3)"
 	$(Q) rm -Rf $(DOTNET_SDK_MANIFESTS_PATH)/*/microsoft.net.sdk.$3
+	$(Q) rm -Rf $(DOTNET_SDK_MANIFESTS_PATH)/*/workloadsets
 	$(Q) touch $$@
 
 $(DOTNET_SDK_MANIFESTS_PATH)/$(MACIOS_MANIFEST_VERSION_BAND)/microsoft.net.sdk.$3: .stamp-workload-replace-$1-$(DOTNET_VERSION) | $(DOTNET_SDK_MANIFESTS_PATH)/$(MACIOS_MANIFEST_VERSION_BAND)
