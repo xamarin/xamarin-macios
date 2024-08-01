@@ -182,7 +182,7 @@ steps:
            xcodebuild -runFirstLaunch 
            xcrun simctl runtime add "iOS_18_beta_3_Simulator_Runtime.dmg"
         workingDirectory: "$(Build.ArtifactStagingDirectory)"
-        displayName: 'Provision simulators (xcodebuild)'
+        displayName: 'Provision simulators (simctl)'
 
   # downloding mono takes time and has been shown to be problematic when we have network issues. This is why we
   # are using the cache. Mono does not get bump a lot of times if any (after dotnet)
