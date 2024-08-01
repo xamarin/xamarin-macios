@@ -118,7 +118,7 @@
       <ArtifactsLogDir>$(BarManifestOutputPath)</ArtifactsLogDir>
       <AssetManifestFileName>Assets.xml</AssetManifestFileName>
       <AssetManifestPath>$(ArtifactsLogDir)AssetManifest\$(AssetManifestFileName)</AssetManifestPath>
-      <IsStableBuild Condition=" '$(IsStableBuild)' == '' ">false</IsStableBuild>
+      <IsStableBuild Condition=" '$(PrereleaseIdentifier)' != '' ">false</IsStableBuild>
     </PropertyGroup>
 
     <Error Condition="Exists($(AssetManifestPath))" Text="The manifest file '$(AssetManifestPath)' already exists." />

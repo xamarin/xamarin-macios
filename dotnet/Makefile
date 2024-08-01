@@ -136,7 +136,7 @@ $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call VersionsTemplate,$(platform
 version-props: $(foreach platform,$(DOTNET_PLATFORMS),targets/Microsoft.$(platform).Sdk.Versions.props)
 
 publish-bar-manifest: version-props
-	cd $(TOP)/.. && dotnet build -v:diag $(abspath $(TOP)/dotnet/package/Microsoft.$(BAR_MANIFEST_PLATFORM_NAME).Ref/package.csproj) -t:PushManifestToBuildAssetRegistry -p:IsStableBuild=$(NUGET_HARDCODED_IS_STABLE_BUILD) $(BAR_MANIFEST_MSBUILD_ARGS)
+	cd $(TOP)/.. && dotnet build -v:diag $(abspath $(TOP)/dotnet/package/Microsoft.$(BAR_MANIFEST_PLATFORM_NAME).Ref/package.csproj) -t:PushManifestToBuildAssetRegistry -p:PrereleaseIdentifier=$(NUGET_PRERELEASE_IDENTIFIER) $(BAR_MANIFEST_MSBUILD_ARGS)
 
 define AutoImports
 Microsoft.$(1).Sdk/Sdk/AutoImport.props: targets/AutoImport.template.props Makefile
