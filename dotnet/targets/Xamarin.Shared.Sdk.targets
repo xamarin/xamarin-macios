@@ -2419,17 +2419,17 @@ global using nfloat = global::System.Runtime.InteropServices.NFloat%3B
 	<Target Name="ComputeXcsyncArguments">
 		<PropertyGroup>
 			<xcSyncExecute>$(DOTNET_HOST_PATH) $(XcsyncPath)</xcSyncExecute>
-			<xcSyncProjectFile Condition="'$(xcSyncProjectFile)' == ''">$(MSBuildProjectDirectory)/$(MSBuildProjectFile)</xcSyncProjectFile>
+			<xcSyncProjectFile Condition="'$(xcSyncProjectFile)' == ''">$(MSBuildProjectFullPath)</xcSyncProjectFile>
 			<xcSyncXcodeFolder Condition="'$(xcSyncXcodeFolder)' == ''">$(IntermediateOutputPath)xcode</xcSyncXcodeFolder>
 			<xcSyncTargetFrameworkMoniker Condition="'$(xcSyncTargetFrameworkMoniker)' == ''">$(TargetFramework)</xcSyncTargetFrameworkMoniker>
 			<xcSyncVerbosity Condition="'$(xcSyncVerbosity)' == ''">Diagnostic</xcSyncVerbosity>
 
 
-			<XcsyncCommonArguments Condition="'$(xcSyncProjectFile)' != ''">$(XcsyncCommonArguments) -p $(xcSyncProjectFile)</XcsyncCommonArguments>
-			<XcsyncCommonArguments Condition="'$(xcSyncXcodeFolder)' != ''">$(XcsyncCommonArguments) -t $(xcSyncXcodeFolder)</XcsyncCommonArguments>
+			<XcsyncCommonArguments Condition="'$(xcSyncProjectFile)' != ''">$(XcsyncCommonArguments) -p "$(xcSyncProjectFile)"</XcsyncCommonArguments>
+			<XcsyncCommonArguments Condition="'$(xcSyncXcodeFolder)' != ''">$(XcsyncCommonArguments) -t "$(xcSyncXcodeFolder)"</XcsyncCommonArguments>
 			<XcsyncCommonArguments Condition="'$(xcSyncTargetFrameworkMoniker)' != ''">$(XcsyncCommonArguments) -tfm $(xcSyncTargetFrameworkMoniker)</XcsyncCommonArguments>
 			<XcsyncCommonArguments Condition="'$(xcSyncVerbosity)' != ''">$(XcsyncCommonArguments) -v $(xcSyncVerbosity)</XcsyncCommonArguments>
-			<XcsyncCommonArguments>$(XcsyncCommonArguments) --dotnet-path $([System.IO.Path]::GetDirectoryName($(DOTNET_HOST_PATH)))</XcsyncCommonArguments>
+			<XcsyncCommonArguments>$(XcsyncCommonArguments) --dotnet-path "$([System.IO.Path]::GetDirectoryName($(DOTNET_HOST_PATH)))"</XcsyncCommonArguments>
 
 			<XcsyncGenerateArguments>$(XcsyncCommonArguments) --force</XcsyncGenerateArguments>
 
