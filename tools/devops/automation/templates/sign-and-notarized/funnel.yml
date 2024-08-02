@@ -96,6 +96,7 @@ jobs:
     parameters:
       GitHubToken: $(GitHub.Token)
       ArtifactDirectory: $(Build.SourcesDirectory)/package-internal
+      BuildTasksChannel: 'pr/MSylvia/110'
 
   # download workload json and add it to out package internal dir, this allows the rest of jobs
   # not to need several artifacts but just package-internal
