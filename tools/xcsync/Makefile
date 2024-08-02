@@ -17,7 +17,7 @@ $$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/tools/bin/xcsync: $$(DOWNLOAD_STAMP_FILE)
 	$$(Q) rm -rf $$(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/tools/lib/xcsync
 	$$(Q) mkdir -p $$(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/tools/bin
 	$$(Q) mkdir -p $$(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/tools/lib/xcsync
-	$$(Q) $$(CP) -R $(TOP)/packages/microsoft.tools.xcsync/$$(XCSYNC_NUGET_VERSION)/bin/xcsync $$(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/tools/bin/xcsync
+	$$(Q) $$(CP) -R $(TOP)/packages/microsoft.tools.xcsync/$$(XCSYNC_NUGET_VERSION)/bin/dotnet-xcsync $$(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/tools/bin/xcsync
 	$$(Q) $$(CP) -R $(TOP)/packages/microsoft.tools.xcsync/$$(XCSYNC_NUGET_VERSION)/lib/. $$(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/tools/lib/xcsync
 	$$(Q) chmod a+x $$(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/tools/bin/xcsync
 	$$(Q) chmod a+x $$(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/tools/lib/xcsync/xcsync

@@ -2418,7 +2418,7 @@ global using nfloat = global::System.Runtime.InteropServices.NFloat%3B
 
 	<Target Name="ComputeXcsyncArguments">
 		<PropertyGroup>
-			<xcSyncExecute>$(DOTNET_HOST_PATH) $(XcsyncPath)</xcSyncExecute>
+			<xcSyncExecute>PATH=$(XcsyncPath):$PATH $(DOTNET_HOST_PATH) xcsync</xcSyncExecute>
 			<xcSyncProjectFile Condition="'$(xcSyncProjectFile)' == ''">$(MSBuildProjectFullPath)</xcSyncProjectFile>
 			<xcSyncXcodeFolder Condition="'$(xcSyncXcodeFolder)' == ''">$(IntermediateOutputPath)xcode</xcSyncXcodeFolder>
 			<xcSyncTargetFrameworkMoniker Condition="'$(xcSyncTargetFrameworkMoniker)' == ''">$(TargetFramework)</xcSyncTargetFrameworkMoniker>
