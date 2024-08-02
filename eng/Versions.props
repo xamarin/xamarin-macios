@@ -2,8 +2,7 @@
   <!--Package versions-->
   <PropertyGroup>
     <!-- Versions updated by maestro -->
-    <!-- NOTE: $(VSToolsNetCoreSDKResolverPackageVersion) may be temporary -->
-    <VSToolsNetCoreSDKResolverPackageVersion>9.0.100-rc.1.24380.5</VSToolsNetCoreSDKResolverPackageVersion>
+    <MicrosoftNETSdkPackageVersion>9.0.100-rc.1.24380.5</MicrosoftNETSdkPackageVersion>
     <MicrosoftNETILLinkTasksPackageVersion>9.0.0-rc.1.24378.5</MicrosoftNETILLinkTasksPackageVersion>
     <MicrosoftNETILLinkPackageVersion>9.0.0-alpha.1.23556.4</MicrosoftNETILLinkPackageVersion>
     <MicrosoftDotNetBuildTasksFeedPackageVersion>8.0.0-beta.24225.1</MicrosoftDotNetBuildTasksFeedPackageVersion>
@@ -16,7 +15,7 @@
     <!-- Manually updated versions -->
     <Emscriptennet7WorkloadVersion>$(MicrosoftNETWorkloadEmscriptenCurrentManifest80100Version)</Emscriptennet7WorkloadVersion>
     <EmscriptenWorkloadVersion>$(MicrosoftNETWorkloadEmscriptenCurrentManifest80100Version)</EmscriptenWorkloadVersion>
-    <MicrosoftDotnetSdkInternalPackageVersion>$(VSToolsNetCoreSDKResolverPackageVersion)</MicrosoftDotnetSdkInternalPackageVersion>
+    <MicrosoftDotnetSdkInternalPackageVersion>$(MicrosoftNETSdkPackageVersion)</MicrosoftDotnetSdkInternalPackageVersion>
     <!-- This is a subscription of the .NET 8 versions of our packages -->
     <MicrosoftMacCatalystSdknet80_175PackageVersion>17.5.8016</MicrosoftMacCatalystSdknet80_175PackageVersion>
     <MicrosoftmacOSSdknet80_145PackageVersion>14.5.8016</MicrosoftmacOSSdknet80_145PackageVersion>
