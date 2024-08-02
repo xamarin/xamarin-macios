@@ -2351,7 +2351,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</_ComputeLinkModeDependsOn>
 	</PropertyGroup>
 	<Target Name="_ComputeLinkMode" DependsOnTargets="$(_ComputeLinkModeDependsOn)">
-		<PropertyGroup Condition="'$(UsingAppleNETSdk)' != 'true'"> <!-- this is already done outside of a target for .NET -->
+		<PropertyGroup>
 			<_LinkMode Condition="'$(_LinkMode)' == '' And '$(_PlatformName)' == 'macOS'">$(LinkMode)</_LinkMode>
 			<_LinkMode Condition="'$(_LinkMode)' == '' And '$(_PlatformName)' != 'macOS'">$(MtouchLink)</_LinkMode>
 			<_LinkMode Condition="'$(_LinkMode)' == ''">$(_DefaultLinkMode)</_LinkMode> <!-- Let the .NET targets chime in -->
