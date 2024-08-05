@@ -5,4 +5,7 @@
 	<!-- mlaunch -->
 	<File Path="tools/bin/mlaunch" Permission="755" />
 	<File Path="tools/lib/mlaunch/mlaunch.app/Contents/MacOS/mlaunch" Permission="755" />
+     <!-- xcsync -->
+	<File Path="tools/bin/xcsync" Permission="755" />
+	<File Path="tools/lib/xcsync" Permission="755" />
  </FileList>
