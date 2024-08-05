@@ -4,13 +4,12 @@ using Microsoft.Maui.Hosting;
 
 namespace MyMauiApp;
 
-class Program : MauiApplication
-{
-	protected override MauiApp CreateMauiApp() => MauiProgram.CreateMauiApp();
+class Program : MauiApplication {
+	protected override MauiApp CreateMauiApp () => MauiProgram.CreateMauiApp ();
 
-	static void Main(string[] args)
+	static void Main (string [] args)
 	{
-		var app = new Program();
-		app.Run(args);
+		var app = new Program ();
+		app.Run (args);
 	}
 }

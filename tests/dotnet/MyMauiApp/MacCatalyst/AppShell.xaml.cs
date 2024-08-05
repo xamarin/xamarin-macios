@@ -1,9 +1,8 @@
-﻿namespace MyMauiApp;
+namespace MyMauiApp;
 
-public partial class AppShell : Shell
-{
-	public AppShell()
+public partial class AppShell : Shell {
+	public AppShell ()
 	{
-		InitializeComponent();
+		InitializeComponent ();
 	}
 }
