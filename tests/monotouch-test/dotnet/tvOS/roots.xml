@@ -1,0 +1,5 @@
+<linker>
+  <assembly fullname="System.Net.Http">
+    <type fullname="System.Net.Http.SocketsHttpHandler" />
+  </assembly>
+</linker>

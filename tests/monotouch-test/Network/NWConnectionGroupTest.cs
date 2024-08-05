@@ -92,6 +92,10 @@ namespace MonoTouchFixtures.Network {
 		[Test]
 		public void TryReinsertExtractedConnectionTest ()
 		{
+#if NATIVEAOT && __TVOS__
+			if (TestRuntime.IsSimulator && !TestRuntime.IsARM64)
+				Assert.Ignore ("Causes hangs when executed along with other NWConnectionGroupTest tests tvossimulator-x64 with NativeAOT");
+#endif
 			TestRuntime.AssertXcodeVersion (13, 0);
 			Assert.DoesNotThrow (() => {
 				var conn = connectionGroup.ExtractConnection (endpoint, new NWProtocolTcpOptions ());

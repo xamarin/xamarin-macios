@@ -10,4 +10,10 @@
   <ItemGroup>
     <!-- this empty item group is here for xharness -->
   </ItemGroup>
+
+  <!-- Workaround for hanging MessageHandlers tests on tvossimulator-x64 with NativeAOT -->
+  <ItemGroup Condition="'$(PublishAot)' == 'true' And '$(_IsPublishing)' == 'true' And '$(RuntimeIdentifier)' == 'tvossimulator-x64'">
+    <TrimmerRootDescriptor Include="roots.xml" />
+  </ItemGroup>
+
 </Project>

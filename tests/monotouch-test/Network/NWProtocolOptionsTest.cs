@@ -61,6 +61,11 @@ namespace MonoTouchFixtures.Network {
 		[Test]
 		public void SetIPLocalAddressPreference ()
 		{
+#if NATIVEAOT && __TVOS__
+			if (TestRuntime.IsSimulator && !TestRuntime.IsARM64)
+				Assert.Ignore ("Causes hangs on tvossimulator-x64 with NativeAOT");
+#endif
+
 			TestRuntime.AssertXcodeVersion (11, 0);
 
 			foreach (var ipOption in new [] { NWIPLocalAddressPreference.Default, NWIPLocalAddressPreference.Stable, NWIPLocalAddressPreference.Temporary }) {
