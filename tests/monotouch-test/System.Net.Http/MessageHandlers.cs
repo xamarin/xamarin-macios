@@ -52,6 +52,14 @@ namespace MonoTests.System.Net.Http {
 			throw new NotImplementedException ($"Unknown handler type: {handler_type}");
 		}
 
+		public static void CheckTVOSNativeAotFailure ()
+		{
+#if NATIVEAOT && __TVOS__
+			if (TestRuntime.IsSimulator && !TestRuntime.IsARM64)
+				Assert.Ignore ("Causes hangs on tvossimulator-x64 with NativeAOT: https://github.com/xamarin/xamarin-macios/issues/20972");
+#endif
+		}
+
 		[Test]
 #if !__WATCHOS__
 		[TestCase (typeof (HttpClientHandler))]
@@ -63,6 +71,7 @@ namespace MonoTests.System.Net.Http {
 		[TestCase (typeof (NSUrlSessionHandler))]
 		public void DnsFailure (Type handlerType)
 		{
+			CheckTVOSNativeAotFailure ();
 			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 9, throwIfOtherPlatform: false);
 			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 7, 0, throwIfOtherPlatform: false);
 
@@ -449,6 +458,7 @@ namespace MonoTests.System.Net.Http {
 		[TestCase (typeof (NSUrlSessionHandler))]
 		public void RejectSslCertificatesServicePointManager (Type handlerType)
 		{
+			CheckTVOSNativeAotFailure ();
 			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 9, throwIfOtherPlatform: false);
 			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 7, 0, throwIfOtherPlatform: false);
 
@@ -846,6 +856,8 @@ namespace MonoTests.System.Net.Http {
 		[TestCase (typeof (SocketsHttpHandler))]
 		public void UpdateRequestUriAfterRedirect (Type handlerType)
 		{
+			CheckTVOSNativeAotFailure ();
+
 			// https://github.com/xamarin/xamarin-macios/issues/20629
 
 			var done = TestRuntime.TryRunAsync (TimeSpan.FromSeconds (30), async () => {
@@ -871,6 +883,8 @@ namespace MonoTests.System.Net.Http {
 		[TestCase (typeof (SocketsHttpHandler))]
 		public void RequestUriNotUpdatedIfNotRedirect (Type handlerType)
 		{
+			CheckTVOSNativeAotFailure ();
+
 			// https://github.com/xamarin/xamarin-macios/issues/20629
 
 			var done = TestRuntime.TryRunAsync (TimeSpan.FromSeconds (30), async () => {
