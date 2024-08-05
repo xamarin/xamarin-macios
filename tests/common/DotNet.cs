@@ -113,6 +113,21 @@ namespace Xamarin.Tests {
 			return new ExecutionResult (output, output, rv.ExitCode);
 		}
 
+		public static ExecutionResult InstallWorkload (string workload)
+		{
+			var args = new string [] {
+				"workload",
+				"install",
+				workload,
+				"-v", "diag",
+				"--skip-manifest-update",
+			};
+
+			var rv = ExecuteCommand (Executable, args);
+			Assert.AreEqual (0, rv.ExitCode, $"Installation of workload '{workload}' failed with exit code {rv.ExitCode}");
+			return rv;
+		}
+
 		public static ExecutionResult InstallTool (string tool, string path)
 		{
 			var installed = ExecuteCommand (Executable, "tool", "list", "--tool-path", path);
