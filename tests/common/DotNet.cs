@@ -113,19 +113,31 @@ namespace Xamarin.Tests {
 			return new ExecutionResult (output, output, rv.ExitCode);
 		}
 
-		public static ExecutionResult InstallWorkload (string workload)
+		public static ExecutionResult InstallWorkload (params string [] workloads)
 		{
-			var args = new string [] {
-				"workload",
-				"install",
-				workload,
-				"-v", "diag",
-				"--skip-manifest-update",
-			};
+			var args = new List<string> ();
+			args.Add ("workload");
+			args.Add ("install");
+			args.AddRange (workloads);
+			args.Add ("-v");
+			args.Add ("diag");
+			args.Add ("--skip-manifest-update");
 
-			var rv = ExecuteCommand (Executable, args);
-			Assert.AreEqual (0, rv.ExitCode, $"Installation of workload '{workload}' failed with exit code {rv.ExitCode}");
-			return rv;
+			var env = new Dictionary<string, string?> ();
+			env ["MSBuildSDKsPath"] = null;
+			env ["MSBUILD_EXE_PATH"] = null;
+
+			var output = new StringBuilder ();
+			var rv = Execution.RunWithStringBuildersAsync (Executable, args, env, output, output, Console.Out, workingDirectory: Configuration.SourceRoot, timeout: TimeSpan.FromMinutes (10)).Result;
+			if (rv.ExitCode != 0) {
+				var msg = new StringBuilder ();
+				msg.AppendLine ($"'dotnet workload install' failed with exit code {rv.ExitCode}");
+				msg.AppendLine ($"Full command: {Executable} {StringUtils.FormatArguments (args)}");
+				msg.AppendLine (output.ToString ());
+				Console.WriteLine (msg);
+				Assert.Fail (msg.ToString ());
+			}
+			return new ExecutionResult (output, output, rv.ExitCode);
 		}
 
 		public static ExecutionResult InstallTool (string tool, string path)
