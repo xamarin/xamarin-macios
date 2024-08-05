@@ -10,19 +10,6 @@
 !missing-enum! CGWindowBackingType not bound
 !missing-enum! CGWindowLevelKey not bound
 !missing-enum! CGWindowSharingType not bound
-!missing-field! kCGDisplayShowDuplicateLowResolutionModes not bound
-!missing-field! kCGWindowAlpha not bound
-!missing-field! kCGWindowBackingLocationVideoMemory not bound
-!missing-field! kCGWindowBounds not bound
-!missing-field! kCGWindowIsOnscreen not bound
-!missing-field! kCGWindowLayer not bound
-!missing-field! kCGWindowMemoryUsage not bound
-!missing-field! kCGWindowName not bound
-!missing-field! kCGWindowNumber not bound
-!missing-field! kCGWindowOwnerName not bound
-!missing-field! kCGWindowOwnerPID not bound
-!missing-field! kCGWindowSharingState not bound
-!missing-field! kCGWindowStoreType not bound
 !missing-pinvoke! CGAcquireDisplayFadeReservation is not bound
 !missing-pinvoke! CGAssociateMouseAndMouseCursorPosition is not bound
 !missing-pinvoke! CGBeginDisplayConfiguration is not bound
@@ -37,8 +24,6 @@
 !missing-pinvoke! CGDisplayCopyAllDisplayModes is not bound
 !missing-pinvoke! CGDisplayCopyColorSpace is not bound
 !missing-pinvoke! CGDisplayCopyDisplayMode is not bound
-!missing-pinvoke! CGDisplayCreateImage is not bound
-!missing-pinvoke! CGDisplayCreateImageForRect is not bound
 !missing-pinvoke! CGDisplayFade is not bound
 !missing-pinvoke! CGDisplayGetDrawingContext is not bound
 !missing-pinvoke! CGDisplayIsActive is not bound
@@ -70,24 +55,11 @@
 !missing-pinvoke! CGDisplaySerialNumber is not bound
 !missing-pinvoke! CGDisplaySetDisplayMode is not bound
 !missing-pinvoke! CGDisplaySetStereoOperation is not bound
-!missing-pinvoke! CGDisplayStreamCreate is not bound
-!missing-pinvoke! CGDisplayStreamCreateWithDispatchQueue is not bound
-!missing-pinvoke! CGDisplayStreamGetRunLoopSource is not bound
-!missing-pinvoke! CGDisplayStreamGetTypeID is not bound
-!missing-pinvoke! CGDisplayStreamStart is not bound
-!missing-pinvoke! CGDisplayStreamStop is not bound
-!missing-pinvoke! CGDisplayStreamUpdateCreateMergedUpdate is not bound
-!missing-pinvoke! CGDisplayStreamUpdateGetDropCount is not bound
-!missing-pinvoke! CGDisplayStreamUpdateGetMovedRectsDelta is not bound
-!missing-pinvoke! CGDisplayStreamUpdateGetRects is not bound
-!missing-pinvoke! CGDisplayStreamUpdateGetTypeID is not bound
 !missing-pinvoke! CGDisplayUnitNumber is not bound
 !missing-pinvoke! CGDisplayUsesOpenGLAcceleration is not bound
 !missing-pinvoke! CGDisplayVendorNumber is not bound
-!missing-pinvoke! CGEventCreateScrollWheelEvent2 is not bound
 !missing-pinvoke! CGEventGetTypeID is not bound
 !missing-pinvoke! CGEventSourceGetTypeID is not bound
-!missing-pinvoke! CGEventTapCreateForPid is not bound
 !missing-pinvoke! CGGetActiveDisplayList is not bound
 !missing-pinvoke! CGGetDisplayTransferByFormula is not bound
 !missing-pinvoke! CGGetDisplayTransferByTable is not bound
@@ -113,5 +85,4 @@
 !missing-pinvoke! CGWindowListCopyWindowInfo is not bound
 !missing-pinvoke! CGWindowListCreate is not bound
 !missing-pinvoke! CGWindowListCreateDescriptionFromArray is not bound
-!missing-pinvoke! CGWindowListCreateImageFromArray is not bound
 !missing-pinvoke! CGWindowServerCreateServerPort is not bound

@@ -1,6 +1,3 @@
-## All GKSessionError values were deprecated in iOS7 and we never bound then (no point in adding it now)
-!missing-field! GKSessionErrorDomain not bound
-
 ## enum size declared after the enum, e.g. `typedef NSInteger GKInviteeResponse;`, so we miss the metadata
 !unknown-native-enum! GKInviteeResponse bound
 
@@ -11,6 +8,3 @@
 !missing-selector! GKLeaderboardEntry::formattedScore not bound
 !missing-selector! GKLeaderboardEntry::rank not bound
 !missing-selector! GKLeaderboardEntry::score not bound
-
-## unsorted
-

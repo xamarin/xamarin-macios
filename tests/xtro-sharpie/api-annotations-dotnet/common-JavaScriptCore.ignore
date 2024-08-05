@@ -2,7 +2,6 @@
 
 # C based-API, we have the ObjC based one
 
-!missing-field! kJSClassDefinitionEmpty not bound
 !missing-pinvoke! JSCheckScriptSyntax is not bound
 !missing-pinvoke! JSClassCreate is not bound
 !missing-pinvoke! JSClassRelease is not bound

@@ -2,37 +2,6 @@
 !missing-enum! IOSurfaceComponentRange not bound
 !missing-enum! IOSurfaceComponentType not bound
 !missing-enum! IOSurfaceSubsampling not bound
-!missing-field! kIOSurfaceAllocSize not bound
-!missing-field! kIOSurfaceBytesPerElement not bound
-!missing-field! kIOSurfaceBytesPerRow not bound
-!missing-field! kIOSurfaceCacheMode not bound
-!missing-field! kIOSurfaceElementHeight not bound
-!missing-field! kIOSurfaceElementWidth not bound
-!missing-field! kIOSurfaceHeight not bound
-!missing-field! kIOSurfaceOffset not bound
-!missing-field! kIOSurfacePixelFormat not bound
-!missing-field! kIOSurfacePixelSizeCastingAllowed not bound
-!missing-field! kIOSurfacePlaneBase not bound
-!missing-field! kIOSurfacePlaneBitsPerElement not bound
-!missing-field! kIOSurfacePlaneBytesPerElement not bound
-!missing-field! kIOSurfacePlaneBytesPerRow not bound
-!missing-field! kIOSurfacePlaneComponentBitDepths not bound
-!missing-field! kIOSurfacePlaneComponentBitOffsets not bound
-!missing-field! kIOSurfacePlaneComponentNames not bound
-!missing-field! kIOSurfacePlaneComponentRanges not bound
-!missing-field! kIOSurfacePlaneComponentTypes not bound
-!missing-field! kIOSurfacePlaneElementHeight not bound
-!missing-field! kIOSurfacePlaneElementWidth not bound
-!missing-field! kIOSurfacePlaneHeight not bound
-!missing-field! kIOSurfacePlaneInfo not bound
-!missing-field! kIOSurfacePlaneOffset not bound
-!missing-field! kIOSurfacePlaneSize not bound
-!missing-field! kIOSurfacePlaneWidth not bound
-!missing-field! kIOSurfaceSubsampling not bound
-!missing-field! kIOSurfaceWidth not bound
-!missing-field! kIOSurfaceColorSpace not bound
-!missing-field! kIOSurfaceICCProfile not bound
-!missing-field! kIOSurfaceName not bound
 !missing-pinvoke! IOSurfaceAlignProperty is not bound
 !missing-pinvoke! IOSurfaceAllowsPixelSizeCasting is not bound
 !missing-pinvoke! IOSurfaceCopyAllValues is not bound

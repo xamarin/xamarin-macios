@@ -1,7 +1,4 @@
 ## We have managed counterparts that comes from OpenTK code
-!missing-field! SCNMatrix4Identity not bound
-!missing-field! SCNVector3Zero not bound
-!missing-field! SCNVector4Zero not bound
 !missing-pinvoke! SCNMatrix4EqualToMatrix4 is not bound
 !missing-pinvoke! SCNMatrix4Invert is not bound
 !missing-pinvoke! SCNMatrix4IsIdentity is not bound

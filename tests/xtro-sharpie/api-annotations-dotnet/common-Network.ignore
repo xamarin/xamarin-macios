@@ -40,9 +40,6 @@
 ## xcode 10.0 backlog
 !missing-pinvoke! nw_endpoint_get_address is not bound
 
-## no documentation from apple. So we do nothing, specially with the _ prefix. Leak?
-!missing-field! _nw_data_transfer_report_all_paths not bound
-
 ## the enum is bound as NWParametersAttribution. Apple uses _t for types, probably was an error 
 ## in their part which confuses xtro
 !missing-enum! nw_parameters_attribution_t not bound

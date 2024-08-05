@@ -1,5 +1,3 @@
-!missing-field! kCARendererColorSpace not bound
-!missing-field! kCARendererMetalCommandQueue not bound
 !missing-selector! +CARenderer::rendererWithMTLTexture:options: not bound
 !missing-selector! CARenderer::addUpdateRect: not bound
 !missing-selector! CARenderer::beginFrameAtTime:timeStamp: not bound

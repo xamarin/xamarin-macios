@@ -5,11 +5,6 @@
 
 ## only a subset of this framework is presently supported
 
-!missing-field! kvImage_ARGBToYpCbCrMatrix_ITU_R_601_4 not bound
-!missing-field! kvImage_ARGBToYpCbCrMatrix_ITU_R_709_2 not bound
-!missing-field! kvImage_YpCbCrToARGBMatrix_ITU_R_601_4 not bound
-!missing-field! kvImage_YpCbCrToARGBMatrix_ITU_R_709_2 not bound
-!missing-field! kvImageDecodeArray_16Q12Format not bound
 !missing-pinvoke! vImageAffineWarp_ARGB16S is not bound
 !missing-pinvoke! vImageAffineWarp_ARGB16U is not bound
 !missing-pinvoke! vImageAffineWarp_ARGB8888 is not bound
