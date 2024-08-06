@@ -196,6 +196,11 @@ namespace Introspection {
 				case "TKSmartCardPinFormat":
 					return true;
 				// Xcode 16, conformance not in headers
+				case "ASAccessory":
+				case "ASAccessorySettings":
+				case "ASDiscoveryDescriptor":
+				case "ASMigrationDisplayItem":
+				case "ASPickerDisplayItem":
 				case "PKAddCarKeyPassConfiguration":
 				case "PKAddSecureElementPassConfiguration":
 				case "PKAddShareablePassConfiguration":
@@ -385,6 +390,11 @@ namespace Introspection {
 				case "VSAppleSubscription":
 					return true;
 				// Xcode 16, conformance not in headers
+				case "ASAccessory":
+				case "ASAccessorySettings":
+				case "ASDiscoveryDescriptor":
+				case "ASMigrationDisplayItem":
+				case "ASPickerDisplayItem":
 				case "QLFileThumbnailRequest":
 				case "QLThumbnailReply":
 				case "PHPickerResult":
@@ -580,6 +590,11 @@ namespace Introspection {
 				case "VSAppleSubscription":
 					return true;
 				// Xcode 16, conformance not in headers
+				case "ASAccessory":
+				case "ASAccessorySettings":
+				case "ASDiscoveryDescriptor":
+				case "ASMigrationDisplayItem":
+				case "ASPickerDisplayItem":
 				case "QLFileThumbnailRequest":
 				case "QLThumbnailReply":
 				case "PHPickerResult":
