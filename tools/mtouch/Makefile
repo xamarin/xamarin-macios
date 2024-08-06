@@ -73,7 +73,6 @@ SIMLAUNCHER_FRAMEWORKS =  \
 	-framework SystemConfiguration		\
 	-framework UIKit			\
 						\
-	-weak_framework AssetsLibrary		\
 	-weak_framework CoreMedia		\
 	-weak_framework CoreMidi		\
 	-weak_framework CoreMotion		\
