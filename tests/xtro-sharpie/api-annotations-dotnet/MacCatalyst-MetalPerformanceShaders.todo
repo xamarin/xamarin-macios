@@ -434,3 +434,14 @@
 !missing-enum-value! MPSIntersectionDataType native value MPSIntersectionDataTypeDistancePrimitiveIndexBufferIndexCoordinates = 6 not bound
 !missing-enum-value! MPSIntersectionDataType native value MPSIntersectionDataTypeDistancePrimitiveIndexBufferIndexInstanceIndex = 7 not bound
 !missing-enum-value! MPSIntersectionDataType native value MPSIntersectionDataTypeDistancePrimitiveIndexBufferIndexInstanceIndexCoordinates = 8 not bound
+!deprecated-attribute-missing! MPSAccelerationStructure missing a [Deprecated] attribute
+!deprecated-attribute-missing! MPSAccelerationStructureGroup missing a [Deprecated] attribute
+!deprecated-attribute-missing! MPSInstanceAccelerationStructure missing a [Deprecated] attribute
+!deprecated-attribute-missing! MPSRayIntersector missing a [Deprecated] attribute
+!deprecated-attribute-missing! MPSTriangleAccelerationStructure missing a [Deprecated] attribute
+!missing-enum! MPSFloatDataTypeBit not bound
+!missing-enum! MPSFloatDataTypeShift not bound
+!missing-enum-value! MPSDataType native value MPSDataTypeBFloat16 = 2415919120 not bound
+!missing-enum-value! MPSDataType native value MPSDataTypeComplexBit = 16777216 not bound
+!missing-enum-value! MPSDataType native value MPSDataTypeComplexFloat16 = 285212704 not bound
+!missing-enum-value! MPSDataType native value MPSDataTypeComplexFloat32 = 285212736 not bound
