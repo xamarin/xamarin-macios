@@ -486,3 +486,6 @@
 !missing-type! MPSNDArrayQuantizationDescriptor not bound
 !missing-type! MPSNDArrayQuantizedMatrixMultiplication not bound
 !missing-type! MPSNDArrayVectorLUTDequantize not bound
+!missing-selector! MPSNDArrayAffineQuantizationDescriptor::implicitZeroPoint not bound
+!missing-selector! MPSNDArrayAffineQuantizationDescriptor::setImplicitZeroPoint: not bound
+!missing-selector! MPSNDArrayMultiaryKernel::encodeToCommandEncoder:commandBuffer:sourceArrays:destinationArray: not bound
