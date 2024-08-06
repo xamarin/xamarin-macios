@@ -16,6 +16,7 @@
 
 # missing - pending decision for implementation
 !missing-type! NSAssertionHandler not bound
+!missing-field! NSAssertionHandlerKey not bound
 !missing-selector! +NSAssertionHandler::currentHandler not bound
 !missing-selector! NSAssertionHandler::handleFailureInFunction:file:lineNumber:description: not bound
 !missing-selector! NSAssertionHandler::handleFailureInMethod:object:file:lineNumber:description: not bound
@@ -172,6 +173,9 @@
 # this is a better named version of `date` which we already bound as `Now` in C#
 !missing-selector! +NSDate::now not bound
 
+# Apple says this is not implemented
+!missing-field! NSDidBecomeSingleThreadedNotification not bound
+
 ## unsorted
 
 !extra-designated-initializer! NSSortDescriptor::initWithCoder: is incorrectly decorated with an [DesignatedInitializer] attribute
@@ -181,6 +185,54 @@
 !missing-enum! NSPointerFunctionsOptions not bound
 !missing-enum! NSSearchPathDomainMask not bound
 !missing-enum! NSStringEncodingConversionOptions not bound
+!missing-field! NSAverageKeyValueOperator not bound
+!missing-field! NSCalendarIdentifierIslamic not bound
+!missing-field! NSCharacterConversionException not bound
+!missing-field! NSCountKeyValueOperator not bound
+!missing-field! NSDecimalNumberDivideByZeroException not bound
+!missing-field! NSDecimalNumberExactnessException not bound
+!missing-field! NSDecimalNumberOverflowException not bound
+!missing-field! NSDecimalNumberUnderflowException not bound
+!missing-field! NSDestinationInvalidException not bound
+!missing-field! NSDistinctUnionOfArraysKeyValueOperator not bound
+!missing-field! NSDistinctUnionOfObjectsKeyValueOperator not bound
+!missing-field! NSDistinctUnionOfSetsKeyValueOperator not bound
+!missing-field! NSFoundationVersionNumber not bound
+!missing-field! NSGenericException not bound
+!missing-field! NSInconsistentArchiveException not bound
+!missing-field! NSInternalInconsistencyException not bound
+!missing-field! NSInvalidArchiveOperationException not bound
+!missing-field! NSInvalidArgumentException not bound
+!missing-field! NSInvalidReceivePortException not bound
+!missing-field! NSInvalidSendPortException not bound
+!missing-field! NSInvalidUnarchiveOperationException not bound
+!missing-field! NSInvocationOperationCancelledException not bound
+!missing-field! NSInvocationOperationVoidResultException not bound
+!missing-field! NSLoadedClasses not bound
+!missing-field! NSMallocException not bound
+!missing-field! NSMaximumKeyValueOperator not bound
+!missing-field! NSMinimumKeyValueOperator not bound
+!missing-field! NSObjectInaccessibleException not bound
+!missing-field! NSObjectNotAvailableException not bound
+!missing-field! NSOldStyleException not bound
+!missing-field! NSParseErrorException not bound
+!missing-field! NSPortReceiveException not bound
+!missing-field! NSPortSendException not bound
+!missing-field! NSPortTimeoutException not bound
+!missing-field! NSRangeException not bound
+!missing-field! NSSumKeyValueOperator not bound
+!missing-field! NSUndefinedKeyException not bound
+!missing-field! NSUnionOfArraysKeyValueOperator not bound
+!missing-field! NSUnionOfObjectsKeyValueOperator not bound
+!missing-field! NSUnionOfSetsKeyValueOperator not bound
+!missing-field! NSURLCanonicalPathKey not bound
+!missing-field! NSURLErrorBackgroundTaskCancelledReasonKey not bound
+!missing-field! NSURLErrorFailingURLErrorKey not bound
+!missing-field! NSURLErrorFailingURLPeerTrustErrorKey not bound
+!missing-field! NSURLErrorFailingURLStringErrorKey not bound
+!missing-field! NSURLErrorNetworkUnavailableReasonKey not bound
+!missing-field! NSURLFileScheme not bound
+!missing-field! NSXMLParserErrorDomain not bound
 !missing-pinvoke! NSAllocateMemoryPages is not bound
 !missing-pinvoke! NSAllocateObject is not bound
 !missing-pinvoke! NSClassFromString is not bound
@@ -729,6 +781,21 @@
 !missing-protocol-conformance! NSDictionary should conform to NSFastEnumeration (defined in 'NSGenericFastEnumeration' category)
 
 ## never bound (or requested) for macOS, added to iOS/tvOS/watchOS in xcode10
+!missing-field! NSNonOwnedPointerHashCallBacks not bound
+!missing-field! NSNonOwnedPointerMapKeyCallBacks not bound
+!missing-field! NSNonOwnedPointerMapValueCallBacks not bound
+!missing-field! NSNonOwnedPointerOrNullMapKeyCallBacks not bound
+!missing-field! NSNonRetainedObjectHashCallBacks not bound
+!missing-field! NSNonRetainedObjectMapKeyCallBacks not bound
+!missing-field! NSNonRetainedObjectMapValueCallBacks not bound
+!missing-field! NSObjectHashCallBacks not bound
+!missing-field! NSObjectMapKeyCallBacks not bound
+!missing-field! NSObjectMapValueCallBacks not bound
+!missing-field! NSOwnedObjectIdentityHashCallBacks not bound
+!missing-field! NSOwnedPointerHashCallBacks not bound
+!missing-field! NSOwnedPointerMapKeyCallBacks not bound
+!missing-field! NSOwnedPointerMapValueCallBacks not bound
+!missing-field! NSPointerToStructHashCallBacks not bound
 !missing-pinvoke! NSAllHashTableObjects is not bound
 !missing-pinvoke! NSAllMapTableKeys is not bound
 !missing-pinvoke! NSAllMapTableValues is not bound
@@ -1318,3 +1385,4 @@
 !missing-selector! NSURLComponents::initWithString:encodingInvalidCharacters: not bound
 
 # it is used in the selectors that support vargs and thefore cannot be used with out bindings
+!missing-field! NSInflectionConceptsKey not bound

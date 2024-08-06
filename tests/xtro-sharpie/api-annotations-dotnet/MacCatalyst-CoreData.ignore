@@ -2,3 +2,4 @@
 !missing-protocol-member! NSFetchedResultsControllerDelegate::controller:didChangeContentWithDifference: not found
 !missing-protocol-member! NSFetchedResultsControllerDelegate::controller:didChangeContentWithSnapshot: not found
 
+!missing-selector! +NSPersistentStoreCoordinator::metadataForPersistentStoreWithURL:error: not bound

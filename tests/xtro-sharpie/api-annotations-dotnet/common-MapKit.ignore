@@ -1,3 +1,6 @@
+!missing-field! MKMapRectNull not bound
+!missing-field! MKMapRectWorld not bound
+!missing-field! MKMapSizeWorld not bound
 
 ## soft deprecation
 !deprecated-attribute-missing! MKMapView::mapType missing a [Deprecated] attribute

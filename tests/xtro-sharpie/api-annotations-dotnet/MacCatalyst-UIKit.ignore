@@ -36,4 +36,7 @@
 !extra-enum-value! Managed value 3 for UITextAlignment.Justified not found in native headers
 !extra-enum-value! Managed value 4 for UITextAlignment.Natural not found in native headers
 
+## manually bound
+!missing-field! UIListSeparatorAutomaticInsets not bound
+
 !missing-protocol! UIItemProviderReadingAugmentationDesignating not bound

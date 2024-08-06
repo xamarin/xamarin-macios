@@ -15,6 +15,21 @@
 !missing-enum! CGBitmapInfo not bound
 !missing-enum! CGError not bound
 !missing-enum! CGFontPostScriptFormat not bound
+!missing-field! CGAffineTransformIdentity not bound
+!missing-field! CGPointZero not bound
+!missing-field! CGSizeZero not bound
+!missing-field! kCGFontVariationAxisDefaultValue not bound
+!missing-field! kCGFontVariationAxisMaxValue not bound
+!missing-field! kCGFontVariationAxisMinValue not bound
+!missing-field! kCGFontVariationAxisName not bound
+!missing-field! kCGPDFContextOutputIntent not bound
+!missing-field! kCGPDFContextOutputIntents not bound
+!missing-field! kCGPDFXDestinationOutputProfile not bound
+!missing-field! kCGPDFXInfo not bound
+!missing-field! kCGPDFXOutputCondition not bound
+!missing-field! kCGPDFXOutputConditionIdentifier not bound
+!missing-field! kCGPDFXOutputIntentSubtype not bound
+!missing-field! kCGPDFXRegistryName not bound
 !missing-pinvoke! CGAffineTransformConcat is not bound
 !missing-pinvoke! CGAffineTransformEqualToTransform is not bound
 !missing-pinvoke! CGAffineTransformIsIdentity is not bound

@@ -4,6 +4,17 @@
 !missing-enum! CTRubyAlignment not bound
 !missing-enum! CTRubyOverhang not bound
 !missing-enum! CTRubyPosition not bound
+!missing-field! kCTFontDownloadableAttribute not bound
+!missing-field! kCTFontDownloadedAttribute not bound
+!missing-field! kCTFontManagerRegisteredFontsChangedNotification not bound
+!missing-field! kCTFontOpenTypeFeatureTag not bound
+!missing-field! kCTFontOpenTypeFeatureValue not bound
+!missing-field! kCTLanguageAttributeName not bound
+!missing-field! kCTRubyAnnotationAttributeName not bound
+!missing-field! kCTRubyAnnotationScaleToFitAttributeName not bound
+!missing-field! kCTRubyAnnotationSizeFactorAttributeName not bound
+!missing-field! kCTFontOpticalSizeAttribute not bound
+!missing-field! kCTFontVariationAxesAttribute not bound
 !missing-pinvoke! CTFontCollectionGetTypeID is not bound
 !missing-pinvoke! CTFontDescriptorCreateCopyWithFamily is not bound
 !missing-pinvoke! CTFontDescriptorCreateCopyWithSymbolicTraits is not bound

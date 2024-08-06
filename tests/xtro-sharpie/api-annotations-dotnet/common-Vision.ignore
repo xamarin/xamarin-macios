@@ -1,3 +1,8 @@
+# note: framework not available on watchOS
+
+## we do not expose internal framework versions
+!missing-field! VNVisionVersionNumber not bound
+
 ## called indirectly (there's a required native layer for them)
 !missing-pinvoke! VNImagePointForFaceLandmarkPoint is not bound
 !missing-pinvoke! VNNormalizedFaceBoundingBoxPointForLandmarkPoint is not bound
@@ -57,3 +62,4 @@
 # Since the parameter is passed by reference rather than value, the marshal directive is not necessary
 # validated by VisionAnalyzer sample: https://github.com/haritha-mohan/vision-analyzer
 !wrong-simd-missing-marshaldirective! System.Boolean Vision.VNHumanBodyPose3DObservation::GetCameraRelativePosition(CoreGraphics.NMatrix4&,Vision.VNHumanBodyPose3DObservationJointName,Foundation.NSError&): simd type: simd_float4x4
+

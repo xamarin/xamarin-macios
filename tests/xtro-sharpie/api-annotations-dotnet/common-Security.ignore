@@ -1,3 +1,8 @@
+## 'kSecAttrPersistentReference' (correct), 'kSecAttrPersistantReference' (incorrect). Persistent with an "a" instead of "e".
+!missing-field! kSecAttrPersistantReference not bound
+!missing-field! kSecRandomDefault not bound
+
+
 ## used in mscorlib.dll mcs/class/corlib/CommonCrypto/CommonCrypto.cs
 !missing-pinvoke! SecRandomCopyBytes is not bound
 

@@ -3,6 +3,7 @@
 
 !missing-enum! WCErrorCode not bound
 !missing-enum! WCSessionActivationState not bound
+!missing-field! WCErrorDomain not bound
 !missing-protocol! WCSessionDelegate not bound
 !missing-selector! +WCSession::defaultSession not bound
 !missing-selector! +WCSession::isSupported not bound

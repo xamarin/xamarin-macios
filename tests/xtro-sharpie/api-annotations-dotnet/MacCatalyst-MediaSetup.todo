@@ -1,3 +1,5 @@
+!missing-field! MediaSetupVersionNumber not bound
+!missing-field! MediaSetupVersionString not bound
 !missing-protocol! MSAuthenticationPresentationContext not bound
 !missing-selector! MSServiceAccount::accountName not bound
 !missing-selector! MSServiceAccount::authorizationScope not bound

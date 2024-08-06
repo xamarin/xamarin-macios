@@ -1,3 +1,7 @@
+## not exposed by our API (better use the OS version)
+!missing-field! IntentsVersionNumber not bound
+!missing-field! IntentsVersionString not bound
+
 ## type is abstract and the selector are redefined in subclasses
 !missing-selector! +INIntentResolutionResult::needsValue not bound
 !missing-selector! +INIntentResolutionResult::notRequired not bound
