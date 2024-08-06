@@ -1,6 +1,0 @@
-!missing-enum-value! AEAssessmentErrorCode native value AEAssessmentErrorConfigurationUpdatesNotSupported = 4 not bound
-!missing-enum-value! AEAssessmentErrorCode native value AEAssessmentErrorMultipleParticipantsNotSupported = 3 not bound
-!missing-selector! +AEAssessmentSession::supportsConfigurationUpdates not bound
-!missing-selector! +AEAssessmentSession::supportsMultipleParticipants not bound
-!missing-selector! AEAssessmentParticipantConfiguration::configurationInfo not bound
-!missing-selector! AEAssessmentParticipantConfiguration::setConfigurationInfo: not bound

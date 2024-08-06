@@ -42,7 +42,9 @@ XTRO_SHARPIE_EXEC=$(MONO) --debug $(XTRO_SHARPIE)
 
 build: $(XTRO_SHARPIE) $(XTRO_REPORT) $(XTRO_SANITY)
 
+.stamp-build: export SHARPIE:=$(SHARPIE)
 .stamp-build: $(wildcard *.cs) pch-info.proj $(XTRO_REPORT) $(XTRO_SANITY) $(XTRO_SHARPIE)
+	$(Q_BUILD) $(SYSTEM_MSBUILD) $(MSBUILD_VERBOSITY) xtro-sharpie.csproj /r /bl:$@.binlog
 	$(Q) touch $@
 
 $(XTRO_SHARPIE): $(wildcard xtro-sharpie/*.cs) $(wildcard xtro-sharpie/*.csproj) pch-info.proj $(XTRO_REPORT)
@@ -67,6 +69,8 @@ $(XIOS_PCH): .stamp-check-sharpie
 	-exclude FactoryOTAWifiUtils \
 	-exclude FactoryOTALogger \
 	-exclude FactoryOTANetworkUtils \
+	-exclude AssetsLibrary \
+	-exclude _CoreNFC_UIKit \
 	-i ThreadNetwork/THClient.h \
 	$(CORETELEPHONY_HEADERS) \
 
@@ -80,6 +84,7 @@ XWATCHOS_PCH = watchos$(WATCH_SDK_VERSION)-$(XWATCHOS_ARCH).pch
 $(XWATCHOS_PCH): .stamp-check-sharpie
 	$(SHARPIE) sdk-db --xcode $(XCODE) -s watchos$(WATCH_SDK_VERSION) -a $(XWATCHOS_ARCH) \
 		-modules false \
+		-exclude BrowserEngineKit \
 
 XTVOS ?= $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/64bits/tvOS/Xamarin.TVOS.dll
 XTVOS_LIBDIR ?= $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.TVOS/
@@ -114,6 +119,7 @@ $(XMACCATALYST_PCH): .stamp-check-sharpie
 	-modules false \
 	-exclude AGL \
 	-exclude AudioVideoBridging \
+	-exclude AssetsLibrary \
 	-exclude CalendarStore \
 	-exclude Carbon \
 	-exclude ClockKit \
@@ -313,7 +319,7 @@ remove-empty-files:
 
 U2TODO = u2todo/bin/Debug/u2todo.dll
 $(U2TODO): $(wildcard u2todo/*.cs u2todo/*.csproj xtro-sharpie/Filter.cs)
-	$(Q) unset MSBUILD_EXE_PATH && $(DOTNET) build $(DOTNET_BUILD_VERBOSITY) u2todo/u2todo.csproj /bl:$@.binlog
+	$(Q) unset MSBUILD_EXE_PATH && $(DOTNET) build u2todo/u2todo.csproj $(DOTNET_BUILD_VERBOSITY) /bl:$@.binlog
 	$(Q) touch $@
 
 unclassified2todo-classic: $(U2TODO)

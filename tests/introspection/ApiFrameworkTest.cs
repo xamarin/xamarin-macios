@@ -86,6 +86,9 @@ namespace Introspection {
 			// Removed in Xcode 15
 			case "NewsstandKit":
 				return true;
+			// Removed in Xcode 15.3
+			case "AssetsLibrary":
+				return true;
 			default:
 				return false;
 			}
