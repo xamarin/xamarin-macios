@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 
 using Mono.Cecil;
 using Mono.Linker;
@@ -28,6 +29,7 @@ namespace Xamarin.Linker {
 				case AssemblyAction.Save:
 					var ad = Configuration.Target.AddAssembly (assembly);
 					var assemblyFileName = Configuration.GetAssemblyFileName (assembly);
+					ad.IsDedupAssembly = Path.GetFileName (Configuration.DedupAssembly).Equals (Path.GetFileName (assemblyFileName), StringComparison.OrdinalIgnoreCase);
 					ad.FullPath = assemblyFileName;
 					break;
 				case AssemblyAction.AddBypassNGen: // This should be turned into Save or Delete
