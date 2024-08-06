@@ -4,25 +4,6 @@
 !extra-enum-value! Managed value 3 for MTLFeatureSet.iOS_GPUFamily2_v2 is available for the current platform while the value in the native header is not
 !extra-enum-value! Managed value 30000 for MTLFeatureSet.tvOS_GPUFamily1_v1 is available for the current platform while the value in the native header is not
 !extra-enum-value! Managed value 4 for MTLFeatureSet.iOS_GPUFamily3_v1 is available for the current platform while the value in the native header is not
-!missing-protocol! MTLIOCommandBuffer not bound
-!missing-protocol! MTLIOCommandQueue not bound
-!missing-protocol! MTLIOFileHandle not bound
-!missing-protocol! MTLIOScratchBuffer not bound
-!missing-protocol! MTLIOScratchBufferAllocator not bound
 !missing-protocol-member! MTLDevice::areBarycentricCoordsSupported not found
-!missing-protocol-member! MTLDevice::newIOCommandQueueWithDescriptor:error: not found
-!missing-protocol-member! MTLDevice::newIOHandleWithURL:compressionMethod:error: not found
-!missing-protocol-member! MTLDevice::newIOHandleWithURL:error: not found
 !missing-protocol-member! MTLDevice::supportsShaderBarycentricCoordinates not found
 !missing-protocol-member! MTLTexture::compressionType not found
-!missing-selector! MTLIOCommandQueueDescriptor::maxCommandBufferCount not bound
-!missing-selector! MTLIOCommandQueueDescriptor::maxCommandsInFlight not bound
-!missing-selector! MTLIOCommandQueueDescriptor::priority not bound
-!missing-selector! MTLIOCommandQueueDescriptor::scratchBufferAllocator not bound
-!missing-selector! MTLIOCommandQueueDescriptor::setMaxCommandBufferCount: not bound
-!missing-selector! MTLIOCommandQueueDescriptor::setMaxCommandsInFlight: not bound
-!missing-selector! MTLIOCommandQueueDescriptor::setPriority: not bound
-!missing-selector! MTLIOCommandQueueDescriptor::setScratchBufferAllocator: not bound
-!missing-selector! MTLIOCommandQueueDescriptor::setType: not bound
-!missing-selector! MTLIOCommandQueueDescriptor::type not bound
-!missing-type! MTLIOCommandQueueDescriptor not bound
