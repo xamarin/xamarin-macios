@@ -2425,7 +2425,7 @@ global using nfloat = global::System.Runtime.InteropServices.NFloat%3B
 			<xcSyncXcodeFolder Condition="'$(xcSyncXcodeFolder)' == ''">$(IntermediateOutputPath)xcode</xcSyncXcodeFolder>
 			<xcSyncTargetFrameworkMoniker Condition="'$(xcSyncTargetFrameworkMoniker)' == ''">$(TargetFramework)</xcSyncTargetFrameworkMoniker>
 			<xcSyncVerbosity Condition="'$(xcSyncVerbosity)' == ''">Diagnostic</xcSyncVerbosity>
-			<xcSyncOpenXcode Condition="'$(xcSyncOpenXcode)' == ''">true<xcSyncOpenXcode>
+			<xcSyncOpenXcode Condition="'$(xcSyncOpenXcode)' == ''">true</xcSyncOpenXcode>
 
 			<XcsyncCommonArguments Condition="'$(xcSyncProjectFile)' != ''">$(XcsyncCommonArguments) -p "$(xcSyncProjectFile)"</XcsyncCommonArguments>
 			<XcsyncCommonArguments Condition="'$(xcSyncXcodeFolder)' != ''">$(XcsyncCommonArguments) -t "$(xcSyncXcodeFolder)"</XcsyncCommonArguments>
@@ -2434,7 +2434,7 @@ global using nfloat = global::System.Runtime.InteropServices.NFloat%3B
 			<XcsyncCommonArguments>$(XcsyncCommonArguments) --dotnet-path "$([System.IO.Path]::GetDirectoryName($(DOTNET_HOST_PATH)))"</XcsyncCommonArguments>
 
 			<XcsyncGenerateArguments>$(XcsyncCommonArguments) --force</XcsyncGenerateArguments>
-			<xcsyncGenerateArguments Condition="'$(xcSyncOpenXcode)' != 'false'">$(XcsyncGenerateArguments) --open</XcsyncGenerateArguments>
+			<XcsyncGenerateArguments Condition="'$(xcSyncOpenXcode)' != 'false'">$(XcsyncGenerateArguments) --open</XcsyncGenerateArguments>
 
 			<XcsyncSyncArguments>$(XcsyncCommonArguments)</XcsyncSyncArguments>
 		</PropertyGroup>
