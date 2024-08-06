@@ -35,3 +35,9 @@ steps:
   parameters:
     outputPath: agent-logs.log
     use1ES: ${{ parameters.use1ES }}
+
+- template: screenshot.yml
+  parameters:
+    outputPath: $(Build.ArtifactStagingDirectory)/screenshot.png
+    use1ES: ${{ parameters.use1ES }}
+
