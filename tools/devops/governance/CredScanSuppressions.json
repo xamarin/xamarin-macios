@@ -1,0 +1,901 @@
+{
+    "tool": "Credential Scanner",
+    "suppressions": [
+        {
+            "placeholder": "12345678",
+            "_justification": "Dummy secret used in unit tests, it is fake."
+        },
+        {
+            "file": "src\\cfnetwork.cs",
+            "_justification": "API definition file that cannot contain passwords at all."
+        },
+        {
+            "file": "external\\guiunit\\tools\\nant\\bin\\NAnt.Core.xml",
+            "_justification": "External repo dependency, guiunit."
+        },
+        {
+            "file": "external\\guiunit\\tools\\nant\\bin\\NAnt.SourceControlTasks.xml",
+            "_justification": "External repo dependency, guiunit."
+        },
+        {
+            "file": "external\\guiunit\\tools\\nant\\bin\\NAnt.DotNetTasks.xml",
+            "_justification": "External repo dependency, guiunit."
+        },
+        {
+            "file": "external\\guiunit\\tools\\nant\\bin\\NAnt.Core.xml",
+            "_justification": "External repo dependency, guiunit."
+        },
+        {
+            "file": "external\\guiunit\\tools\\nant\\bin\\NAnt.Core.xml",
+            "_justification": "External repo dependency, guiunit."
+        },
+        {
+            "file": "external\\mono\\data\\net_2_0\\web.config",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\data\\net_4_0\\web.config",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\data\\net_4_5\\web.config",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\data\\net_1_1\\machine.config",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\api-doc-tools\\external\\SharpZipLib\\ICSharpCode.SharpZipLib.Tests\\Zip\\ZipTests.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\api-doc-tools\\external\\SharpZipLib\\ICSharpCode.SharpZipLib.Tests\\Zip\\ZipTests.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\api-doc-tools\\external\\SharpZipLib\\ICSharpCode.SharpZipLib.Tests\\Zip\\ZipTests.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\api-doc-tools\\external\\SharpZipLib\\ICSharpCode.SharpZipLib.Tests\\Zip\\ZipTests.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\api-doc-tools\\external\\SharpZipLib\\ICSharpCode.SharpZipLib.Tests\\Zip\\ZipTests.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\api-doc-tools\\external\\SharpZipLib\\ICSharpCode.SharpZipLib.Tests\\Zip\\ZipTests.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\api-doc-tools\\external\\SharpZipLib\\ICSharpCode.SharpZipLib.Tests\\Zip\\ZipTests.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\api-doc-tools\\external\\SharpZipLib\\ICSharpCode.SharpZipLib.Tests\\Zip\\ZipTests.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\api-doc-tools\\external\\SharpZipLib\\ICSharpCode.SharpZipLib.Tests\\Zip\\ZipTests.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\api-doc-tools\\external\\SharpZipLib\\ICSharpCode.SharpZipLib.Tests\\Zip\\ZipTests.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\api-doc-tools\\external\\SharpZipLib\\ICSharpCode.SharpZipLib.Tests\\Zip\\ZipTests.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\api-doc-tools\\external\\SharpZipLib\\ICSharpCode.SharpZipLib.Tests\\Zip\\ZipTests.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\api-doc-tools\\external\\SharpZipLib\\ICSharpCode.SharpZipLib.Tests\\Zip\\ZipTests.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\api-doc-tools\\external\\SharpZipLib\\ICSharpCode.SharpZipLib.Tests\\Zip\\ZipTests.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\api-doc-tools\\external\\SharpZipLib\\ICSharpCode.SharpZipLib.Tests\\Zip\\ZipTests.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\macios-binaries\\docs\\macOS\\classic\\XamMac.xml",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\aspnetwebstack\\test\\System.Web.Helpers.Test\\WebMailTest.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\macios-binaries\\docs\\macOS\\classic\\XamMac.CFNetwork.xml",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\aspnetwebstack\\test\\System.Web.Helpers.Test\\CryptoTest.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\aspnetwebstack\\test\\System.Web.Helpers.Test\\CryptoTest.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\aspnetwebstack\\test\\System.Web.Helpers.Test\\CryptoTest.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\aspnetwebstack\\test\\System.Web.Helpers.Test\\CryptoTest.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\aspnetwebstack\\test\\System.Web.WebPages.Test\\Validation\\ValidatorTest.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\aspnetwebstack\\test\\System.Web.WebPages.Test\\Validation\\ValidatorTest.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\aspnetwebstack\\test\\System.Web.WebPages.Test\\Validation\\ValidatorTest.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\aspnetwebstack\\test\\System.Web.WebPages.Test\\Validation\\ValidatorTest.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\boringssl\\ssl\\test\\runner\\ecdsa_key.pem",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\boringssl\\ssl\\test\\runner\\channel_id_key.pem",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\boringssl\\ssl\\test\\runner\\key.pem",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\corefx\\src\\Common\\src\\Interop\\OSX\\System.Security.Cryptography.Native.Apple\\Interop.SecKeyRef.Export.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\corefx\\src\\Common\\tests\\System\\Net\\Prerequisites\\Deployment\\config.ps1",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\corefx\\src\\Common\\tests\\System\\Net\\Prerequisites\\Deployment\\setup_certificates.ps1",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\corefx\\src\\Common\\tests\\System\\Net\\Prerequisites\\Deployment\\setup_certificates.ps1",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\corefx\\src\\Common\\tests\\System\\Net\\Configuration.Certificates.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\corefx\\src\\System.Data.SqlClient\\tests\\FunctionalTests\\ExceptionTest.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\corefx\\src\\System.Data.SqlClient\\tests\\FunctionalTests\\SqlConnectionBasicTests.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\corefx\\src\\System.Data.SqlClient\\tests\\Tools\\TDS\\TDS.Servers\\TDSServerArguments.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\corefx\\src\\System.Data.SqlClient\\tests\\Tools\\TDS\\TDS.Servers\\TdsServerCertificate.pfx",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\corefx\\src\\System.Diagnostics.Process\\tests\\ProcessStartInfoTests.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\corefx\\src\\System.DirectoryServices.AccountManagement\\tests\\PrincipalTest.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\corefx\\src\\System.DirectoryServices.AccountManagement\\tests\\UserPrincipalTest.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\corefx\\src\\System.Data.Common\\tests\\System\\Data\\Common\\DbConnectionStringBuilderTest.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\corefx\\src\\System.Data.Common\\tests\\System\\Data\\Common\\DbConnectionStringBuilderTest.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\corefx\\src\\System.Data.Common\\tests\\System\\Data\\Common\\DbConnectionStringBuilderTest.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\corefx\\src\\System.Data.Common\\tests\\System\\Data\\Common\\DbConnectionStringBuilderTest.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\corefx\\src\\System.Data.Common\\tests\\System\\Data\\Common\\DbConnectionStringBuilderTest.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\corefx\\src\\System.Data.Common\\tests\\System\\Data\\Common\\DbConnectionStringBuilderTest.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\corefx\\src\\System.Data.Common\\tests\\System\\Data\\Common\\DbConnectionStringBuilderTest.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\corefx\\src\\System.Data.Common\\tests\\System\\Data\\Common\\DbConnectionStringBuilderTest.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\corefx\\src\\System.Management\\src\\System\\Management\\ManagementScope.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\corefx\\src\\System.Management\\src\\System\\Management\\ManagementScope.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\corefx\\src\\System.Management\\src\\System\\Management\\ManagementScope.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\corefx\\src\\System.Management\\src\\System\\Management\\ManagementScope.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\corefx\\src\\System.Net.Http\\tests\\FunctionalTests\\HttpClientHandlerTest.DefaultProxyCredentials.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\corefx\\src\\System.Net.Http\\tests\\FunctionalTests\\PostScenarioTest.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\corefx\\src\\System.Net.Requests\\src\\System\\Net\\FtpControlStream.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\corefx\\src\\System.Security.Cryptography.Algorithms\\tests\\Rfc2898Tests.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\corefx\\src\\System.Security.Cryptography.Algorithms\\tests\\Rfc2898Tests.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\corefx\\src\\System.Security.Cryptography.Algorithms\\tests\\Rfc2898Tests.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\corefx\\src\\System.Security.Cryptography.Algorithms\\tests\\Rfc2898Tests.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\corefx\\src\\System.Security.Cryptography.Algorithms\\tests\\Rfc2898Tests.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\corefx\\src\\System.Security.Cryptography.Algorithms\\tests\\Rfc2898Tests.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\corefx\\src\\System.Security.Cryptography.Algorithms\\tests\\Rfc2898Tests.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\corefx\\src\\System.Security.Cryptography.Csp\\tests\\PasswordDeriveBytesTests.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\corefx\\src\\System.Security.Cryptography.Pkcs\\tests\\Certificates.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\corefx\\src\\System.Security.Cryptography.Pkcs\\tests\\Certificates.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\corefx\\src\\System.Security.Cryptography.Pkcs\\tests\\Certificates.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\corefx\\src\\System.Security.Cryptography.Pkcs\\tests\\Certificates.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\corefx\\src\\System.Security.Cryptography.Pkcs\\tests\\Certificates.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\corefx\\src\\System.Security.Cryptography.Pkcs\\tests\\Certificates.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\corefx\\src\\System.Security.Cryptography.Pkcs\\tests\\Certificates.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\corefx\\src\\System.Security.Cryptography.Pkcs\\tests\\Certificates.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\corefx\\src\\System.Security.Cryptography.X509Certificates\\tests\\ExportTests.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\corefx\\src\\System.Security.Cryptography.X509Certificates\\tests\\ExportTests.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\corefx\\src\\System.Security.Cryptography.X509Certificates\\tests\\ExportTests.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\corefx\\src\\System.Security.Cryptography.X509Certificates\\tests\\ExportTests.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\corefx\\src\\System.Security.Cryptography.X509Certificates\\tests\\ExportTests.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\corefx\\src\\System.Security.Cryptography.X509Certificates\\tests\\PfxTests.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\corefx\\src\\System.Security.Cryptography.X509Certificates\\tests\\TestData.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\corefx\\src\\System.Security.Cryptography.Xml\\tests\\EncryptedXmlTest.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\corefx\\src\\System.Security.Cryptography.X509Certificates\\tests\\TestData.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\corefx\\src\\System.Security.Cryptography.Xml\\tests\\TestHelpers.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\corefx\\src\\System.Security.Cryptography.Xml\\tests\\SignedXmlTest.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\corefx\\src\\System.Security.Cryptography.Xml\\tests\\SignedXmlTest.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\corefx\\src\\System.Security.Cryptography.Xml\\tests\\SignedXmlTest.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\corefx\\src\\System.Security.Cryptography.Xml\\tests\\SignedXmlTest.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\corefx\\src\\System.Security.Cryptography.Xml\\tests\\SignedXmlTest.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\corefx\\src\\System.Security.Cryptography.Xml\\tests\\SignedXmlTest.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\corefx\\src\\System.Security.Cryptography.Xml\\tests\\EncryptedXmlTest.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\corefx\\src\\System.Security.Cryptography.Xml\\tests\\TestHelpers.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\Newtonsoft.Json\\Src\\Newtonsoft.Json.Tests\\Newtonsoft.Json.Tests.Metro_TemporaryKey.pfx",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\nuget-buildtasks\\src\\Microsoft.NuGet.Build.Tasks.Tests\\Json\\Win10.json",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\rx\\Rx\\NET\\Test\\Rx\\WindowsStoreApp8_NuGet\\WindowsStoreApp8_NuGet_TemporaryKey.pfx",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\external\\rx\\Rx\\NET\\Test\\Rx\\WpfXbapApp45_NuGet\\WpfXbapApp45_NuGet_TemporaryKey.pfx",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\Compat.ICSharpCode.SharpZipLib\\SharpZipLib.key",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\corlib\\Test\\System.Security.Cryptography\\RSAOAEPKeyExchangeDeformatterTest.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\corlib\\Test\\System.Security.Cryptography\\RSACryptoServiceProviderTest.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\corlib\\Test\\System.Security.Cryptography\\RSAPKCS1KeyExchangeDeformatterTest.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\corlib\\Test\\System.Security.Cryptography\\RSACryptoServiceProviderTest.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\corlib\\Test\\System.Security.Cryptography\\RSACryptoServiceProviderTest.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\corlib\\Test\\System.Security.Cryptography\\RSACryptoServiceProviderTest.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\corlib\\Test\\System.Security.Cryptography\\RSACryptoServiceProviderTest.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\corlib\\Test\\System.Security.Cryptography\\RSACryptoServiceProviderTest.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\corlib\\Test\\System.Security.Cryptography\\RSACryptoServiceProviderTest.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\corlib\\Test\\System.Security.Cryptography\\DSACryptoServiceProviderTest.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\corlib\\Test\\System.Security.Cryptography\\DSACryptoServiceProviderTest.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\corlib\\Test\\System.Security.Cryptography\\RSACryptoServiceProviderTest.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\corlib\\Test\\System.Security.Cryptography\\RSATest.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\ICSharpCode.SharpZipLib\\SharpZipLib.key",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\Mono.Http\\samples\\auth.xml",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\Mono.Security\\Test\\Mono.Security\\StrongNameTest.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\Mono.Security\\Test\\Mono.Security.Cryptography\\PKCS8Test.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\Mono.Security\\Test\\Mono.Security.Cryptography\\RSAManagedTest.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\Mono.Security\\Test\\Mono.Security.Cryptography\\RSAManagedTest.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\Mono.Security\\Test\\Mono.Security.Protocol.Ntlm\\ChallengeResponseTest.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\Mono.Security\\Test\\Mono.Security.Cryptography\\RSAManagedTest.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\Mono.Security\\Test\\Mono.Security.Cryptography\\CryptoConvertTest.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\Mono.Security\\Test\\Mono.Security.Cryptography\\RSAManagedTest.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\Mono.Security\\Test\\Mono.Security.Cryptography\\CryptoConvertTest.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\Mono.Security\\Test\\Mono.Security.Cryptography\\PKCS1Test.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\Mono.Security\\Test\\Mono.Security.Protocol.Ntlm\\Type3MessageTest.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\Mono.Security\\Test\\Mono.Security.Protocol.Ntlm\\Type3MessageTest.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\Mono.Security\\Test\\tools\\mutual\\server_key.pem",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\Mono.Security\\Test\\tools\\server\\mutual.pem",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\Mono.Security\\Test\\tools\\npgsql\\npdbtest.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\Mono.Security\\Test\\Mono.Security.X509\\PKCS12Test.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\Mono.Security\\Test\\Mono.Security.Cryptography\\RSAManagedTest.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\Mono.Security\\Test\\Mono.Security.Cryptography\\RSAManagedTest.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\Mono.Security\\Test\\tools\\mutual\\client.p12",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\Mono.ServiceModel.IdentitySelectors\\Test\\resources\\rupert.xml",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\Mono.ServiceModel.IdentitySelectors\\Test\\resources\\managed.xml",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\referencesource\\System\\net\\System\\Net\\_FtpControlStream.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\System\\Test\\System\\UriBuilderTest.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\System\\Test\\System\\UriBuilderTest.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\System\\Test\\System.Security.Cryptography.X509Certificates\\X509Certificate2Test.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\System\\Test\\System.Security.Cryptography.X509Certificates\\X509Certificate2Test.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\System\\Test\\tools\\mutual\\client.p12",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\System\\Test\\tools\\mutual\\server_key.pem",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\System\\Test\\tools\\server\\mutual.pem",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\System.Configuration\\Test\\standalone\\t33.exe.config",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\System.Configuration\\Test\\standalone\\t34.exe.config",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\System.Configuration\\Test\\System.Configuration\\ConfigurationManagerTest.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\System.Data\\Test\\MySqlTestBed.dll.config",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\System.Data\\Test\\ProviderTests\\app-net_1_1.config",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\System.Data\\Test\\ProviderTests\\app-net_2_0.config",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\System.Data\\Test\\ProviderTests\\app-net_1_1.config",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\System.Data\\Test\\ProviderTests\\Common\\ConnectionManager.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\System.Data\\Test\\ProviderTests\\app-net_2_0.config",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\System.Data\\Test\\ProviderTests\\Common\\ConnectionManager.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\System.Data\\Test\\ProviderTests\\System.Data.OleDb.jvm\\OleDbCommand\\OleDbCommand_ExecuteReader.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\System.Data\\Test\\ProviderTests\\System.Data.SqlClient\\SqlConnectionTest.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\System.Data\\Test\\System.Data.Common\\DbConnectionStringBuilderTest.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\System.Data\\Test\\System.Data.Common\\DbConnectionStringBuilderTest.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\System.Data\\Test\\System.Data.Common\\DbConnectionStringBuilderTest.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\System.Data\\Test\\System.Data.Common\\DbConnectionStringBuilderTest.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\System.Data\\Test\\System.Data.Common\\DbConnectionStringBuilderTest.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\System.Data\\Test\\System.Data.Common\\DbConnectionStringBuilderTest.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\System.Data\\Test\\System.Data.Common\\DbConnectionStringBuilderTest.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\System.Data\\Test\\System.Data.Common\\DbConnectionStringBuilderTest.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\System.Data\\Test\\System.Data.Odbc\\OdbcConnectionStringBuilderTest.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\System.Data\\Test\\System.Data.Odbc\\OdbcConnectionStringBuilderTest.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\System.Data\\Test\\System.Data.Odbc\\OdbcConnectionStringBuilderTest.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\System.Data.Linq\\examples\\DbLinq.Ingres.Example\\Program.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\System.Data.Linq\\examples\\DbLinq.Ora.Example\\Program.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\System.Data.Linq\\examples\\DbLinq.Ora.Example\\Program.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\System.Data.Linq\\examples\\DbLinq.Pgsql.Example\\PgAndrusClient.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\System.Data.Linq\\examples\\DbLinq.Pgsql.Example\\ProgramPg.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\System.Data.Linq\\src\\DbLinq\\Test\\Providers\\ReadTest_AllTypes_MySql.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\System.Data.Linq\\tests\\ConnectionStrings.xml",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\System.Data.Linq\\tests\\ConnectionStrings.xml",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\System.Data.Linq\\tests\\ConnectionStrings.xml",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\System.Data.Linq\\tests\\ConnectionStrings.xml",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\System.Data.Linq\\tests\\ConnectionStrings.xml",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\System.Data.Linq\\tests\\ConnectionStrings.xml",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\System.Data.Linq\\tests\\ConnectionStrings.xml",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\System.Data.Linq\\tests\\ConnectionStrings.xml",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\System.Data.OracleClient\\Test\\testblob.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\System.Data.OracleClient\\Test\\testclob.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\System.Data.OracleClient\\Test\\TestOracleClient.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\System.Data.OracleClient\\Test\\TestOracleClient.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\System.Data.OracleClient\\Test\\TestOracleClient.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\System.Data.OracleClient\\Test\\TestOracleClient.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\System.IdentityModel\\Test\\Resources\\test.pfx",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\System.IdentityModel\\Test\\Resources\\test2.pfx",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\System.IdentityModel\\Test\\System.IdentityModel.Tokens\\BootstrapContextTest.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\System.IdentityModel\\Test\\System.IdentityModel.Tokens\\InMemorySymmetricSecurityKeyTest.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\System.IdentityModel\\Test\\System.IdentityModel.Tokens\\InMemorySymmetricSecurityKeyTest.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\System.Security\\Test\\System.Security.Cryptography.Xml\\EncryptedXmlTest.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\System.Security\\Test\\System.Security.Cryptography.Xml\\EncryptedXmlTest.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\System.Security\\Test\\System.Security.Cryptography.Xml\\EncryptedXmlTest.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\System.Security\\Test\\System.Security.Cryptography.Xml\\sample.pfx",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\System.ServiceModel\\Test\\Resources\\test.pfx",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\System.ServiceModel\\Test\\Resources\\test2.pfx",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\System.ServiceModel\\Test\\System.ServiceModel.Security\\WSSecurityTokenSerializerTest.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\System.ServiceModel\\Test\\System.ServiceModel.Security\\WSSecurityTokenSerializerTest.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\System.Web\\Test\\standalone\\masterpages\\77278\\Web.Config",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\System.Web\\Test\\standalone\\MD5PasswordAuth_Bug601727\\Web.config",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\System.XML\\Test\\System.Xml.Serialization\\XmlSerializerTests.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\tools\\security\\makecert.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\System.Net.Http\\corefx\\Configuration.Certificates.cs",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "external\\mono\\mcs\\class\\System.Net.Http\\TestData\\testservereku.contoso.com.pfx",
+            "_justification": "External repo dependency, mono."
+        },
+        {
+            "file": "maccore\\tools\\provisioning-profiles\\certificates-and-profiles\\developer-id-application-luis-aguilera-jul-2029.p12",
+            "_justification": "Testing certificate."
+        },
+        {
+            "file": "maccore\\tools\\provisioning-profiles\\certificates-and-profiles\\developer-id-installer-luis-aguilera-jul-2029.p12",
+            "_justification": "Testing certificate."
+        },
+        {
+            "file": "maccore\\tools\\provisioning-profiles\\certificates-and-profiles\\la_dev_apple.p12",
+            "_justification": "Testing certificate."
+        },
+        {
+            "file": "maccore\\tools\\provisioning-profiles\\certificates-and-profiles\\la_dev_iPhone.p12",
+            "_justification": "Testing certificate."
+        },
+        {
+            "file": "maccore\\tools\\provisioning-profiles\\certificates-and-profiles\\la_distr_apple.p12",
+            "_justification": "Testing certificate."
+        },
+        {
+            "file": "maccore\\tools\\provisioning-profiles\\certificates-and-profiles\\la_distr_iphone.p12",
+            "_justification": "Testing certificate."
+        },
+        {
+            "file": "maccore\\tools\\provisioning-profiles\\certificates-and-profiles\\la_mac_app_dev.p12",
+            "_justification": "Testing certificate."
+        },
+        {
+            "file": "maccore\\tools\\provisioning-profiles\\certificates-and-profiles\\la_mac_app_dev.p12",
+            "_justification": "Testing certificate."
+        },
+        {
+            "file": "maccore\\tools\\provisioning-profiles\\certificates-and-profiles\\la_mac_app_distr.p12",
+            "_justification": "Testing certificate."
+        },
+        {
+            "file": "maccore\\tools\\provisioning-profiles\\certificates-and-profiles\\la_mac_installer_distr.p12",
+            "_justification": "Testing certificate."
+        },
+        {
+            "file": "maccore\\tools\\provisioning-profiles\\certificates-and-profiles\\vseng-xamarin-mac-devices-2.p12",
+            "_justification": "Testing certificate."
+        },
+        {
+            "file": "maccore\\tools\\provisioning-profiles\\certificates-and-profiles\\vseng-xamarin-mac-devices.p12",
+            "_justification": "Testing certificate."
+        }
+    ]
+}

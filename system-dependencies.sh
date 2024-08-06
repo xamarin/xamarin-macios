@@ -11,6 +11,7 @@ VERBOSE=
 
 OPTIONAL_SHARPIE=1
 OPTIONAL_SIMULATORS=1
+OPTIONAL_OLD_SIMULATORS=1
 
 # parse command-line arguments
 while ! test -z $1; do
@@ -75,6 +76,12 @@ while ! test -z $1; do
 			unset IGNORE_SIMULATORS
 			shift
 			;;
+		--provision-old-simulators)
+			PROVISION_OLD_SIMULATORS=1
+			unset OPTIONAL_OLD_SIMULATORS
+			unset IGNORE_OLD_SIMULATORS
+			shift
+			;;
 		--provision-dotnet)
 			PROVISION_DOTNET=1
 			unset IGNORE_DOTNET
@@ -109,6 +116,8 @@ while ! test -z $1; do
 			unset IGNORE_SHARPIE
 			PROVISION_SIMULATORS=1
 			unset IGNORE_SIMULATORS
+			PROVISION_OLD_SIMULATORS=1
+			unset IGNORE_OLD_SIMULATORS
 			PROVISION_PYTHON3=1
 			unset IGNORE_PYTHON3
 			PROVISION_DOTNET=1
@@ -305,6 +314,16 @@ function install_mono () {
 	rm -f $MONO_PKG
 }
 
+function xcodebuild_download_selected_platforms ()
+{
+	log "Executing '$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -downloadPlatform iOS' $1"
+	"$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -downloadPlatform iOS
+	log "Executing '$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -downloadPlatform tvOS' $1"
+	"$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -downloadPlatform tvOS
+	log "Executing '$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -downloadPlatform watchOS' $1"
+	"$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -downloadPlatform watchOS
+}
+
 function download_xcode_platforms ()
 {
 	if test -n "$IGNORE_SIMULATORS"; then return; fi
@@ -327,21 +346,25 @@ function download_xcode_platforms ()
 
 	log "Xcode has additional platforms that must be downloaded ($MUST_INSTALL_RUNTIMES), so installing those."
 
-	log "Executing '$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -downloadAllPlatforms'"
-	if ! $SUDO "$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -downloadAllPlatforms; then
+	log "Executing '$SUDO pkill -9 -f CoreSimulator.framework'"
+	$SUDO pkill -9 -f "CoreSimulator.framework" || true
+	if ! xcodebuild_download_selected_platforms; then
+		log "Executing '$XCODE_DEVELOPER_ROOT/usr/bin/simctl runtime list -v"
 		"$XCODE_DEVELOPER_ROOT/usr/bin/simctl" runtime list -v
 		# Don't exit here, just hope for the best instead.
 		set +x
 		echo "##vso[task.logissue type=warning;sourcepath=system-dependencies.sh]Failed to download all simulator platforms, this may result in problems executing tests in the simulator."
 		set -x
 	else
+		log "Executing '$XCODE_DEVELOPER_ROOT/usr/bin/simctl runtime list -v"
 		"$XCODE_DEVELOPER_ROOT/usr/bin/simctl" runtime list -v
+		log "Executing '$XCODE_DEVELOPER_ROOT/usr/bin/simctl list -v"
 		"$XCODE_DEVELOPER_ROOT/usr/bin/simctl" list -v
 	fi
-	
-	$SUDO "$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -downloadAllPlatforms
-	$SUDO "$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -downloadAllPlatforms
-	$SUDO "$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -downloadAllPlatforms
+
+	xcodebuild_download_selected_platforms "(second time)" || true
+	xcodebuild_download_selected_platforms "(third time)" || true
+	xcodebuild_download_selected_platforms "(fourth time)" || true
 
 	log "Executing '$SUDO $XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -runFirstLaunch'"
 	$SUDO "$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -runFirstLaunch
@@ -359,7 +382,7 @@ function download_xcode_platforms ()
 	pkill -9 "Xcode" || log "Xcode was not running."
 	log "Executed 'open xcpref://Xcode.PreferencePane.Platforms'"
 
-	log "Executed '$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -downloadAllPlatforms'"
+	log "Finished installing Xcode platforms"
 }
 
 function run_xcode_first_launch ()
@@ -994,9 +1017,9 @@ function check_objective_sharpie () {
 	fi
 }
 
-function check_simulators ()
+function check_old_simulators ()
 {
-	if test -n "$IGNORE_SIMULATORS"; then return; fi
+	if test -n "$IGNORE_OLD_SIMULATORS"; then return; fi
 
 	local EXTRA_SIMULATORS
 	local XCODE
@@ -1017,13 +1040,14 @@ function check_simulators ()
 
 	IFS=', ' read -r -a SIMS <<< "$EXTRA_SIMULATORS"
 	arraylength=${#SIMS[@]}
+	INSTALL_SIMULATORS=
 	for (( i=1; i<arraylength+1; i++ ));	do
-		SIMS[$i-1]="--install=${SIMS[$i-1]}"
+		INSTALL_SIMULATORS="$INSTALL_SIMULATORS --install=${SIMS[$i-1]}"
 	done
 
-	if ! FAILED_SIMULATORS=$(mono --debug tools/siminstaller/bin/Debug/siminstaller.exe -q --xcode "$XCODE" --only-check "${SIMS[@]}"); then
+	if ! FAILED_SIMULATORS=$(make -C tools/siminstaller only-check INSTALL_SIMULATORS="$INSTALL_SIMULATORS" 2>/dev/null); then
 		local action=warn
-		if test -z $OPTIONAL_SIMULATORS; then
+		if test -z $OPTIONAL_OLD_SIMULATORS; then
 			action=fail
 		fi
 		if [[ "$FAILED_SIMULATORS" =~ "Unknown simulators:" ]]; then
@@ -1033,8 +1057,8 @@ function check_simulators ()
 			$action "    and then update the ${COLOR_MAGENTA}MIN_<OS>_SIMULATOR_VERSION${COLOR_RESET} and ${COLOR_MAGENTA}EXTRA_SIMULATORS${COLOR_RESET} variables in Make.config to the earliest available simulators."
 			$action "    Another possibility is that Apple is not shipping any simulators (yet?) for the new version of Xcode (if the previous list shows no simulators)."
 		else
-			if ! test -z $PROVISION_SIMULATORS; then
-				if ! mono --debug tools/siminstaller/bin/Debug/siminstaller.exe -q --xcode "$XCODE" "${SIMS[@]}"; then
+			if ! test -z $PROVISION_OLD_SIMULATORS; then
+				if ! make -C tools/siminstaller install-simulators INSTALL_SIMULATORS="$INSTALL_SIMULATORS"; then
 					$action "Failed to install extra simulators."
 				else
 					ok "Extra simulators installed successfully: '${FAILED_SIMULATORS//$'\n'/', '}'"
@@ -1062,7 +1086,7 @@ check_mono
 check_cmake
 check_7z
 check_objective_sharpie
-check_simulators
+check_old_simulators
 if test -z "$IGNORE_DOTNET"; then
 	ok "Installed .NET SDKs:"
 	(IFS=$'\n'; for i in $(/usr/local/share/dotnet/dotnet --list-sdks); do log "$i"; done)

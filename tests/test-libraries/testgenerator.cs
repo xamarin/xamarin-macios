@@ -50,16 +50,16 @@ static class C {
 	static Architecture [] strets = structs_and_stret.Select ((v) => v.IndexOf (':') >= 0 ? (Architecture) int.Parse (v.Substring (v.IndexOf (':') + 1)) : Architecture.None).ToArray ();
 
 	class BindAsData {
-		public string Managed;
-		public string Native;
-		public string ManagedCondition;
-		public string ManagedNewExpression;
-		public string Map;
-		public string MapFrom;
-		public Version MinXcodeVersion;
-		public Version MinMacOSVersion;
-		public string ToNSNumberCastExpression;
-		public string FromNSNumberCastExpression;
+		public string? Managed;
+		public string? Native;
+		public string? ManagedCondition;
+		public string? ManagedNewExpression;
+		public string? Map;
+		public string? MapFrom;
+		public Version? MinXcodeVersion;
+		public Version? MinMacOSVersion;
+		public string? ToNSNumberCastExpression;
+		public string? FromNSNumberCastExpression;
 	}
 
 	static BindAsData [] bindas_nsnumber = new [] {
@@ -1651,7 +1651,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 	static void Main ()
 	{
 		while (Path.GetFileName (Environment.CurrentDirectory) != "test-libraries")
-			Environment.CurrentDirectory = Path.GetDirectoryName (Environment.CurrentDirectory);
+			Environment.CurrentDirectory = Path.GetDirectoryName (Environment.CurrentDirectory)!;
 
 		/* native code */
 		WriteLibTestStructH ();
