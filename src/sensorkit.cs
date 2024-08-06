@@ -3,6 +3,15 @@ using System.Runtime.InteropServices;
 
 using Foundation;
 using ObjCRuntime;
+using CoreMedia;
+using Speech;
+using SoundAnalysis;
+
+#if __MACCATALYST__
+using ARFaceAnchor = Foundation.NSObject;
+#else
+using ARKit;
+#endif
 
 #if !NET
 using NativeHandle = System.IntPtr;
@@ -14,6 +23,10 @@ namespace SensorKit {
 	interface NSUnitDuration : NSUnit { }
 	interface NSUnitIlluminance : NSUnit { }
 	interface NSUnitLength : NSUnit { }
+	interface NSUnitElectricPotentialDifference : NSUnit { }
+	interface NSUnitFrequency : NSUnit { }
+	interface NSUnitAcceleration : NSUnit { }
+	interface NSUnitTemperature : NSUnit { }
 
 	[NoWatch, NoTV, NoMac]
 	[iOS (14, 0)]
@@ -149,6 +162,59 @@ namespace SensorKit {
 	public enum SRMediaEventType : long {
 		OnScreen = 1,
 		OffScreen,
+	}
+
+	[Flags, NoWatch, NoTV, NoMac, iOS (17, 4), MacCatalyst (17, 4)]
+	[Native]
+	public enum SRElectrocardiogramDataFlags : ulong {
+		None = 0x0,
+		SignalInvalid = 1uL << 0,
+		CrownTouched = 1uL << 1,
+	}
+
+	[NoWatch, NoTV, NoMac, iOS (17, 4), MacCatalyst (17, 4)]
+	[Native]
+	public enum SRElectrocardiogramLead : long {
+		RightArmMinusLeftArm = 1,
+		LeftArmMinusRightArm,
+	}
+
+	[NoWatch, NoTV, NoMac, iOS (17, 4), MacCatalyst (17, 4)]
+	[Native]
+	public enum SRElectrocardiogramSessionState : long {
+		Begin = 1,
+		Active,
+		End,
+	}
+
+	[NoWatch, NoTV, NoMac, iOS (17, 4), MacCatalyst (17, 4)]
+	[Native]
+	public enum SRElectrocardiogramSessionGuidance : long {
+		Guided = 1,
+		Unguided,
+	}
+
+	[Flags, NoWatch, NoTV, NoMac, iOS (17, 0), MacCatalyst (17, 0)]
+	[Native]
+	public enum SRFaceMetricsContext : ulong {
+		DeviceUnlock = 1uL << 0,
+		MessagingAppUsage = 1uL << 1,
+	}
+
+	[Flags, NoWatch, NoTV, NoMac, iOS (17, 0), MacCatalyst (17, 0)]
+	[Native]
+	public enum SRSpeechMetricsSessionFlags : ulong {
+		Default = 0x0,
+		BypassVoiceProcessing = (1uL << 0),
+	}
+
+	[Flags, NoWatch, NoTV, NoMac, iOS (17, 0), MacCatalyst (17, 0)]
+	[Native]
+	public enum SRWristTemperatureCondition : ulong {
+		None = 0x0,
+		OffWrist = 1uL << 0,
+		OnCharger = 1uL << 1,
+		InMotion = 1uL << 2,
 	}
 
 	[NoWatch, NoTV, NoMac]
@@ -328,6 +394,10 @@ namespace SensorKit {
 
 		[Export ("systemVersion")]
 		string SystemVersion { get; }
+
+		[iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("productType")]
+		string ProductType { get; }
 	}
 
 	[NoWatch, NoTV, NoMac]
@@ -823,6 +893,30 @@ namespace SensorKit {
 		[iOS (16, 4), MacCatalyst (16, 4)]
 		[Field ("SRSensorMediaEvents")]
 		MediaEvents,
+
+		[iOS (17, 0), MacCatalyst (17, 0)]
+		[Field ("SRSensorFaceMetrics")]
+		FaceMetrics,
+
+		[iOS (17, 0), MacCatalyst (17, 0)]
+		[Field ("SRSensorHeartRate")]
+		HeartRate,
+
+		[iOS (17, 0), MacCatalyst (17, 0)]
+		[Field ("SRSensorOdometer")]
+		Odometer,
+
+		[iOS (17, 0), MacCatalyst (17, 0)]
+		[Field ("SRSensorWristTemperature")]
+		WristTemperature,
+
+		[iOS (17, 4), MacCatalyst (17, 4)]
+		[Field ("SRSensorElectrocardiogram")]
+		Electrocardiogram,
+
+		[iOS (17, 4), MacCatalyst (17, 4)]
+		[Field ("SRSensorPhotoplethysmogram")]
+		Photoplethysmogram,
 	}
 
 	[NoWatch, NoTV, NoMac]
@@ -981,5 +1075,315 @@ namespace SensorKit {
 		[BindAs (typeof (SRDeviceUsageCategory))]
 		[Export ("identifier")]
 		NSString Identifier { get; }
+	}
+
+	[NoWatch, NoTV, NoMac, iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface SRAudioLevel : NSCopying, NSSecureCoding {
+
+		[Export ("timeRange", ArgumentSemantic.Assign)]
+		CMTimeRange TimeRange { get; }
+
+		[Export ("loudness")]
+		double Loudness { get; }
+	}
+
+	[NoWatch, NoTV, NoMac, iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface SRFaceMetricsExpression : NSCopying, NSSecureCoding {
+
+		[Export ("identifier")]
+		string Identifier { get; }
+
+		[Export ("value")]
+		double Value { get; }
+	}
+
+	[NoWatch, NoTV, NoMac, iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface SRSpeechExpression : NSCopying, NSSecureCoding {
+
+		[Export ("version")]
+		string Version { get; }
+
+		[Export ("timeRange", ArgumentSemantic.Assign)]
+		CMTimeRange TimeRange { get; }
+
+		[Export ("confidence")]
+		double Confidence { get; }
+
+		[Export ("mood")]
+		double Mood { get; }
+
+		[Export ("valence")]
+		double Valence { get; }
+
+		[Export ("activation")]
+		double Activation { get; }
+
+		[Export ("dominance")]
+		double Dominance { get; }
+	}
+
+	[NoWatch, NoTV, NoMac, iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface SRSpeechMetrics : NSCopying, NSSecureCoding {
+
+		[Export ("sessionIdentifier")]
+		string SessionIdentifier { get; }
+
+		[Export ("sessionFlags", ArgumentSemantic.Assign)]
+		SRSpeechMetricsSessionFlags SessionFlags { get; }
+
+		[Export ("timestamp", ArgumentSemantic.Strong)]
+		NSDate Timestamp { get; }
+
+		[iOS (17, 2), MacCatalyst (17, 2)]
+		[Export ("timeSinceAudioStart")]
+		double TimeSinceAudioStart { get; }
+
+		[NullAllowed, Export ("audioLevel", ArgumentSemantic.Strong)]
+		SRAudioLevel AudioLevel { get; }
+
+		[NullAllowed, Export ("speechRecognition", ArgumentSemantic.Strong)]
+		SFSpeechRecognitionResult SpeechRecognition { get; }
+
+		[NullAllowed, Export ("soundClassification", ArgumentSemantic.Strong)]
+		SNClassificationResult SoundClassification { get; }
+
+		[NullAllowed, Export ("speechExpression", ArgumentSemantic.Strong)]
+		SRSpeechExpression SpeechExpression { get; }
+	}
+
+	[NoWatch, NoTV, NoMac, iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface SRWristTemperature : NSCopying, NSSecureCoding {
+
+		[Export ("timestamp", ArgumentSemantic.Strong)]
+		NSDate Timestamp { get; }
+
+		[Export ("value", ArgumentSemantic.Strong)]
+		NSMeasurement<NSUnitTemperature> Value { get; }
+
+		[Export ("condition")]
+		SRWristTemperatureCondition Condition { get; }
+
+		[Export ("errorEstimate", ArgumentSemantic.Strong)]
+		NSMeasurement<NSUnitTemperature> ErrorEstimate { get; }
+	}
+
+	[NoWatch, NoTV, NoMac, iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface SRWristTemperatureSession : NSCopying, NSSecureCoding {
+
+		[Export ("startDate", ArgumentSemantic.Strong)]
+		NSDate StartDate { get; }
+
+		[Export ("duration")]
+		double Duration { get; }
+
+		[Export ("version")]
+		string Version { get; }
+
+		[Export ("temperatures", ArgumentSemantic.Copy)]
+		NSEnumerator<SRWristTemperature> Temperatures { get; }
+	}
+
+	[NoWatch, NoTV, NoMac, iOS (17, 0), NoMacCatalyst]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface SRFaceMetrics : NSCopying, NSSecureCoding {
+
+		[Export ("version")]
+		string Version { get; }
+
+		[Export ("sessionIdentifier")]
+		string SessionIdentifier { get; }
+
+		[Export ("context", ArgumentSemantic.Assign)]
+		SRFaceMetricsContext Context { get; }
+
+		[Export ("faceAnchor", ArgumentSemantic.Copy)]
+		ARFaceAnchor FaceAnchor { get; }
+
+		[Export ("wholeFaceExpressions", ArgumentSemantic.Copy)]
+		SRFaceMetricsExpression [] WholeFaceExpressions { get; }
+
+		[Export ("partialFaceExpressions", ArgumentSemantic.Copy)]
+		SRFaceMetricsExpression [] PartialFaceExpressions { get; }
+	}
+
+	[NoWatch, NoTV, NoMac, iOS (17, 4), MacCatalyst (17, 4)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface SRElectrocardiogramData : NSCopying, NSSecureCoding {
+
+		[Export ("flags", ArgumentSemantic.Assign)]
+		SRElectrocardiogramDataFlags Flags { get; }
+
+		[Export ("value", ArgumentSemantic.Strong)]
+		NSMeasurement<NSUnitElectricPotentialDifference> Value { get; }
+	}
+
+	[NoWatch, NoTV, NoMac, iOS (17, 4), MacCatalyst (17, 4)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface SRElectrocardiogramSample : NSCopying, NSSecureCoding {
+
+		[Export ("date", ArgumentSemantic.Strong)]
+		NSDate Date { get; }
+
+		[Export ("frequency", ArgumentSemantic.Strong)]
+		NSMeasurement<NSUnitFrequency> Frequency { get; }
+
+		[Export ("session", ArgumentSemantic.Strong)]
+		SRElectrocardiogramSession Session { get; }
+
+		[Export ("lead", ArgumentSemantic.Assign)]
+		SRElectrocardiogramLead Lead { get; }
+
+		[Export ("data", ArgumentSemantic.Copy)]
+		SRElectrocardiogramData [] Data { get; }
+	}
+
+	[NoWatch, NoTV, NoMac, iOS (17, 4), MacCatalyst (17, 4)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface SRElectrocardiogramSession : NSCopying, NSSecureCoding {
+
+		[Export ("state", ArgumentSemantic.Assign)]
+		SRElectrocardiogramSessionState State { get; }
+
+		[Export ("sessionGuidance", ArgumentSemantic.Assign)]
+		SRElectrocardiogramSessionGuidance SessionGuidance { get; }
+
+		[Export ("identifier")]
+		string Identifier { get; }
+	}
+
+	[NoWatch, NoTV, NoMac, iOS (17, 4), MacCatalyst (17, 4)]
+	public enum SRPhotoplethysmogramOpticalSampleCondition {
+		[Field ("SRPhotoplethysmogramOpticalSampleConditionSignalSaturation")]
+		SignalSaturation,
+		[Field ("SRPhotoplethysmogramOpticalSampleConditionUnreliableNoise")]
+		UnreliableNoise,
+	}
+
+	[NoWatch, NoTV, NoMac, iOS (17, 4), MacCatalyst (17, 4)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface SRPhotoplethysmogramOpticalSample : NSCopying, NSSecureCoding {
+
+		[Export ("emitter")]
+		nint Emitter { get; }
+
+		[Export ("activePhotodiodeIndexes", ArgumentSemantic.Strong)]
+		NSIndexSet ActivePhotodiodeIndexes { get; }
+
+		[Export ("signalIdentifier")]
+		nint SignalIdentifier { get; }
+
+		[Export ("nominalWavelength", ArgumentSemantic.Strong)]
+		NSMeasurement<NSUnitLength> NominalWavelength { get; }
+
+		[Export ("effectiveWavelength", ArgumentSemantic.Strong)]
+		NSMeasurement<NSUnitLength> EffectiveWavelength { get; }
+
+		[Export ("samplingFrequency", ArgumentSemantic.Strong)]
+		NSMeasurement<NSUnitFrequency> SamplingFrequency { get; }
+
+		[Export ("nanosecondsSinceStart")]
+		long NanosecondsSinceStart { get; }
+
+		[NullAllowed]
+		[BindAs (typeof (double?))]
+		[Export ("normalizedReflectance", ArgumentSemantic.Strong)]
+		NSNumber NormalizedReflectance { get; }
+
+		[NullAllowed]
+		[BindAs (typeof (double?))]
+		[Export ("whiteNoise", ArgumentSemantic.Strong)]
+		NSNumber WhiteNoise { get; }
+
+		[NullAllowed]
+		[BindAs (typeof (double?))]
+		[Export ("pinkNoise", ArgumentSemantic.Strong)]
+		NSNumber PinkNoise { get; }
+
+		[NullAllowed]
+		[BindAs (typeof (double?))]
+		[Export ("backgroundNoise", ArgumentSemantic.Strong)]
+		NSNumber BackgroundNoise { get; }
+
+		[NullAllowed]
+		[BindAs (typeof (double?))]
+		[Export ("backgroundNoiseOffset", ArgumentSemantic.Strong)]
+		NSNumber BackgroundNoiseOffset { get; }
+
+		[Export ("conditions", ArgumentSemantic.Copy)]
+		NSString [] Conditions { get; }
+	}
+
+	[NoWatch, NoTV, NoMac, iOS (17, 4), MacCatalyst (17, 4)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface SRPhotoplethysmogramAccelerometerSample : NSCopying, NSSecureCoding {
+
+		[Export ("nanosecondsSinceStart")]
+		long NanosecondsSinceStart { get; }
+
+		[Export ("samplingFrequency", ArgumentSemantic.Strong)]
+		NSMeasurement<NSUnitFrequency> SamplingFrequency { get; }
+
+		[Export ("x", ArgumentSemantic.Strong)]
+		NSMeasurement<NSUnitAcceleration> X { get; }
+
+		[Export ("y", ArgumentSemantic.Strong)]
+		NSMeasurement<NSUnitAcceleration> Y { get; }
+
+		[Export ("z", ArgumentSemantic.Strong)]
+		NSMeasurement<NSUnitAcceleration> Z { get; }
+	}
+
+	[NoWatch, NoTV, NoMac, iOS (17, 4), MacCatalyst (17, 4)]
+	public enum SRPhotoplethysmogramSampleUsage {
+		[Field ("SRPhotoplethysmogramSampleUsageForegroundHeartRate")]
+		ForegroundHeartRate,
+		[Field ("SRPhotoplethysmogramSampleUsageDeepBreathing")]
+		DeepBreathing,
+		[Field ("SRPhotoplethysmogramSampleUsageForegroundBloodOxygen")]
+		ForegroundBloodOxygen,
+		[Field ("SRPhotoplethysmogramSampleUsageBackgroundSystem")]
+		BackgroundSystem,
+	}
+
+	[NoWatch, NoTV, NoMac, iOS (17, 4), MacCatalyst (17, 4)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface SRPhotoplethysmogramSample : NSCopying, NSSecureCoding {
+
+		[Export ("startDate", ArgumentSemantic.Strong)]
+		NSDate StartDate { get; }
+
+		[Export ("nanosecondsSinceStart")]
+		long NanosecondsSinceStart { get; }
+
+		[Export ("usage", ArgumentSemantic.Copy)]
+		NSString [] Usage { get; }
+
+		[Export ("opticalSamples", ArgumentSemantic.Copy)]
+		SRPhotoplethysmogramOpticalSample [] OpticalSamples { get; }
+
+		[Export ("accelerometerSamples", ArgumentSemantic.Copy)]
+		SRPhotoplethysmogramAccelerometerSample [] AccelerometerSamples { get; }
+
+		[NullAllowed, Export ("temperature", ArgumentSemantic.Strong)]
+		NSMeasurement<NSUnitTemperature> Temperature { get; }
 	}
 }

@@ -1,21 +1,4 @@
-!deprecated-attribute-missing! CLUpdate::isStationary missing a [Deprecated] attribute
 !missing-enum! CLServiceSessionAuthorizationRequirement not bound
-!missing-selector! CLMonitoringEvent::accuracyLimited not bound
-!missing-selector! CLMonitoringEvent::authorizationDenied not bound
-!missing-selector! CLMonitoringEvent::authorizationDeniedGlobally not bound
-!missing-selector! CLMonitoringEvent::authorizationRequestInProgress not bound
-!missing-selector! CLMonitoringEvent::authorizationRestricted not bound
-!missing-selector! CLMonitoringEvent::conditionLimitExceeded not bound
-!missing-selector! CLMonitoringEvent::conditionUnsupported not bound
-!missing-selector! CLMonitoringEvent::insufficientlyInUse not bound
-!missing-selector! CLMonitoringEvent::persistenceUnavailable not bound
-!missing-selector! CLMonitoringEvent::serviceSessionRequired not bound
-!missing-selector! CLUpdate::accuracyLimited not bound
-!missing-selector! CLUpdate::authorizationDenied not bound
-!missing-selector! CLUpdate::authorizationDeniedGlobally not bound
-!missing-selector! CLUpdate::authorizationRequestInProgress not bound
-!missing-selector! CLUpdate::authorizationRestricted not bound
-!missing-selector! CLUpdate::insufficientlyInUse not bound
-!missing-selector! CLUpdate::locationUnavailable not bound
-!missing-selector! CLUpdate::serviceSessionRequired not bound
-!missing-selector! CLUpdate::stationary not bound
+
+# I think this is a typo from Apple
+!deprecated-attribute-wrong! CLUpdate::isStationary has 15.0 not 14.0 on [Deprecated] attribute

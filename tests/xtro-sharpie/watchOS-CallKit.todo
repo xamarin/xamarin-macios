@@ -1,2 +1,0 @@
-!missing-enum-value! CXErrorCodeIncomingCallError native value CXErrorCodeIncomingCallErrorCallIsProtected = 6 not bound
-!missing-enum-value! CXErrorCodeRequestTransactionError native value CXErrorCodeRequestTransactionErrorCallIsProtected = 8 not bound

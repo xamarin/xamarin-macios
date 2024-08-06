@@ -81,3 +81,7 @@
 !missing-pinvoke! IOSurfaceSetValue is not bound
 !missing-pinvoke! IOSurfaceSetValues is not bound
 !missing-pinvoke! IOSurfaceUnlock is not bound
+!missing-enum! IOSurfaceMemoryLedgerFlags not bound
+!missing-enum! IOSurfaceMemoryLedgerTags not bound
+!missing-pinvoke! IOSurfaceSetOwnershipIdentity is not bound
+!missing-field! kIOSurfaceContentHeadroom not bound
