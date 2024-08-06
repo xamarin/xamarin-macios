@@ -2,6 +2,10 @@
 !missing-protocol-conformance! NSXPCConnection should conform to NSXPCProxyCreating
 !missing-selector! NSXPCInterface::interfaceForSelector:argumentIndex:ofReply: not bound
 !missing-selector! NSXPCInterface::setInterface:forSelector:argumentIndex:ofReply: not bound
+!missing-selector! NSXPCCoder::decodeXPCObjectOfType:forKey: not bound
+!missing-selector! NSXPCCoder::encodeXPCObject:forKey: not bound
+!missing-selector! NSXPCInterface::setXPCType:forSelector:argumentIndex:ofReply: not bound
+!missing-selector! NSXPCInterface::XPCTypeForSelector:argumentIndex:ofReply: not bound
 
 ## does not exists in iOS as a type - but some API refers to it (messy)
 !unknown-type! NSPortMessage bound

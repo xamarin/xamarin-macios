@@ -24,10 +24,6 @@
 !missing-field! kVTCompressionPropertyKey_SpatialAdaptiveQPLevel not bound
 !missing-field! kVTCompressionPropertyKey_SuggestedLookAheadFrameCount not bound
 !missing-field! kVTCompressionPropertyKey_ViewPackingKind not bound
-!missing-field! kVTDecoderExtensionProperties_ContainingBundleNameKey not bound
-!missing-field! kVTDecoderExtensionProperties_ContainingBundleURLKey not bound
-!missing-field! kVTDecoderExtensionProperties_ExtensionNameKey not bound
-!missing-field! kVTDecoderExtensionProperties_ExtensionURLKey not bound
 !missing-field! kVTHDRPerFrameMetadataGenerationHDRFormatType_DolbyVision not bound
 !missing-field! kVTHDRPerFrameMetadataGenerationOptionsKey_HDRFormats not bound
 !missing-field! kVTProfileLevel_HEVC_Monochrome_AutoLevel not bound
@@ -70,4 +66,10 @@
 !missing-pinvoke! VTRAWProcessingSessionProcessFrame is not bound
 !missing-pinvoke! VTRAWProcessingSessionSetParameterChangedHander is not bound
 !missing-pinvoke! VTRAWProcessingSessionSetProcessingParameters is not bound
-!missing-field! kVTDecoderExtensionProperties_ExtensionIdentifierKey not bound
+!missing-field! kVTExtensionProperties_CodecNameKey not bound
+!missing-field! kVTExtensionProperties_ContainingBundleNameKey not bound
+!missing-field! kVTExtensionProperties_ContainingBundleURLKey not bound
+!missing-field! kVTExtensionProperties_ExtensionIdentifierKey not bound
+!missing-field! kVTExtensionProperties_ExtensionNameKey not bound
+!missing-field! kVTExtensionProperties_ExtensionURLKey not bound
+!missing-pinvoke! VTCopyRAWProcessorExtensionProperties is not bound

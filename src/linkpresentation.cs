@@ -35,6 +35,7 @@ namespace LinkPresentation {
 		MetadataFetchFailed,
 		MetadataFetchCancelled,
 		MetadataFetchTimedOut,
+		MetadataFetchNotAllowed,
 	}
 
 	[iOS (13, 0)]
@@ -86,7 +87,7 @@ namespace LinkPresentation {
 	}
 
 	[iOS (13, 0)]
-	[NoTV]
+	[TV (18, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface LPMetadataProvider {
