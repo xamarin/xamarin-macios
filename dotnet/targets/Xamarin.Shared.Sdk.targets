@@ -2418,42 +2418,6 @@ global using nfloat = global::System.Runtime.InteropServices.NFloat%3B
 		</ItemGroup>
 	</Target>
 
-	<Target Name="ComputeXcsyncArguments">
-		<PropertyGroup>
-			<xcSyncExecute>PATH=$(XcsyncPath):$PATH $(DOTNET_HOST_PATH) xcsync</xcSyncExecute>
-			<xcSyncProjectFile Condition="'$(xcSyncProjectFile)' == ''">$(MSBuildProjectFullPath)</xcSyncProjectFile>
-			<xcSyncXcodeFolder Condition="'$(xcSyncXcodeFolder)' == ''">$(IntermediateOutputPath)xcode</xcSyncXcodeFolder>
-			<xcSyncTargetFrameworkMoniker Condition="'$(xcSyncTargetFrameworkMoniker)' == ''">$(TargetFramework)</xcSyncTargetFrameworkMoniker>
-			<xcSyncVerbosity Condition="'$(xcSyncVerbosity)' == ''">Diagnostic</xcSyncVerbosity>
-			<xcSyncOpenXcode Condition="'$(xcSyncOpenXcode)' == ''">true</xcSyncOpenXcode>
-
-			<XcsyncCommonArguments Condition="'$(xcSyncProjectFile)' != ''">$(XcsyncCommonArguments) -p "$(xcSyncProjectFile)"</XcsyncCommonArguments>
-			<XcsyncCommonArguments Condition="'$(xcSyncXcodeFolder)' != ''">$(XcsyncCommonArguments) -t "$(xcSyncXcodeFolder)"</XcsyncCommonArguments>
-			<XcsyncCommonArguments Condition="'$(xcSyncTargetFrameworkMoniker)' != ''">$(XcsyncCommonArguments) -tfm $(xcSyncTargetFrameworkMoniker)</XcsyncCommonArguments>
-			<XcsyncCommonArguments Condition="'$(xcSyncVerbosity)' != ''">$(XcsyncCommonArguments) -v $(xcSyncVerbosity)</XcsyncCommonArguments>
-			<XcsyncCommonArguments>$(XcsyncCommonArguments) --dotnet-path "$([System.IO.Path]::GetDirectoryName($(DOTNET_HOST_PATH)))"</XcsyncCommonArguments>
-
-			<XcsyncGenerateArguments>$(XcsyncCommonArguments) --force</XcsyncGenerateArguments>
-			<XcsyncGenerateArguments Condition="'$(xcSyncOpenXcode)' != 'false'">$(XcsyncGenerateArguments) --open</XcsyncGenerateArguments>
-
-			<XcsyncSyncArguments>$(XcsyncCommonArguments)</XcsyncSyncArguments>
-		</PropertyGroup>
-	</Target>
-
-	<Target Name="xcsync-generate" DependsOnTargets="ComputeXcsyncArguments">
-		<Message Importance="Normal" Text="Add $(XcsyncPath) to your path to invoke xcSync directly from the commandline." />
-		<Message Importance="Low" Text="Executing xcSync using: $(xcSyncExecute) generate $(XcsyncGenerateArguments)" />
-
-		<Exec SessionId="$(BuildSessionId)" Command="$(xcSyncExecute) generate $(XcsyncGenerateArguments)" />
-	</Target>
-
-	<Target Name="xcsync-sync" DependsOnTargets="ComputeXcsyncArguments">
-		<Message Importance="Normal" Text="Add $(XcsyncPath) to your path to invoke xcSync directly from the commandline." />
-		<Message Importance="Low" Text="Executing xcSync using: $(xcSyncExecute) sync $(XcsyncSyncArguments)" />
-
-		<Exec SessionId="$(BuildSessionId)" Command="$(xcSyncExecute) sync $(XcsyncSyncArguments)" />
-	</Target>
-
 	<!-- Import existing targets -->
 
 	<PropertyGroup>

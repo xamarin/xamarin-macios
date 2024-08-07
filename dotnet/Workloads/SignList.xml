@@ -44,20 +44,6 @@
     <ThirdParty Include="imobiledevice-*\*.exe" />
     <!-- Build.zip -->
     <ThirdParty Include="Mono.Cecil*.dll" />
-
-    <!-- xcsync assemblies -->
-    <ThirdParty Include="ClangSharp.dll" />
-    <ThirdParty Include="ClangSharp.Interop.dll" />
-    <ThirdParty Include="Humanizer.dll" />
-    <ThirdParty Include="Marille.dll" />
-    <ThirdParty Include="Newtonsoft.Json.dll" />
-    <ThirdParty Include="Serilog.dll" />
-    <ThirdParty Include="Serilog.Enrichers.Thread.dll" />
-    <ThirdParty Include="Serilog.Expressions.dll" />
-    <ThirdParty Include="Serilog.Sinks.Console.dll" />
-    <ThirdParty Include="Serilog.Sinks.Debug.dll" />
-    <ThirdParty Include="TestableIO.System.IO.Abstractions.dll" />
-    <ThirdParty Include="TestableIO.System.IO.Abstractions.Wrappers.dll" />
   </ItemGroup>
 
   <ItemGroup>
@@ -133,65 +119,6 @@
     <FirstParty Include="Microsoft.MacCatalyst.dll" />
     <FirstParty Include="Microsoft.macOS.dll" />
     <FirstParty Include="Microsoft.tvOS.dll" />
-
-    <!-- Adding xcsync dlls -->
-    <FirstParty Include="Microsoft.Bcl.AsyncInterfaces.dll" />
-    <FirstParty Include="Microsoft.CodeAnalysis.CSharp.dll" />
-    <FirstParty Include="Microsoft.CodeAnalysis.CSharp.resources.dll" />
-    <FirstParty Include="Microsoft.CodeAnalysis.CSharp.Workspaces.dll" />
-    <FirstParty Include="Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll" />
-    <FirstParty Include="Microsoft.CodeAnalysis.dll" />
-    <FirstParty Include="Microsoft.CodeAnalysis.resources.dll" />
-    <FirstParty Include="Microsoft.CodeAnalysis.VisualBasic.dll" />
-    <FirstParty Include="Microsoft.CodeAnalysis.VisualBasic.resources.dll" />
-    <FirstParty Include="Microsoft.CodeAnalysis.VisualBasic.Workspaces.dll" />
-    <FirstParty Include="Microsoft.CodeAnalysis.VisualBasic.Workspaces.resources.dll" />
-    <FirstParty Include="Microsoft.CodeAnalysis.Workspaces.dll" />
-    <FirstParty Include="Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.dll" />
-    <FirstParty Include="Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.exe" />
-    <FirstParty Include="Microsoft.CodeAnalysis.Workspaces.MSBuild.dll" />
-    <FirstParty Include="Microsoft.CodeAnalysis.Workspaces.MSBuild.resources.dll" />
-    <FirstParty Include="Microsoft.CodeAnalysis.Workspaces.resources.dll" />
-    <FirstParty Include="Microsoft.Extensions.Configuration.Abstractions.dll" />
-    <FirstParty Include="Microsoft.Extensions.Configuration.Binder.dll" />
-    <FirstParty Include="Microsoft.Extensions.Configuration.dll" />
-    <FirstParty Include="Microsoft.Extensions.DependencyInjection.Abstractions.dll" />
-    <FirstParty Include="Microsoft.Extensions.DependencyInjection.dll" />
-    <FirstParty Include="Microsoft.Extensions.Logging.Abstractions.dll" />
-    <FirstParty Include="Microsoft.Extensions.Logging.Configuration.dll" />
-    <FirstParty Include="Microsoft.Extensions.Logging.Console.dll" />
-    <FirstParty Include="Microsoft.Extensions.Logging.dll" />
-    <FirstParty Include="Microsoft.Extensions.Options.ConfigurationExtensions.dll" />
-    <FirstParty Include="Microsoft.Extensions.Options.dll" />
-    <FirstParty Include="Microsoft.Extensions.Primitives.dll" />
-    <FirstParty Include="Microsoft.VisualStudio.Setup.Configuration.Interop.dll" />
-    <FirstParty Include="System.Buffers.dll" />
-    <FirstParty Include="System.CodeDom.dll" />
-    <FirstParty Include="System.CommandLine.dll" />
-    <FirstParty Include="System.CommandLine.resources.dll" />
-    <FirstParty Include="System.Composition.AttributedModel.dll" />
-    <FirstParty Include="System.Composition.Convention.dll" />
-    <FirstParty Include="System.Composition.Hosting.dll" />
-    <FirstParty Include="System.Composition.Runtime.dll" />
-    <FirstParty Include="System.Composition.TypedParts.dll" />
-    <FirstParty Include="System.Configuration.ConfigurationManager.dll" />
-    <FirstParty Include="System.Diagnostics.EventLog.dll" />
-    <FirstParty Include="System.Diagnostics.EventLog.Messages.dll" />
-    <FirstParty Include="System.IO.Pipelines.dll" />
-    <FirstParty Include="System.Numerics.Vectors.dll" />
-    <FirstParty Include="System.Resources.Extensions.dll" />
-    <FirstParty Include="System.Runtime.CompilerServices.Unsafe.dll" />
-    <FirstParty Include="System.Security.Cryptography.Pkcs.dll" />
-    <FirstParty Include="System.Security.Cryptography.ProtectedData.dll" />
-    <FirstParty Include="System.Security.Cryptography.Xml.dll" />
-    <FirstParty Include="System.Security.Permissions.dll" />
-    <FirstParty Include="System.Text.Encoding.CodePages.dll" />
-    <FirstParty Include="System.Text.Encodings.Web.dll" />
-    <FirstParty Include="System.Threading.Tasks.Extensions.dll" />
-    <FirstParty Include="System.ValueTuple.dll" />
-    <FirstParty Include="System.Windows.Extensions.dll" />
-    <FirstParty Include="xcsync.dll" />
-    <FirstParty Include="xcsync.resources.dll" />
   </ItemGroup>
 
   <Import Project="$(MSBuildThisFileDirectory)SignList.targets" />
