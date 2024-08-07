@@ -399,3 +399,6 @@
 !missing-type! AVMetricPlayerItemVariantSwitchStartEvent not bound
 !missing-protocol-member! AVContentKeySessionDelegate::contentKeySession:didProvideContentKeyRequests:forInitializationData: not found
 !missing-selector! AVContentKey::revoke not bound
+!missing-enum-value! AVError native value AVErrorMediaExtensionConflict = -11887 not bound
+!missing-enum-value! AVError native value AVErrorMediaExtensionDisabled = -11886 not bound
+!missing-selector! AVMutableComposition::insertTimeRange:ofAsset:atTime:completionHandler: not bound

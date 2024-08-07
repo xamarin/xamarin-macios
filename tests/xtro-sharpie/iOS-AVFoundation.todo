@@ -865,3 +865,6 @@
 !missing-selector! AVMetricPlayerItemVariantSwitchStartEvent::toVariant not bound
 !missing-type! AVMetricPlayerItemVariantSwitchStartEvent not bound
 !missing-type! AVVideoPerformanceMetrics not bound
+!missing-enum-value! AVError native value AVErrorMediaExtensionConflict = -11887 not bound
+!missing-enum-value! AVError native value AVErrorMediaExtensionDisabled = -11886 not bound
+!missing-selector! AVMutableComposition::insertTimeRange:ofAsset:atTime:completionHandler: not bound

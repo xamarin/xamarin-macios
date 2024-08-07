@@ -9,3 +9,4 @@
 !missing-selector! INSticker::type not bound
 !missing-type! INMessageReaction not bound
 !missing-type! INSticker not bound
+!extra-enum-value! Managed value 3 for INMessageReactionType.Generic not found in native headers

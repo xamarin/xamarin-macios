@@ -1,1 +1,5 @@
 !extra-designated-initializer! INMessage::initWithIdentifier:conversationIdentifier:content:dateSent:sender:recipients:groupName:messageType: is incorrectly decorated with an [DesignatedInitializer] attribute
+!extra-enum-value! Managed value 3 for INMessageReactionType.Generic not found in native headers
+!missing-selector! INMessage::initWithIdentifier:conversationIdentifier:content:dateSent:sender:recipients:groupName:serviceName:messageType:referencedMessage:reaction: not bound
+!missing-selector! INMessage::initWithIdentifier:conversationIdentifier:content:dateSent:sender:recipients:groupName:serviceName:messageType:referencedMessage:sticker:reaction: not bound
+!unknown-type! INAggregatedMessageReaction bound
