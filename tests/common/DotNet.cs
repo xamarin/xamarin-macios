@@ -119,6 +119,9 @@ namespace Xamarin.Tests {
 			args.Add ("workload");
 			args.Add ("install");
 			args.AddRange (workloads);
+			args.Add ("-v");
+			args.Add ("diag");
+			args.Add ("--skip-manifest-update");
 
 			var env = new Dictionary<string, string?> ();
 			env ["MSBuildSDKsPath"] = null;
