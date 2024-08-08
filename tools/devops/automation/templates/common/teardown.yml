@@ -5,6 +5,10 @@ parameters:
 - name: keyringPass
   type: string
 
+- name: use1ES
+  type: boolean
+  default: false
+
 steps:
 
 - pwsh: |
@@ -30,3 +34,4 @@ steps:
 - template: mac-agent-logs.yml
   parameters:
     outputPath: agent-logs.log
+    use1ES: ${{ parameters.use1ES }}

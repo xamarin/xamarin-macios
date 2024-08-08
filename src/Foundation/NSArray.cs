@@ -232,6 +232,22 @@ namespace Foundation {
 			}
 		}
 
+#if NET
+		/// <summary>Create an <see cref="NSArray" /> from the specified pointers.</summary>
+		/// <param name="items">Array of pointers (to <see cref="NSObject" /> instances).</param>
+		/// <remarks>If the <paramref name="items" /> array is null, an <see cref="ArgumentNullException" /> is thrown.</remarks>
+		static internal NSArray FromIntPtrs (IntPtr [] items)
+		{
+			if (items is null)
+				throw new ArgumentNullException (nameof (items));
+
+			unsafe {
+				fixed (IntPtr *valuesPtr = items)
+					return Runtime.GetNSObject<NSArray> (NSArray.FromObjects ((IntPtr) valuesPtr, items.Length))!;
+			}
+		}
+#endif
+
 		static public NSArray FromIntPtrs (NativeHandle [] vals)
 		{
 			if (vals is null)
@@ -476,7 +492,9 @@ namespace Foundation {
 			return ToArray<NSObject> ();
 		}
 
-		IEnumerator<NSObject> IEnumerable<NSObject>.GetEnumerator ()
+		/// <summary>Returns an enumerator that iterates through the array.</summary>
+		/// <returns>An enumerator that can be used to iterate through the array.</returns>
+		public IEnumerator<NSObject> GetEnumerator ()
 		{
 			return new NSFastEnumerator<NSObject> (this);
 		}

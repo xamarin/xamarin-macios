@@ -2,6 +2,10 @@
 !missing-selector! NSXPCInterface::interfaceForSelector:argumentIndex:ofReply: not bound
 !missing-selector! NSXPCInterface::setInterface:forSelector:argumentIndex:ofReply: not bound
 !missing-enum! NSNetServicesError not bound
+!missing-selector! NSXPCCoder::decodeXPCObjectOfType:forKey: not bound
+!missing-selector! NSXPCCoder::encodeXPCObject:forKey: not bound
+!missing-selector! NSXPCInterface::setXPCType:forSelector:argumentIndex:ofReply: not bound
+!missing-selector! NSXPCInterface::XPCTypeForSelector:argumentIndex:ofReply: not bound
 
 # Apple started refusing applications that use those selectors (desk #63237)
 # The situation is a bit confusing since NSPortMessage.h is not part of iOS SDK - 

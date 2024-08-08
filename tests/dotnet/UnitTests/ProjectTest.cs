@@ -190,8 +190,10 @@ namespace Xamarin.Tests {
 			// Verify that there's one resource in the binding assembly, and its name
 			var ad = AssemblyDefinition.ReadAssembly (asm, new ReaderParameters { ReadingMode = ReadingMode.Deferred });
 			Assert.That (ad.MainModule.Resources.Count, Is.EqualTo (0), "no embedded resources");
-			var resourceBundle = Path.Combine (project_dir, "bin", "Debug", platform.ToFramework (), assemblyName + ".resources.zip");
-			Assert.That (resourceBundle, Does.Exist, "Bundle existence");
+			var resourceBundle = Path.Combine (project_dir, "bin", "Debug", platform.ToFramework (), assemblyName + ".resources");
+			var resourceZip = resourceBundle + ".zip";
+			if (!Directory.Exists (resourceBundle) && !File.Exists (resourceZip))
+				Assert.Fail ($"Neither the sidecar {resourceBundle} or the zipped sidecar {resourceZip} exists.");
 		}
 
 		[TestCase (ApplePlatform.iOS)]
@@ -1391,6 +1393,31 @@ namespace Xamarin.Tests {
 			var result = DotNet.AssertBuild (project_path, properties);
 		}
 
+		[TestCase (ApplePlatform.iOS, "ios-arm64")]
+		public void PluralRuntimeIdentifiers (ApplePlatform platform, string runtimeIdentifiers)
+		{
+			PluralRuntimeIdentifiersImpl (platform, runtimeIdentifiers);
+		}
+
+		internal static void PluralRuntimeIdentifiersImpl (ApplePlatform platform, string runtimeIdentifiers, Dictionary<string, string>? extraProperties = null, bool isUsingHotRestart = false)
+		{
+			var project = "MySimpleApp";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
+
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
+			Clean (project_path);
+			var properties = GetDefaultProperties (extraProperties: extraProperties);
+			properties ["RuntimeIdentifiers"] = runtimeIdentifiers;
+			if (isUsingHotRestart) {
+				var rv = DotNet.AssertBuildFailure (project_path, properties);
+				var errors = BinLog.GetBuildLogErrors (rv.BinLogPath).ToArray ();
+				AssertErrorMessages (errors, $"Hot Restart is not supported when 'RuntimeIdentifiers' (plural) is set. Use 'RuntimeIdentifier' (singular) instead.");
+			} else {
+				DotNet.AssertBuild (project_path, properties);
+			}
+		}
+
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64")]
 		[TestCase (ApplePlatform.iOS, "ios-arm64")]
 		public void CustomizedCodeSigning (ApplePlatform platform, string runtimeIdentifiers)
@@ -1918,10 +1945,11 @@ namespace Xamarin.Tests {
 			}
 		}
 
-		bool FindAssembly (string path, string dllName)
+		bool FindAOTedAssemblyFile (string path, string dllName)
 		{
-			foreach (string file in Directory.GetFiles (path, "*.dll", SearchOption.AllDirectories)) {
-				if (Path.GetFileName (file).Equals (dllName, StringComparison.OrdinalIgnoreCase)) {
+			var aotedAssemblyFileName = $"{dllName}.o";
+			foreach (string file in Directory.GetFiles (path, "*.o", SearchOption.AllDirectories)) {
+				if (Path.GetFileName (file).Equals (aotedAssemblyFileName, StringComparison.OrdinalIgnoreCase)) {
 					return true;
 				}
 			}
@@ -1930,13 +1958,13 @@ namespace Xamarin.Tests {
 		}
 
 		[Test]
-		[TestCase (ApplePlatform.iOS, "ios-arm64;", "-all,System.Private.CoreLib")]
-		[TestCase (ApplePlatform.iOS, "ios-arm64;", "all,-System.Private.CoreLib")]
-		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64", "-all,System.Private.CoreLib")]
-		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64", "all,-System.Private.CoreLib")]
-		[TestCase (ApplePlatform.TVOS, "tvos-arm64;", "-all,System.Private.CoreLib")]
-		[TestCase (ApplePlatform.TVOS, "tvos-arm64;", "all,-System.Private.CoreLib")]
-		public void PartialAOTTest (ApplePlatform platform, string runtimeIdentifiers, string mtouchInterpreter)
+		[TestCase (ApplePlatform.iOS, "ios-arm64", "-all,System.Private.CoreLib")]
+		[TestCase (ApplePlatform.iOS, "ios-arm64", "all,-System.Private.CoreLib")]
+		[TestCase (ApplePlatform.iOS, "ios-arm64", "")]
+		[TestCase (ApplePlatform.TVOS, "tvos-arm64", "-all,System.Private.CoreLib")]
+		[TestCase (ApplePlatform.TVOS, "tvos-arm64", "all,-System.Private.CoreLib")]
+		[TestCase (ApplePlatform.TVOS, "tvos-arm64", "")]
+		public void DedupEnabledTest (ApplePlatform platform, string runtimeIdentifiers, string mtouchInterpreter)
 		{
 			var project = "MySimpleApp";
 			Configuration.IgnoreIfIgnoredPlatform (platform);
@@ -1949,13 +1977,95 @@ namespace Xamarin.Tests {
 
 			DotNet.AssertBuild (project_path, properties);
 
-			Assert.True (!FindAssembly (appPath, "aot-instances.dll"), "Dedup optimization shouldn't been enabled for partial AOT compilation");
+			var objDir = GetObjDir (project_path, platform, runtimeIdentifiers);
+			Assert.True (FindAOTedAssemblyFile (objDir, "aot-instances.dll"), $"Dedup optimization should be enabled for AOT compilation on: {platform} with RID: {runtimeIdentifiers}");
+		}
+
+		[Test]
+		[TestCase (ApplePlatform.iOS, "iossimulator-x64", "-all,System.Private.CoreLib")]
+		[TestCase (ApplePlatform.iOS, "iossimulator-x64", "all,-System.Private.CoreLib")]
+		[TestCase (ApplePlatform.iOS, "iossimulator-x64", "")]
+		[TestCase (ApplePlatform.TVOS, "tvossimulator-x64", "-all,System.Private.CoreLib")]
+		[TestCase (ApplePlatform.TVOS, "tvossimulator-x64", "all,-System.Private.CoreLib")]
+		[TestCase (ApplePlatform.TVOS, "tvossimulator-x64", "")]
+		public void DedupDisabledTest (ApplePlatform platform, string runtimeIdentifiers, string mtouchInterpreter)
+		{
+			var project = "MySimpleApp";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
+
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
+			Clean (project_path);
+			var properties = GetDefaultProperties (runtimeIdentifiers);
+			properties ["MtouchInterpreter"] = $"\"{mtouchInterpreter}\"";
+
+			DotNet.AssertBuild (project_path, properties);
+
+			var objDir = GetObjDir (project_path, platform, runtimeIdentifiers);
+			Assert.False (FindAOTedAssemblyFile (objDir, "aot-instances.dll"), $"Dedup optimization should not be enabled for AOT compilation on: {platform} with RID: {runtimeIdentifiers}");
+		}
+
+		[Test]
+		// [TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64", "-all,System.Private.CoreLib")] // Should be reenalbed once https://github.com/dotnet/runtime/issues/105510 gets fixed
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64", "all,-System.Private.CoreLib")]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64", "")]
+		public void DedupUniversalAppTest (ApplePlatform platform, string runtimeIdentifiers, string mtouchInterpreter)
+		{
+			var project = "MySimpleApp";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
+
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
+			Clean (project_path);
+			var properties = GetDefaultProperties (runtimeIdentifiers);
+			properties ["MtouchInterpreter"] = $"\"{mtouchInterpreter}\"";
+
+			DotNet.AssertBuild (project_path, properties);
+
+			var objDir = GetObjDir (project_path, platform, runtimeIdentifiers);
+			var objDirMacCatalystArm64 = Path.Combine (objDir, "maccatalyst-arm64");
+			Assert.True (FindAOTedAssemblyFile (objDirMacCatalystArm64, "aot-instances.dll"), $"Dedup optimization should be enabled for AOT compilation on: {platform} with RID: maccatalyst-arm64");
+
+			var objDirMacCatalystx64 = Path.Combine (objDir, "maccatalyst-x64");
+			Assert.False (FindAOTedAssemblyFile (objDirMacCatalystx64, "aot-instances.dll"), $"Dedup optimization should not be enabled for AOT compilation on: {platform} with RID: maccatalyst-x64");
 
 			var appExecutable = GetNativeExecutable (platform, appPath);
 
 			if (CanExecute (platform, runtimeIdentifiers)) {
 				ExecuteWithMagicWordAndAssert (appExecutable);
 			}
+		}
+
+		[Test]
+		[TestCase (ApplePlatform.MacOSX, "osx-arm64;osx-x64")]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64")]
+		public void AppendRuntimeIdentifierToOutputPath_DisableCommandLine (ApplePlatform platform, string runtimeIdentifiers)
+		{
+			var project = "MySimpleApp";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
+
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
+			Clean (project_path);
+			var properties = GetDefaultProperties (runtimeIdentifiers);
+			properties ["cmdline:AppendRuntimeIdentifierToOutputPath"] = "false";
+			DotNet.AssertBuild (project_path, properties);
+		}
+
+		[Test]
+		[TestCase (ApplePlatform.MacOSX, "osx-arm64;osx-x64")]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64")]
+		public void AppendRuntimeIdentifierToOutputPath_DisableDirectoryBuildProps (ApplePlatform platform, string runtimeIdentifiers)
+		{
+			var project = "MySimpleApp";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
+
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
+			Clean (project_path);
+			var properties = GetDefaultProperties (runtimeIdentifiers);
+			properties ["SetAppendRuntimeIdentifierToOutputPathToFalse"] = "true";
+			DotNet.AssertBuild (project_path, properties);
 		}
 	}
 }

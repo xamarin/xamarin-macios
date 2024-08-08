@@ -2665,7 +2665,7 @@ xamarin_is_native_library (const char *libraryName)
 	if (xamarin_runtime_libraries == NULL)
 		return false;
 
-	size_t libraryNameLength = strlen (libraryName);
+	size_t libraryNameLength = strnlen (libraryName, 255 /* max length of file name across all relevant file systems currently in use */);
 	// The libraries in xamarin_runtime_libraries are extension-less, so we need to
 	// remove any .dylib extension for the library name we're comparing with too.
 	if (libraryNameLength > 6 && strcmp (libraryName + libraryNameLength - 6, ".dylib") == 0)
