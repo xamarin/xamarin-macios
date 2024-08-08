@@ -257,6 +257,7 @@ namespace Xamarin.BindingTests {
 			}
 
 #if NET
+			[BindingImpl (BindingImplOptions.Optimizable)]
 			public bool InvokeNullableCallbackNatively (Action<int>? completionHandler)
 			{
 				byte rv;
@@ -265,7 +266,7 @@ namespace Xamarin.BindingTests {
 				} else {
 					unsafe {
 						delegate* unmanaged<IntPtr, int, void> trampoline = &NullableCallbackHandler;
-						using var block = new BlockLiteral (trampoline, completionHandler, GetType (), nameof (NullableCallbackHandler));
+						using var block = new BlockLiteral (trampoline, completionHandler, typeof (BlockCallbackTester), nameof (NullableCallbackHandler));
 						BlockLiteral* block_ptr = &block;
 						rv = Messaging.byte_objc_msgSend_IntPtr (Handle, Selector.GetHandle ("nullableCallback:"), (IntPtr) block_ptr);
 					}
