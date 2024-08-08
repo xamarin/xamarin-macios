@@ -40,7 +40,6 @@
 !missing-selector! +HKStateOfMind::stateOfMindWithDate:kind:valence:labels:associations: not bound
 !missing-selector! +HKStateOfMind::stateOfMindWithDate:kind:valence:labels:associations:metadata: not bound
 !missing-selector! +HKUnit::appleEffortScoreUnit not bound
-!missing-selector! HKActivitySummary::paused not bound
 !missing-selector! HKActivitySummary::setPaused: not bound
 !missing-selector! HKGAD7Assessment::answers not bound
 !missing-selector! HKGAD7Assessment::risk not bound

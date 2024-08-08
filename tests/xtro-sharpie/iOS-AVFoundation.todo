@@ -760,7 +760,6 @@
 !missing-selector! AVMutableCaptionRegion::setWritingMode: not bound
 !missing-selector! AVMutableCaptionRegion::size not bound
 !missing-selector! AVMutableCaptionRegion::writingMode not bound
-!missing-selector! AVMutableComposition::insertTimeRange:ofTracks:atTime:error: not bound
 !missing-selector! AVPlayerInterstitialEvent::contentMayVary not bound
 !missing-selector! AVPlayerInterstitialEvent::plannedDuration not bound
 !missing-selector! AVPlayerInterstitialEvent::setContentMayVary: not bound

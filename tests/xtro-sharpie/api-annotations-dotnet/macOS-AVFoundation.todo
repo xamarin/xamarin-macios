@@ -641,7 +641,6 @@
 !missing-selector! AVMetricPlayerItemVariantSwitchEvent::fromVariant not bound
 !missing-selector! AVMetricPlayerItemVariantSwitchEvent::loadedTimeRanges not bound
 !missing-selector! AVMetricPlayerItemVariantSwitchEvent::toVariant not bound
-!missing-selector! AVMutableComposition::insertTimeRange:ofTracks:atTime:error: not bound
 !missing-selector! AVPlayerInterstitialEvent::contentMayVary not bound
 !missing-selector! AVPlayerInterstitialEvent::plannedDuration not bound
 !missing-selector! AVPlayerInterstitialEvent::setContentMayVary: not bound

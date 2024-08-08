@@ -11,7 +11,6 @@
 !missing-enum! UITableViewContentHuggingElements not bound
 !missing-enum! UITabPlacement not bound
 !missing-enum! UITextMathExpressionCompletionType not bound
-!missing-enum! UIWritingToolsAllowedInputOptions not bound
 !missing-enum! UIWritingToolsBehavior not bound
 !missing-enum-value! UIPasteControlDisplayMode native value UIPasteControlDisplayModeArrowAndLabel = 3 not bound
 !missing-field! NSAdaptiveImageGlyphAttributeName not bound
@@ -312,9 +311,7 @@
 !missing-selector! NSObject::setAccessibilityPreviousTextNavigationElementBlock: not bound
 !missing-selector! UIAccessibilityCustomAction::category not bound
 !missing-selector! UIAccessibilityCustomAction::setCategory: not bound
-!missing-selector! UITextView::setWritingToolsAllowedInputOptions: not bound
 !missing-selector! UITextView::setWritingToolsBehavior: not bound
-!missing-selector! UITextView::writingToolsAllowedInputOptions not bound
 !missing-selector! UITextView::writingToolsBehavior not bound
 !missing-enum! UITextFormattingViewControllerComponentSize not bound
 !missing-field! NSTextKit1ListMarkerFormatDocumentOption not bound
