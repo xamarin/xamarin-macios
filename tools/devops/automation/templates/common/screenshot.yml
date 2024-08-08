@@ -16,6 +16,14 @@ parameters:
 steps:
 
 - bash: |
+    system_profiler SPDisplaysDataType
+  displayName: "List screens"
+  env:
+    SCREENSHOT_PATH: ${{ parameters.outputPath }}
+  condition: always()
+  continueOnError: true
+
+- bash: |
     screencapture "$SCREENSHOT_PATH"
   displayName: "Take screenshot"
   env:
