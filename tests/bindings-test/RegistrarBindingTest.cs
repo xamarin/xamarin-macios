@@ -1,5 +1,8 @@
 using System;
 using System.Threading;
+#if NET
+using System.Runtime.InteropServices;
+#endif
 
 using Foundation;
 using ObjCRuntime;
@@ -7,6 +10,8 @@ using ObjCRuntime;
 using NUnit.Framework;
 
 using Bindings.Test;
+
+#nullable enable
 
 namespace Xamarin.BindingTests {
 	[TestFixture]
@@ -102,6 +107,13 @@ namespace Xamarin.BindingTests {
 				ObjCBlockTester.CallRequiredStaticCallback ();
 				ObjCBlockTester.CallOptionalStaticCallback ();
 				DerivedBlockCallbackClass.Answer = 2;
+
+#if NET
+				Assert.IsFalse (obj.InvokeNullableCallbackNatively (null), "NullableCallback A rv");
+				int nullableResult = -1;
+				Assert.IsTrue (obj.InvokeNullableCallbackNatively ((v) => nullableResult = v), "NullableCallback B rv");
+				Assert.AreEqual (24, nullableResult, "NullableCallback result");
+#endif
 			}
 		}
 
@@ -234,19 +246,55 @@ namespace Xamarin.BindingTests {
 			{
 				completionHandler (42);
 			}
+
+			public override bool NullableCallback (Action<int>? completionHandler)
+			{
+				if (completionHandler is not null) {
+					completionHandler (24);
+					return true;
+				}
+				return false;
+			}
+
+#if NET
+			public bool InvokeNullableCallbackNatively (Action<int>? completionHandler)
+			{
+				byte rv;
+				if (completionHandler is null) {
+					rv = Messaging.byte_objc_msgSend_IntPtr (Handle, Selector.GetHandle ("nullableCallback:"), IntPtr.Zero);
+				} else {
+					unsafe {
+						delegate* unmanaged<IntPtr, int, void> trampoline = &NullableCallbackHandler;
+						using var block = new BlockLiteral (trampoline, completionHandler, GetType (), nameof (NullableCallbackHandler));
+						BlockLiteral* block_ptr = &block;
+						rv = Messaging.byte_objc_msgSend_IntPtr (Handle, Selector.GetHandle ("nullableCallback:"), (IntPtr) block_ptr);
+					}
+				}
+				return rv != 0;
+			}
+
+			[UnmanagedCallersOnly]
+			static void NullableCallbackHandler (IntPtr block, int magicNumber)
+			{
+				var del = BlockLiteral.GetTarget<Action<int>> (block);
+				if (del is not null) {
+					del (magicNumber);
+				}
+			}
+#endif
 		}
 
 		public class PropertyBlock : NSObject, IProtocolWithBlockProperties {
 			[Export ("myOptionalProperty")]
-			public SimpleCallback MyOptionalProperty { get; set; }
+			public SimpleCallback MyOptionalProperty { get; set; } = () => { Assert.Fail ("No block set?"); };
 
-			public SimpleCallback MyRequiredProperty { get; set; }
+			public SimpleCallback MyRequiredProperty { get; set; } = () => { Assert.Fail ("No block set?"); };
 
 			[Export ("myOptionalStaticProperty")]
-			public static SimpleCallback MyOptionalStaticProperty { get; set; }
+			public static SimpleCallback? MyOptionalStaticProperty { get; set; }
 
 			[Export ("myRequiredStaticProperty")]
-			public static SimpleCallback MyRequiredStaticProperty { get; set; }
+			public static SimpleCallback? MyRequiredStaticProperty { get; set; }
 		}
 
 		[Test]
@@ -291,15 +339,15 @@ namespace Xamarin.BindingTests {
 				ObjCBlockTester.SetProtocolWithBlockProperties (pb, required, instance);
 				if (required) {
 					if (instance) {
-						pb.MyRequiredProperty ();
+						pb.MyRequiredProperty! ();
 					} else {
-						PropertyBlock.MyRequiredStaticProperty ();
+						PropertyBlock.MyRequiredStaticProperty! ();
 					}
 				} else {
 					if (instance) {
-						pb.MyOptionalProperty ();
+						pb.MyOptionalProperty! ();
 					} else {
-						PropertyBlock.MyOptionalStaticProperty ();
+						PropertyBlock.MyOptionalStaticProperty! ();
 					}
 				}
 				Assert.AreEqual (calledCounter + 1, ObjCBlockTester.CalledBlockCount, "Blocks called");
@@ -353,16 +401,16 @@ namespace Xamarin.BindingTests {
 		// have been linked away (which happen when _forcing_ the dynamic registrar to be linked away).
 		public class FakePropertyBlock : NSObject {
 			[Export ("myOptionalProperty")]
-			public SimpleCallback MyOptionalProperty { get; set; }
+			public SimpleCallback? MyOptionalProperty { get; set; }
 
 			[Export ("myRequiredProperty")]
-			public SimpleCallback MyRequiredProperty { get; set; }
+			public SimpleCallback? MyRequiredProperty { get; set; }
 
 			[Export ("myOptionalStaticProperty")]
-			public static SimpleCallback MyOptionalStaticProperty { get; set; }
+			public static SimpleCallback? MyOptionalStaticProperty { get; set; }
 
 			[Export ("myRequiredStaticProperty")]
-			public static SimpleCallback MyRequiredStaticProperty { get; set; }
+			public static SimpleCallback? MyRequiredStaticProperty { get; set; }
 		}
 	}
 }
