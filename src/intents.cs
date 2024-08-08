@@ -2733,12 +2733,6 @@ namespace Intents {
 	[iOS (18, 0), MacCatalyst (18, 0), Mac (15, 0), Watch (11, 0), NoTV]
 	public enum INMessageReactionType : long {
 		Unknown = 0,
-		[Deprecated (PlatformName.iOS, 18, 0)]
-		[Deprecated (PlatformName.MacCatalyst, 18, 0)]
-		[Deprecated (PlatformName.TvOS, 18, 0)]
-		[Deprecated (PlatformName.MacOSX, 15, 0)]
-		[Deprecated (PlatformName.WatchOS, 11, 0)]
-		EmojiReaction, // introduced and deprecated in the same OS version.
 		Emoji,
 		Generic,
 	}
@@ -4598,23 +4592,23 @@ namespace Intents {
 		[DesignatedInitializer]
 		NativeHandle Constructor (string identifier, [NullAllowed] string conversationIdentifier, [NullAllowed] string content, [NullAllowed] NSDate dateSent, [NullAllowed] INPerson sender, [NullAllowed] INPerson [] recipients, [NullAllowed] INSpeakableString groupName, INMessageType messageType, [NullAllowed] string serviceName);
 
-		[Deprecated (PlatformName.iOS, 18, 0, message: "Use a constructor that takes a reaction and an aggregateRections instead.")]
-		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use a constructor that takes a reaction and an aggregateRections instead.")]
-		[Deprecated (PlatformName.WatchOS, 11, 0, message: "Use a constructor that takes a reaction and an aggregateRections instead.")]
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use a constructor that takes a reaction instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use a constructor that takes a reaction instead.")]
+		[Deprecated (PlatformName.WatchOS, 11, 0, message: "Use a constructor that takes a reaction instead.")]
 		[MacCatalyst (13, 1)]
 		[Export ("initWithIdentifier:conversationIdentifier:content:dateSent:sender:recipients:groupName:messageType:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (string identifier, [NullAllowed] string conversationIdentifier, [NullAllowed] string content, [NullAllowed] NSDate dateSent, [NullAllowed] INPerson sender, [NullAllowed] INPerson [] recipients, [NullAllowed] INSpeakableString groupName, INMessageType messageType);
 
-		[Deprecated (PlatformName.iOS, 18, 0, message: "Use a constructor that takes a reaction and an aggregateRections instead.")]
-		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use a constructor that takes a reaction and an aggregateRections instead.")]
-		[Deprecated (PlatformName.WatchOS, 11, 0, message: "Use a constructor that takes a reaction and an aggregateRections instead.")]
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use a constructor that takes a reaction instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use a constructor that takes a reaction instead.")]
+		[Deprecated (PlatformName.WatchOS, 11, 0, message: "Use a constructor that takes a reaction instead.")]
 		[MacCatalyst (13, 1)]
 		[Export ("initWithIdentifier:conversationIdentifier:content:dateSent:sender:recipients:messageType:")]
 		NativeHandle Constructor (string identifier, [NullAllowed] string conversationIdentifier, [NullAllowed] string content, [NullAllowed] NSDate dateSent, [NullAllowed] INPerson sender, [NullAllowed] INPerson [] recipients, INMessageType messageType);
 
 		[iOS (18, 0), MacCatalyst (18, 0), Watch (11, 0), NoMac]
-		[Export ("initWithIdentifier:conversationIdentifier:content:dateSent:sender:recipients:groupName:serviceName:messageType:referencedMessage:reaction:aggregatedReactions:")]
+		[Export ("initWithIdentifier:conversationIdentifier:content:dateSent:sender:recipients:groupName:serviceName:messageType:referencedMessage:reaction:")]
 		NativeHandle Constructor (
 				string identifier,
 				[NullAllowed] string conversationIdentifier,
@@ -4626,13 +4620,12 @@ namespace Intents {
 				[NullAllowed] string serviceName,
 				INMessageType messageType,
 				[NullAllowed] INMessage referencedMessage,
-				[NullAllowed] INMessageReaction reaction,
-				[NullAllowed] INAggregatedMessageReaction [] aggregatedReactions
+				[NullAllowed] INMessageReaction reaction
 				);
 
 		[DesignatedInitializer]
 		[iOS (18, 0), MacCatalyst (18, 0), Watch (11, 0), NoMac]
-		[Export ("initWithIdentifier:conversationIdentifier:content:dateSent:sender:recipients:groupName:serviceName:messageType:referencedMessage:sticker:reaction:aggregatedReactions:")]
+		[Export ("initWithIdentifier:conversationIdentifier:content:dateSent:sender:recipients:groupName:serviceName:messageType:referencedMessage:sticker:reaction:")]
 		NativeHandle Constructor (
 				string identifier,
 				[NullAllowed] string conversationIdentifier,
@@ -4645,8 +4638,7 @@ namespace Intents {
 				INMessageType messageType,
 				[NullAllowed] INMessage referencedMessage,
 				[NullAllowed] INSticker sticker,
-				[NullAllowed] INMessageReaction reaction,
-				[NullAllowed] INAggregatedMessageReaction [] aggregatedReactions
+				[NullAllowed] INMessageReaction reaction
 				);
 
 		[Export ("initWithIdentifier:content:dateSent:sender:recipients:")]
@@ -4722,11 +4714,6 @@ namespace Intents {
 		[Watch (11, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
 		[Export ("sticker", ArgumentSemantic.Copy)]
 		INSticker Sticker { get; set; }
-
-		[NullAllowed]
-		[Watch (11, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
-		[Export ("aggregatedReactions", ArgumentSemantic.Copy)]
-		INAggregatedMessageReaction [] AggregatedReactions { get; set; }
 
 		[NullAllowed]
 		[Watch (11, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
@@ -15859,28 +15846,6 @@ namespace Intents {
 
 		[Export ("confirmUnsendMessages:completion:")]
 		void ConfirmUnsendMessages (INUnsendMessagesIntent intent, Action<INUnsendMessagesIntentResponse> completion);
-	}
-
-	[Watch (11, 0), iOS (18, 0), NoTV, MacCatalyst (18, 0), NoMac]
-	[BaseType (typeof (NSObject))]
-	[DisableDefaultCtor]
-	interface INAggregatedMessageReaction : NSCopying, NSSecureCoding {
-		[Export ("initWithReactionType:emoji:senders:reactionCount:")]
-		[DesignatedInitializer]
-		NativeHandle Constructor (INMessageReactionType reactionType, [NullAllowed] string emoji, [NullAllowed] INPerson [] senders, [NullAllowed] NSNumber reactionCount);
-
-		[Export ("reactionType", ArgumentSemantic.Assign)]
-		INMessageReactionType ReactionType { get; }
-
-		[Export ("emoji", ArgumentSemantic.Copy), NullAllowed]
-		string Emoji { get; }
-
-		[Export ("senders", ArgumentSemantic.Copy), NullAllowed]
-		INPerson [] Senders { get; }
-
-		// No documentation in what kind of number this is :/
-		[Export ("reactionCount", ArgumentSemantic.Copy), NullAllowed]
-		NSNumber ReactionCount { get; }
 	}
 
 	[Watch (11, 0), iOS (18, 0), NoTV, MacCatalyst (18, 0), NoMac]
