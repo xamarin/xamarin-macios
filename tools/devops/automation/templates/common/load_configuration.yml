@@ -85,7 +85,8 @@ steps:
     # TODO: do not need to print the object all the time
     Write-Host ($config | Format-Table | Out-String)
     $testMatrix = $config.TEST_MATRIX
-    Write-Host "##vso[task.setvariable variable=TEST_MATRIX;isOutput=true]$config.TEST_MATRIX"
+    Write-Host "The test matrix is: $testMatrix"
+    Write-Host "##vso[task.setvariable variable=TEST_MATRIX;isOutput=true]$testMatrix"
   name: test_matrix
   displayName: 'Create tests strategy matrix'
   env:
