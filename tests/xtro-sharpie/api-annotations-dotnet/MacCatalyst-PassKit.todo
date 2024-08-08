@@ -18,3 +18,41 @@
 !missing-selector! PKDisbursementRequest::supportedNetworks not bound
 !missing-selector! PKDisbursementRequest::supportedRegions not bound
 !unknown-native-enum! PKDisbursementRequestSchedule bound
+!deprecated-attribute-missing! PKPass::relevantDate missing a [Deprecated] attribute
+!missing-enum-value! PKIdentityError native value PKIdentityErrorRegionNotSupported = 8 not bound
+!missing-field! PKMerchantCategoryCodeNone not bound
+!missing-selector! +PKAddIdentityDocumentConfiguration::configurationForMetadata:completion: not bound
+!missing-selector! +PKAddPassMetadataPreview::previewWithPassThumbnail:localizedDescription: not bound
+!missing-selector! PKAddIdentityDocumentConfiguration::metadata not bound
+!missing-selector! PKAddPassMetadataPreview::initWithPassThumbnail:localizedDescription: not bound
+!missing-selector! PKAddPassMetadataPreview::localizedDescription not bound
+!missing-selector! PKAddPassMetadataPreview::passThumbnailImage not bound
+!missing-selector! PKIdentityNationalIDCardDescriptor::regionCode not bound
+!missing-selector! PKIdentityNationalIDCardDescriptor::setRegionCode: not bound
+!missing-selector! PKJapanIndividualNumberCardMetadata::authenticationPassword not bound
+!missing-selector! PKJapanIndividualNumberCardMetadata::initWithProvisioningCredentialIdentifier:sharingInstanceIdentifier:cardConfigurationIdentifier:preview: not bound
+!missing-selector! PKJapanIndividualNumberCardMetadata::initWithProvisioningCredentialIdentifier:sharingInstanceIdentifier:cardTemplateIdentifier:preview: not bound
+!missing-selector! PKJapanIndividualNumberCardMetadata::preview not bound
+!missing-selector! PKJapanIndividualNumberCardMetadata::setAuthenticationPassword: not bound
+!missing-selector! PKJapanIndividualNumberCardMetadata::setPreview: not bound
+!missing-selector! PKJapanIndividualNumberCardMetadata::setSigningPassword: not bound
+!missing-selector! PKJapanIndividualNumberCardMetadata::signingPassword not bound
+!missing-selector! PKPass::relevantDates not bound
+!missing-selector! PKPaymentRequest::merchantCategoryCode not bound
+!missing-selector! PKPaymentRequest::setMerchantCategoryCode: not bound
+!missing-selector! PKPushablePassMetadata::cardConfigurationIdentifier not bound
+!missing-selector! PKPushablePassMetadata::cardTemplateIdentifier not bound
+!missing-selector! PKPushablePassMetadata::credentialIdentifier not bound
+!missing-selector! PKPushablePassMetadata::serverEnvironmentIdentifier not bound
+!missing-selector! PKPushablePassMetadata::setServerEnvironmentIdentifier: not bound
+!missing-selector! PKPushablePassMetadata::sharingInstanceIdentifier not bound
+!missing-type! PKAddIdentityDocumentConfiguration not bound
+!missing-type! PKAddPassMetadataPreview not bound
+!missing-type! PKAddPushablePassConfiguration not bound
+!missing-type! PKIdentityDocumentMetadata not bound
+!missing-type! PKIdentityNationalIDCardDescriptor not bound
+!missing-type! PKJapanIndividualNumberCardMetadata not bound
+!missing-type! PKPushablePassMetadata not bound
+!wrong-base-type! PKAddShareablePassConfiguration expected PKAddPushablePassConfiguration actual PKAddSecureElementPassConfiguration
+!wrong-base-type! PKShareablePassMetadata expected PKPushablePassMetadata actual NSObject
+!wrong-base-type! PKShareablePassMetadataPreview expected PKAddPassMetadataPreview actual NSObject

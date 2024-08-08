@@ -1,0 +1,5 @@
+!deprecated-attribute-missing! CKUserIdentity::contactIdentifiers missing a [Deprecated] attribute
+!missing-selector! CKShareParticipant::participantID not bound
+!unknown-type! CKFetchNotificationChangesOperation bound
+!unknown-type! CKMarkNotificationsReadOperation bound
+!unknown-type! CKModifyBadgeOperation bound

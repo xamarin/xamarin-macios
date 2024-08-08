@@ -3,3 +3,7 @@
 !missing-pinvoke! AudioFileGetUserDataSize64 is not bound
 !missing-protocol! AUMessageChannel not bound
 !missing-selector! AUAudioUnit::messageChannelFor: not bound
+!missing-enum! AudioConverterOptions not bound
+!missing-pinvoke! AudioConverterNewWithOptions is not bound
+!missing-pinvoke! AudioConverterPrepare is not bound
+!missing-selector! AUAudioUnit::migrateFromPlugin not bound

@@ -124,6 +124,7 @@ $(XMACCATALYST_PCH): .stamp-check-sharpie
 	-exclude Carbon \
 	-exclude ClockKit \
 	-exclude DiscRecordingUI \
+	-exclude FSKit \
 	-exclude GLKit \
 	-exclude ICADevices \
 	-exclude InputMethodKit \

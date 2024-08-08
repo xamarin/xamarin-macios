@@ -109,3 +109,13 @@
 !missing-pinvoke! CMTagMakeWithOSTypeValue is not bound
 !missing-pinvoke! CMTagMakeWithSInt64Value is not bound
 !missing-pinvoke! CMVideoFormatDescriptionCopyTagCollectionArray is not bound
+!missing-field! kCMFormatDescriptionExtension_ProjectionKind not bound
+!missing-field! kCMFormatDescriptionExtension_ViewPackingKind not bound
+!missing-field! kCMFormatDescriptionProjectionKind_Rectilinear not bound
+!missing-field! kCMFormatDescriptionViewPackingKind_OverUnder not bound
+!missing-field! kCMFormatDescriptionViewPackingKind_SideBySide not bound
+!missing-field! kCMMetadataDataType_QuickTimeMetadataMilliLux not bound
+!missing-field! kCMMetadataDataType_QuickTimeMetadataUUID not bound
+!missing-field! kCMMetadataIdentifier_QuickTimeMetadataSceneIlluminance not bound
+!missing-field! kCMMetadataIdentifier_QuickTimeMetadataSegmentIdentifier not bound
+!missing-field! kCMTagProjectionTypeHalfEquirectangular not bound

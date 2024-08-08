@@ -1,1 +1,3 @@
 !missing-field! kCFURLFileProtectionCompleteWhenUserInactive not bound
+!missing-field! kCFNumberFormatterMinGroupingDigits not bound
+!missing-pinvoke! CFAttributedStringGetBidiLevelsAndResolvedDirections is not bound
