@@ -410,7 +410,7 @@ namespace Foundation {
 		{
 			HasManagedRef = true;
 			if (!Runtime.TryGetIsUserType (handle, out var isUserType, out var error_message))
-				throw new InvalidOperationException ($"Unable to create a managed reference for the pointer {handle.ToString ()} whose managed type is {GetType ().FullName} because it wasn't possible to get the class of the pointer: {error_message}");
+				throw new InvalidOperationException ($"Unable to create a managed reference for the pointer {handle} whose managed type is {GetType ().FullName} because it wasn't possible to get the class of the pointer: {error_message}");
 
 			if (isUserType) {
 				var flags = XamarinGCHandleFlags.HasManagedRef | XamarinGCHandleFlags.InitialSet | XamarinGCHandleFlags.WeakGCHandle;
@@ -431,7 +431,7 @@ namespace Foundation {
 		{
 			var handle = this.Handle; // Get a copy of the handle, because it will be cleared out when calling Runtime.NativeObjectHasDied, and we still need the handle later.
 			if (!Runtime.TryGetIsUserType (handle, out var user_type, out var error_message))
-				throw new InvalidOperationException ($"Unable to release the managed reference for the pointer {handle.ToString ()} whose managed type is {GetType ().FullName} because it wasn't possible to get the class of the pointer: {error_message}");
+				throw new InvalidOperationException ($"Unable to release the managed reference for the pointer {handle} whose managed type is {GetType ().FullName} because it wasn't possible to get the class of the pointer: {error_message}");
 			HasManagedRef = false;
 			if (!user_type) {
 				/* If we're a wrapper type, we need to unregister here, since we won't enter the release trampoline */
