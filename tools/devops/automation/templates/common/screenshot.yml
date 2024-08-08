@@ -1,49 +1,50 @@
-# Template that does all the boiler plate needed after building tests or the project
+# yamllint disable rule:line-length
 
+# Template that does all the boiler plate needed after building tests or the project
 parameters:
 
-- name: outputPath
-  type: string
+  - name: outputPath
+    type: string
 
-- name: use1ES
-  type: boolean
-  default: false
+  - name: use1ES
+    type: boolean
+    default: false
 
-- name: uploadPrefix
-  type: string
-  default: '$(MaciosUploadPrefix)'
+  - name: uploadPrefix
+    type: string
+    default: '$(MaciosUploadPrefix)'
 
 steps:
 
-- bash: |
-    system_profiler SPDisplaysDataType
-  displayName: "List screens"
-  env:
-    SCREENSHOT_PATH: ${{ parameters.outputPath }}
-  condition: always()
-  continueOnError: true
-
-- bash: |
-    screencapture "$SCREENSHOT_PATH"
-  displayName: "Take screenshot"
-  env:
-    SCREENSHOT_PATH: ${{ parameters.outputPath }}
-  condition: always()
-  continueOnError: true
-
-- ${{ if eq(parameters.use1ES, true) }}:
-  - task: 1ES.PublishPipelineArtifact@1
-    displayName: 'Publish Artifact: Agent logs'
+  - bash: |
+      system_profiler SPDisplaysDataType
+    displayName: "List screens"
+    env:
+      SCREENSHOT_PATH: ${{ parameters.outputPath }}
     condition: always()
-    inputs:
-      path: ${{ parameters.outputPath }}
-      artifact: '${{ parameters.uploadPrefix }}$(Agent.Name)-$(System.JobName)-$(System.JobId)-screenshot'
     continueOnError: true
-- ${{ else }}:
-  - task: PublishPipelineArtifact@1
-    displayName: 'Publish Artifact: Agent logs'
+
+  - bash: |
+      screencapture "$SCREENSHOT_PATH"
+    displayName: "Take screenshot"
+    env:
+      SCREENSHOT_PATH: ${{ parameters.outputPath }}
     condition: always()
-    inputs:
-      targetPath: ${{ parameters.outputPath }}
-      artifactName: '${{ parameters.uploadPrefix }}$(Agent.Name)-$(System.JobName)-$(System.JobId)-screenshot'
     continueOnError: true
+
+  - ${{ if eq(parameters.use1ES, true) }}:
+      - task: 1ES.PublishPipelineArtifact@1
+        displayName: 'Publish Artifact: Agent logs'
+        condition: always()
+        inputs:
+          path: ${{ parameters.outputPath }}
+          artifact: '${{ parameters.uploadPrefix }}$(Agent.Name)-$(System.JobName)-$(System.JobId)-screenshot'
+        continueOnError: true
+  - ${{ else }}:
+      - task: PublishPipelineArtifact@1
+        displayName: 'Publish Artifact: Agent logs'
+        condition: always()
+        inputs:
+          targetPath: ${{ parameters.outputPath }}
+          artifactName: '${{ parameters.uploadPrefix }}$(Agent.Name)-$(System.JobName)-$(System.JobId)-screenshot'
+        continueOnError: true
