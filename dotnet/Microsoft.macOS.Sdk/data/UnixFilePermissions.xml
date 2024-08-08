@@ -3,6 +3,6 @@
 	<File Path="tools/bin/bgen" Permission="755" />
 	<File Path="tools/lib/bgen/bgen" Permission="755" />
     <!-- xcsync -->
-	<File Path="tools/bin/xcsync" Permission="755" />
+	<File Path="tools/bin/dotnet-xcsync" Permission="755" />
 	<File Path="tools/lib/xcsync" Permission="755" />
  </FileList>
