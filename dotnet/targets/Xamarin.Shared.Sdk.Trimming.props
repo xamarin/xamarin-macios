@@ -84,5 +84,4 @@
 		<SuppressTrimAnalysisWarnings Condition="'$(SuppressTrimAnalysisWarnings)' == '' And '$(PublishAot)' == 'true'">false</SuppressTrimAnalysisWarnings>
 		<SuppressTrimAnalysisWarnings Condition="'$(SuppressTrimAnalysisWarnings)' == ''">true</SuppressTrimAnalysisWarnings>
 	</PropertyGroup>
-
 </Project>

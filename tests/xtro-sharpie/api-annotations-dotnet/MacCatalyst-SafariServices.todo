@@ -1,0 +1,2 @@
+!missing-field! SFExtensionProfileKey not bound
+!missing-protocol-member! SFAddToHomeScreenActivityItem::getWebAppManifestWithCompletionHandler: not found
