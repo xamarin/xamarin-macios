@@ -65,3 +65,4 @@
 !missing-type! HKStateOfMindType not bound
 !missing-type! HKWorkoutEffortRelationship not bound
 !missing-type! HKWorkoutEffortRelationshipQuery not bound
+!missing-selector! HKActivitySummary::isPaused not bound
