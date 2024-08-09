@@ -1713,14 +1713,22 @@ namespace Registrar {
 			switch (kind) {
 			case AvailabilityKind.Introduced:
 				if (shorthand) {
-					sdkVersion = new Version (majorVersion, minorVersion, subminorVersion);
+					if (subminorVersion == 0) {
+						sdkVersion = new Version (majorVersion, minorVersion);
+					} else {
+						sdkVersion = new Version (majorVersion, minorVersion, subminorVersion);
+					}
 				} else {
 					switch (ca.ConstructorArguments.Count) {
 					case 5:
 						sdkVersion = new Version (majorVersion, minorVersion);
 						break;
 					case 6:
-						sdkVersion = new Version (majorVersion, minorVersion, subminorVersion);
+						if (subminorVersion == 0) {
+							sdkVersion = new Version (majorVersion, minorVersion);
+						} else {
+							sdkVersion = new Version (majorVersion, minorVersion, subminorVersion);
+						}
 						break;
 					default:
 						throw ErrorHelper.CreateError (4163, Errors.MT4163, caType.Name, ca.ConstructorArguments.Count);
