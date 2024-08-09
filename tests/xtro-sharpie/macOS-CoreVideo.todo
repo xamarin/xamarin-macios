@@ -26,3 +26,5 @@
 !missing-pinvoke! CVMetalBufferCacheGetTypeID is not bound
 !missing-pinvoke! CVMetalBufferGetBuffer is not bound
 !missing-pinvoke! CVMetalBufferGetTypeID is not bound
+!missing-field! kCVImageBufferPostDecodeProcessingFrameMetadataKey not bound
+!missing-field! kCVImageBufferPostDecodeProcessingSequenceMetadataKey not bound
