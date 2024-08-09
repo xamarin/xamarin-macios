@@ -83,3 +83,4 @@
 !missing-type! NSTextList not bound
 !missing-type! NSTextRange not bound
 !missing-protocol! UIItemProviderReadingAugmentationProviding not bound
+!missing-enum! UIAxis not bound

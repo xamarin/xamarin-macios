@@ -9,3 +9,4 @@
 !missing-selector! PKPass::relevantDates not bound
 !missing-selector! PKPaymentRequest::merchantCategoryCode not bound
 !missing-selector! PKPaymentRequest::setMerchantCategoryCode: not bound
+!missing-selector! PKPaymentAuthorizationController::initWithDisbursementRequest: not bound
