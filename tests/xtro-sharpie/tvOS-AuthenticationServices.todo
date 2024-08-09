@@ -1,1 +1,2 @@
 !missing-enum-value! ASAuthorizationError native value ASAuthorizationErrorMatchedExcludedCredential = 1006 not bound
+!missing-selector! ASAuthorizationController::cancel not bound

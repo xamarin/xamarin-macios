@@ -43,3 +43,14 @@
 !missing-field! HMCharacteristicTypeVolumeControlType not bound
 !missing-field! HMCharacteristicTypeVolumeSelector not bound
 !missing-selector! HMService::matterEndpointID not bound
+!deprecated-attribute-missing! HMAccessory::init missing a [Deprecated] attribute
+!deprecated-attribute-missing! HMCameraControl::init missing a [Deprecated] attribute
+!deprecated-attribute-missing! HMCameraSnapshot::init missing a [Deprecated] attribute
+!deprecated-attribute-missing! HMCameraSnapshotControl::init missing a [Deprecated] attribute
+!deprecated-attribute-missing! HMCameraStream::init missing a [Deprecated] attribute
+!deprecated-attribute-missing! HMCameraStreamControl::init missing a [Deprecated] attribute
+!deprecated-attribute-missing! HMCharacteristic::init missing a [Deprecated] attribute
+!deprecated-attribute-missing! HMService::init missing a [Deprecated] attribute
+!missing-designated-initializer! HMCameraSnapshot::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! HMCameraSource::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! HMCameraStream::init is missing an [DesignatedInitializer] attribute
