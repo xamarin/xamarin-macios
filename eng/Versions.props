@@ -5,7 +5,7 @@
     <MicrosoftNETSdkPackageVersion>9.0.100-rc.1.24380.5</MicrosoftNETSdkPackageVersion>
     <MicrosoftNETILLinkTasksPackageVersion>9.0.0-rc.1.24378.5</MicrosoftNETILLinkTasksPackageVersion>
     <MicrosoftNETILLinkPackageVersion>9.0.0-alpha.1.23556.4</MicrosoftNETILLinkPackageVersion>
-    <MicrosoftDotNetBuildTasksFeedPackageVersion>8.0.0-beta.24225.1</MicrosoftDotNetBuildTasksFeedPackageVersion>
+    <MicrosoftDotNetBuildTasksFeedPackageVersion>9.0.0-beta.24408.2</MicrosoftDotNetBuildTasksFeedPackageVersion>
     <MicrosoftNETCoreAppRefPackageVersion>9.0.0-rc.1.24378.5</MicrosoftNETCoreAppRefPackageVersion>
     <MicrosoftNETWorkloadEmscriptenCurrentManifest80100TransportVersion>8.0.0-rtm.23511.3</MicrosoftNETWorkloadEmscriptenCurrentManifest80100TransportVersion>
     <MicrosoftNETRuntimeMonoTargetsSdkPackageVersion>9.0.0-alpha.1.23556.4</MicrosoftNETRuntimeMonoTargetsSdkPackageVersion>
