@@ -448,6 +448,9 @@ namespace Cecil.Tests {
 		//     public static void Extension () { }
 		// }
 		//
+		// Special case: it's allowed to not have an introduced if the only other attribute is an
+		// UnsupportedOSPlatform with no version.
+		//
 		// When run against mac, this fails as Extension does not include a mac supported of any kind attribute
 		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformAssemblyDefinitions))]
 		public void AllAttributedItemsMustIncludeCurrentPlatform (AssemblyInfo info)
@@ -474,7 +477,7 @@ namespace Cecil.Tests {
 
 		void CheckCurrentPlatformIncludedIfAny (ICustomAttributeProvider item, string platformName, string fullName, TypeDefinition parent, HashSet<string> found)
 		{
-			if (HasAnyAvailabilityAttribute (item)) {
+			if (HasAnyAvailabilityAttribute (item, onlyUnsupportedWithVersion: true)) {
 				if (IgnoreCurrentPlatform (fullName)) {
 					return;
 				}
@@ -572,11 +575,35 @@ namespace Cecil.Tests {
 			return null;
 		}
 
-		bool HasAnyAvailabilityAttribute (ICustomAttributeProvider provider) => provider.CustomAttributes.Any (a => IsAvailabilityAttribute (a));
+		bool HasAnyAvailabilityAttribute (ICustomAttributeProvider provider, bool onlyUnsupportedWithVersion = false)
+		{
+			return provider.CustomAttributes.Any (a => IsAvailabilityAttribute (a, onlyUnsupportedWithVersion));
+		}
+
 		bool HasAnySupportedAttribute (ICustomAttributeProvider provider) => provider.CustomAttributes.Any (a => IsSupportedAttribute (a));
 
-		bool IsAvailabilityAttribute (CustomAttribute attribute) => IsSupportedAttribute (attribute) || attribute.AttributeType.Name == "UnsupportedOSPlatformAttribute";
+		bool IsAvailabilityAttribute (CustomAttribute attribute) => IsAvailabilityAttribute (attribute, false);
+		bool IsAvailabilityAttribute (CustomAttribute attribute, bool onlyUnsupportedWithVersion)
+		{
+			if (IsSupportedAttribute (attribute))
+				return true;
+
+			return IsUnsupportedAttribute (attribute, onlyUnsupportedWithVersion);
+		}
+
 		bool IsSupportedAttribute (CustomAttribute attribute) => attribute.AttributeType.Name == "SupportedOSPlatformAttribute";
+
+		static char [] versionCharacters = new char [] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.' };
+		bool IsUnsupportedAttribute (CustomAttribute attribute, bool onlyWithVersion = false)
+		{
+			if (attribute.AttributeType.Name != "UnsupportedOSPlatformAttribute")
+				return false;
+			if (onlyWithVersion) {
+				var hasVersion = ((string) attribute.ConstructorArguments [0].Value).IndexOfAny (versionCharacters) > -1;
+				return hasVersion;
+			}
+			return true;
+		}
 
 		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformAssemblyDefinitions))]
 		public void ModelMustBeProtocol (AssemblyInfo info)

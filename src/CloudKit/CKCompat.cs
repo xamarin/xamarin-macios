@@ -162,15 +162,6 @@ namespace CloudKit {
 #endif
 
 #if WATCH
-
-	public partial class CKModifyBadgeOperation {
-
-		// `init` does not work on watchOS but we can keep compatibility with a different init
-		public CKModifyBadgeOperation () : this (0)
-		{
-		}
-	}
-
 	public partial class CKModifyRecordZonesOperation {
 
 		// `init` does not work on watchOS but we can keep compatibility with a different init
