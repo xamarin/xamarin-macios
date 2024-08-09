@@ -125,6 +125,7 @@ stages:
         CONTEXT: ${{ parameters.statusContext }}
         GITHUB_TOKEN: $(GitHub.Token)
         ACCESSTOKEN: $(System.AccessToken)
+        IS_PR: "${{ parameters.isPR }}"
         ${{ if eq(parameters.repositoryAlias, 'self') }}:
           COMMENT_HASH: $(fix_commit.GIT_HASH)
         ${{ else }}:
