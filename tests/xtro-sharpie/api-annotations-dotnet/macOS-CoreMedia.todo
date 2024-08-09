@@ -119,3 +119,4 @@
 !missing-field! kCMMetadataIdentifier_QuickTimeMetadataSceneIlluminance not bound
 !missing-field! kCMMetadataIdentifier_QuickTimeMetadataSegmentIdentifier not bound
 !missing-field! kCMTagProjectionTypeHalfEquirectangular not bound
+!missing-field! kCMSampleAttachmentKey_PostDecodeProcessingMetadata not bound

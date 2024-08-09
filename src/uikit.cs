@@ -331,7 +331,12 @@ namespace UIKit {
 	[DisableDefaultCtor]
 	[Abstract] // abstract class that should not be used directly
 	[BaseType (typeof (NSObject))]
-	interface UIFeedbackGenerator {
+	interface UIFeedbackGenerator : UIInteraction {
+
+		[iOS (17, 5), MacCatalyst (17, 5)]
+		[Static]
+		[Export ("feedbackGeneratorForView:")]
+		UIFeedbackGenerator GetFeedbackGenerator (UIView forView);
 
 		[Export ("prepare")]
 		void Prepare ();
@@ -344,16 +349,37 @@ namespace UIKit {
 	[BaseType (typeof (UIFeedbackGenerator))]
 	interface UIImpactFeedbackGenerator {
 
+		[iOS (17, 5), MacCatalyst (17, 5)]
+		[Static]
+		[Export ("feedbackGeneratorWithStyle:forView:")]
+		UIImpactFeedbackGenerator GetFeedbackGenerator (UIImpactFeedbackStyle style, UIView view);
+
+		[Deprecated (PlatformName.iOS, 17, 5, message: "Use 'GetFeedbackGenerator' method instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 17, 5, message: "Use 'GetFeedbackGenerator' method instead.")]
 		[Export ("initWithStyle:")]
 		NativeHandle Constructor (UIImpactFeedbackStyle style);
 
 		[Export ("impactOccurred")]
 		void ImpactOccurred ();
 
+		[iOS (17, 5), MacCatalyst (17, 5)]
+		[Export ("impactOccurredAtLocation:")]
+		void ImpactOccurred (CGPoint atLocation);
+
 		[iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("impactOccurredWithIntensity:")]
 		void ImpactOccurred (nfloat intensity);
+
+		[iOS (17, 5), MacCatalyst (17, 5)]
+		[Export ("impactOccurredWithIntensity:atLocation:")]
+		void ImpactOccurred (nfloat intensity, CGPoint location);
+
+		[iOS (17, 5), MacCatalyst (17, 5)]
+		[New] // kind of overloading a static member, make it return 'instancetype'
+		[Static]
+		[Export ("feedbackGeneratorForView:")]
+		UIImpactFeedbackGenerator GetFeedbackGenerator (UIView forView);
 	}
 
 	/// <summary>A <see cref="T:UIKit.UIFeedbackGenerator" /> that generates haptics relating to successes, failures, and warnings.</summary>
@@ -364,6 +390,16 @@ namespace UIKit {
 
 		[Export ("notificationOccurred:")]
 		void NotificationOccurred (UINotificationFeedbackType notificationType);
+
+		[iOS (17, 5), MacCatalyst (17, 5)]
+		[Export ("notificationOccurred:atLocation:")]
+		void NotificationOccurred (UINotificationFeedbackType notificationType, CGPoint location);
+
+		[iOS (17, 5), MacCatalyst (17, 5)]
+		[New] // kind of overloading a static member, make it return 'instancetype'
+		[Static]
+		[Export ("feedbackGeneratorForView:")]
+		UINotificationFeedbackGenerator GetFeedbackGenerator (UIView forView);
 	}
 
 	/// <summary>A <see cref="T:UIKit.UIFeedbackGenerator" /> that produces haptic feedback.</summary>
@@ -374,6 +410,16 @@ namespace UIKit {
 
 		[Export ("selectionChanged")]
 		void SelectionChanged ();
+
+		[iOS (17, 5), MacCatalyst (17, 5)]
+		[Export ("selectionChangedAtLocation:")]
+		void SelectionChanged (CGPoint location);
+
+		[iOS (17, 5), MacCatalyst (17, 5)]
+		[New] // kind of overloading a static member, make it return 'instancetype'
+		[Static]
+		[Export ("feedbackGeneratorForView:")]
+		UISelectionFeedbackGenerator GetFeedbackGenerator (UIView forView);
 	}
 
 	interface IUISheetPresentationControllerDelegate { }
@@ -3324,7 +3370,12 @@ namespace UIKit {
 		BottomToTop = 4,
 	}
 
+#if XAMCORE_5_0
+	[NoWatch, TV (16, 0), iOS (16, 0), NoMacCatalyst]
+#else
 	[NoWatch, TV (16, 0), iOS (16, 0), MacCatalyst (16, 0)]
+	[Obsoleted (PlatformName.MacCatalyst, 17, 4, message: Constants.ApiRemovedGeneral)]
+#endif
 	[Native]
 	public enum UIPasteControlDisplayMode : ulong {
 		IconAndLabel,
@@ -8099,6 +8150,10 @@ namespace UIKit {
 		[Export ("endFloatingCursor")]
 		void EndFloatingCursor ();
 
+		[TV (17, 4), iOS (17, 4), MacCatalyst (17, 4)]
+		[Export ("caretTransformForPosition:")]
+		CGAffineTransform GetCaretTransform (UITextPosition forPosition);
+
 		[iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("insertText:alternatives:style:")]
@@ -8226,6 +8281,10 @@ namespace UIKit {
 
 		[Export ("isVertical")]
 		bool IsVertical { get; }
+
+		[TV (17, 4), iOS (17, 4), MacCatalyst (17, 4)]
+		[Export ("transform")]
+		CGAffineTransform Transform { get; }
 	}
 
 	/// <summary>A set of <see cref="T:UIKit.UILexiconEntry" /> objects derived from a variety of system resources, such as first and last names from the Address Book, text shortcuts, and Apple product names.</summary>
@@ -9210,6 +9269,11 @@ namespace UIKit {
 		UIMenuElement [] _SelectedElements { get; }
 #endif
 
+		[iOS (17, 4), MacCatalyst (17, 4), TV (17, 4)]
+		[NullAllowed]
+		[Export ("displayPreferences", ArgumentSemantic.Copy)]
+		UIMenuDisplayPreferences DisplayPreferences { get; set; }
+
 		[Export ("children")]
 		UIMenuElement [] Children { get; }
 
@@ -9606,6 +9670,10 @@ namespace UIKit {
 		[MacCatalyst (14, 0)]
 		[Export ("removeActionForIdentifier:forControlEvents:")]
 		void RemoveAction (string actionIdentifier, UIControlEvent controlEvents);
+
+		[iOS (17, 4), TV (17, 4), MacCatalyst (17, 4)]
+		[Export ("performPrimaryAction")]
+		void PerformPrimaryAction ();
 
 		[Export ("allTargets")]
 		NSSet AllTargets { get; }
@@ -12972,6 +13040,10 @@ namespace UIKit {
 		[Export ("contentInset")]
 		UIEdgeInsets ContentInset { get; set; }
 
+		[iOS (17, 4), TV (17, 4), MacCatalyst (17, 4)]
+		[Export ("contentAlignmentPoint", ArgumentSemantic.Assign)]
+		CGPoint ContentAlignmentPoint { get; set; }
+
 		[MacCatalyst (13, 1)]
 		[Export ("adjustedContentInset")]
 		UIEdgeInsets AdjustedContentInset { get; }
@@ -13007,6 +13079,14 @@ namespace UIKit {
 
 		[Export ("bounces")]
 		bool Bounces { get; set; }
+
+		[TV (17, 4), iOS (17, 4), MacCatalyst (17, 4)]
+		[Export ("bouncesHorizontally")]
+		bool BouncesHorizontally { get; set; }
+
+		[TV (17, 4), iOS (17, 4), MacCatalyst (17, 4)]
+		[Export ("bouncesVertically")]
+		bool BouncesVertically { get; set; }
 
 		[Export ("alwaysBounceVertical")]
 		bool AlwaysBounceVertical { get; set; }
@@ -13061,6 +13141,14 @@ namespace UIKit {
 		[Export ("scrollEnabled")]
 		bool ScrollEnabled { [Bind ("isScrollEnabled")] get; set; }
 
+		[TV (17, 4), iOS (17, 4), MacCatalyst (17, 4)]
+		[Export ("transfersHorizontalScrollingToParent")]
+		bool TransfersHorizontalScrollingToParent { get; set; }
+
+		[TV (17, 4), iOS (17, 4), MacCatalyst (17, 4)]
+		[Export ("transfersVerticalScrollingToParent")]
+		bool TransfersVerticalScrollingToParent { get; set; }
+
 		[Export ("tracking")]
 		bool Tracking { [Bind ("isTracking")] get; }
 
@@ -13070,6 +13158,10 @@ namespace UIKit {
 		[Export ("decelerating")]
 		bool Decelerating { [Bind ("isDecelerating")] get; }
 
+		[TV (17, 4), iOS (17, 4), MacCatalyst (17, 4)]
+		[Export ("scrollAnimating")]
+		bool ScrollAnimating { [Bind ("isScrollAnimating")] get; }
+
 		[Export ("setContentOffset:animated:")]
 		void SetContentOffset (CGPoint contentOffset, bool animated);
 
@@ -13078,6 +13170,10 @@ namespace UIKit {
 
 		[Export ("flashScrollIndicators")]
 		void FlashScrollIndicators ();
+
+		[TV (17, 4), iOS (17, 4), MacCatalyst (17, 4)]
+		[Export ("withScrollIndicatorsShownForContentOffsetChanges:")]
+		void WithScrollIndicatorsShown (Action forContentOffsetChanges);
 
 		[Export ("delaysContentTouches")]
 		bool DelaysContentTouches { get; set; }
@@ -13115,10 +13211,18 @@ namespace UIKit {
 		[Export ("zoomBouncing")]
 		bool ZoomBouncing { [Bind ("isZoomBouncing")] get; }
 
+		[TV (17, 4), iOS (17, 4), MacCatalyst (17, 4)]
+		[Export ("zoomAnimating")]
+		bool ZoomAnimating { [Bind ("isZoomAnimating")] get; }
+
 		[NoTV]
 		[MacCatalyst (13, 1)]
 		[Export ("scrollsToTop")]
 		bool ScrollsToTop { get; set; }
+
+		[TV (17, 4), iOS (17, 4), MacCatalyst (17, 4)]
+		[Export ("stopScrollingAndZooming")]
+		void StopScrollingAndZooming ();
 
 		[Export ("panGestureRecognizer")]
 		UIPanGestureRecognizer PanGestureRecognizer { get; }
@@ -16511,6 +16615,10 @@ namespace UIKit {
 		[MacCatalyst (13, 1)]
 		[Export ("estimatedPropertiesExpectingUpdates")]
 		UITouchProperties EstimatedPropertiesExpectingUpdates { get; }
+
+		[NoWatch, NoTV, iOS (17, 5), MacCatalyst (17, 5)]
+		[Export ("rollAngle")]
+		nfloat RollAngle { get; }
 	}
 
 	/// <summary>A Video Editor Controller.</summary>
@@ -19137,6 +19245,14 @@ namespace UIKit {
 		[iOS (17, 0), MacCatalyst (17, 0), TV (17, 0)]
 		[Field ("UITextContentTypeCreditCardType")]
 		NSString CreditCardType { get; }
+
+		[iOS (17, 4), MacCatalyst (17, 4), TV (17, 4)]
+		[Field ("UITextContentTypeCellularEID")]
+		NSString CellularEid { get; }
+
+		[iOS (17, 4), MacCatalyst (17, 4), TV (17, 4)]
+		[Field ("UITextContentTypeCellularIMEI")]
+		NSString CellularImei { get; }
 	}
 
 	[NoWatch]
@@ -21970,6 +22086,10 @@ namespace UIKit {
 
 		[NullAllowed, Export ("previewProvider", ArgumentSemantic.Copy)]
 		Func<UIDragPreview> PreviewProvider { get; set; }
+
+		[iOS (17, 4), MacCatalyst (17, 4)]
+		[Export ("setNeedsDropPreviewUpdate")]
+		void SetNeedsDropPreviewUpdate ();
 	}
 
 	/// <summary>A visual representation of a dragging item.</summary>
@@ -23381,6 +23501,19 @@ namespace UIKit {
 		ShowColorPalette,
 		[iOS (16, 0), MacCatalyst (16, 0)]
 		ShowInkAttributes,
+		[iOS (17, 5), MacCatalyst (17, 5)]
+		ShowContextualPalette,
+		[iOS (17, 5), MacCatalyst (17, 5)]
+		RunSystemShortcut,
+	}
+
+	[NoWatch, NoTV, iOS (17, 5), MacCatalyst (17, 5)]
+	[Native]
+	public enum UIPencilInteractionPhase : ulong {
+		Began,
+		Changed,
+		Ended,
+		Cancelled,
 	}
 
 	[iOS (12, 1)]
@@ -23393,11 +23526,25 @@ namespace UIKit {
 		[Export ("preferredTapAction")]
 		UIPencilPreferredAction PreferredTapAction { get; }
 
+		[iOS (17, 5), MacCatalyst (17, 5)]
+		[Static]
+		[Export ("preferredSqueezeAction")]
+		UIPencilPreferredAction PreferredSqueezeAction { get; }
+
 		[iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[Static]
 		[Export ("prefersPencilOnlyDrawing")]
 		bool PrefersPencilOnlyDrawing { get; }
+
+		[iOS (17, 5), MacCatalyst (17, 5)]
+		[Static]
+		[Export ("prefersHoverToolPreview")]
+		bool PrefersHoverToolPreview { get; }
+
+		[iOS (17, 5), MacCatalyst (17, 5)]
+		[Export ("initWithDelegate:")]
+		NativeHandle Constructor (IUIPencilInteractionDelegate @delegate);
 
 		[Wrap ("WeakDelegate")]
 		[NullAllowed]
@@ -23410,6 +23557,57 @@ namespace UIKit {
 		bool Enabled { [Bind ("isEnabled")] get; set; }
 	}
 
+	[NoWatch, NoTV, iOS (17, 5), MacCatalyst (17, 5)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface UIPencilHoverPose {
+
+		[Export ("location", ArgumentSemantic.Assign)]
+		CGPoint Location { get; }
+
+		[Export ("zOffset")]
+		nfloat ZOffset { get; }
+
+		[Export ("azimuthAngle")]
+		nfloat AzimuthAngle { get; }
+
+		[Export ("azimuthUnitVector", ArgumentSemantic.Assign)]
+		CGVector AzimuthUnitVector { get; }
+
+		[Export ("altitudeAngle")]
+		nfloat AltitudeAngle { get; }
+
+		[Export ("rollAngle")]
+		nfloat RollAngle { get; }
+	}
+
+	[NoWatch, NoTV, iOS (17, 5), MacCatalyst (17, 5)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface UIPencilInteractionTap {
+
+		[Export ("timestamp")]
+		double Timestamp { get; }
+
+		[NullAllowed, Export ("hoverPose", ArgumentSemantic.Strong)]
+		UIPencilHoverPose HoverPose { get; }
+	}
+
+	[NoWatch, NoTV, iOS (17, 5), MacCatalyst (17, 5)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface UIPencilInteractionSqueeze {
+
+		[Export ("timestamp")]
+		double Timestamp { get; }
+
+		[Export ("phase", ArgumentSemantic.Assign)]
+		UIPencilInteractionPhase Phase { get; }
+
+		[NullAllowed, Export ("hoverPose", ArgumentSemantic.Strong)]
+		UIPencilHoverPose HoverPose { get; }
+	}
+
 	interface IUIPencilInteractionDelegate { }
 
 	[iOS (12, 1)]
@@ -23419,8 +23617,19 @@ namespace UIKit {
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	interface UIPencilInteractionDelegate {
+
+		[Deprecated (PlatformName.iOS, 17, 5, message: "Use 'DidReceiveTap' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 17, 5, message: "Use 'DidReceiveTap' instead.")]
 		[Export ("pencilInteractionDidTap:")]
 		void DidTap (UIPencilInteraction interaction);
+
+		[iOS (17, 5), MacCatalyst (17, 5)]
+		[Export ("pencilInteraction:didReceiveTap:")]
+		void DidReceiveTap (UIPencilInteraction interaction, UIPencilInteractionTap tap);
+
+		[iOS (17, 5), MacCatalyst (17, 5)]
+		[Export ("pencilInteraction:didReceiveSqueeze:")]
+		void DidReceiveSqueeze (UIPencilInteraction interaction, UIPencilInteractionSqueeze squeeze);
 	}
 
 	[iOS (13, 0), TV (13, 0), NoWatch]
@@ -24064,6 +24273,10 @@ namespace UIKit {
 		[iOS (16, 4), MacCatalyst (16, 4)]
 		[Export ("altitudeAngle")]
 		nfloat AltitudeAngle { get; }
+
+		[iOS (17, 5), MacCatalyst (17, 5)]
+		[Export ("rollAngle")]
+		nfloat RollAngle { get; }
 	}
 
 	interface IUILargeContentViewerItem { }
@@ -29113,4 +29326,84 @@ namespace UIKit {
 		[Export ("unregisterForTraitChanges:")]
 		void UnregisterForTraitChanges (IUITraitChangeRegistration registration);
 	}
+
+	[NoWatch, TV (17, 4), iOS (17, 4), MacCatalyst (17, 4)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface UITextCursorDropPositionAnimator {
+
+		[Export ("cursorView")]
+		IUITextCursorView CursorView { get; }
+
+		[Export ("textInput")]
+		IUITextInput TextInput { get; }
+
+		[Export ("initWithTextCursorView:textInput:")]
+		[DesignatedInitializer]
+		NativeHandle Constructor (IUITextCursorView cursorView, IUITextInput textInput);
+
+		[Export ("setCursorVisible:animated:")]
+		void SetCursorVisible (bool visible, bool animated);
+
+		[Export ("placeCursorAtPosition:animated:")]
+		void PlaceCursor (UITextPosition atPosition, bool animated);
+
+		[Async]
+		[Export ("animateAlongsideChanges:completion:")]
+		void AnimateAlongsideChanges ([NullAllowed] Action animation, [NullAllowed] Action completion);
+	}
+
+	[NoWatch, TV (17, 4), iOS (17, 4), MacCatalyst (17, 4)]
+	[BaseType (typeof (NSObject))]
+	interface UIMenuDisplayPreferences : NSCopying, NSSecureCoding {
+
+		[Export ("maximumNumberOfTitleLines")]
+		nint MaximumNumberOfTitleLines { get; set; }
+	}
+
+	[NoWatch, TV (17, 4), iOS (17, 4), MacCatalyst (17, 4)]
+	[Protocol (BackwardsCompatibleCodeGeneration = false)]
+	interface UIItemProviderReadingAugmentationProviding {
+
+		[Static, Abstract]
+		[Export ("objectWithItemProviderData:typeIdentifier:requestedClass:error:")]
+		[return: NullAllowed]
+		NSObject GetTypeIdentifier (NSData data, string typeIdentifier, Class requestedClass, [NullAllowed] out NSError outError);
+
+		[Static, Abstract]
+		[Export ("additionalLeadingReadableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
+		string [] AdditionalLeadingReadableTypeIdentifiersForItemProvider { get; }
+
+		[Static, Abstract]
+		[Export ("additionalTrailingReadableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
+		string [] AdditionalTrailingReadableTypeIdentifiersForItemProvider { get; }
+	}
+
+	[NoWatch, TV (17, 4), iOS (17, 4), MacCatalyst (17, 4)]
+	[BaseType (typeof (UIView))]
+	[DisableDefaultCtor]
+	interface UIStandardTextCursorView : UITextCursorView {
+
+		[Export ("initWithFrame:")]
+		NativeHandle Constructor (CGRect frame);
+	}
+
+	[NoWatch, NoTV, iOS (17, 5), MacCatalyst (17, 5)]
+	[BaseType (typeof (UIFeedbackGenerator))]
+	[DisableDefaultCtor]
+	interface UICanvasFeedbackGenerator {
+
+		[Export ("alignmentOccurredAtLocation:")]
+		void AlignmentOccurred (CGPoint atLocation);
+
+		[Export ("pathCompletedAtLocation:")]
+		void PathCompleted (CGPoint atLocation);
+
+		[iOS (17, 5), MacCatalyst (17, 5)]
+		[New] // kind of overloading a static member, make it return 'instancetype'
+		[Static]
+		[Export ("feedbackGeneratorForView:")]
+		UICanvasFeedbackGenerator GetFeedbackGenerator (UIView forView);
+	}
+
 }

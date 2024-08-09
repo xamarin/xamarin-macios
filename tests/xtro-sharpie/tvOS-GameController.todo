@@ -16,7 +16,6 @@
 !missing-selector! GCControllerLiveInput::unmappedInput not bound
 !missing-type! GCControllerInputState not bound
 !missing-type! GCControllerLiveInput not bound
-!missing-enum! GCUIEventTypes not bound
 !missing-field! GCInputLeftBumper not bound
 !missing-field! GCInputRightBumper not bound
 !missing-field! GCPoint2Zero not bound

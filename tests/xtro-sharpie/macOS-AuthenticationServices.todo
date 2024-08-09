@@ -1,15 +1,10 @@
 !deprecated-attribute-missing! ASAuthorizationProviderExtensionLoginManager::loginUserName missing a [Deprecated] attribute
 !deprecated-attribute-missing! ASAuthorizationProviderExtensionLoginManager::setLoginUserName: missing a [Deprecated] attribute
 !deprecated-attribute-wrong! ASCredentialIdentityStore::replaceCredentialIdentitiesWithIdentities:completion: has 17.0 not 14.0 on [Deprecated] attribute
-!deprecated-attribute-missing! ASWebAuthenticationSession::initWithURL:callbackURLScheme:completionHandler: missing a [Deprecated] attribute
 !deprecated-attribute-missing! ASWebAuthenticationSessionRequest::callbackURLScheme missing a [Deprecated] attribute
 !missing-enum! ASAuthorizationPlatformPublicKeyCredentialRegistrationRequestStyle not bound
-!missing-enum! ASAuthorizationProviderExtensionUserSecureEnclaveKeyBiometricPolicy not bound
-!missing-enum! ASCredentialIdentityTypes not bound
-!missing-enum! ASUserAgeRange not bound
 !missing-enum-value! ASAuthorizationError native value ASAuthorizationErrorMatchedExcludedCredential = 1006 not bound
 !missing-enum-value! ASAuthorizationProviderExtensionRequestOptions native value ASAuthorizationProviderExtensionRequestOptionsStrongerKeyAvailable = 16 not bound
-!missing-enum-value! ASAuthorizationProviderExtensionRequestOptions native value ASAuthorizationProviderExtensionRequestOptionsUserKeyInvalid = 32 not bound
 !missing-enum-value! ASCredentialRequestType native value ASCredentialRequestTypeOneTimeCode = 3 not bound
 !missing-enum-value! ASCredentialRequestType native value ASCredentialRequestTypePasskeyRegistration = 2 not bound
 !missing-enum-value! ASExtensionErrorCode native value ASExtensionErrorCodeMatchedExcludedCredential = 102 not bound
@@ -20,9 +15,6 @@
 !missing-field! ASAuthorizationProviderExtensionSigningAlgorithmEd25519 not bound
 !missing-field! ASAuthorizationProviderExtensionSigningAlgorithmES256 not bound
 !missing-field! ASAuthorizationProviderExtensionSigningAlgorithmES384 not bound
-!missing-protocol! ASAuthorizationWebBrowserSecurityKeyPublicKeyCredentialAssertionRequest not bound
-!missing-protocol! ASAuthorizationWebBrowserSecurityKeyPublicKeyCredentialProvider not bound
-!missing-protocol! ASAuthorizationWebBrowserSecurityKeyPublicKeyCredentialRegistrationRequest not bound
 !missing-protocol-member! ASAuthorizationProviderExtensionRegistrationHandler::keyWillRotateForKeyType:newKey:loginManager:completion: not found
 !missing-protocol-member! ASAuthorizationProviderExtensionRegistrationHandler::supportedDeviceEncryptionAlgorithms not found
 !missing-protocol-member! ASAuthorizationProviderExtensionRegistrationHandler::supportedDeviceSigningAlgorithms not found
@@ -30,9 +22,6 @@
 !missing-protocol-member! ASAuthorizationWebBrowserPlatformPublicKeyCredentialProvider::createCredentialRegistrationRequestWithClientData:name:userID:requestStyle: not found
 !missing-selector! +ASAuthorizationPublicKeyCredentialPRFRegistrationInput::checkForSupport not bound
 !missing-selector! +ASOneTimeCodeCredential::credentialWithCode: not bound
-!missing-selector! +ASWebAuthenticationSessionCallback::callbackWithCustomScheme: not bound
-!missing-selector! +ASWebAuthenticationSessionCallback::callbackWithHTTPSHost:path: not bound
-!missing-selector! ASAuthorizationAppleIDCredential::userAgeRange not bound
 !missing-selector! ASAuthorizationPlatformPublicKeyCredentialAssertion::prf not bound
 !missing-selector! ASAuthorizationPlatformPublicKeyCredentialAssertionRequest::prf not bound
 !missing-selector! ASAuthorizationPlatformPublicKeyCredentialAssertionRequest::setPrf: not bound
@@ -54,8 +43,6 @@
 !missing-selector! ASAuthorizationProviderExtensionLoginConfiguration::setLoginRequestEncryptionAlgorithm: not bound
 !missing-selector! ASAuthorizationProviderExtensionLoginConfiguration::setLoginRequestHPKEPreSharedKey: not bound
 !missing-selector! ASAuthorizationProviderExtensionLoginConfiguration::setLoginRequestHPKEPreSharedKeyID: not bound
-!missing-selector! ASAuthorizationProviderExtensionLoginConfiguration::setUserSecureEnclaveKeyBiometricPolicy: not bound
-!missing-selector! ASAuthorizationProviderExtensionLoginConfiguration::userSecureEnclaveKeyBiometricPolicy not bound
 !missing-selector! ASAuthorizationProviderExtensionLoginManager::beginKeyRotationForKeyType: not bound
 !missing-selector! ASAuthorizationProviderExtensionLoginManager::completeKeyRotationForKeyType: not bound
 !missing-selector! ASAuthorizationPublicKeyCredentialPRFAssertionInput::initWithInputValues:perCredentialInputValues: not bound
@@ -68,11 +55,6 @@
 !missing-selector! ASAuthorizationPublicKeyCredentialPRFAssertionOutput::second not bound
 !missing-selector! ASAuthorizationPublicKeyCredentialPRFRegistrationInput::shouldCheckForSupport not bound
 !missing-selector! ASAuthorizationPublicKeyCredentialPRFRegistrationOutput::isSupported not bound
-!missing-selector! ASAuthorizationSecurityKeyPublicKeyCredentialAssertion::appID not bound
-!missing-selector! ASAuthorizationSecurityKeyPublicKeyCredentialAssertionRequest::appID not bound
-!missing-selector! ASAuthorizationSecurityKeyPublicKeyCredentialAssertionRequest::setAppID: not bound
-!missing-selector! ASAuthorizationSecurityKeyPublicKeyCredentialRegistration::transports not bound
-!missing-selector! ASCredentialIdentityStore::getCredentialIdentitiesForService:credentialIdentityTypes:completionHandler: not bound
 !missing-selector! ASCredentialProviderExtensionContext::completeOneTimeCodeRequestWithSelectedCredential:completionHandler: not bound
 !missing-selector! ASCredentialProviderViewController::performPasskeyRegistrationWithoutUserInteractionIfPossible: not bound
 !missing-selector! ASCredentialProviderViewController::prepareOneTimeCodeCredentialListForServiceIdentifiers: not bound
@@ -99,12 +81,6 @@
 !missing-selector! ASPasskeyRegistrationCredentialExtensionInput::largeBlob not bound
 !missing-selector! ASPasskeyRegistrationCredentialExtensionOutput::initWithLargeBlobOutput: not bound
 !missing-selector! ASPasskeyRegistrationCredentialExtensionOutput::largeBlobRegistrationOutput not bound
-!missing-selector! ASWebAuthenticationSession::additionalHeaderFields not bound
-!missing-selector! ASWebAuthenticationSession::initWithURL:callback:completionHandler: not bound
-!missing-selector! ASWebAuthenticationSession::setAdditionalHeaderFields: not bound
-!missing-selector! ASWebAuthenticationSessionCallback::matchesURL: not bound
-!missing-selector! ASWebAuthenticationSessionRequest::additionalHeaderFields not bound
-!missing-selector! ASWebAuthenticationSessionRequest::callback not bound
 !missing-type! ASAuthorizationPublicKeyCredentialPRFAssertionInput not bound
 !missing-type! ASAuthorizationPublicKeyCredentialPRFAssertionInputValues not bound
 !missing-type! ASAuthorizationPublicKeyCredentialPRFAssertionOutput not bound
@@ -117,4 +93,10 @@
 !missing-type! ASPasskeyAssertionCredentialExtensionOutput not bound
 !missing-type! ASPasskeyRegistrationCredentialExtensionInput not bound
 !missing-type! ASPasskeyRegistrationCredentialExtensionOutput not bound
-!missing-type! ASWebAuthenticationSessionCallback not bound
+!missing-selector! +ASSettingsHelper::requestToTurnOnCredentialProviderExtensionWithCompletionHandler: not bound
+!deprecated-attribute-missing! ASWebAuthenticationSessionRequest::callbackURLScheme missing a [Deprecated] attribute
+!missing-enum-value! ASCredentialIdentityTypes native value ASCredentialIdentityTypesOneTimeCode = 4 not bound
+!missing-selector! ASAuthorizationPublicKeyCredentialPRFRegistrationInput::initWithInputValues: not bound
+!missing-selector! ASAuthorizationPublicKeyCredentialPRFRegistrationInput::inputValues not bound
+!missing-selector! ASAuthorizationPublicKeyCredentialPRFRegistrationOutput::first not bound
+!missing-selector! ASAuthorizationPublicKeyCredentialPRFRegistrationOutput::second not bound
