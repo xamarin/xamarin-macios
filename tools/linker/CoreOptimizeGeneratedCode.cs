@@ -755,6 +755,9 @@ namespace Xamarin.Linker {
 				return; // nothing else to do here.
 			}
 
+			if (ProcessProtocolInterfaceStaticConstructor (method))
+				return;
+
 			var instructions = method.Body.Instructions;
 			for (int i = 0; i < instructions.Count; i++) {
 				var ins = instructions [i];
@@ -1183,6 +1186,19 @@ namespace Xamarin.Linker {
 			return ins;
 		}
 
+		static Instruction SkipNops (Instruction ins)
+		{
+			if (ins is null)
+				return null;
+
+			while (ins.OpCode == OpCodes.Nop) {
+				if (ins.Next is null)
+					return null;
+				ins = ins.Next;
+			}
+			return ins;
+		}
+
 		int ProcessIsARM64CallingConvention (MethodDefinition caller, Instruction ins)
 		{
 			const string operation = "inline Runtime.IsARM64CallingConvention";
@@ -1336,6 +1352,67 @@ namespace Xamarin.Linker {
 					throw ErrorHelper.CreateError (LinkContext.App, 99, caller, ins, Errors.MX0099, $"could not find the constructor ObjCRuntime.BlockLiteral (void*, object, string)");
 			}
 			return caller.Module.ImportReference (block_ctor_def);
+		}
+
+		bool ProcessProtocolInterfaceStaticConstructor (MethodDefinition method)
+		{
+			// The static cctor in protocol interfaces exists only to preserve the protocol's members, for inspection by the registrar(s).
+			// If we're registering protocols, then we don't need to preserve protocol members, because the registrar
+			// already knows everything about it => we can remove the static cctor.
+
+			if (!(method.DeclaringType.IsInterface && method.DeclaringType.IsInterface && method.IsStatic && method.IsConstructor && method.HasBody))
+				return false;
+
+			if (Optimizations.RegisterProtocols != true) {
+				Driver.Log (4, "Did not optimize static constructor in the protocol interface {0}: the 'register-protocols' optimization is disabled.", method.DeclaringType.FullName);
+				return false;
+			}
+
+			if (!method.DeclaringType.HasCustomAttributes || !method.DeclaringType.CustomAttributes.Any (v => v.AttributeType.Is ("Foundation", "ProtocolAttribute"))) {
+				Driver.Log (4, "Did not optimize static constructor in the protocol interface {0}: no Protocol attribute found.", method.DeclaringType.FullName);
+				return false;
+			}
+
+			var ins = SkipNops (method.Body.Instructions.First ());
+			if (ins is null) {
+				ErrorHelper.Show (ErrorHelper.CreateWarning (LinkContext.App, 2112, method, ins, Errors.MX2112_A /* Could not optimize the static constructor in the interface {0} because it did not have the expected instruction sequence (found end of method too soon). */, method.DeclaringType.FullName));
+				return false;
+			} else if (ins.OpCode != OpCodes.Ldnull) {
+				ErrorHelper.Show (ErrorHelper.CreateWarning (LinkContext.App, 2112, method, ins, Errors.MX2112_B /* Could not optimize the static constructor in the interface {0} because it had an unexpected instruction {1} at offset {2}. */, method.DeclaringType.FullName, ins.OpCode, ins.Offset));
+				return false;
+			}
+
+			ins = SkipNops (ins.Next);
+			var callGCKeepAlive = ins;
+			if (ins is null) {
+				ErrorHelper.Show (ErrorHelper.CreateWarning (LinkContext.App, 2112, method, ins, Errors.MX2112_A /* Could not optimize the static constructor in the interface {0} because it did not have the expected instruction sequence (found end of method too soon). */, method.DeclaringType.FullName));
+				return false;
+			} else if (callGCKeepAlive.OpCode != OpCodes.Call || !(callGCKeepAlive.Operand is MethodReference methodOperand) || methodOperand.Name != "KeepAlive" || !methodOperand.DeclaringType.Is ("System", "GC")) {
+				ErrorHelper.Show (ErrorHelper.CreateWarning (LinkContext.App, 2112, method, ins, Errors.MX2112_B /* Could not optimize the static constructor in the interface {0} because it had an unexpected instruction {1} at offset {2}. */, method.DeclaringType.FullName, ins.OpCode, ins.Offset));
+				return false;
+			}
+
+			ins = SkipNops (ins.Next);
+			if (ins is null) {
+				ErrorHelper.Show (ErrorHelper.CreateWarning (LinkContext.App, 2112, method, ins, Errors.MX2112_A /* Could not optimize the static constructor in the interface {0} because it did not have the expected instruction sequence (found end of method too soon). */, method.DeclaringType.FullName));
+				return false;
+			} else if (ins.OpCode != OpCodes.Ret) {
+				ErrorHelper.Show (ErrorHelper.CreateWarning (LinkContext.App, 2112, method, ins, Errors.MX2112_B /* Could not optimize the static constructor in the interface {0} because it had an unexpected instruction {1} at offset {2}. */, method.DeclaringType.FullName, ins.OpCode, ins.Offset));
+				return false;
+			}
+
+			ins = SkipNops (ins.Next);
+			if (ins is not null) {
+				ErrorHelper.Show (ErrorHelper.CreateWarning (LinkContext.App, 2112, method, ins, Errors.MX2112_B /* Could not optimize the static constructor in the interface {0} because it had an unexpected instruction {1} at offset {2}. */, method.DeclaringType.FullName, ins.OpCode, ins.Offset));
+				return false;
+			}
+
+			// We can just remove the entire method
+			Driver.Log (4, "Optimized static constructor in the protocol interface {0} (static constructor was cleared and custom attributes removed)", method.DeclaringType.FullName);
+			method.Body.Instructions.Clear ();
+			method.Body.Instructions.Add (Instruction.Create (OpCodes.Ret));
+			method.CustomAttributes.Clear ();
+			return true;
 		}
 	}
 }

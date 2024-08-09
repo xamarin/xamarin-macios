@@ -5054,6 +5054,7 @@ public partial class Generator : IMemberGatherer {
 			foreach (var docId in docIds) {
 				print ($"[DynamicDependencyAttribute (\"{docId}\")]");
 			}
+			print ("[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]");
 			print ($"static I{TypeName} ()");
 			print ("{");
 			print ("\tGC.KeepAlive (null);"); // need to do _something_ (doesn't seem to matter what), otherwise the static cctor (and the DynamicDependency attributes) are trimmed away.
