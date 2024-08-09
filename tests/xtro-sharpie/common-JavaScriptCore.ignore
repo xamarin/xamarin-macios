@@ -109,3 +109,16 @@
 !missing-pinvoke! JSValueMakeSymbol is not bound
 !missing-pinvoke! JSGlobalContextIsInspectable is not bound
 !missing-pinvoke! JSGlobalContextSetInspectable is not bound
+!missing-pinvoke! JSBigIntCreateWithDouble is not bound
+!missing-pinvoke! JSBigIntCreateWithInt64 is not bound
+!missing-pinvoke! JSBigIntCreateWithString is not bound
+!missing-pinvoke! JSBigIntCreateWithUInt64 is not bound
+!missing-pinvoke! JSValueCompare is not bound
+!missing-pinvoke! JSValueCompareDouble is not bound
+!missing-pinvoke! JSValueCompareInt64 is not bound
+!missing-pinvoke! JSValueCompareUInt64 is not bound
+!missing-pinvoke! JSValueIsBigInt is not bound
+!missing-pinvoke! JSValueToInt32 is not bound
+!missing-pinvoke! JSValueToInt64 is not bound
+!missing-pinvoke! JSValueToUInt32 is not bound
+!missing-pinvoke! JSValueToUInt64 is not bound
