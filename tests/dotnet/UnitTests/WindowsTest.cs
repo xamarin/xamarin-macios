@@ -368,16 +368,6 @@ namespace Xamarin.Tests {
 			Assert.AreEqual ("3.14", infoPlist.GetString ("CFBundleShortVersionString").Value, "CFBundleShortVersionString");
 		}
 
-		protected void AddRemoteProperties (Dictionary<string, string> properties)
-		{
-			properties ["ServerAddress"] = Environment.GetEnvironmentVariable ("MAC_AGENT_IP") ?? string.Empty;
-			properties ["ServerUser"] = Environment.GetEnvironmentVariable ("MAC_AGENT_USER") ?? string.Empty;
-			properties ["ServerPassword"] = Environment.GetEnvironmentVariable ("XMA_PASSWORD") ?? string.Empty;
-
-			if (!string.IsNullOrEmpty (properties ["ServerUser"]))
-				properties ["EnsureRemoteConnection"] = "true";
-		}
-
 		protected Dictionary<string, string> AddHotRestartProperties (Dictionary<string, string>? properties = null)
 		{
 			properties ??= new Dictionary<string, string> ();
@@ -388,6 +378,63 @@ namespace Xamarin.Tests {
 			properties ["_AppIdentifier"] = "placeholder_AppIdentifier"; // This needs to be set to a placeholder value because DetectSigningIdentity usually does it (and we've disabled signing)
 			properties ["_BundleIdentifier"] = "placeholder_BundleIdentifier"; // This needs to be set to a placeholder value because DetectSigningIdentity usually does it (and we've disabled signing)
 			return properties;
+		}
+	}
+
+	public class AppBundleInfo {
+		public readonly bool IsRemoteBuild;
+		public readonly string AppPath;
+		public readonly ApplePlatform Platform;
+		public readonly string Configuration;
+		public readonly string RuntimeIdentifiers;
+
+		string? zippedAppBundlePath;
+		string ZippedAppBundlePath {
+			get {
+				if (zippedAppBundlePath is null) {
+					if (!IsRemoteBuild)
+						throw new InvalidOperationException ($"Can't get the zipped app bundle path unless it's for a remote build.");
+					var objDir = TestBaseClass.GetObjDir (AppPath, Platform, RuntimeIdentifiers, Configuration);
+					zippedAppBundlePath = Path.Combine (objDir, "AppBundle.zip");
+					Assert.That (zippedAppBundlePath, Does.Exist, "AppBundle.zip");
+				}
+				return zippedAppBundlePath;
+			}
+		}
+
+		public AppBundleInfo (ApplePlatform platform, string appPath, bool isRemoteBuild, string runtimeIdentifiers, string configuration)
+		{
+			Platform = platform;
+			AppPath = appPath;
+			IsRemoteBuild = isRemoteBuild;
+			Configuration = configuration;
+			RuntimeIdentifiers = runtimeIdentifiers;
+		}
+
+		public byte [] GetFile (string appBundleRelativePath)
+		{
+			Assert.That (GetAppBundleFiles (), Does.Contain (appBundleRelativePath), "File does not exist in app bundle");
+			if (IsRemoteBuild) {
+				using var zip = ZipFile.OpenRead (ZippedAppBundlePath);
+				var entry = zip.GetEntry (appBundleRelativePath.Replace (Path.DirectorySeparatorChar, '/'))!;
+				using var stream = entry.Open ();
+				using var memoryStream = new MemoryStream ((int) stream.Length);
+				stream.CopyTo (memoryStream);
+				return memoryStream.ToArray ();
+			} else {
+				return File.ReadAllBytes (Path.Combine (AppPath, appBundleRelativePath));
+			}
+		}
+
+		public IEnumerable<string> GetAppBundleFiles ()
+		{
+			if (IsRemoteBuild) {
+				return ZipHelpers.List (ZippedAppBundlePath);
+			} else {
+				return Directory
+					.GetFileSystemEntries (AppPath, "*", SearchOption.AllDirectories)
+					.Select (v => v.Substring (AppPath.Length + 1));
+			}
 		}
 	}
 }
