@@ -1,0 +1,72 @@
+name: 🏃‍♀️ Running an Application
+description: Issues trying to run your application, like crashes on device or in the simulator.
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this report! Please make sure to add as much detail as you can, preferably with a reproduction if possible. This will help us diagnose the issue faster and thus resolve it quicker. For more information on how to write a good isse see https://github.com/xamarin/xamarin-macios/wiki/Submitting-Bugs-&-Suggestions.
+  - type: platform
+    id: platform
+    attributes:
+      label: Apple platform
+      description: Which Apple platform are you trying to build for?
+      multiple: true
+      options:
+        - iOS
+        - macOS
+        - "Mac Catalyst"
+        - tvOS
+  - type: dropdown
+    id: target-framework
+    attributes:
+      label: Framework version
+      description: In what target framework(s) do you see this issue?
+      multiple: true
+      options:
+      - net8.0-*
+      - net9.0-*
+      - Other
+    validations:
+      required: true
+  - type: input
+    id: platform-versions
+    attributes:
+      label: Affected platform version
+      description: Please provide the version number of the platform you see this issue on.
+      placeholder: E.g. VS 2022 17.9.0, .NET 8.0.100, etc.
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Please give us a detailed description of the issue that you're seeing. You can add screenshots and videos as well. If you have a repro project, you can drag and drop the .zip/etc. onto the issue editor to attach it.
+      placeholder: Tell us what you see! (And how it's different from what you expected to see!)
+    validations:
+      required: true
+  - type: textarea
+    id: repro-steps
+    attributes:
+      label: Steps to Reproduce
+      description: Describe all the steps we need to take to show the behavior that you have observed.
+      placeholder: |
+        1. File > New Project > New iOS|tvOS|macOS|Mac Catalyst Application
+        2. Add the following code: ...
+        3. Run the app and observe the bug 🐞
+    validations:
+      required: true
+  - type: textarea
+    id: workaround
+    attributes:
+      label: Did you find any workaround?
+      description: Did you find any workaround for this issue? This can unblock other people while waiting for this issue to be resolved or even give us a hint on how to fix this.
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant logs
+      description: Please copy and paste any (short!) relevant logs. Longer logs can be attached as .txt or .zip files. This is likely either the Application Output from the IDE, a [crash report](https://github.com/xamarin/xamarin-macios/wiki/Diagnosis#crash-reports) or the [device log](https://support.apple.com/en-in/guide/console/cnsl1012/mac) (or all of these).
+      render: shell
+  - type: markdown
+    attributes:
+      value: |
+        By opening the issue you agree to follow this project's [Code of Conduct](https://dotnetfoundation.org/about/code-of-conduct).
