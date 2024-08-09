@@ -67,3 +67,7 @@
 !missing-type! ASPasskeyAssertionCredentialExtensionOutput not bound
 !missing-type! ASPasskeyRegistrationCredentialExtensionInput not bound
 !missing-type! ASPasskeyRegistrationCredentialExtensionOutput not bound
+!missing-selector! ASAuthorizationPublicKeyCredentialPRFRegistrationInput::initWithInputValues: not bound
+!missing-selector! ASAuthorizationPublicKeyCredentialPRFRegistrationInput::inputValues not bound
+!missing-selector! ASAuthorizationPublicKeyCredentialPRFRegistrationOutput::first not bound
+!missing-selector! ASAuthorizationPublicKeyCredentialPRFRegistrationOutput::second not bound

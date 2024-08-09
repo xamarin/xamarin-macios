@@ -43,3 +43,6 @@
 !missing-field! HMServiceTypeWiFiRouter not bound
 !missing-field! HMServiceTypeWiFiSatellite not bound
 !missing-selector! HMService::matterEndpointID not bound
+!missing-designated-initializer! HMCameraSnapshot::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! HMCameraSource::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! HMCameraStream::init is missing an [DesignatedInitializer] attribute

@@ -357,3 +357,4 @@
 !missing-selector! MPSGraphCompilationDescriptor::callables not bound
 !missing-selector! MPSGraphCompilationDescriptor::setCallables: not bound
 !missing-selector! MPSGraphExecutable::initWithCoreMLPackageAtURL:compilationDescriptor: not bound
+!missing-selector! MPSGraph::reciprocalSquareRootWithTensor:name: not bound
