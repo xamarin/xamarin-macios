@@ -146,6 +146,12 @@ stages:
           New-Item -Path "$(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/governance" -Name "CredScanSuppressions.json" -Value '{"tool":"Crendential Scanner", "supressions":[]}'
         displayName: Create credscan dummy ignore file
 
+      - task: UseDotNet@2
+        displayName: Install .NET 9.x
+        inputs:
+          version: 9.x
+          includePreviewVersions: true
+
       - task: DownloadPipelineArtifact@2
         inputs:
           artifactName: DropMetadata-$(Build.BuildId)-nugets-$(System.JobAttempt)
