@@ -4,3 +4,4 @@
 !missing-pinvoke! CTFontDrawImageFromAdaptiveImageProviderAtPoint is not bound
 !missing-pinvoke! CTFontGetTypographicBoundsForAdaptiveImageProvider is not bound
 !missing-protocol! CTAdaptiveImageProviding not bound
+!missing-pinvoke! CTFontHasTable is not bound

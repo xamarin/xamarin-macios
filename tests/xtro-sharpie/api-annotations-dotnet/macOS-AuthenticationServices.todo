@@ -95,3 +95,7 @@
 !missing-selector! +ASSettingsHelper::requestToTurnOnCredentialProviderExtensionWithCompletionHandler: not bound
 !deprecated-attribute-missing! ASWebAuthenticationSessionRequest::callbackURLScheme missing a [Deprecated] attribute
 !missing-enum-value! ASCredentialIdentityTypes native value ASCredentialIdentityTypesOneTimeCode = 4 not bound
+!missing-selector! ASAuthorizationPublicKeyCredentialPRFRegistrationInput::initWithInputValues: not bound
+!missing-selector! ASAuthorizationPublicKeyCredentialPRFRegistrationInput::inputValues not bound
+!missing-selector! ASAuthorizationPublicKeyCredentialPRFRegistrationOutput::first not bound
+!missing-selector! ASAuthorizationPublicKeyCredentialPRFRegistrationOutput::second not bound
