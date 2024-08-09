@@ -34,8 +34,7 @@ resources:
     source: xamarin-macios-ci
     trigger:
       branches:
-      - release/*
-      - net7.0
+      - release/8*
       - net8.0
       - release-test/* # this is for testing the release pipeline on branches without GitHub's branch protection (so we can automate tests without requiring commits to go through pull requests, etc.).
       stages:

@@ -48,3 +48,16 @@
 !missing-pinvoke! vImageVerticalShearD_ARGB16F is not bound
 !missing-pinvoke! vImageVerticalShearD_CbCr16F is not bound
 !missing-pinvoke! vImageVerticalShearD_Planar16F is not bound
+!missing-pinvoke! vImageConvolveFloatKernel_ARGB8888 is not bound
+!missing-pinvoke! vImageFloodFill_ARGB16U is not bound
+!missing-pinvoke! vImageFloodFill_ARGB8888 is not bound
+!missing-pinvoke! vImageFloodFill_Planar16U is not bound
+!missing-pinvoke! vImageFloodFill_Planar8 is not bound
+!missing-pinvoke! vImageGetPerspectiveWarp is not bound
+!missing-pinvoke! vImagePerspectiveWarp_ARGB16F is not bound
+!missing-pinvoke! vImagePerspectiveWarp_ARGB16U is not bound
+!missing-pinvoke! vImagePerspectiveWarp_ARGB8888 is not bound
+!missing-pinvoke! vImagePerspectiveWarp_Planar16F is not bound
+!missing-pinvoke! vImagePerspectiveWarp_Planar16U is not bound
+!missing-pinvoke! vImagePerspectiveWarp_Planar8 is not bound
+!missing-pinvoke! vImageSepConvolve_ARGB8888 is not bound

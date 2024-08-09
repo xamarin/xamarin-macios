@@ -1,0 +1,2 @@
+!missing-protocol-conformance! SKNode should conform to UICoordinateSpace
+!missing-protocol-conformance! SKNode should conform to UIFocusItemContainer

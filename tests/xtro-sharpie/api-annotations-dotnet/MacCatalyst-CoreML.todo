@@ -1,0 +1,28 @@
+!missing-enum-value! MLMultiArrayDataType native value MLMultiArrayDataTypeFloat16 = 65552 not bound
+!missing-enum! MLSpecializationStrategy not bound
+!missing-enum-value! MLFeatureType native value MLFeatureTypeState = 8 not bound
+!missing-selector! +MLModelAsset::modelAssetWithSpecificationData:blobMapping:error: not bound
+!missing-selector! +MLModelAsset::modelAssetWithURL:error: not bound
+!missing-selector! MLFeatureDescription::stateConstraint not bound
+!missing-selector! MLModel::newState not bound
+!missing-selector! MLModel::predictionFromFeatures:usingState:error: not bound
+!missing-selector! MLModel::predictionFromFeatures:usingState:options:completionHandler: not bound
+!missing-selector! MLModel::predictionFromFeatures:usingState:options:error: not bound
+!missing-selector! MLModelAsset::functionNamesWithCompletionHandler: not bound
+!missing-selector! MLModelAsset::modelDescriptionOfFunctionNamed:completionHandler: not bound
+!missing-selector! MLModelAsset::modelDescriptionWithCompletionHandler: not bound
+!missing-selector! MLModelConfiguration::functionName not bound
+!missing-selector! MLModelConfiguration::setFunctionName: not bound
+!missing-selector! MLModelDescription::stateDescriptionsByName not bound
+!missing-selector! MLMultiArray::initWithShape:dataType:strides: not bound
+!missing-selector! MLMultiArray::transferToMultiArray: not bound
+!missing-selector! MLOptimizationHints::setSpecializationStrategy: not bound
+!missing-selector! MLOptimizationHints::specializationStrategy not bound
+!missing-selector! MLState::getMultiArrayForStateNamed:handler: not bound
+!missing-selector! MLStateConstraint::bufferShape not bound
+!missing-selector! MLStateConstraint::dataType not bound
+!missing-type! MLState not bound
+!missing-type! MLStateConstraint not bound
+!unknown-field! MLModelCollectionDidChangeNotification bound
+!unknown-type! MLModelCollection bound
+!unknown-type! MLModelCollectionEntry bound

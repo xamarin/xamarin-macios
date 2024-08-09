@@ -1,16 +1,30 @@
-!deprecated-attribute-missing! NSImage::lockFocus missing a [Deprecated] attribute
-!deprecated-attribute-missing! NSImage::lockFocusFlipped: missing a [Deprecated] attribute
-!deprecated-attribute-missing! NSImage::unlockFocus missing a [Deprecated] attribute
-!deprecated-attribute-missing! NSToolbar::centeredItemIdentifier missing a [Deprecated] attribute
-!deprecated-attribute-missing! NSToolbar::setCenteredItemIdentifier: missing a [Deprecated] attribute
-!deprecated-attribute-missing! NSToolbar::setSizeMode: missing a [Deprecated] attribute
-!deprecated-attribute-missing! NSToolbar::sizeMode missing a [Deprecated] attribute
 !missing-field! NSToolbarItemKey not bound
-!missing-protocol! NSAccessibilityColor not bound
-!missing-protocol-member! NSToolbarDelegate::toolbar:itemIdentifier:canBeInsertedAtIndex: not found
-!missing-protocol-member! NSToolbarDelegate::toolbarImmovableItemIdentifiers: not found
-!missing-selector! NSToolbar::centeredItemIdentifiers not bound
-!missing-selector! NSToolbar::setCenteredItemIdentifiers: not bound
-!missing-selector! NSToolbarItem::isVisible not bound
 !missing-selector! NSToolbarItem::possibleLabels not bound
 !missing-selector! NSToolbarItem::setPossibleLabels: not bound
+!unknown-native-enum! NSCollectionViewDropOperation bound
+!unknown-native-enum! NSCollectionViewItemHighlightState bound
+!unknown-native-enum! NSCollectionViewScrollPosition bound
+!deprecated-attribute-missing! NSToolbar::configurationDictionary missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSToolbar::setConfigurationFromDictionary: missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSToolbar::setShowsBaselineSeparator: missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSToolbar::showsBaselineSeparator missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSToolbarItem::allowsDuplicatesInToolbar missing a [Deprecated] attribute
+!missing-enum! NSCursorFrameResizeDirections not bound
+!missing-enum! NSCursorFrameResizePosition not bound
+!missing-enum! NSHorizontalDirections not bound
+!missing-enum! NSVerticalDirections not bound
+!missing-field! NSToolbarNewIndexKey not bound
+!missing-selector! +NSCursor::columnResizeCursor not bound
+!missing-selector! +NSCursor::columnResizeCursorInDirections: not bound
+!missing-selector! +NSCursor::frameResizeCursorFromPosition:inDirections: not bound
+!missing-selector! +NSCursor::rowResizeCursor not bound
+!missing-selector! +NSCursor::rowResizeCursorInDirections: not bound
+!missing-selector! +NSCursor::zoomInCursor not bound
+!missing-selector! +NSCursor::zoomOutCursor not bound
+!missing-selector! NSToolbar::allowsDisplayModeCustomization not bound
+!missing-selector! NSToolbar::itemIdentifiers not bound
+!missing-selector! NSToolbar::removeItemWithItemIdentifier: not bound
+!missing-selector! NSToolbar::setAllowsDisplayModeCustomization: not bound
+!missing-selector! NSToolbar::setItemIdentifiers: not bound
+!missing-selector! NSToolbarItem::isHidden not bound
+!missing-selector! NSToolbarItem::setHidden: not bound
