@@ -822,6 +822,38 @@ namespace ObjCRuntime {
 		[DllImport (Messaging.LIBOBJC_DYLIB)]
 		internal static extern IntPtr object_getClass (IntPtr obj);
 
+		[DllImport ("__Internal")]
+		static unsafe extern byte xamarin_is_object_valid (IntPtr obj, IntPtr* error_message);
+
+		[DllImport ("__Internal")]
+		static extern void xamarin_free (IntPtr ptr);
+
+		// This option is turned on by setting _ValidateObjectPointers property to true in the project file.
+		static bool validate_object_pointers;
+		static bool ValidateObjectPointers {
+			get => validate_object_pointers;
+			set => validate_object_pointers = value;
+		}
+
+		internal unsafe static bool TryGetClass (IntPtr obj, out IntPtr cls, [NotNullWhen (false)] out string? error_message)
+		{
+			error_message = null;
+			if (ValidateObjectPointers && obj != IntPtr.Zero) {
+				IntPtr error_str;
+				var rv = xamarin_is_object_valid (obj, &error_str);
+				if (rv == 0) {
+					error_message = Marshal.PtrToStringAuto (error_str)!;
+					xamarin_free (error_str);
+					Runtime.NSLog ($"Found invalid id reference 0x{obj.ToString ("x")}: {error_message}");
+					Runtime.NSLog (Environment.StackTrace);
+					cls = IntPtr.Zero;
+					return false;
+				}
+			}
+			cls = object_getClass (obj);
+			return true;
+		}
+
 		[DllImport (Messaging.LIBOBJC_DYLIB)]
 		internal extern static IntPtr class_getMethodImplementation (IntPtr cls, IntPtr sel);
 

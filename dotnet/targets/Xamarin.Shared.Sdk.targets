@@ -515,12 +515,16 @@
 			<!-- Set NativeAOT value -->
 			<_IsNativeAOTFeature Condition="'$(_XamarinRuntime)' == 'NativeAOT'">true</_IsNativeAOTFeature>
 			<_IsNativeAOTFeature Condition="'$(_XamarinRuntime)' != 'NativeAOT'">false</_IsNativeAOTFeature>
+
+			<!-- Set default ValidateObjectPointers value -->
+			<_ValidateObjectPointers Condition="'$(_ValidateObjectPointers)' == ''">false</_ValidateObjectPointers>
 		</PropertyGroup>
 
 		<ItemGroup>
 			<RuntimeHostConfigurationOption Include="ObjCRuntime.Runtime.Arch.IsSimulator" Value="$(_IsSimulatorFeature)" Trim="true" />
 			<RuntimeHostConfigurationOption Include="ObjCRuntime.Runtime.IsManagedStaticRegistrar" Value="$(_IsManagedStaticRegistrarFeature)" Trim="true" />
 			<RuntimeHostConfigurationOption Include="ObjCRuntime.Runtime.IsNativeAOT" Value="$(_IsNativeAOTFeature)" Trim="true" />
+			<RuntimeHostConfigurationOption Include="ObjCRuntime.Class.ValidateObjectPointers" Value="$(_ValidateObjectPointers)" Trim="true" />
 		</ItemGroup>
 	</Target>
 
