@@ -17,6 +17,14 @@ using UIKit;
 
 namespace MessageUI {
 
+	[iOS (18, 0), MacCatalyst (18, 0)]
+	[Native]
+	enum MFMailComposeControllerDeferredAction : long {
+		None,
+		AdjustInsertionPoint,
+		AddMissingRecipients,
+	}
+
 	/// <summary>Provides a user interface for composing and sending email messages.</summary>
 	///     
 	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/MessageUI/Reference/MFMailComposeViewController_class/index.html">Apple documentation for <c>MFMailComposeViewController</c></related>
