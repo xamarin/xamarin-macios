@@ -3,8 +3,8 @@
 # this is a workaround for the fact that xcodebuild -downloadPlatform iOS does not work on EO machines
 xcodebuild -runFirstLaunch
 
-SIMULATOR_FILENAME=iOS_18_beta_3_Simulator_Runtime.dmg
-SIMULATOR_VERSION=22A5307f
+SIMULATOR_FILENAME=iOS_18_beta_5_Simulator_Runtime.dmg
+SIMULATOR_VERSION=22A5326g
 
 xcrun simctl runtime list
 if xcrun simctl runtime list | grep "iOS.*($SIMULATOR_VERSION)"; then

@@ -73,3 +73,8 @@
 !missing-field! kVTExtensionProperties_ExtensionNameKey not bound
 !missing-field! kVTExtensionProperties_ExtensionURLKey not bound
 !missing-pinvoke! VTCopyRAWProcessorExtensionProperties is not bound
+!missing-field! kVTCompressionPropertyKey_MaximumRealTimeFrameRate not bound
+!missing-field! kVTDecompressionPropertyKey_AllowBitstreamToChangeFrameDimensions not bound
+!missing-field! kVTDecompressionPropertyKey_DecoderProducesRAWOutput not bound
+!missing-field! kVTDecompressionPropertyKey_RequestRAWOutput not bound
+!missing-field! kVTRAWProcessingPropertyKey_OutputColorAttachments not bound

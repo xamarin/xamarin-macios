@@ -67,3 +67,7 @@
 !missing-selector! +ASSettingsHelper::requestToTurnOnCredentialProviderExtensionWithCompletionHandler: not bound
 !missing-enum-value! ASCredentialIdentityTypes native value ASCredentialIdentityTypesOneTimeCode = 4 not bound
 !missing-protocol-member! ASAuthorizationWebBrowserPlatformPublicKeyCredentialProvider::createCredentialRegistrationRequestWithClientData:name:userID:requestStyle: not found
+!missing-selector! ASAuthorizationPublicKeyCredentialPRFRegistrationInput::initWithInputValues: not bound
+!missing-selector! ASAuthorizationPublicKeyCredentialPRFRegistrationInput::inputValues not bound
+!missing-selector! ASAuthorizationPublicKeyCredentialPRFRegistrationOutput::first not bound
+!missing-selector! ASAuthorizationPublicKeyCredentialPRFRegistrationOutput::second not bound

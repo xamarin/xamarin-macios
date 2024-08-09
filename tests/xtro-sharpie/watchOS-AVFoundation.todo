@@ -340,7 +340,6 @@
 !missing-selector! AVMetricPlayerItemVariantSwitchEvent::fromVariant not bound
 !missing-selector! AVMetricPlayerItemVariantSwitchEvent::loadedTimeRanges not bound
 !missing-selector! AVMetricPlayerItemVariantSwitchEvent::toVariant not bound
-!missing-selector! AVMutableComposition::insertTimeRange:ofTracks:atTime:error: not bound
 !missing-selector! AVPlayerInterstitialEvent::contentMayVary not bound
 !missing-selector! AVPlayerInterstitialEvent::plannedDuration not bound
 !missing-selector! AVPlayerInterstitialEvent::setContentMayVary: not bound
@@ -399,3 +398,6 @@
 !missing-type! AVMetricPlayerItemVariantSwitchStartEvent not bound
 !missing-protocol-member! AVContentKeySessionDelegate::contentKeySession:didProvideContentKeyRequests:forInitializationData: not found
 !missing-selector! AVContentKey::revoke not bound
+!missing-enum-value! AVError native value AVErrorMediaExtensionConflict = -11887 not bound
+!missing-enum-value! AVError native value AVErrorMediaExtensionDisabled = -11886 not bound
+!missing-selector! AVMutableComposition::insertTimeRange:ofAsset:atTime:completionHandler: not bound
