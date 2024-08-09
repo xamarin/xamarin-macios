@@ -23,8 +23,8 @@ body:
       description: In what target framework(s) do you see this issue?
       multiple: true
       options:
-      - net8.0-android
-      - net9.0-android
+      - net8.0-*
+      - net9.0-*
       - Other
     validations:
       required: true
