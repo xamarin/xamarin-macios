@@ -812,6 +812,12 @@ static Class _TestClass = NULL;
 	return called_blocks;
 }
 
+-(bool) nullableCallback: (void (^ __nullable)(int32_t magic_number))completionHandler
+{
+	assert (false); // THIS FUNCTION SHOULD BE OVERRIDDEN
+	return false;
+}
+
 static void block_called ()
 {
 #pragma clang diagnostic push

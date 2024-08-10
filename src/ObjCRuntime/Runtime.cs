@@ -2587,11 +2587,11 @@ namespace ObjCRuntime {
 		[EditorBrowsable (EditorBrowsableState.Never)]
 		static Delegate ReleaseBlockWhenDelegateIsCollected (IntPtr block, Delegate @delegate)
 		{
-			if (@delegate is null)
-				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (@delegate));
-
 			if (block == IntPtr.Zero)
 				return @delegate;
+
+			if (@delegate is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (@delegate));
 
 			if (block_lifetime_table.TryGetValue (@delegate, out var existingCollector)) {
 				existingCollector.Add (block);
