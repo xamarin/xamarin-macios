@@ -37,6 +37,7 @@ resources:
       - release/8*
       - net8.0
       - release-test/* # this is for testing the release pipeline on branches without GitHub's branch protection (so we can automate tests without requiring commits to go through pull requests, etc.).
+      - xcode16
       stages:
       - prepare_release
 
