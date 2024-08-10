@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+	<!--
+
+		We have a few requirements when computing trimming properties:
+
+		1. We must give MAUI a change to set MtouchLink, which they do in Microsoft.Maui.Controls.iOS.targets
+		2. We must set SuppressTrimAnalysisWarnings before Microsoft.NET.ILLink.targets is included.
+
+		1: Microsoft.Maui.Controls.iOS.targets is included like this:
+			a) Sdks/Microsoft.NET.Sdk/Sdk/Sdk.targets
+			b) Microsoft.CSharp.targets
+			c) Microsoft.CSharp.CurrentVersion.targets
+			d) Microsoft.Common.targets
+			e) <project path>/obj/*.csproj.nuget.g.targets
+			f) packages/microsoft.maui.controls.build.tasks/<version>/buildTransitive/net6.0-ios10.0/Microsoft.Maui.Controls.Build.Tasks.targets
+			g) packages/microsoft.maui.controls.build.tasks/<version>/buildTransitive/Microsoft.Maui.Controls.Build.Tasks.targets
+			h) packages/microsoft.maui.controls.build.tasks/<version>/buildTransitive/netstandard2.0/Microsoft.Maui.Controls.Build.Tasks.targets
+			i) packages/packages/microsoft.maui.controls.build.tasks/<version>/buildTransitive/netstandard2.0/Microsoft.Maui.Controls.Build.Tasks.Before.targets
+			j) packages/packages/microsoft.maui.controls.build.tasks/<version>/buildTransitive/net6.0-ios10.0/Microsoft.Maui.Controls.iOS.targets
+
+		2: Microsoft.NET.ILLink.targets is included like this:
+			a) Sdks/Microsoft.NET.Sdk/Sdk/Sdk.targets
+			b) Sdks/Microsoft.NET.Sdk/targets/Microsoft.NET.Sdk.targets
+			c) packages/microsoft.net.illink.tasks/<version>/build/Microsoft.NET.ILLink.targets
+
+		* Microsoft.NET.Sdk.targets is loaded right after
+		  Microsoft.CSharp.targets, and Microsoft.NET.Sdk.targets doesn't
+		  provide any customization points, so we can't inject logic in
+		  Microsoft.NET.Sdk.targets before Microsoft.NET.ILLink.targets is
+		  loaded.
+		* However, Microsoft.Common.targets has a few customization points
+		  that are loaded after build logic from NuGets is loaded (aka
+		  Microsoft.Maui.Controls.iOS.targets), of which
+		  CustomBeforeDirectoryBuildTargets and
+		  CustomAfterDirectoryBuildTargets seem to fit. I chose
+		  CustomAfterDirectoryBuildTargets because that makes it possible to
+		  set MtouchLink/LinkMode in Directory.Build.targets files if people
+		  wants to do so.
+
+	-->
+
+	<!-- Since we know if we're building for a simulator or not, we can determine the default trimming behavior -->
+	<PropertyGroup Condition="'$(TrimMode)' != ''">
+		<!-- If TrimMode is set, then that's the default link mode -->
+		<_DefaultLinkMode>TrimMode</_DefaultLinkMode>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(TrimMode)' == ''">
+		<!-- Linking is always on for all assemblies when using NativeAOT - this is because we need to modify all assemblies in the linker for them to be compatible with NativeAOT -->
+		<_DefaultLinkMode Condition="'$(_UseNativeAot)' == 'true'">Full</_DefaultLinkMode>
+
+		<_DefaultLinkMode Condition="'$(_UseNativeAot)' != 'true' And '$(_PlatformName)' == 'macOS'">None</_DefaultLinkMode> <!-- Linking is off by default for macOS apps -->
+		<_DefaultLinkMode Condition="'$(_UseNativeAot)' != 'true' And '$(_PlatformName)' == 'MacCatalyst' And '$(Configuration)' == 'Release'">SdkOnly</_DefaultLinkMode> <!-- Default linking is on for release builds for Mac Catalyst apps -->
+		<_DefaultLinkMode Condition="'$(_UseNativeAot)' != 'true' And '$(_PlatformName)' == 'MacCatalyst' And '$(Configuration)' != 'Release'">None</_DefaultLinkMode> <!-- Default linking is off for non-release builds for Mac Catalyst apps -->
+		<_DefaultLinkMode Condition="'$(_UseNativeAot)' != 'true' And '$(_PlatformName)' != 'macOS' And '$(_PlatformName)' != 'MacCatalyst' And '$(_SdkIsSimulator)' == 'true'">None</_DefaultLinkMode> <!-- Linking is off by default in the simulator -->
+		<_DefaultLinkMode Condition="'$(_UseNativeAot)' != 'true' And '$(_PlatformName)' != 'macOS' And '$(_PlatformName)' != 'MacCatalyst' And '$(_SdkIsSimulator)' != 'true'">SdkOnly</_DefaultLinkMode> <!-- Linking is SdkOnly for iOS/tvOS/watchOS apps on device -->
+	</PropertyGroup>
+	<PropertyGroup>
+		<_LinkMode Condition="'$(_LinkMode)' == '' And '$(_PlatformName)' == 'macOS'">$(LinkMode)</_LinkMode>
+		<_LinkMode Condition="'$(_LinkMode)' == '' And '$(_PlatformName)' != 'macOS'">$(MtouchLink)</_LinkMode>
+		<_LinkMode Condition="'$(_LinkMode)' == ''">$(_DefaultLinkMode)</_LinkMode>
+		<_LinkMode Condition="'$(_LinkMode)' == '' And '$(_PlatformName)' == 'macOS'">None</_LinkMode> <!-- Linking is off by default for macOS apps -->
+		<_LinkMode Condition="'$(_LinkMode)' == '' And '$(_PlatformName)' != 'macOS'">SdkOnly</_LinkMode> <!-- Default linking is SdkOnly for iOS/tvOS/watchOS apps -->
+
+		<!-- TrimMode specifies what the linker will do with framework assemblies -->
+		<TrimMode Condition="'$(_LinkMode)' == 'TrimMode'">$(TrimMode)</TrimMode>
+		<TrimMode Condition="'$(_LinkMode)' == 'None'">copy</TrimMode>
+		<TrimMode Condition="'$(_LinkMode)' == 'SdkOnly'">partial</TrimMode>
+		<TrimMode Condition="'$(_LinkMode)' == 'Full'">full</TrimMode>
+		<!-- For None link mode we also need to set TrimMode for all assemblies. This is done later -->
+	</PropertyGroup>
+</Project>
