@@ -1,0 +1,6 @@
+!missing-selector! SRFaceMetrics::context not bound
+!missing-selector! SRFaceMetrics::partialFaceExpressions not bound
+!missing-selector! SRFaceMetrics::sessionIdentifier not bound
+!missing-selector! SRFaceMetrics::version not bound
+!missing-selector! SRFaceMetrics::wholeFaceExpressions not bound
+!missing-type! SRFaceMetrics not bound
