@@ -373,7 +373,7 @@ class BuildConfiguration {
 
         # store if dotnet has been enabled
         $variableName = "ENABLE_DOTNET"
-        $variableValue = [Environment]::GetEnvironmentVariable("ENABLE_DOTNET")
+        $variableValue = [Environment]::GetEnvironmentVariable($variableValue)
         $configuration | Add-Member -NotePropertyName $variableName -NotePropertyValue $variableValue
 
         # For each .NET platform we support, add a INCLUDE_DOTNET_<platform> variable specifying whether that platform is enabled or not.

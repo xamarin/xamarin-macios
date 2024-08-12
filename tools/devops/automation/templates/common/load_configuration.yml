@@ -86,7 +86,7 @@ steps:
       $testMatrix = $config.TEST_MATRIX
       Write-Host "##vso[task.setvariable variable=TEST_MATRIX;isOutput=true]$testMatrix"
     name: test_matrix
-    displayCONFIG_PATHName: 'Create tests strategy matrix'
+    displayName: 'Create tests strategy matrix'
 
   # upload config to be consumed later
   - ${{ if eq(parameters.uploadArtifacts, true) }}:
