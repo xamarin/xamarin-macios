@@ -15,7 +15,7 @@ body:
 
         [Microsoft Q&A](https://learn.microsoft.com/answers/products/97/dotnet/)
         [Stack Overflow](https://stackoverflow.com)
-  - type: platform
+  - type: dropdown
     id: platform
     attributes:
       label: Apple platform
