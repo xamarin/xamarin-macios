@@ -23,6 +23,9 @@ namespace ObjCRuntime {
 #if !XAMCORE_5_0
 		// Apple removed the NewsstandKit framework from iOS in Xcode 15.
 		public const string NewsstandKitLibrary = "/System/Library/Frameworks/NewsstandKit.framework/NewsstandKit";
+
+		// Apple removed the AssetsLibrary framework from iOS in Xcode 15.3.
+		public const string AssetsLibraryLibrary = "/System/Library/Frameworks/AssetsLibrary.framework/AssetsLibrary";
 #endif
 	}
 }

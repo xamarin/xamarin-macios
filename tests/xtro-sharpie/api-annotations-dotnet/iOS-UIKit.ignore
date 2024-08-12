@@ -474,3 +474,5 @@
 !incorrect-protocol-member! UIPopoverPresentationControllerSourceItem::frameInView: is REQUIRED and should be abstract
 !incorrect-protocol-member! UIMenuLeaf::selectedImage is REQUIRED and should be abstract
 !incorrect-protocol-member! UIMenuLeaf::setSelectedImage: is REQUIRED and should be abstract
+
+!missing-protocol! UIItemProviderReadingAugmentationDesignating not bound

@@ -1,8 +1,0 @@
-!missing-enum! DDDeviceSupports not bound
-!missing-enum-value! DDDeviceCategory native value DDDeviceCategoryAccessorySetup = 6 not bound
-!missing-selector! DDDevice::deviceSupports not bound
-!missing-selector! DDDevice::displayImageName not bound
-!missing-selector! DDDevice::setDeviceSupports: not bound
-!missing-selector! DDDevice::setDisplayImageName: not bound
-!missing-selector! DDDevice::setSSID: not bound
-!missing-selector! DDDevice::SSID not bound

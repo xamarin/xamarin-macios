@@ -1,3 +1,2 @@
-!missing-selector! UNMutableNotificationContent::filterCriteria not bound
-!missing-selector! UNMutableNotificationContent::setFilterCriteria: not bound
-!missing-selector! UNNotificationContent::filterCriteria not bound
+!missing-selector! +UNNotificationAttributedMessageContext::contextWithSendMessageIntent:attributedContent: not bound
+!missing-type! UNNotificationAttributedMessageContext not bound
