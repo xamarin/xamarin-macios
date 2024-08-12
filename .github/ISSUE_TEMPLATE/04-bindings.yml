@@ -6,7 +6,7 @@ body:
     attributes:
       value: |
         Thanks for taking the time to fill out this report! Please make sure to add as much detail as you can, preferably with a reproduction if possible. This will help us diagnose the issue faster and thus resolve it quicker. For more information on how to write a good isse see https://github.com/xamarin/xamarin-macios/wiki/Submitting-Bugs-&-Suggestions.
-  - type: platform
+  - type: dropdown
     id: platform
     attributes:
       label: Apple platform
