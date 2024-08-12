@@ -216,3 +216,7 @@
 !missing-selector! UIShadowProperties::setPath: not bound
 !missing-selector! UIShadowProperties::setRadius: not bound
 !missing-type! UIShadowProperties not bound
+!missing-enum! UIFocusItemDeferralMode not bound
+!missing-protocol-member! UIFocusItem::focusItemDeferralMode not found
+!missing-protocol-member! UITextInput::attributedTextInRange: not found
+!missing-selector! UITab::managingTabGroup not bound
