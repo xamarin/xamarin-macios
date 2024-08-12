@@ -32,6 +32,8 @@ namespace MonoTouchFixtures.CoreText {
 
 			using (var font = new CTFont ("HoeflerText-Regular", 10, CTFontOptions.Default)) {
 				Assert.That (font.Handle, Is.Not.EqualTo (IntPtr.Zero), "Handle");
+				if (TestRuntime.CheckXcodeVersion (11, 0))
+					Assert.That (font.HasTable (CTFontTable.ScalableVectorGraphics), Is.EqualTo (false), "HasTable");
 			}
 		}
 
@@ -151,7 +153,7 @@ namespace MonoTouchFixtures.CoreText {
 			using var font = new CTFont ("HoeflerText-Regular", 10, CTFontOptions.Default);
 			using var provider = new AdaptiveImageProvider ();
 			var bounds = font.GetTypographicBoundsForAdaptiveImageProvider (provider);
-			Assert.AreEqual (CGRect.Empty, bounds, "Bounds");
+			Assert.AreEqual (new CGRect (0, -3.90625, 13, 16.40625), bounds, "Bounds");
 			Assert.AreEqual (1, provider.Count, "#Count");
 		}
 

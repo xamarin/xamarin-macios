@@ -2733,10 +2733,10 @@ namespace CoreText {
 #if NET
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
-		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos13.0")]
 #else
-		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0), MacCatalyst (13, 0)]
+		[Watch (6, 0), TV (13, 0), iOS (13, 0), MacCatalyst (13, 0)]
 #endif
 		[DllImport (Constants.CoreTextLibrary)]
 		extern static byte CTFontHasTable (
@@ -2750,10 +2750,10 @@ namespace CoreText {
 #if NET
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
-		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos13.0")]
 #else
-		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0), MacCatalyst (13, 0)]
+		[Watch (6, 0), TV (13, 0), iOS (13, 0), MacCatalyst (13, 0)]
 #endif
 		public bool HasTable (CTFontTable tag)
 		{

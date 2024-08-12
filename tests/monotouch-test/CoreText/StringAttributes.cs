@@ -50,8 +50,10 @@ namespace MonoTouchFixtures.CoreText {
 				sa.TrackingAdjustment = 1.0f;
 
 			AdaptiveImageProvider? provider = null;
+#if NET
 			if (TestRuntime.CheckXcodeVersion (16, 0))
 				sa.AdaptiveImageProvider = provider = new AdaptiveImageProvider ();
+#endif
 
 			var size = new CGSize (300, 300);
 			UIGraphics.BeginImageContext (size);
@@ -65,6 +67,7 @@ namespace MonoTouchFixtures.CoreText {
 				textLine.Draw (gctx);
 			}
 
+#if NET
 			if (TestRuntime.CheckXcodeVersion (16, 0))
 				Assert.AreEqual (0, provider!.Count, "AdaptiveImageProvider #0");
 
@@ -75,6 +78,7 @@ namespace MonoTouchFixtures.CoreText {
 
 			if (TestRuntime.CheckXcodeVersion (16, 0))
 				Assert.AreEqual (1, provider!.Count, "AdaptiveImageProvider #1");
+#endif
 
 			UIGraphics.EndImageContext ();
 		}
