@@ -8,8 +8,7 @@ SHARPIE ?= sharpie
 
 XCODE=$(abspath $(XCODE_DEVELOPER_ROOT)/../..)
 
-# MacCatalyst is currently broken wrt sharpie and Xcode 14 beta 2, so skip it.
-XTRO_DOTNET_PLATFORMS=$(filter-out MacCatalyst,$(DOTNET_PLATFORMS))
+XTRO_DOTNET_PLATFORMS=$(DOTNET_PLATFORMS)
 
 ANNOTATIONS_DIR=.
 DOTNET_ANNOTATIONS_DIR=api-annotations-dotnet
@@ -42,7 +41,9 @@ XTRO_SHARPIE_EXEC=$(MONO) --debug $(XTRO_SHARPIE)
 
 build: $(XTRO_SHARPIE) $(XTRO_REPORT) $(XTRO_SANITY)
 
+.stamp-build: export SHARPIE:=$(SHARPIE)
 .stamp-build: $(wildcard *.cs) pch-info.proj $(XTRO_REPORT) $(XTRO_SANITY) $(XTRO_SHARPIE)
+	$(Q_BUILD) $(SYSTEM_MSBUILD) $(MSBUILD_VERBOSITY) xtro-sharpie.csproj /r /bl:$@.binlog
 	$(Q) touch $@
 
 $(XTRO_SHARPIE): $(wildcard xtro-sharpie/*.cs) $(wildcard xtro-sharpie/*.csproj) pch-info.proj $(XTRO_REPORT)
@@ -67,6 +68,8 @@ $(XIOS_PCH): .stamp-check-sharpie
 	-exclude FactoryOTAWifiUtils \
 	-exclude FactoryOTALogger \
 	-exclude FactoryOTANetworkUtils \
+	-exclude AssetsLibrary \
+	-exclude _CoreNFC_UIKit \
 	-i ThreadNetwork/THClient.h \
 	$(CORETELEPHONY_HEADERS) \
 
@@ -80,6 +83,7 @@ XWATCHOS_PCH = watchos$(WATCH_SDK_VERSION)-$(XWATCHOS_ARCH).pch
 $(XWATCHOS_PCH): .stamp-check-sharpie
 	$(SHARPIE) sdk-db --xcode $(XCODE) -s watchos$(WATCH_SDK_VERSION) -a $(XWATCHOS_ARCH) \
 		-modules false \
+		-exclude BrowserEngineKit \
 
 XTVOS ?= $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/64bits/tvOS/Xamarin.TVOS.dll
 XTVOS_LIBDIR ?= $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.TVOS/
@@ -112,12 +116,15 @@ XMACCATALYST_RID = maccatalyst-x64
 $(XMACCATALYST_PCH): .stamp-check-sharpie
 	$(SHARPIE) sdk-db --xcode $(XCODE) -s ios$(MACCATALYST_SDK_VERSION)-macabi -a $(XMACCATALYST_ARCH) \
 	-modules false \
+	-exclude _CoreNFC_UIKit \
 	-exclude AGL \
 	-exclude AudioVideoBridging \
+	-exclude AssetsLibrary \
 	-exclude CalendarStore \
 	-exclude Carbon \
 	-exclude ClockKit \
 	-exclude DiscRecordingUI \
+	-exclude FSKit \
 	-exclude GLKit \
 	-exclude ICADevices \
 	-exclude InputMethodKit \

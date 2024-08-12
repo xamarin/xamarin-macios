@@ -9,7 +9,6 @@
 !missing-enum! HMCharacteristicValueRouterStatus not bound
 !missing-enum! HMCharacteristicValueTargetVisibilityState not bound
 !missing-enum! HMCharacteristicValueWiFiSatelliteStatus not bound
-!missing-enum-value! HMError native value HMErrorCodePartialCommunicationFailure = 104 not bound
 !missing-field! HMAccessoryCategoryTypeAirPort not bound
 !missing-field! HMAccessoryCategoryTypeAudioReceiver not bound
 !missing-field! HMAccessoryCategoryTypeSpeaker not bound
@@ -36,3 +35,22 @@
 !missing-field! HMServiceTypeTelevision not bound
 !missing-field! HMServiceTypeWiFiRouter not bound
 !missing-field! HMServiceTypeWiFiSatellite not bound
+!missing-enum! HMCharacteristicValueTargetMediaState not bound
+!missing-enum! HMCharacteristicValueVolumeControlType not bound
+!missing-enum! HMCharacteristicValueVolumeSelector not bound
+!missing-field! HMCharacteristicPropertyRequiresAuthorizationData not bound
+!missing-field! HMCharacteristicTypeTargetMediaState not bound
+!missing-field! HMCharacteristicTypeVolumeControlType not bound
+!missing-field! HMCharacteristicTypeVolumeSelector not bound
+!missing-selector! HMService::matterEndpointID not bound
+!deprecated-attribute-missing! HMAccessory::init missing a [Deprecated] attribute
+!deprecated-attribute-missing! HMCameraControl::init missing a [Deprecated] attribute
+!deprecated-attribute-missing! HMCameraSnapshot::init missing a [Deprecated] attribute
+!deprecated-attribute-missing! HMCameraSnapshotControl::init missing a [Deprecated] attribute
+!deprecated-attribute-missing! HMCameraStream::init missing a [Deprecated] attribute
+!deprecated-attribute-missing! HMCameraStreamControl::init missing a [Deprecated] attribute
+!deprecated-attribute-missing! HMCharacteristic::init missing a [Deprecated] attribute
+!deprecated-attribute-missing! HMService::init missing a [Deprecated] attribute
+!missing-designated-initializer! HMCameraSnapshot::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! HMCameraSource::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! HMCameraStream::init is missing an [DesignatedInitializer] attribute

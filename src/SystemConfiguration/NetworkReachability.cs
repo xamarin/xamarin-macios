@@ -215,27 +215,102 @@ namespace SystemConfiguration {
 			}
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[ObsoletedOSPlatform ("ios17.4", "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[ObsoletedOSPlatform ("maccatalyst17.4", "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[ObsoletedOSPlatform ("tvos17.4", "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[ObsoletedOSPlatform ("macos14.4", "Use 'NSUrlSession' or 'NWConnection' instead.")]
+#else
+		[Deprecated (PlatformName.iOS, 17, 4, message: "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[Deprecated (PlatformName.TvOS, 17, 4, message: "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 17, 4, message: "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[Deprecated (PlatformName.MacOSX, 14, 4, message: "Use 'NSUrlSession' or 'NWConnection' instead.")]
+#endif
 		[DllImport (Constants.SystemConfigurationLibrary)]
 		extern static /* SCNetworkReachabilityRef __nullable */ IntPtr SCNetworkReachabilityCreateWithName (
 			/* CFAllocatorRef __nullable */ IntPtr allocator, /* const char* __nonnull */ IntPtr address);
 
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[ObsoletedOSPlatform ("ios17.4", "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[ObsoletedOSPlatform ("maccatalyst17.4", "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[ObsoletedOSPlatform ("tvos17.4", "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[ObsoletedOSPlatform ("macos14.4", "Use 'NSUrlSession' or 'NWConnection' instead.")]
+#else
+		[Deprecated (PlatformName.iOS, 17, 4, message: "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[Deprecated (PlatformName.TvOS, 17, 4, message: "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 17, 4, message: "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[Deprecated (PlatformName.MacOSX, 14, 4, message: "Use 'NSUrlSession' or 'NWConnection' instead.")]
+#endif
 		[DllImport (Constants.SystemConfigurationLibrary)]
 		unsafe extern static /* SCNetworkReachabilityRef __nullable */ IntPtr SCNetworkReachabilityCreateWithAddress (
 			/* CFAllocatorRef __nullable */ IntPtr allocator,
 			/* const struct sockaddr * __nonnull */ sockaddr_in* address);
 
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[ObsoletedOSPlatform ("ios17.4", "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[ObsoletedOSPlatform ("maccatalyst17.4", "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[ObsoletedOSPlatform ("tvos17.4", "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[ObsoletedOSPlatform ("macos14.4", "Use 'NSUrlSession' or 'NWConnection' instead.")]
+#else
+		[Deprecated (PlatformName.iOS, 17, 4, message: "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[Deprecated (PlatformName.TvOS, 17, 4, message: "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 17, 4, message: "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[Deprecated (PlatformName.MacOSX, 14, 4, message: "Use 'NSUrlSession' or 'NWConnection' instead.")]
+#endif
 		[DllImport (Constants.SystemConfigurationLibrary)]
 		unsafe extern static /* SCNetworkReachabilityRef __nullable */ IntPtr SCNetworkReachabilityCreateWithAddressPair (
 			/* CFAllocatorRef __nullable */ IntPtr allocator,
 			/* const struct sockaddr * __nullable */ sockaddr_in* localAddress,
 			/* const struct sockaddr * __nullable */ sockaddr_in* remoteAddress);
 
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[ObsoletedOSPlatform ("ios17.4", "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[ObsoletedOSPlatform ("maccatalyst17.4", "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[ObsoletedOSPlatform ("tvos17.4", "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[ObsoletedOSPlatform ("macos14.4", "Use 'NSUrlSession' or 'NWConnection' instead.")]
+#else
+		[Deprecated (PlatformName.iOS, 17, 4, message: "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[Deprecated (PlatformName.TvOS, 17, 4, message: "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 17, 4, message: "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[Deprecated (PlatformName.MacOSX, 14, 4, message: "Use 'NSUrlSession' or 'NWConnection' instead.")]
+#endif
 		[DllImport (Constants.SystemConfigurationLibrary)]
 		unsafe extern static /* SCNetworkReachabilityRef __nullable */ IntPtr SCNetworkReachabilityCreateWithAddressPair (
 			/* CFAllocatorRef __nullable */ IntPtr allocator,
 			/* const struct sockaddr * __nullable */ IntPtr localAddress,
 			/* const struct sockaddr * __nullable */ sockaddr_in* remoteAddress);
 
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[ObsoletedOSPlatform ("ios17.4", "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[ObsoletedOSPlatform ("maccatalyst17.4", "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[ObsoletedOSPlatform ("tvos17.4", "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[ObsoletedOSPlatform ("macos14.4", "Use 'NSUrlSession' or 'NWConnection' instead.")]
+#else
+		[Deprecated (PlatformName.iOS, 17, 4, message: "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[Deprecated (PlatformName.TvOS, 17, 4, message: "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 17, 4, message: "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[Deprecated (PlatformName.MacOSX, 14, 4, message: "Use 'NSUrlSession' or 'NWConnection' instead.")]
+#endif
 		[DllImport (Constants.SystemConfigurationLibrary)]
 		unsafe extern static /* SCNetworkReachabilityRef __nullable */ IntPtr SCNetworkReachabilityCreateWithAddressPair (
 			/* CFAllocatorRef __nullable */ IntPtr allocator,
@@ -314,6 +389,21 @@ namespace SystemConfiguration {
 		{
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[ObsoletedOSPlatform ("ios17.4", "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[ObsoletedOSPlatform ("maccatalyst17.4", "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[ObsoletedOSPlatform ("tvos17.4", "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[ObsoletedOSPlatform ("macos14.4", "Use 'NSUrlSession' or 'NWConnection' instead.")]
+#else
+		[Deprecated (PlatformName.iOS, 17, 4, message: "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[Deprecated (PlatformName.TvOS, 17, 4, message: "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 17, 4, message: "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[Deprecated (PlatformName.MacOSX, 14, 4, message: "Use 'NSUrlSession' or 'NWConnection' instead.")]
+#endif
 		[DllImport (Constants.SystemConfigurationLibrary)]
 		unsafe static extern int SCNetworkReachabilityGetFlags (/* SCNetworkReachabilityRef __nonnull */ IntPtr target,
 			/* SCNetworkReachabilityFlags* __nonnull */ NetworkReachabilityFlags* flags);
@@ -323,6 +413,21 @@ namespace SystemConfiguration {
 			return GetFlags (out flags) == StatusCode.OK;
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[ObsoletedOSPlatform ("ios17.4", "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[ObsoletedOSPlatform ("maccatalyst17.4", "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[ObsoletedOSPlatform ("tvos17.4", "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[ObsoletedOSPlatform ("macos14.4", "Use 'NSUrlSession' or 'NWConnection' instead.")]
+#else
+		[Deprecated (PlatformName.iOS, 17, 4, message: "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[Deprecated (PlatformName.TvOS, 17, 4, message: "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 17, 4, message: "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[Deprecated (PlatformName.MacOSX, 14, 4, message: "Use 'NSUrlSession' or 'NWConnection' instead.")]
+#endif
 		public StatusCode GetFlags (out NetworkReachabilityFlags flags)
 		{
 			flags = default;
@@ -337,6 +442,21 @@ namespace SystemConfiguration {
 		delegate void SCNetworkReachabilityCallBack (/* SCNetworkReachabilityRef */ IntPtr handle, /* SCNetworkReachabilityFlags */ NetworkReachabilityFlags flags, /* void* */ IntPtr info);
 #endif
 
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[ObsoletedOSPlatform ("ios17.4", "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[ObsoletedOSPlatform ("maccatalyst17.4", "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[ObsoletedOSPlatform ("tvos17.4", "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[ObsoletedOSPlatform ("macos14.4", "Use 'NSUrlSession' or 'NWConnection' instead.")]
+#else
+		[Deprecated (PlatformName.iOS, 17, 4, message: "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[Deprecated (PlatformName.TvOS, 17, 4, message: "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 17, 4, message: "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[Deprecated (PlatformName.MacOSX, 14, 4, message: "Use 'NSUrlSession' or 'NWConnection' instead.")]
+#endif
 		[DllImport (Constants.SystemConfigurationLibrary)]
 		unsafe static extern /* Boolean */ byte SCNetworkReachabilitySetCallback (
 			/* SCNetworkReachabilityRef __nonnull */ IntPtr handle,
@@ -369,6 +489,21 @@ namespace SystemConfiguration {
 			r.notification (flags);
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[ObsoletedOSPlatform ("ios17.4", "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[ObsoletedOSPlatform ("maccatalyst17.4", "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[ObsoletedOSPlatform ("tvos17.4", "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[ObsoletedOSPlatform ("macos14.4", "Use 'NSUrlSession' or 'NWConnection' instead.")]
+#else
+		[Deprecated (PlatformName.iOS, 17, 4, message: "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[Deprecated (PlatformName.TvOS, 17, 4, message: "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 17, 4, message: "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[Deprecated (PlatformName.MacOSX, 14, 4, message: "Use 'NSUrlSession' or 'NWConnection' instead.")]
+#endif
 		public StatusCode SetNotification (Notification callback)
 		{
 			bool rv;
@@ -417,11 +552,41 @@ namespace SystemConfiguration {
 			return StatusCode.OK;
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[ObsoletedOSPlatform ("ios17.4", "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[ObsoletedOSPlatform ("maccatalyst17.4", "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[ObsoletedOSPlatform ("tvos17.4", "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[ObsoletedOSPlatform ("macos14.4", "Use 'NSUrlSession' or 'NWConnection' instead.")]
+#else
+		[Deprecated (PlatformName.iOS, 17, 4, message: "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[Deprecated (PlatformName.TvOS, 17, 4, message: "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 17, 4, message: "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[Deprecated (PlatformName.MacOSX, 14, 4, message: "Use 'NSUrlSession' or 'NWConnection' instead.")]
+#endif
 		[DllImport (Constants.SystemConfigurationLibrary)]
 		extern static /* Boolean */ byte SCNetworkReachabilityScheduleWithRunLoop (
 			/* SCNetworkReachabilityRef __nonnull */ IntPtr target, /* CFRunLoopRef __nonnull */ IntPtr runloop,
 			/* CFStringRef __nonnull */ IntPtr runLoopMode);
 
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[ObsoletedOSPlatform ("ios17.4", "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[ObsoletedOSPlatform ("maccatalyst17.4", "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[ObsoletedOSPlatform ("tvos17.4", "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[ObsoletedOSPlatform ("macos14.4", "Use 'NSUrlSession' or 'NWConnection' instead.")]
+#else
+		[Deprecated (PlatformName.iOS, 17, 4, message: "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[Deprecated (PlatformName.TvOS, 17, 4, message: "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 17, 4, message: "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[Deprecated (PlatformName.MacOSX, 14, 4, message: "Use 'NSUrlSession' or 'NWConnection' instead.")]
+#endif
 		public bool Schedule (CFRunLoop runLoop, string mode)
 		{
 			if (runLoop is null)
@@ -443,9 +608,39 @@ namespace SystemConfiguration {
 			return Schedule (CFRunLoop.Current, CFRunLoop.ModeDefault);
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[ObsoletedOSPlatform ("ios17.4", "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[ObsoletedOSPlatform ("maccatalyst17.4", "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[ObsoletedOSPlatform ("tvos17.4", "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[ObsoletedOSPlatform ("macos14.4", "Use 'NSUrlSession' or 'NWConnection' instead.")]
+#else
+		[Deprecated (PlatformName.iOS, 17, 4, message: "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[Deprecated (PlatformName.TvOS, 17, 4, message: "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 17, 4, message: "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[Deprecated (PlatformName.MacOSX, 14, 4, message: "Use 'NSUrlSession' or 'NWConnection' instead.")]
+#endif
 		[DllImport (Constants.SystemConfigurationLibrary)]
 		extern static int SCNetworkReachabilityUnscheduleFromRunLoop (/* SCNetworkReachabilityRef */ IntPtr target, /* CFRunLoopRef */ IntPtr runloop, /* CFStringRef */ IntPtr runLoopMode);
 
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[ObsoletedOSPlatform ("ios17.4", "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[ObsoletedOSPlatform ("maccatalyst17.4", "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[ObsoletedOSPlatform ("tvos17.4", "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[ObsoletedOSPlatform ("macos14.4", "Use 'NSUrlSession' or 'NWConnection' instead.")]
+#else
+		[Deprecated (PlatformName.iOS, 17, 4, message: "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[Deprecated (PlatformName.TvOS, 17, 4, message: "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 17, 4, message: "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[Deprecated (PlatformName.MacOSX, 14, 4, message: "Use 'NSUrlSession' or 'NWConnection' instead.")]
+#endif
 		public bool Unschedule (CFRunLoop runLoop, string mode)
 		{
 			if (runLoop is null)
@@ -467,11 +662,41 @@ namespace SystemConfiguration {
 			return Unschedule (CFRunLoop.Current, CFRunLoop.ModeDefault);
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[ObsoletedOSPlatform ("ios17.4", "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[ObsoletedOSPlatform ("maccatalyst17.4", "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[ObsoletedOSPlatform ("tvos17.4", "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[ObsoletedOSPlatform ("macos14.4", "Use 'NSUrlSession' or 'NWConnection' instead.")]
+#else
+		[Deprecated (PlatformName.iOS, 17, 4, message: "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[Deprecated (PlatformName.TvOS, 17, 4, message: "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 17, 4, message: "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[Deprecated (PlatformName.MacOSX, 14, 4, message: "Use 'NSUrlSession' or 'NWConnection' instead.")]
+#endif
 		[DllImport (Constants.SystemConfigurationLibrary)]
 		extern static /* Boolean */ byte SCNetworkReachabilitySetDispatchQueue (
 			/* SCNetworkReachabilityRef __nonnull */ IntPtr target,
 			/* dispatch_queue_t __nullable */ IntPtr queue);
 
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[ObsoletedOSPlatform ("ios17.4", "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[ObsoletedOSPlatform ("maccatalyst17.4", "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[ObsoletedOSPlatform ("tvos17.4", "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[ObsoletedOSPlatform ("macos14.4", "Use 'NSUrlSession' or 'NWConnection' instead.")]
+#else
+		[Deprecated (PlatformName.iOS, 17, 4, message: "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[Deprecated (PlatformName.TvOS, 17, 4, message: "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 17, 4, message: "Use 'NSUrlSession' or 'NWConnection' instead.")]
+		[Deprecated (PlatformName.MacOSX, 14, 4, message: "Use 'NSUrlSession' or 'NWConnection' instead.")]
+#endif
 		public bool SetDispatchQueue (DispatchQueue queue)
 		{
 			return SCNetworkReachabilitySetDispatchQueue (Handle, queue.GetHandle ()) != 0;
