@@ -137,9 +137,9 @@ stages:
       - name: INCLUDE_DOTNET_TVOS
         value: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.INCLUDE_DOTNET_TVOS'] ]
       pool:
-        name: AzurePipelines-EO
-        demands:
-        - ImageOverride -equals 1ESPT-Windows2022
+        name: Azure Pipelines
+        image: macOS-14
+        os: macOS
       steps:
       - pwsh: |
           New-Item "$(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/governance" -ItemType Directory -ea 0
