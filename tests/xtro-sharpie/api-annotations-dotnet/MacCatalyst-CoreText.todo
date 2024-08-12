@@ -1,2 +1,9 @@
 !missing-field! kCTFontRegistrationUserInfoAttribute not bound
 !extra-enum-value! Managed value 3 for CTFontManagerScope.Session is available for the current platform while the value in the native header is not
+!deprecated-attribute-missing! CTFontManagerRegisterGraphicsFont missing a [Deprecated] attribute
+!deprecated-attribute-missing! CTFontManagerUnregisterGraphicsFont missing a [Deprecated] attribute
+!missing-field! kCTAdaptiveImageProviderAttributeName not bound
+!missing-pinvoke! CTFontDrawImageFromAdaptiveImageProviderAtPoint is not bound
+!missing-pinvoke! CTFontGetTypographicBoundsForAdaptiveImageProvider is not bound
+!missing-protocol! CTAdaptiveImageProviding not bound
+!missing-pinvoke! CTFontHasTable is not bound
