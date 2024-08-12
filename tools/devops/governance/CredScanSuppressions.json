@@ -850,11 +850,11 @@
             "_justification": "External repo dependency, mono."
         },
         {
-            "file": "maccore\\tools\\provisioning-profiles\\certificates-and-profiles\\developer-id-application-luis-aguilera-aug-2024.p12",
+            "file": "maccore\\tools\\provisioning-profiles\\certificates-and-profiles\\developer-id-application-luis-aguilera-jul-2029.p12",
             "_justification": "Testing certificate."
         },
         {
-            "file": "maccore\\tools\\provisioning-profiles\\certificates-and-profiles\\developer-id-installer-luis-aguilera-aug-2024.p12",
+            "file": "maccore\\tools\\provisioning-profiles\\certificates-and-profiles\\developer-id-installer-luis-aguilera-jul-2029.p12",
             "_justification": "Testing certificate."
         },
         {
