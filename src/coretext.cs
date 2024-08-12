@@ -226,6 +226,10 @@ namespace CoreText {
 
 		[Field ("kCTFontEnabledAttribute")]
 		NSString Enabled { get; }
+
+		[iOS (13, 0), NoTV, NoWatch, MacCatalyst (13, 1), NoMac]
+		[Field ("kCTFontRegistrationUserInfoAttribute")]
+		NSString RegistrationUserInfo { get; }
 	}
 
 	/// <summary>A class whose static properties can be used as keys for the <see cref="T:Foundation.NSDictionary" /> used by <see cref="T:CoreText.CTTextTabOptions" />.</summary>
