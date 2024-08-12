@@ -2,15 +2,15 @@
   <!--Package versions-->
   <PropertyGroup>
     <!-- Versions updated by maestro -->
-    <MicrosoftNETSdkPackageVersion>9.0.100-rc.1.24380.5</MicrosoftNETSdkPackageVersion>
-    <MicrosoftNETILLinkTasksPackageVersion>9.0.0-rc.1.24378.5</MicrosoftNETILLinkTasksPackageVersion>
+    <MicrosoftNETSdkPackageVersion>9.0.100-rc.1.24409.1</MicrosoftNETSdkPackageVersion>
+    <MicrosoftNETILLinkTasksPackageVersion>9.0.0-rc.1.24408.12</MicrosoftNETILLinkTasksPackageVersion>
     <MicrosoftNETILLinkPackageVersion>9.0.0-alpha.1.23556.4</MicrosoftNETILLinkPackageVersion>
     <MicrosoftDotNetBuildTasksFeedPackageVersion>8.0.0-beta.24225.1</MicrosoftDotNetBuildTasksFeedPackageVersion>
-    <MicrosoftNETCoreAppRefPackageVersion>9.0.0-rc.1.24378.5</MicrosoftNETCoreAppRefPackageVersion>
+    <MicrosoftNETCoreAppRefPackageVersion>9.0.0-rc.1.24408.12</MicrosoftNETCoreAppRefPackageVersion>
     <MicrosoftNETWorkloadEmscriptenCurrentManifest80100TransportVersion>8.0.0-rtm.23511.3</MicrosoftNETWorkloadEmscriptenCurrentManifest80100TransportVersion>
     <MicrosoftNETRuntimeMonoTargetsSdkPackageVersion>9.0.0-alpha.1.23556.4</MicrosoftNETRuntimeMonoTargetsSdkPackageVersion>
     <MicrosoftTemplateEngineTasksVersion>7.0.100-alpha.1.21601.1</MicrosoftTemplateEngineTasksVersion>
-    <MicrosoftDotNetCecilPackageVersion>0.11.5-alpha.24365.1</MicrosoftDotNetCecilPackageVersion>
+    <MicrosoftDotNetCecilPackageVersion>0.11.5-alpha.24379.1</MicrosoftDotNetCecilPackageVersion>
     <MicrosoftDotNetXHarnessiOSSharedPackageVersion>9.0.0-prerelease.24379.1</MicrosoftDotNetXHarnessiOSSharedPackageVersion>
     <!-- Manually updated versions -->
     <Emscriptennet7WorkloadVersion>$(MicrosoftNETWorkloadEmscriptenCurrentManifest80100Version)</Emscriptennet7WorkloadVersion>
