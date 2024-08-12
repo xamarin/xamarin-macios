@@ -291,24 +291,23 @@ namespace ObjCRuntime {
 
 		public static void SetString (IntPtr handle, string symbol, NSString? value)
 		{
-			var indirect = dlsym (handle, symbol);
-			if (indirect == IntPtr.Zero)
-				return;
-			var strHandle = value.GetHandle ();
-			if (strHandle != IntPtr.Zero)
-				CFObject.CFRetain (strHandle);
-			Marshal.WriteIntPtr (indirect, strHandle);
+			SetObject (handle, symbol, value);
 		}
 
 		public static void SetArray (IntPtr handle, string symbol, NSArray? array)
 		{
+			SetObject (handle, symbol, array);
+		}
+
+		public static void SetObject (IntPtr handle, string symbol, NSObject? value)
+		{
 			var indirect = dlsym (handle, symbol);
 			if (indirect == IntPtr.Zero)
 				return;
-			var arrayHandle = array.GetHandle ();
-			if (arrayHandle != IntPtr.Zero)
-				CFObject.CFRetain (arrayHandle);
-			Marshal.WriteIntPtr (indirect, arrayHandle);
+			var objectHandle = value.GetHandle ();
+			if (objectHandle != IntPtr.Zero)
+				CFObject.CFRetain (objectHandle);
+			Marshal.WriteIntPtr (indirect, objectHandle);
 		}
 
 		public static nint GetNInt (IntPtr handle, string symbol)
