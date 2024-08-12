@@ -155,11 +155,11 @@ stages:
       - task: DownloadPipelineArtifact@2
         inputs:
           artifactName: DropMetadata-$(Build.BuildId)-nugets-$(System.JobAttempt)
-          downloadPath: $(Build.StagingDirectory)\metadata
+          downloadPath: $(Build.StagingDirectory)/metadata
         displayName: Download nugets drop metadata
 
       - powershell: |
-          $jsonContent = Get-Content -Path "$(Build.StagingDirectory)\metadata\VSTSDrop.json" -Raw | ConvertFrom-Json
+          $jsonContent = Get-Content -Path "$(Build.StagingDirectory)/metadata/VSTSDrop.json" -Raw | ConvertFrom-Json
           $dropPrefix = $jsonContent.VstsDropBuildArtifact.VstsDropUrl -replace 'https://devdiv.artifacts.visualstudio.com/DefaultCollection/_apis/drop/drops/' -replace '/nugets'
           Write-Host "##vso[task.setvariable variable=ReleaseDropPrefix]$dropPrefix"
         displayName: Set variable ReleaseDropPrefix
@@ -170,7 +170,7 @@ stages:
         inputs:
           dropServiceURI: https://devdiv.artifacts.visualstudio.com/DefaultCollection
           buildNumber: $(ReleaseDropPrefix)/nugets
-          destinationPath: $(Build.StagingDirectory)\nuget-signed
+          destinationPath: $(Build.StagingDirectory)/nuget-signed
 
       - powershell: |
           $varMap = @{ "INCLUDE_DOTNET_IOS" = "iOS"; "INCLUDE_DOTNET_MACCATALYST" = "MacCatalyst"; "INCLUDE_DOTNET_MACOS" = "macOS"; "INCLUDE_DOTNET_TVOS" = "tvOS" }
@@ -192,7 +192,7 @@ stages:
             make -C $(Build.SourcesDirectory)/dotnet publish-bar-manifest
             BAR_MANIFEST_PLATFORM_NAME=$(MaestroProjectPlatformName)
             BAR_MANIFEST_MSBUILD_ARGS='-p:NupkgPath=$(Build.SourcesDirectory)/nugets-signed -bl:$(Build.ArtifactStagingDirectory)/maestro-binlogs/generate-bar-manifest.binlog'
-          workingDirectory: $(Build.SourcesDirectory)\..
+          workingDirectory: $(Build.SourcesDirectory)/..
         condition: and(succeeded(), eq('${{ parameters.pushNugetsToMaestro }}', 'true'))
 
       - task: AzureCLI@2
@@ -204,11 +204,11 @@ stages:
             $versionEndpoint = 'https://maestro.dot.net/api/assets/darc-version?api-version=2019-01-16'
             $darcVersion = $(Invoke-WebRequest -Uri $versionEndpoint -UseBasicParsing).Content
             $arcadeServicesSource = 'https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-eng/nuget/v3/index.json'
-            & dotnet tool update microsoft.dotnet.darc --version "$darcVersion" --add-source "$arcadeServicesSource" --tool-path $(Agent.ToolsDirectory)\darc -v n
-            & $(Agent.ToolsDirectory)\darc\darc add-build-to-channel --default-channels --id $(BARBuildId) --publishing-infra-version 3 --azdev-pat $(System.AccessToken)
+            & dotnet tool update microsoft.dotnet.darc --version "$darcVersion" --add-source "$arcadeServicesSource" --tool-path $(Agent.ToolsDirectory)/darc -v n
+            & $(Agent.ToolsDirectory)/darc/darc add-build-to-channel --default-channels --id $(BARBuildId) --publishing-infra-version 3 --azdev-pat $(System.AccessToken)
           # We can't use the global.json located in the root of our repo, because makes it required to use the exact .NET version we're referencing in our eng/Versions.Details.xml file.
           # So in order to not use it, we set the working directory to the parent directory of xamarin-macios.
-          workingDirectory: $(Build.SourcesDirectory)\..
+          workingDirectory: $(Build.SourcesDirectory)/..
         displayName: Add builds to default darc channel
         condition: and(succeeded(), eq('${{ parameters.pushNugetsToMaestro }}', 'true'))
 
