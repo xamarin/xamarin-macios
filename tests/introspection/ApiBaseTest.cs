@@ -229,10 +229,7 @@ namespace Introspection {
 		public bool MemberHasEditorBrowsableNever (MemberInfo member)
 		{
 			var attribute = member.GetCustomAttribute<EditorBrowsableAttribute> (false);
-			if (attribute is null)
-				return false;
-
-			return attribute.State == EditorBrowsableState.Never;
+			return attribute?.State == EditorBrowsableState.Never;
 		}
 
 		/// <summary>
