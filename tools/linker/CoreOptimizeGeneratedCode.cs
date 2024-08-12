@@ -1419,7 +1419,6 @@ namespace Xamarin.Linker {
 			Driver.Log (4, "Optimized static constructor in the protocol interface {0} (static constructor was cleared and custom attributes removed)", method.DeclaringType.FullName);
 			method.Body.Instructions.Clear ();
 			method.Body.Instructions.Add (Instruction.Create (OpCodes.Ret));
-			method.CustomAttributes.Clear ();
 			return true;
 		}
 	}
