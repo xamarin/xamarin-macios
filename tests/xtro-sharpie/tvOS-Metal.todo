@@ -1,5 +1,44 @@
 !missing-protocol-member! MTLResource::setOwnerWithIdentity: not found
 !missing-protocol-member! MTLSharedEvent::waitUntilSignaledValue:timeoutMS: not found
+!deprecated-attribute-missing! MTLCompileOptions::fastMathEnabled missing a [Deprecated] attribute
+!deprecated-attribute-missing! MTLCompileOptions::setFastMathEnabled: missing a [Deprecated] attribute
+!missing-enum! MTLLogLevel not bound
+!missing-enum! MTLLogStateError not bound
+!missing-enum! MTLMathFloatingPointFunctions not bound
+!missing-enum! MTLMathMode not bound
+!missing-enum! MTLShaderValidation not bound
+!missing-enum! MTLStitchedLibraryOptions not bound
+!missing-enum-value! MTLFunctionOptions native value MTLFunctionOptionFailOnBinaryArchiveMiss = 4 not bound
+!missing-enum-value! MTLLanguageVersion native value MTLLanguageVersion3_2 = 196610 not bound
+!missing-field! MTLLogStateErrorDomain not bound
+!missing-field! NSDeviceCertificationiPhonePerformanceGaming not bound
+!missing-field! NSProcessInfoPerformanceProfileDidChangeNotification not bound
+!missing-field! NSProcessPerformanceProfileDefault not bound
+!missing-field! NSProcessPerformanceProfileSustained not bound
+!missing-pinvoke! MTLCopyAllDevices is not bound
+!missing-protocol! MTLAllocation not bound
+!missing-protocol! MTLLogState not bound
+!missing-protocol! MTLResidencySet not bound
+!missing-protocol-member! MTLBinaryArchive::addLibraryWithDescriptor:error: not found
+!missing-protocol-member! MTLBinaryArchive::addMeshRenderPipelineFunctionsWithDescriptor:error: not found
+!missing-protocol-member! MTLCommandBuffer::useResidencySet: not found
+!missing-protocol-member! MTLCommandBuffer::useResidencySets:count: not found
+!missing-protocol-member! MTLCommandQueue::addResidencySet: not found
+!missing-protocol-member! MTLCommandQueue::addResidencySets:count: not found
+!missing-protocol-member! MTLCommandQueue::removeResidencySet: not found
+!missing-protocol-member! MTLCommandQueue::removeResidencySets:count: not found
+!missing-protocol-member! MTLComputePipelineState::shaderValidation not found
+!missing-protocol-member! MTLDevice::newCommandQueueWithDescriptor: not found
+!missing-protocol-member! MTLDevice::newLogStateWithDescriptor:error: not found
+!missing-protocol-member! MTLDevice::newResidencySetWithDescriptor:error: not found
+!missing-protocol-member! MTLRenderPipelineState::shaderValidation not found
+!missing-selector! MTLCommandBufferDescriptor::logState not bound
+!missing-selector! MTLCommandBufferDescriptor::setLogState: not bound
+!missing-selector! MTLCommandQueueDescriptor::logState not bound
+!missing-selector! MTLCommandQueueDescriptor::maxCommandBufferCount not bound
+!missing-selector! MTLCommandQueueDescriptor::setLogState: not bound
+!missing-selector! MTLCommandQueueDescriptor::setMaxCommandBufferCount: not bound
+!missing-selector! MTLCompileOptions::enableLogging not bound
 !missing-selector! MTLCompileOptions::mathFloatingPointFunctions not bound
 !missing-selector! MTLCompileOptions::setMathFloatingPointFunctions: not bound
 !missing-selector! MTLStitchedLibraryDescriptor::setBinaryArchives: not bound
