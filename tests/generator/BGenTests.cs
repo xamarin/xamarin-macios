@@ -1627,9 +1627,11 @@ namespace GeneratorTests {
 #endif
 
 		[Test]
-		public void BackingFieldType ()
+		[TestCase (Profile.iOS)]
+		public void BackingFieldType (Profile profile)
 		{
-			var bgen = BuildFile (Profile.iOS, true, true, "tests/backingfieldtype.cs");
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
+			var bgen = BuildFile (profile, true, true, "tests/backingfieldtype.cs");
 
 			var nsNumberGetConstant = bgen.ApiAssembly.MainModule.GetType ("BackingField", "NSNumberFieldTypeExtensions").Methods.First ((v) => v.Name == "GetConstant");
 			Assert.AreEqual ("Foundation.NSNumber", nsNumberGetConstant.ReturnType.FullName, "NSNumber #1");
