@@ -1633,20 +1633,28 @@ namespace GeneratorTests {
 			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
 			var bgen = BuildFile (profile, true, true, "tests/backingfieldtype.cs");
 
+#if NET
+			const string nintName = "System.IntPtr";
+			const string nuintName = "System.UIntPtr";
+#else
+			const string nintName = "System.nint";
+			const string nuintName = "System.nuint";
+#endif
+
 			var nsNumberGetConstant = bgen.ApiAssembly.MainModule.GetType ("BackingField", "NSNumberFieldTypeExtensions").Methods.First ((v) => v.Name == "GetConstant");
 			Assert.AreEqual ("Foundation.NSNumber", nsNumberGetConstant.ReturnType.FullName, "NSNumber #1");
 			var nsNumberGetValue = bgen.ApiAssembly.MainModule.GetType ("BackingField", "NSNumberFieldTypeExtensions").Methods.First ((v) => v.Name == "GetValue");
 			Assert.AreEqual ("Foundation.NSNumber", nsNumberGetValue.Parameters [0].ParameterType.FullName, "NSNumber #2");
 
 			var nsNSIntegerGetConstant = bgen.ApiAssembly.MainModule.GetType ("BackingField", "NSIntegerFieldTypeExtensions").Methods.First ((v) => v.Name == "GetConstant");
-			Assert.AreEqual ("System.Nullable`1<System.IntPtr>", nsNSIntegerGetConstant.ReturnType.FullName, "NSInteger #1");
+			Assert.AreEqual ($"System.Nullable`1<{nintName}>", nsNSIntegerGetConstant.ReturnType.FullName, "NSInteger #1");
 			var nsNSIntegerGetValue = bgen.ApiAssembly.MainModule.GetType ("BackingField", "NSIntegerFieldTypeExtensions").Methods.First ((v) => v.Name == "GetValue");
-			Assert.AreEqual ("System.IntPtr", nsNSIntegerGetValue.Parameters [0].ParameterType.FullName, "NSInteger #2");
+			Assert.AreEqual (nintName, nsNSIntegerGetValue.Parameters [0].ParameterType.FullName, "NSInteger #2");
 
 			var nsNSUIntegerGetConstant = bgen.ApiAssembly.MainModule.GetType ("BackingField", "NSUIntegerFieldTypeExtensions").Methods.First ((v) => v.Name == "GetConstant");
-			Assert.AreEqual ("System.Nullable`1<System.UIntPtr>", nsNSUIntegerGetConstant.ReturnType.FullName, "NSUInteger #1");
+			Assert.AreEqual ($"System.Nullable`1<{nuintName}>", nsNSUIntegerGetConstant.ReturnType.FullName, "NSUInteger #1");
 			var nsNSUIntegerGetValue = bgen.ApiAssembly.MainModule.GetType ("BackingField", "NSUIntegerFieldTypeExtensions").Methods.First ((v) => v.Name == "GetValue");
-			Assert.AreEqual ("System.UIntPtr", nsNSUIntegerGetValue.Parameters [0].ParameterType.FullName, "NSUInteger #2");
+			Assert.AreEqual (nuintName, nsNSUIntegerGetValue.Parameters [0].ParameterType.FullName, "NSUInteger #2");
 		}
 
 	}
