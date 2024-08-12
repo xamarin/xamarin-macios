@@ -187,8 +187,20 @@ namespace ObjCRuntime {
 			if (!trampolineMethod.IsDefined (typeof (UnmanagedCallersOnlyAttribute), false))
 				throw ErrorHelper.CreateError (8051, Errors.MX8051 /* The trampoline method {0} must have an [UnmanagedCallersOnly] attribute. */, trampolineMethod.DeclaringType.FullName + "." + trampolineMethod.Name);
 
+			// We need to get the signature of the target method, so that we can compute
+			// the ObjC signature correctly (the generated method that's actually
+			// invoked by native code does not have enough type information to compute
+			// the correct signature).
+			// This attribute might not exist for third-party libraries created
+			// with earlier versions of our SDK, so make sure to cope with
+			// the attribute not being available.
+
+			// This logic is mirrored in CoreOptimizeGeneratedCode.ProcessSetupBlock and must be
+			// updated if anything changes here.
+			TryGetUserDelegateType (trampolineMethod, trampolineMethod, out var userMethod);
+
 			// We're good to go!
-			return Runtime.ComputeSignature (trampolineMethod, true);
+			return Runtime.ComputeSignature (userMethod, true);
 		}
 #endif // NET
 
@@ -214,19 +226,21 @@ namespace ObjCRuntime {
 
 			// This logic is mirrored in CoreOptimizeGeneratedCode.ProcessSetupBlock and must be
 			// updated if anything changes here.
-			var userDelegateType = trampoline.GetType ().GetCustomAttribute<UserDelegateTypeAttribute> ()?.UserDelegateType;
-			bool blockSignature;
-			MethodInfo userMethod;
-			if (userDelegateType is not null) {
-				userMethod = userDelegateType.GetMethod ("Invoke");
-				blockSignature = true;
-			} else {
-				userMethod = trampoline.Method;
-				blockSignature = false;
-			}
-
+			var blockSignature = TryGetUserDelegateType (trampoline.GetType (), trampoline.Method, out var userMethod);
 			var signature = Runtime.ComputeSignature (userMethod, blockSignature);
 			SetupBlockImpl (trampoline, target, safe, System.Text.Encoding.UTF8.GetBytes (signature));
+		}
+
+		static bool TryGetUserDelegateType (MemberInfo provider, MethodInfo noUserDelegateTypeMethod, out MethodInfo userMethod)
+		{
+			var userDelegateType = provider.GetCustomAttribute<UserDelegateTypeAttribute> ()?.UserDelegateType;
+			if (userDelegateType is not null) {
+				userMethod = userDelegateType.GetMethod ("Invoke");
+				return true;
+			} else {
+				userMethod = noUserDelegateTypeMethod;
+				return false;
+			}
 		}
 
 		void SetupBlockImpl (Delegate trampoline, Delegate target, bool safe, string signature)
