@@ -31,6 +31,22 @@ namespace AccessorySetupKit {
 		BluetoothTransportBridging = 1U << 2,
 	}
 
+	[Native]
+	[iOS (18, 0)]
+	public enum ASDiscoveryDescriptorRange : long {
+		Default = 0,
+		Immediate = 10,
+	}
+
+	[Flags]
+	[Native]
+	[iOS (18, 0)]
+	public enum ASPickerDisplayItemSetupOptions : long {
+		Rename = 1 << 0,
+		ConfirmAuthorization = 1 << 1,
+		FinishInApp = 1 << 2,
+	}
+
 	[BaseType (typeof (NSObject))]
 	[iOS (18, 0)]
 	[DisableDefaultCtor]
@@ -49,20 +65,27 @@ namespace AccessorySetupKit {
 
 		[Export ("descriptor", ArgumentSemantic.Copy)]
 		ASDiscoveryDescriptor Descriptor { get; }
+
+		[Export ("bluetoothTransportBridgingIdentifier", ArgumentSemantic.Copy), NullAllowed]
+		NSData BluetoothTransportBridgingIdentifier { get; }
 	}
 
 	[Native]
 	[iOS (18, 0)]
 	public enum ASAccessoryEventType : long {
-	    Unknown           = 0,
-	    Activated         = 10,
-	    Invalidated       = 11,
-	    MigrationComplete = 20,
-	    AccessoryAdded    = 30,
-	    AccessoryRemoved  = 31,
-	    AccessoryChanged  = 32,
-	    PickerDidPresent  = 42,
-	    PickerDidDismiss  = 45,
+		Unknown             = 0,
+		Activated           = 10,
+		Invalidated         = 11,
+		MigrationComplete   = 20,
+		AccessoryAdded      = 30,
+		AccessoryRemoved    = 31,
+		AccessoryChanged    = 32,
+		PickerDidPresent    = 40,
+		PickerDidDismiss    = 50,
+		PickerSetupBridging = 60,
+		PickerSetupFailed   = 70,
+		PickerSetupPairing  = 80,
+		PickerSetupRename   = 90,
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -113,14 +136,25 @@ namespace AccessorySetupKit {
 		[Async]
 		[Export ("renameAccessory:options:completionHandler:")]
 		void RenameAccessory (ASAccessory accessory, ASAccessoryRenameOptions renameOptions, ASAccessorySessionCompletionHandler completionHandler);
+
+		[Async]
+		[Export ("failAuthorization:completionHandler:")]
+		void FailAuthorization (ASAccessory accessory, ASAccessorySessionCompletionHandler completionHandler);
 	}
 
 	[BaseType (typeof (NSObject))]
 	[iOS (18, 0)]
 	[DisableDefaultCtor]
 	interface ASAccessorySettings {
+		[Export ("defaultSettings")]
+		[Static]
+		ASAccessorySettings DefaultSettings { get; }
+
 		[Export ("SSID", ArgumentSemantic.Copy), NullAllowed]
 		string Ssid { get; set; }
+
+		[Export ("bluetoothTransportBridgingIdentifier", ArgumentSemantic.Copy), NullAllowed]
+		NSData BluetoothTransportBridgingIdentifier { get; set; }
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -141,6 +175,9 @@ namespace AccessorySetupKit {
 
 		[Export ("bluetoothNameSubstring", ArgumentSemantic.Copy), NullAllowed]
 		string BluetoothNameSubstring { get; set; }
+
+		[Export ("bluetoothRange", ArgumentSemantic.Assign)]
+		ASDiscoveryDescriptorRange BluetoothRange { get; set; }
 
 		[Export ("bluetoothServiceDataBlob", ArgumentSemantic.Copy), NullAllowed]
 		NSData BluetoothServiceDataBlob { get; set; }
@@ -164,9 +201,11 @@ namespace AccessorySetupKit {
 		Success             = 0,
 		Unknown             = 1,
 		ActivationFailed    = 100,
+		ConnectionFailed    = 150,
 		DiscoveryTimeout    = 200,
 		ExtensionNotFound   = 300,
 		Invalidated         = 400,
+		InvalidRequest      = 450,
 		PickerAlreadyActive = 500,
 		PickerRestricted    = 550,
 		UserCancelled       = 700,
@@ -177,11 +216,9 @@ namespace AccessorySetupKit {
 	[iOS (18, 0)]
 	[DisableDefaultCtor]
 	interface ASPickerDisplayItem {
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use SetupOptions' instead.")]
 		[Export ("allowsRename", ArgumentSemantic.Assign)]
 		bool AllowsRename { get; set; }
-
-		[Export ("renameOptions", ArgumentSemantic.Assign)]
-		ASAccessoryRenameOptions RenameOptions { get; set; }
 
 		[Export ("name", ArgumentSemantic.Copy)]
 		string Name { get; }
@@ -191,6 +228,12 @@ namespace AccessorySetupKit {
 
 		[Export ("descriptor", ArgumentSemantic.Copy)]
 		ASDiscoveryDescriptor Descriptor { get; set; }
+
+		[Export ("renameOptions", ArgumentSemantic.Assign)]
+		ASAccessoryRenameOptions RenameOptions { get; set; }
+
+		[Export ("setupOptions", ArgumentSemantic.Assign)]
+		ASPickerDisplayItemSetupOptions SetupOptions { get; set; }
 
 		[Export ("initWithName:productImage:descriptor:")]
 		[DesignatedInitializer]
