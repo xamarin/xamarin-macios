@@ -2730,6 +2730,37 @@ namespace CoreText {
 			CTFontDrawImageFromAdaptiveImageProviderAtPoint (Handle, provider.GetNonNullHandle (nameof (provider)), point, context.GetNonNullHandle (nameof (context)));
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("tvos13.0")]
+#else
+		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0), MacCatalyst (13, 0)]
+#endif
+		[DllImport (Constants.CoreTextLibrary)]
+		extern static byte CTFontHasTable (
+			/* CTFontRef */ IntPtr font,
+			/* CTFontTableTag */ CTFontTable tag);
+
+		/// <summary>Checks whether a table is present in a font.</summary>
+		/// <param name="tag">The table identifier to check for.</param>
+		/// <returns>Whether the table is present in the font or not.</returns>
+		/// <remarks>The check behaves as if <see cref="CTFontTableOptions.None" /> was specified.</remarks>
+#if NET
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("tvos13.0")]
+#else
+		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0), MacCatalyst (13, 0)]
+#endif
+		public bool HasTable (CTFontTable tag)
+		{
+			return CTFontHasTable (GetCheckedHandle (), tag) != 0;
+		}
+
+
 		public override string? ToString ()
 		{
 			return FullName;
