@@ -1,0 +1,16 @@
+!missing-enum! AXSettingsFeature not bound
+!missing-field! AXPrefersNonBlinkingTextInsertionIndicatorDidChangeNotification not bound
+!missing-field! AXTechnologyAutomation not bound
+!missing-field! AXTechnologyFullKeyboardAccess not bound
+!missing-field! AXTechnologyHoverText not bound
+!missing-field! AXTechnologySpeakScreen not bound
+!missing-field! AXTechnologySwitchControl not bound
+!missing-field! AXTechnologyVoiceControl not bound
+!missing-field! AXTechnologyVoiceOver not bound
+!missing-field! AXTechnologyZoom not bound
+!missing-pinvoke! AXAssistiveAccessEnabled is not bound
+!missing-pinvoke! AXOpenSettingsFeature is not bound
+!missing-pinvoke! AXPrefersNonBlinkingTextInsertionIndicator is not bound
+!missing-selector! +AXRequest::currentRequest not bound
+!missing-selector! AXRequest::technology not bound
+!missing-type! AXRequest not bound

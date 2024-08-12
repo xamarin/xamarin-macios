@@ -3,3 +3,4 @@
 
 # Not found in the headers or web docs
 !missing-selector! NSFileProviderManager::waitForNSFileProviderManagerWithCompletionHandler: not bound
+!incorrect-protocol-member! NSFileProviderPendingSetEnumerator::isMaximumSizeReached is REQUIRED and should be abstract
