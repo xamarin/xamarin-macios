@@ -87,6 +87,9 @@ namespace MapKit {
 		[Export ("setCoordinate:")]
 		[MacCatalyst (13, 1)]
 		void SetCoordinate (CLLocationCoordinate2D value);
+
+		[Notification, Field ("MKAnnotationCalloutInfoDidChangeNotification")]
+		NSString CalloutInfoDidChangeNotification { get; }
 	}
 
 	interface IMKAnnotation { }
@@ -97,6 +100,11 @@ namespace MapKit {
 	[Protocol]
 	[MacCatalyst (13, 1)]
 	interface MKOverlay {
+		// There's a 'coordinate' readonly property defined in the header for MKOverlay,
+		// but the MKAnnotation protocol (which this protocol subclasses), also defines
+		// a readonly 'coordinate' property, so there's no need to re-declare it here
+		// (in fact it causes numerous build problems).
+
 		[Abstract]
 		[Export ("boundingMapRect")]
 		MKMapRect BoundingMapRect { get; }
@@ -2822,12 +2830,12 @@ namespace MapKit {
 		MKAddressFilter ExcludingAll { get; }
 
 		[Export ("initIncludingOptions:")]
-		[DesignatedInitializer]
+		// [DesignatedInitializer] // this isn't a constructor, so [DesignatedInitializer] doesn't work
 		[Internal]
 		NativeHandle _InitIncludingOptions (MKAddressFilter options);
 
 		[Export ("initExcludingOptions:")]
-		[DesignatedInitializer]
+		// [DesignatedInitializer] // this isn't a constructor, so [DesignatedInitializer] doesn't work
 		[Internal]
 		NativeHandle _InitExcludingOptions (MKAddressFilter options);
 
@@ -2854,6 +2862,7 @@ namespace MapKit {
 	[Protocol (BackwardsCompatibleCodeGeneration = false), Model]
 	[BaseType (typeof (NSObject))]
 	interface MKMapItemDetailViewControllerDelegate {
+		[Abstract]
 		[Export ("mapItemDetailViewControllerDidFinish:")]
 		void DidFinish (MKMapItemDetailViewController detailViewController);
 	}
@@ -2914,7 +2923,7 @@ namespace MapKit {
 	interface MKMapItemDetailSelectionAccessoryPresentationStyle {
 		[Static]
 		[Export ("automaticWithPresentationViewController:")]
-		MKMapItemDetailSelectionAccessoryPresentationStyle CreateAutomatic (UIViewController presentationViewController);
+		MKMapItemDetailSelectionAccessoryPresentationStyle CreateAutomatic ([NullAllowed] UIViewController presentationViewController);
 
 		[Static]
 		[Export ("callout", ArgumentSemantic.Strong)]
