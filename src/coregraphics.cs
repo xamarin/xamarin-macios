@@ -504,4 +504,16 @@ namespace CoreGraphics {
 		[Field ("kCGDisplayStreamYCbCrMatrix_SMPTE_240M_1995")]
 		NSString Smpte_240M_1995 { get; }
 	}
+
+#if NET
+	[NoiOS, NoTV, NoWatch, MacCatalyst (13, 1)]
+	[StrongDictionary ("CGSessionKeys")]
+	interface CGSessionProperties {
+		uint UserId { get; }
+		string UserName { get; }
+		uint ConsoleSet { get; }
+		bool OnConsole { get; }
+		bool LoginDone { get; }
+	}
+#endif
 }
