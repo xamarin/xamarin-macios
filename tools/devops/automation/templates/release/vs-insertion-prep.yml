@@ -191,7 +191,7 @@ stages:
           inlineScript: >-
             make -C $(Build.SourcesDirectory)/dotnet publish-bar-manifest
             BAR_MANIFEST_PLATFORM_NAME=$(MaestroProjectPlatformName)
-            BAR_MANIFEST_MSBUILD_ARGS='-p:NupkgPath=$(Build.SourcesDirectory)/nugets-signed -bl:$(Build.ArtifactStagingDirectory)/maestro-binlogs/generate-bar-manifest.binlog'
+            BAR_MANIFEST_MSBUILD_ARGS='-p:NupkgPath=$(Build.SourcesDirectory)/nuget-signed -bl:$(Build.ArtifactStagingDirectory)/maestro-binlogs/generate-bar-manifest.binlog'
           workingDirectory: $(Build.SourcesDirectory)/..
         condition: and(succeeded(), eq('${{ parameters.pushNugetsToMaestro }}', 'true'))
 
@@ -205,7 +205,7 @@ stages:
             $darcVersion = $(Invoke-WebRequest -Uri $versionEndpoint -UseBasicParsing).Content
             $arcadeServicesSource = 'https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-eng/nuget/v3/index.json'
             & dotnet tool update microsoft.dotnet.darc --version "$darcVersion" --add-source "$arcadeServicesSource" --tool-path $(Agent.ToolsDirectory)/darc -v n
-            & $(Agent.ToolsDirectory)/darc/darc add-build-to-channel --default-channels --id $(BARBuildId) --publishing-infra-version 3 --azdev-pat $(System.AccessToken)
+            & $(Agent.ToolsDirectory)/darc/darc add-build-to-channel --default-channels --id $(BARBuildId) --ci --publishing-infra-version 3 --azdev-pat $(System.AccessToken)
           # We can't use the global.json located in the root of our repo, because makes it required to use the exact .NET version we're referencing in our eng/Versions.Details.xml file.
           # So in order to not use it, we set the working directory to the parent directory of xamarin-macios.
           workingDirectory: $(Build.SourcesDirectory)/..
