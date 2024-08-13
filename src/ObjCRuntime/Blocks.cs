@@ -204,11 +204,6 @@ namespace ObjCRuntime {
 		}
 #endif // NET
 
-#if NET
-		// Note that the code in this method shouldn't be called when using any static registrar, so throw an exception in that case.
-		// IL2075: 'this' argument does not satisfy 'DynamicallyAccessedMemberTypes.PublicMethods' in call to 'System.Type.GetMethod(String)'. The return value of method 'ObjCRuntime.UserDelegateTypeAttribute.UserDelegateType.get' does not have matching annotations. The source value must declare at least the same requirements as those declared on the target location it is assigned to.
-		[UnconditionalSuppressMessage ("", "IL2075", Justification = "The APIs this method tries to access are marked by other means, so this is linker-safe.")]
-#endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		void SetupBlock (Delegate trampoline, Delegate target, bool safe)
 		{
@@ -231,6 +226,11 @@ namespace ObjCRuntime {
 			SetupBlockImpl (trampoline, target, safe, System.Text.Encoding.UTF8.GetBytes (signature));
 		}
 
+#if NET
+		// Note that the code in this method shouldn't be called when using any static registrar, so throw an exception in that case.
+		// IL2075: 'this' argument does not satisfy 'DynamicallyAccessedMemberTypes.PublicMethods' in call to 'System.Type.GetMethod(String)'. The return value of method 'ObjCRuntime.UserDelegateTypeAttribute.UserDelegateType.get' does not have matching annotations. The source value must declare at least the same requirements as those declared on the target location it is assigned to.
+		[UnconditionalSuppressMessage ("", "IL2075", Justification = "The APIs this method tries to access are marked by other means, so this is linker-safe.")]
+#endif
 		static bool TryGetUserDelegateType (MemberInfo provider, MethodInfo noUserDelegateTypeMethod, out MethodInfo userMethod)
 		{
 			var userDelegateType = provider.GetCustomAttribute<UserDelegateTypeAttribute> ()?.UserDelegateType;

@@ -41,7 +41,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		{
 			delegate* unmanaged<IntPtr, byte, void> trampoline = &SignatureTestA;
 			using var block = new BlockLiteral (trampoline, null, typeof (BlocksTest), nameof (SignatureTestA));
-#if __MACOS__ || __MACCATALYST__
+#if __MACOS__
 			var boolIsB = Runtime.IsARM64CallingConvention;
 #else
 			var boolIsB = true;
