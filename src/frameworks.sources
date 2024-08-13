@@ -36,6 +36,7 @@ ACCESSIBILITY_SOURCES = \
 	Accessibility/AXHearingUtilities.cs \
 	Accessibility/AXAnimatedImagesUtilities.cs \
 	Accessibility/AXPrefers.cs \
+	Accessibility/AXSettings.cs \
 
 # Accounts
 
