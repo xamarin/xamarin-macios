@@ -1021,6 +1021,35 @@ namespace Introspection {
 					return !TestRuntime.CheckXcodeVersion (16, 0);
 				}
 				break;
+			case "GKLeaderboardEntry":
+				// It's not possible to create an instance of GKLeaderboardEntry, so I believe that whenever Apple
+				// returns an instance they return something that responds to these selectors, thus we have to
+				// provide bindings for them.
+				switch (selectorName) {
+				case "context":
+				case "date":
+				case "formattedScore":
+				case "rank":
+				case "score":
+					return true;
+				}
+				break;
+#if __MACCATALYST__
+			case "GKLeaderboardSet":
+				switch (selectorName) {
+				case "loadImageWithCompletionHandler:":
+					// This exists in both iOS and macOS, so not existing in Mac Catalyst is weird - so just provide the binding.
+					return true;
+				}
+				break;
+			case "GKLocalPlayer":
+				switch (selectorName) {
+				case "isPresentingFriendRequestViewController":
+					// This exists in both iOS and macOS, so not existing in Mac Catalyst is weird - so just provide the binding.
+					return true;
+				}
+				break;
+#endif // __MACCATALYST__
 			}
 
 			// old binding mistake

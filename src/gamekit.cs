@@ -535,10 +535,8 @@ namespace GameKit {
 		[Async]
 		void LoadLeaderboardsWithCompletionHandler (GKLeaderboardsHandler handler);
 
-		[NoMac]
 		[NoTV]
 		[NoWatch]
-		[NoMacCatalyst]
 		[Export ("loadImageWithCompletionHandler:")]
 		[Async]
 		void LoadImage ([NullAllowed] GKImageLoadedHandler completionHandler);
@@ -917,8 +915,7 @@ namespace GameKit {
 		Action<NSViewController, NSError> AuthenticateHandler { get; set; }
 #endif
 
-		[NoWatch, NoTV, Mac (12, 0), iOS (15, 0)]
-		[NoMacCatalyst]
+		[NoWatch, NoTV, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("isPresentingFriendRequestViewController")]
 		bool IsPresentingFriendRequestViewController { get; }
 
@@ -1528,7 +1525,7 @@ namespace GameKit {
 		[TV (17, 2), Mac (14, 2), iOS (17, 2), MacCatalyst (17, 2)]
 		[Async]
 		[Export ("findMatchedPlayers:withCompletionHandler:")]
-		void FindMatchedPlayers (GKMatchRequest request, [NullAllowed] Action<GKMatchedPlayers, NSError> completionHandler);
+		void FindMatchedPlayers (GKMatchRequest request, Action<GKMatchedPlayers, NSError> completionHandler);
 
 		// Not truly an [Async] method since the handler can be called multiple times, for each player found
 		[MacCatalyst (13, 1)]
@@ -3154,9 +3151,6 @@ namespace GameKit {
 		[Export ("player", ArgumentSemantic.Strong)]
 		GKPlayer Player { get; }
 
-#if false
-		// Some APIs missing on iOS, tvOS, watchOS as of Xcode 12 beta 3 - https://github.com/xamarin/maccore/issues/2269
-		// disabled since the selectors don't respond on macOS 11.0
 		[Export ("rank")]
 		nint Rank { get; }
 
@@ -3171,7 +3165,6 @@ namespace GameKit {
 
 		[Export ("date", ArgumentSemantic.Strong)]
 		NSDate Date { get; }
-#endif
 
 		[NoWatch] // header lists watch as supported, but UIViewController is not available on Watch!
 		[MacCatalyst (13, 1)]
