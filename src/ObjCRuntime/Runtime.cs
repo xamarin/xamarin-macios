@@ -2772,6 +2772,7 @@ namespace ObjCRuntime {
 		}
 	}
 
+
 	internal class IntPtrEqualityComparer : IEqualityComparer<IntPtr> {
 		public bool Equals (IntPtr x, IntPtr y)
 		{
