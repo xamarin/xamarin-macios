@@ -299,6 +299,11 @@ namespace ObjCRuntime {
 			SetObject (handle, symbol, array);
 		}
 
+		/// <summary>Sets the specified symbol in the library handle to the specified NSObject value.</summary>
+		/// <param name="handle">Handle to the dynamic library previously opened with <see cref="dlopen(System.String,Mode)" />.</param>
+		/// <param name="symbol">Name of the public symbol in the dynamic library to look up.</param>
+		/// <param name="value">The object to set, can be null.</param>
+		/// <remarks>The previous object value is not released, it is up to the developer to release the handle to that object if needed.</remarks>
 		public static void SetObject (IntPtr handle, string symbol, NSObject? value)
 		{
 			var indirect = dlsym (handle, symbol);
