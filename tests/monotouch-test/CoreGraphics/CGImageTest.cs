@@ -41,5 +41,27 @@ namespace MonoTouchFixtures.CoreGraphics {
 					Assert.That (img.UTType.ToString (), Is.EqualTo ("public.png"), "UTType");
 			}
 		}
+
+		[Test]
+		public void Xcode16APIs ()
+		{
+			TestRuntime.AssertXcodeVersion (16, 0);
+
+			var file = Path.Combine (NSBundle.MainBundle.ResourcePath, "basn3p08.png");
+			using var dp = new CGDataProvider (file);
+			using var img = new CGImage (2.0f, 20, 20, 8, 32, 80, null, CGBitmapFlags.None, dp, null, false, CGColorRenderingIntent.Default);
+			Assert.IsNotNull (img, "Image");
+			Assert.AreEqual (0.0f, img.ContentHeadroom, "ContentHeadroom A");
+			Assert.IsFalse (img.ShouldToneMap, "ShouldToneMap A");
+			Assert.IsFalse (img.ContainsImageSpecificToneMappingMetadata, "ContainsImageSpecificToneMappingMetadata A");
+
+			using var copy = img.Copy (3.0f);
+			Assert.IsNotNull (copy, "Copy");
+			Assert.AreEqual (3.0f, copy.ContentHeadroom, "ContentHeadroom B");
+			Assert.IsFalse (copy.ShouldToneMap, "ShouldToneMap B");
+			Assert.IsFalse (copy.ContainsImageSpecificToneMappingMetadata, "ContainsImageSpecificToneMappingMetadata B");
+
+			Assert.AreEqual (2.0f, CGImage.DefaultHdrImageContentHeadroom, "DefaultHdrImageContentHeadroom");
+		}
 	}
 }
