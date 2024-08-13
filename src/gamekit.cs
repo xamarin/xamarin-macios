@@ -2533,33 +2533,33 @@ namespace GameKit {
 		[Export ("initWithNibName:bundle:")]
 		NativeHandle Constructor ([NullAllowed] string nibNameOrNull, [NullAllowed] NSBundle nibBundleOrNull);
 
-		[TV (14, 0), NoWatch, Mac (11, 0), iOS (14, 0)]
+		[TV (14, 0), Mac (11, 0), iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[Export ("initWithLeaderboardID:playerScope:timeScope:")]
 		NativeHandle Constructor (string leaderboardId, GKLeaderboardPlayerScope playerScope, GKLeaderboardTimeScope timeScope);
 
-		[TV (14, 0), NoWatch, Mac (11, 0), iOS (14, 0)]
+		[TV (14, 0), Mac (11, 0), iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[Export ("initWithLeaderboard:playerScope:")]
 		NativeHandle Constructor (GKLeaderboard leaderboard, GKLeaderboardPlayerScope playerScope);
 
-		[TV (14, 0), NoWatch, Mac (11, 0), iOS (14, 0)]
+		[TV (14, 0), Mac (11, 0), iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[Export ("initWithAchievementID:")]
 		[Internal]
 		NativeHandle _InitWithAchievementId (string achievementId);
 
-		[TV (14, 0), NoWatch, Mac (11, 0), iOS (14, 0)]
+		[TV (14, 0), Mac (11, 0), iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[Export ("initWithState:")]
 		NativeHandle Constructor (GKGameCenterViewControllerState state);
 
-		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0), NoWatch]
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 		[Export ("initWithLeaderboardSetID:")]
 		[Internal]
 		NativeHandle _InitWithLeaderboardSetId (string leaderboardSetId);
 
-		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0), NoWatch]
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 		[Export ("initWithPlayer:")]
 		NativeHandle Constructor (GKPlayer player);
 
