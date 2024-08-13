@@ -1806,6 +1806,7 @@ public partial class Generator : IMemberGatherer {
 				print ("namespace {0} {{", dictType.Namespace);
 				indent++;
 				PrintPlatformAttributes (dictType);
+				PrintExperimentalAttribute (dictType);
 				print ("public partial class {0} : DictionaryContainer {{", typeName);
 				indent++;
 				sw.WriteLine ("#if !COREBUILD");
