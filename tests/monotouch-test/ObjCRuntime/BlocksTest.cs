@@ -43,10 +43,12 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			using var block = new BlockLiteral (trampoline, null, typeof (BlocksTest), nameof (SignatureTestA));
 #if __MACOS__
 			var boolIsB = Runtime.IsARM64CallingConvention;
+#elif __MACCATALYST__
+			var boolIsB = Runtime.IsARM64CallingConvention;
 #else
 			var boolIsB = true;
 #endif
-			Assert.AreEqual (boolIsB ? "v@?B" : "v@?c", GetBlockSignature (&block), "Signature");
+			Assert.AreEqual (boolIsB ? "v@?B" : "v@?c", GetBlockSignature (&block), $"Signature ARM64: {Runtime.IsARM64CallingConvention}");
 		}
 
 		[Test]
