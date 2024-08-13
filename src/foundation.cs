@@ -12382,7 +12382,6 @@ namespace Foundation {
 		[Export ("compare:")]
 		nint Compare (NSNumber otherNumber);
 
-		[Sealed]
 		[Export ("isEqualToNumber:")]
 		bool IsEqualTo (IntPtr number);
 
