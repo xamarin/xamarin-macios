@@ -305,7 +305,7 @@ namespace LocalAuthentication {
 	[Native]
 	[Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0), Watch (11, 0), NoTV]
 	enum LACompanionType : long {
-		[NoiOS, NoWatch, NoTV]
+		[NoiOS, NoWatch, NoTV, NoMacCatalyst]
 		Watch = 1 << 0,
 		[NoMac, NoWatch, NoTV]
 		Mac = 1 << 1,

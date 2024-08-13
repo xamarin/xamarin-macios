@@ -90,6 +90,7 @@ namespace LocalAuthentication {
 		[MacCatalyst (13, 1)]
 		BiometryLockout = -8,
 		NotInteractive = -1004,
+		[NoWatch]
 		CompanionNotAvailable = -11,
 	}
 
