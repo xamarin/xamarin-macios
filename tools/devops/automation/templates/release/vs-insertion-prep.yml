@@ -172,10 +172,13 @@ stages:
           buildNumber: $(ReleaseDropPrefix)/nugets
           destinationPath: $(Build.StagingDirectory)/nuget-signed
 
-      - powershell: |
-          $varMap = @{ "INCLUDE_DOTNET_IOS" = "iOS"; "INCLUDE_DOTNET_MACCATALYST" = "MacCatalyst"; "INCLUDE_DOTNET_MACOS" = "macOS"; "INCLUDE_DOTNET_TVOS" = "tvOS" }
+      - pwsh: |
+          gci env: | format-table -autosize -wrap
+          Get-ChildItem -Name -Recurse -Path $(Build.StagingDirectory)
+          $varMap = [ordered]@{ "INCLUDE_DOTNET_IOS" = "iOS"; "INCLUDE_DOTNET_MACCATALYST" = "MacCatalyst"; "INCLUDE_DOTNET_MACOS" = "macOS"; "INCLUDE_DOTNET_TVOS" = "tvOS" }
           foreach ($varName in $varMap.Keys) {
               if ([Environment]::GetEnvironmentVariable($varName)) {
+                  Write-Host "Variable '$varName' was set, setting MaestroProjectPlatformName to '$($varMap[$varName])'"
                   Write-Host "##vso[task.setvariable variable=MaestroProjectPlatformName]$($varMap[$varName])"
                   exit 0;
               }
@@ -191,7 +194,7 @@ stages:
           inlineScript: >-
             make -C $(Build.SourcesDirectory)/dotnet publish-bar-manifest
             BAR_MANIFEST_PLATFORM_NAME=$(MaestroProjectPlatformName)
-            BAR_MANIFEST_MSBUILD_ARGS='-p:NupkgPath=$(Build.SourcesDirectory)/nuget-signed -bl:$(Build.ArtifactStagingDirectory)/maestro-binlogs/generate-bar-manifest.binlog'
+            BAR_MANIFEST_MSBUILD_ARGS='-p:NupkgPath=$(Build.StagingDirectory)/nuget-signed -bl:$(Build.StagingDirectory)/maestro-binlogs/generate-bar-manifest.binlog'
           workingDirectory: $(Build.SourcesDirectory)/..
         condition: and(succeeded(), eq('${{ parameters.pushNugetsToMaestro }}', 'true'))
 
@@ -215,7 +218,7 @@ stages:
       - task: 1ES.PublishPipelineArtifact@1
         displayName: 'Publish Artifact: maestro-binlogs'
         inputs:
-          path: $(Build.ArtifactStagingDirectory)/maestro-binlogs
+          path: $(Build.StagingDirectory)/maestro-binlogs
           artifact: ${{ parameters.uploadPrefix }}maestro-binlogs-$(System.JobAttempt)
         condition: and(succeededOrFailed(), eq('${{ parameters.pushNugetsToMaestro }}', 'true'))
         continueOnError: true
