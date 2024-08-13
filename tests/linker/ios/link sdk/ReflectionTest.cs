@@ -25,7 +25,7 @@ namespace Linker.Shared.Reflection {
 
 			var mi = GetType ().Assembly.GetType ("Linker.Shared.Reflection.ReflectionTestClass").GetMethod ("MethodWithParameters");
 			var p = mi.GetParameters ();
-#if DEBUG && !NET
+#if DEBUG
 			// dotnet has adopted (and adapted) the metadata reducer and runs it on it's own conditions
 			var optimized = false;
 #else
