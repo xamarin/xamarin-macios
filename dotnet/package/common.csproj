@@ -118,6 +118,7 @@
       <ArtifactsLogDir>$(BarManifestOutputPath)</ArtifactsLogDir>
       <AssetManifestFileName>Assets.xml</AssetManifestFileName>
       <AssetManifestPath>$(ArtifactsLogDir)AssetManifest\$(AssetManifestFileName)</AssetManifestPath>
+      <IsStableBuild Condition=" '$(PrereleaseIdentifier)' == '' ">true</IsStableBuild>
       <IsStableBuild Condition=" '$(PrereleaseIdentifier)' != '' ">false</IsStableBuild>
     </PropertyGroup>
 
