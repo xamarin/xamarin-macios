@@ -137,7 +137,7 @@ $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call VersionsTemplate,$(platform
 version-props: $(foreach platform,$(DOTNET_PLATFORMS),targets/Microsoft.$(platform).Sdk.Versions.props)
 
 setup-publish-bar-manifest: version-props
-	echo ##vso[task.setvariable variable=PrereleaseIdentifier]$(NUGET_PRERELEASE_IDENTIFIER)
+	echo \#\#vso[task.setvariable variable=PrereleaseIdentifier]$(NUGET_PRERELEASE_IDENTIFIER)
 
 define AutoImports
 Microsoft.$(1).Sdk/Sdk/AutoImport.props: targets/AutoImport.template.props Makefile
