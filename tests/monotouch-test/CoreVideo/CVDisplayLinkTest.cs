@@ -15,11 +15,13 @@ namespace MonoTouchFixtures.CoreVideo {
 
 		void IgnoreIfLockedScreen ()
 		{
+#if NET
 			var props = CGSession.GetProperties ();
 			var value = props.Dictionary [(NSString) "CGSSessionScreenIsLocked"]; // This key isn't documented, so no binding for it.
 			var isLocked = (value as NSNumber)?.BoolValue;
 			if (isLocked == true)
 				Assert.Ignore ("The screen is locked.");
+#endif
 		}
 
 		[Test]
