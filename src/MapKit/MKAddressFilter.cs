@@ -11,10 +11,10 @@ using MapKit;
 namespace MapKit {
 	/// <summary>This enum is used to select how to initialize a new instance of a <see cref="MKAddressFilter" />.</summary>
 	public enum MKAddressFilterConstructorOption {
-		/// <summary>The <c>options</c> parameter passed to the constructor is are included address filter options.</summary>
-		IncludingOptions,
-		/// <summary>The <c>options</c> parameter passed to the constructor is are excluded address filter options.</summary>
-		ExcludeOptions,
+		/// <summary>The <c>options</c> parameter passed to the constructor are inclusive.</summary>
+		Include,
+		/// <summary>The <c>options</c> parameter passed to the constructor are exclusive.</summary>
+		Exclude,
 	}
 
 	public partial class MKAddressFilter {
@@ -22,13 +22,14 @@ namespace MapKit {
 		/// <param name="options">The address filter options to use.</param>
 		/// <param name="constructorOption">Specify whether the <paramref name="options" /> argument is including or excluding the given options.</param>
 		/// <returns>A new <see cref="MKAddressFilter" /> instance with the specified address filter options.</returns>
-		public MKAddressFilter (MKAddressFilter options, MKAddressFilterConstructorOption constructorOption)
+		public MKAddressFilter (MKAddressFilterOption options, MKAddressFilterConstructorOption constructorOption)
+			: base (NSObjectFlag.Empty)
 		{
 			switch (constructorOption) {
-			case MKAddressFilterConstructorOption.IncludingOptions:
+			case MKAddressFilterConstructorOption.Include:
 				InitializeHandle (_InitIncludingOptions (options));
 				break;
-			case MKAddressFilterConstructorOption.ExcludeOptions:
+			case MKAddressFilterConstructorOption.Exclude:
 				InitializeHandle (_InitExcludingOptions (options));
 				break;
 			default:

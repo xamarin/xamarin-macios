@@ -2832,12 +2832,12 @@ namespace MapKit {
 		[Export ("initIncludingOptions:")]
 		// [DesignatedInitializer] // this isn't a constructor, so [DesignatedInitializer] doesn't work
 		[Internal]
-		NativeHandle _InitIncludingOptions (MKAddressFilter options);
+		NativeHandle _InitIncludingOptions (MKAddressFilterOption options);
 
 		[Export ("initExcludingOptions:")]
 		// [DesignatedInitializer] // this isn't a constructor, so [DesignatedInitializer] doesn't work
 		[Internal]
-		NativeHandle _InitExcludingOptions (MKAddressFilter options);
+		NativeHandle _InitExcludingOptions (MKAddressFilterOption options);
 
 		[Export ("includesOptions:")]
 		bool Includes (MKAddressFilterOption options);
