@@ -305,6 +305,7 @@ namespace LocalAuthentication {
 	[Native]
 	[Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0), Watch (11, 0), NoTV]
 	enum LACompanionType : long {
+		None = 0,
 		[NoiOS, NoWatch, NoTV, NoMacCatalyst]
 		Watch = 1 << 0,
 		[NoMac, NoWatch, NoTV]
@@ -327,9 +328,6 @@ namespace LocalAuthentication {
 	[DisableDefaultCtor]
 	interface LADomainStateCompanion {
 		[Export ("availableCompanionTypes")]
-		// FIXME: Maybe bind this as a bitmask of LACompanionType?
-		// "Indicates types of companions paired with the device."
-		// "The elements are NSNumber-wrapped instances of @c `LACompanionType`."
 		NSSet<NSNumber> WeakAvailableCompanionTypes { get; }
 
 		[Export ("stateHash"), NullAllowed]
