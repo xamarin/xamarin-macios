@@ -2273,17 +2273,23 @@ namespace Metal {
 		[Abstract]
 		[Export ("newLogStateWithDescriptor:error:")]
 		[return: NullAllowed]
+		[return: Release]
 		IMTLLogState GetNewLogState (MTLLogStateDescriptor descriptor, out NSError error);
 
 		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 		[Abstract]
 		[Export ("newCommandQueueWithDescriptor:")]
 		[return: NullAllowed]
+		[return: Release]
 		IMTLCommandQueue CreateCommandQueue (MTLCommandQueueDescriptor descriptor);
 
+#if NET
+		[Abstract]
+#endif
 		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 		[return: NullAllowed]
 		[Export ("newResidencySetWithDescriptor:error:")]
+		[return: Release]
 		IMTLResidencySet CreateResidencySet (MTLResidencySetDescriptor descriptor, out NSError error);
 	}
 
@@ -5945,10 +5951,16 @@ namespace Metal {
 		[Export ("addFunctionWithDescriptor:library:error:")]
 		bool AddFunctionWithDescriptor (MTLFunctionDescriptor descriptor, IMTLLibrary library, [NullAllowed] out NSError error);
 
+#if NET
+		[Abstract]
+#endif
 		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 		[Export ("addMeshRenderPipelineFunctionsWithDescriptor:error:")]
 		bool AddMeshRenderPipelineFunctions (MTLMeshRenderPipelineDescriptor descriptor, out NSError error);
 
+#if NET
+		[Abstract]
+#endif
 		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 		[Export ("addLibraryWithDescriptor:error:")]
 		bool AddLibrary (MTLStitchedLibraryDescriptor descriptor, out NSError error);
@@ -7400,7 +7412,7 @@ namespace Metal {
 		IMTLFunction [] Functions { get; set; }
 
 		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
-		[Export ("binaryArchives", ArgumentSemantic.Copy), NullAllowed]
+		[Export ("binaryArchives", ArgumentSemantic.Copy)]
 		IMTLBinaryArchive [] BinaryArchives { get; }
 
 		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
@@ -8062,6 +8074,7 @@ namespace Metal {
 	[Protocol (BackwardsCompatibleCodeGeneration = false)]
 	[Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0), TV (18, 0)]
 	interface MTLLogState {
+		[Abstract]
 		[Export ("addLogHandler:")]
 		void AddLogHandler (MTLLogStateLogHandler handler);
 	}
