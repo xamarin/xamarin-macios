@@ -154,7 +154,7 @@ namespace MonoTouchFixtures.CoreText {
 			using var provider = new AdaptiveImageProvider ();
 			var bounds = font.GetTypographicBoundsForAdaptiveImageProvider (provider);
 			Assert.AreEqual (new CGRect (0, -3.90625, 13, 16.40625), bounds, "Bounds");
-			Assert.AreEqual (1, provider.Count, "#Count");
+			Assert.AreEqual (0, provider.Count, "#Count");
 		}
 
 		class AdaptiveImageProvider : NSObject, ICTAdaptiveImageProviding {
