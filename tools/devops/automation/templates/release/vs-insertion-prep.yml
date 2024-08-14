@@ -192,10 +192,10 @@ stages:
           scriptType: bash
           scriptLocation: inlineScript
           inlineScript: >-
-            make -C $(Build.SourcesDirectory)/dotnet publish-bar-manifest
+            make publish-bar-manifest
             BAR_MANIFEST_PLATFORM_NAME=$(MaestroProjectPlatformName)
             BAR_MANIFEST_MSBUILD_ARGS='-p:NupkgPath=$(Build.StagingDirectory)/nuget-signed -bl:$(Build.StagingDirectory)/maestro-binlogs/generate-bar-manifest.binlog'
-          workingDirectory: $(Build.SourcesDirectory)/..
+          workingDirectory: $(Build.SourcesDirectory)/dotnet
         condition: and(succeeded(), eq('${{ parameters.pushNugetsToMaestro }}', 'true'))
 
       - task: AzureCLI@2
