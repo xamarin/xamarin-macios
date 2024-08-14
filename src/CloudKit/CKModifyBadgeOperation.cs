@@ -21,6 +21,11 @@ namespace CloudKit {
 	[UnsupportedOSPlatform ("macos", "Modifying badge counts is no longer supported.")]
 	[UnsupportedOSPlatform ("tvos", "Modifying badge counts is no longer supported.")]
 	[UnsupportedOSPlatform ("maccatalyst", "Modifying badge counts is no longer supported.")]
+#else
+	[Deprecated (PlatformName.MacOSX, 15, 0, message : "Modifying badge counts is no longer supported.")]
+	[Deprecated (PlatformName.iOS, 18, 0, message : "Modifying badge counts is no longer supported.")]
+	[Deprecated (PlatformName.WatchOS, 11, 0, message : "Modifying badge counts is no longer supported.")]
+	[Deprecated (PlatformName.TvOS, 18, 0, message : "Modifying badge counts is no longer supported.")]
 #endif
 	[EditorBrowsable (EditorBrowsableState.Never)]
 	public class CKModifyBadgeOperation : CKOperation {
