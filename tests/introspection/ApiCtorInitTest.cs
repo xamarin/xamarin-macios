@@ -118,6 +118,7 @@ namespace Introspection {
 				return true;
 			case "MPSImageArithmetic": // Cannot directly initialize MPSImageArithmetic. Use one of the sub-classes of MPSImageArithmetic.
 				return true;
+			case "CKModifyBadgeOperation":
 			case "CKDiscoverUserInfosOperation": // deprecated, throws exception
 			case "CKSubscription":
 			case "MPSCnnConvolutionState":
