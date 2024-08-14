@@ -8134,7 +8134,6 @@ namespace Metal {
 		[Abstract]
 		[Export ("addAllocations:count:")]
 		void AddAllocations (IntPtr allocations, nuint count);
-		// FIXME: better method
 
 		[Abstract]
 		[Export ("removeAllocation:")]
