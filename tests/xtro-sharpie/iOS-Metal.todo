@@ -1,6 +1,3 @@
-!missing-selector! MTLCompileOptions::mathFloatingPointFunctions not bound
-!missing-selector! MTLCompileOptions::setMathFloatingPointFunctions: not bound
-!missing-selector! MTLStitchedLibraryDescriptor::setBinaryArchives: not bound
 !incorrect-protocol-member! MTLBinaryArchive::addLibraryWithDescriptor:error: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLBinaryArchive::addMeshRenderPipelineFunctionsWithDescriptor:error: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLDevice::newResidencySetWithDescriptor:error: is REQUIRED and should be abstract

@@ -1046,14 +1046,16 @@ namespace Metal {
 		[Export ("optimizeIndirectCommandBuffer:withRange:")]
 		void Optimize (IMTLIndirectCommandBuffer indirectCommandBuffer, NSRange range);
 
-#if NET
+		// @optional in macOS and Mac Catalyst
+#if NET && !__MACOS__ && !__MACCATALYST__
 		[Abstract (GenerateExtensionMethod = true)]
 #endif
 		[Mac (11, 0), TV (16, 0), iOS (13, 0), MacCatalyst (15, 0)]
 		[Export ("getTextureAccessCounters:region:mipLevel:slice:resetCounters:countersBuffer:countersBufferOffset:")]
 		void GetTextureAccessCounters (IMTLTexture texture, MTLRegion region, nuint mipLevel, nuint slice, bool resetCounters, IMTLBuffer countersBuffer, nuint countersBufferOffset);
 
-#if NET
+		// @optional in macOS and Mac Catalyst
+#if NET && !__MACOS__ && !__MACCATALYST__
 		[Abstract (GenerateExtensionMethod = true)]
 #endif
 		[Mac (11, 0), TV (16, 0), iOS (13, 0), MacCatalyst (15, 0)]
@@ -2235,21 +2237,24 @@ namespace Metal {
 		[Export ("newSharedTextureHandle")]
 		MTLSharedTextureHandle CreateSharedTextureHandle ();
 
-#if NET
+		// @optional in macOS and Mac Catalyst
+#if NET && !__MACOS__ && !__MACCATALYST__
 		[Abstract (GenerateExtensionMethod = true)]
 #endif
 		[Mac (11, 0), TV (16, 0), iOS (13, 0), MacCatalyst (15, 0)]
 		[Export ("firstMipmapInTail")]
 		nuint FirstMipmapInTail { get; }
 
-#if NET
+		// @optional in macOS and Mac Catalyst
+#if NET && !__MACOS__ && !__MACCATALYST__
 		[Abstract (GenerateExtensionMethod = true)]
 #endif
 		[Mac (11, 0), TV (16, 0), iOS (13, 0), MacCatalyst (15, 0)]
 		[Export ("tailSizeInBytes")]
 		nuint TailSizeInBytes { get; }
 
-#if NET
+		// @optional in macOS and Mac Catalyst
+#if NET && !__MACOS__ && !__MACCATALYST__
 		[Abstract (GenerateExtensionMethod = true)]
 #endif
 		[Mac (11, 0), TV (16, 0), iOS (13, 0), MacCatalyst (15, 0)]
@@ -3774,32 +3779,16 @@ namespace Metal {
 		void ExecuteCommands (IMTLIndirectCommandBuffer indirectCommandbuffer, IMTLBuffer indirectRangeBuffer, nuint indirectBufferOffset);
 
 #if NET
-
-#if MONOMAC || __MACCATALYST__
-		[NoiOS, NoTV, MacCatalyst (15, 0)]
-		[Abstract]
-#else
-		[iOS (16,0), TV (16,0), NoMacCatalyst, NoMac]
+		[Abstract (GenerateExtensionMethod = true)]
 #endif
-
-#else
 		[iOS (16, 0), TV (16, 0), MacCatalyst (15, 0)]
-#endif
 		[Export ("memoryBarrierWithScope:afterStages:beforeStages:")]
 		void MemoryBarrier (MTLBarrierScope scope, MTLRenderStages after, MTLRenderStages before);
 
 #if NET
-
-#if MONOMAC || __MACCATALYST__
-		[NoiOS, NoTV, MacCatalyst (15, 0)]
-		[Abstract]
-#else
-		[iOS (16,0), TV (16,0), NoMacCatalyst, NoMac]
+		[Abstract (GenerateExtensionMethod = true)]
 #endif
-
-#else
 		[iOS (16, 0), TV (16, 0), MacCatalyst (15, 0)]
-#endif
 		[Export ("memoryBarrierWithResources:count:afterStages:beforeStages:")]
 		void MemoryBarrier (IMTLResource [] resources, nuint count, MTLRenderStages after, MTLRenderStages before);
 
@@ -5900,7 +5889,8 @@ namespace Metal {
 		void Wait (IMTLFence fence);
 
 		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
-#if NET
+		// @optional in macOS and Mac Catalyst
+#if NET && !__MACOS__ && !__MACCATALYST__
 		[Abstract (GenerateExtensionMethod = true)]
 #endif
 		[Export ("moveTextureMappingsFromTexture:sourceSlice:sourceLevel:sourceOrigin:sourceSize:toTexture:destinationSlice:destinationLevel:destinationOrigin:")]

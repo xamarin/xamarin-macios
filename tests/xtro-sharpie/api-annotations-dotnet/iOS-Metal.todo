@@ -1,3 +1,0 @@
-!missing-selector! MTLCompileOptions::mathFloatingPointFunctions not bound
-!missing-selector! MTLCompileOptions::setMathFloatingPointFunctions: not bound
-!missing-selector! MTLStitchedLibraryDescriptor::setBinaryArchives: not bound
