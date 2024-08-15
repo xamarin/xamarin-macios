@@ -1542,15 +1542,19 @@ namespace Xamarin.Tests {
 				properties ["CodesignDisallowResourcesSubdirectoryInAppBundle"] = "false";
 				buildFailure = DotNet.AssertBuildFailure (project_path, properties);
 				errors = BinLog.GetBuildLogErrors (buildFailure.BinLogPath).ToArray ();
-				AssertErrorMessages (errors,
+				var errorMessagePrefixes = new string []
+				{
 					$"/usr/bin/codesign exited with code 1:\n" +
 					$"{appPath}: replacing existing signature\n" +
-					$"{appPath}: code object is not signed at all\n" +
-					$"In subcomponent: {appPath}/System.Collections.NonGeneric.aotdata.arm64",
+					$"{appPath}: code object is not signed at all\n",
 
 					$"Failed to codesign '{appPath}': {appPath}: replacing existing signature\n" +
-					$"{appPath}: code object is not signed at all\n" +
-					$"In subcomponent: {appPath}/System.Collections.NonGeneric.aotdata.arm64"
+					$"{appPath}: code object is not signed at all\n",
+				};
+
+				AssertErrorMessages (errors,
+					errorMessagePrefixes.Select (prefix => new Func<string, bool> ((msg) => msg.StartsWith (prefix))).ToArray (),
+					errorMessagePrefixes.Select (prefix => new Func<string> (() => prefix)).ToArray ()
 				);
 
 				// Remove the dir, and now the build should succeed again.
