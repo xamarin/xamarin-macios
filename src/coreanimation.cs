@@ -2336,8 +2336,7 @@ namespace CoreAnimation {
 	[BaseType (typeof (NSObject))]
 	[iOS (17, 0), TV (17, 0), Mac (14, 0), MacCatalyst (17, 0), NoWatch]
 	[DisableDefaultCtor]
-	interface CAMetalDisplayLinkUpdate
-	{
+	interface CAMetalDisplayLinkUpdate {
 		[Export ("drawable")]
 		ICAMetalDrawable Drawable { get; }
 
@@ -2357,7 +2356,7 @@ namespace CoreAnimation {
 		void NeedsUpdate (CAMetalDisplayLink link, CAMetalDisplayLinkUpdate update);
 	}
 
-	interface ICAMetalDisplayLinkDelegate {}
+	interface ICAMetalDisplayLinkDelegate { }
 
 	[BaseType (typeof (NSObject))]
 	[iOS (17, 0), TV (17, 0), Mac (14, 0), MacCatalyst (17, 0), NoWatch]
