@@ -2,11 +2,11 @@
   <!--Package versions-->
   <PropertyGroup>
     <!-- Versions updated by maestro -->
-    <MicrosoftDotnetSdkInternalPackageVersion>8.0.109-servicing.24414.3</MicrosoftDotnetSdkInternalPackageVersion>
-    <MicrosoftNETILLinkTasksPackageVersion>8.0.7</MicrosoftNETILLinkTasksPackageVersion>
+    <MicrosoftDotnetSdkInternalPackageVersion>8.0.109-servicing.24415.3</MicrosoftDotnetSdkInternalPackageVersion>
+    <MicrosoftNETILLinkTasksPackageVersion>8.0.8</MicrosoftNETILLinkTasksPackageVersion>
     <MicrosoftNETILLinkPackageVersion>8.0.0-rtm.23524.7</MicrosoftNETILLinkPackageVersion>
     <MicrosoftDotNetBuildTasksFeedPackageVersion>8.0.0-beta.24225.1</MicrosoftDotNetBuildTasksFeedPackageVersion>
-    <MicrosoftNETCoreAppRefPackageVersion>8.0.7</MicrosoftNETCoreAppRefPackageVersion>
+    <MicrosoftNETCoreAppRefPackageVersion>8.0.8</MicrosoftNETCoreAppRefPackageVersion>
     <MicrosoftNETWorkloadEmscriptenCurrentManifest80100TransportVersion>8.0.0-rtm.23511.3</MicrosoftNETWorkloadEmscriptenCurrentManifest80100TransportVersion>
     <MicrosoftNETRuntimeMonoTargetsSdkPackageVersion>8.0.0</MicrosoftNETRuntimeMonoTargetsSdkPackageVersion>
     <MicrosoftTemplateEngineTasksVersion>7.0.100-alpha.1.21601.1</MicrosoftTemplateEngineTasksVersion>
