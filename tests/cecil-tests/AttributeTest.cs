@@ -288,8 +288,6 @@ namespace Cecil.Tests {
 					"SpriteKit.SKView.EncodeTo (Foundation.NSCoder)",
 
 					// These methods have different optional/required semantics between platforms.
-					"Metal.MTLBlitCommandEncoder_Extensions.GetTextureAccessCounters (Metal.IMTLBlitCommandEncoder, Metal.IMTLTexture, Metal.MTLRegion, System.UIntPtr, System.UIntPtr, System.Boolean, Metal.IMTLBuffer, System.UIntPtr)",
-					"Metal.MTLBlitCommandEncoder_Extensions.ResetTextureAccessCounters (Metal.IMTLBlitCommandEncoder, Metal.IMTLTexture, Metal.MTLRegion, System.UIntPtr, System.UIntPtr)",
 					"PassKit.PKPaymentAuthorizationControllerDelegate_Extensions.GetPresentationWindow (PassKit.IPKPaymentAuthorizationControllerDelegate, PassKit.PKPaymentAuthorizationController)",
 					"Metal.MTLTextureWrapper.FirstMipmapInTail",
 					"Metal.MTLTextureWrapper.IsSparse",
