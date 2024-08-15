@@ -40,7 +40,7 @@ namespace MonoTouchFixtures.Metal {
 			Assert.IsNotNull (residencySet, "ResidencySet #1");
 
 			commandBuffer.UseResidencySets (residencySet);
-			commandBuffer.UseResidencySets (new IMTLResidencySet []  { residencySet });
+			commandBuffer.UseResidencySets (new IMTLResidencySet [] { residencySet });
 		}
 	}
 }
