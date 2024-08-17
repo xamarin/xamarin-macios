@@ -543,6 +543,10 @@
 		<value>Missing value for the 'LibraryName' property for the '[ErrorDomain]' attribute for {0} (e.g. '[ErrorDomain ("MyDomain", LibraryName = "__Internal")]')</value>
 	</data>
 
+	<data name="BI1088" xml:space="preserve">
+		<value>The backing field type '{0}' is invalid. Valid backing field types are: "NSString", "NSNumber", "nint" and "nuint".</value>
+	</data>
+
 	<data name="BI1101" xml:space="preserve">
 		<value>Trying to use a string as a [Target]</value>
 	</data>
