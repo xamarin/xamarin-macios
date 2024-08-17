@@ -12382,9 +12382,11 @@ namespace Foundation {
 		[Export ("compare:")]
 		nint Compare (NSNumber otherNumber);
 
-		[Internal] // Equals(object) or IEquatable<T>'s Equals(NSNumber)
 		[Export ("isEqualToNumber:")]
-		bool IsEqualToNumber (NSNumber number);
+		bool IsEqualTo (IntPtr number);
+
+		[Wrap ("IsEqualTo (number.GetHandle ())")]
+		bool IsEqualTo (NSNumber number);
 
 		[Export ("descriptionWithLocale:")]
 		string DescriptionWithLocale (NSLocale locale);
