@@ -1145,7 +1145,22 @@ namespace Introspection {
 			case "UIFocusItemContainer":
 			case "UICoordinateSpace":
 				switch (type.Name) {
+				case "SK3DNode":
+				case "SKAudioNode":
+				case "SKCameraNode":
+				case "SKCropNode":
+				case "SKEffectNode":
+				case "SKEmitterNode":
+				case "SKFieldNode":
+				case "SKLabelNode":
+				case "SKLightNode":
 				case "SKNode":
+				case "SKReferenceNode":
+				case "SKScene":
+				case "SKShapeNode":
+				case "SKSpriteNode":
+				case "SKTileMapNode":
+				case "SKTransformNode":
 					return !TestRuntime.CheckXcodeVersion (16, 0);
 				}
 				break;
