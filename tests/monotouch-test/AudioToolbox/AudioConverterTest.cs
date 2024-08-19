@@ -35,6 +35,7 @@ namespace MonoTouchFixtures.AudioToolbox {
 			Assert.That (encodeFormats.Length, Is.GreaterThan (10), "Encode Length #1");
 		}
 
+#if NET
 		[Test]
 		public void Prepare ()
 		{
@@ -58,6 +59,7 @@ namespace MonoTouchFixtures.AudioToolbox {
 					Assert.Fail ($"Callback wasn't called within {timeout.TotalSeconds} s");
 			}
 		}
+#endif
 
 		[Test]
 		public void CreateWithOptions ()
