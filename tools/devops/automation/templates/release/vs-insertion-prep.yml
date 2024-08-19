@@ -136,8 +136,6 @@ stages:
         value: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.INCLUDE_DOTNET_MACOS'] ]
       - name: INCLUDE_DOTNET_TVOS
         value: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.INCLUDE_DOTNET_TVOS'] ]
-      - ${{ if eq(parameters.isPR, false) }}:
-        - group: Publish-Build-Assets
       pool:
         name: AzurePipelines-EO
         demands:
@@ -147,6 +145,12 @@ stages:
           New-Item "$(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/governance" -ItemType Directory -ea 0
           New-Item -Path "$(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/governance" -Name "CredScanSuppressions.json" -Value '{"tool":"Crendential Scanner", "supressions":[]}'
         displayName: Create credscan dummy ignore file
+
+      - task: UseDotNet@2
+        displayName: Install .NET 9.x
+        inputs:
+          version: 9.x
+          includePreviewVersions: true
 
       - task: DownloadPipelineArtifact@2
         inputs:
@@ -168,47 +172,58 @@ stages:
           buildNumber: $(ReleaseDropPrefix)/nugets
           destinationPath: $(Build.StagingDirectory)\nuget-signed
 
-      - script: make -C $(Build.SourcesDirectory)/dotnet version-props
-        displayName: make version props
+      - script: make -C $(Build.SourcesDirectory)/dotnet setup-publish-bar-manifest
+        displayName: make setup-publish-bar-manifest
 
-      - powershell: |
-          $varMap = @{ "INCLUDE_DOTNET_IOS" = "iOS"; "INCLUDE_DOTNET_MACCATALYST" = "MacCatalyst"; "INCLUDE_DOTNET_MACOS" = "macOS"; "INCLUDE_DOTNET_TVOS" = "tvOS" }
+      - pwsh: |
+          gci env: | format-table -autosize -wrap
+          Get-ChildItem -Name -Recurse -Path $(Build.StagingDirectory)
+          $varMap = [ordered]@{ "INCLUDE_DOTNET_IOS" = "iOS"; "INCLUDE_DOTNET_MACCATALYST" = "MacCatalyst"; "INCLUDE_DOTNET_MACOS" = "macOS"; "INCLUDE_DOTNET_TVOS" = "tvOS" }
           foreach ($varName in $varMap.Keys) {
               if ([Environment]::GetEnvironmentVariable($varName)) {
+                  Write-Host "Variable '$varName' was set, setting MaestroProjectPlatformName to '$($varMap[$varName])'"
                   Write-Host "##vso[task.setvariable variable=MaestroProjectPlatformName]$($varMap[$varName])"
                   exit 0;
               }
           }
         displayName: Set maestro project variable
 
-      - task: DotNetCoreCLI@2
+      - task: AzureCLI@2
         displayName: generate and publish BAR manifest
         inputs:
-          projects: $(Build.SourcesDirectory)/dotnet/package/Microsoft.$(MaestroProjectPlatformName).Ref/package.csproj
-          arguments: >-
+          azureSubscription: "Darc: Maestro Production"
+          scriptType: pscore
+          scriptLocation: inlineScript
+          inlineScript: >-
+            dotnet build $(Build.SourcesDirectory)\dotnet\package\Microsoft.$(MaestroProjectPlatformName).Ref\package.csproj
             -t:PushManifestToBuildAssetRegistry
-            -p:BuildAssetRegistryToken=$(MaestroAccessToken)
-            -p:NupkgPath=$(Build.StagingDirectory)/nuget-signed
-            -bl:$(Build.ArtifactStagingDirectory)/maestro-binlogs/generate-bar-manifest.binlog
+            -p:NupkgPath=$(Build.StagingDirectory)\nuget-signed
+            -p:PrereleaseIdentifier=$(PrereleaseIdentifier)
+            -bl:$(Build.StagingDirectory)\maestro-binlogs\generate-bar-manifest.binlog
           workingDirectory: $(Build.SourcesDirectory)\..
         condition: and(succeeded(), eq('${{ parameters.pushNugetsToMaestro }}', 'true'))
 
-      - powershell: |
-          $versionEndpoint = 'https://maestro.dot.net/api/assets/darc-version?api-version=2019-01-16'
-          $darcVersion = $(Invoke-WebRequest -Uri $versionEndpoint -UseBasicParsing).Content
-          $arcadeServicesSource = 'https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-eng/nuget/v3/index.json'
-          & dotnet tool update microsoft.dotnet.darc --version "$darcVersion" --add-source "$arcadeServicesSource" --tool-path $(Agent.ToolsDirectory)\darc -v n
-          & $(Agent.ToolsDirectory)\darc\darc add-build-to-channel --default-channels --id $(BARBuildId) --publishing-infra-version 3 --password $(MaestroAccessToken) --azdev-pat $(publishing-dnceng-devdiv-code-r-build-re)
+      - task: AzureCLI@2
+        inputs:
+          azureSubscription: "Darc: Maestro Production"
+          scriptType: pscore
+          scriptLocation: inlineScript
+          inlineScript: |
+            $versionEndpoint = 'https://maestro.dot.net/api/assets/darc-version?api-version=2019-01-16'
+            $darcVersion = $(Invoke-WebRequest -Uri $versionEndpoint -UseBasicParsing).Content
+            $arcadeServicesSource = 'https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-eng/nuget/v3/index.json'
+            & dotnet tool update microsoft.dotnet.darc --version "$darcVersion" --add-source "$arcadeServicesSource" --tool-path $(Agent.ToolsDirectory)\darc -v n
+            & $(Agent.ToolsDirectory)\darc\darc add-build-to-channel --default-channels --id $(BARBuildId) --ci --publishing-infra-version 3 --azdev-pat $(System.AccessToken)
+          # We can't use the global.json located in the root of our repo, because makes it required to use the exact .NET version we're referencing in our eng/Versions.Details.xml file.
+          # So in order to not use it, we set the working directory to the parent directory of xamarin-macios.
+          workingDirectory: $(Build.SourcesDirectory)\..
         displayName: Add builds to default darc channel
-        # We can't use the global.json located in the root of our repo, because makes it required to use the exact .NET version we're referencing in our eng/Versions.Details.xml file.
-        # So in order to not use it, we set the working directory to the parent directory of xamarin-macios.
-        workingDirectory: $(Build.SourcesDirectory)\..
         condition: and(succeeded(), eq('${{ parameters.pushNugetsToMaestro }}', 'true'))
 
       - task: 1ES.PublishPipelineArtifact@1
         displayName: 'Publish Artifact: maestro-binlogs'
         inputs:
-          path: $(Build.ArtifactStagingDirectory)/maestro-binlogs
+          path: $(Build.StagingDirectory)\maestro-binlogs
           artifact: ${{ parameters.uploadPrefix }}maestro-binlogs-$(System.JobAttempt)
         condition: and(succeededOrFailed(), eq('${{ parameters.pushNugetsToMaestro }}', 'true'))
         continueOnError: true
