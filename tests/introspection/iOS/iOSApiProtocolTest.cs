@@ -1141,6 +1141,15 @@ namespace Introspection {
 			case "UIStateRestoring":
 				return type.Name == "UIViewController" || type.IsSubclassOf (typeof (UIViewController));
 #endif
+#if __MACCATALYST__
+			case "UIFocusItemContainer":
+			case "UICoordinateSpace":
+				switch (type.Name) {
+				case "SKNode":
+					return !TestRuntime.CheckXcodeVersion (16, 0);
+				}
+				break;
+#endif
 			}
 			return base.Skip (type, protocolName);
 		}
