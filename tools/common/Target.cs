@@ -960,7 +960,7 @@ namespace Xamarin.Bundler {
 				if ((c >= '0' && c <= '9') ||
 					(c >= 'a' && c <= 'z') ||
 					(c >= 'A' && c <= 'Z') ||
-                    (c == '_')) {
+					(c == '_')) {
 					sb.Append (c);
 					continue;
 #if NET
