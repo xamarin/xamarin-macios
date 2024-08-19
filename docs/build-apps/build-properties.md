@@ -30,3 +30,10 @@ Example:
 ```
 
 This property was introduced in .NET 9.
+
+## MobileAggressiveAttributeTrimming
+
+This property determines whether numerous attributes that are very rarely
+needed at runtime should be trimmed away.
+
+This is enabled by default.
