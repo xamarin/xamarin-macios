@@ -959,7 +959,8 @@ namespace Xamarin.Bundler {
 				char c = (char) b;
 				if ((c >= '0' && c <= '9') ||
 					(c >= 'a' && c <= 'z') ||
-					(c >= 'A' && c <= 'Z')) {
+					(c >= 'A' && c <= 'Z') ||
+                    (c == '_')) {
 					sb.Append (c);
 					continue;
 #if NET
