@@ -125,7 +125,7 @@ namespace FSKit {
 	[Mac (15, 0)]
 	[Category]
 	[BaseType (typeof (NSUuid))]
-	interface NSUUID_FSEntityIdentifier
+	interface NSUuid_FSEntityIdentifier
 	{
 		[Export ("fs_containerIdentifier")]
 		FSContainerIdentifier GetFSContainerIdentifier ();
