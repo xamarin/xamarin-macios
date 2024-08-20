@@ -45,7 +45,7 @@ namespace Accessibility {
 		[SupportedOSPlatform ("macos15.0")]
 		[SupportedOSPlatform ("tvos18.0")]
 		[DllImport (Constants.AccessibilityLibrary)]
-		unsafe static extern void AXOpenSettingsFeature (AXSettingsFeature feature, BlockLiteral *block);
+		unsafe static extern void AXOpenSettingsFeature (nint /* AXSettingsFeature */ feature, BlockLiteral *block);
 
 		/// <summary>Open the Settings app to the specified section.</summary>
 		/// <param name="feature">The section to open.</param>
@@ -58,7 +58,7 @@ namespace Accessibility {
 		{
 			delegate* unmanaged<IntPtr, IntPtr, void> trampoline = &OpenSettingsFeatureCompletionHandler;
 			using var block = new BlockLiteral (trampoline, completionHandler, typeof (AXSettings), nameof (OpenSettingsFeatureCompletionHandler));
-			AXOpenSettingsFeature (feature, &block);
+			AXOpenSettingsFeature ((nint) (long) feature, &block);
 		}
 
 		[UnmanagedCallersOnly]
