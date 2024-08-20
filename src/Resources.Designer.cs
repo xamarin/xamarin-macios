@@ -980,6 +980,15 @@ namespace bgen {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The backing field type &apos;{0}&apos; is invalid. Valid backing field types are: &quot;NSString&quot;, &quot;NSNumber&quot;, &quot;nint&quot; and &quot;nuint&quot;..
+        /// </summary>
+        internal static string BI1088 {
+            get {
+                return ResourceManager.GetString("BI1088", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Trying to use a string as a [Target].
         /// </summary>
         internal static string BI1101 {
