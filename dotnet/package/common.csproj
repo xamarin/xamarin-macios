@@ -43,7 +43,7 @@
 
   <ItemGroup>
     <None Include="$(_RepositoryPath)/LICENSE" Pack="true" PackagePath="/" />
-    <None Include="$(MSBuildThisFileDirectory)Workloads/Icon.png" Pack="true" PackagePath="/" />
+    <None Include="$(MSBuildThisFileDirectory)Icon.png" Pack="true" PackagePath="/" />
     <Content Include="$(_packagePath)**" Pack="true" PackagePath="/" />
   </ItemGroup>
 
