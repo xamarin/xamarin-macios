@@ -37,6 +37,7 @@ $(1)_NUGET_TARGETS = \
 	$(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/targets/Xamarin.Shared.Sdk.Publish.targets \
 	$(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/targets/Xamarin.Shared.Sdk.TargetFrameworkInference.props \
 	$(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/targets/Xamarin.Shared.Sdk.props \
+	$(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/targets/Xamarin.Shared.Sdk.Trimming.props \
 	$(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/targets/Xamarin.Shared.Sdk.targets \
 
 endef
@@ -133,6 +134,9 @@ endef
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call VersionsTemplate,$(platform),$(shell echo $(platform) | tr a-z A-Z),$(DOTNET_$(shell echo $(platform) | tr a-z A-Z)_RUNTIME_IDENTIFIERS),$(shell echo $(DOTNET_$(shell echo $(platform) | tr a-z A-Z)_RUNTIME_IDENTIFIERS) | tr ' ' ';'))))
 
 version-props: $(foreach platform,$(DOTNET_PLATFORMS),targets/Microsoft.$(platform).Sdk.Versions.props)
+
+setup-publish-bar-manifest: version-props
+	echo \#\#vso[task.setvariable variable=PrereleaseIdentifier]$(NUGET_PRERELEASE_IDENTIFIER)
 
 define AutoImports
 Microsoft.$(1).Sdk/Sdk/AutoImport.props: targets/AutoImport.template.props Makefile
