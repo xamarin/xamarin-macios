@@ -34,6 +34,89 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		[DllImport ("/usr/lib/libobjc.dylib")]
 		static extern bool class_addMethod (IntPtr cls, IntPtr name, IntPtr imp, string types);
 
+#if NET
+		[Test]
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		public unsafe void SignatureA ()
+		{
+			delegate* unmanaged<IntPtr, byte, void> trampoline = &SignatureTestA;
+			using var block = new BlockLiteral (trampoline, null, typeof (BlocksTest), nameof (SignatureTestA));
+#if __MACOS__
+			var boolIsB = Runtime.IsARM64CallingConvention;
+#elif __MACCATALYST__
+			var boolIsB = Runtime.IsARM64CallingConvention;
+#else
+			var boolIsB = true;
+#endif
+			Assert.AreEqual (boolIsB ? "v@?B" : "v@?c", GetBlockSignature (&block), $"Signature ARM64: {Runtime.IsARM64CallingConvention}");
+		}
+
+		[Test]
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		public unsafe void SignatureB ()
+		{
+			delegate* unmanaged<IntPtr, IntPtr, void> trampoline = &SignatureTestB;
+			using var block = new BlockLiteral (trampoline, null, typeof (BlocksTest), nameof (SignatureTestB));
+			Assert.AreEqual ("v@?@", GetBlockSignature (&block), "Signature");
+		}
+
+		[Test]
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		public unsafe void SignatureC ()
+		{
+			delegate* unmanaged<IntPtr, IntPtr, void> trampoline = &SignatureTestC;
+			using var block = new BlockLiteral (trampoline, null, typeof (BlocksTest), nameof (SignatureTestC));
+			// This is the wrong signature, but the registrar has no way of figuring out the correct
+			// one without the UserDelegateType attribute on the target method.
+			Assert.AreEqual ("v@?^v^v", GetBlockSignature (&block), "Signature");
+		}
+
+		[UserDelegateType (typeof (Action<bool>))]
+		[UnmanagedCallersOnly]
+		static void SignatureTestA (IntPtr block, byte value)
+		{
+		}
+
+		[UserDelegateType (typeof (Action<NSError>))]
+		[UnmanagedCallersOnly]
+		static void SignatureTestB (IntPtr block, IntPtr value)
+		{
+		}
+
+		[UnmanagedCallersOnly]
+		static void SignatureTestC (IntPtr block, IntPtr value)
+		{
+		}
+#endif
+
+
+#pragma warning disable 649
+		[StructLayout (LayoutKind.Sequential)]
+		struct TestBlockDescriptor {
+			public IntPtr reserved;
+			public IntPtr size;
+			public IntPtr copy_helper;
+			public IntPtr dispose;
+			public IntPtr signature;
+		}
+		[StructLayout (LayoutKind.Sequential)]
+		unsafe struct TestBlockLiteral {
+			IntPtr isa;
+			int flags;
+			int reserved;
+			IntPtr invoke;
+			public TestBlockDescriptor* block_descriptor;
+		}
+#pragma warning restore 649
+
+		static unsafe string GetBlockSignature (BlockLiteral* block)
+		{
+			var test_block = (TestBlockLiteral*) block;
+			var signatureUtf8Ptr = test_block->block_descriptor->signature;
+			var signature = Marshal.PtrToStringAuto (signatureUtf8Ptr);
+			return signature;
+		}
+
 		[Test]
 		public void TestSetupBlock ()
 		{

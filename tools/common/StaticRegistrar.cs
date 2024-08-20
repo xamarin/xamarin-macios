@@ -5716,10 +5716,23 @@ namespace Registrar {
 		}
 
 		// Find the value of the [UserDelegateType] attribute on the specified delegate
+		public TypeReference GetUserDelegateType (MethodReference invokeMethod)
+		{
+			return GetUserDelegateTypeImpl (invokeMethod.Resolve ());
+		}
+
+		// Find the value of the [UserDelegateType] attribute on the specified method
 		TypeReference GetUserDelegateType (TypeReference delegateType)
 		{
-			var delegateTypeDefinition = delegateType.Resolve ();
-			foreach (var attrib in delegateTypeDefinition.CustomAttributes) {
+			return GetUserDelegateTypeImpl (delegateType.Resolve ());
+		}
+
+		// Find the value of the [UserDelegateType] attribute on the specified delegate
+		TypeReference GetUserDelegateTypeImpl (ICustomAttributeProvider provider)
+		{
+			if (provider?.HasCustomAttributes != true)
+				return null;
+			foreach (var attrib in provider.CustomAttributes) {
 				var attribType = attrib.AttributeType;
 				if (!attribType.Is (Namespaces.ObjCRuntime, "UserDelegateTypeAttribute"))
 					continue;
@@ -5728,17 +5741,17 @@ namespace Registrar {
 			return null;
 		}
 
-		MethodDefinition GetDelegateInvoke (TypeReference delegateType)
+		public MethodReference GetDelegateInvoke (TypeReference delegateType)
 		{
 			var td = delegateType.Resolve ();
 			foreach (var method in td.Methods) {
 				if (method.Name == "Invoke")
-					return method;
+					return InflateMethod (delegateType, method);
 			}
 			return null;
 		}
 
-		MethodReference InflateMethod (TypeReference inflatedDeclaringType, MethodDefinition openMethod)
+		public MethodReference InflateMethod (TypeReference inflatedDeclaringType, MethodDefinition openMethod)
 		{
 			if (inflatedDeclaringType is not GenericInstanceType git)
 				return openMethod;
@@ -5767,13 +5780,11 @@ namespace Registrar {
 				// First look for any [UserDelegateType] attributes on the trampoline delegate type.
 				var userDelegateType = GetUserDelegateType (trampolineDelegateType);
 				if (userDelegateType is not null) {
-					var userMethodDefinition = GetDelegateInvoke (userDelegateType);
-					userMethod = InflateMethod (userDelegateType, userMethodDefinition);
+					userMethod = GetDelegateInvoke (userDelegateType);
 					blockSignature = true;
 				} else {
 					// Couldn't find a [UserDelegateType] attribute, use the type of the actual trampoline instead.
-					var userMethodDefinition = GetDelegateInvoke (trampolineDelegateType);
-					userMethod = InflateMethod (trampolineDelegateType, userMethodDefinition);
+					userMethod = GetDelegateInvoke (trampolineDelegateType);
 					blockSignature = false;
 				}
 
