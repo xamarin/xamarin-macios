@@ -2200,7 +2200,7 @@
 		<!-- We used to use '_RelativeMlaunchPath' as the property name, but we've made it public, so it's RelativeMlaunchPath now, but keep setting/supporting the underscored version for a while -->
 		<RelativeMlaunchPath Condition="'$(RelativeMlaunchPath)' == '' And '$(_RelativeMlaunchPath)' != ''">$(_RelativeMlaunchPath)</RelativeMlaunchPath>
 		<RelativeMlaunchPath Condition="'$(RelativeMlaunchPath)' == ''">$(XamarinRelativeSdkRootDirectory)tools\bin\mlaunch</RelativeMlaunchPath>
-		<_RelativeMlaunchPath Condition="'$(_RelativeMlaunchPath)' == ''">$(_RelativeMlaunchPath)</_RelativeMlaunchPath>
+		<_RelativeMlaunchPath Condition="'$(_RelativeMlaunchPath)' == ''">$(RelativeMlaunchPath)</_RelativeMlaunchPath>
 	</PropertyGroup>
 
 	<Target Name="ComputeMlaunchInstallArguments" DependsOnTargets="_DetectSdkLocations;_GenerateBundleName;_DetectAppManifest;_ComputeMlaunchInstallArguments" />
