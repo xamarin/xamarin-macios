@@ -13,6 +13,17 @@ namespace MonoTouchFixtures.CoreVideo {
 	[Preserve (AllMembers = true)]
 	public class CVDisplayLinkTest {
 
+		void IgnoreIfLockedScreen ()
+		{
+#if NET
+			var props = CGSession.GetProperties ();
+			var value = props.Dictionary [(NSString) "CGSSessionScreenIsLocked"]; // This key isn't documented, so no binding for it.
+			var isLocked = (value as NSNumber)?.BoolValue;
+			if (isLocked == true)
+				Assert.Ignore ("The screen is locked.");
+#endif
+		}
+
 		[Test]
 		public void CreateFromDisplayIdValidIdTest ()
 		{
@@ -61,6 +72,7 @@ namespace MonoTouchFixtures.CoreVideo {
 		public void DefaultConstructorTest ()
 		{
 			TestRuntime.AssertNotVSTS ();
+			IgnoreIfLockedScreen ();
 			Assert.DoesNotThrow (() => {
 				using var displayLink = new CVDisplayLink ();
 			});
@@ -70,6 +82,7 @@ namespace MonoTouchFixtures.CoreVideo {
 		public void SetCurrentDisplayOpenGLTest ()
 		{
 			TestRuntime.AssertNotVSTS ();
+			IgnoreIfLockedScreen ();
 			Assert.DoesNotThrow (() => {
 				using var displayLink = new CVDisplayLink ();
 				displayLink.SetCurrentDisplay (CGDisplay.MainDisplayID);
@@ -80,6 +93,7 @@ namespace MonoTouchFixtures.CoreVideo {
 		public void GetCurrentDisplayTest ()
 		{
 			TestRuntime.AssertNotVSTS ();
+			IgnoreIfLockedScreen ();
 			Assert.DoesNotThrow (() => {
 				using var displayLink = new CVDisplayLink ();
 				Assert.AreEqual (CGDisplay.MainDisplayID, displayLink.GetCurrentDisplay ());
@@ -100,6 +114,7 @@ namespace MonoTouchFixtures.CoreVideo {
 		{
 			TestRuntime.AssertNotVSTS ();
 			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 12, 0);
+			IgnoreIfLockedScreen ();
 			var outTime = new CVTimeStamp {
 				Version = 0,
 				Flags = (1L << 0) | (1L << 1), // kCVTimeStampVideoTimeValid | kCVTimeStampHostTimeValid
