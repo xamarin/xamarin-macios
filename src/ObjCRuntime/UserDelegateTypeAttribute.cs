@@ -36,7 +36,7 @@ namespace ObjCRuntime {
 	// This attribute is emitted by the generator and used at runtime.
 	// It's not supposed to be used by manually written code.
 	[EditorBrowsable (EditorBrowsableState.Never)]
-	[AttributeUsage (AttributeTargets.Delegate, AllowMultiple = false)]
+	[AttributeUsage (AttributeTargets.Delegate | AttributeTargets.Method, AllowMultiple = false)]
 	public sealed class UserDelegateTypeAttribute : Attribute {
 		public UserDelegateTypeAttribute (Type userDelegateType)
 		{
