@@ -45,7 +45,7 @@ jobs:
       target_branch: ${{ needs.setupBackport.outputs.target_branch }}
       comment_author: ${{ github.actor }}
       github_repository: ${{ github.repository }}
-      use_fork: true
+      use_fork: false
     secrets:
       azure_tenant_id: ${{ secrets.BACKPORT_AZURE_TENANT_ID }}
       azure_subscription_id: ${{ secrets.BACKPORT_AZURE_SUBSCRIPTION_ID }}

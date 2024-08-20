@@ -38,3 +38,5 @@
 
 ## manually bound
 !missing-field! UIListSeparatorAutomaticInsets not bound
+
+!missing-protocol! UIItemProviderReadingAugmentationDesignating not bound

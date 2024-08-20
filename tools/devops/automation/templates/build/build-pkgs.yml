@@ -1,158 +1,159 @@
+# yamllint disable rule:line-length
 parameters:
-- name: vsdropsPrefix
-  type: string
+  - name: vsdropsPrefix
+    type: string
 
-- name: keyringPass
-  type: string
+  - name: keyringPass
+    type: string
 
-- name: gitHubToken
-  type: string
+  - name: gitHubToken
+    type: string
 
-- name: xqaCertPass
-  type: string
+  - name: xqaCertPass
+    type: string
 
-- name: uploadBinlogs
-  type: boolean
-  default: true
+  - name: uploadBinlogs
+    type: boolean
+    default: true
 
-- name: signAndNotarize
-  type: boolean
-  default: true
+  - name: signAndNotarize
+    type: boolean
+    default: true
 
-- name: skipESRP
-  type: boolean
-  default: false # only to be used when testing the CI and we do not need a signed pkg
+  - name: skipESRP
+    type: boolean
+    default: false  # only to be used when testing the CI and we do not need a signed pkg
 
-- name: isPR
-  type: boolean
+  - name: isPR
+    type: boolean
 
-- name: repositoryAlias
-  type: string
-  default: self
+  - name: repositoryAlias
+    type: string
+    default: self
 
-- name: commit
-  type: string
-  default: HEAD
+  - name: commit
+    type: string
+    default: HEAD
 
-- name: uploadPrefix
-  type: string
-  default: '$(MaciosUploadPrefix)'
+  - name: uploadPrefix
+    type: string
+    default: '$(MaciosUploadPrefix)'
 
 steps:
-- template: build.yml
-  parameters:
-    isPR: ${{ parameters.isPR }}
-    repositoryAlias: ${{ parameters.repositoryAlias }}
-    commit: ${{ parameters.commit }}
-    vsdropsPrefix: ${{ parameters.vsdropsPrefix }}
-    keyringPass: ${{ parameters.keyringPass }}
-    gitHubToken: ${{ parameters.gitHubToken }}
-    xqaCertPass: ${{ parameters.xqaCertPass }}
-    buildSteps:
-    # build not signed .pkgs for the SDK
-    - bash: |
-        set -x
-        set -e
-        rm -Rf $(Build.SourcesDirectory)/package/*.pkg
-        rm -Rf $(Build.SourcesDirectory)/package/notarized/*.pkg
-        time make -C $(Build.SourcesDirectory)/xamarin-macios/ package
-      name: packages
-      displayName: 'Build Packages'
-      condition: and(succeeded(), contains(variables['configuration.BuildPkgs'], 'True'))
-      timeoutInMinutes: 180
+  - template: build.yml
+    parameters:
+      isPR: ${{ parameters.isPR }}
+      repositoryAlias: ${{ parameters.repositoryAlias }}
+      commit: ${{ parameters.commit }}
+      vsdropsPrefix: ${{ parameters.vsdropsPrefix }}
+      keyringPass: ${{ parameters.keyringPass }}
+      gitHubToken: ${{ parameters.gitHubToken }}
+      xqaCertPass: ${{ parameters.xqaCertPass }}
+      buildSteps:
+        # build not signed .pkgs for the SDK
+        - bash: |
+            set -x
+            set -e
+            rm -Rf $(Build.SourcesDirectory)/package/*.pkg
+            rm -Rf $(Build.SourcesDirectory)/package/notarized/*.pkg
+            time make -C $(Build.SourcesDirectory)/xamarin-macios/ package
+          name: packages
+          displayName: 'Build Packages'
+          condition: and(succeeded(), contains(variables['configuration.BuildPkgs'], 'True'))
+          timeoutInMinutes: 180
 
-    # build nugets
-    - bash: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/build-nugets.sh
-      displayName: 'Build Nugets'
-      condition: and(succeeded(), contains(variables['configuration.BuildNugets'], 'True'), ne(variables['ENABLE_DOTNET'], ''))
-      timeoutInMinutes: 180
+        # build nugets
+        - bash: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/build-nugets.sh
+          displayName: 'Build Nugets'
+          condition: and(succeeded(), contains(variables['configuration.BuildNugets'], 'True'), ne(variables['ENABLE_DOTNET'], ''))
+          timeoutInMinutes: 180
 
-    - bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/generate-workload-rollback.sh
-      name: workload_file
-      displayName: 'Generate "WorkloadRollback.json"'
+        - bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/generate-workload-rollback.sh
+          name: workload_file
+          displayName: 'Generate "WorkloadRollback.json"'
 
-    - task: 1ES.PublishPipelineArtifact@1
-      displayName: 'Publish WorkloadRollback.json'
-      inputs:
-        path: $(Build.SourcesDirectory)/WorkloadRollback.json
-        artifact: '${{ parameters.uploadPrefix }}WorkloadRollback'
-      continueOnError: true
+        - task: 1ES.PublishPipelineArtifact@1
+          displayName: 'Publish WorkloadRollback.json'
+          inputs:
+            path: $(Build.SourcesDirectory)/WorkloadRollback.json
+            artifact: '${{ parameters.uploadPrefix }}WorkloadRollback'
+          continueOnError: true
 
-    - bash: |
-        var=$(make -C $(Build.SourcesDirectory)/xamarin-macios/tools/devops print-variable VARIABLE=IOS_PACKAGE_VERSION)
-        IOS_PACKAGE_VERSION=${var#*=}
-        IOS_PACKAGE_VERSION=$(echo $IOS_PACKAGE_VERSION | cut -d "+" -f1)
+        - bash: |
+            var=$(make -C $(Build.SourcesDirectory)/xamarin-macios/tools/devops print-variable VARIABLE=IOS_PACKAGE_VERSION)
+            IOS_PACKAGE_VERSION=${var#*=}
+            IOS_PACKAGE_VERSION=$(echo $IOS_PACKAGE_VERSION | cut -d "+" -f1)
 
-        var=$(make -C $(Build.SourcesDirectory)/xamarin-macios/tools/devops print-variable VARIABLE=MAC_PACKAGE_VERSION)
-        MAC_PACKAGE_VERSION=${var#*=}
-        MAC_PACKAGE_VERSION=$(echo $MAC_PACKAGE_VERSION | cut -d "+" -f1)
+            var=$(make -C $(Build.SourcesDirectory)/xamarin-macios/tools/devops print-variable VARIABLE=MAC_PACKAGE_VERSION)
+            MAC_PACKAGE_VERSION=${var#*=}
+            MAC_PACKAGE_VERSION=$(echo $MAC_PACKAGE_VERSION | cut -d "+" -f1)
 
-        PKG_DST="$(Build.SourcesDirectory)/PkgsVersions.json"
+            PKG_DST="$(Build.SourcesDirectory)/PkgsVersions.json"
 
-        echo "{" > $PKG_DST
-        echo "\"iOS\": \"$IOS_PACKAGE_VERSION\"," >>  $PKG_DST
-        echo "\"macOS\": \"$MAC_PACKAGE_VERSION\"" >> $PKG_DST
-        echo "}" >>  $PKG_DST
+            echo "{" > $PKG_DST
+            echo "\"iOS\": \"$IOS_PACKAGE_VERSION\"," >>  $PKG_DST
+            echo "\"macOS\": \"$MAC_PACKAGE_VERSION\"" >> $PKG_DST
+            echo "}" >>  $PKG_DST
 
-        echo "PkgVersions.json file contents:" 
-        echo "$(cat $PKG_DST)"
-      name: pkg_versions_file
-      displayName: 'Generate PkgsVersions.json'
+            echo "PkgVersions.json file contents:"
+            echo "$(cat $PKG_DST)"
+          name: pkg_versions_file
+          displayName: 'Generate PkgsVersions.json'
 
-    - task: 1ES.PublishPipelineArtifact@1
-      displayName: 'Publish PkgsVersions.json'
-      inputs:
-        path: $(Build.SourcesDirectory)/PkgsVersions.json
-        artifact: '${{ parameters.uploadPrefix }}PkgsVersions'
-      continueOnError: true
+        - task: 1ES.PublishPipelineArtifact@1
+          displayName: 'Publish PkgsVersions.json'
+          inputs:
+            path: $(Build.SourcesDirectory)/PkgsVersions.json
+            artifact: '${{ parameters.uploadPrefix }}PkgsVersions'
+          continueOnError: true
 
-    # upload each of the pkgs into the pipeline artifacts
-    - task: 1ES.PublishPipelineArtifact@1
-      displayName: 'Publish Build Artifacts'
-      inputs:
-        path: $(Build.SourcesDirectory)/package
-        artifact: '${{ parameters.uploadPrefix }}not-signed-package'
-      continueOnError: true
+        # upload each of the pkgs into the pipeline artifacts
+        - task: 1ES.PublishPipelineArtifact@1
+          displayName: 'Publish Build Artifacts'
+          inputs:
+            path: $(Build.SourcesDirectory)/package
+            artifact: '${{ parameters.uploadPrefix }}not-signed-package'
+          continueOnError: true
 
-    - bash: |
-        set -x
-        set -e
+        - bash: |
+            set -x
+            set -e
 
-        make -C $(Build.SourcesDirectory)/xamarin-macios/tests package-test-libraries.zip
-      name: introPkg
-      displayName: 'Package test libraries dependencies'
-      continueOnError: true # not a terrible blocking issue
-      timeoutInMinutes: 60
+            make -C $(Build.SourcesDirectory)/xamarin-macios/tests package-test-libraries.zip
+          name: introPkg
+          displayName: 'Package test libraries dependencies'
+          continueOnError: true  # not a terrible blocking issue
+          timeoutInMinutes: 60
 
-    - task: 1ES.PublishPipelineArtifact@1
-      displayName: 'Publish test libraries dependencies'
-      inputs:
-        path: $(Build.SourcesDirectory)/xamarin-macios/tests/package-test-libraries.zip 
-        artifact: '${{ parameters.uploadPrefix }}package-test-libraries'
-      continueOnError: true
+        - task: 1ES.PublishPipelineArtifact@1
+          displayName: 'Publish test libraries dependencies'
+          inputs:
+            path: $(Build.SourcesDirectory)/xamarin-macios/tests/package-test-libraries.zip
+            artifact: '${{ parameters.uploadPrefix }}package-test-libraries'
+          continueOnError: true
 
-    - task: 1ES.PublishPipelineArtifact@1
-      displayName: 'Publish Build.props'
-      inputs:
-        path: $(Build.SourcesDirectory)/xamarin-macios/Build.props
-        artifact: '${{ parameters.uploadPrefix }}Build.props'
-      continueOnError: true
+        - task: 1ES.PublishPipelineArtifact@1
+          displayName: 'Publish Build.props'
+          inputs:
+            path: $(Build.SourcesDirectory)/xamarin-macios/Build.props
+            artifact: '${{ parameters.uploadPrefix }}Build.props'
+          continueOnError: true
 
-    - ${{ if eq(parameters.uploadBinlogs, true) }}:
-      # Copy all the binlogs to a separate directory, keeping directory structure.
-      - script: |
-          set -x
-          mkdir -p $(Build.ArtifactStagingDirectory)/all-binlogs
-          rsync -av --prune-empty-dirs --include '*/' --include '*.binlog' --exclude '*' $(Build.SourcesDirectory)/xamarin-macios $(Build.ArtifactStagingDirectory)/all-binlogs
-        displayName: Copy all binlogs
-        continueOnError: true
-        condition: succeededOrFailed()
+        - ${{ if eq(parameters.uploadBinlogs, true) }}:
+            # Copy all the binlogs to a separate directory, keeping directory structure.
+            - script: |
+                set -x
+                mkdir -p $(Build.ArtifactStagingDirectory)/all-binlogs
+                rsync -av --prune-empty-dirs --include '*/' --include '*.binlog' --exclude '*' $(Build.SourcesDirectory)/xamarin-macios $(Build.ArtifactStagingDirectory)/all-binlogs
+              displayName: Copy all binlogs
+              continueOnError: true
+              condition: succeededOrFailed()
 
-      # Publish all the binlogs we collected in the previous step
-      - task: 1ES.PublishPipelineArtifact@1
-        displayName: 'Publish Artifact: All binlogs'
-        inputs:
-          path: $(Build.ArtifactStagingDirectory)/all-binlogs
-          artifact: '${{ parameters.uploadPrefix }}all-binlogs-$(Build.BuildId)-$(System.StageAttempt)-$(System.JobAttempt)'
-        continueOnError: true
-        condition: succeededOrFailed()
+            # Publish all the binlogs we collected in the previous step
+            - task: 1ES.PublishPipelineArtifact@1
+              displayName: 'Publish Artifact: All binlogs'
+              inputs:
+                path: $(Build.ArtifactStagingDirectory)/all-binlogs
+                artifact: '${{ parameters.uploadPrefix }}all-binlogs-$(Build.BuildId)-$(System.StageAttempt)-$(System.JobAttempt)'
+              continueOnError: true
+              condition: succeededOrFailed()
