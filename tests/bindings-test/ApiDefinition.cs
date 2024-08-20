@@ -424,6 +424,8 @@ namespace Bindings.Test {
 		[Export ("setProtocolWithBlockProperties:required:instance:")]
 		void SetProtocolWithBlockProperties (IProtocolWithBlockProperties obj, bool required, bool instance);
 
+		[Export ("nullableCallback:")]
+		bool NullableCallback ([NullAllowed] Action<int> completionHandler);
 	}
 
 	delegate void InnerBlock (int magic_number);
