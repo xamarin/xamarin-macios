@@ -21,6 +21,10 @@ mkdir -p "$CHANGE_DETECTION_RESULTS_DIR"
 
 cd "$XAM_TOP"
 
+if test -z "$PR_ID"; then
+    PR_ID=$SYSTEM_PULLREQUEST_PULLREQUESTNUMBER
+fi
+
 # Figure out the base hash we want to compare against
 if [[ $PR_ID ]]; then
     git fetch --no-tags --progress https://github.com/xamarin/xamarin-macios +refs/pull/"$PR_ID"/*:refs/remotes/origin/pr/"$PR_ID"/*

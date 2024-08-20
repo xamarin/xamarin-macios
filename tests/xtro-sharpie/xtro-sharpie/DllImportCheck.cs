@@ -12,6 +12,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using Mono.Cecil;
 
@@ -24,6 +25,7 @@ namespace Extrospection {
 
 		// dupes :|
 		Dictionary<string, MethodDefinition> dllimports = new Dictionary<string, MethodDefinition> ();
+		HashSet<string> found = new HashSet<string> ();
 
 		public override void VisitManagedMethod (MethodDefinition method)
 		{
@@ -36,7 +38,7 @@ namespace Extrospection {
 
 			// there are duplicates declarations
 			// TODO: right now we only check the first one, as the priority is knowing if we have (or not) bindings for them
-			var name = info.EntryPoint;
+			var name = info.EntryPoint ?? method.Name;
 			if (!dllimports.ContainsKey (name))
 				dllimports.Add (name, method);
 		}
@@ -70,14 +72,14 @@ namespace Extrospection {
 				return;
 			}
 
-			dllimports.Remove (name);
+			found.Add (name);
 		}
 
 		public override void End ()
 		{
 			// at this stage anything else we have is not something we could find in Apple's headers
 			// e.g. a typo in the name
-			foreach (var kvp in dllimports) {
+			foreach (var kvp in dllimports.Where (v => !found.Contains (v.Key))) {
 				var extra = kvp.Key;
 				var framework = Helpers.GetFramework (kvp.Value);
 				Log.On (framework).Add ($"!unknown-pinvoke! {extra} bound");
