@@ -238,6 +238,8 @@ public class AttributeManager {
 		case "System.Runtime.Versioning.ObsoletedOSPlatformAttribute":
 			return typeof (System.Runtime.Versioning.ObsoletedOSPlatformAttribute);
 #endif
+		case "BackingFieldTypeAttribute":
+			return typeof (BackingFieldTypeAttribute);
 		}
 
 		switch (fullname) {
