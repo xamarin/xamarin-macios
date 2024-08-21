@@ -64,6 +64,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="NativeLibrary.dll">
+      <HintPath>$(RootTestsDirectory)\monotouch-test\NativeLibrary.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="$(MonoTouchTestDirectory)\Entitlements.plist" />
     <None Include="$(MonoTouchTestDirectory)\app.config" />
     <None Include="$(MonoTouchTestDirectory)\EmptyNib.xib" />
