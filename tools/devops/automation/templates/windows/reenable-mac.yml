@@ -24,7 +24,7 @@ steps:
 
 - task: AzureKeyVault@2
   inputs:
-    azureSubscription: 'Xamarin - R&D - XamarinSecurity'
+    azureSubscription: 'Xamarin - SDK Engineering - macios-team-pair-to-mac-ci'
     KeyVaultName: 'xamarin-ios-vault'
     SecretsFilter: 'RemoteMacIdRsa'
   displayName: 'Download id_rsa'
