@@ -180,6 +180,8 @@ namespace Photos {
 		SmartAlbumRAW = 217,
 		[iOS (15, 0), TV (15, 0), Mac (12, 0), MacCatalyst (15, 0)]
 		SmartAlbumCinematic = 218,
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		SmartAlbumSpatial = 219,
 
 		Any = Int64.MaxValue
 	}
@@ -221,6 +223,8 @@ namespace Photos {
 		PhotoLive = (1 << 3),
 		[MacCatalyst (13, 1)]
 		PhotoDepthEffect = (1 << 4),
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		SmartAlbumSpatial = (1 << 10),
 		VideoStreamed = (1 << 16),
 		VideoHighFrameRate = (1 << 17),
 		VideoTimelapse = (1 << 18),
