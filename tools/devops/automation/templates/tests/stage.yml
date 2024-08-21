@@ -76,6 +76,10 @@ parameters:
   type: boolean
   default: false
 
+- name: useAzHostedPool #if we are using the az hosted pool, we use testPool as the 'vmImage' parameter
+  type: boolean
+  default: false
+
 stages:
 - stage: ${{ parameters.stageName }}
   displayName: ${{ parameters.displayName }}
@@ -105,13 +109,16 @@ stages:
       ${{ else }}:
         AgentPoolComputed: ${{ parameters.testPool }}
     pool:
-      name: $(AgentPoolComputed)
-      demands:
-      - Agent.OS -equals Darwin
-      - macOS.Name -equals ${{ parameters.macOSName }}
-      - XcodeChannel -equals ${{ parameters.XcodeChannel }}
-      - ${{ each demand in parameters.extraBotDemands }}:
-        - demand
+      ${{ if eq(parameters.useAzHostedPool, true) }}:
+        vmImage: $(AgentPoolComputed)
+      ${{ else }}:
+        name: $(AgentPoolComputed)
+        demands:
+        - Agent.OS -equals Darwin
+        - macOS.Name -equals ${{ parameters.macOSName }}
+        - XcodeChannel -equals ${{ parameters.XcodeChannel }}
+        - ${{ each demand in parameters.extraBotDemands }}:
+          - demand
       workspace:
         clean: all
     strategy:

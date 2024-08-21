@@ -318,7 +318,6 @@ stages:
     supportedPlatforms: ${{ parameters.supportedPlatforms }}
     stageName: 'simulator_tests'
     displayName: '${{ parameters.stageDisplayNamePrefix }}Simulator tests'
-    testPool: '' # use the default
     statusContext: 'VSTS: simulator tests'
     makeTarget: 'jenkins'
     vsdropsPrefix: ${{ variables.vsdropsPrefix }}
@@ -327,6 +326,12 @@ stages:
     xqaCertPass: $(xqa--certificates--password)
     condition: ${{ parameters.runTests }}
     postPipeline: true
+    ${{ if eq(parameters.isPR, true) }}:
+      # Using Azure hosted pool for PR simulator tests
+      useAzHostedPool: true
+      testPool: 'macOS-latest'
+    ${{ else }}:
+      testPool: '' # use the default
 
 - template: ./tests/publish-results.yml
   parameters:
