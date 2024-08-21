@@ -94,6 +94,12 @@ public partial class Generator {
 		var backingFieldType = AttributeManager.GetCustomAttribute<BackingFieldTypeAttribute> (type)?.BackingFieldType ?? TypeCache.NSString;
 		var isBackingFieldValueType = backingFieldType.IsValueType;
 		var visibility = is_internal ? "internal" : "public";
+
+		if (backingFieldType != TypeCache.System_nint && backingFieldType != TypeCache.System_nuint && backingFieldType != TypeCache.NSString && backingFieldType != TypeCache.NSNumber) {
+			exceptions.Add (ErrorHelper.CreateError (1088 /* The backing field type '{0}' is invalid. Valid backing field types are: "NSString", "NSNumber", "nint" and "nuint". */, backingFieldType.FullName));
+			backingFieldType = TypeCache.NSString;
+		}
+
 		print ("{0} enum {1} : {2} {{", visibility, type.Name, underlying_type);
 		indent++;
 		foreach (var f in type.GetFields ()) {

@@ -860,6 +860,7 @@ public class DefaultEnumValueAttribute : Attribute {
 	}
 }
 
+/// <summary>This attribute is used to specify the type of the backing field for strongly typed enums.</summary>
 [AttributeUsage (AttributeTargets.Enum)]
 public class BackingFieldTypeAttribute : Attribute {
 
