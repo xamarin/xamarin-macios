@@ -32,7 +32,7 @@ namespace Xamarin.MacDev.Tasks {
 
 			var result = base.Execute ();
 
-			if (result && UpdatedAssemblies != null)
+			if (result && UpdatedAssemblies is not null)
 				StrippedAssemblies = UpdatedAssemblies;
 
 			return result;
