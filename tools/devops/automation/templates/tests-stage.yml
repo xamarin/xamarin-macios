@@ -329,7 +329,7 @@ stages:
     ${{ if eq(parameters.isPR, true) }}:
       # Using Azure hosted pool for PR simulator tests
       useAzHostedPool: true
-      testPool: 'macOS-latest'
+      testPool: 'macOS-14'
     ${{ else }}:
       testPool: '' # use the default
 
