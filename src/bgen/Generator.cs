@@ -1602,6 +1602,7 @@ public partial class Generator : IMemberGatherer {
 #else
 			print ("[MonoPInvokeCallback (typeof ({0}))]", ti.DelegateName);
 #endif
+			print ("[UserDelegateType (typeof ({0}))]", ti.UserDelegate);
 			print ("internal static unsafe {0} Invoke ({1}) {{", ti.ReturnType, ti.Parameters);
 			indent++;
 			print ("var del = BlockLiteral.GetTarget<{0}> (block);", ti.UserDelegate);
