@@ -62,5 +62,8 @@ namespace FieldEnumTests {
 
 		[Field ("FooIntEnumField", "__Internal")]
 		FooIntEnum FooIntEnumField { get; set; }
+
+		[Field ("NSNumberField", "__Internal")]
+		NSNumber NSNumberField { get; set; }
 	}
 }
