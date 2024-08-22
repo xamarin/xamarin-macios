@@ -3,12 +3,6 @@ parameters:
   type: string
   default: '*'            # Supports multiple filters separated by semi-colon such as *.msi;*.nupkg
 
-- name: azureStorage
-  type: string
-
-- name: azureContainer
-  type: string
-
 - name: repositoryAlias
   type: string
   default: self
@@ -68,17 +62,28 @@ steps:
   displayName: "Show downloaded artifacts"
 
 - pwsh: |
-    $packagePrefix = "https://dl.internalx.com/$Env:AZURE_CONTAINER/$Env:VIRTUAL_PATH/package"
+    $DropServiceUrl = "https://devdiv.artifacts.visualstudio.com/DefaultCollection"
+    $StatusDropUrl = "https://vsdrop.microsoft.com/file/v1"
+    $BuildShortHash = "$(Build.SourceVersion)".subString(0, 7)
+    $ProjectPathUrl = "Products/$(System.TeamProject)/$(Build.Repository.Name)/$(Build.SourceBranchName)/$BuildShortHash/$(Build.BuildId)"
+    $PackagePrefix = "$StatusDropUrl/$ProjectPathUrl/${{ parameters.uploadPrefix }}package"
+
+    # Write-Host "##vso[task.setvariable variable=BuildShortHash]$BuildShortHash"
+    # Write-Host "##vso[task.setvariable variable=DropServiceUrl]$DropServiceUrl"
+    Write-Host "##vso[task.setvariable variable=ProjectPathUrl]$ProjectPathUrl"
+    Write-Host "##vso[task.setvariable variable=PackagePrefix]$PackagePrefix"
+  displayName: "Set drop status URL variables"
+
+- pwsh: |
     $files =  Get-ChildItem -Path "$(Build.SourcesDirectory)\\artifacts\\${{ parameters.uploadPrefix }}package" -File -Force -Name
     $manifestFile = "$(Build.SourcesDirectory)\\artifacts\${{ parameters.uploadPrefix }}package\\manifest"
     foreach ($f in $files) {
-      Add-Content -Path "$manifestFile" -Value "$packagePrefix/$f"
+      Add-Content -Path "$manifestFile" -Value "$(PackagePrefix);$f"
     }
-    Add-Content -Path "$manifestFile" -Value "$packagePrefix/$artifacts.json"
-    Add-Content -Path "$manifestFile" -Value "$packagePrefix/manifest"
+    Add-Content -Path "$manifestFile" -Value "$(PackagePrefix);artifacts.json"
+    Add-Content -Path "$manifestFile" -Value "$(PackagePrefix);manifest"
   env:
     VIRTUAL_PATH: $(Build.SourceBranchName)/$(Build.SourceVersion)/$(Build.BuildId)
-    AZURE_CONTAINER: ${{ parameters.azureContainer }}
   displayName: "Build manifest"
 
 # Important needed for the next step
@@ -86,47 +91,6 @@ steps:
   parameters:
     GitHubToken: $(GitHub.Token)
     ArtifactDirectory: $(Build.SourcesDirectory)/${{ parameters.uploadPrefix }}package-internal
-
-- task: AzureFileCopy@6
-  displayName: 'Publish package to Azure'
-  name: upload
-  inputs:
-    SourcePath: $(Build.SourcesDirectory)/artifacts/${{ parameters.uploadPrefix }}package
-    azureSubscription: 'Azure Releng (7b4817ae-218f-464a-bab1-a9df2d99e1e5)'
-    Destination: AzureBlob
-    storage: ${{ parameters.azureStorage }}
-    ContainerName: ${{ parameters.azureContainer }}
-    BlobPrefix: $(Build.SourceBranchName)/$(Build.SourceVersion)/$(Build.BuildId)/${{ parameters.uploadPrefix }}package  # ideally, we would use a variable for this
-
-- task: AzureFileCopy@6
-  displayName: 'Publish manifest to Azure'
-  inputs:
-    SourcePath: $(Build.SourcesDirectory)/artifacts/${{ parameters.uploadPrefix }}package/manifest
-    azureSubscription: 'Azure Releng (7b4817ae-218f-464a-bab1-a9df2d99e1e5)'
-    Destination: AzureBlob
-    storage: ${{ parameters.azureStorage }}
-    ContainerName: ${{ parameters.azureContainer }}
-    BlobPrefix: jenkins/$(Build.SourceBranchName)/$(Build.SourceVersion)
-
-- task: AzureFileCopy@6
-  displayName: 'Publish manifest to Azure as latest'
-  inputs:
-    SourcePath: $(Build.SourcesDirectory)/artifacts/${{ parameters.uploadPrefix }}package/manifest
-    azureSubscription: 'Azure Releng (7b4817ae-218f-464a-bab1-a9df2d99e1e5)'
-    Destination: AzureBlob
-    storage: ${{ parameters.azureStorage }}
-    ContainerName: ${{ parameters.azureContainer }}
-    BlobPrefix: jenkins/$(Build.SourceBranchName)/latest
-
-- task: AzureFileCopy@6
-  displayName: 'Publish manifest to Azure per commit'
-  inputs:
-    SourcePath: $(Build.SourcesDirectory)/artifacts/${{ parameters.uploadPrefix }}package/manifest
-    azureSubscription: 'Azure Releng (7b4817ae-218f-464a-bab1-a9df2d99e1e5)'
-    Destination: AzureBlob
-    storage: ${{ parameters.azureStorage }}
-    ContainerName: ${{ parameters.azureContainer }}
-    BlobPrefix: jenkins/$(Build.SourceVersion)
 
 - pwsh: |
     $execPath="$Env:BUILD_SOURCESDIRECTORY\Xamarin.Build.Tasks\tools\BuildTasks\build-tasks.exe"
@@ -145,11 +109,12 @@ steps:
     $execExpression = (
                     "$execPath artifacts" +
                     " -s `"$maciosPath`"" +
-                    " -a $Env:AZURE_STORAGE" +
-                    " -c $Env:STORAGE_PASS" +
+                    " -a AZURE_STORAGE" +
+                    " -c STORAGE_PASS" +
                     " -u `"$Env:AZURE_CONTAINER/$Env:VIRTUAL_PATH/${{ parameters.uploadPrefix }}package`"" +
                     " -d `"$(Build.SourcesDirectory)\\artifacts\${{ parameters.uploadPrefix }}package`"" +
-                    " -o `"$(Build.SourcesDirectory)\\artifacts\${{ parameters.uploadPrefix }}package`""
+                    " -o `"$(Build.SourcesDirectory)\\artifacts\${{ parameters.uploadPrefix }}package`"" +
+                    " -x" # Disable Upload
                     )
 
     Write-Host "Expression is:"
@@ -159,10 +124,17 @@ steps:
   env:
     VIRTUAL_PATH: $(Build.SourceBranchName)/$(Build.SourceVersion)/$(Build.BuildId)
     GITHUB_AUTH_TOKEN: $(GitHub.Token)
-    STORAGE_PASS: $(auth-xamarin-bosstoragemirror-account-key)
-    AZURE_STORAGE: ${{ parameters.azureStorage }}
-    AZURE_CONTAINER: ${{ parameters.azureContainer }}
   displayName: 'Generate artifacts.json'
+
+- task: ms-vscs-artifact.build-tasks.artifactDropTask-1.artifactDropTask@0
+  displayName: 'Publish package to Azure DevOps'
+  inputs:
+    sourcePath: $(Build.SourcesDirectory)/artifacts/${{ parameters.uploadPrefix }}package
+    dropServiceURI: "https://devdiv.artifacts.visualstudio.com/DefaultCollection"
+    buildNumber: $(ProjectPathUrl)
+    dropMetadataContainerName: ${{ parameters.uploadPrefix }}package #TODO
+    retentionDays: 2 #TODO
+    toLowerCase: false
 
 # upload the artifacts.json to the build pipeline artifacts so that it can be consumed by other jobs to
 # get the required urls
@@ -184,7 +156,8 @@ steps:
 
     # the azure step sets the env variable, but it points to the wrong url since it uses the one in bosstorage, we
     # need to use the dl version.
-    $pkgsVirtualUrl =  "https://dl.internalx.com/$Env:AZURE_CONTAINER/$Env:VIRTUAL_PATH/${{ parameters.uploadPrefix }}package"
+    $pkgsVirtualUrl = "$(PackagePrefix)"
+    
     Write-Host "Urls is $pkgsVirtualUrl"
 
     $pkgsPath = "$(Build.SourcesDirectory)\\artifacts\\${{ parameters.uploadPrefix }}package"
@@ -291,7 +264,6 @@ steps:
   env:
     GITHUB_TOKEN: $(GitHub.Token)
     ACCESSTOKEN: $(System.AccessToken)
-    AZURE_CONTAINER: ${{ parameters.azureContainer }}
     VIRTUAL_PATH: $(Build.SourceBranchName)/$(Build.SourceVersion)/$(Build.BuildId)
   displayName: 'Set GithubStatus'
 

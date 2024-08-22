@@ -231,12 +231,6 @@ parameters:
 - name: macTestsConfigurations
   type: object
 
-- name: azureStorage
-  type: string
-
-- name: azureContainer
-  type: string
-
 - name: stageDisplayNamePrefix
   type: string
   default: ''

@@ -256,12 +256,6 @@ parameters:
       }
     ]
 
-  - name: azureStorage
-    type: string
-
-  - name: azureContainer
-    type: string
-
   - name: stageDisplayNamePrefix
     type: string
     default: ''
@@ -438,8 +432,6 @@ stages:
           isPR: ${{ parameters.isPR }}
           repositoryAlias: ${{ parameters.repositoryAlias }}
           commit: ${{ parameters.commit }}
-          azureStorage: ${{ parameters.azureStorage }}
-          azureContainer: ${{ parameters.azureContainer }}
           packages:  # flatten the pkgs for the parameter
             - ${{ each pkg in parameters.legacyPackageJobs }}:
                 - ${{ pkg }}
