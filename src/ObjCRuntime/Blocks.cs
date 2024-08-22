@@ -187,16 +187,23 @@ namespace ObjCRuntime {
 			if (!trampolineMethod.IsDefined (typeof (UnmanagedCallersOnlyAttribute), false))
 				throw ErrorHelper.CreateError (8051, Errors.MX8051 /* The trampoline method {0} must have an [UnmanagedCallersOnly] attribute. */, trampolineMethod.DeclaringType.FullName + "." + trampolineMethod.Name);
 
+			// We need to get the signature of the target method, so that we can compute
+			// the ObjC signature correctly (the generated method that's actually
+			// invoked by native code does not have enough type information to compute
+			// the correct signature).
+			// This attribute might not exist for third-party libraries created
+			// with earlier versions of our SDK, so make sure to cope with
+			// the attribute not being available.
+
+			// This logic is mirrored in CoreOptimizeGeneratedCode.ProcessSetupBlock and must be
+			// updated if anything changes here.
+			TryGetUserDelegateType (trampolineMethod, trampolineMethod, out var userMethod);
+
 			// We're good to go!
-			return Runtime.ComputeSignature (trampolineMethod, true);
+			return Runtime.ComputeSignature (userMethod, true);
 		}
 #endif // NET
 
-#if NET
-		// Note that the code in this method shouldn't be called when using any static registrar, so throw an exception in that case.
-		// IL2075: 'this' argument does not satisfy 'DynamicallyAccessedMemberTypes.PublicMethods' in call to 'System.Type.GetMethod(String)'. The return value of method 'ObjCRuntime.UserDelegateTypeAttribute.UserDelegateType.get' does not have matching annotations. The source value must declare at least the same requirements as those declared on the target location it is assigned to.
-		[UnconditionalSuppressMessage ("", "IL2075", Justification = "The APIs this method tries to access are marked by other means, so this is linker-safe.")]
-#endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		void SetupBlock (Delegate trampoline, Delegate target, bool safe)
 		{
@@ -214,19 +221,26 @@ namespace ObjCRuntime {
 
 			// This logic is mirrored in CoreOptimizeGeneratedCode.ProcessSetupBlock and must be
 			// updated if anything changes here.
-			var userDelegateType = trampoline.GetType ().GetCustomAttribute<UserDelegateTypeAttribute> ()?.UserDelegateType;
-			bool blockSignature;
-			MethodInfo userMethod;
-			if (userDelegateType is not null) {
-				userMethod = userDelegateType.GetMethod ("Invoke");
-				blockSignature = true;
-			} else {
-				userMethod = trampoline.Method;
-				blockSignature = false;
-			}
-
+			var blockSignature = TryGetUserDelegateType (trampoline.GetType (), trampoline.Method, out var userMethod);
 			var signature = Runtime.ComputeSignature (userMethod, blockSignature);
 			SetupBlockImpl (trampoline, target, safe, System.Text.Encoding.UTF8.GetBytes (signature));
+		}
+
+#if NET
+		// Note that the code in this method shouldn't be called when using any static registrar, so throw an exception in that case.
+		// IL2075: 'this' argument does not satisfy 'DynamicallyAccessedMemberTypes.PublicMethods' in call to 'System.Type.GetMethod(String)'. The return value of method 'ObjCRuntime.UserDelegateTypeAttribute.UserDelegateType.get' does not have matching annotations. The source value must declare at least the same requirements as those declared on the target location it is assigned to.
+		[UnconditionalSuppressMessage ("", "IL2075", Justification = "The APIs this method tries to access are marked by other means, so this is linker-safe.")]
+#endif
+		static bool TryGetUserDelegateType (MemberInfo provider, MethodInfo noUserDelegateTypeMethod, out MethodInfo userMethod)
+		{
+			var userDelegateType = provider.GetCustomAttribute<UserDelegateTypeAttribute> ()?.UserDelegateType;
+			if (userDelegateType is not null) {
+				userMethod = userDelegateType.GetMethod ("Invoke");
+				return true;
+			} else {
+				userMethod = noUserDelegateTypeMethod;
+				return false;
+			}
 		}
 
 		void SetupBlockImpl (Delegate trampoline, Delegate target, bool safe, string signature)
