@@ -15,7 +15,7 @@ namespace GameKit {
 
 	public partial class GKGameCenterViewController {
 		/// <summary>Create a new GKGameCenterViewController instance that presents an achievement.</summary>
-		/// <param name="id">The ID of the achievement to show.</param>
+		/// <param name="achievementId">The ID of the achievement to show.</param>
 #if NET
 		[SupportedOSPlatform ("ios14.0")]
 		[SupportedOSPlatform ("maccatalyst14.0")]
