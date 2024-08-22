@@ -230,6 +230,13 @@ namespace GeneratorTests {
 			BuildFile (Profile.iOS, "bug34042.cs");
 		}
 
+		[Test]
+		[TestCase (Profile.iOS)]
+		public void NSCopyingNullability (Profile profile)
+		{
+			var bgen = BuildFile (profile, "tests/nscopying-nullability.cs");
+			bgen.AssertNoWarnings ();
+		}
 
 		static string RenderArgument (CustomAttributeArgument arg)
 		{

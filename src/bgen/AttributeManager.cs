@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
 #if !NET
@@ -670,6 +671,36 @@ public class AttributeManager {
 			if (property is not null && HasAttribute<StaticAttribute> (property))
 				return true;
 		}
+		return false;
+	}
+
+	public bool IsNullable (ICustomAttributeProvider provider)
+	{
+		var attributes = GetAttributes (provider);
+		if (attributes is null)
+			return false;
+
+		foreach (var attrib in attributes) {
+			var attribType = attrib.GetAttributeType ();
+			if (attribType.Name == "NullAllowedAttribute")
+				return true;
+			if (attribType.Name == "NullableAttribute") {
+				// https://codeblog.jonskeet.uk/2019/02/10/nullableattribute-and-c-8/
+				if (attrib.ConstructorArguments.Count == 1) {
+					var argType = attrib.ConstructorArguments [0].ArgumentType;
+					if (argType.Namespace == "System" && argType.Name == "Byte")
+						return ((byte) attrib.ConstructorArguments [0].Value) == 2;
+					if (argType.IsArray && argType.GetElementType ().Namespace == "System" && argType.GetElementType ().Name == "Byte") {
+						var valueCollection = (ReadOnlyCollection<CustomAttributeTypedArgument>) attrib.ConstructorArguments [0].Value;
+						// Getting complex nullability right means we'll have to completely rework how we render types.
+						// So don't do that for now, just look at the outermost type (the first number in the array),
+						// and return nullability depending on that value.
+						return ((byte) valueCollection [0].Value) == 2;
+					}
+				}
+			}
+		}
+
 		return false;
 	}
 }

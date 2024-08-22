@@ -28,7 +28,7 @@ class AsyncMethodInfo : MemberInformation {
 		var lastParam = cbParams.LastOrDefault ();
 		if (lastParam is not null && lastParam.ParameterType.Name == "NSError") {
 			HasNSError = true;
-			IsNSErrorNullable = generator.AttributeManager.HasAttribute<NullAllowedAttribute> (lastParam);
+			IsNSErrorNullable = generator.AttributeManager.IsNullable (lastParam);
 			cbParams = cbParams.DropLast ();
 		}
 
