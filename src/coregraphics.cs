@@ -521,6 +521,18 @@ namespace CoreGraphics {
 		NSString Smpte_240M_1995 { get; }
 	}
 
+#if NET
+	[NoiOS, NoTV, NoWatch, MacCatalyst (13, 1)]
+	[StrongDictionary ("CGSessionKeys")]
+	interface CGSessionProperties {
+		uint UserId { get; }
+		string UserName { get; }
+		uint ConsoleSet { get; }
+		bool OnConsole { get; }
+		bool LoginDone { get; }
+	}
+#endif
+
 	[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 	[Partial]
 	partial interface CGToneMappingOptionKeys {

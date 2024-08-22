@@ -90,7 +90,6 @@
 !missing-pinvoke! CGReleaseDisplayFadeReservation is not bound
 !missing-pinvoke! CGRequestScreenCaptureAccess is not bound
 !missing-pinvoke! CGRestorePermanentDisplayConfiguration is not bound
-!missing-pinvoke! CGSessionCopyCurrentDictionary is not bound
 !missing-pinvoke! CGSetDisplayTransferByByteTable is not bound
 !missing-pinvoke! CGSetDisplayTransferByTable is not bound
 !missing-pinvoke! CGWarpMouseCursorPosition is not bound
