@@ -4,7 +4,7 @@
 
 Our NuGet packages are versioned using [Semver 2.0.0][2].
 
-This is the scheme: `OsMajor.OsMinor.InternalRelease[-prereleaseX].CommitDistance`.
+This is the scheme: `OsMajor.OsMinor.InternalRelease[-prereleaseX]`.
 
 * Major: The major OS version.
 * Minor: The minor OS version.
