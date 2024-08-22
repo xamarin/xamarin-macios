@@ -672,7 +672,7 @@ namespace ScreenCaptureKit {
 		void DidStartRecording (SCRecordingOutput recordingOutput);
 
 		[Export ("recordingOutput:didFailWithError:")]
-		void DidFailWithError (SCRecordingOutput recordingOutput, NSError error);
+		void DidFail (SCRecordingOutput recordingOutput, NSError error);
 
 		[Export ("recordingOutputDidFinishRecording:")]
 		void DidFinishRecording (SCRecordingOutput recordingOutput);
