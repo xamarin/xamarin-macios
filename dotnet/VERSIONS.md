@@ -36,6 +36,13 @@ This is the scheme: `OsMajor.OsMinor.InternalRelease[-prereleaseX]`.
         * Example: `iOS 15.1.123-rt` (and nothing else). This makes these
           versions exactly 3 characters longer than the release version, which
           is hopefully enough to avoid MAX_PATH issues on Windows.
+* Build metadata: Optional Hash
+    * This is `sha.` + the short commit hash.
+        * Use the short hash because the long hash is quite long and
+          cumbersome. This leaves the complete version open for duplication,
+          but this is extremely unlikely.
+    * Example: `iOS 14.0.123+sha.1a2b3c`
+    * Example (CI build): `iOS 15.0.123-ci.main+sha.1a2b3c`
 
 [1]: https://github.com/dotnet/designs/blob/master/accepted/2018/sdk-version-scheme.md
 [2]: https://semver.org
