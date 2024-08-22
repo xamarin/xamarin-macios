@@ -291,24 +291,28 @@ namespace ObjCRuntime {
 
 		public static void SetString (IntPtr handle, string symbol, NSString? value)
 		{
-			var indirect = dlsym (handle, symbol);
-			if (indirect == IntPtr.Zero)
-				return;
-			var strHandle = value.GetHandle ();
-			if (strHandle != IntPtr.Zero)
-				CFObject.CFRetain (strHandle);
-			Marshal.WriteIntPtr (indirect, strHandle);
+			SetObject (handle, symbol, value);
 		}
 
 		public static void SetArray (IntPtr handle, string symbol, NSArray? array)
 		{
+			SetObject (handle, symbol, array);
+		}
+
+		/// <summary>Sets the specified symbol in the library handle to the specified NSObject value.</summary>
+		/// <param name="handle">Handle to the dynamic library previously opened with <see cref="dlopen(System.String,Mode)" />.</param>
+		/// <param name="symbol">Name of the public symbol in the dynamic library to look up.</param>
+		/// <param name="value">The object to set, can be null.</param>
+		/// <remarks>The previous object value is not released, it is up to the developer to release the handle to that object if needed.</remarks>
+		public static void SetObject (IntPtr handle, string symbol, NSObject? value)
+		{
 			var indirect = dlsym (handle, symbol);
 			if (indirect == IntPtr.Zero)
 				return;
-			var arrayHandle = array.GetHandle ();
-			if (arrayHandle != IntPtr.Zero)
-				CFObject.CFRetain (arrayHandle);
-			Marshal.WriteIntPtr (indirect, arrayHandle);
+			var objectHandle = value.GetHandle ();
+			if (objectHandle != IntPtr.Zero)
+				CFObject.CFRetain (objectHandle);
+			Marshal.WriteIntPtr (indirect, objectHandle);
 		}
 
 		public static nint GetNInt (IntPtr handle, string symbol)

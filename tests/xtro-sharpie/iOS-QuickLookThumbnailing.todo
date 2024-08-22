@@ -1,2 +1,0 @@
-!deprecated-attribute-missing! QLThumbnailGenerator::saveBestRepresentationForRequest:toFileAtURL:withContentType:completionHandler: missing a [Deprecated] attribute
-!missing-selector! QLThumbnailGenerator::saveBestRepresentationForRequest:toFileAtURL:asContentType:completionHandler: not bound
