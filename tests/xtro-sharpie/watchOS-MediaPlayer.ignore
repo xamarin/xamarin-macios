@@ -3,3 +3,5 @@
 !unknown-field! MPMediaEntityPropertyPersistentID bound
 !unknown-protocol! MPMediaPlayback bound
 !unknown-type! MPMediaEntity bound
+
+!extra-null-allowed! 'System.Void MediaPlayer.MPRemoteCommand::RemoveTarget(Foundation.NSObject,ObjCRuntime.Selector)' has a extraneous [NullAllowed] on parameter #0

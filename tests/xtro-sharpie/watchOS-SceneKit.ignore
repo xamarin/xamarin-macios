@@ -12,3 +12,6 @@
 
 ## obsoleted (removed from headers) in watchOS 6
 !extra-protocol-member! unexpected selector SCNSceneRenderer::context found
+
+## A parameter comes from the Metal framework, which isn't available on watchOS.
+!missing-selector! +SCNMaterialProperty::precomputedLightingEnvironmentDataForContents:device:error: not bound
