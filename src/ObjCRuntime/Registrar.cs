@@ -2697,10 +2697,24 @@ namespace Registrar {
 			case "System.Double": return "d";
 			case "System.Boolean":
 				// map managed 'bool' to ObjC BOOL = 'unsigned char' in OSX and 32bit iOS architectures and 'bool' in 64bit iOS architectures
+#if MTOUCH || MMP || BUNDLER
+				switch (App.Platform) {
+				case ApplePlatform.iOS:
+				case ApplePlatform.WatchOS:
+				case ApplePlatform.TVOS:
+					return Is64Bits ? "B" : "c";
+				case ApplePlatform.MacOSX:
+				case ApplePlatform.MacCatalyst:
+					return IsARM64 ? "B" : "c";
+				default:
+					throw ErrorHelper.CreateError (71, Errors.MX0071, App.Platform, App.ProductName);
+				}
+#else
 #if MONOMAC || __MACCATALYST__
 				return IsARM64 ? "B" : "c";
 #else
 				return Is64Bits ? "B" : "c";
+#endif
 #endif
 			case "System.Void": return "v";
 			case "System.String":
