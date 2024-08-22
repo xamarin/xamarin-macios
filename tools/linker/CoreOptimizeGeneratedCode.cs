@@ -1147,12 +1147,20 @@ namespace Xamarin.Linker {
 					return 0;
 				}
 
-				// Calculate the block signature.
+				var userDelegateType = LinkContext.Target.StaticRegistrar.GetUserDelegateType (trampolineMethod);
+				MethodReference userMethod = null;
 				var blockSignature = true;
-				var parameters = new TypeReference [trampolineMethod.Parameters.Count];
+				if (userDelegateType is not null) {
+					userMethod = LinkContext.Target.StaticRegistrar.GetDelegateInvoke (userDelegateType);
+				} else {
+					userMethod = trampolineMethod;
+				}
+
+				// Calculate the block signature.
+				var parameters = new TypeReference [userMethod.Parameters.Count];
 				for (int p = 0; p < parameters.Length; p++)
-					parameters [p] = trampolineMethod.Parameters [p].ParameterType;
-				signature = LinkContext.Target.StaticRegistrar.ComputeSignature (trampolineMethod.DeclaringType, false, trampolineMethod.ReturnType, parameters, trampolineMethod.Resolve (), isBlockSignature: blockSignature);
+					parameters [p] = userMethod.Parameters [p].ParameterType;
+				signature = LinkContext.Target.StaticRegistrar.ComputeSignature (userMethod.DeclaringType, false, userMethod.ReturnType, parameters, userMethod.Resolve (), isBlockSignature: blockSignature);
 
 				sequenceStart = loadType;
 			} catch (Exception e) {
