@@ -322,8 +322,8 @@ public partial class Generator {
 			print ("}");
 			print ("");
 			if (BindingTouch.SupportsXmlDocumentation) {
-				print ($"/// <summary>Converts an array of <see cref=\"{backingFieldTypeName}}\" /> values into an array of their corresponding enum values.</summary>");
-				print ($"/// <param name=\"values\">The array if <see cref=\"{backingFieldTypeName}}\" /> values to convert.</param>");
+				print ($"/// <summary>Converts an array of <see cref=\"{backingFieldTypeName}\" /> values into an array of their corresponding enum values.</summary>");
+				print ($"/// <param name=\"values\">The array if <see cref=\"{backingFieldTypeName}\" /> values to convert.</param>");
 			}
 			print ($"internal static {type.Name}[]? To{type.Name}Array (this {backingFieldTypeName}[]? values)");
 			print ("{");
