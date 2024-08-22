@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 using System.Threading;
@@ -5535,6 +5536,35 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				Assert.AreEqual (EnumL.b, l, "out: L");
 				Assert.AreEqual (EnumUL.b, ul, "out: UL");
 			}
+		}
+
+		[Test]
+		public void ProtocolsTrimmedAway ()
+		{
+			PreserveIUIApplicationDelegate (null);
+
+			// A little indirection to try to make the trimmer not be helpful and preserve all the methods on IUIApplicationDelegate.
+			AssertMemberCount (typeof (IUIApplicationDelegate));
+		}
+
+		void AssertMemberCount (Type type)
+		{
+			var members = type.GetMembers (BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
+#if OPTIMIZEALL
+			var expectNoMembers = true;
+#else
+			var expectNoMembers = false;
+#endif
+			if (expectNoMembers) {
+				Assert.AreEqual (0, members.Length, $"All members should be trimmed away in {type.FullName}:\n\t{string.Join ("\n\t", members.Select (v => v.ToString ()))}");
+			} else {
+				Assert.AreNotEqual (0, members.Length, $"All members should not be trimmed away in {type.FullName}");
+			}
+		}
+
+		void PreserveIUIApplicationDelegate (IUIApplicationDelegate obj)
+		{
+			GC.KeepAlive (obj);
 		}
 	}
 
