@@ -62,7 +62,7 @@ namespace MonoTouchFixtures.Network {
 			});
 		}
 
-#if __MACOS__
+#if __MACOS__ && NET
 		[Test]
 		public void TestCreateLaunchd ()
 		{
