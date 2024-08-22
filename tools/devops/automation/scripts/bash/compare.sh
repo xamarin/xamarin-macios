@@ -52,8 +52,8 @@ RC=0
 ./tools/compare-commits.sh --base="$BASE" "--output-dir=$CHANGE_DETECTION_OUTPUT_DIR" || RC=$?
 
 if test -d "$CHANGE_DETECTION_OUTPUT_DIR"; then
-    rm -f "$CHANGE_DETECTION_OUTPUT_DIR/change-detection-$SYSTEM_STAGEATTEMPT.zip"
-    cd "$CHANGE_DETECTION_OUTPUT_DIR" && zip -9r "change-detection-$SYSTEM_STAGEATTEMPT.zip" .
+    rm -f "$CHANGE_DETECTION_OUTPUT_DIR/change-detection.zip"
+    cd "$CHANGE_DETECTION_OUTPUT_DIR" && zip -9r "change-detection.zip" .
 fi
 
 exit $RC
