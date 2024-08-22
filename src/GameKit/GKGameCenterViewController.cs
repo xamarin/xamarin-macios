@@ -24,8 +24,8 @@ namespace GameKit {
 #else
 		[TV (14, 0), Mac (11, 0), iOS (14, 0), MacCatalyst (14, 0)]
 #endif
-		public GKGameCenterViewController (string id)
-			: this (id, GKGameCenterViewControllerInitializationOption.Achievement)
+		public GKGameCenterViewController (string achievementId)
+			: this (achievementId, GKGameCenterViewControllerInitializationOption.Achievement)
 		{
 		}
 
