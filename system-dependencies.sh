@@ -1089,7 +1089,7 @@ check_objective_sharpie
 check_old_simulators
 if test -z "$IGNORE_DOTNET"; then
 	ok "Installed .NET SDKs:"
-	(IFS=$'\n'; for i in $(/usr/local/share/dotnet/dotnet --list-sdks); do log "$i"; done)
+	(IFS=$'\n'; for i in $(dotnet --list-sdks); do log "$i"; done)
 fi
 
 if test -z $FAIL; then
