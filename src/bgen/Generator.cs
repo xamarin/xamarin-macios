@@ -3926,9 +3926,9 @@ public partial class Generator : IMemberGatherer {
 
 #if NET
 		if (minfo.is_protocol_member_required.Value) {
-			print ("[RequiredMember]");
+			print ("[global::Foundation.RequiredMember]");
 		} else {
-			print ("[OptionalMember]");
+			print ("[global::Foundation.OptionalMember]");
 		}
 #endif
 	}
