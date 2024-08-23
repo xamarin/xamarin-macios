@@ -216,10 +216,6 @@ namespace AccessorySetupKit {
 	[iOS (18, 0)]
 	[DisableDefaultCtor]
 	interface ASPickerDisplayItem {
-		[Deprecated (PlatformName.iOS, 18, 0, message: "Use SetupOptions' instead.")]
-		[Export ("allowsRename", ArgumentSemantic.Assign)]
-		bool AllowsRename { get; set; }
-
 		[Export ("name", ArgumentSemantic.Copy)]
 		string Name { get; }
 
