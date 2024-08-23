@@ -51,7 +51,7 @@
 
   <!-- do not load this Sdk for template packages -->
   <!-- it overwrites packageType -->
-  <Import Project="Sdk.props" Sdk="Microsoft.DotNet.SharedFramework.Sdk" Version="$(MicrosoftDotNetBuildTasksFeedPackageVersion)" Condition="'$(PackageType)' != 'Template'" />
+  <Import Project="Sdk.props" Sdk="Microsoft.DotNet.SharedFramework.Sdk" Version="$(MicrosoftDotNetSharedFrameworkSdkVersion)" Condition="'$(PackageType)' != 'Template'" />
   <UsingTask TaskName="CreateFrameworkListFile" AssemblyFile="$(DotNetSharedFrameworkTaskFile)" Condition="'$(PackageType)' != 'Template'" />
   <UsingTask TaskName="GenerateBuildManifest" AssemblyFile="$(_MicrosoftDotNetBuildTasksFeedTaskDir)Microsoft.DotNet.Build.Tasks.Feed.dll" />
 
@@ -113,7 +113,18 @@
     </Content>
   </ItemGroup>
 
-  <Target Name="GenerateBuildAssetRegistryManifest" >
+  <!-- https://github.com/dotnet/arcade/blob/00d6decc59f5030c2399a64fd3e4f6e8e11bacca/Documentation/DependencyFlowOnboardingWithoutArcade.md -->
+  <Target Name="PushManifestToBuildAssetRegistry" >
+    <PropertyGroup>
+      <ArtifactsLogDir>$(BarManifestOutputPath)</ArtifactsLogDir>
+      <AssetManifestFileName>Assets.xml</AssetManifestFileName>
+      <AssetManifestPath>$(ArtifactsLogDir)AssetManifest\$(AssetManifestFileName)</AssetManifestPath>
+      <IsStableBuild Condition=" '$(PrereleaseIdentifier)' == '' ">true</IsStableBuild>
+      <IsStableBuild Condition=" '$(PrereleaseIdentifier)' != '' ">false</IsStableBuild>
+    </PropertyGroup>
+
+    <Error Condition="Exists($(AssetManifestPath))" Text="The manifest file '$(AssetManifestPath)' already exists." />
+
     <ItemGroup>
       <BuildArtifacts Include="$(NupkgPath)\Microsoft*.$(_PlatformName).*.nupkg" />
     </ItemGroup>
@@ -130,14 +141,15 @@
       <ManifestBuildData Include="AzureDevOpsBranch=$(BUILD_SOURCEBRANCH)" />
     </ItemGroup>
 
-    <GenerateBuildManifest
-        Artifacts="@(BuildArtifacts)"
-        OutputPath="$(BarManifestOutputPath)\AssetManifest.xml"
-        BuildId="$(BUILD_BUILDNUMBER)"
-        BuildData="@(ManifestBuildData)"
-        RepoUri="$(BUILD_REPOSITORY_URI)"
-        RepoBranch="$(BUILD_SOURCEBRANCH)"
-        RepoCommit="$(BUILD_SOURCEVERSION)"
+    <PushToBuildStorage
+        ItemsToPush="@(ItemsToPush)"
+        IsStableBuild="$(IsStableBuild)"
+        ManifestBuildData="@(ManifestBuildData)"
+        ManifestRepoUri="$(BUILD_REPOSITORY_NAME)"
+        ManifestBranch="$(BUILD_SOURCEBRANCH)"
+        ManifestBuildId="$(BUILD_BUILDNUMBER)"
+        ManifestCommit="$(BUILD_SOURCEVERSION)"
+        AssetManifestPath="$(AssetManifestPath)"
         PublishingVersion="3" />
   </Target>
 
