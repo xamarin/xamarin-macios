@@ -67,7 +67,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 			Assert.AreEqual (0.0f, context.GetEdrTargetHeadroom (), "a");
 			Assert.IsTrue (context.SetEdrTargetHeadroom (2.0f), "b");
 			Assert.AreEqual (2.0f, context.GetEdrTargetHeadroom (), "c");
-			Assert.IsFalse (context.SetEdrTargetHeadroom (0.0f), "d");
+			Assert.IsFalse (context.SetEdrTargetHeadroom (-2.0f), "d");
 			Assert.AreEqual (2.0f, context.GetEdrTargetHeadroom (), "e");
 		}
 

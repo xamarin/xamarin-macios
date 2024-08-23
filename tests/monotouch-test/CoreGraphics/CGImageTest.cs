@@ -43,25 +43,28 @@ namespace MonoTouchFixtures.CoreGraphics {
 		}
 
 		[Test]
-		public void Xcode16APIs ()
+		public void ContentHeadroom ()
 		{
 			TestRuntime.AssertXcodeVersion (16, 0);
 
-			var file = Path.Combine (NSBundle.MainBundle.ResourcePath, "basn3p08.png");
-			using var dp = new CGDataProvider (file);
-			using var img = new CGImage (2.0f, 20, 20, 8, 32, 80, null, CGBitmapFlags.None, dp, null, false, CGColorRenderingIntent.Default);
-			Assert.IsNotNull (img, "Image");
-			Assert.AreEqual (0.0f, img.ContentHeadroom, "ContentHeadroom A");
-			Assert.IsFalse (img.ShouldToneMap, "ShouldToneMap A");
-			Assert.IsFalse (img.ContainsImageSpecificToneMappingMetadata, "ContainsImageSpecificToneMappingMetadata A");
+			Assert.Multiple (() => {
+				var frame = new CGSize (32, 32);
+				using var provider = new CGDataProvider (new byte [(int) frame.Width * (int) frame.Height * 4]);
+				using var colorSpace = CGColorSpace.CreateWithName (CGColorSpaceNames.Itur_2100_PQ);
+				using var img = new CGImage (0.0f, (int) frame.Width, (int) frame.Height, 8, 32, 4 * (int) frame.Width, colorSpace, CGBitmapFlags.ByteOrderDefault | CGBitmapFlags.Last, provider, null, false, CGColorRenderingIntent.Default);
+				Assert.IsNotNull (img, "Image");
+				Assert.AreEqual (4.92610836f, img.ContentHeadroom, "ContentHeadroom A");
+				Assert.IsTrue (img.ShouldToneMap, "ShouldToneMap A");
+				Assert.IsFalse (img.ContainsImageSpecificToneMappingMetadata, "ContainsImageSpecificToneMappingMetadata A");
 
-			using var copy = img.Copy (3.0f);
-			Assert.IsNotNull (copy, "Copy");
-			Assert.AreEqual (3.0f, copy.ContentHeadroom, "ContentHeadroom B");
-			Assert.IsFalse (copy.ShouldToneMap, "ShouldToneMap B");
-			Assert.IsFalse (copy.ContainsImageSpecificToneMappingMetadata, "ContainsImageSpecificToneMappingMetadata B");
+				using var copy = img.Copy (3.0f);
+				Assert.IsNotNull (copy, "Copy");
+				Assert.AreEqual (3.0f, copy.ContentHeadroom, "ContentHeadroom B");
+				Assert.IsTrue (copy.ShouldToneMap, "ShouldToneMap B");
+				Assert.IsFalse (copy.ContainsImageSpecificToneMappingMetadata, "ContainsImageSpecificToneMappingMetadata B");
 
-			Assert.AreEqual (2.0f, CGImage.DefaultHdrImageContentHeadroom, "DefaultHdrImageContentHeadroom");
+				Assert.AreEqual (4.92610836f, CGImage.DefaultHdrImageContentHeadroom, "DefaultHdrImageContentHeadroom");
+			});
 		}
 	}
 }
