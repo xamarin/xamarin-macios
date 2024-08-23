@@ -54,8 +54,7 @@ while ! test -z $1; do
 			shift
 			;;
 		--provision-autotools)
-			PROVISION_AUTOTOOLS=1
-			unset IGNORE_AUTOTOOLS
+			# this is an old argument, just ignore it
 			shift
 			;;
 		--provision-python3)
@@ -108,8 +107,6 @@ while ! test -z $1; do
 			unset IGNORE_CMAKE
 			PROVISION_7Z=1
 			unset IGNORE_7Z
-			PROVISION_AUTOTOOLS=1
-			unset IGNORE_AUTOTOOLS
 			PROVISION_HOMEBREW=1
 			unset IGNORE_HOMEBREW
 			PROVISION_SHARPIE=1
@@ -135,7 +132,6 @@ while ! test -z $1; do
 			IGNORE_XCODE=1
 			IGNORE_CMAKE=1
 			IGNORE_7Z=1
-			IGNORE_AUTOTOOLS=1
 			IGNORE_HOMEBREW=1
 			IGNORE_SHARPIE=1
 			IGNORE_SIMULATORS=1
@@ -162,7 +158,7 @@ while ! test -z $1; do
 			shift
 			;;
 		--ignore-autotools)
-			IGNORE_AUTOTOOLS=1
+			# this is an old argument, just ignore it
 			shift
 			;;
 		--ignore-python3)
@@ -735,52 +731,6 @@ function install_libtool () {
 	brew install libtool
 }
 
-function install_automake () {
-	if ! brew --version >& /dev/null; then
-		fail "Asked to install automake, but brew is not installed."
-		return
-	fi
-
-	brew install automake
-}
-
-
-function check_autotools () {
-	if ! test -z $IGNORE_AUTOTOOLS; then return; fi
-
-IFStmp=$IFS
-IFS='
-'
-	if AUTOCONF_VERSION=($(autoconf --version 2>/dev/null)); then
-		ok "Found ${AUTOCONF_VERSION[0]} (no specific version is required)"
-	elif ! test -z $PROVISION_AUTOTOOLS; then
-		install_autoconf
-	else
-		fail "You must install autoconf, read the README.md for instructions"
-	fi
-
-	if ! LIBTOOL=$(which glibtool 2>/dev/null); then
-		LIBTOOL=$(which libtool)
-	fi
-
-	if LIBTOOL_VERSION=($($LIBTOOL --version 2>/dev/null )); then
-		ok "Found ${LIBTOOL_VERSION[0]} (no specific version is required)"
-	elif ! test -z $PROVISION_AUTOTOOLS; then
-		install_libtool
-	else
-		fail "You must install libtool, read the README.md for instructions"
-	fi
-
-	if AUTOMAKE_VERSION=($(automake --version 2>/dev/null)); then
-		ok "Found ${AUTOMAKE_VERSION[0]} (no specific version is required)"
-	elif ! test -z $PROVISION_AUTOTOOLS; then
-		install_automake
-	else
-		fail "You must install automake, read the README.md for instructions"
-	fi
-IFS=$IFS_tmp
-}
-
 function check_shellcheck () {
 	if ! test -z $IGNORE_SHELLCHECK; then return; fi
 
@@ -931,7 +881,7 @@ IFS='
 		HOMEBREW_VERSION=($(brew --version 2>/dev/null))
 		log "Installed Homebrew ($HOMEBREW_VERSION)"
 	else
-		warn "Could not find Homebrew. Homebrew is required to auto-provision some dependencies (autotools, cmake), but not required otherwise."
+		warn "Could not find Homebrew. Homebrew is required to auto-provision some dependencies (cmake), but not required otherwise."
 	fi
 IFS=$IFS_tmp
 }
@@ -1078,7 +1028,6 @@ check_osx_version
 check_checkout_dir
 check_xcode
 check_homebrew
-check_autotools
 check_shellcheck
 check_yamllint
 check_python3
