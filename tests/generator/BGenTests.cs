@@ -1668,5 +1668,16 @@ namespace GeneratorTests {
 			}
 		}
 
+		[Test]
+		[TestCase (Profile.iOS)]
+		public void DelegatesWithNullableReturnType (Profile profile)
+		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
+			var bgen = BuildFile (profile, "tests/delegate-nullable-return.cs");
+			bgen.AssertNoWarnings ();
+
+			var delegateCallback = bgen.ApiAssembly.MainModule.GetType ("NS", "MyCallback").Methods.First ((v) => v.Name == "EndInvoke");
+			Assert.That (delegateCallback.MethodReturnType.CustomAttributes.Any (v => v.AttributeType.Name == "NullableAttribute"), "Nullable return type");
+		}
 	}
 }
