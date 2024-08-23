@@ -1,3 +1,0 @@
-!deprecated-attribute-missing! SHCustomCatalog::writeToURL:error: missing a [Deprecated] attribute
-!missing-selector! SHCustomCatalog::dataRepresentation not bound
-!missing-selector! SHCustomCatalog::initWithDataRepresentation:error: not bound
