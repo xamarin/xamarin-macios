@@ -680,10 +680,16 @@ public class AttributeManager {
 		if (attributes is null)
 			return false;
 
+		// first check if any of the attributes are [NullAllowed]
 		foreach (var attrib in attributes) {
 			var attribType = attrib.GetAttributeType ();
 			if (attribType.Name == "NullAllowedAttribute")
 				return true;
+		}
+
+		// then check for [Nullable]
+		foreach (var attrib in attributes) {
+			var attribType = attrib.GetAttributeType ();
 			if (attribType.Name == "NullableAttribute") {
 				// https://codeblog.jonskeet.uk/2019/02/10/nullableattribute-and-c-8/
 				if (attrib.ConstructorArguments.Count == 1) {
