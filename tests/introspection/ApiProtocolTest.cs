@@ -596,6 +596,9 @@ namespace Introspection {
 				case "UIScreenEdgePanGestureRecognizer":
 				case "UIHoverGestureRecognizer":
 					return true;
+				case "NSLocalizedNumberFormatRule":
+					// Foundation.MonoTouchException : Objective-C exception thrown. Name: NSInvalidArgumentException Reason: *** -supportsSecureCoding cannot be sent to an abstract object of class NSLocalizedNumberFormatRule: Create a concrete instance!
+					return true;
 				}
 				break;
 			// conformance added in Xcode 8 (iOS 10 / macOS 10.12)
