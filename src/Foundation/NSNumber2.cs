@@ -188,7 +188,7 @@ namespace Foundation {
 		{
 			if (other is null)
 				return false;
-			return IsEqualToNumber (other);
+			return IsEqualTo (other.Handle);
 		}
 
 		public override int GetHashCode ()

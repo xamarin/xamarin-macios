@@ -611,6 +611,9 @@ namespace Introspection {
 				case "UIScreenEdgePanGestureRecognizer":
 				case "UIHoverGestureRecognizer":
 					return true;
+				case "NSLocalizedNumberFormatRule":
+					// Foundation.MonoTouchException : Objective-C exception thrown. Name: NSInvalidArgumentException Reason: *** -supportsSecureCoding cannot be sent to an abstract object of class NSLocalizedNumberFormatRule: Create a concrete instance!
+					return true;
 				}
 				break;
 			// conformance added in Xcode 8 (iOS 10 / macOS 10.12)
@@ -716,6 +719,12 @@ namespace Introspection {
 			case "NSTextAttachmentContainer":
 				// NSTextAttachment implementing the NSTextAttachmentContainer protocol was deprecated in Xcode 16 beta 1.
 				if (type.Name == "NSTextAttachment")
+					return true;
+				break;
+			case "UIFocusItemContainer":
+			case "UICoordinateSpace":
+				// SKVideoNode started implementing UIFocusItemContainer and UICoordinateSpace in Xcode 16
+				if (type.Name == "SKVideoNode" && !TestRuntime.CheckXcodeVersion (16, 0))
 					return true;
 				break;
 			}

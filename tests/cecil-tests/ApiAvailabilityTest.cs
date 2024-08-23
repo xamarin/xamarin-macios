@@ -246,7 +246,6 @@ namespace Cecil.Tests {
 			"System.String PassKit.PKShareablePassMetadata::LocalizedDescription()",
 			"System.String PassKit.PKShareablePassMetadata::OwnerDisplayName()",
 			"System.String PassKit.PKShareablePassMetadata::TemplateIdentifier()",
-			"System.String Speech.SFSpeechRecognitionRequest::InteractionIdentifier()",
 			"System.String StoreKit.SKProduct::ContentVersion()",
 			"System.String UserNotifications.UNMutableNotificationContent::SummaryArgument()",
 			"System.String UserNotifications.UNNotificationContent::SummaryArgument()",
