@@ -161,7 +161,7 @@ namespace SpriteKit {
 	partial interface SKNode : NSSecureCoding, NSCopying {
 #elif IOS || TVOS
 	[BaseType (typeof (UIResponder))]
-	partial interface SKNode : NSSecureCoding, NSCopying, UIFocusItem {
+	partial interface SKNode : NSSecureCoding, NSCopying, UIFocusItem, UIFocusItemContainer, UICoordinateSpace {
 #else // WATCHOS
 	[BaseType (typeof (NSObject))]
 	partial interface SKNode : NSSecureCoding, NSCopying {

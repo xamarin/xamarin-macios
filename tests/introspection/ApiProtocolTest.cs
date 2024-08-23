@@ -706,6 +706,12 @@ namespace Introspection {
 				if (type.Name == "NSTextAttachment")
 					return true;
 				break;
+			case "UIFocusItemContainer":
+			case "UICoordinateSpace":
+				// SKVideoNode started implementing UIFocusItemContainer and UICoordinateSpace in Xcode 16
+				if (type.Name == "SKVideoNode" && !TestRuntime.CheckXcodeVersion (16, 0))
+					return true;
+				break;
 			}
 			return false;
 		}
