@@ -13,14 +13,20 @@ namespace LocalAuthentication {
 		[MacCatalyst (13, 1)]
 		DeviceOwnerAuthenticationWithBiometrics = 1,
 		DeviceOwnerAuthentication = 2,
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'DeviceOwnerAuthenticationWithCompanion' instead.")]
 		[NoiOS]
 		[NoWatch]
 		[NoMacCatalyst]
 		DeviceOwnerAuthenticationWithWatch = 3,
+		[NoWatch, NoTV, MacCatalyst (18, 0), Mac (15, 0), iOS (18, 0)]
+		DeviceOwnerAuthenticationWithCompanion = 3,
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'DeviceOwnerAuthenticationWithBiometricsOrCompanion' instead.")]
 		[NoiOS]
 		[NoWatch]
 		[NoMacCatalyst]
 		DeviceOwnerAuthenticationWithBiometricsOrWatch = 4,
+		[NoWatch, NoTV, MacCatalyst (18, 0), Mac (15, 0), iOS (18, 0)]
+		DeviceOwnerAuthenticationWithBiometricsOrCompanion = 4,
 		[Obsolete ("Use DeviceOwnerAuthenticationWithBiometricsOrWatch enum value instead.")]
 		[NoiOS]
 		[NoWatch]
@@ -65,6 +71,7 @@ namespace LocalAuthentication {
 #endif
 		AppCancel = -9,
 		InvalidContext = -10,
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'CompanionNotAvailable' instead.")]
 		[NoiOS, NoWatch, NoMacCatalyst]
 		WatchNotAvailable = -11,
 		[NoiOS, NoWatch, NoMacCatalyst]
@@ -83,6 +90,8 @@ namespace LocalAuthentication {
 		[MacCatalyst (13, 1)]
 		BiometryLockout = -8,
 		NotInteractive = -1004,
+		[NoWatch]
+		CompanionNotAvailable = -11,
 	}
 
 	/// <summary>Enumerates local authentication credential types.</summary>

@@ -1,2 +1,0 @@
-!missing-enum-value! SFSpeechErrorCode native value SFSpeechErrorCodeAudioReadFailed = 2 not bound
-!missing-protocol-member! SFSpeechRecognitionTaskDelegate::speechRecognitionTask:didProcessAudioDuration: not found

@@ -1141,6 +1141,30 @@ namespace Introspection {
 			case "UIStateRestoring":
 				return type.Name == "UIViewController" || type.IsSubclassOf (typeof (UIViewController));
 #endif
+#if __IOS__ || __TVOS__
+			case "UIFocusItemContainer":
+			case "UICoordinateSpace":
+				switch (type.Name) {
+				case "SK3DNode":
+				case "SKAudioNode":
+				case "SKCameraNode":
+				case "SKCropNode":
+				case "SKEffectNode":
+				case "SKEmitterNode":
+				case "SKFieldNode":
+				case "SKLabelNode":
+				case "SKLightNode":
+				case "SKNode":
+				case "SKReferenceNode":
+				case "SKScene":
+				case "SKShapeNode":
+				case "SKSpriteNode":
+				case "SKTileMapNode":
+				case "SKTransformNode":
+					return !TestRuntime.CheckXcodeVersion (16, 0);
+				}
+				break;
+#endif
 			}
 			return base.Skip (type, protocolName);
 		}
