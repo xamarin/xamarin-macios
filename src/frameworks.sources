@@ -368,6 +368,9 @@ CLOUDKIT_API_SOURCES = \
 
 CLOUDKIT_SOURCES = \
 	CloudKit/CKCompat.cs \
+	CloudKit/CKFetchNotificationChangesOperation.cs \
+	CloudKit/CKMarkNotificationsReadOperation.cs \
+	CloudKit/CKModifyBadgeOperation.cs \
 	CloudKit/CKRecord.cs \
 	CloudKit/CKRecordID.cs \
 	CloudKit/CKRecordZoneID.cs \
