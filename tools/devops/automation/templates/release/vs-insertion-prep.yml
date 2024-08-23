@@ -21,6 +21,10 @@ parameters:
   type: boolean
   default: true
 
+- name: pushNugetsToMaestro
+  type: boolean
+  default: true
+
 - name: stageDisplayNamePrefix
   type: string
   default: ''

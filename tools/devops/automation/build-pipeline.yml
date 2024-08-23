@@ -45,6 +45,10 @@ parameters:
   displayName: 'Push Nugets (dotnet)'
   default: true
 
+- name: pushNugetsToMaestro
+  type: boolean
+  default: true
+
 - name: testConfigurations
   displayName: Test configurations to run
   type: object
@@ -251,6 +255,7 @@ extends:
         forceInsertion: ${{ parameters.forceInsertion }}
         skipESRP: ${{ parameters.skipESRP }}
         pushNugets: ${{ parameters.pushNugets }}
+        pushNugetsToMaestro: ${{ parameters.pushNugetsToMaestro }}
         ${{ if ne(length(parameters.testConfigurations), 0)}}:
           testConfigurations: ${{ parameters.testConfigurations }}
         deviceTestsConfigurations: ${{ parameters.deviceTestsConfigurations }}
