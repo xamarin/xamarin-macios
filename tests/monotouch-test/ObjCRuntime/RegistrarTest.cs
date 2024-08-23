@@ -5538,6 +5538,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			}
 		}
 
+#if HAS_UIKIT
 		[Test]
 		public void ProtocolsTrimmedAway ()
 		{
@@ -5566,6 +5567,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		{
 			GC.KeepAlive (obj);
 		}
+#endif // HAS_UIKIT
 	}
 
 #if !__WATCHOS__
