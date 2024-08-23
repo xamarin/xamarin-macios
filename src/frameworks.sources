@@ -546,6 +546,7 @@ COREGRAPHICS_SOURCES = \
 	CoreGraphics/CGPDFStream.cs \
 	CoreGraphics/CGPDFString.cs \
 	CoreGraphics/CGPdfTagType.cs \
+	CoreGraphics/CGSession.cs \
 	CoreGraphics/CGShading.cs \
 	CoreGraphics/NativeDrawingMethods.cs \
 
@@ -1118,6 +1119,9 @@ JAVASCRIPTCORE_SOURCES = \
 
 LOCALAUTHENTICATION_API_SOURCES = \
 	LocalAuthentication/LAEnums.cs \
+
+LOCALAUTHENTICATION_SOURCES = \
+	LocalAuthentication/LADomainStateCompanion.cs \
 
 # MapKit
 
