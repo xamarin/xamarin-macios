@@ -62,4 +62,11 @@ namespace AudioToolbox {
 		Auto = 2,
 	}
 
+	[iOS (17, 0), TV (17, 0), MacCatalyst (17, 0), Mac (14, 0)]
+	public enum AUVoiceIOOtherAudioDuckingLevel : uint {
+		Default = 0,
+		Min = 10,
+		Mid = 20,
+		Max = 30,
+	}
 }
