@@ -460,6 +460,7 @@ COREDATA_API_SOURCES = \
 
 COREDATA_SOURCES = \
 	CoreData/NSEntityDescription.cs \
+	CoreData/NSPersistentStoreCoordinator.cs \
 	CoreData/Obsolete.cs \
 
 # CoreFoundation
