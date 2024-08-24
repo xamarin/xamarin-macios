@@ -36,8 +36,6 @@ parameters:
 stages:
 - stage: prepare_release
   displayName: '${{ parameters.stageDisplayNamePrefix }}Prepare .NET Release'
-  variables:
-  - group: Xamarin Release
   ${{ if parameters.dependsOn }}:
     dependsOn: ${{ parameters.dependsOn }}
     condition: and(
