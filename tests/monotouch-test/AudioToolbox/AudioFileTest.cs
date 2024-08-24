@@ -47,10 +47,10 @@ namespace MonoTouchFixtures.AudioToolbox {
 			Assert.That (chunkIds.Length, Is.GreaterThan (0), "ChunkIDs");
 
 			var memorySize = 1024;
-			IntPtr memory = Marshal.AllocHGlobal (memorySize);;
+			IntPtr memory = Marshal.AllocHGlobal (memorySize); ;
 			int size = 0;
 			int offset;
-			byte[] buffer;
+			byte [] buffer;
 			var expectedData = new byte [] { 0x40, 0xc5, 0x7c, 0x00, 0x00, 0x00, 0x00, 0x00, 0x69, 0x6d, 0x61, 0x34, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x22, 0x00, 0x00, 0x00, 0x40, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00 };
 
 			try {
@@ -103,7 +103,7 @@ namespace MonoTouchFixtures.AudioToolbox {
 					Assert.AreEqual (size, expectedData.Length - offset, "GetUserDataAtOffset/B #3");
 					for (var i = offset; i < expectedData.Length; i++) {
 						Assert.AreEqual (expectedData [i], Marshal.ReadByte (memory, i - offset), $"GetUserDataAtOffset/B #4[{i}]");
-						Marshal.WriteByte (memory, i  - offset, 0);
+						Marshal.WriteByte (memory, i - offset, 0);
 					}
 
 					size = memorySize;
