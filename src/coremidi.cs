@@ -573,4 +573,206 @@ namespace CoreMidi {
 		void Stop ();
 	}
 
+	[Internal]
+	enum MidiProperty {
+		[NoTV, NoWatch]
+		[Field ("kMIDIPropertyName")]
+		Name,
+
+		[NoTV, NoWatch]
+		[Field ("kMIDIPropertyManufacturer")]
+		Manufacturer,
+
+		[NoTV, NoWatch]
+		[Field ("kMIDIPropertyModel")]
+		Model,
+
+		[NoTV, NoWatch]
+		[Field ("kMIDIPropertyUniqueID")]
+		UniqueId,
+
+		[NoTV, NoWatch]
+		[Field ("kMIDIPropertyDeviceID")]
+		DeviceId,
+
+		[NoTV, NoWatch]
+		[Field ("kMIDIPropertyReceiveChannels")]
+		ReceiveChannels,
+
+		[NoTV, NoWatch]
+		[Field ("kMIDIPropertyTransmitChannels")]
+		TransmitChannels,
+
+		[NoTV, NoWatch]
+		[Field ("kMIDIPropertyMaxSysExSpeed")]
+		MaxSysExSpeed,
+
+		[NoTV, NoWatch]
+		[Field ("kMIDIPropertyAdvanceScheduleTimeMuSec")]
+		AdvanceScheduleTimeMuSec,
+
+		[NoTV, NoWatch]
+		[Field ("kMIDIPropertyIsEmbeddedEntity")]
+		IsEmbeddedEntity,
+
+		[NoTV, NoWatch]
+		[Field ("kMIDIPropertyIsBroadcast")]
+		IsBroadcast,
+
+		[NoTV, NoWatch]
+		[Field ("kMIDIPropertySingleRealtimeEntity")]
+		SingleRealtimeEntity,
+
+		[NoTV, NoWatch]
+		[Field ("kMIDIPropertyConnectionUniqueID")]
+		ConnectionUniqueId,
+
+		[NoTV, NoWatch]
+		[Field ("kMIDIPropertyOffline")]
+		Offline,
+
+		[NoTV, NoWatch]
+		[Field ("kMIDIPropertyPrivate")]
+		Private,
+
+		[NoTV, NoWatch]
+		[Field ("kMIDIPropertyDriverOwner")]
+		DriverOwner,
+
+		[NoiOS, NoTV, NoMacCatalyst, NoWatch]
+		[Field ("kMIDIPropertyFactoryPatchNameFile")]
+		FactoryPatchNameFile,
+
+		[NoiOS, NoTV, NoMacCatalyst, NoWatch]
+		[Field ("kMIDIPropertyUserPatchNameFile")]
+		UserPatchNameFile,
+
+		[NoTV, NoWatch]
+		[Field ("kMIDIPropertyNameConfiguration")]
+		NameConfiguration,
+
+		[NoTV, NoWatch]
+		[Field ("kMIDIPropertyNameConfigurationDictionary")]
+		NameConfigurationDictionary,
+
+		[NoTV, NoWatch]
+		[Field ("kMIDIPropertyImage")]
+		Image,
+
+		[NoTV, NoWatch]
+		[Field ("kMIDIPropertyDriverVersion")]
+		DriverVersion,
+
+		[NoTV, NoWatch]
+		[Field ("kMIDIPropertySupportsGeneralMIDI")]
+		SupportsGeneralMidi,
+
+		[NoTV, NoWatch]
+		[Field ("kMIDIPropertySupportsMMC")]
+		SupportsMmc,
+
+		[NoTV, NoWatch]
+		[Field ("kMIDIPropertyCanRoute")]
+		CanRoute,
+
+		[NoTV, NoWatch]
+		[Field ("kMIDIPropertyReceivesClock")]
+		ReceivesClock,
+
+		[NoTV, NoWatch]
+		[Field ("kMIDIPropertyReceivesMTC")]
+		ReceivesMtc,
+
+		[NoTV, NoWatch]
+		[Field ("kMIDIPropertyReceivesNotes")]
+		ReceivesNotes,
+
+		[NoTV, NoWatch]
+		[Field ("kMIDIPropertyReceivesProgramChanges")]
+		ReceivesProgramChanges,
+
+		[NoTV, NoWatch]
+		[Field ("kMIDIPropertyReceivesBankSelectMSB")]
+		ReceivesBankSelectMsb,
+
+		[NoTV, NoWatch]
+		[Field ("kMIDIPropertyReceivesBankSelectLSB")]
+		ReceivesBankSelectLsb,
+
+		[NoTV, NoWatch]
+		[Field ("kMIDIPropertyTransmitsClock")]
+		TransmitsClock,
+
+		[NoTV, NoWatch]
+		[Field ("kMIDIPropertyTransmitsMTC")]
+		TransmitsMtc,
+
+		[NoTV, NoWatch]
+		[Field ("kMIDIPropertyTransmitsNotes")]
+		TransmitsNotes,
+
+		[NoTV, NoWatch]
+		[Field ("kMIDIPropertyTransmitsProgramChanges")]
+		TransmitsProgramChanges,
+
+		[NoTV, NoWatch]
+		[Field ("kMIDIPropertyTransmitsBankSelectMSB")]
+		TransmitsBankSelectMsb,
+
+		[NoTV, NoWatch]
+		[Field ("kMIDIPropertyTransmitsBankSelectLSB")]
+		TransmitsBankSelectLsb,
+
+		[NoTV, NoWatch]
+		[Field ("kMIDIPropertyPanDisruptsStereo")]
+		PanDisruptsStereo,
+
+		[NoTV, NoWatch]
+		[Field ("kMIDIPropertyIsSampler")]
+		IsSampler,
+
+		[NoTV, NoWatch]
+		[Field ("kMIDIPropertyIsDrumMachine")]
+		IsDrumMachine,
+
+		[NoTV, NoWatch]
+		[Field ("kMIDIPropertyIsMixer")]
+		IsMixer,
+
+		[NoTV, NoWatch]
+		[Field ("kMIDIPropertyIsEffectUnit")]
+		IsEffectUnit,
+
+		[NoTV, NoWatch]
+		[Field ("kMIDIPropertyMaxReceiveChannels")]
+		MaxReceiveChannels,
+
+		[NoTV, NoWatch]
+		[Field ("kMIDIPropertyMaxTransmitChannels")]
+		MaxTransmitChannels,
+
+		[NoTV, NoWatch]
+		[Field ("kMIDIPropertyDriverDeviceEditorApp")]
+		DriverDeviceEditorApp,
+
+		[NoTV, NoWatch]
+		[Field ("kMIDIPropertySupportsShowControl")]
+		SupportsShowControl,
+
+		[NoTV, NoWatch]
+		[Field ("kMIDIPropertyDisplayName")]
+		DisplayName,
+
+		[NoTV, NoWatch]
+		[Field ("kMIDIPropertyProtocolID")]
+		ProtocolId,
+
+		[Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0), NoTV, NoWatch]
+		[Field ("kMIDIPropertyUMPActiveGroupBitmap")]
+		UmpActiveGroupBitmap,
+
+		[Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0), NoTV, NoWatch]
+		[Field ("kMIDIPropertyUMPCanTransmitGroupless")]
+		UmpCanTransmitGroupless,
+	}
 }
