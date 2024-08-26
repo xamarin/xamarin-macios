@@ -362,7 +362,7 @@ $(TMP_PKG_DIR)/Microsoft.$1.Templates.$2.pkg: $(TEMPLATE_PACKS_$(4)) | $(TMP_PKG
 	$$(Q) rm -f $$@
 	$$(Q) rm -rf tmpdir/Microsoft.$1.Templates.$2/
 	$$(Q) mkdir -p tmpdir/Microsoft.$1.Templates.$2/usr/local/share/dotnet/template-packs/
-	$$(Q) $$(CP) $(TEMPLATE_PACKS_$(4)) tmpdir/Microsoft.$1.Templates.$2/usr/local/share/dotnet/template-packs/$(subst +$(NUGET_BUILD_METADATA),,$(notdir $(TEMPLATE_PACKS_$(4))))
+	$$(Q) $$(CP) $(TEMPLATE_PACKS_$(4)) tmpdir/Microsoft.$1.Templates.$2/usr/local/share/dotnet/template-packs/$(subst $(NUGET_BUILD_METADATA),,$(notdir $(TEMPLATE_PACKS_$(4))))
 	$$(Q_GEN) pkgbuild --quiet --version '$2' --root tmpdir/Microsoft.$1.Templates.$2 --component-plist PackageInfo.plist --install-location / --identifier com.microsoft.net.$3.template.pkg $$@.tmp
 	$$(Q) mv $$@.tmp $$@
 
@@ -395,7 +395,7 @@ $(TMP_PKG_DIR)/Microsoft.$1.Bundle.$2.zip: $($(1)_NUGET_TARGETS) $(WORKLOAD_TARG
 	$$(Q) $(CP) -r Workloads/Microsoft.NET.Sdk.$1 $$@.tmpdir/dotnet/sdk-manifests/$(MACIOS_MANIFEST_VERSION_BAND)/microsoft.net.sdk.$3
 	$$(Q) $(CP) -r $(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME) $$@.tmpdir/dotnet/packs/$($(1)_NUGET_SDK_NAME)/$2
 	$$(Q) $(CP) -r $(DOTNET_DESTDIR)/$($(1)_NUGET_REF_NAME) $$@.tmpdir/dotnet/packs/$($(1)_NUGET_REF_NAME)/$2
-	$$(Q) $(CP) $(TEMPLATE_PACKS_$(4)) $$@.tmpdir/dotnet/template-packs/$(subst +$(NUGET_BUILD_METADATA),,$(notdir $(TEMPLATE_PACKS_$(4))))
+	$$(Q) $(CP) $(TEMPLATE_PACKS_$(4)) $$@.tmpdir/dotnet/template-packs/$(subst $(NUGET_BUILD_METADATA),,$(notdir $(TEMPLATE_PACKS_$(4))))
 	$$(Q_GEN) cd $$@.tmpdir && zip -9rq $$(abspath $$@.tmp) .
 	$$(Q) mv $$@.tmp $$@
 	$$(Q) echo Created $$@
@@ -423,7 +423,7 @@ $(TMP_PKG_DIR)/Microsoft.$1.Windows.Bundle.$2.zip: $($(1)_NUGET_TARGETS) $($(1)_
 	$$(Q) $(CP) -r $(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME) $$@.tmpdir/dotnet/packs/$($(1)_NUGET_SDK_NAME)/$2
 	$$(Q) $(CP) -r $(DOTNET_DESTDIR)/$($(1)_NUGET_WINDOWS_SDK_NAME) $$@.tmpdir/dotnet/packs/$($(1)_NUGET_WINDOWS_SDK_NAME)/$2
 	$$(Q) $(CP) -r $(DOTNET_DESTDIR)/$($(1)_NUGET_REF_NAME) $$@.tmpdir/dotnet/packs/$($(1)_NUGET_REF_NAME)/$2
-	$$(Q) $(CP) $(TEMPLATE_PACKS_$(4)) $$@.tmpdir/dotnet/template-packs/$(subst +$(NUGET_BUILD_METADATA),,$(notdir $(TEMPLATE_PACKS_$(4))))
+	$$(Q) $(CP) $(TEMPLATE_PACKS_$(4)) $$@.tmpdir/dotnet/template-packs/$(subst $(NUGET_BUILD_METADATA),,$(notdir $(TEMPLATE_PACKS_$(4))))
 	$$(Q_GEN) cd $$@.tmpdir && zip -9rq $$(abspath $$@.tmp) .
 	$$(Q) mv $$@.tmp $$@
 	$$(Q) echo Created $$@
