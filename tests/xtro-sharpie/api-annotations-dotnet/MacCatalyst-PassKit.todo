@@ -40,19 +40,15 @@
 !missing-selector! PKPass::relevantDates not bound
 !missing-selector! PKPaymentRequest::merchantCategoryCode not bound
 !missing-selector! PKPaymentRequest::setMerchantCategoryCode: not bound
-!missing-selector! PKPushablePassMetadata::cardConfigurationIdentifier not bound
-!missing-selector! PKPushablePassMetadata::cardTemplateIdentifier not bound
-!missing-selector! PKPushablePassMetadata::credentialIdentifier not bound
-!missing-selector! PKPushablePassMetadata::serverEnvironmentIdentifier not bound
-!missing-selector! PKPushablePassMetadata::setServerEnvironmentIdentifier: not bound
-!missing-selector! PKPushablePassMetadata::sharingInstanceIdentifier not bound
 !missing-type! PKAddIdentityDocumentConfiguration not bound
 !missing-type! PKAddPassMetadataPreview not bound
-!missing-type! PKAddPushablePassConfiguration not bound
 !missing-type! PKIdentityDocumentMetadata not bound
 !missing-type! PKIdentityNationalIDCardDescriptor not bound
 !missing-type! PKJapanIndividualNumberCardMetadata not bound
-!missing-type! PKPushablePassMetadata not bound
-!wrong-base-type! PKAddShareablePassConfiguration expected PKAddPushablePassConfiguration actual PKAddSecureElementPassConfiguration
-!wrong-base-type! PKShareablePassMetadata expected PKPushablePassMetadata actual NSObject
 !wrong-base-type! PKShareablePassMetadataPreview expected PKAddPassMetadataPreview actual NSObject
+!missing-selector! PKIdentityDocumentMetadata::cardConfigurationIdentifier not bound
+!missing-selector! PKIdentityDocumentMetadata::cardTemplateIdentifier not bound
+!missing-selector! PKIdentityDocumentMetadata::credentialIdentifier not bound
+!missing-selector! PKIdentityDocumentMetadata::serverEnvironmentIdentifier not bound
+!missing-selector! PKIdentityDocumentMetadata::setServerEnvironmentIdentifier: not bound
+!missing-selector! PKIdentityDocumentMetadata::sharingInstanceIdentifier not bound
