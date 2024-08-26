@@ -35,6 +35,7 @@
 using System;
 using System.Text;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
@@ -81,7 +82,13 @@ namespace AudioToolbox {
 		DVIIntelIMA = 0x6d730011,
 		MicrosoftGSM = 0x6d730031,
 		AES3 = 0x61657333, // 'aes3'
+#if !XAMCORE_5_0
+		[Obsolete ("Use 'EnhancedAC3' instead.")]
+		[EditorBrowsable (EditorBrowsableState.Never)]
 		EnhancedAES3 = 0x65632d33, // 'ec-3'
+#endif
+		/// <summary>Enhanced AC-3.</summary>
+		EnhancedAC3 = 0x65632d33, // 'ec-3'
 		Flac = 0x666c6163, // 'flac'
 #if NET
 		[SupportedOSPlatform ("ios13.0")]
@@ -95,6 +102,16 @@ namespace AudioToolbox {
 #endif
 		LatmInLoas = 0x6c6f6173, // 'loas'
 		Opus = 0x6f707573, // 'opus'
+		/// <summary>Apple Positional Audio Codec.</summary>
+#if NET
+		[SupportedOSPlatform ("ios18.0")]
+		[SupportedOSPlatform ("macos15.0")]
+		[SupportedOSPlatform ("tvos18.0")]
+		[SupportedOSPlatform ("maccatalyst18.0")]
+#else
+		[NoWatch, iOS (18, 0), TV (18, 0), MacCatalyst (18, 0), Mac (15, 0)]
+#endif
+		Apac = 0x61706163, // 'apac'
 	}
 
 	[Flags]
@@ -920,6 +937,46 @@ namespace AudioToolbox {
 		[MacCatalyst (17, 0)]
 #endif
 		Ogg_7_1 = (215U << 16) | 8,
+
+#if NET
+		[SupportedOSPlatform ("ios18.0")]
+		[SupportedOSPlatform ("maccatalyst18.0")]
+		[SupportedOSPlatform ("macos15.0")]
+		[SupportedOSPlatform ("tvos18.0")]
+#else
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+#endif
+		MPEG_5_0_E = (216U << 16) | 5,
+
+#if NET
+		[SupportedOSPlatform ("ios18.0")]
+		[SupportedOSPlatform ("maccatalyst18.0")]
+		[SupportedOSPlatform ("macos15.0")]
+		[SupportedOSPlatform ("tvos18.0")]
+#else
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+#endif
+		MPEG_5_1_E = (217U << 16) | 6,
+
+#if NET
+		[SupportedOSPlatform ("ios18.0")]
+		[SupportedOSPlatform ("maccatalyst18.0")]
+		[SupportedOSPlatform ("macos15.0")]
+		[SupportedOSPlatform ("tvos18.0")]
+#else
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+#endif
+		MPEG_6_1_B = (218U << 16) | 7,
+
+#if NET
+		[SupportedOSPlatform ("ios18.0")]
+		[SupportedOSPlatform ("maccatalyst18.0")]
+		[SupportedOSPlatform ("macos15.0")]
+		[SupportedOSPlatform ("tvos18.0")]
+#else
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+#endif
+		MPEG_7_1_D = (219U << 16) | 8,
 
 		Unknown = 0xFFFF0000                           // needs to be ORed with the actual number of channels  
 	}

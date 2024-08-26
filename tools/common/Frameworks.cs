@@ -290,6 +290,8 @@ public class Frameworks : Dictionary<string, Framework> {
 					{ "Cinematic", "Cinematic", 14,0 },
 					{ "Symbols", "Symbols", 14, 0 },
 					{ "SensitiveContentAnalysis", "SensitiveContentAnalysis", 14, 0 },
+
+					{ "FSKit", "FSKit", 15, 0 },
 				};
 			}
 			return mac_frameworks;

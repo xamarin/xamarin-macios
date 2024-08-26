@@ -1,16 +1,3 @@
-## fixed in XAMCORE_3_0 - API break
-
-
-# Used to remove hard to kill delegate API until .NET
-
-# Fixed in .NET
-
-# The parent enum GKVoiceChatService is not available in macOS 
-# so to be honest it does not make much sense to expose this constant on macOS
-# nor the below protocols
-
-# This selector does not exist in macOS, confirmed by intro.
-
 # API removed by Apple, marked as deprecated
 !unknown-native-enum! GKAuthenticationType bound
 
@@ -24,9 +11,6 @@
 # addressed in XAMCORE_5_0
 !incorrect-protocol-member! GKTurnBasedEventHandlerDelegate::handleTurnEventForMatch:didBecomeActive: is REQUIRED and should be abstract
 
-# This selector does not exist (respond?) in macOS either
-!missing-selector! GKLeaderboardSet::loadImageWithCompletionHandler: not bound
-
 # is marked as Obsolete
 !extra-protocol-member! unexpected selector GKMatchDelegate::xamarin:selector:removed: found
 
@@ -35,6 +19,3 @@
 !incorrect-protocol-member! GKMatchmakerViewControllerDelegate::matchmakerViewController:didFindPlayers: is OPTIONAL and should NOT be abstract
 !incorrect-protocol-member! GKTurnBasedMatchmakerViewControllerDelegate::turnBasedMatchmakerViewController:didFindMatch: is OPTIONAL and should NOT be abstract
 !incorrect-protocol-member! GKTurnBasedMatchmakerViewControllerDelegate::turnBasedMatchmakerViewController:playerQuitForMatch: is OPTIONAL and should NOT be abstract
-
-# NullAllowed makes sense
-!extra-null-allowed! 'System.Void GameKit.GKMatchmaker::FindMatchedPlayers(GameKit.GKMatchRequest,System.Action`2<GameKit.GKMatchedPlayers,Foundation.NSError>)' has a extraneous [NullAllowed] on parameter #1

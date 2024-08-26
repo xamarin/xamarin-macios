@@ -75,4 +75,16 @@ We've tentatively set .NET 10 as the release when we'll stop marking CryptoToken
 
 The diagnostic id for CryptoTokenKit is APL0001.
 
+## FSKit (APL0002)
+
+FSKit is a new framework in macOS 15.0 to implement a file system in user space.
+
+At the moment implementing a file system is out of our reach, so we haven't
+been able to validate the API, and as such we mark every type in this
+framework as preview API for a while.
+
+We've tentatively set .NET 11 as the release when we'll stop marking FSKit as preview API.
+
+The diagnostic id for CryptoTokenKit is APL0001.
+
 [1]: https://learn.microsoft.com/en-us/dotnet/api/system.diagnostics.codeanalysis.experimentalattribute?view=net-8.0

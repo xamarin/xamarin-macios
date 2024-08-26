@@ -1,9 +1,0 @@
-!extra-null-allowed! 'System.Void GameKit.GKMatchmaker::FindMatchedPlayers(GameKit.GKMatchRequest,System.Action`2<GameKit.GKMatchedPlayers,Foundation.NSError>)' has a extraneous [NullAllowed] on parameter #1
-!deprecated-attribute-missing! GKMatch::voiceChatWithName: missing a [Deprecated] attribute
-!deprecated-attribute-missing! GKVoiceChat missing a [Deprecated] attribute
-!missing-selector! GKAccessPoint::triggerAccessPointWithAchievementID:handler: not bound
-!missing-selector! GKAccessPoint::triggerAccessPointWithLeaderboardID:playerScope:timeScope:handler: not bound
-!missing-selector! GKAccessPoint::triggerAccessPointWithLeaderboardSetID:handler: not bound
-!missing-selector! GKAccessPoint::triggerAccessPointWithPlayer:handler: not bound
-!missing-selector! GKGameCenterViewControllerGKGameCenterViewController::initWithLeaderboardSetID: not bound
-!missing-selector! GKGameCenterViewControllerGKGameCenterViewController::initWithPlayer: not bound

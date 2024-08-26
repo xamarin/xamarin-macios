@@ -30,7 +30,8 @@ namespace AutomaticAssessmentConfiguration {
 	}
 
 	[iOS (14, 0)]
-	[MacCatalyst (14, 0)]
+	[MacCatalyst (18, 0)]
+	[Mac (15, 0)]
 	[Native]
 	enum AEAutocorrectMode : long {
 		None = 0,
@@ -43,23 +44,23 @@ namespace AutomaticAssessmentConfiguration {
 	[BaseType (typeof (NSObject))]
 	interface AEAssessmentConfiguration : NSCopying {
 
-		[NoMac, iOS (14, 0)]
-		[MacCatalyst (14, 0)]
+		[Mac (15, 0), iOS (14, 0)]
+		[MacCatalyst (18, 0)]
 		[Export ("autocorrectMode")]
 		AEAutocorrectMode AutocorrectMode { get; set; }
 
-		[NoMac, iOS (14, 0)]
-		[MacCatalyst (14, 0)]
+		[Mac (15, 0), iOS (14, 0)]
+		[MacCatalyst (18, 0)]
 		[Export ("allowsSpellCheck")]
 		bool AllowsSpellCheck { get; set; }
 
-		[NoMac, iOS (14, 0)]
-		[MacCatalyst (14, 0)]
+		[Mac (15, 0), iOS (14, 0)]
+		[MacCatalyst (18, 0)]
 		[Export ("allowsPredictiveKeyboard")]
 		bool AllowsPredictiveKeyboard { get; set; }
 
-		[NoMac, iOS (14, 0)]
-		[MacCatalyst (14, 0)]
+		[Mac (15, 0), iOS (14, 0)]
+		[MacCatalyst (18, 0)]
 		[Export ("allowsKeyboardShortcuts")]
 		bool AllowsKeyboardShortcuts { get; set; }
 
