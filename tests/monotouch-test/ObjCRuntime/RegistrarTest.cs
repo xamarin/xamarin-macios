@@ -5538,7 +5538,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			}
 		}
 
-#if HAS_UIKIT
+#if NET && HAS_UIKIT
 		[Test]
 		public void ProtocolsTrimmedAway ()
 		{
@@ -5551,7 +5551,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		void AssertMemberCount (Type type)
 		{
 			var members = type.GetMembers (BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
-#if OPTIMIZEALL
+#if OPTIMIZEALL || NATIVEAOT
 			var expectNoMembers = true;
 #else
 			var expectNoMembers = false;
@@ -5567,7 +5567,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		{
 			GC.KeepAlive (obj);
 		}
-#endif // HAS_UIKIT
+#endif // NET && HAS_UIKIT
 	}
 
 #if !__WATCHOS__
