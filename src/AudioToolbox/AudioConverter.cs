@@ -717,6 +717,7 @@ namespace AudioToolbox {
 		[SupportedOSPlatform ("maccatalyst18.0")]
 		[SupportedOSPlatform ("macos15.0")]
 		[SupportedOSPlatform ("tvos18.0")]
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		public unsafe static void Prepare (uint flags = 0, IntPtr ioReserved = default (IntPtr), PrepareCompletionCallback? completionCallback = null)
 		{
 			if (completionCallback is null) {
