@@ -1318,6 +1318,7 @@ namespace Introspection {
 				return true;
 			// GKGameCenterViewController
 			case "initWithAchievementID:":
+			case "initWithLeaderboardSetID:":
 				return true;
 			default:
 				return false;
