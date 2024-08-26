@@ -925,6 +925,17 @@ FOUNDATION_SOURCES = \
 	Foundation/ToString.cs \
 	Foundation/NSItemProvider.cs \
 
+# FSKit
+
+FSKIT_CORE_SOURCES = \
+	FSKit/FSMetaReadahead.cs \
+
+FSKIT_SOURCES = \
+	FSKit/FSBlockDeviceResource.cs \
+	FSKit/FSFileName.cs \
+	FSKit/FSKitFunctions.cs \
+	FSKit/FSMessageConnection.cs \
+
 # GameController
 
 GAMECONTROLLER_API_SOURCES = \
@@ -2123,6 +2134,7 @@ MACOS_FRAMEWORKS =          \
 	FileProvider	\
 	FileProviderUI	\
 	FinderSync		\
+	FSKit \
 	GameController          \
 	GameplayKit             \
 	GLKit                   \
