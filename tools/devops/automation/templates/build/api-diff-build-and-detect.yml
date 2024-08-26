@@ -61,6 +61,6 @@ steps:
   displayName: 'Publish change detection artifact'
   inputs:
     targetPath: '$(Build.ArtifactStagingDirectory)/change-detection/change-detection.zip'
-    artifactName: ${{ parameters.uploadPrefix }}change-detection
+    artifactName: ${{ parameters.uploadPrefix }}change-detection-$(System.StageAttempt)
   condition: succeededOrFailed() # we always want to upload the zip as an artifact
   continueOnError: true

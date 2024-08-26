@@ -161,6 +161,8 @@ namespace Extrospection {
 					continue;
 				if (!(File.ReadLines (file).Count () > 0)) {
 					Log ($"?empty-todo? File '{Path.GetFileName (file)}' is empty. Empty todo files should be removed.");
+					if (Autosanitize)
+						File.Delete (file);
 				}
 			}
 		}
