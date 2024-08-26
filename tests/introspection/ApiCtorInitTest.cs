@@ -118,6 +118,7 @@ namespace Introspection {
 				return true;
 			case "MPSImageArithmetic": // Cannot directly initialize MPSImageArithmetic. Use one of the sub-classes of MPSImageArithmetic.
 				return true;
+			case "CKModifyBadgeOperation":
 			case "CKDiscoverUserInfosOperation": // deprecated, throws exception
 			case "CKSubscription":
 			case "MPSCnnConvolutionState":
@@ -273,6 +274,10 @@ namespace Introspection {
 
 				var ctor = t.GetConstructor (Type.EmptyTypes);
 				if (SkipDueToAttribute (ctor))
+					continue;
+
+				// Don't test methods that have [UnsupportedOSPlatform] + [EditorBrowsable (Never)]
+				if (SkipDueToInvisibleAndUnsupported (ctor))
 					continue;
 
 				if ((ctor is null) || ctor.IsAbstract) {

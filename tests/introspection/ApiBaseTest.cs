@@ -20,6 +20,7 @@
 //
 
 using System;
+using System.ComponentModel;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -143,6 +144,20 @@ namespace Introspection {
 			return false;
 		}
 
+		protected bool SkipDueToInvisibleAndUnsupported (MemberInfo member)
+		{
+			if (member is null)
+				return false;
+
+			if (SkipDueToInvisibleAndUnsupported (member.DeclaringType))
+				return true;
+
+			if (!MemberHasUnsupported (member))
+				return false;
+
+			return MemberHasEditorBrowsableNever (member);
+		}
+
 		protected virtual bool SkipDueToAttribute (MemberInfo member)
 		{
 			if (member is null)
@@ -200,6 +215,21 @@ namespace Introspection {
 #else
 			return member.GetCustomAttribute<ObsoleteAttribute> () is not null;
 #endif
+		}
+
+		public bool MemberHasUnsupported (MemberInfo member)
+		{
+#if NET
+			return member.GetCustomAttributes<UnsupportedOSPlatformAttribute> (false).Any ();
+#else
+			return member.GetCustomAttribute<ObsoleteAttribute> () is not null;
+#endif
+		}
+
+		public bool MemberHasEditorBrowsableNever (MemberInfo member)
+		{
+			var attribute = member.GetCustomAttribute<EditorBrowsableAttribute> (false);
+			return attribute?.State == EditorBrowsableState.Never;
 		}
 
 		/// <summary>
