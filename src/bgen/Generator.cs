@@ -1602,6 +1602,7 @@ public partial class Generator : IMemberGatherer {
 #else
 			print ("[MonoPInvokeCallback (typeof ({0}))]", ti.DelegateName);
 #endif
+			print ("[UserDelegateType (typeof ({0}))]", ti.UserDelegate);
 			print ("internal static unsafe {0} Invoke ({1}) {{", ti.ReturnType, ti.Parameters);
 			indent++;
 			print ("var del = BlockLiteral.GetTarget<{0}> (block);", ti.UserDelegate);
@@ -1627,7 +1628,7 @@ public partial class Generator : IMemberGatherer {
 			} else {
 				if (ti.Convert.Length > 0)
 					print (ti.Convert);
-				print ("{0} retval = del ({1});", ti.DelegateReturnType, ti.Invoke);
+				print ("var retval = del ({1});", ti.DelegateReturnType, ti.Invoke);
 				if (ti.PostConvert.Length > 0)
 					print (ti.PostConvert);
 				print (ti.ReturnFormat, "retval");
@@ -6644,7 +6645,7 @@ public partial class Generator : IMemberGatherer {
 						if (isProtocolEventBacked)
 							print ("[Export (\"{0}\")]", FindSelector (dtype, mi));
 
-						print ("public {0}{1} {2} ({3})", shouldOverrideDelegateString, TypeManager.RenderType (mi.ReturnType), mi.Name, RenderParameterDecl (pars));
+						print ("public {0}{1} {2} ({3})", shouldOverrideDelegateString, TypeManager.RenderType (mi.ReturnType, mi.ReturnTypeCustomAttributes), mi.Name, RenderParameterDecl (pars));
 						print ("{"); indent++;
 
 						if (mi.Name == bta.KeepRefUntil)
@@ -7450,8 +7451,6 @@ public partial class Generator : IMemberGatherer {
 			name += (removeRefTypes ? "" : (p.IsOut ? "out " : "ref ")) + TypeManager.RenderType (pt, p);
 		} else
 			name += TypeManager.RenderType (pt, p);
-		if (!pt.IsValueType && AttributeManager.HasAttribute<NullAllowedAttribute> (p))
-			name += "?";
 		return name;
 	}
 
