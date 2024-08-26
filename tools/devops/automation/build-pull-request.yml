@@ -246,6 +246,7 @@ extends:
         forceInsertion: ${{ parameters.forceInsertion }}
         skipESRP: ${{ parameters.skipESRP }}
         pushNugets: false
+        pushNugetsToMaestro: false
         ${{ if ne(length(parameters.testConfigurations), 0)}}:
           testConfigurations: ${{ parameters.testConfigurations }}
         deviceTestsConfigurations: ${{ parameters.deviceTestsConfigurations }}

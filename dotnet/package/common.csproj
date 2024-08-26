@@ -12,8 +12,12 @@
     <RepositoryCommit>$(CurrentHash)</RepositoryCommit>
     <Authors>Microsoft</Authors>
     <Copyright>© Microsoft Corporation. All rights reserved.</Copyright>
-    <PackageProjectUrl>https://github.com/xamarin/xamarin-macios</PackageProjectUrl>
+    <PackageProjectUrl>https://dot.net</PackageProjectUrl>
+    <Owners>microsoft,dotnetframework</Owners>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageIcon>Icon.png</PackageIcon>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
 
     <GenerateDependencyFile>false</GenerateDependencyFile>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
@@ -39,6 +43,7 @@
 
   <ItemGroup>
     <None Include="$(_RepositoryPath)/LICENSE" Pack="true" PackagePath="/" />
+    <None Include="$(MSBuildThisFileDirectory)Icon.png" Pack="true" PackagePath="/" />
     <Content Include="$(_packagePath)**" Pack="true" PackagePath="/" />
   </ItemGroup>
 
@@ -51,7 +56,7 @@
 
   <!-- do not load this Sdk for template packages -->
   <!-- it overwrites packageType -->
-  <Import Project="Sdk.props" Sdk="Microsoft.DotNet.SharedFramework.Sdk" Version="$(MicrosoftDotNetBuildTasksFeedPackageVersion)" Condition="'$(PackageType)' != 'Template'" />
+  <Import Project="Sdk.props" Sdk="Microsoft.DotNet.SharedFramework.Sdk" Version="$(MicrosoftDotNetSharedFrameworkSdkVersion)" Condition="'$(PackageType)' != 'Template'" />
   <UsingTask TaskName="CreateFrameworkListFile" AssemblyFile="$(DotNetSharedFrameworkTaskFile)" Condition="'$(PackageType)' != 'Template'" />
   <UsingTask TaskName="GenerateBuildManifest" AssemblyFile="$(_MicrosoftDotNetBuildTasksFeedTaskDir)Microsoft.DotNet.Build.Tasks.Feed.dll" />
 
@@ -113,15 +118,28 @@
     </Content>
   </ItemGroup>
 
-  <Target Name="GenerateBuildAssetRegistryManifest" >
+  <!-- https://github.com/dotnet/arcade/blob/00d6decc59f5030c2399a64fd3e4f6e8e11bacca/Documentation/DependencyFlowOnboardingWithoutArcade.md -->
+  <Target Name="PushManifestToBuildAssetRegistry" >
+    <PropertyGroup>
+      <ArtifactsLogDir>$(BarManifestOutputPath)</ArtifactsLogDir>
+      <AssetManifestFileName>Assets.xml</AssetManifestFileName>
+      <AssetManifestPath>$(ArtifactsLogDir)AssetManifest\$(AssetManifestFileName)</AssetManifestPath>
+      <IsStableBuild Condition=" '$(PrereleaseIdentifier)' == '' ">true</IsStableBuild>
+      <IsStableBuild Condition=" '$(PrereleaseIdentifier)' != '' ">false</IsStableBuild>
+    </PropertyGroup>
+
+    <Error Condition="Exists($(AssetManifestPath))" Text="The manifest file '$(AssetManifestPath)' already exists." />
+
     <ItemGroup>
-      <BuildArtifacts Include="$(NupkgPath)\Microsoft*.$(_PlatformName).*.nupkg" />
+      <ItemsToPush Include="$(NupkgPath)\*.nupkg" />
     </ItemGroup>
 
-    <Error Condition="'@(BuildArtifacts)' == ''" Text="No packages to create manifest from." />
+    <Error Condition="'@(ItemsToPush)' == ''" Text="No packages to push." />
+
+    <Message Text="Publishing %(ItemsToPush.Identity)" Importance="normal" />
 
     <ItemGroup>
-      <ManifestBuildData Include="InitialAssetsLocation=https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet6/nuget/v3/index.json" />
+      <ManifestBuildData Include="InitialAssetsLocation=" />
       <ManifestBuildData Include="AzureDevOpsBuildId=$(BUILD_BUILDID)" />
       <ManifestBuildData Include="AzureDevOpsBuildDefinitionId=$(SYSTEM_DEFINITIONID)" />
       <ManifestBuildData Include="AzureDevOpsProject=$(SYSTEM_TEAMPROJECT)" />
@@ -130,31 +148,26 @@
       <ManifestBuildData Include="AzureDevOpsBranch=$(BUILD_SOURCEBRANCH)" />
     </ItemGroup>
 
-    <GenerateBuildManifest
-        Artifacts="@(BuildArtifacts)"
-        OutputPath="$(BarManifestOutputPath)\AssetManifest.xml"
-        BuildId="$(BUILD_BUILDNUMBER)"
-        BuildData="@(ManifestBuildData)"
-        RepoUri="$(BUILD_REPOSITORY_URI)"
-        RepoBranch="$(BUILD_SOURCEBRANCH)"
-        RepoCommit="$(BUILD_SOURCEVERSION)"
+    <PushToBuildStorage
+        ItemsToPush="@(ItemsToPush)"
+        IsStableBuild="$(IsStableBuild)"
+        ManifestBuildData="@(ManifestBuildData)"
+        ManifestRepoUri="$(BUILD_REPOSITORY_NAME)"
+        ManifestBranch="$(BUILD_SOURCEBRANCH)"
+        ManifestBuildId="$(BUILD_BUILDNUMBER)"
+        ManifestCommit="$(BUILD_SOURCEVERSION)"
+        AssetManifestPath="$(AssetManifestPath)"
         PublishingVersion="3" />
-  </Target>
-
-  <Target Name="PushManifestToBuildAssetRegistry" >
-    <PropertyGroup>
-      <VersionPrefix>1.0.0</VersionPrefix>
-    </PropertyGroup>
 
     <MSBuild
         Targets="Restore"
         Projects="$(PkgMicrosoft_DotNet_Arcade_Sdk)\tools\SdkTasks\PublishBuildAssets.proj"
-        Properties="Configuration=$(Configuration);RepoRoot=$(_RepositoryPath);VersionPrefix=$(VersionPrefix);NuGetPackageRoot=$(_RepositoryPath)\packages\"
+        Properties="Configuration=$(Configuration);RepoRoot=$(_RepositoryPath);VersionPrefix=$(_PackageVersion);NuGetPackageRoot=$(_RepositoryPath)\packages\"
     />
 
     <MSBuild
         Projects="$(PkgMicrosoft_DotNet_Arcade_Sdk)\tools\SdkTasks\PublishBuildAssets.proj"
-        Properties="Configuration=$(Configuration);RepoRoot=$(_RepositoryPath);VersionPrefix=$(VersionPrefix);ManifestsPath=$(BarManifestOutputPath);MaestroApiEndpoint=https://maestro-prod.westus2.cloudapp.azure.com;NuGetPackageRoot=$(_RepositoryPath)\packages\"
+        Properties="Configuration=$(Configuration);RepoRoot=$(_RepositoryPath);VersionPrefix=$(_PackageVersion);ManifestsPath=$(ArtifactsLogDir)AssetManifest;MaestroApiEndpoint=https://maestro.dot.net;NuGetPackageRoot=$(_RepositoryPath)\packages\"
     />
   </Target>
 
