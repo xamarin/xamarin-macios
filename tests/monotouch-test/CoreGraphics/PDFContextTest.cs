@@ -121,5 +121,35 @@ namespace MonoTouchFixtures.CoreGraphics {
 				ctx.EndPage ();
 			}
 		}
+
+		[Test]
+		public void SetParentTree ()
+		{
+			TestRuntime.AssertXcodeVersion (16, 0);
+			using var url = new NSUrl (filename);
+			using var ctx = new CGContextPDF (url);
+			using var doc = CGPDFDocument.FromFile (NSBundle.MainBundle.PathForResource ("Tamarin", "pdf"));
+			ctx.SetParentTree (doc.GetCatalog ());
+		}
+
+		[Test]
+		public void SetIdTree ()
+		{
+			TestRuntime.AssertXcodeVersion (16, 0);
+			using var url = new NSUrl (filename);
+			using var ctx = new CGContextPDF (url);
+			using var doc = CGPDFDocument.FromFile (NSBundle.MainBundle.PathForResource ("Tamarin", "pdf"));
+			ctx.SetIdTree (doc.GetCatalog ());
+		}
+
+		[Test]
+		public void SetPageTagStructureTree ()
+		{
+			TestRuntime.AssertXcodeVersion (16, 0);
+			using var url = new NSUrl (filename);
+			using var ctx = new CGContextPDF (url);
+			using var dict = new NSDictionary ();
+			ctx.SetPageTagStructureTree (dict);
+		}
 	}
 }
