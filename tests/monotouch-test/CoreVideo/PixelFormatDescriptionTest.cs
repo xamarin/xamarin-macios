@@ -80,7 +80,8 @@ namespace MonoTouchFixtures.CoreVideo {
 				Assert.AreEqual (false, desc.FormatContainsYCbCr, "FormatContainsYCbCr");
 				Assert.AreEqual (true, desc.FormatContainsRgb, "FormatContainsRgb");
 				Assert.AreEqual (false, desc.ContainsGrayscale, "ContainsGrayscale");
-				Assert.IsNull (desc.FormatContainsSenselArray, "FormatContainsSenselArray");
+				if (TestRuntime.CheckXcodeVersion (14, 0))
+					Assert.IsNull (desc.FormatContainsSenselArray, "FormatContainsSenselArray");
 				Assert.IsNull (desc.ComponentRange, "ComponentRange");
 				Assert.IsNull (desc.Planes, "Planes");
 				Assert.IsNull (desc.BlockWidth, "BlockWidth");
