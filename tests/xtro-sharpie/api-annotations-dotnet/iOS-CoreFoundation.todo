@@ -1,6 +1,0 @@
-!missing-field! kCFNumberFormatterMinGroupingDigits not bound
-!missing-pinvoke! CFAttributedStringGetBidiLevelsAndResolvedDirections is not bound
-!missing-pinvoke! CFAllocatorAllocateBytes is not bound
-!missing-pinvoke! CFAllocatorAllocateTyped is not bound
-!missing-pinvoke! CFAllocatorReallocateBytes is not bound
-!missing-pinvoke! CFAllocatorReallocateTyped is not bound
