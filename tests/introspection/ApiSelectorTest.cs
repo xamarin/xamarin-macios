@@ -370,6 +370,16 @@ namespace Introspection {
 					if (!TestRuntime.CheckXcodeVersion (12, 0))
 						return true;
 					break;
+				case "convertPoint:fromCoordinateSpace:":
+				case "convertPoint:toCoordinateSpace:":
+				case "convertRect:fromCoordinateSpace:":
+				case "convertRect:toCoordinateSpace:":
+				case "focusItemsInRect:":
+				case "bounds":
+				case "coordinateSpace":
+					if (!TestRuntime.CheckXcodeVersion (16, 0))
+						return true;
+					break;
 				}
 				break;
 			case "INPriceRange":
