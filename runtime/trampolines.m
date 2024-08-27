@@ -1153,13 +1153,11 @@ void *xamarin_nsnumber_to_nfloat (NSNumber *number, void *ptr, MonoClass *manage
 // If called multiple times in succession, the returned pointer can be passed as the second ptr argument, and it need only be freed once done iterating.
 void *xamarin_nsvalue_to_nsrange                (NSValue *value, void *ptr, MonoClass *managedType, void *context, GCHandle *exception_gchandle) {                NSRange *valueptr =                (NSRange *) (ptr ? ptr : xamarin_calloc (sizeof (NSRange)));                *valueptr = [value rangeValue];             return valueptr; }
 #if HAVE_UIKIT // Yep, these CoreGraphics-looking category method is defined in UIKit.
-#if !TARGET_OS_WATCH
 void *xamarin_nsvalue_to_cgaffinetransform      (NSValue *value, void *ptr, MonoClass *managedType, void *context, GCHandle *exception_gchandle) {      CGAffineTransform *valueptr =      (CGAffineTransform *) (ptr ? ptr : xamarin_calloc (sizeof (CGAffineTransform)));      *valueptr = [value CGAffineTransformValue]; return valueptr; }
 void *xamarin_nsvalue_to_cgpoint                (NSValue *value, void *ptr, MonoClass *managedType, void *context, GCHandle *exception_gchandle) {                CGPoint *valueptr =                (CGPoint *) (ptr ? ptr : xamarin_calloc (sizeof (CGPoint)));                *valueptr = [value CGPointValue];           return valueptr; }
 void *xamarin_nsvalue_to_cgrect                 (NSValue *value, void *ptr, MonoClass *managedType, void *context, GCHandle *exception_gchandle) {                 CGRect *valueptr =                 (CGRect *) (ptr ? ptr : xamarin_calloc (sizeof (CGRect)));                 *valueptr = [value CGRectValue];            return valueptr; }
 void *xamarin_nsvalue_to_cgsize                 (NSValue *value, void *ptr, MonoClass *managedType, void *context, GCHandle *exception_gchandle) {                 CGSize *valueptr =                 (CGSize *) (ptr ? ptr : xamarin_calloc (sizeof (CGSize)));                 *valueptr = [value CGSizeValue];            return valueptr; }
 void *xamarin_nsvalue_to_cgvector               (NSValue *value, void *ptr, MonoClass *managedType, void *context, GCHandle *exception_gchandle) {               CGVector *valueptr =               (CGVector *) (ptr ? ptr : xamarin_calloc (sizeof (CGVector)));               *valueptr = [value CGVectorValue];          return valueptr; }
-#endif
 void *xamarin_nsvalue_to_nsdirectionaledgeinsets(NSValue *value, void *ptr, MonoClass *managedType, void *context, GCHandle *exception_gchandle) {NSDirectionalEdgeInsets *valueptr =(NSDirectionalEdgeInsets *) (ptr ? ptr : xamarin_calloc (sizeof (NSDirectionalEdgeInsets)));*valueptr = [value directionalEdgeInsetsValue];return valueptr; }
 #endif
 #if HAVE_COREANIMATION
@@ -1219,9 +1217,7 @@ xamarin_nsvalue_to_scnvector3 (NSValue *value, void *ptr, MonoClass *managedType
 }
 void *xamarin_nsvalue_to_scnvector4             (NSValue *value, void *ptr, MonoClass *managedType, void *context, GCHandle *exception_gchandle) {             SCNVector4 *valueptr =             (SCNVector4 *) (ptr ? ptr : xamarin_calloc (sizeof (SCNVector4)));             *valueptr = [value SCNVector4Value];        return valueptr; }
 #if HAVE_UIKIT
-#if !TARGET_OS_WATCH
 void *xamarin_nsvalue_to_uiedgeinsets           (NSValue *value, void *ptr, MonoClass *managedType, void *context, GCHandle *exception_gchandle) {           UIEdgeInsets *valueptr =           (UIEdgeInsets *) (ptr ? ptr : xamarin_calloc (sizeof (UIEdgeInsets)));           *valueptr = [value UIEdgeInsetsValue];      return valueptr; }
-#endif
 void *xamarin_nsvalue_to_uioffset               (NSValue *value, void *ptr, MonoClass *managedType, void *context, GCHandle *exception_gchandle) {               UIOffset *valueptr =               (UIOffset *) (ptr ? ptr : xamarin_calloc (sizeof (UIOffset)));               *valueptr = [value UIOffsetValue];          return valueptr; }
 #endif
 
@@ -1248,13 +1244,11 @@ id xamarin_nfloat_to_nsnumber (MonoObject *value, void *context, GCHandle *excep
 
 id xamarin_nsrange_to_nsvalue                (MonoObject *value, void *context, GCHandle *exception_gchandle) { return [NSValue valueWithRange:               *(NSRange *)                mono_object_unbox (value)]; }
 #if HAVE_UIKIT // yep, these CoreGraphics-looking category methods are defined in UIKit
-#if !TARGET_OS_WATCH
 id xamarin_cgaffinetransform_to_nsvalue      (MonoObject *value, void *context, GCHandle *exception_gchandle) { return [NSValue valueWithCGAffineTransform:   *(CGAffineTransform *)      mono_object_unbox (value)]; }
 id xamarin_cgpoint_to_nsvalue                (MonoObject *value, void *context, GCHandle *exception_gchandle) { return [NSValue valueWithCGPoint:             *(CGPoint *)                mono_object_unbox (value)]; }
 id xamarin_cgrect_to_nsvalue                 (MonoObject *value, void *context, GCHandle *exception_gchandle) { return [NSValue valueWithCGRect:              *(CGRect *)                 mono_object_unbox (value)]; }
 id xamarin_cgsize_to_nsvalue                 (MonoObject *value, void *context, GCHandle *exception_gchandle) { return [NSValue valueWithCGSize:              *(CGSize *)                 mono_object_unbox (value)]; }
 id xamarin_cgvector_to_nsvalue               (MonoObject *value, void *context, GCHandle *exception_gchandle) { return [NSValue valueWithCGVector:            *(CGVector *)               mono_object_unbox (value)]; }
-#endif
 id xamarin_nsdirectionaledgeinsets_to_nsvalue(MonoObject *value, void *context, GCHandle *exception_gchandle) { return [NSValue valueWithDirectionalEdgeInsets:*(NSDirectionalEdgeInsets *)mono_object_unbox (value)]; }
 #endif
 #if HAVE_COREANIMATION
@@ -1275,7 +1269,7 @@ id xamarin_mkcoordinatespan_to_nsvalue       (MonoObject *value, void *context, 
 id xamarin_scnmatrix4_to_nsvalue             (MonoObject *value, void *context, GCHandle *exception_gchandle) { return [NSValue valueWithSCNMatrix4:          *(SCNMatrix4 *)             mono_object_unbox (value)]; }
 id xamarin_scnvector3_to_nsvalue             (MonoObject *value, void *context, GCHandle *exception_gchandle) { return [NSValue valueWithSCNVector3:          *(SCNVector3 *)             mono_object_unbox (value)]; }
 id xamarin_scnvector4_to_nsvalue             (MonoObject *value, void *context, GCHandle *exception_gchandle) { return [NSValue valueWithSCNVector4:          *(SCNVector4 *)             mono_object_unbox (value)]; }
-#if HAVE_UIKIT && !TARGET_OS_WATCH
+#if HAVE_UIKIT
 id xamarin_uiedgeinsets_to_nsvalue           (MonoObject *value, void *context, GCHandle *exception_gchandle) { return [NSValue valueWithUIEdgeInsets:        *(UIEdgeInsets *)           mono_object_unbox (value)]; }
 id xamarin_uioffset_to_nsvalue               (MonoObject *value, void *context, GCHandle *exception_gchandle) { return [NSValue valueWithUIOffset:            *(UIOffset *)               mono_object_unbox (value)]; }
 #endif
@@ -1606,7 +1600,6 @@ xamarin_get_nsvalue_converter (MonoClass *managedType, MonoMethod *method, bool 
 	if (!strcmp (fullname, "Foundation.NSRange")) {
 		func = to_managed ? (void *) xamarin_nsvalue_to_nsrange : (void *) xamarin_nsrange_to_nsvalue;
 #if HAVE_UIKIT // yep, these CoreGraphics-looking category methods are defined in UIKit
-#if !TARGET_OS_WATCH
 	} else if (!strcmp (fullname, "CoreGraphics.CGAffineTransform")) {
 		func = to_managed ? (void *) xamarin_nsvalue_to_cgaffinetransform : (void *) xamarin_cgaffinetransform_to_nsvalue;
 	} else if (!strcmp (fullname, "CoreGraphics.CGPoint")) {
@@ -1617,7 +1610,6 @@ xamarin_get_nsvalue_converter (MonoClass *managedType, MonoMethod *method, bool 
 		func = to_managed ? (void *) xamarin_nsvalue_to_cgsize : (void *) xamarin_cgsize_to_nsvalue;
 	} else if (!strcmp (fullname, "CoreGraphics.CGVector")) {
 		func = to_managed ? (void *) xamarin_nsvalue_to_cgvector : (void *) xamarin_cgvector_to_nsvalue;
-#endif
 	} else if (!strcmp (fullname, "UIKit.NSDirectionalEdgeInsets")) {
 		func = to_managed ? (void *) xamarin_nsvalue_to_nsdirectionaledgeinsets : (void *) xamarin_nsdirectionaledgeinsets_to_nsvalue;
 #endif
@@ -1649,7 +1641,7 @@ xamarin_get_nsvalue_converter (MonoClass *managedType, MonoMethod *method, bool 
 		func = to_managed ? (void *) xamarin_nsvalue_to_scnvector3 : (void *) xamarin_scnvector3_to_nsvalue;
 	} else if (!strcmp (fullname, "SceneKit.SCNVector4")) {
 		func = to_managed ? (void *) xamarin_nsvalue_to_scnvector4 : (void *) xamarin_scnvector4_to_nsvalue;
-#if HAVE_UIKIT && !TARGET_OS_WATCH
+#if HAVE_UIKIT
 	} else if (!strcmp (fullname, "UIKit.UIEdgeInsets")) {
 		func = to_managed ? (void *) xamarin_nsvalue_to_uiedgeinsets : (void *) xamarin_uiedgeinsets_to_nsvalue;
 	} else if (!strcmp (fullname, "UIKit.UIOffset")) {
