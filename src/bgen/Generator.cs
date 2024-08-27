@@ -6339,6 +6339,14 @@ public partial class Generator : IMemberGatherer {
 						print ("_{0} = Runtime.GetNSObject<UTType> (Dlfcn.GetIntPtr (Libraries.{2}.Handle, \"{1}\"))!;", field_pi.Name, fieldAttr.SymbolName, library_name);
 						indent--;
 						print ("return _{0};", field_pi.Name);
+					} else if (field_pi.PropertyType == TypeCache.System_Byte) {
+						print ("return Dlfcn.GetByte (Libraries.{2}.Handle, \"{1}\");", field_pi.Name, fieldAttr.SymbolName, library_name);
+					} else if (field_pi.PropertyType == TypeCache.System_SByte) {
+						print ("return Dlfcn.GetSByte (Libraries.{2}.Handle, \"{1}\");", field_pi.Name, fieldAttr.SymbolName, library_name);
+					} else if (field_pi.PropertyType == TypeCache.System_Int16) {
+						print ("return Dlfcn.GetInt16 (Libraries.{2}.Handle, \"{1}\");", field_pi.Name, fieldAttr.SymbolName, library_name);
+					} else if (field_pi.PropertyType == TypeCache.System_UInt16) {
+						print ("return Dlfcn.GetUInt16 (Libraries.{2}.Handle, \"{1}\");", field_pi.Name, fieldAttr.SymbolName, library_name);
 					} else if (field_pi.PropertyType == TypeCache.System_Int32) {
 						print ("return Dlfcn.GetInt32 (Libraries.{2}.Handle, \"{1}\");", field_pi.Name, fieldAttr.SymbolName, library_name);
 					} else if (field_pi.PropertyType == TypeCache.System_UInt32) {
@@ -6349,6 +6357,8 @@ public partial class Generator : IMemberGatherer {
 						print ("return Dlfcn.GetFloat (Libraries.{2}.Handle, \"{1}\");", field_pi.Name, fieldAttr.SymbolName, library_name);
 					} else if (field_pi.PropertyType == TypeCache.System_IntPtr) {
 						print ("return Dlfcn.GetIntPtr (Libraries.{2}.Handle, \"{1}\");", field_pi.Name, fieldAttr.SymbolName, library_name);
+					} else if (field_pi.PropertyType == TypeCache.System_UIntPtr) {
+						print ("return Dlfcn.GetUIntPtr (Libraries.{2}.Handle, \"{1}\");", field_pi.Name, fieldAttr.SymbolName, library_name);
 					} else if (field_pi.PropertyType.FullName == "System.Drawing.SizeF") {
 						print ("return Dlfcn.GetSizeF (Libraries.{2}.Handle, \"{1}\");", field_pi.Name, fieldAttr.SymbolName, library_name);
 					} else if (field_pi.PropertyType == TypeCache.System_Int64) {
@@ -6419,10 +6429,20 @@ public partial class Generator : IMemberGatherer {
 							print ("Dlfcn.SetUInt32 (Libraries.{2}.Handle, \"{1}\", value);", field_pi.Name, fieldAttr.SymbolName, library_name);
 						} else if (field_pi.PropertyType == TypeCache.System_Double) {
 							print ("Dlfcn.SetDouble (Libraries.{2}.Handle, \"{1}\", value);", field_pi.Name, fieldAttr.SymbolName, library_name);
+						} else if (field_pi.PropertyType == TypeCache.System_Byte) {
+							print ("Dlfcn.SetByte (Libraries.{2}.Handle, \"{1}\", value);", field_pi.Name, fieldAttr.SymbolName, library_name);
+						} else if (field_pi.PropertyType == TypeCache.System_SByte) {
+							print ("Dlfcn.SetSByte (Libraries.{2}.Handle, \"{1}\", value);", field_pi.Name, fieldAttr.SymbolName, library_name);
+						} else if (field_pi.PropertyType == TypeCache.System_Int16) {
+							print ("Dlfcn.SetInt16 (Libraries.{2}.Handle, \"{1}\", value);", field_pi.Name, fieldAttr.SymbolName, library_name);
+						} else if (field_pi.PropertyType == TypeCache.System_UInt16) {
+							print ("Dlfcn.SetUInt16 (Libraries.{2}.Handle, \"{1}\", value);", field_pi.Name, fieldAttr.SymbolName, library_name);
 						} else if (field_pi.PropertyType == TypeCache.System_Float) {
 							print ("Dlfcn.SetFloat (Libraries.{2}.Handle, \"{1}\", value);", field_pi.Name, fieldAttr.SymbolName, library_name);
 						} else if (field_pi.PropertyType == TypeCache.System_IntPtr) {
 							print ("Dlfcn.SetIntPtr (Libraries.{2}.Handle, \"{1}\", value);", field_pi.Name, fieldAttr.SymbolName, library_name);
+						} else if (field_pi.PropertyType == TypeCache.System_UIntPtr) {
+							print ("Dlfcn.SetUIntPtr (Libraries.{2}.Handle, \"{1}\", value);", field_pi.Name, fieldAttr.SymbolName, library_name);
 						} else if (field_pi.PropertyType.FullName == "System.Drawing.SizeF") {
 							print ("Dlfcn.SetSizeF (Libraries.{2}.Handle, \"{1}\", value);", field_pi.Name, fieldAttr.SymbolName, library_name);
 						} else if (field_pi.PropertyType == TypeCache.System_Int64) {
