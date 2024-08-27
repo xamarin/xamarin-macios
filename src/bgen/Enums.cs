@@ -82,7 +82,6 @@ public partial class Generator {
 			sb.Append ("]");
 			print (sb.ToString ());
 		}
-		PrintObsoleteAttributes (type);
 		CopyNativeName (type);
 
 		var unique_constants = new HashSet<string> ();
