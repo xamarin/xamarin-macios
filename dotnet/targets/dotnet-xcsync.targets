@@ -22,28 +22,38 @@
 	</Target>
 
 	<Target Name="CheckXcsyncInstalled">		
-	    <Exec ContinueOnError="True" IgnoreStandardErrorWarningFormat="true" Command="$(XcsyncExecute)" ConsoleToMSBuild="true">
-       		<Output TaskParameter="ExitCode" PropertyName="ErrorCode"/>
-    	</Exec>
-	    <Exec ContinueOnError="True" IgnoreStandardErrorWarningFormat="true" Command="$(DOTNET_HOST_PATH) tool run xcsync" Condition="'$(ErrorCode)' != '0'" ConsoleToMSBuild="true">
-       		<Output TaskParameter="ExitCode" PropertyName="ErrorCode"/>
-    	</Exec>
-		<Message Importance="High" Text="The xcsync tool is not installed." Condition="'$(ErrorCode)' != '0'" />
 		<PropertyGroup>
-			<XcsyncInstalled Condition="'$(ErrorCode)' == '0'">True</XcsyncInstalled>
-			<XcsyncInstalled Condition="'$(ErrorCode)' != '0'">False</XcsyncInstalled>
+			<LocalErrorCode>0</LocalErrorCode>
+			<GlobalErrorCode>0</GlobalErrorCode>
+			<XcsyncInstalled>False</XcsyncInstalled>	
 		</PropertyGroup>
+	    <Exec ContinueOnError="True" IgnoreStandardErrorWarningFormat="true" Command="$(XcsyncExecute)" StandardErrorImportance="Low" StandardOutputImportance="Low">
+       		<Output TaskParameter="ExitCode" PropertyName="GlobalErrorCode"/>
+    	</Exec>
+	    <Exec ContinueOnError="True" IgnoreStandardErrorWarningFormat="true" Command="$(DOTNET_HOST_PATH) tool run xcsync" Condition="'$(GlobalErrorCode)' != '0'" StandardErrorImportance="Low" StandardOutputImportance="Low">
+       		<Output TaskParameter="ExitCode" PropertyName="LocalErrorCode"/>
+    	</Exec>
+		<PropertyGroup>
+			<XcsyncInstalled Condition="'$(GlobalErrorCode)' == '0' OR '$(LocalErrorCode)' == '0'">True</XcsyncInstalled>
+			<XcsyncInstalled Condition="'$(GlobalErrorCode)' != '0' AND '$(LocalErrorCode)' != '0'">False</XcsyncInstalled>		
+			<XcsyncExecute Condition="'$(GlobalErrorCode)' != '0' AND '$(LocalErrorCode)' == '0'">$(DOTNET_HOST_PATH) tool run xcsync</XcsyncExecute>
+		</PropertyGroup>
+		<Message Importance="High" Text="The xcsync tool is not installed." Condition="'$(XcsyncInstalled)' != 'False'" />
 	</Target>
 
 	<Target Name="InstallXcsync" DependsOnTargets="CheckXcsyncInstalled">
-		<Message Importance="High" Text="Installing xcsync tool..." Condition="'$(XcsyncInstalled)' == 'False'"/>
-	    <Exec ContinueOnError="True" IgnoreStandardErrorWarningFormat="true" Command="$(DOTNET_HOST_PATH) tool install -g dotnet-xcsync --prerelease" Condition="'$(XcsyncInstalled)' == 'False'" ConsoleToMSBuild="true">
-       		<Output TaskParameter="ExitCode" PropertyName="ErrorCode"/>
-    	</Exec>
-		<Message Importance="High" Text="The xcsync tool could not be installed. Please install xcsync by running 'dotnet tool install -g dotnet-xcsync'." Condition="'$(ErrorCode)' != '0'" />
 		<PropertyGroup>
-			<XcsyncInstalled Condition="'$(ErrorCode)' == '0'">True</XcsyncInstalled>
-			<XcsyncInstalled Condition="'$(ErrorCode)' != '0'">False</XcsyncInstalled>
+			<InstallErrorCode>0</InstallErrorCode>
+		</PropertyGroup>
+		<Message Importance="High" Text="Installing xcsync tool..." Condition="'$(XcsyncInstalled)' == 'False'"/>
+	    <Exec ContinueOnError="True" IgnoreStandardErrorWarningFormat="true" Command="$(DOTNET_HOST_PATH) tool install -g dotnet-xcsync --prerelease" Condition="'$(XcsyncInstalled)' == 'False'" StandardErrorImportance="Low" StandardOutputImportance="Low">
+       		<Output TaskParameter="ExitCode" PropertyName="InstallErrorCode"/>
+    	</Exec>
+		<Error Text="The xcsync tool could not be installed. Please install xcsync by running 'dotnet tool install -g dotnet-xcsync --prerelease'." Condition="'$(InstallErrorCode)' != '0'" />
+		<Error Text="The xcsync tool was installed globally. Remove it using the following command: 'dotnet tool install -g dotnet-xcsync --prerelease'." Condition="'$(InstallErrorCode)' == '0'" />
+		<PropertyGroup>
+			<XcsyncInstalled Condition="'$(InstallErrorCode)' == '0'">True</XcsyncInstalled>
+			<XcsyncInstalled Condition="'$(InstallErrorCode)' != '0'">False</XcsyncInstalled>
 		</PropertyGroup>
 	</Target>
 
