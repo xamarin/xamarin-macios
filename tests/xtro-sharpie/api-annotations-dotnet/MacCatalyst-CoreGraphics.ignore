@@ -98,3 +98,6 @@
 !missing-pinvoke! CGWindowListCreate is not bound
 !missing-pinvoke! CGWindowListCreateDescriptionFromArray is not bound
 !missing-pinvoke! CGWindowServerCreateServerPort is not bound
+
+# We're using CGEventCreateScrollWheelEvent2, which is identical, except not variadic.
+!missing-pinvoke! CGEventCreateScrollWheelEvent is not bound

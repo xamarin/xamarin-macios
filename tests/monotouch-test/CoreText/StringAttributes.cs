@@ -49,6 +49,12 @@ namespace MonoTouchFixtures.CoreText {
 			if (TestRuntime.CheckXcodeVersion (11, 0))
 				sa.TrackingAdjustment = 1.0f;
 
+			AdaptiveImageProvider? provider = null;
+#if NET
+			if (TestRuntime.CheckXcodeVersion (16, 0))
+				sa.AdaptiveImageProvider = provider = new AdaptiveImageProvider ();
+#endif
+
 			var size = new CGSize (300, 300);
 			UIGraphics.BeginImageContext (size);
 			var gctx = UIGraphics.GetCurrentContext ();
@@ -60,6 +66,19 @@ namespace MonoTouchFixtures.CoreText {
 			using (var textLine = new CTLine (attributedString)) {
 				textLine.Draw (gctx);
 			}
+
+#if NET
+			if (TestRuntime.CheckXcodeVersion (16, 0))
+				Assert.AreEqual (0, provider!.Count, "AdaptiveImageProvider #0");
+
+			attributedString = new NSAttributedString ("🙈`", sa);
+			using (var textLine = new CTLine (attributedString)) {
+				textLine.Draw (gctx);
+			}
+
+			if (TestRuntime.CheckXcodeVersion (16, 0))
+				Assert.AreEqual (1, provider!.Count, "AdaptiveImageProvider #1");
+#endif
 
 			UIGraphics.EndImageContext ();
 		}
@@ -79,6 +98,17 @@ namespace MonoTouchFixtures.CoreText {
 			var sa = new CTStringAttributes ();
 			Assert.DoesNotThrow (() => { sa.HorizontalInVerticalForms = 1; }, "#0");
 			Assert.DoesNotThrow (() => { var x = sa.HorizontalInVerticalForms; }, "#1");
+		}
+	}
+
+	class AdaptiveImageProvider : NSObject, ICTAdaptiveImageProviding {
+		public int Count;
+		public CGImage? GetImage (CGSize proposedSize, nfloat scaleFactor, out CGPoint imageOffset, out CGSize imageSize)
+		{
+			imageOffset = default (CGPoint);
+			imageSize = default (CGSize);
+			Count++;
+			return null;
 		}
 	}
 }
