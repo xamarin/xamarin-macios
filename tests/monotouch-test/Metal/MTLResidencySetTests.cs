@@ -23,6 +23,10 @@ namespace MonoTouchFixtures.Metal {
 			if (device is null)
 				Assert.Inconclusive ("Metal is not supported");
 
+			var supportsResidencySets = device.SupportsFamily (MTLGpuFamily.Apple6);
+			if (!supportsResidencySets)
+				Assert.Inconclusive ("Residency sets are not supported on this device.");
+
 			using var heapDescriptor = new MTLHeapDescriptor () {
 				Size = 1024,
 			};

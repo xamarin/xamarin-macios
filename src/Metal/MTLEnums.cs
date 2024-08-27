@@ -1740,7 +1740,13 @@ namespace Metal {
 		[MacCatalyst (14, 0)]
 		CompileToBinary = 1uL << 0,
 		[iOS (17, 0), TV (17, 0), MacCatalyst (17, 0), Mac (14, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'StoreFunctionInMetalPipelinesScript' instead.")]
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'StoreFunctionInMetalPipelinesScript' instead.")]
+		[Deprecated (PlatformName.TvOS, 18, 0, message: "Use 'StoreFunctionInMetalPipelinesScript' instead.")]
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'StoreFunctionInMetalPipelinesScript' instead.")]
 		StoreFunctionInMetalScript = 1uL << 1,
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		StoreFunctionInMetalPipelinesScript = 1 << 1,
 		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 		FailOnBinaryArchiveMiss = 1 << 2,
 	}

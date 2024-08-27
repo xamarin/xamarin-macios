@@ -23,6 +23,10 @@ namespace MonoTouchFixtures.Metal {
 			if (device is null)
 				Assert.Inconclusive ("Metal is not supported");
 
+			var supportsResidencySets = device.SupportsFamily (MTLGpuFamily.Apple6);
+			if (!supportsResidencySets)
+				Assert.Inconclusive ("Residency sets are not supported on this device.");
+
 			using var commandQ = device.CreateCommandQueue ();
 			if (commandQ is null)  // this happens on a simulator
 				Assert.Inconclusive ("Could not get the functions library for the device.");

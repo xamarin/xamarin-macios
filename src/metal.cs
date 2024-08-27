@@ -7443,7 +7443,7 @@ namespace Metal {
 	enum MTLStitchedLibraryOptions : ulong {
 		None = 0,
 		FailOnBinaryArchiveMiss = 1 << 0,
-		StoreLibraryInMetalScript = 1 << 1,
+		StoreLibraryInMetalPipelinesScript = 1 << 1,
 	}
 
 	[Native]
