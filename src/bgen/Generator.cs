@@ -3879,6 +3879,20 @@ public partial class Generator : IMemberGatherer {
 			print ("[EditorBrowsable (EditorBrowsableState.Never)]");
 	}
 
+	bool PrintEditorBrowsableAttribute (ICustomAttributeProvider provider)
+	{
+		foreach (var ea in AttributeManager.GetCustomAttributes<EditorBrowsableAttribute> (provider)) {
+			if (ea.State == EditorBrowsableState.Always) {
+				print ("[EditorBrowsable]");
+			} else {
+				print ("[EditorBrowsable (EditorBrowsableState.{0})]", ea.State);
+			}
+			return true;
+		}
+
+		return false;
+	}
+
 	void PrintPropertyAttributes (PropertyInfo pi, Type type, bool skipTypeInjection = false)
 	{
 		var minfo = new MemberInformation (this, this, pi, type);
@@ -4419,20 +4433,11 @@ public partial class Generator : IMemberGatherer {
 	void PrintMethodAttributes (MemberInformation minfo)
 	{
 		MethodInfo mi = minfo.Method;
-		var editor_browsable_attribute = false;
 
 		foreach (var sa in AttributeManager.GetCustomAttributes<ThreadSafeAttribute> (mi))
 			print (sa.Safe ? "[ThreadSafe]" : "[ThreadSafe (false)]");
 
-		foreach (var ea in AttributeManager.GetCustomAttributes<EditorBrowsableAttribute> (mi)) {
-			if (ea.State == EditorBrowsableState.Always) {
-				print ("[EditorBrowsable]");
-			} else {
-				print ("[EditorBrowsable (EditorBrowsableState.{0})]", ea.State);
-			}
-			editor_browsable_attribute = true;
-		}
-
+		var editor_browsable_attribute = PrintEditorBrowsableAttribute (mi);
 		PrintObsoleteAttributes (mi, editor_browsable_attribute);
 
 		if (minfo.is_return_release)
