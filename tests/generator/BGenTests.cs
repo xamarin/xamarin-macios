@@ -245,8 +245,7 @@ namespace GeneratorTests {
 			var bgen = BuildFile (profile, false, true, "tests/editor-browsable.cs");
 			var types = bgen.ApiAssembly.MainModule.Types;
 
-			var hasEditorBrowsableAttribute = new Func<ICustomAttributeProvider, bool> ((ICustomAttributeProvider provider) =>
-			{
+			var hasEditorBrowsableAttribute = new Func<ICustomAttributeProvider, bool> ((ICustomAttributeProvider provider) => {
 				return provider.CustomAttributes.Any (v => v.AttributeType.Name == "EditorBrowsableAttribute");
 			});
 
