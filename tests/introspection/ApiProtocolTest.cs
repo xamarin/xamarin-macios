@@ -197,8 +197,13 @@ namespace Introspection {
 					return true;
 				// Xcode 16, conformance not in headers
 				case "PKAddCarKeyPassConfiguration":
+				case "PKAddIdentityDocumentConfiguration":
 				case "PKAddSecureElementPassConfiguration":
 				case "PKAddShareablePassConfiguration":
+				case "PKAddPassMetadataPreview":
+				case "PKIdentityDocumentMetadata":
+				case "PKJapanIndividualNumberCardMetadata":
+				case "PKPassRelevantDate":
 				case "ASAuthorizationPublicKeyCredentialLargeBlobAssertionInput":
 				case "ASAuthorizationPublicKeyCredentialLargeBlobAssertionOutput":
 				case "ASAuthorizationPublicKeyCredentialLargeBlobRegistrationInput":
@@ -388,6 +393,11 @@ namespace Introspection {
 				case "QLFileThumbnailRequest":
 				case "QLThumbnailReply":
 				case "PHPickerResult":
+				case "PKAddIdentityDocumentConfiguration":
+				case "PKAddPassMetadataPreview":
+				case "PKIdentityDocumentMetadata":
+				case "PKJapanIndividualNumberCardMetadata":
+				case "PKPassRelevantDate":
 				case "ASAuthorizationPublicKeyCredentialLargeBlobAssertionInput":
 				case "ASAuthorizationPublicKeyCredentialLargeBlobAssertionOutput":
 				case "ASAuthorizationPublicKeyCredentialLargeBlobRegistrationInput":
@@ -583,6 +593,11 @@ namespace Introspection {
 				case "QLFileThumbnailRequest":
 				case "QLThumbnailReply":
 				case "PHPickerResult":
+				case "PKAddIdentityDocumentConfiguration":
+				case "PKAddPassMetadataPreview":
+				case "PKIdentityDocumentMetadata":
+				case "PKJapanIndividualNumberCardMetadata":
+				case "PKPassRelevantDate":
 				case "ASAuthorizationPublicKeyCredentialLargeBlobAssertionInput":
 				case "ASAuthorizationPublicKeyCredentialLargeBlobAssertionOutput":
 				case "ASAuthorizationPublicKeyCredentialLargeBlobRegistrationInput":

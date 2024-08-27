@@ -1493,9 +1493,13 @@ OPENGLES_SOURCES = \
 
 PASSKIT_API_SOURCES = \
 	PassKit/PKEnums.cs \
-	
+
+PASSKIT_CORE_SOURCES = \
+	PassKit/PKMerchantCategoryCode.cs \
+
 PASSKIT_SOURCES = \
 	PassKit/PKCompat.cs	\
+	PassKit/PKJapanIndividualNumberCardMetadata.cs \
 	PassKit/PKPayLaterView.cs	\
 	PassKit/PKPaymentRequest.cs	\
 	PassKit/PKShareablePassMetadata.cs \
