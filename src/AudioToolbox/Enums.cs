@@ -54,15 +54,19 @@ namespace AudioToolbox {
 	[iOS (16, 0)]
 	[MacCatalyst (16, 0)]
 	public enum AUSpatialMixerPersonalizedHrtfMode : uint {
-		[NoiOS, NoTV]
-		[NoMacCatalyst]
+		[iOS (18, 0), TV (18, 0), MacCatalyst (18, 0)]
 		Off = 0,
-		[NoiOS, NoTV]
-		[NoMacCatalyst]
+		[iOS (18, 0), TV (18, 0), MacCatalyst (18, 0)]
 		On = 1,
-		[NoiOS, NoTV]
-		[NoMacCatalyst]
+		[iOS (18, 0), TV (18, 0), MacCatalyst (18, 0)]
 		Auto = 2,
 	}
 
+	[iOS (17, 0), TV (17, 0), MacCatalyst (17, 0), Mac (14, 0)]
+	public enum AUVoiceIOOtherAudioDuckingLevel : uint {
+		Default = 0,
+		Min = 10,
+		Mid = 20,
+		Max = 30,
+	}
 }
