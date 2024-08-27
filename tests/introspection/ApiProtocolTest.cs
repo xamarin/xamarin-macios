@@ -714,11 +714,11 @@ namespace Introspection {
 				break;
 			case "UISpringLoadedInteractionSupporting":
 				switch (type.Name) {
-					case "UISearchTab":
-					case "UITab":
-					case "UITabGroup":
-						// These types implement UISpringLoadedInteractionSupporting using category, which we can't detect at runtime.
-						return true;
+				case "UISearchTab":
+				case "UITab":
+				case "UITabGroup":
+					// These types implement UISpringLoadedInteractionSupporting using category, which we can't detect at runtime.
+					return true;
 				}
 				break;
 			}
