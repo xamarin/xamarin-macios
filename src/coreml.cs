@@ -645,7 +645,7 @@ namespace CoreML {
 
 		[iOS (18, 0), TV (18, 0), MacCatalyst (18, 0), Mac (15, 0), Watch (11, 0)]
 		[Export ("initWithShape:dataType:strides:")]
-		NativeHandle Constructor (NSNumber [] shape, MLMultiArrayDataType dataType, NSNumber[] strides);
+		NativeHandle Constructor (NSNumber [] shape, MLMultiArrayDataType dataType, NSNumber [] strides);
 
 		[Export ("initWithDataPointer:shape:dataType:strides:deallocator:error:")]
 		NativeHandle Constructor (IntPtr dataPointer, NSNumber [] shape, MLMultiArrayDataType dataType, NSNumber [] strides, [NullAllowed] Action<IntPtr> deallocator, out NSError error);
