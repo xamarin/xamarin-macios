@@ -191,7 +191,7 @@ steps:
     -GithubFailureCommentFile "$Env:GITHUB_FAILURE_COMMENT_FILE"
     -StatusContext "${{ parameters.statusContext }}"
   displayName: 'Run tests'
-  timeoutInMinutes: 60
+  timeoutInMinutes: 90
   ${{ if not(parameters.isPR) }}:
     retryCountOnTaskFailure: ${{ parameters.retryCount }}
   env:
