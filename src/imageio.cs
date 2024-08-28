@@ -2916,6 +2916,11 @@ namespace ImageIO {
 		[Field ("kCGImageSourceDecodeToSDR")]
 		IntPtr DecodeToSDR { get; }
 
+		[iOS (18, 0), MacCatalyst (18, 0), TV (18, 0), Mac (15, 0), Watch (11, 0)]
+		[Internal]
+		[Field ("kCGImageSourceGenerateImageSpecificLumaScaling")]
+		IntPtr GenerateImageSpecificLumaScaling { get; }
+
 		[Internal]
 		[Field ("kCGImageSourceDecodeRequestOptions")]
 		IntPtr DecodeRequestOptions { get; }
