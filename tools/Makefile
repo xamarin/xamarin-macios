@@ -30,7 +30,7 @@ ifdef INCLUDE_MTOUCH
 SUBDIRS += mtouch
 endif
 
-SUBDIRS+=mlaunch siminstaller xcsync
+SUBDIRS+=mlaunch siminstaller
 
 ifdef ENABLE_DOTNET
 ifdef INCLUDE_XAMARIN_LEGACY
