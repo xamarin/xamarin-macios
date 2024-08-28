@@ -261,7 +261,7 @@ class BuildConfiguration {
     <#
         .SYNOPSIS
             Stores the default variables in the current buld as PARENT_BUILD_* in the
-            configuration object. This allows cacasding pipelines to access the configuration
+            configuration object. This allows cascading pipelines to access the configuration
             of the pipeline that triggered them.
     #>
     [void] StoreParentBuildVariables ([PSCustomObject] $configuration) {
