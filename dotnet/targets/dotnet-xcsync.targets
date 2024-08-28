@@ -27,11 +27,11 @@
 			<GlobalErrorCode>0</GlobalErrorCode>
 			<XcsyncInstalled>False</XcsyncInstalled>	
 		</PropertyGroup>
-	    <Exec ContinueOnError="True" IgnoreStandardErrorWarningFormat="true" Command="$(XcsyncExecute)" StandardErrorImportance="Low" StandardOutputImportance="Low" CustomErrorRegularExpression="" CustomWarningRegularExpression="">
-       		<Output TaskParameter="ExitCode" PropertyName="GlobalErrorCode"/>
-    	</Exec>
-	    <Exec ContinueOnError="True" IgnoreStandardErrorWarningFormat="true" Command="$(DOTNET_HOST_PATH) tool run xcsync" Condition="'$(GlobalErrorCode)' != '0'" StandardErrorImportance="Low" StandardOutputImportance="Low" CustomErrorRegularExpression="" CustomWarningRegularExpression="">
-       		<Output TaskParameter="ExitCode" PropertyName="LocalErrorCode"/>
+		<Exec ContinueOnError="True" IgnoreStandardErrorWarningFormat="true" Command="$(XcsyncExecute)" StandardErrorImportance="Low" StandardOutputImportance="Low" CustomErrorRegularExpression="" CustomWarningRegularExpression="">
+			<Output TaskParameter="ExitCode" PropertyName="GlobalErrorCode"/>
+		</Exec>
+		<Exec ContinueOnError="True" IgnoreStandardErrorWarningFormat="true" Command="$(DOTNET_HOST_PATH) tool run xcsync" Condition="'$(GlobalErrorCode)' != '0'" StandardErrorImportance="Low" StandardOutputImportance="Low" CustomErrorRegularExpression="" CustomWarningRegularExpression="">
+			<Output TaskParameter="ExitCode" PropertyName="LocalErrorCode"/>
     	</Exec>
 		<PropertyGroup>
 			<XcsyncInstalled Condition="'$(GlobalErrorCode)' == '0' OR '$(LocalErrorCode)' == '0'">True</XcsyncInstalled>
@@ -43,9 +43,6 @@
 
 	<Target Name="InstallXcsync" DependsOnTargets="CheckXcsyncInstalled">
 		<Message Importance="High" Text="Installing xcsync tool..." Condition="'$(XcsyncInstalled)' == 'False'"/>
-	    <Exec ContinueOnError="True" IgnoreStandardErrorWarningFormat="true" Command="$(DOTNET_HOST_PATH) tool install -g dotnet-xcsync --prerelease" Condition="'$(XcsyncInstalled)' == 'False'" StandardErrorImportance="Low" StandardOutputImportance="Low">
-       		<Output TaskParameter="ExitCode" PropertyName="InstallErrorCode"/>
-    	</Exec>
 		<Error Text="The xcsync tool could not be installed. Please install xcsync by running 'dotnet tool install -g dotnet-xcsync --prerelease'." Condition="'$(InstallErrorCode)' != '0' AND '$(InstallErrorCode)' != ''" />
 		<Warning Text="The xcsync tool was installed globally. Remove it using the following command: 'dotnet tool install -g dotnet-xcsync --prerelease'." Condition="'$(InstallErrorCode)' == '0'" />
 		<PropertyGroup>
