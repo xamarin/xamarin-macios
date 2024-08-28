@@ -1273,6 +1273,7 @@ METALPERFORMANCESHADERSGRAPH_API_SOURCES = \
 	MetalPerformanceShadersGraph/MPSGraphEnums.cs \
 
 METALPERFORMANCESHADERSGRAPH_SOURCES = \
+	MetalPerformanceShadersGraph/MPSGraphExecutable.cs \
 	MetalPerformanceShadersGraph/MPSGraphExtensions.cs \
 	MetalPerformanceShadersGraph/MPSGraphTensorData.cs \
 
