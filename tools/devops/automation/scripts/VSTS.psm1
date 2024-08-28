@@ -383,7 +383,6 @@ class BuildConfiguration {
         }
 
         $this.StoreParentBuildVariables($configuration)
-        }
 
         # For each .NET platform we support, add a INCLUDE_DOTNET_<platform> variable specifying whether that platform is enabled or not.
         $dotnetPlatforms = $configuration.DOTNET_PLATFORMS.Split(' ', [StringSplitOptions]::RemoveEmptyEntries)
