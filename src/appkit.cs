@@ -20096,15 +20096,15 @@ namespace AppKit {
 		[Export ("textView:shouldSelectCandidateAtIndex:"), DelegateName ("NSTextViewSelectCandidate"), NoDefaultValue]
 		bool ShouldSelectCandidates (NSTextView textView, nuint index);
 
-		[Mac (15, 0), MacCatalyst (18, 0)]
+		[Mac (15, 0)]
 		[Export ("textViewWritingToolsWillBegin:"), EventArgs ("NSTextView")]
 		void WritingToolsWillBegin (NSTextView textView);
 
-		[Mac (15, 0), MacCatalyst (18, 0)]
+		[Mac (15, 0)]
 		[Export ("textViewWritingToolsDidEnd:"), EventArgs ("NSTextView")]
 		void WritingToolsDidEnd (NSTextView textView);
 
-		[Mac (15, 0), MacCatalyst (18, 0)]
+		[Mac (15, 0)]
 		[Export ("textView:writingToolsIgnoredRangesInEnclosingRange:"), DelegateName ("NSTextViewRange"), NoDefaultValue]
 		// Can't use BindAs in a protocol [return: BindAs (typeof (NSRange[]))]
 		NSValue [] GetWritingToolsIgnoredRangesInEnclosingRange (NSTextView textView, NSRange enclosingRange);
