@@ -2961,7 +2961,6 @@
 !missing-selector! MTRClusterWindowCovering::writeAttributeModeWithValue:expectedValueInterval: not bound
 !missing-selector! MTRClusterWindowCovering::writeAttributeModeWithValue:expectedValueInterval:params: not bound
 !missing-selector! MTRDevice::readAttributeWithEndpointID:clusterID:attributeID:params: not bound
-!missing-selector! MTRDevice::setDelegate:queue: not bound
 !missing-selector! MTRDevice::state not bound
 !missing-selector! MTRDevice::writeAttributeWithEndpointID:clusterID:attributeID:value:expectedValueInterval:timedWriteTimeout: not bound
 !missing-selector! MTRDeviceAttestationDeviceInfo::certificateDeclaration not bound

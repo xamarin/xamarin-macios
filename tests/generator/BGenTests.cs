@@ -230,6 +230,13 @@ namespace GeneratorTests {
 			BuildFile (Profile.iOS, "bug34042.cs");
 		}
 
+		[Test]
+		[TestCase (Profile.iOS)]
+		public void NSCopyingNullability (Profile profile)
+		{
+			var bgen = BuildFile (profile, "tests/nscopying-nullability.cs");
+			bgen.AssertNoWarnings ();
+		}
 
 		static string RenderArgument (CustomAttributeArgument arg)
 		{
@@ -1625,5 +1632,59 @@ namespace GeneratorTests {
 			bgen.AssertNoWarnings ();
 		}
 #endif
+
+		[Test]
+		[TestCase (Profile.iOS)]
+		public void BackingFieldType (Profile profile)
+		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
+			var bgen = BuildFile (profile, true, true, "tests/backingfieldtype.cs");
+
+#if NET
+			const string nintName = "System.IntPtr";
+			const string nuintName = "System.UIntPtr";
+#else
+			const string nintName = "System.nint";
+			const string nuintName = "System.nuint";
+#endif
+
+			var testCases = new [] {
+				new { BackingFieldType = "NSNumber", NullableType = "Foundation.NSNumber", RenderedBackingFieldType = "Foundation.NSNumber", SimplifiedNullableType = "Foundation.NSNumber" },
+				new { BackingFieldType = "NSInteger", NullableType = $"System.Nullable`1<{nintName}>", RenderedBackingFieldType = nintName, SimplifiedNullableType = "System.Nullable`1" },
+				new { BackingFieldType = "NSUInteger", NullableType = $"System.Nullable`1<{nuintName}>", RenderedBackingFieldType = nuintName, SimplifiedNullableType = "System.Nullable`1" },
+			};
+
+			foreach (var tc in testCases) {
+				var getConstant = bgen.ApiAssembly.MainModule.GetType ("BackingField", $"{tc.BackingFieldType}FieldTypeExtensions").Methods.First ((v) => v.Name == "GetConstant");
+				Assert.AreEqual (tc.NullableType, getConstant.ReturnType.FullName, $"{tc.BackingFieldType}: GetConstant return type");
+
+				var getValue = bgen.ApiAssembly.MainModule.GetType ("BackingField", $"{tc.BackingFieldType}FieldTypeExtensions").Methods.First ((v) => v.Name == "GetValue");
+				Assert.AreEqual (tc.RenderedBackingFieldType, getValue.Parameters [0].ParameterType.FullName, $"{tc.BackingFieldType}: GetValue parameter type");
+
+				var toEnumArray = bgen.ApiAssembly.MainModule.GetType ("BackingField", $"{tc.BackingFieldType}FieldTypeExtensions").Methods.First ((v) => v.Name == "ToEnumArray");
+				Assert.IsTrue (toEnumArray.ReturnType.IsArray, $"{tc.BackingFieldType} ToEnumArray return type IsArray");
+				Assert.AreEqual ($"{tc.BackingFieldType}FieldType", toEnumArray.ReturnType.GetElementType ().Name, $"{tc.BackingFieldType} ToEnumArray return type");
+				Assert.IsTrue (toEnumArray.Parameters [0].ParameterType.IsArray, $"{tc.BackingFieldType} ToEnumArray parameter type IsArray");
+				Assert.AreEqual (tc.RenderedBackingFieldType, toEnumArray.Parameters [0].ParameterType.GetElementType ().FullName, $"{tc.BackingFieldType} ToEnumArray parameter type");
+
+				var toConstantArray = bgen.ApiAssembly.MainModule.GetType ("BackingField", $"{tc.BackingFieldType}FieldTypeExtensions").Methods.First ((v) => v.Name == "ToConstantArray");
+				Assert.IsTrue (toConstantArray.ReturnType.IsArray, $"{tc.BackingFieldType} ToConstantArray return type IsArray");
+				Assert.AreEqual (tc.SimplifiedNullableType, toConstantArray.ReturnType.GetElementType ().FullName, $"{tc.BackingFieldType} ToConstantArray return type");
+				Assert.IsTrue (toConstantArray.Parameters [0].ParameterType.IsArray, $"{tc.BackingFieldType} ToConstantArray parameter type IsArray");
+				Assert.AreEqual ($"{tc.BackingFieldType}FieldType", toConstantArray.Parameters [0].ParameterType.GetElementType ().Name, $"{tc.BackingFieldType} ToConstantArray parameter type");
+			}
+		}
+
+		[Test]
+		[TestCase (Profile.iOS)]
+		public void DelegatesWithNullableReturnType (Profile profile)
+		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
+			var bgen = BuildFile (profile, "tests/delegate-nullable-return.cs");
+			bgen.AssertNoWarnings ();
+
+			var delegateCallback = bgen.ApiAssembly.MainModule.GetType ("NS", "MyCallback").Methods.First ((v) => v.Name == "EndInvoke");
+			Assert.That (delegateCallback.MethodReturnType.CustomAttributes.Any (v => v.AttributeType.Name == "NullableAttribute"), "Nullable return type");
+		}
 	}
 }

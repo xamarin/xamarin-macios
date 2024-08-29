@@ -8,8 +8,7 @@ SHARPIE ?= sharpie
 
 XCODE=$(abspath $(XCODE_DEVELOPER_ROOT)/../..)
 
-# MacCatalyst is currently broken wrt sharpie and Xcode 14 beta 2, so skip it.
-XTRO_DOTNET_PLATFORMS=$(filter-out MacCatalyst,$(DOTNET_PLATFORMS))
+XTRO_DOTNET_PLATFORMS=$(DOTNET_PLATFORMS)
 
 ANNOTATIONS_DIR=.
 DOTNET_ANNOTATIONS_DIR=api-annotations-dotnet
@@ -106,6 +105,7 @@ XMACOS_RID = osx-x64
 $(XMACOS_PCH): .stamp-check-sharpie
 	$(SHARPIE) sdk-db --xcode $(XCODE) -s macosx$(MACOS_SDK_VERSION) -a $(XMACOS_ARCH) \
 		-modules false \
+		-exclude AccessorySetupKit \
 		-exclude JavaNativeFoundation \
 		-exclude ParavirtualizedGraphics \
 		$(CORETELEPHONY_HEADERS) \
@@ -117,6 +117,8 @@ XMACCATALYST_RID = maccatalyst-x64
 $(XMACCATALYST_PCH): .stamp-check-sharpie
 	$(SHARPIE) sdk-db --xcode $(XCODE) -s ios$(MACCATALYST_SDK_VERSION)-macabi -a $(XMACCATALYST_ARCH) \
 	-modules false \
+	-exclude _CoreNFC_UIKit \
+	-exclude AccessorySetupKit \
 	-exclude AGL \
 	-exclude AudioVideoBridging \
 	-exclude AssetsLibrary \
@@ -124,6 +126,7 @@ $(XMACCATALYST_PCH): .stamp-check-sharpie
 	-exclude Carbon \
 	-exclude ClockKit \
 	-exclude DiscRecordingUI \
+	-exclude FSKit \
 	-exclude GLKit \
 	-exclude ICADevices \
 	-exclude InputMethodKit \

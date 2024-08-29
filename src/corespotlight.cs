@@ -1216,7 +1216,7 @@ namespace CoreSpotlight {
 
 		[Static]
 		[Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
-		[Wrap ("Prepare (protectionClasses.ToArray ()!)")]
+		[Wrap ("Prepare (protectionClasses.ToConstantArray ()!)")]
 		void Prepare (NSFileProtectionType [] protectionClasses);
 
 		[Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]

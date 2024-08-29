@@ -2244,7 +2244,21 @@ namespace ObjCRuntime {
 
 		internal static bool IsUserType (IntPtr self)
 		{
-			var cls = Class.object_getClass (self);
+			if (!TryGetIsUserType (self, out var result, out var error_message))
+				throw new InvalidOperationException ($"Unable to get the class of the pointer 0x{self.ToString ("x")}: {error_message}");
+			return result;
+		}
+
+#if NET
+		internal static bool TryGetIsUserType (IntPtr self, out bool isUserType, [NotNullWhen (false)] out string? error_message)
+#else
+		internal static bool TryGetIsUserType (IntPtr self, out bool isUserType, out string? error_message)
+#endif
+		{
+			isUserType = false;
+			if (!Class.TryGetClass (self, out var cls, out error_message))
+				return false;
+
 			lock (usertype_cache) {
 #if NET
 				ref var result = ref CollectionsMarshal.GetValueRefOrAddDefault (usertype_cache, cls, out var exists);
@@ -2256,13 +2270,13 @@ namespace ObjCRuntime {
 					usertype_cache.Add (cls, result);
 				}
 #endif
-				return result;
+				isUserType = result;
+				return true;
 			}
 		}
 
-#if __MACOS__
-		static IntPtr selSetGCHandle = Selector.GetHandle ("xamarinSetGCHandle:flags:");
-#endif
+		[DllImport ("__Internal")]
+		extern static byte xamarin_is_user_type (IntPtr cls);
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		static bool SlowIsUserType (IntPtr cls)
@@ -2279,11 +2293,8 @@ namespace ObjCRuntime {
 						return false;
 				}
 			}
-#if __MACOS__
-			return Class.class_getInstanceMethod (cls, selSetGCHandle) != IntPtr.Zero;
-#else
-			return Class.class_getInstanceMethod (cls, Selector.GetHandle ("xamarinSetGCHandle:flags:")) != IntPtr.Zero;
-#endif
+
+			return xamarin_is_user_type (cls) != 0;
 		}
 
 		public static void ConnectMethod (Type type, MethodInfo method, Selector selector)
@@ -2587,11 +2598,11 @@ namespace ObjCRuntime {
 		[EditorBrowsable (EditorBrowsableState.Never)]
 		static Delegate ReleaseBlockWhenDelegateIsCollected (IntPtr block, Delegate @delegate)
 		{
-			if (@delegate is null)
-				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (@delegate));
-
 			if (block == IntPtr.Zero)
 				return @delegate;
+
+			if (@delegate is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (@delegate));
 
 			if (block_lifetime_table.TryGetValue (@delegate, out var existingCollector)) {
 				existingCollector.Add (block);
@@ -2771,6 +2782,7 @@ namespace ObjCRuntime {
 #endif
 		}
 	}
+
 
 	internal class IntPtrEqualityComparer : IEqualityComparer<IntPtr> {
 		public bool Equals (IntPtr x, IntPtr y)

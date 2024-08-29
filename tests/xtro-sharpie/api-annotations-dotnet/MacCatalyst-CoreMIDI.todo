@@ -1,11 +1,115 @@
-!missing-enum! MIDINoteAttribute not bound
-!missing-enum! MIDIPerNoteManagementOptions not bound
-!missing-enum! MIDIProgramChangeOptions not bound
-!missing-enum! MIDIUtilityStatus not bound
-!missing-enum-value! MidiMessageType native value kMIDIMessageTypeUnknownF = 15 not bound
-!missing-enum-value! MidiSysExStatus native value kMIDISysExStatusMixedDataSetHeader = 8 not bound
-!missing-enum-value! MidiSysExStatus native value kMIDISysExStatusMixedDataSetPayload = 9 not bound
 !missing-pinvoke! MIDIEventListForEachEvent is not bound
-## appended from unclassified file
-!missing-pinvoke! MIDIBluetoothDriverActivateAllConnections is not bound
-!missing-pinvoke! MIDIBluetoothDriverDisconnect is not bound
+!missing-pinvoke! MIDIEventPacketSysexBytesForGroup is not bound
+!missing-pinvoke! MIDISendUMPSysex is not bound
+!missing-pinvoke! MIDISendUMPSysex8 is not bound
+!deprecated-attribute-missing! MIDICIDeviceInfo missing a [Deprecated] attribute
+!deprecated-attribute-missing! MIDICIDiscoveredNode missing a [Deprecated] attribute
+!deprecated-attribute-missing! MIDICIDiscoveryManager missing a [Deprecated] attribute
+!deprecated-attribute-missing! MIDICIProfileState::initWithChannel:enabledProfiles:disabledProfiles: missing a [Deprecated] attribute
+!deprecated-attribute-missing! MIDICIResponder missing a [Deprecated] attribute
+!deprecated-attribute-missing! MIDICISession missing a [Deprecated] attribute
+!missing-enum! MIDICICategoryOptions not bound
+!missing-enum! MIDICIDeviceType not bound
+!missing-enum! MIDICIManagementMessageType not bound
+!missing-enum! MIDICIProcessInquiryMessageType not bound
+!missing-enum! MIDICIProfileMessageType not bound
+!missing-enum! MIDICIProfileType not bound
+!missing-enum! MIDICIPropertyExchangeMessageType not bound
+!missing-enum! MIDIUMPCIObjectBackingType not bound
+!missing-enum! MIDIUMPFunctionBlockDirection not bound
+!missing-enum! MIDIUMPFunctionBlockMIDI1Info not bound
+!missing-enum! MIDIUMPFunctionBlockUIHint not bound
+!missing-enum! MIDIUMPProtocolOptions not bound
+!missing-enum! UMPStreamMessageFormat not bound
+!missing-enum! UMPStreamMessageStatus not bound
+!missing-enum-value! MidiMessageType native value kMIDIMessageTypeFlexData = 13 not bound
+!missing-enum-value! MidiMessageType native value kMIDIMessageTypeInvalid = 255 not bound
+!missing-enum-value! MidiNotificationMessageId native value kMIDIMsgInternalStart = 4096 not bound
+!missing-enum-value! MidiUtilityStatus native value kMIDIUtilityStatusDeltaClockstampTicksPerQuarterNote = 3 not bound
+!missing-enum-value! MidiUtilityStatus native value kMIDIUtilityStatusTicksSinceLastEvent = 4 not bound
+!missing-field! kMIDIPropertyAssociatedEndpoint not bound
+!missing-field! MIDICIDeviceObjectKey not bound
+!missing-field! MIDICIDeviceWasAddedNotification not bound
+!missing-field! MIDICIDeviceWasRemovedNotification not bound
+!missing-field! MIDICIProfileObjectKey not bound
+!missing-field! MIDICIProfileWasRemovedNotification not bound
+!missing-field! MIDICIProfileWasUpdatedNotification not bound
+!missing-field! MIDIUMPEndpointObjectKey not bound
+!missing-field! MIDIUMPEndpointWasAddedNotification not bound
+!missing-field! MIDIUMPEndpointWasRemovedNotification not bound
+!missing-field! MIDIUMPEndpointWasUpdatedNotification not bound
+!missing-field! MIDIUMPFunctionBlockObjectKey not bound
+!missing-field! MIDIUMPFunctionBlockWasUpdatedNotification not bound
+!missing-selector! +MIDICIDeviceManager::sharedInstance not bound
+!missing-selector! +MIDIUMPEndpointManager::sharedInstance not bound
+!missing-selector! MIDI2DeviceInfo::family not bound
+!missing-selector! MIDI2DeviceInfo::initWithManufacturerID:family:modelNumber:revisionLevel: not bound
+!missing-selector! MIDI2DeviceInfo::manufacturerID not bound
+!missing-selector! MIDI2DeviceInfo::modelNumber not bound
+!missing-selector! MIDI2DeviceInfo::revisionLevel not bound
+!missing-selector! MIDICIDevice::deviceInfo not bound
+!missing-selector! MIDICIDevice::deviceType not bound
+!missing-selector! MIDICIDevice::maxPropertyExchangeRequests not bound
+!missing-selector! MIDICIDevice::maxSysExSize not bound
+!missing-selector! MIDICIDevice::MUID not bound
+!missing-selector! MIDICIDevice::profiles not bound
+!missing-selector! MIDICIDevice::supportsProcessInquiry not bound
+!missing-selector! MIDICIDevice::supportsProfileConfiguration not bound
+!missing-selector! MIDICIDevice::supportsPropertyExchange not bound
+!missing-selector! MIDICIDevice::supportsProtocolNegotiation not bound
+!missing-selector! MIDICIDeviceManager::discoveredCIDevices not bound
+!missing-selector! MIDIUMPCIProfile::enabledChannelCount not bound
+!missing-selector! MIDIUMPCIProfile::firstChannel not bound
+!missing-selector! MIDIUMPCIProfile::groupOffset not bound
+!missing-selector! MIDIUMPCIProfile::isEnabled not bound
+!missing-selector! MIDIUMPCIProfile::name not bound
+!missing-selector! MIDIUMPCIProfile::profileID not bound
+!missing-selector! MIDIUMPCIProfile::profileType not bound
+!missing-selector! MIDIUMPCIProfile::setProfileState:enabledChannelCount:error: not bound
+!missing-selector! MIDIUMPCIProfile::totalChannelCount not bound
+!missing-selector! MIDIUMPEndpoint::deviceInfo not bound
+!missing-selector! MIDIUMPEndpoint::endpointType not bound
+!missing-selector! MIDIUMPEndpoint::functionBlocks not bound
+!missing-selector! MIDIUMPEndpoint::hasJRTSReceiveCapability not bound
+!missing-selector! MIDIUMPEndpoint::hasJRTSTransmitCapability not bound
+!missing-selector! MIDIUMPEndpoint::hasStaticFunctionBlocks not bound
+!missing-selector! MIDIUMPEndpoint::MIDIDestination not bound
+!missing-selector! MIDIUMPEndpoint::MIDIProtocol not bound
+!missing-selector! MIDIUMPEndpoint::MIDISource not bound
+!missing-selector! MIDIUMPEndpoint::name not bound
+!missing-selector! MIDIUMPEndpoint::productInstanceID not bound
+!missing-selector! MIDIUMPEndpoint::setFunctionBlocks: not bound
+!missing-selector! MIDIUMPEndpoint::supportedMIDIProtocols not bound
+!missing-selector! MIDIUMPEndpointManager::UMPEndpoints not bound
+!missing-selector! MIDIUMPFunctionBlock::direction not bound
+!missing-selector! MIDIUMPFunctionBlock::firstGroup not bound
+!missing-selector! MIDIUMPFunctionBlock::functionBlockID not bound
+!missing-selector! MIDIUMPFunctionBlock::isEnabled not bound
+!missing-selector! MIDIUMPFunctionBlock::maxSysEx8Streams not bound
+!missing-selector! MIDIUMPFunctionBlock::MIDI1Info not bound
+!missing-selector! MIDIUMPFunctionBlock::midiCIDevice not bound
+!missing-selector! MIDIUMPFunctionBlock::name not bound
+!missing-selector! MIDIUMPFunctionBlock::totalGroupsSpanned not bound
+!missing-selector! MIDIUMPFunctionBlock::UIHint not bound
+!missing-selector! MIDIUMPFunctionBlock::UMPEndpoint not bound
+!missing-selector! MIDIUMPMutableEndpoint::initWithName:deviceInfo:productInstanceID:MIDIProtocol:destinationCallback: not bound
+!missing-selector! MIDIUMPMutableEndpoint::isEnabled not bound
+!missing-selector! MIDIUMPMutableEndpoint::mutableFunctionBlocks not bound
+!missing-selector! MIDIUMPMutableEndpoint::registerFunctionBlocks:markAsStatic:error: not bound
+!missing-selector! MIDIUMPMutableEndpoint::setEnabled:error: not bound
+!missing-selector! MIDIUMPMutableEndpoint::setMutableFunctionBlocks: not bound
+!missing-selector! MIDIUMPMutableEndpoint::setName:error: not bound
+!missing-selector! MIDIUMPMutableFunctionBlock::initWithName:direction:firstGroup:totalGroupsSpanned:maxSysEx8Streams:MIDI1Info:UIHint:isEnabled: not bound
+!missing-selector! MIDIUMPMutableFunctionBlock::reconfigureWithFirstGroup:direction:MIDI1Info:UIHint:error: not bound
+!missing-selector! MIDIUMPMutableFunctionBlock::setEnabled:error: not bound
+!missing-selector! MIDIUMPMutableFunctionBlock::setName:error: not bound
+!missing-selector! MIDIUMPMutableFunctionBlock::UMPEndpoint not bound
+!missing-type! MIDI2DeviceInfo not bound
+!missing-type! MIDICIDevice not bound
+!missing-type! MIDICIDeviceManager not bound
+!missing-type! MIDIUMPCIProfile not bound
+!missing-type! MIDIUMPEndpoint not bound
+!missing-type! MIDIUMPEndpointManager not bound
+!missing-type! MIDIUMPFunctionBlock not bound
+!missing-type! MIDIUMPMutableEndpoint not bound
+!missing-type! MIDIUMPMutableFunctionBlock not bound

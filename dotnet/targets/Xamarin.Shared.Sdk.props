@@ -23,7 +23,10 @@
 		<UsingAppleNETSdk>true</UsingAppleNETSdk>
 		<!-- This is the location of the Microsoft.<platform>.Sdk NuGet (/usr/local/share/dotnet/sdk/<version>/Sdks/Microsoft.[iOS/tvOS/watchOS/macOS].Sdk) on the platform the build is running from (Mac or Win) -->
 		<_XamarinSdkRootDirectory>$([MSBuild]::NormalizePath('$(MSBuildThisFileDirectory)', '..'))\</_XamarinSdkRootDirectory>
-		<_XamarinRelativeSdkRootDirectory>$([MSBuild]::EnsureTrailingSlash($([MSBuild]::MakeRelative('$(NetCoreRoot)', '$(_XamarinSdkRootDirectory)'))))</_XamarinRelativeSdkRootDirectory>
+		<!-- We used to use '_XamarinRelativeSdkRootDirectory' as the property name, but we've made it public, so it's XamarinRelativeSdkRootDirectory now, but keep setting/supporting the underscored version for a while -->
+		<XamarinRelativeSdkRootDirectory Condition="'$(XamarinRelativeSdkRootDirectory)' == '' And '$(_XamarinRelativeSdkRootDirectory)' != ''">$(_XamarinRelativeSdkRootDirectory)</XamarinRelativeSdkRootDirectory>
+		<XamarinRelativeSdkRootDirectory Condition="'$(XamarinRelativeSdkRootDirectory)' == ''">$([MSBuild]::EnsureTrailingSlash($([MSBuild]::MakeRelative('$(NetCoreRoot)', '$(_XamarinSdkRootDirectory)'))))</XamarinRelativeSdkRootDirectory>
+		<_XamarinRelativeSdkRootDirectory Condition="'$(_XamarinRelativeSdkRootDirectory)' == ''">$(XamarinRelativeSdkRootDirectory)</_XamarinRelativeSdkRootDirectory>
 		<!-- This is the location of the Microsoft.<platform>.Sdk NuGet on macOS, this value will be overriden from Windows  -->
 		<_XamarinSdkRootDirectoryOnMac>$(_XamarinSdkRootDirectory)</_XamarinSdkRootDirectoryOnMac>
 		<_XamarinTaskAssembly Condition="'$(_PlatformName)' != 'macOS'">$(_XamarinSdkRootDirectory)\tools\msbuild\iOS\Xamarin.iOS.Tasks.dll</_XamarinTaskAssembly>
@@ -143,34 +146,9 @@
 		<_SdkIsSimulator Condition="'$(_SdkIsSimulator)' == ''">false</_SdkIsSimulator>
 	</PropertyGroup>
 
-	<!-- Since we know if we're building for a simulator or not, we can determine the default trimming behavior -->
-	<PropertyGroup Condition="'$(TrimMode)' != ''">
-		<!-- If TrimMode is set, then that's the default link mode -->
-		<_DefaultLinkMode>TrimMode</_DefaultLinkMode>
-	</PropertyGroup>
-	<PropertyGroup Condition="'$(TrimMode)' == ''">
-		<!-- Linking is always on for all assemblies when using NativeAOT - this is because we need to modify all assemblies in the linker for them to be compatible with NativeAOT -->
-		<_DefaultLinkMode Condition="'$(_UseNativeAot)' == 'true'">Full</_DefaultLinkMode>
-
-		<_DefaultLinkMode Condition="'$(_UseNativeAot)' != 'true' And '$(_PlatformName)' == 'macOS'">None</_DefaultLinkMode> <!-- Linking is off by default for macOS apps -->
-		<_DefaultLinkMode Condition="'$(_UseNativeAot)' != 'true' And '$(_PlatformName)' == 'MacCatalyst' And '$(Configuration)' == 'Release'">SdkOnly</_DefaultLinkMode> <!-- Default linking is on for release builds for Mac Catalyst apps -->
-		<_DefaultLinkMode Condition="'$(_UseNativeAot)' != 'true' And '$(_PlatformName)' == 'MacCatalyst' And '$(Configuration)' != 'Release'">None</_DefaultLinkMode> <!-- Default linking is off for non-release builds for Mac Catalyst apps -->
-		<_DefaultLinkMode Condition="'$(_UseNativeAot)' != 'true' And '$(_PlatformName)' != 'macOS' And '$(_PlatformName)' != 'MacCatalyst' And '$(_SdkIsSimulator)' == 'true'">None</_DefaultLinkMode> <!-- Linking is off by default in the simulator -->
-		<_DefaultLinkMode Condition="'$(_UseNativeAot)' != 'true' And '$(_PlatformName)' != 'macOS' And '$(_PlatformName)' != 'MacCatalyst' And '$(_SdkIsSimulator)' != 'true'">SdkOnly</_DefaultLinkMode> <!-- Linking is SdkOnly for iOS/tvOS/watchOS apps on device -->
-	</PropertyGroup>
 	<PropertyGroup>
-		<_LinkMode Condition="'$(_LinkMode)' == '' And '$(_PlatformName)' == 'macOS'">$(LinkMode)</_LinkMode>
-		<_LinkMode Condition="'$(_LinkMode)' == '' And '$(_PlatformName)' != 'macOS'">$(MtouchLink)</_LinkMode>
-		<_LinkMode Condition="'$(_LinkMode)' == ''">$(_DefaultLinkMode)</_LinkMode>
-		<_LinkMode Condition="'$(_LinkMode)' == '' And '$(_PlatformName)' == 'macOS'">None</_LinkMode> <!-- Linking is off by default for macOS apps -->
-		<_LinkMode Condition="'$(_LinkMode)' == '' And '$(_PlatformName)' != 'macOS'">SdkOnly</_LinkMode> <!-- Default linking is SdkOnly for iOS/tvOS/watchOS apps -->
-
-		<!-- TrimMode specifies what the linker will do with framework assemblies -->
-		<TrimMode Condition="'$(_LinkMode)' == 'TrimMode'">$(TrimMode)</TrimMode>
-		<TrimMode Condition="'$(_LinkMode)' == 'None'">copy</TrimMode>
-		<TrimMode Condition="'$(_LinkMode)' == 'SdkOnly'">partial</TrimMode>
-		<TrimMode Condition="'$(_LinkMode)' == 'Full'">full</TrimMode>
-		<!-- For None link mode we also need to set TrimMode for all assemblies. This is done later -->
+		<!-- See Xamarin.Shared.Sdk.Trimming.props for an explanation why we use CustomAfterDirectoryBuildTargets to compute trimming options -->
+		<CustomAfterDirectoryBuildTargets>$(CustomAfterDirectoryBuildTargets);$(MSBuildThisFileDirectory)Xamarin.Shared.Sdk.Trimming.props</CustomAfterDirectoryBuildTargets>
 	</PropertyGroup>
 
 	<!-- We're never using any app hosts -->
