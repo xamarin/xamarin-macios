@@ -302,10 +302,10 @@ public partial class Generator {
 			print ("}");
 
 			if (BindingTouch.SupportsXmlDocumentation) {
-				print ($"/// <summary>Converts an array of <see cref=\"global::{type.FullName}\" /> enum values into an array of their corresponding constants..</summary>");
-				print ($"/// <param name=\"values\">The array if enum values to convert.</param>");
+				print ($"/// <summary>Converts an array of <see cref=\"global::{type.FullName}\" /> enum values into an array of their corresponding constants.</summary>");
+				print ($"/// <param name=\"values\">The array of enum values to convert.</param>");
 			}
-			print ($"public static {backingFieldTypeName}?[]? ToArray (this {type.Name}[]? values)");
+			print ($"internal static {backingFieldTypeName}?[]? ToConstantArray (this {type.Name}[]? values)");
 			print ("{");
 			indent++;
 			print ("if (values is null)");
@@ -321,7 +321,11 @@ public partial class Generator {
 			indent--;
 			print ("}");
 			print ("");
-			print ($"internal static {type.Name}[]? To{type.Name}Array (this {backingFieldTypeName}[]? values)");
+			if (BindingTouch.SupportsXmlDocumentation) {
+				print ($"/// <summary>Converts an array of <see cref=\"{backingFieldTypeName}\" /> values into an array of their corresponding enum values.</summary>");
+				print ($"/// <param name=\"values\">The array if <see cref=\"{backingFieldTypeName}\" /> values to convert.</param>");
+			}
+			print ($"internal static {type.Name}[]? ToEnumArray (this {backingFieldTypeName}[]? values)");
 			print ("{");
 			indent++;
 			print ("if (values is null)");
