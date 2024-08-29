@@ -230,6 +230,13 @@ namespace GeneratorTests {
 			BuildFile (Profile.iOS, "bug34042.cs");
 		}
 
+		[Test]
+		[TestCase (Profile.iOS)]
+		public void NSCopyingNullability (Profile profile)
+		{
+			var bgen = BuildFile (profile, "tests/nscopying-nullability.cs");
+			bgen.AssertNoWarnings ();
+		}
 
 		static string RenderArgument (CustomAttributeArgument arg)
 		{
@@ -1641,21 +1648,43 @@ namespace GeneratorTests {
 			const string nuintName = "System.nuint";
 #endif
 
-			var nsNumberGetConstant = bgen.ApiAssembly.MainModule.GetType ("BackingField", "NSNumberFieldTypeExtensions").Methods.First ((v) => v.Name == "GetConstant");
-			Assert.AreEqual ("Foundation.NSNumber", nsNumberGetConstant.ReturnType.FullName, "NSNumber #1");
-			var nsNumberGetValue = bgen.ApiAssembly.MainModule.GetType ("BackingField", "NSNumberFieldTypeExtensions").Methods.First ((v) => v.Name == "GetValue");
-			Assert.AreEqual ("Foundation.NSNumber", nsNumberGetValue.Parameters [0].ParameterType.FullName, "NSNumber #2");
+			var testCases = new [] {
+				new { BackingFieldType = "NSNumber", NullableType = "Foundation.NSNumber", RenderedBackingFieldType = "Foundation.NSNumber", SimplifiedNullableType = "Foundation.NSNumber" },
+				new { BackingFieldType = "NSInteger", NullableType = $"System.Nullable`1<{nintName}>", RenderedBackingFieldType = nintName, SimplifiedNullableType = "System.Nullable`1" },
+				new { BackingFieldType = "NSUInteger", NullableType = $"System.Nullable`1<{nuintName}>", RenderedBackingFieldType = nuintName, SimplifiedNullableType = "System.Nullable`1" },
+			};
 
-			var nsNSIntegerGetConstant = bgen.ApiAssembly.MainModule.GetType ("BackingField", "NSIntegerFieldTypeExtensions").Methods.First ((v) => v.Name == "GetConstant");
-			Assert.AreEqual ($"System.Nullable`1<{nintName}>", nsNSIntegerGetConstant.ReturnType.FullName, "NSInteger #1");
-			var nsNSIntegerGetValue = bgen.ApiAssembly.MainModule.GetType ("BackingField", "NSIntegerFieldTypeExtensions").Methods.First ((v) => v.Name == "GetValue");
-			Assert.AreEqual (nintName, nsNSIntegerGetValue.Parameters [0].ParameterType.FullName, "NSInteger #2");
+			foreach (var tc in testCases) {
+				var getConstant = bgen.ApiAssembly.MainModule.GetType ("BackingField", $"{tc.BackingFieldType}FieldTypeExtensions").Methods.First ((v) => v.Name == "GetConstant");
+				Assert.AreEqual (tc.NullableType, getConstant.ReturnType.FullName, $"{tc.BackingFieldType}: GetConstant return type");
 
-			var nsNSUIntegerGetConstant = bgen.ApiAssembly.MainModule.GetType ("BackingField", "NSUIntegerFieldTypeExtensions").Methods.First ((v) => v.Name == "GetConstant");
-			Assert.AreEqual ($"System.Nullable`1<{nuintName}>", nsNSUIntegerGetConstant.ReturnType.FullName, "NSUInteger #1");
-			var nsNSUIntegerGetValue = bgen.ApiAssembly.MainModule.GetType ("BackingField", "NSUIntegerFieldTypeExtensions").Methods.First ((v) => v.Name == "GetValue");
-			Assert.AreEqual (nuintName, nsNSUIntegerGetValue.Parameters [0].ParameterType.FullName, "NSUInteger #2");
+				var getValue = bgen.ApiAssembly.MainModule.GetType ("BackingField", $"{tc.BackingFieldType}FieldTypeExtensions").Methods.First ((v) => v.Name == "GetValue");
+				Assert.AreEqual (tc.RenderedBackingFieldType, getValue.Parameters [0].ParameterType.FullName, $"{tc.BackingFieldType}: GetValue parameter type");
+
+				var toEnumArray = bgen.ApiAssembly.MainModule.GetType ("BackingField", $"{tc.BackingFieldType}FieldTypeExtensions").Methods.First ((v) => v.Name == "ToEnumArray");
+				Assert.IsTrue (toEnumArray.ReturnType.IsArray, $"{tc.BackingFieldType} ToEnumArray return type IsArray");
+				Assert.AreEqual ($"{tc.BackingFieldType}FieldType", toEnumArray.ReturnType.GetElementType ().Name, $"{tc.BackingFieldType} ToEnumArray return type");
+				Assert.IsTrue (toEnumArray.Parameters [0].ParameterType.IsArray, $"{tc.BackingFieldType} ToEnumArray parameter type IsArray");
+				Assert.AreEqual (tc.RenderedBackingFieldType, toEnumArray.Parameters [0].ParameterType.GetElementType ().FullName, $"{tc.BackingFieldType} ToEnumArray parameter type");
+
+				var toConstantArray = bgen.ApiAssembly.MainModule.GetType ("BackingField", $"{tc.BackingFieldType}FieldTypeExtensions").Methods.First ((v) => v.Name == "ToConstantArray");
+				Assert.IsTrue (toConstantArray.ReturnType.IsArray, $"{tc.BackingFieldType} ToConstantArray return type IsArray");
+				Assert.AreEqual (tc.SimplifiedNullableType, toConstantArray.ReturnType.GetElementType ().FullName, $"{tc.BackingFieldType} ToConstantArray return type");
+				Assert.IsTrue (toConstantArray.Parameters [0].ParameterType.IsArray, $"{tc.BackingFieldType} ToConstantArray parameter type IsArray");
+				Assert.AreEqual ($"{tc.BackingFieldType}FieldType", toConstantArray.Parameters [0].ParameterType.GetElementType ().Name, $"{tc.BackingFieldType} ToConstantArray parameter type");
+			}
 		}
 
+		[Test]
+		[TestCase (Profile.iOS)]
+		public void DelegatesWithNullableReturnType (Profile profile)
+		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
+			var bgen = BuildFile (profile, "tests/delegate-nullable-return.cs");
+			bgen.AssertNoWarnings ();
+
+			var delegateCallback = bgen.ApiAssembly.MainModule.GetType ("NS", "MyCallback").Methods.First ((v) => v.Name == "EndInvoke");
+			Assert.That (delegateCallback.MethodReturnType.CustomAttributes.Any (v => v.AttributeType.Name == "NullableAttribute"), "Nullable return type");
+		}
 	}
 }

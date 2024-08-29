@@ -1,2 +1,0 @@
-!missing-enum! PDFSelectionGranularity not bound
-!missing-selector! PDFDocument::selectionFromPage:atPoint:toPage:atPoint:withGranularity: not bound

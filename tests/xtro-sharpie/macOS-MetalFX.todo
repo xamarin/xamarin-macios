@@ -1,2 +1,0 @@
-!missing-selector! MTLFXTemporalScalerDescriptor::requiresSynchronousInitialization not bound
-!missing-selector! MTLFXTemporalScalerDescriptor::setRequiresSynchronousInitialization: not bound

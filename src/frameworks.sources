@@ -368,6 +368,9 @@ CLOUDKIT_API_SOURCES = \
 
 CLOUDKIT_SOURCES = \
 	CloudKit/CKCompat.cs \
+	CloudKit/CKFetchNotificationChangesOperation.cs \
+	CloudKit/CKMarkNotificationsReadOperation.cs \
+	CloudKit/CKModifyBadgeOperation.cs \
 	CloudKit/CKRecord.cs \
 	CloudKit/CKRecordID.cs \
 	CloudKit/CKRecordZoneID.cs \
@@ -922,6 +925,17 @@ FOUNDATION_SOURCES = \
 	Foundation/ToString.cs \
 	Foundation/NSItemProvider.cs \
 
+# FSKit
+
+FSKIT_CORE_SOURCES = \
+	FSKit/FSMetaReadahead.cs \
+
+FSKIT_SOURCES = \
+	FSKit/FSBlockDeviceResource.cs \
+	FSKit/FSFileName.cs \
+	FSKit/FSKitFunctions.cs \
+	FSKit/FSMessageConnection.cs \
+
 # GameController
 
 GAMECONTROLLER_API_SOURCES = \
@@ -943,6 +957,7 @@ GAMEKIT_API_SOURCES = \
 	GameKit/GameKit.cs \
 
 GAMEKIT_SOURCES = \
+	GameKit/GKGameCenterViewController.cs \
 	GameKit/GKLocalPlayerListener.cs \
 	GameKit/GameKit2.cs \
 	GameKit/GKCompat.cs \
@@ -2120,6 +2135,7 @@ MACOS_FRAMEWORKS =          \
 	FileProvider	\
 	FileProviderUI	\
 	FinderSync		\
+	FSKit \
 	GameController          \
 	GameplayKit             \
 	GLKit                   \

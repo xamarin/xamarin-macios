@@ -70,7 +70,11 @@
     </Dependency>
   </ProductDependencies>
   <ToolsetDependencies>
-    <Dependency Name="Microsoft.DotNet.Build.Tasks.Feed" Version="9.0.0-beta.24408.2">
+    <Dependency Name="Microsoft.DotNet.SharedFramework.Sdk" Version="8.0.0-beta.24413.2">
+      <Uri>https://github.com/dotnet/arcade</Uri>
+      <Sha>51321b7e150a2f426cb9e1334687bdfab68ec323</Sha>
+    </Dependency>
+    <Dependency Name="Microsoft.DotNet.Build.Tasks.Feed" Version="9.0.0-beta.24408.2" Pinned="true">
       <Uri>https://github.com/dotnet/arcade</Uri>
       <Sha>60ae233c3d77f11c5fdb53e570b64d503b13ba59</Sha>
     </Dependency>
@@ -78,9 +82,9 @@
       <Uri>https://github.com/dotnet/templating</Uri>
       <Sha />
     </Dependency>
-    <Dependency Name="Microsoft.DotNet.XHarness.iOS.Shared" Version="9.0.0-prerelease.24405.1">
+    <Dependency Name="Microsoft.DotNet.XHarness.iOS.Shared" Version="9.0.0-prerelease.24420.3">
       <Uri>https://github.com/dotnet/xharness</Uri>
-      <Sha>9794254fa909ff5adc46326e9b54009793f61dcd</Sha>
+      <Sha>69f15217657bc3a7f0102911aa967525529fdfdb</Sha>
     </Dependency>
   </ToolsetDependencies>
 </Dependencies>

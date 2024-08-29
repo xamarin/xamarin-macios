@@ -202,6 +202,7 @@ partial class Frameworks {
 		"FileProviderUI",
 		"FinderSync",
 		"Foundation",
+		"FSKit",
 		"GameController",
 		"GameKit",
 		"GameplayKit",
@@ -627,6 +628,7 @@ partial class Frameworks {
 	bool? _FileProviderUI;
 	bool? _FinderSync;
 	bool? _Foundation;
+	bool? _FSKit;
 	bool? _GameController;
 	bool? _GameKit;
 	bool? _GameplayKit;
@@ -797,6 +799,7 @@ partial class Frameworks {
 	public bool HaveFileProviderUI { get { if (!_FileProviderUI.HasValue) _FileProviderUI = GetValue ("FileProviderUI"); return _FileProviderUI.Value; } }
 	public bool HaveFinderSync { get { if (!_FinderSync.HasValue) _FinderSync = GetValue ("FinderSync"); return _FinderSync.Value; } }
 	public bool HaveFoundation { get { if (!_Foundation.HasValue) _Foundation = GetValue ("Foundation"); return _Foundation.Value; } }
+	public bool HaveFSKit { get { if (!_FSKit.HasValue) _FSKit = GetValue ("FSKit"); return _FSKit.Value; } }
 	public bool HaveGameController { get { if (!_GameController.HasValue) _GameController = GetValue ("GameController"); return _GameController.Value; } }
 	public bool HaveGameKit { get { if (!_GameKit.HasValue) _GameKit = GetValue ("GameKit"); return _GameKit.Value; } }
 	public bool HaveGameplayKit { get { if (!_GameplayKit.HasValue) _GameplayKit = GetValue ("GameplayKit"); return _GameplayKit.Value; } }

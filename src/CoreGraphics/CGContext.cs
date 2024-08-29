@@ -1433,6 +1433,109 @@ namespace CoreGraphics {
 		public void DrawConicGradient (CGGradient? gradient, CGPoint point, nfloat angle) =>
 			CGContextDrawConicGradient (Handle, gradient.GetHandle (), point, angle);
 
+#if NET
+		[SupportedOSPlatform ("ios18.0")]
+		[SupportedOSPlatform ("maccatalyst18.0")]
+		[SupportedOSPlatform ("macos15.0")]
+		[SupportedOSPlatform ("tvos18.0")]
+#else
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+#endif
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		static extern byte CGContextSetEDRTargetHeadroom (/* CGContextRef __nonnull */ IntPtr context, /* float */ float headroom);
+
+#if NET
+		[SupportedOSPlatform ("ios18.0")]
+		[SupportedOSPlatform ("maccatalyst18.0")]
+		[SupportedOSPlatform ("macos15.0")]
+		[SupportedOSPlatform ("tvos18.0")]
+#else
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+#endif
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		static extern float CGContextGetEDRTargetHeadroom (/* CGContextRef __nonnull */ IntPtr context);
+
+		/// <summary>Get the EDR headroom that's used when rendering HDR content.</summary>
+		/// <returns>The EDR headroom.</returns>
+#if NET
+		[SupportedOSPlatform ("ios18.0")]
+		[SupportedOSPlatform ("maccatalyst18.0")]
+		[SupportedOSPlatform ("macos15.0")]
+		[SupportedOSPlatform ("tvos18.0")]
+#else
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+#endif
+		public float GetEdrTargetHeadroom ()
+		{
+			return CGContextGetEDRTargetHeadroom (Handle);
+		}
+
+		/// <summary>Get the EDR headroom that's used when rendering HDR content.</summary>
+		/// <param name="value">The value to set. Must be greater than 1.0f.</param>
+		/// <returns>Returns true if successful, false otherwise.</returns>
+#if NET
+		[SupportedOSPlatform ("ios18.0")]
+		[SupportedOSPlatform ("maccatalyst18.0")]
+		[SupportedOSPlatform ("macos15.0")]
+		[SupportedOSPlatform ("tvos18.0")]
+#else
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+#endif
+		public bool SetEdrTargetHeadroom (float value)
+		{
+			return CGContextSetEDRTargetHeadroom (Handle, value) != 0;
+		}
+
+#if NET
+		[SupportedOSPlatform ("ios18.0")]
+		[SupportedOSPlatform ("maccatalyst18.0")]
+		[SupportedOSPlatform ("macos15.0")]
+		[SupportedOSPlatform ("tvos18.0")]
+#else
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+#endif
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		static extern /* bool */ byte CGContextDrawImageApplyingToneMapping (/* CGContextRef __nonnull */ IntPtr context, CGRect r, /* CGImageRef */ IntPtr image, CGToneMapping method, /* CFDictionaryRef  __nullable */ IntPtr options);
+
+		/// <summary>Draw the specified image onto the CGContext, applying the tone mapping and any tone mapping options.</summary>
+		/// <param name="rect">The rectangle where the image is rendered.</param>
+		/// <param name="image">The image to render.</param>
+		/// <param name="method">The tone mapping method to use.</param>
+		/// <param name="options">The tone mapping options to use.</param>
+		/// <returns>Returns true if successful, otherwise false.</returns>
+#if NET
+		[SupportedOSPlatform ("ios18.0")]
+		[SupportedOSPlatform ("maccatalyst18.0")]
+		[SupportedOSPlatform ("macos15.0")]
+		[SupportedOSPlatform ("tvos18.0")]
+#else
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+#endif
+		public bool DrawImageApplyingToneMapping (CGRect rect, CGImage image, CGToneMapping method, NSDictionary? options)
+		{
+			var rv = CGContextDrawImageApplyingToneMapping (Handle, rect, image.Handle, method, options.GetHandle ());
+			return rv != 0;
+		}
+
+		/// <summary>Draw the specified image onto the CGContext, applying the tone mapping and any tone mapping options.</summary>
+		/// <param name="rect">The rectangle where the image is rendered.</param>
+		/// <param name="image">The image to render.</param>
+		/// <param name="method">The tone mapping method to use.</param>
+		/// <param name="options">The tone mapping options to use.</param>
+		/// <returns>Returns true if successful, otherwise false.</returns>
+#if NET
+		[SupportedOSPlatform ("ios18.0")]
+		[SupportedOSPlatform ("maccatalyst18.0")]
+		[SupportedOSPlatform ("macos15.0")]
+		[SupportedOSPlatform ("tvos18.0")]
+#else
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+#endif
+		public bool DrawImageApplyingToneMapping (CGRect rect, CGImage image, CGToneMapping method, CGToneMappingOptions? options)
+		{
+			var rv = CGContextDrawImageApplyingToneMapping (Handle, rect, image.Handle, method, options?.Dictionary?.GetHandle () ?? IntPtr.Zero);
+			return rv != 0;
+		}
 #endif // !COREBUILD
 	}
 }
