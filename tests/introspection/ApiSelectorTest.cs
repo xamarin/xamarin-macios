@@ -1287,6 +1287,10 @@ namespace Introspection {
 			// DDDevicePickerViewController
 			case "initWithBrowseDescriptor:parameters:":
 				return true;
+			// MKAddressFilter
+			case "initExcludingOptions:":
+			case "initIncludingOptions:":
+				return true;
 			default:
 				return false;
 			}
