@@ -221,7 +221,7 @@ namespace AVFoundation {
 	}
 
 #if !NET
-	[Obsolete ("Use AVMediaTypes enum values")]
+	[Obsolete ("Use AVMediaTypes enum values.")]
 	[NoWatch]
 	[BaseType (typeof (NSObject))]
 	[Static]
@@ -420,7 +420,7 @@ namespace AVFoundation {
 
 #if !NET
 	[NoWatch]
-	[Obsolete ("Use AVMediaCharacteristics enum values")]
+	[Obsolete ("Use AVMediaCharacteristics enum values.")]
 	[BaseType (typeof (NSObject))]
 	[Static]
 	interface AVMediaCharacteristic {
@@ -598,7 +598,7 @@ namespace AVFoundation {
 	[NoWatch]
 	[BaseType (typeof (NSObject))]
 	[Static]
-	[Obsolete ("Use AVFileTypes enum values")]
+	[Obsolete ("Use AVFileTypes enum values.")]
 	interface AVFileType {
 		[Field ("AVFileTypeQuickTimeMovie")]
 		NSString QuickTimeMovie { get; }
