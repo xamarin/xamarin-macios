@@ -17,7 +17,7 @@ namespace MetalPerformanceShadersGraph {
 		[SupportedOSPlatform ("macos14.0")]
 		[SupportedOSPlatform ("tvos17.0")]
 #else
-		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 #endif
 	public enum MPSGraphExecutableInitializationOption {
 		/// <summary>The <c>packageUrl</c> parameter passed to the constructor is a url to a CoreML package.</summary>

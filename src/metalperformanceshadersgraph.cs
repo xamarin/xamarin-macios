@@ -191,7 +191,7 @@ namespace MetalPerformanceShadersGraph {
 		[Export ("absoluteWithTensor:name:")]
 		MPSGraphTensor Absolute (MPSGraphTensor tensor, [NullAllowed] string name);
 
-		[TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17, 0)]
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("absoluteSquareWithTensor:name:")]
 		MPSGraphTensor AbsoluteSquare (MPSGraphTensor tensor, [NullAllowed] string name);
 
@@ -291,19 +291,19 @@ namespace MetalPerformanceShadersGraph {
 		[Export ("erfWithTensor:name:")]
 		MPSGraphTensor Erf (MPSGraphTensor tensor, [NullAllowed] string name);
 
-		[TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[TV (16, 0), Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 		[Export ("truncateWithTensor:name:")]
 		MPSGraphTensor Truncate (MPSGraphTensor tensor, [NullAllowed] string name);
 
-		[TV (16,1), Mac (13,0), iOS (16,1), MacCatalyst (16,1)]
+		[TV (16, 1), Mac (13, 0), iOS (16, 1), MacCatalyst (16, 1)]
 		[Export ("bitwiseNOTWithTensor:name:")]
 		MPSGraphTensor BitwiseNot (MPSGraphTensor tensor, [NullAllowed] string name);
 
-		[TV (16,1), Mac (13,0), iOS (16,1), MacCatalyst (16,1)]
+		[TV (16, 1), Mac (13, 0), iOS (16, 1), MacCatalyst (16, 1)]
 		[Export ("bitwisePopulationCountWithTensor:name:")]
 		MPSGraphTensor BitwisePopulationCount (MPSGraphTensor tensor, [NullAllowed] string name);
 
-		[TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("conjugateWithTensor:name:")]
 		MPSGraphTensor Conjugate (MPSGraphTensor tensor, [NullAllowed] string name);
 
@@ -401,23 +401,23 @@ namespace MetalPerformanceShadersGraph {
 		[Export ("atan2WithPrimaryTensor:secondaryTensor:name:")]
 		MPSGraphTensor Atan2 (MPSGraphTensor primaryTensor, MPSGraphTensor secondaryTensor, [NullAllowed] string name);
 
-		[TV (16,1), Mac (13,0), iOS (16,1), MacCatalyst (16,1)]
+		[TV (16, 1), Mac (13, 0), iOS (16, 1), MacCatalyst (16, 1)]
 		[Export ("bitwiseANDWithPrimaryTensor:secondaryTensor:name:")]
 		MPSGraphTensor BitwiseAnd (MPSGraphTensor primaryTensor, MPSGraphTensor secondaryTensor, [NullAllowed] string name);
 
-		[TV (16,1), Mac (13,0), iOS (16,1), MacCatalyst (16,1)]
+		[TV (16, 1), Mac (13, 0), iOS (16, 1), MacCatalyst (16, 1)]
 		[Export ("bitwiseORWithPrimaryTensor:secondaryTensor:name:")]
 		MPSGraphTensor BitwiseOr (MPSGraphTensor primaryTensor, MPSGraphTensor secondaryTensor, [NullAllowed] string name);
 
-		[TV (16,1), Mac (13,0), iOS (16,1), MacCatalyst (16,1)]
+		[TV (16, 1), Mac (13, 0), iOS (16, 1), MacCatalyst (16, 1)]
 		[Export ("bitwiseXORWithPrimaryTensor:secondaryTensor:name:")]
 		MPSGraphTensor BitwiseXor (MPSGraphTensor primaryTensor, MPSGraphTensor secondaryTensor, [NullAllowed] string name);
 
-		[TV (16,1), Mac (13,0), iOS (16,1), MacCatalyst (16,1)]
+		[TV (16, 1), Mac (13, 0), iOS (16, 1), MacCatalyst (16, 1)]
 		[Export ("bitwiseLeftShiftWithPrimaryTensor:secondaryTensor:name:")]
 		MPSGraphTensor BitwiseLeftShift (MPSGraphTensor primaryTensor, MPSGraphTensor secondaryTensor, [NullAllowed] string name);
 
-		[TV (16,1), Mac (13,0), iOS (16,1), MacCatalyst (16,1)]
+		[TV (16, 1), Mac (13, 0), iOS (16, 1), MacCatalyst (16, 1)]
 		[Export ("bitwiseRightShiftWithPrimaryTensor:secondaryTensor:name:")]
 		MPSGraphTensor BitwiseRightShift (MPSGraphTensor primaryTensor, MPSGraphTensor secondaryTensor, [NullAllowed] string name);
 
@@ -437,15 +437,15 @@ namespace MetalPerformanceShadersGraph {
 		[Export ("floorModuloWithPrimaryTensor:secondaryTensor:name:")]
 		MPSGraphTensor FloorModulo (MPSGraphTensor primaryTensor, MPSGraphTensor secondaryTensor, [NullAllowed] string name);
 
-		[TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("realPartOfTensor:name:")]
 		MPSGraphTensor RealPart (MPSGraphTensor tensor, [NullAllowed] string name);
 
-		[TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("imaginaryPartOfTensor:name:")]
 		MPSGraphTensor ImaginaryPart (MPSGraphTensor tensor, [NullAllowed] string name);
 
-		[TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("complexTensorWithRealTensor:imaginaryTensor:name:")]
 		MPSGraphTensor ComplexTensor (MPSGraphTensor realTensor, MPSGraphTensor imaginaryTensor, [NullAllowed] string name);
 	}
@@ -546,23 +546,23 @@ namespace MetalPerformanceShadersGraph {
 		[Export ("convolution2DWeightsGradientWithIncomingGradientTensor:sourceTensor:outputShapeTensor:forwardConvolutionDescriptor:name:")]
 		MPSGraphTensor Convolution2DWeightsGradient (MPSGraphTensor gradient, MPSGraphTensor source, MPSGraphTensor outputShapeTensor, MPSGraphConvolution2DOpDescriptor forwardConvolutionDescriptor, [NullAllowed] string name);
 
-		[TV (16,3), Mac (13,2), iOS (16,3), MacCatalyst (16,3)]
+		[TV (16, 3), Mac (13, 2), iOS (16, 3), MacCatalyst (16, 3)]
 		[Export ("convolution3DWithSourceTensor:weightsTensor:descriptor:name:")]
 		MPSGraphTensor Convolution3D (MPSGraphTensor source, MPSGraphTensor weights, MPSGraphConvolution3DOpDescriptor descriptor, [NullAllowed] string name);
 
-		[TV (16,3), Mac (13,2), iOS (16,3), MacCatalyst (16,3)]
+		[TV (16, 3), Mac (13, 2), iOS (16, 3), MacCatalyst (16, 3)]
 		[Export ("convolution3DDataGradientWithIncomingGradientTensor:weightsTensor:outputShape:forwardConvolutionDescriptor:name:")]
-		MPSGraphTensor Convolution3DDataGradient (MPSGraphTensor incomingGradient, MPSGraphTensor weights, [BindAs (typeof (int []))] NSNumber[] outputShape, MPSGraphConvolution3DOpDescriptor forwardConvolutionDescriptor, [NullAllowed] string name);
+		MPSGraphTensor Convolution3DDataGradient (MPSGraphTensor incomingGradient, MPSGraphTensor weights, [BindAs (typeof (int []))] NSNumber [] outputShape, MPSGraphConvolution3DOpDescriptor forwardConvolutionDescriptor, [NullAllowed] string name);
 
-		[TV (16,3), Mac (13,2), iOS (16,3), MacCatalyst (16,3)]
+		[TV (16, 3), Mac (13, 2), iOS (16, 3), MacCatalyst (16, 3)]
 		[Export ("convolution3DDataGradientWithIncomingGradientTensor:weightsTensor:outputShapeTensor:forwardConvolutionDescriptor:name:")]
 		MPSGraphTensor Convolution3DDataGradient (MPSGraphTensor gradient, MPSGraphTensor weights, MPSGraphTensor outputShapeTensor, MPSGraphConvolution3DOpDescriptor forwardConvolutionDescriptor, [NullAllowed] string name);
 
-		[TV (16,3), Mac (13,2), iOS (16,3), MacCatalyst (16,3)]
+		[TV (16, 3), Mac (13, 2), iOS (16, 3), MacCatalyst (16, 3)]
 		[Export ("convolution3DWeightsGradientWithIncomingGradientTensor:sourceTensor:outputShape:forwardConvolutionDescriptor:name:")]
-		MPSGraphTensor Convolution3DWeightsGradient (MPSGraphTensor incomingGradient, MPSGraphTensor source, [BindAs (typeof (int []))] NSNumber[] outputShape, MPSGraphConvolution3DOpDescriptor forwardConvolutionDescriptor, [NullAllowed] string name);
+		MPSGraphTensor Convolution3DWeightsGradient (MPSGraphTensor incomingGradient, MPSGraphTensor source, [BindAs (typeof (int []))] NSNumber [] outputShape, MPSGraphConvolution3DOpDescriptor forwardConvolutionDescriptor, [NullAllowed] string name);
 
-		[TV (16,3), Mac (13,2), iOS (16,3), MacCatalyst (16,3)]
+		[TV (16, 3), Mac (13, 2), iOS (16, 3), MacCatalyst (16, 3)]
 		[Export ("convolution3DWeightsGradientWithIncomingGradientTensor:sourceTensor:outputShapeTensor:forwardConvolutionDescriptor:name:")]
 		MPSGraphTensor Convolution3DWeightsGradient (MPSGraphTensor gradient, MPSGraphTensor source, MPSGraphTensor outputShapeTensor, MPSGraphConvolution3DOpDescriptor forwardConvolutionDescriptor, [NullAllowed] string name);
 	}
@@ -821,7 +821,7 @@ namespace MetalPerformanceShadersGraph {
 		[Export ("matrixMultiplicationWithPrimaryTensor:secondaryTensor:name:")]
 		MPSGraphTensor MatrixMultiplication (MPSGraphTensor primaryTensor, MPSGraphTensor secondaryTensor, [NullAllowed] string name);
 
-		[TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[TV (16, 0), Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 		[Export ("HammingDistanceWithPrimaryTensor:secondaryTensor:resultDataType:name:")]
 		MPSGraphTensor HammingDistance (MPSGraphTensor primaryTensor, MPSGraphTensor secondaryTensor, MPSDataType resultDataType, [NullAllowed] string name);
 
@@ -907,17 +907,17 @@ namespace MetalPerformanceShadersGraph {
 		[Export ("constantWithScalar:shape:dataType:")]
 		MPSGraphTensor Constant (double scalar, [BindAs (typeof (int []))] NSNumber [] shape, MPSDataType dataType);
 
-		[TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("constantWithRealPart:imaginaryPart:")]
 		MPSGraphTensor Constant (double realPart, double imaginaryPart);
 
-		[TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("constantWithRealPart:imaginaryPart:dataType:")]
 		MPSGraphTensor Constant (double realPart, double imaginaryPart, MPSDataType dataType);
 
-		[TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("constantWithRealPart:imaginaryPart:shape:dataType:")]
-		MPSGraphTensor Constant (double realPart, double imaginaryPart, [BindAs (typeof (int []))] NSNumber[] shape, MPSDataType dataType);
+		MPSGraphTensor Constant (double realPart, double imaginaryPart, [BindAs (typeof (int []))] NSNumber [] shape, MPSDataType dataType);
 
 		// -(MPSGraphTensor * _Nonnull)variableWithData:(NSData * _Nonnull)data shape:(MPSShape * _Nonnull)shape dataType:(MPSDataType)dataType name:(NSString * _Nullable)name;
 		[Export ("variableWithData:shape:dataType:name:")]
@@ -1014,10 +1014,10 @@ namespace MetalPerformanceShadersGraph {
 		MPSGraphOperation ApplyStochasticGradientDescent (MPSGraphTensor learningRate, MPSGraphVariableOp variable, MPSGraphTensor gradient, [NullAllowed] string name);
 
 		[Export ("adamWithLearningRateTensor:beta1Tensor:beta2Tensor:epsilonTensor:beta1PowerTensor:beta2PowerTensor:valuesTensor:momentumTensor:velocityTensor:maximumVelocityTensor:gradientTensor:name:")]
-		MPSGraphTensor[] Adam (MPSGraphTensor learningRateTensor, MPSGraphTensor beta1Tensor, MPSGraphTensor beta2Tensor, MPSGraphTensor epsilonTensor, MPSGraphTensor beta1PowerTensor, MPSGraphTensor beta2PowerTensor, MPSGraphTensor valuesTensor, MPSGraphTensor momentumTensor, MPSGraphTensor velocityTensor, [NullAllowed] MPSGraphTensor maximumVelocityTensor, MPSGraphTensor gradientTensor, [NullAllowed] string name);
+		MPSGraphTensor [] Adam (MPSGraphTensor learningRateTensor, MPSGraphTensor beta1Tensor, MPSGraphTensor beta2Tensor, MPSGraphTensor epsilonTensor, MPSGraphTensor beta1PowerTensor, MPSGraphTensor beta2PowerTensor, MPSGraphTensor valuesTensor, MPSGraphTensor momentumTensor, MPSGraphTensor velocityTensor, [NullAllowed] MPSGraphTensor maximumVelocityTensor, MPSGraphTensor gradientTensor, [NullAllowed] string name);
 
 		[Export ("adamWithCurrentLearningRateTensor:beta1Tensor:beta2Tensor:epsilonTensor:valuesTensor:momentumTensor:velocityTensor:maximumVelocityTensor:gradientTensor:name:")]
-		MPSGraphTensor[] Adam (MPSGraphTensor currentLearningRateTensor, MPSGraphTensor beta1Tensor, MPSGraphTensor beta2Tensor, MPSGraphTensor epsilonTensor, MPSGraphTensor valuesTensor, MPSGraphTensor momentumTensor, MPSGraphTensor velocityTensor, [NullAllowed] MPSGraphTensor maximumVelocityTensor, MPSGraphTensor gradientTensor, [NullAllowed] string name);
+		MPSGraphTensor [] Adam (MPSGraphTensor currentLearningRateTensor, MPSGraphTensor beta1Tensor, MPSGraphTensor beta2Tensor, MPSGraphTensor epsilonTensor, MPSGraphTensor valuesTensor, MPSGraphTensor momentumTensor, MPSGraphTensor velocityTensor, [NullAllowed] MPSGraphTensor maximumVelocityTensor, MPSGraphTensor gradientTensor, [NullAllowed] string name);
 	}
 
 	[iOS (16, 2), TV (16, 2), Mac (13, 1), MacCatalyst (16, 2)]
@@ -1216,19 +1216,19 @@ namespace MetalPerformanceShadersGraph {
 		[Export ("maxPooling2DWithSourceTensor:descriptor:name:")]
 		MPSGraphTensor MaxPooling2D (MPSGraphTensor source, MPSGraphPooling2DOpDescriptor descriptor, [NullAllowed] string name);
 
-		[TV (15,3), Mac (12,2), iOS (15,3), MacCatalyst (15,3)]
+		[TV (15, 3), Mac (12, 2), iOS (15, 3), MacCatalyst (15, 3)]
 		[Export ("maxPooling2DReturnIndicesWithSourceTensor:descriptor:name:")]
-		MPSGraphTensor[] MaxPooling2DReturnIndices (MPSGraphTensor source, MPSGraphPooling2DOpDescriptor descriptor, [NullAllowed] string name);
+		MPSGraphTensor [] MaxPooling2DReturnIndices (MPSGraphTensor source, MPSGraphPooling2DOpDescriptor descriptor, [NullAllowed] string name);
 
 		// -(MPSGraphTensor * _Nonnull)maxPooling2DGradientWithGradientTensor:(MPSGraphTensor * _Nonnull)gradient sourceTensor:(MPSGraphTensor * _Nonnull)source descriptor:(MPSGraphPooling2DOpDescriptor * _Nonnull)descriptor name:(NSString * _Nullable)name;
 		[Export ("maxPooling2DGradientWithGradientTensor:sourceTensor:descriptor:name:")]
 		MPSGraphTensor MaxPooling2DGradient (MPSGraphTensor gradient, MPSGraphTensor source, MPSGraphPooling2DOpDescriptor descriptor, [NullAllowed] string name);
 
-		[TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[TV (16, 0), Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 		[Export ("maxPooling2DGradientWithGradientTensor:indicesTensor:outputShape:descriptor:name:")]
-		MPSGraphTensor MaxPooling2DGradient (MPSGraphTensor gradient, MPSGraphTensor indices, [BindAs (typeof (int[]))] NSNumber[] outputShape, MPSGraphPooling2DOpDescriptor descriptor, [NullAllowed] string name);
+		MPSGraphTensor MaxPooling2DGradient (MPSGraphTensor gradient, MPSGraphTensor indices, [BindAs (typeof (int []))] NSNumber [] outputShape, MPSGraphPooling2DOpDescriptor descriptor, [NullAllowed] string name);
 
-		[TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[TV (16, 0), Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 		[Export ("maxPooling2DGradientWithGradientTensor:indicesTensor:outputShapeTensor:descriptor:name:")]
 		MPSGraphTensor MaxPooling2DGradient (MPSGraphTensor gradient, MPSGraphTensor indices, MPSGraphTensor outputShape, MPSGraphPooling2DOpDescriptor descriptor, [NullAllowed] string name);
 
@@ -1245,20 +1245,20 @@ namespace MetalPerformanceShadersGraph {
 		[Export ("maxPooling4DWithSourceTensor:descriptor:name:")]
 		MPSGraphTensor MaxPooling4D (MPSGraphTensor source, MPSGraphPooling4DOpDescriptor descriptor, [NullAllowed] string name);
 
-		[TV (15,3), Mac (12,2), iOS (15,3), MacCatalyst (15,3)]
+		[TV (15, 3), Mac (12, 2), iOS (15, 3), MacCatalyst (15, 3)]
 		[Export ("maxPooling4DReturnIndicesWithSourceTensor:descriptor:name:")]
-		MPSGraphTensor[] MaxPooling4DReturnIndices (MPSGraphTensor source, MPSGraphPooling4DOpDescriptor descriptor, [NullAllowed] string name);
+		MPSGraphTensor [] MaxPooling4DReturnIndices (MPSGraphTensor source, MPSGraphPooling4DOpDescriptor descriptor, [NullAllowed] string name);
 
 		// -(MPSGraphTensor * _Nonnull)maxPooling4DGradientWithGradientTensor:(MPSGraphTensor * _Nonnull)gradient sourceTensor:(MPSGraphTensor * _Nonnull)source descriptor:(MPSGraphPooling4DOpDescriptor * _Nonnull)descriptor name:(NSString * _Nullable)name __attribute__((swift_name("maxPooling4DGradient(_:source:descriptor:name:)"))) __attribute__((availability(macos, introduced=12.0))) __attribute__((availability(ios, introduced=15.0))) __attribute__((availability(tvos, introduced=15.0)));
 		[TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("maxPooling4DGradientWithGradientTensor:sourceTensor:descriptor:name:")]
 		MPSGraphTensor MaxPooling4DGradient (MPSGraphTensor gradient, MPSGraphTensor source, MPSGraphPooling4DOpDescriptor descriptor, [NullAllowed] string name);
 
-		[TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[TV (16, 0), Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 		[Export ("maxPooling4DGradientWithGradientTensor:indicesTensor:outputShape:descriptor:name:")]
-		MPSGraphTensor MaxPooling4DGradient (MPSGraphTensor gradient, MPSGraphTensor indices, [BindAs (typeof (int[]))] NSNumber[] outputShape, MPSGraphPooling4DOpDescriptor descriptor, [NullAllowed] string name);
+		MPSGraphTensor MaxPooling4DGradient (MPSGraphTensor gradient, MPSGraphTensor indices, [BindAs (typeof (int []))] NSNumber [] outputShape, MPSGraphPooling4DOpDescriptor descriptor, [NullAllowed] string name);
 
-		[TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[TV (16, 0), Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 		[Export ("maxPooling4DGradientWithGradientTensor:indicesTensor:outputShapeTensor:descriptor:name:")]
 		MPSGraphTensor MaxPooling4DGradient (MPSGraphTensor gradient, MPSGraphTensor indices, MPSGraphTensor outputShape, MPSGraphPooling4DOpDescriptor descriptor, [NullAllowed] string name);
 
@@ -1463,21 +1463,21 @@ namespace MetalPerformanceShadersGraph {
 		[Export ("reductionArgMinimumWithTensor:axis:name:")]
 		MPSGraphTensor ReductionArgMinimum (MPSGraphTensor tensor, nint axis, [NullAllowed] string name);
 
-		[TV (15,3), MacCatalyst (15,3), Mac (12,2), iOS (15,3), MacCatalyst (15,3)]
+		[TV (15, 3), MacCatalyst (15, 3), Mac (12, 2), iOS (15, 3), MacCatalyst (15, 3)]
 		[Export ("reductionAndWithTensor:axis:name:")]
 		MPSGraphTensor ReductionAnd (MPSGraphTensor tensor, nint axis, [NullAllowed] string name);
 
-		[TV (15,3), MacCatalyst (15,3), Mac (12,2), iOS (15,3), MacCatalyst (15,3)]
+		[TV (15, 3), MacCatalyst (15, 3), Mac (12, 2), iOS (15, 3), MacCatalyst (15, 3)]
 		[Export ("reductionAndWithTensor:axes:name:")]
-		MPSGraphTensor ReductionAnd (MPSGraphTensor tensor, [NullAllowed] [BindAs (typeof (int[]))] NSNumber[] axes, [NullAllowed] string name);
+		MPSGraphTensor ReductionAnd (MPSGraphTensor tensor, [NullAllowed][BindAs (typeof (int []))] NSNumber [] axes, [NullAllowed] string name);
 
-		[TV (15,3), MacCatalyst (15,3), Mac (12,2), iOS (15,3), MacCatalyst (15,3)]
+		[TV (15, 3), MacCatalyst (15, 3), Mac (12, 2), iOS (15, 3), MacCatalyst (15, 3)]
 		[Export ("reductionOrWithTensor:axis:name:")]
 		MPSGraphTensor ReductionOr (MPSGraphTensor tensor, nint axis, [NullAllowed] string name);
 
-		[TV (15,3), MacCatalyst (15,3), Mac (12,2), iOS (15,3), MacCatalyst (15,3)]
+		[TV (15, 3), MacCatalyst (15, 3), Mac (12, 2), iOS (15, 3), MacCatalyst (15, 3)]
 		[Export ("reductionOrWithTensor:axes:name:")]
-		MPSGraphTensor ReductionOr (MPSGraphTensor tensor, [NullAllowed] [BindAs (typeof (int[]))] NSNumber[] axes, [NullAllowed] string name);
+		MPSGraphTensor ReductionOr (MPSGraphTensor tensor, [NullAllowed][BindAs (typeof (int []))] NSNumber [] axes, [NullAllowed] string name);
 	}
 
 	// @interface MPSGraphResizeOps (MPSGraph)
@@ -1498,79 +1498,79 @@ namespace MetalPerformanceShadersGraph {
 		[Export ("resizeWithGradientTensor:input:mode:centerResult:alignCorners:layout:name:")]
 		MPSGraphTensor ResizeGradient (MPSGraphTensor gradient, MPSGraphTensor input, MPSGraphResizeMode mode, bool centerResult, bool alignCorners, MPSGraphTensorNamedDataLayout layout, [NullAllowed] string name);
 
-		[TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("resizeTensor:sizeTensor:mode:centerResult:alignCorners:name:")]
 		MPSGraphTensor Resize (MPSGraphTensor imagesTensor, MPSGraphTensor size, MPSGraphResizeMode mode, bool centerResult, bool alignCorners, [NullAllowed] string name);
 
-		[TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[TV (16, 0), Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 		[Export ("resizeNearestWithTensor:sizeTensor:nearestRoundingMode:centerResult:alignCorners:layout:name:")]
 		MPSGraphTensor ResizeNearest (MPSGraphTensor imagesTensor, MPSGraphTensor size, MPSGraphResizeNearestRoundingMode nearestRoundingMode, bool centerResult, bool alignCorners, MPSGraphTensorNamedDataLayout layout, [NullAllowed] string name);
 
-		[TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("resizeNearestWithTensor:sizeTensor:nearestRoundingMode:centerResult:alignCorners:name:")]
 		MPSGraphTensor ResizeNearest (MPSGraphTensor imagesTensor, MPSGraphTensor size, MPSGraphResizeNearestRoundingMode nearestRoundingMode, bool centerResult, bool alignCorners, [NullAllowed] string name);
 
-		[TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[TV (16, 0), Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 		[Export ("resizeBilinearWithTensor:sizeTensor:centerResult:alignCorners:layout:name:")]
 		MPSGraphTensor ResizeBilinear (MPSGraphTensor imagesTensor, MPSGraphTensor size, bool centerResult, bool alignCorners, MPSGraphTensorNamedDataLayout layout, [NullAllowed] string name);
 
-		[TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("resizeBilinearWithTensor:sizeTensor:centerResult:alignCorners:name:")]
 		MPSGraphTensor ResizeBilinear (MPSGraphTensor imagesTensor, MPSGraphTensor size, bool centerResult, bool alignCorners, [NullAllowed] string name);
 
-		[TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[TV (16, 0), Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 		[Export ("resizeTensor:sizeTensor:scaleOffsetTensor:mode:layout:name:")]
 		MPSGraphTensor Resize (MPSGraphTensor imagesTensor, MPSGraphTensor size, MPSGraphTensor scaleOffset, MPSGraphResizeMode mode, MPSGraphTensorNamedDataLayout layout, [NullAllowed] string name);
 
-		[TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("resizeTensor:sizeTensor:scaleTensor:offsetTensor:mode:name:")]
 		MPSGraphTensor Resize (MPSGraphTensor imagesTensor, MPSGraphTensor size, MPSGraphTensor scale, MPSGraphTensor offset, MPSGraphResizeMode mode, [NullAllowed] string name);
 
-		[TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[TV (16, 0), Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 		[Export ("resizeNearestWithTensor:sizeTensor:scaleOffsetTensor:nearestRoundingMode:layout:name:")]
 		MPSGraphTensor ResizeNearest (MPSGraphTensor imagesTensor, MPSGraphTensor size, MPSGraphTensor scaleOffset, MPSGraphResizeNearestRoundingMode nearestRoundingMode, MPSGraphTensorNamedDataLayout layout, [NullAllowed] string name);
 
-		[TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("resizeNearestWithTensor:sizeTensor:scaleTensor:offsetTensor:nearestRoundingMode:name:")]
 		MPSGraphTensor ResizeNearest (MPSGraphTensor imagesTensor, MPSGraphTensor size, MPSGraphTensor scale, MPSGraphTensor offset, MPSGraphResizeNearestRoundingMode nearestRoundingMode, [NullAllowed] string name);
 
-		[TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[TV (16, 0), Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 		[Export ("resizeBilinearWithTensor:sizeTensor:scaleOffsetTensor:layout:name:")]
 		MPSGraphTensor ResizeBilinear (MPSGraphTensor imagesTensor, MPSGraphTensor size, MPSGraphTensor scaleOffset, MPSGraphTensorNamedDataLayout layout, [NullAllowed] string name);
 
-		[TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("resizeBilinearWithTensor:sizeTensor:scaleTensor:offsetTensor:name:")]
 		MPSGraphTensor ResizeBilinear (MPSGraphTensor imagesTensor, MPSGraphTensor size, MPSGraphTensor scale, MPSGraphTensor offset, [NullAllowed] string name);
 
-		[TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[TV (16, 0), Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 		[Export ("resizeNearestWithGradientTensor:input:nearestRoundingMode:centerResult:alignCorners:layout:name:")]
 		MPSGraphTensor ResizeNearestWithGradient (MPSGraphTensor gradient, MPSGraphTensor input, MPSGraphResizeNearestRoundingMode nearestRoundingMode, bool centerResult, bool alignCorners, MPSGraphTensorNamedDataLayout layout, [NullAllowed] string name);
 
-		[TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[TV (16, 0), Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 		[Export ("resizeBilinearWithGradientTensor:input:centerResult:alignCorners:layout:name:")]
 		MPSGraphTensor ResizeBilinearWithGradient (MPSGraphTensor gradient, MPSGraphTensor input, bool centerResult, bool alignCorners, MPSGraphTensorNamedDataLayout layout, [NullAllowed] string name);
 
-		[TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[TV (16, 0), Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 		[Export ("resizeWithGradientTensor:input:scaleOffsetTensor:mode:layout:name:")]
 		MPSGraphTensor ResizeWithGradient (MPSGraphTensor gradient, MPSGraphTensor input, MPSGraphTensor scaleOffset, MPSGraphResizeMode mode, MPSGraphTensorNamedDataLayout layout, [NullAllowed] string name);
 
-		[TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("resizeWithGradientTensor:input:scaleTensor:offsetTensor:mode:name:")]
 		MPSGraphTensor ResizeWithGradient (MPSGraphTensor gradient, MPSGraphTensor input, MPSGraphTensor scale, MPSGraphTensor offset, MPSGraphResizeMode mode, [NullAllowed] string name);
 
-		[TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[TV (16, 0), Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 		[Export ("resizeNearestWithGradientTensor:input:scaleOffsetTensor:nearestRoundingMode:layout:name:")]
 		MPSGraphTensor ResizeNearestWithGradient (MPSGraphTensor gradient, MPSGraphTensor input, MPSGraphTensor scaleOffset, MPSGraphResizeNearestRoundingMode nearestRoundingMode, MPSGraphTensorNamedDataLayout layout, [NullAllowed] string name);
 
-		[TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("resizeNearestWithGradientTensor:input:scaleTensor:offsetTensor:nearestRoundingMode:name:")]
 		MPSGraphTensor ResizeNearestWithGradient (MPSGraphTensor gradient, MPSGraphTensor input, MPSGraphTensor scale, MPSGraphTensor offset, MPSGraphResizeNearestRoundingMode nearestRoundingMode, [NullAllowed] string name);
 
-		[TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[TV (16, 0), Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 		[Export ("resizeBilinearWithGradientTensor:input:scaleOffsetTensor:layout:name:")]
 		MPSGraphTensor ResizeBilinearWithGradient (MPSGraphTensor gradient, MPSGraphTensor input, MPSGraphTensor scaleOffset, MPSGraphTensorNamedDataLayout layout, [NullAllowed] string name);
 
-		[TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("resizeBilinearWithGradientTensor:input:scaleTensor:offsetTensor:name:")]
 		MPSGraphTensor ResizeBilinearWithGradient (MPSGraphTensor gradient, MPSGraphTensor input, MPSGraphTensor scale, MPSGraphTensor offset, [NullAllowed] string name);
 	}
@@ -1701,9 +1701,9 @@ namespace MetalPerformanceShadersGraph {
 		[Export ("transposeTensor:dimension:withDimension:name:")]
 		MPSGraphTensor Transpose (MPSGraphTensor tensor, nuint dimensionIndex, nuint dimensionIndex2, [NullAllowed] string name);
 
-		[TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst(16,0)]
+		[TV (16, 0), Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 		[Export ("transposeTensor:permutation:name:")]
-		MPSGraphTensor Transpose (MPSGraphTensor tensor, [BindAs (typeof (int[]))] NSNumber[] permutation, [NullAllowed] string name);
+		MPSGraphTensor Transpose (MPSGraphTensor tensor, [BindAs (typeof (int []))] NSNumber [] permutation, [NullAllowed] string name);
 
 		// -(MPSGraphTensor * _Nonnull)sliceTensor:(MPSGraphTensor * _Nonnull)tensor dimension:(NSUInteger)dimensionIndex start:(NSInteger)start length:(NSInteger)length name:(NSString * _Nullable)name;
 		[Export ("sliceTensor:dimension:start:length:name:")]
@@ -1725,13 +1725,13 @@ namespace MetalPerformanceShadersGraph {
 		[Export ("sliceGradientTensor:fwdInShapeTensor:starts:ends:strides:startMask:endMask:squeezeMask:name:")]
 		MPSGraphTensor SliceGradient (MPSGraphTensor inputGradientTensor, MPSGraphTensor fwdInShapeTensor, [BindAs (typeof (int []))] NSNumber [] starts, [BindAs (typeof (int []))] NSNumber [] ends, [BindAs (typeof (int []))] NSNumber [] strides, uint startMask, uint endMask, uint squeezeMask, [NullAllowed] string name);
 
-		[TV (17,4), Mac (14,4), iOS (17,4), MacCatalyst (17,4)]
+		[TV (17, 4), Mac (14, 4), iOS (17, 4), MacCatalyst (17, 4)]
 		[Export ("sliceUpdateDataTensor:updateTensor:startsTensor:endsTensor:stridesTensor:startMask:endMask:squeezeMask:name:")]
 		MPSGraphTensor SliceUpdateData (MPSGraphTensor dataTensor, MPSGraphTensor updateTensor, MPSGraphTensor startsTensor, MPSGraphTensor endsTensor, MPSGraphTensor stridesTensor, uint startMask, uint endMask, uint squeezeMask, [NullAllowed] string name);
 
-		[TV (17,4), Mac (14,4), iOS (17,4), MacCatalyst (17,4)]
+		[TV (17, 4), Mac (14, 4), iOS (17, 4), MacCatalyst (17, 4)]
 		[Export ("sliceUpdateDataTensor:updateTensor:starts:ends:strides:startMask:endMask:squeezeMask:name:")]
-		MPSGraphTensor SliceUpdateData (MPSGraphTensor dataTensor, MPSGraphTensor updateTensor, [BindAs (typeof (int []))] NSNumber[] starts, [BindAs (typeof (int []))] NSNumber[] ends, [BindAs (typeof (int []))] NSNumber[] strides, uint startMask, uint endMask, uint squeezeMask, [NullAllowed] string name);
+		MPSGraphTensor SliceUpdateData (MPSGraphTensor dataTensor, MPSGraphTensor updateTensor, [BindAs (typeof (int []))] NSNumber [] starts, [BindAs (typeof (int []))] NSNumber [] ends, [BindAs (typeof (int []))] NSNumber [] strides, uint startMask, uint endMask, uint squeezeMask, [NullAllowed] string name);
 
 		// -(MPSGraphTensor * _Nonnull)concatTensor:(MPSGraphTensor * _Nonnull)tensor withTensor:(MPSGraphTensor * _Nonnull)tensor2 dimension:(NSInteger)dimensionIndex name:(NSString * _Nullable)name;
 		[Export ("concatTensor:withTensor:dimension:name:")]
@@ -1781,19 +1781,19 @@ namespace MetalPerformanceShadersGraph {
 		[Export ("depthToSpace2DTensor:widthAxis:heightAxis:depthAxis:blockSize:usePixelShuffleOrder:name:")]
 		MPSGraphTensor DepthToSpace2D (MPSGraphTensor tensor, nuint widthAxis, nuint heightAxis, nuint depthAxis, nuint blockSize, bool usePixelShuffleOrder, [NullAllowed] string name);
 
-		[TV (16,1), Mac (13,0), iOS (16,1), MacCatalyst (16,1)]
+		[TV (16, 1), Mac (13, 0), iOS (16, 1), MacCatalyst (16, 1)]
 		[Export ("spaceToBatchTensor:spatialAxes:batchAxis:blockDimensions:usePixelShuffleOrder:name:")]
-		MPSGraphTensor SpaceToBatch (MPSGraphTensor tensor, [BindAs (typeof (int[]))] NSNumber[] spatialAxes, nint batchAxis, [BindAs (typeof (int[]))] NSNumber[] blockDimensions, bool usePixelShuffleOrder, [NullAllowed] string name);
+		MPSGraphTensor SpaceToBatch (MPSGraphTensor tensor, [BindAs (typeof (int []))] NSNumber [] spatialAxes, nint batchAxis, [BindAs (typeof (int []))] NSNumber [] blockDimensions, bool usePixelShuffleOrder, [NullAllowed] string name);
 
-		[TV (16,1), Mac (13,0), iOS (16,1), MacCatalyst (16,1)]
+		[TV (16, 1), Mac (13, 0), iOS (16, 1), MacCatalyst (16, 1)]
 		[Export ("spaceToBatchTensor:spatialAxesTensor:batchAxisTensor:blockDimensionsTensor:usePixelShuffleOrder:name:")]
 		MPSGraphTensor SpaceToBatch (MPSGraphTensor tensor, MPSGraphTensor spatialAxesTensor, MPSGraphTensor batchAxisTensor, MPSGraphTensor blockDimensionsTensor, bool usePixelShuffleOrder, [NullAllowed] string name);
 
-		[TV (16,1), Mac (13,0), iOS (16,1), MacCatalyst (16,1)]
+		[TV (16, 1), Mac (13, 0), iOS (16, 1), MacCatalyst (16, 1)]
 		[Export ("batchToSpaceTensor:spatialAxes:batchAxis:blockDimensions:usePixelShuffleOrder:name:")]
-		MPSGraphTensor BatchToSpace (MPSGraphTensor tensor, [BindAs (typeof (int[]))] NSNumber[] spatialAxes, nint batchAxis, [BindAs (typeof (int[]))] NSNumber[] blockDimensions, bool usePixelShuffleOrder, [NullAllowed] string name);
+		MPSGraphTensor BatchToSpace (MPSGraphTensor tensor, [BindAs (typeof (int []))] NSNumber [] spatialAxes, nint batchAxis, [BindAs (typeof (int []))] NSNumber [] blockDimensions, bool usePixelShuffleOrder, [NullAllowed] string name);
 
-		[TV (16,1), Mac (13,0), iOS (16,1), MacCatalyst (16,1)]
+		[TV (16, 1), Mac (13, 0), iOS (16, 1), MacCatalyst (16, 1)]
 		[Export ("batchToSpaceTensor:spatialAxesTensor:batchAxisTensor:blockDimensionsTensor:usePixelShuffleOrder:name:")]
 		MPSGraphTensor BatchToSpace (MPSGraphTensor tensor, MPSGraphTensor spatialAxesTensor, MPSGraphTensor batchAxisTensor, MPSGraphTensor blockDimensionsTensor, bool usePixelShuffleOrder, [NullAllowed] string name);
 
@@ -1849,67 +1849,67 @@ namespace MetalPerformanceShadersGraph {
 		[Export ("sliceUpdateDataTensor:updateTensor:starts:ends:strides:name:")]
 		MPSGraphTensor SliceUpdateData (MPSGraphTensor dataTensor, MPSGraphTensor updatesTensor, [BindAs (typeof (int []))] NSNumber [] starts, [BindAs (typeof (int []))] NSNumber [] ends, [BindAs (typeof (int []))] NSNumber [] strides, [NullAllowed] string name);
 
-		[TV (16,3), Mac (13,2), iOS (16,3), MacCatalyst (16,3)]
+		[TV (16, 3), Mac (13, 2), iOS (16, 3), MacCatalyst (16, 3)]
 		[Export ("reinterpretCastTensor:toType:name:")]
 		MPSGraphTensor ReinterpretCast (MPSGraphTensor tensor, MPSDataType type, [NullAllowed] string name);
 
-		[TV (15,4), Mac (12,3), iOS (15,4), MacCatalyst (15,4)]
+		[TV (15, 4), Mac (12, 3), iOS (15, 4), MacCatalyst (15, 4)]
 		[Export ("stackTensors:axis:name:")]
-		MPSGraphTensor Stack (MPSGraphTensor[] inputTensors, nint axis, [NullAllowed] string name);
+		MPSGraphTensor Stack (MPSGraphTensor [] inputTensors, nint axis, [NullAllowed] string name);
 
-		[TV (15,4), Mac (12,3), iOS (15,4), MacCatalyst (15,4)]
+		[TV (15, 4), Mac (12, 3), iOS (15, 4), MacCatalyst (15, 4)]
 		[Export ("splitTensor:splitSizes:axis:name:")]
-		MPSGraphTensor[] Split (MPSGraphTensor tensor, [BindAs (typeof (int[]))] NSNumber[] splitSizes, nint axis, [NullAllowed] string name);
+		MPSGraphTensor [] Split (MPSGraphTensor tensor, [BindAs (typeof (int []))] NSNumber [] splitSizes, nint axis, [NullAllowed] string name);
 
-		[TV (15,4), Mac (12,3), iOS (15,4), MacCatalyst (15,4)]
+		[TV (15, 4), Mac (12, 3), iOS (15, 4), MacCatalyst (15, 4)]
 		[Export ("splitTensor:splitSizesTensor:axis:name:")]
-		MPSGraphTensor[] Split (MPSGraphTensor tensor, MPSGraphTensor splitSizesTensor, nint axis, [NullAllowed] string name);
+		MPSGraphTensor [] Split (MPSGraphTensor tensor, MPSGraphTensor splitSizesTensor, nint axis, [NullAllowed] string name);
 
-		[TV (15,4), Mac (12,3), iOS (15,4), MacCatalyst (15,4)]
+		[TV (15, 4), Mac (12, 3), iOS (15, 4), MacCatalyst (15, 4)]
 		[Export ("splitTensor:numSplits:axis:name:")]
-		MPSGraphTensor[] Split (MPSGraphTensor tensor, nuint numSplits, nint axis, [NullAllowed] string name);
+		MPSGraphTensor [] Split (MPSGraphTensor tensor, nuint numSplits, nint axis, [NullAllowed] string name);
 
-		[TV (15,4), Mac (12,3), iOS (15,4), MacCatalyst (15,4)]
+		[TV (15, 4), Mac (12, 3), iOS (15, 4), MacCatalyst (15, 4)]
 		[Export ("squeezeTensor:name:")]
 		MPSGraphTensor Squeeze (MPSGraphTensor tensor, [NullAllowed] string name);
 
-		[TV (15,4), Mac (12,3), iOS (15,4), MacCatalyst (15,4)]
+		[TV (15, 4), Mac (12, 3), iOS (15, 4), MacCatalyst (15, 4)]
 		[Export ("squeezeTensor:axis:name:")]
 		MPSGraphTensor Squeeze (MPSGraphTensor tensor, nint axis, [NullAllowed] string name);
 
-		[TV (15,4), Mac (12,3), iOS (15,4), MacCatalyst (15,4)]
+		[TV (15, 4), Mac (12, 3), iOS (15, 4), MacCatalyst (15, 4)]
 		[Export ("squeezeTensor:axes:name:")]
-		MPSGraphTensor Squeeze (MPSGraphTensor tensor, [BindAs (typeof (int[]))] NSNumber[] axes, [NullAllowed] string name);
+		MPSGraphTensor Squeeze (MPSGraphTensor tensor, [BindAs (typeof (int []))] NSNumber [] axes, [NullAllowed] string name);
 
-		[TV (15,4), Mac (12,3), iOS (15,4), MacCatalyst (15,4)]
+		[TV (15, 4), Mac (12, 3), iOS (15, 4), MacCatalyst (15, 4)]
 		[Export ("squeezeTensor:axesTensor:name:")]
 		MPSGraphTensor Squeeze (MPSGraphTensor tensor, MPSGraphTensor axesTensor, [NullAllowed] string name);
 
-		[TV (15,4), Mac (12,3), iOS (15,4), MacCatalyst (15,4)]
+		[TV (15, 4), Mac (12, 3), iOS (15, 4), MacCatalyst (15, 4)]
 		[Export ("expandDimsOfTensor:axis:name:")]
 		MPSGraphTensor ExpandDims (MPSGraphTensor tensor, nint axis, [NullAllowed] string name);
 
-		[TV (15,4), Mac (12,3), iOS (15,4), MacCatalyst (15,4)]
+		[TV (15, 4), Mac (12, 3), iOS (15, 4), MacCatalyst (15, 4)]
 		[Export ("expandDimsOfTensor:axes:name:")]
-		MPSGraphTensor ExpandDims (MPSGraphTensor tensor, [BindAs (typeof (int[]))] NSNumber[] axes, [NullAllowed] string name);
+		MPSGraphTensor ExpandDims (MPSGraphTensor tensor, [BindAs (typeof (int []))] NSNumber [] axes, [NullAllowed] string name);
 
-		[TV (15,4), Mac (12,3), iOS (15,4), MacCatalyst (15,4)]
+		[TV (15, 4), Mac (12, 3), iOS (15, 4), MacCatalyst (15, 4)]
 		[Export ("expandDimsOfTensor:axesTensor:name:")]
 		MPSGraphTensor ExpandDims (MPSGraphTensor tensor, MPSGraphTensor axesTensor, [NullAllowed] string name);
 
-		[TV (15,4), Mac (12,3), iOS (15,4), MacCatalyst (15,4)]
+		[TV (15, 4), Mac (12, 3), iOS (15, 4), MacCatalyst (15, 4)]
 		[Export ("coordinateAlongAxis:withShape:name:")]
-		MPSGraphTensor CoordinateAlongAxis (nint axis, [BindAs (typeof (int[]))] NSNumber[] shape, [NullAllowed] string name);
+		MPSGraphTensor CoordinateAlongAxis (nint axis, [BindAs (typeof (int []))] NSNumber [] shape, [NullAllowed] string name);
 
-		[TV (15,4), Mac (12,3), iOS (15,4), MacCatalyst (15,4)]
+		[TV (15, 4), Mac (12, 3), iOS (15, 4), MacCatalyst (15, 4)]
 		[Export ("coordinateAlongAxisTensor:withShape:name:")]
-		MPSGraphTensor CoordinateAlongAxis (MPSGraphTensor axisTensor, [BindAs (typeof (int[]))] NSNumber[] shape, [NullAllowed] string name);
+		MPSGraphTensor CoordinateAlongAxis (MPSGraphTensor axisTensor, [BindAs (typeof (int []))] NSNumber [] shape, [NullAllowed] string name);
 
-		[TV (15,4), Mac (12,3), iOS (15,4), MacCatalyst (15,4)]
+		[TV (15, 4), Mac (12, 3), iOS (15, 4), MacCatalyst (15, 4)]
 		[Export ("coordinateAlongAxis:withShapeTensor:name:")]
 		MPSGraphTensor CoordinateAlongAxis (nint axis, MPSGraphTensor shapeTensor, [NullAllowed] string name);
 
-		[TV (15,4), Mac (12,3), iOS (15,4), MacCatalyst (15,4)]
+		[TV (15, 4), Mac (12, 3), iOS (15, 4), MacCatalyst (15, 4)]
 		[Export ("coordinateAlongAxisTensor:withShapeTensor:name:")]
 		MPSGraphTensor CoordinateAlongAxis (MPSGraphTensor axisTensor, MPSGraphTensor shapeTensor, [NullAllowed] string name);
 	}
@@ -1927,21 +1927,21 @@ namespace MetalPerformanceShadersGraph {
 		[Export ("topKWithSourceTensor:kTensor:name:")]
 		MPSGraphTensor [] TopK (MPSGraphTensor source, MPSGraphTensor kTensor, [NullAllowed] string name);
 
-		[TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("topKWithSourceTensor:axis:k:name:")]
-		MPSGraphTensor[] TopK (MPSGraphTensor source, nint axis, nuint k, [NullAllowed] string name);
+		MPSGraphTensor [] TopK (MPSGraphTensor source, nint axis, nuint k, [NullAllowed] string name);
 
-		[TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("bottomKWithSourceTensor:axis:k:name:")]
-		MPSGraphTensor[] BottomK (MPSGraphTensor source, nint axis, nuint k, [NullAllowed] string name);
+		MPSGraphTensor [] BottomK (MPSGraphTensor source, nint axis, nuint k, [NullAllowed] string name);
 
-		[TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("topKWithSourceTensor:axisTensor:kTensor:name:")]
-		MPSGraphTensor[] TopK (MPSGraphTensor source, MPSGraphTensor axisTensor, MPSGraphTensor kTensor, [NullAllowed] string name);
+		MPSGraphTensor [] TopK (MPSGraphTensor source, MPSGraphTensor axisTensor, MPSGraphTensor kTensor, [NullAllowed] string name);
 
-		[TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("bottomKWithSourceTensor:axisTensor:kTensor:name:")]
-		MPSGraphTensor[] BottomK (MPSGraphTensor source, MPSGraphTensor axisTensor, MPSGraphTensor kTensor, [NullAllowed] string name);
+		MPSGraphTensor [] BottomK (MPSGraphTensor source, MPSGraphTensor axisTensor, MPSGraphTensor kTensor, [NullAllowed] string name);
 	}
 
 	// @interface MPSGraphTopKGradientOps (MPSGraph)
@@ -1953,11 +1953,11 @@ namespace MetalPerformanceShadersGraph {
 		[Export ("topKWithGradientTensor:source:k:name:")]
 		MPSGraphTensor TopKGradient (MPSGraphTensor gradient, MPSGraphTensor source, nuint k, [NullAllowed] string name);
 
-		[TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("topKWithGradientTensor:source:axis:k:name:")]
 		MPSGraphTensor TopKWithGradient (MPSGraphTensor gradient, MPSGraphTensor source, nint axis, nuint k, [NullAllowed] string name);
 
-		[TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("bottomKWithGradientTensor:source:axis:k:name:")]
 		MPSGraphTensor BottomKWithGradient (MPSGraphTensor gradient, MPSGraphTensor source, nint axis, nuint k, [NullAllowed] string name);
 
@@ -1965,11 +1965,11 @@ namespace MetalPerformanceShadersGraph {
 		[Export ("topKWithGradientTensor:source:kTensor:name:")]
 		MPSGraphTensor TopKGradient (MPSGraphTensor gradient, MPSGraphTensor source, MPSGraphTensor kTensor, [NullAllowed] string name);
 
-		[TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("topKWithGradientTensor:source:axisTensor:kTensor:name:")]
 		MPSGraphTensor TopKWithGradient (MPSGraphTensor gradient, MPSGraphTensor source, MPSGraphTensor axisTensor, MPSGraphTensor kTensor, [NullAllowed] string name);
 
-		[TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("bottomKWithGradientTensor:source:axisTensor:kTensor:name:")]
 		MPSGraphTensor BottomKWithGradient (MPSGraphTensor gradient, MPSGraphTensor source, MPSGraphTensor axisTensor, MPSGraphTensor kTensor, [NullAllowed] string name);
 	}
@@ -2053,11 +2053,11 @@ namespace MetalPerformanceShadersGraph {
 		[Export ("waitUntilCompleted")]
 		bool WaitUntilCompleted { get; set; }
 
-		[TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16, 0)]
+		[TV (16, 0), Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 		[Export ("waitForEvent:value:")]
 		void WaitForEvent (IMTLSharedEvent @event, ulong value);
 
-		[TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16, 0)]
+		[TV (16, 0), Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 		[Export ("signalEvent:atExecutionEvent:value:")]
 		void SignalEvent (IMTLSharedEvent @event, MPSGraphExecutionStage executionStage, ulong value);
 	}
@@ -2100,16 +2100,16 @@ namespace MetalPerformanceShadersGraph {
 		NativeHandle _InitWithCoreMLPackage (NSUrl coreMLPackageUrl, [NullAllowed] MPSGraphCompilationDescriptor compilationDescriptor);
 
 		[Internal]
-		[TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17, 0)]
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("initWithMPSGraphPackageAtURL:compilationDescriptor:")]
 		NativeHandle _InitWithMPSGraphPackage (NSUrl mpsgraphPackageUrl, [NullAllowed] MPSGraphCompilationDescriptor compilationDescriptor);
 
-		[TV (16,3), Mac (13,2), iOS (16,3), MacCatalyst (16, 3)]
+		[TV (16, 3), Mac (13, 2), iOS (16, 3), MacCatalyst (16, 3)]
 		[Export ("getOutputTypesWithDevice:inputTypes:compilationDescriptor:")]
 		[return: NullAllowed]
-		MPSGraphShapedType[] GetOutputTypes ([NullAllowed] MPSGraphDevice device, MPSGraphType[] inputTypes, [NullAllowed] MPSGraphCompilationDescriptor compilationDescriptor);
+		MPSGraphShapedType [] GetOutputTypes ([NullAllowed] MPSGraphDevice device, MPSGraphType [] inputTypes, [NullAllowed] MPSGraphCompilationDescriptor compilationDescriptor);
 
-		[TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17, 0)]
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("serializeToMPSGraphPackageAtURL:descriptor:")]
 		void SerializeToMPSGraphPackage (NSUrl url, [NullAllowed] MPSGraphExecutableSerializationDescriptor descriptor);
 	}
@@ -2140,11 +2140,11 @@ namespace MetalPerformanceShadersGraph {
 		[NullAllowed, Export ("compilationDescriptor", ArgumentSemantic.Copy)]
 		MPSGraphCompilationDescriptor CompilationDescriptor { get; set; }
 
-		[TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16, 0)]
+		[TV (16, 0), Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 		[Export ("waitForEvent:value:")]
 		void WaitForEvent (IMTLSharedEvent @event, ulong value);
 
-		[TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16, 0)]
+		[TV (16, 0), Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 		[Export ("signalEvent:atExecutionEvent:value:")]
 		void SignalEvent (IMTLSharedEvent @event, MPSGraphExecutionStage executionStage, ulong value);
 	}
@@ -2280,9 +2280,9 @@ namespace MetalPerformanceShadersGraph {
 		[Export ("initWithMPSImageBatch:")]
 		IntPtr Constructor (NSArray<MPSImage> imageBatch);
 
-		[TV (15,4), Mac (12,3), iOS (15,4), MacCatalyst (15, 4)]
+		[TV (15, 4), Mac (12, 3), iOS (15, 4), MacCatalyst (15, 4)]
 		[Export ("initWithMTLBuffer:shape:dataType:rowBytes:")]
-		NativeHandle Constructor (IMTLBuffer buffer, [BindAs (typeof (int []))] NSNumber[] shape, MPSDataType dataType, nuint rowBytes);
+		NativeHandle Constructor (IMTLBuffer buffer, [BindAs (typeof (int []))] NSNumber [] shape, MPSDataType dataType, nuint rowBytes);
 
 		// -(MPSNDArray * _Nonnull)mpsndarray;
 		[Export ("mpsndarray")]
@@ -2292,8 +2292,7 @@ namespace MetalPerformanceShadersGraph {
 
 	[iOS (17, 0), TV (17, 0), Mac (14, 0), MacCatalyst (17, 0)]
 	// Not a native enum
-	public enum MPSGraphDeploymentPlatform : ulong
-	{
+	public enum MPSGraphDeploymentPlatform : ulong {
 		macOS = 0,
 		iOS = 1,
 		tvOS = 2,
@@ -2303,16 +2302,14 @@ namespace MetalPerformanceShadersGraph {
 
 	[iOS (16, 0), TV (16, 0), Mac (13, 0), MacCatalyst (16, 0)]
 	// Not a native enum
-	public enum MPSGraphExecutionStage : ulong
-	{
+	public enum MPSGraphExecutionStage : ulong {
 		Completed = 0,
 	}
 
 	[iOS (17, 0), TV (17, 0), Mac (14, 0), MacCatalyst (17, 0)]
 	[Native]
 	[NativeName ("MPSGraphFFTScalingMode")]
-	public enum MPSGraphFftScalingMode : ulong
-	{
+	public enum MPSGraphFftScalingMode : ulong {
 		None = 0,
 		Size,
 		Unitary,
@@ -2320,8 +2317,7 @@ namespace MetalPerformanceShadersGraph {
 
 	[iOS (17, 0), TV (17, 0), Mac (14, 0), MacCatalyst (17, 0)]
 	[Native]
-	public enum MPSGraphNonMaximumSuppressionCoordinateMode : ulong
-	{
+	public enum MPSGraphNonMaximumSuppressionCoordinateMode : ulong {
 		CornersHeightFirst = 0,
 		CornersWidthFirst = 1,
 		CentersHeightFirst = 2,
@@ -2330,8 +2326,7 @@ namespace MetalPerformanceShadersGraph {
 
 	[iOS (15, 3), TV (15, 3), Mac (12, 2), MacCatalyst (15, 3)]
 	[Native]
-	public enum MPSGraphPoolingReturnIndicesMode : ulong
-	{
+	public enum MPSGraphPoolingReturnIndicesMode : ulong {
 		None,
 		GlobalFlatten1d,
 		GlobalFlatten2d,
@@ -2345,8 +2340,7 @@ namespace MetalPerformanceShadersGraph {
 
 	[iOS (16, 0), TV (16, 0), Mac (13, 0), MacCatalyst (16, 0)]
 	[Native]
-	public enum MPSGraphResizeNearestRoundingMode : ulong
-	{
+	public enum MPSGraphResizeNearestRoundingMode : ulong {
 		RoundPreferCeil = 0,
 		RoundPreferFloor = 1,
 		Ceil = 2,
@@ -2360,8 +2354,7 @@ namespace MetalPerformanceShadersGraph {
 	[iOS (15, 4), TV (15, 4), Mac (12, 3), MacCatalyst (15, 4)]
 	[Native]
 	[NativeName ("MPSGraphRNNActivation")]
-	public enum MPSGraphRnnActivation : ulong
-	{
+	public enum MPSGraphRnnActivation : ulong {
 		None = 0,
 		Relu,
 		Tanh,
@@ -2371,8 +2364,7 @@ namespace MetalPerformanceShadersGraph {
 
 	[TV (16, 3), Mac (13, 2), iOS (16, 3), MacCatalyst (16, 3)]
 	[BaseType (typeof (MPSGraphObject))]
-	interface MPSGraphConvolution3DOpDescriptor : NSCopying
-	{
+	interface MPSGraphConvolution3DOpDescriptor : NSCopying {
 		[Export ("strideInX")]
 		nuint StrideInX { get; set; }
 
@@ -2437,8 +2429,7 @@ namespace MetalPerformanceShadersGraph {
 
 	[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[BaseType (typeof (MPSGraphObject))]
-	interface MPSGraphExecutableSerializationDescriptor
-	{
+	interface MPSGraphExecutableSerializationDescriptor {
 		[Export ("append")]
 		bool Append { get; set; }
 
@@ -2449,10 +2440,9 @@ namespace MetalPerformanceShadersGraph {
 		string MinimumDeploymentTarget { get; set; }
 	}
 
-	[TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17, 0)]
+	[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[BaseType (typeof (MPSGraphObject), Name = "MPSGraphFFTDescriptor")]
-	interface MPSGraphFftDescriptor : NSCopying
-	{
+	interface MPSGraphFftDescriptor : NSCopying {
 		[Export ("inverse")]
 		bool Inverse { get; set; }
 
@@ -2468,10 +2458,9 @@ namespace MetalPerformanceShadersGraph {
 		MPSGraphFftDescriptor Create ();
 	}
 
-	[TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16, 0)]
+	[TV (16, 0), Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 	[BaseType (typeof (MPSGraphObject), Name = "MPSGraphGRUDescriptor")]
-	interface MPSGraphGruDescriptor : NSCopying
-	{
+	interface MPSGraphGruDescriptor : NSCopying {
 		[Export ("reverse")]
 		bool Reverse { get; set; }
 
@@ -2505,10 +2494,9 @@ namespace MetalPerformanceShadersGraph {
 		MPSGraphGruDescriptor Create ();
 	}
 
-	[TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17, 0)]
+	[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[BaseType (typeof (MPSGraphObject))]
-	interface MPSGraphImToColOpDescriptor : NSCopying
-	{
+	interface MPSGraphImToColOpDescriptor : NSCopying {
 		[Export ("kernelWidth")]
 		nuint KernelWidth { get; set; }
 
@@ -2556,10 +2544,9 @@ namespace MetalPerformanceShadersGraph {
 		void SetExplicitPadding (nuint paddingLeft, nuint paddingRight, nuint paddingTop, nuint paddingBottom);
 	}
 
-	[TV (15,4), Mac (12,3), iOS (15,4), MacCatalyst (15, 4)]
+	[TV (15, 4), Mac (12, 3), iOS (15, 4), MacCatalyst (15, 4)]
 	[BaseType (typeof (MPSGraphObject), Name = "MPSGraphLSTMDescriptor")]
-	interface MPSGraphLstmDescriptor : NSCopying
-	{
+	interface MPSGraphLstmDescriptor : NSCopying {
 		[Export ("reverse")]
 		bool Reverse { get; set; }
 
@@ -2596,10 +2583,9 @@ namespace MetalPerformanceShadersGraph {
 		MPSGraphLstmDescriptor Create ();
 	}
 
-	[TV (15,4), Mac (12,3), iOS (15,4), MacCatalyst (15, 4)]
+	[TV (15, 4), Mac (12, 3), iOS (15, 4), MacCatalyst (15, 4)]
 	[BaseType (typeof (MPSGraphObject), Name = "MPSGraphSingleGateRNNDescriptor")]
-	interface MPSGraphSingleGateRnnDescriptor : NSCopying
-	{
+	interface MPSGraphSingleGateRnnDescriptor : NSCopying {
 		[Export ("reverse")]
 		bool Reverse { get; set; }
 
@@ -2619,49 +2605,47 @@ namespace MetalPerformanceShadersGraph {
 	}
 
 	// @interface MPSGraphSortOps (MPSGraph)
-	[TV (14,0), Mac (11,0), iOS (14,0), MacCatalyst (14,0)]
+	[TV (14, 0), Mac (11, 0), iOS (14, 0), MacCatalyst (14, 0)]
 	[Category]
-	[BaseType (typeof(MPSGraph))]
-	interface MPSGraph_MPSGraphSortOps
-	{
-		[TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+	[BaseType (typeof (MPSGraph))]
+	interface MPSGraph_MPSGraphSortOps {
+		[TV (16, 0), Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 		[Export ("sortWithTensor:axis:descending:name:")]
 		MPSGraphTensor Sort (MPSGraphTensor tensor, nint axis, bool descending, [NullAllowed] string name);
 
-		[TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[TV (16, 0), Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 		[Export ("sortWithTensor:axisTensor:descending:name:")]
 		MPSGraphTensor Sort (MPSGraphTensor tensor, MPSGraphTensor axisTensor, bool descending, [NullAllowed] string name);
 
-		[TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[TV (16, 0), Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 		[Export ("sortWithTensor:axis:name:")]
 		MPSGraphTensor Sort (MPSGraphTensor tensor, nint axis, [NullAllowed] string name);
 
-		[TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[TV (16, 0), Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 		[Export ("sortWithTensor:axisTensor:name:")]
 		MPSGraphTensor Sort (MPSGraphTensor tensor, MPSGraphTensor axisTensor, [NullAllowed] string name);
 
-		[TV (16,1), Mac (13,0), iOS (16,1), MacCatalyst (16,1)]
+		[TV (16, 1), Mac (13, 0), iOS (16, 1), MacCatalyst (16, 1)]
 		[Export ("argSortWithTensor:axis:descending:name:")]
 		MPSGraphTensor ArgSort (MPSGraphTensor tensor, nint axis, bool descending, [NullAllowed] string name);
 
-		[TV (16,1), Mac (13,0), iOS (16,1), MacCatalyst (16,1)]
+		[TV (16, 1), Mac (13, 0), iOS (16, 1), MacCatalyst (16, 1)]
 		[Export ("argSortWithTensor:axisTensor:descending:name:")]
 		MPSGraphTensor ArgSort (MPSGraphTensor tensor, MPSGraphTensor axisTensor, bool descending, [NullAllowed] string name);
 
-		[TV (16,1), Mac (13,0), iOS (16,1), MacCatalyst (16,1)]
+		[TV (16, 1), Mac (13, 0), iOS (16, 1), MacCatalyst (16, 1)]
 		[Export ("argSortWithTensor:axis:name:")]
 		MPSGraphTensor ArgSort (MPSGraphTensor tensor, nint axis, [NullAllowed] string name);
 
-		[TV (16,1), Mac (13,0), iOS (16,1), MacCatalyst (16,1)]
+		[TV (16, 1), Mac (13, 0), iOS (16, 1), MacCatalyst (16, 1)]
 		[Export ("argSortWithTensor:axisTensor:name:")]
 		MPSGraphTensor ArgSort (MPSGraphTensor tensor, MPSGraphTensor axisTensor, [NullAllowed] string name);
 	}
 
-	[TV (15,4), Mac (12,3), iOS (15,4), MacCatalyst (15,4)]
+	[TV (15, 4), Mac (12, 3), iOS (15, 4), MacCatalyst (15, 4)]
 	[Category]
-	[BaseType (typeof(MPSGraph))]
-	interface MPSGraph_MPSGraphLinearAlgebraOps
-	{
+	[BaseType (typeof (MPSGraph))]
+	interface MPSGraph_MPSGraphLinearAlgebraOps {
 		[Export ("bandPartWithTensor:numLower:numUpper:name:")]
 		MPSGraphTensor BandPart (MPSGraphTensor inputTensor, nint numLower, nint numUpper, [NullAllowed] string name);
 
@@ -2670,236 +2654,229 @@ namespace MetalPerformanceShadersGraph {
 	}
 
 	// @interface MPSGraphImToColOps (MPSGraph)
-	[TV (14,0), Mac (11,0), iOS (14,0), MacCatalyst (14, 0)]
+	[TV (14, 0), Mac (11, 0), iOS (14, 0), MacCatalyst (14, 0)]
 	[Category]
-	[BaseType (typeof(MPSGraph))]
-	interface MPSGraph_MPSGraphImToColOps
-	{
+	[BaseType (typeof (MPSGraph))]
+	interface MPSGraph_MPSGraphImToColOps {
 		[Export ("imToColWithSourceTensor:descriptor:name:")]
 		MPSGraphTensor ImToCol (MPSGraphTensor source, MPSGraphImToColOpDescriptor descriptor, [NullAllowed] string name);
 
 		[Export ("colToImWithSourceTensor:outputShape:descriptor:name:")]
-		MPSGraphTensor ColToIm (MPSGraphTensor source, [BindAs (typeof (int[]))] NSNumber[] outputShape, MPSGraphImToColOpDescriptor descriptor, [NullAllowed] string name);
+		MPSGraphTensor ColToIm (MPSGraphTensor source, [BindAs (typeof (int []))] NSNumber [] outputShape, MPSGraphImToColOpDescriptor descriptor, [NullAllowed] string name);
 	}
 
 	// @interface MPSGraphCumulativeOps (MPSGraph)
-	[TV (14,0), Mac (11,0), iOS (14,0), MacCatalyst (14,0)]
+	[TV (14, 0), Mac (11, 0), iOS (14, 0), MacCatalyst (14, 0)]
 	[Category]
-	[BaseType (typeof(MPSGraph))]
-	interface MPSGraph_MPSGraphCumulativeOps
-	{
-		[TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+	[BaseType (typeof (MPSGraph))]
+	interface MPSGraph_MPSGraphCumulativeOps {
+		[TV (16, 0), Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 		[Export ("cumulativeSumWithTensor:axis:exclusive:reverse:name:")]
 		MPSGraphTensor CumulativeSum (MPSGraphTensor tensor, nint axis, bool exclusive, bool reverse, [NullAllowed] string name);
 
-		[TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[TV (16, 0), Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 		[Export ("cumulativeSumWithTensor:axisTensor:exclusive:reverse:name:")]
 		MPSGraphTensor CumulativeSum (MPSGraphTensor tensor, MPSGraphTensor axisTensor, bool exclusive, bool reverse, [NullAllowed] string name);
 
-		[TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[TV (16, 0), Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 		[Export ("cumulativeSumWithTensor:axis:name:")]
 		MPSGraphTensor CumulativeSum (MPSGraphTensor tensor, nint axis, [NullAllowed] string name);
 
-		[TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[TV (16, 0), Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 		[Export ("cumulativeSumWithTensor:axisTensor:name:")]
 		MPSGraphTensor CumulativeSum (MPSGraphTensor tensor, MPSGraphTensor axisTensor, [NullAllowed] string name);
 
-		[TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[TV (16, 0), Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 		[Export ("cumulativeProductWithTensor:axis:exclusive:reverse:name:")]
 		MPSGraphTensor CumulativeProduct (MPSGraphTensor tensor, nint axis, bool exclusive, bool reverse, [NullAllowed] string name);
 
-		[TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[TV (16, 0), Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 		[Export ("cumulativeProductWithTensor:axisTensor:exclusive:reverse:name:")]
 		MPSGraphTensor CumulativeProduct (MPSGraphTensor tensor, MPSGraphTensor axisTensor, bool exclusive, bool reverse, [NullAllowed] string name);
 
-		[TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[TV (16, 0), Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 		[Export ("cumulativeProductWithTensor:axis:name:")]
 		MPSGraphTensor CumulativeProduct (MPSGraphTensor tensor, nint axis, [NullAllowed] string name);
 
-		[TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[TV (16, 0), Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 		[Export ("cumulativeProductWithTensor:axisTensor:name:")]
 		MPSGraphTensor CumulativeProduct (MPSGraphTensor tensor, MPSGraphTensor axisTensor, [NullAllowed] string name);
 
-		[TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[TV (16, 0), Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 		[Export ("cumulativeMinimumWithTensor:axis:exclusive:reverse:name:")]
 		MPSGraphTensor CumulativeMinimum (MPSGraphTensor tensor, nint axis, bool exclusive, bool reverse, [NullAllowed] string name);
 
-		[TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[TV (16, 0), Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 		[Export ("cumulativeMinimumWithTensor:axisTensor:exclusive:reverse:name:")]
 		MPSGraphTensor CumulativeMinimum (MPSGraphTensor tensor, MPSGraphTensor axisTensor, bool exclusive, bool reverse, [NullAllowed] string name);
 
-		[TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[TV (16, 0), Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 		[Export ("cumulativeMinimumWithTensor:axis:name:")]
 		MPSGraphTensor CumulativeMinimum (MPSGraphTensor tensor, nint axis, [NullAllowed] string name);
 
-		[TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[TV (16, 0), Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 		[Export ("cumulativeMinimumWithTensor:axisTensor:name:")]
 		MPSGraphTensor CumulativeMinimum (MPSGraphTensor tensor, MPSGraphTensor axisTensor, [NullAllowed] string name);
 
-		[TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[TV (16, 0), Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 		[Export ("cumulativeMaximumWithTensor:axis:exclusive:reverse:name:")]
 		MPSGraphTensor CumulativeMaximum (MPSGraphTensor tensor, nint axis, bool exclusive, bool reverse, [NullAllowed] string name);
 
-		[TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[TV (16, 0), Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 		[Export ("cumulativeMaximumWithTensor:axisTensor:exclusive:reverse:name:")]
 		MPSGraphTensor CumulativeMaximum (MPSGraphTensor tensor, MPSGraphTensor axisTensor, bool exclusive, bool reverse, [NullAllowed] string name);
 
-		[TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[TV (16, 0), Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 		[Export ("cumulativeMaximumWithTensor:axis:name:")]
 		MPSGraphTensor CumulativeMaximum (MPSGraphTensor tensor, nint axis, [NullAllowed] string name);
 
-		[TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[TV (16, 0), Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 		[Export ("cumulativeMaximumWithTensor:axisTensor:name:")]
 		MPSGraphTensor CumulativeMaximum (MPSGraphTensor tensor, MPSGraphTensor axisTensor, [NullAllowed] string name);
 	}
 
 	// @interface MPSGraphFourierTransformOps (MPSGraph)
-	[TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
+	[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[Category]
-	[BaseType (typeof(MPSGraph))]
-	interface MPSGraph_MPSGraphFourierTransformOps
-	{
-		[TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
+	[BaseType (typeof (MPSGraph))]
+	interface MPSGraph_MPSGraphFourierTransformOps {
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("fastFourierTransformWithTensor:axes:descriptor:name:")]
-		MPSGraphTensor FastFourierTransform (MPSGraphTensor tensor, [BindAs (typeof (int[]))] NSNumber[] axes, MPSGraphFftDescriptor descriptor, [NullAllowed] string name);
+		MPSGraphTensor FastFourierTransform (MPSGraphTensor tensor, [BindAs (typeof (int []))] NSNumber [] axes, MPSGraphFftDescriptor descriptor, [NullAllowed] string name);
 
-		[TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("fastFourierTransformWithTensor:axesTensor:descriptor:name:")]
 		MPSGraphTensor FastFourierTransform (MPSGraphTensor tensor, MPSGraphTensor axesTensor, MPSGraphFftDescriptor descriptor, [NullAllowed] string name);
 
-		[TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("realToHermiteanFFTWithTensor:axes:descriptor:name:")]
-		MPSGraphTensor RealToHermiteanFft (MPSGraphTensor tensor, [BindAs (typeof (int[]))] NSNumber[] axes, MPSGraphFftDescriptor descriptor, [NullAllowed] string name);
+		MPSGraphTensor RealToHermiteanFft (MPSGraphTensor tensor, [BindAs (typeof (int []))] NSNumber [] axes, MPSGraphFftDescriptor descriptor, [NullAllowed] string name);
 
-		[TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("realToHermiteanFFTWithTensor:axesTensor:descriptor:name:")]
 		MPSGraphTensor RealToHermiteanFft (MPSGraphTensor tensor, MPSGraphTensor axesTensor, MPSGraphFftDescriptor descriptor, [NullAllowed] string name);
 
-		[TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("HermiteanToRealFFTWithTensor:axes:descriptor:name:")]
-		MPSGraphTensor HermiteanToRealFft (MPSGraphTensor tensor, [BindAs (typeof (int[]))] NSNumber[] axes, MPSGraphFftDescriptor descriptor, [NullAllowed] string name);
+		MPSGraphTensor HermiteanToRealFft (MPSGraphTensor tensor, [BindAs (typeof (int []))] NSNumber [] axes, MPSGraphFftDescriptor descriptor, [NullAllowed] string name);
 
-		[TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("HermiteanToRealFFTWithTensor:axesTensor:descriptor:name:")]
 		MPSGraphTensor HermiteanToRealFft (MPSGraphTensor tensor, MPSGraphTensor axesTensor, MPSGraphFftDescriptor descriptor, [NullAllowed] string name);
 	}
 
 	// @interface MPSGraphGatherAlongAxisOps (MPSGraph)
 	[Category]
-	[BaseType (typeof(MPSGraph))]
-	interface MPSGraph_MPSGraphGatherAlongAxisOps
-	{
-		[TV (15,4), Mac (12,3), iOS (15,4), MacCatalyst (15,4)]
+	[BaseType (typeof (MPSGraph))]
+	interface MPSGraph_MPSGraphGatherAlongAxisOps {
+		[TV (15, 4), Mac (12, 3), iOS (15, 4), MacCatalyst (15, 4)]
 		[Export ("gatherAlongAxis:withUpdatesTensor:indicesTensor:name:")]
 		MPSGraphTensor GatherAlongAxis (nint axis, MPSGraphTensor updatesTensor, MPSGraphTensor indicesTensor, [NullAllowed] string name);
 
-		[TV (15,4), Mac (12,3), iOS (15,4), MacCatalyst (15,4)]
+		[TV (15, 4), Mac (12, 3), iOS (15, 4), MacCatalyst (15, 4)]
 		[Export ("gatherAlongAxisTensor:withUpdatesTensor:indicesTensor:name:")]
 		MPSGraphTensor GatherAlongAxis (MPSGraphTensor axisTensor, MPSGraphTensor updatesTensor, MPSGraphTensor indicesTensor, [NullAllowed] string name);
 	}
 
 	// @interface MPSGraphRNNOps (MPSGraph)
-	[TV (15,4), Mac (12,3), iOS (15,4), MacCatalyst(15,4)]
+	[TV (15, 4), Mac (12, 3), iOS (15, 4), MacCatalyst (15, 4)]
 	[Category]
-	[BaseType (typeof(MPSGraph))]
-	interface MPSGraph_MPSGraphRnnOps
-	{
-		[TV (15,4), Mac (12,3), iOS (15,4), MacCatalyst (15,4)]
+	[BaseType (typeof (MPSGraph))]
+	interface MPSGraph_MPSGraphRnnOps {
+		[TV (15, 4), Mac (12, 3), iOS (15, 4), MacCatalyst (15, 4)]
 		[Export ("singleGateRNNWithSourceTensor:recurrentWeight:inputWeight:bias:initState:mask:descriptor:name:")]
-		MPSGraphTensor[] SingleGateRnn (MPSGraphTensor source, MPSGraphTensor recurrentWeight, [NullAllowed] MPSGraphTensor inputWeight, [NullAllowed] MPSGraphTensor bias, [NullAllowed] MPSGraphTensor initState, [NullAllowed] MPSGraphTensor mask, MPSGraphSingleGateRnnDescriptor descriptor, [NullAllowed] string name);
+		MPSGraphTensor [] SingleGateRnn (MPSGraphTensor source, MPSGraphTensor recurrentWeight, [NullAllowed] MPSGraphTensor inputWeight, [NullAllowed] MPSGraphTensor bias, [NullAllowed] MPSGraphTensor initState, [NullAllowed] MPSGraphTensor mask, MPSGraphSingleGateRnnDescriptor descriptor, [NullAllowed] string name);
 
-		[TV (15,4), Mac (12,3), iOS (15,4), MacCatalyst (15,4)]
+		[TV (15, 4), Mac (12, 3), iOS (15, 4), MacCatalyst (15, 4)]
 		[Export ("singleGateRNNWithSourceTensor:recurrentWeight:inputWeight:bias:initState:descriptor:name:")]
-		MPSGraphTensor[] SingleGateRnn (MPSGraphTensor source, MPSGraphTensor recurrentWeight, [NullAllowed] MPSGraphTensor inputWeight, [NullAllowed] MPSGraphTensor bias, [NullAllowed] MPSGraphTensor initState, MPSGraphSingleGateRnnDescriptor descriptor, [NullAllowed] string name);
+		MPSGraphTensor [] SingleGateRnn (MPSGraphTensor source, MPSGraphTensor recurrentWeight, [NullAllowed] MPSGraphTensor inputWeight, [NullAllowed] MPSGraphTensor bias, [NullAllowed] MPSGraphTensor initState, MPSGraphSingleGateRnnDescriptor descriptor, [NullAllowed] string name);
 
-		[TV (15,4), Mac (12,3), iOS (15,4), MacCatalyst (15,4)]
+		[TV (15, 4), Mac (12, 3), iOS (15, 4), MacCatalyst (15, 4)]
 		[Export ("singleGateRNNWithSourceTensor:recurrentWeight:initState:descriptor:name:")]
-		MPSGraphTensor[] SingleGateRnn (MPSGraphTensor source, MPSGraphTensor recurrentWeight, [NullAllowed] MPSGraphTensor initState, MPSGraphSingleGateRnnDescriptor descriptor, [NullAllowed] string name);
+		MPSGraphTensor [] SingleGateRnn (MPSGraphTensor source, MPSGraphTensor recurrentWeight, [NullAllowed] MPSGraphTensor initState, MPSGraphSingleGateRnnDescriptor descriptor, [NullAllowed] string name);
 
-		[TV (15,4), Mac (12,3), iOS (15,4), MacCatalyst (15,4)]
+		[TV (15, 4), Mac (12, 3), iOS (15, 4), MacCatalyst (15, 4)]
 		[Export ("singleGateRNNGradientsWithSourceTensor:recurrentWeight:sourceGradient:zState:stateGradient:inputWeight:bias:initState:mask:descriptor:name:")]
-		MPSGraphTensor[] SingleGateRnnGradients (MPSGraphTensor source, MPSGraphTensor recurrentWeight, MPSGraphTensor sourceGradient, MPSGraphTensor zState, [NullAllowed] MPSGraphTensor stateGradient, [NullAllowed] MPSGraphTensor inputWeight, [NullAllowed] MPSGraphTensor bias, [NullAllowed] MPSGraphTensor initState, [NullAllowed] MPSGraphTensor mask, MPSGraphSingleGateRnnDescriptor descriptor, [NullAllowed] string name);
+		MPSGraphTensor [] SingleGateRnnGradients (MPSGraphTensor source, MPSGraphTensor recurrentWeight, MPSGraphTensor sourceGradient, MPSGraphTensor zState, [NullAllowed] MPSGraphTensor stateGradient, [NullAllowed] MPSGraphTensor inputWeight, [NullAllowed] MPSGraphTensor bias, [NullAllowed] MPSGraphTensor initState, [NullAllowed] MPSGraphTensor mask, MPSGraphSingleGateRnnDescriptor descriptor, [NullAllowed] string name);
 
-		[TV (15,4), Mac (12,3), iOS (15,4), MacCatalyst (15,4)]
+		[TV (15, 4), Mac (12, 3), iOS (15, 4), MacCatalyst (15, 4)]
 		[Export ("singleGateRNNGradientsWithSourceTensor:recurrentWeight:sourceGradient:zState:inputWeight:bias:initState:mask:descriptor:name:")]
-		MPSGraphTensor[] SingleGateRnnGradients (MPSGraphTensor source, MPSGraphTensor recurrentWeight, MPSGraphTensor sourceGradient, MPSGraphTensor zState, [NullAllowed] MPSGraphTensor inputWeight, [NullAllowed] MPSGraphTensor bias, [NullAllowed] MPSGraphTensor initState, [NullAllowed] MPSGraphTensor mask, MPSGraphSingleGateRnnDescriptor descriptor, [NullAllowed] string name);
+		MPSGraphTensor [] SingleGateRnnGradients (MPSGraphTensor source, MPSGraphTensor recurrentWeight, MPSGraphTensor sourceGradient, MPSGraphTensor zState, [NullAllowed] MPSGraphTensor inputWeight, [NullAllowed] MPSGraphTensor bias, [NullAllowed] MPSGraphTensor initState, [NullAllowed] MPSGraphTensor mask, MPSGraphSingleGateRnnDescriptor descriptor, [NullAllowed] string name);
 
-		[TV (15,4), Mac (12,3), iOS (15,4), MacCatalyst (15,4)]
+		[TV (15, 4), Mac (12, 3), iOS (15, 4), MacCatalyst (15, 4)]
 		[Export ("singleGateRNNGradientsWithSourceTensor:recurrentWeight:sourceGradient:zState:inputWeight:bias:initState:descriptor:name:")]
-		MPSGraphTensor[] SingleGateRnnGradients (MPSGraphTensor source, MPSGraphTensor recurrentWeight, MPSGraphTensor sourceGradient, MPSGraphTensor zState, [NullAllowed] MPSGraphTensor inputWeight, [NullAllowed] MPSGraphTensor bias, [NullAllowed] MPSGraphTensor initState, MPSGraphSingleGateRnnDescriptor descriptor, [NullAllowed] string name);
+		MPSGraphTensor [] SingleGateRnnGradients (MPSGraphTensor source, MPSGraphTensor recurrentWeight, MPSGraphTensor sourceGradient, MPSGraphTensor zState, [NullAllowed] MPSGraphTensor inputWeight, [NullAllowed] MPSGraphTensor bias, [NullAllowed] MPSGraphTensor initState, MPSGraphSingleGateRnnDescriptor descriptor, [NullAllowed] string name);
 
-		[TV (15,4), Mac (12,3), iOS (15,4), MacCatalyst (15,4)]
+		[TV (15, 4), Mac (12, 3), iOS (15, 4), MacCatalyst (15, 4)]
 		[Export ("singleGateRNNGradientsWithSourceTensor:recurrentWeight:sourceGradient:zState:initState:descriptor:name:")]
-		MPSGraphTensor[] SingleGateRnnGradients (MPSGraphTensor source, MPSGraphTensor recurrentWeight, MPSGraphTensor sourceGradient, MPSGraphTensor zState, [NullAllowed] MPSGraphTensor initState, MPSGraphSingleGateRnnDescriptor descriptor, [NullAllowed] string name);
+		MPSGraphTensor [] SingleGateRnnGradients (MPSGraphTensor source, MPSGraphTensor recurrentWeight, MPSGraphTensor sourceGradient, MPSGraphTensor zState, [NullAllowed] MPSGraphTensor initState, MPSGraphSingleGateRnnDescriptor descriptor, [NullAllowed] string name);
 
-		[TV (15,4), Mac (12,3), iOS (15,4), MacCatalyst (15,4)]
+		[TV (15, 4), Mac (12, 3), iOS (15, 4), MacCatalyst (15, 4)]
 		[Export ("LSTMWithSourceTensor:recurrentWeight:inputWeight:bias:initState:initCell:mask:peephole:descriptor:name:")]
-		MPSGraphTensor[] Lstm (MPSGraphTensor source, MPSGraphTensor recurrentWeight, [NullAllowed] MPSGraphTensor inputWeight, [NullAllowed] MPSGraphTensor bias, [NullAllowed] MPSGraphTensor initState, [NullAllowed] MPSGraphTensor initCell, [NullAllowed] MPSGraphTensor mask, [NullAllowed] MPSGraphTensor peephole, MPSGraphLstmDescriptor descriptor, [NullAllowed] string name);
+		MPSGraphTensor [] Lstm (MPSGraphTensor source, MPSGraphTensor recurrentWeight, [NullAllowed] MPSGraphTensor inputWeight, [NullAllowed] MPSGraphTensor bias, [NullAllowed] MPSGraphTensor initState, [NullAllowed] MPSGraphTensor initCell, [NullAllowed] MPSGraphTensor mask, [NullAllowed] MPSGraphTensor peephole, MPSGraphLstmDescriptor descriptor, [NullAllowed] string name);
 
-		[TV (15,4), Mac (12,3), iOS (15,4), MacCatalyst (15,4)]
+		[TV (15, 4), Mac (12, 3), iOS (15, 4), MacCatalyst (15, 4)]
 		[Export ("LSTMWithSourceTensor:recurrentWeight:inputWeight:bias:initState:initCell:descriptor:name:")]
-		MPSGraphTensor[] Lstm (MPSGraphTensor source, MPSGraphTensor recurrentWeight, [NullAllowed] MPSGraphTensor inputWeight, [NullAllowed] MPSGraphTensor bias, [NullAllowed] MPSGraphTensor initState, [NullAllowed] MPSGraphTensor initCell, MPSGraphLstmDescriptor descriptor, [NullAllowed] string name);
+		MPSGraphTensor [] Lstm (MPSGraphTensor source, MPSGraphTensor recurrentWeight, [NullAllowed] MPSGraphTensor inputWeight, [NullAllowed] MPSGraphTensor bias, [NullAllowed] MPSGraphTensor initState, [NullAllowed] MPSGraphTensor initCell, MPSGraphLstmDescriptor descriptor, [NullAllowed] string name);
 
-		[TV (15,4), Mac (12,3), iOS (15,4), MacCatalyst (15,4)]
+		[TV (15, 4), Mac (12, 3), iOS (15, 4), MacCatalyst (15, 4)]
 		[Export ("LSTMWithSourceTensor:recurrentWeight:initState:initCell:descriptor:name:")]
-		MPSGraphTensor[] Lstm (MPSGraphTensor source, MPSGraphTensor recurrentWeight, [NullAllowed] MPSGraphTensor initState, [NullAllowed] MPSGraphTensor initCell, MPSGraphLstmDescriptor descriptor, [NullAllowed] string name);
+		MPSGraphTensor [] Lstm (MPSGraphTensor source, MPSGraphTensor recurrentWeight, [NullAllowed] MPSGraphTensor initState, [NullAllowed] MPSGraphTensor initCell, MPSGraphLstmDescriptor descriptor, [NullAllowed] string name);
 
-		[TV (15,4), Mac (12,3), iOS (15,4), MacCatalyst (15,4)]
+		[TV (15, 4), Mac (12, 3), iOS (15, 4), MacCatalyst (15, 4)]
 		[Export ("LSTMGradientsWithSourceTensor:recurrentWeight:sourceGradient:zState:cellOutputFwd:stateGradient:cellGradient:inputWeight:bias:initState:initCell:mask:peephole:descriptor:name:")]
-		MPSGraphTensor[] LstmGradients (MPSGraphTensor source, MPSGraphTensor recurrentWeight, MPSGraphTensor sourceGradient, MPSGraphTensor zState, MPSGraphTensor cellOutputFwd, [NullAllowed] MPSGraphTensor stateGradient, [NullAllowed] MPSGraphTensor cellGradient, [NullAllowed] MPSGraphTensor inputWeight, [NullAllowed] MPSGraphTensor bias, [NullAllowed] MPSGraphTensor initState, [NullAllowed] MPSGraphTensor initCell, [NullAllowed] MPSGraphTensor mask, [NullAllowed] MPSGraphTensor peephole, MPSGraphLstmDescriptor descriptor, [NullAllowed] string name);
+		MPSGraphTensor [] LstmGradients (MPSGraphTensor source, MPSGraphTensor recurrentWeight, MPSGraphTensor sourceGradient, MPSGraphTensor zState, MPSGraphTensor cellOutputFwd, [NullAllowed] MPSGraphTensor stateGradient, [NullAllowed] MPSGraphTensor cellGradient, [NullAllowed] MPSGraphTensor inputWeight, [NullAllowed] MPSGraphTensor bias, [NullAllowed] MPSGraphTensor initState, [NullAllowed] MPSGraphTensor initCell, [NullAllowed] MPSGraphTensor mask, [NullAllowed] MPSGraphTensor peephole, MPSGraphLstmDescriptor descriptor, [NullAllowed] string name);
 
-		[TV (15,4), Mac (12,3), iOS (15,4), MacCatalyst (15,4)]
+		[TV (15, 4), Mac (12, 3), iOS (15, 4), MacCatalyst (15, 4)]
 		[Export ("LSTMGradientsWithSourceTensor:recurrentWeight:sourceGradient:zState:cellOutputFwd:inputWeight:bias:initState:initCell:mask:descriptor:name:")]
-		MPSGraphTensor[] LstmGradients (MPSGraphTensor source, MPSGraphTensor recurrentWeight, MPSGraphTensor sourceGradient, MPSGraphTensor zState, MPSGraphTensor cellOutputFwd, [NullAllowed] MPSGraphTensor inputWeight, [NullAllowed] MPSGraphTensor bias, [NullAllowed] MPSGraphTensor initState, [NullAllowed] MPSGraphTensor initCell, [NullAllowed] MPSGraphTensor mask, MPSGraphLstmDescriptor descriptor, [NullAllowed] string name);
+		MPSGraphTensor [] LstmGradients (MPSGraphTensor source, MPSGraphTensor recurrentWeight, MPSGraphTensor sourceGradient, MPSGraphTensor zState, MPSGraphTensor cellOutputFwd, [NullAllowed] MPSGraphTensor inputWeight, [NullAllowed] MPSGraphTensor bias, [NullAllowed] MPSGraphTensor initState, [NullAllowed] MPSGraphTensor initCell, [NullAllowed] MPSGraphTensor mask, MPSGraphLstmDescriptor descriptor, [NullAllowed] string name);
 
-		[TV (15,4), Mac (12,3), iOS (15,4), MacCatalyst (15,4)]
+		[TV (15, 4), Mac (12, 3), iOS (15, 4), MacCatalyst (15, 4)]
 		[Export ("LSTMGradientsWithSourceTensor:recurrentWeight:sourceGradient:zState:cellOutputFwd:inputWeight:bias:initState:initCell:descriptor:name:")]
-		MPSGraphTensor[] LstmGradients (MPSGraphTensor source, MPSGraphTensor recurrentWeight, MPSGraphTensor sourceGradient, MPSGraphTensor zState, MPSGraphTensor cellOutputFwd, [NullAllowed] MPSGraphTensor inputWeight, [NullAllowed] MPSGraphTensor bias, [NullAllowed] MPSGraphTensor initState, [NullAllowed] MPSGraphTensor initCell, MPSGraphLstmDescriptor descriptor, [NullAllowed] string name);
+		MPSGraphTensor [] LstmGradients (MPSGraphTensor source, MPSGraphTensor recurrentWeight, MPSGraphTensor sourceGradient, MPSGraphTensor zState, MPSGraphTensor cellOutputFwd, [NullAllowed] MPSGraphTensor inputWeight, [NullAllowed] MPSGraphTensor bias, [NullAllowed] MPSGraphTensor initState, [NullAllowed] MPSGraphTensor initCell, MPSGraphLstmDescriptor descriptor, [NullAllowed] string name);
 
-		[TV (15,4), Mac (12,3), iOS (15,4), MacCatalyst (15,4)]
+		[TV (15, 4), Mac (12, 3), iOS (15, 4), MacCatalyst (15, 4)]
 		[Export ("LSTMGradientsWithSourceTensor:recurrentWeight:sourceGradient:zState:cellOutputFwd:descriptor:name:")]
-		MPSGraphTensor[] LstmGradients (MPSGraphTensor source, MPSGraphTensor recurrentWeight, MPSGraphTensor sourceGradient, MPSGraphTensor zState, MPSGraphTensor cellOutputFwd, MPSGraphLstmDescriptor descriptor, [NullAllowed] string name);
+		MPSGraphTensor [] LstmGradients (MPSGraphTensor source, MPSGraphTensor recurrentWeight, MPSGraphTensor sourceGradient, MPSGraphTensor zState, MPSGraphTensor cellOutputFwd, MPSGraphLstmDescriptor descriptor, [NullAllowed] string name);
 
-		[TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[TV (16, 0), Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 		[Export ("GRUWithSourceTensor:recurrentWeight:inputWeight:bias:initState:mask:secondaryBias:descriptor:name:")]
-		MPSGraphTensor[] Gru (MPSGraphTensor source, MPSGraphTensor recurrentWeight, [NullAllowed] MPSGraphTensor inputWeight, [NullAllowed] MPSGraphTensor bias, [NullAllowed] MPSGraphTensor initState, [NullAllowed] MPSGraphTensor mask, [NullAllowed] MPSGraphTensor secondaryBias, MPSGraphGruDescriptor descriptor, [NullAllowed] string name);
+		MPSGraphTensor [] Gru (MPSGraphTensor source, MPSGraphTensor recurrentWeight, [NullAllowed] MPSGraphTensor inputWeight, [NullAllowed] MPSGraphTensor bias, [NullAllowed] MPSGraphTensor initState, [NullAllowed] MPSGraphTensor mask, [NullAllowed] MPSGraphTensor secondaryBias, MPSGraphGruDescriptor descriptor, [NullAllowed] string name);
 
-		[TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[TV (16, 0), Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 		[Export ("GRUWithSourceTensor:recurrentWeight:inputWeight:bias:initState:descriptor:name:")]
-		MPSGraphTensor[] Gru (MPSGraphTensor source, MPSGraphTensor recurrentWeight, [NullAllowed] MPSGraphTensor inputWeight, [NullAllowed] MPSGraphTensor bias, [NullAllowed] MPSGraphTensor initState, MPSGraphGruDescriptor descriptor, [NullAllowed] string name);
+		MPSGraphTensor [] Gru (MPSGraphTensor source, MPSGraphTensor recurrentWeight, [NullAllowed] MPSGraphTensor inputWeight, [NullAllowed] MPSGraphTensor bias, [NullAllowed] MPSGraphTensor initState, MPSGraphGruDescriptor descriptor, [NullAllowed] string name);
 
-		[TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[TV (16, 0), Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 		[Export ("GRUWithSourceTensor:recurrentWeight:inputWeight:bias:descriptor:name:")]
-		MPSGraphTensor[] Gru (MPSGraphTensor source, MPSGraphTensor recurrentWeight, [NullAllowed] MPSGraphTensor inputWeight, [NullAllowed] MPSGraphTensor bias, MPSGraphGruDescriptor descriptor, [NullAllowed] string name);
+		MPSGraphTensor [] Gru (MPSGraphTensor source, MPSGraphTensor recurrentWeight, [NullAllowed] MPSGraphTensor inputWeight, [NullAllowed] MPSGraphTensor bias, MPSGraphGruDescriptor descriptor, [NullAllowed] string name);
 
-		[TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[TV (16, 0), Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 		[Export ("GRUGradientsWithSourceTensor:recurrentWeight:sourceGradient:zState:outputFwd:stateGradient:inputWeight:bias:initState:mask:secondaryBias:descriptor:name:")]
-		MPSGraphTensor[] GruGradients (MPSGraphTensor source, MPSGraphTensor recurrentWeight, MPSGraphTensor sourceGradient, MPSGraphTensor zState, MPSGraphTensor outputFwd, [NullAllowed] MPSGraphTensor stateGradient, [NullAllowed] MPSGraphTensor inputWeight, [NullAllowed] MPSGraphTensor bias, [NullAllowed] MPSGraphTensor initState, [NullAllowed] MPSGraphTensor mask, [NullAllowed] MPSGraphTensor secondaryBias, MPSGraphGruDescriptor descriptor, [NullAllowed] string name);
+		MPSGraphTensor [] GruGradients (MPSGraphTensor source, MPSGraphTensor recurrentWeight, MPSGraphTensor sourceGradient, MPSGraphTensor zState, MPSGraphTensor outputFwd, [NullAllowed] MPSGraphTensor stateGradient, [NullAllowed] MPSGraphTensor inputWeight, [NullAllowed] MPSGraphTensor bias, [NullAllowed] MPSGraphTensor initState, [NullAllowed] MPSGraphTensor mask, [NullAllowed] MPSGraphTensor secondaryBias, MPSGraphGruDescriptor descriptor, [NullAllowed] string name);
 
-		[TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[TV (16, 0), Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 		[Export ("GRUGradientsWithSourceTensor:recurrentWeight:sourceGradient:zState:outputFwd:inputWeight:bias:initState:descriptor:name:")]
-		MPSGraphTensor[] GruGradients (MPSGraphTensor source, MPSGraphTensor recurrentWeight, MPSGraphTensor sourceGradient, MPSGraphTensor zState, MPSGraphTensor outputFwd, [NullAllowed] MPSGraphTensor inputWeight, [NullAllowed] MPSGraphTensor bias, [NullAllowed] MPSGraphTensor initState, MPSGraphGruDescriptor descriptor, [NullAllowed] string name);
+		MPSGraphTensor [] GruGradients (MPSGraphTensor source, MPSGraphTensor recurrentWeight, MPSGraphTensor sourceGradient, MPSGraphTensor zState, MPSGraphTensor outputFwd, [NullAllowed] MPSGraphTensor inputWeight, [NullAllowed] MPSGraphTensor bias, [NullAllowed] MPSGraphTensor initState, MPSGraphGruDescriptor descriptor, [NullAllowed] string name);
 
-		[TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[TV (16, 0), Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 		[Export ("GRUGradientsWithSourceTensor:recurrentWeight:sourceGradient:zState:outputFwd:inputWeight:bias:descriptor:name:")]
-		MPSGraphTensor[] GruGradients (MPSGraphTensor source, MPSGraphTensor recurrentWeight, MPSGraphTensor sourceGradient, MPSGraphTensor zState, MPSGraphTensor outputFwd, [NullAllowed] MPSGraphTensor inputWeight, [NullAllowed] MPSGraphTensor bias, MPSGraphGruDescriptor descriptor, [NullAllowed] string name);
+		MPSGraphTensor [] GruGradients (MPSGraphTensor source, MPSGraphTensor recurrentWeight, MPSGraphTensor sourceGradient, MPSGraphTensor zState, MPSGraphTensor outputFwd, [NullAllowed] MPSGraphTensor inputWeight, [NullAllowed] MPSGraphTensor bias, MPSGraphGruDescriptor descriptor, [NullAllowed] string name);
 	}
 
-	[TV (16,1), Mac (13,0), iOS (16,1), MacCatalyst (16,1)]
+	[TV (16, 1), Mac (13, 0), iOS (16, 1), MacCatalyst (16, 1)]
 	[Category]
-	[BaseType (typeof(MPSGraph))]
-	interface MPSGraph_MPSGraphMatrixInverseOps
-	{
+	[BaseType (typeof (MPSGraph))]
+	interface MPSGraph_MPSGraphMatrixInverseOps {
 		[Export ("inverseOfTensor:name:")]
 		MPSGraphTensor Inverse (MPSGraphTensor inputTensor, [NullAllowed] string name);
 	}
 
 	// @interface MPSGraphNonMaximumSuppressionOps (MPSGraph)
-	[TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
+	[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[Category]
-	[BaseType (typeof(MPSGraph))]
-	interface MPSGraph_MPSGraphNonMaximumSuppressionOps
-	{
+	[BaseType (typeof (MPSGraph))]
+	interface MPSGraph_MPSGraphNonMaximumSuppressionOps {
 		[Export ("nonMaximumSuppressionWithBoxesTensor:scoresTensor:IOUThreshold:scoreThreshold:perClassSuppression:coordinateMode:name:")]
 		MPSGraphTensor NonMaximumSuppression (MPSGraphTensor boxesTensor, MPSGraphTensor scoresTensor, float iouThreshold, float scoreThreshold, bool perClassSuppression, MPSGraphNonMaximumSuppressionCoordinateMode coordinateMode, [NullAllowed] string name);
 
@@ -2908,48 +2885,45 @@ namespace MetalPerformanceShadersGraph {
 	}
 
 	// @interface NonZeroOps (MPSGraph)
-	[TV (14,0), Mac (11,0), iOS (14,0), MacCatalyst (14,0)]
+	[TV (14, 0), Mac (11, 0), iOS (14, 0), MacCatalyst (14, 0)]
 	[Category]
-	[BaseType (typeof(MPSGraph))]
-	interface MPSGraph_NonZeroOps
-	{
-		[TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
+	[BaseType (typeof (MPSGraph))]
+	interface MPSGraph_NonZeroOps {
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("nonZeroIndicesOfTensor:name:")]
 		MPSGraphTensor NonZeroIndices (MPSGraphTensor tensor, [NullAllowed] string name);
 	}
 
 	// @interface MPSGraphSampleGrid (MPSGraph)
 	[Category]
-	[BaseType (typeof(MPSGraph))]
-	interface MPSGraph_MPSGraphSampleGrid
-	{
-		[TV (16,2), Mac (13,1), iOS (16,2), MacCatalyst (16,2)]
+	[BaseType (typeof (MPSGraph))]
+	interface MPSGraph_MPSGraphSampleGrid {
+		[TV (16, 2), Mac (13, 1), iOS (16, 2), MacCatalyst (16, 2)]
 		[Export ("sampleGridWithSourceTensor:coordinateTensor:layout:normalizeCoordinates:relativeCoordinates:alignCorners:paddingMode:samplingMode:constantValue:name:")]
 		MPSGraphTensor SampleGrid (MPSGraphTensor source, MPSGraphTensor coordinates, MPSGraphTensorNamedDataLayout layout, bool normalizeCoordinates, bool relativeCoordinates, bool alignCorners, MPSGraphPaddingMode paddingMode, MPSGraphResizeMode samplingMode, double constantValue, [NullAllowed] string name);
 
-		[TV (16,2), Mac (13,1), iOS (16,2), MacCatalyst (16,2)]
+		[TV (16, 2), Mac (13, 1), iOS (16, 2), MacCatalyst (16, 2)]
 		[Export ("sampleGridWithSourceTensor:coordinateTensor:layout:normalizeCoordinates:relativeCoordinates:alignCorners:paddingMode:nearestRoundingMode:constantValue:name:")]
 		MPSGraphTensor SampleGrid (MPSGraphTensor source, MPSGraphTensor coordinates, MPSGraphTensorNamedDataLayout layout, bool normalizeCoordinates, bool relativeCoordinates, bool alignCorners, MPSGraphPaddingMode paddingMode, MPSGraphResizeNearestRoundingMode nearestRoundingMode, double constantValue, [NullAllowed] string name);
 	}
 
 	// @interface MPSGraphScatterAlongAxisOps (MPSGraph)
 	[Category]
-	[BaseType (typeof(MPSGraph))]
-	interface MPSGraph_MPSGraphScatterAlongAxisOps
-	{
-		[TV (15,4), Mac (12,3), iOS (15,4), MacCatalyst (15,4)]
+	[BaseType (typeof (MPSGraph))]
+	interface MPSGraph_MPSGraphScatterAlongAxisOps {
+		[TV (15, 4), Mac (12, 3), iOS (15, 4), MacCatalyst (15, 4)]
 		[Export ("scatterAlongAxis:withUpdatesTensor:indicesTensor:shape:mode:name:")]
-		MPSGraphTensor ScatterAlongAxis (nint axis, MPSGraphTensor updatesTensor, MPSGraphTensor indicesTensor, [BindAs (typeof (int[]))] NSNumber[] shape, MPSGraphScatterMode mode, [NullAllowed] string name);
+		MPSGraphTensor ScatterAlongAxis (nint axis, MPSGraphTensor updatesTensor, MPSGraphTensor indicesTensor, [BindAs (typeof (int []))] NSNumber [] shape, MPSGraphScatterMode mode, [NullAllowed] string name);
 
-		[TV (15,4), Mac (12,3), iOS (15,4), MacCatalyst (15,4)]
+		[TV (15, 4), Mac (12, 3), iOS (15, 4), MacCatalyst (15, 4)]
 		[Export ("scatterAlongAxisTensor:withUpdatesTensor:indicesTensor:shape:mode:name:")]
-		MPSGraphTensor ScatterAlongAxis (MPSGraphTensor axisTensor, MPSGraphTensor updatesTensor, MPSGraphTensor indicesTensor, [BindAs (typeof (int[]))] NSNumber[] shape, MPSGraphScatterMode mode, [NullAllowed] string name);
+		MPSGraphTensor ScatterAlongAxis (MPSGraphTensor axisTensor, MPSGraphTensor updatesTensor, MPSGraphTensor indicesTensor, [BindAs (typeof (int []))] NSNumber [] shape, MPSGraphScatterMode mode, [NullAllowed] string name);
 
-		[TV (15,4), Mac (12,3), iOS (15,4), MacCatalyst (15,4)]
+		[TV (15, 4), Mac (12, 3), iOS (15, 4), MacCatalyst (15, 4)]
 		[Export ("scatterAlongAxis:withDataTensor:updatesTensor:indicesTensor:mode:name:")]
 		MPSGraphTensor ScatterAlongAxis (nint axis, MPSGraphTensor dataTensor, MPSGraphTensor updatesTensor, MPSGraphTensor indicesTensor, MPSGraphScatterMode mode, [NullAllowed] string name);
 
-		[TV (15,4), Mac (12,3), iOS (15,4), MacCatalyst (15,4)]
+		[TV (15, 4), Mac (12, 3), iOS (15, 4), MacCatalyst (15, 4)]
 		[Export ("scatterAlongAxisTensor:withDataTensor:updatesTensor:indicesTensor:mode:name:")]
 		MPSGraphTensor ScatterAlongAxis (MPSGraphTensor axisTensor, MPSGraphTensor dataTensor, MPSGraphTensor updatesTensor, MPSGraphTensor indicesTensor, MPSGraphScatterMode mode, [NullAllowed] string name);
 	}
