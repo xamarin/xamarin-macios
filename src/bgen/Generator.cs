@@ -3867,7 +3867,7 @@ public partial class Generator : IMemberGatherer {
 		}
 	}
 
-	void PrintObsoleteAttributes (ICustomAttributeProvider provider, bool already_has_editor_browsable_attribute = false)
+	void PrintObsoleteAttributes (ICustomAttributeProvider provider)
 	{
 		var obsoleteAttributes = AttributeManager.GetCustomAttributes<ObsoleteAttribute> (provider);
 
@@ -3875,8 +3875,37 @@ public partial class Generator : IMemberGatherer {
 			print ("[Obsolete (\"{0}\", {1})]", oa.Message, oa.IsError ? "true" : "false");
 		}
 
-		if (!already_has_editor_browsable_attribute && obsoleteAttributes.Any ())
+		var printEditorBrowsableAttribute = TryGetPrintEditorBrowsableAttribute (provider, out var editorBrowsableAttribute);
+		if (!printEditorBrowsableAttribute && obsoleteAttributes.Any ()) {
+			printEditorBrowsableAttribute = true;
+			editorBrowsableAttribute = "[EditorBrowsable (EditorBrowsableState.Never)]";
+		}
+		if (printEditorBrowsableAttribute)
 			print ("[EditorBrowsable (EditorBrowsableState.Never)]");
+	}
+
+	bool TryGetPrintEditorBrowsableAttribute (ICustomAttributeProvider provider, out string attribute)
+	{
+		attribute = string.Empty;
+		foreach (var ea in AttributeManager.GetCustomAttributes<EditorBrowsableAttribute> (provider)) {
+			switch (ea.State) {
+			case EditorBrowsableState.Always:
+				attribute = "[EditorBrowsable (EditorBrowsableState.Always)]";
+				break;
+			case EditorBrowsableState.Never:
+				attribute = "[EditorBrowsable (EditorBrowsableState.Never)]";
+				break;
+			case EditorBrowsableState.Advanced:
+				attribute = "[EditorBrowsable (EditorBrowsableState.Advanced)]";
+				break;
+			default:
+				attribute = $"[EditorBrowsable (EditorBrowsableState.{ea.State})]";
+				break;
+			}
+			return true;
+		}
+
+		return false;
 	}
 
 	void PrintPropertyAttributes (PropertyInfo pi, Type type, bool skipTypeInjection = false)
@@ -4419,21 +4448,11 @@ public partial class Generator : IMemberGatherer {
 	void PrintMethodAttributes (MemberInformation minfo)
 	{
 		MethodInfo mi = minfo.Method;
-		var editor_browsable_attribute = false;
 
 		foreach (var sa in AttributeManager.GetCustomAttributes<ThreadSafeAttribute> (mi))
 			print (sa.Safe ? "[ThreadSafe]" : "[ThreadSafe (false)]");
 
-		foreach (var ea in AttributeManager.GetCustomAttributes<EditorBrowsableAttribute> (mi)) {
-			if (ea.State == EditorBrowsableState.Always) {
-				print ("[EditorBrowsable]");
-			} else {
-				print ("[EditorBrowsable (EditorBrowsableState.{0})]", ea.State);
-			}
-			editor_browsable_attribute = true;
-		}
-
-		PrintObsoleteAttributes (mi, editor_browsable_attribute);
+		PrintObsoleteAttributes (mi);
 
 		if (minfo.is_return_release)
 			print ("[return: ReleaseAttribute ()]");
@@ -5508,7 +5527,7 @@ public partial class Generator : IMemberGatherer {
 	// Not adding the experimental attribute is bad (it would mean that an API
 	// we meant to be experimental ended up being released as stable), so it's
 	// opt-out instead of opt-in.
-	public void PrintAttributes (ICustomAttributeProvider mi, bool platform = false, bool preserve = false, bool advice = false, bool notImplemented = false, bool bindAs = false, bool requiresSuper = false, Type inlinedType = null, bool experimental = true)
+	public void PrintAttributes (ICustomAttributeProvider mi, bool platform = false, bool preserve = false, bool advice = false, bool notImplemented = false, bool bindAs = false, bool requiresSuper = false, Type inlinedType = null, bool experimental = true, bool obsolete = false)
 	{
 		if (platform)
 			PrintPlatformAttributes (mi as MemberInfo, inlinedType);
@@ -5524,6 +5543,8 @@ public partial class Generator : IMemberGatherer {
 			PrintRequiresSuperAttribute (mi);
 		if (experimental)
 			PrintExperimentalAttribute (mi);
+		if (obsolete)
+			PrintObsoleteAttributes (mi);
 	}
 
 	public void PrintExperimentalAttribute (ICustomAttributeProvider mi)
@@ -5755,7 +5776,7 @@ public partial class Generator : IMemberGatherer {
 				print ("[Model]");
 			}
 
-			PrintAttributes (type, platform: true, preserve: true, advice: true);
+			PrintAttributes (type, platform: true, preserve: true, advice: true, obsolete: true);
 
 			if (type.IsEnum) {
 				GenerateEnum (type);
@@ -6340,6 +6361,14 @@ public partial class Generator : IMemberGatherer {
 						print ("_{0} = Runtime.GetNSObject<UTType> (Dlfcn.GetIntPtr (Libraries.{2}.Handle, \"{1}\"))!;", field_pi.Name, fieldAttr.SymbolName, library_name);
 						indent--;
 						print ("return _{0};", field_pi.Name);
+					} else if (field_pi.PropertyType == TypeCache.System_Byte) {
+						print ("return Dlfcn.GetByte (Libraries.{2}.Handle, \"{1}\");", field_pi.Name, fieldAttr.SymbolName, library_name);
+					} else if (field_pi.PropertyType == TypeCache.System_SByte) {
+						print ("return Dlfcn.GetSByte (Libraries.{2}.Handle, \"{1}\");", field_pi.Name, fieldAttr.SymbolName, library_name);
+					} else if (field_pi.PropertyType == TypeCache.System_Int16) {
+						print ("return Dlfcn.GetInt16 (Libraries.{2}.Handle, \"{1}\");", field_pi.Name, fieldAttr.SymbolName, library_name);
+					} else if (field_pi.PropertyType == TypeCache.System_UInt16) {
+						print ("return Dlfcn.GetUInt16 (Libraries.{2}.Handle, \"{1}\");", field_pi.Name, fieldAttr.SymbolName, library_name);
 					} else if (field_pi.PropertyType == TypeCache.System_Int32) {
 						print ("return Dlfcn.GetInt32 (Libraries.{2}.Handle, \"{1}\");", field_pi.Name, fieldAttr.SymbolName, library_name);
 					} else if (field_pi.PropertyType == TypeCache.System_UInt32) {
@@ -6350,6 +6379,8 @@ public partial class Generator : IMemberGatherer {
 						print ("return Dlfcn.GetFloat (Libraries.{2}.Handle, \"{1}\");", field_pi.Name, fieldAttr.SymbolName, library_name);
 					} else if (field_pi.PropertyType == TypeCache.System_IntPtr) {
 						print ("return Dlfcn.GetIntPtr (Libraries.{2}.Handle, \"{1}\");", field_pi.Name, fieldAttr.SymbolName, library_name);
+					} else if (field_pi.PropertyType == TypeCache.System_UIntPtr) {
+						print ("return Dlfcn.GetUIntPtr (Libraries.{2}.Handle, \"{1}\");", field_pi.Name, fieldAttr.SymbolName, library_name);
 					} else if (field_pi.PropertyType.FullName == "System.Drawing.SizeF") {
 						print ("return Dlfcn.GetSizeF (Libraries.{2}.Handle, \"{1}\");", field_pi.Name, fieldAttr.SymbolName, library_name);
 					} else if (field_pi.PropertyType == TypeCache.System_Int64) {
@@ -6420,10 +6451,20 @@ public partial class Generator : IMemberGatherer {
 							print ("Dlfcn.SetUInt32 (Libraries.{2}.Handle, \"{1}\", value);", field_pi.Name, fieldAttr.SymbolName, library_name);
 						} else if (field_pi.PropertyType == TypeCache.System_Double) {
 							print ("Dlfcn.SetDouble (Libraries.{2}.Handle, \"{1}\", value);", field_pi.Name, fieldAttr.SymbolName, library_name);
+						} else if (field_pi.PropertyType == TypeCache.System_Byte) {
+							print ("Dlfcn.SetByte (Libraries.{2}.Handle, \"{1}\", value);", field_pi.Name, fieldAttr.SymbolName, library_name);
+						} else if (field_pi.PropertyType == TypeCache.System_SByte) {
+							print ("Dlfcn.SetSByte (Libraries.{2}.Handle, \"{1}\", value);", field_pi.Name, fieldAttr.SymbolName, library_name);
+						} else if (field_pi.PropertyType == TypeCache.System_Int16) {
+							print ("Dlfcn.SetInt16 (Libraries.{2}.Handle, \"{1}\", value);", field_pi.Name, fieldAttr.SymbolName, library_name);
+						} else if (field_pi.PropertyType == TypeCache.System_UInt16) {
+							print ("Dlfcn.SetUInt16 (Libraries.{2}.Handle, \"{1}\", value);", field_pi.Name, fieldAttr.SymbolName, library_name);
 						} else if (field_pi.PropertyType == TypeCache.System_Float) {
 							print ("Dlfcn.SetFloat (Libraries.{2}.Handle, \"{1}\", value);", field_pi.Name, fieldAttr.SymbolName, library_name);
 						} else if (field_pi.PropertyType == TypeCache.System_IntPtr) {
 							print ("Dlfcn.SetIntPtr (Libraries.{2}.Handle, \"{1}\", value);", field_pi.Name, fieldAttr.SymbolName, library_name);
+						} else if (field_pi.PropertyType == TypeCache.System_UIntPtr) {
+							print ("Dlfcn.SetUIntPtr (Libraries.{2}.Handle, \"{1}\", value);", field_pi.Name, fieldAttr.SymbolName, library_name);
 						} else if (field_pi.PropertyType.FullName == "System.Drawing.SizeF") {
 							print ("Dlfcn.SetSizeF (Libraries.{2}.Handle, \"{1}\", value);", field_pi.Name, fieldAttr.SymbolName, library_name);
 						} else if (field_pi.PropertyType == TypeCache.System_Int64) {

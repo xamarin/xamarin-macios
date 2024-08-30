@@ -7,6 +7,8 @@ trigger:
     exclude:
       - refs/heads/locfiles/*
       - refs/heads/dev/*
+      - refs/heads/darc-*
+      - refs/heads/backport-pr-*
   paths:
     exclude:
       - .github
