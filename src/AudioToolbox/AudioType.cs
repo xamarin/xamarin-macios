@@ -1484,6 +1484,51 @@ namespace AudioToolbox {
 		}
 	}
 
+	/// <summary>This class represents the native AudioBufferList.</summary>
+	/// <remarks>
+	///     Typically it's better to use the <see cref="AudioBuffers" /> class to wrap a pointer to a native AudioBufferList,
+	///     but some audio code needs to minimize memory allocations due to being executed in a realtime thread. In that case,
+	///     using this struct is better, because it's possible to use it without incurring any memory allocations.
+	/// </remarks>
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
+	[StructLayout (LayoutKind.Sequential)]
+	public unsafe struct AudioBufferList {
+		uint mNumberOfBuffers;
+
+		/// <summary>Returns the number of audio buffers in this list.</summary>
+		public uint Count { get => mNumberOfBuffers; }
+
+		/// <summary>Return a pointer to the <see cref="AudioBuffer" /> at the specified index.</summary>
+		/// <param name="index">The index of the <see cref="AudioBuffer" /> to retrieve.</param>
+		/// <returns>A pointer to the <see cref="AudioBuffer" /> at the specified index.</returns>
+		public AudioBuffer* GetBuffer (int index)
+		{
+			if (index < 0 || index >= Count)
+				throw new ArgumentOutOfRangeException (nameof (index));
+
+			//
+			// Decodes
+			//
+			// struct AudioBufferList
+			// {
+			//    UInt32      mNumberBuffers;
+			//    AudioBuffer mBuffers[1]; // this is a variable length array of mNumberBuffers elements
+			// }
+			//
+			fixed (uint* bufferPtr = &mNumberOfBuffers) {
+				byte* baddress = (byte*) bufferPtr;
+
+				var ptr = baddress + IntPtr.Size + index * sizeof (AudioBuffer);
+				return (AudioBuffer*) ptr;
+			}
+		}
+	}
+
 	// CoreAudioClock.h (inside AudioToolbox)
 	// It was a confusion between CA (CoreAudio) and CA (CoreAnimation)
 #if NET
