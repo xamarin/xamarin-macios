@@ -569,15 +569,15 @@ namespace VideoToolbox {
 
 		[iOS (17, 0), NoTV, MacCatalyst (17, 0), Mac (14, 0), NoWatch]
 		[Export ("MvHevcVideoLayerIds")]
-		NSNumber[] MvHevcVideoLayerIds { get; }
+		NSNumber [] MvHevcVideoLayerIds { get; }
 
 		[iOS (17, 0), NoTV, MacCatalyst (17, 0), Mac (14, 0), NoWatch]
 		[Export ("MvHevcViewIds")]
-		NSNumber[] MvHevcViewIds { get; }
+		NSNumber [] MvHevcViewIds { get; }
 
 		[iOS (17, 0), NoTV, MacCatalyst (17, 0), Mac (14, 0), NoWatch]
 		[Export ("MvHevcLeftAndRightViewIds")]
-		NSNumber[] MvHevcLeftAndRightViewIds { get; }
+		NSNumber [] MvHevcLeftAndRightViewIds { get; }
 
 		[iOS (17, 0), NoTV, MacCatalyst (17, 0), Mac (14, 0), NoWatch]
 		[Export ("HeroEye")]
@@ -1204,7 +1204,7 @@ namespace VideoToolbox {
 
 		[iOS (17, 0), NoTV, NoWatch, Mac (14, 0), MacCatalyst (17, 0)]
 		[Export ("RequestedMvHevcVideoLayerIds")]
-		NSNumber[] RequestedMvHevcVideoLayerIds { get; }
+		NSNumber [] RequestedMvHevcVideoLayerIds { get; }
 	}
 
 	/// <summary>Strongly typed set of options.</summary>
