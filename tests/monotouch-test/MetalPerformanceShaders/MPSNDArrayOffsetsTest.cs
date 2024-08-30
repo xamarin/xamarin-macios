@@ -18,7 +18,7 @@ namespace MonoTouchFixtures.MetalPerformanceShaders {
 		[Test]
 		public void Dimensions ()
 		{
-				var value = default (MPSNDArrayOffsets);
+			var value = default (MPSNDArrayOffsets);
 			CollectionAssert.AreEqual (new nint [16], value.Dimensions, "A");
 
 			var array = new nint [] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 };
