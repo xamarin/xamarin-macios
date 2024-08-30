@@ -21,13 +21,13 @@ namespace MonoTouchFixtures.AudioToolbox {
 		{
 			var buffer = new byte [1024];
 			fixed (byte* ptr = buffer) {
-				var list = (AudioBufferList *) ptr;
+				var list = (AudioBufferList*) ptr;
 				Assert.AreEqual (0, list->Count, "Count");
 				Assert.Throws<ArgumentOutOfRangeException> (() => list->GetBuffer (0), "Item 0");
 				Assert.Throws<ArgumentOutOfRangeException> (() => list->GetBuffer (-1), "Item -1");
 				Assert.Throws<ArgumentOutOfRangeException> (() => list->GetBuffer (1), "Item 1");
 
-				*(int *) ptr = 3;
+				*(int*) ptr = 3;
 				Assert.AreEqual (3, list->Count, "Count B");
 				for (var i = 0; i < 3; i++) {
 					Assert.AreEqual (0, list->GetBuffer (i)->NumberChannels, $"NumberChannels B#{i}");
