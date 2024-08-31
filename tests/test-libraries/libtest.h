@@ -17,6 +17,8 @@ extern "C" {
 int theUltimateAnswer ();
 void useZLib ();
 
+__attribute__ ((used)) unsigned long long x_native_field = 0xAABBCCDDEEFF8899;
+
 // NS_ASSUME_NONNULL_BEGIN doesn't work
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wnullability-completeness"
