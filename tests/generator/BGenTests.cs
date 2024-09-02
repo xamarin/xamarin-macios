@@ -1719,5 +1719,20 @@ namespace GeneratorTests {
 			var delegateCallback = bgen.ApiAssembly.MainModule.GetType ("NS", "MyCallback").Methods.First ((v) => v.Name == "EndInvoke");
 			Assert.That (delegateCallback.MethodReturnType.CustomAttributes.Any (v => v.AttributeType.Name == "NullableAttribute"), "Nullable return type");
 		}
+
+		[Test]
+		[TestCase (Profile.iOS)]
+		public void DelegatesWithPointerTypes (Profile profile)
+		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
+			var bgen = BuildFile (profile, "tests/delegate-types.cs");
+			bgen.AssertNoWarnings ();
+
+			var delegateCallback = bgen.ApiAssembly.MainModule.GetType ("NS", "MyCallback").Methods.First ((v) => v.Name == "EndInvoke");
+			Assert.IsTrue (delegateCallback.MethodReturnType.ReturnType.IsPointer, "Pointer return type");
+			foreach (var p in delegateCallback.Parameters.Where (v => v.Name != "result")) {
+				Assert.IsTrue (p.ParameterType.IsPointer, $"Pointer parameter type: {p.Name}");
+			}
+		}
 	}
 }
