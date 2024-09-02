@@ -718,6 +718,14 @@ public partial class Generator : IMemberGatherer {
 				}
 			}
 
+			if (pi.ParameterType.IsPointer && pi.ParameterType.GetElementType ().IsValueType) {
+				// Technically we should only allow blittable types here, but the C# compiler shows an error later on if any non-blittable types
+				// are used, because this ends up in the signature of a UnmanagedCallersOnly method.
+				pars.Add (new TrampolineParameterInfo (TypeManager.FormatType (null, pi.ParameterType), safe_name));
+				invoke.Append (safe_name);
+				continue;
+			}
+
 			if (pi.ParameterType.IsSubclassOf (TypeCache.System_Delegate)) {
 				if (!delegate_types.ContainsKey (pi.ParameterType.Name)) {
 					delegate_types [pi.ParameterType.FullName] = pi.ParameterType.GetMethod ("Invoke");
@@ -4732,11 +4740,13 @@ public partial class Generator : IMemberGatherer {
 					print ("[MonoNativeFunctionWrapper]\n");
 
 				var accessibility = mi.DeclaringType.IsInternal (this) ? "internal" : "public";
-				print ("{3} delegate {0} {1} ({2});",
+				var isUnsafe = mi.GetParameters ().Any ((v => v.ParameterType.IsPointer)) || mi.ReturnType.IsPointer;
+				print ("{3}{4} delegate {0} {1} ({2});",
 					   TypeManager.RenderType (mi.ReturnType, mi.ReturnTypeCustomAttributes),
 					   shortName,
 					   RenderParameterDecl (mi.GetParameters ()),
-					   accessibility);
+					   accessibility,
+					   isUnsafe ? " unsafe" : string.Empty);
 			}
 
 			if (group.Namespace is not null) {
@@ -5075,6 +5085,7 @@ public partial class Generator : IMemberGatherer {
 			foreach (var docId in docIds) {
 				print ($"[DynamicDependencyAttribute (\"{docId}\")]");
 			}
+			print ("[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]");
 			print ($"static I{TypeName} ()");
 			print ("{");
 			print ("\tGC.KeepAlive (null);"); // need to do _something_ (doesn't seem to matter what), otherwise the static cctor (and the DynamicDependency attributes) are trimmed away.
