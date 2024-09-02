@@ -713,6 +713,8 @@ COREVIDEO_CORE_SOURCES = \
 
 COREVIDEO_SOURCES = \
 	CoreVideo/CVDisplayLink.cs \
+	CoreVideo/CVMetalBuffer.cs \
+	CoreVideo/CVMetalBufferCache.cs \
 	CoreVideo/CVMetalTexture.cs \
 	CoreVideo/CVMetalTextureAttributes.cs \
 	CoreVideo/CVMetalTextureCache.cs \

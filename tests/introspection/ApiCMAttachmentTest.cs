@@ -221,6 +221,8 @@ namespace Introspection {
 			case "CVBuffer": // DOES support the API, but it has its own version and is already in the bindings, so no need ATM
 			case "CVImageBuffer": // same as CVBuffer
 			case "CVPixelBuffer": // same as CVBuffer
+			case "CVMetalBuffer": // same as CVBuffer
+			case "CVMetalBufferCache": // same as CVBuffer
 			case "MTAudioProcessingTap":
 			case "Protocol":
 			case "MidiObject": // causes crash
