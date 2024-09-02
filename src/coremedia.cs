@@ -204,6 +204,10 @@ namespace CoreMedia {
 		[MacCatalyst (16, 0)]
 		[Field ("kCMSampleAttachmentKey_HDR10PlusPerFrameData")]
 		NSString Hdr10PlusPerFrameDataKey { get; }
+
+		[NoWatch, NoTV, NoiOS, NoMacCatalyst, Mac (15, 0)]
+		[Field ("kCMSampleAttachmentKey_PostDecodeProcessingMetadata")]
+		NSString PostDecodeProcessingMetadataKey { get; }
 	}
 
 	/// <summary>The keys for <see cref="T:CoreMedia.CMSampleBuffer" /> attachments.</summary>
@@ -247,8 +251,10 @@ namespace CoreMedia {
 
 		[Watch (9, 0), TV (16, 0), Mac (13, 0), iOS (16, 0)]
 		[MacCatalyst (16, 0)]
-		[Field ("kCMSampleAttachmentKey_HDR10PlusPerFrameData")]
 		NSData Hdr10PlusPerFrameData { get; set; } // it is a CFData, but that is a toll-free bridged
+
+		[NoWatch, NoTV, NoiOS, NoMacCatalyst, Mac (15, 0)]
+		NSDictionary PostDecodeProcessingMetadata { get; set; } // it is a CFDictionary, but that is a toll-free bridged
 	}
 
 	[Internal]
