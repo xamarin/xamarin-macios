@@ -82,7 +82,6 @@ public partial class Generator {
 			sb.Append ("]");
 			print (sb.ToString ());
 		}
-		PrintObsoleteAttributes (type);
 		CopyNativeName (type);
 
 		var unique_constants = new HashSet<string> ();
@@ -300,6 +299,47 @@ public partial class Generator {
 				print ("return {0}.{1};", type.Name, default_symbol.Item1.Name);
 			indent--;
 			print ("}");
+
+			if (BindingTouch.SupportsXmlDocumentation) {
+				print ($"/// <summary>Converts an array of <see cref=\"global::{type.FullName}\" /> enum values into an array of their corresponding constants.</summary>");
+				print ($"/// <param name=\"values\">The array of enum values to convert.</param>");
+			}
+			print ($"internal static {backingFieldTypeName}?[]? ToConstantArray (this {type.Name}[]? values)");
+			print ("{");
+			indent++;
+			print ("if (values is null)");
+			print ("\treturn null;");
+			print ($"var rv = new global::System.Collections.Generic.List<{backingFieldTypeName}?> ();");
+			print ("for (var i = 0; i < values.Length; i++) {");
+			indent++;
+			print ("var value = values [i];");
+			print ("rv.Add (value.GetConstant ());");
+			indent--;
+			print ("}");
+			print ("return rv.ToArray ();");
+			indent--;
+			print ("}");
+			print ("");
+			if (BindingTouch.SupportsXmlDocumentation) {
+				print ($"/// <summary>Converts an array of <see cref=\"{backingFieldTypeName}\" /> values into an array of their corresponding enum values.</summary>");
+				print ($"/// <param name=\"values\">The array if <see cref=\"{backingFieldTypeName}\" /> values to convert.</param>");
+			}
+			print ($"internal static {type.Name}[]? ToEnumArray (this {backingFieldTypeName}[]? values)");
+			print ("{");
+			indent++;
+			print ("if (values is null)");
+			print ("\treturn null;");
+			print ($"var rv = new global::System.Collections.Generic.List<{type.Name}> ();");
+			print ("for (var i = 0; i < values.Length; i++) {");
+			indent++;
+			print ("var value = values [i];");
+			print ("rv.Add (GetValue (value));");
+			indent--;
+			print ("}");
+			print ("return rv.ToArray ();");
+			indent--;
+			print ("}");
+			print ("");
 
 			if (isFlagsEnum) {
 				if (BindingTouch.SupportsXmlDocumentation) {

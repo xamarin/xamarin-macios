@@ -200,7 +200,7 @@ public partial class Generator {
 					nullable = true;
 				break;
 			}
-			if (AttributeManager.HasAttribute<NullAllowedAttribute> (p))
+			if (AttributeManager.IsNullable (p))
 				nullable = true;
 			print ("public {0}{1} {2} {{", ptype, nullable ? "?" : "", p.Name);
 			indent++;
