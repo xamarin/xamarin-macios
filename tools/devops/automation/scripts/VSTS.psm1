@@ -297,6 +297,41 @@ class BuildConfiguration {
         }
     }
 
+    static [string[]] $labelsOfInterest = $(
+        "build-package",
+        "skip-packages",
+        "skip-nugets",
+        "skip-signing",
+        "run-sample-tests",
+        "skip-packaged-macos-tests",
+        "run-packaged-macos-tests",
+        "skip-api-comparison",
+        "run-windows-tests",
+        "skip-windows-tests",
+        "skip-all-tests"
+    )
+
+    [void] SetLabelsFromPR ([PSCustomObject] $prInfo, [bool]$isPR) {
+        if ($prInfo) {
+            Write-Deubg "Setting VSTS labels from $($prInfo.labels)"
+            foreach ($l in [BuildConfiguration]::labelsOfInterest) {
+                $labelPresent = 1 -eq ($prInfo.labels | Where-Object { $_.name -eq "$l"}).Count
+                # We need to replace dashes with underscores, because bash can't access an environment variable with a dash in the name.
+                $lbl = $l.Replace('-', '_')
+                Write-Host "##vso[task.setvariable variable=$lbl;isOutput=true]$labelPresent"
+            }
+        } else {
+            Write-Debug "Not setting PR labels because there was not info provided."
+        }
+
+        # set if the build is a PR or not
+        if ($isPR) {
+          Write-Host "##vso[task.setvariable variable=prBuild;isOutput=true]True"
+        } else {
+          Write-Host "##vso[task.setvariable variable=prBuild;isOutput=true]False"
+        }
+    }
+
     [PSCustomObject] Import([string] $configFile) {
         if (-not (Test-Path -Path $configFile -PathType Leaf)) {
           throw [System.InvalidOperationException]::new("Configuration file $configFile is missing")
@@ -459,29 +494,11 @@ class BuildConfiguration {
           $tags.Add("$ref")
 
           # set output variables based on the git labels
-          $labelsOfInterest = @(
-            "build-package",
-            "skip-packages",
-            "skip-nugets",
-            "skip-signing",
-            "run-sample-tests",
-            "skip-packaged-macos-tests",
-            "run-packaged-macos-tests",
-            "skip-api-comparison",
-            "run-windows-tests",
-            "skip-windows-tests",
-            "skip-all-tests"
-          )
+          $this.SetLabelsFromPR($prInfo, $true)
 
-          foreach ($l in $labelsOfInterest) {
-            $labelPresent = 1 -eq ($prInfo.labels | Where-Object { $_.name -eq "$l"}).Count
-            # We need to replace dashes with underscores, because bash can't access an environment variable with a dash in the name.
-            $lbl = $l.Replace('-', '_')
-            Write-Host "##vso[task.setvariable variable=$lbl;isOutput=true]$labelPresent"
-          }
-
-          Write-Host "##vso[task.setvariable variable=prBuild;isOutput=true]True"
         } else {
+          # thee are not labels to add in a CI build and we will set the build as a ci build.
+          $this.SetLabelsFromPR($null, $false)
           if ($tags.Contains("cronjob")) {
             # debug so that we do know why we do not have ciBuild
             Write-Debug "Skipping the tag 'ciBuild' because we are dealing with a translation build."
