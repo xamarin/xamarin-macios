@@ -235,7 +235,7 @@ namespace Xamarin.Tests {
 			if (Configuration.XcodeIsStable)
 				return null;
 
-			var previewNoWarn =$"XCODE_{Configuration.XcodeVersion.Major}_{Configuration.XcodeVersion.Minor}_PREVIEW";
+			var previewNoWarn = $"XCODE_{Configuration.XcodeVersion.Major}_{Configuration.XcodeVersion.Minor}_PREVIEW";
 			if (string.IsNullOrEmpty (existingNowarn)) {
 				return previewNoWarn;
 			} else {
