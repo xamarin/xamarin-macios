@@ -41,7 +41,7 @@ using NativeHandle = System.IntPtr;
 
 namespace CoreFoundation {
 
-	public class DispatchData : DispatchObject {
+	public partial class DispatchData : DispatchObject {
 #if !COREBUILD
 		[Preserve (Conditional = true)]
 #if NET
@@ -71,7 +71,7 @@ namespace CoreFoundation {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (buffer));
 			var b = Marshal.AllocHGlobal (buffer.Length);
 			Marshal.Copy (buffer, 0, b, buffer.Length);
-			var dd = dispatch_data_create (b, (nuint) buffer.Length, IntPtr.Zero, destructor: CoreFoundationFields.free);
+			var dd = dispatch_data_create (b, (nuint) buffer.Length, IntPtr.Zero, destructor: free);
 			return new DispatchData (dd, owns: true);
 		}
 
@@ -88,7 +88,7 @@ namespace CoreFoundation {
 
 			var b = Marshal.AllocHGlobal (length);
 			Marshal.Copy (buffer, start, b, length);
-			var dd = dispatch_data_create (b, (nuint) length, IntPtr.Zero, destructor: CoreFoundationFields.free);
+			var dd = dispatch_data_create (b, (nuint) length, IntPtr.Zero, destructor: free);
 			return new DispatchData (dd, owns: true);
 		}
 
