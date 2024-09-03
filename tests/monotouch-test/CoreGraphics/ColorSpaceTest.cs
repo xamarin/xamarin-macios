@@ -506,6 +506,16 @@ namespace MonoTouchFixtures.CoreGraphics {
 				});
 			}
 		}
+
+		[Test]
+		public void CopyBaseColorSpace ()
+		{
+			TestRuntime.AssertXcodeVersion (16, 0);
+			using (var cs = CGColorSpace.CreateDeviceRGB ()) {
+				using var cbcs = cs.CopyBaseColorSpace ();
+				Assert.IsNull (cbcs, "CopyBaseColorSpace");
+			}
+		}
 	}
 
 }

@@ -246,7 +246,6 @@ namespace Cecil.Tests {
 			"System.String PassKit.PKShareablePassMetadata::LocalizedDescription()",
 			"System.String PassKit.PKShareablePassMetadata::OwnerDisplayName()",
 			"System.String PassKit.PKShareablePassMetadata::TemplateIdentifier()",
-			"System.String Speech.SFSpeechRecognitionRequest::InteractionIdentifier()",
 			"System.String StoreKit.SKProduct::ContentVersion()",
 			"System.String UserNotifications.UNMutableNotificationContent::SummaryArgument()",
 			"System.String UserNotifications.UNNotificationContent::SummaryArgument()",
@@ -423,6 +422,7 @@ namespace Cecil.Tests {
 				case "SceneKit.SCNAnimationPlayer.PauseAnimation(Foundation.NSString)":
 				case "SceneKit.SCNAnimationPlayer.RemoveAnimation(Foundation.NSString, System.Runtime.InteropServices.NFloat)":
 				case "SceneKit.SCNAnimationPlayer.ResumeAnimation(Foundation.NSString)":
+				case "System.Boolean AccessorySetupKit.ASPickerDisplayItem::AllowsRename()": // Apple introduced and deprecated in the same version.
 					return true;
 				}
 				break;

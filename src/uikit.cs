@@ -3553,6 +3553,7 @@ namespace UIKit {
 	[Abstract]
 	[NoWatch]
 	[MacCatalyst (13, 1)]
+	[NoMac]
 	interface UICoordinateSpace {
 		[Abstract]
 		[Export ("bounds")]
@@ -23409,6 +23410,7 @@ namespace UIKit {
 	interface IUIFocusItemContainer { }
 	[iOS (12, 0), TV (12, 0), NoWatch]
 	[MacCatalyst (13, 1)]
+	[NoMac]
 	[Protocol]
 	interface UIFocusItemContainer {
 		[Abstract]

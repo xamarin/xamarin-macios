@@ -196,6 +196,11 @@ namespace Introspection {
 				case "TKSmartCardPinFormat":
 					return true;
 				// Xcode 16, conformance not in headers
+				case "ASAccessory":
+				case "ASAccessorySettings":
+				case "ASDiscoveryDescriptor":
+				case "ASMigrationDisplayItem":
+				case "ASPickerDisplayItem":
 				case "PKAddCarKeyPassConfiguration":
 				case "PKAddSecureElementPassConfiguration":
 				case "PKAddShareablePassConfiguration":
@@ -385,6 +390,11 @@ namespace Introspection {
 				case "VSAppleSubscription":
 					return true;
 				// Xcode 16, conformance not in headers
+				case "ASAccessory":
+				case "ASAccessorySettings":
+				case "ASDiscoveryDescriptor":
+				case "ASMigrationDisplayItem":
+				case "ASPickerDisplayItem":
 				case "QLFileThumbnailRequest":
 				case "QLThumbnailReply":
 				case "PHPickerResult":
@@ -580,6 +590,11 @@ namespace Introspection {
 				case "VSAppleSubscription":
 					return true;
 				// Xcode 16, conformance not in headers
+				case "ASAccessory":
+				case "ASAccessorySettings":
+				case "ASDiscoveryDescriptor":
+				case "ASMigrationDisplayItem":
+				case "ASPickerDisplayItem":
 				case "QLFileThumbnailRequest":
 				case "QLThumbnailReply":
 				case "PHPickerResult":
@@ -595,6 +610,9 @@ namespace Introspection {
 				case "UISwipeGestureRecognizer":
 				case "UIScreenEdgePanGestureRecognizer":
 				case "UIHoverGestureRecognizer":
+					return true;
+				case "NSLocalizedNumberFormatRule":
+					// Foundation.MonoTouchException : Objective-C exception thrown. Name: NSInvalidArgumentException Reason: *** -supportsSecureCoding cannot be sent to an abstract object of class NSLocalizedNumberFormatRule: Create a concrete instance!
 					return true;
 				}
 				break;
@@ -701,6 +719,12 @@ namespace Introspection {
 			case "NSTextAttachmentContainer":
 				// NSTextAttachment implementing the NSTextAttachmentContainer protocol was deprecated in Xcode 16 beta 1.
 				if (type.Name == "NSTextAttachment")
+					return true;
+				break;
+			case "UIFocusItemContainer":
+			case "UICoordinateSpace":
+				// SKVideoNode started implementing UIFocusItemContainer and UICoordinateSpace in Xcode 16
+				if (type.Name == "SKVideoNode" && !TestRuntime.CheckXcodeVersion (16, 0))
 					return true;
 				break;
 			}

@@ -5,6 +5,7 @@ partial class Frameworks {
 	internal readonly HashSet<string> iosframeworks = new HashSet<string> {
 		"Accelerate",
 		"Accessibility",
+		"AccessorySetupKit",
 		"Accounts",
 		"AddressBook",
 		"AddressBookUI",
@@ -202,6 +203,7 @@ partial class Frameworks {
 		"FileProviderUI",
 		"FinderSync",
 		"Foundation",
+		"FSKit",
 		"GameController",
 		"GameKit",
 		"GameplayKit",
@@ -561,6 +563,7 @@ partial class Frameworks {
 	};
 	bool? _Accelerate;
 	bool? _Accessibility;
+	bool? _AccessorySetupKit;
 	bool? _Accounts;
 	bool? _AddressBook;
 	bool? _AddressBookUI;
@@ -627,6 +630,7 @@ partial class Frameworks {
 	bool? _FileProviderUI;
 	bool? _FinderSync;
 	bool? _Foundation;
+	bool? _FSKit;
 	bool? _GameController;
 	bool? _GameKit;
 	bool? _GameplayKit;
@@ -731,6 +735,7 @@ partial class Frameworks {
 	bool? _XKit;
 	public bool HaveAccelerate { get { if (!_Accelerate.HasValue) _Accelerate = GetValue ("Accelerate"); return _Accelerate.Value; } }
 	public bool HaveAccessibility { get { if (!_Accessibility.HasValue) _Accessibility = GetValue ("Accessibility"); return _Accessibility.Value; } }
+	public bool HaveAccessorySetupKit { get { if (!_AccessorySetupKit.HasValue) _AccessorySetupKit = GetValue ("AccessorySetupKit"); return _AccessorySetupKit.Value; } }
 	public bool HaveAccounts { get { if (!_Accounts.HasValue) _Accounts = GetValue ("Accounts"); return _Accounts.Value; } }
 	public bool HaveAddressBook { get { if (!_AddressBook.HasValue) _AddressBook = GetValue ("AddressBook"); return _AddressBook.Value; } }
 	public bool HaveAddressBookUI { get { if (!_AddressBookUI.HasValue) _AddressBookUI = GetValue ("AddressBookUI"); return _AddressBookUI.Value; } }
@@ -797,6 +802,7 @@ partial class Frameworks {
 	public bool HaveFileProviderUI { get { if (!_FileProviderUI.HasValue) _FileProviderUI = GetValue ("FileProviderUI"); return _FileProviderUI.Value; } }
 	public bool HaveFinderSync { get { if (!_FinderSync.HasValue) _FinderSync = GetValue ("FinderSync"); return _FinderSync.Value; } }
 	public bool HaveFoundation { get { if (!_Foundation.HasValue) _Foundation = GetValue ("Foundation"); return _Foundation.Value; } }
+	public bool HaveFSKit { get { if (!_FSKit.HasValue) _FSKit = GetValue ("FSKit"); return _FSKit.Value; } }
 	public bool HaveGameController { get { if (!_GameController.HasValue) _GameController = GetValue ("GameController"); return _GameController.Value; } }
 	public bool HaveGameKit { get { if (!_GameKit.HasValue) _GameKit = GetValue ("GameKit"); return _GameKit.Value; } }
 	public bool HaveGameplayKit { get { if (!_GameplayKit.HasValue) _GameplayKit = GetValue ("GameplayKit"); return _GameplayKit.Value; } }

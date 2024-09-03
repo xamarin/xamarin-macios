@@ -290,6 +290,8 @@ public class Frameworks : Dictionary<string, Framework> {
 					{ "Cinematic", "Cinematic", 14,0 },
 					{ "Symbols", "Symbols", 14, 0 },
 					{ "SensitiveContentAnalysis", "SensitiveContentAnalysis", 14, 0 },
+
+					{ "FSKit", "FSKit", 15, 0 },
 				};
 			}
 			return mac_frameworks;
@@ -472,6 +474,8 @@ public class Frameworks : Dictionary<string, Framework> {
 				{ "Cinematic", "Cinematic", new Version (17, 0), NotAvailableInSimulator },
 				{ "Symbols", "Symbols", 17, 0 },
 				{ "SensitiveContentAnalysis", "SensitiveContentAnalysis", 17, 0 },
+
+				{ "AccessorySetupKit", "AccessorySetupKit", 18, 0 },
 
 				// the above MUST be kept in sync with simlauncher
 				// see tools/mtouch/Makefile
@@ -704,6 +708,7 @@ public class Frameworks : Dictionary<string, Framework> {
 				case "NotificationCenter":
 				case "GLKit":
 				case "VideoSubscriberAccount":
+				case "AccessorySetupKit":
 				// The headers for FileProviderUI exist, but the native linker fails
 				case "FileProviderUI":
 				// The headers for Twitter are there, , but no documentation whatsoever online and the native linker fails too

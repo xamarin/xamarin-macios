@@ -54,6 +54,15 @@ namespace Network {
 			set => nw_quic_set_keepalive_interval (GetCheckedHandle (), value);
 		}
 
+		/// <summary>
+		/// Set the default keepalive value. The current default is every 20 seconds, but this is subject to change.
+		/// </summary>
+		public void SetDefaultKeepAlive ()
+		{
+			// #define NW_QUIC_CONNECTION_DEFAULT_KEEPALIVE	UINT16_MAX
+			KeepaliveInterval = ushort.MaxValue;
+		}
+
 		[DllImport (Constants.NetworkLibrary, EntryPoint = "nw_quic_get_application_error_reason")]
 		static extern IntPtr nw_quic_get_application_error_reason_ptr (OS_nw_protocol_metadata metadata);
 
