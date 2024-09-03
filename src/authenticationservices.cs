@@ -2598,7 +2598,9 @@ namespace AuthenticationServices {
 		[Export ("createCredentialAssertionRequestWithClientData:")]
 		ASAuthorizationPlatformPublicKeyCredentialAssertionRequest CreateCredentialAssertionRequest (ASPublicKeyCredentialClientData clientData);
 
+#if NET
 		[Abstract]
+#endif
 		[NoWatch, NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 		[Export ("createCredentialRegistrationRequestWithClientData:name:userID:requestStyle:")]
 		ASAuthorizationPlatformPublicKeyCredentialRegistrationRequest CreateCredentialRegistrationRequest (ASPublicKeyCredentialClientData clientData, string name, NSData userId, ASAuthorizationPlatformPublicKeyCredentialRegistrationRequestStyle requestStyle);
