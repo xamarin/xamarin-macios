@@ -4455,10 +4455,10 @@ public partial class Generator : IMemberGatherer {
 <<<<<<< HEAD
 		var editor_browsable_attribute = PrintEditorBrowsableAttribute (mi);
 		PrintObsoleteAttributes (mi, editor_browsable_attribute);
+
 =======
 		PrintObsoleteAttributes (mi);
 >>>>>>> origin/xcode16
-
 		if (minfo.is_return_release)
 			print ("[return: ReleaseAttribute ()]");
 
