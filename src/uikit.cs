@@ -16616,6 +16616,7 @@ namespace UIKit {
 		[Export ("textView:textItemMenuWillEndForTextItem:animator:")]
 		void WillEnd (UITextView textView, UITextItem textItem, IUIContextMenuInteractionAnimating animator);
 
+#if NET
 		[iOS (18, 0), MacCatalyst (18, 0), NoTV]
 		[Export ("textViewWritingToolsWillBegin:"), EventArgs ("UITextView")]
 		void WritingToolsWillBegin (UITextView textView);
@@ -16628,6 +16629,7 @@ namespace UIKit {
 		[Export ("textView:writingToolsIgnoredRangesInEnclosingRange:"), DelegateName ("UITextViewRange"), NoDefaultValue]
 		// Can't use BindAs in a protocol [return: BindAs (typeof (NSRange[]))]
 		NSValue [] GetWritingToolsIgnoredRangesInEnclosingRange (UITextView textView, NSRange enclosingRange);
+#endif
 
 		[NoWatch, NoTV, NoMacCatalyst, iOS (18, 0)]
 		[Export ("textView:willBeginFormattingWithViewController:"), EventArgs ("UITextViewTextFormattingViewController")]
