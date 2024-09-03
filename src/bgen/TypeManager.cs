@@ -302,7 +302,7 @@ public class TypeManager {
 			string ns = t.Namespace;
 			var isImplicitNamespace = NamespaceCache.ImplicitNamespaces.Contains (ns);
 			var isInMultipleNamespaces = IsInMultipleNamespaces (t);
-			var nonGlobalCandidate =  isImplicitNamespace && !isInMultipleNamespaces;
+			var nonGlobalCandidate = isImplicitNamespace && !isInMultipleNamespaces;
 			if (nonGlobalCandidate || t.IsGenericType) {
 				var targs = t.GetGenericArguments ();
 				if (targs.Length == 0)
