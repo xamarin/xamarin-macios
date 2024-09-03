@@ -2793,11 +2793,11 @@ namespace PassKit {
 		[Export ("previewWithTemplateIdentifier:")]
 		PKShareablePassMetadataPreview PreviewWithTemplateIdentifier (string templateIdentifier);
 
-		// [NullAllowed, Export ("passThumbnailImage", ArgumentSemantic.Assign)]
-		// CGImage PassThumbnailImage { get; }
+		[NullAllowed, Export ("passThumbnailImage", ArgumentSemantic.Assign)]
+		new CGImage PassThumbnailImage { get; }
 
-		// [NullAllowed, Export ("localizedDescription", ArgumentSemantic.Strong)]
-		// string LocalizedDescription { get; }
+		[NullAllowed, Export ("localizedDescription", ArgumentSemantic.Strong)]
+		new string LocalizedDescription { get; }
 
 		[NullAllowed, Export ("ownerDisplayName", ArgumentSemantic.Strong)]
 		string OwnerDisplayName { get; set; }
