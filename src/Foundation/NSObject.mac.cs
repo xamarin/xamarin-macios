@@ -108,6 +108,7 @@ namespace Foundation {
 		static IntPtr sw = Dlfcn.dlopen (Constants.SharedWithYouLibrary, 1);
 		static IntPtr swc = Dlfcn.dlopen (Constants.SharedWithYouCoreLibrary, 1);
 		static IntPtr th = Dlfcn.dlopen (Constants.ThreadNetworkLibrary, 1);
+		static IntPtr mx = Dlfcn.dlopen (Constants.MediaExtensionLibrary, 1);
 		static IntPtr ni = Dlfcn.dlopen (Constants.NearbyInteractionLibrary, 1);
 		static IntPtr sm = Dlfcn.dlopen (Constants.ServiceManagementLibrary, 1);
 		static IntPtr sa = Dlfcn.dlopen (Constants.SafetyKitLibrary, 1);

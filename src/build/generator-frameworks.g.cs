@@ -222,6 +222,7 @@ partial class Frameworks {
 		"MailKit",
 		"MapKit",
 		"MediaAccessibility",
+		"MediaExtension",
 		"MediaLibrary",
 		"MediaPlayer",
 		"MediaToolbox",
@@ -653,6 +654,7 @@ partial class Frameworks {
 	bool? _MailKit;
 	bool? _MapKit;
 	bool? _MediaAccessibility;
+	bool? _MediaExtension;
 	bool? _MediaLibrary;
 	bool? _MediaPlayer;
 	bool? _MediaSetup;
@@ -824,6 +826,7 @@ partial class Frameworks {
 	public bool HaveMailKit { get { if (!_MailKit.HasValue) _MailKit = GetValue ("MailKit"); return _MailKit.Value; } }
 	public bool HaveMapKit { get { if (!_MapKit.HasValue) _MapKit = GetValue ("MapKit"); return _MapKit.Value; } }
 	public bool HaveMediaAccessibility { get { if (!_MediaAccessibility.HasValue) _MediaAccessibility = GetValue ("MediaAccessibility"); return _MediaAccessibility.Value; } }
+	public bool HaveMediaExtension { get { if (!_MediaExtension.HasValue) _MediaExtension = GetValue ("MediaExtension"); return _MediaExtension.Value; } }
 	public bool HaveMediaLibrary { get { if (!_MediaLibrary.HasValue) _MediaLibrary = GetValue ("MediaLibrary"); return _MediaLibrary.Value; } }
 	public bool HaveMediaPlayer { get { if (!_MediaPlayer.HasValue) _MediaPlayer = GetValue ("MediaPlayer"); return _MediaPlayer.Value; } }
 	public bool HaveMediaSetup { get { if (!_MediaSetup.HasValue) _MediaSetup = GetValue ("MediaSetup"); return _MediaSetup.Value; } }

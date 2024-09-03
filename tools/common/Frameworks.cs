@@ -292,6 +292,7 @@ public class Frameworks : Dictionary<string, Framework> {
 					{ "SensitiveContentAnalysis", "SensitiveContentAnalysis", 14, 0 },
 
 					{ "FSKit", "FSKit", 15, 0 },
+					{ "MediaExtension", "MediaExtension", 15, 0 },
 				};
 			}
 			return mac_frameworks;
