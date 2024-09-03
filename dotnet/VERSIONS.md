@@ -4,7 +4,7 @@
 
 Our NuGet packages are versioned using [Semver 2.0.0][2].
 
-This is the scheme: `OsMajor.OsMinor.InternalRelease[-prereleaseX]+sha.1b2c3d4`.
+This is the scheme: `OsMajor.OsMinor.InternalRelease[-prereleaseX]`.
 
 * Major: The major OS version.
 * Minor: The minor OS version.
@@ -36,24 +36,13 @@ This is the scheme: `OsMajor.OsMinor.InternalRelease[-prereleaseX]+sha.1b2c3d4`.
         * Example: `iOS 15.1.123-rt` (and nothing else). This makes these
           versions exactly 3 characters longer than the release version, which
           is hopefully enough to avoid MAX_PATH issues on Windows.
-* Build metadata: Required Hash
+* Build metadata: Optional Hash
     * This is `sha.` + the short commit hash.
         * Use the short hash because the long hash is quite long and
           cumbersome. This leaves the complete version open for duplication,
           but this is extremely unlikely.
     * Example: `iOS 14.0.123+sha.1a2b3c`
     * Example (CI build): `iOS 15.0.123-ci.main+sha.1a2b3c`
-    * Since the build metadata is required for all builds, we're able to
-      recognize incomplete version numbers and determine if a particular
-      version string refers to a stable version or not.
-        * Example: `iOS 15.0.123`: incomplete version
-        * Example: `iOS 15.0.123+sha.1a2b3c`: stable
-        * Example: `iOS 15.0.123-ci.d17-0+sha.1a2b3c`: CI build
-        * Example: `iOS 15.0.123-xcode13-1.beta+sha.1a2b3c`: official
-          preview
-            * Technically it's possible to remove the prerelease part, but
-              we’d still be able to figure out it’s not a stable version by
-              using the commit hash.
 
 [1]: https://github.com/dotnet/designs/blob/master/accepted/2018/sdk-version-scheme.md
 [2]: https://semver.org
