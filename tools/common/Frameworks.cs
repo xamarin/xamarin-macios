@@ -290,6 +290,7 @@ public class Frameworks : Dictionary<string, Framework> {
 					{ "Cinematic", "Cinematic", 14,0 },
 					{ "Symbols", "Symbols", 14, 0 },
 					{ "SensitiveContentAnalysis", "SensitiveContentAnalysis", 14, 0 },
+					{ "BrowserEngineKit", "BrowserEngineKit", 14, 3},
 
 					{ "FSKit", "FSKit", 15, 0 },
 				};
@@ -474,6 +475,7 @@ public class Frameworks : Dictionary<string, Framework> {
 				{ "Cinematic", "Cinematic", new Version (17, 0), NotAvailableInSimulator },
 				{ "Symbols", "Symbols", 17, 0 },
 				{ "SensitiveContentAnalysis", "SensitiveContentAnalysis", 17, 0 },
+				{ "BrowserEngineKit", "BrowserEngineKit", 17, 4},
 
 				// the above MUST be kept in sync with simlauncher
 				// see tools/mtouch/Makefile
@@ -662,6 +664,7 @@ public class Frameworks : Dictionary<string, Framework> {
 					{ "Symbols", "Symbols", 17, 0 },
 					{ "NetworkExtension", "NetworkExtension", 17, 0 },
 					{ "Phase", "PHASE", new Version (17,0), NotAvailableInSimulator },
+					{ "BrowserEngineKit", "BrowserEngineKit", 17, 4},
 				};
 			}
 			return tvos_frameworks;
@@ -699,6 +702,7 @@ public class Frameworks : Dictionary<string, Framework> {
 					f.Version = v16_1;
 					break;
 				// These frameworks are not available on Mac Catalyst
+				case "BrowserEngineKit":
 				case "DeviceDiscoveryExtension":
 				case "OpenGLES":
 				case "NewsstandKit":

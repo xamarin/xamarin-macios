@@ -23,6 +23,7 @@ partial class Frameworks {
 		"AVRouting",
 		"BackgroundAssets",
 		"BackgroundTasks",
+		"BrowserEngineKit",
 		"BusinessChat",
 		"CallKit",
 		"CarPlay",
@@ -164,6 +165,7 @@ partial class Frameworks {
 		"AVKit",
 		"AVRouting",
 		"BackgroundAssets",
+		"BrowserEngineKit",
 		"BusinessChat",
 		"CallKit",
 		"CFNetwork",
@@ -355,6 +357,7 @@ partial class Frameworks {
 		"AVFoundation",
 		"AVKit",
 		"BackgroundTasks",
+		"BrowserEngineKit",
 		"CFNetwork",
 		"Chip",
 		"Cinematic",
@@ -581,6 +584,7 @@ partial class Frameworks {
 	bool? _AVRouting;
 	bool? _BackgroundAssets;
 	bool? _BackgroundTasks;
+	bool? _BrowserEngineKit;
 	bool? _BusinessChat;
 	bool? _CallKit;
 	bool? _CarPlay;
@@ -752,6 +756,7 @@ partial class Frameworks {
 	public bool HaveAVRouting { get { if (!_AVRouting.HasValue) _AVRouting = GetValue ("AVRouting"); return _AVRouting.Value; } }
 	public bool HaveBackgroundAssets { get { if (!_BackgroundAssets.HasValue) _BackgroundAssets = GetValue ("BackgroundAssets"); return _BackgroundAssets.Value; } }
 	public bool HaveBackgroundTasks { get { if (!_BackgroundTasks.HasValue) _BackgroundTasks = GetValue ("BackgroundTasks"); return _BackgroundTasks.Value; } }
+	public bool HaveBrowserEngineKit { get { if (!_BrowserEngineKit.HasValue) _BrowserEngineKit = GetValue ("BrowserEngineKit"); return _BrowserEngineKit.Value; } }
 	public bool HaveBusinessChat { get { if (!_BusinessChat.HasValue) _BusinessChat = GetValue ("BusinessChat"); return _BusinessChat.Value; } }
 	public bool HaveCallKit { get { if (!_CallKit.HasValue) _CallKit = GetValue ("CallKit"); return _CallKit.Value; } }
 	public bool HaveCarPlay { get { if (!_CarPlay.HasValue) _CarPlay = GetValue ("CarPlay"); return _CarPlay.Value; } }
