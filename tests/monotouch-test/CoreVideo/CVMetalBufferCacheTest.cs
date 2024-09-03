@@ -32,7 +32,7 @@ namespace MonoTouchFixtures.CoreVideo {
 		{
 			TestRuntime.AssertXcodeVersion (16, 0);
 
-			using var device  = MTLDevice.SystemDefault;
+			using var device = MTLDevice.SystemDefault;
 			if (device is null)
 				Assert.Ignore ("Metal is not supported on this device.");
 
@@ -45,7 +45,7 @@ namespace MonoTouchFixtures.CoreVideo {
 		{
 			TestRuntime.AssertXcodeVersion (16, 0);
 
-			using var device  = MTLDevice.SystemDefault;
+			using var device = MTLDevice.SystemDefault;
 			if (device is null)
 				Assert.Ignore ("Metal is not supported on this device.");
 
@@ -60,7 +60,7 @@ namespace MonoTouchFixtures.CoreVideo {
 			TestRuntime.AssertXcodeVersion (16, 0);
 			TestRuntime.AssertNotSimulator (); // metal api not supported in the simulator
 
-			using var device  = MTLDevice.SystemDefault;
+			using var device = MTLDevice.SystemDefault;
 			if (device is null)
 				Assert.Ignore ("Metal is not supported on this device.");
 
@@ -78,7 +78,7 @@ namespace MonoTouchFixtures.CoreVideo {
 		{
 			TestRuntime.AssertXcodeVersion (16, 0);
 
-			using var device  = MTLDevice.SystemDefault;
+			using var device = MTLDevice.SystemDefault;
 			if (device is null)
 				Assert.Ignore ("Metal is not supported on this device.");
 
