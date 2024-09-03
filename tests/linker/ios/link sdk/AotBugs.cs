@@ -412,6 +412,11 @@ namespace LinkSdk.Aot {
 		}
 
 		[Test]
+#if __MACOS__ && NET
+#if !NET9_0_OR_GREATER // not sure if this issue is limited to .NET 8, but add this in so that we find out in our .NET 9 branch.
+		[Ignore ("https://github.com/dotnet/runtime/issues/107026")]
+#endif
+#endif
 		public void AsEnumerable_4114 ()
 		{
 			Enumbers<string> e = new Enumbers<string> ();

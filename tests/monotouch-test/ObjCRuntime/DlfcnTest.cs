@@ -33,5 +33,83 @@ namespace MonoTouchFixtures.ObjCRuntime {
 #endif
 			Assert.That (err, Is.EqualTo (expected), "dlclose");
 		}
+
+#if NET
+		[Test]
+		public void GetVariables ()
+		{
+			var symbol = "x_native_field";
+			var handle = (IntPtr) Dlfcn.RTLD.Default;
+
+			Assert.AreNotEqual (IntPtr.Zero, Dlfcn.dlsym (handle, symbol), "Symbol");
+
+			var originalValue = Dlfcn.GetUInt64 (handle, symbol);
+			Assert.Multiple (() => {
+				unchecked {
+					// the n(uint) and (U)IntPtr asserts only work in 64-bit, which is fine because we only care about 64-bit right now.
+					Assert.AreEqual ((ushort) 0x8899, (ushort) Dlfcn.GetInt16 (handle, symbol), "GetInt16");
+					Assert.AreEqual ((uint) 0xeeff8899, (uint) Dlfcn.GetInt32 (handle, symbol), "GetInt32");
+					Assert.AreEqual ((ulong) 0xaabbccddeeff8899, (ulong) Dlfcn.GetInt64 (handle, symbol), "GetInt64");
+					Assert.AreEqual ((nuint) 0xaabbccddeeff8899, (nuint) Dlfcn.GetNInt (handle, symbol), "GetNInt");
+					Assert.AreEqual ((ushort) 0x8899, Dlfcn.GetUInt16 (handle, symbol), "GetUInt16");
+					Assert.AreEqual ((uint) 0xeeff8899, Dlfcn.GetUInt32 (handle, symbol), "GetUInt32");
+					Assert.AreEqual ((ulong) 0xaabbccddeeff8899, Dlfcn.GetUInt64 (handle, symbol), "GetUInt64");
+					Assert.AreEqual ((nuint) 0xaabbccddeeff8899, Dlfcn.GetNUInt (handle, symbol), "GetNUInt");
+					Assert.AreEqual ((nfloat) (-7.757653393002521E-103), Dlfcn.GetNFloat (handle, symbol), "GetNFloat");
+					Assert.AreEqual (-7.7576533930025207E-103d, Dlfcn.GetDouble (handle, symbol), "GetDouble");
+					Assert.AreEqual ((nuint) 0xaabbccddeeff8899, (nuint) Dlfcn.GetIntPtr (handle, symbol), "GetIntPtr"); // won't work in 32-bit, but we don't care about that anymore
+					Assert.AreEqual ((nuint) 0xaabbccddeeff8899, Dlfcn.GetUIntPtr (handle, symbol), "GetUIntPtr");
+
+					Dlfcn.SetInt16 (handle, symbol, 0x77);
+					Assert.AreEqual ((short) 0x77, Dlfcn.GetInt16 (handle, symbol), "SetInt16");
+					Dlfcn.SetUInt64 (handle, symbol, originalValue);
+
+					Dlfcn.SetInt32 (handle, symbol, 0x77);
+					Assert.AreEqual ((int) 0x77, Dlfcn.GetInt32 (handle, symbol), "SetInt32");
+					Dlfcn.SetUInt64 (handle, symbol, originalValue);
+
+					Dlfcn.SetInt64 (handle, symbol, 0x77);
+					Assert.AreEqual ((long) 0x77, Dlfcn.GetInt64 (handle, symbol), "SetInt64");
+					Dlfcn.SetUInt64 (handle, symbol, originalValue);
+
+					Dlfcn.SetNInt (handle, symbol, 0x77);
+					Assert.AreEqual ((nint) 0x77, Dlfcn.GetNInt (handle, symbol), "SetNInt");
+					Dlfcn.SetUInt64 (handle, symbol, originalValue);
+
+					Dlfcn.SetUInt16 (handle, symbol, 0x77);
+					Assert.AreEqual ((ushort) 0x77, Dlfcn.GetUInt16 (handle, symbol), "SetUInt16");
+					Dlfcn.SetUInt64 (handle, symbol, originalValue);
+
+					Dlfcn.SetUInt32 (handle, symbol, 0x77);
+					Assert.AreEqual ((uint) 0x77, Dlfcn.GetUInt32 (handle, symbol), "SetUInt32");
+					Dlfcn.SetUInt64 (handle, symbol, originalValue);
+
+					Dlfcn.SetUInt64 (handle, symbol, 0x77);
+					Assert.AreEqual ((ulong) 0x77, Dlfcn.GetUInt64 (handle, symbol), "SetUInt64");
+					Dlfcn.SetUInt64 (handle, symbol, originalValue);
+
+					Dlfcn.SetNUInt (handle, symbol, 0x77);
+					Assert.AreEqual ((nuint) 0x77, Dlfcn.GetNUInt (handle, symbol), "SetNUInt");
+					Dlfcn.SetUInt64 (handle, symbol, originalValue);
+
+					Dlfcn.SetNFloat (handle, symbol, 0x77);
+					Assert.AreEqual ((nfloat) 0x77, Dlfcn.GetNFloat (handle, symbol), "SetNFloat");
+					Dlfcn.SetUInt64 (handle, symbol, originalValue);
+
+					Dlfcn.SetDouble (handle, symbol, 0x77);
+					Assert.AreEqual (0x77, Dlfcn.GetDouble (handle, symbol), "SetDouble");
+					Dlfcn.SetUInt64 (handle, symbol, originalValue);
+
+					Dlfcn.SetIntPtr (handle, symbol, 0x77);
+					Assert.AreEqual ((nint) 0x77, Dlfcn.GetIntPtr (handle, symbol), "SetIntPtr");
+					Dlfcn.SetUInt64 (handle, symbol, originalValue);
+
+					Dlfcn.SetUIntPtr (handle, symbol, 0x77);
+					Assert.AreEqual ((nuint) 0x77, Dlfcn.GetUIntPtr (handle, symbol), "SetUIntPtr");
+					Dlfcn.SetUInt64 (handle, symbol, originalValue);
+				}
+			});
+		}
+#endif
 	}
 }
