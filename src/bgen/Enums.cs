@@ -82,8 +82,6 @@ public partial class Generator {
 			sb.Append ("]");
 			print (sb.ToString ());
 		}
-		var editor_browsable_attribute = PrintEditorBrowsableAttribute (type);
-		PrintObsoleteAttributes (type, editor_browsable_attribute);
 		CopyNativeName (type);
 
 		var unique_constants = new HashSet<string> ();
