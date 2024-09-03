@@ -26,6 +26,7 @@ namespace Xamarin.Tests {
 
 		public List<string> ApiDefinitions = new List<string> ();
 		public List<string> Sources = new List<string> ();
+		public List<string> ExtraSources = new List<string> ();
 		public List<string> References = new List<string> ();
 #if NET
 		public List<string>? CompileCommand = null;
@@ -69,6 +70,11 @@ namespace Xamarin.Tests {
 		public void AddTestApiDefinition (string filename)
 		{
 			ApiDefinitions.Add (Path.Combine (Configuration.SourceRoot, "tests", "generator", filename));
+		}
+
+		public void AddExtraSources (string filename)
+		{
+			ExtraSources.Add (Path.Combine (Configuration.SourceRoot, "tests", "generator", filename));
 		}
 
 		public AssemblyDefinition ApiAssembly {
@@ -168,6 +174,9 @@ namespace Xamarin.Tests {
 
 			foreach (var s in Sources)
 				sb.Add ($"-s={s}");
+
+			foreach (var x in ExtraSources)
+				sb.Add ($"-x={x}");
 
 			if (ReferenceBclByDefault) {
 				if (tf is null) {
