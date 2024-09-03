@@ -342,10 +342,10 @@ class BuildConfiguration {
         # we could use a regexp but then we would have two problems instead of one
         $changeId = $null
         if ($configuration.PARENT_BUILD_BUILD_SOURCEBRANCH) {
-            # use the source branch information from the configuraiton object
+            # use the source branch information from the configuration object
             $changeId = $configuration.PARENT_BUILD_BUILD_SOURCEBRANCH.Replace("refs/pull/", "").Replace("/merge", "")
         } else {
-            Write-Debug "Retrieving change id from the enviroment since it could not be found in the config."
+            Write-Debug "Retrieving change id from the environment since it could not be found in the config."
             # retrieve the change ide form the BUILD_SOURCEBRANCH enviroment variable. 
             $changeId = "$Env:BUILD_SOURCEBRANCH".Replace("refs/pull/", "").Replace("/merge", "")
         }
