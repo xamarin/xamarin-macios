@@ -17,7 +17,7 @@ namespace MonoTouchFixtures.CoreData {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class NSPersistentStoreCoordinatorTest {
-
+#if NET
 		[Test]
 		public void GetManagedObjectId ()
 		{
@@ -77,6 +77,7 @@ namespace MonoTouchFixtures.CoreData {
 			using var psc = new NSPersistentStoreCoordinator (managedObjectModel);
 			Assert.IsNull (psc.GetManagedObjectId ("magnitude"), "GetManagedObjectId");
 		}
+#endif // NET
 	}
 }
 #endif // !TVOS
