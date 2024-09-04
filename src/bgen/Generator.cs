@@ -4452,13 +4452,7 @@ public partial class Generator : IMemberGatherer {
 		foreach (var sa in AttributeManager.GetCustomAttributes<ThreadSafeAttribute> (mi))
 			print (sa.Safe ? "[ThreadSafe]" : "[ThreadSafe (false)]");
 
-<<<<<<< HEAD
-		var editor_browsable_attribute = PrintEditorBrowsableAttribute (mi);
-		PrintObsoleteAttributes (mi, editor_browsable_attribute);
-
-=======
 		PrintObsoleteAttributes (mi);
->>>>>>> origin/xcode16
 		if (minfo.is_return_release)
 			print ("[return: ReleaseAttribute ()]");
 
