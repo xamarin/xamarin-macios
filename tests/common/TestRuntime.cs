@@ -12,6 +12,7 @@ using System.Net.Http;
 using System.Runtime.InteropServices;
 using System.Reflection;
 using System.Reflection.Emit;
+using System.Runtime.Versioning;
 
 using AVFoundation;
 using CoreBluetooth;
@@ -115,6 +116,59 @@ partial class TestRuntime {
 		}
 	}
 #endif
+
+	public static ApplePlatform CurrentPlatform {
+		get {
+#if __MACCATALYST__
+			return ApplePlatform.MacCatalyst;
+#elif __IOS__
+			return ApplePlatform.iOS;
+#elif __TVOS__
+			return ApplePlatform.TVOS;
+#elif __MACOS__
+			return ApplePlatform.MacOSX;
+#elif __WATCHOS__
+			return ApplePlatform.WatchOS;
+#else
+#error Unknown platform
+#endif
+		}
+	}
+
+	// This returns the string for the platform as used in the OSPlatformAttribute's PlatformName property.
+	public static string GetOSPlatformName (ApplePlatform platform)
+	{
+		switch (platform) {
+		case ApplePlatform.iOS:
+			return "ios";
+		case ApplePlatform.MacOSX:
+			return "macos";
+		case ApplePlatform.TVOS:
+			return "tvos";
+		case ApplePlatform.MacCatalyst:
+			return "maccatalyst";
+		default:
+			throw new Exception ($"Unknown platform: {platform}");
+		}
+	}
+
+	public static bool HasOSPlatformAttributeForCurrentPlatform<T> (ICustomAttributeProvider provider) where T: OSPlatformAttribute
+	{
+		return HasOSPlatformAttribute<T> (provider, CurrentPlatform);
+	}
+
+	public static bool HasOSPlatformAttribute<T> (ICustomAttributeProvider provider, ApplePlatform platform) where T: OSPlatformAttribute
+	{
+		var attribs = provider.GetCustomAttributes (false);
+		var platformName = GetOSPlatformName (platform);
+		foreach (var attrib in attribs) {
+			if (attrib is T platformAttribute) {
+				if (platformAttribute.PlatformName.StartsWith (platformName, StringComparison.OrdinalIgnoreCase))
+					return true;
+			}
+		}
+		return false;
+	}
 
 	public static Version GetSDKVersion ()
 	{
