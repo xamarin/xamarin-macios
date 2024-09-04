@@ -24537,11 +24537,11 @@ namespace UIKit {
 		[Export ("zOffset")]
 		nfloat ZOffset { get; }
 
-		[iOS (16, 4), MacCatalyst (16, 4)]
+		[iOS (16, 4), MacCatalyst (17, 0)]
 		[Export ("azimuthAngleInView:")]
 		nfloat GetAzimuthAngle ([NullAllowed] UIView view);
 
-		[iOS (16, 4), MacCatalyst (16, 4)]
+		[iOS (16, 4), MacCatalyst (17, 0)]
 		[Export ("azimuthUnitVectorInView:")]
 		CGVector GetAzimuthUnitVector ([NullAllowed] UIView view);
 
