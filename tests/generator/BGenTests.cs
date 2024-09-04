@@ -1697,15 +1697,7 @@ namespace GeneratorTests {
 		public void UnderlyingFieldType (Profile profile)
 		{
 			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
-			var bgen = BuildFile (profile, true, true, "tests/underlyingfieldtype.cs");
-
-#if NET
-			const string nintName = "System.IntPtr";
-			const string nuintName = "System.UIntPtr";
-#else
-			const string nintName = "System.nint";
-			const string nuintName = "System.nuint";
-#endif
+			BuildFile (profile, true, true, "tests/underlyingfieldtype.cs");
 		}
 
 		[Test]
