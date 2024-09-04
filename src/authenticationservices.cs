@@ -319,10 +319,12 @@ namespace AuthenticationServices {
 		[Export ("completeAssertionRequestWithSelectedPasskeyCredential:completionHandler:")]
 		void CompleteAssertionRequest (ASPasskeyAssertionCredential credential, [NullAllowed] Action<bool> completionHandler);
 
+		[Async]
 		[NoWatch, NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 		[Export ("completeOneTimeCodeRequestWithSelectedCredential:completionHandler:")]
 		void CompleteOneTimeCodeRequest (ASOneTimeCodeCredential credential, [NullAllowed] Action<bool> completionHandler);
 
+		[Async]
 		[NoWatch, NoTV, NoMac, iOS (18, 0), NoMacCatalyst]
 		[Export ("completeRequestWithTextToInsert:completionHandler:")]
 		void CompleteRequest (string textToInsert, [NullAllowed] Action<bool> completionHandler);
