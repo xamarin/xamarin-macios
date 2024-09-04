@@ -2215,6 +2215,7 @@ IOS_FRAMEWORKS =         \
 	AVKit \
 	AVRouting \
 	Accounts \
+	AccessorySetupKit \
 	AdServices \
 	AdSupport \
 	AddressBook \
