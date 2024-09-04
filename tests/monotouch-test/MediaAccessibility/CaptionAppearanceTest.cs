@@ -67,6 +67,7 @@ namespace MonoTouchFixtures.MediaAccessibility {
 			MACaptionAppearance.DidDisplayCaptions (a);
 		}
 
+#if NET
 		[Test]
 		public void IsCustomized ()
 		{
@@ -76,6 +77,7 @@ namespace MonoTouchFixtures.MediaAccessibility {
 				Assert.That (MACaptionAppearance.IsCustomized (value), Is.EqualTo (true).Or.EqualTo (false), value.ToString ());
 			}
 		}
+#endif // NET
 	}
 }
 
