@@ -475,6 +475,8 @@ public class Frameworks : Dictionary<string, Framework> {
 				{ "Symbols", "Symbols", 17, 0 },
 				{ "SensitiveContentAnalysis", "SensitiveContentAnalysis", 17, 0 },
 
+				{ "AccessorySetupKit", "AccessorySetupKit", 18, 0 },
+
 				// the above MUST be kept in sync with simlauncher
 				// see tools/mtouch/Makefile
 				// please also keep it sorted to ease comparison
@@ -706,6 +708,7 @@ public class Frameworks : Dictionary<string, Framework> {
 				case "NotificationCenter":
 				case "GLKit":
 				case "VideoSubscriberAccount":
+				case "AccessorySetupKit":
 				// The headers for FileProviderUI exist, but the native linker fails
 				case "FileProviderUI":
 				// The headers for Twitter are there, , but no documentation whatsoever online and the native linker fails too
