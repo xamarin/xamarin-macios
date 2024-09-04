@@ -311,7 +311,7 @@ namespace Xamarin.Tests {
 			DotNetTfm = GetVariable ("DOTNET_TFM", null);
 			iOSSupports32BitArchitectures = !string.IsNullOrEmpty (GetVariable ("IOS_SUPPORTS_32BIT_ARCHITECTURES", ""));
 			EnableXamarin = !string.IsNullOrEmpty (GetVariable ("ENABLE_XAMARIN", ""));
-			XcodeIsStable = string.Equals (GetVariable ("ENABLE_XAMARIN", ""), "true", StringComparison.OrdinalIgnoreCase);
+			XcodeIsStable = string.Equals (GetVariable ("XCODE_IS_STABLE", ""), "true", StringComparison.OrdinalIgnoreCase);
 
 			XcodeVersionString = GetXcodeVersion (xcode_root);
 #if MONOMAC
