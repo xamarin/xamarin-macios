@@ -1463,19 +1463,19 @@ namespace MetalPerformanceShadersGraph {
 		[Export ("reductionArgMinimumWithTensor:axis:name:")]
 		MPSGraphTensor ReductionArgMinimum (MPSGraphTensor tensor, nint axis, [NullAllowed] string name);
 
-		[TV (15, 3), MacCatalyst (15, 3), Mac (12, 2), iOS (15, 3), MacCatalyst (15, 3)]
+		[TV (15, 3), MacCatalyst (15, 3), Mac (12, 2), iOS (15, 3)]
 		[Export ("reductionAndWithTensor:axis:name:")]
 		MPSGraphTensor ReductionAnd (MPSGraphTensor tensor, nint axis, [NullAllowed] string name);
 
-		[TV (15, 3), MacCatalyst (15, 3), Mac (12, 2), iOS (15, 3), MacCatalyst (15, 3)]
+		[TV (15, 3), MacCatalyst (15, 3), Mac (12, 2), iOS (15, 3)]
 		[Export ("reductionAndWithTensor:axes:name:")]
 		MPSGraphTensor ReductionAnd (MPSGraphTensor tensor, [NullAllowed][BindAs (typeof (int []))] NSNumber [] axes, [NullAllowed] string name);
 
-		[TV (15, 3), MacCatalyst (15, 3), Mac (12, 2), iOS (15, 3), MacCatalyst (15, 3)]
+		[TV (15, 3), MacCatalyst (15, 3), Mac (12, 2), iOS (15, 3)]
 		[Export ("reductionOrWithTensor:axis:name:")]
 		MPSGraphTensor ReductionOr (MPSGraphTensor tensor, nint axis, [NullAllowed] string name);
 
-		[TV (15, 3), MacCatalyst (15, 3), Mac (12, 2), iOS (15, 3), MacCatalyst (15, 3)]
+		[TV (15, 3), MacCatalyst (15, 3), Mac (12, 2), iOS (15, 3)]
 		[Export ("reductionOrWithTensor:axes:name:")]
 		MPSGraphTensor ReductionOr (MPSGraphTensor tensor, [NullAllowed][BindAs (typeof (int []))] NSNumber [] axes, [NullAllowed] string name);
 	}
@@ -2000,10 +2000,10 @@ namespace MetalPerformanceShadersGraph {
 		DispatchQueue DispatchQueue { get; set; }
 
 		[TV (15, 4), Mac (12, 3), iOS (15, 4), MacCatalyst (15, 4)]
-		[Deprecated (PlatformName.iOS, 17, 0, message: "MPSGraph will automatically provide the best performance and power efficiency with MPSGraphOptimization.Level1")]
-		[Deprecated (PlatformName.MacOSX, 14, 0, message: "MPSGraph will automatically provide the best performance and power efficiency with MPSGraphOptimization.Level1")]
-		[Deprecated (PlatformName.TvOS, 17, 0, message: "MPSGraph will automatically provide the best performance and power efficiency with MPSGraphOptimization.Level1")]
-		[Deprecated (PlatformName.MacCatalyst, 17, 0, message: "MPSGraph will automatically provide the best performance and power efficiency with MPSGraphOptimization.Level1")]
+		[Deprecated (PlatformName.iOS, 17, 0, message: "MPSGraph will automatically provide the best performance and power efficiency with MPSGraphOptimization.Level1.")]
+		[Deprecated (PlatformName.MacOSX, 14, 0, message: "MPSGraph will automatically provide the best performance and power efficiency with MPSGraphOptimization.Level1.")]
+		[Deprecated (PlatformName.TvOS, 17, 0, message: "MPSGraph will automatically provide the best performance and power efficiency with MPSGraphOptimization.Level1.")]
+		[Deprecated (PlatformName.MacCatalyst, 17, 0, message: "MPSGraph will automatically provide the best performance and power efficiency with MPSGraphOptimization.Level1.")]
 		[Export ("optimizationProfile")]
 		MPSGraphOptimizationProfile OptimizationProfile { get; set; }
 
