@@ -598,6 +598,14 @@ namespace GeneratorTests {
 			BuildFile (Profile.iOS, "multiple-api-definitions2-a.cs", "multiple-api-definitions2-b.cs");
 		}
 
+
+		[Test]
+		[TestCase (Profile.iOS)]
+		public void INativeObjectArraysInBlocks (Profile profile)
+		{
+			BuildFile (profile, "tests/inativeobject-arrays-in-blocks.cs");
+		}
+
 		[Test]
 		[TestCase (Profile.iOS)]
 		public void ClassNameCollision (Profile profile)
