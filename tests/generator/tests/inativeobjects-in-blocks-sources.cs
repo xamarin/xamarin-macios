@@ -5,5 +5,5 @@ using Foundation;
 using ObjCRuntime;
 
 namespace NS {
-	public partial class DispatchData2 : NativeObject {}
+	public partial class DispatchData2 : NativeObject { }
 }
