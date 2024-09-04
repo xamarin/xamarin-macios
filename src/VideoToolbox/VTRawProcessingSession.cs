@@ -32,6 +32,7 @@ namespace VideoToolbox {
 	[NoWatch, NoTV, NoiOS, NoMacCatalyst, Mac (15, 0)]
 #endif
 	public class VTRawProcessingSession : NativeObject {
+		[Preserve (Conditional = true)]
 		protected VTRawProcessingSession (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
