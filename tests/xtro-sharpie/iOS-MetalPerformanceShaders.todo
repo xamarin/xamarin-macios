@@ -418,9 +418,3 @@
 !missing-enum! MPSFloatDataTypeBit not bound
 !missing-enum! MPSFloatDataTypeShift not bound
 !missing-enum-value! MPSDataType native value MPSDataTypeBFloat16 = 2415919120 not bound
-!missing-selector! MPSNDArrayDescriptor::getShape not bound
-!missing-selector! MPSNDArrayDescriptor::permuteWithDimensionOrder: not bound
-!missing-selector! MPSNDArrayDescriptor::preferPackedRows not bound
-!missing-selector! MPSNDArrayDescriptor::setPreferPackedRows: not bound
-!missing-selector! MPSNDArrayIdentity::reshapeWithCommandBuffer:sourceArray:dimensionCount:dimensionSizes:destinationArray: not bound
-!missing-selector! MPSNDArrayIdentity::reshapeWithCommandBuffer:sourceArray:shape:destinationArray: not bound

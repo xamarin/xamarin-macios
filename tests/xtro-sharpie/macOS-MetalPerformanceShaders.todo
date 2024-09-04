@@ -418,9 +418,3 @@
 !deprecated-attribute-missing! MPSInstanceAccelerationStructure missing a [Deprecated] attribute
 !deprecated-attribute-missing! MPSRayIntersector missing a [Deprecated] attribute
 !deprecated-attribute-missing! MPSTriangleAccelerationStructure missing a [Deprecated] attribute
-!missing-selector! MPSNDArrayDescriptor::getShape not bound
-!missing-selector! MPSNDArrayDescriptor::permuteWithDimensionOrder: not bound
-!missing-selector! MPSNDArrayDescriptor::preferPackedRows not bound
-!missing-selector! MPSNDArrayDescriptor::setPreferPackedRows: not bound
-!missing-selector! MPSNDArrayIdentity::reshapeWithCommandBuffer:sourceArray:dimensionCount:dimensionSizes:destinationArray: not bound
-!missing-selector! MPSNDArrayIdentity::reshapeWithCommandBuffer:sourceArray:shape:destinationArray: not bound

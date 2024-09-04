@@ -418,9 +418,3 @@
 !missing-enum-value! MPSDataType native value MPSDataTypeComplexBit = 16777216 not bound
 !missing-enum-value! MPSDataType native value MPSDataTypeComplexFloat16 = 285212704 not bound
 !missing-enum-value! MPSDataType native value MPSDataTypeComplexFloat32 = 285212736 not bound
-!missing-selector! MPSNDArrayDescriptor::getShape not bound
-!missing-selector! MPSNDArrayDescriptor::permuteWithDimensionOrder: not bound
-!missing-selector! MPSNDArrayDescriptor::preferPackedRows not bound
-!missing-selector! MPSNDArrayDescriptor::setPreferPackedRows: not bound
-!missing-selector! MPSNDArrayIdentity::reshapeWithCommandBuffer:sourceArray:dimensionCount:dimensionSizes:destinationArray: not bound
-!missing-selector! MPSNDArrayIdentity::reshapeWithCommandBuffer:sourceArray:shape:destinationArray: not bound
