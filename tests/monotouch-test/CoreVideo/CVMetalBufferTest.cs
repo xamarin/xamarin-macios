@@ -28,6 +28,7 @@ namespace MonoTouchFixtures.CoreVideo {
 			Assert.AreNotEqual (0, CVMetalBuffer.GetTypeId (), "GetTypeId");
 		}
 
+#if !MONOMAC
 		[Test]
 		[TestCase (CVPixelFormatType.CV32BGRA)]
 		public void GetMetalBufferTest (CVPixelFormatType pft)
@@ -49,7 +50,7 @@ namespace MonoTouchFixtures.CoreVideo {
 			using var metalBuffer = buffer.GetMetalBuffer ();
 			Assert.IsNotNull (metalBuffer, "GetMetalBuffer");
 		}
-
+#endif // !MONOMAC
 	}
 }
 #endif

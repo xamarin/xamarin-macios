@@ -53,6 +53,7 @@ namespace MonoTouchFixtures.CoreVideo {
 			Assert.IsNotNull (cache);
 		}
 
+#if !MONOMAC
 		[Test]
 		[TestCase (CVPixelFormatType.CV32BGRA)]
 		public void CreateBufferFromImageTest (CVPixelFormatType pft)
@@ -72,6 +73,7 @@ namespace MonoTouchFixtures.CoreVideo {
 			using var buffer = cache.CreateBufferFromImage (image);
 			Assert.IsNotNull (buffer, "Buffer");
 		}
+#endif // !MONOMAC
 
 		[Test]
 		public void FlushTest ()
