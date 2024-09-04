@@ -4563,8 +4563,8 @@ public partial class Generator : IMemberGatherer {
 					argCount++;
 			}
 			if (minfo.Method.GetParameters ().Length != argCount) {
-				ErrorHelper.Warning (1105,
-					minfo.selector, argCount, minfo.Method, minfo.Method.GetParameters ().Length);
+				exceptions.Add (ErrorHelper.CreateWarning (1105,
+					minfo.selector, argCount, minfo.Method, minfo.Method.GetParameters ().Length));
 			}
 		}
 
