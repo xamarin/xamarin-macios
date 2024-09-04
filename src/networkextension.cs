@@ -380,7 +380,7 @@ namespace NetworkExtension {
 
 	delegate void NEDatagramRead (NSData [] datagrams, NWEndpoint [] remoteEndpoints, NSError error);
 	delegate void NEDatagramAndFlowEndpointsRead ([NullAllowed] NSData [] datagrams, [NullAllowed] Network.NWEndpoint [] remoteEndpoints, [NullAllowed] NSError error);
-	delegate void NDatagramWriteResult ([NullAllowed] NSError error);
+	delegate void NEDatagramWriteResult ([NullAllowed] NSError error);
 	/// <summary>Provides IO over a UDP socket.</summary>
 	///     
 	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/NetworkExtension/Reference/NEAppProxyUDPFlowClassRef/index.html">Apple documentation for <c>NEAppProxyUDPFlow</c></related>
@@ -416,9 +416,10 @@ namespace NetworkExtension {
 		void ReadDatagramsAndFlowEndpoints (NEDatagramAndFlowEndpointsRead completionHandler);
 #endif
 
+		[Async]
 		[NoWatch, NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 		[Export ("writeDatagrams:sentByFlowEndpoints:completionHandler:")]
-		void WriteDatagramsAndFlowEndpoints (NSData [] datagrams, Network.NWEndpoint [] flowEndpoints, NDatagramWriteResult completionHandler);
+		void WriteDatagramsAndFlowEndpoints (NSData [] datagrams, Network.NWEndpoint [] flowEndpoints, NEDatagramWriteResult completionHandler);
 
 		[NoWatch, NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 		[Export ("localFlowEndpoint"), NullAllowed]
