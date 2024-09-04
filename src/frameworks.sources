@@ -2129,6 +2129,7 @@ MACOS_FRAMEWORKS =          \
 	CoreText                \
 	CoreWlan                \
 	Darwin                  \
+	DeviceDiscoveryExtension \
 	EventKit                \
 	ExecutionPolicy		\
 	ExtensionKit		\
@@ -2213,6 +2214,7 @@ IOS_FRAMEWORKS =         \
 	AVKit \
 	AVRouting \
 	Accounts \
+	AccessorySetupKit \
 	AdServices \
 	AdSupport \
 	AddressBook \
@@ -2454,6 +2456,7 @@ MACCATALYST_FRAMEWORKS = \
 	CoreTelephony \
 	CoreText \
 	CoreWlan \
+	DeviceDiscoveryExtension \
 	EventKit \
 	EventKitUI \
 	ExecutionPolicy \

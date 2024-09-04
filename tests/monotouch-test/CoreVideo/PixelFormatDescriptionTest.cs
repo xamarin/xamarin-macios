@@ -10,7 +10,11 @@
 #if !__WATCHOS__
 
 using System;
+using System.IO;
+using System.Text;
+
 using Foundation;
+using CoreGraphics;
 using CoreVideo;
 using ObjCRuntime;
 using NUnit.Framework;
@@ -60,6 +64,54 @@ namespace MonoTouchFixtures.CoreVideo {
 
 			Assert.NotNull (CVPixelFormatDescription.Create ((CVPixelFormatType) 3), "3b");
 		}
+
+#if NET
+		[Test]
+		public void CV32ARGB ()
+		{
+			Assert.Multiple (() => {
+				var pf = CVPixelFormatType.CV32ARGB;
+				var desc = CVPixelFormatDescription.CreatePixelFormat (pf);
+				Assert.IsNull (desc.Name, "Name");
+				Assert.AreEqual (pf, desc.Constant ?? ((CVPixelFormatType) 0xFFFFFFFF), "Constant");
+				Assert.IsNull (desc.CodecType, "CodecType");
+				Assert.IsNull (desc.FourCC, "FourCC");
+				Assert.AreEqual (true, desc.ContainsAlpha, "ContainsAlpha");
+				Assert.AreEqual (false, desc.FormatContainsYCbCr, "FormatContainsYCbCr");
+				Assert.AreEqual (true, desc.FormatContainsRgb, "FormatContainsRgb");
+				Assert.AreEqual (false, desc.ContainsGrayscale, "ContainsGrayscale");
+				if (TestRuntime.CheckXcodeVersion (14, 0))
+					Assert.IsNull (desc.FormatContainsSenselArray, "FormatContainsSenselArray");
+				Assert.IsNull (desc.ComponentRange, "ComponentRange");
+				Assert.IsNull (desc.Planes, "Planes");
+				Assert.IsNull (desc.BlockWidth, "BlockWidth");
+				Assert.IsNull (desc.BlockHeight, "BlockHeight");
+				Assert.AreEqual (32, desc.BitsPerBlock, "BitsPerBlock");
+				Assert.IsNull (desc.BlockHorizontalAlignment, "BlockHorizontalAlignment");
+				Assert.IsNull (desc.BlockVerticalAlignment, "BlockVerticalAlignment");
+				Assert.IsNotNull (desc.BlackBlock, "BlackBlock");
+				Assert.IsNull (desc.HorizontalSubsampling, "HorizontalSubsampling");
+				Assert.IsNull (desc.VerticalSubsampling, "VerticalSubsampling");
+#if (__IOS__ && !__MACCATALYST__) || __TVOS__
+				Assert.IsNull (desc.OpenGLFormat, "OpenGLFormat");
+				Assert.IsNull (desc.OpenGLType, "OpenGLType");
+				Assert.IsNull (desc.OpenGLInternalFormat, "OpenGLInternalFormat");
+				Assert.IsNull (desc.OpenGLCompatibility, "OpenGLCompatibility");
+#else
+				Assert.AreEqual (32993, desc.OpenGLFormat, "OpenGLFormat");
+				Assert.AreEqual (32821, desc.OpenGLType, "OpenGLType");
+				Assert.AreEqual (32856, desc.OpenGLInternalFormat, "OpenGLInternalFormat");
+				Assert.AreEqual (true, desc.OpenGLCompatibility, "OpenGLCompatibility");
+#endif
+				Assert.AreEqual (CGBitmapFlags.ByteOrder32Big | CGBitmapFlags.First, desc.CGBitmapInfo, "CGBitmapInfo");
+				Assert.AreEqual (true, desc.QDCompatibility, "QDCompatibility");
+				Assert.AreEqual (true, desc.CGBitmapContextCompatibility, "CGBitmapContextCompatibility");
+				Assert.AreEqual (true, desc.CGImageCompatibility, "CGImageCompatibility");
+				Assert.IsNotNull (desc.FillExtendedPixelsCallback, "FillExtendedPixelsCallback");
+				Assert.IsNotNull (desc.FillExtendedPixelsCallbackStruct, "FillExtendedPixelsCallbackStruct");
+			});
+		}
+#endif // NET
 	}
 }
 
