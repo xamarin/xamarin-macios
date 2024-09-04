@@ -96,8 +96,7 @@ namespace MonoTouchFixtures.VideoToolbox {
 			vtStatus = session.SetProcessingParameters (new VTRawProcessingParameters ());
 			Assert.AreEqual (VTStatus.Ok, vtStatus, "SetProcessingParameters status (VTRawProcessingParameter)");
 
-			session.ProcessFrame (pixelBuffer, (NSDictionary) null, (VTStatus status, CVPixelBuffer? processedPixelBuffer) =>
-			{
+			session.ProcessFrame (pixelBuffer, (NSDictionary) null, (VTStatus status, CVPixelBuffer? processedPixelBuffer) => {
 				Console.WriteLine ($"ProcessFrameCallback, status: {status} pb: {processedPixelBuffer}");
 			});
 
