@@ -125,6 +125,34 @@ namespace MonoTouchFixtures.VideoToolbox {
 			// no way to know if it was a success
 			VTUtilities.RegisterSupplementalVideoDecoder (codec);
 		}
+
+		[Test]
+		public void CopyVideoDecoderExtensionPropertiesTest ()
+		{
+			TestRuntime.AssertXcodeVersion (16, 0);
+
+			using var desc = CMFormatDescription.Create (CMMediaType.Video, (uint) CMVideoCodecType.H264, out var fde);
+			Assert.IsNotNull (desc, "CMFormatDescription");
+			Assert.That (fde, Is.EqualTo (CMFormatDescriptionError.None), "CMFormatDescriptionError #2 (authorized)");
+			using var dict = VTUtilities.CopyVideoDecoderExtensionProperties (desc, out var vtError);
+			Console.WriteLine (dict);
+			Assert.IsNotNull (dict, "CopyVideoDecoderExtensionProperties");
+			Assert.AreEqual (VTStatus.Ok, dict, "VTError");
+		}
+
+		[Test]
+		public void CopyRawVideoDecoderExtensionPropertiesTest ()
+		{
+			TestRuntime.AssertXcodeVersion (16, 0);
+
+			using var desc = CMFormatDescription.Create (CMMediaType.Video, (uint) CMVideoCodecType.H264, out var fde);
+			Assert.IsNotNull (desc, "CMFormatDescription");
+			Assert.That (fde, Is.EqualTo (CMFormatDescriptionError.None), "CMFormatDescriptionError #2 (authorized)");
+			using var dict = VTUtilities.CopyRawProcessorExtensionProperties (desc, out var vtError);
+			Console.WriteLine (dict);
+			Assert.IsNotNull (dict, "CopyRawProcessorExtensionProperties");
+			Assert.AreEqual (VTStatus.Ok, dict, "VTError");
+		}
 #endif
 
 	}

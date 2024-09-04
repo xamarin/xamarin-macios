@@ -3,13 +3,3 @@
 !missing-pinvoke! VTCompressionSessionEncodeMultiImageFrameWithOutputHandler is not bound
 !missing-pinvoke! VTDecompressionSessionDecodeFrameWithMultiImageCapableOutputHandler is not bound
 !missing-pinvoke! VTDecompressionSessionSetMultiImageCallback is not bound
-
-# Pending
-!missing-pinvoke! VTRAWProcessingSessionCompleteFrames is not bound
-!missing-pinvoke! VTRAWProcessingSessionCopyProcessingParameters is not bound
-!missing-pinvoke! VTRAWProcessingSessionCreate is not bound
-!missing-pinvoke! VTRAWProcessingSessionGetTypeID is not bound
-!missing-pinvoke! VTRAWProcessingSessionInvalidate is not bound
-!missing-pinvoke! VTRAWProcessingSessionProcessFrame is not bound
-!missing-pinvoke! VTRAWProcessingSessionSetParameterChangedHander is not bound
-!missing-pinvoke! VTRAWProcessingSessionSetProcessingParameters is not bound

@@ -5,11 +5,3 @@
 !missing-pinvoke! VTHDRPerFrameMetadataGenerationSessionAttachMetadata is not bound
 !missing-pinvoke! VTHDRPerFrameMetadataGenerationSessionCreate is not bound
 !missing-pinvoke! VTHDRPerFrameMetadataGenerationSessionGetTypeID is not bound
-!missing-pinvoke! VTRAWProcessingSessionCompleteFrames is not bound
-!missing-pinvoke! VTRAWProcessingSessionCopyProcessingParameters is not bound
-!missing-pinvoke! VTRAWProcessingSessionCreate is not bound
-!missing-pinvoke! VTRAWProcessingSessionGetTypeID is not bound
-!missing-pinvoke! VTRAWProcessingSessionInvalidate is not bound
-!missing-pinvoke! VTRAWProcessingSessionProcessFrame is not bound
-!missing-pinvoke! VTRAWProcessingSessionSetParameterChangedHander is not bound
-!missing-pinvoke! VTRAWProcessingSessionSetProcessingParameters is not bound

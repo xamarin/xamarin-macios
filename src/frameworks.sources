@@ -1883,6 +1883,7 @@ VIDEOTOOLBOX_SOURCES = \
 	VideoToolbox/VTPixelTransferSession.cs \
 	VideoToolbox/VTProfessionalVideoWorkflow.cs \
 	VideoToolbox/VTPropertyOptions.cs \
+	VideoToolbox/VTRawProcessingSession.cs \
 	VideoToolbox/VTSession.cs \
 	VideoToolbox/VTVideoEncoder.cs \
 	VideoToolbox/VTUtilities.cs \
