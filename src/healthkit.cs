@@ -881,7 +881,10 @@ namespace HealthKit {
 		void RequestPerObjectReadAuthorization (HKObjectType objectType, [NullAllowed] NSPredicate predicate, HKHealthStoreCompletionHandler completion);
 
 		[NullAllowed]
-		[iOS (17, 0), Mac (14, 0), Watch (10, 0), NoTV, MacCatalyst (17, 0)]
+		// xtro says this exists on macOS, introspection disagrees.
+		// Headers doesn't say neither that it's available nor that it's not on macOS, which is probably why xtro picks it up.
+		// Assuming that the lack of unavailability in the headers is a mistake, so remove from macOS.
+		[iOS (17, 0), NoMac, Watch (10, 0), NoTV, MacCatalyst (17, 0)]
 		[Export ("workoutSessionMirroringStartHandler", ArgumentSemantic.Copy)]
 		Action<HKWorkoutSession> WorkoutSessionMirroringStartHandler { get; set; }
 
