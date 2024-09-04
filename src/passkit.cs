@@ -2996,6 +2996,7 @@ namespace PassKit {
 	[BaseType (typeof (PKAddSecureElementPassConfiguration))]
 	[DisableDefaultCtor]
 	interface PKAddIdentityDocumentConfiguration {
+		[Async]
 		[Static]
 		[Export ("configurationForMetadata:completion:")]
 		void GetConfiguration (PKIdentityDocumentMetadata metadata, PKAddIdentityDocumentConfigurationGetConfigurationCompletionHandler completionHandler);
