@@ -64,9 +64,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="NativeLibrary.dll">
-      <HintPath>$(RootTestsDirectory)\monotouch-test\NativeLibrary.dll</HintPath>
-    </Reference>
+    <None Include="$(RootTestsDirectory)\monotouch-test\NativeLibrary.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
