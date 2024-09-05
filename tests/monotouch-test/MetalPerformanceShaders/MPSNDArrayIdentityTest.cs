@@ -18,6 +18,8 @@ namespace MonoTouchFixtures.MetalPerformanceShaders {
 		[Test]
 		public void ReshapeA ()
 		{
+			TestRuntime.AssertXcodeVersion (16, 0);
+
 			var device = MTLDevice.SystemDefault;
 			if (device is null)
 				Assert.Inconclusive ($"Metal does not exist on this device.");
@@ -32,6 +34,8 @@ namespace MonoTouchFixtures.MetalPerformanceShaders {
 		[Test]
 		public void ReshapeB ()
 		{
+			TestRuntime.AssertXcodeVersion (16, 0);
+
 			var device = MTLDevice.SystemDefault;
 			if (device is null)
 				Assert.Inconclusive ($"Metal does not exist on this device.");
