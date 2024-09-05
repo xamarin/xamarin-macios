@@ -227,10 +227,6 @@ namespace Cecil.Tests {
 			"Security.SslContext.SetSessionTickets(System.Boolean)",
 			"Security.SslProtocol Security.SecProtocolMetadata::NegotiatedProtocolVersion()",
 			"Speech.SFVoiceAnalytics Speech.SFTranscriptionSegment::VoiceAnalytics()",
-			"StoreKit.SKCloudServiceController.RequestPersonalizationToken(System.String, System.Action`2<Foundation.NSString,Foundation.NSError>)",
-			"StoreKit.SKCloudServiceController.RequestPersonalizationTokenAsync(System.String)",
-			"StoreKit.SKMutablePayment.PaymentWithProduct(System.String)",
-			"StoreKit.SKStoreReviewController.RequestReview()",
 			"System.Boolean AVFoundation.AVCaptureConnection::SupportsVideoMaxFrameDuration()",
 			"System.Boolean AVFoundation.AVCaptureConnection::SupportsVideoMinFrameDuration()",
 			"System.Boolean AVFoundation.AVCapturePhotoSettings::AutoDualCameraFusionEnabled()",
@@ -246,7 +242,6 @@ namespace Cecil.Tests {
 			"System.String PassKit.PKShareablePassMetadata::LocalizedDescription()",
 			"System.String PassKit.PKShareablePassMetadata::OwnerDisplayName()",
 			"System.String PassKit.PKShareablePassMetadata::TemplateIdentifier()",
-			"System.String StoreKit.SKProduct::ContentVersion()",
 			"System.String UserNotifications.UNMutableNotificationContent::SummaryArgument()",
 			"System.String UserNotifications.UNNotificationContent::SummaryArgument()",
 			"System.UIntPtr UserNotifications.UNMutableNotificationContent::SummaryArgumentCount()",
@@ -422,6 +417,7 @@ namespace Cecil.Tests {
 				case "SceneKit.SCNAnimationPlayer.PauseAnimation(Foundation.NSString)":
 				case "SceneKit.SCNAnimationPlayer.RemoveAnimation(Foundation.NSString, System.Runtime.InteropServices.NFloat)":
 				case "SceneKit.SCNAnimationPlayer.ResumeAnimation(Foundation.NSString)":
+				case "System.Boolean AccessorySetupKit.ASPickerDisplayItem::AllowsRename()": // Apple introduced and deprecated in the same version.
 					return true;
 				}
 				break;

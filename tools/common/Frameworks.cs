@@ -291,6 +291,7 @@ public class Frameworks : Dictionary<string, Framework> {
 					{ "Symbols", "Symbols", 14, 0 },
 					{ "SensitiveContentAnalysis", "SensitiveContentAnalysis", 14, 0 },
 
+					{ "DeviceDiscoveryExtension", "DeviceDiscoveryExtension", 15, 0},
 					{ "FSKit", "FSKit", 15, 0 },
 					{ "MediaExtension", "MediaExtension", 15, 0 },
 				};
@@ -475,6 +476,8 @@ public class Frameworks : Dictionary<string, Framework> {
 				{ "Cinematic", "Cinematic", new Version (17, 0), NotAvailableInSimulator },
 				{ "Symbols", "Symbols", 17, 0 },
 				{ "SensitiveContentAnalysis", "SensitiveContentAnalysis", 17, 0 },
+
+				{ "AccessorySetupKit", "AccessorySetupKit", 18, 0 },
 
 				// the above MUST be kept in sync with simlauncher
 				// see tools/mtouch/Makefile
@@ -681,6 +684,7 @@ public class Frameworks : Dictionary<string, Framework> {
 			var v14_0 = new Version (14, 0);
 			var v14_2 = new Version (14, 2);
 			var v16_1 = new Version (16, 1);
+			var v18_0 = new Version (18, 0);
 			foreach (var f in catalyst_frameworks.Values) {
 				switch (f.Name) {
 				// These frameworks were added to Catalyst after they were added to iOS, so we have to adjust the Versions fields
@@ -699,14 +703,17 @@ public class Frameworks : Dictionary<string, Framework> {
 				case "ThreadNetwork":
 					f.Version = v16_1;
 					break;
-				// These frameworks are not available on Mac Catalyst
 				case "DeviceDiscoveryExtension":
+					f.Version = v18_0;
+					break;
+				// These frameworks are not available on Mac Catalyst
 				case "OpenGLES":
 				case "NewsstandKit":
 				case "MediaSetup":
 				case "NotificationCenter":
 				case "GLKit":
 				case "VideoSubscriberAccount":
+				case "AccessorySetupKit":
 				// The headers for FileProviderUI exist, but the native linker fails
 				case "FileProviderUI":
 				// The headers for Twitter are there, , but no documentation whatsoever online and the native linker fails too

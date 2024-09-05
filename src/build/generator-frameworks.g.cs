@@ -5,6 +5,7 @@ partial class Frameworks {
 	internal readonly HashSet<string> iosframeworks = new HashSet<string> {
 		"Accelerate",
 		"Accessibility",
+		"AccessorySetupKit",
 		"Accounts",
 		"AddressBook",
 		"AddressBookUI",
@@ -194,6 +195,7 @@ partial class Frameworks {
 		"CryptoTokenKit",
 		"Darwin",
 		"DeviceCheck",
+		"DeviceDiscoveryExtension",
 		"EventKit",
 		"ExecutionPolicy",
 		"ExtensionKit",
@@ -482,6 +484,7 @@ partial class Frameworks {
 		"CoreWlan",
 		"CryptoTokenKit",
 		"DeviceCheck",
+		"DeviceDiscoveryExtension",
 		"EventKit",
 		"EventKitUI",
 		"ExecutionPolicy",
@@ -563,6 +566,7 @@ partial class Frameworks {
 	};
 	bool? _Accelerate;
 	bool? _Accessibility;
+	bool? _AccessorySetupKit;
 	bool? _Accounts;
 	bool? _AddressBook;
 	bool? _AddressBookUI;
@@ -735,6 +739,7 @@ partial class Frameworks {
 	bool? _XKit;
 	public bool HaveAccelerate { get { if (!_Accelerate.HasValue) _Accelerate = GetValue ("Accelerate"); return _Accelerate.Value; } }
 	public bool HaveAccessibility { get { if (!_Accessibility.HasValue) _Accessibility = GetValue ("Accessibility"); return _Accessibility.Value; } }
+	public bool HaveAccessorySetupKit { get { if (!_AccessorySetupKit.HasValue) _AccessorySetupKit = GetValue ("AccessorySetupKit"); return _AccessorySetupKit.Value; } }
 	public bool HaveAccounts { get { if (!_Accounts.HasValue) _Accounts = GetValue ("Accounts"); return _Accounts.Value; } }
 	public bool HaveAddressBook { get { if (!_AddressBook.HasValue) _AddressBook = GetValue ("AddressBook"); return _AddressBook.Value; } }
 	public bool HaveAddressBookUI { get { if (!_AddressBookUI.HasValue) _AddressBookUI = GetValue ("AddressBookUI"); return _AddressBookUI.Value; } }

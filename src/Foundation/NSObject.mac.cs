@@ -113,6 +113,7 @@ namespace Foundation {
 		static IntPtr sm = Dlfcn.dlopen (Constants.ServiceManagementLibrary, 1);
 		static IntPtr sa = Dlfcn.dlopen (Constants.SafetyKitLibrary, 1);
 		static IntPtr cr = Dlfcn.dlopen (Constants.CryptoTokenKitLibrary, 1);
+		static IntPtr dd = Dlfcn.dlopen (Constants.DeviceDiscoveryExtensionLibrary, 1);
 		static IntPtr fk = Dlfcn.dlopen (Constants.FSKitLibrary, 1);
 
 #if !NET
