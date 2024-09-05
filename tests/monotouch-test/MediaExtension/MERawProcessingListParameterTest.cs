@@ -23,12 +23,12 @@ namespace MonoTouchFixtures.MediaExtension {
 			Assert.Multiple (() => {
 				Assert.AreEqual ("name", obj.Name, "Name");
 				Assert.AreEqual ("key", obj.Key, "Key");
-				Assert.AreEqual ("description", obj.LongDescription, "LongDescription");
+				Assert.IsNull (obj.LongDescription, "LongDescription");
 				Assert.AreEqual ((nint) 1, obj.InitialValue, "InitialValue");
 				Assert.AreEqual ((nint) 1, obj.CurrentValue, "CurrentValue");
 				Assert.IsTrue (obj.HasNeutralValue (out var neutralValue), "HasNeutralValue");
 				Assert.AreEqual ((nint) 3, neutralValue, "NeutralValue");
-				Assert.IsTrue (obj.HasCameraValue (out var cameraValue), "HasCameraValue");
+				Assert.IsFalse (obj.HasCameraValue (out var cameraValue), "HasCameraValue");
 				Assert.AreEqual ((nint) 0, cameraValue, "NeutralValue");
 			});
 		}
@@ -48,10 +48,10 @@ namespace MonoTouchFixtures.MediaExtension {
 			Assert.Multiple (() => {
 				Assert.AreEqual ("name", obj.Name, "Name");
 				Assert.AreEqual ("key", obj.Key, "Key");
-				Assert.AreEqual ("description", obj.LongDescription, "LongDescription");
+				Assert.IsNull (obj.LongDescription, "LongDescription");
 				Assert.AreEqual ((nint) 1, obj.InitialValue, "InitialValue");
 				Assert.AreEqual ((nint) 1, obj.CurrentValue, "CurrentValue");
-				Assert.IsTrue (obj.HasNeutralValue (out var neutralValue), "HasNeutralValue");
+				Assert.IsFalse (obj.HasNeutralValue (out var neutralValue), "HasNeutralValue");
 				Assert.AreEqual ((nint) 0, neutralValue, "NeutralValue");
 				Assert.IsTrue (obj.HasCameraValue (out var cameraValue), "HasCameraValue");
 				Assert.AreEqual ((nint) 3, cameraValue, "NeutralValue");
