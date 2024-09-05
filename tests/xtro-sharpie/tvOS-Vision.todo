@@ -1,6 +1,1 @@
-!missing-selector! VNCalculateImageAestheticsScoresRequest::results not bound
-!missing-selector! VNGeneratePersonSegmentationRequest::supportedOutputPixelFormatsAndReturnError: not bound
-!missing-selector! VNImageAestheticsScoresObservation::isUtility not bound
-!missing-selector! VNImageAestheticsScoresObservation::overallScore not bound
-!missing-type! VNCalculateImageAestheticsScoresRequest not bound
-!missing-type! VNImageAestheticsScoresObservation not bound
+!unknown-native-enum! VNCalculateImageAestheticsScoresRequestRevision bound
