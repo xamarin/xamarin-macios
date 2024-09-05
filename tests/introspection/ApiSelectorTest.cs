@@ -1319,6 +1319,10 @@ namespace Introspection {
 			// DDDevicePickerViewController
 			case "initWithBrowseDescriptor:parameters:":
 				return true;
+			// MKAddressFilter
+			case "initExcludingOptions:":
+			case "initIncludingOptions:":
+				return true;
 			// GKGameCenterViewController
 			case "initWithAchievementID:":
 			case "initWithLeaderboardSetID:":
