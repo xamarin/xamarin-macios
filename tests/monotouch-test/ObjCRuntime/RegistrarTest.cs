@@ -5555,7 +5555,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 #if OPTIMIZEALL || NATIVEAOT
 			var expectNoMembers = true;
 #elif !__MACOS__
-			var expectNoMembers = global::XamarinTests.ObjCRuntime.Registrar.IsStaticRegistrar;
+			var expectNoMembers = global::XamarinTests.ObjCRuntime.Registrar.IsStaticRegistrar && TestRuntime.IsLinkAny;
 #else
 			var expectNoMembers = false;
 #endif
