@@ -238,6 +238,23 @@ namespace GeneratorTests {
 			bgen.AssertNoWarnings ();
 		}
 
+		[Test]
+		[TestCase (Profile.iOS)]
+		public void EditorBrowsable (Profile profile)
+		{
+			var bgen = BuildFile (profile, false, true, "tests/editor-browsable.cs");
+			var types = bgen.ApiAssembly.MainModule.Types;
+
+			var hasEditorBrowsableAttribute = new Func<ICustomAttributeProvider, bool> ((ICustomAttributeProvider provider) => {
+				return provider.CustomAttributes.Any (v => v.AttributeType.Name == "EditorBrowsableAttribute");
+			});
+
+			var strongEnumType = types.Single (v => v.Name == "StrongEnum");
+			Assert.IsTrue (hasEditorBrowsableAttribute (strongEnumType), "StrongEnumType");
+			var objcClassType = types.Single (v => v.Name == "ObjCClass");
+			Assert.IsTrue (hasEditorBrowsableAttribute (objcClassType), "ObjCClass");
+		}
+
 		static string RenderArgument (CustomAttributeArgument arg)
 		{
 			var td = arg.Type.Resolve ();
@@ -1673,6 +1690,22 @@ namespace GeneratorTests {
 				Assert.IsTrue (toConstantArray.Parameters [0].ParameterType.IsArray, $"{tc.BackingFieldType} ToConstantArray parameter type IsArray");
 				Assert.AreEqual ($"{tc.BackingFieldType}FieldType", toConstantArray.Parameters [0].ParameterType.GetElementType ().Name, $"{tc.BackingFieldType} ToConstantArray parameter type");
 			}
+		}
+
+		[Test]
+		[TestCase (Profile.iOS)]
+		public void UnderlyingFieldType (Profile profile)
+		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
+			var bgen = BuildFile (profile, true, true, "tests/underlyingfieldtype.cs");
+
+#if NET
+			const string nintName = "System.IntPtr";
+			const string nuintName = "System.UIntPtr";
+#else
+			const string nintName = "System.nint";
+			const string nuintName = "System.nuint";
+#endif
 		}
 
 		[Test]

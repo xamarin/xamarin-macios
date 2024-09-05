@@ -74,6 +74,7 @@
 	#define x_SCNMatrix4MakeScale       object_x_SCNMatrix4MakeScale
 	#define x_SCNMatrix4Translate       object_x_SCNMatrix4Translate
 	#define x_GlobalString				object_x_GlobalString
+	#define x_native_field				object_x_native_field
 #elif PREFIX == 2
 	#define theUltimateAnswer ar_theUltimateAnswer
 	#define useZLib           ar_useZLib
@@ -149,6 +150,7 @@
 	#define x_SCNMatrix4MakeScale       ar_x_SCNMatrix4MakeScale
 	#define x_SCNMatrix4Translate       ar_x_SCNMatrix4Translate
 	#define x_GlobalString					ar_x_GlobalString
+	#define x_native_field				ar_x_native_field
 #else
 // keep original names
 #endif
