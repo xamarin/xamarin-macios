@@ -1008,6 +1008,7 @@ HEALTHKIT_SOURCES = \
 	HealthKit/HKObjectType.cs \
 	HealthKit/HKObsolete.cs \
 	HealthKit/HKSampleQuery.cs \
+	HealthKit/HKSupportFunctions.cs \
 	HealthKit/HKUnit.cs \
 
 # HealthKitUI
