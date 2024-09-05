@@ -20,5 +20,22 @@ namespace Accessibility {
 			return AXPrefersHorizontalTextLayout () != 0;
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios18.0")]
+		[SupportedOSPlatform ("maccatalyst18.0")]
+		[SupportedOSPlatform ("macos15.0")]
+		[SupportedOSPlatform ("tvos18.0")]
+		[DllImport (Constants.AccessibilityLibrary)]
+		static extern byte AXPrefersNonBlinkingTextInsertionIndicator ();
+
+		[SupportedOSPlatform ("ios18.0")]
+		[SupportedOSPlatform ("maccatalyst18.0")]
+		[SupportedOSPlatform ("macos15.0")]
+		[SupportedOSPlatform ("tvos18.0")]
+		public static bool NonBlinkingTextInsertionIndicator ()
+		{
+			return AXPrefersNonBlinkingTextInsertionIndicator () != 0;
+		}
+#endif // NET
 	}
 }

@@ -36,6 +36,7 @@ ACCESSIBILITY_SOURCES = \
 	Accessibility/AXHearingUtilities.cs \
 	Accessibility/AXAnimatedImagesUtilities.cs \
 	Accessibility/AXPrefers.cs \
+	Accessibility/AXSettings.cs \
 
 # Accounts
 
@@ -460,6 +461,7 @@ COREDATA_API_SOURCES = \
 
 COREDATA_SOURCES = \
 	CoreData/NSEntityDescription.cs \
+	CoreData/NSPersistentStoreCoordinator.cs \
 	CoreData/Obsolete.cs \
 
 # CoreFoundation
@@ -2127,6 +2129,7 @@ MACOS_FRAMEWORKS =          \
 	CoreText                \
 	CoreWlan                \
 	Darwin                  \
+	DeviceDiscoveryExtension \
 	EventKit                \
 	ExecutionPolicy		\
 	ExtensionKit		\
@@ -2453,6 +2456,7 @@ MACCATALYST_FRAMEWORKS = \
 	CoreTelephony \
 	CoreText \
 	CoreWlan \
+	DeviceDiscoveryExtension \
 	EventKit \
 	EventKitUI \
 	ExecutionPolicy \

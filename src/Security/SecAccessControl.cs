@@ -87,6 +87,8 @@ namespace Security {
 #if NET
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
+		[ObsoletedOSPlatform ("macos", "Use 'Companion' instead.")]
+		[ObsoletedOSPlatform ("maccatalyst", "Use 'Companion' instead.")]
 		[UnsupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
@@ -95,6 +97,18 @@ namespace Security {
 		[NoWatch]
 #endif
 		Watch = 1 << 5,
+
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[NoiOS]
+		[NoTV]
+		[NoWatch]
+#endif
+		Companion = 1 << 5,
 
 #if NET
 		[SupportedOSPlatform ("ios")]
