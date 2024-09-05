@@ -118,6 +118,7 @@ namespace CoreVideo {
 		public Int16 Frames;
 	}
 
+#if !XAMCORE_5_0
 #if NET
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
@@ -131,4 +132,32 @@ namespace CoreVideo {
 	}
 
 	public delegate bool CVFillExtendedPixelsCallBack (IntPtr pixelBuffer, IntPtr refCon);
+#endif // !XAMCORE_5_0
+
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#if XAMCORE_5_0
+	public unsafe struct CVFillExtendedPixelsCallBackData {
+#else
+	[NativeName ("CVFillExtendedPixelsCallBackData")]
+	public unsafe struct CVFillExtendedPixelsCallBackDataStruct {
+#endif
+		public nint /* CFIndex */ Version;
+		public delegate* unmanaged<IntPtr, IntPtr, byte> FillCallBack;
+		public IntPtr UserInfo;
+#if !COREBUILD
+		public unsafe bool CallFillCallback (CVPixelBuffer buffer)
+		{
+			if (FillCallBack is null)
+				throw new InvalidOperationException ($"The callback is null.");
+			var rv = FillCallBack (buffer.GetCheckedHandle (), UserInfo);
+			return rv != 0;
+		}
+#endif
+	}
+#endif
+
 }

@@ -651,7 +651,10 @@ namespace Foundation {
 		[EditorBrowsable (EditorBrowsableState.Never)]
 		public IWebProxy? Proxy {
 			get => null;
-			set => throw new PlatformNotSupportedException ();
+			set {
+				if (value is not null)
+					throw new PlatformNotSupportedException ();
+			} 
 		}
 
 		// There doesn't seem to be a trivial way to specify the protocols to accept (or not)

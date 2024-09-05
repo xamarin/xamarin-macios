@@ -81,7 +81,6 @@ steps:
     # compress the json to remove any newlines, because we can't set the variable below if the json has any newlines
     Write-Host "$testMatrix"
     $testMatrix = $testMatrix | ConvertFrom-Json | ConvertTo-Json -Compress
-    Write-Host "##vso[task.setvariable variable=TEST_MATRIX;isOutput=true]$testMatrix"
     # update the config file so that we do not recalculate the matrix in other pipelines
     Edit-BuildConfiguration -ConfigKey TEST_MATRIX -ConfigValue $testMatrix -ConfigFile $Env:CONFIG_PATH
     #CONFIG_PATH
