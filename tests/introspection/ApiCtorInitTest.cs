@@ -123,6 +123,14 @@ namespace Introspection {
 			case "CKSubscription":
 			case "MPSCnnConvolutionState":
 				return true;
+			case "MPSGraphExecutableSerializationDescriptor":
+#if __MACCATALYST__
+				// failed assertion `Error: unhandled platform for MPSGraph serialization'
+				return true;
+#elif __IOS__
+				// crashes in the simulator
+				return TestRuntime.IsSimulator;
+#endif
 			case "AVSpeechSynthesisVoice": // Calling description crashes the test
 #if __WATCHOS__
 				return TestRuntime.CheckXcodeVersion (12, 2); // CheckExactXcodeVersion is not implemented in watchOS yet but will be covered by iOS parrot below

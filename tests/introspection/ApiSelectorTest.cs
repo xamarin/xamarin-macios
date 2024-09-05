@@ -1241,6 +1241,9 @@ namespace Introspection {
 		protected virtual bool SkipInit (string selector, MethodBase m)
 		{
 			switch (selector) {
+			// MPSGraphExecutable
+			case "initWithMPSGraphPackageAtURL:compilationDescriptor:":
+			case "initWithCoreMLPackageAtURL:compilationDescriptor:":
 			// NSAttributedString
 			case "initWithHTML:documentAttributes:":
 			case "initWithRTF:documentAttributes:":
