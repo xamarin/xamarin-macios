@@ -11469,6 +11469,11 @@ namespace AVFoundation {
 		[NoWatch, NoTV, NoMac, MacCatalyst (15, 4), iOS (15, 4)]
 		[Field ("AVCaptureDeviceTypeBuiltInLiDARDepthCamera")]
 		BuiltInLiDarDepthCamera,
+
+		[NoWatch]
+		[iOS (17, 0), MacCatalyst (17, 0), TV (17, 0)]
+		[Field ("AVCaptureDeviceTypeExternal")]
+		External,
 	}
 
 	[NoTV, NoWatch] // matches API that uses it.
