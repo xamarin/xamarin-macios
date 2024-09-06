@@ -90,7 +90,7 @@ stages:
   - job: "tests"
     condition: ne(stageDependencies.configure_build.configure.outputs['labels.skip_all_tests'], 'True')
     displayName: 'T:' 
-    timeoutInMinutes: 240
+    timeoutInMinutes: 180
     variables:
       # disable governance checks in the tests 
       skipComponentGovernanceDetection: true
