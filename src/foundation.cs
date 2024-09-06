@@ -4610,6 +4610,12 @@ namespace Foundation {
 		[Field ("CMErrorDomain", "CoreMotion")]
 		NSString CoreMotionErrorDomain { get; }
 
+		[NoMac, NoTV, NoWatch]
+		[iOS (12, 0)]
+		[NoMacCatalyst] // We don't expose CarPlay on Mac Catalyst for the moment // [MacCatalyst (14, 0)]
+		[Field ("CarPlayErrorDomain", "CarPlay")]
+		NSString CarPlayErrorDomain { get; }
+
 #if !XAMCORE_3_0
 		// now exposed with the corresponding EABluetoothAccessoryPickerError enum
 		[NoMac, NoTV, NoWatch]

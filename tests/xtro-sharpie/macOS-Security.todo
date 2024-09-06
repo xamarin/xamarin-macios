@@ -4,7 +4,3 @@
 !missing-protocol! OS_sec_protocol_metadata not bound
 !missing-protocol! OS_sec_protocol_options not bound
 !missing-protocol! OS_sec_trust not bound
-!missing-field! kSecImportToMemoryOnly not bound
-!missing-field! kSecMatchHostOrSubdomainOfHost not bound
-!missing-pinvoke! SecCertificateCopyNotValidAfterDate is not bound
-!missing-pinvoke! SecCertificateCopyNotValidBeforeDate is not bound
