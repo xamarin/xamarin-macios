@@ -126,6 +126,10 @@ steps:
     GITHUB_AUTH_TOKEN: $(GitHub.Token)
   displayName: 'Generate artifacts.json'
 
+
+- pwsh: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/show_env.ps1
+  displayName: 'Show Environment'
+
 - task: ms-vscs-artifact.build-tasks.artifactDropTask-1.artifactDropTask@0
   displayName: 'Publish package to Azure DevOps'
   inputs:
