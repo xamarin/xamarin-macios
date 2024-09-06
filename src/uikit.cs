@@ -30955,16 +30955,6 @@ namespace UIKit {
 		NativeHandle Constructor (string styleKey, string title, UIStringAttributes attributes);
 	}
 
-	// @protocol UITabBarControllerSidebarAnimating <NSObject>
-	/*
-	  Check whether adding [Model] to this declaration is appropriate.
-	  [Model] is used to generate a C# class that implements this protocol,
-	  and might be useful for protocols that consumers are supposed to implement,
-	  since consumers can subclass the generated class instead of implementing
-	  the generated interface. If consumers are not supposed to implement this
-	  protocol, then [Model] is redundant and will generate code that will never
-	  be used.
-	*/
 	[NoWatch, NoTV, iOS (18, 0)]
 	[Protocol (BackwardsCompatibleCodeGeneration = false)]
 	interface UITabBarControllerSidebarAnimating {
