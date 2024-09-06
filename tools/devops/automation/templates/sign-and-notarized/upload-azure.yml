@@ -139,6 +139,39 @@ steps:
     dropMetadataContainerName: ${{ parameters.uploadPrefix }}package #TODO
     retentionDays: 2 #TODO
     toLowerCase: false
+  env:
+    # nuke env variables content.. WHAT? Well turns out that due to the overuse of env variables, we have issues
+    # when pwsh tries to spawn a new process because we are reaching the limit of the size of the env in dotnet 
+    # framework. Here we are overriding the values of ALL those variable we do not care to try to make the size
+    # smaller. Yaml does not have a way to delete them, so we are setting them to empty.
+    ANDROID_HOME: ''
+    ANDROID_NDK: ''
+    ANDROID_NDK_HOME: ''
+    ANDROID_NDK_LATEST_HOME: ''
+    ANDROID_NDK_ROOT: ''
+    ANDROID_SDK_ROOT: ''
+    ANT_HOME: ''
+    MonAgentClientLocation: ''
+    MSDEPLOY_HTTP_USER_AGENT: ''
+    ONEES_DEFAULTREPOBRANCH: ''
+    ONEES_ESRP_CLIENT_LOCATION : ''
+    ONEES_ISHOSTEDPOOL: ''
+    ONEES_ISSTATELESSAGENT: ''
+    ONEES_TARGETNAME: ''
+    ONEES_USABLEPROCESSORCOUNT: ''
+    ONEESPT: ''
+    ONEESPT_BUILDTYPE: ''
+    PGBIN: ''
+    PGDATA: ''
+    PGPASSWORD: ''
+    PGROOT: ''
+    PGUSER: ''
+    PHPROOT: ''
+    PROVISIONATOR_CHANNEL: ''
+    PROVISIONATOR_URI: ''
+    PROVISIONATOR-URI: ''
+    SYSTEM_OIDCREQUESTURI: ''
+
 
 # upload the artifacts.json to the build pipeline artifacts so that it can be consumed by other jobs to
 # get the required urls
