@@ -153,7 +153,7 @@ build-% run-% exec-% install-%:
 	@echo "    Where: "
 	@echo "        ios: sim = [simclassic + simunified = [sim32, sim64]]; dev = [devclassic + devunified]"
 	@echo "        tvos/watchos: sim, dev"
-	@echo "    What: The test project to run (BCL tests do not need to be treated specially anymore, just use test project's name)"
+	@echo "    What: The test project to run"
 	@echo ""
 	@echo "Example:"
 	@echo ""
@@ -322,9 +322,6 @@ wrench-docs:
 wrench-sim-%:
 	@echo Not here anymore
 
-wrench-bcl-sim-%:
-	@echo Not here anymore
-
 wrench-%:
 	@echo Not here anymore
 
@@ -364,7 +361,6 @@ package-test-libraries.zip:
 	$(Q_GEN) cd $(TOP) && zip -9r --symlinks $(abspath $@).tmp ./tests/test-libraries
 	$(Q_GEN) cd $(TOP) && zip -9r --symlinks $(abspath $@).tmp ./tests/mono-native/macOS/unified ./tests/mono-native/macOS/compat
 	$(Q_GEN) cd $(TOP) && zip -9r --symlinks $(abspath $@).tmp ./tests/mono-native/iOS/unified ./tests/mono-native/iOS/compat
-	$(Q_GEN) cd $(TOP) && zip -9r --symlinks $(abspath $@).tmp ./tests/bcl-test/generated ./tests/bcl-test/templates
 	$(Q_GEN) cd $(TOP) && find tests -regex '.*/generated-projects/.*[c|f]sproj' -exec zip -9r --symlinks $(abspath $@).tmp {} +
 	$(Q_GEN) cd $(TOP) && find tests -regex '.*/generated-projects/.*sln' -exec zip -9r --symlinks $(abspath $@).tmp {} +
 	$(Q_GEN) cd $(TOP) && find tests -regex 'tests/test-libraries/custom-type-assembly/.libs/.*dll' -exec zip -9r --symlinks $(abspath $@).tmp {} +

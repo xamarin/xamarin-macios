@@ -21,8 +21,7 @@ namespace Xharness {
 	public enum TestLabel : Int64 {
 		[Label ("none")]
 		None = 0,
-		[Label ("bcl")]
-		Bcl = 1 << 1,
+		// 1 << 1 is unused
 		[Label ("bgen")]
 		Bgen = 1 << 2,
 		[Label ("binding")]

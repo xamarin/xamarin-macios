@@ -95,30 +95,6 @@ namespace Xharness.Jenkins.TestTasks {
 		ILogs logs;
 		public ILogs Logs => logs ??= new Logs (LogDirectory);
 
-		IEnumerable<string> referencedNunitAndXunitTestAssemblies;
-		public IEnumerable<string> ReferencedNunitAndXunitTestAssemblies {
-			get {
-				if (referencedNunitAndXunitTestAssemblies is not null)
-					return referencedNunitAndXunitTestAssemblies;
-
-				if (TestName.Contains ("BCL tests group")) { // avoid loading unrelated projects
-					if (!File.Exists (ProjectFile))
-						return Enumerable.Empty<string> ();
-
-					var csproj = new XmlDocument ();
-					try {
-						csproj.LoadWithoutNetworkAccess (ProjectFile.Replace ("\\", "/"));
-						referencedNunitAndXunitTestAssemblies = csproj.GetNunitAndXunitTestReferences ();
-					} catch (Exception e) {
-						referencedNunitAndXunitTestAssemblies = new [] { $"Exception: {e.Message}", $"Filename: {ProjectFile}" };
-					}
-				} else {
-					referencedNunitAndXunitTestAssemblies = Enumerable.Empty<string> ();
-				}
-				return referencedNunitAndXunitTestAssemblies;
-			}
-		}
-
 		#endregion
 
 		#region Abstract
