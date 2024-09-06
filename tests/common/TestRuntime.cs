@@ -152,12 +152,12 @@ partial class TestRuntime {
 		}
 	}
 
-	public static bool HasOSPlatformAttributeForCurrentPlatform<T> (ICustomAttributeProvider provider) where T: OSPlatformAttribute
+	public static bool HasOSPlatformAttributeForCurrentPlatform<T> (ICustomAttributeProvider provider) where T : OSPlatformAttribute
 	{
 		return HasOSPlatformAttribute<T> (provider, CurrentPlatform);
 	}
 
-	public static bool HasOSPlatformAttribute<T> (ICustomAttributeProvider provider, ApplePlatform platform) where T: OSPlatformAttribute
+	public static bool HasOSPlatformAttribute<T> (ICustomAttributeProvider provider, ApplePlatform platform) where T : OSPlatformAttribute
 	{
 		var attribs = provider.GetCustomAttributes (false);
 		var platformName = GetOSPlatformName (platform);
