@@ -1669,6 +1669,10 @@ namespace GeneratorTests {
 				new { BackingFieldType = "NSNumber", NullableType = "Foundation.NSNumber", RenderedBackingFieldType = "Foundation.NSNumber", SimplifiedNullableType = "Foundation.NSNumber" },
 				new { BackingFieldType = "NSInteger", NullableType = $"System.Nullable`1<{nintName}>", RenderedBackingFieldType = nintName, SimplifiedNullableType = "System.Nullable`1" },
 				new { BackingFieldType = "NSUInteger", NullableType = $"System.Nullable`1<{nuintName}>", RenderedBackingFieldType = nuintName, SimplifiedNullableType = "System.Nullable`1" },
+				new { BackingFieldType = "Int32", NullableType = $"System.Nullable`1<System.Int32>", RenderedBackingFieldType = "System.Int32", SimplifiedNullableType = "System.Nullable`1" },
+				new { BackingFieldType = "Int64", NullableType = $"System.Nullable`1<System.Int64>", RenderedBackingFieldType = "System.Int64", SimplifiedNullableType = "System.Nullable`1" },
+				new { BackingFieldType = "UInt32", NullableType = $"System.Nullable`1<System.UInt32>", RenderedBackingFieldType = "System.UInt32", SimplifiedNullableType = "System.Nullable`1" },
+				new { BackingFieldType = "UInt64", NullableType = $"System.Nullable`1<System.UInt64>", RenderedBackingFieldType = "System.UInt64", SimplifiedNullableType = "System.Nullable`1" },
 			};
 
 			foreach (var tc in testCases) {
