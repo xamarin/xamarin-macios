@@ -126,6 +126,8 @@ namespace CoreSpotlight {
 	/// <summary>Completion handler used in <see cref="M:CoreSpotlight.CSSearchableIndex_CSOptionalBatchingExtension.FetchLastClientState(CoreSpotlight.CSSearchableIndex,CoreSpotlight.CSSearchableIndexFetchHandler)" />.</summary>
 	delegate void CSSearchableIndexFetchHandler (NSData clientState, NSError error);
 
+	delegate void CSSearchableIndexEndIndexHandler ([NullAllowed] NSError error);
+
 	/// <summary>Extension methods for <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=T:CoreServices.CSSearchableIndex&amp;scope=Xamarin" title="T:CoreServices.CSSearchableIndex">T:CoreServices.CSSearchableIndex</a></format>.</summary>
 	[NoTV] // CS_TVOS_UNAVAILABLE
 	[MacCatalyst (13, 1)]
@@ -141,6 +143,10 @@ namespace CoreSpotlight {
 
 		[Export ("fetchLastClientStateWithCompletionHandler:")]
 		void FetchLastClientState (CSSearchableIndexFetchHandler completionHandler);
+
+		[NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("endIndexBatchWithExpectedClientState:newClientState:completionHandler:")]
+		void EndIndexBatch ([NullAllowed] NSData expectedClientState, NSData newClientState, [NullAllowed] CSSearchableIndexEndIndexHandler completionHandler);
 	}
 
 	/// <summary>Interface representing the required methods (if any) of the protocol <see cref="T:CoreSpotlight.CSSearchableIndexDelegate" />.</summary>
@@ -229,6 +235,10 @@ namespace CoreSpotlight {
 		[NoTV, iOS (16, 0), MacCatalyst (16, 0), Mac (13, 0), NoWatch]
 		[Export ("compareByRank:")]
 		NSComparisonResult CompareByRank (CSSearchableItem other);
+
+		[NoTV, NoWatch]
+		[Export ("isUpdate", ArgumentSemantic.Assign)]
+		bool IsUpdate { get; set; }
 	}
 
 	/// <summary>Represents a string-like object that returns a locale-specific version of a string.</summary>
@@ -1133,6 +1143,9 @@ namespace CoreSpotlight {
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface CSSearchQuery {
+		[Deprecated (PlatformName.iOS, 16, 0, message: "Use the constructor that takes a 'CSSearchQueryContext' parameter instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use the constructor that takes a 'CSSearchQueryContext' parameter instead.")]
+		[Deprecated (PlatformName.MacOSX, 13, 0, message: "Use the constructor that takes a 'CSSearchQueryContext' parameter instead.")]
 		[Export ("initWithQueryString:attributes:")]
 		NativeHandle Constructor (string queryString, [NullAllowed] string [] attributes);
 
@@ -1190,6 +1203,29 @@ namespace CoreSpotlight {
 
 		[Export ("cancel")]
 		void Cancel ();
+
+		[Static]
+		[Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("prepare")]
+		void Prepare ();
+
+		[Static]
+		[Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("prepareProtectionClasses:")]
+		void Prepare (NSString [] protectionClasses);
+
+		[Static]
+		[Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Wrap ("Prepare (protectionClasses.ToConstantArray ()!)")]
+		void Prepare (NSFileProtectionType [] protectionClasses);
+
+		[Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("userEngagedWithItem:visibleItems:userInteractionType:")]
+		void UserEngaged (CSSearchableItem item, CSSearchableItem [] visibleItems, CSUserInteraction userInteractionType);
+
+		[Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("userEngagedWithSuggestion:visibleSuggestions:userInteractionType:")]
+		void UserEngaged (CSSuggestion suggestion, CSSuggestion [] visibleSuggestions, CSUserInteraction userInteractionType);
 	}
 
 	[NoTV, Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
@@ -1212,6 +1248,14 @@ namespace CoreSpotlight {
 
 		[Export ("maxResultCount")]
 		nint MaxResultCount { get; set; }
+
+		[Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("disableSemanticSearch")]
+		bool DisableSemanticSearch { get; set; }
+
+		[Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("maxRankedResultCount")]
+		nint MaxRankedResultCount { get; set; }
 	}
 
 
