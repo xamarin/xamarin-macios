@@ -297,6 +297,70 @@ class BuildConfiguration {
         }
     }
 
+    static [string[]] $labelsOfInterest = $(
+        "build-package",
+        "skip-packages",
+        "skip-nugets",
+        "skip-signing",
+        "run-sample-tests",
+        "skip-packaged-macos-tests",
+        "run-packaged-macos-tests",
+        "skip-api-comparison",
+        "run-windows-tests",
+        "skip-windows-tests",
+        "skip-all-tests"
+    )
+
+    [void] SetLabelsFromPR ([PSCustomObject] $prInfo, [bool]$isPR) {
+        if ($prInfo) {
+            Write-Deubg "Setting VSTS labels from $($prInfo.labels)"
+            foreach ($l in [BuildConfiguration]::labelsOfInterest) {
+                $labelPresent = 1 -eq ($prInfo.labels | Where-Object { $_.name -eq "$l"}).Count
+                # We need to replace dashes with underscores, because bash can't access an environment variable with a dash in the name.
+                $lbl = $l.Replace('-', '_')
+                Write-Host "##vso[task.setvariable variable=$lbl;isOutput=true]$labelPresent"
+            }
+        } else {
+            Write-Debug "Not setting PR labels because there was not info provided."
+        }
+
+        # set if the build is a PR or not
+        if ($isPR) {
+          Write-Host "##vso[task.setvariable variable=prBuild;isOutput=true]True"
+        } else {
+          Write-Host "##vso[task.setvariable variable=prBuild;isOutput=true]False"
+        }
+    }
+
+    <#
+        .SYNOPSIS
+            Retrieve the change id and export it as an enviroment variable.
+    #>
+    [string] ExportChangeId ([object] $configuration) {
+        # This is an interesting step, we do know we are dealing with a PR, but we need the PR id to
+        # be able to get the labels, the buildSourceBranch follows the pattern: refs/pull/{ChangeId}/merge
+        # we could use a regexp but then we would have two problems instead of one
+        $changeId = $null
+        if ($configuration.PARENT_BUILD_BUILD_SOURCEBRANCH) {
+            # use the source branch information from the configuration object
+            $changeId = $configuration.PARENT_BUILD_BUILD_SOURCEBRANCH.Replace("refs/pull/", "").Replace("/merge", "")
+        } else {
+            Write-Debug "Retrieving change id from the environment since it could not be found in the config."
+            # retrieve the change ide form the BUILD_SOURCEBRANCH enviroment variable. 
+            $changeId = "$Env:BUILD_SOURCEBRANCH".Replace("refs/pull/", "").Replace("/merge", "")
+        }
+
+        # we can always fail (regexp error or not env varaible)
+        if ($changeId) {
+            # add a var with the change id, which can be later consumed by some of the old scripts from
+            # jenkins
+            Write-Host "##vso[task.setvariable variable=pr_number;isOutput=true]$changeId"
+        } else {
+            Write-Debug "Not setting the change id because it could not be calculated."
+        }
+        return $changeId
+    }
+
     [PSCustomObject] Import([string] $configFile) {
         if (-not (Test-Path -Path $configFile -PathType Leaf)) {
           throw [System.InvalidOperationException]::new("Configuration file $configFile is missing")
@@ -433,15 +497,9 @@ class BuildConfiguration {
 
         if ($configuration.BuildReason -eq "PullRequest" -or (($configuration.BuildReason -eq "Manual") -and ($configuration.PARENT_BUILD_BUILD_SOURCEBRANCH -eq "merge")) ) {
           Write-Host "Configuring build from PR."
-          # This is an interesting step, we do know we are dealing with a PR, but we need the PR id to
-          # be able to get the labels, the buildSourceBranch follows the pattern: refs/pull/{ChangeId}/merge
-          # we could use a regexp but then we would have two problems instead of one
-          $changeId = $configuration.PARENT_BUILD_BUILD_SOURCEBRANCH.Replace("refs/pull/", "").Replace("/merge", "")
 
-          # add a var with the change id, which can be later consumed by some of the old scripts from
-          # jenkins
-          Write-Host "##vso[task.setvariable variable=pr_number;isOutput=true]$changeId"
-
+          # retrieve the PR data to be able to fwd the labels from github
+          $changeId = $this.ExportChangeId($configuration)
           $prInfo = Get-GitHubPRInfo -ChangeId $changeId
           Write-Host $prInfo
 
@@ -459,29 +517,11 @@ class BuildConfiguration {
           $tags.Add("$ref")
 
           # set output variables based on the git labels
-          $labelsOfInterest = @(
-            "build-package",
-            "skip-packages",
-            "skip-nugets",
-            "skip-signing",
-            "run-sample-tests",
-            "skip-packaged-macos-tests",
-            "run-packaged-macos-tests",
-            "skip-api-comparison",
-            "run-windows-tests",
-            "skip-windows-tests",
-            "skip-all-tests"
-          )
+          $this.SetLabelsFromPR($prInfo, $true)
 
-          foreach ($l in $labelsOfInterest) {
-            $labelPresent = 1 -eq ($prInfo.labels | Where-Object { $_.name -eq "$l"}).Count
-            # We need to replace dashes with underscores, because bash can't access an environment variable with a dash in the name.
-            $lbl = $l.Replace('-', '_')
-            Write-Host "##vso[task.setvariable variable=$lbl;isOutput=true]$labelPresent"
-          }
-
-          Write-Host "##vso[task.setvariable variable=prBuild;isOutput=true]True"
         } else {
+          # thee are not labels to add in a CI build and we will set the build as a ci build.
+          $this.SetLabelsFromPR($null, $false)
           if ($tags.Contains("cronjob")) {
             # debug so that we do know why we do not have ciBuild
             Write-Debug "Skipping the tag 'ciBuild' because we are dealing with a translation build."
