@@ -72,9 +72,14 @@ namespace Xamarin.Tests {
 			ApiDefinitions.Add (Path.Combine (Configuration.SourceRoot, "tests", "generator", filename));
 		}
 
-		public void AddExtraSources (string filename)
+		public void AddExtraSourcesRelativeToGeneratorDirectory (string pathRelativeToGeneratorDirectory)
 		{
-			ExtraSources.Add (Path.Combine (Configuration.SourceRoot, "tests", "generator", filename));
+			ExtraSources.Add (GetFullPathRelativeToGeneratorDirectory (pathRelativeToGeneratorDirectory));
+		}
+
+		public string GetFullPathRelativeToGeneratorDirectory (string pathRelativeToGeneratorDirectory)
+		{
+			return Path.Combine (Configuration.SourceRoot, "tests", "generator", pathRelativeToGeneratorDirectory);
 		}
 
 		public AssemblyDefinition ApiAssembly {
