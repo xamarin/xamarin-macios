@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
 using System.Text;
 
 using NUnit.Framework;
@@ -14,7 +15,59 @@ using Xamarin.Tests;
 
 namespace Cecil.Tests {
 	[TestFixture]
-	public class ApiAvailabilityTest {
+	public partial class ApiAvailabilityTest {
+		[Test]
+		public void Warnings ()
+		{
+			Configuration.IgnoreIfAnyIgnoredPlatforms ();
+			// Make this test opt-in, it's quite slow.
+			if (string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("RUN_AVAILABILITY_WARNING_TEST")))
+				Assert.Ignore ("The 'RUN_AVAILABILITY_WARNING_TEST' environment variable isn't set.");
+
+			var args = new string [] {
+				"-C", Path.Combine (Configuration.RootPath, "src"),
+				"analyze"
+			};
+			var rv = ExecutionHelper.Execute ("make", args, TimeSpan.FromMinutes (10));
+			Assert.AreEqual (0, rv, "'make analyze' exit code");
+
+			var platforms = Configuration.GetAllPlatforms ().Select (v => v.AsString ());
+			var binlogs = new List<string> ();
+			foreach (var platform in platforms) {
+				binlogs.Add (Path.Combine (Configuration.RootPath, "src", "build", "dotnet", platform.ToLower (), "csproj", "api", $"ApiDefinition.{platform}.csproj-analyze.binlog"));
+				binlogs.Add (Path.Combine (Configuration.RootPath, "src", "build", "dotnet", platform.ToLower (), "csproj", "core", $"Core.{platform}.csproj-analyze.binlog"));
+				binlogs.Add (Path.Combine (Configuration.RootPath, "src", "build", "dotnet", platform.ToLower (), "csproj", "platform", $"Microsoft.{platform}.csproj-analyze.binlog"));
+			}
+
+			foreach (var binlog in binlogs)
+				Assert.That (binlog, Does.Exist, "binlog existence");
+
+			var groupedWarnings = new Dictionary<string, (int Count, string File, string Message)> ();
+			int totalWarnings = 0;
+			foreach (var binlog in binlogs) {
+				var warnings = BinLog.GetBuildLogWarnings (binlog).ToArray ();
+				Console.WriteLine ($"Found {warnings.Length} warnings in {binlog}");
+				foreach (var w in warnings) {
+					var msg = w.Message?.Replace ("only ", ""); // the analyzer flip-flops a bit between two message... 🤷 so unify them.
+					var file = w.File?.Replace (Configuration.RootPath, "")!;
+					var key = $"{file} : {msg}";
+					groupedWarnings.TryGetValue (key, out var value);
+					value.Count++;
+					value.File = file;
+					value.Message = msg!;
+					groupedWarnings [key] = value;
+				}
+				totalWarnings += warnings.Length;
+			}
+
+			var failures = new HashSet<string> ();
+			foreach (var kvp in groupedWarnings)
+				failures.Add ($"{kvp.Value.File} has {kvp.Value.Count} occurrences of {kvp.Value.Message}");
+
+			Helper.AssertFailures (failures, knownFailuresAvailabilityWarnings, nameof (knownFailuresAvailabilityWarnings), "Availability warnings.");
+
+			Console.WriteLine ($"There's a total of {totalWarnings} warnings.");
+		}
 
 		public record ObsoletedFailure : IComparable {
 
