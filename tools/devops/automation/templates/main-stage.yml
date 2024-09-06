@@ -143,13 +143,6 @@ parameters:
         testPrefix: 'simulator_tests',
       },
       {
-        label: install-source,
-        splitByPlatforms: false,
-        containsDotNetTests: false,
-        containsLegacyTests: true,
-        testPrefix: 'simulator_tests',
-      },
-      {
         label: introspection,
         splitByPlatforms: false,
         containsDotNetTests: true,
