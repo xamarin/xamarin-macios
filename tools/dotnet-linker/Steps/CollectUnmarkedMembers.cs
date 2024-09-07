@@ -26,6 +26,12 @@ namespace Xamarin.Linker {
 			if (!Annotations.IsMarked (type))
 				LinkContext.AddLinkedAwayType (type);
 
+			if (type.IsInterface &&
+				Configuration.DerivedLinkContext.App.Optimizations.RegisterProtocols == true &&
+				type.HasCustomAttribute (LinkContext, Namespaces.Foundation, "ProtocolAttribute")) {
+				Configuration.DerivedLinkContext.StoreProtocolMethods (type);
+			}
+
 			if (type.HasInterfaces) {
 				foreach (var iface in type.Interfaces) {
 					if (Annotations.IsMarked (iface))
