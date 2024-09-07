@@ -1669,6 +1669,10 @@ namespace GeneratorTests {
 				new { BackingFieldType = "NSNumber", NullableType = "Foundation.NSNumber", RenderedBackingFieldType = "Foundation.NSNumber", SimplifiedNullableType = "Foundation.NSNumber" },
 				new { BackingFieldType = "NSInteger", NullableType = $"System.Nullable`1<{nintName}>", RenderedBackingFieldType = nintName, SimplifiedNullableType = "System.Nullable`1" },
 				new { BackingFieldType = "NSUInteger", NullableType = $"System.Nullable`1<{nuintName}>", RenderedBackingFieldType = nuintName, SimplifiedNullableType = "System.Nullable`1" },
+				new { BackingFieldType = "Int32", NullableType = $"System.Nullable`1<System.Int32>", RenderedBackingFieldType = "System.Int32", SimplifiedNullableType = "System.Nullable`1" },
+				new { BackingFieldType = "Int64", NullableType = $"System.Nullable`1<System.Int64>", RenderedBackingFieldType = "System.Int64", SimplifiedNullableType = "System.Nullable`1" },
+				new { BackingFieldType = "UInt32", NullableType = $"System.Nullable`1<System.UInt32>", RenderedBackingFieldType = "System.UInt32", SimplifiedNullableType = "System.Nullable`1" },
+				new { BackingFieldType = "UInt64", NullableType = $"System.Nullable`1<System.UInt64>", RenderedBackingFieldType = "System.UInt64", SimplifiedNullableType = "System.Nullable`1" },
 			};
 
 			foreach (var tc in testCases) {
@@ -1718,6 +1722,21 @@ namespace GeneratorTests {
 
 			var delegateCallback = bgen.ApiAssembly.MainModule.GetType ("NS", "MyCallback").Methods.First ((v) => v.Name == "EndInvoke");
 			Assert.That (delegateCallback.MethodReturnType.CustomAttributes.Any (v => v.AttributeType.Name == "NullableAttribute"), "Nullable return type");
+		}
+
+		[Test]
+		[TestCase (Profile.iOS)]
+		public void DelegatesWithPointerTypes (Profile profile)
+		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
+			var bgen = BuildFile (profile, "tests/delegate-types.cs");
+			bgen.AssertNoWarnings ();
+
+			var delegateCallback = bgen.ApiAssembly.MainModule.GetType ("NS", "MyCallback").Methods.First ((v) => v.Name == "EndInvoke");
+			Assert.IsTrue (delegateCallback.MethodReturnType.ReturnType.IsPointer, "Pointer return type");
+			foreach (var p in delegateCallback.Parameters.Where (v => v.Name != "result")) {
+				Assert.IsTrue (p.ParameterType.IsPointer, $"Pointer parameter type: {p.Name}");
+			}
 		}
 	}
 }

@@ -1327,6 +1327,13 @@
 		</value>
 	</data>
 
+	<data name="MX2112_A" xml:space="preserve">
+		<value>Could not optimize the static constructor in the interface {0} because it did not have the expected instruction sequence (found end of method too soon).</value>
+	</data>
+
+	<data name="MX2112_B" xml:space="preserve">
+		<value>Could not optimize the static constructor in the interface {0} because it had an unexpected instruction {1} at offset {2}.</value>
+	</data>
 	<!-- 2200 -> 2299 is used by/reserved for ExceptionalSubStep subclasses in the linker -->
 	<!-- 220x: PreserveSmartEnumConversionsSubStep -->
 	<!-- 221x: RemoveBitcodeIncompatibleCodeStep -->
