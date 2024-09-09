@@ -733,6 +733,11 @@ public partial class Generator : IMemberGatherer {
 					invoke.AppendFormat ("CFArray.ArrayFromHandle<{0}> ({1})!", TypeManager.FormatType (null, et), safe_name);
 					continue;
 				}
+				if (TypeCache.INativeObject.IsAssignableFrom (et)) {
+					pars.Add (new TrampolineParameterInfo (NativeHandleType, safe_name));
+					invoke.AppendFormat ("NSArray.ArrayFromHandle<{0}> ({1})!", TypeManager.FormatType (t, et), safe_name);
+					continue;
+				}
 			}
 
 			if (pi.ParameterType.IsPointer && pi.ParameterType.GetElementType ().IsValueType) {
@@ -910,6 +915,9 @@ public partial class Generator : IMemberGatherer {
 				return string.Format ("{0}.GetHandle ()", safe_name);
 			return safe_name + ".Handle";
 		}
+
+		if (TypeCache.INativeObject.IsAssignableFrom (pi.ParameterType))
+			return $"{safe_name}.GetHandle ()";
 
 		// This means you need to add a new MarshalType in the method "Go"
 		throw new BindingException (1002, true, pi.ParameterType.FullName, mi.DeclaringType.FullName, mi.Name.GetSafeParamName ());

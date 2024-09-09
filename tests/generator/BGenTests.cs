@@ -540,6 +540,13 @@ namespace GeneratorTests {
 		}
 
 		[Test]
+		[TestCase (Profile.iOS)]
+		public void TypesInMultipleNamespaces (Profile profile)
+		{
+			BuildFile (profile, "tests/types-in-multiple-namespaces.cs");
+		}
+
+		[Test]
 		public void HyphenInName ()
 		{
 			BuildFile (Profile.iOS, "btouch-with-hyphen-in-name.cs");
@@ -609,6 +616,14 @@ namespace GeneratorTests {
 		public void MultipleApiDefinitions2 ()
 		{
 			BuildFile (Profile.iOS, "multiple-api-definitions2-a.cs", "multiple-api-definitions2-b.cs");
+		}
+
+
+		[Test]
+		[TestCase (Profile.iOS)]
+		public void INativeObjectArraysInBlocks (Profile profile)
+		{
+			BuildFile (profile, "tests/inativeobject-arrays-in-blocks.cs");
 		}
 
 		[Test]
@@ -1714,15 +1729,7 @@ namespace GeneratorTests {
 		public void UnderlyingFieldType (Profile profile)
 		{
 			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
-			var bgen = BuildFile (profile, true, true, "tests/underlyingfieldtype.cs");
-
-#if NET
-			const string nintName = "System.IntPtr";
-			const string nuintName = "System.UIntPtr";
-#else
-			const string nintName = "System.nint";
-			const string nuintName = "System.nuint";
-#endif
+			BuildFile (profile, true, true, "tests/underlyingfieldtype.cs");
 		}
 
 		[Test]
