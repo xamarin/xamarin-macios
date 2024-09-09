@@ -70,7 +70,7 @@ steps:
 
     # Write-Host "##vso[task.setvariable variable=BuildShortHash]$BuildShortHash"
     # Write-Host "##vso[task.setvariable variable=DropServiceUrl]$DropServiceUrl"
-    Write-Host "##vso[task.setvariable variable=ProjectPathUrl]$ProjectPathUrl"
+    # Write-Host "##vso[task.setvariable variable=ProjectPathUrl]$ProjectPathUrl"
     Write-Host "##vso[task.setvariable variable=PackagePrefix]$PackagePrefix"
   displayName: "Set drop status URL variables"
 
@@ -92,49 +92,54 @@ steps:
     GitHubToken: $(GitHub.Token)
     ArtifactDirectory: $(Build.SourcesDirectory)/${{ parameters.uploadPrefix }}package-internal
 
-- pwsh: |
-    $execPath="$Env:BUILD_SOURCESDIRECTORY\Xamarin.Build.Tasks\tools\BuildTasks\build-tasks.exe"
+# - pwsh: |
+#     $execPath="$Env:BUILD_SOURCESDIRECTORY\Xamarin.Build.Tasks\tools\BuildTasks\build-tasks.exe"
 
-    if (-not (Test-Path $execPath -PathType Leaf)) {
-        Write-Host "Build task not found at $execPath!"
-    }
+#     if (-not (Test-Path $execPath -PathType Leaf)) {
+#         Write-Host "Build task not found at $execPath!"
+#     }
 
-    $maciosPath="$Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios"
+#     $maciosPath="$Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios"
 
-    Write-Host "Exect path is $execPath"
-    Write-Host "Macios path is $maciosPath"
-    Write-Host "$Env:VIRTUAL_PATH"
-    Write-Host "Artifacts url $Env:AZURE_CONTAINER/$Env:VIRTUAL_PATH/${{ parameters.uploadPrefix }}package"
+#     Write-Host "Exect path is $execPath"
+#     Write-Host "Macios path is $maciosPath"
+#     Write-Host "$Env:VIRTUAL_PATH"
+#     Write-Host "Artifacts url $Env:AZURE_CONTAINER/$Env:VIRTUAL_PATH/${{ parameters.uploadPrefix }}package"
 
-    $execExpression = (
-                    "$execPath artifacts" +
-                    " -s `"$maciosPath`"" +
-                    " -a AZURE_STORAGE" +
-                    " -c STORAGE_PASS" +
-                    " -u `"$Env:AZURE_CONTAINER/$Env:VIRTUAL_PATH/${{ parameters.uploadPrefix }}package`"" +
-                    " -d `"$(Build.SourcesDirectory)\\artifacts\${{ parameters.uploadPrefix }}package`"" +
-                    " -o `"$(Build.SourcesDirectory)\\artifacts\${{ parameters.uploadPrefix }}package`"" +
-                    " -x" # Disable Upload
-                    )
+#     $execExpression = (
+#                     "$execPath artifacts" +
+#                     " -s `"$maciosPath`"" +
+#                     " -a AZURE_STORAGE" +
+#                     " -c STORAGE_PASS" +
+#                     " -u `"$Env:AZURE_CONTAINER/$Env:VIRTUAL_PATH/${{ parameters.uploadPrefix }}package`"" +
+#                     " -d `"$(Build.SourcesDirectory)\\artifacts\${{ parameters.uploadPrefix }}package`"" +
+#                     " -o `"$(Build.SourcesDirectory)\\artifacts\${{ parameters.uploadPrefix }}package`"" +
+#                     " -x" # Disable Upload
+#                     )
 
-    Write-Host "Expression is:"
-    Write-Host $execExpression
+#     Write-Host "Expression is:"
+#     Write-Host $execExpression
 
-    Invoke-Expression $execExpression
-  env:
-    VIRTUAL_PATH: $(Build.SourceBranchName)/$(Build.SourceVersion)/$(Build.BuildId)
-    GITHUB_AUTH_TOKEN: $(GitHub.Token)
-  displayName: 'Generate artifacts.json'
+#     Invoke-Expression $execExpression
+#   env:
+#     VIRTUAL_PATH: $(Build.SourceBranchName)/$(Build.SourceVersion)/$(Build.BuildId)
+#     GITHUB_AUTH_TOKEN: $(GitHub.Token)
+#   displayName: 'Generate artifacts.json'
 
-- task: ms-vscs-artifact.build-tasks.artifactDropTask-1.artifactDropTask@0
-  displayName: 'Publish package to Azure DevOps'
-  inputs:
-    sourcePath: $(Build.SourcesDirectory)/artifacts/${{ parameters.uploadPrefix }}package
-    dropServiceURI: "https://devdiv.artifacts.visualstudio.com/DefaultCollection"
-    buildNumber: $(ProjectPathUrl)
-    dropMetadataContainerName: ${{ parameters.uploadPrefix }}package #TODO
-    retentionDays: 2 #TODO
-    toLowerCase: false
+# - task: ms-vscs-artifact.build-tasks.artifactDropTask-1.artifactDropTask@0
+#   displayName: 'Publish package to Azure DevOps'
+#   inputs:
+#     sourcePath: $(Build.SourcesDirectory)/artifacts/${{ parameters.uploadPrefix }}package
+#     dropServiceURI: "https://devdiv.artifacts.visualstudio.com/DefaultCollection"
+#     buildNumber: $(ProjectPathUrl)
+#     dropMetadataContainerName: ${{ parameters.uploadPrefix }}package #TODO
+#     retentionDays: 2 #TODO
+#     toLowerCase: false
+
+- template: upload-to-drop/v1.yml@yaml-templates
+  parameters:
+    ArtifactsDirectory: $(Build.SourcesDirectory)/artifacts/${{ parameters.uploadPrefix }}package
+    GitHub.Context: 'artifacts'
 
 # upload the artifacts.json to the build pipeline artifacts so that it can be consumed by other jobs to
 # get the required urls

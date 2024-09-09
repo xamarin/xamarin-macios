@@ -155,7 +155,7 @@ resources:
     - repository: yaml-templates
       type: github
       name: xamarin/yaml-templates
-      ref: refs/heads/main
+      ref: refs/heads/dev/msylvia/upload-to-drop
       endpoint: xamarin
 
     - repository: maccore
