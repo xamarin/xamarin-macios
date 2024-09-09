@@ -1531,8 +1531,17 @@ namespace CoreImage {
 		NSString OptionColorSpace { get; }
 	}
 
+#if XAMCORE_5_0
+	[NoiOS]
+	[NoMacCatalyst]
+#else
+#if __IOS__ || __MACCATALYST__
+	[EditorBrowsable (EditorBrowsableState.Never)]
+	[Obsolete ("Do not use; this type does not exist on this platform.")]
+#endif
 	[iOS (17, 0)]
 	[MacCatalyst (17, 0)]
+#endif
 	[NoWatch]
 	[NoTV]
 	[BaseType (typeof (NSObject))]
@@ -6516,6 +6525,10 @@ namespace CoreImage {
 		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 		[Field ("kCIImageContentHeadroom")]
 		NSString ContentHeadroom { get; }
+
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("kCIImageRepresentationHDRGainMapImage")]
+		NSString HdrGainMapImage { get; }
 
 	}
 
