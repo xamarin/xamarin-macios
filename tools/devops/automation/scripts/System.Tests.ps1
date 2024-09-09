@@ -59,7 +59,6 @@ Describe 'Clear-XamarinProcesses' {
 
             Assert-MockCalled -CommandName Start-Process -ParameterFilter { $FilePath -eq "pkill" -and $ArgumentList -eq "-9 mlaunch"} -Times 1 -Exactly
             Assert-MockCalled -CommandName Start-Process -ParameterFilter { $FilePath -eq "pkill" -and $ArgumentList -eq "-9 -f mono.*xharness.exe"} -Times 1 -Exactly
-            Assert-MockCalled -CommandName Start-Process -ParameterFilter { $FilePath -eq "pkill" -and $ArgumentList -eq "-9 -f ssh.*rsync.*xamarin-storage"} -Times 1 -Exactly
         }
     }
 }

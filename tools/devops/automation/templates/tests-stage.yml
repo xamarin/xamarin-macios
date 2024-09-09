@@ -296,7 +296,7 @@ stages:
       BRANCH_NAME: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', '') ]
 
     steps:
-    - template: common/configure.yml
+    - template: common/load_configuration.yml
       parameters: 
         repositoryAlias: ${{ parameters.repositoryAlias }}
         commit: ${{ parameters.commit }}
@@ -319,7 +319,6 @@ stages:
     stageName: 'simulator_tests'
     displayName: '${{ parameters.stageDisplayNamePrefix }}Simulator tests'
     testPool: '' # use the default
-    useXamarinStorage: false
     statusContext: 'VSTS: simulator tests'
     makeTarget: 'jenkins'
     vsdropsPrefix: ${{ variables.vsdropsPrefix }}

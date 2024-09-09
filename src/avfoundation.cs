@@ -221,7 +221,7 @@ namespace AVFoundation {
 	}
 
 #if !NET
-	[Obsolete ("Use AVMediaTypes enum values")]
+	[Obsolete ("Use AVMediaTypes enum values.")]
 	[NoWatch]
 	[BaseType (typeof (NSObject))]
 	[Static]
@@ -420,7 +420,7 @@ namespace AVFoundation {
 
 #if !NET
 	[NoWatch]
-	[Obsolete ("Use AVMediaCharacteristics enum values")]
+	[Obsolete ("Use AVMediaCharacteristics enum values.")]
 	[BaseType (typeof (NSObject))]
 	[Static]
 	interface AVMediaCharacteristic {
@@ -598,7 +598,7 @@ namespace AVFoundation {
 	[NoWatch]
 	[BaseType (typeof (NSObject))]
 	[Static]
-	[Obsolete ("Use AVFileTypes enum values")]
+	[Obsolete ("Use AVFileTypes enum values.")]
 	interface AVFileType {
 		[Field ("AVFileTypeQuickTimeMovie")]
 		NSString QuickTimeMovie { get; }
@@ -5365,7 +5365,7 @@ namespace AVFoundation {
 
 
 		[Export ("currentSampleAudioDependencyInfo")]
-#if XAMCORE_5_0 || IOS || TVOS
+#if XAMCORE_5_0 || (IOS && !__MACCATALYST__) || TVOS
 		AVSampleCursorAudioDependencyInfo CurrentSampleAudioDependencyInfo { get; }
 #else
 		[Internal]
@@ -14055,6 +14055,10 @@ namespace AVFoundation {
 
 		[Export ("errorComment"), NullAllowed]
 		string ErrorComment { get; }
+
+		[Watch (10, 5), TV (17, 5), Mac (14, 5), iOS (17, 5), MacCatalyst (17, 5)]
+		[NullAllowed, Export ("allHTTPResponseHeaderFields")]
+		NSDictionary<NSString, NSString> AllHttpResponseHeaderFields { get; }
 	}
 
 	interface IAVPlayerItemMetadataCollectorPushDelegate { }

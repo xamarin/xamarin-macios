@@ -77,6 +77,10 @@ steps:
   condition: ${{ parameters.condition }}
   timeoutInMinutes: 180
 
+- bash: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/scripts/disable-codeql-arm64.sh
+  displayName: 'Disable CodeQL'
+  name: disableCodeQLOnArm64
+
 - ${{ if and(eq(parameters.skipESRP, false), eq(parameters.isPR, false)) }}:
   - bash: |
       set -exo pipefail
@@ -108,11 +112,11 @@ steps:
     condition: ${{ and(eq(parameters.condition, true), eq(variables['System.debug'], 'true')) }}
 
   # Upload the esrp temp dir
-  - task: PublishPipelineArtifact@1
+  - task: 1ES.PublishPipelineArtifact@1
     displayName: 'Publish Artifact: ESRP temp'
     inputs:
-      targetPath: '$(Build.ArtifactStagingDirectory)/esrp.zip'
-      artifactName: '${{ parameters.uploadPrefix }}ESRP-tmp-${{ parameters.packageName }}'
+      path: '$(Build.ArtifactStagingDirectory)/esrp.zip'
+      artifact: '${{ parameters.uploadPrefix }}ESRP-tmp-${{ parameters.packageName }}'
     continueOnError: true
     condition: ${{ and(eq(parameters.condition, true), eq(variables['System.debug'], 'true')) }}
 
@@ -124,9 +128,9 @@ steps:
     condition: ${{ parameters.condition }}
 
 # always upload no matter what, since if we are not signing we need the artifact in the pipeline
-- task: PublishPipelineArtifact@1
+- task: 1ES.PublishPipelineArtifact@1
   displayName: 'Publish Notarized Classic Artifacts'
   inputs:
-    targetPath: $(Build.SourcesDirectory)/package
-    artifactName: '${{ parameters.uploadPrefix }}classic-${{ parameters.packageName }}-signed'
+    path: $(Build.SourcesDirectory)/package
+    artifact: '${{ parameters.uploadPrefix }}classic-${{ parameters.packageName }}-signed'
   continueOnError: true

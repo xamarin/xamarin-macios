@@ -233,5 +233,16 @@ namespace MonoTouchFixtures.Foundation {
 				Assert.AreEqual (C, lst.Count, "iterator count");
 			}
 		}
+
+		[Test]
+		public void IEnumerable1Test_EnumeratorType ()
+		{
+			var myEnumerable = new NSMutableArray<NSNumber> ();
+			foreach (var item in myEnumerable) {
+				// The point of this test is to verify that the compiler finds the correct enumerator (the one returning NSNumbers, and not the one from the non-generic NSSet class returning NSObjects).
+				// This means that we don't have to actually execute this code, it's enough to make it compile.
+				Console.WriteLine (item.LongValue);
+			}
+		}
 	}
 }

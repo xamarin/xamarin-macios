@@ -260,6 +260,17 @@ namespace MonoTouchFixtures.Foundation {
 		}
 
 		[Test]
+		public void IEnumerable1Test_EnumeratorType ()
+		{
+			var myEnumerable = new NSMutableOrderedSet<NSNumber> ();
+			foreach (var item in myEnumerable) {
+				// The point of this test is to verify that the compiler finds the correct enumerator (the one returning NSNumbers, and not the one from the non-generic NSSet class returning NSObjects).
+				// This means that we don't have to actually execute this code, it's enough to make it compile.
+				Console.WriteLine (item.LongValue);
+			}
+		}
+
+		[Test]
 		public void IEnumerableTest ()
 		{
 			const int C = 16 * 2 + 3; // NSFastEnumerator has a array of size 16, use more than that, and not an exact multiple.

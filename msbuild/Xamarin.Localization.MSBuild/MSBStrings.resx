@@ -479,14 +479,12 @@
         </value>
     </data>
     
-    <data name="W0108" xml:space="preserve">
-        <value>Cannot expand $(TeamIdentifierPrefix) in Entitlements.plist without a provisioning profile.
-        </value>
+    <data name="W0108b" xml:space="preserve">
+        <value>Cannot expand $(TeamIdentifierPrefix) in Entitlements.plist without a provisioning profile for key '{0}' with value '{1}'.</value>
     </data>
     
-    <data name="W0109" xml:space="preserve">
-        <value>Cannot expand $(AppIdentifierPrefix) in Entitlements.plist without a provisioning profile.
-        </value>
+    <data name="W0109b" xml:space="preserve">
+        <value>Cannot expand $(AppIdentifierPrefix) in Entitlements.plist without a provisioning profile for key '{0}' with value '{1}'.</value>
     </data>
         
     <data name="W0110" xml:space="preserve">
@@ -1572,4 +1570,10 @@
         <value>The app bundle '{0}' contains a subdirectory named 'Resources'. This is not allowed on this platform. Typically resource files should be in the root directory of the app bundle (or a custom subdirectory, but named anything other than 'Resources').</value>
         <comment>0: a path</comment>
     </data>
+
+    <data name="E7124" xml:space="preserve">
+        <value>Can't compute the architecture for the archive for the RuntimeIdentifier '{0}' (unknown value)</value>
+        <comment>RuntimeIdentifier: don't translate (it's the name of a MSBuild property)</comment>
+    </data>
+
 </root>

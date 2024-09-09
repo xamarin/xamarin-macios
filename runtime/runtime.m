@@ -10,6 +10,7 @@
 #include <objc/runtime.h>
 #include <sys/stat.h>
 #include <dlfcn.h>
+#include <mach/mach.h>
 
 #include "product.h"
 #include "shared.h"
@@ -2664,7 +2665,7 @@ xamarin_is_native_library (const char *libraryName)
 	if (xamarin_runtime_libraries == NULL)
 		return false;
 
-	size_t libraryNameLength = strlen (libraryName);
+	size_t libraryNameLength = strnlen (libraryName, 255 /* max length of file name across all relevant file systems currently in use */);
 	// The libraries in xamarin_runtime_libraries are extension-less, so we need to
 	// remove any .dylib extension for the library name we're comparing with too.
 	if (libraryNameLength > 6 && strcmp (libraryName + libraryNameLength - 6, ".dylib") == 0)
@@ -3085,6 +3086,15 @@ xamarin_gchandle_unwrap (GCHandle handle)
 	return rv;
 }
 
+// Use custom native method to detect if a type is a user type.
+// This way might produce better diagnostic info when running in lldb.
+bool
+xamarin_is_user_type (Class cls)
+{
+	Method setGCHandle = class_getInstanceMethod (cls, @selector(xamarinSetGCHandle:flags:));
+	return setGCHandle != NULL;
+}
+
 /*
  * Object unregistration:
  *
@@ -3289,6 +3299,61 @@ xamarin_is_managed_exception_marshaling_disabled ()
 #else
 	return false;
 #endif
+}
+
+/* This is a function to validate that a pointer is pointing to an actual object (id). It's used for providing better diagnostics/crashes */
+bool
+xamarin_is_object_valid (id obj, char** error_message)
+{
+	kern_return_t rv;
+
+	vm_size_t vmsize;
+	vm_address_t address = (vm_address_t) obj;
+	vm_region_basic_info_data_t info;
+	mach_msg_type_number_t info_count = VM_REGION_BASIC_INFO_COUNT_64;
+
+	memory_object_name_t object;
+
+	*error_message = NULL;
+
+	// A tagged object is a valid object, even though it's not an actual pointer
+	// Note that tagged pointers only happens on 64-bit.
+#if __LP64__
+#if (TARGET_OS_OSX || TARGET_OS_MACCATALYST) && __x86_64__
+#   define _OBJC_TAG_MASK 1UL
+#else
+#   define _OBJC_TAG_MASK (1UL<<63)
+#endif
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-objc-pointer-introspection"
+	if (((uintptr_t) obj & _OBJC_TAG_MASK) == _OBJC_TAG_MASK)
+		return true;
+#pragma clang diagnostic pop
+#endif
+
+	rv = vm_region_64 (mach_task_self (), &address, &vmsize, VM_REGION_BASIC_INFO, (vm_region_info_t) &info, &info_count, &object);
+	if (rv != KERN_SUCCESS) {
+		*error_message = xamarin_strdup_printf ("vm_region_64 returned kern error %i", (int) rv);
+		return false;
+	}
+
+	if ((info.protection & VM_PROT_READ) != VM_PROT_READ) {
+		*error_message = xamarin_strdup_printf ("vm_region_64 said memory isn't readable (protection: %i)", (int) info.protection);
+		return false;
+	}
+
+	// Read the memory
+	void* readMem = NULL;
+	vm_size_t size = 0;
+	rv = vm_read_overwrite (mach_task_self (), (vm_address_t) obj, sizeof (readMem), (vm_address_t) &readMem, &size);
+
+	if (rv != KERN_SUCCESS)	{
+		*error_message = xamarin_strdup_printf ("vm_read returned kern error %i", rv);
+		return false;
+	}
+
+	return true;
 }
 
 #if DOTNET && (TARGET_OS_IOS || TARGET_OS_TV || TARGET_OS_WATCH)

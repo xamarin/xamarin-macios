@@ -191,7 +191,7 @@ steps:
     -GithubFailureCommentFile "$Env:GITHUB_FAILURE_COMMENT_FILE"
     -StatusContext "${{ parameters.statusContext }}"
   displayName: 'Run tests'
-  timeoutInMinutes: 60
+  timeoutInMinutes: 90
   ${{ if not(parameters.isPR) }}:
     retryCountOnTaskFailure: ${{ parameters.retryCount }}
   env:
@@ -229,6 +229,6 @@ steps:
     SYSTEM_ACCESSTOKEN: $(System.AccessToken)
     TEST_BOT: $(Agent.Name)
     ${{ if eq(parameters.repositoryAlias, 'self') }}:
-      COMMENT_HASH: $(GIT_HASH)
+      COMMENT_HASH: $(fix_commit.GIT_HASH)
     ${{ else }}:
       COMMENT_HASH: $(Build.SourceVersion)

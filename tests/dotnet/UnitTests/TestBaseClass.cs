@@ -11,30 +11,34 @@ using Xamarin.Tests;
 namespace Xamarin.Tests {
 	[TestFixture]
 	public abstract class TestBaseClass {
-		protected Dictionary<string, string> verbosity = new Dictionary<string, string> {
+		protected static Dictionary<string, string> verbosity = new Dictionary<string, string> {
 			{ "_BundlerVerbosity", "1" },
 		};
 
-		protected Dictionary<string, string> GetDefaultProperties (string? runtimeIdentifiers = null)
+		protected static Dictionary<string, string> GetDefaultProperties (string? runtimeIdentifiers = null, Dictionary<string, string>? extraProperties = null)
 		{
 			var rv = new Dictionary<string, string> (verbosity);
 			if (!string.IsNullOrEmpty (runtimeIdentifiers))
 				SetRuntimeIdentifiers (rv, runtimeIdentifiers);
+			if (extraProperties is not null) {
+				foreach (var kvp in extraProperties)
+					rv [kvp.Key] = kvp.Value;
+			}
 			return rv;
 		}
 
-		protected void SetRuntimeIdentifiers (Dictionary<string, string> properties, string runtimeIdentifiers)
+		protected static void SetRuntimeIdentifiers (Dictionary<string, string> properties, string runtimeIdentifiers)
 		{
 			var multiRid = runtimeIdentifiers.IndexOf (';') >= 0 ? "RuntimeIdentifiers" : "RuntimeIdentifier";
 			properties [multiRid] = runtimeIdentifiers;
 		}
 
-		protected string GetProjectPath (string project, string runtimeIdentifiers, ApplePlatform platform, out string appPath, string? subdir = null, string configuration = "Debug", string? netVersion = null)
+		protected static string GetProjectPath (string project, string runtimeIdentifiers, ApplePlatform platform, out string appPath, string? subdir = null, string configuration = "Debug", string? netVersion = null)
 		{
 			return GetProjectPath (project, null, runtimeIdentifiers, platform, out appPath, configuration, netVersion);
 		}
 
-		protected string GetProjectPath (string project, string? subdir, string runtimeIdentifiers, ApplePlatform platform, out string appPath, string configuration = "Debug", string? netVersion = null)
+		protected static string GetProjectPath (string project, string? subdir, string runtimeIdentifiers, ApplePlatform platform, out string appPath, string configuration = "Debug", string? netVersion = null)
 		{
 			var rv = GetProjectPath (project, subdir, platform);
 			appPath = Path.Combine (GetOutputPath (project, subdir, runtimeIdentifiers, platform, configuration, netVersion), project + ".app");
@@ -62,7 +66,7 @@ namespace Xamarin.Tests {
 			return Path.Combine (Path.GetDirectoryName (projectPath)!, binOrObj, configuration, platform.ToFramework (), appPathRuntimeIdentifier);
 		}
 
-		protected string GetOutputPath (string project, string? subdir, string runtimeIdentifiers, ApplePlatform platform, string configuration = "Debug", string? netVersion = null)
+		protected static string GetOutputPath (string project, string? subdir, string runtimeIdentifiers, ApplePlatform platform, string configuration = "Debug", string? netVersion = null)
 		{
 			var rv = GetProjectPath (project, subdir, platform);
 			if (string.IsNullOrEmpty (runtimeIdentifiers))
@@ -71,7 +75,7 @@ namespace Xamarin.Tests {
 			return Path.Combine (Path.GetDirectoryName (rv)!, "bin", configuration, platform.ToFramework (netVersion), appPathRuntimeIdentifier);
 		}
 
-		protected string GetDefaultRuntimeIdentifier (ApplePlatform platform, string configuration = "Debug")
+		protected static string GetDefaultRuntimeIdentifier (ApplePlatform platform, string configuration = "Debug")
 		{
 			var arch = Configuration.CanRunArm64 ? "arm64" : "x64";
 			switch (platform) {
@@ -92,7 +96,7 @@ namespace Xamarin.Tests {
 			}
 		}
 
-		protected string GetProjectPath (string project, string? subdir = null, ApplePlatform? platform = null)
+		protected static string GetProjectPath (string project, string? subdir = null, ApplePlatform? platform = null)
 		{
 			var project_dir = Path.Combine (Configuration.SourceRoot, "tests", "dotnet", project);
 			if (!string.IsNullOrEmpty (subdir))
@@ -143,7 +147,7 @@ namespace Xamarin.Tests {
 			}
 		}
 
-		protected void Clean (string project_path)
+		protected static void Clean (string project_path)
 		{
 			var dirs = Directory.GetDirectories (Path.GetDirectoryName (project_path)!, "*", SearchOption.AllDirectories);
 			dirs = dirs.OrderBy (v => v.Length).Reverse ().ToArray (); // If we have nested directories, make sure to delete the nested one first
@@ -441,20 +445,48 @@ namespace Xamarin.Tests {
 			AssertBuildMessages ("error", actualErrors, expectedErrorMessages);
 		}
 
+		public static void AssertErrorMessages (IList<BuildLogEvent> actualErrors, Func<string, bool> [] matchesExpectedErrorMessage, Func<string> [] rendersExpectedErrorMessage)
+		{
+			AssertBuildMessages ("error", actualErrors, matchesExpectedErrorMessage, rendersExpectedErrorMessage);
+		}
+
 		public static void AssertBuildMessages (string type, IList<BuildLogEvent> actualMessages, params string [] expectedMessages)
 		{
-			if (actualMessages.Count != expectedMessages.Length) {
-				Assert.Fail ($"Expected {expectedMessages.Length} {type}s, got {actualMessages.Count} {type}s:\n\t{string.Join ("\n\t", actualMessages.Select (v => v.Message?.TrimEnd ()))}");
+			AssertBuildMessages (type, actualMessages,
+				expectedMessages.Select (v => new Func<string, bool> ((msg) => msg == v)).ToArray (),
+				expectedMessages.Select (v => new Func<string> (() => v)).ToArray ()
+			);
+		}
+
+		static string makeSingleLine (string? msg)
+		{
+			if (msg is null)
+				return "";
+			return msg.TrimEnd ().Replace ("\n", "\\n").Replace ("\r", "\\r");
+		}
+
+		public static void AssertBuildMessages (string type, IList<BuildLogEvent> actualMessages, Func<string, bool> [] matchesExpectedMessage, Func<string> [] rendersExpectedMessage)
+		{
+			var expectedCount = matchesExpectedMessage.Length;
+			if (expectedCount != rendersExpectedMessage.Length)
+				throw new InvalidOperationException ($"Mismatched function count");
+
+			if (actualMessages.Count != expectedCount) {
+				Assert.Fail ($"Expected {expectedCount} {type}(s), got {actualMessages.Count} {type}(s)\n" +
+					$"\tExpected:\n" +
+					$"\t\t{string.Join ("\n\t\t", rendersExpectedMessage.Select (v => makeSingleLine (v ())))}" +
+					$"\tActual:\n" +
+					$"\t\t{string.Join ("\n\t\t", actualMessages.Select (v => makeSingleLine (v.Message)))}");
 				return;
 			}
 
 			var failures = new List<string> ();
-			for (var i = 0; i < expectedMessages.Length; i++) {
-				var actual = (actualMessages [i].Message ?? string.Empty).Trim ('\n', '\r', ' ');
-				var expected = expectedMessages [i].Trim ('\n', '\r', ' ');
-				if (actual != expected) {
-					actual = actual.Replace ("\n", "\\n").Replace ("\r", "\\r");
-					expected = expected.Replace ("\n", "\\n").Replace ("\r", "\\r");
+			for (var i = 0; i < expectedCount; i++) {
+				var actual = actualMessages [i].Message ?? string.Empty;
+				var isExpected = matchesExpectedMessage [i];
+				if (!isExpected (actual)) {
+					actual = makeSingleLine (actual);
+					var expected = makeSingleLine (rendersExpectedMessage [i] ());
 					failures.Add ($"\tUnexpected {type} message #{i}:\n\t\tExpected: {expected}\n\t\tActual:   {actual}");
 				}
 			}

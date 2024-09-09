@@ -44,6 +44,7 @@ steps:
     gitHubToken: ${{ parameters.gitHubToken }}
     xqaCertPass: ${{ parameters.xqaCertPass }}
     makeParallelism: '4'
+    use1ES: false
 
 # detect changes
 - bash: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/compare.sh
@@ -60,6 +61,6 @@ steps:
   displayName: 'Publish change detection artifact'
   inputs:
     targetPath: '$(Build.ArtifactStagingDirectory)/change-detection/change-detection.zip'
-    artifactName: ${{ parameters.uploadPrefix }}change-detection
+    artifactName: ${{ parameters.uploadPrefix }}change-detection-$(System.StageAttempt)
   condition: succeededOrFailed() # we always want to upload the zip as an artifact
   continueOnError: true

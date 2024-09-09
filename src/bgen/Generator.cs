@@ -716,6 +716,19 @@ public partial class Generator : IMemberGatherer {
 					invoke.AppendFormat ("CFArray.ArrayFromHandle<{0}> ({1})!", TypeManager.FormatType (null, et), safe_name);
 					continue;
 				}
+				if (TypeCache.INativeObject.IsAssignableFrom (et)) {
+					pars.Add (new TrampolineParameterInfo (NativeHandleType, safe_name));
+					invoke.AppendFormat ("NSArray.ArrayFromHandle<{0}> ({1})!", TypeManager.FormatType (t, et), safe_name);
+					continue;
+				}
+			}
+
+			if (pi.ParameterType.IsPointer && pi.ParameterType.GetElementType ().IsValueType) {
+				// Technically we should only allow blittable types here, but the C# compiler shows an error later on if any non-blittable types
+				// are used, because this ends up in the signature of a UnmanagedCallersOnly method.
+				pars.Add (new TrampolineParameterInfo (TypeManager.FormatType (null, pi.ParameterType), safe_name));
+				invoke.Append (safe_name);
+				continue;
 			}
 
 			if (pi.ParameterType.IsSubclassOf (TypeCache.System_Delegate)) {
@@ -807,7 +820,7 @@ public partial class Generator : IMemberGatherer {
 			if (mai.PlainString)
 				return safe_name;
 			else {
-				bool allow_null = null_allowed_override || AttributeManager.HasAttribute<NullAllowedAttribute> (pi);
+				bool allow_null = null_allowed_override || AttributeManager.IsNullable (pi);
 
 				if (mai.ZeroCopyStringMarshal) {
 					if (allow_null)
@@ -828,7 +841,7 @@ public partial class Generator : IMemberGatherer {
 
 		MarshalType mt;
 		if (marshalTypes.TryGetMarshalType (pi.ParameterType, out mt)) {
-			if (null_allowed_override || AttributeManager.HasAttribute<NullAllowedAttribute> (pi))
+			if (null_allowed_override || AttributeManager.IsNullable (pi))
 				return safe_name + "__handle__";
 			return String.Format (mt.ParameterMarshal, safe_name);
 		}
@@ -836,7 +849,7 @@ public partial class Generator : IMemberGatherer {
 		if (pi.ParameterType.IsArray) {
 			//Type etype = pi.ParameterType.GetElementType ();
 
-			if (null_allowed_override || AttributeManager.HasAttribute<NullAllowedAttribute> (pi))
+			if (null_allowed_override || AttributeManager.IsNullable (pi))
 				return String.Format ("nsa_{0}.GetHandle ()", pi.Name);
 			return "nsa_" + pi.Name + ".Handle";
 		}
@@ -875,16 +888,19 @@ public partial class Generator : IMemberGatherer {
 		}
 
 		if (TypeManager.IsDictionaryContainerType (pi.ParameterType)) {
-			if (null_allowed_override || AttributeManager.HasAttribute<NullAllowedAttribute> (pi))
+			if (null_allowed_override || AttributeManager.IsNullable (pi))
 				return String.Format ("{0} is null ? NativeHandle.Zero : {0}.Dictionary.Handle", safe_name);
 			return safe_name + ".Dictionary.Handle";
 		}
 
 		if (pi.ParameterType.IsGenericParameter) {
-			if (null_allowed_override || AttributeManager.HasAttribute<NullAllowedAttribute> (pi))
+			if (null_allowed_override || AttributeManager.IsNullable (pi))
 				return string.Format ("{0}.GetHandle ()", safe_name);
 			return safe_name + ".Handle";
 		}
+
+		if (TypeCache.INativeObject.IsAssignableFrom (pi.ParameterType))
+			return $"{safe_name}.GetHandle ()";
 
 		// This means you need to add a new MarshalType in the method "Go"
 		throw new BindingException (1002, true, pi.ParameterType.FullName, mi.DeclaringType.FullName, mi.Name.GetSafeParamName ());
@@ -895,14 +911,14 @@ public partial class Generator : IMemberGatherer {
 		if (pi.ParameterType.IsByRef)
 			return false;
 
-		if (AttributeManager.HasAttribute<NullAllowedAttribute> (pi))
+		if (AttributeManager.IsNullable (pi))
 			return false;
 
 		if (IsSetter (mi)) {
-			if (AttributeManager.HasAttribute<NullAllowedAttribute> (mi)) {
+			if (AttributeManager.IsNullable (mi)) {
 				return false;
 			}
-			if ((propInfo is not null) && AttributeManager.HasAttribute<NullAllowedAttribute> (propInfo)) {
+			if ((propInfo is not null) && AttributeManager.IsNullable (propInfo)) {
 				return false;
 			}
 		}
@@ -1602,6 +1618,7 @@ public partial class Generator : IMemberGatherer {
 #else
 			print ("[MonoPInvokeCallback (typeof ({0}))]", ti.DelegateName);
 #endif
+			print ("[UserDelegateType (typeof ({0}))]", ti.UserDelegate);
 			print ("internal static unsafe {0} Invoke ({1}) {{", ti.ReturnType, ti.Parameters);
 			indent++;
 			print ("var del = BlockLiteral.GetTarget<{0}> (block);", ti.UserDelegate);
@@ -1627,7 +1644,7 @@ public partial class Generator : IMemberGatherer {
 			} else {
 				if (ti.Convert.Length > 0)
 					print (ti.Convert);
-				print ("{0} retval = del ({1});", ti.DelegateReturnType, ti.Invoke);
+				print ("var retval = del ({1});", ti.DelegateReturnType, ti.Invoke);
 				if (ti.PostConvert.Length > 0)
 					print (ti.PostConvert);
 				print (ti.ReturnFormat, "retval");
@@ -2021,7 +2038,7 @@ public partial class Generator : IMemberGatherer {
 				var is_internal = prop.IsInternal (this);
 				var export = attrs [0];
 				var use_export_as_string_constant = export.ArgumentSemantic != ArgumentSemantic.None;
-				var null_allowed = AttributeManager.HasAttribute<NullAllowedAttribute> (prop);
+				var null_allowed = AttributeManager.IsNullable (prop);
 				var nullable_type = prop.PropertyType.IsValueType && null_allowed;
 				var propertyType = prop.PropertyType;
 				var propNamespace = prop.DeclaringType.Namespace;
@@ -2715,12 +2732,12 @@ public partial class Generator : IMemberGatherer {
 
 				var bindAsAttrib = GetBindAsAttribute (minfo.mi);
 				sb.Append (prefix + TypeManager.FormatType (bindAsAttrib.Type.DeclaringType, bindAsAttrib.Type));
-				if (!bindAsAttrib.Type.IsValueType && AttributeManager.HasAttribute<NullAllowedAttribute> (mi.ReturnParameter))
+				if (!bindAsAttrib.Type.IsValueType && AttributeManager.IsNullable (mi.ReturnParameter))
 					sb.Append ('?');
 			} else {
 				sb.Append (prefix);
 				sb.Append (TypeManager.FormatType (minfo.type, mi.ReturnType));
-				if (!mi.ReturnType.IsValueType && AttributeManager.HasAttribute<NullAllowedAttribute> (mi.ReturnParameter))
+				if (!mi.ReturnType.IsValueType && AttributeManager.IsNullable (mi.ReturnParameter))
 					sb.Append ('?');
 			}
 
@@ -2814,18 +2831,18 @@ public partial class Generator : IMemberGatherer {
 				PrintBindAsAttribute (pi, sb);
 				var bt = bindAsAtt.Type;
 				sb.Append (TypeManager.FormatType (bt.DeclaringType, bt));
-				if (!bt.IsValueType && AttributeManager.HasAttribute<NullAllowedAttribute> (pi))
+				if (!bt.IsValueType && AttributeManager.IsNullable (pi))
 					sb.Append ('?');
 			} else {
 				sb.Append (TypeManager.FormatType (declaringType, parType));
 				// some `IntPtr` are decorated with `[NullAttribute]`
 				if (!parType.IsValueType) {
-					if (AttributeManager.HasAttribute<NullAllowedAttribute> (pi)) {
+					if (AttributeManager.IsNullable (pi)) {
 						sb.Append ('?');
 					} else if (pi.Position == 0 && mi is MethodInfo minfo) {
 						// only need to check for setter, since we wouldn't get here for a getter.
 						var propertyInfo = GetProperty (minfo, getter: false, setter: true);
-						if (AttributeManager.HasAttribute<NullAllowedAttribute> (propertyInfo))
+						if (AttributeManager.IsNullable (propertyInfo))
 							sb.Append ('?');
 					}
 				}
@@ -3287,7 +3304,7 @@ public partial class Generator : IMemberGatherer {
 
 			// Construct conversions
 			if (mai.Type == TypeCache.System_String && !mai.PlainString) {
-				bool probe_null = null_allowed_override || AttributeManager.HasAttribute<NullAllowedAttribute> (pi);
+				bool probe_null = null_allowed_override || AttributeManager.IsNullable (pi);
 
 				convs.AppendFormat (GenerateMarshalString (probe_null, !mai.ZeroCopyStringMarshal), pi.Name, pi.Name.GetSafeParamName ());
 				disposes.AppendFormat (GenerateDisposeString (probe_null, !mai.ZeroCopyStringMarshal), pi.Name);
@@ -3299,7 +3316,7 @@ public partial class Generator : IMemberGatherer {
 				} else if (HasBindAsAttribute (propInfo)) {
 					disposes.AppendFormat ("\nnsb_{0}?.Dispose ();", propInfo.Name);
 				} else if (etype == TypeCache.System_String) {
-					if (null_allowed_override || AttributeManager.HasAttribute<NullAllowedAttribute> (pi)) {
+					if (null_allowed_override || AttributeManager.IsNullable (pi)) {
 						convs.AppendFormat ("var nsa_{0} = {1} is null ? null : NSArray.FromStrings ({1});\n", pi.Name, pi.Name.GetSafeParamName ());
 						disposes.AppendFormat ("if (nsa_{0} is not null)\n\tnsa_{0}.Dispose ();\n", pi.Name);
 					} else {
@@ -3309,7 +3326,7 @@ public partial class Generator : IMemberGatherer {
 				} else if (etype == TypeCache.Selector) {
 					exceptions.Add (ErrorHelper.CreateError (1065, mai.Type.FullName, string.IsNullOrEmpty (pi.Name) ? $"#{pi.Position}" : pi.Name, mi.DeclaringType.FullName, mi.Name));
 				} else {
-					if (null_allowed_override || AttributeManager.HasAttribute<NullAllowedAttribute> (pi)) {
+					if (null_allowed_override || AttributeManager.IsNullable (pi)) {
 						convs.AppendFormat ("var nsa_{0} = {1} is null ? null : NSArray.FromNSObjects ({1});\n", pi.Name, pi.Name.GetSafeParamName ());
 						disposes.AppendFormat ("if (nsa_{0} is not null)\n\tnsa_{0}.Dispose ();\n", pi.Name);
 					} else {
@@ -3319,11 +3336,11 @@ public partial class Generator : IMemberGatherer {
 				}
 			} else if (mai.Type.IsSubclassOf (TypeCache.System_Delegate)) {
 				string trampoline_name = MakeTrampoline (pi.ParameterType).StaticName;
-				bool null_allowed = AttributeManager.HasAttribute<NullAllowedAttribute> (pi);
+				bool null_allowed = AttributeManager.IsNullable (pi);
 				if (!null_allowed) {
 					var property = GetProperty (mi);
 					if (property is not null)
-						null_allowed = AttributeManager.HasAttribute<NullAllowedAttribute> (property);
+						null_allowed = AttributeManager.IsNullable (property);
 				}
 				var createBlockMethod = null_allowed ? "CreateNullableBlock" : "CreateBlock";
 				convs.AppendFormat ("using var block_{0} = Trampolines.{1}.{3} ({2});\n", pi.Name, trampoline_name, safe_name, createBlockMethod);
@@ -3426,7 +3443,7 @@ public partial class Generator : IMemberGatherer {
 
 	void GenerateArgumentChecks (MethodInfo mi, bool null_allowed_override, PropertyInfo propInfo = null)
 	{
-		if (AttributeManager.HasAttribute<NullAllowedAttribute> (mi))
+		if (AttributeManager.IsNullable (mi))
 			ErrorHelper.Show (new BindingException (1118, false, mi));
 
 		foreach (var pi in mi.GetParameters ()) {
@@ -3865,7 +3882,7 @@ public partial class Generator : IMemberGatherer {
 		}
 	}
 
-	void PrintObsoleteAttributes (ICustomAttributeProvider provider, bool already_has_editor_browsable_attribute = false)
+	void PrintObsoleteAttributes (ICustomAttributeProvider provider)
 	{
 		var obsoleteAttributes = AttributeManager.GetCustomAttributes<ObsoleteAttribute> (provider);
 
@@ -3873,8 +3890,37 @@ public partial class Generator : IMemberGatherer {
 			print ("[Obsolete (\"{0}\", {1})]", oa.Message, oa.IsError ? "true" : "false");
 		}
 
-		if (!already_has_editor_browsable_attribute && obsoleteAttributes.Any ())
+		var printEditorBrowsableAttribute = TryGetPrintEditorBrowsableAttribute (provider, out var editorBrowsableAttribute);
+		if (!printEditorBrowsableAttribute && obsoleteAttributes.Any ()) {
+			printEditorBrowsableAttribute = true;
+			editorBrowsableAttribute = "[EditorBrowsable (EditorBrowsableState.Never)]";
+		}
+		if (printEditorBrowsableAttribute)
 			print ("[EditorBrowsable (EditorBrowsableState.Never)]");
+	}
+
+	bool TryGetPrintEditorBrowsableAttribute (ICustomAttributeProvider provider, out string attribute)
+	{
+		attribute = string.Empty;
+		foreach (var ea in AttributeManager.GetCustomAttributes<EditorBrowsableAttribute> (provider)) {
+			switch (ea.State) {
+			case EditorBrowsableState.Always:
+				attribute = "[EditorBrowsable (EditorBrowsableState.Always)]";
+				break;
+			case EditorBrowsableState.Never:
+				attribute = "[EditorBrowsable (EditorBrowsableState.Never)]";
+				break;
+			case EditorBrowsableState.Advanced:
+				attribute = "[EditorBrowsable (EditorBrowsableState.Advanced)]";
+				break;
+			default:
+				attribute = $"[EditorBrowsable (EditorBrowsableState.{ea.State})]";
+				break;
+			}
+			return true;
+		}
+
+		return false;
 	}
 
 	void PrintPropertyAttributes (PropertyInfo pi, Type type, bool skipTypeInjection = false)
@@ -3925,9 +3971,9 @@ public partial class Generator : IMemberGatherer {
 
 #if NET
 		if (minfo.is_protocol_member_required.Value) {
-			print ("[RequiredMember]");
+			print ("[global::Foundation.RequiredMember]");
 		} else {
-			print ("[OptionalMember]");
+			print ("[global::Foundation.OptionalMember]");
 		}
 #endif
 	}
@@ -3944,7 +3990,7 @@ public partial class Generator : IMemberGatherer {
 		Type inlinedType = pi.DeclaringType == type ? null : type;
 		GetAccessorInfo (pi, out var getter, out var setter, out var generate_getter, out var generate_setter);
 
-		var nullable = !pi.PropertyType.IsValueType && AttributeManager.HasAttribute<NullAllowedAttribute> (pi);
+		var nullable = !pi.PropertyType.IsValueType && AttributeManager.IsNullable (pi);
 
 		// So we don't hide the get or set of a parent property with the same name, we need to see if we have a parent declaring the same property
 		PropertyInfo parentBaseType = TypeManager.GetParentTypeWithSameNamedProperty (ReflectionExtensions.GetBaseTypeAttribute (type, this), pi.Name);
@@ -4065,7 +4111,7 @@ public partial class Generator : IMemberGatherer {
 			var bindAsAttrib = GetBindAsAttribute (minfo.mi);
 			propertyTypeName = TypeManager.FormatType (bindAsAttrib.Type.DeclaringType, bindAsAttrib.Type);
 			// it remains nullable only if the BindAs type can be null (i.e. a reference type)
-			nullable = !bindAsAttrib.Type.IsValueType && AttributeManager.HasAttribute<NullAllowedAttribute> (pi);
+			nullable = !bindAsAttrib.Type.IsValueType && AttributeManager.IsNullable (pi);
 		} else {
 			propertyTypeName = TypeManager.FormatType (minfo.type, pi.PropertyType);
 		}
@@ -4177,10 +4223,10 @@ public partial class Generator : IMemberGatherer {
 		}
 		if (generate_setter) {
 			var ba = GetBindAttribute (setter);
-			bool null_allowed = AttributeManager.HasAttribute<NullAllowedAttribute> (setter);
+			bool null_allowed = AttributeManager.IsNullable (setter);
 			if (null_allowed)
 				ErrorHelper.Show (new BindingException (1118, false, setter));
-			null_allowed |= AttributeManager.HasAttribute<NullAllowedAttribute> (pi);
+			null_allowed |= AttributeManager.IsNullable (pi);
 			var not_implemented_attr = AttributeManager.GetCustomAttribute<NotImplementedAttribute> (setter);
 			string sel;
 
@@ -4417,21 +4463,11 @@ public partial class Generator : IMemberGatherer {
 	void PrintMethodAttributes (MemberInformation minfo)
 	{
 		MethodInfo mi = minfo.Method;
-		var editor_browsable_attribute = false;
 
 		foreach (var sa in AttributeManager.GetCustomAttributes<ThreadSafeAttribute> (mi))
 			print (sa.Safe ? "[ThreadSafe]" : "[ThreadSafe (false)]");
 
-		foreach (var ea in AttributeManager.GetCustomAttributes<EditorBrowsableAttribute> (mi)) {
-			if (ea.State == EditorBrowsableState.Always) {
-				print ("[EditorBrowsable]");
-			} else {
-				print ("[EditorBrowsable (EditorBrowsableState.{0})]", ea.State);
-			}
-			editor_browsable_attribute = true;
-		}
-
-		PrintObsoleteAttributes (mi, editor_browsable_attribute);
+		PrintObsoleteAttributes (mi);
 
 		if (minfo.is_return_release)
 			print ("[return: ReleaseAttribute ()]");
@@ -4535,8 +4571,8 @@ public partial class Generator : IMemberGatherer {
 					argCount++;
 			}
 			if (minfo.Method.GetParameters ().Length != argCount) {
-				ErrorHelper.Warning (1105,
-					minfo.selector, argCount, minfo.Method, minfo.Method.GetParameters ().Length);
+				exceptions.Add (ErrorHelper.CreateWarning (1105,
+					minfo.selector, argCount, minfo.Method, minfo.Method.GetParameters ().Length));
 			}
 		}
 
@@ -4638,7 +4674,7 @@ public partial class Generator : IMemberGatherer {
 					// we do not need the information if it's a getter (it won't change generated code)
 					pinfo = GetProperty (method, getter: false, setter: true);
 					if (pinfo is not null)
-						null_allowed = AttributeManager.HasAttribute<NullAllowedAttribute> (pinfo);
+						null_allowed = AttributeManager.IsNullable (pinfo);
 				}
 				GenerateMethodBody (minfo, minfo.Method, minfo.selector, null_allowed, null, BodyOption.None, pinfo);
 				if (minfo.is_autorelease) {
@@ -4711,11 +4747,13 @@ public partial class Generator : IMemberGatherer {
 					print ("[MonoNativeFunctionWrapper]\n");
 
 				var accessibility = mi.DeclaringType.IsInternal (this) ? "internal" : "public";
-				print ("{3} delegate {0} {1} ({2});",
+				var isUnsafe = mi.GetParameters ().Any ((v => v.ParameterType.IsPointer)) || mi.ReturnType.IsPointer;
+				print ("{3}{4} delegate {0} {1} ({2});",
 					   TypeManager.RenderType (mi.ReturnType, mi.ReturnTypeCustomAttributes),
 					   shortName,
 					   RenderParameterDecl (mi.GetParameters ()),
-					   accessibility);
+					   accessibility,
+					   isUnsafe ? " unsafe" : string.Empty);
 			}
 
 			if (group.Namespace is not null) {
@@ -4879,11 +4917,13 @@ public partial class Generator : IMemberGatherer {
 		WriteDocumentation (type);
 
 		PrintAttributes (type, platform: true, preserve: true, advice: true);
-		print ("[Protocol (Name = \"{1}\", WrapperType = typeof ({0}Wrapper){2}{3})]",
+		print ("[Protocol (Name = \"{1}\", WrapperType = typeof ({0}Wrapper){2}{3}{4})]",
 			   TypeName,
 			   protocol_name,
 			   protocolAttribute.IsInformal ? ", IsInformal = true" : string.Empty,
-			   protocolAttribute.FormalSince is not null ? $", FormalSince = \"{protocolAttribute.FormalSince}\"" : string.Empty);
+			   protocolAttribute.FormalSince is not null ? $", FormalSince = \"{protocolAttribute.FormalSince}\"" : string.Empty,
+			   backwardsCompatibleCodeGeneration ? string.Empty : ", BackwardsCompatibleCodeGeneration = false"
+			   );
 
 		var sb = new StringBuilder ();
 
@@ -5052,6 +5092,7 @@ public partial class Generator : IMemberGatherer {
 			foreach (var docId in docIds) {
 				print ($"[DynamicDependencyAttribute (\"{docId}\")]");
 			}
+			print ("[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]");
 			print ($"static I{TypeName} ()");
 			print ("{");
 			print ("\tGC.KeepAlive (null);"); // need to do _something_ (doesn't seem to matter what), otherwise the static cctor (and the DynamicDependency attributes) are trimmed away.
@@ -5127,7 +5168,7 @@ public partial class Generator : IMemberGatherer {
 			if (minfo.is_unsafe)
 				mod = "unsafe ";
 			// IsValueType check needed for `IntPtr` signatures (which can't become `IntPtr?`)
-			var nullable = !pi.PropertyType.IsValueType && AttributeManager.HasAttribute<NullAllowedAttribute> (pi) ? "?" : String.Empty;
+			var nullable = !pi.PropertyType.IsValueType && AttributeManager.IsNullable (pi) ? "?" : String.Empty;
 			GetAccessorInfo (pi, out var getMethod, out var setMethod, out var generate_getter, out var generate_setter);
 			print ("{0}{1}{2} {3} {{", mod, TypeManager.FormatType (type, pi.PropertyType), nullable, pi.Name, generate_getter ? "get;" : string.Empty, generate_setter ? "set;" : string.Empty);
 			indent++;
@@ -5504,7 +5545,7 @@ public partial class Generator : IMemberGatherer {
 	// Not adding the experimental attribute is bad (it would mean that an API
 	// we meant to be experimental ended up being released as stable), so it's
 	// opt-out instead of opt-in.
-	public void PrintAttributes (ICustomAttributeProvider mi, bool platform = false, bool preserve = false, bool advice = false, bool notImplemented = false, bool bindAs = false, bool requiresSuper = false, Type inlinedType = null, bool experimental = true)
+	public void PrintAttributes (ICustomAttributeProvider mi, bool platform = false, bool preserve = false, bool advice = false, bool notImplemented = false, bool bindAs = false, bool requiresSuper = false, Type inlinedType = null, bool experimental = true, bool obsolete = false)
 	{
 		if (platform)
 			PrintPlatformAttributes (mi as MemberInfo, inlinedType);
@@ -5520,6 +5561,8 @@ public partial class Generator : IMemberGatherer {
 			PrintRequiresSuperAttribute (mi);
 		if (experimental)
 			PrintExperimentalAttribute (mi);
+		if (obsolete)
+			PrintObsoleteAttributes (mi);
 	}
 
 	public void PrintExperimentalAttribute (ICustomAttributeProvider mi)
@@ -5751,7 +5794,7 @@ public partial class Generator : IMemberGatherer {
 				print ("[Model]");
 			}
 
-			PrintAttributes (type, platform: true, preserve: true, advice: true);
+			PrintAttributes (type, platform: true, preserve: true, advice: true, obsolete: true);
 
 			if (type.IsEnum) {
 				GenerateEnum (type);
@@ -6248,8 +6291,8 @@ public partial class Generator : IMemberGatherer {
 								throw new BindingException (1037, true, pi.Name, type.Name);
 						}
 
-						if (AttributeManager.HasAttribute<NullAllowedAttribute> (pi)) {
-							var nonNullableProperty = protocolsThatHaveThisProp.SingleOrDefault (v => !AttributeManager.HasAttribute<NullAllowedAttribute> (v));
+						if (AttributeManager.IsNullable (pi)) {
+							var nonNullableProperty = protocolsThatHaveThisProp.SingleOrDefault (v => !AttributeManager.IsNullable (v));
 							if (nonNullableProperty is not null) {
 								// We're getting the same property from multiple interfaces, and the nullability attributes don't match.
 								// This results in a warning (which turn into an error because we've turned on warnaserror):
@@ -6324,12 +6367,26 @@ public partial class Generator : IMemberGatherer {
 						print ("_{0} = Runtime.GetNSObject<NSArray> (Dlfcn.GetIndirect (Libraries.{2}.Handle, \"{1}\"))!;", field_pi.Name, fieldAttr.SymbolName, library_name);
 						indent--;
 						print ("return _{0};", field_pi.Name);
+					} else if (field_pi.PropertyType.Name == "NSNumber") {
+						print ("if (_{0} is null)", field_pi.Name);
+						indent++;
+						print ("_{0} = Runtime.GetNSObject<NSNumber> (Dlfcn.GetIndirect (Libraries.{2}.Handle, \"{1}\"))!;", field_pi.Name, fieldAttr.SymbolName, library_name);
+						indent--;
+						print ("return _{0};", field_pi.Name);
 					} else if (field_pi.PropertyType.Name == "UTType") {
 						print ("if (_{0} is null)", field_pi.Name);
 						indent++;
 						print ("_{0} = Runtime.GetNSObject<UTType> (Dlfcn.GetIntPtr (Libraries.{2}.Handle, \"{1}\"))!;", field_pi.Name, fieldAttr.SymbolName, library_name);
 						indent--;
 						print ("return _{0};", field_pi.Name);
+					} else if (field_pi.PropertyType == TypeCache.System_Byte) {
+						print ("return Dlfcn.GetByte (Libraries.{2}.Handle, \"{1}\");", field_pi.Name, fieldAttr.SymbolName, library_name);
+					} else if (field_pi.PropertyType == TypeCache.System_SByte) {
+						print ("return Dlfcn.GetSByte (Libraries.{2}.Handle, \"{1}\");", field_pi.Name, fieldAttr.SymbolName, library_name);
+					} else if (field_pi.PropertyType == TypeCache.System_Int16) {
+						print ("return Dlfcn.GetInt16 (Libraries.{2}.Handle, \"{1}\");", field_pi.Name, fieldAttr.SymbolName, library_name);
+					} else if (field_pi.PropertyType == TypeCache.System_UInt16) {
+						print ("return Dlfcn.GetUInt16 (Libraries.{2}.Handle, \"{1}\");", field_pi.Name, fieldAttr.SymbolName, library_name);
 					} else if (field_pi.PropertyType == TypeCache.System_Int32) {
 						print ("return Dlfcn.GetInt32 (Libraries.{2}.Handle, \"{1}\");", field_pi.Name, fieldAttr.SymbolName, library_name);
 					} else if (field_pi.PropertyType == TypeCache.System_UInt32) {
@@ -6340,6 +6397,8 @@ public partial class Generator : IMemberGatherer {
 						print ("return Dlfcn.GetFloat (Libraries.{2}.Handle, \"{1}\");", field_pi.Name, fieldAttr.SymbolName, library_name);
 					} else if (field_pi.PropertyType == TypeCache.System_IntPtr) {
 						print ("return Dlfcn.GetIntPtr (Libraries.{2}.Handle, \"{1}\");", field_pi.Name, fieldAttr.SymbolName, library_name);
+					} else if (field_pi.PropertyType == TypeCache.System_UIntPtr) {
+						print ("return Dlfcn.GetUIntPtr (Libraries.{2}.Handle, \"{1}\");", field_pi.Name, fieldAttr.SymbolName, library_name);
 					} else if (field_pi.PropertyType.FullName == "System.Drawing.SizeF") {
 						print ("return Dlfcn.GetSizeF (Libraries.{2}.Handle, \"{1}\");", field_pi.Name, fieldAttr.SymbolName, library_name);
 					} else if (field_pi.PropertyType == TypeCache.System_Int64) {
@@ -6410,10 +6469,20 @@ public partial class Generator : IMemberGatherer {
 							print ("Dlfcn.SetUInt32 (Libraries.{2}.Handle, \"{1}\", value);", field_pi.Name, fieldAttr.SymbolName, library_name);
 						} else if (field_pi.PropertyType == TypeCache.System_Double) {
 							print ("Dlfcn.SetDouble (Libraries.{2}.Handle, \"{1}\", value);", field_pi.Name, fieldAttr.SymbolName, library_name);
+						} else if (field_pi.PropertyType == TypeCache.System_Byte) {
+							print ("Dlfcn.SetByte (Libraries.{2}.Handle, \"{1}\", value);", field_pi.Name, fieldAttr.SymbolName, library_name);
+						} else if (field_pi.PropertyType == TypeCache.System_SByte) {
+							print ("Dlfcn.SetSByte (Libraries.{2}.Handle, \"{1}\", value);", field_pi.Name, fieldAttr.SymbolName, library_name);
+						} else if (field_pi.PropertyType == TypeCache.System_Int16) {
+							print ("Dlfcn.SetInt16 (Libraries.{2}.Handle, \"{1}\", value);", field_pi.Name, fieldAttr.SymbolName, library_name);
+						} else if (field_pi.PropertyType == TypeCache.System_UInt16) {
+							print ("Dlfcn.SetUInt16 (Libraries.{2}.Handle, \"{1}\", value);", field_pi.Name, fieldAttr.SymbolName, library_name);
 						} else if (field_pi.PropertyType == TypeCache.System_Float) {
 							print ("Dlfcn.SetFloat (Libraries.{2}.Handle, \"{1}\", value);", field_pi.Name, fieldAttr.SymbolName, library_name);
 						} else if (field_pi.PropertyType == TypeCache.System_IntPtr) {
 							print ("Dlfcn.SetIntPtr (Libraries.{2}.Handle, \"{1}\", value);", field_pi.Name, fieldAttr.SymbolName, library_name);
+						} else if (field_pi.PropertyType == TypeCache.System_UIntPtr) {
+							print ("Dlfcn.SetUIntPtr (Libraries.{2}.Handle, \"{1}\", value);", field_pi.Name, fieldAttr.SymbolName, library_name);
 						} else if (field_pi.PropertyType.FullName == "System.Drawing.SizeF") {
 							print ("Dlfcn.SetSizeF (Libraries.{2}.Handle, \"{1}\", value);", field_pi.Name, fieldAttr.SymbolName, library_name);
 						} else if (field_pi.PropertyType == TypeCache.System_Int64) {
@@ -6424,6 +6493,8 @@ public partial class Generator : IMemberGatherer {
 							print ("Dlfcn.SetString (Libraries.{2}.Handle, \"{1}\", value);", field_pi.Name, fieldAttr.SymbolName, library_name);
 						} else if (field_pi.PropertyType.Name == "NSArray") {
 							print ("Dlfcn.SetArray (Libraries.{2}.Handle, \"{1}\", value);", field_pi.Name, fieldAttr.SymbolName, library_name);
+						} else if (field_pi.PropertyType.Name == "NSNumber") {
+							print ("Dlfcn.SetObject (Libraries.{2}.Handle, \"{1}\", value);", field_pi.Name, fieldAttr.SymbolName, library_name);
 						} else if (field_pi.PropertyType == TypeCache.System_nint) {
 							print ("Dlfcn.SetNInt (Libraries.{2}.Handle, \"{1}\", value);", field_pi.Name, fieldAttr.SymbolName, library_name);
 						} else if (field_pi.PropertyType == TypeCache.System_nuint) {
@@ -6634,7 +6705,7 @@ public partial class Generator : IMemberGatherer {
 						if (isProtocolEventBacked)
 							print ("[Export (\"{0}\")]", FindSelector (dtype, mi));
 
-						print ("public {0}{1} {2} ({3})", shouldOverrideDelegateString, TypeManager.RenderType (mi.ReturnType), mi.Name, RenderParameterDecl (pars));
+						print ("public {0}{1} {2} ({3})", shouldOverrideDelegateString, TypeManager.RenderType (mi.ReturnType, mi.ReturnTypeCustomAttributes), mi.Name, RenderParameterDecl (pars));
 						print ("{"); indent++;
 
 						if (mi.Name == bta.KeepRefUntil)
@@ -7184,7 +7255,7 @@ public partial class Generator : IMemberGatherer {
 				foreach (var p in pars.Skip (minPars).OrderBy (p => p.Name, StringComparer.Ordinal)) {
 					var pt = p.ParameterType;
 					var bareType = pt.IsByRef ? pt.GetElementType () : pt;
-					var nullable = !pt.IsValueType && AttributeManager.HasAttribute<NullAllowedAttribute> (p);
+					var nullable = !pt.IsValueType && AttributeManager.IsNullable (p);
 
 					print ("public {0}{1} {2} {{ get; set; }}", TypeManager.RenderType (bareType), nullable ? "?" : "", GetPublicParameterName (p));
 				}
@@ -7440,8 +7511,6 @@ public partial class Generator : IMemberGatherer {
 			name += (removeRefTypes ? "" : (p.IsOut ? "out " : "ref ")) + TypeManager.RenderType (pt, p);
 		} else
 			name += TypeManager.RenderType (pt, p);
-		if (!pt.IsValueType && AttributeManager.HasAttribute<NullAllowedAttribute> (p))
-			name += "?";
 		return name;
 	}
 
