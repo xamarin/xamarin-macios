@@ -1008,6 +1008,7 @@ HEALTHKIT_SOURCES = \
 	HealthKit/HKObjectType.cs \
 	HealthKit/HKObsolete.cs \
 	HealthKit/HKSampleQuery.cs \
+	HealthKit/HKSupportFunctions.cs \
 	HealthKit/HKUnit.cs \
 
 # HealthKitUI
@@ -1149,6 +1150,7 @@ MAPKIT_CORE_SOURCES = \
 	MapKit/MapKit.cs \
 
 MAPKIT_SOURCES = \
+	MapKit/MKAddressFilter.cs \
 	MapKit/MKCompat.cs \
 	MapKit/MKDirections.cs \
 	MapKit/MKFeatureDisplayPriority.cs \
@@ -1277,6 +1279,7 @@ METALPERFORMANCESHADERSGRAPH_API_SOURCES = \
 	MetalPerformanceShadersGraph/MPSGraphEnums.cs \
 
 METALPERFORMANCESHADERSGRAPH_SOURCES = \
+	MetalPerformanceShadersGraph/MPSGraphExecutable.cs \
 	MetalPerformanceShadersGraph/MPSGraphExtensions.cs \
 	MetalPerformanceShadersGraph/MPSGraphTensorData.cs \
 
