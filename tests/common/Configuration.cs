@@ -313,7 +313,7 @@ namespace Xamarin.Tests {
 			EnableXamarin = !string.IsNullOrEmpty (GetVariable ("ENABLE_XAMARIN", ""));
 			XcodeIsStable = string.Equals (GetVariable ("XCODE_IS_STABLE", ""), "true", StringComparison.OrdinalIgnoreCase);
 
-			XcodeVersionString = GetXcodeVersion (xcode_root);
+			XcodeVersionString = GetVariable ("XCODE_VERSION", GetXcodeVersion (xcode_root));
 #if MONOMAC
 			mac_xcode_root = xcode_root;
 #endif
