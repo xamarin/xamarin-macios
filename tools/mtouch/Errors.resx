@@ -364,9 +364,9 @@
 	</data>
 
 	<data name="MT0073" xml:space="preserve">
-		<value>{4} {0} does not support a deployment target of {1} for {3} (the minimum is {2}). Please select a newer deployment target in your project's Info.plist.
+		<value>{4} {0} does not support a deployment target of {1} for {3} (the minimum is {2}). Please select a newer deployment target in your project's Info.plist or change the SupportedOSPlatformVersion property in your project file.
 		</value>
-		<comment>The following are literal names and should not be translated: SDK, Xcode
+		<comment>The following are literal names and should not be translated: SDK, Xcode, SupportedOSPlatformVersion, Info.plist
 {0} - The version number of the .NET SDK.
 {1} - The name of the deployment target such as a device, simulator, etc.
 {2} - The minimum version number.
@@ -376,9 +376,9 @@
 	</data>
 
 	<data name="MX0074" xml:space="preserve">
-		<value>{4} {0} does not support a deployment target of {1} for {3} (the maximum is {2}). Please select an older deployment target in your project's Info.plist or upgrade to a newer version of {4}.
+		<value>{4} {0} does not support a deployment target of {1} for {3} (the maximum is {2}). Please select an older deployment target in your project's Info.plist or change the SupportedOSPlatformVersion property in your project file, or upgrade to a newer version of {4}.
 		</value>
-		<comment>The following are literal names and should not be translated: SDK, Xcode
+		<comment>The following are literal names and should not be translated: SDK, Xcode, SupportedOSPlatformVersion, Info.plist
 {0} - The version number of the .NET SDK product.
 {1} - The name of the deployment target such as a device, simulator, etc.
 {2} - The maximum version number.
