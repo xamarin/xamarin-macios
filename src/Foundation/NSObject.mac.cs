@@ -113,7 +113,8 @@ namespace Foundation {
 		static IntPtr sa = Dlfcn.dlopen (Constants.SafetyKitLibrary, 1);
 		static IntPtr cr = Dlfcn.dlopen (Constants.CryptoTokenKitLibrary, 1);
 		static IntPtr dd = Dlfcn.dlopen (Constants.DeviceDiscoveryExtensionLibrary, 1);
-		static IntPtr fk = Dlfcn.dlopen (Constants.FSKitLibrary, 1);
+		// FSKit was removed from Xcode 16 RC, but keeping it commented, because it's likely to return in a later release
+		// static IntPtr fk = Dlfcn.dlopen (Constants.FSKitLibrary, 1);
 
 #if !NET
 		[Obsolete ("Use PlatformAssembly for easier code sharing across platforms.")]

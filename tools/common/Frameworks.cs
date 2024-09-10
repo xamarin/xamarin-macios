@@ -292,7 +292,8 @@ public class Frameworks : Dictionary<string, Framework> {
 					{ "SensitiveContentAnalysis", "SensitiveContentAnalysis", 14, 0 },
 
 					{ "DeviceDiscoveryExtension", "DeviceDiscoveryExtension", 15, 0},
-					{ "FSKit", "FSKit", 15, 0 },
+					// FSKit was removed from Xcode 16 RC, but keeping it commented, because it's likely to return in a later release
+					// { "FSKit", "FSKit", 15, 0 },
 				};
 			}
 			return mac_frameworks;
