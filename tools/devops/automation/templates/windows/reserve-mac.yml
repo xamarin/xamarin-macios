@@ -65,7 +65,7 @@ steps:
     AUTH_TOKEN_VSENG_XAMARIN_MAC_DEVICES_2_P12: ${{ parameters.xqaCertPass }}
 
 # Sets the AzDO.BearerToken variable used as the auth token to disable/reenable agents
-- template: set-token.yml
+- template: generate-token.yml
 
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
