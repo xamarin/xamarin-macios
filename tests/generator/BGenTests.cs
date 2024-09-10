@@ -413,6 +413,7 @@ namespace GeneratorTests {
 			bgen.Defines = BGenTool.GetDefaultDefines (bgen.Profile);
 			bgen.AddTestApiDefinition ("tests/inativeobjects-in-blocks.cs");
 			bgen.AddExtraSourcesRelativeToGeneratorDirectory ("tests/inativeobjects-in-blocks-sources.cs");
+			bgen.CreateTemporaryBinding ();
 			bgen.AssertExecute ("build");
 			bgen.AssertNoWarnings ();
 		}
