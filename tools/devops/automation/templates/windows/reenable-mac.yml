@@ -47,7 +47,7 @@ steps:
   condition: always()
   continueOnError: true
 
-# Sets the AzDO.BearerToken variable that can be used as the auth token to disable/reenable agents
+# Sets the AzDO.BearerToken variable used as the auth token to disable/reenable agents
 - template: set-token.yml
 
 - pwsh: |

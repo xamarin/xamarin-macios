@@ -64,7 +64,7 @@ steps:
     AUTH_TOKEN_VSENG_XAMARIN_MAC_DEVICES_P12: ${{ parameters.xqaCertPass }}
     AUTH_TOKEN_VSENG_XAMARIN_MAC_DEVICES_2_P12: ${{ parameters.xqaCertPass }}
 
-# Sets the AzDO.BearerToken variable that can be used as the auth token to disable/reenable agents
+# Sets the AzDO.BearerToken variable used as the auth token to disable/reenable agents
 - template: set-token.yml
 
 - pwsh: |
