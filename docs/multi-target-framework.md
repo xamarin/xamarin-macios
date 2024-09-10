@@ -64,7 +64,7 @@ following property in their project file to make their intention clear:
 
 ```xml
 <PropertyGroup>
-    <EnablePreviewFeatures>true</EnablePreviewFeatures>
+    <NoWarn>XCODE_16_0;$(NoWarn)</NoWarn>
 </PropertyGroup>
 ```
 
@@ -89,7 +89,7 @@ We'll release a single workload (per platform), with bindings for every OS
 version we currently support or plan to support. This means our stable
 releases may point to preview packages (but these preview packages have to be
 opted in by doing two things: appending the OS version to their target
-framework + setting EnablePreviewFeatures=true)
+framework + adding the specific experimental warning to NoWarn)
 
 We'll rename our packages. Currently we ship these packages:
 
@@ -162,14 +162,7 @@ Note 2: One complication here is that TargetPlatformVersion might not be set
 condition that accepts an empty TargetPlatformVersion. This corresponds with
 the default target platform version.
 
-Note 3: we load the preview sdk (Microsoft.iOS.Sdk.net8.0_18.0) even if
-`EnablePreviewFeatures!=true` - we show the error requesting
-`EnablePreviewFeatures` to be set from the preview sdk instead (this is to get
-an actionable error message). Without this, the user would get this rather
-unhelpful error message: `error NETSDK1139: The target platform identifier ios
-was not recognized.`
-
-Note 4: we load a special error-handling version of the sdk if we don't
+Note 3: we load a special error-handling version of the sdk if we don't
 support a TargetPlatformVersion for given TargetFrameworkVersion, and show an
 error about unsupported TargetPlatformVersion. Without this, the user would
 get this rather unhelpful error message: `error NETSDK1139: The target

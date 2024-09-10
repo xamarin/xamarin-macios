@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -206,6 +207,8 @@ namespace Xamarin.Tests {
 				sb.Add (arg);
 			}
 
+			NoWarn = GetPreviewNoWarn (NoWarn);
+
 			if (NoWarn is not null) {
 				var arg = "--nowarn";
 				if (NoWarn.Length > 0)
@@ -215,6 +218,29 @@ namespace Xamarin.Tests {
 			if (Verbosity != 0)
 				sb.Add ("-" + new string (Verbosity > 0 ? 'v' : 'q', Math.Abs (Verbosity)));
 			return sb.ToArray ();
+		}
+
+		public static void AddPreviewNoWarn (IList<string> argumentList)
+		{
+			var nw = GetPreviewNoWarn (null);
+			if (!string.IsNullOrEmpty (nw))
+				argumentList.Add ($"-nowarn:{nw}");
+		}
+
+#if NET
+		[return: NotNullIfNotNull (nameof (existingNowarn))]
+#endif
+		public static string? GetPreviewNoWarn (string? existingNowarn)
+		{
+			if (Configuration.XcodeIsStable)
+				return null;
+
+			var previewNoWarn = $"XCODE_{Configuration.XcodeVersion.Major}_{Configuration.XcodeVersion.Minor}_PREVIEW";
+			if (string.IsNullOrEmpty (existingNowarn)) {
+				return previewNoWarn;
+			} else {
+				return $"{existingNowarn},{previewNoWarn}";
+			}
 		}
 
 		public void AssertExecute (string message)
