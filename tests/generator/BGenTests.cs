@@ -527,6 +527,13 @@ namespace GeneratorTests {
 		}
 
 		[Test]
+		[TestCase (Profile.iOS)]
+		public void TypesInMultipleNamespaces (Profile profile)
+		{
+			BuildFile (profile, "tests/types-in-multiple-namespaces.cs");
+		}
+
+		[Test]
 		public void HyphenInName ()
 		{
 			BuildFile (Profile.iOS, "btouch-with-hyphen-in-name.cs");
@@ -596,6 +603,14 @@ namespace GeneratorTests {
 		public void MultipleApiDefinitions2 ()
 		{
 			BuildFile (Profile.iOS, "multiple-api-definitions2-a.cs", "multiple-api-definitions2-b.cs");
+		}
+
+
+		[Test]
+		[TestCase (Profile.iOS)]
+		public void INativeObjectArraysInBlocks (Profile profile)
+		{
+			BuildFile (profile, "tests/inativeobject-arrays-in-blocks.cs");
 		}
 
 		[Test]
@@ -1669,6 +1684,10 @@ namespace GeneratorTests {
 				new { BackingFieldType = "NSNumber", NullableType = "Foundation.NSNumber", RenderedBackingFieldType = "Foundation.NSNumber", SimplifiedNullableType = "Foundation.NSNumber" },
 				new { BackingFieldType = "NSInteger", NullableType = $"System.Nullable`1<{nintName}>", RenderedBackingFieldType = nintName, SimplifiedNullableType = "System.Nullable`1" },
 				new { BackingFieldType = "NSUInteger", NullableType = $"System.Nullable`1<{nuintName}>", RenderedBackingFieldType = nuintName, SimplifiedNullableType = "System.Nullable`1" },
+				new { BackingFieldType = "Int32", NullableType = $"System.Nullable`1<System.Int32>", RenderedBackingFieldType = "System.Int32", SimplifiedNullableType = "System.Nullable`1" },
+				new { BackingFieldType = "Int64", NullableType = $"System.Nullable`1<System.Int64>", RenderedBackingFieldType = "System.Int64", SimplifiedNullableType = "System.Nullable`1" },
+				new { BackingFieldType = "UInt32", NullableType = $"System.Nullable`1<System.UInt32>", RenderedBackingFieldType = "System.UInt32", SimplifiedNullableType = "System.Nullable`1" },
+				new { BackingFieldType = "UInt64", NullableType = $"System.Nullable`1<System.UInt64>", RenderedBackingFieldType = "System.UInt64", SimplifiedNullableType = "System.Nullable`1" },
 			};
 
 			foreach (var tc in testCases) {
@@ -1697,15 +1716,7 @@ namespace GeneratorTests {
 		public void UnderlyingFieldType (Profile profile)
 		{
 			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
-			var bgen = BuildFile (profile, true, true, "tests/underlyingfieldtype.cs");
-
-#if NET
-			const string nintName = "System.IntPtr";
-			const string nuintName = "System.UIntPtr";
-#else
-			const string nintName = "System.nint";
-			const string nuintName = "System.nuint";
-#endif
+			BuildFile (profile, true, true, "tests/underlyingfieldtype.cs");
 		}
 
 		[Test]
