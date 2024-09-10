@@ -17,6 +17,7 @@ public class NamespaceCache {
 	public ICollection<string> UINamespaces { get; private set; }
 	public ICollection<string> ImplicitNamespaces { get; private set; }
 	public ICollection<string> NamespacesThatConflictWithTypes { get; private set; }
+	public ICollection<string> TypesInMultipleNamespaces { get; private set; }
 
 	public NamespaceCache (PlatformName currentPlatform, string customObjCRuntimeNS, bool skipSystemDrawing)
 	{
@@ -152,6 +153,10 @@ public class NamespaceCache {
 		// These are both types and namespaces
 		NamespacesThatConflictWithTypes = new HashSet<string> {
 			"AudioUnit",
+		};
+
+		TypesInMultipleNamespaces = new HashSet<string> {
+			"NWEndpoint", // Both in Network and NetworkExtension
 		};
 
 		if (!skipSystemDrawing)
