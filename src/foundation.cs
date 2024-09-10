@@ -13230,6 +13230,11 @@ namespace Foundation {
 		[Export ("iOSAppOnMac")]
 		bool IsiOSApplicationOnMac { [Bind ("isiOSAppOnMac")] get; }
 		#endregion
+
+		[Field ("NSProcessInfoPerformanceProfileDidChangeNotification", "Metal")]
+		[Notification]
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0), NoWatch]
+		NSString PerformanceProfileDidChangeNotification { get; }
 	}
 
 	[NoWatch]
