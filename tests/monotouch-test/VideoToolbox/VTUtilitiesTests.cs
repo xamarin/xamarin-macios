@@ -126,8 +126,14 @@ namespace MonoTouchFixtures.VideoToolbox {
 			VTUtilities.RegisterSupplementalVideoDecoder (codec);
 		}
 
+		static CMVideoCodecType[] GetAllCMVideoCodecTypes ()
+		{
+			return Enum.GetValues<CMVideoCodecType> ();
+		}
+
 		[Test]
-		public void CopyVideoDecoderExtensionPropertiesTest ([Values] CMVideoCodecType codecType)
+		[TestCaseSource (nameof (GetAllCMVideoCodecTypes))]
+		public void CopyVideoDecoderExtensionPropertiesTest (CMVideoCodecType codecType)
 		{
 			TestRuntime.AssertXcodeVersion (16, 0);
 
@@ -143,7 +149,8 @@ namespace MonoTouchFixtures.VideoToolbox {
 		}
 
 		[Test]
-		public void CopyRawVideoDecoderExtensionPropertiesTest ([Values] CMVideoCodecType codecType)
+		[TestCaseSource (nameof (GetAllCMVideoCodecTypes))]
+		public void CopyRawVideoDecoderExtensionPropertiesTest (CMVideoCodecType codecType)
 		{
 			TestRuntime.AssertXcodeVersion (16, 0);
 
