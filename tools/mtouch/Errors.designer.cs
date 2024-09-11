@@ -3933,6 +3933,24 @@ namespace Xamarin.Bundler {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not optimize the static constructor in the interface {0} because it did not have the expected instruction sequence (found end of method too soon)..
+        /// </summary>
+        public static string MX2112_A {
+            get {
+                return ResourceManager.GetString("MX2112_A", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not optimize the static constructor in the interface {0} because it had an unexpected instruction {1} at offset {2}..
+        /// </summary>
+        public static string MX2112_B {
+            get {
+                return ResourceManager.GetString("MX2112_B", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Could not {0} the assembly &apos;{1}&apos;
         ///		.
         /// </summary>
