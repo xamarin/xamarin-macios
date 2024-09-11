@@ -405,6 +405,20 @@ namespace GeneratorTests {
 		}
 
 		[Test]
+		[TestCase (Profile.iOS)]
+		public void INativeObjectsInBlocks (Profile profile)
+		{
+			var bgen = new BGenTool ();
+			bgen.Profile = profile;
+			bgen.Defines = BGenTool.GetDefaultDefines (bgen.Profile);
+			bgen.AddTestApiDefinition ("tests/inativeobjects-in-blocks.cs");
+			bgen.AddExtraSourcesRelativeToGeneratorDirectory ("tests/inativeobjects-in-blocks-sources.cs");
+			bgen.CreateTemporaryBinding ();
+			bgen.AssertExecute ("build");
+			bgen.AssertNoWarnings ();
+		}
+
+		[Test]
 		public void Bug36457 ()
 		{
 			BuildFile (Profile.iOS, "bug36457.cs");
@@ -527,6 +541,13 @@ namespace GeneratorTests {
 		}
 
 		[Test]
+		[TestCase (Profile.iOS)]
+		public void TypesInMultipleNamespaces (Profile profile)
+		{
+			BuildFile (profile, "tests/types-in-multiple-namespaces.cs");
+		}
+
+		[Test]
 		public void HyphenInName ()
 		{
 			BuildFile (Profile.iOS, "btouch-with-hyphen-in-name.cs");
@@ -596,6 +617,14 @@ namespace GeneratorTests {
 		public void MultipleApiDefinitions2 ()
 		{
 			BuildFile (Profile.iOS, "multiple-api-definitions2-a.cs", "multiple-api-definitions2-b.cs");
+		}
+
+
+		[Test]
+		[TestCase (Profile.iOS)]
+		public void INativeObjectArraysInBlocks (Profile profile)
+		{
+			BuildFile (profile, "tests/inativeobject-arrays-in-blocks.cs");
 		}
 
 		[Test]
@@ -1637,6 +1666,7 @@ namespace GeneratorTests {
 			var tf = TargetFramework.Parse (BGenTool.GetTargetFramework (profile));
 			cscArguments.Add ($"/r:{Configuration.GetBindingAttributePath (tf)}");
 			cscArguments.Add ($"/r:{Configuration.GetBaseLibrary (tf)}");
+			BGenTool.AddPreviewNoWarn (cscArguments);
 			var rv = ExecutionHelper.Execute (cscExecutable, cscArguments);
 			Assert.AreEqual (0, rv, "CSC exit code");
 
@@ -1669,6 +1699,10 @@ namespace GeneratorTests {
 				new { BackingFieldType = "NSNumber", NullableType = "Foundation.NSNumber", RenderedBackingFieldType = "Foundation.NSNumber", SimplifiedNullableType = "Foundation.NSNumber" },
 				new { BackingFieldType = "NSInteger", NullableType = $"System.Nullable`1<{nintName}>", RenderedBackingFieldType = nintName, SimplifiedNullableType = "System.Nullable`1" },
 				new { BackingFieldType = "NSUInteger", NullableType = $"System.Nullable`1<{nuintName}>", RenderedBackingFieldType = nuintName, SimplifiedNullableType = "System.Nullable`1" },
+				new { BackingFieldType = "Int32", NullableType = $"System.Nullable`1<System.Int32>", RenderedBackingFieldType = "System.Int32", SimplifiedNullableType = "System.Nullable`1" },
+				new { BackingFieldType = "Int64", NullableType = $"System.Nullable`1<System.Int64>", RenderedBackingFieldType = "System.Int64", SimplifiedNullableType = "System.Nullable`1" },
+				new { BackingFieldType = "UInt32", NullableType = $"System.Nullable`1<System.UInt32>", RenderedBackingFieldType = "System.UInt32", SimplifiedNullableType = "System.Nullable`1" },
+				new { BackingFieldType = "UInt64", NullableType = $"System.Nullable`1<System.UInt64>", RenderedBackingFieldType = "System.UInt64", SimplifiedNullableType = "System.Nullable`1" },
 			};
 
 			foreach (var tc in testCases) {
@@ -1697,15 +1731,7 @@ namespace GeneratorTests {
 		public void UnderlyingFieldType (Profile profile)
 		{
 			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
-			var bgen = BuildFile (profile, true, true, "tests/underlyingfieldtype.cs");
-
-#if NET
-			const string nintName = "System.IntPtr";
-			const string nuintName = "System.UIntPtr";
-#else
-			const string nintName = "System.nint";
-			const string nuintName = "System.nuint";
-#endif
+			BuildFile (profile, true, true, "tests/underlyingfieldtype.cs");
 		}
 
 		[Test]
@@ -1718,6 +1744,21 @@ namespace GeneratorTests {
 
 			var delegateCallback = bgen.ApiAssembly.MainModule.GetType ("NS", "MyCallback").Methods.First ((v) => v.Name == "EndInvoke");
 			Assert.That (delegateCallback.MethodReturnType.CustomAttributes.Any (v => v.AttributeType.Name == "NullableAttribute"), "Nullable return type");
+		}
+
+		[Test]
+		[TestCase (Profile.iOS)]
+		public void DelegatesWithPointerTypes (Profile profile)
+		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
+			var bgen = BuildFile (profile, "tests/delegate-types.cs");
+			bgen.AssertNoWarnings ();
+
+			var delegateCallback = bgen.ApiAssembly.MainModule.GetType ("NS", "MyCallback").Methods.First ((v) => v.Name == "EndInvoke");
+			Assert.IsTrue (delegateCallback.MethodReturnType.ReturnType.IsPointer, "Pointer return type");
+			foreach (var p in delegateCallback.Parameters.Where (v => v.Name != "result")) {
+				Assert.IsTrue (p.ParameterType.IsPointer, $"Pointer parameter type: {p.Name}");
+			}
 		}
 	}
 }

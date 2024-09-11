@@ -164,23 +164,9 @@ namespace Network {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public unsafe void SetBooleanChangeHandler (Action<bool> callback)
 		{
-			if (callback is null) {
-				nw_connection_set_viability_changed_handler (GetCheckedHandle (), null);
-				return;
-			}
-
-			unsafe {
-#if NET
-				delegate* unmanaged<IntPtr, byte, void> trampoline = &TrampolineBooleanChangeHandler;
-				using var block = new BlockLiteral (trampoline, callback, typeof (NWConnection), nameof (TrampolineBooleanChangeHandler));
-#else
-				using var block = new BlockLiteral ();
-				block.SetupBlockUnsafe (static_BooleanChangeHandler, callback);
-#endif
-				nw_connection_set_viability_changed_handler (GetCheckedHandle (), &block);
-			}
+			SetViabilityChangeHandler (callback);
 		}
-#endif
+#endif // !XAMCORE_5_0
 
 		/// <summary>Set a handler that is called when data can be sent or received.</summary>
 		/// <param name="callback">The callback to call when data can be sent or received.</param>

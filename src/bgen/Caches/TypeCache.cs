@@ -73,6 +73,7 @@ public class TypeCache {
 	public Type SCNVector4 { get; }
 	public Type SecAccessControl { get; }
 	public Type SecIdentity { get; }
+	public Type SecKey { get; }
 	public Type SecTrust { get; }
 	public Type SecProtocolMetadata { get; }
 	public Type SecProtocolOptions { get; }
@@ -233,6 +234,7 @@ public class TypeCache {
 		SCNMatrix4 = Lookup (platformAssembly, "SceneKit", "SCNMatrix4");
 		SecAccessControl = Lookup (platformAssembly, "Security", "SecAccessControl");
 		SecIdentity = Lookup (platformAssembly, "Security", "SecIdentity");
+		SecKey = Lookup (platformAssembly, "Security", "SecKey");
 		SecTrust = Lookup (platformAssembly, "Security", "SecTrust");
 		SecProtocolOptions = Lookup (platformAssembly, "Security", "SecProtocolOptions");
 		SecProtocolMetadata = Lookup (platformAssembly, "Security", "SecProtocolMetadata");
