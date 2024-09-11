@@ -367,6 +367,7 @@ namespace Cecil.Tests {
 			// https://github.com/xamarin/xamarin-macios/issues/17292
 			key = key
 				.Replace ("AppKit.NS", "XKit.X")
+				.Replace ("UIKit.NS", "XKit.X")
 				.Replace ("UIKit.UI", "XKit.X")
 				.Replace ("AppKit.INS", "XKit.IX")
 				.Replace ("UIKit.IUI", "XKit.IX")

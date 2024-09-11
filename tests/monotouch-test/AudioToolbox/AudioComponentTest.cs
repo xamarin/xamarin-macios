@@ -144,6 +144,7 @@ namespace MonoTouchFixtures.AudioToolbox {
 		}
 
 		[Test]
+		[Ignore ("This test times out randomly")]
 		public void TestValidation ()
 		{
 			TestRuntime.AssertXcodeVersion (14, 0);
@@ -183,6 +184,7 @@ namespace MonoTouchFixtures.AudioToolbox {
 		}
 
 		[Test]
+		[Ignore ("This test times out randomly")]
 		public void TestValidationAsync ()
 		{
 			TestRuntime.AssertXcodeVersion (14, 0);

@@ -114,6 +114,7 @@ namespace Foundation {
 		static IntPtr cr = Dlfcn.dlopen (Constants.CryptoTokenKitLibrary, 1);
 		static IntPtr dd = Dlfcn.dlopen (Constants.DeviceDiscoveryExtensionLibrary, 1);
 		static IntPtr fk = Dlfcn.dlopen (Constants.FSKitLibrary, 1);
+		static IntPtr be = Dlfcn.dlopen (Constants.BrowserEngineKitLibrary, 1);
 
 #if !NET
 		[Obsolete ("Use PlatformAssembly for easier code sharing across platforms.")]

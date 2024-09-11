@@ -201,6 +201,7 @@ namespace Introspection {
 				case "ASDiscoveryDescriptor":
 				case "ASMigrationDisplayItem":
 				case "ASPickerDisplayItem":
+				case "DDDevice":
 				case "PKAddCarKeyPassConfiguration":
 				case "PKAddSecureElementPassConfiguration":
 				case "PKAddShareablePassConfiguration":
@@ -401,6 +402,11 @@ namespace Introspection {
 				case "ASAuthorizationPublicKeyCredentialLargeBlobAssertionInput":
 				case "ASAuthorizationPublicKeyCredentialLargeBlobAssertionOutput":
 				case "ASAuthorizationPublicKeyCredentialLargeBlobRegistrationInput":
+				case "DDDevice":
+				case "DDDeviceEvent":
+				case "FSMessageConnection":
+				case "FSModuleIdentity":
+				case "NSFileProviderKnownFolderLocations":
 				case "UIGestureRecognizer":
 				case "UIRotationGestureRecognizer":
 				case "UILongPressGestureRecognizer":
@@ -601,6 +607,11 @@ namespace Introspection {
 				case "ASAuthorizationPublicKeyCredentialLargeBlobAssertionInput":
 				case "ASAuthorizationPublicKeyCredentialLargeBlobAssertionOutput":
 				case "ASAuthorizationPublicKeyCredentialLargeBlobRegistrationInput":
+				case "DDDevice":
+				case "DDDeviceEvent":
+				case "FSMessageConnection":
+				case "FSModuleIdentity":
+				case "NSFileProviderKnownFolderLocations":
 				case "UIGestureRecognizer":
 				case "UIRotationGestureRecognizer":
 				case "UILongPressGestureRecognizer":
@@ -613,6 +624,8 @@ namespace Introspection {
 					return true;
 				case "NSLocalizedNumberFormatRule":
 					// Foundation.MonoTouchException : Objective-C exception thrown. Name: NSInvalidArgumentException Reason: *** -supportsSecureCoding cannot be sent to an abstract object of class NSLocalizedNumberFormatRule: Create a concrete instance!
+					return true;
+				case "FSResource": // header says yes, runtime says no
 					return true;
 				}
 				break;
@@ -726,6 +739,15 @@ namespace Introspection {
 				// SKVideoNode started implementing UIFocusItemContainer and UICoordinateSpace in Xcode 16
 				if (type.Name == "SKVideoNode" && !TestRuntime.CheckXcodeVersion (16, 0))
 					return true;
+				break;
+			case "UISpringLoadedInteractionSupporting":
+				switch (type.Name) {
+				case "UISearchTab":
+				case "UITab":
+				case "UITabGroup":
+					// These types implement UISpringLoadedInteractionSupporting using category, which we can't detect at runtime.
+					return true;
+				}
 				break;
 			}
 			return false;
