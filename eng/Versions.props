@@ -28,9 +28,9 @@
     <MicrosoftiOSSdknet80_170PackageVersion>17.0.8523</MicrosoftiOSSdknet80_170PackageVersion>
     <MicrosofttvOSSdknet80_170PackageVersion>17.0.8523</MicrosofttvOSSdknet80_170PackageVersion>
     <!-- This is a subscription to the .NET 8/Xcode 16.0 versions of our packages -->
-    <MicrosoftMacCatalystSdknet80_180PackageVersion>18.0.8159-xcode16</MicrosoftMacCatalystSdknet80_180PackageVersion>
-    <MicrosoftmacOSSdknet80_150PackageVersion>15.0.8159-xcode16</MicrosoftmacOSSdknet80_150PackageVersion>
-    <MicrosoftiOSSdknet80_180PackageVersion>18.0.8159-xcode16</MicrosoftiOSSdknet80_180PackageVersion>
-    <MicrosofttvOSSdknet80_180PackageVersion>18.0.8159-xcode16</MicrosofttvOSSdknet80_180PackageVersion>
+    <MicrosoftMacCatalystSdknet80_180PackageVersion>18.0.8242-xcode16</MicrosoftMacCatalystSdknet80_180PackageVersion>
+    <MicrosoftmacOSSdknet80_150PackageVersion>15.0.8242-xcode16</MicrosoftmacOSSdknet80_150PackageVersion>
+    <MicrosoftiOSSdknet80_180PackageVersion>18.0.8242-xcode16</MicrosoftiOSSdknet80_180PackageVersion>
+    <MicrosofttvOSSdknet80_180PackageVersion>18.0.8242-xcode16</MicrosofttvOSSdknet80_180PackageVersion>
   </PropertyGroup>
 </Project>
