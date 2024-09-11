@@ -1,6 +1,6 @@
 # Sets the AzDO.BearerToken variable that can be used as the auth token to disable/reenable agents
 steps:
-- template: azure-tools/az-client-update.yml@templates    # AzureCLI step below requires that AzClient 2.x is installed on the agent
+- template: azure-tools/az-client-update.yml@yaml-templates    # AzureCLI step below requires that AzClient 2.x is installed on the agent
   parameters:
     platform: 'All'       # Update Az tools for both Windows and Mac agents
     version: '2.62.0'
