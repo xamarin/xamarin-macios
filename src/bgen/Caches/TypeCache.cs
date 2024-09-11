@@ -132,6 +132,10 @@ public class TypeCache {
 	// optional if MediaToolbox is present 
 	public Type? MTAudioProcessingTap { get; }
 
+	public Type NWEndpoint { get; }
+	public Type NWInterface { get; }
+	public Type NWParameters { get; }
+
 	// optional if UIKit is present
 	public Type? UIOffset { get; }
 	public Type? UIEdgeInsets { get; }
@@ -290,6 +294,10 @@ public class TypeCache {
 			UIEdgeInsets = ConditionalLookup (platformAssembly, "UIKit", "UIEdgeInsets");
 			NSDirectionalEdgeInsets = ConditionalLookup (platformAssembly, "UIKit", "NSDirectionalEdgeInsets");
 		}
+		NWEndpoint = Lookup (platformAssembly, "Network", "NWEndpoint");
+		NWInterface = Lookup (platformAssembly, "Network", "NWInterface");
+		NWParameters = Lookup (platformAssembly, "Network", "NWParameters");
+
 		// init the NSValueCreateMap
 		NSValueCreateMap = BuildNSValueCreateMap (frameworks);
 	}
