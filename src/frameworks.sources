@@ -36,6 +36,7 @@ ACCESSIBILITY_SOURCES = \
 	Accessibility/AXHearingUtilities.cs \
 	Accessibility/AXAnimatedImagesUtilities.cs \
 	Accessibility/AXPrefers.cs \
+	Accessibility/AXSettings.cs \
 
 # Accounts
 
@@ -465,6 +466,7 @@ COREDATA_API_SOURCES = \
 
 COREDATA_SOURCES = \
 	CoreData/NSEntityDescription.cs \
+	CoreData/NSPersistentStoreCoordinator.cs \
 	CoreData/Obsolete.cs \
 
 # CoreFoundation
@@ -1011,6 +1013,7 @@ HEALTHKIT_SOURCES = \
 	HealthKit/HKObjectType.cs \
 	HealthKit/HKObsolete.cs \
 	HealthKit/HKSampleQuery.cs \
+	HealthKit/HKSupportFunctions.cs \
 	HealthKit/HKUnit.cs \
 
 # HealthKitUI
@@ -1152,6 +1155,7 @@ MAPKIT_CORE_SOURCES = \
 	MapKit/MapKit.cs \
 
 MAPKIT_SOURCES = \
+	MapKit/MKAddressFilter.cs \
 	MapKit/MKCompat.cs \
 	MapKit/MKDirections.cs \
 	MapKit/MKFeatureDisplayPriority.cs \
@@ -1224,6 +1228,8 @@ METAL_CORE_SOURCES = \
 METAL_SOURCES = \
 	Metal/MTLArgumentEncoder.cs \
 	Metal/MTLBlitPassSampleBufferAttachmentDescriptorArray.cs \
+	Metal/MTLCommandBuffer.cs \
+	Metal/MTLCommandQueue.cs \
 	Metal/MTLCompat.cs \
 	Metal/MTLIOCompression.cs \
 	Metal/MTLComputeCommandEncoder.cs \
@@ -1235,6 +1241,7 @@ METAL_SOURCES = \
 	Metal/MTLRenderCommandEncoder.cs \
 	Metal/MTLRenderPassDescriptor.cs \
 	Metal/MTLRenderPassSampleBufferAttachmentDescriptorArray.cs \
+	Metal/MTLResidencySet.cs \
 	Metal/MTLResourceStateCommandEncoder.cs \
 	Metal/MTLResourceStatePassSampleBufferAttachmentDescriptorArray.cs \
 	Metal/MTLVertexDescriptor.cs \
@@ -1278,6 +1285,7 @@ METALPERFORMANCESHADERSGRAPH_API_SOURCES = \
 	MetalPerformanceShadersGraph/MPSGraphEnums.cs \
 
 METALPERFORMANCESHADERSGRAPH_SOURCES = \
+	MetalPerformanceShadersGraph/MPSGraphExecutable.cs \
 	MetalPerformanceShadersGraph/MPSGraphExtensions.cs \
 	MetalPerformanceShadersGraph/MPSGraphTensorData.cs \
 
@@ -2133,6 +2141,7 @@ MACOS_FRAMEWORKS =          \
 	CoreText                \
 	CoreWlan                \
 	Darwin                  \
+	DeviceDiscoveryExtension \
 	EventKit                \
 	ExecutionPolicy		\
 	ExtensionKit		\
@@ -2461,6 +2470,7 @@ MACCATALYST_FRAMEWORKS = \
 	CoreTelephony \
 	CoreText \
 	CoreWlan \
+	DeviceDiscoveryExtension \
 	EventKit \
 	EventKitUI \
 	ExecutionPolicy \
