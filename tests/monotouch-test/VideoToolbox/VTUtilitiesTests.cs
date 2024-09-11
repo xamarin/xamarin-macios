@@ -126,7 +126,7 @@ namespace MonoTouchFixtures.VideoToolbox {
 			VTUtilities.RegisterSupplementalVideoDecoder (codec);
 		}
 
-		static CMVideoCodecType[] GetAllCMVideoCodecTypes ()
+		static CMVideoCodecType [] GetAllCMVideoCodecTypes ()
 		{
 			return Enum.GetValues<CMVideoCodecType> ();
 		}
