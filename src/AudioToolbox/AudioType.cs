@@ -1484,11 +1484,30 @@ namespace AudioToolbox {
 		}
 	}
 
-	/// <summary>This class represents the native AudioBufferList.</summary>
+	/// <summary>This struct represents the native <see href="https://developer.apple.com/documentation/coreaudiotypes/audiobufferlist">AudioBufferList</see> struct.</summary>
 	/// <remarks>
+	///   <para>
 	///     Typically it's better to use the <see cref="AudioBuffers" /> class to wrap a pointer to a native AudioBufferList,
 	///     but some audio code needs to minimize memory allocations due to being executed in a realtime thread. In that case,
 	///     using this struct is better, because it's possible to use it without incurring any memory allocations.
+	///   </para>
+	///
+	///   <para>
+	///     Note that this struct should never be created in C#, the only valid way to use it is to cast a pointer (<see cref="IntPtr" />)
+	///     to a pointer of this struct:
+	///   </para>
+	///
+	///   <example>
+	///     <code lang="csharp lang-csharp"><![CDATA[
+	/// public unsafe static void Callback (IntPtr audioBufferListPtr) {
+	///     AudioBufferList* audioBufferList = (AudioBufferList* ) audioBufferListPtr;
+	///     for (var i = 0; i < audioBufferList->Count; i++) {
+	///         AudioBuffer* buffer = audioBufferList->GetBuffer (index),
+	///         // Use the buffer for something
+	///     }
+	/// }
+	///   ]]></code>
+	///   </example>
 	/// </remarks>
 #if NET
 	[SupportedOSPlatform ("ios")]
