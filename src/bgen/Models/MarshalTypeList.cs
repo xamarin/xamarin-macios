@@ -81,6 +81,9 @@ public class MarshalTypeList : List<MarshalType> {
 		if (frameworks.HaveAudioUnit) {
 			Add (typeCache.AURenderEventEnumerator);
 		}
+		Add (typeCache.NWEndpoint);
+		Add (typeCache.NWInterface);
+		Add (typeCache.NWParameters);
 	}
 
 	void Add (Type? type)

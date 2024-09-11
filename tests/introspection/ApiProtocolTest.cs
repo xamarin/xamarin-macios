@@ -396,6 +396,7 @@ namespace Introspection {
 				case "ASDiscoveryDescriptor":
 				case "ASMigrationDisplayItem":
 				case "ASPickerDisplayItem":
+				case "NEVpnIkev2PpkConfiguration":
 				case "QLFileThumbnailRequest":
 				case "QLThumbnailReply":
 				case "PHPickerResult":
@@ -601,6 +602,7 @@ namespace Introspection {
 				case "ASDiscoveryDescriptor":
 				case "ASMigrationDisplayItem":
 				case "ASPickerDisplayItem":
+				case "NEVpnIkev2PpkConfiguration":
 				case "QLFileThumbnailRequest":
 				case "QLThumbnailReply":
 				case "PHPickerResult":
