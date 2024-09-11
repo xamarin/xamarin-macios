@@ -236,14 +236,14 @@ namespace UIKit {
 
 	[Native]
 	[ErrorDomain ("UIGuidedAccessErrorDomain")]
-	[NoWatch, NoTV, iOS (12, 2)]
+	[NoWatch, NoTV]
 	[MacCatalyst (13, 1)]
 	public enum UIGuidedAccessErrorCode : long {
 		PermissionDenied,
 		Failed = long.MaxValue,
 	}
 
-	[Flags, NoWatch, NoTV, iOS (12, 2)]
+	[Flags, NoWatch, NoTV]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum UIGuidedAccessAccessibilityFeature : ulong {
@@ -7401,7 +7401,6 @@ namespace UIKit {
 		[Export ("formatForTraitCollection:")]
 		UIGraphicsImageRendererFormat GetFormat (UITraitCollection traitCollection);
 
-		[TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("preferredRange", ArgumentSemantic.Assign)]
 		UIGraphicsImageRendererFormatRange PreferredRange { get; set; }
@@ -7607,7 +7606,6 @@ namespace UIKit {
 		[Export ("smartInsertDeleteType", ArgumentSemantic.Assign)]
 		UITextSmartInsertDeleteType SmartInsertDeleteType { get; set; }
 
-		[iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("passwordRules", ArgumentSemantic.Copy)]
 		UITextInputPasswordRules PasswordRules { get; set; }
@@ -10277,7 +10275,7 @@ namespace UIKit {
 		[Export ("lineBreakStrategy", ArgumentSemantic.Assign)]
 		NSLineBreakStrategy LineBreakStrategy { get; set; }
 
-		[TV (12, 0), NoWatch, NoiOS]
+		[NoWatch, NoiOS]
 		[NoMacCatalyst]
 		[Export ("enablesMarqueeWhenAncestorFocused")]
 		bool EnablesMarqueeWhenAncestorFocused { get; set; }
@@ -18394,7 +18392,7 @@ namespace UIKit {
 		[Export ("userInterfaceIdiom")]
 		UIUserInterfaceIdiom UserInterfaceIdiom { get; }
 
-		[NoWatch, iOS (12, 0)]
+		[NoWatch]
 		[MacCatalyst (13, 1)]
 		[Export ("userInterfaceStyle")]
 		UIUserInterfaceStyle UserInterfaceStyle { get; }
@@ -18433,7 +18431,7 @@ namespace UIKit {
 		[Static, Export ("traitCollectionWithForceTouchCapability:")]
 		UITraitCollection FromForceTouchCapability (UIForceTouchCapability capability);
 
-		[NoWatch, iOS (12, 0)]
+		[NoWatch]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("traitCollectionWithUserInterfaceStyle:")]
@@ -19172,12 +19170,10 @@ namespace UIKit {
 		[Field ("UITextContentTypePassword")]
 		NSString Password { get; }
 
-		[TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("UITextContentTypeNewPassword")]
 		NSString NewPassword { get; }
 
-		[TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("UITextContentTypeOneTimeCode")]
 		NSString OneTimeCode { get; }
@@ -20799,7 +20795,6 @@ namespace UIKit {
 		[Export ("primaryLanguage")]
 		string PrimaryLanguage { get; set; }
 
-		[iOS (11, 1), TV (11, 1)]
 		[MacCatalyst (13, 1)]
 		[Export ("hasDictationKey")]
 		bool HasDictationKey { get; set; }
@@ -21527,7 +21522,7 @@ namespace UIKit {
 		IUIFocusEnvironment [] PreferredFocusEnvironments { get; set; }
 	}
 
-	[TV (12, 0), iOS (12, 0), NoWatch]
+	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -21561,7 +21556,7 @@ namespace UIKit {
 
 		// FIXME: declared as a @required, but this breaks compatibility
 		// Radar: 41121416
-		[TV (12, 0), iOS (12, 0), NoWatch]
+		[NoWatch]
 		[MacCatalyst (13, 1)]
 #if NET
 		[Abstract]
@@ -21582,7 +21577,7 @@ namespace UIKit {
 		[Export ("isTransparentFocusItem")]
 		bool IsTransparentFocusItem { get; }
 
-		[TV (12, 0), iOS (12, 0), NoWatch]
+		[NoWatch]
 		[MacCatalyst (13, 1)]
 		[Export ("didHintFocusMovement:")]
 		void DidHintFocusMovement (UIFocusMovementHint hint);
@@ -21648,24 +21643,20 @@ namespace UIKit {
 		// See https://developer.apple.com/documentation/uikit/uifocussystem/2887479-register
 		// Do not specify one of the UIKit sound identifiers (such as default); doing so will cause an immediate assertion failure and crash your app.
 
-		[TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("focusedItem", ArgumentSemantic.Weak)]
 		IUIFocusItem FocusedItem { get; }
 
-		[TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("focusSystemForEnvironment:")]
 		[return: NullAllowed]
 		UIFocusSystem Create (IUIFocusEnvironment environment);
 
-		[TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("requestFocusUpdateToEnvironment:")]
 		void RequestFocusUpdate (IUIFocusEnvironment environment);
 
-		[TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("updateFocusIfNeeded")]
 		void UpdateFocusIfNeeded ();
@@ -21894,7 +21885,6 @@ namespace UIKit {
 
 		// FIXME: declared as a @required, but this breaks compatibility
 		// Radar: 41121293
-		[TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 #if NET
 		[Abstract]
@@ -21902,7 +21892,6 @@ namespace UIKit {
 		[NullAllowed, Export ("parentFocusEnvironment", ArgumentSemantic.Weak)]
 		IUIFocusEnvironment ParentFocusEnvironment { get; }
 
-		[TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 #if NET
 		[Abstract]
@@ -21917,7 +21906,7 @@ namespace UIKit {
 		string FocusGroupIdentifier { get; }
 	}
 
-	[TV (12, 0), iOS (12, 0), NoWatch]
+	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -23312,7 +23301,6 @@ namespace UIKit {
 		nfloat DefaultDocumentAspectRatio { get; set; }
 
 		[Internal]
-		[iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("transitionControllerForDocumentAtURL:")]
 		UIDocumentBrowserTransitionController _NewGetTransitionController (NSUrl documentUrl);
@@ -23358,7 +23346,6 @@ namespace UIKit {
 		[Export ("documentBrowser:willPresentActivityViewController:")]
 		void WillPresent (UIDocumentBrowserViewController controller, UIActivityViewController activityViewController);
 
-		[iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("documentBrowser:didPickDocumentsAtURLs:")]
 		void DidPickDocumentsAtUrls (UIDocumentBrowserViewController controller, NSUrl [] documentUrls);
@@ -23407,7 +23394,7 @@ namespace UIKit {
 	}
 
 	interface IUIFocusItemContainer { }
-	[iOS (12, 0), TV (12, 0), NoWatch]
+	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface UIFocusItemContainer {
@@ -23420,7 +23407,7 @@ namespace UIKit {
 		IUIFocusItem [] GetFocusItems (CGRect rect);
 	}
 
-	[iOS (12, 0), TV (12, 0), NoWatch]
+	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface UIFocusItemScrollableContainer : UIFocusItemContainer {
@@ -23442,7 +23429,6 @@ namespace UIKit {
 	[Protocol]
 	interface UIUserActivityRestoring {
 		[Abstract]
-		[TV (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("restoreUserActivityState:")]
 		void RestoreUserActivityState (NSUserActivity activity);
@@ -23489,7 +23475,6 @@ namespace UIKit {
 		nfloat GetScaledValue (nfloat value, [NullAllowed] UITraitCollection traitCollection);
 	}
 
-	[iOS (12, 1)]
 	[NoWatch]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -23516,7 +23501,6 @@ namespace UIKit {
 		Cancelled,
 	}
 
-	[iOS (12, 1)]
 	[NoWatch]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -23610,7 +23594,6 @@ namespace UIKit {
 
 	interface IUIPencilInteractionDelegate { }
 
-	[iOS (12, 1)]
 	[NoWatch]
 	[NoTV]
 	[MacCatalyst (13, 1)]

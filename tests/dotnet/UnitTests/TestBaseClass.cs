@@ -428,13 +428,6 @@ namespace Xamarin.Tests {
 			return false;
 		}
 
-		public static void AssertErrorCount (IList<BuildLogEvent> errors, int count, string message)
-		{
-			if (errors.Count == count)
-				return;
-			Assert.Fail ($"Expected {count} errors, got {errors.Count} errors: {message}.\n\t{string.Join ("\n\t", errors.Select (v => v.Message?.TrimEnd ()))}");
-		}
-
 		public static void AssertWarningMessages (IList<BuildLogEvent> actualWarnings, params string [] expectedWarningMessages)
 		{
 			AssertBuildMessages ("warning", actualWarnings, expectedWarningMessages);
@@ -453,9 +446,16 @@ namespace Xamarin.Tests {
 		public static void AssertBuildMessages (string type, IList<BuildLogEvent> actualMessages, params string [] expectedMessages)
 		{
 			AssertBuildMessages (type, actualMessages,
-				expectedMessages.Select (v => new Func<string, bool> ((msg) => msg == v)).ToArray (),
+				expectedMessages.Select (v => new Func<string, bool> ((msg) => msg == Canonicalize (v))).ToArray (),
 				expectedMessages.Select (v => new Func<string> (() => v)).ToArray ()
 			);
+		}
+
+		static string Canonicalize (string? msg)
+		{
+			if (msg is null)
+				return string.Empty;
+			return msg.Trim ('\n', '\r', ' ', '\t');
 		}
 
 		static string makeSingleLine (string? msg)
@@ -482,11 +482,11 @@ namespace Xamarin.Tests {
 
 			var failures = new List<string> ();
 			for (var i = 0; i < expectedCount; i++) {
-				var actual = actualMessages [i].Message ?? string.Empty;
+				var actual = Canonicalize (actualMessages [i].Message);
 				var isExpected = matchesExpectedMessage [i];
 				if (!isExpected (actual)) {
 					actual = makeSingleLine (actual);
-					var expected = makeSingleLine (rendersExpectedMessage [i] ());
+					var expected = makeSingleLine (Canonicalize (rendersExpectedMessage [i] ()));
 					failures.Add ($"\tUnexpected {type} message #{i}:\n\t\tExpected: {expected}\n\t\tActual:   {actual}");
 				}
 			}

@@ -68,7 +68,7 @@ namespace AVKit {
 		[Export ("initWithPlayerLayer:")]
 		NativeHandle Constructor (AVPlayerLayer playerLayer);
 
-		[TV (15, 0), NoWatch, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+		[TV (15, 0), NoWatch, iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("initWithContentSource:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (AVPictureInPictureControllerContentSource contentSource);
@@ -122,7 +122,7 @@ namespace AVKit {
 		[Export ("pictureInPictureButtonStopImageCompatibleWithTraitCollection:")]
 		UIImage CreateStopButton ([NullAllowed] UITraitCollection traitCollection);
 
-		[NoWatch, Mac (11, 0), iOS (14, 0)]
+		[NoWatch, iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[Export ("requiresLinearPlayback")]
 		bool RequiresLinearPlayback { get; set; }
@@ -136,12 +136,12 @@ namespace AVKit {
 		[Export ("canStartPictureInPictureAutomaticallyFromInline")]
 		bool CanStartPictureInPictureAutomaticallyFromInline { get; set; }
 
-		[TV (15, 0), NoWatch, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+		[TV (15, 0), NoWatch, iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("invalidatePlaybackState")]
 		void InvalidatePlaybackState ();
 
 		[NullAllowed]
-		[TV (15, 0), NoWatch, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+		[TV (15, 0), NoWatch, iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("contentSource", ArgumentSemantic.Strong)]
 		AVPictureInPictureControllerContentSource ContentSource { get; set; }
 	}
@@ -305,7 +305,7 @@ namespace AVKit {
 		[Export ("customInfoViewController", ArgumentSemantic.Assign)]
 		UIViewController CustomInfoViewController { get; set; }
 
-		[NoiOS, TV (11, 2), NoMac, NoWatch]
+		[NoiOS, NoMac, NoWatch]
 		[NoMacCatalyst]
 		[Export ("appliesPreferredDisplayCriteriaAutomatically")]
 		bool AppliesPreferredDisplayCriteriaAutomatically { get; set; }
@@ -636,12 +636,10 @@ namespace AVKit {
 		[Export ("showsTimecodes")]
 		bool ShowsTimecodes { get; set; }
 
-		[Mac (12, 0)]
 		[NoMacCatalyst]
 		[Wrap ("WeakDelegate")]
 		IAVPlayerViewDelegate Delegate { get; set; }
 
-		[Mac (12, 0)]
 		[NoMacCatalyst]
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
 		NSObject WeakDelegate { get; set; }
@@ -930,25 +928,22 @@ namespace AVKit {
 		void DidEndPresentingRoutes (AVRoutePickerView routePickerView);
 	}
 
-	[TV (11, 2), NoiOS, NoMac, NoWatch]
+	[NoiOS, NoMac, NoWatch]
 	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface AVDisplayManager {
 
-		[TV (11, 3)]
 		[NoMacCatalyst]
 		[Field ("AVDisplayManagerModeSwitchStartNotification")]
 		[Notification]
 		NSString ModeSwitchStartNotification { get; }
 
-		[TV (11, 3)]
 		[NoMacCatalyst]
 		[Field ("AVDisplayManagerModeSwitchEndNotification")]
 		[Notification]
 		NSString ModeSwitchEndNotification { get; }
 
-		[TV (11, 3)]
 		[NoMacCatalyst]
 		[Field ("AVDisplayManagerModeSwitchSettingsChangedNotification")]
 		[Notification]
@@ -960,13 +955,12 @@ namespace AVKit {
 		[Export ("displayModeSwitchInProgress")]
 		bool DisplayModeSwitchInProgress { [Bind ("isDisplayModeSwitchInProgress")] get; }
 
-		[TV (11, 3)]
 		[NoMacCatalyst]
 		[Export ("displayCriteriaMatchingEnabled")]
 		bool DisplayCriteriaMatchingEnabled { [Bind ("isDisplayCriteriaMatchingEnabled")] get; }
 	}
 
-	[TV (11, 2), NoiOS, NoMac, NoWatch]
+	[NoiOS, NoMac, NoWatch]
 	[NoMacCatalyst]
 	[Category]
 	[BaseType (typeof (UIWindow))]
@@ -984,7 +978,7 @@ namespace AVKit {
 		NativeHandle Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
 	}
 
-	[TV (15, 0), NoWatch, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[TV (15, 0), NoWatch, iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface AVPictureInPictureControllerContentSource {
@@ -1028,7 +1022,7 @@ namespace AVKit {
 
 	interface IAVPictureInPictureSampleBufferPlaybackDelegate { }
 
-	[TV (15, 0), NoWatch, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[TV (15, 0), NoWatch, iOS (15, 0), MacCatalyst (15, 0)]
 #if NET
 	[Protocol, Model]
 #else
@@ -1062,7 +1056,7 @@ namespace AVKit {
 
 	interface IAVPlayerViewDelegate { }
 
-	[Mac (12, 0), NoiOS, NoTV, NoMacCatalyst]
+	[NoiOS, NoTV, NoMacCatalyst]
 #if NET
 	[Protocol, Model]
 #else

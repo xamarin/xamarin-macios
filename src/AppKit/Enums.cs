@@ -363,7 +363,6 @@ namespace AppKit {
 		Regular = 0,
 		Small = 1,
 		Mini = 2,
-		[Mac (11, 0)]
 		Large = 3,
 	}
 
@@ -3112,7 +3111,6 @@ namespace AppKit {
 	}
 
 	[NoMacCatalyst]
-	[Mac (11, 0)]
 	[Native]
 	public enum NSTableViewStyle : long {
 		Automatic,
@@ -3123,7 +3121,6 @@ namespace AppKit {
 	}
 
 	[NoMacCatalyst]
-	[Mac (11, 0)]
 	[Native]
 	public enum NSTitlebarSeparatorStyle : long {
 		Automatic,
@@ -3133,7 +3130,6 @@ namespace AppKit {
 	}
 
 	[NoMacCatalyst]
-	[Mac (11, 0)]
 	[Native]
 	public enum NSWindowToolbarStyle : long {
 		Automatic,
@@ -3157,7 +3153,6 @@ namespace AppKit {
 	}
 
 	[NoMacCatalyst]
-	[Mac (11, 0)]
 	[Native]
 	public enum NSImageSymbolScale : long {
 		Small = 1,

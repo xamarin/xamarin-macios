@@ -737,8 +737,6 @@ namespace CoreAnimation {
 		bool AllowsNextDrawableTimeout { get; set; }
 
 		[NoWatch] // headers not updated
-		[TV (11, 2)]
-		[iOS (11, 2)]
 		[MacCatalyst (13, 1)]
 		[Export ("maximumDrawableCount")]
 		nuint MaximumDrawableCount { get; set; }
@@ -768,7 +766,6 @@ namespace CoreAnimation {
 		[NoTV]
 		[iOS (16, 0)]
 		[MacCatalyst (16, 0)]
-		[Mac (11, 0)]
 		[Export ("wantsExtendedDynamicRangeContent")]
 		bool WantsExtendedDynamicRangeContent { get; set; }
 
@@ -1423,7 +1420,7 @@ namespace CoreAnimation {
 
 		#endregion
 
-		[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0), Mac (12, 0)]
+		[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("preferredFrameRateRange", ArgumentSemantic.Assign)]
 		CAFrameRateRange PreferredFrameRateRange { get; set; }
 	}
@@ -1776,15 +1773,11 @@ namespace CoreAnimation {
 		[Field ("kCAGradientLayerAxial")]
 		Axial,
 
-		[iOS (12, 0)]
-		[TV (12, 0)]
 		[NoWatch]
 		[MacCatalyst (13, 1)]
 		[Field ("kCAGradientLayerRadial")]
 		Radial,
 
-		[iOS (12, 0)]
-		[TV (12, 0)]
 		[NoWatch]
 		[MacCatalyst (13, 1)]
 		[Field ("kCAGradientLayerConic")]

@@ -13,13 +13,12 @@ namespace CoreMidi {
 #if !XAMCORE_5_0
 #if NET
 	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("ios12.0")]
+	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[UnsupportedOSPlatform ("tvos")]
 #else
 	[NoWatch]
 	[NoTV]
-	[iOS (12, 0)]
 #endif
 	[NativeName ("MIDICIDeviceIdentification")]
 	[StructLayout (LayoutKind.Sequential)]
@@ -39,13 +38,12 @@ namespace CoreMidi {
 
 #if NET
 	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("ios12.0")]
+	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[UnsupportedOSPlatform ("tvos")]
 #else
 	[NoWatch]
 	[NoTV]
-	[iOS (12, 0)]
 #endif
 	[NativeName ("MIDICIDeviceIdentification")]
 	[StructLayout (LayoutKind.Sequential)]

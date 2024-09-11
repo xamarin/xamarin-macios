@@ -284,7 +284,6 @@ namespace GameKit {
 		[MacCatalyst (14, 0)]
 		Dashboard = 4,
 		[iOS (15, 0)]
-		[Mac (12, 0)]
 		[MacCatalyst (15, 0)]
 		[TV (15, 0)]
 		[NoWatch]
@@ -330,10 +329,8 @@ namespace GameKit {
 	}
 
 #if !NET
-	[iOS (11, 3)]
 	[Deprecated (PlatformName.iOS, 14, 0, message: "Do not use; this API was removed.")]
 	[Deprecated (PlatformName.MacOSX, 11, 0, message: "Do not use; this API was removed.")]
-	[TV (11, 3)]
 	[Deprecated (PlatformName.TvOS, 14, 0, message: "Do not use; this API was removed.")]
 	[Native]
 	public enum GKAuthenticationType : ulong {
@@ -344,7 +341,6 @@ namespace GameKit {
 #endif
 
 	[TV (14, 0)]
-	[Mac (11, 0)]
 	[iOS (14, 0)]
 	[NoWatch]
 	[MacCatalyst (14, 0)]
@@ -357,7 +353,6 @@ namespace GameKit {
 	}
 
 	[TV (14, 0)]
-	[Mac (11, 0)]
 	[iOS (14, 0)]
 	[Watch (7, 0)]
 	[MacCatalyst (14, 0)]
@@ -368,7 +363,6 @@ namespace GameKit {
 	}
 
 	[TV (14, 0)]
-	[Mac (11, 0)]
 	[iOS (14, 0)]
 	[NoWatch]
 	[MacCatalyst (14, 0)]
@@ -378,7 +372,6 @@ namespace GameKit {
 		NearbyOnly = 1,
 		AutomatchOnly = 2,
 		[TV (15, 0)]
-		[Mac (12, 0)]
 		[iOS (15, 0)]
 		[MacCatalyst (15, 0)]
 		InviteOnly = 3,
@@ -386,7 +379,6 @@ namespace GameKit {
 
 	[Watch (7, 4)]
 	[TV (14, 5)]
-	[Mac (11, 3)]
 	[iOS (14, 5)]
 	[MacCatalyst (14, 5)]
 	[Native]

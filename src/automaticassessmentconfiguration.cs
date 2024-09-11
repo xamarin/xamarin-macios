@@ -134,7 +134,7 @@ namespace AutomaticAssessmentConfiguration {
 		[Export ("initWithConfiguration:")]
 		NativeHandle Constructor (AEAssessmentConfiguration configuration);
 
-		[Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+		[iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("configuration", ArgumentSemantic.Copy)]
 		AEAssessmentConfiguration Configuration { get; }
 
@@ -182,7 +182,7 @@ namespace AutomaticAssessmentConfiguration {
 		void FailedToUpdate (AEAssessmentSession session, AEAssessmentConfiguration configuration, NSError error);
 	}
 
-	[Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (NSObject))]
 #if XAMCORE_5_0
 	[DisableDefaultCtor]

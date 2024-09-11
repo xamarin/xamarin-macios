@@ -417,7 +417,11 @@ namespace Introspection {
 					return Runtime.GetINativeObject<SecIdentity> (array [0].LowlevelObjectForKey (SecImportExport.Identity.Handle), false);
 				}
 			case "SecTrust":
+#if NET
+				X509Certificate x = X509CertificateLoader.LoadCertificate (mail_google_com);
+#else
 				X509Certificate x = new X509Certificate (mail_google_com);
+#endif
 				using (var policy = SecPolicy.CreateSslPolicy (true, "mail.google.com"))
 					return new SecTrust (x, policy);
 			case "SslContext":
@@ -476,7 +480,11 @@ namespace Introspection {
 				using (var cdata = NSData.FromArray (mail_google_com))
 					return new SecCertificate2 (new SecCertificate (cdata));
 			case "SecTrust2":
+#if NET
+				X509Certificate x2 = X509CertificateLoader.LoadCertificate (mail_google_com);
+#else
 				X509Certificate x2 = new X509Certificate (mail_google_com);
+#endif
 				using (var policy = SecPolicy.CreateSslPolicy (true, "mail.google.com"))
 					return new SecTrust2 (new SecTrust (x2, policy));
 			case "SecIdentity2":

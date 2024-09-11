@@ -700,7 +700,7 @@ namespace EventKit {
 		[Export ("initWithAccessToEntityTypes:")]
 		NativeHandle Constructor (EKEntityMask accessToEntityTypes);
 
-		[Watch (5, 0), iOS (12, 0)]
+		[Watch (5, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("delegateSources")]
 		EKSource [] DelegateSources { get; }
@@ -773,7 +773,7 @@ namespace EventKit {
 		EKReminder Create (EKEventStore eventStore);
 	}
 
-	[Mac (12, 0), iOS (15, 0), Watch (8, 0), MacCatalyst (15, 0), NoTV]
+	[iOS (15, 0), Watch (8, 0), MacCatalyst (15, 0), NoTV]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface EKVirtualConferenceDescriptor {
@@ -794,7 +794,7 @@ namespace EventKit {
 	delegate void VirtualConferenceRoomTypeHandler (NSArray<EKVirtualConferenceRoomTypeDescriptor> virtualConferenceRoomTypeDescriptor, NSError error);
 	delegate void VirtualConferenceHandler (EKVirtualConferenceDescriptor virtualConferenceDescriptor, NSError error);
 
-	[Mac (12, 0), iOS (15, 0), Watch (8, 0), MacCatalyst (15, 0), NoTV]
+	[iOS (15, 0), Watch (8, 0), MacCatalyst (15, 0), NoTV]
 	[BaseType (typeof (NSObject))]
 	interface EKVirtualConferenceProvider : NSExtensionRequestHandling {
 		[Async]
@@ -806,7 +806,7 @@ namespace EventKit {
 		void FetchVirtualConference (string identifier, VirtualConferenceHandler handler);
 	}
 
-	[Mac (12, 0), iOS (15, 0), Watch (8, 0), MacCatalyst (15, 0), NoTV]
+	[iOS (15, 0), Watch (8, 0), MacCatalyst (15, 0), NoTV]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface EKVirtualConferenceRoomTypeDescriptor {
@@ -821,7 +821,7 @@ namespace EventKit {
 		string Identifier { get; }
 	}
 
-	[Mac (12, 0), iOS (15, 0), Watch (8, 0), MacCatalyst (15, 0), NoTV]
+	[iOS (15, 0), Watch (8, 0), MacCatalyst (15, 0), NoTV]
 	[BaseType (typeof (NSObject), Name = "EKVirtualConferenceURLDescriptor")]
 	[DisableDefaultCtor]
 	interface EKVirtualConferenceUrlDescriptor {

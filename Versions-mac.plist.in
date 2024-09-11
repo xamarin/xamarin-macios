@@ -10,12 +10,6 @@
 	<dict>
 		<key>macOS</key>
 		<array>
-			<string>10.15</string>
-			<string>10.16</string>
-			<string>11.0</string>
-			<string>11.1</string>
-			<string>11.2</string>
-			<string>11.3</string>
 			<string>12.0</string>
 			<string>12.1</string>
 			<string>12.3</string>

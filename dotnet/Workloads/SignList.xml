@@ -44,6 +44,20 @@
     <ThirdParty Include="imobiledevice-*\*.exe" />
     <!-- Build.zip -->
     <ThirdParty Include="Mono.Cecil*.dll" />
+
+    <!-- xcsync assemblies -->
+    <ThirdParty Include="ClangSharp.dll" />
+    <ThirdParty Include="ClangSharp.Interop.dll" />
+    <ThirdParty Include="Humanizer.dll" />
+    <ThirdParty Include="Marille.dll" />
+    <ThirdParty Include="Newtonsoft.Json.dll" />
+    <ThirdParty Include="Serilog.dll" />
+    <ThirdParty Include="Serilog.Enrichers.Thread.dll" />
+    <ThirdParty Include="Serilog.Expressions.dll" />
+    <ThirdParty Include="Serilog.Sinks.Console.dll" />
+    <ThirdParty Include="Serilog.Sinks.Debug.dll" />
+    <ThirdParty Include="TestableIO.System.IO.Abstractions.dll" />
+    <ThirdParty Include="TestableIO.System.IO.Abstractions.Wrappers.dll" />
   </ItemGroup>
 
   <ItemGroup>

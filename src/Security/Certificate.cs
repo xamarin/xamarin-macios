@@ -177,17 +177,25 @@ namespace Security {
 
 		public X509Certificate ToX509Certificate ()
 		{
+#if NET
+			return X509CertificateLoader.LoadCertificate (GetRawData ());
+#else
 #if NATIVE_APPLE_CERTIFICATE
 			var impl = new Mono.AppleTls.X509CertificateImplApple (GetCheckedHandle (), false);
 			return new X509Certificate (impl);
 #else
 			return new X509Certificate (GetRawData ());
 #endif
+#endif
 		}
 
 		public X509Certificate2 ToX509Certificate2 ()
 		{
+#if NET
+			return X509CertificateLoader.LoadCertificate (GetRawData ());
+#else
 			return new X509Certificate2 (GetRawData ());
+#endif
 		}
 
 		internal static bool Equals (SecCertificate first, SecCertificate second)
@@ -291,26 +299,22 @@ namespace Security {
 #endif // !__MACCATALYST__
 
 #if NET
-		[SupportedOSPlatform ("tvos12.0")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[TV (12, 0)]
-		[iOS (12, 0)]
 		[Watch (5, 0)]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
 		static extern IntPtr /* SecKeyRef* */ SecCertificateCopyKey (IntPtr /* SecKeyRef* */ key);
 
 #if NET
-		[SupportedOSPlatform ("tvos12.0")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[TV (12, 0)]
-		[iOS (12, 0)]
 		[Watch (5, 0)]
 #endif
 		public SecKey? GetKey ()
