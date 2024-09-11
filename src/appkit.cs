@@ -20096,6 +20096,7 @@ namespace AppKit {
 		[Export ("textView:shouldSelectCandidateAtIndex:"), DelegateName ("NSTextViewSelectCandidate"), NoDefaultValue]
 		bool ShouldSelectCandidates (NSTextView textView, nuint index);
 
+#if NET
 		[Mac (15, 0)]
 		[Export ("textViewWritingToolsWillBegin:"), EventArgs ("NSTextView")]
 		void WritingToolsWillBegin (NSTextView textView);
@@ -20108,6 +20109,7 @@ namespace AppKit {
 		[Export ("textView:writingToolsIgnoredRangesInEnclosingRange:"), DelegateName ("NSTextViewRange"), NoDefaultValue]
 		// Can't use BindAs in a protocol [return: BindAs (typeof (NSRange[]))]
 		NSValue [] GetWritingToolsIgnoredRangesInEnclosingRange (NSTextView textView, NSRange enclosingRange);
+#endif
 	}
 
 	[NoMacCatalyst]

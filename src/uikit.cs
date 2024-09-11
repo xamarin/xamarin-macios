@@ -16616,6 +16616,7 @@ namespace UIKit {
 		[Export ("textView:textItemMenuWillEndForTextItem:animator:")]
 		void WillEnd (UITextView textView, UITextItem textItem, IUIContextMenuInteractionAnimating animator);
 
+#if NET
 		[iOS (18, 0), MacCatalyst (18, 0), NoTV]
 		[Export ("textViewWritingToolsWillBegin:"), EventArgs ("UITextView")]
 		void WritingToolsWillBegin (UITextView textView);
@@ -16628,6 +16629,7 @@ namespace UIKit {
 		[Export ("textView:writingToolsIgnoredRangesInEnclosingRange:"), DelegateName ("UITextViewRange"), NoDefaultValue]
 		// Can't use BindAs in a protocol [return: BindAs (typeof (NSRange[]))]
 		NSValue [] GetWritingToolsIgnoredRangesInEnclosingRange (UITextView textView, NSRange enclosingRange);
+#endif
 
 		[NoWatch, NoTV, NoMacCatalyst, iOS (18, 0)]
 		[Export ("textView:willBeginFormattingWithViewController:"), EventArgs ("UITextViewTextFormattingViewController")]
@@ -24535,11 +24537,11 @@ namespace UIKit {
 		[Export ("zOffset")]
 		nfloat ZOffset { get; }
 
-		[iOS (16, 4), MacCatalyst (16, 4)]
+		[iOS (16, 4), MacCatalyst (17, 0)]
 		[Export ("azimuthAngleInView:")]
 		nfloat GetAzimuthAngle ([NullAllowed] UIView view);
 
-		[iOS (16, 4), MacCatalyst (16, 4)]
+		[iOS (16, 4), MacCatalyst (17, 0)]
 		[Export ("azimuthUnitVectorInView:")]
 		CGVector GetAzimuthUnitVector ([NullAllowed] UIView view);
 
@@ -30953,16 +30955,6 @@ namespace UIKit {
 		NativeHandle Constructor (string styleKey, string title, UIStringAttributes attributes);
 	}
 
-	// @protocol UITabBarControllerSidebarAnimating <NSObject>
-	/*
-	  Check whether adding [Model] to this declaration is appropriate.
-	  [Model] is used to generate a C# class that implements this protocol,
-	  and might be useful for protocols that consumers are supposed to implement,
-	  since consumers can subclass the generated class instead of implementing
-	  the generated interface. If consumers are not supposed to implement this
-	  protocol, then [Model] is redundant and will generate code that will never
-	  be used.
-	*/
 	[NoWatch, NoTV, iOS (18, 0)]
 	[Protocol (BackwardsCompatibleCodeGeneration = false)]
 	interface UITabBarControllerSidebarAnimating {

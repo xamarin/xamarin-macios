@@ -167,7 +167,22 @@ public partial class Generator : IMemberGatherer {
 			return false;
 		}
 
-		return type.IsInterface;
+		// If any of the interfaces this type implements is an NSObject,
+		// then this type is also an NSObject
+		var ifaces = type.GetInterfaces ();
+		foreach (var iface in ifaces)
+			if (IsNSObject (iface))
+				return true;
+
+		if (type.IsInterface) {
+			var bta = ReflectionExtensions.GetBaseTypeAttribute (type, this);
+			if (bta?.BaseType is not null)
+				return IsNSObject (bta.BaseType);
+
+			return false;
+		}
+
+		return false;
 	}
 
 	public string PrimitiveType (Type t, bool formatted = false)
@@ -604,8 +619,10 @@ public partial class Generator : IMemberGatherer {
 					invoke.AppendFormat (" Runtime.GetINativeObject<{1}> ({0}, false)!", safe_name, pi.ParameterType);
 				} else if (isForced) {
 					invoke.AppendFormat (" Runtime.GetINativeObject<{1}> ({0}, true, {2})!", safe_name, TypeManager.RenderType (pi.ParameterType), isForcedOwns);
-				} else {
+				} else if (IsNSObject (pi.ParameterType)) {
 					invoke.AppendFormat (" Runtime.GetNSObject<{1}> ({0})!", safe_name, TypeManager.RenderType (pi.ParameterType));
+				} else {
+					invoke.AppendFormat (" Runtime.GetINativeObject<{1}> ({0}, false)!", safe_name, TypeManager.RenderType (pi.ParameterType));
 				}
 				continue;
 			}
@@ -716,6 +733,19 @@ public partial class Generator : IMemberGatherer {
 					invoke.AppendFormat ("CFArray.ArrayFromHandle<{0}> ({1})!", TypeManager.FormatType (null, et), safe_name);
 					continue;
 				}
+				if (TypeCache.INativeObject.IsAssignableFrom (et)) {
+					pars.Add (new TrampolineParameterInfo (NativeHandleType, safe_name));
+					invoke.AppendFormat ("NSArray.ArrayFromHandle<{0}> ({1})!", TypeManager.FormatType (t, et), safe_name);
+					continue;
+				}
+			}
+
+			if (pi.ParameterType.IsPointer && pi.ParameterType.GetElementType ().IsValueType) {
+				// Technically we should only allow blittable types here, but the C# compiler shows an error later on if any non-blittable types
+				// are used, because this ends up in the signature of a UnmanagedCallersOnly method.
+				pars.Add (new TrampolineParameterInfo (TypeManager.FormatType (null, pi.ParameterType), safe_name));
+				invoke.Append (safe_name);
+				continue;
 			}
 
 			if (pi.ParameterType.IsSubclassOf (TypeCache.System_Delegate)) {
@@ -885,6 +915,9 @@ public partial class Generator : IMemberGatherer {
 				return string.Format ("{0}.GetHandle ()", safe_name);
 			return safe_name + ".Handle";
 		}
+
+		if (TypeCache.INativeObject.IsAssignableFrom (pi.ParameterType))
+			return $"{safe_name}.GetHandle ()";
 
 		// This means you need to add a new MarshalType in the method "Go"
 		throw new BindingException (1002, true, pi.ParameterType.FullName, mi.DeclaringType.FullName, mi.Name.GetSafeParamName ());
@@ -4453,6 +4486,7 @@ public partial class Generator : IMemberGatherer {
 			print (sa.Safe ? "[ThreadSafe]" : "[ThreadSafe (false)]");
 
 		PrintObsoleteAttributes (mi);
+
 		if (minfo.is_return_release)
 			print ("[return: ReleaseAttribute ()]");
 
@@ -4555,8 +4589,8 @@ public partial class Generator : IMemberGatherer {
 					argCount++;
 			}
 			if (minfo.Method.GetParameters ().Length != argCount) {
-				ErrorHelper.Warning (1105,
-					minfo.selector, argCount, minfo.Method, minfo.Method.GetParameters ().Length);
+				exceptions.Add (ErrorHelper.CreateWarning (1105,
+					minfo.selector, argCount, minfo.Method, minfo.Method.GetParameters ().Length));
 			}
 		}
 
@@ -4731,11 +4765,13 @@ public partial class Generator : IMemberGatherer {
 					print ("[MonoNativeFunctionWrapper]\n");
 
 				var accessibility = mi.DeclaringType.IsInternal (this) ? "internal" : "public";
-				print ("{3} delegate {0} {1} ({2});",
+				var isUnsafe = mi.GetParameters ().Any ((v => v.ParameterType.IsPointer)) || mi.ReturnType.IsPointer;
+				print ("{3}{4} delegate {0} {1} ({2});",
 					   TypeManager.RenderType (mi.ReturnType, mi.ReturnTypeCustomAttributes),
 					   shortName,
 					   RenderParameterDecl (mi.GetParameters ()),
-					   accessibility);
+					   accessibility,
+					   isUnsafe ? " unsafe" : string.Empty);
 			}
 
 			if (group.Namespace is not null) {
@@ -5074,6 +5110,7 @@ public partial class Generator : IMemberGatherer {
 			foreach (var docId in docIds) {
 				print ($"[DynamicDependencyAttribute (\"{docId}\")]");
 			}
+			print ("[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]");
 			print ($"static I{TypeName} ()");
 			print ("{");
 			print ("\tGC.KeepAlive (null);"); // need to do _something_ (doesn't seem to matter what), otherwise the static cctor (and the DynamicDependency attributes) are trimmed away.

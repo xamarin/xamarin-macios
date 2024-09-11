@@ -3,3 +3,6 @@
 !missing-selector! NSObject::accessibilityExpandedStatusBlock not bound
 !missing-selector! NSObject::setAccessibilityExpandedStatus: not bound
 !missing-selector! NSObject::setAccessibilityExpandedStatusBlock: not bound
+!missing-protocol-member! UITextViewDelegate::textView:writingToolsIgnoredRangesInEnclosingRange: not found
+!missing-protocol-member! UITextViewDelegate::textViewWritingToolsDidEnd: not found
+!missing-protocol-member! UITextViewDelegate::textViewWritingToolsWillBegin: not found
