@@ -142,7 +142,6 @@ parameters:
       splitByPlatforms: false,
       testPrefix: 'simulator_tests',
     },
-    },
     {
       label: xcframework,
       splitByPlatforms: false,
