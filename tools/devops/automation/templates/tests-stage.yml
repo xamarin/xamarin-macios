@@ -224,12 +224,6 @@ parameters:
 - name: deviceTestsConfigurations
   type: object
 
-- name: azureStorage
-  type: string
-
-- name: azureContainer
-  type: string
-
 - name: stageDisplayNamePrefix
   type: string
   default: ''

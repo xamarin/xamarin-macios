@@ -132,6 +132,4 @@ stages:
       ${{ if ne(length(parameters.testConfigurations), 0)}}:
         testConfigurations: ${{ parameters.testConfigurations }}
       deviceTestsConfigurations: ${{ parameters.deviceTestsConfigurations }}
-      azureStorage: ${{ variables['azureStorage'] }}
-      azureContainer: ${{ variables['azureContainer'] }}
 
