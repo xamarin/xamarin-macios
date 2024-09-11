@@ -1516,8 +1516,8 @@ namespace AudioToolbox {
 	[SupportedOSPlatform ("tvos")]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
-	public unsafe struct AudioBufferList {
-		uint mNumberOfBuffers;
+	public unsafe readonly ref struct AudioBufferList {
+		readonly uint mNumberOfBuffers;
 
 		/// <summary>Returns the number of audio buffers in this list.</summary>
 		public uint Count { get => mNumberOfBuffers; }
