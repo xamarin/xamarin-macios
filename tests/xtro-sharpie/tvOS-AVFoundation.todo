@@ -322,7 +322,6 @@
 !missing-field! AVCaptureDeviceTypeBuiltInUltraWideCamera not bound
 !missing-field! AVCaptureDeviceTypeBuiltInWideAngleCamera not bound
 !missing-field! AVCaptureDeviceTypeContinuityCamera not bound
-!missing-field! AVCaptureDeviceTypeExternal not bound
 !missing-field! AVCaptureDeviceTypeMicrophone not bound
 !missing-field! AVCaptureDeviceWasConnectedNotification not bound
 !missing-field! AVCaptureDeviceWasDisconnectedNotification not bound
