@@ -913,6 +913,9 @@ namespace BI1066Errors
 		public void NoWarn (Profile profile)
 		{
 			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
+			if (!Configuration.XcodeIsStable)
+				Assert.Ignore ("This test doesn't work when using a preview Xcode, because we have to pass -nowarn to enable preview builds, which interferes with the test.");
+
 			const string message = "The member 'SomeMethod' is decorated with [Static] and its container class nowarnTests.FooObject_Extensions is decorated with [Category] this leads to hard to use code. Please inline SomeMethod into nowarnTests.FooObject class.";
 			{
 				// Enabled
