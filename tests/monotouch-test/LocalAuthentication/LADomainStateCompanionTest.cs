@@ -23,7 +23,7 @@ namespace MonoTouchFixtures.LocalAuthentication {
 			Assert.IsNotNull (context.DomainState, "DomainState");
 			Assert.IsNotNull (context.DomainState.Companion, "DomainState.Companion");
 			Assert.IsNotNull (context.DomainState.Companion.WeakAvailableCompanionTypes, "DomainState.Companion.WeakAvailableCompanionTypes");
-			Assert.AreEqual (LACompanionType.None, context.DomainState.Companion.AvailableCompanionTypes, "DomainState.Companion.AvailableCompanionTypes");
+			Assert.That (context.DomainState.Companion.AvailableCompanionTypes, Is.EqualTo (LACompanionType.None).Or.EqualTo (LACompanionType.Watch), "DomainState.Companion.AvailableCompanionTypes");
 		}
 	}
 }

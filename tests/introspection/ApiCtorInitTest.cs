@@ -151,6 +151,11 @@ namespace Introspection {
 			case "GKHybridStrategist":
 				return true; // GKHybridStrategist has been removed from our bindings
 #endif
+			case "THClient":
+				// The default initializer is documented to work, but it takes a long time before it eventually fails on macOS Sequoia
+				// Looking at the stack trace in Xcode, it seems it hits the network and times out waiting for something?
+				// So just skip the testing, it's likely the constructor is bound correctly, but that it only works in some circumstances.
+				return true;
 			}
 
 			switch (type.Namespace) {

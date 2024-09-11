@@ -320,6 +320,11 @@ BACKGROUNDTASKS_API_SOURCES = \
 BACKGROUNDASSETS_SOURCES = \
 	BackgroundAssets/BACompat.cs \
 
+# BrowserEngineKit
+
+BROWSERENGINEKIT_CORE_SOURCES = \
+	BrowserEngineKit/BEStructs.cs \
+
 # BusinessChat
 
 BUSINESSCHAT_API_SOURCES = \
@@ -2118,6 +2123,7 @@ MACOS_FRAMEWORKS =          \
 	AVRouting               \
 	BusinessChat            \
 	BackgroundAssets        \
+	BrowserEngineKit        \
 	CallKit \
 	CFNetwork               \
 	Chip                    \
@@ -2235,6 +2241,7 @@ IOS_FRAMEWORKS =         \
 	AutomaticAssessmentConfiguration \
 	BackgroundAssets \
 	BackgroundTasks \
+	BrowserEngineKit \
 	BusinessChat \
 	CallKit \
 	CarPlay \
@@ -2374,6 +2381,7 @@ TVOS_FRAMEWORKS =           \
 	AudioToolbox            \
 	AudioUnit               \
 	BackgroundTasks         \
+	BrowserEngineKit        \
 	CFNetwork               \
 	Chip                    \
 	Cinematic              \

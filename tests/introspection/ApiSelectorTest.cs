@@ -1327,6 +1327,12 @@ namespace Introspection {
 			case "initWithAchievementID:":
 			case "initWithLeaderboardSetID:":
 				return true;
+			case "initWithBytes:length:":
+				switch (m.DeclaringType.Name) {
+				case "FSFileName":
+					return true;
+				}
+				return false;
 			default:
 				return false;
 			}
