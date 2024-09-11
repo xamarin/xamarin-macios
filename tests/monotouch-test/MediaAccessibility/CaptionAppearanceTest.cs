@@ -66,6 +66,18 @@ namespace MonoTouchFixtures.MediaAccessibility {
 			a = null;
 			MACaptionAppearance.DidDisplayCaptions (a);
 		}
+
+#if NET
+		[Test]
+		public void IsCustomized ()
+		{
+			TestRuntime.AssertXcodeVersion (16, 0);
+
+			foreach (var value in Enum.GetValues<MACaptionAppearanceDomain> ()) {
+				Assert.That (MACaptionAppearance.IsCustomized (value), Is.EqualTo (true).Or.EqualTo (false), value.ToString ());
+			}
+		}
+#endif // NET
 	}
 }
 

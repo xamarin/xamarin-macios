@@ -316,8 +316,6 @@ function xcodebuild_download_selected_platforms ()
 	"$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -downloadPlatform iOS
 	log "Executing '$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -downloadPlatform tvOS' $1"
 	"$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -downloadPlatform tvOS
-	log "Executing '$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -downloadPlatform watchOS' $1"
-	"$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -downloadPlatform watchOS
 }
 
 function download_xcode_platforms ()

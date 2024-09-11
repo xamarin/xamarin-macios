@@ -65,6 +65,15 @@ References:
 * https://learn.microsoft.com/en-us/dotnet/api/system.diagnostics.codeanalysis.experimentalattribute?view=net-8.0
 * https://learn.microsoft.com/en-us/dotnet/fundamentals/apicompat/preview-apis#experimentalattribute
 
+## Previws of new API bindings (XCODE_x_y_PREVIEW)
+
+We sometimes release previews of new API bindings, and until these are deemed
+stable (by both Apple and us), we mark all our API bindings as preview of the
+new Xcode version.
+
+The diagnostic id is `XCODE_x_y_PREVIEW`, where `x` and `y` are Xcode's major and
+minor versions.
+
 ## CryptoTokenKit (APL0001)
 
 CryptoTokenKit requires special hardware to test, so it's not trivial for us to do so.
@@ -85,6 +94,6 @@ framework as preview API for a while.
 
 We've tentatively set .NET 11 as the release when we'll stop marking FSKit as preview API.
 
-The diagnostic id for CryptoTokenKit is APL0001.
+The diagnostic id for FSKit is APL0002.
 
 [1]: https://learn.microsoft.com/en-us/dotnet/api/system.diagnostics.codeanalysis.experimentalattribute?view=net-8.0

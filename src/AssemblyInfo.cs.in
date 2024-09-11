@@ -6,6 +6,7 @@
 //
 // Copyright 2014 Xamarin, Inc.
 
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
@@ -40,5 +41,5 @@ using System.Runtime.CompilerServices;
 #endif
 
 #if NET && !XCODE_IS_STABLE && !COREBUILD
-[assembly: RequiresPreviewFeatures("These are preview bindings for an unstable version of Xcode. Opt into preview features by adding <EnablePreviewFeatures>True</EnablePreviewFeatures> to your project file.")]
+[assembly: Experimental("XCODE_@XCODE_VERSION@_PREVIEW", UrlFormat = "https://github.com/xamarin/xamarin-macios/blob/main/docs/preview-apis.md")]
 #endif
