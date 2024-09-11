@@ -1125,6 +1125,11 @@ namespace Introspection {
 				case "UIBarButtonItem":
 				case "MKUserTrackingBarButtonItem":
 					return true;
+				// xcode 16
+				case "UISearchTab":
+				case "UITab":
+				case "UITabGroup":
+					return true;
 				}
 				break;
 

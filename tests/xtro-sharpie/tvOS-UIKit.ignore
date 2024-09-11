@@ -18,6 +18,8 @@
 !missing-selector! NSObject::accessibilityDirectTouchOptions not bound
 !missing-selector! NSObject::accessibilityElementsBlock not bound
 !missing-selector! NSObject::accessibilityElementsHiddenBlock not bound
+!missing-selector! NSObject::accessibilityExpandedStatus not bound
+!missing-selector! NSObject::accessibilityExpandedStatusBlock not bound
 !missing-selector! NSObject::accessibilityFrameBlock not bound
 !missing-selector! NSObject::accessibilityHeaderElementsBlock not bound
 !missing-selector! NSObject::accessibilityHintBlock not bound
@@ -54,6 +56,8 @@
 !missing-selector! NSObject::setAccessibilityDirectTouchOptions: not bound
 !missing-selector! NSObject::setAccessibilityElementsBlock: not bound
 !missing-selector! NSObject::setAccessibilityElementsHiddenBlock: not bound
+!missing-selector! NSObject::setAccessibilityExpandedStatus: not bound
+!missing-selector! NSObject::setAccessibilityExpandedStatusBlock: not bound
 !missing-selector! NSObject::setAccessibilityFrameBlock: not bound
 !missing-selector! NSObject::setAccessibilityHeaderElementsBlock: not bound
 !missing-selector! NSObject::setAccessibilityHintBlock: not bound
@@ -129,6 +133,8 @@
 !incorrect-protocol-member! UIFocusItem::frame is REQUIRED and should be abstract
 !incorrect-protocol-member! UIFocusEnvironment::focusItemContainer is REQUIRED and should be abstract
 !incorrect-protocol-member! UIFocusEnvironment::parentFocusEnvironment is REQUIRED and should be abstract
+!incorrect-protocol-member! UIMutableTraits::listEnvironment is REQUIRED and should be abstract
+!incorrect-protocol-member! UIMutableTraits::setListEnvironment: is REQUIRED and should be abstract
 
 ## not supported as per introspection, rdar filled: 42851110
 !missing-protocol-conformance! NSAttributedString should conform to NSItemProviderReading (defined in 'NSAttributedString_ItemProvider' category)

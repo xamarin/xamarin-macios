@@ -299,9 +299,15 @@ namespace Foundation {
 #endif
 	{
 #if !WATCH
+		// Inlined from the NSAttributedStringAttachmentConveniences category
 		[Static, Export ("attributedStringWithAttachment:")]
 		NSAttributedString FromAttachment (NSTextAttachment attachment);
 #endif
+
+		// Inlined from the NSAttributedStringAttachmentConveniences category
+		[NoWatch, TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Static, Export ("attributedStringWithAttachment:attributes:")]
+		NSAttributedString FromAttachment (NSTextAttachment attachment, NSDictionary<NSString, NSObject> attributes);
 
 		[Export ("string")]
 		IntPtr LowLevelValue { get; }
@@ -670,10 +676,15 @@ namespace Foundation {
 		[Export ("drawInRect:")]
 		void DrawString (CGRect rect);
 
-		// -(BOOL)containsAttachmentsInRange:(NSRange)range __attribute__((availability(macosx, introduced=10.11)));
+		// Inlined from the NSAttributedStringKitAdditions category
 		[MacCatalyst (13, 1)]
 		[Export ("containsAttachmentsInRange:")]
 		bool ContainsAttachmentsInRange (NSRange range);
+
+		// Inlined from the NSAttributedStringKitAdditions category
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("prefersRTFDInRange:")]
+		bool PrefersRtfdInRange (NSRange range);
 
 		// inlined from NSAttributedStringWebKitAdditions category (since they are all static members)
 
@@ -841,6 +852,12 @@ namespace Foundation {
 		[MacCatalyst (13, 1)]
 		NSString CocoaVersionDocumentAttribute { get; }
 #endif // !XAMCORE_5_0
+
+		// Inlined from the NSAttributedStringAdaptiveImageGlyphConveniences category
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Static]
+		[Export ("attributedStringWithAdaptiveImageGlyph:attributes:")]
+		NSAttributedString Create (NSAdaptiveImageGlyph adaptiveImageGlyph, NSDictionary<NSString, NSObject> attributes);
 	}
 
 	// we follow the API found in swift

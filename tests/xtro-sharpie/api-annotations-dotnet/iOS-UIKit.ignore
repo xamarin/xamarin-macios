@@ -476,3 +476,6 @@
 !incorrect-protocol-member! UIMenuLeaf::setSelectedImage: is REQUIRED and should be abstract
 
 !missing-protocol! UIItemProviderReadingAugmentationDesignating not bound
+
+# Bound on the NSObjectProtocol protocol
+!missing-selector! UIActivityCollaborationModeRestriction::description not bound
