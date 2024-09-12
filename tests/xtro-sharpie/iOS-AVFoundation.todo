@@ -318,7 +318,6 @@
 !missing-field! AVAudioApplicationInputMuteStateChangeNotification not bound
 !missing-field! AVAudioApplicationMuteStateKey not bound
 !missing-field! AVAudioSessionPortContinuityMicrophone not bound
-!missing-field! AVCaptureDeviceTypeExternal not bound
 !missing-field! AVCaptureDeviceTypeMicrophone not bound
 !missing-field! AVCaptureReactionTypeBalloons not bound
 !missing-field! AVCaptureReactionTypeConfetti not bound
