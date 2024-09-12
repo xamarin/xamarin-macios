@@ -24,6 +24,7 @@ partial class Frameworks {
 		"AVRouting",
 		"BackgroundAssets",
 		"BackgroundTasks",
+		"BrowserEngineKit",
 		"BusinessChat",
 		"CallKit",
 		"CarPlay",
@@ -165,6 +166,7 @@ partial class Frameworks {
 		"AVKit",
 		"AVRouting",
 		"BackgroundAssets",
+		"BrowserEngineKit",
 		"BusinessChat",
 		"CallKit",
 		"CFNetwork",
@@ -204,7 +206,6 @@ partial class Frameworks {
 		"FileProviderUI",
 		"FinderSync",
 		"Foundation",
-		"FSKit",
 		"GameController",
 		"GameKit",
 		"GameplayKit",
@@ -357,6 +358,7 @@ partial class Frameworks {
 		"AVFoundation",
 		"AVKit",
 		"BackgroundTasks",
+		"BrowserEngineKit",
 		"CFNetwork",
 		"Chip",
 		"Cinematic",
@@ -585,6 +587,7 @@ partial class Frameworks {
 	bool? _AVRouting;
 	bool? _BackgroundAssets;
 	bool? _BackgroundTasks;
+	bool? _BrowserEngineKit;
 	bool? _BusinessChat;
 	bool? _CallKit;
 	bool? _CarPlay;
@@ -632,7 +635,6 @@ partial class Frameworks {
 	bool? _FileProviderUI;
 	bool? _FinderSync;
 	bool? _Foundation;
-	bool? _FSKit;
 	bool? _GameController;
 	bool? _GameKit;
 	bool? _GameplayKit;
@@ -757,6 +759,7 @@ partial class Frameworks {
 	public bool HaveAVRouting { get { if (!_AVRouting.HasValue) _AVRouting = GetValue ("AVRouting"); return _AVRouting.Value; } }
 	public bool HaveBackgroundAssets { get { if (!_BackgroundAssets.HasValue) _BackgroundAssets = GetValue ("BackgroundAssets"); return _BackgroundAssets.Value; } }
 	public bool HaveBackgroundTasks { get { if (!_BackgroundTasks.HasValue) _BackgroundTasks = GetValue ("BackgroundTasks"); return _BackgroundTasks.Value; } }
+	public bool HaveBrowserEngineKit { get { if (!_BrowserEngineKit.HasValue) _BrowserEngineKit = GetValue ("BrowserEngineKit"); return _BrowserEngineKit.Value; } }
 	public bool HaveBusinessChat { get { if (!_BusinessChat.HasValue) _BusinessChat = GetValue ("BusinessChat"); return _BusinessChat.Value; } }
 	public bool HaveCallKit { get { if (!_CallKit.HasValue) _CallKit = GetValue ("CallKit"); return _CallKit.Value; } }
 	public bool HaveCarPlay { get { if (!_CarPlay.HasValue) _CarPlay = GetValue ("CarPlay"); return _CarPlay.Value; } }
@@ -804,7 +807,6 @@ partial class Frameworks {
 	public bool HaveFileProviderUI { get { if (!_FileProviderUI.HasValue) _FileProviderUI = GetValue ("FileProviderUI"); return _FileProviderUI.Value; } }
 	public bool HaveFinderSync { get { if (!_FinderSync.HasValue) _FinderSync = GetValue ("FinderSync"); return _FinderSync.Value; } }
 	public bool HaveFoundation { get { if (!_Foundation.HasValue) _Foundation = GetValue ("Foundation"); return _Foundation.Value; } }
-	public bool HaveFSKit { get { if (!_FSKit.HasValue) _FSKit = GetValue ("FSKit"); return _FSKit.Value; } }
 	public bool HaveGameController { get { if (!_GameController.HasValue) _GameController = GetValue ("GameController"); return _GameController.Value; } }
 	public bool HaveGameKit { get { if (!_GameKit.HasValue) _GameKit = GetValue ("GameKit"); return _GameKit.Value; } }
 	public bool HaveGameplayKit { get { if (!_GameplayKit.HasValue) _GameplayKit = GetValue ("GameplayKit"); return _GameplayKit.Value; } }

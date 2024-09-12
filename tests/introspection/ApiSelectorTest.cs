@@ -1241,6 +1241,9 @@ namespace Introspection {
 		protected virtual bool SkipInit (string selector, MethodBase m)
 		{
 			switch (selector) {
+			// MPSGraphExecutable
+			case "initWithMPSGraphPackageAtURL:compilationDescriptor:":
+			case "initWithCoreMLPackageAtURL:compilationDescriptor:":
 			// NSAttributedString
 			case "initWithHTML:documentAttributes:":
 			case "initWithRTF:documentAttributes:":
@@ -1316,10 +1319,20 @@ namespace Introspection {
 			// DDDevicePickerViewController
 			case "initWithBrowseDescriptor:parameters:":
 				return true;
+			// MKAddressFilter
+			case "initExcludingOptions:":
+			case "initIncludingOptions:":
+				return true;
 			// GKGameCenterViewController
 			case "initWithAchievementID:":
 			case "initWithLeaderboardSetID:":
 				return true;
+			case "initWithBytes:length:":
+				switch (m.DeclaringType.Name) {
+				case "FSFileName":
+					return true;
+				}
+				return false;
 			default:
 				return false;
 			}

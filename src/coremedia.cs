@@ -23,6 +23,21 @@ namespace CoreMedia {
 		IntPtr AgeOutPeriodSelector { get; }
 	}
 
+	[NoWatch, NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	public enum CMFormatDescriptionProjectionKind {
+		[Field ("kCMFormatDescriptionProjectionKind_Rectilinear")]
+		Rectilinear,
+	}
+
+	[NoWatch, NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	public enum CMFormatDescriptionViewPackingKind {
+		[Field ("kCMFormatDescriptionViewPackingKind_SideBySide")]
+		SideBySide,
+
+		[Field ("kCMFormatDescriptionViewPackingKind_OverUnder")]
+		OverUnder,
+	}
+
 	[Static]
 	[Internal]
 	[Watch (6, 0)]

@@ -127,7 +127,7 @@ MACCATALYST_NUGET_OS_VERSION=18.0
 # would add support for trying the preview release by doing:
 #
 #     <TargetFramework>net9.0-18.0</TargetFramework>
-#     <EnablePreviewFeatures>true</EnablePreviewFeatures>
+#     <NoWarn>XCODE_16_0_PREVIEW;$(NoWarn)</NoWarn>
 #
 # Note that any SUPPORTED_API_VERSIONS entry below for older OS versions need a corresponding entry in
 # the eng/Version.Details.xml and eng/Versions.props files.

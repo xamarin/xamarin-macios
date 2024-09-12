@@ -1484,6 +1484,70 @@ namespace AudioToolbox {
 		}
 	}
 
+	/// <summary>This struct represents the native <see href="https://developer.apple.com/documentation/coreaudiotypes/audiobufferlist">AudioBufferList</see> struct.</summary>
+	/// <remarks>
+	///   <para>
+	///     Typically it's better to use the <see cref="AudioBuffers" /> class to wrap a pointer to a native AudioBufferList,
+	///     but some audio code needs to minimize memory allocations due to being executed in a realtime thread. In that case,
+	///     using this struct is better, because it's possible to use it without incurring any memory allocations.
+	///   </para>
+	///
+	///   <para>
+	///     Note that this struct should never be created in C#, the only valid way to use it is to cast a pointer (<see cref="IntPtr" />)
+	///     to a pointer of this struct:
+	///   </para>
+	///
+	///   <example>
+	///     <code lang="csharp lang-csharp"><![CDATA[
+	/// public unsafe static void Callback (IntPtr audioBufferListPtr) {
+	///     AudioBufferList* audioBufferList = (AudioBufferList* ) audioBufferListPtr;
+	///     for (var i = 0; i < audioBufferList->Count; i++) {
+	///         AudioBuffer* buffer = audioBufferList->GetBuffer (index),
+	///         // Use the buffer for something
+	///     }
+	/// }
+	///   ]]></code>
+	///   </example>
+	/// </remarks>
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
+	[StructLayout (LayoutKind.Sequential)]
+	public unsafe readonly ref struct AudioBufferList {
+		readonly uint mNumberOfBuffers;
+
+		/// <summary>Returns the number of audio buffers in this list.</summary>
+		public uint Count { get => mNumberOfBuffers; }
+
+		/// <summary>Return a pointer to the <see cref="AudioBuffer" /> at the specified index.</summary>
+		/// <param name="index">The index of the <see cref="AudioBuffer" /> to retrieve.</param>
+		/// <returns>A pointer to the <see cref="AudioBuffer" /> at the specified index.</returns>
+		public AudioBuffer* GetBuffer (int index)
+		{
+			if (index < 0 || index >= Count)
+				throw new ArgumentOutOfRangeException (nameof (index));
+
+			//
+			// Decodes
+			//
+			// struct AudioBufferList
+			// {
+			//    UInt32      mNumberBuffers;
+			//    AudioBuffer mBuffers[1]; // this is a variable length array of mNumberBuffers elements
+			// }
+			//
+			fixed (uint* bufferPtr = &mNumberOfBuffers) {
+				byte* baddress = (byte*) bufferPtr;
+
+				var ptr = baddress + IntPtr.Size + index * sizeof (AudioBuffer);
+				return (AudioBuffer*) ptr;
+			}
+		}
+	}
+
 	// CoreAudioClock.h (inside AudioToolbox)
 	// It was a confusion between CA (CoreAudio) and CA (CoreAnimation)
 #if NET

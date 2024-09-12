@@ -54,7 +54,8 @@ namespace Cecil.Tests {
 			var failures = new Dictionary<string, ObsoletedFailure> ();
 			var mismatchedObsoleteMessages = new List<string> ();
 			foreach (var kvp in harvestedInfo) {
-				var attributes = kvp.Value.Select (v => v.Api.GetAvailabilityAttributes (v.Platform) ?? new OSPlatformAttributes (v.Api, v.Platform) ?? new OSPlatformAttributes (v.Api, v.Platform)).ToArray ();
+				var values = kvp.Value.Where (v => !v.Api.HasEditorBrowseableNeverAttribute ());
+				var attributes = values.Select (v => v.Api.GetAvailabilityAttributes (v.Platform) ?? new OSPlatformAttributes (v.Api, v.Platform) ?? new OSPlatformAttributes (v.Api, v.Platform)).ToArray ();
 				var obsoleted = attributes.Where (v => v?.Obsoleted is not null).ToArray ();
 
 				// No obsoleted, nothing to check
@@ -70,7 +71,7 @@ namespace Cecil.Tests {
 				if (!notObsoletedNorUnsupported.Any ())
 					continue;
 
-				var failure = new ObsoletedFailure (kvp.Key, kvp.Value.First ().Api, obsoleted, notObsoletedNorUnsupported);
+				var failure = new ObsoletedFailure (kvp.Key, values.First ().Api, obsoleted, notObsoletedNorUnsupported);
 				failures [failure.Key] = failure;
 
 				var obsoleteMessages = obsoleted.Select (v => v.Obsoleted?.Message).Distinct ().ToArray ();
@@ -171,12 +172,10 @@ namespace Cecil.Tests {
 			"HealthKit.HKUnit HealthKit.HKUnit::Calorie()",
 			"HealthKit.HKWorkoutActivityType HealthKit.HKWorkoutActivityType::DanceInspiredTraining",
 			"HealthKit.HKWorkoutActivityType HealthKit.HKWorkoutActivityType::MixedMetabolicCardioTraining",
-			"HealthKit.HKWorkoutEvent.Create(HealthKit.HKWorkoutEventType, Foundation.NSDate, Foundation.NSDictionary)",
 			"HealthKit.HKWorkoutEvent.Create(HealthKit.HKWorkoutEventType, Foundation.NSDate, HealthKit.HKMetadata)",
 			"HealthKit.HKWorkoutEvent.Create(HealthKit.HKWorkoutEventType, Foundation.NSDate)",
 			"HomeKit.HMEventTrigger.CreatePredicateForEvaluatingTriggerOccurringAfterSignificantEvent(HomeKit.HMSignificantEvent, Foundation.NSDateComponents)",
 			"HomeKit.HMEventTrigger.CreatePredicateForEvaluatingTriggerOccurringBeforeSignificantEvent(HomeKit.HMSignificantEvent, Foundation.NSDateComponents)",
-			"Intents.INCallRecord..ctor(System.String, Foundation.NSDate, Intents.INPerson, Intents.INCallRecordType, Intents.INCallCapability, System.Nullable`1<System.Double>, System.Nullable`1<System.Boolean>, System.Nullable`1<System.Int32>)",
 			"Intents.INCallRecordType Intents.INStartCallIntent::RecordTypeForRedialing()",
 			"Intents.INCarChargingConnectorType Intents.INCarChargingConnectorType::Tesla",
 			"Intents.INSetClimateSettingsInCarIntent..ctor(System.Nullable`1<System.Boolean>, System.Nullable`1<System.Boolean>, System.Nullable`1<System.Boolean>, System.Nullable`1<System.Boolean>, Intents.INCarAirCirculationMode, Foundation.NSNumber, Foundation.NSNumber, Intents.INRelativeSetting, Foundation.NSMeasurement`1<Foundation.NSUnitTemperature>, Intents.INRelativeSetting, Intents.INCarSeat)",

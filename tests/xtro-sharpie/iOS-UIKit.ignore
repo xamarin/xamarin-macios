@@ -20,6 +20,8 @@
 !incorrect-protocol-member! UIFocusItem::frame is REQUIRED and should be abstract
 !incorrect-protocol-member! UIFocusEnvironment::focusItemContainer is REQUIRED and should be abstract
 !incorrect-protocol-member! UIFocusEnvironment::parentFocusEnvironment is REQUIRED and should be abstract
+!incorrect-protocol-member! UIMutableTraits::listEnvironment is REQUIRED and should be abstract
+!incorrect-protocol-member! UIMutableTraits::setListEnvironment: is REQUIRED and should be abstract
 
 ## Special case from UIAccessibilityAction. We added it (completly) on UIResponser but magic tap is also available on app delegate according to docs
 ## See comments is uikit.cs for more info

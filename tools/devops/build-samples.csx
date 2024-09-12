@@ -12,13 +12,12 @@ using Newtonsoft.Json.Linq;
 using Xamarin.Provisioning;
 using Xamarin.Provisioning.Model;
 
-// Provision Mono, XI, XM, Mono, Objective-Sharpie, provisioning profiles.
+// Provision Mono, Mono, Objective-Sharpie, provisioning profiles.
 //
 // We get Mono from the current commit's MIN_MONO_URL value in Make.config
-// We get XI and XM from the current commit's manifest from GitHub's statuses
 //
 // Overrides:
-// * Each download URL can be overriden by setting an environment variable (MIN_MONO_URL, XI_PACKAGE and/or XM_PACKAGE).
+// * Each download URL can be overriden by setting an environment variable (MIN_MONO_URL).
 // * The current commit can be overridden by setting the PROVISION_FROM_COMMIT variable. This is usually easier than overriding each url.
 
 var commit = Environment.GetEnvironmentVariable ("BUILD_SOURCEVERSION");
@@ -29,15 +28,6 @@ string FindVariable (string variable, bool throwIfNotFound = true)
 	var value = FindConfigurationVariable (variable, provision_from_commit);
 	if (!string.IsNullOrEmpty (value))
 		return value;
-
-	switch (variable) {
-	case "XI_PACKAGE":
-		value = GetManifest (provision_from_commit).Where ((v) => v.Contains ("notarized/xamarin.ios-") && v.EndsWith (".pkg", StringComparison.Ordinal)).FirstOrDefault ();
-		break;
-	case "XM_PACKAGE":
-		value = GetManifest (provision_from_commit).Where ((v) => v.Contains ("notarized/xamarin.mac-") && v.EndsWith (".pkg", StringComparison.Ordinal)).FirstOrDefault ();
-		break;
-	}
 
 	if (!string.IsNullOrEmpty (value))
 		return value;
@@ -56,10 +46,6 @@ if (string.IsNullOrEmpty (provision_from_commit)) {
 Console.WriteLine ($"Provisioning from {provision_from_commit}...");
 
 InstallPackage ("Mono", FindVariable ("MIN_MONO_URL"));
-if (FindVariable ("INCLUDE_IOS", false) == "1")
-	InstallPackage ("Xamarin.iOS", FindVariable ("XI_PACKAGE"));
-if (FindVariable ("INCLUDE_MAC", false) == "1")
-	InstallPackage ("Xamarin.Mac", FindVariable ("XM_PACKAGE"));
 InstallPackage ("Objective-Sharpie", FindVariable ("MIN_SHARPIE_URL"));
 
 // Provisioning profiles

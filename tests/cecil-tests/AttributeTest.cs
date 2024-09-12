@@ -288,8 +288,6 @@ namespace Cecil.Tests {
 					"SpriteKit.SKView.EncodeTo (Foundation.NSCoder)",
 
 					// These methods have different optional/required semantics between platforms.
-					"Metal.MTLBlitCommandEncoder_Extensions.GetTextureAccessCounters (Metal.IMTLBlitCommandEncoder, Metal.IMTLTexture, Metal.MTLRegion, System.UIntPtr, System.UIntPtr, System.Boolean, Metal.IMTLBuffer, System.UIntPtr)",
-					"Metal.MTLBlitCommandEncoder_Extensions.ResetTextureAccessCounters (Metal.IMTLBlitCommandEncoder, Metal.IMTLTexture, Metal.MTLRegion, System.UIntPtr, System.UIntPtr)",
 					"PassKit.PKPaymentAuthorizationControllerDelegate_Extensions.GetPresentationWindow (PassKit.IPKPaymentAuthorizationControllerDelegate, PassKit.PKPaymentAuthorizationController)",
 					"Metal.MTLTextureWrapper.FirstMipmapInTail",
 					"Metal.MTLTextureWrapper.IsSparse",
@@ -369,6 +367,7 @@ namespace Cecil.Tests {
 			// https://github.com/xamarin/xamarin-macios/issues/17292
 			key = key
 				.Replace ("AppKit.NS", "XKit.X")
+				.Replace ("UIKit.NS", "XKit.X")
 				.Replace ("UIKit.UI", "XKit.X")
 				.Replace ("AppKit.INS", "XKit.IX")
 				.Replace ("UIKit.IUI", "XKit.IX")

@@ -8,6 +8,3 @@
 !missing-field! kCMFormatDescriptionExtension_HasRightStereoEyeView not bound
 !missing-field! kCMFormatDescriptionExtension_ProjectionKind not bound
 !missing-field! kCMFormatDescriptionExtension_ViewPackingKind not bound
-!missing-field! kCMFormatDescriptionProjectionKind_Rectilinear not bound
-!missing-field! kCMFormatDescriptionViewPackingKind_OverUnder not bound
-!missing-field! kCMFormatDescriptionViewPackingKind_SideBySide not bound

@@ -4,14 +4,12 @@ include $(TOP)/Make.config
 device-tests-provisioning.csx: device-tests-provisioning.csx.in Makefile $(TOP)/Make.config
 	$(Q_GEN) sed \
 		-e 's#@XCODE_XIP_NAME@#$(notdir $(XCODE_URL))#g' \
-		-e 's#@XI_PACKAGE@#$(XI_PACKAGE)#g' \
 		-e 's#@MONO_PACKAGE@#$(MIN_MONO_URL)#g' \
 		-e 's#@MIN_SHARPIE_URL@#$(MIN_SHARPIE_URL)#g' \
 		-e 's#@INCLUDE_MAC@#$(INCLUDE_MAC)#g' \
 		-e 's#@INCLUDE_IOS@#$(INCLUDE_IOS)#g' \
 		-e 's#@INCLUDE_TVOS@#$(INCLUDE_TVOS)#g' \
 		-e 's#@INCLUDE_WATCH@#$(INCLUDE_WATCH)#g' \
-		-e 's#@INCLUDE_XAMARIN_LEGACY@#$(INCLUDE_XAMARIN_LEGACY)#g' \
 		$< > $@;
 		@echo "Generated $@:"
 		@cat $@
@@ -27,11 +25,9 @@ build-provisioning.csx: build-provisioning.csx.in Makefile $(TOP)/Make.config
 
 mac-tests-provisioning.csx: mac-tests-provisioning.csx.in Makefile $(TOP)/Make.config
 	$(Q_GEN) sed \
-		-e 's#@XM_PACKAGE@#$(XM_PACKAGE)#g' \
 		-e 's#@MONO_PACKAGE@#$(MIN_MONO_URL)#g' \
 		-e 's#@INCLUDE_MAC@#$(INCLUDE_MAC)#g' \
 		-e 's#@INCLUDE_IOS@#$(INCLUDE_IOS)#g' \
-		-e 's#@INCLUDE_XAMARIN_LEGACY@#$(INCLUDE_XAMARIN_LEGACY)#g' \
 		$< > $@;
 		@echo "Generated $@:"
 		@cat $@
