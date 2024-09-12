@@ -1,2 +1,5 @@
-# Not available on iOS
-!missing-enum-value! MLMultiArrayDataType native value MLMultiArrayDataTypeFloat16 = 65552 not bound
+# These types are marked as unavailable in the headers if the min OS version is >= Xcode 16's OS versions, so xtro doesn't detect them as available.
+# We're removing them in XAMCORE_5_0.
+!unknown-field! MLModelCollectionDidChangeNotification bound
+!unknown-type! MLModelCollection bound
+!unknown-type! MLModelCollectionEntry bound
