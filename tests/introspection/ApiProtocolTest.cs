@@ -203,8 +203,13 @@ namespace Introspection {
 				case "ASPickerDisplayItem":
 				case "DDDevice":
 				case "PKAddCarKeyPassConfiguration":
+				case "PKAddIdentityDocumentConfiguration":
 				case "PKAddSecureElementPassConfiguration":
 				case "PKAddShareablePassConfiguration":
+				case "PKAddPassMetadataPreview":
+				case "PKIdentityDocumentMetadata":
+				case "PKJapanIndividualNumberCardMetadata":
+				case "PKPassRelevantDate":
 				case "ASAuthorizationPublicKeyCredentialLargeBlobAssertionInput":
 				case "ASAuthorizationPublicKeyCredentialLargeBlobAssertionOutput":
 				case "ASAuthorizationPublicKeyCredentialLargeBlobRegistrationInput":
@@ -400,6 +405,11 @@ namespace Introspection {
 				case "QLFileThumbnailRequest":
 				case "QLThumbnailReply":
 				case "PHPickerResult":
+				case "PKAddIdentityDocumentConfiguration":
+				case "PKAddPassMetadataPreview":
+				case "PKIdentityDocumentMetadata":
+				case "PKJapanIndividualNumberCardMetadata":
+				case "PKPassRelevantDate":
 				case "ASAuthorizationPublicKeyCredentialLargeBlobAssertionInput":
 				case "ASAuthorizationPublicKeyCredentialLargeBlobAssertionOutput":
 				case "ASAuthorizationPublicKeyCredentialLargeBlobRegistrationInput":
@@ -606,6 +616,11 @@ namespace Introspection {
 				case "QLFileThumbnailRequest":
 				case "QLThumbnailReply":
 				case "PHPickerResult":
+				case "PKAddIdentityDocumentConfiguration":
+				case "PKAddPassMetadataPreview":
+				case "PKIdentityDocumentMetadata":
+				case "PKJapanIndividualNumberCardMetadata":
+				case "PKPassRelevantDate":
 				case "ASAuthorizationPublicKeyCredentialLargeBlobAssertionInput":
 				case "ASAuthorizationPublicKeyCredentialLargeBlobAssertionOutput":
 				case "ASAuthorizationPublicKeyCredentialLargeBlobRegistrationInput":
