@@ -428,6 +428,11 @@ namespace Introspection {
 				return new UIFontFeature (CTFontFeatureNumberSpacing.Selector.ProportionalNumbers);
 			case "NetworkReachability":
 				return new NetworkReachability (IPAddress.Loopback, null);
+			case "VTHdrPerFrameMetadataGenerationSession":
+				var rv = VTHdrPerFrameMetadataGenerationSession.Create (30, (NSDictionary) null, out var error);
+				if (rv is null)
+					throw new InvalidOperationException ($"Could not create the new instance for type {t.Name}: {error}");
+				return rv;
 			case "VTCompressionSession":
 			case "VTSession":
 				return VTCompressionSession.Create (1024, 768, CMVideoCodecType.H264, (sourceFrame, status, flags, buffer) => { }, null, (CVPixelBufferAttributes) null);

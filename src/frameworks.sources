@@ -1898,6 +1898,7 @@ VIDEOTOOLBOX_SOURCES = \
 	VideoToolbox/VTDecompressionProperties.cs \
 	VideoToolbox/VTDecompressionSession.cs \
 	VideoToolbox/VTFrameSilo.cs \
+	VideoToolbox/VTHdrPerFrameMetadataGenerationSession.cs \
 	VideoToolbox/VTMultiPassStorage.cs \
 	VideoToolbox/VTPixelRotationProperties.cs \
 	VideoToolbox/VTPixelRotationSession.cs \
@@ -1905,6 +1906,7 @@ VIDEOTOOLBOX_SOURCES = \
 	VideoToolbox/VTPixelTransferSession.cs \
 	VideoToolbox/VTProfessionalVideoWorkflow.cs \
 	VideoToolbox/VTPropertyOptions.cs \
+	VideoToolbox/VTRawProcessingSession.cs \
 	VideoToolbox/VTSession.cs \
 	VideoToolbox/VTVideoEncoder.cs \
 	VideoToolbox/VTUtilities.cs \

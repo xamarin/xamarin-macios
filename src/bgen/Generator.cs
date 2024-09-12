@@ -1896,6 +1896,9 @@ public partial class Generator : IMemberGatherer {
 						} else if (fetchType == TypeCache.System_Int64) {
 							getter = "{1} GetLongValue ({0})";
 							setter = "SetNumberValue ({0}, {1}value)";
+						} else if (fetchType == TypeCache.System_UInt64) {
+							getter = "{1} GetULongValue ({0})";
+							setter = "SetNumberValue ({0}, {1}value)";
 						} else if (pi.PropertyType == TypeCache.System_Float) {
 							getter = "{1} GetFloatValue ({0})";
 							setter = "SetNumberValue ({0}, {1}value)";

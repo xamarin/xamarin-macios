@@ -392,5 +392,33 @@ namespace VideoToolbox {
 		{
 			return VTIsHardwareDecodeSupported (codecType) != 0;
 		}
+
+#if !__WATCHOS__
+#if NET
+		[SupportedOSPlatform ("macos14.0")]
+		[SupportedOSPlatform ("ios17.0")]
+		[SupportedOSPlatform ("tvos17.0")]
+		[SupportedOSPlatform ("maccatalyst17.0")]
+#else
+		[iOS (17, 0), TV (17, 0), Mac (14, 0), NoWatch]
+#endif
+		[DllImport (Constants.VideoToolboxLibrary)]
+		extern static /* Boolean */ byte VTIsStereoMVHEVCDecodeSupported ();
+
+		/// <summary>Returns whether the current system supports stereo MV-HEVC decode.</summary>
+		/// <returns>True if the current system supports stereo MV-HEVC decode, false otherwise.</returns>
+#if NET
+		[SupportedOSPlatform ("macos14.0")]
+		[SupportedOSPlatform ("ios17.0")]
+		[SupportedOSPlatform ("tvos17.0")]
+		[SupportedOSPlatform ("maccatalyst17.0")]
+#else
+		[iOS (17, 0), TV (17, 0), Mac (14, 0), NoWatch]
+#endif
+		public static bool IsStereoMvHevcDecodeSupported ()
+		{
+			return VTIsStereoMVHEVCDecodeSupported () != 0;
+		}
+#endif // !__WATCHOS__
 	}
 }
