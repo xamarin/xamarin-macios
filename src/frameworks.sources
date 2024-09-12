@@ -1183,6 +1183,16 @@ MEDIAACCESSIBILITY_SOURCES = \
 	MediaAccessibility/MediaAccessibility.cs \
 	MediaAccessibility/MAImageCaptioning.cs \
 
+# MediaExtesion
+
+MEDIAEXTENSION_SOURCES = \
+	MediaExtension/MEByteSource.cs \
+	MediaExtension/MERawProcessingBooleanParameter.cs \
+	MediaExtension/MERawProcessingFloatParameter.cs \
+	MediaExtension/MERawProcessingIntegerParameter.cs \
+	MediaExtension/MERawProcessingListParameter.cs \
+	MediaExtension/MESampleCursor.cs \
+
 # MediaPlayer
 
 MEDIAPLAYER_API_SOURCES = \
@@ -2181,6 +2191,7 @@ MACOS_FRAMEWORKS =          \
 	MailKit                 \
 	MapKit                  \
 	MediaAccessibility      \
+	MediaExtension          \
 	MediaLibrary 		\
 	MediaPlayer             \
 	MediaToolbox            \
