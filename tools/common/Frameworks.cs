@@ -605,7 +605,7 @@ public class Frameworks : Dictionary<string, Framework> {
 					{ "MediaToolbox", "MediaToolbox", 9 },
 					{ "Metal", "Metal", 9 },
 					{ "MetalKit", "MetalKit", new Version (9, 0), new Version (10, 0) },
-					{ "MetalPerformanceShaders", "MetalPerformanceShaders", new Version (9, 0), NotAvailableInSimulator /* not available in the simulator */ },
+					{ "MetalPerformanceShaders", "MetalPerformanceShaders", new Version (9, 0), new Version (18, 0) /* not available in the simulator in tvOS 9.0, but available in tvOS 18.0. Not investigated about earlier versions. */ },
 					{ "MobileCoreServices", "MobileCoreServices", 9 },
 					{ "ModelIO", "ModelIO", 9 },
 					{ "OpenGLES", "OpenGLES", 9 },
