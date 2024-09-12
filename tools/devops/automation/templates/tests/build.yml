@@ -219,26 +219,9 @@ steps:
   displayName: 'Display downloads'
   timeoutInMinutes: 5
 
-- pwsh: |
-    $dir = "$(Build.SourcesDirectory)/artifacts"
-    $versionsPath = "$dir/${{ parameters.uploadPrefix }}PkgsVersions/PkgsVersions.json"
-    $versionData = Get-Content $versionsPath | ConvertFrom-Json
-
-    $iOSVersion = $versionData | Select-Object -ExpandProperty "iOS"
-    $iOSPath = "$dir/${{ parameters.uploadPrefix }}not-signed-package/xamarin.ios-$iOSVersion.pkg"
-    Write-Host "##vso[task.setvariable variable=XI_PACKAGE;]$iOSPath"
-
-    $macOSVersion = $versionData | Select-Object -ExpandProperty "macOS"
-    $macOSPath = "$dir/${{ parameters.uploadPrefix }}not-signed-package/xamarin.mac-$macOSVersion.pkg"
-    Write-Host "##vso[task.setvariable variable=XM_PACKAGE;]$macOSPath"
-
-  displayName: 'Set pkgs url'
-  timeoutInMinutes: 5
-
 - bash: |
-    echo "Pkg uri is $XI_PACKAGE"
     make -C $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/ device-tests-provisioning.csx
-  displayName: 'Generate Provisionator csx file for iOS'
+  displayName: 'Generate Provisionator csx file'
 
 # Executed ONLY if we want to clear the provisionator cache.
 - bash: rm -rf "$TOOLS_DIR/provisionator"
@@ -249,7 +232,7 @@ steps:
 
 # Use the provisionator to install the test dependencies. Those have been generated in the 'Generate Provisionator csx file' step.
 - task: xamops.azdevex.provisionator-task.provisionator@2
-  displayName: 'Provision Xamarin.iOS'
+  displayName: 'Provision dependencies'
   inputs:
     provisioning_script: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/device-tests-provisioning.csx
     provisioning_extra_args: '-vvvv'
@@ -257,9 +240,8 @@ steps:
   timeoutInMinutes: 250
 
 - bash: |
-    echo "Pkg uri is $XM_PACKAGE"
     make -C $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/ mac-tests-provisioning.csx
-  displayName: 'Generate Provisionator csx file for Mac'
+  displayName: 'Generate Provisionator csx file for macOS'
 
 - task: xamops.azdevex.provisionator-task.provisionator@2
   displayName: 'Provision Xamarin.Mac'
@@ -268,16 +250,6 @@ steps:
     provisioning_extra_args: '-vvvv'
     github_token: ${{ parameters.gitHubToken }}
   timeoutInMinutes: 250
-
-- bash: |
-    set -ex
-    ls -R /Library/Frameworks/Xamarin.iOS.framework || true
-    ls -R /Library/Frameworks/Xamarin.Mac.framework || true
-  displayName: "Show installed Frameworks"
-
-- bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/create-legacy-ios-mac-sdk-symlinks.sh
-  workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios/
-  displayName: Create legacy iOS/Mac SDK symlinks
 
 - bash: |
     set -x
