@@ -5,10 +5,8 @@ using System.Runtime.InteropServices;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
-namespace Xamarin.MacDev.Tasks
-{
-	public class Sharpie : XamarinToolTaskWithOutput
-	{
+namespace Xamarin.MacDev.Tasks {
+	public class Sharpie : XamarinToolTaskWithOutput {
 		public override string TaskPrefix => "SHRP";
 
 		protected override string ToolName => "sharpie";
@@ -25,7 +23,7 @@ namespace Xamarin.MacDev.Tasks
 
 		public string OutputPath { get; set; } = string.Empty;
 
-		public ITaskItem[] Headers { get; set; } = Array.Empty<ITaskItem> ();
+		public ITaskItem [] Headers { get; set; } = Array.Empty<ITaskItem> ();
 
 
 		const string ClassicXIAssembly = "/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/64bits/iOS/Xamarin.iOS.dll";
@@ -64,8 +62,7 @@ namespace Xamarin.MacDev.Tasks
 
 		public override bool RunTask ()
 		{
-			if (RuntimeInformation.IsOSPlatform (OSPlatform.OSX))
-			{
+			if (RuntimeInformation.IsOSPlatform (OSPlatform.OSX)) {
 				if (!File.Exists (GenerateFullPathToTool ())) {
 					// TODO loc
 					Log.LogError ($"{TaskPrefix}1000 {{0}}", $"Unable to find the executable \"{ToolName}\". Please install Objective-Sharpie: https://aka.ms/objective-sharpie.");
@@ -78,9 +75,7 @@ namespace Xamarin.MacDev.Tasks
 				}
 
 				return base.RunTask ();
-			}
-			else
-			{
+			} else {
 				Log.LogWarning ($"{TaskPrefix}5000 {{0}}", $"Skipping attempt to run \"{ToolName}\" with arguments \"{GenerateCommandLineCommands ()}\". The \"@(MaciOSXcodeProject)\" build action is only supported on macOS.");
 				return true;
 			}

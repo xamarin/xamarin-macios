@@ -2,17 +2,15 @@ using System.IO;
 
 #nullable enable
 
-namespace Xamarin.Tests
-{
-	public static class FileHelpers
-	{
+namespace Xamarin.Tests {
+	public static class FileHelpers {
 		public static void CopyDirectory (string sourceDir, string destinationDir)
 		{
 			if (!Directory.Exists (sourceDir))
 				throw new DirectoryNotFoundException ($"Unable to copy source dir, it was not found: {sourceDir}");
 
 			if (!Directory.Exists (destinationDir))
-				Directory.CreateDirectory(destinationDir);
+				Directory.CreateDirectory (destinationDir);
 
 			foreach (var file in Directory.GetFiles (sourceDir)) {
 				var destFile = Path.Combine (destinationDir, Path.GetFileName (file));

@@ -5,10 +5,8 @@ using NUnit.Framework.Interfaces;
 
 using Microsoft.Build.Logging.StructuredLogger;
 
-namespace Xamarin.Tests
-{
-	public class XcodeProjectTests : TestBaseClass
-	{
+namespace Xamarin.Tests {
+	public class XcodeProjectTests : TestBaseClass {
 		string TestDir = string.Empty;
 
 		[SetUp]
@@ -56,7 +54,7 @@ public class {name}
 			File.WriteAllText (file, classContent);
 		}
 
-		void AddXcodeProjectItem (string project, string path, Dictionary<string,string> metadata)
+		void AddXcodeProjectItem (string project, string path, Dictionary<string, string> metadata)
 		{
 			string xcProjItem = $@"
 <ItemGroup>
@@ -88,7 +86,7 @@ public class {name}
 			AddTemplateApiDefinition (TestDir);
 
 			AddXcodeProjectItem (proj, Path.Combine (xcodeProjDirDest, $"{xcodeProjName}.xcodeproj"),
-				new Dictionary<string,string> {
+				new Dictionary<string, string> {
 					{ "SchemeName", xcodeProjName }
 				});
 

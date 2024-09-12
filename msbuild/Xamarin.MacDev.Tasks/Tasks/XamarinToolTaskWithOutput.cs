@@ -5,10 +5,8 @@ using System.Text;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
-namespace Xamarin.MacDev.Tasks
-{
-	public abstract class XamarinToolTaskWithOutput : XamarinToolTask
-	{
+namespace Xamarin.MacDev.Tasks {
+	public abstract class XamarinToolTaskWithOutput : XamarinToolTask {
 		public abstract string TaskPrefix { get; }
 
 		public string WorkingDirectory { get; set; } = Directory.GetCurrentDirectory ();
@@ -20,19 +18,15 @@ namespace Xamarin.MacDev.Tasks
 
 		public override bool Execute ()
 		{
-			try
-			{
+			try {
 				bool taskResult = RunTask ();
-				if (!taskResult && !string.IsNullOrEmpty (toolOutput.ToString ()))
-				{
+				if (!taskResult && !string.IsNullOrEmpty (toolOutput.ToString ())) {
 					Log.LogError ($"{TaskPrefix}0000 {{0}}", toolOutput.ToString ().Trim ());
 				}
 				ConsoleOutput = toolOutput.ToString ();
 				toolOutput.Clear ();
 				return taskResult;
-			}
-			catch (Exception ex)
-			{
+			} catch (Exception ex) {
 				Log.LogError ($"{TaskPrefix}0100 {{0}}", ex.ToString ());
 				return false;
 			}
