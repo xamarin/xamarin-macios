@@ -934,14 +934,16 @@ FOUNDATION_SOURCES = \
 
 # FSKit
 
-FSKIT_CORE_SOURCES = \
-	FSKit/FSMetaReadahead.cs \
+# FSKit was removed from Xcode 16 RC, but keeping it commented, because it's likely to return in a later release
 
-FSKIT_SOURCES = \
-	FSKit/FSBlockDeviceResource.cs \
-	FSKit/FSFileName.cs \
-	FSKit/FSKitFunctions.cs \
-	FSKit/FSMessageConnection.cs \
+# FSKIT_CORE_SOURCES = \
+# 	FSKit/FSMetaReadahead.cs \
+
+# FSKIT_SOURCES = \
+# 	FSKit/FSBlockDeviceResource.cs \
+# 	FSKit/FSFileName.cs \
+# 	FSKit/FSKitFunctions.cs \
+# 	FSKit/FSMessageConnection.cs \
 
 # GameController
 
@@ -2151,7 +2153,6 @@ MACOS_FRAMEWORKS =          \
 	FileProvider	\
 	FileProviderUI	\
 	FinderSync		\
-	FSKit \
 	GameController          \
 	GameplayKit             \
 	GLKit                   \
