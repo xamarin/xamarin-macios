@@ -11403,9 +11403,10 @@ namespace AVFoundation {
 
 	/// <summary>Enumerates the types of device that can capture audiovisual data.</summary>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[NoTV, NoWatch]
+	[TV (17, 0), NoWatch]
 	enum AVCaptureDeviceType {
 
+		[NoTV]
 		[Field ("AVCaptureDeviceTypeBuiltInMicrophone")]
 		BuiltInMicrophone,
 
@@ -11417,6 +11418,7 @@ namespace AVFoundation {
 		[Field ("AVCaptureDeviceTypeBuiltInTelephotoCamera")]
 		BuiltInTelephotoCamera,
 
+		[NoTV]
 		[NoMac]
 		[Deprecated (PlatformName.iOS, 10, 2, message: "Use 'BuiltInDualCamera' instead.")]
 		[MacCatalyst (13, 1)]
@@ -11453,9 +11455,14 @@ namespace AVFoundation {
 		[Field ("AVCaptureDeviceTypeExternalUnknown")]
 		ExternalUnknown,
 
-		[NoWatch, NoTV, NoMac, MacCatalyst (15, 4), iOS (15, 4)]
+		[NoWatch, TV (17, 0), NoMac, MacCatalyst (15, 4), iOS (15, 4)]
 		[Field ("AVCaptureDeviceTypeBuiltInLiDARDepthCamera")]
 		BuiltInLiDarDepthCamera,
+
+		[NoWatch]
+		[iOS (17, 0), MacCatalyst (17, 0), TV (17, 0), Mac (14, 0)]
+		[Field ("AVCaptureDeviceTypeExternal")]
+		External,
 	}
 
 	[NoTV, NoWatch] // matches API that uses it.
