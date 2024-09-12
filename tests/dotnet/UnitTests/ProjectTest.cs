@@ -1791,6 +1791,7 @@ namespace Xamarin.Tests {
 			var project_path = GetProjectPath (project, platform: platform);
 			Clean (project_path);
 			var properties = GetDefaultProperties ();
+			DotNetProjectTest.AddNoWarnForPreviewOSVersions (properties, supportedApiVersion, platform);
 			properties ["cmdline:AllTheTargetFrameworks"] = targetFrameworks;
 			var rv = DotNet.AssertBuild (project_path, properties);
 			rv.AssertNoWarnings ();
@@ -1807,6 +1808,39 @@ namespace Xamarin.Tests {
 				return self.Where (v => string.Compare (v, current, StringComparison.Ordinal) <= 0).ToList ();
 			}
 			return self;
+		}
+
+		internal static void AddNoWarnForPreviewOSVersions (Dictionary<string, string> properties, IList<string> tfms, ApplePlatform platform)
+		{
+			var currentVersion = Version.Parse (Configuration.GetNuGetOsVersion (platform));
+			var postVersions = tfms
+				.Select (v => v [(1 + v.IndexOfAny (new char [] { '-', '_' }))..])
+				.Select (Version.Parse)
+				.Where (v => v > currentVersion);
+
+			if (!properties.TryGetValue ("NoWarn", out var nowarn))
+				nowarn = "";
+
+			foreach (var pv in postVersions) {
+				Version xcodeVersion;
+				// Computing the Xcode version like this is just a guess, and will eventually fail for minor versions.
+				switch (platform) {
+				case ApplePlatform.iOS:
+				case ApplePlatform.TVOS:
+				case ApplePlatform.MacCatalyst:
+					xcodeVersion = new Version (pv.Major - 2, pv.Minor);
+					break;
+				case ApplePlatform.MacOSX:
+					xcodeVersion = new Version (pv.Major + 1, pv.Minor);
+					break;
+				default:
+					throw new ArgumentOutOfRangeException ($"Unknown platform: {platform}");
+				}
+				nowarn += $";XCODE_{xcodeVersion.Major}_{xcodeVersion.Minor}_PREVIEW";
+			}
+			nowarn = nowarn.Trim (';');
+			if (!string.IsNullOrEmpty (nowarn))
+				properties ["NoWarn"] = nowarn;
 		}
 
 		[Test]

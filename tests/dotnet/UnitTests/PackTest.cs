@@ -188,6 +188,7 @@ namespace Xamarin.Tests {
 			Clean (project_path);
 
 			var properties = GetDefaultProperties ();
+			DotNetProjectTest.AddNoWarnForPreviewOSVersions (properties, supportedApiVersion, platform);
 			properties ["cmdline:AllTheTargetFrameworks"] = targetFrameworks;
 
 			DotNet.AssertPack (project_path, properties);
