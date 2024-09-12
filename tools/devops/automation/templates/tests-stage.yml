@@ -231,12 +231,6 @@ parameters:
 - name: macTestsConfigurations
   type: object
 
-- name: azureStorage
-  type: string
-
-- name: azureContainer
-  type: string
-
 - name: stageDisplayNamePrefix
   type: string
   default: ''
@@ -296,7 +290,7 @@ stages:
       BRANCH_NAME: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', '') ]
 
     steps:
-    - template: common/configure.yml
+    - template: common/load_configuration.yml
       parameters: 
         repositoryAlias: ${{ parameters.repositoryAlias }}
         commit: ${{ parameters.commit }}

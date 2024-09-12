@@ -167,7 +167,22 @@ public partial class Generator : IMemberGatherer {
 			return false;
 		}
 
-		return type.IsInterface;
+		// If any of the interfaces this type implements is an NSObject,
+		// then this type is also an NSObject
+		var ifaces = type.GetInterfaces ();
+		foreach (var iface in ifaces)
+			if (IsNSObject (iface))
+				return true;
+
+		if (type.IsInterface) {
+			var bta = ReflectionExtensions.GetBaseTypeAttribute (type, this);
+			if (bta?.BaseType is not null)
+				return IsNSObject (bta.BaseType);
+
+			return false;
+		}
+
+		return false;
 	}
 
 	public string PrimitiveType (Type t, bool formatted = false)
@@ -604,8 +619,10 @@ public partial class Generator : IMemberGatherer {
 					invoke.AppendFormat (" Runtime.GetINativeObject<{1}> ({0}, false)!", safe_name, pi.ParameterType);
 				} else if (isForced) {
 					invoke.AppendFormat (" Runtime.GetINativeObject<{1}> ({0}, true, {2})!", safe_name, TypeManager.RenderType (pi.ParameterType), isForcedOwns);
-				} else {
+				} else if (IsNSObject (pi.ParameterType)) {
 					invoke.AppendFormat (" Runtime.GetNSObject<{1}> ({0})!", safe_name, TypeManager.RenderType (pi.ParameterType));
+				} else {
+					invoke.AppendFormat (" Runtime.GetINativeObject<{1}> ({0}, false)!", safe_name, TypeManager.RenderType (pi.ParameterType));
 				}
 				continue;
 			}
@@ -714,6 +731,11 @@ public partial class Generator : IMemberGatherer {
 				if (TypeManager.IsWrappedType (et)) {
 					pars.Add (new TrampolineParameterInfo (NativeHandleType, safe_name));
 					invoke.AppendFormat ("CFArray.ArrayFromHandle<{0}> ({1})!", TypeManager.FormatType (null, et), safe_name);
+					continue;
+				}
+				if (TypeCache.INativeObject.IsAssignableFrom (et)) {
+					pars.Add (new TrampolineParameterInfo (NativeHandleType, safe_name));
+					invoke.AppendFormat ("NSArray.ArrayFromHandle<{0}> ({1})!", TypeManager.FormatType (t, et), safe_name);
 					continue;
 				}
 			}
@@ -893,6 +915,9 @@ public partial class Generator : IMemberGatherer {
 				return string.Format ("{0}.GetHandle ()", safe_name);
 			return safe_name + ".Handle";
 		}
+
+		if (TypeCache.INativeObject.IsAssignableFrom (pi.ParameterType))
+			return $"{safe_name}.GetHandle ()";
 
 		// This means you need to add a new MarshalType in the method "Go"
 		throw new BindingException (1002, true, pi.ParameterType.FullName, mi.DeclaringType.FullName, mi.Name.GetSafeParamName ());
