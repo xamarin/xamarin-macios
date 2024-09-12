@@ -1,0 +1,209 @@
+<!--
+***********************************************************************************************
+Microsoft.MaciOS.Sdk.Xcode.targets
+
+This file contains MSBuild targets that support building and operating on Xcode projects.
+
+***********************************************************************************************
+-->
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <UsingTask TaskName="Sharpie"                AssemblyFile="$(_XamarinTaskAssembly)"/>
+  <UsingTask TaskName="XcodeBuild"             AssemblyFile="$(_XamarinTaskAssembly)"/>
+
+  <PropertyGroup>
+    <XcodeBuildiOS Condition=" '$(XcodeBuildiOS)' == '' and '$(TargetPlatformIdentifier)' == 'ios' ">true</XcodeBuildiOS>
+    <XcodeBuildMacCatalyst Condition=" '$(XcodeBuildMacCatalyst)' == '' and '$(TargetPlatformIdentifier)' == 'maccatalyst' ">true</XcodeBuildMacCatalyst>
+    <EnableDefaultSharpieiOSItems Condition=" '$(EnableDefaultSharpieiOSItems)' == '' ">false</EnableDefaultSharpieiOSItems>
+
+    <_MaciOSXcodeProjectDefaultOutputPathRoot>$(MSBuildProjectDirectory)/$(IntermediateOutputPath)xcode/</_MaciOSXcodeProjectDefaultOutputPathRoot>
+    <_BuildMaciOSXcodeProjectsStamp>$(_MaciOSStampDirectory)_BuildMaciOSXcodeProjects.stamp</_BuildMaciOSXcodeProjectsStamp>
+    <_SharpieBindMaciOSXcodeProjectsStamp>$(_MaciOSStampDirectory)_SharpieBindMaciOSXcodeProjects.stamp</_SharpieBindMaciOSXcodeProjectsStamp>
+    <_XcArchiveExtraArgs>$(_XcArchiveExtraArgs) ENABLE_BITCODE=NO SKIP_INSTALL=NO SWIFT_INSTALL_OBJC_HEADER=YES BUILD_LIBRARY_FOR_DISTRIBUTION=YES</_XcArchiveExtraArgs>
+    <_XcArchiveExtraArgs>$(_XcArchiveExtraArgs) OTHER_LDFLAGS=&quot;-ObjC&quot; OTHER_SWIFT_FLAGS=&quot;-no-verify-emitted-module-interface&quot; OBJC_CFLAGS=&quot;-fno-objc-msgsend-selector-stubs -ObjC&quot;</_XcArchiveExtraArgs>
+  </PropertyGroup>
+
+  <ItemDefinitionGroup>
+    <MaciOSXcodeProject>
+      <Configuration>Release</Configuration>
+      <Kind>Framework</Kind>
+      <OutputPath></OutputPath>
+      <ReferenceXcFramework>true</ReferenceXcFramework>
+      <SchemeName></SchemeName>
+      <SharpieBind>true</SharpieBind>
+      <SharpieNamespace></SharpieNamespace>
+      <SmartLink>true</SmartLink>
+      <Visible>false</Visible>
+    </MaciOSXcodeProject>
+  </ItemDefinitionGroup>
+
+  <Target Name="_GetBuildMaciOSXcodeProjectsInputs"
+      Condition=" '@(MaciOSXcodeProject->Count())' != '0' " >
+    <ItemGroup>
+      <_AllXcbFiles Include="$([System.IO.Directory]::GetFiles('%(MaciOSXcodeProject.RootDir)%(MaciOSXcodeProject.Directory)', '*.*', System.IO.SearchOption.AllDirectories))"
+          Condition= " Exists('%(MaciOSXcodeProject.RootDir)%(MaciOSXcodeProject.Directory)') "/>
+      <_XcbInputs Include="@(_AllXcbFiles)"
+          Condition="  '%(Extension)' == '.swift'
+                    or '%(Extension)' == '.h'
+                    or '%(Extension)' == '.pbxproj'
+                    or '%(Extension)' == '.xcworkspace' " />
+      <_XcbInputs Include="$(MSBuildProjectFullPath)" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="_CalculateMaciOSXcodeProjectOutputPaths"
+        Condition=" '@(MaciOSXcodeProject->Count())' != '0' "
+        Outputs="%(MaciOSXcodeProject.Identity)" >
+    <Hash
+        ItemsToHash="%(MaciOSXcodeProject.Identity)"
+        IgnoreCase="true" >
+      <Output TaskParameter="HashResult" PropertyName="_MaciOSXcodeProjectHash" />
+    </Hash>
+    <ItemGroup>
+      <MaciOSXcodeProject Condition=" '%(MaciOSXcodeProject.OutputPath)' == '' " >
+        <OutputPath>$(_MaciOSXcodeProjectDefaultOutputPathRoot)%(SchemeName)-$([System.String]::Copy($(_MaciOSXcodeProjectHash)).Substring(0, 5))/</OutputPath>
+      </MaciOSXcodeProject>
+    </ItemGroup>
+  </Target>
+
+  <Target Name="_BuildMaciOSXcodeProjects"
+      Condition=" '@(MaciOSXcodeProject->Count())' != '0' "
+      DependsOnTargets="_BuildMaciOSXcodeProjectFrameworks;_SharpieBindMaciOSXcodeProjects" >
+  </Target>
+
+  <Target Name="_BuildMaciOSXcodeProjectFrameworks"
+      Condition=" '@(MaciOSXcodeProject->Count())' != '0' "
+      DependsOnTargets="_GetBuildMaciOSXcodeProjectsInputs;_CalculateMaciOSXcodeProjectOutputPaths"
+      Inputs="@(_XcbInputs)"
+      Outputs="$(_BuildMaciOSXcodeProjectsStamp)" >
+    <RemoveDir Directories="@(MaciOSXcodeProject->'%(OutputPath)archives')" />
+    <RemoveDir Directories="@(MaciOSXcodeProject->'%(OutputPath)xcframeworks')" />
+
+    <PropertyGroup>
+      <_MaciOSXcArchivePlatform Condition=" '$(TargetPlatformIdentifier)' == 'maccatalyst' ">generic/platform=macOS,variant=Mac Catalyst</_MaciOSXcArchivePlatform>
+      <_MaciOSXcArchivePlatform Condition=" '$(TargetPlatformIdentifier)' == 'tvos' ">generic/platform=iOS</_MaciOSXcArchivePlatform>
+      <_MaciOSXcArchivePlatform Condition=" '$(_MaciOSXcArchivePlatform)' == '' ">generic/platform=$(TargetPlatformIdentifier)</_MaciOSXcArchivePlatform>
+    </PropertyGroup>
+
+    <!-- Create XCARCHIVE for $(TargetPlatformIdentifier) -->
+    <!-- The derivedDataPath and packageCachePath arguments are used to better support multitargeting -->
+    <XcodeBuild
+        Command="archive"
+        ProjectPath="%(MaciOSXcodeProject.FullPath)"
+        SchemeName="%(MaciOSXcodeProject.SchemeName)"
+        Configuration="%(MaciOSXcodeProject.Configuration)"
+        ArchivePlatform="$(_MaciOSXcArchivePlatform)"
+        ArchiveOutputPath="%(MaciOSXcodeProject.OutputPath)archives/%(MaciOSXcodeProject.SchemeName)$(TargetPlatformIdentifier).xcarchive"
+        DerivedDataPath="$(_MaciOSXcodeProjectDefaultOutputPathRoot)DerivedData"
+        PackageCachePath="$(_MaciOSXcodeProjectDefaultOutputPathRoot)Cache"
+        Arguments="$(_XcArchiveExtraArgs)"
+        WorkingDirectory="%(MaciOSXcodeProject.RootDir)%(MaciOSXcodeProject.Directory)" >
+    </XcodeBuild>
+
+    <!-- Create simulator XCARCHIVE for $(TargetPlatformIdentifier) -->
+    <XcodeBuild
+        Condition=" '$(TargetPlatformIdentifier)' == 'ios' or  '$(TargetPlatformIdentifier)' == 'tvos' "
+        Command="archive"
+        ProjectPath="%(MaciOSXcodeProject.FullPath)"
+        SchemeName="%(MaciOSXcodeProject.SchemeName)"
+        Configuration="%(MaciOSXcodeProject.Configuration)"
+        ArchivePlatform="$(_MaciOSXcArchivePlatform) Simulator"
+        ArchiveOutputPath="%(MaciOSXcodeProject.OutputPath)archives/%(MaciOSXcodeProject.SchemeName)$(TargetPlatformIdentifier)Simulator.xcarchive"
+        DerivedDataPath="$(_MaciOSXcodeProjectDefaultOutputPathRoot)DerivedData"
+        PackageCachePath="$(_MaciOSXcodeProjectDefaultOutputPathRoot)Cache"
+        Arguments="$(_XcArchiveExtraArgs)"
+        WorkingDirectory="%(MaciOSXcodeProject.RootDir)%(MaciOSXcodeProject.Directory)" >
+    </XcodeBuild>
+
+    <!-- Create XCFRAMEWORK for $(TargetPlatformIdentifier) -->
+    <!-- TODO Sign the XCFramework bundle? Looks like this is done via _CodesignAppBundle but may need to sign nested content? -->
+    <ItemGroup>
+      <_XcArchiveOutputs Include="%(MaciOSXcodeProject.OutputPath)archives/%(MaciOSXcodeProject.SchemeName)$(TargetPlatformIdentifier).xcarchive" />
+      <_XcArchiveOutputs Include="%(MaciOSXcodeProject.OutputPath)archives/%(MaciOSXcodeProject.SchemeName)$(TargetPlatformIdentifier)Simulator.xcarchive"
+          Condition=" Exists('%(MaciOSXcodeProject.OutputPath)archives/%(MaciOSXcodeProject.SchemeName)$(TargetPlatformIdentifier)Simulator.xcarchive') "/>
+    </ItemGroup>
+    <XcodeBuild
+        Command="-create-xcframework"
+        FrameworkArchives="@(_XcArchiveOutputs)"
+        FrameworkName="%(MaciOSXcodeProject.SchemeName).framework"
+        FrameworkOutputPath="%(MaciOSXcodeProject.OutputPath)xcframeworks/%(MaciOSXcodeProject.SchemeName)$(TargetPlatformIdentifier).xcframework"
+        WorkingDirectory="%(MaciOSXcodeProject.RootDir)%(MaciOSXcodeProject.Directory)" >
+    </XcodeBuild>
+
+    <ItemGroup>
+      <_MaciosXcodeProjectXcFrameworkOutputs Include="%(MaciOSXcodeProject.OutputPath)xcframeworks/%(MaciOSXcodeProject.SchemeName)$(TargetPlatformIdentifier).xcframework"
+          Condition=" '%(ReferenceXcFramework)' == 'true' "
+          Kind="%(Kind)"
+          SmartLink="%(SmartLink)"
+          Visible="%(Visible)" />
+    </ItemGroup>
+
+    <Message Text="Adding reference to Xcode project output: %(_MaciosXcodeProjectXcFrameworkOutputs.Identity)" Importance="high" />
+
+    <Touch Files="$(_BuildMaciOSXcodeProjectsStamp)" AlwaysCreate="true" />
+    <ItemGroup>
+      <!-- Add stamp and build outputs to FileWrites so they are not deleted on IncrementalClean -->
+      <FileWrites Include="$(_BuildMaciOSXcodeProjectsStamp);%(MaciOSXcodeProject.OutputPath)**/*" />
+      <!-- Automatically add XCFRAMEWORK outputs to be bound or otherwise processed later in the build -->
+      <NativeReference Include="@(_MaciosXcodeProjectXcFrameworkOutputs)" Kind="%(Kind)" SmartLink="%(SmartLink)" Visible="%(Visible)" />
+    </ItemGroup>
+  </Target>
+
+
+  <Target Name="_GetSharpieBindInputs">
+    <ItemGroup>
+      <_SharpieInputs Include="%(MaciOSXcodeProject.OutputPath)archives/%(MaciOSXcodeProject.SchemeName)$(TargetPlatformIdentifier).xcarchive" />
+    </ItemGroup>
+  </Target>
+
+  <!-- TODO put this in a task? -->
+  <Target Name="_GetSharpieBindSdkName"
+      Condition=" '@(MaciOSXcodeProject->Count())' != '0' and '@(MaciOSXcodeProject->'%(SharpieBind)')' == 'true' and '$(MaciOSSharpieBindSdkName)' == '' " >
+    <Exec Command="xcode-select -p"
+        Condition=" $([MSBuild]::IsOSPlatform('osx')) "
+        ConsoleToMSBuild="true"
+        StandardOutputImportance="low">
+      <Output TaskParameter="ConsoleOutput" PropertyName="_XcodeSelectOutput" />
+    </Exec>
+    <PropertyGroup>
+      <_MaciOSSharpieXcodeFilter Condition=" '$(_XcodeSelectOutput)' != '' ">-x $(_XcodeSelectOutput.Replace(Contents/Developer, ''))</_MaciOSSharpieXcodeFilter>
+    </PropertyGroup>
+    <Sharpie Command="xcode"
+        Arguments="-sdks $(MaciOSSharpieXcodeFilter)" >
+      <Output TaskParameter="ConsoleOutput" PropertyName="_SharpieXcodeSdksOutput" />
+    </Sharpie>
+    <PropertyGroup>
+      <MaciOSSharpieBindSdkName>$([System.Text.RegularExpressions.Regex]::Match($(_SharpieXcodeSdksOutput), `iphoneos[^; \n\r\t]+`))</MaciOSSharpieBindSdkName>
+    </PropertyGroup>
+  </Target>
+
+  <Target Name="_SharpieBindMaciOSXcodeProjects"
+      Condition=" '@(MaciOSXcodeProject->Count())' != '0' and '@(MaciOSXcodeProject->'%(SharpieBind)')' == 'true' "
+      DependsOnTargets="_GetSharpieBindInputs;_GetSharpieBindSdkName"
+      Inputs="@(_SharpieInputs)"
+      Outputs="$(_SharpieBindMaciOSXcodeProjectsStamp)">
+    <RemoveDir Directories="@(MaciOSXcodeProject->'%(OutputPath)sharpie')" />
+
+    <Sharpie Command="bind"
+        Namespace="%(MaciOSXcodeProject.SharpieNamespace)"
+        Sdk="$(MaciOSSharpieBindSdkName)"
+        OutputPath="%(MaciOSXcodeProject.OutputPath)sharpie/%(MaciOSXcodeProject.Filename)"
+        Scope="%(MaciOSXcodeProject.OutputPath)archives/%(MaciOSXcodeProject.SchemeName)$(TargetPlatformIdentifier).xcarchive/Products/Library/Frameworks/%(MaciOSXcodeProject.SchemeName).framework/Headers"
+        Headers="%(MaciOSXcodeProject.OutputPath)archives/%(MaciOSXcodeProject.SchemeName)$(TargetPlatformIdentifier).xcarchive/Products/Library/Frameworks/%(MaciOSXcodeProject.SchemeName).framework/Headers/%(SchemeName)-Swift.h" >
+    </Sharpie>
+
+    <Touch Files="$(_SharpieBindMaciOSXcodeProjectsStamp)" AlwaysCreate="true" />
+    <ItemGroup>
+      <FileWrites Include="$(_SharpieBindMaciOSXcodeProjectsStamp);%(MaciOSXcodeProject.OutputPath)sharpie/**/*" />
+    </ItemGroup>
+  </Target>
+
+
+  <Target Name="_CleanMaciOSXcodeProjects"
+      Condition=" '@(MaciOSXcodeProject->Count())' != '0' "
+      DependsOnTargets="_GetBuildMaciOSXcodeProjectsInputs;_CalculateMaciOSXcodeProjectOutputPaths" >
+    <RemoveDir Directories="@(MaciOSXcodeProject->'%(OutputPath)')" />
+  </Target>
+
+</Project>
