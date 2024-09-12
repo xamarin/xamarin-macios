@@ -22,6 +22,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using System.Reflection;
 using System.Text;
 using NUnit.Framework;
@@ -864,10 +865,15 @@ namespace Introspection {
 				case "AdviceAttribute":
 				case "ObsoletedAttribute":
 				case "DeprecatedAttribute":
-				case "UnsupportedOSPlatformAttribute":
 					return true;
 				}
 			}
+
+#if NET
+			if (TestRuntime.HasOSPlatformAttributeForCurrentPlatform<UnsupportedOSPlatformAttribute> (mi))
+				return true;
+#endif
+
 			return false;
 		}
 
