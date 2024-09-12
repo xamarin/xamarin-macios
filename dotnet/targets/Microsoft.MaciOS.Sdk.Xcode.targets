@@ -13,10 +13,6 @@ This file contains MSBuild targets that support building and operating on Xcode 
   <UsingTask TaskName="XcodeBuild"             AssemblyFile="$(_XamarinTaskAssembly)"/>
 
   <PropertyGroup>
-    <XcodeBuildiOS Condition=" '$(XcodeBuildiOS)' == '' and '$(TargetPlatformIdentifier)' == 'ios' ">true</XcodeBuildiOS>
-    <XcodeBuildMacCatalyst Condition=" '$(XcodeBuildMacCatalyst)' == '' and '$(TargetPlatformIdentifier)' == 'maccatalyst' ">true</XcodeBuildMacCatalyst>
-    <EnableDefaultSharpieiOSItems Condition=" '$(EnableDefaultSharpieiOSItems)' == '' ">false</EnableDefaultSharpieiOSItems>
-
     <_MaciOSXcodeProjectDefaultOutputPathRoot>$(MSBuildProjectDirectory)/$(IntermediateOutputPath)xcode/</_MaciOSXcodeProjectDefaultOutputPathRoot>
     <_BuildMaciOSXcodeProjectsStamp>$(_MaciOSStampDirectory)_BuildMaciOSXcodeProjects.stamp</_BuildMaciOSXcodeProjectsStamp>
     <_SharpieBindMaciOSXcodeProjectsStamp>$(_MaciOSStampDirectory)_SharpieBindMaciOSXcodeProjects.stamp</_SharpieBindMaciOSXcodeProjectsStamp>
