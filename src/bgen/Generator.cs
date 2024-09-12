@@ -167,7 +167,22 @@ public partial class Generator : IMemberGatherer {
 			return false;
 		}
 
-		return type.IsInterface;
+		// If any of the interfaces this type implements is an NSObject,
+		// then this type is also an NSObject
+		var ifaces = type.GetInterfaces ();
+		foreach (var iface in ifaces)
+			if (IsNSObject (iface))
+				return true;
+
+		if (type.IsInterface) {
+			var bta = ReflectionExtensions.GetBaseTypeAttribute (type, this);
+			if (bta?.BaseType is not null)
+				return IsNSObject (bta.BaseType);
+
+			return false;
+		}
+
+		return false;
 	}
 
 	public string PrimitiveType (Type t, bool formatted = false)
@@ -604,8 +619,10 @@ public partial class Generator : IMemberGatherer {
 					invoke.AppendFormat (" Runtime.GetINativeObject<{1}> ({0}, false)!", safe_name, pi.ParameterType);
 				} else if (isForced) {
 					invoke.AppendFormat (" Runtime.GetINativeObject<{1}> ({0}, true, {2})!", safe_name, TypeManager.RenderType (pi.ParameterType), isForcedOwns);
-				} else {
+				} else if (IsNSObject (pi.ParameterType)) {
 					invoke.AppendFormat (" Runtime.GetNSObject<{1}> ({0})!", safe_name, TypeManager.RenderType (pi.ParameterType));
+				} else {
+					invoke.AppendFormat (" Runtime.GetINativeObject<{1}> ({0}, false)!", safe_name, TypeManager.RenderType (pi.ParameterType));
 				}
 				continue;
 			}

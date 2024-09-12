@@ -405,6 +405,20 @@ namespace GeneratorTests {
 		}
 
 		[Test]
+		[TestCase (Profile.iOS)]
+		public void INativeObjectsInBlocks (Profile profile)
+		{
+			var bgen = new BGenTool ();
+			bgen.Profile = profile;
+			bgen.Defines = BGenTool.GetDefaultDefines (bgen.Profile);
+			bgen.AddTestApiDefinition ("tests/inativeobjects-in-blocks.cs");
+			bgen.AddExtraSourcesRelativeToGeneratorDirectory ("tests/inativeobjects-in-blocks-sources.cs");
+			bgen.CreateTemporaryBinding ();
+			bgen.AssertExecute ("build");
+			bgen.AssertNoWarnings ();
+		}
+
+		[Test]
 		public void Bug36457 ()
 		{
 			BuildFile (Profile.iOS, "bug36457.cs");
