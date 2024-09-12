@@ -125,6 +125,7 @@ namespace MonoTouchFixtures.HealthKit {
 					if (!TestRuntime.CheckXcodeVersion (15, 0))
 						continue;
 					break;
+				case HKQuantityTypeIdentifier.AppleSleepingBreathingDisturbances:
 				case HKQuantityTypeIdentifier.CrossCountrySkiingSpeed:
 				case HKQuantityTypeIdentifier.DistanceCrossCountrySkiing:
 				case HKQuantityTypeIdentifier.DistancePaddleSports:
