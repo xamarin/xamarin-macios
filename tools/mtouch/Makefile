@@ -184,6 +184,7 @@ SIMLAUNCHER_FRAMEWORKS =  \
 						\
 	-weak_framework Symbols \
 	-weak_framework SensitiveContentAnalysis \
+	-weak_framework BrowserEngineKit \
 
 SIMLAUNCHER64_FRAMEWORKS =  \
 	-framework GameKit				\

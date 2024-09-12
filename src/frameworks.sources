@@ -320,6 +320,11 @@ BACKGROUNDTASKS_API_SOURCES = \
 BACKGROUNDASSETS_SOURCES = \
 	BackgroundAssets/BACompat.cs \
 
+# BrowserEngineKit
+
+BROWSERENGINEKIT_CORE_SOURCES = \
+	BrowserEngineKit/BEStructs.cs \
+
 # BusinessChat
 
 BUSINESSCHAT_API_SOURCES = \
@@ -715,6 +720,8 @@ COREVIDEO_CORE_SOURCES = \
 
 COREVIDEO_SOURCES = \
 	CoreVideo/CVDisplayLink.cs \
+	CoreVideo/CVMetalBuffer.cs \
+	CoreVideo/CVMetalBufferCache.cs \
 	CoreVideo/CVMetalTexture.cs \
 	CoreVideo/CVMetalTextureAttributes.cs \
 	CoreVideo/CVMetalTextureCache.cs \
@@ -929,14 +936,16 @@ FOUNDATION_SOURCES = \
 
 # FSKit
 
-FSKIT_CORE_SOURCES = \
-	FSKit/FSMetaReadahead.cs \
+# FSKit was removed from Xcode 16 RC, but keeping it commented, because it's likely to return in a later release
 
-FSKIT_SOURCES = \
-	FSKit/FSBlockDeviceResource.cs \
-	FSKit/FSFileName.cs \
-	FSKit/FSKitFunctions.cs \
-	FSKit/FSMessageConnection.cs \
+# FSKIT_CORE_SOURCES = \
+# 	FSKit/FSMetaReadahead.cs \
+
+# FSKIT_SOURCES = \
+# 	FSKit/FSBlockDeviceResource.cs \
+# 	FSKit/FSFileName.cs \
+# 	FSKit/FSKitFunctions.cs \
+# 	FSKit/FSMessageConnection.cs \
 
 # GameController
 
@@ -1364,6 +1373,11 @@ NATURALLANGUAGE_SOURCES = \
 NETWORK_API_SOURCES = \
 	Network/NWEnums.cs \
 
+NETWORK_CORE_SOURCES = \
+	Network/NWEndpoint.cs			\
+	Network/NWInterface.cs			\
+	Network/NWParameters.cs			\
+
 NETWORK_SOURCES = \
 	Network/NWAdvertiseDescriptor.cs	\
 	Network/NWBrowserDescriptor.cs	\
@@ -1375,20 +1389,17 @@ NETWORK_SOURCES = \
 	Network/NWDataTransferReport.cs 	\
 	Network/NWEthernetChannel.cs 	\
 	Network/NWEstablishmentReport.cs	\
-	Network/NWEndpoint.cs			\
 	Network/NWError.cs			\
 	Network/NWFramer.cs			\
 	Network/NWFramerMessage.cs			\
 	Network/NWMulticastGroup.cs		\
 	Network/NWMultiplexGroup.cs		\
-	Network/NWInterface.cs			\
 	Network/NWIPMetadata.cs			\
 	Network/NWListener.cs			\
 	Network/NWPrivacyContext.cs	\
 	Network/NWProtocolFramerOptions.cs \
 	Network/NWProtocolIPOptions.cs	\
 	Network/NWProxyConfig.cs	\
-	Network/NWParameters.cs			\
 	Network/NWPath.cs			\
 	Network/NWPathMonitor.cs		\
 	Network/NWPrivacyContext.cs		\
@@ -2126,6 +2137,7 @@ MACOS_FRAMEWORKS =          \
 	AVRouting               \
 	BusinessChat            \
 	BackgroundAssets        \
+	BrowserEngineKit        \
 	CallKit \
 	CFNetwork               \
 	Chip                    \
@@ -2153,7 +2165,6 @@ MACOS_FRAMEWORKS =          \
 	FileProvider	\
 	FileProviderUI	\
 	FinderSync		\
-	FSKit \
 	GameController          \
 	GameplayKit             \
 	GLKit                   \
@@ -2245,6 +2256,7 @@ IOS_FRAMEWORKS =         \
 	AutomaticAssessmentConfiguration \
 	BackgroundAssets \
 	BackgroundTasks \
+	BrowserEngineKit \
 	BusinessChat \
 	CallKit \
 	CarPlay \
@@ -2384,6 +2396,7 @@ TVOS_FRAMEWORKS =           \
 	AudioToolbox            \
 	AudioUnit               \
 	BackgroundTasks         \
+	BrowserEngineKit        \
 	CFNetwork               \
 	Chip                    \
 	Cinematic              \

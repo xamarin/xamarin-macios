@@ -1,5 +1,0 @@
-!missing-selector! WKWebView::isWritingToolsActive not bound
-!missing-selector! WKWebViewConfiguration::setSupportsAdaptiveImageGlyph: not bound
-!missing-selector! WKWebViewConfiguration::setWritingToolsBehavior: not bound
-!missing-selector! WKWebViewConfiguration::supportsAdaptiveImageGlyph not bound
-!missing-selector! WKWebViewConfiguration::writingToolsBehavior not bound

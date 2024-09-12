@@ -296,10 +296,6 @@ namespace FSKit {
 		[Export ("parentID")]
 		ulong ParentId { get; set; }
 
-		// KOIO = Kernel Offloaded IO
-		[Export ("useKOIO")]
-		bool UseKoio { get; set; }
-
 		[Export ("supportsLimitedXAttrs")]
 		bool SupportsLimitedXAttrs { get; set; }
 

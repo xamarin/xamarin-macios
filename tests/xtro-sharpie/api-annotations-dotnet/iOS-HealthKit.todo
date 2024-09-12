@@ -1,0 +1,5 @@
+!missing-enum! HKAppleSleepingBreathingDisturbancesClassification not bound
+!missing-field! HKCategoryTypeIdentifierSleepApneaEvent not bound
+!missing-field! HKQuantityTypeIdentifierAppleSleepingBreathingDisturbances not bound
+!missing-pinvoke! HKAppleSleepingBreathingDisturbancesClassificationForQuantity is not bound
+!missing-pinvoke! HKAppleSleepingBreathingDisturbancesMinimumQuantityForClassification is not bound

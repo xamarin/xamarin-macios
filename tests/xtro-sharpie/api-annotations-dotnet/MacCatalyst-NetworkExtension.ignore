@@ -4,3 +4,6 @@
 # error used to be ignored in common-NetworkExtension.ignore but tvOS platform support was added and since this error does not apply to tvOS, it had to be addressed on a per platform basis
 !missing-release-attribute-on-return-value! NetworkExtension.NEAppRule[] NetworkExtension.NETunnelProviderManager::CopyAppRules()'s selector's ('copyAppRules') Objective-C method family ('copy') indicates that the native method returns a retained object, and as such a '[return: Release]' attribute is required.
 
+# Headers say this method is available on Mac Catalyst, but the AccessorySetupKit framework (thus the ASAccessory type) is not, so we can't expose it in Mac Catalyst for now.
+!missing-selector! NEHotspotConfigurationManager::joinAccessoryHotspot:passphrase:completionHandler: not bound
+!missing-selector! NEHotspotConfigurationManager::joinAccessoryHotspotWithoutSecurity:completionHandler: not bound
