@@ -72,7 +72,7 @@ public class {name}
 		public void BindLibraryiOS ()
 		{
 			DotNet.AssertNew (TestDir, "iosbinding", TestName);
-			TestDir = Path.Combine (TestDir, TestName);
+			var testDir = Cache.CreateTemporaryDirectory (TestName);
 			var proj = Path.Combine (TestDir, $"{TestName}.csproj");
 
 			var xcodeProjName = "XcodeFxTemplate";
@@ -95,7 +95,7 @@ public class {name}
 			Assert.That (warnings, Is.Empty, $"Build warnings:\n\t{string.Join ("\n\t", warnings)}");
 
 			var expectedXcodeFxOutput = Path.Combine (TestDir, "bin", "Debug", $"{Configuration.DotNetTfm}-ios", $"{TestName}.resources", $"{xcodeProjName}iOS.xcframework");
-			Assert.IsTrue (Directory.Exists (expectedXcodeFxOutput), $"The expected xcode project output '{expectedXcodeFxOutput}' did not exist.");
+			Assert.That (expectedXcodeFxOutput, Does.Exist, $"The expected xcode project output '{expectedXcodeFxOutput}' did not exist.");
 		}
 
 		[Test]

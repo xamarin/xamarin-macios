@@ -37,7 +37,7 @@ This file contains MSBuild targets that support building and operating on Xcode 
   <Target Name="_GetBuildMaciOSXcodeProjectsInputs"
       Condition=" '@(MaciOSXcodeProject->Count())' != '0' " >
     <ItemGroup>
-      <_AllXcbFiles Include="$([System.IO.Directory]::GetFiles('%(MaciOSXcodeProject.RootDir)%(MaciOSXcodeProject.Directory)', '*.*', System.IO.SearchOption.AllDirectories))"
+      <_AllXcbFiles Include="%(MaciOSXcodeProject.RootDir)%(MaciOSXcodeProject.Directory)/**/*"
           Condition= " Exists('%(MaciOSXcodeProject.RootDir)%(MaciOSXcodeProject.Directory)') "/>
       <_XcbInputs Include="@(_AllXcbFiles)"
           Condition="  '%(Extension)' == '.swift'
