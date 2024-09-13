@@ -111,7 +111,7 @@ public class {name}
 			var xcodeProjPath = Path.Combine (xcodeProjDirDest, $"{xcodeProjName}.xcodeproj");
 			FileHelpers.CopyDirectory (xcodeProjDirSrc, xcodeProjDirDest);
 			AddXcodeProjectItem (proj, xcodeProjPath,
-				new Dictionary<string,string> {
+				new Dictionary<string, string> {
 					{ "SchemeName", xcodeProjName },
 				});
 
