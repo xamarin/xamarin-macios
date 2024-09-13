@@ -40,7 +40,7 @@ The bots produce the report on every commit/PR. It can also be produced locally 
 ```
 cd tests/xtro-sharpie
 make
-open report/index.html
+open report-dotnet/index.html
 ```
 
 ### How to read the report
