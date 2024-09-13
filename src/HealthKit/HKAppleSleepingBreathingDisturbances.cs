@@ -18,7 +18,7 @@ namespace HealthKit {
 		[DllImport (Constants.HealthKitLibrary)]
 		unsafe static extern /* NSNumber * _Nullable */ IntPtr HKAppleSleepingBreathingDisturbancesClassificationForQuantity (HKQuantityRef value);
 
-		/// <summary>Get the breathing disturbances classification a given quantity of breathing disturbance.</summary>
+		/// <summary>Get the breathing disturbances classification for a given quantity of breathing disturbance.</summary>
 		/// <param name="value">The quantity of the breathing disturbance whose classification to get.</param>
 		/// <returns>The breathing disturbances classification for the specified breathing disturbance quantity.</returns>
 		public static HKAppleSleepingBreathingDisturbancesClassification? GetClassification (HKQuantity value)
