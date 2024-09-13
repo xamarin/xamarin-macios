@@ -11,6 +11,8 @@ export DEVELOPER_DIR
 # this is a workaround for the fact that xcodebuild -downloadPlatform iOS does not work on EO machines
 xcodebuild -runFirstLaunch
 
+./tools/devops/delete-deleting-runtimes.sh
+
 xcrun simctl runtime list
 if xcrun simctl runtime list | grep -v Deleting | grep "iOS.*($SIMULATOR_VERSION)"; then
 	echo "The iOS Simulator runtime $SIMULATOR_VERSION is already installed."
