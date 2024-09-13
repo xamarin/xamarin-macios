@@ -12,7 +12,7 @@ export DEVELOPER_DIR
 xcodebuild -runFirstLaunch
 
 xcrun simctl runtime list
-if xcrun simctl runtime list | grep "iOS.*($SIMULATOR_VERSION)"; then
+if xcrun simctl runtime list | grep -v Deleting | grep "iOS.*($SIMULATOR_VERSION)"; then
 	echo "The iOS Simulator runtime $SIMULATOR_VERSION is already installed."
 	exit 0
 fi
