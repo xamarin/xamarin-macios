@@ -252,7 +252,6 @@ namespace Xharness {
 			if (harness is null)
 				throw new ArgumentNullException (nameof (harness));
 			iOSMonoSDKPath = harness.MONO_IOS_SDK_DESTDIR;
-			MacMonoSDKPath = harness.MONO_MAC_SDK_DESTDIR;
 			GuidGenerator = Harness.Helpers.GenerateStableGuid;
 			GroupTests = harness.InCI || harness.UseGroupedApps;
 		}
