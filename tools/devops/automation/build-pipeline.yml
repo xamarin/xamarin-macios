@@ -263,8 +263,6 @@ extends:
             testConfigurations: ${{ parameters.testConfigurations }}
           deviceTestsConfigurations: ${{ parameters.deviceTestsConfigurations }}
           macTestsConfigurations: ${{ parameters.macTestsConfigurations }}
-          azureStorage: ${{ variables['azureStorage'] }}
-          azureContainer: ${{ variables['azureContainer'] }}
           signingSetupSteps:
             - template: ./templates/sign-and-notarized/setup.yml
               parameters:

@@ -1184,6 +1184,16 @@ MEDIAACCESSIBILITY_SOURCES = \
 	MediaAccessibility/MediaAccessibility.cs \
 	MediaAccessibility/MAImageCaptioning.cs \
 
+# MediaExtesion
+
+MEDIAEXTENSION_SOURCES = \
+	MediaExtension/MEByteSource.cs \
+	MediaExtension/MERawProcessingBooleanParameter.cs \
+	MediaExtension/MERawProcessingFloatParameter.cs \
+	MediaExtension/MERawProcessingIntegerParameter.cs \
+	MediaExtension/MERawProcessingListParameter.cs \
+	MediaExtension/MESampleCursor.cs \
+
 # MediaPlayer
 
 MEDIAPLAYER_API_SOURCES = \
@@ -1279,6 +1289,8 @@ METALPERFORMANCESHADERS_SOURCES = \
 	MetalPerformanceShaders/MPSCnnKernel.cs \
 	MetalPerformanceShaders/MPSMatrixDescriptor.cs \
 	MetalPerformanceShaders/MPSNDArray.cs \
+	MetalPerformanceShaders/MPSNDArrayDescriptor.cs \
+	MetalPerformanceShaders/MPSNDArrayIdentity.cs \
 	MetalPerformanceShaders/MPSNNGraph.cs \
 	MetalPerformanceShaders/MPSImageHistogram.cs \
 	MetalPerformanceShaders/MPSStateBatch.cs \
@@ -2180,6 +2192,7 @@ MACOS_FRAMEWORKS =          \
 	MailKit                 \
 	MapKit                  \
 	MediaAccessibility      \
+	MediaExtension          \
 	MediaLibrary 		\
 	MediaPlayer             \
 	MediaToolbox            \

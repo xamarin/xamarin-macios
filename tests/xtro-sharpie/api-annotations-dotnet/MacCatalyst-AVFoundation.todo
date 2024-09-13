@@ -314,7 +314,6 @@
 !missing-field! AVAudioSessionRenderingModeChangeNotification not bound
 !missing-field! AVAudioSessionRenderingModeNewRenderingModeKey not bound
 !missing-field! AVCaptureDeviceTypeContinuityCamera not bound
-!missing-field! AVCaptureDeviceTypeExternal not bound
 !missing-field! AVCaptureDeviceTypeMicrophone not bound
 !missing-field! AVCaptureReactionTypeBalloons not bound
 !missing-field! AVCaptureReactionTypeConfetti not bound

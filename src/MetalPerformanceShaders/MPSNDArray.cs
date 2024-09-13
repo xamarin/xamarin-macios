@@ -1,8 +1,10 @@
 #nullable enable
 
 using System;
+
 using Metal;
 using Foundation;
+using ObjCRuntime;
 
 namespace MetalPerformanceShaders {
 	public partial class MPSNDArray {
@@ -91,6 +93,39 @@ namespace MetalPerformanceShaders {
 			fixed (float* p = values) {
 				ReadBytes ((IntPtr) p, strideBytesPerDimension: IntPtr.Zero);
 			}
+		}
+
+#if NET
+		[SupportedOSPlatform ("ios18.0")]
+		[SupportedOSPlatform ("maccatalyst18.0")]
+		[SupportedOSPlatform ("macos15.0")]
+		[SupportedOSPlatform ("tvos18.0")]
+#else
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+#endif
+		public MPSNDArray? Create (nuint numberOfDimensions, nuint [] dimensionSizes, nuint [] dimStrides)
+		{
+			if (dimensionSizes is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (dimensionSizes));
+
+			if (dimStrides is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (dimStrides));
+
+			if (dimensionSizes.Length != (int) numberOfDimensions)
+				ObjCRuntime.ThrowHelper.ThrowArgumentOutOfRangeException (nameof (dimensionSizes), $"Length must be equal to 'numberOfDimensions'.");
+
+			if (dimStrides.Length != (int) numberOfDimensions)
+				ObjCRuntime.ThrowHelper.ThrowArgumentOutOfRangeException (nameof (dimStrides), $"Length must be equal to 'numberOfDimensions'.");
+
+			MPSNDArray? rv;
+			unsafe {
+				fixed (nuint* dimensionSizesPtr = dimensionSizes) {
+					fixed (nuint* dimStridesPtr = dimStrides) {
+						rv = _Create (numberOfDimensions, (IntPtr) dimensionSizesPtr, (IntPtr) dimStridesPtr);
+					}
+				}
+			}
+			return rv;
 		}
 	}
 }
