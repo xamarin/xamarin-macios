@@ -25,6 +25,5 @@ Copyright (C) 2011-2013 Xamarin. All rights reserved.
 		<AvailableItemName Include="Metal" />
 		<AvailableItemName Include="ITunesArtwork" />
 		<AvailableItemName Include="LinkDescription" />
-		<AvailableItemName Include="MaciOSXcodeProject" />
 	</ItemGroup>
 </Project>

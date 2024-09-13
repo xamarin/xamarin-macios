@@ -97,7 +97,7 @@ namespace Xamarin.MacDev.Tasks {
 
 				return base.RunTask ();
 			} else {
-				Log.LogWarning ($"{TaskPrefix}5000 {{0}}", $"Skipping attempt to run \"{ToolName}\" with arguments \"{GenerateCommandLineCommands ()}\". The \"@(MaciOSXcodeProject)\" build action is only supported on macOS.");
+				Log.LogWarning ($"{TaskPrefix}5000 {{0}}", $"Skipping attempt to run \"{ToolName}\" with arguments \"{GenerateCommandLineCommands ()}\". The \"@(XcodeProject)\" build action is only supported on macOS.");
 				return true;
 			}
 		}

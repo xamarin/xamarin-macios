@@ -70,13 +70,13 @@ namespace Xamarin.MacDev.Tasks {
 				}
 
 				if (!File.Exists (ClassicXIAssembly)) {
-					Log.LogError ($"{TaskPrefix}1001 {{0}}", $"The \"{ToolName}\" tool requires a classic Xamarin.iOS installation. Please install Xamarin.iOS: https://github.com/xamarin/xamarin-macios/blob/main/DOWNLOADS.md");
+					Log.LogWarning ($"{TaskPrefix}1001 {{0}}", $"The \"{ToolName}\" tool has dependencies on classic Xamarin.iOS, but an installation was not detected. You may encounter issues running this tool.");
 					return false;
 				}
 
 				return base.RunTask ();
 			} else {
-				Log.LogWarning ($"{TaskPrefix}5000 {{0}}", $"Skipping attempt to run \"{ToolName}\" with arguments \"{GenerateCommandLineCommands ()}\". The \"@(MaciOSXcodeProject)\" build action is only supported on macOS.");
+				Log.LogWarning ($"{TaskPrefix}5000 {{0}}", $"Skipping attempt to run \"{ToolName}\" with arguments \"{GenerateCommandLineCommands ()}\". The \"@(XcodeProject)\" build action is only supported on macOS.");
 				return true;
 			}
 		}

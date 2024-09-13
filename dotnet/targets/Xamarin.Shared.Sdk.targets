@@ -190,7 +190,7 @@
 		<BuildDependsOn>
 			BuildOnlySettings;
 			MaciOSPrepareForBuild;
-			_BuildMaciOSXcodeProjects;
+			_BuildXcodeProjects;
 			_CollectBundleResources;
 			_PackLibraryResources;
 			$(BuildDependsOn);
@@ -203,7 +203,7 @@
 			_ComputePublishTrimmed;
 			BuildOnlySettings;
 			MaciOSPrepareForBuild;
-			_BuildMaciOSXcodeProjects;
+			_BuildXcodeProjects;
 			_CollectBundleResources;
 			_PackLibraryResources;
 			_UnpackLibraryResources;
@@ -221,7 +221,7 @@
 			_ComputePublishTrimmed;
 			BuildOnlySettings;
 			MaciOSPrepareForBuild;
-			_BuildMaciOSXcodeProjects;
+			_BuildXcodeProjects;
 			_CollectBundleResources;
 			_PackLibraryResources;
 			_UnpackLibraryResources;
