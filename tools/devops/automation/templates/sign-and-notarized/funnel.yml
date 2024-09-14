@@ -14,12 +14,6 @@ parameters:
   type: string
   default: HEAD
 
-- name: azureStorage
-  type: string
-
-- name: azureContainer
-  type: string
-
 - name: uploadPrefix
   type: string
   default: '$(MaciosUploadPrefix)'
@@ -175,8 +169,6 @@ jobs:
       repositoryAlias: ${{ parameters.repositoryAlias }}
       commit: ${{ parameters.commit }}
       sbomFilter: '*.nupkg;*.pkg;*.msi'
-      azureStorage: ${{ parameters.azureStorage }}
-      azureContainer: ${{ parameters.azureContainer }}
 
 # Job that runs on a vm that downloads the artifacts information and adds a github comment pointing to the results of the build.
 - job: artifacts_github_comment

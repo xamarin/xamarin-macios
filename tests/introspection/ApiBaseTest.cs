@@ -196,7 +196,16 @@ namespace Introspection {
 		public bool MemberHasObsolete (MemberInfo member)
 		{
 #if NET
-			return member.GetCustomAttributes<ObsoletedOSPlatformAttribute> (false).Any ();
+			return TestRuntime.HasOSPlatformAttributeForCurrentPlatform<ObsoletedOSPlatformAttribute> (member);
+#else
+			return member.GetCustomAttribute<ObsoleteAttribute> () is not null;
+#endif
+		}
+
+		public bool MemberHasUnsupported (MemberInfo member)
+		{
+#if NET
+			return TestRuntime.HasOSPlatformAttributeForCurrentPlatform<UnsupportedOSPlatformAttribute> (member);
 #else
 			return member.GetCustomAttribute<ObsoleteAttribute> () is not null;
 #endif

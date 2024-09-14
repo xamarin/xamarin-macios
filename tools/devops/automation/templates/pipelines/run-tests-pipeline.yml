@@ -84,68 +84,6 @@ parameters:
         ]
       }]
 
-  - name: macTestsConfigurations
-    displayName: macOS test configurations to run
-    type: object
-    default: [
-      {
-        stageName: 'mac_11_m1',
-        displayName: 'M1 - Mac Big Sur (11)',
-        macPool: 'VSEng-VSMac-Xamarin-Shared',
-        useImage: false,
-        statusContext: 'M1 - Mac Big Sur (11)',
-        demands: [
-          "Agent.OS -equals Darwin",
-          "macOS.Name -equals BigSur",
-          "macOS.Architecture -equals arm64",
-          "Agent.HasDevices -equals False",
-          "Agent.IsPaired -equals False"
-        ]
-      },
-      {
-        stageName: 'mac_12_m1',
-        displayName: 'M1 - Mac Ventura (12)',
-        macPool: 'VSEng-VSMac-Xamarin-Shared',
-        useImage: false,
-        statusContext: 'M1 - Mac Monterey (12)',
-        demands: [
-          "Agent.OS -equals Darwin",
-          "macOS.Name -equals Monterey",
-          "macOS.Architecture -equals arm64",
-          "Agent.HasDevices -equals False",
-          "Agent.IsPaired -equals False"
-        ]
-      },
-      {
-        stageName: 'mac_13_m1',
-        displayName: 'M1 - Mac Ventura (13)',
-        macPool: 'VSEng-VSMac-Xamarin-Shared',
-        useImage: false,
-        statusContext: 'M1 - Mac Ventura (13)',
-        demands: [
-          "Agent.OS -equals Darwin",
-          "macOS.Name -equals Ventura",
-          "macOS.Architecture -equals arm64",
-          "Agent.HasDevices -equals False",
-          "Agent.IsPaired -equals False"
-        ]
-      },
-      {
-        stageName: 'mac_14_x64',
-        displayName: 'X64 - Mac Sonoma (14)',
-        macPool: 'VSEng-Xamarin-RedmondMacBuildPool-iOS-Untrusted',
-        useImage: false,
-        statusContext: 'X64 - Mac Sonoma (14)',
-        demands: [
-          "Agent.OS -equals Darwin",
-          "macOS.Name -equals Sonoma",
-          "macOS.Architecture -equals x64",
-          "Agent.HasDevices -equals False",
-          "Agent.IsPaired -equals False"
-        ]
-      }]
-
-
 resources:
   repositories:
     - repository: self
@@ -189,13 +127,9 @@ stages:
       pool: ${{ parameters.pool }}
       runTests: ${{ parameters.runTests }}
       runDeviceTests: ${{ parameters.runDeviceTests }}
-      runOldMacOSTests: ${{ parameters.runOldMacOSTests }}
       runWindowsIntegration: ${{ parameters.runWindowsIntegration }}
       runSamples: ${{ parameters.runSamples }}
       ${{ if ne(length(parameters.testConfigurations), 0)}}:
         testConfigurations: ${{ parameters.testConfigurations }}
       deviceTestsConfigurations: ${{ parameters.deviceTestsConfigurations }}
-      macTestsConfigurations: ${{ parameters.macTestsConfigurations }}
-      azureStorage: ${{ variables['azureStorage'] }}
-      azureContainer: ${{ variables['azureContainer'] }}
 

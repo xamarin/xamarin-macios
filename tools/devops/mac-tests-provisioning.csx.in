@@ -6,13 +6,6 @@ using System.Linq;
 
 using static Xamarin.Provisioning.ProvisioningScript;
 
-// provisionator knows how to deal with this items
-if (!string.IsNullOrEmpty ("@INCLUDE_XAMARIN_LEGACY@")) {
-	Item ("@MONO_PACKAGE@");
-	if (!string.IsNullOrEmpty ("@INCLUDE_MAC@"))
-		Item ("@XM_PACKAGE@");
-}
-
 BrewPackages ("p7zip");
 
 var appleSdkOverride = Path.Combine (Environment.GetFolderPath (Environment.SpecialFolder.UserProfile), "Library", "Preferences", "Xamarin", "Settings.plist");
