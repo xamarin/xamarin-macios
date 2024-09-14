@@ -20,10 +20,6 @@ parameters:
   type: boolean
   default: false
 
-- name: runOldMacOSTests
-  type: boolean
-  default: true
-
 - name: runWindowsIntegration
   type: boolean
   default: true
@@ -57,33 +53,23 @@ parameters:
     {
       platform: iOS,
       isDotNetPlatform: true,
-      isLegacyPlatform: true
     },
     {
       platform: macOS,
       isDotNetPlatform: true,
-      isLegacyPlatform: true
     },
     {
       platform: tvOS,
       isDotNetPlatform: true,
-      isLegacyPlatform: true
-    },
-    {
-      platform: watchOS,
-      isDotNetPlatform: false,
-      isLegacyPlatform: true
     },
     {
       platform: MacCatalyst,
       isDotNetPlatform: true,
-      isLegacyPlatform: false
     },
     {
       # when running platform-specific test runs, we also need a special test run that executes tests that only runs when multiple platforms are enabled
       platform: Multiple,
       isDotNetPlatform: true,
-      isLegacyPlatform: true
     }
   ]
 
@@ -98,144 +84,74 @@ parameters:
     {
       label: cecil,
       splitByPlatforms: false,
-      containsDotNetTests: true,
-      containsLegacyTests: false,
       testPrefix: 'simulator_tests',
     },
     {
       label: dotnettests,
       splitByPlatforms: true,
-      containsDotNetTests: true,
-      containsLegacyTests: false,
       needsMultiplePlatforms: true,
       testPrefix: 'simulator_tests',
     },
     {
       label: fsharp,
       splitByPlatforms: false,
-      containsDotNetTests: true,
-      containsLegacyTests: true,
       testPrefix: 'simulator_tests',
     },
     {
       label: framework,
       splitByPlatforms: false,
-      containsDotNetTests: true,
-      containsLegacyTests: true,
       testPrefix: 'simulator_tests',
     },
     {
       label: generator,
       splitByPlatforms: false,
-      containsDotNetTests: true,
-      containsLegacyTests: true,
       testPrefix: 'simulator_tests',
     },
     {
       label: interdependent-binding-projects,
       splitByPlatforms: false,
-      containsDotNetTests: true,
-      containsLegacyTests: true,
-      testPrefix: 'simulator_tests',
-    },
-    {
-      label: install-source,
-      splitByPlatforms: false,
-      containsDotNetTests: false,
-      containsLegacyTests: true,
       testPrefix: 'simulator_tests',
     },
     {
       label: introspection,
       splitByPlatforms: false,
-      containsDotNetTests: true,
-      containsLegacyTests: true,
       testPrefix: 'simulator_tests',
     },
     {
       label: linker,
       splitByPlatforms: false,
-      containsDotNetTests: true,
-      containsLegacyTests: true,
-      testPrefix: 'simulator_tests',
-    },
-    {
-      label: mac-binding-project,
-      splitByPlatforms: false,
-      containsDotNetTests: false,
-      containsLegacyTests: true,
       testPrefix: 'simulator_tests',
     },
     {
       label: mmp,
       splitByPlatforms: false,
-      containsDotNetTests: false,
-      containsLegacyTests: true,
-      testPrefix: 'simulator_tests',
-    },
-    {
-      label: mononative,
-      splitByPlatforms: false,
-      containsDotNetTests: false,
-      containsLegacyTests: true,
       testPrefix: 'simulator_tests',
     },
     {
       label: monotouch,
       splitByPlatforms: true,
-      containsDotNetTests: true,
-      containsLegacyTests: true,
       needsMultiplePlatforms: false,
       testPrefix: 'simulator_tests',
     },
     {
       label: msbuild,
       splitByPlatforms: false,
-      containsDotNetTests: true,
-      containsLegacyTests: true,
-      testPrefix: 'simulator_tests',
-    },
-    {
-      label: mtouch,
-      splitByPlatforms: false,
-      containsDotNetTests: false,
-      containsLegacyTests: true,
-      testPrefix: 'simulator_tests',
-    },
-    {
-      label: xammac,
-      splitByPlatforms: false,
-      containsDotNetTests: false,
-      containsLegacyTests: true,
       testPrefix: 'simulator_tests',
     },
     {
       label: xcframework,
       splitByPlatforms: false,
-      containsDotNetTests: true,
-      containsLegacyTests: true,
       testPrefix: 'simulator_tests',
     },
     {
       label: xtro,
       splitByPlatforms: false,
-      containsDotNetTests: true,
-      containsLegacyTests: true,
       testPrefix: 'simulator_tests',
     },
   ]
 
 - name: deviceTestsConfigurations
   type: object
-
-- name: macTestsConfigurations
-  type: object
-
-- name: azureStorage
-  type: string
-
-- name: azureContainer
-  type: string
 
 - name: stageDisplayNamePrefix
   type: string
@@ -341,22 +257,6 @@ stages:
     repositoryAlias: ${{ parameters.repositoryAlias }}
     commit: ${{ parameters.commit }}
     postPipeline: true
-
-- ${{ if eq(parameters.runOldMacOSTests, true) }}:
-  - ${{ each config in parameters.macTestsConfigurations }}:
-    - template: ./mac/stage.yml
-      parameters:
-        isPR: ${{ parameters.isPR }}
-        repositoryAlias: ${{ parameters.repositoryAlias }}
-        commit: ${{ parameters.commit }}
-        stageName: ${{ config.stageName }}
-        displayName: ' ${{ parameters.stageDisplayNamePrefix }}${{ config.displayName }}'
-        macPool: ${{ config.macPool }}
-        useImage: ${{ config.useImage }}
-        statusContext: ${{ config.statusContext }}
-        keyringPass: $(pass--lab--mac--builder--keychain)
-        demands: ${{ config.demands }}
-        postPipeline: true
 
 - ${{ if eq(parameters.runWindowsIntegration, true) }}:
   - template: ./windows/stage.yml

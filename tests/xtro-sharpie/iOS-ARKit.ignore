@@ -1,3 +1,0 @@
-## No need for a Marshal Directive on those, they were bound manually
-
-# only exposed in subclasses (it's static but also abstract) - see https://github.com/xamarin/xamarin-macios/issues/5347

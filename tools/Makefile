@@ -38,12 +38,6 @@ SUBDIRS += nnyeah
 endif
 endif
 
-ifdef INCLUDE_XAMARIN_LEGACY
-ifdef ENABLE_INSTALL_SOURCE
-SUBDIRS += install-source
-endif
-endif
-
 ifdef ENABLE_DOTNET
 SUBDIRS += dotnet-linker
 endif
