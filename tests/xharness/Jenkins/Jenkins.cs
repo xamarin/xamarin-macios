@@ -155,26 +155,6 @@ namespace Xharness.Jenkins {
 			}
 
 			// individual special tasks
-			var buildXtroTests = new MakeTask (jenkins: this, processManager: processManager) {
-				Platform = TestPlatform.All,
-				TestName = "Xtro",
-				Target = "wrench",
-				WorkingDirectory = Path.Combine (HarnessConfiguration.RootDirectory, "xtro-sharpie"),
-				Ignored = !TestSelection.IsEnabled (TestLabel.Xtro) || !TestSelection.IsEnabled (PlatformLabel.LegacyXamarin),
-				Timeout = TimeSpan.FromMinutes (15),
-				SupportsParallelExecution = false,
-			};
-
-			var runXtroReporter = new RunXtroTask (this, buildXtroTests, processManager, crashReportSnapshotFactory) {
-				Platform = TestPlatform.Mac,
-				TestName = buildXtroTests.TestName,
-				Mode = "Legacy Xamarin",
-				Ignored = buildXtroTests.Ignored,
-				WorkingDirectory = buildXtroTests.WorkingDirectory,
-				AnnotationsDirectory = buildXtroTests.WorkingDirectory,
-			};
-			Tasks.Add (runXtroReporter);
-
 			var buildDotNetXtroTests = new MakeTask (jenkins: this, processManager: processManager) {
 				Platform = TestPlatform.All,
 				TestName = "Xtro",

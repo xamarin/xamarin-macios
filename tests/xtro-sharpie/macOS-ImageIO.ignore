@@ -1,3 +1,0 @@
-!missing-field! kCGImagePropertyMakerAppleDictionary not bound
-!missing-pinvoke! CGImageSourceCopyMetadataAtIndex is not bound
-!missing-pinvoke! CGImageSourceRemoveCacheAtIndex is not bound

@@ -78,9 +78,9 @@ endif
 
 ifeq ($(RID),)
 ifeq ($(PLATFORM),iOS)
-RID=ios-arm64
+RID=iossimulator-arm64
 else ifeq ($(PLATFORM),tvOS)
-RID=tvos-arm64
+RID=tvossimulator-arm64
 else ifeq ($(PLATFORM),MacCatalyst)
 ifeq ($(CONFIG),Release)
 RID=maccatalyst-x64;maccatalyst-arm64
