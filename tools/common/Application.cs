@@ -174,7 +174,7 @@ namespace Xamarin.Bundler {
 
 		public bool SkipMarkingNSObjectsInUserAssemblies { get; set; }
 
-		public bool DisableAutomaticLinkerSelection { get; set; };
+		public bool DisableAutomaticLinkerSelection { get; set; }
 
 		// assembly_build_targets describes what kind of native code each assembly should be compiled into for mobile targets (iOS, tvOS, watchOS).
 		// An assembly can be compiled into: static object (.o), dynamic library (.dylib) or a framework (.framework).
