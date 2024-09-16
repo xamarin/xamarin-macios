@@ -860,6 +860,17 @@ public class DefaultEnumValueAttribute : Attribute {
 	}
 }
 
+/// <summary>This attribute is used to specify the type of the backing field for strongly typed enums.</summary>
+[AttributeUsage (AttributeTargets.Enum)]
+public class BackingFieldTypeAttribute : Attribute {
+
+	public BackingFieldTypeAttribute (Type type)
+	{
+		BackingFieldType = type;
+	}
+
+	public Type BackingFieldType { get; set; }
+}
 //
 // This prevents the generator from generating the managed proxy to
 // the method being called, this is done when we are interested in

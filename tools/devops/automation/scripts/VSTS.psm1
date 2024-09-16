@@ -242,6 +242,125 @@ class Vsts {
 
 class BuildConfiguration {
 
+    # list of the default variables we are interested in
+    static [string[]] $defaultBuildVariables = $(
+        "BUILD_BUILDID",
+        "BUILD_BUILDNUMBER",
+        "BUILD_BUILDURI",
+        "BUILD_BINARIESDIRECTORY",
+        "BUILD_DEFINITIONNAME",
+        "BUILD_REASON",
+        "BUILD_REPOSITORY_ID",
+        "BUILD_REPOSITORY_NAME",
+        "BUILD_REPOSITORY_PROVIDER",
+        "BUILD_REPOSITORY_URI",
+        "BUILD_SOURCEBRANCH",
+        "BUILD_SOURCEBRANCHNAME"
+    )
+
+    <#
+        .SYNOPSIS
+            Stores the default variables in the current buld as PARENT_BUILD_* in the
+            configuration object. This allows cascading pipelines to access the configuration
+            of the pipeline that triggered them.
+    #>
+    [void] StoreParentBuildVariables ([PSCustomObject] $configuration) {
+        Write-Debug ("=> StoreParentBuildVariables")
+        foreach ($buildVariable in [BuildConfiguration]::defaultBuildVariables) {
+            $variableName = "PARENT_BUILD_$buildVariable"
+            $variableValue = [Environment]::GetEnvironmentVariable($buildVariable)
+            if ($variableValue) {
+                Write-Debug "$variableName = $variableValue"
+                $configuration | Add-Member -NotePropertyName $variableName -NotePropertyValue $variableValue
+            } else {
+                Write-Debug "$variableName not found."
+            }
+        }
+    }
+
+    <#
+        .SYNOPSIS
+            Exports the default variables in the current buld as PARENT_BUILD_* from the
+            configuration object.
+    #>
+    [void] ExportParentBuildVariables ([PSCustomObject] $configuration) {
+        Write-Debug ("=> ExportParentBuildVariables")
+        foreach ($buildVariable in [BuildConfiguration]::defaultBuildVariables) {
+            $variableName = "PARENT_BUILD_$buildVariable"
+            $variableValue = $configuration.$variableName
+            if ($variableValue) {
+                Write-Debug "$variableName = $variableValue"
+                Write-Host "##vso[task.setvariable variable=$variableName;isOutput=true]$variableValue"
+            } else {
+                Write-Debug "$variableName not found."
+            }
+        }
+    }
+
+    static [string[]] $labelsOfInterest = $(
+        "build-package",
+        "skip-packages",
+        "skip-nugets",
+        "skip-signing",
+        "run-sample-tests",
+        "skip-packaged-macos-tests",
+        "run-packaged-macos-tests",
+        "skip-api-comparison",
+        "run-windows-tests",
+        "skip-windows-tests",
+        "skip-all-tests"
+    )
+
+    [void] SetLabelsFromPR ([PSCustomObject] $prInfo, [bool]$isPR) {
+        if ($prInfo) {
+            Write-Deubg "Setting VSTS labels from $($prInfo.labels)"
+            foreach ($l in [BuildConfiguration]::labelsOfInterest) {
+                $labelPresent = 1 -eq ($prInfo.labels | Where-Object { $_.name -eq "$l"}).Count
+                # We need to replace dashes with underscores, because bash can't access an environment variable with a dash in the name.
+                $lbl = $l.Replace('-', '_')
+                Write-Host "##vso[task.setvariable variable=$lbl;isOutput=true]$labelPresent"
+            }
+        } else {
+            Write-Debug "Not setting PR labels because there was not info provided."
+        }
+
+        # set if the build is a PR or not
+        if ($isPR) {
+          Write-Host "##vso[task.setvariable variable=prBuild;isOutput=true]True"
+        } else {
+          Write-Host "##vso[task.setvariable variable=prBuild;isOutput=true]False"
+        }
+    }
+
+    <#
+        .SYNOPSIS
+            Retrieve the change id and export it as an enviroment variable.
+    #>
+    [string] ExportChangeId ([object] $configuration) {
+        # This is an interesting step, we do know we are dealing with a PR, but we need the PR id to
+        # be able to get the labels, the buildSourceBranch follows the pattern: refs/pull/{ChangeId}/merge
+        # we could use a regexp but then we would have two problems instead of one
+        $changeId = $null
+        if ($configuration.PARENT_BUILD_BUILD_SOURCEBRANCH) {
+            # use the source branch information from the configuration object
+            $changeId = $configuration.PARENT_BUILD_BUILD_SOURCEBRANCH.Replace("refs/pull/", "").Replace("/merge", "")
+        } else {
+            Write-Debug "Retrieving change id from the environment since it could not be found in the config."
+            # retrieve the change ide form the BUILD_SOURCEBRANCH enviroment variable. 
+            $changeId = "$Env:BUILD_SOURCEBRANCH".Replace("refs/pull/", "").Replace("/merge", "")
+        }
+
+        # we can always fail (regexp error or not env varaible)
+        if ($changeId) {
+            # add a var with the change id, which can be later consumed by some of the old scripts from
+            # jenkins
+            Write-Host "##vso[task.setvariable variable=pr_number;isOutput=true]$changeId"
+        } else {
+            Write-Debug "Not setting the change id because it could not be calculated."
+        }
+        return $changeId
+    }
+
     [PSCustomObject] Import([string] $configFile) {
         if (-not (Test-Path -Path $configFile -PathType Leaf)) {
           throw [System.InvalidOperationException]::new("Configuration file $configFile is missing")
@@ -253,31 +372,8 @@ class BuildConfiguration {
           throw [System.InvalidOperationException]::new("Failed to load configuration file $configFile")
         }
 
-        $defaultBuildVariables = @(
-            "BUILD_BUILDID",
-            "BUILD_BUILDNUMBER",
-            "BUILD_BUILDURI",
-            "BUILD_BINARIESDIRECTORY",
-            "BUILD_DEFINITIONNAME",
-            "BUILD_REASON",
-            "BUILD_REPOSITORY_ID",
-            "BUILD_REPOSITORY_NAME",
-            "BUILD_REPOSITORY_PROVIDER",
-            "BUILD_REPOSITORY_URI",
-            "BUILD_SOURCEBRANCH",
-            "BUILD_SOURCEBRANCHNAME"
-        )
-
-        # load the variable name from the parent
-        foreach ($buildVariable in $defaultBuildVariables) {
-            $variableName = "PARENT_BUILD_$buildVariable"
-            $variableValue = $config.$variableName
-            if ($variableValue) {
-                Write-Host "##vso[task.setvariable variable=$variableName;isOutput=true]$variableValue"
-            } else {
-                Write-Debug "Ignoring variable $variableName"
-            }
-        }
+        # load the variables from the config and export them to be accessable from others
+        $this.ExportParentBuildVariables($config)
 
         $dotnetPlatforms = $config.DOTNET_PLATFORMS.Split(' ', [StringSplitOptions]::RemoveEmptyEntries)
         Write-Host "##vso[task.setvariable variable=DOTNET_PLATFORMS;isOutput=true]$dotnetPlatforms"
@@ -339,6 +435,7 @@ class BuildConfiguration {
         return $config
     }
 
+
     [PSCustomObject] Create([bool] $addTags, [string] $configFile) {
         # we are going to use a custom object to store all the configuration of the build, this later
         # will be uploaded as an artifact so that it can be easily shared with the cascade pipelines, we will
@@ -349,27 +446,12 @@ class BuildConfiguration {
           DOTNET_PLATFORMS = "$Env:CONFIGURE_PLATFORMS_DOTNET_PLATFORMS"
         }
 
-        $defaultBuildVariables = @(
-            "BUILD_BUILDID",
-            "BUILD_BUILDNUMBER",
-            "BUILD_BUILDURI",
-            "BUILD_BINARIESDIRECTORY",
-            "BUILD_DEFINITIONNAME",
-            "BUILD_REASON",
-            "BUILD_REPOSITORY_ID",
-            "BUILD_REPOSITORY_NAME",
-            "BUILD_REPOSITORY_PROVIDER",
-            "BUILD_REPOSITORY_URI",
-            "BUILD_SOURCEBRANCH",
-            "BUILD_SOURCEBRANCHNAME"
-        )
+        $this.StoreParentBuildVariables($configuration)
 
-        # loop over the default build enviroments and add them with a prefix to the configuration objects
-        foreach ($buildVariable in $defaultBuildVariables) {
-            $variableName = "PARENT_BUILD_$buildVariable"
-            $variableValue = [Environment]::GetEnvironmentVariable($buildVariable)
-            $configuration | Add-Member -NotePropertyName $variableName -NotePropertyValue $variableValue
-        }
+        # store if dotnet has been enabled
+        $variableName = "ENABLE_DOTNET"
+        $variableValue = [Environment]::GetEnvironmentVariable($variableName)
+        $configuration | Add-Member -NotePropertyName $variableName -NotePropertyValue $variableValue
 
         # For each .NET platform we support, add a INCLUDE_DOTNET_<platform> variable specifying whether that platform is enabled or not.
         $dotnetPlatforms = $configuration.DOTNET_PLATFORMS.Split(' ', [StringSplitOptions]::RemoveEmptyEntries)
@@ -402,6 +484,36 @@ class BuildConfiguration {
             }
         }
 
+        # store all the variables needed when classic xamarin has been enabled
+        $configuration | Add-Member -NotePropertyName "INCLUDE_XAMARIN_LEGACY" -NotePropertyValue $Env:INCLUDE_XAMARIN_LEGACY
+
+        # if xamarin legacy has been included, check if we need to include the xamarin sdk for each of the platforms, otherewise it will be
+        # false for all
+        $xamarinPlatforms = @("ios", "macos", "tvos", "watchos", "maccatalyst")
+        if ($configuration.INCLUDE_XAMARIN_LEGACY -eq "true") {
+            foreach ($platform in $xamarinPlatforms) {
+                $variableName = "INCLUDE_LEGACY_$($platform.ToUpper())"
+                $variableValue = [Environment]::GetEnvironmentVariable("$variableName")
+                $configuration | Add-Member -NotePropertyName $variableName -NotePropertyValue $variableValue
+            }
+        } else {
+            foreach ($platform in $xamarinPlatforms) {
+                $variableName = "INCLUDE_LEGACY_$($platform.ToUpper())"
+                $configuration | Add-Member -NotePropertyName $variableName -NotePropertyValue "false"
+            }
+        }
+
+        # add all the include platforms as well as the nuget os version
+        foreach ($platform in $xamarinPlatforms) {
+            $variableName = "INCLUDE_$($platform.ToUpper())"
+            $variableValue = [Environment]::GetEnvironmentVariable("$variableName")
+            $configuration | Add-Member -NotePropertyName $variableName -NotePropertyValue $variableValue
+
+            $variableName = "$($platform.ToUpper())__NUGET_OS_VERSION"
+            $variableValue = [Environment]::GetEnvironmentVariable("$variableName")
+            $configuration | Add-Member -NotePropertyName $variableName -NotePropertyValue $variableValue
+        }
+
         # calculate the commit to later share it with the cascade pipelines
         if ($Env:BUILD_REASON -eq "PullRequest") {
             $changeId = $configuration.PARENT_BUILD_BUILD_SOURCEBRANCH.Replace("refs/pull/", "").Replace("/merge", "")
@@ -420,15 +532,9 @@ class BuildConfiguration {
 
         if ($configuration.BuildReason -eq "PullRequest" -or (($configuration.BuildReason -eq "Manual") -and ($configuration.PARENT_BUILD_BUILD_SOURCEBRANCH -eq "merge")) ) {
           Write-Host "Configuring build from PR."
-          # This is an interesting step, we do know we are dealing with a PR, but we need the PR id to
-          # be able to get the labels, the buildSourceBranch follows the pattern: refs/pull/{ChangeId}/merge
-          # we could use a regexp but then we would have two problems instead of one
-          $changeId = $configuration.PARENT_BUILD_BUILD_SOURCEBRANCH.Replace("refs/pull/", "").Replace("/merge", "")
 
-          # add a var with the change id, which can be later consumed by some of the old scripts from
-          # jenkins
-          Write-Host "##vso[task.setvariable variable=pr_number;isOutput=true]$changeId"
-
+          # retrieve the PR data to be able to fwd the labels from github
+          $changeId = $this.ExportChangeId($configuration)
           $prInfo = Get-GitHubPRInfo -ChangeId $changeId
           Write-Host $prInfo
 
@@ -446,29 +552,11 @@ class BuildConfiguration {
           $tags.Add("$ref")
 
           # set output variables based on the git labels
-          $labelsOfInterest = @(
-            "build-package",
-            "skip-packages",
-            "skip-nugets",
-            "skip-signing",
-            "run-sample-tests",
-            "skip-packaged-macos-tests",
-            "run-packaged-macos-tests",
-            "skip-api-comparison",
-            "run-windows-tests",
-            "skip-windows-tests",
-            "skip-all-tests"
-          )
+          $this.SetLabelsFromPR($prInfo, $true)
 
-          foreach ($l in $labelsOfInterest) {
-            $labelPresent = 1 -eq ($prInfo.labels | Where-Object { $_.name -eq "$l"}).Count
-            # We need to replace dashes with underscores, because bash can't access an environment variable with a dash in the name.
-            $lbl = $l.Replace('-', '_')
-            Write-Host "##vso[task.setvariable variable=$lbl;isOutput=true]$labelPresent"
-          }
-
-          Write-Host "##vso[task.setvariable variable=prBuild;isOutput=true]True"
         } else {
+          # thee are not labels to add in a CI build and we will set the build as a ci build.
+          $this.SetLabelsFromPR($null, $false)
           if ($tags.Contains("cronjob")) {
             # debug so that we do know why we do not have ciBuild
             Write-Debug "Skipping the tag 'ciBuild' because we are dealing with a translation build."

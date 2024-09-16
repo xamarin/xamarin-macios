@@ -9,6 +9,7 @@
 #nullable enable
 
 using System;
+using System.ComponentModel;
 using System.Runtime.InteropServices;
 using ObjCRuntime;
 using Foundation;
@@ -155,8 +156,20 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern unsafe void nw_connection_set_viability_changed_handler (IntPtr handle, void* callback);
 
+#if !XAMCORE_5_0
+		[Obsolete ("Use 'SetViabilityChangeHandler' instead.")]
+		[EditorBrowsable (EditorBrowsableState.Never)]
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public unsafe void SetBooleanChangeHandler (Action<bool> callback)
+		{
+			SetViabilityChangeHandler (callback);
+		}
+#endif // !XAMCORE_5_0
+
+		/// <summary>Set a handler that is called when data can be sent or received.</summary>
+		/// <param name="callback">The callback to call when data can be sent or received.</param>
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		public unsafe void SetViabilityChangeHandler (Action<bool> callback)
 		{
 			if (callback is null) {
 				nw_connection_set_viability_changed_handler (GetCheckedHandle (), null);

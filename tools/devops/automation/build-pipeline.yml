@@ -198,6 +198,8 @@ trigger:
     exclude:
       - refs/heads/locfiles/*
       - refs/heads/dev/*
+      - refs/heads/darc-*
+      - refs/heads/backport-pr-*
   paths:
     exclude:
       - .github
@@ -261,8 +263,6 @@ extends:
             testConfigurations: ${{ parameters.testConfigurations }}
           deviceTestsConfigurations: ${{ parameters.deviceTestsConfigurations }}
           macTestsConfigurations: ${{ parameters.macTestsConfigurations }}
-          azureStorage: ${{ variables['azureStorage'] }}
-          azureContainer: ${{ variables['azureContainer'] }}
           signingSetupSteps:
             - template: ./templates/sign-and-notarized/setup.yml
               parameters:

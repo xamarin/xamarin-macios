@@ -172,108 +172,6 @@ namespace CoreMidi {
 		internal MidiObjectRef handle;
 		internal bool owns;
 
-		internal static IntPtr kMIDIPropertyAdvanceScheduleTimeMuSec;
-		internal static IntPtr kMIDIPropertyCanRoute;
-		internal static IntPtr kMIDIPropertyConnectionUniqueID;
-		internal static IntPtr kMIDIPropertyDeviceID;
-		internal static IntPtr kMIDIPropertyDisplayName;
-		internal static IntPtr kMIDIPropertyDriverDeviceEditorApp;
-		internal static IntPtr kMIDIPropertyDriverOwner;
-		internal static IntPtr kMIDIPropertyDriverVersion;
-		internal static IntPtr kMIDIPropertyImage;
-		internal static IntPtr kMIDIPropertyIsBroadcast;
-		internal static IntPtr kMIDIPropertyIsDrumMachine;
-		internal static IntPtr kMIDIPropertyIsEffectUnit;
-		internal static IntPtr kMIDIPropertyIsEmbeddedEntity;
-		internal static IntPtr kMIDIPropertyIsMixer;
-		internal static IntPtr kMIDIPropertyIsSampler;
-		internal static IntPtr kMIDIPropertyManufacturer;
-		internal static IntPtr kMIDIPropertyMaxReceiveChannels;
-		internal static IntPtr kMIDIPropertyMaxSysExSpeed;
-		internal static IntPtr kMIDIPropertyMaxTransmitChannels;
-		internal static IntPtr kMIDIPropertyModel;
-		internal static IntPtr kMIDIPropertyName;
-		internal static IntPtr kMIDIPropertyNameConfiguration;
-		internal static IntPtr kMIDIPropertyOffline;
-		internal static IntPtr kMIDIPropertyPanDisruptsStereo;
-		internal static IntPtr kMIDIPropertyPrivate;
-		internal static IntPtr kMIDIPropertyReceiveChannels;
-		internal static IntPtr kMIDIPropertyReceivesBankSelectLSB;
-		internal static IntPtr kMIDIPropertyReceivesBankSelectMSB;
-		internal static IntPtr kMIDIPropertyReceivesClock;
-		internal static IntPtr kMIDIPropertyReceivesMTC;
-		internal static IntPtr kMIDIPropertyReceivesNotes;
-		internal static IntPtr kMIDIPropertyReceivesProgramChanges;
-		internal static IntPtr kMIDIPropertySingleRealtimeEntity;
-		internal static IntPtr kMIDIPropertySupportsGeneralMIDI;
-		internal static IntPtr kMIDIPropertySupportsMMC;
-		internal static IntPtr kMIDIPropertySupportsShowControl;
-		internal static IntPtr kMIDIPropertyTransmitChannels;
-		internal static IntPtr kMIDIPropertyTransmitsBankSelectLSB;
-		internal static IntPtr kMIDIPropertyTransmitsBankSelectMSB;
-		internal static IntPtr kMIDIPropertyTransmitsClock;
-		internal static IntPtr kMIDIPropertyTransmitsMTC;
-		internal static IntPtr kMIDIPropertyTransmitsNotes;
-		internal static IntPtr kMIDIPropertyTransmitsProgramChanges;
-		internal static IntPtr kMIDIPropertyUniqueID;
-		internal static IntPtr kMIDIDriverPropertyUsesSerial;
-		internal static IntPtr kMIDIPropertyFactoryPatchNameFile;
-		internal static IntPtr kMIDIPropertyUserPatchNameFile;
-		internal static IntPtr kMIDIPropertyNameConfigurationDictionary;
-
-		static MidiObject ()
-		{
-			var midiLibrary = Libraries.CoreMidi.Handle;
-			kMIDIPropertyAdvanceScheduleTimeMuSec = Dlfcn.GetIntPtr (midiLibrary, "kMIDIPropertyAdvanceScheduleTimeMuSec");
-			kMIDIPropertyCanRoute = Dlfcn.GetIntPtr (midiLibrary, "kMIDIPropertyCanRoute");
-			kMIDIPropertyConnectionUniqueID = Dlfcn.GetIntPtr (midiLibrary, "kMIDIPropertyConnectionUniqueID");
-			kMIDIPropertyDeviceID = Dlfcn.GetIntPtr (midiLibrary, "kMIDIPropertyDeviceID");
-			kMIDIPropertyDisplayName = Dlfcn.GetIntPtr (midiLibrary, "kMIDIPropertyDisplayName");
-			kMIDIPropertyDriverDeviceEditorApp = Dlfcn.GetIntPtr (midiLibrary, "kMIDIPropertyDriverDeviceEditorApp");
-			kMIDIPropertyDriverOwner = Dlfcn.GetIntPtr (midiLibrary, "kMIDIPropertyDriverOwner");
-			kMIDIPropertyDriverVersion = Dlfcn.GetIntPtr (midiLibrary, "kMIDIPropertyDriverVersion");
-			kMIDIPropertyImage = Dlfcn.GetIntPtr (midiLibrary, "kMIDIPropertyImage");
-			kMIDIPropertyIsBroadcast = Dlfcn.GetIntPtr (midiLibrary, "kMIDIPropertyIsBroadcast");
-			kMIDIPropertyIsDrumMachine = Dlfcn.GetIntPtr (midiLibrary, "kMIDIPropertyIsDrumMachine");
-			kMIDIPropertyIsEffectUnit = Dlfcn.GetIntPtr (midiLibrary, "kMIDIPropertyIsEffectUnit");
-			kMIDIPropertyIsEmbeddedEntity = Dlfcn.GetIntPtr (midiLibrary, "kMIDIPropertyIsEmbeddedEntity");
-			kMIDIPropertyIsMixer = Dlfcn.GetIntPtr (midiLibrary, "kMIDIPropertyIsMixer");
-			kMIDIPropertyIsSampler = Dlfcn.GetIntPtr (midiLibrary, "kMIDIPropertyIsSampler");
-			kMIDIPropertyManufacturer = Dlfcn.GetIntPtr (midiLibrary, "kMIDIPropertyManufacturer");
-			kMIDIPropertyMaxReceiveChannels = Dlfcn.GetIntPtr (midiLibrary, "kMIDIPropertyMaxReceiveChannels");
-			kMIDIPropertyMaxSysExSpeed = Dlfcn.GetIntPtr (midiLibrary, "kMIDIPropertyMaxSysExSpeed");
-			kMIDIPropertyMaxTransmitChannels = Dlfcn.GetIntPtr (midiLibrary, "kMIDIPropertyMaxTransmitChannels");
-			kMIDIPropertyModel = Dlfcn.GetIntPtr (midiLibrary, "kMIDIPropertyModel");
-			kMIDIPropertyName = Dlfcn.GetIntPtr (midiLibrary, "kMIDIPropertyName");
-			kMIDIPropertyNameConfiguration = Dlfcn.GetIntPtr (midiLibrary, "kMIDIPropertyNameConfiguration");
-			kMIDIPropertyOffline = Dlfcn.GetIntPtr (midiLibrary, "kMIDIPropertyOffline");
-			kMIDIPropertyPanDisruptsStereo = Dlfcn.GetIntPtr (midiLibrary, "kMIDIPropertyPanDisruptsStereo");
-			kMIDIPropertyPrivate = Dlfcn.GetIntPtr (midiLibrary, "kMIDIPropertyPrivate");
-			kMIDIPropertyReceiveChannels = Dlfcn.GetIntPtr (midiLibrary, "kMIDIPropertyReceiveChannels");
-			kMIDIPropertyReceivesBankSelectLSB = Dlfcn.GetIntPtr (midiLibrary, "kMIDIPropertyReceivesBankSelectLSB");
-			kMIDIPropertyReceivesBankSelectMSB = Dlfcn.GetIntPtr (midiLibrary, "kMIDIPropertyReceivesBankSelectMSB");
-			kMIDIPropertyReceivesClock = Dlfcn.GetIntPtr (midiLibrary, "kMIDIPropertyReceivesClock");
-			kMIDIPropertyReceivesMTC = Dlfcn.GetIntPtr (midiLibrary, "kMIDIPropertyReceivesMTC");
-			kMIDIPropertyReceivesNotes = Dlfcn.GetIntPtr (midiLibrary, "kMIDIPropertyReceivesNotes");
-			kMIDIPropertyReceivesProgramChanges = Dlfcn.GetIntPtr (midiLibrary, "kMIDIPropertyReceivesProgramChanges");
-			kMIDIPropertySingleRealtimeEntity = Dlfcn.GetIntPtr (midiLibrary, "kMIDIPropertySingleRealtimeEntity");
-			kMIDIPropertySupportsGeneralMIDI = Dlfcn.GetIntPtr (midiLibrary, "kMIDIPropertySupportsGeneralMIDI");
-			kMIDIPropertySupportsMMC = Dlfcn.GetIntPtr (midiLibrary, "kMIDIPropertySupportsMMC");
-			kMIDIPropertySupportsShowControl = Dlfcn.GetIntPtr (midiLibrary, "kMIDIPropertySupportsShowControl");
-			kMIDIPropertyTransmitChannels = Dlfcn.GetIntPtr (midiLibrary, "kMIDIPropertyTransmitChannels");
-			kMIDIPropertyTransmitsBankSelectLSB = Dlfcn.GetIntPtr (midiLibrary, "kMIDIPropertyTransmitsBankSelectLSB");
-			kMIDIPropertyTransmitsBankSelectMSB = Dlfcn.GetIntPtr (midiLibrary, "kMIDIPropertyTransmitsBankSelectMSB");
-			kMIDIPropertyTransmitsClock = Dlfcn.GetIntPtr (midiLibrary, "kMIDIPropertyTransmitsClock");
-			kMIDIPropertyTransmitsMTC = Dlfcn.GetIntPtr (midiLibrary, "kMIDIPropertyTransmitsMTC");
-			kMIDIPropertyTransmitsNotes = Dlfcn.GetIntPtr (midiLibrary, "kMIDIPropertyTransmitsNotes");
-			kMIDIPropertyTransmitsProgramChanges = Dlfcn.GetIntPtr (midiLibrary, "kMIDIPropertyTransmitsProgramChanges");
-			kMIDIPropertyUniqueID = Dlfcn.GetIntPtr (midiLibrary, "kMIDIPropertyUniqueID");
-			kMIDIDriverPropertyUsesSerial = Dlfcn.GetIntPtr (midiLibrary, "kMIDIDriverPropertyUsesSerial");
-			kMIDIPropertyFactoryPatchNameFile = Dlfcn.GetIntPtr (midiLibrary, "kMIDIPropertyFactoryPatchNameFile");
-			kMIDIPropertyUserPatchNameFile = Dlfcn.GetIntPtr (midiLibrary, "kMIDIPropertyUserPatchNameFile");
-			kMIDIPropertyNameConfigurationDictionary = Dlfcn.GetIntPtr (midiLibrary, "kMIDIPropertyNameConfigurationDictionary");
-		}
-
 		public MidiObjectRef Handle {
 			get { return handle; }
 		}
@@ -1219,134 +1117,134 @@ namespace CoreMidi {
 
 		public int AdvanceScheduleTimeMuSec {
 			get {
-				return GetInt (kMIDIPropertyAdvanceScheduleTimeMuSec);
+				return GetInt (MidiPropertyExtensions.kMIDIPropertyAdvanceScheduleTimeMuSec);
 			}
 			set {
-				SetInt (kMIDIPropertyAdvanceScheduleTimeMuSec, value);
+				SetInt (MidiPropertyExtensions.kMIDIPropertyAdvanceScheduleTimeMuSec, value);
 			}
 		}
 
 		public bool CanRoute {
 			get {
-				return GetInt (kMIDIPropertyCanRoute) != 0;
+				return GetInt (MidiPropertyExtensions.kMIDIPropertyCanRoute) != 0;
 			}
 			set {
-				SetInt (kMIDIPropertyCanRoute, value ? 1 : 0);
+				SetInt (MidiPropertyExtensions.kMIDIPropertyCanRoute, value ? 1 : 0);
 			}
 		}
 
 		public int ConnectionUniqueIDInt {
 			get {
-				return GetInt (kMIDIPropertyConnectionUniqueID);
+				return GetInt (MidiPropertyExtensions.kMIDIPropertyConnectionUniqueID);
 			}
 			set {
-				SetInt (kMIDIPropertyConnectionUniqueID, value);
+				SetInt (MidiPropertyExtensions.kMIDIPropertyConnectionUniqueID, value);
 			}
 		}
 
 		public NSData? ConnectionUniqueIDData {
 			get {
-				return GetData (kMIDIPropertyConnectionUniqueID);
+				return GetData (MidiPropertyExtensions.kMIDIPropertyConnectionUniqueID);
 			}
 			set {
 				if (value is null)
 					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
-				SetData (kMIDIPropertyConnectionUniqueID, value);
+				SetData (MidiPropertyExtensions.kMIDIPropertyConnectionUniqueID, value);
 			}
 		}
 
 		public int DeviceID {
 			get {
-				return GetInt (kMIDIPropertyDeviceID);
+				return GetInt (MidiPropertyExtensions.kMIDIPropertyDeviceID);
 			}
 			set {
-				SetInt (kMIDIPropertyDeviceID, value);
+				SetInt (MidiPropertyExtensions.kMIDIPropertyDeviceID, value);
 			}
 		}
 
 		public string? DisplayName {
 			get {
-				return GetString (kMIDIPropertyDisplayName);
+				return GetString (MidiPropertyExtensions.kMIDIPropertyDisplayName);
 			}
 			set {
 				if (value is null)
 					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
-				SetString (kMIDIPropertyDisplayName, value);
+				SetString (MidiPropertyExtensions.kMIDIPropertyDisplayName, value);
 			}
 		}
 
 		public string? DriverOwner {
 			get {
-				return GetString (kMIDIPropertyDriverOwner);
+				return GetString (MidiPropertyExtensions.kMIDIPropertyDriverOwner);
 			}
 			set {
 				if (value is null)
 					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
-				SetString (kMIDIPropertyDriverOwner, value);
+				SetString (MidiPropertyExtensions.kMIDIPropertyDriverOwner, value);
 			}
 		}
 
 		public int DriverVersion {
 			get {
-				return GetInt (kMIDIPropertyDriverVersion);
+				return GetInt (MidiPropertyExtensions.kMIDIPropertyDriverVersion);
 			}
 			set {
-				SetInt (kMIDIPropertyDriverVersion, value);
+				SetInt (MidiPropertyExtensions.kMIDIPropertyDriverVersion, value);
 			}
 		}
 
 		public bool IsBroadcast {
 			get {
-				return GetInt (kMIDIPropertyIsBroadcast) != 0;
+				return GetInt (MidiPropertyExtensions.kMIDIPropertyIsBroadcast) != 0;
 			}
 			set {
-				SetInt (kMIDIPropertyIsBroadcast, value ? 1 : 0);
+				SetInt (MidiPropertyExtensions.kMIDIPropertyIsBroadcast, value ? 1 : 0);
 			}
 		}
 
 		public bool IsDrumMachine {
 			get {
-				return GetInt (kMIDIPropertyIsDrumMachine) != 0;
+				return GetInt (MidiPropertyExtensions.kMIDIPropertyIsDrumMachine) != 0;
 			}
 		}
 
 		public bool IsEffectUnit {
 			get {
-				return GetInt (kMIDIPropertyIsEffectUnit) != 0;
+				return GetInt (MidiPropertyExtensions.kMIDIPropertyIsEffectUnit) != 0;
 			}
 		}
 
 		public bool IsEmbeddedEntity {
 			get {
-				return GetInt (kMIDIPropertyIsEmbeddedEntity) != 0;
+				return GetInt (MidiPropertyExtensions.kMIDIPropertyIsEmbeddedEntity) != 0;
 			}
 		}
 
 		public bool IsMixer {
 			get {
-				return GetInt (kMIDIPropertyIsMixer) != 0;
+				return GetInt (MidiPropertyExtensions.kMIDIPropertyIsMixer) != 0;
 			}
 		}
 
 		public bool IsSampler {
 			get {
-				return GetInt (kMIDIPropertyIsSampler) != 0;
+				return GetInt (MidiPropertyExtensions.kMIDIPropertyIsSampler) != 0;
 			}
 		}
 
 		public int MaxReceiveChannels {
 			get {
-				return GetInt (kMIDIPropertyMaxReceiveChannels);
+				return GetInt (MidiPropertyExtensions.kMIDIPropertyMaxReceiveChannels);
 			}
 			//set {
-			//SetInt (kMIDIPropertyMaxReceiveChannels, value);
+			//SetInt (MidiPropertyExtensions.kMIDIPropertyMaxReceiveChannels, value);
 			//}
 		}
 
 		public int MaxSysExSpeed {
 			get {
 				try {
-					return GetInt (kMIDIPropertyMaxSysExSpeed);
+					return GetInt (MidiPropertyExtensions.kMIDIPropertyMaxSysExSpeed);
 				} catch {
 					// Some endpoints do not support this property
 					// return the MIDI 1.0 default in those cases.
@@ -1354,215 +1252,266 @@ namespace CoreMidi {
 				}
 			}
 			set {
-				SetInt (kMIDIPropertyMaxSysExSpeed, value);
+				SetInt (MidiPropertyExtensions.kMIDIPropertyMaxSysExSpeed, value);
 			}
 		}
 
 		public int MaxTransmitChannels {
 			get {
-				return GetInt (kMIDIPropertyMaxTransmitChannels);
+				return GetInt (MidiPropertyExtensions.kMIDIPropertyMaxTransmitChannels);
 			}
 			set {
-				SetInt (kMIDIPropertyMaxTransmitChannels, value);
+				SetInt (MidiPropertyExtensions.kMIDIPropertyMaxTransmitChannels, value);
 			}
 		}
 
 		public string? Model {
 			get {
-				return GetString (kMIDIPropertyModel);
+				return GetString (MidiPropertyExtensions.kMIDIPropertyModel);
 			}
 			set {
 				if (value is null)
 					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
-				SetString (kMIDIPropertyModel, value);
+				SetString (MidiPropertyExtensions.kMIDIPropertyModel, value);
 			}
 		}
 
 		public string? Name {
 			get {
-				return GetString (kMIDIPropertyName);
+				return GetString (MidiPropertyExtensions.kMIDIPropertyName);
 			}
 			set {
 				if (value is null)
 					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
-				SetString (kMIDIPropertyName, value);
+				SetString (MidiPropertyExtensions.kMIDIPropertyName, value);
 			}
 		}
 
 		public NSDictionary? NameConfiguration {
 			get {
-				return GetDictionary (kMIDIPropertyNameConfiguration);
+				return GetDictionary (MidiPropertyExtensions.kMIDIPropertyNameConfiguration);
 			}
 			set {
 				if (value is null)
 					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
-				SetDictionary (kMIDIPropertyNameConfiguration, value);
+				SetDictionary (MidiPropertyExtensions.kMIDIPropertyNameConfiguration, value);
 			}
 		}
 
 		public bool Offline {
 			get {
-				return GetInt (kMIDIPropertyOffline) != 0;
+				return GetInt (MidiPropertyExtensions.kMIDIPropertyOffline) != 0;
 			}
 			set {
-				SetInt (kMIDIPropertyOffline, value ? 1 : 0);
+				SetInt (MidiPropertyExtensions.kMIDIPropertyOffline, value ? 1 : 0);
 			}
 		}
 
 		public bool PanDisruptsStereo {
 			get {
-				return GetInt (kMIDIPropertyPanDisruptsStereo) != 0;
+				return GetInt (MidiPropertyExtensions.kMIDIPropertyPanDisruptsStereo) != 0;
 			}
 			set {
-				SetInt (kMIDIPropertyPanDisruptsStereo, value ? 1 : 0);
+				SetInt (MidiPropertyExtensions.kMIDIPropertyPanDisruptsStereo, value ? 1 : 0);
 			}
 		}
 
 		public bool Private {
 			get {
-				return GetInt (kMIDIPropertyPrivate) != 0;
+				return GetInt (MidiPropertyExtensions.kMIDIPropertyPrivate) != 0;
 			}
 			set {
-				SetInt (kMIDIPropertyPrivate, value ? 1 : 0);
+				SetInt (MidiPropertyExtensions.kMIDIPropertyPrivate, value ? 1 : 0);
 			}
 		}
 
 		public bool ReceivesBankSelectLSB {
 			get {
-				return GetInt (kMIDIPropertyReceivesBankSelectLSB) != 0;
+				return GetInt (MidiPropertyExtensions.kMIDIPropertyReceivesBankSelectLSB) != 0;
 			}
 			set {
-				SetInt (kMIDIPropertyReceivesBankSelectLSB, value ? 1 : 0);
+				SetInt (MidiPropertyExtensions.kMIDIPropertyReceivesBankSelectLSB, value ? 1 : 0);
 			}
 		}
 
 		public bool ReceivesBankSelectMSB {
 			get {
-				return GetInt (kMIDIPropertyReceivesBankSelectMSB) != 0;
+				return GetInt (MidiPropertyExtensions.kMIDIPropertyReceivesBankSelectMSB) != 0;
 			}
 			set {
-				SetInt (kMIDIPropertyReceivesBankSelectMSB, value ? 1 : 0);
+				SetInt (MidiPropertyExtensions.kMIDIPropertyReceivesBankSelectMSB, value ? 1 : 0);
 			}
 		}
 
 		public bool ReceivesClock {
 			get {
-				return GetInt (kMIDIPropertyReceivesClock) != 0;
+				return GetInt (MidiPropertyExtensions.kMIDIPropertyReceivesClock) != 0;
 			}
 			set {
-				SetInt (kMIDIPropertyReceivesClock, value ? 1 : 0);
+				SetInt (MidiPropertyExtensions.kMIDIPropertyReceivesClock, value ? 1 : 0);
 			}
 		}
 
 		public bool ReceivesMTC {
 			get {
-				return GetInt (kMIDIPropertyReceivesMTC) != 0;
+				return GetInt (MidiPropertyExtensions.kMIDIPropertyReceivesMTC) != 0;
 			}
 			set {
-				SetInt (kMIDIPropertyReceivesMTC, value ? 1 : 0);
+				SetInt (MidiPropertyExtensions.kMIDIPropertyReceivesMTC, value ? 1 : 0);
 			}
 		}
 
 		public bool ReceivesNotes {
 			get {
-				return GetInt (kMIDIPropertyReceivesNotes) != 0;
+				return GetInt (MidiPropertyExtensions.kMIDIPropertyReceivesNotes) != 0;
 			}
 			set {
-				SetInt (kMIDIPropertyReceivesNotes, value ? 1 : 0);
+				SetInt (MidiPropertyExtensions.kMIDIPropertyReceivesNotes, value ? 1 : 0);
 			}
 		}
 
 		public bool ReceivesProgramChanges {
 			get {
-				return GetInt (kMIDIPropertyReceivesProgramChanges) != 0;
+				return GetInt (MidiPropertyExtensions.kMIDIPropertyReceivesProgramChanges) != 0;
 			}
 			set {
-				SetInt (kMIDIPropertyReceivesProgramChanges, value ? 1 : 0);
+				SetInt (MidiPropertyExtensions.kMIDIPropertyReceivesProgramChanges, value ? 1 : 0);
 			}
 		}
 
 		public bool SupportsGeneralMidi {
 			get {
-				return GetInt (kMIDIPropertySupportsGeneralMIDI) != 0;
+				return GetInt (MidiPropertyExtensions.kMIDIPropertySupportsGeneralMIDI) != 0;
 			}
 			set {
-				SetInt (kMIDIPropertySupportsGeneralMIDI, value ? 1 : 0);
+				SetInt (MidiPropertyExtensions.kMIDIPropertySupportsGeneralMIDI, value ? 1 : 0);
 			}
 		}
 
 		public bool SupportsMMC {
 			get {
-				return GetInt (kMIDIPropertySupportsMMC) != 0;
+				return GetInt (MidiPropertyExtensions.kMIDIPropertySupportsMMC) != 0;
 			}
 			set {
-				SetInt (kMIDIPropertySupportsMMC, value ? 1 : 0);
+				SetInt (MidiPropertyExtensions.kMIDIPropertySupportsMMC, value ? 1 : 0);
 			}
 		}
 
 		public bool SupportsShowControl {
 			get {
-				return GetInt (kMIDIPropertySupportsShowControl) != 0;
+				return GetInt (MidiPropertyExtensions.kMIDIPropertySupportsShowControl) != 0;
 			}
 			set {
-				SetInt (kMIDIPropertySupportsShowControl, value ? 1 : 0);
+				SetInt (MidiPropertyExtensions.kMIDIPropertySupportsShowControl, value ? 1 : 0);
 			}
 		}
 
 		public bool TransmitsBankSelectLSB {
 			get {
-				return GetInt (kMIDIPropertyTransmitsBankSelectLSB) != 0;
+				return GetInt (MidiPropertyExtensions.kMIDIPropertyTransmitsBankSelectLSB) != 0;
 			}
 			set {
-				SetInt (kMIDIPropertyTransmitsBankSelectLSB, value ? 1 : 0);
+				SetInt (MidiPropertyExtensions.kMIDIPropertyTransmitsBankSelectLSB, value ? 1 : 0);
 			}
 		}
 
 		public bool TransmitsBankSelectMSB {
 			get {
-				return GetInt (kMIDIPropertyTransmitsBankSelectMSB) != 0;
+				return GetInt (MidiPropertyExtensions.kMIDIPropertyTransmitsBankSelectMSB) != 0;
 			}
 			set {
-				SetInt (kMIDIPropertyTransmitsBankSelectMSB, value ? 1 : 0);
+				SetInt (MidiPropertyExtensions.kMIDIPropertyTransmitsBankSelectMSB, value ? 1 : 0);
 			}
 		}
 
 		public bool TransmitsClock {
 			get {
-				return GetInt (kMIDIPropertyTransmitsClock) != 0;
+				return GetInt (MidiPropertyExtensions.kMIDIPropertyTransmitsClock) != 0;
 			}
 			set {
-				SetInt (kMIDIPropertyTransmitsClock, value ? 1 : 0);
+				SetInt (MidiPropertyExtensions.kMIDIPropertyTransmitsClock, value ? 1 : 0);
 			}
 		}
 
 		public bool TransmitsMTC {
 			get {
-				return GetInt (kMIDIPropertyTransmitsMTC) != 0;
+				return GetInt (MidiPropertyExtensions.kMIDIPropertyTransmitsMTC) != 0;
 			}
 			set {
-				SetInt (kMIDIPropertyTransmitsMTC, value ? 1 : 0);
+				SetInt (MidiPropertyExtensions.kMIDIPropertyTransmitsMTC, value ? 1 : 0);
 			}
 		}
 
 		public bool TransmitsNotes {
 			get {
-				return GetInt (kMIDIPropertyTransmitsNotes) != 0;
+				return GetInt (MidiPropertyExtensions.kMIDIPropertyTransmitsNotes) != 0;
 			}
 			set {
-				SetInt (kMIDIPropertyTransmitsNotes, value ? 1 : 0);
+				SetInt (MidiPropertyExtensions.kMIDIPropertyTransmitsNotes, value ? 1 : 0);
 			}
 		}
 
 		public bool TransmitsProgramChanges {
 			get {
-				return GetInt (kMIDIPropertyTransmitsProgramChanges) != 0;
+				return GetInt (MidiPropertyExtensions.kMIDIPropertyTransmitsProgramChanges) != 0;
 			}
 			set {
-				SetInt (kMIDIPropertyTransmitsProgramChanges, value ? 1 : 0);
+				SetInt (MidiPropertyExtensions.kMIDIPropertyTransmitsProgramChanges, value ? 1 : 0);
+			}
+		}
+
+#if NET
+		[SupportedOSPlatform ("ios14.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[NoWatch, NoTV, iOS (14, 0), MacCatalyst (14, 0)]
+#endif
+		public MidiProtocolId ProtocolId {
+			get {
+				return (MidiProtocolId) GetInt (MidiPropertyExtensions.kMIDIPropertyProtocolID);
+			}
+			set {
+				SetInt (MidiPropertyExtensions.kMIDIPropertyProtocolID, (int) value);
+			}
+		}
+
+#if NET
+		[SupportedOSPlatform ("ios17.0")]
+		[SupportedOSPlatform ("maccatalyst17.0")]
+		[SupportedOSPlatform ("macos14.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[NoWatch, NoTV, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+#endif
+		public ushort UmpActiveGroupBitmap {
+			get {
+				return (ushort) GetInt (MidiPropertyExtensions.kMIDIPropertyUMPActiveGroupBitmap);
+			}
+			set {
+				SetInt (MidiPropertyExtensions.kMIDIPropertyUMPActiveGroupBitmap, (int) value);
+			}
+		}
+
+#if NET
+		[SupportedOSPlatform ("ios17.0")]
+		[SupportedOSPlatform ("maccatalyst17.0")]
+		[SupportedOSPlatform ("macos14.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[NoWatch, NoTV, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+#endif
+		public bool UmpCanTransmitGroupless {
+			get {
+				return GetInt (MidiPropertyExtensions.kMIDIPropertyUMPCanTransmitGroupless) == 1;
+			}
+			set {
+				SetInt (MidiPropertyExtensions.kMIDIPropertyUMPCanTransmitGroupless, value ? 1 : 0);
 			}
 		}
 #endif // !COREBUILD
-	}
+	} // MidiEntity
 
 #if NET
 	[SupportedOSPlatform ("ios")]
@@ -1625,74 +1574,113 @@ namespace CoreMidi {
 
 		public string? Image {
 			get {
-				return GetString (kMIDIPropertyImage);
+				return GetString (MidiPropertyExtensions.kMIDIPropertyImage);
 			}
 			set {
 				if (value is null)
 					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
-				SetString (kMIDIPropertyImage, value);
+				SetString (MidiPropertyExtensions.kMIDIPropertyImage, value);
 			}
 		}
 
 		public string? DriverDeviceEditorApp {
 			get {
-				return GetString (kMIDIPropertyDriverDeviceEditorApp);
+				return GetString (MidiPropertyExtensions.kMIDIPropertyDriverDeviceEditorApp);
 			}
 			set {
 				if (value is null)
 					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
-				SetString (kMIDIPropertyDriverDeviceEditorApp, value);
+				SetString (MidiPropertyExtensions.kMIDIPropertyDriverDeviceEditorApp, value);
 			}
 		}
 
 		public int SingleRealtimeEntity {
 			get {
-				return GetInt (kMIDIPropertySingleRealtimeEntity);
+				return GetInt (MidiPropertyExtensions.kMIDIPropertySingleRealtimeEntity);
 			}
 			set {
-				SetInt (kMIDIPropertySingleRealtimeEntity, value);
+				SetInt (MidiPropertyExtensions.kMIDIPropertySingleRealtimeEntity, value);
 			}
 		}
 
 		public int UniqueID {
 			get {
-				return GetInt (kMIDIPropertyUniqueID);
+				return GetInt (MidiPropertyExtensions.kMIDIPropertyUniqueID);
 			}
 			set {
-				SetInt (kMIDIPropertyUniqueID, value);
+				SetInt (MidiPropertyExtensions.kMIDIPropertyUniqueID, value);
 			}
 		}
 
 		public bool UsesSerial {
 			get {
+				var kMIDIDriverPropertyUsesSerial = Dlfcn.GetIntPtr (Libraries.CoreMidi.Handle, "kMIDIDriverPropertyUsesSerial");
 				return GetInt (kMIDIDriverPropertyUsesSerial) != 0;
 			}
 			set {
+				var kMIDIDriverPropertyUsesSerial = Dlfcn.GetIntPtr (Libraries.CoreMidi.Handle, "kMIDIDriverPropertyUsesSerial");
 				SetInt (kMIDIDriverPropertyUsesSerial, value ? 1 : 0);
 			}
 		}
 
+#if !XAMCORE_5_0 || __MACOS__
+#if NET
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+#endif
+#if !__MACOS__
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		[Obsolete ("This API does not do anything on this platform.")]
+#endif
 		public string? FactoryPatchNameFile {
 			get {
-				return GetString (kMIDIPropertyFactoryPatchNameFile);
+#if __MACOS__
+				return GetString (MidiPropertyExtensions.kMIDIPropertyFactoryPatchNameFile);
+#else
+				return null;
+#endif
 			}
 			set {
 				if (value is null)
 					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
-				SetString (kMIDIPropertyFactoryPatchNameFile, value);
+#if __MACOS__
+				SetString (MidiPropertyExtensions.kMIDIPropertyFactoryPatchNameFile, value);
+#endif
 			}
 		}
+#endif // !XAMCORE_5_0 || __MACOS__
 
+#if !XAMCORE_5_0 || __MACOS__
+#if NET
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+#endif
+#if !__MACOS__
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		[Obsolete ("This API does not do anything on this platform.")]
+#endif
 		public string? UserPatchNameFile {
 			get {
-				return GetString (kMIDIPropertyUserPatchNameFile);
+#if __MACOS__
+				return GetString (MidiPropertyExtensions.kMIDIPropertyUserPatchNameFile);
+#else
+				return null;
+#endif
 			}
 			set {
 				if (value is null)
 					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
-				SetString (kMIDIPropertyUserPatchNameFile, value);
+
+#if __MACOS__
+				SetString (MidiPropertyExtensions.kMIDIPropertyUserPatchNameFile, value);
+#endif
 			}
 		}
+#endif // !XAMCORE_5_0 || __MACOS__
 
 #if NET
 		[SupportedOSPlatform ("macos")]
@@ -1703,147 +1691,147 @@ namespace CoreMidi {
 #endif
 		public string? NameConfigurationDictionary {
 			get {
-				return GetString (kMIDIPropertyNameConfigurationDictionary);
+				return GetString (MidiPropertyExtensions.kMIDIPropertyNameConfigurationDictionary);
 			}
 			set {
 				if (value is null)
 					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
-				SetString (kMIDIPropertyNameConfigurationDictionary, value);
+				SetString (MidiPropertyExtensions.kMIDIPropertyNameConfigurationDictionary, value);
 			}
 		}
 
 		public int AdvanceScheduleTimeMuSec {
 			get {
-				return GetInt (kMIDIPropertyAdvanceScheduleTimeMuSec);
+				return GetInt (MidiPropertyExtensions.kMIDIPropertyAdvanceScheduleTimeMuSec);
 			}
 			set {
-				SetInt (kMIDIPropertyAdvanceScheduleTimeMuSec, value);
+				SetInt (MidiPropertyExtensions.kMIDIPropertyAdvanceScheduleTimeMuSec, value);
 			}
 		}
 
 		public bool CanRoute {
 			get {
-				return GetInt (kMIDIPropertyCanRoute) != 0;
+				return GetInt (MidiPropertyExtensions.kMIDIPropertyCanRoute) != 0;
 			}
 			set {
-				SetInt (kMIDIPropertyCanRoute, value ? 1 : 0);
+				SetInt (MidiPropertyExtensions.kMIDIPropertyCanRoute, value ? 1 : 0);
 			}
 		}
 
 		public int ConnectionUniqueIDInt {
 			get {
-				return GetInt (kMIDIPropertyConnectionUniqueID);
+				return GetInt (MidiPropertyExtensions.kMIDIPropertyConnectionUniqueID);
 			}
 			set {
-				SetInt (kMIDIPropertyConnectionUniqueID, value);
+				SetInt (MidiPropertyExtensions.kMIDIPropertyConnectionUniqueID, value);
 			}
 		}
 
 		public NSData? ConnectionUniqueIDData {
 			get {
-				return GetData (kMIDIPropertyConnectionUniqueID);
+				return GetData (MidiPropertyExtensions.kMIDIPropertyConnectionUniqueID);
 			}
 			set {
 				if (value is null)
 					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
-				SetData (kMIDIPropertyConnectionUniqueID, value);
+				SetData (MidiPropertyExtensions.kMIDIPropertyConnectionUniqueID, value);
 			}
 		}
 
 		public int DeviceID {
 			get {
-				return GetInt (kMIDIPropertyDeviceID);
+				return GetInt (MidiPropertyExtensions.kMIDIPropertyDeviceID);
 			}
 			set {
-				SetInt (kMIDIPropertyDeviceID, value);
+				SetInt (MidiPropertyExtensions.kMIDIPropertyDeviceID, value);
 			}
 		}
 
 		public string? DisplayName {
 			get {
-				return GetString (kMIDIPropertyDisplayName);
+				return GetString (MidiPropertyExtensions.kMIDIPropertyDisplayName);
 			}
 			set {
 				if (value is null)
 					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
-				SetString (kMIDIPropertyDisplayName, value);
+				SetString (MidiPropertyExtensions.kMIDIPropertyDisplayName, value);
 			}
 		}
 
 		public string? DriverOwner {
 			get {
-				return GetString (kMIDIPropertyDriverOwner);
+				return GetString (MidiPropertyExtensions.kMIDIPropertyDriverOwner);
 			}
 			set {
 				if (value is null)
 					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
-				SetString (kMIDIPropertyDriverOwner, value);
+				SetString (MidiPropertyExtensions.kMIDIPropertyDriverOwner, value);
 			}
 		}
 
 		public int DriverVersion {
 			get {
-				return GetInt (kMIDIPropertyDriverVersion);
+				return GetInt (MidiPropertyExtensions.kMIDIPropertyDriverVersion);
 			}
 			set {
-				SetInt (kMIDIPropertyDriverVersion, value);
+				SetInt (MidiPropertyExtensions.kMIDIPropertyDriverVersion, value);
 			}
 		}
 
 		public bool IsDrumMachine {
 			get {
-				return GetInt (kMIDIPropertyIsDrumMachine) != 0;
+				return GetInt (MidiPropertyExtensions.kMIDIPropertyIsDrumMachine) != 0;
 			}
 		}
 
 		public bool IsEffectUnit {
 			get {
-				return GetInt (kMIDIPropertyIsEffectUnit) != 0;
+				return GetInt (MidiPropertyExtensions.kMIDIPropertyIsEffectUnit) != 0;
 			}
 		}
 
 		public bool IsEmbeddedEntity {
 			get {
-				return GetInt (kMIDIPropertyIsEmbeddedEntity) != 0;
+				return GetInt (MidiPropertyExtensions.kMIDIPropertyIsEmbeddedEntity) != 0;
 			}
 		}
 
 		public bool IsMixer {
 			get {
-				return GetInt (kMIDIPropertyIsMixer) != 0;
+				return GetInt (MidiPropertyExtensions.kMIDIPropertyIsMixer) != 0;
 			}
 		}
 
 		public bool IsSampler {
 			get {
-				return GetInt (kMIDIPropertyIsSampler) != 0;
+				return GetInt (MidiPropertyExtensions.kMIDIPropertyIsSampler) != 0;
 			}
 		}
 
 		public string? Manufacturer {
 			get {
-				return GetString (kMIDIPropertyManufacturer);
+				return GetString (MidiPropertyExtensions.kMIDIPropertyManufacturer);
 			}
 			set {
 				if (value is null)
 					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
-				SetString (kMIDIPropertyManufacturer, value);
+				SetString (MidiPropertyExtensions.kMIDIPropertyManufacturer, value);
 			}
 		}
 
 		public int MaxReceiveChannels {
 			get {
-				return GetInt (kMIDIPropertyMaxReceiveChannels);
+				return GetInt (MidiPropertyExtensions.kMIDIPropertyMaxReceiveChannels);
 			}
 			//set {
-			//SetInt (kMIDIPropertyMaxReceiveChannels, value);
+			//SetInt (MidiPropertyExtensions.kMIDIPropertyMaxReceiveChannels, value);
 			//}
 		}
 
 		public int MaxSysExSpeed {
 			get {
 				try {
-					return GetInt (kMIDIPropertyMaxSysExSpeed);
+					return GetInt (MidiPropertyExtensions.kMIDIPropertyMaxSysExSpeed);
 				} catch {
 					// Some endpoints do not support this property
 					// return the MIDI 1.0 default in those cases.
@@ -1851,211 +1839,228 @@ namespace CoreMidi {
 				}
 			}
 			set {
-				SetInt (kMIDIPropertyMaxSysExSpeed, value);
+				SetInt (MidiPropertyExtensions.kMIDIPropertyMaxSysExSpeed, value);
 			}
 		}
 
 		public int MaxTransmitChannels {
 			get {
-				return GetInt (kMIDIPropertyMaxTransmitChannels);
+				return GetInt (MidiPropertyExtensions.kMIDIPropertyMaxTransmitChannels);
 			}
 			set {
-				SetInt (kMIDIPropertyMaxTransmitChannels, value);
+				SetInt (MidiPropertyExtensions.kMIDIPropertyMaxTransmitChannels, value);
 			}
 		}
 
 		public string? Model {
 			get {
-				return GetString (kMIDIPropertyModel);
+				return GetString (MidiPropertyExtensions.kMIDIPropertyModel);
 			}
 			set {
 				if (value is null)
 					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
-				SetString (kMIDIPropertyModel, value);
+				SetString (MidiPropertyExtensions.kMIDIPropertyModel, value);
 			}
 		}
 
 		public string? Name {
 			get {
-				return GetString (kMIDIPropertyName);
+				return GetString (MidiPropertyExtensions.kMIDIPropertyName);
 			}
 			set {
 				if (value is null)
 					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
-				SetString (kMIDIPropertyName, value);
+				SetString (MidiPropertyExtensions.kMIDIPropertyName, value);
 			}
 		}
 
 		public NSDictionary? NameConfiguration {
 			get {
-				return GetDictionary (kMIDIPropertyNameConfiguration);
+				return GetDictionary (MidiPropertyExtensions.kMIDIPropertyNameConfiguration);
 			}
 			set {
 				if (value is null)
 					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
-				SetDictionary (kMIDIPropertyNameConfiguration, value);
+				SetDictionary (MidiPropertyExtensions.kMIDIPropertyNameConfiguration, value);
 			}
 		}
 
 		public bool Offline {
 			get {
-				return GetInt (kMIDIPropertyOffline) != 0;
+				return GetInt (MidiPropertyExtensions.kMIDIPropertyOffline) != 0;
 			}
 			set {
-				SetInt (kMIDIPropertyOffline, value ? 1 : 0);
+				SetInt (MidiPropertyExtensions.kMIDIPropertyOffline, value ? 1 : 0);
 			}
 		}
 
 		public bool PanDisruptsStereo {
 			get {
-				return GetInt (kMIDIPropertyPanDisruptsStereo) != 0;
+				return GetInt (MidiPropertyExtensions.kMIDIPropertyPanDisruptsStereo) != 0;
 			}
 			set {
-				SetInt (kMIDIPropertyPanDisruptsStereo, value ? 1 : 0);
+				SetInt (MidiPropertyExtensions.kMIDIPropertyPanDisruptsStereo, value ? 1 : 0);
 			}
 		}
 
 		public bool Private {
 			get {
-				return GetInt (kMIDIPropertyPrivate) != 0;
+				return GetInt (MidiPropertyExtensions.kMIDIPropertyPrivate) != 0;
 			}
 			set {
-				SetInt (kMIDIPropertyPrivate, value ? 1 : 0);
+				SetInt (MidiPropertyExtensions.kMIDIPropertyPrivate, value ? 1 : 0);
 			}
 		}
 
 		public bool ReceivesBankSelectLSB {
 			get {
-				return GetInt (kMIDIPropertyReceivesBankSelectLSB) != 0;
+				return GetInt (MidiPropertyExtensions.kMIDIPropertyReceivesBankSelectLSB) != 0;
 			}
 			set {
-				SetInt (kMIDIPropertyReceivesBankSelectLSB, value ? 1 : 0);
+				SetInt (MidiPropertyExtensions.kMIDIPropertyReceivesBankSelectLSB, value ? 1 : 0);
 			}
 		}
 
 		public bool ReceivesBankSelectMSB {
 			get {
-				return GetInt (kMIDIPropertyReceivesBankSelectMSB) != 0;
+				return GetInt (MidiPropertyExtensions.kMIDIPropertyReceivesBankSelectMSB) != 0;
 			}
 			set {
-				SetInt (kMIDIPropertyReceivesBankSelectMSB, value ? 1 : 0);
+				SetInt (MidiPropertyExtensions.kMIDIPropertyReceivesBankSelectMSB, value ? 1 : 0);
 			}
 		}
 
 		public bool ReceivesClock {
 			get {
-				return GetInt (kMIDIPropertyReceivesClock) != 0;
+				return GetInt (MidiPropertyExtensions.kMIDIPropertyReceivesClock) != 0;
 			}
 			set {
-				SetInt (kMIDIPropertyReceivesClock, value ? 1 : 0);
+				SetInt (MidiPropertyExtensions.kMIDIPropertyReceivesClock, value ? 1 : 0);
 			}
 		}
 
 		public bool ReceivesMTC {
 			get {
-				return GetInt (kMIDIPropertyReceivesMTC) != 0;
+				return GetInt (MidiPropertyExtensions.kMIDIPropertyReceivesMTC) != 0;
 			}
 			set {
-				SetInt (kMIDIPropertyReceivesMTC, value ? 1 : 0);
+				SetInt (MidiPropertyExtensions.kMIDIPropertyReceivesMTC, value ? 1 : 0);
 			}
 		}
 
 		public bool ReceivesNotes {
 			get {
-				return GetInt (kMIDIPropertyReceivesNotes) != 0;
+				return GetInt (MidiPropertyExtensions.kMIDIPropertyReceivesNotes) != 0;
 			}
 			set {
-				SetInt (kMIDIPropertyReceivesNotes, value ? 1 : 0);
+				SetInt (MidiPropertyExtensions.kMIDIPropertyReceivesNotes, value ? 1 : 0);
 			}
 		}
 
 		public bool ReceivesProgramChanges {
 			get {
-				return GetInt (kMIDIPropertyReceivesProgramChanges) != 0;
+				return GetInt (MidiPropertyExtensions.kMIDIPropertyReceivesProgramChanges) != 0;
 			}
 			set {
-				SetInt (kMIDIPropertyReceivesProgramChanges, value ? 1 : 0);
+				SetInt (MidiPropertyExtensions.kMIDIPropertyReceivesProgramChanges, value ? 1 : 0);
 			}
 		}
 
 		public bool SupportsGeneralMidi {
 			get {
-				return GetInt (kMIDIPropertySupportsGeneralMIDI) != 0;
+				return GetInt (MidiPropertyExtensions.kMIDIPropertySupportsGeneralMIDI) != 0;
 			}
 			set {
-				SetInt (kMIDIPropertySupportsGeneralMIDI, value ? 1 : 0);
+				SetInt (MidiPropertyExtensions.kMIDIPropertySupportsGeneralMIDI, value ? 1 : 0);
 			}
 		}
 
 		public bool SupportsMMC {
 			get {
-				return GetInt (kMIDIPropertySupportsMMC) != 0;
+				return GetInt (MidiPropertyExtensions.kMIDIPropertySupportsMMC) != 0;
 			}
 			set {
-				SetInt (kMIDIPropertySupportsMMC, value ? 1 : 0);
+				SetInt (MidiPropertyExtensions.kMIDIPropertySupportsMMC, value ? 1 : 0);
 			}
 		}
 
 		public bool SupportsShowControl {
 			get {
-				return GetInt (kMIDIPropertySupportsShowControl) != 0;
+				return GetInt (MidiPropertyExtensions.kMIDIPropertySupportsShowControl) != 0;
 			}
 			set {
-				SetInt (kMIDIPropertySupportsShowControl, value ? 1 : 0);
+				SetInt (MidiPropertyExtensions.kMIDIPropertySupportsShowControl, value ? 1 : 0);
 			}
 		}
 
 		public bool TransmitsBankSelectLSB {
 			get {
-				return GetInt (kMIDIPropertyTransmitsBankSelectLSB) != 0;
+				return GetInt (MidiPropertyExtensions.kMIDIPropertyTransmitsBankSelectLSB) != 0;
 			}
 			set {
-				SetInt (kMIDIPropertyTransmitsBankSelectLSB, value ? 1 : 0);
+				SetInt (MidiPropertyExtensions.kMIDIPropertyTransmitsBankSelectLSB, value ? 1 : 0);
 			}
 		}
 
 		public bool TransmitsBankSelectMSB {
 			get {
-				return GetInt (kMIDIPropertyTransmitsBankSelectMSB) != 0;
+				return GetInt (MidiPropertyExtensions.kMIDIPropertyTransmitsBankSelectMSB) != 0;
 			}
 			set {
-				SetInt (kMIDIPropertyTransmitsBankSelectMSB, value ? 1 : 0);
+				SetInt (MidiPropertyExtensions.kMIDIPropertyTransmitsBankSelectMSB, value ? 1 : 0);
 			}
 		}
 
 		public bool TransmitsClock {
 			get {
-				return GetInt (kMIDIPropertyTransmitsClock) != 0;
+				return GetInt (MidiPropertyExtensions.kMIDIPropertyTransmitsClock) != 0;
 			}
 			set {
-				SetInt (kMIDIPropertyTransmitsClock, value ? 1 : 0);
+				SetInt (MidiPropertyExtensions.kMIDIPropertyTransmitsClock, value ? 1 : 0);
 			}
 		}
 
 		public bool TransmitsMTC {
 			get {
-				return GetInt (kMIDIPropertyTransmitsMTC) != 0;
+				return GetInt (MidiPropertyExtensions.kMIDIPropertyTransmitsMTC) != 0;
 			}
 			set {
-				SetInt (kMIDIPropertyTransmitsMTC, value ? 1 : 0);
+				SetInt (MidiPropertyExtensions.kMIDIPropertyTransmitsMTC, value ? 1 : 0);
 			}
 		}
 
 		public bool TransmitsNotes {
 			get {
-				return GetInt (kMIDIPropertyTransmitsNotes) != 0;
+				return GetInt (MidiPropertyExtensions.kMIDIPropertyTransmitsNotes) != 0;
 			}
 			set {
-				SetInt (kMIDIPropertyTransmitsNotes, value ? 1 : 0);
+				SetInt (MidiPropertyExtensions.kMIDIPropertyTransmitsNotes, value ? 1 : 0);
 			}
 		}
 
 		public bool TransmitsProgramChanges {
 			get {
-				return GetInt (kMIDIPropertyTransmitsProgramChanges) != 0;
+				return GetInt (MidiPropertyExtensions.kMIDIPropertyTransmitsProgramChanges) != 0;
 			}
 			set {
-				SetInt (kMIDIPropertyTransmitsProgramChanges, value ? 1 : 0);
+				SetInt (MidiPropertyExtensions.kMIDIPropertyTransmitsProgramChanges, value ? 1 : 0);
+			}
+		}
+
+#if NET
+		[SupportedOSPlatform ("ios14.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[NoWatch, NoTV, iOS (14, 0), MacCatalyst (14, 0)]
+#endif
+		public MidiProtocolId ProtocolId {
+			get {
+				return (MidiProtocolId) GetInt (MidiPropertyExtensions.kMIDIPropertyProtocolID);
+			}
+			set {
+				SetInt (MidiPropertyExtensions.kMIDIPropertyProtocolID, (int) value);
 			}
 		}
 
@@ -2067,7 +2072,7 @@ namespace CoreMidi {
 		{
 		}
 #endif // !COREBUILD
-	}
+	} // MidiDevice
 
 #if NET
 	[SupportedOSPlatform ("ios")]
@@ -2338,88 +2343,88 @@ namespace CoreMidi {
 
 		public int AdvanceScheduleTimeMuSec {
 			get {
-				return GetInt (kMIDIPropertyAdvanceScheduleTimeMuSec);
+				return GetInt (MidiPropertyExtensions.kMIDIPropertyAdvanceScheduleTimeMuSec);
 			}
 			set {
-				SetInt (kMIDIPropertyAdvanceScheduleTimeMuSec, value);
+				SetInt (MidiPropertyExtensions.kMIDIPropertyAdvanceScheduleTimeMuSec, value);
 			}
 		}
 
 		public int ConnectionUniqueIDInt {
 			get {
-				return GetInt (kMIDIPropertyConnectionUniqueID);
+				return GetInt (MidiPropertyExtensions.kMIDIPropertyConnectionUniqueID);
 			}
 			set {
-				SetInt (kMIDIPropertyConnectionUniqueID, value);
+				SetInt (MidiPropertyExtensions.kMIDIPropertyConnectionUniqueID, value);
 			}
 		}
 
 		public NSData? ConnectionUniqueIDData {
 			get {
-				return GetData (kMIDIPropertyConnectionUniqueID);
+				return GetData (MidiPropertyExtensions.kMIDIPropertyConnectionUniqueID);
 			}
 			set {
 				if (value is null)
 					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
-				SetData (kMIDIPropertyConnectionUniqueID, value);
+				SetData (MidiPropertyExtensions.kMIDIPropertyConnectionUniqueID, value);
 			}
 		}
 
 		public string? DisplayName {
 			get {
-				return GetString (kMIDIPropertyDisplayName);
+				return GetString (MidiPropertyExtensions.kMIDIPropertyDisplayName);
 			}
 			set {
 				if (value is null)
 					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
-				SetString (kMIDIPropertyDisplayName, value);
+				SetString (MidiPropertyExtensions.kMIDIPropertyDisplayName, value);
 			}
 		}
 
 		public string? DriverOwner {
 			get {
-				return GetString (kMIDIPropertyDriverOwner);
+				return GetString (MidiPropertyExtensions.kMIDIPropertyDriverOwner);
 			}
 			set {
 				if (value is null)
 					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
-				SetString (kMIDIPropertyDriverOwner, value);
+				SetString (MidiPropertyExtensions.kMIDIPropertyDriverOwner, value);
 			}
 		}
 
 		public int DriverVersion {
 			get {
-				return GetInt (kMIDIPropertyDriverVersion);
+				return GetInt (MidiPropertyExtensions.kMIDIPropertyDriverVersion);
 			}
 			set {
-				SetInt (kMIDIPropertyDriverVersion, value);
+				SetInt (MidiPropertyExtensions.kMIDIPropertyDriverVersion, value);
 			}
 		}
 
 		public bool IsBroadcast {
 			get {
-				return GetInt (kMIDIPropertyIsBroadcast) != 0;
+				return GetInt (MidiPropertyExtensions.kMIDIPropertyIsBroadcast) != 0;
 			}
 			set {
-				SetInt (kMIDIPropertyIsBroadcast, value ? 1 : 0);
+				SetInt (MidiPropertyExtensions.kMIDIPropertyIsBroadcast, value ? 1 : 0);
 			}
 		}
 
 		public string? Manufacturer {
 			get {
-				return GetString (kMIDIPropertyManufacturer);
+				return GetString (MidiPropertyExtensions.kMIDIPropertyManufacturer);
 			}
 			set {
 				if (value is null)
 					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
-				SetString (kMIDIPropertyManufacturer, value);
+				SetString (MidiPropertyExtensions.kMIDIPropertyManufacturer, value);
 			}
 		}
 
 		public int MaxSysExSpeed {
 			get {
 				try {
-					return GetInt (kMIDIPropertyMaxSysExSpeed);
+					return GetInt (MidiPropertyExtensions.kMIDIPropertyMaxSysExSpeed);
 				} catch {
 					// Some endpoints do not support this property
 					// return the MIDI 1.0 default in those cases.
@@ -2427,68 +2432,118 @@ namespace CoreMidi {
 				}
 			}
 			set {
-				SetInt (kMIDIPropertyMaxSysExSpeed, value);
+				SetInt (MidiPropertyExtensions.kMIDIPropertyMaxSysExSpeed, value);
 			}
 		}
 
 		public string? Name {
 			get {
-				return GetString (kMIDIPropertyName);
+				return GetString (MidiPropertyExtensions.kMIDIPropertyName);
 			}
 			set {
 				if (value is null)
 					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
-				SetString (kMIDIPropertyName, value);
+				SetString (MidiPropertyExtensions.kMIDIPropertyName, value);
 			}
 		}
 
 		public NSDictionary? NameConfiguration {
 			get {
-				return GetDictionary (kMIDIPropertyNameConfiguration);
+				return GetDictionary (MidiPropertyExtensions.kMIDIPropertyNameConfiguration);
 			}
 			set {
 				if (value is null)
 					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
-				SetDictionary (kMIDIPropertyNameConfiguration, value);
+				SetDictionary (MidiPropertyExtensions.kMIDIPropertyNameConfiguration, value);
 			}
 		}
 
 		public bool Offline {
 			get {
-				return GetInt (kMIDIPropertyOffline) != 0;
+				return GetInt (MidiPropertyExtensions.kMIDIPropertyOffline) != 0;
 			}
 			set {
-				SetInt (kMIDIPropertyOffline, value ? 1 : 0);
+				SetInt (MidiPropertyExtensions.kMIDIPropertyOffline, value ? 1 : 0);
 			}
 		}
 
 		public bool Private {
 			get {
-				return GetInt (kMIDIPropertyPrivate) != 0;
+				return GetInt (MidiPropertyExtensions.kMIDIPropertyPrivate) != 0;
 			}
 			set {
-				SetInt (kMIDIPropertyPrivate, value ? 1 : 0);
+				SetInt (MidiPropertyExtensions.kMIDIPropertyPrivate, value ? 1 : 0);
 			}
 		}
 
 		public int ReceiveChannels {
 			get {
-				return GetInt (kMIDIPropertyReceiveChannels);
+				return GetInt (MidiPropertyExtensions.kMIDIPropertyReceiveChannels);
 			}
 			set {
-				SetInt (kMIDIPropertyReceiveChannels, value);
+				SetInt (MidiPropertyExtensions.kMIDIPropertyReceiveChannels, value);
 			}
 		}
 
 		public int TransmitChannels {
 			get {
-				return GetInt (kMIDIPropertyTransmitChannels);
+				return GetInt (MidiPropertyExtensions.kMIDIPropertyTransmitChannels);
 			}
 			set {
-				SetInt (kMIDIPropertyTransmitChannels, value);
+				SetInt (MidiPropertyExtensions.kMIDIPropertyTransmitChannels, value);
 			}
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios14.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[NoWatch, NoTV, iOS (14, 0), MacCatalyst (14, 0)]
+#endif
+		public MidiProtocolId ProtocolId {
+			get {
+				return (MidiProtocolId) GetInt (MidiPropertyExtensions.kMIDIPropertyProtocolID);
+			}
+			set {
+				SetInt (MidiPropertyExtensions.kMIDIPropertyProtocolID, (int) value);
+			}
+		}
+
+#if NET
+		[SupportedOSPlatform ("ios17.0")]
+		[SupportedOSPlatform ("maccatalyst17.0")]
+		[SupportedOSPlatform ("macos14.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[NoWatch, NoTV, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+#endif
+		public ushort UmpActiveGroupBitmap {
+			get {
+				return (ushort) GetInt (MidiPropertyExtensions.kMIDIPropertyUMPActiveGroupBitmap);
+			}
+			set {
+				SetInt (MidiPropertyExtensions.kMIDIPropertyUMPActiveGroupBitmap, (int) value);
+			}
+		}
+
+#if NET
+		[SupportedOSPlatform ("ios17.0")]
+		[SupportedOSPlatform ("maccatalyst17.0")]
+		[SupportedOSPlatform ("macos14.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[NoWatch, NoTV, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+#endif
+		public bool UmpCanTransmitGroupless {
+			get {
+				return GetInt (MidiPropertyExtensions.kMIDIPropertyUMPCanTransmitGroupless) == 1;
+			}
+			set {
+				SetInt (MidiPropertyExtensions.kMIDIPropertyUMPCanTransmitGroupless, value ? 1 : 0);
+			}
+		}
 		// MidiEndpoint 
 #endif // !COREBUILD
 	}
