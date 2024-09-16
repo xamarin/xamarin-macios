@@ -20,10 +20,6 @@ parameters:
   type: boolean
   default: false
 
-- name: runOldMacOSTests
-  type: boolean
-  default: true
-
 - name: runWindowsIntegration
   type: boolean
   default: true
@@ -157,9 +153,6 @@ parameters:
 - name: deviceTestsConfigurations
   type: object
 
-- name: macTestsConfigurations
-  type: object
-
 - name: stageDisplayNamePrefix
   type: string
   default: ''
@@ -264,22 +257,6 @@ stages:
     repositoryAlias: ${{ parameters.repositoryAlias }}
     commit: ${{ parameters.commit }}
     postPipeline: true
-
-- ${{ if eq(parameters.runOldMacOSTests, true) }}:
-  - ${{ each config in parameters.macTestsConfigurations }}:
-    - template: ./mac/stage.yml
-      parameters:
-        isPR: ${{ parameters.isPR }}
-        repositoryAlias: ${{ parameters.repositoryAlias }}
-        commit: ${{ parameters.commit }}
-        stageName: ${{ config.stageName }}
-        displayName: ' ${{ parameters.stageDisplayNamePrefix }}${{ config.displayName }}'
-        macPool: ${{ config.macPool }}
-        useImage: ${{ config.useImage }}
-        statusContext: ${{ config.statusContext }}
-        keyringPass: $(pass--lab--mac--builder--keychain)
-        demands: ${{ config.demands }}
-        postPipeline: true
 
 - ${{ if eq(parameters.runWindowsIntegration, true) }}:
   - template: ./windows/stage.yml
