@@ -4097,7 +4097,7 @@ namespace Xamarin.Bundler {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to An error occured while executing the custom linker steps. Please review the build log for more information..
+        ///   Looks up a localized string similar to An error occurred while executing the custom linker steps. Please review the build log for more information..
         /// </summary>
         public static string MX7000 {
             get {
