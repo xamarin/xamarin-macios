@@ -535,7 +535,7 @@ namespace Linker.Shared {
 			instructions = new ILReader (method);
 			call_instructions = instructions.Where ((v) => v.OpCode.Name == "ldsfld");
 			Assert.AreEqual (1, call_instructions.Count (), "not optimized: 1 ldsfld instruction");
-			
+
 			method = typeof (Runtime).GetMethod ("GetIsARM64CallingConvention", BindingFlags.Static | BindingFlags.NonPublic);
 			instructions = new ILReader (method);
 			Assert.AreEqual (2, instructions.Count (), "IL Count");
