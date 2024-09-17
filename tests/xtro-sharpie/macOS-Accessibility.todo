@@ -1,4 +1,0 @@
-!missing-enum! AXSettingsFeature not bound
-!missing-pinvoke! AXAssistiveAccessEnabled is not bound
-!missing-pinvoke! AXOpenSettingsFeature is not bound
-!missing-pinvoke! AXPrefersNonBlinkingTextInsertionIndicator is not bound

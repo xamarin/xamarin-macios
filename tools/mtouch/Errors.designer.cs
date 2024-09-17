@@ -948,7 +948,7 @@ namespace Xamarin.Bundler {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {4} {0} does not support a deployment target of {1} for {3} (the minimum is {2}). Please select a newer deployment target in your project&apos;s Info.plist.
+        ///   Looks up a localized string similar to {4} {0} does not support a deployment target of {1} for {3} (the minimum is {2}). Please select a newer deployment target in your project&apos;s Info.plist or change the SupportedOSPlatformVersion property in your project file.
         ///		.
         /// </summary>
         public static string MT0073 {
@@ -3501,7 +3501,7 @@ namespace Xamarin.Bundler {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {4} {0} does not support a deployment target of {1} for {3} (the maximum is {2}). Please select an older deployment target in your project&apos;s Info.plist or upgrade to a newer version of {4}.
+        ///   Looks up a localized string similar to {4} {0} does not support a deployment target of {1} for {3} (the maximum is {2}). Please select an older deployment target in your project&apos;s Info.plist or change the SupportedOSPlatformVersion property in your project file, or upgrade to a newer version of {4}.
         ///		.
         /// </summary>
         public static string MX0074 {
@@ -4097,7 +4097,7 @@ namespace Xamarin.Bundler {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to An error occured while executing the custom linker steps. Please review the build log for more information..
+        ///   Looks up a localized string similar to An error occurred while executing the custom linker steps. Please review the build log for more information..
         /// </summary>
         public static string MX7000 {
             get {

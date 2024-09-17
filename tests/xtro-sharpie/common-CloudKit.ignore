@@ -1,8 +1,0 @@
-## we offer a better managed API using another selector
-!missing-selector! CKRecord::objectForKeyedSubscript: not bound
-!missing-selector! CKRecord::setObject:forKeyedSubscript: not bound
-
-## Not intended to be used directly by client code
-!missing-protocol! CKRecordKeyValueSetting not bound
-!missing-protocol-conformance! CKRecord should conform to CKRecordKeyValueSetting (defined in 'CKRecordKeyValueSettingConformance' category)
-!missing-selector! CKRecord::encryptedValues not bound

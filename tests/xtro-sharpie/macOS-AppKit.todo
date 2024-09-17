@@ -1,4 +1,0 @@
-!extra-enum-value! Managed value 2 for NSWindowSharingType.ReadWrite not found in native headers
-!missing-protocol-member! NSTextViewDelegate::textView:writingToolsIgnoredRangesInEnclosingRange: not found
-!missing-protocol-member! NSTextViewDelegate::textViewWritingToolsDidEnd: not found
-!missing-protocol-member! NSTextViewDelegate::textViewWritingToolsWillBegin: not found

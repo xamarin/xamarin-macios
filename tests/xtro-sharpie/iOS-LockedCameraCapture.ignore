@@ -1,4 +1,0 @@
-# This is a Swift-only frameworks, with only version APIs available in Objective-C, so we're not binding it in Objective-C
-!missing-field! LockedCameraCaptureVersionNumber not bound
-!missing-field! LockedCameraCaptureVersionString not bound
-!missing-field! NSUserActivityTypeLockedCameraCapture not bound
