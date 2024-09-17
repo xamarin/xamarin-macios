@@ -5553,49 +5553,49 @@ namespace Metal {
 		[Export ("setVertexBuffer:offset:attributeStride:atIndex:")]
 		void SetVertexBuffer (IMTLBuffer buffer, nuint offset, nuint stride, nuint index);
 
-		[Mac (14, 0), iOS (17, 0), NoTV, MacCatalyst (17, 0)]
+		[Mac (14, 0), iOS (17, 0), TV (18, 0), MacCatalyst (17, 0)]
 #if NET
 		[Abstract (GenerateExtensionMethod = true)]
 #endif
 		[Export ("setObjectThreadgroupMemoryLength:atIndex:")]
 		void SetObjectThreadgroupMemoryLength (nuint length, nuint index);
 
-		[Mac (14, 0), iOS (17, 0), NoTV, MacCatalyst (17, 0)]
+		[Mac (14, 0), iOS (17, 0), TV (18, 0), MacCatalyst (17, 0)]
 #if NET
 		[Abstract (GenerateExtensionMethod = true)]
 #endif
 		[Export ("setObjectBuffer:offset:atIndex:")]
 		void SetObjectBuffer (IMTLBuffer buffer, nuint offset, nuint index);
 
-		[Mac (14, 0), iOS (17, 0), NoTV, MacCatalyst (17, 0)]
+		[Mac (14, 0), iOS (17, 0), TV (18, 0), MacCatalyst (17, 0)]
 #if NET
 		[Abstract (GenerateExtensionMethod = true)]
 #endif
 		[Export ("setMeshBuffer:offset:atIndex:")]
 		void SetMeshBuffer (IMTLBuffer buffer, nuint offset, nuint index);
 
-		[Mac (14, 0), iOS (17, 0), NoTV, MacCatalyst (17, 0)]
+		[Mac (14, 0), iOS (17, 0), TV (18, 0), MacCatalyst (17, 0)]
 #if NET
 		[Abstract (GenerateExtensionMethod = true)]
 #endif
 		[Export ("drawMeshThreadgroups:threadsPerObjectThreadgroup:threadsPerMeshThreadgroup:")]
 		void DrawMeshThreadgroups (MTLSize threadgroupsPerGrid, MTLSize threadsPerObjectThreadgroup, MTLSize threadsPerMeshThreadgroup);
 
-		[Mac (14, 0), iOS (17, 0), NoTV, MacCatalyst (17, 0)]
+		[Mac (14, 0), iOS (17, 0), TV (18, 0), MacCatalyst (17, 0)]
 #if NET
 		[Abstract (GenerateExtensionMethod = true)]
 #endif
 		[Export ("drawMeshThreads:threadsPerObjectThreadgroup:threadsPerMeshThreadgroup:")]
 		void DrawMeshThreads (MTLSize threadsPerGrid, MTLSize threadsPerObjectThreadgroup, MTLSize threadsPerMeshThreadgroup);
 
-		[Mac (14, 0), iOS (17, 0), NoTV, MacCatalyst (17, 0)]
+		[Mac (14, 0), iOS (17, 0), TV (18, 0), MacCatalyst (17, 0)]
 #if NET
 		[Abstract (GenerateExtensionMethod = true)]
 #endif
 		[Export ("setBarrier")]
 		void SetBarrier ();
 
-		[Mac (14, 0), iOS (17, 0), NoTV, MacCatalyst (17, 0)]
+		[Mac (14, 0), iOS (17, 0), TV (18, 0), MacCatalyst (17, 0)]
 #if NET
 		[Abstract (GenerateExtensionMethod = true)]
 #endif
@@ -6170,7 +6170,7 @@ namespace Metal {
 		[Export ("transformationMatrixBufferOffset")]
 		nuint TransformationMatrixBufferOffset { get; set; }
 
-		[Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0), NoTV]
+		[Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0), TV (18, 0)]
 		[Export ("transformationMatrixLayout")]
 		MTLMatrixLayout TransformationMatrixLayout { get; set; }
 	}
@@ -6347,15 +6347,15 @@ namespace Metal {
 		[Export ("motionTransformCount")]
 		nuint MotionTransformCount { get; set; }
 
-		[Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0), NoTV]
+		[Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0), TV (18, 0)]
 		[Export ("instanceTransformationMatrixLayout")]
 		MTLMatrixLayout InstanceTransformationMatrixLayout { get; set; }
 
-		[Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0), NoTV]
+		[Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0), TV (18, 0)]
 		[Export ("motionTransformType")]
 		MTLTransformType MotionTransformType { get; set; }
 
-		[Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0), NoTV]
+		[Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0), TV (18, 0)]
 		[Export ("motionTransformStride")]
 		nuint MotionTransformStride { get; set; }
 	}
@@ -6949,7 +6949,7 @@ namespace Metal {
 		[Export ("transformationMatrixBufferOffset")]
 		nuint TransformationMatrixBufferOffset { get; set; }
 
-		[Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0), NoTV]
+		[Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0), TV (18, 0)]
 		[Export ("transformationMatrixLayout")]
 		MTLMatrixLayout TransformationMatrixLayout { get; set; }
 	}
@@ -7222,15 +7222,15 @@ namespace Metal {
 		[Export ("descriptor")]
 		MTLIndirectInstanceAccelerationStructureDescriptor GetDescriptor ();
 
-		[Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0), NoTV]
+		[Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0), TV (18, 0)]
 		[Export ("instanceTransformationMatrixLayout")]
 		MTLMatrixLayout InstanceTransformationMatrixLayout { get; set; }
 
-		[Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0), NoTV]
+		[Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0), TV (18, 0)]
 		[Export ("motionTransformType")]
 		MTLTransformType MotionTransformType { get; set; }
 
-		[Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0), NoTV]
+		[Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0), TV (18, 0)]
 		[Export ("motionTransformStride")]
 		nuint MotionTransformStride { get; set; }
 	}
@@ -7376,14 +7376,14 @@ namespace Metal {
 	}
 
 	[Native]
-	[Mac (15, 0), NoTV, iOS (18, 0), MacCatalyst (18, 0)]
+	[Mac (15, 0), TV (18, 0), iOS (18, 0), MacCatalyst (18, 0)]
 	enum MTLMatrixLayout : long {
 		ColumnMajor = 0,
 		RowMajor = 1,
 	}
 
 	[Native]
-	[Mac (15, 0), NoTV, iOS (18, 0), MacCatalyst (18, 0)]
+	[Mac (15, 0), TV (18, 0), iOS (18, 0), MacCatalyst (18, 0)]
 	enum MTLTransformType : long {
 		PackedFloat4x3 = 0,
 		Component = 1,

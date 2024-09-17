@@ -624,6 +624,7 @@ COREMIDI_CORE_SOURCES = \
 	CoreMidi/MidiCompat.cs \
 	CoreMidi/MidiCIDeviceIdentification.cs \
 	CoreMidi/MidiServices.cs \
+	CoreMidi/MidiStructs.cs \
 	CoreMidi/MidiThruConnection.cs \
 	CoreMidi/MidiThruConnectionParams.cs \
 
