@@ -1,5 +1,0 @@
-!unknown-native-enum! CTCellularDataRestrictedState bound
-!unknown-native-enum! CTCellularPlanProvisioningAddPlanResult bound
-!unknown-type! CTCellularData bound
-!unknown-type! CTCellularPlanProvisioning bound
-!unknown-type! CTCellularPlanProvisioningRequest bound

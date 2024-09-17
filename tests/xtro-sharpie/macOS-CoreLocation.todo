@@ -1,4 +1,0 @@
-!missing-enum! CLServiceSessionAuthorizationRequirement not bound
-
-# I think this is a typo from Apple
-!deprecated-attribute-wrong! CLUpdate::isStationary has 15.0 not 14.0 on [Deprecated] attribute

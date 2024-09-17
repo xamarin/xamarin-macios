@@ -1,3 +1,0 @@
-## SKStoreProductViewController is not in tvOS and the only member of the delegate is not either
-## but the delegate itself is not marked (so it's reported as missing)
-!missing-protocol! SKStoreProductViewControllerDelegate not bound

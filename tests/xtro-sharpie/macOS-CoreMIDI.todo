@@ -1,5 +1,0 @@
-!missing-pinvoke! MIDIEventListForEachEvent is not bound
-!missing-pinvoke! MIDIEventPacketSysexBytesForGroup is not bound
-!missing-pinvoke! MIDISendUMPSysex is not bound
-!missing-pinvoke! MIDISendUMPSysex8 is not bound
-!missing-enum-value! MidiNotificationMessageId native value kMIDIMsgInternalStart = 4096 not bound

@@ -1,7 +1,0 @@
-!missing-pinvoke! VTCompressionSessionEncodeMultiImageFrame is not bound
-!missing-pinvoke! VTCompressionSessionEncodeMultiImageFrameWithOutputHandler is not bound
-!missing-pinvoke! VTDecompressionSessionDecodeFrameWithMultiImageCapableOutputHandler is not bound
-!missing-pinvoke! VTDecompressionSessionSetMultiImageCallback is not bound
-!missing-pinvoke! VTHDRPerFrameMetadataGenerationSessionAttachMetadata is not bound
-!missing-pinvoke! VTHDRPerFrameMetadataGenerationSessionCreate is not bound
-!missing-pinvoke! VTHDRPerFrameMetadataGenerationSessionGetTypeID is not bound

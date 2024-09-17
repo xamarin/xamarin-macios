@@ -45,8 +45,7 @@ namespace Xharness {
 		Generator = 1 << 11,
 		[Label ("interdependent-binding-projects")]
 		InterdependentBindingProjects = 1 << 12,
-		[Label ("install-source")]
-		InstallSource = 1 << 13,
+		// 1 << 13 is unused
 		[Label ("introspection")]
 		Introspection = 1 << 14,
 		[Label ("linker")]
