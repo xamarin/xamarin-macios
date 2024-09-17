@@ -20,10 +20,10 @@ namespace Xamarin.MacDev.Tasks {
 		public string PackageCachePath { get; set; } = string.Empty;
 
 
-		readonly string[] archive_args = new string [] { 
+		readonly string [] archive_args = new string [] {
 			"BUILD_LIBRARY_FOR_DISTRIBUTION=YES", "ENABLE_BITCODE=NO", "OBJC_CFLAGS=\"-fno-objc-msgsend-selector-stubs -ObjC\"",
 			"OTHER_LDFLAGS=\"-ObjC\"", "OTHER_SWIFT_FLAGS=\"-no-verify-emitted-module-interface\"",
-			"SKIP_INSTALL=NO", "SWIFT_INSTALL_OBJC_HEADER=YES", 
+			"SKIP_INSTALL=NO", "SWIFT_INSTALL_OBJC_HEADER=YES",
 		};
 
 		protected override string Command { get; set; } = "archive";
