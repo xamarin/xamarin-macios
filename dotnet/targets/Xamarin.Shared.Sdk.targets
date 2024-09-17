@@ -2476,6 +2476,6 @@ global using nfloat = global::System.Runtime.InteropServices.NFloat%3B
 	<Import Project="$(_TargetsDirectory)Xamarin.MacCatalyst.ObjCBinding.$(_ProjectLanguage).targets"  Condition="'$(_ProjectType)' == 'MacCatalystBindingProject' " />
 	
 	<Import Project="dotnet-xcsync.targets" />
-	<Import Project="Microsoft.MaciOS.Sdk.Xcode.targets" />
+	<Import Project="Microsoft.MaciOS.Sdk.Xcode.targets" Condition=" $([MSBuild]::IsOSPlatform('osx')) " />
 
 </Project>

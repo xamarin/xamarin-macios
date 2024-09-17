@@ -1,19 +1,16 @@
 using System;
 using System.IO;
-using System.Runtime.InteropServices;
+using System.Collections.Generic;
 
 using Microsoft.Build.Framework;
-using Microsoft.Build.Utilities;
+
+using Xamarin.Localization.MSBuild;
 
 namespace Xamarin.MacDev.Tasks {
-	public class Sharpie : XamarinToolTaskWithOutput {
-		public override string TaskPrefix => "SHRP";
+	public class Sharpie : XamarinTask {
 
-		protected override string ToolName => "sharpie";
-
+		// Task input parameters
 		public string Command { get; set; } = string.Empty;
-
-		public string Arguments { get; set; } = string.Empty;
 
 		public string Namespace { get; set; } = string.Empty;
 
@@ -25,60 +22,65 @@ namespace Xamarin.MacDev.Tasks {
 
 		public ITaskItem [] Headers { get; set; } = Array.Empty<ITaskItem> ();
 
+		public string SdkDevPath { get; set; } = string.Empty;
+
 
 		const string ClassicXIAssembly = "/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/64bits/iOS/Xamarin.iOS.dll";
 
-		protected override string GenerateFullPathToTool ()
+		protected virtual IList<string> GenerateCommandLineCommands ()
 		{
-			return Path.Combine ("/usr", "local", "bin", ToolExe);
-		}
-
-		protected override string GenerateCommandLineCommands ()
-		{
-			var cmd = new CommandLineBuilder ();
+			var args = new List<string> ();
 
 			if (!string.IsNullOrEmpty (Command))
-				cmd.AppendSwitch (Command);
+				args.Add (Command);
 
-			if (!string.IsNullOrEmpty (Namespace))
-				cmd.AppendSwitchIfNotNull ("--namespace ", Namespace);
+			if (!string.IsNullOrEmpty (Namespace)) {
+				args.Add ("-namespace");
+				args.Add (Namespace);
+			}
 
-			if (!string.IsNullOrEmpty (Sdk))
-				cmd.AppendSwitchIfNotNull ("--sdk ", Sdk);
+			if (!string.IsNullOrEmpty (Sdk)) {
+				args.Add ("-sdk");
+				args.Add (Sdk);
+			}
 
-			if (!string.IsNullOrEmpty (Scope))
-				cmd.AppendSwitchIfNotNull ("--scope ", Scope);
+			if (!string.IsNullOrEmpty (Scope)) {
+				args.Add ("-scope");
+				args.Add (Scope);
+			}
 
-			if (!string.IsNullOrEmpty (OutputPath))
-				cmd.AppendSwitchIfNotNull ("--output ", OutputPath);
+			if (!string.IsNullOrEmpty (SdkDevPath)) {
+				args.Add ("-x");
+				args.Add (SdkDevPath);
+			}
 
-			cmd.AppendSwitchIfNotNull (string.Empty, Headers, delimiter: " ");
+			if (!string.IsNullOrEmpty (OutputPath)) {
+				args.Add ("-output");
+				args.Add (OutputPath);
+			}
 
-			if (!string.IsNullOrEmpty (Arguments))
-				cmd.AppendSwitch (Arguments);
+			foreach (var header in Headers) {
+				args.Add (header.ItemSpec);
+			}
 
-			return cmd.ToString ();
+			return args;
 		}
 
-		public override bool RunTask ()
+		public override bool Execute ()
 		{
-			if (RuntimeInformation.IsOSPlatform (OSPlatform.OSX)) {
-				if (!File.Exists (GenerateFullPathToTool ())) {
-					// TODO loc
-					Log.LogError ($"{TaskPrefix}1000 {{0}}", $"Unable to find the executable \"{ToolName}\". Please install Objective-Sharpie: https://aka.ms/objective-sharpie.");
-					return false;
-				}
-
-				if (!File.Exists (ClassicXIAssembly)) {
-					Log.LogWarning ($"{TaskPrefix}1001 {{0}}", $"The \"{ToolName}\" tool has dependencies on classic Xamarin.iOS, but an installation was not detected. You may encounter issues running this tool.");
-					return false;
-				}
-
-				return base.RunTask ();
-			} else {
-				Log.LogWarning ($"{TaskPrefix}5000 {{0}}", $"Skipping attempt to run \"{ToolName}\" with arguments \"{GenerateCommandLineCommands ()}\". The \"@(XcodeProject)\" build action is only supported on macOS.");
-				return true;
+			var sharpieTool = Path.Combine ("/usr", "local", "bin", "sharpie");
+			if (!File.Exists (sharpieTool)) {
+				Log.LogError (MSBStrings.XISHRP1000);
+				return false;
 			}
+
+			if (!File.Exists (ClassicXIAssembly)) {
+				Log.LogWarning (MSBStrings.XISHRP1001);
+				return false;
+			}
+
+			ExecuteAsync (sharpieTool, GenerateCommandLineCommands ()).Wait ();
+			return !Log.HasLoggedErrors;
 		}
 
 	}

@@ -10,14 +10,13 @@ This file contains MSBuild targets that support building and operating on Xcode 
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
   <UsingTask TaskName="Sharpie"                AssemblyFile="$(_XamarinTaskAssembly)"/>
-  <UsingTask TaskName="XcodeBuild"             AssemblyFile="$(_XamarinTaskAssembly)"/>
+  <UsingTask TaskName="CreateXcArchive"        AssemblyFile="$(_XamarinTaskAssembly)"/>
+  <UsingTask TaskName="CreateXcFramework"      AssemblyFile="$(_XamarinTaskAssembly)"/>
 
   <PropertyGroup>
     <_XcodeProjectDefaultOutputPathRoot>$(MSBuildProjectDirectory)/$(IntermediateOutputPath)xcode/</_XcodeProjectDefaultOutputPathRoot>
     <_BuildXcodeProjectsStamp>$(_MaciOSStampDirectory)_BuildXcodeProjects.stamp</_BuildXcodeProjectsStamp>
     <_SharpieBindXcodeProjectsStamp>$(_MaciOSStampDirectory)_SharpieBindXcodeProjects.stamp</_SharpieBindXcodeProjectsStamp>
-    <_XcArchiveExtraArgs>$(_XcArchiveExtraArgs) ENABLE_BITCODE=NO SKIP_INSTALL=NO SWIFT_INSTALL_OBJC_HEADER=YES BUILD_LIBRARY_FOR_DISTRIBUTION=YES</_XcArchiveExtraArgs>
-    <_XcArchiveExtraArgs>$(_XcArchiveExtraArgs) OTHER_LDFLAGS=&quot;-ObjC&quot; OTHER_SWIFT_FLAGS=&quot;-no-verify-emitted-module-interface&quot; OBJC_CFLAGS=&quot;-fno-objc-msgsend-selector-stubs -ObjC&quot;</_XcArchiveExtraArgs>
   </PropertyGroup>
 
   <ItemDefinitionGroup>
@@ -29,6 +28,8 @@ This file contains MSBuild targets that support building and operating on Xcode 
       <SchemeName></SchemeName>
       <SharpieBind>false</SharpieBind>
       <SharpieNamespace></SharpieNamespace>
+      <SharpieSdkName></SharpieSdkName>
+      <SharpieIncludeApiDefintion>false</SharpieIncludeApiDefintion>
       <SmartLink></SmartLink>
       <Visible></Visible>
     </XcodeProject>
@@ -37,8 +38,8 @@ This file contains MSBuild targets that support building and operating on Xcode 
   <Target Name="_GetBuildXcodeProjectsInputs"
       Condition=" '@(XcodeProject->Count())' != '0' " >
     <ItemGroup>
-      <_AllXcbFiles Include="%(MaciOSXcodeProject.RootDir)%(MaciOSXcodeProject.Directory)/**/*"
-          Condition= " Exists('%(MaciOSXcodeProject.RootDir)%(MaciOSXcodeProject.Directory)') "/>
+      <_AllXcbFiles Include="%(XcodeProject.RootDir)%(XcodeProject.Directory)/**/*"
+          Condition= " Exists('%(XcodeProject.RootDir)%(XcodeProject.Directory)') "/>
       <_XcbInputs Include="@(_AllXcbFiles)"
           Condition="  '%(Extension)' == '.swift'
                     or '%(Extension)' == '.h'
@@ -70,7 +71,7 @@ This file contains MSBuild targets that support building and operating on Xcode 
 
   <Target Name="_BuildXcodeProjectFrameworks"
       Condition=" '@(XcodeProject->Count())' != '0' "
-      DependsOnTargets="_GetBuildXcodeProjectsInputs;_CalculateXcodeProjectOutputPaths"
+      DependsOnTargets="_GetBuildXcodeProjectsInputs;_CalculateXcodeProjectOutputPaths;_DetectSdkLocations"
       Inputs="@(_XcbInputs)"
       Outputs="$(_BuildXcodeProjectsStamp)" >
     <RemoveDir Directories="@(XcodeProject->'%(OutputPath)archives')" />
@@ -84,33 +85,31 @@ This file contains MSBuild targets that support building and operating on Xcode 
 
     <!-- Create XCARCHIVE for $(TargetPlatformIdentifier) -->
     <!-- The derivedDataPath and packageCachePath arguments are used to better support multitargeting -->
-    <XcodeBuild
-        Command="archive"
+    <CreateXcArchive
         ProjectPath="%(XcodeProject.FullPath)"
         SchemeName="%(XcodeProject.SchemeName)"
         Configuration="%(XcodeProject.Configuration)"
         ArchivePlatform="$(_XcArchivePlatform)"
-        ArchiveOutputPath="%(XcodeProject.OutputPath)archives/%(XcodeProject.SchemeName)$(TargetPlatformIdentifier).xcarchive"
+        OutputPath="%(XcodeProject.OutputPath)archives/%(XcodeProject.SchemeName)$(TargetPlatformIdentifier).xcarchive"
         DerivedDataPath="$(_XcodeProjectDefaultOutputPathRoot)DerivedData"
         PackageCachePath="$(_XcodeProjectDefaultOutputPathRoot)Cache"
-        Arguments="$(_XcArchiveExtraArgs)"
+        SdkDevPath="$(_SdkDevPath)"
         WorkingDirectory="%(XcodeProject.RootDir)%(XcodeProject.Directory)" >
-    </XcodeBuild>
+    </CreateXcArchive>
 
     <!-- Create simulator XCARCHIVE for $(TargetPlatformIdentifier) -->
-    <XcodeBuild
+    <CreateXcArchive
         Condition=" '$(TargetPlatformIdentifier)' == 'ios' or  '$(TargetPlatformIdentifier)' == 'tvos' "
-        Command="archive"
         ProjectPath="%(XcodeProject.FullPath)"
         SchemeName="%(XcodeProject.SchemeName)"
         Configuration="%(XcodeProject.Configuration)"
         ArchivePlatform="$(_XcArchivePlatform) Simulator"
-        ArchiveOutputPath="%(XcodeProject.OutputPath)archives/%(XcodeProject.SchemeName)$(TargetPlatformIdentifier)Simulator.xcarchive"
         DerivedDataPath="$(_XcodeProjectDefaultOutputPathRoot)DerivedData"
         PackageCachePath="$(_XcodeProjectDefaultOutputPathRoot)Cache"
-        Arguments="$(_XcArchiveExtraArgs)"
+        OutputPath="%(XcodeProject.OutputPath)archives/%(XcodeProject.SchemeName)$(TargetPlatformIdentifier)Simulator.xcarchive"
+        SdkDevPath="$(_SdkDevPath)"
         WorkingDirectory="%(XcodeProject.RootDir)%(XcodeProject.Directory)" >
-    </XcodeBuild>
+    </CreateXcArchive>
 
     <!-- Create XCFRAMEWORK for $(TargetPlatformIdentifier) -->
     <!-- TODO Sign the XCFramework bundle? Looks like this is done via _CodesignAppBundle but may need to sign nested content? -->
@@ -119,13 +118,13 @@ This file contains MSBuild targets that support building and operating on Xcode 
       <_XcArchiveOutputs Include="%(XcodeProject.OutputPath)archives/%(XcodeProject.SchemeName)$(TargetPlatformIdentifier)Simulator.xcarchive"
           Condition=" Exists('%(XcodeProject.OutputPath)archives/%(XcodeProject.SchemeName)$(TargetPlatformIdentifier)Simulator.xcarchive') "/>
     </ItemGroup>
-    <XcodeBuild
-        Command="-create-xcframework"
+    <CreateXcFramework
         FrameworkArchives="@(_XcArchiveOutputs)"
         FrameworkName="%(XcodeProject.SchemeName).framework"
-        FrameworkOutputPath="%(XcodeProject.OutputPath)xcframeworks/%(XcodeProject.SchemeName)$(TargetPlatformIdentifier).xcframework"
+        OutputPath="%(XcodeProject.OutputPath)xcframeworks/%(XcodeProject.SchemeName)$(TargetPlatformIdentifier).xcframework"
+        SdkDevPath="$(_SdkDevPath)"
         WorkingDirectory="%(XcodeProject.RootDir)%(XcodeProject.Directory)" >
-    </XcodeBuild>
+    </CreateXcFramework>
 
     <ItemGroup>
       <_XcodeProjectXcFrameworkOutputs Include="%(XcodeProject.OutputPath)xcframeworks/%(XcodeProject.SchemeName)$(TargetPlatformIdentifier).xcframework"
@@ -147,51 +146,36 @@ This file contains MSBuild targets that support building and operating on Xcode 
   </Target>
 
 
-  <Target Name="_GetSharpieBindInputs">
+  <Target Name="_GetSharpieBindInputs"
+      Condition=" '$(IsBindingProject)' == 'true' and '@(XcodeProject->Count())' != '0' and '@(XcodeProject->'%(SharpieBind)')' == 'true' " >
     <ItemGroup>
       <_SharpieInputs Include="%(XcodeProject.OutputPath)archives/%(XcodeProject.SchemeName)$(TargetPlatformIdentifier).xcarchive" />
     </ItemGroup>
   </Target>
 
-  <!-- TODO put this in a task? -->
-  <Target Name="_GetSharpieBindSdkName"
-      Condition=" '@(XcodeProject->Count())' != '0' and '@(XcodeProject->'%(SharpieBind)')' == 'true' and '$(SharpieBindSdkName)' == '' " >
-    <Exec Command="xcode-select -p"
-        Condition=" $([MSBuild]::IsOSPlatform('osx')) "
-        ConsoleToMSBuild="true"
-        StandardOutputImportance="low">
-      <Output TaskParameter="ConsoleOutput" PropertyName="_XcodeSelectOutput" />
-    </Exec>
-    <PropertyGroup>
-      <_SharpieXcodeFilter Condition=" '$(_XcodeSelectOutput)' != '' ">-x $(_XcodeSelectOutput.Replace(Contents/Developer, ''))</_SharpieXcodeFilter>
-    </PropertyGroup>
-    <Sharpie Command="xcode"
-        Arguments="-sdks $(_SharpieXcodeFilter)" >
-      <Output TaskParameter="ConsoleOutput" PropertyName="_SharpieXcodeSdksOutput" />
-    </Sharpie>
-    <PropertyGroup>
-      <SharpieBindSdkName>$([System.Text.RegularExpressions.Regex]::Match($(_SharpieXcodeSdksOutput), `iphoneos[^; \n\r\t]+`))</SharpieBindSdkName>
-    </PropertyGroup>
-  </Target>
-
   <Target Name="_SharpieBindXcodeProjects"
-      Condition=" '@(XcodeProject->Count())' != '0' and '@(XcodeProject->'%(SharpieBind)')' == 'true' "
-      DependsOnTargets="_GetSharpieBindInputs;_GetSharpieBindSdkName"
+      Condition=" '$(IsBindingProject)' == 'true' and '@(XcodeProject->Count())' != '0' and '@(XcodeProject->'%(SharpieBind)')' == 'true' "
+      DependsOnTargets="_GetSharpieBindInputs;_DetectSdkLocations"
       Inputs="@(_SharpieInputs)"
       Outputs="$(_SharpieBindXcodeProjectsStamp)">
     <RemoveDir Directories="@(XcodeProject->'%(OutputPath)sharpie')" />
 
     <Sharpie Command="bind"
         Namespace="%(XcodeProject.SharpieNamespace)"
-        Sdk="$(SharpieBindSdkName)"
+        Sdk="%(XcodeProject.SharpieSdkName)"
         OutputPath="%(XcodeProject.OutputPath)sharpie/%(XcodeProject.Filename)"
         Scope="%(XcodeProject.OutputPath)archives/%(XcodeProject.SchemeName)$(TargetPlatformIdentifier).xcarchive/Products/Library/Frameworks/%(XcodeProject.SchemeName).framework/Headers"
-        Headers="%(XcodeProject.OutputPath)archives/%(XcodeProject.SchemeName)$(TargetPlatformIdentifier).xcarchive/Products/Library/Frameworks/%(XcodeProject.SchemeName).framework/Headers/%(SchemeName)-Swift.h" >
+        Headers="%(XcodeProject.OutputPath)archives/%(XcodeProject.SchemeName)$(TargetPlatformIdentifier).xcarchive/Products/Library/Frameworks/%(XcodeProject.SchemeName).framework/Headers/%(SchemeName)-Swift.h"
+        SdkDevPath="$(_SdkDevPath)" >
     </Sharpie>
 
     <Touch Files="$(_SharpieBindXcodeProjectsStamp)" AlwaysCreate="true" />
     <ItemGroup>
+      <!-- Add stamp and build outputs to FileWrites so they are not deleted on IncrementalClean -->
       <FileWrites Include="$(_SharpieBindXcodeProjectsStamp);%(XcodeProject.OutputPath)sharpie/**/*" />
+      <!-- Add ApiDefinition output to be processed later in the build -->
+      <ObjcBindingApiDefinition Include="%(XcodeProject.OutputPath)sharpie/%(XcodeProject.Filename)/ApiDefinition.cs"
+          Condition=" '%(SharpieIncludeApiDefintion)' == 'true' " />
     </ItemGroup>
   </Target>
 

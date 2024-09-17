@@ -1,7 +1,6 @@
 using System;
 
 using NUnit.Framework;
-using NUnit.Framework.Interfaces;
 
 using Microsoft.Build.Logging.StructuredLogger;
 
@@ -82,8 +81,13 @@ public class {name}
 			var warnings = BinLog.GetBuildLogWarnings (rv.BinLogPath).Select (v => v.Message);
 			Assert.That (warnings, Is.Empty, $"Build warnings:\n\t{string.Join ("\n\t", warnings)}");
 
-			var expectedXcodeFxOutput = Path.Combine (testDir, "bin", "Debug", $"{platform.ToFramework ()}", $"{TestName}.resources", $"{xcodeProjName}{platform.AsString ().ToLower ()}.xcframework");
-			Assert.That (expectedXcodeFxOutput, Does.Exist, $"The expected xcode project output '{expectedXcodeFxOutput}' did not exist.");
+			if (platform == ApplePlatform.iOS || platform == ApplePlatform.TVOS) {
+				var expectedXcodeFxOutput = Path.Combine (testDir, "bin", "Debug", $"{platform.ToFramework ()}", $"{TestName}.resources", $"{xcodeProjName}{platform.AsString ()}.xcframework");
+				Assert.That (expectedXcodeFxOutput, Does.Exist, $"The expected xcode project output '{expectedXcodeFxOutput}' did not exist.");
+			} else {
+				var resourcesZip = Path.Combine (testDir, "bin", "Debug", $"{platform.ToFramework ()}", $"{TestName}.resources.zip");
+				Assert.Contains ($"{xcodeProjName}{platform.AsString ()}.xcframework/Info.plist", ZipHelpers.List (resourcesZip), $"The expected xcode project output was not found in '{resourcesZip}'.");
+			}
 		}
 
 		[Test]
@@ -118,24 +122,26 @@ public class {name}
 			// Build the first time
 			var rv = DotNet.AssertBuild (proj);
 			var allTargets = BinLog.GetAllTargets (rv.BinLogPath);
-			AssertTargetExecuted (allTargets, "_BuildXcodeProjects", "First _BuildXcodeProjects");
+			AssertTargetExecuted (allTargets, "_BuildXcodeProjectFrameworks", "First _BuildXcodeProjectFrameworks");
 			var expectedXcodeFxOutput = Path.Combine (testDir, "bin", "Debug", $"{platform.ToFramework ()}", $"{TestName}.resources", $"{xcodeProjName}{platform.AsString ().ToLower ()}.xcframework");
+			if (platform == ApplePlatform.MacOSX || platform == ApplePlatform.MacCatalyst)
+				expectedXcodeFxOutput = Path.Combine (testDir, "bin", "Debug", $"{platform.ToFramework ()}", $"{TestName}.resources.zip");
 			Assert.That (expectedXcodeFxOutput, Does.Exist, $"The expected xcode project output '{expectedXcodeFxOutput}' did not exist.");
 			var outputFxFirstWriteTime = File.GetLastWriteTime (expectedXcodeFxOutput);
 
 			// Build again, _BuildXcodeProjects should be skipped and outputs should not be updated
 			rv = DotNet.AssertBuild (proj);
 			allTargets = BinLog.GetAllTargets (rv.BinLogPath);
-			AssertTargetNotExecuted (allTargets, "_BuildXcodeProjects", "Second _BuildXcodeProjects");
+			AssertTargetNotExecuted (allTargets, "_BuildXcodeProjectFrameworks", "Second _BuildXcodeProjectFrameworks");
 			Assert.That (expectedXcodeFxOutput, Does.Exist, $"The expected xcode project output '{expectedXcodeFxOutput}' did not exist.");
 			var outputFxSecondWriteTime = File.GetLastWriteTime (expectedXcodeFxOutput);
 			Assert.That (outputFxFirstWriteTime, Is.EqualTo (outputFxSecondWriteTime), $"Expected '{expectedXcodeFxOutput}' write time to be '{outputFxFirstWriteTime}', but was '{outputFxSecondWriteTime}'");
 
 			// Update xcode project, _BuildXcodeProjects should run and outputs should be updated
-			File.SetLastWriteTime (xcodeProjPath, DateTime.Now);
+			File.SetLastWriteTime (Path.Combine (xcodeProjPath, "project.pbxproj"), DateTime.Now);
 			rv = DotNet.AssertBuild (proj);
 			allTargets = BinLog.GetAllTargets (rv.BinLogPath);
-			AssertTargetExecuted (allTargets, "_BuildXcodeProjects", "Third _BuildXcodeProjects");
+			AssertTargetExecuted (allTargets, "_BuildXcodeProjectFrameworks", "Third _BuildXcodeProjectFrameworks");
 			Assert.That (expectedXcodeFxOutput, Does.Exist, $"The expected xcode project output '{expectedXcodeFxOutput}' did not exist.");
 			var outputFxThirdWriteTime = File.GetLastWriteTime (expectedXcodeFxOutput);
 			Assert.IsTrue (outputFxThirdWriteTime > outputFxFirstWriteTime, $"Expected '{outputFxThirdWriteTime}' write time of '{outputFxThirdWriteTime}' to be greater than first write '{outputFxFirstWriteTime}'");
@@ -154,6 +160,12 @@ public class {name}
 		[Test]
 		public void BuildMultipleTargeting ()
 		{
+		}
+
+		[Test]
+		public void SharpieBindiOS ()
+		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS);
 		}
 
 		[Test]

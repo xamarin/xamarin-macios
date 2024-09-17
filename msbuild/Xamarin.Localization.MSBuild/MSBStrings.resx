@@ -1576,4 +1576,14 @@
         <comment>RuntimeIdentifier: don't translate (it's the name of a MSBuild property)</comment>
     </data>
 
+    <data name="XISHRP1000" xml:space="preserve">
+        <value>Unable to find the executable 'sharpie'. Please install Objective-Sharpie: https://aka.ms/objective-sharpie.</value>
+        <comment>The following are literal names and should not be translated: sharpie, Objective Sharpie</comment>
+    </data>
+
+    <data name="XISHRP1001" xml:space="preserve">
+        <value>The tool 'sharpie' depends on Xamarin.iOS, but a Xamarin.iOS installation was not detected. You may encounter issues running this tool.</value>
+        <comment>The following are literal names and should not be translated: sharpie, Xamarin.iOS</comment>
+    </data>
+
 </root>
