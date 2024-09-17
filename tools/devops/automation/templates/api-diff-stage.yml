@@ -25,7 +25,7 @@ parameters:
 
 - name: xcodeChannel
   type: string
-  default: Stable
+  default: Beta
 
 - name: macOSName
   type: string

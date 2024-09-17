@@ -339,14 +339,17 @@ define NativeCompilationTemplate
 
 endef
 
+DEBUG_FLAGS=-DDEBUG -D_LIBCPP_HARDENING_MODE=_LIBCPP_HARDENING_MODE_DEBUG
+RELEASE_FLAGS=-O2 -D_LIBCPP_HARDENING_MODE=_LIBCPP_HARDENING_MODE_FAST
+
 $(eval $(call NativeCompilationTemplate,,-O2))
-$(eval $(call NativeCompilationTemplate,-debug,-DDEBUG))
-$(eval $(call NativeCompilationTemplate,-dotnet,-O2 -DDOTNET))
-$(eval $(call NativeCompilationTemplate,-dotnet-debug,-DDEBUG -DDOTNET))
-$(eval $(call NativeCompilationTemplate,-dotnet-coreclr,-O2 -DCORECLR_RUNTIME -DDOTNET))
-$(eval $(call NativeCompilationTemplate,-dotnet-coreclr-debug,-DDEBUG -DCORECLR_RUNTIME -DDOTNET))
-$(eval $(call NativeCompilationTemplate,-dotnet-nativeaot,-O2 -DCORECLR_RUNTIME -DDOTNET -DNATIVEAOT))
-$(eval $(call NativeCompilationTemplate,-dotnet-nativeaot-debug,-DDEBUG -DCORECLR_RUNTIME -DDOTNET -DNATIVEAOT))
+$(eval $(call NativeCompilationTemplate,-debug,$(DEBUG_FLAGS)))
+$(eval $(call NativeCompilationTemplate,-dotnet,$(RELEASE_FLAGS) -DDOTNET))
+$(eval $(call NativeCompilationTemplate,-dotnet-debug,$(DEBUG_FLAGS) -DDOTNET))
+$(eval $(call NativeCompilationTemplate,-dotnet-coreclr,$(RELEASE_FLAGS) -DCORECLR_RUNTIME -DDOTNET))
+$(eval $(call NativeCompilationTemplate,-dotnet-coreclr-debug,$(DEBUG_FLAGS) -DCORECLR_RUNTIME -DDOTNET))
+$(eval $(call NativeCompilationTemplate,-dotnet-nativeaot,$(RELEASE_FLAGS) -DCORECLR_RUNTIME -DDOTNET -DNATIVEAOT))
+$(eval $(call NativeCompilationTemplate,-dotnet-nativeaot-debug,$(DEBUG_FLAGS) -DCORECLR_RUNTIME -DDOTNET -DNATIVEAOT))
 
 .libs/iphoneos .libs/iphonesimulator .libs/watchos .libs/watchsimulator .libs/tvos .libs/tvsimulator .libs/maccatalyst .libs/mac:
 	$(Q) mkdir -p $@

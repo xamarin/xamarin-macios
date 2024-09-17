@@ -295,6 +295,7 @@ public class Frameworks : Dictionary<string, Framework> {
 					{ "DeviceDiscoveryExtension", "DeviceDiscoveryExtension", 15, 0},
 					// FSKit was removed from Xcode 16 RC, but keeping it commented, because it's likely to return in a later release
 					// { "FSKit", "FSKit", 15, 0 },
+					{ "MediaExtension", "MediaExtension", 15, 0 },
 				};
 			}
 			return mac_frameworks;

@@ -624,6 +624,7 @@ COREMIDI_CORE_SOURCES = \
 	CoreMidi/MidiCompat.cs \
 	CoreMidi/MidiCIDeviceIdentification.cs \
 	CoreMidi/MidiServices.cs \
+	CoreMidi/MidiStructs.cs \
 	CoreMidi/MidiThruConnection.cs \
 	CoreMidi/MidiThruConnectionParams.cs \
 
@@ -1182,6 +1183,16 @@ MEDIAACCESSIBILITY_API_SOURCES = \
 MEDIAACCESSIBILITY_SOURCES = \
 	MediaAccessibility/MediaAccessibility.cs \
 	MediaAccessibility/MAImageCaptioning.cs \
+
+# MediaExtesion
+
+MEDIAEXTENSION_SOURCES = \
+	MediaExtension/MEByteSource.cs \
+	MediaExtension/MERawProcessingBooleanParameter.cs \
+	MediaExtension/MERawProcessingFloatParameter.cs \
+	MediaExtension/MERawProcessingIntegerParameter.cs \
+	MediaExtension/MERawProcessingListParameter.cs \
+	MediaExtension/MESampleCursor.cs \
 
 # MediaPlayer
 
@@ -2181,6 +2192,7 @@ MACOS_FRAMEWORKS =          \
 	MailKit                 \
 	MapKit                  \
 	MediaAccessibility      \
+	MediaExtension          \
 	MediaLibrary 		\
 	MediaPlayer             \
 	MediaToolbox            \

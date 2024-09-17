@@ -1,2 +1,0 @@
-!missing-pinvoke! AudioFileComponentGetUserDataAtOffset is not bound
-!missing-pinvoke! AudioFileComponentGetUserDataSize64 is not bound
