@@ -1,3 +1,0 @@
-# This is a Swift-only frameworks, with only version APIs available in Objective-C, so we're not binding it in Objective-C
-!missing-field! ContactProviderVersionNumber not bound
-!missing-field! ContactProviderVersionString not bound

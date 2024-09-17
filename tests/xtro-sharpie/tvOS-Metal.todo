@@ -1,3 +1,0 @@
-!incorrect-protocol-member! MTLBinaryArchive::addLibraryWithDescriptor:error: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLBinaryArchive::addMeshRenderPipelineFunctionsWithDescriptor:error: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLDevice::newResidencySetWithDescriptor:error: is REQUIRED and should be abstract

@@ -1,4 +1,0 @@
-## AVPlayer is not available on watchOS
-!missing-selector! +SKVideoNode::videoNodeWithAVPlayer: not bound
-!missing-selector! SKVideoNode::initWithAVPlayer: not bound
-!extra-null-allowed! 'System.Void SpriteKit.SKSpriteNode::set_Color(UIKit.UIColor)' has a extraneous [NullAllowed] on parameter #0

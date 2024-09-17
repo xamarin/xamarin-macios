@@ -278,7 +278,6 @@ namespace Xharness.Jenkins {
 				selection.SetEnabled (PlatformLabel.LegacyXamarin, false);
 				selection.SetEnabled (PlatformLabel.watchOS, false);
 				selection.SetEnabled (TestLabel.Bcl, false);
-				selection.SetEnabled (TestLabel.InstallSource, false);
 				selection.SetEnabled (TestLabel.Mmp, false);
 				selection.SetEnabled (TestLabel.Mononative, false);
 				selection.SetEnabled (TestLabel.Mtouch, false);
