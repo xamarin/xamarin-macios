@@ -13,6 +13,7 @@ resources:
       trigger:
         stages:
           - build_packages
+          - build_macos_tests
 
 extends:
   template: templates/pipelines/run-tests-pipeline.yml
