@@ -2752,8 +2752,10 @@ namespace Foundation {
 		bool IsPartialStringValid (ref string partialString, out NSRange proposedSelRange, string origString, NSRange origSelRange, [NullAllowed] out string error);
 	}
 
+#if !XAMCORE_5_0
 	[BaseType (typeof (NSObject))]
 	[Model]
+#endif
 	[Protocol]
 	interface NSCoding {
 		// [Abstract]
@@ -2770,8 +2772,10 @@ namespace Foundation {
 		// note: +supportsSecureCoding being static it is not a good "generated" binding candidate
 	}
 
+#if !XAMCORE_5_0
 	[BaseType (typeof (NSObject))]
 	[Model]
+#endif
 	[Protocol]
 	interface NSCopying {
 		[Abstract]
@@ -2780,8 +2784,10 @@ namespace Foundation {
 		NSObject Copy ([NullAllowed] NSZone zone);
 	}
 
+#if !XAMCORE_5_0
 	[BaseType (typeof (NSObject))]
 	[Model]
+#endif
 	[Protocol]
 	interface NSMutableCopying : NSCopying {
 		[Abstract]
