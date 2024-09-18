@@ -30,7 +30,6 @@ namespace Xharness {
 		string WatchOSExtensionTemplate { get; }
 		string TodayContainerTemplate { get; }
 		string TodayExtensionTemplate { get; }
-		string BCLTodayExtensionTemplate { get; }
 		string MONO_PATH { get; }
 		string TVOS_MONO_PATH { get; }
 		bool INCLUDE_IOS { get; }
@@ -61,7 +60,6 @@ namespace Xharness {
 		bool? IncludeSystemPermissionTests { get; set; }
 		bool InCI { get; }
 		bool UseTcpTunnel { get; }
-		bool UseGroupedApps { get; }
 		string VSDropsUri { get; }
 		bool DisableWatchOSOnWrench { get; }
 

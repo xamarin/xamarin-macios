@@ -380,10 +380,6 @@ namespace Xharness.Jenkins.Reports {
 						writer.WriteLine ("</div>");
 						writer.WriteLine ($"<div id='logs_{log_id}' class='autorefreshable logs togglable' data-onautorefresh='{log_id}' style='display: {defaultDisplay};'>");
 
-						var testAssemblies = test.ReferencedNunitAndXunitTestAssemblies;
-						if (testAssemblies.Any ())
-							writer.WriteLine ($"Test assemblies:<br/>- {String.Join ("<br/>- ", testAssemblies)}<br />");
-
 						if (test.KnownFailure is not null)
 							writer.WriteLine ($"Known failure: <a href='{test.KnownFailure.IssueLink}'>{test.KnownFailure.HumanMessage}</a> <br />");
 

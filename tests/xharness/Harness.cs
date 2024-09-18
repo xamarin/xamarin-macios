@@ -219,7 +219,6 @@ namespace Xharness {
 		public string WatchOSExtensionTemplate { get; private set; }
 		public string TodayContainerTemplate { get; private set; }
 		public string TodayExtensionTemplate { get; private set; }
-		public string BCLTodayExtensionTemplate { get; private set; }
 		public string MONO_PATH { get; } // Use same name as in Makefiles, so that a grep finds it.
 		public string TVOS_MONO_PATH { get; } // Use same name as in Makefiles, so that a grep finds it.
 		public bool INCLUDE_IOS { get; }
@@ -504,10 +503,8 @@ namespace Xharness {
 			};
 			MacTestProjects.Add (macTestProject);
 
-			var monoImportTestFactory = new BCLTestImportTargetFactory (this);
-			MacTestProjects.AddRange (monoImportTestFactory.GetMacBclTargets ());
 
-			// Generate test projects from templates (bcl/mono-native templates)
+			// Generate test projects from templates (mono-native templates)
 			if (generate_projects) {
 				foreach (var mtp in MacTestProjects.Where (x => x.MonoNativeInfo is not null).Select (x => x.MonoNativeInfo))
 					mtp.Convert ();
@@ -623,16 +620,12 @@ namespace Xharness {
 			IOSTestProjects.Add (iosTestProject);
 
 			// add all the tests that are using the precompiled mono assemblies
-			var monoImportTestFactory = new BCLTestImportTargetFactory (this);
-			IOSTestProjects.AddRange (monoImportTestFactory.GetiOSBclTargets ());
-
 			WatchOSContainerTemplate = Path.GetFullPath (Path.Combine (RootDirectory, "templates/WatchContainer"));
 			WatchOSAppTemplate = Path.GetFullPath (Path.Combine (RootDirectory, "templates/WatchApp"));
 			WatchOSExtensionTemplate = Path.GetFullPath (Path.Combine (RootDirectory, "templates/WatchExtension"));
 
 			TodayContainerTemplate = Path.GetFullPath (Path.Combine (RootDirectory, "templates", "TodayContainer"));
 			TodayExtensionTemplate = Path.GetFullPath (Path.Combine (RootDirectory, "templates", "TodayExtension"));
-			BCLTodayExtensionTemplate = Path.GetFullPath (Path.Combine (RootDirectory, "bcl-test", "templates", "today"));
 		}
 
 		// Dictionary<string, string> make_config = new Dictionary<string, string> ();
@@ -698,8 +691,6 @@ namespace Xharness {
 		//   if the the TestProject.GenerateVariations property is true.
 		// * For the mono-native template project, we generate a compat+unified version of the mono-native template project (in MonoNativeInfo.Convert).
 		//   GenerateVariations is true for mono-native projects, which means we'll generate platform variations.
-		// * For the BCL tests, we use a BCL test project generator. The BCL test generator generates projects for
-		//   all platforms we're interested in, so we set GenerateVariations to false to avoid generate the platform variations again.
 
 		int ConfigureIOS ()
 		{
@@ -852,13 +843,6 @@ namespace Xharness {
 			get {
 				// We use the 'USE_TCP_TUNNEL' variable to detect whether we're running CI or not.
 				return !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("USE_TCP_TUNNEL"));
-			}
-		}
-
-		public bool UseGroupedApps {
-			get {
-				var groupApps = Environment.GetEnvironmentVariable ("BCL_GROUPED_APPS");
-				return string.IsNullOrEmpty (groupApps) || groupApps == "grouped";
 			}
 		}
 
