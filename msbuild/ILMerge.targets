@@ -88,6 +88,8 @@
     <PropertyGroup>
       <LOCAL_DOTNET_PATH Condition="'$(LOCAL_DOTNET_PATH)' == ''">$(MSBuildThisFileDirectory)../builds/downloads/dotnet/dotnet</LOCAL_DOTNET_PATH>
     </PropertyGroup>
+    <!-- Restore the 'ilrepack' tool before trying to use it (we've already restored it a bunch of times, but sometimes dotnet can still not find it). -->
+    <Exec Command="$(LOCAL_DOTNET_PATH) tool restore" WorkingDirectory="$(MSBuildThisFileDirectory).." />
     <Exec Command="$(LOCAL_DOTNET_PATH) tool run ilrepack $(ILRepackArgs)" WorkingDirectory="$(MSBuildProjectDirectory)\$(OutputPath)" StandardErrorImportance="high" StandardOutputImportance="low" ConsoleToMSBuild="true" ContinueOnError="true">
       <Output TaskParameter="ConsoleOutput" PropertyName="ILRepackOutput" />
       <Output TaskParameter="ExitCode" PropertyName="ExitCode" />
