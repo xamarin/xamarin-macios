@@ -2696,6 +2696,10 @@ namespace HealthKit {
 		[iOS (18, 0), MacCatalyst (18, 0), Mac (15, 0), Watch (11, 0)]
 		[Field ("HKQuantityTypeIdentifierRowingSpeed")]
 		RowingSpeed,
+
+		[iOS (18, 0), MacCatalyst (18, 0), Mac (15, 0), Watch (11, 0)]
+		[Field ("HKQuantityTypeIdentifierAppleSleepingBreathingDisturbances")]
+		AppleSleepingBreathingDisturbances,
 	}
 
 	/// <summary>Contains constants that identify HealthKit correlation types.</summary>
@@ -3048,6 +3052,10 @@ namespace HealthKit {
 		[iOS (18, 0), MacCatalyst (18, 0), Mac (15, 0), Watch (11, 0)]
 		[Field ("HKCategoryTypeIdentifierBleedingDuringPregnancy")]
 		BleedingDuringPregnancy,
+
+		[iOS (18, 0), MacCatalyst (18, 0), Mac (15, 0), Watch (11, 0)]
+		[Field ("HKCategoryTypeIdentifierSleepApneaEvent")]
+		SleepApneaEvent,
 	}
 
 	/// <summary>Enumerates the forms of <see cref="T:HealthKit.HKCharacteristicType" />.</summary>
@@ -5311,4 +5319,12 @@ namespace HealthKit {
 		[Export ("initWithPredicate:anchor:options:resultsHandler:")]
 		NativeHandle Constructor ([NullAllowed] NSPredicate predicate, [NullAllowed] HKQueryAnchor anchor, HKWorkoutEffortRelationshipQueryOptions options, HKWorkoutEffortRelationshipQueryResultsHandler resultsHandler);
 	}
+
+	[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[Native]
+	public enum HKAppleSleepingBreathingDisturbancesClassification : long {
+		NotElevated,
+		Elevated,
+	}
+
 }
