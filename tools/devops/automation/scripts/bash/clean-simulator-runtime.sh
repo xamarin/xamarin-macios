@@ -46,7 +46,7 @@ for dir in /Library/Developer/CoreSimulator/Volumes/*; do
   sudo diskutil eject "$dir" || true
 done
 # kill the com.apple.CoreSimulator.simdiskimaged service
-sudo launchctl kill 9 system/com.apple.CoreSimulator.simdiskimaged || true
+sudo launchctl kill -9 system/com.apple.CoreSimulator.simdiskimaged || true
 # kill the com.apple.CoreSimulator.CoreSimulatorService service
 # it seems this service starts the simdiskimaged service if it's not running.
 sudo pkill -9 com.apple.CoreSimulator.CoreSimulatorService || true

@@ -1,2 +1,0 @@
-# remove after XAMCORE_5_0
-!extra-protocol-member! unexpected selector EXHostViewControllerDelegate::shouldAcceptXPCConnection: found

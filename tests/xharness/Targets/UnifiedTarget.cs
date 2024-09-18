@@ -7,8 +7,6 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 
 namespace Xharness.Targets {
 	public class UnifiedTarget : iOSTarget {
-		// special cases for the BCL applications
-
 		public override string Suffix {
 			get {
 				return "-ios";
@@ -61,20 +59,6 @@ namespace Xharness.Targets {
 			get {
 				return "ARM64";
 			}
-		}
-
-		protected override void CalculateName ()
-		{
-			if (TargetDirectory.Contains ("bcl-test")) {
-				if (TestProject.Name.StartsWith ("mscorlib", StringComparison.Ordinal))
-					Name = TestProject.Name;
-				else {
-					var bclIndex = TestProject.Name.IndexOf ("BCL", StringComparison.Ordinal);
-					// most of the BCL test are grouped, but there are a number that are not, in those cases remove the "{testype} Mono " prefix
-					Name = (bclIndex == -1) ? TestProject.Name.Substring (TestProject.Name.IndexOf ("Mono ", StringComparison.Ordinal) + "Mono ".Length) : TestProject.Name.Substring (bclIndex);
-				}
-			} else
-				base.CalculateName ();
 		}
 
 		protected override string GetMinimumOSVersion (string templateMinimumOSVersion)

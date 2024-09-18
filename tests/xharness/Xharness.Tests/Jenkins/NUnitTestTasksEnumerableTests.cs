@@ -38,7 +38,6 @@ namespace Xharness.Tests.Jenkins {
 		}
 
 		[TestCase ("MSBuild tests")]
-		[TestCase ("Install Sources tests")]
 		[TestCase ("MTouch tests")]
 		[TestCase ("Generator tests")]
 		[TestCase ("Cecil-based tests")]

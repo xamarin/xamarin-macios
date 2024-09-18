@@ -586,7 +586,7 @@ namespace Xamarin.Linker {
 			if (!allWarnings) {
 				TryGetInstance (context, out var instance);
 				var platform = (instance?.Platform)?.ToString () ?? "unknown";
-				var msg = MessageContainer.CreateCustomErrorMessage (Errors.MX7000 /* An error occured while executing the custom linker steps. Please review the build log for more information. */, 7000, platform);
+				var msg = MessageContainer.CreateCustomErrorMessage (Errors.MX7000 /* An error occurred while executing the custom linker steps. Please review the build log for more information. */, 7000, platform);
 				context.LogMessage (msg);
 			}
 			// ErrorHelper.Show will print our errors and warnings to stderr.
