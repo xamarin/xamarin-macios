@@ -231,6 +231,7 @@ namespace BrowserEngineKit {
 	{
 		[Static]
 		[Export ("webContentProcessWithInterruptionHandler:completion:")]
+		[Async]
 		void Create (Action interruptionHandler, BEWebContentProcessCreateCallback completion);
 
 		[Export ("invalidate")]
@@ -265,6 +266,7 @@ namespace BrowserEngineKit {
 	{
 		[Static]
 		[Export ("networkProcessWithInterruptionHandler:completion:")]
+		[Async]
 		void Create (Action interruptionHandler, BENetworkingProcessCreateCallback completion);
 
 		[Export ("invalidate")]
@@ -296,6 +298,7 @@ namespace BrowserEngineKit {
 	{
 		[Static]
 		[Export ("renderingProcessWithInterruptionHandler:completion:")]
+		[Async]
 		void Create (Action interruptionHandler, BERenderingProcessCreateCallback completion);
 
 		[Export ("invalidate")]
