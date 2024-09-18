@@ -249,7 +249,7 @@ extends:
     stages:
       - template: templates/main-stage.yml
         parameters:
-          xcodeChannel: Stable
+          xcodeChannel: Beta
           macOSName: ${{ parameters.macOSName }}
           isPR: false
           provisionatorChannel: ${{ parameters.provisionatorChannel }}

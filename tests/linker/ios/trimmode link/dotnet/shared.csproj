@@ -87,7 +87,7 @@
     <Compile Include="$(RootTestsDirectory)\common\TestAssemblyLoader.cs" />
   </ItemGroup>
   <ItemGroup>
-    <InterfaceDefinition Include="$(ThisTestDirectory)\LaunchScreen.storyboard" />
+    <InterfaceDefinition Include="$(ThisTestDirectory)\LaunchScreen.storyboard" Condition="'$(_PlatformName)' != 'tvOS' And '$(_PlatformName)' != 'MacCatalyst' And '$(_PlatformName)' != 'macOS'" />
   </ItemGroup>
   <ItemGroup>
     <ImageAsset Include="$(ThisTestDirectory)\Assets.xcassets\AppIcons.appiconset\Contents.json" />

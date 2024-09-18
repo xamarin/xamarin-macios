@@ -31,6 +31,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -418,21 +419,29 @@ namespace AudioUnit {
 		ReverbRoomType = 10,
 		UsesInternalReverb = 1005,
 		SpatializationAlgorithm = 3000,
-		[Deprecated (PlatformName.iOS, 9, 0)]
-		[Deprecated (PlatformName.TvOS, 9, 0)]
-		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
-		[Deprecated (PlatformName.MacOSX, 10, 11)]
-		DistanceParams = 3010,
-		[Deprecated (PlatformName.iOS, 9, 0)]
-		[Deprecated (PlatformName.TvOS, 9, 0)]
-		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
-		[Deprecated (PlatformName.MacOSX, 10, 11)]
-		AttenuationCurve = 3013,
-		[Deprecated (PlatformName.iOS, 9, 0)]
-		[Deprecated (PlatformName.TvOS, 9, 0)]
-		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
-		[Deprecated (PlatformName.MacOSX, 10, 11)]
-		RenderingFlags = 3003,
+		SpatialMixerRenderingFlags = 3003,
+		SpatialMixerSourceMode = 3005,
+		SpatialMixerDistanceParams = 3010,
+#if !XAMCORE_5_0
+		[Obsolete ("Use 'SpatialMixerDistanceParams' instead.")]
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		DistanceParams = SpatialMixerDistanceParams,
+		[Obsolete ("Use 'SpatialMixerAttenuationCurve' instead.")]
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		AttenuationCurve = SpatialMixerAttenuationCurve,
+		[Obsolete ("Use 'SpatialMixerRenderingFlags' instead.")]
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		RenderingFlags = SpatialMixerRenderingFlags,
+#endif
+		SpatialMixerAttenuationCurve = 3013,
+		SpatialMixerOutputType = 3100,
+		SpatialMixerPointSourceInHeadMode = 3103,
+		[Mac (12, 3), iOS (18, 0), TV (18, 0), MacCatalyst (18, 0), NoWatch]
+		SpatialMixerEnableHeadTracking = 3111,
+		[Mac (13, 0), iOS (18, 0), TV (18, 0), MacCatalyst (18, 0), NoWatch]
+		SpatialMixerPersonalizedHrtfMode = 3113,
+		[Mac (14, 0), iOS (18, 0), TV (18, 0), MacCatalyst (18, 0), NoWatch]
+		SpatialMixerAnyInputIsUsingPersonalizedHrtf = 3116,
 
 		// AUScheduledSoundPlayer
 		ScheduleAudioSlice = 3300,

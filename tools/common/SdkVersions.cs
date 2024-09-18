@@ -14,12 +14,12 @@ using MonoTouch;
 
 namespace Xamarin {
 	static class SdkVersions {
-		public const string Xcode = "15.4";
-		public const string OSX = "14.5";
-		public const string iOS = "17.5";
-		public const string WatchOS = "10.5";
-		public const string TVOS = "17.5";
-		public const string MacCatalyst = "17.5";
+		public const string Xcode = "16.0";
+		public const string OSX = "15.0";
+		public const string iOS = "18.0";
+		public const string WatchOS = "11.0";
+		public const string TVOS = "18.0";
+		public const string MacCatalyst = "18.0";
 
 #if NET
 		public const string MinOSX = "10.15";
@@ -43,24 +43,24 @@ namespace Xamarin {
 		public const string LegacyMinWatchOS = "4.0";
 		public const string LegacyMinTVOS = "11.0";
 
-		public const string MiniOSSimulator = "14.3";
-		public const string MinWatchOSSimulator = "7.1";
-		public const string MinWatchOSCompanionSimulator = "14.5";
-		public const string MinTVOSSimulator = "14.0";
+		public const string MiniOSSimulator = "15.0";
+		public const string MinWatchOSSimulator = "8.0";
+		public const string MinWatchOSCompanionSimulator = "15.0";
+		public const string MinTVOSSimulator = "15.0";
 
-		public const string MaxiOSSimulator = "17.5";
-		public const string MaxWatchOSSimulator = "10.5";
-		public const string MaxWatchOSCompanionSimulator = "17.5";
-		public const string MaxTVOSSimulator = "17.5";
+		public const string MaxiOSSimulator = "18.0";
+		public const string MaxWatchOSSimulator = "11.0";
+		public const string MaxWatchOSCompanionSimulator = "18.0";
+		public const string MaxTVOSSimulator = "18.0";
 
-		public const string MaxiOSDeploymentTarget = "17.5";
-		public const string MaxWatchDeploymentTarget = "10.5";
-		public const string MaxTVOSDeploymentTarget = "17.5";
+		public const string MaxiOSDeploymentTarget = "18.0";
+		public const string MaxWatchDeploymentTarget = "11.0";
+		public const string MaxTVOSDeploymentTarget = "18.0";
 
-		public const string TargetPlatformVersioniOS = "17.5";
-		public const string TargetPlatformVersiontvOS = "17.5";
-		public const string TargetPlatformVersionmacOS = "14.5";
-		public const string TargetPlatformVersionMacCatalyst = "17.5";
+		public const string TargetPlatformVersioniOS = "18.0";
+		public const string TargetPlatformVersiontvOS = "18.0";
+		public const string TargetPlatformVersionmacOS = "15.0";
+		public const string TargetPlatformVersionMacCatalyst = "18.0";
 
 		public static Version OSXVersion { get { return new Version (OSX); } }
 		public static Version iOSVersion { get { return new Version (iOS); } }

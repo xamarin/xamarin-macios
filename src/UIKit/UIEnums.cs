@@ -3183,7 +3183,7 @@ namespace UIKit {
 		Secondary = 1L << 1,
 	}
 
-	[Flags, TV (13, 4), NoWatch, iOS (13, 4)]
+	[Flags, TV (13, 4), Watch (6, 2), iOS (13, 4)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum UIAxis : ulong {

@@ -41,5 +41,30 @@ namespace MonoTouchFixtures.CoreGraphics {
 					Assert.That (img.UTType.ToString (), Is.EqualTo ("public.png"), "UTType");
 			}
 		}
+
+		[Test]
+		public void ContentHeadroom ()
+		{
+			TestRuntime.AssertXcodeVersion (16, 0);
+
+			Assert.Multiple (() => {
+				var frame = new CGSize (32, 32);
+				using var provider = new CGDataProvider (new byte [(int) frame.Width * (int) frame.Height * 4]);
+				using var colorSpace = CGColorSpace.CreateWithName (CGColorSpaceNames.Itur_2100_PQ);
+				using var img = new CGImage (0.0f, (int) frame.Width, (int) frame.Height, 8, 32, 4 * (int) frame.Width, colorSpace, CGBitmapFlags.ByteOrderDefault | CGBitmapFlags.Last, provider, null, false, CGColorRenderingIntent.Default);
+				Assert.IsNotNull (img, "Image");
+				Assert.AreEqual (4.92610836f, img.ContentHeadroom, "ContentHeadroom A");
+				Assert.IsTrue (img.ShouldToneMap, "ShouldToneMap A");
+				Assert.IsFalse (img.ContainsImageSpecificToneMappingMetadata, "ContainsImageSpecificToneMappingMetadata A");
+
+				using var copy = img.Copy (3.0f);
+				Assert.IsNotNull (copy, "Copy");
+				Assert.AreEqual (3.0f, copy.ContentHeadroom, "ContentHeadroom B");
+				Assert.IsTrue (copy.ShouldToneMap, "ShouldToneMap B");
+				Assert.IsFalse (copy.ContainsImageSpecificToneMappingMetadata, "ContainsImageSpecificToneMappingMetadata B");
+
+				Assert.AreEqual (4.92610836f, CGImage.DefaultHdrImageContentHeadroom, "DefaultHdrImageContentHeadroom");
+			});
+		}
 	}
 }

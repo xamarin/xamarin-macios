@@ -179,9 +179,21 @@ namespace AppKit {
 			NSFrameRectWithWidthUsingOperation (rect, frameWidth, (nuint) (ulong) operation);
 		}
 
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[ObsoletedOSPlatform ("macos14.0", "Use 'NSCursor.DisappearingItemCursor' instead."	)]
+#else
+		[Deprecated (PlatformName.MacOSX, 14, 0, message: "Use 'NSCursor.DisappearingItemCursor' instead.")]
+#endif
 		[DllImport (Constants.AppKitLibrary, EntryPoint = "NSShowAnimationEffect")]
 		extern static void NSShowAnimationEffect (nuint animationEffect, CGPoint centerLocation, CGSize size, NativeHandle animationDelegate, NativeHandle didEndSelector, IntPtr contextInfo);
 
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[ObsoletedOSPlatform ("macos14.0", "Use 'NSCursor.DisappearingItemCursor' instead."	)]
+#else
+		[Deprecated (PlatformName.MacOSX, 14, 0, message: "Use 'NSCursor.DisappearingItemCursor' instead.")]
+#endif
 		public static void ShowAnimationEffect (NSAnimationEffect animationEffect, CGPoint centerLocation, CGSize size, NSObject animationDelegate, Selector didEndSelector, IntPtr contextInfo)
 		{
 			NSShowAnimationEffect ((nuint) (ulong) animationEffect, centerLocation, size, animationDelegate.GetHandle (), didEndSelector.Handle, contextInfo);
