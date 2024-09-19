@@ -122,6 +122,7 @@ stages:
         set +x
         for repo in /Users/builder/azdo/_work/*/s/xamarin-macios; do cd $repo; git config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"; done
         for repo in /Users/builder/azdo/_work/*/s/xamarin-macios; do cd $repo; git fetch origin; done
+        exit 1
       displayName: 'Fix stuff'
       name: FixStuff
 
