@@ -716,7 +716,7 @@ namespace Phase {
 		nint UniqueSelectionQueueLength { get; set; }
 	}
 
-	[NoWatch, TV (17, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[NoWatch, TV (18, 0), iOS (18, 0), Mac (15, 0), MacCatalyst (18, 0)]
 	[BaseType (typeof (NSObject), Name = "PHASEStreamNode")]
 	[DisableDefaultCtor]
 	interface PhaseStreamNode {

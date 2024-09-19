@@ -447,10 +447,12 @@ namespace Metal {
 		[Export ("blitCommandEncoderWithDescriptor:")]
 		IMTLBlitCommandEncoder CreateBlitCommandEncoder (MTLBlitPassDescriptor blitPassDescriptor);
 
+		[Abstract (GenerateExtensionMethod = true)]
 		[iOS (14, 0), TV (16, 0), MacCatalyst (14, 0)]
 		[Export ("resourceStateCommandEncoderWithDescriptor:")]
 		IMTLResourceStateCommandEncoder CreateResourceStateCommandEncoder (MTLResourceStatePassDescriptor resourceStatePassDescriptor);
 
+		[Abstract (GenerateExtensionMethod = true)]
 		[iOS (14, 0), TV (16, 0), MacCatalyst (14, 0)]
 		[Export ("accelerationStructureCommandEncoder")]
 		IMTLAccelerationStructureCommandEncoder CreateAccelerationStructureCommandEncoder ();
@@ -731,6 +733,7 @@ namespace Metal {
 		void SampleCounters (MTLCounterSampleBuffer sampleBuffer, nuint sampleIndex, bool barrier);
 #endif
 
+		[Abstract (GenerateExtensionMethod = true)]
 		[iOS (14, 0), TV (16, 0), MacCatalyst (14, 0)]
 		[Export ("setVisibleFunctionTable:atBufferIndex:")]
 		void SetVisibleFunctionTable ([NullAllowed] IMTLVisibleFunctionTable visibleFunctionTable, nuint bufferIndex);

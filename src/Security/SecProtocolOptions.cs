@@ -593,9 +593,9 @@ namespace Security {
 
 #if NET
 #if !COREBUILD
-		[SupportedOSPlatform ("tvos12.0")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[DllImport (Constants.SecurityLibrary)]
 		unsafe static extern void sec_protocol_options_set_challenge_block (sec_protocol_options_t options, BlockLiteral* /* sec_protocol_challenge_t */ challenge_block, IntPtr /* dispatch_queue_t */ challenge_queue);
@@ -603,9 +603,9 @@ namespace Security {
 		/// <summary>Set the challenge callback.</summary>
 		/// <param name="challenge">The callback to call during a challenge.</param>
 		/// <param name="queue">The queue where the callback is called.</param>
-		[SupportedOSPlatform ("tvos12.0")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		public void SetChallengeBlock (SecProtocolChallenge challenge, DispatchQueue queue)
 		{
@@ -616,9 +616,9 @@ namespace Security {
 			}
 		}
 
-		[SupportedOSPlatform ("tvos12.0")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[DllImport (Constants.SecurityLibrary)]
 		unsafe static extern void sec_protocol_options_set_verify_block (sec_protocol_options_t options, BlockLiteral* /* sec_protocol_verify_t */ verify_block, IntPtr /* dispatch_queue_t */ verify_block_queue);
@@ -626,9 +626,9 @@ namespace Security {
 		/// <summary>Set the verify callback.</summary>
 		/// <param name="verify">The callback to call during verification.</param>
 		/// <param name="queue">The queue where the callback is called.</param>
-		[SupportedOSPlatform ("tvos12.0")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		public void SetVerifyBlock (SecProtocolVerify verify, DispatchQueue queue)
 		{
