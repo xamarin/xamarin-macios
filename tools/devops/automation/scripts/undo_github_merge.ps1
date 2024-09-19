@@ -11,7 +11,7 @@ param
 if($IsPr.ToLower() -eq "true") {
     Write-Host "Working on a PR, Undoing the github merge with main."
 
-    git config remote.origin.fetch '+refs/pull/$Env:SYSTEM_PULLREQUEST_PULLREQUESTNUMBER/*:refs/remotes/origin/pull/$Env:SYSTEM_PULLREQUEST_PULLREQUESTNUMBER/*'
+    git config remote.origin.fetch "+refs/pull/$Env:SYSTEM_PULLREQUEST_PULLREQUESTNUMBER/*:refs/remotes/origin/pull/$Env:SYSTEM_PULLREQUEST_PULLREQUESTNUMBER/*"
     git fetch origin
 
     $branch="$SourceBranch".Replace("merge", "head")
