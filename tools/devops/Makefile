@@ -1,33 +1,11 @@
 TOP=../..
 include $(TOP)/Make.config
 
-device-tests-provisioning.csx: device-tests-provisioning.csx.in Makefile $(TOP)/Make.config
-	$(Q_GEN) sed \
-		-e 's#@XCODE_XIP_NAME@#$(notdir $(XCODE_URL))#g' \
-		-e 's#@MONO_PACKAGE@#$(MIN_MONO_URL)#g' \
-		-e 's#@MIN_SHARPIE_URL@#$(MIN_SHARPIE_URL)#g' \
-		-e 's#@INCLUDE_MAC@#$(INCLUDE_MAC)#g' \
-		-e 's#@INCLUDE_IOS@#$(INCLUDE_IOS)#g' \
-		-e 's#@INCLUDE_TVOS@#$(INCLUDE_TVOS)#g' \
-		-e 's#@INCLUDE_WATCH@#$(INCLUDE_WATCH)#g' \
-		$< > $@;
-		@echo "Generated $@:"
-		@cat $@
-
 build-provisioning.csx: build-provisioning.csx.in Makefile $(TOP)/Make.config
 	$(Q_GEN) sed \
 		-e 's#@XCODE_XIP_NAME@#$(notdir $(XCODE_URL))#g' \
 		-e 's#@MONO_PACKAGE@#$(MIN_MONO_URL)#g' \
 		-e 's#@MIN_SHARPIE_URL@#$(MIN_SHARPIE_URL)#g' \
-		$< > $@;
-		@echo "Generated $@:"
-		@cat $@
-
-mac-tests-provisioning.csx: mac-tests-provisioning.csx.in Makefile $(TOP)/Make.config
-	$(Q_GEN) sed \
-		-e 's#@MONO_PACKAGE@#$(MIN_MONO_URL)#g' \
-		-e 's#@INCLUDE_MAC@#$(INCLUDE_MAC)#g' \
-		-e 's#@INCLUDE_IOS@#$(INCLUDE_IOS)#g' \
 		$< > $@;
 		@echo "Generated $@:"
 		@cat $@
@@ -65,4 +43,4 @@ print-variable:
 print-variable-value-to-file:
 	@echo $($(VARIABLE)) > "$(FILE)"
 
-provisioning: build-provisioning.csx device-tests-provisioning.csx provision-xcode.csx
+provisioning: build-provisioning.csx provision-xcode.csx
