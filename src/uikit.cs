@@ -24502,8 +24502,6 @@ namespace UIKit {
 		[Export ("displayUsingSystemFont")]
 		bool DisplayUsingSystemFont { get; set; }
 
-		[Deprecated (PlatformName.iOS, 18, 0, message: "Use the 'LanguageFilter' property instead.")]
-		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use the 'LanguageFilter' property instead.")]
 		[Export ("filteredTraits", ArgumentSemantic.Assign)]
 		UIFontDescriptorSymbolicTraits FilteredTraits { get; set; }
 
