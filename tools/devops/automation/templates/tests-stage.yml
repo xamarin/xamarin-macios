@@ -28,10 +28,6 @@ parameters:
   type: boolean
   default: true
 
-- name: runSamples
-  type: boolean
-  default: false
-  
 - name: isPR
   type: boolean
 
@@ -294,20 +290,3 @@ stages:
       gitHubToken: $(Github.Token)
       xqaCertPass: $(xqa--certificates--password)
       postPipeline: true
-
-- ${{ if eq(parameters.runSamples, true) }}:
-  # TODO: Not the real step
-  - stage: sample_testing
-    displayName: '${{ stageDisplayNamePrefix }}Sample testing'
-    dependsOn:
-    - build_packages
-    condition: and(succeeded(), contains (stageDependencies.build_packages.build.outputs['configuration.RunSampleTests'], 'True'))
-    jobs:
-    - job: sample_testing
-      pool:
-        vmImage: ubuntu-latest
-      steps:
-      # TODO: do parse labels
-      - bash: |
-          echo "Samples!"
-        displayName: 'Sample testing'
