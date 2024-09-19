@@ -11,6 +11,7 @@
     <LangVersion>latest</LangVersion>
     <WarningsAsErrors>Nullable</WarningsAsErrors>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <RollForward>LatestMajor</RollForward>
   </PropertyGroup>
 
   <PropertyGroup Label="Messaging">
