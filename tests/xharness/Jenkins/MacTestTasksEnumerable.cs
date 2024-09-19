@@ -53,7 +53,6 @@ namespace Xharness.Jenkins {
 
 			var exec = new MacExecuteTask (jenkins, build, processManager, crashReportSnapshotFactory) {
 				Ignored = ignored,
-				BCLTest = project.Label == TestLabel.Bcl,
 				TestName = project.Name,
 				IsUnitTest = true,
 			};
