@@ -90,7 +90,7 @@ steps:
       Write-Host "Looking in '$(Build.SourcesDirectory)\\artifacts"
       Get-ChildItem "$(Build.SourcesDirectory)\\artifacts" -Recurse
     } catch {
-      Write-Host "Exception occured: $_"
+      Write-Host "Exception occurred: $_"
     }
   displayName: 'List downloaded artifacts'
   continueOnError: true
@@ -157,22 +157,22 @@ steps:
     try {
       New-Item -Path "D:\Program Files (x86)\Microsoft SDKs\" -Name "NuGetPackages" -ItemType "directory"
     } catch {
-      Write-Host "Exception occured: $_"
+      Write-Host "Exception occurred: $_"
     }
     try {
       New-Item -Path "D:\Program Files (x86)\Microsoft SDKs\" -Name "Shared" -ItemType "directory"
     } catch {
-      Write-Host "Exception occured: $_"
+      Write-Host "Exception occurred: $_"
     }
     try {
       New-Item -Path "D:\Program Files (x86)\Microsoft SDKs\Shared\" -Name "NuGetPackages" -ItemType "directory"
     } catch {
-      Write-Host "Exception occured: $_"
+      Write-Host "Exception occurred: $_"
     }
     try {
       New-Item -Path "D:\Program Files (x86)\Microsoft Visual Studio\Shared\NuGetPackages" -Name "NuGetPackages" -ItemType "directory"
     } catch {
-      Write-Host "Exception occured: $_"
+      Write-Host "Exception occurred: $_"
     }
   displayName: 'Create directories for NuGet'
   continueOnError: true
