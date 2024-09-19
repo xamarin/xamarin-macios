@@ -75,7 +75,6 @@ body:
     attributes:
       label: Relevant log output
       description: Please copy and paste any (short!) relevant log output. Longer logs can be attached as .txt or .zip files.
-      render: shell
   - type: markdown
     attributes:
       value: |
