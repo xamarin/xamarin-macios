@@ -5,6 +5,7 @@ partial class Frameworks {
 	internal readonly HashSet<string> iosframeworks = new HashSet<string> {
 		"Accelerate",
 		"Accessibility",
+		"AccessorySetupKit",
 		"Accounts",
 		"AddressBook",
 		"AddressBookUI",
@@ -23,6 +24,7 @@ partial class Frameworks {
 		"AVRouting",
 		"BackgroundAssets",
 		"BackgroundTasks",
+		"BrowserEngineKit",
 		"BusinessChat",
 		"CallKit",
 		"CarPlay",
@@ -164,6 +166,7 @@ partial class Frameworks {
 		"AVKit",
 		"AVRouting",
 		"BackgroundAssets",
+		"BrowserEngineKit",
 		"BusinessChat",
 		"CallKit",
 		"CFNetwork",
@@ -194,6 +197,7 @@ partial class Frameworks {
 		"CryptoTokenKit",
 		"Darwin",
 		"DeviceCheck",
+		"DeviceDiscoveryExtension",
 		"EventKit",
 		"ExecutionPolicy",
 		"ExtensionKit",
@@ -221,6 +225,7 @@ partial class Frameworks {
 		"MailKit",
 		"MapKit",
 		"MediaAccessibility",
+		"MediaExtension",
 		"MediaLibrary",
 		"MediaPlayer",
 		"MediaToolbox",
@@ -354,6 +359,7 @@ partial class Frameworks {
 		"AVFoundation",
 		"AVKit",
 		"BackgroundTasks",
+		"BrowserEngineKit",
 		"CFNetwork",
 		"Chip",
 		"Cinematic",
@@ -480,6 +486,7 @@ partial class Frameworks {
 		"CoreWlan",
 		"CryptoTokenKit",
 		"DeviceCheck",
+		"DeviceDiscoveryExtension",
 		"EventKit",
 		"EventKitUI",
 		"ExecutionPolicy",
@@ -561,6 +568,7 @@ partial class Frameworks {
 	};
 	bool? _Accelerate;
 	bool? _Accessibility;
+	bool? _AccessorySetupKit;
 	bool? _Accounts;
 	bool? _AddressBook;
 	bool? _AddressBookUI;
@@ -580,6 +588,7 @@ partial class Frameworks {
 	bool? _AVRouting;
 	bool? _BackgroundAssets;
 	bool? _BackgroundTasks;
+	bool? _BrowserEngineKit;
 	bool? _BusinessChat;
 	bool? _CallKit;
 	bool? _CarPlay;
@@ -651,6 +660,7 @@ partial class Frameworks {
 	bool? _MailKit;
 	bool? _MapKit;
 	bool? _MediaAccessibility;
+	bool? _MediaExtension;
 	bool? _MediaLibrary;
 	bool? _MediaPlayer;
 	bool? _MediaSetup;
@@ -731,6 +741,7 @@ partial class Frameworks {
 	bool? _XKit;
 	public bool HaveAccelerate { get { if (!_Accelerate.HasValue) _Accelerate = GetValue ("Accelerate"); return _Accelerate.Value; } }
 	public bool HaveAccessibility { get { if (!_Accessibility.HasValue) _Accessibility = GetValue ("Accessibility"); return _Accessibility.Value; } }
+	public bool HaveAccessorySetupKit { get { if (!_AccessorySetupKit.HasValue) _AccessorySetupKit = GetValue ("AccessorySetupKit"); return _AccessorySetupKit.Value; } }
 	public bool HaveAccounts { get { if (!_Accounts.HasValue) _Accounts = GetValue ("Accounts"); return _Accounts.Value; } }
 	public bool HaveAddressBook { get { if (!_AddressBook.HasValue) _AddressBook = GetValue ("AddressBook"); return _AddressBook.Value; } }
 	public bool HaveAddressBookUI { get { if (!_AddressBookUI.HasValue) _AddressBookUI = GetValue ("AddressBookUI"); return _AddressBookUI.Value; } }
@@ -750,6 +761,7 @@ partial class Frameworks {
 	public bool HaveAVRouting { get { if (!_AVRouting.HasValue) _AVRouting = GetValue ("AVRouting"); return _AVRouting.Value; } }
 	public bool HaveBackgroundAssets { get { if (!_BackgroundAssets.HasValue) _BackgroundAssets = GetValue ("BackgroundAssets"); return _BackgroundAssets.Value; } }
 	public bool HaveBackgroundTasks { get { if (!_BackgroundTasks.HasValue) _BackgroundTasks = GetValue ("BackgroundTasks"); return _BackgroundTasks.Value; } }
+	public bool HaveBrowserEngineKit { get { if (!_BrowserEngineKit.HasValue) _BrowserEngineKit = GetValue ("BrowserEngineKit"); return _BrowserEngineKit.Value; } }
 	public bool HaveBusinessChat { get { if (!_BusinessChat.HasValue) _BusinessChat = GetValue ("BusinessChat"); return _BusinessChat.Value; } }
 	public bool HaveCallKit { get { if (!_CallKit.HasValue) _CallKit = GetValue ("CallKit"); return _CallKit.Value; } }
 	public bool HaveCarPlay { get { if (!_CarPlay.HasValue) _CarPlay = GetValue ("CarPlay"); return _CarPlay.Value; } }
@@ -821,6 +833,7 @@ partial class Frameworks {
 	public bool HaveMailKit { get { if (!_MailKit.HasValue) _MailKit = GetValue ("MailKit"); return _MailKit.Value; } }
 	public bool HaveMapKit { get { if (!_MapKit.HasValue) _MapKit = GetValue ("MapKit"); return _MapKit.Value; } }
 	public bool HaveMediaAccessibility { get { if (!_MediaAccessibility.HasValue) _MediaAccessibility = GetValue ("MediaAccessibility"); return _MediaAccessibility.Value; } }
+	public bool HaveMediaExtension { get { if (!_MediaExtension.HasValue) _MediaExtension = GetValue ("MediaExtension"); return _MediaExtension.Value; } }
 	public bool HaveMediaLibrary { get { if (!_MediaLibrary.HasValue) _MediaLibrary = GetValue ("MediaLibrary"); return _MediaLibrary.Value; } }
 	public bool HaveMediaPlayer { get { if (!_MediaPlayer.HasValue) _MediaPlayer = GetValue ("MediaPlayer"); return _MediaPlayer.Value; } }
 	public bool HaveMediaSetup { get { if (!_MediaSetup.HasValue) _MediaSetup = GetValue ("MediaSetup"); return _MediaSetup.Value; } }

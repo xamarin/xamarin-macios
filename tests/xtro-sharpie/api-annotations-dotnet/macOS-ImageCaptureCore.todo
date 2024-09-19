@@ -3,3 +3,6 @@
 !deprecated-attribute-missing! ICCameraDevice::requestDisableTethering missing a [Deprecated] attribute
 !deprecated-attribute-missing! ICCameraDevice::requestEnableTethering missing a [Deprecated] attribute
 !deprecated-attribute-missing! ICCameraDevice::requestUploadFile:options:uploadDelegate:didUploadSelector:contextInfo: missing a [Deprecated] attribute
+!missing-selector! +ICCameraFile::fingerprintForFileAtURL: not bound
+!missing-selector! ICCameraFile::fingerprint not bound
+!missing-selector! ICCameraFile::requestFingerprintWithCompletion: not bound

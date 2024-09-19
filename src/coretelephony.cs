@@ -228,8 +228,6 @@ namespace CoreTelephony {
 	partial interface CTSubscriber {
 		[Export ("carrierToken")]
 		[NullAllowed]
-		[Deprecated (PlatformName.iOS, 11, 0)]
-		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 		NSData CarrierToken { get; }
 
 		[iOS (12, 1)]
@@ -244,6 +242,14 @@ namespace CoreTelephony {
 		[Wrap ("WeakDelegate")]
 		[NullAllowed]
 		ICTSubscriberDelegate Delegate { get; set; }
+
+		// available since iOS 6 according to the headers
+		[Export ("refreshCarrierToken")]
+		bool RefreshCarrierToken ();
+
+		[iOS (18, 0)]
+		[Export ("SIMInserted")]
+		bool IsSimInserted { [Bind ("isSIMInserted")] get; }
 	}
 
 	/// <summary>Information on a subscriber to a telephone service.</summary>

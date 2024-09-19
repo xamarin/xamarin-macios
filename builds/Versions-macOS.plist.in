@@ -26,6 +26,7 @@
 			<string>14.2</string>
 			<string>14.4</string>
 			<string>14.5</string>
+			<string>15.0</string>
 		</array>
 	</dict>
 	<key>SupportedTargetPlatformVersions</key>
@@ -52,6 +53,7 @@
 			<string>14.2</string>
 			<string>14.4</string>
 			<string>14.5</string>
+			<string>15.0</string>
 		</array>
 	</dict>
 	<key>RecommendedXcodeVersion</key>

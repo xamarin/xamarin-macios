@@ -10,7 +10,6 @@
 !missing-field! kCTFontOpenTypeFeatureTag not bound
 !missing-field! kCTFontOpenTypeFeatureValue not bound
 !missing-field! kCTLanguageAttributeName not bound
-!missing-field! kCTRubyAnnotationAttributeName not bound
 !missing-field! kCTRubyAnnotationScaleToFitAttributeName not bound
 !missing-field! kCTRubyAnnotationSizeFactorAttributeName not bound
 !missing-field! kCTFontOpticalSizeAttribute not bound
