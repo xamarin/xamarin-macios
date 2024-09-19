@@ -161,6 +161,7 @@ package-download/all-package-references.csproj: $(GIT_DIRECTORY)/HEAD $(GIT_DIRE
 .stamp-install-t4: $(TOP)/.config/dotnet-tools.json .stamp-download-dotnet-packages
 	@# https://github.com/dotnet/sdk/issues/16165
 	$(Q) rm -f ~/.dotnet/toolResolverCache/*/dotnet-t4
+	$(Q) rm -f ~/.dotnet/toolResolverCache/*/dotnet-ilrepack
 	$(DOTNET) tool restore
 	$(Q) touch $@
 
