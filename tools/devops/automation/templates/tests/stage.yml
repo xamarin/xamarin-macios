@@ -119,6 +119,13 @@ stages:
     steps:
 
     - bash: |
+        set +x
+        for repo in /Users/builder/azdo/_work/*/s/xamarin-macios; do cd $repo; git config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"; done
+        for repo in /Users/builder/azdo/_work/*/s/xamarin-macios; do cd $repo; git fetch origin; done
+      displayName: 'Fix stuff'
+      name: FixStuff
+
+    - bash: |
         env | sort
         env
       displayName: 'Dump env'
