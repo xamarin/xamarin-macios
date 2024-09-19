@@ -119,8 +119,9 @@ stages:
     steps:
 
     - bash: |
-        env | sort
-        env
+        set +x
+        env -0 | sort -z | tr '\0' '\n'
+        ifconfig | grep 'inet '
       displayName: 'Dump env'
       name: DumpEnv
     - template: build.yml
