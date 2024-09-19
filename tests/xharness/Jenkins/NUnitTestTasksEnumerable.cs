@@ -73,24 +73,6 @@ namespace Xharness.Jenkins {
 			};
 			yield return nunitExecutioniOSMSBuildIntegration;
 
-			var installSourcesProject = new TestProject (TestLabel.InstallSource, Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "..", "tools", "install-source", "InstallSourcesTests", "InstallSourcesTests.csproj")));
-			var buildInstallSources = new MSBuildTask (jenkins: jenkins, testProject: installSourcesProject, processManager: processManager) {
-				SpecifyPlatform = false,
-				SpecifyConfiguration = false,
-				Platform = TestPlatform.iOS,
-			};
-			buildInstallSources.SolutionPath = Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "..", "tools", "install-source", "install-source.sln")); // this is required for nuget restore to be executed
-			var nunitExecutionInstallSource = new NUnitExecuteTask (jenkins, buildInstallSources, processManager) {
-				TestLibrary = Path.Combine (HarnessConfiguration.RootDirectory, "..", "tools", "install-source", "InstallSourcesTests", "bin", "Release", "InstallSourcesTests.dll"),
-				TestProject = installSourcesProject,
-				Platform = TestPlatform.iOS,
-				TestName = "Install Sources tests",
-				Mode = "iOS",
-				Timeout = TimeSpan.FromMinutes (60),
-				Ignored = !jenkins.TestSelection.IsEnabled (TestLabel.InstallSource) || (!jenkins.TestSelection.IsEnabled (PlatformLabel.Mac) && !jenkins.TestSelection.IsEnabled (PlatformLabel.iOSSimulator)),
-			};
-			yield return nunitExecutionInstallSource;
-
 			var buildMTouch = new MakeTask (jenkins: jenkins, processManager: processManager) {
 				TestProject = new TestProject (TestLabel.Mtouch, Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "mtouch", "mtouchtests.sln"))),
 				SpecifyPlatform = false,

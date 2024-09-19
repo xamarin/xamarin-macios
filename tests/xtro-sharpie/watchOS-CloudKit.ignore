@@ -1,6 +1,0 @@
-## some `init` do not work on watchOS (only) and we provide compatibility stubs for them to ease code sharing
-!missing-selector! CKFetchRecordsOperation::init not bound
-!missing-selector! CKFetchRecordZonesOperation::init not bound
-!missing-selector! CKModifyRecordsOperation::init not bound
-!missing-selector! CKModifyRecordZonesOperation::init not bound
-!missing-selector! CKQueryOperation::init not bound
