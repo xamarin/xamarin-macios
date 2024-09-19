@@ -590,5 +590,78 @@ namespace Security {
 			sec_protocol_options_set_tls_pre_shared_key_identity_hint (GetCheckedHandle (), pskIdentityHint.Handle);
 		}
 #endif
+
+#if NET
+#if !COREBUILD
+		[SupportedOSPlatform ("tvos12.0")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[DllImport (Constants.SecurityLibrary)]
+		unsafe static extern void sec_protocol_options_set_challenge_block (sec_protocol_options_t options, BlockLiteral* /* sec_protocol_challenge_t */ challenge_block, IntPtr /* dispatch_queue_t */ challenge_queue);
+
+		/// <summary>Set the challenge callback.</summary>
+		/// <param name="challenge">The callback to call during a challenge.</param>
+		/// <param name="queue">The queue where the callback is called.</param>
+		[SupportedOSPlatform ("tvos12.0")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		public void SetChallengeBlock (SecProtocolChallenge challenge, DispatchQueue queue)
+		{
+			unsafe {
+				delegate* unmanaged<IntPtr, NativeHandle, NativeHandle, void> trampoline = &Trampolines.SDSecProtocolChallenge.Invoke;
+				using var block = new BlockLiteral (trampoline, challenge, typeof (Trampolines.SDSecProtocolChallenge), nameof (Trampolines.SDSecProtocolChallenge.Invoke));
+				sec_protocol_options_set_challenge_block (GetCheckedHandle (), &block, queue.GetNonNullHandle (nameof (queue)));
+			}
+		}
+
+		[SupportedOSPlatform ("tvos12.0")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[DllImport (Constants.SecurityLibrary)]
+		unsafe static extern void sec_protocol_options_set_verify_block (sec_protocol_options_t options, BlockLiteral* /* sec_protocol_verify_t */ verify_block, IntPtr /* dispatch_queue_t */ verify_block_queue);
+
+		/// <summary>Set the verify callback.</summary>
+		/// <param name="verify">The callback to call during verification.</param>
+		/// <param name="queue">The queue where the callback is called.</param>
+		[SupportedOSPlatform ("tvos12.0")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		public void SetVerifyBlock (SecProtocolVerify verify, DispatchQueue queue)
+		{
+			unsafe {
+				delegate* unmanaged<IntPtr, NativeHandle, NativeHandle, NativeHandle, void> trampoline = &Trampolines.SDSecProtocolVerify.Invoke;
+				using var block = new BlockLiteral (trampoline, verify, typeof (Trampolines.SDSecProtocolVerify), nameof (Trampolines.SDSecProtocolVerify.Invoke));
+				sec_protocol_options_set_verify_block (GetCheckedHandle (), &block, queue.GetNonNullHandle (nameof (queue)));
+			}
+		}
+
+		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[DllImport (Constants.SecurityLibrary)]
+		unsafe static extern void sec_protocol_options_set_pre_shared_key_selection_block (sec_protocol_options_t options, BlockLiteral* /* sec_protocol_pre_shared_key_selection_t */ psk_selection_block, IntPtr /* dispatch_queue_t */ psk_selection_queue);
+
+		/// <summary>Set the pre-shared key selection callback.</summary>
+		/// <param name="selection">The callback to call during pre-shared key selection.</param>
+		/// <param name="queue">The queue where the callback is called.</param>
+		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		public void SetPreSharedKeySelectionBlock (SecProtocolPreSharedKeySelection selection, DispatchQueue queue)
+		{
+			unsafe {
+				delegate* unmanaged<IntPtr, NativeHandle, NativeHandle, NativeHandle, void> trampoline = &Trampolines.SDSecProtocolPreSharedKeySelection.Invoke;
+				using var block = new BlockLiteral (trampoline, selection, typeof (Trampolines.SDSecProtocolPreSharedKeySelection), nameof (Trampolines.SDSecProtocolPreSharedKeySelection.Invoke));
+				sec_protocol_options_set_pre_shared_key_selection_block (GetCheckedHandle (), &block, queue.GetNonNullHandle (nameof (queue)));
+			}
+		}
+#endif // !COREBUILD
+#endif // NET
 	}
 }

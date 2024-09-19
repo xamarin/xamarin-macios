@@ -62,11 +62,13 @@ namespace CoreVideo {
 		}
 
 #if NET
+		[ObsoletedOSPlatform ("macos15.0", "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
 		[NoiOS]
 		[NoTV]
 		[NoMacCatalyst]
@@ -76,10 +78,12 @@ namespace CoreVideo {
 
 #if NET
 		[SupportedOSPlatform ("macos")]
+		[ObsoletedOSPlatform ("macos15.0", "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
 		[UnsupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
 		[NoiOS]
 		[NoTV]
 		[NoMacCatalyst]
@@ -111,10 +115,12 @@ namespace CoreVideo {
 
 #if NET
 		[SupportedOSPlatform ("macos")]
+		[ObsoletedOSPlatform ("macos15.0", "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
 		[UnsupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
 		[NoiOS]
 		[NoTV]
 		[NoMacCatalyst]
@@ -124,10 +130,12 @@ namespace CoreVideo {
 
 #if NET
 		[SupportedOSPlatform ("macos")]
+		[ObsoletedOSPlatform ("macos15.0", "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
 		[UnsupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
 		[NoiOS]
 		[NoTV]
 		[NoMacCatalyst]
@@ -165,10 +173,12 @@ namespace CoreVideo {
 
 #if NET
 		[SupportedOSPlatform ("macos")]
+		[ObsoletedOSPlatform ("macos15.0", "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
 		[UnsupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
 		[NoiOS]
 		[NoTV]
 		[NoMacCatalyst]
@@ -178,10 +188,12 @@ namespace CoreVideo {
 
 #if NET
 		[SupportedOSPlatform ("macos")]
+		[ObsoletedOSPlatform ("macos15.0", "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
 		[UnsupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
 		[NoiOS]
 		[NoTV]
 		[NoMacCatalyst]
@@ -210,17 +222,41 @@ namespace CoreVideo {
 		public static CVDisplayLink? CreateFromOpenGLMask (uint mask)
 			=> CreateFromOpenGLMask (mask, out var _);
 
+#if NET
+		[ObsoletedOSPlatform ("macos15.0", "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
+		[SupportedOSPlatform ("macos")]
+#else
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
+#endif
 		[DllImport (Constants.CoreVideoLibrary)]
 		extern static void CVDisplayLinkRetain (IntPtr handle);
 		
+#if NET
+		[ObsoletedOSPlatform ("macos15.0", "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
+		[SupportedOSPlatform ("macos")]
+#else
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
+#endif
 		[DllImport (Constants.CoreVideoLibrary)]
 		extern static void CVDisplayLinkRelease (IntPtr handle);
 		
+#if NET
+		[ObsoletedOSPlatform ("macos15.0", "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
+		[SupportedOSPlatform ("macos")]
+#else
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
+#endif
 		protected internal override void Retain ()
 		{
 			CVDisplayLinkRetain (GetCheckedHandle ());
 		}
 
+#if NET
+		[ObsoletedOSPlatform ("macos15.0", "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
+		[SupportedOSPlatform ("macos")]
+#else
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
+#endif
 		protected internal override void Release ()
 		{
 			CVDisplayLinkRelease (GetCheckedHandle ());
@@ -236,7 +272,20 @@ namespace CoreVideo {
 		}
 
 		[DllImport (Constants.CoreVideoLibrary)]
+#if NET
+		[ObsoletedOSPlatform ("macos15.0", "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
+		[SupportedOSPlatform ("macos")]
+#else
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
+#endif
 		unsafe extern static CVReturn CVDisplayLinkCreateWithActiveCGDisplays (IntPtr* displayLinkOut);
+
+#if NET
+		[ObsoletedOSPlatform ("macos15.0", "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
+		[SupportedOSPlatform ("macos")]
+#else
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
+#endif
 		static IntPtr Create ()
 		{
 			CVReturn ret;
@@ -251,80 +300,217 @@ namespace CoreVideo {
 			return handle;
 
 		}
+
+#if NET
+		[ObsoletedOSPlatform ("macos15.0", "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
+		[SupportedOSPlatform ("macos")]
+#else
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
+#endif
 		public CVDisplayLink ()
 			: base (Create (), true)
 		{
 		}		
 
+#if NET
+		[ObsoletedOSPlatform ("macos15.0", "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
+		[SupportedOSPlatform ("macos")]
+#else
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
+#endif
 		[DllImport (Constants.CoreVideoLibrary)]
 		extern static CVReturn CVDisplayLinkSetCurrentCGDisplay (IntPtr displayLink, int /* CGDirectDisplayID = uint32_t */ displayId);
+
+#if NET
+		[ObsoletedOSPlatform ("macos15.0", "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
+		[SupportedOSPlatform ("macos")]
+#else
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
+#endif
 		public CVReturn SetCurrentDisplay (int displayId)
 		{
 			return CVDisplayLinkSetCurrentCGDisplay (Handle, displayId);
 		}     
 			
+#if NET
+		[ObsoletedOSPlatform ("macos15.0", "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
+		[SupportedOSPlatform ("macos")]
+#else
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
+#endif
 		[DllImport (Constants.CoreVideoLibrary)]
 		extern static CVReturn CVDisplayLinkSetCurrentCGDisplayFromOpenGLContext (IntPtr displayLink, IntPtr cglContext, IntPtr cglPixelFormat);
+
+#if NET
+		[ObsoletedOSPlatform ("macos15.0", "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
+		[SupportedOSPlatform ("macos")]
+#else
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
+#endif
 		public CVReturn SetCurrentDisplay (CGLContext cglContext, CGLPixelFormat cglPixelFormat)
 		{
 			return CVDisplayLinkSetCurrentCGDisplayFromOpenGLContext (Handle, cglContext.Handle, cglPixelFormat.Handle);
 		}     
 
+#if NET
+		[ObsoletedOSPlatform ("macos15.0", "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
+		[SupportedOSPlatform ("macos")]
+#else
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
+#endif
 		[DllImport (Constants.CoreVideoLibrary)]
 		extern static int /* CGDirectDisplayID = uint32_t */ CVDisplayLinkGetCurrentCGDisplay (IntPtr displayLink);
+
+#if NET
+		[ObsoletedOSPlatform ("macos15.0", "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
+		[SupportedOSPlatform ("macos")]
+#else
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
+#endif
 		public int GetCurrentDisplay ()
 		{
 			return CVDisplayLinkGetCurrentCGDisplay (Handle);
 		}
 			
+#if NET
+		[ObsoletedOSPlatform ("macos15.0", "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
+		[SupportedOSPlatform ("macos")]
+#else
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
+#endif
 		[DllImport (Constants.CoreVideoLibrary)]
 		extern static CVReturn CVDisplayLinkStart (IntPtr displayLink);
+
+#if NET
+		[ObsoletedOSPlatform ("macos15.0", "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
+		[SupportedOSPlatform ("macos")]
+#else
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
+#endif
 		public CVReturn Start ()
 		{
 			return CVDisplayLinkStart (Handle);
 		}		     
 			
+#if NET
+		[ObsoletedOSPlatform ("macos15.0", "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
+		[SupportedOSPlatform ("macos")]
+#else
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
+#endif
 		[DllImport (Constants.CoreVideoLibrary)]
 		extern static CVReturn CVDisplayLinkStop (IntPtr displayLink);
+
+#if NET
+		[ObsoletedOSPlatform ("macos15.0", "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
+		[SupportedOSPlatform ("macos")]
+#else
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
+#endif
 		public CVReturn Stop ()
 		{
 			return CVDisplayLinkStop (Handle);
 		}		     
 			
+#if NET
+		[ObsoletedOSPlatform ("macos15.0", "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
+		[SupportedOSPlatform ("macos")]
+#else
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
+#endif
 		[DllImport (Constants.CoreVideoLibrary)]
 		extern static CVTime CVDisplayLinkGetNominalOutputVideoRefreshPeriod (IntPtr displayLink);
+
+#if NET
+		[ObsoletedOSPlatform ("macos15.0", "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
+		[SupportedOSPlatform ("macos")]
+#else
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
+#endif
 		public CVTime NominalOutputVideoRefreshPeriod {
 			get {
 				return CVDisplayLinkGetNominalOutputVideoRefreshPeriod (Handle);
 			}
 		}
 
+#if NET
+		[ObsoletedOSPlatform ("macos15.0", "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
+		[SupportedOSPlatform ("macos")]
+#else
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
+#endif
 		[DllImport (Constants.CoreVideoLibrary)]
 		extern static CVTime CVDisplayLinkGetOutputVideoLatency (IntPtr displayLink);
+
+#if NET
+		[ObsoletedOSPlatform ("macos15.0", "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
+		[SupportedOSPlatform ("macos")]
+#else
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
+#endif
 		public CVTime OutputVideoLatency {
 			get {
 				return CVDisplayLinkGetOutputVideoLatency (Handle);
 			}
 		}
 
+#if NET
+		[ObsoletedOSPlatform ("macos15.0", "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
+		[SupportedOSPlatform ("macos")]
+#else
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
+#endif
 		[DllImport (Constants.CoreVideoLibrary)]
 		extern static double CVDisplayLinkGetActualOutputVideoRefreshPeriod (IntPtr displayLink);
+
+#if NET
+		[ObsoletedOSPlatform ("macos15.0", "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
+		[SupportedOSPlatform ("macos")]
+#else
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
+#endif
 		public double ActualOutputVideoRefreshPeriod {
 			get {
 				return CVDisplayLinkGetActualOutputVideoRefreshPeriod (Handle);
 			}
 		}
 			
+#if NET
+		[ObsoletedOSPlatform ("macos15.0", "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
+		[SupportedOSPlatform ("macos")]
+#else
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
+#endif
 		[DllImport (Constants.CoreVideoLibrary)]
 		extern static byte CVDisplayLinkIsRunning (IntPtr displayLink);
+
+#if NET
+		[ObsoletedOSPlatform ("macos15.0", "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
+		[SupportedOSPlatform ("macos")]
+#else
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
+#endif
 		public bool IsRunning {
 			get {
 				return CVDisplayLinkIsRunning (Handle) != 0;
 			}
 		}
 			
+#if NET
+		[ObsoletedOSPlatform ("macos15.0", "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
+		[SupportedOSPlatform ("macos")]
+#else
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
+#endif
 		[DllImport (Constants.CoreVideoLibrary)]
 		unsafe extern static CVReturn CVDisplayLinkGetCurrentTime (IntPtr displayLink, CVTimeStamp* outTime);
+
+#if NET
+		[ObsoletedOSPlatform ("macos15.0", "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
+		[SupportedOSPlatform ("macos")]
+#else
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
+#endif
 		public CVReturn GetCurrentTime (out CVTimeStamp outTime)
 		{
 			CVReturn ret;
@@ -364,11 +550,21 @@ namespace CoreVideo {
 		}
 
 #if NET
+		[ObsoletedOSPlatform ("macos15.0", "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
+		[SupportedOSPlatform ("macos")]
 		[DllImport (Constants.CoreVideoLibrary)]
 		extern static unsafe CVReturn CVDisplayLinkSetOutputCallback (IntPtr displayLink, delegate* unmanaged<IntPtr, CVTimeStamp*, CVTimeStamp*, CVOptionFlags, CVOptionFlags *, IntPtr, CVReturn> function, IntPtr userInfo);
 #else
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
 		[DllImport (Constants.CoreVideoLibrary)]
 		extern static CVReturn CVDisplayLinkSetOutputCallback (IntPtr displayLink, CVDisplayLinkOutputCallback function, IntPtr userInfo);
+#endif
+
+#if NET
+		[ObsoletedOSPlatform ("macos15.0", "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
+		[SupportedOSPlatform ("macos")]
+#else
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
 #endif
 		public CVReturn SetOutputCallback (DisplayLinkOutputCallback callback)
 		{
@@ -387,10 +583,12 @@ namespace CoreVideo {
 
 #if NET
 		[SupportedOSPlatform ("macos")]
+		[ObsoletedOSPlatform ("macos15.0", "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
 		[UnsupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
 		[NoiOS]
 		[NoTV]
 		[NoMacCatalyst]
@@ -400,10 +598,12 @@ namespace CoreVideo {
 
 #if NET
 		[SupportedOSPlatform ("macos")]
+		[ObsoletedOSPlatform ("macos15.0", "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
 		[UnsupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
 		[NoiOS]
 		[NoTV]
 		[NoMacCatalyst]
@@ -413,10 +613,12 @@ namespace CoreVideo {
 
 #if NET
 		[SupportedOSPlatform ("macos")]
+		[ObsoletedOSPlatform ("macos15.0", "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
 		[UnsupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
 		[NoiOS]
 		[NoTV]
 		[NoMacCatalyst]
@@ -426,10 +628,12 @@ namespace CoreVideo {
 
 #if NET
 		[SupportedOSPlatform ("macos")]
+		[ObsoletedOSPlatform ("macos15.0", "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
 		[UnsupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
 		[NoiOS]
 		[NoTV]
 		[NoMacCatalyst]

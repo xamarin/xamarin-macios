@@ -975,6 +975,11 @@ namespace SceneKit {
 		[Export ("geometryWithSources:elements:")]
 		SCNGeometry Create (SCNGeometrySource [] sources, [NullAllowed] SCNGeometryElement [] elements);
 
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Static]
+		[Export ("geometryWithSources:elements:sourceChannels:")]
+		SCNGeometry Create (SCNGeometrySource [] sources, [NullAllowed] SCNGeometryElement [] elements, [NullAllowed][BindAs (typeof (int []))] NSNumber [] sourceChannels);
+
 		[Export ("geometrySourcesForSemantic:")]
 		SCNGeometrySource [] GetGeometrySourcesForSemantic (string semantic);
 
@@ -1018,6 +1023,11 @@ namespace SceneKit {
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("tessellator", ArgumentSemantic.Retain)]
 		SCNGeometryTessellator Tessellator { get; set; }
+
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("geometrySourceChannels"), NullAllowed]
+		[BindAs (typeof (int []))]
+		NSNumber [] GeometrySourceChannels { get; }
 	}
 
 	/// <include file="../docs/api/SceneKit/SCNGeometrySource.xml" path="/Documentation/Docs[@DocId='T:SceneKit.SCNGeometrySource']/*" />
@@ -1130,6 +1140,11 @@ namespace SceneKit {
 		[Export ("geometryElementWithData:primitiveType:primitiveCount:bytesPerIndex:")]
 		SCNGeometryElement FromData ([NullAllowed] NSData data, SCNGeometryPrimitiveType primitiveType, nint primitiveCount, nint bytesPerIndex);
 
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Static]
+		[Export ("geometryElementWithData:primitiveType:primitiveCount:indicesChannelCount:interleavedIndicesChannels:bytesPerIndex:")]
+		SCNGeometryElement FromData ([NullAllowed] NSData data, SCNGeometryPrimitiveType primitiveType, nint primitiveCount, nint indicesChannelCount, bool interleavedIndicesChannels, nint bytesPerIndex);
+
 		[MacCatalyst (13, 1)]
 		[Export ("primitiveRange", ArgumentSemantic.Assign)]
 		NSRange PrimitiveRange { get; set; }
@@ -1158,6 +1173,20 @@ namespace SceneKit {
 		[Static]
 		[Export ("geometryElementWithBuffer:primitiveType:primitiveCount:bytesPerIndex:")]
 		SCNGeometryElement FromBuffer (IMTLBuffer buffer, SCNGeometryPrimitiveType primitiveType, nint primitiveCount, nint bytesPerIndex);
+
+		[NoWatch] // marked as 11.0 but there's no Metal support on the platform
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Static]
+		[Export ("geometryElementWithBuffer:primitiveType:primitiveCount:indicesChannelCount:interleavedIndicesChannels:bytesPerIndex:")]
+		SCNGeometryElement FromBuffer (IMTLBuffer data, SCNGeometryPrimitiveType primitiveType, nint primitiveCount, nint indicesChannelCount, bool interleavedIndicesChannels, nint bytesPerIndex);
+
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("interleavedIndicesChannels")]
+		bool InterleavedIndicesChannels { [Bind ("hasInterleavedIndicesChannels")] get; }
+
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("indicesChannelCount")]
+		nint IndicesChannelCount { get; }
 	}
 
 #if !WATCH
@@ -1836,6 +1865,25 @@ namespace SceneKit {
 		[MacCatalyst (13, 1)]
 		[Static, Export ("materialPropertyWithContents:")]
 		SCNMaterialProperty Create (NSObject contents);
+
+		[Static]
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0), Watch (10, 0)]
+		[return: NullAllowed]
+		[Export ("precomputedLightingEnvironmentContentsWithURL:error:")]
+		NSObject GetPrecomputedLightingEnvironmentContents (NSUrl url, out NSError error);
+
+		[Static]
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0), Watch (10, 0)]
+		[return: NullAllowed]
+		[Export ("precomputedLightingEnvironmentContentsWithData:error:")]
+		NSObject GetPrecomputedLightingEnvironmentContents (NSData url, out NSError error);
+
+		[Static]
+		[NoWatch] // headers claim watchOS 10.0, but watchOS doesn't have Metal
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[return: NullAllowed]
+		[Export ("precomputedLightingEnvironmentDataForContents:device:error:")]
+		NSData GetPrecomputedLightingEnvironmentData (NSObject contents, [NullAllowed] IMTLDevice device, out NSError error);
 	}
 
 #if !WATCH

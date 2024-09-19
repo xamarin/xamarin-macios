@@ -360,6 +360,50 @@ namespace Accessibility {
 		[Notification]
 		[Field ("AXPrefersHorizontalTextLayoutDidChangeNotification")]
 		NSString HorizontalTextLayoutDidChangeNotification { get; }
+
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Notification]
+		[Field ("AXPrefersNonBlinkingTextInsertionIndicatorDidChangeNotification")]
+		NSString NonBlinkingTextInsertionIndicatorDidChangeNotification { get; }
 	}
 
+	[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface AXRequest : NSCopying, NSSecureCoding {
+		[Static]
+		[Export ("currentRequest"), NullAllowed]
+		AXRequest Current { get; }
+
+		[Export ("technology")]
+		[BindAs (typeof (AXTechnology))]
+		NSString Technology { get; }
+	}
+
+	[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	enum AXTechnology {
+		[Field ("AXTechnologyVoiceOver")]
+		VoiceOver,
+
+		[Field ("AXTechnologySwitchControl")]
+		SwitchControl,
+
+		[Field ("AXTechnologyVoiceControl")]
+		VoiceControl,
+
+		[Field ("AXTechnologyFullKeyboardAccess")]
+		FullKeyboardAccess,
+
+		[Field ("AXTechnologySpeakScreen")]
+		SpeakScreen,
+
+		[Field ("AXTechnologyAutomation")]
+		Automation,
+
+		[Field ("AXTechnologyHoverText")]
+		HoverText,
+
+		[Field ("AXTechnologyZoom")]
+		Zoom,
+	}
 }

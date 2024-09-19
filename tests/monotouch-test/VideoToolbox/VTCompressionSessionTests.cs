@@ -31,6 +31,14 @@ namespace MonoTouchFixtures.VideoToolbox {
 	[Preserve (AllMembers = true)]
 	public class VTCompressionSessionTests {
 		[Test]
+		public void CompressionSessionPropertiesTest ()
+		{
+			TestRuntime.AssertXcodeVersion (15, 0);
+
+			Assert.That (VTCompressionSession.IsStereoMvHevcEncodeSupported (), Is.EqualTo (true).Or.EqualTo (false), "IsStereoMvHevcEncodeSupported");
+		}
+
+		[Test]
 		public void CompressionSessionCreateTest ()
 		{
 			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 8, 0, throwIfOtherPlatform: false);

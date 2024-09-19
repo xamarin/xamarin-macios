@@ -8,6 +8,8 @@
 //
 
 using System;
+using System.IO;
+
 using Foundation;
 using CoreGraphics;
 using ObjCRuntime;
@@ -54,6 +56,43 @@ namespace MonoTouchFixtures.CoreGraphics {
 				c.ResetClip ();
 				Assert.That (original, Is.EqualTo (c.GetClipBoundingBox ()));
 			}
+		}
+
+		[Test]
+		public void EdrHeadroom ()
+		{
+			TestRuntime.AssertXcodeVersion (16, 0);
+
+			using var context = Create ();
+			Assert.AreEqual (0.0f, context.GetEdrTargetHeadroom (), "a");
+			Assert.IsTrue (context.SetEdrTargetHeadroom (2.0f), "b");
+			Assert.AreEqual (2.0f, context.GetEdrTargetHeadroom (), "c");
+			Assert.IsFalse (context.SetEdrTargetHeadroom (-2.0f), "d");
+			Assert.AreEqual (2.0f, context.GetEdrTargetHeadroom (), "e");
+		}
+
+		[Test]
+		public void DrawImageApplyingToneMapping ()
+		{
+			TestRuntime.AssertXcodeVersion (16, 0);
+
+			var imageFile = Path.Combine (NSBundle.MainBundle.ResourcePath, "basn3p08.png");
+			using var dp = new CGDataProvider (imageFile);
+			using var img = CGImage.FromPNG (dp, null, false, CGColorRenderingIntent.Default);
+			var mapping = new CGToneMappingOptions () { Use100nitsHlgOotf = true, ExrToneMappingGammaExposure = 3.14f };
+
+			using (var context = Create ()) {
+				Assert.IsFalse (context.DrawImageApplyingToneMapping (new CGRect (0, 0, 10, 10), img, CGToneMapping.IturRecommended, (NSDictionary?) null), "DrawImageApplyingToneMapping A");
+			}
+
+			using (var context = Create ()) {
+				Assert.IsFalse (context.DrawImageApplyingToneMapping (new CGRect (0, 0, 10, 10), img, CGToneMapping.IturRecommended, mapping), "DrawImageApplyingToneMapping B");
+			}
+
+			using (var context = Create ()) {
+				Assert.IsFalse (context.DrawImageApplyingToneMapping (new CGRect (0, 0, 10, 10), img, CGToneMapping.IturRecommended, mapping.Dictionary), "DrawImageApplyingToneMapping C");
+			}
+
 		}
 	}
 }

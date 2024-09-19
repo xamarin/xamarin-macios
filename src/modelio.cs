@@ -3247,4 +3247,12 @@ namespace ModelIO {
 		nuint _GetDoubleQuaternionArray (IntPtr valuesArray, nuint maxCount);
 	}
 
+	[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[DisableDefaultCtor]
+	[BaseType (typeof (NSObject))]
+	interface MDLUtility {
+		[Static]
+		[Export ("convertToUSDZ:writeToURL:")]
+		void ConvertToUsdz (NSUrl inputUrl, NSUrl outputUrl);
+	}
 }

@@ -488,7 +488,7 @@ namespace CoreMotion {
 	///     
 	///     
 	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/CoreMotion/Reference/CMMotionActivity_class/index.html">Apple documentation for <c>CMMotionActivity</c></related>
-	[NoMac]
+	[Mac (15, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CMLogItem))]
 	[DisableDefaultCtor] // <quote>You do not create instances of this class yourself.</quote>
@@ -789,7 +789,7 @@ namespace CoreMotion {
 	}
 
 	/// <summary>An enumeration whose values specify the confidence in a <see cref="T:CoreMotion.CMMotionActivity" />.</summary>
-	[NoMac]
+	[Mac (15, 0)]
 	[MacCatalyst (13, 1)]
 	// NSInteger -> CMMotionActivity.h
 	[Native]
@@ -859,6 +859,18 @@ namespace CoreMotion {
 
 		[Export ("stopDeviceMotionUpdates")]
 		void StopDeviceMotionUpdates ();
+
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("connectionStatusActive")]
+		bool ConnectionStatusActive { [Bind ("isConnectionStatusActive")] get; }
+
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("startConnectionStatusUpdates")]
+		void StartConnectionStatusUpdates ();
+
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("stopConnectionStatusUpdates")]
+		void StopConnectionStatusUpdates ();
 	}
 
 	interface ICMHeadphoneMotionManagerDelegate { }
@@ -1236,5 +1248,50 @@ namespace CoreMotion {
 
 		[NullAllowed, Export ("date")]
 		NSDate Date { get; }
+	}
+
+	[Native]
+	[Watch (11, 0), NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	enum CMHeadphoneActivityStatus : long {
+		Disconnected = 0,
+		Connected,
+	}
+
+	[Watch (11, 0), NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	delegate void CMHeadphoneActivityStatusHandler (CMHeadphoneActivityStatus status, [NullAllowed] NSError error);
+
+	[Watch (11, 0), NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	delegate void CMHeadphoneActivityHandler ([NullAllowed] CMMotionActivity activity, [NullAllowed] NSError error);
+
+	[Watch (11, 0), NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[BaseType (typeof (NSObject))]
+	interface CMHeadphoneActivityManager {
+		[Static]
+		[Export ("authorizationStatus")]
+		CMAuthorizationStatus AuthorizationStatus { get; }
+
+		[Export ("isActivityAvailable")]
+		bool IsActivityAvailable { get; }
+
+		[Export ("isActivityActive")]
+		bool IsActivityActive { get; }
+
+		[Export ("isStatusAvailable")]
+		bool IsStatusAvailable { get; }
+
+		[Export ("isStatusActive")]
+		bool IsStatusActive { get; }
+
+		[Export ("startActivityUpdatesToQueue:withHandler:")]
+		void StartActivityUpdates (NSOperationQueue queue, CMHeadphoneActivityHandler handler);
+
+		[Export ("stopActivityUpdates")]
+		void StopActivityUpdates ();
+
+		[Export ("startStatusUpdatesToQueue:withHandler:")]
+		void StartStatusUpdates (NSOperationQueue queue, CMHeadphoneActivityStatusHandler handler);
+
+		[Export ("stopStatusUpdates")]
+		void StopStatusUpdates ();
 	}
 }

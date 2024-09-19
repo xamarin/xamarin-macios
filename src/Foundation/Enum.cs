@@ -244,6 +244,7 @@ namespace Foundation {
 		YearForWeakOfYear = (1 << 14),
 
 		Nanosecond = (1 << 15),
+		DayOfYear = (1 << 16),
 
 		Calendar = (1 << 20),
 		TimeZone = (1 << 21),

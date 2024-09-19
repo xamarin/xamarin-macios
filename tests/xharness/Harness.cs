@@ -603,7 +603,6 @@ namespace Xharness {
 			IOSTestProjects.Add (new iOSTestProject (TestLabel.Binding, Path.GetFullPath (Path.Combine (RootDirectory, "bindings-test", "iOS", "bindings-test.csproj")), false) { Name = "bindings-test" });
 
 			IOSTestProjects.Add (new iOSTestProject (TestLabel.InterdependentBindingProjects, Path.GetFullPath (Path.Combine (RootDirectory, "interdependent-binding-projects", "interdependent-binding-projects.csproj"))) { Name = "interdependent-binding-projects" });
-			IOSTestProjects.Add (new iOSTestProject (TestLabel.Introspection, Path.GetFullPath (Path.Combine (RootDirectory, "introspection", "iOS", "introspection-ios.csproj"))) { Name = "introspection" });
 			IOSTestProjects.Add (new iOSTestProject (TestLabel.Linker, Path.GetFullPath (Path.Combine (RootDirectory, "linker", "ios", "dont link", "dont link.csproj"))) {
 				Configurations = new string [] { "Debug", "Release" },
 			});

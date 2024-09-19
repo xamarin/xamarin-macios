@@ -331,6 +331,14 @@ namespace PdfKit {
 		FormFieldEntry = (1uL << 7),
 	}
 
+	[Native]
+	[iOS (18, 0), Mac (15, 0), MacCatalyst (18, 0)]
+	enum PdfSelectionGranularity : ulong {
+		Character,
+		Word,
+		Line,
+	}
+
 	[MacCatalyst (13, 1)]
 	[Static]
 	interface PdfAppearanceCharacteristicsKeys {
@@ -1494,6 +1502,11 @@ namespace PdfKit {
 #pragma warning disable 0618 // 'PdfPrintScalingMode' is obsolete: 'This type is not available on iOS.'
 		NSPrintOperation GetPrintOperation ([NullAllowed] NSPrintInfo printInfo, PdfPrintScalingMode scaleMode, bool doRotate);
 #pragma warning restore
+
+		[Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("selectionFromPage:atPoint:toPage:atPoint:withGranularity:")]
+		[return: NullAllowed]
+		PdfSelection GetSelection (PdfPage startPage, CGPoint startPoint, PdfPage endPage, CGPoint endPoint, PdfSelectionGranularity granularity);
 	}
 
 	/// <summary>Interface representing the required methods (if any) of the protocol <see cref="T:PdfKit.PdfDocumentDelegate" />.</summary>
@@ -2134,6 +2147,9 @@ namespace PdfKit {
 		[Export ("visiblePages")]
 		PdfPage [] VisiblePages { get; }
 
+		[Deprecated (PlatformName.MacOSX, 15, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0)]
+		[Deprecated (PlatformName.iOS, 18, 0)]
 		[Export ("enableDataDetectors")]
 		bool EnableDataDetectors { get; set; }
 

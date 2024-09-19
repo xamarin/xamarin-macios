@@ -108,6 +108,7 @@ namespace CoreMedia {
 		Cinepak = 0x63766964,
 		JPEG = 0x6a706567,
 		JPEG_OpenDML = 0x646d6231,
+		JPEG_XL = ('j' << 24) + ('x' << 16) + ('l' << 8) + 'c', // 'jxlc'
 		SorensonVideo = 0x53565131,
 		SorensonVideo3 = 0x53565133,
 		H263 = 0x68323633,

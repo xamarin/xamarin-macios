@@ -82,12 +82,21 @@ namespace ShazamKit {
 	[iOS (15, 0), Watch (8, 0), TV (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (SHCatalog))]
 	interface SHCustomCatalog {
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("initWithDataRepresentation:error:")]
+		NativeHandle Constructor (NSData data, out NSError error);
+
 		[Export ("addReferenceSignature:representingMediaItems:error:")]
 		bool Add (SHSignature signature, SHMediaItem [] mediaItems, [NullAllowed] out NSError error);
 
 		[Export ("addCustomCatalogFromURL:error:")]
 		bool Add (NSUrl url, [NullAllowed] out NSError error);
 
+		[Deprecated (PlatformName.MacOSX, 14, 0, message: "Use 'DataRepresentation' instead.")]
+		[Deprecated (PlatformName.iOS, 17, 0, message: "Use 'DataRepresentation' instead.")]
+		[Deprecated (PlatformName.TvOS, 17, 0, message: "Use 'DataRepresentation' instead.")]
+		[Deprecated (PlatformName.WatchOS, 10, 0, message: "Use 'DataRepresentation' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 17, 0, message: "Use 'DataRepresentation' instead.")]
 		[Export ("writeToURL:error:")]
 		bool Write (NSUrl url, [NullAllowed] out NSError error);
 
@@ -95,6 +104,10 @@ namespace ShazamKit {
 		[Export ("new")]
 		[return: Release]
 		SHCustomCatalog Create ();
+
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("dataRepresentation", ArgumentSemantic.Strong)]
+		NSData DataRepresentation { get; }
 	}
 
 	[iOS (15, 0), Watch (8, 0), TV (15, 0), MacCatalyst (15, 0)]
