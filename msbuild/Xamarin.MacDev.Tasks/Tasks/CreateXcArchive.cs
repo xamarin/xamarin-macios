@@ -1,7 +1,10 @@
 using System;
+using System.IO;
 using System.Collections.Generic;
 
 using Microsoft.Build.Framework;
+
+using Xamarin.Localization.MSBuild;
 
 namespace Xamarin.MacDev.Tasks {
 	public class CreateXcArchive : XcodeBuildTask {
@@ -70,6 +73,16 @@ namespace Xamarin.MacDev.Tasks {
 			args.AddRange (archive_args);
 
 			return args;
+		}
+
+		public override bool Execute ()
+		{
+			if (!Directory.Exists (ProjectPath)) {
+				Log.LogError (MSBStrings.XcodeBuild_InvalidItem, ProjectPath);
+				return false;
+			}
+
+			return base.Execute ();
 		}
 
 	}

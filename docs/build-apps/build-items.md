@@ -12,7 +12,7 @@ application or library projects are built.
 ## XcodeProject
 
 `<XcodeProject>` can be used to build and consume the outputs
-of Xcode library or framework projects created in Xcode or elsewehere.
+of Xcode framework projects created in Xcode or elsewehere.
 
 The `Include` metadata should point to the path of the XCODEPROJ file to be built.
 
@@ -24,7 +24,7 @@ The `Include` metadata should point to the path of the XCODEPROJ file to be buil
 
 The following MSBuild metadata are supported:
 
-- `%(SchemeName)`: The name of the build scheme that should be used to build the project.
+- `%(SchemeName)`: The name of the build scheme or target that should be used to build the project.
 
 - `%(Configuration)`: The name of the configuration to use to build the project.
     The default value is `Release`.

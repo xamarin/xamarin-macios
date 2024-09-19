@@ -1,4 +1,6 @@
 using System;
+using System.Linq;
+using System.Text;
 
 using NUnit.Framework;
 
@@ -7,31 +9,7 @@ using Microsoft.Build.Logging.StructuredLogger;
 namespace Xamarin.Tests {
 	public class XcodeProjectTests : TestBaseClass {
 
-		void AddTemplateApiDefinition (string directory)
-		{
-			var apiDefinitions = @"
-using Foundation;
-namespace XcProjBinding;
-[BaseType (typeof(NSObject))]
-interface SwiftBindTest {
-	[Static,Export (""getStringWithMyString:"")]
-	string GetString (string myString);
-}";
-			var file = Path.Combine (directory, "ApiDefinition.cs");
-			File.WriteAllText (file, apiDefinitions);
-		}
-
-		void AddClassFile (string name, string content, string directory)
-		{
-			string classContent = $@"
-public class {name}
-{{
-	{content}
-}}
-";
-			var file = Path.Combine (directory, $"{name}.cs");
-			File.WriteAllText (file, classContent);
-		}
+		readonly string XCodeTestProjectDir = Path.Combine (Configuration.SourceRoot, "tests", "common", "TestProjects", "Xcode");
 
 		void AddXcodeProjectItem (string project, string path, Dictionary<string, string> metadata)
 		{
@@ -47,6 +25,18 @@ public class {name}
 			File.WriteAllText (project, newProjContent);
 		}
 
+		void AssertXcFrameworkOutput (ApplePlatform platform, string testDir, string xcodeProjName, string config = "Debug")
+		{
+			if (platform == ApplePlatform.iOS || platform == ApplePlatform.TVOS) {
+				var expectedXcodeFxOutput = Path.Combine (testDir, "bin", config, platform.ToFramework (), $"{TestName}.resources", $"{xcodeProjName}{platform.AsString ()}.xcframework");
+				Assert.That (expectedXcodeFxOutput, Does.Exist, $"Expected xcframework output '{expectedXcodeFxOutput}' did not exist.");
+			} else {
+				var resourcesZip = Path.Combine (testDir, "bin", config, platform.ToFramework (), $"{TestName}.resources.zip");
+				Assert.Contains ($"{xcodeProjName}{platform.AsString ()}.xcframework/Info.plist", ZipHelpers.List (resourcesZip),
+					$"Expected xcframework output was not found in '{resourcesZip}'.");
+			}
+		}
+
 
 		[Test]
 		[TestCase ("Debug")]
@@ -57,11 +47,11 @@ public class {name}
 			Configuration.IgnoreIfIgnoredPlatform (platform);
 
 			var testDir = Cache.CreateTemporaryDirectory (TestName);
-			DotNet.AssertNew (testDir, "ios");
 			var proj = Path.Combine (testDir, $"{TestName}.csproj");
+			DotNet.AssertNew (testDir, "ios");
 
-			var xcodeProjName = "XcodeFxTemplate";
-			var xcodeProjDirSrc = Path.Combine (Configuration.SourceRoot, "tests", "common", "TestProjects", "Templates", xcodeProjName);
+			var xcodeProjName = "TemplateFx";
+			var xcodeProjDirSrc = Path.Combine (XCodeTestProjectDir, xcodeProjName);
 			var xcodeProjDirDest = Cache.CreateTemporaryDirectory ($"{TestName}XcProj");
 			FileHelpers.CopyDirectory (xcodeProjDirSrc, xcodeProjDirDest);
 			AddXcodeProjectItem (proj, Path.Combine (xcodeProjDirDest, $"{xcodeProjName}.xcodeproj"),
@@ -87,14 +77,13 @@ public class {name}
 			Configuration.IgnoreIfIgnoredPlatform (platform);
 
 			var testDir = Cache.CreateTemporaryDirectory (TestName);
-			DotNet.AssertNew (testDir, "iosbinding");
 			var proj = Path.Combine (testDir, $"{TestName}.csproj");
+			DotNet.AssertNew (testDir, "iosbinding");
 
-			var xcodeProjName = "XcodeFxTemplate";
-			var xcodeProjDirSrc = Path.Combine (Configuration.SourceRoot, "tests", "common", "TestProjects", "Templates", xcodeProjName);
+			var xcodeProjName = "TemplateFx";
+			var xcodeProjDirSrc = Path.Combine (XCodeTestProjectDir, xcodeProjName);
 			var xcodeProjDirDest = Cache.CreateTemporaryDirectory ($"{TestName}XcProj");
 			FileHelpers.CopyDirectory (xcodeProjDirSrc, xcodeProjDirDest);
-
 			AddXcodeProjectItem (proj, Path.Combine (xcodeProjDirDest, $"{xcodeProjName}.xcodeproj"),
 				new Dictionary<string, string> {
 					{ "Configuration", fxConfig },
@@ -120,11 +109,11 @@ public class {name}
 			Configuration.IgnoreIfIgnoredPlatform (platform);
 
 			var testDir = Cache.CreateTemporaryDirectory (TestName);
-			DotNet.AssertNew (testDir, $"{platform.AsString ().ToLower ()}binding");
 			var proj = Path.Combine (testDir, $"{TestName}.csproj");
+			DotNet.AssertNew (testDir, $"{platform.AsString ().ToLower ()}binding");
 
-			var xcodeProjName = "XcodeFxTemplate";
-			var xcodeProjDirSrc = Path.Combine (Configuration.SourceRoot, "tests", "common", "TestProjects", "Templates", xcodeProjName);
+			var xcodeProjName = "TemplateFx";
+			var xcodeProjDirSrc = Path.Combine (XCodeTestProjectDir, xcodeProjName);
 			var xcodeProjDirDest = Cache.CreateTemporaryDirectory ($"{TestName}XcProj");
 			FileHelpers.CopyDirectory (xcodeProjDirSrc, xcodeProjDirDest);
 			AddXcodeProjectItem (proj, Path.Combine (xcodeProjDirDest, $"{xcodeProjName}.xcodeproj"),
@@ -132,22 +121,30 @@ public class {name}
 					{ "SchemeName", xcodeProjName },
 				});
 
+			// Add API definition to expose the API from the xcodeproj
+			var apiDefinition = @"
+using Foundation;
+namespace XcProjBinding;
+[BaseType (typeof(NSObject))]
+interface SwiftBindTest {
+	[Static,Export (""getStringWithMyString:"")]
+	string GetString (string myString);
+}";
+			File.WriteAllText (Path.Combine (testDir, "ApiDefinition.cs"), apiDefinition);
+
 			// Add class file to ensure ensure the xcframework from our xcodeproj was built and bound
-			AddClassFile ("Binding", "public void BindTest () { Console.WriteLine (XcProjBinding.SwiftBindTest.GetString(\"test\")); }", testDir);
-			AddTemplateApiDefinition (testDir);
+			string classContent = @"
+public class Binding
+{
+	public void BindTest () { Console.WriteLine (XcProjBinding.SwiftBindTest.GetString(""test"")); }
+}
+";
+			File.WriteAllText (Path.Combine (testDir, "Binding.cs"), classContent);
 
 			var rv = DotNet.AssertBuild (proj);
 			var warnings = BinLog.GetBuildLogWarnings (rv.BinLogPath).Select (v => v.Message);
 			Assert.That (warnings, Is.Empty, $"Build warnings:\n\t{string.Join ("\n\t", warnings)}");
-
-			if (platform == ApplePlatform.iOS || platform == ApplePlatform.TVOS) {
-				var expectedXcodeFxOutput = Path.Combine (testDir, "bin", "Debug", platform.ToFramework (), $"{TestName}.resources", $"{xcodeProjName}{platform.AsString ()}.xcframework");
-				Assert.That (expectedXcodeFxOutput, Does.Exist, $"Expected xcframework output '{expectedXcodeFxOutput}' did not exist.");
-			} else {
-				var resourcesZip = Path.Combine (testDir, "bin", "Debug", platform.ToFramework (), $"{TestName}.resources.zip");
-				Assert.Contains ($"{xcodeProjName}{platform.AsString ()}.xcframework/Info.plist", ZipHelpers.List (resourcesZip),
-					$"Expected xcframework output was not found in '{resourcesZip}'.");
-			}
+			AssertXcFrameworkOutput (platform, testDir, xcodeProjName);
 		}
 
 		[Test]
@@ -160,11 +157,11 @@ public class {name}
 			Configuration.IgnoreIfIgnoredPlatform (platform);
 
 			var testDir = Cache.CreateTemporaryDirectory (TestName);
-			DotNet.AssertNew (testDir, $"{platform.AsString ().ToLower ()}binding");
 			var proj = Path.Combine (testDir, $"{TestName}.csproj");
+			DotNet.AssertNew (testDir, $"{platform.AsString ().ToLower ()}binding");
 
-			var xcodeProjName = "XcodeFxTemplate";
-			var xcodeProjDirSrc = Path.Combine (Configuration.SourceRoot, "tests", "common", "TestProjects", "Templates", xcodeProjName);
+			var xcodeProjName = "TemplateFx";
+			var xcodeProjDirSrc = Path.Combine (XCodeTestProjectDir, xcodeProjName);
 			var xcodeProjDirDest = Cache.CreateTemporaryDirectory ($"{TestName}XcProj");
 			FileHelpers.CopyDirectory (xcodeProjDirSrc, xcodeProjDirDest);
 			AddXcodeProjectItem (proj, Path.Combine (xcodeProjDirDest, $"{xcodeProjName}.xcodeproj"),
@@ -195,11 +192,11 @@ public class {name}
 			Configuration.IgnoreIfIgnoredPlatform (platform);
 
 			var testDir = Cache.CreateTemporaryDirectory (TestName);
-			DotNet.AssertNew (testDir, $"{platform.AsString ().ToLower ()}binding");
 			var proj = Path.Combine (testDir, $"{TestName}.csproj");
+			DotNet.AssertNew (testDir, $"{platform.AsString ().ToLower ()}binding");
 
-			var xcodeProjName = "XcodeFxTemplate";
-			var xcodeProjDirSrc = Path.Combine (Configuration.SourceRoot, "tests", "common", "TestProjects", "Templates", xcodeProjName);
+			var xcodeProjName = "TemplateFx";
+			var xcodeProjDirSrc = Path.Combine (XCodeTestProjectDir, xcodeProjName);
 			var xcodeProjDirDest = Cache.CreateTemporaryDirectory ($"{TestName}XcProj");
 			var xcodeProjPath = Path.Combine (xcodeProjDirDest, $"{xcodeProjName}.xcodeproj");
 			FileHelpers.CopyDirectory (xcodeProjDirSrc, xcodeProjDirDest);
@@ -241,6 +238,29 @@ public class {name}
 		{
 			var platform = ApplePlatform.iOS;
 			Configuration.IgnoreIfIgnoredPlatform (platform);
+
+			var testDir = Cache.CreateTemporaryDirectory (TestName);
+			var proj = Path.Combine (testDir, $"{TestName}.csproj");
+			DotNet.AssertNew (testDir, "iosbinding");
+
+			var xcodeProjName = "TwoSchemeFx";
+			var xcodeProjDirSrc = Path.Combine (XCodeTestProjectDir, xcodeProjName);
+			var xcodeProjDirDest = Cache.CreateTemporaryDirectory ($"{TestName}XcProj");
+			FileHelpers.CopyDirectory (xcodeProjDirSrc, xcodeProjDirDest);
+			AddXcodeProjectItem (proj, Path.Combine (xcodeProjDirDest, $"{xcodeProjName}.xcodeproj"),
+				new Dictionary<string, string> {
+					{ "SchemeName", xcodeProjName },
+				});
+
+			var secondSchemeName = "iOSFx";
+			AddXcodeProjectItem (proj, Path.Combine (xcodeProjDirDest, $"{xcodeProjName}.xcodeproj"),
+				new Dictionary<string, string> {
+					{ "SchemeName", secondSchemeName },
+				});
+
+			DotNet.AssertBuild (proj);
+			AssertXcFrameworkOutput (platform, testDir, xcodeProjName);
+			AssertXcFrameworkOutput (platform, testDir, secondSchemeName);
 		}
 
 		[Test]
@@ -248,11 +268,60 @@ public class {name}
 		{
 			var platform = ApplePlatform.iOS;
 			Configuration.IgnoreIfIgnoredPlatform (platform);
+
+			var testDir = Cache.CreateTemporaryDirectory (TestName);
+			var proj = Path.Combine (testDir, $"{TestName}.csproj");
+			DotNet.AssertNew (testDir, "iosbinding");
+
+			var xcodeProjName = "TemplateFx";
+			var xcodeProjDirSrc = Path.Combine (XCodeTestProjectDir, xcodeProjName);
+			var xcodeProjDirDest = Cache.CreateTemporaryDirectory ($"{TestName}XcProj");
+			FileHelpers.CopyDirectory (xcodeProjDirSrc, xcodeProjDirDest);
+			AddXcodeProjectItem (proj, Path.Combine (xcodeProjDirDest, $"{xcodeProjName}.xcodeproj"),
+				new Dictionary<string, string> {
+					{ "SchemeName", xcodeProjName },
+				});
+
+			var xcodeProjName2 = "TwoSchemeFx";
+			var xcodeProjDirSrc2 = Path.Combine (XCodeTestProjectDir, xcodeProjName2);
+			var xcodeProjDirDest2 = Cache.CreateTemporaryDirectory ($"{TestName}XcProjTwo");
+			FileHelpers.CopyDirectory (xcodeProjDirSrc2, xcodeProjDirDest2);
+			AddXcodeProjectItem (proj, Path.Combine (xcodeProjDirDest2, $"{xcodeProjName2}.xcodeproj"),
+				new Dictionary<string, string> {
+					{ "SchemeName", xcodeProjName2 },
+				});
+
+			DotNet.AssertBuild (proj);
+			AssertXcFrameworkOutput (platform, testDir, xcodeProjName);
+			AssertXcFrameworkOutput (platform, testDir, xcodeProjName2);
 		}
 
 		[Test]
 		public void BuildMultiTargeting ()
 		{
+			var testDir = Cache.CreateTemporaryDirectory (TestName);
+			var proj = Path.Combine (testDir, $"{TestName}.csproj");
+			DotNet.AssertNew (testDir, "iosbinding");
+
+			var enabledPlatforms = Configuration.GetIncludedPlatforms (dotnet: true);
+			var tfxs = string.Join (";", enabledPlatforms.Select (p => p.ToFramework ()));
+			var existingProjContent = File.ReadAllText (proj);
+			var newProjContent = existingProjContent.Replace ($"<TargetFramework>{ApplePlatform.iOS.ToFramework ()}</TargetFramework>", $"<TargetFrameworks>{tfxs}</TargetFrameworks>");
+			File.WriteAllText (proj, newProjContent);
+
+			var xcodeProjName = "TemplateFx";
+			var xcodeProjDirSrc = Path.Combine (XCodeTestProjectDir, xcodeProjName);
+			var xcodeProjDirDest = Cache.CreateTemporaryDirectory ($"{TestName}XcProj");
+			FileHelpers.CopyDirectory (xcodeProjDirSrc, xcodeProjDirDest);
+			AddXcodeProjectItem (proj, Path.Combine (xcodeProjDirDest, $"{xcodeProjName}.xcodeproj"),
+				new Dictionary<string, string> {
+					{ "SchemeName", xcodeProjName },
+				});
+
+			DotNet.AssertBuild (proj);
+			foreach (var platform in enabledPlatforms) {
+				AssertXcFrameworkOutput (platform, testDir, xcodeProjName);
+			}
 		}
 
 		[Test]
@@ -262,18 +331,20 @@ public class {name}
 			Configuration.IgnoreIfIgnoredPlatform (platform);
 
 			var testDir = Cache.CreateTemporaryDirectory (TestName);
-			DotNet.AssertNew (testDir, "ioslib");
 			var proj = Path.Combine (testDir, $"{TestName}.csproj");
+			DotNet.AssertNew (testDir, "ioslib");
 
-			var xcodeProjName = "XcodeFxTemplate";
-			AddXcodeProjectItem (proj, Path.Combine (testDir, "invalid", "path", $"{xcodeProjName}.xcodeproj"),
+			var xcodeProjName = "TemplateFx";
+			var invalidXcodeProjPath = Path.Combine (testDir, "invalid", "path", $"{xcodeProjName}.xcodeproj");
+			AddXcodeProjectItem (proj, invalidXcodeProjPath,
 				new Dictionary<string, string> {
 					{ "SchemeName", xcodeProjName },
 				});
 
 			var rv = DotNet.AssertBuildFailure (proj);
-			var errors = BinLog.GetBuildLogErrors (rv.BinLogPath).ToArray ();
-			AssertErrorMessages (errors, "TODO: invalid item");
+			var errors = BinLog.GetBuildLogErrors (rv.BinLogPath).Select (e => e.Message).ToArray ();
+			var expectedError = $"The Xcode project item: '{invalidXcodeProjPath}' could not be found. Please update the 'Include' value to a path containing a valid '.xcodeproj' file.";
+			Assert.Contains (expectedError, errors, $"Expected error message '{expectedError}' was not found in build log.");
 		}
 
 		[Test]
@@ -283,22 +354,24 @@ public class {name}
 			Configuration.IgnoreIfIgnoredPlatform (platform);
 
 			var testDir = Cache.CreateTemporaryDirectory (TestName);
-			DotNet.AssertNew (testDir, "ioslib");
 			var proj = Path.Combine (testDir, $"{TestName}.csproj");
+			DotNet.AssertNew (testDir, "ioslib");
 
-			var xcodeProjName = "XcodeFxTemplate";
-			var xcodeProjDirSrc = Path.Combine (Configuration.SourceRoot, "tests", "common", "TestProjects", "Templates", xcodeProjName);
+			var xcodeProjName = "TemplateFx";
+			var invaldSchemeName = "InvalidScheme";
+			var xcodeProjDirSrc = Path.Combine (XCodeTestProjectDir, xcodeProjName);
 			var xcodeProjDirDest = Cache.CreateTemporaryDirectory ($"{TestName}XcProj");
 			FileHelpers.CopyDirectory (xcodeProjDirSrc, xcodeProjDirDest);
 
 			AddXcodeProjectItem (proj, Path.Combine (xcodeProjDirDest, $"{xcodeProjName}.xcodeproj"),
 				new Dictionary<string, string> {
-					{ "SchemeName", "invalid" },
+					{ "SchemeName", invaldSchemeName },
 				});
 
 			var rv = DotNet.AssertBuildFailure (proj);
-			var errors = BinLog.GetBuildLogErrors (rv.BinLogPath).ToArray ();
-			AssertErrorMessages (errors, "TODO: invalid scheme");
+			var expectedErrorContent = $"xcodebuild: error: The project named \"{xcodeProjName}\" does not contain a scheme named \"{invaldSchemeName}\".";
+			var doesContainErrorContent = BinLog.GetBuildLogErrors (rv.BinLogPath).Select (e => e.Message).Any (e => e is not null && e.Contains (expectedErrorContent));
+			Assert.IsTrue (doesContainErrorContent, $"Expected error content '{expectedErrorContent}' was not found in any error message.");
 		}
 
 	}

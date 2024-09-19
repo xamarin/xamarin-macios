@@ -1576,4 +1576,20 @@
         <comment>RuntimeIdentifier: don't translate (it's the name of a MSBuild property)</comment>
     </data>
 
+    <data name="XcodeBuild_CreateNativeRef" xml:space="preserve">
+        <value>Adding reference to Xcode project output: '{0}'. The '%(CreateNativeReference)' metadata can be set to 'false' to opt out of this behavior.</value>
+        <comment>
+            The following are literal names and should not be translated: Xcode, '%(CreateNativeReference)', metadata, 'false'
+            {0}: The path to the XCFramework output that will be referenced
+        </comment>
+    </data>
+
+    <data name="XcodeBuild_InvalidItem" xml:space="preserve">
+        <value>The Xcode project item: '{0}' could not be found. Please update the 'Include' value to a path containing a valid '.xcodeproj' file.</value>
+        <comment>
+            The following are literal names and should not be translated: Xcode, 'Include', '.xcodeproj'
+            {0}: The path to the XCFramework output that will be referenced
+        </comment>
+    </data>
+
 </root>

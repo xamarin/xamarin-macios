@@ -2,15 +2,15 @@
 ***********************************************************************************************
 Microsoft.MaciOS.Sdk.Xcode.targets
 
-This file contains MSBuild targets that support building Xcode framework and library projects.
+This file contains MSBuild targets that support building Xcode framework projects.
 
 ***********************************************************************************************
 -->
 
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
-  <UsingTask TaskName="CreateXcArchive"        AssemblyFile="$(_XamarinTaskAssembly)"/>
-  <UsingTask TaskName="CreateXcFramework"      AssemblyFile="$(_XamarinTaskAssembly)"/>
+  <UsingTask TaskName="Xamarin.MacDev.Tasks.CreateXcArchive"        AssemblyFile="$(_XamarinTaskAssembly)"/>
+  <UsingTask TaskName="Xamarin.MacDev.Tasks.CreateXcFramework"      AssemblyFile="$(_XamarinTaskAssembly)"/>
 
   <PropertyGroup>
     <_XcodeProjectDefaultOutputPathRoot>$(MSBuildProjectDirectory)/$(IntermediateOutputPath)xcode/</_XcodeProjectDefaultOutputPathRoot>
@@ -104,13 +104,8 @@ This file contains MSBuild targets that support building Xcode framework and lib
     </CreateXcArchive>
 
     <!-- Create XCFRAMEWORK for $(TargetPlatformIdentifier) -->
-    <ItemGroup>
-      <_XcArchiveOutputs Include="%(XcodeProject.OutputPath)archives/%(XcodeProject.SchemeName)$(TargetPlatformIdentifier).xcarchive" />
-      <_XcArchiveOutputs Include="%(XcodeProject.OutputPath)archives/%(XcodeProject.SchemeName)$(TargetPlatformIdentifier)Simulator.xcarchive"
-          Condition=" Exists('%(XcodeProject.OutputPath)archives/%(XcodeProject.SchemeName)$(TargetPlatformIdentifier)Simulator.xcarchive') "/>
-    </ItemGroup>
     <CreateXcFramework
-        FrameworkArchives="@(_XcArchiveOutputs)"
+        XcArchivePath="%(XcodeProject.OutputPath)archives"
         FrameworkName="%(XcodeProject.SchemeName).framework"
         OutputPath="%(XcodeProject.OutputPath)xcframeworks/%(XcodeProject.SchemeName)$(TargetPlatformIdentifier).xcframework"
         SdkDevPath="$(_SdkDevPath)"
@@ -127,7 +122,10 @@ This file contains MSBuild targets that support building Xcode framework and lib
           Visible="%(Visible)" />
     </ItemGroup>
 
-    <Message Text="Adding reference to Xcode project output: '%(_XcodeProjectXcFrameworkOutputs.Identity)'. The '%25(CreateNativeReference)' metadata can be set to 'false' to opt out of this behavior." Importance="high" />
+    <MacDevMessage ResourceName="XcodeBuild_CreateNativeRef"
+        FormatArguments="%(_XcodeProjectXcFrameworkOutputs.Identity)"
+        Condition=" '@(_XcodeProjectXcFrameworkOutputs->Count())' != '0' "
+    />
 
     <Touch Files="$(_BuildXcodeProjectsStamp)" AlwaysCreate="true" />
     <ItemGroup>

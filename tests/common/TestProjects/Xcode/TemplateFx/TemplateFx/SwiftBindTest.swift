@@ -1,6 +1,6 @@
 //
-//  XcodeFxTemplate.swift
-//  XcodeFxTemplate
+//  TemplateFx.swift
+//  TemplateFx
 //
 
 import Foundation

@@ -7,18 +7,28 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		D0746F782C935F8900C867A3 /* XcodeFxTemplate.h in Headers */ = {isa = PBXBuildFile; fileRef = D0746F772C935F8900C867A3 /* XcodeFxTemplate.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		D0746F932C93614400C867A3 /* XcodeFxTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0746F922C93614400C867A3 /* XcodeFxTemplate.swift */; };
+		D022304A2C9CD08900CB72B4 /* TestClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = D02230492C9CD08900CB72B4 /* TestClass.swift */; };
+		D06216732C9CBBB60057E268 /* TwoSchemeFx.h in Headers */ = {isa = PBXBuildFile; fileRef = D06216722C9CBBB60057E268 /* TwoSchemeFx.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D06216B92C9CBEDE0057E268 /* iOSFx.h in Headers */ = {isa = PBXBuildFile; fileRef = D06216B82C9CBEDE0057E268 /* iOSFx.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		D0746F742C935F8900C867A3 /* XcodeFxTemplate.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = XcodeFxTemplate.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		D0746F772C935F8900C867A3 /* XcodeFxTemplate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XcodeFxTemplate.h; sourceTree = "<group>"; };
-		D0746F922C93614400C867A3 /* XcodeFxTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XcodeFxTemplate.swift; sourceTree = "<group>"; };
+		D02230492C9CD08900CB72B4 /* TestClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestClass.swift; sourceTree = "<group>"; };
+		D062166F2C9CBBB60057E268 /* TwoSchemeFx.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TwoSchemeFx.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D06216722C9CBBB60057E268 /* TwoSchemeFx.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TwoSchemeFx.h; sourceTree = "<group>"; };
+		D06216B62C9CBEDE0057E268 /* iOSFx.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = iOSFx.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D06216B82C9CBEDE0057E268 /* iOSFx.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = iOSFx.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		D0746F712C935F8900C867A3 /* Frameworks */ = {
+		D062166C2C9CBBB60057E268 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D06216B32C9CBEDE0057E268 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -28,79 +38,119 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		D0746F6A2C935F8900C867A3 = {
+		D06216652C9CBBB60057E268 = {
 			isa = PBXGroup;
 			children = (
-				D0746F762C935F8900C867A3 /* XcodeFxTemplate */,
-				D0746F752C935F8900C867A3 /* Products */,
+				D06216712C9CBBB60057E268 /* TwoSchemeFx */,
+				D06216B72C9CBEDE0057E268 /* iOSFx */,
+				D06216702C9CBBB60057E268 /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		D0746F752C935F8900C867A3 /* Products */ = {
+		D06216702C9CBBB60057E268 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				D0746F742C935F8900C867A3 /* XcodeFxTemplate.framework */,
+				D062166F2C9CBBB60057E268 /* TwoSchemeFx.framework */,
+				D06216B62C9CBEDE0057E268 /* iOSFx.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		D0746F762C935F8900C867A3 /* XcodeFxTemplate */ = {
+		D06216712C9CBBB60057E268 /* TwoSchemeFx */ = {
 			isa = PBXGroup;
 			children = (
-				D0746F922C93614400C867A3 /* XcodeFxTemplate.swift */,
-				D0746F772C935F8900C867A3 /* XcodeFxTemplate.h */,
+				D02230492C9CD08900CB72B4 /* TestClass.swift */,
+				D06216722C9CBBB60057E268 /* TwoSchemeFx.h */,
 			);
-			path = XcodeFxTemplate;
+			path = TwoSchemeFx;
+			sourceTree = "<group>";
+		};
+		D06216B72C9CBEDE0057E268 /* iOSFx */ = {
+			isa = PBXGroup;
+			children = (
+				D06216B82C9CBEDE0057E268 /* iOSFx.h */,
+			);
+			path = iOSFx;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
-		D0746F6F2C935F8900C867A3 /* Headers */ = {
+		D062166A2C9CBBB60057E268 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D0746F782C935F8900C867A3 /* XcodeFxTemplate.h in Headers */,
+				D06216732C9CBBB60057E268 /* TwoSchemeFx.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D06216B12C9CBEDE0057E268 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D06216B92C9CBEDE0057E268 /* iOSFx.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		D0746F732C935F8900C867A3 /* XcodeFxTemplate */ = {
+		D062166E2C9CBBB60057E268 /* TwoSchemeFx */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = D0746F7B2C935F8900C867A3 /* Build configuration list for PBXNativeTarget "XcodeFxTemplate" */;
+			buildConfigurationList = D06216762C9CBBB60057E268 /* Build configuration list for PBXNativeTarget "TwoSchemeFx" */;
 			buildPhases = (
-				D0746F6F2C935F8900C867A3 /* Headers */,
-				D0746F702C935F8900C867A3 /* Sources */,
-				D0746F712C935F8900C867A3 /* Frameworks */,
-				D0746F722C935F8900C867A3 /* Resources */,
+				D062166A2C9CBBB60057E268 /* Headers */,
+				D062166B2C9CBBB60057E268 /* Sources */,
+				D062166C2C9CBBB60057E268 /* Frameworks */,
+				D062166D2C9CBBB60057E268 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
-			name = XcodeFxTemplate;
-			productName = XcodeFxTemplate;
-			productReference = D0746F742C935F8900C867A3 /* XcodeFxTemplate.framework */;
+			name = TwoSchemeFx;
+			productName = TwoSchemeFx;
+			productReference = D062166F2C9CBBB60057E268 /* TwoSchemeFx.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		D06216B52C9CBEDE0057E268 /* iOSFx */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D06216BA2C9CBEDE0057E268 /* Build configuration list for PBXNativeTarget "iOSFx" */;
+			buildPhases = (
+				D06216B12C9CBEDE0057E268 /* Headers */,
+				D06216B22C9CBEDE0057E268 /* Sources */,
+				D06216B32C9CBEDE0057E268 /* Frameworks */,
+				D06216B42C9CBEDE0057E268 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = iOSFx;
+			productName = iOSFx;
+			productReference = D06216B62C9CBEDE0057E268 /* iOSFx.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		D0746F6B2C935F8900C867A3 /* Project object */ = {
+		D06216662C9CBBB60057E268 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1540;
 				LastUpgradeCheck = 1540;
 				TargetAttributes = {
-					D0746F732C935F8900C867A3 = {
+					D062166E2C9CBBB60057E268 = {
 						CreatedOnToolsVersion = 15.4;
 						LastSwiftMigration = 1540;
 					};
+					D06216B52C9CBEDE0057E268 = {
+						CreatedOnToolsVersion = 15.4;
+					};
 				};
 			};
-			buildConfigurationList = D0746F6E2C935F8900C867A3 /* Build configuration list for PBXProject "XcodeFxTemplate" */;
+			buildConfigurationList = D06216692C9CBBB60057E268 /* Build configuration list for PBXProject "TwoSchemeFx" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -108,18 +158,26 @@
 				en,
 				Base,
 			);
-			mainGroup = D0746F6A2C935F8900C867A3;
-			productRefGroup = D0746F752C935F8900C867A3 /* Products */;
+			mainGroup = D06216652C9CBBB60057E268;
+			productRefGroup = D06216702C9CBBB60057E268 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				D0746F732C935F8900C867A3 /* XcodeFxTemplate */,
+				D062166E2C9CBBB60057E268 /* TwoSchemeFx */,
+				D06216B52C9CBEDE0057E268 /* iOSFx */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		D0746F722C935F8900C867A3 /* Resources */ = {
+		D062166D2C9CBBB60057E268 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D06216B42C9CBEDE0057E268 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -129,18 +187,25 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		D0746F702C935F8900C867A3 /* Sources */ = {
+		D062166B2C9CBBB60057E268 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D0746F932C93614400C867A3 /* XcodeFxTemplate.swift in Sources */,
+				D022304A2C9CD08900CB72B4 /* TestClass.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D06216B22C9CBEDE0057E268 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		D0746F792C935F8900C867A3 /* Debug */ = {
+		D06216742C9CBBB60057E268 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -204,7 +269,7 @@
 			};
 			name = Debug;
 		};
-		D0746F7A2C935F8900C867A3 /* Release */ = {
+		D06216752C9CBBB60057E268 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -260,7 +325,7 @@
 			};
 			name = Release;
 		};
-		D0746F7C2C935F8900C867A3 /* Debug */ = {
+		D06216772C9CBBB60057E268 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
@@ -289,7 +354,7 @@
 				MARKETING_VERSION = 1.0;
 				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
-				PRODUCT_BUNDLE_IDENTIFIER = com.example.XcodeFxTemplate;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.TwoSchemeFx;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SDKROOT = auto;
 				SKIP_INSTALL = YES;
@@ -303,7 +368,7 @@
 			};
 			name = Debug;
 		};
-		D0746F7D2C935F8900C867A3 /* Release */ = {
+		D06216782C9CBBB60057E268 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
@@ -332,7 +397,7 @@
 				MARKETING_VERSION = 1.0;
 				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
-				PRODUCT_BUNDLE_IDENTIFIER = com.example.XcodeFxTemplate;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.TwoSchemeFx;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SDKROOT = auto;
 				SKIP_INSTALL = YES;
@@ -345,28 +410,106 @@
 			};
 			name = Release;
 		};
+		D06216BB2C9CBEDE0057E268 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_MODULE_VERIFIER = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
+				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.iOSFx;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_INSTALL_OBJC_HEADER = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		D06216BC2C9CBEDE0057E268 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_MODULE_VERIFIER = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
+				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.iOSFx;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_INSTALL_OBJC_HEADER = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		D0746F6E2C935F8900C867A3 /* Build configuration list for PBXProject "XcodeFxTemplate" */ = {
+		D06216692C9CBBB60057E268 /* Build configuration list for PBXProject "TwoSchemeFx" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				D0746F792C935F8900C867A3 /* Debug */,
-				D0746F7A2C935F8900C867A3 /* Release */,
+				D06216742C9CBBB60057E268 /* Debug */,
+				D06216752C9CBBB60057E268 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		D0746F7B2C935F8900C867A3 /* Build configuration list for PBXNativeTarget "XcodeFxTemplate" */ = {
+		D06216762C9CBBB60057E268 /* Build configuration list for PBXNativeTarget "TwoSchemeFx" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				D0746F7C2C935F8900C867A3 /* Debug */,
-				D0746F7D2C935F8900C867A3 /* Release */,
+				D06216772C9CBBB60057E268 /* Debug */,
+				D06216782C9CBBB60057E268 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D06216BA2C9CBEDE0057E268 /* Build configuration list for PBXNativeTarget "iOSFx" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D06216BB2C9CBEDE0057E268 /* Debug */,
+				D06216BC2C9CBEDE0057E268 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = D0746F6B2C935F8900C867A3 /* Project object */;
+	rootObject = D06216662C9CBBB60057E268 /* Project object */;
 }

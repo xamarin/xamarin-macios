@@ -25,7 +25,7 @@ namespace Xamarin.MacDev.Tasks {
 			}
 			args.AddRange (GenerateCommandLineCommands ());
 
-			ExecuteAsync ("xcrun", args, sdkDevPath: SdkDevPath, workingDirectory: WorkingDirectory).Wait ();
+			ExecuteAsync ("xcrun", args, sdkDevPath: SdkDevPath, mergeOutput: false, workingDirectory: WorkingDirectory).Wait ();
 			return !Log.HasLoggedErrors;
 		}
 

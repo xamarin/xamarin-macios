@@ -5,8 +5,8 @@ Native Library Interop (formerly referred to as the "Slim Binding" approach), re
 pattern for accessing native SDKs in .NET for iOS, Mac Catalyst, macOS, and tvOS projects.
 
 Starting in .NET 9, the .NET for iOS, Mac Catalyst, macOS, and tvOS SDKs support building
-Xcode library or framework projects by using the `@(XcodeProjet)` build action. This is
-declared in an MSBuild ItemGroup in a project file:
+Xcode framework projects by using the `@(XcodeProjet)` build action. This is declared in
+an MSBuild ItemGroup in a project file:
 
 ```xml
 <ItemGroup>

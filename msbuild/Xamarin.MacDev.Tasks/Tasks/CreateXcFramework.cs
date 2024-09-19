@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Collections.Generic;
 
 using Microsoft.Build.Framework;
@@ -7,8 +8,10 @@ namespace Xamarin.MacDev.Tasks {
 	public class CreateXcFramework : XcodeBuildTask {
 
 		// Task input parameters
-		public ITaskItem [] FrameworkArchives { get; set; } = Array.Empty<ITaskItem> ();
+		[Required]
+		public string XcArchivePath { get; set; } = string.Empty;
 
+		[Required]
 		public string FrameworkName { get; set; } = string.Empty;
 
 
@@ -18,11 +21,13 @@ namespace Xamarin.MacDev.Tasks {
 		{
 			var args = new List<string> ();
 
-			foreach (var frameworkArchive in FrameworkArchives) {
-				args.Add ("-archive");
-				args.Add (frameworkArchive.ItemSpec);
-				args.Add ("-framework");
-				args.Add (FrameworkName);
+			if (Directory.Exists (XcArchivePath)) {
+				foreach (var frameworkArchive in Directory.EnumerateDirectories (XcArchivePath, "*.xcarchive")) {
+					args.Add ("-archive");
+					args.Add (frameworkArchive);
+					args.Add ("-framework");
+					args.Add (FrameworkName);
+				}
 			}
 
 			if (!string.IsNullOrEmpty (OutputPath)) {
