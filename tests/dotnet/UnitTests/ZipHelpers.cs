@@ -18,8 +18,8 @@ namespace Xamarin.Tests {
 		{
 			using var zip = ZipFile.OpenRead (file);
 			var innerZipEntry = zip.GetEntry (innerZipFileName);
-			if (innerZipEntry == null)
-				return new List<string>();
+			if (innerZipEntry is null)
+				return new List<string> ();
 
 			using Stream innerZipStream = innerZipEntry.Open ();
 			using ZipArchive innerZip = new ZipArchive (innerZipStream, ZipArchiveMode.Read);
