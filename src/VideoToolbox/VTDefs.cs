@@ -64,6 +64,11 @@ namespace VideoToolbox {
 		VideoDecoderCallbackMessaging = -17695,
 		[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0), Watch (9, 0), TV (16, 0)]
 		VideoDecoderUnknownErr = -17696,
+		ExtensionDisabledErr = -17697,
+		VideoEncoderMVHEVCVideoLayerIDsMismatchErr = -17698,
+		CouldNotOutputTaggedBufferGroupErr = -17699,
+		CouldNotFindExtensionErr = -19510,
+		ExtensionConflictErr = -19511,
 	}
 
 	// uint32_t -> VTErrors.h
@@ -83,6 +88,7 @@ namespace VideoToolbox {
 		Asynchronous = 1 << 0,
 		FrameDropped = 1 << 1,
 		ImageBufferModifiable = 1 << 2,
+		SkippedLeadingFrameDropped = 1 << 3,
 	}
 
 	// UInt32 -> VTErrors.h

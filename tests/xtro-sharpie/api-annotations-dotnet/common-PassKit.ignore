@@ -6,3 +6,6 @@
 !extra-null-allowed! 'System.Void PassKit.PKPaymentRequest::set_SupportedNetworks(Foundation.NSString[])' has a extraneous [NullAllowed] on parameter #0
 !extra-null-allowed! 'System.Void PassKit.PKPaymentSummaryItem::set_Amount(Foundation.NSDecimalNumber)' has a extraneous [NullAllowed] on parameter #0
 !extra-null-allowed! 'System.Void PassKit.PKPaymentSummaryItem::set_Label(System.String)' has a extraneous [NullAllowed] on parameter #0
+
+# This is weird, the header is there, the type is there, it's documented on Apple's web site, but xtro seems to think it's not. Possibly because the header is not included in the umbrella header?
+!unknown-type! PKPassRelevantDate bound

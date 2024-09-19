@@ -134,6 +134,7 @@ namespace Xamarin.MMP.Tests {
 
 				var rv = TI.TestUnifiedExecutable (test);
 				Console.WriteLine (rv.BuildResult);
+				rv.Messages.FilterUnrelatedWarnings ();
 				if (full && release) {
 					rv.Messages.AssertWarning (5220, "Skipping framework 'QTKit'. It is prohibited (rejected) by the Mac App Store");
 					// We get the MM5220 twice in the output, once from mmp and once from msbuild repeating what mmp said, so we can't assert that there's exactly 1 warning.

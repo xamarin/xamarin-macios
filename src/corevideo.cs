@@ -284,6 +284,18 @@ namespace CoreVideo {
 		[Watch (10, 2), TV (17, 2), Mac (14, 2), iOS (17, 2), MacCatalyst (17, 2)]
 		[Field ("kCVImageBufferLogTransferFunction_AppleLog")]
 		NSString LogTransferFunctionAppleLogKey { get; }
+
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("kCVImageBufferSceneIlluminationKey")]
+		NSString SceneIlluminationKey { get; }
+
+		[Mac (15, 0), NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		[Field ("kCVImageBufferPostDecodeProcessingSequenceMetadataKey")]
+		NSString PostDecodeProcessingSequenceMetadataKey { get; }
+
+		[Mac (15, 0), NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		[Field ("kCVImageBufferPostDecodeProcessingFrameMetadataKey")]
+		NSString PostDecodeProcessingFrameMetadataKey { get; }
 	}
 
 	[MacCatalyst (13, 1)]
@@ -571,6 +583,19 @@ namespace CoreVideo {
 		Bggr = 3,
 	}
 
+	[NoWatch, TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[Static, Internal]
+	interface CVMetalBufferCacheAttributeKeys {
+		[Field ("kCVMetalBufferCacheMaximumBufferAgeKey")]
+		NSString MaximumBufferAgeKey { get; }
+	}
+
+	[NoWatch]
+	[StrongDictionary ("CVMetalBufferCacheAttributeKeys")]
+	interface CVMetalBufferCacheAttributes {
+		double MaximumBufferAge { get; }
+	}
+
 	[Partial]
 	interface CVPixelFormatKeys {
 		[Field ("kCVPixelFormatName")]
@@ -661,6 +686,10 @@ namespace CoreVideo {
 
 		[Field ("kCVPixelFormatFillExtendedPixelsCallback")]
 		NSString FillExtendedPixelsCallback { get; }
+
+		[iOS (18, 0), Mac (15, 0), MacCatalyst (18, 0), TV (18, 0), Watch (11, 0)]
+		[Field ("kCVPixelFormatBitsPerComponent")]
+		NSString BitsPerComponent { get; }
 	}
 
 	[Partial]
@@ -767,5 +796,8 @@ namespace CoreVideo {
 		bool OpenGlesCompatibility { get; set; }
 
 		NSData FillExtendedPixelsCallback { get; set; }
+
+		[iOS (18, 0), Mac (15, 0), MacCatalyst (18, 0), TV (18, 0), Watch (11, 0)]
+		int BitsPerComponent { get; set; }
 	}
 }

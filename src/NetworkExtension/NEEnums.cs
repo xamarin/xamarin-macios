@@ -108,13 +108,15 @@ namespace NetworkExtension {
 	}
 
 	[MacCatalyst (13, 1)]
+	[TV (17, 0)]
 	[Native]
 	public enum NEOnDemandRuleInterfaceType : long {
 		Any = 0,
+		[NoiOS, NoMacCatalyst]
 		Ethernet = 1,
 		WiFi = 2,
-		[NoTV]
-		Cellular = 3
+		[NoTV, NoMac]
+		Cellular = 3,
 	}
 
 	[MacCatalyst (13, 1)]
@@ -209,6 +211,10 @@ namespace NetworkExtension {
 		AppUpdate,
 	}
 
+	[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'Network.NWPathStatus' instead.")]
+	[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'Network.NWPathStatus' instead.")]
+	[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'Network.NWPathStatus' instead.")]
+	[Deprecated (PlatformName.TvOS, 18, 0, message: "Use 'Network.NWPathStatus' instead.")]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum NWPathStatus : long {
@@ -218,6 +224,10 @@ namespace NetworkExtension {
 		Satisfiable = 3
 	}
 
+	[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'Network.NWConnectionState' instead.")]
+	[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'Network.NWConnectionState' instead.")]
+	[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'Network.NWConnectionState' instead.")]
+	[Deprecated (PlatformName.TvOS, 18, 0, message: "Use 'Network.NWConnectionState' instead.")]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum NWTcpConnectionState : long {
@@ -229,6 +239,10 @@ namespace NetworkExtension {
 		Cancelled = 5
 	}
 
+	[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'Network.NWConnectionState' instead.")]
+	[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'Network.NWConnectionState' instead.")]
+	[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'Network.NWConnectionState' instead.")]
+	[Deprecated (PlatformName.TvOS, 18, 0, message: "Use 'Network.NWConnectionState' instead.")]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum NWUdpSessionState : long {

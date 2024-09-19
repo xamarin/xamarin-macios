@@ -51,3 +51,5 @@
 !missing-selector! MTLFXTemporalScalerDescriptor::setReactiveMaskTextureFormat: not bound
 !missing-type! MTLFXSpatialScalerDescriptor not bound
 !missing-type! MTLFXTemporalScalerDescriptor not bound
+!missing-selector! MTLFXTemporalScalerDescriptor::requiresSynchronousInitialization not bound
+!missing-selector! MTLFXTemporalScalerDescriptor::setRequiresSynchronousInitialization: not bound

@@ -82,6 +82,20 @@ namespace AudioToolbox {
 		None = 2
 	}
 
+	[Flags]
+#if NET
+	[SupportedOSPlatform ("ios18.0")]
+	[SupportedOSPlatform ("maccatalyst18.0")]
+	[SupportedOSPlatform ("macos15.0")]
+	[SupportedOSPlatform ("tvos18.0")]
+#else
+	[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+#endif
+	public enum AudioConverterOptions : uint {
+		None = 0,
+		Unbuffered = 1 << 16,
+	}
+
 #if NET
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
@@ -441,6 +455,49 @@ namespace AudioToolbox {
 			return new AudioConverter (ptr, true);
 		}
 
+		/// <summary>Create a new AudioConverter with the specified options.</summary>
+		/// <param name="sourceFormat">The format of the source audio to be converted.</param>
+		/// <param name="destinationFormat">The format to convert the source audio to.</param>
+		/// <param name="options">Any <see cref="AudioConverterOptions" /> to use.</param>
+		/// <param name="error">In case of failure, will contain the error code for the failure. Otherwise the value <see cref="AudioConverterError.None" /> will be returned.</param>
+		/// <returns>A new AudioConverter instance, or null in case of failure.</returns>
+#if NET
+		[SupportedOSPlatform ("ios18.0")]
+		[SupportedOSPlatform ("maccatalyst18.0")]
+		[SupportedOSPlatform ("macos15.0")]
+		[SupportedOSPlatform ("tvos18.0")]
+#else
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+#endif
+		public static AudioConverter? Create (AudioStreamBasicDescription sourceFormat, AudioStreamBasicDescription destinationFormat, AudioConverterOptions options, out AudioConverterError error)
+		{
+			IntPtr ptr = default (IntPtr);
+			unsafe {
+				error = AudioConverterNewWithOptions (&sourceFormat, &destinationFormat, options, &ptr);
+			}
+			if (error != AudioConverterError.None)
+				return null;
+			return new AudioConverter (ptr, true);
+		}
+
+		/// <summary>Create a new AudioConverter with the specified options.</summary>
+		/// <param name="sourceFormat">The format of the source audio to be converted.</param>
+		/// <param name="destinationFormat">The format to convert the source audio to.</param>
+		/// <param name="options">Any <see cref="AudioConverterOptions" /> to use.</param>
+		/// <returns>A new AudioConverter instance, or null in case of failure.</returns>
+#if NET
+		[SupportedOSPlatform ("ios18.0")]
+		[SupportedOSPlatform ("maccatalyst18.0")]
+		[SupportedOSPlatform ("macos15.0")]
+		[SupportedOSPlatform ("tvos18.0")]
+#else
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+#endif
+		public static AudioConverter? Create (AudioStreamBasicDescription sourceFormat, AudioStreamBasicDescription destinationFormat, AudioConverterOptions options)
+		{
+			return Create (sourceFormat, destinationFormat, options, out var _);
+		}
+
 		public static AudioFormatType []? DecodeFormats {
 			get {
 				return GetFormats (AudioFormatProperty.DecodeFormatIDs);
@@ -641,6 +698,49 @@ namespace AudioToolbox {
 			}
 		}
 
+#if NET
+		public delegate void PrepareCompletionCallback (AudioConverterError status);
+
+		[UnmanagedCallersOnly]
+		static void PrepareCompletionHandler (IntPtr block, int status)
+		{
+			var del = BlockLiteral.GetTarget<PrepareCompletionCallback> (block);
+			if (del is not null)
+				del ((AudioConverterError) status);
+		}
+
+		/// <summary>Optimizes any subsequent creation of audio converters in this process.</summary>
+		/// <param name="flags">Reserved; always pass 0.</param>
+		/// <param name="ioReserved">Reserved; always pass IntPtr.Zero.</param>
+		/// <param name="completionCallback">Optional callback to invoke when the preparation is complete.</param>
+		[SupportedOSPlatform ("ios18.0")]
+		[SupportedOSPlatform ("maccatalyst18.0")]
+		[SupportedOSPlatform ("macos15.0")]
+		[SupportedOSPlatform ("tvos18.0")]
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		public unsafe static void Prepare (uint flags = 0, IntPtr ioReserved = default (IntPtr), PrepareCompletionCallback? completionCallback = null)
+		{
+			if (completionCallback is null) {
+				AudioConverterPrepare (flags, ioReserved, null);
+			} else {
+				delegate* unmanaged<IntPtr, int, void> trampoline = &PrepareCompletionHandler;
+				using var block = new BlockLiteral (trampoline, completionCallback, typeof (AudioConverter), nameof (PrepareCompletionHandler));
+				AudioConverterPrepare (flags, ioReserved, &block);
+			}
+		}
+
+		/// <summary>Optimizes any subsequent creation of audio converters in this process.</summary>
+		/// <param name="completionCallback">Callback to invoke when the preparation is complete.</param>
+		[SupportedOSPlatform ("ios18.0")]
+		[SupportedOSPlatform ("maccatalyst18.0")]
+		[SupportedOSPlatform ("macos15.0")]
+		[SupportedOSPlatform ("tvos18.0")]
+		public unsafe static void Prepare (PrepareCompletionCallback completionCallback)
+		{
+			Prepare (0, IntPtr.Zero, completionCallback);
+		}
+#endif // NET
+
 		public AudioConverterError Reset ()
 		{
 			return AudioConverterReset (Handle);
@@ -742,6 +842,32 @@ namespace AudioToolbox {
 		[DllImport (Constants.AudioToolboxLibrary)]
 		unsafe static extern AudioConverterError AudioConverterNewSpecific (AudioStreamBasicDescription* inSourceFormat, AudioStreamBasicDescription* inDestinationFormat,
 			int inNumberClassDescriptions, AudioClassDescription* inClassDescriptions, IntPtr* outAudioConverter);
+
+#if NET
+		[SupportedOSPlatform ("ios18.0")]
+		[SupportedOSPlatform ("maccatalyst18.0")]
+		[SupportedOSPlatform ("macos15.0")]
+		[SupportedOSPlatform ("tvos18.0")]
+#else
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+#endif
+		[DllImport (Constants.AudioToolboxLibrary)]
+		unsafe static extern void AudioConverterPrepare (uint inFlags, IntPtr ioReserved, BlockLiteral* block);
+
+#if NET
+		[SupportedOSPlatform ("ios18.0")]
+		[SupportedOSPlatform ("maccatalyst18.0")]
+		[SupportedOSPlatform ("macos15.0")]
+		[SupportedOSPlatform ("tvos18.0")]
+#else
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+#endif
+		[DllImport (Constants.AudioToolboxLibrary)]
+		unsafe static extern /* OSStatus */ AudioConverterError AudioConverterNewWithOptions (
+				/* const AudioStreamBasicDescription * */ AudioStreamBasicDescription* inSourceFormat,
+				/* const AudioStreamBasicDescription * */ AudioStreamBasicDescription* inDestinationFormat,
+				/* AudioConverterOptions */ AudioConverterOptions inOptions,
+				/* AudioConverterRef __nullable * __nonnull */ IntPtr* outAudioConverter);
 
 		[DllImport (Constants.AudioToolboxLibrary)]
 		static extern AudioConverterError AudioConverterDispose (IntPtr inAudioConverter);

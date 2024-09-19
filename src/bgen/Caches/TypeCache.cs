@@ -73,6 +73,7 @@ public class TypeCache {
 	public Type SCNVector4 { get; }
 	public Type SecAccessControl { get; }
 	public Type SecIdentity { get; }
+	public Type SecKey { get; }
 	public Type SecTrust { get; }
 	public Type SecProtocolMetadata { get; }
 	public Type SecProtocolOptions { get; }
@@ -130,6 +131,10 @@ public class TypeCache {
 
 	// optional if MediaToolbox is present 
 	public Type? MTAudioProcessingTap { get; }
+
+	public Type NWEndpoint { get; }
+	public Type NWInterface { get; }
+	public Type NWParameters { get; }
 
 	// optional if UIKit is present
 	public Type? UIOffset { get; }
@@ -229,6 +234,7 @@ public class TypeCache {
 		SCNMatrix4 = Lookup (platformAssembly, "SceneKit", "SCNMatrix4");
 		SecAccessControl = Lookup (platformAssembly, "Security", "SecAccessControl");
 		SecIdentity = Lookup (platformAssembly, "Security", "SecIdentity");
+		SecKey = Lookup (platformAssembly, "Security", "SecKey");
 		SecTrust = Lookup (platformAssembly, "Security", "SecTrust");
 		SecProtocolOptions = Lookup (platformAssembly, "Security", "SecProtocolOptions");
 		SecProtocolMetadata = Lookup (platformAssembly, "Security", "SecProtocolMetadata");
@@ -288,6 +294,10 @@ public class TypeCache {
 			UIEdgeInsets = ConditionalLookup (platformAssembly, "UIKit", "UIEdgeInsets");
 			NSDirectionalEdgeInsets = ConditionalLookup (platformAssembly, "UIKit", "NSDirectionalEdgeInsets");
 		}
+		NWEndpoint = Lookup (platformAssembly, "Network", "NWEndpoint");
+		NWInterface = Lookup (platformAssembly, "Network", "NWInterface");
+		NWParameters = Lookup (platformAssembly, "Network", "NWParameters");
+
 		// init the NSValueCreateMap
 		NSValueCreateMap = BuildNSValueCreateMap (frameworks);
 	}
