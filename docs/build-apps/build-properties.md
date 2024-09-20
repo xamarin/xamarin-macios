@@ -21,11 +21,11 @@ Example:
 
 ```xml
 <PropertyGroup>
-  <MaciOSPrepareForBuildDependsOn>BeforeBuild</MaciOSPrepareForBuildDependsOn>
+  <MaciOSPrepareForBuildDependsOn>MyCustomTarget</MaciOSPrepareForBuildDependsOn>
 </PropertyGroup>
 
-<Target Name="BeforeBuild" >
-  <Message Text="Running target: 'BeforeBuild'" Importance="high"  />
+<Target Name="MyCustomTarget" >
+  <Message Text="Running target: 'MyCustomTarget'" Importance="high"  />
 </Target>
 ```
 

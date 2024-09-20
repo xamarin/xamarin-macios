@@ -297,6 +297,7 @@ public class Binding
 		}
 
 		[Test]
+		[Category ("Multiplatform")]
 		public void BuildMultiTargeting ()
 		{
 			var testDir = Cache.CreateTemporaryDirectory (TestName);
@@ -304,10 +305,11 @@ public class Binding
 			DotNet.AssertNew (testDir, "iosbinding");
 
 			var enabledPlatforms = Configuration.GetIncludedPlatforms (dotnet: true);
-			var tfxs = string.Join (";", enabledPlatforms.Select (p => p.ToFramework ()));
+			var tfxs = $"<TargetFrameworks>{string.Join (";", enabledPlatforms.Select (p => p.ToFramework ()))}</TargetFrameworks>";
 			var existingProjContent = File.ReadAllText (proj);
-			var newProjContent = existingProjContent.Replace ($"<TargetFramework>{ApplePlatform.iOS.ToFramework ()}</TargetFramework>", $"<TargetFrameworks>{tfxs}</TargetFrameworks>");
+			var newProjContent = existingProjContent.Replace ($"<TargetFramework>{ApplePlatform.iOS.ToFramework ()}</TargetFramework>", tfxs);
 			File.WriteAllText (proj, newProjContent);
+			StringAssert.Contains (tfxs, File.ReadAllText (proj));
 
 			var xcodeProjName = "TemplateFx";
 			var xcodeProjDirSrc = Path.Combine (XCodeTestProjectDir, xcodeProjName);
@@ -342,9 +344,9 @@ public class Binding
 				});
 
 			var rv = DotNet.AssertBuildFailure (proj);
-			var errors = BinLog.GetBuildLogErrors (rv.BinLogPath).Select (e => e.Message).ToArray ();
+			var errors = BinLog.GetBuildLogErrors (rv.BinLogPath).ToArray ();
 			var expectedError = $"The Xcode project item: '{invalidXcodeProjPath}' could not be found. Please update the 'Include' value to a path containing a valid '.xcodeproj' file.";
-			Assert.Contains (expectedError, errors, $"Expected error message '{expectedError}' was not found in build log.");
+			AssertErrorMessages (errors, expectedError);
 		}
 
 		[Test]
@@ -370,13 +372,13 @@ public class Binding
 
 			var rv = DotNet.AssertBuildFailure (proj);
 			var expectedErrorContent = $"xcodebuild: error: The project named \"{xcodeProjName}\" does not contain a scheme named \"{invaldSchemeName}\".";
-			var errors = BinLog.GetBuildLogErrors (rv.BinLogPath);
+			var errors = BinLog.GetBuildLogErrors (rv.BinLogPath).ToArray ();
 			AssertErrorMessages (errors,
 				new Func<string, bool> [] {
 					(msg) => msg?.Contains (expectedErrorContent) == true
 				},
-				Func<string, bool> [] {
-				(msg) => msg)
+				new Func<string> [] {
+					() => expectedErrorContent
 				}
 			);
 		}
