@@ -81,8 +81,6 @@ Copyright (C) 2015-2016 Xamarin. All rights reserved.
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)'"
 			AdditionalArguments="$(WKDittoArchitectures)"
-			ToolExe="$(DittoExe)"
-			ToolPath="$(DittoPath)"
 			Source="$(_NativeWatchApp)"
 			Destination="$(_AppBundlePath)$(AssemblyName)"
 		/>
@@ -93,8 +91,6 @@ Copyright (C) 2015-2016 Xamarin. All rights reserved.
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)'"
 			AdditionalArguments="$(WKDittoArchitectures)"
-			ToolExe="$(DittoExe)"
-			ToolPath="$(DittoPath)"
 			Source="$(_NativeWatchApp)"
 			Destination="$(_AppBundlePath)_WatchKitStub\WK"
 		/>
