@@ -42,6 +42,7 @@ namespace Network {
 		public NWEndpoint (NativeHandle handle, bool owns) : base (handle, owns) { }
 #endif
 
+#if !COREBUILD
 		[DllImport (Constants.NetworkLibrary)]
 		extern static NWEndpointType nw_endpoint_get_type (OS_nw_endpoint handle);
 
@@ -268,6 +269,23 @@ namespace Network {
 				return new NWTxtRecord (record, owns: true);
 			}
 		}
+
+		internal NWEndpoint []? FromNSArrayHandle (IntPtr handle)
+		{
+			return NSArray.ArrayFromHandle<NWEndpoint> (handle);
+		}
+
+		/// <summary>Returns an autoreleased NSArray handle.</summary>
+		internal IntPtr ToNSArrayHandle (NWEndpoint [] array)
+		{
+			using var rv = NSArray.FromNSObjects (array);
+			if (rv is null)
+				return IntPtr.Zero;
+			rv.DangerousRetain ();
+			rv.DangerousAutorelease ();
+			return rv.Handle;
+		}
+#endif // !COREBUILD
 
 	}
 }

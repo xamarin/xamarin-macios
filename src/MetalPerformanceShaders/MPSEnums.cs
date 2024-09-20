@@ -60,6 +60,8 @@ namespace MetalPerformanceShaders {
 		Float32 = FloatBit | 32,
 
 		SignedBit = 0x20000000,
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		Int4 = SignedBit | 4,
 		Int8 = SignedBit | 8,
 		Int16 = SignedBit | 16,
 		Int32 = SignedBit | 32,
@@ -68,6 +70,8 @@ namespace MetalPerformanceShaders {
 		[MacCatalyst (14, 1)]
 		Int64 = SignedBit | 64,
 
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		UInt4 = 4,
 		UInt8 = 8,
 		UInt16 = 16,
 		UInt32 = 32,

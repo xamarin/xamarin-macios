@@ -117,6 +117,7 @@ namespace HomeKit {
 		FailedToJoinNetwork = 102,
 		// iOS 15
 		AccessoryIsSuspended = 103,
+		// iOS 17.4
 		PartialCommunicationFailure = 104,
 	}
 
@@ -626,6 +627,78 @@ namespace HomeKit {
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypeIsConfigured")]
 		IsConfigured,
+
+		[Watch (11, 0), TV (18, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("HMCharacteristicTypeInputSourceType")]
+		InputSourceType,
+
+		[Watch (11, 0), TV (18, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("HMCharacteristicTypeInputDeviceType")]
+		InputDeviceType,
+
+		[Watch (11, 0), TV (18, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("HMCharacteristicTypeClosedCaptions")]
+		ClosedCaptions,
+
+		[Watch (11, 0), TV (18, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("HMCharacteristicTypePowerModeSelection")]
+		PowerModeSelection,
+
+		[Watch (11, 0), TV (18, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("HMCharacteristicTypeCurrentMediaState")]
+		CurrentMediaState,
+
+		[Watch (11, 0), TV (18, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("HMCharacteristicTypeRemoteKey")]
+		RemoteKey,
+
+		[Watch (11, 0), TV (18, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("HMCharacteristicTypePictureMode")]
+		PictureMode,
+
+		[Watch (11, 0), TV (18, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("HMCharacteristicTypeConfiguredName")]
+		ConfiguredName,
+
+		[Watch (11, 0), TV (18, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("HMCharacteristicTypeIdentifier")]
+		Identifier,
+
+		[Watch (11, 0), TV (18, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("HMCharacteristicTypeActiveIdentifier")]
+		ActiveIdentifier,
+
+		[Watch (11, 0), TV (18, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("HMCharacteristicTypeTargetVisibilityState")]
+		TargetVisibilityState,
+
+		[Watch (11, 0), TV (18, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("HMCharacteristicTypeCurrentVisibilityState")]
+		CurrentVisibilityState,
+
+		[Watch (11, 0), TV (18, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("HMCharacteristicTypeRouterStatus")]
+		RouterStatus,
+
+		[Watch (11, 0), TV (18, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("HMCharacteristicTypeWANStatusList")]
+		WanStatusList,
+
+		[Watch (11, 0), TV (18, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("HMCharacteristicTypeWiFiSatelliteStatus")]
+		WiFiSatelliteStatus,
+
+		[Watch (11, 0), TV (18, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("HMCharacteristicTypeVolumeControlType")]
+		VolumeControlType,
+
+		[Watch (11, 0), TV (18, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("HMCharacteristicTypeVolumeSelector")]
+		VolumeSelector,
+
+		[Watch (11, 0), TV (18, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("HMCharacteristicTypeTargetMediaState")]
+		TargetMediaState,
 	}
 
 	// conveniance enum (ObjC uses NSString)
@@ -821,6 +894,22 @@ namespace HomeKit {
 		[MacCatalyst (14, 0)]
 		[Field ("HMServiceTypeFaucet")]
 		Faucet,
+
+		[Watch (11, 0), TV (18, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("HMServiceTypeTelevision")]
+		Television,
+
+		[Watch (11, 0), TV (18, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("HMServiceTypeInputSource")]
+		InputSource,
+
+		[Watch (11, 0), TV (18, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("HMServiceTypeWiFiRouter")]
+		WiFiRouter,
+
+		[Watch (11, 0), TV (18, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("HMServiceTypeWiFiSatellite")]
+		WiFiSatellite,
 	}
 
 	// conveniance enum (ObjC uses NSString)
@@ -1165,6 +1254,34 @@ namespace HomeKit {
 		[MacCatalyst (14, 0)]
 		[Field ("HMAccessoryCategoryTypeShowerHead")]
 		ShowerHead,
+
+		[Watch (11, 0), TV (18, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("HMAccessoryCategoryTypeTelevision")]
+		Television,
+
+		[Watch (11, 0), TV (18, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("HMAccessoryCategoryTypeTelevisionSetTopBox")]
+		TelevisionSetTopBox,
+
+		[Watch (11, 0), TV (18, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("HMAccessoryCategoryTypeTelevisionStreamingStick")]
+		TelevisionStreamingStick,
+
+		[Watch (11, 0), TV (18, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("HMAccessoryCategoryTypeWiFiRouter")]
+		WiFiRouter,
+
+		[Watch (11, 0), TV (18, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("HMAccessoryCategoryTypeSpeaker")]
+		Speaker,
+
+		[Watch (11, 0), TV (18, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("HMAccessoryCategoryTypeAudioReceiver")]
+		AudioReceiver,
+
+		[Watch (11, 0), TV (18, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("HMAccessoryCategoryTypeAirPort")]
+		AirPort,
 	}
 
 	/// <summary>Enumerates events such as sunrise and sunset.</summary>
@@ -1469,5 +1586,154 @@ namespace HomeKit {
 	public enum HMCharacteristicValueTargetLockMechanismState : long {
 		Unsecured = 0,
 		Secured = 1,
+	}
+
+	[Watch (11, 0), TV (18, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
+	[Native]
+	public enum HMCharacteristicValueInputSourceType : long {
+		Other = 0,
+		HomeScreen = 1,
+		Tuner = 2,
+		Hdmi = 3,
+		CompositeVideo = 4,
+		SVideo = 5,
+		ComponentVideo = 6,
+		Dvi = 7,
+		AirPlay = 8,
+		Usb = 9,
+		Application = 10,
+	}
+
+	[Watch (11, 0), TV (18, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
+	[Native]
+	public enum HMCharacteristicValueInputDeviceType : long {
+		Other = 0,
+		TV = 1,
+		Recording = 2,
+		Tuner = 3,
+		Playback = 4,
+		AudioSystem = 5,
+		None = 6,
+	}
+
+	[Watch (11, 0), TV (18, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
+	[Native]
+	public enum HMCharacteristicValueClosedCaptions : long {
+		Disabled = 0,
+		Enabled = 1,
+	}
+
+	[Watch (11, 0), TV (18, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
+	[Native]
+	public enum HMCharacteristicValuePowerModeSelection : long {
+		Show = 0,
+		Hide = 1,
+	}
+
+	[Watch (11, 0), TV (18, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
+	[Native]
+	public enum HMCharacteristicValueCurrentMediaState : long {
+		Playing = 0,
+		Paused = 1,
+		Stopped = 2,
+		Unknown = 3,
+		Loading = 4,
+		Interrupted = 5,
+	}
+
+	[Watch (11, 0), TV (18, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
+	[Native]
+	public enum HMCharacteristicValueRemoteKey : long {
+		Rewind = 0,
+		FastForward = 1,
+		NextTrack = 2,
+		PreviousTrack = 3,
+		ArrowUp = 4,
+		ArrowDown = 5,
+		ArrowLeft = 6,
+		ArrowRight = 7,
+		Select = 8,
+		Back = 9,
+		Exit = 10,
+		PlayPause = 11,
+		Play = 12,
+		Pause = 13,
+		Menu = 14,
+		Info = 15,
+		Home = 16,
+	}
+
+	[Watch (11, 0), TV (18, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
+	[Native]
+	public enum HMCharacteristicValuePictureMode : long {
+		Standard = 0,
+		Movie = 1,
+		Sport = 2,
+		Game = 3,
+		Photo = 4,
+		Vivid = 5,
+		Dark = 6,
+		Bright = 7,
+		Computer = 8,
+		Night = 9,
+		Calibrated = 10,
+		Custom1 = 11,
+		Custom2 = 12,
+		Custom3 = 13,
+	}
+
+	[Watch (11, 0), TV (18, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
+	[Native]
+	public enum HMCharacteristicValueTargetVisibilityState : long {
+		Show = 0,
+		Hide = 1,
+	}
+
+	[Watch (11, 0), TV (18, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
+	[Native]
+	public enum HMCharacteristicValueCurrentVisibilityState : long {
+		Shown = 0,
+		Hidden = 1,
+		Connected = 2,
+		AlwaysShown = 3,
+	}
+
+	[Watch (11, 0), TV (18, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
+	[Native]
+	public enum HMCharacteristicValueRouterStatus : long {
+		Ready = 0,
+		NotReady = 1,
+	}
+
+	[Watch (11, 0), TV (18, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
+	[Native]
+	public enum HMCharacteristicValueWiFiSatelliteStatus : long {
+		Unknown = 0,
+		Connected = 1,
+		NotConnected = 2,
+	}
+
+	[Watch (11, 0), TV (18, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
+	[Native]
+	public enum HMCharacteristicValueVolumeControlType : long {
+		None = 0,
+		Relative,
+		RelativeWithCurrent,
+		Absolute,
+	}
+
+	[Watch (11, 0), TV (18, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
+	[Native]
+	public enum HMCharacteristicValueVolumeSelector : long {
+		VolumeIncrement = 0,
+		VolumeDecrement,
+	}
+
+	[Watch (11, 0), TV (18, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
+	[Native]
+	public enum HMCharacteristicValueTargetMediaState : long {
+		Play = 0,
+		Pause = 1,
+		Stop = 2,
 	}
 }

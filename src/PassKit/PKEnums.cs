@@ -242,7 +242,8 @@ namespace PassKit {
 	}
 
 	/// <summary>Enumerates results that are used in calls to <see cref="M:PassKit.PKPassLibrary.RequestAutomaticPassPresentationSuppression(System.Action{PassKit.PKAutomaticPassPresentationSuppressionResult})" />.</summary>
-	[NoWatch]
+	[Mac (11, 0)]
+	[Watch (10, 2)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum PKAutomaticPassPresentationSuppressionResult : ulong {
@@ -309,7 +310,15 @@ namespace PassKit {
 	[ErrorDomain ("PKAddSecureElementPassErrorDomain")]
 	[Native]
 	public enum PKAddSecureElementPassErrorCode : long {
-		UnknownError,
+		GenericError = 0,
+#if !XAMCORE_5_0
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'GenericError' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'GenericError' instead.")]
+		[Deprecated (PlatformName.TvOS, 18, 0, message: "Use 'GenericError' instead.")]
+		[Deprecated (PlatformName.WatchOS, 11, 0, message: "Use 'GenericError' instead.")]
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'GenericError' instead.")]
+		UnknownError = GenericError,
+#endif
 		UserCanceledError,
 		UnavailableError,
 		InvalidConfigurationError,
@@ -346,6 +355,7 @@ namespace PassKit {
 		RequestAlreadyInProgress = 5,
 		InvalidNonce = 6,
 		InvalidElement = 7,
+		RegionNotSupported = 8,
 	}
 
 	[iOS (16, 0), Mac (13, 0), Watch (9, 0), NoTV, MacCatalyst (16, 0)]
@@ -389,7 +399,7 @@ namespace PassKit {
 		UnavailableRecurringTransaction,
 	}
 
-	[NoWatch, NoTV, NoMac, iOS (17, 0), MacCatalyst (17, 0)]
+	[NoWatch, NoTV, Mac (15, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[Native]
 	[ErrorDomain ("PKDisbursementErrorDomain")]
 	public enum PKDisbursementErrorCode : long {
@@ -412,5 +422,13 @@ namespace PassKit {
 		Badge,
 		Checkout,
 		Price,
+	}
+
+	[Static]
+	[Internal]
+	[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	interface PKMerchantCategoryCodeValues {
+		[Field ("PKMerchantCategoryCodeNone")]
+		short None { get; }
 	}
 }
