@@ -46,8 +46,7 @@ try {
       log show --predicate $Predicate --style $Style --start "$start" --end "$end" > $Output
   }
 } catch {
-    Write-Host "Exception occurred: $_"
     # Create the output file, because we later try to upload it as an artifact, and *not* uploading
     # if there's *no* file is much harder than just creating the file.
-    New-Item -Path $Output -Value "$_"
+    Write-Host "Exception occurred: $_" | Tee-Object -FilePath $Output -Append
 }
