@@ -73,6 +73,8 @@ namespace Introspection {
 			case "CIConvertLabToRGB":
 			case "CIConvertRGBtoLab":
 				return true;
+			case "CIAreaAlphaWeightedHistogram": // not in Xcode 16 b1 or b2 headers.
+				return true;
 			}
 		}
 
@@ -561,6 +563,13 @@ namespace Introspection {
 						case "outputImageNonMPS":
 						case "outputData":
 						case "outputImageMPS":
+							// no doc for argument
+							continue;
+						}
+						break;
+					case "CIToneMapHeadroom":
+						switch (key) {
+						case "outputValue:":
 							// no doc for argument
 							continue;
 						}

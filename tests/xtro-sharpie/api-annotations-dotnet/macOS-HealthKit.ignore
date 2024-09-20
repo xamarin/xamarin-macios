@@ -1,3 +1,5 @@
-# intro reports them as not present
+# xtro says 'workoutSessionMirroringStartHandler' exists on macOS, introspection disagrees.
+# Headers doesn't say neither that it's available nor that it's not on macOS, which is probably why xtro picks it up (defaults to available).
+# Assuming that the lack of unavailability in the headers is a mistake, so remove from macOS.
 !missing-selector! HKHealthStore::setWorkoutSessionMirroringStartHandler: not bound
 !missing-selector! HKHealthStore::workoutSessionMirroringStartHandler not bound

@@ -695,6 +695,11 @@ namespace PhotosUI {
 		[Export ("timelapseVideosFilter")]
 		PHPickerFilter TimelapseVideosFilter { get; }
 
+		[NoWatch, NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Static]
+		[Export ("spatialMediaFilter")]
+		PHPickerFilter SpatialMediaFilter { get; }
+
 		[NoWatch, NoTV, Mac (13, 0), iOS (15, 0)]
 		[MacCatalyst (15, 0)]
 		[Static]
