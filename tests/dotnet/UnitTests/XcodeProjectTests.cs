@@ -376,7 +376,7 @@ public class Binding
 					(msg) => msg?.Contains (expectedErrorContent) == true
 				},
 				Func<string, bool> [] {
-					(msg) => msg)
+				(msg) => msg)
 				}
 			);
 		}
