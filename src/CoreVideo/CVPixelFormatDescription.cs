@@ -366,6 +366,7 @@ namespace CoreVideo {
 			}
 		}
 #endif
+
 #endif // !COREBUILD
 	}
 }

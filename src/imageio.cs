@@ -680,10 +680,10 @@ namespace ImageIO {
 		NSString TIFFXResolution { get; }
 		[Field ("kCGImagePropertyTIFFYResolution")]
 		NSString TIFFYResolution { get; }
-		[Mac (14, 4), iOS (17, 4), MacCatalyst (17, 4)]
+		[Mac (14, 4), iOS (17, 4), MacCatalyst (17, 4), TV (17, 4), Watch (10, 4)]
 		[Field ("kCGImagePropertyTIFFXPosition")]
 		NSString TIFFXPosition { get; }
-		[Mac (14, 4), iOS (17, 4), MacCatalyst (17, 4)]
+		[Mac (14, 4), iOS (17, 4), MacCatalyst (17, 4), TV (17, 4), Watch (10, 4)]
 		[Field ("kCGImagePropertyTIFFYPosition")]
 		NSString TIFFYPosition { get; }
 		[Field ("kCGImagePropertyTIFFResolutionUnit")]
@@ -2402,6 +2402,22 @@ namespace ImageIO {
 		[iOS (16, 4), Mac (13, 3), Watch (9, 4), TV (16, 4), MacCatalyst (16, 4)]
 		[Field ("kCGImagePropertyOpenEXRCompression")]
 		NSString OpenExrCompression { get; }
+
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("kCGImagePropertyGroupImageIndexMonoscopic")]
+		NSString GroupImageIndexMonoscopic { get; }
+
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("kCGImagePropertyGroupImageIsMonoscopicImage")]
+		NSString GroupImageIsMonoscopicImage { get; }
+
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("kCGImagePropertyGroupImageStereoAggressors")]
+		NSString GroupImageStereoAggressors { get; }
+
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("kCGImagePropertyGroupMonoscopicImageLocation")]
+		NSString GroupMonoscopicImageLocation { get; }
 	}
 
 	/// <summary>Holds constants specifying standard metadata namespaces. Primarily used with <see cref="P:ImageIO.CGImageMetadataTag.Namespace" />.</summary>
@@ -2525,6 +2541,11 @@ namespace ImageIO {
 		[Internal]
 		[Field ("kCGImageSourceDecodeToSDR")]
 		IntPtr DecodeToSDR { get; }
+
+		[iOS (18, 0), MacCatalyst (18, 0), TV (18, 0), Mac (15, 0), Watch (11, 0)]
+		[Internal]
+		[Field ("kCGImageSourceGenerateImageSpecificLumaScaling")]
+		IntPtr GenerateImageSpecificLumaScaling { get; }
 
 		[Internal]
 		[Field ("kCGImageSourceDecodeRequestOptions")]
@@ -2738,6 +2759,34 @@ namespace ImageIO {
 		[MacCatalyst (14, 1)]
 		[Field ("kCGImageDestinationPreserveGainMap")]
 		NSString PreserveGainMapKey { get; }
+
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("kCGImageDestinationEncodeRequest")]
+		NSString EncodeRequest { get; }
+
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("kCGImageDestinationEncodeToSDR")]
+		NSString EncodeToSdr { get; }
+
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("kCGImageDestinationEncodeToISOHDR")]
+		NSString EncodeToIsoHdr { get; }
+
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("kCGImageDestinationEncodeToISOGainmap")]
+		NSString EncodeToIsoGainmap { get; }
+
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("kCGImageDestinationEncodeRequestOptions")]
+		NSString EncodeRequestOptions { get; }
+
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("kCGImageDestinationEncodeBaseIsSDR")]
+		NSString EncodeBaseIsSdr { get; }
+
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("kCGImageDestinationEncodeTonemapMode")]
+		NSString EncodeTonemapMode { get; }
 	}
 
 	/// <summary>Class that contains options for copying image sources.</summary>
@@ -2824,6 +2873,10 @@ namespace ImageIO {
 		[MacCatalyst (14, 3)]
 		[Field ("kCGImageAuxiliaryDataTypeSemanticSegmentationSkyMatte")]
 		SemanticSegmentationSkyMatte,
+
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("kCGImageAuxiliaryDataTypeISOGainMap")]
+		IsoGainMap,
 	}
 
 	[MacCatalyst (13, 1)]
@@ -2838,6 +2891,10 @@ namespace ImageIO {
 
 		[Field ("kCGImageAuxiliaryDataInfoMetadata")]
 		NSString MetadataKey { get; }
+
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("kCGImageAuxiliaryDataInfoColorSpace")]
+		NSString ColorSpaceKey { get; }
 	}
 
 	[MacCatalyst (13, 1)]
@@ -2846,6 +2903,10 @@ namespace ImageIO {
 
 		NSData Data { get; set; }
 		NSDictionary DataDescription { get; set; }
+		// Bound manually:
+		// CGImageMetadata Metadata { get; set; }))
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		CGColorSpace ColorSpace { get; set; }
 	}
 
 	[iOS (13, 0), TV (13, 0), Watch (6, 0)]
@@ -2917,5 +2978,34 @@ namespace ImageIO {
 
 		[Field ("kIIOMetadata_CameraModelKey")]
 		NSString CameraModelKey { get; }
+	}
+
+	[Static]
+	[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	interface IOStereoAggressors {
+		[Field ("kIIOStereoAggressors_Type")]
+		NSString Type { get; }
+
+		[Field ("kIIOStereoAggressors_SubTypeURI")]
+		NSString SubTypeUri { get; }
+
+		[Field ("kIIOStereoAggressors_Severity")]
+		NSString Severity { get; }
+	}
+
+	[Static]
+	[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	interface IOMonoscopicImageLocation {
+		[Field ("kIIOMonoscopicImageLocation_Unspecified")]
+		NSString Unspecified { get; }
+
+		[Field ("kIIOMonoscopicImageLocation_Left")]
+		NSString Left { get; }
+
+		[Field ("kIIOMonoscopicImageLocation_Right")]
+		NSString Right { get; }
+
+		[Field ("kIIOMonoscopicImageLocation_Center")]
+		NSString Center { get; }
 	}
 }

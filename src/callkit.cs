@@ -52,6 +52,7 @@ namespace CallKit {
 		FilteredByDoNotDisturb = 3,
 		FilteredByBlockList = 4,
 		FilteredDuringRestrictedSharingMode = 5,
+		CallIsProtected = 6,
 	}
 
 	/// <summary>Enumerates transaction request errors.</summary>
@@ -68,6 +69,7 @@ namespace CallKit {
 		CallUuidAlreadyExists = 5,
 		InvalidAction = 6,
 		MaximumCallGroupsReached = 7,
+		CallIsProtected = 8,
 	}
 
 	/// <summary>Enumerates directory manager errors.</summary>

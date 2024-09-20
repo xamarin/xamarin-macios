@@ -1,3 +1,4 @@
+using AudioToolbox;
 using AVFoundation;
 using CoreFoundation;
 using Foundation;
@@ -238,6 +239,14 @@ namespace Phase {
 		LateReverb = 1uL << 2,
 	}
 
+	[Flags]
+	[NoWatch, TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[Native]
+	[NativeName ("PHASEAutomaticHeadTrackingFlags")]
+	public enum PhaseAutomaticHeadTrackingFlags : ulong {
+		None = 0,
+		Orientation = 1UL << 0,
+	}
 
 	[NoWatch, TV (17, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (NSObject), Name = "PHASENumericPair")]
@@ -707,6 +716,23 @@ namespace Phase {
 		nint UniqueSelectionQueueLength { get; set; }
 	}
 
+	[NoWatch, TV (18, 0), iOS (18, 0), Mac (15, 0), MacCatalyst (18, 0)]
+	[BaseType (typeof (NSObject), Name = "PHASEStreamNode")]
+	[DisableDefaultCtor]
+	interface PhaseStreamNode {
+		[Export ("gainMetaParameter", ArgumentSemantic.Strong), NullAllowed]
+		PhaseNumberMetaParameter GainMetaParameter { get; }
+
+		[Export ("rateMetaParameter", ArgumentSemantic.Strong), NullAllowed]
+		PhaseNumberMetaParameter RateMetaParameter { get; }
+
+		[Export ("mixer", ArgumentSemantic.Strong)]
+		PhaseMixer Mixer { get; }
+
+		[Export ("format", ArgumentSemantic.Strong)]
+		AVAudioFormat Format { get; }
+	}
+
 	[NoWatch, TV (17, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (PhaseGeneratorNodeDefinition), Name = "PHASEPushStreamNodeDefinition")]
 	[DisableDefaultCtor]
@@ -726,13 +752,13 @@ namespace Phase {
 	}
 
 	[NoWatch, TV (17, 0), iOS (15, 0), MacCatalyst (15, 0)]
-	[BaseType (typeof (NSObject), Name = "PHASEPushStreamNode")]
+	[BaseType (typeof (PhaseStreamNode), Name = "PHASEPushStreamNode")]
 	[DisableDefaultCtor]
 	interface PhasePushStreamNode {
-		[NullAllowed, Export ("gainMetaParameter", ArgumentSemantic.Strong)]
+		[Export ("gainMetaParameter", ArgumentSemantic.Strong), NullAllowed]
 		PhaseNumberMetaParameter GainMetaParameter { get; }
 
-		[NullAllowed, Export ("rateMetaParameter", ArgumentSemantic.Strong)]
+		[Export ("rateMetaParameter", ArgumentSemantic.Strong), NullAllowed]
 		PhaseNumberMetaParameter RateMetaParameter { get; }
 
 		[Export ("mixer", ArgumentSemantic.Strong)]
@@ -1131,6 +1157,10 @@ namespace Phase {
 
 		[Export ("indefinite")]
 		bool Indefinite { [Bind ("isIndefinite")] get; }
+
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("pullStreamNodes", ArgumentSemantic.Copy)]
+		NSDictionary<NSString, PhasePullStreamNode> PullStreamNodes { get; }
 	}
 
 	[NoWatch, TV (17, 0), iOS (15, 0), MacCatalyst (15, 0)]
@@ -1200,6 +1230,10 @@ namespace Phase {
 
 		[Export ("gain")]
 		double Gain { get; set; }
+
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("automaticHeadTrackingFlags", ArgumentSemantic.Assign)]
+		PhaseAutomaticHeadTrackingFlags AutomaticHeadTrackingFlags { get; set; }
 	}
 
 	[NoWatch, TV (17, 0), iOS (15, 0), MacCatalyst (15, 0)]
@@ -1295,5 +1329,54 @@ namespace Phase {
 
 		[Export ("entries", ArgumentSemantic.Copy)]
 		NSDictionary<NSString, PhaseSpatialPipelineEntry> Entries { get; }
+	}
+
+	/// <summary>This is a delegate to provide audio data to a <see cref="PhasePullStreamNode" />.</summary>
+	/// <param name="isSilence">It's possible to hint to the receiver of the buffer that the returned audio samples are silence. Note that since this is  just a hint, the returned audio samples should also be silence.</param>
+	/// <param name="timeStamp">The HAL time when the sample is to be rendered.</param>
+	/// <param name="frameCount">The number of sample frames requested.</param>
+	/// <param name="outputData">
+	///    <para>The list of audio buffers where to store the returned audio samples.</para>
+	///    <para>
+	///        The caller will provide the list of audio buffers, but the callback may replace the
+	///        <see cref="AudioBuffer.Data" /> pointer (and update the <see cref="AudioBuffer.DataByteSize" /> value)
+	///        with a pointer to a memory location that the callback owns, and which will be valid until
+	///        the next render cycle.
+	///    </para>
+	/// </param>
+	/// <returns>0 in case of success, otherwise an OSStatus error code. The audio data will be assumed to be invalid in case of an error.</returns>
+	public unsafe delegate /* OSStatus */ int PhasePullStreamRenderBlock (
+		/* BOOL * */ byte* isSilence,
+		/* const AudioTimeStamp * */ AudioTimeStamp* timeStamp,
+		/* AVAudioFrameCount */ uint frameCount,
+		/* AudioBufferList * */ AudioBufferList* outputData);
+
+	[NoWatch, TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[BaseType (typeof (PhaseGeneratorNodeDefinition), Name = "PHASEPullStreamNodeDefinition")]
+	[DisableDefaultCtor]
+	interface PhasePullStreamNodeDefinition {
+		[Export ("initWithMixerDefinition:format:identifier:")]
+		NativeHandle Constructor (PhaseMixerDefinition mixerDefinition, AVAudioFormat format, string identifier);
+
+		[DesignatedInitializer]
+		[Export ("initWithMixerDefinition:format:")]
+		NativeHandle Constructor (PhaseMixerDefinition mixerDefinition, AVAudioFormat format);
+
+		[Export ("format", ArgumentSemantic.Strong)]
+		AVAudioFormat Format { get; }
+
+		[Export ("normalize")]
+		bool Normalize { get; set; }
+	}
+
+	[NoWatch, TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[BaseType (typeof (PhaseStreamNode), Name = "PHASEPullStreamNode")]
+	[DisableDefaultCtor]
+	interface PhasePullStreamNode {
+		// Apple's header says:
+		//     "Your implementation must be performant and not perform any realtime unsafe operations such as lock mutexes or allocate memory."
+		// So not offering a strongly typed delegate type, because that would involve memory allocations, just offer the rawest version.
+		[Export ("renderBlock", ArgumentSemantic.Strong)]
+		PhasePullStreamRenderBlock RenderBlock { get; set; }
 	}
 }

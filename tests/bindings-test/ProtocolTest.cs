@@ -317,49 +317,42 @@ namespace Xamarin.BindingTests {
 			}), "Properties: requiredReadonlyProperty");
 
 			if (XamarinTests.ObjCRuntime.Registrar.IsStaticRegistrar) {
-				AssertContains (properties, new objc_property ("optionalInstanceProperty", "T@\"NSString\",?,N", new objc_property_attribute [] {
+				AssertContains (properties, new objc_property ("optionalInstanceProperty", "T@\"NSString\",N", new objc_property_attribute [] {
 					new objc_property_attribute ("T", "@\"NSString\""),
-					new objc_property_attribute ("?"),
 					new objc_property_attribute ("N", "")
 				}), "Properties: optionalInstanceProperty");
 
-				AssertContains (properties, new objc_property ("propertyWithCustomAccessors", "T@\"NSString\",?,N,Gget_propertyWithCustomAccessors,Sset_propertyWithCustomAccessors:", new objc_property_attribute [] {
+				AssertContains (properties, new objc_property ("propertyWithCustomAccessors", "T@\"NSString\",N,Gget_propertyWithCustomAccessors,Sset_propertyWithCustomAccessors:", new objc_property_attribute [] {
 					new objc_property_attribute ("T", "@\"NSString\""),
-					new objc_property_attribute ("?"),
 					new objc_property_attribute ("N", ""),
 					new objc_property_attribute ("G", "get_propertyWithCustomAccessors"),
 					new objc_property_attribute ("S", "set_propertyWithCustomAccessors:")
 				}), "Properties: propertyWithCustomAccessors");
 
-				AssertContains (properties, new objc_property ("propertyWithArgumentSemanticNone", "T@\"NSString\",?,N", new objc_property_attribute [] {
+				AssertContains (properties, new objc_property ("propertyWithArgumentSemanticNone", "T@\"NSString\",N", new objc_property_attribute [] {
 					new objc_property_attribute ("T", "@\"NSString\""),
-					new objc_property_attribute ("?"),
 					new objc_property_attribute ("N", "")
 				}), "Properties: propertyWithArgumentSemanticNone");
 
-				AssertContains (properties, new objc_property ("propertyWithArgumentSemanticCopy", "T@\"NSString\",?,C,N", new objc_property_attribute [] {
+				AssertContains (properties, new objc_property ("propertyWithArgumentSemanticCopy", "T@\"NSString\",C,N", new objc_property_attribute [] {
 					new objc_property_attribute ("T", "@\"NSString\""),
-					new objc_property_attribute ("?"),
 					new objc_property_attribute ("N", ""),
 					new objc_property_attribute ("C", "")
 				}), "Properties: propertyWithArgumentSemanticCopy");
 
-				AssertContains (properties, new objc_property ("propertyWithArgumentSemanticAssign", "T@\"NSString\",?,N", new objc_property_attribute [] {
+				AssertContains (properties, new objc_property ("propertyWithArgumentSemanticAssign", "T@\"NSString\",N", new objc_property_attribute [] {
 					new objc_property_attribute ("T", "@\"NSString\""),
-					new objc_property_attribute ("?"),
 					new objc_property_attribute ("N", "")
 				}), "Properties: propertyWithArgumentSemanticAssign");
 
-				AssertContains (properties, new objc_property ("propertyWithArgumentSemanticRetain", "T@\"NSString\",?,&,N", new objc_property_attribute [] {
+				AssertContains (properties, new objc_property ("propertyWithArgumentSemanticRetain", "T@\"NSString\",&,N", new objc_property_attribute [] {
 					new objc_property_attribute ("T", "@\"NSString\""),
-					new objc_property_attribute ("?"),
 					new objc_property_attribute ("&", ""),
 					new objc_property_attribute ("N", "")
 				}), "Properties: propertyWithArgumentSemanticRetain");
 
-				AssertContains (properties, new objc_property ("readonlyProperty", "T@\"NSString\",?,R,N", new objc_property_attribute [] {
+				AssertContains (properties, new objc_property ("readonlyProperty", "T@\"NSString\",R,N", new objc_property_attribute [] {
 					new objc_property_attribute ("T", "@\"NSString\""),
-					new objc_property_attribute ("?"),
 					new objc_property_attribute ("R", ""),
 					new objc_property_attribute ("N", "")
 				}), "Properties: readonlyProperty");
@@ -378,7 +371,7 @@ namespace Xamarin.BindingTests {
 					return;
 			}
 
-			Assert.Fail ($"Collection {array} does not contain item {item}: {message}");
+			throw new Exception ($"Collection {array} does not contain item {item}: {message}");
 		}
 
 		[DllImport ("/usr/lib/libobjc.dylib")]
@@ -410,11 +403,17 @@ namespace Xamarin.BindingTests {
 		[DllImport ("/usr/lib/libobjc.dylib", EntryPoint = "protocol_copyPropertyList")]
 		internal extern static IntPtr _protocol_copyPropertyList (IntPtr protocol, out int count);
 
+		static void Trace (string message)
+		{
+			TestRuntime.NSLog (message);
+		}
+
 		static objc_property [] protocol_copyPropertyList (IntPtr protocol)
 		{
 			int count;
 			IntPtr list = _protocol_copyPropertyList (protocol, out count);
 			var rv = new objc_property [count];
+			Trace ($"Protocol {new Protocol (protocol)} has {rv} properties");
 			try {
 				for (int i = 0; i < count; i++) {
 					var prop = new objc_property ();
@@ -423,6 +422,7 @@ namespace Xamarin.BindingTests {
 					prop.Name = property_getName (p);
 					prop.Attributes = property_getAttributes (p);
 					prop.AttributeList = property_copyAttributeList (p);
+					Trace ($"    #{i + 1}: Name={prop.Name} Attributes={prop.Attributes} AttributeList={prop.AttributeList}");
 				}
 				return rv;
 			} finally {
@@ -447,7 +447,11 @@ namespace Xamarin.BindingTests {
 
 		static string property_getAttributes (IntPtr property)
 		{
-			return Marshal.PtrToStringAuto (_property_getAttributes (property));
+			var v = Marshal.PtrToStringAuto (_property_getAttributes (property));
+
+			// Ignore any "?" attributes, apparently it's a new property attribute in Xcode 16, but since there's no documentation about it yet, just ignore it.
+			var attribs = v.Split (',').Where (v => v != "?").ToArray ();
+			return string.Join (",", attribs);
 		}
 
 		[DllImport ("/usr/lib/libobjc.dylib", EntryPoint = "property_copyAttributeList")]
@@ -457,17 +461,20 @@ namespace Xamarin.BindingTests {
 		{
 			int count;
 			IntPtr list = _property_copyAttributeList (property, out count);
-			var rv = new objc_property_attribute [count];
+			var rv = new List<objc_property_attribute> (count);
 			try {
 				for (int i = 0; i < count; i++) {
 					var attrib = new objc_property_attribute ();
-					rv [i] = attrib;
 					IntPtr n = Marshal.ReadIntPtr (list, (IntPtr.Size * 2) * i);
 					IntPtr v = Marshal.ReadIntPtr (list, (IntPtr.Size * 2) * i + IntPtr.Size);
 					attrib.Name = Marshal.PtrToStringAuto (n);
 					attrib.Value = Marshal.PtrToStringAuto (v);
+					// Ignore any "?" attributes, apparently it's a new property attribute in Xcode 16, but since there's no documentation about it yet, just ignore it.
+					if (attrib.Name == "?" && string.IsNullOrEmpty (attrib.Value))
+						continue;
+					rv.Add (attrib);
 				}
-				return rv;
+				return rv.ToArray ();
 			} finally {
 				free (list);
 			}
@@ -484,7 +491,7 @@ namespace Xamarin.BindingTests {
 			{
 			}
 
-			public objc_property_attribute (string name, string value = "")
+			public objc_property_attribute (string name, string value)
 			{
 				this.Name = name;
 				this.Value = value;

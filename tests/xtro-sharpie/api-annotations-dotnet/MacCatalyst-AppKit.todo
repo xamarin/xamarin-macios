@@ -1,6 +1,0 @@
-!missing-field! NSToolbarItemKey not bound
-!missing-selector! NSToolbarItem::possibleLabels not bound
-!missing-selector! NSToolbarItem::setPossibleLabels: not bound
-!unknown-native-enum! NSCollectionViewDropOperation bound
-!unknown-native-enum! NSCollectionViewItemHighlightState bound
-!unknown-native-enum! NSCollectionViewScrollPosition bound

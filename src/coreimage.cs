@@ -1524,8 +1524,17 @@ namespace CoreImage {
 		NSString OptionColorSpace { get; }
 	}
 
+#if XAMCORE_5_0
+	[NoiOS]
+	[NoMacCatalyst]
+#else
+#if __IOS__ || __MACCATALYST__
+	[EditorBrowsable (EditorBrowsableState.Never)]
+	[Obsolete ("Do not use; this type does not exist on this platform.")]
+#endif
 	[iOS (17, 0)]
 	[MacCatalyst (17, 0)]
+#endif
 	[NoWatch]
 	[NoTV]
 	[BaseType (typeof (NSObject))]
@@ -2365,6 +2374,17 @@ namespace CoreImage {
 		[Export ("imageByInsertingIntermediate:")]
 		CIImage CreateByInsertingIntermediate (bool cache);
 
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("imageByApplyingGainMap:")]
+		CIImage CreateByApplyingGainMap (CIImage gainMap);
+
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("imageByApplyingGainMap:headroom:")]
+		CIImage CreateByApplyingGainMap (CIImage gainMap, float headroom);
+
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("opaque")]
+		bool Opaque { [Bind ("isOpaque")] get; }
 		// CIImage_AVPortraitEffectsMatte category
 
 		[MacCatalyst (13, 1)]
@@ -2523,6 +2543,14 @@ namespace CoreImage {
 		[iOS (16, 0), TV (16, 0), Mac (13, 0), MacCatalyst (16, 0)]
 		[Export ("imageByConvertingLabToWorkingSpace")]
 		CIImage ConvertLabToWorkingSpace ();
+
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("contentHeadroom")]
+		float ContentHeadroom { get; }
+
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("metalTexture"), NullAllowed]
+		IMTLTexture MetalTexture { get; }
 	}
 
 	interface ICIImageProcessorInput { }
@@ -5355,6 +5383,10 @@ namespace CoreImage {
 		[CoreImageFilterProperty ("inputPoint4")]
 		CIVector Point4 { get; set; }
 #endif
+
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[CoreImageFilterProperty ("inputExtrapolate")]
+		bool Extrapolate { get; set; }
 	}
 
 	[iOS (14, 0)]
@@ -6431,6 +6463,19 @@ namespace CoreImage {
 		[iOS (17, 0), TV (17, 0), Mac (14, 0), MacCatalyst (17, 0)]
 		[Field ("kCIImageExpandToHDR")]
 		NSString ExpandToHdr { get; }
+
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("kCIImageRepresentationHDRImage")]
+		NSString HdrImage { get; }
+
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("kCIImageContentHeadroom")]
+		NSString ContentHeadroom { get; }
+
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("kCIImageRepresentationHDRGainMapImage")]
+		NSString HdrGainMapImage { get; }
+
 	}
 
 	[MacCatalyst (13, 1)]
@@ -10175,6 +10220,60 @@ namespace CoreImage {
 	}
 #endif
 
+	[CoreImageFilter]
+	[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[BaseType (typeof (CIFilter))]
+	interface CIMaximumScaleTransform : CIMaximumScaleTransformProtocol {
+	}
+
+	[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[Protocol (Name = "CIMaximumScaleTransform", BackwardsCompatibleCodeGeneration = false)]
+	interface CIMaximumScaleTransformProtocol : CIFilterProtocol {
+		[Abstract]
+		[NullAllowed, Export ("inputImage", ArgumentSemantic.Retain)]
+		CIImage InputImage { get; set; }
+
+		[Abstract]
+		[Export ("scale")]
+		float Scale { get; set; }
+
+		[Abstract]
+		[Export ("aspectRatio")]
+		float AspectRatio { get; set; }
+	}
+
+	[CoreImageFilter]
+	[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[BaseType (typeof (CIFilter))]
+	interface CIToneMapHeadroom : CIToneMapHeadroomProtocol {
+	}
+
+	[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[Protocol (Name = "CIToneMapHeadroom", BackwardsCompatibleCodeGeneration = false)]
+	interface CIToneMapHeadroomProtocol : CIFilterProtocol {
+		[Abstract]
+		[NullAllowed, Export ("inputImage", ArgumentSemantic.Retain)]
+		CIImage InputImage { get; set; }
+
+		[Abstract]
+		[Export ("sourceHeadroom")]
+		float SourceHeadroom { get; set; }
+
+		[Abstract]
+		[Export ("targetHeadroom")]
+		float TargetHeadroom { get; set; }
+	}
+
+	[CoreImageFilter]
+	[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[BaseType (typeof (CIFilter))]
+	interface CIAreaBoundsRed : CIAreaBoundsRedProtocol {
+	}
+
+	[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[Protocol (Name = "CIAreaBoundsRed")]
+	interface CIAreaBoundsRedProtocol : CIAreaReductionFilterProtocol {
+	}
 	#endregion
 
 }

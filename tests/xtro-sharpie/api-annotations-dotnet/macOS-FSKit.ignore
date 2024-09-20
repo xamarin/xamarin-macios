@@ -1,0 +1,14 @@
+# FSKit was removed from Xcode 16 RC, but keeping it commented, because it's likely to return in a later release
+#
+# ## There's no documentation on what the '[long]ByteQualifier' pointer is, so wait with the binding for it.
+# !missing-selector! +FSEntityIdentifier::identifierWithUUID:byteQualifier: not bound
+# !missing-selector! +FSEntityIdentifier::identifierWithUUID:longByteQualifier: not bound
+# !missing-selector! FSEntityIdentifier::initWithUUID:byteQualifier: not bound
+# !missing-selector! FSEntityIdentifier::initWithUUID:longByteQualifier: not bound
+# 
+# ## The C# binding for this ends up being the same as the the nameWithString: selector, which we've already bound.
+# !missing-selector! +FSFileName::nameWithCString: not bound
+# !missing-selector! FSFileName::initWithCString: not bound
+# 
+# ## debugDescripion is already bound on NSObject
+# !missing-selector! FSFileName::debugDescription not bound

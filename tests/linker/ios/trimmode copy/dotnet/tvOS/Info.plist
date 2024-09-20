@@ -6,7 +6,5 @@
     <string>com.xamarin.trimmode_copy</string>
     <key>XSAppIconAssets</key>
     <string>Assets.xcassets/AppIcons.appiconset</string>
-    <key>UILaunchStoryboardName</key>
-    <string>LaunchScreen</string>
   </dict>
 </plist>

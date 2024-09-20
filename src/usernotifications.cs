@@ -17,6 +17,8 @@ using CoreLocation;
 using CoreMedia;
 #endif
 
+using Intents;
+
 #if MONOMAC || WATCH
 using UIScene = Foundation.NSObject;
 #else
@@ -945,6 +947,15 @@ namespace UserNotifications {
 	[iOS (15, 0), MacCatalyst (15, 0), TV (15, 0), Watch (8, 0)]
 	[Protocol]
 	interface UNNotificationContentProviding {
+	}
+
+	[Watch (11, 0), NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface UNNotificationAttributedMessageContext : UNNotificationContentProviding {
+		[Static]
+		[Export ("contextWithSendMessageIntent:attributedContent:")]
+		UNNotificationAttributedMessageContext Create (INSendMessageIntent sendMessageIntent, NSAttributedString attributedContent);
 	}
 }
 

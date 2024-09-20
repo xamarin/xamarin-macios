@@ -1,3 +1,4 @@
 # https://github.com/xamarin/xamarin-macios/issues/4452#issuecomment-660220392
 !missing-pinvoke! MIDIEventListAdd is not bound
 !missing-pinvoke! MIDIEventListInit is not bound
+!missing-pinvoke! MIDIEventListForEachEvent is not bound
