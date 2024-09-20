@@ -1588,7 +1588,7 @@
         <value>The Xcode project item: '{0}' could not be found. Please update the 'Include' value to a path containing a valid '.xcodeproj' file.</value>
         <comment>
             The following are literal names and should not be translated: Xcode, 'Include', '.xcodeproj'
-            {0}: The path to the XCFramework output that will be referenced
+            {0}: An invalid path to an Xcode project file
         </comment>
     </data>
 
