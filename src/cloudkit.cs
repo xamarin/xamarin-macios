@@ -79,6 +79,11 @@ namespace CloudKit {
 
 		[NoTV]
 		[MacCatalyst (13, 1)]
+		[Deprecated (PlatformName.WatchOS, 11, 0, message: "Please read Apple's document about 'Sharing CloudKit Data with Other iCloud Users'.")]
+		[Deprecated (PlatformName.TvOS, 18, 0, message: "Please read Apple's document about 'Sharing CloudKit Data with Other iCloud Users'.")]
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Please read Apple's document about 'Sharing CloudKit Data with Other iCloud Users'.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Please read Apple's document about 'Sharing CloudKit Data with Other iCloud Users'.")]
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Please read Apple's document about 'Sharing CloudKit Data with Other iCloud Users'.")]
 		[Export ("contactIdentifiers", ArgumentSemantic.Copy)]
 		string [] ContactIdentifiers { get; }
 	}
@@ -217,6 +222,10 @@ namespace CloudKit {
 
 		[Export ("permission", ArgumentSemantic.Assign)]
 		CKShareParticipantPermission Permission { get; set; }
+
+		// This showed up in Xcode 16's b1 headers, but according to the availability attributes it's always been available.
+		[Export ("participantID", ArgumentSemantic.Copy)]
+		string ParticipantId { get; }
 	}
 
 	[MacCatalyst (13, 1)]
@@ -523,48 +532,6 @@ namespace CloudKit {
 		[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Field ("CKErrorUserDidResetEncryptedDataKey")]
 		NSString UserDidResetEncryptedDataKey { get; }
-	}
-
-	[BaseType (typeof (CKOperation))]
-	[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'CKDatabaseSubscription', 'CKFetchDatabaseChangesOperation' and 'CKFetchRecordZoneChangesOperation' instead.")]
-	[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'CKDatabaseSubscription', 'CKFetchDatabaseChangesOperation' and 'CKFetchRecordZoneChangesOperation' instead.")]
-	[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'CKDatabaseSubscription', 'CKFetchDatabaseChangesOperation' and 'CKFetchRecordZoneChangesOperation' instead.")]
-	[Deprecated (PlatformName.TvOS, 11, 0, message: "Use 'CKDatabaseSubscription', 'CKFetchDatabaseChangesOperation' and 'CKFetchRecordZoneChangesOperation' instead.")]
-	[MacCatalyst (13, 1)]
-	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'CKDatabaseSubscription', 'CKFetchDatabaseChangesOperation' and 'CKFetchRecordZoneChangesOperation' instead.")]
-	[DisableDefaultCtor] // designated
-	interface CKFetchNotificationChangesOperation {
-
-		[DesignatedInitializer]
-		[Export ("init")]
-		NativeHandle Constructor ();
-
-		[Export ("initWithPreviousServerChangeToken:")]
-		NativeHandle Constructor ([NullAllowed] CKServerChangeToken previousServerChangeToken);
-
-		[NullAllowed] // by default this property is null
-		[Export ("previousServerChangeToken", ArgumentSemantic.Copy)]
-		CKServerChangeToken PreviousServerChangeToken { get; set; }
-
-		[Export ("resultsLimit")]
-		nuint ResultsLimit { get; set; }
-
-		[Export ("moreComing")]
-		bool MoreComing { get; }
-
-		[NullAllowed] // by default this property is null
-		[Export ("notificationChangedBlock", ArgumentSemantic.Copy)]
-		Action<CKNotification> NotificationChanged {
-			get;
-			set;
-		}
-
-		[NullAllowed] // by default this property is null
-		[Export ("fetchNotificationChangesCompletionBlock", ArgumentSemantic.Copy)]
-		Action<CKServerChangeToken, NSError> Completed {
-			get;
-			set;
-		}
 	}
 
 	[MacCatalyst (13, 1)]
@@ -888,63 +855,6 @@ namespace CloudKit {
 
 		[Export ("relativeLocation", ArgumentSemantic.Copy)]
 		CLLocation RelativeLocation { get; }
-	}
-
-	[MacCatalyst (13, 1)]
-	delegate void CKMarkNotificationsReadHandler (CKNotificationID [] notificationIDsMarkedRead, NSError operationError);
-
-	[BaseType (typeof (CKOperation))]
-	[DisableDefaultCtor] // NSInvalidArgumentException Reason: You must call -[CKMarkNotificationsReadOperation initWithNotificationIDsToMarkRead:]
-	[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'CKDatabaseSubscription', 'CKFetchDatabaseChangesOperation' and 'CKFetchRecordZoneChangesOperation' instead.")]
-	[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'CKDatabaseSubscription', 'CKFetchDatabaseChangesOperation' and 'CKFetchRecordZoneChangesOperation' instead.")]
-	[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'CKDatabaseSubscription', 'CKFetchDatabaseChangesOperation' and 'CKFetchRecordZoneChangesOperation' instead.")]
-	[Deprecated (PlatformName.TvOS, 11, 0, message: "Use 'CKDatabaseSubscription', 'CKFetchDatabaseChangesOperation' and 'CKFetchRecordZoneChangesOperation' instead.")]
-	[MacCatalyst (13, 1)]
-	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'CKDatabaseSubscription', 'CKFetchDatabaseChangesOperation' and 'CKFetchRecordZoneChangesOperation' instead.")]
-	interface CKMarkNotificationsReadOperation {
-
-		[DesignatedInitializer]
-		[Export ("initWithNotificationIDsToMarkRead:")]
-		NativeHandle Constructor (CKNotificationID [] notificationIds);
-
-		[NullAllowed]
-		[Export ("notificationIDs", ArgumentSemantic.Copy)]
-		CKNotificationID [] NotificationIds { get; set; }
-
-		[NullAllowed]
-		[Export ("markNotificationsReadCompletionBlock", ArgumentSemantic.Copy)]
-		CKMarkNotificationsReadHandler Completed {
-			get;
-			set;
-		}
-	}
-
-#if WATCH
-	[DisableDefaultCtor] // does not work on watchOS, working stub provided to ease source compatibility
-#else
-	[DesignatedDefaultCtor]
-#endif
-	[BaseType (typeof (CKOperation))]
-	[Deprecated (PlatformName.iOS, 11, 0)]
-	[Deprecated (PlatformName.MacOSX, 10, 13)]
-	[Deprecated (PlatformName.WatchOS, 4, 0)]
-	[Deprecated (PlatformName.TvOS, 11, 0)]
-	[MacCatalyst (13, 1)]
-	[Deprecated (PlatformName.MacCatalyst, 13, 1)]
-	interface CKModifyBadgeOperation {
-
-		[Export ("initWithBadgeValue:")]
-		NativeHandle Constructor (nuint badgeValue);
-
-		[Export ("badgeValue", ArgumentSemantic.UnsafeUnretained)]
-		nuint BadgeValue { get; set; }
-
-		[NullAllowed] // by default this property is null
-		[Export ("modifyBadgeCompletionBlock", ArgumentSemantic.Copy)]
-		Action<NSError> Completed {
-			get;
-			set;
-		}
 	}
 
 	[MacCatalyst (13, 1)]

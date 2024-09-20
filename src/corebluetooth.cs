@@ -875,6 +875,10 @@ namespace CoreBluetooth {
 		NSString CharacteristicValidRangeString { get; }
 #endif
 
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("CBUUIDCharacteristicObservationScheduleString")]
+		NSString CharacteristicObservationScheduleString { get; }
+
 		[MacCatalyst (13, 1)]
 		[Field ("CBUUIDL2CAPPSMCharacteristicString")]
 		NSString L2CapPsmCharacteristicString { get; }

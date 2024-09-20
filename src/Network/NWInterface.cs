@@ -40,6 +40,7 @@ namespace Network {
 		public NWInterface (NativeHandle handle, bool owns) : base (handle, owns) { }
 #endif
 
+#if !COREBUILD
 		[DllImport (Constants.NetworkLibrary)]
 		static extern NWInterfaceType nw_interface_get_type (OS_nw_interface iface);
 
@@ -54,5 +55,6 @@ namespace Network {
 		static extern /* uint32_t */ uint nw_interface_get_index (OS_nw_interface iface);
 
 		public uint Index => nw_interface_get_index (GetCheckedHandle ());
+#endif // !COREBUILD
 	}
 }

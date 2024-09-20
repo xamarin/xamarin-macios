@@ -169,6 +169,8 @@ namespace Network {
 		Default = 0,
 		Allow = 1,
 		Prohibit = 2,
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		Persistent = 3,
 	}
 
 	// this maps to `nw_path_status_t` in Network/Headers/path.h (and not the enum from NetworkExtension)

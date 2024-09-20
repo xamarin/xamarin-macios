@@ -50,6 +50,18 @@ using NativeHandle = System.IntPtr;
 #endif
 
 namespace AVKit {
+	[NoWatch, NoTV, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[Native]
+	enum AVVideoFrameAnalysisType : ulong {
+		AVVideoFrameAnalysisTypeNone = 0,
+		AVVideoFrameAnalysisTypeDefault = 1 << 0,
+		AVVideoFrameAnalysisTypeText = 1 << 1,
+		AVVideoFrameAnalysisTypeSubject = 1 << 2,
+		AVVideoFrameAnalysisTypeVisualSearch = 1 << 3,
+		[NoMac, NoMacCatalyst]
+		AVVideoFrameAnalysisTypeMachineReadableCode = 1 << 4,
+	}
+
 	/// <summary>Provides video playback in a floating, resizable window on larger devices.</summary>
 	///     
 	///     <related type="externalDocumentation" href="https://developer.apple.com/library/prerelease/ios/documentation/AVKit/Reference/AVPictureInPictureControllerDelegate_Protocol/index.html#//apple_ref/doc/uid/TP40016161">Apple documentation for <c>AVPictureInPictureController</c></related>
@@ -365,6 +377,14 @@ namespace AVKit {
 		[iOS (16, 0), MacCatalyst (16, 0), NoMac, NoWatch, TV (16, 0)]
 		[Export ("selectSpeed:")]
 		void SelectSpeed (AVPlaybackSpeed speed);
+
+		[iOS (17, 0), MacCatalyst (18, 0), NoTV, NoWatch, NoMac]
+		[Export ("videoFrameAnalysisTypes")]
+		AVVideoFrameAnalysisType VideoFrameAnalysisTypes { get; set; }
+
+		[iOS (17, 0), MacCatalyst (18, 0), NoTV, NoWatch, NoMac]
+		[Export ("toggleLookupAction")]
+		UIAction ToggleLookupAction { get; }
 	}
 
 	/// <summary>Interface representing the required methods (if any) of the protocol <see cref="T:AVKit.AVPlayerViewControllerDelegate" />.</summary>

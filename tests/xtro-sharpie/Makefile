@@ -61,6 +61,7 @@ XIOS_RID = ios-arm64
 
 $(XIOS_PCH): .stamp-check-sharpie
 	$(SHARPIE) sdk-db --xcode $(XCODE) -s iphoneos$(IOS_SDK_VERSION) -a $(XIOS_ARCH) \
+	-modules false \
 	-exclude FactoryOTAWifiUtils \
 	-exclude FactoryOTALogger \
 	-exclude FactoryOTANetworkUtils \
@@ -74,7 +75,8 @@ XTVOS_PCH = appletvos$(TVOS_SDK_VERSION)-$(XTVOS_ARCH).pch
 XTVOS_RID = tvos-arm64
 
 $(XTVOS_PCH): .stamp-check-sharpie
-	$(SHARPIE) sdk-db --xcode $(XCODE) -s appletvos$(TVOS_SDK_VERSION) -a $(XTVOS_ARCH)
+	$(SHARPIE) sdk-db --xcode $(XCODE) -s appletvos$(TVOS_SDK_VERSION) -a $(XTVOS_ARCH) \
+		-modules false \
 
 XMACOS_ARCH = x86_64
 XMACOS_PCH = macosx$(MACOS_SDK_VERSION)-$(XMACOS_ARCH).pch
@@ -82,6 +84,8 @@ XMACOS_RID = osx-x64
 
 $(XMACOS_PCH): .stamp-check-sharpie
 	$(SHARPIE) sdk-db --xcode $(XCODE) -s macosx$(MACOS_SDK_VERSION) -a $(XMACOS_ARCH) \
+		-modules false \
+		-exclude AccessorySetupKit \
 		-exclude JavaNativeFoundation \
 		-exclude ParavirtualizedGraphics \
 		$(CORETELEPHONY_HEADERS) \
@@ -92,7 +96,9 @@ XMACCATALYST_RID = maccatalyst-x64
 
 $(XMACCATALYST_PCH): .stamp-check-sharpie
 	$(SHARPIE) sdk-db --xcode $(XCODE) -s ios$(MACCATALYST_SDK_VERSION)-macabi -a $(XMACCATALYST_ARCH) \
+	-modules false \
 	-exclude _CoreNFC_UIKit \
+	-exclude AccessorySetupKit \
 	-exclude AGL \
 	-exclude AudioVideoBridging \
 	-exclude AssetsLibrary \
@@ -100,6 +106,7 @@ $(XMACCATALYST_PCH): .stamp-check-sharpie
 	-exclude Carbon \
 	-exclude ClockKit \
 	-exclude DiscRecordingUI \
+	-exclude FSKit \
 	-exclude GLKit \
 	-exclude ICADevices \
 	-exclude InputMethodKit \

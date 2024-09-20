@@ -64,6 +64,10 @@ namespace CoreData {
 		[Watch (7, 0), TV (14, 0), iOS (14, 0), MacCatalyst (17, 0)]
 		[Field ("NSPersistentStoreDeferredLightweightMigrationOptionKey")]
 		NSString DeferredLightweightMigrationOptionKey { get; }
+
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("NSPersistentStoreModelVersionChecksumKey")]
+		NSString ModelVersionChecksumKey { get; }
 	}
 
 	/// <summary>Enumerates valid keys for the user information dictionary used in <see cref="P:CoreData.NSPersistentStoreCoordinator.StoresWillChangeNotification" /> and <see cref="P:CoreData.NSPersistentStoreCoordinator.StoresDidChangeNotification" />.</summary>
@@ -2374,6 +2378,10 @@ namespace CoreData {
 		[Watch (7, 0), TV (14, 0), iOS (14, 0), MacCatalyst (14, 0)]
 		[Export ("finishDeferredLightweightMigrationTask:")]
 		bool FinishDeferredLightweightMigrationTask ([NullAllowed] out NSError error);
+
+		[NoWatch, NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("managedObjectIDFromUTF8String:length:")]
+		NSManagedObjectID GetManagedObjectId (IntPtr utf8String, nuint length);
 	}
 
 	interface NSPersistentStoreCoordinatorStoreChangeEventArgs {
