@@ -370,8 +370,15 @@ public class Binding
 
 			var rv = DotNet.AssertBuildFailure (proj);
 			var expectedErrorContent = $"xcodebuild: error: The project named \"{xcodeProjName}\" does not contain a scheme named \"{invaldSchemeName}\".";
-			var doesContainErrorContent = BinLog.GetBuildLogErrors (rv.BinLogPath).Select (e => e.Message).Any (e => e is not null && e.Contains (expectedErrorContent));
-			Assert.IsTrue (doesContainErrorContent, $"Expected error content '{expectedErrorContent}' was not found in any error message.");
+			var errors = BinLog.GetBuildLogErrors (rv.BinLogPath);
+			AssertErrorMessages (errors,
+				new Func<string, bool> [] {
+					(msg) => msg?.Contains (expectedErrorContent) == true
+				},
+				Func<string, bool> [] {
+					(msg) => msg)
+				}
+			);
 		}
 
 	}
