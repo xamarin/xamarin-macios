@@ -230,6 +230,10 @@ namespace UniformTypeIdentifiers {
 		[Field ("UTTypeYAML")]
 		UTType Yaml { get; }
 
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("UTTypeCSS")]
+		UTType Css { get; }
+
 		[Field ("UTTypeSourceCode")]
 		UTType SourceCode { get; }
 
@@ -354,8 +358,20 @@ namespace UniformTypeIdentifiers {
 		[Field ("UTTypeHEIC")]
 		UTType Heic { get; }
 
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("UTTypeHEICS")]
+		UTType Heics { get; }
+
 		[Field ("UTTypeWebP")]
 		UTType WebP { get; }
+
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("UTTypeEXR")]
+		UTType Exr { get; }
+
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("UTTypeDNG")]
+		UTType Dng { get; }
 
 		[Field ("UTType3DContent")]
 		UTType ThreeDContent { get; }
@@ -492,6 +508,10 @@ namespace UniformTypeIdentifiers {
 		[Field ("UTTypeAppleArchive")]
 		UTType AppleArchive { get; }
 
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("UTTypeTarArchive")]
+		UTType TarArchive { get; }
+
 		[Field ("UTTypeSpreadsheet")]
 		UTType Spreadsheet { get; }
 
@@ -546,6 +566,14 @@ namespace UniformTypeIdentifiers {
 		[Watch (10, 0), TV (17, 0), MacCatalyst (17, 0), Mac (14, 0), iOS (17, 0)]
 		[Field ("UTTypeAHAP")]
 		UTType Ahap { get; }
+
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("UTTypeGeoJSON")]
+		UTType GeoJson { get; }
+
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("UTTypeLinkPresentationMetadata")]
+		UTType LinkPresentationMetadata { get; }
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]

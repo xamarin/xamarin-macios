@@ -2240,6 +2240,17 @@ namespace MetalPerformanceShaders {
 		nuint BatchSize { get; set; }
 	}
 
+	[TV (13, 0), Mac (10, 15), iOS (13, 0), MacCatalyst (13, 0)]
+	[BaseType (typeof (MPSNDArrayMultiaryKernel))]
+	[DisableDefaultCtor]
+	interface MPSNDArrayMatrixMultiplication {
+		[Export ("alpha")]
+		double Alpha { get; set; }
+
+		[Export ("beta")]
+		double Beta { get; set; }
+	}
+
 	/// <summary>Temporary storage used by convolutional neural nets.</summary>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -6597,6 +6608,20 @@ namespace MetalPerformanceShaders {
 
 		[Export ("reshapeWithShape:")]
 		void Reshape ([BindAs (typeof (nuint []))] NSNumber [] shape);
+
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("preferPackedRows")]
+		bool PreferPackedRows { get; set; }
+
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("permuteWithDimensionOrder:")]
+		[Internal]
+		void _PermuteWithDimensionOrder (/* NSUInteger* */ IntPtr dimensionOrder);
+
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("getShape")]
+		[return: BindAs (typeof (nuint []))]
+		NSNumber [] GetShape ();
 	}
 
 	interface IMPSNDArrayAllocator { }
@@ -6675,6 +6700,31 @@ namespace MetalPerformanceShaders {
 
 		[Export ("synchronizeOnCommandBuffer:")]
 		void Synchronize (IMTLCommandBuffer commandBuffer);
+
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("initWithBuffer:offset:descriptor:")]
+		NativeHandle Constructor (IMTLBuffer buffer, nuint offset, MPSNDArrayDescriptor descriptor);
+
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[NullAllowed]
+		[Export ("userBuffer")]
+		IMTLBuffer UserBuffer { get; }
+
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("arrayViewWithDescriptor:")]
+		[return: NullAllowed]
+		MPSNDArray Create (MPSNDArrayDescriptor descriptor);
+
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("arrayViewWithShape:strides:")]
+		[return: NullAllowed]
+		MPSNDArray Create ([NullAllowed][BindAs (typeof (nint []))] NSNumber [] shape, [BindAs (typeof (nint []))] NSNumber [] strides);
+
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("arrayViewWithDimensionCount:dimensionSizes:strides:")]
+		[return: NullAllowed]
+		[Internal]
+		MPSNDArray _Create (nuint numberOfDimensions, IntPtr dimensionSizes, IntPtr dimStrides);
 	}
 
 	[DisableDefaultCtor]
@@ -9077,5 +9127,265 @@ namespace MetalPerformanceShaders {
 		[Export ("copyWithZone:device:")]
 		[return: Release]
 		MPSRnnMatrixTrainingLayer Copy ([NullAllowed] NSZone zone, [NullAllowed] IMTLDevice device);
+	}
+
+	[TV (13, 0), Mac (10, 15), iOS (13, 0), MacCatalyst (13, 0)]
+	[BaseType (typeof (MPSKernel))]
+	[DisableDefaultCtor]
+	interface MPSNDArrayMultiaryBase {
+		[Export ("offsetsAtSourceIndex:")]
+		[Deprecated (PlatformName.iOS, 14, 0, message: "Use derived filter properties instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 14, 0, message: "Use derived filter properties instead.")]
+		[Deprecated (PlatformName.TvOS, 14, 0, message: "Use derived filter properties instead.")]
+		[Deprecated (PlatformName.MacOSX, 11, 0, message: "Use derived filter properties instead.")]
+		MPSNDArrayOffsets GetOffsets (nuint sourceIndex);
+
+		[Export ("edgeModeAtSourceIndex:")]
+		[Deprecated (PlatformName.iOS, 14, 0, message: "Use derived filter properties instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 14, 0, message: "Use derived filter properties instead.")]
+		[Deprecated (PlatformName.TvOS, 14, 0, message: "Use derived filter properties instead.")]
+		[Deprecated (PlatformName.MacOSX, 11, 0, message: "Use derived filter properties instead.")]
+		MPSImageEdgeMode GetEdgeMode (nuint sourceIndex);
+
+		[Export ("kernelSizesForSourceIndex:")]
+		[Deprecated (PlatformName.iOS, 14, 0, message: "Use derived filter properties instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 14, 0, message: "Use derived filter properties instead.")]
+		[Deprecated (PlatformName.TvOS, 14, 0, message: "Use derived filter properties instead.")]
+		[Deprecated (PlatformName.MacOSX, 11, 0, message: "Use derived filter properties instead.")]
+		MPSNDArraySizes GetKernelSizes (nuint sourceIndex);
+
+		[Export ("stridesForSourceIndex:")]
+		[Deprecated (PlatformName.iOS, 14, 0, message: "Use derived filter properties instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 14, 0, message: "Use derived filter properties instead.")]
+		[Deprecated (PlatformName.TvOS, 14, 0, message: "Use derived filter properties instead.")]
+		[Deprecated (PlatformName.MacOSX, 11, 0, message: "Use derived filter properties instead.")]
+		MPSNDArrayOffsets GetStrides (nuint sourceIndex);
+
+		[Export ("dilationRatesForSourceIndex:")]
+		[Deprecated (PlatformName.iOS, 14, 0, message: "Use derived filter properties instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 14, 0, message: "Use derived filter properties instead.")]
+		[Deprecated (PlatformName.TvOS, 14, 0, message: "Use derived filter properties instead.")]
+		[Deprecated (PlatformName.MacOSX, 11, 0, message: "Use derived filter properties instead.")]
+		MPSNDArraySizes GetDilationRates (nuint sourceIndex);
+
+		[Export ("destinationArrayAllocator", ArgumentSemantic.Retain)]
+		IMPSNDArrayAllocator DestinationArrayAllocator { get; set; }
+
+		[Export ("initWithDevice:sourceCount:")]
+		[DesignatedInitializer]
+		NativeHandle Constructor (IMTLDevice device, nuint count);
+
+		[Export ("initWithCoder:device:")]
+		[DesignatedInitializer]
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
+
+		[Export ("encodeWithCoder:")]
+		void EncodeTo (NSCoder coder);
+
+		[Export ("copyWithZone:device:")]
+		[return: Release ()]
+		MPSMatrixNeuron Copy ([NullAllowed] NSZone zone, [NullAllowed] IMTLDevice device);
+
+		[Export ("resultStateForSourceArrays:sourceStates:destinationArray:")]
+		[return: NullAllowed]
+		MPSState GetResultState (MPSNDArray [] sourceArrays, [NullAllowed] MPSState [] sourceStates, MPSNDArray destinationArray);
+
+		[Export ("destinationArrayDescriptorForSourceArrays:sourceState:")]
+		MPSNDArrayDescriptor GetDestinationArray (MPSNDArray [] sources, [NullAllowed] MPSState state);
+	}
+
+	[TV (13, 0), Mac (10, 15), iOS (13, 0), MacCatalyst (13, 0)]
+	[BaseType (typeof (MPSNDArrayMultiaryBase))]
+	[DisableDefaultCtor]
+	interface MPSNDArrayMultiaryKernel {
+		[Export ("initWithDevice:sourceCount:")]
+		[DesignatedInitializer]
+		NativeHandle Constructor (IMTLDevice device, nuint count);
+
+		[Export ("initWithCoder:device:")]
+		[DesignatedInitializer]
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
+
+		[Export ("encodeToCommandBuffer:sourceArrays:")]
+		MPSNDArray EncodeToCommandBuffer (IMTLCommandBuffer commandBuffer, MPSNDArray [] sourceArrays);
+
+		[Export ("encodeToCommandBuffer:sourceArrays:destinationArray:")]
+		MPSNDArray EncodeToCommandBuffer (IMTLCommandBuffer commandBuffer, MPSNDArray [] sourceArrays, MPSNDArray destinationArray);
+
+		[Export ("encodeToCommandBuffer:sourceArrays:resultState:outputStateIsTemporary:")]
+		MPSNDArray EncodeToCommandBuffer (IMTLCommandBuffer commandBuffer, MPSNDArray [] sourceArrays, [NullAllowed] out MPSState gradientState, bool outputStateIsTemporary);
+
+		[Export ("encodeToCommandBuffer:sourceArrays:resultState:destinationArray:")]
+		MPSNDArray EncodeToCommandBuffer (IMTLCommandBuffer commandBuffer, MPSNDArray [] sourceArrays, [NullAllowed] MPSState gradientState, MPSNDArray destinationArray);
+
+		[iOS (18, 0), TV (18, 0), MacCatalyst (18, 0), Mac (15, 0)]
+		[Export ("encodeToCommandEncoder:commandBuffer:sourceArrays:destinationArray:")]
+		MPSNDArray EncodeToCommandEncoder ([NullAllowed] IMTLComputeCommandEncoder encoder, IMTLCommandBuffer commandBuffer, MPSNDArray [] sourceArrays, MPSNDArray destinationArray);
+	}
+
+	[TV (13, 0), Mac (10, 15), iOS (13, 0), MacCatalyst (13, 0)]
+	[BaseType (typeof (MPSNDArrayMultiaryKernel))]
+	[DisableDefaultCtor]
+	interface MPSNDArrayUnaryKernel {
+		[Export ("offsets")]
+		[Deprecated (PlatformName.iOS, 14, 0, message: "Use derived filter properties instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 14, 0, message: "Use derived filter properties instead.")]
+		[Deprecated (PlatformName.TvOS, 14, 0, message: "Use derived filter properties instead.")]
+		[Deprecated (PlatformName.MacOSX, 11, 0, message: "Use derived filter properties instead.")]
+		MPSNDArrayOffsets Offsets { get; }
+
+		[Export ("edgeMode")]
+		[Deprecated (PlatformName.iOS, 14, 0, message: "Use derived filter properties instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 14, 0, message: "Use derived filter properties instead.")]
+		[Deprecated (PlatformName.TvOS, 14, 0, message: "Use derived filter properties instead.")]
+		[Deprecated (PlatformName.MacOSX, 11, 0, message: "Use derived filter properties instead.")]
+		MPSImageEdgeMode EdgeMode { get; }
+
+		[Export ("kernelSizes")]
+		[Deprecated (PlatformName.iOS, 14, 0, message: "Use derived filter properties instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 14, 0, message: "Use derived filter properties instead.")]
+		[Deprecated (PlatformName.TvOS, 14, 0, message: "Use derived filter properties instead.")]
+		[Deprecated (PlatformName.MacOSX, 11, 0, message: "Use derived filter properties instead.")]
+		MPSNDArraySizes KernelSizes { get; }
+
+		[Export ("strides")]
+		[Deprecated (PlatformName.iOS, 14, 0, message: "Use derived filter properties instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 14, 0, message: "Use derived filter properties instead.")]
+		[Deprecated (PlatformName.TvOS, 14, 0, message: "Use derived filter properties instead.")]
+		[Deprecated (PlatformName.MacOSX, 11, 0, message: "Use derived filter properties instead.")]
+		MPSNDArrayOffsets Strides { get; }
+
+		[Export ("dilationRates")]
+		[Deprecated (PlatformName.iOS, 14, 0, message: "Use derived filter properties instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 14, 0, message: "Use derived filter properties instead.")]
+		[Deprecated (PlatformName.TvOS, 14, 0, message: "Use derived filter properties instead.")]
+		[Deprecated (PlatformName.MacOSX, 11, 0, message: "Use derived filter properties instead.")]
+		MPSNDArraySizes DilationRates { get; }
+
+		[Export ("initWithDevice:")]
+		[DesignatedInitializer]
+		NativeHandle Constructor (IMTLDevice device);
+
+		[Export ("encodeToCommandBuffer:sourceArray:")]
+		MPSNDArray EncodeToCommandBuffer (IMTLCommandBuffer commandBuffer, MPSNDArray sourceArray);
+
+		[Export ("encodeToCommandBuffer:sourceArray:destinationArray:")]
+		MPSNDArray EncodeToCommandBuffer (IMTLCommandBuffer commandBuffer, MPSNDArray sourceArray, MPSNDArray destinationArray);
+
+		[Export ("encodeToCommandBuffer:sourceArray:resultState:outputStateIsTemporary:")]
+		MPSNDArray EncodeToCommandBuffer (IMTLCommandBuffer commandBuffer, MPSNDArray sourceArray, [NullAllowed] out MPSState gradientState, bool outputStateIsTemporary);
+
+		[Export ("encodeToCommandBuffer:sourceArray:resultState:destinationArray:")]
+		MPSNDArray EncodeToCommandBuffer (IMTLCommandBuffer commandBuffer, MPSNDArray sourceArray, [NullAllowed] MPSState gradientState, MPSNDArray destinationArray);
+	}
+
+	[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[BaseType (typeof (MPSNDArrayUnaryKernel))]
+	[DisableDefaultCtor]
+	interface MPSNDArrayIdentity {
+		[Export ("initWithDevice:")]
+		[DesignatedInitializer]
+		NativeHandle Constructor (IMTLDevice device);
+
+		[Export ("reshapeWithCommandBuffer:sourceArray:shape:destinationArray:")]
+		[return: NullAllowed]
+		MPSNDArray Reshape ([NullAllowed] IMTLCommandBuffer commandBuffer, MPSNDArray sourceArray, [BindAs (typeof (int []))] NSNumber [] shape, [NullAllowed] MPSNDArray destinationArray);
+
+		[Export ("reshapeWithCommandBuffer:sourceArray:dimensionCount:dimensionSizes:destinationArray:")]
+		[return: NullAllowed]
+		[Internal]
+		MPSNDArray _Reshape ([NullAllowed] IMTLCommandBuffer commandBuffer, MPSNDArray sourceArray, nuint numberOfDimensions, /* NSUInteger */ IntPtr dimensionSizes, [NullAllowed] MPSNDArray destinationArray);
+
+		[Export ("reshapeWithCommandEncoder:commandBuffer:sourceArray:shape:destinationArray:")]
+		[return: NullAllowed]
+		MPSNDArray Reshape ([NullAllowed] IMTLComputeCommandEncoder encoder, [NullAllowed] IMTLCommandBuffer commandBuffer, MPSNDArray sourceArray, [BindAs (typeof (int []))] NSNumber [] shape, [NullAllowed] MPSNDArray destinationArray);
+
+		[Export ("reshapeWithCommandEncoder:commandBuffer:sourceArray:dimensionCount:dimensionSizes:destinationArray:")]
+		[return: NullAllowed]
+		[Internal]
+		MPSNDArray _Reshape ([NullAllowed] IMTLComputeCommandEncoder encoder, [NullAllowed] IMTLCommandBuffer commandBuffer, MPSNDArray sourceArray, nuint numberOfDimensions, /* NSUInteger */ IntPtr dimensionSizes, [NullAllowed] MPSNDArray destinationArray);
+	}
+
+	[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[Native]
+	public enum MPSNDArrayQuantizationScheme : ulong {
+		None = 0,
+		Affine,
+		Lut,
+	}
+
+	[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[BaseType (typeof (NSObject))]
+	[DefaultCtorVisibility (Visibility.Protected)]
+	interface MPSNDArrayQuantizationDescriptor : NSCopying {
+		[Export ("quantizationDataType")]
+		MPSDataType QuantizationDataType { get; }
+
+		[Export ("quantizationScheme")]
+		MPSNDArrayQuantizationScheme QuantizationScheme { get; }
+	}
+
+	[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[BaseType (typeof (MPSNDArrayQuantizationDescriptor))]
+	interface MPSNDArrayAffineQuantizationDescriptor {
+		[Export ("hasZeroPoint")]
+		bool HasZeroPoint { get; set; }
+
+		[Export ("hasMinValue")]
+		bool HasMinValue { get; set; }
+
+		[Export ("implicitZeroPoint")]
+		bool ImplicitZeroPoint { get; set; }
+
+		[Export ("initWithDataType:hasZeroPoint:hasMinValue:")]
+		NativeHandle Constructor (MPSDataType quantizationDataType, bool hasZeroPoint, bool hasMinValue);
+	}
+
+	[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[BaseType (typeof (MPSNDArrayQuantizationDescriptor), Name = "MPSNDArrayLUTQuantizationDescriptor")]
+	[DisableDefaultCtor]
+	interface MPSNDArrayLutQuantizationDescriptor {
+		[Export ("initWithDataType:")]
+		NativeHandle Constructor (MPSDataType quantizationDataType);
+
+		[Export ("initWithDataType:vectorAxis:")]
+		NativeHandle Constructor (MPSDataType quantizationDataType, nuint vectorAxis);
+	}
+
+	[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[BaseType (typeof (MPSNDArrayMatrixMultiplication))]
+	[DisableDefaultCtor]
+	interface MPSNDArrayQuantizedMatrixMultiplication {
+		[Export ("initWithDevice:leftQuantizationDescriptor:rightQuantizationDescriptor:")]
+		NativeHandle Constructor (IMTLDevice device, [NullAllowed] MPSNDArrayQuantizationDescriptor leftQuantizationDescriptor, [NullAllowed] MPSNDArrayQuantizationDescriptor rightQuantizationDescriptor);
+	}
+
+	[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[BaseType (typeof (MPSNDArrayMultiaryKernel), Name = "MPSNDArrayLUTDequantize")]
+	[DisableDefaultCtor]
+	interface MPSNDArrayLutDequantize {
+		[DesignatedInitializer]
+		[Export ("initWithDevice:")]
+		NativeHandle Constructor (IMTLDevice device);
+	}
+
+	[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[BaseType (typeof (MPSNDArrayMultiaryKernel), Name = "MPSNDArrayVectorLUTDequantize")]
+	[DisableDefaultCtor]
+	interface MPSNDArrayVectorLutDequantize {
+		[Export ("vectorAxis")]
+		nuint VectorAxis { get; set; }
+
+		[DesignatedInitializer]
+		[Export ("initWithDevice:axis:")]
+		NativeHandle Constructor (IMTLDevice device, nuint axis);
+	}
+
+	[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[BaseType (typeof (MPSNDArrayMultiaryKernel))]
+	[DisableDefaultCtor]
+	interface MPSNDArrayAffineInt4Dequantize {
+		[Export ("initWithDevice:quantizationDescriptor:")]
+		NativeHandle Constructor (IMTLDevice device, MPSNDArrayAffineQuantizationDescriptor quantizationDescriptor);
 	}
 }

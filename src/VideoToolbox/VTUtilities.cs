@@ -14,6 +14,7 @@ using ObjCRuntime;
 using CoreGraphics;
 using CoreMedia;
 using CoreVideo;
+using Foundation;
 
 #nullable enable
 
@@ -81,5 +82,80 @@ namespace VideoToolbox {
 		public static void RegisterSupplementalVideoDecoder (CMVideoCodecType codecType)
 			=> VTRegisterSupplementalVideoDecoderIfAvailable ((uint) codecType);
 #endif
+
+#if __MACOS__
+#if NET
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos15.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[NoWatch, NoTV, NoiOS, NoMacCatalyst, Mac (15, 0)]
+#endif
+		[DllImport (Constants.VideoToolboxLibrary)]
+		unsafe static extern VTStatus VTCopyVideoDecoderExtensionProperties (
+			IntPtr /* CMFormatDescriptionRef CM_NONNULL */ formatDesc,
+			IntPtr* /* CM_RETURNS_RETAINED_PARAMETER CM_NULLABLE CFDictionaryRef * CM_NONNULL */ mediaExtensionPropertiesOut
+		);
+
+		/// <summary>Determine whether a Media Extension video decoder will be used to decode the specified format, and return information about the Media Extension.</summary>
+		/// <param name="formatDescription">The format description for the video format to analyze.</param>
+		/// <param name="error">An error code if the operation was unsuccessful, otherwise <see cref="VTStatus.Ok" />. If a Media Extension encoder won't be used to decode this format, <see cref="VTStatus.CouldNotFindExtensionErr" /> will be returned.</param>
+		/// <returns>A dictionary with the properties for the Media Extension that will be used to decode this format, or null in case of failure.</returns>
+#if NET
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos15.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[NoWatch, NoTV, NoiOS, NoMacCatalyst, Mac (15, 0)]
+#endif
+		public static NSDictionary? CopyVideoDecoderExtensionProperties (CMFormatDescription formatDescription, out VTStatus error)
+		{
+			IntPtr handle;
+			unsafe {
+				error = VTCopyVideoDecoderExtensionProperties (formatDescription.GetNonNullHandle (nameof (formatDescription)), &handle);
+			}
+			return Runtime.GetNSObject<NSDictionary> (handle, owns: true);
+		}
+#endif // __MACOS__
+
+#if __MACOS__
+#if NET
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos15.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[NoWatch, NoTV, NoiOS, NoMacCatalyst, Mac (15, 0)]
+#endif
+		[DllImport (Constants.VideoToolboxLibrary)]
+		unsafe static extern VTStatus VTCopyRAWProcessorExtensionProperties (
+			IntPtr /* CMFormatDescriptionRef CM_NONNULL */ formatDesc,
+			IntPtr* /* CM_RETURNS_RETAINED_PARAMETER CM_NULLABLE CFDictionaryRef * CM_NONNULL */ mediaExtensionPropertiesOut
+		);
+
+		/// <summary>Determine whether a Media Extension RAW processor will be used to process the specified format, and return information about the Media Extension.</summary>
+		/// <param name="formatDescription">The format description for the video format to analyze.</param>
+		/// <param name="error">An error code if the operation was unsuccessful, otherwise <see cref="VTStatus.Ok" />. If a Media Extension RAW processor won't be used to decode this format, <see cref="VTStatus.CouldNotFindExtensionErr" /> will be returned.</param>
+		/// <returns>A dictionary with the properties for the Media Extension RAW processor that will be used to decode this format, or null in case of failure.</returns>
+#if NET
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos15.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[NoWatch, NoTV, NoiOS, NoMacCatalyst, Mac (15, 0)]
+#endif
+		public static NSDictionary? CopyRawProcessorExtensionProperties (CMFormatDescription formatDescription, out VTStatus error)
+		{
+			IntPtr handle;
+			unsafe {
+				error = VTCopyRAWProcessorExtensionProperties (formatDescription.GetNonNullHandle (nameof (formatDescription)), &handle);
+			}
+			return Runtime.GetNSObject<NSDictionary> (handle, owns: true);
+		}
+#endif // __MACOS__
+
 	}
 }

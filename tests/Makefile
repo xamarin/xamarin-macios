@@ -87,6 +87,8 @@ test.config: Makefile $(TOP)/Make.config $(TOP)/mk/mono.mk $(TOP)/eng/Version.De
 	@printf "$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),$(rid)_NUGET_RUNTIME_NAME=$($(rid)_NUGET_RUNTIME_NAME)\\n))" | sed 's/^ //' >> $@
 	@printf "$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),SUPPORTED_API_VERSIONS_$(platform)='$(SUPPORTED_API_VERSIONS_$(platform))'\\n)" | sed 's/^ //' >> $@
 	@printf "ENABLE_XAMARIN=$(ENABLE_XAMARIN)" >> $@
+	@printf "XCODE_IS_STABLE=$(XCODE_IS_STABLE)" >> $@
+	@printf "XCODE_VERSION=$(XCODE_VERSION)" >> $@
 
 test-system.config: Makefile $(TOP)/Make.config $(TOP)/mk/mono.mk $(TOP)/eng/Version.Details.xml
 	@rm -f $@
@@ -120,6 +122,8 @@ test-system.config: Makefile $(TOP)/Make.config $(TOP)/mk/mono.mk $(TOP)/eng/Ver
 	@printf "$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),$(rid)_NUGET_RUNTIME_NAME=$($(rid)_NUGET_RUNTIME_NAME)\\n))" | sed 's/^ //' >> $@
 	@printf "$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),SUPPORTED_API_VERSIONS_$(platform)='$(SUPPORTED_API_VERSIONS_$(platform))'\\n)" | sed 's/^ //' >> $@
 	@printf "ENABLE_XAMARIN=$(ENABLE_XAMARIN)" >> $@
+	@printf "XCODE_IS_STABLE=$(XCODE_IS_STABLE)" >> $@
+	@printf "XCODE_VERSION=$(XCODE_VERSION)" >> $@
 
 clean-local::
 	$(Q) $(SYSTEM_XBUILD) /t:Clean /p:Platform=iPhoneSimulator /p:Configuration=$(CONFIG) $(XBUILD_VERBOSITY) tests.sln

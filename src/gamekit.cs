@@ -535,10 +535,8 @@ namespace GameKit {
 		[Async]
 		void LoadLeaderboardsWithCompletionHandler (GKLeaderboardsHandler handler);
 
-		[NoMac]
 		[NoTV]
 		[NoWatch]
-		[NoMacCatalyst]
 		[Export ("loadImageWithCompletionHandler:")]
 		[Async]
 		void LoadImage ([NullAllowed] GKImageLoadedHandler completionHandler);
@@ -916,8 +914,7 @@ namespace GameKit {
 		Action<NSViewController, NSError> AuthenticateHandler { get; set; }
 #endif
 
-		[NoWatch, NoTV, iOS (15, 0)]
-		[NoMacCatalyst]
+		[NoWatch, NoTV, iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("isPresentingFriendRequestViewController")]
 		bool IsPresentingFriendRequestViewController { get; }
 
@@ -1159,6 +1156,10 @@ namespace GameKit {
 		[Export ("disconnect")]
 		void Disconnect ();
 
+		[Deprecated (PlatformName.iOS, 18, 0, message: "No longer supported.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "No longer supported.")]
+		[Deprecated (PlatformName.TvOS, 18, 0, message: "No longer supported.")]
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "No longer supported.")]
 		[Export ("voiceChatWithName:")]
 		[return: NullAllowed]
 		GKVoiceChat VoiceChatWithName (string name);
@@ -1253,6 +1254,10 @@ namespace GameKit {
 		void DataReceivedForRecipient (GKMatch match, NSData data, GKPlayer recipient, GKPlayer player);
 	}
 
+	[Deprecated (PlatformName.iOS, 18, 0, message: "No longer supported.")]
+	[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "No longer supported.")]
+	[Deprecated (PlatformName.TvOS, 18, 0, message: "No longer supported.")]
+	[Deprecated (PlatformName.MacOSX, 15, 0, message: "No longer supported.")]
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -1386,15 +1391,15 @@ namespace GameKit {
 		[Export ("restrictToAutomatch")]
 		bool RestrictToAutomatch { get; set; }
 
-		[TV (17, 2), Mac (14, 2), iOS (17, 2), MacCatalyst (17, 2)]
+		[TV (17, 2), Mac (14, 2), iOS (17, 2), MacCatalyst (17, 2), Watch (10, 2)]
 		[NullAllowed, Export ("queueName")]
 		string QueueName { get; set; }
 
-		[TV (17, 2), Mac (14, 2), iOS (17, 2), MacCatalyst (17, 2)]
+		[TV (17, 2), Mac (14, 2), iOS (17, 2), MacCatalyst (17, 2), Watch (10, 2)]
 		[NullAllowed, Export ("properties", ArgumentSemantic.Copy)]
 		NSDictionary<NSString, NSObject> Properties { get; set; }
 
-		[TV (17, 2), Mac (14, 2), iOS (17, 2), MacCatalyst (17, 2)]
+		[TV (17, 2), Mac (14, 2), iOS (17, 2), MacCatalyst (17, 2), Watch (10, 2)]
 		[NullAllowed, Export ("recipientProperties", ArgumentSemantic.Copy)]
 		NSDictionary<GKPlayer, NSDictionary<NSString, NSObject>> RecipientProperties { get; set; }
 	}
@@ -1519,7 +1524,7 @@ namespace GameKit {
 		[TV (17, 2), Mac (14, 2), iOS (17, 2), MacCatalyst (17, 2)]
 		[Async]
 		[Export ("findMatchedPlayers:withCompletionHandler:")]
-		void FindMatchedPlayers (GKMatchRequest request, [NullAllowed] Action<GKMatchedPlayers, NSError> completionHandler);
+		void FindMatchedPlayers (GKMatchRequest request, Action<GKMatchedPlayers, NSError> completionHandler);
 
 		// Not truly an [Async] method since the handler can be called multiple times, for each player found
 		[MacCatalyst (13, 1)]
@@ -2523,7 +2528,7 @@ namespace GameKit {
 		[Export ("initWithNibName:bundle:")]
 		NativeHandle Constructor ([NullAllowed] string nibNameOrNull, [NullAllowed] NSBundle nibBundleOrNull);
 
-		[TV (14, 0), NoWatch, iOS (14, 0)]
+		[TV (14, 0), iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[Export ("initWithLeaderboardID:playerScope:timeScope:")]
 		NativeHandle Constructor (string leaderboardId, GKLeaderboardPlayerScope playerScope, GKLeaderboardTimeScope timeScope);
@@ -2536,12 +2541,22 @@ namespace GameKit {
 		[TV (14, 0), NoWatch, iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[Export ("initWithAchievementID:")]
-		NativeHandle Constructor (string achievementId);
+		[Internal]
+		NativeHandle _InitWithAchievementId (string achievementId);
 
 		[TV (14, 0), NoWatch, iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[Export ("initWithState:")]
 		NativeHandle Constructor (GKGameCenterViewControllerState state);
+
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("initWithLeaderboardSetID:")]
+		[Internal]
+		NativeHandle _InitWithLeaderboardSetId (string leaderboardSetId);
+
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("initWithPlayer:")]
+		NativeHandle Constructor (GKPlayer player);
 
 		[Export ("gameCenterDelegate", ArgumentSemantic.Weak), NullAllowed]
 		NSObject WeakDelegate { get; set; }
@@ -3108,6 +3123,22 @@ namespace GameKit {
 
 		[Export ("triggerAccessPointWithState:handler:")]
 		void TriggerAccessPoint (GKGameCenterViewControllerState state, Action handler);
+
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("triggerAccessPointWithAchievementID:handler:")]
+		void TriggerAccessPointWithAchievementId (string achievementId, [NullAllowed] Action handler);
+
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("triggerAccessPointWithLeaderboardSetID:handler:")]
+		void TriggerAccessPointWithLeaderboardSetId (string leaderboardSetId, [NullAllowed] Action handler);
+
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("triggerAccessPointWithLeaderboardID:playerScope:timeScope:handler:")]
+		void TriggerAccessPoint (string leaderboardId, GKLeaderboardPlayerScope playerScope, GKLeaderboardTimeScope timeScope, [NullAllowed] Action handler);
+
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("triggerAccessPointWithPlayer:handler:")]
+		void TriggerAccessPoint (GKPlayer player, [NullAllowed] Action handler);
 	}
 
 	[Watch (7, 0), TV (14, 0), iOS (14, 0)]
@@ -3118,9 +3149,6 @@ namespace GameKit {
 		[Export ("player", ArgumentSemantic.Strong)]
 		GKPlayer Player { get; }
 
-#if false
-		// Some APIs missing on iOS, tvOS, watchOS as of Xcode 12 beta 3 - https://github.com/xamarin/maccore/issues/2269
-		// disabled since the selectors don't respond on macOS 11.0
 		[Export ("rank")]
 		nint Rank { get; }
 
@@ -3135,7 +3163,6 @@ namespace GameKit {
 
 		[Export ("date", ArgumentSemantic.Strong)]
 		NSDate Date { get; }
-#endif
 
 		[NoWatch] // header lists watch as supported, but UIViewController is not available on Watch!
 		[MacCatalyst (13, 1)]

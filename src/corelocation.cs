@@ -1145,11 +1145,52 @@ namespace CoreLocation {
 	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0), TV (17, 0)]
 	[BaseType (typeof (NSObject))]
 	interface CLUpdate {
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'Stationary' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'Stationary' instead.")]
+		[Deprecated (PlatformName.TvOS, 18, 0, message: "Use 'Stationary' instead.")]
+		[Deprecated (PlatformName.WatchOS, 11, 0, message: "Use 'Stationary' instead.")]
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'Stationary' instead.")]
 		[Export ("isStationary")]
 		bool IsStationary { get; }
 
 		[NullAllowed, Export ("location")]
 		CLLocation Location { get; }
+
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("authorizationDenied")]
+		bool AuthorizationDenied { get; }
+
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("authorizationDeniedGlobally")]
+		bool AuthorizationDeniedGlobally { get; }
+
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("authorizationRestricted")]
+		bool AuthorizationRestricted { get; }
+
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("stationary")]
+		bool Stationary { get; }
+
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("insufficientlyInUse")]
+		bool InsufficientlyInUse { get; }
+
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("locationUnavailable")]
+		bool LocationUnavailable { get; }
+
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("accuracyLimited")]
+		bool AccuracyLimited { get; }
+
+		[NoWatch, NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("serviceSessionRequired")]
+		bool ServiceSessionRequired { get; }
+
+		[NoWatch, NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("authorizationRequestInProgress")]
+		bool AuthorizationRequestInProgress { get; }
 	}
 
 	[NoWatch, NoTV, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
@@ -1178,6 +1219,46 @@ namespace CoreLocation {
 
 		[Export ("date", ArgumentSemantic.Strong)]
 		NSDate Date { get; }
+
+		[NoWatch, NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("authorizationDenied")]
+		bool AuthorizationDenied { get; }
+
+		[NoWatch, NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("authorizationDeniedGlobally")]
+		bool AuthorizationDeniedGlobally { get; }
+
+		[NoWatch, NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("authorizationRestricted")]
+		bool AuthorizationRestricted { get; }
+
+		[NoWatch, NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("insufficientlyInUse")]
+		bool InsufficientlyInUse { get; }
+
+		[NoWatch, NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("accuracyLimited")]
+		bool AccuracyLimited { get; }
+
+		[NoWatch, NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("conditionUnsupported")]
+		bool ConditionUnsupported { get; }
+
+		[NoWatch, NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("conditionLimitExceeded")]
+		bool ConditionLimitExceeded { get; }
+
+		[NoWatch, NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("persistenceUnavailable")]
+		bool PersistenceUnavailable { get; }
+
+		[NoWatch, NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("serviceSessionRequired")]
+		bool ServiceSessionRequired { get; }
+
+		[NoWatch, NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("authorizationRequestInProgress")]
+		bool AuthorizationRequestInProgress { get; }
 	}
 
 	[NoWatch, NoTV, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
@@ -1292,7 +1373,9 @@ namespace CoreLocation {
 		NativeHandle Constructor (NSUuid uuid, ushort major, ushort minor);
 	}
 
-	[Watch (10, 0), NoTV, NoMac, iOS (17, 0), MacCatalyst (17, 0)]
+	delegate void CLBackgroundActivitySessionCreateHandler (CLBackgroundActivitySessionDiagnostic diagnostic);
+
+	[Watch (10, 0), TV (18, 0), NoMac, iOS (17, 0), MacCatalyst (17, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface CLBackgroundActivitySession {
@@ -1304,5 +1387,98 @@ namespace CoreLocation {
 		[Static]
 		[Export ("backgroundActivitySession")]
 		CLBackgroundActivitySession Create ();
+
+		[Watch (11, 0), TV (18, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
+		[Static]
+		[Export ("backgroundActivitySessionWithQueue:handler:")]
+		CLBackgroundActivitySession Create (DispatchQueue queue, CLBackgroundActivitySessionCreateHandler handler);
+	}
+
+	[Watch (11, 0), TV (18, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
+	[BaseType (typeof (NSObject))]
+	interface CLBackgroundActivitySessionDiagnostic {
+		[Export ("authorizationDenied")]
+		bool AuthorizationDenied { get; }
+
+		[Export ("authorizationDeniedGlobally")]
+		bool AuthorizationDeniedGlobally { get; }
+
+		[Export ("authorizationRestricted")]
+		bool AuthorizationRestricted { get; }
+
+		[Export ("insufficientlyInUse")]
+		bool InsufficientlyInUse { get; }
+
+		[NoWatch]
+		[Export ("serviceSessionRequired")]
+		bool ServiceSessionRequired { get; }
+
+		[NoWatch]
+		[Export ("authorizationRequestInProgress")]
+		bool AuthorizationRequestInProgress { get; }
+	}
+
+	[Native]
+	[Watch (11, 0), TV (18, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
+	public enum CLServiceSessionAuthorizationRequirement : long {
+		None = 0,
+		WhenInUse = 1,
+		[NoTV, NoMac]
+		Always = 2,
+	}
+
+	[Watch (11, 0), TV (18, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface CLServiceSessionDiagnostic {
+		[Export ("authorizationDenied")]
+		bool AuthorizationDenied { get; }
+
+		[Export ("authorizationDeniedGlobally")]
+		bool AuthorizationDeniedGlobally { get; }
+
+		[Export ("authorizationRestricted")]
+		bool AuthorizationRestricted { get; }
+
+		[Export ("insufficientlyInUse")]
+		bool InsufficientlyInUse { get; }
+
+		[Export ("serviceSessionRequired")]
+		bool ServiceSessionRequired { get; }
+
+		[Export ("fullAccuracyDenied")]
+		bool FullAccuracyDenied { get; }
+
+		[Export ("alwaysAuthorizationDenied")]
+		bool AlwaysAuthorizationDenied { get; }
+
+		[Export ("authorizationRequestInProgress")]
+		bool AuthorizationRequestInProgress { get; }
+	}
+
+	delegate void CLServiceSessionCreateHandler (CLServiceSessionDiagnostic diagnostic);
+
+	[Watch (11, 0), TV (18, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface CLServiceSession {
+		[Static]
+		[Export ("sessionRequiringAuthorization:")]
+		CLServiceSession CreateSession (CLServiceSessionAuthorizationRequirement authorizationRequirement);
+
+		[Static]
+		[Export ("sessionRequiringAuthorization:queue:handler:")]
+		CLServiceSession CreateSession (CLServiceSessionAuthorizationRequirement authorizationRequirement, DispatchQueue queue, CLServiceSessionCreateHandler handler);
+
+		[Static]
+		[Export ("sessionRequiringAuthorization:fullAccuracyPurposeKey:")]
+		CLServiceSession CreateSession (CLServiceSessionAuthorizationRequirement authorizationRequirement, string fullAccuracyPurposeKey);
+
+		[Static]
+		[Export ("sessionRequiringAuthorization:fullAccuracyPurposeKey:queue:handler:")]
+		CLServiceSession CreateSession (CLServiceSessionAuthorizationRequirement authorizationRequirement, string fullAccuracyPurposeKey, DispatchQueue queue, CLServiceSessionCreateHandler handler);
+
+		[Export ("invalidate")]
+		void Invalidate ();
 	}
 }

@@ -494,6 +494,62 @@ namespace Security {
 			return Runtime.GetNSObject<NSData> (data, true);
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios18.0")]
+		[SupportedOSPlatform ("maccatalyst18.0")]
+		[SupportedOSPlatform ("macos15.0")]
+		[SupportedOSPlatform ("tvos18.0")]
+#else
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+#endif
+		[DllImport (Constants.SecurityLibrary)]
+		static extern /* CFDateRef */ IntPtr SecCertificateCopyNotValidBeforeDate (/* SecCertificateRef */ IntPtr certificate);
+
+		/// <summary>Get the date when this certificate becomes valid.</summary>
+		/// <returns>The date when this certificate becomes valid, or null if the date could not be obtained.</returns>
+#if NET
+		[SupportedOSPlatform ("ios18.0")]
+		[SupportedOSPlatform ("maccatalyst18.0")]
+		[SupportedOSPlatform ("macos15.0")]
+		[SupportedOSPlatform ("tvos18.0")]
+#else
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+#endif
+		public NSDate? NotValidBeforeDate {
+			get {
+				var ptr = SecCertificateCopyNotValidBeforeDate (Handle);
+				return Runtime.GetNSObject<NSDate> (ptr, owns: true);
+			}
+		}
+
+#if NET
+		[SupportedOSPlatform ("ios18.0")]
+		[SupportedOSPlatform ("maccatalyst18.0")]
+		[SupportedOSPlatform ("macos15.0")]
+		[SupportedOSPlatform ("tvos18.0")]
+#else
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+#endif
+		[DllImport (Constants.SecurityLibrary)]
+		static extern /* CFDateRef */ IntPtr SecCertificateCopyNotValidAfterDate (/* SecCertificateRef */ IntPtr certificate);
+
+		/// <summary>Get the date when this certificate is no longer valid.</summary>
+		/// <returns>The date when this certificate is no longer valid, or null if the date could not be obtained.</returns>
+#if NET
+		[SupportedOSPlatform ("ios18.0")]
+		[SupportedOSPlatform ("maccatalyst18.0")]
+		[SupportedOSPlatform ("macos15.0")]
+		[SupportedOSPlatform ("tvos18.0")]
+#else
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+#endif
+		public NSDate? NotValidAfterDate {
+			get {
+				var ptr = SecCertificateCopyNotValidAfterDate (Handle);
+				return Runtime.GetNSObject<NSDate> (ptr, owns: true);
+			}
+		}
+
 #endif // COREBUILD
 	}
 

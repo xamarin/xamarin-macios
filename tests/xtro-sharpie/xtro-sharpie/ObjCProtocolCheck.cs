@@ -224,7 +224,11 @@ namespace Extrospection {
 
 		bool IsInit (string selector)
 		{
-			return selector.StartsWith ("init", StringComparison.Ordinal) && Char.IsUpper (selector [4]);
+			if (!selector.StartsWith ("init", StringComparison.Ordinal))
+				return false;
+			if (selector.Length == 4)
+				return true;
+			return Char.IsUpper (selector [4]);
 		}
 
 		public override void End ()

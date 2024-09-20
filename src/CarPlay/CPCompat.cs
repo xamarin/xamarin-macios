@@ -10,6 +10,7 @@
 #nullable enable
 
 using System;
+using CoreGraphics;
 using Foundation;
 using ObjCRuntime;
 using System.ComponentModel;
@@ -18,8 +19,8 @@ using System.ComponentModel;
 using NativeHandle = System.IntPtr;
 #endif
 
-#if !NET
 namespace CarPlay {
+#if !NET
 	[Register (SkipRegistration = true)]
 	[Unavailable (PlatformName.iOS, PlatformArchitecture.All)]
 	[Obsolete ("This API has been removed from the native SDK.")]
@@ -38,5 +39,24 @@ namespace CarPlay {
 
 		public override NativeHandle ClassHandle => throw new NotSupportedException ();
 	}
-}
 #endif
+#if !XAMCORE_5_0 && __IOS__
+	public partial class CPListItem {
+#if NET
+		[ObsoletedOSPlatform ("ios14.0", "Do not use; this API was removed.")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("ios")]
+#else
+		[Deprecated (PlatformName.iOS, 14, 0, message: "Do not use; this API was removed.")]
+#endif
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		public static CGSize MaximumListItemImageSize {
+			get {
+				return default (CGSize);
+			}
+		}
+	}
+#endif // !XAMCORE_5_0 && __IOS__
+}

@@ -46,6 +46,8 @@ namespace CoreML {
 		[Watch (5, 0)]
 		[MacCatalyst (13, 1)]
 		Sequence = 7,
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		State = 8,
 	}
 
 	/// <summary>Enumerates errors that may occur in the use of Core ML.</summary>
@@ -74,10 +76,8 @@ namespace CoreML {
 		// added in xcode12 but it's the same a `Double` and can be used in earlier versions
 		Float64 = 0x10000 | 64,
 		Float32 = 0x10000 | 32,
-#if MONOMAC // macOS 12 Only
-		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
+		[iOS (16, 0), MacCatalyst (16, 0), Watch (9, 0), TV (16, 0)]
 		Float16 = 0x10000 | 16,
-#endif
 		// added in xcode12 but it's the same a `Float32` and can be used in earlier versions
 		Float = 0x10000 | 32,
 		Int32 = 0x20000 | 32,
@@ -185,6 +185,10 @@ namespace CoreML {
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("sequenceConstraint")]
 		MLSequenceConstraint SequenceConstraint { get; }
+
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0), Watch (11, 0)]
+		[NullAllowed, Export ("stateConstraint")]
+		MLStateConstraint StateConstraint { get; }
 	}
 
 	interface IMLFeatureProvider { }
@@ -563,6 +567,10 @@ namespace CoreML {
 		[MacCatalyst (13, 1)]
 		[Export ("parameterDescriptionsByKey")]
 		NSDictionary<MLParameterKey, MLParameterDescription> ParameterDescriptionsByKey { get; }
+
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("stateDescriptionsByName")]
+		NSDictionary<NSString, MLFeatureDescription> StateDescriptionsByName { get; }
 	}
 
 	[MacCatalyst (13, 1)]
@@ -635,6 +643,10 @@ namespace CoreML {
 		[Export ("initWithShape:dataType:error:")]
 		NativeHandle Constructor (NSNumber [] shape, MLMultiArrayDataType dataType, out NSError error);
 
+		[iOS (18, 0), TV (18, 0), MacCatalyst (18, 0), Mac (15, 0), Watch (11, 0)]
+		[Export ("initWithShape:dataType:strides:")]
+		NativeHandle Constructor (NSNumber [] shape, MLMultiArrayDataType dataType, NSNumber [] strides);
+
 		[Export ("initWithDataPointer:shape:dataType:strides:deallocator:error:")]
 		NativeHandle Constructor (IntPtr dataPointer, NSNumber [] shape, MLMultiArrayDataType dataType, NSNumber [] strides, [NullAllowed] Action<IntPtr> deallocator, out NSError error);
 
@@ -685,6 +697,11 @@ namespace CoreML {
 		[Watch (8, 5), TV (15, 4), Mac (12, 3), iOS (15, 4), MacCatalyst (15, 4)]
 		[Export ("getMutableBytesWithHandler:")]
 		void GetMutableBytes (Action<IntPtr, nint, NSArray<NSNumber>> handler);
+
+		// From MLMultiArray (Transferring) category
+		[iOS (18, 0), TV (18, 0), MacCatalyst (18, 0), Mac (15, 0), Watch (11, 0)]
+		[Export ("transferToMultiArray:")]
+		void TransferToMultiArray (MLMultiArray destinationMultiArray);
 	}
 
 	/// <summary>Contains a value that constrains the type of dictionary keys.</summary>
@@ -971,6 +988,11 @@ namespace CoreML {
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("parameters", ArgumentSemantic.Assign)]
 		NSDictionary<MLParameterKey, NSObject> Parameters { get; set; }
+
+		// From MLModelConfiguration (MultiFunctions)
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("functionName", ArgumentSemantic.Copy), NullAllowed]
+		string FunctionName { get; set; }
 	}
 
 	[Watch (6, 0), TV (13, 0), iOS (13, 0)]
@@ -1210,6 +1232,7 @@ namespace CoreML {
 		bool Write (NSUrl url, [NullAllowed] out NSError error);
 	}
 
+#if !XAMCORE_5_0
 	[Deprecated (PlatformName.MacOSX, 13, 3, message: "Use Background Assets or 'NSUrlSession' instead.")]
 	[Deprecated (PlatformName.MacCatalyst, 16, 4, message: "Use Background Assets or 'NSUrlSession' instead.")]
 	[Deprecated (PlatformName.iOS, 16, 4, message: "Use Background Assets or 'NSUrlSession' instead.")]
@@ -1244,7 +1267,9 @@ namespace CoreML {
 		[Field ("MLModelCollectionDidChangeNotification")]
 		NSString DidChangeNotification { get; }
 	}
+#endif // !XAMCORE_5_0
 
+#if !XAMCORE_5_0
 	[Deprecated (PlatformName.MacOSX, 13, 3, message: "Use Background Assets or 'NSUrlSession' instead.")]
 	[Deprecated (PlatformName.MacCatalyst, 16, 4, message: "Use Background Assets or 'NSUrlSession' instead.")]
 	[Deprecated (PlatformName.iOS, 16, 4, message: "Use Background Assets or 'NSUrlSession' instead.")]
@@ -1265,6 +1290,10 @@ namespace CoreML {
 		[Export ("isEqualToModelCollectionEntry:")]
 		bool IsEqual (MLModelCollectionEntry entry);
 	}
+#endif // !XAMCORE_5_0
+
+	delegate void MLModelAssetGetModelDescriptionCompletionHandler ([NullAllowed] MLModelDescription modelDescription, [NullAllowed] NSError error);
+	delegate void MLModelAssetGetFunctionNamesCompletionHandler ([NullAllowed] string [] functionNames, [NullAllowed] NSError error);
 
 	[Watch (9, 0), TV (16, 0), Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 	[BaseType (typeof (NSObject))]
@@ -1276,6 +1305,31 @@ namespace CoreML {
 		[Export ("modelAssetWithSpecificationData:error:")]
 		[return: NullAllowed]
 		MLModelAsset Create (NSData specificationData, [NullAllowed] out NSError error);
+
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Static]
+		[Export ("modelAssetWithURL:error:")]
+		[return: NullAllowed]
+		MLModelAsset Create (NSUrl compiledModelUrl, [NullAllowed] out NSError error);
+
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("modelDescriptionWithCompletionHandler:")]
+		void GetModelDescription (MLModelAssetGetModelDescriptionCompletionHandler handler);
+
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("modelDescriptionOfFunctionNamed:completionHandler:")]
+		void GetModelDescription (string functionName, MLModelAssetGetModelDescriptionCompletionHandler handler);
+
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("functionNamesWithCompletionHandler:")]
+		void GetFunctionNames (MLModelAssetGetFunctionNamesCompletionHandler handler);
+
+		[NoWatch, TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Static]
+		[Export ("modelAssetWithSpecificationData:blobMapping:error:")]
+		[return: NullAllowed]
+		MLModelAsset Create (NSData specificationData, NSDictionary<NSUrl, NSData> blobMapping, [NullAllowed] out NSError error);
+
 	}
 
 	interface IMLComputeDeviceProtocol { }
@@ -1334,6 +1388,58 @@ namespace CoreML {
 
 		[Export ("modelStructure", ArgumentSemantic.Strong)]
 		MLModelStructure ModelStructure { get; }
+	}
+
+	delegate void MLStateGetMultiArrayForStateHandler (MLMultiArray buffer);
+
+	[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface MLState {
+		[Export ("getMultiArrayForStateNamed:handler:")]
+		void GetMultiArrayForState (string stateName, MLStateGetMultiArrayForStateHandler handler);
+	}
+
+	delegate void MLStateGetPredictionCompletionHandler ([NullAllowed] IMLFeatureProvider output, NSError error);
+
+	[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[Category]
+	[BaseType (typeof (MLModel))]
+	interface MLModel_MLState {
+		[Export ("newState")]
+		[return: Release]
+		MLState CreateNewState ();
+
+		[Export ("predictionFromFeatures:usingState:error:")]
+		[return: NullAllowed]
+		IMLFeatureProvider GetPrediction (IMLFeatureProvider inputFeatures, MLState state, out NSError error);
+
+		[Export ("predictionFromFeatures:usingState:options:error:")]
+		[return: NullAllowed]
+		IMLFeatureProvider GetPrediction (IMLFeatureProvider inputFeatures, MLState state, MLPredictionOptions options, out NSError error);
+
+		[Export ("predictionFromFeatures:usingState:options:completionHandler:")]
+		[return: NullAllowed]
+		IMLFeatureProvider GetPrediction (IMLFeatureProvider inputFeatures, MLState state, MLPredictionOptions options, MLStateGetPredictionCompletionHandler completionHandler);
+	}
+
+	[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface MLStateConstraint : NSSecureCoding {
+		// BindAs: No documentation about which types of NSNumbers we get back
+		[Export ("bufferShape")]
+		NSNumber [] BufferShape { get; }
+
+		[Export ("dataType")]
+		MLMultiArrayDataType DataType { get; }
+	}
+
+	[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[Native]
+	public enum MLSpecializationStrategy : long {
+		Default = 0,
+		FastPrediction = 1,
 	}
 
 	[Watch (10, 4), TV (17, 4), Mac (14, 4), iOS (17, 4), MacCatalyst (17, 4)]
@@ -1525,6 +1631,9 @@ namespace CoreML {
 
 		[Export ("reshapeFrequency", ArgumentSemantic.Assign)]
 		MLReshapeFrequencyHint ReshapeFrequency { get; set; }
-	}
 
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("specializationStrategy", ArgumentSemantic.Assign)]
+		MLSpecializationStrategy SpecializationStrategy { get; set; }
+	}
 }
