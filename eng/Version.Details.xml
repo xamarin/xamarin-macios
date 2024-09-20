@@ -64,9 +64,9 @@
       <Uri>https://github.com/xamarin/xamarin-macios</Uri>
       <Sha>06fea905cf900ab5296b08d7b67dadddc733dd65</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Runtime.MonoTargets.Sdk" Version="9.0.0-alpha.1.23556.4">
+    <Dependency Name="Microsoft.NET.Runtime.MonoTargets.Sdk" Version="9.0.0-rc.2.24462.10">
       <Uri>https://github.com/dotnet/runtime</Uri>
-      <Sha>cf47d9ff6827a3e1d6f2acbf925cd618418f20dd</Sha>
+      <Sha>9bff9c5017d8444fdf76959c112dd9fed2da9317</Sha>
     </Dependency>
   </ProductDependencies>
   <ToolsetDependencies>
