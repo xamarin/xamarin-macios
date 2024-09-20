@@ -11,6 +11,7 @@
 ## static const NSUInteger VNCoreMLRequestRevision1 = 1;
 !unknown-native-enum! VNRequestRevision bound
 !unknown-native-enum! VNBarcodeObservationRequestRevision bound
+!unknown-native-enum! VNCalculateImageAestheticsScoresRequestRevision bound
 !unknown-native-enum! VNCoreMLRequestRevision bound
 !unknown-native-enum! VNDetectBarcodesRequestRevision bound
 !unknown-native-enum! VNDetectedObjectObservationRequestRevision bound

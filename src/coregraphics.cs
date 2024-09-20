@@ -10,6 +10,16 @@ using ObjCRuntime;
 
 namespace CoreGraphics {
 
+	[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	enum CGToneMapping : uint {
+		Default = 0,
+		ImageSpecificLumaScaling,
+		ReferenceWhiteBased,
+		IturRecommended,
+		ExrGamma,
+		None,
+	}
+
 	/// <summary>Specifies various boxes for the <see cref="M:CoreGraphics.CGContextPDF.BeginPage(CoreGraphics.CGPDFPageInfo)" /> method.</summary>
 	[Partial]
 	interface CGPDFPageInfo {
@@ -352,6 +362,10 @@ namespace CoreGraphics {
 		[iOS (15, 0), TV (15, 0), Watch (8, 0), MacCatalyst (15, 0)]
 		[Field ("kCGColorSpaceLinearITUR_2020")]
 		NSString LinearItur_2020 { get; }
+
+		[Mac (15, 0), iOS (18, 0), TV (18, 0), Watch (11, 0), MacCatalyst (18, 0)]
+		[Field ("kCGColorSpaceCoreMedia709")]
+		NSString CoreMedia709 { get; }
 	}
 
 	[Partial]
@@ -458,6 +472,8 @@ namespace CoreGraphics {
 	// Adding suffix *Keys to avoid possible name clash
 	[NoiOS, NoTV, NoWatch, MacCatalyst (13, 1)]
 	[Static]
+	[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use ScreenCaptureKit instead.")]
+	[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use ScreenCaptureKit instead.")]
 	interface CGDisplayStreamKeys {
 
 		[Field ("kCGDisplayStreamColorSpace")]
@@ -510,4 +526,56 @@ namespace CoreGraphics {
 		bool LoginDone { get; }
 	}
 #endif
+
+	[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[Partial]
+	partial interface CGToneMappingOptionKeys {
+		[Internal]
+		[Field ("kCGUse100nitsHLGOOTF")]
+		NSString Use100nitsHlgOotfKey { get; }
+
+		[Internal]
+		[Field ("kCGUseBT1886ForCoreVideoGamma")]
+		NSString UseBT1886ForCoreVideoGammaKey { get; }
+
+		[Internal]
+		[Field ("kCGSkipBoostToHDR")]
+		NSString SkipBoostToHdrKey { get; }
+
+		[Internal]
+		[Field ("kCGEXRToneMappingGammaDefog")]
+		NSString ExrToneMappingGammaDefogKey { get; }
+
+		[Internal]
+		[Field ("kCGEXRToneMappingGammaExposure")]
+		NSString ExrToneMappingGammaExposureKey { get; }
+
+		[Internal]
+		[Field ("kCGEXRToneMappingGammaKneeLow")]
+		NSString ExrToneMappingGammaKneeLowKey { get; }
+
+		[Internal]
+		[Field ("kCGEXRToneMappingGammaKneeHigh")]
+		NSString ExrToneMappingGammaKneeHighKey { get; }
+	}
+
+	[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[StrongDictionary ("CGToneMappingOptionKeys")]
+	interface CGToneMappingOptions {
+		bool Use100nitsHlgOotf { get; set; }
+		bool UseBT1886ForCoreVideoGamma { get; set; }
+		bool SkipBoostToHdr { get; set; }
+		float ExrToneMappingGammaDefog { get; set; }
+		float ExrToneMappingGammaExposure { get; set; }
+		float ExrToneMappingGammaKneeLow { get; set; }
+		float ExrToneMappingGammaKneeHigh { get; set; }
+	}
+
+	[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[Partial]
+	[Internal]
+	interface CoreGraphicsFields {
+		[Field ("kCGDefaultHDRImageContentHeadroom")]
+		float DefaultHdrImageContentHeadroom { get; }
+	}
 }

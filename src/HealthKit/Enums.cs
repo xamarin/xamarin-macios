@@ -369,6 +369,11 @@ namespace HealthKit {
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
+	[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'HKCategoryValueVaginalBleeding' instead.")]
+	[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'HKCategoryValueVaginalBleeding' instead.")]
+	[Deprecated (PlatformName.TvOS, 18, 0, message: "Use 'HKCategoryValueVaginalBleeding' instead.")]
+	[Deprecated (PlatformName.WatchOS, 11, 0, message: "Use 'HKCategoryValueVaginalBleeding' instead.")]
+	[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'HKCategoryValueVaginalBleeding' instead.")]
 	public enum HKCategoryValueMenstrualFlow : long {
 		NotApplicable = 0,
 		Unspecified = 1,
@@ -378,6 +383,16 @@ namespace HealthKit {
 		[Watch (5, 0)]
 		[MacCatalyst (13, 1)]
 		None,
+	}
+
+	[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[Native]
+	public enum HKCategoryValueVaginalBleeding : long {
+		Unspecified = 1,
+		Light = 2,
+		Medium = 3,
+		Heavy = 4,
+		None = 5,
 	}
 
 	/// <summary>Enumerates the results of an ovulation test.</summary>

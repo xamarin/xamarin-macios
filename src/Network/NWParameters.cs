@@ -43,6 +43,7 @@ namespace Network {
 		public NWParameters (NativeHandle handle, bool owns) : base (handle, owns) { }
 #endif
 
+#if !COREBUILD
 #if NET
 		[SupportedOSPlatform ("tvos16.0")]
 		[SupportedOSPlatform ("macos13.0")]
@@ -724,5 +725,6 @@ namespace Network {
 			get => nw_parameters_requires_dnssec_validation (GetCheckedHandle ()) != 0;
 			set => nw_parameters_set_requires_dnssec_validation (GetCheckedHandle (), value.AsByte ());
 		}
+#endif // COREBUILD
 	}
 }

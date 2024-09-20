@@ -94,6 +94,35 @@ namespace Network {
 			return new NWListener (handle, owns: true);
 		}
 
+#if __MACOS__ && NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[DllImport (Constants.NetworkLibrary)]
+		extern static IntPtr nw_listener_create_with_launchd_key (/* nw_parameters_t */ IntPtr nwparameters, /* const char */ IntPtr launchd_key);
+
+		/// <summary>Creates an <see cref="NWListener" /> instance from a launchd key.</summary>
+		/// <param name="parameters">The parameters to use for the listener, including the protocols to use.</param>
+		/// <param name="launchd_key">The name of the socket entry as specified in the launchd.plist.</param>
+		/// <returns>A new <see cref="NWListener" /> instance, or null if not successful.</returns>
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		public static NWListener? Create (NWParameters parameters, string launchd_key)
+		{
+			if (launchd_key is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (launchd_key));
+
+			using var launchd_key_ptr = new TransientString (launchd_key);
+			var handle = nw_listener_create_with_launchd_key (parameters.GetNonNullHandle (nameof (parameters)), launchd_key_ptr);
+			if (handle == IntPtr.Zero)
+				return null;
+			return new NWListener (handle, owns: true);
+		}
+#endif // __MACOS__ && NET
+
 		[DllImport (Constants.NetworkLibrary)]
 		extern static void nw_listener_set_queue (IntPtr listener, IntPtr queue);
 

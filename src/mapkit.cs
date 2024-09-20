@@ -87,6 +87,9 @@ namespace MapKit {
 		[Export ("setCoordinate:")]
 		[MacCatalyst (13, 1)]
 		void SetCoordinate (CLLocationCoordinate2D value);
+
+		[Notification, Field ("MKAnnotationCalloutInfoDidChangeNotification")]
+		NSString CalloutInfoDidChangeNotification { get; }
 	}
 
 	interface IMKAnnotation { }
@@ -97,6 +100,11 @@ namespace MapKit {
 	[Protocol]
 	[MacCatalyst (13, 1)]
 	interface MKOverlay {
+		// There's a 'coordinate' readonly property defined in the header for MKOverlay,
+		// but the MKAnnotation protocol (which this protocol subclasses), also defines
+		// a readonly 'coordinate' property, so there's no need to re-declare it here
+		// (in fact it causes numerous build problems).
+
 		[Abstract]
 		[Export ("boundingMapRect")]
 		MKMapRect BoundingMapRect { get; }
@@ -235,6 +243,10 @@ namespace MapKit {
 		[MacCatalyst (14, 0)]
 		[Export ("selectedZPriority")]
 		float SelectedZPriority { get; set; }
+
+		[iOS (18, 0), Mac (15, 0), MacCatalyst (18, 0), NoTV, NoWatch]
+		[Export ("accessoryOffset", ArgumentSemantic.Assign)]
+		CGPoint AccessoryOffset { get; set; }
 	}
 
 	[ThreadSafe]
@@ -454,6 +466,14 @@ namespace MapKit {
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("pointOfInterestCategory")]
 		string PointOfInterestCategory { get; set; }
+
+		[NoWatch, TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("identifier"), NullAllowed]
+		MKMapItemIdentifier Identifier { get; }
+
+		[NoWatch, TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("alternateIdentifiers")]
+		NSSet<MKMapItemIdentifier> AlternateIdentifiers { get; }
 	}
 
 	[NoWatch]
@@ -880,6 +900,11 @@ namespace MapKit {
 		[MacCatalyst (13, 1)]
 		[Export ("mapViewDidChangeVisibleRegion:")]
 		void DidChangeVisibleRegion (MKMapView mapView);
+
+		[return: NullAllowed]
+		[Export ("mapView:selectionAccessoryForAnnotation:"), DelegateName ("MKMapViewDelegateGetSelectionAccessory"), DefaultValue (null)]
+		[NoWatch, NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		MKSelectionAccessory GetSelectionAccessory (MKMapView mapView, IMKAnnotation annotation);
 	}
 
 	[BaseType (typeof (MKAnnotationView))]
@@ -1452,6 +1477,14 @@ namespace MapKit {
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("pointOfInterestFilter", ArgumentSemantic.Copy)]
 		MKPointOfInterestFilter PointOfInterestFilter { get; set; }
+
+		[NoWatch, TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("regionPriority", ArgumentSemantic.Assign)]
+		MKLocalSearchRegionPriority RegionPriority { get; set; }
+
+		[NoWatch, TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("addressFilter", ArgumentSemantic.Copy), NullAllowed]
+		MKAddressFilter AddressFilter { get; set; }
 	}
 
 	[NoWatch]
@@ -2103,6 +2136,14 @@ namespace MapKit {
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("pointOfInterestFilter", ArgumentSemantic.Copy)]
 		MKPointOfInterestFilter PointOfInterestFilter { get; set; }
+
+		[NoWatch, TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("regionPriority", ArgumentSemantic.Assign)]
+		MKLocalSearchRegionPriority RegionPriority { get; set; }
+
+		[NoWatch, TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("addressFilter", ArgumentSemantic.Copy), NullAllowed]
+		MKAddressFilter AddressFilter { get; set; }
 	}
 
 	interface IMKLocalSearchCompleterDelegate { }
@@ -2694,13 +2735,19 @@ namespace MapKit {
 		NSString PointOfInterestCategory { get; }
 	}
 
-	[NoMac, iOS (16, 0), MacCatalyst (16, 0), NoWatch, NoTV]
+	[Mac (15, 0), iOS (16, 0), MacCatalyst (16, 0), NoWatch, TV (18, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface MKMapItemRequest {
+		[NoMac, NoTV]
 		[Export ("initWithMapFeatureAnnotation:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (MKMapFeatureAnnotation mapFeatureAnnotation);
+
+		[NoWatch, TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("initWithMapItemIdentifier:")]
+		[DesignatedInitializer]
+		NativeHandle Constructor (MKMapItemIdentifier identifier);
 
 		[Async]
 		[Export ("getMapItemWithCompletionHandler:")]
@@ -2709,6 +2756,9 @@ namespace MapKit {
 		[Export ("cancel")]
 		void Cancel ();
 
+		[NoMac, NoTV]
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'MapFeatureAnnotation' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'MapFeatureAnnotation' instead.")]
 		[Export ("featureAnnotation")]
 		MKMapFeatureAnnotation FeatureAnnotation { get; }
 
@@ -2717,6 +2767,14 @@ namespace MapKit {
 
 		[Export ("isLoading")]
 		bool IsLoading { get; }
+
+		[NoWatch, TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("mapItemIdentifier"), NullAllowed]
+		MKMapItemIdentifier MapItemIdentifier { get; }
+
+		[NoWatch, NoTV, NoMac, iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("mapFeatureAnnotation"), NullAllowed]
+		MKMapFeatureAnnotation MapFeatureAnnotation { get; }
 	}
 
 	[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0), NoWatch, TV (16, 0)]
@@ -2740,5 +2798,149 @@ namespace MapKit {
 
 		[Export ("showsTraffic")]
 		bool ShowsTraffic { get; set; }
+	}
+
+	[Flags]
+	[Native]
+	[NoWatch, TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	enum MKAddressFilterOption : ulong {
+		Country = 1 << 0,
+		AdministrativeArea = 1 << 1,
+		SubAdministrativeArea = 1 << 2,
+		Locality = 1 << 3,
+		SubLocality = 1 << 4,
+		PostalCode = 1 << 5,
+	}
+
+	[NoWatch, TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface MKAddressFilter : NSSecureCoding, NSCopying {
+		[Static]
+		[Export ("filterIncludingAll")]
+		MKAddressFilter IncludingAll { get; }
+
+		[Static]
+		[Export ("filterExcludingAll")]
+		MKAddressFilter ExcludingAll { get; }
+
+		[Export ("initIncludingOptions:")]
+		// [DesignatedInitializer] // this isn't a constructor, so [DesignatedInitializer] doesn't work
+		[Internal]
+		NativeHandle _InitIncludingOptions (MKAddressFilterOption options);
+
+		[Export ("initExcludingOptions:")]
+		// [DesignatedInitializer] // this isn't a constructor, so [DesignatedInitializer] doesn't work
+		[Internal]
+		NativeHandle _InitExcludingOptions (MKAddressFilterOption options);
+
+		[Export ("includesOptions:")]
+		bool Includes (MKAddressFilterOption options);
+
+		[Export ("excludesOptions:")]
+		bool Excludes (MKAddressFilterOption options);
+	}
+
+	[NoWatch, TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface MKMapItemAnnotation : MKAnnotation {
+		[Export ("initWithMapItem:")]
+		[DesignatedInitializer]
+		NativeHandle Constructor (MKMapItem mapItem);
+
+		[Export ("mapItem", ArgumentSemantic.Strong)]
+		MKMapItem MapItem { get; }
+	}
+
+	[NoWatch, NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[Protocol (BackwardsCompatibleCodeGeneration = false), Model]
+	[BaseType (typeof (NSObject))]
+	interface MKMapItemDetailViewControllerDelegate {
+		[Abstract]
+		[Export ("mapItemDetailViewControllerDidFinish:")]
+		void DidFinish (MKMapItemDetailViewController detailViewController);
+	}
+
+	interface IMKMapItemDetailViewControllerDelegate { }
+
+	[NoWatch, NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[BaseType (typeof (UIViewController))]
+	[DisableDefaultCtor]
+	interface MKMapItemDetailViewController {
+		[Export ("mapItem", ArgumentSemantic.Strong), NullAllowed]
+		MKMapItem MapItem { get; set; }
+
+		[Export ("delegate", ArgumentSemantic.Weak), NullAllowed]
+		NSObject WeakDelegate { get; set; }
+
+		[Wrap ("WeakDelegate")]
+		IMKMapItemDetailViewControllerDelegate Delegate { get; set; }
+
+		[Export ("initWithMapItem:displaysMap:")]
+		NativeHandle Constructor ([NullAllowed] MKMapItem mapItem, bool displaysMap);
+
+		[Export ("initWithMapItem:")]
+		NativeHandle Constructor ([NullAllowed] MKMapItem mapItem);
+	}
+
+	[NoWatch, TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface MKMapItemIdentifier : NSCopying, NSSecureCoding {
+		[Export ("initWithIdentifierString:")]
+		NativeHandle Constructor (string identifier);
+
+		[Export ("identifierString")]
+		string IdentifierString { get; }
+	}
+
+	[NoWatch, NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface MKSelectionAccessory {
+		[Static]
+		[Export ("mapItemDetailWithPresentationStyle:")]
+		MKSelectionAccessory Create (MKMapItemDetailSelectionAccessoryPresentationStyle presentationStyle);
+	}
+
+	[Native]
+	[NoWatch, NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	enum MKMapItemDetailSelectionAccessoryCalloutStyle : long {
+		Automatic,
+		Full,
+		Compact,
+	}
+
+	[NoWatch, NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface MKMapItemDetailSelectionAccessoryPresentationStyle {
+		[Static]
+		[Export ("automaticWithPresentationViewController:")]
+		MKMapItemDetailSelectionAccessoryPresentationStyle CreateAutomatic ([NullAllowed] UIViewController presentationViewController);
+
+		[Static]
+		[Export ("callout", ArgumentSemantic.Strong)]
+		MKMapItemDetailSelectionAccessoryPresentationStyle Callout { get; }
+
+		[Static]
+		[Export ("calloutWithCalloutStyle:")]
+		MKMapItemDetailSelectionAccessoryPresentationStyle CreateCallout (MKMapItemDetailSelectionAccessoryCalloutStyle style);
+
+		[Static]
+		[Export ("sheetPresentedFromViewController:")]
+		MKMapItemDetailSelectionAccessoryPresentationStyle CreateSheet (UIViewController viewController);
+
+		[Static]
+		[Export ("openInMaps", ArgumentSemantic.Strong)]
+		MKMapItemDetailSelectionAccessoryPresentationStyle OpenInMaps { get; }
+	}
+
+	[Native]
+	[NoWatch, TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	enum MKLocalSearchRegionPriority : long {
+		Default = 0,
+		Required,
 	}
 }

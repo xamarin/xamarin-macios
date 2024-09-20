@@ -162,7 +162,7 @@ namespace Photos {
 		NSString LocalIdentifierNotFound { get; }
 
 		[TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
-		[NullAllowed, Export ("adjustmentFormatIdentifier")]
+		[NullAllowed, Export ("adjustmentFormatIdentifier", ArgumentSemantic.Copy)]
 		string AdjustmentFormatIdentifier { get; }
 
 		[TV (15, 0), iOS (15, 0)]
@@ -381,7 +381,7 @@ namespace Photos {
 		[Static]
 		[Export ("changeRequestForAssetCollection:assets:")]
 		[return: NullAllowed]
-		PHAssetCollectionChangeRequest ChangeRequest (PHAssetCollection assetCollection, PHFetchResult assets);
+		PHAssetCollectionChangeRequest ChangeRequest (PHAssetCollection assetCollection, [NullAllowed] PHFetchResult assets);
 
 		[Export ("title", ArgumentSemantic.Strong)]
 		string Title { get; set; }
