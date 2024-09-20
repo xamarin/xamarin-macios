@@ -869,8 +869,6 @@
 			Condition="'$(IsMacEnabled)' == 'true'"
 			AdditionalArguments="$(_DittoArchitectures)"
 			CopyFromWindows="true"
-			ToolExe="$(DittoExe)"
-			ToolPath="$(DittoPath)"
 			Source="%(_DirectoriesToPublish.SourceDirectory)"
 			Destination="%(_DirectoriesToPublish.TargetDirectory)"
 			TouchDestinationFiles="true"
