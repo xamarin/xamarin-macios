@@ -1666,6 +1666,7 @@ namespace GeneratorTests {
 			var tf = TargetFramework.Parse (BGenTool.GetTargetFramework (profile));
 			cscArguments.Add ($"/r:{Configuration.GetBindingAttributePath (tf)}");
 			cscArguments.Add ($"/r:{Configuration.GetBaseLibrary (tf)}");
+			BGenTool.AddPreviewNoWarn (cscArguments);
 			var rv = ExecutionHelper.Execute (cscExecutable, cscArguments);
 			Assert.AreEqual (0, rv, "CSC exit code");
 

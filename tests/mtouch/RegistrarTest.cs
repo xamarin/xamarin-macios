@@ -357,6 +357,7 @@ class MyObjectErr : NSObject, IFoo1, IFoo2
 					new { Framework = "Cinematic", Version = "17.0" },
 					new { Framework = "Symbols", Version = "17.0" },
 					new { Framework = "SensitiveContentAnalysis", Version = "17.0" },
+					new { Framework = "AccessorySetupKit", Version = "18.0" },
 				};
 				foreach (var framework in invalidFrameworks)
 					mtouch.AssertError (4134, $"Your application is using the '{framework.Framework}' framework, which isn't included in the iOS SDK you're using to build your app (this framework was introduced in iOS {framework.Version}, while you're building with the iOS {mtouch.Sdk} SDK.) Please select a newer SDK in your app's iOS Build options.");
@@ -1439,6 +1440,8 @@ namespace NS {
 				foreach (var line in mtouch.OutputLines) {
 					if (line.Contains ("warning: method 'paymentAuthorizationViewController:didAuthorizePayment:handler:' in protocol 'PKPaymentAuthorizationViewControllerDelegate' not implemented [-Wprotocol]"))
 						continue; // Xcode 9 beta 1: this method changed from optional to required.
+					if (line.Contains ("warning: -ld_classic is deprecated and will be removed in a future release"))
+						continue;
 					Assert.That (line, Does.Not.Match ("warning:"), "no warnings");
 				}
 			}

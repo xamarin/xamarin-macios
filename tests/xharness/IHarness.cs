@@ -30,7 +30,6 @@ namespace Xharness {
 		string WatchOSExtensionTemplate { get; }
 		string TodayContainerTemplate { get; }
 		string TodayExtensionTemplate { get; }
-		string BCLTodayExtensionTemplate { get; }
 		string MONO_PATH { get; }
 		string TVOS_MONO_PATH { get; }
 		bool INCLUDE_IOS { get; }
@@ -42,7 +41,6 @@ namespace Xharness {
 		string MAC_DESTDIR { get; }
 		string IOS_DESTDIR { get; }
 		string MONO_IOS_SDK_DESTDIR { get; }
-		string MONO_MAC_SDK_DESTDIR { get; }
 		bool ENABLE_DOTNET { get; }
 		bool INCLUDE_XAMARIN_LEGACY { get; }
 		string SYSTEM_MONO { get; set; }
@@ -62,7 +60,6 @@ namespace Xharness {
 		bool? IncludeSystemPermissionTests { get; set; }
 		bool InCI { get; }
 		bool UseTcpTunnel { get; }
-		bool UseGroupedApps { get; }
 		string VSDropsUri { get; }
 		bool DisableWatchOSOnWrench { get; }
 

@@ -17,7 +17,6 @@ namespace Xharness.Jenkins.TestTasks {
 		protected ICrashSnapshotReporterFactory CrashReportSnapshotFactory { get; }
 
 		public string Path;
-		public bool BCLTest;
 		public bool IsUnitTest;
 
 		public MacExecuteTask (Jenkins jenkins, BuildToolTask build_task, IMlaunchProcessManager processManager, ICrashSnapshotReporterFactory crashReportSnapshotFactory)
@@ -33,12 +32,6 @@ namespace Xharness.Jenkins.TestTasks {
 					// These tests are not written to support parallel execution
 					// (there are hard coded paths used for instance), so disable
 					// parallel execution for these tests.
-					return false;
-				}
-				if (BCLTest) {
-					// We run the BCL tests in multiple flavors (Full/Modern),
-					// and the BCL tests are not written to support parallel execution,
-					// so disable parallel execution for these tests.
 					return false;
 				}
 
