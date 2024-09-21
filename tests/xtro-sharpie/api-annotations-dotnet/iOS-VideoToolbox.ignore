@@ -2,5 +2,8 @@
 !missing-field! kVTVideoDecoderSpecification_PreferredDecoderGPURegistryID not bound
 !missing-field! kVTVideoDecoderSpecification_RequiredDecoderGPURegistryID not bound
 
-## availability macro says iOS 8.0 but constants are under a #if !TARGET_OS_IPHONE define.
-## introspection does not report them as missing...
+## Requires binding CMTaggedBuffer from CoreMedia first
+!missing-pinvoke! VTCompressionSessionEncodeMultiImageFrame is not bound
+!missing-pinvoke! VTCompressionSessionEncodeMultiImageFrameWithOutputHandler is not bound
+!missing-pinvoke! VTDecompressionSessionDecodeFrameWithMultiImageCapableOutputHandler is not bound
+!missing-pinvoke! VTDecompressionSessionSetMultiImageCallback is not bound

@@ -171,3 +171,6 @@
 !missing-type! ICCameraItem not bound
 !missing-type! ICDevice not bound
 !missing-type! ICDeviceBrowser not bound
+!missing-selector! +ICCameraFile::fingerprintForFileAtURL: not bound
+!missing-selector! ICCameraFile::fingerprint not bound
+!missing-selector! ICCameraFile::requestFingerprintWithCompletion: not bound

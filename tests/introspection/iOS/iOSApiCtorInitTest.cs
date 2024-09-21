@@ -237,8 +237,6 @@ namespace Introspection {
 				return TestRuntime.CheckXcodeVersion (11, 2);
 			case "UIMenuController": // Stopped working with Xcode 11.3 beta 1
 				return TestRuntime.CheckXcodeVersion (11, 3);
-			case "THClient":
-				return TestRuntime.IsSimulatorOrDesktop;
 #if __TVOS__
 			case "MPSPredicate":
 				// the device .ctor ends up calling `initWithBuffer:offset:` and crash on older (non 4k AppleTV devices)
@@ -252,6 +250,9 @@ namespace Introspection {
 					return true;
 				break;
 #endif
+			case "UITextLoupeSession":
+				// crashes on the bots, although I can't reproduce locally.
+				return true;
 			}
 			return base.Skip (type);
 		}

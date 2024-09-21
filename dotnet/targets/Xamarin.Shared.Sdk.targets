@@ -1029,13 +1029,6 @@
 		<Error Text="Only CoreCLR is supported on macOS. Set 'UseMonoRuntime=false' to use CoreCLR." Condition="'$(_PlatformName)' == 'macOS' And '$(UseMonoRuntime)' != 'false'" />
 	</Target>
 
-	<Target Name="_VerifyPreviewFeaturesIfUnstableXcode">
-		<Error
-			Text="These are preview bindings for an unstable version of Xcode. Opt into preview features by adding &lt;EnablePreviewFeatures&gt;True&lt;/EnablePreviewFeatures&gt; to your project file."
-			Condition="'$(_XamarinIsPreviewRelease)' == 'true' And '$(EnablePreviewFeatures)' != 'true'"
-			/>
-	</Target>
-
 	<Target Name="_VerifyValidProperties">
 		<Error
 			Text="The property 'MtouchArch' is deprecated, please remove it from the project file. Use 'RuntimeIdentifier' or 'RuntimeIdentifiers' instead to specify the target architecture."
@@ -1049,7 +1042,6 @@
 
 	<PropertyGroup>
 		<_ComputeVariablesDependsOn>
-			_VerifyPreviewFeaturesIfUnstableXcode;
 			_VerifyValidRuntime;
 			_GenerateBundleName;
 			_ComputeFrameworkVariables;
@@ -1633,13 +1625,19 @@
 
 		<WriteLinesToFile SessionId="$(BuildSessionId)" File="$(_MtouchSymbolsList)" Lines="@(_ProcessedReferenceNativeSymbol)" Overwrite="true" />
 
+		<PropertyGroup>
+			<!-- There are known bugs in the classic linker with Xcode 15, so keep use the classic linker in that case -->
+			<!-- In Xcode 16 we don't know of any problems for now, so enable the new linker by default -->
+			<_UseClassicLinker Condition="'$(_UseClassicLinker)' == '' And $([MSBuild]::VersionGreaterThanOrEquals('$(_XcodeVersion)', '16.0'))">false</_UseClassicLinker>
+			<_UseClassicLinker Condition="'$(_UseClassicLinker)' == '' And $([MSBuild]::VersionGreaterThanOrEquals('$(_XcodeVersion)', '15.0'))">true</_UseClassicLinker>
+		</PropertyGroup>
+
 		<ItemGroup>
 			<_AllLinkerFlags Include="@(_AssemblyLinkerFlags);@(_MainLinkerFlags);@(_CustomLinkFlags)" />
 			<_AllLinkerFlags Condition="'$(_ExportSymbolsExplicitly)' != 'true'" Include="@(_ProcessedReferenceNativeSymbol->'-u%(Identity)')" />
 
-			<!-- check if needs to be removed: https://github.com/xamarin/xamarin-macios/issues/18693 -->
-			<_AllLinkerFlags Condition="$([MSBuild]::VersionGreaterThanOrEquals('$(_XcodeVersion)', '15.0')) And '$(_UseClassicLinker)' != 'false'" Include="-Xlinker" />
-			<_AllLinkerFlags Condition="$([MSBuild]::VersionGreaterThanOrEquals('$(_XcodeVersion)', '15.0')) And '$(_UseClassicLinker)' != 'false'" Include="-ld_classic" />
+			<_AllLinkerFlags Condition="'$(_UseClassicLinker)' == 'true'" Include="-Xlinker" />
+			<_AllLinkerFlags Condition="'$(_UseClassicLinker)' == 'true'" Include="-ld_classic" />
 		</ItemGroup>
 
 		<LinkNativeCode

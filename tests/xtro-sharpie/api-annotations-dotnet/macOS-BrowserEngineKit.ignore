@@ -1,0 +1,5 @@
+# BETextInput isn't available on macOS, so it makes no sense to bind BETextInputDelegate
+!missing-protocol! BETextInputDelegate not bound
+
+# BETextInteraction isn't available on macOS, so it makes no sense to bind BETextInteractionDelegate
+!missing-protocol! BETextInteractionDelegate not bound
