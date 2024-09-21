@@ -215,14 +215,6 @@ namespace Xharness.Targets {
 			}
 		}
 
-		protected override void CalculateName ()
-		{
-			if (TargetDirectory.Contains ("bcl-test"))
-				Name = TestProject.Name;
-			else
-				base.CalculateName ();
-		}
-
 		protected override string GetMinimumOSVersion (string templateMinimumOSVersion)
 		{
 			if (MonoNativeInfo is null)

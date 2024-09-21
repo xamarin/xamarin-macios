@@ -118,10 +118,19 @@ namespace Introspection {
 				return true;
 			case "MPSImageArithmetic": // Cannot directly initialize MPSImageArithmetic. Use one of the sub-classes of MPSImageArithmetic.
 				return true;
+			case "CKModifyBadgeOperation":
 			case "CKDiscoverUserInfosOperation": // deprecated, throws exception
 			case "CKSubscription":
 			case "MPSCnnConvolutionState":
 				return true;
+			case "MPSGraphExecutableSerializationDescriptor":
+#if __MACCATALYST__
+				// failed assertion `Error: unhandled platform for MPSGraph serialization'
+				return true;
+#elif __IOS__
+				// crashes in the simulator
+				return TestRuntime.IsSimulator;
+#endif
 			case "AVSpeechSynthesisVoice": // Calling description crashes the test
 #if __WATCHOS__
 				return TestRuntime.CheckXcodeVersion (12, 2); // CheckExactXcodeVersion is not implemented in watchOS yet but will be covered by iOS parrot below
@@ -142,6 +151,11 @@ namespace Introspection {
 			case "GKHybridStrategist":
 				return true; // GKHybridStrategist has been removed from our bindings
 #endif
+			case "THClient":
+				// The default initializer is documented to work, but it takes a long time before it eventually fails on macOS Sequoia
+				// Looking at the stack trace in Xcode, it seems it hits the network and times out waiting for something?
+				// So just skip the testing, it's likely the constructor is bound correctly, but that it only works in some circumstances.
+				return true;
 			}
 
 			switch (type.Namespace) {
@@ -273,6 +287,10 @@ namespace Introspection {
 
 				var ctor = t.GetConstructor (Type.EmptyTypes);
 				if (SkipDueToAttribute (ctor))
+					continue;
+
+				// Don't test methods that have [UnsupportedOSPlatform] + [EditorBrowsable (Never)]
+				if (SkipDueToInvisibleAndUnsupported (ctor))
 					continue;
 
 				if ((ctor is null) || ctor.IsAbstract) {

@@ -72,7 +72,7 @@ namespace Extrospection {
 		{
 			if (!decl.IsExternC)
 				return;
-			if (!decl.PresumedLoc.FileName.Contains (".framework"))
+			if (decl.PresumedLoc?.FileName?.Contains (".framework") != true)
 				return;
 
 			if (!decl.IsAvailable ())

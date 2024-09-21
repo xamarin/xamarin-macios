@@ -168,6 +168,8 @@ namespace CoreGraphics {
 		Figure = 700,
 		Formula,
 		Form,
+		[NoWatch, TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		Object = 800,
 	}
 
 	// untyped enum -> CGPDFObject.h

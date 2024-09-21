@@ -277,7 +277,6 @@ namespace Xharness.Jenkins {
 				MainLog?.WriteLine ("The legacy Xamarin build is disabled, so any legacy Xamarin tests will be disabled as well.");
 				selection.SetEnabled (PlatformLabel.LegacyXamarin, false);
 				selection.SetEnabled (PlatformLabel.watchOS, false);
-				selection.SetEnabled (TestLabel.Bcl, false);
 				selection.SetEnabled (TestLabel.Mmp, false);
 				selection.SetEnabled (TestLabel.Mononative, false);
 				selection.SetEnabled (TestLabel.Mtouch, false);

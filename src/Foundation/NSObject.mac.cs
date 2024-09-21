@@ -108,10 +108,15 @@ namespace Foundation {
 		static IntPtr sw = Dlfcn.dlopen (Constants.SharedWithYouLibrary, 1);
 		static IntPtr swc = Dlfcn.dlopen (Constants.SharedWithYouCoreLibrary, 1);
 		static IntPtr th = Dlfcn.dlopen (Constants.ThreadNetworkLibrary, 1);
+		static IntPtr mx = Dlfcn.dlopen (Constants.MediaExtensionLibrary, 1);
 		static IntPtr ni = Dlfcn.dlopen (Constants.NearbyInteractionLibrary, 1);
 		static IntPtr sm = Dlfcn.dlopen (Constants.ServiceManagementLibrary, 1);
 		static IntPtr sa = Dlfcn.dlopen (Constants.SafetyKitLibrary, 1);
 		static IntPtr cr = Dlfcn.dlopen (Constants.CryptoTokenKitLibrary, 1);
+		static IntPtr dd = Dlfcn.dlopen (Constants.DeviceDiscoveryExtensionLibrary, 1);
+		// FSKit was removed from Xcode 16 RC, but keeping it commented, because it's likely to return in a later release
+		// static IntPtr fk = Dlfcn.dlopen (Constants.FSKitLibrary, 1);
+		static IntPtr be = Dlfcn.dlopen (Constants.BrowserEngineKitLibrary, 1);
 
 #if !NET
 		[Obsolete ("Use PlatformAssembly for easier code sharing across platforms.")]

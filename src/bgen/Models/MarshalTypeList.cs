@@ -71,6 +71,7 @@ public class MarshalTypeList : List<MarshalType> {
 			Add (typeCache.AudioUnit);
 		Add (typeCache.SecIdentity);
 		Add (typeCache.SecIdentity2);
+		Add (typeCache.SecKey);
 		Add (typeCache.SecTrust);
 		Add (typeCache.SecTrust2);
 		Add (typeCache.SecProtocolOptions);
@@ -80,6 +81,9 @@ public class MarshalTypeList : List<MarshalType> {
 		if (frameworks.HaveAudioUnit) {
 			Add (typeCache.AURenderEventEnumerator);
 		}
+		Add (typeCache.NWEndpoint);
+		Add (typeCache.NWInterface);
+		Add (typeCache.NWParameters);
 	}
 
 	void Add (Type? type)
