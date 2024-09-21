@@ -26,7 +26,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'Run device tests' ">
     <StartAction>Project</StartAction>
-    <StartArguments>--verbose --jenkins --autoconf --rootdir .. --label=skip-mac-tests,skip-ios-simulator-tests,skip-ios-msbuild-tests,skip-system-permission-tests,run-ios-device-tests,run-ios-extensions-tests --markdown-summary=../TestSummary.md --label=run-watchos-tests,skip-bcl-tests</StartArguments>
+    <StartArguments>--verbose --jenkins --autoconf --rootdir .. --label=skip-mac-tests,skip-ios-simulator-tests,skip-ios-msbuild-tests,skip-system-permission-tests,run-ios-device-tests,run-ios-extensions-tests --markdown-summary=../TestSummary.md --label=run-watchos-tests</StartArguments>
     <EnvironmentVariables>
       <Variable name="MONO_ENV_OPTIONS" value="--trace=E:all" />
     </EnvironmentVariables>
@@ -44,7 +44,6 @@
   <ItemGroup>
     <Compile Include="AppBundleLocator.cs" />
     <Compile Include="AppRunner.cs" />
-    <Compile Include="BCLTestImportTargetFactory.cs" />
     <Compile Include="CrashSnapshotReporterFactory.cs" />
     <Compile Include="DeviceLoaderFactory.cs" />
     <Compile Include="DeviceLogCapturerFactory.cs" />
@@ -118,19 +117,6 @@
     <Compile Include="Targets\TVOSTarget.cs" />
     <Compile Include="Targets\UnifiedTarget.cs" />
     <Compile Include="Targets\WatchOSTarget.cs" />
-    <Compile Include="TestImporter\IAssemblyLocator.cs" />
-    <Compile Include="TestImporter\ITestAssemblyDefinition.cs" />
-    <Compile Include="TestImporter\Platform.cs" />
-    <Compile Include="TestImporter\ProjectDefinition.cs" />
-    <Compile Include="TestImporter\Templates\IProjectFilter.cs" />
-    <Compile Include="TestImporter\Templates\ITemplatedProject.cs" />
-    <Compile Include="TestImporter\Templates\Managed\InfoPlistGenerator.cs" />
-    <Compile Include="TestImporter\Templates\Managed\RegisterTypeGenerator.cs" />
-    <Compile Include="TestImporter\Templates\Managed\XamariniOSTemplate.cs" />
-    <Compile Include="TestImporter\Xamarin\AssemblyDefinitionFactory.cs" />
-    <Compile Include="TestImporter\Xamarin\AssemblyLocator.cs" />
-    <Compile Include="TestImporter\Xamarin\ProjectFilter.cs" />
-    <Compile Include="TestImporter\Xamarin\TestAssemblyDefinition.cs" />
     <Compile Include="TestLabel.cs" />
     <Compile Include="TestPlatform.cs" />
     <Compile Include="TestPlatformExtensions.cs" />

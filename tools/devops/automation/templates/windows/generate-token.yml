@@ -10,6 +10,7 @@ steps:
 - task: AzureCLI@2
   displayName: 'AzDO.BearerToken based on service connection'
   enabled: true
+  condition: always()
   inputs:
     azureSubscription: 'DevDiv - SharedUntrustedAgentPool-Manage'
     scriptType: 'pscore'

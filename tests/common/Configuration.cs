@@ -50,6 +50,7 @@ namespace Xamarin.Tests {
 		public static bool include_legacy_xamarin;
 		public static bool iOSSupports32BitArchitectures;
 		public static bool EnableXamarin;
+		public static bool XcodeIsStable;
 
 		static Version xcode_version;
 		public static Version XcodeVersion {
@@ -310,8 +311,9 @@ namespace Xamarin.Tests {
 			DotNetTfm = GetVariable ("DOTNET_TFM", null);
 			iOSSupports32BitArchitectures = !string.IsNullOrEmpty (GetVariable ("IOS_SUPPORTS_32BIT_ARCHITECTURES", ""));
 			EnableXamarin = !string.IsNullOrEmpty (GetVariable ("ENABLE_XAMARIN", ""));
+			XcodeIsStable = string.Equals (GetVariable ("XCODE_IS_STABLE", ""), "true", StringComparison.OrdinalIgnoreCase);
 
-			XcodeVersionString = GetXcodeVersion (xcode_root);
+			XcodeVersionString = GetVariable ("XCODE_VERSION", GetXcodeVersion (xcode_root));
 #if MONOMAC
 			mac_xcode_root = xcode_root;
 #endif

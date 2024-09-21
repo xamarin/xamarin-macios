@@ -405,14 +405,55 @@ namespace Metal {
 		[NoiOS]
 		[NoMacCatalyst]
 		BC7_RGBAUnorm_sRGB = 153,
+
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use ASTC/ETC2/BC formats instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use ASTC/ETC2/BC formats instead.")]
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use ASTC/ETC2/BC formats instead.")]
+		[Deprecated (PlatformName.TvOS, 18, 0, message: "Use ASTC/ETC2/BC formats instead.")]
 		PVRTC_RGB_2BPP = 160,
+
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use ASTC/ETC2/BC formats instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use ASTC/ETC2/BC formats instead.")]
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use ASTC/ETC2/BC formats instead.")]
+		[Deprecated (PlatformName.TvOS, 18, 0, message: "Use ASTC/ETC2/BC formats instead.")]
 		PVRTC_RGB_2BPP_sRGB = 161,
+
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use ASTC/ETC2/BC formats instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use ASTC/ETC2/BC formats instead.")]
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use ASTC/ETC2/BC formats instead.")]
+		[Deprecated (PlatformName.TvOS, 18, 0, message: "Use ASTC/ETC2/BC formats instead.")]
 		PVRTC_RGB_4BPP = 162,
+
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use ASTC/ETC2/BC formats instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use ASTC/ETC2/BC formats instead.")]
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use ASTC/ETC2/BC formats instead.")]
+		[Deprecated (PlatformName.TvOS, 18, 0, message: "Use ASTC/ETC2/BC formats instead.")]
 		PVRTC_RGB_4BPP_sRGB = 163,
+
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use ASTC/ETC2/BC formats instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use ASTC/ETC2/BC formats instead.")]
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use ASTC/ETC2/BC formats instead.")]
+		[Deprecated (PlatformName.TvOS, 18, 0, message: "Use ASTC/ETC2/BC formats instead.")]
 		PVRTC_RGBA_2BPP = 164,
+
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use ASTC/ETC2/BC formats instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use ASTC/ETC2/BC formats instead.")]
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use ASTC/ETC2/BC formats instead.")]
+		[Deprecated (PlatformName.TvOS, 18, 0, message: "Use ASTC/ETC2/BC formats instead.")]
 		PVRTC_RGBA_2BPP_sRGB = 165,
+
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use ASTC/ETC2/BC formats instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use ASTC/ETC2/BC formats instead.")]
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use ASTC/ETC2/BC formats instead.")]
+		[Deprecated (PlatformName.TvOS, 18, 0, message: "Use ASTC/ETC2/BC formats instead.")]
 		PVRTC_RGBA_4BPP = 166,
+
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use ASTC/ETC2/BC formats instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use ASTC/ETC2/BC formats instead.")]
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use ASTC/ETC2/BC formats instead.")]
+		[Deprecated (PlatformName.TvOS, 18, 0, message: "Use ASTC/ETC2/BC formats instead.")]
 		PVRTC_RGBA_4BPP_sRGB = 167,
+
 		EAC_R11Unorm = 170,
 		EAC_R11Snorm = 172,
 		EAC_RG11Unorm = 174,
@@ -966,7 +1007,14 @@ namespace Metal {
 	[Flags]
 	public enum MTLPipelineOption : ulong {
 		None,
-		ArgumentInfo,
+#if !XAMCORE_5_0
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'BindingInfo' instead.")]
+		[Deprecated (PlatformName.TvOS, 18, 0, message: "Use 'BindingInfo' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'BindingInfo' instead.")]
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'BindingInfo' instead.")]
+		ArgumentInfo = 1 << 0,
+#endif
+		BindingInfo = 1 << 0,
 		BufferTypeInfo,
 		[iOS (14, 0)]
 		[TV (14, 0)]
@@ -1109,6 +1157,8 @@ namespace Metal {
 		v3_0 = (3uL << 16) + 0,
 		[iOS (17, 0), TV (17, 0), MacCatalyst (17, 0), Mac (14, 0), NoWatch]
 		v3_1 = (3uL << 16) + 1,
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		v3_2 = (3ul << 16) + 2,
 	}
 
 	/// <summary>Enumerates values that indicate whether to clip or clamp depth values.</summary>
@@ -1690,7 +1740,15 @@ namespace Metal {
 		[MacCatalyst (14, 0)]
 		CompileToBinary = 1uL << 0,
 		[iOS (17, 0), TV (17, 0), MacCatalyst (17, 0), Mac (14, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'StoreFunctionInMetalPipelinesScript' instead.")]
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'StoreFunctionInMetalPipelinesScript' instead.")]
+		[Deprecated (PlatformName.TvOS, 18, 0, message: "Use 'StoreFunctionInMetalPipelinesScript' instead.")]
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'StoreFunctionInMetalPipelinesScript' instead.")]
 		StoreFunctionInMetalScript = 1uL << 1,
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		StoreFunctionInMetalPipelinesScript = 1 << 1,
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		FailOnBinaryArchiveMiss = 1 << 2,
 	}
 
 	[Flags, Mac (11, 0), iOS (14, 0), TV (16, 0)]

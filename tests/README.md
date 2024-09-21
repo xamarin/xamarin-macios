@@ -84,7 +84,6 @@ Many tests when run for macOS use a integration [hack](https://github.com/xamari
 
 - Allowing command line arguments to tests while excluding "psn" arguments passed in while debugging with Visual Studio for Mac
 - Invoking `_exit` to work around a number of post-test hangs. See the [bug](https://bugzilla.xamarin.com/show_bug.cgi?id=52604) for details.
-- Add a number of "default" excludes for mono BCL tests
 
 One very useful "hack" this support adds is the ability to run a single test from the command line via the `XM_TEST_NAME` environmental variable. For example
 
@@ -119,18 +118,6 @@ Use the project defaults for linking, i.e.
 * regression testing using the linker on the SDK assemblies
 
 * "Link SDK assemblies only" for both simulator/devices
-
-## bcl-test
-
-These are the Mono BCL test suite tweaked to run on the mobile profile.
-It reuse the files directly from mono's repository (linking, not copying).
-
-As other unit tests the configuration is set to mimick normal apps, e.g.
-
-* "Don't link" for simulator
-
-* "Link SDK assemblies only" for devices
-
 
 # Common make targets
 
@@ -189,11 +176,11 @@ These targets will build, install (if applicable) and run the specified project(
 
 * Simulator
     * run-sim-*project*: Builds and runs the specified test project in the simulator in compat, 32 and 64bit mode.
-    * run-sim: Builds and runs all the non-bcl test projects in the simulator in compat, 32 and 64bit mode.
+    * run-sim: Builds and runs all the test projects in the simulator in compat, 32 and 64bit mode.
 
 * Device
-    * run-dev-*project*: Builds and runs the specified non-bcl test project on a device in compat and native mode (if it's 32 and 64bit depends on the device; 64bit devices will run in 64bit mode and the same for 32bit devices).
-    * run-devcompat: Run all the non-bcl test projects on device, in compat mode.
-    * run-devdual: Run all the non-bcl test projects on device, in native mode (if it's 32 and 64bit depends on the device; 64bit devices will run in 64bit mode and the same for 32bit devices).
-    * run-dev: Run all the non-bcl test projects on device, in both compat and native mode.
+    * run-dev-*project*: Builds and runs the specified test project on a device in compat and native mode (if it's 32 and 64bit depends on the device; 64bit devices will run in 64bit mode and the same for 32bit devices).
+    * run-devcompat: Run all the test projects on device, in compat mode.
+    * run-devdual: Run all the test projects on device, in native mode (if it's 32 and 64bit depends on the device; 64bit devices will run in 64bit mode and the same for 32bit devices).
+    * run-dev: Run all the test projects on device, in both compat and native mode.
 

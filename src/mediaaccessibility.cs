@@ -71,4 +71,34 @@ namespace MediaAccessibility {
 		[Export ("processSurface:outSurface:timestamp:options:")]
 		MAFlashingLightsProcessorResult Process (Surface inSurface, Surface outSurface, double timestamp, [NullAllowed] NSDictionary options);
 	}
+
+	delegate void MAMusicHapticTrackAvailabilityCallback (bool musicHapticsAvailable);
+	delegate void MAMusicHapticTrackStatusObserver (string internationalStandardRecordingCode, bool musicHapticsActive);
+
+	[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface MAMusicHapticsManager {
+		[Static]
+		[Export ("sharedManager")]
+		MAMusicHapticsManager SharedManager { get; }
+
+		[Export ("isActive")]
+		bool IsActive { get; }
+
+		[Async]
+		[Export ("checkHapticTrackAvailabilityForMediaMatchingCode:completionHandler:")]
+		void CheckHapticTrackAvailability (string internationalStandardRecordingCode, [NullAllowed] MAMusicHapticTrackAvailabilityCallback completionHandler);
+
+		[Export ("addStatusObserver:")]
+		[return: NullAllowed]
+		INSCopying AddStatusObserver (MAMusicHapticTrackStatusObserver statusHandler);
+
+		[Export ("removeStatusObserver:")]
+		void RemoveStatusObserver (INSCopying registrationToken);
+
+		[Notification]
+		[Field ("MAMusicHapticsManagerActiveStatusDidChangeNotification")]
+		NSString ActiveStatusDidChangeNotification { get; }
+	}
 }
