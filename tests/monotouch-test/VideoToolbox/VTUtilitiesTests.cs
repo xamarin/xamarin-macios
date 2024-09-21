@@ -125,6 +125,45 @@ namespace MonoTouchFixtures.VideoToolbox {
 			// no way to know if it was a success
 			VTUtilities.RegisterSupplementalVideoDecoder (codec);
 		}
+
+		static CMVideoCodecType [] GetAllCMVideoCodecTypes ()
+		{
+			return Enum.GetValues<CMVideoCodecType> ();
+		}
+
+		[Test]
+		[TestCaseSource (nameof (GetAllCMVideoCodecTypes))]
+		public void CopyVideoDecoderExtensionPropertiesTest (CMVideoCodecType codecType)
+		{
+			TestRuntime.AssertXcodeVersion (16, 0);
+
+			using var desc = CMFormatDescription.Create (CMMediaType.Video, (uint) codecType, out var fde);
+			Assert.IsNotNull (desc, "CMFormatDescription");
+			Assert.That (fde, Is.EqualTo (CMFormatDescriptionError.None), "CMFormatDescriptionError #2 (authorized)");
+			using var dict = VTUtilities.CopyVideoDecoderExtensionProperties (desc, out var vtError);
+			Assert.That (vtError, Is.EqualTo (VTStatus.CouldNotFindVideoDecoder).Or.EqualTo (VTStatus.CouldNotFindExtensionErr), "VTError");
+			Assert.IsNull (dict, "CopyVideoDecoderExtensionProperties");
+
+			// I have not been able to figure out what kind of CMVideoFormatDescription is needed for CopyVideoDecoderExtensionProperties to work,
+			// so I can't test that case.
+		}
+
+		[Test]
+		[TestCaseSource (nameof (GetAllCMVideoCodecTypes))]
+		public void CopyRawVideoDecoderExtensionPropertiesTest (CMVideoCodecType codecType)
+		{
+			TestRuntime.AssertXcodeVersion (16, 0);
+
+			using var desc = CMFormatDescription.Create (CMMediaType.Video, (uint) codecType, out var fde);
+			Assert.That (fde, Is.EqualTo (CMFormatDescriptionError.None), "CMFormatDescriptionError #2 (authorized)");
+			Assert.IsNotNull (desc, "CMFormatDescription");
+			using var dict = VTUtilities.CopyRawProcessorExtensionProperties (desc, out var vtError);
+			Assert.That (vtError, Is.EqualTo (VTStatus.CouldNotCreateInstance).Or.EqualTo (VTStatus.CouldNotFindExtensionErr), "VTError");
+			Assert.IsNull (dict, "CopyRawProcessorExtensionProperties");
+
+			// I have not been able to figure out what kind of CMVideoFormatDescription is needed for VTRawProcessingSession,
+			// so I can't test the case where a CMFormatDescription is handled.
+		}
 #endif
 
 	}

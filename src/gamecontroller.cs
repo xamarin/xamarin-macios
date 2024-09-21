@@ -22,6 +22,9 @@ using AppKit;
 using UIViewController = AppKit.NSViewController;
 using CHHapticEngine = Foundation.NSObject;
 using BezierPath = AppKit.NSBezierPath;
+using UIScene = Foundation.NSObject;
+using UISceneConnectionOptions = Foundation.NSObject;
+using UIInteraction = Foundation.NSObject;
 #else
 using CoreHaptics;
 using UIKit;
@@ -2767,5 +2770,52 @@ namespace GameController {
 	interface GCControllerUserCustomizations {
 		[Notification, Field ("GCControllerUserCustomizationsDidChangeNotification")]
 		NSString DidChangeNotification { get; }
+	}
+
+	[TV (18, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0), NoWatch]
+	[Native]
+	enum GCUIEventTypes : ulong {
+		None = 0U,
+		Gamepad = (1U << 0),
+	}
+
+#if IOS || MACCATALYST
+	[NoTV, NoMac, iOS (18, 0), MacCatalyst (18, 0), NoWatch]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface GCEventInteraction : UIInteraction {
+		[DesignatedInitializer]
+		[Export ("init")]
+		NativeHandle Constructor ();
+
+		[Export ("handledEventTypes")]
+		GCUIEventTypes HandledEventTypes { get; set; }
+	}
+#endif // IOS || MACCATALYST
+
+	[NoTV, NoMac, iOS (18, 0), NoMacCatalyst, NoWatch]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface GCGameControllerActivationContext {
+		[Export ("previousApplicationBundleID"), NullAllowed]
+		string PreviousApplicationBundleId { get; }
+	}
+
+	[NoTV, NoMac, iOS (18, 0), NoMacCatalyst, NoWatch]
+	[BaseType (typeof (NSObject))]
+	[Protocol (BackwardsCompatibleCodeGeneration = false), Model]
+	interface GCGameControllerSceneDelegate {
+		[Abstract]
+		[Export ("scene:didActivateGameControllerWithContext:")]
+		void DidActivateGameController (UIScene scene, GCGameControllerActivationContext context);
+	}
+
+	[NoTV, NoMac, iOS (18, 0), NoMacCatalyst, NoWatch]
+	[Category]
+	[BaseType (typeof (UISceneConnectionOptions))]
+	interface UISceneConnectionOptions_GameController {
+		[Export ("gameControllerActivationContext")]
+		[return: NullAllowed]
+		GCGameControllerActivationContext GetGameControllerActivationContext ();
 	}
 }

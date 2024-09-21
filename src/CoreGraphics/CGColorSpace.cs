@@ -1005,6 +1005,41 @@ namespace CoreGraphics {
 #endif
 		public bool IsPQBased => CGColorSpaceIsPQBased (Handle) != 0;
 
+#if NET
+		[SupportedOSPlatform ("macos15.0")]
+		[SupportedOSPlatform ("ios18.0")]
+		[SupportedOSPlatform ("tvos18.0")]
+		[SupportedOSPlatform ("maccatalyst18.0")]
+#else
+		[Mac (15, 0)]
+		[iOS (18, 0)]
+		[TV (18, 0)]
+		[MacCatalyst (18, 0)]
+		[Watch (11, 0)]
+#endif
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		extern static /* CGColorSpaceRef */ IntPtr CGColorSpaceCopyBaseColorSpace (/* CGColorSpaceRef */ IntPtr space);
+
+		/// <summary>Get the base color space, or a new color space without any image-specific metadata.</summary>
+		/// <returns>If the current color space is a pattern or an indexed color space, get the base color space. If the current color space contains image-specific metadata associated with the gain map, get a new color space without the metadata. Otherwise returns a null value.</returns>
+#if NET
+		[SupportedOSPlatform ("macos15.0")]
+		[SupportedOSPlatform ("ios18.0")]
+		[SupportedOSPlatform ("tvos18.0")]
+		[SupportedOSPlatform ("maccatalyst18.0")]
+#else
+		[Mac (15, 0)]
+		[iOS (18, 0)]
+		[TV (18, 0)]
+		[MacCatalyst (18, 0)]
+		[Watch (11, 0)]
+#endif
+		public CGColorSpace? CopyBaseColorSpace ()
+		{
+			var h = CGColorSpaceCopyBaseColorSpace (Handle);
+			return FromHandle (h, true);
+		}
+
 
 #endif // !COREBUILD
 	}
