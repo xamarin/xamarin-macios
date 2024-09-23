@@ -66,7 +66,7 @@ namespace Xamarin.Tests {
 			DotNet.AssertBuild (proj, properties: projProps);
 			var appDir = Path.Combine (testDir, "bin", projConfig, platform.ToFramework (), rid, $"{TestName}.app");
 			Assert.That (appDir, Does.Exist, $"Expected app dir '{appDir}' did not exist.");
-			var appContent = Directory.GetFiles (Path.Combine (testDir, "bin", projConfig, platform.ToFramework (), rid, $"{TestName}.app"), "*", SearchOption.AllDirectories);
+			var appContent = Directory.GetFiles (appDir, "*", SearchOption.AllDirectories);
 			var expectedAppOutput = Path.Combine (testDir, "bin", projConfig, platform.ToFramework (), rid, $"{TestName}.app", "Frameworks", $"{xcodeProjName}.framework", "Info.plist");
 			Assert.Contains (expectedAppOutput, appContent, $"Expected framework output '{expectedAppOutput}' did not exist.");
 
