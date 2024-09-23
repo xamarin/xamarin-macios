@@ -300,11 +300,11 @@ public class Binding
 		[Category ("Multiplatform")]
 		public void BuildMultiTargeting ()
 		{
+			var enabledPlatforms = Configuration.GetIncludedPlatforms (dotnet: true);
 			var testDir = Cache.CreateTemporaryDirectory (TestName);
 			var proj = Path.Combine (testDir, $"{TestName}.csproj");
-			DotNet.AssertNew (testDir, "iosbinding");
+			DotNet.AssertNew (testDir, $"{enabledPlatforms.First ().AsString ().ToLower ()}binding");
 
-			var enabledPlatforms = Configuration.GetIncludedPlatforms (dotnet: true);
 			var tfxs = $"<TargetFrameworks>{string.Join (";", enabledPlatforms.Select (p => p.ToFramework ()))}</TargetFrameworks>";
 			var existingProjContent = File.ReadAllText (proj);
 			var newProjContent = existingProjContent.Replace ($"<TargetFramework>{ApplePlatform.iOS.ToFramework ()}</TargetFramework>", tfxs);
