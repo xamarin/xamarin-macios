@@ -56,7 +56,6 @@ namespace Xharness.Jenkins.TestTasks {
 		IEnumerable<ILog> AggregatedLogs { get; }
 		ILogs Logs { get; }
 		Stopwatch DurationStopWatch { get; }
-		IEnumerable<string> ReferencedNunitAndXunitTestAssemblies { get; }
 		string ProgressMessage { get; }
 		string RootDirectory { get; }
 

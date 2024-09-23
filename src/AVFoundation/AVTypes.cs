@@ -573,6 +573,15 @@ namespace AVFoundation {
 
 		[MarshalAs (UnmanagedType.I1)]
 		public bool HasUniformFormatDescriptions;
+
+		internal AVSampleCursorChunkInfo_Blittable ToBlittable ()
+		{
+			var rv = new AVSampleCursorChunkInfo_Blittable ();
+			rv.HasUniformSampleSizes = HasUniformSampleSizes;
+			rv.HasUniformSampleDurations = HasUniformSampleDurations;
+			rv.HasUniformFormatDescriptions = HasUniformFormatDescriptions;
+			return rv;
+		}
 #endif
 	}
 

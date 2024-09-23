@@ -30,19 +30,23 @@ try {
   $url= $Env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI + "$Env:SYSTEM_TEAMPROJECT/_apis/build/builds/" + $Env:BUILD_BUILDID + "?api-version=5.1"
   $buildPipeline= Invoke-RestMethod -Uri $url -Headers $headers -Method Get
 
+  Write-host "Build pipeline start time: $($buildPipeline.startTime)"
   $start=[DateTime]::Parse($buildPipeline.startTime).ToString("yyyy-MM-dd HH:mm:ss")
 
-  $end=Get-Date -Format "yyyy-MM-dd HH:mm:ss"
-  Write-Host "end time: $end"
+  # hack to get the end time
+  $date = Get-Date
+  $end=$date.ToString("yyyy-MM-dd HH:mm:ss")
+  $start=$date.AddHours(-1).ToString("yyyy-MM-dd HH:mm:ss")
 
   if (-not $Predicate) {
-    log show --style $Style --start "$start" --end "$end" > $Output
+      Write-Host "Executing: log show --style $Style --start `"$start`" --end `"$end`" > $Output"
+      log show --style $Style --start "$start" --end "$end" > $Output
   } else {
-    log show --predicate $Predicate --style $Style --start "$start" --end "$end" > $Output
+      Write-Host "Executing: log show --predicate $Predicate --style $Style --start `"$start`" --end `"$end`" > $Output"
+      log show --predicate $Predicate --style $Style --start "$start" --end "$end" > $Output
   }
 } catch {
-    Write-Host "Exception occurred: $_"
     # Create the output file, because we later try to upload it as an artifact, and *not* uploading
     # if there's *no* file is much harder than just creating the file.
-    New-Item -Path $Output -Value "$_"
+    Write-Host "Exception occurred: $_" | Tee-Object -FilePath $Output -Append
 }

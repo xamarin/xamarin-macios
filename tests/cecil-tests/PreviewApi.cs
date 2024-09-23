@@ -17,30 +17,33 @@ namespace Cecil.Tests {
 	[TestFixture]
 	public class PreviewApi {
 		[TestCase ("CryptoTokenKit", "APL0001", "10.0")]
+		// [TestCase ("FSKit", "APL0002", "11.0")]
 		public void EverythingInNamespace (string ns, string expectedDiagnosticId, string stableInDotNetVersion)
 		{
 			// Verify that all types in the given namespace have an Experimental attribute.
 			var failures = new HashSet<string> ();
 			var isAttributeExpected = Version.Parse (Configuration.DotNetTfm.Replace ("net", "")) < Version.Parse (stableInDotNetVersion);
 
+			var typesInNamespace = new List<TypeDefinition> ();
 			foreach (var info in Helper.NetPlatformImplementationAssemblyDefinitions) {
-				var typesInNamespace = info.Assembly.EnumerateTypes (t => t.Namespace == ns).ToArray ();
-				if (typesInNamespace.Length == 0)
-					failures.Add ($"No types found for the namespace {ns}, something is very wrong somewhere.");
-				foreach (var type in typesInNamespace) {
-					var hasAttribute = TryGetExperimentalAttribute (type, out var diagnosticId);
+				typesInNamespace.AddRange (info.Assembly.EnumerateTypes (t => t.Namespace == ns));
+			}
 
-					if (isAttributeExpected) {
-						if (hasAttribute) {
-							if (diagnosticId != expectedDiagnosticId)
-								failures.Add ($"The type '{type.FullName}' has the [Experimental] attribute as expected, but the diagnostic id is incorrect (expected '{expectedDiagnosticId}', actual '{diagnosticId}')");
-						} else {
-							failures.Add ($"The type '{type.FullName}' is supposed to be in preview in until .NET {stableInDotNetVersion}, but it does not have an [Experimental] attribute.");
-						}
+			if (typesInNamespace.Count == 0)
+				failures.Add ($"No types found for the namespace {ns}, something is very wrong somewhere.");
+			foreach (var type in typesInNamespace) {
+				var hasAttribute = TryGetExperimentalAttribute (type, out var diagnosticId);
+
+				if (isAttributeExpected) {
+					if (hasAttribute) {
+						if (diagnosticId != expectedDiagnosticId)
+							failures.Add ($"The type '{type.FullName}' has the [Experimental] attribute as expected, but the diagnostic id is incorrect (expected '{expectedDiagnosticId}', actual '{diagnosticId}')");
 					} else {
-						if (hasAttribute)
-							failures.Add ($"The type '{type.FullName}' is supposed to be stable in .NET {stableInDotNetVersion}, but it has an [Experimental] attribute.");
+						failures.Add ($"The type '{type.FullName}' is supposed to be in preview in until .NET {stableInDotNetVersion}, but it does not have an [Experimental] attribute.");
 					}
+				} else {
+					if (hasAttribute)
+						failures.Add ($"The type '{type.FullName}' is supposed to be stable in .NET {stableInDotNetVersion}, but it has an [Experimental] attribute.");
 				}
 			}
 

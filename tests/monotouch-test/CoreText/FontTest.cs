@@ -32,6 +32,8 @@ namespace MonoTouchFixtures.CoreText {
 
 			using (var font = new CTFont ("HoeflerText-Regular", 10, CTFontOptions.Default)) {
 				Assert.That (font.Handle, Is.Not.EqualTo (IntPtr.Zero), "Handle");
+				if (TestRuntime.CheckXcodeVersion (11, 0))
+					Assert.That (font.HasTable (CTFontTable.ScalableVectorGraphics), Is.EqualTo (false), "HasTable");
 			}
 		}
 
@@ -128,6 +130,44 @@ namespace MonoTouchFixtures.CoreText {
 			using (var font = CGFont.CreateWithFontName ("AppleColorEmoji"))
 			using (var ctfont = font.ToCTFont ((nfloat) 10.0))
 				Assert.Null (ctfont.GetGlyphName ('\ud83d'), "2");
+		}
+
+		[Test]
+		public void DrawImage ()
+		{
+			TestRuntime.AssertXcodeVersion (16, 0);
+
+			using var font = new CTFont ("HoeflerText-Regular", 10, CTFontOptions.Default);
+			using var provider = new AdaptiveImageProvider ();
+			using var space = CGColorSpace.CreateDeviceRGB ();
+			using var context = new CGBitmapContext (null, 10, 10, 8, 40, space, CGBitmapFlags.PremultipliedLast);
+			font.DrawImage (provider, CGPoint.Empty, context);
+			Assert.AreEqual (1, provider.Count, "#Count");
+		}
+
+#if !__WATCHOS__
+		[Test]
+		public void GetTypographicBoundsForAdaptiveImageProvider ()
+		{
+			TestRuntime.AssertXcodeVersion (16, 0);
+
+			using var font = new CTFont ("HoeflerText-Regular", 10, CTFontOptions.Default);
+			using var provider = new AdaptiveImageProvider ();
+			var bounds = font.GetTypographicBoundsForAdaptiveImageProvider (provider);
+			Assert.AreEqual (new CGRect (0, -3.90625, 13, 16.40625), bounds, "Bounds");
+			Assert.AreEqual (0, provider.Count, "#Count");
+		}
+#endif // !__WATCHOS__
+
+		class AdaptiveImageProvider : NSObject, ICTAdaptiveImageProviding {
+			public int Count;
+			public CGImage? GetImage (CGSize proposedSize, nfloat scaleFactor, out CGPoint imageOffset, out CGSize imageSize)
+			{
+				imageOffset = default (CGPoint);
+				imageSize = default (CGSize);
+				Count++;
+				return null;
+			}
 		}
 	}
 }

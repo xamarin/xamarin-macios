@@ -309,6 +309,33 @@ namespace MediaAccessibility {
 					MACaptionAppearanceDidDisplayCaptions (array.Handle);
 			}
 		}
+
+#if NET
+		[SupportedOSPlatform ("tvos18.0")]
+		[SupportedOSPlatform ("macos15.0")]
+		[SupportedOSPlatform ("ios18.0")]
+		[SupportedOSPlatform ("maccatalyst18.0")]
+#else
+		[TV (18, 0), iOS (18, 0), MacCatalyst (18, 0), Mac (15, 0), Watch (11, 0)]
+#endif
+		[DllImport (Constants.MediaAccessibilityLibrary)]
+		static extern byte MACaptionAppearanceIsCustomized (nint /* MACaptionAppearanceDomain */ domain);
+
+		/// <summary>Checks whether the specified style has been customized by the user.</summary>
+		/// <param name="domain">The style to check</param>
+		/// <returns>True if the specified style has been customized by the user, false otherwise.</returns>
+#if NET
+		[SupportedOSPlatform ("tvos18.0")]
+		[SupportedOSPlatform ("macos15.0")]
+		[SupportedOSPlatform ("ios18.0")]
+		[SupportedOSPlatform ("maccatalyst18.0")]
+#else
+		[TV (18, 0), iOS (18, 0), MacCatalyst (18, 0), Mac (15, 0), Watch (11, 0)]
+#endif
+		public static bool IsCustomized (MACaptionAppearanceDomain domain)
+		{
+			return MACaptionAppearanceIsCustomized ((nint) (long) domain) != 0;
+		}
 	}
 
 #if NET

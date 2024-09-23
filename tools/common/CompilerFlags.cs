@@ -239,8 +239,9 @@ namespace Xamarin.Utils {
 				}
 			}
 
-			// check if needs to be removed: https://github.com/xamarin/xamarin-macios/issues/18693
-			if (Driver.XcodeVersion.Major >= 15 && !Application.DisableAutomaticLinkerSelection) {
+			// There are known bugs in the classic linker with Xcode 15, so keep use the classic linker in that case
+			//  In Xcode 16 we don't know of any problems for now, so enable the new linker by default
+			if (Driver.XcodeVersion.Major >= 15 && Driver.XcodeVersion.Major < 16 && !Application.DisableAutomaticLinkerSelection) {
 				args.Insert (0, "-Xlinker");
 				args.Insert (1, "-ld_classic");
 			}
