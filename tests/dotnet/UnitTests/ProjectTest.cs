@@ -1738,25 +1738,36 @@ namespace Xamarin.Tests {
 		}
 
 		[Test]
-		[TestCase (ApplePlatform.iOS, "ios-arm64")]
-		[TestCase (ApplePlatform.MacOSX, "osx-x64")]
-		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64")]
-		[TestCase (ApplePlatform.TVOS, "tvossimulator-x64")]
-		public void PublishAot (ApplePlatform platform, string runtimeIdentifiers)
+		[TestCase (ApplePlatform.iOS, "ios-arm64", "Debug")]
+		[TestCase (ApplePlatform.iOS, "ios-arm64", "Release")]
+		[TestCase (ApplePlatform.MacOSX, "osx-x64", "Debug")]
+		[TestCase (ApplePlatform.MacOSX, "osx-x64", "Release")]
+		// [TestCase (ApplePlatform.MacOSX, "osx-arm64;osx-x64", "Debug")] // See: https://github.com/xamarin/xamarin-macios/issues/20903
+		[TestCase (ApplePlatform.MacOSX, "osx-arm64;osx-x64", "Release")]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64", "Debug")]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64", "Release")]
+		// [TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64", "Debug")] // See: https://github.com/xamarin/xamarin-macios/issues/20903
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64", "Release")]
+		[TestCase (ApplePlatform.TVOS, "tvossimulator-x64", "Debug")]
+		[TestCase (ApplePlatform.TVOS, "tvossimulator-x64", "Release")]
+		public void PublishAot (ApplePlatform platform, string runtimeIdentifiers, string configuration)
 		{
 			var project = "MySimpleApp";
 			Configuration.IgnoreIfIgnoredPlatform (platform);
 			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
 
-			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath, configuration: configuration);
 			Clean (project_path);
 			var properties = GetDefaultProperties (runtimeIdentifiers);
+			properties ["Configuration"] = configuration;
 			properties ["PublishAot"] = "true";
 			properties ["_IsPublishing"] = "true"; // quack like "dotnet publish"
 			properties ["ExcludeNUnitLiteReference"] = "true"; // we're asserting no warnings, and NUnitLite produces a lot of them, so ignore NUnitLite
 			properties ["ExcludeTouchUnitReference"] = "true"; // we're asserting no warnings, and Touch.Unit produces a lot of them, so ignore Touch.Unit
 			properties ["TrimmerSingleWarn"] = "false"; // don't be shy, we want to know what the problem is
 			var rv = DotNet.AssertBuild (project_path, properties);
+
+			Assert.True (Directory.Exists (appPath), $"App file expected at: {appPath}");
 
 			// Verify that we have no warnings, but unfortunately we still have some we haven't fixed yet.
 			// Ignore those, and fail the test if we stop getting them (so that we can update the test to not ignore them anymore).
