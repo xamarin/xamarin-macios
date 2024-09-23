@@ -65,7 +65,7 @@ steps:
       HostedMacKeychainPassword: ${{ parameters.keyringPass }}
 
   - bash: |
-      make -C $(Build.SourcesDirectory)/xamarin-macios/tools/devops build-provisioning.csx
+      make -C $(Build.SourcesDirectory)/xamarin-macios/tools/devops provisioning
     displayName: 'Generate provisionator files.'
 
   - task: xamops.azdevex.provisionator-task.provisionator@2

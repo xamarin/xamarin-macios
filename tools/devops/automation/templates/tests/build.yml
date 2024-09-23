@@ -220,7 +220,7 @@ steps:
   timeoutInMinutes: 5
 
 - bash: |
-    make -C $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/ build-provisioning.csx
+    make -C $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/ provisioning
   displayName: 'Generate Provisionator csx file'
 
 # Executed ONLY if we want to clear the provisionator cache.
