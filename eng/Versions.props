@@ -6,7 +6,7 @@
     <MicrosoftDotnetSdkInternalPackageVersion>8.0.109-servicing.24407.6</MicrosoftDotnetSdkInternalPackageVersion>
     <MicrosoftNETILLinkTasksPackageVersion>8.0.7</MicrosoftNETILLinkTasksPackageVersion>
     <MicrosoftNETILLinkPackageVersion>8.0.0-rtm.23524.7</MicrosoftNETILLinkPackageVersion>
-    <MicrosoftDotNetBuildTasksFeedPackageVersion>8.0.0-beta.24426.2</MicrosoftDotNetBuildTasksFeedPackageVersion>
+    <MicrosoftDotNetBuildTasksFeedPackageVersion>8.0.0-beta.24463.3</MicrosoftDotNetBuildTasksFeedPackageVersion>
     <MicrosoftDotNetSharedFrameworkSdkVersion>8.0.0-beta.24413.2</MicrosoftDotNetSharedFrameworkSdkVersion>
     <MicrosoftNETCoreAppRefPackageVersion>8.0.7</MicrosoftNETCoreAppRefPackageVersion>
     <MicrosoftNETWorkloadEmscriptenCurrentManifest80100TransportVersion>8.0.0-rtm.23511.3</MicrosoftNETWorkloadEmscriptenCurrentManifest80100TransportVersion>
