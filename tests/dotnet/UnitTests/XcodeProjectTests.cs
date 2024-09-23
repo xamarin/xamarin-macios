@@ -39,9 +39,9 @@ namespace Xamarin.Tests {
 
 
 		[Test]
-		[TestCase ("Debug")]
-		[TestCase ("Release")]
-		public void BuildAppiOS (string projConfig)
+		[TestCase ("Debug", "iossimulator-x64")]
+		[TestCase ("Release", "ios-arm64")]
+		public void BuildAppiOS (string projConfig, string rid)
 		{
 			var platform = ApplePlatform.iOS;
 			Configuration.IgnoreIfIgnoredPlatform (platform);
@@ -61,10 +61,15 @@ namespace Xamarin.Tests {
 
 			var projProps = new Dictionary<string, string> {
 				{ "Configuration", projConfig },
+				{ "RuntimeIdentifier", rid },
 			};
 			DotNet.AssertBuild (proj, properties: projProps);
-			var expectedAppOutput = Path.Combine (testDir, "bin", projConfig, platform.ToFramework (), "iossimulator-arm64", $"{TestName}.app", "Frameworks", $"{xcodeProjName}.framework", "Info.plist");
-			Assert.That (expectedAppOutput, Does.Exist, $"Expected framework output was not found in '{expectedAppOutput}'.");
+			var appDir = Path.Combine (testDir, "bin", projConfig, platform.ToFramework (), rid, $"{TestName}.app");
+			Assert.That (appDir, Does.Exist, $"Expected app dir '{appDir}' did not exist.");
+			var appContent = Directory.GetFiles (Path.Combine (testDir, "bin", projConfig, platform.ToFramework (), rid, $"{TestName}.app"), "*", SearchOption.AllDirectories);
+			var expectedAppOutput = Path.Combine (testDir, "bin", projConfig, platform.ToFramework (), rid, $"{TestName}.app", "Frameworks", $"{xcodeProjName}.framework", "Info.plist");
+			Assert.Contains (expectedAppOutput, appContent, $"Expected framework output '{expectedAppOutput}' did not exist.");
+
 		}
 
 		[Test]
