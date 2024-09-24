@@ -33,7 +33,7 @@ This file contains MSBuild targets that support building Xcode framework project
 
 
   <Target Name="_GetBuildXcodeProjectsInputs"
-      Condition=" '@(XcodeProject->Count())' != '0' " >
+      Condition=" '@(XcodeProject->Count())' != '0' and $([MSBuild]::IsOSPlatform('osx')) " >
     <ItemGroup>
       <_AllXcbFiles Include="%(XcodeProject.RootDir)%(XcodeProject.Directory)/**/*"
           Condition= " Exists('%(XcodeProject.RootDir)%(XcodeProject.Directory)') "/>
@@ -47,7 +47,7 @@ This file contains MSBuild targets that support building Xcode framework project
   </Target>
 
   <Target Name="_CalculateXcodeProjectOutputPaths"
-        Condition=" '@(XcodeProject->Count())' != '0' "
+        Condition=" '@(XcodeProject->Count())' != '0' and $([MSBuild]::IsOSPlatform('osx')) "
         Outputs="%(XcodeProject.Identity)" >
     <Hash
         ItemsToHash="%(XcodeProject.Identity)"
@@ -62,7 +62,7 @@ This file contains MSBuild targets that support building Xcode framework project
   </Target>
 
   <Target Name="_BuildXcodeProjects"
-      Condition=" '@(XcodeProject->Count())' != '0' "
+      Condition=" '@(XcodeProject->Count())' != '0' and $([MSBuild]::IsOSPlatform('osx')) "
       DependsOnTargets="_GetBuildXcodeProjectsInputs;_CalculateXcodeProjectOutputPaths;_DetectSdkLocations"
       Inputs="@(_XcbInputs)"
       Outputs="$(_BuildXcodeProjectsStamp)" >
@@ -138,7 +138,7 @@ This file contains MSBuild targets that support building Xcode framework project
 
 
   <Target Name="_CleanXcodeProjects"
-      Condition=" '@(XcodeProject->Count())' != '0' "
+      Condition=" '@(XcodeProject->Count())' != '0' and $([MSBuild]::IsOSPlatform('osx')) "
       DependsOnTargets="_GetBuildXcodeProjectsInputs;_CalculateXcodeProjectOutputPaths" >
     <RemoveDir Directories="@(XcodeProject->'%(OutputPath)')" />
   </Target>
