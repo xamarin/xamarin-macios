@@ -181,18 +181,6 @@ steps:
       key: "$(MONO_IOS_FILENAME)"
       path: "$(Build.SourcesDirectory)/xamarin-macios/builds/downloads/$(MONO_IOS_FILENAME)"
 
-  - task: Cache@2
-    displayName: 'Cache macOS Mono download'
-    inputs:
-      key: "$(MONO_MAC_FILENAME)"
-      path: "$(Build.SourcesDirectory)/xamarin-macios/builds/downloads/$(MONO_MAC_FILENAME)"
-
-  - task: Cache@2
-    displayName: 'Cache MacCatalsyt Mono download'
-    inputs:
-      key: "$(MONO_MACCATALYST_FILENAME)"
-      path: "$(Build.SourcesDirectory)/xamarin-macios/builds/downloads/$(MONO_MACCATALYST_FILENAME)"
-
   # Actual build of the project
   - bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/build-macios.sh
     name: build
