@@ -47,10 +47,12 @@ namespace Xamarin.MacDev.Tasks {
 		public override bool Execute ()
 		{
 			if (ShouldExecuteRemotely ()) {
+				Log.LogWarning ($"Ditto.Execute () about to execute remotely");
 				var taskRunner = new TaskRunner (SessionId, BuildEngine4);
 
 				taskRunner.FixReferencedItems (this, new ITaskItem [] { Source! });
 
+				Log.LogWarning ($"Ditto.Execute () executed remotely");
 				return taskRunner.RunAsync (this).Result;
 			}
 
@@ -70,9 +72,11 @@ namespace Xamarin.MacDev.Tasks {
 				}
 			}
 
+			Log.LogWarning ($"Ditto.Execute () about to execute locally");
 			cancellationTokenSource = new CancellationTokenSource ();
 			cancellationTokenSource.CancelAfter (TimeSpan.FromMinutes (2)); // FIXME: remove this
 			ExecuteAsync (Log, "/usr/bin/ditto", args, cancellationToken: cancellationTokenSource.Token).Wait ();
+			Log.LogWarning ($"Ditto.Execute () executed locally");
 
 			// Create a list of all the files we've copied
 			var copiedFiles = new List<ITaskItem> ();
