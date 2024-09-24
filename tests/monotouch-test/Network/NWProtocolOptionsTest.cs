@@ -61,7 +61,6 @@ namespace MonoTouchFixtures.Network {
 		[Test]
 		public void SetIPLocalAddressPreference ()
 		{
-			global::MonoTests.System.Net.Http.MessageHandlerTest.CheckTVOSNativeAotFailure ();
 			TestRuntime.AssertXcodeVersion (11, 0);
 
 			foreach (var ipOption in new [] { NWIPLocalAddressPreference.Default, NWIPLocalAddressPreference.Stable, NWIPLocalAddressPreference.Temporary }) {
