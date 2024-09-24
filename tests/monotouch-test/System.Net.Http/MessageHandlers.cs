@@ -675,7 +675,7 @@ namespace MonoTests.System.Net.Http {
 			// The test requires access to the default system keychain on macOS 14 or earlier, which is really
 			// annoying on bots (a password dialog will pop up, blocking the tests). So just not run this test
 			// on anything earlier than macOS 15.0,
-			TestRuntime.CheckXcodeVersion (16, 0);
+			TestRuntime.AssertXcodeVersion (16, 0);
 			var storageFlags = X509KeyStorageFlags.Exportable;
 #else
 			var storageFlags = X509KeyStorageFlags.DefaultKeySet;
