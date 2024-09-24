@@ -1078,7 +1078,7 @@ namespace Xamarin.Tests {
 		[TestCase (ApplePlatform.MacOSX, "osx-x64", false)]
 		[TestCase (ApplePlatform.MacOSX, "osx-x64", true)]
 		[TestCase (ApplePlatform.MacOSX, "osx-x64;osx-arm64", false)]
-		// [TestCase (ApplePlatform.MacOSX, "osx-x64;osx-arm64", true)]  See: https://github.com/xamarin/xamarin-macios/issues/20903
+		[TestCase (ApplePlatform.MacOSX, "osx-x64;osx-arm64", true)]
 		// [TestCase ("MacCatalyst", "")] - No extension support yet
 		public void BuildProjectsWithExtensions (ApplePlatform platform, string runtimeIdentifier, bool isNativeAot)
 		{
@@ -1113,7 +1113,7 @@ namespace Xamarin.Tests {
 		[TestCase (ApplePlatform.MacOSX, "osx-x64", false)]
 		[TestCase (ApplePlatform.MacOSX, "osx-x64", true)]
 		[TestCase (ApplePlatform.MacOSX, "osx-x64;osx-arm64", false)]
-		// [TestCase (ApplePlatform.MacOSX, "osx-x64;osx-arm64", true)] See: https://github.com/xamarin/xamarin-macios/issues/20903
+		[TestCase (ApplePlatform.MacOSX, "osx-x64;osx-arm64", true)]
 		// [TestCase ("MacCatalyst", "")] - No extension support yet
 		public void BuildProjectsWithExtensionsAndFrameworks (ApplePlatform platform, string runtimeIdentifier, bool isNativeAot)
 		{
@@ -1742,11 +1742,11 @@ namespace Xamarin.Tests {
 		[TestCase (ApplePlatform.iOS, "ios-arm64", "Release")]
 		[TestCase (ApplePlatform.MacOSX, "osx-x64", "Debug")]
 		[TestCase (ApplePlatform.MacOSX, "osx-x64", "Release")]
-		// [TestCase (ApplePlatform.MacOSX, "osx-arm64;osx-x64", "Debug")] // See: https://github.com/xamarin/xamarin-macios/issues/20903
+		[TestCase (ApplePlatform.MacOSX, "osx-arm64;osx-x64", "Debug")]
 		[TestCase (ApplePlatform.MacOSX, "osx-arm64;osx-x64", "Release")]
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64", "Debug")]
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64", "Release")]
-		// [TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64", "Debug")] // See: https://github.com/xamarin/xamarin-macios/issues/20903
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64", "Debug")]
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64", "Release")]
 		[TestCase (ApplePlatform.TVOS, "tvossimulator-x64", "Debug")]
 		[TestCase (ApplePlatform.TVOS, "tvossimulator-x64", "Release")]

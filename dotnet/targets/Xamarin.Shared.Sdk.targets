@@ -1379,9 +1379,10 @@
 		AfterTargets="_LinkNativeExecutable"
 		BeforeTargets="CopyFilesToPublishDirectory">
 		<ItemGroup>
-			<!-- We don't ship assemblies with NativeAOT -->
-			<!-- Exclude assemblies explicitly until https://github.com/dotnet/runtime/issues/87187 is not resolved -->
+			<!-- We don't ship assemblies and pdbs with NativeAOT -->
+			<!-- Exclude assemblies and pdbs explicitly until https://github.com/dotnet/runtime/issues/87187 is not resolved -->
 			<ResolvedFileToPublish Remove="@(ResolvedFileToPublish)" Condition="'%(ResolvedFileToPublish.Extension)' == '.dll'" />
+			<ResolvedFileToPublish Remove="@(ResolvedFileToPublish)" Condition="'%(ResolvedFileToPublish.Extension)' == '.pdb'" />
 		</ItemGroup>
 	</Target>
 
