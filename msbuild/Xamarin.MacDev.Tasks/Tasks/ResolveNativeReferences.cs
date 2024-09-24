@@ -5,6 +5,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using System.Xml;
 
 using Microsoft.Build.Framework;
@@ -40,6 +41,8 @@ namespace Xamarin.MacDev.Tasks {
 	//   with a framework for macOS will likely have symlinks, but that shouldn't prevent the xcframework from being
 	//   consumed in a build for iOS.
 	public class ResolveNativeReferences : XamarinTask, ITaskCallback {
+		CancellationTokenSource? cancellationTokenSource;
+
 		#region Inputs
 
 		[Required]
@@ -112,9 +115,11 @@ namespace Xamarin.MacDev.Tasks {
 			var native_frameworks = new List<ITaskItem> ();
 			var createdFiles = new List<string> ();
 
+			cancellationTokenSource = new CancellationTokenSource ();
+
 			// there can be direct native references inside a project
 			foreach (var nr in NativeReferences) {
-				ProcessNativeReference (nr, native_frameworks, createdFiles);
+				ProcessNativeReference (nr, native_frameworks, createdFiles, cancellationTokenSource.Token);
 			}
 
 			// or (managed) reference to an assembly that bind a framework
@@ -122,11 +127,11 @@ namespace Xamarin.MacDev.Tasks {
 				// look for sidecar's manifest
 				var resources = Path.ChangeExtension (r.ItemSpec, ".resources");
 				if (Directory.Exists (resources)) {
-					ProcessNativeReference (r, resources, native_frameworks, createdFiles);
+					ProcessNativeReference (r, resources, native_frameworks, createdFiles, cancellationTokenSource.Token);
 				} else {
 					resources = resources + ".zip";
 					if (File.Exists (resources))
-						ProcessNativeReference (r, resources, native_frameworks, createdFiles);
+						ProcessNativeReference (r, resources, native_frameworks, createdFiles, cancellationTokenSource.Token);
 				}
 			}
 
@@ -136,12 +141,12 @@ namespace Xamarin.MacDev.Tasks {
 			return !Log.HasLoggedErrors;
 		}
 
-		void ProcessNativeReference (ITaskItem item, List<ITaskItem> native_frameworks, List<string> createdFiles)
+		void ProcessNativeReference (ITaskItem item, List<ITaskItem> native_frameworks, List<string> createdFiles, CancellationToken? cancellationTokenSource)
 		{
-			ProcessNativeReference (item, item.ItemSpec, native_frameworks, createdFiles);
+			ProcessNativeReference (item, item.ItemSpec, native_frameworks, createdFiles, cancellationTokenSource);
 		}
 
-		void ProcessNativeReference (ITaskItem item, string name, List<ITaskItem> native_frameworks, List<string> createdFiles)
+		void ProcessNativeReference (ITaskItem item, string name, List<ITaskItem> native_frameworks, List<string> createdFiles, CancellationToken? cancellationToken)
 		{
 			// '.' can be used to represent a file (instead of the directory)
 			if (Path.GetFileName (name) == ".")
@@ -190,7 +195,7 @@ namespace Xamarin.MacDev.Tasks {
 
 			// (compressed) xcframework
 			if (name.EndsWith (".xcframework", StringComparison.OrdinalIgnoreCase) || name.EndsWith (".xcframework.zip", StringComparison.OrdinalIgnoreCase)) {
-				if (!TryResolveXCFramework (Log, TargetFrameworkMoniker, SdkIsSimulator, Architectures, name, GetIntermediateDecompressionDir (item), createdFiles, out var nativeLibraryPath))
+				if (!TryResolveXCFramework (Log, TargetFrameworkMoniker, SdkIsSimulator, Architectures, name, GetIntermediateDecompressionDir (item), createdFiles, cancellationToken, out var nativeLibraryPath))
 					return;
 				var nr = new TaskItem (item);
 				SetMetadataNativeLibrary (nr, nativeLibraryPath);
@@ -200,7 +205,7 @@ namespace Xamarin.MacDev.Tasks {
 
 			// compressed framework
 			if (name.EndsWith (".framework.zip", StringComparison.OrdinalIgnoreCase)) {
-				if (!CompressionHelper.TryDecompress (Log, name, Path.GetFileNameWithoutExtension (name), GetIntermediateDecompressionDir (item), createdFiles, out var frameworkPath))
+				if (!CompressionHelper.TryDecompress (Log, name, Path.GetFileNameWithoutExtension (name), GetIntermediateDecompressionDir (item), createdFiles, cancellationToken, out var frameworkPath))
 					return;
 				var nr = new TaskItem (item);
 				nr.ItemSpec = GetActualLibrary (frameworkPath);
@@ -213,13 +218,13 @@ namespace Xamarin.MacDev.Tasks {
 
 			// sidecar / binding resource package
 			if (name.EndsWith (".resources", StringComparison.OrdinalIgnoreCase)) {
-				ProcessSidecar (item, name, native_frameworks, createdFiles);
+				ProcessSidecar (item, name, native_frameworks, createdFiles, cancellationToken);
 				return;
 			}
 
 			// compressed sidecar / binding resource package
 			if (name.EndsWith (".resources.zip", StringComparison.OrdinalIgnoreCase)) {
-				ProcessSidecar (item, name, native_frameworks, createdFiles);
+				ProcessSidecar (item, name, native_frameworks, createdFiles, cancellationToken);
 				return;
 			}
 
@@ -289,7 +294,7 @@ namespace Xamarin.MacDev.Tasks {
 			item.SetMetadata ("RelativePath", Path.Combine (FrameworksDirectory, Path.GetFileName (Path.GetDirectoryName (item.ItemSpec))));
 		}
 
-		void ProcessSidecar (ITaskItem r, string resources, List<ITaskItem> native_frameworks, List<string> createdFiles)
+		void ProcessSidecar (ITaskItem r, string resources, List<ITaskItem> native_frameworks, List<string> createdFiles, CancellationToken? cancellationToken)
 		{
 			if (!TryGetSidecarManifest (Log, resources, out var manifestContents))
 				return;
@@ -302,7 +307,7 @@ namespace Xamarin.MacDev.Tasks {
 				var name = referenceNode.Attributes ["Name"].Value.Trim ('\\', '/');
 				switch (Path.GetExtension (name)) {
 				case ".xcframework": {
-					if (!TryResolveXCFramework (Log, TargetFrameworkMoniker, SdkIsSimulator, Architectures, resources, name, GetIntermediateDecompressionDir (resources), createdFiles, out var nativeLibraryPath))
+					if (!TryResolveXCFramework (Log, TargetFrameworkMoniker, SdkIsSimulator, Architectures, resources, name, GetIntermediateDecompressionDir (resources), createdFiles, cancellationToken, out var nativeLibraryPath))
 						continue;
 					SetMetadataNativeLibrary (t, nativeLibraryPath);
 					break;
@@ -311,7 +316,7 @@ namespace Xamarin.MacDev.Tasks {
 					string? frameworkPath;
 					if (!isCompressed) {
 						frameworkPath = Path.Combine (resources, name);
-					} else if (!CompressionHelper.TryDecompress (Log, resources, name, GetIntermediateDecompressionDir (resources), createdFiles, out frameworkPath)) {
+					} else if (!CompressionHelper.TryDecompress (Log, resources, name, GetIntermediateDecompressionDir (resources), createdFiles, cancellationToken, out frameworkPath)) {
 						continue;
 					}
 					t.ItemSpec = GetActualLibrary (frameworkPath);
@@ -324,7 +329,7 @@ namespace Xamarin.MacDev.Tasks {
 					string? dylibPath;
 					if (!isCompressed) {
 						dylibPath = Path.Combine (resources, name);
-					} else if (!CompressionHelper.TryDecompress (Log, resources, name, GetIntermediateDecompressionDir (resources), createdFiles, out dylibPath)) {
+					} else if (!CompressionHelper.TryDecompress (Log, resources, name, GetIntermediateDecompressionDir (resources), createdFiles, cancellationToken, out dylibPath)) {
 						continue;
 					}
 					t.ItemSpec = dylibPath;
@@ -335,7 +340,7 @@ namespace Xamarin.MacDev.Tasks {
 					string? aPath;
 					if (!isCompressed) {
 						aPath = Path.Combine (resources, name);
-					} else if (!CompressionHelper.TryDecompress (Log, resources, name, GetIntermediateDecompressionDir (resources), createdFiles, out aPath)) {
+					} else if (!CompressionHelper.TryDecompress (Log, resources, name, GetIntermediateDecompressionDir (resources), createdFiles, cancellationToken, out aPath)) {
 						continue;
 					}
 					t.ItemSpec = aPath;
@@ -374,7 +379,7 @@ namespace Xamarin.MacDev.Tasks {
 		/// <param name="nativeLibraryPath">A full path to the resolved native library within the xcframework. If 'resourcePath' is compressed, this will point to where the native library is decompressed on disk.</param>
 		/// <param name="intermediateDecompressionDir"></param>
 		/// <returns>True if a native library was successfully found. Otherwise false, and an error will have been printed to the log.</returns>
-		public static bool TryResolveXCFramework (TaskLoggingHelper log, string targetFrameworkMoniker, bool isSimulator, string? architectures, string path, string intermediateDecompressionDir, List<string> createdFiles, [NotNullWhen (true)] out string? nativeLibraryPath)
+		public static bool TryResolveXCFramework (TaskLoggingHelper log, string targetFrameworkMoniker, bool isSimulator, string? architectures, string path, string intermediateDecompressionDir, List<string> createdFiles, CancellationToken? cancellationToken, [NotNullWhen (true)] out string? nativeLibraryPath)
 		{
 			string resourcePath;
 			string xcframework;
@@ -386,7 +391,7 @@ namespace Xamarin.MacDev.Tasks {
 				resourcePath = Path.GetDirectoryName (path);
 				xcframework = Path.GetFileName (path);
 			}
-			return TryResolveXCFramework (log, targetFrameworkMoniker, isSimulator, architectures, resourcePath, xcframework, intermediateDecompressionDir, createdFiles, out nativeLibraryPath);
+			return TryResolveXCFramework (log, targetFrameworkMoniker, isSimulator, architectures, resourcePath, xcframework, intermediateDecompressionDir, createdFiles, cancellationToken, out nativeLibraryPath);
 		}
 
 		/// <summary>
@@ -401,7 +406,7 @@ namespace Xamarin.MacDev.Tasks {
 		/// <param name="nativeLibraryPath">A full path to the resolved native library within the xcframework. If 'resourcePath' is compressed, this will point to where the native library is decompressed on disk.</param>
 		/// <param name="intermediateDecompressionDir"></param>
 		/// <returns>True if a native library was successfully found. Otherwise false, and an error will have been printed to the log.</returns>
-		public static bool TryResolveXCFramework (TaskLoggingHelper log, string targetFrameworkMoniker, bool isSimulator, string? architectures, string resourcePath, string xcframework, string intermediateDecompressionDir, List<string> createdFiles, [NotNullWhen (true)] out string? nativeLibraryPath)
+		public static bool TryResolveXCFramework (TaskLoggingHelper log, string targetFrameworkMoniker, bool isSimulator, string? architectures, string resourcePath, string xcframework, string intermediateDecompressionDir, List<string> createdFiles, CancellationToken? cancellationToken, [NotNullWhen (true)] out string? nativeLibraryPath)
 		{
 			nativeLibraryPath = null;
 
@@ -411,7 +416,7 @@ namespace Xamarin.MacDev.Tasks {
 
 				var isCompressed = CompressionHelper.IsCompressed (resourcePath);
 				var xcframeworkPath = isCompressed ? resourcePath : Path.Combine (resourcePath, xcframework);
-				if (!TryResolveXCFramework (log, plist, xcframeworkPath, targetFrameworkMoniker, isSimulator, architectures!, out var nativeLibraryRelativePath))
+				if (!TryResolveXCFramework (log, plist, xcframeworkPath, targetFrameworkMoniker, isSimulator, architectures!, cancellationToken, out var nativeLibraryRelativePath))
 					return false;
 
 				if (!isCompressed) {
@@ -420,7 +425,7 @@ namespace Xamarin.MacDev.Tasks {
 				}
 
 				var zipResource = Path.Combine (xcframework, Path.GetDirectoryName (nativeLibraryRelativePath));
-				if (!CompressionHelper.TryDecompress (log, resourcePath, zipResource, intermediateDecompressionDir, createdFiles, out var decompressedPath))
+				if (!CompressionHelper.TryDecompress (log, resourcePath, zipResource, intermediateDecompressionDir, createdFiles, cancellationToken, out var decompressedPath))
 					return false;
 
 				nativeLibraryPath = Path.Combine (intermediateDecompressionDir, xcframework, nativeLibraryRelativePath);
@@ -444,7 +449,7 @@ namespace Xamarin.MacDev.Tasks {
 		/// <param name="architectures">The target architectures</param>
 		/// <param name="frameworkPath">A relative path to the resolved native library within the xcframework.</param>
 		/// <returns>True if a native library was successfully found. Otherwise false, and an error will have been printed to the log.</returns>
-		public static bool TryResolveXCFramework (TaskLoggingHelper log, PDictionary plist, string xcframeworkPath, string targetFrameworkMoniker, bool isSimulator, string architectures, [NotNullWhen (true)] out string? nativeLibraryPath)
+		public static bool TryResolveXCFramework (TaskLoggingHelper log, PDictionary plist, string xcframeworkPath, string targetFrameworkMoniker, bool isSimulator, string architectures, CancellationToken? cancellationToken, [NotNullWhen (true)] out string? nativeLibraryPath)
 		{
 			nativeLibraryPath = null;
 			var platform = PlatformFrameworkHelper.GetFramework (targetFrameworkMoniker);
@@ -519,8 +524,11 @@ namespace Xamarin.MacDev.Tasks {
 
 		public void Cancel ()
 		{
-			if (ShouldExecuteRemotely ())
+			if (ShouldExecuteRemotely ()) {
 				BuildConnection.CancelAsync (BuildEngine4).Wait ();
+			} else {
+				cancellationTokenSource?.Cancel ();
+			}
 		}
 
 		public bool ShouldCopyToBuildServer (ITaskItem item) => true;
