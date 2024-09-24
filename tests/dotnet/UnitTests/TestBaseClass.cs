@@ -1,9 +1,10 @@
 #nullable enable
-
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 
 using Mono.Cecil;
+
+using NUnit.Framework;
 
 using Xamarin.MacDev;
 using Xamarin.Tests;
@@ -14,6 +15,17 @@ namespace Xamarin.Tests {
 		protected static Dictionary<string, string> verbosity = new Dictionary<string, string> {
 			{ "_BundlerVerbosity", "1" },
 		};
+
+		readonly char [] invalidChars = { '{', '}', '(', ')', '$', ':', ';', '\"', '\'', ',', '=', '|' };
+		protected string TestName {
+			get {
+				var result = TestContext.CurrentContext.Test.Name;
+				foreach (var c in invalidChars.Concat (Path.GetInvalidPathChars ().Concat (Path.GetInvalidFileNameChars ()))) {
+					result = result.Replace (c, '_');
+				}
+				return result.Replace ("_", string.Empty);
+			}
+		}
 
 		protected static Dictionary<string, string> GetDefaultProperties (string? runtimeIdentifiers = null, Dictionary<string, string>? extraProperties = null)
 		{
@@ -508,6 +520,23 @@ namespace Xamarin.Tests {
 			var output = BinLog.PrintToString (result.BinLogPath);
 			Assert.That (output, Does.Not.Contain ("Building target \"_RunILLink\" completely."), "Linker did not executed as expected.");
 			Assert.That (output, Does.Not.Contain ("LinkerConfiguration:"), "Custom steps did not run as expected.");
+		}
+
+
+		public void AssertTargetExecuted (IEnumerable<TargetExecutionResult> executedTargets, string targetName, string message)
+		{
+			var targets = executedTargets.Where (v => v.TargetName == targetName);
+			if (!targets.Any ())
+				Assert.Fail ($"The target '{targetName}' was not executed: no corresponding targets found in binlog ({message})");
+			if (!targets.Any (v => !v.Skipped))
+				Assert.Fail ($"The target '{targetName}' was not executed: the target was found {targets.Count ()} time(s) in the binlog, but they were all skipped ({message})");
+		}
+
+		public void AssertTargetNotExecuted (IEnumerable<TargetExecutionResult> executedTargets, string targetName, string message)
+		{
+			var targets = executedTargets.Where (v => v.TargetName == targetName);
+			if (targets.Any (v => !v.Skipped))
+				Assert.Fail ($"The target '{targetName}' was unexpectedly executed ({message})");
 		}
 
 		static bool? is_in_ci;
