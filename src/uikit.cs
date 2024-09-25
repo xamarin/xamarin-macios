@@ -14085,7 +14085,6 @@ namespace UIKit {
 		UIImage DividerImageForLeftSegmentStaterightSegmentStatebarMetrics (UIControlState leftState, UIControlState rightState, UIBarMetrics barMetrics);
 #endif
 
-		[Export ("setTitleTextAttributes:forState:")]
 		[Appearance]
 		[Wrap ("SetTitleTextAttributes (attributes.GetDictionary (), state)", IsVirtual = true)]
 		void SetTitleTextAttributes (UIStringAttributes attributes, UIControlState state);
