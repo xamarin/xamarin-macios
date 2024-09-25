@@ -95,6 +95,9 @@
 		<AllowPublishAotWithoutRuntimeIdentifier Condition="'$(AllowPublishAotWithoutRuntimeIdentifier)' == '' And '$(_UseNativeAot)' == 'true'">true</AllowPublishAotWithoutRuntimeIdentifier>
 		<AllowSelfContainedWithoutRuntimeIdentifier Condition="'$(AllowSelfContainedWithoutRuntimeIdentifier)' == ''">true</AllowSelfContainedWithoutRuntimeIdentifier>
 
+		<!-- Prevent .NET from resolving runtime identifier for NativeAOT builds when building universal apps. -->
+		<UseCurrentRuntimeIdentifier Condition="'$(_UseNativeAot)' == 'true' And '$(RuntimeIdentifiers)' != '' And '$(RuntimeIdentifier)' == ''">false</UseCurrentRuntimeIdentifier>
+
 	</PropertyGroup>
 
 	<!-- Set the default RuntimeIdentifier if not already specified. -->

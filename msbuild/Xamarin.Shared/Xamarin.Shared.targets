@@ -298,6 +298,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			_CleanDeviceSpecificOutput;
 			_CleanIntermediateToolOutput;
 			_CleanITunesArtwork;
+			_CleanXcodeProjects;
 		</CleanDependsOn>
 	</PropertyGroup>
 

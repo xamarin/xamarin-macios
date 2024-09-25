@@ -14,6 +14,7 @@
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.LinkNativeCode" AssemblyFile="$(_XamarinTaskAssembly)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.MergeAppBundles" AssemblyFile="$(_XamarinTaskAssembly)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.MobileILStrip" AssemblyFile="$(_XamarinTaskAssembly)" />
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.MacDevMessage" AssemblyFile="$(_XamarinTaskAssembly)" />
 
 	<!-- Project types and how do we distinguish between them
 
@@ -163,6 +164,9 @@
 			 (in other words: once we drop support for legacy Xamarin, we can remove the other definition) -->
 		<_CanOutputAppBundle Condition="'$(_CanOutputAppBundle)' == '' And ('$(OutputType)' == 'Exe' Or '$(IsAppExtension)' == 'true' Or '$(IsWatchApp)' == 'true')">true</_CanOutputAppBundle>
 		<_CanOutputAppBundle Condition="'$(_CanOutputAppBundle)' == ''">false</_CanOutputAppBundle>
+
+		<!-- Directory to store project specific stamp files used by certain targets for incremental builds -->
+		<_MaciOSStampDirectory>$(IntermediateOutputPath)stamp\</_MaciOSStampDirectory>
 	</PropertyGroup>
 
 	<PropertyGroup>
@@ -186,6 +190,8 @@
 	<PropertyGroup Condition="'$(_CanOutputAppBundle)' != 'true'">
 		<BuildDependsOn>
 			BuildOnlySettings;
+			MaciOSPrepareForBuild;
+			_BuildXcodeProjects;
 			_CollectBundleResources;
 			_PackLibraryResources;
 			$(BuildDependsOn);
@@ -197,6 +203,8 @@
 			_WarnRuntimeIdentifiersClash;
 			_ComputePublishTrimmed;
 			BuildOnlySettings;
+			MaciOSPrepareForBuild;
+			_BuildXcodeProjects;
 			_CollectBundleResources;
 			_PackLibraryResources;
 			_UnpackLibraryResources;
@@ -213,6 +221,8 @@
 			_ErrorRuntimeIdentifiersClash;
 			_ComputePublishTrimmed;
 			BuildOnlySettings;
+			MaciOSPrepareForBuild;
+			_BuildXcodeProjects;
 			_CollectBundleResources;
 			_PackLibraryResources;
 			_UnpackLibraryResources;
@@ -285,6 +295,15 @@
 			_PostProcessAppBundle;
 		</CreateAppBundleDependsOn>
 	</PropertyGroup>
+
+	<!-- Used to extend the build process, .csproj files can declare <MaciOSPrepareForBuildDependsOn>SomeTarget</MaciOSPrepareForBuildDependsOn> to run a target at the beginning of the build -->
+	<Target Name="MaciOSPrepareForBuild"
+			DependsOnTargets="$(MaciOSPrepareForBuildDependsOn)" >
+		<MakeDir
+			Condition=" '$(_MaciOSStampDirectory)' != '' and !Exists('$(_MaciOSStampDirectory)') "
+			Directories="$(_MaciOSStampDirectory)"
+		/>
+	</Target>
 
 	<Target Name="_CreateAssetPackManifestMobile" Condition="'$(_PlatformName)' != 'macOS'" DependsOnTargets="_CreateAssetPackManifest" />
 
@@ -1377,9 +1396,10 @@
 		AfterTargets="_LinkNativeExecutable"
 		BeforeTargets="CopyFilesToPublishDirectory">
 		<ItemGroup>
-			<!-- We don't ship assemblies with NativeAOT -->
-			<!-- Exclude assemblies explicitly until https://github.com/dotnet/runtime/issues/87187 is not resolved -->
+			<!-- We don't ship assemblies and pdbs with NativeAOT -->
+			<!-- Exclude assemblies and pdbs explicitly until https://github.com/dotnet/runtime/issues/87187 is not resolved -->
 			<ResolvedFileToPublish Remove="@(ResolvedFileToPublish)" Condition="'%(ResolvedFileToPublish.Extension)' == '.dll'" />
+			<ResolvedFileToPublish Remove="@(ResolvedFileToPublish)" Condition="'%(ResolvedFileToPublish.Extension)' == '.pdb'" />
 		</ItemGroup>
 	</Target>
 
@@ -2454,4 +2474,6 @@ global using nfloat = global::System.Runtime.InteropServices.NFloat%3B
 	<Import Project="$(_TargetsDirectory)Xamarin.MacCatalyst.ObjCBinding.$(_ProjectLanguage).targets"  Condition="'$(_ProjectType)' == 'MacCatalystBindingProject' " />
 	
 	<Import Project="dotnet-xcsync.targets" />
+	<Import Project="Microsoft.MaciOS.Sdk.Xcode.targets" />
+
 </Project>

@@ -92,7 +92,6 @@ namespace MonoTouchFixtures.Network {
 		[Test]
 		public void TryReinsertExtractedConnectionTest ()
 		{
-			global::MonoTests.System.Net.Http.MessageHandlerTest.CheckTVOSNativeAotFailure ();
 			TestRuntime.AssertXcodeVersion (13, 0);
 			Assert.DoesNotThrow (() => {
 				var conn = connectionGroup.ExtractConnection (endpoint, new NWProtocolTcpOptions ());
