@@ -352,8 +352,6 @@ package-test-libraries.zip:
 	$(Q) $(MAKE) all -C test-libraries/custom-type-assembly build-assembly
 	$(Q_GEN) rm -f "$@" "$@.tmp"
 	$(Q_GEN) cd $(TOP) && zip -9r --symlinks $(abspath $@).tmp ./tests/test-libraries
-	$(Q_GEN) cd $(TOP) && zip -9r --symlinks $(abspath $@).tmp ./tests/mono-native/macOS/unified ./tests/mono-native/macOS/compat
-	$(Q_GEN) cd $(TOP) && zip -9r --symlinks $(abspath $@).tmp ./tests/mono-native/iOS/unified ./tests/mono-native/iOS/compat
 	$(Q_GEN) cd $(TOP) && find tests -regex '.*/generated-projects/.*[c|f]sproj' -exec zip -9r --symlinks $(abspath $@).tmp {} +
 	$(Q_GEN) cd $(TOP) && find tests -regex '.*/generated-projects/.*sln' -exec zip -9r --symlinks $(abspath $@).tmp {} +
 	$(Q_GEN) cd $(TOP) && find tests -regex 'tests/test-libraries/custom-type-assembly/.libs/.*dll' -exec zip -9r --symlinks $(abspath $@).tmp {} +
