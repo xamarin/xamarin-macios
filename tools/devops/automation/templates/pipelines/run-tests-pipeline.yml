@@ -45,11 +45,6 @@ parameters:
     type: boolean
     default: true
 
-  - name: runSamples
-    displayName: Run Samples
-    type: boolean
-    default: false
-    
   - name: testConfigurations
     displayName: Test configurations to run
     type: object
@@ -128,7 +123,6 @@ stages:
       runTests: ${{ parameters.runTests }}
       runDeviceTests: ${{ parameters.runDeviceTests }}
       runWindowsIntegration: ${{ parameters.runWindowsIntegration }}
-      runSamples: ${{ parameters.runSamples }}
       ${{ if ne(length(parameters.testConfigurations), 0)}}:
         testConfigurations: ${{ parameters.testConfigurations }}
       deviceTestsConfigurations: ${{ parameters.deviceTestsConfigurations }}
