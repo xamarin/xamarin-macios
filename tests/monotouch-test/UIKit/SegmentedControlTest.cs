@@ -7,6 +7,7 @@ using System.Drawing;
 using System.IO;
 using CoreGraphics;
 using Foundation;
+using ObjCRuntime;
 using UIKit;
 using NUnit.Framework;
 
@@ -106,6 +107,17 @@ namespace MonoTouchFixtures.UIKit {
 			using (UISegmentedControl sc = new UISegmentedControl (img)) {
 				Assert.That (sc.NumberOfSegments, Is.EqualTo ((nint) 1), "NumberOfSegments");
 			}
+		}
+
+		[Test]
+		public void TitleTextAttributes ()
+		{
+			using var sc = new UISegmentedControl ("one", "two");
+			sc.SetTitleTextAttributes (new UIStringAttributes () { ForegroundColor = UIColor.Gray }, UIControlState.Selected);
+			var attrib = sc.GetTitleTextAttributes (UIControlState.Selected);
+			Assert.AreEqual (UIColor.Gray, attrib?.ForegroundColor, "ForegroundColor");
+			Assert.IsNotNull (attrib?.Dictionary, "Dictionary");
+			Assert.AreNotEqual (NativeHandle.Zero, attrib.Dictionary.Handle, "Dictionary.Handle");
 		}
 	}
 }
