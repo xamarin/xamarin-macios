@@ -703,7 +703,7 @@ namespace MonoTests.System.Net.Http {
 				Assert.Inconclusive ("Request timedout.");
 			} else {
 				Assert.IsNull (ex, "Exception wasn't expected.");
-				X509Certificate2 certificate2 = X509CertificateLoader.LoadPkcs12 (global::System.Convert.FromBase64String (content), null);
+				X509Certificate2 certificate2 = X509CertificateLoader.LoadCertificate (global::System.Convert.FromBase64String (content));
 				Assert.AreEqual (certificate.Thumbprint, certificate2.Thumbprint);
 			}
 		}
