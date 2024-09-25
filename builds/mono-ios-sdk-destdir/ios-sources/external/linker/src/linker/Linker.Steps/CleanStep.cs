@@ -1,4 +1,4 @@
-﻿//
+//
 // CleanStep.cs
 //
 // Author:
@@ -58,7 +58,7 @@ namespace Mono.Linker.Steps {
 
 		static MethodDefinition CheckMethod (TypeDefinition type, MethodDefinition method)
 		{
-			if (method == null)
+			if (method is null)
 				return null;
 
 			return type.Methods.Contains (method) ? method : null;
@@ -81,7 +81,7 @@ namespace Mono.Linker.Steps {
 
 		static bool IsEventUsed (EventDefinition evt)
 		{
-			return evt.AddMethod != null || evt.InvokeMethod != null || evt.RemoveMethod != null;
+			return evt.AddMethod is not null || evt.InvokeMethod is not null || evt.RemoveMethod is not null;
 		}
 
 		static void CleanProperties (TypeDefinition type)
@@ -100,7 +100,7 @@ namespace Mono.Linker.Steps {
 
 		static bool IsPropertyUsed (PropertyDefinition prop)
 		{
-			return prop.GetMethod != null || prop.SetMethod != null;
+			return prop.GetMethod is not null || prop.SetMethod is not null;
 		}
 	}
 }

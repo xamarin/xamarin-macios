@@ -1,4 +1,4 @@
-﻿//
+//
 // IReflectionPatternRecorder.cs
 //
 // Copyright (C) 2017 Microsoft Corporation (http://www.microsoft.com)
@@ -25,8 +25,7 @@
 
 using Mono.Cecil;
 
-namespace Mono.Linker
-{
+namespace Mono.Linker {
 	/// <summary>
 	/// Interface which is called every time the linker inspects a pattern of code involving reflection to determine a more complex
 	/// dependency.
@@ -38,8 +37,7 @@ namespace Mono.Linker
 	///  - or it will call UnrecognizedReflectionAccessPattern with an optional message describing why it could not recognize
 	///    the pattern.
 	/// </remarks>
-	public interface IReflectionPatternRecorder
-	{
+	public interface IReflectionPatternRecorder {
 		/// <summary>
 		/// Called when the linker recognized a reflection access pattern (and thus was able to correctly apply marking to the accessed item).
 		/// </summary>

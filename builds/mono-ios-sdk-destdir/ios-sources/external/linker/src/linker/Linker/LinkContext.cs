@@ -1,4 +1,4 @@
-﻿//
+//
 // LinkContext.cs
 //
 // Author:
@@ -91,20 +91,17 @@ namespace Mono.Linker {
 			set { _linkSymbols = value; }
 		}
 
-		public bool KeepTypeForwarderOnlyAssemblies
-		{
+		public bool KeepTypeForwarderOnlyAssemblies {
 			get { return _keepTypeForwarderOnlyAssemblies; }
 			set { _keepTypeForwarderOnlyAssemblies = value; }
 		}
 
-		public bool KeepMembersForDebugger
-		{
+		public bool KeepMembersForDebugger {
 			get { return _keepMembersForDebugger; }
 			set { _keepMembersForDebugger = value; }
 		}
 
-		public bool IgnoreUnresolved
-		{
+		public bool IgnoreUnresolved {
 			get { return _ignoreUnresolved; }
 			set { _ignoreUnresolved = value; }
 		}
@@ -167,8 +164,7 @@ namespace Mono.Linker {
 		}
 
 		public LinkContext (Pipeline pipeline, AssemblyResolver resolver)
-			: this(pipeline, resolver, new ReaderParameters
-			{
+			: this (pipeline, resolver, new ReaderParameters {
 				AssemblyResolver = resolver
 			}, new UnintializedContextFactory ())
 		{
@@ -182,10 +178,10 @@ namespace Mono.Linker {
 			_actions = new Dictionary<string, AssemblyAction> ();
 			_parameters = new Dictionary<string, string> ();
 			_readerParameters = readerParameters;
-			
+
 			SymbolReaderProvider = new DefaultSymbolReaderProvider (false);
 
-			if (factory == null)
+			if (factory is null)
 				throw new ArgumentNullException (nameof (factory));
 
 			_annotations = factory.CreateAnnotationStore (this);
@@ -203,7 +199,7 @@ namespace Mono.Linker {
 
 		public void AddSubstitutionFile (string file)
 		{
-			if (Substitutions == null) {
+			if (Substitutions is null) {
 				Substitutions = new List<string> ();
 				Substitutions.Add (file);
 				return;
@@ -222,7 +218,7 @@ namespace Mono.Linker {
 			if (pos == -1) {
 				foreach (AssemblyDefinition asm in GetAssemblies ()) {
 					var type = asm.MainModule.GetType (fullName);
-					if (type != null)
+					if (type is not null)
 						return type;
 				}
 
@@ -255,12 +251,11 @@ namespace Mono.Linker {
 			try {
 				AssemblyDefinition assembly = _resolver.Resolve (reference, _readerParameters);
 
-				if (assembly != null)
+				if (assembly is not null)
 					RegisterAssembly (assembly);
 
 				return assembly;
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 				throw new AssemblyResolutionException (reference, e);
 			}
 		}
@@ -283,7 +278,7 @@ namespace Mono.Linker {
 			if (assembly.MainModule.HasSymbols)
 				return;
 
-			if (_symbolReaderProvider == null)
+			if (_symbolReaderProvider is null)
 				throw new ArgumentNullException (nameof (_symbolReaderProvider));
 
 			try {
@@ -291,7 +286,7 @@ namespace Mono.Linker {
 					assembly.MainModule,
 					assembly.MainModule.FileName);
 
-				if (symbolReader == null)
+				if (symbolReader is null)
 					return;
 
 				try {
@@ -309,11 +304,11 @@ namespace Mono.Linker {
 		public virtual ICollection<AssemblyDefinition> ResolveReferences (AssemblyDefinition assembly)
 		{
 			List<AssemblyDefinition> references = new List<AssemblyDefinition> ();
-			if (assembly == null)
+			if (assembly is null)
 				return references;
 			foreach (AssemblyNameReference reference in assembly.MainModule.AssemblyReferences) {
 				AssemblyDefinition definition = Resolve (reference);
-				if (definition != null)
+				if (definition is not null)
 					references.Add (definition);
 			}
 			return references;
@@ -330,7 +325,7 @@ namespace Mono.Linker {
 
 			return reference;
 		}
-		
+
 		public void SetAction (AssemblyDefinition assembly, AssemblyAction defaultAction)
 		{
 			RegisterAssembly (assembly);
@@ -363,7 +358,7 @@ namespace Mono.Linker {
 			case "mscorlib":
 			case "Accessibility":
 			case "Mono.Security":
-				// WPF
+			// WPF
 			case "PresentationFramework":
 			case "PresentationCore":
 			case "WindowsBase":
@@ -372,7 +367,7 @@ namespace Mono.Linker {
 			case "PresentationUI":
 			case "ReachFramework":
 			case "netstandard":
-					return true;
+				return true;
 			default:
 				return name.Name.StartsWith ("System")
 					|| name.Name.StartsWith ("Microsoft");
@@ -411,7 +406,7 @@ namespace Mono.Linker {
 
 		public bool IsFeatureExcluded (string featureName)
 		{
-			return ExcludedFeatures != null && Array.IndexOf (ExcludedFeatures, featureName) >= 0;
+			return ExcludedFeatures is not null && Array.IndexOf (ExcludedFeatures, featureName) >= 0;
 		}
 
 		public bool IsOptimizationEnabled (CodeOptimizations optimization)
@@ -426,16 +421,15 @@ namespace Mono.Linker {
 
 		public void LogMessage (MessageImportance importance, string message)
 		{
-			if (LogMessages && Logger != null)
+			if (LogMessages && Logger is not null)
 				Logger.LogMessage (importance, "{0}", message);
 		}
 	}
 
 	[Flags]
-	public enum CodeOptimizations
-	{
+	public enum CodeOptimizations {
 		BeforeFieldInit = 1 << 0,
-		
+
 		/// <summary>
 		/// Option to disable removal of overrides of virtual methods when a type is never instantiated
 		///
@@ -443,7 +437,7 @@ namespace Mono.Linker {
 		/// that do not get an instance constructor marked.
 		/// </summary>
 		OverrideRemoval = 1 << 1,
-		
+
 		/// <summary>
 		/// Option to disable delaying marking of instance methods until an instance of that type could exist
 		/// </summary>

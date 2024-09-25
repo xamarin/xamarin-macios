@@ -1,4 +1,4 @@
-﻿//
+//
 // AssemblyResolver.cs
 //
 // Author:
@@ -76,7 +76,7 @@ namespace Mono.Linker {
 		// The base class's definition of GetAssembly is visible when using DirectoryAssemblyResolver.
 		AssemblyDefinition GetAssembly (string file, ReaderParameters parameters)
 		{
-			if (parameters.AssemblyResolver == null)
+			if (parameters.AssemblyResolver is null)
 				parameters.AssemblyResolver = this;
 
 			return ModuleDefinition.ReadModule (file, parameters).Assembly;
@@ -102,19 +102,19 @@ namespace Mono.Linker {
 		public override AssemblyDefinition Resolve (AssemblyNameReference name, ReaderParameters parameters)
 		{
 			// Validate arguments, similarly to how the base class does it.
-			if (name == null)
+			if (name is null)
 				throw new ArgumentNullException ("name");
-			if (parameters == null)
+			if (parameters is null)
 				throw new ArgumentNullException ("parameters");
 
 			AssemblyDefinition asm = null;
-			if (!_assemblies.TryGetValue (name.Name, out asm) && (_unresolvedAssemblies == null || !_unresolvedAssemblies.Contains (name.Name))) {
+			if (!_assemblies.TryGetValue (name.Name, out asm) && (_unresolvedAssemblies is null || !_unresolvedAssemblies.Contains (name.Name))) {
 				try {
 					// Any full path explicit reference takes precedence over other look up logic
 					asm = ResolveFromReferences (name, _references, parameters);
 
 					// Fall back to the base class resolution logic
-					if (asm == null)
+					if (asm is null)
 						asm = base.Resolve (name, parameters);
 
 					_assemblies [name.Name] = asm;
@@ -122,7 +122,7 @@ namespace Mono.Linker {
 					if (!_ignoreUnresolved)
 						throw;
 					_context.LogMessage ($"warning: Ignoring unresolved assembly '{name.Name}'.");
-					if (_unresolvedAssemblies == null)
+					if (_unresolvedAssemblies is null)
 						_unresolvedAssemblies = new HashSet<string> ();
 					_unresolvedAssemblies.Add (name.Name);
 				}
@@ -150,7 +150,7 @@ namespace Mono.Linker {
 			}
 
 			_assemblies.Clear ();
-			if (_unresolvedAssemblies != null)
+			if (_unresolvedAssemblies is not null)
 				_unresolvedAssemblies.Clear ();
 		}
 	}

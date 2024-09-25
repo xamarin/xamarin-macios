@@ -1,11 +1,9 @@
-﻿using System;
+using System;
 
 using Mono.Cecil;
 
-namespace Mono.Linker
-{
-	public class MarkException : Exception
-	{
+namespace Mono.Linker {
+	public class MarkException : Exception {
 		public MethodDefinition Method { get; private set; }
 
 		public MarkException (string message)

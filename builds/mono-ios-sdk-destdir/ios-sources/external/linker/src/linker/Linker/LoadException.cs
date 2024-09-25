@@ -1,9 +1,7 @@
-﻿using System;
+using System;
 
-namespace Mono.Linker
-{
-	public class LoadException : Exception
-	{
+namespace Mono.Linker {
+	public class LoadException : Exception {
 		public LoadException (string message)
 			: base (message)
 		{

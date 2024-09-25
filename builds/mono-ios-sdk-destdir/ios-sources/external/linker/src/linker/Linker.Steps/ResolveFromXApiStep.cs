@@ -1,4 +1,4 @@
-﻿//
+//
 // ResolveFromXApiStep.cs
 //
 // Author:
@@ -30,11 +30,9 @@ using System.Xml.XPath;
 
 using Mono.Cecil;
 
-namespace Mono.Linker.Steps
-{
+namespace Mono.Linker.Steps {
 
-	public class ResolveFromXApiStep : ResolveStep, IXApiVisitor
-	{
+	public class ResolveFromXApiStep : ResolveStep, IXApiVisitor {
 
 		static readonly string _name = "name";
 		static readonly string _ns = string.Empty;
@@ -61,7 +59,7 @@ namespace Mono.Linker.Steps
 			string name = GetName (nav);
 
 			TypeDefinition type = Context.GetType (name);
-			if (type != null)
+			if (type is not null)
 				MarkType (type);
 		}
 
@@ -96,11 +94,11 @@ namespace Mono.Linker.Steps
 
 		public void OnEvent (XPathNavigator nav, EventDefinition evt)
 		{
-			if (evt.AddMethod != null)
+			if (evt.AddMethod is not null)
 				MarkMethod (evt.AddMethod);
-			if (evt.InvokeMethod != null)
+			if (evt.InvokeMethod is not null)
 				MarkMethod (evt.InvokeMethod);
-			if (evt.RemoveMethod != null)
+			if (evt.RemoveMethod is not null)
 				MarkMethod (evt.RemoveMethod);
 		}
 

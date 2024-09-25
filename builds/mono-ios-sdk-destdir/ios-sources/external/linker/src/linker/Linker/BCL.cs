@@ -1,21 +1,18 @@
-﻿using Mono.Cecil;
+using Mono.Cecil;
 
-namespace Mono.Linker
-{
-	public static class BCL
-	{
-		public static class EventTracingForWindows
-		{
+namespace Mono.Linker {
+	public static class BCL {
+		public static class EventTracingForWindows {
 			public static bool IsEventSourceImplementation (TypeDefinition type, LinkContext context = null)
 			{
 				if (!type.IsClass)
 					return false;
 
-				while (type.BaseType != null) {
+				while (type.BaseType is not null) {
 					var bt = type.BaseType.Resolve ();
 
-					if (bt == null) {
-						if (context != null && !context.IgnoreUnresolved)
+					if (bt is null) {
+						if (context is not null && !context.IgnoreUnresolved)
 							throw new ResolutionException (type.BaseType);
 
 						break;
@@ -60,7 +57,7 @@ namespace Mono.Linker
 			return true;
 		}
 
-		static readonly string[] corlibNames = new [] {
+		static readonly string [] corlibNames = new [] {
 			"mscorlib",
 			"System.Runtime",
 			"System.Private.CoreLib",
@@ -77,7 +74,7 @@ namespace Mono.Linker
 
 				TypeDefinition type = corlib.MainModule.GetType (ns, name);
 				// The assembly could be a facade with type forwarders, in which case we don't find the type in this assembly.
-				if (type != null)
+				if (type is not null)
 					return type;
 			}
 

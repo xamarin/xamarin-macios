@@ -86,7 +86,7 @@ namespace Mono.Linker.Steps {
 		{
 			AssemblyDefinition assembly = GetAssemblyIfReferenced (name);
 
-			if (assembly == null)
+			if (assembly is null)
 				return false;
 
 			switch (Annotations.GetAction (assembly)) {

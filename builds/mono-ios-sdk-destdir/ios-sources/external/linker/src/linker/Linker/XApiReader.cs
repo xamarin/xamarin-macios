@@ -1,4 +1,4 @@
-﻿//
+//
 // XApiReader.cs
 //
 // Author:
@@ -122,7 +122,7 @@ namespace Mono.Linker {
 			string name = GetClassName (nav);
 
 			TypeDefinition type = _assembly.MainModule.GetType (name);
-			if (type == null)
+			if (type is null)
 				return;
 
 			_visitor.OnClass (nav, type);
@@ -159,7 +159,7 @@ namespace Mono.Linker {
 			TypeDefinition declaring = PeekType ();
 
 			FieldDefinition field = declaring.Fields.FirstOrDefault (f => f.Name == GetName (nav));
-			if (field != null)
+			if (field is not null)
 				_visitor.OnField (nav, field);
 
 			ProcessAttributes (nav);
@@ -170,7 +170,7 @@ namespace Mono.Linker {
 			string name = GetName (nav);
 
 			TypeDefinition type = _context.GetType (GetTypeName (name));
-			if (type != null)
+			if (type is not null)
 				_visitor.OnInterface (nav, type);
 		}
 
@@ -183,7 +183,7 @@ namespace Mono.Linker {
 			string signature = GetMethodSignature ();
 
 			MethodDefinition method = GetMethod (signature);
-			if (method != null)
+			if (method is not null)
 				_visitor.OnMethod (nav, method);
 
 			ProcessAttributes (nav);
@@ -219,7 +219,7 @@ namespace Mono.Linker {
 			_signature = new StringBuilder ();
 
 			string returntype = GetAttribute (nav, "returntype");
-			if (returntype == null || returntype.Length == 0)
+			if (returntype is null || returntype.Length == 0)
 				returntype = "System.Void";
 
 			_signature.Append (NormalizeTypeName (returntype));
@@ -276,7 +276,7 @@ namespace Mono.Linker {
 			string signature = GetMethodSignature ();
 
 			MethodDefinition ctor = GetMethod (signature);
-			if (ctor != null)
+			if (ctor is not null)
 				_visitor.OnConstructor (nav, ctor);
 
 			ProcessAttributes (nav);
@@ -288,7 +288,7 @@ namespace Mono.Linker {
 			TypeDefinition type = PeekType ();
 
 			var property = type.Properties.FirstOrDefault (p => p.Name == name);
-			if (property != null)
+			if (property is not null)
 				_visitor.OnProperty (nav, property);
 
 			ProcessAttributes (nav);
@@ -301,7 +301,7 @@ namespace Mono.Linker {
 			TypeDefinition type = PeekType ();
 
 			EventDefinition evt = type.Events.FirstOrDefault (e => e.Name == name);
-			if (evt != null)
+			if (evt is not null)
 				_visitor.OnEvent (nav, evt);
 
 			ProcessAttributes (nav);

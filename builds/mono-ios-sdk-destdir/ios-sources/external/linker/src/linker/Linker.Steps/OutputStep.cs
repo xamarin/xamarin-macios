@@ -50,18 +50,19 @@ namespace Mono.Linker.Steps {
 
 		List<string> assembliesWritten;
 
-		public OutputStep () {
+		public OutputStep ()
+		{
 			assembliesWritten = new List<string> ();
 		}
 
 		static TargetArchitecture CalculateArchitecture (TargetArchitecture readyToRunArch)
 		{
-			if (architectureMap == null) {
+			if (architectureMap is null) {
 				architectureMap = new Dictionary<UInt16, TargetArchitecture> ();
 				foreach (var os in Enum.GetValues (typeof (NativeOSOverride))) {
 					ushort osVal = (ushort) (NativeOSOverride) os;
 					foreach (var arch in Enum.GetValues (typeof (TargetArchitecture))) {
-						ushort archVal = (ushort) (TargetArchitecture)arch;
+						ushort archVal = (ushort) (TargetArchitecture) arch;
 						architectureMap.Add ((ushort) (archVal ^ osVal), (TargetArchitecture) arch);
 					}
 				}
@@ -82,7 +83,7 @@ namespace Mono.Linker.Steps {
 
 		protected override void EndProcess ()
 		{
-			if (Context.AssemblyListFile != null) {
+			if (Context.AssemblyListFile is not null) {
 				using (var w = File.CreateText (Context.AssemblyListFile)) {
 					w.WriteLine ("[" + String.Join (", ", assembliesWritten.Select (a => "\"" + a + "\"").ToArray ()) + "]");
 				}
@@ -161,7 +162,7 @@ namespace Mono.Linker.Steps {
 			}
 		}
 
-		protected virtual void DeleteAssembly(AssemblyDefinition assembly, string directory)
+		protected virtual void DeleteAssembly (AssemblyDefinition assembly, string directory)
 		{
 			var target = GetAssemblyFileName (assembly, directory);
 			if (File.Exists (target)) {
@@ -193,7 +194,7 @@ namespace Mono.Linker.Steps {
 			if (Environment.OSVersion.Platform != PlatformID.Win32NT && assembly.MainModule.SymbolReader.GetType ().FullName == "Mono.Cecil.Pdb.NativePdbReader")
 				return parameters;
 
-			if (Context.SymbolWriterProvider != null)
+			if (Context.SymbolWriterProvider is not null)
 				parameters.SymbolWriterProvider = Context.SymbolWriterProvider;
 			else
 				parameters.WriteSymbols = true;
@@ -281,7 +282,8 @@ namespace Mono.Linker.Steps {
 				CopyFileAndRemoveReadOnly (pdb, Path.ChangeExtension (target, "pdb"));
 		}
 
-		static void CopyFileAndRemoveReadOnly (string src, string dest) {
+		static void CopyFileAndRemoveReadOnly (string src, string dest)
+		{
 			File.Copy (src, dest, true);
 
 			System.IO.FileAttributes attrs = File.GetAttributes (dest);

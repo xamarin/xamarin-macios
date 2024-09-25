@@ -1,4 +1,4 @@
-﻿//
+//
 // Pipeline.cs
 //
 // Author:
@@ -39,7 +39,7 @@ namespace Mono.Linker {
 
 		public Pipeline ()
 		{
-			_steps = new List<IStep>();
+			_steps = new List<IStep> ();
 		}
 
 		public void PrependStep (IStep step)
@@ -127,7 +127,7 @@ namespace Mono.Linker {
 				_steps.Remove (step);
 			}
 		}
-		
+
 		protected virtual void ProcessStep (LinkContext context, IStep step)
 		{
 			context.Tracer.Push (step);

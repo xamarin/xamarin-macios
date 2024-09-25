@@ -30,11 +30,11 @@ namespace Mono.Tuner {
 
 			for (int i = 0; i < resources.Count; i++) {
 				var resource = resources [i] as EmbeddedResource;
-				if (resource == null)
+				if (resource is null)
 					continue;
 
 				if (RemoveResource (resource.Name))
-					resources.RemoveAt(i--);
+					resources.RemoveAt (i--);
 			}
 		}
 
@@ -47,9 +47,9 @@ namespace Mono.Tuner {
 			case "collation.tailoring.bin":
 				return false;
 			default:
-				if (!name.Contains("cjk"))
+				if (!name.Contains ("cjk"))
 					return false;
-				if (IncludeCJK())
+				if (IncludeCJK ())
 					return false;
 				return true;
 			}

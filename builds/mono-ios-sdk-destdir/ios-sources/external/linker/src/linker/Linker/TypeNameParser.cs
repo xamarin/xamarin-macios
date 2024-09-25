@@ -1,8 +1,9 @@
-﻿using System;
+using System;
 
 namespace Mono.Linker {
 	public static class TypeNameParser {
-		public static bool TryParseTypeAssemblyQualifiedName (string value, out string typeName, out string assemblyName) {
+		public static bool TryParseTypeAssemblyQualifiedName (string value, out string typeName, out string assemblyName)
+		{
 			if (string.IsNullOrEmpty (value)) {
 				typeName = null;
 				assemblyName = null;
@@ -19,7 +20,7 @@ namespace Mono.Linker {
 			while (value.IndexOf ('[') > 0) {
 				var openidx = value.IndexOf ('[');
 				var closeidx = value.IndexOf (']');
-				
+
 				// No matching close ] or out of order
 				if (closeidx < 0 || closeidx < openidx) {
 					typeName = null;

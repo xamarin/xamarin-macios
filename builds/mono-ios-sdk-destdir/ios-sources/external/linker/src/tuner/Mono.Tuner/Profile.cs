@@ -11,19 +11,19 @@ namespace Mono.Tuner {
 
 		public static Profile Current {
 			get {
-				if (current != null)
+				if (current is not null)
 					return current;
 
 				current = CreateProfile ("MonoTouch");
-				if (current != null)
+				if (current is not null)
 					return current;
 
 				current = CreateProfile ("MonoDroid");
-				if (current != null)
+				if (current is not null)
 					return current;
 
 				current = CreateProfile ("MonoMac");
-				if (current != null)
+				if (current is not null)
 					return current;
 
 				throw new NotSupportedException ("No active profile");
@@ -36,7 +36,7 @@ namespace Mono.Tuner {
 		static Profile CreateProfile (string name)
 		{
 			var type = Type.GetType (string.Format ("{0}.Tuner.{0}Profile", name));
-			if (type == null)
+			if (type is null)
 				return null;
 
 			return (Profile) Activator.CreateInstance (type);
@@ -66,7 +66,7 @@ namespace Mono.Tuner {
 		{
 			return IsSdk (assembly.Name.Name);
 		}
-		
+
 		protected virtual bool IsProduct (AssemblyDefinition assembly)
 		{
 			return IsProduct (assembly.Name.Name);

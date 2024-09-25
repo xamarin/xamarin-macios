@@ -1,4 +1,4 @@
-﻿//
+//
 // ResolveStep.cs
 //
 // Author:
@@ -39,8 +39,7 @@ namespace Mono.Linker.Steps {
 			_unResolved = new List<string> ();
 		}
 
-		public bool AllMarkerResolved
-		{
+		public bool AllMarkerResolved {
 			get { return _unResolved.Count == 0; }
 		}
 

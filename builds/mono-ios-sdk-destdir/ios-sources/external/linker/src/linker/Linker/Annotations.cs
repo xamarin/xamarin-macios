@@ -52,14 +52,14 @@ namespace Mono.Linker {
 		protected readonly Dictionary<MethodDefinition, List<MethodDefinition>> base_methods = new Dictionary<MethodDefinition, List<MethodDefinition>> ();
 		protected readonly Dictionary<AssemblyDefinition, ISymbolReader> symbol_readers = new Dictionary<AssemblyDefinition, ISymbolReader> ();
 		protected readonly Dictionary<TypeDefinition, List<TypeDefinition>> class_type_base_hierarchy = new Dictionary<TypeDefinition, List<TypeDefinition>> ();
-		protected readonly Dictionary<TypeDefinition, List<TypeDefinition>> derived_interfaces = new Dictionary<TypeDefinition, List<TypeDefinition>>();
+		protected readonly Dictionary<TypeDefinition, List<TypeDefinition>> derived_interfaces = new Dictionary<TypeDefinition, List<TypeDefinition>> ();
 
 		protected readonly Dictionary<object, Dictionary<IMetadataTokenProvider, object>> custom_annotations = new Dictionary<object, Dictionary<IMetadataTokenProvider, object>> ();
 		protected readonly Dictionary<AssemblyDefinition, HashSet<string>> resources_to_remove = new Dictionary<AssemblyDefinition, HashSet<string>> ();
 		protected readonly HashSet<CustomAttribute> marked_attributes = new HashSet<CustomAttribute> ();
 		readonly HashSet<TypeDefinition> marked_types_with_cctor = new HashSet<TypeDefinition> ();
 		protected readonly HashSet<TypeDefinition> marked_instantiated = new HashSet<TypeDefinition> ();
-		protected readonly HashSet<MethodDefinition> indirectly_called = new HashSet<MethodDefinition>();
+		protected readonly HashSet<MethodDefinition> indirectly_called = new HashSet<MethodDefinition> ();
 
 
 		public AnnotationStore (LinkContext context) => this.context = context;
@@ -95,7 +95,7 @@ namespace Mono.Linker {
 			if (assembly_actions.TryGetValue (assembly, out action))
 				return action;
 
-			throw new InvalidOperationException($"No action for the assembly {assembly.Name} defined");
+			throw new InvalidOperationException ($"No action for the assembly {assembly.Name} defined");
 		}
 
 		public MethodAction GetAction (MethodDefinition method)
@@ -308,7 +308,7 @@ namespace Mono.Linker {
 		public void AddOverride (MethodDefinition @base, MethodDefinition @override, InterfaceImplementation matchingInterfaceImplementation = null)
 		{
 			var methods = GetOverrides (@base);
-			if (methods == null) {
+			if (methods is null) {
 				methods = new List<OverrideInformation> ();
 				override_methods [@base] = methods;
 			}
@@ -328,7 +328,7 @@ namespace Mono.Linker {
 		public void AddBaseMethod (MethodDefinition method, MethodDefinition @base)
 		{
 			var methods = GetBaseMethods (method);
-			if (methods == null) {
+			if (methods is null) {
 				methods = new List<MethodDefinition> ();
 				base_methods [method] = methods;
 			}
@@ -377,7 +377,7 @@ namespace Mono.Linker {
 		void AddPreservedMethod (IMemberDefinition definition, MethodDefinition method)
 		{
 			var methods = GetPreservedMethods (definition);
-			if (methods == null) {
+			if (methods is null) {
 				methods = new List<MethodDefinition> ();
 				preserved_methods [definition] = methods;
 			}
@@ -445,15 +445,15 @@ namespace Mono.Linker {
 			List<TypeDefinition> derivedInterfaces;
 			if (!derived_interfaces.TryGetValue (@base, out derivedInterfaces))
 				derived_interfaces [@base] = derivedInterfaces = new List<TypeDefinition> ();
-			
-			derivedInterfaces.Add(derived);
+
+			derivedInterfaces.Add (derived);
 		}
 
 		public List<TypeDefinition> GetDerivedInterfacesForInterface (TypeDefinition @interface)
 		{
 			if (!@interface.IsInterface)
 				throw new ArgumentException ($"{nameof (@interface)} must be an interface");
-			
+
 			List<TypeDefinition> derivedInterfaces;
 			if (derived_interfaces.TryGetValue (@interface, out derivedInterfaces))
 				return derivedInterfaces;

@@ -54,8 +54,8 @@ namespace Mono.Linker.Steps {
 		static readonly string _accessors = "accessors";
 		static readonly string _ns = string.Empty;
 
-		static readonly string[] _accessorsAll = new string[] { "all" };
-		static readonly char[] _accessorsSep = new char[] { ';' };
+		static readonly string [] _accessorsAll = new string [] { "all" };
+		static readonly char [] _accessorsSep = new char [] { ';' };
 
 		XPathDocument _document;
 		string _xmlDocumentLocation;
@@ -74,7 +74,7 @@ namespace Mono.Linker.Steps {
 			if (string.IsNullOrEmpty (resourceName))
 				throw new ArgumentNullException (nameof (resourceName));
 
-			if (resourceAssembly == null)
+			if (resourceAssembly is null)
 				throw new ArgumentNullException (nameof (resourceAssembly));
 
 			_resourceName = resourceName;
@@ -87,7 +87,7 @@ namespace Mono.Linker.Steps {
 
 			// This step can be created with XML files that aren't necessarily
 			// linker descriptor files. So bail if we don't have a <linker> element.
-			if (!nav.MoveToChild("linker", _ns))
+			if (!nav.MoveToChild ("linker", _ns))
 				return;
 
 			try {
@@ -104,7 +104,7 @@ namespace Mono.Linker.Steps {
 		{
 			while (iterator.MoveNext ()) {
 				AssemblyDefinition assembly = GetAssembly (context, GetAssemblyName (iterator.Current));
-				if (assembly != null)
+				if (assembly is not null)
 					ProcessAssembly (assembly, iterator);
 			}
 		}
@@ -168,7 +168,7 @@ namespace Mono.Linker.Steps {
 
 				TypeDefinition type = assembly.MainModule.GetType (fullname);
 
-				if (type == null) {
+				if (type is null) {
 					if (assembly.MainModule.HasExportedTypes) {
 						foreach (var exported in assembly.MainModule.ExportedTypes) {
 							if (fullname == exported.FullName) {
@@ -176,7 +176,7 @@ namespace Mono.Linker.Steps {
 								MarkingHelpers.MarkExportedType (exported, assembly.MainModule);
 								var resolvedExternal = exported.Resolve ();
 								Tracer.Pop ();
-								if (resolvedExternal != null) {
+								if (resolvedExternal is not null) {
 									type = resolvedExternal;
 									break;
 								}
@@ -185,7 +185,7 @@ namespace Mono.Linker.Steps {
 					}
 				}
 
-				if (type == null)
+				if (type is null)
 					continue;
 
 				ProcessType (type, nav);
@@ -219,7 +219,7 @@ namespace Mono.Linker.Steps {
 			if (regex.Match (exportedType.FullName).Success) {
 				MarkingHelpers.MarkExportedType (exportedType, module);
 				TypeDefinition type = exportedType.Resolve ();
-				if (type != null) {
+				if (type is not null) {
 					ProcessType (type, nav);
 				}
 			}
@@ -245,7 +245,7 @@ namespace Mono.Linker.Steps {
 		{
 			if (IsExcluded (nav))
 				return;
-			
+
 			TypePreserve preserve = GetTypePreserve (nav);
 
 			if (!IsRequired (nav)) {
@@ -253,11 +253,11 @@ namespace Mono.Linker.Steps {
 				return;
 			}
 
-			if (Annotations.IsMarked (type)) { 
-				var existingLevel = Annotations.TryGetPreserve (type, out TypePreserve existingPreserve) ? existingPreserve : TypePreserve.Nothing; 
-				var duplicateLevel = preserve != TypePreserve.Nothing ? preserve : nav.HasChildren ? TypePreserve.Nothing : TypePreserve.All; 
-				Context.LogMessage ($"Duplicate preserve in {_xmlDocumentLocation} of {type.FullName} ({existingLevel}).  Duplicate uses ({duplicateLevel})"); 
-			} 
+			if (Annotations.IsMarked (type)) {
+				var existingLevel = Annotations.TryGetPreserve (type, out TypePreserve existingPreserve) ? existingPreserve : TypePreserve.Nothing;
+				var duplicateLevel = preserve != TypePreserve.Nothing ? preserve : nav.HasChildren ? TypePreserve.Nothing : TypePreserve.All;
+				Context.LogMessage ($"Duplicate preserve in {_xmlDocumentLocation} of {type.FullName} ({existingLevel}).  Duplicate uses ({duplicateLevel})");
+			}
 
 			Annotations.MarkAndPush (type);
 			Tracer.AddDirectDependency (this, type);
@@ -340,7 +340,7 @@ namespace Mono.Linker.Steps {
 		{
 			if (IsExcluded (iterator.Current))
 				return;
-			
+
 			string value = GetSignature (iterator.Current);
 			if (!String.IsNullOrEmpty (value))
 				ProcessFieldSignature (type, value);
@@ -358,10 +358,10 @@ namespace Mono.Linker.Steps {
 
 		void MarkField (TypeDefinition type, FieldDefinition field, string signature)
 		{
-			if (field != null) {
+			if (field is not null) {
 				if (Annotations.IsMarked (field))
 					Context.LogMessage ($"Duplicate preserve in {_xmlDocumentLocation} of {field.FullName}");
-				
+
 				Annotations.Mark (field);
 			} else {
 				AddUnresolveMarker (string.Format ("T: {0}; F: {1}", type, signature));
@@ -405,7 +405,7 @@ namespace Mono.Linker.Steps {
 		{
 			if (IsExcluded (iterator.Current))
 				return;
-			
+
 			string value = GetSignature (iterator.Current);
 			if (!String.IsNullOrEmpty (value))
 				ProcessMethodSignature (type, value);
@@ -423,7 +423,7 @@ namespace Mono.Linker.Steps {
 
 		void MarkMethod (TypeDefinition type, MethodDefinition method, string signature)
 		{
-			if (method != null) {
+			if (method is not null) {
 				MarkMethod (method);
 			} else
 				AddUnresolveMarker (string.Format ("T: {0}; M: {1}", type, signature));
@@ -431,8 +431,8 @@ namespace Mono.Linker.Steps {
 
 		void MarkMethod (MethodDefinition method)
 		{
-			if (Annotations.IsMarked (method)) 
-				Context.LogMessage ($"Duplicate preserve in {_xmlDocumentLocation} of {method.FullName}"); 
+			if (Annotations.IsMarked (method))
+				Context.LogMessage ($"Duplicate preserve in {_xmlDocumentLocation} of {method.FullName}");
 
 			Annotations.Mark (method);
 			Annotations.MarkIndirectlyCalledMethod (method);
@@ -442,7 +442,7 @@ namespace Mono.Linker.Steps {
 
 		void MarkMethodIfNotNull (MethodDefinition method)
 		{
-			if (method == null)
+			if (method is null)
 				return;
 
 			MarkMethod (method);
@@ -502,7 +502,7 @@ namespace Mono.Linker.Steps {
 		{
 			if (IsExcluded (iterator.Current))
 				return;
-			
+
 			string value = GetSignature (iterator.Current);
 			if (!String.IsNullOrEmpty (value))
 				ProcessEventSignature (type, value);
@@ -520,7 +520,7 @@ namespace Mono.Linker.Steps {
 
 		void MarkEvent (TypeDefinition type, EventDefinition @event, string signature)
 		{
-			if (@event != null) {
+			if (@event is not null) {
 				if (Annotations.IsMarked (@event))
 					Context.LogMessage ($"Duplicate preserve in {_xmlDocumentLocation} of {@event.FullName}");
 
@@ -570,7 +570,7 @@ namespace Mono.Linker.Steps {
 		{
 			if (IsExcluded (iterator.Current))
 				return;
-			
+
 			string value = GetSignature (iterator.Current);
 			if (!String.IsNullOrEmpty (value))
 				ProcessPropertySignature (type, value, GetAccessors (iterator.Current));
@@ -580,18 +580,18 @@ namespace Mono.Linker.Steps {
 				ProcessPropertyName (type, value, _accessorsAll);
 		}
 
-		void ProcessPropertySignature (TypeDefinition type, string signature, string[] accessors)
+		void ProcessPropertySignature (TypeDefinition type, string signature, string [] accessors)
 		{
 			PropertyDefinition property = GetProperty (type, signature);
 			MarkProperty (type, property, signature, accessors);
 		}
 
-		void MarkProperty (TypeDefinition type, PropertyDefinition property, string signature, string[] accessors)
+		void MarkProperty (TypeDefinition type, PropertyDefinition property, string signature, string [] accessors)
 		{
-			if (property != null) {
+			if (property is not null) {
 				if (Annotations.IsMarked (property))
 					Context.LogMessage ($"Duplicate preserve in {_xmlDocumentLocation} of {property.FullName}");
-				
+
 				Annotations.Mark (property);
 
 				MarkPropertyAccessors (type, property, accessors);
@@ -599,7 +599,7 @@ namespace Mono.Linker.Steps {
 				AddUnresolveMarker (string.Format ("T: {0}; P: {1}", type, signature));
 		}
 
-		void MarkPropertyAccessors (TypeDefinition type, PropertyDefinition property, string[] accessors)
+		void MarkPropertyAccessors (TypeDefinition type, PropertyDefinition property, string [] accessors)
 		{
 			if (Array.IndexOf (accessors, "all") >= 0) {
 				MarkMethodIfNotNull (property.GetMethod);
@@ -607,20 +607,20 @@ namespace Mono.Linker.Steps {
 
 				return;
 			}
-			if (property.GetMethod != null 
+			if (property.GetMethod is not null
 					&& Array.IndexOf (accessors, "get") >= 0)
 				MarkMethod (property.GetMethod);
-			else if (property.GetMethod == null)
+			else if (property.GetMethod is null)
 				AddUnresolveMarker (string.Format ("T: {0}' M: {1} get_{2}", type, property.PropertyType, property.Name));
-			
-			if (property.SetMethod != null 
+
+			if (property.SetMethod is not null
 					&& Array.IndexOf (accessors, "set") >= 0)
 				MarkMethod (property.SetMethod);
-			else if (property.SetMethod == null)
+			else if (property.SetMethod is null)
 				AddUnresolveMarker (string.Format ("T: {0}' M: System.Void set_{2} ({1})", type, property.PropertyType, property.Name));
 		}
 
-		void ProcessPropertyName (TypeDefinition type, string name, string[] accessors)
+		void ProcessPropertyName (TypeDefinition type, string name, string [] accessors)
 		{
 			if (!type.HasProperties)
 				return;
@@ -667,7 +667,7 @@ namespace Mono.Linker.Steps {
 		static bool IsRequired (XPathNavigator nav)
 		{
 			string attribute = GetAttribute (nav, _required);
-			if (attribute == null || attribute.Length == 0)
+			if (attribute is null || attribute.Length == 0)
 				return true;
 
 			bool result;
@@ -686,17 +686,17 @@ namespace Mono.Linker.Steps {
 			return GetAttribute (nav, _fullname);
 		}
 
-		protected static string[] GetAccessors (XPathNavigator nav)
+		protected static string [] GetAccessors (XPathNavigator nav)
 		{
 			string accessorsValue = GetAttribute (nav, _accessors);
 
-			if (accessorsValue != null)	{
-				string[] accessors = accessorsValue.Split (
+			if (accessorsValue is not null) {
+				string [] accessors = accessorsValue.Split (
 					_accessorsSep, StringSplitOptions.RemoveEmptyEntries);
 
 				if (accessors.Length > 0) {
 					for (int i = 0; i < accessors.Length; ++i)
-						accessors[i] = accessors[i].ToLower ();
+						accessors [i] = accessors [i].ToLower ();
 
 					return accessors;
 				}
@@ -708,7 +708,7 @@ namespace Mono.Linker.Steps {
 		{
 			return nav.GetAttribute (attribute, _ns);
 		}
-		
+
 		protected virtual bool IsExcluded (XPathNavigator nav)
 		{
 			var value = GetAttribute (nav, "feature");

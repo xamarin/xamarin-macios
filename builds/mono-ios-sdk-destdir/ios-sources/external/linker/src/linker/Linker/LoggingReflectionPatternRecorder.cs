@@ -1,4 +1,4 @@
-﻿//
+//
 // LoggingReflectionPatternRecorder.cs
 //
 // Copyright (C) 2017 Microsoft Corporation (http://www.microsoft.com)
@@ -25,10 +25,8 @@
 
 using Mono.Cecil;
 
-namespace Mono.Linker
-{
-	class LoggingReflectionPatternRecorder : IReflectionPatternRecorder
-	{
+namespace Mono.Linker {
+	class LoggingReflectionPatternRecorder : IReflectionPatternRecorder {
 		private readonly LinkContext _context;
 
 		public LoggingReflectionPatternRecorder (LinkContext context)

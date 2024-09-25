@@ -1,15 +1,13 @@
-﻿using System;
+using System;
 using Mono.Cecil;
 
-namespace Mono.Linker
-{
-	public static class MethodReferenceExtensions
-	{
+namespace Mono.Linker {
+	public static class MethodReferenceExtensions {
 		public static TypeReference GetReturnType (this MethodReference method)
 		{
 			var genericInstance = method.DeclaringType as GenericInstanceType;
 
-			if (genericInstance != null)
+			if (genericInstance is not null)
 				return TypeReferenceExtensions.InflateGenericType (genericInstance, method.ReturnType);
 
 			return method.ReturnType;
@@ -19,7 +17,7 @@ namespace Mono.Linker
 		{
 			var genericInstance = method.DeclaringType as GenericInstanceType;
 
-			if (genericInstance != null)
+			if (genericInstance is not null)
 				return TypeReferenceExtensions.InflateGenericType (genericInstance, method.Parameters [parameterIndex].ParameterType);
 
 			return method.Parameters [parameterIndex].ParameterType;

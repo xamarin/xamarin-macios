@@ -15,25 +15,21 @@ namespace Mono.Linker {
 			MatchingInterfaceImplementation = matchingInterfaceImplementation;
 		}
 
-		public bool IsOverrideOfInterfaceMember
-		{
-			get
-			{
-				if (MatchingInterfaceImplementation != null)
+		public bool IsOverrideOfInterfaceMember {
+			get {
+				if (MatchingInterfaceImplementation is not null)
 					return true;
 
 				return Base.DeclaringType.IsInterface;
 			}
 		}
 
-		public TypeDefinition InterfaceType
-		{
-			get
-			{
+		public TypeDefinition InterfaceType {
+			get {
 				if (!IsOverrideOfInterfaceMember)
 					return null;
 
-				if (MatchingInterfaceImplementation != null)
+				if (MatchingInterfaceImplementation is not null)
 					return MatchingInterfaceImplementation.InterfaceType.Resolve ();
 
 				return Base.DeclaringType;

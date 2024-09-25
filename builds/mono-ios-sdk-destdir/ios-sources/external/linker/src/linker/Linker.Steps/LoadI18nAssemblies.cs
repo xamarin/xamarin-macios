@@ -34,7 +34,7 @@ namespace Mono.Linker.Steps {
 
 	public class LoadI18nAssemblies : BaseStep {
 
-		static readonly byte [] _pktoken = new byte [] {0x07, 0x38, 0xeb, 0x9f, 0x13, 0x2e, 0xd7, 0x56};
+		static readonly byte [] _pktoken = new byte [] { 0x07, 0x38, 0xeb, 0x9f, 0x13, 0x2e, 0xd7, 0x56 };
 
 		I18nAssemblies _assemblies;
 
@@ -46,10 +46,10 @@ namespace Mono.Linker.Steps {
 		protected override bool ConditionToProcess ()
 		{
 			return _assemblies != I18nAssemblies.None &&
-				Context.GetAssemblies ().FirstOrDefault (a => a.Name.Name == "mscorlib")?.MainModule.GetType ("System.MonoType") != null;
+				Context.GetAssemblies ().FirstOrDefault (a => a.Name.Name == "mscorlib")?.MainModule.GetType ("System.MonoType") is not null;
 		}
 
-		protected override void Process()
+		protected override void Process ()
 		{
 			LoadAssembly (GetAssemblyName (I18nAssemblies.Base));
 

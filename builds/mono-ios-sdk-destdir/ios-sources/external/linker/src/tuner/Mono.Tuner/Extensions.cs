@@ -12,7 +12,7 @@ namespace Mono.Tuner {
 		public static bool TryGetLinkedAssembly (this LinkContext context, string name, out AssemblyDefinition assembly)
 		{
 			assembly = GetAssembly (context, name);
-			if (assembly == null)
+			if (assembly is null)
 				return false;
 
 			return context.Annotations.GetAction (assembly) == AssemblyAction.Link;
@@ -30,7 +30,7 @@ namespace Mono.Tuner {
 		// note: direct check, no inheritance
 		public static bool Is (this TypeReference type, string @namespace, string name)
 		{
-			return ((type != null) && (type.Name == name) && (type.Namespace == @namespace));
+			return ((type is not null) && (type.Name == name) && (type.Namespace == @namespace));
 		}
 	}
 }

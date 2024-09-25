@@ -1,4 +1,4 @@
-﻿//
+//
 // LoadReferencesStep.cs
 //
 // Author:

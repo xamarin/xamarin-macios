@@ -70,7 +70,7 @@ namespace Mono.Tuner {
 
 		public static void SimplifyMacros (this MethodBody self)
 		{
-			if (self == null)
+			if (self is null)
 				throw new ArgumentNullException ("self");
 
 			foreach (var instruction in self.Instructions) {
@@ -225,7 +225,7 @@ namespace Mono.Tuner {
 
 		public static void OptimizeMacros (this MethodBody self)
 		{
-			if (self == null)
+			if (self is null)
 				throw new ArgumentNullException ("self");
 
 			var method = self.Method;
@@ -456,14 +456,14 @@ namespace Mono.Tuner {
 
 		public static bool Implements (this TypeReference self, string interfaceName)
 		{
-			if (interfaceName == null)
+			if (interfaceName is null)
 				throw new ArgumentNullException ("interfaceName");
-			if (self == null)
+			if (self is null)
 				return false;
 
 			TypeDefinition type = self.Resolve ();
-			if (type == null)
-				return false;	// not enough information available
+			if (type is null)
+				return false;   // not enough information available
 
 			// special case, check if we implement ourselves
 			if (type.IsInterface && (type.FullName == interfaceName))
@@ -474,7 +474,7 @@ namespace Mono.Tuner {
 
 		public static bool Implements (TypeDefinition type, string interfaceName, bool generic)
 		{
-			while (type != null) {
+			while (type is not null) {
 				// does the type implements it itself
 				if (type.HasInterfaces) {
 					foreach (var iface in type.Interfaces) {
@@ -487,30 +487,30 @@ namespace Mono.Tuner {
 					}
 				}
 
-				type = type.BaseType != null ? type.BaseType.Resolve () : null;
+				type = type.BaseType is not null ? type.BaseType.Resolve () : null;
 			}
 			return false;
 		}
 
 		public static bool Inherits (this TypeReference self, string @namespace, string name)
 		{
-			if (@namespace == null)
+			if (@namespace is null)
 				throw new ArgumentNullException ("namespace");
-			if (name == null)
+			if (name is null)
 				throw new ArgumentNullException ("name");
-			if (self == null)
+			if (self is null)
 				return false;
-			
+
 			TypeReference current = self.Resolve ();
-			while (current != null) {
+			while (current is not null) {
 				if (current.Is (@namespace, name))
 					return true;
 				if (current.Is ("System", "Object"))
 					return false;
-				
+
 				TypeDefinition td = current.Resolve ();
-				if (td == null)
-					return false;		// could not resolve type
+				if (td is null)
+					return false;       // could not resolve type
 				current = td.BaseType;
 			}
 			return false;

@@ -1,9 +1,7 @@
-﻿using Mono.Cecil;
+using Mono.Cecil;
 
-namespace Mono.Linker
-{
-	public static class MethodDefinitionExtensions 
-	{
+namespace Mono.Linker {
+	public static class MethodDefinitionExtensions {
 		public static bool IsDefaultConstructor (this MethodDefinition method)
 		{
 			return IsInstanceConstructor (method) && !method.HasParameters;
@@ -81,13 +79,13 @@ namespace Mono.Linker
 
 			return true;
 		}
-		
+
 		public static void ClearDebugInformation (this MethodDefinition method)
 		{
 			// TODO: This always allocates, update when Cecil catches up
 			var di = method.DebugInformation;
 			di.SequencePoints.Clear ();
-			if (di.Scope != null) {
+			if (di.Scope is not null) {
 				di.Scope.Variables.Clear ();
 				di.Scope.Constants.Clear ();
 				di.Scope = null;

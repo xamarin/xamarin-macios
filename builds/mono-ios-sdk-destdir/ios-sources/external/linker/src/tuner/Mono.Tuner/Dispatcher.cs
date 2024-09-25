@@ -110,19 +110,19 @@ namespace Mono.Tuner {
 
 		void Push (ISubStep subStep)
 		{
-			if (tracer != null)
+			if (tracer is not null)
 				tracer.Push (subStep);
 		}
 
 		void Pop ()
 		{
-			if (tracer != null)
+			if (tracer is not null)
 				tracer.Pop ();
 		}
 
 		static bool HasSubSteps (List<ISubStep> substeps)
 		{
-			return substeps != null && substeps.Count > 0;
+			return substeps is not null && substeps.Count > 0;
 		}
 
 		void BrowseAssemblies (IEnumerable<AssemblyDefinition> assemblies)
@@ -286,7 +286,7 @@ namespace Mono.Tuner {
 			if (!Targets (substep, target))
 				return;
 
-			if (list == null)
+			if (list is null)
 				list = new List<ISubStep> ();
 
 			list.Add (substep);

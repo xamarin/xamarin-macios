@@ -1,4 +1,4 @@
-﻿//
+//
 // ResolveFromAssemblyStep.cs
 //
 // Author:
@@ -29,18 +29,15 @@
 using Mono.Cecil;
 using Mono.Collections.Generic;
 
-namespace Mono.Linker.Steps
-{
+namespace Mono.Linker.Steps {
 
-	public class ResolveFromAssemblyStep : ResolveStep
-	{
+	public class ResolveFromAssemblyStep : ResolveStep {
 
 		AssemblyDefinition _assembly;
 		string _file;
 		RootVisibility _rootVisibility;
 
-		public enum RootVisibility
-		{
+		public enum RootVisibility {
 			Any = 0,
 			PublicAndFamily = 1,
 			PublicAndFamilyAndAssembly = 2
@@ -60,7 +57,7 @@ namespace Mono.Linker.Steps
 
 		protected override void Process ()
 		{
-			if (_assembly != null)
+			if (_assembly is not null)
 				Context.Resolver.CacheAssembly (_assembly);
 
 			var ignoreUnresolved = Context.Resolver.IgnoreUnresolved;
@@ -103,7 +100,7 @@ namespace Mono.Linker.Steps
 				foreach (var exported in assembly.MainModule.ExportedTypes) {
 					bool isForwarder = exported.IsForwarder;
 					var declaringType = exported.DeclaringType;
-					while (!isForwarder && (declaringType != null)) {
+					while (!isForwarder && (declaringType is not null)) {
 						isForwarder = declaringType.IsForwarder;
 						declaringType = declaringType.DeclaringType;
 					}
@@ -112,7 +109,7 @@ namespace Mono.Linker.Steps
 						continue;
 					TypeDefinition resolvedExportedType = exported.Resolve ();
 
-					if (resolvedExportedType == null) {
+					if (resolvedExportedType is null) {
 						//
 						// It's quite common for assemblies to have broken exported types
 						//

@@ -87,11 +87,11 @@ namespace Mono.Linker.Steps {
 					continue;
 
 				var assemblyName = ca.ConstructorArguments [2].Value as string;
-				if (assemblyName == null)
+				if (assemblyName is null)
 					continue;
 
 				var newDependency = Context.Resolve (new AssemblyNameReference (assemblyName, new Version ()));
-				if (newDependency != null)
+				if (newDependency is not null)
 					ProcessReferences (newDependency);
 			}
 		}

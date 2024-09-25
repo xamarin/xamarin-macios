@@ -1,4 +1,4 @@
-﻿//
+//
 // Tracer.cs
 //
 // Author:
@@ -29,10 +29,8 @@
 using System;
 using System.Collections.Generic;
 
-namespace Mono.Linker
-{
-	public class Tracer
-	{
+namespace Mono.Linker {
+	public class Tracer {
 		protected readonly LinkContext context;
 
 		Stack<object> dependency_stack;
@@ -47,7 +45,7 @@ namespace Mono.Linker
 		public void Finish ()
 		{
 			dependency_stack = null;
-			if (recorders != null) {
+			if (recorders is not null) {
 				foreach (var recorder in recorders) {
 					if (recorder is IDisposable disposableRecorder)
 						disposableRecorder.Dispose ();
@@ -59,7 +57,7 @@ namespace Mono.Linker
 
 		public void AddRecorder (IDependencyRecorder recorder)
 		{
-			if (recorders == null) {
+			if (recorders is null) {
 				recorders = new List<IDependencyRecorder> ();
 			}
 
@@ -87,7 +85,7 @@ namespace Mono.Linker
 
 		bool IsRecordingEnabled ()
 		{
-			return recorders != null;
+			return recorders is not null;
 		}
 
 		public void AddDirectDependency (object b, object e)

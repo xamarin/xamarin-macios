@@ -1,4 +1,4 @@
-﻿//
+//
 // Tracer.cs
 //
 // Copyright (C) 2017 Microsoft Corporation (http://www.microsoft.com)
@@ -30,13 +30,11 @@ using System.IO;
 using System.IO.Compression;
 using System.Xml;
 
-namespace Mono.Linker
-{
+namespace Mono.Linker {
 	/// <summary>
 	/// Class which implements IDependencyRecorder and writes the dependencies into an XML file.
 	/// </summary>
-	public class XmlDependencyRecorder : IDependencyRecorder, IDisposable
-	{
+	public class XmlDependencyRecorder : IDependencyRecorder, IDisposable {
 		public const string DefaultDependenciesFileName = "linker-dependencies.xml.gz";
 
 		private readonly LinkContext context;
@@ -52,7 +50,7 @@ namespace Mono.Linker
 				IndentChars = "\t"
 			};
 
-			if (fileName == null)
+			if (fileName is null)
 				fileName = DefaultDependenciesFileName;
 
 			if (string.IsNullOrEmpty (Path.GetDirectoryName (fileName)) && !string.IsNullOrEmpty (context.OutputDirectory)) {
@@ -77,7 +75,7 @@ namespace Mono.Linker
 
 		public void Dispose ()
 		{
-			if (writer == null)
+			if (writer is null)
 				return;
 
 			writer.WriteEndElement ();
@@ -125,21 +123,21 @@ namespace Mono.Linker
 					return true;
 
 				td = td.DeclaringType;
-			} while (td != null);
+			} while (td is not null);
 
 			return false;
 		}
 
 		string TokenString (object o)
 		{
-			if (o == null)
+			if (o is null)
 				return "N:null";
 
 			if (o is TypeReference t) {
 				bool addAssembly = true;
 				var td = t as TypeDefinition ?? t.Resolve ();
 
-				if (td != null) {
+				if (td is not null) {
 					addAssembly = td.IsNotPublic || IsAssemblyBound (td);
 					t = td;
 				}
@@ -158,12 +156,12 @@ namespace Mono.Linker
 		bool WillAssemblyBeModified (AssemblyDefinition assembly)
 		{
 			switch (context.Annotations.GetAction (assembly)) {
-				case AssemblyAction.Link:
-				case AssemblyAction.AddBypassNGen:
-				case AssemblyAction.AddBypassNGenUsed:
-					return true;
-				default:
-					return false;
+			case AssemblyAction.Link:
+			case AssemblyAction.AddBypassNGen:
+			case AssemblyAction.AddBypassNGenUsed:
+				return true;
+			default:
+				return false;
 			}
 		}
 
@@ -182,7 +180,7 @@ namespace Mono.Linker
 				var resolved = typeRef.Resolve ();
 
 				// Err on the side of caution if we can't resolve
-				if (resolved == null)
+				if (resolved is null)
 					return true;
 
 				return WillAssemblyBeModified (resolved.Module.Assembly);
@@ -192,7 +190,7 @@ namespace Mono.Linker
 				var resolved = mRef.Resolve ();
 
 				// Err on the side of caution if we can't resolve
-				if (resolved == null)
+				if (resolved is null)
 					return true;
 
 				return WillAssemblyBeModified (resolved.DeclaringType.Module.Assembly);

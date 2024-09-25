@@ -47,7 +47,7 @@ namespace Mono.Tuner {
 			return (attribute.AttributeType.Name == "LinkerSafeAttribute");
 		}
 
-		const ModuleAttributes Supported = ModuleAttributes.ILOnly | ModuleAttributes.Required32Bit | 
+		const ModuleAttributes Supported = ModuleAttributes.ILOnly | ModuleAttributes.Required32Bit |
 			ModuleAttributes.Preferred32Bit | ModuleAttributes.StrongNameSigned;
 
 		protected virtual bool IsSkipped (AssemblyDefinition assembly)
@@ -74,7 +74,7 @@ namespace Mono.Tuner {
 			if (Profile.IsSdkAssembly (assembly))
 				return true;
 			if (Profile.IsProductAssembly (assembly))
-			    return true;
+				return true;
 			// the assembly can be marked with [LinkAssembly]
 			if (assembly.HasCustomAttributes) {
 				foreach (var ca in assembly.CustomAttributes) {

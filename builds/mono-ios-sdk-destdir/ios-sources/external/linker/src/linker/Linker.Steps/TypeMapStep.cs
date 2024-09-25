@@ -1,4 +1,4 @@
-﻿//
+//
 // TypeMapStep.cs
 //
 // Author:
@@ -60,9 +60,9 @@ namespace Mono.Linker.Steps {
 
 			foreach (var iface in type.Interfaces) {
 				var resolved = iface.InterfaceType.Resolve ();
-				if (resolved == null)
+				if (resolved is null)
 					continue;
-				
+
 				Annotations.AddDerivedInterfaceForInterface (resolved, type);
 			}
 		}
@@ -75,21 +75,21 @@ namespace Mono.Linker.Steps {
 			foreach (var @interface in type.Interfaces) {
 				var interfaceType = @interface.InterfaceType;
 				var iface = interfaceType.Resolve ();
-				if (iface == null || !iface.HasMethods)
+				if (iface is null || !iface.HasMethods)
 					continue;
 
 				foreach (MethodDefinition interfaceMethod in iface.Methods) {
-					if (TryMatchMethod (type, interfaceMethod) != null)
+					if (TryMatchMethod (type, interfaceMethod) is not null)
 						continue;
 
 					var @base = GetBaseMethodInTypeHierarchy (type, interfaceMethod);
-					if (@base != null)
+					if (@base is not null)
 						AnnotateMethods (interfaceMethod, @base, @interface);
 
 					if (interfaceType is GenericInstanceType genericInterfaceInstance) {
 						var genericContext = new Inflater.GenericContext (genericInterfaceInstance, null);
 						var baseInflated = GetBaseInflatedInterfaceMethodInTypeHierarchy (genericContext, type, interfaceMethod);
-						if (baseInflated != null)
+						if (baseInflated is not null)
 							Annotations.AddOverride (interfaceMethod, baseInflated, @interface);
 					}
 				}
@@ -98,14 +98,14 @@ namespace Mono.Linker.Steps {
 
 		static MethodReference CreateGenericInstanceCandidate (Inflater.GenericContext context, TypeDefinition candidateType, MethodDefinition interfaceMethod)
 		{
-			var methodReference = new MethodReference (interfaceMethod.Name, interfaceMethod.ReturnType, candidateType) {HasThis = interfaceMethod.HasThis};
-			
+			var methodReference = new MethodReference (interfaceMethod.Name, interfaceMethod.ReturnType, candidateType) { HasThis = interfaceMethod.HasThis };
+
 			foreach (var genericMethodParameter in interfaceMethod.GenericParameters)
 				methodReference.GenericParameters.Add (new GenericParameter (genericMethodParameter.Name, methodReference));
-			
+
 			if (interfaceMethod.ReturnType.IsGenericParameter || interfaceMethod.ReturnType.IsGenericInstance)
 				methodReference.ReturnType = Inflater.InflateType (context, interfaceMethod.ReturnType);
-			
+
 			foreach (var p in interfaceMethod.Parameters) {
 				var parameterType = p.ParameterType;
 				if (parameterType.IsGenericParameter || parameterType.IsGenericInstance)
@@ -142,7 +142,7 @@ namespace Mono.Linker.Steps {
 		void MapVirtualBaseMethod (MethodDefinition method)
 		{
 			MethodDefinition @base = GetBaseMethodInTypeHierarchy (method);
-			if (@base == null)
+			if (@base is null)
 				return;
 
 			AnnotateMethods (@base, method);
@@ -158,7 +158,7 @@ namespace Mono.Linker.Steps {
 		{
 			foreach (MethodReference override_ref in method.Overrides) {
 				MethodDefinition @override = override_ref.Resolve ();
-				if (@override == null)
+				if (@override is null)
 					continue;
 
 				AnnotateMethods (@override, method);
@@ -173,13 +173,13 @@ namespace Mono.Linker.Steps {
 			var bases = new List<TypeDefinition> ();
 			var current = type.BaseType;
 
-			while (current != null) {
+			while (current is not null) {
 				var resolved = current.Resolve ();
-				if (resolved == null)
+				if (resolved is null)
 					break;
 
 				// Exclude Object.  That's implied and adding it to the list will just lead to lots of extra unnecessary processing
-				if (resolved.BaseType == null)
+				if (resolved.BaseType is null)
 					break;
 
 				bases.Add (resolved);
@@ -203,9 +203,9 @@ namespace Mono.Linker.Steps {
 		static MethodDefinition GetBaseMethodInTypeHierarchy (TypeDefinition type, MethodDefinition method)
 		{
 			TypeReference @base = type.GetInflatedBaseType ();
-			while (@base != null) {
+			while (@base is not null) {
 				MethodDefinition base_method = TryMatchMethod (@base, method);
-				if (base_method != null)
+				if (base_method is not null)
 					return base_method;
 
 				@base = @base.GetInflatedBaseType ();
@@ -217,11 +217,11 @@ namespace Mono.Linker.Steps {
 		static MethodDefinition GetBaseInflatedInterfaceMethodInTypeHierarchy (Inflater.GenericContext context, TypeDefinition type, MethodDefinition interfaceMethod)
 		{
 			TypeReference @base = type.GetInflatedBaseType ();
-			while (@base != null) {
+			while (@base is not null) {
 				var candidate = CreateGenericInstanceCandidate (context, @base.Resolve (), interfaceMethod);
-				
+
 				MethodDefinition base_method = TryMatchMethod (@base, candidate);
-				if (base_method != null)
+				if (base_method is not null)
 					return base_method;
 
 				@base = @base.GetInflatedBaseType ();
@@ -239,7 +239,7 @@ namespace Mono.Linker.Steps {
 		{
 			foreach (TypeReference @interface in type.GetInflatedInterfaces ()) {
 				MethodDefinition base_method = TryMatchMethod (@interface, method);
-				if (base_method != null)
+				if (base_method is not null)
 					yield return base_method;
 
 				foreach (MethodDefinition @base in GetBaseMethodsInInterfaceHierarchy (@interface, method))
@@ -308,11 +308,11 @@ namespace Mono.Linker.Steps {
 		static bool TypeMatch (TypeSpecification a, TypeSpecification b)
 		{
 			var gita = a as GenericInstanceType;
-			if (gita != null)
+			if (gita is not null)
 				return TypeMatch (gita, (GenericInstanceType) b);
 
 			var mta = a as IModifierType;
-			if (mta != null)
+			if (mta is not null)
 				return TypeMatch (mta, (IModifierType) b);
 
 			return TypeMatch (a.ElementType, b.ElementType);
@@ -363,7 +363,7 @@ namespace Mono.Linker.Steps {
 			}
 
 			if (a is GenericParameter && b is GenericParameter)
-				return TypeMatch ((GenericParameter)a, (GenericParameter)b);
+				return TypeMatch ((GenericParameter) a, (GenericParameter) b);
 
 			return a.FullName == b.FullName;
 		}

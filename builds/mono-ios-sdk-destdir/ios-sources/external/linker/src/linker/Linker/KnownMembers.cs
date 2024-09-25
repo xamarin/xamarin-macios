@@ -1,9 +1,7 @@
-﻿using Mono.Cecil;
+using Mono.Cecil;
 
-namespace Mono.Linker
-{
-	public class KnownMembers
-	{
+namespace Mono.Linker {
+	public class KnownMembers {
 		public MethodDefinition NotSupportedExceptionCtorString { get; set; }
 		public MethodDefinition DisablePrivateReflectionAttributeCtor { get; set; }
 		public MethodDefinition ObjectCtor { get; set; }

@@ -82,11 +82,11 @@ namespace Mono.Tuner {
 		bool TryAddPreserveInfo (AssemblyDefinition assembly, string name, string type)
 		{
 			var marker = GetCryptoType (assembly, name);
-			if (marker == null)
+			if (marker is null)
 				return false;
 
 			var implementation = GetCryptoType (assembly, type);
-			if (implementation == null)
+			if (implementation is null)
 				return false;
 
 			Preserve (marker, implementation);
@@ -96,11 +96,11 @@ namespace Mono.Tuner {
 		void AddPreserveInfo (AssemblyDefinition assembly, string name, string type)
 		{
 			var marker = GetCryptoType (assembly, name);
-			if (marker == null)
+			if (marker is null)
 				throw new ArgumentException (name);
 
 			var implementation = GetCryptoType (assembly, type);
-			if (implementation == null)
+			if (implementation is null)
 				throw new ArgumentException (type);
 
 			Preserve (marker, implementation);
@@ -108,7 +108,7 @@ namespace Mono.Tuner {
 
 		void Preserve (TypeDefinition marker, TypeDefinition implementation)
 		{
-			if (marker == null || implementation == null)
+			if (marker is null || implementation is null)
 				return;
 			foreach (var constructor in implementation.GetConstructors ())
 				annotations.AddPreservedMethod (marker, constructor);

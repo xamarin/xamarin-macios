@@ -1,4 +1,4 @@
-﻿//
+//
 // SweepStep.cs
 //
 // Author:
@@ -35,8 +35,7 @@ using Mono.Cecil.Cil;
 
 namespace Mono.Linker.Steps {
 
-	public class SweepStep : BaseStep
-	{
+	public class SweepStep : BaseStep {
 		AssemblyDefinition [] assemblies;
 		readonly bool sweepSymbols;
 		readonly HashSet<AssemblyDefinition> BypassNGenToSave = new HashSet<AssemblyDefinition> ();
@@ -189,12 +188,12 @@ namespace Mono.Linker.Steps {
 		void SweepResources (AssemblyDefinition assembly)
 		{
 			var resourcesToRemove = Annotations.GetResourcesToRemove (assembly);
-			if (resourcesToRemove != null) {
+			if (resourcesToRemove is not null) {
 				var resources = assembly.MainModule.Resources;
 
 				for (int i = 0; i < resources.Count; i++) {
 					var resource = resources [i] as EmbeddedResource;
-					if (resource == null)
+					if (resource is null)
 						continue;
 
 					if (resourcesToRemove.Contains (resource.Name))
@@ -215,7 +214,7 @@ namespace Mono.Linker.Steps {
 				var reference = references [i];
 
 				AssemblyDefinition ad = Context.Resolver.Resolve (reference);
-				if (ad == null || !AreSameReference (ad.Name, referenceToRemove.Name))
+				if (ad is null || !AreSameReference (ad.Name, referenceToRemove.Name))
 					continue;
 
 				ReferenceRemoved (assembly, reference);
@@ -291,7 +290,7 @@ namespace Mono.Linker.Steps {
 
 				// at this stage reference might include things that can't be resolved
 				// and if it is (resolved) it needs to be kept only if marked (#16213)
-				if (td == null || !Annotations.IsMarked (td))
+				if (td is null || !Annotations.IsMarked (td))
 					continue;
 
 				IMetadataScope scope = assembly.MainModule.ImportReference (td).Scope;
@@ -311,7 +310,7 @@ namespace Mono.Linker.Steps {
 			if (assembly.MainModule.HasExportedTypes) {
 				foreach (var et in assembly.MainModule.ExportedTypes) {
 					var td = et.Resolve ();
-					if (td == null)
+					if (td is null)
 						continue;
 
 					et.Scope = assembly.MainModule.ImportReference (td).Scope;
@@ -332,7 +331,7 @@ namespace Mono.Linker.Steps {
 
 		static void UpdateCustomAttributesTypesScopes (TypeDefinition typeDefinition)
 		{
-			UpdateCustomAttributesTypesScopes ((ICustomAttributeProvider)typeDefinition);
+			UpdateCustomAttributesTypesScopes ((ICustomAttributeProvider) typeDefinition);
 
 			if (typeDefinition.HasEvents)
 				UpdateCustomAttributesTypesScopes (typeDefinition.Events);
@@ -412,7 +411,7 @@ namespace Mono.Linker.Steps {
 			case CustomAttributeArgument caa:
 				UpdateForwardedTypesScope (caa, assembly);
 				break;
-			case CustomAttributeArgument[] array:
+			case CustomAttributeArgument [] array:
 				foreach (var item in array)
 					UpdateForwardedTypesScope (item, assembly);
 				break;
@@ -438,7 +437,7 @@ namespace Mono.Linker.Steps {
 			}
 
 			TypeDefinition td = type.Resolve ();
-			if (td == null)
+			if (td is null)
 				return;
 
 			IMetadataScope scope = assembly.MainModule.ImportReference (td).Scope;
@@ -542,21 +541,21 @@ namespace Mono.Linker.Steps {
 
 		static bool IsSecurityAttributeType (TypeDefinition definition)
 		{
-			if (definition == null)
+			if (definition is null)
 				return false;
 
 			if (definition.Namespace == "System.Security") {
 				switch (definition.FullName) {
-					// This seems to be one attribute in the System.Security namespace that doesn't count
-					// as an attribute that requires HasSecurity to be true
-					case "System.Security.SecurityCriticalAttribute":
-						return false;
+				// This seems to be one attribute in the System.Security namespace that doesn't count
+				// as an attribute that requires HasSecurity to be true
+				case "System.Security.SecurityCriticalAttribute":
+					return false;
 				}
 
 				return true;
 			}
 
-			if (definition.BaseType == null)
+			if (definition.BaseType is null)
 				return false;
 
 			return IsSecurityAttributeType (definition.BaseType.Resolve ());
@@ -564,7 +563,7 @@ namespace Mono.Linker.Steps {
 
 		protected IList<CustomAttribute> SweepCustomAttributes (ICustomAttributeProvider provider)
 		{
-			var removed = new List<CustomAttribute>();
+			var removed = new List<CustomAttribute> ();
 
 			for (int i = provider.CustomAttributes.Count - 1; i >= 0; i--) {
 				var attribute = provider.CustomAttributes [i];
@@ -610,14 +609,14 @@ namespace Mono.Linker.Steps {
 		{
 			List<ScopeDebugInformation> sweptScopes = null;
 			foreach (var m in methods) {
-				if (m.DebugInformation == null)
+				if (m.DebugInformation is null)
 					continue;
 
 				var scope = m.DebugInformation.Scope;
-				if (scope == null)
+				if (scope is null)
 					continue;
 
-				if (sweptScopes == null) {
+				if (sweptScopes is null) {
 					sweptScopes = new List<ScopeDebugInformation> ();
 				} else if (sweptScopes.Contains (scope)) {
 					continue;
@@ -634,12 +633,12 @@ namespace Mono.Linker.Steps {
 				}
 
 				var import = scope.Import;
-				while (import != null) {
+				while (import is not null) {
 					if (import.HasTargets) {
 						var targets = import.Targets;
 						for (int i = 0; i < targets.Count; ++i) {
 							var ttype = targets [i].Type;
-							if (ttype != null && !Annotations.IsMarked (ttype))
+							if (ttype is not null && !Annotations.IsMarked (ttype))
 								targets.RemoveAt (i--);
 
 							// TODO: Clear also AssemblyReference and Namespace when not marked
