@@ -2918,7 +2918,7 @@ public partial class Generator : IMemberGatherer {
 			// protocol support means we can return interfaces and, as far as .NET knows, they might not be NSObject
 			if (IsProtocolInterface (mi.ReturnType)) {
 				cast_a = " Runtime.GetINativeObject<" + TypeManager.FormatType (minfo?.type ?? mi.DeclaringType, mi.ReturnType) + "> (";
-				cast_b = ", false)!";
+				cast_b = $", {(minfo?.is_return_release == true ? "true" : "false")})!";
 			} else if (minfo is not null && minfo.is_forced) {
 				cast_a = " Runtime.GetINativeObject<" + TypeManager.FormatType (minfo.type, mi.ReturnType) + "> (";
 				cast_b = $", true, {minfo.is_forced_owns})!";
@@ -3686,7 +3686,7 @@ public partial class Generator : IMemberGatherer {
 		if (shouldMarshalNativeExceptions)
 			print ("Runtime.ThrowException (exception_gchandle);");
 
-		if (minfo.is_return_release) {
+		if (minfo.is_return_release && !IsProtocolInterface (mi.ReturnType)) {
 
 			// Make sure we generate the required signature in Messaging only if needed 
 			// bool_objc_msgSendSuper_IntPtr: for respondsToSelector:
