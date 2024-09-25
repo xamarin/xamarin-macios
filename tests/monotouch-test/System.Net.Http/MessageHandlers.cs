@@ -690,7 +690,7 @@ namespace MonoTests.System.Net.Http {
 			var storageFlags = X509KeyStorageFlags.DefaultKeySet;
 #endif
 
-			X509Certificate2 certificate = new X509Certificate2 (global::System.Convert.FromBase64String (certificate_base64), "test", storageFlags);
+			X509Certificate2 certificate = X509CertificateLoader.LoadPkcs12 (global::System.Convert.FromBase64String (certificate_base64), "test", storageFlags);
 			string content = "";
 			var done = TestRuntime.TryRunAsync (TimeSpan.FromSeconds (30), async () => {
 				using var handler = new NSUrlSessionHandler ();
@@ -703,7 +703,7 @@ namespace MonoTests.System.Net.Http {
 				Assert.Inconclusive ("Request timedout.");
 			} else {
 				Assert.IsNull (ex, "Exception wasn't expected.");
-				X509Certificate2 certificate2 = new X509Certificate2 (global::System.Convert.FromBase64String (content));
+				X509Certificate2 certificate2 = X509CertificateLoader.LoadPkcs12 (global::System.Convert.FromBase64String (content), null);
 				Assert.AreEqual (certificate.Thumbprint, certificate2.Thumbprint);
 			}
 		}
