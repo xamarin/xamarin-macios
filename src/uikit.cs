@@ -14088,7 +14088,7 @@ namespace UIKit {
 #endif
 
 		[Appearance]
-		[Wrap ("SetTitleTextAttributes (attributes.GetDictionary (), state)", IsVirtual = true)]
+		[Wrap ("SetTitleTextAttributes (attributes.GetDictionary (), state)")]
 		void SetTitleTextAttributes (UIStringAttributes attributes, UIControlState state);
 
 		[Export ("setTitleTextAttributes:forState:")]
@@ -14096,7 +14096,7 @@ namespace UIKit {
 		void SetTitleTextAttributes (NSDictionary attributes, UIControlState state);
 
 		[Appearance]
-		[Wrap ("new UIStringAttributes (GetWeakTitleTextAttributes (state))", IsVirtual = true)]
+		[Wrap ("new UIStringAttributes (GetWeakTitleTextAttributes (state))")]
 		UIStringAttributes GetTitleTextAttributes (UIControlState state);
 
 		[Appearance]
