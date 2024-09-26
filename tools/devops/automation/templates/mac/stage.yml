@@ -187,7 +187,7 @@ stages:
       BRANCH_NAME: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', '') ]
 
     steps:
-    - template: common/load_configuration.yml
+    - template: ../common/load_configuration.yml
       parameters: 
         repositoryAlias: ${{ parameters.repositoryAlias }}
         commit: ${{ parameters.commit }}
