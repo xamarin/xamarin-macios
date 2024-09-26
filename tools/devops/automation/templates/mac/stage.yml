@@ -157,10 +157,10 @@ parameters:
 
 
 stages:
-- stage: configure_build
+- stage: configure_mac_tests
   displayName: '${{ parameters.stageDisplayNamePrefix }}Configure'
   jobs:
-  
+
   - ${{ if eq(parameters.pool, 'automatic') }}:
     - job: AgentPoolSelector       # https://docs.microsoft.com/en-us/azure/devops/pipelines/process/phases?view=azure-devops&tabs=yaml
       pool:                        # Consider using an agentless (server) job here, but would need to host selection logic as an Azure function: https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#server
@@ -202,8 +202,8 @@ stages:
   dependsOn:
   - ${{ if eq(parameters.postPipeline, false) }}:
     - build_macos_tests
-  - configure_build
-  condition: and(succeeded(), eq(stageDependencies.configure_build.outputs['configure.decisions.RUN_MAC_TESTS'], 'true'))
+  - configure_mac_tests
+  condition: and(succeeded(), eq(stageDependencies.configure_mac_tests.outputs['configure.decisions.RUN_MAC_TESTS'], 'true'))
   variables:
     GITHUB_FAILURE_COMMENT_FILE: $(System.DefaultWorkingDirectory)/github-comment-file.md
 
@@ -222,7 +222,7 @@ stages:
         vmImage: ${{ parameters.macPool }}
 
     variables:
-      PR_ID: $[ stageDependencies.configure_build.configure.outputs['labels.pr_number'] ]
+      PR_ID: $[ stageDependencies.configure_mac_tests.configure.outputs['labels.pr_number'] ]
 
     steps:
     - template: build.yml
