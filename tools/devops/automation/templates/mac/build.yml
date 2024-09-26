@@ -144,7 +144,6 @@ steps:
 # Go get the tests!, this depends on how the test was triggered
 - ${{ if or(contains(variables['Build.Reason'], 'ResourceTrigger'), contains(variables['Build.Reason'], 'BuildCompletion'), contains(variables['Build.DefinitionName'], 'xamarin-macios-ci-tests'), contains(variables['Build.DefinitionName'], 'xamarin-macios-pr-tests')) }}:
   - download: macios
-    artifact: mac-test-package
     displayName: Download Mac tests
     artifact: 'mac-test-package'
 
