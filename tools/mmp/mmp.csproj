@@ -318,8 +318,8 @@
     <Compile Include="..\linker\MonoTouch.Tuner\PreserveSmartEnumConversions.cs">
       <Link>tools\linker\MonoTouch.Tuner\PreserveSmartEnumConversions.cs</Link>
     </Compile>
-    <Compile Include="..\..\src\build\mac\Constants.cs">
-      <Link>src\build\mac\Constants.cs</Link>
+    <Compile Include="..\..\src\build\dotnet\macos\Constants.cs">
+      <Link>src\build\dotnet\macos\Constants.cs</Link>
     </Compile>
     <Compile Include="..\..\src\ObjCRuntime\Constants.cs">
       <Link>src\ObjCRuntime\Constants.cs</Link>
