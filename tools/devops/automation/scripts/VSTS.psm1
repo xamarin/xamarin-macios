@@ -302,7 +302,6 @@ class BuildConfiguration {
         "skip-packages",
         "skip-nugets",
         "skip-signing",
-        "run-sample-tests",
         "skip-packaged-macos-tests",
         "run-packaged-macos-tests",
         "skip-api-comparison",
