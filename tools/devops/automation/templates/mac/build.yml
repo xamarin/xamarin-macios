@@ -146,7 +146,7 @@ steps:
   - download: macios
     artifact: mac-test-package
     displayName: Download Mac tests
-    patterns: '**/mac-test-package.7z'
+    artifact: 'mac-test-package'
 
   # the default location when downloading is $(Pipeline.Workspace)/<pipeline resource identifier>/<artifact name>
   - pwsh: |
@@ -162,7 +162,7 @@ steps:
   - task: DownloadPipelineArtifact@2
     displayName: Download Mac tests
     inputs:
-      patterns: '**/mac-test-package.7z'
+      artifact: 'mac-test-package'
       allowFailedBuilds: true
       path: $(Build.SourcesDirectory)/artifacts/tmp
 
