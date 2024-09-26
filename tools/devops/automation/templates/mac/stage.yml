@@ -51,8 +51,8 @@ stages:
   dependsOn:
   - ${{ if eq(parameters.postPipeline, false) }}:
     - build_macos_tests
-  - configure_mac_tests
-  condition: and(succeeded(), eq(stageDependencies.configure_mac_tests.outputs['configure.decisions.RUN_MAC_TESTS'], 'true'))
+  - configure_build
+  condition: and(succeeded(), eq(stageDependencies.configure_build.outputs['configure.decisions.RUN_MAC_TESTS'], 'true'))
   variables:
     GITHUB_FAILURE_COMMENT_FILE: $(System.DefaultWorkingDirectory)/github-comment-file.md
 
@@ -71,7 +71,7 @@ stages:
         vmImage: ${{ parameters.macPool }}
 
     variables:
-      PR_ID: $[ stageDependencies.configure_mac_tests.configure.outputs['labels.pr_number'] ]
+      PR_ID: $[ stageDependencies.configure_build.configure.outputs['labels.pr_number'] ]
 
     steps:
     - template: build.yml
