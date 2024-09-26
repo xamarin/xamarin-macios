@@ -191,10 +191,6 @@ parameters:
       },
     ]
 
-  - name: stageDisplayNamePrefix
-    type: string
-    default: ''
-
 resources:
   repositories:
     - repository: self
