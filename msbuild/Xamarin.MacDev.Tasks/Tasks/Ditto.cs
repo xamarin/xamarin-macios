@@ -52,8 +52,15 @@ namespace Xamarin.MacDev.Tasks {
 
 				taskRunner.FixReferencedItems (this, new ITaskItem [] { Source! });
 
-				Log.LogWarning ($"Ditto.Execute () executed remotely");
-				return taskRunner.RunAsync (this).Result;
+				var rv = taskRunner.RunAsync (this).Result;
+				Log.LogWarning ($"Ditto.Execute () executed remotely: {rv}");
+				return rv;
+			}
+
+			var src = Source!.ItemSpec;
+			if (!File.Exists (src) && !Directory.Exists (src)) {
+				Log.LogError ($"The source {src} does not exist.");
+				return false;
 			}
 
 			var args = new List<string> ();
