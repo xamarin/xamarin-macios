@@ -46,17 +46,12 @@ if ($BuildReason -eq "PullRequest" -or (($BuildReason -eq "Manual" -or $BuildRea
         $configVars.Add("SignPkgs", "True")
     }
 
-    $configVars.Add("RunSampleTests", $Env:RunSampleTests)
-
 } else {
     # set the defaults, all the things! o/
     # build pkg, nugets and sign them
     $configVars.Add("BuildPkgs", "True")
     $configVars.Add("BuildNugets", "True")
     $configVars.Add("SignPkgs", "True")
-
-    # tests, run all of them, internal, external, mac but not sample tests
-    $configVars.Add("RunSampleTests", "False")
 }
 # write debugging and process of the vars
 foreach($key in $configVars.Keys) {
