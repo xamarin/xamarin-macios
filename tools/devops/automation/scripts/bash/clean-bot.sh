@@ -14,8 +14,9 @@ set +e
 
 # Clean workspace
 (
-	if test -d "$SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios"; then
-		cd "$SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios"
+	REPO_PATH="SYSTEM_DEFAULTWORKINGDIRECTORY/$(basename "$BUILD_REPOSITORY_NAME")"
+	if test -d "$REPO_PATH"; then
+		cd "$REPO_PATH"
 		git clean -xfd
 	fi
 )
