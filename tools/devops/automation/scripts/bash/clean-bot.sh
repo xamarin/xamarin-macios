@@ -12,6 +12,14 @@ df -h
 # We don't care about errors in this section, we just want to clean as much as possible
 set +e
 
+# Clean workspace
+(
+	if test -d "$SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios"; then
+		cd "$SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios"
+		git clean -xfd
+	fi
+)
+
 # Delete all the simulator devices. These can take up a lot of space over time (I've seen 100+GB on the bots)
 /Applications/Xcode.app/Contents/Developer/usr/bin/simctl delete all
 
@@ -126,6 +134,13 @@ done
 
 DIR="$(dirname "${BASH_SOURCE[0]}")"
 "$DIR"/clean-simulator-runtime.sh
+"$DIR"/kill-deadlocked-processes.sh
+
+# Remove legacy Xamarin/MonoTouch stuff
+sudo rm -Rf /Developer/MonoTouch
+sudo rm -Rf /Library/Frameworks/Xamarin.iOS.framework
+sudo rm -Rf /Library/Frameworks/Xamarin.Mac.framework
+ls -R /Library/Frameworks
 
 # Print disk status after cleaning
 df -h
