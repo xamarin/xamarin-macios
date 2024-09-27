@@ -21,7 +21,6 @@ if ($IsMacOS) {
     Write-Host ""
     ifconfig | grep 'inet '
 
-
     Write-Host ""
     Write-Host "## Top processes"
     Write-Host ""
