@@ -147,7 +147,6 @@ steps:
     # show environment
     env -0 | sort -z | tr '\0' '\n' || true
 
-    make -C builds download -j
     make -C tests ${{ parameters.makeTarget }}
 
     # We reached the end! This means we succeeded!
