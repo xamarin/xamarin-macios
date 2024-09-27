@@ -294,7 +294,8 @@ class GitHubComments {
     }
 
     [void] WriteCommentFooter(
-        [object] $stringBuilder
+        [object] $stringBuilder,
+        [string] $commentId
     ) {
         $targetUrl = Get-TargetUrl
         $stringBuilder.AppendLine("[Pipeline]($targetUrl) on Agent $Env:TESTS_BOT") # Env:TESTS_BOT is added by the pipeline as a variable coming from the execute tests job
@@ -308,10 +309,15 @@ class GitHubComments {
             $hashUrl= "https://github.com/$($this.Org)/$($this.Repo)/commit/$($this.Hash)"
             $hashSource = " [CI build]"
         }
-        $ciComment = "[comment]: <> (This is a comment added by Azure DevOps)"
+        $ciComment = $this.GetCommentIdentifier($commentId)
         $stringBuilder.AppendLine("Hash: [$($this.Hash)]($hashUrl) $hashSource")
         $stringBuilder.AppendLine("")
         $stringBuilder.AppendLine($ciComment)
+    }
+
+    [string] GetCommentIdentifier([string] $commentId)
+    {
+        return "[comment]: <> (This is a comment added by Azure DevOps, id: $commentId)"
     }
 
     [string] GetCommentUrl() {
@@ -360,11 +366,46 @@ class GitHubComments {
         return $request
     }
 
+    [void] HideComments(
+        [string] $commentId
+    ) {
+        if (!$commentId) {
+            Write-Host "Not hiding comments, because no comment id provided"
+            return
+        }
+
+        if (![GitHubComments]::IsPR()) {
+            Write-Host "Not hiding comments, because we're not in a pull request"
+            return
+        }
+
+        $prId = "$Env:BUILD_SOURCEBRANCH".Replace("refs/pull/", "").Replace("/merge", "")
+        $prComments = $this.GetCommentsForPR($prId)
+
+        $botComments = [System.Collections.ArrayList]@()
+        $commentToHide = $this.GetCommentIdentifier($commentId)
+
+        foreach ($c in $prComments) {
+          if ($c.Author -eq "vs-mobiletools-engineering-service2") {
+            if ($c.Body.Contains($CommentToHide)) {
+              $botComments.Add($c)
+            }
+          }
+        }
+
+        Write-Host "Hiding $($botComments.Count) comments for PR #$prId with comment id '$commentId'"
+
+        $this.MinimizeComments($botComments)
+    }
+
     [object] NewCommentFromObject(
         [string] $commentTitle,
         [string] $commentEmoji,
-        [object] $commentObject
+        [object] $commentObject,
+        [string] $commentId
     ) {
+        $this.HideComments($commentId)
+
         # build the message, which will be sent to github, users can use markdown
         $msg = [System.Text.StringBuilder]::new()
 
@@ -376,7 +417,7 @@ class GitHubComments {
         $msg.AppendLine()
 
         # footer
-        $this.WriteCommentFooter($msg)
+        $this.WriteCommentFooter($msg, $commentId)
 
         return $this.NewComment($msg)
     }
@@ -384,8 +425,11 @@ class GitHubComments {
     [object] NewCommentFromFile(
         [string] $commentTitle,
         [string] $commentEmoji,
-        [string] $filePath
+        [string] $filePath,
+        [string] $commentId
     ) {
+        $this.HideComments($commentId)
+
         # build the message, which will be sent to github, users can use markdown
         $msg = [System.Text.StringBuilder]::new()
 
@@ -404,7 +448,7 @@ class GitHubComments {
         $msg.AppendLine()
 
         # footer
-        $this.WriteCommentFooter($msg)
+        $this.WriteCommentFooter($msg, $commentId)
 
         return $this.NewComment($msg)
     }
@@ -412,8 +456,11 @@ class GitHubComments {
     [object] NewCommentFromMessage(
         [string] $commentTitle,
         [string] $commentEmoji,
-        [string] $content
+        [string] $content,
+        [string] $commentId
     ) {
+        $this.HideComments($commentId)
+
         $msg = [System.Text.StringBuilder]::new()
 
         # header
@@ -424,7 +471,7 @@ class GitHubComments {
         $msg.AppendLine()
 
         # footer
-        $this.WriteCommentFooter($msg)
+        $this.WriteCommentFooter($msg, $commentId)
 
         return $this.NewComment($msg)
     }
