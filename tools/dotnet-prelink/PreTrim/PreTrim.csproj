@@ -7,9 +7,9 @@
     <DefineConstants>$(DefineConstants);BUNDLER</DefineConstants>
     <!-- Crashes roslyn with InvalidOperationException: Cannot enqueue data after PromiseNotToEnqueue -->
     <RunAnalyzers>false</RunAnalyzers>
-    <Nullable>disable</Nullable>
+    <Nullable>enable</Nullable>
 
-    <OutputType>Exe</OutputType>
+    <OutputType>Library</OutputType>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <Import Project="..\..\..\eng\Versions.props" />
