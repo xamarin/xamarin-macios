@@ -13,7 +13,7 @@ using Xamarin.Messaging.Build.Client;
 using Xamarin.Utils;
 
 namespace Xamarin.MacDev.Tasks {
-	public class Ditto : XamarinTask, ICancelableTask {
+	public class Ditto : XamarinTask, ITaskCallback, ICancelableTask {
 		#region Inputs
 
 		public string? AdditionalArguments { get; set; }
