@@ -20516,7 +20516,7 @@ namespace AppKit {
 		/// item.VisibilityPriority = (nint) (long) NSToolbarItemVisibilityPriority.High;
 		/// ]]></code>
 		///   </example>
-		/// <remarks>
+		/// </remarks>
 		[Export ("visibilityPriority")]
 		nint VisibilityPriority { get; set; }
 #endif
