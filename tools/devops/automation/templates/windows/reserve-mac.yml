@@ -85,7 +85,7 @@ steps:
     $vsts.Agents.SetEnabled($pool, $agent, $False)
   displayName: "Disable macOS bot from pool"
 
-- bash: make -C $(Build.SourcesDirectory)/xamarin-macios/tools/devops provision-xcode.csx
+- bash: make -C $(Build.SourcesDirectory)/xamarin-macios/tools/devops provisioning
   displayName: 'Generate Xcode provisioning csx file'
 
 - task: xamops.azdevex.provisionator-task.provisionator@2
