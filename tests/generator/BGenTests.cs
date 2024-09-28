@@ -408,6 +408,7 @@ namespace GeneratorTests {
 		[TestCase (Profile.iOS)]
 		public void INativeObjectsInBlocks (Profile profile)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
 			var bgen = new BGenTool ();
 			bgen.Profile = profile;
 			bgen.Defines = BGenTool.GetDefaultDefines (bgen.Profile);
