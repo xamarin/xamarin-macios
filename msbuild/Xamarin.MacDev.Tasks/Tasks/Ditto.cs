@@ -47,11 +47,12 @@ namespace Xamarin.MacDev.Tasks {
 		public override bool Execute ()
 		{
 			if (ShouldExecuteRemotely ()) {
-				Log.LogWarning ($"Ditto.Execute () about to execute remotely");
+				Log.LogWarning ($"Ditto.Execute () will execute remotely");
 				var taskRunner = new TaskRunner (SessionId, BuildEngine4);
 
 				taskRunner.FixReferencedItems (this, new ITaskItem [] { Source! });
 
+				Log.LogWarning ($"Ditto.Execute () about to execute remotely");
 				var rv = taskRunner.RunAsync (this).Result;
 				Log.LogWarning ($"Ditto.Execute () executed remotely: {rv}");
 				return rv;
