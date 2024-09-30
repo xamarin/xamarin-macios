@@ -220,7 +220,7 @@ steps:
   timeoutInMinutes: 5
 
 - bash: |
-    make -C $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/ device-tests-provisioning.csx
+    make -C $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/ provisioning
   displayName: 'Generate Provisionator csx file'
 
 # Executed ONLY if we want to clear the provisionator cache.
@@ -234,19 +234,7 @@ steps:
 - task: xamops.azdevex.provisionator-task.provisionator@2
   displayName: 'Provision dependencies'
   inputs:
-    provisioning_script: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/device-tests-provisioning.csx
-    provisioning_extra_args: '-vvvv'
-    github_token: ${{ parameters.gitHubToken }}
-  timeoutInMinutes: 250
-
-- bash: |
-    make -C $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/ mac-tests-provisioning.csx
-  displayName: 'Generate Provisionator csx file for macOS'
-
-- task: xamops.azdevex.provisionator-task.provisionator@2
-  displayName: 'Provision Xamarin.Mac'
-  inputs:
-    provisioning_script: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/mac-tests-provisioning.csx
+    provisioning_script: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/build-provisioning.csx
     provisioning_extra_args: '-vvvv'
     github_token: ${{ parameters.gitHubToken }}
   timeoutInMinutes: 250
