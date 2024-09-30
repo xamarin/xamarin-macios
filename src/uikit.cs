@@ -14088,12 +14088,12 @@ namespace UIKit {
 #endif
 
 		[Appearance]
-		[Wrap ("SetTitleTextAttributes (attributes.GetDictionary (), state)")]
-		void SetTitleTextAttributes (UIStringAttributes attributes, UIControlState state);
+		[Wrap ("SetTitleTextAttributes (attributes?.GetDictionary (), state)")]
+		void SetTitleTextAttributes ([NullAllowed] UIStringAttributes attributes, UIControlState state);
 
 		[Export ("setTitleTextAttributes:forState:")]
 		[Appearance]
-		void SetTitleTextAttributes (NSDictionary attributes, UIControlState state);
+		void SetTitleTextAttributes ([NullAllowed] NSDictionary attributes, UIControlState state);
 
 		[Appearance]
 		[Wrap ("new UIStringAttributes (GetWeakTitleTextAttributes (state))")]
@@ -14101,6 +14101,7 @@ namespace UIKit {
 
 		[Appearance]
 		[Export ("titleTextAttributesForState:")]
+		[return: NullAllowed]
 		NSDictionary GetWeakTitleTextAttributes (UIControlState state);
 
 		[Export ("setContentPositionAdjustment:forSegmentType:barMetrics:")]
