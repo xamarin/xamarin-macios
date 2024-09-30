@@ -27,11 +27,6 @@ if ($IsMacOS) {
     ifconfig | grep 'inet '
 
     Write-Host ""
-    Write-Host "## Top processes"
-    Write-Host ""
-    top -l 1 -o TIME
-
-    Write-Host ""
     Write-Host "## Top processes (ps)"
     Write-Host ""
     ps aux
