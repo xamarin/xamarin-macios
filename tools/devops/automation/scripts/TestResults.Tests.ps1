@@ -212,7 +212,6 @@ Describe "TestResults tests" {
         "configuration.BuildNugets": "True",
         "configuration.BuildPkgs": "True",
         "configuration.PR_ID": "20434",
-        "configuration.RunSampleTests": "",
         "configuration.SignPkgs": "True",
         "build.TESTS_BOT": "XAMBOT-1001.Sonoma"
       },
