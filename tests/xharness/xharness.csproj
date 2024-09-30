@@ -105,7 +105,6 @@
     <Compile Include="Jenkins\TestVariationsFactory.cs" />
     <Compile Include="MacFlavorsExtensions.cs" />
     <Compile Include="MacTestProject.cs" />
-    <Compile Include="MonoNativeInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SimulatorLoaderFactory.cs" />

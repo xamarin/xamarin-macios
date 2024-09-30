@@ -111,9 +111,6 @@
     <Compile Include="$(IntrospectionTestDirectory)\EnvironmentVariable.cs">
       <Link>EnvironmentVariable.cs</Link>
     </Compile>
-    <Compile Include="$(IntrospectionTestDirectory)\..\common\MonoNativeConfig.cs">
-      <Link>MonoNativeConfig.cs</Link>
-    </Compile>
     <Compile Include="$(IntrospectionTestDirectory)\..\common\PlatformInfo.cs">
       <Link>PlatformInfo.cs</Link>
     </Compile>
