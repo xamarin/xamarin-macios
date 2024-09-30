@@ -12,6 +12,11 @@ Get-ChildItem env: | Sort-Object -Property Name | Format-Table -AutoSize | Out-S
 
 if ($IsMacOS) {
     Write-Host ""
+    Write-Host "## Uptime"
+    Write-Host ""
+    uptime
+
+    Write-Host ""
     Write-Host "## System profile"
     Write-Host ""
     system_profiler SPSoftwareDataType SPHardwareDataType SPDeveloperToolsDataType
@@ -25,6 +30,11 @@ if ($IsMacOS) {
     Write-Host "## Top processes"
     Write-Host ""
     top -l 1 -o TIME
+
+    Write-Host ""
+    Write-Host "## Top processes (ps)"
+    Write-Host ""
+    ps aux
 
     Write-Host ""
     Write-Host "## Python3 location:"
