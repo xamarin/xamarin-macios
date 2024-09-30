@@ -317,7 +317,10 @@ class GitHubComments {
 
     [string] GetCommentIdentifier([string] $commentId)
     {
-        return "[comment]: <> (This is a comment added by Azure DevOps, id: $commentId)"
+        $sanitizedId = $commentId
+        $sanitizedId = $sanitizedId.Replace("(","_").Replace(")","_").Replace("[","_").Replace("]","_")
+        $sanitizedId = $sanitizedId.Replace("{","_").Replace("}","_").Replace("<","_").Replace(">","_")
+        return "[comment]: <> (This is a comment added by Azure DevOps, id: $sanitizedId)"
     }
 
     [string] GetCommentUrl() {
