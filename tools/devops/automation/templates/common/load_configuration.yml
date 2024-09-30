@@ -78,6 +78,12 @@ steps:
   - pwsh: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/show_env.ps1
     displayName: 'Show Environment'
 
+  - pwsh:
+      Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\\xamarin-macios\\tools\\devops\\automation\\scripts\\MaciosCI.psd1
+      $statuses = New-GitHubStatusesObjectFromUrl -Url "$(Build.Repository.Uri)" -Token $(GitHub.Token)
+      $statuses.SetStatus("success", "This is a status for a cascade PR", "TEST", "")
+    displayName: Set status
+
   - pwsh: |
       Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/MaciosCI.psd1
       # load the configuration files and set the required variables to be used in the later stages
