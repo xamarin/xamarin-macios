@@ -74,7 +74,6 @@
     <Compile Include="..\common\BundlerTool.cs">
       <Link>BundlerTool.cs</Link>
     </Compile>
-    <Compile Include="MonoNativeTests.cs" />
     <Compile Include="..\..\tools\common\SdkVersions.cs">
       <Link>SdkVersions.cs</Link>
     </Compile>
