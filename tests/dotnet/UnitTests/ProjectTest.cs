@@ -2072,7 +2072,7 @@ namespace Xamarin.Tests {
 			DotNet.AssertBuild (project_path, properties);
 		}
 
-		static string[] expectedFrameworks_iOS_None = [
+		static string [] expectedFrameworks_iOS_None = [
 			"/System/Library/Frameworks/Accelerate.framework/Accelerate",
 			"/System/Library/Frameworks/Accessibility.framework/Accessibility",
 			"/System/Library/Frameworks/AccessorySetupKit.framework/AccessorySetupKit",
@@ -2218,7 +2218,7 @@ namespace Xamarin.Tests {
 			"/usr/lib/libz.1.dylib",
 		];
 
-		static string[] expectedFrameworks_iOS_Full = [
+		static string [] expectedFrameworks_iOS_Full = [
 			"/System/Library/Frameworks/CFNetwork.framework/CFNetwork",
 			"/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation",
 			"/System/Library/Frameworks/Foundation.framework/Foundation",
@@ -2233,7 +2233,7 @@ namespace Xamarin.Tests {
 			"/usr/lib/libz.1.dylib",
 		];
 
-		static string[] expectedFrameworks_tvOS_None = [
+		static string [] expectedFrameworks_tvOS_None = [
 			"/System/Library/Frameworks/Accelerate.framework/Accelerate",
 			"/System/Library/Frameworks/Accessibility.framework/Accessibility",
 			"/System/Library/Frameworks/AdSupport.framework/AdSupport",
@@ -2322,7 +2322,7 @@ namespace Xamarin.Tests {
 			"/usr/lib/libz.1.dylib",
 		];
 
-		static string[] expectedFrameworks_tvOS_Full = [
+		static string [] expectedFrameworks_tvOS_Full = [
 			"/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation",
 			"/System/Library/Frameworks/Foundation.framework/Foundation",
 			"/System/Library/Frameworks/Security.framework/Security",
@@ -2335,7 +2335,7 @@ namespace Xamarin.Tests {
 			"/usr/lib/libz.1.dylib",
 		];
 
-		static string[] expectedFrameworks_macOS_None = [
+		static string [] expectedFrameworks_macOS_None = [
 			"@executable_path/../../Contents/MonoBundle/libclrgc.dylib",
 			"@executable_path/../../Contents/MonoBundle/libclrjit.dylib",
 			"@executable_path/../../Contents/MonoBundle/libcoreclr.dylib",
@@ -2483,7 +2483,7 @@ namespace Xamarin.Tests {
 			"/usr/lib/libz.1.dylib",
 		];
 
-		static string[] expectedFrameworks_macOS_Full = [
+		static string [] expectedFrameworks_macOS_Full = [
 			"@executable_path/../../Contents/MonoBundle/libclrgc.dylib",
 			"@executable_path/../../Contents/MonoBundle/libclrjit.dylib",
 			"@executable_path/../../Contents/MonoBundle/libcoreclr.dylib",
@@ -2514,7 +2514,7 @@ namespace Xamarin.Tests {
 			"/usr/lib/libz.1.dylib",
 		];
 
-		static string[] expectedFrameworks_MacCatalyst_None = [
+		static string [] expectedFrameworks_MacCatalyst_None = [
 			"/System/iOSSupport/System/Library/Frameworks/AddressBook.framework/Versions/A/AddressBook",
 			"/System/iOSSupport/System/Library/Frameworks/AppClip.framework/Versions/A/AppClip",
 			"/System/iOSSupport/System/Library/Frameworks/AuthenticationServices.framework/Versions/A/AuthenticationServices",
@@ -2650,7 +2650,7 @@ namespace Xamarin.Tests {
 			"/usr/lib/libz.1.dylib",
 		];
 
-		static string[] expectedFrameworks_MacCatalyst_Full = [
+		static string [] expectedFrameworks_MacCatalyst_Full = [
 			"/System/iOSSupport/System/Library/Frameworks/UIKit.framework/Versions/A/UIKit",
 			"/System/Library/Frameworks/AppKit.framework/Versions/C/AppKit",
 			"/System/Library/Frameworks/CloudKit.framework/Versions/A/CloudKit",
@@ -2688,7 +2688,7 @@ namespace Xamarin.Tests {
 		}
 
 		[TestCaseSource (nameof (GetLinkedWithNativeLibrariesTestCases))]
-		public void LinkedWithNativeLibraries (ApplePlatform platform, string runtimeIdentifiers, string linkMode, string[] expectedFrameworks)
+		public void LinkedWithNativeLibraries (ApplePlatform platform, string runtimeIdentifiers, string linkMode, string [] expectedFrameworks)
 		{
 			var project = "MySimpleApp";
 			Configuration.IgnoreIfIgnoredPlatform (platform);
