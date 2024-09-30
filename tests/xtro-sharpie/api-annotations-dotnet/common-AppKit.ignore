@@ -16,3 +16,6 @@
 !missing-field! NSTypeIdentifierTransitInformationText not bound
 !missing-protocol! NSAnimatablePropertyContainer not bound
 !missing-selector! NSTouchBar::itemIdentifiers not bound
+
+# NSToolbarItemVisibilityPriority is a collection of constants we've bound as an enum.
+!unknown-native-enum! NSToolbarItemVisibilityPriority bound
