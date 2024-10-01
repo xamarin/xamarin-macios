@@ -12,12 +12,11 @@ namespace MLCompute {
 #if NET
 	[SupportedOSPlatform ("ios14.0")]
 	[SupportedOSPlatform ("tvos14.0")]
-	[SupportedOSPlatform ("macos11.0")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[iOS (14, 0)]
 	[TV (14, 0)]
-	[Mac (11, 0)]
 	[NoWatch]
 #endif
 	public static class MLCActivationTypeExtensions {
@@ -34,12 +33,11 @@ namespace MLCompute {
 #if NET
 	[SupportedOSPlatform ("ios14.0")]
 	[SupportedOSPlatform ("tvos14.0")]
-	[SupportedOSPlatform ("macos11.0")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[iOS (14, 0)]
 	[TV (14, 0)]
-	[Mac (11, 0)]
 	[NoWatch]
 #endif
 	public static class MLCArithmeticOperationExtensions {
@@ -56,12 +54,11 @@ namespace MLCompute {
 #if NET
 	[SupportedOSPlatform ("ios14.0")]
 	[SupportedOSPlatform ("tvos14.0")]
-	[SupportedOSPlatform ("macos11.0")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[iOS (14, 0)]
 	[TV (14, 0)]
-	[Mac (11, 0)]
 	[NoWatch]
 #endif
 	public static class MLCPaddingPolicyExtensions {
@@ -78,12 +75,11 @@ namespace MLCompute {
 #if NET
 	[SupportedOSPlatform ("ios14.0")]
 	[SupportedOSPlatform ("tvos14.0")]
-	[SupportedOSPlatform ("macos11.0")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[iOS (14, 0)]
 	[TV (14, 0)]
-	[Mac (11, 0)]
 	[NoWatch]
 #endif
 	public static class MLCLossTypeExtensions {
@@ -100,12 +96,11 @@ namespace MLCompute {
 #if NET
 	[SupportedOSPlatform ("ios14.0")]
 	[SupportedOSPlatform ("tvos14.0")]
-	[SupportedOSPlatform ("macos11.0")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[iOS (14, 0)]
 	[TV (14, 0)]
-	[Mac (11, 0)]
 	[NoWatch]
 #endif
 	public static class MLCReductionTypeExtensions {
@@ -122,12 +117,11 @@ namespace MLCompute {
 #if NET
 	[SupportedOSPlatform ("ios14.0")]
 	[SupportedOSPlatform ("tvos14.0")]
-	[SupportedOSPlatform ("macos11.0")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[iOS (14, 0)]
 	[TV (14, 0)]
-	[Mac (11, 0)]
 	[NoWatch]
 #endif
 	public static class MLCPaddingTypeExtensions {
@@ -144,12 +138,11 @@ namespace MLCompute {
 #if NET
 	[SupportedOSPlatform ("ios14.0")]
 	[SupportedOSPlatform ("tvos14.0")]
-	[SupportedOSPlatform ("macos11.0")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[iOS (14, 0)]
 	[TV (14, 0)]
-	[Mac (11, 0)]
 	[NoWatch]
 #endif
 	public static class MLCConvolutionTypeExtensions {
@@ -166,12 +159,11 @@ namespace MLCompute {
 #if NET
 	[SupportedOSPlatform ("ios14.0")]
 	[SupportedOSPlatform ("tvos14.0")]
-	[SupportedOSPlatform ("macos11.0")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[iOS (14, 0)]
 	[TV (14, 0)]
-	[Mac (11, 0)]
 	[NoWatch]
 #endif
 	public static class MLCPoolingTypeExtensions {
@@ -188,12 +180,11 @@ namespace MLCompute {
 #if NET
 	[SupportedOSPlatform ("ios14.0")]
 	[SupportedOSPlatform ("tvos14.0")]
-	[SupportedOSPlatform ("macos11.0")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[iOS (14, 0)]
 	[TV (14, 0)]
-	[Mac (11, 0)]
 	[NoWatch]
 #endif
 	public static class MLCSoftmaxOperationExtensions {
@@ -210,12 +201,11 @@ namespace MLCompute {
 #if NET
 	[SupportedOSPlatform ("ios14.0")]
 	[SupportedOSPlatform ("tvos14.0")]
-	[SupportedOSPlatform ("macos11.0")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[iOS (14, 0)]
 	[TV (14, 0)]
-	[Mac (11, 0)]
 	[NoWatch]
 #endif
 	public static class MLCSampleModeExtensions {
@@ -232,12 +222,11 @@ namespace MLCompute {
 #if NET
 	[SupportedOSPlatform ("ios14.0")]
 	[SupportedOSPlatform ("tvos14.0")]
-	[SupportedOSPlatform ("macos11.0")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[iOS (14, 0)]
 	[TV (14, 0)]
-	[Mac (11, 0)]
 	[NoWatch]
 #endif
 	public static class MLCLstmResultModeExtensions {
@@ -253,12 +242,11 @@ namespace MLCompute {
 
 #if NET
 	[SupportedOSPlatform ("tvos14.5")]
-	[SupportedOSPlatform ("macos11.3")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("ios14.5")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[TV (14, 5)]
-	[Mac (11, 3)]
 	[iOS (14, 5)]
 	[NoWatch]
 #endif
@@ -275,13 +263,12 @@ namespace MLCompute {
 
 #if NET
 	[SupportedOSPlatform ("tvos15.0")]
-	[SupportedOSPlatform ("macos12.0")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("ios15.0")]
-	[SupportedOSPlatform ("maccatalyst15.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[NoWatch]
 	[TV (15, 0)]
-	[Mac (12, 0)]
 	[iOS (15, 0)]
 	[MacCatalyst (15, 0)]
 #endif

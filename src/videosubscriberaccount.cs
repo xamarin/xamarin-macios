@@ -287,7 +287,7 @@ namespace VideoSubscriberAccount {
 		[NullAllowed, Export ("accountProviderAuthenticationToken")]
 		string AccountProviderAuthenticationToken { get; set; }
 
-		[TV (14, 2), iOS (14, 2), Mac (11, 0)]
+		[TV (14, 2), iOS (14, 2)]
 		[NullAllowed, Export ("applicationAccountProviders", ArgumentSemantic.Copy)]
 		VSAccountApplicationProvider [] ApplicationAccountProviders { get; set; }
 	}
@@ -349,7 +349,6 @@ namespace VideoSubscriberAccount {
 		[Export ("tierIdentifiers", ArgumentSemantic.Copy)]
 		string [] TierIdentifiers { get; set; }
 
-		[TV (11, 3), iOS (11, 3)]
 		[NullAllowed, Export ("billingIdentifier")]
 		string BillingIdentifier { get; set; }
 	}
@@ -369,7 +368,7 @@ namespace VideoSubscriberAccount {
 		void SetCurrentSubscription ([NullAllowed] VSSubscription currentSubscription);
 	}
 
-	[TV (14, 2), iOS (14, 2), Mac (11, 0)]
+	[TV (14, 2), iOS (14, 2)]
 	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
