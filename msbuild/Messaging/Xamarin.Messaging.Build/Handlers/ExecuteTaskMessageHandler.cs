@@ -25,6 +25,10 @@ namespace Xamarin.Messaging.Build {
 
 		protected override async Task<ExecuteTaskResult> ExecuteAsync (ExecuteTaskMessage message)
 		{
+			var msg = $"{global::System.DateTime.UtcNow.ToString ("o")} ExecuteTaskMessageHandler.ExecuteAsync ({message.TaskName})\n{global::System.Environment.StackTrace}";
+			Console.WriteLine (msg);
+			Console.Error.WriteLine (msg);
+			tracer.Info (msg);
 			return await Task.Run (() => {
 				// We need to lock in order to change the current directory
 				lock (lockObject) {
