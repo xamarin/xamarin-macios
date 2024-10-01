@@ -131,19 +131,19 @@ namespace Foundation {
 		}
 
 		public NSNumber (nfloat value) :
-			this ((double)value)
+			this ((double) value)
 		{
 		}
 
 		public nfloat NFloatValue {
 			get {
-				return (nfloat)DoubleValue;
+				return (nfloat) DoubleValue;
 			}
 		}
 
 		public static NSNumber FromNFloat (nfloat value)
 		{
-			return (FromDouble ((double)value));
+			return (FromDouble ((double) value));
 		}
 
 		public override string ToString ()
