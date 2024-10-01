@@ -3,5 +3,5 @@
 		<!-- Used by the AppendRuntimeIdentifierToOutputPath_* tests -->
 		<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
 	</PropertyGroup>
-	<Import Project="$(MSBuildThisFileDirectory)../../../Directory.Build.props" />
+	<Import Project="$(MSBuildThisFileDirectory)../../Directory.Build.props" />
 </Project>

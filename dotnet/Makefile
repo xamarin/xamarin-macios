@@ -546,4 +546,9 @@ all-hook::
 	$(Q) $(MAKE) shutdown-build-server
 
 shutdown-build-server:
-	$(Q) $(DOTNET) build-server shutdown
+	$(Q) echo "Shutting down build servers:"
+	$(Q) $(DOTNET) build-server shutdown | sed 's/^/    /' || true
+	$(Q) echo "Listing .NET processes still alive:"
+	$(Q) pgrep -lf "^$(DOTNET)" | sed 's/^/    /' || true
+	$(Q) echo "Killing the above mentioned processes."
+	$(Q) pkill -9 -f "^$(DOTNET)" | sed 's/^/    /' || true

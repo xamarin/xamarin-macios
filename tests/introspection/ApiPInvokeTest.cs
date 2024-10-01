@@ -158,13 +158,7 @@ namespace Introspection {
 				case "System.Native":
 				case "System.Security.Cryptography.Native.Apple":
 				case "System.Net.Security.Native":
-					if (MonoNativeConfig.LinkMode == MonoNativeLinkMode.None)
-						continue;
-#if __IOS__
-					libname = MonoNativeConfig.GetPInvokeLibraryName (MonoNativeFlavor.Unified, MonoNativeConfig.LinkMode);
-#else
 					libname = null;
-#endif
 					break;
 				}
 
@@ -248,13 +242,7 @@ namespace Introspection {
 					case "System.Native":
 					case "System.Security.Cryptography.Native.Apple":
 					case "System.Net.Security.Native":
-						if (MonoNativeConfig.LinkMode == MonoNativeLinkMode.None)
-							continue;
-#if __IOS__
-						path = MonoNativeConfig.GetPInvokeLibraryName (MonoNativeFlavor.Unified, MonoNativeConfig.LinkMode);
-#else
 						path = null;
-#endif
 						break;
 					}
 
