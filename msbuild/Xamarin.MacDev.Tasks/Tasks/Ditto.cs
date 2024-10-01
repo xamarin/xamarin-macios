@@ -80,7 +80,7 @@ namespace Xamarin.MacDev.Tasks {
 				}
 			}
 
-			Log.LogWarning ($"Ditto.Execute () about to execute locally");
+			Log.LogWarning ($"Ditto.Execute () about to execute locally\n{Environment.StackTrace}");
 			cancellationTokenSource = new CancellationTokenSource ();
 			cancellationTokenSource.CancelAfter (TimeSpan.FromMinutes (2)); // FIXME: remove this
 			ExecuteAsync (Log, "/usr/bin/ditto", args, cancellationToken: cancellationTokenSource.Token).Wait ();
