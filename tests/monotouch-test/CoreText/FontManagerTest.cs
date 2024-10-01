@@ -217,8 +217,7 @@ namespace MonoTouchFixtures.CoreText {
 			Exception? ex = null;
 			using (CTFontDescriptor fd = new CTFontDescriptor (fda)) {
 				var array = new [] { fd };
-				CTFontManager.RegisterFontDescriptors (array, CTFontManagerScope.Process, true, (NSError [] errors, bool done) =>
-				{
+				CTFontManager.RegisterFontDescriptors (array, CTFontManagerScope.Process, true, (NSError [] errors, bool done) => {
 					try {
 						Assert.True (done, "done: RegisterFontDescriptors");
 					} catch (Exception e) {
@@ -228,8 +227,7 @@ namespace MonoTouchFixtures.CoreText {
 				});
 				Assert.That (ex, Is.Null.Or.Not.Null, "RegisterFontDescriptors");
 
-				CTFontManager.UnregisterFontDescriptors (array, CTFontManagerScope.Process, (NSError [] errors, bool done) =>
-				{
+				CTFontManager.UnregisterFontDescriptors (array, CTFontManagerScope.Process, (NSError [] errors, bool done) => {
 					try {
 						Assert.True (done, "done: UnregisterFontDescriptors");
 					} catch (Exception e) {
