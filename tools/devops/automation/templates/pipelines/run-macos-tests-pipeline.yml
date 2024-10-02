@@ -21,49 +21,7 @@ parameters:
   - name: macTestsConfigurations
     displayName: macOS test configurations to run
     type: object
-    default: [
-      {
-        stageName: 'mac_12_m1',
-        displayName: 'M1 - Mac Ventura (12)',
-        macPool: 'VSEng-VSMac-Xamarin-Shared',
-        useImage: false,
-        statusContext: 'M1 - Mac Monterey (12)',
-        demands: [
-          "Agent.OS -equals Darwin",
-          "macOS.Name -equals Monterey",
-          "macOS.Architecture -equals arm64",
-          "Agent.HasDevices -equals False",
-          "Agent.IsPaired -equals False"
-        ]
-      },
-      {
-        stageName: 'mac_13_m1',
-        displayName: 'M1 - Mac Ventura (13)',
-        macPool: 'VSEng-VSMac-Xamarin-Shared',
-        useImage: false,
-        statusContext: 'M1 - Mac Ventura (13)',
-        demands: [
-          "Agent.OS -equals Darwin",
-          "macOS.Name -equals Ventura",
-          "macOS.Architecture -equals arm64",
-          "Agent.HasDevices -equals False",
-          "Agent.IsPaired -equals False"
-        ]
-      },
-      {
-        stageName: 'mac_14_x64',
-        displayName: 'X64 - Mac Sonoma (14)',
-        macPool: 'VSEng-Xamarin-RedmondMacBuildPool-iOS-Untrusted',
-        useImage: false,
-        statusContext: 'X64 - Mac Sonoma (14)',
-        demands: [
-          "Agent.OS -equals Darwin",
-          "macOS.Name -equals Sonoma",
-          "macOS.Architecture -equals x64",
-          "Agent.HasDevices -equals False",
-          "Agent.IsPaired -equals False"
-        ]
-      }]
+    default: []
 
   - name: pool
     type: string
