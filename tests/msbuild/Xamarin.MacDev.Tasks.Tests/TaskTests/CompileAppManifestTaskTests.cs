@@ -21,8 +21,8 @@ namespace Xamarin.MacDev.Tasks {
 			task.AssemblyName = "AssemblyName";
 			task.AppBundleName = "AppBundleName";
 			task.CompiledAppManifest = new TaskItem (Path.Combine (tmpdir, "TemporaryAppManifest.plist"));
-			task.DefaultSdkVersion = Sdks.GetAppleSdk (platform).GetInstalledSdkVersions (false).First ().ToString ()!;
-			task.SdkVersion = task.DefaultSdkVersion ?? string.Empty;
+			task.DefaultSdkVersion = Sdks.GetAppleSdk (platform).GetInstalledSdkVersions (false).First ().ToString ();
+			task.SdkVersion = task.DefaultSdkVersion;
 			task.TargetFrameworkMoniker = TargetFramework.GetTargetFramework (platform, true).ToString ();
 
 			return task;

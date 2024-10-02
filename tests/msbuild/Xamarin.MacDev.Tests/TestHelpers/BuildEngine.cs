@@ -246,7 +246,7 @@ namespace Xamarin.Tests {
 				foreach (var prop in properties)
 					args.Add ($"/p:{prop.Key}={prop.Value}");
 			}
-			var binlog = Path.Combine (Path.GetDirectoryName (project)!, $"log-{target}-{DateTime.Now:yyyyMMdd_HHmmss}.binlog");
+			var binlog = Path.Combine (Path.GetDirectoryName (project), $"log-{target}-{DateTime.Now:yyyyMMdd_HHmmss}.binlog");
 			args.Add ($"/bl:{binlog}");
 
 			var output = new StringBuilder ();
