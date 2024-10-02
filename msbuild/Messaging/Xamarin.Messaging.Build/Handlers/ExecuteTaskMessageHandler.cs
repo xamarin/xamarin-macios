@@ -1,3 +1,4 @@
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
@@ -25,7 +26,7 @@ namespace Xamarin.Messaging.Build {
 
 		protected override async Task<ExecuteTaskResult> ExecuteAsync (ExecuteTaskMessage message)
 		{
-			var msg = $"{global::System.DateTime.UtcNow.ToString ("o")} ExecuteTaskMessageHandler.ExecuteAsync ({message.TaskName})\n{global::System.Environment.StackTrace}";
+			var msg = $"{System.DateTime.UtcNow.ToString ("o")} ExecuteTaskMessageHandler.ExecuteAsync ({message.TaskName})\n{System.Environment.StackTrace}";
 			Console.WriteLine (msg);
 			Console.Error.WriteLine (msg);
 			tracer.Info (msg);
