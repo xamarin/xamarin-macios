@@ -111,15 +111,6 @@ steps:
 - bash: |
     set -x
     set -e
-
-    make -C src build/ios.rsp
-  workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios
-  displayName: Generate rsp files
-  timeoutInMinutes: 30
-
-- bash: |
-    set -x
-    set -e
     make -C tools/xibuild
   workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios
   displayName: Build test dependencies
