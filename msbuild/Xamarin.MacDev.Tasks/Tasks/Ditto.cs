@@ -44,17 +44,24 @@ namespace Xamarin.MacDev.Tasks {
 
 		CancellationTokenSource? cancellationTokenSource;
 
+		void LogLine (string msg)
+		{
+			Log.LogWarning (msg);
+			Console.WriteLine ($"{DateTime.UtcNow.ToString("o")} Ditto stdout: {msg}");
+			Console.Error.WriteLine ($"{DateTime.UtcNow.ToString("o")} Ditto stderr: {msg}");
+		}
+
 		public override bool Execute ()
 		{
 			if (ShouldExecuteRemotely ()) {
-				Log.LogWarning ($"Ditto.Execute () will execute remotely");
+				LogLine ($"Ditto.Execute () will execute remotely");
 				var taskRunner = new TaskRunner (SessionId, BuildEngine4);
 
 				taskRunner.FixReferencedItems (this, new ITaskItem [] { Source! });
 
-				Log.LogWarning ($"Ditto.Execute () about to execute remotely");
+				LogLine ($"Ditto.Execute () about to execute remotely");
 				var rv = taskRunner.RunAsync (this).Result;
-				Log.LogWarning ($"Ditto.Execute () executed remotely: {rv}");
+				LogLine ($"Ditto.Execute () executed remotely: {rv}");
 				return rv;
 			}
 
@@ -80,11 +87,11 @@ namespace Xamarin.MacDev.Tasks {
 				}
 			}
 
-			Log.LogWarning ($"Ditto.Execute () about to execute locally\n{Environment.StackTrace}");
+			LogLine ($"Ditto.Execute () about to execute locally\n{Environment.StackTrace}");
 			cancellationTokenSource = new CancellationTokenSource ();
 			cancellationTokenSource.CancelAfter (TimeSpan.FromMinutes (2)); // FIXME: remove this
 			ExecuteAsync (Log, "/usr/bin/ditto", args, cancellationToken: cancellationTokenSource.Token).Wait ();
-			Log.LogWarning ($"Ditto.Execute () executed locally");
+			LogLine ($"Ditto.Execute () executed locally");
 
 			// Create a list of all the files we've copied
 			var copiedFiles = new List<ITaskItem> ();
