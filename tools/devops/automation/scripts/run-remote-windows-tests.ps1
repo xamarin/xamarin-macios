@@ -6,6 +6,8 @@ $Env:ServerUser = $Env:MAC_AGENT_USER
 $Env:ServerPassword = $Env:XMA_PASSWORD
 $Env:_DotNetRootRemoteDirectory = "/Users/$Env:MAC_AGENT_USER/Library/Caches/Xamarin/XMA/SDKs/dotnet/"
 
+$Env:SkipCompatibleRuntimeCheck = "true"
+
 & $Env:DOTNET `
     test `
     "$Env:BUILD_SOURCESDIRECTORY/xamarin-macios/tests/dotnet/UnitTests/DotNetUnitTests.csproj" `
