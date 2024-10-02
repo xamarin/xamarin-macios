@@ -144,9 +144,8 @@ steps:
 # Go get the tests!, this depends on how the test was triggered
 - ${{ if or(contains(variables['Build.Reason'], 'ResourceTrigger'), contains(variables['Build.Reason'], 'BuildCompletion'), contains(variables['Build.DefinitionName'], 'xamarin-macios-ci-tests'), contains(variables['Build.DefinitionName'], 'xamarin-macios-pr-tests')) }}:
   - download: macios
-    artifact: mac-test-package
     displayName: Download Mac tests
-    patterns: '**/mac-test-package.7z'
+    artifact: 'mac-test-package'
 
   # the default location when downloading is $(Pipeline.Workspace)/<pipeline resource identifier>/<artifact name>
   - pwsh: |
@@ -162,7 +161,7 @@ steps:
   - task: DownloadPipelineArtifact@2
     displayName: Download Mac tests
     inputs:
-      patterns: '**/mac-test-package.7z'
+      artifact: 'mac-test-package'
       allowFailedBuilds: true
       path: $(Build.SourcesDirectory)/artifacts/tmp
 
