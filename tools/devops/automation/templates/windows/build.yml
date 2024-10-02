@@ -90,7 +90,7 @@ steps:
       Write-Host "Looking in '$(Build.SourcesDirectory)\\artifacts"
       Get-ChildItem "$(Build.SourcesDirectory)\\artifacts" -Recurse
     } catch {
-      Write-Host "Exception occured: $_"
+      Write-Host "Exception occurred: $_"
     }
   displayName: 'List downloaded artifacts'
   continueOnError: true
@@ -110,7 +110,7 @@ steps:
 
 - task: AzureKeyVault@2
   inputs:
-    azureSubscription: 'Xamarin - R&D - XamarinSecurity'
+    azureSubscription: 'Xamarin - SDK Engineering - macios-team-pair-to-mac-ci'
     KeyVaultName: 'xamarin-ios-vault'
     SecretsFilter: 'RemoteMacIdRsa'
   displayName: 'Download id_rsa'
@@ -157,22 +157,22 @@ steps:
     try {
       New-Item -Path "D:\Program Files (x86)\Microsoft SDKs\" -Name "NuGetPackages" -ItemType "directory"
     } catch {
-      Write-Host "Exception occured: $_"
+      Write-Host "Exception occurred: $_"
     }
     try {
       New-Item -Path "D:\Program Files (x86)\Microsoft SDKs\" -Name "Shared" -ItemType "directory"
     } catch {
-      Write-Host "Exception occured: $_"
+      Write-Host "Exception occurred: $_"
     }
     try {
       New-Item -Path "D:\Program Files (x86)\Microsoft SDKs\Shared\" -Name "NuGetPackages" -ItemType "directory"
     } catch {
-      Write-Host "Exception occured: $_"
+      Write-Host "Exception occurred: $_"
     }
     try {
       New-Item -Path "D:\Program Files (x86)\Microsoft Visual Studio\Shared\NuGetPackages" -Name "NuGetPackages" -ItemType "directory"
     } catch {
-      Write-Host "Exception occured: $_"
+      Write-Host "Exception occurred: $_"
     }
   displayName: 'Create directories for NuGet'
   continueOnError: true
@@ -342,13 +342,13 @@ steps:
     $githubComments = New-GitHubCommentsObjectFromUrl -Url "$(Build.Repository.Uri)" -Token $(GitHub.Token) -Hash $Env:COMMENT_HASH
 
     if (Test-Path -Path "$Env:GITHUB_FAILURE_COMMENT_FILE" -PathType Leaf)  {
-      $githubComments.NewCommentFromFile("${{ parameters.statusContext }} failed", ":x:", "$Env:GITHUB_FAILURE_COMMENT_FILE")
+      $githubComments.NewCommentFromFile("${{ parameters.statusContext }} failed", ":x:", "$Env:GITHUB_FAILURE_COMMENT_FILE", "windows tests")
     } elseif ("$($Env:AGENT_JOBSTATUS)" -ne "Succeeded") {
       $message = ":x: $($Env:AGENT_JOBSTATUS) :x:"
-      $githubComments.NewCommentFromMessage("${{ parameters.statusContext }} failed", ":x:", $message)
+      $githubComments.NewCommentFromMessage("${{ parameters.statusContext }} failed", ":x:", $message, "windows tests")
     } else {
       $message = ":white_check_mark: **All** ${{ parameters.statusContext }} passed."
-      $githubComments.NewCommentFromMessage("${{ parameters.statusContext }} passed", ":computer:", $message)
+      $githubComments.NewCommentFromMessage("${{ parameters.statusContext }} passed", ":computer:", $message, "windows tests")
     }
   displayName: 'Report results to GitHub'
   timeoutInMinutes: 5

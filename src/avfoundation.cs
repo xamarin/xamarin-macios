@@ -221,7 +221,7 @@ namespace AVFoundation {
 	}
 
 #if !NET
-	[Obsolete ("Use AVMediaTypes enum values")]
+	[Obsolete ("Use AVMediaTypes enum values.")]
 	[NoWatch]
 	[BaseType (typeof (NSObject))]
 	[Static]
@@ -420,7 +420,7 @@ namespace AVFoundation {
 
 #if !NET
 	[NoWatch]
-	[Obsolete ("Use AVMediaCharacteristics enum values")]
+	[Obsolete ("Use AVMediaCharacteristics enum values.")]
 	[BaseType (typeof (NSObject))]
 	[Static]
 	interface AVMediaCharacteristic {
@@ -598,7 +598,7 @@ namespace AVFoundation {
 	[NoWatch]
 	[BaseType (typeof (NSObject))]
 	[Static]
-	[Obsolete ("Use AVFileTypes enum values")]
+	[Obsolete ("Use AVFileTypes enum values.")]
 	interface AVFileType {
 		[Field ("AVFileTypeQuickTimeMovie")]
 		NSString QuickTimeMovie { get; }
@@ -1157,6 +1157,14 @@ namespace AVFoundation {
 		[MacCatalyst (13, 1)]
 		[Export ("outputType", ArgumentSemantic.Assign)]
 		AVAudioEnvironmentOutputType OutputType { get; set; }
+
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0), NoWatch]
+		[Export ("listenerHeadTrackingEnabled")]
+		bool ListenerHeadTrackingEnabled {
+			[Bind ("isListenerHeadTrackingEnabled")]
+			get;
+			set;
+		}
 	}
 
 	[MacCatalyst (13, 1)]
@@ -1237,6 +1245,14 @@ namespace AVFoundation {
 
 		[Export ("writeFromBuffer:error:")]
 		bool WriteFromBuffer (AVAudioPcmBuffer buffer, out NSError outError);
+
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("close")]
+		void Close ();
+
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("isOpen")]
+		bool IsOpen { get; }
 	}
 
 	[MacCatalyst (13, 1)]
@@ -1957,13 +1973,22 @@ namespace AVFoundation {
 	/// <summary>The delegate for <see cref="M:AVFoundation.AVAudioSession.RequestRecordPermission(AVFoundation.AVPermissionGranted)" />.</summary>
 	delegate void AVPermissionGranted (bool granted);
 
-	[iOS (14, 5), Watch (7, 4), NoTV, NoMac]
+	[iOS (14, 5), Watch (7, 4), TV (14, 5), Mac (11, 3)]
 	[MacCatalyst (14, 5)]
 	[Native]
 	public enum AVAudioSessionInterruptionReason : ulong {
 		Default = 0,
+		[Deprecated (PlatformName.MacCatalyst, 16, 0, message: "Not reported anymore.")]
+		[Deprecated (PlatformName.iOS, 16, 0, message: "Not reported anymore.")]
+		[Deprecated (PlatformName.TvOS, 16, 0, message: "Not reported anymore.")]
+		[Deprecated (PlatformName.MacOSX, 11, 3, message: "Not reported anymore.")]
+		[Deprecated (PlatformName.WatchOS, 9, 0, message: "Not reported anymore.")]
 		AppWasSuspended = 1,
 		BuiltInMicMuted = 2,
+		// visionOS only // WasBackgrounded = 3,
+		[iOS (17, 0), Watch (10, 0), TV (17, 0), MacCatalyst (17, 0), NoMac]
+		RouteDisconnected = 4,
+		// visionOS only // DeviceUnauthenticated = 5,
 	}
 
 	[Watch (8, 0), TV (15, 0), NoMac, iOS (15, 0), MacCatalyst (15, 0)]
@@ -11416,9 +11441,10 @@ namespace AVFoundation {
 
 	/// <summary>Enumerates the types of device that can capture audiovisual data.</summary>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[NoTV, NoWatch]
+	[TV (17, 0), NoWatch]
 	enum AVCaptureDeviceType {
 
+		[NoTV]
 		[Field ("AVCaptureDeviceTypeBuiltInMicrophone")]
 		BuiltInMicrophone,
 
@@ -11430,6 +11456,7 @@ namespace AVFoundation {
 		[Field ("AVCaptureDeviceTypeBuiltInTelephotoCamera")]
 		BuiltInTelephotoCamera,
 
+		[NoTV]
 		[NoMac]
 		[Deprecated (PlatformName.iOS, 10, 2, message: "Use 'BuiltInDualCamera' instead.")]
 		[MacCatalyst (13, 1)]
@@ -11466,9 +11493,14 @@ namespace AVFoundation {
 		[Field ("AVCaptureDeviceTypeExternalUnknown")]
 		ExternalUnknown,
 
-		[NoWatch, NoTV, NoMac, MacCatalyst (15, 4), iOS (15, 4)]
+		[NoWatch, TV (17, 0), NoMac, MacCatalyst (15, 4), iOS (15, 4)]
 		[Field ("AVCaptureDeviceTypeBuiltInLiDARDepthCamera")]
 		BuiltInLiDarDepthCamera,
+
+		[NoWatch]
+		[iOS (17, 0), MacCatalyst (17, 0), TV (17, 0), Mac (14, 0)]
+		[Field ("AVCaptureDeviceTypeExternal")]
+		External,
 	}
 
 	[NoTV, NoWatch] // matches API that uses it.
@@ -14055,6 +14087,10 @@ namespace AVFoundation {
 
 		[Export ("errorComment"), NullAllowed]
 		string ErrorComment { get; }
+
+		[Watch (10, 5), TV (17, 5), Mac (14, 5), iOS (17, 5), MacCatalyst (17, 5)]
+		[NullAllowed, Export ("allHTTPResponseHeaderFields")]
+		NSDictionary<NSString, NSString> AllHttpResponseHeaderFields { get; }
 	}
 
 	interface IAVPlayerItemMetadataCollectorPushDelegate { }

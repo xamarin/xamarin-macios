@@ -2,7 +2,7 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-    <MergeSystemAssemblies Condition="'$(MergeSystemAssemblies)' == ''">true</MergeSystemAssemblies>
+    <MergeSystemAssemblies Condition="'$(MergeSystemAssemblies)' == ''">false</MergeSystemAssemblies>
   </PropertyGroup>
 
   <ItemGroup>
@@ -71,6 +71,7 @@
     </ItemGroup>
     <ItemGroup>
       <ReferenceCopyLocalDirs Include="@(ReferenceCopyLocalPaths -&gt; '%(RootDir)%(Directory)')" />
+      <ReferenceCopyLocalDirs Include="@(ReferencePathWithRefAssemblies -&gt; '%(RootDir)%(Directory)')" />
       <ReferenceCopyLocalPaths Remove="@(MergedAssemblies)" />
       <LibDir Include="@(ReferenceCopyLocalDirs -&gt; Distinct())" />
     </ItemGroup>
@@ -85,9 +86,9 @@
       <ILRepackArgs>$(ILRepackArgs) "/lib:$(NetstandardDirectory)"</ILRepackArgs> <!-- This is needed for ilrepack to find netstandard.dll, which is referenced by the System.Text.Json assembly -->
     </PropertyGroup>
     <PropertyGroup>
-      <SYSTEM_MONO Condition="'$(SYSTEM_MONO)' == ''">/Library/Frameworks/Mono.framework/Versions/Current/Commands/mono</SYSTEM_MONO>
+      <LOCAL_DOTNET_PATH Condition="'$(LOCAL_DOTNET_PATH)' == ''">$(MSBuildThisFileDirectory)../builds/downloads/dotnet/dotnet</LOCAL_DOTNET_PATH>
     </PropertyGroup>
-    <Exec Command="$(SYSTEM_MONO) &quot;$(ILRepack)&quot; $(ILRepackArgs)" WorkingDirectory="$(MSBuildProjectDirectory)\$(OutputPath)" StandardErrorImportance="high" StandardOutputImportance="low" ConsoleToMSBuild="true" ContinueOnError="true">
+    <Exec Command="$(LOCAL_DOTNET_PATH) tool run ilrepack $(ILRepackArgs)" WorkingDirectory="$(MSBuildProjectDirectory)\$(OutputPath)" StandardErrorImportance="high" StandardOutputImportance="low" ConsoleToMSBuild="true" ContinueOnError="true">
       <Output TaskParameter="ConsoleOutput" PropertyName="ILRepackOutput" />
       <Output TaskParameter="ExitCode" PropertyName="ExitCode" />
     </Exec>

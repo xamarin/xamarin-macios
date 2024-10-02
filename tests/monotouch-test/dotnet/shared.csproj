@@ -15,7 +15,6 @@
     <LinkMode>None</LinkMode>
     <!-- Don't remove native symbols, because it makes debugging native crashes harder -->
     <MtouchNoSymbolStrip>true</MtouchNoSymbolStrip>
-    <CodesignEntitlements Condition="'$(Platform)' == 'iPhoneSimulator'">$(MonoTouchTestDirectory)\Entitlements.plist</CodesignEntitlements>
 
     <DefineConstants Condition="'$(Configuration)' == 'Debug'">$(DefineConstants);DEBUG</DefineConstants>
 
@@ -49,9 +48,15 @@
 
   <ItemGroup>
     <ReferenceNativeSymbol Include="Inexistent" SymbolType="ObjectiveCClass" SymbolMode="Ignore" />
+    <ReferenceNativeSymbol Include="x_native_field" SymbolType="Field" />
   </ItemGroup>
 
   <Import Project="$(RootTestsDirectory)/common/shared-dotnet.csproj" />
+
+  <PropertyGroup>
+    <!-- Must be done after importing shared-dotnet.csproj -->
+    <CodesignEntitlements Condition="'$(_IsSimulatorBuild)' == 'true'">$(MonoTouchTestDirectory)\Entitlements.plist</CodesignEntitlements>
+  </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="$(RootTestsDirectory)\EmbeddedResources\dotnet\$(_PlatformName)\EmbeddedResources.csproj" />

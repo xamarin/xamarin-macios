@@ -64,13 +64,20 @@ steps:
     AUTH_TOKEN_VSENG_XAMARIN_MAC_DEVICES_P12: ${{ parameters.xqaCertPass }}
     AUTH_TOKEN_VSENG_XAMARIN_MAC_DEVICES_2_P12: ${{ parameters.xqaCertPass }}
 
+# Sets the AzDO.BearerToken variable used as the auth token to disable/reenable agents
+- template: ./generate-token.yml
+
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
 
     New-Item -Path "$($Env:HOME)" -Name "remote_build_testing" -Force -ItemType "directory"
     New-Item -Path "$($Env:HOME)/remote_build_testing" -Name "BuildId.txt" -ItemType "file" -Force -Value "$($Env:BUILD_BUILDID)"
 
-    $vsts = New-VSTS -Org "devdiv" -Project "DevDiv" -Token $(MacPoolAccessToken)
+    $azdoBearerToken = "$(AzDO.BearerToken)"
+    $azdoBearerTokenHint = $azdoBearerToken.Substring(0, 8)
+    Write-Host "AzDO.BearerToken (hint): ${azdoBearerTokenHint}"
+
+    $vsts = New-VSTS -Org "devdiv" -Project "DevDiv" -Token $azdoBearerToken
 
     # get the pool and the agent objects and disable the bot
     $pool = $vsts.Pools.GetPool("${{ parameters.macPool }}")
@@ -78,7 +85,7 @@ steps:
     $vsts.Agents.SetEnabled($pool, $agent, $False)
   displayName: "Disable macOS bot from pool"
 
-- bash: make -C $(Build.SourcesDirectory)/xamarin-macios/tools/devops provision-xcode.csx
+- bash: make -C $(Build.SourcesDirectory)/xamarin-macios/tools/devops provisioning
   displayName: 'Generate Xcode provisioning csx file'
 
 - task: xamops.azdevex.provisionator-task.provisionator@2
@@ -91,7 +98,7 @@ steps:
 
 - task: AzureKeyVault@2
   inputs:
-    azureSubscription: 'Xamarin - R&D - XamarinSecurity'
+    azureSubscription: 'Xamarin - SDK Engineering - macios-team-pair-to-mac-ci'
     KeyVaultName: 'xamarin-ios-vault'
     SecretsFilter: 'RemoteMacIdRsaPub'
   displayName: 'Download id_rsa.pub'

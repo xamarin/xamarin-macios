@@ -37,9 +37,6 @@ namespace Xharness {
 
 		public IEnumerable<TestProject>? ProjectReferences;
 
-		// Optional
-		public MonoNativeInfo? MonoNativeInfo { get; set; }
-
 		public TestProject (TestLabel label, string path, bool isExecutableProject = true)
 		{
 			Label = label;

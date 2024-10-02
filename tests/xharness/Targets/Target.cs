@@ -33,7 +33,6 @@ namespace Xharness.Targets {
 		public bool IsLibrary { get { return outputType == "Library"; } }
 		public bool IsExe { get { return outputType == "Exe"; } }
 		public bool IsBindingProject { get; private set; }
-		public bool IsBCLProject { get { return ProjectPath.Contains ("bcl-test"); } }
 		public bool IsNUnitProject { get; set; }
 
 		public string BundleIdentifier { get { return bundleIdentifier; } protected set { bundleIdentifier = value; } }
@@ -235,9 +234,6 @@ namespace Xharness.Targets {
 			if (templateName.EndsWith (".template", StringComparison.OrdinalIgnoreCase))
 				templateName = Path.GetFileNameWithoutExtension (templateName);
 			templateName = Path.GetFileNameWithoutExtension (templateName);
-
-			if (templateName.Equals ("mono-native-mac", StringComparison.Ordinal))
-				templateName = "mono-native";
 
 			if (!ShouldSkipProjectGeneration) {
 				inputProject = new XmlDocument ();

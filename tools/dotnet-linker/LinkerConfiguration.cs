@@ -351,6 +351,13 @@ namespace Xamarin.Linker {
 						throw new InvalidOperationException ($"Invalid Verbosity '{value}' in {linker_file}");
 					Driver.Verbosity += verbosity;
 					break;
+				case "Warn":
+					try {
+						ErrorHelper.ParseWarningLevel (ErrorHelper.WarningLevel.Warning, value);
+					} catch (Exception ex) {
+						throw new InvalidOperationException ($"Invalid Warn '{value}' in {linker_file}", ex);
+					}
+					break;
 				case "WarnAsError":
 					try {
 						ErrorHelper.ParseWarningLevel (ErrorHelper.WarningLevel.Error, value);
@@ -583,7 +590,7 @@ namespace Xamarin.Linker {
 			if (!allWarnings) {
 				TryGetInstance (context, out var instance);
 				var platform = (instance?.Platform)?.ToString () ?? "unknown";
-				var msg = MessageContainer.CreateCustomErrorMessage (Errors.MX7000 /* An error occured while executing the custom linker steps. Please review the build log for more information. */, 7000, platform);
+				var msg = MessageContainer.CreateCustomErrorMessage (Errors.MX7000 /* An error occurred while executing the custom linker steps. Please review the build log for more information. */, 7000, platform);
 				context.LogMessage (msg);
 			}
 			// ErrorHelper.Show will print our errors and warnings to stderr.

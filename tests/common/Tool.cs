@@ -49,6 +49,19 @@ namespace Xamarin.Tests {
 					case "The class 'NewsstandKit.NKAssetDownload' will not be registered because the NewsstandKit framework has been removed from the iOS SDK.":
 					case "The class 'NewsstandKit.NKLibrary' will not be registered because the NewsstandKit framework has been removed from the iOS SDK.":
 					case "The class 'NewsstandKit.NKIssue' will not be registered because the NewsstandKit framework has been removed from the iOS SDK.":
+					case "The class 'AssetsLibrary.ALAssetRepresentation' will not be registered because the AssetsLibrary framework has been removed from the iOS SDK.":
+					case "The class 'AssetsLibrary.ALAssetsFilter' will not be registered because the AssetsLibrary framework has been removed from the iOS SDK.":
+					case "The class 'AssetsLibrary.ALAssetsGroup' will not be registered because the AssetsLibrary framework has been removed from the iOS SDK.":
+					case "The class 'AssetsLibrary.ALAssetsLibrary' will not be registered because the AssetsLibrary framework has been removed from the iOS SDK.":
+					case "The class 'AssetsLibrary.ALAsset' will not be registered because the AssetsLibrary framework has been removed from the iOS SDK.":
+						return false;
+					}
+					break;
+				case 0000: // this is what mmp reports
+				case 5203:
+					switch (msg.Message) {
+					case "-ld_classic is deprecated and will be removed in a future release":
+					case "Native linking warning: warning: -ld_classic is deprecated and will be removed in a future release":
 						return false;
 					}
 					break;
@@ -90,6 +103,11 @@ namespace Xamarin.Tests {
 			set {
 				output = value;
 			}
+		}
+
+		public void FilterUnrelatedWarnings ()
+		{
+			messages = messages.FilterUnrelatedWarnings ().ToList ();
 		}
 
 		public int Execute (IList<string> arguments)

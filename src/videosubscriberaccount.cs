@@ -9,6 +9,7 @@
 //
 
 using System;
+using System.ComponentModel;
 using Foundation;
 using ObjCRuntime;
 #if MONOMAC
@@ -50,12 +51,16 @@ namespace VideoSubscriberAccount {
 		Granted = 3
 	}
 
+#if !XAMCORE_5_0
+	[EditorBrowsable (EditorBrowsableState.Never)]
+	[Obsolete ("Use 'VSUserAccountQueryOptions' instead.")]
 	[TV (16, 0), Mac (13, 0), iOS (16, 0), NoMacCatalyst]
 	[Native]
 	enum VSUserAccountQueryOption : ulong {
 		None = 0,
 		AllDevices,
 	}
+#endif // !XAMCORE_5_0
 
 	[TV (16, 0), NoMacCatalyst, iOS (16, 0), Mac (13, 0)]
 	[Flags]
@@ -316,6 +321,9 @@ namespace VideoSubscriberAccount {
 		Api,
 	}
 
+	[Deprecated (PlatformName.iOS, 18, 0, message: "Use the 'VSUserAccountType' enum instead.")]
+	[Deprecated (PlatformName.TvOS, 18, 0, message: "Use the 'VSUserAccountType' enum instead.")]
+	[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use the 'VSUserAccount' type instead.")]
 	[NoMacCatalyst]
 	[Native]
 	public enum VSSubscriptionAccessLevel : long {
@@ -324,6 +332,9 @@ namespace VideoSubscriberAccount {
 		Paid,
 	}
 
+	[Deprecated (PlatformName.iOS, 18, 0, message: "Use the 'VSUserAccount' type instead.")]
+	[Deprecated (PlatformName.TvOS, 18, 0, message: "Use the 'VSUserAccount' type instead.")]
+	[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use the 'VSUserAccount' type instead.")]
 	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	interface VSSubscription {
@@ -343,6 +354,9 @@ namespace VideoSubscriberAccount {
 		string BillingIdentifier { get; set; }
 	}
 
+	[Deprecated (PlatformName.iOS, 18, 0, message: "Use the 'VSUserAccountManager' type instead.")]
+	[Deprecated (PlatformName.TvOS, 18, 0, message: "Use the 'VSUserAccountManager' type instead.")]
+	[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use the 'VSUserAccount' type instead.")]
 	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -435,8 +449,27 @@ namespace VideoSubscriberAccount {
 		[Export ("deviceCategory")]
 		VSOriginatingDeviceCategory DeviceCategory { get; }
 
+		[TV (17, 4), NoWatch, NoMacCatalyst, Mac (14, 4), iOS (17, 4)]
+		[NullAllowed, Export ("appleSubscription", ArgumentSemantic.Strong)]
+		VSAppleSubscription AppleSubscription { get; set; }
+
 		[Export ("initWithAccountType:updateURL:")]
 		NativeHandle Constructor (VSUserAccountType accountType, [NullAllowed] NSUrl url);
+	}
+
+	[TV (17, 4), NoWatch, NoMacCatalyst, Mac (14, 4), iOS (17, 4)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface VSAppleSubscription {
+
+		[Export ("customerID", ArgumentSemantic.Strong)]
+		string CustomerId { get; set; }
+
+		[Export ("productCodes", ArgumentSemantic.Strong)]
+		string [] ProductCodes { get; set; }
+
+		[Export ("initWithCustomerID:productCodes:")]
+		NativeHandle Constructor (string customerId, string [] productCodes);
 	}
 
 }

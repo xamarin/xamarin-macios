@@ -74,7 +74,6 @@ namespace Xharness.Targets {
 			csproj.SetOutputType ("Library");
 			csproj.AddAdditionalDefines ("XAMCORE_3_0;TODAY_EXTENSION");
 			var ext = IsFSharp ? "fs" : "cs";
-			// we have diff templates for the bcl tests because they use xunit/nunit and not monotouch nunit.
 			csproj.AddCompileInclude ("TodayExtensionMain." + ext, Path.Combine (Harness.TodayExtensionTemplate, "TodayExtensionMain." + ext), true);
 			csproj.AddInterfaceDefinition (Path.Combine (Harness.TodayExtensionTemplate, "TodayView.storyboard").Replace ('/', '\\'));
 			csproj.SetExtraLinkerDefs ("extra-linker-defs" + ExtraLinkerDefsSuffix + ".xml");
@@ -130,9 +129,7 @@ namespace Xharness.Targets {
 
 		protected override string GetMinimumOSVersion (string templateMinimumOSVersion)
 		{
-			if (MonoNativeInfo is null)
-				return templateMinimumOSVersion;
-			return MonoNativeHelper.GetMinimumOSVersion (DevicePlatform.iOS);
+			return templateMinimumOSVersion;
 		}
 
 		public override IEnumerable<RelatedProject> GetRelatedProjects ()

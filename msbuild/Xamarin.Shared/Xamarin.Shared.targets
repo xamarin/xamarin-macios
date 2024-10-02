@@ -1674,6 +1674,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 
 		<PropertyGroup>
 			<_CompiledApiDefinitionAssembly>$(DeviceSpecificIntermediateOutputPath)compiled-api-definitions.dll</_CompiledApiDefinitionAssembly>
+			<_CompiledApiDefinitionNoWarn>$(_CompiledApiDefinitionNoWarn);$(NoWarn)</_CompiledApiDefinitionNoWarn>
 			<_CompiledApiDefinitionNoWarn>$(_CompiledApiDefinitionNoWarn);436</_CompiledApiDefinitionNoWarn>
 			<_CompiledApiDefinitionDocumentationFile>$(DeviceSpecificIntermediateOutputPath)compiled-api-definitions.xml</_CompiledApiDefinitionDocumentationFile>
 			<_CompiledApiDefinitionNoWarn>$(_CompiledApiDefinitionNoWarn);1591</_CompiledApiDefinitionNoWarn> <!-- Don't expect every public API to have documentation -->
@@ -1932,7 +1933,9 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			<_StampDirectory>$(DeviceSpecificIntermediateOutputPath)resourcestamps\</_StampDirectory>
 		</PropertyGroup>
 		<ItemGroup>
-			<_UnpackLibraryResourceItems Include="@(ReferencePath);@(ReferenceDependencyPaths)">
+			<_UnpackLibraryResourceItems Include="@(ReferencePath)" Condition="'%(ReferencePath.FrameworkReferenceName)' != 'Microsoft.NETCore.App' And '%(ReferencePath.FrameworkReferenceName)' != 'Microsoft.$(_PlatformName)'" />
+			<_UnpackLibraryResourceItems Include="@(ReferenceDependencyPaths)" Condition="'%(ReferenceDependencyPaths.FrameworkReferenceName)' != 'Microsoft.NETCore.App' And '%(ReferenceDependencyPaths.FrameworkReferenceName)' != 'Microsoft.$(_PlatformName)'" />
+			<_UnpackLibraryResourceItems>
 				<StampFile>$(_StampDirectory)%(FileName).stamp</StampFile>
 				<ItemsFile>$(_StampDirectory)%(FileName).items</ItemsFile>
 			</_UnpackLibraryResourceItems>
@@ -1981,14 +1984,12 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		<MakeDir Directories="$(_StampDirectory)" />
 
 		<!-- This task may be executed locally on Windows (for Hot Restart) -->
-		<!-- Note that ReferenceAssemblies must always be passed all referenced assemblies, even for incremental builds when we're not necessarily unpacking from all assemblies -->
 		<UnpackLibraryResources
 			Condition="'$(IsMacEnabled)' == 'true' Or '$(IsHotRestartBuild)' == 'true'"
 			SessionId="$(BuildSessionId)"
 			Prefix="$(_EmbeddedResourcePrefix)"
 			IntermediateOutputPath="$(DeviceSpecificIntermediateOutputPath)"
 			TargetFrameworkDirectory="$(TargetFrameworkDirectory)"
-			ReferenceAssemblies="@(ReferencePath);@(ReferenceDependencyPaths)"
 			ReferencedLibraries="@(_UnpackLibraryResourceItems)"
 			>
 			<Output TaskParameter="BundleResourcesWithLogicalNames" ItemName="_BundleResourceWithLogicalName" />
@@ -2039,6 +2040,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			<Output TaskParameter="SkipMarkingNSObjectsInUserAssemblies" PropertyName="_SkipMarkingNSObjectsInUserAssemblies" />
 			<Output TaskParameter="Verbosity" PropertyName="_BundlerVerbosity" />
 			<Output TaskParameter="WarnAsError" PropertyName="_BundlerWarnAsError" />
+			<Output TaskParameter="Warn" PropertyName="_BundlerWarn" />
 			<Output TaskParameter="XmlDefinitions" ItemName="_BundlerXmlDefinitions" />
 			<Output TaskParameter="NoStrip" PropertyName="EnableAssemblyILStripping" />
 		</ParseBundlerArguments>

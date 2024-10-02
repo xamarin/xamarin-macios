@@ -46,6 +46,8 @@ namespace CoreML {
 		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		Sequence = 7,
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		State = 8,
 	}
 
 	/// <summary>Enumerates errors that may occur in the use of Core ML.</summary>
@@ -74,10 +76,8 @@ namespace CoreML {
 		// added in xcode12 but it's the same a `Double` and can be used in earlier versions
 		Float64 = 0x10000 | 64,
 		Float32 = 0x10000 | 32,
-#if MONOMAC // macOS 12 Only
-		[Mac (12,0)][NoiOS][NoMacCatalyst][NoWatch][NoTV]
+		[Mac (12, 0), iOS (16, 0), MacCatalyst (16, 0), Watch (9, 0), TV (16, 0)]
 		Float16 = 0x10000 | 16,
-#endif
 		// added in xcode12 but it's the same a `Float32` and can be used in earlier versions
 		Float = 0x10000 | 32,
 		Int32 = 0x20000 | 32,
@@ -134,6 +134,13 @@ namespace CoreML {
 		MiniBatchEnd = 1L << 2,
 	}
 
+	[Watch (10, 4), TV (17, 4), Mac (14, 4), iOS (17, 4), MacCatalyst (17, 4)]
+	[Native]
+	public enum MLReshapeFrequencyHint : long {
+		Frequent = 0,
+		Infrequent = 1,
+	}
+
 	/// <summary>An implementation of <see cref="T:CoreML.IMLFeatureProvider" /> that is backed by a <see cref="T:Foundation.NSDictionary" />.</summary>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -178,6 +185,10 @@ namespace CoreML {
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("sequenceConstraint")]
 		MLSequenceConstraint SequenceConstraint { get; }
+
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0), Watch (11, 0)]
+		[NullAllowed, Export ("stateConstraint")]
+		MLStateConstraint StateConstraint { get; }
 	}
 
 	interface IMLFeatureProvider { }
@@ -556,6 +567,10 @@ namespace CoreML {
 		[MacCatalyst (13, 1)]
 		[Export ("parameterDescriptionsByKey")]
 		NSDictionary<MLParameterKey, MLParameterDescription> ParameterDescriptionsByKey { get; }
+
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("stateDescriptionsByName")]
+		NSDictionary<NSString, MLFeatureDescription> StateDescriptionsByName { get; }
 	}
 
 	[MacCatalyst (13, 1)]
@@ -628,6 +643,10 @@ namespace CoreML {
 		[Export ("initWithShape:dataType:error:")]
 		NativeHandle Constructor (NSNumber [] shape, MLMultiArrayDataType dataType, out NSError error);
 
+		[iOS (18, 0), TV (18, 0), MacCatalyst (18, 0), Mac (15, 0), Watch (11, 0)]
+		[Export ("initWithShape:dataType:strides:")]
+		NativeHandle Constructor (NSNumber [] shape, MLMultiArrayDataType dataType, NSNumber [] strides);
+
 		[Export ("initWithDataPointer:shape:dataType:strides:deallocator:error:")]
 		NativeHandle Constructor (IntPtr dataPointer, NSNumber [] shape, MLMultiArrayDataType dataType, NSNumber [] strides, [NullAllowed] Action<IntPtr> deallocator, out NSError error);
 
@@ -678,6 +697,11 @@ namespace CoreML {
 		[Watch (8, 5), TV (15, 4), Mac (12, 3), iOS (15, 4), MacCatalyst (15, 4)]
 		[Export ("getMutableBytesWithHandler:")]
 		void GetMutableBytes (Action<IntPtr, nint, NSArray<NSNumber>> handler);
+
+		// From MLMultiArray (Transferring) category
+		[iOS (18, 0), TV (18, 0), MacCatalyst (18, 0), Mac (15, 0), Watch (11, 0)]
+		[Export ("transferToMultiArray:")]
+		void TransferToMultiArray (MLMultiArray destinationMultiArray);
 	}
 
 	/// <summary>Contains a value that constrains the type of dictionary keys.</summary>
@@ -938,6 +962,10 @@ namespace CoreML {
 		[Export ("computeUnits", ArgumentSemantic.Assign)]
 		MLComputeUnits ComputeUnits { get; set; }
 
+		[Watch (10, 4), TV (17, 4), Mac (14, 4), iOS (17, 4), MacCatalyst (17, 4)]
+		[Export ("optimizationHints", ArgumentSemantic.Copy)]
+		MLOptimizationHints OptimizationHints { get; set; }
+
 		[Watch (9, 0), TV (16, 0), Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 		[NullAllowed, Export ("modelDisplayName")]
 		string ModelDisplayName { get; set; }
@@ -960,6 +988,11 @@ namespace CoreML {
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("parameters", ArgumentSemantic.Assign)]
 		NSDictionary<MLParameterKey, NSObject> Parameters { get; set; }
+
+		// From MLModelConfiguration (MultiFunctions)
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("functionName", ArgumentSemantic.Copy), NullAllowed]
+		string FunctionName { get; set; }
 	}
 
 	[Watch (6, 0), TV (13, 0), iOS (13, 0)]
@@ -1199,6 +1232,7 @@ namespace CoreML {
 		bool Write (NSUrl url, [NullAllowed] out NSError error);
 	}
 
+#if !XAMCORE_5_0
 	[Deprecated (PlatformName.MacOSX, 13, 3, message: "Use Background Assets or 'NSUrlSession' instead.")]
 	[Deprecated (PlatformName.MacCatalyst, 16, 4, message: "Use Background Assets or 'NSUrlSession' instead.")]
 	[Deprecated (PlatformName.iOS, 16, 4, message: "Use Background Assets or 'NSUrlSession' instead.")]
@@ -1233,7 +1267,9 @@ namespace CoreML {
 		[Field ("MLModelCollectionDidChangeNotification")]
 		NSString DidChangeNotification { get; }
 	}
+#endif // !XAMCORE_5_0
 
+#if !XAMCORE_5_0
 	[Deprecated (PlatformName.MacOSX, 13, 3, message: "Use Background Assets or 'NSUrlSession' instead.")]
 	[Deprecated (PlatformName.MacCatalyst, 16, 4, message: "Use Background Assets or 'NSUrlSession' instead.")]
 	[Deprecated (PlatformName.iOS, 16, 4, message: "Use Background Assets or 'NSUrlSession' instead.")]
@@ -1254,6 +1290,10 @@ namespace CoreML {
 		[Export ("isEqualToModelCollectionEntry:")]
 		bool IsEqual (MLModelCollectionEntry entry);
 	}
+#endif // !XAMCORE_5_0
+
+	delegate void MLModelAssetGetModelDescriptionCompletionHandler ([NullAllowed] MLModelDescription modelDescription, [NullAllowed] NSError error);
+	delegate void MLModelAssetGetFunctionNamesCompletionHandler ([NullAllowed] string [] functionNames, [NullAllowed] NSError error);
 
 	[Watch (9, 0), TV (16, 0), Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 	[BaseType (typeof (NSObject))]
@@ -1265,6 +1305,31 @@ namespace CoreML {
 		[Export ("modelAssetWithSpecificationData:error:")]
 		[return: NullAllowed]
 		MLModelAsset Create (NSData specificationData, [NullAllowed] out NSError error);
+
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Static]
+		[Export ("modelAssetWithURL:error:")]
+		[return: NullAllowed]
+		MLModelAsset Create (NSUrl compiledModelUrl, [NullAllowed] out NSError error);
+
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("modelDescriptionWithCompletionHandler:")]
+		void GetModelDescription (MLModelAssetGetModelDescriptionCompletionHandler handler);
+
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("modelDescriptionOfFunctionNamed:completionHandler:")]
+		void GetModelDescription (string functionName, MLModelAssetGetModelDescriptionCompletionHandler handler);
+
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("functionNamesWithCompletionHandler:")]
+		void GetFunctionNames (MLModelAssetGetFunctionNamesCompletionHandler handler);
+
+		[NoWatch, TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Static]
+		[Export ("modelAssetWithSpecificationData:blobMapping:error:")]
+		[return: NullAllowed]
+		MLModelAsset Create (NSData specificationData, NSDictionary<NSUrl, NSData> blobMapping, [NullAllowed] out NSError error);
+
 	}
 
 	interface IMLComputeDeviceProtocol { }
@@ -1296,4 +1361,279 @@ namespace CoreML {
 		IMTLDevice MetalDevice { get; }
 	}
 
+	[Watch (10, 4), TV (17, 4), Mac (14, 4), iOS (17, 4), MacCatalyst (17, 4)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface MLComputePlan {
+
+		[Static]
+		[Export ("loadContentsOfURL:configuration:completionHandler:")]
+		void Load (NSUrl contentsUrl, MLModelConfiguration configuration, Action<MLComputePlan, NSError> handler);
+
+		[Static]
+		[Export ("loadModelAsset:configuration:completionHandler:")]
+		void Load (MLModelAsset modelAsset, MLModelConfiguration configuration, Action<MLComputePlan, NSError> handler);
+
+		[Export ("estimatedCostOfMLProgramOperation:")]
+		[return: NullAllowed]
+		MLComputePlanCost GetEstimatedCost (MLModelStructureProgramOperation programOperation);
+
+		[Export ("computeDeviceUsageForNeuralNetworkLayer:")]
+		[return: NullAllowed]
+		MLComputePlanDeviceUsage ComputeDeviceUsage (MLModelStructureNeuralNetworkLayer neuralNetworkLayer);
+
+		[Export ("computeDeviceUsageForMLProgramOperation:")]
+		[return: NullAllowed]
+		MLComputePlanDeviceUsage ComputeDeviceUsage (MLModelStructureProgramOperation programOperation);
+
+		[Export ("modelStructure", ArgumentSemantic.Strong)]
+		MLModelStructure ModelStructure { get; }
+	}
+
+	delegate void MLStateGetMultiArrayForStateHandler (MLMultiArray buffer);
+
+	[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface MLState {
+		[Export ("getMultiArrayForStateNamed:handler:")]
+		void GetMultiArrayForState (string stateName, MLStateGetMultiArrayForStateHandler handler);
+	}
+
+	delegate void MLStateGetPredictionCompletionHandler ([NullAllowed] IMLFeatureProvider output, NSError error);
+
+	[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[Category]
+	[BaseType (typeof (MLModel))]
+	interface MLModel_MLState {
+		[Export ("newState")]
+		[return: Release]
+		MLState CreateNewState ();
+
+		[Export ("predictionFromFeatures:usingState:error:")]
+		[return: NullAllowed]
+		IMLFeatureProvider GetPrediction (IMLFeatureProvider inputFeatures, MLState state, out NSError error);
+
+		[Export ("predictionFromFeatures:usingState:options:error:")]
+		[return: NullAllowed]
+		IMLFeatureProvider GetPrediction (IMLFeatureProvider inputFeatures, MLState state, MLPredictionOptions options, out NSError error);
+
+		[Export ("predictionFromFeatures:usingState:options:completionHandler:")]
+		[return: NullAllowed]
+		IMLFeatureProvider GetPrediction (IMLFeatureProvider inputFeatures, MLState state, MLPredictionOptions options, MLStateGetPredictionCompletionHandler completionHandler);
+	}
+
+	[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface MLStateConstraint : NSSecureCoding {
+		// BindAs: No documentation about which types of NSNumbers we get back
+		[Export ("bufferShape")]
+		NSNumber [] BufferShape { get; }
+
+		[Export ("dataType")]
+		MLMultiArrayDataType DataType { get; }
+	}
+
+	[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[Native]
+	public enum MLSpecializationStrategy : long {
+		Default = 0,
+		FastPrediction = 1,
+	}
+
+	[Watch (10, 4), TV (17, 4), Mac (14, 4), iOS (17, 4), MacCatalyst (17, 4)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface MLComputePlanCost {
+
+		[Export ("weight")]
+		double Weight { get; }
+	}
+
+	[Watch (10, 4), TV (17, 4), Mac (14, 4), iOS (17, 4), MacCatalyst (17, 4)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface MLComputePlanDeviceUsage {
+
+		[Export ("supportedComputeDevices", ArgumentSemantic.Copy)]
+		IMLComputeDeviceProtocol [] SupportedComputeDevices { get; }
+
+		[Export ("preferredComputeDevice", ArgumentSemantic.Strong)]
+		IMLComputeDeviceProtocol PreferredComputeDevice { get; }
+	}
+
+	[Watch (10, 4), TV (17, 4), Mac (14, 4), iOS (17, 4), MacCatalyst (17, 4)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface MLModelStructure {
+
+		[Static]
+		[Export ("loadContentsOfURL:completionHandler:")]
+		void Load (NSUrl url, Action<MLModelStructure, NSError> handler);
+
+		[Static]
+		[Export ("loadModelAsset:completionHandler:")]
+		void Load (MLModelAsset modelAsset, Action<MLModelStructure, NSError> handler);
+
+		[NullAllowed, Export ("neuralNetwork", ArgumentSemantic.Strong)]
+		MLModelStructureNeuralNetwork NeuralNetwork { get; }
+
+		[NullAllowed, Export ("program", ArgumentSemantic.Strong)]
+		MLModelStructureProgram Program { get; }
+
+		[NullAllowed, Export ("pipeline", ArgumentSemantic.Strong)]
+		MLModelStructurePipeline Pipeline { get; }
+	}
+
+	[Watch (10, 4), TV (17, 4), Mac (14, 4), iOS (17, 4), MacCatalyst (17, 4)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface MLModelStructureNeuralNetwork {
+
+		[Export ("layers", ArgumentSemantic.Copy)]
+		MLModelStructureNeuralNetworkLayer [] Layers { get; }
+	}
+
+	[Watch (10, 4), TV (17, 4), Mac (14, 4), iOS (17, 4), MacCatalyst (17, 4)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface MLModelStructureNeuralNetworkLayer {
+
+		[Export ("name")]
+		string Name { get; }
+
+		[Export ("type")]
+		string Type { get; }
+
+		[Export ("inputNames", ArgumentSemantic.Copy)]
+		string [] InputNames { get; }
+
+		[Export ("outputNames", ArgumentSemantic.Copy)]
+		string [] OutputNames { get; }
+	}
+
+	[Watch (10, 4), TV (17, 4), Mac (14, 4), iOS (17, 4), MacCatalyst (17, 4)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface MLModelStructurePipeline {
+
+		[Export ("subModelNames", ArgumentSemantic.Copy)]
+		string [] SubModelNames { get; }
+
+		[Export ("subModels", ArgumentSemantic.Copy)]
+		MLModelStructure [] SubModels { get; }
+	}
+
+	[Watch (10, 4), TV (17, 4), Mac (14, 4), iOS (17, 4), MacCatalyst (17, 4)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface MLModelStructureProgram {
+		[Export ("functions", ArgumentSemantic.Copy)]
+		NSDictionary<NSString, MLModelStructureProgramFunction> Functions { get; }
+	}
+
+	[Watch (10, 4), TV (17, 4), Mac (14, 4), iOS (17, 4), MacCatalyst (17, 4)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface MLModelStructureProgramArgument {
+
+		[Export ("bindings", ArgumentSemantic.Copy)]
+		MLModelStructureProgramBinding [] Bindings { get; }
+	}
+
+	[Watch (10, 4), TV (17, 4), Mac (14, 4), iOS (17, 4), MacCatalyst (17, 4)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface MLModelStructureProgramBinding {
+
+		[NullAllowed, Export ("name")]
+		string Name { get; }
+
+		[NullAllowed, Export ("value", ArgumentSemantic.Copy)]
+		MLModelStructureProgramValue Value { get; }
+	}
+
+	[Watch (10, 4), TV (17, 4), Mac (14, 4), iOS (17, 4), MacCatalyst (17, 4)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface MLModelStructureProgramBlock {
+
+		[Export ("inputs", ArgumentSemantic.Copy)]
+		MLModelStructureProgramNamedValueType [] Inputs { get; }
+
+		[Export ("outputNames", ArgumentSemantic.Copy)]
+		string [] OutputNames { get; }
+
+		[Export ("operations", ArgumentSemantic.Copy)]
+		MLModelStructureProgramOperation [] Operations { get; }
+	}
+
+	[Watch (10, 4), TV (17, 4), Mac (14, 4), iOS (17, 4), MacCatalyst (17, 4)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface MLModelStructureProgramFunction {
+
+		[Export ("inputs", ArgumentSemantic.Copy)]
+		MLModelStructureProgramNamedValueType [] Inputs { get; }
+
+		[Export ("block", ArgumentSemantic.Strong)]
+		MLModelStructureProgramBlock Block { get; }
+	}
+
+	[Watch (10, 4), TV (17, 4), Mac (14, 4), iOS (17, 4), MacCatalyst (17, 4)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface MLModelStructureProgramNamedValueType {
+
+		[Export ("name")]
+		string Name { get; }
+
+		[Export ("type", ArgumentSemantic.Strong)]
+		MLModelStructureProgramValueType Type { get; }
+	}
+
+	[Watch (10, 4), TV (17, 4), Mac (14, 4), iOS (17, 4), MacCatalyst (17, 4)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface MLModelStructureProgramOperation {
+
+		[Export ("operatorName")]
+		string OperatorName { get; }
+
+		[Export ("inputs", ArgumentSemantic.Copy)]
+		NSDictionary<NSString, MLModelStructureProgramArgument> Inputs { get; }
+
+		[Export ("outputs", ArgumentSemantic.Copy)]
+		MLModelStructureProgramNamedValueType [] Outputs { get; }
+
+		[Export ("blocks", ArgumentSemantic.Copy)]
+		MLModelStructureProgramBlock [] Blocks { get; }
+	}
+
+	[Watch (10, 4), TV (17, 4), Mac (14, 4), iOS (17, 4), MacCatalyst (17, 4)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface MLModelStructureProgramValue {
+		// Empty class!!
+	}
+
+	[Watch (10, 4), TV (17, 4), Mac (14, 4), iOS (17, 4), MacCatalyst (17, 4)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface MLModelStructureProgramValueType {
+		// Empty class!!
+	}
+
+	[Watch (10, 4), TV (17, 4), Mac (14, 4), iOS (17, 4), MacCatalyst (17, 4)]
+	[BaseType (typeof (NSObject))]
+	interface MLOptimizationHints : NSCopying, NSSecureCoding {
+
+		[Export ("reshapeFrequency", ArgumentSemantic.Assign)]
+		MLReshapeFrequencyHint ReshapeFrequency { get; set; }
+
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("specializationStrategy", ArgumentSemantic.Assign)]
+		MLSpecializationStrategy SpecializationStrategy { get; set; }
+	}
 }

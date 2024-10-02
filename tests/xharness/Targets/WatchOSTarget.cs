@@ -215,19 +215,9 @@ namespace Xharness.Targets {
 			}
 		}
 
-		protected override void CalculateName ()
-		{
-			if (TargetDirectory.Contains ("bcl-test"))
-				Name = TestProject.Name;
-			else
-				base.CalculateName ();
-		}
-
 		protected override string GetMinimumOSVersion (string templateMinimumOSVersion)
 		{
-			if (MonoNativeInfo is null)
-				return templateMinimumOSVersion;
-			return MonoNativeHelper.GetMinimumOSVersion (DevicePlatform.watchOS);
+			return templateMinimumOSVersion;
 		}
 
 		public override string Suffix {

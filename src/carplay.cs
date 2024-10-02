@@ -22,6 +22,7 @@ namespace CarPlay {
 
 	// Just to please the generator that at this point does not know the hierarchy
 	interface NSUnitLength : NSUnit { }
+	interface NSUnitAngle : NSUnit { }
 
 	/// <summary>Enumerates the styles for a <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=Car%20Play%20CPAlert&amp;scope=Xamarin" title="T:CarPlay.CPAlert">T:CarPlay.CPAlert</a></format> object's action button.</summary>
 	[NoWatch, NoTV, NoMac, iOS (12, 0)]
@@ -198,6 +199,96 @@ namespace CarPlay {
 		UserPreference,
 	}
 
+	[NoWatch, NoTV, NoMac, iOS (17, 4), MacCatalyst (17, 4)]
+	[Native]
+	public enum CPLaneStatus : long {
+		NotGood = 0,
+		Good,
+		Preferred,
+	}
+
+	[NoWatch, NoTV, NoMac, iOS (17, 4), MacCatalyst (17, 4)]
+	[Native]
+	public enum CPManeuverType : ulong {
+		NoTurn = 0,
+		LeftTurn = 1,
+		RightTurn = 2,
+		StraightAhead = 3,
+		UTurn = 4,
+		FollowRoad = 5,
+		EnterRoundabout = 6,
+		ExitRoundabout = 7,
+		OffRamp = 8,
+		OnRamp = 9,
+		ArriveEndOfNavigation = 10,
+		StartRoute = 11,
+		ArriveAtDestination = 12,
+		KeepLeft = 13,
+		KeepRight = 14,
+		EnterFerry = 15,
+		ExitFerry = 16,
+		ChangeFerry = 17,
+		StartRouteWithUTurn = 18,
+		UTurnAtRoundabout = 19,
+		LeftTurnAtEnd = 20,
+		RightTurnAtEnd = 21,
+		HighwayOffRampLeft = 22,
+		HighwayOffRampRight = 23,
+		ArriveAtDestinationLeft = 24,
+		ArriveAtDestinationRight = 25,
+		UTurnWhenPossible = 26,
+		ArriveEndOfDirections = 27,
+		RoundaboutExit1 = 28,
+		RoundaboutExit2 = 29,
+		RoundaboutExit3 = 30,
+		RoundaboutExit4 = 31,
+		RoundaboutExit5 = 32,
+		RoundaboutExit6 = 33,
+		RoundaboutExit7 = 34,
+		RoundaboutExit8 = 35,
+		RoundaboutExit9 = 36,
+		RoundaboutExit10 = 37,
+		RoundaboutExit11 = 38,
+		RoundaboutExit12 = 39,
+		RoundaboutExit13 = 40,
+		RoundaboutExit14 = 41,
+		RoundaboutExit15 = 42,
+		RoundaboutExit16 = 43,
+		RoundaboutExit17 = 44,
+		RoundaboutExit18 = 45,
+		RoundaboutExit19 = 46,
+		SharpLeftTurn = 47,
+		SharpRightTurn = 48,
+		SlightLeftTurn = 49,
+		SlightRightTurn = 50,
+		ChangeHighway = 51,
+		ChangeHighwayLeft = 52,
+		ChangeHighwayRight = 53,
+	}
+
+	[NoWatch, NoTV, NoMac, iOS (17, 4), MacCatalyst (17, 4)]
+	[Native]
+	public enum CPJunctionType : ulong {
+		Intersection = 0,
+		Roundabout = 1,
+	}
+
+	[NoWatch, NoTV, NoMac, iOS (17, 4), MacCatalyst (17, 4)]
+	[Native]
+	public enum CPTrafficSide : ulong {
+		Right = 0,
+		Left = 1,
+	}
+
+	[NoWatch, NoTV, NoMac, iOS (17, 4), MacCatalyst (17, 4)]
+	[Native]
+	public enum CPManeuverState : long {
+		Continue = 0,
+		Initial,
+		Prepare,
+		Execute,
+	}
+
 	/// <summary>An action that is displayed on a button in an alert.</summary>
 	[NoWatch, NoTV, NoMac, iOS (12, 0)]
 	[BaseType (typeof (NSObject))]
@@ -235,6 +326,7 @@ namespace CarPlay {
 	interface CPBarButton : NSSecureCoding {
 
 		[Deprecated (PlatformName.iOS, 14, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 14, 0)]
 		[Export ("initWithType:handler:")]
 		NativeHandle Constructor (CPBarButtonType type, [NullAllowed] Action<CPBarButton> handler);
 
@@ -242,6 +334,7 @@ namespace CarPlay {
 		bool Enabled { [Bind ("isEnabled")] get; set; }
 
 		[Deprecated (PlatformName.iOS, 14, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 14, 0)]
 		[Export ("buttonType", ArgumentSemantic.Assign)]
 		CPBarButtonType ButtonType { get; }
 
@@ -354,30 +447,37 @@ namespace CarPlay {
 		bool PrefersDarkUserInterfaceStyle { get; set; }
 
 		[Deprecated (PlatformName.iOS, 14, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 14, 0)]
 		[Export ("setRootTemplate:animated:")]
 		void SetRootTemplate (CPTemplate rootTemplate, bool animated);
 
 		[Deprecated (PlatformName.iOS, 14, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 14, 0)]
 		[Export ("pushTemplate:animated:")]
 		void PushTemplate (CPTemplate templateToPush, bool animated);
 
 		[Deprecated (PlatformName.iOS, 14, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 14, 0)]
 		[Export ("popTemplateAnimated:")]
 		void PopTemplate (bool animated);
 
 		[Deprecated (PlatformName.iOS, 14, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 14, 0)]
 		[Export ("popToRootTemplateAnimated:")]
 		void PopToRootTemplate (bool animated);
 
 		[Deprecated (PlatformName.iOS, 14, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 14, 0)]
 		[Export ("popToTemplate:animated:")]
 		void PopToTemplate (CPTemplate targetTemplate, bool animated);
 
 		[Deprecated (PlatformName.iOS, 14, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 14, 0)]
 		[Export ("presentTemplate:animated:")]
 		void PresentTemplate (CPTemplate templateToPresent, bool animated);
 
 		[Deprecated (PlatformName.iOS, 14, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 14, 0)]
 		[Export ("dismissTemplateAnimated:")]
 		void DismissTemplate (bool animated);
 
@@ -466,6 +566,7 @@ namespace CarPlay {
 	/// <summary>The application delegate for CarPlay applications.</summary>
 	[Introduced (PlatformName.iOS, 12, 0)]
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'CPTemplateApplicationSceneDelegate' instead.")]
+	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'CPTemplateApplicationSceneDelegate' instead.")]
 	[NoWatch, NoTV, NoMac]
 #if NET
 	[Protocol, Model]
@@ -495,12 +596,8 @@ namespace CarPlay {
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface CPListItem : CPSelectableListItem, NSSecureCoding {
-
-		[Deprecated (PlatformName.iOS, 14, 0, message: "Do not use; this API was removed.")]
-		[Field ("CPMaximumListItemImageSize")]
-		CGSize MaximumListItemImageSize { get; }
-
 		[Deprecated (PlatformName.iOS, 14, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 14, 0)]
 		[Export ("initWithText:detailText:image:showsDisclosureIndicator:")]
 		NativeHandle Constructor ([NullAllowed] string text, [NullAllowed] string detailText, [NullAllowed] UIImage image, bool showsDisclosureIndicator);
 
@@ -521,6 +618,7 @@ namespace CarPlay {
 		UIImage Image { get; }
 
 		[Deprecated (PlatformName.iOS, 14, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 14, 0)]
 		[Export ("showsDisclosureIndicator")]
 		bool ShowsDisclosureIndicator { get; }
 
@@ -660,11 +758,13 @@ namespace CarPlay {
 		NativeHandle Constructor ([NullAllowed] string title, CPListSection [] sections, [NullAllowed] CPAssistantCellConfiguration assistantCellConfiguration);
 
 		[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'CPListItem.Handler' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 14, 0, message: "Use 'CPListItem.Handler' instead.")]
 		[Wrap ("WeakDelegate")]
 		[NullAllowed]
 		ICPListTemplateDelegate Delegate { get; set; }
 
 		[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'CPListItem.Handler' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 14, 0, message: "Use 'CPListItem.Handler' instead.")]
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
 		NSObject WeakDelegate { get; set; }
 
@@ -719,6 +819,7 @@ namespace CarPlay {
 
 	/// <summary>Abstract implementation of <see cref="T:CarPlay.ICPListTemplateDelegate" />, the delegate object for <see cref="T:CarPlay.CPListTemplate" /> objects.</summary>
 	[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'CPListItem.Handler' instead.")]
+	[Deprecated (PlatformName.MacCatalyst, 14, 0, message: "Use 'CPListItem.Handler' instead.")]
 	[NoWatch, NoTV, NoMac, iOS (12, 0)]
 #if NET
 	[Protocol, Model]
@@ -739,6 +840,7 @@ namespace CarPlay {
 	interface CPManeuver : NSCopying, NSSecureCoding {
 
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'CPManeuver.SymbolImage' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 13, 0, message: "Use 'CPManeuver.SymbolImage' instead.")]
 		[NullAllowed, Export ("symbolSet", ArgumentSemantic.Strong)]
 		CPImageSet SymbolSet { get; set; }
 
@@ -797,6 +899,41 @@ namespace CarPlay {
 		[iOS (14, 0)]
 		[Export ("notificationAttributedInstructionVariants", ArgumentSemantic.Copy)]
 		NSAttributedString [] NotificationAttributedInstructionVariants { get; set; }
+
+		[iOS (17, 4), MacCatalyst (17, 4)]
+		[Export ("maneuverType", ArgumentSemantic.Assign)]
+		CPManeuverType ManeuverType { get; set; }
+
+		[iOS (17, 4), MacCatalyst (17, 4)]
+		[NullAllowed]
+		[Export ("roadFollowingManeuverVariants", ArgumentSemantic.Copy)]
+		string [] RoadFollowingManeuverVariants { get; set; }
+
+		[iOS (17, 4), MacCatalyst (17, 4)]
+		[Export ("trafficSide", ArgumentSemantic.Assign)]
+		CPTrafficSide TrafficSide { get; set; }
+
+		[iOS (17, 4), MacCatalyst (17, 4)]
+		[Export ("junctionType", ArgumentSemantic.Assign)]
+		CPJunctionType JunctionType { get; set; }
+
+		[iOS (17, 4), MacCatalyst (17, 4)]
+		[NullAllowed]
+		[Export ("junctionExitAngle", ArgumentSemantic.Copy)]
+		NSMeasurement<NSUnitAngle> JunctionExitAngle { get; set; }
+
+		[iOS (17, 4), MacCatalyst (17, 4)]
+		[NullAllowed]
+		[Export ("junctionElementAngles", ArgumentSemantic.Copy)]
+		NSSet<NSMeasurement<NSUnitAngle>> JunctionElementAngles { get; set; }
+
+		[iOS (17, 4), MacCatalyst (17, 4)]
+		[Export ("linkedLaneGuidance", ArgumentSemantic.Assign)]
+		CPLaneGuidance LinkedLaneGuidance { get; set; }
+
+		[iOS (17, 4), MacCatalyst (17, 4)]
+		[Export ("highwayExitLabel")]
+		string HighwayExitLabel { get; set; }
 	}
 
 	/// <summary>A button displayed on the <see cref="T:CarPlay.CPMapTemplate" />.</summary>
@@ -906,6 +1043,10 @@ namespace CarPlay {
 	[BaseType (typeof (NSObject))]
 	interface CPMapTemplateDelegate {
 
+		[iOS (17, 4), MacCatalyst (17, 4)]
+		[Export ("mapTemplateShouldProvideNavigationMetadata:")]
+		bool ShouldProvideNavigationMetadata (CPMapTemplate mapTemplate);
+
 		[Export ("mapTemplate:shouldShowNotificationForManeuver:")]
 		bool ShouldShowNotificationForManeuver (CPMapTemplate mapTemplate, CPManeuver maneuver);
 
@@ -975,6 +1116,7 @@ namespace CarPlay {
 
 
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use constructor that takes in 'UIImage' instead of 'CPImageSet'.")]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use constructor that takes in 'UIImage' instead of 'CPImageSet'.")]
 		[Export ("initWithTitleVariants:subtitleVariants:imageSet:primaryAction:secondaryAction:duration:")]
 		NativeHandle Constructor (string [] titleVariants, [NullAllowed] string [] subtitleVariants, [NullAllowed] CPImageSet imageSet, CPAlertAction primaryAction, [NullAllowed] CPAlertAction secondaryAction, double duration);
 
@@ -1021,6 +1163,10 @@ namespace CarPlay {
 		[Export ("pauseTripForReason:description:turnCardColor:")]
 		void PauseTrip (CPTripPauseReason reason, [NullAllowed] string description, [NullAllowed] UIColor turnCardColor);
 
+		[iOS (17, 4), MacCatalyst (17, 4)]
+		[Export ("resumeTripWithUpdatedRouteInformation:")]
+		void ResumeTrip (CPRouteInformation routeInformation);
+
 		[Export ("finishTrip")]
 		void FinishTrip ();
 
@@ -1029,6 +1175,26 @@ namespace CarPlay {
 
 		[Export ("upcomingManeuvers", ArgumentSemantic.Copy)]
 		CPManeuver [] UpcomingManeuvers { get; set; }
+
+		[iOS (17, 4), MacCatalyst (17, 4)]
+		[NullAllowed, Export ("currentLaneGuidance", ArgumentSemantic.Copy)]
+		CPLaneGuidance CurrentLaneGuidance { get; set; }
+
+		[iOS (17, 4), MacCatalyst (17, 4)]
+		[Export ("addManeuvers:")]
+		void AddManeuvers (CPManeuver [] maneuvers);
+
+		[iOS (17, 4), MacCatalyst (17, 4)]
+		[Export ("addLaneGuidances:")]
+		void AddLaneGuidances (CPLaneGuidance [] laneGuidances);
+
+		[iOS (17, 4), MacCatalyst (17, 4)]
+		[Export ("currentRoadNameVariants", ArgumentSemantic.Copy)]
+		string [] CurrentRoadNameVariants { get; set; }
+
+		[iOS (17, 4), MacCatalyst (17, 4)]
+		[Export ("maneuverState", ArgumentSemantic.Assign)]
+		CPManeuverState ManeuverState { get; set; }
 
 		[Export ("trip", ArgumentSemantic.Strong)]
 		CPTrip Trip { get; }
@@ -1199,6 +1365,10 @@ namespace CarPlay {
 
 		[NullAllowed, Export ("userInfo", ArgumentSemantic.Strong)]
 		NSObject UserInfo { get; set; }
+
+		[iOS (17, 4), MacCatalyst (17, 4)]
+		[NullAllowed, Export ("destinationNameVariants", ArgumentSemantic.Copy)]
+		string [] DestinationNameVariants { get; set; }
 	}
 
 	[NoWatch, NoTV, NoMac, iOS (12, 0)]
@@ -1343,6 +1513,15 @@ namespace CarPlay {
 		[Export ("initWithDistanceRemaining:timeRemaining:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (NSMeasurement<NSUnitLength> distance, double time);
+
+		[iOS (17, 4), MacCatalyst (17, 4)]
+		[Export ("initWithDistanceRemaining:distanceRemainingToDisplay:timeRemaining:")]
+		[DesignatedInitializer]
+		NativeHandle Constructor (NSMeasurement<NSUnitLength> distanceRemaining, NSMeasurement<NSUnitLength> distanceRemainingToDisplay, double time);
+
+		[iOS (17, 4), MacCatalyst (17, 4)]
+		[Export ("distanceRemainingToDisplay", ArgumentSemantic.Copy)]
+		NSMeasurement<NSUnitLength> DistanceRemainingToDisplay { get; }
 
 		[Export ("distanceRemaining", ArgumentSemantic.Copy)]
 		NSMeasurement<NSUnitLength> DistanceRemaining { get; }
@@ -1601,11 +1780,19 @@ namespace CarPlay {
 		[Export ("initWithText:images:")]
 		NativeHandle Constructor (string text, UIImage [] images);
 
+		[iOS (17, 4), MacCatalyst (17, 4)]
+		[Export ("initWithText:images:imageTitles:")]
+		NativeHandle Constructor (string text, UIImage [] images, string [] imageTitles);
+
 		[Export ("gridImages", ArgumentSemantic.Strong)]
 		UIImage [] GridImages { get; }
 
 		[Export ("updateImages:")]
 		void UpdateImages (UIImage [] gridImages);
+
+		[iOS (17, 4), MacCatalyst (17, 4)]
+		[Export ("imageTitles", ArgumentSemantic.Copy)]
+		string [] ImageTitles { get; set; }
 
 		[NullAllowed, Export ("listImageRowHandler", ArgumentSemantic.Copy)]
 		CPListImageRowItemHandler ListImageRowHandler { get; set; }
@@ -2166,6 +2353,98 @@ namespace CarPlay {
 
 		[Export ("contentStyle")]
 		UIUserInterfaceStyle ContentStyle { get; }
+	}
+
+	[NoWatch, NoTV, NoMac, iOS (17, 4)]
+	[NoMacCatalyst] // We don't expose CarPlay on Mac Catalyst for the moment // [MacCatalyst (17, 4)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface CPLane : NSCopying, NSSecureCoding {
+		[Export ("status", ArgumentSemantic.Assign)]
+		CPLaneStatus Status {
+			get;
+			[Deprecated (PlatformName.iOS, 18, 0, message: "Use the 'NSMeasurement<NSUnitAngle>' constructor to create a CPLane with CPLaneStatus.NotGood, or use the 'NSMeasurement<NSUnitAngle>[], NSMeasurement<NSUnitAngle>[], bool' constructor to create a CPLane with status CPLaneStatus.Good or CPLaneStatus.Preferred.")]
+			set;
+		}
+
+		[Export ("primaryAngle", ArgumentSemantic.Strong)]
+		NSMeasurement<NSUnitAngle> PrimaryAngle {
+			[Deprecated (PlatformName.iOS, 18, 0, message: "Use the 'HighlightedAngle' property instead.")]
+			get;
+			[Deprecated (PlatformName.iOS, 18, 0, message: "Use the 'NSMeasurement<NSUnitAngle>[], NSMeasurement<NSUnitAngle>[], bool' to create a CPLane with a HighlightedAngle.")]
+			set;
+		}
+
+		[Export ("secondaryAngles", ArgumentSemantic.Strong)]
+		NSMeasurement<NSUnitAngle> [] SecondaryAngles {
+			[Deprecated (PlatformName.iOS, 18, 0, message: "Use the 'Angles' property instead.")]
+			get;
+			[Deprecated (PlatformName.iOS, 18, 0, message: "Use the 'NSMeasurement<NSUnitAngle>' constructor or the 'NSMeasurement<NSUnitAngle>[], NSMeasurement<NSUnitAngle>[], bool' constructor to create a CPLane with angles.")]
+			set;
+		}
+
+		[Export ("init")]
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use either of the other two constructors instead.")]
+		NativeHandle Constructor ();
+
+		[iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("initWithAngles:")]
+		NativeHandle Constructor (NSMeasurement<NSUnitAngle> [] angles);
+
+		[iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("initWithAngles:highlightedAngle:isPreferred:")]
+		NativeHandle Constructor (NSMeasurement<NSUnitAngle> [] angles, NSMeasurement<NSUnitAngle> [] highlightedAngle, bool isPreferred);
+
+
+		[NullAllowed]
+		[iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("highlightedAngle", ArgumentSemantic.Strong)]
+		NSMeasurement<NSUnitAngle> HighlightedAngle { get; }
+
+
+		[iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("angles", ArgumentSemantic.Copy)]
+		NSMeasurement<NSUnitAngle> [] Angles { get; }
+	}
+
+	[NoWatch, NoTV, NoMac, iOS (17, 4), MacCatalyst (17, 4)]
+	[BaseType (typeof (NSObject))]
+	interface CPLaneGuidance : NSCopying, NSSecureCoding {
+
+		[Export ("lanes", ArgumentSemantic.Copy)]
+		CPLane [] Lanes { get; set; }
+
+		[Export ("instructionVariants", ArgumentSemantic.Copy)]
+		string [] InstructionVariants { get; set; }
+	}
+
+	// @interface CPRouteInformation : NSObject
+	[NoWatch, NoTV, NoMac, iOS (17, 4), MacCatalyst (17, 4)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface CPRouteInformation {
+
+		[Export ("initWithManeuvers:laneGuidances:currentManeuvers:currentLaneGuidance:tripTravelEstimates:maneuverTravelEstimates:")]
+		[DesignatedInitializer]
+		NativeHandle Constructor (CPManeuver [] maneuvers, CPLaneGuidance [] laneGuidances, CPManeuver [] currentManeuvers, CPLaneGuidance currentLaneGuidance, CPTravelEstimates tripTravelEstimates, CPTravelEstimates maneuverTravelEstimates);
+
+		[Export ("maneuvers", ArgumentSemantic.Copy)]
+		CPManeuver [] Maneuvers { get; }
+
+		[Export ("laneGuidances", ArgumentSemantic.Copy)]
+		CPLaneGuidance [] LaneGuidances { get; }
+
+		[Export ("currentManeuvers", ArgumentSemantic.Copy)]
+		CPManeuver [] CurrentManeuvers { get; }
+
+		[Export ("currentLaneGuidance", ArgumentSemantic.Copy)]
+		CPLaneGuidance CurrentLaneGuidance { get; }
+
+		[Export ("tripTravelEstimates", ArgumentSemantic.Copy)]
+		CPTravelEstimates TripTravelEstimates { get; }
+
+		[Export ("maneuverTravelEstimates", ArgumentSemantic.Copy)]
+		CPTravelEstimates ManeuverTravelEstimates { get; }
 	}
 
 }

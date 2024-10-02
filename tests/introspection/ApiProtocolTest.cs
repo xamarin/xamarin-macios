@@ -195,6 +195,25 @@ namespace Introspection {
 				case "PKContact":
 				case "TKSmartCardPinFormat":
 					return true;
+				// Xcode 16, conformance not in headers
+				case "ASAccessory":
+				case "ASAccessorySettings":
+				case "ASDiscoveryDescriptor":
+				case "ASMigrationDisplayItem":
+				case "ASPickerDisplayItem":
+				case "DDDevice":
+				case "PKAddCarKeyPassConfiguration":
+				case "PKAddIdentityDocumentConfiguration":
+				case "PKAddSecureElementPassConfiguration":
+				case "PKAddShareablePassConfiguration":
+				case "PKAddPassMetadataPreview":
+				case "PKIdentityDocumentMetadata":
+				case "PKJapanIndividualNumberCardMetadata":
+				case "PKPassRelevantDate":
+				case "ASAuthorizationPublicKeyCredentialLargeBlobAssertionInput":
+				case "ASAuthorizationPublicKeyCredentialLargeBlobAssertionOutput":
+				case "ASAuthorizationPublicKeyCredentialLargeBlobRegistrationInput":
+					return true;
 				}
 				break;
 			case "NSMutableCopying":
@@ -372,6 +391,43 @@ namespace Introspection {
 				case "TKSmartCardUserInteractionForSecurePinChange":
 				case "TKSmartCardUserInteractionForSecurePinVerification":
 					return true;
+				// Xcode 15.3, Conformance not in headers
+				case "ASWebAuthenticationSessionCallback":
+				case "VSAppleSubscription":
+					return true;
+				// Xcode 16, conformance not in headers
+				case "ASAccessory":
+				case "ASAccessorySettings":
+				case "ASDiscoveryDescriptor":
+				case "ASMigrationDisplayItem":
+				case "ASPickerDisplayItem":
+				case "NEVpnIkev2PpkConfiguration":
+				case "QLFileThumbnailRequest":
+				case "QLThumbnailReply":
+				case "PHPickerResult":
+				case "PKAddIdentityDocumentConfiguration":
+				case "PKAddPassMetadataPreview":
+				case "PKIdentityDocumentMetadata":
+				case "PKJapanIndividualNumberCardMetadata":
+				case "PKPassRelevantDate":
+				case "ASAuthorizationPublicKeyCredentialLargeBlobAssertionInput":
+				case "ASAuthorizationPublicKeyCredentialLargeBlobAssertionOutput":
+				case "ASAuthorizationPublicKeyCredentialLargeBlobRegistrationInput":
+				case "DDDevice":
+				case "DDDeviceEvent":
+				case "FSMessageConnection":
+				case "FSModuleIdentity":
+				case "NSFileProviderKnownFolderLocations":
+				case "UIGestureRecognizer":
+				case "UIRotationGestureRecognizer":
+				case "UILongPressGestureRecognizer":
+				case "UITapGestureRecognizer":
+				case "UIPanGestureRecognizer":
+				case "UIPinchGestureRecognizer":
+				case "UISwipeGestureRecognizer":
+				case "UIScreenEdgePanGestureRecognizer":
+				case "UIHoverGestureRecognizer":
+					return true;
 				}
 				break;
 			case "NSSecureCoding":
@@ -546,6 +602,48 @@ namespace Introspection {
 				case "TKSmartCardUserInteractionForSecurePinChange":
 				case "TKSmartCardUserInteractionForSecurePinVerification":
 					return true;
+				// Xcode 15.3, Conformance not in headers
+				case "ASWebAuthenticationSessionCallback":
+				case "VSAppleSubscription":
+					return true;
+				// Xcode 16, conformance not in headers
+				case "ASAccessory":
+				case "ASAccessorySettings":
+				case "ASDiscoveryDescriptor":
+				case "ASMigrationDisplayItem":
+				case "ASPickerDisplayItem":
+				case "NEVpnIkev2PpkConfiguration":
+				case "QLFileThumbnailRequest":
+				case "QLThumbnailReply":
+				case "PHPickerResult":
+				case "PKAddIdentityDocumentConfiguration":
+				case "PKAddPassMetadataPreview":
+				case "PKIdentityDocumentMetadata":
+				case "PKJapanIndividualNumberCardMetadata":
+				case "PKPassRelevantDate":
+				case "ASAuthorizationPublicKeyCredentialLargeBlobAssertionInput":
+				case "ASAuthorizationPublicKeyCredentialLargeBlobAssertionOutput":
+				case "ASAuthorizationPublicKeyCredentialLargeBlobRegistrationInput":
+				case "DDDevice":
+				case "DDDeviceEvent":
+				case "FSMessageConnection":
+				case "FSModuleIdentity":
+				case "NSFileProviderKnownFolderLocations":
+				case "UIGestureRecognizer":
+				case "UIRotationGestureRecognizer":
+				case "UILongPressGestureRecognizer":
+				case "UITapGestureRecognizer":
+				case "UIPanGestureRecognizer":
+				case "UIPinchGestureRecognizer":
+				case "UISwipeGestureRecognizer":
+				case "UIScreenEdgePanGestureRecognizer":
+				case "UIHoverGestureRecognizer":
+					return true;
+				case "NSLocalizedNumberFormatRule":
+					// Foundation.MonoTouchException : Objective-C exception thrown. Name: NSInvalidArgumentException Reason: *** -supportsSecureCoding cannot be sent to an abstract object of class NSLocalizedNumberFormatRule: Create a concrete instance!
+					return true;
+				case "FSResource": // header says yes, runtime says no
+					return true;
 				}
 				break;
 			// conformance added in Xcode 8 (iOS 10 / macOS 10.12)
@@ -636,6 +734,37 @@ namespace Introspection {
 			case "QLPreviewItem":
 				if (type.Name == "NSUrl")
 					return true;
+				break;
+			case "UIInteraction":
+				switch (type.Name) {
+				case "UIFeedbackGenerator":
+				case "UIImpactFeedbackGenerator":
+				case "UINotificationFeedbackGenerator":
+				case "UISelectionFeedbackGenerator":
+					if (!TestRuntime.CheckXcodeVersion (15, 4))
+						return true;
+					break;
+				}
+				break;
+			case "NSTextAttachmentContainer":
+				// NSTextAttachment implementing the NSTextAttachmentContainer protocol was deprecated in Xcode 16 beta 1.
+				if (type.Name == "NSTextAttachment")
+					return true;
+				break;
+			case "UIFocusItemContainer":
+			case "UICoordinateSpace":
+				// SKVideoNode started implementing UIFocusItemContainer and UICoordinateSpace in Xcode 16
+				if (type.Name == "SKVideoNode" && !TestRuntime.CheckXcodeVersion (16, 0))
+					return true;
+				break;
+			case "UISpringLoadedInteractionSupporting":
+				switch (type.Name) {
+				case "UISearchTab":
+				case "UITab":
+				case "UITabGroup":
+					// These types implement UISpringLoadedInteractionSupporting using category, which we can't detect at runtime.
+					return true;
+				}
 				break;
 			}
 			return false;

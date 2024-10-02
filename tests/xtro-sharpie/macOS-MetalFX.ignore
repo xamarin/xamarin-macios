@@ -1,2 +1,0 @@
-!missing-protocol-conformance! MTLFXSpatialScalerDescriptor should conform to NSCopying
-!missing-protocol-conformance! MTLFXTemporalScalerDescriptor should conform to NSCopying

@@ -174,7 +174,6 @@ namespace Xamarin.Bundler {
 
 		public bool SkipMarkingNSObjectsInUserAssemblies { get; set; }
 
-		// check if needs to be removed: https://github.com/xamarin/xamarin-macios/issues/18693
 		public bool DisableAutomaticLinkerSelection { get; set; }
 
 		// assembly_build_targets describes what kind of native code each assembly should be compiled into for mobile targets (iOS, tvOS, watchOS).
@@ -1544,7 +1543,7 @@ namespace Xamarin.Bundler {
 			bool enable_debug = app.EnableDebug;
 			bool enable_debug_symbols = app.PackageManagedDebugSymbols;
 			bool llvm_only = app.EnableLLVMOnlyBitCode;
-			bool interp = app.IsInterpreted (Assembly.GetIdentity (filename));
+			bool interp = app.IsInterpreted (Assembly.GetIdentity (filename)) && !(isDedupAssembly.HasValue && isDedupAssembly.Value);
 			bool interp_full = !interp && app.UseInterpreter;
 			bool is32bit = (abi & Abi.Arch32Mask) > 0;
 			string arch = abi.AsArchString ();
@@ -1796,6 +1795,19 @@ namespace Xamarin.Bundler {
 				Driver.Log (1, "The framework {0} is a framework of static libraries, and will not be copied to the app.", framework_path);
 
 			return dynamic;
+		}
+
+		static Application ()
+		{
+			SetDefaultHiddenWarnings ();
+		}
+
+		public static void SetDefaultHiddenWarnings ()
+		{
+			// People don't like these warnings (#20670), and they also complicate our tests, so ignore them.
+			ErrorHelper.ParseWarningLevel (ErrorHelper.WarningLevel.Disable, "4178"); // The class '{0}' will not be registered because the {1} framework has been removed from the {2} SDK.
+			ErrorHelper.ParseWarningLevel (ErrorHelper.WarningLevel.Disable, "4189"); // The class '{0}' will not be registered because it has been removed from the {1} SDK.
+			ErrorHelper.ParseWarningLevel (ErrorHelper.WarningLevel.Disable, "4190"); // The class '{0}' will not be registered because the {1} framework has been deprecated from the {2} SDK.
 		}
 	}
 }

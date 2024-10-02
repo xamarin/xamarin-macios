@@ -76,6 +76,12 @@ global.json: $(TOP)/dotnet.config Makefile $(GIT_DIRECTORY)/HEAD $(GIT_DIRECTORY
 		printf "}\n" >> $@
 
 install-hook::
+	$(Q) if ! git diff --exit-code global.json; then \
+		echo "Error: global.json has changed: please commit the changes."; \
+		exit 1; \
+	fi
+
+install-hook::
 	@$(MAKE) check-permissions
 ifdef INCLUDE_IOS
 ifneq ($(findstring $(IOS_DESTDIR)$(MONOTOUCH_PREFIX),$(shell ls -l /Library/Frameworks/Xamarin.iOS.framework/Versions/Current 2>&1)),)
@@ -104,6 +110,7 @@ else
 	@echo
 endif
 endif
+	$(Q) $(MAKE) -C dotnet shutdown-build-server
 
 .PHONY: package release
 package release:

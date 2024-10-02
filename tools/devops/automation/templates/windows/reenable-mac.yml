@@ -24,7 +24,7 @@ steps:
 
 - task: AzureKeyVault@2
   inputs:
-    azureSubscription: 'Xamarin - R&D - XamarinSecurity'
+    azureSubscription: 'Xamarin - SDK Engineering - macios-team-pair-to-mac-ci'
     KeyVaultName: 'xamarin-ios-vault'
     SecretsFilter: 'RemoteMacIdRsa'
   displayName: 'Download id_rsa'
@@ -47,9 +47,17 @@ steps:
   condition: always()
   continueOnError: true
 
+# Sets the AzDO.BearerToken variable used as the auth token to disable/reenable agents
+- template: ./generate-token.yml
+
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
-    $vsts = New-VSTS -Org "devdiv" -Project "DevDiv" -Token $(MacPoolAccessToken)
+
+    $azdoBearerToken = "$(AzDO.BearerToken)"
+    $azdoBearerTokenHint = $azdoBearerToken.Substring(0, 8)
+    Write-Host "AzDO.BearerToken (hint): ${azdoBearerTokenHint}"
+
+    $vsts = New-VSTS -Org "devdiv" -Project "DevDiv" -Token $azdoBearerToken
 
     # get the pool and the agent objects and enable the bot
     $pool = $vsts.Pools.GetPool("$Env:MAC_AGENT_POOL")

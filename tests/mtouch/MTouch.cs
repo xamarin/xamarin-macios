@@ -2256,6 +2256,7 @@ public class TestApp {
 				Asserts.DoesNotContain ("SafariServices", load_commands, "SafariServices");
 				Asserts.DoesNotContain ("GameController", load_commands, "GameController");
 				Asserts.DoesNotContain ("NewsstandKit", load_commands, "NewsstandKit");
+				Asserts.DoesNotContain ("AssetsLibrary", load_commands, "AssetsLibrary");
 
 				// Try again with the static registrar
 				mtouch.Registrar = MTouchRegistrar.Static;
@@ -2266,6 +2267,7 @@ public class TestApp {
 				Asserts.DoesNotContain ("GameController", load_commands, "GameController");
 				Asserts.DoesNotContain ("QuickLook", load_commands, "QuickLook");
 				Asserts.DoesNotContain ("NewsstandKit", load_commands, "NewsstandKit");
+				Asserts.DoesNotContain ("AssetsLibrary", load_commands, "AssetsLibrary");
 			}
 		}
 
@@ -2635,8 +2637,24 @@ public class TestApp {
 		[TestCase (Target.Dev, null, "ARMv7k", MTouchBitcode.Unspecified)]
 		[TestCase (Target.Dev, "arm64_32+llvm", "ARM64_32", MTouchBitcode.Unspecified)]
 		[TestCase (Target.Dev, "armv7k+llvm,arm64_32+llvm", "ARMv7k,ARM64_32", MTouchBitcode.Full)]
-		[TestCase (Target.Sim, null, "i386", MTouchBitcode.Unspecified)]
+		[TestCase (Target.Sim, null, "x86_64", MTouchBitcode.Unspecified)]
 		[TestCase (Target.Sim, "x86_64", "x86_64", MTouchBitcode.Unspecified)]
+		/* clang crashes in Xcode 16 beta 1 with:
+
+				warning: overriding the module target triple with arm64_32-apple-watchos11.0.0 [-Woverride-module]
+				1 warning generated.
+				nonnull metadata must be empty
+				  %LDSTR_23 = load ptr, ptr getelementptr inbounds ([0 x ptr], ptr @mono_aot_Xamarin_WatchOS_llvm_got, i32 0, i32 23), align 4, !nonnull !2
+				in function Xamarin_WatchOS_WatchKit_WKInterfaceController__cctor
+				fatal error: error in backend: Broken function found, compilation aborted!
+				clang++: error: clang frontend command failed with exit code 70 (use -v to see invocation)
+				Apple clang version 16.0.0 (clang-1600.0.20.10)
+				Target: arm64_32-apple-darwin23.5.0
+				Thread model: posix
+				InstalledDir: /Applications/Xcode_16.0.0-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin
+				clang++: note: diagnostic msg: Error generating preprocessed source(s) - no preprocessable inputs.
+		*/
+		[Ignore ("Crashes in clang")]
 		public void Architectures_WatchOS (Target target, string abi, string expected_abi, MTouchBitcode bitcode)
 		{
 			AssertDeviceAvailable ();

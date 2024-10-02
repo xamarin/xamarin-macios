@@ -84,7 +84,7 @@ DOTNET_REFERENCES = \
 	/r:$(DOTNET_BCL_DIR)/System.Xml.ReaderWriter.dll \
 
 DOTNET_OR_GREATER_DEFINES:=$(foreach version,$(shell seq 6 $(firstword $(subst ., ,$(subst net,,$(DOTNET_TFM))))),/define:NET$(version)_0_OR_GREATER)
-DOTNET_FLAGS=/noconfig /nostdlib+ /deterministic /features:strict /nologo /target:library /debug /unsafe /define:NET /define:NET_TODO /define:XAMCORE_3_0 $(DOTNET_OR_GREATER_DEFINES) $(DOTNET_REFERENCES)
+DOTNET_FLAGS=/warnaserror+ /noconfig /nostdlib+ /deterministic /features:strict /nologo /target:library /debug /unsafe /define:NET /define:NET_TODO /define:XAMCORE_3_0 $(DOTNET_OR_GREATER_DEFINES) $(DOTNET_REFERENCES)
 
 ifeq ($(XCODE_IS_STABLE),true)
 DOTNET_FLAGS+=/define:XCODE_IS_STABLE
@@ -216,6 +216,7 @@ $(IOS_BUILD_DIR)/AssemblyInfo.cs: $(TOP)/src/AssemblyInfo.cs.in | $(IOS_BUILD_DI
 		-e 's|@NUGET_VERSION_REV@|$(IOS_NUGET_VERSION_PATCH)|g' \
 		-e 's|@NUGET_VERSION_BUILD@|$(IOS_NUGET_COMMIT_DISTANCE)|g' \
 		-e 's|@DOTNET_PLATFORM@|iOS|g' \
+		-e 's|@XCODE_VERSION@|$(subst .,_,$(XCODE_VERSION))|g' \
 		< $< > $@.tmp
 	$(Q) diff $@ $@.tmp >/dev/null 2>&1 || mv -f $@.tmp $@
 	$(Q) rm -f $@.tmp
@@ -453,15 +454,11 @@ MACOS_CORE_SOURCES += \
 MACOS_DOTNET_SOURCES += \
 	$(MAC_DOTNET_EXTRA_CORE_SOURCES) \
 	$(MACOS_BUILD_DIR)/AssemblyInfo.cs \
-	Darwin/KernelNotification.cs \
-	Darwin/SystemLog.cs \
 	$(SHARED_DESIGNER_CS) \
 
 MACOS_SOURCES += \
 	$(MAC_EXTRA_CORE_SOURCES) \
 	$(MACOS_BUILD_DIR)/AssemblyInfo.cs \
-	Darwin/KernelNotification.cs \
-	Darwin/SystemLog.cs \
 	$(SHARED_DESIGNER_CS) \
 
 # CFNetwork is shipped:
@@ -514,6 +511,7 @@ $(MACOS_BUILD_DIR)/AssemblyInfo.cs: $(TOP)/src/AssemblyInfo.cs.in | $(MACOS_BUIL
 		-e 's|@NUGET_VERSION_REV@|$(MACOS_NUGET_VERSION_PATCH)|g' \
 		-e 's|@NUGET_VERSION_BUILD@|$(MACOS_NUGET_COMMIT_DISTANCE)|g' \
 		-e 's|@DOTNET_PLATFORM@|macOS|g' \
+		-e 's|@XCODE_VERSION@|$(subst .,_,$(XCODE_VERSION))|g' \
 		< $< > $@.tmp
 	$(Q) diff $@ $@.tmp >/dev/null 2>&1 || mv -f $@.tmp $@
 	$(Q) rm -f $@.tmp
@@ -739,6 +737,7 @@ $(WATCH_BUILD_DIR)/AssemblyInfo.cs: $(TOP)/src/AssemblyInfo.cs.in $(TOP)/Make.co
 		-e 's|@PACKAGE_VERSION_MINOR@|$(IOS_PACKAGE_VERSION_MINOR)|g' \
 		-e 's|@PACKAGE_VERSION_REV@|$(IOS_PACKAGE_VERSION_REV)|g' \
 		-e 's|@PACKAGE_VERSION_BUILD@|$(IOS_PACKAGE_VERSION_BUILD)|g' \
+		-e 's|@XCODE_VERSION@|$(subst .,_,$(XCODE_VERSION))|g' \
 		$< > $@.tmp
 	$(Q) diff $@ $@.tmp >/dev/null 2>&1 || mv -f $@.tmp $@
 	$(Q) rm -f $@.tmp
@@ -949,6 +948,7 @@ $(TVOS_BUILD_DIR)/AssemblyInfo.cs: $(TOP)/src/AssemblyInfo.cs.in $(TOP)/Make.con
 		-e 's|@NUGET_VERSION_REV@|$(TVOS_NUGET_VERSION_PATCH)|g' \
 		-e 's|@NUGET_VERSION_BUILD@|$(TVOS_NUGET_COMMIT_DISTANCE)|g' \
 		-e 's|@DOTNET_PLATFORM@|tvOS|g' \
+		-e 's|@XCODE_VERSION@|$(subst .,_,$(XCODE_VERSION))|g' \
 		$< > $@.tmp
 	$(Q) diff $@ $@.tmp >/dev/null 2>&1 || mv -f $@.tmp $@
 	$(Q) rm -f $@.tmp
@@ -1115,6 +1115,7 @@ $(MACCATALYST_BUILD_DIR)/AssemblyInfo.cs: $(TOP)/src/AssemblyInfo.cs.in $(TOP)/M
 		-e 's|@NUGET_VERSION_REV@|$(MACCATALYST_NUGET_VERSION_PATCH)|g' \
 		-e 's|@NUGET_VERSION_BUILD@|$(MACCATALYST_NUGET_COMMIT_DISTANCE)|g' \
 		-e 's|@DOTNET_PLATFORM@|MacCatalyst|g' \
+		-e 's|@XCODE_VERSION@|$(subst .,_,$(XCODE_VERSION))|g' \
 		$< > $@.tmp
 	$(Q) diff $@ $@.tmp >/dev/null 2>&1 || mv -f $@.tmp $@
 	$(Q) rm -f $@.tmp

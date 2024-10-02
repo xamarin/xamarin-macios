@@ -12,6 +12,7 @@ using System.Net.Http;
 using System.Runtime.InteropServices;
 using System.Reflection;
 using System.Reflection.Emit;
+using System.Runtime.Versioning;
 
 using AVFoundation;
 using CoreBluetooth;
@@ -115,6 +116,59 @@ partial class TestRuntime {
 		}
 	}
 #endif
+
+	public static ApplePlatform CurrentPlatform {
+		get {
+#if __MACCATALYST__
+			return ApplePlatform.MacCatalyst;
+#elif __IOS__
+			return ApplePlatform.iOS;
+#elif __TVOS__
+			return ApplePlatform.TVOS;
+#elif __MACOS__
+			return ApplePlatform.MacOSX;
+#elif __WATCHOS__
+			return ApplePlatform.WatchOS;
+#else
+#error Unknown platform
+#endif
+		}
+	}
+
+	// This returns the string for the platform as used in the OSPlatformAttribute's PlatformName property.
+	public static string GetOSPlatformName (ApplePlatform platform)
+	{
+		switch (platform) {
+		case ApplePlatform.iOS:
+			return "ios";
+		case ApplePlatform.MacOSX:
+			return "macos";
+		case ApplePlatform.TVOS:
+			return "tvos";
+		case ApplePlatform.MacCatalyst:
+			return "maccatalyst";
+		default:
+			throw new Exception ($"Unknown platform: {platform}");
+		}
+	}
+
+	public static bool HasOSPlatformAttributeForCurrentPlatform<T> (ICustomAttributeProvider provider) where T : OSPlatformAttribute
+	{
+		return HasOSPlatformAttribute<T> (provider, CurrentPlatform);
+	}
+
+	public static bool HasOSPlatformAttribute<T> (ICustomAttributeProvider provider, ApplePlatform platform) where T : OSPlatformAttribute
+	{
+		var attribs = provider.GetCustomAttributes (false);
+		var platformName = GetOSPlatformName (platform);
+		foreach (var attrib in attribs) {
+			if (attrib is T platformAttribute) {
+				if (platformAttribute.PlatformName.StartsWith (platformName, StringComparison.OrdinalIgnoreCase))
+					return true;
+			}
+		}
+		return false;
+	}
 
 	public static Version GetSDKVersion ()
 	{
@@ -403,6 +457,23 @@ partial class TestRuntime {
 	public static bool CheckXcodeVersion (int major, int minor, int build = 0)
 	{
 		switch (major) {
+		case 16:
+			switch (minor) {
+			case 0:
+#if __WATCHOS__
+				return CheckWatchOSSystemVersion (11, 0);
+#elif __TVOS__
+				return ChecktvOSSystemVersion (18, 0);
+#elif __IOS__
+				return CheckiOSSystemVersion (18, 0);
+#elif MONOMAC
+				return CheckMacSystemVersion (15, 0);
+#else
+				throw new NotImplementedException ($"Missing platform case for Xcode {major}.{minor}");
+#endif
+			default:
+				throw new NotImplementedException ($"Missing version logic for checking for Xcode {major}.{minor}");
+			}
 		case 15:
 			switch (minor) {
 			case 0:
@@ -414,6 +485,43 @@ partial class TestRuntime {
 				return CheckiOSSystemVersion (17, 0);
 #elif MONOMAC
 				return CheckMacSystemVersion (14, 0);
+#else
+				throw new NotImplementedException ($"Missing platform case for Xcode {major}.{minor}");
+#endif
+			case 1:
+			case 2:
+#if __WATCHOS__
+				return CheckWatchOSSystemVersion (10, 2);
+#elif __TVOS__
+				return ChecktvOSSystemVersion (17, 2);
+#elif __IOS__
+				return CheckiOSSystemVersion (17, 2);
+#elif MONOMAC
+				return CheckMacSystemVersion (14, 2);
+#else
+				throw new NotImplementedException ($"Missing platform case for Xcode {major}.{minor}");
+#endif
+			case 3:
+#if __WATCHOS__
+				return CheckWatchOSSystemVersion (10, 4);
+#elif __TVOS__
+				return ChecktvOSSystemVersion (17, 4);
+#elif __IOS__
+				return CheckiOSSystemVersion (17, 4);
+#elif MONOMAC
+				return CheckMacSystemVersion (14, 4);
+#else
+				throw new NotImplementedException ($"Missing platform case for Xcode {major}.{minor}");
+#endif
+			case 4:
+#if __WATCHOS__
+				return CheckWatchOSSystemVersion (10, 5);
+#elif __TVOS__
+				return ChecktvOSSystemVersion (17, 5);
+#elif __IOS__
+				return CheckiOSSystemVersion (17, 5);
+#elif MONOMAC
+				return CheckMacSystemVersion (14, 5);
 #else
 				throw new NotImplementedException ($"Missing platform case for Xcode {major}.{minor}");
 #endif

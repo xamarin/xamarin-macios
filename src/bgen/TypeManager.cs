@@ -256,32 +256,36 @@ public class TypeManager {
 
 	public string? RenderType (Type t, ICustomAttributeProvider? provider = null)
 	{
+		var nullable = string.Empty;
+		if (provider is not null && !t.IsValueType && AttributeManager.HasAttribute<NullAllowedAttribute> (provider))
+			nullable = "?";
+
 		if (!t.IsEnum) {
 			switch (Type.GetTypeCode (t)) {
 			case TypeCode.Char:
-				return "char";
+				return "char" + nullable;
 			case TypeCode.String:
-				return "string";
+				return "string" + nullable;
 			case TypeCode.Int32:
-				return "int";
+				return "int" + nullable;
 			case TypeCode.UInt32:
-				return "uint";
+				return "uint" + nullable;
 			case TypeCode.Int64:
-				return "long";
+				return "long" + nullable;
 			case TypeCode.UInt64:
-				return "ulong";
+				return "ulong" + nullable;
 			case TypeCode.Single:
-				return "float";
+				return "float" + nullable;
 			case TypeCode.Double:
-				return "double";
+				return "double" + nullable;
 			case TypeCode.Decimal:
-				return "decimal";
+				return "decimal" + nullable;
 			case TypeCode.SByte:
-				return "sbyte";
+				return "sbyte" + nullable;
 			case TypeCode.Byte:
-				return "byte";
+				return "byte" + nullable;
 			case TypeCode.Boolean:
-				return "bool";
+				return "bool" + nullable;
 			}
 		}
 
@@ -289,28 +293,44 @@ public class TypeManager {
 			return "void";
 
 		if (t == TypeCache.System_IntPtr) {
-			return AttributeManager.HasNativeAttribute (provider) ? "nint" : "IntPtr";
+			return (AttributeManager.HasNativeAttribute (provider) ? "nint" : "IntPtr") + nullable;
 		} else if (t == TypeCache.System_UIntPtr) {
-			return AttributeManager.HasNativeAttribute (provider) ? "nuint" : "UIntPtr";
+			return (AttributeManager.HasNativeAttribute (provider) ? "nuint" : "UIntPtr") + nullable;
 		}
 
 		if (t.Namespace is not null) {
 			string ns = t.Namespace;
-			if (NamespaceCache.ImplicitNamespaces.Contains (ns) || t.IsGenericType) {
+			var isImplicitNamespace = NamespaceCache.ImplicitNamespaces.Contains (ns);
+			var isInMultipleNamespaces = IsInMultipleNamespaces (t);
+			var nonGlobalCandidate = isImplicitNamespace && !isInMultipleNamespaces;
+			if (nonGlobalCandidate || t.IsGenericType) {
 				var targs = t.GetGenericArguments ();
 				if (targs.Length == 0)
-					return t.Name;
-				return $"global::{t.Namespace}." + t.Name.RemoveArity () + "<" + string.Join (", ", targs.Select (l => FormatTypeUsedIn (null, l)).ToArray ()) + ">";
+					return t.Name + nullable;
+				return $"global::{t.Namespace}." + t.Name.RemoveArity () + "<" + string.Join (", ", targs.Select (l => FormatTypeUsedIn (null, l)).ToArray ()) + ">" + nullable;
 			}
+			if (isInMultipleNamespaces)
+				return "global::" + t.FullName + nullable;
 			if (NamespaceCache.NamespacesThatConflictWithTypes.Contains (ns))
-				return "global::" + t.FullName;
+				return "global::" + t.FullName + nullable;
 			if (t.Name == t.Namespace)
-				return "global::" + t.FullName;
+				return "global::" + t.FullName + nullable;
 			else
-				return t.FullName;
+				return t.FullName + nullable;
 		}
 
-		return t.FullName;
+		return t.FullName + nullable;
+	}
+
+	bool IsInMultipleNamespaces (Type? type)
+	{
+		if (type is null)
+			return false;
+
+		if (NamespaceCache.TypesInMultipleNamespaces.Contains (type.Name))
+			return true;
+
+		return IsInMultipleNamespaces (type.GetElementType ());
 	}
 
 	// TODO: If we ever have an API with nested properties of the same name more than

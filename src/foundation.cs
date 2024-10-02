@@ -299,9 +299,15 @@ namespace Foundation {
 #endif
 	{
 #if !WATCH
+		// Inlined from the NSAttributedStringAttachmentConveniences category
 		[Static, Export ("attributedStringWithAttachment:")]
 		NSAttributedString FromAttachment (NSTextAttachment attachment);
 #endif
+
+		// Inlined from the NSAttributedStringAttachmentConveniences category
+		[NoWatch, TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Static, Export ("attributedStringWithAttachment:attributes:")]
+		NSAttributedString FromAttachment (NSTextAttachment attachment, NSDictionary<NSString, NSObject> attributes);
 
 		[Export ("string")]
 		IntPtr LowLevelValue { get; }
@@ -670,10 +676,15 @@ namespace Foundation {
 		[Export ("drawInRect:")]
 		void DrawString (CGRect rect);
 
-		// -(BOOL)containsAttachmentsInRange:(NSRange)range __attribute__((availability(macosx, introduced=10.11)));
+		// Inlined from the NSAttributedStringKitAdditions category
 		[MacCatalyst (13, 1)]
 		[Export ("containsAttachmentsInRange:")]
 		bool ContainsAttachmentsInRange (NSRange range);
+
+		// Inlined from the NSAttributedStringKitAdditions category
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("prefersRTFDInRange:")]
+		bool PrefersRtfdInRange (NSRange range);
 
 		// inlined from NSAttributedStringWebKitAdditions category (since they are all static members)
 
@@ -841,6 +852,12 @@ namespace Foundation {
 		[MacCatalyst (13, 1)]
 		NSString CocoaVersionDocumentAttribute { get; }
 #endif // !XAMCORE_5_0
+
+		// Inlined from the NSAttributedStringAdaptiveImageGlyphConveniences category
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Static]
+		[Export ("attributedStringWithAdaptiveImageGlyph:attributes:")]
+		NSAttributedString Create (NSAdaptiveImageGlyph adaptiveImageGlyph, NSDictionary<NSString, NSObject> attributes);
 	}
 
 	// we follow the API found in swift
@@ -891,6 +908,9 @@ namespace Foundation {
 		[Field ("NSInflectionReferentConceptAttributeName")]
 		InflectionReferentConcept,
 
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("NSLocalizedNumberFormatAttributeName")]
+		LocalizedNumberFormat,
 	}
 
 	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
@@ -2042,6 +2062,10 @@ namespace Foundation {
 		[Export ("yearForWeekOfYear")]
 		nint YearForWeekOfYear { get; set; }
 
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("dayOfYear")]
+		nint DayOfYear { get; set; }
+
 		[Export ("leapMonth")]
 		bool IsLeapMonth { [Bind ("isLeapMonth")] get; set; }
 
@@ -2752,8 +2776,10 @@ namespace Foundation {
 		bool IsPartialStringValid (ref string partialString, out NSRange proposedSelRange, string origString, NSRange origSelRange, [NullAllowed] out string error);
 	}
 
+#if !XAMCORE_5_0
 	[BaseType (typeof (NSObject))]
 	[Model]
+#endif
 	[Protocol]
 	interface NSCoding {
 		// [Abstract]
@@ -2770,8 +2796,10 @@ namespace Foundation {
 		// note: +supportsSecureCoding being static it is not a good "generated" binding candidate
 	}
 
+#if !XAMCORE_5_0
 	[BaseType (typeof (NSObject))]
 	[Model]
+#endif
 	[Protocol]
 	interface NSCopying {
 		[Abstract]
@@ -2780,8 +2808,10 @@ namespace Foundation {
 		NSObject Copy ([NullAllowed] NSZone zone);
 	}
 
+#if !XAMCORE_5_0
 	[BaseType (typeof (NSObject))]
 	[Model]
+#endif
 	[Protocol]
 	interface NSMutableCopying : NSCopying {
 		[Abstract]
@@ -4585,6 +4615,12 @@ namespace Foundation {
 		[MacCatalyst (13, 1)]
 		[Field ("CMErrorDomain", "CoreMotion")]
 		NSString CoreMotionErrorDomain { get; }
+
+		[NoMac, NoTV, NoWatch]
+		[iOS (12, 0)]
+		[NoMacCatalyst] // We don't expose CarPlay on Mac Catalyst for the moment // [MacCatalyst (14, 0)]
+		[Field ("CarPlayErrorDomain", "CarPlay")]
+		NSString CarPlayErrorDomain { get; }
 
 #if !XAMCORE_3_0
 		// now exposed with the corresponding EABluetoothAccessoryPickerError enum
@@ -8477,6 +8513,14 @@ namespace Foundation {
 		[Export ("canRedo")]
 		bool CanRedo { get; }
 
+		[Watch (10, 4), TV (17, 4), Mac (14, 4), iOS (17, 4), MacCatalyst (17, 4)]
+		[Export ("undoCount")]
+		nuint UndoCount { get; }
+
+		[Watch (10, 4), TV (17, 4), Mac (14, 4), iOS (17, 4), MacCatalyst (17, 4)]
+		[Export ("redoCount")]
+		nuint RedoCount { get; }
+
 		[Export ("isUndoing")]
 		bool IsUndoing { get; }
 
@@ -8570,6 +8614,19 @@ namespace Foundation {
 		[Export ("registerUndoWithTarget:handler:")]
 		void RegisterUndo (NSObject target, Action<NSObject> undoHandler);
 
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("undoActionUserInfoValueForKey:")]
+		[return: NullAllowed]
+		NSObject GetUndoActionUserInfoValue (string key);
+
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("redoActionUserInfoValueForKey:")]
+		[return: NullAllowed]
+		NSObject GetRedoActionUserInfoValue (string key);
+
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("setActionUserInfoValue:forKey:")]
+		void SetActionUserInfoValue ([NullAllowed] NSObject info, string key);
 	}
 
 	[BaseType (typeof (NSObject), Name = "NSURLProtectionSpace")]
@@ -8739,6 +8796,10 @@ namespace Foundation {
 		[MacCatalyst (16, 1)]
 		[Export ("requiresDNSSECValidation")]
 		bool RequiresDnsSecValidation { get; }
+
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("allowsPersistentDNS")]
+		bool AllowsPersistentDns { get; }
 	}
 
 	[BaseType (typeof (NSDictionary))]
@@ -8944,6 +9005,10 @@ namespace Foundation {
 		[MacCatalyst (16, 1)]
 		[Export ("requiresDNSSECValidation")]
 		bool RequiresDnsSecValidation { get; set; }
+
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("allowsPersistentDNS")]
+		bool AllowsPersistentDns { get; set; }
 	}
 
 	[BaseType (typeof (NSObject), Name = "NSURLResponse")]
@@ -8976,7 +9041,10 @@ namespace Foundation {
 		[Export ("close")]
 		void Close ();
 
-		[Export ("delegate", ArgumentSemantic.Assign), NullAllowed]
+		// Header says:
+		//    assign /* actually weak */
+		// so bind as weak
+		[Export ("delegate", ArgumentSemantic.Weak), NullAllowed]
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
@@ -12374,9 +12442,11 @@ namespace Foundation {
 		[Export ("compare:")]
 		nint Compare (NSNumber otherNumber);
 
-		[Internal] // Equals(object) or IEquatable<T>'s Equals(NSNumber)
 		[Export ("isEqualToNumber:")]
-		bool IsEqualToNumber (NSNumber number);
+		bool IsEqualTo (IntPtr number);
+
+		[Wrap ("IsEqualTo (number.GetHandle ())")]
+		bool IsEqualTo (NSNumber number);
 
 		[Export ("descriptionWithLocale:")]
 		string DescriptionWithLocale (NSLocale locale);
@@ -12696,6 +12766,10 @@ namespace Foundation {
 
 		[Export ("partialStringValidationEnabled")]
 		bool PartialStringValidationEnabled { [Bind ("isPartialStringValidationEnabled")] get; set; }
+
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("minimumGroupingDigits")]
+		nint MinimumGroupingDigits { get; set; }
 	}
 
 	[BaseType (typeof (NSNumber))]
@@ -13179,6 +13253,11 @@ namespace Foundation {
 		[Export ("iOSAppOnMac")]
 		bool IsiOSApplicationOnMac { [Bind ("isiOSAppOnMac")] get; }
 		#endregion
+
+		[Field ("NSProcessInfoPerformanceProfileDidChangeNotification", "Metal")]
+		[Notification]
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0), NoWatch]
+		NSString PerformanceProfileDidChangeNotification { get; }
 	}
 
 	[NoWatch]
@@ -14013,6 +14092,10 @@ namespace Foundation {
 
 		[Export ("accommodatePresentedItemDeletionWithCompletionHandler:")]
 		void AccommodatePresentedItemDeletion (Action<NSError> completionHandler);
+
+		[NoWatch, NoTV, Mac (14, 4), iOS (17, 4), MacCatalyst (17, 4)]
+		[Export ("accommodatePresentedItemEvictionWithCompletionHandler:")]
+		void AccommodatePresentedItemEviction (Action<NSError> completionHandler);
 
 		[Export ("presentedItemDidMoveToURL:")]
 		void PresentedItemMoved (NSUrl newURL);
@@ -15809,6 +15892,11 @@ namespace Foundation {
 		[NoMacCatalyst]
 		[Export ("currentDirectoryURL")]
 		NSUrl CurrentDirectoryUrl { get; set; }
+
+		[NullAllowed]
+		[Mac (14, 4), MacCatalyst (17, 4)]
+		[Export ("launchRequirementData", ArgumentSemantic.Copy)]
+		NSData LaunchRequirementData { get; set; }
 
 		[NullAllowed]
 		[Export ("standardInput", ArgumentSemantic.Retain)]
@@ -18300,6 +18388,11 @@ namespace Foundation {
 
 		[NullAllowed, Export ("pronouns", ArgumentSemantic.Copy)]
 		NSMorphologyPronoun [] Pronouns { get; }
+
+		[Static]
+		[Export ("currentUser")]
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		NSTermOfAddress CurrentUser { get; }
 	}
 
 	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
@@ -18446,4 +18539,42 @@ namespace Foundation {
 		int PrefixSpaces { get; set; }
 	}
 
+	[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface NSKeyValueSharedObserversSnapshot {
+	}
+
+	[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface NSKeyValueSharedObservers {
+		[Export ("initWithObservableClass:")]
+		NativeHandle Constructor (Class observableClass);
+
+		[Wrap ("this (new Class (observableType))")]
+		NativeHandle Constructor (Type observableType);
+
+		[Export ("addSharedObserver:forKey:options:context:")]
+		void AddSharedObserver (NSObject observer, string forKey, NSKeyValueObservingOptions options, IntPtr context);
+
+		[Export ("snapshot")]
+		NSKeyValueSharedObserversSnapshot GetSnapshot ();
+	}
+
+	[Category, BaseType (typeof (NSObject))]
+	[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	interface NSKeyValueSharedObserverRegistration_NSObject {
+		[Export ("setSharedObservers:")]
+		void SetSharedObservers ([NullAllowed] NSKeyValueSharedObserversSnapshot sharedObservers);
+	}
+
+	[BaseType (typeof (NSObject))]
+	[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[DisableDefaultCtor]
+	interface NSLocalizedNumberFormatRule : NSCopying, NSSecureCoding {
+		[Static]
+		[Export ("automatic")]
+		NSLocalizedNumberFormatRule Automatic { get; }
+	}
 }

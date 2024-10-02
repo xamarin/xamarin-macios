@@ -104,6 +104,11 @@ namespace MetalFX {
 		[Export ("motionTextureUsage")]
 		MTLTextureUsage MotionTextureUsage { get; }
 
+		[Mac (14, 4), iOS (17, 4), MacCatalyst (17, 4)]
+		[Abstract]
+		[Export ("reactiveTextureUsage")]
+		MTLTextureUsage ReactiveTextureUsage { get; }
+
 		[Abstract]
 		[Export ("outputTextureUsage")]
 		MTLTextureUsage OutputTextureUsage { get; }
@@ -135,6 +140,11 @@ namespace MetalFX {
 		[Abstract]
 		[NullAllowed, Export ("exposureTexture", ArgumentSemantic.Retain)]
 		IMTLTexture ExposureTexture { get; set; }
+
+		[Mac (14, 4), iOS (17, 4), MacCatalyst (17, 4)]
+		[Abstract]
+		[NullAllowed, Export ("reactiveMaskTexture", ArgumentSemantic.Retain)]
+		IMTLTexture ReactiveMaskTexture { get; set; }
 
 		[Abstract]
 		[Export ("preExposure")]
@@ -278,6 +288,10 @@ namespace MetalFX {
 		[Export ("autoExposureEnabled")]
 		bool AutoExposureEnabled { [Bind ("isAutoExposureEnabled")] get; set; }
 
+		[Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("requiresSynchronousInitialization")]
+		bool RequiresSynchronousInitialization { get; set; }
+
 		[Export ("inputContentPropertiesEnabled")]
 		bool InputContentPropertiesEnabled { [Bind ("isInputContentPropertiesEnabled")] get; set; }
 
@@ -286,6 +300,14 @@ namespace MetalFX {
 
 		[Export ("inputContentMaxScale")]
 		float InputContentMaxScale { get; set; }
+
+		[Mac (14, 4), iOS (17, 4), MacCatalyst (17, 4)]
+		[Export ("reactiveMaskTextureEnabled")]
+		bool ReactiveMaskTextureEnabled { [Bind ("isReactiveMaskTextureEnabled")] get; set; }
+
+		[Mac (14, 4), iOS (17, 4), MacCatalyst (17, 4)]
+		[Export ("reactiveMaskTextureFormat", ArgumentSemantic.Assign)]
+		MTLPixelFormat ReactiveMaskTextureFormat { get; set; }
 
 		[Export ("newTemporalScalerWithDevice:")]
 		[return: NullAllowed, Release]

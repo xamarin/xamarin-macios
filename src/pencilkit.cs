@@ -13,11 +13,13 @@ using AppKit;
 using UIColor = AppKit.NSColor;
 using UIImage = AppKit.NSImage;
 
+using UIBarButtonItem = Foundation.NSObject;
 using UIScrollViewDelegate = Foundation.NSObjectProtocol;
 using UIScrollView = Foundation.NSObject;
 using UIGestureRecognizer = Foundation.NSObject;
 using UIResponder = Foundation.NSObject;
 using UIView = Foundation.NSObject;
+using UIViewController = Foundation.NSObject;
 using UIWindow = Foundation.NSObject;
 using UIUserInterfaceStyle = Foundation.NSObject;
 using BezierPath = AppKit.NSBezierPath;
@@ -92,6 +94,8 @@ namespace PencilKit {
 	public enum PKContentVersion : long {
 		Version1 = 1,
 		Version2 = 2,
+		[iOS (17, 4), Mac (14, 4), MacCatalyst (17, 4)]
+		Version3 = 3,
 	}
 
 	[iOS (13, 0), NoMac]
@@ -129,7 +133,6 @@ namespace PencilKit {
 		// [Export ("delegate", ArgumentSemantic.Weak), NullAllowed]
 		// NSObject WeakDelegate { get; set; }
 
-		[Unavailable (PlatformName.MacCatalyst), Advice ("This API is not available when using Catalyst on macOS.")]
 		[Wrap ("WeakDelegate"), NullAllowed, New]
 		IPKCanvasViewDelegate Delegate { get; set; }
 
@@ -158,6 +161,14 @@ namespace PencilKit {
 		[iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("maximumSupportedContentVersion", ArgumentSemantic.Assign)]
 		PKContentVersion MaximumSupportedContentVersion { get; set; }
+
+		[iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("drawingEnabled")]
+		bool DrawingEnabled {
+			[Bind ("isDrawingEnabled")]
+			get;
+			set;
+		}
 	}
 
 	[iOS (13, 0)]
@@ -321,6 +332,8 @@ namespace PencilKit {
 	[Protocol]
 	interface PKToolPickerObserver {
 
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'SelectedToolItemDidChange' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'SelectedToolItemDidChange' instead.")]
 		[Export ("toolPickerSelectedToolDidChange:")]
 		void SelectedToolDidChange (PKToolPicker toolPicker);
 
@@ -332,6 +345,10 @@ namespace PencilKit {
 
 		[Export ("toolPickerFramesObscuredDidChange:")]
 		void FramesObscuredDidChange (PKToolPicker toolPicker);
+
+		[iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("toolPickerSelectedToolItemDidChange:")]
+		void SelectedToolItemDidChange (PKToolPicker toolPicker);
 	}
 
 	[iOS (13, 0), NoMac]
@@ -345,6 +362,10 @@ namespace PencilKit {
 		[Export ("init")]
 		NativeHandle Constructor ();
 
+		[iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("initWithToolItems:")]
+		NativeHandle Constructor (PKToolPickerItem [] items);
+
 		[Export ("addObserver:")]
 		void AddObserver (IPKToolPickerObserver observer);
 
@@ -354,6 +375,8 @@ namespace PencilKit {
 		[Export ("setVisible:forFirstResponder:")]
 		void SetVisible (bool visible, UIResponder responder);
 
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'SelectedToolItem' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'SelectedToolItem' instead.")]
 		[Export ("selectedTool", ArgumentSemantic.Strong)]
 		PKTool SelectedTool { get; set; }
 
@@ -393,6 +416,31 @@ namespace PencilKit {
 		[iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("maximumSupportedContentVersion", ArgumentSemantic.Assign)]
 		PKContentVersion MaximumSupportedContentVersion { get; set; }
+
+		[iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("selectedToolItem", ArgumentSemantic.Strong)]
+		PKToolPickerItem SelectedToolItem { get; set; }
+
+		[iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("selectedToolItemIdentifier", ArgumentSemantic.Copy)]
+		string SelectedToolItemIdentifier { get; set; }
+
+		[iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("toolItems")]
+		PKToolPickerItem [] ToolItems { get; }
+
+		[iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("accessoryItem", ArgumentSemantic.Strong), NullAllowed]
+		UIBarButtonItem AccessoryItem { get; set; }
+
+		[iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("delegate", ArgumentSemantic.Weak), NullAllowed]
+		NSObject WeakDelegate { get; set; }
+
+		[iOS (18, 0), MacCatalyst (18, 0)]
+		[Wrap ("WeakDelegate"), NullAllowed]
+		IPKToolPickerDelegate Delegate { get; set; }
+
 	}
 
 	[Mac (11, 0), iOS (14, 0)]
@@ -560,5 +608,148 @@ namespace PencilKit {
 		[Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("secondaryScale")]
 		nfloat SecondaryScale { get; }
+	}
+
+	[iOS (18, 0), MacCatalyst (18, 0), NoMac]
+	[BaseType (typeof (PKToolPickerItem))]
+	[DisableDefaultCtor]
+	interface PKToolPickerCustomItem {
+		[Export ("initWithConfiguration:")]
+		NativeHandle Constructor (PKToolPickerCustomItemConfiguration configuration);
+
+		[Export ("configuration")]
+		PKToolPickerCustomItemConfiguration Configuration { get; }
+
+		[Export ("color", ArgumentSemantic.Strong)]
+		UIColor Color { get; set; }
+
+		[Export ("allowsColorSelection", ArgumentSemantic.Assign)]
+		bool AllowsColorSelection { get; set; }
+
+		[Export ("width", ArgumentSemantic.Assign)]
+		nfloat Width { get; set; }
+
+		[Export ("reloadImage")]
+		void ReloadImage ();
+	}
+
+	delegate UIImage PKToolPickerCustomItemConfigurationImageProviderCallback (PKToolPickerCustomItem toolPickerItem);
+	delegate UIViewController PKToolPickerCustomItemConfigurationViewControllerProvider (PKToolPickerCustomItem toolPickerItem);
+
+	[iOS (18, 0), MacCatalyst (18, 0), NoMac]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface PKToolPickerCustomItemConfiguration : NSCopying {
+		[Export ("initWithIdentifier:name:")]
+		NativeHandle Constructor (string identifier, string name);
+
+		[Export ("identifier", ArgumentSemantic.Copy)]
+		string Identifier { get; set; }
+
+		[Export ("name", ArgumentSemantic.Copy)]
+		string Name { get; set; }
+
+		[Export ("imageProvider", ArgumentSemantic.Copy), NullAllowed]
+		PKToolPickerCustomItemConfigurationImageProviderCallback ImageProvider { get; set; }
+
+		[Export ("viewControllerProvider", ArgumentSemantic.Copy), NullAllowed]
+		PKToolPickerCustomItemConfigurationViewControllerProvider ViewControllerProvider { get; set; }
+
+		[Export ("defaultWidth", ArgumentSemantic.Assign)]
+		nfloat DefaultWidth { get; set; }
+
+		[Export ("widthVariants", ArgumentSemantic.Copy)]
+		NSDictionary<NSNumber, UIImage> WidthVariants { get; set; }
+
+		[Export ("defaultColor", ArgumentSemantic.Strong)]
+		UIColor DefaultColor { get; set; }
+
+		[Export ("allowsColorSelection", ArgumentSemantic.Assign)]
+		bool AllowsColorSelection { get; set; }
+
+		[Export ("toolAttributeControls", ArgumentSemantic.Assign)]
+		PKToolPickerCustomItemControlOptions ToolAttributeControls { get; set; }
+	}
+
+	[iOS (18, 0), MacCatalyst (18, 0), NoMac]
+	[BaseType (typeof (PKToolPickerItem))]
+	[DisableDefaultCtor]
+	interface PKToolPickerEraserItem {
+		[Export ("initWithEraserType:")]
+		NativeHandle Constructor (PKEraserType eraserType);
+
+		[Export ("initWithEraserType:width:")]
+		NativeHandle Constructor (PKEraserType eraserType, nfloat width);
+
+		[Export ("eraserTool")]
+		PKEraserTool EraserTool { get; }
+	}
+
+	[iOS (18, 0), MacCatalyst (18, 0), NoMac]
+	[BaseType (typeof (PKToolPickerItem))]
+	[DisableDefaultCtor]
+	interface PKToolPickerInkingItem {
+		[Export ("initWithInkType:")]
+		NativeHandle Constructor (PKInkType inkType);
+
+		[Export ("initWithInkType:color:")]
+		NativeHandle Constructor (PKInkType inkType, UIColor color);
+
+		[Export ("initWithInkType:width:")]
+		NativeHandle Constructor (PKInkType inkType, nfloat width);
+
+		[Export ("initWithInkType:color:width:")]
+		NativeHandle Constructor (PKInkType inkType, UIColor color, nfloat width);
+
+		[Export ("initWithInkType:color:width:identifier:")]
+		NativeHandle Constructor (PKInkType inkType, UIColor color, nfloat width, [NullAllowed] string identifier);
+
+		[Export ("inkingTool")]
+		PKInkingTool InkingTool { get; }
+
+		[Export ("allowsColorSelection", ArgumentSemantic.Assign)]
+		bool AllowsColorSelection { get; set; }
+	}
+
+	[iOS (18, 0), MacCatalyst (18, 0), NoMac]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface PKToolPickerItem : NSCopying {
+		[Export ("identifier")]
+		string Identifier { get; }
+	}
+
+	[iOS (18, 0), MacCatalyst (18, 0), NoMac]
+	[BaseType (typeof (PKToolPickerItem))]
+	interface PKToolPickerLassoItem {
+		[Export ("lassoTool")]
+		PKLassoTool LassoTool { get; }
+	}
+
+	[iOS (18, 0), MacCatalyst (18, 0), NoMac]
+	[BaseType (typeof (PKToolPickerItem))]
+	interface PKToolPickerRulerItem {
+	}
+
+	[iOS (18, 0), MacCatalyst (18, 0), NoMac]
+	[BaseType (typeof (PKToolPickerItem))]
+	interface PKToolPickerScribbleItem {
+	}
+
+	[iOS (18, 0), MacCatalyst (18, 0), NoMac]
+	[Protocol (BackwardsCompatibleCodeGeneration = false), Model]
+	[BaseType (typeof (NSObject))]
+	interface PKToolPickerDelegate {
+	}
+
+	interface IPKToolPickerDelegate { }
+
+	[iOS (18, 0), MacCatalyst (18, 0), NoMac]
+	[Native]
+	[Flags]
+	enum PKToolPickerCustomItemControlOptions : ulong {
+		None = 0,
+		Width = 1 << 0,
+		Opacity = 1 << 1
 	}
 }

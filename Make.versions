@@ -48,8 +48,8 @@
 #   line changed in git).
 #
 
-IOS_PACKAGE_VERSION=17.3.0.$(IOS_COMMIT_DISTANCE)
-MAC_PACKAGE_VERSION=9.3.0.$(MAC_COMMIT_DISTANCE)
+IOS_PACKAGE_VERSION=17.99.0.$(IOS_COMMIT_DISTANCE)
+MAC_PACKAGE_VERSION=9.99.0.$(MAC_COMMIT_DISTANCE)
 
 #
 # ** NuGet package version numbers **
@@ -65,11 +65,11 @@ MAC_PACKAGE_VERSION=9.3.0.$(MAC_COMMIT_DISTANCE)
 
 # WARNING: Do **not** use versions higher than the available Xcode SDK or else we will have issues with mtouch (See https://github.com/xamarin/xamarin-macios/issues/7705)
 
-IOS_NUGET_OS_VERSION=17.2
-TVOS_NUGET_OS_VERSION=17.2
-WATCHOS_NUGET_OS_VERSION=10.2
-MACOS_NUGET_OS_VERSION=14.2
-MACCATALYST_NUGET_OS_VERSION=17.2
+IOS_NUGET_OS_VERSION=18.0
+TVOS_NUGET_OS_VERSION=18.0
+WATCHOS_NUGET_OS_VERSION=11.0
+MACOS_NUGET_OS_VERSION=15.0
+MACCATALYST_NUGET_OS_VERSION=18.0
 
 
 # In theory we should define the default platform version if it's not specified in the TFM. The default should not change for a given .NET version:
@@ -127,7 +127,7 @@ MACCATALYST_NUGET_OS_VERSION=17.2
 # would add support for trying the preview release by doing:
 #
 #     <TargetFramework>net9.0-18.0</TargetFramework>
-#     <EnablePreviewFeatures>true</EnablePreviewFeatures>
+#     <NoWarn>XCODE_16_0_PREVIEW;$(NoWarn)</NoWarn>
 #
 # Note that any SUPPORTED_API_VERSIONS entry below for older OS versions need a corresponding entry in
 # the eng/Version.Details.xml and eng/Versions.props files.

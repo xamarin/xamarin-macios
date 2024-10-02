@@ -1,0 +1,7 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<PropertyGroup Condition="'$(SetAppendRuntimeIdentifierToOutputPathToFalse)' == 'true'">
+		<!-- Used by the AppendRuntimeIdentifierToOutputPath_* tests -->
+		<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+	</PropertyGroup>
+	<Import Project="$(MSBuildThisFileDirectory)../../Directory.Build.props" />
+</Project>

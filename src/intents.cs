@@ -1501,6 +1501,10 @@ namespace Intents {
 		Link,
 		[iOS (17, 0), MacCatalyst (17, 0), Watch (10, 0)]
 		Reaction,
+		[iOS (18, 0), MacCatalyst (18, 0), Watch (11, 0)]
+		MediaAnimatedImage,
+		[iOS (18, 0), MacCatalyst (18, 0), Watch (11, 0)]
+		ThirdPartyAttachment,
 	}
 
 	/// <summary>Enumerates note content types.</summary>
@@ -2708,11 +2712,37 @@ namespace Intents {
 		[Field ("INCarChargingConnectorTypeGBTDC")]
 		Gbtdc,
 
+		[Deprecated (PlatformName.iOS, 17, 4, message: "Use 'INCarChargingConnectorType.NacsDc' instead.")]
+		[Deprecated (PlatformName.WatchOS, 10, 4, message: "Use 'INCarChargingConnectorType.NacsDc' instead.")]
 		[Field ("INCarChargingConnectorTypeTesla")]
 		Tesla,
 
 		[Field ("INCarChargingConnectorTypeMennekes")]
 		Mennekes,
+
+		[Watch (10, 4), iOS (17, 4), MacCatalyst (17, 4)]
+		[Field ("INCarChargingConnectorTypeNACSDC")]
+		NacsDC,
+
+		[Watch (10, 4), iOS (17, 4), MacCatalyst (17, 4)]
+		[Field ("INCarChargingConnectorTypeNACSAC")]
+		NacsAC,
+	}
+
+	[Native]
+	[iOS (18, 0), MacCatalyst (18, 0), Mac (15, 0), Watch (11, 0), NoTV]
+	public enum INMessageReactionType : long {
+		Unknown = 0,
+		Emoji,
+		Generic,
+	}
+
+	[Native]
+	[iOS (18, 0), MacCatalyst (18, 0), Mac (15, 0), Watch (11, 0), NoTV]
+	public enum INStickerType : long {
+		Unknown = 0,
+		Emoji,
+		Generic,
 	}
 
 	// End of enums
@@ -4562,14 +4592,53 @@ namespace Intents {
 		[DesignatedInitializer]
 		NativeHandle Constructor (string identifier, [NullAllowed] string conversationIdentifier, [NullAllowed] string content, [NullAllowed] NSDate dateSent, [NullAllowed] INPerson sender, [NullAllowed] INPerson [] recipients, [NullAllowed] INSpeakableString groupName, INMessageType messageType, [NullAllowed] string serviceName);
 
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use a constructor that takes a reaction instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use a constructor that takes a reaction instead.")]
+		[Deprecated (PlatformName.WatchOS, 11, 0, message: "Use a constructor that takes a reaction instead.")]
 		[MacCatalyst (13, 1)]
 		[Export ("initWithIdentifier:conversationIdentifier:content:dateSent:sender:recipients:groupName:messageType:")]
-		[DesignatedInitializer]
 		NativeHandle Constructor (string identifier, [NullAllowed] string conversationIdentifier, [NullAllowed] string content, [NullAllowed] NSDate dateSent, [NullAllowed] INPerson sender, [NullAllowed] INPerson [] recipients, [NullAllowed] INSpeakableString groupName, INMessageType messageType);
 
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use a constructor that takes a reaction instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use a constructor that takes a reaction instead.")]
+		[Deprecated (PlatformName.WatchOS, 11, 0, message: "Use a constructor that takes a reaction instead.")]
 		[MacCatalyst (13, 1)]
 		[Export ("initWithIdentifier:conversationIdentifier:content:dateSent:sender:recipients:messageType:")]
 		NativeHandle Constructor (string identifier, [NullAllowed] string conversationIdentifier, [NullAllowed] string content, [NullAllowed] NSDate dateSent, [NullAllowed] INPerson sender, [NullAllowed] INPerson [] recipients, INMessageType messageType);
+
+		[iOS (18, 0), MacCatalyst (18, 0), Watch (11, 0), NoMac]
+		[Export ("initWithIdentifier:conversationIdentifier:content:dateSent:sender:recipients:groupName:serviceName:messageType:referencedMessage:reaction:")]
+		NativeHandle Constructor (
+				string identifier,
+				[NullAllowed] string conversationIdentifier,
+				[NullAllowed] string content,
+				[NullAllowed] NSDate dateSent,
+				[NullAllowed] INPerson sender,
+				[NullAllowed] INPerson [] recipients,
+				[NullAllowed] INSpeakableString groupName,
+				[NullAllowed] string serviceName,
+				INMessageType messageType,
+				[NullAllowed] INMessage referencedMessage,
+				[NullAllowed] INMessageReaction reaction
+				);
+
+		[DesignatedInitializer]
+		[iOS (18, 0), MacCatalyst (18, 0), Watch (11, 0), NoMac]
+		[Export ("initWithIdentifier:conversationIdentifier:content:dateSent:sender:recipients:groupName:serviceName:messageType:referencedMessage:sticker:reaction:")]
+		NativeHandle Constructor (
+				string identifier,
+				[NullAllowed] string conversationIdentifier,
+				[NullAllowed] string content,
+				[NullAllowed] NSDate dateSent,
+				[NullAllowed] INPerson sender,
+				[NullAllowed] INPerson [] recipients,
+				[NullAllowed] INSpeakableString groupName,
+				[NullAllowed] string serviceName,
+				INMessageType messageType,
+				[NullAllowed] INMessage referencedMessage,
+				[NullAllowed] INSticker sticker,
+				[NullAllowed] INMessageReaction reaction
+				);
 
 		[Export ("initWithIdentifier:content:dateSent:sender:recipients:")]
 		NativeHandle Constructor (string identifier, [NullAllowed] string content, [NullAllowed] NSDate dateSent, [NullAllowed] INPerson sender, [NullAllowed] INPerson [] recipients);
@@ -4639,6 +4708,16 @@ namespace Intents {
 		[Watch (10, 0), NoMac, iOS (17, 0)]
 		[Export ("linkMetadata", ArgumentSemantic.Copy)]
 		INMessageLinkMetadata LinkMetadata { get; }
+
+		[NullAllowed]
+		[Watch (11, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("sticker", ArgumentSemantic.Copy)]
+		INSticker Sticker { get; set; }
+
+		[NullAllowed]
+		[Watch (11, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("reaction", ArgumentSemantic.Copy)]
+		INMessageReaction Reaction { get; set; }
 
 	}
 
@@ -6772,7 +6851,7 @@ namespace Intents {
 		[DesignatedInitializer]
 		NativeHandle Constructor ([NullAllowed] INPerson [] recipients, INOutgoingMessageType outgoingMessageType, [NullAllowed] string content, [NullAllowed] INSpeakableString speakableGroupName, [NullAllowed] string conversationIdentifier, [NullAllowed] string serviceName, [NullAllowed] INPerson sender, [NullAllowed] INSendMessageAttachment [] attachments);
 
-		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use '.ctor (INPerson[], INOutgoingMessageType, string, INSpeakableString, string, string, INPerson, INSendMessageAttachment[])' instead.")]
+		[Deprecated (PlatformName.MacOSX, 11, 0, message: "Use '.ctor (INPerson[], INOutgoingMessageType, string, INSpeakableString, string, string, INPerson, INSendMessageAttachment[])' instead.")]
 		[Deprecated (PlatformName.WatchOS, 7, 0, message: "Use '.ctor (INPerson[], INOutgoingMessageType, string, INSpeakableString, string, string, INPerson, INSendMessageAttachment[])' instead.")]
 		[Deprecated (PlatformName.iOS, 14, 0, message: "Use '.ctor (INPerson[], INOutgoingMessageType, string, INSpeakableString, string, string, INPerson, INSendMessageAttachment[])' instead.")]
 		[MacCatalyst (13, 1)]
@@ -10062,6 +10141,7 @@ namespace Intents {
 		[Deprecated (PlatformName.iOS, 14, 5, message: "Use '.ctor (string, NSDate, INCallRecordType, INCallCapability, double?, bool?, int?)' instead.")]
 		[Deprecated (PlatformName.MacCatalyst, 14, 5, message: "Use '.ctor (string, NSDate, INCallRecordType, INCallCapability, double?, bool?, int?)' instead.")]
 		[Deprecated (PlatformName.WatchOS, 7, 4, message: "Use '.ctor (string, NSDate, INCallRecordType, INCallCapability, double?, bool?, int?)' instead.")]
+		[Deprecated (PlatformName.MacOSX, 11, 3, message: "Use '.ctor (string, NSDate, INCallRecordType, INCallCapability, double?, bool?, int?)' instead.")]
 		[Watch (6, 0), iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("initWithIdentifier:dateCreated:caller:callRecordType:callCapability:callDuration:unseen:numberOfCalls:")]
@@ -15768,4 +15848,36 @@ namespace Intents {
 		void ConfirmUnsendMessages (INUnsendMessagesIntent intent, Action<INUnsendMessagesIntentResponse> completion);
 	}
 
+	[Watch (11, 0), iOS (18, 0), NoTV, MacCatalyst (18, 0), Mac (15, 0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface INMessageReaction : NSCopying, NSSecureCoding {
+		[DesignatedInitializer]
+		[Export ("initWithReactionType:reactionDescription:emoji:")]
+		NativeHandle Constructor (INMessageReactionType reactionType, [NullAllowed] string reactionDescription, [NullAllowed] string emoji);
+
+		[Export ("reactionType", ArgumentSemantic.Assign)]
+		INMessageReactionType ReactionType { get; }
+
+		[Export ("reactionDescription", ArgumentSemantic.Copy), NullAllowed]
+		string ReactionDescription { get; }
+
+		[Export ("emoji", ArgumentSemantic.Copy), NullAllowed]
+		string Emoji { get; }
+	}
+
+	[Watch (11, 0), iOS (18, 0), NoTV, MacCatalyst (18, 0), Mac (15, 0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface INSticker : NSCopying, NSSecureCoding {
+		[Export ("initWithType:emoji:")]
+		[DesignatedInitializer]
+		NativeHandle Constructor (INStickerType type, [NullAllowed] string emoji);
+
+		[Export ("type", ArgumentSemantic.Assign)]
+		INStickerType Type { get; }
+
+		[Export ("emoji", ArgumentSemantic.Copy), NullAllowed]
+		string Emoji { get; }
+	}
 }

@@ -11,14 +11,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Jenkins\ErrorKnowledgeBaseTests.cs" />
-    <Compile Include="TestImporter\Templates\Tests\PListExtensionsTests.cs" />
-    <Compile Include="TestImporter\Tests\ProjectDefinitionTests.cs" />
-    <Compile Include="Tests\BCLTestImportTargetFactoryTest.cs" />
-    <Compile Include="TestImporter\Xamarin\Tests\TestAssemblyDefinitionTest.cs" />
     <Compile Include="Tests\AppRunnerTests.cs" />
-    <Compile Include="TestImporter\Xamarin\Tests\ProjectFilterTest.cs" />
-    <Compile Include="TestImporter\Xamarin\Tests\AssemblyLocatorTest.cs" />
-    <Compile Include="TestImporter\Xamarin\Tests\XamariniOSTemplateTest.cs" />
     <Compile Include="Jenkins\ITestTaskExtensionsTests.cs" />
     <Compile Include="Tests\TestTargetExtensionsTests.cs" />
     <Compile Include="Tests\TestPlatformExtensionsTests.cs" />
@@ -52,7 +45,6 @@
     <EmbeddedResource Include="Samples\NUnitV3SampleSuccess.xml" />
     <EmbeddedResource Include="Samples\NUnitV3SampleFailure.xml" />
   </ItemGroup>
-  <Import Project="../../../eng/Versions.props" />
   <ItemGroup>
     <ProjectReference Include="..\xharness.csproj">
       <Project>{e1f53f80-8399-499b-8017-c414b9cd263b}</Project>

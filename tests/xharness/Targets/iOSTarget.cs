@@ -8,8 +8,6 @@ namespace Xharness.Targets {
 	public abstract class iOSTarget : Target {
 		public iOSTestProject TestProject;
 
-		public MonoNativeInfo MonoNativeInfo => TestProject.MonoNativeInfo;
-
 		protected override void PostProcessExecutableProject ()
 		{
 			base.PostProcessExecutableProject ();

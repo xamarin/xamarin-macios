@@ -16,9 +16,9 @@ namespace u2ignore {
 			}
 			var id = args [0];
 
-			var dir = Path.GetDirectoryName (Assembly.GetExecutingAssembly ().Location);
+			var dir = Path.GetDirectoryName (Assembly.GetExecutingAssembly ().Location)!;
 			while (Path.GetFileName (dir) != "xtro-sharpie")
-				dir = Path.GetDirectoryName (dir);
+				dir = Path.GetDirectoryName (dir)!;
 
 			var ignored_files = Directory.GetFiles (dir, "*.unclassified", SearchOption.TopDirectoryOnly);
 			var dict = new Dictionary<string, Dictionary<string, List<string>>> ();

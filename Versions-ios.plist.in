@@ -40,6 +40,9 @@
 			<string>16.4</string>
 			<string>17.0</string>
 			<string>17.2</string>
+			<string>17.4</string>
+			<string>17.5</string>
+			<string>18.0</string>
 		</array>
 		<key>tvOS</key>
 		<array>
@@ -70,6 +73,9 @@
 			<string>16.4</string>
 			<string>17.0</string>
 			<string>17.2</string>
+			<string>17.4</string>
+			<string>17.5</string>
+			<string>18.0</string>
 		</array>
 		<key>watchOS</key>
 		<array>
@@ -96,6 +102,9 @@
 			<string>9.4</string>
 			<string>10.0</string>
 			<string>10.2</string>
+			<string>10.4</string>
+			<string>10.5</string>
+			<string>11.0</string>
 		</array>
 		<key>MacCatalyst</key>
 		<array>
@@ -116,6 +125,9 @@
 			<string>16.4</string>
 			<string>17.0</string>
 			<string>17.2</string>
+			<string>17.4</string>
+			<string>17.5</string>
+			<string>18.0</string>
 		</array>
 	</dict>
 	<key>MacCatalystVersionMap</key>
@@ -154,6 +166,12 @@
 		<string>14.0</string>
 		<key>17.2</key>
 		<string>14.2</string>
+		<key>17.4</key>
+		<string>14.4</string>
+		<key>17.5</key>
+		<string>14.5</string>
+		<key>18.0</key>
+		<string>15.0</string>
 	</dict>
 	<key>RecommendedXcodeVersion</key>
 	<string>@XCODE_VERSION@</string>
