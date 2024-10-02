@@ -9,7 +9,7 @@ pr: none
 resources:
   pipelines:
     - pipeline: macios
-      source: xamarin-macios-ci
+      source: \Xamarin\Mac-iOS\ci pipelines\xamarin-macios-ci
       trigger:
         stages:
           - build_macos_tests
