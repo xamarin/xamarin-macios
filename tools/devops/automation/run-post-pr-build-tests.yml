@@ -8,7 +8,7 @@ pr: none
 resources:
   pipelines:
     - pipeline: macios
-      source: xamarin-macios-pr
+      source: \Xamarin\Mac-iOS\pr pipelines\xamarin-macios-pr
       trigger:
         stages:
           - build_packages
