@@ -10,6 +10,7 @@ variables:
 
 # needed to install the dev certificates in the build machine
 - group: Xamarin Notarization
+- group: Xamarin Signing
 
 # Override the GitHub.Token setting defined in the Xamarin Release group
 # Use a token dedicated to critical production workflows and help avoid GitHub throttling
