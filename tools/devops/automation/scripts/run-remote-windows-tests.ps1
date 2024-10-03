@@ -1,4 +1,6 @@
-$Env:DOTNET = "$Env:BUILD_SOURCESDIRECTORY\xamarin-macios\tests\dotnet\Windows\bin\dotnet\dotnet.exe"
+if ("$Env:DOTNET" -eq "") {
+    $Env:DOTNET = "$Env:BUILD_SOURCESDIRECTORY\xamarin-macios\tests\dotnet\Windows\bin\dotnet\dotnet.exe"
+}
 $Env:ServerAddress = $Env:MAC_AGENT_IP
 $Env:ServerUser = $Env:MAC_AGENT_USER
 $Env:ServerPassword = $Env:XMA_PASSWORD
