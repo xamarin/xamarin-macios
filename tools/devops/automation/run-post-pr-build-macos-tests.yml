@@ -11,9 +11,9 @@ resources:
       source: \Xamarin\Mac-iOS\pr pipelines\xamarin-macios-pr
       trigger:
         stages:
-          - build_packages
+          - build_macos_tests
 
 extends:
-  template: templates/pipelines/run-tests-pipeline.yml
+  template: templates/pipelines/run-macos-tests-pipeline.yml
   parameters:
     isPR: true
