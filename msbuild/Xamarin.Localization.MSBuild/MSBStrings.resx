@@ -1576,4 +1576,17 @@
         <comment>RuntimeIdentifier: don't translate (it's the name of a MSBuild property)</comment>
     </data>
 
+    <data name="E7125" xml:space="preserve">
+        <value>Unable to parse the value '{0}' for the property '{1}.</value>
+        <comment>
+            {0}: user-provided value
+            {1]: name of an MSBuild property
+        </comment>
+    </data>
+
+    <data name="E7126" xml:space="preserve">
+        <value>The SupportedOSPlatformVersion value '{0}' in the project file is lower than the minimum value '{1}'.</value>
+        <comment>SupportedOSPlatformVersion: don't translate (it's the name of an MSBuild property)</comment>
+    </data>
+
 </root>
