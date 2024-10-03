@@ -39,7 +39,13 @@ parameters:
   type: boolean
   default: false
 
+- name: stageDisplayNamePrefix
+  type: string
+  default: ''
+
+
 stages:
+
 - stage: ${{ parameters.stageName }}
   displayName: ${{ parameters.displayName }}
   dependsOn:

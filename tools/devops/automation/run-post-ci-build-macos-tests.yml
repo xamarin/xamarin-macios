@@ -4,6 +4,7 @@
 trigger: none
 pr: none
 
+
 # we cannot use a template in a pipeline context
 resources:
   pipelines:
@@ -11,9 +12,9 @@ resources:
       source: \Xamarin\Mac-iOS\ci pipelines\xamarin-macios-ci
       trigger:
         stages:
-          - build_packages
+          - build_macos_tests
 
 extends:
-  template: templates/pipelines/run-tests-pipeline.yml
+  template: templates/pipelines/run-macos-tests-pipeline.yml
   parameters:
     isPR: false
