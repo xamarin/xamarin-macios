@@ -8,6 +8,9 @@ variables:
 
 - group: xamops-azdev-secrets
 
+# needed to install the dev certificates in the build machine
+- group: Xamarin Notarization
+
 # Override the GitHub.Token setting defined in the Xamarin Release group
 # Use a token dedicated to critical production workflows and help avoid GitHub throttling
 # this variable comes from the Xamarin-Secrets group, so we have do have both together
