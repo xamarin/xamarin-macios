@@ -47,8 +47,8 @@ namespace Xamarin.MacDev.Tasks {
 		void LogLine (string msg)
 		{
 			Log.LogWarning (msg);
-			Console.WriteLine ($"{DateTime.UtcNow.ToString("o")} Ditto stdout: {msg}");
-			Console.Error.WriteLine ($"{DateTime.UtcNow.ToString("o")} Ditto stderr: {msg}");
+			Console.WriteLine ($"{DateTime.UtcNow.ToString ("o")} Ditto stdout: {msg}");
+			Console.Error.WriteLine ($"{DateTime.UtcNow.ToString ("o")} Ditto stderr: {msg}");
 		}
 
 		public override bool Execute ()
