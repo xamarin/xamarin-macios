@@ -9307,10 +9307,13 @@ namespace AppKit {
 		[ForcedType] // different type used inside a sandbox
 		NSOpenPanel OpenPanel { get; }
 
+#if !XAMCORE_5_0
+		[EditorBrowsable (EditorBrowsableState.Never)]
 		[Advice ("You must use 'OpenPanel' method if the application is sandboxed.")]
 		[Deprecated (PlatformName.MacOSX, 10, 15, message: "All open panels now run out-of-process, use 'OpenPanel' method instead")]
 		[Export ("init")]
 		NativeHandle Constructor ();
+#endif
 
 		[Export ("URLs")]
 		NSUrl [] Urls { get; }
@@ -13652,10 +13655,13 @@ namespace AppKit {
 		[ForcedType] // different type used inside a sandbox
 		NSSavePanel SavePanel { get; }
 
+#if !XAMCORE_5_0
 		[Advice ("You must use 'SavePanel' method if the application is sandboxed.")]
 		[Deprecated (PlatformName.MacOSX, 10, 15, message: "All save panels now run out-of-process, use 'SavePanel' method instead")]
+		[EditorBrowsable (EditorBrowsableState.Never)]
 		[Export ("init")]
 		NativeHandle Constructor ();
+#endif
 
 		[Export ("URL")]
 		NSUrl Url { get; }
