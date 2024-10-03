@@ -41,7 +41,7 @@ variables:
 - name: CIBuildPoolUrl
   value: 'https://devdiv.visualstudio.com/_settings/agentpools?poolId=367&view=agents'
 
-# override the defualt build revision
+# override the default build revision
 - name: BUILD_REVISION
   value: azure-devops-$(Build.SourceVersion)
 
