@@ -1,4 +1,4 @@
-# signing realted variables
+# signing related variables
 variables:
 - group: Xamarin-Secrets
 - group: Xamarin Signing
