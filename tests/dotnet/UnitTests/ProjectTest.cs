@@ -2294,6 +2294,14 @@ namespace Xamarin.Tests {
 			"/usr/lib/libobjc.A.dylib",
 			"/usr/lib/libSystem.B.dylib",
 			"/usr/lib/libz.1.dylib",
+			"/System/Library/Frameworks/CryptoKit.framework/CryptoKit",
+			"/usr/lib/libicucore.A.dylib",
+			"/usr/lib/swift/libswiftCore.dylib",
+			"/usr/lib/swift/libswiftCoreFoundation.dylib",
+			"/usr/lib/swift/libswiftDarwin.dylib",
+			"/usr/lib/swift/libswiftDispatch.dylib",
+			"/usr/lib/swift/libswiftFoundation.dylib",
+			"/usr/lib/swift/libswiftObjectiveC.dylib",
 		];
 
 		static string [] expectedFrameworks_iOS_Full = [
@@ -2306,6 +2314,7 @@ namespace Xamarin.Tests {
 			"/usr/lib/libc++.1.dylib",
 			"/usr/lib/libcompression.dylib",
 			"/usr/lib/libiconv.2.dylib",
+			"/usr/lib/libicucore.A.dylib",
 			"/usr/lib/libobjc.A.dylib",
 			"/usr/lib/libSystem.B.dylib",
 			"/usr/lib/libz.1.dylib",
@@ -2337,6 +2346,7 @@ namespace Xamarin.Tests {
 			"/System/Library/Frameworks/CoreSpotlight.framework/CoreSpotlight",
 			"/System/Library/Frameworks/CoreText.framework/CoreText",
 			"/System/Library/Frameworks/CoreVideo.framework/CoreVideo",
+			"/System/Library/Frameworks/CryptoKit.framework/CryptoKit",
 			"/System/Library/Frameworks/CryptoTokenKit.framework/CryptoTokenKit",
 			"/System/Library/Frameworks/DeviceCheck.framework/DeviceCheck",
 			"/System/Library/Frameworks/DeviceDiscoveryUI.framework/DeviceDiscoveryUI",
@@ -2395,9 +2405,16 @@ namespace Xamarin.Tests {
 			"/usr/lib/libc++.1.dylib",
 			"/usr/lib/libcompression.dylib",
 			"/usr/lib/libiconv.2.dylib",
+			"/usr/lib/libicucore.A.dylib",
 			"/usr/lib/libobjc.A.dylib",
 			"/usr/lib/libSystem.B.dylib",
 			"/usr/lib/libz.1.dylib",
+			"/usr/lib/swift/libswiftCore.dylib",
+			"/usr/lib/swift/libswiftCoreFoundation.dylib",
+			"/usr/lib/swift/libswiftDarwin.dylib",
+			"/usr/lib/swift/libswiftDispatch.dylib",
+			"/usr/lib/swift/libswiftFoundation.dylib",
+			"/usr/lib/swift/libswiftObjectiveC.dylib",
 		];
 
 		static string [] expectedFrameworks_tvOS_Full = [
@@ -2408,6 +2425,7 @@ namespace Xamarin.Tests {
 			"/usr/lib/libc++.1.dylib",
 			"/usr/lib/libcompression.dylib",
 			"/usr/lib/libiconv.2.dylib",
+			"/usr/lib/libicucore.A.dylib",
 			"/usr/lib/libobjc.A.dylib",
 			"/usr/lib/libSystem.B.dylib",
 			"/usr/lib/libz.1.dylib",
@@ -2415,6 +2433,7 @@ namespace Xamarin.Tests {
 
 		static string [] expectedFrameworks_macOS_None = [
 			"@executable_path/../../Contents/MonoBundle/libclrgc.dylib",
+			"@executable_path/../../Contents/MonoBundle/libclrgcexp.dylib",
 			"@executable_path/../../Contents/MonoBundle/libclrjit.dylib",
 			"@executable_path/../../Contents/MonoBundle/libcoreclr.dylib",
 			"@executable_path/../../Contents/MonoBundle/libhostfxr.dylib",
@@ -2556,6 +2575,7 @@ namespace Xamarin.Tests {
 			"/usr/lib/libc++.1.dylib",
 			"/usr/lib/libcompression.dylib",
 			"/usr/lib/libiconv.2.dylib",
+			"/usr/lib/libicucore.A.dylib",
 			"/usr/lib/libobjc.A.dylib",
 			"/usr/lib/libSystem.B.dylib",
 			"/usr/lib/libz.1.dylib",
@@ -2563,6 +2583,7 @@ namespace Xamarin.Tests {
 
 		static string [] expectedFrameworks_macOS_Full = [
 			"@executable_path/../../Contents/MonoBundle/libclrgc.dylib",
+			"@executable_path/../../Contents/MonoBundle/libclrgcexp.dylib",
 			"@executable_path/../../Contents/MonoBundle/libclrjit.dylib",
 			"@executable_path/../../Contents/MonoBundle/libcoreclr.dylib",
 			"@executable_path/../../Contents/MonoBundle/libhostfxr.dylib",
@@ -2587,6 +2608,7 @@ namespace Xamarin.Tests {
 			"/usr/lib/libc++.1.dylib",
 			"/usr/lib/libcompression.dylib",
 			"/usr/lib/libiconv.2.dylib",
+			"/usr/lib/libicucore.A.dylib",
 			"/usr/lib/libobjc.A.dylib",
 			"/usr/lib/libSystem.B.dylib",
 			"/usr/lib/libz.1.dylib",
@@ -2672,6 +2694,7 @@ namespace Xamarin.Tests {
 			"/System/Library/Frameworks/CoreText.framework/Versions/A/CoreText",
 			"/System/Library/Frameworks/CoreVideo.framework/Versions/A/CoreVideo",
 			"/System/Library/Frameworks/CoreWLAN.framework/Versions/A/CoreWLAN",
+			"/System/Library/Frameworks/CryptoKit.framework/Versions/A/CryptoKit",
 			"/System/Library/Frameworks/CryptoTokenKit.framework/Versions/A/CryptoTokenKit",
 			"/System/Library/Frameworks/DeviceCheck.framework/Versions/A/DeviceCheck",
 			"/System/Library/Frameworks/DeviceDiscoveryExtension.framework/Versions/A/DeviceDiscoveryExtension",
@@ -2723,9 +2746,18 @@ namespace Xamarin.Tests {
 			"/usr/lib/libc++.1.dylib",
 			"/usr/lib/libcompression.dylib",
 			"/usr/lib/libiconv.2.dylib",
+			"/usr/lib/libicucore.A.dylib",
 			"/usr/lib/libobjc.A.dylib",
 			"/usr/lib/libSystem.B.dylib",
 			"/usr/lib/libz.1.dylib",
+			"/usr/lib/swift/libswiftCore.dylib",
+			"/usr/lib/swift/libswiftCoreFoundation.dylib",
+			"/usr/lib/swift/libswiftDarwin.dylib",
+			"/usr/lib/swift/libswiftDispatch.dylib",
+			"/usr/lib/swift/libswiftFoundation.dylib",
+			"/usr/lib/swift/libswiftIOKit.dylib",
+			"/usr/lib/swift/libswiftObjectiveC.dylib",
+			"/usr/lib/swift/libswiftXPC.dylib",
 		];
 
 		static string [] expectedFrameworks_MacCatalyst_Full = [
@@ -2742,6 +2774,7 @@ namespace Xamarin.Tests {
 			"/usr/lib/libc++.1.dylib",
 			"/usr/lib/libcompression.dylib",
 			"/usr/lib/libiconv.2.dylib",
+			"/usr/lib/libicucore.A.dylib",
 			"/usr/lib/libobjc.A.dylib",
 			"/usr/lib/libSystem.B.dylib",
 			"/usr/lib/libz.1.dylib",
@@ -2754,6 +2787,9 @@ namespace Xamarin.Tests {
 			// up linking with said framework in every app - it's also an indication that we're not trimming away as much
 			// as we want, because just adding an (unused) framework shouldn't make it impossible to trim away all the
 			// code in that framework).
+			//
+			// However, new .NET versions often require updates to both the "None" and "Full lists of frameworks and libraries.
+			//
 
 			yield return new TestCaseData (ApplePlatform.iOS, "ios-arm64", "None", expectedFrameworks_iOS_None);
 			yield return new TestCaseData (ApplePlatform.iOS, "ios-arm64", "Full", expectedFrameworks_iOS_Full);
