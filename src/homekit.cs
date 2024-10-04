@@ -211,7 +211,7 @@ namespace HomeKit {
 		[NullAllowed, Export ("cameraProfiles", ArgumentSemantic.Copy)]
 		HMCameraProfile [] CameraProfiles { get; }
 
-		[Watch (4, 3), TV (11, 3), iOS (11, 3)]
+		[Watch (4, 3)]
 		[MacCatalyst (14, 0)]
 		[Export ("supportsIdentify")]
 		bool SupportsIdentify { get; }
@@ -688,7 +688,7 @@ namespace HomeKit {
 		void AddAndSetupAccessories (Action<NSError> completion);
 
 		[Deprecated (PlatformName.iOS, 15, 4, message: "Use 'HMAccessorySetupManager.PerformAccessorySetup' instead.")]
-		[NoWatch, NoTV, iOS (11, 3), NoMacCatalyst]
+		[NoWatch, NoTV, NoMacCatalyst]
 		[Deprecated (PlatformName.MacCatalyst, 15, 4, message: "Use 'HMAccessorySetupManager.PerformAccessorySetup' instead.")]
 		[Async]
 		[Export ("addAndSetupAccessoriesWithPayload:completionHandler:")]
@@ -1582,7 +1582,7 @@ namespace HomeKit {
 		NativeHandle Constructor ();
 #endif
 
-		[Watch (7, 4), TV (14, 5), Mac (11, 3), iOS (14, 5)]
+		[Watch (7, 4), TV (14, 5), iOS (14, 5)]
 		[MacCatalyst (14, 5)]
 		[Export ("aspectRatio")]
 		double AspectRatio { get; }
@@ -1982,7 +1982,7 @@ namespace HomeKit {
 		void DidUpdateNetworkAccessMode (HMNetworkConfigurationProfile profile);
 	}
 
-	[NoWatch, NoTV, iOS (11, 3), NoMacCatalyst]
+	[NoWatch, NoTV, NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface HMAccessorySetupPayload {
@@ -2084,7 +2084,7 @@ namespace HomeKit {
 		NSDateComponents Offset { get; set; }
 	}
 
-	[Watch (4, 2), TV (11, 2), iOS (11, 2), MacCatalyst (14, 0)]
+	[Watch (4, 2), MacCatalyst (14, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface HMAccessControl {

@@ -18,8 +18,8 @@ namespace GameKit {
 		/// <param name="achievementId">The ID of the achievement to show.</param>
 #if NET
 		[SupportedOSPlatform ("ios14.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-		[SupportedOSPlatform ("macos11.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos14.0")]
 #else
 		[TV (14, 0), Mac (11, 0), iOS (14, 0), MacCatalyst (14, 0)]

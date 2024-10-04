@@ -29,9 +29,22 @@ namespace Xamarin.Tests {
 			var result = DotNet.AssertBuild (project_path, properties);
 			var recordArgs = BinLog.ReadBuildEvents (result.BinLogPath).ToList ();
 			var findString = "Output Property: ArchiveDir";
-			var archiveDirRecord = recordArgs.Where (v => v?.Message?.Contains (findString) == true).ToList ();
-			Assert.That (archiveDirRecord.Count, Is.GreaterThan (0), "ArchiveDir");
-			var archiveDir = archiveDirRecord [0].Message?.Substring (findString.Length + 1)?.Trim ();
+			var findString2 = "TaskOutput: ArchiveDir";
+			var archiveDirs = recordArgs.
+				Select (v => v?.Message).
+				Select (v => {
+					if (v is null)
+						return null;
+					if (v.Contains (findString))
+						return v.Substring (findString.Length + 1);
+					if (v.Contains (findString2))
+						return v.Substring (findString2.Length + 1);
+					return null;
+				}).
+				Where (v => v is not null).
+				ToList ();
+			Assert.That (archiveDirs.Count, Is.GreaterThan (0), "ArchiveDir");
+			var archiveDir = archiveDirs [0]!.Trim ();
 			Assert.That (archiveDir, Does.Exist, "Archive directory existence");
 			AssertDSymDirectory (appPath);
 		}

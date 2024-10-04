@@ -2,7 +2,7 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-    <MergeSystemAssemblies Condition="'$(MergeSystemAssemblies)' == ''">false</MergeSystemAssemblies>
+    <MergeSystemAssemblies Condition="'$(MergeSystemAssemblies)' == ''">true</MergeSystemAssemblies>
   </PropertyGroup>
 
   <ItemGroup>
@@ -42,6 +42,7 @@
       <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'System.ComponentModel.Composition'" />
       <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'System.Diagnostics.Tracer'" />
       <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'System.Net.Mqtt'" />
+      <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'System.Net.Mqtt.Server'" />
       <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'System.Reactive'" />
       <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'System.Security.Cryptography.ProtectedData'" />
       <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'System.Text.Encoding.CodePages'" />

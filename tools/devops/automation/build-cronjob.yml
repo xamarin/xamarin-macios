@@ -16,7 +16,7 @@ parameters:
   default: false
 
 variables:
-- template: templates/variables.yml
+- template: templates/variables/common.yml
 - name: MaciosUploadPrefix
   value: ''
 
