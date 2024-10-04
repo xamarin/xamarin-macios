@@ -315,16 +315,16 @@ namespace MonoTouchFixtures.Security {
 			var testUsername = "testusername";
 
 			//TEST 1: Save a keychain value
-			var test1 = SaveUserPassword (testUsername, "testValue1");
-			Assert.IsTrue (test1, "Password could not be saved to keychain");
+			var test1 = SaveUserPassword (testUsername, "testValue1", out var queryCode, out var addCode, out var updateCode);
+			Assert.IsTrue (test1, $"Password could not be saved to keychain. queryCode: {queryCode} addCode: {addCode} updateCode: {updateCode}");
 
 			//TEST 2: Get the saved keychain value
 			var test2 = GetUserPassword (testUsername);
 			Assert.IsTrue (StringUtil.StringsEqual (test2, "testValue1", false));
 
 			//TEST 3: Update the keychain value
-			var test3 = SaveUserPassword (testUsername, "testValue2");
-			Assert.IsTrue (test3, "Password could not be saved to keychain");
+			var test3 = SaveUserPassword (testUsername, "testValue2", out queryCode, out addCode, out updateCode);
+			Assert.IsTrue (test3, "Password could not be saved to keychain. queryCode: {queryCode} addCode: {addCode} updateCode: {updateCode}");
 
 			//TEST 4: Get the updated keychain value
 			var test4 = GetUserPassword (testUsername);
@@ -353,14 +353,15 @@ namespace MonoTouchFixtures.Security {
 			return password;
 		}
 
-		public static bool SaveUserPassword (string username, string password)
+		public static bool SaveUserPassword (string username, string password, out SecStatusCode queryCode, out SecStatusCode addCode, out SecStatusCode updateCode)
 		{
+			addCode = (SecStatusCode) (-1); // pick a value that doesn't already exist in SecStatusCode
+			updateCode = (SecStatusCode) (-1); // pick a value that doesn't already exist in SecStatusCode
 			var success = false;
 			var searchRecord = CreateSecRecord (SecKind.InternetPassword,
 				server: "Test1",
 				account: username.ToLower ()
 			);
-			SecStatusCode queryCode;
 			var record = SecKeyChain.QueryAsRecord (searchRecord, out queryCode);
 			if (queryCode == SecStatusCode.ItemNotFound) {
 				record = CreateSecRecord (SecKind.InternetPassword,
@@ -368,12 +369,12 @@ namespace MonoTouchFixtures.Security {
 					account: username.ToLower (),
 					valueData: NSData.FromString (password)
 				);
-				var addCode = SecKeyChain.Add (record);
+				addCode = SecKeyChain.Add (record);
 				success = (addCode == SecStatusCode.Success);
 			}
 			if (queryCode == SecStatusCode.Success && record is not null) {
 				record.ValueData = NSData.FromString (password);
-				var updateCode = SecKeyChain.Update (searchRecord, record);
+				updateCode = SecKeyChain.Update (searchRecord, record);
 				success = (updateCode == SecStatusCode.Success);
 			}
 			return success;
@@ -425,7 +426,11 @@ namespace MonoTouchFixtures.Security {
 		[Test]
 		public void SecRecordRecordTest ()
 		{
+#if NET
+			using (var cert = X509CertificateLoader.LoadCertificate (CertificateTest.mail_google_com))
+#else
 			using (var cert = new X509Certificate (CertificateTest.mail_google_com))
+#endif
 			using (var sc = new SecCertificate (cert))
 			using (var rec = CreateSecRecord (sc)) {
 				Assert.NotNull (rec, "rec is null");
@@ -446,7 +451,11 @@ namespace MonoTouchFixtures.Security {
 		[Test]
 		public void KeyRecordTest ()
 		{
+#if NET
+			using (var cert = X509CertificateLoader.LoadPkcs12 (ImportExportTest.farscape_pfx, "farscape"))
+#else
 			using (var cert = new X509Certificate2 (ImportExportTest.farscape_pfx, "farscape"))
+#endif
 			using (var policy = SecPolicy.CreateBasicX509Policy ())
 			using (var trust = new SecTrust (cert, policy)) {
 				trust.Evaluate ();

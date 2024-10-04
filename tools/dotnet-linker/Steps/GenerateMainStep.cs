@@ -87,7 +87,7 @@ namespace Xamarin {
 			if (app.IsTVExtension) {
 				extensionlib = "libtvextension-dotnet.a";
 			} else if (app.IsExtension) {
-				if (app.XamarinRuntime == Bundler.XamarinRuntime.CoreCLR) {
+				if (app.XamarinRuntime == Bundler.XamarinRuntime.CoreCLR || (app.XamarinRuntime == Bundler.XamarinRuntime.NativeAOT && app.Platform == Xamarin.Utils.ApplePlatform.MacOSX)) {
 					extensionlib = "libextension-dotnet-coreclr.a";
 				} else {
 					extensionlib = "libextension-dotnet.a";

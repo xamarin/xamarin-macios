@@ -97,13 +97,10 @@ namespace MetalPerformanceShaders {
 	}
 
 #if NET
-	[SupportedOSPlatform ("ios11.3")]
-	[SupportedOSPlatform ("tvos11.3")]
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("tvos")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("maccatalyst")]
-#else
-	[iOS (11, 3)]
-	[TV (11, 3)]
 #endif
 	public struct MPSImageCoordinate {
 		public nuint X;
@@ -112,13 +109,10 @@ namespace MetalPerformanceShaders {
 	}
 
 #if NET
-	[SupportedOSPlatform ("ios11.3")]
-	[SupportedOSPlatform ("tvos11.3")]
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("tvos")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("maccatalyst")]
-#else
-	[iOS (11, 3)]
-	[TV (11, 3)]
 #endif
 	public struct MPSImageRegion {
 		public MPSImageCoordinate Offset;
@@ -185,13 +179,10 @@ namespace MetalPerformanceShaders {
 	}
 
 #if NET
-	[SupportedOSPlatform ("tvos11.3")]
-	[SupportedOSPlatform ("ios11.3")]
+	[SupportedOSPlatform ("tvos")]
+	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("maccatalyst")]
-#else
-	[TV (11, 3)]
-	[iOS (11, 3)]
 #endif
 	public struct MPSStateTextureInfo {
 		public nuint Width;
@@ -229,13 +220,10 @@ namespace MetalPerformanceShaders {
 	}
 
 #if NET
-	[SupportedOSPlatform ("tvos12.0")]
+	[SupportedOSPlatform ("tvos")]
 	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("ios12.0")]
+	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
-#else
-	[TV (12, 0)]
-	[iOS (12, 0)]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MPSAxisAlignedBoundingBox {
@@ -259,13 +247,10 @@ namespace MetalPerformanceShaders {
 	}
 
 #if NET
-	[SupportedOSPlatform ("ios11.2")]
-	[SupportedOSPlatform ("tvos11.2")]
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("tvos")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("maccatalyst")]
-#else
-	[iOS (11, 2)]
-	[TV (11, 2)]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MPSMatrixOffset {

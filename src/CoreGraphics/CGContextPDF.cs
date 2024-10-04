@@ -85,24 +85,22 @@ namespace CoreGraphics {
 		public CGPDFAccessPermissions? AccessPermissions { get; set; }
 		//public NSDictionary OutputIntent { get; set; }
 #if NET
-		[SupportedOSPlatform ("macos11.0")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios14.0")]
 		[SupportedOSPlatform ("tvos14.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Mac (11, 0)]
 		[iOS (14, 0)]
 		[TV (14, 0)]
 		[Watch (7, 0)]
 #endif
 		public bool? CreateLinearizedPdf { get; set; }
 #if NET
-		[SupportedOSPlatform ("macos11.0")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios14.0")]
 		[SupportedOSPlatform ("tvos14.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Mac (11, 0)]
 		[iOS (14, 0)]
 		[TV (14, 0)]
 		[Watch (7, 0)]

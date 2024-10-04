@@ -113,7 +113,6 @@ namespace StoreKit {
 	[Deprecated (PlatformName.MacOSX, 15, 0 /* Apple's replacement requires Swift */ )]
 	[Deprecated (PlatformName.TvOS, 18, 0 /* Apple's replacement requires Swift */ )]
 	[Deprecated (PlatformName.WatchOS, 11, 0 /* Apple's replacement requires Swift */ )]
-	[Mac (11, 0)]
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -124,12 +123,12 @@ namespace StoreKit {
 	}
 
 	/// <summary>Defines the natural period for a subscription.</summary>
+	[Watch (6, 2)]
 	[Deprecated (PlatformName.iOS, 18, 0 /* Apple's replacement requires Swift */ )]
 	[Deprecated (PlatformName.MacCatalyst, 18, 0 /* Apple's replacement requires Swift */ )]
 	[Deprecated (PlatformName.MacOSX, 15, 0 /* Apple's replacement requires Swift */ )]
 	[Deprecated (PlatformName.TvOS, 18, 0 /* Apple's replacement requires Swift */ )]
 	[Deprecated (PlatformName.WatchOS, 11, 0 /* Apple's replacement requires Swift */ )]
-	[Watch (6, 2), iOS (11, 2), TV (11, 2)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum SKProductPeriodUnit : ulong {
@@ -140,12 +139,12 @@ namespace StoreKit {
 	}
 
 	/// <summary>Enumerates how a discount price is applied.</summary>
+	[Watch (6, 2)]
 	[Deprecated (PlatformName.iOS, 18, 0 /* Apple's replacement requires Swift */ )]
 	[Deprecated (PlatformName.MacCatalyst, 18, 0 /* Apple's replacement requires Swift */ )]
 	[Deprecated (PlatformName.MacOSX, 15, 0 /* Apple's replacement requires Swift */ )]
 	[Deprecated (PlatformName.TvOS, 18, 0 /* Apple's replacement requires Swift */ )]
 	[Deprecated (PlatformName.WatchOS, 11, 0 /* Apple's replacement requires Swift */ )]
-	[Watch (6, 2), iOS (11, 2), TV (11, 2)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum SKProductDiscountPaymentMode : ulong {

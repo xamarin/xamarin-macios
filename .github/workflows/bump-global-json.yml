@@ -1,4 +1,4 @@
-name: Bump global.json for dotnet/installer bumps
+name: Bump global.json for dotnet/sdk bumps
 on: pull_request_target
 
 jobs:
@@ -10,7 +10,7 @@ jobs:
     # https://docs.github.com/en/actions/using-jobs/assigning-permissions-to-jobs
     permissions:
       contents: write
-    if: contains(github.event.pull_request.title, 'Update dependencies from dotnet/installer') && github.actor == 'dotnet-maestro[bot]'
+    if: contains(github.event.pull_request.title, 'Update dependencies from dotnet/sdk') && github.actor == 'dotnet-maestro[bot]'
     steps:
     - name: 'Checkout repo'
       uses: actions/checkout@v4

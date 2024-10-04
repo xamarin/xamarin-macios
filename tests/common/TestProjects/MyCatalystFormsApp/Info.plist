@@ -21,7 +21,7 @@
         <string>UIInterfaceOrientationLandscapeRight</string>
     </array>
     <key>LSMinimumSystemVersion</key>
-    <string>10.15</string>
+    <string>12.0</string>
     <key>CFBundleDisplayName</key>
     <string>MyCatalystFormsApp</string>
     <key>CFBundleIdentifier</key>
