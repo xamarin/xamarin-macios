@@ -1580,7 +1580,7 @@
         <value>Unable to parse the value '{0}' for the property '{1}.</value>
         <comment>
             {0}: user-provided value
-            {1]: name of an MSBuild property
+            {1}: name of an MSBuild property
         </comment>
     </data>
 
