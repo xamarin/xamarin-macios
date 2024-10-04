@@ -897,6 +897,13 @@ namespace Xamarin.Bundler {
 			sw.WriteLine ("\treturn rv;");
 			sw.WriteLine ("}");
 
+			// Add an empty __managed__Main function when building class lib app extensions with NativeAOT to workaround static reference to this symbol from nativeaot-bridge.m
+			if (app.IsExtension && app.XamarinRuntime == XamarinRuntime.NativeAOT) {
+				sw.WriteLine ();
+				sw.Write ("extern \"C\" int __managed__Main (int argc, const char** argv) { return 0; } ");
+				sw.WriteLine ();
+			}
+
 			string extension_main = null;
 			if (app.Platform == ApplePlatform.WatchOS && app.IsWatchExtension) {
 				// We're building a watch extension, and we have multiple scenarios, depending on the watchOS version we're executing on:
@@ -939,19 +946,34 @@ namespace Xamarin.Bundler {
 			sw.WriteLine ("}");
 		}
 
+#if NET
+		static readonly char [] charsToReplaceAot = new [] { '.', '-', '+', '<', '>' };
+#endif
 		static string EncodeAotSymbol (string symbol)
 		{
 			var sb = new StringBuilder ();
 			/* This mimics what the aot-compiler does */
+			// https://github.com/dotnet/runtime/blob/2f08fcbfece0c09319f237a6aee6f74c4a9e14e8/src/mono/mono/metadata/native-library.c#L1265-L1284
+			// https://github.com/dotnet/runtime/blob/2f08fcbfece0c09319f237a6aee6f74c4a9e14e8/src/tasks/Common/Utils.cs#L419-L445
 			foreach (var b in System.Text.Encoding.UTF8.GetBytes (symbol)) {
 				char c = (char) b;
 				if ((c >= '0' && c <= '9') ||
 					(c >= 'a' && c <= 'z') ||
-					(c >= 'A' && c <= 'Z')) {
+					(c >= 'A' && c <= 'Z') ||
+					(c == '_')) {
 					sb.Append (c);
 					continue;
+#if NET
+				} else if (charsToReplaceAot.Contains (c)) {
+					sb.Append ('_');
+				} else {
+					// Append the hex representation of b between underscores
+					sb.Append ($"_{b:X}_");
+#endif
 				}
+#if !NET
 				sb.Append ('_');
+#endif
 			}
 			return sb.ToString ();
 		}

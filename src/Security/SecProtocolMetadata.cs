@@ -25,13 +25,11 @@ using NativeHandle = System.IntPtr;
 
 namespace Security {
 #if NET
-	[SupportedOSPlatform ("tvos12.0")]
+	[SupportedOSPlatform ("tvos")]
 	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("ios12.0")]
+	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
-	[TV (12, 0)]
-	[iOS (12, 0)]
 	[Watch (5, 0)]
 #endif
 	public class SecProtocolMetadata : NativeObject {
@@ -56,9 +54,9 @@ namespace Security {
 		public DispatchData? PeerPublicKey => CreateDispatchData (sec_protocol_metadata_copy_peer_public_key (GetCheckedHandle ()));
 
 #if NET
-		[SupportedOSPlatform ("tvos12.0")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[ObsoletedOSPlatform ("macos10.15", "Use 'NegotiatedTlsProtocolVersion' instead.")]
 		[ObsoletedOSPlatform ("tvos13.0", "Use 'NegotiatedTlsProtocolVersion' instead.")]
@@ -73,9 +71,9 @@ namespace Security {
 		extern static SslProtocol sec_protocol_metadata_get_negotiated_protocol_version (IntPtr handle);
 
 #if NET
-		[SupportedOSPlatform ("tvos12.0")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[ObsoletedOSPlatform ("macos10.15", "Use 'NegotiatedTlsProtocolVersion' instead.")]
 		[ObsoletedOSPlatform ("tvos13.0", "Use 'NegotiatedTlsProtocolVersion' instead.")]

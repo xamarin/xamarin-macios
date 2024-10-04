@@ -11,7 +11,7 @@ namespace HomeKit {
 #if NET
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("ios")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[ObsoletedOSPlatform ("tvos11.0", "Use 'CreatePredicateForEvaluatingTriggerOccurringBeforeSignificantEvent (HMSignificantTimeEvent)' instead.")]
 		[ObsoletedOSPlatform ("ios11.0", "Use 'CreatePredicateForEvaluatingTriggerOccurringBeforeSignificantEvent (HMSignificantTimeEvent)' instead.")]
 #else
@@ -30,7 +30,7 @@ namespace HomeKit {
 #if NET
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("ios")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[ObsoletedOSPlatform ("tvos11.0", "Use 'CreatePredicateForEvaluatingTriggerOccurringAfterSignificantEvent (HMSignificantTimeEvent)' instead.")]
 		[ObsoletedOSPlatform ("ios11.0", "Use 'CreatePredicateForEvaluatingTriggerOccurringAfterSignificantEvent (HMSignificantTimeEvent)' instead.")]
 #else
