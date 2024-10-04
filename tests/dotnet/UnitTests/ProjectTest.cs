@@ -1782,7 +1782,7 @@ namespace Xamarin.Tests {
 			// Pick a target platform version that we don't really support,
 			// but don't show an error in .NET 8 because of backwards compat.
 			// The earliest target OS version should do.
-			var minSupportedOSVersion = GetSupportedTargetPlatformVersions (platform).First ();
+			var minSupportedOSVersion = GetMinSupportedOSPlatformVersion (platform);
 			var targetFrameworks = Configuration.DotNetTfm + "-" + platform.AsString ().ToLowerInvariant () + minSupportedOSVersion;
 			var supportedApiVersions = GetSupportedApiVersions (platform, isCompat: false);
 
@@ -1833,6 +1833,11 @@ namespace Xamarin.Tests {
 				.Cast<XmlNode> ()
 				.Select (v => v.InnerText)
 				.ToArray ();
+		}
+
+		string GetMinSupportedOSPlatformVersion (ApplePlatform platform)
+		{
+			return Configuration.GetVariable ($"DOTNET_MIN_{platform.AsString ().ToUpperInvariant ()}_SDK_VERSION", "unknown MinSupportedOSPlatformVersion");
 		}
 
 		[Test]
@@ -2737,7 +2742,7 @@ namespace Xamarin.Tests {
 			Configuration.IgnoreIfIgnoredPlatform (platform);
 			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
 
-			var minVersion = Configuration.GetVariable ($"DOTNET_MIN_{platform.AsString ().ToUpperInvariant ()}_SDK_VERSION", "");
+			var minVersion = GetMinSupportedOSPlatformVersion (platform);
 			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
 			Clean (project_path);
 			var properties = GetDefaultProperties (runtimeIdentifiers);
