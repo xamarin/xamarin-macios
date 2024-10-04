@@ -32,9 +32,8 @@ resources:
       endpoint: xamarin
 
 variables:
-  - template: ../variables.yml
-  - name: MaciosUploadPrefix
-    value: ''
+  - template: ../variables/common.yml
+  - template: ../variables/api-scan.yml
   - name: DisablePipelineConfigDetector
     ${{ if eq(parameters.isPR, false) }}:
     value: true
