@@ -110,6 +110,7 @@ else
 	@echo
 endif
 endif
+	$(Q) $(MAKE) -C dotnet shutdown-build-server
 
 .PHONY: package release
 package release:

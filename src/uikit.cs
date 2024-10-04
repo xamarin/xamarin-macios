@@ -14085,13 +14085,22 @@ namespace UIKit {
 		UIImage DividerImageForLeftSegmentStaterightSegmentStatebarMetrics (UIControlState leftState, UIControlState rightState, UIBarMetrics barMetrics);
 #endif
 
-		[Export ("setTitleTextAttributes:forState:"), Internal]
 		[Appearance]
-		void _SetTitleTextAttributes (NSDictionary attributes, UIControlState state);
+		[Wrap ("SetTitleTextAttributes (attributes?.GetDictionary (), state)")]
+		void SetTitleTextAttributes ([NullAllowed] UIStringAttributes attributes, UIControlState state);
 
-		[Export ("titleTextAttributesForState:"), Internal]
+		[Export ("setTitleTextAttributes:forState:")]
 		[Appearance]
-		NSDictionary _GetTitleTextAttributes (UIControlState state);
+		void SetTitleTextAttributes ([NullAllowed] NSDictionary attributes, UIControlState state);
+
+		[Appearance]
+		[Wrap ("new UIStringAttributes (GetWeakTitleTextAttributes (state))")]
+		UIStringAttributes GetTitleTextAttributes (UIControlState state);
+
+		[Appearance]
+		[Export ("titleTextAttributesForState:")]
+		[return: NullAllowed]
+		NSDictionary GetWeakTitleTextAttributes (UIControlState state);
 
 		[Export ("setContentPositionAdjustment:forSegmentType:barMetrics:")]
 		[Appearance]

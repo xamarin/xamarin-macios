@@ -78,9 +78,9 @@
       <Uri>https://github.com/dotnet/templating</Uri>
       <Sha />
     </Dependency>
-    <Dependency Name="Microsoft.DotNet.XHarness.iOS.Shared" Version="9.0.0-prerelease.24379.1">
+    <Dependency Name="Microsoft.DotNet.XHarness.iOS.Shared" Version="10.0.0-prerelease.24476.1">
       <Uri>https://github.com/dotnet/xharness</Uri>
-      <Sha>edae8a9491f747ba2a36023075aa3ac57be4d32e</Sha>
+      <Sha>7d5c32dbda0c6c8b9dc20cde4e1261b191896138</Sha>
     </Dependency>
   </ToolsetDependencies>
 </Dependencies>
