@@ -2844,9 +2844,7 @@ namespace Xamarin.Tests {
 		}
 
 		[Test]
-#if NET9_0_OR_GREATER
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64", "13.1")]
-#endif
 		[TestCase (ApplePlatform.iOS, "ios-arm64", "10.0")]
 		[TestCase (ApplePlatform.TVOS, "tvossimulator-x64", "10.0")]
 		[TestCase (ApplePlatform.MacOSX, "osx-arm64", "10.0")]
