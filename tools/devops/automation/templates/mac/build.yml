@@ -102,7 +102,7 @@ steps:
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
 
     if ( -not (Test-HDFreeSpace -Size 5)) {
-      Set-Content -Path "$GITHUB_FAILURE_COMMENT_FILE" -Value "Not enough free space in the host."
+      Set-Content -Path "$GITHUB_FAILURE_COMMENT_FILE" -Value "Not enough free space in the host $Env:AGENT_MACHINENAME."
       exit 1
     }
   env:
