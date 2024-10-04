@@ -250,7 +250,7 @@ namespace CoreData {
 		PrintSchema = 1 << 2,
 	}
 
-	[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+	[Watch (7, 0), TV (14, 0), iOS (14, 0)]
 	[MacCatalyst (14, 0)]
 	[Native]
 	public enum NSPersistentCloudKitContainerEventResultType : long {
@@ -258,7 +258,7 @@ namespace CoreData {
 		CountEvents,
 	}
 
-	[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+	[Watch (7, 0), TV (14, 0), iOS (14, 0)]
 	[MacCatalyst (14, 0)]
 	[Native]
 	public enum NSPersistentCloudKitContainerEventType : long {

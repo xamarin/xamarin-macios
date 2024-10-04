@@ -22,7 +22,6 @@ using UserNotifications;
 namespace UserNotificationsUI {
 
 	/// <summary>Enumerates the kinds of media control button sets that the system will provide for playable notification content.</summary>
-	[Mac (11, 0)]
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[Unavailable (PlatformName.WatchOS)]
 	[Unavailable (PlatformName.TvOS)]
@@ -34,7 +33,6 @@ namespace UserNotificationsUI {
 	}
 
 	/// <summary>Enumerates preferred notification responses.</summary>
-	[Mac (11, 0)]
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[Unavailable (PlatformName.WatchOS)]
 	[Unavailable (PlatformName.TvOS)]
@@ -48,7 +46,6 @@ namespace UserNotificationsUI {
 	interface IUNNotificationContentExtension { }
 
 	/// <summary>Interface that contains the mandatory methods, if any, for the <see cref="T:UserNotifications.UNNotificationContent" /> protocol, which is required for displaying notification content from a view controller's view with custom UI.</summary>
-	[Mac (11, 0)]
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[Unavailable (PlatformName.WatchOS)]
 	[Unavailable (PlatformName.TvOS)]
@@ -79,7 +76,6 @@ namespace UserNotificationsUI {
 	}
 
 	/// <summary>Content extension for presenting notification UI, including UI for playable content.</summary>
-	[Mac (11, 0)]
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[Unavailable (PlatformName.WatchOS)]
 	[Unavailable (PlatformName.TvOS)]
@@ -93,23 +89,19 @@ namespace UserNotificationsUI {
 		[Export ("mediaPlayingPaused")]
 		void MediaPlayingPaused ();
 
-		[iOS (12, 0)]
 		[MacCatalyst (14, 0)]
 		[Export ("performNotificationDefaultAction")]
 		void PerformNotificationDefaultAction ();
 
-		[iOS (12, 0)]
 		[MacCatalyst (14, 0)]
 		[Export ("dismissNotificationContentExtension")]
 		void DismissNotificationContentExtension ();
 
 		// property, but we have to add the two methods since it is a category.
-		[iOS (12, 0)]
 		[MacCatalyst (14, 0)]
 		[Export ("notificationActions")]
 		UNNotificationAction [] GetNotificationActions ();
 
-		[iOS (12, 0)]
 		[MacCatalyst (14, 0)]
 		[Export ("setNotificationActions:")]
 		void SetNotificationActions (UNNotificationAction [] actions);

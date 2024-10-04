@@ -53,20 +53,5 @@ class MainClass {
 			Assert.That (File.GetLastWriteTimeUtc (executable), Is.GreaterThan (timestamp), "B: Executable modified");
 		}
 
-		void AssertTargetExecuted (IEnumerable<TargetExecutionResult> executedTargets, string targetName, string message)
-		{
-			var targets = executedTargets.Where (v => v.TargetName == targetName);
-			if (!targets.Any ())
-				Assert.Fail ($"The target '{targetName}' was not executed: no corresponding targets found in binlog ({message})");
-			if (!targets.Any (v => !v.Skipped))
-				Assert.Fail ($"The target '{targetName}' was not executed: the target was found {targets.Count ()} time(s) in the binlog, but they were all skipped ({message})");
-		}
-
-		void AssertTargetNotExecuted (IEnumerable<TargetExecutionResult> executedTargets, string targetName, string message)
-		{
-			var targets = executedTargets.Where (v => v.TargetName == targetName);
-			if (targets.Any (v => !v.Skipped))
-				Assert.Fail ($"The target '{targetName}' was unexpectedly executed ({message})");
-		}
 	}
 }

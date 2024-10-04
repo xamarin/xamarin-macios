@@ -1,0 +1,146 @@
+<!--
+***********************************************************************************************
+Microsoft.MaciOS.Sdk.Xcode.targets
+
+This file contains MSBuild targets that support building Xcode framework projects.
+
+***********************************************************************************************
+-->
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <UsingTask TaskName="Xamarin.MacDev.Tasks.CreateXcArchive"        AssemblyFile="$(_XamarinTaskAssembly)"/>
+  <UsingTask TaskName="Xamarin.MacDev.Tasks.CreateXcFramework"      AssemblyFile="$(_XamarinTaskAssembly)"/>
+
+  <PropertyGroup>
+    <_XcodeProjectDefaultOutputPathRoot>$(MSBuildProjectDirectory)/$(IntermediateOutputPath)xcode/</_XcodeProjectDefaultOutputPathRoot>
+    <_BuildXcodeProjectsStamp>$(_MaciOSStampDirectory)_BuildXcodeProjects.stamp</_BuildXcodeProjectsStamp>
+  </PropertyGroup>
+
+  <ItemDefinitionGroup>
+    <XcodeProject>
+      <Configuration>Release</Configuration>
+      <CreateNativeReference>true</CreateNativeReference>
+      <ForceLoad></ForceLoad>
+      <Frameworks></Frameworks>
+      <Kind>Framework</Kind>
+      <OutputPath></OutputPath>
+      <SchemeName></SchemeName>
+      <SmartLink></SmartLink>
+      <Visible></Visible>
+    </XcodeProject>
+  </ItemDefinitionGroup>
+
+
+  <Target Name="_GetBuildXcodeProjectsInputs"
+      Condition=" '@(XcodeProject->Count())' != '0' and $([MSBuild]::IsOSPlatform('osx')) " >
+    <ItemGroup>
+      <_AllXcbFiles Include="%(XcodeProject.RootDir)%(XcodeProject.Directory)/**/*"
+          Condition= " Exists('%(XcodeProject.RootDir)%(XcodeProject.Directory)') "/>
+      <_XcbInputs Include="@(_AllXcbFiles)"
+          Condition="  '%(Extension)' == '.swift'
+                    or '%(Extension)' == '.h'
+                    or '%(Extension)' == '.pbxproj'
+                    or '%(Extension)' == '.xcworkspace' " />
+      <_XcbInputs Include="$(MSBuildProjectFullPath)" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="_CalculateXcodeProjectOutputPaths"
+        Condition=" '@(XcodeProject->Count())' != '0' and $([MSBuild]::IsOSPlatform('osx')) "
+        Outputs="%(XcodeProject.Identity)" >
+    <Hash
+        ItemsToHash="%(XcodeProject.Identity)"
+        IgnoreCase="true" >
+      <Output TaskParameter="HashResult" PropertyName="_XcodeProjectHash" />
+    </Hash>
+    <ItemGroup>
+      <XcodeProject Condition=" '%(XcodeProject.OutputPath)' == '' " >
+        <OutputPath>$(_XcodeProjectDefaultOutputPathRoot)%(SchemeName)-$([System.String]::Copy($(_XcodeProjectHash)).Substring(0, 5))/</OutputPath>
+      </XcodeProject>
+    </ItemGroup>
+  </Target>
+
+  <Target Name="_BuildXcodeProjects"
+      Condition=" '@(XcodeProject->Count())' != '0' and $([MSBuild]::IsOSPlatform('osx')) "
+      DependsOnTargets="_GetBuildXcodeProjectsInputs;_CalculateXcodeProjectOutputPaths;_DetectSdkLocations"
+      Inputs="@(_XcbInputs)"
+      Outputs="$(_BuildXcodeProjectsStamp)" >
+    <RemoveDir Directories="@(XcodeProject->'%(OutputPath)archives')" />
+    <RemoveDir Directories="@(XcodeProject->'%(OutputPath)xcframeworks')" />
+
+    <PropertyGroup>
+      <_XcArchivePlatform Condition=" '$(TargetPlatformIdentifier)' == 'maccatalyst' ">generic/platform=macOS,variant=Mac Catalyst</_XcArchivePlatform>
+      <_XcArchivePlatform Condition=" '$(TargetPlatformIdentifier)' == 'tvos' ">generic/platform=iOS</_XcArchivePlatform>
+      <_XcArchivePlatform Condition=" '$(_XcArchivePlatform)' == '' ">generic/platform=$(TargetPlatformIdentifier)</_XcArchivePlatform>
+    </PropertyGroup>
+
+    <!-- Create XCARCHIVE for $(TargetPlatformIdentifier) -->
+    <!-- The derivedDataPath and packageCachePath arguments are used to better support multitargeting projects building in parallel -->
+    <CreateXcArchive
+        ProjectPath="%(XcodeProject.FullPath)"
+        SchemeName="%(XcodeProject.SchemeName)"
+        Configuration="%(XcodeProject.Configuration)"
+        ArchivePlatform="$(_XcArchivePlatform)"
+        OutputPath="%(XcodeProject.OutputPath)archives/%(XcodeProject.SchemeName)$(TargetPlatformIdentifier).xcarchive"
+        DerivedDataPath="$(_XcodeProjectDefaultOutputPathRoot)DerivedData"
+        PackageCachePath="$(_XcodeProjectDefaultOutputPathRoot)Cache"
+        SdkDevPath="$(_SdkDevPath)"
+        WorkingDirectory="%(XcodeProject.RootDir)%(XcodeProject.Directory)" >
+    </CreateXcArchive>
+
+    <!-- Create simulator XCARCHIVE for $(TargetPlatformIdentifier) -->
+    <CreateXcArchive
+        Condition=" '$(TargetPlatformIdentifier)' == 'ios' or  '$(TargetPlatformIdentifier)' == 'tvos' "
+        ProjectPath="%(XcodeProject.FullPath)"
+        SchemeName="%(XcodeProject.SchemeName)"
+        Configuration="%(XcodeProject.Configuration)"
+        ArchivePlatform="$(_XcArchivePlatform) Simulator"
+        DerivedDataPath="$(_XcodeProjectDefaultOutputPathRoot)DerivedData"
+        PackageCachePath="$(_XcodeProjectDefaultOutputPathRoot)Cache"
+        OutputPath="%(XcodeProject.OutputPath)archives/%(XcodeProject.SchemeName)$(TargetPlatformIdentifier)Simulator.xcarchive"
+        SdkDevPath="$(_SdkDevPath)"
+        WorkingDirectory="%(XcodeProject.RootDir)%(XcodeProject.Directory)" >
+    </CreateXcArchive>
+
+    <!-- Create XCFRAMEWORK for $(TargetPlatformIdentifier) -->
+    <CreateXcFramework
+        XcArchivePath="%(XcodeProject.OutputPath)archives"
+        FrameworkName="%(XcodeProject.SchemeName).framework"
+        OutputPath="%(XcodeProject.OutputPath)xcframeworks/%(XcodeProject.SchemeName)$(TargetPlatformIdentifier).xcframework"
+        SdkDevPath="$(_SdkDevPath)"
+        WorkingDirectory="%(XcodeProject.RootDir)%(XcodeProject.Directory)" >
+    </CreateXcFramework>
+
+    <ItemGroup>
+      <_XcodeProjectXcFrameworkOutputs Include="%(XcodeProject.OutputPath)xcframeworks/%(XcodeProject.SchemeName)$(TargetPlatformIdentifier).xcframework"
+          Condition=" '%(CreateNativeReference)' == 'true' "
+          ForceLoad="%(ForceLoad)"
+          Frameworks="%(Frameworks)"
+          Kind="%(Kind)"
+          SmartLink="%(SmartLink)"
+          Visible="%(Visible)" />
+    </ItemGroup>
+
+    <MacDevMessage ResourceName="XcodeBuild_CreateNativeRef"
+        FormatArguments="%(_XcodeProjectXcFrameworkOutputs.Identity)"
+        Condition=" '@(_XcodeProjectXcFrameworkOutputs->Count())' != '0' "
+    />
+
+    <Touch Files="$(_BuildXcodeProjectsStamp)" AlwaysCreate="true" />
+    <ItemGroup>
+      <!-- Add stamp and build outputs to FileWrites so they are not deleted on IncrementalClean -->
+      <FileWrites Include="$(_BuildXcodeProjectsStamp);%(XcodeProject.OutputPath)**/*" />
+      <!-- Automatically add XCFRAMEWORK outputs to be bound or otherwise processed later in the build -->
+      <NativeReference Include="@(_XcodeProjectXcFrameworkOutputs)" Kind="%(Kind)" ForceLoad="%(ForceLoad)" Frameworks="%(Frameworks)" SmartLink="%(SmartLink)" Visible="%(Visible)" />
+    </ItemGroup>
+  </Target>
+
+
+  <Target Name="_CleanXcodeProjects"
+      Condition=" '@(XcodeProject->Count())' != '0' and $([MSBuild]::IsOSPlatform('osx')) "
+      DependsOnTargets="_GetBuildXcodeProjectsInputs;_CalculateXcodeProjectOutputPaths" >
+    <RemoveDir Directories="@(XcodeProject->'%(OutputPath)')" />
+  </Target>
+
+</Project>
