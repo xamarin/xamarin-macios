@@ -342,13 +342,13 @@ steps:
     $githubComments = New-GitHubCommentsObjectFromUrl -Url "$(Build.Repository.Uri)" -Token $(GitHub.Token) -Hash $Env:COMMENT_HASH
 
     if (Test-Path -Path "$Env:GITHUB_FAILURE_COMMENT_FILE" -PathType Leaf)  {
-      $githubComments.NewCommentFromFile("${{ parameters.statusContext }} failed", ":x:", "$Env:GITHUB_FAILURE_COMMENT_FILE")
+      $githubComments.NewCommentFromFile("${{ parameters.statusContext }} failed", ":x:", "$Env:GITHUB_FAILURE_COMMENT_FILE", "windows tests")
     } elseif ("$($Env:AGENT_JOBSTATUS)" -ne "Succeeded") {
       $message = ":x: $($Env:AGENT_JOBSTATUS) :x:"
-      $githubComments.NewCommentFromMessage("${{ parameters.statusContext }} failed", ":x:", $message)
+      $githubComments.NewCommentFromMessage("${{ parameters.statusContext }} failed", ":x:", $message, "windows tests")
     } else {
       $message = ":white_check_mark: **All** ${{ parameters.statusContext }} passed."
-      $githubComments.NewCommentFromMessage("${{ parameters.statusContext }} passed", ":computer:", $message)
+      $githubComments.NewCommentFromMessage("${{ parameters.statusContext }} passed", ":computer:", $message, "windows tests")
     }
   displayName: 'Report results to GitHub'
   timeoutInMinutes: 5

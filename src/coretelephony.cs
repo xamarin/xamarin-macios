@@ -118,7 +118,6 @@ namespace CoreTelephony {
 		[NullAllowed]
 		NSString CurrentRadioAccessTechnology { get; }
 
-		[iOS (12, 0)]
 		[MacCatalyst (14, 0)]
 		[Deprecated (PlatformName.iOS, 16, 0)]
 		[Deprecated (PlatformName.MacCatalyst, 16, 0)]
@@ -126,13 +125,11 @@ namespace CoreTelephony {
 		[Export ("serviceSubscriberCellularProviders", ArgumentSemantic.Retain)]
 		NSDictionary<NSString, CTCarrier> ServiceSubscriberCellularProviders { get; }
 
-		[iOS (12, 0)]
 		[MacCatalyst (14, 0)]
 		[NullAllowed]
 		[Export ("serviceCurrentRadioAccessTechnology", ArgumentSemantic.Retain)]
 		NSDictionary<NSString, NSString> ServiceCurrentRadioAccessTechnology { get; }
 
-		[iOS (12, 0)]
 		[MacCatalyst (14, 0)]
 		[Deprecated (PlatformName.iOS, 16, 0)]
 		[Deprecated (PlatformName.MacCatalyst, 16, 0)]
@@ -140,7 +137,6 @@ namespace CoreTelephony {
 		[Export ("serviceSubscriberCellularProvidersDidUpdateNotifier", ArgumentSemantic.Copy)]
 		Action<NSString> ServiceSubscriberCellularProvidersDidUpdateNotifier { get; set; }
 
-		[iOS (12, 0)]
 		[MacCatalyst (14, 0)]
 		[Notification]
 		[Field ("CTServiceRadioAccessTechnologyDidChangeNotification")]
@@ -213,7 +209,6 @@ namespace CoreTelephony {
 
 	[NoMacCatalyst]
 	[Protocol]
-	[iOS (12, 1)]
 	interface CTSubscriberDelegate {
 		[Abstract]
 		[Export ("subscriberTokenRefreshed:")]
@@ -230,15 +225,12 @@ namespace CoreTelephony {
 		[NullAllowed]
 		NSData CarrierToken { get; }
 
-		[iOS (12, 1)]
 		[Export ("identifier")]
 		string Identifier { get; }
 
-		[iOS (12, 1)]
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
 		NSObject WeakDelegate { get; set; }
 
-		[iOS (12, 1)]
 		[Wrap ("WeakDelegate")]
 		[NullAllowed]
 		ICTSubscriberDelegate Delegate { get; set; }
@@ -264,14 +256,12 @@ namespace CoreTelephony {
 		[Export ("subscriber")]
 		CTSubscriber Subscriber { get; }
 
-		[iOS (12, 1)]
 		[Static]
 		[Export ("subscribers")]
 		CTSubscriber [] Subscribers { get; }
 	}
 
 	[NoMacCatalyst]
-	[iOS (12, 0)]
 	[BaseType (typeof (NSObject))]
 	interface CTCellularPlanProvisioningRequest : NSSecureCoding {
 		[Export ("address")]
@@ -294,7 +284,6 @@ namespace CoreTelephony {
 	}
 
 	[NoMacCatalyst]
-	[iOS (12, 0)]
 	[BaseType (typeof (NSObject))]
 	interface CTCellularPlanProvisioning {
 		[Export ("supportsCellularPlan")]
