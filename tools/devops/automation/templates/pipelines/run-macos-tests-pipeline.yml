@@ -23,20 +23,6 @@ parameters:
     type: object
     default: [
       {
-        stageName: 'mac_11_m1',
-        displayName: 'M1 - Mac Big Sur (11)',
-        macPool: 'VSEng-VSMac-Xamarin-Shared',
-        useImage: false,
-        statusContext: 'M1 - Mac Big Sur (11)',
-        demands: [
-          "Agent.OS -equals Darwin",
-          "macOS.Name -equals BigSur",
-          "macOS.Architecture -equals arm64",
-          "Agent.HasDevices -equals False",
-          "Agent.IsPaired -equals False"
-        ]
-      },
-      {
         stageName: 'mac_12_m1',
         displayName: 'M1 - Mac Ventura (12)',
         macPool: 'VSEng-VSMac-Xamarin-Shared',
@@ -216,11 +202,7 @@ resources:
       endpoint: xamarin
 
 variables:
-  - ${{ if contains(variables['Build.DefinitionName'], 'private') }}:
-      - template: ../vsts-variables.yml
-  - template: ../variables.yml
-  - name: MaciosUploadPrefix
-    value: ''
+  - template: ../variables/common.yml
   - name: DisablePipelineConfigDetector
     value: true
 

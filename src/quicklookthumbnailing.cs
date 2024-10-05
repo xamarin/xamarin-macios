@@ -113,7 +113,6 @@ namespace QuickLookThumbnailing {
 		[Export ("representationTypes")]
 		QLThumbnailGenerationRequestRepresentationTypes RepresentationTypes { get; }
 
-		[Mac (11, 0)]
 		[iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[NullAllowed, Export ("contentType", ArgumentSemantic.Copy)]
@@ -140,7 +139,7 @@ namespace QuickLookThumbnailing {
 		[Export ("NSImage", ArgumentSemantic.Strong)]
 		NSImage NSImage { get; }
 
-		[Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+		[iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("contentRect")]
 		CGRect ContentRect { get; }
 	}
@@ -165,7 +164,7 @@ namespace QuickLookThumbnailing {
 	[DisableDefaultCtor]
 	interface QLThumbnailReply {
 
-		[Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+		[iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("extensionBadge")]
 		string ExtensionBadge { get; set; }
 

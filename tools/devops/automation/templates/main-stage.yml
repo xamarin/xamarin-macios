@@ -202,21 +202,6 @@ stages:
           commit: ${{ parameters.commit }}
           stageDisplayNamePrefix: ${{ parameters.stageDisplayNamePrefix }}
 
-  - ${{ if parameters.isPR }}:
-      - stage: clean
-        displayName: '${{ parameters.stageDisplayNamePrefix }}Clean up'
-        dependsOn: []
-        jobs:
-          - job:
-            displayName: 'Clean comments'
-            pool:
-              name: AzurePipelines-EO
-              demands:
-                - ImageOverride -equals 1ESPT-Windows2022
-
-            steps:
-              - template: ./common/clean.yml
-
   - stage: configure_build
     displayName: '${{ parameters.stageDisplayNamePrefix }}Configure'
     dependsOn: ${{ parameters.dependsOn }}

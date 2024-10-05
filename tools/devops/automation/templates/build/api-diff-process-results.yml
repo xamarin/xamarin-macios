@@ -84,7 +84,7 @@ steps:
         $converted = $inputContents + "`n`nUnable to convert markdown: $_`n`n"
       }
       $githubComments = New-GitHubCommentsObjectFromUrl -Url "$(Build.Repository.Uri)" -Token $Env:GITHUB_TOKEN -Hash $Env:COMMENT_HASH
-      $result = $githubComments.NewCommentFromMessage("", "", $converted)
+      $result = $githubComments.NewCommentFromMessage("", "", $converted, "api diff")
     displayName: 'Publish GitHub comment for change detection'
     timeoutInMinutes: 10
     continueOnError: true  # don't let any failures here stop us
