@@ -32,7 +32,6 @@ namespace ReplayKit {
 	/// <summary>A view controller for previewing and editing a ReplayKit recording.</summary>
 	///     
 	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/ReplayKit/RPPreviewViewController">Apple documentation for <c>RPPreviewViewController</c></related>
-	[Mac (11, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (UIViewController))]
 	interface RPPreviewViewController {
@@ -62,7 +61,6 @@ namespace ReplayKit {
 	/// <summary>The view controller protocol for previewing and editing a ReplayKit recording.</summary>
 	///     
 	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/ReplayKit/Reference/RPPreviewViewControllerDelegate_Ref/index.html">Apple documentation for <c>RPPreviewViewControllerDelegate</c></related>
-	[Mac (11, 0)]
 	[MacCatalyst (13, 1)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
@@ -80,7 +78,6 @@ namespace ReplayKit {
 	/// <summary>Enables the user to record visual and audio output of applications, with simultaneous recorded audio (screencasts).</summary>
 	///     
 	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/ReplayKit/Reference/RPScreenRecorder_Ref/index.html">Apple documentation for <c>RPScreenRecorder</c></related>
-	[Mac (11, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -167,17 +164,17 @@ namespace ReplayKit {
 		void StopRecording (NSUrl url, [NullAllowed] Action<NSError> completionHandler);
 
 		[Async]
-		[TV (15, 4), NoWatch, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+		[TV (15, 4), NoWatch, iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("exportClipToURL:duration:completionHandler:")]
 		void ExportClip (NSUrl url, double duration, [NullAllowed] Action<NSError> completionHandler);
 
 		[Async]
-		[TV (15, 4), NoWatch, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+		[TV (15, 4), NoWatch, iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("startClipBufferingWithCompletionHandler:")]
 		void StartClipBuffering ([NullAllowed] Action<NSError> completionHandler);
 
 		[Async]
-		[TV (15, 4), NoWatch, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+		[TV (15, 4), NoWatch, iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("stopClipBufferingWithCompletionHandler:")]
 		void StopClipBuffering ([NullAllowed] Action<NSError> completionHandler);
 	}
@@ -193,7 +190,6 @@ namespace ReplayKit {
 	/// <summary>Protocol for enabling the user to record visual and audio output of applications, with simultaneous recorded audio (screencasts)..</summary>
 	///     
 	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/ReplayKit/Reference/RPScreenRecorderDelegate_Ref/index.html">Apple documentation for <c>RPScreenRecorderDelegate</c></related>
-	[Mac (11, 0)]
 	[MacCatalyst (13, 1)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
@@ -262,7 +258,6 @@ namespace ReplayKit {
 	/// <summary>Manages an audio or video broadcast stream.</summary>
 	///     
 	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/ReplayKit/RPBroadcastController">Apple documentation for <c>RPBroadcastController</c></related>
-	[Mac (11, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface RPBroadcastController {
@@ -352,7 +347,6 @@ namespace ReplayKit {
 	///     <summary>Delegate that specifies the signature of the completion handler in calls to the <see cref="M:ReplayKit.NSExtensionContext_RPBroadcastExtension.LoadBroadcastingApplicationInfo(Foundation.NSExtensionContext,ReplayKit.LoadBroadcastingHandler)" /> method.</summary>
 	delegate void LoadBroadcastingHandler (string bundleID, string displayName, UIImage appIcon);
 
-	[Mac (11, 0)]
 	[MacCatalyst (13, 1)]
 	[Category]
 	[BaseType (typeof (NSExtensionContext))]
@@ -376,7 +370,6 @@ namespace ReplayKit {
 	/// <summary>Base class for managing Replay Kit broadcasts.</summary>
 	///     
 	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/ReplayKit/RPBroadcastHandler">Apple documentation for <c>RPBroadcastHandler</c></related>
-	[Mac (11, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface RPBroadcastHandler : NSExtensionRequestHandling {
@@ -408,17 +401,15 @@ namespace ReplayKit {
 	/// <summary>Processes ReplayKit buffer obects as they arrive.</summary>
 	///     
 	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/ReplayKit/RPBroadcastSampleHandler">Apple documentation for <c>RPBroadcastSampleHandler</c></related>
-	[Mac (11, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (RPBroadcastHandler))]
 	interface RPBroadcastSampleHandler {
 
-		[iOS (11, 1), TV (11, 1)]
 		[MacCatalyst (13, 1)]
 		[Field ("RPVideoSampleOrientationKey")]
 		NSString VideoSampleOrientationKey { get; }
 
-		[NoTV, iOS (11, 2)]
+		[NoTV]
 		[MacCatalyst (13, 1)]
 		[Field ("RPApplicationInfoBundleIdentifierKey")]
 		NSString ApplicationInfoBundleIdentifierKey { get; }
@@ -435,7 +426,7 @@ namespace ReplayKit {
 		[Export ("broadcastFinished")]
 		void BroadcastFinished ();
 
-		[NoTV, iOS (11, 2)]
+		[NoTV]
 		[MacCatalyst (13, 1)]
 		[Export ("broadcastAnnotatedWithApplicationInfo:")]
 		void BroadcastAnnotated (NSDictionary applicationInfo);
@@ -448,7 +439,7 @@ namespace ReplayKit {
 		void FinishBroadcast (NSError error);
 	}
 
-	[NoTV, iOS (12, 0)]
+	[NoTV]
 	[NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (UIView))]
@@ -464,7 +455,6 @@ namespace ReplayKit {
 		bool ShowsMicrophoneButton { get; set; }
 	}
 
-	[Mac (11, 0)]
 	[NoiOS]
 	[NoTV]
 	[NoMacCatalyst]
@@ -485,7 +475,6 @@ namespace ReplayKit {
 
 	interface IRPBroadcastActivityControllerDelegate { }
 
-	[Mac (11, 0)]
 	[NoiOS]
 	[NoTV]
 	[NoMacCatalyst]

@@ -30,8 +30,6 @@ namespace Xharness.Jenkins {
 				} else {
 					if (!project.SkipiOSVariation)
 						ps.Add (new Tuple<TestProject, TestPlatform, bool> (project, TestPlatform.iOS_Unified, ignored));
-					if (project.MonoNativeInfo is not null)
-						ps.Add (new Tuple<TestProject, TestPlatform, bool> (project, TestPlatform.iOS_TodayExtension64, ignored));
 					if (!project.SkiptvOSVariation)
 						ps.Add (new Tuple<TestProject, TestPlatform, bool> (project.AsTvOSProject (), TestPlatform.tvOS, ignored));
 					if (!project.SkipwatchOSVariation)

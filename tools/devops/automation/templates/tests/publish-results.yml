@@ -119,7 +119,7 @@ stages:
         $githubComments = New-GitHubCommentsObjectFromUrl -Url "$(Build.Repository.Uri)" -Token $Env:GITHUB_TOKEN -Hash $Env:COMMENT_HASH -Debug
         $sb = [System.Text.StringBuilder]::new()
         $sb.AppendLine("All tests have been skipped because the label 'skip-all-tests' was set.")
-        $result = $githubComments.NewCommentFromMessage("Test results", ":seedling:", $sb.ToString())
+        $result = $githubComments.NewCommentFromMessage("Test results", ":seedling:", $sb.ToString(), "test results")
       displayName: 'Set comment'
       env:
         CONTEXT: ${{ parameters.statusContext }}

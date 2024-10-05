@@ -29,7 +29,7 @@ namespace NaturalLanguage {
 	/// <summary>Enumerates preprocessing options for tags.</summary>
 	[Flags]
 	[Native]
-	[iOS (12, 0), TV (12, 0), Watch (5, 0)]
+	[Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	public enum NLTaggerOptions : ulong {
 		OmitWords = 1uL << 0,
@@ -42,7 +42,7 @@ namespace NaturalLanguage {
 
 	/// <summary>Enumerates natural language model types.</summary>
 	[Native]
-	[iOS (12, 0), TV (12, 0), Watch (5, 0)]
+	[Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	public enum NLModelType : long {
 		Classifier,
@@ -51,7 +51,7 @@ namespace NaturalLanguage {
 
 	/// <summary>Enumerates linguistic units to which tags can be applied.</summary>
 	[Native]
-	[iOS (12, 0), TV (12, 0), Watch (5, 0)]
+	[Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	public enum NLTokenUnit : long {
 		Word,
@@ -64,7 +64,7 @@ namespace NaturalLanguage {
 	/// <summary>Enumerates content hints for tokenizers.</summary>
 	[Flags]
 	[Native]
-	[iOS (12, 0), TV (12, 0), Watch (5, 0)]
+	[Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	public enum NLTokenizerAttributes : ulong {
 		Numeric = 1uL << 0,
@@ -73,7 +73,7 @@ namespace NaturalLanguage {
 	}
 
 	/// <summary>Enumerates languages for which recognition is supported.</summary>
-	[iOS (12, 0), TV (12, 0), Watch (5, 0)]
+	[Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	public enum NLLanguage {
 		[DefaultEnumValue]
@@ -200,7 +200,7 @@ namespace NaturalLanguage {
 	}
 
 	/// <summary>Enumerates classes of tags that are returned from a text classifier.</summary>
-	[iOS (12, 0), TV (12, 0), Watch (5, 0)]
+	[Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	public enum NLTagScheme {
 		[Field ("NLTagSchemeTokenType")]

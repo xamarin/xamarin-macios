@@ -55,8 +55,7 @@ namespace Xharness {
 		MacBindingProject = 1 << 17,
 		[Label ("mmp")]
 		Mmp = 1 << 18,
-		[Label ("mononative")]
-		Mononative = 1 << 19,
+		// 1 << 19 is unused
 		[Label ("monotouch")]
 		Monotouch = 1 << 20,
 		[Label ("msbuild")]
