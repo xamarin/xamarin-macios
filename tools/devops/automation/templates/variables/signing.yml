@@ -1,0 +1,7 @@
+# signing related variables
+variables:
+- group: Xamarin-Secrets
+- group: Xamarin Signing
+- group: Xamarin Release
+- group: Xamarin Notarization
+- group: VSEng DTL secrets

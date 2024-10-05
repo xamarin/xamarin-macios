@@ -68,22 +68,22 @@ namespace Xharness.Jenkins {
 
 				/* we don't add --assembly-build-target=@all=staticobject because that's the default in all our test projects */
 				if (supports_debug && !test.TestProject.IsDotNetProject) {
-					yield return new TestData { Variation = "AssemblyBuildTarget: dylib (debug)", AppBundleExtraOptions = $"--assembly-build-target=@all=dynamiclibrary", Debug = true, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Dynamic, Ignored = ignore };
-					yield return new TestData { Variation = "AssemblyBuildTarget: SDK framework (debug)", AppBundleExtraOptions = $"--assembly-build-target=@sdk=framework=Xamarin.Sdk --assembly-build-target=@all=staticobject", Debug = true, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Static, Ignored = ignore };
-					yield return new TestData { Variation = "AssemblyBuildTarget: dylib (debug, profiling)", AppBundleExtraOptions = $"--assembly-build-target=@all=dynamiclibrary", Debug = true, Profiling = true, MonoNativeLinkMode = MonoNativeLinkMode.Dynamic, Ignored = ignore };
-					yield return new TestData { Variation = "AssemblyBuildTarget: SDK framework (debug, profiling)", AppBundleExtraOptions = $"--assembly-build-target=@sdk=framework=Xamarin.Sdk --assembly-build-target=@all=staticobject", Debug = true, Profiling = true, MonoNativeLinkMode = MonoNativeLinkMode.Static, Ignored = ignore };
+					yield return new TestData { Variation = "AssemblyBuildTarget: dylib (debug)", AppBundleExtraOptions = $"--assembly-build-target=@all=dynamiclibrary", Debug = true, Profiling = false, Ignored = ignore };
+					yield return new TestData { Variation = "AssemblyBuildTarget: SDK framework (debug)", AppBundleExtraOptions = $"--assembly-build-target=@sdk=framework=Xamarin.Sdk --assembly-build-target=@all=staticobject", Debug = true, Profiling = false, Ignored = ignore };
+					yield return new TestData { Variation = "AssemblyBuildTarget: dylib (debug, profiling)", AppBundleExtraOptions = $"--assembly-build-target=@all=dynamiclibrary", Debug = true, Profiling = true, Ignored = ignore };
+					yield return new TestData { Variation = "AssemblyBuildTarget: SDK framework (debug, profiling)", AppBundleExtraOptions = $"--assembly-build-target=@sdk=framework=Xamarin.Sdk --assembly-build-target=@all=staticobject", Debug = true, Profiling = true, Ignored = ignore };
 				}
 
 				if (test.ProjectConfiguration.Contains ("Debug"))
-					yield return new TestData { Variation = "Release", Debug = false, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Static };
+					yield return new TestData { Variation = "Release", Debug = false, Profiling = false };
 				if (test.Platform == TestPlatform.iOS_Unified32 && !test.TestProject.IsDotNetProject)
-					yield return new TestData { Variation = "Release: UseThumb", Debug = false, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Static, UseThumb = true };
+					yield return new TestData { Variation = "Release: UseThumb", Debug = false, Profiling = false, UseThumb = true };
 
 				// Disable this by default for tvOS/Release because the app ends up being too big (https://github.com/xamarin/maccore/issues/2282)
 				var sdk_release_skip = test.Platform == TestPlatform.tvOS && test.TestName == "dont link";
 				sdk_release_skip = sdk_release_skip || test.TestProject.IsDotNetProject;
 				if (!sdk_release_skip)
-					yield return new TestData { Variation = "AssemblyBuildTarget: SDK framework (release)", AppBundleExtraOptions = $"--assembly-build-target=@sdk=framework=Xamarin.Sdk --assembly-build-target=@all=staticobject", Debug = false, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Static, };
+					yield return new TestData { Variation = "AssemblyBuildTarget: SDK framework (release)", AppBundleExtraOptions = $"--assembly-build-target=@sdk=framework=Xamarin.Sdk --assembly-build-target=@all=staticobject", Debug = false, Profiling = false, };
 
 				switch (test.TestName) {
 				case "monotouch-test":
@@ -94,7 +94,7 @@ namespace Xharness.Jenkins {
 					yield return new TestData { Variation = "Release (all optimizations)", AppBundleExtraOptions = "--optimize:all", Registrar = "static", Debug = false, Profiling = false, Defines = "OPTIMIZEALL", Ignored = ignore };
 					if (supports_debug) {
 						yield return new TestData { Variation = "Debug (all optimizations)", AppBundleExtraOptions = "--optimize:all", Registrar = "static", Debug = true, Profiling = false, Defines = "OPTIMIZEALL", Ignored = ignore };
-						yield return new TestData { Variation = "Debug: SGenConc", AppBundleExtraOptions = "", Debug = true, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Static, EnableSGenConc = true, Ignored = ignore };
+						yield return new TestData { Variation = "Debug: SGenConc", AppBundleExtraOptions = "", Debug = true, Profiling = false, EnableSGenConc = true, Ignored = ignore };
 					}
 					if (supports_interpreter) {
 						if (supports_debug) {
@@ -113,7 +113,7 @@ namespace Xharness.Jenkins {
 					break;
 				case string name when name.StartsWith ("mscorlib", StringComparison.Ordinal):
 					if (supports_debug)
-						yield return new TestData { Variation = "Debug: SGenConc", AppBundleExtraOptions = "", Debug = true, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Static, EnableSGenConc = true };
+						yield return new TestData { Variation = "Debug: SGenConc", AppBundleExtraOptions = "", Debug = true, Profiling = false, EnableSGenConc = true };
 					if (supports_interpreter) {
 						if (supports_debug) {
 							yield return new TestData { Variation = "Debug (interpreter)", AppBundleExtraOptions = "--interpreter", Debug = true, Profiling = false, Undefines = "FULL_AOT_RUNTIME", KnownFailure = new KnownIssue ("#1683", issueLink: "https://github.com/xamarin/maccore/issues/1683") };
@@ -174,17 +174,19 @@ namespace Xharness.Jenkins {
 						}
 						if (test.Platform == TestPlatform.MacCatalyst) {
 							yield return new TestData { Variation = "Release (ARM64, LLVM)", Debug = false, UseLlvm = true, Ignored = !jenkins.TestSelection.IsEnabled (TestLabel.Monotouch) || !jenkins.TestSelection.IsEnabled (PlatformLabel.MacCatalyst) || !mac_supports_arm64, RuntimeIdentifier = arm64_runtime_identifier };
-							yield return new TestData { Variation = "Release", Debug = false, Ignored = !jenkins.TestSelection.IsEnabled (TestLabel.Monotouch) || !jenkins.TestSelection.IsEnabled (PlatformLabel.MacCatalyst) };
+							yield return new TestData { Variation = "Release (static registrar)", Registrar = "static", Debug = false, Ignored = !jenkins.TestSelection.IsEnabled (TestLabel.Monotouch) || !jenkins.TestSelection.IsEnabled (PlatformLabel.MacCatalyst) };
+							yield return new TestData { Variation = "Release (managed static registrar)", Registrar = "managed-static", Debug = false, Ignored = !jenkins.TestSelection.IsEnabled (TestLabel.Monotouch) || !jenkins.TestSelection.IsEnabled (PlatformLabel.MacCatalyst) };
 							yield return new TestData { Variation = "Release (NativeAOT)", Debug = false, PublishAot = true, Ignored = !jenkins.TestSelection.IsEnabled (TestLabel.Monotouch) || !jenkins.TestSelection.IsEnabled (PlatformLabel.MacCatalyst), LinkMode = "Full" };
 							yield return new TestData { Variation = "Release (NativeAOT, ARM64)", Debug = false, PublishAot = true, Ignored = !jenkins.TestSelection.IsEnabled (TestLabel.Monotouch) || !jenkins.TestSelection.IsEnabled (PlatformLabel.MacCatalyst) || !mac_supports_arm64, RuntimeIdentifier = arm64_runtime_identifier, LinkMode = "Full" };
 							yield return new TestData { Variation = "Release (NativeAOT, x64)", Debug = false, PublishAot = true, Ignored = !jenkins.TestSelection.IsEnabled (TestLabel.Monotouch) || !jenkins.TestSelection.IsEnabled (PlatformLabel.MacCatalyst), LinkMode = "Full", RuntimeIdentifier = x64_runtime_identifier };
 						}
 						if (test.Platform == TestPlatform.Mac) {
-							yield return new TestData { Variation = "Release", Debug = false, Ignored = !jenkins.TestSelection.IsEnabled (TestLabel.Monotouch) || !jenkins.TestSelection.IsEnabled (PlatformLabel.Mac) };
+							yield return new TestData { Variation = "Release (static registrar)", Registrar = "static", Debug = false, Ignored = !jenkins.TestSelection.IsEnabled (TestLabel.Monotouch) || !jenkins.TestSelection.IsEnabled (PlatformLabel.Mac) };
+							yield return new TestData { Variation = "Release (managed static registrar)", Registrar = "managed-static", Debug = false, Ignored = !jenkins.TestSelection.IsEnabled (TestLabel.Monotouch) || !jenkins.TestSelection.IsEnabled (PlatformLabel.Mac) };
 							yield return new TestData { Variation = "Release (NativeAOT)", Debug = false, PublishAot = true, Ignored = !jenkins.TestSelection.IsEnabled (TestLabel.Monotouch) || !jenkins.TestSelection.IsEnabled (PlatformLabel.Mac), LinkMode = "Full" };
 						}
 						if (test.TestProject.IsDotNetProject) {
-							yield return new TestData { Variation = "Release (all optimizations)", AppBundleExtraOptions = "--optimize:all", Registrar = "static", Debug = false, Profiling = false, LinkMode = "Full", Defines = "OPTIMIZEALL", Ignored = ignore };
+							yield return new TestData { Variation = "Release (static registrar, all optimizations)", AppBundleExtraOptions = "--optimize:all", Registrar = "static", Debug = false, Profiling = false, LinkMode = "Full", Defines = "OPTIMIZEALL", Ignored = ignore };
 							yield return new TestData { Variation = "Debug (managed static registrar)", Registrar = "managed-static", Debug = true, Profiling = false, Ignored = ignore };
 							yield return new TestData { Variation = "Release (managed static registrar, all optimizations)", AppBundleExtraOptions = "--optimize:all", Registrar = "managed-static", Debug = false, Profiling = false, LinkMode = "Full", Defines = "OPTIMIZEALL", Ignored = ignore };
 						}
@@ -280,12 +282,6 @@ namespace Xharness.Jenkins {
 							}
 						}
 						clone.Xml.SetNode (isMac ? "Profiling" : "MTouchProfiling", profiling ? "True" : "False", task.ProjectPlatform, configuration);
-						if (test_data.MonoNativeLinkMode != MonoNativeLinkMode.None) {
-							var mono_native_link = test_data.MonoNativeLinkMode;
-							if (!canSymlink && mono_native_link == MonoNativeLinkMode.Symlink)
-								mono_native_link = MonoNativeLinkMode.Static;
-							MonoNativeHelper.AddProjectDefines (clone.Xml, mono_native_link);
-						}
 						if (test_data.EnableSGenConc)
 							clone.Xml.SetProperty ("EnableSGenConc", "true");
 						if (test_data.UseThumb) // no need to check the platform, already done at the data iterator
@@ -306,6 +302,7 @@ namespace Xharness.Jenkins {
 						if (publishaot) {
 							clone.Xml.SetProperty ("PublishAot", "true", last: false);
 							clone.Xml.SetProperty ("_IsPublishing", "true", last: false); // quack like "dotnet publish", otherwise PublishAot=true has no effect.
+							clone.Xml.SetProperty ("IlcTreatWarningsAsErrors", "false", last: false); // We're enabling warnaserror by default, but we're not warning-free for ILC (especially for NUnit), so disable warnaserror for ILC - https://github.com/xamarin/xamarin-macios/issues/19911
 						}
 						clone.Xml.Save (clone.Path);
 					});

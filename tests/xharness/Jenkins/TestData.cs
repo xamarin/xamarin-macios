@@ -18,7 +18,6 @@ namespace Xharness.Jenkins {
 		public bool UseThumb;
 		public bool UseLlvm;
 		public bool? UseMonoRuntime;
-		public MonoNativeLinkMode MonoNativeLinkMode;
 		public IEnumerable<IDevice> Candidates;
 		public string XamMacArch;
 		public string RuntimeIdentifier;

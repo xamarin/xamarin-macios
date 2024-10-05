@@ -103,7 +103,6 @@ namespace CallKit {
 	/// <summary>Enumerates DTMF play action types.</summary>
 	[NoMac]
 #else
-	[Mac (11, 0)]
 	[Obsoleted (PlatformName.MacOSX, 12, 1)]
 #endif
 	[MacCatalyst (13, 1)]
@@ -118,7 +117,6 @@ namespace CallKit {
 	/// <summary>Enumerates reasons that calls can end.</summary>
 	[NoMac]
 #else
-	[Mac (11, 0)]
 	[Obsoleted (PlatformName.MacOSX, 12, 1)]
 #endif
 	[MacCatalyst (13, 1)]
@@ -136,7 +134,6 @@ namespace CallKit {
 	///     <remarks>Handles act as identifiers for VOIP users.</remarks>
 	[NoMac]
 #else
-	[Mac (11, 0)]
 	[Obsoleted (PlatformName.MacOSX, 12, 1)]
 #endif
 	[MacCatalyst (13, 1)]
@@ -602,7 +599,7 @@ namespace CallKit {
 	/// <summary>Contains values that control miscellaneous call properties, such as the ringtone, whether the call supports video, the maximum number of callers, and so on.</summary>
 	///     
 	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/CallKit/CXProviderConfiguration">Apple documentation for <c>CXProviderConfiguration</c></related>
-	[Mac (11, 0), Watch (9, 0)]
+	[Watch (9, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
