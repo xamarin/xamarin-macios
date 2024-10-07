@@ -63,6 +63,14 @@ steps:
             artifact: '${{ parameters.uploadPrefix }}WorkloadRollback'
           continueOnError: true
 
+        # upload each of the pkgs into the pipeline artifacts
+        - task: 1ES.PublishPipelineArtifact@1
+          displayName: 'Publish Build Artifacts'
+          inputs:
+            path: $(Build.SourcesDirectory)/package
+            artifact: '${{ parameters.uploadPrefix }}not-signed-package'
+          continueOnError: true
+
         - bash: |
             set -x
             set -e
