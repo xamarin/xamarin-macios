@@ -36,9 +36,6 @@ steps:
 - checkout: yaml-templates
   clean: true
 
-- checkout: release-scripts
-  clean: true
-
 - pwsh: ./clean_git_vsts.ps1 -GithubToken "$(GitHub.Token)" -MaccorePath "$(System.DefaultWorkingDirectory)/maccore"
   displayName: 'Clean git mess from VSTS'
   workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts
