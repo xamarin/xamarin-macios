@@ -99,7 +99,7 @@ steps:
     Import-Module ./MaciosCI.psd1
 
     if ( -not (Test-HDFreeSpace -Size 20)) {
-      New-GitHubComment -Header "Tests failed catastrophically on $Env:CONTEXT" -Emoji ":fire:" -Description "Not enough free space in the host."
+      New-GitHubComment -Header "Tests failed catastrophically on $Env:CONTEXT" -Emoji ":fire:" -Description "Not enough free space in the host $Env:AGENT_MACHINENAME."
       Stop-Pipeline
     }
   env:
