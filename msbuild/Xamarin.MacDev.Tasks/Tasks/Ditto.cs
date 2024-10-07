@@ -46,7 +46,7 @@ namespace Xamarin.MacDev.Tasks {
 
 		void LogLine (string msg)
 		{
-			Log.LogWarning (msg);
+			Log.LogMessage (MessageImportance.Low, (msg);
 			Console.WriteLine ($"{DateTime.UtcNow.ToString ("o")} Ditto stdout: {msg}");
 			Console.Error.WriteLine ($"{DateTime.UtcNow.ToString ("o")} Ditto stderr: {msg}");
 		}
