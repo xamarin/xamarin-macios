@@ -40,23 +40,26 @@ namespace Xamarin.MacDev.Tasks {
 		public ITaskItem [] TouchedFiles { get; set; } = Array.Empty<ITaskItem> ();
 
 		CancellationTokenSource? cancellationTokenSource;
+		static int counter;
 		public override bool Execute ()
 		{
+			var id = Interlocked.Increment (ref counter);
+
 			if (ShouldExecuteRemotely ()) {
-				Log.LogWarning ($"Unzip.Execute () about to execute remotely");
+				LogLine ($"{id} Unzip.Execute () about to execute remotely");
 				var taskRunner = new TaskRunner (SessionId, BuildEngine4);
 				var rv = taskRunner.RunAsync (this).Result;
 
 				if (rv && CopyToWindows)
 					CopyFilesToWindowsAsync (taskRunner, TouchedFiles).Wait ();
 
-				Log.LogWarning ($"Unzip.Execute () executed remotely: {rv}");
+				LogLine ($"{id} Unzip.Execute () executed remotely: {rv}");
 				return rv;
 			}
 
-			Log.LogWarning ($"Unzip.Execute () about to execute locally");
+			LogLine ($"{id} Unzip.Execute () about to execute locally. ZipFilePath: {ZipFilePath} ExtractionPath: {ExtractionPath} Resource: {Resource}");
 			var rv2 = ExecuteLocally ();
-			Log.LogWarning ($"Unzip.Execute () executed locally");
+			LogLine ($"{id} Unzip.Execute () executed locally");
 			return rv2;
 		}
 
