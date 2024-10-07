@@ -20,10 +20,6 @@ parameters:
     type: boolean
     default: true
 
-  - name: skipESRP
-    type: boolean
-    default: false  # only to be used when testing the CI and we do not need a signed pkg
-
   - name: isPR
     type: boolean
 
