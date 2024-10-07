@@ -15,7 +15,7 @@
 			https://dev.azure.com/azure-public/vside/_artifacts/feed/xamarin-impl/NuGet/Xamarin.Messaging.Client/
 
 		-->
-		<MessagingVersion Condition="'$(MessagingVersion)' == ''">[2.1.52-pushpackage-diagnose-cancelled-posts]</MessagingVersion>
+		<MessagingVersion Condition="'$(MessagingVersion)' == ''">[2.1.55-pushpackage-diagnose-cancelled-posts]</MessagingVersion>
 		<HotRestartVersion>[1.1.7]</HotRestartVersion>
 	</PropertyGroup>
 	<Import Project="$(MSBuildThisFileDirectory)../Directory.Build.props" />
