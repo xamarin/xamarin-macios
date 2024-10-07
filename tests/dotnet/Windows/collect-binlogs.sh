@@ -35,6 +35,9 @@ fi
 
 ps auxww > ~/remote_build_testing/processes.txt || true
 
+sudo log collect --last 3h || true
+zip -9r ~/remote_build_testing/windows-remote-logs.zip system_logs.logarchive || true
+
 ls -la ~/Library/Caches/Xamarin/XMA/SDKs/dotnet/ >> ~/remote_build_testing/dotnet-debug.txt 2>&1 || true
 cat ~/Library/Caches/Xamarin/XMA/SDKs/dotnet/NuGet.config >> ~/remote_build_testing/dotnet-debug.txt 2>&1 || true
 cat ~/Library/Caches/Xamarin/XMA/SDKs/.home/.nuget/NuGet/NuGet.Config >> ~/remote_build_testing/dotnet-debug.txt 2>&1  || true
