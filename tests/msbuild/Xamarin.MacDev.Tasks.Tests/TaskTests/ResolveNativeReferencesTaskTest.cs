@@ -39,7 +39,7 @@ namespace Xamarin.MacDev.Tasks.Tests {
 			// some architecture changes recently, e.g.
 			// in Xcode 12.1+ watchOS does not have an i386 architecture anymore
 			// on Xcode 12.2+ you get arm64 for all (iOS, tvOS and watchOS) simulators
-			var path = Path.Combine (Path.GetDirectoryName (GetType ().Assembly.Location), "Resources", "xcf-xcode12.2.plist");
+			var path = Path.Combine (Path.GetDirectoryName (GetType ().Assembly.Location)!, "Resources", "xcf-xcode12.2.plist");
 			var plist = PDictionary.FromFile (path)!;
 			var result = ResolveNativeReferences.TryResolveXCFramework (log, plist, "N/A", targetFrameworkMoniker, isSimulator, architecture, null, out var frameworkPath);
 			Assert.AreEqual (result, !string.IsNullOrEmpty (expected), "result");
@@ -52,7 +52,7 @@ namespace Xamarin.MacDev.Tasks.Tests {
 		[TestCase (TargetFramework.Xamarin_WatchOS_1_0_String, true, "i386", "watchos-i386-simulator/XTest.framework/XTest")]
 		public void PreXcode12 (string targetFrameworkMoniker, bool isSimulator, string architecture, string expected)
 		{
-			var path = Path.Combine (Path.GetDirectoryName (GetType ().Assembly.Location), "Resources", "xcf-prexcode12.plist");
+			var path = Path.Combine (Path.GetDirectoryName (GetType ().Assembly.Location)!, "Resources", "xcf-prexcode12.plist");
 			var plist = PDictionary.FromFile (path)!;
 			var result = ResolveNativeReferences.TryResolveXCFramework (log, plist, "N/A", targetFrameworkMoniker, isSimulator, architecture, null, out var frameworkPath);
 			Assert.AreEqual (result, !string.IsNullOrEmpty (expected), "result");
