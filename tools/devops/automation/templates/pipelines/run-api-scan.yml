@@ -1,0 +1,90 @@
+# template that can be extended by pipelines that will be used to run the api-scan tests. This
+# allows to share resources and parameters
+parameters:
+
+  - name: isPR
+    displayName: Is PR build
+    type: boolean
+    default: false
+
+resources:
+  repositories:
+    - repository: self
+      checkoutOptions:
+        submodules: true
+
+    - repository: yaml-templates
+      type: github
+      name: xamarin/yaml-templates
+      ref: refs/heads/main
+      endpoint: xamarin
+
+    - repository: maccore
+      type: github
+      name: xamarin/maccore
+      ref: refs/heads/main
+      endpoint: xamarin
+
+    - repository: release-scripts
+      type: github
+      name: xamarin/release-scripts
+      ref: refs/heads/only_codesign
+      endpoint: xamarin
+
+variables:
+  - template: ../variables/common.yml
+  - template: ../variables/api-scan.yml
+  - name: DisablePipelineConfigDetector
+    ${{ if eq(parameters.isPR, false) }}:
+    value: true
+    ${{ else }}:
+    value: false
+
+stages:
+  - stage: configure_build
+    displayName: '${{ parameters.stageDisplayNamePrefix }}Configure'
+    jobs:
+
+      - ${{ if eq(parameters.pool, 'automatic') }}:
+          - job: AgentPoolSelector       # https://docs.microsoft.com/en-us/azure/devops/pipelines/process/phases?view=azure-devops&tabs=yaml
+            pool:                        # Consider using an agentless (server) job here, but would need to host selection logic as an Azure function: https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#server
+              vmImage: ubuntu-latest
+            steps:
+              - checkout: none             # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#checkout
+
+              # Selects appropriate agent pool based on trigger type (PR or CI); manually triggered builds target the PR pool
+              - template: azure-devops-pools/agent-pool-selector.yml@yaml-templates
+                parameters:
+                  agentPoolPR: $(PRBuildPool)
+                  agentPoolPRUrl: $(PRBuildPoolUrl)
+                  agentPoolCI: $(CIBuildPool)
+                  agentPoolCIUrl: $(CIBuildPoolUrl)
+
+      - job: configure
+        displayName: 'Configure build'
+        pool:
+          vmImage: windows-latest
+
+        variables:
+          isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
+          isScheduled: $[eq(variables['Build.Reason'], 'Schedule')]
+          BRANCH_NAME: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', '') ]
+
+        steps:
+          - template: ../common/configuration.yml
+            parameters: 
+              repositoryAlias: ${{ parameters.repositoryAlias }}
+              commit: ${{ parameters.commit }}
+              testConfigurations: ${{ parameters.testConfigurations }}
+              supportedPlatforms: ${{ parameters.supportedPlatforms }}
+              testsLabels: '--label=skip-all-tests,run-ios-tests,run-ios-simulator-tests,run-tvos-tests,run-watchos-tests,run-mac-tests,run-maccatalyst-tests,run-dotnet-tests,run-system-permission-tests,run-legacy-xamarin-tests'
+              statusContext: 'VSTS: simulator tests' 
+              uploadArtifacts: true
+
+  - template: ../governance/stage.yml
+    parameters:
+      isPR: ${{ parameters.isPR }}
+      repositoryAlias: ${{ parameters.repositoryAlias }}
+      commit: ${{ parameters.commit }}
+      stageDisplayNamePrefix: ${{ parameters.stageDisplayNamePrefix }}
+      dependsOn: configure_build
