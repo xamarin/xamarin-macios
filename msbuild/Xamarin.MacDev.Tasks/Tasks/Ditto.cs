@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -44,24 +45,20 @@ namespace Xamarin.MacDev.Tasks {
 
 		CancellationTokenSource? cancellationTokenSource;
 
-		void LogLine (string msg)
-		{
-			Log.LogWarning (msg);
-			Console.WriteLine ($"{DateTime.UtcNow.ToString ("o")} Ditto stdout: {msg}");
-			Console.Error.WriteLine ($"{DateTime.UtcNow.ToString ("o")} Ditto stderr: {msg}");
-		}
-
+		static int counter;
 		public override bool Execute ()
 		{
+			var id = Interlocked.Increment (ref counter);
+
 			if (ShouldExecuteRemotely ()) {
-				LogLine ($"Ditto.Execute () will execute remotely");
+				LogLine ($"{id} Ditto.Execute () will execute remotely");
 				var taskRunner = new TaskRunner (SessionId, BuildEngine4);
 
 				taskRunner.FixReferencedItems (this, new ITaskItem [] { Source! });
 
-				LogLine ($"Ditto.Execute () about to execute remotely");
+				LogLine ($"{id} Ditto.Execute () about to execute remotely");
 				var rv = taskRunner.RunAsync (this).Result;
-				LogLine ($"Ditto.Execute () executed remotely: {rv}");
+				LogLine ($"{id} Ditto.Execute () executed remotely: {rv}");
 				return rv;
 			}
 
@@ -87,11 +84,12 @@ namespace Xamarin.MacDev.Tasks {
 				}
 			}
 
-			LogLine ($"Ditto.Execute () about to execute locally\n{Environment.StackTrace}");
+			LogLine ($"{id} Ditto.Execute () about to execute locally. Args: {string.Join (" ", args)}\n{Environment.StackTrace}");
+			var watch = Stopwatch.StartNew ();
 			cancellationTokenSource = new CancellationTokenSource ();
-			cancellationTokenSource.CancelAfter (TimeSpan.FromMinutes (2)); // FIXME: remove this
+			cancellationTokenSource.CancelAfter (TimeSpan.FromSeconds (30)); // FIXME: remove this
 			ExecuteAsync (Log, "/usr/bin/ditto", args, cancellationToken: cancellationTokenSource.Token).Wait ();
-			LogLine ($"Ditto.Execute () executed locally");
+			LogLine ($"{id} Ditto.Execute () executed locally in {watch.Elapsed.TotalSeconds} seconds. Args: {string.Join (" ", args)}");
 
 			// Create a list of all the files we've copied
 			var copiedFiles = new List<ITaskItem> ();
