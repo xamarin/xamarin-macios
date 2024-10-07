@@ -546,6 +546,7 @@ namespace Foundation {
 
 		// helper to avoid the (common pattern)
 		// 	var p = x is null ? null : x.Dictionary;
+		[return: NotNullIfNotNull (nameof (self))]
 		static public NSDictionary? GetDictionary (this DictionaryContainer? self)
 		{
 			return self is null ? null : self.Dictionary;

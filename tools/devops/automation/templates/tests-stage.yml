@@ -163,18 +163,6 @@ parameters:
 
 stages:
 
-- ${{ if parameters.isPR }}:
-  - stage: clean
-    displayName: '${{ parameters.stageDisplayNamePrefix }}Clean up'
-    dependsOn: []
-    jobs:
-    - job:
-      displayName: 'Clean comments'
-      pool:
-        vmImage: windows-latest
-      steps:
-      - template: ./common/clean.yml
-
 - stage: configure_build
   displayName: '${{ parameters.stageDisplayNamePrefix }}Configure'
   dependsOn: ${{ parameters.dependsOn }}

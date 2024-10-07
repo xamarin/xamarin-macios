@@ -160,11 +160,7 @@ resources:
       endpoint: xamarin
 
 variables:
-  - ${{ if contains(variables['Build.DefinitionName'], 'private') }}:
-      - template: ../vsts-variables.yml
-  - template: ../variables.yml
-  - name: MaciosUploadPrefix
-    value: ''
+  - template: ../variables/common.yml
   - name: DisablePipelineConfigDetector
     value: true
 
