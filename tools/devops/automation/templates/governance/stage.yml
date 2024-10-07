@@ -16,11 +16,14 @@ parameters:
   type: string
   default: ''
 
+- name: dependsOn
+  type: object
+  default: [configure_build, build_packages]
 
 stages:
 - stage: governance_checks
   displayName: '${{ parameters.stageDisplayNamePrefix }}API Scan'
-  dependsOn: [ configure_build, build_packages]
+  dependsOn: ${{ parameters.dependsOn }}
 
   jobs:
   - job: apiscan
