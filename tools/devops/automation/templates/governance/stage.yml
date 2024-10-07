@@ -23,7 +23,7 @@ parameters:
 stages:
 - stage: governance_checks
   displayName: '${{ parameters.stageDisplayNamePrefix }}API Scan'
-  dependsOn: ${{ paramenters.dependsOn }}
+  dependsOn: ${{ parameters.dependsOn }}
 
   jobs:
   - job: apiscan
