@@ -7,6 +7,47 @@ parameters:
     type: boolean
     default: false
 
+  - name: pool
+    type: string
+    displayName: Bot pool to use
+    default: automatic
+    values:
+      - pr
+      - ci
+      - automatic
+
+  - name: testConfigurations
+    displayName: Test configurations to run
+    type: object
+    default: []
+
+  - name: supportedPlatforms
+    type: object
+    default: [
+      {
+        platform: iOS,
+        isDotNetPlatform: true,
+      },
+      {
+        platform: macOS,
+        isDotNetPlatform: true,
+      },
+      {
+        platform: tvOS,
+        isDotNetPlatform: true,
+      },
+      {
+        platform: MacCatalyst,
+        isDotNetPlatform: true,
+      },
+      {
+        # when running platform-specific test runs, we also need a special test run that executes tests that only runs when multiple platforms are enabled
+        platform: Multiple,
+        isDotNetPlatform: true,
+      }
+    ]
+
+
 resources:
   repositories:
     - repository: self
@@ -34,15 +75,16 @@ resources:
 variables:
   - template: ../variables/common.yml
   - template: ../variables/api-scan.yml
-  - name: DisablePipelineConfigDetector
-    ${{ if eq(parameters.isPR, false) }}:
-    value: true
-    ${{ else }}:
-    value: false
+  - ${{ if eq(parameters.isPR, false) }}:
+      - name: DisablePipelineConfigDetector
+        value: true
+  - ${{ else }}:
+      - name: DisablePipelineConfigDetector
+        value: false
 
 stages:
   - stage: configure_build
-    displayName: '${{ parameters.stageDisplayNamePrefix }}Configure'
+    displayName: 'Configure'
     jobs:
 
       - ${{ if eq(parameters.pool, 'automatic') }}:
@@ -71,10 +113,10 @@ stages:
           BRANCH_NAME: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', '') ]
 
         steps:
-          - template: ../common/configuration.yml
+          - template: ../common/configure.yml
             parameters: 
-              repositoryAlias: ${{ parameters.repositoryAlias }}
-              commit: ${{ parameters.commit }}
+              repositoryAlias: self
+              commit: HEAD
               testConfigurations: ${{ parameters.testConfigurations }}
               supportedPlatforms: ${{ parameters.supportedPlatforms }}
               testsLabels: '--label=skip-all-tests,run-ios-tests,run-ios-simulator-tests,run-tvos-tests,run-watchos-tests,run-mac-tests,run-maccatalyst-tests,run-dotnet-tests,run-system-permission-tests,run-legacy-xamarin-tests'
@@ -84,7 +126,7 @@ stages:
   - template: ../governance/stage.yml
     parameters:
       isPR: ${{ parameters.isPR }}
-      repositoryAlias: ${{ parameters.repositoryAlias }}
-      commit: ${{ parameters.commit }}
-      stageDisplayNamePrefix: ${{ parameters.stageDisplayNamePrefix }}
+      repositoryAlias: self
+      commit: HEAD
       dependsOn: configure_build
+      use1ES: false

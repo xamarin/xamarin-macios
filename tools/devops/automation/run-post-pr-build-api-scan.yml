@@ -12,7 +12,7 @@ resources:
           - build_packages
 
 extends:
-  template: templates/pipelines/run-tests-pipeline.yml
+  template: templates/pipelines/run-api-scan.yml
   parameters:
     isPR: true
 
