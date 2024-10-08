@@ -171,8 +171,7 @@ namespace Xamarin.MacDev.Tasks {
 				LogLine (log, "XamarinTask|log", v);
 			});
 			var stdOutput = new StringBuilder ();
-			var stdOutputCallback = new Action<string?> ((v) =>
-			{
+			var stdOutputCallback = new Action<string?> ((v) => {
 				LogLine (log, "XamarinTask|stdout", v);
 				if (v is not null) {
 					lock (stdOutput)
@@ -180,8 +179,7 @@ namespace Xamarin.MacDev.Tasks {
 				}
 			});
 			StringBuilder stdError = mergeOutput ? stdOutput : new StringBuilder ();
-			var stdErrorCallback = new Action<string?> ((v) =>
-			{
+			var stdErrorCallback = new Action<string?> ((v) => {
 				LogLine (log, "XamarinTask|stderr", v);
 				if (v is not null) {
 					lock (stdError)
