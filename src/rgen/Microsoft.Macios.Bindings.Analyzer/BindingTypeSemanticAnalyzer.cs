@@ -14,17 +14,17 @@ namespace Microsoft.Macios.Bindings.Analyzer;
 [DiagnosticAnalyzer (LanguageNames.CSharp)]
 public class BindingTypeSemanticAnalyzer : DiagnosticAnalyzer {
 	internal const string DiagnosticId = "RBI0001";
-	static readonly LocalizableString Title = new LocalizableResourceString (nameof(Resources.RBI0001Title),
-		Resources.ResourceManager, typeof(Resources));
+	static readonly LocalizableString Title = new LocalizableResourceString (nameof (Resources.RBI0001Title),
+		Resources.ResourceManager, typeof (Resources));
 	static readonly LocalizableString MessageFormat =
-		new LocalizableResourceString (nameof(Resources.RBI0001MessageFormat), Resources.ResourceManager,
-			typeof(Resources));
+		new LocalizableResourceString (nameof (Resources.RBI0001MessageFormat), Resources.ResourceManager,
+			typeof (Resources));
 	static readonly LocalizableString Description =
-		new LocalizableResourceString (nameof(Resources.RBI0001Description), Resources.ResourceManager,
-			typeof(Resources));
+		new LocalizableResourceString (nameof (Resources.RBI0001Description), Resources.ResourceManager,
+			typeof (Resources));
 	const string Category = "Usage";
 
-	static readonly DiagnosticDescriptor RBI0001 = new(DiagnosticId, Title, MessageFormat, Category,
+	static readonly DiagnosticDescriptor RBI0001 = new (DiagnosticId, Title, MessageFormat, Category,
 		DiagnosticSeverity.Error, isEnabledByDefault: true, description: Description);
 
 	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } =

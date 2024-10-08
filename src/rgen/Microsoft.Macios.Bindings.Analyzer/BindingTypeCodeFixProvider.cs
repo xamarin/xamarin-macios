@@ -17,7 +17,7 @@ namespace Microsoft.Macios.Bindings.Analyzer;
 /// A sample code fix provider that renames classes with the company name in their definition.
 /// All code fixes must  be linked to specific analyzers.
 /// </summary>
-[ExportCodeFixProvider (LanguageNames.CSharp, Name = nameof(BindingTypeCodeFixProvider)), Shared]
+[ExportCodeFixProvider (LanguageNames.CSharp, Name = nameof (BindingTypeCodeFixProvider)), Shared]
 public class BindingTypeCodeFixProvider : CodeFixProvider {
 	// Specify the diagnostic IDs of analyzers that are expected to be linked.
 	public sealed override ImmutableArray<string> FixableDiagnosticIds { get; } =
@@ -42,19 +42,19 @@ public class BindingTypeCodeFixProvider : CodeFixProvider {
 			CodeAction.Create (
 				title: Resources.RBI0001CodeFixTitle,
 				createChangedDocument: c => MakePartialClassAsync (context.Document, declaration, c),
-				equivalenceKey: nameof(Resources.RBI0001CodeFixTitle)),
+				equivalenceKey: nameof (Resources.RBI0001CodeFixTitle)),
 			diagnostic);
 	}
 
 	async Task<Document> MakePartialClassAsync (Document document,
 		ClassDeclarationSyntax classDeclarationSyntax, CancellationToken cancellationToken)
 	{
-		var partialClass = classDeclarationSyntax.AddModifiers (SyntaxFactory.Token(SyntaxKind.PartialKeyword));
-		var oldRoot = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
+		var partialClass = classDeclarationSyntax.AddModifiers (SyntaxFactory.Token (SyntaxKind.PartialKeyword));
+		var oldRoot = await document.GetSyntaxRootAsync (cancellationToken).ConfigureAwait (false);
 		if (oldRoot is null)
 			return document;
 
-		var newRoot = oldRoot.ReplaceNode(classDeclarationSyntax, partialClass);
-		return document.WithSyntaxRoot(newRoot);
+		var newRoot = oldRoot.ReplaceNode (classDeclarationSyntax, partialClass);
+		return document.WithSyntaxRoot (newRoot);
 	}
 }
