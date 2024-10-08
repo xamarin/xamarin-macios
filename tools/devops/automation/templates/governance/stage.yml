@@ -20,6 +20,10 @@ parameters:
   type: object
   default: [configure_build, build_packages]
 
+- name: use1ES
+  type: boolean
+  default: true
+
 stages:
 - stage: governance_checks
   displayName: '${{ parameters.stageDisplayNamePrefix }}API Scan'
@@ -43,3 +47,4 @@ stages:
         isPR: ${{ parameters.isPR }}
         repositoryAlias: ${{ parameters.repositoryAlias }}
         commit: ${{ parameters.commit }}
+        use1ES: ${{ parameters.use1ES }}
