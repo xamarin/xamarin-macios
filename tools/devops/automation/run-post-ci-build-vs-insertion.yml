@@ -6,18 +6,6 @@ pr: none
 
 parameters:
 
-  - name: stageDisplayNamePrefix
-    type: string
-    default: ''
-
-  - name: repositoryAlias
-    type: string
-    default: self
-
-  - name: commit
-    type: string
-    default: HEAD
-
   - name: pushNugets
     type: boolean
     default: true # default to true until otherwhise
@@ -44,6 +32,33 @@ resources:
             - xcode??
         stages:
           - build_packages
+
+  repositories:
+    - repository: self
+      checkoutOptions:
+        submodules: true
+
+    - repository: yaml-templates
+      type: github
+      name: xamarin/yaml-templates
+      ref: refs/heads/main
+      endpoint: xamarin
+
+    - repository: sdk-insertions
+      type: github
+      name: xamarin/sdk-insertions
+      ref: refs/heads/main
+      endpoint: xamarin
+
+    - repository: maccore
+      type: github
+      name: xamarin/maccore
+      ref: refs/heads/main
+      endpoint: xamarin
+
+    - repository: CustomPipelineTemplates
+      type: git
+      name: 1ESPipelineTemplates/MicroBuildTemplate
 
 extends:
   template: azure-pipelines/MicroBuild.1ES.Official.yml@CustomPipelineTemplates
@@ -77,11 +92,11 @@ extends:
           - repository: yaml-templates
           - repository: sdk-insertions
     stages:
-      - template: templates/release/vs-insertion-prep.yml
+      - template: ./templates/release/vs-insertion-prep.yml
         parameters:
-          stageDisplayNamePrefix: ${{ parameters.stageDisplayNamePrefix }}
+          stageDisplayNamePrefix: ''
           isPR: false
-          repositoryAlias: ${{ parameters.repositoryAlias }}
-          commit: ${{ parameters.commit }}
+          repositoryAlias: self
+          commit: HEAD
           pushNugets: ${{ parameters.pushNugets }}
           pushNugetsToMaestro: ${{ parameters.pushNugetsToMaestro }}

@@ -1,6 +1,7 @@
 parameters:
 - name: buildStage
   type: string
+  default: ''
 
 - name: dependsOn
   type: object
