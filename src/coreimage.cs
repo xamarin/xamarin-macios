@@ -10281,7 +10281,7 @@ namespace CoreImage {
 	interface CIDistanceGradientFromRedMask : CIFilterProtocol {
 
 		[CoreImageFilterProperty ("inputImage")]
-		CIImage inputImage { get; set; }
+		CIImage InputImage { get; set; }
 
 		[CoreImageFilterProperty ("inputMaximumDistance")]
 		int MaximumDistance { get; set; }
