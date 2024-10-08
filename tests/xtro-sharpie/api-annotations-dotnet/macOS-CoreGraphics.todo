@@ -1,0 +1,3 @@
+!missing-field! kCGUseLegacyHDREcosystem not bound
+!missing-pinvoke! CGColorConversionInfoConvertData is not bound
+!missing-pinvoke! CGColorConversionInfoCreateForToneMapping is not bound
