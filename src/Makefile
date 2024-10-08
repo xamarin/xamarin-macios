@@ -95,8 +95,6 @@ DOTNET_GENERATOR_FLAGS=$(GENERATOR_FLAGS) -compiler=$(abspath $(DOTNET_COMPILER)
 DOTNET_GENERATOR=$(DOTNET_BUILD_DIR)/bgen/bgen
 DOTNET_BINDING_ATTRIBUTES=$(DOTNET_BUILD_DIR)/Xamarin.Apple.BindingAttributes.dll
 
-# Roslyn based binding generator
-
 #
 # Specific warnings that we want reported as errors by generator
 # It takes a comma separated list, but an empty list means
