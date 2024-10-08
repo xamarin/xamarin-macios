@@ -30,6 +30,19 @@ namespace Xamarin.MacDev.Tasks {
 			Log.LogError ($"The task {GetType ().Name} requires TargetFrameworkMoniker to be set.");
 		}
 
+		static XamarinTask ()
+		{
+			AppDomain.CurrentDomain.FirstChanceException += (object sender, System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs fceea) => {
+				LogLine (null, "XamarinTask", $"FirstChanceException<XamarinTask>: {fceea.GetType ().FullName}\n" +
+					$"Exception.Message: {fceea.Exception.Message}\n" +
+					$"Exception.StackTrace: {fceea.Exception.StackTrace}\n" +
+					$"Exception.ToString (): {fceea.Exception}\n" +
+					$"Environment.StackTrace: {Environment.StackTrace}\n" +
+					$"FirstChanceException END");
+			};
+			LogLine (null, "XamarinTask", "Added FirstChanceException handler");
+		}
+
 		public string Product {
 			get {
 				if (IsDotNet)
@@ -121,6 +134,20 @@ namespace Xamarin.MacDev.Tasks {
 			return ExecuteAsync (Log, fileName, arguments, sdkDevPath, environment, mergeOutput, showErrorIfFailure, workingDirectory);
 		}
 
+		protected void LogLine (string msg)
+		{
+			LogLine (Log, GetType ().Name, msg);
+		}
+
+
+		protected static void LogLine (TaskLoggingHelper? log, string type, string msg)
+		{
+			log?.LogMessage (MessageImportance.Low, msg);
+			Console.WriteLine ($"{DateTime.UtcNow.ToString ("o")} {type} stdout: {msg}");
+			Console.Error.WriteLine ($"{DateTime.UtcNow.ToString ("o")} {type} stderr: {msg}");
+		}
+
+
 		internal protected static async System.Threading.Tasks.Task<Execution> ExecuteAsync (TaskLoggingHelper log, string fileName, IList<string> arguments, string? sdkDevPath = null, Dictionary<string, string?>? environment = null, bool mergeOutput = true, bool showErrorIfFailure = true, string? workingDirectory = null, CancellationToken? cancellationToken = null)
 		{
 			// Create a new dictionary if we're given one, to make sure we don't change the caller's dictionary.
@@ -128,9 +155,9 @@ namespace Xamarin.MacDev.Tasks {
 			if (!string.IsNullOrEmpty (sdkDevPath))
 				launchEnvironment ["DEVELOPER_DIR"] = sdkDevPath;
 
-			log.LogMessage (MessageImportance.Normal, MSBStrings.M0001, fileName, StringUtils.FormatArguments (arguments));
+			LogLine (log, "XamarinTask", string.Format (MSBStrings.M0001, fileName, StringUtils.FormatArguments (arguments)));
 			var rv = await Execution.RunAsync (fileName, arguments, environment: launchEnvironment, mergeOutput: mergeOutput, workingDirectory: workingDirectory, cancellationToken: cancellationToken);
-			log.LogMessage (rv.ExitCode == 0 ? MessageImportance.Low : MessageImportance.High, MSBStrings.M0002, fileName, rv.ExitCode);
+			LogLine (log, "XamarinTask", string.Format (MSBStrings.M0002, fileName, rv.ExitCode));
 
 			// Show the output
 			var output = rv.StandardOutput!.ToString ();
