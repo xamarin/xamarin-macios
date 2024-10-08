@@ -10274,6 +10274,18 @@ namespace CoreImage {
 	[Protocol (Name = "CIAreaBoundsRed")]
 	interface CIAreaBoundsRedProtocol : CIAreaReductionFilterProtocol {
 	}
+
+	[CoreImageFilter]
+	[TV (18, 1), Mac (15, 1), iOS (18, 1), MacCatalyst (18, 1)]
+	[BaseType (typeof (CIFilter))]
+	interface CIDistanceGradientFromRedMask : CIFilterProtocol {
+
+		[CoreImageFilterProperty ("inputImage")]
+		CIImage inputImage { get; set; }
+
+		[CoreImageFilterProperty ("inputMaximumDistance")]
+		int MaximumDistance { get; set; }
+	}
 	#endregion
 
 }

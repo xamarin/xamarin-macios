@@ -1679,5 +1679,3 @@
 !incorrect-protocol-member! NSAccessibility::setAccessibilityUserInputLabels: is REQUIRED and should be abstract
 
 # introduced and deprecated in the same version
-!missing-protocol-member! NSTextInputTraits::setWritingToolsAllowedInputOptions: not found
-!missing-protocol-member! NSTextInputTraits::writingToolsAllowedInputOptions not found
