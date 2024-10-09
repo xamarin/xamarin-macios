@@ -151,9 +151,6 @@ SHARED_DESIGNER_CS = $(BUILD_DIR)/common/Errors.Designer.cs
 $(SHARED_DESIGNER_CS): $(SHARED_RESX)
 	$(Q_GEN) ./generate-errors.csharp > $(SHARED_DESIGNER_CS)
 
-# Roslyn code generator
-ROSLYN_GENERATOR=$(DOTNET_BUILD_DIR)/common/rgen/Microsoft.Macios.Generator.dll
-
 #
 # Xamarin.iOS
 #

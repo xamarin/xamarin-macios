@@ -1,3 +1,5 @@
+# Roslyn code generator
+ROSLYN_GENERATOR=$(DOTNET_BUILD_DIR)/common/rgen/Microsoft.Macios.Generator.dll
 ROSLYN_GENERATOR_FILES := $(wildcard rgen/Microsoft.Macios.Generator/*.cs)
 
 $(ROSLYN_GENERATOR): Makefile.rgenerator $(ROSLYN_GENERATOR_FILES)
