@@ -6,6 +6,8 @@ include $(TOP)/Make.config
 
 ifeq ($(shell arch),arm64)
 DOTNET_ARCH=arm64
+else ifeq ($(shell sysctl -n sysctl.proc_translated 2>/dev/null),1)
+DOTNET_ARCH=arm64
 else
 DOTNET_ARCH=x64
 endif
@@ -70,7 +72,7 @@ downloads/%: downloads/%.nupkg
 	$(Q) echo "Unzipped $*."
 
 downloads/$(DOTNET_INSTALL_NAME): dotnet-install.sh
-	$(Q) echo "Downloading and installing .NET $(DOTNET_VERSION) into $@..."
+	$(Q) echo "Downloading and installing .NET $(DOTNET_VERSION) ($(DOTNET_ARCH)) into $@..."
 	$(Q) ./dotnet-install.sh --install-dir "$@.tmp" --version "$(DOTNET_VERSION)" --architecture $(DOTNET_ARCH) --no-path $$DOTNET_INSTALL_EXTRA_ARGS
 	$(Q) rm -Rf "$@"
 	$(Q) mv "$@.tmp" "$@"
