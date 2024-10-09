@@ -12,12 +12,11 @@ namespace Intents {
 
 #if NET
 		[SupportedOSPlatform ("ios15.0")]
-		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
 		[Introduced (PlatformName.iOS, 15, 0)]
-		[Introduced (PlatformName.MacOSX, 12, 0)]
 		[Introduced (PlatformName.WatchOS, 8, 0)]
 #endif
 		public enum INPersonType {
@@ -27,12 +26,11 @@ namespace Intents {
 
 #if NET
 		[SupportedOSPlatform ("ios15.0")]
-		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
 		[Introduced (PlatformName.iOS, 15, 0)]
-		[Introduced (PlatformName.MacOSX, 12, 0)]
 		[Introduced (PlatformName.WatchOS, 8, 0)]
 #endif
 		public INPerson (INPersonHandle personHandle, NSPersonNameComponents? nameComponents, string? displayName, INImage? image, string? contactIdentifier, string? customIdentifier, bool isMe, INPersonSuggestionType suggestionType) :
@@ -42,12 +40,11 @@ namespace Intents {
 
 #if NET
 		[SupportedOSPlatform ("ios15.0")]
-		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
 		[Introduced (PlatformName.iOS, 15, 0)]
-		[Introduced (PlatformName.MacOSX, 12, 0)]
 		[Introduced (PlatformName.WatchOS, 8, 0)]
 #endif
 		public INPerson (INPersonHandle personHandle, NSPersonNameComponents? nameComponents, string? displayName, INImage? image, string? contactIdentifier, string? customIdentifier, bool isMe, INPersonSuggestionType suggestionType, INPersonType personType) : base (NSObjectFlag.Empty)

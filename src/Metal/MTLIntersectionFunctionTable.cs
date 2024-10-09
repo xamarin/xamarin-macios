@@ -17,12 +17,11 @@ namespace Metal {
 	public static class MTLIntersectionFunctionTableExtensions {
 
 #if NET
-		[SupportedOSPlatform ("macos11.0")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios14.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
-		[Mac (11, 0)]
 		[iOS (14, 0)]
 		[NoTV]
 #endif

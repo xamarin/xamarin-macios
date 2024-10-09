@@ -285,7 +285,6 @@ namespace iTunesLibrary {
 		Master,
 		[Field ("ITLibPlaylistPropertyParentPersistentID")]
 		ParentPersistentId,
-		[Mac (12, 0)]
 		[Field ("ITLibPlaylistPropertyPrimary")]
 		Primary,
 		[Field ("ITLibPlaylistPropertyVisible")]

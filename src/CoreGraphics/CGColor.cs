@@ -157,7 +157,7 @@ namespace CoreGraphics {
 #if NET
 		[SupportedOSPlatform ("ios14.0")]
 		[SupportedOSPlatform ("tvos14.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 #else
 		[iOS (14, 0)]
@@ -391,13 +391,12 @@ namespace CoreGraphics {
 #if NET
 		[SupportedOSPlatform ("ios14.0")]
 		[SupportedOSPlatform ("tvos14.0")]
-		[SupportedOSPlatform ("macos11.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (14, 0)]
 		[TV (14, 0)]
 		[Watch (7, 0)]
-		[Mac (11, 0)]
 		[MacCatalyst (14, 0)]
 #endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
@@ -406,13 +405,12 @@ namespace CoreGraphics {
 #if NET
 		[SupportedOSPlatform ("ios14.0")]
 		[SupportedOSPlatform ("tvos14.0")]
-		[SupportedOSPlatform ("macos11.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (14, 0)]
 		[TV (14, 0)]
 		[Watch (7, 0)]
-		[Mac (11, 0)]
 		[MacCatalyst (14, 0)]
 #endif
 		static public CGColor? CreateCmyk (nfloat cyan, nfloat magenta, nfloat yellow, nfloat black, nfloat alpha)
@@ -424,13 +422,12 @@ namespace CoreGraphics {
 #if NET
 		[SupportedOSPlatform ("ios14.0")]
 		[SupportedOSPlatform ("tvos14.0")]
-		[SupportedOSPlatform ("macos11.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (14, 0)]
 		[TV (14, 0)]
 		[Watch (7, 0)]
-		[Mac (11, 0)]
 		[MacCatalyst (14, 0)]
 #endif
 		[DllImport (Constants.AccessibilityLibrary)]
@@ -439,13 +436,12 @@ namespace CoreGraphics {
 #if NET
 		[SupportedOSPlatform ("ios14.0")]
 		[SupportedOSPlatform ("tvos14.0")]
-		[SupportedOSPlatform ("macos11.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (14, 0)]
 		[TV (14, 0)]
 		[Watch (7, 0)]
-		[Mac (11, 0)]
 		[MacCatalyst (14, 0)]
 #endif
 		public string? AXName => CFString.FromHandle (AXNameFromColor (Handle));
