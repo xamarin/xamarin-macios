@@ -2,7 +2,7 @@ TOP=..
 
 include $(TOP)/Make.config
 
-ifeq ($(shell uname -a),"arm64")
+ifeq ($(shell arch),"arm64")
 IS_ARM64=1
 IS_APPLE_SILICON=1
 endif
