@@ -403,6 +403,10 @@ Copyright (C) 2011-2013 Xamarin. All rights reserved.
 			<Output TaskParameter="LinkerOutputItems" ItemName="_XamarinLinkerItems" />
 		</Xamarin.MacDev.Tasks.ILLink>
 
+		<PropertyGroup>
+			<!-- Sometimes the ILLink task itself fails, in which case the _ILLinkExitCode value won't be set. In this case, set it to a value that will cause the expected error to be shown later on. -->
+			<_ILLinkExitCode Condition="'$(_ILLinkExitCode)' == '' And '$(MSBuildLastTaskResult)' != 'true'">-1</_ILLinkExitCode>
+		</PropertyGroup>
 		<Touch Files="$(_LinkSemaphore)" AlwaysCreate="true" Condition=" '$(_ILLinkExitCode)' == '0' " />
 
 	</Target>
