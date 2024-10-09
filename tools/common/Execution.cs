@@ -108,7 +108,7 @@ namespace Xamarin.Utils {
 
 						if (Log is not null) {
 							var ticker = new Thread (() => {
-								Log.WriteLine ($"{id} Ticker for {p.StartInfo.FileName} with pid {pid}");
+								Log.WriteLine ($"{id} Ticker for {p.StartInfo.FileName} with pid {pid} and timeout {(Timeout is null ? "<no timeout>" : Timeout.Value.ToString ())}");
 								while (true) {
 									Thread.Sleep (TimeSpan.FromSeconds (1));
 									if (tcs.Task.IsCompleted) {
