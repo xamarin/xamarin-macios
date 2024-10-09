@@ -27,12 +27,18 @@ steps:
     repositoryAlias: ${{ parameters.repositoryAlias }}
     commit: ${{ parameters.commit }}
 
-- task: DownloadPipelineArtifact@2
-  displayName: Download artifacts
-  inputs:
-    artifactName: not-signed-package
-    allowFailedBuilds: true
-    path: $(Build.SourcesDirectory)/not-signed-package
+- ${{ if or(contains(variables['Build.Reason'], 'ResourceTrigger'), contains(variables['Build.Reason'], 'BuildCompletion')) }}:
+  - download: macios
+    displayName: Download artifacts
+    artifact: not-signed-package
+
+- ${{ else }}:
+  - task: DownloadPipelineArtifact@2
+    displayName: Download artifacts
+    inputs:
+      artifactName: not-signed-package
+      allowFailedBuilds: true
+      path: $(Build.SourcesDirectory)/not-signed-package
 
 - pwsh: >-
     ./prepare_workload_apiscan.ps1
