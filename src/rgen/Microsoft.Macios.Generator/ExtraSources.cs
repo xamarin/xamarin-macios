@@ -14,17 +14,6 @@ namespace Foundation
     public class BindingTypeAttribute : System.Attribute
     {
         public string Name { get; set; }
-        public Type [] Events { get; set; }
-        public string [] Delegates { get; set; }
-        public bool Singleton { get; set; }
-
-        // If set, the code will keep a reference in the EnsureXXX method for
-        // delegates and will clear the reference to the object in the method
-        // referenced by KeepUntilRef.   Currently uses an ArrayList, so this
-        // is not really designed as a workaround for systems that create
-        // too many objects, but two cases in particular that users keep
-        // trampling on: UIAlertView and UIActionSheet
-        public string KeepRefUntil { get; set; }
     }
 }";
 

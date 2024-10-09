@@ -10,7 +10,7 @@ public class BindingSourceGeneratorTests : BaseTestClass {
 	const string SampleBindingType = @"
 namespace TestNamespace;
 
-[BidingType (Name = ""AVAudioPCMBuffer"")]
+[BindingType (Name = ""AVAudioPCMBuffer"")]
 interface AVAudioPcmBuffer : AVAudioBuffer {
 }
 ";

@@ -52,7 +52,7 @@ public class BindingTypeSemanticAnalyzer : DiagnosticAnalyzer {
 			return;
 		}
 
-		// the c# systanx is a a list of lists of attributes. That is why we need to iterate through the list of lists
+		// the c# syntax is a a list of lists of attributes. That is why we need to iterate through the list of lists
 		foreach (var attributeData in boundAttributes) {
 			// based on the type use the correct parser to retrieve the data
 			var attributeType = attributeData.AttributeClass!.ToDisplayString ();

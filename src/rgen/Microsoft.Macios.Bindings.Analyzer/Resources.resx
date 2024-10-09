@@ -18,20 +18,13 @@
     <resheader name="writer">
         <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     </resheader>
-    <data name="AB0001Description" xml:space="preserve">
-        <value>Type names should not contain the company name.</value><comment>An optional longer localizable description of the diagnostic.</comment>
-    </data>
-    <data name="AB0001MessageFormat" xml:space="preserve">
-        <value>Type name '{0}' contains the company name</value><comment>The format-able message the diagnostic displays.</comment>
-    </data>
-    <data name="AB0001Title" xml:space="preserve">
-        <value>Type name contains the company name</value><comment>The title of the diagnostic.</comment>
-    </data>
     <data name="RBI0001CodeFixTitle" xml:space="preserve">
-        <value>Make Binding Type class partial</value><comment>The title of the code fix.</comment>
+        <value>Make Binding Type class partial</value>
+        <comment>The title of the code fix.</comment>
     </data>
     <data name="RBI0001Description" xml:space="preserve">
-        <value>In order for the code to be generated all binding types have to be declared as partial classes.</value><comment>An optional longer localizable description of the diagnostic.</comment>
+        <value>In order for the code to be generated all binding types have to be declared as partial classes.</value>
+        <comment>An optional longer localizable description of the diagnostic.</comment>
     </data>
     <data name="RBI0001MessageFormat" xml:space="preserve">
         <value>The binding type '{0}' must declared as a partial class</value>
@@ -40,8 +33,5 @@
     <data name="RBI0001Title" xml:space="preserve">
         <value>Binding type declaration must be partial</value>
         <comment>The title of the diagnostic.</comment>
-    </data>
-    <data name="AB0002Description" xml:space="preserve">
-        <value />
     </data>
 </root>
