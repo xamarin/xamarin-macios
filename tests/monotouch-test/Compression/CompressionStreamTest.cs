@@ -101,7 +101,7 @@ namespace MonoTouchFixtures.Compression {
 				Assert.Ignore ("Requires iOS 9.0+ or macOS 10.11+");
 			MemoryStream backing = new MemoryStream (compressed_data);
 			DeflateStream decompressing = new DeflateStream (backing, CompressionMode.Decompress, CompressionAlgorithm.Zlib);
-			Assert.Throws<ArgumentNullException> (() => decompressing.Read (null, 0, 20));
+			Assert.Throws<ArgumentNullException> (() => IgnoreReturnValue (decompressing.Read (null, 0, 20)));
 		}
 
 		[Test]
@@ -112,7 +112,7 @@ namespace MonoTouchFixtures.Compression {
 			byte [] dummy = new byte [20];
 			MemoryStream backing = new MemoryStream ();
 			DeflateStream compressing = new DeflateStream (backing, CompressionMode.Compress, CompressionAlgorithm.Zlib);
-			Assert.Throws<InvalidOperationException> (() => compressing.Read (dummy, 0, 20));
+			Assert.Throws<InvalidOperationException> (() => IgnoreReturnValue (compressing.Read (dummy, 0, 20)));
 		}
 
 		[Test]
@@ -123,7 +123,7 @@ namespace MonoTouchFixtures.Compression {
 			byte [] dummy = new byte [20];
 			MemoryStream backing = new MemoryStream (compressed_data);
 			DeflateStream decompressing = new DeflateStream (backing, CompressionMode.Decompress, CompressionAlgorithm.Zlib);
-			Assert.Throws<ArgumentException> (() => decompressing.Read (dummy, 10, 20));
+			Assert.Throws<ArgumentException> (() => IgnoreReturnValue (decompressing.Read (dummy, 10, 20)));
 		}
 
 		[Test]
@@ -135,7 +135,7 @@ namespace MonoTouchFixtures.Compression {
 			MemoryStream backing = new MemoryStream (compressed_data);
 			DeflateStream decompressing = new DeflateStream (backing, CompressionMode.Decompress, CompressionAlgorithm.Zlib);
 			decompressing.Close ();
-			Assert.Throws<ObjectDisposedException> (() => decompressing.Read (dummy, 0, 20));
+			Assert.Throws<ObjectDisposedException> (() => IgnoreReturnValue (decompressing.Read (dummy, 0, 20)));
 		}
 
 		[Test]
@@ -335,7 +335,13 @@ namespace MonoTouchFixtures.Compression {
 			byte [] buffer = new byte [512];
 			using (var backing = new Bug19313Stream (compressed_data))
 			using (var decompressing = new DeflateStream (backing, CompressionMode.Decompress, CompressionAlgorithm.Zlib))
-				decompressing.Read (buffer, 0, buffer.Length);
+				IgnoreReturnValue (decompressing.Read (buffer, 0, buffer.Length));
+		}
+
+		// Call this with the return value from CompressionStream.Read to avoid:
+		//     error CA2022: Avoid inexact read with 'Compression.CompressionStream.Read(byte[], int, int)' (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca2022)
+		void IgnoreReturnValue (int value)
+		{
 		}
 	}
 }
