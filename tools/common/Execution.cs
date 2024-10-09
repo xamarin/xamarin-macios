@@ -92,6 +92,26 @@ namespace Xamarin.Utils {
 				StandardOutput ??= new StringWriter ();
 				StandardError ??= new StringWriter ();
 
+				if (Log is not null) {
+					var ticker = new Thread (() => {
+						Log.WriteLine ($"Ticker for {p.StartInfo.FileName}");
+						while (true) {
+							Thread.Sleep (TimeSpan.FromSeconds (1));
+							if (tcs.Task.IsCompleted) {
+								Log.WriteLine ($"Ticker for {p.StartInfo.FileName}: task completed with status '{tcs.Task.Status}'");
+								break;
+							} else {
+								Log.WriteLine ($"Ticker for {p.StartInfo.FileName}: task not complete yet (status = '{tcs.Task.Status}')");
+							}
+						}
+						Log.WriteLine ($"Ticker for {p.StartInfo.FileName}: Done");
+					}) {
+						IsBackground = true,
+						Name = $"Thread ticker for {p.StartInfo.FileName}",
+					};
+					ticker.Start ();
+				}
+
 				var thread = new Thread (() => {
 					try {
 						if (Log is not null) {
