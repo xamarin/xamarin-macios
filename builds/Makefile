@@ -6,6 +6,8 @@ include $(TOP)/Make.config
 
 ifeq ($(shell arch),arm64)
 DOTNET_ARCH=arm64
+else ifeq ($(shell sysctl -n sysctl.proc_translated 2>/dev/null),1)
+DOTNET_ARCH=arm64
 else
 DOTNET_ARCH=x64
 endif
@@ -16,7 +18,7 @@ DOTNET_FILENAME=$(DOTNET_VERSION).tar.gz
 DOTNET_CACHE_FILENAME=$(HOME)/Library/Caches/xamarin-macios/$(DOTNET_FILENAME)
 
 downloads/$(DOTNET_INSTALL_NAME): dotnet-install.sh
-	$(Q) echo "Downloading and installing .NET $(DOTNET_VERSION) into $@..."
+	$(Q) echo "Downloading and installing .NET $(DOTNET_VERSION) ($(DOTNET_ARCH)) into $@..."
 	$(Q) if test -f $(DOTNET_CACHE_FILENAME); then \
 			echo "Found a cached version of .NET $(DOTNET_VERSION) in $(DOTNET_CACHE_FILENAME)."; \
 			mkdir -p "$@.tmp"; \
