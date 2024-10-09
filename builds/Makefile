@@ -72,7 +72,7 @@ downloads/%: downloads/%.nupkg
 	$(Q) echo "Unzipped $*."
 
 downloads/$(DOTNET_INSTALL_NAME): dotnet-install.sh
-	$(Q) echo "Downloading and installing .NET $(DOTNET_VERSION) into $@..."
+	$(Q) echo "Downloading and installing .NET $(DOTNET_VERSION) ($(DOTNET_ARCH)) into $@..."
 	$(Q) ./dotnet-install.sh --install-dir "$@.tmp" --version "$(DOTNET_VERSION)" --architecture $(DOTNET_ARCH) --no-path $$DOTNET_INSTALL_EXTRA_ARGS
 	$(Q) rm -Rf "$@"
 	$(Q) mv "$@.tmp" "$@"
