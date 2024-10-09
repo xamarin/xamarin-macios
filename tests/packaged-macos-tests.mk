@@ -16,7 +16,7 @@ LAUNCH_ARGUMENTS=--autostart --autoexit
 
 # Time test runs out after 5 minutes (300 seconds)
 RUN_WITH_TIMEOUT=./run-with-timeout.csharp 300
-# Some tests need a bit more time... (introspection, monotouch-test/xammac_tests)
+# Some tests need a bit more time... (introspection, monotouch-test)
 RUN_WITH_TIMEOUT_LONGER=./run-with-timeout.csharp 600
 
 ### .NET dependency projects
