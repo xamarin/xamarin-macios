@@ -70,6 +70,7 @@ steps:
     preserveLogsFolder: true
   env:
     AzureServicesAuthConnectionString: RunAs=App;AppId=$(CLIENT_ID)
+    SYSTEM_ACCESSTOKEN: $(System.AccessToken)
 
 - task: PublishSecurityAnalysisLogs@3
   displayName: Publish Security Analysis Logs
