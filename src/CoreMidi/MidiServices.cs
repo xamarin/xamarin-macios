@@ -1462,11 +1462,11 @@ namespace CoreMidi {
 
 #if NET
 		[SupportedOSPlatform ("ios14.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
-		[NoWatch, NoTV, Mac (11, 0), iOS (14, 0), MacCatalyst (14, 0)]
+		[NoWatch, NoTV, iOS (14, 0), MacCatalyst (14, 0)]
 #endif
 		public MidiProtocolId ProtocolId {
 			get {
@@ -2049,11 +2049,11 @@ namespace CoreMidi {
 
 #if NET
 		[SupportedOSPlatform ("ios14.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
-		[NoWatch, NoTV, Mac (11, 0), iOS (14, 0), MacCatalyst (14, 0)]
+		[NoWatch, NoTV, iOS (14, 0), MacCatalyst (14, 0)]
 #endif
 		public MidiProtocolId ProtocolId {
 			get {
@@ -2496,11 +2496,11 @@ namespace CoreMidi {
 
 #if NET
 		[SupportedOSPlatform ("ios14.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
-		[NoWatch, NoTV, Mac (11, 0), iOS (14, 0), MacCatalyst (14, 0)]
+		[NoWatch, NoTV, iOS (14, 0), MacCatalyst (14, 0)]
 #endif
 		public MidiProtocolId ProtocolId {
 			get {

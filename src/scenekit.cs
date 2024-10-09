@@ -193,7 +193,7 @@ namespace SceneKit {
 #if NET
 		[Abstract]
 #endif
-		[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+		[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("removeAllAnimationsWithBlendOutDuration:")]
 		void RemoveAllAnimationsWithBlendOutDuration (nfloat duration);
 
@@ -1020,7 +1020,6 @@ namespace SceneKit {
 		SCNGeometry FromMesh (MDLMesh mesh);
 
 		[NoWatch]
-		[TV (12, 0)]
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("tessellator", ArgumentSemantic.Retain)]
 		SCNGeometryTessellator Tessellator { get; set; }
@@ -1169,7 +1168,7 @@ namespace SceneKit {
 		SCNGeometryElement FromSubmesh (MDLSubmesh submesh);
 
 		[NoWatch] // marked as 7,0 but there's no Metal support on the platform
-		[TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[TV (14, 0), iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[Static]
 		[Export ("geometryElementWithBuffer:primitiveType:primitiveCount:bytesPerIndex:")]
@@ -1192,7 +1191,6 @@ namespace SceneKit {
 
 #if !WATCH
 	[NoWatch]
-	[TV (12, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -4333,7 +4331,7 @@ namespace SceneKit {
 #if !NET
 		[Watch (8, 0)]
 #endif
-		[Mac (12, 0), iOS (15, 0), TV (15, 0)]
+		[iOS (15, 0), TV (15, 0)]
 		[MacCatalyst (15, 0)]
 		[NullAllowed] // by default this property is null
 		[Export ("minimumLanguageVersion", ArgumentSemantic.Retain)]
@@ -4543,27 +4541,27 @@ namespace SceneKit {
 		[Export ("affectedByGravity")]
 		bool AffectedByGravity { [Bind ("isAffectedByGravity")] get; set; }
 
-		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
+		[Watch (5, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("setResting:")]
 		void SetResting (bool resting);
 
-		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
+		[Watch (5, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("continuousCollisionDetectionThreshold")]
 		nfloat ContinuousCollisionDetectionThreshold { get; set; }
 
-		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
+		[Watch (5, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("centerOfMassOffset", ArgumentSemantic.Assign)]
 		SCNVector3 CenterOfMassOffset { get; set; }
 
-		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
+		[Watch (5, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("linearRestingThreshold")]
 		nfloat LinearRestingThreshold { get; set; }
 
-		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
+		[Watch (5, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("angularRestingThreshold")]
 		nfloat AngularRestingThreshold { get; set; }
@@ -5263,7 +5261,7 @@ namespace SceneKit {
 		nfloat FresnelExponent { get; set; }
 
 		[Introduced (PlatformName.MacCatalyst, 15, 0)]
-		[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0)]
+		[Watch (8, 0), TV (15, 0), iOS (15, 0)]
 		[Export ("writesToDepthBuffer")]
 		bool WritesToDepthBuffer { get; set; }
 
