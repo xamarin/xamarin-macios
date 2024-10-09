@@ -6,6 +6,8 @@ include $(TOP)/Make.config
 
 ifeq ($(shell arch),arm64)
 DOTNET_ARCH=arm64
+else ifeq ($(shell sysctl -n sysctl.proc_translated 2>/dev/null),1)
+DOTNET_ARCH=arm64
 else
 DOTNET_ARCH=x64
 endif
