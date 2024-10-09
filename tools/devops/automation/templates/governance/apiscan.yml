@@ -15,6 +15,10 @@ parameters:
   type: string
   default: '$(MaciosUploadPrefix)'
 
+- name: use1ES
+  type: boolean
+  default: true
+
 steps:
 
 - template: ../common/checkout.yml
@@ -88,9 +92,17 @@ steps:
     GdnBreakOutputSuppressionFile: $(Build.ArtifactStagingDirectory)\GuardianSuppressions\falsepositives.gdnsuppress
     GdnBreakOutputSuppressionSet: falsepositives
 
-- task: 1ES.PublishPipelineArtifact@1
-  displayName: Publish Artifact for Guardian Supressions
-  inputs:
-    path: $(Build.ArtifactStagingDirectory)\GuardianSuppressions
-    artifact: Guardian Suppressions APIScan $(PLATFORM) $(VERSION)
-  condition: failed()
+- ${{ if eq(parameters.use1ES, true) }}:
+  - task: 1ES.PublishPipelineArtifact@1
+    displayName: Publish Artifact for Guardian Supressions
+    inputs:
+      path: $(Build.ArtifactStagingDirectory)\GuardianSuppressions
+      artifact: Guardian Suppressions APIScan $(PLATFORM) $(VERSION)
+    condition: failed()
+- ${{ else }}:
+  - task: PublishPipelineArtifact@1
+    displayName: Publish Artifact for Guardian Supressions
+    inputs:
+      targetPath: $(Build.ArtifactStagingDirectory)\GuardianSuppressions
+      artifactName: Guardian Suppressions APIScan $(PLATFORM) $(VERSION)
+    condition: failed()

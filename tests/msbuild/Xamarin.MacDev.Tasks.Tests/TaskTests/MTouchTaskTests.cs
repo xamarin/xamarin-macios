@@ -207,94 +207,10 @@ namespace Xamarin.MacDev.Tasks {
 		}
 
 		[Test]
-		public void ReferenceFrameworkFileResolution_WhenReceivedReferencePathExists ()
-		{
-			using (var sdk = new TempSdk ()) {
-				Task.TargetFrameworkMoniker = "MonoTouch,v1.0";
-
-				var expectedPath = Path.Combine (Cache.CreateTemporaryDirectory (), "tmpfile");
-
-				Task.References = new [] { new TaskItem (expectedPath, new Dictionary<string, string> { { "FrameworkFile", "true" } }) };
-
-				var args = Task.GenerateCommandLineCommands ();
-
-				if (Environment.OSVersion.Platform == PlatformID.Win32NT)
-					// In Windows, the path slashes are escaped.
-					expectedPath = expectedPath.Replace ("\\", "\\\\");
-
-				Assert.IsTrue (Task.ResponseFile.Contains (expectedPath));
-			}
-		}
-
-		[Test]
 		public void ResponseFileTest ()
 		{
 			var args = Task.GenerateCommandLineCommands ();
 			Assert.IsTrue (args.Contains ($"@{Task.ResponseFilePath}"), "#@response-file");
-		}
-
-		[TestCase ("Xamarin.iOS,v1.0", "Xamarin.iOS")]
-		public void ReferenceFrameworkFileResolution_WhenFacadeFileExists (string targetFrameworkMoniker, string frameworkDir)
-		{
-			using (var sdk = new TempSdk ()) {
-				Task.TargetFrameworkMoniker = targetFrameworkMoniker;
-				var expectedPath = Path.Combine (Sdks.XamIOS.LibDir, "mono", frameworkDir, "Facades", "System.Collections.dll");
-				Directory.CreateDirectory (Path.GetDirectoryName (expectedPath));
-				File.WriteAllText (expectedPath, "");
-
-				Task.References = new [] { new TaskItem ("System.Collections.dll", new Dictionary<string, string> { { "FrameworkFile", "true" } }) };
-
-				var args = Task.GenerateCommandLineCommands ();
-
-				if (Environment.OSVersion.Platform == PlatformID.Win32NT)
-					// In Windows, the path slashes are escaped.
-					expectedPath = expectedPath.Replace ("\\", "\\\\");
-
-				Assert.IsTrue (Task.ResponseFile.Contains (expectedPath), string.Format (
-					@"Failed to resolve facade assembly to the Sdk path.
-	Expected path:{0}
-
-	Actual args:{1}", expectedPath, Task.ResponseFile));
-			}
-		}
-
-		[TestCase ("Xamarin.iOS,v1.0", "Xamarin.iOS")]
-		public void ReferenceFrameworkFileResolution_WhenFrameworkFileExists (string targetFrameworkMoniker, string frameworkDir)
-		{
-			using (var sdk = new TempSdk ()) {
-				Task.TargetFrameworkMoniker = targetFrameworkMoniker;
-				var expectedPath = Path.Combine (Sdks.XamIOS.LibDir, "mono", frameworkDir, "System.Collections.dll");
-				Directory.CreateDirectory (Path.GetDirectoryName (expectedPath));
-				File.WriteAllText (expectedPath, "");
-
-				Task.References = new [] { new TaskItem ("System.Collections.dll", new Dictionary<string, string> { { "FrameworkFile", "true" } }) };
-
-				var args = Task.GenerateCommandLineCommands ();
-
-				if (Environment.OSVersion.Platform == PlatformID.Win32NT)
-					// In Windows, the path slashes are escaped.
-					expectedPath = expectedPath.Replace ("\\", "\\\\");
-
-				Assert.IsTrue (Task.ResponseFile.Contains (expectedPath), string.Format (
-					@"Failed to resolve facade assembly to the Sdk path.
-	Expected path:{0}
-
-	Actual args:{1}", expectedPath, Task.ResponseFile));
-			}
-		}
-
-		[TestCase ("Xamarin.iOS,v1.0", "Xamarin.iOS")]
-		public void ReferenceFrameworkFileResolution_WhenResolutionFails (string targetFrameworkMoniker, string frameworkDir)
-		{
-			using (var sdk = new TempSdk ()) {
-				Task.TargetFrameworkMoniker = targetFrameworkMoniker;
-
-				Task.References = new [] { new TaskItem ("/usr/foo/System.Collections.dll", new Dictionary<string, string> { { "FrameworkFile", "true" } }) };
-
-				var args = Task.GenerateCommandLineCommands ();
-
-				Assert.IsTrue (Task.ResponseFile.Contains ("/usr/foo/System.Collections.dll"));
-			}
 		}
 
 		[Test]
@@ -343,29 +259,6 @@ namespace Xamarin.MacDev.Tasks {
 			var items = Task.GetAdditionalItemsToBeCopied ().ToArray ();
 			// 3 additional files (as we do not duplicate the TaskItem for the native library itself)
 			Assert.That (items.Count (), Is.EqualTo (3), "framework files");
-		}
-
-		class TempSdk : IDisposable {
-			MonoTouchSdk sdk;
-
-			public TempSdk ()
-			{
-				SdkDir = Cache.CreateTemporaryDirectory ();
-				Directory.CreateDirectory (Path.Combine (SdkDir, "bin"));
-				File.WriteAllText (Path.Combine (SdkDir, "Version"), "1.0.0.0"); // Fake Version file so that MonoTouchSdk detects this as a real Sdk location.
-				File.WriteAllText (Path.Combine (SdkDir, "bin", "mtouch"), "echo \"fake mtouch\""); // Fake mtouch binary so that MonoTouchSdk detects this as a real Sdk location.
-				Directory.CreateDirectory (Path.Combine (SdkDir, "lib"));
-				sdk = Sdks.XamIOS;
-
-				Sdks.XamIOS = new MonoTouchSdk (SdkDir);
-			}
-
-			public string SdkDir { get; private set; }
-
-			public void Dispose ()
-			{
-				Sdks.XamIOS = sdk;
-			}
 		}
 	}
 }
