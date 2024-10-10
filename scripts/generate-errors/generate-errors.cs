@@ -1,4 +1,5 @@
 using System.IO;
+using System.Text;
 using System.Xml;
 
 var file = args [0];
