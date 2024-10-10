@@ -1,5 +1,3 @@
-#!/usr/bin/env /Library/Frameworks/Mono.framework/Commands/csharp -s
-
 // arguments are: <platform> <outputPath> <inputDirectory> <version>
 
 using System.IO;
@@ -7,12 +5,10 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Xml;
 
-var args = Args;
 var expectedArgumentCount = 4;
 if (args.Length != expectedArgumentCount) {
 	Console.WriteLine ($"Need {expectedArgumentCount} arguments, got {args.Length}");
-	Environment.Exit (1);
-	return;
+	return 1;
 }
 
 var idx = 0;
@@ -38,7 +34,7 @@ switch (platform) {
 		break;
 	default:
 		Console.Error.WriteLine ($"Need to generate an upgradeGuid for {platform}");
-		break;
+		return 1;
 }
 
 List<string> components = new List<string> ();
@@ -69,7 +65,8 @@ Func<string, string> GetId = (string path) =>
 	return GetHashString (path);
 };
 
-Action<TextWriter, string, string> process = new Action<TextWriter, string, string> ((TextWriter writer, string indent, string directory) =>
+Action<TextWriter, string, string>? process = null;
+process = new Action<TextWriter, string, string> ((TextWriter writer, string indent, string directory) =>
 {
 	var entries = Directory.GetFileSystemEntries (directory);
 	foreach (var entry in entries) {
@@ -77,7 +74,7 @@ Action<TextWriter, string, string> process = new Action<TextWriter, string, stri
 		var id = GetId (entry);
 		if (Directory.Exists (entry)) {
 			writer.WriteLine ($"{indent}  <Directory Id=\"{id}\" Name=\"{name}\">");
-			process (writer, indent + "  ", entry);
+			process! (writer, indent + "  ", entry);
 			writer.WriteLine ($"{indent}  </Directory>");
 		} else {
 			components.Add (id);
@@ -119,4 +116,4 @@ using (TextWriter writer = new StreamWriter (outputPath)) {
 
 }
 
-Environment.Exit (0);
+return 0;

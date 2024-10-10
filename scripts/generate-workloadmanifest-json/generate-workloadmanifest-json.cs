@@ -1,16 +1,12 @@
-#!/usr/bin/env /Library/Frameworks/Mono.framework/Commands/csharp -s
-
 // arguments are: <platform> <outputPath>
 
 using System.IO;
 using System.Xml;
 
-var args = Args;
 var expectedArgumentCount = 9;
 if (args.Length != expectedArgumentCount) {
 	Console.WriteLine ($"Need {expectedArgumentCount} arguments, got {args.Length}");
-	Environment.Exit (1);
-	return;
+	return 1;
 }
 
 var argumentIndex = 0;
@@ -75,7 +71,7 @@ using (TextWriter writer = new StreamWriter (outputPath)) {
 	writer.WriteLine ($"	}},");
 	writer.WriteLine ($"	\"packs\": {{");
 	foreach (var tfmVersion in allApiVersions) {
-		string apiVersion;
+		string? apiVersion = null;
 		var tfm = tfmVersion;
 		if (tfm == currentApiVersion) {
 			apiVersion = version;
@@ -137,6 +133,4 @@ using (TextWriter writer = new StreamWriter (outputPath)) {
 	writer.WriteLine ($"}}");
 }
 
-if (failed)
-        Environment.Exit (1);
-Environment.Exit (0);
+return failed ? 1 : 0;
