@@ -14,8 +14,7 @@ using SyntaxKind = Microsoft.CodeAnalysis.CSharp.SyntaxKind;
 namespace Microsoft.Macios.Bindings.Analyzer;
 
 /// <summary>
-/// A sample code fix provider that renames classes with the company name in their definition.
-/// All code fixes must  be linked to specific analyzers.
+/// Code fix provider that adds the 'partial' modifier to the class decorated with BindingTypeAttribute.
 /// </summary>
 [ExportCodeFixProvider (LanguageNames.CSharp, Name = nameof (BindingTypeCodeFixProvider)), Shared]
 public class BindingTypeCodeFixProvider : CodeFixProvider {
