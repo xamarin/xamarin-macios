@@ -42,6 +42,7 @@ steps:
     displayName: Move artifacts to the expected location
 
 - ${{ else }}:
+
   - task: DownloadPipelineArtifact@2
     displayName: Download artifacts
     inputs:
