@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -69,6 +70,112 @@ namespace Xamarin.Utils {
 				if (buffer != IntPtr.Zero)
 					Marshal.FreeHGlobal (buffer);
 			}
+		}
+
+		// This is a variation of AbsoluteToRelative that works with Windows-style paths on all platforms.
+		public static string AbsoluteToRelativeWindows (string? baseDirectory, string absolute)
+		{
+			if (Environment.OSVersion.Platform == PlatformID.Win32NT)
+				return AbsoluteToRelative (baseDirectory, absolute);
+
+			if (string.IsNullOrEmpty (baseDirectory))
+				return absolute;
+
+			if (!IsWindowsPathRooted (absolute, out var absoluteDriveLetter, out var absoluteUnrooted)) {
+				// We can't make 'absolute' an absolute path if it's already not, because we need the current directory for that, which we don't have.
+				throw new ArgumentOutOfRangeException (nameof (absolute), "Must be an absolute path", absolute);
+			}
+
+			if (!IsWindowsPathRooted (baseDirectory, out var baseDirectoryDriveLetter, out var baseDirectoryUnrooted)) {
+				// We can't make 'baseDirectory' an absolute path if it's already not, because we need the current directory for that, which we don't have.
+				throw new ArgumentOutOfRangeException (nameof (baseDirectory), "Must be an absolute path", baseDirectory);
+			}
+
+			if (absoluteDriveLetter != baseDirectoryDriveLetter)
+				return absolute;
+
+			// Convert to mac-style paths, and reuse the existing AbsoluteToRelative implementation
+			var macRelative = AbsoluteToRelative (baseDirectoryUnrooted.Replace ('\\', '/'), absoluteUnrooted.Replace ('\\', '/'));
+			// Convert the result back to windows-style paths
+			return macRelative.Replace ('/', '\\');
+		}
+
+		// This is a variation of Path.Combine that works with Windows-style paths on all platforms.
+		public static string PathCombineWindows (string pathA, string pathB)
+		{
+			// If B is a rooted path, return it directly
+			if (IsWindowsPathRooted (pathB, out var _, out var _))
+				return pathB;
+
+			var path = pathA + "\\" + pathB;
+			path = path.Replace ('/', '\\'); // canonicalize (the forward slash is a valid directory separator on Windows)
+
+			// Strip the root, if there is a root
+			var isRooted = IsWindowsPathRooted (path, out var rootLetter, out var unrootedPath);
+
+			// Evaluate '..' and '.'
+			var segments = new List<string> (unrootedPath.Split ('\\'));
+			var idx = 0;
+			while (idx < segments.Count) {
+				if (segments [idx] == ".") {
+					segments.RemoveAt (idx);
+					continue;
+				}
+				if (segments [idx] == "..") {
+					if (idx > 0) {
+						segments.RemoveAt (idx);
+						segments.RemoveAt (idx - 1);
+					} else {
+						idx++;
+					}
+					continue;
+				}
+				idx++;
+			}
+
+			var canonicalizedUnrootedPath = string.Join ("\\", segments);
+			if (isRooted)
+				return rootLetter + "\\" + canonicalizedUnrootedPath;
+			return canonicalizedUnrootedPath;
+		}
+
+		static bool IsWindowsPathRooted (string? path, [NotNullWhen (true)] out string? root, out string unrootedPath)
+		{
+			root = null;
+			unrootedPath = path ?? string.Empty;
+
+#if NET
+			if (string.IsNullOrEmpty (path))
+#else
+			if (path is null || string.IsNullOrEmpty (path))
+#endif
+			{
+				return false;
+			}
+
+			if (path [0] == Path.DirectorySeparatorChar || path [0] == Path.AltDirectorySeparatorChar) {
+				root = path [0].ToString ();
+				unrootedPath = path.Substring (1);
+				return true;
+			}
+
+			if (path.Length < 2)
+				return false;
+
+			if (IsAscii (path [0]) && path [1] == ':') {
+				root = path.Substring (0, 2);
+				unrootedPath = path.Substring (2);
+				return true;
+			}
+
+			return false;
+		}
+
+		static bool IsAscii (char c)
+		{
+			if (c >= 'a' && c <= 'z')
+				return true;
+			return c >= 'A' && c <= 'Z';
 		}
 
 		public static string AbsoluteToRelative (string? baseDirectory, string absolute)

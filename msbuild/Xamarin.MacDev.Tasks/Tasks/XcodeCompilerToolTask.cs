@@ -259,6 +259,18 @@ namespace Xamarin.MacDev.Tasks {
 
 					File.Delete (manifest.ItemSpec);
 				}
+
+				Log.LogWarning ($"Tried to compile {items.Length} items:");
+				foreach (var item in items) {
+					Log.LogWarning ($"    {item.ItemSpec} {(File.Exists (item.ItemSpec) ? new FileInfo (item.ItemSpec).Length : -1)}");
+				}
+				foreach (var item in items) {
+					if (!File.Exists (item.ItemSpec))
+						continue;
+					Log.LogWarning ($"{item.ItemSpec}:");
+					Log.LogWarning (File.ReadAllText (item.ItemSpec));
+				}
+
 			}
 
 			return exitCode;
