@@ -15,4 +15,3 @@ extends:
   template: templates/pipelines/run-api-scan.yml
   parameters:
     isPR: false
-
