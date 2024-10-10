@@ -34,8 +34,8 @@ namespace Xamarin.MacDev.Tasks {
 			task.AppBundleDir = AppBundlePath;
 			task.BundleIdentifier = "com.xamarin.MySingleView";
 			task.CompiledEntitlements = new TaskItem (Path.Combine (MonoTouchProjectObjPath, "Entitlements.xcent"));
-			task.Entitlements = Path.Combine (Path.GetDirectoryName (GetType ().Assembly.Location), "Resources", "Entitlements.plist");
-			task.ProvisioningProfile = Path.Combine (Path.GetDirectoryName (GetType ().Assembly.Location), "Resources", "profile.mobileprovision");
+			task.Entitlements = Path.Combine (Path.GetDirectoryName (GetType ().Assembly.Location)!, "Resources", "Entitlements.plist");
+			task.ProvisioningProfile = Path.Combine (Path.GetDirectoryName (GetType ().Assembly.Location)!, "Resources", "profile.mobileprovision");
 			task.SdkPlatform = "iPhoneOS";
 			task.SdkVersion = "6.1";
 			task.TargetFrameworkMoniker = "Xamarin.iOS,v1.0";
