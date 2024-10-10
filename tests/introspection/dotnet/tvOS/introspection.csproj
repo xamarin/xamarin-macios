@@ -2,6 +2,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net$(BundledNETCoreAppTargetFrameworkVersion)-tvos</TargetFramework>
+    <!-- We don't link with BrowserEngineKit by default because it requires special entitlements to pass the App Store. Introspection won't ever be submitted to the App Store, so we have no such concerns. -->
+    <LinkWithBrowserEngineKit>true</LinkWithBrowserEngineKit>
   </PropertyGroup>
 
   <!-- Imports of the form '../shared.csproj' will be inlined by xharness -->
