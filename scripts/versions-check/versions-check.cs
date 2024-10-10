@@ -1,5 +1,3 @@
-#!/usr/bin/env /Library/Frameworks/Mono.framework/Commands/csharp -s
-
 // this script is to make sure our versions.plist files are not out of date with our min/max supported OS versions.
 
 // arguments are: plistPath iOSMinVersion iOSMaxVersion tvOSMinVersion tvOSMaxVersion watchOSMinVersion watchOSMaxVersion macOSMinVersion macOSMaxVersion MacCatalystOSMinVersion MacCatalystOSMaxVersion
@@ -8,12 +6,10 @@ using System.IO;
 using System.Xml;
 
 try {
-	var args = Args;
 	var expectedArgumentCount = 11;
 	if (args.Length != expectedArgumentCount) {
 		Console.WriteLine ("Need 11 arguments, got {0}", args.Length);
-		Environment.Exit (1);
-		return;
+		return 1;
 	}
 
 	var plistPath = args [0];
@@ -33,13 +29,12 @@ try {
 
 	var failed = false;
 
-	var check = new Action<string, string, string> ((product, min, max) =>
-	{
+	var check = new Action<string, string, string> ((product, min, max) => {
 		var minVersion = Version.Parse (min);
 		var maxVersion = Version.Parse (max);
 		var foundMax = false;
 		var foundMin = false;
-		var versions = doc.SelectNodes ($"/plist/dict/key[text()='KnownVersions']/following-sibling::dict[1]/key[text()='{product}']/following-sibling::array[1]/string");
+		var versions = doc.SelectNodes ($"/plist/dict/key[text()='KnownVersions']/following-sibling::dict[1]/key[text()='{product}']/following-sibling::array[1]/string")!;
 		if (versions.Count == 0) {
 			// Skip this (iOS/tvOS/watchOS versions for macOS, or vice versa)
 			return;
@@ -70,7 +65,7 @@ try {
 			failed = true;
 		}
 
-		var supportedTPVNodes = doc.SelectNodes ($"/plist/dict/key[text()='SupportedTargetPlatformVersions']/following-sibling::dict[1]/key[text()='{product}']/following-sibling::array[1]/string").Cast<XmlNode> ().ToArray ();
+		var supportedTPVNodes = doc.SelectNodes ($"/plist/dict/key[text()='SupportedTargetPlatformVersions']/following-sibling::dict[1]/key[text()='{product}']/following-sibling::array[1]/string")!.Cast<XmlNode> ().ToArray ();
 		var supportedTPVs = supportedTPVNodes.Select (v => v.InnerText).ToArray ();
 		if (supportedTPVs?.Any () == true) {
 			var supportedTPVSet = new HashSet<string> (supportedTPVs);
@@ -91,8 +86,8 @@ try {
 	check ("macOS", macOSMin, macOSMax);
 	check ("MacCatalyst", MacCatalystMin, MacCatalystMax);
 
-	Environment.Exit (failed ? 1 : 0);
+	return failed ? 1 : 0;
 } catch (Exception e) {
 	Console.WriteLine (e);
-	Environment.Exit (1);
+	return 1;
 }

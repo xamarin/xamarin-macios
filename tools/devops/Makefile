@@ -5,7 +5,6 @@ provision-shared.csx: provision-shared.in.csx Makefile $(TOP)/Make.config
 	$(Q_GEN) sed \
 		-e 's#@XCODE_XIP_NAME@#$(notdir $(XCODE_URL))#g' \
 		-e 's#@XCODE_ROOT_PATH@#$(XCODE_DEVELOPER_ROOT)#g' \
-		-e 's#@MONO_PACKAGE@#$(MIN_MONO_URL)#g' \
 		-e 's#@MIN_SHARPIE_URL@#$(MIN_SHARPIE_URL)#g' \
 		$< > $@
 

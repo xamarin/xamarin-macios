@@ -1,15 +1,11 @@
-#!/usr/bin/env /Library/Frameworks/Mono.framework/Commands/csharp -s
-
 using System.IO;
 using System.Text;
 
 try {
-	var args = Args;
 	var expectedArgumentCount = 2;
 	if (args.Length != expectedArgumentCount) {
 		Console.WriteLine ($"Need {expectedArgumentCount} arguments, got {args.Length} arguments");
-		Environment.Exit (1);
-		return;
+		return 1;
 	}
 
 	var output = args [0];
@@ -20,8 +16,8 @@ try {
 		sb.AppendLine ($"-d:HAS_{fw.ToUpperInvariant ()}");
 	File.WriteAllText (output, sb.ToString ());
 
-	Environment.Exit (0);
+	return 0;
 } catch (Exception e) {
 	Console.WriteLine ("Failed: {0}", e);
-	Environment.Exit (1);
+	return 1;
 }
