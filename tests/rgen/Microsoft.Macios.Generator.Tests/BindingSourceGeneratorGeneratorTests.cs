@@ -25,7 +25,7 @@ interface AVAudioPcmBuffer : AVAudioBuffer {
 	public void AttributesAreNotPresent (ApplePlatform platform)
 	{
 		// We need to create a compilation with the required source code.
-		var compilation = CreateCompilation (nameof(AttributesAreNotPresent),
+		var compilation = CreateCompilation (nameof (AttributesAreNotPresent),
 			platform, SampleBindingType);
 
 		// Run generators and retrieve all results.

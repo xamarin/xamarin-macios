@@ -17,7 +17,7 @@ public class BaseGeneratorTestClass {
 	protected BindingSourceGeneratorGenerator GeneratorGenerator;
 	protected CSharpGeneratorDriver _driver;
 
-	readonly PortableExecutableReference[] _defaultReferences;
+	readonly PortableExecutableReference [] _defaultReferences;
 
 	public BaseGeneratorTestClass ()
 	{
@@ -41,7 +41,7 @@ public class BaseGeneratorTestClass {
 
 	protected Compilation RunGeneratorsAndUpdateCompilation (Compilation compilation, out ImmutableArray<Diagnostic> diagnostics)
 	{
-		_driver.RunGeneratorsAndUpdateCompilation(compilation, out var updatedCompilation, out diagnostics);
+		_driver.RunGeneratorsAndUpdateCompilation (compilation, out var updatedCompilation, out diagnostics);
 		return updatedCompilation;
 	}
 
@@ -54,15 +54,15 @@ public class BaseGeneratorTestClass {
 		var references = new List<PortableExecutableReference> (_defaultReferences);
 		var targetFramework = TargetFramework.GetTargetFramework (platform, isDotNet: true);
 		var platformDll = Configuration.GetBaseLibrary (targetFramework);
-		if (!string.IsNullOrEmpty(platformDll)) {
+		if (!string.IsNullOrEmpty (platformDll)) {
 			references.Add (MetadataReference.CreateFromFile (platformDll));
 		}
 		var attributesDlls = Configuration.GetBindingAttributePath (targetFramework);
-		if (!string.IsNullOrEmpty(platformDll)) {
+		if (!string.IsNullOrEmpty (platformDll)) {
 			references.Add (MetadataReference.CreateFromFile (attributesDlls));
 		}
 		var trees = sources.Select (s => CSharpSyntaxTree.ParseText (s));
-		var options = new CSharpCompilationOptions(OutputKind.NetModule);
+		var options = new CSharpCompilationOptions (OutputKind.NetModule);
 		return CSharpCompilation.Create (name, trees, references, options);
 	}
 
