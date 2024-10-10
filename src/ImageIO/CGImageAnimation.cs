@@ -67,9 +67,6 @@ namespace ImageIO {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static CGImageAnimationStatus AnimateImage (NSUrl url, CGImageAnimationOptions options, CGImageSourceAnimationHandler handler)
 		{
-#if IOS && ARCH_32
-            throw new PlatformNotSupportedException ("This API is not supported on this version of iOS");
-#else
 			if (url is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (url));
 			if (handler is null)
@@ -85,7 +82,6 @@ namespace ImageIO {
 #endif
 				return CGAnimateImageAtURLWithBlock (url.Handle, options.GetHandle (), &block);
 			}
-#endif
 		}
 
 #if NET
@@ -101,9 +97,6 @@ namespace ImageIO {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static CGImageAnimationStatus AnimateImage (NSData data, CGImageAnimationOptions options, CGImageSourceAnimationHandler handler)
 		{
-#if IOS && ARCH_32
-            throw new PlatformNotSupportedException ("This API is not supported on this version of iOS");
-#else
 			if (data is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (data));
 			if (handler is null)
@@ -119,7 +112,6 @@ namespace ImageIO {
 #endif
 				return CGAnimateImageDataWithBlock (data.Handle, options.GetHandle (), &block);
 			}
-#endif
 		}
 
 		//

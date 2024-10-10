@@ -9,9 +9,7 @@ namespace Xharness.Jenkins.TestTasks {
 	class MSBuildTask : BuildProjectTask {
 		protected virtual string ToolName {
 			get {
-				if (TestProject.IsDotNetProject)
-					return Jenkins.Harness.GetDotNetExecutable (Path.GetDirectoryName (ProjectFile));
-				return Jenkins.Harness.XIBuildPath;
+				return Jenkins.Harness.GetDotNetExecutable (Path.GetDirectoryName (ProjectFile));
 			}
 		}
 

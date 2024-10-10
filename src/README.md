@@ -178,18 +178,7 @@ conditional compilation:
 | Variable  | Description |
 | --------- | ------------|
 | `MONOMAC` | defined for Xamarin.Mac builds; not defined for Xamarin.iOS |
-| `ARCH_32` | defined when the target architecture is 32-bit; this will be defined for Classic and the Unified 32-bit assemblies |
-| `ARCH_64` | defined when the target architecture is 64-bit; this will be defined only for the Unified 64-bit assembly |
 | `COREBUILD` | defined when building the intermediate `core.dll` assembly against which the code generator will produce bindings |
-
-For example, to build an API for all of iOS but only 64-bit OS X (Xamarin.Mac):
-
-```csharp
-#if !MONOMAC || (MONOMAC && ARCH_64)
-...
-#endif
-```
-
 
 ## Source Localization ##
 Coming soon!

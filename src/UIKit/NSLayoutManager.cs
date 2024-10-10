@@ -51,15 +51,8 @@ namespace UIKit {
 
 			fixed (short* glyphs = glyphBuffer) {
 				nuint rv;
-#if ARCH_32
-				// Unified/32: the output array is not the correct size, it needs to be int[], and it's an array of NSGlyphProperty (which is long)
-				nint[] tmpArray = null;
-				if (props is not null)
-					tmpArray = new nint [props.Length];
-#else
 				// Unified/64 + Classic: the input array is the correct size
 				var tmpArray = props;
-#endif
 				fixed (void* properties = tmpArray) {
 					fixed (nuint* charIBuffer = charIndexBuffer) {
 						fixed (byte* bidi = bidiLevelBuffer) {
@@ -67,13 +60,6 @@ namespace UIKit {
 						}
 					}
 				}
-#if ARCH_32
-				// Marshal back from the tmpArray.
-				if (tmpArray is not null) {
-					for (int i = 0; i < props.Length; i++)
-						props [i] = (NSGlyphProperty) (long) tmpArray [i];
-				}
-#endif
 
 				return rv;
 			}
