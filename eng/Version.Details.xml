@@ -1,16 +1,16 @@
 <Dependencies>
   <ProductDependencies>
-    <Dependency Name="Microsoft.NET.Sdk" Version="9.0.100-rc.2.24475.4">
-      <Uri>https://github.com/dotnet/sdk</Uri>
-      <Sha>f59e9ca09cb4d5b903b276c0d3d7825b6ddbc3a0</Sha>
+    <Dependency Name="Microsoft.NET.Sdk" Version="9.0.100-rc.2.24508.16">
+      <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-sdk</Uri>
+      <Sha>cc49248ee7220330dfd6eb4f9da34b680a093c68</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NET.ILLink" Version="9.0.0-rc.2.24473.4">
       <Uri>https://github.com/dotnet/runtime</Uri>
       <Sha>200d05e41fc2212ff8c98ed79ebe9043bfed58aa</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.ILLink.Tasks" Version="9.0.0-rtm.24475.3" CoherentParentDependency="Microsoft.NET.Sdk">
-      <Uri>https://github.com/dotnet/runtime</Uri>
-      <Sha>2c4266c134aa02718179818098a11e825c9d1362</Sha>
+    <Dependency Name="Microsoft.NET.ILLink.Tasks" Version="9.0.0-rc.2.24473.5" CoherentParentDependency="Microsoft.NET.Sdk">
+      <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-runtime</Uri>
+      <Sha>990ebf52fc408ca45929fd176d2740675a67fab8</Sha>
     </Dependency>
     <!-- Set TRACKING_DOTNET_RUNTIME_SEPARATELY to something in Make.config if removing the CoherentParentDependency on Microsoft.NET.Sdk -->
     <Dependency Name="Microsoft.NETCore.App.Ref" Version="9.0.0-rc.2.24473.4">
@@ -18,9 +18,9 @@
       <Sha>200d05e41fc2212ff8c98ed79ebe9043bfed58aa</Sha>
     </Dependency>
     <!-- This is required for our test apps to build; in some cases Microsoft.AspNetCore.App is pulled in, and when building test apps the build needs to be able to resolve that -->
-    <Dependency Name="Microsoft.AspNetCore.App.Ref" Version="9.0.0-rtm.24474.6" CoherentParentDependency="Microsoft.NET.Sdk">
-      <Uri>https://github.com/dotnet/aspnetcore</Uri>
-      <Sha>afe2857bffef08213d6f3c7688647c60d5d5e7bd</Sha>
+    <Dependency Name="Microsoft.AspNetCore.App.Ref" Version="9.0.0-rc.2.24474.3" CoherentParentDependency="Microsoft.NET.Sdk">
+      <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-aspnetcore</Uri>
+      <Sha>c70204ae3c91d2b48fa6d9b92b62265f368421b4</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NET.Workload.Emscripten.Current.Manifest-9.0.100.Transport" Version="9.0.0-rc.2.24468.8" CoherentParentDependency="Microsoft.NETCore.App.Ref">
       <Uri>https://github.com/dotnet/emsdk</Uri>
