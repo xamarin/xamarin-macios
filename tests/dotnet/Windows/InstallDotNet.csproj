@@ -110,7 +110,11 @@
       <_WorkloadSource Include="$(PackageOutputPath)" />
     </ItemGroup>
     <Copy SourceFiles="$(MacIosRootDirectory)NuGet.config" DestinationFolder="$(DotNetTempDirectory)" />
-    <Exec Command="&quot;$(DotNetToolPath)&quot; workload install ios tvos maccatalyst macos --verbosity diag --temp-dir &quot;$(DotNetTempDirectory)&quot; --configfile &quot;$(DotNetTempDirectory)NuGet.config&quot; --from-rollback-file &quot;$(RollbackFile)&quot; --source $(RollbackSource) --skip-sign-check $(NuGetSourceList)" WorkingDirectory="$(MacIosRootDirectory)" />
+    <Exec
+      Command="&quot;$(DotNetToolPath)&quot; workload install ios tvos maccatalyst macos --verbosity diag --temp-dir &quot;$(DotNetTempDirectory)&quot; --configfile &quot;$(DotNetTempDirectory)NuGet.config&quot; --from-rollback-file &quot;$(RollbackFile)&quot; --source $(RollbackSource) --skip-sign-check $(NuGetSourceList)"
+      WorkingDirectory="$(MacIosRootDirectory)"
+      IgnoreStandardErrorWarningFormat="true"
+    />
 
   </Target>
 
@@ -144,7 +148,10 @@
       Inputs="$(_Inputs)"
       Outputs="$(DotNetDirectory).stamp">
     <RemoveDir Directories="$(DotNetDirectory)" />
-    <Exec Command="$(DotNetInstallCommand)" />
+    <Exec
+      Command="$(DotNetInstallCommand)"
+      IgnoreStandardErrorWarningFormat="true"
+    />
     <Touch Files="$(DotNetDirectory).stamp" AlwaysCreate="true" />
 
     <!-- This is used by iOS pair to mac because pair to mac can't
@@ -171,6 +178,7 @@
         Command="&quot;$(DotNetToolPath)&quot; workload install %(_WorkloadIds.Identity) --skip-manifest-update --verbosity diag --temp-dir &quot;$(DotNetTempDirectory)&quot; --configfile &quot;$(MacIosRootDirectory)NuGet.config&quot; --skip-sign-check"
         WorkingDirectory="$(MSBuildThisFileDirectory)"
         EnvironmentVariables="DOTNET_MULTILEVEL_LOOKUP=0"
+        IgnoreStandardErrorWarningFormat="true"
     />
     <Touch Files="$(DotNetPacksDirectory).stamp" AlwaysCreate="true" />
   </Target>
