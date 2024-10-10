@@ -1,15 +1,11 @@
-#!/usr/bin/env /Library/Frameworks/Mono.framework/Commands/csharp -s
-
 using System.IO;
 using System.Text;
 
 try {
-	var args = Args;
 	var actualArgumentCount = 6;
 	if (args.Length != actualArgumentCount) {
 		Console.WriteLine ($"Need {actualArgumentCount} arguments, got {args.Length} arguments");
-		Environment.Exit (1);
-		return;
+		return 1;
 	}
 
 	var csharpOutput = args [0];
@@ -67,8 +63,8 @@ try {
 
 	File.WriteAllText (csharpOutput, sb.ToString ());
 
-	Environment.Exit (0);
+	return 0;
 } catch (Exception e) {
 	Console.WriteLine ("Failed: {0}", e);
-	Environment.Exit (1);
+	return 1;
 }

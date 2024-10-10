@@ -1,9 +1,6 @@
-#!/usr/bin/env /Library/Frameworks/Mono.framework/Commands/csharp -s
-
 using System.IO;
 using System.Text;
 
-var args = Args;
 var idx = 0;
 var latestCommit = args [idx++];
 var src = args [idx++];
@@ -16,5 +13,3 @@ using (var writer = new StreamWriter (outputPath)) {
     writer.WriteLine ("  }");
     writer.WriteLine ("}");
 }
-
-Environment.Exit(0)
