@@ -1744,6 +1744,7 @@ namespace Xamarin.Tests {
 		[TestCase (ApplePlatform.MacOSX, "osx-x64", "Release")]
 		[TestCase (ApplePlatform.MacOSX, "osx-arm64;osx-x64", "Debug")]
 		[TestCase (ApplePlatform.MacOSX, "osx-arm64;osx-x64", "Release")]
+		[TestCase (ApplePlatform.MacOSX, "", "Release")]
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64", "Debug")]
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64", "Release")]
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64", "Debug")]
