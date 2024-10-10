@@ -14,12 +14,12 @@ endif
 CONFIG?=Debug
 LAUNCH_ARGUMENTS=--autostart --autoexit
 
-incldue $(TOP)/scripts/run-with-timeout/fragment.mk
+include $(TOP)/scripts/run-with-timeout/fragment.mk
 
 # Time test runs out after 5 minutes (300 seconds)
-RUN_WITH_TIMEOUT=$(RUN_WITH_TIMEOUT_EXEC) 300
+LAUNCH_WITH_TIMEOUT=$(RUN_WITH_TIMEOUT_EXEC) 300
 # Some tests need a bit more time... (introspection, monotouch-test)
-RUN_WITH_TIMEOUT_LONGER=$(RUN_WITH_TIMEOUT_EXEC) 600
+LAUNCH_WITH_TIMEOUT_LONGER=$(RUN_WITH_TIMEOUT_EXEC) 600
 
 ### .NET dependency projects
 
@@ -50,18 +50,18 @@ define DotNetNormalTest
 build-mac-dotnet-x64-$(1): .stamp-dotnet-dependency-macOS
 	$$(Q) $$(MAKE) -C "$(1)/dotnet/macOS" build BUILD_ARGUMENTS=/p:RuntimeIdentifier=osx-x64
 
-exec-mac-dotnet-x64-$(1):
+exec-mac-dotnet-x64-$(1): $(RUN_WITH_TIMEOUT)
 	@echo "ℹ️  Executing the '$(1)' test for macOS/.NET (x64) ℹ️"
-	$$(Q) $(RUN_WITH_TIMEOUT$(3)) "./$(1)/dotnet/macOS/bin/$(CONFIG)/$(DOTNET_TFM)-macos/osx-x64/$(2).app/Contents/MacOS/$(2)"
+	$$(Q) $(LAUNCH_WITH_TIMEOUT$(3)) "./$(1)/dotnet/macOS/bin/$(CONFIG)/$(DOTNET_TFM)-macos/osx-x64/$(2).app/Contents/MacOS/$(2)"
 
 # macOS/.NET/arm64
 build-mac-dotnet-arm64-$(1): .stamp-dotnet-dependency-macOS
 	$$(Q) $$(MAKE) -C "$(1)/dotnet/macOS" build BUILD_ARGUMENTS=/p:RuntimeIdentifier=osx-arm64
 
-exec-mac-dotnet-arm64-$(1):
+exec-mac-dotnet-arm64-$(1): $(RUN_WITH_TIMEOUT)
 ifeq ($(IS_APPLE_SILICON),1)
 	@echo "ℹ️  Executing the '$(1)' test for macOS/.NET (arm64) ℹ️"
-	$$(Q) $(RUN_WITH_TIMEOUT$(3)) "./$(1)/dotnet/macOS/bin/$(CONFIG)/$(DOTNET_TFM)-macos/osx-arm64/$(2).app/Contents/MacOS/$(2)"
+	$$(Q) $(LAUNCH_WITH_TIMEOUT$(3)) "./$(1)/dotnet/macOS/bin/$(CONFIG)/$(DOTNET_TFM)-macos/osx-arm64/$(2).app/Contents/MacOS/$(2)"
 else
 	@echo "⚠️  Not executing the '$(1)' test for macOS/.NET (arm64) - not executing on Apple Silicon ⚠️"
 endif
@@ -70,18 +70,18 @@ endif
 build-maccatalyst-dotnet-x64-$(1): .stamp-dotnet-dependency-MacCatalyst
 	$$(Q_BUILD) $$(MAKE) -C "$(1)/dotnet/MacCatalyst" build BUILD_ARGUMENTS=/p:RuntimeIdentifier=maccatalyst-x64
 
-exec-maccatalyst-dotnet-x64-$(1):
+exec-maccatalyst-dotnet-x64-$(1): $(RUN_WITH_TIMEOUT)
 	@echo "ℹ️  Executing the '$(1)' test for Mac Catalyst/.NET (x64) ℹ️"
-	$$(Q) $(RUN_WITH_TIMEOUT$(3)) "./$(1)/dotnet/MacCatalyst/bin/$(CONFIG)/$(DOTNET_TFM)-maccatalyst/maccatalyst-x64/$(2).app/Contents/MacOS/$(2)" $(LAUNCH_ARGUMENTS)
+	$$(Q) $(LAUNCH_WITH_TIMEOUT$(3)) "./$(1)/dotnet/MacCatalyst/bin/$(CONFIG)/$(DOTNET_TFM)-maccatalyst/maccatalyst-x64/$(2).app/Contents/MacOS/$(2)" $(LAUNCH_ARGUMENTS)
 
 # MacCatalyst/.NET/arm64
 build-maccatalyst-dotnet-arm64-$(1):.stamp-dotnet-dependency-MacCatalyst
 	$$(Q) $$(MAKE) -C "$(1)/dotnet/MacCatalyst" build BUILD_ARGUMENTS=/p:RuntimeIdentifier=maccatalyst-arm64
 
-exec-maccatalyst-dotnet-arm64-$(1):
+exec-maccatalyst-dotnet-arm64-$(1): $(RUN_WITH_TIMEOUT)
 ifeq ($(IS_APPLE_SILICON),1)
 	@echo "ℹ️  Executing the '$(1)' test for Mac Catalyst/.NET (arm64) ℹ️"
-	$$(Q) $(RUN_WITH_TIMEOUT$(3)) "./$(1)/dotnet/MacCatalyst/bin/$(CONFIG)/$(DOTNET_TFM)-maccatalyst/maccatalyst-arm64/$(2).app/Contents/MacOS/$(2)" $(LAUNCH_ARGUMENTS)
+	$$(Q) $(LAUNCH_WITH_TIMEOUT$(3)) "./$(1)/dotnet/MacCatalyst/bin/$(CONFIG)/$(DOTNET_TFM)-maccatalyst/maccatalyst-arm64/$(2).app/Contents/MacOS/$(2)" $(LAUNCH_ARGUMENTS)
 else
 	@echo "⚠️  Not executing the '$(1)' test for Mac Catalyst/.NET (arm64) - not executing on Apple Silicon ⚠️"
 endif
@@ -121,18 +121,18 @@ define DotNetLinkerTest
 build-mac-dotnet-x64-$(1): .stamp-dotnet-dependency-macOS
 	$$(Q_BUILD) $$(MAKE) -C "linker/ios/$(2)/dotnet/macOS" build BUILD_ARGUMENTS=/p:RuntimeIdentifier=osx-x64
 
-exec-mac-dotnet-x64-$(1):
+exec-mac-dotnet-x64-$(1): $(RUN_WITH_TIMEOUT)
 	@echo "ℹ️  Executing the '$(2)' test for macOS/.NET (x64) ℹ️"
-	$$(Q) $(RUN_WITH_TIMEOUT) "./linker/ios/$(2)/dotnet/macOS/bin/$(CONFIG)/$(DOTNET_TFM)-macos/osx-x64/$(2).app/Contents/MacOS/$(2)"
+	$$(Q) $(LAUNCH_WITH_TIMEOUT) "./linker/ios/$(2)/dotnet/macOS/bin/$(CONFIG)/$(DOTNET_TFM)-macos/osx-x64/$(2).app/Contents/MacOS/$(2)"
 
 # macOS/.NET/arm64
 build-mac-dotnet-arm64-$(1): .stamp-dotnet-dependency-macOS
 	$$(Q) $$(MAKE) -C "linker/ios/$(2)/dotnet/macOS" build BUILD_ARGUMENTS=/p:RuntimeIdentifier=osx-arm64
 
-exec-mac-dotnet-arm64-$(1):
+exec-mac-dotnet-arm64-$(1): $(RUN_WITH_TIMEOUT)
 ifeq ($(IS_APPLE_SILICON),1)
 	@echo "ℹ️  Executing the '$(2)' test for macOS/.NET (arm64) ℹ️"
-	$$(Q) $(RUN_WITH_TIMEOUT) "./linker/ios/$(2)/dotnet/macOS/bin/$(CONFIG)/$(DOTNET_TFM)-macos/osx-arm64/$(2).app/Contents/MacOS/$(2)"
+	$$(Q) $(LAUNCH_WITH_TIMEOUT) "./linker/ios/$(2)/dotnet/macOS/bin/$(CONFIG)/$(DOTNET_TFM)-macos/osx-arm64/$(2).app/Contents/MacOS/$(2)"
 else
 	@echo "⚠️  Not executing the '$(2)' test for macOS/.NET (arm64) - not executing on Apple Silicon ⚠️"
 endif
@@ -141,18 +141,18 @@ endif
 build-maccatalyst-dotnet-x64-$(1): .stamp-dotnet-dependency-MacCatalyst
 	$$(Q_BUILD) $$(MAKE) -C "linker/ios/$(2)/dotnet/MacCatalyst" build BUILD_ARGUMENTS=/p:RuntimeIdentifier=maccatalyst-x64
 
-exec-maccatalyst-dotnet-x64-$(1):
+exec-maccatalyst-dotnet-x64-$(1): $(RUN_WITH_TIMEOUT)
 	@echo "ℹ️  Executing the '$(2)' test for Mac Catalyst/.NET (x64) ℹ️"
-	$$(Q) $(RUN_WITH_TIMEOUT) "./linker/ios/$(2)/dotnet/MacCatalyst/bin/$(CONFIG)/$(DOTNET_TFM)-maccatalyst/maccatalyst-x64/$(2).app/Contents/MacOS/$(2)" $(LAUNCH_ARGUMENTS)
+	$$(Q) $(LAUNCH_WITH_TIMEOUT) "./linker/ios/$(2)/dotnet/MacCatalyst/bin/$(CONFIG)/$(DOTNET_TFM)-maccatalyst/maccatalyst-x64/$(2).app/Contents/MacOS/$(2)" $(LAUNCH_ARGUMENTS)
 
 # MacCatalyst/.NET/arm64
 build-maccatalyst-dotnet-arm64-$(1): .stamp-dotnet-dependency-MacCatalyst
 	$$(Q) $$(MAKE) -C "linker/ios/$(2)/dotnet/MacCatalyst" build BUILD_ARGUMENTS=/p:RuntimeIdentifier=maccatalyst-arm64
 
-exec-maccatalyst-dotnet-arm64-$(1):
+exec-maccatalyst-dotnet-arm64-$(1): $(RUN_WITH_TIMEOUT)
 ifeq ($(IS_APPLE_SILICON),1)
 	@echo "ℹ️  Executing the '$(2)' test for Mac Catalyst/.NET (arm64) ℹ️"
-	$$(Q) $(RUN_WITH_TIMEOUT) "./linker/ios/$(2)/dotnet/MacCatalyst/bin/$(CONFIG)/$(DOTNET_TFM)-maccatalyst/maccatalyst-arm64/$(2).app/Contents/MacOS/$(2)" $(LAUNCH_ARGUMENTS)
+	$$(Q) $(LAUNCH_WITH_TIMEOUT) "./linker/ios/$(2)/dotnet/MacCatalyst/bin/$(CONFIG)/$(DOTNET_TFM)-maccatalyst/maccatalyst-arm64/$(2).app/Contents/MacOS/$(2)" $(LAUNCH_ARGUMENTS)
 else
 	@echo "⚠️  Not executing the '$(2)' test for Mac Catalyst/.NET (arm64) - not executing on Apple Silicon ⚠️"
 endif
