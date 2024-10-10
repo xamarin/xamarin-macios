@@ -5,7 +5,7 @@ using Xunit;
 
 namespace Microsoft.Macios.Bindings.Analyzer.Tests;
 
-public class BindingTypeSemanticAnalyzerTests : BaseGeneratorWithAnalyzerTestClass{
+public class BindingTypeSemanticAnalyzerTests : BaseGeneratorWithAnalyzerTestClass {
 
 	[Theory]
 	[InlineData (ApplePlatform.iOS)]
@@ -27,7 +27,7 @@ namespace Test {
 		Assert.Single (diagnostics);
 		// verify the diagnostic message
 		var location = diagnostics [0].Location;
-		VerifyDiagnosticMessage (diagnostics[0], BindingTypeSemanticAnalyzer.DiagnosticId,
+		VerifyDiagnosticMessage (diagnostics [0], BindingTypeSemanticAnalyzer.DiagnosticId,
 			DiagnosticSeverity.Error, "The binding type 'Test.Examples' must declared as a partial class");
 	}
 }

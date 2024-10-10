@@ -15,5 +15,5 @@ namespace Foundation
     }
 }";
 
-	public static readonly (string FileName, string Content) [] Sources = new (string, string)[0];
+	public static readonly (string FileName, string Content) [] Sources = new (string, string) [0];
 }

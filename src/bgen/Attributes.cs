@@ -126,8 +126,7 @@ public class PostGetAttribute : Attribute {
 }
 
 [AttributeUsage (AttributeTargets.Class | System.AttributeTargets.Enum, AllowMultiple = false)]
-public class BindingTypeAttribute : Attribute
-{
+public class BindingTypeAttribute : Attribute {
 	public string Name { get; set; }
 }
 
