@@ -125,6 +125,12 @@ public class PostGetAttribute : Attribute {
 	public string MethodName { get; set; }
 }
 
+[AttributeUsage (AttributeTargets.Class | System.AttributeTargets.Enum, AllowMultiple = false)]
+public class BindingTypeAttribute : Attribute
+{
+	public string Name { get; set; }
+}
+
 public class BaseTypeAttribute : Attribute {
 	public BaseTypeAttribute (Type t)
 	{

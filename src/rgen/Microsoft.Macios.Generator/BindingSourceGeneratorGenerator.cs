@@ -9,7 +9,7 @@ namespace Microsoft.Macios.Generator;
 /// When using the source code as a baseline, an incremental source generator is preferable because it reduces the performance overhead.
 /// </summary>
 [Generator]
-public class BindingSourceGenerator : IIncrementalGenerator {
+public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 
 	public void Initialize (IncrementalGeneratorInitializationContext context)
 	{

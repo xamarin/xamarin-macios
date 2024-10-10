@@ -57,7 +57,7 @@ public class BindingTypeSemanticAnalyzer : DiagnosticAnalyzer {
 			// based on the type use the correct parser to retrieve the data
 			var attributeType = attributeData.AttributeClass!.ToDisplayString ();
 			switch (attributeType) {
-			case "Foundation.BindingTypeAttribute":
+			case "BindingTypeAttribute":
 				// validate that the class is partial, else we need to report an error
 				if (!classDeclarationNode.Modifiers.Any (x => x.IsKind (SyntaxKind.PartialKeyword))) {
 					var diagnostic = Diagnostic.Create (RBI0001,

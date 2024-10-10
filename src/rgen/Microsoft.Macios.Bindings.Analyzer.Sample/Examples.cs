@@ -1,5 +1,3 @@
-using Foundation;
-
 namespace Microsoft.Macios.Bindings.Analyzer.Sample;
 
 // If you don't see warnings, build the Analyzers Project.

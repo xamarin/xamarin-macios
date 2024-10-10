@@ -1,5 +1,3 @@
-using Foundation;
-
 namespace Microsoft.Macios.Generator.Sample;
 
 // This code will not compile until you build the project with the Source Generators

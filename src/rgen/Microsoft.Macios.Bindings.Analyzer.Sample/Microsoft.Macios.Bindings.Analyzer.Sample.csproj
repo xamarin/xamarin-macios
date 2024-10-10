@@ -10,4 +10,10 @@
         <ProjectReference Include="..\Microsoft.Macios.Bindings.Analyzer\Microsoft.Macios.Bindings.Analyzer.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false"/>
     </ItemGroup>
 
+    <ItemGroup>
+        <Compile Include="..\..\..\src\bgen\Attributes.cs" >
+            <Link>external\Attributes.cs</Link>
+        </Compile>
+    </ItemGroup>
+
 </Project>
