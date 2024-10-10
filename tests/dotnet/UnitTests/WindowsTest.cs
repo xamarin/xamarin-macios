@@ -187,7 +187,7 @@ namespace Xamarin.Tests {
 			// Copy the app bundle to Windows so that we can inspect the results.
 			properties ["CopyAppBundleToWindows"] = "true";
 
-			var rv = DotNet.AssertBuild (project_path, properties);
+			var rv = DotNet.AssertBuild (project_path, properties, timeout: TimeSpan.FromMinutes (30));
 			var warnings = BinLog.GetBuildLogWarnings (rv.BinLogPath).ToArray ();
 			var warningMessages = BundleStructureTest.FilterWarnings (warnings, canonicalizePaths: true);
 

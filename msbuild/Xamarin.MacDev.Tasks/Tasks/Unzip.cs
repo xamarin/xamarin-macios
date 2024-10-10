@@ -5,6 +5,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
@@ -38,25 +39,37 @@ namespace Xamarin.MacDev.Tasks {
 		[Output]
 		public ITaskItem [] TouchedFiles { get; set; } = Array.Empty<ITaskItem> ();
 
+		CancellationTokenSource? cancellationTokenSource;
+		static int counter;
 		public override bool Execute ()
 		{
+			var id = Interlocked.Increment (ref counter);
+
 			if (ShouldExecuteRemotely ()) {
+				LogLine ($"{id} Unzip.Execute () about to execute remotely");
 				var taskRunner = new TaskRunner (SessionId, BuildEngine4);
 				var rv = taskRunner.RunAsync (this).Result;
 
 				if (rv && CopyToWindows)
 					CopyFilesToWindowsAsync (taskRunner, TouchedFiles).Wait ();
 
+				LogLine ($"{id} Unzip.Execute () executed remotely: {rv}");
 				return rv;
 			}
 
-			return ExecuteLocally ();
+			LogLine ($"{id} Unzip.Execute () about to execute locally. ZipFilePath: {ZipFilePath} ExtractionPath: {ExtractionPath} Resource: {Resource}");
+			var rv2 = ExecuteLocally ();
+			LogLine ($"{id} Unzip.Execute () executed locally");
+			return rv2;
 		}
 
 		public void Cancel ()
 		{
-			if (ShouldExecuteRemotely ())
+			if (ShouldExecuteRemotely ()) {
 				BuildConnection.CancelAsync (BuildEngine4).Wait ();
+			} else {
+				cancellationTokenSource?.Cancel ();
+			}
 		}
 
 		public bool ShouldCopyToBuildServer (ITaskItem item) => true;
@@ -73,7 +86,8 @@ namespace Xamarin.MacDev.Tasks {
 		bool ExecuteLocally ()
 		{
 			var createdFiles = new List<string> ();
-			if (!CompressionHelper.TryDecompress (Log, ZipFilePath!.ItemSpec, Resource, ExtractionPath, createdFiles, out var _))
+			cancellationTokenSource = new CancellationTokenSource ();
+			if (!CompressionHelper.TryDecompress (Log, ZipFilePath!.ItemSpec, Resource, ExtractionPath, createdFiles, cancellationTokenSource.Token, out var _))
 				return false;
 
 			TouchedFiles = createdFiles.Select (v => new TaskItem (v)).ToArray ();

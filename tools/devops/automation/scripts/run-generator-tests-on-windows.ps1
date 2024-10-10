@@ -1,5 +1,5 @@
 # Dump the environment to see what we're working with.
-& "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\show_env.ps1"
+& "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY\$($Env:BUILD_REPOSITORY_NAME.Split('/')[1])\tools\devops\automation\scripts\show_bot_info.ps1"
 
 # Set a few variables
 $Env:DOTNET = "$Env:BUILD_SOURCESDIRECTORY\xamarin-macios\tests\dotnet\Windows\bin\dotnet\dotnet.exe"

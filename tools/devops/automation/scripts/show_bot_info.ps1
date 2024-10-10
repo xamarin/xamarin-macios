@@ -8,13 +8,14 @@ if ($IsMacOS -or $IsLinux) {
     Write-Host "COMPUTERNAME: ${env:COMPUTERNAME}"
 }
 
-gci env: | format-table -autosize
-
-gci env: | format-table -autosize | Out-String -Width 8192
-
-gci env: | format-table -autosize -wrap
+Get-ChildItem env: | Sort-Object -Property Name | Format-Table -AutoSize | Out-String -Width 81920
 
 if ($IsMacOS) {
+    Write-Host ""
+    Write-Host "## Uptime"
+    Write-Host ""
+    uptime
+
     Write-Host ""
     Write-Host "## System profile"
     Write-Host ""
@@ -25,10 +26,24 @@ if ($IsMacOS) {
     Write-Host ""
     ifconfig | grep 'inet '
 
+    Write-Host ""
+    Write-Host "## Top processes (ps)"
+    Write-Host ""
+    ps aux
 
     Write-Host ""
-    Write-Host "## Top processes"
+    Write-Host "## Python3 location:"
     Write-Host ""
-    top -l 1 -o TIME
+    which python3
+
+    Write-Host ""
+    Write-Host "## Pip3 version:"
+    Write-Host ""
+    pip3 -V
+
+    Write-Host ""
+    Write-Host "## Hardware info"
+    Write-Host ""
+    ioreg -l | grep -e Manufacturer -e 'Vendor Name'
 }
 

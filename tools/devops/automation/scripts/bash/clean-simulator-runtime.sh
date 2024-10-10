@@ -5,6 +5,11 @@
 set -o pipefail
 IFS=$'\n\t'
 
+# delete all watchOS simulators, we don't need them anymore
+for i in $(xcrun simctl runtime list | grep "watchOS.*Ready" | sed -e 's/.* - //'  -e 's/ .*//'); do
+  xcrun simctl runtime delete "$i"
+done
+
 xcrun simctl runtime list -j > simruntime.json
 cat simruntime.json
 
