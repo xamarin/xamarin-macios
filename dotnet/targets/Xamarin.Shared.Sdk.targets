@@ -151,15 +151,6 @@
 		<!-- We don't need to generate reference assemblies for apps or app extensions -->
 		<ProduceReferenceAssembly Condition="'$(ProduceReferenceAssembly)' == '' And ('$(OutputType)' == 'Exe' Or '$(IsAppExtension)' == 'true')">false</ProduceReferenceAssembly>
 
-		<!-- 
-			With NativeAOT we want to prevent ILLink from removing attributes like `IsTrimmable` so further trimming can be done by the NativeAOT toolchain.
-			For this reason, in case of NativeAOT, we set _AggressiveAttributeTrimming to false by default and store the overwriten default in 
-			_OriginalAggressiveAttributeTrimming property, which is later used to properly configure NativeAOT trimming.
-		-->
-		<_OriginalAggressiveAttributeTrimming>$(_AggressiveAttributeTrimming)</_OriginalAggressiveAttributeTrimming>
-		<_AggressiveAttributeTrimming Condition="'$(_UseNativeAot)' == 'true'">false</_AggressiveAttributeTrimming>
-		<_AggressiveAttributeTrimming Condition="'$(_AggressiveAttributeTrimming)' == ''">true</_AggressiveAttributeTrimming>
-
 		<!-- This property is also defined in Xamarin.Shared.props, but that file is imported too late for us to use the definition, and we can't remove it from Xamarin.Shared.props quite yet, because that would break legacy
 			 (in other words: once we drop support for legacy Xamarin, we can remove the other definition) -->
 		<_CanOutputAppBundle Condition="'$(_CanOutputAppBundle)' == '' And ('$(OutputType)' == 'Exe' Or '$(IsAppExtension)' == 'true' Or '$(IsWatchApp)' == 'true')">true</_CanOutputAppBundle>
@@ -679,10 +670,16 @@
 			<!-- Linker -->
 			<_AdditionalTaskAssemblyDirectory>$(_XamarinSdkRootDirectoryOnMac)tools/dotnet-linker/</_AdditionalTaskAssemblyDirectory>
 			<_AdditionalTaskAssembly>$(_AdditionalTaskAssemblyDirectory)dotnet-linker.dll</_AdditionalTaskAssembly>
+
+			<MobileAggressiveAttributeTrimming Condition="'$(MobileAggressiveAttributeTrimming)' == ''">true</MobileAggressiveAttributeTrimming>
+			<_TrimAttributesLinkDescriptionPath>$(_XamarinSdkRootDirectory)tools/TrimAttributes.LinkDescription.xml</_TrimAttributesLinkDescriptionPath>
+			<_ExtraTrimmerArgs>$(_ExtraTrimmerArgs) --link-attributes $(_TrimAttributesLinkDescriptionPath)</_ExtraTrimmerArgs>
 		</PropertyGroup>
 
 		<ItemGroup>
 			<!-- Configure linker features -->
+			<RuntimeHostConfigurationOption Include="ObjCRuntime.AggressiveAttributeTrimming" Value="true" Trim="true" Condition="'$(MobileAggressiveAttributeTrimming)' == 'true'" />
+			<RuntimeHostConfigurationOption Include="ObjCRuntime.AggressiveAttributeTrimmingMono" Value="true" Trim="true" Condition="'$(MobileAggressiveAttributeTrimming)' == 'true' And '$(_XamarinRuntime)' == 'MonoVM'" />
 			<RuntimeHostConfigurationOption Include="ObjCRuntime.Runtime.Arch.IsSimulator" Value="$(_IsSimulatorFeature)" Trim="true" />
 			<RuntimeHostConfigurationOption Include="ObjCRuntime.Runtime.IsManagedStaticRegistrar" Value="$(_IsManagedStaticRegistrarFeature)" Trim="true" />
 			<RuntimeHostConfigurationOption Include="ObjCRuntime.Runtime.IsNativeAOT" Value="$(_IsNativeAOTFeature)" Trim="true" />
@@ -1342,16 +1339,6 @@
 
 			<!-- Link in the output from ILC -->
 			<_NativeExecutableObjectFiles Include="$(NativeObject)" />
-
-			<!-- By default perform aggressive attribute trimming, except when explicitly disabled -->
-			<_TrimmerFeatureSettings Condition="'$(_OriginalAggressiveAttributeTrimming)' != 'false' and '%(Identity)' == 'System.AggressiveAttributeTrimming'">
-				<Value>true</Value>
-				<Trim>true</Trim>
-			</_TrimmerFeatureSettings>
-			<RuntimeHostConfigurationOption Condition="'$(_OriginalAggressiveAttributeTrimming)' != 'false' and '%(Identity)' == 'System.AggressiveAttributeTrimming'">
-				<Value>true</Value>
-				<Trim>true</Trim>
-			</RuntimeHostConfigurationOption>
 		</ItemGroup>
 
 		<ItemGroup>
