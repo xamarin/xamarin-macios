@@ -18635,6 +18635,8 @@ namespace UIKit {
 		void TraitCollectionDidChange ([NullAllowed] UITraitCollection previousTraitCollection);
 	}
 
+	delegate void UITraitMutations (IUIMutableTraits mutableTraits);
+
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -18664,6 +18666,9 @@ namespace UIKit {
 		[Export ("containsTraitsInCollection:")]
 		bool Contains (UITraitCollection trait);
 
+		[Deprecated (PlatformName.iOS, 17, 0, message: "Use 'GetTraitCollectionWithTraits(UITraitMutations)' and 'GetTraitCollectionByModifyingTraits(UITraitMutations)' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 17, 0, message: "Use 'GetTraitCollectionWithTraits(UITraitMutations)' and 'GetTraitCollectionByModifyingTraits(UITraitMutations)' instead.")]
+		[Deprecated (PlatformName.TvOS, 17, 0, message: "Use 'GetTraitCollectionWithTraits(UITraitMutations)' and 'GetTraitCollectionByModifyingTraits(UITraitMutations)' instead.")]
 		[Static, Export ("traitCollectionWithTraitsFromCollections:")]
 		UITraitCollection FromTraitsFromCollections (UITraitCollection [] traitCollections);
 
@@ -18812,14 +18817,23 @@ namespace UIKit {
 		[Export ("toolbarItemPresentationSize")]
 		UINSToolbarItemPresentationSize ToolbarItemPresentationSize { get; }
 
+#if !XAMCORE_5_0
+		[Obsolete ("Use the overload that takes a 'UITraitMutations' parameter instead.")]
+		[EditorBrowsable (EditorBrowsableState.Never)]
 		[Watch (10, 0), TV (17, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Static]
 		[Export ("traitCollectionWithTraits:")]
 		UITraitCollection GetTraitCollectionWithTraits (Func<IUIMutableTraits> mutations);
+#endif
+
+		[Watch (10, 0), TV (17, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Static]
+		[Export ("traitCollectionWithTraits:")]
+		UITraitCollection GetTraitCollectionWithTraits (UITraitMutations mutations);
 
 		[Watch (10, 0), TV (17, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("traitCollectionByModifyingTraits:")]
-		UITraitCollection GetTraitCollectionByModifyingTraits (Func<IUIMutableTraits> mutations);
+		UITraitCollection GetTraitCollectionByModifyingTraits (UITraitMutations mutations);
 
 		[Watch (10, 0), TV (17, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Static]

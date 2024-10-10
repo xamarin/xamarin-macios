@@ -8,6 +8,8 @@
 //
 
 using System;
+using System.ComponentModel;
+
 using ObjCRuntime;
 using Foundation;
 
@@ -15,17 +17,22 @@ using Foundation;
 #nullable disable
 
 namespace UIKit {
-#if !WATCH
 	public partial class UITraitCollection {
-
-#if !NET
-		[Obsolete ("Please use the static 'Create' method instead.")]
-		public UITraitCollection FromPreferredContentSizeCategory (UIContentSizeCategory category)
-			=> Create (category);
-#endif
-
 		public static UITraitCollection Create (UIContentSizeCategory category)
 			=> FromPreferredContentSizeCategory (category.GetConstant ());
-	}
+
+#if !XAMCORE_5_0
+		[Obsolete ("Use the overload that takes a 'UITraitMutations' parameter instead.", false)]
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		[SupportedOSPlatform ("tvos17.0")]
+		[SupportedOSPlatform ("ios17.0")]
+		[SupportedOSPlatform ("maccatalyst17.0")]
+		[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
+		public virtual UITraitCollection GetTraitCollectionByModifyingTraits (Func<IUIMutableTraits> mutations)
+		{
+			// there's nothing useful this method can do.
+			throw new NotSupportedException ($"Use the overload that takes a 'UITraitMutations' parameter instead.");
+		}
 #endif
+	}
 }

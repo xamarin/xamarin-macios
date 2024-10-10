@@ -131,31 +131,19 @@ namespace Foundation {
 		}
 
 		public NSNumber (nfloat value) :
-#if ARCH_64
-			this ((double)value)
-#else
-			this ((float) value)
-#endif
+			this ((double) value)
 		{
 		}
 
 		public nfloat NFloatValue {
 			get {
-#if ARCH_64
-				return (nfloat)DoubleValue;
-#else
-				return (nfloat) FloatValue;
-#endif
+				return (nfloat) DoubleValue;
 			}
 		}
 
 		public static NSNumber FromNFloat (nfloat value)
 		{
-#if ARCH_64
-			return (FromDouble ((double)value));
-#else
-			return (FromFloat ((float) value));
-#endif
+			return (FromDouble ((double) value));
 		}
 
 		public override string ToString ()

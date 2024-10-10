@@ -23,7 +23,7 @@
 	<Target Name="WriteInputs">
 		<WriteLinesToFile
 			File="$(InputsPath)"
-			Lines="@(ProjectReference);@(Compile);@(EmbeddedResource)"
+			Lines="@(ProjectReference->'%(FullPath)');@(Compile->'%(FullPath)');@(EmbeddedResource->'%(FullPath)')"
 			Overwrite="True"
 		/>
 	</Target>

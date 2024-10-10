@@ -34,7 +34,7 @@
     <Compile Include="$(RepositoryPath)\tools\common\ApplePlatform.cs" />
     <Compile Include="$(RepositoryPath)\tools\common\TargetFramework.cs" />
     <Compile Include="$(RepositoryPath)\tools\common\StringUtils.cs" />
-    <Compile Include="$(BuildDir)\generator-frameworks.g.cs" />
+    <Compile Include="$(DotNetBuildDir)\generator-frameworks.g.cs" />
     <Compile Include="$(RepositoryPath)\src\Foundation\AdviceAttribute.cs" />
     <Compile Include="$(RepositoryPath)\src\Foundation\ExportAttribute.cs" />
     <Compile Include="$(RepositoryPath)\src\Foundation\FieldAttribute.cs" />

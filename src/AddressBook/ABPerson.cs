@@ -1021,11 +1021,7 @@ namespace AddressBook {
 
 		public NSData? GetImage (ABPersonImageFormat format)
 		{
-#if ARCH_32
-			return Runtime.GetNSObject<NSData> (ABPersonCopyImageDataWithFormat (Handle, (nint)(int)format));
-#else
 			return Runtime.GetNSObject<NSData> (ABPersonCopyImageDataWithFormat (Handle, (nint) (long) format));
-#endif
 		}
 
 		[DllImport (Constants.AddressBookLibrary)]
