@@ -25,7 +25,6 @@ parameters:
 
 - name: xcodeChannel
   type: string
-  default: Stable
 
 - name: macOSName
   type: string
@@ -33,18 +32,6 @@ parameters:
 
 
 stages:
-
-- ${{ if parameters.isPR }}:
-  - stage: clean
-    displayName: 'Clean up'
-    dependsOn: []
-    jobs:
-    - job:
-      displayName: 'Clean comments'
-      pool:
-        vmImage: windows-latest
-      steps:
-      - template: ./common/clean.yml
 
 - stage: configure_build
   displayName: 'Configure'

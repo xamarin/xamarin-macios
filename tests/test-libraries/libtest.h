@@ -17,6 +17,12 @@ extern "C" {
 int theUltimateAnswer ();
 void useZLib ();
 
+__attribute__ ((used)) unsigned long long x_native_field = 0xAABBCCDDEEFF8899;
+
+// NS_ASSUME_NONNULL_BEGIN doesn't work
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wnullability-completeness"
+
 typedef void (^x_block_callback)();
 void x_call_block (x_block_callback block);
 void* x_call_func_3 (void* (*fptr)(void*, void*, void*), void* p1, void* p2, void* p3);
@@ -237,6 +243,8 @@ typedef void (^outerBlock) (innerBlock callback);
 
 +(void) setProtocolWithBlockProperties: (id<ProtocolWithBlockProperties>) obj required: (bool) required instance: (bool) instance;
 +(int) calledBlockCount;
+
+-(bool) nullableCallback: (void (^ __nullable)(int32_t magic_number))completionHandler;
 @end
 
 @interface FreedNotifier : NSObject {
@@ -293,6 +301,9 @@ typedef void (^outerBlock) (innerBlock callback);
 @property (copy) NSDate* dateValue;
 
 @end
+
+#pragma clang diagnostic pop
+// NS_ASSUME_NONNULL_END
 
 #ifdef __cplusplus
 } /* extern "C" */

@@ -55,26 +55,26 @@ namespace Metal {
 			}
 		}
 
-#if MONOMAC || __MACCATALYST__
-
 #if NET
-		[SupportedOSPlatform ("maccatalyst15.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
-		[UnsupportedOSPlatform ("ios")]
-		[UnsupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("ios18.0")]
+		[SupportedOSPlatform ("tvos18.0")]
 #else
-		[MacCatalyst (15,0)]
+		[MacCatalyst (15, 0)]
+		[iOS (18, 0), TV (18, 0)]
 #endif
 		[DllImport (Constants.MetalLibrary)]
 		unsafe static extern IntPtr MTLCopyAllDevices ();
 
 #if NET
-		[SupportedOSPlatform ("maccatalyst15.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
-		[UnsupportedOSPlatform ("ios")]
-		[UnsupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("ios18.0")]
+		[SupportedOSPlatform ("tvos18.0")]
 #else
-		[MacCatalyst (15,0)]
+		[MacCatalyst (15, 0)]
+		[iOS (18, 0), TV (18, 0)]
 #endif
 		public static IMTLDevice [] GetAllDevices ()
 		{
@@ -83,8 +83,6 @@ namespace Metal {
 			NSObject.DangerousRelease (rv);
 			return devices;
 		}
-
-#endif
 
 #if MONOMAC
 

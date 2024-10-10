@@ -156,10 +156,6 @@ steps:
 # use a diff step depending if we have been trigger by a pipeline of by a PR/Commit
 - ${{ if or(contains(variables['Build.Reason'], 'ResourceTrigger'), contains(variables['Build.Reason'], 'BuildCompletion'), contains(variables['Build.DefinitionName'], 'xamarin-macios-ci-tests'), contains(variables['Build.DefinitionName'], 'xamarin-macios-pr-tests')) }}:
   - download: macios
-    displayName: Download PkgsVersions.json
-    artifact: PkgsVersions
-
-  - download: macios
     displayName: Download WorkloadRollback.json
     artifact: WorkloadRollback
 
@@ -185,13 +181,6 @@ steps:
     displayName: Move artifacts to the expected location
 
 - ${{ else }}:
-  - task: DownloadPipelineArtifact@2
-    displayName: Download PkgsVersions.json
-    inputs:
-      allowFailedBuilds: true
-      patterns: '**/PkgsVersions.json'
-      path: $(Build.SourcesDirectory)/artifacts
-
   - task: DownloadPipelineArtifact@2
     displayName: Download WorkloadRollback.json
     inputs:
@@ -219,26 +208,9 @@ steps:
   displayName: 'Display downloads'
   timeoutInMinutes: 5
 
-- pwsh: |
-    $dir = "$(Build.SourcesDirectory)/artifacts"
-    $versionsPath = "$dir/${{ parameters.uploadPrefix }}PkgsVersions/PkgsVersions.json"
-    $versionData = Get-Content $versionsPath | ConvertFrom-Json
-
-    $iOSVersion = $versionData | Select-Object -ExpandProperty "iOS"
-    $iOSPath = "$dir/${{ parameters.uploadPrefix }}not-signed-package/xamarin.ios-$iOSVersion.pkg"
-    Write-Host "##vso[task.setvariable variable=XI_PACKAGE;]$iOSPath"
-
-    $macOSVersion = $versionData | Select-Object -ExpandProperty "macOS"
-    $macOSPath = "$dir/${{ parameters.uploadPrefix }}not-signed-package/xamarin.mac-$macOSVersion.pkg"
-    Write-Host "##vso[task.setvariable variable=XM_PACKAGE;]$macOSPath"
-
-  displayName: 'Set pkgs url'
-  timeoutInMinutes: 5
-
 - bash: |
-    echo "Pkg uri is $XI_PACKAGE"
-    make -C $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/ device-tests-provisioning.csx
-  displayName: 'Generate Provisionator csx file for iOS'
+    make -C $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/ provisioning
+  displayName: 'Generate Provisionator csx file'
 
 # Executed ONLY if we want to clear the provisionator cache.
 - bash: rm -rf "$TOOLS_DIR/provisionator"
@@ -249,35 +221,12 @@ steps:
 
 # Use the provisionator to install the test dependencies. Those have been generated in the 'Generate Provisionator csx file' step.
 - task: xamops.azdevex.provisionator-task.provisionator@2
-  displayName: 'Provision Xamarin.iOS'
+  displayName: 'Provision dependencies'
   inputs:
-    provisioning_script: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/device-tests-provisioning.csx
+    provisioning_script: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/build-provisioning.csx
     provisioning_extra_args: '-vvvv'
     github_token: ${{ parameters.gitHubToken }}
   timeoutInMinutes: 250
-
-- bash: |
-    echo "Pkg uri is $XM_PACKAGE"
-    make -C $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/ mac-tests-provisioning.csx
-  displayName: 'Generate Provisionator csx file for Mac'
-
-- task: xamops.azdevex.provisionator-task.provisionator@2
-  displayName: 'Provision Xamarin.Mac'
-  inputs:
-    provisioning_script: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/mac-tests-provisioning.csx
-    provisioning_extra_args: '-vvvv'
-    github_token: ${{ parameters.gitHubToken }}
-  timeoutInMinutes: 250
-
-- bash: |
-    set -ex
-    ls -R /Library/Frameworks/Xamarin.iOS.framework || true
-    ls -R /Library/Frameworks/Xamarin.Mac.framework || true
-  displayName: "Show installed Frameworks"
-
-- bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/create-legacy-ios-mac-sdk-symlinks.sh
-  workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios/
-  displayName: Create legacy iOS/Mac SDK symlinks
 
 - bash: |
     set -x

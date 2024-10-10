@@ -319,7 +319,7 @@ namespace PdfKit {
 	}
 
 	[Native]
-	[iOS (15, 0), Mac (12, 0), MacCatalyst (15, 0)]
+	[iOS (15, 0), MacCatalyst (15, 0)]
 	public enum PdfAccessPermissions : ulong {
 		LowQualityPrinting = (1uL << 0),
 		HighQualityPrinting = (1uL << 1),
@@ -329,6 +329,14 @@ namespace PdfKit {
 		ContentAccessibility = (1uL << 5),
 		Commenting = (1uL << 6),
 		FormFieldEntry = (1uL << 7),
+	}
+
+	[Native]
+	[iOS (18, 0), Mac (15, 0), MacCatalyst (18, 0)]
+	enum PdfSelectionGranularity : ulong {
+		Character,
+		Word,
+		Line,
 	}
 
 	[MacCatalyst (13, 1)]
@@ -448,7 +456,7 @@ namespace PdfKit {
 		[Field ("PDFDocumentUserPasswordOption", "+PDFKit")]
 		NSString UserPasswordKey { get; }
 
-		[iOS (15, 0), Mac (12, 0), MacCatalyst (15, 0)]
+		[iOS (15, 0), MacCatalyst (15, 0)]
 		[Field ("PDFDocumentAccessPermissionsOption", "+PDFKit")]
 		NSString AccessPermissionsKey { get; }
 
@@ -476,7 +484,7 @@ namespace PdfKit {
 		string OwnerPassword { get; set; }
 		string UserPassword { get; set; }
 
-		[iOS (15, 0), Mac (12, 0), MacCatalyst (15, 0)]
+		[iOS (15, 0), MacCatalyst (15, 0)]
 		string AccessPermissions { get; set; }
 
 		[iOS (16, 0), Mac (13, 0), MacCatalyst (16, 0)]
@@ -775,7 +783,6 @@ namespace PdfKit {
 		[NullAllowed, Export ("fontColor", ArgumentSemantic.Copy)]
 		NSColor FontColor { get; set; }
 
-		[iOS (11, 2)]
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("interiorColor", ArgumentSemantic.Copy)]
 		NSColor InteriorColor { get; set; }
@@ -923,7 +930,6 @@ namespace PdfKit {
 		[NullAllowed, Export ("backgroundColor", ArgumentSemantic.Copy)]
 		NSColor BackgroundColor { get; set; }
 
-		[iOS (11, 2)]
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("stampName")]
 		string StampName { get; set; }
@@ -1260,11 +1266,11 @@ namespace PdfKit {
 		[Notification]
 		NSString DidEndPageWriteNotification { get; }
 
-		[iOS (15, 0), Mac (12, 0), MacCatalyst (15, 0)]
+		[iOS (15, 0), MacCatalyst (15, 0)]
 		[Field ("PDFDocumentFoundSelectionKey")]
 		NSString FoundSelectionKey { get; }
 
-		[iOS (15, 0), Mac (12, 0), MacCatalyst (15, 0)]
+		[iOS (15, 0), MacCatalyst (15, 0)]
 		[Field ("PDFDocumentPageIndexKey")]
 		NSString PageIndexKey { get; }
 
@@ -1294,7 +1300,7 @@ namespace PdfKit {
 		[NullAllowed]
 		NSDictionary DocumentAttributes { get; set; }
 
-		[iOS (15, 0), Mac (12, 0), MacCatalyst (15, 0)]
+		[iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("accessPermissions")]
 		PdfAccessPermissions AccessPermissions { get; }
 
@@ -1496,6 +1502,11 @@ namespace PdfKit {
 #pragma warning disable 0618 // 'PdfPrintScalingMode' is obsolete: 'This type is not available on iOS.'
 		NSPrintOperation GetPrintOperation ([NullAllowed] NSPrintInfo printInfo, PdfPrintScalingMode scaleMode, bool doRotate);
 #pragma warning restore
+
+		[Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("selectionFromPage:atPoint:toPage:atPoint:withGranularity:")]
+		[return: NullAllowed]
+		PdfSelection GetSelection (PdfPage startPage, CGPoint startPoint, PdfPage endPage, CGPoint endPoint, PdfSelectionGranularity granularity);
 	}
 
 	/// <summary>Interface representing the required methods (if any) of the protocol <see cref="T:PdfKit.PdfDocumentDelegate" />.</summary>
@@ -1972,7 +1983,6 @@ namespace PdfKit {
 		[Export ("interpolationQuality", ArgumentSemantic.Assign)]
 		PdfInterpolationQuality InterpolationQuality { get; set; }
 
-		[iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("pageShadowsEnabled")]
 		bool PageShadowsEnabled { get; [Bind ("enablePageShadows:")] set; }
@@ -2137,6 +2147,9 @@ namespace PdfKit {
 		[Export ("visiblePages")]
 		PdfPage [] VisiblePages { get; }
 
+		[Deprecated (PlatformName.MacOSX, 15, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0)]
+		[Deprecated (PlatformName.iOS, 18, 0)]
 		[Export ("enableDataDetectors")]
 		bool EnableDataDetectors { get; set; }
 

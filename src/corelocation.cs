@@ -182,7 +182,7 @@ namespace CoreLocation {
 		[Export ("initWithCoordinate:altitude:horizontalAccuracy:verticalAccuracy:course:courseAccuracy:speed:speedAccuracy:timestamp:")]
 		NativeHandle Constructor (CLLocationCoordinate2D coordinate, double altitude, double hAccuracy, double vAccuracy, double course, double courseAccuracy, double speed, double speedAccuracy, NSDate timestamp);
 
-		[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+		[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("initWithCoordinate:altitude:horizontalAccuracy:verticalAccuracy:course:courseAccuracy:speed:speedAccuracy:timestamp:sourceInfo:")]
 		NativeHandle Constructor (CLLocationCoordinate2D coordinate, double altitude, double horizontalAccuracy, double verticalAccuracy, double course, double courseAccuracy, double speed, double speedAccuracy, NSDate timestamp, CLLocationSourceInformation sourceInfo);
 
@@ -212,7 +212,7 @@ namespace CoreLocation {
 		[Field ("kCLLocationAccuracyThreeKilometers")]
 		double AccuracyThreeKilometers { get; }
 
-		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[Watch (7, 0), TV (14, 0), iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[Field ("kCLLocationAccuracyReduced")]
 		double AccuracyReduced { get; }
@@ -221,11 +221,11 @@ namespace CoreLocation {
 		[NullAllowed, Export ("floor", ArgumentSemantic.Copy)]
 		CLFloor Floor { get; }
 
-		[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+		[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("ellipsoidalAltitude")]
 		double EllipsoidalAltitude { get; }
 
-		[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+		[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[NullAllowed, Export ("sourceInformation")]
 		CLLocationSourceInformation SourceInformation { get; }
 	}
@@ -270,25 +270,25 @@ namespace CoreLocation {
 		bool LocationServicesEnabled { get; }
 
 		[NoTV]
-		[Watch (6, 0), Mac (11, 0)]
+		[Watch (6, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("headingFilter", ArgumentSemantic.Assign)]
 		double HeadingFilter { get; set; }
 
 		[NoTV]
-		[Watch (6, 0), Mac (11, 0)]
+		[Watch (6, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("startUpdatingHeading")]
 		void StartUpdatingHeading ();
 
 		[NoTV]
-		[Watch (6, 0), Mac (11, 0)]
+		[Watch (6, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("stopUpdatingHeading")]
 		void StopUpdatingHeading ();
 
 		[NoTV]
-		[Watch (6, 0), Mac (11, 0)]
+		[Watch (6, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("dismissHeadingCalibrationDisplay")]
 		void DismissHeadingCalibrationDisplay ();
@@ -305,7 +305,6 @@ namespace CoreLocation {
 		string Purpose { get; set; }
 
 		[NoTV]
-		[Mac (11, 0)]
 		[Watch (6, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("headingAvailable"), Static]
@@ -336,13 +335,13 @@ namespace CoreLocation {
 		bool RegionMonitoringEnabled { get; }
 
 		[NoTV]
-		[Watch (6, 0), Mac (11, 0)]
+		[Watch (6, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("headingOrientation", ArgumentSemantic.Assign)]
 		CLDeviceOrientation HeadingOrientation { get; set; }
 
 		[NoTV]
-		[Watch (6, 0), Mac (11, 0)]
+		[Watch (6, 0)]
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("heading", ArgumentSemantic.Copy)]
 		CLHeading Heading { get; }
@@ -389,7 +388,7 @@ namespace CoreLocation {
 		[Export ("stopMonitoringForRegion:")]
 		void StopMonitoring (CLRegion region);
 
-		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[Watch (7, 0), TV (14, 0), iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[Export ("authorizationStatus")]
 		CLAuthorizationStatus AuthorizationStatus { get; }
@@ -413,14 +412,12 @@ namespace CoreLocation {
 		void StartMonitoring (CLRegion region);
 
 		[NoTV]
-		[Mac (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("activityType", ArgumentSemantic.Assign)]
 		CLActivityType ActivityType { get; set; }
 
 		[NoWatch]
 		[NoTV]
-		[Mac (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("pausesLocationUpdatesAutomatically", ArgumentSemantic.Assign)]
 		bool PausesLocationUpdatesAutomatically { get; set; }
@@ -472,7 +469,7 @@ namespace CoreLocation {
 		[Export ("rangedRegions", ArgumentSemantic.Copy)]
 		NSSet RangedRegions { get; }
 
-		[NoWatch, NoTV, Mac (11, 0), iOS (13, 0)]
+		[NoWatch, NoTV, iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("rangedBeaconConstraints", ArgumentSemantic.Copy)]
 		NSSet<CLBeaconIdentityConstraint> RangedBeaconConstraints { get; }
@@ -495,7 +492,7 @@ namespace CoreLocation {
 		[Export ("startRangingBeaconsInRegion:")]
 		void StartRangingBeacons (CLBeaconRegion region);
 
-		[NoWatch, NoTV, Mac (11, 0), iOS (13, 0)]
+		[NoWatch, NoTV, iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("startRangingBeaconsSatisfyingConstraint:")]
 		void StartRangingBeacons (CLBeaconIdentityConstraint constraint);
@@ -509,20 +506,18 @@ namespace CoreLocation {
 		[Export ("stopRangingBeaconsInRegion:")]
 		void StopRangingBeacons (CLBeaconRegion region);
 
-		[NoWatch, NoTV, Mac (11, 0), iOS (13, 0)]
+		[NoWatch, NoTV, iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("stopRangingBeaconsSatisfyingConstraint:")]
 		void StopRangingBeacons (CLBeaconIdentityConstraint constraint);
 
 		[NoWatch]
 		[NoTV]
-		[Mac (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("isRangingAvailable")]
 		bool IsRangingAvailable { get; }
 
-		[Mac (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("requestWhenInUseAuthorization")]
 		void RequestWhenInUseAuthorization ();
@@ -534,25 +529,22 @@ namespace CoreLocation {
 
 		[NoWatch]
 		[NoTV]
-		[Mac (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("startMonitoringVisits")]
 		void StartMonitoringVisits ();
 
 		[NoWatch]
 		[NoTV]
-		[Mac (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("stopMonitoringVisits")]
 		void StopMonitoringVisits ();
 
 		[NoTV]
-		[Mac (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("allowsBackgroundLocationUpdates")]
 		bool AllowsBackgroundLocationUpdates { get; set; }
 
-		[NoWatch, NoTV, Mac (11, 0)]
+		[NoWatch, NoTV]
 		[MacCatalyst (13, 1)]
 		[Export ("showsBackgroundLocationIndicator")]
 		bool ShowsBackgroundLocationIndicator { get; set; }
@@ -561,23 +553,23 @@ namespace CoreLocation {
 		[Export ("requestLocation")]
 		void RequestLocation ();
 
-		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[Watch (7, 0), TV (14, 0), iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[Export ("accuracyAuthorization")]
 		CLAccuracyAuthorization AccuracyAuthorization { get; }
 
 		[Async]
-		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[Watch (7, 0), TV (14, 0), iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[Export ("requestTemporaryFullAccuracyAuthorizationWithPurposeKey:completion:")]
 		void RequestTemporaryFullAccuracyAuthorization (string purposeKey, [NullAllowed] Action<NSError> completion);
 
-		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[Watch (7, 0), TV (14, 0), iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[Export ("requestTemporaryFullAccuracyAuthorizationWithPurposeKey:")]
 		void RequestTemporaryFullAccuracyAuthorization (string purposeKey);
 
-		[NoWatch, NoTV, Mac (11, 0), iOS (14, 0)]
+		[NoWatch, NoTV, iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[Export ("authorizedForWidgetUpdates")]
 		bool IsAuthorizedForWidgetUpdates { [Bind ("isAuthorizedForWidgetUpdates")] get; }
@@ -613,7 +605,7 @@ namespace CoreLocation {
 		void UpdatedLocation (CLLocationManager manager, CLLocation newLocation, CLLocation oldLocation);
 
 		[NoTV]
-		[Watch (6, 0), Mac (11, 0)]
+		[Watch (6, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("locationManager:didUpdateHeading:"), EventArgs ("CLHeadingUpdated")]
 		void UpdatedHeading (CLLocationManager manager, CLHeading newHeading);
@@ -666,7 +658,7 @@ namespace CoreLocation {
 		[Export ("locationManager:didRangeBeacons:inRegion:"), EventArgs ("CLRegionBeaconsRanged")]
 		void DidRangeBeacons (CLLocationManager manager, CLBeacon [] beacons, CLBeaconRegion region);
 
-		[NoWatch, NoTV, Mac (11, 0), iOS (13, 0)]
+		[NoWatch, NoTV, iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("locationManager:didRangeBeacons:satisfyingConstraint:")]
 		[EventArgs ("CLRegionBeaconsConstraintRanged")]
@@ -681,7 +673,7 @@ namespace CoreLocation {
 		[Export ("locationManager:rangingBeaconsDidFailForRegion:withError:"), EventArgs ("CLRegionBeaconsFailed")]
 		void RangingBeaconsDidFailForRegion (CLLocationManager manager, CLBeaconRegion region, NSError error);
 
-		[NoWatch, NoTV, Mac (11, 0), iOS (13, 0)]
+		[NoWatch, NoTV, iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("locationManager:didFailRangingBeaconsForConstraint:error:")]
 		[EventArgs ("CLRegionBeaconsConstraintFailed")]
@@ -689,7 +681,6 @@ namespace CoreLocation {
 
 		[NoWatch]
 		[NoTV]
-		[Mac (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("locationManager:didVisit:"), EventArgs ("CLVisited")]
 		void DidVisit (CLLocationManager manager, CLVisit visit);
@@ -723,7 +714,7 @@ namespace CoreLocation {
 		[Export ("locationManager:didFinishDeferredUpdatesWithError:"), EventArgs ("NSError", true)]
 		void DeferredUpdatesFinished (CLLocationManager manager, [NullAllowed] NSError error);
 
-		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[Watch (7, 0), TV (14, 0), iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[Export ("locationManagerDidChangeAuthorization:")]
 		void DidChangeAuthorization (CLLocationManager manager);
@@ -893,7 +884,6 @@ namespace CoreLocation {
 	///     </remarks>
 	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/CoreLocation/Reference/CLBeaconRegion_class/index.html">Apple documentation for <c>CLBeaconRegion</c></related>
 	[NoWatch]
-	[Mac (11, 0)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
 	[Deprecated (PlatformName.MacOSX, 14, 0, message: "Use 'CLBeaconIdentityCondition' instead.")]
@@ -980,7 +970,6 @@ namespace CoreLocation {
 
 	/// <include file="../docs/api/CoreLocation/CLBeacon.xml" path="/Documentation/Docs[@DocId='T:CoreLocation.CLBeacon']/*" />
 	[NoWatch]
-	[Mac (11, 0)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -1078,7 +1067,6 @@ namespace CoreLocation {
 	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/CoreLocation/Reference/CLVisit_class/index.html">Apple documentation for <c>CLVisit</c></related>
 	[NoWatch]
 	[NoTV]
-	[Mac (11, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface CLVisit : NSSecureCoding, NSCopying {
@@ -1096,7 +1084,7 @@ namespace CoreLocation {
 		double HorizontalAccuracy { get; }
 	}
 
-	[NoWatch, NoTV, Mac (11, 0), iOS (13, 0)]
+	[NoWatch, NoTV, iOS (13, 0)]
 	[MacCatalyst (13, 1)]
 	[Deprecated (PlatformName.MacOSX, 14, 0, message: "Use 'CLBeaconIdentityCondition' instead.")]
 	[Deprecated (PlatformName.iOS, 17, 0, message: "Use 'CLBeaconIdentityCondition' instead.")]
@@ -1141,7 +1129,7 @@ namespace CoreLocation {
 		void ServiceExtensionWillTerminate ();
 	}
 
-	[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (NSObject))]
 	interface CLLocationSourceInformation : NSCopying, NSSecureCoding {
 		[Export ("initWithSoftwareSimulationState:andExternalAccessoryState:")]
@@ -1157,11 +1145,52 @@ namespace CoreLocation {
 	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0), TV (17, 0)]
 	[BaseType (typeof (NSObject))]
 	interface CLUpdate {
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'Stationary' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'Stationary' instead.")]
+		[Deprecated (PlatformName.TvOS, 18, 0, message: "Use 'Stationary' instead.")]
+		[Deprecated (PlatformName.WatchOS, 11, 0, message: "Use 'Stationary' instead.")]
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'Stationary' instead.")]
 		[Export ("isStationary")]
 		bool IsStationary { get; }
 
 		[NullAllowed, Export ("location")]
 		CLLocation Location { get; }
+
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("authorizationDenied")]
+		bool AuthorizationDenied { get; }
+
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("authorizationDeniedGlobally")]
+		bool AuthorizationDeniedGlobally { get; }
+
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("authorizationRestricted")]
+		bool AuthorizationRestricted { get; }
+
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("stationary")]
+		bool Stationary { get; }
+
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("insufficientlyInUse")]
+		bool InsufficientlyInUse { get; }
+
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("locationUnavailable")]
+		bool LocationUnavailable { get; }
+
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("accuracyLimited")]
+		bool AccuracyLimited { get; }
+
+		[NoWatch, NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("serviceSessionRequired")]
+		bool ServiceSessionRequired { get; }
+
+		[NoWatch, NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("authorizationRequestInProgress")]
+		bool AuthorizationRequestInProgress { get; }
 	}
 
 	[NoWatch, NoTV, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
@@ -1190,6 +1219,46 @@ namespace CoreLocation {
 
 		[Export ("date", ArgumentSemantic.Strong)]
 		NSDate Date { get; }
+
+		[NoWatch, NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("authorizationDenied")]
+		bool AuthorizationDenied { get; }
+
+		[NoWatch, NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("authorizationDeniedGlobally")]
+		bool AuthorizationDeniedGlobally { get; }
+
+		[NoWatch, NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("authorizationRestricted")]
+		bool AuthorizationRestricted { get; }
+
+		[NoWatch, NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("insufficientlyInUse")]
+		bool InsufficientlyInUse { get; }
+
+		[NoWatch, NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("accuracyLimited")]
+		bool AccuracyLimited { get; }
+
+		[NoWatch, NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("conditionUnsupported")]
+		bool ConditionUnsupported { get; }
+
+		[NoWatch, NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("conditionLimitExceeded")]
+		bool ConditionLimitExceeded { get; }
+
+		[NoWatch, NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("persistenceUnavailable")]
+		bool PersistenceUnavailable { get; }
+
+		[NoWatch, NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("serviceSessionRequired")]
+		bool ServiceSessionRequired { get; }
+
+		[NoWatch, NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("authorizationRequestInProgress")]
+		bool AuthorizationRequestInProgress { get; }
 	}
 
 	[NoWatch, NoTV, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
@@ -1304,7 +1373,9 @@ namespace CoreLocation {
 		NativeHandle Constructor (NSUuid uuid, ushort major, ushort minor);
 	}
 
-	[Watch (10, 0), NoTV, NoMac, iOS (17, 0), MacCatalyst (17, 0)]
+	delegate void CLBackgroundActivitySessionCreateHandler (CLBackgroundActivitySessionDiagnostic diagnostic);
+
+	[Watch (10, 0), TV (18, 0), NoMac, iOS (17, 0), MacCatalyst (17, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface CLBackgroundActivitySession {
@@ -1316,5 +1387,98 @@ namespace CoreLocation {
 		[Static]
 		[Export ("backgroundActivitySession")]
 		CLBackgroundActivitySession Create ();
+
+		[Watch (11, 0), TV (18, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
+		[Static]
+		[Export ("backgroundActivitySessionWithQueue:handler:")]
+		CLBackgroundActivitySession Create (DispatchQueue queue, CLBackgroundActivitySessionCreateHandler handler);
+	}
+
+	[Watch (11, 0), TV (18, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
+	[BaseType (typeof (NSObject))]
+	interface CLBackgroundActivitySessionDiagnostic {
+		[Export ("authorizationDenied")]
+		bool AuthorizationDenied { get; }
+
+		[Export ("authorizationDeniedGlobally")]
+		bool AuthorizationDeniedGlobally { get; }
+
+		[Export ("authorizationRestricted")]
+		bool AuthorizationRestricted { get; }
+
+		[Export ("insufficientlyInUse")]
+		bool InsufficientlyInUse { get; }
+
+		[NoWatch]
+		[Export ("serviceSessionRequired")]
+		bool ServiceSessionRequired { get; }
+
+		[NoWatch]
+		[Export ("authorizationRequestInProgress")]
+		bool AuthorizationRequestInProgress { get; }
+	}
+
+	[Native]
+	[Watch (11, 0), TV (18, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
+	public enum CLServiceSessionAuthorizationRequirement : long {
+		None = 0,
+		WhenInUse = 1,
+		[NoTV, NoMac]
+		Always = 2,
+	}
+
+	[Watch (11, 0), TV (18, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface CLServiceSessionDiagnostic {
+		[Export ("authorizationDenied")]
+		bool AuthorizationDenied { get; }
+
+		[Export ("authorizationDeniedGlobally")]
+		bool AuthorizationDeniedGlobally { get; }
+
+		[Export ("authorizationRestricted")]
+		bool AuthorizationRestricted { get; }
+
+		[Export ("insufficientlyInUse")]
+		bool InsufficientlyInUse { get; }
+
+		[Export ("serviceSessionRequired")]
+		bool ServiceSessionRequired { get; }
+
+		[Export ("fullAccuracyDenied")]
+		bool FullAccuracyDenied { get; }
+
+		[Export ("alwaysAuthorizationDenied")]
+		bool AlwaysAuthorizationDenied { get; }
+
+		[Export ("authorizationRequestInProgress")]
+		bool AuthorizationRequestInProgress { get; }
+	}
+
+	delegate void CLServiceSessionCreateHandler (CLServiceSessionDiagnostic diagnostic);
+
+	[Watch (11, 0), TV (18, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface CLServiceSession {
+		[Static]
+		[Export ("sessionRequiringAuthorization:")]
+		CLServiceSession CreateSession (CLServiceSessionAuthorizationRequirement authorizationRequirement);
+
+		[Static]
+		[Export ("sessionRequiringAuthorization:queue:handler:")]
+		CLServiceSession CreateSession (CLServiceSessionAuthorizationRequirement authorizationRequirement, DispatchQueue queue, CLServiceSessionCreateHandler handler);
+
+		[Static]
+		[Export ("sessionRequiringAuthorization:fullAccuracyPurposeKey:")]
+		CLServiceSession CreateSession (CLServiceSessionAuthorizationRequirement authorizationRequirement, string fullAccuracyPurposeKey);
+
+		[Static]
+		[Export ("sessionRequiringAuthorization:fullAccuracyPurposeKey:queue:handler:")]
+		CLServiceSession CreateSession (CLServiceSessionAuthorizationRequirement authorizationRequirement, string fullAccuracyPurposeKey, DispatchQueue queue, CLServiceSessionCreateHandler handler);
+
+		[Export ("invalidate")]
+		void Invalidate ();
 	}
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 using System.Threading;
@@ -5536,6 +5537,40 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				Assert.AreEqual (EnumUL.b, ul, "out: UL");
 			}
 		}
+
+#if NET && HAS_UIKIT
+		[Test]
+		public void ProtocolsTrimmedAway ()
+		{
+			PreserveIUIApplicationDelegate (null);
+
+			// A little indirection to try to make the trimmer not be helpful and preserve all the methods on IUIApplicationDelegate.
+			AssertMemberCount (typeof (IUIApplicationDelegate));
+		}
+
+		[UnconditionalSuppressMessage ("Trimming", "IL2070", Justification = "This test verifies that all members have been correctly preserved, and fails if that's not the case. It'll thus fail if the trimmer removed anything it didn't expect - and is then technically trimmer safe in that it's aware and react accordingly if there's any behavioral change when the trimmer is enabled.")]
+		void AssertMemberCount (Type type)
+		{
+			var members = type.GetMembers (BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
+#if OPTIMIZEALL || NATIVEAOT
+			var expectNoMembers = true;
+#elif !__MACOS__
+			var expectNoMembers = global::XamarinTests.ObjCRuntime.Registrar.IsStaticRegistrar && TestRuntime.IsLinkAny;
+#else
+			var expectNoMembers = false;
+#endif
+			if (expectNoMembers) {
+				Assert.AreEqual (0, members.Length, $"All members should be trimmed away in {type.FullName}:\n\t{string.Join ("\n\t", members.Select (v => v.ToString ()))}");
+			} else {
+				Assert.AreNotEqual (0, members.Length, $"All members should not be trimmed away in {type.FullName}");
+			}
+		}
+
+		void PreserveIUIApplicationDelegate (IUIApplicationDelegate obj)
+		{
+			GC.KeepAlive (obj);
+		}
+#endif // NET && HAS_UIKIT
 	}
 
 #if !__WATCHOS__

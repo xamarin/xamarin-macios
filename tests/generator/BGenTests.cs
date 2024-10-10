@@ -230,6 +230,30 @@ namespace GeneratorTests {
 			BuildFile (Profile.iOS, "bug34042.cs");
 		}
 
+		[Test]
+		[TestCase (Profile.iOS)]
+		public void NSCopyingNullability (Profile profile)
+		{
+			var bgen = BuildFile (profile, "tests/nscopying-nullability.cs");
+			bgen.AssertNoWarnings ();
+		}
+
+		[Test]
+		[TestCase (Profile.iOS)]
+		public void EditorBrowsable (Profile profile)
+		{
+			var bgen = BuildFile (profile, false, true, "tests/editor-browsable.cs");
+			var types = bgen.ApiAssembly.MainModule.Types;
+
+			var hasEditorBrowsableAttribute = new Func<ICustomAttributeProvider, bool> ((ICustomAttributeProvider provider) => {
+				return provider.CustomAttributes.Any (v => v.AttributeType.Name == "EditorBrowsableAttribute");
+			});
+
+			var strongEnumType = types.Single (v => v.Name == "StrongEnum");
+			Assert.IsTrue (hasEditorBrowsableAttribute (strongEnumType), "StrongEnumType");
+			var objcClassType = types.Single (v => v.Name == "ObjCClass");
+			Assert.IsTrue (hasEditorBrowsableAttribute (objcClassType), "ObjCClass");
+		}
 
 		static string RenderArgument (CustomAttributeArgument arg)
 		{
@@ -322,48 +346,48 @@ namespace GeneratorTests {
 #if NET
 			string expectedAttributes =
 @"	Bug35176.IFooInterface: [SupportedOSPlatform(""ios14.3"")]
-	Bug35176.IFooInterface: [SupportedOSPlatform(""maccatalyst14.3"")]
-	Bug35176.IFooInterface: [SupportedOSPlatform(""macos11.2"")]
+	Bug35176.IFooInterface: [SupportedOSPlatform(""maccatalyst15.3"")]
+	Bug35176.IFooInterface: [SupportedOSPlatform(""macos12.2"")]
 	UIKit.UIView Bug35176.BarObject::BarView(): [SupportedOSPlatform(""ios14.3"")]
-	UIKit.UIView Bug35176.BarObject::BarView(): [SupportedOSPlatform(""maccatalyst14.3"")]
-	UIKit.UIView Bug35176.BarObject::BarView(): [SupportedOSPlatform(""macos11.2"")]
+	UIKit.UIView Bug35176.BarObject::BarView(): [SupportedOSPlatform(""maccatalyst15.3"")]
+	UIKit.UIView Bug35176.BarObject::BarView(): [SupportedOSPlatform(""macos12.2"")]
 	UIKit.UIView Bug35176.BarObject::FooView(): [SupportedOSPlatform(""ios14.3"")]
-	UIKit.UIView Bug35176.BarObject::FooView(): [SupportedOSPlatform(""maccatalyst14.3"")]
-	UIKit.UIView Bug35176.BarObject::FooView(): [SupportedOSPlatform(""macos11.2"")]
+	UIKit.UIView Bug35176.BarObject::FooView(): [SupportedOSPlatform(""maccatalyst15.3"")]
+	UIKit.UIView Bug35176.BarObject::FooView(): [SupportedOSPlatform(""macos12.2"")]
 	UIKit.UIView Bug35176.BarObject::get_BarView(): [SupportedOSPlatform(""ios14.4"")]
-	UIKit.UIView Bug35176.BarObject::get_BarView(): [SupportedOSPlatform(""maccatalyst14.4"")]
-	UIKit.UIView Bug35176.BarObject::get_BarView(): [SupportedOSPlatform(""macos11.2"")]
+	UIKit.UIView Bug35176.BarObject::get_BarView(): [SupportedOSPlatform(""maccatalyst15.4"")]
+	UIKit.UIView Bug35176.BarObject::get_BarView(): [SupportedOSPlatform(""macos12.2"")]
 	UIKit.UIView Bug35176.BarObject::GetBarMember(System.Int32): [SupportedOSPlatform(""ios14.3"")]
-	UIKit.UIView Bug35176.BarObject::GetBarMember(System.Int32): [SupportedOSPlatform(""maccatalyst14.3"")]
-	UIKit.UIView Bug35176.BarObject::GetBarMember(System.Int32): [SupportedOSPlatform(""macos11.2"")]
+	UIKit.UIView Bug35176.BarObject::GetBarMember(System.Int32): [SupportedOSPlatform(""maccatalyst15.3"")]
+	UIKit.UIView Bug35176.BarObject::GetBarMember(System.Int32): [SupportedOSPlatform(""macos12.2"")]
 	UIKit.UIView Bug35176.FooInterface_Extensions::GetBarView(Bug35176.IFooInterface): [SupportedOSPlatform(""ios14.4"")]
-	UIKit.UIView Bug35176.FooInterface_Extensions::GetBarView(Bug35176.IFooInterface): [SupportedOSPlatform(""maccatalyst14.4"")]
-	UIKit.UIView Bug35176.FooInterface_Extensions::GetBarView(Bug35176.IFooInterface): [SupportedOSPlatform(""macos11.2"")]
+	UIKit.UIView Bug35176.FooInterface_Extensions::GetBarView(Bug35176.IFooInterface): [SupportedOSPlatform(""maccatalyst15.4"")]
+	UIKit.UIView Bug35176.FooInterface_Extensions::GetBarView(Bug35176.IFooInterface): [SupportedOSPlatform(""macos12.2"")]
 	UIKit.UIView Bug35176.IFooInterface::_GetBarView(Bug35176.IFooInterface): [SupportedOSPlatform(""ios14.4"")]
-	UIKit.UIView Bug35176.IFooInterface::_GetBarView(Bug35176.IFooInterface): [SupportedOSPlatform(""maccatalyst14.4"")]
-	UIKit.UIView Bug35176.IFooInterface::_GetBarView(Bug35176.IFooInterface): [SupportedOSPlatform(""macos11.2"")]
+	UIKit.UIView Bug35176.IFooInterface::_GetBarView(Bug35176.IFooInterface): [SupportedOSPlatform(""maccatalyst15.4"")]
+	UIKit.UIView Bug35176.IFooInterface::_GetBarView(Bug35176.IFooInterface): [SupportedOSPlatform(""macos12.2"")]
 	UIKit.UIView Bug35176.IFooInterface::get_BarView(): [SupportedOSPlatform(""ios14.4"")]
-	UIKit.UIView Bug35176.IFooInterface::get_BarView(): [SupportedOSPlatform(""maccatalyst14.4"")]
-	UIKit.UIView Bug35176.IFooInterface::get_BarView(): [SupportedOSPlatform(""macos11.2"")]
+	UIKit.UIView Bug35176.IFooInterface::get_BarView(): [SupportedOSPlatform(""maccatalyst15.4"")]
+	UIKit.UIView Bug35176.IFooInterface::get_BarView(): [SupportedOSPlatform(""macos12.2"")]
 ";
 #else
 			string expectedAttributes =
 @"	Bug35176.IFooInterface: [Introduced(ObjCRuntime.PlatformName.iOS, 14, 3, ObjCRuntime.PlatformArchitecture.None, null)]
-	Bug35176.IFooInterface: [Introduced(ObjCRuntime.PlatformName.MacCatalyst, 14, 3, ObjCRuntime.PlatformArchitecture.None, null)]
-	Bug35176.IFooInterface: [Introduced(ObjCRuntime.PlatformName.MacOSX, 11, 2, ObjCRuntime.PlatformArchitecture.None, null)]
+	Bug35176.IFooInterface: [Introduced(ObjCRuntime.PlatformName.MacCatalyst, 15, 3, ObjCRuntime.PlatformArchitecture.None, null)]
+	Bug35176.IFooInterface: [Introduced(ObjCRuntime.PlatformName.MacOSX, 12, 2, ObjCRuntime.PlatformArchitecture.None, null)]
 	UIKit.UIView Bug35176.BarObject::BarView(): [Introduced(ObjCRuntime.PlatformName.iOS, 14, 3, ObjCRuntime.PlatformArchitecture.None, null)]
-	UIKit.UIView Bug35176.BarObject::BarView(): [Introduced(ObjCRuntime.PlatformName.MacCatalyst, 14, 3, ObjCRuntime.PlatformArchitecture.None, null)]
-	UIKit.UIView Bug35176.BarObject::BarView(): [Introduced(ObjCRuntime.PlatformName.MacOSX, 11, 2, ObjCRuntime.PlatformArchitecture.None, null)]
+	UIKit.UIView Bug35176.BarObject::BarView(): [Introduced(ObjCRuntime.PlatformName.MacCatalyst, 15, 3, ObjCRuntime.PlatformArchitecture.None, null)]
+	UIKit.UIView Bug35176.BarObject::BarView(): [Introduced(ObjCRuntime.PlatformName.MacOSX, 12, 2, ObjCRuntime.PlatformArchitecture.None, null)]
 	UIKit.UIView Bug35176.BarObject::FooView(): [Introduced(ObjCRuntime.PlatformName.iOS, 14, 3, ObjCRuntime.PlatformArchitecture.None, null)]
-	UIKit.UIView Bug35176.BarObject::FooView(): [Introduced(ObjCRuntime.PlatformName.MacCatalyst, 14, 3, ObjCRuntime.PlatformArchitecture.None, null)]
-	UIKit.UIView Bug35176.BarObject::FooView(): [Introduced(ObjCRuntime.PlatformName.MacOSX, 11, 2, ObjCRuntime.PlatformArchitecture.None, null)]
+	UIKit.UIView Bug35176.BarObject::FooView(): [Introduced(ObjCRuntime.PlatformName.MacCatalyst, 15, 3, ObjCRuntime.PlatformArchitecture.None, null)]
+	UIKit.UIView Bug35176.BarObject::FooView(): [Introduced(ObjCRuntime.PlatformName.MacOSX, 12, 2, ObjCRuntime.PlatformArchitecture.None, null)]
 	UIKit.UIView Bug35176.BarObject::get_BarView(): [Introduced(ObjCRuntime.PlatformName.iOS, 14, 4, ObjCRuntime.PlatformArchitecture.None, null)]
-	UIKit.UIView Bug35176.BarObject::get_BarView(): [Introduced(ObjCRuntime.PlatformName.MacCatalyst, 14, 4, ObjCRuntime.PlatformArchitecture.None, null)]
+	UIKit.UIView Bug35176.BarObject::get_BarView(): [Introduced(ObjCRuntime.PlatformName.MacCatalyst, 15, 4, ObjCRuntime.PlatformArchitecture.None, null)]
 	UIKit.UIView Bug35176.BarObject::GetBarMember(System.Int32): [Introduced(ObjCRuntime.PlatformName.iOS, 14, 3, ObjCRuntime.PlatformArchitecture.None, null)]
-	UIKit.UIView Bug35176.BarObject::GetBarMember(System.Int32): [Introduced(ObjCRuntime.PlatformName.MacCatalyst, 14, 3, ObjCRuntime.PlatformArchitecture.None, null)]
-	UIKit.UIView Bug35176.BarObject::GetBarMember(System.Int32): [Introduced(ObjCRuntime.PlatformName.MacOSX, 11, 2, ObjCRuntime.PlatformArchitecture.None, null)]
+	UIKit.UIView Bug35176.BarObject::GetBarMember(System.Int32): [Introduced(ObjCRuntime.PlatformName.MacCatalyst, 15, 3, ObjCRuntime.PlatformArchitecture.None, null)]
+	UIKit.UIView Bug35176.BarObject::GetBarMember(System.Int32): [Introduced(ObjCRuntime.PlatformName.MacOSX, 12, 2, ObjCRuntime.PlatformArchitecture.None, null)]
 	UIKit.UIView Bug35176.FooInterface_Extensions::GetBarView(Bug35176.IFooInterface): [Introduced(ObjCRuntime.PlatformName.iOS, 14, 4, ObjCRuntime.PlatformArchitecture.None, null)]
-	UIKit.UIView Bug35176.FooInterface_Extensions::GetBarView(Bug35176.IFooInterface): [Introduced(ObjCRuntime.PlatformName.MacCatalyst, 14, 4, ObjCRuntime.PlatformArchitecture.None, null)]
+	UIKit.UIView Bug35176.FooInterface_Extensions::GetBarView(Bug35176.IFooInterface): [Introduced(ObjCRuntime.PlatformName.MacCatalyst, 15, 4, ObjCRuntime.PlatformArchitecture.None, null)]
 ";
 #endif
 
@@ -378,6 +402,21 @@ namespace GeneratorTests {
 			}
 
 			Assert.AreEqual (expectedAttributes, renderedAttributes, "Introduced attributes");
+		}
+
+		[Test]
+		[TestCase (Profile.iOS)]
+		public void INativeObjectsInBlocks (Profile profile)
+		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
+			var bgen = new BGenTool ();
+			bgen.Profile = profile;
+			bgen.Defines = BGenTool.GetDefaultDefines (bgen.Profile);
+			bgen.AddTestApiDefinition ("tests/inativeobjects-in-blocks.cs");
+			bgen.AddExtraSourcesRelativeToGeneratorDirectory ("tests/inativeobjects-in-blocks-sources.cs");
+			bgen.CreateTemporaryBinding ();
+			bgen.AssertExecute ("build");
+			bgen.AssertNoWarnings ();
 		}
 
 		[Test]
@@ -503,6 +542,13 @@ namespace GeneratorTests {
 		}
 
 		[Test]
+		[TestCase (Profile.iOS)]
+		public void TypesInMultipleNamespaces (Profile profile)
+		{
+			BuildFile (profile, "tests/types-in-multiple-namespaces.cs");
+		}
+
+		[Test]
 		public void HyphenInName ()
 		{
 			BuildFile (Profile.iOS, "btouch-with-hyphen-in-name.cs");
@@ -572,6 +618,14 @@ namespace GeneratorTests {
 		public void MultipleApiDefinitions2 ()
 		{
 			BuildFile (Profile.iOS, "multiple-api-definitions2-a.cs", "multiple-api-definitions2-b.cs");
+		}
+
+
+		[Test]
+		[TestCase (Profile.iOS)]
+		public void INativeObjectArraysInBlocks (Profile profile)
+		{
+			BuildFile (profile, "tests/inativeobject-arrays-in-blocks.cs");
 		}
 
 		[Test]
@@ -1099,13 +1153,13 @@ namespace GeneratorTests {
 			var expectedAttributes = new string [] {
 @"[BindingImpl(3)]
 [Export(""someMethod1:"")]
-[SupportedOSPlatform(""ios12.0"")]
+[SupportedOSPlatform(""ios13.0"")]
 [SupportedOSPlatform(""maccatalyst"")]
 [UnsupportedOSPlatform(""tvos"")]",
 
 @"[BindingImpl(3)]
 [Export(""someMethod2:"")]
-[SupportedOSPlatform(""ios12.0"")]
+[SupportedOSPlatform(""ios13.0"")]
 [SupportedOSPlatform(""maccatalyst"")]
 [UnsupportedOSPlatform(""tvos"")]",
 
@@ -1251,12 +1305,12 @@ namespace GeneratorTests {
 			var expectedPropertyAttributes =
 @"[SupportedOSPlatform(""ios"")]
 [SupportedOSPlatform(""maccatalyst"")]
-[SupportedOSPlatform(""macos11.0"")]
+[SupportedOSPlatform(""macos13.0"")]
 [UnsupportedOSPlatform(""tvos"")]";
 			var expectedSetterAttributes =
 @"[SupportedOSPlatform(""ios"")]
 [SupportedOSPlatform(""maccatalyst"")]
-[SupportedOSPlatform(""macos11.0"")]
+[SupportedOSPlatform(""macos13.0"")]
 [UnsupportedOSPlatform(""tvos"")]";
 
 			expectedPropertyAttributes = expectedPropertyAttributes.Replace ("\r", string.Empty);
@@ -1613,6 +1667,7 @@ namespace GeneratorTests {
 			var tf = TargetFramework.Parse (BGenTool.GetTargetFramework (profile));
 			cscArguments.Add ($"/r:{Configuration.GetBindingAttributePath (tf)}");
 			cscArguments.Add ($"/r:{Configuration.GetBaseLibrary (tf)}");
+			BGenTool.AddPreviewNoWarn (cscArguments);
 			var rv = ExecutionHelper.Execute (cscExecutable, cscArguments);
 			Assert.AreEqual (0, rv, "CSC exit code");
 
@@ -1625,5 +1680,86 @@ namespace GeneratorTests {
 			bgen.AssertNoWarnings ();
 		}
 #endif
+
+		[Test]
+		[TestCase (Profile.iOS)]
+		public void BackingFieldType (Profile profile)
+		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
+			var bgen = BuildFile (profile, true, true, "tests/backingfieldtype.cs");
+
+#if NET
+			const string nintName = "System.IntPtr";
+			const string nuintName = "System.UIntPtr";
+#else
+			const string nintName = "System.nint";
+			const string nuintName = "System.nuint";
+#endif
+
+			var testCases = new [] {
+				new { BackingFieldType = "NSNumber", NullableType = "Foundation.NSNumber", RenderedBackingFieldType = "Foundation.NSNumber", SimplifiedNullableType = "Foundation.NSNumber" },
+				new { BackingFieldType = "NSInteger", NullableType = $"System.Nullable`1<{nintName}>", RenderedBackingFieldType = nintName, SimplifiedNullableType = "System.Nullable`1" },
+				new { BackingFieldType = "NSUInteger", NullableType = $"System.Nullable`1<{nuintName}>", RenderedBackingFieldType = nuintName, SimplifiedNullableType = "System.Nullable`1" },
+				new { BackingFieldType = "Int32", NullableType = $"System.Nullable`1<System.Int32>", RenderedBackingFieldType = "System.Int32", SimplifiedNullableType = "System.Nullable`1" },
+				new { BackingFieldType = "Int64", NullableType = $"System.Nullable`1<System.Int64>", RenderedBackingFieldType = "System.Int64", SimplifiedNullableType = "System.Nullable`1" },
+				new { BackingFieldType = "UInt32", NullableType = $"System.Nullable`1<System.UInt32>", RenderedBackingFieldType = "System.UInt32", SimplifiedNullableType = "System.Nullable`1" },
+				new { BackingFieldType = "UInt64", NullableType = $"System.Nullable`1<System.UInt64>", RenderedBackingFieldType = "System.UInt64", SimplifiedNullableType = "System.Nullable`1" },
+			};
+
+			foreach (var tc in testCases) {
+				var getConstant = bgen.ApiAssembly.MainModule.GetType ("BackingField", $"{tc.BackingFieldType}FieldTypeExtensions").Methods.First ((v) => v.Name == "GetConstant");
+				Assert.AreEqual (tc.NullableType, getConstant.ReturnType.FullName, $"{tc.BackingFieldType}: GetConstant return type");
+
+				var getValue = bgen.ApiAssembly.MainModule.GetType ("BackingField", $"{tc.BackingFieldType}FieldTypeExtensions").Methods.First ((v) => v.Name == "GetValue");
+				Assert.AreEqual (tc.RenderedBackingFieldType, getValue.Parameters [0].ParameterType.FullName, $"{tc.BackingFieldType}: GetValue parameter type");
+
+				var toEnumArray = bgen.ApiAssembly.MainModule.GetType ("BackingField", $"{tc.BackingFieldType}FieldTypeExtensions").Methods.First ((v) => v.Name == "ToEnumArray");
+				Assert.IsTrue (toEnumArray.ReturnType.IsArray, $"{tc.BackingFieldType} ToEnumArray return type IsArray");
+				Assert.AreEqual ($"{tc.BackingFieldType}FieldType", toEnumArray.ReturnType.GetElementType ().Name, $"{tc.BackingFieldType} ToEnumArray return type");
+				Assert.IsTrue (toEnumArray.Parameters [0].ParameterType.IsArray, $"{tc.BackingFieldType} ToEnumArray parameter type IsArray");
+				Assert.AreEqual (tc.RenderedBackingFieldType, toEnumArray.Parameters [0].ParameterType.GetElementType ().FullName, $"{tc.BackingFieldType} ToEnumArray parameter type");
+
+				var toConstantArray = bgen.ApiAssembly.MainModule.GetType ("BackingField", $"{tc.BackingFieldType}FieldTypeExtensions").Methods.First ((v) => v.Name == "ToConstantArray");
+				Assert.IsTrue (toConstantArray.ReturnType.IsArray, $"{tc.BackingFieldType} ToConstantArray return type IsArray");
+				Assert.AreEqual (tc.SimplifiedNullableType, toConstantArray.ReturnType.GetElementType ().FullName, $"{tc.BackingFieldType} ToConstantArray return type");
+				Assert.IsTrue (toConstantArray.Parameters [0].ParameterType.IsArray, $"{tc.BackingFieldType} ToConstantArray parameter type IsArray");
+				Assert.AreEqual ($"{tc.BackingFieldType}FieldType", toConstantArray.Parameters [0].ParameterType.GetElementType ().Name, $"{tc.BackingFieldType} ToConstantArray parameter type");
+			}
+		}
+
+		[Test]
+		[TestCase (Profile.iOS)]
+		public void UnderlyingFieldType (Profile profile)
+		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
+			BuildFile (profile, true, true, "tests/underlyingfieldtype.cs");
+		}
+
+		[Test]
+		[TestCase (Profile.iOS)]
+		public void DelegatesWithNullableReturnType (Profile profile)
+		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
+			var bgen = BuildFile (profile, "tests/delegate-nullable-return.cs");
+			bgen.AssertNoWarnings ();
+
+			var delegateCallback = bgen.ApiAssembly.MainModule.GetType ("NS", "MyCallback").Methods.First ((v) => v.Name == "EndInvoke");
+			Assert.That (delegateCallback.MethodReturnType.CustomAttributes.Any (v => v.AttributeType.Name == "NullableAttribute"), "Nullable return type");
+		}
+
+		[Test]
+		[TestCase (Profile.iOS)]
+		public void DelegatesWithPointerTypes (Profile profile)
+		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
+			var bgen = BuildFile (profile, "tests/delegate-types.cs");
+			bgen.AssertNoWarnings ();
+
+			var delegateCallback = bgen.ApiAssembly.MainModule.GetType ("NS", "MyCallback").Methods.First ((v) => v.Name == "EndInvoke");
+			Assert.IsTrue (delegateCallback.MethodReturnType.ReturnType.IsPointer, "Pointer return type");
+			foreach (var p in delegateCallback.Parameters.Where (v => v.Name != "result")) {
+				Assert.IsTrue (p.ParameterType.IsPointer, $"Pointer parameter type: {p.Name}");
+			}
+		}
 	}
 }

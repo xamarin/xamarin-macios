@@ -1652,7 +1652,6 @@
 !missing-selector! NSView::scrollClipView:toPoint: not bound
 !missing-selector! NSView::showDefinitionForAttributedString:atPoint: not bound
 !missing-selector! NSView::showDefinitionForAttributedString:range:options:baselineOriginProvider: not bound
-!missing-selector! NSWindow::dragImage:at:offset:event:pasteboard:source:slideBack: not bound
 !missing-selector! NSWindow::handleCloseScriptCommand: not bound
 !missing-selector! NSWindow::handlePrintScriptCommand: not bound
 !missing-selector! NSWindow::handleSaveScriptCommand: not bound
@@ -1678,3 +1677,7 @@
 !incorrect-protocol-member! NSAccessibility::accessibilityUserInputLabels is REQUIRED and should be abstract
 !incorrect-protocol-member! NSAccessibility::setAccessibilityAttributedUserInputLabels: is REQUIRED and should be abstract
 !incorrect-protocol-member! NSAccessibility::setAccessibilityUserInputLabels: is REQUIRED and should be abstract
+
+# introduced and deprecated in the same version
+!missing-protocol-member! NSTextInputTraits::setWritingToolsAllowedInputOptions: not found
+!missing-protocol-member! NSTextInputTraits::writingToolsAllowedInputOptions not found

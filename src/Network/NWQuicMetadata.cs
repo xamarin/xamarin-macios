@@ -18,13 +18,12 @@ namespace Network {
 
 #if NET
 	[SupportedOSPlatform ("tvos15.0")]
-	[SupportedOSPlatform ("macos12.0")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("ios15.0")]
-	[SupportedOSPlatform ("maccatalyst15.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[Watch (8, 0)]
 	[TV (15, 0)]
-	[Mac (12, 0)]
 	[iOS (15, 0)]
 	[MacCatalyst (15, 0)]
 #endif
@@ -52,6 +51,15 @@ namespace Network {
 		public ushort KeepaliveInterval {
 			get => nw_quic_get_keepalive_interval (GetCheckedHandle ());
 			set => nw_quic_set_keepalive_interval (GetCheckedHandle (), value);
+		}
+
+		/// <summary>
+		/// Set the default keepalive value. The current default is every 20 seconds, but this is subject to change.
+		/// </summary>
+		public void SetDefaultKeepAlive ()
+		{
+			// #define NW_QUIC_CONNECTION_DEFAULT_KEEPALIVE	UINT16_MAX
+			KeepaliveInterval = ushort.MaxValue;
 		}
 
 		[DllImport (Constants.NetworkLibrary, EntryPoint = "nw_quic_get_application_error_reason")]

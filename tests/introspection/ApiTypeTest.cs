@@ -50,6 +50,11 @@ namespace Introspection {
 				if (Skip (t))
 					continue;
 
+				if (t.IsGenericTypeDefinition) {
+					// https://github.com/dotnet/runtime/issues/103891
+					continue;
+				}
+
 				var cctor = t.GetConstructor (BindingFlags.Static | BindingFlags.NonPublic, null, Type.EmptyTypes, null);
 				if (cctor is null)
 					continue;

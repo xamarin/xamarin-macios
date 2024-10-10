@@ -6,6 +6,8 @@
 //
 
 using System;
+
+using CoreGraphics;
 using Foundation;
 using ObjCRuntime;
 #if !WATCH
@@ -267,11 +269,11 @@ namespace CoreVideo {
 		[Field ("kCVImageBufferAlphaChannelModeKey")]
 		NSString AlphaChannelModeKey { get; }
 
-		[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+		[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Field ("kCVImageBufferRegionOfInterestKey")]
 		NSString RegionOfInterestKey { get; }
 
-		[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+		[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Field ("kCVImageBufferAmbientViewingEnvironmentKey")]
 		NSString AmbientViewingEnvironmentKey { get; }
 
@@ -282,6 +284,18 @@ namespace CoreVideo {
 		[Watch (10, 2), TV (17, 2), Mac (14, 2), iOS (17, 2), MacCatalyst (17, 2)]
 		[Field ("kCVImageBufferLogTransferFunction_AppleLog")]
 		NSString LogTransferFunctionAppleLogKey { get; }
+
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("kCVImageBufferSceneIlluminationKey")]
+		NSString SceneIlluminationKey { get; }
+
+		[Mac (15, 0), NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		[Field ("kCVImageBufferPostDecodeProcessingSequenceMetadataKey")]
+		NSString PostDecodeProcessingSequenceMetadataKey { get; }
+
+		[Mac (15, 0), NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		[Field ("kCVImageBufferPostDecodeProcessingFrameMetadataKey")]
+		NSString PostDecodeProcessingFrameMetadataKey { get; }
 	}
 
 	[MacCatalyst (13, 1)]
@@ -319,8 +333,6 @@ namespace CoreVideo {
 		[Field ("kCVImageBufferTransferFunction_ITU_R_2100_HLG")]
 		ItuR2100Hlg,
 
-		[iOS (12, 0)]
-		[TV (12, 0)]
 		[Watch (5, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCVImageBufferTransferFunction_Linear")]
@@ -460,47 +472,47 @@ namespace CoreVideo {
 		[Field ("kCVPixelBufferOpenGLTextureCacheCompatibilityKey")]
 		NSString OpenGLTextureCacheCompatibilityKey { get; }
 
-		[NoWatch, NoTV, Mac (12, 0), iOS (14, 0), MacCatalyst (15, 0)]
+		[NoWatch, NoTV, iOS (14, 0), MacCatalyst (15, 0)]
 		[Field ("kCVPixelBufferProResRAWKey_BlackLevel")]
 		NSString ProResRawKey_BlackLevel { get; }
 
-		[NoWatch, NoTV, Mac (12, 0), iOS (14, 0), MacCatalyst (15, 0)]
+		[NoWatch, NoTV, iOS (14, 0), MacCatalyst (15, 0)]
 		[Field ("kCVPixelBufferProResRAWKey_ColorMatrix")]
 		NSString ProResRawKey_ColorMatrix { get; }
 
-		[NoWatch, NoTV, Mac (12, 0), iOS (14, 0), MacCatalyst (15, 0)]
+		[NoWatch, NoTV, iOS (14, 0), MacCatalyst (15, 0)]
 		[Field ("kCVPixelBufferProResRAWKey_GainFactor")]
 		NSString ProResRawKey_GainFactor { get; }
 
-		[NoWatch, NoTV, Mac (12, 0), iOS (14, 0), MacCatalyst (15, 0)]
+		[NoWatch, NoTV, iOS (14, 0), MacCatalyst (15, 0)]
 		[Field ("kCVPixelBufferProResRAWKey_RecommendedCrop")]
 		NSString ProResRawKey_RecommendedCrop { get; }
 
-		[NoWatch, NoTV, Mac (12, 0), iOS (14, 0), MacCatalyst (15, 0)]
+		[NoWatch, NoTV, iOS (14, 0), MacCatalyst (15, 0)]
 		[Field ("kCVPixelBufferProResRAWKey_SenselSitingOffsets")]
 		NSString ProResRawKey_SenselSitingOffsets { get; }
 
-		[NoWatch, NoTV, Mac (12, 0), iOS (14, 0), MacCatalyst (15, 0)]
+		[NoWatch, NoTV, iOS (14, 0), MacCatalyst (15, 0)]
 		[Field ("kCVPixelBufferProResRAWKey_WhiteBalanceBlueFactor")]
 		NSString ProResRawKey_WhiteBalanceBlueFactor { get; }
 
-		[NoWatch, NoTV, Mac (12, 0), iOS (14, 0), MacCatalyst (15, 0)]
+		[NoWatch, NoTV, iOS (14, 0), MacCatalyst (15, 0)]
 		[Field ("kCVPixelBufferProResRAWKey_WhiteBalanceCCT")]
 		NSString ProResRawKey_WhiteBalanceCct { get; }
 
-		[NoWatch, NoTV, Mac (12, 0), iOS (14, 0), MacCatalyst (15, 0)]
+		[NoWatch, NoTV, iOS (14, 0), MacCatalyst (15, 0)]
 		[Field ("kCVPixelBufferProResRAWKey_WhiteBalanceRedFactor")]
 		NSString ProResRawKey_WhiteBalanceRedFactor { get; }
 
-		[NoWatch, NoTV, Mac (12, 0), iOS (14, 0), MacCatalyst (15, 0)]
+		[NoWatch, NoTV, iOS (14, 0), MacCatalyst (15, 0)]
 		[Field ("kCVPixelBufferProResRAWKey_WhiteLevel")]
 		NSString ProResRawKey_WhiteLevel { get; }
 
-		[NoWatch, NoTV, Mac (12, 0), iOS (14, 0), MacCatalyst (15, 0)]
+		[NoWatch, NoTV, iOS (14, 0), MacCatalyst (15, 0)]
 		[Field ("kCVPixelBufferVersatileBayerKey_BayerPattern")]
 		NSString VersatileBayerKey_BayerPattern { get; }
 
-		[NoWatch, NoTV, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+		[NoWatch, NoTV, iOS (15, 0), MacCatalyst (15, 0)]
 		[Field ("kCVPixelBufferProResRAWKey_MetadataExtension")]
 		NSString MetadataExtension { get; }
 	}
@@ -524,7 +536,6 @@ namespace CoreVideo {
 	[MacCatalyst (13, 1)]
 	[Partial]
 	interface CVMetalTextureCache {
-		[Mac (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Internal]
 		[Field ("kCVMetalTextureCacheMaximumTextureAgeKey")]
@@ -567,5 +578,223 @@ namespace CoreVideo {
 		Grbg = 1,
 		Gbrg = 2,
 		Bggr = 3,
+	}
+
+	[NoWatch, TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[Static, Internal]
+	interface CVMetalBufferCacheAttributeKeys {
+		[Field ("kCVMetalBufferCacheMaximumBufferAgeKey")]
+		NSString MaximumBufferAgeKey { get; }
+	}
+
+	[NoWatch]
+	[StrongDictionary ("CVMetalBufferCacheAttributeKeys")]
+	interface CVMetalBufferCacheAttributes {
+		double MaximumBufferAge { get; }
+	}
+
+	[Partial]
+	interface CVPixelFormatKeys {
+		[Field ("kCVPixelFormatName")]
+		NSString Name { get; }
+
+		[Field ("kCVPixelFormatConstant")]
+		NSString Constant { get; }
+
+		[Field ("kCVPixelFormatCodecType")]
+		NSString CodecType { get; }
+
+		[Field ("kCVPixelFormatFourCC")]
+		NSString FourCC { get; }
+
+		[Field ("kCVPixelFormatContainsAlpha")]
+		NSString ContainsAlpha { get; }
+
+		[Field ("kCVPixelFormatContainsYCbCr")]
+		NSString ContainsYCbCr { get; }
+
+		[Field ("kCVPixelFormatContainsRGB")]
+		NSString ContainsRgb { get; }
+
+		[Field ("kCVPixelFormatContainsGrayscale")]
+		NSString ContainsGrayscale { get; }
+
+		[iOS (16, 0), Mac (13, 0), MacCatalyst (16, 0), TV (16, 0), Watch (9, 0)]
+		[Field ("kCVPixelFormatContainsSenselArray")]
+		NSString ContainsSenselArray { get; }
+
+		[Field ("kCVPixelFormatComponentRange")]
+		NSString ComponentRange { get; }
+
+		[Field ("kCVPixelFormatPlanes")]
+		NSString Planes { get; }
+
+		[Field ("kCVPixelFormatBlockWidth")]
+		NSString BlockWidth { get; }
+
+		[Field ("kCVPixelFormatBlockHeight")]
+		NSString BlockHeight { get; }
+
+		[Field ("kCVPixelFormatBitsPerBlock")]
+		NSString BitsPerBlock { get; }
+
+		[Field ("kCVPixelFormatBlockHorizontalAlignment")]
+		NSString BlockHorizontalAlignment { get; }
+
+		[Field ("kCVPixelFormatBlockVerticalAlignment")]
+		NSString BlockVerticalAlignment { get; }
+
+		[Field ("kCVPixelFormatBlackBlock")]
+		NSString BlackBlock { get; }
+
+		[Field ("kCVPixelFormatHorizontalSubsampling")]
+		NSString HorizontalSubsampling { get; }
+
+		[Field ("kCVPixelFormatVerticalSubsampling")]
+		NSString VerticalSubsampling { get; }
+
+		[Field ("kCVPixelFormatOpenGLFormat")]
+		NSString OpenGLFormat { get; }
+
+		[Field ("kCVPixelFormatOpenGLType")]
+		NSString OpenGLType { get; }
+
+		[Field ("kCVPixelFormatOpenGLInternalFormat")]
+		NSString OpenGLInternalFormat { get; }
+
+		[Field ("kCVPixelFormatCGBitmapInfo")]
+		NSString CGBitmapInfo { get; }
+
+		[Field ("kCVPixelFormatQDCompatibility")]
+		NSString QDCompatibility { get; }
+
+		[Field ("kCVPixelFormatCGBitmapContextCompatibility")]
+		NSString CGBitmapContextCompatibility { get; }
+
+		[Field ("kCVPixelFormatCGImageCompatibility")]
+		NSString CGImageCompatibility { get; }
+
+		[Field ("kCVPixelFormatOpenGLCompatibility")]
+		NSString OpenGLCompatibility { get; }
+
+		[NoWatch, NoMacCatalyst, NoMac]
+		[Field ("kCVPixelFormatOpenGLESCompatibility")]
+		NSString OpenGlesCompatibility { get; }
+
+		[Field ("kCVPixelFormatFillExtendedPixelsCallback")]
+		NSString FillExtendedPixelsCallback { get; }
+
+		[iOS (18, 0), Mac (15, 0), MacCatalyst (18, 0), TV (18, 0), Watch (11, 0)]
+		[Field ("kCVPixelFormatBitsPerComponent")]
+		NSString BitsPerComponent { get; }
+	}
+
+	[Partial]
+	interface CVPixelFormatComponentRangeKeys {
+		[Field ("kCVPixelFormatComponentRange_VideoRange")]
+		NSString VideoRange { get; }
+
+		[Field ("kCVPixelFormatComponentRange_FullRange")]
+		NSString FullRange { get; }
+
+		[Field ("kCVPixelFormatComponentRange_WideRange")]
+		NSString WideRange { get; }
+	}
+
+
+	[StrongDictionary ("CVPixelFormatComponentRangeKeys", Suffix = "")]
+	interface CVPixelFormatComponentRange {
+		// there's no documentation about the type, so binding as NSObject
+		NSObject VideoRange { get; set; }
+
+		// there's no documentation about the type, so binding as NSObject
+		NSObject FullRange { get; set; }
+
+		// there's no documentation about the type, so binding as NSObject
+		NSObject WideRange { get; set; }
+	}
+
+	[StrongDictionary ("CVPixelFormatKeys", Suffix = "")]
+	interface CVPixelFormatDescription {
+		string Name { get; set; }
+
+		CVPixelFormatType Constant { get; set; }
+
+		// Documentation says 'CFString', but it also says 'CFString' about another property which clearly isn't, so I don't trust the documentation.
+		// Headers don't say, and tests don't show anything useful, there are no hits on Google for the underlying field, so leaving this typed as 'NSObject'.
+		NSObject CodecType { get; set; }
+
+		int FourCC { get; set; }
+
+		bool ContainsAlpha { get; set; }
+
+#if XAMCORE_5_0
+		bool ContainsYCbCr { get; set; }
+#else
+		[Export ("ContainsYCbCr")]
+		bool FormatContainsYCbCr { get; set; }
+#endif
+
+#if XAMCORE_5_0
+		bool ContainsRgb { get; set; }
+#else
+		[Export ("ContainsRgb")]
+		bool FormatContainsRgb { get; set; }
+#endif
+
+		bool ContainsGrayscale { get; set; }
+
+		[iOS (16, 0), Mac (13, 0), MacCatalyst (16, 0), TV (16, 0), Watch (9, 0)]
+#if XAMCORE_5_0
+		bool ContainsSenselArray { get; set; }
+#else
+		[Export ("ContainsSenselArray")]
+		bool FormatContainsSenselArray { get; set; }
+#endif
+
+		CVPixelFormatComponentRange ComponentRange { get; set; }
+
+		// This can be an array of dictionaries, or a single dictionary when there's only one plane, so we have to type as 'NSObject'.
+		NSObject Planes { get; set; }
+
+		int BlockWidth { get; set; }
+
+		int BlockHeight { get; set; }
+
+		int BitsPerBlock { get; set; }
+
+		int BlockHorizontalAlignment { get; set; }
+
+		int BlockVerticalAlignment { get; set; }
+
+		NSData BlackBlock { get; set; }
+
+		int HorizontalSubsampling { get; set; }
+
+		int VerticalSubsampling { get; set; }
+
+		int OpenGLFormat { get; set; }
+
+		int OpenGLType { get; set; }
+
+		int OpenGLInternalFormat { get; set; }
+
+		CGBitmapFlags CGBitmapInfo { get; set; }
+
+		bool QDCompatibility { get; set; }
+
+		bool CGBitmapContextCompatibility { get; set; }
+
+		bool CGImageCompatibility { get; set; }
+
+		bool OpenGLCompatibility { get; set; }
+
+		[NoWatch, NoMacCatalyst, NoMac]
+		bool OpenGlesCompatibility { get; set; }
+
+		NSData FillExtendedPixelsCallback { get; set; }
+
+		[iOS (18, 0), Mac (15, 0), MacCatalyst (18, 0), TV (18, 0), Watch (11, 0)]
+		int BitsPerComponent { get; set; }
 	}
 }

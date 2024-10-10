@@ -11,12 +11,12 @@ using Xamarin.MacDev;
 
 namespace Xamarin.MacDev.Tasks {
 	class CustomCompileEntitlements : CompileEntitlements {
-		protected override MobileProvision? GetMobileProvision (MobileProvisionPlatform platform, string uuid)
+		protected override MobileProvision GetMobileProvision (MobileProvisionPlatform platform, string uuid)
 		{
 			if (File.Exists (ProvisioningProfile))
 				return MobileProvision.LoadFromFile (ProvisioningProfile);
 
-			return null;
+			return null!;
 		}
 	}
 
@@ -34,8 +34,8 @@ namespace Xamarin.MacDev.Tasks {
 			task.AppBundleDir = AppBundlePath;
 			task.BundleIdentifier = "com.xamarin.MySingleView";
 			task.CompiledEntitlements = new TaskItem (Path.Combine (MonoTouchProjectObjPath, "Entitlements.xcent"));
-			task.Entitlements = Path.Combine (Path.GetDirectoryName (GetType ().Assembly.Location), "Resources", "Entitlements.plist");
-			task.ProvisioningProfile = Path.Combine (Path.GetDirectoryName (GetType ().Assembly.Location), "Resources", "profile.mobileprovision");
+			task.Entitlements = Path.Combine (Path.GetDirectoryName (GetType ().Assembly.Location)!, "Resources", "Entitlements.plist");
+			task.ProvisioningProfile = Path.Combine (Path.GetDirectoryName (GetType ().Assembly.Location)!, "Resources", "profile.mobileprovision");
 			task.SdkPlatform = "iPhoneOS";
 			task.SdkVersion = "6.1";
 			task.TargetFrameworkMoniker = "Xamarin.iOS,v1.0";
@@ -61,10 +61,10 @@ namespace Xamarin.MacDev.Tasks {
 		{
 			var task = CreateEntitlementsTask (out var compiledEntitlements, out var archivedEntitlements);
 			ExecuteTask (task);
-			var compiled = PDictionary.FromFile (compiledEntitlements);
-			Assert.IsTrue (compiled.Get<PBoolean> (EntitlementKeys.GetTaskAllow).Value, "#1");
-			Assert.AreEqual ("32UV7A8CDE.com.xamarin.MySingleView", compiled.Get<PString> ("application-identifier").Value, "#2");
-			Assert.AreEqual ("Z8CSQKJE7R", compiled.Get<PString> ("com.apple.developer.team-identifier").Value, "#3");
+			var compiled = PDictionary.FromFile (compiledEntitlements)!;
+			Assert.IsTrue (compiled.Get<PBoolean> (EntitlementKeys.GetTaskAllow)?.Value, "#1");
+			Assert.AreEqual ("32UV7A8CDE.com.xamarin.MySingleView", compiled.Get<PString> ("application-identifier")?.Value, "#2");
+			Assert.AreEqual ("Z8CSQKJE7R", compiled.Get<PString> ("com.apple.developer.team-identifier")?.Value, "#3");
 			Assert.AreEqual ("applinks:*.xamarin.com", compiled.GetAssociatedDomains ().ToStringArray ().First (), "#4");
 			Assert.AreEqual ("Z8CSQKJE7R.*", compiled.GetPassBookIdentifiers ().ToStringArray ().First (), "#5");
 			Assert.AreEqual ("Z8CSQKJE7R.com.xamarin.MySingleView", compiled.GetUbiquityKeyValueStore (), "#6");
@@ -113,7 +113,7 @@ namespace Xamarin.MacDev.Tasks {
 			task.TargetFrameworkMoniker = ".NETCoreApp,Version=v6.0,Profile=maccatalyst";
 			task.CustomEntitlements = customEntitlements;
 			ExecuteTask (task);
-			var compiled = PDictionary.FromFile (compiledEntitlements);
+			var compiled = PDictionary.FromFile (compiledEntitlements)!;
 			Assert.AreEqual (value ?? string.Empty, compiled.GetString ("com.xamarin.custom.entitlement")?.Value, "#1");
 		}
 
@@ -131,7 +131,7 @@ namespace Xamarin.MacDev.Tasks {
 			task.TargetFrameworkMoniker = ".NETCoreApp,Version=v6.0,Profile=maccatalyst";
 			task.CustomEntitlements = customEntitlements;
 			ExecuteTask (task);
-			var compiled = PDictionary.FromFile (compiledEntitlements);
+			var compiled = PDictionary.FromFile (compiledEntitlements)!;
 			var array = compiled.GetArray ("com.xamarin.custom.entitlement");
 			Assert.NotNull (array, "array");
 			Assert.AreEqual (new string [] { "A", "B", "C" }, array.ToStringArray (), "array contents");
@@ -154,7 +154,7 @@ namespace Xamarin.MacDev.Tasks {
 			task.TargetFrameworkMoniker = ".NETCoreApp,Version=v6.0,Profile=maccatalyst";
 			task.CustomEntitlements = customEntitlements;
 			ExecuteTask (task);
-			var compiled = PDictionary.FromFile (compiledEntitlements);
+			var compiled = PDictionary.FromFile (compiledEntitlements)!;
 			var array = compiled.GetArray ("com.xamarin.custom.entitlement");
 			Assert.NotNull (array, "array");
 			Assert.AreEqual (new string [] { "A;B;C", "D", "E" }, array.ToStringArray (), "array contents");
@@ -166,7 +166,7 @@ namespace Xamarin.MacDev.Tasks {
 			var task = CreateEntitlementsTask (out var compiledEntitlements);
 			task.TargetFrameworkMoniker = ".NETCoreApp,Version=v6.0,Profile=maccatalyst";
 			ExecuteTask (task);
-			var compiled = PDictionary.FromFile (compiledEntitlements);
+			var compiled = PDictionary.FromFile (compiledEntitlements)!;
 			Assert.IsFalse (compiled.ContainsKey (EntitlementKeys.AllowExecutionOfJitCode), "#1");
 		}
 
@@ -180,9 +180,9 @@ namespace Xamarin.MacDev.Tasks {
 			task.TargetFrameworkMoniker = ".NETCoreApp,Version=v6.0,Profile=maccatalyst";
 			task.CustomEntitlements = customEntitlements;
 			ExecuteTask (task);
-			var compiled = PDictionary.FromFile (compiledEntitlements);
+			var compiled = PDictionary.FromFile (compiledEntitlements)!;
 			Assert.IsTrue (compiled.ContainsKey (EntitlementKeys.AllowExecutionOfJitCode), "#1");
-			Assert.IsTrue (compiled.Get<PBoolean> (EntitlementKeys.AllowExecutionOfJitCode).Value, "#2");
+			Assert.IsTrue (compiled.Get<PBoolean> (EntitlementKeys.AllowExecutionOfJitCode)?.Value, "#2");
 		}
 
 		[Test]
@@ -195,9 +195,9 @@ namespace Xamarin.MacDev.Tasks {
 			task.TargetFrameworkMoniker = ".NETCoreApp,Version=v6.0,Profile=maccatalyst";
 			task.CustomEntitlements = customEntitlements;
 			ExecuteTask (task);
-			var compiled = PDictionary.FromFile (compiledEntitlements);
+			var compiled = PDictionary.FromFile (compiledEntitlements)!;
 			Assert.IsTrue (compiled.ContainsKey (EntitlementKeys.AllowExecutionOfJitCode), "#1");
-			Assert.IsFalse (compiled.Get<PBoolean> (EntitlementKeys.AllowExecutionOfJitCode).Value, "#2");
+			Assert.IsFalse (compiled.Get<PBoolean> (EntitlementKeys.AllowExecutionOfJitCode)?.Value, "#2");
 
 			Assert.That (archivedEntitlements, Does.Not.Exist, "No archived entitlements");
 		}
@@ -212,7 +212,7 @@ namespace Xamarin.MacDev.Tasks {
 			task.TargetFrameworkMoniker = ".NETCoreApp,Version=v6.0,Profile=maccatalyst";
 			task.CustomEntitlements = customEntitlements;
 			ExecuteTask (task);
-			var compiled = PDictionary.FromFile (compiledEntitlements);
+			var compiled = PDictionary.FromFile (compiledEntitlements)!;
 			Assert.IsFalse (compiled.ContainsKey (EntitlementKeys.AllowExecutionOfJitCode), "#1");
 		}
 
@@ -226,14 +226,14 @@ namespace Xamarin.MacDev.Tasks {
 			task.TargetFrameworkMoniker = ".NETCoreApp,Version=v6.0,Profile=ios";
 			task.CustomEntitlements = customEntitlements;
 			ExecuteTask (task);
-			var compiled = PDictionary.FromFile (compiledEntitlements);
+			var compiled = PDictionary.FromFile (compiledEntitlements)!;
 			Assert.IsFalse (compiled.ContainsKey (EntitlementKeys.AllowExecutionOfJitCode), "#1");
-			var kag = ((PString) compiled ["keychain-access-group"]).Value;
+			var kag = ((PString?) compiled ["keychain-access-group"])?.Value;
 			Assert.That (kag, Is.EqualTo ("32UV7A8CDE.org.xamarin"), "value 1");
 
-			var archived = PDictionary.FromFile (archivedEntitlements);
+			var archived = PDictionary.FromFile (archivedEntitlements)!;
 			Assert.IsTrue (archived.ContainsKey ("keychain-access-group"), "archived");
-			var archivedKag = ((PString) archived ["keychain-access-group"]).Value;
+			var archivedKag = ((PString?) archived ["keychain-access-group"])?.Value;
 			Assert.That (archivedKag, Is.EqualTo ("32UV7A8CDE.org.xamarin"), "archived value 1");
 		}
 
@@ -247,14 +247,14 @@ namespace Xamarin.MacDev.Tasks {
 			task.TargetFrameworkMoniker = ".NETCoreApp,Version=v6.0,Profile=ios";
 			task.CustomEntitlements = customEntitlements;
 			ExecuteTask (task);
-			var compiled = PDictionary.FromFile (compiledEntitlements);
+			var compiled = PDictionary.FromFile (compiledEntitlements)!;
 			Assert.IsFalse (compiled.ContainsKey (EntitlementKeys.AllowExecutionOfJitCode), "#1");
-			var kag = ((PString) compiled ["keychain-access-group"]).Value;
+			var kag = ((PString?) compiled ["keychain-access-group"])?.Value;
 			Assert.That (kag, Is.EqualTo ("Z8CSQKJE7R.org.xamarin"), "value 1");
 
-			var archived = PDictionary.FromFile (archivedEntitlements);
+			var archived = PDictionary.FromFile (archivedEntitlements)!;
 			Assert.IsTrue (archived.ContainsKey ("keychain-access-group"), "archived");
-			var archivedKag = ((PString) archived ["keychain-access-group"]).Value;
+			var archivedKag = ((PString?) archived ["keychain-access-group"])?.Value;
 			Assert.That (archivedKag, Is.EqualTo ("Z8CSQKJE7R.org.xamarin"), "archived value 1");
 		}
 	}

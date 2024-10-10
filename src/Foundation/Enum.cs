@@ -89,7 +89,6 @@ namespace Foundation {
 		PPC = 0x00000012,
 		X86_64 = 0x01000007,
 		PPC64 = 0x01000012,
-		[Mac (11, 0)]
 #if !XAMCORE_3_0
 		[Watch (7, 0), TV (14, 0), iOS (14, 0)]
 #endif
@@ -245,6 +244,7 @@ namespace Foundation {
 		YearForWeakOfYear = (1 << 14),
 
 		Nanosecond = (1 << 15),
+		DayOfYear = (1 << 16),
 
 		Calendar = (1 << 20),
 		TimeZone = (1 << 21),
@@ -268,19 +268,14 @@ namespace Foundation {
 		Atomic = 1,
 
 		WithoutOverwriting = 2,
-		[Mac (11, 0)]
 		[MacCatalyst (13, 1)]
 		FileProtectionNone = 0x10000000,
-		[Mac (11, 0)]
 		[MacCatalyst (13, 1)]
 		FileProtectionComplete = 0x20000000,
-		[Mac (11, 0)]
 		[MacCatalyst (13, 1)]
 		FileProtectionMask = 0xf0000000,
-		[Mac (11, 0)]
 		[MacCatalyst (13, 1)]
 		FileProtectionCompleteUnlessOpen = 0x30000000,
-		[Mac (11, 0)]
 		[MacCatalyst (13, 1)]
 		FileProtectionCompleteUntilFirstUserAuthentication = 0x40000000,
 		[iOS (17, 0), NoMac, MacCatalyst (17, 0), TV (17, 0), Watch (10, 0)]
@@ -785,9 +780,9 @@ namespace Foundation {
 		MutableContainers = 1,
 		MutableLeaves = 2,
 		FragmentsAllowed = 4,
-		[Mac (12, 0), iOS (15, 0), TV (15, 0), Watch (8, 0), MacCatalyst (15, 0)]
+		[iOS (15, 0), TV (15, 0), Watch (8, 0), MacCatalyst (15, 0)]
 		Json5Allowed = 8,
-		[Mac (12, 0), iOS (15, 0), TV (15, 0), Watch (8, 0), MacCatalyst (15, 0)]
+		[iOS (15, 0), TV (15, 0), Watch (8, 0), MacCatalyst (15, 0)]
 		TopLevelDictionaryAssumed = 16,
 #if !NET
 		[Obsolete ("Use 'FragmentsAllowed. instead.")]
@@ -926,7 +921,7 @@ namespace Foundation {
 		[NoiOS, NoTV, NoWatch]
 		[NoMacCatalyst]
 		SecurityScopeAllowOnlyReadAccess = 1 << 12,
-		[Mac (12, 0), iOS (15, 0), TV (15, 0), Watch (8, 0), MacCatalyst (15, 0)]
+		[iOS (15, 0), TV (15, 0), Watch (8, 0), MacCatalyst (15, 0)]
 		CreationWithoutImplicitSecurityScope = 1 << 29,
 	}
 
@@ -938,7 +933,7 @@ namespace Foundation {
 		[NoiOS, NoTV, NoWatch]
 		[NoMacCatalyst]
 		WithSecurityScope = 1 << 10,
-		[Mac (12, 0), iOS (15, 0), TV (15, 0), Watch (8, 0), MacCatalyst (15, 0)]
+		[iOS (15, 0), TV (15, 0), Watch (8, 0), MacCatalyst (15, 0)]
 		WithoutImplicitStartAccessing = 1 << 15,
 	}
 
@@ -994,9 +989,7 @@ namespace Foundation {
 		Video,
 		Background,
 		Voice,
-		[iOS (12, 0)]
 		[Watch (5, 0)]
-		[TV (12, 0)]
 		[MacCatalyst (13, 1)]
 		ResponsiveData = 6,
 		[Watch (6, 0), TV (13, 0), iOS (13, 0)]
@@ -1378,7 +1371,7 @@ namespace Foundation {
 		Privileged = (1 << 12),
 	}
 
-	[Mac (11, 0), MacCatalyst (13, 1)]
+	[MacCatalyst (13, 1)]
 	public enum NSFileProtectionType {
 		[Field ("NSFileProtectionComplete")]
 		Complete,

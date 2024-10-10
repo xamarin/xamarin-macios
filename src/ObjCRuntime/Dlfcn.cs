@@ -203,6 +203,114 @@ namespace ObjCRuntime {
 			return Runtime.GetNSObject<NSNumber> (actual);
 		}
 
+		/// <summary>Gets the signed byte value exposed with the given symbol from the dynamic library.</summary>
+		/// <param name="handle">Handle to the dynamic library previously opened with <see cref="dlopen(System.String,System.Int32)" /> or <see cref="dlopen(System.String,Mode)" />.</param>
+		/// <param name="symbol">Name of the public symbol in the dynamic library to look up.</param>
+		/// <returns>The value from the library, or zero on failure.</returns>
+		/// <remarks>If this routine fails, it will return zero.</remarks>
+		public static sbyte GetSByte (IntPtr handle, string symbol)
+		{
+			var indirect = dlsym (handle, symbol);
+			if (indirect == IntPtr.Zero)
+				return 0;
+			unchecked {
+				return (sbyte) Marshal.ReadByte (indirect);
+			}
+		}
+
+		/// <summary>Sets the specified symbol in the library handle to the specified signed byte value.</summary>
+		/// <param name="handle">Handle to the dynamic library previously opened with <see cref="dlopen(System.String,System.Int32)" /> or <see cref="dlopen(System.String,Mode)" />.</param>
+		/// <param name="symbol">Name of the public symbol in the dynamic library to look up.</param>
+		/// <param name="value">The value to set.</param>
+		public static void SetSByte (IntPtr handle, string symbol, sbyte value)
+		{
+			var indirect = dlsym (handle, symbol);
+			if (indirect == IntPtr.Zero)
+				return;
+			unsafe {
+				Marshal.WriteByte (indirect, (byte) value);
+			}
+		}
+
+		/// <summary>Gets the byte value exposed with the given symbol from the dynamic library.</summary>
+		/// <param name="handle">Handle to the dynamic library previously opened with <see cref="dlopen(System.String,System.Int32)" /> or <see cref="dlopen(System.String,Mode)" />.</param>
+		/// <param name="symbol">Name of the public symbol in the dynamic library to look up.</param>
+		/// <returns>The value from the library, or zero on failure.</returns>
+		/// <remarks>If this routine fails, it will return zero.</remarks>
+		public static byte GetByte (IntPtr handle, string symbol)
+		{
+			var indirect = dlsym (handle, symbol);
+			if (indirect == IntPtr.Zero)
+				return 0;
+			return Marshal.ReadByte (indirect);
+		}
+
+		/// <summary>Sets the specified symbol in the library handle to the specified byte value.</summary>
+		/// <param name="handle">Handle to the dynamic library previously opened with <see cref="dlopen(System.String,System.Int32)" /> or <see cref="dlopen(System.String,Mode)" />.</param>
+		/// <param name="symbol">Name of the public symbol in the dynamic library to look up.</param>
+		/// <param name="value">The value to set.</param>
+		public static void SetByte (IntPtr handle, string symbol, byte value)
+		{
+			var indirect = dlsym (handle, symbol);
+			if (indirect == IntPtr.Zero)
+				return;
+			Marshal.WriteByte (indirect, value);
+		}
+
+		/// <summary>Gets the short value exposed with the given symbol from the dynamic library.</summary>
+		/// <param name="handle">Handle to the dynamic library previously opened with <see cref="dlopen(System.String,System.Int32)" /> or <see cref="dlopen(System.String,Mode)" />.</param>
+		/// <param name="symbol">Name of the public symbol in the dynamic library to look up.</param>
+		/// <returns>The value from the library, or zero on failure.</returns>
+		/// <remarks>If this routine fails, it will return zero.</remarks>
+		public static short GetInt16 (IntPtr handle, string symbol)
+		{
+			var indirect = dlsym (handle, symbol);
+			if (indirect == IntPtr.Zero)
+				return 0;
+			return Marshal.ReadInt16 (indirect);
+		}
+
+		/// <summary>Sets the specified symbol in the library handle to the specified short value.</summary>
+		/// <param name="handle">Handle to the dynamic library previously opened with <see cref="dlopen(System.String,System.Int32)" /> or <see cref="dlopen(System.String,Mode)" />.</param>
+		/// <param name="symbol">Name of the public symbol in the dynamic library to look up.</param>
+		/// <param name="value">The value to set.</param>
+		public static void SetInt16 (IntPtr handle, string symbol, short value)
+		{
+			var indirect = dlsym (handle, symbol);
+			if (indirect == IntPtr.Zero)
+				return;
+			Marshal.WriteInt16 (indirect, value);
+		}
+
+		/// <summary>Gets the ushort value exposed with the given symbol from the dynamic library.</summary>
+		/// <param name="handle">Handle to the dynamic library previously opened with <see cref="dlopen(System.String,System.Int32)" /> or <see cref="dlopen(System.String,Mode)" />.</param>
+		/// <param name="symbol">Name of the public symbol in the dynamic library to look up.</param>
+		/// <returns>The value from the library, or zero on failure.</returns>
+		/// <remarks>If this routine fails, it will return zero.</remarks>
+		public static ushort GetUInt16 (IntPtr handle, string symbol)
+		{
+			var indirect = dlsym (handle, symbol);
+			if (indirect == IntPtr.Zero)
+				return 0;
+			unchecked {
+				return (ushort) Marshal.ReadInt16 (indirect);
+			}
+		}
+
+		/// <summary>Sets the specified symbol in the library handle to the specified ushort value.</summary>
+		/// <param name="handle">Handle to the dynamic library previously opened with <see cref="dlopen(System.String,System.Int32)" /> or <see cref="dlopen(System.String,Mode)" />.</param>
+		/// <param name="symbol">Name of the public symbol in the dynamic library to look up.</param>
+		/// <param name="value">The value to set.</param>
+		public static void SetUInt16 (IntPtr handle, string symbol, ushort value)
+		{
+			var indirect = dlsym (handle, symbol);
+			if (indirect == IntPtr.Zero)
+				return;
+			unchecked {
+				Marshal.WriteInt16 (indirect, (short) value);
+			}
+		}
+
 		public static int GetInt32 (IntPtr handle, string symbol)
 		{
 			var indirect = dlsym (handle, symbol);
@@ -291,24 +399,28 @@ namespace ObjCRuntime {
 
 		public static void SetString (IntPtr handle, string symbol, NSString? value)
 		{
-			var indirect = dlsym (handle, symbol);
-			if (indirect == IntPtr.Zero)
-				return;
-			var strHandle = value.GetHandle ();
-			if (strHandle != IntPtr.Zero)
-				CFObject.CFRetain (strHandle);
-			Marshal.WriteIntPtr (indirect, strHandle);
+			SetObject (handle, symbol, value);
 		}
 
 		public static void SetArray (IntPtr handle, string symbol, NSArray? array)
 		{
+			SetObject (handle, symbol, array);
+		}
+
+		/// <summary>Sets the specified symbol in the library handle to the specified NSObject value.</summary>
+		/// <param name="handle">Handle to the dynamic library previously opened with <see cref="dlopen(System.String,Mode)" />.</param>
+		/// <param name="symbol">Name of the public symbol in the dynamic library to look up.</param>
+		/// <param name="value">The object to set, can be null.</param>
+		/// <remarks>The previous object value is not released, it is up to the developer to release the handle to that object if needed.</remarks>
+		public static void SetObject (IntPtr handle, string symbol, NSObject? value)
+		{
 			var indirect = dlsym (handle, symbol);
 			if (indirect == IntPtr.Zero)
 				return;
-			var arrayHandle = array.GetHandle ();
-			if (arrayHandle != IntPtr.Zero)
-				CFObject.CFRetain (arrayHandle);
-			Marshal.WriteIntPtr (indirect, arrayHandle);
+			var objectHandle = value.GetHandle ();
+			if (objectHandle != IntPtr.Zero)
+				CFObject.CFRetain (objectHandle);
+			Marshal.WriteIntPtr (indirect, objectHandle);
 		}
 
 		public static nint GetNInt (IntPtr handle, string symbol)

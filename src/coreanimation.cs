@@ -669,6 +669,19 @@ namespace CoreAnimation {
 		[Static]
 		[Export ("cornerCurveExpansionFactor:")]
 		nfloat GetCornerCurveExpansionFactor ([BindAs (typeof (CACornerCurve))] NSString curve);
+
+		[NoWatch]
+		[NoTV]
+		[iOS (17, 0)]
+		[MacCatalyst (17, 0)]
+		[Mac (14, 0)]
+		[Export ("wantsExtendedDynamicRangeContent")]
+		bool WantsExtendedDynamicRangeContent { get; set; }
+
+		[Mac (15, 0), iOS (18, 0), TV (18, 0), MacCatalyst (18, 0), NoWatch]
+		[Export ("toneMapMode")]
+		[BindAs (typeof (CAToneMapMode))]
+		NSString ToneMapMode { get; set; }
 	}
 
 	[NoWatch] // headers not updated
@@ -681,6 +694,17 @@ namespace CoreAnimation {
 		Circular,
 		[Field ("kCACornerCurveContinuous")]
 		Continuous,
+	}
+
+	[Mac (15, 0), iOS (18, 0), TV (18, 0), MacCatalyst (18, 0), NoWatch]
+	enum CAToneMapMode {
+		[DefaultEnumValue]
+		[Field ("CAToneMapModeAutomatic")]
+		Automatic,
+		[Field ("CAToneMapModeNever")]
+		Never,
+		[Field ("CAToneMapModeIfSupported")]
+		IfSupported,
 	}
 
 	interface ICAMetalDrawable { }
@@ -737,8 +761,6 @@ namespace CoreAnimation {
 		bool AllowsNextDrawableTimeout { get; set; }
 
 		[NoWatch] // headers not updated
-		[TV (11, 2)]
-		[iOS (11, 2)]
 		[MacCatalyst (13, 1)]
 		[Export ("maximumDrawableCount")]
 		nuint MaximumDrawableCount { get; set; }
@@ -768,7 +790,6 @@ namespace CoreAnimation {
 		[NoTV]
 		[iOS (16, 0)]
 		[MacCatalyst (16, 0)]
-		[Mac (11, 0)]
 		[Export ("wantsExtendedDynamicRangeContent")]
 		bool WantsExtendedDynamicRangeContent { get; set; }
 
@@ -1229,7 +1250,7 @@ namespace CoreAnimation {
 #elif MONOMAC
 	[Protocol (FormalSince = "10.12")]
 #elif WATCH
-	[Protocol (FormalSince = "3.0"]
+	[Protocol (FormalSince = "3.0")]
 #else
 	[Protocol]
 #endif
@@ -1423,7 +1444,7 @@ namespace CoreAnimation {
 
 		#endregion
 
-		[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0), Mac (12, 0)]
+		[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("preferredFrameRateRange", ArgumentSemantic.Assign)]
 		CAFrameRateRange PreferredFrameRateRange { get; set; }
 	}
@@ -1437,7 +1458,7 @@ namespace CoreAnimation {
 #elif MONOMAC
 	[Protocol (FormalSince = "10.12")]
 #elif WATCH
-	[Protocol (FormalSince = "3.0"]
+	[Protocol (FormalSince = "3.0")]
 #else
 	[Synthetic]
 #endif
@@ -1530,8 +1551,25 @@ namespace CoreAnimation {
 		[Export ("initialVelocity")]
 		nfloat InitialVelocity { get; set; }
 
+		[iOS (17, 0), TV (17, 0), MacCatalyst (17, 0), Mac (14, 0), NoWatch]
 		[Export ("settlingDuration")]
 		double /* CFTimeInterval */ SettlingDuration { get; }
+
+		[iOS (17, 0), TV (17, 0), MacCatalyst (17, 0), Mac (14, 0), NoWatch]
+		[Export ("allowsOverdamping")]
+		bool AllowsOverdamping { get; set; }
+
+		[iOS (17, 0), TV (17, 0), MacCatalyst (17, 0), Mac (14, 0), NoWatch]
+		[Export ("initWithPerceptualDuration:bounce:")]
+		NativeHandle Constructor (double /* CFTimeInterval */ perceptualDuration, nfloat bounce);
+
+		[iOS (17, 0), TV (17, 0), MacCatalyst (17, 0), Mac (14, 0), NoWatch]
+		[Export ("perceptualDuration")]
+		double /* CFTimeInterval */ PerceptualDuration { get; }
+
+		[iOS (17, 0), TV (17, 0), MacCatalyst (17, 0), Mac (14, 0), NoWatch]
+		[Export ("bounce")]
+		nfloat Bounce { get; }
 	}
 
 	/// <summary>Keyframe-based animation support.</summary>
@@ -1776,15 +1814,11 @@ namespace CoreAnimation {
 		[Field ("kCAGradientLayerAxial")]
 		Axial,
 
-		[iOS (12, 0)]
-		[TV (12, 0)]
 		[NoWatch]
 		[MacCatalyst (13, 1)]
 		[Field ("kCAGradientLayerRadial")]
 		Radial,
 
-		[iOS (12, 0)]
-		[TV (12, 0)]
 		[NoWatch]
 		[MacCatalyst (13, 1)]
 		[Field ("kCAGradientLayerConic")]
@@ -2195,23 +2229,14 @@ namespace CoreAnimation {
 
 	[Internal]
 	[Static]
-	[NoiOS]
-	[NoTV]
-	[NoWatch]
-	[NoMacCatalyst]
 	partial interface CARendererOptionKeys {
 		[Field ("kCARendererColorSpace")]
 		NSString ColorSpace { get; }
 
-		[NoMacCatalyst]
 		[Field ("kCARendererMetalCommandQueue")]
 		NSString MetalCommandQueue { get; }
 	}
 
-	[NoiOS]
-	[NoTV]
-	[NoWatch]
-	[NoMacCatalyst]
 	[StrongDictionary ("CARendererOptionKeys")]
 	interface CARendererOptions {
 
@@ -2223,19 +2248,12 @@ namespace CoreAnimation {
 		IMTLCommandQueue MetalCommandQueue { get; set; }
 	}
 
-	// 10.5 on the Mac
-	[NoiOS]
-	[NoTV]
-	[NoWatch]
-	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	interface CARenderer {
-		[NoMacCatalyst]
 		[Static]
 		[Export ("rendererWithMTLTexture:options:")]
 		CARenderer Create (IMTLTexture tex, [NullAllowed] NSDictionary dict);
 
-		[NoMacCatalyst]
 		[Static]
 		[Wrap ("Create (tex, options.GetDictionary ())")]
 		CARenderer Create (IMTLTexture tex, [NullAllowed] CARendererOptions options);
@@ -2272,7 +2290,6 @@ namespace CoreAnimation {
 		[Export ("endFrame")]
 		void EndFrame ();
 
-		[NoMacCatalyst]
 		[Export ("setDestination:")]
 		void SetDestination (IMTLTexture tex);
 	}
@@ -2302,5 +2319,67 @@ namespace CoreAnimation {
 		[Static]
 		[Export ("available")]
 		bool Available { [Bind ("isAvailable")] get; }
+
+		[Static]
+		[Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("HLGMetadataWithAmbientViewingEnvironment:")]
+		CAEdrMetadata GetHlgMetadata (NSData ambientViewingEnvironmentData);
+	}
+
+	[BaseType (typeof (NSObject))]
+	[iOS (17, 0), TV (17, 0), Mac (14, 0), MacCatalyst (17, 0), NoWatch]
+	[DisableDefaultCtor]
+	interface CAMetalDisplayLinkUpdate {
+		[Export ("drawable")]
+		ICAMetalDrawable Drawable { get; }
+
+		[Export ("targetTimestamp")]
+		double /* CFTimeInterval */ TargetTimestamp { get; }
+
+		[Export ("targetPresentationTimestamp")]
+		double /* CFTimeInterval */ TargetPresentationTimestamp { get; }
+	}
+
+	[Protocol (BackwardsCompatibleCodeGeneration = false), Model]
+	[BaseType (typeof (NSObject))]
+	[iOS (17, 0), TV (17, 0), Mac (14, 0), MacCatalyst (17, 0), NoWatch]
+	interface CAMetalDisplayLinkDelegate {
+		[Abstract]
+		[Export ("metalDisplayLink:needsUpdate:")]
+		void NeedsUpdate (CAMetalDisplayLink link, CAMetalDisplayLinkUpdate update);
+	}
+
+	interface ICAMetalDisplayLinkDelegate { }
+
+	[BaseType (typeof (NSObject))]
+	[iOS (17, 0), TV (17, 0), Mac (14, 0), MacCatalyst (17, 0), NoWatch]
+	[DisableDefaultCtor]
+	interface CAMetalDisplayLink {
+		[Export ("initWithMetalLayer:")]
+		NativeHandle Constructor (CAMetalLayer layer);
+
+		[Export ("addToRunLoop:forMode:")]
+		void AddToRunLoop (NSRunLoop runloop, NSRunLoopMode mode);
+
+		[Export ("removeFromRunLoop:forMode:")]
+		void RemoveFromRunLoop (NSRunLoop runloop, NSRunLoopMode mode);
+
+		[Export ("invalidate")]
+		void Invalidate ();
+
+		[Export ("delegate", ArgumentSemantic.Weak), NullAllowed]
+		NSObject WeakDelegate { get; set; }
+
+		[Wrap ("WeakDelegate"), NullAllowed]
+		ICAMetalDisplayLinkDelegate Delegate { get; set; }
+
+		[Export ("preferredFrameLatency")]
+		float PreferredFrameLatency { get; set; }
+
+		[Export ("preferredFrameRateRange")]
+		CAFrameRateRange PreferredFrameRateRange { get; set; }
+
+		[Export ("paused")]
+		bool Paused { [Bind ("isPaused")] get; set; }
 	}
 }

@@ -21,8 +21,7 @@ namespace Xharness {
 	public enum TestLabel : Int64 {
 		[Label ("none")]
 		None = 0,
-		[Label ("bcl")]
-		Bcl = 1 << 1,
+		// 1 << 1 is unused
 		[Label ("bgen")]
 		Bgen = 1 << 2,
 		[Label ("binding")]
@@ -45,8 +44,7 @@ namespace Xharness {
 		Generator = 1 << 11,
 		[Label ("interdependent-binding-projects")]
 		InterdependentBindingProjects = 1 << 12,
-		[Label ("install-source")]
-		InstallSource = 1 << 13,
+		// 1 << 13 is unused
 		[Label ("introspection")]
 		Introspection = 1 << 14,
 		[Label ("linker")]
@@ -57,8 +55,7 @@ namespace Xharness {
 		MacBindingProject = 1 << 17,
 		[Label ("mmp")]
 		Mmp = 1 << 18,
-		[Label ("mononative")]
-		Mononative = 1 << 19,
+		// 1 << 19 is unused
 		[Label ("monotouch")]
 		Monotouch = 1 << 20,
 		[Label ("msbuild")]

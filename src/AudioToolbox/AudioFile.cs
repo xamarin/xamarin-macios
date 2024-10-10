@@ -1160,6 +1160,9 @@ namespace AudioToolbox {
 		[DllImport (Constants.AudioToolboxLibrary)]
 		unsafe extern static OSStatus AudioFileCountUserData (AudioFileID handle, uint userData, int* count);
 
+		/// <summary>Get the number of user data for the specified chunk type.</summary>
+		/// <param name="userData">The fourcc of the ID whose count to retrieve.</param>
+		/// <returns>The number of user udata for the specified ID.</returns>
 		public int CountUserData (uint userData)
 		{
 			int count;
@@ -1170,27 +1173,217 @@ namespace AudioToolbox {
 			return -1;
 		}
 
+		/// <summary>Get the number of user data for the specified chunk type.</summary>
+		/// <param name="chunkType">The fourcc of the chunk.</param>
+		/// <returns>The number of user data for the specified chunk type.</returns>
+		public int CountUserData (AudioFileChunkType chunkType)
+		{
+			return CountUserData ((uint) chunkType);
+		}
+
 		[DllImport (Constants.AudioToolboxLibrary)]
 		unsafe extern static OSStatus AudioFileGetUserDataSize (AudioFileID audioFile, uint userDataID, int index, int* userDataSize);
+
+		/// <summary>Get the size of the specified user data.</summary>
+		/// <param name="userDataId">The fourcc of the chunk.</param>
+		/// <param name="index">The index of the chunk if there are more than one chunk.</param>
+		/// <returns>Returns the (non-negative) size on success, otherwise -1.</returns>
 		public int GetUserDataSize (uint userDataId, int index)
 		{
 			int ds;
 
 			unsafe {
-				if (AudioFileGetUserDataSize (Handle, userDataId, index, &ds) == 0)
+				if (AudioFileGetUserDataSize (Handle, userDataId, index, &ds) != 0)
 					return -1;
 			}
 			return ds;
 		}
 
+		/// <summary>Get the size of the specified user data.</summary>
+		/// <param name="chunkType">The fourcc of the chunk.</param>
+		/// <param name="index">The index of the chunk if there are more than one chunk.</param>
+		/// <returns>Returns the (non-negative) size on success, otherwise -1.</returns>
+		public int GetUserDataSize (AudioFileChunkType chunkType, int index)
+		{
+			return GetUserDataSize ((uint) chunkType, index);
+		}
+
+#if NET
+		[SupportedOSPlatform ("ios17.0")]
+		[SupportedOSPlatform ("tvos17.0")]
+		[SupportedOSPlatform ("maccatalyst17.0")]
+		[SupportedOSPlatform ("macos14.0")]
+#else
+		[iOS (17, 0), TV (17, 0), MacCatalyst (17, 0), Mac (14, 0)]
+#endif
+		[DllImport (Constants.AudioToolboxLibrary)]
+		unsafe extern static OSStatus AudioFileGetUserDataSize64 (AudioFileID audioFile, uint userDataID, int index, ulong* userDataSize);
+
+		/// <summary>Get the 64-bit size of the specified user data.</summary>
+		/// <param name="userDataId">The fourcc of the chunk.</param>
+		/// <param name="index">The index of the chunk if there are more than one chunk.</param>
+		/// <param name="size">The retrieved 64-bit size of the specified user data.</param>
+		/// <returns>Returns <see cref="AudioFileError.Success" /> on success, otherwise an <see cref="AudioFileError" /> error code.</returns>
+#if NET
+		[SupportedOSPlatform ("ios17.0")]
+		[SupportedOSPlatform ("tvos17.0")]
+		[SupportedOSPlatform ("maccatalyst17.0")]
+		[SupportedOSPlatform ("macos14.0")]
+#else
+		[iOS (17, 0), TV (17, 0), MacCatalyst (17, 0), Mac (14, 0)]
+#endif
+		public AudioFileError GetUserDataSize (uint userDataId, int index, out ulong size)
+		{
+			size = 0;
+			unsafe {
+				return (AudioFileError) AudioFileGetUserDataSize64 (Handle, userDataId, index, (ulong*) Unsafe.AsPointer<ulong> (ref size));
+			}
+		}
+
+		/// <summary>Get the 64-bit size of the specified user data.</summary>
+		/// <param name="chunkType">The fourcc of the chunk.</param>
+		/// <param name="index">The index of the chunk if there are more than one chunk.</param>
+		/// <param name="size">The retrieved 64-bit size of the specified user data.</param>
+		/// <returns>Returns <see cref="AudioFileError.Success" /> on success, otherwise an <see cref="AudioFileError" /> error code.</returns>
+#if NET
+		[SupportedOSPlatform ("ios17.0")]
+		[SupportedOSPlatform ("tvos17.0")]
+		[SupportedOSPlatform ("maccatalyst17.0")]
+		[SupportedOSPlatform ("macos14.0")]
+#else
+		[iOS (17, 0), TV (17, 0), MacCatalyst (17, 0), Mac (14, 0)]
+#endif
+		public AudioFileError GetUserDataSize (AudioFileChunkType chunkType, int index, out ulong size)
+		{
+			return GetUserDataSize ((uint) chunkType, index, out size);
+		}
+
 		[DllImport (Constants.AudioToolboxLibrary)]
 		unsafe extern static OSStatus AudioFileGetUserData (AudioFileID audioFile, int userDataID, int index, int* userDataSize, IntPtr userData);
 
+		/// <summary>Get part of the data of a chunk in a file.</summary>
+		/// <param name="userDataID">The fourcc of the chunk.</param>
+		/// <param name="index">The index of the chunk if there are more than one chunk.</param>
+		/// <param name="size">On input the size of the memory <paramref name="userData" /> points to. On output the number of bytes written.</param>
+		/// <param name="userData">A pointer to memory where the data will be copied.</param>
+		/// <returns>Returns <see cref="AudioFileError.Success" /> on success, otherwise an <see cref="AudioFileError" /> error code.</returns>
+#if XAMCORE_5_0
+		public AudioFileError GetUserData (int userDataID, int index, ref int size, IntPtr userData)
+#else
 		public int GetUserData (int userDataID, int index, ref int size, IntPtr userData)
+#endif
 		{
 			unsafe {
 				return AudioFileGetUserData (Handle, userDataID, index, (int*) Unsafe.AsPointer<int> (ref size), userData);
 			}
+		}
+
+		/// <summary>Get part of the data of a chunk in a file.</summary>
+		/// <param name="chunkType">The fourcc of the chunk.</param>
+		/// <param name="index">The index of the chunk if there are more than one chunk.</param>
+		/// <param name="size">On input the size of the memory <paramref name="userData" /> points to. On output the number of bytes written.</param>
+		/// <param name="userData">A pointer to memory where the data will be copied.</param>
+		/// <returns>Returns <see cref="AudioFileError.Success" /> on success, otherwise an <see cref="AudioFileError" /> error code.</returns>
+		public AudioFileError GetUserData (AudioFileChunkType chunkType, int index, ref int size, IntPtr userData)
+		{
+			return (AudioFileError) GetUserData ((int) chunkType, index, ref size, userData);
+		}
+
+#if NET
+		[SupportedOSPlatform ("ios17.0")]
+		[SupportedOSPlatform ("tvos17.0")]
+		[SupportedOSPlatform ("maccatalyst17.0")]
+		[SupportedOSPlatform ("macos14.0")]
+#else
+		[iOS (17, 0), TV (17, 0), MacCatalyst (17, 0), Mac (14, 0)]
+#endif
+		[DllImport (Constants.AudioToolboxLibrary)]
+		unsafe extern static OSStatus AudioFileGetUserDataAtOffset (AudioFileID audioFile, uint userDataID, int index, long inOffset, int* userDataSize, IntPtr userData);
+
+		/// <summary>Get part of the data of a chunk in a file.</summary>
+		/// <param name="userDataId">The fourcc of the chunk.</param>
+		/// <param name="index">The index of the chunk if there are more than one chunk.</param>
+		/// <param name="offset">The offset from the first byte of the chunk of the data to get.</param>
+		/// <param name="size">On input the size of the memory <paramref name="userData" /> points to. On output the number of bytes written.</param>
+		/// <param name="userData">A pointer to memory where the data will be copied.</param>
+		/// <returns>Returns <see cref="AudioFileError.Success" /> on success, otherwise an <see cref="AudioFileError" /> error code.</returns>
+#if NET
+		[SupportedOSPlatform ("ios17.0")]
+		[SupportedOSPlatform ("tvos17.0")]
+		[SupportedOSPlatform ("maccatalyst17.0")]
+		[SupportedOSPlatform ("macos14.0")]
+#else
+		[iOS (17, 0), TV (17, 0), MacCatalyst (17, 0), Mac (14, 0)]
+#endif
+		public AudioFileError GetUserData (uint userDataId, int index, long offset, ref int size, IntPtr userData)
+		{
+			unsafe {
+				return (AudioFileError) AudioFileGetUserDataAtOffset (Handle, userDataId, index, offset, (int*) Unsafe.AsPointer<int> (ref size), userData);
+			}
+		}
+
+		/// <summary>Get part of the data of a chunk in a file.</summary>
+		/// <param name="chunkType">The fourcc of the chunk.</param>
+		/// <param name="index">The index of the chunk if there are more than one chunk.</param>
+		/// <param name="offset">The offset from the first byte of the chunk of the data to get.</param>
+		/// <param name="size">On input the size of the memory <paramref name="userData" /> points to. On output the number of bytes written.</param>
+		/// <param name="userData">A pointer to memory where the data will be copied.</param>
+		/// <returns>Returns <see cref="AudioFileError.Success" /> on success, otherwise an <see cref="AudioFileError" /> error code.</returns>
+#if NET
+		[SupportedOSPlatform ("ios17.0")]
+		[SupportedOSPlatform ("tvos17.0")]
+		[SupportedOSPlatform ("maccatalyst17.0")]
+		[SupportedOSPlatform ("macos14.0")]
+#else
+		[iOS (17, 0), TV (17, 0), MacCatalyst (17, 0), Mac (14, 0)]
+#endif
+		public AudioFileError GetUserData (AudioFileChunkType chunkType, int index, long offset, ref int size, IntPtr userData)
+		{
+			return GetUserData ((uint) chunkType, index, offset, ref size, userData);
+		}
+
+		/// <summary>Get part of the data of a chunk in a file.</summary>
+		/// <param name="userDataId">The fourcc of the chunk.</param>
+		/// <param name="index">The index of the chunk if there are more than one chunk.</param>
+		/// <param name="offset">The offset from the first byte of the chunk of the data to get.</param>
+		/// <param name="size">The number of bytes written into the byte array.</param>
+		/// <param name="data">An array of bytes where the data will be copied.</param>
+		/// <returns>Returns <see cref="AudioFileError.Success" /> on success, otherwise an <see cref="AudioFileError" /> error code.</returns>
+#if NET
+		[SupportedOSPlatform ("ios17.0")]
+		[SupportedOSPlatform ("tvos17.0")]
+		[SupportedOSPlatform ("maccatalyst17.0")]
+		[SupportedOSPlatform ("macos14.0")]
+#else
+		[iOS (17, 0), TV (17, 0), MacCatalyst (17, 0), Mac (14, 0)]
+#endif
+		public AudioFileError GetUserData (uint userDataId, int index, long offset, byte [] data, out int size)
+		{
+			size = data.Length;
+			unsafe {
+				fixed (byte* dataPtr = data)
+					return GetUserData (userDataId, index, offset, ref size, (IntPtr) dataPtr);
+			}
+		}
+
+		/// <summary>Get part of the data of a chunk in a file.</summary>
+		/// <param name="chunkType">The fourcc of the chunk.</param>
+		/// <param name="index">The index of the chunk if there are more than one chunk.</param>
+		/// <param name="offset">The offset from the first byte of the chunk of the data to get.</param>
+		/// <param name="size">The number of bytes written into the byte array.</param>
+		/// <param name="data">An array of bytes where the data will be copied.</param>
+		/// <returns>Returns <see cref="AudioFileError.Success" /> on success, otherwise an <see cref="AudioFileError" /> error code.</returns>
+#if NET
+		[SupportedOSPlatform ("ios17.0")]
+		[SupportedOSPlatform ("tvos17.0")]
+		[SupportedOSPlatform ("maccatalyst17.0")]
+		[SupportedOSPlatform ("macos14.0")]
+#else
+		[iOS (17, 0), TV (17, 0), MacCatalyst (17, 0), Mac (14, 0)]
+#endif
+		public AudioFileError GetUserData (AudioFileChunkType chunkType, int index, long offset, byte [] data, out int size)
+		{
+			return GetUserData ((uint) chunkType, index, offset, data, out size);
 		}
 
 		[DllImport (Constants.AudioToolboxLibrary)]

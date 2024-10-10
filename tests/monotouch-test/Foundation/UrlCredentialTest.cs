@@ -29,7 +29,11 @@ namespace MonoTouchFixtures.Foundation {
 
 		SecTrust GetTrust ()
 		{
+#if NET
+			var x = X509CertificateLoader.LoadCertificate (CertificateTest.mail_google_com);
+#else
 			X509Certificate x = new X509Certificate (CertificateTest.mail_google_com);
+#endif
 			using (var policy = SecPolicy.CreateBasicX509Policy ())
 				return new SecTrust (x, policy);
 		}

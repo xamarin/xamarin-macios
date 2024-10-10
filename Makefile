@@ -1,5 +1,5 @@
 TOP=.
-SUBDIRS=builds runtime fsharp src msbuild tools
+SUBDIRS=builds runtime src msbuild tools
 include $(TOP)/Make.config
 include $(TOP)/mk/versions.mk
 
@@ -110,6 +110,7 @@ else
 	@echo
 endif
 endif
+	$(Q) $(MAKE) -C dotnet shutdown-build-server
 
 .PHONY: package release
 package release:

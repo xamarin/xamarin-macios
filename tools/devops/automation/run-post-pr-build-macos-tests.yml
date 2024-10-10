@@ -1,0 +1,19 @@
+# YAML pipeline for post build operations. 
+# This pipeline will execute the tests for the CI on PR as soon as the workloads have been complited.
+
+trigger: none
+pr: none
+
+# we cannot use a template in a pipeline context
+resources:
+  pipelines:
+    - pipeline: macios
+      source: \Xamarin\Mac-iOS\pr pipelines\xamarin-macios-pr
+      trigger:
+        stages:
+          - build_macos_tests
+
+extends:
+  template: templates/pipelines/run-macos-tests-pipeline.yml
+  parameters:
+    isPR: true

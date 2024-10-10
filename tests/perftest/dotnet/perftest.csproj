@@ -7,7 +7,7 @@
     <MonoBundlingExtraArgs>--marshal-objectivec-exceptions:disable --registrar:static</MonoBundlingExtraArgs>
     <LinkMode>None</LinkMode> <!-- never link -->
     <Optimize>true</Optimize> <!-- always optimize -->
-    <SupportedOSPlatformVersion>10.15</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion>12.0</SupportedOSPlatformVersion>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>

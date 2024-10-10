@@ -41,7 +41,7 @@ steps:
   - task: DownloadPipelineArtifact@2
     displayName: 'Download change detection artifacts'
     inputs:
-      patterns: '${{ parameters.uploadPrefix }}change-detection/change-detection.zip'
+      patterns: '${{ parameters.uploadPrefix }}change-detection-$(System.StageAttempt)/change-detection.zip'
       allowFailedBuilds: true
       path: $(System.DefaultWorkingDirectory)/Artifacts
 
@@ -49,7 +49,7 @@ steps:
   - task: ExtractFiles@1
     displayName: 'Decompress change detection artifacts'
     inputs:
-      archiveFilePatterns: '$(System.DefaultWorkingDirectory)/Artifacts/${{ parameters.uploadPrefix }}change-detection/change-detection.zip'
+      archiveFilePatterns: '$(System.DefaultWorkingDirectory)/Artifacts/${{ parameters.uploadPrefix }}change-detection-$(System.StageAttempt)/change-detection.zip'
       destinationFolder: '$(System.DefaultWorkingDirectory)/change-detection'
 
   # Upload the change detection results to vsdrops
@@ -84,7 +84,7 @@ steps:
         $converted = $inputContents + "`n`nUnable to convert markdown: $_`n`n"
       }
       $githubComments = New-GitHubCommentsObjectFromUrl -Url "$(Build.Repository.Uri)" -Token $Env:GITHUB_TOKEN -Hash $Env:COMMENT_HASH
-      $result = $githubComments.NewCommentFromMessage("", "", $converted)
+      $result = $githubComments.NewCommentFromMessage("", "", $converted, "api diff")
     displayName: 'Publish GitHub comment for change detection'
     timeoutInMinutes: 10
     continueOnError: true  # don't let any failures here stop us

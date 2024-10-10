@@ -7,6 +7,12 @@
       "commands": [
         "t4"
       ]
+    },
+    "dotnet-ilrepack": {
+      "version": "1.0.0",
+      "commands": [
+        "ilrepack"
+      ]
     }
   }
 }

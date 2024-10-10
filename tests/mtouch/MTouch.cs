@@ -2639,6 +2639,22 @@ public class TestApp {
 		[TestCase (Target.Dev, "armv7k+llvm,arm64_32+llvm", "ARMv7k,ARM64_32", MTouchBitcode.Full)]
 		[TestCase (Target.Sim, null, "x86_64", MTouchBitcode.Unspecified)]
 		[TestCase (Target.Sim, "x86_64", "x86_64", MTouchBitcode.Unspecified)]
+		/* clang crashes in Xcode 16 beta 1 with:
+
+				warning: overriding the module target triple with arm64_32-apple-watchos11.0.0 [-Woverride-module]
+				1 warning generated.
+				nonnull metadata must be empty
+				  %LDSTR_23 = load ptr, ptr getelementptr inbounds ([0 x ptr], ptr @mono_aot_Xamarin_WatchOS_llvm_got, i32 0, i32 23), align 4, !nonnull !2
+				in function Xamarin_WatchOS_WatchKit_WKInterfaceController__cctor
+				fatal error: error in backend: Broken function found, compilation aborted!
+				clang++: error: clang frontend command failed with exit code 70 (use -v to see invocation)
+				Apple clang version 16.0.0 (clang-1600.0.20.10)
+				Target: arm64_32-apple-darwin23.5.0
+				Thread model: posix
+				InstalledDir: /Applications/Xcode_16.0.0-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin
+				clang++: note: diagnostic msg: Error generating preprocessed source(s) - no preprocessable inputs.
+		*/
+		[Ignore ("Crashes in clang")]
 		public void Architectures_WatchOS (Target target, string abi, string expected_abi, MTouchBitcode bitcode)
 		{
 			AssertDeviceAvailable ();
@@ -4297,7 +4313,7 @@ public partial class KeyboardViewController : UIKit.UIInputViewController
 	<key>CFBundleIdentifier</key>
 	<string>com.xamarin.monotouch-test</string>
 	<key>MinimumOSVersion</key>
-	<string>12.0</string>
+	<string>12.2</string>
 </dict>
 </plist>
 ";

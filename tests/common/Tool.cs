@@ -57,6 +57,14 @@ namespace Xamarin.Tests {
 						return false;
 					}
 					break;
+				case 0000: // this is what mmp reports
+				case 5203:
+					switch (msg.Message) {
+					case "-ld_classic is deprecated and will be removed in a future release":
+					case "Native linking warning: warning: -ld_classic is deprecated and will be removed in a future release":
+						return false;
+					}
+					break;
 				}
 
 				return true;
@@ -95,6 +103,11 @@ namespace Xamarin.Tests {
 			set {
 				output = value;
 			}
+		}
+
+		public void FilterUnrelatedWarnings ()
+		{
+			messages = messages.FilterUnrelatedWarnings ().ToList ();
 		}
 
 		public int Execute (IList<string> arguments)

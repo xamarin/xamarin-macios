@@ -191,7 +191,7 @@ namespace AudioUnit {
 		AUScheduleParameterBlock ScheduleParameterBlock { get; }
 
 		// TODO: https://github.com/xamarin/xamarin-macios/issues/12489
-		// [TV (15,0), NoWatch, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		// [TV (15,0), NoWatch, iOS (15,0), MacCatalyst (15,0)]
 		// [NullAllowed]
 		// [Export ("scheduleMIDIEventListBlock")]
 		// AUMidiEventListBlock ScheduleMidiEventListBlock { get; }
@@ -210,18 +210,18 @@ namespace AudioUnit {
 		string [] MidiOutputNames { get; }
 
 		// TODO: https://github.com/xamarin/xamarin-macios/issues/12489
-		// [TV (15,0), NoWatch, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		// [TV (15,0), NoWatch, iOS (15,0), MacCatalyst (15,0)]
 		// [NullAllowed]
 		// [Export ("MIDIOutputEventListBlock", ArgumentSemantic.Copy)]
 		// AUMidiEventListBlock MidiOutputEventListBlock { get; set; }
 
 		// TODO: https://github.com/xamarin/xamarin-macios/issues/12489
-		// [TV (15,0), NoWatch, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		// [TV (15,0), NoWatch, iOS (15,0), MacCatalyst (15,0)]
 		// [Export ("AudioUnitMIDIProtocol")]
 		// MIDIProtocolID AudioUnitMidiProtocol { get; }
 
 		// TODO: https://github.com/xamarin/xamarin-macios/issues/12489
-		// [TV (15,0), NoWatch, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		// [TV (15,0), NoWatch, iOS (15,0), MacCatalyst (15,0)]
 		// [Export ("hostMIDIProtocol", ArgumentSemantic.Assign)]
 		// MIDIProtocolID HostMIDIProtocol { get; set; }
 
@@ -332,26 +332,23 @@ namespace AudioUnit {
 		[Export ("MIDIOutputBufferSizeHint")]
 		nint MidiOutputBufferSizeHint { get; set; }
 
-		[iOS (12, 0)]
 		[NoWatch]
 		[NoTV]
 		[MacCatalyst (13, 1)]
 		[Export ("profileStateForCable:channel:")]
 		MidiCIProfileState GetProfileState (byte cable, byte channel);
 
-		[iOS (12, 0), NoWatch, NoTV]
+		[NoWatch, NoTV]
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("profileChangedBlock", ArgumentSemantic.Assign)]
 		AUMidiCIProfileChangedCallback ProfileChangedCallback { get; set; }
 
-		[iOS (12, 0)]
 		[NoWatch]
 		[NoTV]
 		[MacCatalyst (13, 1)]
 		[Export ("disableProfile:cable:onChannel:error:")]
 		bool Disable (MidiCIProfile profile, byte cable, byte channel, [NullAllowed] out NSError outError);
 
-		[iOS (12, 0)]
 		[NoWatch]
 		[NoTV]
 		[MacCatalyst (13, 1)]
@@ -388,6 +385,10 @@ namespace AudioUnit {
 		[NoWatch, NoTV, NoiOS]
 		[Export ("isLoadedInProcess")]
 		bool IsLoadedInProcess { get; }
+
+		[Watch (9, 0), TV (16, 0), Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
+		[Export ("migrateFromPlugin")]
+		NSData [] MigrateFromPlugin { get; }
 	}
 
 	// kept separate from AUAudioUnit, quote:
