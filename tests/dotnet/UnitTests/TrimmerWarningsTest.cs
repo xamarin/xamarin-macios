@@ -8,7 +8,23 @@ namespace Xamarin.Tests {
 		[TestCase (ApplePlatform.TVOS, "tvossimulator-x64")]
 		public void TrimmerWarningsManagedStaticRegistrar (ApplePlatform platform, string runtimeIdentifiers)
 		{
-			TrimmerWarnings (platform, runtimeIdentifiers, "managed-static", Array.Empty<ExpectedBuildMessage> ());
+			// FIXME: dotnet/runtime#100256
+			ExpectedBuildMessage [] expectedWarnings;
+			switch (platform) {
+			case ApplePlatform.iOS:
+			case ApplePlatform.TVOS:
+				expectedWarnings = Array.Empty<ExpectedBuildMessage> ();
+				break;
+			case ApplePlatform.MacOSX:
+			case ApplePlatform.MacCatalyst:
+				expectedWarnings = Array.Empty<ExpectedBuildMessage> ();
+				break;
+			default:
+				Assert.Fail ($"Unknown platform: {platform}");
+				return;
+			}
+
+			TrimmerWarnings (platform, runtimeIdentifiers, "managed-static", expectedWarnings);
 		}
 
 		[Test]
@@ -18,7 +34,23 @@ namespace Xamarin.Tests {
 		[TestCase (ApplePlatform.TVOS, "tvos-arm64")]
 		public void TrimmerWarningsStaticRegistrar (ApplePlatform platform, string runtimeIdentifiers)
 		{
-			TrimmerWarnings (platform, runtimeIdentifiers, "static", Array.Empty<ExpectedBuildMessage> ());
+			// FIXME: dotnet/runtime#100256
+			ExpectedBuildMessage [] expectedWarnings;
+			switch (platform) {
+			case ApplePlatform.iOS:
+			case ApplePlatform.TVOS:
+				expectedWarnings = Array.Empty<ExpectedBuildMessage> ();
+				break;
+			case ApplePlatform.MacOSX:
+			case ApplePlatform.MacCatalyst:
+				expectedWarnings = Array.Empty<ExpectedBuildMessage> ();
+				break;
+			default:
+				Assert.Fail ($"Unknown platform: {platform}");
+				return;
+			}
+
+			TrimmerWarnings (platform, runtimeIdentifiers, "static", expectedWarnings);
 		}
 
 		[Test]
@@ -28,7 +60,23 @@ namespace Xamarin.Tests {
 		[TestCase (ApplePlatform.TVOS, "tvos-arm64")]
 		public void TrimmerWarningsDynamicRegistrar (ApplePlatform platform, string runtimeIdentifiers)
 		{
-			TrimmerWarnings (platform, runtimeIdentifiers, "dynamic", Array.Empty<ExpectedBuildMessage> ());
+			// FIXME: dotnet/runtime#100256
+			ExpectedBuildMessage [] expectedWarnings;
+			switch (platform) {
+			case ApplePlatform.iOS:
+			case ApplePlatform.TVOS:
+				expectedWarnings = Array.Empty<ExpectedBuildMessage> ();
+				break;
+			case ApplePlatform.MacOSX:
+			case ApplePlatform.MacCatalyst:
+				expectedWarnings = Array.Empty<ExpectedBuildMessage> ();
+				break;
+			default:
+				Assert.Fail ($"Unknown platform: {platform}");
+				return;
+			}
+
+			TrimmerWarnings (platform, runtimeIdentifiers, "dynamic", expectedWarnings);
 		}
 
 		void TrimmerWarnings (ApplePlatform platform, string runtimeIdentifiers, string registrar, params ExpectedBuildMessage [] expectedWarnings)

@@ -38,3 +38,6 @@ provision-shared.csx
 mono_crash.*.json
 *.binlog
 .vscode
+# Xcode
+xcuserdata/
+.build/

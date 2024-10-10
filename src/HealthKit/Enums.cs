@@ -380,7 +380,6 @@ namespace HealthKit {
 		Light,
 		Medium,
 		Heavy,
-		[iOS (12, 0)]
 		[Watch (5, 0)]
 		[MacCatalyst (13, 1)]
 		None,
@@ -557,7 +556,7 @@ namespace HealthKit {
 	}
 
 	/// <summary>Enumerates Fast Healthcare Interoperability Resources (FHIR) types.</summary>
-	[NoWatch, iOS (12, 0), Mac (13, 0)]
+	[NoWatch, Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	public enum HKFhirResourceType {
 		[Field ("HKFHIRResourceTypeAllergyIntolerance")]
@@ -593,7 +592,7 @@ namespace HealthKit {
 	}
 
 	/// <summary>Enumerates clinical record type identifiers.</summary>
-	[Watch (5, 0), iOS (12, 0), Mac (13, 0)]
+	[Watch (5, 0), Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	public enum HKClinicalTypeIdentifier {
 
@@ -622,7 +621,7 @@ namespace HealthKit {
 	}
 
 	/// <summary>Enumerates values that tell when an app should request user permission for access.</summary>
-	[Watch (5, 0), iOS (12, 0), Mac (13, 0)]
+	[Watch (5, 0), Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum HKAuthorizationRequestStatus : long {

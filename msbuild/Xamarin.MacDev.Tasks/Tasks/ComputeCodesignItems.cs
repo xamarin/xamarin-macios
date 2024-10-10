@@ -161,7 +161,7 @@ namespace Xamarin.MacDev.Tasks {
 				for (var i = 1; i < all.Length; i++) {
 					var nextMetadata = all [i].CloneCustomMetadataToDictionary ();
 					if (nextMetadata.Count != firstMetadata.Count) {
-						Log.LogWarning (MSBStrings.W7095, /* Code signing has been requested multiple times for '{0}', with different metadata. The metadata for one are: '{1}', while the metadata for the other are: '{2}' */ group.Key, string.Join (", ", firstMetadata.Keys), string.Join (", ", nextMetadata.Keys));
+						Log.LogWarning (MSBStrings.W7095, /* Code signing has been requested multiple times for '{0}', with different metadata. The metadata for one are: '{1}', while the metadata for the other are: '{2}' */ group.Key, string.Join (", ", firstMetadata.Keys.OrderBy (v => v)), string.Join (", ", nextMetadata.Keys.OrderBy (v => v)));
 					} else {
 						foreach (var kvp in firstMetadata) {
 							if (!nextMetadata.TryGetValue (kvp.Key, out var nextValue)) {

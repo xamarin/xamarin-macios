@@ -188,7 +188,6 @@ namespace MonoTouchFixtures.CoreText {
 			Assert.Throws<ArgumentException> (() => CTFontManager.UnregisterFontDescriptors (new CTFontDescriptor [] { null }, CTFontManagerScope.Process, null), "null element");
 		}
 
-#if !__WATCHOS__
 		[Test]
 		public void RegisterFontDescriptors_NoCallback ()
 		{
@@ -205,11 +204,6 @@ namespace MonoTouchFixtures.CoreText {
 			}
 		}
 
-#if __TVOS__
-		[Ignore ("Fails on tvOS with undocumented error code 'The operation couldn’t be completed. (com.apple.CoreText.CTFontManagerErrorDomain error 500.'")]
-#elif __IOS__
-		[Ignore ("https://github.com/xamarin/xamarin-macios/issues/6690. This began failing for no aparent reason in iOS 13 Beta 5. Check back with GM.")]
-#endif
 		[Test]
 		public void RegisterFontDescriptors_WithCallback ()
 		{
@@ -220,13 +214,30 @@ namespace MonoTouchFixtures.CoreText {
 				StyleName = "Bold",
 				Size = 16.0f
 			};
+			Exception? ex = null;
 			using (CTFontDescriptor fd = new CTFontDescriptor (fda)) {
 				var array = new [] { fd };
-				CTFontManager.RegisterFontDescriptors (array, CTFontManagerScope.Process, true, SuccessDone);
-				CTFontManager.UnregisterFontDescriptors (array, CTFontManagerScope.Process, SuccessDone);
+				CTFontManager.RegisterFontDescriptors (array, CTFontManagerScope.Process, true, (NSError [] errors, bool done) => {
+					try {
+						Assert.True (done, "done: RegisterFontDescriptors");
+					} catch (Exception e) {
+						ex = e;
+					}
+					return true;
+				});
+				Assert.That (ex, Is.Null.Or.Not.Null, "RegisterFontDescriptors");
+
+				CTFontManager.UnregisterFontDescriptors (array, CTFontManagerScope.Process, (NSError [] errors, bool done) => {
+					try {
+						Assert.True (done, "done: UnregisterFontDescriptors");
+					} catch (Exception e) {
+						ex = e;
+					}
+					return true;
+				});
+				Assert.That (ex, Is.Null.Or.Not.Null, "UnregisterFontDescriptors");
 			}
 		}
-#endif
 
 		[Test]
 		public void GetFontsNullUrl ()

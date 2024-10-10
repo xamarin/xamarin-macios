@@ -70,4 +70,18 @@
 		<TrimMode Condition="'$(_LinkMode)' == 'Full'">full</TrimMode>
 		<!-- For None link mode we also need to set TrimMode for all assemblies. This is done later -->
 	</PropertyGroup>
+
+	<PropertyGroup>
+		<!--
+			With NativeAOT we want to suppress trim warnings coming from ILLink and enable them only for ILC when publishing.
+			For this reason, in case of NativeAOT while publishing, we set SuppressTrimAnalysisWarnings to true by default and store the overwriten default in
+			_OriginalSuppressTrimAnalysisWarnings property, which is later used to properly configure warning suppression for ILC.
+		-->
+		<_OriginalSuppressTrimAnalysisWarnings>$(SuppressTrimAnalysisWarnings)</_OriginalSuppressTrimAnalysisWarnings>
+		<SuppressTrimAnalysisWarnings Condition="'$(_UseNativeAot)' == 'true'">true</SuppressTrimAnalysisWarnings>
+		<!-- Otherwise suppress trimmer warnings unless we're trimming all assemblies -->
+		<SuppressTrimAnalysisWarnings Condition="'$(SuppressTrimAnalysisWarnings)' == '' And '$(TrimMode)' == 'full'">false</SuppressTrimAnalysisWarnings>
+		<SuppressTrimAnalysisWarnings Condition="'$(SuppressTrimAnalysisWarnings)' == '' And '$(PublishAot)' == 'true'">false</SuppressTrimAnalysisWarnings>
+		<SuppressTrimAnalysisWarnings Condition="'$(SuppressTrimAnalysisWarnings)' == ''">true</SuppressTrimAnalysisWarnings>
+	</PropertyGroup>
 </Project>

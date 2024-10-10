@@ -597,20 +597,18 @@ namespace CoreFoundation {
 
 #if MONOMAC
 #if NET
-		[SupportedOSPlatform ("macos11.0")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
-		[Introduced (PlatformName.MacOSX, 11, 0)]
 		[NoMacCatalyst]
 #endif
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static byte CFBundleIsExecutableLoadable (IntPtr bundle);
 
 #if NET
-		[SupportedOSPlatform ("macos11.0")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
-		[Introduced (PlatformName.MacOSX, 11, 0)]
 		[NoMacCatalyst]
 #endif
 		public static bool IsExecutableLoadable (CFBundle bundle)
@@ -622,20 +620,18 @@ namespace CoreFoundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos11.0")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
-		[Introduced (PlatformName.MacOSX, 11, 0)]
 		[NoMacCatalyst]
 #endif
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static byte CFBundleIsExecutableLoadableForURL (IntPtr bundle);
 
 #if NET
-		[SupportedOSPlatform ("macos11.0")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
-		[Introduced (PlatformName.MacOSX, 11, 0)]
 		[NoMacCatalyst]
 #endif
 		public static bool IsExecutableLoadable (NSUrl url)
@@ -647,20 +643,18 @@ namespace CoreFoundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos11.0")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
-		[Introduced (PlatformName.MacOSX, 11, 0)]
 		[NoMacCatalyst]
 #endif
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static byte CFBundleIsArchitectureLoadable (/*cpu_type_t => integer_t => int*/ Architecture architecture);
 
 #if NET
-		[SupportedOSPlatform ("macos11.0")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
-		[Introduced (PlatformName.MacOSX, 11, 0)]
 		[NoMacCatalyst]
 #endif
 		public static bool IsArchitectureLoadable (Architecture architecture) => CFBundleIsArchitectureLoadable (architecture) != 0;

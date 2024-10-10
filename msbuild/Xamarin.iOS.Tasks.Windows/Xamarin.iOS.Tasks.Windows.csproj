@@ -29,11 +29,6 @@
     <PackageReference Include="GitInfo" Version="2.2.0" ExcludeAssets="all" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Messaging\Xamarin.Messaging.Build\Xamarin.Messaging.Build.csproj">
-      <ExcludeAssets>all</ExcludeAssets>
-      <ReferenceOutputAssembly>False</ReferenceOutputAssembly>
-      <IsAgent>True</IsAgent>
-    </ProjectReference>
     <ProjectReference Include="..\..\external\Xamarin.MacDev\Xamarin.MacDev\Xamarin.MacDev.csproj" />
   </ItemGroup>
   <ItemGroup>

@@ -247,7 +247,7 @@ namespace Xamarin.Tests {
 		public static string? GetPreviewNoWarn (string? existingNowarn)
 		{
 			if (Configuration.XcodeIsStable)
-				return null;
+				return existingNowarn;
 
 			var previewNoWarn = $"XCODE_{Configuration.XcodeVersion.Major}_{Configuration.XcodeVersion.Minor}_PREVIEW";
 			if (string.IsNullOrEmpty (existingNowarn)) {

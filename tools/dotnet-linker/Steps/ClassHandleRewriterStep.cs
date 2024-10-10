@@ -17,8 +17,6 @@ namespace Xamarin.Linker {
 		{
 			var app = Configuration.Application;
 
-			app.SelectRegistrar ();
-
 			if (app.Registrar == RegistrarMode.Static) {
 				// with the static registrar selected, we can
 				// rewrite the usage of class_ptr in NSObject

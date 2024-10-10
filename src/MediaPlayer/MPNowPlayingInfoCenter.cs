@@ -111,13 +111,10 @@ namespace MediaPlayer {
 #endif
 		public NSUrl? AssetUrl { get; set; }
 #if NET
-		[SupportedOSPlatform ("ios11.1")]
-		[SupportedOSPlatform ("tvos11.1")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
-#else
-		[iOS (11, 1)]
-		[TV (11, 1)]
 #endif
 		public NSDate? CurrentPlaybackDate { get; set; }
 

@@ -41,7 +41,6 @@ namespace JavaScriptCore {
 		[Export ("inspectable")]
 		bool Inspectable { [Bind ("isInspectable")] get; set; }
 
-		[Mac (10, 10), iOS (8, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("evaluateScript:withSourceURL:")]
 		JSValue EvaluateScript (string script, NSUrl sourceUrl);

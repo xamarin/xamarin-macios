@@ -14,10 +14,6 @@ parameters:
   - name: xqaCertPass
     type: string
 
-  - name: skipESRP
-    type: boolean
-    default: false  # only to be used when testing the CI and we do not need a signed pkg
-
   - name: pool
     type: string
     default: automatic
@@ -97,4 +93,3 @@ jobs:
           keyringPass: ${{ parameters.keyringPass }}
           gitHubToken: ${{ parameters.gitHubToken }}
           xqaCertPass: ${{ parameters.xqaCertPass }}
-          skipESRP: ${{ parameters.skipESRP }}

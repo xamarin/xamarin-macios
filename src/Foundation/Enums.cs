@@ -281,7 +281,7 @@ namespace Foundation {
 		Localized = 1uL << 10,
 	}
 
-	[Mac (12, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0), Watch (8, 0)]
+	[TV (15, 0), iOS (15, 0), MacCatalyst (15, 0), Watch (8, 0)]
 	[Flags]
 	[Native]
 	public enum NSAttributedStringFormattingOptions : ulong {
@@ -289,7 +289,7 @@ namespace Foundation {
 		ApplyReplacementIndexAttribute = 1uL << 1,
 	}
 
-	[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[Native]
 	public enum NSAttributedStringMarkdownInterpretedSyntax : long {
 		Full = 0,
@@ -297,14 +297,14 @@ namespace Foundation {
 		InlineOnlyPreservingWhitespace = 2,
 	}
 
-	[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[Native]
 	public enum NSAttributedStringMarkdownParsingFailurePolicy : long {
 		Error = 0,
 		PartiallyParsedIfPossible = 1,
 	}
 
-	[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[Native]
 	public enum NSGrammaticalGender : long {
 		NotSet = 0,
@@ -313,7 +313,7 @@ namespace Foundation {
 		Neuter,
 	}
 
-	[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[Native]
 	public enum NSGrammaticalNumber : long {
 		NotSet = 0,
@@ -325,7 +325,7 @@ namespace Foundation {
 		PluralMany,
 	}
 
-	[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[Native]
 	public enum NSGrammaticalPartOfSpeech : long {
 		NotSet = 0,
@@ -345,7 +345,7 @@ namespace Foundation {
 		Abbreviation,
 	}
 
-	[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[Native]
 	public enum NSInlinePresentationIntent : ulong {
 		Emphasized = 1uL << 0,
@@ -358,7 +358,7 @@ namespace Foundation {
 		BlockHTML = 1uL << 9,
 	}
 
-	[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[Native]
 	public enum NSPresentationIntentKind : long {
 		Paragraph,
@@ -375,7 +375,7 @@ namespace Foundation {
 		TableCell,
 	}
 
-	[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[Native]
 	public enum NSPresentationIntentTableColumnAlignment : long {
 		Left,
@@ -383,7 +383,7 @@ namespace Foundation {
 		Right,
 	}
 
-	[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[Native]
 	public enum NSURLRequestAttribution : ulong {
 		Developer = 0,

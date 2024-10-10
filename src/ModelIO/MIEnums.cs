@@ -106,7 +106,7 @@ namespace ModelIO {
 	public enum MDLMeshBufferType : ulong {
 		Vertex = 1,
 		Index = 2,
-		[iOS (15, 0), TV (15, 0), Mac (12, 0), MacCatalyst (15, 0)]
+		[iOS (15, 0), TV (15, 0), MacCatalyst (15, 0)]
 		Custom = 3,
 	}
 
@@ -174,7 +174,7 @@ namespace ModelIO {
 		Float3,
 		Float4,
 		Matrix44,
-		[iOS (15, 0), TV (15, 0), Mac (12, 0), MacCatalyst (15, 0)]
+		[iOS (15, 0), TV (15, 0), MacCatalyst (15, 0)]
 		Buffer,
 	}
 

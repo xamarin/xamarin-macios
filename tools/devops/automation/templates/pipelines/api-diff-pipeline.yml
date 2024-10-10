@@ -50,25 +50,13 @@ resources:
     ref: refs/heads/main
     endpoint: xamarin
 
-  - repository: release-scripts
-    type: github
-    name: xamarin/release-scripts
-    ref: refs/heads/only_codesign
-    endpoint: xamarin
-
 variables:
-- ${{ if eq(parameters.isPR, false) }}:
-  - ${{ if contains(variables['Build.DefinitionName'], 'private') }}:
-    - template: ../vsts-variables.yml
-  - template: ../variables.yml
-  - name: MaciosUploadPrefix
-    value: ''
-  - name: DisablePipelineConfigDetector
+- template: ../variables/common.yml
+- name: DisablePipelineConfigDetector
+  ${{ if eq(parameters.isPR, false) }}:
     value: true
-- ${{ else }}:
-  - template: ../variables.yml
-  - name: MaciosUploadPrefix
-    value: ''
+  ${{ else }}:
+    value: false
 
 stages:
 - template: ../api-diff-stage.yml

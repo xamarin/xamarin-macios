@@ -876,19 +876,6 @@
         <value>Could not resolve UTI for {0} in catalog {1}</value>
     </data>
 
-    <data name="E0183" xml:space="preserve">
-        <value>An error occurred while trying to verify the compatibility between Xcode and the .NET SDK</value>
-    </data>
-
-    <data name="E0184" xml:space="preserve">
-        <value>The project was built with a version of Xcode ({0}) that is not compatible which may result in unexpected warnings or errors. Please install Xcode '{1}' or visit the documentation to learn more.</value>
-    </data>
-
-    <data name="E0185" xml:space="preserve">
-        <value>An error occurred while trying to verify the compatibility between Xcode and the .NET SDK. Details: {0}
-        </value>
-    </data>
-
     <data name="E0186" xml:space="preserve">
         <value>The provided Archive Path is not from a valid archive file (.xcarchive). Archive Path: '{0}'</value>
     </data>
@@ -1574,6 +1561,22 @@
     <data name="E7124" xml:space="preserve">
         <value>Can't compute the architecture for the archive for the RuntimeIdentifier '{0}' (unknown value)</value>
         <comment>RuntimeIdentifier: don't translate (it's the name of a MSBuild property)</comment>
+    </data>
+
+    <data name="XcodeBuild_CreateNativeRef" xml:space="preserve">
+        <value>Adding reference to Xcode project output: '{0}'. The '%(CreateNativeReference)' metadata can be set to 'false' to opt out of this behavior.</value>
+        <comment>
+            The following are literal names and should not be translated: Xcode, '%(CreateNativeReference)', metadata, 'false'
+            {0}: The path to the XCFramework output that will be referenced
+        </comment>
+    </data>
+
+    <data name="XcodeBuild_InvalidItem" xml:space="preserve">
+        <value>The Xcode project item: '{0}' could not be found. Please update the 'Include' value to a path containing a valid '.xcodeproj' file.</value>
+        <comment>
+            The following are literal names and should not be translated: Xcode, 'Include', '.xcodeproj'
+            {0}: An invalid path to an Xcode project file
+        </comment>
     </data>
 
 </root>

@@ -169,12 +169,11 @@ namespace CoreImage {
 #if NET
 		[SupportedOSPlatform ("ios14.0")]
 		[SupportedOSPlatform ("tvos14.0")]
-		[SupportedOSPlatform ("macos11.0")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (14, 0)]
 		[TV (14, 0)]
-		[Mac (11, 0)]
 #endif
 		public string? Name {
 			get {

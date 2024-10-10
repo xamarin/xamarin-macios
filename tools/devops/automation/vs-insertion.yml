@@ -21,12 +21,6 @@ resources:
     ref: refs/heads/main
     endpoint: xamarin
 
-  - repository: release-scripts
-    type: github
-    name: xamarin/release-scripts
-    ref: refs/heads/sign-and-notarized
-    endpoint: xamarin
-
   # we need all stages to be completed, else we do not have the test results, this trigger is just for CI, because we have
   # but because we have device issues, and it needs to be gree to trigger, we will deal with it later
   pipelines:

@@ -43,7 +43,7 @@ namespace CoreML {
 		Image = 4,
 		MultiArray = 5,
 		Dictionary = 6,
-		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
+		[Watch (5, 0)]
 		[MacCatalyst (13, 1)]
 		Sequence = 7,
 		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
@@ -76,7 +76,7 @@ namespace CoreML {
 		// added in xcode12 but it's the same a `Double` and can be used in earlier versions
 		Float64 = 0x10000 | 64,
 		Float32 = 0x10000 | 32,
-		[Mac (12, 0), iOS (16, 0), MacCatalyst (16, 0), Watch (9, 0), TV (16, 0)]
+		[iOS (16, 0), MacCatalyst (16, 0), Watch (9, 0), TV (16, 0)]
 		Float16 = 0x10000 | 16,
 		// added in xcode12 but it's the same a `Float32` and can be used in earlier versions
 		Float = 0x10000 | 32,
@@ -84,7 +84,7 @@ namespace CoreML {
 	}
 
 	/// <summary>Enumerates the form of a <see cref="T:CoreML.MLImageSizeConstraint" />.</summary>
-	[Watch (5, 0), TV (12, 0), iOS (12, 0)]
+	[Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum MLImageSizeConstraintType : long {
@@ -94,7 +94,7 @@ namespace CoreML {
 	}
 
 	/// <summary>Enumerates the form of a <see cref="T:CoreML.MLMultiArrayShapeConstraint" />.</summary>
-	[Watch (5, 0), TV (12, 0), iOS (12, 0)]
+	[Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum MLMultiArrayShapeConstraintType : long {
@@ -103,7 +103,7 @@ namespace CoreML {
 		Range = 3,
 	}
 
-	[Watch (5, 0), TV (12, 0), iOS (12, 0)]
+	[Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum MLComputeUnits : long {
@@ -181,7 +181,7 @@ namespace CoreML {
 		[NullAllowed, Export ("dictionaryConstraint", ArgumentSemantic.Assign)]
 		MLDictionaryConstraint DictionaryConstraint { get; }
 
-		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
+		[Watch (5, 0)]
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("sequenceConstraint")]
 		MLSequenceConstraint SequenceConstraint { get; }
@@ -237,7 +237,7 @@ namespace CoreML {
 		[NullAllowed, Export ("imageBufferValue")]
 		CVPixelBuffer ImageBufferValue { get; }
 
-		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
+		[Watch (5, 0)]
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("sequenceValue")]
 		MLSequence SequenceValue { get; }
@@ -246,7 +246,7 @@ namespace CoreML {
 		[Export ("featureValueWithPixelBuffer:")]
 		MLFeatureValue Create (CVPixelBuffer value);
 
-		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
+		[Watch (5, 0)]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("featureValueWithSequence:")]
@@ -427,7 +427,7 @@ namespace CoreML {
 		[Export ("modelDescription")]
 		MLModelDescription ModelDescription { get; }
 
-		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
+		[Watch (5, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("configuration")]
 		MLModelConfiguration Configuration { get; }
@@ -437,7 +437,7 @@ namespace CoreML {
 		[return: NullAllowed]
 		MLModel Create (NSUrl url, out NSError error);
 
-		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
+		[Watch (5, 0)]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("modelWithContentsOfURL:configuration:error:")]
@@ -458,7 +458,7 @@ namespace CoreML {
 		[return: NullAllowed]
 		IMLBatchProvider GetPredictions (IMLBatchProvider inputBatch, [NullAllowed] out NSError error);
 
-		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
+		[Watch (5, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("predictionsFromBatch:options:error:")]
 		[return: NullAllowed]
@@ -470,7 +470,7 @@ namespace CoreML {
 		[return: NullAllowed]
 		NSObject GetParameterValue (MLParameterKey key, [NullAllowed] out NSError error);
 
-		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[Watch (7, 0), TV (14, 0), iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[Static]
 		[Async]
@@ -544,7 +544,7 @@ namespace CoreML {
 		[Wrap ("_Metadata")]
 		MLModelMetadata Metadata { get; }
 
-		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[Watch (7, 0), TV (14, 0), iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[NullAllowed, Export ("classLabels", ArgumentSemantic.Copy)]
 		NSObject [] ClassLabels { get; }
@@ -634,7 +634,7 @@ namespace CoreML {
 		nint Count { get; }
 
 		[NullAllowed]
-		[Watch (9, 0), TV (16, 0), Mac (12, 0), iOS (16, 0), MacCatalyst (16, 0)]
+		[Watch (9, 0), TV (16, 0), iOS (16, 0), MacCatalyst (16, 0)]
 		[Export ("pixelBuffer")]
 		CVPixelBuffer PixelBuffer { get; }
 
@@ -650,7 +650,7 @@ namespace CoreML {
 		[Export ("initWithDataPointer:shape:dataType:strides:deallocator:error:")]
 		NativeHandle Constructor (IntPtr dataPointer, NSNumber [] shape, MLMultiArrayDataType dataType, NSNumber [] strides, [NullAllowed] Action<IntPtr> deallocator, out NSError error);
 
-		[Watch (9, 0), TV (16, 0), Mac (12, 0), iOS (16, 0), MacCatalyst (16, 0)]
+		[Watch (9, 0), TV (16, 0), iOS (16, 0), MacCatalyst (16, 0)]
 		[Export ("initWithPixelBuffer:shape:")]
 		IntPtr Constructor (CVPixelBuffer pixelBuffer, NSNumber [] shape);
 
@@ -682,7 +682,7 @@ namespace CoreML {
 
 		// @interface Concatenating (MLMultiArray)
 
-		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[Watch (7, 0), TV (14, 0), iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[Static]
 		[Export ("multiArrayByConcatenatingMultiArrays:alongAxis:dataType:")]
@@ -729,7 +729,7 @@ namespace CoreML {
 		[Export ("pixelFormatType")]
 		uint PixelFormatType { get; }
 
-		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
+		[Watch (5, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("sizeConstraint")]
 		MLImageSizeConstraint SizeConstraint { get; }
@@ -748,7 +748,7 @@ namespace CoreML {
 		[Export ("dataType")]
 		MLMultiArrayDataType DataType { get; }
 
-		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
+		[Watch (5, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("shapeConstraint")]
 		MLMultiArrayShapeConstraint ShapeConstraint { get; }
@@ -768,13 +768,13 @@ namespace CoreML {
 		bool UsesCpuOnly { get; set; }
 
 		// Leaving it intentionally as NSDictionary to make it easier to use the lowlevel apis.
-		[Watch (9, 0), TV (16, 0), Mac (12, 0), iOS (16, 0), MacCatalyst (16, 0)]
+		[Watch (9, 0), TV (16, 0), iOS (16, 0), MacCatalyst (16, 0)]
 		[Export ("outputBackings", ArgumentSemantic.Copy)]
 		NSDictionary OutputBackings { get; set; }
 	}
 
 	/// <summary>Interface defining methods necessary for a custom model layer.</summary>
-	[NoWatch, TV (11, 2), iOS (11, 2)]
+	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface MLCustomLayer {
@@ -802,7 +802,7 @@ namespace CoreML {
 	}
 
 	/// <summary>An <see cref="T:CoreML.IMLBatchProvider" /> backed by an array.</summary>
-	[Watch (5, 0), TV (12, 0), iOS (12, 0)]
+	[Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -821,7 +821,7 @@ namespace CoreML {
 	interface IMLBatchProvider { }
 
 	/// <summary>Interface defining the protocol for providing data in batches to the model.</summary>
-	[Watch (5, 0), TV (12, 0), iOS (12, 0)]
+	[Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface MLBatchProvider {
@@ -836,7 +836,7 @@ namespace CoreML {
 	}
 
 	/// <summary>Interface defining a custom CoreML model.</summary>
-	[Watch (5, 0), TV (12, 0), iOS (12, 0)]
+	[Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 #if NET
@@ -861,7 +861,7 @@ namespace CoreML {
 	}
 
 	/// <summary>Describes one acceptable image size for the CoreML model inputs.</summary>
-	[Watch (5, 0), TV (12, 0), iOS (12, 0)]
+	[Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -875,7 +875,7 @@ namespace CoreML {
 	}
 
 	/// <summary>Description of the constraint on image sizes for a CoreML model.</summary>
-	[Watch (5, 0), TV (12, 0), iOS (12, 0)]
+	[Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -895,7 +895,7 @@ namespace CoreML {
 	}
 
 	/// <summary>Describes the constraints on the shape of the multidimensional array allowed by the model.</summary>
-	[Watch (5, 0), TV (12, 0), iOS (12, 0)]
+	[Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -912,7 +912,7 @@ namespace CoreML {
 	}
 
 	/// <summary>Encodes a sequence as a single input.</summary>
-	[Watch (5, 0), TV (12, 0), iOS (12, 0)]
+	[Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -941,7 +941,7 @@ namespace CoreML {
 	}
 
 	/// <summary>A constraint on sequences of features.</summary>
-	[Watch (5, 0), TV (12, 0), iOS (12, 0)]
+	[Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -954,7 +954,7 @@ namespace CoreML {
 		NSRange CountRange { get; }
 	}
 
-	[Watch (5, 0), TV (12, 0), iOS (12, 0)]
+	[Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface MLModelConfiguration : NSCopying, NSSecureCoding {
@@ -1202,14 +1202,14 @@ namespace CoreML {
 		[return: NullAllowed]
 		MLUpdateTask Create (NSUrl modelUrl, IMLBatchProvider trainingData, [NullAllowed] MLModelConfiguration configuration, MLUpdateProgressHandlers progressHandlers, [NullAllowed] out NSError error);
 
-		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[Watch (7, 0), TV (14, 0), iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[Static]
 		[Export ("updateTaskForModelAtURL:trainingData:completionHandler:error:")]
 		[return: NullAllowed]
 		MLUpdateTask Create (NSUrl modelUrl, IMLBatchProvider trainingData, Action<MLUpdateContext> completionHandler, [NullAllowed] out NSError error);
 
-		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[Watch (7, 0), TV (14, 0), iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[Static]
 		[Export ("updateTaskForModelAtURL:trainingData:progressHandlers:error:")]
@@ -1236,7 +1236,7 @@ namespace CoreML {
 	[Deprecated (PlatformName.MacOSX, 13, 3, message: "Use Background Assets or 'NSUrlSession' instead.")]
 	[Deprecated (PlatformName.MacCatalyst, 16, 4, message: "Use Background Assets or 'NSUrlSession' instead.")]
 	[Deprecated (PlatformName.iOS, 16, 4, message: "Use Background Assets or 'NSUrlSession' instead.")]
-	[Mac (11, 0), iOS (14, 0)]
+	[iOS (14, 0)]
 	[MacCatalyst (14, 0)]
 	[NoTV]
 	[NoWatch]
@@ -1273,7 +1273,7 @@ namespace CoreML {
 	[Deprecated (PlatformName.MacOSX, 13, 3, message: "Use Background Assets or 'NSUrlSession' instead.")]
 	[Deprecated (PlatformName.MacCatalyst, 16, 4, message: "Use Background Assets or 'NSUrlSession' instead.")]
 	[Deprecated (PlatformName.iOS, 16, 4, message: "Use Background Assets or 'NSUrlSession' instead.")]
-	[Mac (11, 0), iOS (14, 0)]
+	[iOS (14, 0)]
 	[MacCatalyst (14, 0)]
 	[NoTV]
 	[NoWatch]

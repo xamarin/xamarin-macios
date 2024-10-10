@@ -49,12 +49,11 @@ namespace Vision {
 
 #if NET
 		[SupportedOSPlatform ("tvos14.0")]
-		[SupportedOSPlatform ("macos11.0")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios14.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[TV (14, 0)]
-		[Mac (11, 0)]
 		[iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 #endif
@@ -69,12 +68,11 @@ namespace Vision {
 
 #if NET
 		[SupportedOSPlatform ("tvos15.0")]
-		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios15.0")]
-		[SupportedOSPlatform ("maccatalyst15.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[TV (15, 0)]
-		[Mac (12, 0)]
 		[iOS (15, 0)]
 		[MacCatalyst (15, 0)]
 #endif
@@ -83,12 +81,11 @@ namespace Vision {
 
 #if NET
 		[SupportedOSPlatform ("tvos15.0")]
-		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios15.0")]
-		[SupportedOSPlatform ("maccatalyst15.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[TV (15, 0)]
-		[Mac (12, 0)]
 		[iOS (15, 0)]
 		[MacCatalyst (15, 0)]
 #endif
@@ -97,12 +94,11 @@ namespace Vision {
 
 #if NET
 		[SupportedOSPlatform ("tvos15.0")]
-		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios15.0")]
-		[SupportedOSPlatform ("maccatalyst15.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[TV (15, 0)]
-		[Mac (12, 0)]
 		[iOS (15, 0)]
 		[MacCatalyst (15, 0)]
 #endif
@@ -111,12 +107,11 @@ namespace Vision {
 
 #if NET
 		[SupportedOSPlatform ("tvos15.0")]
-		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios15.0")]
-		[SupportedOSPlatform ("maccatalyst15.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[TV (15, 0)]
-		[Mac (12, 0)]
 		[iOS (15, 0)]
 		[MacCatalyst (15, 0)]
 #endif

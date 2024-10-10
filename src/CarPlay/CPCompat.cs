@@ -47,7 +47,7 @@ namespace CarPlay {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
-		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("ios")]
 #else
 		[Deprecated (PlatformName.iOS, 14, 0, message: "Do not use; this API was removed.")]
 #endif

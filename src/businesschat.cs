@@ -26,7 +26,6 @@ namespace BusinessChat {
 
 	[Deprecated (PlatformName.MacOSX, 13, 1)]
 	[Deprecated (PlatformName.iOS, 16, 2)]
-	[iOS (11, 3)]
 	[MacCatalyst (13, 1)]
 	[Deprecated (PlatformName.MacCatalyst, 16, 2)]
 	[BaseType (typeof (UIControl))]
@@ -40,7 +39,6 @@ namespace BusinessChat {
 
 	[Deprecated (PlatformName.MacOSX, 13, 1)]
 	[Deprecated (PlatformName.iOS, 16, 2)]
-	[iOS (11, 3)]
 	[MacCatalyst (13, 1)]
 	[Deprecated (PlatformName.MacCatalyst, 16, 2)]
 	[BaseType (typeof (NSObject))]

@@ -122,12 +122,11 @@ namespace VideoToolbox {
 #if NET
 		[SupportedOSPlatform ("ios14.2")]
 		[SupportedOSPlatform ("tvos14.2")]
-		[SupportedOSPlatform ("macos11.0")]
-		[SupportedOSPlatform ("maccatalyst14.2")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (14, 2)]
 		[TV (14, 2)]
-		[Mac (11, 0)]
 		[MacCatalyst (14, 2)]
 #endif
 		public bool SupportsFrameReordering { get; private set; }
@@ -140,13 +139,12 @@ namespace VideoToolbox {
 #if NET
 		[SupportedOSPlatform ("ios15.0")]
 		[SupportedOSPlatform ("tvos15.0")]
-		[SupportedOSPlatform ("maccatalyst15.0")]
-		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
 #else
 		[iOS (15, 0)]
 		[TV (15, 0)]
 		[MacCatalyst (15, 0)]
-		[Mac (12, 0)]
 		[Watch (8, 0)]
 #endif
 		public bool IncludeStandardDefinitionDVEncoders { get; private set; }

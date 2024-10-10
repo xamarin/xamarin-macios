@@ -7,7 +7,7 @@ include $(TOP)/Make.config
 export TargetFrameworkFallbackSearchPaths:=$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild-frameworks
 export MSBuildExtensionsPathFallbackPathsOverride:=$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild
 
-ifeq ($(shell uname -a),"arm64")
+ifeq ($(shell arch),"arm64")
 IS_ARM64=1
 IS_APPLE_SILICON=1
 endif

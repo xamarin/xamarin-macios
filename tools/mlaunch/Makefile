@@ -16,7 +16,7 @@ endif
 TARGETS += $(foreach platform,$(DOTNET_PLATFORMS_MOBILE),$(DOTNET_DESTDIR)/Microsoft.$(platform).Sdk/tools/bin/mlaunch)
 
 $(DOWNLOAD_STAMP_FILE):
-	$(Q) $(DOTNET) restore download-mlaunch.csproj /bl:$@.binlog $(NSBUILD_VERBOSITY) /p:MlaunchNuGetVersion=$(MLAUNCH_NUGET_VERSION)
+	$(Q) $(DOTNET) restore download-mlaunch.csproj /bl:$@.binlog $(MSBUILD_VERBOSITY) /p:MlaunchNuGetVersion=$(MLAUNCH_NUGET_VERSION)
 	$(Q) touch $@
 
 $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/bin/mlaunch: $(DOWNLOAD_STAMP_FILE)

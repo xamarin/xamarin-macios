@@ -13,12 +13,11 @@ namespace WebKit {
 #if !COREBUILD
 		// we use the attrs of the old property 
 #if NET
-		[SupportedOSPlatform ("macos11.3")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios14.5")]
-		[SupportedOSPlatform ("maccatalyst14.5")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
-		[Mac (11, 3)]
 		[iOS (14, 5)]
 		[MacCatalyst (14, 5)]
 #endif

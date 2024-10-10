@@ -16,7 +16,7 @@ using NativeHandle = System.IntPtr;
 
 namespace ScreenTime {
 
-	[Mac (11, 0), iOS (14, 0)]
+	[iOS (14, 0)]
 	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -25,7 +25,7 @@ namespace ScreenTime {
 		bool EnforcesChildRestrictions { get; }
 	}
 
-	[Mac (11, 0), iOS (14, 0)]
+	[iOS (14, 0)]
 	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -44,7 +44,7 @@ namespace ScreenTime {
 		STScreenTimeConfiguration Configuration { get; }
 	}
 
-	[Mac (11, 0), iOS (14, 0)]
+	[iOS (14, 0)]
 	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -63,7 +63,7 @@ namespace ScreenTime {
 		void DeleteAllHistory ();
 	}
 
-	[Mac (11, 0), iOS (14, 0)]
+	[iOS (14, 0)]
 	[MacCatalyst (14, 0)]
 	[BaseType (typeof (UIViewController))]
 	[DisableDefaultCtor]

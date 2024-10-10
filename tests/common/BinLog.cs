@@ -294,6 +294,8 @@ namespace Xamarin.Tests {
 							if (propname == property)
 								value = propvalue;
 						}
+					} else if (bmea.Message?.StartsWith ($"TaskOutput: {property}") == true) {
+						value = bmea.Message?.Substring ($"TaskOutput: {property}".Length).Trim ();
 					}
 				}
 			}

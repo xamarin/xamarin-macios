@@ -14,6 +14,18 @@ namespace Xamarin.Tests {
 			return zip.Entries.Select (entry => entry.FullName.TrimEnd ('/').Replace ('/', Path.DirectorySeparatorChar)).ToList ();
 		}
 
+		public static List<string> ListInnerZip (string file, string innerZipFileName)
+		{
+			using var zip = ZipFile.OpenRead (file);
+			var innerZipEntry = zip.GetEntry (innerZipFileName);
+			if (innerZipEntry is null)
+				return new List<string> ();
+
+			using Stream innerZipStream = innerZipEntry.Open ();
+			using ZipArchive innerZip = new ZipArchive (innerZipStream, ZipArchiveMode.Read);
+			return innerZip.Entries.Select (entry => entry.FullName.TrimEnd ('/').Replace ('/', Path.DirectorySeparatorChar)).ToList ();
+		}
+
 		public static void DumpZipFile (ZipArchive zip, string path)
 		{
 #if TRACE

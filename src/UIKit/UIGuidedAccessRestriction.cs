@@ -46,21 +46,17 @@ namespace UIKit {
 
 #if IOS
 #if NET
-		[SupportedOSPlatform ("ios12.2")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (12,2)]
 #endif
 		[DllImport (Constants.UIKitLibrary)]
 		static unsafe extern void UIGuidedAccessConfigureAccessibilityFeatures (/* UIGuidedAccessAccessibilityFeature */ nuint features, byte enabled, BlockLiteral* completion);
 
 #if NET
-		// [SupportedOSPlatform ("ios12.2")] -- Not valid for Delegates
+		// [SupportedOSPlatform ("ios")] -- Not valid for Delegates
 		// [SupportedOSPlatform ("maccatalyst")]
 		// [SupportedOSPlatform ("tvos")]
-#else
-		[iOS (12,2)]
 #endif
 		public delegate void UIGuidedAccessConfigureAccessibilityFeaturesCompletionHandler (bool success, NSError error);
 
@@ -89,11 +85,9 @@ namespace UIKit {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios12.2")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (12,2)]
 #endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static void ConfigureAccessibilityFeatures (UIGuidedAccessAccessibilityFeature features, bool enabled, UIGuidedAccessConfigureAccessibilityFeaturesCompletionHandler completionHandler)
@@ -114,11 +108,9 @@ namespace UIKit {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios12.2")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (12,2)]
 #endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static Task<(bool Success, NSError Error)> ConfigureAccessibilityFeaturesAsync (UIGuidedAccessAccessibilityFeature features, bool enabled)

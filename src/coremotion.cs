@@ -261,7 +261,6 @@ namespace CoreMotion {
 
 		[iOS (14, 0)]
 		[Watch (7, 0)]
-		[Mac (11, 0)]
 		[MacCatalyst (14, 0)]
 		[Export ("sensorLocation")]
 		CMDeviceMotionSensorLocation SensorLocation { get; }
@@ -658,7 +657,7 @@ namespace CoreMotion {
 		CMPedometerEventType Type { get; }
 	}
 
-	[Watch (5, 0), NoTV, NoMac, iOS (12, 0)]
+	[Watch (5, 0), NoTV, NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -677,7 +676,7 @@ namespace CoreMotion {
 		float PercentLikely { get; }
 	}
 
-	[Watch (5, 0), NoTV, NoMac, iOS (12, 0)]
+	[Watch (5, 0), NoTV, NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -802,7 +801,6 @@ namespace CoreMotion {
 
 	[iOS (14, 0)]
 	[Watch (7, 0)]
-	[Mac (11, 0)]
 	[MacCatalyst (14, 0)]
 	[Native]
 	public enum CMDeviceMotionSensorLocation : long {

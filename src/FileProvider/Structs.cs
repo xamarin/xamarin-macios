@@ -12,7 +12,7 @@ namespace FileProvider {
 #if !(XAMCORE_5_0 && __MACCATALYST__)
 
 #if NET
-	[SupportedOSPlatform ("macos12.0")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("ios16.0")]
 	[UnsupportedOSPlatform ("maccatalyst")]
 #if __MACCATALYST__
@@ -21,7 +21,6 @@ namespace FileProvider {
 #else
 	[iOS (16,0)]
 	[NoMacCatalyst]
-	[Mac (12,0)]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct NSFileProviderTypeAndCreator
