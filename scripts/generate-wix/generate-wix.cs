@@ -19,43 +19,41 @@ var version = args [idx++];
 
 string upgradeGuid;
 
-switch (platform) {
-	case "iOS":
-		upgradeGuid = "e17c20f4-e9a6-445a-915a-dac336097012";
-		break;
-	case "tvOS":
-		upgradeGuid = "951a188f-e59a-4db1-bc42-b3ca47edb4c6";
-		break;
-	case "watchOS":
-		upgradeGuid = "b365f5c9-6bbf-4c66-957a-8868576b4ddc";
-		break;
-	case "macOS":
-		upgradeGuid = "b64a436b-db46-4467-953c-bdcfc592d4da";
-		break;
-	default:
-		Console.Error.WriteLine ($"Need to generate an upgradeGuid for {platform}");
-		return 1;
+switch (platform)
+{
+case "iOS":
+	upgradeGuid = "e17c20f4-e9a6-445a-915a-dac336097012";
+	break;
+case "tvOS":
+	upgradeGuid = "951a188f-e59a-4db1-bc42-b3ca47edb4c6";
+	break;
+case "watchOS":
+	upgradeGuid = "b365f5c9-6bbf-4c66-957a-8868576b4ddc";
+	break;
+case "macOS":
+	upgradeGuid = "b64a436b-db46-4467-953c-bdcfc592d4da";
+	break;
+default:
+	Console.Error.WriteLine ($"Need to generate an upgradeGuid for {platform}");
+	return 1;
 }
 
 List<string> components = new List<string> ();
 
-Func<string, byte[]> GetHash = (string inputString) =>
-{
+Func<string, byte []> GetHash = (string inputString) => {
 	using (var algorithm = SHA256.Create ())
 		return algorithm.ComputeHash (Encoding.UTF8.GetBytes (inputString));
 };
 
-Func<string, string> GetHashString = (string inputString) =>
-{
+Func<string, string> GetHashString = (string inputString) => {
 	var sb = new StringBuilder ("S", 65);
 	foreach (byte b in GetHash (inputString))
 		sb.Append (b.ToString ("X2"));
-		Console.WriteLine ($"{inputString} => {sb.ToString ()}");
+	Console.WriteLine ($"{inputString} => {sb.ToString ()}");
 	return sb.ToString ();
 };
 
-Func<string, string> GetId = (string path) =>
-{
+Func<string, string> GetId = (string path) => {
 	var top_dir = inputDirectory;
 	if (string.IsNullOrEmpty (path))
 		return path;
@@ -66,8 +64,7 @@ Func<string, string> GetId = (string path) =>
 };
 
 Action<TextWriter, string, string>? process = null;
-process = new Action<TextWriter, string, string> ((TextWriter writer, string indent, string directory) =>
-{
+process = new Action<TextWriter, string, string> ((TextWriter writer, string indent, string directory) => {
 	var entries = Directory.GetFileSystemEntries (directory);
 	foreach (var entry in entries) {
 		var name = Path.GetFileName (entry);

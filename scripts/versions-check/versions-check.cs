@@ -29,8 +29,7 @@ try {
 
 	var failed = false;
 
-	var check = new Action<string, string, string> ((product, min, max) =>
-	{
+	var check = new Action<string, string, string> ((product, min, max) => {
 		var minVersion = Version.Parse (min);
 		var maxVersion = Version.Parse (max);
 		var foundMax = false;

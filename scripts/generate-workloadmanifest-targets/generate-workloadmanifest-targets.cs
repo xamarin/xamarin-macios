@@ -43,12 +43,12 @@ var groupedByMajorDotNetVersion = supportedTFMs.
 										GroupBy (v => v.Split (new char [] { '-', '_' }) [0]);
 var highestTpvPerMajorDotNet = groupedByMajorDotNetVersion.
 			Select (gr => {
-						var max = gr.OrderByDescending (el => {
-							var rv = tfmToTpvAndTfv (el);
-							return float.Parse (rv.Tpv, System.Globalization.CultureInfo.InvariantCulture);
-						}).First ();
-						return max;
-					}).
+				var max = gr.OrderByDescending (el => {
+					var rv = tfmToTpvAndTfv (el);
+					return float.Parse (rv.Tpv, System.Globalization.CultureInfo.InvariantCulture);
+				}).First ();
+				return max;
+			}).
 			ToHashSet ();
 
 using (var writer = new StreamWriter (outputPath)) {

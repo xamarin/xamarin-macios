@@ -29,7 +29,7 @@ allApiVersions = allApiVersions.Select (v => v.Replace ('-', '_')).ToList ();
 var versionsPropsTable = File.ReadAllLines (versionsPropsPath).
 				Where (v => v.Count (f => f == '>') > 1).
 				Select (v => {
-					var split = v.Trim ().Split (new char [] { '<', '>', '/'}, StringSplitOptions.RemoveEmptyEntries);
+					var split = v.Trim ().Split (new char [] { '<', '>', '/' }, StringSplitOptions.RemoveEmptyEntries);
 					var name = split [0];
 					var value = split [1];
 					return new Tuple<string, string> (name, value);
@@ -125,9 +125,9 @@ using (TextWriter writer = new StreamWriter (outputPath)) {
 	writer.WriteLine ($"		\"Microsoft.{platform}.Templates.net9\": {{");
 	writer.WriteLine ($"			\"kind\": \"template\",");
 	writer.WriteLine ($"			\"version\": \"{version}\",");
-		writer.WriteLine ($"			\"alias-to\": {{");
-		writer.WriteLine ($"				\"any\": \"Microsoft.{platform}.Templates\",");
-		writer.WriteLine ($"			}}");
+	writer.WriteLine ($"			\"alias-to\": {{");
+	writer.WriteLine ($"				\"any\": \"Microsoft.{platform}.Templates\",");
+	writer.WriteLine ($"			}}");
 	writer.WriteLine ($"		}}");
 	writer.WriteLine ($"	}}");
 	writer.WriteLine ($"}}");
