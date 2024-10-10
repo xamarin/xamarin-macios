@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:element name="root" msdata:IsDataSet="true">
+            
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="RBI0001CodeFixTitle" xml:space="preserve">
+        <value>Make Binding Type class partial</value>
+        <comment>The title of the code fix.</comment>
+    </data>
+    <data name="RBI0001Description" xml:space="preserve">
+        <value>In order for the code to be generated all binding types have to be declared as partial classes.</value>
+        <comment>An optional longer localizable description of the diagnostic.</comment>
+    </data>
+    <data name="RBI0001MessageFormat" xml:space="preserve">
+        <value>The binding type '{0}' must declared as a partial class</value>
+        <comment>The format-able message the diagnostic displays.</comment>
+    </data>
+    <data name="RBI0001Title" xml:space="preserve">
+        <value>Binding type declaration must be partial</value>
+        <comment>The title of the diagnostic.</comment>
+    </data>
+</root>

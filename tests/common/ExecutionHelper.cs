@@ -1,11 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
-
-using NUnit.Framework;
 using Xamarin.Utils;
 
 #nullable disable // until we get around to fixing this file

@@ -44,6 +44,9 @@
     <Compile Include="..\..\tests\common\Configuration.cs">
       <Link>Configuration.cs</Link>
     </Compile>
+    <Compile Include="..\..\tests\common\ConfigurationNUnit.cs">
+      <Link>ConfigurationNUnit.cs</Link>
+    </Compile>
     <Compile Include="MiscTests.cs" />
     <Compile Include="SdkTest.cs" />
     <Compile Include="MTouchTool.cs" />
