@@ -1861,7 +1861,7 @@ namespace Xamarin.Tests {
 			// Pick a target platform version that we don't really support,
 			// but don't show an error in .NET 8 because of backwards compat.
 			// The earliest target OS version should do.
-			var minSupportedOSVersion = GetSupportedTargetPlatformVersions (platform).First ();
+			var minSupportedOSVersion = GetMinSupportedOSPlatformVersion (platform);
 			var targetFrameworks = Configuration.DotNetTfm + "-" + platform.AsString ().ToLowerInvariant () + minSupportedOSVersion;
 			var supportedApiVersions = GetSupportedApiVersions (platform, isCompat: false);
 
@@ -1912,6 +1912,11 @@ namespace Xamarin.Tests {
 				.Cast<XmlNode> ()
 				.Select (v => v.InnerText)
 				.ToArray ();
+		}
+
+		string GetMinSupportedOSPlatformVersion (ApplePlatform platform)
+		{
+			return Configuration.GetVariable ($"DOTNET_MIN_{platform.AsString ().ToUpperInvariant ()}_SDK_VERSION", "unknown MinSupportedOSPlatformVersion");
 		}
 
 		[Test]
@@ -2836,6 +2841,27 @@ namespace Xamarin.Tests {
 				}
 			}
 			return rv;
+		}
+
+		[Test]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64", "13.1")]
+		[TestCase (ApplePlatform.iOS, "ios-arm64", "10.0")]
+		[TestCase (ApplePlatform.TVOS, "tvossimulator-x64", "10.0")]
+		[TestCase (ApplePlatform.MacOSX, "osx-arm64", "10.0")]
+		public void InvalidSupportedOSPlatformVersion (ApplePlatform platform, string runtimeIdentifiers, string version)
+		{
+			var project = "MySimpleApp";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
+
+			var minVersion = GetMinSupportedOSPlatformVersion (platform);
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
+			Clean (project_path);
+			var properties = GetDefaultProperties (runtimeIdentifiers);
+			properties ["SupportedOSPlatformVersion"] = version;
+			var rv = DotNet.AssertBuildFailure (project_path, properties);
+			var errors = BinLog.GetBuildLogErrors (rv.BinLogPath).ToArray ();
+			AssertErrorMessages (errors, $"The SupportedOSPlatformVersion value '{version}' in the project file is lower than the minimum value '{minVersion}'.");
 		}
 	}
 }

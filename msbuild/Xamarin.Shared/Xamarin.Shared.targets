@@ -570,6 +570,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			IsWatchApp="$(IsWatchApp)"
 			IsWatchExtension="$(IsWatchExtension)"
 			IsXPCService="$(IsXPCService)"
+			MinSupportedOSPlatformVersion="$(MinSupportedOSPlatformVersion)"
 			PartialAppManifests="@(PartialAppManifest)"
 			ProjectDir="$(MSBuildProjectDirectory)"
 			ResourcePrefix="$(_ResourcePrefix)"
