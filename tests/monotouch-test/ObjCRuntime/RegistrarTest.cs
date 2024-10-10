@@ -5548,11 +5548,14 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			AssertMemberCount (typeof (IUIApplicationDelegate));
 		}
 
+		[UnconditionalSuppressMessage ("Trimming", "IL2070", Justification = "This test verifies that all members have been correctly preserved, and fails if that's not the case. It'll thus fail if the trimmer removed anything it didn't expect - and is then technically trimmer safe in that it's aware and react accordingly if there's any behavioral change when the trimmer is enabled.")]
 		void AssertMemberCount (Type type)
 		{
 			var members = type.GetMembers (BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
 #if OPTIMIZEALL || NATIVEAOT
 			var expectNoMembers = true;
+#elif !__MACOS__
+			var expectNoMembers = global::XamarinTests.ObjCRuntime.Registrar.IsStaticRegistrar && TestRuntime.IsLinkAny;
 #else
 			var expectNoMembers = false;
 #endif

@@ -35,7 +35,7 @@
       "description": "Overrides SupportedOSPlatformVersion in the project file",
       "replaces": "minOSVersion",
       "datatype": "string",
-      "defaultValue": "14.2"
+      "defaultValue": "15.0"
     }
   },
   "defaultName": "MacCatalystApp1"
