@@ -6,7 +6,8 @@
 
 		<_ShortPackageVersion>@NUGET_VERSION_NO_METADATA@</_ShortPackageVersion>
 		<_PackageVersion>@NUGET_VERSION_FULL@</_PackageVersion>
-		<_XamarinTargetPlatformVersion>@TARGET_PLATFORM_VERSION@</_XamarinTargetPlatformVersion>
+		<_XamarinTargetPlatformVersionExecutable>@TARGET_PLATFORM_VERSION_EXE@</_XamarinTargetPlatformVersionExecutable>
+		<_XamarinTargetPlatformVersionLibrary>@TARGET_PLATFORM_VERSION_LIBRARY@</_XamarinTargetPlatformVersionLibrary>
 		<_XamarinIsPreviewRelease>@XCODE_IS_PREVIEW@</_XamarinIsPreviewRelease>
 		<_XamarinDotNetVersion>@DOTNET_TFM@</_XamarinDotNetVersion>
 		<_XamarinPackSuffix>@DOTNET_TFM@_@NUGET_OS_VERSION@</_XamarinPackSuffix>
