@@ -444,7 +444,7 @@ namespace Xamarin.MacDev.Tasks {
 		/// <param name="architectures">The target architectures</param>
 		/// <param name="frameworkPath">A relative path to the resolved native library within the xcframework.</param>
 		/// <returns>True if a native library was successfully found. Otherwise false, and an error will have been printed to the log.</returns>
-		internal static bool TryResolveXCFramework (TaskLoggingHelper log, PDictionary plist, string xcframeworkPath, string targetFrameworkMoniker, bool isSimulator, string architectures, [NotNullWhen (true)] out string? nativeLibraryPath)
+		public static bool TryResolveXCFramework (TaskLoggingHelper log, PDictionary plist, string xcframeworkPath, string targetFrameworkMoniker, bool isSimulator, string architectures, [NotNullWhen (true)] out string? nativeLibraryPath)
 		{
 			nativeLibraryPath = null;
 			var platform = PlatformFrameworkHelper.GetFramework (targetFrameworkMoniker);
