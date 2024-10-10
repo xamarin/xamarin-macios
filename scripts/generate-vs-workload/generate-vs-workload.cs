@@ -1,5 +1,3 @@
-#!/usr/bin/env /Library/Frameworks/Mono.framework/Commands/csharp -s
-
 // arguments are:
 //   --shorten long=short
 //   --platform <platform> <version>
@@ -16,33 +14,32 @@ var windowsPlatforms = new List<string> ();
 var tfm = string.Empty;
 var outputPath = string.Empty;
 
-var args = new Queue<string> (Args);
+var queue = new Queue<string> (args);
 
-while (args.Any ()) {
-	var arg = args.Dequeue ();
+while (queue.Any ()) {
+	var arg = queue.Dequeue ();
 	switch (arg) {
 	case "--shorten":
-		var values = args.Dequeue ().Split ('=');
+		var values = queue.Dequeue ().Split ('=');
 		shorten [values [0]] = values [1];
 		break;
 	case "--platform":
-		var platform = args.Dequeue ();
-		var version = args.Dequeue ();
+		var platform = queue.Dequeue ();
+		var version = queue.Dequeue ();
 		platforms.Add ((platform, version));
 		break;
 	case "--windows-platform":
-		windowsPlatforms.Add (args.Dequeue ());
+		windowsPlatforms.Add (queue.Dequeue ());
 		break;
 	case "--output":
-		outputPath = args.Dequeue ();
+		outputPath = queue.Dequeue ();
 		break;
 	case "--tfm":
-		tfm = args.Dequeue ();
+		tfm = queue.Dequeue ();
 		break;
 	default:
 		Console.Error.WriteLine ($"Unknown argument: {arg}");
-		Environment.Exit (1);
-		break;
+		return 1;
 	}
 }
 
@@ -88,4 +85,4 @@ using (TextWriter writer = new StreamWriter (outputPath)) {
 	writer.WriteLine ("</Project>");
 }
 
-Environment.Exit (0);
+return 0;
