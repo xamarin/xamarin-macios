@@ -23,7 +23,6 @@ export MD_APPLE_SDK_ROOT="$(dirname "$(dirname "$XCODE_DEVELOPER_ROOT")")"
 export RootTestsDirectory="$(pwd)"
 
 make
-make .stamp-xharness-configure
 
 TEST_SUITE_DEPENDENCIES+=(bindings-test)
 TEST_SUITE_DEPENDENCIES+=(EmbeddedResources)
