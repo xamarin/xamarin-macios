@@ -82,6 +82,8 @@ steps:
 
   - ${{ if eq(variables['System.TeamProject'], 'devdiv') }}:
       - template: /eng/common/templates-official/steps/enable-internal-sources.yml
+        parameters:
+          repositoryName: /xamarin-macios
 
       - template: /eng/common/templates-official/steps/enable-internal-runtimes.yml
         parameters:
