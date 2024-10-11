@@ -82,5 +82,10 @@
       <Uri>https://github.com/dotnet/xharness</Uri>
       <Sha>edae8a9491f747ba2a36023075aa3ac57be4d32e</Sha>
     </Dependency>
+    <Dependency Name="Microsoft.DotNet.Arcade.Sdk" Version="10.0.0-beta.24476.2">
+      <Uri>https://github.com/dotnet/arcade</Uri>
+      <Sha>7e8b8f4f321c8671aa01b53567d31aaa4950706f</Sha>
+      <SourceBuild RepoName="arcade" ManagedOnly="true" />
+    </Dependency>
   </ToolsetDependencies>
 </Dependencies>
