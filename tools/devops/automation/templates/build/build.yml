@@ -81,14 +81,14 @@ steps:
       HostedMacKeychainPassword: ${{ parameters.keyringPass }}
 
   - ${{ if eq(variables['System.TeamProject'], 'devdiv') }}:
-    - template: /eng/common/templates-official/steps/enable-internal-sources.yml
+      - template: /eng/common/templates-official/steps/enable-internal-sources.yml
 
-    - template: /eng/common/templates-official/steps/enable-internal-runtimes.yml
-      parameters:
-        federatedServiceConnection: ${{ parameters.federatedServiceConnection }}
-        outputVariableName: ${{ parameters.dotnetInternalBuildContainerTokenVariableName }}
-        expiryInHours: ${{ parameters.dotnetInternalBuildContainerTokenExpiryInHours }}
-        base64Encode: ${{ parameters.dotnetInternalBuildContainerTokenBase64Encode }}
+      - template: /eng/common/templates-official/steps/enable-internal-runtimes.yml
+        parameters:
+          federatedServiceConnection: ${{ parameters.federatedServiceConnection }}
+          outputVariableName: ${{ parameters.dotnetInternalBuildContainerTokenVariableName }}
+          expiryInHours: ${{ parameters.dotnetInternalBuildContainerTokenExpiryInHours }}
+          base64Encode: ${{ parameters.dotnetInternalBuildContainerTokenBase64Encode }}
 
   - task: xamops.azdevex.provisionator-task.provisionator@2
     displayName: 'Provision Brew components'
