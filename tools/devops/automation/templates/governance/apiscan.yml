@@ -32,6 +32,10 @@ steps:
     displayName: Download artifacts
     artifact: not-signed-package
 
+  # When we download an artifact from a resource pipeline, the download task places the artifact under $(Pipeline.Workspace)/$(pipeline-ref)/artifact
+  # in our case, it will be "$(Pipeline.Workspace)/macios/not-signed-package". Becuase this stage was originally part of the build, all the scripts
+  # assume that the location of the nugets is "$(Build.SourcesDirectory)/not-signed-package" already unzipped in a flat dir. This pwsh script does
+  # the move and flattering of the files.
   - pwsh: |
       $source = "$(Pipeline.Workspace)/macios/not-signed-package"
       $destination = "$(Build.SourcesDirectory)/not-signed-package"
