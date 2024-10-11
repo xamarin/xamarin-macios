@@ -34,6 +34,19 @@ using NativeHandle = System.IntPtr;
 
 namespace StoreKit {
 
+	[Internal]
+	[BaseType (typeof (NSObject))]
+	interface XamarinSwiftFunctions {
+		[Export ("requestReview:")]
+		[Static]
+		[iOS (16, 0), MacCatalyst (16, 0), Mac (13, 0), NoTV]
+#if MONOMAC
+		void RequestReview (NSViewController viewController);
+#else
+		void RequestReview (UIWindowScene windowScene);
+#endif
+	}
+
 	[ErrorDomain ("SKANErrorDomain")]
 	[NoWatch, NoTV, NoMac, iOS (15, 4), MacCatalyst (17, 0)]
 	[Native]
@@ -1112,6 +1125,9 @@ namespace StoreKit {
 		[Export ("requestReview")]
 		void RequestReview ();
 
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use the 'AppStore.RequestReview (UIWindowScene)' API instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use the 'AppStore.RequestReview (UIWindowScene)' API instead.")]
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use the 'AppStore.RequestReview (NSViewController)' API instead.")]
 		[Introduced (PlatformName.MacCatalyst, 14, 0)]
 		[NoWatch, NoTV, iOS (14, 0), NoMac]
 		[Static]
