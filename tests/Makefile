@@ -189,11 +189,9 @@ logdev:
 build-test-libraries:
 	@$(MAKE) -C $(TOP)/tests/test-libraries
 
-.stamp-xharness-configure: $(XHARNESS_EXECUTABLE)
-	$(Q_GEN) $(DOTNET) $< $(XHARNESS_VERBOSITY) --configure --autoconf --rootdir $(CURDIR)
-	$(Q) touch $@
+xharness: $(XHARNESS_EXECUTABLE)
 
-all-local:: .stamp-xharness-configure
+all-local:: xharness
 
 $(TOP)/tools/common/SdkVersions.cs: $(TOP)/tools/common/SdkVersions.in.cs
 	@$(MAKE) -C $(TOP)/tools/mtouch ../common/SdkVersions.cs
