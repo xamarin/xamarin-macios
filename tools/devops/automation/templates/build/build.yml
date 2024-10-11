@@ -44,6 +44,22 @@ parameters:
     type: boolean
     default: true
 
+  - name: federatedServiceConnection
+    type: string
+    default: 'dotnetbuilds-internal-read'
+
+  - name: dotnetInternalBuildContainerTokenVariableName
+    type: string
+    default: 'dotnetbuilds-internal-container-read-token'
+
+  - name: dotnetInternalBuildContainerTokenExpiryInHours
+    type: string
+    default: 1
+
+  - name: dotnetInternalBuildContainerTokenBase64Encode
+    type: boolean
+    default: false
+
 steps:
 
   - template: ../common/checkout.yml
