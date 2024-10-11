@@ -1,0 +1,45 @@
+# Template that gets token to fetch internal .NET builds.
+
+parameters:
+
+- name: federatedServiceConnection
+  type: string
+  default: 'dotnetbuilds-internal-read'
+
+- name: dotnetInternalBuildContainerTokenVariableName
+  type: string
+  default: 'dotnetbuilds-internal-container-read-token'
+
+- name: dotnetInternalBuildContainerTokenExpiryInHours
+  type: string
+  default: 1
+
+- name: dotnetInternalBuildContainerTokenBase64Encode
+  type: boolean
+  default: false
+
+- name: agentPoolComputed
+  type: string
+
+steps:
+
+- ${{ if eq(stageDependencies.configure_build.configure.outputs['configure_platforms.INTERNAL_DOTNET'],'1') }}:
+  - ${{ if and(eq(parameters.agentPoolComputed, 'ci') }}:
+      - template: /eng/common/templates-official/steps/enable-internal-sources.yml
+        parameters:
+          repositoryName: /xamarin-macios
+
+      - template: /eng/common/templates-official/steps/enable-internal-runtimes.yml
+        parameters:
+          federatedServiceConnection: ${{ parameters.federatedServiceConnection }}
+          outputVariableName: ${{ parameters.dotnetInternalBuildContainerTokenVariableName }}
+          expiryInHours: ${{ parameters.dotnetInternalBuildContainerTokenExpiryInHours }}
+          base64Encode: ${{ parameters.dotnetInternalBuildContainerTokenBase64Encode }}
+  - ${{ else }}:
+      - bash: |
+          echo "This branch currently requires an internal build of .NET, but that's only supported in CI pipelines/agents, not PR pipelines/agents."
+          exit 1
+        displayName: "Internal build check"
+- ${{ else }}:
+    - bash: echo "This branch does not requre an internal build of .NET, so we're good to proceed."
+      displayName: "Internal build check"

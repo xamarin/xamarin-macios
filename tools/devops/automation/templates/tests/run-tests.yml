@@ -39,6 +39,9 @@ parameters:
   type: number
   default: 3
 
+- name: agentPoolComputed
+  type: string
+
 steps:
 - bash: |
     set -ex
@@ -101,12 +104,17 @@ steps:
   workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts
   displayName: 'Set workload versions for xtro'
 
+- template: ../common/internal-dotnet.yml
+  parameters:
+    agentPoolComputed: ${{ parameters.agentPoolComputed }}
+
 - bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/install-workloads.sh
   workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios
   displayName: 'Install dotnet workloads'
   timeoutInMinutes: 45
   env:
     MACIOS_UPLOAD_PREFIX: ${{ parameters.uploadPrefix }}
+    DOTNET_INSTALL_INTERNAL_FEED_CREDENTIAL: $(dotnetbuilds-internal-container-read-token)
 
 # expand all the prebuilt test dependencies
 - bash: |

@@ -16,6 +16,8 @@ ALL_DOTNET_PLATFORMS=$(cat "$FILE")
 make -C "$BUILD_SOURCESDIRECTORY/xamarin-macios/tools/devops" print-variable-value-to-file FILE="$FILE" VARIABLE=ENABLE_DOTNET
 ENABLE_DOTNET=$(cat "$FILE")
 
+make -C "$BUILD_SOURCESDIRECTORY/xamarin-macios/tools/devops" print-variable-value-to-file FILE="$FILE" VARIABLE=INTERNAL_DOTNET
+INTERNAL_DOTNET=$(cat "$FILE")
 
 make -C "$BUILD_SOURCESDIRECTORY/xamarin-macios/tools/devops" print-variable-value-to-file FILE="$FILE" VARIABLE=INCLUDE_XAMARIN_LEGACY
 INCLUDE_XAMARIN_LEGACY=$(cat "$FILE")
@@ -49,6 +51,7 @@ set +x
 
 echo "##vso[task.setvariable variable=ENABLE_DOTNET;isOutput=true]$ENABLE_DOTNET"
 echo "##vso[task.setvariable variable=DOTNET_PLATFORMS;isOutput=true]$DOTNET_PLATFORMS"
+echo "##vso[task.setvariable variable=INTERNAL_DOTNET;isOutput=true]$INTERNAL_DOTNET"
 DISABLED_DOTNET_PLATFORMS=" $ALL_DOTNET_PLATFORMS "
 for platform in $DOTNET_PLATFORMS; do
 	PLATFORM_UPPER=$(echo "$platform" | tr '[:lower:]' '[:upper:]')

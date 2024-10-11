@@ -93,3 +93,4 @@ jobs:
           keyringPass: ${{ parameters.keyringPass }}
           gitHubToken: ${{ parameters.gitHubToken }}
           xqaCertPass: ${{ parameters.xqaCertPass }}
+          agentPoolComputed: $(AgentPoolComputed)
