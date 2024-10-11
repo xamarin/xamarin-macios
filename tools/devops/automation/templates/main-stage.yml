@@ -53,6 +53,22 @@ parameters:
   - name: macOSName
     type: string
 
+  - name: federatedServiceConnection
+    type: string
+    default: 'dotnetbuilds-internal-read'
+
+  - name: dotnetInternalBuildContainerTokenVariableName
+    type: string
+    default: 'dotnetbuilds-internal-container-read-token'
+
+  - name: dotnetInternalBuildContainerTokenExpiryInHours
+    type: string
+    default: 1
+
+  - name: dotnetInternalBuildContainerTokenBase64Encode
+    type: boolean
+    default: false
+
   # Ideally we should read/get the list of platforms from somewhere else, instead of hardcoding them here.
   # Note that this is _all_ the platforms we support (not just the enabled ones).
   - name: supportedPlatforms
@@ -216,6 +232,16 @@ stages:
 
             steps:
               - template: ./common/clean.yml
+
+  - ${{ if eq(variables['System.TeamProject'], 'devdiv') }}:
+    - template: /eng/common/templates-official/steps/enable-internal-sources.yml
+
+    - template: /eng/common/templates-official/steps/enable-internal-runtimes.yml
+      parameters:
+        federatedServiceConnection: ${{ parameters.federatedServiceConnection }}
+        outputVariableName: ${{ parameters.dotnetInternalBuildContainerTokenVariableName }}
+        expiryInHours: ${{ parameters.dotnetInternalBuildContainerTokenExpiryInHours }}
+        base64Encode: ${{ parameters.dotnetInternalBuildContainerTokenBase64Encode }}
 
   - stage: configure_build
     displayName: '${{ parameters.stageDisplayNamePrefix }}Configure'

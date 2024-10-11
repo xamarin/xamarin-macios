@@ -189,6 +189,7 @@ steps:
     timeoutInMinutes: 180
     env:
       MAKE_PARALLELISM: ${{ parameters.makeParallelism }}
+      DOTNET_INSTALL_INTERNAL_FEED_CREDENTIAL: $(dotnetbuilds-internal-container-read-token)
 
   - ${{ each step in parameters.buildSteps }}:
       - ${{ each pair in step }}:
