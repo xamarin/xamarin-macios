@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
+using Xamarin.Tests;
 using Xamarin.Utils;
 using Xunit;
 
@@ -8,10 +9,10 @@ namespace Microsoft.Macios.Bindings.Analyzer.Tests;
 public class BindingTypeSemanticAnalyzerTests : BaseGeneratorWithAnalyzerTestClass {
 
 	[Theory]
-	[InlineData (ApplePlatform.iOS)]
-	[InlineData (ApplePlatform.TVOS)]
-	[InlineData (ApplePlatform.MacOSX)]
-	[InlineData (ApplePlatform.MacCatalyst)]
+	[PlatformInlineData (ApplePlatform.iOS)]
+	[PlatformInlineData (ApplePlatform.TVOS)]
+	[PlatformInlineData (ApplePlatform.MacOSX)]
+	[PlatformInlineData (ApplePlatform.MacCatalyst)]
 	public async Task BindingTypeMustBePartial (ApplePlatform platform)
 	{
 		const string inputText = @"

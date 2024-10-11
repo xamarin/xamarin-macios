@@ -18,10 +18,10 @@ interface AVAudioPcmBuffer : AVAudioBuffer {
 ";
 
 	[Theory]
-	[InlineData (ApplePlatform.iOS)]
-	[InlineData (ApplePlatform.TVOS)]
-	[InlineData (ApplePlatform.MacOSX)]
-	[InlineData (ApplePlatform.MacCatalyst)]
+	[PlatformInlineData (ApplePlatform.iOS)]
+	[PlatformInlineData (ApplePlatform.TVOS)]
+	[PlatformInlineData (ApplePlatform.MacOSX)]
+	[PlatformInlineData (ApplePlatform.MacCatalyst)]
 	public void AttributesAreNotPresent (ApplePlatform platform)
 	{
 		// We need to create a compilation with the required source code.
