@@ -24,10 +24,6 @@ namespace Xamarin.Tests {
 					if (!Configuration.include_tvos)
 						Skip = "tvOS is not included in this build";
 					break;
-				case ApplePlatform.WatchOS:
-					if (!Configuration.include_dotnet_watchos)
-						Skip = "watchOS is not included in this build";
-					break;
 				case ApplePlatform.MacOSX:
 					if (!Configuration.include_mac)
 						Skip = "macOS is not included in this build";

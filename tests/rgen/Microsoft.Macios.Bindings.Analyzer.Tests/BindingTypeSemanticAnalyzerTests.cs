@@ -16,6 +16,8 @@ public class BindingTypeSemanticAnalyzerTests : BaseGeneratorWithAnalyzerTestCla
 	public async Task BindingTypeMustBePartial (ApplePlatform platform)
 	{
 		const string inputText = @"
+using ObjCBindings;
+
 namespace Test {
 	[BindingType]
 	public class Examples {

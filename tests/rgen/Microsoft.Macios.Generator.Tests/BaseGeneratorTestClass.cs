@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.IO;
@@ -17,26 +18,10 @@ public class BaseGeneratorTestClass {
 	protected BindingSourceGeneratorGenerator GeneratorGenerator;
 	protected CSharpGeneratorDriver _driver;
 
-	readonly PortableExecutableReference [] _defaultReferences;
-
 	public BaseGeneratorTestClass ()
 	{
 		GeneratorGenerator = new BindingSourceGeneratorGenerator ();
 		_driver = CSharpGeneratorDriver.Create (GeneratorGenerator);
-
-		var dotNetAssemblyPath = Path.GetDirectoryName (typeof (object).Assembly.Location)!;
-		_defaultReferences =
-		[
-			MetadataReference.CreateFromFile (typeof (object).Assembly.Location),
-			MetadataReference.CreateFromFile (Path.Combine (dotNetAssemblyPath, "mscorlib.dll")),
-			MetadataReference.CreateFromFile (Path.Combine (dotNetAssemblyPath, "System.dll")),
-			MetadataReference.CreateFromFile (Path.Combine (dotNetAssemblyPath, "System.Core.dll")),
-			MetadataReference.CreateFromFile (Path.Combine (dotNetAssemblyPath, "System.Drawing.dll")),
-			MetadataReference.CreateFromFile (Path.Combine (dotNetAssemblyPath, "System.Drawing.Primitives.dll")),
-			MetadataReference.CreateFromFile (Path.Combine (dotNetAssemblyPath, "System.Runtime.InteropServices.dll")),
-			MetadataReference.CreateFromFile (Path.Combine (dotNetAssemblyPath, "System.Private.CoreLib.dll")),
-			MetadataReference.CreateFromFile (Path.Combine (dotNetAssemblyPath, "System.Runtime.dll")),
-		];
 	}
 
 	protected Compilation RunGeneratorsAndUpdateCompilation (Compilation compilation, out ImmutableArray<Diagnostic> diagnostics)
@@ -50,16 +35,16 @@ public class BaseGeneratorTestClass {
 
 	protected Compilation CreateCompilation (string name, ApplePlatform platform, params string [] sources)
 	{
+		// get the dotnet bcl and fully load it for the test.
+		var references = Directory.GetFiles (Configuration.DotNetBclDir, "*.dll")
+			.Select (assembly => MetadataReference.CreateFromFile (assembly)).ToList ();
 		// get the dll for the current platform
-		var references = new List<PortableExecutableReference> (_defaultReferences);
 		var targetFramework = TargetFramework.GetTargetFramework (platform, isDotNet: true);
 		var platformDll = Configuration.GetBaseLibrary (targetFramework);
 		if (!string.IsNullOrEmpty (platformDll)) {
 			references.Add (MetadataReference.CreateFromFile (platformDll));
-		}
-		var attributesDlls = Configuration.GetBindingAttributePath (targetFramework);
-		if (!string.IsNullOrEmpty (platformDll)) {
-			references.Add (MetadataReference.CreateFromFile (attributesDlls));
+		} else {
+			throw new InvalidOperationException ($"Could not find platform dll for {platform}");
 		}
 		var trees = sources.Select (s => CSharpSyntaxTree.ParseText (s));
 		var options = new CSharpCompilationOptions (OutputKind.NetModule);
