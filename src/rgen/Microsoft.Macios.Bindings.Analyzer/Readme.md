@@ -17,7 +17,7 @@ Unit tests for the sample analyzers and code fix provider. The easiest way to de
 ## How To?
 ### How to debug?
 - Use the [launchSettings.json](Properties/launchSettings.json) profile.
-- Debug tests.
+- Debug tests (in VSCode).
 
 ### How can I determine which syntax nodes I should expect?
 Consider installing the Roslyn syntax tree viewer plugin [Rossynt](https://plugins.jetbrains.com/plugin/16902-rossynt/).
