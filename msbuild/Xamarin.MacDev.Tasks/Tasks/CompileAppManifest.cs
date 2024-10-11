@@ -62,6 +62,9 @@ namespace Xamarin.MacDev.Tasks {
 
 		public bool IsWatchExtension { get; set; }
 
+		[Required]
+		public string MinSupportedOSPlatformVersion { get; set; } = string.Empty;
+
 		public ITaskItem [] PartialAppManifests { get; set; } = Array.Empty<ITaskItem> ();
 
 		[Required]
@@ -300,6 +303,18 @@ namespace Xamarin.MacDev.Tasks {
 				return false;
 			} else {
 				minimumOSVersion = minimumOSVersionInManifest!;
+			}
+
+			// Verify that the value is not lower than the minimum
+			if (!Version.TryParse (MinSupportedOSPlatformVersion, out var minSupportedVersion)) {
+				Log.LogError (MSBStrings.E7125 /* Unable to parse the value '{0}' for the property '{1}. */, MinSupportedOSPlatformVersion, "MinSupportedOSPlatformVersion");
+				return false;
+			} else if (!Version.TryParse (SupportedOSPlatformVersion, out var supportedVersion)) {
+				Log.LogError (MSBStrings.E7125 /* Unable to parse the value '{0}' for the property '{1}. */, SupportedOSPlatformVersion, "SupportedOSPlatformVersion");
+				return false;
+			} else if (minSupportedVersion > supportedVersion) {
+				Log.LogError (MSBStrings.E7126 /* The SupportedOSPlatformVersion value '{0}' in the project file is lower than the minimum value '{1}'." */, SupportedOSPlatformVersion, MinSupportedOSPlatformVersion);
+				return false;
 			}
 
 			// Write out our value
