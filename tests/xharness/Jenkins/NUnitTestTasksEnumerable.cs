@@ -22,8 +22,7 @@ namespace Xharness.Jenkins {
 			var msbuildTasksTestsProject = new TestProject (TestLabel.Msbuild, Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "msbuild", "Xamarin.MacDev.Tasks.Tests", "Xamarin.MacDev.Tasks.Tests.csproj"))) {
 				IsDotNetProject = true,
 			};
-			var env = new Dictionary<string, string>
-			{
+			var env = new Dictionary<string, string> {
 			};
 			var buildiOSMSBuild = new MSBuildTask (jenkins: jenkins, testProject: msbuildTasksTestsProject, processManager: processManager) {
 				SpecifyPlatform = false,
