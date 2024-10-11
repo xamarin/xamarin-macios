@@ -226,8 +226,8 @@ $(eval $(call SimlauncherTemplate,Xamarin.iOS.registrar.ios.simulator.a,64,64))
 
 MTOUCH_CONF=Release
 MTOUCH_DIR=bin/$(MTOUCH_CONF)
-LOCAL_MTOUCH=$(MTOUCH_DIR)/mtouch.exe
-LOCAL_MTOUCH_COMMAND=$(SYSTEM_MONO) --debug $(LOCAL_MTOUCH)
+LOCAL_MTOUCH=$(MTOUCH_DIR)/mtouch.dll
+LOCAL_MTOUCH_COMMAND=$(DOTNET) exec $(LOCAL_MTOUCH)
 
 DOTNET_PLATFORMS_MTOUCH=$(filter-out macOS,$(DOTNET_PLATFORMS))
 
@@ -235,8 +235,8 @@ DOTNET_PLATFORMS_MTOUCH=$(filter-out macOS,$(DOTNET_PLATFORMS))
 mtouch.csproj.inc: export BUILD_VERBOSITY=$(MSBUILD_VERBOSITY)
 -include mtouch.csproj.inc
 
-$(MTOUCH_DIR)/mtouch.exe: $(mtouch_dependencies)
-	$(Q_GEN) $(SYSTEM_MSBUILD) mtouch.csproj /r $(XBUILD_VERBOSITY) /p:Configuration=$(MTOUCH_CONF)
+$(LOCAL_MTOUCH): $(mtouch_dependencies)
+	$(Q_GEN) $(DOTNET) build mtouch.csproj $(DOTNET_BUILD_VERBOSITY) /p:Configuration=$(MTOUCH_CONF)
 
 $(abspath Constants.cs): Constants.cs.in Makefile $(TOP)/Make.config.inc
 	$(Q_GEN) sed \

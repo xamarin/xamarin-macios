@@ -19,7 +19,7 @@ namespace Xamarin.Bundler {
 namespace ObjCRuntime {
 #endif
 	class RuntimeOptions {
-#if NET
+#if NET && !LEGACY_TOOLS
 		const string SocketsHandlerValue = "SocketsHttpHandler";
 #else
 		const string HttpClientHandlerValue = "HttpClientHandler";
@@ -45,13 +45,13 @@ namespace ObjCRuntime {
 			switch (value) {
 			// default
 			case null:
-#if NET
+#if NET && !LEGACY_TOOLS
 				return NSUrlSessionHandlerValue;
 #else
 				return (app.Platform == Utils.ApplePlatform.WatchOS) ? NSUrlSessionHandlerValue : HttpClientHandlerValue;
 #endif
 			case CFNetworkHandlerValue:
-#if NET
+#if NET && !LEGACY_TOOLS
 			case SocketsHandlerValue:
 #else
 			case HttpClientHandlerValue:
@@ -100,7 +100,7 @@ namespace ObjCRuntime {
 			} else if (app.Platform == Utils.ApplePlatform.WatchOS) {
 				handler = NSUrlSessionHandlerValue;
 			} else {
-#if NET
+#if NET && !LEGACY_TOOLS
 				handler = NSUrlSessionHandlerValue;
 #else
 				handler = HttpClientHandlerValue;
@@ -119,7 +119,7 @@ namespace ObjCRuntime {
 				type = platformModule!.GetType ("Foundation", "NSUrlSessionHandler");
 				break;
 #else
-#if NET
+#if NET && !LEGACY_TOOLS
 			case SocketsHandlerValue:
 				type = httpModule.GetType ("System.Net.Http", "SocketsHttpHandler");
 				break;
@@ -180,7 +180,7 @@ namespace ObjCRuntime {
 			var options = RuntimeOptions.Read ();
 			// all types will be present as this is executed only when the linker is not enabled
 			var handler_name = options?.http_message_handler;
-#if NET
+#if NET && !LEGACY_TOOLS
 			// Note: no need to handle SocketsHandlerValue here because System.Net.Http handles
 			// creating a SocketsHttpHandler when configured to do so.
 			switch (handler_name) {

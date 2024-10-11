@@ -6,7 +6,7 @@ using Mono.Linker;
 
 using Xamarin.Bundler;
 using Xamarin.Linker;
-#if !NET
+#if !NET || LEGACY_TOOLS
 using Mono.Linker.Steps;
 using Mono.Tuner;
 using Xamarin.Tuner;
@@ -14,7 +14,7 @@ using Xamarin.Tuner;
 
 namespace MonoTouch.Tuner {
 
-#if NET
+#if NET && !LEGACY_TOOLS
 	public class RegistrarRemovalTrackingStep : ConfigurationAwareStep {
 
 		protected override string Name { get; } = "RegistrarRemovalTracking";
@@ -146,7 +146,7 @@ namespace MonoTouch.Tuner {
 							break;
 						case ".ctor":
 							var md = mr.Resolve () as MethodDefinition;
-#if NET
+#if NET && !LEGACY_TOOLS
 							requires |= Xamarin.Linker.OptimizeGeneratedCodeHandler.IsBlockLiteralCtor_Type_String (md);
 #else
 							requires |= Xamarin.Linker.OptimizeGeneratedCodeSubStep.IsBlockLiteralCtor_Type_String (md);
@@ -179,7 +179,7 @@ namespace MonoTouch.Tuner {
 			ErrorHelper.Warning (WarnCode, Errors.MM2107, assembly.Name.Name, mr.DeclaringType.FullName, mr.Name, string.Join (", ", ((MethodReference) mr).Parameters.Select ((v) => v.ParameterType.FullName)));
 		}
 
-#if NET
+#if NET && !LEGACY_TOOLS
 		protected override void TryEndProcess ()
 		{
 #else
