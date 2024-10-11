@@ -234,9 +234,9 @@ stages:
               - template: ./common/clean.yml
 
   - ${{ if eq(variables['System.TeamProject'], 'devdiv') }}:
-    - template: /eng/common/core-templates/steps/enable-internal-sources.yml
+    - template: /eng/common/templates-official/steps/enable-internal-sources.yml
 
-    - template: /eng/common/core-templates/steps/enable-internal-runtimes.yml
+    - template: /eng/common/templates-official/steps/enable-internal-runtimes.yml
       parameters:
         federatedServiceConnection: ${{ parameters.federatedServiceConnection }}
         outputVariableName: ${{ parameters.dotnetInternalBuildContainerTokenVariableName }}
