@@ -216,7 +216,7 @@ namespace Xamarin.Bundler {
 					if (Driver.GetFrameworks (App).TryGetValue (nspace, out framework)) {
 						// framework specific processing
 						switch (framework.Name) {
-#if MONOMAC && !NET
+#if MONOMAC && (!NET || LEGACY_TOOLS)
 						case "QTKit":
 							// we already warn in Frameworks.cs Gather method
 							if (!Driver.LinkProhibitedFrameworks)
@@ -257,7 +257,7 @@ namespace Xamarin.Bundler {
 								continue;
 							}
 							break;
-#if !NET
+#if !NET || !LEGACY_TOOLS
 						case "WatchKit":
 							// Xcode 11 doesn't ship WatchKit for iOS
 							if (Driver.XcodeVersion.Major == 11 && App.Platform == ApplePlatform.iOS) {
@@ -619,7 +619,7 @@ namespace Xamarin.Bundler {
 						GenerateIOSMain (sw, abi);
 						break;
 					case ApplePlatform.MacOSX:
-#if NET
+#if NET && !LEGACY_TOOLS
 						GenerateIOSMain (sw, abi);
 #else
 						GenerateMacMain (sw);
@@ -641,7 +641,7 @@ namespace Xamarin.Bundler {
 		{
 			sw.WriteLine ("#define MONOMAC 1");
 			sw.WriteLine ("#include <xamarin/xamarin.h>");
-#if !NET
+#if !NET || LEGACY_TOOLS
 			if (App.Registrar == RegistrarMode.PartialStatic)
 				sw.WriteLine ($"extern \"C\" void {StaticRegistrar.GetInitializationMethodName ("Xamarin.Mac")} ();");
 #endif
@@ -783,7 +783,7 @@ namespace Xamarin.Bundler {
 				sw.WriteLine ("extern \"C\" { void mono_sgen_mono_ilgen_init (void); }");
 			}
 
-#if NET
+#if NET && !LEGACY_TOOLS
 			if (app.MonoNativeMode != MonoNativeMode.None) {
 				sw.WriteLine ("static const char *xamarin_runtime_libraries_array[] = {");
 				foreach (var lib in app.MonoLibraries)
@@ -806,7 +806,7 @@ namespace Xamarin.Bundler {
 				sw.WriteLine ("\tmono_marshal_ilgen_init ();");
 				sw.WriteLine ("\tmono_method_builder_ilgen_init ();");
 				sw.WriteLine ("\tmono_sgen_mono_ilgen_init ();");
-#if !NET
+#if !NET || LEGACY_TOOLS
 				sw.WriteLine ("\tmono_ee_interp_init (NULL);");
 #endif
 				if ((abi & Abi.x86_64) == Abi.x86_64) {
@@ -830,7 +830,7 @@ namespace Xamarin.Bundler {
 			sw.WriteLine ("\txamarin_invoke_registration_methods ();");
 
 			if (app.MonoNativeMode != MonoNativeMode.None) {
-#if NET
+#if NET && !LEGACY_TOOLS
 				// Mono doesn't support dllmaps for Mac Catalyst / macOS in .NET, so we're using an alternative:
 				// the PINVOKE_OVERRIDE runtime option. Since we have to use it for Mac Catalyst + macOS, let's
 				// just use it everywhere to simplify code. This means that at runtime we need to know how we
@@ -873,7 +873,7 @@ namespace Xamarin.Bundler {
 				sw.WriteLine ("\tsetenv (\"{0}\", \"{1}\", 1);", kvp.Key.Replace ("\"", "\\\""), kvp.Value.Replace ("\"", "\\\""));
 			if (app.XamarinRuntime != XamarinRuntime.NativeAOT)
 				sw.WriteLine ("\txamarin_supports_dynamic_registration = {0};", app.DynamicRegistrationSupported ? "TRUE" : "FALSE");
-#if NET
+#if NET && !LEGACY_TOOLS
 			sw.WriteLine ("\txamarin_runtime_configuration_name = {0};", string.IsNullOrEmpty (app.RuntimeConfigurationFile) ? "NULL" : $"\"{app.RuntimeConfigurationFile}\"");
 #endif
 			if (app.Registrar == RegistrarMode.ManagedStatic)
@@ -946,7 +946,7 @@ namespace Xamarin.Bundler {
 			sw.WriteLine ("}");
 		}
 
-#if NET
+#if NET && !LEGACY_TOOLS
 		static readonly char [] charsToReplaceAot = new [] { '.', '-', '+', '<', '>' };
 #endif
 		static string EncodeAotSymbol (string symbol)
@@ -963,7 +963,7 @@ namespace Xamarin.Bundler {
 					(c == '_')) {
 					sb.Append (c);
 					continue;
-#if NET
+#if NET && !LEGACY_TOOLS
 				} else if (charsToReplaceAot.Contains (c)) {
 					sb.Append ('_');
 				} else {
@@ -971,7 +971,7 @@ namespace Xamarin.Bundler {
 					sb.Append ($"_{b:X}_");
 #endif
 				}
-#if !NET
+#if !NET || LEGACY_TOOLS
 				sb.Append ('_');
 #endif
 			}

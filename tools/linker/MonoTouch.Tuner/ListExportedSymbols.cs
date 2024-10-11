@@ -17,13 +17,13 @@ namespace Xamarin.Linker.Steps {
 	public class ListExportedSymbols : BaseStep {
 		PInvokeWrapperGenerator state;
 		bool is_product_assembly;
-#if !NET
+#if !NET || LEGACY_TOOLS
 		bool skip_sdk_assemblies;
 #endif
 
 		PInvokeWrapperGenerator State {
 			get {
-#if NET
+#if NET && !LEGACY_TOOLS
 				if (state is null && DerivedLinkContext.App.RequiresPInvokeWrappers) {
 					Configuration.PInvokeWrapperGenerationState = new PInvokeWrapperGenerator () {
 						App = DerivedLinkContext.App,
@@ -38,7 +38,7 @@ namespace Xamarin.Linker.Steps {
 			}
 		}
 
-#if NET
+#if NET && !LEGACY_TOOLS
 		protected override void EndProcess ()
 		{
 			if (state?.Started == true) {
@@ -50,7 +50,7 @@ namespace Xamarin.Linker.Steps {
 		}
 #endif
 
-#if NET
+#if NET && !LEGACY_TOOLS
 		public LinkerConfiguration Configuration {
 			get {
 				return LinkerConfiguration.GetInstance (Context);
@@ -60,7 +60,7 @@ namespace Xamarin.Linker.Steps {
 
 		public DerivedLinkContext DerivedLinkContext {
 			get {
-#if NET
+#if NET && !LEGACY_TOOLS
 				return Configuration.DerivedLinkContext;
 #else
 				return (DerivedLinkContext) Context;
@@ -68,7 +68,7 @@ namespace Xamarin.Linker.Steps {
 			}
 		}
 
-#if NET
+#if NET && !LEGACY_TOOLS
 		public ListExportedSymbols ()
 		{
 		}
@@ -87,7 +87,7 @@ namespace Xamarin.Linker.Steps {
 			if (Annotations.GetAction (assembly) == AssemblyAction.Delete)
 				return;
 
-#if !NET
+#if !NET || LEGACY_TOOLS
 			if (skip_sdk_assemblies && Profile.IsSdkAssembly (assembly))
 				return;
 #endif
@@ -104,7 +104,7 @@ namespace Xamarin.Linker.Steps {
 			if (!hasSymbols)
 				return;
 
-#if NET
+#if NET && !LEGACY_TOOLS
 			is_product_assembly = Configuration.Profile.IsProductAssembly (assembly);
 #else
 			is_product_assembly = Profile.IsProductAssembly (assembly);
@@ -191,7 +191,7 @@ namespace Xamarin.Linker.Steps {
 					}
 				}
 
-#if NET
+#if NET && !LEGACY_TOOLS
 				// Create a list of all the libraries from Mono that we'll link with
 				// We add 4 different variations for each library:
 				// * with and without a "lib" prefix

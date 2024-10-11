@@ -67,7 +67,7 @@ namespace Xamarin.Bundler {
 			set {
 				full_path = value;
 				if (!is_framework_assembly.HasValue && !string.IsNullOrEmpty (full_path)) {
-#if NET
+#if NET && !LEGACY_TOOLS
 					is_framework_assembly = Target.App.Configuration.FrameworkAssemblies.Contains (GetIdentity (full_path));
 #else
 					var real_full_path = Target.GetRealPath (full_path);
@@ -582,7 +582,7 @@ namespace Xamarin.Bundler {
 						if (Frameworks.Add ("OpenAL"))
 							Driver.Log (3, "Linking with the framework OpenAL because {0} is referenced by a module reference in {1}", file, FileName);
 						break;
-#if NET
+#if NET && !LEGACY_TOOLS
 					case "Carbon":
 						if (App.Platform != ApplePlatform.MacOSX) {
 							Driver.Log (3, $"Not linking with the framework {file} (referenced by a module reference in {FileName}) because it doesn't exist on the target platform.");

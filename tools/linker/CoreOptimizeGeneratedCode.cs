@@ -12,13 +12,13 @@ using Mono.Tuner;
 using Xamarin.Bundler;
 
 using MonoTouch.Tuner;
-#if NET
+#if NET && !LEGACY_TOOLS
 using Mono.Linker.Steps;
 #endif
 
 namespace Xamarin.Linker {
 
-#if NET
+#if NET && !LEGACY_TOOLS
 	public class OptimizeGeneratedCodeHandler : ExceptionalMarkHandler {
 #else
 	public class OptimizeGeneratedCodeSubStep : ExceptionalSubStep {
@@ -30,7 +30,7 @@ namespace Xamarin.Linker {
 		protected override string Name { get; } = "Binding Optimizer";
 		protected override int ErrorCode { get; } = 2020;
 
-#if NET
+#if NET && !LEGACY_TOOLS
 		Dictionary<AssemblyDefinition, bool?> _hasOptimizableCode;
 		Dictionary<AssemblyDefinition, bool?> HasOptimizableCode {
 			get {
@@ -76,7 +76,7 @@ namespace Xamarin.Linker {
 
 		bool? is_arm64_calling_convention;
 
-#if NET
+#if NET && !LEGACY_TOOLS
 		public override void Initialize (LinkContext context, MarkContext markContext)
 #else
 		public override void Initialize (LinkContext context)
@@ -112,25 +112,25 @@ namespace Xamarin.Linker {
 					is_arm64_calling_convention = false;
 				}
 			}
-#if NET
+#if NET && !LEGACY_TOOLS
 			markContext.RegisterMarkMethodAction (ProcessMethod);
 #endif
 		}
 
 
-#if !NET
+#if !NET || LEGACY_TOOLS
 		public override SubStepTargets Targets {
 			get { return SubStepTargets.Assembly | SubStepTargets.Type | SubStepTargets.Method; }
 		}
 #endif
 
-#if NET
+#if NET && !LEGACY_TOOLS
 		bool IsActiveFor (AssemblyDefinition assembly, out bool hasOptimizableCode)
 #else
 		public override bool IsActiveFor (AssemblyDefinition assembly)
 #endif
 		{
-#if NET
+#if NET && !LEGACY_TOOLS
 			hasOptimizableCode = false;
 			if (HasOptimizableCode.TryGetValue (assembly, out bool? optimizable)) {
 				if (optimizable == true)
@@ -145,7 +145,7 @@ namespace Xamarin.Linker {
 #if DEBUG
 				Console.WriteLine ("Assembly {0} : skipped (SDK)", assembly);
 #endif
-#if NET
+#if NET && !LEGACY_TOOLS
 				HasOptimizableCode.Add (assembly, null);
 #endif
 				return false;
@@ -157,7 +157,7 @@ namespace Xamarin.Linker {
 #if DEBUG
 				Console.WriteLine ("Assembly {0} : skipped ({1})", assembly, action);
 #endif
-#if NET
+#if NET && !LEGACY_TOOLS
 				HasOptimizableCode.Add (assembly, null);
 #endif
 				return false;
@@ -183,7 +183,7 @@ namespace Xamarin.Linker {
 				Console.WriteLine ("Assembly {0} : no [CompilerGeneratedAttribute] nor [BindingImplAttribute] present (applying basic optimizations)", assembly);
 #endif
 			// we always apply the step
-#if NET
+#if NET && !LEGACY_TOOLS
 			HasOptimizableCode.Add (assembly, hasOptimizableCode);
 #else
 			HasOptimizableCode = hasOptimizableCode;
@@ -191,7 +191,7 @@ namespace Xamarin.Linker {
 			return true;
 		}
 
-#if !NET
+#if !NET || LEGACY_TOOLS
 		protected override void Process (TypeDefinition type)
 		{
 			if (!HasOptimizableCode)
@@ -669,7 +669,7 @@ namespace Xamarin.Linker {
 
 		bool GetInlineIntPtrSize (AssemblyDefinition assembly)
 		{
-#if NET
+#if NET && !LEGACY_TOOLS
 			if (InlineIntPtrSize.TryGetValue (assembly, out bool inlineIntPtrSize))
 				return inlineIntPtrSize;
 #else
@@ -697,7 +697,7 @@ namespace Xamarin.Linker {
 			if (inlineIntPtrSize)
 				Driver.Log (4, "Optimization 'inline-intptr-size' enabled for assembly '{0}'.", assembly.Name);
 
-#if NET
+#if NET && !LEGACY_TOOLS
 			InlineIntPtrSize.Add (assembly, inlineIntPtrSize);
 #else
 			InlineIntPtrSize = inlineIntPtrSize;
@@ -705,7 +705,7 @@ namespace Xamarin.Linker {
 			return inlineIntPtrSize;
 		}
 
-#if !NET
+#if !NET || LEGACY_TOOLS
 		protected override void Process (AssemblyDefinition assembly)
 		{
 			GetInlineIntPtrSize (assembly);
@@ -723,7 +723,7 @@ namespace Xamarin.Linker {
 
 		protected override void Process (MethodDefinition method)
 		{
-#if NET
+#if NET && !LEGACY_TOOLS
 			if (!IsActiveFor (method.DeclaringType.Module.Assembly, out bool hasOptimizableCode))
 				return;
 #endif
@@ -734,7 +734,7 @@ namespace Xamarin.Linker {
 			if (method.IsBindingImplOptimizableCode (LinkContext)) {
 				// We optimize all methods that have the [BindingImpl (BindingImplAttributes.Optimizable)] attribute.
 			} else if ((method.IsGeneratedCode (LinkContext) && (
-#if NET
+#if NET && !LEGACY_TOOLS
 				GetIsExtensionType (method.DeclaringType)
 #else
 				IsExtensionType
@@ -789,7 +789,7 @@ namespace Xamarin.Linker {
 			case "get_IsDirectBinding":
 				ProcessIsDirectBinding (caller, ins);
 				break;
-#if !NET
+#if !NET || LEGACY_TOOLS
 			// ILLink does this optimization since the property returns a constant `true` (built time)
 			// or `false` - if `RegistrarRemovalTrackingStep` decide it's possible to do without
 			case "get_DynamicRegistrationSupported":
@@ -845,7 +845,7 @@ namespace Xamarin.Linker {
 
 		void ProcessIntPtrSize (MethodDefinition caller, Instruction ins)
 		{
-#if NET
+#if NET && !LEGACY_TOOLS
 			if (!GetInlineIntPtrSize (caller.Module.Assembly))
 				return;
 #else
@@ -877,7 +877,7 @@ namespace Xamarin.Linker {
 			if (Optimizations.InlineIsDirectBinding != true)
 				return;
 
-#if NET
+#if NET && !LEGACY_TOOLS
 			bool? isdirectbinding_constant = IsDirectBindingConstant (caller.DeclaringType);
 #endif
 			// If we don't know the constant isdirectbinding value, then we can't inline anything
@@ -904,7 +904,7 @@ namespace Xamarin.Linker {
 			ins.Operand = null;
 		}
 
-#if !NET
+#if !NET || LEGACY_TOOLS
 		void ProcessIsDynamicSupported (MethodDefinition caller, Instruction ins)
 		{
 			const string operation = "inline Runtime.DynamicRegistrationSupported";

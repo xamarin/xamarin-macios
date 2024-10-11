@@ -13,7 +13,7 @@ namespace Xamarin.Linker.Steps {
 
 	public class ApplyPreserveAttribute : ApplyPreserveAttributeBase {
 
-#if !NET
+#if !NET || LEGACY_TOOLS
 		HashSet<TypeDefinition> preserve_synonyms;
 #endif
 
@@ -26,7 +26,7 @@ namespace Xamarin.Linker.Steps {
 			return Annotations.GetAction (assembly) == AssemblyAction.Link;
 		}
 
-#if NET
+#if NET && !LEGACY_TOOLS
 		protected override void Process (AssemblyDefinition assembly)
 		{
 			base.Process (assembly);
@@ -64,7 +64,7 @@ namespace Xamarin.Linker.Steps {
 				// (b) it will try to fetch the [Preserve] attribute on the type (and it's not there) as `base` would
 				var type = tr.Resolve ();
 
-#if NET
+#if NET && !LEGACY_TOOLS
 				PreserveType (type, attribute);
 #else
 				Annotations.Mark (type);
@@ -78,7 +78,7 @@ namespace Xamarin.Linker.Steps {
 
 				// In .NET6, ApplyPreserveAttribute no longer runs on all assemblies.
 				// [assembly: Preserve (typeof (SomeAttribute))] no longer gives SomeAttribute "Preserve" semantics.
-#if !NET
+#if !NET || LEGACY_TOOLS
 				// if the type is a custom attribute then it means we want to preserve what's decorated
 				// with this attribute (not just the attribute alone)
 				if (type.Inherits ("System", "Attribute")) {
@@ -100,7 +100,7 @@ namespace Xamarin.Linker.Steps {
 				removeAttribute = true;
 				return true;
 			}
-#if NET
+#if NET && !LEGACY_TOOLS
 			return false;
 #else
 			// we need to resolve (as many reference instances can exists)

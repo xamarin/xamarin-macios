@@ -9,15 +9,15 @@ export DEVELOPER_DIR=$(XCODE_DEVELOPER_ROOT)
 
 MMP_CONF=Release
 MMP_DIR=bin/$(MMP_CONF)
-LOCAL_MMP=$(MMP_DIR)/mmp.exe
-LOCAL_MMP_COMMAND=$(SYSTEM_MONO) --debug $(LOCAL_MMP)
+LOCAL_MMP=$(MMP_DIR)/mmp.dll
+LOCAL_MMP_COMMAND=$(DOTNET) exec $(LOCAL_MMP)
 
 # mmp.csproj.inc contains the mmp_dependencies variable used to determine if mmp needs to be rebuilt or not.
 mmp.csproj.inc: export BUILD_VERBOSITY=$(MSBUILD_VERBOSITY)
 -include mmp.csproj.inc
 
 $(MMP_DIR)/mmp.exe: $(mmp_dependencies)
-	$(Q_GEN) $(SYSTEM_MSBUILD) "/bl:$@.binlog" mmp.csproj /r $(XBUILD_VERBOSITY) /p:Configuration=$(MMP_CONF)
+	$(Q_GEN) $(DOTNET) build "/bl:$@.binlog" mmp.csproj $(XBUILD_VERBOSITY) /p:Configuration=$(MMP_CONF)
 
 MMP_TARGETS_DOTNET = \
 	$(DOTNET_DESTDIR)/$(osx-x64_NUGET_RUNTIME_NAME)/runtimes/osx-x64/native/Microsoft.macOS.registrar.a \

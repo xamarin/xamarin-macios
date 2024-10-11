@@ -38,7 +38,7 @@ namespace Xamarin.Bundler {
 		static Version min_xcode_version = new Version (6, 0);
 #endif
 
-#if !NET
+#if !NET || LEGACY_TOOLS
 		public static int Main (string [] args)
 		{
 			try {
@@ -303,7 +303,7 @@ namespace Xamarin.Bundler {
 		}
 #endif // !NET
 
-#if !NET
+#if !NET || LEGACY_TOOLS
 		static int Jobs;
 		public static int Concurrency {
 			get {
