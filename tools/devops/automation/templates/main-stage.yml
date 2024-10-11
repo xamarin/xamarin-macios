@@ -233,16 +233,6 @@ stages:
             steps:
               - template: ./common/clean.yml
 
-  - ${{ if eq(variables['System.TeamProject'], 'devdiv') }}:
-    - template: /eng/common/templates-official/steps/enable-internal-sources.yml
-
-    - template: /eng/common/templates-official/steps/enable-internal-runtimes.yml
-      parameters:
-        federatedServiceConnection: ${{ parameters.federatedServiceConnection }}
-        outputVariableName: ${{ parameters.dotnetInternalBuildContainerTokenVariableName }}
-        expiryInHours: ${{ parameters.dotnetInternalBuildContainerTokenExpiryInHours }}
-        base64Encode: ${{ parameters.dotnetInternalBuildContainerTokenBase64Encode }}
-
   - stage: configure_build
     displayName: '${{ parameters.stageDisplayNamePrefix }}Configure'
     dependsOn: ${{ parameters.dependsOn }}
