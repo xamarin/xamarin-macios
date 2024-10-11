@@ -1,4 +1,4 @@
 #!/bin/bash -ex
 
 cd "$(dirname "$0")"
-./system-dependencies.sh --provision-mono --ignore-xamarin-studio --ignore-xcode --ignore-osx --ignore-cmake --ignore-dotnet --ignore-shellcheck --ignore-yamllint
+./system-dependencies.sh --provision-mono --ignore-xamarin-studio --ignore-xcode --ignore-osx --ignore-dotnet --ignore-shellcheck --ignore-yamllint

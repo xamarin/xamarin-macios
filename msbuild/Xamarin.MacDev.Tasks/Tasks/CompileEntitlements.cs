@@ -521,6 +521,11 @@ namespace Xamarin.MacDev.Tasks {
 
 			SaveArchivedExpandedEntitlements (archived);
 
+			/* The path to the entitlements must be resolved to the full path, because we might want to reference it from a containing project that just references this project,
+			  * and in that case it becomes a bit complicated to resolve to a full path on disk when building remotely from Windows. Instead just resolve to a full path here,
+			  * and use that from now on. This has to be done from a task, so that we get the full path on the mac when executed remotely from Windows. */
+			CompiledEntitlements = new TaskItem (Path.GetFullPath (CompiledEntitlements!.ItemSpec));
+
 			if (Platform == Utils.ApplePlatform.MacCatalyst) {
 				EntitlementsInSignature = CompiledEntitlements;
 			} else if (SdkIsSimulator) {
