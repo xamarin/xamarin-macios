@@ -244,7 +244,8 @@ namespace Xamarin.Tests {
 
 				// Work around https://github.com/dotnet/msbuild/issues/8845
 				args.Add ("/v:diag");
-				args.Add ("/consoleloggerparameters:Verbosity=Quiet");
+				// args.Add ("/consoleloggerparameters:Verbosity=Quiet");
+
 				// vb does not have preview lang, so we force it to latest
 				if (project.EndsWith (".vbproj", StringComparison.OrdinalIgnoreCase))
 					args.Add ("/p:LangVersion=latest");
@@ -270,7 +271,11 @@ namespace Xamarin.Tests {
 					Console.WriteLine (outputStr);
 					if (rv.ExitCode != 0) {
 						var msg = new StringBuilder ();
-						msg.AppendLine ($"'dotnet {verb}' failed with exit code {rv.ExitCode}");
+						if (rv.TimedOut) {
+							msg.AppendLine ($"'dotnet {verb}' failed with exit code {rv.ExitCode}");
+						} else {
+							msg.AppendLine ($"'dotnet {verb}' timed out after {timeout}");
+						}
 						msg.AppendLine ($"Full command: {Executable} {StringUtils.FormatArguments (args)}");
 #if !MSBUILD_TASKS
 						try {

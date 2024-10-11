@@ -57,10 +57,12 @@ namespace Xamarin.Utils {
 			return thread;
 		}
 
+		static int counter;
 		public Task<Execution> RunAsync ()
 		{
 			var tcs = new TaskCompletionSource<Execution> ();
 			var lockobj = new object ();
+			var id = Interlocked.Increment (ref counter);
 
 			try {
 				var p = new Process ();
@@ -100,8 +102,29 @@ namespace Xamarin.Utils {
 							Log.WriteLine ("{0} {1}", p.StartInfo.FileName, p.StartInfo.Arguments);
 						}
 
+						var watch = Stopwatch.StartNew ();
 						p.Start ();
 						var pid = p.Id;
+
+						if (Log is not null) {
+							var ticker = new Thread (() => {
+								Log.WriteLine ($"{id} Ticker for {p.StartInfo.FileName} with pid {pid} and timeout {(Timeout is null ? "<no timeout>" : Timeout.Value.ToString ())}");
+								while (true) {
+									Thread.Sleep (TimeSpan.FromSeconds (1));
+									if (tcs.Task.IsCompleted) {
+										Log.WriteLine ($"{id} Ticker for {p.StartInfo.FileName} with pid {pid}: task completed with status '{tcs.Task.Status}'");
+										break;
+									} else {
+										Log.WriteLine ($"{id} Ticker for {p.StartInfo.FileName} with pid {pid}: task not complete yet (status = '{tcs.Task.Status}')");
+									}
+								}
+								Log.WriteLine ($"{id} Ticker for {p.StartInfo.FileName} with pid {pid}: Done");
+							}) {
+								IsBackground = true,
+								Name = $"{id} Thread ticker for {p.StartInfo.FileName}",
+							};
+							ticker.Start ();
+						}
 
 						var stdoutThread = StartOutputThread (tcs, lockobj, p.StandardOutput, StandardOutput, $"StandardOutput reader for {p.StartInfo.FileName} (PID: {pid})");
 						var stderrThread = StartOutputThread (tcs, lockobj, p.StandardError, StandardError, $"StandardError reader for {p.StartInfo.FileName} (PID: {pid})");
@@ -112,26 +135,28 @@ namespace Xamarin.Utils {
 								p.Kill ();
 							} catch (Exception ex) {
 								// The process could be disposed already. Just ignore any exceptions here.
-								Log?.WriteLine ($"Failed to cancel and kill PID {pid}: {ex.Message}");
+								Log?.WriteLine ($"{id} Failed to cancel and kill PID {pid}: {ex.Message}");
 							}
 						});
 
 						if (Timeout.HasValue) {
 							if (!p.WaitForExit ((int) Timeout.Value.TotalMilliseconds)) {
-								Log?.WriteLine ($"Command '{p.StartInfo.FileName} {p.StartInfo.Arguments}' didn't finish in {Timeout.Value.TotalMilliseconds} ms, and will be killed.");
+								Log?.WriteLine ($"{id} Command '{p.StartInfo.FileName} {p.StartInfo.Arguments}' didn't finish in {Timeout.Value.TotalMilliseconds} ms, and will be killed.");
 								TimedOut = true;
 								try {
 									p.Kill ();
 								} catch (Exception ex) {
 									// According to the documentation, there can be exceptions here we can't prepare for, so just ignore them.
-									Log?.WriteLine ($"Failed to kill PID {pid}: {ex.Message}");
+									Log?.WriteLine ($"{id} Failed to kill PID {pid}: {ex.Message}");
 								}
 							}
 						}
 						// Always call this WaitForExit overload to be make sure the stdout/stderr buffers have been flushed,
 						// even if we've called the WaitForExit (int) overload
 						p.WaitForExit ();
+						watch.Stop ();
 						ExitCode = p.ExitCode;
+						Log?.WriteLine ($"{id} Command '{p.StartInfo.FileName} {p.StartInfo.Arguments}' finished in {watch.Elapsed} with exit code {ExitCode}.");
 
 						stdoutThread.Join (TimeSpan.FromSeconds (1));
 						stderrThread.Join (TimeSpan.FromSeconds (1));
@@ -144,7 +169,7 @@ namespace Xamarin.Utils {
 					}
 				}) {
 					IsBackground = true,
-					Name = $"Thread waiting for {p.StartInfo.FileName} to finish",
+					Name = $"{id} Thread waiting for {p.StartInfo.FileName} to finish",
 				};
 				thread.Start ();
 			} catch (Exception e) {
