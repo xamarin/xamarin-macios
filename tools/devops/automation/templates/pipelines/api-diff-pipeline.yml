@@ -50,12 +50,6 @@ resources:
     ref: refs/heads/main
     endpoint: xamarin
 
-  - repository: release-scripts
-    type: github
-    name: xamarin/release-scripts
-    ref: refs/heads/only_codesign
-    endpoint: xamarin
-
 variables:
 - template: ../variables/common.yml
 - name: DisablePipelineConfigDetector
