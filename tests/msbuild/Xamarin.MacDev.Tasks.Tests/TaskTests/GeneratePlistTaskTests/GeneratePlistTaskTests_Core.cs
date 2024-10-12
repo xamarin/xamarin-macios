@@ -50,6 +50,8 @@ namespace Xamarin.MacDev.Tasks {
 			Task.CompiledAppManifest = new TaskItem (Path.Combine (Cache.CreateTemporaryDirectory (), "AppBundlePath", "Info.plist"));
 			Task.AssemblyName = assemblyName;
 			Task.AppManifest = new TaskItem (CreateTempFile ("foo.plist"));
+			Task.MinSupportedOSPlatformVersion = "10.0";
+			Task.SupportedOSPlatformVersion = "15.0";
 			Task.SdkVersion = "10.0";
 
 			Plist = new PDictionary ();
@@ -70,7 +72,7 @@ namespace Xamarin.MacDev.Tasks {
 
 			ConfigureTask (IsDotNet);
 
-			Task.Execute ();
+			ExecuteTask (Task);
 			CompiledPlist = PDictionary.FromFile (Task.CompiledAppManifest.ItemSpec);
 		}
 

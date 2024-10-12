@@ -37,11 +37,6 @@ parameters:
   type: boolean
   default: false 
 
-- name: skipESRP
-  displayName: Skip ESRP
-  type: boolean
-  default: false # only to be used when testing the CI and we do not need a signed pkg
-
 - name: pushNugets
   type: boolean
   default: true
@@ -54,10 +49,6 @@ parameters:
   displayName: Is PR build
   type: boolean
   default: false
-
-- name: signingSetupSteps
-  type: stepList
-  default: []
 
 - name: testConfigurations
   displayName: Test configurations to run
@@ -164,13 +155,6 @@ resources:
     ref: refs/heads/main
     endpoint: xamarin
 
-  - repository: release-scripts
-    type: github
-    name: xamarin/release-scripts
-    ref: refs/heads/only_codesign
-    endpoint: xamarin
-
-
 variables:
 - ${{ if eq(parameters.isPR, false) }}:
   - ${{ if contains(variables['Build.DefinitionName'], 'private') }}:
@@ -202,7 +186,6 @@ stages:
     runGovernanceTests: ${{ parameters.runGovernanceTests }}
     enableAPIDiff: ${{ parameters.enableAPIDiff }}
     forceInsertion: ${{ parameters.forceInsertion }}
-    skipESRP: ${{ parameters.skipESRP }}
     pushNugets: ${{ parameters.pushNugets }}
     pushNugetsToMaestro: ${{ parameters.pushNugetsToMaestro }}
     ${{ if ne(length(parameters.testConfigurations), 0)}}:
@@ -211,4 +194,3 @@ stages:
     macTestsConfigurations: ${{ parameters.macTestsConfigurations }}
     azureStorage: ${{ variables['azureStorage'] }}
     azureContainer: ${{ variables['azureContainer'] }}
-    signingSetupSteps: ${{ parameters.signingSetupSteps }}

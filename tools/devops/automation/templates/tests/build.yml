@@ -99,7 +99,7 @@ steps:
     Import-Module ./MaciosCI.psd1
 
     if ( -not (Test-HDFreeSpace -Size 20)) {
-      New-GitHubComment -Header "Tests failed catastrophically on $Env:CONTEXT" -Emoji ":fire:" -Description "Not enough free space in the host."
+      New-GitHubComment -Header "Tests failed catastrophically on $Env:CONTEXT" -Emoji ":fire:" -Description "Not enough free space in the host $Env:AGENT_MACHINENAME."
       Stop-Pipeline
     }
   env:
@@ -156,10 +156,6 @@ steps:
 # use a diff step depending if we have been trigger by a pipeline of by a PR/Commit
 - ${{ if or(contains(variables['Build.Reason'], 'ResourceTrigger'), contains(variables['Build.Reason'], 'BuildCompletion'), contains(variables['Build.DefinitionName'], 'xamarin-macios-ci-tests'), contains(variables['Build.DefinitionName'], 'xamarin-macios-pr-tests')) }}:
   - download: macios
-    displayName: Download PkgsVersions.json
-    artifact: PkgsVersions
-
-  - download: macios
     displayName: Download WorkloadRollback.json
     artifact: WorkloadRollback
 
@@ -185,13 +181,6 @@ steps:
     displayName: Move artifacts to the expected location
 
 - ${{ else }}:
-  - task: DownloadPipelineArtifact@2
-    displayName: Download PkgsVersions.json
-    inputs:
-      allowFailedBuilds: true
-      patterns: '**/PkgsVersions.json'
-      path: $(Build.SourcesDirectory)/artifacts
-
   - task: DownloadPipelineArtifact@2
     displayName: Download WorkloadRollback.json
     inputs:
