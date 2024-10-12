@@ -229,7 +229,6 @@ namespace Xharness {
 		public string JENKINS_RESULTS_DIRECTORY { get; } // Use same name as in Makefiles, so that a grep finds it.
 		public string MAC_DESTDIR { get; }
 		public string IOS_DESTDIR { get; }
-		public string MONO_IOS_SDK_DESTDIR { get; }
 		public bool ENABLE_DOTNET { get; }
 		public bool INCLUDE_XAMARIN_LEGACY { get; }
 		public string SYSTEM_MONO { get; set; }
@@ -305,7 +304,6 @@ namespace Xharness {
 			INCLUDE_MACCATALYST = IsVariableSet (nameof (INCLUDE_MACCATALYST));
 			MAC_DESTDIR = GetVariable (nameof (MAC_DESTDIR));
 			IOS_DESTDIR = GetVariable (nameof (IOS_DESTDIR));
-			MONO_IOS_SDK_DESTDIR = GetVariable (nameof (MONO_IOS_SDK_DESTDIR));
 			ENABLE_DOTNET = IsVariableSet (nameof (ENABLE_DOTNET));
 			SYSTEM_MONO = GetVariable (nameof (SYSTEM_MONO));
 			DOTNET_DIR = GetVariable (nameof (DOTNET_DIR));

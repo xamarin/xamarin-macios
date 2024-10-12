@@ -2302,6 +2302,7 @@ namespace Xamarin.Tests {
 			"/usr/lib/swift/libswiftDispatch.dylib",
 			"/usr/lib/swift/libswiftFoundation.dylib",
 			"/usr/lib/swift/libswiftObjectiveC.dylib",
+			"/usr/lib/swift/libswiftXPC.dylib",
 		];
 
 		static string [] expectedFrameworks_iOS_Full = [
