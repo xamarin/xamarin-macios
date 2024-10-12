@@ -62,7 +62,6 @@ test.config: Makefile $(TOP)/Make.config $(TOP)/mk/mono.mk $(TOP)/eng/Version.De
 	@echo "JENKINS_RESULTS_DIRECTORY=$(abspath $(JENKINS_RESULTS_DIRECTORY))" >> $@
 	@echo "INCLUDE_DEVICE=$(INCLUDE_DEVICE)" >> $@
 	@echo "XCODE_DEVELOPER_ROOT=$(XCODE_DEVELOPER_ROOT)" >> $@
-	@echo "MONO_IOS_SDK_DESTDIR=$(MONO_IOS_SDK_DESTDIR)" >> $@
 	@echo "DOTNET=$(DOTNET)" >> $@
 	@echo "IOS_SDK_VERSION=$(IOS_SDK_VERSION)" >> $@
 	@echo "TVOS_SDK_VERSION=$(TVOS_SDK_VERSION)" >> $@
@@ -88,6 +87,7 @@ test.config: Makefile $(TOP)/Make.config $(TOP)/mk/mono.mk $(TOP)/eng/Version.De
 	@printf "ENABLE_XAMARIN=$(ENABLE_XAMARIN)\n" >> $@
 	@printf "XCODE_IS_STABLE=$(XCODE_IS_STABLE)\n" >> $@
 	@printf "XCODE_VERSION=$(XCODE_VERSION)\n" >> $@
+	@printf "$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),DOTNET_MIN_$(platform)_SDK_VERSION=$(DOTNET_MIN_$(platform)_SDK_VERSION)\\n)" | sed 's/^ //' >> $@
 
 test-system.config: Makefile $(TOP)/Make.config $(TOP)/mk/mono.mk $(TOP)/eng/Version.Details.xml
 	@rm -f $@
@@ -96,7 +96,6 @@ test-system.config: Makefile $(TOP)/Make.config $(TOP)/mk/mono.mk $(TOP)/eng/Ver
 	@echo "MAC_DESTDIR=/" >> $@
 	@echo "JENKINS_RESULTS_DIRECTORY=$(abspath $(JENKINS_RESULTS_DIRECTORY))" >> $@
 	@echo "INCLUDE_DEVICE=$(INCLUDE_DEVICE)" >> $@
-	@echo "MONO_IOS_SDK_DESTDIR=$(MONO_IOS_SDK_DESTDIR)" >> $@
 	@echo "DOTNET=$(DOTNET)" >> $@
 	@echo "IOS_SDK_VERSION=$(IOS_SDK_VERSION)" >> $@
 	@echo "TVOS_SDK_VERSION=$(TVOS_SDK_VERSION)" >> $@
@@ -122,6 +121,7 @@ test-system.config: Makefile $(TOP)/Make.config $(TOP)/mk/mono.mk $(TOP)/eng/Ver
 	@printf "ENABLE_XAMARIN=$(ENABLE_XAMARIN)\n" >> $@
 	@printf "XCODE_IS_STABLE=$(XCODE_IS_STABLE)\n" >> $@
 	@printf "XCODE_VERSION=$(XCODE_VERSION)\n" >> $@
+	@printf "$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),DOTNET_MIN_$(platform)_SDK_VERSION=$(DOTNET_MIN_$(platform)_SDK_VERSION)\\n)" | sed 's/^ //' >> $@
 
 clean-local::
 	$(Q) $(SYSTEM_XBUILD) /t:Clean /p:Platform=iPhoneSimulator /p:Configuration=$(CONFIG) $(XBUILD_VERBOSITY) tests.sln
@@ -214,18 +214,22 @@ killall:
 	@killall "iOS Simulator" >/dev/null 2>&1 || true
 	@killall Touch.Server >/dev/null 2>&1 || true
 
-NUNIT_MSBUILD_DIR=$(TOP)/packages/NUnit.Runners.2.6.4/tools/lib
-test-ios-tasks: test-macdev-tests test-macdev-tasks
+test-msbuild run-tests-msbuild:
+	$(MAKE) test-macdev-tests test-macdev-tasks
 
+# Example TEST_FILTER:
+#    TEST_FILTER="--filter FullyQualifiedName~BuildMyCocoaApp"
+# Docs: https://docs.microsoft.com/en-us/dotnet/core/tools/dotnet-test#filter-option-details
 test-macdev-tests: export MSBUILD_EXE_PATH=
 test-macdev-tests: verify-system-vsmac-xcode-match
-	$(Q) $(DOTNET) build "/bl:$@.binlog" $(TOP)/tests/msbuild/Xamarin.MacDev.Tests/Xamarin.MacDev.Tests.csproj /p:Configuration=Debug $(DOTNET_BUILD_VERBOSITY)
-	cd $(TOP)/tests/msbuild/Xamarin.MacDev.Tests && $(SYSTEM_XIBUILD) -t -- $(abspath $(TOP)/tools/nunit3-console-3.11.1) $(abspath $(TOP)/tests/msbuild/Xamarin.MacDev.Tests/bin/Debug/net472/Xamarin.MacDev.Tests.dll) "--result=$(abspath $(CURDIR)/TestResults_Xamarin.MacDev.Tests.xml);format=nunit2" -labels=After $(TEST_FIXTURE)
+	$(Q) $(DOTNET) test $(TOP)/tests/msbuild/Xamarin.MacDev.Tests/Xamarin.MacDev.Tests.csproj $(TEST_FILTER)
 
+# Example TEST_FILTER:
+#    TEST_FILTER="--filter FullyQualifiedName~BuildMyCocoaApp"
+# Docs: https://docs.microsoft.com/en-us/dotnet/core/tools/dotnet-test#filter-option-details
 test-macdev-tasks: export MSBUILD_EXE_PATH=
 test-macdev-tasks: verify-system-vsmac-xcode-match
-	$(Q) $(DOTNET) build "/bl:$@.binlog" $(TOP)/tests/msbuild/Xamarin.MacDev.Tasks.Tests/Xamarin.MacDev.Tasks.Tests.csproj /p:Configuration=Debug $(DOTNET_BUILD_VERBOSITY)
-	cd $(TOP)/tests/msbuild/Xamarin.MacDev.Tasks.Tests && $(SYSTEM_XIBUILD) -t -- $(abspath $(TOP)/tools/nunit3-console-3.11.1) $(abspath $(TOP)/tests/msbuild/Xamarin.MacDev.Tasks.Tests/bin/Debug/net472/Xamarin.MacDev.Tasks.Tests.dll) "--result=$(abspath $(CURDIR)/TestResults_Xamarin.MacDev.Tasks.Tests.xml)" -labels=After $(TEST_FIXTURE)
+	$(Q) $(DOTNET) test $(TOP)/tests/msbuild/Xamarin.MacDev.Tasks.Tests/Xamarin.MacDev.Tasks.Tests.csproj $(TEST_FILTER)
 
 mac-test-package.zip:
 ifdef INCLUDE_MAC
@@ -339,7 +343,7 @@ runner: $(XHARNESS_EXECUTABLE)
 # This makefile target will run the device tests using the Xamarin.iOS version
 # installed on the system.
 vsts-device-tests: $(XHARNESS_EXECUTABLE)
-	$(MAKE) -C $(TOP)/builds .stamp-mono-ios-sdk-destdir download -j
+	$(MAKE) -C $(TOP)/builds download -j
 	$(Q) ulimit -n 4096 && $(DOTNET) $< $(XHARNESS_VERBOSITY) --jenkins --autoconf --rootdir $(CURDIR) --sdkroot $(XCODE_DEVELOPER_ROOT) --use-system:true --label=skip-all-tests,run-device-tests --markdown-summary=$(CURDIR)/TestSummary.md $(TESTS_EXTRA_ARGUMENTS) $(TESTS_PERIODIC_COMMAND)
 
 verify-system-vsmac-xcode-match:
