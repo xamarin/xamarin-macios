@@ -80,6 +80,7 @@
 		<_OriginalSuppressTrimAnalysisWarnings>$(SuppressTrimAnalysisWarnings)</_OriginalSuppressTrimAnalysisWarnings>
 		<SuppressTrimAnalysisWarnings Condition="'$(_UseNativeAot)' == 'true'">true</SuppressTrimAnalysisWarnings>
 		<!-- Otherwise don't suppress trimmer warnings -->
-		<SuppressTrimAnalysisWarnings Condition="'$(SuppressTrimAnalysisWarnings)' == ''">false</SuppressTrimAnalysisWarnings>
+		<SuppressTrimAnalysisWarnings Condition="'$(SuppressTrimAnalysisWarnings)' == '' And '$(TrimMode)' == 'copy'">true</SuppressTrimAnalysisWarnings>
+		<SuppressTrimAnalysisWarnings Condition="'$(SuppressTrimAnalysisWarnings)' == '' And '$(TrimMode)' != 'copy'">false</SuppressTrimAnalysisWarnings>
 	</PropertyGroup>
 </Project>
