@@ -69,9 +69,29 @@ downloads/%: downloads/%.nupkg
 	$(Q) mv $@.tmp $@
 	$(Q) echo "Unzipped $*."
 
+ifdef INTERNAL_DOTNET
+ifeq ($(DOTNET_INSTALL_INTERNAL_FEED_CREDENTIAL),)
+define ErrorMessage
+: $(shell tput setaf 1 2>/dev/null)
+This branch references an internal build of .NET.
+In order to download this version of .NET, the DOTNET_INSTALL_INTERNAL_FEED_CREDENTIAL environment variable must be set to a feed credential with the appropriate access.
+To get access:
+* Request access here: https://coreidentity.microsoft.com/manage/Entitlement/entitlement/netdailyinte-q2ql
+* Wait 12 hours.
+* Create SAS token by executing this in pwsh: az storage container generate-sas --account-name dotnetbuilds --name internal --permissions rl --auth-mode login --as-user --expiry $((Get-Date).AddHours(12).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ"))
+* export DOTNET_INSTALL_INTERNAL_FEED_CREDENTIAL="<SAS token (it's _quite_ long)>"
+* Try again
+$(shell tput sgr0 2>/dev/null)
+endef
+$(error $(ErrorMessage))
+endif
+DOTNET_INSTALL_INTERNAL_AZURE_FEED?=https://dotnetbuilds.blob.core.windows.net/internal
+DOTNET_INSTALL_INTERNAL_ARGS=--feed-credential "$(DOTNET_INSTALL_INTERNAL_FEED_CREDENTIAL)" -AzureFeed "$(DOTNET_INSTALL_INTERNAL_AZURE_FEED)"
+endif
+
 downloads/$(DOTNET_INSTALL_NAME): dotnet-install.sh
 	$(Q) echo "Downloading and installing .NET $(DOTNET_VERSION) into $@..."
-	$(Q) ./dotnet-install.sh --install-dir "$@.tmp" --version "$(DOTNET_VERSION)" --architecture $(DOTNET_ARCH) --no-path $$DOTNET_INSTALL_EXTRA_ARGS
+	$(Q) ./dotnet-install.sh --install-dir "$@.tmp" --version "$(DOTNET_VERSION)" --architecture $(DOTNET_ARCH) --no-path $$DOTNET_INSTALL_EXTRA_ARGS $(DOTNET_INSTALL_INTERNAL_ARGS)
 	$(Q) rm -Rf "$@"
 	$(Q) mv "$@.tmp" "$@"
 	$(Q) echo "Downloaded and installed .NET $(DOTNET_VERSION) into $@."
