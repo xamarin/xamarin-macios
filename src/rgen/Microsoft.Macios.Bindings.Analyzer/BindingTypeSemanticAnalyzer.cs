@@ -55,7 +55,7 @@ public class BindingTypeSemanticAnalyzer : DiagnosticAnalyzer {
 		// the c# syntax is a a list of lists of attributes. That is why we need to iterate through the list of lists
 		foreach (var attributeData in boundAttributes) {
 			// based on the type use the correct parser to retrieve the data
-			var attributeType = attributeData.AttributeClass!.ToDisplayString ();
+			var attributeType = attributeData.AttributeClass?.ToDisplayString ();
 			switch (attributeType) {
 			case "ObjCBindings.BindingTypeAttribute":
 				// validate that the class is partial, else we need to report an error

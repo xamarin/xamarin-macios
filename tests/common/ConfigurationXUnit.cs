@@ -14,7 +14,7 @@ namespace Xamarin.Tests {
 		{
 			// data values are the join of the platform and all other values passed to the attr
 			dataValues = parameters.Prepend (platform).ToArray ();
-			// based on the passed platform and the configuration, decide if we skit the test
+			// based on the passed platform and the configuration, decide if we skip the test
 			switch (platform) {
 			case ApplePlatform.iOS:
 				if (!Configuration.include_ios)
