@@ -118,16 +118,16 @@ steps:
   displayName: 'Set workload versions for xtro'
 
 - ${{ if eq(variables['System.TeamProject'], 'devdiv') }}:
-    - template: /eng/common/templates-official/steps/enable-internal-sources.yml
-      parameters:
-        repositoryName: /xamarin-macios
+  - template: /eng/common/templates-official/steps/enable-internal-sources.yml
+    parameters:
+      repositoryName: /xamarin-macios
 
-    - template: /eng/common/templates-official/steps/enable-internal-runtimes.yml
-      parameters:
-        federatedServiceConnection: ${{ parameters.federatedServiceConnection }}
-        outputVariableName: ${{ parameters.dotnetInternalBuildContainerTokenVariableName }}
-        expiryInHours: ${{ parameters.dotnetInternalBuildContainerTokenExpiryInHours }}
-        base64Encode: ${{ parameters.dotnetInternalBuildContainerTokenBase64Encode }}
+  - template: /eng/common/templates-official/steps/enable-internal-runtimes.yml
+    parameters:
+      federatedServiceConnection: ${{ parameters.federatedServiceConnection }}
+      outputVariableName: ${{ parameters.dotnetInternalBuildContainerTokenVariableName }}
+      expiryInHours: ${{ parameters.dotnetInternalBuildContainerTokenExpiryInHours }}
+      base64Encode: ${{ parameters.dotnetInternalBuildContainerTokenBase64Encode }}
 
 - bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/install-workloads.sh
   workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios
