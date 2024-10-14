@@ -97,3 +97,10 @@ We've tentatively set .NET 11 as the release when we'll stop marking FSKit as pr
 The diagnostic id for FSKit is APL0002.
 
 [1]: https://learn.microsoft.com/en-us/dotnet/api/system.diagnostics.codeanalysis.experimentalattribute?view=net-8.0
+
+## Rgen (APL0003)
+
+Rgen is the new Roslyn codegenerator based binding tool. The tool is underdevelopment and its API is open to change until
+a stable release is announced.
+
+The diagnostic id for Rgen is APL0003.
