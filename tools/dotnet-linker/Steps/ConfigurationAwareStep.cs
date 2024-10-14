@@ -106,17 +106,17 @@ namespace Xamarin.Linker {
 
 		protected virtual Exception [] Fail (AssemblyDefinition assembly, Exception e)
 		{
-			return CollectExceptions (e, () => ErrorHelper.CreateError (ErrorCode, Errors.MX_ConfigurationAwareStepWithAssembly, Name, assembly?.FullName, e.Message));
+			return CollectExceptions (e, () => ErrorHelper.CreateError (ErrorCode, e, Errors.MX_ConfigurationAwareStepWithAssembly, Name, assembly?.FullName, e.Message));
 		}
 
 		protected virtual Exception [] Fail (Exception e)
 		{
-			return CollectExceptions (e, () => ErrorHelper.CreateError (ErrorCode | 1, Errors.MX_ConfigurationAwareStep, Name, e.Message));
+			return CollectExceptions (e, () => ErrorHelper.CreateError (ErrorCode | 1, e, Errors.MX_ConfigurationAwareStep, Name, e.Message));
 		}
 
 		protected virtual Exception [] FailEnd (Exception e)
 		{
-			return CollectExceptions (e, () => ErrorHelper.CreateError (ErrorCode | 2, Errors.MX_ConfigurationAwareStep, Name, e.Message));
+			return CollectExceptions (e, () => ErrorHelper.CreateError (ErrorCode | 2, e, Errors.MX_ConfigurationAwareStep, Name, e.Message));
 		}
 
 		Exception [] CollectExceptions (Exception e, Func<ProductException> createException)
