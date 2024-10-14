@@ -39,6 +39,22 @@ parameters:
   type: number
   default: 3
 
+- name: federatedServiceConnection
+  type: string
+  default: 'dotnetbuilds-internal-read'
+
+- name: dotnetInternalBuildContainerTokenVariableName
+  type: string
+  default: 'dotnetbuilds-internal-container-read-token'
+
+- name: dotnetInternalBuildContainerTokenExpiryInHours
+  type: string
+  default: 1
+
+- name: dotnetInternalBuildContainerTokenBase64Encode
+  type: boolean
+  default: false
+
 steps:
 - bash: |
     set -ex
@@ -101,12 +117,25 @@ steps:
   workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts
   displayName: 'Set workload versions for xtro'
 
+- ${{ if eq(variables['System.TeamProject'], 'devdiv') }}:
+    - template: /eng/common/templates-official/steps/enable-internal-sources.yml
+      parameters:
+        repositoryName: /xamarin-macios
+
+    - template: /eng/common/templates-official/steps/enable-internal-runtimes.yml
+      parameters:
+        federatedServiceConnection: ${{ parameters.federatedServiceConnection }}
+        outputVariableName: ${{ parameters.dotnetInternalBuildContainerTokenVariableName }}
+        expiryInHours: ${{ parameters.dotnetInternalBuildContainerTokenExpiryInHours }}
+        base64Encode: ${{ parameters.dotnetInternalBuildContainerTokenBase64Encode }}
+
 - bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/install-workloads.sh
   workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios
   displayName: 'Install dotnet workloads'
   timeoutInMinutes: 45
   env:
     MACIOS_UPLOAD_PREFIX: ${{ parameters.uploadPrefix }}
+    DOTNET_INSTALL_INTERNAL_FEED_CREDENTIAL: $(dotnetbuilds-internal-container-read-token)
 
 - bash: |
     set -x
