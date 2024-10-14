@@ -280,6 +280,7 @@ The easiest way is to set `PublishFolderType` to `None`:
 ```
 
 <a name="transitiveProject" />
+
 ### `PublishFolderType` doesn't work from a referenced library project.
 
 The `PublishFolderType` metadata does not work in transitive / referenced
