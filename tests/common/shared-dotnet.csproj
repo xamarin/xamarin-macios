@@ -81,6 +81,8 @@
 		<TrimmerSingleWarn Condition="'$(TrimmerSingleWarn)' == ''">false</TrimmerSingleWarn>
 		<!-- IL2104: Assembly '...' produced trim warnings -->
 		<NoWarn>$(NoWarn);IL2104</NoWarn>
+		<!-- Touch.Unit is not trimmer-safe, so ignore any trimmer warnings if we're including Touch.Unit in the build -->
+		<SuppressTrimAnalysisWarnings Condition="'$(SuppressTrimAnalysisWarnings)' == '' And '$(ExcludeTouchUnitReference)' != 'true'">true</SuppressTrimAnalysisWarnings>
 	</PropertyGroup>
 	<Target Name="IgnoreTrimmerWarningsInNUnit" BeforeTargets="PrepareForILLink">
 		<ItemGroup>
