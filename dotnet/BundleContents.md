@@ -292,7 +292,7 @@ on items in the `net9.0` library project doesn't have any effect, and you'll get
 
 The workaround is to set
 `MSBuildDisableGetCopyToPublishDirectoryItemsOptimization=true` in the
-executable project:
+library project:
 
 ```xml
 <PropertyGroup>
