@@ -546,7 +546,6 @@ namespace Xamarin.Bundler {
 				InterpretedAssemblies.AddRange (value.Split (new char [] { ',' }, StringSplitOptions.RemoveEmptyEntries));
 		}
 
-#if !NET || LEGACY_TOOLS
 		public void UnsetInterpreter ()
 		{
 			UseInterpreter = false;
