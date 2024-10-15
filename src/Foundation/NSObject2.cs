@@ -998,13 +998,49 @@ namespace Foundation {
 			handle = NativeHandle.Zero;
 		}
 
+		// This option is turned on by setting _DisposeTaggedPointers property to true in the project file.
+		static bool dispose_tagged_pointers;
+		static bool DisposeTaggedPointers {
+			get => dispose_tagged_pointers;
+			set => dispose_tagged_pointers = value;
+		}
+
 		protected virtual void Dispose (bool disposing)
 		{
 			if (disposed)
 				return;
 			disposed = true;
 
-			if (handle != NativeHandle.Zero) {
+			/* Tagged pointer is limited to 64bit, which is all we support anyway.
+			 *
+			 * The tagged pointer bit is:
+			 *
+			 * Arm64: most significant bit
+			 * Simulators (both on arm64 and x64 desktops): most significant bit
+			 * Desktop/x64 (macOS + Mac Catalyst): least significant bit
+			 * Ref: https://github.com/apple-oss-distributions/objc4/blob/89543e2c0f67d38ca5211cea33f42c51500287d5/runtime/objc-internal.h#L603-L672
+			 */
+#if __MACOS__ || __MACCATALYST__
+			ulong _OBJC_TAG_MASK;
+			if (Runtime.IsARM64CallingConvention) {
+				_OBJC_TAG_MASK = 1UL << 63;
+			} else {
+				_OBJC_TAG_MASK = 1UL;
+			}
+#else
+			const ulong _OBJC_TAG_MASK = 1UL << 63;
+#endif
+
+			bool isTaggedPointer;
+			unchecked {
+				var ulongHandle = (ulong) (IntPtr) handle;
+				isTaggedPointer = (ulongHandle & _OBJC_TAG_MASK) == _OBJC_TAG_MASK;
+			}
+
+			if (!DisposeTaggedPointers && isTaggedPointer) {
+				// don't dispose tagged pointers.
+				FreeData (); // still need to do this though.
+			} else if (handle != NativeHandle.Zero) {
 				if (disposing) {
 					ReleaseManagedRef ();
 				} else {
