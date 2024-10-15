@@ -9,6 +9,9 @@
 // Copyright 2012 Xamarin Inc.
 // Copyright 2020 Microsoft Corp.
 //
+
+using System.ComponentModel;
+
 using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
@@ -34,6 +37,7 @@ using NativeHandle = System.IntPtr;
 
 namespace StoreKit {
 
+	[EditorBrowsable (EditorBrowsableState.Never)]
 	[Internal]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
