@@ -71,6 +71,7 @@ $CP -p ../mk/quiet.mk "$DIR/mk"
 $CP -p ../mk/mono.mk "$DIR/mk"
 mkdir -p "$DIR/scripts/run-with-timeout"
 $CP -cp ../scripts/Directory.Build.props "$DIR/scripts/"
+$CP -cp ../scripts/*.mk "$DIR/scripts/"
 $CP -cp ../scripts/run-with-timeout/*.cs* "$DIR/scripts/run-with-timeout/"
 $CP -cp ../scripts/run-with-timeout/*.mk "$DIR/scripts/run-with-timeout/"
 
