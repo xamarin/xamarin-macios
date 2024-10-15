@@ -185,7 +185,7 @@ namespace Xharness {
 				if (TryGetMlaunchDotnetPath (out var mlaunch))
 					return mlaunch;
 
-				if (INCLUDE_XAMARIN_LEGACY && (INCLUDE_IOS || INCLUDE_TVOS || INCLUDE_WATCH))
+				if (INCLUDE_XAMARIN_LEGACY && (INCLUDE_IOS || INCLUDE_TVOS))
 					return Path.Combine (IOS_DESTDIR, "Library", "Frameworks", "Xamarin.iOS.framework", "Versions", "Current", "bin", "mlaunch");
 
 				return $"Not building any mobile platform, so can't provide a location to mlaunch.";
@@ -223,7 +223,6 @@ namespace Xharness {
 		public string TVOS_MONO_PATH { get; } // Use same name as in Makefiles, so that a grep finds it.
 		public bool INCLUDE_IOS { get; }
 		public bool INCLUDE_TVOS { get; }
-		public bool INCLUDE_WATCH { get; }
 		public bool INCLUDE_MAC { get; }
 		public bool INCLUDE_MACCATALYST { get; }
 		public string JENKINS_RESULTS_DIRECTORY { get; } // Use same name as in Makefiles, so that a grep finds it.
@@ -299,7 +298,6 @@ namespace Xharness {
 			INCLUDE_IOS = IsVariableSet (nameof (INCLUDE_IOS));
 			INCLUDE_TVOS = IsVariableSet (nameof (INCLUDE_TVOS));
 			JENKINS_RESULTS_DIRECTORY = GetVariable (nameof (JENKINS_RESULTS_DIRECTORY));
-			INCLUDE_WATCH = IsVariableSet (nameof (INCLUDE_WATCH));
 			INCLUDE_MAC = IsVariableSet (nameof (INCLUDE_MAC));
 			INCLUDE_MACCATALYST = IsVariableSet (nameof (INCLUDE_MACCATALYST));
 			MAC_DESTDIR = GetVariable (nameof (MAC_DESTDIR));

@@ -34,7 +34,6 @@ namespace Xharness {
 		string TVOS_MONO_PATH { get; }
 		bool INCLUDE_IOS { get; }
 		bool INCLUDE_TVOS { get; }
-		bool INCLUDE_WATCH { get; }
 		bool INCLUDE_MAC { get; }
 		bool INCLUDE_MACCATALYST { get; }
 		string JENKINS_RESULTS_DIRECTORY { get; }
