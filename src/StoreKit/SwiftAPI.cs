@@ -12,10 +12,13 @@ using UIKit;
 
 namespace StoreKit {
 
+	/// <summary>A class to interact with the App Store.</summary>
 #if !NET10_0_OR_GREATER
 	[Experimental ("APL0004")]
 #endif
 	public static class AppStore {
+		/// <summary>Ask StoreKit to request an App Store review or rating from the user.</summary>
+		/// <param name="in">The scene or view controller to display the interface in.</param>
 		[SupportedOSPlatform ("ios16.0")]
 		[SupportedOSPlatform ("maccatalyst16.0")]
 		[SupportedOSPlatform ("macos13.0")]
