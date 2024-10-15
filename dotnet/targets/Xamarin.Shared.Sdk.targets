@@ -233,6 +233,7 @@
 		<!-- outer build for multi-rid build -->
 		<BuildDependsOn Condition="'$(RuntimeIdentifiers)' != ''">
 			_ErrorRuntimeIdentifiersClash;
+			BuildOnlySettings;
 			_CollectBundleResources;
 			_RunRidSpecificBuild;
 			_DetectAppManifest;
@@ -869,8 +870,6 @@
 			Condition="'$(IsMacEnabled)' == 'true'"
 			AdditionalArguments="$(_DittoArchitectures)"
 			CopyFromWindows="true"
-			ToolExe="$(DittoExe)"
-			ToolPath="$(DittoPath)"
 			Source="%(_DirectoriesToPublish.SourceDirectory)"
 			Destination="%(_DirectoriesToPublish.TargetDirectory)"
 			TouchDestinationFiles="true"

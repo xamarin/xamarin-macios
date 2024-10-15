@@ -371,8 +371,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		<Ditto
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true' And '@(_ResolvedWatchAppReferences)' != '' And '%(_ResolvedWatchAppReferences.Identity)' != ''"
-			ToolExe="$(DittoExe)"
-			ToolPath="$(DittoPath)"
 			Source="@(_ResolvedWatchAppReferences)"
 			Destination="$(_AppBundlePath)Watch\%(_ResolvedWatchAppReferences.FileName)%(_ResolvedWatchAppReferences.Extension)"
 		/>
@@ -391,8 +389,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		<Ditto
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
-			ToolExe="$(DittoExe)"
-			ToolPath="$(DittoPath)"
 			Source="$(AppBundleDir)"
 			Destination="$(_IpaAppBundleDir)"
 		/>
@@ -481,8 +477,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		<Ditto
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true' And Exists('$(DeviceSpecificOutputPath)OnDemandResources\')"
-			ToolExe="$(DittoExe)"
-			ToolPath="$(DittoPath)"
 			Source="$(DeviceSpecificOutputPath)OnDemandResources\"
 			Destination="$(_IntermediateODRDir)"
 			/>
