@@ -510,6 +510,17 @@ endef
 #            BuildDotNetPlatformAssembly (platform, platform.ToUpper (), platform.ToLower (), bitness)
 $(foreach platform,$(DOTNET_PLATFORMS),$(foreach bitness, $(DOTNET_$(shell echo $(platform) | tr '[:lower:]' '[:upper:]')_BITNESSES), $(eval $(call BuildDotNetPlatformAssembly,$(platform),$(shell echo $(platform) | tr '[:lower:]' '[:upper:]'),$(shell echo $(platform) | tr '[:upper:]' '[:lower:]'),$(bitness)))))
 
+define DefineTargets
+$(1)_NUGET_TARGETS = \
+	$(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/tools/TrimAttributes.LinkDescription.xml \
+
+$(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/tools/TrimAttributes.LinkDescription.xml: TrimAttributes.LinkDescription.xml
+	$$(Q) $(CP) $$< $$@
+
+DOTNET_TARGETS += $$($(1)_NUGET_TARGETS)
+endef
+$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call DefineTargets,$(platform))))
+
 #
 # Global targets
 #
