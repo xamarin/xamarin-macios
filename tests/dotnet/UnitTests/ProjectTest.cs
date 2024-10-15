@@ -859,16 +859,6 @@ namespace Xamarin.Tests {
 
 				if (rx == "bindings-framework-test") {
 					foreach (var lib in new string [] { "XStaticArTest", "XStaticObjectTest" }) {
-						addHere = Configuration.include_watchos ? mustHaveContents : mayHaveContents;
-						addHere.AddRange (new string [] {
-							$"{lib}.xcframework/watchos-arm64_32_armv7k",
-							$"{lib}.xcframework/watchos-arm64_32_armv7k/{lib}.framework",
-							$"{lib}.xcframework/watchos-arm64_32_armv7k/{lib}.framework/{lib}",
-							$"{lib}.xcframework/watchos-x86_64-simulator",
-							$"{lib}.xcframework/watchos-x86_64-simulator/{lib}.framework",
-							$"{lib}.xcframework/watchos-x86_64-simulator/{lib}.framework/{lib}",
-						});
-
 						addHere = Configuration.include_tvos ? mustHaveContents : mayHaveContents;
 						addHere.AddRange (new string [] {
 							$"{lib}.xcframework/tvos-arm64",
@@ -965,18 +955,6 @@ namespace Xamarin.Tests {
 					"XTest.xcframework/tvos-arm64_x86_64-simulator/XTest.framework",
 					"XTest.xcframework/tvos-arm64_x86_64-simulator/XTest.framework/Info.plist",
 					"XTest.xcframework/tvos-arm64_x86_64-simulator/XTest.framework/XTest",
-				});
-
-				addHere = Configuration.include_watchos ? mustHaveContents : mayHaveContents;
-				addHere.AddRange (new string [] {
-					"XTest.xcframework/watchos-arm64_32_armv7k",
-					"XTest.xcframework/watchos-arm64_32_armv7k/XTest.framework",
-					"XTest.xcframework/watchos-arm64_32_armv7k/XTest.framework/Info.plist",
-					"XTest.xcframework/watchos-arm64_32_armv7k/XTest.framework/XTest",
-					"XTest.xcframework/watchos-x86_64-simulator",
-					"XTest.xcframework/watchos-x86_64-simulator/XTest.framework",
-					"XTest.xcframework/watchos-x86_64-simulator/XTest.framework/Info.plist",
-					"XTest.xcframework/watchos-x86_64-simulator/XTest.framework/XTest",
 				});
 
 				var missing = mustHaveContents.ToHashSet ().Except (zipContents);
