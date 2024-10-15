@@ -36,6 +36,7 @@ namespace StoreKit {
 
 	[Internal]
 	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
 	interface XamarinSwiftFunctions {
 		[Export ("requestReview:")]
 		[Static]
