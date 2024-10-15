@@ -547,6 +547,13 @@ namespace Xamarin.Bundler {
 		}
 
 #if !NET || LEGACY_TOOLS
+		public void UnsetInterpreter ()
+		{
+			UseInterpreter = false;
+			InterpretedAssemblies.Clear ();
+		}
+
+#if !NET || LEGACY_TOOLS
 		public void ParseI18nAssemblies (string i18n)
 		{
 			var assemblies = I18nAssemblies.None;

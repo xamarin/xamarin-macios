@@ -71,8 +71,6 @@ void ProvisionBrewPackages ()
 		"shellcheck",
 		"yamllint",
 		"p7zip",
-		"msitools",
-		"wget",
 		"azure-cli"
 	 );
 }
