@@ -1,3 +1,4 @@
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
@@ -25,6 +26,10 @@ namespace Xamarin.Messaging.Build {
 
 		protected override async Task<ExecuteTaskResult> ExecuteAsync (ExecuteTaskMessage message)
 		{
+			var msg = $"{System.DateTime.UtcNow.ToString ("o")} ExecuteTaskMessageHandler.ExecuteAsync ({message.TaskName})\n{System.Environment.StackTrace}";
+			Console.WriteLine (msg);
+			Console.Error.WriteLine (msg);
+			tracer.Info (msg);
 			return await Task.Run (() => {
 				// We need to lock in order to change the current directory
 				lock (lockObject) {

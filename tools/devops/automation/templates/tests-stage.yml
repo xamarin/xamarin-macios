@@ -206,42 +206,6 @@ stages:
         statusContext: 'VSTS: simulator tests' 
         uploadArtifacts: true
 
-# always run simulator tests
-- template: ./tests/stage.yml
-  parameters:
-    xcodeChannel: ${{ parameters.xcodeChannel }}
-    macOSName: ${{ parameters.macOSName }}
-    isPR: ${{ parameters.isPR }}
-    repositoryAlias: ${{ parameters.repositoryAlias }}
-    commit: ${{ parameters.commit }}
-    testConfigurations: ${{ parameters.testConfigurations }}
-    supportedPlatforms: ${{ parameters.supportedPlatforms }}
-    stageName: 'simulator_tests'
-    displayName: '${{ parameters.stageDisplayNamePrefix }}Simulator tests'
-    testPool: '' # use the default
-    statusContext: 'VSTS: simulator tests'
-    makeTarget: 'jenkins'
-    vsdropsPrefix: ${{ variables.vsdropsPrefix }}
-    keyringPass: $(pass--lab--mac--builder--keychain)
-    gitHubToken: $(Github.Token)
-    xqaCertPass: $(xqa--certificates--password)
-    condition: ${{ parameters.runTests }}
-    postPipeline: true
-
-- template: ./tests/publish-results.yml
-  parameters:
-    displayName: '${{ parameters.stageDisplayNamePrefix }}Publish Test Results'
-    stageName: 'publish_test_results'
-    statusContext: 'VSTS: test results'
-    vsdropsPrefix: ${{ variables.vsdropsPrefix }}
-    condition: ${{ parameters.runTests }}
-    testConfigurations: ${{ parameters.testConfigurations }}
-    supportedPlatforms: ${{ parameters.supportedPlatforms }}
-    isPR: ${{ parameters.isPR }}
-    repositoryAlias: ${{ parameters.repositoryAlias }}
-    commit: ${{ parameters.commit }}
-    postPipeline: true
-
 - ${{ if eq(parameters.runWindowsIntegration, true) }}:
   - template: ./windows/stage.yml
     parameters:

@@ -2,16 +2,19 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
 using Xamarin.Messaging.Build.Client;
+using Xamarin.Utils;
 
 namespace Xamarin.MacDev.Tasks {
-	public class Ditto : XamarinToolTask, ITaskCallback {
+	public class Ditto : XamarinTask, ITaskCallback, ICancelableTask {
 		#region Inputs
 
 		public string? AdditionalArguments { get; set; }
@@ -40,44 +43,53 @@ namespace Xamarin.MacDev.Tasks {
 
 		#endregion
 
-		protected override string ToolName {
-			get { return "ditto"; }
-		}
+		CancellationTokenSource? cancellationTokenSource;
 
-		protected override string GenerateFullPathToTool ()
-		{
-			if (!string.IsNullOrEmpty (ToolPath))
-				return Path.Combine (ToolPath, ToolExe);
-
-			var path = Path.Combine ("/usr/bin", ToolExe);
-
-			return File.Exists (path) ? path : ToolExe;
-		}
-
-		protected override string GenerateCommandLineCommands ()
-		{
-			var args = new CommandLineArgumentBuilder ();
-
-			args.AddQuoted (Path.GetFullPath (Source!.ItemSpec));
-			args.AddQuoted (Path.GetFullPath (Destination!.ItemSpec));
-			if (!string.IsNullOrEmpty (AdditionalArguments))
-				args.Add (AdditionalArguments);
-
-			return args.ToString ();
-		}
-
+		static int counter;
 		public override bool Execute ()
 		{
+			var id = Interlocked.Increment (ref counter);
+
 			if (ShouldExecuteRemotely ()) {
+				LogLine ($"{id} Ditto.Execute () will execute remotely");
 				var taskRunner = new TaskRunner (SessionId, BuildEngine4);
 
 				taskRunner.FixReferencedItems (this, new ITaskItem [] { Source! });
 
-				return taskRunner.RunAsync (this).Result;
+				LogLine ($"{id} Ditto.Execute () about to execute remotely");
+				var rv = taskRunner.RunAsync (this).Result;
+				LogLine ($"{id} Ditto.Execute () executed remotely: {rv}");
+				return rv;
 			}
 
-			if (!base.Execute ())
+			var src = Source!.ItemSpec;
+			if (!File.Exists (src) && !Directory.Exists (src)) {
+				Log.LogError ($"The source {src} does not exist.");
 				return false;
+			}
+
+			var args = new List<string> ();
+			args.Add (Path.GetFullPath (Source!.ItemSpec));
+			args.Add (Path.GetFullPath (Destination!.ItemSpec));
+#if NET
+			if (!string.IsNullOrEmpty (AdditionalArguments)) {
+#else
+			if (AdditionalArguments is not null && !string.IsNullOrEmpty (AdditionalArguments)) {
+#endif
+				if (StringUtils.TryParseArguments (AdditionalArguments, out var additionalArgs, out var ex)) {
+					args.AddRange (additionalArgs);
+				} else {
+					Log.LogError ("Unable to parse the AdditionalArguments: {0}", AdditionalArguments);
+					return false;
+				}
+			}
+
+			LogLine ($"{id} Ditto.Execute () about to execute locally. Args: {string.Join (" ", args)}\n{Environment.StackTrace}");
+			var watch = Stopwatch.StartNew ();
+			cancellationTokenSource = new CancellationTokenSource ();
+			cancellationTokenSource.CancelAfter (TimeSpan.FromSeconds (30)); // FIXME: remove this
+			ExecuteAsync (Log, "/usr/bin/ditto", args, cancellationToken: cancellationTokenSource.Token).Wait ();
+			LogLine ($"{id} Ditto.Execute () executed locally in {watch.Elapsed.TotalSeconds} seconds. Args: {string.Join (" ", args)}");
 
 			// Create a list of all the files we've copied
 			var copiedFiles = new List<ITaskItem> ();
@@ -96,18 +108,13 @@ namespace Xamarin.MacDev.Tasks {
 			return !Log.HasLoggedErrors;
 		}
 
-		protected override void LogEventsFromTextOutput (string singleLine, MessageImportance messageImportance)
+		public void Cancel ()
 		{
-			// TODO: do proper parsing of error messages and such
-			Log.LogMessage (messageImportance, "{0}", singleLine);
-		}
-
-		public override void Cancel ()
-		{
-			base.Cancel ();
-
-			if (ShouldExecuteRemotely ())
+			if (ShouldExecuteRemotely ()) {
 				BuildConnection.CancelAsync (BuildEngine4).Wait ();
+			} else {
+				cancellationTokenSource?.Cancel ();
+			}
 		}
 
 		public IEnumerable<ITaskItem> GetAdditionalItemsToBeCopied ()
