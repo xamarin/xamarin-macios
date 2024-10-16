@@ -248,11 +248,6 @@ namespace Xharness.Jenkins {
 				selection.SetEnabled (PlatformLabel.iOS, false);
 			}
 
-			if (!Harness.INCLUDE_WATCH) {
-				MainLog?.WriteLine ("The watchOS build is disabled, so any watchOS tests will be disabled as well.");
-				selection.SetEnabled (PlatformLabel.watchOS, false);
-			}
-
 			if (!Harness.INCLUDE_TVOS) {
 				MainLog?.WriteLine ("The tvOS build is disabled, so any tvOS tests will be disabled as well.");
 				selection.SetEnabled (PlatformLabel.tvOS, false);

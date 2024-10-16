@@ -69,14 +69,14 @@ bindings-generated.m: $(BINDINGS_GENERATOR)
 
 # our makefiles don't support building the same source file multiple times with different defines,
 # so just symlink extension-main.m to another file and compile that instead.
-app-main.m watchextension-main.m tvextension-main.m: extension-main.m
+app-main.m tvextension-main.m: extension-main.m
 	$(Q_LN) ln -fs $< $@
 
 product.h: product.in.h Makefile $(GIT_DIRECTORY)/index
 	$(Q) sed -e 's/@PRODUCT_HASH@/$(CURRENT_HASH_LONG)/' $< > $@.tmp
 	$(Q) mv $@.tmp $@
 #
-# MonoTouch defines (used for all MonoTouch platforms: iOS, WatchOS and TVOS)
+# MonoTouch defines (used for all MonoTouch platforms: iOS and TVOS)
 #
 
 MONOTOUCH_SOURCES =     \
@@ -166,17 +166,6 @@ endif
 $(eval $(call FrameworkTemplate,iphonesimulator,IOSSIMULATOR,$(IOS_SIMULATOR_ARCHITECTURES)))
 endif
 
-ifdef INCLUDE_WATCH
-ifdef INCLUDE_DEVICE
-ifdef WATCHOS_SUPPORTS_32BIT_DEVICE_ARCHITECTURES
-$(eval $(call FrameworkTemplate,watchos,WATCHOS,armv7k arm64_32))
-else
-$(eval $(call FrameworkTemplate,watchos,WATCHOS,arm64_32))
-endif
-endif
-$(eval $(call FrameworkTemplate,watchsimulator,WATCHSIMULATOR,x86))
-endif
-
 ifdef INCLUDE_TVOS
 ifdef INCLUDE_DEVICE
 $(eval $(call FrameworkTemplate,tvos,TVOS,arm64))
@@ -241,17 +230,6 @@ ifdef INCLUDE_MACCATALYST
 $(eval $(call PlatformTemplate,maccatalyst,MACCATALYST,x86_64))
 endif
 
-ifdef INCLUDE_WATCH
-ifdef INCLUDE_DEVICE
-ifdef WATCHOS_SUPPORTS_32BIT_DEVICE_ARCHITECTURES
-$(eval $(call PlatformTemplate,watchos,WATCHOS,armv7k arm64_32))
-else
-$(eval $(call PlatformTemplate,watchos,WATCHOS,arm64_32))
-endif
-endif
-$(eval $(call PlatformTemplate,watchsimulator,WATCHSIMULATOR,x86 x86_64))
-endif
-
 ifdef INCLUDE_TVOS
 ifdef INCLUDE_DEVICE
 $(eval $(call PlatformTemplate,tvos,TVOS,arm64))
@@ -269,7 +247,6 @@ endif
 
 define LibTemplate
 $$(foreach arch,$$($(2)_ARCHITECTURES),.libs/$(1)/extension-main.$$(arch).o): EXTRA_DEFINES=-DEXTENSION
-$$(foreach arch,$$($(2)_ARCHITECTURES),.libs/$(1)/watchextension-main.$$(arch).o): EXTRA_DEFINES=-DWATCH_EXTENSION
 $$(foreach arch,$$($(2)_ARCHITECTURES),.libs/$(1)/tvextension-main.$$(arch).o): EXTRA_DEFINES=-DTV_EXTENSION
 
 .libs/$(1)/libextension.%.a: .libs/$(1)/extension-main.%.o
@@ -322,8 +299,6 @@ endef
 $(eval $(call LibTemplate,iphoneos,IPHONEOS))
 $(eval $(call LibTemplate,iphonesimulator,IOSSIMULATOR))
 $(eval $(call LibTemplate,maccatalyst,MACCATALYST))
-$(eval $(call LibTemplate,watchos,WATCHOS))
-$(eval $(call LibTemplate,watchsimulator,WATCHSIMULATOR))
 $(eval $(call LibTemplate,tvos,TVOS))
 $(eval $(call LibTemplate,tvsimulator,TVSIMULATOR))
 
@@ -406,10 +381,6 @@ $(eval $(call LibXamarinTemplate,iphonesimulator,IOSSIMULATOR))
 $(eval $(call LibXamarinTemplate,iphonesimulator,IOSSIMULATOR,_DEBUG,-debug))
 $(eval $(call LibXamarinTemplate,maccatalyst,MACCATALYST))
 $(eval $(call LibXamarinTemplate,maccatalyst,MACCATALYST,_DEBUG,-debug))
-$(eval $(call LibXamarinTemplate,watchos,WATCHOS))
-$(eval $(call LibXamarinTemplate,watchos,WATCHOS,_DEBUG,-debug))
-$(eval $(call LibXamarinTemplate,watchsimulator,WATCHSIMULATOR))
-$(eval $(call LibXamarinTemplate,watchsimulator,WATCHSIMULATOR,_DEBUG,-debug))
 $(eval $(call LibXamarinTemplate,tvos,TVOS))
 $(eval $(call LibXamarinTemplate,tvos,TVOS,_DEBUG,-debug))
 $(eval $(call LibXamarinTemplate,tvsimulator,TVSIMULATOR))

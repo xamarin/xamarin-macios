@@ -84,15 +84,6 @@ namespace Xamarin.Tests {
 				if (!include_tvos)
 					Assert.Ignore ("tvOS is not included in this build");
 				break;
-			case ApplePlatform.WatchOS:
-				if (!include_watchos)
-					Assert.Ignore ("watchOS is not included in this build");
-#if NET
-				if (!include_dotnet_watchos)
-					Assert.Ignore ("watchOS is not included in this build");
-#endif
-
-				break;
 			case ApplePlatform.MacOSX:
 				if (!include_mac)
 					Assert.Ignore ("macOS is not included in this build");
