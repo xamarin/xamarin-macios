@@ -88,3 +88,7 @@
 !missing-protocol-conformance! AVURLAsset should conform to NSItemProviderWriting (defined in 'AVURLAssetNSItemProvider' category)
 !missing-pinvoke! AVSampleBufferAttachContentKey is not bound
 !incorrect-protocol-member! AVQueuedSampleBufferRendering::hasSufficientMediaDataForReliablePlaybackStart is REQUIRED and should be abstract
+!missing-selector! AVAudioEngine::connectMIDI:to:format:eventListBlock: not bound
+!missing-selector! AVAudioEngine::connectMIDI:toNodes:format:eventListBlock: not bound
+!missing-selector! AVAudioEngine::connectMIDI:to:format:eventListBlock: not bound
+!missing-selector! AVAudioEngine::connectMIDI:toNodes:format:eventListBlock: not bound

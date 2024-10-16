@@ -1,42 +1,7 @@
-## there's a type of the same name (like NSObject, check what Swift did)
-
-## fixed in XAMCORE_3_0 - API break
-
-## Used only once in a deprecated API, native use `NSInteger` not a real enum - that's why there's a `[Native]`
-
 ## native use `NSUInteger` not a real enum - that's why there's a `[Native]`
 !unknown-native-enum! AVAudioSessionInterruptionFlags bound
 
-## it's already defined in the base class, it's fine even if it returns mutable tracks in this case 
-
-## type and protocol are named identically (check the swift name, it's a similar situation to NSObject)
-
-## AVAudioPlayer INTERRUPTION NOTIFICATIONS ARE DEPRECATED - Use AVAudioSession instead. 
-
-### deprecated in iOS8
-### deprecated in iOS8
-
-## unsorted
-
-
 # cannot be done because it will break the API, we have a #if define with the correct implementation
-
 !missing-release-attribute-on-return-value! CoreMedia.CMFormatDescription AVFoundation.AVTimedMetadataGroup::CopyFormatDescription()'s selector's ('copyFormatDescription') Objective-C method family ('copy') indicates that the native method returns a retained object, and as such a '[return: Release]' attribute is required.
 
-# Initial result from new rule extra-null-allowed
-
-# Swift Docs and Obj-C are out of sync
-# https://developer.apple.com/documentation/avfoundation/avvideocompositioninstructionprotocol/1388661-requiredsourcetrackids
-# https://developer.apple.com/documentation/avfoundation/1386654-avvideocompositioninstruction/1388661-requiredsourcetrackids?language=objc
-
-# Keep [NullAllowed] on FromAsset to keep existing tests passing and allow backwards compatibility
-
-# Initial result from new rule missing-null-allowed
-
-# intro says that this is not true
-
-# no tests/samples
-
-# adding abstract member to an existing type would be a breaking change
-
-# added for .NET since it is part of a new breaking change in a notification
+# will not be binding the needed parts from CoreMidi

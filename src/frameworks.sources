@@ -248,13 +248,13 @@ AVFOUNDATION_CORE_SOURCES = \
 	AVFoundation/AVUrlAssetOptions.cs \
 	AVFoundation/AVVideoSettings.cs \
 	AVFoundation/AVTypes.cs \
+	AVFoundation/AVAssetReaderVideoCompositionOutput.cs \
 
 AVFOUNDATION_SOURCES = \
 	AVFoundation/AVAssetDownloadStorageManagementPolicy.cs \
 	AVFoundation/AVAssetDownloadTask.cs \
 	AVFoundation/AVAssetDownloadUrlSession.cs \
 	AVFoundation/AVAssetImageGenerator.cs \
-	AVFoundation/AVAssetReaderVideoCompositionOutput.cs \
 	AVFoundation/AVAssetResourceLoadingDataRequest.cs \
 	AVFoundation/AVAudioBuffer.cs \
 	AVFoundation/AVAudioChannelLayout.cs \
@@ -265,6 +265,7 @@ AVFOUNDATION_SOURCES = \
 	AVFoundation/AVAudioSessionPortDescription.cs \
 	AVFoundation/AVAudioSinkNode.cs \
 	AVFoundation/AVAudioSourceNode.cs \
+	AVFoundation/AVAudioVoiceProcessingOtherAudioDuckingConfiguration.cs \
 	AVFoundation/AVCaptureConnection.cs \
 	AVFoundation/AVCaptureDeviceDiscoverySession.cs \
 	AVFoundation/AVCaptureDeviceInput.cs \

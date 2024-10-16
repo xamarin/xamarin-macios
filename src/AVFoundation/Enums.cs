@@ -1756,4 +1756,52 @@ namespace AVFoundation {
 		Cleared = 1,
 		Unavailable = 2,
 	}	
+
+	[TV (17, 0), NoWatch, MacCatalyst (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	public enum AVCaptureReactionType {
+		[Field ("AVCaptureReactionTypeThumbsUp")]
+		ThumbsUp,
+
+		[Field ("AVCaptureReactionTypeThumbsDown")]
+		ThumbsDown,
+
+		[Field ("AVCaptureReactionTypeBalloons")]
+		Balloons,
+
+		[Field ("AVCaptureReactionTypeHeart")]
+		Heart,
+
+		[Field ("AVCaptureReactionTypeFireworks")]
+		Fireworks,
+
+		[Field ("AVCaptureReactionTypeRain")]
+		Rain,
+
+		[Field ("AVCaptureReactionTypeConfetti")]
+		Confetti,
+
+		[Field ("AVCaptureReactionTypeLasers")]
+		Lasers,
+	}
+
+	[Watch (9, 0), TV (16, 0), Mac (13, 0), iOS (16, 0), MacCatalyst (16,0)]
+	enum AVAssetPlaybackConfigurationOption {
+		[Field ("AVAssetPlaybackConfigurationOptionStereoVideo")]
+		StereoVideo,
+
+		[Field ("AVAssetPlaybackConfigurationOptionStereoMultiviewVideo")]
+		StereoMultiviewVideo,
+	}
+
+	[Watch (9, 0), TV (16, 0), Mac (13, 0), iOS (16, 0), MacCatalyst (16,0)]
+	enum AVPlayerInterstitialEventCue {
+		[Field ("AVPlayerInterstitialEventNoCue")]
+		NoCue, 
+
+		[Field ("AVPlayerInterstitialEventJoinCue")]
+		JoinCue,
+
+		[Field ("AVPlayerInterstitialEventLeaveCue")]
+		LeaveCue,
+	}
 }

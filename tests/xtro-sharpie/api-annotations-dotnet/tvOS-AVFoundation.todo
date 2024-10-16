@@ -1,89 +1,20 @@
-!deprecated-attribute-missing! AVAsset::chapterMetadataGroupsBestMatchingPreferredLanguages: missing a [Deprecated] attribute
-!deprecated-attribute-missing! AVAsset::chapterMetadataGroupsWithTitleLocale:containingItemsWithCommonKeys: missing a [Deprecated] attribute
-!deprecated-attribute-missing! AVAsset::mediaSelectionGroupForMediaCharacteristic: missing a [Deprecated] attribute
-!deprecated-attribute-missing! AVAsset::metadataForFormat: missing a [Deprecated] attribute
-!deprecated-attribute-missing! AVAsset::tracksWithMediaCharacteristic: missing a [Deprecated] attribute
-!deprecated-attribute-missing! AVAsset::tracksWithMediaType: missing a [Deprecated] attribute
-!deprecated-attribute-missing! AVAsset::trackWithTrackID: missing a [Deprecated] attribute
-!deprecated-attribute-missing! AVAsset::unusedTrackID missing a [Deprecated] attribute
-!deprecated-attribute-missing! AVAssetTrack::associatedTracksOfType: missing a [Deprecated] attribute
-!deprecated-attribute-missing! AVAssetTrack::metadataForFormat: missing a [Deprecated] attribute
-!deprecated-attribute-missing! AVAssetTrack::samplePresentationTimeForTrackTime: missing a [Deprecated] attribute
-!deprecated-attribute-missing! AVAssetTrack::segmentForTrackTime: missing a [Deprecated] attribute
-!deprecated-attribute-missing! AVAudioEngine::connectMIDI:to:format:block: missing a [Deprecated] attribute
-!deprecated-attribute-missing! AVAudioEngine::connectMIDI:toNodes:format:block: missing a [Deprecated] attribute
-!deprecated-attribute-missing! AVMutableComposition::insertTimeRange:ofAsset:atTime:error: missing a [Deprecated] attribute
-!deprecated-attribute-missing! AVURLAsset::compatibleTrackForCompositionTrack: missing a [Deprecated] attribute
-!deprecated-attribute-missing! AVVideoComposition::isValidForAsset:timeRange:validationDelegate: missing a [Deprecated] attribute
-!missing-field! AVAssetPlaybackConfigurationOptionStereoMultiviewVideo not bound
-!missing-field! AVAssetPlaybackConfigurationOptionStereoVideo not bound
-!missing-field! AVExtendedNoteOnEventDefaultInstrument not bound
-!missing-field! AVPlayerInterstitialEventJoinCue not bound
-!missing-field! AVPlayerInterstitialEventLeaveCue not bound
-!missing-field! AVPlayerInterstitialEventNoCue not bound
 !missing-field! AVURLAssetHTTPUserAgentKey not bound
 !missing-field! AVURLAssetPrimarySessionIdentifierKey not bound
 !missing-field! AVVideoTransferFunction_Linear not bound
-!missing-protocol-conformance! AVPlayerInterstitialEvent should conform to NSCopying
-!missing-selector! +AVPlayerInterstitialEvent::interstitialEventWithPrimaryItem:date: not bound
-!missing-selector! +AVPlayerInterstitialEvent::interstitialEventWithPrimaryItem:time: not bound
 !missing-selector! +AVSpeechUtterance::speechUtteranceWithSSMLRepresentation: not bound
-!missing-selector! +AVVideoComposition::videoCompositionWithAsset:applyingCIFiltersWithHandler:completionHandler: not bound
 !missing-selector! +AVVideoComposition::videoCompositionWithPropertiesOfAsset:completionHandler: not bound
 !missing-selector! AVAssetTrack::makeSampleCursorWithPresentationTimeStamp: not bound
 !missing-selector! AVAudioEngine::connectMIDI:to:format:eventListBlock: not bound
 !missing-selector! AVAudioEngine::connectMIDI:toNodes:format:eventListBlock: not bound
-!missing-selector! AVAudioSequencer::createAndAppendTrack not bound
-!missing-selector! AVAudioSequencer::removeTrack: not bound
 !missing-selector! AVAudioSequencer::reverseEvents not bound
-!missing-selector! AVAudioSequencer::setUserCallback: not bound
 !missing-selector! AVAudioUnitMIDIInstrument::sendMIDIEventList: not bound
-!missing-selector! AVComposition::chapterMetadataGroupsBestMatchingPreferredLanguages: not bound
-!missing-selector! AVComposition::chapterMetadataGroupsWithTitleLocale:containingItemsWithCommonKeys: not bound
-!missing-selector! AVComposition::mediaSelectionGroupForMediaCharacteristic: not bound
-!missing-selector! AVComposition::metadataForFormat: not bound
-!missing-selector! AVComposition::unusedTrackID not bound
-!missing-selector! AVCompositionTrack::associatedTracksOfType: not bound
-!missing-selector! AVCompositionTrack::hasMediaCharacteristic: not bound
-!missing-selector! AVCompositionTrack::metadataForFormat: not bound
-!missing-selector! AVCompositionTrack::samplePresentationTimeForTrackTime: not bound
-!missing-selector! AVMusicTrack::addEvent:atBeat: not bound
-!missing-selector! AVMusicTrack::clearEventsInRange: not bound
-!missing-selector! AVMusicTrack::copyAndMergeEventsInRange:fromTrack:mergeAtBeat: not bound
-!missing-selector! AVMusicTrack::copyEventsInRange:fromTrack:insertAtBeat: not bound
-!missing-selector! AVMusicTrack::cutEventsInRange: not bound
-!missing-selector! AVMusicTrack::enumerateEventsInRange:usingBlock: not bound
-!missing-selector! AVMusicTrack::moveEventsInRange:byAmount: not bound
-!missing-selector! AVMusicTrack::setUsesAutomatedParameters: not bound
-!missing-selector! AVMusicTrack::usesAutomatedParameters not bound
 !missing-selector! AVMutableComposition::insertTimeRange:ofAsset:atTime:completionHandler: not bound
-!missing-selector! AVPlayer::defaultRate not bound
-!missing-selector! AVPlayer::setDefaultRate: not bound
-!missing-selector! AVPlayerInterstitialEvent::setDate: not bound
-!missing-selector! AVPlayerInterstitialEvent::setTime: not bound
-!missing-selector! AVSampleBufferGenerator::createSampleBufferForRequest:addingToBatch:error: not bound
-!missing-selector! AVSampleBufferGenerator::createSampleBufferForRequest:error: not bound
-!missing-selector! AVSampleBufferGenerator::makeBatch not bound
 !missing-selector! AVSpeechSynthesizer::writeUtterance:toBufferCallback:toMarkerCallback: not bound
 !missing-selector! AVSpeechUtterance::initWithSSMLRepresentation: not bound
 !missing-selector! AVURLAsset::httpSessionIdentifier not bound
 !missing-selector! AVVideoComposition::determineValidityForAsset:timeRange:validationDelegate:completionHandler: not bound
 !missing-selector! AVPlayerLayer::copyDisplayedPixelBuffer not bound
-!missing-field! AVPlayerInterstitialEventMonitorAssetListResponseStatusDidChangeErrorKey not bound
-!missing-field! AVPlayerInterstitialEventMonitorAssetListResponseStatusDidChangeEventKey not bound
-!missing-field! AVPlayerInterstitialEventMonitorAssetListResponseStatusDidChangeNotification not bound
-!missing-field! AVPlayerInterstitialEventMonitorAssetListResponseStatusDidChangeStatusKey not bound
 !missing-selector! AVPlayerInterstitialEvent::assetListResponse not bound
-!deprecated-attribute-missing! AVSampleBufferDisplayLayer::enqueueSampleBuffer: missing a [Deprecated] attribute
-!deprecated-attribute-missing! AVSampleBufferDisplayLayer::error missing a [Deprecated] attribute
-!deprecated-attribute-missing! AVSampleBufferDisplayLayer::flush missing a [Deprecated] attribute
-!deprecated-attribute-missing! AVSampleBufferDisplayLayer::flushAndRemoveImage missing a [Deprecated] attribute
-!deprecated-attribute-missing! AVSampleBufferDisplayLayer::isReadyForMoreMediaData missing a [Deprecated] attribute
-!deprecated-attribute-missing! AVSampleBufferDisplayLayer::requestMediaDataWhenReadyOnQueue:usingBlock: missing a [Deprecated] attribute
-!deprecated-attribute-missing! AVSampleBufferDisplayLayer::requiresFlushToResumeDecoding missing a [Deprecated] attribute
-!deprecated-attribute-missing! AVSampleBufferDisplayLayer::status missing a [Deprecated] attribute
-!deprecated-attribute-missing! AVSampleBufferDisplayLayer::stopRequestingMediaData missing a [Deprecated] attribute
-!deprecated-attribute-missing! AVSampleBufferDisplayLayer::timebase missing a [Deprecated] attribute
 !extra-designated-initializer! AVPlayerLooper::initWithPlayer:templateItem:timeRange: is incorrectly decorated with an [DesignatedInitializer] attribute
 !extra-enum-value! Managed value 1684369017 for AVAudioSessionRecordPermission.Denied is available for the current platform while the value in the native header is not
 !extra-enum-value! Managed value 1735552628 for AVAudioSessionRecordPermission.Granted is available for the current platform while the value in the native header is not
@@ -102,16 +33,6 @@
 !missing-field! AVAudioSessionPortContinuityMicrophone not bound
 !missing-field! AVCaptureDeviceTypeBuiltInLiDARDepthCamera not bound
 !missing-field! AVCaptureDeviceTypeContinuityCamera not bound
-!missing-field! AVCaptureDeviceTypeExternal not bound
-!missing-field! AVCaptureDeviceTypeMicrophone not bound
-!missing-field! AVCaptureReactionTypeBalloons not bound
-!missing-field! AVCaptureReactionTypeConfetti not bound
-!missing-field! AVCaptureReactionTypeFireworks not bound
-!missing-field! AVCaptureReactionTypeHeart not bound
-!missing-field! AVCaptureReactionTypeLasers not bound
-!missing-field! AVCaptureReactionTypeRain not bound
-!missing-field! AVCaptureReactionTypeThumbsDown not bound
-!missing-field! AVCaptureReactionTypeThumbsUp not bound
 !missing-field! AVCaptureSystemPressureLevelCritical not bound
 !missing-field! AVCaptureSystemPressureLevelFair not bound
 !missing-field! AVCaptureSystemPressureLevelNominal not bound
@@ -120,11 +41,6 @@
 !missing-field! AVContentKeySessionServerPlaybackContextOptionProtocolVersions not bound
 !missing-field! AVContentKeySessionServerPlaybackContextOptionServerChallenge not bound
 !missing-field! AVFileTypeAHAP not bound
-!missing-field! AVMediaCharacteristicCarriesVideoStereoMetadata not bound
-!missing-field! AVMediaCharacteristicContainsStereoMultiviewVideo not bound
-!missing-field! AVMediaCharacteristicEnhancesSpeechIntelligibility not bound
-!missing-field! AVMediaCharacteristicIndicatesHorizontalFieldOfView not bound
-!missing-field! AVMediaCharacteristicTactileMinimal not bound
 !missing-field! AVMediaTypeHaptic not bound
 !missing-field! AVMetadataObjectTypeCatBody not bound
 !missing-field! AVMetadataObjectTypeDogBody not bound
@@ -147,19 +63,13 @@
 !missing-protocol! AVCaptureVideoDataOutputSampleBufferDelegate not bound
 !missing-protocol-member! AVContentKeySessionDelegate::contentKeySession:didUpdatePersistableContentKey:forContentKeyIdentifier: not found
 !missing-protocol-member! AVSpeechSynthesizerDelegate::speechSynthesizer:willSpeakMarker:utterance: not found
-!missing-selector! +AVAssetVariantQualifier::predicateForBinauralAudio:mediaSelectionOption: not bound
-!missing-selector! +AVAssetVariantQualifier::predicateForDownmixAudio:mediaSelectionOption: not bound
-!missing-selector! +AVAssetVariantQualifier::predicateForImmersiveAudio:mediaSelectionOption: not bound
 !missing-selector! +AVCaptureAutoExposureBracketedStillImageSettings::autoExposureSettingsWithExposureTargetBias: not bound
 !missing-selector! +AVCaptureDevice::activeMicrophoneMode not bound
 !missing-selector! +AVCaptureDevice::centerStageControlMode not bound
 !missing-selector! +AVCaptureDevice::extrinsicMatrixFromDevice:toDevice: not bound
 !missing-selector! +AVCaptureDevice::isCenterStageEnabled not bound
 !missing-selector! +AVCaptureDevice::isPortraitEffectEnabled not bound
-!missing-selector! +AVCaptureDevice::isStudioLightEnabled not bound
 !missing-selector! +AVCaptureDevice::preferredMicrophoneMode not bound
-!missing-selector! +AVCaptureDevice::reactionEffectGesturesEnabled not bound
-!missing-selector! +AVCaptureDevice::reactionEffectsEnabled not bound
 !missing-selector! +AVCaptureDevice::setCenterStageControlMode: not bound
 !missing-selector! +AVCaptureDevice::setCenterStageEnabled: not bound
 !missing-selector! +AVCaptureDevice::setUserPreferredCamera: not bound
@@ -173,16 +83,7 @@
 !missing-selector! +AVCaptureMultiCamSession::isMultiCamSupported not bound
 !missing-selector! +AVCapturePhotoBracketSettings::photoBracketSettingsWithRawPixelFormatType:processedFormat:bracketedSettings: not bound
 !missing-selector! +AVCapturePhotoBracketSettings::photoBracketSettingsWithRawPixelFormatType:rawFileType:processedFormat:processedFileType:bracketedSettings: not bound
-!missing-selector! +AVSpeechSynthesizer::personalVoiceAuthorizationStatus not bound
-!missing-selector! +AVSpeechSynthesizer::requestPersonalVoiceAuthorizationWithCompletionHandler: not bound
-!missing-selector! AVAssetVariantAudioRenditionSpecificAttributes::isBinaural not bound
-!missing-selector! AVAssetVariantAudioRenditionSpecificAttributes::isDownmix not bound
-!missing-selector! AVAssetVariantAudioRenditionSpecificAttributes::isImmersive not bound
-!missing-selector! AVAssetVariantVideoAttributes::videoLayoutAttributes not bound
 !missing-selector! AVAssetVariantVideoLayoutAttributes::stereoViewComponents not bound
-!missing-selector! AVAssetWriter::initialMovieFragmentInterval not bound
-!missing-selector! AVAssetWriter::setInitialMovieFragmentInterval: not bound
-!missing-selector! AVAudioInputNode::setMutedSpeechActivityEventListener: not bound
 !missing-selector! AVAudioRecorder::averagePowerForChannel: not bound
 !missing-selector! AVAudioRecorder::channelAssignments not bound
 !missing-selector! AVAudioRecorder::currentTime not bound
@@ -208,7 +109,6 @@
 !missing-selector! AVAudioRecorder::stop not bound
 !missing-selector! AVAudioRecorder::updateMeters not bound
 !missing-selector! AVAudioRecorder::url not bound
-!missing-selector! AVAudioSession::prefersInterruptionOnRouteDisconnect not bound
 !missing-selector! AVAudioSession::setPrefersInterruptionOnRouteDisconnect:error: not bound
 !missing-selector! AVCaptureAudioDataOutput::init not bound
 !missing-selector! AVCaptureAudioDataOutput::recommendedAudioSettingsForAssetWriterWithOutputFileType: not bound
@@ -217,8 +117,6 @@
 !missing-selector! AVCaptureAudioDataOutput::setSampleBufferDelegate:queue: not bound
 !missing-selector! AVCaptureAutoExposureBracketedStillImageSettings::exposureTargetBias not bound
 !missing-selector! AVCaptureConnection::isVideoRotationAngleSupported: not bound
-!missing-selector! AVCaptureConnection::setVideoRotationAngle: not bound
-!missing-selector! AVCaptureConnection::videoRotationAngle not bound
 !missing-selector! AVCaptureDataOutputSynchronizer::dataOutputs not bound
 !missing-selector! AVCaptureDataOutputSynchronizer::delegate not bound
 !missing-selector! AVCaptureDataOutputSynchronizer::delegateCallbackQueue not bound
@@ -238,8 +136,6 @@
 !missing-selector! AVCaptureDevice::activePrimaryConstituentDeviceSwitchingBehavior not bound
 !missing-selector! AVCaptureDevice::automaticallyAdjustsFaceDrivenAutoExposureEnabled not bound
 !missing-selector! AVCaptureDevice::automaticallyAdjustsFaceDrivenAutoFocusEnabled not bound
-!missing-selector! AVCaptureDevice::availableReactionTypes not bound
-!missing-selector! AVCaptureDevice::canPerformReactionEffects not bound
 !missing-selector! AVCaptureDevice::companionDeskViewCamera not bound
 !missing-selector! AVCaptureDevice::constituentDevices not bound
 !missing-selector! AVCaptureDevice::fallbackPrimaryConstituentDevices not bound
@@ -251,13 +147,10 @@
 !missing-selector! AVCaptureDevice::isGeometricDistortionCorrectionSupported not bound
 !missing-selector! AVCaptureDevice::isGlobalToneMappingEnabled not bound
 !missing-selector! AVCaptureDevice::isPortraitEffectActive not bound
-!missing-selector! AVCaptureDevice::isStudioLightActive not bound
 !missing-selector! AVCaptureDevice::isVirtualDevice not bound
 !missing-selector! AVCaptureDevice::minimumFocusDistance not bound
-!missing-selector! AVCaptureDevice::performEffectForReaction: not bound
 !missing-selector! AVCaptureDevice::primaryConstituentDeviceRestrictedSwitchingBehaviorConditions not bound
 !missing-selector! AVCaptureDevice::primaryConstituentDeviceSwitchingBehavior not bound
-!missing-selector! AVCaptureDevice::reactionEffectsInProgress not bound
 !missing-selector! AVCaptureDevice::setActiveMaxExposureDuration: not bound
 !missing-selector! AVCaptureDevice::setAutomaticallyAdjustsFaceDrivenAutoExposureEnabled: not bound
 !missing-selector! AVCaptureDevice::setAutomaticallyAdjustsFaceDrivenAutoFocusEnabled: not bound
@@ -280,12 +173,8 @@
 !missing-selector! AVCaptureDeviceFormat::isMultiCamSupported not bound
 !missing-selector! AVCaptureDeviceFormat::isPortraitEffectsMatteStillImageDeliverySupported not bound
 !missing-selector! AVCaptureDeviceFormat::isPortraitEffectSupported not bound
-!missing-selector! AVCaptureDeviceFormat::isStudioLightSupported not bound
-!missing-selector! AVCaptureDeviceFormat::reactionEffectsSupported not bound
 !missing-selector! AVCaptureDeviceFormat::videoFrameRateRangeForCenterStage not bound
 !missing-selector! AVCaptureDeviceFormat::videoFrameRateRangeForPortraitEffect not bound
-!missing-selector! AVCaptureDeviceFormat::videoFrameRateRangeForReactionEffectsInProgress not bound
-!missing-selector! AVCaptureDeviceFormat::videoFrameRateRangeForStudioLight not bound
 !missing-selector! AVCaptureDeviceFormat::videoMaxZoomFactorForCenterStage not bound
 !missing-selector! AVCaptureDeviceFormat::videoMinZoomFactorForCenterStage not bound
 !missing-selector! AVCaptureDeviceInput::device not bound
@@ -429,8 +318,6 @@
 !missing-selector! AVMetadataBodyObject::bodyID not bound
 !missing-selector! AVMetadataSalientObject::objectID not bound
 !missing-selector! AVPlayerLooper::initWithPlayer:templateItem:timeRange:existingItemsOrdering: not bound
-!missing-selector! AVSampleBufferDisplayLayer::sampleBufferRenderer not bound
-!missing-selector! AVSpeechSynthesisVoice::voiceTraits not bound
 !missing-type! AVAudioRecorder not bound
 !missing-type! AVCaptureAudioDataOutput not bound
 !missing-type! AVCaptureAutoExposureBracketedStillImageSettings not bound
@@ -460,25 +347,9 @@
 !missing-type! AVMetadataHumanFullBodyObject not bound
 !missing-type! AVMetadataSalientObject not bound
 !missing-selector! AVCaptureDevice::displayVideoZoomFactorMultiplier not bound
-!missing-selector! +AVExternalStorageDevice::authorizationStatus not bound
-!missing-selector! +AVExternalStorageDevice::requestAccessWithCompletionHandler: not bound
-!missing-selector! +AVExternalStorageDeviceDiscoverySession::isSupported not bound
-!missing-selector! +AVExternalStorageDeviceDiscoverySession::sharedSession not bound
 !missing-selector! AVCaptureVideoDataOutput::recommendedVideoSettingsForVideoCodecType:assetWriterOutputFileType:outputFileURL: not bound
-!missing-selector! AVExternalStorageDeviceDiscoverySession::externalStorageDevices not bound
-!missing-type! AVExternalStorageDeviceDiscoverySession not bound
 !missing-enum! CMTagCollectionVideoOutputPreset not bound
 !missing-pinvoke! CMTagCollectionCreateWithVideoOutputPreset is not bound
-!missing-selector! AVCaptureDeviceFormat::supportedVideoZoomRangesForDepthDataDelivery not bound
-!missing-selector! AVCaptureDeviceFormat::zoomFactorsOutsideOfVideoZoomRangesForDepthDeliverySupported not bound
-!missing-selector! AVPlayer::setVideoOutput: not bound
-!missing-selector! AVPlayer::videoOutput not bound
 !missing-selector! AVPlayerVideoOutput::copyTaggedBufferGroupForHostTime:presentationTimeStamp:activeConfiguration: not bound
 !missing-selector! AVVideoOutputSpecification::setOutputPixelBufferAttributes:forTagCollection: not bound
 !missing-field! AVSampleBufferDisplayLayerReadyForDisplayDidChangeNotification not bound
-!missing-protocol-member! AVContentKeySessionDelegate::contentKeySession:didProvideContentKeyRequests:forInitializationData: not found
-!missing-protocol-member! AVContentKeySessionDelegate::contentKeySession:externalProtectionStatusDidChangeForContentKey: not found
-!missing-selector! AVContentKey::externalContentProtectionStatus not bound
-!missing-selector! AVContentKey::revoke not bound
-!missing-selector! AVSampleBufferDisplayLayer::isReadyForDisplay not bound
-!missing-selector! AVSampleBufferVideoRenderer::loadVideoPerformanceMetricsWithCompletionHandler: not bound

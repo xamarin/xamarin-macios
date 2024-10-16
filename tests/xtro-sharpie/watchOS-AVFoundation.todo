@@ -1,21 +1,6 @@
 !unknown-field! AVCaptureLensPositionCurrent bound
 !unknown-protocol! AVVideoCompositionValidationHandling bound
-!deprecated-attribute-missing! AVAsset::chapterMetadataGroupsBestMatchingPreferredLanguages: missing a [Deprecated] attribute
-!deprecated-attribute-missing! AVAsset::chapterMetadataGroupsWithTitleLocale:containingItemsWithCommonKeys: missing a [Deprecated] attribute
-!deprecated-attribute-missing! AVAsset::mediaSelectionGroupForMediaCharacteristic: missing a [Deprecated] attribute
-!deprecated-attribute-missing! AVAsset::metadataForFormat: missing a [Deprecated] attribute
-!deprecated-attribute-missing! AVAsset::tracksWithMediaCharacteristic: missing a [Deprecated] attribute
-!deprecated-attribute-missing! AVAsset::tracksWithMediaType: missing a [Deprecated] attribute
-!deprecated-attribute-missing! AVAsset::trackWithTrackID: missing a [Deprecated] attribute
-!deprecated-attribute-missing! AVAsset::unusedTrackID missing a [Deprecated] attribute
-!deprecated-attribute-missing! AVAssetTrack::associatedTracksOfType: missing a [Deprecated] attribute
-!deprecated-attribute-missing! AVAssetTrack::metadataForFormat: missing a [Deprecated] attribute
-!deprecated-attribute-missing! AVAssetTrack::samplePresentationTimeForTrackTime: missing a [Deprecated] attribute
-!deprecated-attribute-missing! AVAssetTrack::segmentForTrackTime: missing a [Deprecated] attribute
-!deprecated-attribute-missing! AVAudioSession::recordPermission missing a [Deprecated] attribute
 !deprecated-attribute-missing! AVAudioSession::requestRecordPermission: missing a [Deprecated] attribute
-!deprecated-attribute-missing! AVMutableComposition::insertTimeRange:ofAsset:atTime:error: missing a [Deprecated] attribute
-!deprecated-attribute-missing! AVURLAsset::compatibleTrackForCompositionTrack: missing a [Deprecated] attribute
 !extra-null-allowed! 'AVFoundation.AVAudioTime AVFoundation.AVAudioTime::FromAudioTimeStamp(AudioToolbox.AudioTimeStamp&,System.Double)' has a extraneous [NullAllowed] on parameter #0
 !extra-null-allowed! 'AVFoundation.AVPlayerItem AVFoundation.AVPlayerItem::FromAsset(AVFoundation.AVAsset)' has a extraneous [NullAllowed] on parameter #0
 !extra-null-allowed! 'AVFoundation.AVPlayerItem AVFoundation.AVPlayerItem::FromAsset(AVFoundation.AVAsset,Foundation.NSString[])' has a extraneous [NullAllowed] on parameter #0
@@ -27,22 +12,11 @@
 !missing-enum! AVAudioSessionIOType not bound
 !missing-enum! AVMIDIControlChangeMessageType not bound
 !missing-enum! AVMIDIMetaEventType not bound
-!missing-field! AVAssetPlaybackConfigurationOptionStereoMultiviewVideo not bound
-!missing-field! AVAssetPlaybackConfigurationOptionStereoVideo not bound
 !missing-field! AVAudioApplicationInputMuteStateChangeNotification not bound
 !missing-field! AVAudioApplicationMuteStateKey not bound
 !missing-field! AVAudioSessionPortContinuityMicrophone not bound
 !missing-field! AVFileTypeAHAP not bound
-!missing-field! AVMediaCharacteristicEnhancesSpeechIntelligibility not bound
-!missing-field! AVMediaCharacteristicTactileMinimal not bound
 !missing-field! AVMediaTypeHaptic not bound
-!missing-field! AVPlayerInterstitialEventJoinCue not bound
-!missing-field! AVPlayerInterstitialEventLeaveCue not bound
-!missing-field! AVPlayerInterstitialEventMonitorAssetListResponseStatusDidChangeErrorKey not bound
-!missing-field! AVPlayerInterstitialEventMonitorAssetListResponseStatusDidChangeEventKey not bound
-!missing-field! AVPlayerInterstitialEventMonitorAssetListResponseStatusDidChangeNotification not bound
-!missing-field! AVPlayerInterstitialEventMonitorAssetListResponseStatusDidChangeStatusKey not bound
-!missing-field! AVPlayerInterstitialEventNoCue not bound
 !missing-field! AVSpeechSynthesisAvailableVoicesDidChangeNotification not bound
 !missing-field! AVURLAssetHTTPUserAgentKey not bound
 !missing-field! AVURLAssetOverrideMIMETypeKey not bound
@@ -55,7 +29,6 @@
 !missing-protocol-conformance! AVAsset should conform to AVAsynchronousKeyValueLoading
 !missing-protocol-conformance! AVAssetTrack should conform to AVAsynchronousKeyValueLoading
 !missing-protocol-conformance! AVMetadataItem should conform to AVAsynchronousKeyValueLoading
-!missing-protocol-conformance! AVPlayerInterstitialEvent should conform to NSCopying
 !missing-protocol-conformance! AVURLAsset should conform to AVContentKeyRecipient (defined in 'AVURLAssetContentKeyEligibility' category)
 !missing-protocol-conformance! AVURLAsset should conform to NSItemProviderReading (defined in 'AVURLAssetNSItemProvider' category)
 !missing-protocol-conformance! AVURLAsset should conform to NSItemProviderWriting (defined in 'AVURLAssetNSItemProvider' category)
@@ -75,10 +48,6 @@
 !missing-selector! +AVAudioChannelLayout::layoutWithLayout: not bound
 !missing-selector! +AVAudioChannelLayout::layoutWithLayoutTag: not bound
 !missing-selector! +AVMetadataItem::metadataItemsFromArray:filteredByMetadataItemFilter: not bound
-!missing-selector! +AVPlayerInterstitialEvent::interstitialEventWithPrimaryItem:date: not bound
-!missing-selector! +AVPlayerInterstitialEvent::interstitialEventWithPrimaryItem:time: not bound
-!missing-selector! +AVSpeechSynthesizer::personalVoiceAuthorizationStatus not bound
-!missing-selector! +AVSpeechSynthesizer::requestPersonalVoiceAuthorizationWithCompletionHandler: not bound
 !missing-selector! +AVSpeechUtterance::speechUtteranceWithSSMLRepresentation: not bound
 !missing-selector! AVAssetCache::isPlayableOffline not bound
 !missing-selector! AVAssetCache::mediaSelectionOptionsInMediaSelectionGroup: not bound
@@ -96,49 +65,17 @@
 !missing-selector! AVAssetDownloadTask::URLAsset not bound
 !missing-selector! AVAssetDownloadURLSession::assetDownloadTaskWithConfiguration: not bound
 !missing-selector! AVAssetTrack::makeSampleCursorWithPresentationTimeStamp: not bound
-!missing-selector! AVAssetVariantAudioRenditionSpecificAttributes::isBinaural not bound
-!missing-selector! AVAssetVariantAudioRenditionSpecificAttributes::isDownmix not bound
-!missing-selector! AVAssetVariantAudioRenditionSpecificAttributes::isImmersive not bound
-!missing-selector! AVAssetVariantVideoAttributes::videoLayoutAttributes not bound
 !missing-selector! AVAssetVariantVideoLayoutAttributes::stereoViewComponents not bound
 !missing-selector! AVAudioPlayer::initWithContentsOfURL:error: not bound
 !missing-selector! AVAudioPlayer::initWithData:error: not bound
-!missing-selector! AVAudioSession::prefersInterruptionOnRouteDisconnect not bound
 !missing-selector! AVAudioSession::setPrefersInterruptionOnRouteDisconnect:error: not bound
-!missing-selector! AVComposition::chapterMetadataGroupsBestMatchingPreferredLanguages: not bound
-!missing-selector! AVComposition::chapterMetadataGroupsWithTitleLocale:containingItemsWithCommonKeys: not bound
-!missing-selector! AVComposition::mediaSelectionGroupForMediaCharacteristic: not bound
-!missing-selector! AVComposition::metadataForFormat: not bound
-!missing-selector! AVComposition::unusedTrackID not bound
-!missing-selector! AVCompositionTrack::associatedTracksOfType: not bound
-!missing-selector! AVCompositionTrack::hasMediaCharacteristic: not bound
-!missing-selector! AVCompositionTrack::metadataForFormat: not bound
-!missing-selector! AVCompositionTrack::samplePresentationTimeForTrackTime: not bound
 !missing-selector! AVCompositionTrack::segmentForTrackTime: not bound
 !missing-selector! AVMutableComposition::insertTimeRange:ofAsset:atTime:completionHandler: not bound
 !missing-selector! AVMutableComposition::tracks not bound
-!missing-selector! AVMutableMovie::chapterMetadataGroupsBestMatchingPreferredLanguages: not bound
-!missing-selector! AVMutableMovie::chapterMetadataGroupsWithTitleLocale:containingItemsWithCommonKeys: not bound
-!missing-selector! AVMutableMovie::mediaSelectionGroupForMediaCharacteristic: not bound
-!missing-selector! AVMutableMovie::metadataForFormat: not bound
-!missing-selector! AVMutableMovie::unusedTrackID not bound
-!missing-selector! AVMutableMovieTrack::associatedTracksOfType: not bound
-!missing-selector! AVMutableMovieTrack::hasMediaCharacteristic: not bound
-!missing-selector! AVMutableMovieTrack::metadataForFormat: not bound
-!missing-selector! AVMutableMovieTrack::samplePresentationTimeForTrackTime: not bound
-!missing-selector! AVMutableMovieTrack::segmentForTrackTime: not bound
-!missing-selector! AVPlayer::defaultRate not bound
-!missing-selector! AVPlayer::setDefaultRate: not bound
 !missing-selector! AVPlayerInterstitialEvent::assetListResponse not bound
-!missing-selector! AVPlayerInterstitialEvent::setDate: not bound
-!missing-selector! AVPlayerInterstitialEvent::setTime: not bound
 !missing-selector! AVPlayerItem::automaticallyHandlesInterstitialEvents not bound
 !missing-selector! AVPlayerItem::setAutomaticallyHandlesInterstitialEvents: not bound
 !missing-selector! AVPlayerItem::templatePlayerItem not bound
-!missing-selector! AVSampleBufferGenerator::createSampleBufferForRequest:addingToBatch:error: not bound
-!missing-selector! AVSampleBufferGenerator::createSampleBufferForRequest:error: not bound
-!missing-selector! AVSampleBufferGenerator::makeBatch not bound
-!missing-selector! AVSpeechSynthesisVoice::voiceTraits not bound
 !missing-selector! AVSpeechSynthesizer::writeUtterance:toBufferCallback:toMarkerCallback: not bound
 !missing-selector! AVSpeechUtterance::initWithSSMLRepresentation: not bound
 !missing-selector! AVURLAsset::httpSessionIdentifier not bound
@@ -158,9 +95,5 @@
 !missing-enum! AVAudioSessionRenderingMode not bound
 !missing-enum! CMTagCollectionVideoOutputPreset not bound
 !missing-pinvoke! CMTagCollectionCreateWithVideoOutputPreset is not bound
-!missing-selector! AVPlayer::setVideoOutput: not bound
-!missing-selector! AVPlayer::videoOutput not bound
 !missing-selector! AVPlayerVideoOutput::copyTaggedBufferGroupForHostTime:presentationTimeStamp:activeConfiguration: not bound
 !missing-selector! AVVideoOutputSpecification::setOutputPixelBufferAttributes:forTagCollection: not bound
-!missing-protocol-member! AVContentKeySessionDelegate::contentKeySession:didProvideContentKeyRequests:forInitializationData: not found
-!missing-selector! AVContentKey::revoke not bound
