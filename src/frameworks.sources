@@ -296,6 +296,7 @@ AVFOUNDATION_SOURCES = \
 	AVFoundation/Events.cs \
 	AVFoundation/AVPlayerLooper.cs \
 	AVFoundation/AudioRendererWasFlushedAutomaticallyEventArgs.cs \
+	AVFoundation/AVCaptureReactionType.rgen.cs \
 
 # AVKit
 
