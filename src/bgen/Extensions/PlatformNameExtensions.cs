@@ -2,7 +2,7 @@ using System.Diagnostics.CodeAnalysis;
 
 public static class PlatformNameExtensions {
 
-	public static bool TryGetApplicationClassName (this PlatformName currentPlatform, [NotNullWhen(true)]out string? className)
+	public static bool TryGetApplicationClassName (this PlatformName currentPlatform, [NotNullWhen (true)] out string? className)
 	{
 		switch (currentPlatform) {
 		case PlatformName.iOS:
@@ -20,7 +20,7 @@ public static class PlatformNameExtensions {
 		}
 	}
 
-	public static bool TryGetCoreImageMap (this PlatformName currentPlatform, [NotNullWhen(true)]out string? coreImageMap)
+	public static bool TryGetCoreImageMap (this PlatformName currentPlatform, [NotNullWhen (true)] out string? coreImageMap)
 	{
 		switch (currentPlatform) {
 		case PlatformName.iOS:
@@ -38,7 +38,7 @@ public static class PlatformNameExtensions {
 		}
 	}
 
-	public static bool TryGetCoreServicesMap (this PlatformName currentPlatform, [NotNullWhen(true)]out string? coreServicesMap)
+	public static bool TryGetCoreServicesMap (this PlatformName currentPlatform, [NotNullWhen (true)] out string? coreServicesMap)
 	{
 		switch (currentPlatform) {
 		case PlatformName.iOS:
@@ -56,7 +56,7 @@ public static class PlatformNameExtensions {
 		}
 	}
 
-	public static bool TryGetPDFKitMap (this PlatformName currentPlatform, [NotNullWhen(true)]out string? pdfKitMap)
+	public static bool TryGetPDFKitMap (this PlatformName currentPlatform, [NotNullWhen (true)] out string? pdfKitMap)
 	{
 		switch (currentPlatform) {
 		case PlatformName.iOS:

@@ -8,8 +8,7 @@ namespace Microsoft.Macios.Generator.Context;
 /// because it removes the need to a cast.
 /// </summary>
 /// <typeparam name="T">The base type declaration whose context we have</typeparam>
-interface ISymbolBindingContext<out T> where T : BaseTypeDeclarationSyntax
-{
+interface ISymbolBindingContext<out T> where T : BaseTypeDeclarationSyntax {
 	T DeclarationSyntax { get; }
 	string Namespace { get; }
 	string SymbolName { get; }

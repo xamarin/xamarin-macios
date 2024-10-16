@@ -9,7 +9,7 @@ namespace Microsoft.Macios.Generator.Emitters;
 /// </summary>
 static class EmitterFactory {
 	public static bool TryCreate<T> (ISymbolBindingContext<T> context, TabbedStringBuilder builder,
-		[NotNullWhen(true)]out ICodeEmitter? emitter)
+		[NotNullWhen (true)] out ICodeEmitter? emitter)
 		where T : BaseTypeDeclarationSyntax
 	{
 		emitter = context switch {

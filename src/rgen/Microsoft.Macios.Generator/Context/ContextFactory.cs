@@ -8,7 +8,7 @@ namespace Microsoft.Macios.Generator.Context;
 
 static class ContextFactory {
 	public static bool TryCreate<T> (RootBindingContext context, SemanticModel semanticModel,
-		INamedTypeSymbol symbol, T declarationSyntax, [NotNullWhen(true)] out ISymbolBindingContext<T>? bindingContext) where T : BaseTypeDeclarationSyntax
+		INamedTypeSymbol symbol, T declarationSyntax, [NotNullWhen (true)] out ISymbolBindingContext<T>? bindingContext) where T : BaseTypeDeclarationSyntax
 	{
 		bindingContext = declarationSyntax switch {
 			ClassDeclarationSyntax c => Unsafe.As<ISymbolBindingContext<T>> (

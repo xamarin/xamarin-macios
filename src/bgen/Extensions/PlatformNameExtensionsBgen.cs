@@ -21,7 +21,7 @@ public static class PlatformNameExtensionsBgen {
 
 	public static string GetCoreServicesMap (this PlatformName currentPlatform)
 	{
-		if (currentPlatform.TryGetCoreServicesMap(out var coreServicesMap))
+		if (currentPlatform.TryGetCoreServicesMap (out var coreServicesMap))
 			return coreServicesMap;
 		throw new BindingException (1047, currentPlatform);
 	}

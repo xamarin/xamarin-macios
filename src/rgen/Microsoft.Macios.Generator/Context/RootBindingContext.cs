@@ -13,7 +13,7 @@ namespace Microsoft.Macios.Generator.Context;
 /// to the current compilation.
 /// </summary>
 class RootBindingContext {
-	readonly Dictionary<string, string> _libraries = new();
+	readonly Dictionary<string, string> _libraries = new ();
 
 	public PlatformName CurrentPlatform { get; set; }
 	public Compilation Compilation { get; set; }
@@ -65,7 +65,7 @@ class RootBindingContext {
 					break;
 				case "+PDFKit":
 					libraryName = "PdfKit";
-					 CurrentPlatform.TryGetPDFKitMap (out libraryPath);
+					CurrentPlatform.TryGetPDFKitMap (out libraryPath);
 					break;
 				}
 			} else {

@@ -11,7 +11,7 @@ class EnumEmitter (ISymbolBindingContext<EnumDeclarationSyntax> context, TabbedS
 
 	public string SymbolName => $"{context.SymbolName}Extensions";
 
-	public bool TryValidate ([NotNullWhen(false)] out ImmutableArray<Diagnostic>? diagnostics)
+	public bool TryValidate ([NotNullWhen (false)] out ImmutableArray<Diagnostic>? diagnostics)
 	{
 		diagnostics = null;
 		return true;

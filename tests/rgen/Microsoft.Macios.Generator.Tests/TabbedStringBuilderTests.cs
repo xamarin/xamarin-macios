@@ -8,7 +8,7 @@ public class TabbedStringBuilderTests {
 
 	public TabbedStringBuilderTests ()
 	{
-		sb = new();
+		sb = new ();
 	}
 
 	[Theory]
@@ -78,10 +78,10 @@ public class TabbedStringBuilderTests {
 		var expected = $"{expectedTabs}{{\n{expectedTabs}\t{line}\n{expectedTabs}}}\n";
 		string result;
 		using (var block = new TabbedStringBuilder (sb, tabCount, true)) {
-			block.AppendFormatLine(format, formatParam);
+			block.AppendFormatLine (format, formatParam);
 			result = block.ToString ();
 		}
-		Assert.Equal (expected,result);
+		Assert.Equal (expected, result);
 	}
 
 	[Theory]

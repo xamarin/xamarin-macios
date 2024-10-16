@@ -8,7 +8,7 @@ namespace Microsoft.Macios.Generator.Emitters;
 
 class InterfaceEmitter (ISymbolBindingContext<InterfaceDeclarationSyntax> context, TabbedStringBuilder builder) : ICodeEmitter {
 	public string SymbolName { get; } = string.Empty;
-	public bool TryValidate ([NotNullWhen(false)] out ImmutableArray<Diagnostic>? diagnostics)
+	public bool TryValidate ([NotNullWhen (false)] out ImmutableArray<Diagnostic>? diagnostics)
 	{
 		diagnostics = null;
 		return true;

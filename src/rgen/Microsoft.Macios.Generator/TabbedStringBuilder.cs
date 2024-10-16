@@ -181,7 +181,7 @@ class TabbedStringBuilder : IDisposable {
 	{
 		if (disposed || !isBlock) return;
 
-		var braceTab = new string ('\t', (int)(tabCount - 1));
+		var braceTab = new string ('\t', (int) (tabCount - 1));
 		disposed = true;
 		sb.AppendLine ($"{braceTab}}}");
 	}

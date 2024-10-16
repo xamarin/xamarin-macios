@@ -8,7 +8,7 @@ namespace Microsoft.Macios.Generator.Emitters;
 /// Interface to be implemented by all those classes that know how to emit code for a binding.
 /// </summary>
 interface ICodeEmitter {
-	public string SymbolName {get;}
+	public string SymbolName { get; }
 	bool TryValidate ([NotNullWhen (false)] out ImmutableArray<Diagnostic>? diagnostics);
 	void Emit ();
 }

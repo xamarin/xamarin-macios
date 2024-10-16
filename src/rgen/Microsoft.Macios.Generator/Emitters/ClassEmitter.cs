@@ -18,9 +18,8 @@ class ClassEmitter (ClassBindingContext context, TabbedStringBuilder builder) : 
 	{
 		// add the namespace and the class declaration
 		using (var namespaceBlock = builder.CreateBlock ($"namespace {context.Namespace}", true)) {
-			using (var classBlock = namespaceBlock.CreateBlock ($"public partial class {SymbolName}", true))
-			{
-				classBlock.AppendLine("// TODO: add binding code here");
+			using (var classBlock = namespaceBlock.CreateBlock ($"public partial class {SymbolName}", true)) {
+				classBlock.AppendLine ("// TODO: add binding code here");
 			}
 		}
 	}
