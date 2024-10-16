@@ -1570,8 +1570,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		<OptimizeImage
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
-			ToolExe="$(PngCrushExe)"
-			ToolPath="$(PngCrushPath)"
+			PngCrushPath="$(PngcrushPath)"
 			SdkDevPath="$(_SdkDevPath)"
 			InputImages="@(_PngImage)"
 			OutputImages="@(_PngImage -> '$(DeviceSpecificIntermediateOutputPath)optimized\%(LogicalName)')">

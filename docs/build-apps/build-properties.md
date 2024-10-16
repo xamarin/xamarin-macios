@@ -89,6 +89,12 @@ The full path to the Metal compiler.
 
 The default behavior is to use `xcrun metal`.
 
+## PngCrushPath
+
+The full path to the `pngcrush` command-line tool.
+
+The default behavior is to use `xcrun pngcrush`.
+
 ## StripPath
 
 The full path to the `strip` command-line tool.
