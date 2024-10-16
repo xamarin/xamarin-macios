@@ -9,6 +9,5 @@ namespace Microsoft.Macios.Generator.Emitters;
 /// </summary>
 interface ICodeEmitter {
 	public string SymbolName { get; }
-	bool TryValidate ([NotNullWhen (false)] out ImmutableArray<Diagnostic>? diagnostics);
-	void Emit ();
+	bool TryEmit ([NotNullWhen (false)] out ImmutableArray<Diagnostic>? diagnostics);
 }

@@ -142,14 +142,17 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 			// best
 			if (ContextFactory.TryCreate (rootContext, semanticModel, namedTypeSymbol, baseTypeDeclarationSyntax, out var symbolBindingContext)
 				&& EmitterFactory.TryCreate (symbolBindingContext, sb, out var emitter)) {
-				if (!emitter.TryValidate (out var diagnostics)) {
-					continue;
+				if (emitter.TryEmit(out var diagnostics)) {
+					 // only add file when we do generate code
+					 var code = sb.ToString ();
+					 context.AddSource ($"{emitter.SymbolName}.g.cs", SourceText.From (code, Encoding.UTF8));
+				} else {
+					// add to the diagnostics and continue to the next possible candidate
+					foreach (Diagnostic diagnostic in diagnostics) {
+						context.ReportDiagnostic (diagnostic);
+					}
 				}
-				emitter.Emit ();
 
-				// only add file when we do generate code
-				var code = sb.ToString ();
-				context.AddSource ($"{emitter.SymbolName}.g.cs", SourceText.From (code, Encoding.UTF8));
 			} else {
 				// we don't have a emitter for this type, so we can't generate the code, add a diagnostic letting the
 				// user we do not support what he is trying to do
