@@ -94,3 +94,9 @@ The default behavior is to use `xcrun metal`.
 The full path to the `strip` command-line tool.
 
 The default behavior is to use `xcrun strip`.
+
+## ZipPath
+
+The full path to the `zip` command-line tool.
+
+The default behavior is to use `xcrun zip`.
