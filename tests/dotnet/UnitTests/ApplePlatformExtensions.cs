@@ -56,5 +56,17 @@ namespace Xamarin.Utils {
 			// We might have to change the assert if the first minor OS version we release for a given .NET version is >0 (this happened for both .NET 7 and .NET 8).
 			Assert.That (platform.GetDefaultTargetPlatformVersionLibrary (), Does.EndWith (".0"), "Default TPV for a library must end with .0");
 		}
+
+		[TestCase (ApplePlatform.iOS)]
+		[TestCase (ApplePlatform.MacCatalyst)]
+		[TestCase (ApplePlatform.TVOS)]
+		[TestCase (ApplePlatform.MacOSX)]
+		public void MajorTargetPlatformVersion (ApplePlatform platform)
+		{
+			var vLibrary = Version.Parse (platform.GetDefaultTargetPlatformVersionLibrary ());
+			var vExecutable = Version.Parse (platform.GetDefaultTargetPlatformVersionExecutable ());
+			// We might have to change the assert if we release support for a new major OS version within a .NET releases (this happened for .NET 8)
+			Assert.AreEqual (vExecutable.Major, vLibrary.Major, "The major version must be the same between the default TPV for library and executable projects.");
+		}
 	}
 }
