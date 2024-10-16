@@ -5,6 +5,8 @@ using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
@@ -15,123 +17,102 @@ using Xamarin.Localization.MSBuild;
 using Xamarin.Messaging;
 using Xamarin.Messaging.Build.Client;
 
-// Disable until we get around to enable + fix any issues.
-#nullable disable
+#nullable enable
 
 namespace Xamarin.MacDev.Tasks {
-	public class BTouch : XamarinToolTask, ITaskCallback {
+	public class BGen : XamarinTask, ICancelableTask {
+		CancellationTokenSource? cancellationTokenSource;
 
-		public string OutputPath { get; set; }
-
-		[Required]
-		public string BTouchToolPath { get; set; }
+		public string OutputPath { get; set; } = string.Empty;
 
 		[Required]
-		public string BTouchToolExe { get; set; }
+		public string BGenToolPath { get; set; } = string.Empty;
 
-		public ITaskItem [] ObjectiveCLibraries { get; set; }
+		[Required]
+		public string BGenToolExe { get; set; } = string.Empty;
 
-		public ITaskItem [] AdditionalLibPaths { get; set; }
+		public ITaskItem [] ObjectiveCLibraries { get; set; } = Array.Empty<ITaskItem> ();
+
+		public ITaskItem [] AdditionalLibPaths { get; set; } = Array.Empty<ITaskItem> ();
 
 		public bool AllowUnsafeBlocks { get; set; }
 
 		[Required]
-		public string BaseLibDll { get; set; }
+		public string BaseLibDll { get; set; } = string.Empty;
 
 		[Required]
-		public ITaskItem [] ApiDefinitions { get; set; }
+		public ITaskItem [] ApiDefinitions { get; set; } = Array.Empty<ITaskItem> ();
 
-		public string AttributeAssembly { get; set; }
+		public string AttributeAssembly { get; set; } = string.Empty;
 
-		public ITaskItem CompiledApiDefinitionAssembly { get; set; }
+		public ITaskItem? CompiledApiDefinitionAssembly { get; set; }
 
-		public ITaskItem [] CoreSources { get; set; }
+		public ITaskItem [] CoreSources { get; set; } = Array.Empty<ITaskItem> ();
 
-		public string DefineConstants { get; set; }
+		public string DefineConstants { get; set; } = string.Empty;
 
 		public bool EmitDebugInformation { get; set; }
 
-		public string ExtraArgs { get; set; }
+		public string ExtraArgs { get; set; } = string.Empty;
 
 		public int Verbosity { get; set; }
 
-		public string GeneratedSourcesDir { get; set; }
+		public string GeneratedSourcesDir { get; set; } = string.Empty;
 
-		public string GeneratedSourcesFileList { get; set; }
+		public string GeneratedSourcesFileList { get; set; } = string.Empty;
 
-		public string Namespace { get; set; }
+		public string Namespace { get; set; } = string.Empty;
 
 		public bool NoNFloatUsing { get; set; }
 
-		public ITaskItem [] NativeLibraries { get; set; }
+		public ITaskItem [] NativeLibraries { get; set; } = Array.Empty<ITaskItem> ();
 
-		public string OutputAssembly { get; set; }
+		public string OutputAssembly { get; set; } = string.Empty;
 
 		public bool ProcessEnums { get; set; }
 
 		[Required]
-		public string ProjectDir { get; set; }
+		public string ProjectDir { get; set; } = string.Empty;
 
-		public ITaskItem [] References { get; set; }
+		public ITaskItem [] References { get; set; } = Array.Empty<ITaskItem> ();
 
-		public ITaskItem [] Resources { get; set; }
+		public ITaskItem [] Resources { get; set; } = Array.Empty<ITaskItem> ();
 
-		public ITaskItem [] Sources { get; set; }
+		public ITaskItem [] Sources { get; set; } = Array.Empty<ITaskItem> ();
 
 		[Required]
-		public string ResponseFilePath { get; set; }
+		public string ResponseFilePath { get; set; } = string.Empty;
 
-		protected override string ToolName {
-			get {
-				if (IsDotNet)
-					return Path.GetFileName (this.GetDotNetPath ());
-
-				return Path.GetFileNameWithoutExtension (ToolExe);
-			}
-		}
-
-		protected override string GenerateFullPathToTool ()
-		{
-			// If we're building a .NET app, executing bgen using the same
-			// dotnet binary as we're executed with, instead of using the
-			// wrapper bgen script, because that script will try to use the
-			// system dotnet, which might not exist or not have the version we
-			// need.
-			if (IsDotNet)
-				return this.GetDotNetPath ();
-
-			return Path.Combine (ToolPath, ToolExe);
-		}
-
-		protected virtual void HandleReferences (CommandLineArgumentBuilder cmd)
+		protected virtual void HandleReferences (List<string> cmd)
 		{
 			if (References is not null) {
 				foreach (var item in References)
-					cmd.AddQuoted ("-r:" + Path.GetFullPath (item.ItemSpec));
+					cmd.Add ($"-r:{Path.GetFullPath (item.ItemSpec)}");
 			}
 		}
 
-		protected override string GenerateCommandLineCommands ()
+		public virtual List<string> GenerateCommandLineArguments ()
 		{
-			var cmd = new CommandLineArgumentBuilder ();
+			var cmd = new List<string> ();
 
 #if DEBUG
 			cmd.Add ("/v");
 #endif
 
 			if (CompiledApiDefinitionAssembly is not null)
-				cmd.AddQuotedSwitchIfNotNull ("/compiled-api-definition-assembly:", CompiledApiDefinitionAssembly.ItemSpec);
+				cmd.Add ($"/compiled-api-definition-assembly:{CompiledApiDefinitionAssembly.ItemSpec}");
 
 			cmd.Add ("/nostdlib");
-			cmd.AddQuotedSwitchIfNotNull ("/baselib:", BaseLibDll);
-			cmd.AddQuotedSwitchIfNotNull ("/out:", OutputAssembly);
+			if (!string.IsNullOrEmpty (BaseLibDll))
+				cmd.Add ($"/baselib:{BaseLibDll}");
+			if (!string.IsNullOrEmpty (OutputAssembly))
+				cmd.Add ($"/out:{OutputAssembly}");
 
-			cmd.AddQuotedSwitchIfNotNull ("/attributelib:", AttributeAssembly);
+			cmd.Add ($"/attributelib:{AttributeAssembly}");
 
-			string dir;
 			if (!string.IsNullOrEmpty (BaseLibDll)) {
-				dir = Path.GetDirectoryName (BaseLibDll);
-				cmd.AddQuotedSwitchIfNotNull ("/lib:", dir);
+				var dir = Path.GetDirectoryName (BaseLibDll);
+				cmd.Add ($"/lib:{dir}");
 			}
 
 			if (ProcessEnums)
@@ -143,7 +124,7 @@ namespace Xamarin.MacDev.Tasks {
 			if (AllowUnsafeBlocks)
 				cmd.Add ("/unsafe");
 
-			cmd.AddQuotedSwitchIfNotNull ("/ns:", Namespace);
+			cmd.Add ($"/ns:{Namespace}");
 
 			if (NoNFloatUsing)
 				cmd.Add ("/no-nfloat-using:true");
@@ -151,27 +132,27 @@ namespace Xamarin.MacDev.Tasks {
 			if (!string.IsNullOrEmpty (DefineConstants)) {
 				var strv = DefineConstants.Split (new [] { ';' }, StringSplitOptions.RemoveEmptyEntries);
 				foreach (var str in strv)
-					cmd.AddQuoted ("/d:" + str);
+					cmd.Add ($"/d:{str}");
 			}
 
 			//cmd.AppendSwitch ("/e");
 
 			foreach (var item in ApiDefinitions)
-				cmd.AddQuoted (Path.GetFullPath (item.ItemSpec));
+				cmd.Add (Path.GetFullPath (item.ItemSpec));
 
 			if (CoreSources is not null) {
 				foreach (var item in CoreSources)
-					cmd.AddQuoted ("/s:" + Path.GetFullPath (item.ItemSpec));
+					cmd.Add ($"/s:{Path.GetFullPath (item.ItemSpec)}");
 			}
 
 			if (Sources is not null) {
 				foreach (var item in Sources)
-					cmd.AddQuoted ("/x:" + Path.GetFullPath (item.ItemSpec));
+					cmd.Add ($"/x:{Path.GetFullPath (item.ItemSpec)}");
 			}
 
 			if (AdditionalLibPaths is not null) {
 				foreach (var item in AdditionalLibPaths)
-					cmd.AddQuoted ("/lib:" + Path.GetFullPath (item.ItemSpec));
+					cmd.Add ($"/lib:{Path.GetFullPath (item.ItemSpec)}");
 			}
 
 			HandleReferences (cmd);
@@ -183,7 +164,7 @@ namespace Xamarin.MacDev.Tasks {
 					if (!string.IsNullOrEmpty (id))
 						argument += "," + id;
 
-					cmd.AddQuoted ("/res:" + argument);
+					cmd.Add ($"/res:{argument}");
 				}
 			}
 
@@ -194,15 +175,15 @@ namespace Xamarin.MacDev.Tasks {
 					if (string.IsNullOrEmpty (id))
 						id = Path.GetFileName (argument);
 
-					cmd.AddQuoted ("/res:" + argument + "," + id);
+					cmd.Add ($"/res:{argument},{id}");
 				}
 			}
 
 			if (GeneratedSourcesDir is not null)
-				cmd.AddQuoted ("/tmpdir:" + Path.GetFullPath (GeneratedSourcesDir));
+				cmd.Add ($"/tmpdir:{Path.GetFullPath (GeneratedSourcesDir)}");
 
 			if (GeneratedSourcesFileList is not null)
-				cmd.AddQuoted ("/sourceonly:" + Path.GetFullPath (GeneratedSourcesFileList));
+				cmd.Add ($"/sourceonly:{Path.GetFullPath (GeneratedSourcesFileList)}");
 
 			cmd.Add ($"/target-framework={TargetFrameworkMoniker}");
 
@@ -242,20 +223,16 @@ namespace Xamarin.MacDev.Tasks {
 				}
 			}
 
-			cmd.Add (VerbosityUtils.Merge (ExtraArgs, (LoggerVerbosity) Verbosity));
+			cmd.AddRange (VerbosityUtils.Merge (ExtraArgs, (LoggerVerbosity) Verbosity));
 
-			var commandLine = cmd.CreateResponseFile (this, ResponseFilePath, null);
-			if (IsDotNet)
-				commandLine = StringUtils.Quote (Path.Combine (BTouchToolPath, BTouchToolExe)) + " " + commandLine;
-
-			return commandLine.ToString ();
+			return CommandLineArgumentBuilder.CreateResponseFile (this, ResponseFilePath, cmd, null);
 		}
 
 		public override bool Execute ()
 		{
 			if (ShouldExecuteRemotely ()) {
 				try {
-					BTouchToolPath = PlatformPath.GetPathForCurrentPlatform (BTouchToolPath);
+					BGenToolPath = PlatformPath.GetPathForCurrentPlatform (BGenToolPath);
 					BaseLibDll = PlatformPath.GetPathForCurrentPlatform (BaseLibDll);
 
 					TaskItemFixer.FixFrameworkItemSpecs (Log, item => OutputPath, TargetFramework.Identifier, References.Where (x => x.IsFrameworkItem ()).ToArray ());
@@ -277,18 +254,11 @@ namespace Xamarin.MacDev.Tasks {
 
 			AttributeAssembly = PathUtils.ConvertToMacPath (AttributeAssembly);
 			BaseLibDll = PathUtils.ConvertToMacPath (BaseLibDll);
-			BTouchToolExe = PathUtils.ConvertToMacPath (BTouchToolExe);
-			BTouchToolPath = PathUtils.ConvertToMacPath (BTouchToolPath);
 
-			if (IsDotNet) {
-				var customHome = Environment.GetEnvironmentVariable ("DOTNET_CUSTOM_HOME");
-
-				if (!string.IsNullOrEmpty (customHome)) {
-					EnvironmentVariables = EnvironmentVariables.CopyAndAdd ($"HOME={customHome}");
-				}
-			} else {
-				ToolExe = BTouchToolExe;
-				ToolPath = BTouchToolPath;
+			var customHome = Environment.GetEnvironmentVariable ("DOTNET_CUSTOM_HOME");
+			var env = new Dictionary<string, string?> ();
+			if (!string.IsNullOrEmpty (customHome)) {
+				env ["HOME"] = customHome;
 			}
 
 			if (!string.IsNullOrEmpty (SessionId) &&
@@ -302,7 +272,16 @@ namespace Xamarin.MacDev.Tasks {
 				return false;
 			}
 
-			return base.Execute ();
+			var executablePath = PathUtils.ConvertToMacPath (BGenToolPath);
+			var executableExe = PathUtils.ConvertToMacPath (BGenToolExe);
+			var executable = Path.Combine (executablePath, executableExe);
+			var args = GenerateCommandLineArguments ();
+			if (Log.HasLoggedErrors)
+				return false;
+
+			cancellationTokenSource = new CancellationTokenSource ();
+			ExecuteAsync (Log, executable, args, environment: env, cancellationToken: cancellationTokenSource.Token).Wait ();
+			return !Log.HasLoggedErrors;
 		}
 
 		public bool ShouldCopyToBuildServer (ITaskItem item) => !item.IsFrameworkItem ();
@@ -320,12 +299,13 @@ namespace Xamarin.MacDev.Tasks {
 			}).ToArray ();
 		}
 
-		public override void Cancel ()
+		public void Cancel ()
 		{
-			base.Cancel ();
-
-			if (!string.IsNullOrEmpty (SessionId))
+			if (ShouldExecuteRemotely ()) {
 				BuildConnection.CancelAsync (BuildEngine4).Wait ();
+			} else {
+				cancellationTokenSource?.Cancel ();
+			}
 		}
 
 		async System.Threading.Tasks.Task GetGeneratedSourcesAsync (TaskRunner taskRunner)

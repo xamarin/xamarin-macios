@@ -33,6 +33,28 @@ See also:
 * The [AlternateAppIcon](build-items.md#AlternateAppIcon) item group.
 * The [IncludeAllAppIcons](#IncludeAllAppIcons) property.
 
+### BGenEmitDebugInformation
+
+Whether the `bgen` tool (the binding generator) should emit debug information or not.
+
+The default behavior is `true` when the `Debug` property is set to `true`.
+
+## BGenExtraArgs
+
+Any extra arguments to the `bgen` tool (the binding generator).
+
+## BGenToolPath
+
+The name of the `bgen` executable (a tool used by binding projects to generate bindings).
+
+The default behavior is to use the `bgen` tool shipped with our workload.
+
+## BGenToolPath
+
+The directory to where the `bgen` ([BGenToolExe](#BGenToolExe)) is located.
+
+The default behavior is to use the `bgen` tool shipped with our workload.
+
 ## DittoPath
 
 The full path to the `ditto` executable.
