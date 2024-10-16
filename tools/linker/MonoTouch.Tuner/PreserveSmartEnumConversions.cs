@@ -16,7 +16,7 @@ using MonoTouch.Tuner;
 using Xamarin.Bundler;
 
 namespace Xamarin.Linker.Steps {
-#if NET
+#if NET && !LEGACY_TOOLS
 	public class PreserveSmartEnumConversionsHandler : ExceptionalMarkHandler
 #else
 	public class PreserveSmartEnumConversionsSubStep : ExceptionalSubStep
@@ -26,7 +26,7 @@ namespace Xamarin.Linker.Steps {
 		protected override string Name { get; } = "Smart Enum Conversion Preserver";
 		protected override int ErrorCode { get; } = 2200;
 
-#if NET
+#if NET && !LEGACY_TOOLS
 		public override void Initialize (LinkContext context, MarkContext markContext)
 		{
 			base.Initialize (context);
@@ -40,7 +40,7 @@ namespace Xamarin.Linker.Steps {
 		}
 #endif
 
-#if NET
+#if NET && !LEGACY_TOOLS
 		bool IsActiveFor (AssemblyDefinition assembly)
 #else
 		public override bool IsActiveFor (AssemblyDefinition assembly)
@@ -58,7 +58,7 @@ namespace Xamarin.Linker.Steps {
 			return false;
 		}
 
-#if NET
+#if NET && !LEGACY_TOOLS
 		void Mark (Tuple<MethodDefinition, MethodDefinition> pair)
 		{
 			Context.Annotations.Mark (pair.Item1);
@@ -78,7 +78,7 @@ namespace Xamarin.Linker.Steps {
 		}
 #endif
 
-#if NET
+#if NET && !LEGACY_TOOLS
 		void ProcessAttributeProvider (ICustomAttributeProvider provider)
 #else
 		void ProcessAttributeProvider (ICustomAttributeProvider provider, MethodDefinition conditionA, MethodDefinition conditionB = null)
@@ -111,7 +111,7 @@ namespace Xamarin.Linker.Steps {
 
 				Tuple<MethodDefinition, MethodDefinition> pair;
 				if (cache is not null && cache.TryGetValue (managedEnumType, out pair)) {
-#if NET
+#if NET && !LEGACY_TOOLS
 					// The pair was already marked if it was cached.
 #else
 					Preserve (pair, conditionA, conditionB);
@@ -173,7 +173,7 @@ namespace Xamarin.Linker.Steps {
 				if (cache is null)
 					cache = new Dictionary<TypeDefinition, Tuple<MethodDefinition, MethodDefinition>> ();
 				cache.Add (managedEnumType, pair);
-#if NET
+#if NET && !LEGACY_TOOLS
 				Mark (pair);
 #else
 				Preserve (pair, conditionA, conditionB);
@@ -183,7 +183,7 @@ namespace Xamarin.Linker.Steps {
 
 		protected override void Process (MethodDefinition method)
 		{
-#if NET
+#if NET && !LEGACY_TOOLS
 			static bool IsPropertyMethod (MethodDefinition method)
 			{
 				return method.IsGetter || method.IsSetter;
@@ -213,7 +213,7 @@ namespace Xamarin.Linker.Steps {
 #endif
 		}
 
-#if !NET
+#if !NET || LEGACY_TOOLS
 		protected override void Process (PropertyDefinition property)
 		{
 			ProcessAttributeProvider (property, property.GetMethod, property.SetMethod);

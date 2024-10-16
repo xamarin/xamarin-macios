@@ -9,6 +9,7 @@ PROVISION_DOWNLOAD_DIR=/tmp/x-provisioning
 SUDO=sudo
 VERBOSE=
 
+OPTIONAL_MONO=1
 OPTIONAL_SHARPIE=1
 OPTIONAL_SIMULATORS=1
 OPTIONAL_OLD_SIMULATORS=1
@@ -40,6 +41,7 @@ while ! test -z $1; do
 			;;
 		--provision-mono)
 			PROVISION_MONO=1
+			unset OPTIONAL_MONO
 			unset IGNORE_MONO
 			shift
 			;;
@@ -147,6 +149,11 @@ while ! test -z $1; do
 			;;
 		--ignore-mono)
 			IGNORE_MONO=1
+			shift
+			;;
+		--enforce-mono)
+			unset IGNORE_MONO
+			unset OPTIONAL_MONO
 			shift
 			;;
 		--ignore-autotools)
@@ -616,9 +623,13 @@ function check_mono () {
 	if ! test -z $IGNORE_MONO; then return; fi
 
 	MONO_VERSION_FILE=/Library/Frameworks/Mono.framework/Versions/Current/VERSION
+	MIN_MONO_URL=$(grep ^MIN_MONO_URL= Make.config | sed 's/.*=//')
 	if ! /Library/Frameworks/Mono.framework/Commands/mono --version 2>/dev/null >/dev/null; then
 		if ! test -z $PROVISION_MONO; then
 			install_mono
+		elif test -n "$OPTIONAL_MONO"; then
+			warn "Mono MDK is not installed. Download URL: $MIN_MONO_URL"
+			return
 		else
 			fail "You must install the Mono MDK. Download URL: $MIN_MONO_URL"
 			return
@@ -626,6 +637,9 @@ function check_mono () {
 	elif ! test -e $MONO_VERSION_FILE; then
 		if ! test -z $PROVISION_MONO; then
 			install_mono
+		elif test -n "$OPTIONAL_MONO"; then
+			warn "Mono MDK is not installed. Download URL: $MIN_MONO_URL"
+			return
 		else
 			fail "Could not find Mono's VERSION file, you must install the Mono MDK. Download URL: $MIN_MONO_URL"
 			return
@@ -640,8 +654,10 @@ function check_mono () {
 		if ! test -z $PROVISION_MONO; then
 			install_mono
 			ACTUAL_MONO_VERSION=`cat $MONO_VERSION_FILE`
+		elif test -n "$OPTIONAL_MONO"; then
+			warn "It's recommended to have at least Mono $MIN_MONO_VERSION, found $ACTUAL_MONO_VERSION. Download URL: $MIN_MONO_URL"
+			return
 		else
-			MIN_MONO_URL=$(grep ^MIN_MONO_URL= Make.config | sed 's/.*=//')
 			fail "You must have at least Mono $MIN_MONO_VERSION, found $ACTUAL_MONO_VERSION. Download URL: $MIN_MONO_URL"
 			return
 		fi
@@ -651,6 +667,9 @@ function check_mono () {
 		if ! test -z $PROVISION_MONO; then
 			install_mono
 			ACTUAL_MONO_VERSION=`cat $MONO_VERSION_FILE`
+		elif test -n "$OPTIONAL_MONO"; then
+			warn "It's recommended to have no higher than Mono $MAX_MONO_VERSION, found $ACTUAL_MONO_VERSION. Download URL: $MIN_MONO_URL"
+			return
 		else
 			fail "Your mono version is too new, max version is $MAX_MONO_VERSION, found $ACTUAL_MONO_VERSION."
 			fail "You may edit Make.config and change MAX_MONO_VERSION to your actual version to continue the"

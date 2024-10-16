@@ -109,8 +109,9 @@ include ./generator-diff.mk
 SHARED_RESX = $(TOP)/tools/mtouch/Errors.resx
 SHARED_DESIGNER_CS = $(DOTNET_BUILD_DIR)/common/Errors.Designer.cs
 
-$(SHARED_DESIGNER_CS): $(SHARED_RESX) | $(DOTNET_BUILD_DIR)/common
-	$(Q_GEN) ./generate-errors.csharp > $(SHARED_DESIGNER_CS)
+include $(TOP)/scripts/generate-errors/fragment.mk
+$(SHARED_DESIGNER_CS): $(SHARED_RESX) $(GENERATE_ERRORS) | $(DOTNET_BUILD_DIR)/common
+	$(Q_GEN) $(GENERATE_ERRORS_EXEC) $(SHARED_RESX) $(SHARED_DESIGNER_CS)
 
 DOTNET_TARGETS_DIRS += $(DOTNET_BUILD_DIR)/common
 
@@ -340,6 +341,8 @@ $(MACCATALYST_DOTNET_BUILD_DIR)/AssemblyInfo.cs: $(TOP)/src/AssemblyInfo.cs.in $
 
 ### .NET ###
 
+include $(TOP)/scripts/generate-sourcelink-json/fragment.mk
+
 define BuildDotNetIntermediateAssembly
 $($(2)_DOTNET_BUILD_DIR)/core-$(3).dll: $($(2)_DOTNET_CORE_SOURCES) frameworks.sources $(RSP_DIR)/dotnet/$(3)-defines-dotnet.rsp | $($(2)_DOTNET_BUILD_DIR)
 	$$(Q_DOTNET_GEN) \
@@ -388,8 +391,8 @@ dotnet-gen:: dotnet-gen-$(3)
 $($(2)_DOTNET_BUILD_DIR)/ILLink.LinkAttributes.xml: $(TOP)/src/ILLink.LinkAttributes.xml.in | $($(2)_DOTNET_BUILD_DIR)
 	$$(call Q_PROF_GEN,$(3)) sed < $$< > $$@ 's|@PRODUCT_NAME@|Microsoft.$(1)|g;'
 
-$($(2)_DOTNET_BUILD_DIR)/SourceLink.json: $($(2)_DOTNET_BUILD_DIR)
-	$$(Q) $(TOP)/src/generate-sourcelink-json.csharp "$(PACKAGE_HEAD_REV)" "$(abspath $(TOP)/src)" "$$@"
+$($(2)_DOTNET_BUILD_DIR)/SourceLink.json: $($(2)_DOTNET_BUILD_DIR) $(GENERATE_SOURCELINK_JSON)
+	$$(Q) $(GENERATE_SOURCELINK_JSON_EXEC) "$(PACKAGE_HEAD_REV)" "$(abspath $(TOP)/src)" "$$@"
 
 $($(2)_DOTNET_BUILD_DIR)/embed-files.rsp: $($(2)_DOTNET_BUILD_DIR)/$(3)-generated-sources $($(2)_DOTNET_SOURCES) $(TOP)/src/generate-embed-files.sh
 	$$(Q) $(TOP)/src/generate-embed-files.sh $($(2)_DOTNET_BUILD_DIR)/$(3)-generated-sources "$($(2)_DOTNET_SOURCES)" > $$@.tmp

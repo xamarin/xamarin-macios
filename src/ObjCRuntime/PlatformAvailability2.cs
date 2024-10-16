@@ -16,7 +16,7 @@
 //
 // Copyright 2015 Xamarin Inc. All rights reserved.
 
-#if !NET
+#if !NET || LEGACY_TOOLS
 using System;
 using System.Text;
 

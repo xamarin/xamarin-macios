@@ -34,7 +34,7 @@ if test -z "$FRAGMENT_PATH"; then
 fi
 
 if test -z "$BUILD_EXECUTABLE"; then
-	BUILD_EXECUTABLE=msbuild
+	BUILD_EXECUTABLE="dotnet build"
 fi
 
 if test -z "$BUILD_VERBOSITY"; then

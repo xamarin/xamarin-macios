@@ -9,7 +9,7 @@ using Registrar;
 using Mono.Tuner;
 using Xamarin.Bundler;
 
-#if NET
+#if NET && !LEGACY_TOOLS
 using LinkContext = Xamarin.Bundler.DotNetLinkContext;
 #endif
 
@@ -43,7 +43,7 @@ namespace Xamarin.Tuner {
 		// so we need a second dictionary
 		Dictionary<TypeDefinition, LinkedAwayTypeReference> LinkedAwayTypeMap = new Dictionary<TypeDefinition, LinkedAwayTypeReference> ();
 
-#if NET
+#if NET && !LEGACY_TOOLS
 		public DerivedLinkContext (Xamarin.Linker.LinkerConfiguration configuration, Target target)
 			: base (configuration)
 		{
@@ -103,7 +103,7 @@ namespace Xamarin.Tuner {
 			get; set;
 		}
 
-#if !NET
+#if !NET || LEGACY_TOOLS
 		public DerivedLinkContext (Pipeline pipeline, AssemblyResolver resolver)
 			: base (pipeline, resolver)
 		{

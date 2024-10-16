@@ -1598,7 +1598,7 @@ namespace Registrar {
 			}
 		}
 
-#if !NET
+#if !NET || LEGACY_TOOLS
 		PlatformName AsPlatformName (ApplePlatform platform)
 		{
 			switch (platform) {
@@ -1735,7 +1735,7 @@ namespace Registrar {
 		}
 #endif // !NET
 
-#if NET
+#if NET && !LEGACY_TOOLS
 		bool GetDotNetAvailabilityAttribute (ICustomAttribute ca, ApplePlatform currentPlatform, out Version sdkVersion, out string message)
 		{
 			var caType = ca.AttributeType;
@@ -1790,7 +1790,7 @@ namespace Registrar {
 
 			ApplePlatform [] platforms;
 
-#if !NET
+#if !NET || LEGACY_TOOLS
 			if (currentPlatform == ApplePlatform.MacCatalyst) {
 				// Fall back to any iOS attributes if we can't find something for Mac Catalyst
 				platforms = new ApplePlatform [] {
@@ -1812,7 +1812,7 @@ namespace Registrar {
 			foreach (var platform in platforms) {
 				foreach (var ca in attributes) {
 					var caType = ca.AttributeType;
-#if NET
+#if NET && !LEGACY_TOOLS
 					if (!caType.Is ("System.Runtime.Versioning", "SupportedOSPlatformAttribute"))
 						continue;
 					if (GetDotNetAvailabilityAttribute (ca, platform, out sdkVersion, out message))
@@ -2265,7 +2265,7 @@ namespace Registrar {
 					}
 				}
 				goto default;
-#if !NET
+#if !NET || LEGACY_TOOLS
 			case "Chip":
 				switch (App.Platform) {
 				case ApplePlatform.iOS when App.SdkVersion.Major <= 15:
@@ -2348,7 +2348,7 @@ namespace Registrar {
 					}
 				}
 				goto default;
-#if !NET
+#if !NET || LEGACY_TOOLS
 			case "QTKit":
 				if (App.Platform == ApplePlatform.MacOSX && App.SdkVersion >= MacOSTenTwelveVersion)
 					return; // 10.12 removed the header files for QTKit
@@ -2361,7 +2361,7 @@ namespace Registrar {
 				header.WriteLine ("#import <CoreImage/CoreImage.h>");
 				header.WriteLine ("#import <CoreImage/CIFilterBuiltins.h>");
 				return;
-#if !NET
+#if !NET || LEGACY_TOOLS
 			case "iAd":
 				if (App.SdkVersion.Major >= 13) {
 					// most of the framework has been obliterated from the headers
@@ -2810,7 +2810,7 @@ namespace Registrar {
 			return ns == nsToMatch;
 		}
 
-#if !NET
+#if !NET || LEGACY_TOOLS
 		static bool IsQTKitType (ObjCType type) => IsTypeCore (type, "QTKit");
 #endif
 		static bool IsMapKitType (ObjCType type) => IsTypeCore (type, "MapKit");
@@ -2871,13 +2871,13 @@ namespace Registrar {
 						continue; // Some types are not supported in the simulator.
 					}
 				} else {
-#if !NET
+#if !NET || LEGACY_TOOLS
 					if (IsQTKitType (@class) && App.SdkVersion >= MacOSTenTwelveVersion)
 						continue; // QTKit header was removed in 10.12 SDK
 #endif
 				}
 
-#if !NET
+#if !NET || LEGACY_TOOLS
 				// Xcode 11 removed WatchKit for iOS!
 				if (IsTypeCore (@class, "WatchKit") && App.Platform == Xamarin.Utils.ApplePlatform.iOS) {
 					exceptions.Add (ErrorHelper.CreateWarning (4178, $"The class '{@class.Type.FullName}' will not be registered because the WatchKit framework has been removed from the iOS SDK."));
@@ -2950,7 +2950,7 @@ namespace Registrar {
 
 		public void Rewrite ()
 		{
-#if NET
+#if NET && !LEGACY_TOOLS
 			if (App.Optimizations.RedirectClassHandles == true) {
 				var exceptions = new List<Exception> ();
 				var map_dict = GetTypeMapDictionary (exceptions);
@@ -3513,7 +3513,7 @@ namespace Registrar {
 				sb.AppendLine ("}");
 				return true;
 			case Trampoline.CopyWithZone2:
-#if NET
+#if NET && !LEGACY_TOOLS
 				// Managed Static Registrar handles CopyWithZone2 in GenerateCallToUnmanagedCallersOnlyMethod
 				if (LinkContext.App.Registrar == RegistrarMode.ManagedStatic) {
 					return false;
@@ -4140,7 +4140,7 @@ namespace Registrar {
 				nslog_start.AppendLine (");");
 			}
 
-#if NET
+#if NET && !LEGACY_TOOLS
 			// Generate the native trampoline to call the generated UnmanagedCallersOnly method if we're using the managed static registrar.
 			if (LinkContext.App.Registrar == RegistrarMode.ManagedStatic) {
 				GenerateCallToUnmanagedCallersOnlyMethod (sb, method, isCtor, isVoid, num_arg, descriptiveMethodName, exceptions);
@@ -4378,7 +4378,7 @@ namespace Registrar {
 			}
 		}
 
-#if NET
+#if NET && !LEGACY_TOOLS
 		void GenerateCallToUnmanagedCallersOnlyMethod (AutoIndentStringBuilder sb, ObjCMethod method, bool isCtor, bool isVoid, int num_arg, string descriptiveMethodName, List<Exception> exceptions)
 		{
 			// Generate the native trampoline to call the generated UnmanagedCallersOnly method.
@@ -5319,7 +5319,7 @@ namespace Registrar {
 		{
 			var token = member.MetadataToken;
 
-#if NET
+#if NET && !LEGACY_TOOLS
 			if (App.Registrar == RegistrarMode.ManagedStatic) {
 				if (implied_type == TokenType.TypeDef && member is TypeDefinition td) {
 					if (App.Configuration.AssemblyTrampolineInfos.TryGetValue (td.Module.Assembly, out var infos) && infos.TryGetRegisteredTypeIndex (td, out var id)) {
