@@ -9,7 +9,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		void AssertIfIgnored ([CallerMemberName] string testCase = null)
 		{
 			switch (testCase) {
-#if __MACCATALYST__ || __IOS__
+#if __MACCATALYST__ || __IOS__ || __TVOS__
 			case "NSNumberBindAs_Boolean_Array_Overrides":
 			case "NSNumberBindAs_Byte_Array_Overrides":
 			case "NSNumberBindAs_Double_Array_Overrides":
@@ -27,7 +27,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				// https://github.com/xamarin/xamarin-macios/issues/19781
 #if __MACCATALYST__
 				if (Runtime.IsARM64CallingConvention)
-#elif __IOS__
+#elif __IOS__ || __TVOS__
 				if (Runtime.IsARM64CallingConvention && Runtime.Arch == Arch.SIMULATOR)
 #endif
 					Assert.Ignore ("https://github.com/xamarin/xamarin-macios/issues/19781");
