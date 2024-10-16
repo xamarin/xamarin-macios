@@ -3096,6 +3096,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			PackageSigningKey="$(PackageSigningKey)"
 			PackagingExtraArgs="$(PackagingExtraArgs)"
 			PkgPackagePath="$(PkgPackagePath)"
+			ProductBuildPath="$(ProductBuildPath)"
 			ProductDefinition="$(_CompiledProductDefinition)"
 			ProjectPath="$(MSBuildProjectFullPath)"
 		>
