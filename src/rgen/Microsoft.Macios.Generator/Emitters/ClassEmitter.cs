@@ -10,7 +10,7 @@ class ClassEmitter (ClassBindingContext context, TabbedStringBuilder builder) : 
 
 	public bool TryEmit ([NotNullWhen (false)] out ImmutableArray<Diagnostic>? diagnostics)
 	{
-		
+
 		builder.AppendLine ();
 		diagnostics = null;
 		// add the namespace and the class declaration
