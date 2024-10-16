@@ -1,5 +1,6 @@
 SOURCES = $(TEST_SRC) \
 	$(TOP)/tests/common/Configuration.cs \
+	$(TOP)/tests/common/ConfigurationNUnit.cs \
 	$(TOP)/tests/common/mac/ProjectTestHelpers.cs \
 	$(TOP)/tools/common/Driver.cs \
 	$(TOP)/tools/common/TargetFramework.cs \

@@ -55,6 +55,9 @@
     <Compile Include="..\common\Configuration.cs">
       <Link>Configuration.cs</Link>
     </Compile>
+    <Compile Include="..\common\ConfigurationNUnit.cs">
+      <Link>ConfigurationNUnit.cs</Link>
+    </Compile>
     <Compile Include="..\mtouch\Cache.cs">
       <Link>Cache.cs</Link>
     </Compile>
