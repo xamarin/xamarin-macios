@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Tasks;
@@ -120,7 +121,7 @@ namespace Xamarin.MacDev.Tasks {
 			return ExecuteAsync (Log, fileName, arguments, sdkDevPath, environment, mergeOutput, showErrorIfFailure, workingDirectory);
 		}
 
-		internal protected static async System.Threading.Tasks.Task<Execution> ExecuteAsync (TaskLoggingHelper log, string fileName, IList<string> arguments, string? sdkDevPath = null, Dictionary<string, string?>? environment = null, bool mergeOutput = true, bool showErrorIfFailure = true, string? workingDirectory = null)
+		internal protected static async System.Threading.Tasks.Task<Execution> ExecuteAsync (TaskLoggingHelper log, string fileName, IList<string> arguments, string? sdkDevPath = null, Dictionary<string, string?>? environment = null, bool mergeOutput = true, bool showErrorIfFailure = true, string? workingDirectory = null, CancellationToken? cancellationToken = null)
 		{
 			// Create a new dictionary if we're given one, to make sure we don't change the caller's dictionary.
 			var launchEnvironment = environment is null ? new Dictionary<string, string?> () : new Dictionary<string, string?> (environment);
@@ -128,7 +129,7 @@ namespace Xamarin.MacDev.Tasks {
 				launchEnvironment ["DEVELOPER_DIR"] = sdkDevPath;
 
 			log.LogMessage (MessageImportance.Normal, MSBStrings.M0001, fileName, StringUtils.FormatArguments (arguments));
-			var rv = await Execution.RunAsync (fileName, arguments, environment: launchEnvironment, mergeOutput: mergeOutput, workingDirectory: workingDirectory);
+			var rv = await Execution.RunAsync (fileName, arguments, environment: launchEnvironment, mergeOutput: mergeOutput, workingDirectory: workingDirectory, cancellationToken: cancellationToken);
 			log.LogMessage (rv.ExitCode == 0 ? MessageImportance.Low : MessageImportance.High, MSBStrings.M0002, fileName, rv.ExitCode);
 
 			// Show the output
