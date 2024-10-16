@@ -1760,6 +1760,7 @@ STOREKIT_SOURCES = \
 	StoreKit/SKCloudServiceSetupOptions.cs \
 	StoreKit/SKPayment.cs \
 	StoreKit/SKPaymentTransactionObserver.cs \
+	StoreKit/SwiftAPI.cs \
 
 # SystemConfiguration
 

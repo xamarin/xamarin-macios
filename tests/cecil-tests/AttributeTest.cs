@@ -181,6 +181,9 @@ namespace Cecil.Tests {
 				// Walk every class/struct/enum/property/method/enum value/pinvoke/event
 				foreach (var module in assembly.Modules) {
 					foreach (var type in module.Types) {
+						if (!type.IsPubliclyVisible ())
+							continue;
+
 						switch (type.Namespace) {
 						case "AppKit":
 						case "UIKit":
@@ -289,10 +292,6 @@ namespace Cecil.Tests {
 
 					// These methods have different optional/required semantics between platforms.
 					"PassKit.PKPaymentAuthorizationControllerDelegate_Extensions.GetPresentationWindow (PassKit.IPKPaymentAuthorizationControllerDelegate, PassKit.PKPaymentAuthorizationController)",
-					"Metal.MTLTextureWrapper.FirstMipmapInTail",
-					"Metal.MTLTextureWrapper.IsSparse",
-					"Metal.MTLTextureWrapper.TailSizeInBytes",
-
 
 					// HKSeriesBuilder doesn't implement the ISNCopying protocol on all platforms (and shouldn't on any according to the headers, so removed for XAMCORE_5_0).
 					"HealthKit.HKSeriesBuilder.EncodeTo (Foundation.NSCoder)",
@@ -325,6 +324,10 @@ namespace Cecil.Tests {
 					"Foundation.NSAttributedString.ReadableTypeIdentifiers",
 					"Foundation.NSAttributedString.WritableTypeIdentifiers",
 					"Foundation.NSAttributedString.WritableTypeIdentifiersForItemProvider",
+
+					// Same method, but different arguments due to platform differences. We should treat this as the same method, so ignore this failure.
+					"StoreKit.AppStore.RequestReview (XKit.XWindowScene)", // iOS, MacCatalyst
+					"StoreKit.AppStore.RequestReview (XKit.XViewController)", // macOS
 				};
 			}
 		}
