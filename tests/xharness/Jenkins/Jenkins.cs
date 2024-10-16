@@ -106,11 +106,6 @@ namespace Xharness.Jenkins {
 				return false;
 			}
 
-			if (!project.IsDotNetProject && !TestSelection.IsEnabled (PlatformLabel.LegacyXamarin)) {
-				MainLog.WriteLine ($"Ignoring {project.Name} with label {project.Label} because it's a legacy Xamarin project and legacy Xamarin projects are not included.");
-				return false;
-			}
-
 			var rv = TestSelection.IsEnabled (project.Label);
 			MainLog.WriteLine ($"Including {project.Name} with label {project.Label.ToString ()}: {rv}");
 			return rv;
@@ -145,8 +140,7 @@ namespace Xharness.Jenkins {
 			// all factories are enumerators \o/ 
 			var testFactories = new IEnumerable<AppleTestTask> [] {
 				new MacTestTasksEnumerable (this, processManager, crashReportSnapshotFactory, testVariationsFactory),
-				new NUnitTestTasksEnumerable (this, processManager),
-				new MakeTestTaskEnumerable (this, processManager)
+				new NUnitTestTasksEnumerable (this, processManager)
 			};
 
 			// add all tests defined by the factory

@@ -27,14 +27,6 @@ namespace Xharness.Jenkins.TestTasks {
 
 		public override bool SupportsParallelExecution {
 			get {
-				if (TestName.Contains ("xammac")) {
-					// We run the xammac tests in both Debug and Release configurations.
-					// These tests are not written to support parallel execution
-					// (there are hard coded paths used for instance), so disable
-					// parallel execution for these tests.
-					return false;
-				}
-
 				return base.SupportsParallelExecution;
 			}
 		}
@@ -52,17 +44,6 @@ namespace Xharness.Jenkins.TestTasks {
 			if (string.Equals ("mac", name, StringComparison.OrdinalIgnoreCase))
 				name = System.IO.Path.GetFileName (System.IO.Path.GetDirectoryName (projectDir));
 			var suffix = string.Empty;
-			switch (Platform) {
-			case TestPlatform.Mac_Modern:
-				suffix = "-modern";
-				break;
-			case TestPlatform.Mac_Full:
-				suffix = "-full";
-				break;
-			case TestPlatform.Mac_System:
-				suffix = "-system";
-				break;
-			}
 			if (ProjectFile.EndsWith (".sln", StringComparison.Ordinal)) {
 				Path = System.IO.Path.Combine (System.IO.Path.GetDirectoryName (ProjectFile), "bin", BuildTask.ProjectPlatform, BuildTask.ProjectConfiguration + suffix, name + ".app", "Contents", "MacOS", name);
 			} else {

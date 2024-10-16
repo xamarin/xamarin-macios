@@ -189,11 +189,9 @@ logdev:
 build-test-libraries:
 	@$(MAKE) -C $(TOP)/tests/test-libraries
 
-.stamp-xharness-configure: $(XHARNESS_EXECUTABLE)
-	$(Q_GEN) $(DOTNET) $< $(XHARNESS_VERBOSITY) --configure --autoconf --rootdir $(CURDIR)
-	$(Q) touch $@
+xharness: $(XHARNESS_EXECUTABLE)
 
-all-local:: .stamp-xharness-configure
+all-local:: xharness
 
 $(TOP)/tools/common/SdkVersions.cs: $(TOP)/tools/common/SdkVersions.in.cs
 	@$(MAKE) -C $(TOP)/tools/mtouch ../common/SdkVersions.cs
@@ -348,13 +346,5 @@ package-test-libraries.zip:
 	$(Q) $(MAKE) all -C test-libraries/custom-type-assembly build-assembly
 	$(Q_GEN) rm -f "$@" "$@.tmp"
 	$(Q_GEN) cd $(TOP) && zip -9r --symlinks $(abspath $@).tmp ./tests/test-libraries
-	$(Q_GEN) cd $(TOP) && find tests -regex '.*/generated-projects/.*[c|f]sproj' -exec zip -9r --symlinks $(abspath $@).tmp {} +
-	$(Q_GEN) cd $(TOP) && find tests -regex '.*/generated-projects/.*sln' -exec zip -9r --symlinks $(abspath $@).tmp {} +
 	$(Q_GEN) cd $(TOP) && find tests -regex 'tests/test-libraries/custom-type-assembly/.libs/.*dll' -exec zip -9r --symlinks $(abspath $@).tmp {} +
-	$(Q_GEN) cd $(TOP) && git ls-files -o -- 'tests/*/Info-*plist' | zip -9r --symlinks $(abspath $@).tmp -@
-ifdef INCLUDE_XAMARIN_LEGACY
-ifdef INCLUDE_IOS
-	$(Q_GEN) cd $(TOP) && zip -9r --symlinks $(abspath $@).tmp ./tools/mtouch/simlauncher*-sgen*
-endif
-endif
 	$(Q) mv "$@".tmp "$@"

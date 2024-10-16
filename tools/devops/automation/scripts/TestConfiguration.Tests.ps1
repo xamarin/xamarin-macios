@@ -153,6 +153,7 @@ Describe 'Get-TestConfiguration' {
     "TEST_PREFIX": "test-prefix_monotouchtest_tvos",
     "TEST_PLATFORM": "tvOS",
     "TEST_FILTER": "Category != MultiPlatform"
+  }
 }
 "@
 
@@ -195,6 +196,7 @@ Describe 'Get-TestConfiguration' {
     "TEST_PREFIX": "test-prefix_monotouchtest_ios",
     "TEST_PLATFORM": "iOS",
     "TEST_FILTER": "Category != MultiPlatform"
+  }
 }
 "@
 
@@ -219,6 +221,7 @@ Describe 'Get-TestConfiguration' {
     "STATUS_CONTEXT": "status-context - cecil",
     "TEST_PREFIX": "test-prefix_cecil",
     "TEST_PLATFORM": ""
+  }
 }
 "@
 }
@@ -306,6 +309,7 @@ Describe 'Get-TestConfiguration' {
     "TEST_PREFIX": "test-prefix_monotouchtest_maccatalyst",
     "TEST_PLATFORM": "MacCatalyst",
     "TEST_FILTER": "Category != MultiPlatform"
+  }
 }
 "@
   }
