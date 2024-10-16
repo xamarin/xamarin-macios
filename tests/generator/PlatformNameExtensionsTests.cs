@@ -17,7 +17,10 @@ namespace GeneratorTests {
 		[TestCase (PlatformName.MacCatalyst, "UIApplication")]
 		[TestCase (PlatformName.MacOSX, "NSApplication")]
 		public void GetApplicationClassNameTest (PlatformName platformName, string expected)
-			=> Assert.AreEqual (expected, platformName.GetApplicationClassName ());
+		{
+			Assert.True (platformName.TryGetApplicationClassName (out var applicationClassName));
+			Assert.AreEqual (expected, applicationClassName);
+		}
 
 		[TestCase (PlatformName.MacOSX, 2)]
 		[TestCase (PlatformName.iOS, 2)]
