@@ -2,58 +2,52 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 using Microsoft.Build.Utilities;
 using Microsoft.Build.Framework;
 
 using Xamarin.Messaging.Build.Client;
 
-// Disable until we get around to enable + fix any issues.
-#nullable disable
+#nullable enable
 
 namespace Xamarin.MacDev.Tasks {
-	public class OptimizePropertyList : XamarinToolTask, ITaskCallback {
+	public class OptimizePropertyList : XamarinTask, ICancelableTask {
+		CancellationTokenSource? cancellationTokenSource;
 		#region Inputs
 
 		[Required]
-		public ITaskItem Input { get; set; }
+		public ITaskItem? Input { get; set; }
 
 		[Required]
 		[Output]
-		public ITaskItem Output { get; set; }
+		public ITaskItem? Output { get; set; }
+
+		public string PlutilPath { get; set; } = string.Empty;
 
 		#endregion
 
-		protected override string ToolName {
-			get { return "plutil"; }
+		static string GetExecutable (List<string> arguments, string toolName, string toolPathOverride)
+		{
+			if (string.IsNullOrEmpty (toolPathOverride)) {
+				arguments.Insert (0, toolName);
+				return "xcrun";
+			}
+			return toolPathOverride;
 		}
 
-		protected override string GenerateFullPathToTool ()
+		List<string> GenerateCommandLineCommands ()
 		{
-			if (!string.IsNullOrEmpty (ToolPath))
-				return Path.Combine (ToolPath, ToolExe);
+			var args = new List<string> ();
 
-			const string path = "/usr/bin/plutil";
+			args.Add ("-convert");
+			args.Add ("binary1");
+			args.Add ("-o");
+			args.Add (Output!.ItemSpec);
+			args.Add (Input!.ItemSpec);
 
-			return File.Exists (path) ? path : ToolExe;
-		}
-
-		protected override string GenerateCommandLineCommands ()
-		{
-			var args = new CommandLineBuilder ();
-
-			args.AppendSwitch ("-convert");
-			args.AppendSwitch ("binary1");
-			args.AppendSwitch ("-o");
-			args.AppendFileNameIfNotNull (Output.ItemSpec);
-			args.AppendFileNameIfNotNull (Input.ItemSpec);
-
-			return args.ToString ();
-		}
-
-		protected override void LogEventsFromTextOutput (string singleLine, MessageImportance messageImportance)
-		{
-			Log.LogMessage (messageImportance, "{0}", singleLine);
+			return args;
 		}
 
 		public override bool Execute ()
@@ -61,9 +55,12 @@ namespace Xamarin.MacDev.Tasks {
 			if (ShouldExecuteRemotely ())
 				return new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
 
-			Directory.CreateDirectory (Path.GetDirectoryName (Output.ItemSpec));
-
-			return base.Execute ();
+			Directory.CreateDirectory (Path.GetDirectoryName (Output!.ItemSpec));
+			var args = GenerateCommandLineCommands ();
+			var executable = GetExecutable (args, "plutil", PlutilPath);
+			cancellationTokenSource = new CancellationTokenSource ();
+			ExecuteAsync (Log, executable, args, cancellationToken: cancellationTokenSource.Token).Wait ();
+			return !Log.HasLoggedErrors;
 		}
 
 		public bool ShouldCopyToBuildServer (Microsoft.Build.Framework.ITaskItem item) => false;
@@ -72,12 +69,13 @@ namespace Xamarin.MacDev.Tasks {
 
 		public IEnumerable<ITaskItem> GetAdditionalItemsToBeCopied () => Enumerable.Empty<ITaskItem> ();
 
-		public override void Cancel ()
+		public void Cancel ()
 		{
-			base.Cancel ();
-
-			if (!string.IsNullOrEmpty (SessionId))
+			if (!string.IsNullOrEmpty (SessionId)) {
 				BuildConnection.CancelAsync (BuildEngine4).Wait ();
+			} else {
+				cancellationTokenSource?.Cancel ();
+			}
 		}
 	}
 }
