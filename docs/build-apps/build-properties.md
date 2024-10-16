@@ -11,6 +11,12 @@ MSBuild properties control the behavior of the
 They're specified within the project file, for example **MyApp.csproj**, within
 an MSBuild PropertyGroup.
 
+## DittoPath
+
+The full path to the `ditto` executable.
+
+The default behavior is to use `/usr/bin/ditto`.
+
 ## MaciOSPrepareForBuildDependsOn
 
 A semi-colon delimited property that can be used to extend the build process.
