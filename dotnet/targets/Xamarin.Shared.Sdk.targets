@@ -167,7 +167,18 @@
 
 		<!-- Directory to store project specific stamp files used by certain targets for incremental builds -->
 		<_MaciOSStampDirectory>$(IntermediateOutputPath)stamp\</_MaciOSStampDirectory>
+
+		<!-- Our own runtime features -->
+
+		<!-- Set default DisposeTaggedPointers value, we stop disposing them by default in .NET 10 -->
+		<!-- The default logic here must match the default logic in NSObject.DisposeTaggedPointers -->
+		<DisposeTaggedPointers Condition="'$(DisposeTaggedPointers)' == '' And $([MSBuild]::VersionGreaterThanOrEquals($(TargetFrameworkVersion), 10.0))">false</DisposeTaggedPointers>
+		<DisposeTaggedPointers Condition="'$(DisposeTaggedPointers)' == ''">true</DisposeTaggedPointers>
 	</PropertyGroup>
+
+	<ItemGroup>
+		<RuntimeHostConfigurationOption Include="Foundation.NSObject.DisposeTaggedPointers" Condition="'$(DisposeTaggedPointers)' != ''" Value="$(DisposeTaggedPointers)" Trim="true" />
+	</ItemGroup>
 
 	<PropertyGroup>
 		<TargetPlatformSupported Condition=" '$(TargetPlatformIdentifier)' == '$(_PlatformName)' ">true</TargetPlatformSupported>
@@ -573,9 +584,6 @@
 			<!-- Set default ValidateObjectPointers value -->
 			<_ValidateObjectPointers Condition="'$(_ValidateObjectPointers)' == ''">false</_ValidateObjectPointers>
 
-			<!-- Set default DisposeTaggedPointers value -->
-			<_DisposeTaggedPointers Condition="'$(_DisposeTaggedPointers)' == ''">true</_DisposeTaggedPointers>
-
 			<_CustomLinkerOptions>
 				AreAnyAssembliesTrimmed=$(_AreAnyAssembliesTrimmed)
 				AssemblyName=$(AssemblyName).dll
@@ -690,7 +698,6 @@
 			<RuntimeHostConfigurationOption Include="ObjCRuntime.Runtime.IsManagedStaticRegistrar" Value="$(_IsManagedStaticRegistrarFeature)" Trim="true" />
 			<RuntimeHostConfigurationOption Include="ObjCRuntime.Runtime.IsNativeAOT" Value="$(_IsNativeAOTFeature)" Trim="true" />
 			<RuntimeHostConfigurationOption Include="ObjCRuntime.Class.ValidateObjectPointers" Value="$(_ValidateObjectPointers)" Trim="true" />
-			<RuntimeHostConfigurationOption Include="ObjCRuntime.NSObject.DisposeTaggedPointers" Value="$(_DisposeTaggedPointers)" Trim="true" />
 
 			<!-- Mark all assemblies to be copied if we're not linking any assemblies -->
 			<ResolvedFileToPublish

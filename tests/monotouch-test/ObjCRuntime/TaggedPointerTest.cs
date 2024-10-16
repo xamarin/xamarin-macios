@@ -1,4 +1,6 @@
 using System;
+using System.Linq;
+using System.Runtime.CompilerServices;
 
 using Foundation;
 
@@ -8,47 +10,34 @@ namespace MonoTouchFixtures.ObjCRuntime {
 
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class TaggedPointerTest {
+	public partial class TaggedPointerTest {
 
 		[Test]
 		public void TaggedPointersArentDisposed ()
 		{
-			var notificationData =
-				"""
-				{
-					action = "action";
-					aps =
-					{
-						category = "ee";
-						"content-available" = dd;
-						"mutable-content" = cc;
-						sound = bb;
-						"thread-id" = "aa";
-					};
-					"em-account" = "a";
-					"em-account-id" = "b";
-					"em-body" = "c";
-					"em-date" = "d";
-					"em-from" = "e";
-					"em-from-address" = "f";
-					"em-notification" = g;
-					"em-notification-id" = h;
-					"em-subject" = "i";
-					"gcm.message_id" = j;
-					"google.c.a.e" = k;
-					"google.c.fid" = l;
-					"google.c.sender.id" = m;
-				}
-				""";
+#if NET10_0_OR_GREATER
+			var taggedPointersDisposedByDefault = false;
+#else
+			var taggedPointersDisposedByDefault = true;
+#endif
+			Assert.AreEqual (taggedPointersDisposedByDefault, ThrowsObjectDisposedExceptions (), "Default behavior");
+		}
 
-			var data = NSData.FromString (notificationData);
-			var fmt = NSPropertyListFormat.OpenStep;
-			var userInfo = (NSMutableDictionary) NSPropertyListSerialization.PropertyListWithData (data, NSPropertyListReadOptions.Immutable, ref fmt, out var error);
-			var apsKey = new NSString ("aps");
-			// Iteration here should not throw ObjectDisposedExceptions
-			foreach (var kv in userInfo) {
-				apsKey.Dispose ();
+		[Test]
+		public void MemoryUsage ()
+		{
+			var taggedStringValue = "a";
+			var objA = new NSString (taggedStringValue);
+			var objB = new NSString (taggedStringValue);
+			Assert.AreEqual (objA.Handle, objB.Handle, "Pointer equality for tagged pointers");
+
+			var cwt = new ConditionalWeakTable<string, NSObject> ();
+			var count = 1000;
+			for (var i = 0; i < count; i++) {
+				cwt.Add (i.ToString (), new NSString (taggedStringValue));
 			}
+			GC.Collect ();
+			Assert.That (cwt.Count (), Is.LessThan (count), "At least some objects should have gotten garbage collected.");
 		}
 	}
 }
