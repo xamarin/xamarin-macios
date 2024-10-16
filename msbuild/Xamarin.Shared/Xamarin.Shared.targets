@@ -2962,6 +2962,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
 			Input="$(_AppContainerDir)"
+			MdimportPath="$(MdimportPath)"
 		/>
 	</Target>
 
