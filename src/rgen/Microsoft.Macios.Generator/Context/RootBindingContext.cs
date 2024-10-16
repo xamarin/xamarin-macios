@@ -91,7 +91,7 @@ class RootBindingContext {
 			libraryName = typeNamespace;
 		}
 
-		if (!_libraries.ContainsKey (libraryName))
+		if (libraryName is not null && !_libraries.ContainsKey (libraryName))
 			_libraries.Add (libraryName, libraryPath);
 
 		return true;
