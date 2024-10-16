@@ -114,7 +114,6 @@ MACCATALYST_TARGET_PLATFORM_VERSION_LIBRARY=18.0
 # action). Thus we follow .NET's default platform version scheme for library projects:
 # it won't change in minor .NET releases.
 
-
 #
 # Here we list all the releases we support for each platform.
 #

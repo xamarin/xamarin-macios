@@ -90,7 +90,7 @@ namespace Xamarin.Tests {
 			expectedArguments.Append (appPath.Substring (Path.GetDirectoryName (project_path)!.Length + 1)).Append ('/');
 			if (isSim) {
 				expectedArguments.Append (" --device \"");
-				expectedArguments.Append (device.Replace ("%TPV%", platform.GetTargetPlatformVersion ().Replace ('.', '-')));
+				expectedArguments.Append (device.Replace ("%TPV%", platform.GetDefaultTargetPlatformVersionExecutable ().Replace ('.', '-')));
 				expectedArguments.Append ('"');
 			}
 			expectedArguments.Append ($" --wait-for-exit:true");
