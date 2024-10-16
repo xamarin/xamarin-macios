@@ -5,7 +5,6 @@ TestConfiguration unit tests.
 $ScriptDir = Split-Path -parent $MyInvocation.MyCommand.Path
 Import-Module $ScriptDir/TestConfiguration.psm1 -Force
 
-$Env:CONFIGURE_PLATFORMS_INCLUDE_WATCH = "1"
 $Env:CONFIGURE_PLATFORMS_INCLUDE_XAMARIN_LEGACY = "1"
 
 Describe 'Get-TestConfiguration' {
