@@ -26,10 +26,9 @@ namespace Xamarin.Linker {
 			case Bundler.RegistrarMode.Dynamic:
 				mark_protocol_interface_type = true;
 				break;
-			case Bundler.RegistrarMode.Static:
-				mark_protocol_wrapper_type = LinkContext.App.Optimizations.RegisterProtocols == true;
-				break;
 			}
+
+			mark_protocol_wrapper_type = LinkContext.App.Optimizations.RegisterProtocols == true;
 
 			if (mark_protocol_wrapper_type || mark_protocol_interface_type)
 				markContext.RegisterMarkTypeAction (ProcessType);
