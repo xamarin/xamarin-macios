@@ -6,7 +6,7 @@ using Microsoft.Macios.Generator.Context;
 
 namespace Microsoft.Macios.Generator.Emitters;
 
-class ClassEmitter (ClassBindingContext context, TabbedStringBuilder builder) : ICodeEmitter {
+class ClassEmitter (SymbolBindingContext context, TabbedStringBuilder builder) : ICodeEmitter {
 	public string SymbolName => context.SymbolName;
 
 	public IEnumerable<string> UsingStatements => [];

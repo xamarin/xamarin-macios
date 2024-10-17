@@ -9,11 +9,11 @@ namespace Microsoft.Macios.Generator.Context;
 /// </summary>
 /// <typeparam name="T">The base type declaration whose context we have</typeparam>
 interface ISymbolBindingContext<out T> where T : BaseTypeDeclarationSyntax {
-	T DeclarationSyntax { get; }
+	BaseTypeDeclarationSyntax DeclarationSyntax { get; }
 	string Namespace { get; }
 	string SymbolName { get; }
-	RootBindingContext RootBindingContext { get; init; }
-	SemanticModel SemanticModel { get; init; }
-	INamedTypeSymbol Symbol { get; init; }
+	RootBindingContext RootBindingContext { get; }
+	SemanticModel SemanticModel { get; }
+	INamedTypeSymbol Symbol { get; }
 	bool IsStatic { get; }
 }
