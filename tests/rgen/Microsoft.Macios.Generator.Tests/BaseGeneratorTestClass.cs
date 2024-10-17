@@ -16,22 +16,31 @@ namespace Microsoft.Macios.Generator.Tests;
 /// </summary>
 public class BaseGeneratorTestClass {
 	protected BindingSourceGeneratorGenerator GeneratorGenerator;
-	protected CSharpGeneratorDriver _driver;
+	protected CSharpGeneratorDriver Driver;
+
+	// list of the defines for each platform, this is passed to the parser to ensure that
+	// we are testing the platforms as if they were being compiled.
+	readonly Dictionary<ApplePlatform, string[]> platformDefines = new() {
+		{ ApplePlatform.iOS, new [] { "__IOS__" } },
+		{ ApplePlatform.TVOS, new [] { "__TVOS__" } },
+		{ ApplePlatform.MacOSX, new [] { "__MACOS__" } },
+		{ ApplePlatform.MacCatalyst, new [] { "__MACCATALYST__" } },
+	};
 
 	public BaseGeneratorTestClass ()
 	{
 		GeneratorGenerator = new BindingSourceGeneratorGenerator ();
-		_driver = CSharpGeneratorDriver.Create (GeneratorGenerator);
+		Driver = CSharpGeneratorDriver.Create (GeneratorGenerator);
 	}
 
 	protected Compilation RunGeneratorsAndUpdateCompilation (Compilation compilation, out ImmutableArray<Diagnostic> diagnostics)
 	{
-		_driver.RunGeneratorsAndUpdateCompilation (compilation, out var updatedCompilation, out diagnostics);
+		Driver.RunGeneratorsAndUpdateCompilation (compilation, out var updatedCompilation, out diagnostics);
 		return updatedCompilation;
 	}
 
 	protected GeneratorDriverRunResult RunGenerators (Compilation compilation)
-		=> _driver.RunGenerators (compilation).GetRunResult ();
+		=> Driver.RunGenerators (compilation).GetRunResult ();
 
 	protected Compilation CreateCompilation (string name, ApplePlatform platform, params string [] sources)
 	{
@@ -46,8 +55,13 @@ public class BaseGeneratorTestClass {
 		} else {
 			throw new InvalidOperationException ($"Could not find platform dll for {platform}");
 		}
-		var trees = sources.Select (s => CSharpSyntaxTree.ParseText (s));
-		var options = new CSharpCompilationOptions (OutputKind.NetModule);
+
+		var parseOptions = new CSharpParseOptions (LanguageVersion.Latest, DocumentationMode.None, preprocessorSymbols: platformDefines[platform]);;
+		var trees = sources.Select (s => CSharpSyntaxTree.ParseText (s, parseOptions));
+
+		var options = new CSharpCompilationOptions (OutputKind.NetModule)
+			.WithAllowUnsafe (true);
+
 		return CSharpCompilation.Create (name, trees, references, options);
 	}
 

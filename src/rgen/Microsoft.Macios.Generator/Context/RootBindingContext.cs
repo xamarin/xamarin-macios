@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using Microsoft.CodeAnalysis;
+using Microsoft.Macios.Generator.Extensions;
 
 namespace Microsoft.Macios.Generator.Context;
 
@@ -22,26 +23,58 @@ class RootBindingContext {
 	public RootBindingContext (Compilation compilation)
 	{
 		Compilation = compilation;
-		CurrentPlatform = PlatformName.None;
-		// use the reference assembly to determine what platform we are binding
-		foreach (var referencedAssemblyName in compilation.ReferencedAssemblyNames) {
-			switch (referencedAssemblyName.Name) {
-			case "Microsoft.iOS":
-				CurrentPlatform = PlatformName.iOS;
-				break;
-			case "Microsoft.MacCatalyst":
-				CurrentPlatform = PlatformName.MacCatalyst;
-				break;
-			case "Microsoft.macOS":
-				CurrentPlatform = PlatformName.MacOSX;
-				break;
-			case "Microsoft.tvOS":
-				CurrentPlatform = PlatformName.TvOS;
-				break;
-			default:
-				CurrentPlatform = PlatformName.None;
-				break;
+		CurrentPlatform = compilation.GetCurrentPlatform ();
+	}
+
+	// TODO: clean code coming from the old generator
+	public bool TryComputeLibraryName (string? attributeLibraryName, string typeNamespace,
+		[NotNullWhen (true)] out string? libraryName,
+		out string? libraryPath)
+	{
+		libraryPath = null;
+
+		if (!string.IsNullOrEmpty (attributeLibraryName)) {
+			// Remapped
+			libraryName = attributeLibraryName;
+			if (libraryName [0] == '+') {
+				switch (libraryName) {
+				case "+CoreImage":
+					CurrentPlatform.TryGetCoreImageMap (out libraryName);
+					break;
+				case "+CoreServices":
+					CurrentPlatform.TryGetCoreServicesMap (out libraryName);
+					break;
+				case "+PDFKit":
+					libraryName = "PdfKit";
+					CurrentPlatform.TryGetPDFKitMap (out libraryPath);
+					break;
+				}
+			} else {
+				// we get something in LibraryName from FieldAttribute so we assume
+				// it is a path to a library, so we save the path and change library name
+				// to a valid identifier if needed
+				libraryPath = libraryName;
+				// without extension makes more sense, but we can't change it since it breaks compat
+				if (BindThirdPartyLibrary) {
+					libraryName = Path.GetFileName (libraryName);
+				} else {
+					libraryName = Path.GetFileNameWithoutExtension (libraryName);
+				}
+
+				if (libraryName.Contains ('.'))
+					libraryName = libraryName.Replace (".", string.Empty);
 			}
+		} else if (BindThirdPartyLibrary) {
+			// User should provide a LibraryName
+			libraryName = null;
+			return false;
+		} else {
+			libraryName = typeNamespace;
 		}
+
+		if (libraryName is not null && !_libraries.ContainsKey (libraryName))
+			_libraries.Add (libraryName, libraryPath);
+
+		return true;
 	}
 }

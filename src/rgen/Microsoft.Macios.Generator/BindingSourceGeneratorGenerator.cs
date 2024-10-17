@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
@@ -92,7 +93,9 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 	/// </summary>
 	/// <param name="tree">Root syntax tree of the base type declaration.</param>
 	/// <param name="sb">String builder that will be used for the generated code.</param>
-	static void CollectUsingStatements (SyntaxTree tree, TabbedStringBuilder sb)
+	/// <param name="context">The context of the code being generated. Used to keep track of the current added statemnts</param>
+	static void CollectUsingStatements<T> (SyntaxTree tree, TabbedStringBuilder sb, ICodeEmitter emitter)
+		where T : BaseTypeDeclarationSyntax
 	{
 		// collect all using from the syntax tree, add them to a hash to make sure that we don't have duplicates
 		// and add those usings that we do know we need for bindings.
@@ -103,7 +106,14 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 		var usingDirectivesToKeep = new HashSet<string> (usingDirectives) {
 			// add the using statements that we know we need and print them to the sb
 		};
-		foreach (var ns in usingDirectivesToKeep) {
+
+		// add those using statements needed by the emitter
+		foreach (var ns in emitter.UsingStatements) {
+			usingDirectivesToKeep.Add (ns);
+		}
+
+		// add them sorted so that we have testeable generated code
+		foreach (var ns in usingDirectivesToKeep.OrderBy (s => s)) {
 			if (string.IsNullOrEmpty (ns))
 				continue;
 			sb.AppendLine ($"using {ns};");
@@ -138,17 +148,19 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 			sb.AppendLine ("#nullable enable");
 			sb.AppendLine ();
 
-			CollectUsingStatements (baseTypeDeclarationSyntax.SyntaxTree, sb);
-
 
 			// delegate semantic model and syntax tree analysis to the emitter who will generate the code and knows
 			// best
 			if (ContextFactory.TryCreate (rootContext, semanticModel, namedTypeSymbol, baseTypeDeclarationSyntax, out var symbolBindingContext)
 				&& EmitterFactory.TryCreate (symbolBindingContext, sb, out var emitter)) {
-				if (emitter.TryEmit (out var diagnostics)) {
-					// only add file when we do generate code
-					var code = sb.ToString ();
-					context.AddSource ($"{emitter.SymbolName}.g.cs", SourceText.From (code, Encoding.UTF8));
+
+				CollectUsingStatements<T> (baseTypeDeclarationSyntax.SyntaxTree, sb, emitter);
+
+				if (emitter.TryEmit(out var diagnostics)) {
+					 // only add file when we do generate code
+					 var code = sb.ToString ();
+					 context.AddSource ($"{symbolBindingContext.Namespace}/{emitter.SymbolName}.g.cs",
+						 SourceText.From (code, Encoding.UTF8));
 				} else {
 					// add to the diagnostics and continue to the next possible candidate
 					foreach (Diagnostic diagnostic in diagnostics) {
