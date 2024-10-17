@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace Microsoft.Macios.Generator;
@@ -10,7 +11,7 @@ namespace Microsoft.Macios.Generator;
 /// way we do not need to keep track of the current indentation level.
 /// <example>
 /// var classBlock = new TabbedStringBuilder (sb);
-/// classBlock.AppendFormatLine ("public static NSString? GetConstant (this {0} self)", enumSymbol.Name);
+/// classBlock.AppendLine ("public static NSString? GetConstant (this {enumSymbol.Name} self)");
 /// // open a new {} block, no need to keep track of the indentation, the new block has it
 /// using (var getConstantBlock = classBlock.CreateBlock (isBlock: true)) {
 ///    // write the contents of the method here.
@@ -117,13 +118,18 @@ class TabbedStringBuilder : IDisposable {
 		return this;
 	}
 
-	public TabbedStringBuilder AppendFormatLine (string format, params object [] args)
+	public TabbedStringBuilder Append (ref DefaultInterpolatedStringHandler handler)
 	{
-		WriteTabs().AppendFormat (format, args);
-		sb.AppendLine ();
+		WriteTabs ().Append (handler.ToStringAndClear ());
 		return this;
 	}
-
+	
+	public TabbedStringBuilder AppendLine (ref DefaultInterpolatedStringHandler handler)
+	{
+		WriteTabs ().Append (handler.ToStringAndClear ()).AppendLine();
+		return this;
+	}
+	
 	/// <summary>
 	/// Append a new raw literal by prepending the correct indentation.
 	/// </summary>

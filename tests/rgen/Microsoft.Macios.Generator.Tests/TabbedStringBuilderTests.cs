@@ -69,20 +69,24 @@ public class TabbedStringBuilderTests {
 	}
 
 	[Theory]
-	[InlineData ("// this is a string {0}", "example", 0, "")]
-	[InlineData ("var t = {0};", 1, 1, "\t")]
-	[InlineData ("Console.WriteLine (\"{0}\")", "Hello", 5, "\t\t\t\t\t")]
-	public void AppendFormatLineTest (string format, object formatParam, uint tabCount, string expectedTabs)
+	[InlineData (0, "")]
+	[InlineData (1, "\t")]
+	[InlineData (5, "\t\t\t\t\t")]
+	public void AppendInterpolatedLineTest (uint tabCount, string expectedTabs)
 	{
-		var line = string.Format (format, formatParam);
-		var expected = $"{expectedTabs}{{\n{expectedTabs}\t{line}\n{expectedTabs}}}\n";
 		string result;
+		var val1 = "Hello";
+		var val2 = "World";
+		var val3 = '!';
+		var line = "Hello World!";
+		var expected = $"{expectedTabs}{{\n{expectedTabs}\t{line}\n{expectedTabs}}}\n";
 		using (var block = new TabbedStringBuilder (sb, tabCount, true)) {
-			block.AppendFormatLine (format, formatParam);
+			block.AppendLine ($"{val1} {val2}{val3}");
 			result = block.ToString ();
 		}
 		Assert.Equal (expected, result);
 	}
+	
 
 	[Theory]
 	[InlineData (0, "")]
@@ -138,7 +142,7 @@ Because we are using a raw string  we expected:
 		var expected = $"{expectedTabs}[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]\n";
 		string result;
 		using (var block = new TabbedStringBuilder (sb, tabCount)) {
-			block.AppendGeneratedCodeAttribute (true);
+			block.AppendGeneratedCodeAttribute ();
 			result = block.ToString ();
 		}
 		Assert.Equal (expected, result);
