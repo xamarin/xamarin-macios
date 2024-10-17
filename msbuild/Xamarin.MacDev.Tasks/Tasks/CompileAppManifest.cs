@@ -393,15 +393,17 @@ namespace Xamarin.MacDev.Tasks {
 				dict [key] = value;
 		}
 
-		public static void MergePartialPlistDictionary (PDictionary plist, PDictionary partial)
+		public static void MergePartialPlistDictionary (PDictionary plist, PDictionary partial, bool overwrite)
 		{
 			foreach (var property in partial) {
 				var key = property.Key!;
 				if (plist.ContainsKey (key)) {
+					if (!overwrite)
+						continue;
 					var value = plist [key];
 
 					if (value is PDictionary && property.Value is PDictionary) {
-						MergePartialPlistDictionary ((PDictionary) value, (PDictionary) property.Value);
+						MergePartialPlistDictionary ((PDictionary) value, (PDictionary) property.Value, overwrite);
 					} else {
 						plist [key] = property.Value.Clone ();
 					}
@@ -418,6 +420,7 @@ namespace Xamarin.MacDev.Tasks {
 
 			foreach (var template in partialLists) {
 				PDictionary partial;
+				var overwrite = !string.Equals (template.GetMetadata ("Overwrite"), "false", StringComparison.OrdinalIgnoreCase);
 
 				try {
 					partial = PDictionary.FromFile (template.ItemSpec)!;
@@ -426,7 +429,7 @@ namespace Xamarin.MacDev.Tasks {
 					continue;
 				}
 
-				MergePartialPlistDictionary (plist, partial);
+				MergePartialPlistDictionary (plist, partial, overwrite);
 			}
 		}
 

@@ -13,12 +13,17 @@ using Xamarin.Utils;
 
 namespace Xamarin.MacDev.Tasks {
 	public class ACTool : XcodeCompilerToolTask, ICancelableTask {
-		ITaskItem? partialAppManifest;
 		string? outputSpecs;
+		string? partialAppManifestPath;
 
 		#region Inputs
 
 		public string AccentColor { get; set; } = string.Empty;
+
+		public ITaskItem [] AlternateAppIcons { get; set; } = Array.Empty<ITaskItem> ();
+
+		// The name of an app icon
+		public string AppIcon { get; set; } = string.Empty;
 
 		public string DeviceModel { get; set; } = string.Empty;
 
@@ -28,6 +33,8 @@ namespace Xamarin.MacDev.Tasks {
 
 		[Required]
 		public ITaskItem [] ImageAssets { get; set; } = Array.Empty<ITaskItem> ();
+
+		public bool IncludeAllAppIcons { get; set; }
 
 		public bool IsWatchApp { get; set; }
 
@@ -45,6 +52,10 @@ namespace Xamarin.MacDev.Tasks {
 		public ITaskItem? PartialAppManifest { get; set; }
 
 		#endregion
+
+		// ,appiconset on iOS, macOS and Mac Catalyst
+		// .brandassets on tvOS
+		HashSet<string> appIconsInAssets = new ();
 
 		protected override string DefaultBinDir {
 			get { return DeveloperRootBinDir; }
@@ -64,6 +75,11 @@ namespace Xamarin.MacDev.Tasks {
 		{
 			var assetDirs = new HashSet<string> (items.Select (x => BundleResource.GetVirtualProjectPath (ProjectDir, x, !string.IsNullOrEmpty (SessionId))));
 
+			if (!string.IsNullOrEmpty (XSAppIconAssets) && !string.IsNullOrEmpty (AppIcon)) {
+				Log.LogError (MSBStrings.E7129 /* Can't specify both 'XSAppIconAssets' in the Info.plist and 'AppIcon' in the project file. Please select one or the other. */);
+				return;
+			}
+
 			if (!string.IsNullOrEmpty (XSAppIconAssets)) {
 				int index = XSAppIconAssets.IndexOf (".xcassets" + Path.DirectorySeparatorChar, StringComparison.Ordinal);
 				string? assetDir = null;
@@ -74,13 +90,6 @@ namespace Xamarin.MacDev.Tasks {
 
 				if (assetDirs is not null && assetDir is not null && assetDirs.Contains (assetDir)) {
 					var assetName = Path.GetFileNameWithoutExtension (rpath);
-
-					if (PartialAppManifest is null && partialAppManifest is not null) {
-						args.Add ("--output-partial-info-plist");
-						args.AddQuoted (partialAppManifest.GetMetadata ("FullPath"));
-
-						PartialAppManifest = partialAppManifest;
-					}
 
 					args.Add ("--app-icon");
 					args.AddQuoted (assetName);
@@ -104,14 +113,6 @@ namespace Xamarin.MacDev.Tasks {
 
 				if (assetDirs is not null && assetDir is not null && assetDirs.Contains (assetDir)) {
 					var assetName = Path.GetFileNameWithoutExtension (rpath);
-
-					if (PartialAppManifest is null && partialAppManifest is not null) {
-						args.Add ("--output-partial-info-plist");
-						args.AddQuoted (partialAppManifest.GetMetadata ("FullPath"));
-
-						PartialAppManifest = partialAppManifest;
-					}
-
 					args.Add ("--launch-image");
 					args.AddQuoted (assetName);
 				}
@@ -147,12 +148,42 @@ namespace Xamarin.MacDev.Tasks {
 			foreach (var targetDevice in GetTargetDevices ())
 				args.Add ("--target-device", targetDevice);
 
-			args.Add ("--minimum-deployment-target", MinimumOSVersion);
+			if (!string.IsNullOrEmpty (MinimumOSVersion))
+				args.Add ("--minimum-deployment-target", MinimumOSVersion);
 
 			var platform = PlatformUtils.GetTargetPlatform (SdkPlatform, IsWatchApp);
 
 			if (platform is not null)
 				args.Add ("--platform", platform);
+
+			if (!string.IsNullOrEmpty (AppIcon)) {
+				if (!appIconsInAssets.Contains (AppIcon)) {
+					Log.LogError (MSBStrings.E7130 /* Can't find the AppIcon '{0}' among the image resources. */, AppIcon);
+					return;
+				}
+				args.Add ("--app-icon");
+				args.Add (AppIcon);
+			}
+
+			foreach (var alternate in AlternateAppIcons) {
+				var alternateAppIcon = alternate.ItemSpec!;
+				if (!appIconsInAssets.Contains (alternateAppIcon)) {
+					Log.LogError (MSBStrings.E7127 /* Can't find the AlternateAppIcon '{0}' among the image resources. */, alternateAppIcon);
+					return;
+				}
+				if (string.Equals (alternateAppIcon, AppIcon, StringComparison.OrdinalIgnoreCase)) {
+					Log.LogError (MSBStrings.E7128 /* The image resource '{0}' is specified as both 'AppIcon' and 'AlternateAppIcon' */, AppIcon);
+					return;
+				}
+				args.Add ("--alternate-app-icon");
+				args.Add (alternateAppIcon);
+			}
+
+			if (IncludeAllAppIcons)
+				args.Add ("--include-all-app-icons");
+
+			args.Add ("--output-partial-info-plist");
+			args.AddQuoted (Path.GetFullPath (partialAppManifestPath));
 		}
 
 		IEnumerable<ITaskItem> GetCompiledBundleResources (PDictionary output, string intermediateBundleDir)
@@ -309,6 +340,14 @@ namespace Xamarin.MacDev.Tasks {
 				var catalog = Path.GetDirectoryName (vpath);
 				path = Path.GetDirectoryName (path);
 
+				if (Platform == ApplePlatform.TVOS) {
+					if (path.EndsWith (".brandassets", StringComparison.OrdinalIgnoreCase))
+						appIconsInAssets.Add (Path.GetFileNameWithoutExtension (path));
+				} else {
+					if (path.EndsWith (".appiconset", StringComparison.OrdinalIgnoreCase))
+						appIconsInAssets.Add (Path.GetFileNameWithoutExtension (path));
+				}
+
 				// keep walking up the directory structure until we get to the .xcassets directory
 				while (!string.IsNullOrEmpty (catalog) && Path.GetExtension (catalog) != ".xcassets") {
 					catalog = Path.GetDirectoryName (catalog);
@@ -391,7 +430,8 @@ namespace Xamarin.MacDev.Tasks {
 				return !Log.HasLoggedErrors;
 			}
 
-			partialAppManifest = new TaskItem (Path.Combine (intermediate, "partial-info.plist"));
+			partialAppManifestPath = Path.Combine (intermediate, "partial-info.plist");
+			PartialAppManifest = new TaskItem (partialAppManifestPath);
 
 			if (specs.Count > 0) {
 				outputSpecs = Path.Combine (intermediate, "output-specifications.plist");
@@ -400,12 +440,14 @@ namespace Xamarin.MacDev.Tasks {
 
 			Directory.CreateDirectory (intermediateBundleDir);
 
-			// Note: Compile() will set the PartialAppManifest property if it is used...
 			if ((Compile (catalogs.ToArray (), intermediateBundleDir, manifest)) != 0)
 				return false;
 
-			if (PartialAppManifest is not null && !File.Exists (PartialAppManifest.GetMetadata ("FullPath")))
-				Log.LogError (MSBStrings.E0093, PartialAppManifest.GetMetadata ("FullPath"));
+			if (Log.HasLoggedErrors)
+				return false;
+
+			if (!File.Exists (Path.GetFullPath (partialAppManifestPath)))
+				Log.LogError (MSBStrings.E0093, Path.GetFullPath (partialAppManifestPath));
 
 			try {
 				var manifestOutput = PDictionary.FromFile (manifest.ItemSpec)!;

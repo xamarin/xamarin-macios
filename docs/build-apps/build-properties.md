@@ -11,6 +11,46 @@ MSBuild properties control the behavior of the
 They're specified within the project file, for example **MyApp.csproj**, within
 an MSBuild PropertyGroup.
 
+## AppIcon
+
+The `AppIcon` item group can be used to specify app icon for the app.
+
+The value of the property must point to the filename of an `.appiconset` (for
+iOS, macOS and Mac Catalyst) or `.brandassets` (for tvOS) image resource
+inside an asset catalog.
+
+Example:
+
+```xml
+<PropertyGroup>
+    <!-- The value to put in here for "Resources/MyImages.xcassets/MyAppIcon.appiconset" resource would be "MyAppIcon" -->
+    <AppIcon>MyAppIcon</AppIcon>
+</PropertyGroup>
+```
+
+See also:
+
+* The [AlternateAppIcon](build-items.md#AlternateAppIcon) item group.
+* The [IncludeAllAppIcons](#IncludeAllAppIcons) property.
+
+## IncludeAllAppIcons
+
+Set the `IncludeAllAppIcons` property to true to automatically include all app
+icons from all asset catalogs in the app.
+
+Example:
+
+```xml
+<PropertyGroup>
+    <IncludeAllAppIcons>true</IncludeAllAppIcons>
+</PropertyGroup>
+```
+
+See also:
+
+* The [AlternateAppIcon](build-items.md#AlternateAppIcon) item group.
+* The [AppIcon](#AppIcon) property.
+
 ## MaciOSPrepareForBuildDependsOn
 
 A semi-colon delimited property that can be used to extend the build process.

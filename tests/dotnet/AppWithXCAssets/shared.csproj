@@ -5,6 +5,9 @@
 
 		<ApplicationTitle>AppWithXCAssets</ApplicationTitle>
 		<ApplicationId>com.xamarin.appwithxcassets</ApplicationId>
+
+		<!-- enable the interpreter to speed up builds -->
+		<UseInterpreter>true</UseInterpreter>
 	</PropertyGroup>
 
 	<Import Project="../../common/shared-dotnet.csproj" />
@@ -27,6 +30,9 @@
 		<BundleResource Include="../arm64.txt" Condition="$(RuntimeIdentifier.EndsWith('-arm64'))" />
 		<BundleResource Include="../arm.txt" Condition="$(RuntimeIdentifier.EndsWith('-arm'))" />
 		<BundleResource Include="../x64.txt" Condition="$(RuntimeIdentifier.EndsWith('-x64'))" />
+
+		<!-- AddTheseAlternateAppIcons is set from unit tests -->
+		<AlternateAppIcon Condition="'$(AddTheseAlternateAppIcons)' != ''" Include="$(AddTheseAlternateAppIcons)" />
 	</ItemGroup>
 </Project>
 

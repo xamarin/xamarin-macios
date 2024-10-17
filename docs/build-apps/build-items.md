@@ -9,6 +9,27 @@ ms.date: 09/19/2024
 Build items control how .NET for iOS, Mac Catalyst, macOS, and tvOS
 application or library projects are built.
 
+## AlternateAppIcon
+
+The `AlternateAppIcon` item group can be used to specify alternate app icons.
+
+The `Include` metadata must point to the filename of an `.appiconset` (for
+iOS, macOS and Mac Catalyst) or `.brandassets` (for tvOS) image resource
+inside an asset catalog.
+
+Example:
+
+```xml
+<ItemGroup>
+    <!-- The value to put in here for "Resources/MyImages.xcassets/MyAlternateAppIcon.appiconset" resource would be "MyAlternateAppIcon" -->
+    <AlternateAppIcon Include="MyAlternateAppIcon" />
+</ItemGroup>
+```
+
+See also:
+* The [AppIcon](build-properties.md#AppIcon) property.
+* The [IncludeAllAppIcons](build-properties.md#AppIcon) property.
+
 ## XcodeProject
 
 `<XcodeProject>` can be used to build and consume the outputs

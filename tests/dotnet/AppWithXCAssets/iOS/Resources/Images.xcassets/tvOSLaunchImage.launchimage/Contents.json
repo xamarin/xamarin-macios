@@ -1,0 +1,24 @@
+{
+  "images" : [
+    {
+      "extent" : "full-screen",
+      "filename" : "Icon3840x2160.png",
+      "idiom" : "tv",
+      "minimum-system-version" : "11.0",
+      "orientation" : "landscape",
+      "scale" : "2x"
+    },
+    {
+      "extent" : "full-screen",
+      "filename" : "Icon1920x1080.png",
+      "idiom" : "tv",
+      "minimum-system-version" : "9.0",
+      "orientation" : "landscape",
+      "scale" : "1x"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}
