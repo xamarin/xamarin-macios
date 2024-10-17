@@ -78,7 +78,7 @@
     </ItemGroup>
     <PropertyGroup>
       <AbsoluteAssemblyOriginatorKeyFile Condition="'$(AssemblyOriginatorKeyFile)' != ''">$([System.IO.Path]::GetFullPath($([System.IO.Path]::Combine('$(MSBuildProjectDirectory)','$(AssemblyOriginatorKeyFile)'))))</AbsoluteAssemblyOriginatorKeyFile>
-      <ILRepackArgs Condition="'$(AbsoluteAssemblyOriginatorKeyFile)' != ''">/keyfile:"$(AbsoluteAssemblyOriginatorKeyFile)" /delaysign</ILRepackArgs>
+      <ILRepackArgs Condition="'$(AbsoluteAssemblyOriginatorKeyFile)' != ''">/keyfile:"$(AbsoluteAssemblyOriginatorKeyFile)"</ILRepackArgs>
 	  <ILRepackArgs>$(ILRepackArgs) /union</ILRepackArgs> <!-- This is needed to merge types with identical names into one, wich happens with IFluentInterface in Merq and Merq.Core (Xamarin.Messaging dependencies) -->
       <ILRepackArgs>$(ILRepackArgs) @(LibDir -&gt; '/lib:"%(Identity)."', ' ')</ILRepackArgs>
       <ILRepackArgs>$(ILRepackArgs) /out:"@(IntermediateAssembly -&gt; '%(FullPath)')"</ILRepackArgs>
@@ -93,8 +93,6 @@
       <Output TaskParameter="ConsoleOutput" PropertyName="ILRepackOutput" />
       <Output TaskParameter="ExitCode" PropertyName="ExitCode" />
     </Exec>
-    <!-- ILRepack.MSBuild.Task fails when trying to sign the assembly, so instead just delay-sign and use 'sn' to sign after ILRepack.MSBuild.Task is done (ILRepack works fine, but we can't use it for other reasons, mentioned above) -->
-    <Exec Command="sn -R &quot;@(IntermediateAssembly -&gt; '%(FullPath)')&quot; ../../product.snk" Condition="'$(AbsoluteAssemblyOriginatorKeyFile)' != '' And '$(ExitCode)' == '0'" />
     <Message Importance="high" Text="$(ILRepackOutput)" Condition="'$(ExitCode)' != '0'" />
     <Delete Files="$(IntermediateOutputPath)ilrepack.txt" Condition="'$(ExitCode)' != '0'" />
     <Touch AlwaysCreate="true" Files="$(IntermediateOutputPath)ilrepack.txt" Condition="'$(ExitCode)' == '0'" />
