@@ -119,7 +119,8 @@ targets/Microsoft.$(1).Sdk.Versions.props: targets/Microsoft.Sdk.Versions.templa
 		-e "s/@PLATFORM@/$(1)/g" \
 		-e "s/@NUGET_VERSION_NO_METADATA@/$$($(2)_NUGET_VERSION_NO_METADATA)/g" \
 		-e "s/@NUGET_VERSION_FULL@/$$($(2)_NUGET_VERSION_FULL)/g" \
-		-e "s/@TARGET_PLATFORM_VERSION@/$$($(2)_NUGET_OS_VERSION)/g" \
+		-e "s/@TARGET_PLATFORM_VERSION_EXE@/$$($(2)_NUGET_OS_VERSION)/g" \
+		-e "s/@TARGET_PLATFORM_VERSION_LIBRARY@/$$($(2)_TARGET_PLATFORM_VERSION_LIBRARY)/g" \
 		-e "s/@CURRENT_BRANCH@/$$(CURRENT_BRANCH_SED_ESCAPED)/g" \
 		-e "s/@CURRENT_HASH_LONG@/$$(CURRENT_HASH_LONG)/g" \
 		-e 's*@VALID_RUNTIME_IDENTIFIERS@*$(foreach rid,$(3),\n\t\t<_XamarinValidRuntimeIdentifier Include="$(rid)" Platform="$(1)" />)*' \
