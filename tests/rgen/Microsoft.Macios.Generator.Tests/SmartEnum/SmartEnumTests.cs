@@ -19,6 +19,7 @@ public class SmartEnumTests : BaseGeneratorTestClass
 			(ApplePlatform.iOS, "AVCaptureSystemPressureLevelExtensions", "AVCaptureSystemPressureLevel.cs", "ExpectedAVCaptureSystemPressureLevel.cs" ),
 			(ApplePlatform.iOS, "AVMediaCharacteristicsExtensions", "AVMediaCharacteristics.cs", "ExpectediOSAVMediaCharacteristics.cs" ),
 			(ApplePlatform.MacOSX, "AVMediaCharacteristicsExtensions", "AVMediaCharacteristics.cs", "ExpectedMacOSAVMediaCharacteristics.cs" ),
+			(ApplePlatform.MacOSX, "CustomLibraryEnumExtensions", "CustomLibraryEnum.cs", "ExpectedCustomLibraryEnum.cs" ),
 		};
 
 		public IEnumerator<object[]> GetEnumerator()

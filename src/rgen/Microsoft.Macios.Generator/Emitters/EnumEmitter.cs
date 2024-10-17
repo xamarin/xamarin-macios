@@ -26,8 +26,8 @@ class EnumEmitter (ISymbolBindingContext<EnumDeclarationSyntax> context, TabbedS
 		using (var propertyBlock = classBlock.CreateBlock ($"internal unsafe static IntPtr {enumField.FieldData.SymbolName}", true))
 		using (var getterBlock = propertyBlock.CreateBlock ("get", true)) {
 			getterBlock.AppendFormatLine ("fixed (IntPtr *storage = &values [{0}])", index);
-			getterBlock.AppendFormatLine("\treturn Dlfcn.CachePointer (Libraries.{0}.Handle, \"{1}\", storage);",
-				libraryPath ?? libraryName, enumField.FieldData.SymbolName);
+			getterBlock.AppendFormatLine("\treturn Dlfcn.CachePointer ({0}, \"{1}\", storage);",
+				(libraryPath is null) ? $"Libraries.{libraryName}.Handle" : $"\"{libraryPath}\"", enumField.FieldData.SymbolName);
 		}
 	}
 
