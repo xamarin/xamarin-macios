@@ -235,18 +235,6 @@ ifdef INCLUDE_TVOS
 $(eval $(call Template,tvsimulator,TVSIMULATOR,x86_64 arm64,AppleTVSimulator,-mtvos-simulator-version-min=$(MIN_TVOS_SDK_VERSION) -isysroot $(SIMULATORTV_SDK)))
 $(eval $(call Template,tvos,TVOS,arm64,AppleTVOS,-mtvos-version-min=$(MIN_TVOS_SDK_VERSION) -isysroot $(DEVICETV_SDK)))
 endif
-ifdef INCLUDE_WATCH
-ifdef WATCHOS_SUPPORTS_32BIT_SIMULATOR_ARCHITECTURES
-$(eval $(call Template,watchsimulator,WATCHSIMULATOR,x86 x86_64,WatchSimulator,-mwatchos-simulator-version-min=$(MIN_WATCH_OS_VERSION) -isysroot $(SIMULATORWATCH_SDK)))
-else
-$(eval $(call Template,watchsimulator,WATCHSIMULATOR,x86_64,WatchSimulator,-mwatchos-simulator-version-min=$(MIN_WATCH_OS_VERSION) -isysroot $(SIMULATORWATCH_SDK)))
-endif
-ifdef WATCHOS_SUPPORTS_32BIT_DEVICE_ARCHITECTURES
-$(eval $(call Template,watchos,WATCHOS,armv7k arm64_32,WatchOS,-mwatchos-version-min=$(MIN_WATCHOS_SDK_VERSION) -isysroot $(DEVICEWATCH_SDK)))
-else
-$(eval $(call Template,watchos,WATCHOS,arm64_32,WatchOS,-mwatchos-version-min=$(MIN_WATCHOS_SDK_VERSION) -isysroot $(DEVICEWATCH_SDK)))
-endif
-endif
 ifdef INCLUDE_MAC
 $(eval $(call Template,macos,MACOS,x86_64 arm64,MacOSX,-mmacosx-version-min=$(MIN_OSX_VERSION_FOR_MAC) -isysroot $(XCODE_DEVELOPER_ROOT)/Platforms/MacOSX.platform/Developer/SDKs/MacOSX$(MACOS_SDK_VERSION).sdk))
 endif
@@ -254,7 +242,7 @@ ifdef INCLUDE_MACCATALYST
 $(eval $(call Template,maccatalyst,MACCATALYST,x86_64 arm64,MacCatalyst,$(MACCATALYST_COMMON_CFLAGS)))
 endif
 
-.libs/ios-fat .libs/tvos-fat .libs/watchos-fat .libs/maccatalyst-fat .libs/macos-fat:
+.libs/ios-fat .libs/tvos-fat .libs/maccatalyst-fat .libs/macos-fat:
 	$(Q) mkdir -p $@
 
 define LibTemplate
@@ -274,14 +262,6 @@ endif
 
 ifdef INCLUDE_TVOS
 $(eval $(call LibTemplate,arm64+x86_64,.libs/tvos/libtest.arm64.o,.libs/tvsimulator/libtest.x86_64.o,tvos-fat,TVOS))
-endif
-
-ifdef INCLUDE_WATCH
-ifdef WATCHOS_SUPPORTS_32BIT_DEVICE_ARCHITECTURES
-ifdef WATCHOS_SUPPORTS_32BIT_SIMULATOR_ARCHITECTURES
-$(eval $(call LibTemplate,armv7k+x86,.libs/watchos/libtest.armv7k.o,.libs/watchsimulator/libtest.x86.o,watchos-fat,WATCHOS))
-endif
-endif
 endif
 
 ifdef INCLUDE_MACCATALYST
@@ -339,9 +319,6 @@ $(eval $(call FatFrameworkTemplate,ios-fat,iphoneos,iphonesimulator,IPHONESIMULA
 ifdef INCLUDE_TVOS
 $(eval $(call FatFrameworkTemplate,tvos-fat,tvos,tvsimulator,TVSIMULATOR))
 endif
-ifdef INCLUDE_WATCH
-$(eval $(call FatFrameworkTemplate,watchos-fat,watchos,watchsimulator,WATCHSIMULATOR))
-endif
 ifdef INCLUDE_MACCATALYST
 $(eval $(call FatFrameworkTemplate,maccatalyst-fat,maccatalyst,maccatalyst,MACCATALYST))
 endif
@@ -383,9 +360,6 @@ endif
 ifdef INCLUDE_TVOS
 XCPLATFORMS+= tvos tvsimulator
 endif
-ifdef INCLUDE_WATCH
-XCPLATFORMS+= watchos watchsimulator
-endif
 ifdef INCLUDE_MAC
 XCPLATFORMS+= macos
 endif
@@ -405,9 +379,6 @@ $(eval $(call ZippedFrameworkTemplate,ios-fat,IPHONESIMULATOR))
 endif
 ifdef INCLUDE_TVOS
 $(eval $(call ZippedFrameworkTemplate,tvos-fat,TVSIMULATOR))
-endif
-ifdef INCLUDE_WATCH
-$(eval $(call ZippedFrameworkTemplate,watchos-fat,WATCHSIMULATOR))
 endif
 ifdef INCLUDE_MACCATALYST
 $(eval $(call ZippedFrameworkTemplate,maccatalyst-fat,MACCATALYST))

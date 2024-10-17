@@ -22,9 +22,7 @@ namespace Xharness.Jenkins {
 			var msbuildTasksTestsProject = new TestProject (TestLabel.Msbuild, Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "msbuild", "Xamarin.MacDev.Tasks.Tests", "Xamarin.MacDev.Tasks.Tests.csproj"))) {
 				IsDotNetProject = true,
 			};
-			var env = new Dictionary<string, string>
-			{
-				{ "SYSTEM_MONO", this.jenkins.Harness.SYSTEM_MONO },
+			var env = new Dictionary<string, string> {
 			};
 			var buildiOSMSBuild = new MSBuildTask (jenkins: jenkins, testProject: msbuildTasksTestsProject, processManager: processManager) {
 				SpecifyPlatform = false,
@@ -66,44 +64,6 @@ namespace Xharness.Jenkins {
 				SupportsParallelExecution = false,
 			};
 			yield return nunitExecutioniOSMSBuildIntegration;
-
-			var buildMTouch = new MakeTask (jenkins: jenkins, processManager: processManager) {
-				TestProject = new TestProject (TestLabel.Mtouch, Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "mtouch", "mtouchtests.sln"))),
-				SpecifyPlatform = false,
-				SpecifyConfiguration = false,
-				Platform = TestPlatform.iOS,
-				Target = "dependencies",
-				WorkingDirectory = Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "mtouch")),
-			};
-			var nunitExecutionMTouch = new NUnitExecuteTask (jenkins, buildMTouch, processManager) {
-				TestLibrary = Path.Combine (HarnessConfiguration.RootDirectory, "mtouch", "bin", "Debug", "mtouchtests.dll"),
-				TestProject = new TestProject (TestLabel.Mtouch, Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "mtouch", "mtouchtests.csproj"))),
-				Platform = TestPlatform.iOS,
-				TestName = "MTouch tests",
-				Timeout = TimeSpan.FromMinutes (180),
-				Ignored = !jenkins.TestSelection.IsEnabled (TestLabel.Mtouch) || !jenkins.TestSelection.IsEnabled (PlatformLabel.iOS),
-				InProcess = true,
-			};
-			yield return nunitExecutionMTouch;
-
-			var buildGenerator = new MakeTask (jenkins: jenkins, processManager: processManager) {
-				TestProject = new TestProject (TestLabel.Generator, Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "..", "src", "generator.sln"))),
-				SpecifyPlatform = false,
-				SpecifyConfiguration = false,
-				Platform = TestPlatform.iOS,
-				Target = "build-unit-tests",
-				WorkingDirectory = Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "generator")),
-			};
-			var runGenerator = new NUnitExecuteTask (jenkins, buildGenerator, processManager) {
-				TestLibrary = Path.Combine (HarnessConfiguration.RootDirectory, "generator", "bin", "Debug", "generator-tests.dll"),
-				TestProject = new TestProject (TestLabel.Generator, Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "generator", "generator-tests.csproj"))),
-				Platform = TestPlatform.iOS,
-				TestName = "Generator tests",
-				Mode = "NUnit",
-				Timeout = TimeSpan.FromMinutes (10),
-				Ignored = !jenkins.TestSelection.IsEnabled (TestLabel.Generator) || !jenkins.Harness.INCLUDE_XAMARIN_LEGACY,
-			};
-			yield return runGenerator;
 
 			var buildCecilTestsProject = new TestProject (TestLabel.Cecil, Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "cecil-tests", "cecil-tests.csproj"))) {
 				IsDotNetProject = true,

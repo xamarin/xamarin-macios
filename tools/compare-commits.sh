@@ -221,10 +221,10 @@ mkdir -p "$(dirname "$GH_COMMENTS_FILE")"
 
 if test -z "$SKIP_DIRTY_CHECK"; then
 	if [ -n "$(git status --porcelain --ignore-submodule)" ]; then
-		report_error_line "${RED}** Error: Working directory isn't clean:${CLEAR}"
+		report_error_line "${RED}** Error: Working directory isn't clean - check build log for more information.${CLEAR}"
 		# The funny GIT_COLOR_P syntax is explained here: https://stackoverflow.com/a/61551944/183422
-		git ${GIT_COLOR_P[@]+"${GIT_COLOR_P[@]}"} status --ignore-submodules | sed 's/^/    /' | while read -r line; do report_error_line "$line"; done || true
-		git ${GIT_COLOR_P[@]+"${GIT_COLOR_P[@]}"} diff --ignore-submodules | sed 's/^/    /' | while read -r line; do report_error_line "$line"; done || true
+		git ${GIT_COLOR_P[@]+"${GIT_COLOR_P[@]}"} status --ignore-submodules | sed 's/^/    /' || true
+		git ${GIT_COLOR_P[@]+"${GIT_COLOR_P[@]}"} diff --ignore-submodules | sed 's/^/    /' || true
 		exit 1
 	fi
 fi
@@ -445,7 +445,6 @@ fi
 if [ -z ${INCLUDE_IOS+x} ]; then INCLUDE_IOS=$(make -C "$ROOT_DIR"/tools/devops print-variable VARIABLE=INCLUDE_IOS | sed 's/.*=//'); fi
 if [ -z ${INCLUDE_TVOS+x} ]; then INCLUDE_TVOS=$(make -C "$ROOT_DIR"/tools/devops print-variable VARIABLE=INCLUDE_TVOS | sed 's/.*=//'); fi
 if [ -z ${INCLUDE_MAC+x} ]; then INCLUDE_MAC=$(make -C "$ROOT_DIR"/tools/devops print-variable VARIABLE=INCLUDE_MAC | sed 's/.*=//'); fi
-if [ -z ${INCLUDE_WATCH+x} ]; then INCLUDE_WATCH=$(make -C "$ROOT_DIR"/tools/devops print-variable VARIABLE=INCLUDE_WATCH | sed 's/.*=//'); fi
 if [ -z ${DOTNET_PLATFORMS+x} ]; then DOTNET_PLATFORMS=$(make -C "$ROOT_DIR"/tools/devops print-variable VARIABLE=DOTNET_PLATFORMS | sed 's/.*=//'); fi
 if [ -z ${DOTNET_TFM+x} ]; then DOTNET_TFM=$(make -C "$ROOT_DIR"/tools/devops print-variable VARIABLE=DOTNET_TFM | sed 's/.*=//'); fi
 

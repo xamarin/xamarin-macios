@@ -21,11 +21,10 @@ namespace Xharness.Jenkins.TestTasks {
 
 		public IEnumerable<ISimulatorDevice> Simulators {
 			get {
-				if (testTask.Device is null) return Array.Empty<ISimulatorDevice> ();
-				else if (testTask.CompanionDevice is null) {
-					return new ISimulatorDevice [] { testTask.Device };
+				if (testTask.Device is null) {
+					return Array.Empty<ISimulatorDevice> ();
 				} else {
-					return new ISimulatorDevice [] { testTask.Device, testTask.CompanionDevice };
+					return new ISimulatorDevice [] { testTask.Device };
 				}
 			}
 		}
@@ -43,9 +42,8 @@ namespace Xharness.Jenkins.TestTasks {
 			this.simulatorLoadLog = simulatorLoadLog ?? throw new ArgumentNullException (nameof (simulatorLoadLog));
 
 			var project = Path.GetFileNameWithoutExtension (testTask.ProjectFile);
-			if (project.EndsWith ("-tvos", StringComparison.Ordinal)) testTask.AppRunnerTarget = TestTarget.Simulator_tvOS;
-			else if (project.EndsWith ("-watchos", StringComparison.Ordinal)) {
-				testTask.AppRunnerTarget = TestTarget.Simulator_watchOS;
+			if (project.EndsWith ("-tvos", StringComparison.Ordinal)) {
+				testTask.AppRunnerTarget = TestTarget.Simulator_tvOS;
 			} else {
 				testTask.AppRunnerTarget = TestTarget.Simulator_iOS64;
 			}
@@ -66,8 +64,6 @@ namespace Xharness.Jenkins.TestTasks {
 					testTask.FailureMessage = "No applicable devices found.";
 				} else {
 					testTask.Device = testTask.Candidates.First ();
-					if (testTask.Platform == TestPlatform.watchOS)
-						testTask.CompanionDevice = await simulators.FindCompanionDevice (simulatorLoadLog, testTask.Device);
 				}
 			} catch (Exception e) {
 				testTask.ExecutionResult = TestExecutingResult.DeviceNotFound;
@@ -87,7 +83,7 @@ namespace Xharness.Jenkins.TestTasks {
 
 			await FindSimulatorAsync ();
 
-			var clean_state = false;//Platform == TestPlatform.watchOS;
+			var clean_state = false;
 			testTask.Runner = new AppRunner (testTask.ProcessManager,
 				new AppBundleInformationParser (testTask.ProcessManager, testTask.Harness.AppBundleLocator),
 				new SimulatorLoaderFactory (testTask.ProcessManager),
@@ -107,8 +103,7 @@ namespace Xharness.Jenkins.TestTasks {
 				timeoutMultiplier: testTask.TimeoutMultiplier,
 				variation: testTask.Variation,
 				buildTask: testTask.BuildTask,
-				simulator: testTask.Device,
-				companionSimulator: testTask.CompanionDevice);
+				simulator: testTask.Device);
 			await testTask.Runner.InitializeAsync ();
 		}
 

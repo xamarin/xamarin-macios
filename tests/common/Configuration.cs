@@ -7,8 +7,6 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 
-using NUnit.Framework;
-
 using Xamarin.Utils;
 
 #nullable disable // until we get around to fixing this file
@@ -42,8 +40,6 @@ namespace Xamarin.Tests {
 		public static bool include_ios;
 		public static bool include_mac;
 		public static bool include_tvos;
-		public static bool include_watchos;
-		public static bool include_dotnet_watchos;
 		public static bool include_maccatalyst;
 		public static bool include_device;
 		public static bool include_dotnet;
@@ -299,8 +295,6 @@ namespace Xamarin.Tests {
 			include_ios = !string.IsNullOrEmpty (GetVariable ("INCLUDE_IOS", ""));
 			include_mac = !string.IsNullOrEmpty (GetVariable ("INCLUDE_MAC", ""));
 			include_tvos = !string.IsNullOrEmpty (GetVariable ("INCLUDE_TVOS", ""));
-			include_watchos = !string.IsNullOrEmpty (GetVariable ("INCLUDE_WATCH", ""));
-			include_dotnet_watchos = !string.IsNullOrEmpty (GetVariable ("INCLUDE_DOTNET_WATCH", ""));
 			include_maccatalyst = !string.IsNullOrEmpty (GetVariable ("INCLUDE_MACCATALYST", ""));
 			include_device = !string.IsNullOrEmpty (GetVariable ("INCLUDE_DEVICE", ""));
 			include_dotnet = !string.IsNullOrEmpty (GetVariable ("ENABLE_DOTNET", ""));
@@ -333,7 +327,6 @@ namespace Xamarin.Tests {
 			Console.WriteLine ("  INCLUDE_IOS={0}", include_ios);
 			Console.WriteLine ("  INCLUDE_MAC={0}", include_mac);
 			Console.WriteLine ("  INCLUDE_TVOS={0}", include_tvos);
-			Console.WriteLine ("  INCLUDE_WATCHOS={0}", include_watchos);
 			Console.WriteLine ("  INCLUDE_MACCATALYST={0}", include_maccatalyst);
 			Console.WriteLine ("  ENABLE_DOTNET={0}", include_dotnet);
 		}
@@ -381,12 +374,6 @@ namespace Xamarin.Tests {
 			} catch {
 				rootPath = null;
 				return false;
-			}
-		}
-
-		static string TestAssemblyDirectory {
-			get {
-				return TestContext.CurrentContext.WorkDirectory;
 			}
 		}
 
@@ -682,25 +669,6 @@ namespace Xamarin.Tests {
 		}
 
 #if !XAMMAC_TESTS
-		public static void AssertRuntimeIdentifierAvailable (ApplePlatform platform, string runtimeIdentifier)
-		{
-			if (string.IsNullOrEmpty (runtimeIdentifier))
-				return;
-
-			if (GetRuntimeIdentifiers (platform).Contains (runtimeIdentifier))
-				return;
-
-			Assert.Ignore ($"The runtime identifier {runtimeIdentifier} is not available on {platform}");
-		}
-
-		public static void AssertRuntimeIdentifiersAvailable (ApplePlatform platform, string runtimeIdentifiers)
-		{
-			if (string.IsNullOrEmpty (runtimeIdentifiers))
-				return;
-
-			foreach (var rid in runtimeIdentifiers.Split (new char [] { ';' }, StringSplitOptions.RemoveEmptyEntries))
-				AssertRuntimeIdentifierAvailable (platform, rid);
-		}
 
 		public static string GetBaseLibrary (Profile profile)
 		{
@@ -913,12 +881,6 @@ namespace Xamarin.Tests {
 			return "/Library/Frameworks/Mono.framework/Commands/csc";
 		}
 
-		public static void AssertiOS32BitAvailable ()
-		{
-			if (iOSSupports32BitArchitectures)
-				return;
-			Assert.Ignore ($"32-bit iOS support is not available in the current build.");
-		}
 #endif // !XAMMAC_TESTS
 
 		public static IEnumerable<ApplePlatform> GetIncludedPlatforms (bool dotnet)
@@ -934,8 +896,6 @@ namespace Xamarin.Tests {
 				yield return ApplePlatform.MacOSX;
 			if (include_maccatalyst)
 				yield return ApplePlatform.MacCatalyst;
-			if (include_watchos && !dotnet)
-				yield return ApplePlatform.WatchOS;
 		}
 
 		public static IEnumerable<ApplePlatform> GetAllPlatforms (bool dotnet)
@@ -957,27 +917,6 @@ namespace Xamarin.Tests {
 
 		public static string XIBuildPath {
 			get { return Path.GetFullPath (Path.Combine (RootPath, "tools", "xibuild", "xibuild")); }
-		}
-
-		public static void AssertDeviceAvailable ()
-		{
-			if (include_device)
-				return;
-			Assert.Ignore ("This build does not include device support.");
-		}
-
-		public static void AssertDotNetAvailable ()
-		{
-			if (include_dotnet)
-				return;
-			Assert.Ignore (".NET tests not enabled");
-		}
-
-		public static void AssertLegacyXamarinAvailable ()
-		{
-			if (include_legacy_xamarin)
-				return;
-			Assert.Ignore ("Legacy xamarin build not enabled");
 		}
 
 		public static string CloneTestDirectory (string directory)
@@ -1070,102 +1009,6 @@ namespace Xamarin.Tests {
 			default:
 				throw new NotImplementedException (platform.ToString ());
 			}
-		}
-
-		// Calls Assert.Ignore if the given platform isn't included in the current build.
-		public static void IgnoreIfIgnoredPlatform (ApplePlatform platform)
-		{
-			switch (platform) {
-			case ApplePlatform.iOS:
-				if (!include_ios)
-					Assert.Ignore ("iOS is not included in this build");
-				break;
-			case ApplePlatform.TVOS:
-				if (!include_tvos)
-					Assert.Ignore ("tvOS is not included in this build");
-				break;
-			case ApplePlatform.WatchOS:
-				if (!include_watchos)
-					Assert.Ignore ("watchOS is not included in this build");
-#if NET
-				if (!include_dotnet_watchos)
-					Assert.Ignore ("watchOS is not included in this build");
-#endif
-
-				break;
-			case ApplePlatform.MacOSX:
-				if (!include_mac)
-					Assert.Ignore ("macOS is not included in this build");
-				break;
-			case ApplePlatform.MacCatalyst:
-				if (!include_maccatalyst)
-					Assert.Ignore ("Mac Catalyst is not included in this build");
-				break;
-			default:
-				throw new ArgumentOutOfRangeException ($"Unknown platform: {platform}");
-			}
-		}
-
-		// Calls Assert.Ignore if the given platform isn't included in the current build.
-		public static void IgnoreIfIgnoredPlatform (string platform)
-		{
-			switch (platform.ToLower ()) {
-			case "ios":
-			case "tvos":
-			case "watchos":
-			case "macosx":
-			case "maccatalyst":
-				IgnoreIfIgnoredPlatform ((ApplePlatform) Enum.Parse (typeof (ApplePlatform), platform, true));
-				break;
-			case "macos":
-				IgnoreIfIgnoredPlatform (ApplePlatform.MacOSX);
-				break;
-			default:
-				throw new ArgumentOutOfRangeException ($"Unknown platform: {platform}");
-			}
-		}
-
-		public static bool AnyIgnoredPlatforms (bool dotnet = true)
-		{
-			return AnyIgnoredPlatforms (dotnet, out var _);
-		}
-
-		public static bool AnyIgnoredPlatforms (bool dotnet, out IEnumerable<ApplePlatform> notIncluded)
-		{
-			var allPlatforms = GetAllPlatforms (dotnet);
-			var includedPlatforms = GetIncludedPlatforms (dotnet);
-			notIncluded = allPlatforms.Where (v => !includedPlatforms.Contains (v)).ToArray ();
-			return notIncluded.Any ();
-		}
-
-		public static void IgnoreIfAnyIgnoredPlatforms (bool dotnet = true)
-		{
-			if (AnyIgnoredPlatforms (dotnet, out var notIncluded))
-				Assert.Ignore ($"This test requires all platforms to be included, but the following platforms aren't included: {string.Join (", ", notIncluded.Select (v => v.AsString ()))}");
-		}
-
-		public static void IgnoreIfNotOnMacOS ()
-		{
-			IgnoreIfNotOn (System.Runtime.InteropServices.OSPlatform.OSX);
-		}
-
-		public static void IgnoreIfNotOnWindows ()
-		{
-			IgnoreIfNotOn (System.Runtime.InteropServices.OSPlatform.Windows);
-		}
-
-		public static void IgnoreIfNotOn (System.Runtime.InteropServices.OSPlatform platform)
-		{
-			if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform (platform))
-				return;
-			Assert.Ignore ($"This test is only applicable on {platform}");
-		}
-
-		public static void IgnoreIfNotXamarinEnabled ()
-		{
-			if (EnableXamarin)
-				return;
-			Assert.Ignore ($"This test is only applicable if Xamarin-specific bits are enabled.");
 		}
 
 		public static string GetTestLibraryDirectory (ApplePlatform platform, bool? simulator = null)
@@ -1278,3 +1121,4 @@ namespace Xamarin.Tests {
 		}
 	}
 }
+
