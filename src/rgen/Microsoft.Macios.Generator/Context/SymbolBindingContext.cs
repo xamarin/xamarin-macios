@@ -18,7 +18,6 @@ class SymbolBindingContext {
 		SemanticModel = semanticModel;
 		Symbol = symbol;
 	}
-
 }
 
 class SymbolBindingContext<T> : SymbolBindingContext, ISymbolBindingContext<T> where T : BaseTypeDeclarationSyntax {

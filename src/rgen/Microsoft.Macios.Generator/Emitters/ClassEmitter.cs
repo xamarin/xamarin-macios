@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.CodeAnalysis;
@@ -7,6 +8,8 @@ namespace Microsoft.Macios.Generator.Emitters;
 
 class ClassEmitter (ClassBindingContext context, TabbedStringBuilder builder) : ICodeEmitter {
 	public string SymbolName => context.SymbolName;
+
+	public IEnumerable<string> UsingStatements => [];
 
 	public bool TryEmit ([NotNullWhen (false)] out ImmutableArray<Diagnostic>? diagnostics)
 	{
