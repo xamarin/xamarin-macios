@@ -72,7 +72,9 @@ all-local:: global.json
 global.json: $(TOP)/dotnet.config Makefile $(GIT_DIRECTORY)/HEAD $(GIT_DIRECTORY)/index
 	$(Q_GEN) \
 		printf "{\n" > $@; \
-		printf "  \"sdk\": {\n    \"version\": \"$(DOTNET_VERSION)\"\n  }\n" >> $@; \
+		printf "  \"sdk\": {\n    \"version\": \"$(DOTNET_VERSION)\"\n  },\n" >> $@; \
+		printf "  \"tools\": {\n    \"dotnet\": \"$(DOTNET_VERSION)\"\n  },\n" >> $@; \
+		printf "  \"msbuild-sdks\": {\n    \"Microsoft.DotNet.Arcade.Sdk\": \"$(ARCADE_VERSION)\"\n  }\n" >> $@; \
 		printf "}\n" >> $@
 
 install-hook::
