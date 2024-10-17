@@ -449,11 +449,6 @@ namespace Cecil.Tests {
 					yield return Path.Combine (Configuration.MonoTouchRootDirectory, "lib", "64bits", "iOS", "Xamarin.iOS.dll");
 				}
 
-				if (Configuration.include_watchos) {
-					// XamarinWatchOSDll is stripped of its IL
-					yield return Path.Combine (Configuration.MonoTouchRootDirectory, "lib", "32bits", "watchOS", "Xamarin.WatchOS.dll");
-				}
-
 				if (Configuration.include_tvos) {
 					// XamarinTVOSDll is stripped of it's IL
 					yield return Path.Combine (Configuration.MonoTouchRootDirectory, "lib", "64bits", "tvOS", "Xamarin.TVOS.dll");

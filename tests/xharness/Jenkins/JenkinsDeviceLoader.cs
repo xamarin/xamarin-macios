@@ -31,17 +31,11 @@ namespace Xharness.Jenkins {
 		static string BuildDevicesDescription (IHardwareDeviceLoader deviceLoader, string name)
 		{
 			var devicesTypes = new StringBuilder ();
-			if (deviceLoader.Connected32BitIOS.Any ()) {
-				devicesTypes.Append ("iOS 32 bit");
-			}
 			if (deviceLoader.Connected64BitIOS.Any ()) {
-				devicesTypes.Append (devicesTypes.Length == 0 ? "iOS 64 bit" : ", iOS 64 bit");
+				devicesTypes.Append (devicesTypes.Length == 0 ? "iOS" : ", iOS");
 			}
 			if (deviceLoader.ConnectedTV.Any ()) {
 				devicesTypes.Append (devicesTypes.Length == 0 ? "tvOS" : ", tvOS");
-			}
-			if (deviceLoader.ConnectedWatch.Any ()) {
-				devicesTypes.Append (devicesTypes.Length == 0 ? "watchOS" : ", watchOS");
 			}
 			return (devicesTypes.Length == 0) ? $"{name} Listing (ok - no devices found)." : $"{name} Listing (ok). Devices types are: {devicesTypes}";
 		}

@@ -445,7 +445,6 @@ fi
 if [ -z ${INCLUDE_IOS+x} ]; then INCLUDE_IOS=$(make -C "$ROOT_DIR"/tools/devops print-variable VARIABLE=INCLUDE_IOS | sed 's/.*=//'); fi
 if [ -z ${INCLUDE_TVOS+x} ]; then INCLUDE_TVOS=$(make -C "$ROOT_DIR"/tools/devops print-variable VARIABLE=INCLUDE_TVOS | sed 's/.*=//'); fi
 if [ -z ${INCLUDE_MAC+x} ]; then INCLUDE_MAC=$(make -C "$ROOT_DIR"/tools/devops print-variable VARIABLE=INCLUDE_MAC | sed 's/.*=//'); fi
-if [ -z ${INCLUDE_WATCH+x} ]; then INCLUDE_WATCH=$(make -C "$ROOT_DIR"/tools/devops print-variable VARIABLE=INCLUDE_WATCH | sed 's/.*=//'); fi
 if [ -z ${DOTNET_PLATFORMS+x} ]; then DOTNET_PLATFORMS=$(make -C "$ROOT_DIR"/tools/devops print-variable VARIABLE=DOTNET_PLATFORMS | sed 's/.*=//'); fi
 if [ -z ${DOTNET_TFM+x} ]; then DOTNET_TFM=$(make -C "$ROOT_DIR"/tools/devops print-variable VARIABLE=DOTNET_TFM | sed 's/.*=//'); fi
 

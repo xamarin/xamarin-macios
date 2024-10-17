@@ -45,20 +45,9 @@ namespace Xharness.Jenkins.TestTasks {
 
 				switch (Platform) {
 				case TestPlatform.tvOS:
-				case TestPlatform.watchOS:
 					return Platform.ToString () + " - " + XIMode;
-				case TestPlatform.watchOS_32:
-					return "watchOS 32-bits - " + XIMode;
-				case TestPlatform.watchOS_64_32:
-					return "watchOS 64-bits (ARM64_32) - " + XIMode;
-				case TestPlatform.iOS_Unified32:
-					return "iOS Unified 32-bits - " + XIMode;
-				case TestPlatform.iOS_Unified64:
-					return "iOS Unified 64-bits - " + XIMode;
-				case TestPlatform.iOS_TodayExtension64:
-					return "iOS Unified Today Extension 64-bits - " + XIMode;
-				case TestPlatform.iOS_Unified:
-					return "iOS Unified - " + XIMode;
+				case TestPlatform.iOS:
+					return "iOS - " + XIMode;
 				default:
 					throw new NotImplementedException ();
 				}
