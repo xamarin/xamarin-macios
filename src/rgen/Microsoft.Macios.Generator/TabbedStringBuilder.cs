@@ -110,7 +110,7 @@ class TabbedStringBuilder : IDisposable {
 	public TabbedStringBuilder AppendLine (ReadOnlySpan<char> span)
 	{
 		if (span.IsWhiteSpace ()) {
-			sb.Append (span).AppendLine();
+			sb.Append (span).AppendLine ();
 		} else {
 			WriteTabs ().Append (span).AppendLine ();
 		}
@@ -123,13 +123,13 @@ class TabbedStringBuilder : IDisposable {
 		WriteTabs ().Append (handler.ToStringAndClear ());
 		return this;
 	}
-	
+
 	public TabbedStringBuilder AppendLine (ref DefaultInterpolatedStringHandler handler)
 	{
-		WriteTabs ().Append (handler.ToStringAndClear ()).AppendLine();
+		WriteTabs ().Append (handler.ToStringAndClear ()).AppendLine ();
 		return this;
 	}
-	
+
 	/// <summary>
 	/// Append a new raw literal by prepending the correct indentation.
 	/// </summary>
@@ -141,7 +141,7 @@ class TabbedStringBuilder : IDisposable {
 		// tabbing is correct
 		var span = rawString.AsSpan ();
 		Span<Range> lines = stackalloc Range [span.Count ('\n')];
-		var count = rawString.AsSpan().Split (lines, '\n');
+		var count = rawString.AsSpan ().Split (lines, '\n');
 		foreach (var range in lines) {
 			count--;
 			var line = rawString.AsSpan (range);

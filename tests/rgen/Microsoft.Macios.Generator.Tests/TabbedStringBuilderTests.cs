@@ -86,7 +86,7 @@ public class TabbedStringBuilderTests {
 		}
 		Assert.Equal (expected, result);
 	}
-	
+
 
 	[Theory]
 	[InlineData (0, "")]
