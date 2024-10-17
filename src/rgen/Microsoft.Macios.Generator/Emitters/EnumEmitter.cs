@@ -21,13 +21,14 @@ class EnumEmitter (ISymbolBindingContext<EnumDeclarationSyntax> context, TabbedS
 			return;
 		}
 
-		classBlock.AppendFormatLine ("[Field (\"{0}\", \"{1}\")]", enumField.FieldData.SymbolName,
-			libraryPath ?? libraryName);
+		classBlock.AppendLine ($"[Field (\"{enumField.FieldData.SymbolName}\", \"{libraryPath ?? libraryName}\")]");
+
 		using (var propertyBlock = classBlock.CreateBlock ($"internal unsafe static IntPtr {enumField.FieldData.SymbolName}", true))
 		using (var getterBlock = propertyBlock.CreateBlock ("get", true)) {
-			getterBlock.AppendFormatLine ("fixed (IntPtr *storage = &values [{0}])", index);
-			getterBlock.AppendFormatLine("\treturn Dlfcn.CachePointer ({0}, \"{1}\", storage);",
-				(libraryPath is null) ? $"Libraries.{libraryName}.Handle" : $"\"{libraryPath}\"", enumField.FieldData.SymbolName);
+			getterBlock.AppendLine ($"fixed (IntPtr *storage = &values [{index}])");
+			var lib = (libraryPath is null) ? $"Libraries.{libraryName}.Handle" : $"\"{libraryPath}\"";
+			getterBlock.AppendLine (
+				$"\treturn Dlfcn.CachePointer ({lib}, \"{enumField.FieldData.SymbolName}\", storage);");
 		}
 	}
 
@@ -54,9 +55,9 @@ class EnumEmitter (ISymbolBindingContext<EnumDeclarationSyntax> context, TabbedS
 			using (var switchBlock = getConstantBlock.CreateBlock ("switch ((int) self)", true)) {
 				for (var index = 0; index < members.Value.Length; index++) {
 					var (_, fieldData) = members.Value [index];
-					switchBlock.AppendFormatLine ("case {0}: // {1}", index, fieldData.SymbolName);
-					switchBlock.AppendFormatLine ("\tptr = {0};", fieldData.SymbolName);
-					switchBlock.AppendFormatLine ("\tbreak;");
+					switchBlock.AppendLine ($"case {index}: // {fieldData.SymbolName}");
+					switchBlock.AppendLine ($"\tptr = {fieldData.SymbolName};");
+					switchBlock.AppendLine ("\tbreak;");
 				}
 			}
 
@@ -69,8 +70,8 @@ class EnumEmitter (ISymbolBindingContext<EnumDeclarationSyntax> context, TabbedS
 			getValueBlock.AppendLine ("if (constant is null)");
 			getValueBlock.AppendLine ("\tthrow new ArgumentNullException (nameof (constant));");
 			foreach ((IFieldSymbol? fieldSymbol, FieldData? fieldData) in members) {
-				getValueBlock.AppendFormatLine ("if (constant.IsEqualTo ({0}))", fieldData.SymbolName);
-				getValueBlock.AppendFormatLine ("\treturn {0}.{1};", enumSymbol.Name, fieldSymbol.Name);
+				getValueBlock.AppendLine ($"if (constant.IsEqualTo ({fieldData.SymbolName}))");
+				getValueBlock.AppendLine ($"\treturn {enumSymbol.Name}.{fieldSymbol.Name};");
 			}
 
 			getValueBlock.AppendLine (
@@ -119,13 +120,13 @@ class EnumEmitter (ISymbolBindingContext<EnumDeclarationSyntax> context, TabbedS
 	    // in the old generator we had to copy over the enum, in this new approach the only code
 	    // we need to create is the extension class for the enum that is backed by fields
 	    builder.AppendLine ();
-	    builder.AppendFormatLine ("namespace {0};", context.Namespace);
+	    builder.AppendLine ($"namespace {context.Namespace};");
 	    builder.AppendLine ();
 
 	    builder.AppendGeneratedCodeAttribute ();
 	    using (var classBlock = builder.CreateBlock ($"static public partial class {SymbolName}", true)) {
 		    classBlock.AppendLine ();
-		    classBlock.AppendFormatLine ("static IntPtr[] values = new IntPtr [{0}];", members.Value.Length);
+		    classBlock.AppendLine ($"static IntPtr[] values = new IntPtr [{members.Value.Length}];");
 		    // foreach member in the enum we need to create a field that holds the value, the property emitter
 		    // will take care of generating the property. Do not order by name to keep the order of the enum
 		    Emit (classBlock, members.Value);
