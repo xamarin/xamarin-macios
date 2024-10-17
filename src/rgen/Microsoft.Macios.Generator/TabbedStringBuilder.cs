@@ -20,7 +20,6 @@ namespace Microsoft.Macios.Generator;
 class TabbedStringBuilder : IDisposable {
 	readonly StringBuilder sb;
 	readonly uint tabCount;
-	readonly string tabs;
 	readonly bool isBlock;
 	bool disposed;
 
@@ -42,8 +41,9 @@ class TabbedStringBuilder : IDisposable {
 		} else {
 			tabCount = currentCount;
 		}
-		tabs = new string ('\t', (int) tabCount);
 	}
+
+	StringBuilder WriteTabs () => sb.Append ('\t', (int) tabCount);
 
 	/// <summary>
 	/// Append a new empty line to the string builder using the correct tab size.
@@ -65,7 +65,7 @@ class TabbedStringBuilder : IDisposable {
 		if (string.IsNullOrWhiteSpace (line)) {
 			sb.Append (line);
 		} else {
-			sb.Append ($"{tabs}{line}");
+			WriteTabs ().Append (line);
 		}
 		return this;
 	}
@@ -80,14 +80,14 @@ class TabbedStringBuilder : IDisposable {
 		if (string.IsNullOrWhiteSpace (line)) {
 			sb.AppendLine (line);
 		} else {
-			sb.AppendLine ($"{tabs}{line}");
+			WriteTabs ().AppendLine (line);
 		}
 		return this;
 	}
 
 	public TabbedStringBuilder AppendFormatLine (string format, params object [] args)
 	{
-		sb.AppendFormat ($"{tabs}{format}", args);
+		WriteTabs().AppendFormat (format, args);
 		sb.AppendLine ();
 		return this;
 	}
@@ -158,7 +158,7 @@ class TabbedStringBuilder : IDisposable {
 	public TabbedStringBuilder CreateBlock (string line, bool block)
 	{
 		if (!string.IsNullOrEmpty (line)) {
-			sb.AppendLine ($"{tabs}{line}");
+			WriteTabs ().AppendLine (line);
 		}
 
 		return new TabbedStringBuilder (sb, tabCount, block);
@@ -182,7 +182,7 @@ class TabbedStringBuilder : IDisposable {
 		if (disposed || !isBlock) return;
 
 		disposed = true;
-		sb.Append ('\t', tabCount - 1);
-		sb.AppendLine ();
+		sb.Append ('\t', (int) tabCount - 1);
+		sb.AppendLine ("}");
 	}
 }
