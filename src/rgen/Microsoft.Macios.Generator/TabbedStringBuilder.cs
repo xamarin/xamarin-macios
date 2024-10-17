@@ -56,10 +56,10 @@ class TabbedStringBuilder : IDisposable {
 	}
 
 	/// <summary>
-	/// Append a line, but do not add a \n
+	/// Append conteng, but do not add a \n
 	/// </summary>
-	/// <param name="line"></param>
-	/// <returns></returns>
+	/// <param name="line">The content to append.</param>
+	/// <returns>The current builder.</returns>
 	public TabbedStringBuilder Append (string line)
 	{
 		if (string.IsNullOrWhiteSpace (line)) {
@@ -67,6 +67,22 @@ class TabbedStringBuilder : IDisposable {
 		} else {
 			WriteTabs ().Append (line);
 		}
+		return this;
+	}
+
+	/// <summary>
+	/// Append conteng, but do not add a \n
+	/// </summary>
+	/// <param name="span">The content to append.</param>
+	/// <returns>The current builder.</returns>
+	public TabbedStringBuilder Append (ReadOnlySpan<char> span)
+	{
+		if (span.IsWhiteSpace ()) {
+			sb.Append (span);
+		} else {
+			WriteTabs ().Append (span);
+		}
+
 		return this;
 	}
 
@@ -82,6 +98,22 @@ class TabbedStringBuilder : IDisposable {
 		} else {
 			WriteTabs ().AppendLine (line);
 		}
+		return this;
+	}
+
+	/// <summary>
+	/// Append a new tabbed lien from the span.
+	/// </summary>
+	/// <param name="span">The line to append.</param>
+	/// <returns>The current builder.</returns>
+	public TabbedStringBuilder AppendLine (ReadOnlySpan<char> span)
+	{
+		if (span.IsWhiteSpace ()) {
+			sb.Append (span).AppendLine();
+		} else {
+			WriteTabs ().Append (span).AppendLine ();
+		}
+
 		return this;
 	}
 
@@ -101,10 +133,13 @@ class TabbedStringBuilder : IDisposable {
 	{
 		// we will split the raw string in lines and then append them so that the
 		// tabbing is correct
-		var lines = rawString.Split (['\n'], StringSplitOptions.None);
-		for (var index = 0; index < lines.Length; index++) {
-			var line = lines [index];
-			if (index == lines.Length - 1) {
+		var span = rawString.AsSpan ();
+		Span<Range> lines = stackalloc Range [span.Count ('\n')];
+		var count = rawString.AsSpan().Split (lines, '\n');
+		foreach (var range in lines) {
+			count--;
+			var line = rawString.AsSpan (range);
+			if (count <= 0) {
 				Append (line);
 			} else {
 				AppendLine (line);
