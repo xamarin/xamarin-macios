@@ -615,7 +615,7 @@ $(DOTNET_DESTDIR)/$($(2)_NUGET_RUNTIME_NAME)/runtimes/$(2)/native/xamarin/%.h: x
 	$$(Q) $$(CP) $$< $$@
 endef
 
-$(foreach platform,$(DOTNET_PLATFORMS),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),$(eval $(call DotNetLibTemplate,$(platform),$(rid)))))
+$(foreach platform,$(DOTNET_MONOVM_PLATFORMS),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),$(eval $(call DotNetLibTemplate,$(platform),$(rid)))))
 
 define DotNetCoreClrLibTemplate
 DOTNET_TARGETS += \
