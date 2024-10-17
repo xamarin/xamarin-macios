@@ -20,7 +20,7 @@ namespace Microsoft.Macios.Bindings.Analyzer;
 public class BindingTypeCodeFixProvider : CodeFixProvider {
 	// Specify the diagnostic IDs of analyzers that are expected to be linked.
 	public sealed override ImmutableArray<string> FixableDiagnosticIds { get; } =
-		ImmutableArray.Create (BindingTypeSemanticAnalyzer.DiagnosticId);
+		ImmutableArray.Create (BindingTypeSemanticAnalyzer.RBI0001.Id);
 
 	// If you don't need the 'fix all' behaviour, return null.
 	public override FixAllProvider? GetFixAllProvider () => null;

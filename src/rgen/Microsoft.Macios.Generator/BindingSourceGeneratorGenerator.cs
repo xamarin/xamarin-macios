@@ -24,14 +24,17 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 	internal static readonly DiagnosticDescriptor RBI0000 = new (
 		"RBI0000",
 		new LocalizableResourceString (nameof (Resources.RBI0000Title), Resources.ResourceManager, typeof (Resources)),
-		new LocalizableResourceString (nameof (Resources.RBI0000MessageFormat), Resources.ResourceManager, typeof (Resources)),
+		new LocalizableResourceString (nameof (Resources.RBI0000MessageFormat), Resources.ResourceManager,
+			typeof (Resources)),
 		"Usage",
 		DiagnosticSeverity.Error,
 		isEnabledByDefault: true,
-		description: new LocalizableResourceString (nameof (Resources.RBI0000Description), Resources.ResourceManager, typeof (Resources))
+		description: new LocalizableResourceString (nameof (Resources.RBI0000Description), Resources.ResourceManager,
+			typeof (Resources))
 	);
 
 	static readonly CodeChangesComparer comparer = new ();
+
 	/// <inheritdoc cref="IIncrementalGenerator"/>
 	public void Initialize (IncrementalGeneratorInitializationContext context)
 	{
@@ -42,46 +45,35 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 				fileName, SourceText.From (content, Encoding.UTF8)));
 		}
 
-		// binding can use different 'types'. To be able to generate the code we are going to add a different
-		// function for each of the 'types' we are interested in generating that will be added to the compiler
-		// pipeline
-		AddPipeline<ClassDeclarationSyntax> (context);
-		AddPipeline<InterfaceDeclarationSyntax> (context);
-		AddPipeline<EnumDeclarationSyntax> (context);
-	}
-
-	/// <summary>
-	/// Generic method that adds a provider and a code generator to the pipeline.
-	/// </summary>
-	/// <param name="context">The compilation context</param>
-	/// <typeparam name="T">The base type declaration that we are going to generate.</typeparam>
-	static void AddPipeline<T> (IncrementalGeneratorInitializationContext context) where T : BaseTypeDeclarationSyntax
-	{
+		// our bindings are special. Due to the fact that we write shared code in the Library.g.cs and the Trampolines.g.cs
+		// we need to listen to all the BaseTypeDeclarationSyntax changes. We do so, generate a data model with the
+		// changes we are interested and later we transform them. This allows use to be able to use a RootBindingContext
+		// as a bag in which we can add information about libraries and trampolines needed by the bindings.
 		var provider = context.SyntaxProvider
-			.CreateSyntaxProvider (
-				static (s, _) => s is T,
-				(ctx, _) => GetDeclarationForSourceGen<T> (ctx))
-			.Where (t => t.BindingAttributeFound) // get the types with the binding attr
-			.Select ((t, _) => t.Changes)
+			.CreateSyntaxProvider (static (node, _) => IsValidNode (node),
+				static (ctx, _) => GetChangesForSourceGen (ctx))
+			.Where (tuple => tuple.BindingAttributeFound)
+			.Select (static (tuple, _) => tuple.Changes)
 			.WithComparer (comparer);
 
 		context.RegisterSourceOutput (context.CompilationProvider.Combine (provider.Collect ()),
-			((ctx, t) => GenerateCode<T> (ctx, t.Left, t.Right)));
+			((ctx, t) => GenerateCode (ctx, t.Left, t.Right)));
 	}
 
 	/// <summary>
-	/// Generic method that can be used to filter/match a BaseTypeDeclarationSyntax with the BindingTypeAttribute.
-	/// Because our generator is focused only on Enum, Interface and Class declarations we can use a generic method
-	/// that will match the type + the presence of the attribute.
+	/// Returns if the node is a valid node for the binding generator.
 	/// </summary>
-	/// <param name="context">Context used by the generator.</param>
-	/// <typeparam name="T">The BaseTypeDeclarationSyntax we are interested in.</typeparam>
-	/// <returns>A tuple that contains the BaseTypeDeclaration that was processed and a boolean that states if it should be processed or not.</returns>
-	static (CodeChanges Changes, bool BindingAttributeFound) GetDeclarationForSourceGen<T> (GeneratorSyntaxContext context)
-		where T : BaseTypeDeclarationSyntax
+	/// <param name="node">Node modified by the user.</param>
+	/// <returns>True if the binding generator should consider the node for code generation.</returns>
+	static bool IsValidNode (SyntaxNode node) => node switch {
+		EnumDeclarationSyntax or ClassDeclarationSyntax or InterfaceDeclarationSyntax => true,
+		_ => false,
+	};
+
+	static (CodeChanges Changes, bool BindingAttributeFound) GetChangesForSourceGen (GeneratorSyntaxContext context)
 	{
 		// we do know that the context node has to be one of the base type declarations
-		var declarationSyntax = Unsafe.As<T> (context.Node);
+		var declarationSyntax = Unsafe.As<BaseTypeDeclarationSyntax> (context.Node);
 
 		// check if we do have the binding attr, else there nothing to retrieve
 		bool isBindingType = declarationSyntax.HasAttribute (context.SemanticModel, AttributesNames.BindingAttribute);
@@ -93,8 +85,85 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 
 		var codeChanges = CodeChanges.FromDeclaration (context.SemanticModel, declarationSyntax);
 		// if code changes are null, return the default value and a false to later ignore the change
-		return codeChanges is not null ?
-			(codeChanges.Value, isBindingType) : (default, false);
+		return codeChanges is not null ? (codeChanges.Value, isBindingType) : (default, false);
+	}
+
+	static void GenerateCode (SourceProductionContext context, Compilation compilation,
+		ImmutableArray<CodeChanges> changesList)
+	{
+		// the process is as follows, get all the changes we have received from the incremental generator,
+		// loop over them and based on the CodeChange.BindingType we are going to build the symbol context
+		// and emitter. Those are later used to generate the code.
+		//
+		// Once all the enums, classes and interfaces have been processed, we will use the data collected
+		// in the RootBindingContext to generate the library and trampoline code.
+		var rootContext = new RootBindingContext (compilation);
+		foreach (var change in changesList) {
+			var semanticModel = compilation.GetSemanticModel (change.SymbolDeclaration.SyntaxTree);
+			// This is a bug in the roslyn analyzer for roslyn generator https://github.com/dotnet/roslyn-analyzers/issues/7436
+#pragma warning disable RS1039
+			if (semanticModel.GetDeclaredSymbol (change.SymbolDeclaration) is not INamedTypeSymbol namedTypeSymbol)
+#pragma warning restore RS1039
+				continue;
+
+			// init sb and add the header
+			var sb = new TabbedStringBuilder (new ());
+			sb.WriteHeader ();
+			if (EmitterFactory.TryCreate (change, rootContext, semanticModel, namedTypeSymbol, sb, out var emitter)) {
+				// write the using statements
+				CollectUsingStatements (change.SymbolDeclaration.SyntaxTree, sb, emitter);
+
+				if (emitter.TryEmit (out var diagnostics)) {
+					// only add file when we do generate code
+					var code = sb.ToString ();
+					context.AddSource ($"{emitter.SymbolNamespace}/{emitter.SymbolName}.g.cs",
+						SourceText.From (code, Encoding.UTF8));
+				} else {
+					// add to the diagnostics and continue to the next possible candidate
+					foreach (Diagnostic diagnostic in diagnostics) {
+						context.ReportDiagnostic (diagnostic);
+					}
+				}
+			} else {
+				// we don't have a emitter for this type, so we can't generate the code, add a diagnostic letting the
+				// user we do not support what he is trying to do
+				// we don't have a emitter for this type, so we can't generate the code, add a diagnostic letting the
+				// user we do not support what he is trying to do
+				context.ReportDiagnostic (Diagnostic.Create (RBI0000,
+					change.SymbolDeclaration.GetLocation (),
+					namedTypeSymbol.ToDisplayString ().Trim ()));
+			}
+		}
+
+		// we are done with the types, generate the library and trampoline code
+		GenerateLibraryCode (context, rootContext, changesList);
+	}
+
+	/// <summary>
+	/// Code generator that emmits the static classes that contain the pointers to the library used
+	/// by the binding. This is a single generated file.
+	/// </summary>
+	/// <param name="context">Source production context.</param>
+	/// <param name="codeChangesList">Code changes from the last compilation.</param>
+	static void GenerateLibraryCode (SourceProductionContext context, RootBindingContext rootContext,
+		ImmutableArray<CodeChanges> codeChangesList)
+	{
+		var sb = new TabbedStringBuilder (new ());
+		sb.WriteHeader ();
+		// not need to collect the using statements, this file is completely generated
+		var emitter = new LibraryEmitter (rootContext, sb);
+
+		if (emitter.TryEmit (out var diagnostics)) {
+			// only add file when we do generate code
+			var code = sb.ToString ();
+			context.AddSource ($"{emitter.SymbolNamespace}/{emitter.SymbolName}.g.cs",
+				SourceText.From (code, Encoding.UTF8));
+		} else {
+			// add to the diagnostics and continue to the next possible candidate
+			foreach (Diagnostic diagnostic in diagnostics) {
+				context.ReportDiagnostic (diagnostic);
+			}
+		}
 	}
 
 	/// <summary>
@@ -127,60 +196,6 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 			if (string.IsNullOrEmpty (ns))
 				continue;
 			sb.AppendLine ($"using {ns};");
-		}
-	}
-
-	/// <summary>
-	/// Generic method that allows to call a emitter for ta type that will emit the binding code. All code generation
-	/// is very similar. Get create a tabbed string builder to write the code with the needed using statemens from
-	/// the original syntax tree and we pass it to the emitter that will generate the code.
-	/// </summary>
-	/// <param name="context">The generator context.</param>
-	/// <param name="compilation">The compilation unit.</param>
-	/// <param name="changesList">The base type declarations marked by the BindingTypeAttribute.</param>
-	/// <typeparam name="T">The type of type declaration.</typeparam>
-	static void GenerateCode<T> (SourceProductionContext context, Compilation compilation,
-		ImmutableArray<CodeChanges> changesList) where T : BaseTypeDeclarationSyntax
-	{
-		var rootContext = new RootBindingContext (compilation);
-		foreach (var change in changesList) {
-			var declaration = Unsafe.As<T> (change.SymbolDeclaration);
-			var semanticModel = compilation.GetSemanticModel (declaration.SyntaxTree);
-			// This is a bug in the roslyn analyzer for roslyn generator https://github.com/dotnet/roslyn-analyzers/issues/7436
-#pragma warning disable RS1039
-			if (semanticModel.GetDeclaredSymbol (declaration) is not INamedTypeSymbol namedTypeSymbol)
-#pragma warning restore RS1039
-				continue;
-
-			// init sb and add all the using statements from the base type declaration
-			var sb = new TabbedStringBuilder (new ());
-			sb.WriteHeader ();
-
-			// delegate semantic model and syntax tree analysis to the emitter who will generate the code and knows
-			// best
-			if (ContextFactory.TryCreate (rootContext, semanticModel, namedTypeSymbol, declaration,
-					out var symbolBindingContext)
-				&& EmitterFactory.TryCreate (symbolBindingContext, sb, out var emitter)) {
-				CollectUsingStatements (change.SymbolDeclaration.SyntaxTree, sb, emitter);
-
-				if (emitter.TryEmit (out var diagnostics)) {
-					// only add file when we do generate code
-					var code = sb.ToString ();
-					context.AddSource ($"{symbolBindingContext.Namespace}/{emitter.SymbolName}.g.cs",
-						SourceText.From (code, Encoding.UTF8));
-				} else {
-					// add to the diagnostics and continue to the next possible candidate
-					foreach (Diagnostic diagnostic in diagnostics) {
-						context.ReportDiagnostic (diagnostic);
-					}
-				}
-			} else {
-				// we don't have a emitter for this type, so we can't generate the code, add a diagnostic letting the
-				// user we do not support what he is trying to do
-				context.ReportDiagnostic (Diagnostic.Create (RBI0000,
-					declaration.GetLocation (),
-					namedTypeSymbol.ToDisplayString ().Trim ()));
-			}
 		}
 	}
 }

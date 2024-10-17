@@ -14,11 +14,11 @@
         <AssemblyName>Microsoft.Macios.Bindings.Analyzer</AssemblyName>
         <Version>0.1.0</Version>
         <!-- There is a bug in the roslyn analyzer for roslyn analyzers.... -->
-        <NoWarn>RS2007</NoWarn>
+        <NoWarn>RS2007;RS1041;RS1038;APL0003</NoWarn>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.4">
+        <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.11">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
@@ -45,6 +45,21 @@
             <DesignTime>True</DesignTime>
             <AutoGen>True</AutoGen>
             <DependentUpon>Resources.resx</DependentUpon>
+        </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Compile Include="../Microsoft.Macios.Generator/AttributesNames.cs" >
+            <Link>external\AttributesNames.cs</Link>
+        </Compile>
+        <Compile Include="../Microsoft.Macios.Generator/Attributes/FieldData.cs" >
+            <Link>external\FieldData.cs</Link>
+        </Compile>
+        <Compile Include="../Microsoft.Macios.Generator/Extensions/CompilationExtensions.cs" >
+            <Link>Extensions\CompilationExtensions.cs</Link>
+        </Compile>
+        <Compile Include="../Microsoft.Macios.Generator/Extensions/TypeSymbolExtensions.cs" >
+            <Link>Extensions\TypeSymbolExtensions.cs</Link>
         </Compile>
     </ItemGroup>
 

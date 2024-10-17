@@ -72,7 +72,7 @@ readonly struct CodeChanges {
 		// loop over the fields and add those that contain a FieldAttribute
 		var enumValueDeclaration = enumDeclaration.Members.OfType<EnumMemberDeclarationSyntax> ();
 		foreach (var val in enumValueDeclaration) {
-			if (!val.HasAttribute (semanticModel, AttributesNames.FieldAttribute))
+			if (!val.HasAttribute (semanticModel, AttributesNames.EnumFieldAttribute))
 				// for smart enums, we are only interested in the field that have a Field<EnumValue> attribute
 				continue;
 			var memberName = val.Identifier.ToFullString ().Trim ();

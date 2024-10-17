@@ -67,10 +67,7 @@ public interface IInterface {
 	}
 
 	[Theory]
-	[PlatformInlineData (ApplePlatform.iOS)]
-	[PlatformInlineData (ApplePlatform.TVOS)]
-	[PlatformInlineData (ApplePlatform.MacCatalyst)]
-	[PlatformInlineData (ApplePlatform.MacOSX)]
+	[AllSupportedPlatforms]
 	public void CompareDifferentFullyQualifiedSymbol (ApplePlatform platform)
 	{
 		var node = GetSyntaxNode<ClassDeclarationSyntax> (platform);
@@ -80,10 +77,7 @@ public interface IInterface {
 	}
 
 	[Theory]
-	[PlatformInlineData (ApplePlatform.iOS)]
-	[PlatformInlineData (ApplePlatform.TVOS)]
-	[PlatformInlineData (ApplePlatform.MacCatalyst)]
-	[PlatformInlineData (ApplePlatform.MacOSX)]
+	[AllSupportedPlatforms]
 	public void CompareDifferentBindingType (ApplePlatform platform)
 	{
 		var node = GetSyntaxNode<ClassDeclarationSyntax> (platform);
@@ -93,10 +87,7 @@ public interface IInterface {
 	}
 
 	[Theory]
-	[PlatformInlineData (ApplePlatform.iOS)]
-	[PlatformInlineData (ApplePlatform.TVOS)]
-	[PlatformInlineData (ApplePlatform.MacCatalyst)]
-	[PlatformInlineData (ApplePlatform.MacOSX)]
+	[AllSupportedPlatforms]
 	public void CompareDifferentSymbolDeclaration (ApplePlatform platform)
 	{
 		var node1 = GetSyntaxNode<ClassDeclarationSyntax> (platform);
@@ -107,10 +98,7 @@ public interface IInterface {
 	}
 
 	[Theory]
-	[PlatformInlineData (ApplePlatform.iOS)]
-	[PlatformInlineData (ApplePlatform.TVOS)]
-	[PlatformInlineData (ApplePlatform.MacCatalyst)]
-	[PlatformInlineData (ApplePlatform.MacOSX)]
+	[AllSupportedPlatforms]
 	public void CompareDifferentAttributesLength (ApplePlatform platform)
 	{
 		var node = GetSyntaxNode<ClassDeclarationSyntax> (platform);
@@ -122,10 +110,7 @@ public interface IInterface {
 	}
 
 	[Theory]
-	[PlatformInlineData (ApplePlatform.iOS)]
-	[PlatformInlineData (ApplePlatform.TVOS)]
-	[PlatformInlineData (ApplePlatform.MacCatalyst)]
-	[PlatformInlineData (ApplePlatform.MacOSX)]
+	[AllSupportedPlatforms]
 	public void CompareDifferentAttributes (ApplePlatform platform)
 	{
 		var node = GetSyntaxNode<ClassDeclarationSyntax> (platform);
@@ -139,10 +124,7 @@ public interface IInterface {
 	}
 
 	[Theory]
-	[PlatformInlineData (ApplePlatform.iOS)]
-	[PlatformInlineData (ApplePlatform.TVOS)]
-	[PlatformInlineData (ApplePlatform.MacCatalyst)]
-	[PlatformInlineData (ApplePlatform.MacOSX)]
+	[AllSupportedPlatforms]
 	public void CompareDifferentMembersLength (ApplePlatform platform)
 	{
 		var node = GetSyntaxNode<ClassDeclarationSyntax> (platform);
@@ -154,10 +136,7 @@ public interface IInterface {
 	}
 
 	[Theory]
-	[PlatformInlineData (ApplePlatform.iOS)]
-	[PlatformInlineData (ApplePlatform.TVOS)]
-	[PlatformInlineData (ApplePlatform.MacCatalyst)]
-	[PlatformInlineData (ApplePlatform.MacOSX)]
+	[AllSupportedPlatforms]
 	public void CompareDifferentMembers (ApplePlatform platform)
 	{
 		var node = GetSyntaxNode<ClassDeclarationSyntax> (platform);

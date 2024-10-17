@@ -14,7 +14,15 @@
         <PackageId>Microsoft.Macios.Generator</PackageId>
         <Version>0.1.0</Version>
         <!-- There is a bug in the roslyn analyzer for roslyn analyzers.... -->
-        <NoWarn>RS2007;RS1041</NoWarn>
+        <NoWarn>RS2007;RS1041;APL0003</NoWarn>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+      <DefineConstants>TRACE;CLASSIC_ENABLED</DefineConstants>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+      <DefineConstants>TRACE;CLASSIC_ENABLED</DefineConstants>
     </PropertyGroup>
 
     <ItemGroup>
