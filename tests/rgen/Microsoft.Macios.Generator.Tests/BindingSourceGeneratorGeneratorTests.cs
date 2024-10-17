@@ -48,7 +48,7 @@ namespace TestNamespace
 			platform, usingImportInput);
 
 		// Run generators and retrieve all results.
-		var runResult = _driver.RunGenerators (compilation).GetRunResult ();
+		var runResult = Driver.RunGenerators (compilation).GetRunResult ();
 		Assert.Empty (runResult.Diagnostics);
 
 		// ensure that we do have all the needed attributes present

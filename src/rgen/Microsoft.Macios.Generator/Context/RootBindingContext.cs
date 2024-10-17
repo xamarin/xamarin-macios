@@ -46,7 +46,7 @@ class RootBindingContext {
 	}
 
 	// TODO: clean code coming from the old generator
-	public bool TryComputeLibraryName (string attributeLibraryName, string typeNamespace,
+	public bool TryComputeLibraryName (string? attributeLibraryName, string typeNamespace,
 		[NotNullWhen (true)] out string? libraryName,
 		out string? libraryPath)
 	{

@@ -6,4 +6,5 @@ namespace Microsoft.Macios.Generator;
 public static class AttributesNames {
 
 	public static readonly string BindingAttribute = "ObjCBindings.BindingTypeAttribute";
+	public static readonly string FieldAttribute = "Foundation.FieldAttribute";
 }
