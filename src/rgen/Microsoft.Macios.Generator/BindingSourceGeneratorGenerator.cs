@@ -106,7 +106,7 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 		foreach (var ns in usingDirectivesToKeep) {
 			if (string.IsNullOrEmpty (ns))
 				continue;
-			sb.AppendFormatLine ("using {0};", ns);
+			sb.AppendLine ($"using {ns};");
 		}
 	}
 
@@ -135,7 +135,7 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 
 			// enable nullable!
 			sb.AppendLine ();
-			sb.AppendFormatLine ("#nullable enable");
+			sb.AppendLine ("#nullable enable");
 			sb.AppendLine ();
 
 			CollectUsingStatements (baseTypeDeclarationSyntax.SyntaxTree, sb);

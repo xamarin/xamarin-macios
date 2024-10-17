@@ -69,7 +69,7 @@ class RootBindingContext {
 					break;
 				}
 			} else {
-				// we get something in LibraryName from FieldAttribute so we asume
+				// we get something in LibraryName from FieldAttribute so we assume
 				// it is a path to a library, so we save the path and change library name
 				// to a valid identifier if needed
 				libraryPath = libraryName;
