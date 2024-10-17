@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
 using System.Text;
 
@@ -140,16 +141,14 @@ class TabbedStringBuilder : IDisposable {
 		// we will split the raw string in lines and then append them so that the
 		// tabbing is correct
 		var span = rawString.AsSpan ();
-		Span<Range> lines = stackalloc Range [span.Count ('\n')];
-		var count = rawString.AsSpan ().Split (lines, '\n');
+		var lines = rawString.AsSpan().Split ('\n');
+		var count = 0;
 		foreach (var range in lines) {
-			count--;
+			if (count > 0)
+				AppendLine ();
 			var line = rawString.AsSpan (range);
-			if (count <= 0) {
-				Append (line);
-			} else {
-				AppendLine (line);
-			}
+			Append (line);
+			count++;
 		}
 		return this;
 	}
