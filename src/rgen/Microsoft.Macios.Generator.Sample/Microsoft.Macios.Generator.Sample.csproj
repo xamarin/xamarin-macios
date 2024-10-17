@@ -13,7 +13,7 @@
 
     <ItemGroup>
         <Compile Include="..\..\..\src\ObjCBindings\BindingTypeAttribute.cs" >
-            <Link>external\BindginTypeAttribute.cs</Link>
+            <Link>external\BindingTypeAttribute.cs</Link>
         </Compile>
         <Compile Include="..\..\..\src\bgen\Attributes.cs" >
             <Link>external\Attributes.cs</Link>
