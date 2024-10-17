@@ -262,8 +262,10 @@ namespace Xamarin.MacDev.Tasks {
 		/// <returns>True if the Info.plist was found and successfully parsed.</returns>
 		static bool TryGetInfoPlist (TaskLoggingHelper log, string resourcePath, string xcframework, [NotNullWhen (true)] out PDictionary? plist)
 		{
-			var manifestPath = Path.Combine (xcframework, "Info.plist");
-			using var stream = CompressionHelper.TryGetPotentiallyCompressedFile (log, resourcePath, manifestPath);
+			var isCompressedXcframework = CompressionHelper.IsCompressed (xcframework);
+			var potentiallyCompressedFile = isCompressedXcframework ? Path.Combine (resourcePath, xcframework) : resourcePath;
+			var manifestPath = Path.Combine (isCompressedXcframework ? Path.GetFileNameWithoutExtension (xcframework) :  xcframework, "Info.plist");
+			using var stream = CompressionHelper.TryGetPotentiallyCompressedFile (log, potentiallyCompressedFile, manifestPath);
 			if (stream is null) {
 				plist = null;
 				return false;
@@ -305,14 +307,11 @@ namespace Xamarin.MacDev.Tasks {
 			foreach (XmlNode referenceNode in document.GetElementsByTagName ("NativeReference")) {
 				ITaskItem t = new TaskItem (r);
 				var name = referenceNode.Attributes ["Name"].Value.Trim ('\\', '/');
-				switch (Path.GetExtension (name)) {
-				case ".xcframework": {
+				if (name.EndsWith (".xcframework", StringComparison.Ordinal) || name.EndsWith (".xcframework.zip", StringComparison.Ordinal)) {
 					if (!TryResolveXCFramework (Log, TargetFrameworkMoniker, SdkIsSimulator, Architectures, resources, name, GetIntermediateDecompressionDir (resources), createdFiles, cancellationToken, out var nativeLibraryPath))
 						continue;
 					SetMetadataNativeLibrary (t, nativeLibraryPath);
-					break;
-				}
-				case ".framework": {
+				} else if (name.EndsWith (".framework", StringComparison.Ordinal)) {
 					string? frameworkPath;
 					if (!isCompressed) {
 						frameworkPath = Path.Combine (resources, name);
@@ -323,9 +322,8 @@ namespace Xamarin.MacDev.Tasks {
 					t.SetMetadata ("Kind", "Framework");
 					t.SetMetadata ("PublishFolderType", "AppleFramework");
 					t.SetMetadata ("RelativePath", Path.Combine (FrameworksDirectory, Path.GetFileName (Path.GetDirectoryName (t.ItemSpec))));
-					break;
-				}
-				case ".dylib": // macOS
+				} else if (name.EndsWith (".dylib", StringComparison.Ordinal)) {
+					// macOS
 					string? dylibPath;
 					if (!isCompressed) {
 						dylibPath = Path.Combine (resources, name);
@@ -335,8 +333,8 @@ namespace Xamarin.MacDev.Tasks {
 					t.ItemSpec = dylibPath;
 					t.SetMetadata ("Kind", "Dynamic");
 					t.SetMetadata ("PublishFolderType", "DynamicLibrary");
-					break;
-				case ".a": // static library
+				} else if (name.EndsWith (".a", StringComparison.Ordinal)) {
+					// static library
 					string? aPath;
 					if (!isCompressed) {
 						aPath = Path.Combine (resources, name);
@@ -346,11 +344,9 @@ namespace Xamarin.MacDev.Tasks {
 					t.ItemSpec = aPath;
 					t.SetMetadata ("Kind", "Static");
 					t.SetMetadata ("PublishFolderType", "StaticLibrary");
-					break;
-				default:
+				} else {
 					Log.LogWarning (MSBStrings.W7105 /* Unexpected extension '{0}' for native reference '{1}' in binding resource package '{2}'. */, Path.GetExtension (name), name, r.ItemSpec);
 					t = r;
-					break;
 				}
 
 				// defaults
@@ -418,6 +414,16 @@ namespace Xamarin.MacDev.Tasks {
 				var xcframeworkPath = isCompressed ? resourcePath : Path.Combine (resourcePath, xcframework);
 				if (!TryResolveXCFramework (log, plist, xcframeworkPath, targetFrameworkMoniker, isSimulator, architectures!, cancellationToken, out var nativeLibraryRelativePath))
 					return false;
+
+				if (!isCompressed && CompressionHelper.IsCompressed (xcframework)) {
+					var zipPath = Path.Combine (resourcePath, xcframework);
+					var xcframeworkName = Path.GetFileNameWithoutExtension (xcframework);
+					if (!CompressionHelper.TryDecompress (log, zipPath, xcframeworkName, intermediateDecompressionDir, createdFiles, cancellationToken, out var decompressedXcframeworkPath))
+						return false;
+
+					nativeLibraryPath = Path.Combine (intermediateDecompressionDir, xcframeworkName, nativeLibraryRelativePath);
+					return true;
+				}
 
 				if (!isCompressed) {
 					nativeLibraryPath = Path.Combine (resourcePath, xcframework, nativeLibraryRelativePath);
