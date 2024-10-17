@@ -10,7 +10,7 @@ namespace Microsoft.Macios.Generator.Tests.SmartEnum;
 /// <summary>
 ///  Test all the field generation code.
 /// </summary>
-public class SmartEnumTests : BaseGeneratorTestClass {
+public class SmartEnumDiagnosticsTests : BaseGeneratorTestClass {
 	public class TestDataGenerator : BaseTestDataGenerator, IEnumerable<object []> {
 		readonly List<(ApplePlatform Platform, string ClassName, string BindingFile, string OutputFile, string? LibraryText)> _data = new ()
 		{

@@ -6,6 +6,13 @@ using Microsoft.Macios.Generator.Extensions;
 namespace Microsoft.Macios.Generator.Attributes;
 
 readonly struct FieldData<T> where T : Enum {
+
+	public enum ParsingError {
+		None = 0,
+		NotIdentifier,
+		UnknownConstructor,
+		UnknownNamedArgument,
+	}
 	public string SymbolName { get; }
 	public string? LibraryName { get; }
 
@@ -20,8 +27,13 @@ readonly struct FieldData<T> where T : Enum {
 
 	public static bool TryParse (AttributeData attributeData,
 		[NotNullWhen (true)] out FieldData<T>? data)
+		=> TryParse (attributeData, out data, out _);
+
+	public static bool TryParse (AttributeData attributeData,
+		[NotNullWhen (true)] out FieldData<T>? data, out AttributeParsingError<ParsingError> error)
 	{
 		data = default;
+		error = new (ParsingError.None, null);
 
 		var count = attributeData.ConstructorArguments.Length;
 		string? symbolName;
@@ -30,6 +42,7 @@ readonly struct FieldData<T> where T : Enum {
 		switch (count) {
 		case 1:
 			if (!attributeData.ConstructorArguments [0].TryGetIdentifier (out symbolName)) {
+				error = new (ParsingError.NotIdentifier, attributeData.ConstructorArguments[0].Value);
 				return false;
 			}
 			break;
@@ -49,6 +62,7 @@ readonly struct FieldData<T> where T : Enum {
 				break;
 			default:
 				// unexpected value :/
+				error = new (ParsingError.UnknownConstructor, attributeData.ConstructorArguments.Length);
 				return false;
 			}
 			break;
@@ -73,6 +87,7 @@ readonly struct FieldData<T> where T : Enum {
 				break;
 			default:
 				data = null;
+				error = new (ParsingError.UnknownNamedArgument, name);
 				return false;
 			}
 		}
