@@ -87,7 +87,7 @@ class TabbedStringBuilder : IDisposable {
 
 	public TabbedStringBuilder AppendFormatLine (string format, params object [] args)
 	{
-		WriteTabs().AppendFormat (format, args);
+		WriteTabs ().AppendFormat (format, args);
 		sb.AppendLine ();
 		return this;
 	}
