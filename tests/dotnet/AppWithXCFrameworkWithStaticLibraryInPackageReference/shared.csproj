@@ -11,6 +11,9 @@
 
 	<ItemGroup>
 		<PackageReference Include="Xamarin.Tests.XCFrameworkWithStaticLibraryInRuntimesNativeDirectory" Version="1.0.0" />
+		<!-- Improve the below when https://github.com/xamarin/xamarin-macios/issues/17665 is fixed -->
+		<_NativeExecutableFrameworks Include="CoreLocation" />
+		<_NativeExecutableFrameworks Include="ModelIO" />
 	</ItemGroup>
 
 	<ItemGroup>
