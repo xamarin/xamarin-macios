@@ -100,6 +100,26 @@ namespace Xamarin.Tests {
 		}
 
 		[Test]
+		[TestCase ("MySimpleApp", ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64", true)]
+		[TestCase ("MySimpleApp", ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64", false)]
+		public void DefaultAssemblyStripping (string project, ApplePlatform platform, string runtimeIdentifiers, bool shouldStrip)
+		{
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
+
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
+			Clean (project_path);
+			var properties = GetDefaultProperties (runtimeIdentifiers);
+
+			// Verify value defaults to false when not set
+			properties ["EnableAssemblyILStripping"] = shouldStrip ? "true" : "";
+
+			DotNet.AssertBuild (project_path, properties);
+
+			AssertBundleAssembliesStripStatus (appPath, shouldStrip);
+		}
+
+		[Test]
 		[TestCase ("MySimpleApp", ApplePlatform.MacCatalyst, "maccatalyst-arm64")]
 		[TestCase ("MySimpleApp", ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64")]
 		[TestCase ("MySimpleApp", ApplePlatform.MacOSX, "osx-x64")]
