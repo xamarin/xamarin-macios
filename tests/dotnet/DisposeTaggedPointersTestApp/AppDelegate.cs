@@ -83,7 +83,7 @@ namespace DisposeTaggedPointersTestApp {
 				return 0;
 			}
 			default:
-				Console.WriteLine ($"❌ Unknown test case: {testCaseString	}");
+				Console.WriteLine ($"❌ Unknown test case: {testCaseString}");
 				return 2;
 			}
 		}
