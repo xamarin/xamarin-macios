@@ -153,10 +153,6 @@ namespace Xharness.Jenkins {
 									case "?all-ios":
 										switch (task.Platform) {
 										case TestPlatform.iOS:
-										case TestPlatform.iOS_TodayExtension64:
-										case TestPlatform.iOS_Unified:
-										case TestPlatform.iOS_Unified32:
-										case TestPlatform.iOS_Unified64:
 											is_match = true;
 											break;
 										default:
@@ -176,25 +172,9 @@ namespace Xharness.Jenkins {
 											break;
 										}
 										break;
-									case "?all-watchos":
-										switch (task.Platform) {
-										case TestPlatform.watchOS:
-										case TestPlatform.watchOS_32:
-										case TestPlatform.watchOS_64_32:
-											is_match = true;
-											break;
-										default:
-											if (task.Platform.ToString ().StartsWith ("watchOS", StringComparison.Ordinal))
-												throw new NotImplementedException ();
-											break;
-										}
-										break;
 									case "?all-mac":
 										switch (task.Platform) {
 										case TestPlatform.Mac:
-										case TestPlatform.Mac_Modern:
-										case TestPlatform.Mac_Full:
-										case TestPlatform.Mac_System:
 											is_match = true;
 											break;
 										default:

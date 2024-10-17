@@ -337,16 +337,6 @@ ifdef INCLUDE_DEVICE
 TARGETS += $(IOS_DESTDIR)$(MONOTOUCH_DEVICE_SDK)/lib/Xamarin.iOS.registrar.a
 endif
 
-ifdef INCLUDE_WATCH
-TARGETS += \
-	$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/lib/Xamarin.WatchOS.registrar.a \
-
-ifdef INCLUDE_DEVICE
-TARGETS += $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/lib/Xamarin.WatchOS.registrar.a
-endif
-endif
-
-
 ifdef INCLUDE_TVOS
 TARGETS +=	\
 	$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/lib/Xamarin.TVOS.registrar.a       \

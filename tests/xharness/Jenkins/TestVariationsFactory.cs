@@ -30,8 +30,8 @@ namespace Xharness.Jenkins {
 			// This function returns additional test configurations (in addition to the default one) for the specific test
 
 			// 32-bit interpreter doesn't work yet: https://github.com/mono/mono/issues/9871
-			var supports_interpreter = test.Platform != TestPlatform.iOS_Unified32;
-			var supports_dynamic_registrar_on_device = test.Platform == TestPlatform.iOS_Unified64 || test.Platform == TestPlatform.tvOS;
+			var supports_interpreter = true;
+			var supports_dynamic_registrar_on_device = true;
 			var ignore = test.TestProject.Ignore;
 			var mac_supports_arm64 = Harness.CanRunArm64;
 			var arm64_runtime_identifier = string.Empty;
@@ -49,8 +49,6 @@ namespace Xharness.Jenkins {
 				x64_runtime_identifier = "maccatalyst-x64";
 				break;
 			case TestPlatform.iOS:
-			case TestPlatform.iOS_Unified:
-			case TestPlatform.iOS_Unified64:
 				arm64_sim_runtime_identifier = "iossimulator-arm64";
 				x64_sim_runtime_identifier = "iossimulator-x64";
 				break;
@@ -62,22 +60,9 @@ namespace Xharness.Jenkins {
 
 			switch (test.ProjectPlatform) {
 			case "iPhone":
-				// arm64_32 is only supported for Release builds for now.
-				// arm32 bits too big for debug builds - https://github.com/xamarin/maccore/issues/2080
-				var supports_debug = test.Platform != TestPlatform.watchOS_64_32 && !(test.TestName == "dont link" && test.Platform == TestPlatform.iOS_Unified32);
-
-				/* we don't add --assembly-build-target=@all=staticobject because that's the default in all our test projects */
-				if (supports_debug && !test.TestProject.IsDotNetProject) {
-					yield return new TestData { Variation = "AssemblyBuildTarget: dylib (debug)", AppBundleExtraOptions = $"--assembly-build-target=@all=dynamiclibrary", Debug = true, Profiling = false, Ignored = ignore };
-					yield return new TestData { Variation = "AssemblyBuildTarget: SDK framework (debug)", AppBundleExtraOptions = $"--assembly-build-target=@sdk=framework=Xamarin.Sdk --assembly-build-target=@all=staticobject", Debug = true, Profiling = false, Ignored = ignore };
-					yield return new TestData { Variation = "AssemblyBuildTarget: dylib (debug, profiling)", AppBundleExtraOptions = $"--assembly-build-target=@all=dynamiclibrary", Debug = true, Profiling = true, Ignored = ignore };
-					yield return new TestData { Variation = "AssemblyBuildTarget: SDK framework (debug, profiling)", AppBundleExtraOptions = $"--assembly-build-target=@sdk=framework=Xamarin.Sdk --assembly-build-target=@all=staticobject", Debug = true, Profiling = true, Ignored = ignore };
-				}
-
+				var supports_debug = true;
 				if (test.ProjectConfiguration.Contains ("Debug"))
 					yield return new TestData { Variation = "Release", Debug = false, Profiling = false };
-				if (test.Platform == TestPlatform.iOS_Unified32 && !test.TestProject.IsDotNetProject)
-					yield return new TestData { Variation = "Release: UseThumb", Debug = false, Profiling = false, UseThumb = true };
 
 				// Disable this by default for tvOS/Release because the app ends up being too big (https://github.com/xamarin/maccore/issues/2282)
 				var sdk_release_skip = test.Platform == TestPlatform.tvOS && test.TestName == "dont link";
@@ -125,9 +110,6 @@ namespace Xharness.Jenkins {
 				}
 				break;
 			case "iPhoneSimulator":
-				if (test.Platform == TestPlatform.iOS_Unified32)
-					ignore = true;
-
 				switch (test.TestName) {
 				case "monotouch-test":
 					// The default is to run monotouch-test with the dynamic registrar (in the simulator), so that's already covered
@@ -162,6 +144,8 @@ namespace Xharness.Jenkins {
 				break;
 			case "AnyCPU":
 			case "x86":
+			case "":
+			case null:
 				switch (test.TestName) {
 				case "monotouch-test":
 					if (test.TestProject.IsDotNetProject) {
@@ -190,18 +174,6 @@ namespace Xharness.Jenkins {
 							yield return new TestData { Variation = "Debug (managed static registrar)", Registrar = "managed-static", Debug = true, Profiling = false, Ignored = ignore };
 							yield return new TestData { Variation = "Release (managed static registrar, all optimizations)", AppBundleExtraOptions = "--optimize:all", Registrar = "managed-static", Debug = false, Profiling = false, LinkMode = "Full", Defines = "OPTIMIZEALL", Ignored = ignore };
 						}
-					}
-					break;
-				case "xammac tests":
-					switch (test.ProjectConfiguration) {
-					case "Release":
-						yield return new TestData { Variation = "Release (all optimizations)", AppBundleExtraOptions = "--optimize:all", Registrar = "static", Debug = false, LinkMode = "Full", Defines = "OPTIMIZEALL" };
-						yield return new TestData { Variation = "Release (ARM64)", XamMacArch = "ARM64", Debug = false, Ignored = !mac_supports_arm64 || !jenkins.TestSelection.IsEnabled (TestLabel.Xammac) || !jenkins.TestSelection.IsEnabled (PlatformLabel.Mac) };
-						break;
-					case "Debug":
-						yield return new TestData { Variation = "Debug (all optimizations)", AppBundleExtraOptions = "--optimize:all,-remove-uithread-checks", Registrar = "static", Debug = true, LinkMode = "Full", Defines = "OPTIMIZEALL", Ignored = !(jenkins.TestSelection.IsEnabled (TestLabel.All) && jenkins.TestSelection.IsEnabled (PlatformLabel.Mac)) };
-						yield return new TestData { Variation = "Debug (ARM64)", XamMacArch = "ARM64", Debug = true, Ignored = !mac_supports_arm64 || !jenkins.TestSelection.IsEnabled (TestLabel.Xammac) || !jenkins.TestSelection.IsEnabled (PlatformLabel.Mac) };
-						break;
 					}
 					break;
 				}
@@ -236,7 +208,6 @@ namespace Xharness.Jenkins {
 					var known_failure = test_data.KnownFailure;
 					var candidates = test_data.Candidates;
 					var use_mono_runtime = test_data.UseMonoRuntime;
-					var xammac_arch = test_data.XamMacArch;
 					var runtime_identifer = test_data.RuntimeIdentifier;
 					var use_llvm = test_data.UseLlvm;
 					var registrar = test_data.Registrar;
@@ -284,8 +255,6 @@ namespace Xharness.Jenkins {
 						clone.Xml.SetNode (isMac ? "Profiling" : "MTouchProfiling", profiling ? "True" : "False", task.ProjectPlatform, configuration);
 						if (test_data.EnableSGenConc)
 							clone.Xml.SetProperty ("EnableSGenConc", "true");
-						if (test_data.UseThumb) // no need to check the platform, already done at the data iterator
-							clone.Xml.SetProperty ("MtouchUseThumb", "true");
 						if (use_llvm)
 							clone.Xml.SetProperty ("MtouchUseLlvm", "true");
 
@@ -293,8 +262,6 @@ namespace Xharness.Jenkins {
 							clone.Xml.SetMtouchUseLlvm (true, task.ProjectPlatform, configuration);
 						if (use_mono_runtime.HasValue)
 							clone.Xml.SetProperty ("UseMonoRuntime", use_mono_runtime.Value ? "true" : "false");
-						if (!string.IsNullOrEmpty (xammac_arch))
-							clone.Xml.SetProperty ("XamMacArch", xammac_arch);
 						if (!string.IsNullOrEmpty (runtime_identifer))
 							clone.Xml.SetProperty ("RuntimeIdentifier", runtime_identifer);
 						if (!string.IsNullOrEmpty (registrar))

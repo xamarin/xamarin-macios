@@ -488,7 +488,7 @@ class BuildConfiguration {
 
         # if xamarin legacy has been included, check if we need to include the xamarin sdk for each of the platforms, otherewise it will be
         # false for all
-        $xamarinPlatforms = @("ios", "macos", "tvos", "watchos", "maccatalyst")
+        $xamarinPlatforms = @("ios", "macos", "tvos", "maccatalyst")
         if ($configuration.INCLUDE_XAMARIN_LEGACY -eq "true") {
             foreach ($platform in $xamarinPlatforms) {
                 $variableName = "INCLUDE_LEGACY_$($platform.ToUpper())"

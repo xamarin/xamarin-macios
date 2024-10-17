@@ -34,9 +34,6 @@ namespace Xharness.Tests.Jenkins {
 			Assert.IsTrue (selection.SelectedPlatforms.HasFlag (PlatformLabel.tvOS), "tvos");
 			Assert.IsTrue (selection.IsEnabled (PlatformLabel.tvOS), "IsEnabled (tvOS)");
 
-			Assert.IsTrue (selection.SelectedPlatforms.HasFlag (PlatformLabel.watchOS), "watchOS");
-			Assert.IsTrue (selection.IsEnabled (PlatformLabel.watchOS), "IsEnabled (watchOS)");
-
 			Assert.IsTrue (selection.SelectedPlatforms.HasFlag (PlatformLabel.iOS), "iOS");
 			Assert.IsTrue (selection.IsEnabled (PlatformLabel.iOS), "IsEnabled (iOS)");
 

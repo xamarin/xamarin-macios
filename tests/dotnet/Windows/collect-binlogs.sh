@@ -7,6 +7,15 @@ cd "$(dirname "${BASH_SOURCE[0]}")"
 
 TOPLEVEL="$(git rev-parse --show-toplevel)"
 
+# Abort any agents that are still alive.
+# Aborting creates a crash report, and we can investigate why they got stuck.
+ps auxww || true
+pkill -6 -f Broker.exe || true
+pkill -6 -f Build.exe || true
+pkill -6 -f Broker.dll || true
+pkill -6 -f Build.dll || true
+ps auxww || true
+
 # Collect and zip up all the binlogs
 mkdir -p ~/remote_build_testing/binlogs
 rsync -avv --prune-empty-dirs --exclude 'artifacts/' --include '*/' --include '*.binlog' --exclude '*' "$TOPLEVEL/.." ~/remote_build_testing/binlogs
@@ -34,6 +43,9 @@ else
 fi
 
 ps auxww > ~/remote_build_testing/processes.txt || true
+
+# Collect any crash reports.
+zip -9r ~/remote_build_testing/windows-remote-logs.zip ~/Library/Logs/DiagnosticReports || true
 
 ls -la ~/Library/Caches/Xamarin/XMA/SDKs/dotnet/ >> ~/remote_build_testing/dotnet-debug.txt 2>&1 || true
 cat ~/Library/Caches/Xamarin/XMA/SDKs/dotnet/NuGet.config >> ~/remote_build_testing/dotnet-debug.txt 2>&1 || true

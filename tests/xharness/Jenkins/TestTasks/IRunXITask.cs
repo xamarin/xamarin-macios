@@ -10,6 +10,5 @@ namespace Xharness.Jenkins.TestTasks {
 		TestTarget AppRunnerTarget { get; set; }
 		IEnumerable<TDevice> Candidates { get; }
 		TDevice Device { get; set; }
-		TDevice CompanionDevice { get; set; }
 	}
 }
