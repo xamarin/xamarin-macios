@@ -21,10 +21,10 @@ record FieldData {
 		var count = attributeData.ConstructorArguments.Length;
 		switch (count) {
 		case 1:
-			data = new((string) attributeData.ConstructorArguments [0].Value!);
+			data = new ((string) attributeData.ConstructorArguments [0].Value!);
 			return true;
 		case 2:
-			data = new((string) attributeData.ConstructorArguments [0].Value!,
+			data = new ((string) attributeData.ConstructorArguments [0].Value!,
 				(string) attributeData.ConstructorArguments [1].Value!);
 			return true;
 		default:

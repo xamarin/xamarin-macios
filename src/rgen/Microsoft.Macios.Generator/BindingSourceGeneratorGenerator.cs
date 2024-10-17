@@ -144,11 +144,11 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 			// best
 			if (ContextFactory.TryCreate (rootContext, semanticModel, namedTypeSymbol, baseTypeDeclarationSyntax, out var symbolBindingContext)
 				&& EmitterFactory.TryCreate (symbolBindingContext, sb, out var emitter)) {
-				if (emitter.TryEmit(out var diagnostics)) {
-					 // only add file when we do generate code
-					 var code = sb.ToString ();
-					 context.AddSource ($"{symbolBindingContext.Namespace}/{emitter.SymbolName}.g.cs",
-						 SourceText.From (code, Encoding.UTF8));
+				if (emitter.TryEmit (out var diagnostics)) {
+					// only add file when we do generate code
+					var code = sb.ToString ();
+					context.AddSource ($"{symbolBindingContext.Namespace}/{emitter.SymbolName}.g.cs",
+						SourceText.From (code, Encoding.UTF8));
 				} else {
 					// add to the diagnostics and continue to the next possible candidate
 					foreach (Diagnostic diagnostic in diagnostics) {
