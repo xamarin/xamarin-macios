@@ -63,7 +63,7 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 	/// </summary>
 	/// <param name="context">Context used by the generator.</param>
 	/// <typeparam name="T">The BaseTypeDeclarationSyntax we are interested in.</typeparam>
-	/// <returns></returns>
+	/// <returns>A tuple that contains the BaseTypeDeclaration that was processed and a boolean that states if it should be processed or not.</returns>
 	static (T Declaration, bool BindingAttributeFound) GetDeclarationForSourceGen<T> (GeneratorSyntaxContext context)
 		where T : BaseTypeDeclarationSyntax
 	{
