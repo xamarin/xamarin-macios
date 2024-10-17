@@ -5,6 +5,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
@@ -22,6 +23,8 @@ namespace Xamarin.MacDev.Tasks {
 	/// This task works on Windows too, but if the task encounters a symlink while extracting, an error will be shown.
 	/// </summary>
 	public class Unzip : XamarinTask, ITaskCallback {
+		CancellationTokenSource? cancellationTokenSource;
+
 		// If we should copy the extracted files to Windows (as opposed to just creating an empty output file).
 		public bool CopyToWindows { get; set; }
 
@@ -55,8 +58,11 @@ namespace Xamarin.MacDev.Tasks {
 
 		public void Cancel ()
 		{
-			if (ShouldExecuteRemotely ())
+			if (ShouldExecuteRemotely ()) {
 				BuildConnection.CancelAsync (BuildEngine4).Wait ();
+			} else {
+				cancellationTokenSource?.Cancel ();
+			}
 		}
 
 		public bool ShouldCopyToBuildServer (ITaskItem item) => true;
@@ -73,7 +79,8 @@ namespace Xamarin.MacDev.Tasks {
 		bool ExecuteLocally ()
 		{
 			var createdFiles = new List<string> ();
-			if (!CompressionHelper.TryDecompress (Log, ZipFilePath!.ItemSpec, Resource, ExtractionPath, createdFiles, out var _))
+			cancellationTokenSource = new CancellationTokenSource ();
+			if (!CompressionHelper.TryDecompress (Log, ZipFilePath!.ItemSpec, Resource, ExtractionPath, createdFiles, cancellationTokenSource.Token, out var _))
 				return false;
 
 			TouchedFiles = createdFiles.Select (v => new TaskItem (v)).ToArray ();
