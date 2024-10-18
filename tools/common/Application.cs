@@ -707,7 +707,7 @@ namespace Xamarin.Bundler {
 
 			var wp = new WriterParameters () {
 				WriteSymbols = symbols,
-				SymbolWriterProvider = symbols ? new CustomSymbolWriterProvider (false) : null,
+				SymbolWriterProvider = symbols ? new CustomSymbolWriterProvider () : null,
 			};
 
 			// re-write symbols, if available, so the new tokens will match

@@ -19,7 +19,7 @@
   <ItemGroup>
     <ProjectReference Include="..\PreTrim\PreTrim.csproj" />
     <ProjectReference Include="..\PreTrim.Tests.Cases\Basic\Basic.csproj" />
-
+    <ProjectReference Include="..\PreTrim.Tests.Cases\SDInnerBlock\SDInnerBlock.csproj" />
   </ItemGroup>
 
   <ItemGroup>

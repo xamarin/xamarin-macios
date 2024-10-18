@@ -21,6 +21,7 @@
     <Compile Include="..\..\dotnet-linker\**\*.cs" />
     <Compile Remove="..\..\dotnet-linker\bin\**\*.cs" />
     <Compile Remove="..\..\dotnet-linker\obj\**\*.cs" />
+    <Compile Remove="..\..\dotnet-linker\Steps\PreserveBlockCodeHandler.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -133,9 +134,9 @@
     <Compile Include="..\..\common\TargetFramework.cs">
       <Link>external\tools\common\TargetFramework.cs</Link>
     </Compile>
-    <Compile Include="..\..\linker\CustomSymbolWriter.cs">
+    <!-- <Compile Include="..\..\linker\CustomSymbolWriter.cs">
       <Link>external\tools\linker\CustomSymbolWriter.cs</Link>
-    </Compile>
+    </Compile> -->
     <Compile Include="..\..\linker\CoreOptimizeGeneratedCode.cs">
       <Link>external\tools\linker\CoreOptimizeGeneratedCode.cs</Link>
     </Compile>
