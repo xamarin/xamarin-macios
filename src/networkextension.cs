@@ -2,6 +2,14 @@
 // Copyright 2019 Microsoft Corporation
 
 using System;
+
+#if NET
+#if IOS && !__MACCATALYST__
+using AccessorySetupKit;
+#else
+using ASAccessory = Foundation.NSObject;
+#endif
+#endif
 using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
@@ -25,11 +33,6 @@ using NEHotspotHelperConfidence = Foundation.NSObject;
 #endif
 
 namespace NetworkExtension {
-
-	// Just to satisfy the core dll contract, the right type will be used on the generated file
-	interface NWInterface { }
-	interface NWParameters { }
-
 	/// <summary>Enumerates errors relating to a DNS proxy.</summary>
 	[NoTV]
 	[ErrorDomain ("NEDNSProxyErrorDomain")]
@@ -119,6 +122,8 @@ namespace NetworkExtension {
 		AlreadyAssociated = 13,
 		ApplicationIsNotInForeground = 14,
 		InvalidSsidPrefix = 15,
+		UserUnauthorized = 16,
+		SystemDenied = 17,
 	}
 
 	[NoTV]
@@ -223,6 +228,7 @@ namespace NetworkExtension {
 		ServerCertificateExpired = 19,
 	}
 
+	delegate void NEAppProxyFlowOpenCallback ([NullAllowed] NSError completionHandler);
 
 	/// <summary>Provides IO over a network socket.</summary>
 	///     
@@ -233,6 +239,9 @@ namespace NetworkExtension {
 	[Abstract] // documented as such and ...
 	[DisableDefaultCtor] // can't be created (with `init`) without crashing introspection tests
 	interface NEAppProxyFlow {
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'OpenWithLocalFlowEndpoint' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'OpenWithLocalFlowEndpoint' instead.")]
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'OpenWithLocalFlowEndpoint' instead.")]
 		[Export ("openWithLocalEndpoint:completionHandler:")]
 		[Async]
 		void OpenWithLocalEndpoint ([NullAllowed] NWHostEndpoint localEndpoint, Action<NSError> completionHandler);
@@ -270,14 +279,13 @@ namespace NetworkExtension {
 			set;
 		}
 
-		[Mac (11, 0)]
 		[iOS (14, 2)]
 		[MacCatalyst (14, 2)]
 		[Export ("remoteHostname")]
 		[NullAllowed]
 		string RemoteHostname { get; }
 
-		[Mac (11, 1), iOS (14, 3)]
+		[iOS (14, 3)]
 		[MacCatalyst (14, 3)]
 		[Export ("isBound")]
 		bool IsBound { get; }
@@ -286,6 +294,11 @@ namespace NetworkExtension {
 		[Field ("NEAppProxyErrorDomain")]
 		NSString ErrorDomain { get; }
 #endif
+
+		[Async]
+		[NoWatch, NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("openWithLocalFlowEndpoint:completionHandler:")]
+		void OpenWithLocalFlowEndpoint ([NullAllowed] Network.NWEndpoint localEndpoint, NEAppProxyFlowOpenCallback completionHandler);
 	}
 
 	/// <summary>Provides sockets by creating <see cref="T:NetworkExtension.NEAppProxyFlow" /> objects.</summary>
@@ -313,7 +326,14 @@ namespace NetworkExtension {
 		[iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("handleNewUDPFlow:initialRemoteEndpoint:")]
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Call 'HandleNewUdpFlowWithInitialFlowEndPoint' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Call 'HandleNewUdpFlowWithInitialFlowEndPoint' instead.")]
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Call 'HandleNewUdpFlowWithInitialFlowEndPoint' instead.")]
 		bool HandleNewUdpFlow (NEAppProxyUdpFlow flow, NWEndpoint remoteEndpoint);
+
+		[NoWatch, NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("handleNewUDPFlow:initialRemoteFlowEndpoint:")]
+		bool HandleNewUdpFlowWithInitialFlowEndPoint (NEAppProxyUdpFlow flow, Network.NWEndpoint remoteEndpoint);
 	}
 
 	/// <summary>Configures and controls network tunnels received from an App Proxy Provider extension.</summary>
@@ -346,12 +366,20 @@ namespace NetworkExtension {
 		[Async]
 		void WriteData (NSData data, Action<NSError> completionHandler);
 
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Call 'RemoveFlowEndpoint' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Call 'RemoveFlowEndpoint' instead.")]
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Call 'RemoveFlowEndpoint' instead.")]
 		[Export ("remoteEndpoint")]
 		NWEndpoint RemoteEndpoint { get; }
+
+		[NoWatch, NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("remoteFlowEndpoint")]
+		Network.NWEndpoint RemoteFlowEndpoint { get; }
 	}
 
 	delegate void NEDatagramRead (NSData [] datagrams, NWEndpoint [] remoteEndpoints, NSError error);
-
+	delegate void NEDatagramAndFlowEndpointsRead ([NullAllowed] NSData [] datagrams, [NullAllowed] Network.NWEndpoint [] remoteEndpoints, [NullAllowed] NSError error);
+	delegate void NEDatagramWriteResult ([NullAllowed] NSError error);
 	/// <summary>Provides IO over a UDP socket.</summary>
 	///     
 	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/NetworkExtension/Reference/NEAppProxyUDPFlowClassRef/index.html">Apple documentation for <c>NEAppProxyUDPFlow</c></related>
@@ -362,14 +390,39 @@ namespace NetworkExtension {
 	interface NEAppProxyUdpFlow {
 		[Export ("readDatagramsWithCompletionHandler:")]
 		[Async (ResultTypeName = "NEDatagramReadResult")]
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'ReadDatagramsAndFlowEndpoints' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'ReadDatagramsAndFlowEndpoints' instead.")]
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'ReadDatagramsAndFlowEndpoints' instead.")]
 		void ReadDatagrams (NEDatagramRead completionHandler);
 
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'WriteDatagramsAndFlowEndpoints' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'WriteDatagramsAndFlowEndpoints' instead.")]
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'WriteDatagramsAndFlowEndpoints' instead.")]
 		[Export ("writeDatagrams:sentByEndpoints:completionHandler:")]
 		[Async]
 		void WriteDatagrams (NSData [] datagrams, NWEndpoint [] remoteEndpoints, Action<NSError> completionHandler);
 
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'LocalFlowEndpoint' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'LocalFlowEndpoint' instead.")]
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'LocalFlowEndpoint' instead.")]
 		[NullAllowed, Export ("localEndpoint")]
 		NWEndpoint LocalEndpoint { get; }
+
+#if NET
+		[Async (ResultTypeName = "NEDatagramAndFlowEndpointsReadResult")]
+		[NoWatch, NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("readDatagramsAndFlowEndpointsWithCompletionHandler:")]
+		void ReadDatagramsAndFlowEndpoints (NEDatagramAndFlowEndpointsRead completionHandler);
+#endif
+
+		[Async]
+		[NoWatch, NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("writeDatagrams:sentByFlowEndpoints:completionHandler:")]
+		void WriteDatagramsAndFlowEndpoints (NSData [] datagrams, Network.NWEndpoint [] flowEndpoints, NEDatagramWriteResult completionHandler);
+
+		[NoWatch, NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("localFlowEndpoint"), NullAllowed]
+		Network.NWEndpoint LocalFlowEndpoint { get; }
 	}
 
 	/// <summary>Defines a rule that select network connections based on application signing identifier, application path, and/or hostname domain.</summary>
@@ -433,12 +486,12 @@ namespace NetworkExtension {
 		[Export ("matchDomainsNoSearch")]
 		bool MatchDomainsNoSearch { get; set; }
 
-		[NoWatch, Mac (11, 0), iOS (14, 0)]
+		[NoWatch, iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[Export ("dnsProtocol")]
 		NEDnsProtocol DnsProtocol { get; }
 
-		[Mac (11, 0), iOS (14, 0), NoTV, NoWatch]
+		[iOS (14, 0), NoTV, NoWatch]
 		[MacCatalyst (14, 0)]
 		[Notification]
 		[Field ("NEDNSSettingsConfigurationDidChangeNotification")]
@@ -671,6 +724,10 @@ namespace NetworkExtension {
 		[Field ("NEFilterErrorDomain")]
 		NSString ErrorDomain { get; }
 #endif
+
+		[NoWatch, NoTV, Mac (15, 0), NoiOS, MacCatalyst (18, 0)]
+		[Export ("disableEncryptedDNSSettings", ArgumentSemantic.Assign)]
+		bool DisableEncryptedDnsSettings { get; set; }
 	}
 
 	/// <summary>Represents a Filter Provider decision about network data flow the first time that the data is seen.</summary>
@@ -929,11 +986,19 @@ namespace NetworkExtension {
 		[Export ("createResponse:")]
 		NEHotspotHelperResponse CreateResponse (NEHotspotHelperResult result);
 
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'NWParameters.RequiredInterface' with the 'Interface' property instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'NWParameters.RequiredInterface' with the 'Interface' property instead.")]
 		[Export ("createTCPConnection:")]
 		NWTcpConnection CreateTcpConnection (NWEndpoint endpoint);
 
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'NWParameters.RequiredInterface' with the 'Interface' property instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'NWParameters.RequiredInterface' with the 'Interface' property instead.")]
 		[Export ("createUDPSession:")]
 		NWUdpSession CreateUdpSession (NWEndpoint endpoint);
+
+		[NoWatch, NoTV, NoMac, iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("interface")]
+		NWInterface Interface { get; }
 	}
 
 	/// <summary>Contains a Hotspot Helper command response.</summary>
@@ -1100,12 +1165,24 @@ namespace NetworkExtension {
 		[Export ("wake")]
 		void Wake ();
 
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'Network.NWConnection' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'Network.NWConnection' instead.")]
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'Network.NWConnection' instead.")]
+		[Deprecated (PlatformName.TvOS, 18, 0, message: "Use 'Network.NWConnection' instead.")]
 		[Export ("createTCPConnectionToEndpoint:enableTLS:TLSParameters:delegate:")]
 		NWTcpConnection CreateTcpConnectionToEndpoint (NWEndpoint remoteEndpoint, bool enableTLS, [NullAllowed] NWTlsParameters TLSParameters, [NullAllowed] NSObject connectionDelegate);
 
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'Network.NWConnection' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'Network.NWConnection' instead.")]
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'Network.NWConnection' instead.")]
+		[Deprecated (PlatformName.TvOS, 18, 0, message: "Use 'Network.NWConnection' instead.")]
 		[Export ("createUDPSessionToEndpoint:fromEndpoint:")]
 		NWUdpSession CreateUdpSessionToEndpoint (NWEndpoint remoteEndpoint, [NullAllowed] NWHostEndpoint localEndpoint);
 
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'Network.NWPathMonitor' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'Network.NWPathMonitor' instead.")]
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'Network.NWPathMonitor' instead.")]
+		[Deprecated (PlatformName.TvOS, 18, 0, message: "Use 'Network.NWPathMonitor' instead.")]
 		[NullAllowed, Export ("defaultPath")]
 		NWPath DefaultPath { get; }
 
@@ -1280,11 +1357,11 @@ namespace NetworkExtension {
 		NSString ErrorDomain { get; }
 #endif
 
-		[NoWatch, NoTV, NoiOS, Mac (11, 0), MacCatalyst (15, 0)]
+		[NoWatch, NoTV, NoiOS, MacCatalyst (15, 0)]
 		[Export ("excludedDomains", ArgumentSemantic.Copy)]
 		string [] ExcludedDomains { get; set; }
 
-		[NoWatch, NoTV, NoiOS, Mac (11, 0), MacCatalyst (15, 0)]
+		[NoWatch, NoTV, NoiOS, MacCatalyst (15, 0)]
 		[Export ("associatedDomains", ArgumentSemantic.Copy)]
 		string [] AssociatedDomains { get; set; }
 	}
@@ -1357,7 +1434,7 @@ namespace NetworkExtension {
 		NSString ConfigurationChangeNotification { get; }
 	}
 
-	[MacCatalyst (13, 1)]
+	[MacCatalyst (13, 1), TV (17, 0)]
 	[BaseType (typeof (NSObject), Name = "NEVPNConnection")]
 	interface NEVpnConnection {
 
@@ -1473,6 +1550,10 @@ namespace NetworkExtension {
 		[MacCatalyst (14, 2)]
 		[Export ("enforceRoutes")]
 		bool EnforceRoutes { get; set; }
+
+		[NoWatch, NoTV, NoMac, iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("sliceUUID", ArgumentSemantic.Copy), NullAllowed]
+		string SliceUuid { get; set; }
 	}
 
 	[MacCatalyst (13, 1)]
@@ -1578,10 +1659,14 @@ namespace NetworkExtension {
 		[Export ("enableFallback")]
 		bool EnableFallback { get; set; }
 
-		[NoWatch, Mac (11, 0), iOS (14, 0)]
+		[NoWatch, iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[Export ("mtu")]
 		nuint Mtu { get; set; }
+
+		[NoWatch, TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("ppkConfiguration", ArgumentSemantic.Copy), NullAllowed]
+		NEVpnIkev2PpkConfiguration PpkConfiguration { get; set; }
 	}
 
 	[MacCatalyst (13, 1)]
@@ -1661,129 +1746,276 @@ namespace NetworkExtension {
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[Abstract]
+	[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'Network.NWEndpoint' instead.")]
+	[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'Network.NWEndpoint' instead.")]
+	[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'Network.NWEndpoint' instead.")]
+	[Deprecated (PlatformName.TvOS, 18, 0, message: "Use 'Network.NWEndpoint' instead.")]
 	interface NWEndpoint : NSSecureCoding, NSCopying {
 	}
 
+	[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'Network.NWEndpoint' instead.")]
+	[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'Network.NWEndpoint' instead.")]
+	[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'Network.NWEndpoint' instead.")]
+	[Deprecated (PlatformName.TvOS, 18, 0, message: "Use 'Network.NWEndpoint' instead.")]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NWEndpoint))]
 	[DisableDefaultCtor]
 	interface NWHostEndpoint {
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'Network.NWEndpoint.Create' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'Network.NWEndpoint.Create' instead.")]
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'Network.NWEndpoint.Create' instead.")]
+		[Deprecated (PlatformName.TvOS, 18, 0, message: "Use 'Network.NWEndpoint.Create' instead.")]
 		[Static]
 		[Export ("endpointWithHostname:port:")]
 		NWHostEndpoint Create (string hostname, string port);
 
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'Network.NWEndpoint.Hostname' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'Network.NWEndpoint.Hostname' instead.")]
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'Network.NWEndpoint.Hostname' instead.")]
+		[Deprecated (PlatformName.TvOS, 18, 0, message: "Use 'Network.NWEndpoint.Hostname' instead.")]
 		[Export ("hostname")]
 		string Hostname { get; }
 
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'Network.NWEndpoint.PortNumber' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'Network.NWEndpoint.PortNumber' instead.")]
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'Network.NWEndpoint.PortNumber' instead.")]
+		[Deprecated (PlatformName.TvOS, 18, 0, message: "Use 'Network.NWEndpoint.PortNumber' instead.")]
 		[Export ("port")]
 		string Port { get; }
 	}
 
+	[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'Network.NWEndpoint' instead.")]
+	[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'Network.NWEndpoint' instead.")]
+	[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'Network.NWEndpoint' instead.")]
+	[Deprecated (PlatformName.TvOS, 18, 0, message: "Use 'Network.NWEndpoint' instead.")]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NWEndpoint))]
 	[DisableDefaultCtor]
 	interface NWBonjourServiceEndpoint {
 
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'Network.NWEndpoint.CreateBonjourService' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'Network.NWEndpoint.CreateBonjourService' instead.")]
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'Network.NWEndpoint.CreateBonjourService' instead.")]
+		[Deprecated (PlatformName.TvOS, 18, 0, message: "Use 'Network.NWEndpoint.CreateBonjourService' instead.")]
 		[Static]
 		[Export ("endpointWithName:type:domain:")]
 		NWBonjourServiceEndpoint Create (string name, string type, string domain);
 
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'Network.NWEndpoint.BonjourServiceName' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'Network.NWEndpoint.BonjourServiceName' instead.")]
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'Network.NWEndpoint.BonjourServiceName' instead.")]
+		[Deprecated (PlatformName.TvOS, 18, 0, message: "Use 'Network.NWEndpoint.BonjourServiceName' instead.")]
 		[Export ("name")]
 		string Name { get; }
 
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'Network.NWEndpoint.BonjourServiceType' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'Network.NWEndpoint.BonjourServiceType' instead.")]
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'Network.NWEndpoint.BonjourServiceType' instead.")]
+		[Deprecated (PlatformName.TvOS, 18, 0, message: "Use 'Network.NWEndpoint.BonjourServiceType' instead.")]
+
 		[Export ("type")]
 		string Type { get; }
+
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'Network.NWEndpoint.BonjourServiceDomain' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'Network.NWEndpoint.BonjourServiceDomain' instead.")]
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'Network.NWEndpoint.BonjourServiceDomain' instead.")]
+		[Deprecated (PlatformName.TvOS, 18, 0, message: "Use 'Network.NWEndpoint.BonjourServiceDomain' instead.")]
 
 		[Export ("domain")]
 		string Domain { get; }
 	}
 
+	[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'Network.NWPath' instead.")]
+	[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'Network.NWPath' instead.")]
+	[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'Network.NWPath' instead.")]
+	[Deprecated (PlatformName.TvOS, 18, 0, message: "Use 'Network.NWPath' instead.")]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NWPath {
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'Network.NWPath.Status' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'Network.NWPath.Status' instead.")]
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'Network.NWPath.Status' instead.")]
+		[Deprecated (PlatformName.TvOS, 18, 0, message: "Use 'Network.NWPath.Status' instead.")]
 		[Export ("status")]
 		NWPathStatus Status { get; }
 
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'Network.NWPath.IsExpensive' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'Network.NWPath.IsExpensive' instead.")]
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'Network.NWPath.IsExpensive' instead.")]
+		[Deprecated (PlatformName.TvOS, 18, 0, message: "Use 'Network.NWPath.IsExpensive' instead.")]
 		[Export ("expensive")]
 		bool Expensive { [Bind ("isExpensive")] get; }
 
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'Network.NWPath.EqualTo' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'Network.NWPath.EqualTo' instead.")]
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'Network.NWPath.EqualTo' instead.")]
+		[Deprecated (PlatformName.TvOS, 18, 0, message: "Use 'Network.NWPath.EqualTo' instead.")]
 		[Export ("isEqualToPath:")]
 		bool IsEqualToPath (NWPath path);
 
-		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'Network.NWPath.IsConstrained' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'Network.NWPath.IsConstrained' instead.")]
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'Network.NWPath.IsConstrained' instead.")]
+		[Deprecated (PlatformName.TvOS, 18, 0, message: "Use 'Network.NWPath.IsConstrained' instead.")]
+		[Watch (7, 0), TV (14, 0), iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[Export ("constrained")]
 		bool Constrained { [Bind ("isConstrained")] get; }
 	}
 
+	[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'Network.NWConnection' instead.")]
+	[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'Network.NWConnection' instead.")]
+	[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'Network.NWConnection' instead.")]
+	[Deprecated (PlatformName.TvOS, 18, 0, message: "Use 'Network.NWConnection' instead.")]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject), Name = "NWTCPConnection")]
 	interface NWTcpConnection {
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use the 'Network.NWConnection' constructor instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use the 'Network.NWConnection' constructor instead.")]
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use the 'Network.NWConnection' constructor instead.")]
+		[Deprecated (PlatformName.TvOS, 18, 0, message: "Use the 'Network.NWConnection' constructor instead.")]
 		[Export ("initWithUpgradeForConnection:")]
 		NativeHandle Constructor (NWTcpConnection connection);
 
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'Network.NWConnection.SetStateChangedHandler' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'Network.NWConnection.SetStateChangedHandler' instead.")]
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'Network.NWConnection.SetStateChangedHandler' instead.")]
+		[Deprecated (PlatformName.TvOS, 18, 0, message: "Use 'Network.NWConnection.SetStateChangedHandler' instead.")]
 		[Export ("state")]
 		NWTcpConnectionState State { get; }
 
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'Network.NWConnection.SetViabilityChangedHandler' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'Network.NWConnection.SetViabilityChangedHandler' instead.")]
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'Network.NWConnection.SetViabilityChangedHandler' instead.")]
+		[Deprecated (PlatformName.TvOS, 18, 0, message: "Use 'Network.NWConnection.SetViabilityChangedHandler' instead.")]
 		[Export ("viable")]
 		bool Viable { [Bind ("isViable")] get; }
 
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'Network.NWConnection.SetBetterPathAvailableHandler' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'Network.NWConnection.SetBetterPathAvailableHandler' instead.")]
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'Network.NWConnection.SetBetterPathAvailableHandler' instead.")]
+		[Deprecated (PlatformName.TvOS, 18, 0, message: "Use 'Network.NWConnection.SetBetterPathAvailableHandler' instead.")]
 		[Export ("hasBetterPath")]
 		bool HasBetterPath { get; }
 
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'Network.NWConnection.Endpoint' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'Network.NWConnection.Endpoint' instead.")]
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'Network.NWConnection.Endpoint' instead.")]
+		[Deprecated (PlatformName.TvOS, 18, 0, message: "Use 'Network.NWConnection.Endpoint' instead.")]
 		[Export ("endpoint")]
 		NWEndpoint Endpoint { get; }
 
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'Network.NWConnection.CurrentPath' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'Network.NWConnection.CurrentPath' instead.")]
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'Network.NWConnection.CurrentPath' instead.")]
+		[Deprecated (PlatformName.TvOS, 18, 0, message: "Use 'Network.NWConnection.CurrentPath' instead.")]
 		[NullAllowed, Export ("connectedPath")]
 		NWPath ConnectedPath { get; }
 
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'Network.NWPath.EffectiveLocalEndpoint' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'Network.NWPath.EffectiveLocalEndpoint' instead.")]
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'Network.NWPath.EffectiveLocalEndpoint' instead.")]
+		[Deprecated (PlatformName.TvOS, 18, 0, message: "Use 'Network.NWPath.EffectiveLocalEndpoint' instead.")]
 		[NullAllowed, Export ("localAddress")]
 		NWEndpoint LocalAddress { get; }
 
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'Network.NWPath.EffectiveRemoteEndpoint' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'Network.NWPath.EffectiveRemoteEndpoint' instead.")]
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'Network.NWPath.EffectiveRemoteEndpoint' instead.")]
+		[Deprecated (PlatformName.TvOS, 18, 0, message: "Use 'Network.NWPath.EffectiveRemoteEndpoint' instead.")]
 		[NullAllowed, Export ("remoteAddress")]
 		NWEndpoint RemoteAddress { get; }
 
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'Network.NWEndpoint.TxtRecord' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'Network.NWEndpoint.TxtRecord' instead.")]
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'Network.NWEndpoint.TxtRecord' instead.")]
+		[Deprecated (PlatformName.TvOS, 18, 0, message: "Use 'Network.NWEndpoint.TxtRecord' instead.")]
 		[NullAllowed, Export ("txtRecord")]
 		NSData TxtRecord { get; }
 
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'Network.NWConnection.SetStateChangedHandler' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'Network.NWConnection.SetStateChangedHandler' instead.")]
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'Network.NWConnection.SetStateChangedHandler' instead.")]
+		[Deprecated (PlatformName.TvOS, 18, 0, message: "Use 'Network.NWConnection.SetStateChangedHandler' instead.")]
 		[NullAllowed, Export ("error")]
 		NSError Error { get; }
 
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'Network.NWConnection.Cancel' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'Network.NWConnection.Cancel' instead.")]
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'Network.NWConnection.Cancel' instead.")]
+		[Deprecated (PlatformName.TvOS, 18, 0, message: "Use 'Network.NWConnection.Cancel' instead.")]
 		[Export ("cancel")]
 		void Cancel ();
 
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'Network.NWConnection.Receive' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'Network.NWConnection.Receive' instead.")]
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'Network.NWConnection.Receive' instead.")]
+		[Deprecated (PlatformName.TvOS, 18, 0, message: "Use 'Network.NWConnection.Receive' instead.")]
 		[Export ("readLength:completionHandler:")]
 		[Async]
 		void ReadLength (nuint length, Action<NSData, NSError> completion);
 
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'Network.NWConnection.Receive' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'Network.NWConnection.Receive' instead.")]
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'Network.NWConnection.Receive' instead.")]
+		[Deprecated (PlatformName.TvOS, 18, 0, message: "Use 'Network.NWConnection.Receive' instead.")]
 		[Export ("readMinimumLength:maximumLength:completionHandler:")]
 		[Async]
 		void ReadMinimumLength (nuint minimum, nuint maximum, Action<NSData, NSError> completion);
 
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'Network.NWConnection.Send' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'Network.NWConnection.Send' instead.")]
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'Network.NWConnection.Send' instead.")]
+		[Deprecated (PlatformName.TvOS, 18, 0, message: "Use 'Network.NWConnection.Send' instead.")]
 		[Export ("write:completionHandler:")]
 		[Async]
 		void Write (NSData data, Action<NSError> completion);
 
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'Network.NWConnection.Send' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'Network.NWConnection.Send' instead.")]
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'Network.NWConnection.Send' instead.")]
+		[Deprecated (PlatformName.TvOS, 18, 0, message: "Use 'Network.NWConnection.Send' instead.")]
 		[Export ("writeClose")]
 		void WriteClose ();
 	}
 
 	interface INWTcpConnectionAuthenticationDelegate { }
 
+	[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'Security.SecProtocolOptions' instead.")]
+	[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'Security.SecProtocolOptions' instead.")]
+	[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'Security.SecProtocolOptions' instead.")]
+	[Deprecated (PlatformName.TvOS, 18, 0, message: "Use 'Security.SecProtocolOptions' instead.")]
 	[MacCatalyst (13, 1)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject), Name = "NWTCPConnectionAuthenticationDelegate")]
 	interface NWTcpConnectionAuthenticationDelegate {
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'Security.SecProtocolOptions.SetChallengeBlock' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'Security.SecProtocolOptions.SetChallengeBlock' instead.")]
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'Security.SecProtocolOptions.SetChallengeBlock' instead.")]
+		[Deprecated (PlatformName.TvOS, 18, 0, message: "Use 'Security.SecProtocolOptions.SetChallengeBlock' instead.")]
 		[Export ("shouldProvideIdentityForConnection:")]
 		bool ShouldProvideIdentity (NWTcpConnection connection);
 
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'Security.SecProtocolOptions.SetChallengeBlock' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'Security.SecProtocolOptions.SetChallengeBlock' instead.")]
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'Security.SecProtocolOptions.SetChallengeBlock' instead.")]
+		[Deprecated (PlatformName.TvOS, 18, 0, message: "Use 'Security.SecProtocolOptions.SetChallengeBlock' instead.")]
 		[Export ("provideIdentityForConnection:completionHandler:")]
 		void ProvideIdentity (NWTcpConnection connection, Action<SecIdentity, NSArray> completion);
 
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'Security.SecProtocolOptions.SetVerifyBlock' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'Security.SecProtocolOptions.SetVerifyBlock' instead.")]
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'Security.SecProtocolOptions.SetVerifyBlock' instead.")]
+		[Deprecated (PlatformName.TvOS, 18, 0, message: "Use 'Security.SecProtocolOptions.SetVerifyBlock' instead.")]
 		[Export ("shouldEvaluateTrustForConnection:")]
 		bool ShouldEvaluateTrust (NWTcpConnection connection);
 
+
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'Security.SecProtocolOptions.SetVerifyBlock' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'Security.SecProtocolOptions.SetVerifyBlock' instead.")]
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'Security.SecProtocolOptions.SetVerifyBlock' instead.")]
+		[Deprecated (PlatformName.TvOS, 18, 0, message: "Use 'Security.SecProtocolOptions.SetVerifyBlock' instead.")]
 		[Export ("evaluateTrustForConnection:peerCertificateChain:completionHandler:")]
 		[Async]
 		void EvaluateTrust (NWTcpConnection connection, NSArray peerCertificateChain, Action<SecTrust> completion);
@@ -1791,63 +2023,139 @@ namespace NetworkExtension {
 		// and SecCertificate - both *NOT* NSObject -> because of that NSArray is used above
 	}
 
+	[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'Security.SecProtocolOptions' instead.")]
+	[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'Security.SecProtocolOptions' instead.")]
+	[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'Security.SecProtocolOptions' instead.")]
+	[Deprecated (PlatformName.TvOS, 18, 0, message: "Use 'Security.SecProtocolOptions' instead.")]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject), Name = "NWTLSParameters")]
 	interface NWTlsParameters {
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'Security.SecProtocolOptions.SetTlsResumptionEnabled' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'Security.SecProtocolOptions.SetTlsResumptionEnabled' instead.")]
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'Security.SecProtocolOptions.SetTlsResumptionEnabled' instead.")]
+		[Deprecated (PlatformName.TvOS, 18, 0, message: "Use 'Security.SecProtocolOptions.SetTlsResumptionEnabled' instead.")]
 		[NullAllowed, Export ("TLSSessionID", ArgumentSemantic.Copy)]
 		NSData TlsSessionID { get; set; }
 
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'Security.SecProtocolOptions.AddTlsCipherSuite' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'Security.SecProtocolOptions.AddTlsCipherSuite' instead.")]
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'Security.SecProtocolOptions.AddTlsCipherSuite' instead.")]
+		[Deprecated (PlatformName.TvOS, 18, 0, message: "Use 'Security.SecProtocolOptions.AddTlsCipherSuite' instead.")]
 		[NullAllowed, Export ("SSLCipherSuites", ArgumentSemantic.Copy)]
 		NSSet<NSNumber> SslCipherSuites { get; set; }
 
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'Security.SecProtocolOptions.SetTlsMinVersion' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'Security.SecProtocolOptions.SetTlsMinVersion' instead.")]
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'Security.SecProtocolOptions.SetTlsMinVersion' instead.")]
+		[Deprecated (PlatformName.TvOS, 18, 0, message: "Use 'Security.SecProtocolOptions.SetTlsMinVersion' instead.")]
 		[Export ("minimumSSLProtocolVersion", ArgumentSemantic.Assign)]
 		nuint MinimumSslProtocolVersion { get; set; }
 
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'Security.SecProtocolOptions.SetTlsMaxVersion' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'Security.SecProtocolOptions.SetTlsMaxVersion' instead.")]
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'Security.SecProtocolOptions.SetTlsMaxVersion' instead.")]
+		[Deprecated (PlatformName.TvOS, 18, 0, message: "Use 'Security.SecProtocolOptions.SetTlsMaxVersion' instead.")]
 		[Export ("maximumSSLProtocolVersion", ArgumentSemantic.Assign)]
 		nuint MaximumSslProtocolVersion { get; set; }
 	}
 
+	[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'Network.NWConnection' instead.")]
+	[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'Network.NWConnection' instead.")]
+	[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'Network.NWConnection' instead.")]
+	[Deprecated (PlatformName.TvOS, 18, 0, message: "Use 'Network.NWConnection' instead.")]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject), Name = "NWUDPSession")]
 	interface NWUdpSession {
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use the 'Network.NWConnection' constructor instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use the 'Network.NWConnection' constructor instead.")]
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use the 'Network.NWConnection' constructor instead.")]
+		[Deprecated (PlatformName.TvOS, 18, 0, message: "Use the 'Network.NWConnection' constructor instead.")]
 		[Export ("initWithUpgradeForSession:")]
 		NativeHandle Constructor (NWUdpSession session);
 
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'Network.NWConnection.SetStateChangedHandler' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'Network.NWConnection.SetStateChangedHandler' instead.")]
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'Network.NWConnection.SetStateChangedHandler' instead.")]
+		[Deprecated (PlatformName.TvOS, 18, 0, message: "Use 'Network.NWConnection.SetStateChangedHandler' instead.")]
 		[Export ("state")]
 		NWUdpSessionState State { get; }
 
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'Network.NWConnection.Endpoint' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'Network.NWConnection.Endpoint' instead.")]
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'Network.NWConnection.Endpoint' instead.")]
+		[Deprecated (PlatformName.TvOS, 18, 0, message: "Use 'Network.NWConnection.Endpoint' instead.")]
 		[Export ("endpoint")]
 		NWEndpoint Endpoint { get; }
 
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'Network.NWConnection.CurrentPath' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'Network.NWConnection.CurrentPath' instead.")]
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'Network.NWConnection.CurrentPath' instead.")]
+		[Deprecated (PlatformName.TvOS, 18, 0, message: "Use 'Network.NWConnection.CurrentPath' instead.")]
 		[NullAllowed, Export ("resolvedEndpoint")]
 		NWEndpoint ResolvedEndpoint { get; }
 
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'Network.NWConnection.SetViabilityChangedHandler' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'Network.NWConnection.SetViabilityChangedHandler' instead.")]
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'Network.NWConnection.SetViabilityChangedHandler' instead.")]
+		[Deprecated (PlatformName.TvOS, 18, 0, message: "Use 'Network.NWConnection.SetViabilityChangedHandler' instead.")]
 		[Export ("viable")]
 		bool Viable { [Bind ("isViable")] get; }
 
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'Network.NWConnection.SetBetterPathAvailableHandler' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'Network.NWConnection.SetBetterPathAvailableHandler' instead.")]
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'Network.NWConnection.SetBetterPathAvailableHandler' instead.")]
+		[Deprecated (PlatformName.TvOS, 18, 0, message: "Use 'Network.NWConnection.SetBetterPathAvailableHandler' instead.")]
 		[Export ("hasBetterPath")]
 		bool HasBetterPath { get; }
 
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'Network.NWConnection.CurrentPath' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'Network.NWConnection.CurrentPath' instead.")]
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'Network.NWConnection.CurrentPath' instead.")]
+		[Deprecated (PlatformName.TvOS, 18, 0, message: "Use 'Network.NWConnection.CurrentPath' instead.")]
 		[NullAllowed, Export ("currentPath")]
 		NWPath CurrentPath { get; }
 
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'Network.NWConnection.CancelCurrentEndpoint' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'Network.NWConnection.CurrentPath' instead.")]
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'Network.NWConnection.CancelCurrentEndpoint' instead.")]
+		[Deprecated (PlatformName.TvOS, 18, 0, message: "Use 'Network.NWConnection.CancelCurrentEndpoint' instead.")]
 		[Export ("tryNextResolvedEndpoint")]
 		void TryNextResolvedEndpoint ();
 
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'Network.NWConnection.MaximumDatagramSize' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'Network.NWConnection.MaximumDatagramSize' instead.")]
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'Network.NWConnection.MaximumDatagramSize' instead.")]
+		[Deprecated (PlatformName.TvOS, 18, 0, message: "Use 'Network.NWConnection.MaximumDatagramSize' instead.")]
 		[Export ("maximumDatagramLength")]
 		nuint MaximumDatagramLength { get; }
 
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'Network.NWConnection.Receive' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'Network.NWConnection.Receive' instead.")]
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'Network.NWConnection.Receive' instead.")]
+		[Deprecated (PlatformName.TvOS, 18, 0, message: "Use 'Network.NWConnection.Receive' instead.")]
 		[Export ("setReadHandler:maxDatagrams:")]
 		void SetReadHandler (Action<NSArray, NSError> handler, nuint maxDatagrams);
 
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'Network.NWConnection.Send' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'Network.NWConnection.Send' instead.")]
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'Network.NWConnection.Send' instead.")]
+		[Deprecated (PlatformName.TvOS, 18, 0, message: "Use 'Network.NWConnection.Send' instead.")]
 		[Export ("writeMultipleDatagrams:completionHandler:")]
 		[Async]
 		void WriteMultipleDatagrams (NSData [] datagramArray, Action<NSError> completionHandler);
 
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'Network.NWConnection.Send' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'Network.NWConnection.Send' instead.")]
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'Network.NWConnection.Send' instead.")]
+		[Deprecated (PlatformName.TvOS, 18, 0, message: "Use 'Network.NWConnection.Send' instead.")]
 		[Export ("writeDatagram:completionHandler:")]
 		[Async]
 		void WriteDatagram (NSData datagram, Action<NSError> completionHandler);
 
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'Network.NWConnection.Cancel' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'Network.NWConnection.Cancel' instead.")]
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'Network.NWConnection.Cancel' instead.")]
+		[Deprecated (PlatformName.TvOS, 18, 0, message: "Use 'Network.NWConnection.Cancel' instead.")]
 		[Export ("cancel")]
 		void Cancel ();
 	}
@@ -1882,10 +2190,16 @@ namespace NetworkExtension {
 	[BaseType (typeof (NEFilterFlow))]
 	interface NEFilterSocketFlow {
 		[NullAllowed]
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'RemoteFlowEndpoint' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'RemoteFlowEndpoint' instead.")]
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'RemoteFlowEndpoint' instead.")]
 		[Export ("remoteEndpoint")]
 		NWEndpoint RemoteEndpoint { get; }
 
 		[NullAllowed]
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'LocalFlowEndpoint' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'LocalFlowEndpoint' instead.")]
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'LocalFlowEndpoint' instead.")]
 		[Export ("localEndpoint")]
 		NWEndpoint LocalEndpoint { get; }
 
@@ -1917,10 +2231,18 @@ namespace NetworkExtension {
 		}
 
 		[NullAllowed]
-		[NoWatch, NoTV, Mac (11, 0), iOS (14, 0)]
+		[NoWatch, NoTV, iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[Export ("remoteHostname")]
 		string RemoteHostname { get; }
+
+		[NoWatch, NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("localFlowEndpoint"), NullAllowed]
+		Network.NWEndpoint LocalFlowEndpoint { get; }
+
+		[NoWatch, NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("remoteFlowEndpoint"), NullAllowed]
+		Network.NWEndpoint RemoteFlowEndpoint { get; }
 	}
 
 	/// <summary>A reporting action taken on a filtered data flow.</summary>
@@ -2012,11 +2334,23 @@ namespace NetworkExtension {
 		[Export ("packetFlow")]
 		NEPacketTunnelFlow PacketFlow { get; }
 
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'NWParameters.RequiredInterface' with the 'VirtualInterface' property instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'NWParameters.RequiredInterface' with the 'VirtualInterface' property instead.")]
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'NWParameters.RequiredInterface' with the 'VirtualInterface' property instead.")]
+		[Deprecated (PlatformName.TvOS, 18, 0, message: "Use 'NWParameters.RequiredInterface' with the 'VirtualInterface' property instead.")]
 		[Export ("createTCPConnectionThroughTunnelToEndpoint:enableTLS:TLSParameters:delegate:")]
 		NWTcpConnection CreateTcpConnection (NWEndpoint remoteEndpoint, bool enableTls, [NullAllowed] NWTlsParameters tlsParameters, [NullAllowed] INWTcpConnectionAuthenticationDelegate @delegate);
 
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'NWParameters.RequiredInterface' with the 'VirtualInterface' property instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'NWParameters.RequiredInterface' with the 'VirtualInterface' property instead.")]
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'NWParameters.RequiredInterface' with the 'VirtualInterface' property instead.")]
+		[Deprecated (PlatformName.TvOS, 18, 0, message: "Use 'NWParameters.RequiredInterface' with the 'VirtualInterface' property instead.")]
 		[Export ("createUDPSessionThroughTunnelToEndpoint:fromEndpoint:")]
 		NWUdpSession CreateUdpSession (NWEndpoint remoteEndpoint, [NullAllowed] NWHostEndpoint localEndpoint);
+
+		[NoWatch, TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("virtualInterface"), NullAllowed]
+		NWInterface VirtualInterface { get; }
 	}
 
 	[MacCatalyst (13, 1)]
@@ -2129,7 +2463,14 @@ namespace NetworkExtension {
 		[iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("handleNewUDPFlow:initialRemoteEndpoint:")]
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'HandleNewUdpFlowWithInitialFlowEndPoint' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'HandleNewUdpFlowWithInitialFlowEndPoint' instead.")]
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'HandleNewUdpFlowWithInitialFlowEndPoint' instead.")]
 		bool HandleNewUdpFlow (NEAppProxyUdpFlow flow, NWEndpoint remoteEndpoint);
+
+		[NoWatch, NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("handleNewUDPFlow:initialRemoteFlowEndpoint:")]
+		bool HandleNewUdpFlowWithInitialFlowEndPoint (NEAppProxyUdpFlow flow, Network.NWEndpoint remoteEndpoint);
 	}
 
 	/// <summary>Configuration settings for <see cref="T:NetworkExtension.NEDnsProxyProvider" /> objects.</summary>
@@ -2262,6 +2603,8 @@ namespace NetworkExtension {
 		string SsidPrefix { get; }
 	}
 
+	delegate void NEHotspotConfigurationManagerJoinHotspotCallback ([NullAllowed] NSError error);
+
 	/// <summary>Manages the application or removal of <see cref="T:NetworkExtension.NEHotspotConfiguration" />.</summary>
 	[NoTV]
 	[NoMac]
@@ -2286,6 +2629,20 @@ namespace NetworkExtension {
 		[Async]
 		[Export ("getConfiguredSSIDsWithCompletionHandler:")]
 		void GetConfiguredSsids (Action<string []> completionHandler);
+
+#if NET
+		// Headers say this method is available on Mac Catalyst, but the AccessorySetupKit framework (thus the ASAccessory type) is not, so we can't expose it in Mac Catalyst for now.
+		[NoWatch, NoTV, NoMac, iOS (18, 0), NoMacCatalyst]
+		[Async]
+		[Export ("joinAccessoryHotspot:passphrase:completionHandler:")]
+		void JoinAccessoryHotspot (ASAccessory accessory, string passphrase, [NullAllowed] NEHotspotConfigurationManagerJoinHotspotCallback completionHandler);
+
+		// Headers say this method is available on Mac Catalyst, but the AccessorySetupKit framework (thus the ASAccessory type) is not, so we can't expose it in Mac Catalyst for now.
+		[NoWatch, NoTV, NoMac, iOS (18, 0), NoMacCatalyst]
+		[Async]
+		[Export ("joinAccessoryHotspotWithoutSecurity:completionHandler:")]
+		void JoinAccessoryHotspotWithoutSecurit (ASAccessory accessory, [NullAllowed] NEHotspotConfigurationManagerJoinHotspotCallback completionHandler);
+#endif
 	}
 
 	[NoTV]
@@ -2295,21 +2652,26 @@ namespace NetworkExtension {
 	[DisableDefaultCtor]
 	interface NENetworkRule : NSSecureCoding, NSCopying {
 
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Call the constructor overload that takes an 'NENetworkRuleConstructorOption' instead.")]
 		[Export ("initWithDestinationNetwork:prefix:protocol:")]
 		NativeHandle Constructor (NWHostEndpoint networkEndpoint, nuint destinationPrefix, NENetworkRuleProtocol protocol);
 
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Call the constructor overload that takes an 'NENetworkRuleConstructorOption' instead.")]
 		[Export ("initWithDestinationHost:protocol:")]
 		NativeHandle Constructor (NWHostEndpoint hostEndpoint, NENetworkRuleProtocol protocol);
 
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Call the constructor overload that takes an 'NENetworkRuleConstructorOption' instead.")]
 		[Export ("initWithRemoteNetwork:remotePrefix:localNetwork:localPrefix:protocol:direction:")]
 		NativeHandle Constructor ([NullAllowed] NWHostEndpoint remoteNetwork, nuint remotePrefix, [NullAllowed] NWHostEndpoint localNetwork, nuint localPrefix, NENetworkRuleProtocol protocol, NETrafficDirection direction);
 
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'MatchRemoteHostOrNetworkEndpoint' instead.")]
 		[NullAllowed, Export ("matchRemoteEndpoint")]
 		NWHostEndpoint MatchRemoteEndpoint { get; }
 
 		[Export ("matchRemotePrefix")]
 		nuint MatchRemotePrefix { get; }
 
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'MatchLocalNetworkEndpoint' instead.")]
 		[NullAllowed, Export ("matchLocalNetwork")]
 		NWHostEndpoint MatchLocalNetwork { get; }
 
@@ -2321,6 +2683,26 @@ namespace NetworkExtension {
 
 		[Export ("matchDirection")]
 		NETrafficDirection MatchDirection { get; }
+
+		[NoWatch, NoTV, Mac (15, 0), NoiOS, NoMacCatalyst]
+		[Export ("initWithDestinationNetworkEndpoint:prefix:protocol:")]
+		NativeHandle Constructor (Network.NWEndpoint networkEndpoint, nuint destinationPrefix, NENetworkRuleProtocol protocol);
+
+		[NoWatch, NoTV, Mac (15, 0), NoiOS, NoMacCatalyst]
+		[Export ("initWithDestinationHostEndpoint:protocol:")]
+		NativeHandle Constructor (Network.NWEndpoint hostEndpoint, NENetworkRuleProtocol protocol);
+
+		[NoWatch, NoTV, Mac (15, 0), NoiOS, NoMacCatalyst]
+		[Export ("initWithRemoteNetworkEndpoint:remotePrefix:localNetworkEndpoint:localPrefix:protocol:direction:")]
+		NativeHandle Constructor ([NullAllowed] Network.NWEndpoint remoteNetwork, nuint remotePrefix, [NullAllowed] Network.NWEndpoint localNetwork, nuint localPrefix, NENetworkRuleProtocol protocol, NETrafficDirection direction);
+
+		[NoWatch, NoTV, Mac (15, 0), NoiOS, NoMacCatalyst]
+		[Export ("matchRemoteHostOrNetworkEndpoint"), NullAllowed]
+		Network.NWEndpoint MatchRemoteHostOrNetworkEndpoint { get; }
+
+		[NoWatch, NoTV, Mac (15, 0), NoiOS, NoMacCatalyst]
+		[Export ("matchLocalNetworkEndpoint"), NullAllowed]
+		Network.NWEndpoint MatchLocalNetworkEndpoint { get; }
 	}
 
 	[NoTV]
@@ -2499,7 +2881,7 @@ namespace NetworkExtension {
 		void Start ();
 	}
 
-	[NoWatch, Mac (11, 0), iOS (14, 0)]
+	[NoWatch, iOS (14, 0), TV (17, 0)]
 	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NEDnsSettings), Name = "NEDNSOverHTTPSSettings")]
 	interface NEDnsOverHttpsSettings {
@@ -2513,7 +2895,7 @@ namespace NetworkExtension {
 		NSData IdentityReference { get; set; }
 	}
 
-	[NoWatch, Mac (11, 0), iOS (14, 0)]
+	[NoWatch, iOS (14, 0), TV (17, 0)]
 	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NEDnsSettings), Name = "NEDNSOverTLSSettings")]
 	interface NEDnsOverTlsSettings {
@@ -2527,7 +2909,7 @@ namespace NetworkExtension {
 		NSData IdentityReference { get; set; }
 	}
 
-	[NoWatch, NoTV, Mac (11, 0), iOS (14, 0)]
+	[NoWatch, NoTV, iOS (14, 0)]
 	[MacCatalyst (14, 0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject), Name = "NEDNSSettingsManager")]
@@ -2580,7 +2962,7 @@ namespace NetworkExtension {
 		void DidReceiveIncomingCall (NEAppPushManager manager, NSDictionary userInfo);
 	}
 
-	[Mac (11, 0), NoMacCatalyst]
+	[NoMacCatalyst]
 	[NoiOS]
 	[NoTV]
 	[NoWatch]
@@ -2658,6 +3040,8 @@ namespace NetworkExtension {
 		NSString ConfigurationDidChangeNotification { get; }
 	}
 
+	delegate void NERelayManagerGetLastClientErrorsCallback ([NullAllowed] NSError [] errors);
+
 	[TV (17, 0), NoWatch, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[BaseType (typeof (NSObject))]
 	interface NERelayManager {
@@ -2699,5 +3083,42 @@ namespace NetworkExtension {
 		[Export ("loadAllManagersFromPreferencesWithCompletionHandler:")]
 		[Async]
 		void LoadAllManagersFromPreferences (Action<NSArray<NERelayManager>, NSError> completionHandler);
+
+		[NoWatch, TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("getLastClientErrors:completionHandler:")]
+		[Async]
+		void GetLastClientErrors (double seconds, NERelayManagerGetLastClientErrorsCallback completionHandler);
+	}
+
+	[NoWatch, TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[ErrorDomain ("NERelayClientErrorDomain")]
+	[Native]
+	enum NERelayManagerClientError : long {
+		None = 1,
+		DNSFailed = 2,
+		ServerUnreachable = 3,
+		ServerDisconnected = 4,
+		CertificateMissing = 5,
+		CertificateInvalid = 6,
+		CertificateExpired = 7,
+		ServerCertificateInvalid = 8,
+		ServerCertificateExpired = 9,
+		Other = 10,
+	}
+
+	[NoWatch, TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[BaseType (typeof (NSObject), Name = "NEVPNIKEv2PPKConfiguration")]
+	interface NEVpnIkev2PpkConfiguration : NSCopying {
+		[Export ("initWithIdentifier:keychainReference:")]
+		NativeHandle Constructor (string identifier, NSData keychainReference);
+
+		[Export ("identifier", ArgumentSemantic.Copy)]
+		string Identifier { get; }
+
+		[Export ("keychainReference", ArgumentSemantic.Copy)]
+		NSData KeychainReference { get; }
+
+		[Export ("isMandatory")]
+		bool IsMandatory { get; set; }
 	}
 }

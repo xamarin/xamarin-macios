@@ -26,14 +26,10 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'Run device tests' ">
     <StartAction>Project</StartAction>
-    <StartArguments>--verbose --jenkins --autoconf --rootdir .. --label=skip-mac-tests,skip-ios-simulator-tests,skip-ios-msbuild-tests,skip-system-permission-tests,run-ios-device-tests,run-ios-extensions-tests --markdown-summary=../TestSummary.md --label=run-watchos-tests,skip-bcl-tests</StartArguments>
+    <StartArguments>--verbose --jenkins --autoconf --rootdir .. --label=skip-mac-tests,skip-ios-simulator-tests,skip-ios-msbuild-tests,skip-system-permission-tests,run-ios-device-tests,run-ios-extensions-tests --markdown-summary=../TestSummary.md</StartArguments>
     <EnvironmentVariables>
       <Variable name="MONO_ENV_OPTIONS" value="--trace=E:all" />
     </EnvironmentVariables>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(RunConfiguration)' == 'Configure' ">
-    <StartAction>Project</StartAction>
-    <StartArguments>--configure --autoconf --rootdir ../../../..</StartArguments>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.DotNet.XHarness.iOS.Shared" Version="$(MicrosoftDotNetXHarnessiOSSharedPackageVersion)" />
@@ -44,7 +40,6 @@
   <ItemGroup>
     <Compile Include="AppBundleLocator.cs" />
     <Compile Include="AppRunner.cs" />
-    <Compile Include="BCLTestImportTargetFactory.cs" />
     <Compile Include="CrashSnapshotReporterFactory.cs" />
     <Compile Include="DeviceLoaderFactory.cs" />
     <Compile Include="DeviceLogCapturerFactory.cs" />
@@ -57,7 +52,6 @@
     <Compile Include="Jenkins\Jenkins.cs" />
     <Compile Include="Jenkins\JenkinsDeviceLoader.cs" />
     <Compile Include="Jenkins\MacTestTasksEnumerable.cs" />
-    <Compile Include="Jenkins\MakeTestTaskEnumerable.cs" />
     <Compile Include="Jenkins\NUnitTestTasksEnumerable.cs" />
     <Compile Include="Jenkins\PeriodicCommand.cs" />
     <Compile Include="Jenkins\Reports\HtmlReportWriter.cs" />
@@ -106,31 +100,10 @@
     <Compile Include="Jenkins\TestVariationsFactory.cs" />
     <Compile Include="MacFlavorsExtensions.cs" />
     <Compile Include="MacTestProject.cs" />
-    <Compile Include="MonoNativeInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SimulatorLoaderFactory.cs" />
-    <Compile Include="SolutionGenerator.cs" />
-    <Compile Include="Targets\iOSTarget.cs" />
-    <Compile Include="Targets\MacTarget.cs" />
     <Compile Include="Targets\Target.cs" />
-    <Compile Include="Targets\TodayExtensionTarget.cs" />
-    <Compile Include="Targets\TVOSTarget.cs" />
-    <Compile Include="Targets\UnifiedTarget.cs" />
-    <Compile Include="Targets\WatchOSTarget.cs" />
-    <Compile Include="TestImporter\IAssemblyLocator.cs" />
-    <Compile Include="TestImporter\ITestAssemblyDefinition.cs" />
-    <Compile Include="TestImporter\Platform.cs" />
-    <Compile Include="TestImporter\ProjectDefinition.cs" />
-    <Compile Include="TestImporter\Templates\IProjectFilter.cs" />
-    <Compile Include="TestImporter\Templates\ITemplatedProject.cs" />
-    <Compile Include="TestImporter\Templates\Managed\InfoPlistGenerator.cs" />
-    <Compile Include="TestImporter\Templates\Managed\RegisterTypeGenerator.cs" />
-    <Compile Include="TestImporter\Templates\Managed\XamariniOSTemplate.cs" />
-    <Compile Include="TestImporter\Xamarin\AssemblyDefinitionFactory.cs" />
-    <Compile Include="TestImporter\Xamarin\AssemblyLocator.cs" />
-    <Compile Include="TestImporter\Xamarin\ProjectFilter.cs" />
-    <Compile Include="TestImporter\Xamarin\TestAssemblyDefinition.cs" />
     <Compile Include="TestLabel.cs" />
     <Compile Include="TestPlatform.cs" />
     <Compile Include="TestPlatformExtensions.cs" />

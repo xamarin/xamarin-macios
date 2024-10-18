@@ -21,8 +21,7 @@ namespace Xharness {
 	public enum TestLabel : Int64 {
 		[Label ("none")]
 		None = 0,
-		[Label ("bcl")]
-		Bcl = 1 << 1,
+		// 1 << 1 is unused
 		[Label ("bgen")]
 		Bgen = 1 << 2,
 		[Label ("binding")]
@@ -52,24 +51,19 @@ namespace Xharness {
 		Linker = 1 << 15,
 		[Label ("library-projects")]
 		LibraryProjects = 1 << 16,
-		[Label ("mac-binding-project")]
-		MacBindingProject = 1 << 17,
-		[Label ("mmp")]
-		Mmp = 1 << 18,
-		[Label ("mononative")]
-		Mononative = 1 << 19,
+		// 1 << 17 is unused
+		// 1 << 18 is unused
+		// 1 << 19 is unused
 		[Label ("monotouch")]
 		Monotouch = 1 << 20,
 		[Label ("msbuild")]
 		Msbuild = 1 << 21,
-		[Label ("mtouch")]
-		Mtouch = 1 << 22,
+		// 1 << 22 is unused
 		[Label ("sampletester")]
 		SampleTester = 1 << 23,
 		[Label ("system-permission")]
 		SystemPermission = 1 << 24,
-		[Label ("xammac")]
-		Xammac = 1 << 25,
+		//  1 << 25 is unused
 		[Label ("xcframework")]
 		Xcframework = 1 << 26,
 		[Label ("xtro")]
@@ -102,12 +96,10 @@ namespace Xharness {
 		OldiOSSimulator = 1 << 9,
 		[Label ("tvos")]
 		tvOS = 1 << 10,
-		[Label ("watchos")]
-		watchOS = 1 << 11,
+		// 1 << 11 is unused
 		[Label ("dotnet")]
 		Dotnet = 1 << 12,
-		[Label ("legacy-xamarin")]
-		LegacyXamarin = 1 << 13,
+		// 1 << 13 is unused
 		[Label ("all")]
 		All = 0xFFFFFFFF,
 	}

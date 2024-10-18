@@ -50,6 +50,7 @@ using (TextWriter writer = new StreamWriter (outputPath)) {
 	writer.WriteLine ("\t</ItemGroup>");
 	writer.WriteLine ("\t<PropertyGroup>");
 	writer.WriteLine ($"\t\t<{platform}MinSupportedOSPlatformVersion>{minSdkVersionString}</{platform}MinSupportedOSPlatformVersion>");
+	writer.WriteLine ($"\t\t<MinSupportedOSPlatformVersion>$({platform}MinSupportedOSPlatformVersion)</MinSupportedOSPlatformVersion>");
 	writer.WriteLine ("\t</PropertyGroup>");
 	writer.WriteLine ("</Project>");
 }

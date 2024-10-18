@@ -8,6 +8,8 @@
 //
 
 using System;
+
+using CoreGraphics;
 using Foundation;
 using ObjCRuntime;
 
@@ -101,7 +103,7 @@ namespace CoreText {
 		NSString ForceEmbeddingLevel { get; }
 #endif
 
-		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
+		[Watch (5, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCTTypesetterOptionAllowUnboundedLayout")]
 		NSString AllowUnboundedLayout { get; }
@@ -224,6 +226,10 @@ namespace CoreText {
 
 		[Field ("kCTFontEnabledAttribute")]
 		NSString Enabled { get; }
+
+		[iOS (13, 0), NoTV, NoWatch, MacCatalyst (13, 1), NoMac]
+		[Field ("kCTFontRegistrationUserInfoAttribute")]
+		NSString RegistrationUserInfo { get; }
 	}
 
 	/// <summary>A class whose static properties can be used as keys for the <see cref="T:Foundation.NSDictionary" /> used by <see cref="T:CoreText.CTTextTabOptions" />.</summary>
@@ -444,11 +450,27 @@ namespace CoreText {
 
 		[Field ("kCTWritingDirectionAttributeName")]
 		NSString WritingDirection { get; }
+
+		[Field ("kCTRubyAnnotationAttributeName")]
+		NSString RubyAnnotation { get; }
+
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("kCTAdaptiveImageProviderAttributeName")]
+		NSString AdaptiveImageProvider { get; }
 #endif
 
 		[Watch (6, 0), TV (13, 0), iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCTTrackingAttributeName")]
 		NSString TrackingAttributeName { get; }
+	}
+
+	[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[Protocol (BackwardsCompatibleCodeGeneration = false)]
+	interface CTAdaptiveImageProviding {
+		[Abstract]
+		[Export ("imageForProposedSize:scaleFactor:imageOffset:imageSize:")]
+		[return: NullAllowed]
+		CGImage GetImage (CGSize proposedSize, nfloat scaleFactor, out CGPoint imageOffset, out CGSize imageSize);
 	}
 }

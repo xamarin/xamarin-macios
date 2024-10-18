@@ -27,7 +27,6 @@ namespace Xamarin.Linker {
 		public string CacheDirectory { get; private set; } = string.Empty;
 		public Version? DeploymentTarget { get; private set; }
 		public HashSet<string> FrameworkAssemblies { get; private set; } = new HashSet<string> ();
-		public string GlobalizationDataFile { get; private set; } = string.Empty;
 		public string IntermediateLinkDir { get; private set; } = string.Empty;
 		public bool InvariantGlobalization { get; private set; }
 		public bool HybridGlobalization { get; private set; }
@@ -370,9 +369,6 @@ namespace Xamarin.Linker {
 						throw new InvalidOperationException ($"Invalid XamarinRuntime '{value}' in {linker_file}");
 					Application.XamarinRuntime = rv;
 					break;
-				case "GlobalizationDataFile":
-					GlobalizationDataFile = value;
-					break;
 				case "InvariantGlobalization":
 					InvariantGlobalization = string.Equals ("true", value, StringComparison.OrdinalIgnoreCase);
 					break;
@@ -428,6 +424,11 @@ namespace Xamarin.Linker {
 
 			if (Driver.TargetFramework.Platform != Platform)
 				throw ErrorHelper.CreateError (99, "Inconsistent platforms. TargetFramework={0}, Platform={1}", Driver.TargetFramework.Platform, Platform);
+
+			if (Application.XamarinRuntime != XamarinRuntime.MonoVM && Application.UseInterpreter) {
+				Driver.Log (4, "The interpreter is enabled, but the current runtime isn't MonoVM. The interpreter settings will be ignored.");
+				Application.UnsetInterpreter ();
+			}
 
 			Driver.ValidateXcode (Application, false, false);
 

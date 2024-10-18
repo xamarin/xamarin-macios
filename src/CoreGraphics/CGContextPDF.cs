@@ -85,24 +85,22 @@ namespace CoreGraphics {
 		public CGPDFAccessPermissions? AccessPermissions { get; set; }
 		//public NSDictionary OutputIntent { get; set; }
 #if NET
-		[SupportedOSPlatform ("macos11.0")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios14.0")]
 		[SupportedOSPlatform ("tvos14.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Mac (11, 0)]
 		[iOS (14, 0)]
 		[TV (14, 0)]
 		[Watch (7, 0)]
 #endif
 		public bool? CreateLinearizedPdf { get; set; }
 #if NET
-		[SupportedOSPlatform ("macos11.0")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios14.0")]
 		[SupportedOSPlatform ("tvos14.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Mac (11, 0)]
 		[iOS (14, 0)]
 		[TV (14, 0)]
 		[Watch (7, 0)]
@@ -376,6 +374,78 @@ namespace CoreGraphics {
 		public void EndTag ()
 		{
 			CGPDFContextEndTag (Handle);
+		}
+
+#if NET
+		[SupportedOSPlatform ("ios18.0")]
+		[SupportedOSPlatform ("maccatalyst18.0")]
+		[SupportedOSPlatform ("macos15.0")]
+		[SupportedOSPlatform ("tvos18.0")]
+#else
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+#endif
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		static extern void CGPDFContextSetParentTree (/* CGContextRef cg_nullable */ IntPtr context, /* CGPDFDictionaryRef */ IntPtr parentTreeDictionary);
+
+#if NET
+		[SupportedOSPlatform ("ios18.0")]
+		[SupportedOSPlatform ("maccatalyst18.0")]
+		[SupportedOSPlatform ("macos15.0")]
+		[SupportedOSPlatform ("tvos18.0")]
+#else
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+#endif
+		public void SetParentTree (CGPDFDictionary parentTreeDictionary)
+		{
+			CGPDFContextSetParentTree (GetCheckedHandle (), parentTreeDictionary.GetNonNullHandle (nameof (parentTreeDictionary)));
+		}
+
+#if NET
+		[SupportedOSPlatform ("ios18.0")]
+		[SupportedOSPlatform ("maccatalyst18.0")]
+		[SupportedOSPlatform ("macos15.0")]
+		[SupportedOSPlatform ("tvos18.0")]
+#else
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+#endif
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		static extern void CGPDFContextSetIDTree (/* CGContextRef cg_nullable */ IntPtr context, /* CGPDFDictionaryRef */ IntPtr IDTreeDictionary);
+
+#if NET
+		[SupportedOSPlatform ("ios18.0")]
+		[SupportedOSPlatform ("maccatalyst18.0")]
+		[SupportedOSPlatform ("macos15.0")]
+		[SupportedOSPlatform ("tvos18.0")]
+#else
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+#endif
+		public void SetIdTree (CGPDFDictionary idTreeDictionary)
+		{
+			CGPDFContextSetIDTree (GetCheckedHandle (), idTreeDictionary.GetNonNullHandle (nameof (idTreeDictionary)));
+		}
+
+#if NET
+		[SupportedOSPlatform ("ios18.0")]
+		[SupportedOSPlatform ("maccatalyst18.0")]
+		[SupportedOSPlatform ("macos15.0")]
+		[SupportedOSPlatform ("tvos18.0")]
+#else
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+#endif
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		static extern void CGPDFContextSetPageTagStructureTree (/* CGContextRef cg_nullable */ IntPtr context, /* CFDictionaryRef */ IntPtr pageTagStructureTreeDictionary);
+
+#if NET
+		[SupportedOSPlatform ("ios18.0")]
+		[SupportedOSPlatform ("maccatalyst18.0")]
+		[SupportedOSPlatform ("macos15.0")]
+		[SupportedOSPlatform ("tvos18.0")]
+#else
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+#endif
+		public void SetPageTagStructureTree (NSDictionary pageTagStructureTreeDictionary)
+		{
+			CGPDFContextSetPageTagStructureTree (GetCheckedHandle (), pageTagStructureTreeDictionary.GetNonNullHandle (nameof (pageTagStructureTreeDictionary)));
 		}
 
 		protected override void Dispose (bool disposing)

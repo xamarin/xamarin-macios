@@ -158,7 +158,11 @@ namespace Foundation {
 			allowsCellularAccess = configuration.AllowsCellularAccess;
 			AllowAutoRedirect = true;
 
+#pragma warning disable SYSLIB0014
+			// SYSLIB0014: 'ServicePointManager' is obsolete: 'WebRequest, HttpWebRequest, ServicePoint, and WebClient are obsolete. Use HttpClient instead. Settings on ServicePointManager no longer affect SslStream or HttpClient.' (https://aka.ms/dotnet-warnings/SYSLIB0014)
+			// https://github.com/xamarin/xamarin-macios/issues/20764
 			var sp = ServicePointManager.SecurityProtocol;
+#pragma warning restore SYSLIB0014
 			if ((sp & SecurityProtocolType.Ssl3) != 0)
 				configuration.TLSMinimumSupportedProtocol = SslProtocol.Ssl_3_0;
 			else if ((sp & SecurityProtocolType.Tls) != 0)
@@ -567,15 +571,20 @@ namespace Foundation {
 		[EditorBrowsable (EditorBrowsableState.Never)]
 		public bool CheckCertificateRevocationList { get; set; } = false;
 
-		// We're ignoring this property, just like Xamarin.Android does:
-		// https://github.com/xamarin/xamarin-android/blob/09e8cb5c07ea6c39383185a3f90e53186749b802/src/Mono.Android/Xamarin.Android.Net/AndroidMessageHandler.cs#L150
-		// Note: we can't return null (like Xamarin.Android does), because the return type isn't nullable.
-		[UnsupportedOSPlatform ("ios")]
-		[UnsupportedOSPlatform ("maccatalyst")]
-		[UnsupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos")]
-		[EditorBrowsable (EditorBrowsableState.Never)]
-		public X509CertificateCollection ClientCertificates { get { return new X509CertificateCollection (); } }
+
+		X509CertificateCollection? _clientCertificates;
+
+		/// <summary>Gets the collection of security certificates that are associated with requests to the server.</summary>
+		/// <remarks>Client certificates are only supported when ClientCertificateOptions is set to ClientCertificateOptions.Manual.</remarks>
+		public X509CertificateCollection ClientCertificates {
+			get {
+				if (ClientCertificateOptions != ClientCertificateOption.Manual) {
+					throw new InvalidOperationException ($"Enable manual options first on {nameof (ClientCertificateOptions)}");
+				}
+
+				return _clientCertificates ?? (_clientCertificates = new X509CertificateCollection ());
+			}
+		}
 
 		// We're ignoring this property, just like Xamarin.Android does:
 		// https://github.com/xamarin/xamarin-android/blob/09e8cb5c07ea6c39383185a3f90e53186749b802/src/Mono.Android/Xamarin.Android.Net/AndroidMessageHandler.cs#L148
@@ -1088,6 +1097,19 @@ namespace Foundation {
 					}
 					return;
 				}
+#if NET
+				if (sessionHandler.ClientCertificateOptions == ClientCertificateOption.Manual && challenge.ProtectionSpace.AuthenticationMethod == NSUrlProtectionSpace.AuthenticationMethodClientCertificate) {
+					var certificate = CertificateHelper.GetEligibleClientCertificate (sessionHandler.ClientCertificates);
+					if (certificate is not null) {
+						var cert = new SecCertificate (certificate);
+						var identity = SecIdentity.Import (certificate);
+						var credential = new NSUrlCredential (identity, new SecCertificate [] { cert }, NSUrlCredentialPersistence.ForSession);
+						completionHandler (NSUrlSessionAuthChallengeDisposition.UseCredential, credential);
+						return;
+					}
+				}
+#endif
+
 				// case for the basic auth failing up front. As per apple documentation:
 				// The URL Loading System is designed to handle various aspects of the HTTP protocol for you. As a result, you should not modify the following headers using
 				// the addValue(_:forHTTPHeaderField:) or setValue(_:forHTTPHeaderField:) methods:
@@ -1592,5 +1614,73 @@ namespace Foundation {
 				stream?.Dispose ();
 			}
 		}
+
+#if NET
+		static class CertificateHelper {
+			// Based on https://github.com/dotnet/runtime/blob/c2848c582f5d6ae42c89f5bfe0818687ab3345f0/src/libraries/Common/src/System/Net/Security/CertificateHelper.cs
+			// with the NetEventSource code removed and namespace changed.
+			const string ClientAuthenticationOID = "1.3.6.1.5.5.7.3.2";
+
+			internal static X509Certificate2? GetEligibleClientCertificate (X509CertificateCollection? candidateCerts)
+			{
+				if (candidateCerts is null || candidateCerts.Count == 0) {
+					return null;
+				}
+
+				var certs = new X509Certificate2Collection ();
+				certs.AddRange (candidateCerts);
+
+				return GetEligibleClientCertificate (certs);
+			}
+
+			internal static X509Certificate2? GetEligibleClientCertificate (X509Certificate2Collection? candidateCerts)
+			{
+				if (candidateCerts is null || candidateCerts.Count == 0) {
+					return null;
+				}
+
+				foreach (X509Certificate2 cert in candidateCerts) {
+					if (!cert.HasPrivateKey) {
+						continue;
+					}
+
+					if (IsValidClientCertificate (cert)) {
+						return cert;
+					}
+				}
+				return null;
+			}
+
+			static bool IsValidClientCertificate (X509Certificate2 cert)
+			{
+				foreach (X509Extension extension in cert.Extensions) {
+					if ((extension is X509EnhancedKeyUsageExtension eku) && !IsValidForClientAuthenticationEKU (eku)) {
+						return false;
+					} else if ((extension is X509KeyUsageExtension ku) && !IsValidForDigitalSignatureUsage (ku)) {
+						return false;
+					}
+				}
+
+				return true;
+			}
+
+			static bool IsValidForClientAuthenticationEKU (X509EnhancedKeyUsageExtension eku)
+			{
+				foreach (System.Security.Cryptography.Oid oid in eku.EnhancedKeyUsages) {
+					if (oid.Value == ClientAuthenticationOID) {
+						return true;
+					}
+				}
+
+				return false;
+			}
+
+			static bool IsValidForDigitalSignatureUsage (X509KeyUsageExtension ku)
+			{
+				const X509KeyUsageFlags RequiredUsages = X509KeyUsageFlags.DigitalSignature;
+				return (ku.KeyUsages & RequiredUsages) == RequiredUsages;
+			}
+		}
+#endif
 	}
 }

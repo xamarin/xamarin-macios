@@ -437,65 +437,65 @@ namespace GameKit {
 		[Export ("loading")]
 		bool IsLoading { [Bind ("isLoading")] get; }
 
-		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[Watch (7, 0), TV (14, 0), iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[Static]
 		[Async]
 		[Export ("loadLeaderboardsWithIDs:completionHandler:")]
 		void LoadLeaderboards ([NullAllowed] string [] leaderboardIds, GKLeaderboardsHandler completionHandler);
 
-		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[Watch (7, 0), TV (14, 0), iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[Static]
 		[Export ("submitScore:context:player:leaderboardIDs:completionHandler:")]
 		[Async]
 		void SubmitScore (nint score, nuint context, GKPlayer player, string [] leaderboardIds, Action<NSError> completionHandler);
 
-		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[Watch (7, 0), TV (14, 0), iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[Export ("baseLeaderboardID", ArgumentSemantic.Strong)]
 		string BaseLeaderboardId { get; }
 
-		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[Watch (7, 0), TV (14, 0), iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[Export ("duration")]
 		double Duration { get; }
 
-		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[Watch (7, 0), TV (14, 0), iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[Async (ResultTypeName = "GKEntriesForPlayerScopeResult")]
 		[Export ("loadEntriesForPlayerScope:timeScope:range:completionHandler:")]
 		void LoadEntries (GKLeaderboardPlayerScope playerScope, GKLeaderboardTimeScope timeScope, NSRange range, GKEntriesForPlayerScopeHandler completionHandler);
 
-		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[Watch (7, 0), TV (14, 0), iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[Async (ResultTypeName = "GKEntriesForPlayersResult")]
 		[Export ("loadEntriesForPlayers:timeScope:completionHandler:")]
 		void LoadEntries (GKPlayer [] players, GKLeaderboardTimeScope timeScope, GKEntriesForPlayersHandler completionHandler);
 
-		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[Watch (7, 0), TV (14, 0), iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[Export ("loadPreviousOccurrenceWithCompletionHandler:")]
 		[Async]
 		void LoadPreviousOccurrence (GKLeaderboardsHandler completionHandler);
 
-		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[Watch (7, 0), TV (14, 0), iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[NullAllowed, Export ("nextStartDate", ArgumentSemantic.Strong)]
 		NSDate NextStartDate { get; }
 
-		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[Watch (7, 0), TV (14, 0), iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[NullAllowed, Export ("startDate", ArgumentSemantic.Strong)]
 		NSDate StartDate { get; }
 
-		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[Watch (7, 0), TV (14, 0), iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[Export ("submitScore:context:player:completionHandler:")]
 		[Async]
 		void SubmitScore (nint score, nuint context, GKPlayer player, Action<NSError> completionHandler);
 
-		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[Watch (7, 0), TV (14, 0), iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[Export ("type")]
 		GKLeaderboardType Type { get; }
@@ -529,16 +529,14 @@ namespace GameKit {
 		[Async]
 		void LoadLeaderboards ([NullAllowed] GKLeaderboardsHandler completionHandler);
 
-		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[Watch (7, 0), TV (14, 0), iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[Export ("loadLeaderboardsWithHandler:")]
 		[Async]
 		void LoadLeaderboardsWithCompletionHandler (GKLeaderboardsHandler handler);
 
-		[NoMac]
 		[NoTV]
 		[NoWatch]
-		[NoMacCatalyst]
 		[Export ("loadImageWithCompletionHandler:")]
 		[Async]
 		void LoadImage ([NullAllowed] GKImageLoadedHandler completionHandler);
@@ -647,12 +645,12 @@ namespace GameKit {
 		[Export ("scopedIDsArePersistent")]
 		bool ScopedIdsArePersistent { get; }
 
-		[TV (14, 0), NoWatch, Mac (11, 0), iOS (14, 0)]
+		[TV (14, 0), NoWatch, iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[Field ("GKPlayerIDNoLongerAvailable")]
 		NSString IdNoLongerAvailable { get; }
 
-		[TV (14, 0), NoWatch, Mac (11, 0), iOS (14, 0)]
+		[TV (14, 0), NoWatch, iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[Export ("isInvitable")]
 		bool IsInvitable { get; }
@@ -761,7 +759,6 @@ namespace GameKit {
 
 		[NoWatch]
 		[iOS (14, 0)]
-		[Mac (11, 0)]
 		[TV (14, 0)]
 		[MacCatalyst (14, 0)]
 		[Static]
@@ -917,8 +914,7 @@ namespace GameKit {
 		Action<NSViewController, NSError> AuthenticateHandler { get; set; }
 #endif
 
-		[NoWatch, NoTV, Mac (12, 0), iOS (15, 0)]
-		[NoMacCatalyst]
+		[NoWatch, NoTV, iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("isPresentingFriendRequestViewController")]
 		bool IsPresentingFriendRequestViewController { get; }
 
@@ -926,7 +922,7 @@ namespace GameKit {
 		[Export ("presentFriendRequestCreatorFromViewController:error:")]
 		bool PresentFriendRequestCreator (UIViewController viewController, [NullAllowed] out NSError error);
 
-		[NoWatch, NoTV, NoiOS, Mac (12, 0), NoMacCatalyst]
+		[NoWatch, NoTV, NoiOS, NoMacCatalyst]
 		[Export ("presentFriendRequestCreatorFromWindow:error:")]
 		bool PresentFriendRequestCreator ([NullAllowed] NSWindow window, [NullAllowed] out NSError error);
 
@@ -1045,26 +1041,26 @@ namespace GameKit {
 		GKLocalPlayer Local { get; }
 
 		[NoWatch]
-		[TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[TV (14, 0), iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[Export ("personalizedCommunicationRestricted")]
 		bool PersonalizedCommunicationRestricted { [Bind ("isPersonalizedCommunicationRestricted")] get; }
 
 		// FriendsList Category
 
-		[Watch (7, 4), TV (14, 5), Mac (11, 3), iOS (14, 5)]
+		[Watch (7, 4), TV (14, 5), iOS (14, 5)]
 		[MacCatalyst (14, 5)]
 		[Async]
 		[Export ("loadFriendsAuthorizationStatus:")]
 		void LoadFriendsAuthorizationStatus (Action<GKFriendsAuthorizationStatus, NSError> completionHandler);
 
-		[Watch (7, 4), TV (14, 5), Mac (11, 3), iOS (14, 5)]
+		[Watch (7, 4), TV (14, 5), iOS (14, 5)]
 		[MacCatalyst (14, 5)]
 		[Async]
 		[Export ("loadFriends:")]
 		void LoadFriendsList (Action<GKPlayer [], NSError> completionHandler);
 
-		[Watch (7, 4), TV (14, 5), Mac (11, 3), iOS (14, 5)]
+		[Watch (7, 4), TV (14, 5), iOS (14, 5)]
 		[MacCatalyst (14, 5)]
 		[Async]
 		[Export ("loadFriendsWithIdentifiers:completionHandler:")]
@@ -1160,6 +1156,10 @@ namespace GameKit {
 		[Export ("disconnect")]
 		void Disconnect ();
 
+		[Deprecated (PlatformName.iOS, 18, 0, message: "No longer supported.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "No longer supported.")]
+		[Deprecated (PlatformName.TvOS, 18, 0, message: "No longer supported.")]
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "No longer supported.")]
 		[Export ("voiceChatWithName:")]
 		[return: NullAllowed]
 		GKVoiceChat VoiceChatWithName (string name);
@@ -1254,6 +1254,10 @@ namespace GameKit {
 		void DataReceivedForRecipient (GKMatch match, NSData data, GKPlayer recipient, GKPlayer player);
 	}
 
+	[Deprecated (PlatformName.iOS, 18, 0, message: "No longer supported.")]
+	[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "No longer supported.")]
+	[Deprecated (PlatformName.TvOS, 18, 0, message: "No longer supported.")]
+	[Deprecated (PlatformName.MacOSX, 15, 0, message: "No longer supported.")]
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -1387,15 +1391,15 @@ namespace GameKit {
 		[Export ("restrictToAutomatch")]
 		bool RestrictToAutomatch { get; set; }
 
-		[TV (17, 2), Mac (14, 2), iOS (17, 2), MacCatalyst (17, 2)]
+		[TV (17, 2), Mac (14, 2), iOS (17, 2), MacCatalyst (17, 2), Watch (10, 2)]
 		[NullAllowed, Export ("queueName")]
 		string QueueName { get; set; }
 
-		[TV (17, 2), Mac (14, 2), iOS (17, 2), MacCatalyst (17, 2)]
+		[TV (17, 2), Mac (14, 2), iOS (17, 2), MacCatalyst (17, 2), Watch (10, 2)]
 		[NullAllowed, Export ("properties", ArgumentSemantic.Copy)]
 		NSDictionary<NSString, NSObject> Properties { get; set; }
 
-		[TV (17, 2), Mac (14, 2), iOS (17, 2), MacCatalyst (17, 2)]
+		[TV (17, 2), Mac (14, 2), iOS (17, 2), MacCatalyst (17, 2), Watch (10, 2)]
 		[NullAllowed, Export ("recipientProperties", ArgumentSemantic.Copy)]
 		NSDictionary<GKPlayer, NSDictionary<NSString, NSObject>> RecipientProperties { get; set; }
 	}
@@ -1520,7 +1524,7 @@ namespace GameKit {
 		[TV (17, 2), Mac (14, 2), iOS (17, 2), MacCatalyst (17, 2)]
 		[Async]
 		[Export ("findMatchedPlayers:withCompletionHandler:")]
-		void FindMatchedPlayers (GKMatchRequest request, [NullAllowed] Action<GKMatchedPlayers, NSError> completionHandler);
+		void FindMatchedPlayers (GKMatchRequest request, Action<GKMatchedPlayers, NSError> completionHandler);
 
 		// Not truly an [Async] method since the handler can be called multiple times, for each player found
 		[MacCatalyst (13, 1)]
@@ -1609,12 +1613,12 @@ namespace GameKit {
 		[Export ("setHostedPlayer:didConnect:")]
 		void SetHostedPlayerConnected (GKPlayer playerID, bool connected);
 
-		[TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[TV (14, 0), iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[Export ("matchmakingMode", ArgumentSemantic.Assign)]
 		GKMatchmakingMode MatchmakingMode { get; set; }
 
-		[TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+		[TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("canStartWithMinimumPlayers")]
 		bool CanStartWithMinimumPlayers { get; set; }
 	}
@@ -2333,7 +2337,6 @@ namespace GameKit {
 		void SendReminder (GKTurnBasedParticipant [] participants, string localizableMessage, NSObject [] arguments, [NullAllowed] Action<NSError> completionHandler);
 
 		[iOS (14, 0)]
-		[Mac (11, 0)]
 		[Watch (7, 0)]
 		[TV (14, 0)]
 		[MacCatalyst (14, 0)]
@@ -2362,7 +2365,7 @@ namespace GameKit {
 		[Export ("showExistingMatches", ArgumentSemantic.Assign)]
 		bool ShowExistingMatches { get; set; }
 
-		[TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+		[TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("matchmakingMode", ArgumentSemantic.Assign)]
 		GKMatchmakingMode MatchmakingMode { get; set; }
 
@@ -2525,25 +2528,35 @@ namespace GameKit {
 		[Export ("initWithNibName:bundle:")]
 		NativeHandle Constructor ([NullAllowed] string nibNameOrNull, [NullAllowed] NSBundle nibBundleOrNull);
 
-		[TV (14, 0), NoWatch, Mac (11, 0), iOS (14, 0)]
+		[TV (14, 0), iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[Export ("initWithLeaderboardID:playerScope:timeScope:")]
 		NativeHandle Constructor (string leaderboardId, GKLeaderboardPlayerScope playerScope, GKLeaderboardTimeScope timeScope);
 
-		[TV (14, 0), NoWatch, Mac (11, 0), iOS (14, 0)]
+		[TV (14, 0), NoWatch, iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[Export ("initWithLeaderboard:playerScope:")]
 		NativeHandle Constructor (GKLeaderboard leaderboard, GKLeaderboardPlayerScope playerScope);
 
-		[TV (14, 0), NoWatch, Mac (11, 0), iOS (14, 0)]
+		[TV (14, 0), NoWatch, iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[Export ("initWithAchievementID:")]
-		NativeHandle Constructor (string achievementId);
+		[Internal]
+		NativeHandle _InitWithAchievementId (string achievementId);
 
-		[TV (14, 0), NoWatch, Mac (11, 0), iOS (14, 0)]
+		[TV (14, 0), NoWatch, iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[Export ("initWithState:")]
 		NativeHandle Constructor (GKGameCenterViewControllerState state);
+
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("initWithLeaderboardSetID:")]
+		[Internal]
+		NativeHandle _InitWithLeaderboardSetId (string leaderboardSetId);
+
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("initWithPlayer:")]
+		NativeHandle Constructor (GKPlayer player);
 
 		[Export ("gameCenterDelegate", ArgumentSemantic.Weak), NullAllowed]
 		NSObject WeakDelegate { get; set; }
@@ -3069,7 +3082,7 @@ namespace GameKit {
 		void FailedWithError (GKSession session, NSError error);
 	}
 
-	[TV (14, 0), Mac (11, 0), iOS (14, 0)]
+	[TV (14, 0), iOS (14, 0)]
 	[MacCatalyst (14, 0)]
 	[NoWatch]
 	[BaseType (typeof (NSObject))]
@@ -3110,9 +3123,25 @@ namespace GameKit {
 
 		[Export ("triggerAccessPointWithState:handler:")]
 		void TriggerAccessPoint (GKGameCenterViewControllerState state, Action handler);
+
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("triggerAccessPointWithAchievementID:handler:")]
+		void TriggerAccessPointWithAchievementId (string achievementId, [NullAllowed] Action handler);
+
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("triggerAccessPointWithLeaderboardSetID:handler:")]
+		void TriggerAccessPointWithLeaderboardSetId (string leaderboardSetId, [NullAllowed] Action handler);
+
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("triggerAccessPointWithLeaderboardID:playerScope:timeScope:handler:")]
+		void TriggerAccessPoint (string leaderboardId, GKLeaderboardPlayerScope playerScope, GKLeaderboardTimeScope timeScope, [NullAllowed] Action handler);
+
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("triggerAccessPointWithPlayer:handler:")]
+		void TriggerAccessPoint (GKPlayer player, [NullAllowed] Action handler);
 	}
 
-	[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+	[Watch (7, 0), TV (14, 0), iOS (14, 0)]
 	[MacCatalyst (14, 0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
@@ -3120,9 +3149,6 @@ namespace GameKit {
 		[Export ("player", ArgumentSemantic.Strong)]
 		GKPlayer Player { get; }
 
-#if false
-		// Some APIs missing on iOS, tvOS, watchOS as of Xcode 12 beta 3 - https://github.com/xamarin/maccore/issues/2269
-		// disabled since the selectors don't respond on macOS 11.0
 		[Export ("rank")]
 		nint Rank { get; }
 
@@ -3137,7 +3163,6 @@ namespace GameKit {
 
 		[Export ("date", ArgumentSemantic.Strong)]
 		NSDate Date { get; }
-#endif
 
 		[NoWatch] // header lists watch as supported, but UIViewController is not available on Watch!
 		[MacCatalyst (13, 1)]
@@ -3155,7 +3180,7 @@ namespace GameKit {
 		UIViewController ChallengeComposeControllerWithMessage ([NullAllowed] string message, [NullAllowed] GKPlayer [] players, [NullAllowed] GKChallengeComposeHandler2 completionHandler);
 	}
 
-	[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+	[Watch (7, 0), TV (14, 0), iOS (14, 0)]
 	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NSObject))]
 	interface GKLeaderboardScore {

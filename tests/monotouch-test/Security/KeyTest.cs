@@ -44,7 +44,11 @@ namespace MonoTouchFixtures.Security {
 			get {
 				TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 8, throwIfOtherPlatform: false); // System.Security.Cryptography.CryptographicException : Input data cannot be coded as a valid certificate.
 				if (_c is null)
+#if NET
+					_c = X509CertificateLoader.LoadPkcs12 (ImportExportTest.farscape_pfx, "farscape");
+#else
 					_c = new X509Certificate2 (ImportExportTest.farscape_pfx, "farscape");
+#endif
 				return _c;
 			}
 		}
@@ -509,6 +513,8 @@ namespace MonoTouchFixtures.Security {
 
 #if __MACCATALYST__ || __IOS__ || __TVOS__ || __WATCHOS__
 								var badDecrypt = !TestRuntime.CheckXcodeVersion (15, 0);
+#elif __IOS__ || __TVOS__ || __WATCHOS__
+								var badDecrypt = !TestRuntime.CheckXcodeVersion (16, 0);
 #else
 								var badDecrypt = true;
 #endif

@@ -9,11 +9,11 @@ using Xamarin.Tests;
 namespace Xamarin.MMP.Tests {
 	public class CodeStrippingTests {
 		static Func<string, bool> LipoStripConditional = s => s.Contains ("lipo") && s.Contains ("-extract_family");
-		static Func<string, bool> LipoStripSkipPosixAndMonoNativeConditional = s => LipoStripConditional (s) && !s.Contains ("libMonoPosixHelper.dylib") && !s.Contains ("libmono-native.dylib");
+		static Func<string, bool> LipoStripSkipPosixConditional = s => LipoStripConditional (s) && !s.Contains ("libMonoPosixHelper.dylib");
 
-		static bool DidAnyLipoStripSkipPosixAndMonoNative (BuildResult buildResult)
+		static bool DidAnyLipoStripSkipPosix (BuildResult buildResult)
 		{
-			return buildResult.BuildOutputLines.Any (LipoStripSkipPosixAndMonoNativeConditional);
+			return buildResult.BuildOutputLines.Any (LipoStripSkipPosixConditional);
 		}
 
 		static bool DidAnyLipoStrip (BuildResult buildResult)
@@ -129,9 +129,9 @@ namespace Xamarin.MMP.Tests {
 			Assert.False (buildOutput.HasMessage (2108), "MM2108 incorrectly given in in context: " + context);
 		}
 
-		void AssertLipoOnlyMonoPosixAndMonoNative (BuildResult buildOutput, string context)
+		void AssertLipoOnlyMonoPosix (BuildResult buildOutput, string context)
 		{
-			Assert.False (DidAnyLipoStripSkipPosixAndMonoNative (buildOutput), "lipo incorrectly run in context outside of libMonoPosixHelper/libmono-native: " + context);
+			Assert.False (DidAnyLipoStripSkipPosix (buildOutput), "lipo incorrectly run in context outside of libMonoPosixHelper/libmono-native: " + context);
 			Assert.False (buildOutput.HasMessage (2108), "MM2108 incorrectly given in in context: " + context);
 		}
 
@@ -173,7 +173,7 @@ namespace Xamarin.MMP.Tests {
 
 				test.Release = true;
 				testResult = TI.TestUnifiedExecutable (test);
-				AssertLipoOnlyMonoPosixAndMonoNative (testResult.BuildResult, "Release"); // libMonoPosixHelper.dylib and libmono-native.dylib will lipo in Release
+				AssertLipoOnlyMonoPosix (testResult.BuildResult, "Release"); // libMonoPosixHelper.dylib and libmono-native.dylib will lipo in Release
 			});
 		}
 	}

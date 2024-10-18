@@ -9,6 +9,7 @@
     <DefineConstants Condition="'$(XAMMACIOS_DEBUGGER)' != ''">$(DefineConstants);XAMMACIOS_DEBUGGER</DefineConstants>
     <WarningsAsErrors>Nullable</WarningsAsErrors>
     <Nullable>enable</Nullable>
+    <NoWarn>APL0003</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
@@ -26,6 +27,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="..\ObjCBindings\BindingTypeAttribute.cs">
+      <Link>BindingTypeAttribute.cs</Link>
+    </Compile>
     <None Include="$(RepositoryPath)\docs\website\generator-errors.md">
       <Link>generator-errors.md</Link>
     </None>
@@ -34,7 +38,7 @@
     <Compile Include="$(RepositoryPath)\tools\common\ApplePlatform.cs" />
     <Compile Include="$(RepositoryPath)\tools\common\TargetFramework.cs" />
     <Compile Include="$(RepositoryPath)\tools\common\StringUtils.cs" />
-    <Compile Include="$(BuildDir)\generator-frameworks.g.cs" />
+    <Compile Include="$(DotNetBuildDir)\generator-frameworks.g.cs" />
     <Compile Include="$(RepositoryPath)\src\Foundation\AdviceAttribute.cs" />
     <Compile Include="$(RepositoryPath)\src\Foundation\ExportAttribute.cs" />
     <Compile Include="$(RepositoryPath)\src\Foundation\FieldAttribute.cs" />

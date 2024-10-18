@@ -29,6 +29,9 @@ For this purpose, we support the `PublishFolderType` metadata on items in the
 Below is a list of known/valid `PublishFolderType` values and the
 corresponding action taken for each.
 
+> [!IMPORTANT]
+See [`PublishFolderType` doesn't work from a referenced library project](#transitiveProject) for using `PublishFolderType` in library projects.
+
 In all cases the relative directory is preserved (i.e. we don't follow the
 behavior in [dotnet/sdk#9643](https://github.com/dotnet/sdk/issues/9643).
 
@@ -276,6 +279,29 @@ The easiest way is to set `PublishFolderType` to `None`:
 <EmbeddedResource Include="MyFile.bin" CopyToOutputDirectory="PreserveNewest" PublishFolderType="None" />
 ```
 
+<a name="transitiveProject" />
+
+### `PublishFolderType` doesn't work from a referenced library project.
+
+The `PublishFolderType` metadata does not work in transitive / referenced
+projects that aren't platform-specific. For example: if an executable project
+references a `net9.0` library project, adding the `PublishFolderType` metadata
+on items in the `net9.0` library project doesn't have any effect, and you'll get a warning like this:
+
+> Xamarin.Shared.Sdk.targets(1836,3): Warning  : The file '/myresource/file.psd' does not specify a 'PublishFolderType' metadata, and a default value could not be calculated. The file will not be copied to the app bundle.
+
+The workaround is to set
+`MSBuildDisableGetCopyToPublishDirectoryItemsOptimization=true` in the
+library project:
+
+```xml
+<PropertyGroup>
+  <MSBuildDisableGetCopyToPublishDirectoryItemsOptimization>true</MSBuildDisableGetCopyToPublishDirectoryItemsOptimization>
+</PropertyGroup>
+```
+
+See https://github.com/xamarin/xamarin-macios/issues/20947 for more information.
+
 ## References
 
 * [.NET: What to do about files in ResolvedFileToPublish](https://github.com/xamarin/xamarin-macios/issues/12572)
@@ -284,3 +310,4 @@ The easiest way is to set `PublishFolderType` to `None`:
 * [.NET: build fails when referencing BenchmarkDotNet](https://github.com/xamarin/xamarin-macios/issues/12418)
 * [Having multiple .frameworks in a nuget package fails to build due to multiple info.plist files](https://github.com/xamarin/xamarin-macios/issues/12440)
 * [Automatically include .framework or .a files in the NuGet's runtimes/ios/native folder](https://github.com/xamarin/xamarin-macios/issues/11667)
+

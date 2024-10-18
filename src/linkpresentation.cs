@@ -35,6 +35,7 @@ namespace LinkPresentation {
 		MetadataFetchFailed,
 		MetadataFetchCancelled,
 		MetadataFetchTimedOut,
+		MetadataFetchNotAllowed,
 	}
 
 	[iOS (13, 0)]
@@ -86,7 +87,7 @@ namespace LinkPresentation {
 	}
 
 	[iOS (13, 0)]
-	[NoTV]
+	[TV (18, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface LPMetadataProvider {
@@ -96,7 +97,7 @@ namespace LinkPresentation {
 		void StartFetchingMetadata (NSUrl url, Action<LPLinkMetadata, NSError> completionHandler);
 
 		[Async]
-		[Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+		[iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("startFetchingMetadataForRequest:completionHandler:")]
 		void StartFetchingMetadata (NSUrlRequest request, Action<LPLinkMetadata, NSError> completionHandler);
 

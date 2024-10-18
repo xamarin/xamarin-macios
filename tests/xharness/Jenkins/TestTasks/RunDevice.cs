@@ -58,21 +58,10 @@ namespace Xharness.Jenkins.TestTasks {
 
 			switch (testTask.BuildTask.Platform) {
 			case TestPlatform.iOS:
-			case TestPlatform.iOS_Unified:
-			case TestPlatform.iOS_Unified32:
-			case TestPlatform.iOS_Unified64:
-				testTask.AppRunnerTarget = TestTarget.Device_iOS;
-				break;
-			case TestPlatform.iOS_TodayExtension64:
 				testTask.AppRunnerTarget = TestTarget.Device_iOS;
 				break;
 			case TestPlatform.tvOS:
 				testTask.AppRunnerTarget = TestTarget.Device_tvOS;
-				break;
-			case TestPlatform.watchOS:
-			case TestPlatform.watchOS_32:
-			case TestPlatform.watchOS_64_32:
-				testTask.AppRunnerTarget = TestTarget.Device_watchOS;
 				break;
 			}
 		}
@@ -86,8 +75,6 @@ namespace Xharness.Jenkins.TestTasks {
 				try {
 					// Set the device we acquired.
 					testTask.Device = testTask.Candidates.First ((d) => d.UDID == device_resource.Resource.Name);
-					if (testTask.Device.DevicePlatform == DevicePlatform.watchOS)
-						testTask.CompanionDevice = await devices.FindCompanionDevice (deviceLoadLog, testTask.Device);
 					mainLog.WriteLine ("Acquired device '{0}' for '{1}'", testTask.Device.Name, testTask.ProjectFile);
 
 					ITunnelBore tunnelBore = null;
@@ -115,7 +102,6 @@ namespace Xharness.Jenkins.TestTasks {
 						logs: new Logs (testTask.LogDirectory ?? defaultLogDirectory),
 						buildConfiguration: testTask.ProjectConfiguration,
 						deviceName: testTask.Device.Name,
-						companionDeviceName: testTask.CompanionDevice?.Name,
 						timeoutMultiplier: testTask.TimeoutMultiplier,
 						variation: testTask.Variation,
 						buildTask: testTask.BuildTask);
@@ -172,45 +158,7 @@ namespace Xharness.Jenkins.TestTasks {
 							mainLog.WriteLine ($"Test run has a known failure: '{testTask.KnownFailure}'");
 						}
 
-						if (testTask.Runner.Result == TestExecutingResult.Succeeded && testTask.Platform == TestPlatform.iOS_TodayExtension64) {
-							// For the today extension, the main app is just a single test.
-							// This is because running the today extension will not wake up the device,
-							// nor will it close & reopen the today app (but launching the main app
-							// will do both of these things, preparing the device for launching the today extension).
-
-							AppRunner todayRunner = new AppRunner (testTask.ProcessManager,
-								new AppBundleInformationParser (testTask.ProcessManager, testTask.Harness.AppBundleLocator),
-								new SimulatorLoaderFactory (testTask.ProcessManager),
-								new SimpleListenerFactory (tunnelBore),
-								new DeviceLoaderFactory (testTask.ProcessManager),
-								new CrashSnapshotReporterFactory (testTask.ProcessManager),
-								new CaptureLogFactory (),
-								new DeviceLogCapturerFactory (testTask.ProcessManager),
-								new TestReporterFactory (testTask.ProcessManager),
-								testTask.AppRunnerTarget,
-								testTask.Harness,
-								projectFilePath: testTask.ProjectFile,
-								mainLog: testTask.Logs.Create ($"extension-run-{testTask.Device.UDID}-{Harness.Helpers.Timestamp}.log", "Extension run log"),
-								logs: new Logs (testTask.LogDirectory ?? defaultLogDirectory),
-								buildConfiguration: testTask.ProjectConfiguration,
-								deviceName: testTask.Device.Name,
-								companionDeviceName: testTask.CompanionDevice?.Name,
-								timeoutMultiplier: testTask.TimeoutMultiplier,
-								variation: testTask.Variation,
-								buildTask: testTask.BuildTask);
-							await todayRunner.InitializeAsync ();
-
-							testTask.AdditionalRunner = todayRunner;
-							await todayRunner.RunAsync ();
-							foreach (var log in todayRunner.Logs.Where ((v) => !v.Description.StartsWith ("Extension ", StringComparison.Ordinal)))
-								log.Description = "Extension " + log.Description [0].ToString ().ToLower () + log.Description.Substring (1);
-							testTask.ExecutionResult = todayRunner.Result;
-
-							if (!string.IsNullOrEmpty (todayRunner.FailureMessage))
-								testTask.FailureMessage = todayRunner.FailureMessage;
-						} else {
-							testTask.ExecutionResult = testTask.Runner.Result;
-						}
+						testTask.ExecutionResult = testTask.Runner.Result;
 					}
 				} finally {
 					// Uninstall again, so that we don't leave junk behind and fill up the device.

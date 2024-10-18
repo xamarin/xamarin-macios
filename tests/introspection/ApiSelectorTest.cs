@@ -38,6 +38,9 @@ namespace Introspection {
 
 		protected virtual bool Skip (Type type)
 		{
+			if (MemberHasEditorBrowsableNever (type))
+				return true;
+
 			if (type.ContainsGenericParameters)
 				return true;
 
@@ -368,6 +371,16 @@ namespace Introspection {
 				switch (selectorName) {
 				case "focusItemContainer":
 					if (!TestRuntime.CheckXcodeVersion (12, 0))
+						return true;
+					break;
+				case "convertPoint:fromCoordinateSpace:":
+				case "convertPoint:toCoordinateSpace:":
+				case "convertRect:fromCoordinateSpace:":
+				case "convertRect:toCoordinateSpace:":
+				case "focusItemsInRect:":
+				case "bounds":
+				case "coordinateSpace":
+					if (!TestRuntime.CheckXcodeVersion (16, 0))
 						return true;
 					break;
 				}
@@ -1013,6 +1026,43 @@ namespace Introspection {
 					break;
 				}
 				break;
+			case "ASAuthorizationPublicKeyCredentialLargeBlobRegistrationOutput":
+				// Added protocol conformance to NSCopying/NSSecureCoding in Xcode 16.0
+				switch (selectorName) {
+				case "copyWithZone:":
+				case "encodeWithCoder:":
+					return !TestRuntime.CheckXcodeVersion (16, 0);
+				}
+				break;
+			case "GKLeaderboardEntry":
+				// It's not possible to create an instance of GKLeaderboardEntry, so I believe that whenever Apple
+				// returns an instance they return something that responds to these selectors, thus we have to
+				// provide bindings for them.
+				switch (selectorName) {
+				case "context":
+				case "date":
+				case "formattedScore":
+				case "rank":
+				case "score":
+					return true;
+				}
+				break;
+#if __MACCATALYST__
+			case "GKLeaderboardSet":
+				switch (selectorName) {
+				case "loadImageWithCompletionHandler:":
+					// This exists in both iOS and macOS, so not existing in Mac Catalyst is weird - so just provide the binding.
+					return true;
+				}
+				break;
+			case "GKLocalPlayer":
+				switch (selectorName) {
+				case "isPresentingFriendRequestViewController":
+					// This exists in both iOS and macOS, so not existing in Mac Catalyst is weird - so just provide the binding.
+					return true;
+				}
+				break;
+#endif // __MACCATALYST__
 			}
 
 			// old binding mistake
@@ -1194,6 +1244,9 @@ namespace Introspection {
 		protected virtual bool SkipInit (string selector, MethodBase m)
 		{
 			switch (selector) {
+			// MPSGraphExecutable
+			case "initWithMPSGraphPackageAtURL:compilationDescriptor:":
+			case "initWithCoreMLPackageAtURL:compilationDescriptor:":
 			// NSAttributedString
 			case "initWithHTML:documentAttributes:":
 			case "initWithRTF:documentAttributes:":
@@ -1269,6 +1322,20 @@ namespace Introspection {
 			// DDDevicePickerViewController
 			case "initWithBrowseDescriptor:parameters:":
 				return true;
+			// MKAddressFilter
+			case "initExcludingOptions:":
+			case "initIncludingOptions:":
+				return true;
+			// GKGameCenterViewController
+			case "initWithAchievementID:":
+			case "initWithLeaderboardSetID:":
+				return true;
+			case "initWithBytes:length:":
+				switch (m.DeclaringType.Name) {
+				case "FSFileName":
+					return true;
+				}
+				return false;
 			default:
 				return false;
 			}

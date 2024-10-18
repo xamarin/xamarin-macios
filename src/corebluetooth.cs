@@ -198,8 +198,6 @@ namespace CoreBluetooth {
 		NSString OptionNotifyOnNotificationKey { get; }
 #endif
 
-		[iOS (11, 2)]
-		[TV (11, 2)]
 		[Watch (4, 2)]
 		[MacCatalyst (13, 1)]
 		[Field ("CBConnectPeripheralOptionStartDelayKey")]
@@ -876,6 +874,10 @@ namespace CoreBluetooth {
 		[Field ("CBUUIDCharacteristicValidRangeString")]
 		NSString CharacteristicValidRangeString { get; }
 #endif
+
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("CBUUIDCharacteristicObservationScheduleString")]
+		NSString CharacteristicObservationScheduleString { get; }
 
 		[MacCatalyst (13, 1)]
 		[Field ("CBUUIDL2CAPPSMCharacteristicString")]

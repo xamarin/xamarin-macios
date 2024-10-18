@@ -174,7 +174,6 @@ namespace Xamarin.Bundler {
 
 		public bool SkipMarkingNSObjectsInUserAssemblies { get; set; }
 
-		// check if needs to be removed: https://github.com/xamarin/xamarin-macios/issues/18693
 		public bool DisableAutomaticLinkerSelection { get; set; }
 
 		// assembly_build_targets describes what kind of native code each assembly should be compiled into for mobile targets (iOS, tvOS, watchOS).
@@ -547,6 +546,12 @@ namespace Xamarin.Bundler {
 				InterpretedAssemblies.AddRange (value.Split (new char [] { ',' }, StringSplitOptions.RemoveEmptyEntries));
 		}
 
+		public void UnsetInterpreter ()
+		{
+			UseInterpreter = false;
+			InterpretedAssemblies.Clear ();
+		}
+
 #if !NET
 		public void ParseI18nAssemblies (string i18n)
 		{
@@ -831,7 +836,9 @@ namespace Xamarin.Bundler {
 		public void InitializeCommon ()
 		{
 			InitializeDeploymentTarget ();
+#if !NET
 			SelectRegistrar ();
+#endif
 			SelectMonoNative ();
 
 			RuntimeOptions = RuntimeOptions.Create (this, HttpMessageHandler, TlsProvider);

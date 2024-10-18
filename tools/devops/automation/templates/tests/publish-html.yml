@@ -49,14 +49,8 @@ steps:
 
 - template: download-artifacts.yml
 
-- ${{ if parameters.isPR }}:
-  - template: ../common/clean.yml
-    parameters:
-      commentToHide: '[comment]: <> (This is a test result report added by Azure DevOps)'
-      checkoutCode: false # we already execute the 'clean.yml' template elsewhere in this job, and running 'checkout' again is useless (it also leads to duplicate step names which Azure DevOps doesn't like).
-
-- pwsh: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/show_env.ps1
-  displayName: 'Show Environment'
+- pwsh: '& "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/$($Env:BUILD_REPOSITORY_NAME.Split(''/'')[1])/tools/devops/automation/scripts/show_bot_info.ps1"'
+  displayName: 'Show Bot Info'
 
 # build a message with all the content of all tests, to do so, we get the labels and to pass them to pwsh we do a join with ;
 # as the separator
@@ -83,7 +77,7 @@ steps:
         }
 
         $gihubComments = New-GitHubCommentsObjectFromUrl -Url "$(Build.Repository.Uri)" -Token $Env:GITHUB_TOKEN -Hash $Env:COMMENT_HASH -Debug
-        $result = $gihubComments.NewCommentFromObject("Test results", $emoji, $parallelResults)
+        $result = $gihubComments.NewCommentFromObject("Test results", $emoji, $parallelResults, "test results")
       } catch {
         Write-Host "##vso[task.complete result=Failed;]Failed to compute test summaries: $_"
         New-GitHubComment -Header "Failed to compute test summaries on $Env:CONTEXT" -Emoji ":fire:" -Description "Failed to compute test summaries: $_."

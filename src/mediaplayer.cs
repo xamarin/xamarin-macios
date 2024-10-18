@@ -82,7 +82,7 @@ namespace MediaPlayer {
 		NSString PropertyPersistentID { get; }
 
 		[NoiOS, NoMac]
-		[NoMacCatalyst]
+		[MacCatalyst (13, 1)]
 		[Export ("persistentID")]
 		ulong PersistentID { get; }
 
@@ -268,7 +268,7 @@ namespace MediaPlayer {
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		NSString PlaybackStoreIDProperty { get; }
 
-		[Watch (7, 4), TV (14, 5), Mac (11, 3), iOS (14, 5)]
+		[Watch (7, 4), TV (14, 5), iOS (14, 5)]
 		[MacCatalyst (14, 5)]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Field ("MPMediaItemPropertyIsPreorder")]
@@ -1724,7 +1724,6 @@ namespace MediaPlayer {
 		[Field ("MPNowPlayingInfoPropertyAssetURL")]
 		NSString PropertyAssetUrl { get; }
 
-		[iOS (11, 1), TV (11, 1)]
 		[MacCatalyst (13, 1)]
 		[Internal]
 		[Field ("MPNowPlayingInfoPropertyCurrentPlaybackDate")]
@@ -1737,6 +1736,14 @@ namespace MediaPlayer {
 		[TV (16, 0), Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0), Watch (9, 0)]
 		[Field ("MPNowPlayingInfoPropertyCreditsStartTime")]
 		NSString PropertyCreditsStartTime { get; }
+
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("MPNowPlayingInfoPropertyInternationalStandardRecordingCode")]
+		NSString PropertyInternationalStandardRecordingCode { get; }
+
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("MPNowPlayingInfoPropertyExcludeFromSuggestions")]
+		NSString PropertyExcludeFromSuggestions { get; }
 	}
 
 	[NoWatch]

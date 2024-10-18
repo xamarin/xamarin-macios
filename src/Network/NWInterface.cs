@@ -25,13 +25,11 @@ using NativeHandle = System.IntPtr;
 namespace Network {
 
 #if NET
-	[SupportedOSPlatform ("tvos12.0")]
+	[SupportedOSPlatform ("tvos")]
 	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("ios12.0")]
+	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
-	[TV (12, 0)]
-	[iOS (12, 0)]
 	[Watch (6, 0)]
 #endif
 	public class NWInterface : NativeObject {
@@ -42,6 +40,7 @@ namespace Network {
 		public NWInterface (NativeHandle handle, bool owns) : base (handle, owns) { }
 #endif
 
+#if !COREBUILD
 		[DllImport (Constants.NetworkLibrary)]
 		static extern NWInterfaceType nw_interface_get_type (OS_nw_interface iface);
 
@@ -56,5 +55,6 @@ namespace Network {
 		static extern /* uint32_t */ uint nw_interface_get_index (OS_nw_interface iface);
 
 		public uint Index => nw_interface_get_index (GetCheckedHandle ());
+#endif // !COREBUILD
 	}
 }

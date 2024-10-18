@@ -34,9 +34,10 @@ tests/bcl-test/SystemCoreXunit*.csproj
 tests/bcl-test/SystemXunit.csproj
 global.json
 .idea
-device-tests-provisioning.csx
-build-provisioning.csx
-provision-xcode.csx
+provision-shared.csx
 mono_crash.*.json
 *.binlog
 .vscode
+# Xcode
+xcuserdata/
+.build/

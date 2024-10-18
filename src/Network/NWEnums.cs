@@ -42,7 +42,6 @@ namespace Network {
 		Cancelled = 3,
 	}
 
-	[TV (12, 0), iOS (12, 0)]
 	[Watch (6, 0)]
 	[MacCatalyst (13, 1)]
 	public enum NWConnectionState {
@@ -54,7 +53,7 @@ namespace Network {
 		Cancelled = 5,
 	}
 
-	[TV (14, 0), Mac (11, 0), iOS (14, 0), Watch (7, 0)]
+	[TV (14, 0), iOS (14, 0), Watch (7, 0)]
 	[MacCatalyst (14, 0)]
 	public enum NWConnectionGroupState {
 		Invalid = 0,
@@ -71,7 +70,6 @@ namespace Network {
 		Collected = 2,
 	}
 
-	[TV (12, 0), iOS (12, 0)]
 	[Watch (6, 0)]
 	[MacCatalyst (13, 1)]
 	public enum NWEndpointType {
@@ -128,7 +126,7 @@ namespace Network {
 		Stable = 2,
 	}
 
-	[Watch (6, 0), TV (12, 0), iOS (12, 0)]
+	[Watch (6, 0)]
 	[MacCatalyst (13, 1)]
 	public enum NWIPVersion {
 		Any = 0,
@@ -136,7 +134,6 @@ namespace Network {
 		Version6 = 2,
 	}
 
-	[TV (12, 0), iOS (12, 0)]
 	[Watch (6, 0)]
 	[MacCatalyst (13, 1)]
 	public enum NWInterfaceType {
@@ -147,7 +144,6 @@ namespace Network {
 		Loopback = 4,
 	}
 
-	[TV (12, 0), iOS (12, 0)]
 	[Watch (6, 0)]
 	[MacCatalyst (13, 1)]
 	public enum NWListenerState {
@@ -158,7 +154,6 @@ namespace Network {
 		Cancelled = 4,
 	}
 
-	[TV (12, 0), iOS (12, 0)]
 	[Watch (6, 0)]
 	[MacCatalyst (13, 1)]
 	public enum NWMultiPathService {
@@ -168,17 +163,17 @@ namespace Network {
 		Aggregate = 3,
 	}
 
-	[TV (12, 0), iOS (12, 0)]
 	[Watch (6, 0)]
 	[MacCatalyst (13, 1)]
 	public enum NWParametersExpiredDnsBehavior {
 		Default = 0,
 		Allow = 1,
 		Prohibit = 2,
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		Persistent = 3,
 	}
 
 	// this maps to `nw_path_status_t` in Network/Headers/path.h (and not the enum from NetworkExtension)
-	[TV (12, 0), iOS (12, 0)]
 	[Watch (6, 0)]
 	[MacCatalyst (13, 1)]
 	public enum NWPathStatus {
@@ -259,7 +254,7 @@ namespace Network {
 		Reject = 2,
 	}
 
-	[TV (15, 0), Mac (12, 0), iOS (15, 0), Watch (8, 0), MacCatalyst (15, 0)]
+	[TV (15, 0), iOS (15, 0), Watch (8, 0), MacCatalyst (15, 0)]
 	public enum NWReportResolutionProtocol {
 		Unknown = 0,
 		Udp = 1,
@@ -268,14 +263,14 @@ namespace Network {
 		Https = 4,
 	}
 
-	[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+	[Watch (7, 0), TV (14, 0), iOS (14, 0)]
 	[MacCatalyst (14, 0)]
 	public enum NWResolverConfigEndpointType {
 		Https,
 		Tls,
 	}
 
-	[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0)]
+	[Watch (8, 0), TV (15, 0), iOS (15, 0)]
 	[MacCatalyst (15, 0)]
 	public enum NWMultipathVersion {
 		Unspecified = -1,
@@ -283,7 +278,7 @@ namespace Network {
 		Version1 = 1,
 	}
 
-	[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0)]
+	[Watch (8, 0), TV (15, 0), iOS (15, 0)]
 	[MacCatalyst (15, 0)]
 	public enum NWInterfaceRadioType {
 		Unknown = 0,
@@ -305,14 +300,14 @@ namespace Network {
 		CellEvdo = 0x88,
 	}
 
-	[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0)]
+	[Watch (8, 0), TV (15, 0), iOS (15, 0)]
 	[MacCatalyst (15, 0)]
 	public enum NWParametersAttribution {
 		Developer = 1,
 		User = 2,
 	}
 
-	[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	public enum NWQuicStreamType {
 		Unknown = 0,
 		Bidirectional = 1,

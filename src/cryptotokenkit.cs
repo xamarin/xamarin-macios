@@ -2,7 +2,7 @@
 
 // Let's hope that by .NET 10 we've ironed out all the bugs in the API.
 // This can of course be adjusted as needed (until we've released as stable).
-#if NET100_0_OR_GREATER
+#if NET10_0_OR_GREATER
 #define STABLE_CRYPTOTOKENKIT
 #endif
 

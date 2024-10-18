@@ -52,6 +52,7 @@ namespace MonoTests.System.Net.Http {
 			throw new NotImplementedException ($"Unknown handler type: {handler_type}");
 		}
 
+
 		[Test]
 #if !__WATCHOS__
 		[TestCase (typeof (HttpClientHandler))]
@@ -470,7 +471,9 @@ namespace MonoTests.System.Net.Http {
 					// return false, since we want to test that the exception is raised
 					return false;
 				};
+#pragma warning disable SYSLIB0014 // 'ServicePointManager' is obsolete: 'WebRequest, HttpWebRequest, ServicePoint, and WebClient are obsolete. Use HttpClient instead. Settings on ServicePointManager no longer affect SslStream or HttpClient.' (https://aka.ms/dotnet-warnings/SYSLIB0014)
 				ServicePointManager.ServerCertificateValidationCallback = (sender, certificate, chain, errors) => {
+#pragma warning restore SYSLIB0014
 					invalidServicePointManagerCbWasExcuted = true;
 					return false;
 				};
@@ -511,7 +514,9 @@ namespace MonoTests.System.Net.Http {
 					client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue ("Basic", Convert.ToBase64String (byteArray));
 					result = await client.GetAsync (NetworkResources.Httpbin.GetRedirectUrl (3));
 				} finally {
+#pragma warning disable SYSLIB0014 // 'ServicePointManager' is obsolete: 'WebRequest, HttpWebRequest, ServicePoint, and WebClient are obsolete. Use HttpClient instead. Settings on ServicePointManager no longer affect SslStream or HttpClient.' (https://aka.ms/dotnet-warnings/SYSLIB0014)
 					ServicePointManager.ServerCertificateValidationCallback = null;
+#pragma warning restore SYSLIB0014
 				}
 			}, out var ex);
 
@@ -551,7 +556,9 @@ namespace MonoTests.System.Net.Http {
 					return true;
 				};
 			} else {
+#pragma warning disable SYSLIB0014 // 'ServicePointManager' is obsolete: 'WebRequest, HttpWebRequest, ServicePoint, and WebClient are obsolete. Use HttpClient instead. Settings on ServicePointManager no longer affect SslStream or HttpClient.' (https://aka.ms/dotnet-warnings/SYSLIB0014)
 				ServicePointManager.ServerCertificateValidationCallback = (sender, certificate, chain, errors) => {
+#pragma warning restore SYSLIB0014
 					// servicePointManagerCbWasExcuted = true;
 					return true;
 				};
@@ -565,7 +572,9 @@ namespace MonoTests.System.Net.Http {
 					client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue ("Basic", Convert.ToBase64String (byteArray));
 					var result = await client.GetAsync (NetworkResources.Httpbin.GetRedirectUrl (3));
 				} finally {
+#pragma warning disable SYSLIB0014 // 'ServicePointManager' is obsolete: 'WebRequest, HttpWebRequest, ServicePoint, and WebClient are obsolete. Use HttpClient instead. Settings on ServicePointManager no longer affect SslStream or HttpClient.' (https://aka.ms/dotnet-warnings/SYSLIB0014)
 					ServicePointManager.ServerCertificateValidationCallback = null;
+#pragma warning restore SYSLIB0014
 				}
 			}, out var ex);
 
@@ -664,6 +673,41 @@ namespace MonoTests.System.Net.Http {
 				Assert.IsNull (ex2, "Callback asserts");
 			}
 		}
+
+		[Test]
+		public void TestNSUrlSessionHandlerSendClientCertificate ()
+		{
+			string certificate_base64 = "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";
+			// make the cert exportable so that the tests pass: ref: https://github.com/dotnet/runtime/issues/21581
+
+#if __MACOS__
+			// The test requires access to the default system keychain on macOS 14 or earlier, which is really
+			// annoying on bots (a password dialog will pop up, blocking the tests). So just not run this test
+			// on anything earlier than macOS 15.0,
+			TestRuntime.AssertXcodeVersion (16, 0);
+			var storageFlags = X509KeyStorageFlags.Exportable;
+#else
+			var storageFlags = X509KeyStorageFlags.DefaultKeySet;
+#endif
+
+			X509Certificate2 certificate = X509CertificateLoader.LoadPkcs12 (global::System.Convert.FromBase64String (certificate_base64), "test", storageFlags);
+			string content = "";
+			var done = TestRuntime.TryRunAsync (TimeSpan.FromSeconds (30), async () => {
+				using var handler = new NSUrlSessionHandler ();
+				handler.ClientCertificates.Add (certificate);
+				using var client = new HttpClient (handler);
+				var response = await client.GetAsync (NetworkResources.EchoClientCertificateUrl);
+				content = await response.EnsureSuccessStatusCode ().Content.ReadAsStringAsync ();
+			}, out var ex);
+			if (!done) { // timeouts happen in the bots due to dns issues, connection issues etc.. we do not want to fail
+				Assert.Inconclusive ("Request timedout.");
+			} else {
+				Assert.IsNull (ex, "Exception wasn't expected.");
+				X509Certificate2 certificate2 = X509CertificateLoader.LoadCertificate (global::System.Convert.FromBase64String (content));
+				Assert.AreEqual (certificate.Thumbprint, certificate2.Thumbprint);
+			}
+		}
+
 #endif
 
 		[Test]

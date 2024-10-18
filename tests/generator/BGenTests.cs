@@ -346,48 +346,48 @@ namespace GeneratorTests {
 #if NET
 			string expectedAttributes =
 @"	Bug35176.IFooInterface: [SupportedOSPlatform(""ios14.3"")]
-	Bug35176.IFooInterface: [SupportedOSPlatform(""maccatalyst14.3"")]
-	Bug35176.IFooInterface: [SupportedOSPlatform(""macos11.2"")]
+	Bug35176.IFooInterface: [SupportedOSPlatform(""maccatalyst15.3"")]
+	Bug35176.IFooInterface: [SupportedOSPlatform(""macos12.2"")]
 	UIKit.UIView Bug35176.BarObject::BarView(): [SupportedOSPlatform(""ios14.3"")]
-	UIKit.UIView Bug35176.BarObject::BarView(): [SupportedOSPlatform(""maccatalyst14.3"")]
-	UIKit.UIView Bug35176.BarObject::BarView(): [SupportedOSPlatform(""macos11.2"")]
+	UIKit.UIView Bug35176.BarObject::BarView(): [SupportedOSPlatform(""maccatalyst15.3"")]
+	UIKit.UIView Bug35176.BarObject::BarView(): [SupportedOSPlatform(""macos12.2"")]
 	UIKit.UIView Bug35176.BarObject::FooView(): [SupportedOSPlatform(""ios14.3"")]
-	UIKit.UIView Bug35176.BarObject::FooView(): [SupportedOSPlatform(""maccatalyst14.3"")]
-	UIKit.UIView Bug35176.BarObject::FooView(): [SupportedOSPlatform(""macos11.2"")]
+	UIKit.UIView Bug35176.BarObject::FooView(): [SupportedOSPlatform(""maccatalyst15.3"")]
+	UIKit.UIView Bug35176.BarObject::FooView(): [SupportedOSPlatform(""macos12.2"")]
 	UIKit.UIView Bug35176.BarObject::get_BarView(): [SupportedOSPlatform(""ios14.4"")]
-	UIKit.UIView Bug35176.BarObject::get_BarView(): [SupportedOSPlatform(""maccatalyst14.4"")]
-	UIKit.UIView Bug35176.BarObject::get_BarView(): [SupportedOSPlatform(""macos11.2"")]
+	UIKit.UIView Bug35176.BarObject::get_BarView(): [SupportedOSPlatform(""maccatalyst15.4"")]
+	UIKit.UIView Bug35176.BarObject::get_BarView(): [SupportedOSPlatform(""macos12.2"")]
 	UIKit.UIView Bug35176.BarObject::GetBarMember(System.Int32): [SupportedOSPlatform(""ios14.3"")]
-	UIKit.UIView Bug35176.BarObject::GetBarMember(System.Int32): [SupportedOSPlatform(""maccatalyst14.3"")]
-	UIKit.UIView Bug35176.BarObject::GetBarMember(System.Int32): [SupportedOSPlatform(""macos11.2"")]
+	UIKit.UIView Bug35176.BarObject::GetBarMember(System.Int32): [SupportedOSPlatform(""maccatalyst15.3"")]
+	UIKit.UIView Bug35176.BarObject::GetBarMember(System.Int32): [SupportedOSPlatform(""macos12.2"")]
 	UIKit.UIView Bug35176.FooInterface_Extensions::GetBarView(Bug35176.IFooInterface): [SupportedOSPlatform(""ios14.4"")]
-	UIKit.UIView Bug35176.FooInterface_Extensions::GetBarView(Bug35176.IFooInterface): [SupportedOSPlatform(""maccatalyst14.4"")]
-	UIKit.UIView Bug35176.FooInterface_Extensions::GetBarView(Bug35176.IFooInterface): [SupportedOSPlatform(""macos11.2"")]
+	UIKit.UIView Bug35176.FooInterface_Extensions::GetBarView(Bug35176.IFooInterface): [SupportedOSPlatform(""maccatalyst15.4"")]
+	UIKit.UIView Bug35176.FooInterface_Extensions::GetBarView(Bug35176.IFooInterface): [SupportedOSPlatform(""macos12.2"")]
 	UIKit.UIView Bug35176.IFooInterface::_GetBarView(Bug35176.IFooInterface): [SupportedOSPlatform(""ios14.4"")]
-	UIKit.UIView Bug35176.IFooInterface::_GetBarView(Bug35176.IFooInterface): [SupportedOSPlatform(""maccatalyst14.4"")]
-	UIKit.UIView Bug35176.IFooInterface::_GetBarView(Bug35176.IFooInterface): [SupportedOSPlatform(""macos11.2"")]
+	UIKit.UIView Bug35176.IFooInterface::_GetBarView(Bug35176.IFooInterface): [SupportedOSPlatform(""maccatalyst15.4"")]
+	UIKit.UIView Bug35176.IFooInterface::_GetBarView(Bug35176.IFooInterface): [SupportedOSPlatform(""macos12.2"")]
 	UIKit.UIView Bug35176.IFooInterface::get_BarView(): [SupportedOSPlatform(""ios14.4"")]
-	UIKit.UIView Bug35176.IFooInterface::get_BarView(): [SupportedOSPlatform(""maccatalyst14.4"")]
-	UIKit.UIView Bug35176.IFooInterface::get_BarView(): [SupportedOSPlatform(""macos11.2"")]
+	UIKit.UIView Bug35176.IFooInterface::get_BarView(): [SupportedOSPlatform(""maccatalyst15.4"")]
+	UIKit.UIView Bug35176.IFooInterface::get_BarView(): [SupportedOSPlatform(""macos12.2"")]
 ";
 #else
 			string expectedAttributes =
 @"	Bug35176.IFooInterface: [Introduced(ObjCRuntime.PlatformName.iOS, 14, 3, ObjCRuntime.PlatformArchitecture.None, null)]
-	Bug35176.IFooInterface: [Introduced(ObjCRuntime.PlatformName.MacCatalyst, 14, 3, ObjCRuntime.PlatformArchitecture.None, null)]
-	Bug35176.IFooInterface: [Introduced(ObjCRuntime.PlatformName.MacOSX, 11, 2, ObjCRuntime.PlatformArchitecture.None, null)]
+	Bug35176.IFooInterface: [Introduced(ObjCRuntime.PlatformName.MacCatalyst, 15, 3, ObjCRuntime.PlatformArchitecture.None, null)]
+	Bug35176.IFooInterface: [Introduced(ObjCRuntime.PlatformName.MacOSX, 12, 2, ObjCRuntime.PlatformArchitecture.None, null)]
 	UIKit.UIView Bug35176.BarObject::BarView(): [Introduced(ObjCRuntime.PlatformName.iOS, 14, 3, ObjCRuntime.PlatformArchitecture.None, null)]
-	UIKit.UIView Bug35176.BarObject::BarView(): [Introduced(ObjCRuntime.PlatformName.MacCatalyst, 14, 3, ObjCRuntime.PlatformArchitecture.None, null)]
-	UIKit.UIView Bug35176.BarObject::BarView(): [Introduced(ObjCRuntime.PlatformName.MacOSX, 11, 2, ObjCRuntime.PlatformArchitecture.None, null)]
+	UIKit.UIView Bug35176.BarObject::BarView(): [Introduced(ObjCRuntime.PlatformName.MacCatalyst, 15, 3, ObjCRuntime.PlatformArchitecture.None, null)]
+	UIKit.UIView Bug35176.BarObject::BarView(): [Introduced(ObjCRuntime.PlatformName.MacOSX, 12, 2, ObjCRuntime.PlatformArchitecture.None, null)]
 	UIKit.UIView Bug35176.BarObject::FooView(): [Introduced(ObjCRuntime.PlatformName.iOS, 14, 3, ObjCRuntime.PlatformArchitecture.None, null)]
-	UIKit.UIView Bug35176.BarObject::FooView(): [Introduced(ObjCRuntime.PlatformName.MacCatalyst, 14, 3, ObjCRuntime.PlatformArchitecture.None, null)]
-	UIKit.UIView Bug35176.BarObject::FooView(): [Introduced(ObjCRuntime.PlatformName.MacOSX, 11, 2, ObjCRuntime.PlatformArchitecture.None, null)]
+	UIKit.UIView Bug35176.BarObject::FooView(): [Introduced(ObjCRuntime.PlatformName.MacCatalyst, 15, 3, ObjCRuntime.PlatformArchitecture.None, null)]
+	UIKit.UIView Bug35176.BarObject::FooView(): [Introduced(ObjCRuntime.PlatformName.MacOSX, 12, 2, ObjCRuntime.PlatformArchitecture.None, null)]
 	UIKit.UIView Bug35176.BarObject::get_BarView(): [Introduced(ObjCRuntime.PlatformName.iOS, 14, 4, ObjCRuntime.PlatformArchitecture.None, null)]
-	UIKit.UIView Bug35176.BarObject::get_BarView(): [Introduced(ObjCRuntime.PlatformName.MacCatalyst, 14, 4, ObjCRuntime.PlatformArchitecture.None, null)]
+	UIKit.UIView Bug35176.BarObject::get_BarView(): [Introduced(ObjCRuntime.PlatformName.MacCatalyst, 15, 4, ObjCRuntime.PlatformArchitecture.None, null)]
 	UIKit.UIView Bug35176.BarObject::GetBarMember(System.Int32): [Introduced(ObjCRuntime.PlatformName.iOS, 14, 3, ObjCRuntime.PlatformArchitecture.None, null)]
-	UIKit.UIView Bug35176.BarObject::GetBarMember(System.Int32): [Introduced(ObjCRuntime.PlatformName.MacCatalyst, 14, 3, ObjCRuntime.PlatformArchitecture.None, null)]
-	UIKit.UIView Bug35176.BarObject::GetBarMember(System.Int32): [Introduced(ObjCRuntime.PlatformName.MacOSX, 11, 2, ObjCRuntime.PlatformArchitecture.None, null)]
+	UIKit.UIView Bug35176.BarObject::GetBarMember(System.Int32): [Introduced(ObjCRuntime.PlatformName.MacCatalyst, 15, 3, ObjCRuntime.PlatformArchitecture.None, null)]
+	UIKit.UIView Bug35176.BarObject::GetBarMember(System.Int32): [Introduced(ObjCRuntime.PlatformName.MacOSX, 12, 2, ObjCRuntime.PlatformArchitecture.None, null)]
 	UIKit.UIView Bug35176.FooInterface_Extensions::GetBarView(Bug35176.IFooInterface): [Introduced(ObjCRuntime.PlatformName.iOS, 14, 4, ObjCRuntime.PlatformArchitecture.None, null)]
-	UIKit.UIView Bug35176.FooInterface_Extensions::GetBarView(Bug35176.IFooInterface): [Introduced(ObjCRuntime.PlatformName.MacCatalyst, 14, 4, ObjCRuntime.PlatformArchitecture.None, null)]
+	UIKit.UIView Bug35176.FooInterface_Extensions::GetBarView(Bug35176.IFooInterface): [Introduced(ObjCRuntime.PlatformName.MacCatalyst, 15, 4, ObjCRuntime.PlatformArchitecture.None, null)]
 ";
 #endif
 
@@ -408,6 +408,7 @@ namespace GeneratorTests {
 		[TestCase (Profile.iOS)]
 		public void INativeObjectsInBlocks (Profile profile)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
 			var bgen = new BGenTool ();
 			bgen.Profile = profile;
 			bgen.Defines = BGenTool.GetDefaultDefines (bgen.Profile);
@@ -1152,13 +1153,13 @@ namespace GeneratorTests {
 			var expectedAttributes = new string [] {
 @"[BindingImpl(3)]
 [Export(""someMethod1:"")]
-[SupportedOSPlatform(""ios12.0"")]
+[SupportedOSPlatform(""ios13.0"")]
 [SupportedOSPlatform(""maccatalyst"")]
 [UnsupportedOSPlatform(""tvos"")]",
 
 @"[BindingImpl(3)]
 [Export(""someMethod2:"")]
-[SupportedOSPlatform(""ios12.0"")]
+[SupportedOSPlatform(""ios13.0"")]
 [SupportedOSPlatform(""maccatalyst"")]
 [UnsupportedOSPlatform(""tvos"")]",
 
@@ -1304,12 +1305,12 @@ namespace GeneratorTests {
 			var expectedPropertyAttributes =
 @"[SupportedOSPlatform(""ios"")]
 [SupportedOSPlatform(""maccatalyst"")]
-[SupportedOSPlatform(""macos11.0"")]
+[SupportedOSPlatform(""macos13.0"")]
 [UnsupportedOSPlatform(""tvos"")]";
 			var expectedSetterAttributes =
 @"[SupportedOSPlatform(""ios"")]
 [SupportedOSPlatform(""maccatalyst"")]
-[SupportedOSPlatform(""macos11.0"")]
+[SupportedOSPlatform(""macos13.0"")]
 [UnsupportedOSPlatform(""tvos"")]";
 
 			expectedPropertyAttributes = expectedPropertyAttributes.Replace ("\r", string.Empty);
@@ -1666,6 +1667,7 @@ namespace GeneratorTests {
 			var tf = TargetFramework.Parse (BGenTool.GetTargetFramework (profile));
 			cscArguments.Add ($"/r:{Configuration.GetBindingAttributePath (tf)}");
 			cscArguments.Add ($"/r:{Configuration.GetBaseLibrary (tf)}");
+			BGenTool.AddPreviewNoWarn (cscArguments);
 			var rv = ExecutionHelper.Execute (cscExecutable, cscArguments);
 			Assert.AreEqual (0, rv, "CSC exit code");
 

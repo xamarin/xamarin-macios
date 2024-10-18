@@ -161,7 +161,7 @@ namespace SpriteKit {
 	partial interface SKNode : NSSecureCoding, NSCopying {
 #elif IOS || TVOS
 	[BaseType (typeof (UIResponder))]
-	partial interface SKNode : NSSecureCoding, NSCopying, UIFocusItem {
+	partial interface SKNode : NSSecureCoding, NSCopying, UIFocusItem, UIFocusItemContainer, UICoordinateSpace {
 #else // WATCHOS
 	[BaseType (typeof (NSObject))]
 	partial interface SKNode : NSSecureCoding, NSCopying {
@@ -179,7 +179,7 @@ namespace SpriteKit {
 		[return: NullAllowed]
 		SKNode Create (string filename);
 
-		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
+		[Watch (5, 0)]
 		[MacCatalyst (13, 1)]
 		[Internal]
 		[Static]
@@ -1627,7 +1627,6 @@ namespace SpriteKit {
 
 		[iOS (14, 0)]
 		[TV (14, 0)]
-		[Mac (11, 0)]
 		[MacCatalyst (14, 0)]
 		[Export ("disableDepthStencilBuffer")]
 		bool DisableDepthStencilBuffer { get; set; }

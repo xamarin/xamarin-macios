@@ -45,11 +45,6 @@ parameters:
     type: boolean
     default: true
 
-  - name: runSamples
-    displayName: Run Samples
-    type: boolean
-    default: false
-    
   - name: testConfigurations
     displayName: Test configurations to run
     type: object
@@ -102,18 +97,8 @@ resources:
       ref: refs/heads/main
       endpoint: xamarin
 
-    - repository: release-scripts
-      type: github
-      name: xamarin/release-scripts
-      ref: refs/heads/only_codesign
-      endpoint: xamarin
-
 variables:
-  - ${{ if contains(variables['Build.DefinitionName'], 'private') }}:
-      - template: ../vsts-variables.yml
-  - template: ../variables.yml
-  - name: MaciosUploadPrefix
-    value: ''
+  - template: ../variables/common.yml
   - name: DisablePipelineConfigDetector
     value: true
 
@@ -128,7 +113,6 @@ stages:
       runTests: ${{ parameters.runTests }}
       runDeviceTests: ${{ parameters.runDeviceTests }}
       runWindowsIntegration: ${{ parameters.runWindowsIntegration }}
-      runSamples: ${{ parameters.runSamples }}
       ${{ if ne(length(parameters.testConfigurations), 0)}}:
         testConfigurations: ${{ parameters.testConfigurations }}
       deviceTestsConfigurations: ${{ parameters.deviceTestsConfigurations }}

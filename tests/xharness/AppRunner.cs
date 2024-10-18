@@ -42,9 +42,7 @@ namespace Xharness {
 		readonly string buildConfiguration;
 
 		string deviceName;
-		string companionDeviceName;
 		ISimulatorDevice simulator;
-		ISimulatorDevice companionSimulator;
 
 		bool ensureCleanSimulatorState = true;
 		bool EnsureCleanSimulatorState {
@@ -80,9 +78,7 @@ namespace Xharness {
 						  string projectFilePath,
 						  string buildConfiguration,
 						  ISimulatorDevice simulator = null,
-						  ISimulatorDevice companionSimulator = null,
 						  string deviceName = null,
-						  string companionDeviceName = null,
 						  bool ensureCleanSimulatorState = false,
 						  double timeoutMultiplier = 1,
 						  string variation = null,
@@ -102,10 +98,8 @@ namespace Xharness {
 			this.Logs = logs ?? throw new ArgumentNullException (nameof (logs));
 			this.timeoutMultiplier = timeoutMultiplier;
 			this.deviceName = deviceName;
-			this.companionDeviceName = companionDeviceName;
 			this.ensureCleanSimulatorState = ensureCleanSimulatorState;
 			this.simulator = simulator;
-			this.companionSimulator = companionSimulator;
 			this.buildTask = buildTask;
 			this.target = target;
 			this.variation = variation;
@@ -129,7 +123,7 @@ namespace Xharness {
 
 			var sims = simulatorsLoaderFactory.CreateLoader ();
 			await sims.LoadDevices (Logs.Create ($"simulator-list-{Harness.Helpers.Timestamp}.log", "Simulator list"), false, false);
-			(simulator, companionSimulator) = await sims.FindSimulators (target.GetTargetOs (false), MainLog);
+			(simulator, _) = await sims.FindSimulators (target.GetTargetOs (false), MainLog);
 
 			return simulator is not null;
 		}
@@ -149,9 +143,6 @@ namespace Xharness {
 			var device = await devs.FindDevice (runMode, MainLog, false, false);
 
 			deviceName = device?.Name;
-
-			if (runMode == RunMode.WatchOS)
-				companionDeviceName = (await devs.FindCompanionDevice (MainLog, device)).Name;
 		}
 
 		public async Task<ProcessExecutionResult> InstallAsync (CancellationToken cancellation_token)
@@ -172,14 +163,10 @@ namespace Xharness {
 				args.Add (new VerbosityArgument ());
 
 			args.Add (new InstallAppOnDeviceArgument (AppInformation.AppPath));
-			args.Add (new DeviceNameArgument (companionDeviceName ?? deviceName));
-
-			if (runMode == RunMode.WatchOS) {
-				args.Add (new DeviceArgument ("ios,watchos"));
-			}
+			args.Add (new DeviceNameArgument (deviceName));
 
 			var totalSize = Directory.GetFiles (AppInformation.AppPath, "*", SearchOption.AllDirectories).Select ((v) => new FileInfo (v).Length).Sum ();
-			MainLog.WriteLine ($"Installing '{AppInformation.AppPath}' to '{companionDeviceName ?? deviceName}'. Size: {totalSize} bytes = {totalSize / 1024.0 / 1024.0:N2} MB");
+			MainLog.WriteLine ($"Installing '{AppInformation.AppPath}' to '{deviceName}'. Size: {totalSize} bytes = {totalSize / 1024.0 / 1024.0:N2} MB");
 
 			return await processManager.ExecuteCommandAsync (args, MainLog, TimeSpan.FromHours (1), cancellationToken: cancellation_token);
 		}
@@ -197,7 +184,7 @@ namespace Xharness {
 				args.Add (new VerbosityArgument ());
 
 			args.Add (new UninstallAppFromDeviceArgument (AppInformation.BundleIdentifier));
-			args.Add (new DeviceNameArgument (companionDeviceName ?? deviceName));
+			args.Add (new DeviceNameArgument (deviceName));
 
 			return await processManager.ExecuteCommandAsync (args, MainLog, TimeSpan.FromMinutes (1));
 		}
@@ -302,16 +289,7 @@ namespace Xharness {
 			args.AddRange (harness.EnvironmentVariables.Select (kvp => new SetEnvVariableArgument (kvp.Key, kvp.Value)));
 
 			if (IsExtension) {
-				switch (AppInformation.Extension) {
-				case Extension.TodayExtension:
-					args.Add (isSimulator
-						? (MlaunchArgument) new LaunchSimulatorExtensionArgument (AppInformation.LaunchAppPath, AppInformation.BundleIdentifier)
-						: new LaunchDeviceExtensionArgument (AppInformation.LaunchAppPath, AppInformation.BundleIdentifier));
-					break;
-				case Extension.WatchKit2:
-				default:
-					throw new NotImplementedException ();
-				}
+				throw new NotImplementedException ("Extensions aren't supported in xharness at the moment (no .NET extension tests yet)");
 			} else {
 				args.Add (isSimulator
 					? (MlaunchArgument) new LaunchSimulatorAppArgument (AppInformation.LaunchAppPath)
@@ -329,14 +307,12 @@ namespace Xharness {
 				args.Add (new SetStdoutArgument (stdout_log));
 				args.Add (new SetStderrArgument (stderr_log));
 
-				var simulators = new [] { simulator, companionSimulator }.Where (s => s is not null);
+				var simulators = new [] { simulator };
 				var systemLogs = new List<ICaptureLog> ();
 				foreach (var sim in simulators) {
 					// Upload the system log
 					MainLog.WriteLine ("System log for the '{1}' simulator is: {0}", sim.SystemLog, sim.Name);
-					bool isCompanion = sim != simulator;
-
-					var logDescription = isCompanion ? LogType.CompanionSystemLog.ToString () : LogType.SystemLog.ToString ();
+					var logDescription = LogType.SystemLog.ToString ();
 					var log = captureLogFactory.Create (
 						Path.Combine (Logs.Directory, sim.Name + ".log"),
 						sim.SystemLog,
@@ -393,12 +369,7 @@ namespace Xharness {
 			} else {
 				MainLog.WriteLine ("*** Executing {0}/{1} on device '{2}' ***", AppInformation.AppName, runMode, deviceName);
 
-				if (runMode == RunMode.WatchOS) {
-					args.Add (new AttachNativeDebuggerArgument ()); // this prevents the watch from backgrounding the app.
-				} else {
-					args.Add (new WaitForExitArgument ());
-				}
-
+				args.Add (new WaitForExitArgument ());
 				args.Add (new DeviceNameArgument (deviceName));
 
 				var deviceSystemLog = Logs.Create ($"device-{deviceName}-{Harness.Helpers.Timestamp}.log", "Device log");
