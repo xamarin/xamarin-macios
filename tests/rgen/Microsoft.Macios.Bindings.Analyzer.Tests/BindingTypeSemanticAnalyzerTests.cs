@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Xamarin.Tests;
@@ -27,10 +28,11 @@ namespace Test {
 
 		var compilation = CreateCompilation (nameof (CompareGeneratedCode), platform, inputText);
 		var diagnostics = await RunAnalyzer (new BindingTypeSemanticAnalyzer (), compilation);
-		Assert.Single (diagnostics);
+		var analyzerDiagnotics = diagnostics
+			.Where (d => d.Id == BindingTypeSemanticAnalyzer.RBI0001.Id).ToArray ();
+		Assert.Single (analyzerDiagnotics);
 		// verify the diagnostic message
-		var location = diagnostics [0].Location;
-		VerifyDiagnosticMessage (diagnostics [0], BindingTypeSemanticAnalyzer.DiagnosticId,
+		VerifyDiagnosticMessage (analyzerDiagnotics [0], BindingTypeSemanticAnalyzer.RBI0001.Id,
 			DiagnosticSeverity.Error, "The binding type 'Test.Examples' must declared as a partial class");
 	}
 }
