@@ -30,7 +30,7 @@ static class TypeSymbolExtensions {
 		var boundAttributes = symbol.GetAttributes ();
 		if (boundAttributes.Length == 0) {
 			// return an empty dictionary if there are no attributes
-			return new();
+			return new ();
 		}
 
 		var attributes = new Dictionary<string, AttributeData> ();

@@ -156,11 +156,11 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 
 				CollectUsingStatements<T> (baseTypeDeclarationSyntax.SyntaxTree, sb, emitter);
 
-				if (emitter.TryEmit(out var diagnostics)) {
-					 // only add file when we do generate code
-					 var code = sb.ToString ();
-					 context.AddSource ($"{symbolBindingContext.Namespace}/{emitter.SymbolName}.g.cs",
-						 SourceText.From (code, Encoding.UTF8));
+				if (emitter.TryEmit (out var diagnostics)) {
+					// only add file when we do generate code
+					var code = sb.ToString ();
+					context.AddSource ($"{symbolBindingContext.Namespace}/{emitter.SymbolName}.g.cs",
+						SourceText.From (code, Encoding.UTF8));
 				} else {
 					// add to the diagnostics and continue to the next possible candidate
 					foreach (Diagnostic diagnostic in diagnostics) {

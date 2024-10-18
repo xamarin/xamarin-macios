@@ -20,7 +20,7 @@ public class BaseGeneratorTestClass {
 
 	// list of the defines for each platform, this is passed to the parser to ensure that
 	// we are testing the platforms as if they were being compiled.
-	readonly Dictionary<ApplePlatform, string[]> platformDefines = new() {
+	readonly Dictionary<ApplePlatform, string []> platformDefines = new () {
 		{ ApplePlatform.iOS, new [] { "__IOS__" } },
 		{ ApplePlatform.TVOS, new [] { "__TVOS__" } },
 		{ ApplePlatform.MacOSX, new [] { "__MACOS__" } },
@@ -56,7 +56,7 @@ public class BaseGeneratorTestClass {
 			throw new InvalidOperationException ($"Could not find platform dll for {platform}");
 		}
 
-		var parseOptions = new CSharpParseOptions (LanguageVersion.Latest, DocumentationMode.None, preprocessorSymbols: platformDefines[platform]);;
+		var parseOptions = new CSharpParseOptions (LanguageVersion.Latest, DocumentationMode.None, preprocessorSymbols: platformDefines [platform]); ;
 		var trees = sources.Select (s => CSharpSyntaxTree.ParseText (s, parseOptions));
 
 		var options = new CSharpCompilationOptions (OutputKind.NetModule)

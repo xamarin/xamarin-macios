@@ -10,8 +10,8 @@ public struct DiagnosticInfo (
 	string category) {
 
 	public string Id { get; } = id;
-	public LocalizableResourceString Title { get;  } = title;
-	public LocalizableResourceString MessageFormat { get;  } = messageFormat;
+	public LocalizableResourceString Title { get; } = title;
+	public LocalizableResourceString MessageFormat { get; } = messageFormat;
 	public LocalizableResourceString Description { get; } = description;
 	public string Category { get; } = category;
 }

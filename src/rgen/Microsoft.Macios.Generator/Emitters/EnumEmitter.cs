@@ -19,7 +19,7 @@ class EnumEmitter (ISymbolBindingContext<EnumDeclarationSyntax> context, TabbedS
 	{
 		var typeNamespace = enumField.Symbol.ContainingType.ContainingNamespace.Name;
 		if (!context.RootBindingContext.TryComputeLibraryName (enumField.FieldData.LibraryName, typeNamespace,
-			    out string? libraryName, out string? libraryPath)) {
+				out string? libraryName, out string? libraryPath)) {
 			return;
 		}
 
@@ -111,35 +111,35 @@ class EnumEmitter (ISymbolBindingContext<EnumDeclarationSyntax> context, TabbedS
 }}");
 	}
 
-    public bool TryEmit ([NotNullWhen (false)] out ImmutableArray<Diagnostic>? diagnostics)
-    {
-	    diagnostics = null;
-	    if (!context.Symbol.TryGetEnumFields (out var members,
-		        out diagnostics) || members.Value.Length == 0) {
-		    // return true to indicate that we did generate code, even if it's empty, the analyzer will take care
-		    // of the rest
-		    return true;
-	    }
-	    // in the old generator we had to copy over the enum, in this new approach the only code
-	    // we need to create is the extension class for the enum that is backed by fields
-	    builder.AppendLine ();
-	    builder.AppendLine ($"namespace {context.Namespace};");
-	    builder.AppendLine ();
+	public bool TryEmit ([NotNullWhen (false)] out ImmutableArray<Diagnostic>? diagnostics)
+	{
+		diagnostics = null;
+		if (!context.Symbol.TryGetEnumFields (out var members,
+				out diagnostics) || members.Value.Length == 0) {
+			// return true to indicate that we did generate code, even if it's empty, the analyzer will take care
+			// of the rest
+			return true;
+		}
+		// in the old generator we had to copy over the enum, in this new approach the only code
+		// we need to create is the extension class for the enum that is backed by fields
+		builder.AppendLine ();
+		builder.AppendLine ($"namespace {context.Namespace};");
+		builder.AppendLine ();
 
-	    builder.AppendGeneratedCodeAttribute ();
-	    using (var classBlock = builder.CreateBlock ($"static public partial class {SymbolName}", true)) {
-		    classBlock.AppendLine ();
-		    classBlock.AppendLine ($"static IntPtr[] values = new IntPtr [{members.Value.Length}];");
-		    // foreach member in the enum we need to create a field that holds the value, the property emitter
-		    // will take care of generating the property. Do not order by name to keep the order of the enum
-		    Emit (classBlock, members.Value);
-		    classBlock.AppendLine ();
+		builder.AppendGeneratedCodeAttribute ();
+		using (var classBlock = builder.CreateBlock ($"static public partial class {SymbolName}", true)) {
+			classBlock.AppendLine ();
+			classBlock.AppendLine ($"static IntPtr[] values = new IntPtr [{members.Value.Length}];");
+			// foreach member in the enum we need to create a field that holds the value, the property emitter
+			// will take care of generating the property. Do not order by name to keep the order of the enum
+			Emit (classBlock, members.Value);
+			classBlock.AppendLine ();
 
-		    // emit the extension methods that will be used to get the values from the enum
-		    Emit (classBlock, context.Symbol, members);
-		    classBlock.AppendLine ();
-	    }
+			// emit the extension methods that will be used to get the values from the enum
+			Emit (classBlock, context.Symbol, members);
+			classBlock.AppendLine ();
+		}
 
-	    return true;
-    }
+		return true;
+	}
 }
