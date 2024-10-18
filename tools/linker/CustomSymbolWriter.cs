@@ -78,10 +78,5 @@ namespace Xamarin.Linker {
 		public void Write (MethodDebugInformation info) => _symbolWriter.Write (info);
 		public void Write () => _symbolWriter.Write ();
 		public void Dispose () => _symbolWriter.Dispose ();
-
-		public void Write (ICustomDebugInformationProvider provider)
-		{
-			throw new NotImplementedException ();
-		}
 	}
 }

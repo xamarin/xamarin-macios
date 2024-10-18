@@ -1230,7 +1230,7 @@ namespace Xamarin.Bundler {
 				res.Add (value);
 			}
 
-			// We replace any existing abis, to keep the old behavior where '--armv6 --armv7' would
+			// We replace any existing abis, to keep the old behavior where '--armv6 --armv7' would 
 			// enable only the last abi specified and disable the rest.
 			abis = res;
 		}
@@ -1569,7 +1569,7 @@ namespace Xamarin.Bundler {
 			aotArguments.Add ($"data-outfile={dataFile}");
 			aotArguments.Add ("static");
 			aotArguments.Add ("asmonly");
-			// This method is used in legacy build as well, where dedup is not supported.
+			// This method is used in legacy build as well, where dedup is not supported. 
 			// Variable isDedupAssembly could have the following values:
 			// - NULL means that dedup is not enabled
 			// - FALSE means that dedup-skip flag should be passed for all assemblies except a container assemblt
