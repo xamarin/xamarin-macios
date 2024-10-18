@@ -37,9 +37,10 @@ class TabbedStringBuilder : IDisposable {
 		isBlock = block;
 		if (isBlock) {
 			// increase by 1 because we are in a block
-			tabCount = currentCount + 1;
-			var braceTab = new string ('\t', (int) (tabCount - 1));
-			this.sb.AppendLine ($"{braceTab}{{");
+			tabCount = currentCount;
+			WriteTabs ();
+			this.sb.Append ('{');
+			tabCount++;
 		} else {
 			tabCount = currentCount;
 		}
@@ -223,6 +224,6 @@ class TabbedStringBuilder : IDisposable {
 
 		disposed = true;
 		sb.Append ('\t', (int) tabCount - 1);
-		sb.AppendLine ("}");
+		sb.Append ('}').AppendLine ();
 	}
 }
