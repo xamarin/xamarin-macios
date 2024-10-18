@@ -600,10 +600,6 @@ DOTNET_MacCatalyst_LIBRARIES =
 
 define DotNetLibTemplate
 DOTNET_TARGETS += \
-	$(DOTNET_DESTDIR)/$($(2)_NUGET_RUNTIME_NAME)/runtimes/$(2)/native/libxamarin-dotnet.dylib \
-	$(DOTNET_DESTDIR)/$($(2)_NUGET_RUNTIME_NAME)/runtimes/$(2)/native/libxamarin-dotnet-debug.dylib \
-	$(DOTNET_DESTDIR)/$($(2)_NUGET_RUNTIME_NAME)/runtimes/$(2)/native/libxamarin-dotnet.a \
-	$(DOTNET_DESTDIR)/$($(2)_NUGET_RUNTIME_NAME)/runtimes/$(2)/native/libxamarin-dotnet-debug.a \
 	$$(foreach lib,$$(DOTNET_$(1)_LIBRARIES),$(DOTNET_DESTDIR)/$($(2)_NUGET_RUNTIME_NAME)/runtimes/$(2)/native/$$(lib)) \
 	$$(foreach header,$$(SHIPPED_HEADERS),$(DOTNET_DESTDIR)/$($(2)_NUGET_RUNTIME_NAME)/runtimes/$(2)/native/$$(header)) \
 
@@ -616,6 +612,17 @@ $(DOTNET_DESTDIR)/$($(2)_NUGET_RUNTIME_NAME)/runtimes/$(2)/native/xamarin/%.h: x
 endef
 
 $(foreach platform,$(DOTNET_PLATFORMS),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),$(eval $(call DotNetLibTemplate,$(platform),$(rid)))))
+
+define DotNetMonoLibTemplate
+DOTNET_TARGETS += \
+	$(DOTNET_DESTDIR)/$($(2)_NUGET_RUNTIME_NAME)/runtimes/$(2)/native/libxamarin-dotnet.dylib \
+	$(DOTNET_DESTDIR)/$($(2)_NUGET_RUNTIME_NAME)/runtimes/$(2)/native/libxamarin-dotnet-debug.dylib \
+	$(DOTNET_DESTDIR)/$($(2)_NUGET_RUNTIME_NAME)/runtimes/$(2)/native/libxamarin-dotnet.a \
+	$(DOTNET_DESTDIR)/$($(2)_NUGET_RUNTIME_NAME)/runtimes/$(2)/native/libxamarin-dotnet-debug.a \
+
+endef
+
+$(foreach platform,$(DOTNET_MONOVM_PLATFORMS),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),$(eval $(call DotNetMonoLibTemplate,$(platform),$(rid)))))
 
 define DotNetCoreClrLibTemplate
 DOTNET_TARGETS += \
