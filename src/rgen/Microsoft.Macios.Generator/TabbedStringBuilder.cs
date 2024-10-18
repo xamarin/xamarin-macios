@@ -38,7 +38,7 @@ class TabbedStringBuilder : IDisposable {
 		if (isBlock) {
 			// increase by 1 because we are in a block
 			tabCount = currentCount;
-			WriteTabs ().Append ('{').AppendLine();
+			WriteTabs ().Append ('{').AppendLine ();
 			tabCount++;
 		} else {
 			tabCount = currentCount;
