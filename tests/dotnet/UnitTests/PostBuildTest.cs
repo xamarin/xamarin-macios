@@ -112,7 +112,7 @@ namespace Xamarin.Tests {
 			var properties = GetDefaultProperties (runtimeIdentifiers);
 
 			// Verify value defaults to false when not set
-			properties["Configuration"] = configuration;
+			properties ["Configuration"] = configuration;
 
 			DotNet.AssertBuild (project_path, properties);
 
