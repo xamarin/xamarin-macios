@@ -1064,7 +1064,7 @@ namespace Registrar {
 
 		protected override bool IsDelegate (TypeReference tr)
 		{
-			var type = tr.Resolve ();
+			var type = ResolveType (tr);
 			return IsDelegate (type);
 		}
 
