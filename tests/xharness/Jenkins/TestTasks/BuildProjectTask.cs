@@ -21,8 +21,5 @@ namespace Xharness.Jenkins.TestTasks {
 		}
 
 		public override bool SupportsParallelExecution => BuildProject.SupportsParallelExecution;
-
-		protected override void InitializeTool ()
-			=> buildToolTask = new BuildProject (() => Jenkins.Harness.XIBuildPath, ProcessManager, ResourceManager, this, this);
 	}
 }

@@ -134,50 +134,7 @@ namespace Xharness.Jenkins.TestTasks {
 
 		public override async Task RunTestAsync ()
 		{
-			using (var resource = await NotifyAndAcquireDesktopResourceAsync ()) {
-				var xmlLog = Logs.CreateFile ($"log-{Timestamp}.xml", LogType.XmlLog.ToString ());
-				var log = Logs.Create ($"execute-{Timestamp}.txt", LogType.ExecutionLog.ToString ());
-				FindNUnitConsoleExecutable (log);
-
-				var args = new List<string> ();
-				args.Add ("-t");
-				args.Add ("--");
-				args.Add (Path.GetFullPath (TestExecutable));
-				args.Add (Path.GetFullPath (TestLibrary));
-				if (IsNUnit3) {
-					args.Add ("-result=" + xmlLog + ";format=nunit2");
-					args.Add ("--labels=After");
-					if (InProcess)
-						args.Add ("--inprocess");
-				} else {
-					args.Add ("-xml=" + xmlLog);
-					args.Add ("-labels");
-				}
-
-				await ExecuteProcessAsync (log, Jenkins.Harness.XIBuildPath, args);
-
-				if (ProduceHtmlReport) {
-					try {
-						var output = Logs.Create ($"Log-{Timestamp}.html", "HTML log");
-						using (var srt = new StringReader (File.ReadAllText (Path.Combine (RootDirectory, "HtmlTransform.xslt")))) {
-							using (var sri = File.OpenRead (xmlLog)) {
-								using (var xrt = XmlReader.Create (srt)) {
-									using (var xri = XmlReader.Create (sri)) {
-										var xslt = new System.Xml.Xsl.XslCompiledTransform ();
-										xslt.Load (xrt);
-										using (var xwo = XmlWriter.Create (File.Create (output.FullPath), xslt.OutputSettings)) // use OutputSettings of xsl, so it can be output as HTML
-										{
-											xslt.Transform (xri, xwo);
-										}
-									}
-								}
-							}
-						}
-					} catch (Exception e) {
-						log.WriteLine ("Failed to produce HTML report: {0}", e);
-					}
-				}
-			}
+			throw new NotSupportedException ("Legacy projects not supported anymore");
 		}
 
 		public override void Reset ()

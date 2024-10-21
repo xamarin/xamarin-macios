@@ -32,7 +32,7 @@ mtouchtests.csproj.inc: export BUILD_VERBOSITY=$(MSBUILD_VERBOSITY)
 -include mtouchtests.csproj.inc
 
 bin/Debug/mtouchtests.dll: $(mtouchtests_dependencies)
-	$(SYSTEM_XIBUILD) -- mtouchtests.csproj /r $(XBUILD_VERBOSITY) /bl
+	$(SYSTEM_MSBUILD) mtouchtests.csproj /r $(XBUILD_VERBOSITY) /bl
 	$(Q) rm -f .failed-stamp
 
 $(abspath $(TOP)/tools/mtouch/Constants.cs):
