@@ -193,7 +193,7 @@ namespace Xamarin.MMP.Tests {
 		// In most cases we generate projects in tmp and this is not needed. But nuget and test projects can make that hard
 		public static void CleanUnifiedProject (string csprojTarget)
 		{
-			RunAndAssert (Configuration.XIBuildPath, new [] { "--", csprojTarget, "/t:clean" }, "Clean", environment: Configuration.GetBuildEnvironment (ApplePlatform.MacOSX));
+			RunAndAssert ("Legacy projects not supported anymore", new [] { "--", csprojTarget, "/t:clean" }, "Clean", environment: Configuration.GetBuildEnvironment (ApplePlatform.MacOSX));
 		}
 
 		public static BuildResult BuildProject (string csprojTarget, bool shouldFail = false, bool release = false, Dictionary<string, string> environment = null, IList<string> extraArgs = null)
@@ -227,7 +227,7 @@ namespace Xamarin.MMP.Tests {
 			};
 
 			buildArgs.Insert (0, "--");
-			RunAndAssert (Configuration.XIBuildPath, buildArgs, "Compile", shouldFail, getBuildProjectErrorInfo, environment);
+			RunAndAssert ("Legacy projects not supported anymore", buildArgs, "Compile", shouldFail, getBuildProjectErrorInfo, environment);
 
 			return new BuildResult (binlog);
 		}
@@ -505,7 +505,7 @@ namespace TestCase
 		public static bool TryNugetRestore (string project, out StringBuilder output)
 		{
 			output = new StringBuilder ();
-			var rv = ExecutionHelper.Execute (Configuration.XIBuildPath, new [] { $"--", "/t:Restore", project }, stdout: output, stderr: output, environmentVariables: Configuration.GetBuildEnvironment (ApplePlatform.MacOSX));
+			var rv = ExecutionHelper.Execute ("Legacy projects not supported anymore", new [] { $"--", "/t:Restore", project }, stdout: output, stderr: output, environmentVariables: Configuration.GetBuildEnvironment (ApplePlatform.MacOSX));
 			return rv == 0;
 		}
 

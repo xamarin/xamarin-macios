@@ -138,8 +138,6 @@ namespace Xharness {
 		public ITunnelBore TunnelBore { get; }
 		public AppBundleLocator AppBundleLocator { get; }
 
-		public string XIBuildPath => Path.GetFullPath (Path.Combine (RootDirectory, "..", "tools", "xibuild", "xibuild"));
-
 		string sdkRoot;
 		string SdkRoot {
 			get => sdkRoot;
@@ -280,7 +278,7 @@ namespace Xharness {
 				SdkRoot = GetVariable ("XCODE_DEVELOPER_ROOT", configuration.SdkRoot);
 
 			processManager = new MlaunchProcessManager (XcodeRoot, MlaunchPath);
-			AppBundleLocator = new AppBundleLocator (processManager, () => HarnessLog, XIBuildPath, "/usr/local/share/dotnet/dotnet", GetVariable ("DOTNET"));
+			AppBundleLocator = new AppBundleLocator (processManager, () => HarnessLog, "/usr/local/share/dotnet/dotnet", GetVariable ("DOTNET"));
 			TunnelBore = new TunnelBore (processManager);
 		}
 

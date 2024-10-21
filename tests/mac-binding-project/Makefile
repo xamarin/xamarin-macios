@@ -25,50 +25,6 @@ bin/SimpleClass.%.a: ../common/mac/SimpleClass.m bin
 bin/SimpleClassStatic.a: bin/SimpleClass.x86_64.a | bin
 	$(Q) $(CP) $< $@
 
-bin/Mobile-dynamic/MobileBinding.dll: bin/SimpleClassDylib.dylib
-	$(Q) $(SYSTEM_XIBUILD) -- $(XBUILD_VERBOSITY) MobileBinding/MobileBinding_dynamic.csproj
-
-bin/Mobile-dynamic-newstyle/MobileBinding.dll: bin/SimpleClassDylib.dylib
-	$(Q) $(SYSTEM_XIBUILD) -- $(XBUILD_VERBOSITY) MobileBinding/MobileBinding_dynamic_newstyle.csproj
-
-bin/Mobile-dynamic-spaces/Mobile\ Binding.dll: bin/SimpleClass\ Dylib.dylib
-	$(Q) $(SYSTEM_XIBUILD) -- $(XBUILD_VERBOSITY) MobileBinding/MobileBinding_dynamic_spaces.csproj
-
-bin/Mobile-static/MobileBinding.dll: bin/SimpleClassStatic.a
-	$(Q) $(SYSTEM_XIBUILD) -- $(XBUILD_VERBOSITY) MobileBinding/MobileBinding_static.csproj
-
-bin/Mobile-static-newstyle/MobileBinding.dll: bin/SimpleClassStatic.a
-	$(Q) $(SYSTEM_XIBUILD) -- $(XBUILD_VERBOSITY) MobileBinding/MobileBinding_static_newstyle.csproj
-
-
-bin/Mobile-framework/MobileBinding.dll:
-	$(Q) $(SYSTEM_XIBUILD) -- $(XBUILD_VERBOSITY) MobileBinding/MobileBinding_framework.csproj
-
-
-bin/MobileTest-static/MobileTestApp.app/Contents/MacOS/MobileTestApp: bin/Mobile-static/MobileBinding.dll
-	$(Q) $(SYSTEM_XIBUILD) -- $(XBUILD_VERBOSITY) MobileTestApp/MobileTestApp_static.csproj
-
-bin/MobileTest-static-newstyle/MobileTestApp.app/Contents/MacOS/MobileTestApp: bin/Mobile-static-newstyle/MobileBinding.dll
-	$(Q) $(SYSTEM_XIBUILD) -- $(XBUILD_VERBOSITY) MobileTestApp/MobileTestApp_static_newstyle.csproj
-
-bin/MobileTest-withLinker/MobileTestApp.app/Contents/MacOS/MobileTestApp: bin/Mobile-static/MobileBinding.dll
-	$(Q) $(SYSTEM_XIBUILD) -- $(XBUILD_VERBOSITY) MobileTestApp/MobileTestApp_WithLinker.csproj
-
-bin/MobileTest-dynamic/MobileTestApp.app/Contents/MacOS/MobileTestApp: bin/Mobile-dynamic/MobileBinding.dll
-	$(Q) $(SYSTEM_XIBUILD) -- $(XBUILD_VERBOSITY) MobileTestApp/MobileTestApp_dynamic.csproj
-
-bin/MobileTest-dynamic-newstyle/MobileTestApp.app/Contents/MacOS/MobileTestApp: bin/Mobile-dynamic-newstyle/MobileBinding.dll
-	$(Q) $(SYSTEM_XIBUILD) -- $(XBUILD_VERBOSITY) MobileTestApp/MobileTestApp_dynamic_newstyle.csproj
-
-bin/MobileTest-dynamic-spaces/MobileTestApp.app/Contents/MacOS/MobileTestApp: bin/Mobile-dynamic-spaces/Mobile\ Binding.dll
-	$(Q) $(SYSTEM_XIBUILD) -- $(XBUILD_VERBOSITY) MobileTestApp/MobileTestApp_dynamic_spaces.csproj
-
-bin/MobileTest-framework/MobileTestApp.app/Contents/MacOS/MobileTestApp: bin/Mobile-framework/MobileBinding.dll
-	$(Q) $(SYSTEM_XIBUILD) -- $(XBUILD_VERBOSITY) MobileTestApp/MobileTestApp_framework.csproj
-
-
-
-
 test-static:: bin/MobileTest-static/MobileTestApp.app/Contents/MacOS/MobileTestApp bin/MobileTest-static-newstyle/MobileTestApp.app/Contents/MacOS/MobileTestApp
 	$(Q) ./bin/MobileTest-static/MobileTestApp.app/Contents/MacOS/MobileTestApp 2>&1 | grep 42 > /dev/null
 	$(Q) ./bin/MobileTest-static-newstyle/MobileTestApp.app/Contents/MacOS/MobileTestApp 2>&1 | grep 42 > /dev/null
