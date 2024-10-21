@@ -71,6 +71,12 @@ WATCHOS_NUGET_OS_VERSION=11.1
 MACOS_NUGET_OS_VERSION=15.1
 MACCATALYST_NUGET_OS_VERSION=18.1
 
+# The following are the OS versions we first supported with the current .NET version.
+# These versions must *not* change with minor .NET updates, only major .NET releases.
+IOS_TARGET_PLATFORM_VERSION_LIBRARY=18.0
+TVOS_TARGET_PLATFORM_VERSION_LIBRARY=18.0
+MACOS_TARGET_PLATFORM_VERSION_LIBRARY=15.0
+MACCATALYST_TARGET_PLATFORM_VERSION_LIBRARY=18.0
 
 # In theory we should define the default platform version if it's not specified in the TFM. The default should not change for a given .NET version:
 # * We release support for iOS 14.5 with .NET 6
@@ -100,6 +106,13 @@ MACCATALYST_NUGET_OS_VERSION=18.1
 # So we've made the decision that the default target platform version is
 # always the latest target platform version.
 
+# However, this turns out to be somewhat of a complication for library developers,
+# because they typically don't need Xcode to build their projects, and if we auto-
+# update their TargetPlatformVersion to the latest, then all their customers
+# have to also update their workloads, which for some people end up being a rather
+# nasty surprise (because with the above algorithm it happens without developer
+# action). Thus we follow .NET's default platform version scheme for library projects:
+# it won't change in minor .NET releases.
 
 #
 # Here we list all the releases we support for each platform.
