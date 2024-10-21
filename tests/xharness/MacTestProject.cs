@@ -3,10 +3,7 @@ namespace Xharness {
 
 	[Flags]
 	public enum MacFlavors {
-		Modern = 1, // Xamarin.Mac/Modern app
-		Full = 2, // Xamarin.Mac/Full app
-		System = 4, // Xamarin.Mac/System app
-		Console = 8, // Console executable
+		None = 0,
 		DotNet = 16,
 		MacCatalyst = 32,
 	}
@@ -14,38 +11,29 @@ namespace Xharness {
 	public class MacTestProject : TestProject {
 		public MacFlavors TargetFrameworkFlavors;
 
-		public bool GenerateFull => GenerateVariations && (TargetFrameworkFlavors & MacFlavors.Full) == MacFlavors.Full;
-		public bool GenerateSystem => GenerateVariations && (TargetFrameworkFlavors & MacFlavors.System) == MacFlavors.System;
-
 		public override bool GenerateVariations {
 			get {
-				if (IsDotNetProject)
-					return false;
-
-				// If a bitwise combination of flavors, then we're generating variations
-				return TargetFrameworkFlavors != MacFlavors.Modern && TargetFrameworkFlavors != MacFlavors.Full && TargetFrameworkFlavors != MacFlavors.System && TargetFrameworkFlavors != MacFlavors.Console;
+				return false;
 			}
 			set {
 				throw new Exception ("This value is read-only");
 			}
 		}
 
-		public string Platform = "x86";
-
-		public MacTestProject (TestLabel label, string path, bool isExecutableProject = true, MacFlavors targetFrameworkFlavor = MacFlavors.Full | MacFlavors.Modern) : base (label, path, isExecutableProject)
+		public MacTestProject (TestLabel label, string path)
+			: base (label, path, true)
 		{
-			TargetFrameworkFlavors = targetFrameworkFlavor;
 		}
 
 		public override TestProject Clone ()
 		{
-			return CompleteClone (new MacTestProject (Label, Path, IsExecutableProject, TargetFrameworkFlavors));
+			return CompleteClone (new MacTestProject (Label, Path));
 		}
 
 		protected override TestProject CompleteClone (TestProject project)
 		{
 			var rv = (MacTestProject) project;
-			rv.Platform = Platform;
+			rv.TargetFrameworkFlavors = TargetFrameworkFlavors;
 			return base.CompleteClone (rv);
 		}
 

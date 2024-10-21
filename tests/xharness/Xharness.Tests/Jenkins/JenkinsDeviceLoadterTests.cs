@@ -27,7 +27,6 @@ namespace Xharness.Tests.Jenkins {
 					devices.Setup (d => d.Connected32BitIOS).Returns (Array.Empty<IHardwareDevice> ());
 					devices.Setup (d => d.Connected64BitIOS).Returns (Array.Empty<IHardwareDevice> ());
 					devices.Setup (d => d.ConnectedTV).Returns (Array.Empty<IHardwareDevice> ());
-					devices.Setup (d => d.ConnectedWatch).Returns (Array.Empty<IHardwareDevice> ());
 
 					yield return new TestCaseData (simulators.Object, devices.Object, $"Device Listing (ok - no devices found).");
 
@@ -36,7 +35,6 @@ namespace Xharness.Tests.Jenkins {
 					devices.Setup (d => d.Connected32BitIOS).Returns (new IHardwareDevice [] { aDevice.Object });
 					devices.Setup (d => d.Connected64BitIOS).Returns (Array.Empty<IHardwareDevice> ());
 					devices.Setup (d => d.ConnectedTV).Returns (Array.Empty<IHardwareDevice> ());
-					devices.Setup (d => d.ConnectedWatch).Returns (Array.Empty<IHardwareDevice> ());
 
 					yield return new TestCaseData (simulators.Object, devices.Object, $"Device Listing (ok). Devices types are: iOS 32 bit");
 
@@ -44,7 +42,6 @@ namespace Xharness.Tests.Jenkins {
 					devices.Setup (d => d.Connected32BitIOS).Returns (new IHardwareDevice [] { aDevice.Object });
 					devices.Setup (d => d.Connected64BitIOS).Returns (new IHardwareDevice [] { aDevice.Object });
 					devices.Setup (d => d.ConnectedTV).Returns (Array.Empty<IHardwareDevice> ());
-					devices.Setup (d => d.ConnectedWatch).Returns (Array.Empty<IHardwareDevice> ());
 
 					yield return new TestCaseData (simulators.Object, devices.Object, $"Device Listing (ok). Devices types are: iOS 32 bit, iOS 64 bit");
 
@@ -52,15 +49,13 @@ namespace Xharness.Tests.Jenkins {
 					devices.Setup (d => d.Connected32BitIOS).Returns (new IHardwareDevice [] { aDevice.Object });
 					devices.Setup (d => d.Connected64BitIOS).Returns (new IHardwareDevice [] { aDevice.Object });
 					devices.Setup (d => d.ConnectedTV).Returns (new IHardwareDevice [] { aDevice.Object });
-					devices.Setup (d => d.ConnectedWatch).Returns (Array.Empty<IHardwareDevice> ());
 					yield return new TestCaseData (simulators.Object, devices.Object, $"Device Listing (ok). Devices types are: iOS 32 bit, iOS 64 bit, tvOS");
 
 					devices = new Mock<IHardwareDeviceLoader> ();
 					devices.Setup (d => d.Connected32BitIOS).Returns (new IHardwareDevice [] { aDevice.Object });
 					devices.Setup (d => d.Connected64BitIOS).Returns (new IHardwareDevice [] { aDevice.Object });
 					devices.Setup (d => d.ConnectedTV).Returns (new IHardwareDevice [] { aDevice.Object });
-					devices.Setup (d => d.ConnectedWatch).Returns (new IHardwareDevice [] { aDevice.Object });
-					yield return new TestCaseData (simulators.Object, devices.Object, $"Device Listing (ok). Devices types are: iOS 32 bit, iOS 64 bit, tvOS, watchOS");
+					yield return new TestCaseData (simulators.Object, devices.Object, $"Device Listing (ok). Devices types are: iOS 32 bit, iOS 64 bit, tvOS");
 				}
 			}
 

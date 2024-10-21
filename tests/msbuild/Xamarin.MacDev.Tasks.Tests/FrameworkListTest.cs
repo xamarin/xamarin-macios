@@ -13,7 +13,6 @@ namespace Xamarin.MacDev.Tasks {
 	public class FrameworkListTests {
 		[TestCase ("Xamarin.iOS-FrameworkList.xml.in")]
 		[TestCase ("Xamarin.TVOS-FrameworkList.xml.in")]
-		[TestCase ("Xamarin.WatchOS-FrameworkList.xml.in")]
 		[TestCase ("Xamarin.Mac-Full-FrameworkList.xml.in")]
 		[TestCase ("Xamarin.Mac-Mobile-FrameworkList.xml.in")]
 		public void CheckFrameworkListFile (string frameworkListFile)
@@ -30,10 +29,6 @@ namespace Xamarin.MacDev.Tasks {
 			case "Xamarin.TVOS":
 				if (!Configuration.include_tvos)
 					Assert.Inconclusive ("include_tvos is disabled");
-				break;
-			case "Xamarin.WatchOS":
-				if (!Configuration.include_watchos)
-					Assert.Inconclusive ("include_watchos is disabled");
 				break;
 			case "Xamarin.Mac":
 				if (!Configuration.include_mac)

@@ -296,6 +296,7 @@ AVFOUNDATION_SOURCES = \
 	AVFoundation/Events.cs \
 	AVFoundation/AVPlayerLooper.cs \
 	AVFoundation/AudioRendererWasFlushedAutomaticallyEventArgs.cs \
+	AVFoundation/AVCaptureReactionType.rgen.cs \
 
 # AVKit
 
@@ -1760,6 +1761,7 @@ STOREKIT_SOURCES = \
 	StoreKit/SKCloudServiceSetupOptions.cs \
 	StoreKit/SKPayment.cs \
 	StoreKit/SKPaymentTransactionObserver.cs \
+	StoreKit/SwiftAPI.cs \
 
 # SystemConfiguration
 
@@ -2012,6 +2014,7 @@ SHARED_CORE_SOURCES = \
 	DotNetGlobals.cs \
 	MinimumVersions.cs \
 	MonoPInvokeCallbackAttribute.cs \
+	ObjCBindings/BindingTypeAttribute.cs \
 	ObjCRuntime/ArgumentSemantic.cs \
 	ObjCRuntime/BindAsAttribute.cs \
 	ObjCRuntime/Blocks.cs \

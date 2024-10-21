@@ -57,6 +57,9 @@
     <Compile Include="..\..\tests\common\Configuration.cs">
       <Link>Configuration.cs</Link>
     </Compile>
+    <Compile Include="..\..\tests\common\ConfigurationNUnit.cs">
+      <Link>ConfigurationNUnit.cs</Link>
+    </Compile>
     <Compile Include="..\..\src\ObjCRuntime\ErrorHelper.cs">
       <Link>ErrorHelper.cs</Link>
     </Compile>
