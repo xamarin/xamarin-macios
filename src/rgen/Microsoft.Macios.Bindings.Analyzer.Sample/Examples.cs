@@ -1,12 +1,32 @@
-namespace Microsoft.Macios.Bindings.Analyzer.Sample;
+using Foundation;
+using ObjCBindings;
 
-// If you don't see warnings, build the Analyzers Project.
+namespace Microsoft.Macios.Bindings.Analyzer.Sample {
+	// If you don't see warnings, build the Analyzers Project.
 
-[BindingType]
-public class Examples {
+	[BindingType]
+	public enum Test {
+		[Field ("TheSymbolNone", LibraryName = "/my/path/to/my/Manuel.framework")]
+		None,
+		[Field ("TheSymbolMedium", LibraryName = "/my/path/to/my/Manuel.framework")]
+		Medium,
+		[Field ("TheSymbolHigh", LibraryName = "/my/path/to/my/Manuel.framework")]
+		High,
+	}
+
+	// This does not regenerate a thing
+	namespace NestedExample {
+		[BindingType]
+		public enum Test {
+			[Field ("TheSymbolNone", LibraryName = "/my/path/to/my/Manuel.framework")]
+			None,
+			[Field ("TheSymbolMedium", LibraryName = "/my/path/to/my/Manuel.framework")]
+			Medium,
+			[Field ("TheSymbolHigh", LibraryName = "/my/path/to/my/Manuel.framework")]
+			High,
+			[Field ("TheSymbolFoo", LibraryName = "/my/path/to/my/Manuel.framework")]
+			Test,
+		}
+	}
 }
 
-[BindingType]
-public class Foo {
-
-}
