@@ -9,19 +9,16 @@ endif
 ifdef INCLUDE_TVOS
 BUILD_IOS=1
 endif
-ifdef INCLUDE_WATCH
-BUILD_IOS=1
-endif
 ifdef INCLUDE_MACCATALYST
 BUILD_IOS=1
 endif
 
 #
-# To add a new MSBuild assembly, add the base name to the corresponding [IOS|MAC|WATCH]_[BINDING]_TASK_ASSEMBLIES variable.
+# To add a new MSBuild assembly, add the base name to the corresponding [IOS|MAC]_[BINDING]_TASK_ASSEMBLIES variable.
 #
 # New .targets and .props files are picked up automatically if they're in a directory with already
 # existing .targets or .props files. If .targets or .props are added in a new directory, add that
-# directory using a wildcard function to the corresponding [IOS|MAC|WATCH]_TARGETS variable.
+# directory using a wildcard function to the corresponding [IOS|MAC]_TARGETS variable.
 #
 
 ##
@@ -142,44 +139,6 @@ ifdef INCLUDE_MACCATALYST
 MSBUILD_PRODUCTS += all-maccatalyst
 MSBUILD_DIRECTORIES += $(MACCATALYST_DIRECTORIES)
 MSBUILD_SYMLINKS += symlinks-maccatalyst
-endif
-
-##
-## XW definitions
-##
-
-WATCH_TARGETS =                                                  \
-	$(wildcard Xamarin.Shared/Xamarin.WatchOS.*.props)   \
-	$(wildcard Xamarin.Shared/Xamarin.WatchOS.*.targets) \
-	Xamarin.MacDev.Tasks/NoCode.cs                             \
-	$(wildcard Xamarin.Shared/Xamarin.ImplicitFacade.targets) \
-
-WATCH_DIRECTORIES =                                                                                             \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.WatchOS/RedistList                                       \
-	$(IOS_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild-frameworks/Xamarin.WatchOS/v1.0/RedistList \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/WatchOS                                                       \
-
-# XW symlinks the entire $(MONOTOUCH_PREFIX)/lib/msbuild/WatchOS directory to 
-# /Library/Frameworks/Mono.framework/External/xbuild/Xamarin/WatchOS instead of 
-# each separate file (like XI does).
-
-WATCH_SYMLINKS =                                                                                                                  \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.WatchOS/RedistList/FrameworkList.xml                                       \
-	$(IOS_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild-frameworks/Xamarin.WatchOS/v1.0/RedistList/FrameworkList.xml \
-	$(IOS_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild/Xamarin/WatchOS                                              \
-
-WATCH_PRODUCTS =                                                                                                                \
-	$(WATCH_SYMLINKS)                                                                                                           \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/WatchOS/FrameworkList.xml                                                     \
-	$(foreach target,$(WATCH_TARGETS)               ,$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/WatchOS/$(notdir $(target))) \
-
-all-watch: $(WATCH_PRODUCTS)
-symlinks-watch: $(WATCH_SYMLINKS)
-
-ifdef INCLUDE_WATCH
-MSBUILD_PRODUCTS += all-watch
-MSBUILD_DIRECTORIES += $(WATCH_DIRECTORIES)
-MSBUILD_SYMLINKS += symlinks-watch
 endif
 
 ##
@@ -334,25 +293,6 @@ $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/MacCatalyst/%: Xamarin.Shared/% | 
 	$(Q) install -m 644 $< $@
 
 ##
-## XW
-##
-
-$(IOS_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild-frameworks/Xamarin.WatchOS/v1.0/RedistList/FrameworkList.xml: | $(IOS_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild-frameworks/Xamarin.WatchOS/v1.0/RedistList
-	$(Q) ln -fs $(IOS_TARGETDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/msbuild/WatchOS/$(notdir $@) $@
-
-$(IOS_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild/Xamarin/WatchOS: | $(IOS_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild/Xamarin
-	$(Q) ln -Fhs $(IOS_TARGETDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/msbuild/WatchOS $@
-
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/WatchOS/FrameworkList.xml: Xamarin.Shared/Xamarin.WatchOS-FrameworkList.xml.in Makefile | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/WatchOS
-	$(Q) sed 's@%TargetFrameworkDirectory%@$(IOS_TARGETDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.WatchOS@' $< > $@
-
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.WatchOS/RedistList/FrameworkList.xml: $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/WatchOS/FrameworkList.xml | $(WATCH_DIRECTORIES)
-	$(Q) ln -fs $(IOS_TARGETDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/msbuild/WatchOS/$(notdir $@) $@ 
-
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/WatchOS/%: Xamarin.Shared/% | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/WatchOS
-	$(Q) install -m 644 $< $@
-
-##
 ## Xamarin.TVOS
 ##
 
@@ -415,11 +355,10 @@ $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/msbuild/%: Xamarin.Localization.M
 ## net5 targets ##
 ##
 
-# tvOS and watchOS ships most of the iOS targets as well  (for now, we don't need all of these, so this is optimizable)
+# tvOS ships most of the iOS targets as well  (for now, we don't need all of these, so this is optimizable)
 DOTNET_SHARED_FILES = $(IOS_TARGETS) $(IOS_BINDING_TARGETS) $(foreach dll,$(IOS_TASK_ASSEMBLIES),$(dll).dll $(dll).pdb)
 DOTNET_IOS_FILES = $(DOTNET_SHARED_FILES) FrameworkList.xml
 DOTNET_TVOS_FILES = $(TVOS_TARGETS) FrameworkList.xml
-DOTNET_WATCHOS_FILES = $(WATCH_TARGETS) FrameworkList.xml
 DOTNET_MACOS_FILES = $(MAC_TARGETS) $(MAC_BINDING_TARGETS) $(foreach dll,$(MAC_TASK_ASSEMBLIES),$(dll).dll $(dll).pdb) FrameworkList.xml
 DOTNET_MACCATALYST_FILES = $(MACCATALYST_TARGETS) FrameworkList.xml
 

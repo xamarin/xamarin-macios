@@ -859,16 +859,6 @@ namespace Xamarin.Tests {
 
 				if (rx == "bindings-framework-test") {
 					foreach (var lib in new string [] { "XStaticArTest", "XStaticObjectTest" }) {
-						addHere = Configuration.include_watchos ? mustHaveContents : mayHaveContents;
-						addHere.AddRange (new string [] {
-							$"{lib}.xcframework/watchos-arm64_32_armv7k",
-							$"{lib}.xcframework/watchos-arm64_32_armv7k/{lib}.framework",
-							$"{lib}.xcframework/watchos-arm64_32_armv7k/{lib}.framework/{lib}",
-							$"{lib}.xcframework/watchos-x86_64-simulator",
-							$"{lib}.xcframework/watchos-x86_64-simulator/{lib}.framework",
-							$"{lib}.xcframework/watchos-x86_64-simulator/{lib}.framework/{lib}",
-						});
-
 						addHere = Configuration.include_tvos ? mustHaveContents : mayHaveContents;
 						addHere.AddRange (new string [] {
 							$"{lib}.xcframework/tvos-arm64",
@@ -965,18 +955,6 @@ namespace Xamarin.Tests {
 					"XTest.xcframework/tvos-arm64_x86_64-simulator/XTest.framework",
 					"XTest.xcframework/tvos-arm64_x86_64-simulator/XTest.framework/Info.plist",
 					"XTest.xcframework/tvos-arm64_x86_64-simulator/XTest.framework/XTest",
-				});
-
-				addHere = Configuration.include_watchos ? mustHaveContents : mayHaveContents;
-				addHere.AddRange (new string [] {
-					"XTest.xcframework/watchos-arm64_32_armv7k",
-					"XTest.xcframework/watchos-arm64_32_armv7k/XTest.framework",
-					"XTest.xcframework/watchos-arm64_32_armv7k/XTest.framework/Info.plist",
-					"XTest.xcframework/watchos-arm64_32_armv7k/XTest.framework/XTest",
-					"XTest.xcframework/watchos-x86_64-simulator",
-					"XTest.xcframework/watchos-x86_64-simulator/XTest.framework",
-					"XTest.xcframework/watchos-x86_64-simulator/XTest.framework/Info.plist",
-					"XTest.xcframework/watchos-x86_64-simulator/XTest.framework/XTest",
 				});
 
 				var missing = mustHaveContents.ToHashSet ().Except (zipContents);
@@ -1744,6 +1722,7 @@ namespace Xamarin.Tests {
 		[TestCase (ApplePlatform.MacOSX, "osx-x64", "Release")]
 		[TestCase (ApplePlatform.MacOSX, "osx-arm64;osx-x64", "Debug")]
 		[TestCase (ApplePlatform.MacOSX, "osx-arm64;osx-x64", "Release")]
+		[TestCase (ApplePlatform.MacOSX, "", "Release")]
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64", "Debug")]
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64", "Release")]
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64", "Debug")]
@@ -1861,7 +1840,7 @@ namespace Xamarin.Tests {
 			// Pick a target platform version that we don't really support,
 			// but don't show an error in .NET 8 because of backwards compat.
 			// The earliest target OS version should do.
-			var minSupportedOSVersion = GetSupportedTargetPlatformVersions (platform).First ();
+			var minSupportedOSVersion = GetMinSupportedOSPlatformVersion (platform);
 			var targetFrameworks = Configuration.DotNetTfm + "-" + platform.AsString ().ToLowerInvariant () + minSupportedOSVersion;
 			var supportedApiVersions = GetSupportedApiVersions (platform, isCompat: false);
 
@@ -1912,6 +1891,11 @@ namespace Xamarin.Tests {
 				.Cast<XmlNode> ()
 				.Select (v => v.InnerText)
 				.ToArray ();
+		}
+
+		string GetMinSupportedOSPlatformVersion (ApplePlatform platform)
+		{
+			return Configuration.GetVariable ($"DOTNET_MIN_{platform.AsString ().ToUpperInvariant ()}_SDK_VERSION", "unknown MinSupportedOSPlatformVersion");
 		}
 
 		[Test]
@@ -2836,6 +2820,27 @@ namespace Xamarin.Tests {
 				}
 			}
 			return rv;
+		}
+
+		[Test]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64", "13.1")]
+		[TestCase (ApplePlatform.iOS, "ios-arm64", "10.0")]
+		[TestCase (ApplePlatform.TVOS, "tvossimulator-x64", "10.0")]
+		[TestCase (ApplePlatform.MacOSX, "osx-arm64", "10.0")]
+		public void InvalidSupportedOSPlatformVersion (ApplePlatform platform, string runtimeIdentifiers, string version)
+		{
+			var project = "MySimpleApp";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
+
+			var minVersion = GetMinSupportedOSPlatformVersion (platform);
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
+			Clean (project_path);
+			var properties = GetDefaultProperties (runtimeIdentifiers);
+			properties ["SupportedOSPlatformVersion"] = version;
+			var rv = DotNet.AssertBuildFailure (project_path, properties);
+			var errors = BinLog.GetBuildLogErrors (rv.BinLogPath).ToArray ();
+			AssertErrorMessages (errors, $"The SupportedOSPlatformVersion value '{version}' in the project file is lower than the minimum value '{minVersion}'.");
 		}
 	}
 }

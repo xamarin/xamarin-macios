@@ -57,10 +57,15 @@ namespace Xamarin {
 		public const string MaxWatchDeploymentTarget = "@MAX_WATCH_DEPLOYMENT_TARGET@";
 		public const string MaxTVOSDeploymentTarget = "@MAX_TVOS_DEPLOYMENT_TARGET@";
 
-		public const string TargetPlatformVersioniOS = "@TARGET_PLATFORM_VERSION_IOS@";
-		public const string TargetPlatformVersiontvOS = "@TARGET_PLATFORM_VERSION_TVOS@";
-		public const string TargetPlatformVersionmacOS = "@TARGET_PLATFORM_VERSION_MACOS@";
-		public const string TargetPlatformVersionMacCatalyst = "@TARGET_PLATFORM_VERSION_MACCATALYST@";
+		public const string TargetPlatformVersionExecutableiOS = "@TARGET_PLATFORM_VERSION_EXECUTABLE_IOS@";
+		public const string TargetPlatformVersionExecutabletvOS = "@TARGET_PLATFORM_VERSION_EXECUTABLE_TVOS@";
+		public const string TargetPlatformVersionExecutablemacOS = "@TARGET_PLATFORM_VERSION_EXECUTABLE_MACOS@";
+		public const string TargetPlatformVersionExecutableMacCatalyst = "@TARGET_PLATFORM_VERSION_EXECUTABLE_MACCATALYST@";
+
+		public const string TargetPlatformVersionLibraryiOS = "@TARGET_PLATFORM_VERSION_LIBRARY_IOS@";
+		public const string TargetPlatformVersionLibrarytvOS = "@TARGET_PLATFORM_VERSION_LIBRARY_TVOS@";
+		public const string TargetPlatformVersionLibrarymacOS = "@TARGET_PLATFORM_VERSION_LIBRARY_MACOS@";
+		public const string TargetPlatformVersionLibraryMacCatalyst = "@TARGET_PLATFORM_VERSION_LIBRARY_MACCATALYST@";
 
 		public static Version OSXVersion { get { return new Version (OSX); } }
 		public static Version iOSVersion { get { return new Version (iOS); } }

@@ -30,3 +30,15 @@ Example:
 ```
 
 This property was introduced in .NET 9.
+
+## MetalLibPath
+
+The full path to the `metallib` tool (the Metal Linker).
+
+The default behavior is to use `xcrun metallib`.
+
+## MetalPath
+
+The full path to the Metal compiler.
+
+The default behavior is to use `xcrun metal`.

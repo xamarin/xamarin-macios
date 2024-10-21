@@ -186,14 +186,6 @@ parameters:
 
 stages:
 
-  - ${{ if eq(parameters.runGovernanceTests, true) }}:
-      - template: ./governance/stage.yml
-        parameters:
-          isPR: ${{ parameters.isPR }}
-          repositoryAlias: ${{ parameters.repositoryAlias }}
-          commit: ${{ parameters.commit }}
-          stageDisplayNamePrefix: ${{ parameters.stageDisplayNamePrefix }}
-
   - stage: configure_build
     displayName: '${{ parameters.stageDisplayNamePrefix }}Configure'
     dependsOn: ${{ parameters.dependsOn }}
@@ -236,7 +228,7 @@ stages:
               commit: ${{ parameters.commit }}
               testConfigurations: ${{ parameters.testConfigurations }}
               supportedPlatforms: ${{ parameters.supportedPlatforms }}
-              testsLabels: '--label=skip-all-tests,run-ios-tests,run-ios-simulator-tests,run-tvos-tests,run-watchos-tests,run-mac-tests,run-maccatalyst-tests,run-dotnet-tests,run-system-permission-tests,run-legacy-xamarin-tests'
+              testsLabels: '--label=skip-all-tests,run-ios-tests,run-ios-simulator-tests,run-tvos-tests,run-mac-tests,run-maccatalyst-tests,run-dotnet-tests,run-system-permission-tests'
               statusContext: 'VSTS: simulator tests'
               uploadArtifacts: true
               use1ES: true
@@ -287,6 +279,7 @@ stages:
             eq(variables['Build.SourceBranch'], 'refs/heads/net7.0'),
             eq(variables['Build.SourceBranch'], 'refs/heads/net8.0'),
             eq(variables['Build.SourceBranch'], 'refs/heads/net9.0'),
+            eq(variables['Build.SourceBranch'], 'refs/heads/net10.0'),
             eq(variables['Build.SourceBranch'], 'refs/heads/xcode16'),
             eq(parameters.forceInsertion, true)
           )

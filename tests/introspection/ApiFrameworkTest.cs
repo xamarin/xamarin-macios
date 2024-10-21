@@ -43,6 +43,9 @@ namespace Introspection {
 			// not a framework, largely p/invokes to /usr/lib/libobjc.dylib
 			case "ObjCRuntime":
 				return true;
+			// no a framework, namespace for the binding attrs for rgen
+			case "ObjCBindings":
+				return true;
 			// pinvokes into OpenGL[ES]
 			case "OpenTK":
 				return true;

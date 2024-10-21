@@ -1,6 +1,6 @@
 # We check in SdkVersions.cs so that it's easier to use this file when building tests on Windows.
 
-../common/SdkVersions.cs: ../common/SdkVersions.in.cs Makefile $(TOP)/Make.config $(TOP)/Make.versions
+$(abspath ../common/SdkVersions.cs): ../common/SdkVersions.in.cs Makefile $(TOP)/Make.config $(TOP)/Make.versions
 	$(Q_GEN) sed \
 		-e 's/@IOS_SDK_VERSION@/$(IOS_SDK_VERSION)/g' -e 's/@WATCHOS_SDK_VERSION@/$(WATCH_SDK_VERSION)/' -e 's/@TVOS_SDK_VERSION@/$(TVOS_SDK_VERSION)/' -e 's/@MACOS_SDK_VERSION@/$(MACOS_SDK_VERSION)/' \
 		-e 's/@MACCATALYST_SDK_VERSION@/$(MACCATALYST_SDK_VERSION)/g' \
@@ -50,10 +50,15 @@
 		-e "s/@MACOS_NUGET_VERSION@/$(MACOS_NUGET_VERSION)/g" \
 		-e "s/@MACOS_NUGET_REVISION@/$(NUGET_PRERELEASE_IDENTIFIER)$(MACOS_NUGET_COMMIT_DISTANCE)$(NUGET_BUILD_METADATA)/g" \
 		\
-		-e "s/@TARGET_PLATFORM_VERSION_IOS@/$(IOS_NUGET_OS_VERSION)/g" \
-		-e "s/@TARGET_PLATFORM_VERSION_TVOS@/$(TVOS_NUGET_OS_VERSION)/g" \
-		-e "s/@TARGET_PLATFORM_VERSION_MACOS@/$(MACOS_NUGET_OS_VERSION)/g" \
-		-e "s/@TARGET_PLATFORM_VERSION_MACCATALYST@/$(MACCATALYST_NUGET_OS_VERSION)/g" \
+		-e "s/@TARGET_PLATFORM_VERSION_EXECUTABLE_IOS@/$(IOS_NUGET_OS_VERSION)/g" \
+		-e "s/@TARGET_PLATFORM_VERSION_EXECUTABLE_TVOS@/$(TVOS_NUGET_OS_VERSION)/g" \
+		-e "s/@TARGET_PLATFORM_VERSION_EXECUTABLE_MACOS@/$(MACOS_NUGET_OS_VERSION)/g" \
+		-e "s/@TARGET_PLATFORM_VERSION_EXECUTABLE_MACCATALYST@/$(MACCATALYST_NUGET_OS_VERSION)/g" \
+		\
+		-e "s/@TARGET_PLATFORM_VERSION_LIBRARY_IOS@/$(IOS_TARGET_PLATFORM_VERSION_LIBRARY)/g" \
+		-e "s/@TARGET_PLATFORM_VERSION_LIBRARY_TVOS@/$(TVOS_TARGET_PLATFORM_VERSION_LIBRARY)/g" \
+		-e "s/@TARGET_PLATFORM_VERSION_LIBRARY_MACOS@/$(MACOS_TARGET_PLATFORM_VERSION_LIBRARY)/g" \
+		-e "s/@TARGET_PLATFORM_VERSION_LIBRARY_MACCATALYST@/$(MACCATALYST_TARGET_PLATFORM_VERSION_LIBRARY)/g" \
 		\
 		-e "s/@PRODUCT_HASH@/$(CURRENT_HASH_LONG)/g" \
 		\
@@ -63,7 +68,7 @@
 	$(Q) if ! diff $@ $@.tmp >/dev/null; then $(CP) $@.tmp $@; git diff "$@"; echo "The file $(TOP)/tools/common/SdkVersions.cs has been automatically re-generated; please commit the changes."; exit 1; fi
 	$(Q) touch $@
 
-../common/ProductConstants.cs: ../common/ProductConstants.in.cs Makefile $(TOP)/Make.config $(GIT_DIRECTORY)/index
+$(abspath ../common/ProductConstants.cs): ../common/ProductConstants.in.cs Makefile $(TOP)/Make.config $(GIT_DIRECTORY)/index
 	$(Q_GEN) sed \
 		-e "s/@IOS_VERSION@/$(IOS_PACKAGE_VERSION_MAJOR).$(IOS_PACKAGE_VERSION_MINOR).$(IOS_PACKAGE_VERSION_REV)/g" \
 		-e "s/@TVOS_VERSION@/$(IOS_PACKAGE_VERSION_MAJOR).$(IOS_PACKAGE_VERSION_MINOR).$(IOS_PACKAGE_VERSION_REV)/g" \

@@ -157,20 +157,6 @@ steps:
        rm -rf ~/Library/Caches/com.apple.dt.Xcode
     displayName: 'Clear Xcode cache'
 
-  # downloding mono takes time and has been shown to be problematic when we have network issues. This is why we
-  # are using the cache. Mono does not get bump a lot of times if any (after dotnet)
-
-  - bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/export-mono-filenames.sh
-    displayName: "Export mono download filenames"
-    workingDirectory: "$(Build.SourcesDirectory)/xamarin-macios"
-    timeoutInMinutes: 5
-
-  - task: Cache@2
-    displayName: 'Cache iOS Mono download'
-    inputs:
-      key: "$(MONO_IOS_FILENAME)"
-      path: "$(Build.SourcesDirectory)/xamarin-macios/builds/downloads/$(MONO_IOS_FILENAME)"
-
   # Actual build of the project
   - bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/build-macios.sh
     name: build

@@ -27,12 +27,32 @@ steps:
     repositoryAlias: ${{ parameters.repositoryAlias }}
     commit: ${{ parameters.commit }}
 
-- task: DownloadPipelineArtifact@2
-  displayName: Download artifacts
-  inputs:
-    artifactName: not-signed-package
-    allowFailedBuilds: true
-    path: $(Build.SourcesDirectory)/not-signed-package
+- ${{ if or(contains(variables['Build.Reason'], 'ResourceTrigger'), contains(variables['Build.Reason'], 'BuildCompletion')) }}:
+  - download: macios
+    displayName: Download artifacts
+    artifact: not-signed-package
+
+  # When we download an artifact from a resource pipeline, the download task places the artifact under $(Pipeline.Workspace)/$(pipeline-ref)/artifact
+  # in our case, it will be "$(Pipeline.Workspace)/macios/not-signed-package". Becuase this stage was originally part of the build, all the scripts
+  # assume that the location of the nugets is "$(Build.SourcesDirectory)/not-signed-package" already unzipped in a flat dir. This pwsh script does
+  # the move and flattering of the files.
+  - pwsh: |
+      $source = "$(Pipeline.Workspace)/macios/not-signed-package"
+      $destination = "$(Build.SourcesDirectory)/not-signed-package"
+      New-Item -ItemType Directory -Force -Path $destination 
+      Write-Host "Moving content from $source to $destination"
+      # move all the files from the source to the destination
+      Get-ChildItem -Path $source -Recurse -File | Move-Item -Destination $destination 
+    displayName: Move artifacts to the expected location
+
+- ${{ else }}:
+
+  - task: DownloadPipelineArtifact@2
+    displayName: Download artifacts
+    inputs:
+      artifactName: not-signed-package
+      allowFailedBuilds: true
+      path: $(Build.SourcesDirectory)/not-signed-package
 
 - pwsh: >-
     ./prepare_workload_apiscan.ps1
@@ -55,6 +75,7 @@ steps:
     preserveLogsFolder: true
   env:
     AzureServicesAuthConnectionString: RunAs=App;AppId=$(CLIENT_ID)
+    SYSTEM_ACCESSTOKEN: $(System.AccessToken)
 
 - task: PublishSecurityAnalysisLogs@3
   displayName: Publish Security Analysis Logs

@@ -26,9 +26,6 @@ INCLUDE_IOS=$(cat "$FILE")
 make -C "$BUILD_SOURCESDIRECTORY/xamarin-macios/tools/devops" print-variable-value-to-file FILE="$FILE" VARIABLE=INCLUDE_TVOS
 INCLUDE_TVOS=$(cat "$FILE")
 
-make -C "$BUILD_SOURCESDIRECTORY/xamarin-macios/tools/devops" print-variable-value-to-file FILE="$FILE" VARIABLE=INCLUDE_WATCH
-INCLUDE_WATCH=$(cat "$FILE")
-
 make -C "$BUILD_SOURCESDIRECTORY/xamarin-macios/tools/devops" print-variable-value-to-file FILE="$FILE" VARIABLE=INCLUDE_MAC
 INCLUDE_MAC=$(cat "$FILE")
 
@@ -95,18 +92,15 @@ echo "##vso[task.setvariable variable=INCLUDE_XAMARIN_LEGACY;isOutput=true]$INCL
 if test -n "$INCLUDE_XAMARIN_LEGACY"; then
 	echo "##vso[task.setvariable variable=INCLUDE_LEGACY_IOS;isOutput=true]$INCLUDE_IOS"
 	echo "##vso[task.setvariable variable=INCLUDE_LEGACY_TVOS;isOutput=true]$INCLUDE_TVOS"
-	echo "##vso[task.setvariable variable=INCLUDE_LEGACY_WATCH;isOutput=true]$INCLUDE_WATCH"
 	echo "##vso[task.setvariable variable=INCLUDE_LEGACY_MAC;isOutput=true]$INCLUDE_MAC"
 else
 	echo "##vso[task.setvariable variable=INCLUDE_LEGACY_IOS;isOutput=true]"
 	echo "##vso[task.setvariable variable=INCLUDE_LEGACY_TVOS;isOutput=true]"
-	echo "##vso[task.setvariable variable=INCLUDE_LEGACY_WATCH;isOutput=true]"
 	echo "##vso[task.setvariable variable=INCLUDE_LEGACY_MAC;isOutput=true]"
 fi
 
 echo "##vso[task.setvariable variable=INCLUDE_IOS;isOutput=true]$INCLUDE_IOS"
 echo "##vso[task.setvariable variable=INCLUDE_TVOS;isOutput=true]$INCLUDE_TVOS"
-echo "##vso[task.setvariable variable=INCLUDE_WATCH;isOutput=true]$INCLUDE_WATCH"
 echo "##vso[task.setvariable variable=INCLUDE_MAC;isOutput=true]$INCLUDE_MAC"
 echo "##vso[task.setvariable variable=INCLUDE_MACCATALYST;isOutput=true]$INCLUDE_MACCATALYST"
 

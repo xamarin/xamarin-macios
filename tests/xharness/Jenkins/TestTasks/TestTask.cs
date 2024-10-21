@@ -142,20 +142,9 @@ namespace Xharness.Jenkins.TestTasks {
 				switch (Platform) {
 				case TestPlatform.Mac:
 					return rv;
-				case TestPlatform.Mac_Modern:
-					return rv;//.Substring (0, rv.Length - "-unified".Length);
-				case TestPlatform.Mac_Full:
-					return rv.Substring (0, rv.Length - "-full".Length);
-				case TestPlatform.Mac_System:
-					return rv.Substring (0, rv.Length - "-system".Length);
 				default:
-					if (rv.EndsWith ("-watchos", StringComparison.Ordinal)) return rv.Substring (0, rv.Length - 8);
-					else if (rv.EndsWith ("-tvos", StringComparison.Ordinal)) {
+					if (rv.EndsWith ("-tvos", StringComparison.Ordinal)) {
 						return rv.Substring (0, rv.Length - 5);
-					} else if (rv.EndsWith ("-unified", StringComparison.Ordinal)) {
-						return rv.Substring (0, rv.Length - 8);
-					} else if (rv.EndsWith ("-today", StringComparison.Ordinal)) {
-						return rv.Substring (0, rv.Length - 6);
 					} else {
 						return rv;
 					}

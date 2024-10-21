@@ -62,6 +62,7 @@ namespace Xamarin.Tests {
 
 			var archive = ZipFile.OpenRead (nupkg);
 			var files = archive.Entries.Select (v => v.FullName).ToHashSet ();
+			var tfm = platform.ToFrameworkWithPlatformVersion (isExecutable: false);
 			var hasSymlinks = noBindingEmbedding && (platform == ApplePlatform.MacCatalyst || platform == ApplePlatform.MacOSX);
 			if (noBindingEmbedding) {
 				Assert.That (archive.Entries.Count, Is.EqualTo (hasSymlinks ? 6 : 10), $"nupkg file count - {nupkg}");
@@ -71,17 +72,17 @@ namespace Xamarin.Tests {
 			Assert.That (files, Does.Contain (project + ".nuspec"), "nuspec");
 			Assert.That (files, Does.Contain ("_rels/.rels"), ".rels");
 			Assert.That (files, Does.Contain ("[Content_Types].xml"), "[Content_Types].xml");
-			Assert.That (files, Does.Contain ($"lib/{platform.ToFrameworkWithPlatformVersion ()}/{project}.dll"), $"{project}.dll");
+			Assert.That (files, Does.Contain ($"lib/{tfm}/{project}.dll"), $"{project}.dll");
 			Assert.That (files, Has.Some.Matches<string> (v => v.StartsWith ("package/services/metadata/core-properties/", StringComparison.Ordinal) && v.EndsWith (".psmdcp", StringComparison.Ordinal)), "psmdcp");
 			if (noBindingEmbedding) {
 				if (hasSymlinks) {
-					Assert.That (files, Does.Contain ($"lib/{platform.ToFrameworkWithPlatformVersion ()}/{project}.resources.zip"), $"{project}.resources.zip");
+					Assert.That (files, Does.Contain ($"lib/{tfm}/{project}.resources.zip"), $"{project}.resources.zip");
 				} else {
-					Assert.That (files, Does.Contain ($"lib/{platform.ToFrameworkWithPlatformVersion ()}/{project}.resources/XStaticArTest.framework/XStaticArTest"), $"XStaticArTest.framework/XStaticArTest");
-					Assert.That (files, Does.Contain ($"lib/{platform.ToFrameworkWithPlatformVersion ()}/{project}.resources/XStaticObjectTest.framework/XStaticObjectTest"), $"XStaticObjectTest.framework/XStaticObjectTest");
-					Assert.That (files, Does.Contain ($"lib/{platform.ToFrameworkWithPlatformVersion ()}/{project}.resources/XTest.framework/XTest"), $"XTest.framework/XTest");
-					Assert.That (files, Does.Contain ($"lib/{platform.ToFrameworkWithPlatformVersion ()}/{project}.resources/XTest.framework/Info.plist"), $"XTest.framework/Info.plist");
-					Assert.That (files, Does.Contain ($"lib/{platform.ToFrameworkWithPlatformVersion ()}/{project}.resources/manifest"), $"manifest");
+					Assert.That (files, Does.Contain ($"lib/{tfm}/{project}.resources/XStaticArTest.framework/XStaticArTest"), $"XStaticArTest.framework/XStaticArTest");
+					Assert.That (files, Does.Contain ($"lib/{tfm}/{project}.resources/XStaticObjectTest.framework/XStaticObjectTest"), $"XStaticObjectTest.framework/XStaticObjectTest");
+					Assert.That (files, Does.Contain ($"lib/{tfm}/{project}.resources/XTest.framework/XTest"), $"XTest.framework/XTest");
+					Assert.That (files, Does.Contain ($"lib/{tfm}/{project}.resources/XTest.framework/Info.plist"), $"XTest.framework/Info.plist");
+					Assert.That (files, Does.Contain ($"lib/{tfm}/{project}.resources/manifest"), $"manifest");
 				}
 			}
 		}
@@ -127,14 +128,15 @@ namespace Xamarin.Tests {
 
 			var archive = ZipFile.OpenRead (nupkg);
 			var files = archive.Entries.Select (v => v.FullName).ToHashSet ();
+			var tfm = platform.ToFrameworkWithPlatformVersion (isExecutable: false);
 			Assert.That (archive.Entries.Count, Is.EqualTo (noBindingEmbedding ? 6 : 5), $"nupkg file count - {nupkg}");
 			Assert.That (files, Does.Contain (assemblyName + ".nuspec"), "nuspec");
 			Assert.That (files, Does.Contain ("_rels/.rels"), ".rels");
 			Assert.That (files, Does.Contain ("[Content_Types].xml"), "[Content_Types].xml");
-			Assert.That (files, Does.Contain ($"lib/{platform.ToFrameworkWithPlatformVersion ()}/{assemblyName}.dll"), $"{assemblyName}.dll");
+			Assert.That (files, Does.Contain ($"lib/{tfm}/{assemblyName}.dll"), $"{assemblyName}.dll");
 			Assert.That (files, Has.Some.Matches<string> (v => v.StartsWith ("package/services/metadata/core-properties/", StringComparison.Ordinal) && v.EndsWith (".psmdcp", StringComparison.Ordinal)), "psmdcp");
 			if (noBindingEmbedding) {
-				Assert.That (files, Does.Contain ($"lib/{platform.ToFrameworkWithPlatformVersion ()}/{assemblyName}.resources.zip"), $"{assemblyName}.resources.zip");
+				Assert.That (files, Does.Contain ($"lib/{tfm}/{assemblyName}.resources.zip"), $"{assemblyName}.resources.zip");
 			}
 		}
 
@@ -164,7 +166,7 @@ namespace Xamarin.Tests {
 			Assert.That (files, Does.Contain (project + ".nuspec"), "nuspec");
 			Assert.That (files, Does.Contain ("_rels/.rels"), ".rels");
 			Assert.That (files, Does.Contain ("[Content_Types].xml"), "[Content_Types].xml");
-			Assert.That (files, Does.Contain ($"lib/{platform.ToFrameworkWithPlatformVersion ()}/{project}.dll"), $"{project}.dll");
+			Assert.That (files, Does.Contain ($"lib/{platform.ToFrameworkWithPlatformVersion (isExecutable: false)}/{project}.dll"), $"{project}.dll");
 			Assert.That (files, Has.Some.Matches<string> (v => v.StartsWith ("package/services/metadata/core-properties/", StringComparison.Ordinal) && v.EndsWith (".psmdcp", StringComparison.Ordinal)), "psmdcp");
 		}
 

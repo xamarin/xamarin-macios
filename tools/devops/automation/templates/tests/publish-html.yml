@@ -49,8 +49,8 @@ steps:
 
 - template: download-artifacts.yml
 
-- pwsh: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/show_env.ps1
-  displayName: 'Show Environment'
+- pwsh: '& "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/$($Env:BUILD_REPOSITORY_NAME.Split(''/'')[1])/tools/devops/automation/scripts/show_bot_info.ps1"'
+  displayName: 'Show Bot Info'
 
 # build a message with all the content of all tests, to do so, we get the labels and to pass them to pwsh we do a join with ;
 # as the separator

@@ -43,11 +43,6 @@ while ! test -z $1; do
 			unset IGNORE_MONO
 			shift
 			;;
-		--provision-cmake)
-			PROVISION_CMAKE=1
-			unset IGNORE_CMAKE
-			shift
-			;;
 		--provision-7z)
 			PROVISION_7Z=1
 			unset IGNORE_7Z
@@ -103,8 +98,6 @@ while ! test -z $1; do
 			unset IGNORE_VISUAL_STUDIO
 			PROVISION_XCODE=1
 			unset IGNORE_XCODE
-			PROVISION_CMAKE=1
-			unset IGNORE_CMAKE
 			PROVISION_7Z=1
 			unset IGNORE_7Z
 			PROVISION_HOMEBREW=1
@@ -130,7 +123,6 @@ while ! test -z $1; do
 			IGNORE_MONO=1
 			IGNORE_VISUAL_STUDIO=1
 			IGNORE_XCODE=1
-			IGNORE_CMAKE=1
 			IGNORE_7Z=1
 			IGNORE_HOMEBREW=1
 			IGNORE_SHARPIE=1
@@ -163,10 +155,6 @@ while ! test -z $1; do
 			;;
 		--ignore-python3)
 			IGNORE_PYTHON3=1
-			shift
-			;;
-		--ignore-cmake)
-			IGNORE_CMAKE=1
 			shift
 			;;
 		--ignore-7z)
@@ -787,40 +775,6 @@ function check_checkout_dir () {
 	ok "Checkout location will not result in test problems."
 }
 
-
-function install_cmake () {
-	if ! brew --version >& /dev/null; then
-		fail "Asked to install cmake, but brew is not installed."
-		return
-	fi
-
-	brew install cmake
-}
-
-function check_cmake () {
-	if ! test -z $IGNORE_CMAKE; then return; fi
-
-	local MIN_CMAKE_VERSION=`grep MIN_CMAKE_VERSION= Make.config | sed 's/.*=//'`
-	local CMAKE_URL=`grep CMAKE_URL= Make.config | sed 's/.*=//'`
-
-	if ! cmake --version &> /dev/null; then
-		if ! test -z $PROVISION_CMAKE; then
-			install_cmake
-		else
-			fail "You must install CMake ($CMAKE_URL)"
-		fi
-		return
-	fi
-
-	ACTUAL_CMAKE_VERSION=$(cmake --version | grep "cmake version" | sed 's/cmake version //')
-	if ! is_at_least_version $ACTUAL_CMAKE_VERSION $MIN_CMAKE_VERSION; then
-		fail "You must have at least CMake $MIN_CMAKE_VERSION (found $ACTUAL_CMAKE_VERSION)"
-		return
-	fi
-
-	ok "Found CMake $ACTUAL_CMAKE_VERSION (at least $MIN_CMAKE_VERSION is required)"
-}
-
 function install_7z () {
 	if ! brew --version >& /dev/null; then
 		fail "Asked to install 7z, but brew is not installed."
@@ -861,7 +815,7 @@ IFS='
 		HOMEBREW_VERSION=($(brew --version 2>/dev/null))
 		log "Installed Homebrew ($HOMEBREW_VERSION)"
 	else
-		warn "Could not find Homebrew. Homebrew is required to auto-provision some dependencies (cmake), but not required otherwise."
+		warn "Could not find Homebrew. Homebrew is required to auto-provision some dependencies (p7zip), but not required otherwise."
 	fi
 IFS=$IFS_tmp
 }
@@ -1012,7 +966,6 @@ check_shellcheck
 check_yamllint
 check_python3
 check_mono
-check_cmake
 check_7z
 check_objective_sharpie
 check_old_simulators
