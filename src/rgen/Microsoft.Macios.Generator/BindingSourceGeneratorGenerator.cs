@@ -19,7 +19,17 @@ namespace Microsoft.Macios.Generator;
 /// </summary>
 [Generator]
 public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
-
+	
+	internal static readonly DiagnosticDescriptor RBI0000 = new (
+		"RBI0000",
+		new LocalizableResourceString (nameof (Resources.RBI0000Title), Resources.ResourceManager, typeof (Resources)),
+		new LocalizableResourceString (nameof (Resources.RBI0000MessageFormat), Resources.ResourceManager, typeof (Resources)),
+		"Usage",
+		DiagnosticSeverity.Error,
+		isEnabledByDefault: true,
+		description: new LocalizableResourceString (nameof (Resources.RBI0000Description), Resources.ResourceManager, typeof (Resources))
+	);
+	
 	/// <inheritdoc cref="IIncrementalGenerator"/>
 	public void Initialize (IncrementalGeneratorInitializationContext context)
 	{
@@ -158,8 +168,11 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 
 			} else {
 				// we don't have a emitter for this type, so we can't generate the code, add a diagnostic letting the
-				// user we do not support what he is trying to do
-				continue;
+				// user we do not support what he is trying to do, this is a bug in the code generator and we
+				// cannot recover from it. We do not want to crash but we generate no code.
+				context.ReportDiagnostic (Diagnostic.Create (RBI0000, 
+					baseTypeDeclarationSyntax.GetLocation (), 
+					namedTypeSymbol.ToDisplayString ().Trim()));
 			}
 
 		}

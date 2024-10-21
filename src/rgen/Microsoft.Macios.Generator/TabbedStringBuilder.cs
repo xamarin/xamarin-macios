@@ -121,13 +121,13 @@ class TabbedStringBuilder : IDisposable {
 
 	public TabbedStringBuilder Append (ref DefaultInterpolatedStringHandler handler)
 	{
-		WriteTabs ().Append (ref handler);
+		WriteTabs ().Append (handler.ToStringAndClear ());
 		return this;
 	}
 
 	public TabbedStringBuilder AppendLine (ref DefaultInterpolatedStringHandler handler)
 	{
-		WriteTabs ().Append (ref handler).AppendLine ();
+		WriteTabs ().Append (handler.ToStringAndClear ()).AppendLine ();
 		return this;
 	}
 
