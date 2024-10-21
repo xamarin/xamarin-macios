@@ -76,7 +76,7 @@ stages:
         gitHubToken: ${{ parameters.gitHubToken }}
         xqaCertPass: ${{ parameters.xqaCertPass }}
 
-  - job: run_tests
+  - job: "tests"
     dependsOn:
     - mac_reservation
     displayName: 'Dotnet tests'
@@ -112,7 +112,7 @@ stages:
   - job: mac_reenable
     dependsOn:
     - mac_reservation
-    - run_tests
+    - tests
     displayName: "Re-enable macOS bot for tests"
     timeoutInMinutes: 120
     # the condition must be exactly the same as for the mac_reservation job (or if no condition there, then 'always ()')
