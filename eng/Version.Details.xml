@@ -1,30 +1,30 @@
 <Dependencies>
   <ProductDependencies>
-    <Dependency Name="Microsoft.NET.Sdk" Version="9.0.100-rtm.24509.30">
+    <Dependency Name="Microsoft.NET.Sdk" Version="9.0.100-rtm.24520.4">
       <Uri>https://github.com/dotnet/sdk</Uri>
-      <Sha>2d0b3f7934f37595670c1bb8d643c37799fb13a1</Sha>
+      <Sha>95bea787c14e3402b47311007dba6b3f503b34e7</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NET.ILLink" Version="9.0.0-alpha.1.23556.4">
       <Uri>https://github.com/dotnet/runtime</Uri>
       <Sha>cf47d9ff6827a3e1d6f2acbf925cd618418f20dd</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.ILLink.Tasks" Version="9.0.0-rtm.24503.8" CoherentParentDependency="Microsoft.NET.Sdk">
+    <Dependency Name="Microsoft.NET.ILLink.Tasks" Version="9.0.0" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://github.com/dotnet/runtime</Uri>
-      <Sha>3429fee9ed58213a8916e1e2aa921fda6ba24aa2</Sha>
+      <Sha>d3981726bc8b0e179db50301daf9f22d42393096</Sha>
     </Dependency>
     <!-- Set TRACKING_DOTNET_RUNTIME_SEPARATELY to something in Make.config if removing the CoherentParentDependency on Microsoft.NET.Sdk -->
-    <Dependency Name="Microsoft.NETCore.App.Ref" Version="9.0.0-rtm.24503.8" CoherentParentDependency="Microsoft.NET.Sdk">
+    <Dependency Name="Microsoft.NETCore.App.Ref" Version="9.0.0" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://github.com/dotnet/runtime</Uri>
-      <Sha>3429fee9ed58213a8916e1e2aa921fda6ba24aa2</Sha>
+      <Sha>d3981726bc8b0e179db50301daf9f22d42393096</Sha>
     </Dependency>
     <!-- This is required for our test apps to build; in some cases Microsoft.AspNetCore.App is pulled in, and when building test apps the build needs to be able to resolve that -->
-    <Dependency Name="Microsoft.AspNetCore.App.Ref" Version="9.0.0-rtm.24508.22" CoherentParentDependency="Microsoft.NET.Sdk">
+    <Dependency Name="Microsoft.AspNetCore.App.Ref" Version="9.0.0" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://github.com/dotnet/aspnetcore</Uri>
-      <Sha>9f57b1ed7a4adab022ec5d227723f23862aad0e3</Sha>
+      <Sha>1e7a7af6d2417242b244d2a0f4f23fcce8e88d2f</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Workload.Emscripten.Current.Manifest-9.0.100.Transport" Version="9.0.0-rtm.24469.1" CoherentParentDependency="Microsoft.NETCore.App.Ref">
+    <Dependency Name="Microsoft.NET.Workload.Emscripten.Current.Manifest-9.0.100.Transport" Version="9.0.0-rtm.24515.1" CoherentParentDependency="Microsoft.NETCore.App.Ref">
       <Uri>https://github.com/dotnet/emsdk</Uri>
-      <Sha>8e660ff41e91879977e3a9d837e068bd72234c26</Sha>
+      <Sha>8be5676af1ccf568b258133788a24aedd1a80994</Sha>
     </Dependency>
     <Dependency Name="Microsoft.DotNet.Cecil" Version="0.11.5-alpha.24480.1" CoherentParentDependency="Microsoft.NETCore.App.Ref">
       <Uri>https://github.com/dotnet/cecil</Uri>
