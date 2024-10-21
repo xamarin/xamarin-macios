@@ -121,13 +121,13 @@ class TabbedStringBuilder : IDisposable {
 
 	public TabbedStringBuilder Append (ref DefaultInterpolatedStringHandler handler)
 	{
-		WriteTabs ().Append (handler.ToStringAndClear ());
+		WriteTabs ().Append (ref handler);
 		return this;
 	}
 
 	public TabbedStringBuilder AppendLine (ref DefaultInterpolatedStringHandler handler)
 	{
-		WriteTabs ().Append (handler.ToStringAndClear ()).AppendLine ();
+		WriteTabs ().Append (ref handler).AppendLine ();
 		return this;
 	}
 
@@ -140,7 +140,6 @@ class TabbedStringBuilder : IDisposable {
 	{
 		// we will split the raw string in lines and then append them so that the
 		// tabbing is correct
-		var span = rawString.AsSpan ();
 		var lines = rawString.AsSpan ().Split ('\n');
 		var count = 0;
 		foreach (var range in lines) {
