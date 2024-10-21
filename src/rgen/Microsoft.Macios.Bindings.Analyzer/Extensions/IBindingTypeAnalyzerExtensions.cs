@@ -31,7 +31,7 @@ public static class BindingTypeAnalyzerExtensions {
 			switch (attributeType) {
 			case AttributesNames.BindingAttribute:
 				// validate that the class is partial, else we need to report an error
-				var diagnostics= self.Analyze (context.Compilation.GetCurrentPlatform (),
+				var diagnostics = self.Analyze (context.Compilation.GetCurrentPlatform (),
 					declarationNode, declaredSymbol);
 				foreach (var diagnostic in diagnostics)
 					context.ReportDiagnostic (diagnostic);

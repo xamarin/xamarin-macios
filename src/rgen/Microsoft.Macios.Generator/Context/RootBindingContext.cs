@@ -19,7 +19,7 @@ class RootBindingContext {
 	public PlatformName CurrentPlatform { get; set; }
 	public Compilation Compilation { get; set; }
 
-	public Dictionary<string, string> Libraries { get; } = new();
+	public Dictionary<string, string> Libraries { get; } = new ();
 
 	public RootBindingContext (Compilation compilation)
 	{
@@ -78,8 +78,8 @@ class RootBindingContext {
 		// this should not happen, we should have the Constants type
 		if (symbol is null)
 			return false;
-		return symbol.GetMembers().OfType<IFieldSymbol> ()
+		return symbol.GetMembers ().OfType<IFieldSymbol> ()
 			.Select (f => f.Name)
-			.Any(s => s.Equals ($"{name}Library", StringComparison.Ordinal));
+			.Any (s => s.Equals ($"{name}Library", StringComparison.Ordinal));
 	}
 }

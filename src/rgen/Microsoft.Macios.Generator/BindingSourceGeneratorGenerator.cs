@@ -20,7 +20,7 @@ namespace Microsoft.Macios.Generator;
 /// </summary>
 [Generator]
 public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
-	static readonly CodeChangesComparer comparer = new();
+	static readonly CodeChangesComparer comparer = new ();
 	/// <inheritdoc cref="IIncrementalGenerator"/>
 	public void Initialize (IncrementalGeneratorInitializationContext context)
 	{
@@ -74,7 +74,7 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 		ImmutableArray<CodeChanges> codeChangesList)
 	{
 		var rootContext = new RootBindingContext (compilation);
-		var sb = new TabbedStringBuilder (new());
+		var sb = new TabbedStringBuilder (new ());
 		sb.WriteHeader ();
 		// not need to collect the using statements, this file is completely generated
 		var emitter = new LibraryEmitter (rootContext, sb, codeChangesList);
@@ -195,14 +195,14 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 				continue;
 
 			// init sb and add all the using statements from the base type declaration
-			var sb = new TabbedStringBuilder (new());
+			var sb = new TabbedStringBuilder (new ());
 			sb.WriteHeader ();
 
 			// delegate semantic model and syntax tree analysis to the emitter who will generate the code and knows
 			// best
 			if (ContextFactory.TryCreate (rootContext, semanticModel, namedTypeSymbol, declaration,
-				    out var symbolBindingContext)
-			    && EmitterFactory.TryCreate (symbolBindingContext, sb, out var emitter)) {
+					out var symbolBindingContext)
+				&& EmitterFactory.TryCreate (symbolBindingContext, sb, out var emitter)) {
 				CollectUsingStatements (change.SymbolDeclaration.SyntaxTree, sb, emitter);
 
 				if (emitter.TryEmit (out var diagnostics)) {

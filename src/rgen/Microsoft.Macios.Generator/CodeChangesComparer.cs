@@ -8,7 +8,7 @@ namespace Microsoft.Macios.Generator;
 /// </summary>
 class CodeChangesComparer : IEqualityComparer<CodeChanges> {
 
-	public bool Equals(CodeChanges x, CodeChanges y)
+	public bool Equals (CodeChanges x, CodeChanges y)
 	{
 		// we want to ignore the syntax declaration, is not something we want to compare since it can change,
 		// for example, with new attributes or comments.
@@ -16,10 +16,10 @@ class CodeChangesComparer : IEqualityComparer<CodeChanges> {
 			return false;
 
 		// compare arrays of members
-		var xMembers = x.Members.Sort();
-		var yMembers = y.Members.Sort();
+		var xMembers = x.Members.Sort ();
+		var yMembers = y.Members.Sort ();
 		for (int i = 0; i < xMembers.Length; i++) {
-			if (xMembers[i] != yMembers[i]) {
+			if (xMembers [i] != yMembers [i]) {
 				return false;
 			}
 		}
@@ -27,8 +27,8 @@ class CodeChangesComparer : IEqualityComparer<CodeChanges> {
 		return true;
 	}
 
-	public int GetHashCode(CodeChanges obj)
+	public int GetHashCode (CodeChanges obj)
 	{
-		return HashCode.Combine(obj.FullyQualifiedSymbol, obj.Members);
+		return HashCode.Combine (obj.FullyQualifiedSymbol, obj.Members);
 	}
 }

@@ -31,7 +31,7 @@ class LibraryEmitter (
 		// Libs in this case are coming from the FieldAttribute of ech of the members
 		foreach (var enumField in members) {
 			if (!context.TryComputeLibraryName (enumField.FieldData.LibraryName, typeNamespace,
-				    out _, out _)) {
+					out _, out _)) {
 				return;
 			}
 		}
@@ -77,9 +77,9 @@ class LibraryEmitter (
 			}
 		}
 
-	    builder.AppendLine ();
-	    builder.AppendLine ($"namespace ObjCRuntime;");
-	    builder.AppendLine ();
+		builder.AppendLine ();
+		builder.AppendLine ($"namespace ObjCRuntime;");
+		builder.AppendLine ();
 
 		builder.AppendGeneratedCodeAttribute ();
 		using (var classBlock = builder.CreateBlock ($"static partial class {SymbolName}", true)) {

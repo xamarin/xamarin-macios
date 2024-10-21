@@ -13,7 +13,7 @@ public class CodeChangesComparerTests {
 
 	public CodeChangesComparerTests ()
 	{
-		comparer = new();
+		comparer = new ();
 		// no, you do not need to this by hand, visit https://roslynquoter.azurewebsites.net to generate the syntax
 		compilationUnitSyntax = SyntaxFactory.CompilationUnit ()
 			.WithMembers (

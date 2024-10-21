@@ -63,8 +63,8 @@ struct CodeChanges {
 		BaseTypeDeclarationSyntax baseTypeDeclarationSyntax)
 		=> baseTypeDeclarationSyntax switch {
 			EnumDeclarationSyntax enumDeclarationSyntax => new CodeChanges (context, enumDeclarationSyntax),
-			InterfaceDeclarationSyntax interfaceDeclarationSyntax => new CodeChanges(context, interfaceDeclarationSyntax),
-			ClassDeclarationSyntax classDeclarationSyntax => new CodeChanges(context, classDeclarationSyntax),
+			InterfaceDeclarationSyntax interfaceDeclarationSyntax => new CodeChanges (context, interfaceDeclarationSyntax),
+			ClassDeclarationSyntax classDeclarationSyntax => new CodeChanges (context, classDeclarationSyntax),
 			_ => null
 		};
 }

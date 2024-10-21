@@ -158,7 +158,7 @@ public enum AVCaptureSystemPressureExampleLevel {
 	public async Task SmartEnumAppleFrameworkNotLibrary (ApplePlatform platform, string inputText)
 	{
 		var compilation = CreateCompilation (nameof (SmartEnumSemanticAnalyzerTests), platform, inputText);
-		var diagnostics = await RunAnalyzer (new SmartEnumSemanticAnalyzer(), compilation);
+		var diagnostics = await RunAnalyzer (new SmartEnumSemanticAnalyzer (), compilation);
 
 		var analyzerDiagnotics = diagnostics
 			.Where (d => d.Id == SmartEnumSemanticAnalyzer.RBI0006.Id).ToArray ();
@@ -245,7 +245,7 @@ public enum CustomLibraryEnum {
 	public async Task SmartEnumThirdPartyLibrary (ApplePlatform platform, string inputText)
 	{
 		var compilation = CreateCompilation (nameof (SmartEnumSemanticAnalyzerTests), platform, inputText);
-		var diagnostics = await RunAnalyzer (new SmartEnumSemanticAnalyzer(), compilation);
+		var diagnostics = await RunAnalyzer (new SmartEnumSemanticAnalyzer (), compilation);
 		var analyzerDiagnotics = diagnostics
 			.Where (d => d.Id == SmartEnumSemanticAnalyzer.RBI0005.Id).ToArray ();
 		Assert.Single (analyzerDiagnotics);
@@ -277,7 +277,7 @@ public enum CustomLibraryEnum {
 }
 ";
 		var compilation = CreateCompilation (nameof (SmartEnumSemanticAnalyzerTests), platform, inputText);
-		var diagnostics = await RunAnalyzer (new SmartEnumSemanticAnalyzer(), compilation);
+		var diagnostics = await RunAnalyzer (new SmartEnumSemanticAnalyzer (), compilation);
 		var analyzerDiagnotics = diagnostics
 			.Where (d => d.Id == SmartEnumSemanticAnalyzer.RBI0002.Id).ToArray ();
 		// we should have a diagnostic for each enum value
@@ -319,7 +319,7 @@ public enum AVCaptureSystemPressureExampleLevel {
 }";
 
 		var compilation = CreateCompilation (nameof (SmartEnumSemanticAnalyzerTests), platform, inputText);
-		var diagnostics = await RunAnalyzer (new SmartEnumSemanticAnalyzer(), compilation);
+		var diagnostics = await RunAnalyzer (new SmartEnumSemanticAnalyzer (), compilation);
 		var analyzerDiagnotics = diagnostics
 			.Where (d => d.Id == SmartEnumSemanticAnalyzer.RBI0004.Id).ToArray ();
 		Assert.Single (analyzerDiagnotics);
