@@ -1191,7 +1191,19 @@ namespace Xamarin.Tests {
 			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
 			Clean (project_path);
 
-			DotNet.AssertBuild (project_path, GetDefaultProperties (runtimeIdentifiers));
+			// We want RuntimeIdentifier(s) so to be specified in a file, otherwise they're applied to the library
+			// project as well, and that might not be valid.
+			var properties = GetDefaultProperties (runtimeIdentifiers);
+			if (properties.ContainsKey ("RuntimeIdentifiers")) {
+				properties ["file:RuntimeIdentifiers"] = properties ["RuntimeIdentifiers"];
+				properties.Remove ("RuntimeIdentifiers");
+			}
+			if (properties.ContainsKey ("RuntimeIdentifier")) {
+				properties ["file:RuntimeIdentifier"] = properties ["RuntimeIdentifier"];
+				properties.Remove ("RuntimeIdentifier");
+			}
+
+			DotNet.AssertBuild (project_path, properties);
 
 			var appExecutable = GetNativeExecutable (platform, appPath);
 			ExecuteWithMagicWordAndAssert (platform, runtimeIdentifiers, appExecutable);
