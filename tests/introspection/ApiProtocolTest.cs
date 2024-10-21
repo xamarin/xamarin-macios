@@ -34,6 +34,9 @@ namespace Introspection {
 
 		protected virtual bool Skip (Type type)
 		{
+			if (MemberHasEditorBrowsableNever (type))
+				return true;
+
 			switch (type.Namespace) {
 			// Xcode 15:
 			case "MetalFX":

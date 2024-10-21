@@ -75,9 +75,6 @@ namespace Xharness.Jenkins {
 				if (project.Ignore == true)
 					ignored = true;
 
-				if (!jenkins.TestSelection.IsEnabled (TestLabel.Mmp) && project.Path.Contains ("mmptest"))
-					ignored = true;
-
 				if (!jenkins.IsIncluded (project))
 					ignored = true;
 
@@ -91,7 +88,6 @@ namespace Xharness.Jenkins {
 					build.Platform = platform;
 					build.CloneTestProject (jenkins.MainLog, processManager, project, HarnessConfiguration.RootDirectory);
 					build.ProjectConfiguration = config;
-					build.ProjectPlatform = project.Platform;
 					build.SpecifyPlatform = false;
 					build.SpecifyConfiguration = build.ProjectConfiguration != "Debug";
 					build.Dependency = project.Dependency;

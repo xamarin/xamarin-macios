@@ -87,6 +87,7 @@ test.config: Makefile $(TOP)/Make.config $(TOP)/mk/mono.mk $(TOP)/eng/Version.De
 	@printf "ENABLE_XAMARIN=$(ENABLE_XAMARIN)\n" >> $@
 	@printf "XCODE_IS_STABLE=$(XCODE_IS_STABLE)\n" >> $@
 	@printf "XCODE_VERSION=$(XCODE_VERSION)\n" >> $@
+	@printf "$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),DOTNET_MIN_$(platform)_SDK_VERSION=$(DOTNET_MIN_$(platform)_SDK_VERSION)\\n)" | sed 's/^ //' >> $@
 
 test-system.config: Makefile $(TOP)/Make.config $(TOP)/mk/mono.mk $(TOP)/eng/Version.Details.xml
 	@rm -f $@
@@ -120,6 +121,7 @@ test-system.config: Makefile $(TOP)/Make.config $(TOP)/mk/mono.mk $(TOP)/eng/Ver
 	@printf "ENABLE_XAMARIN=$(ENABLE_XAMARIN)\n" >> $@
 	@printf "XCODE_IS_STABLE=$(XCODE_IS_STABLE)\n" >> $@
 	@printf "XCODE_VERSION=$(XCODE_VERSION)\n" >> $@
+	@printf "$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),DOTNET_MIN_$(platform)_SDK_VERSION=$(DOTNET_MIN_$(platform)_SDK_VERSION)\\n)" | sed 's/^ //' >> $@
 
 clean-local::
 	$(Q) $(SYSTEM_XBUILD) /t:Clean /p:Platform=iPhoneSimulator /p:Configuration=$(CONFIG) $(XBUILD_VERBOSITY) tests.sln
@@ -187,11 +189,9 @@ logdev:
 build-test-libraries:
 	@$(MAKE) -C $(TOP)/tests/test-libraries
 
-.stamp-xharness-configure: $(XHARNESS_EXECUTABLE)
-	$(Q_GEN) $(DOTNET) $< $(XHARNESS_VERBOSITY) --configure --autoconf --rootdir $(CURDIR)
-	$(Q) touch $@
+xharness: $(XHARNESS_EXECUTABLE)
 
-all-local:: .stamp-xharness-configure
+all-local:: xharness
 
 $(TOP)/tools/common/SdkVersions.cs: $(TOP)/tools/common/SdkVersions.in.cs
 	@$(MAKE) -C $(TOP)/tools/mtouch ../common/SdkVersions.cs
@@ -235,14 +235,6 @@ ifdef INCLUDE_MAC
 else ifdef INCLUDE_MACCATALYST
 	./package-mac-tests.sh
 else
-	@echo Not enabled
-endif
-
-ifdef INCLUDE_DOTNET
-dotnet-test-package.7z:
-	./package-dotnet-tests.sh
-else
-dotnet-test-package.7z:
 	@echo Not enabled
 endif
 
@@ -354,13 +346,5 @@ package-test-libraries.zip:
 	$(Q) $(MAKE) all -C test-libraries/custom-type-assembly build-assembly
 	$(Q_GEN) rm -f "$@" "$@.tmp"
 	$(Q_GEN) cd $(TOP) && zip -9r --symlinks $(abspath $@).tmp ./tests/test-libraries
-	$(Q_GEN) cd $(TOP) && find tests -regex '.*/generated-projects/.*[c|f]sproj' -exec zip -9r --symlinks $(abspath $@).tmp {} +
-	$(Q_GEN) cd $(TOP) && find tests -regex '.*/generated-projects/.*sln' -exec zip -9r --symlinks $(abspath $@).tmp {} +
 	$(Q_GEN) cd $(TOP) && find tests -regex 'tests/test-libraries/custom-type-assembly/.libs/.*dll' -exec zip -9r --symlinks $(abspath $@).tmp {} +
-	$(Q_GEN) cd $(TOP) && git ls-files -o -- 'tests/*/Info-*plist' | zip -9r --symlinks $(abspath $@).tmp -@
-ifdef INCLUDE_XAMARIN_LEGACY
-ifdef INCLUDE_IOS
-	$(Q_GEN) cd $(TOP) && zip -9r --symlinks $(abspath $@).tmp ./tools/mtouch/simlauncher*-sgen*
-endif
-endif
 	$(Q) mv "$@".tmp "$@"

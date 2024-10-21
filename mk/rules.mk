@@ -52,6 +52,9 @@ define NativeCompilationTemplate
 .libs/iphonesimulator/%$(1).x86_64.dylib: %.swift | .libs/iphonesimulator
 	$$(call Q_2,SWIFT, [iphonesimulator]) $(SWIFTC)       $(IOS_SIMULATOR_X64_SWIFTFLAGS)                 $$< -o $$@
 
+.libs/iphonesimulator/%$(1).x86_64.o: %.swift | .libs/iphonesimulator
+	$$(call Q_2,SWIFT, [iphonesimulator]) $(SWIFTC)       $(IOS_SIMULATOR_X64_SWIFTFLAGS)                 $$< -o $$@ -emit-object
+
 .libs/iphonesimulator/%$(1).x86_64.dylib: | .libs/iphonesimulator
 	$$(call Q_2,LD,    [iphonesimulator]) $(SIMULATOR_CC) $(SIMULATOR64_CFLAGS)      $$(EXTRA_FLAGS) -dynamiclib -o $$@ $$^ -L$(IOS_DESTDIR)$(XAMARIN_IOSSIMULATOR_SDK)/lib -fapplication-extension
 
@@ -71,6 +74,9 @@ define NativeCompilationTemplate
 
 .libs/iphonesimulator/%$(1).arm64.dylib: %.swift | .libs/iphonesimulator
 	$$(call Q_2,SWIFT, [iphonesimulator]) $(SWIFTC)       $(IOS_SIMULATOR_ARM64_SWIFTFLAGS)                    $$< -o $$@
+
+.libs/iphonesimulator/%$(1).arm64.o: %.swift | .libs/iphonesimulator
+	$$(call Q_2,SWIFT, [iphonesimulator]) $(SWIFTC)       $(IOS_SIMULATOR_ARM64_SWIFTFLAGS)                    $$< -o $$@ -emit-object
 
 .libs/iphonesimulator/%$(1).arm64.dylib: | .libs/iphonesimulator
 	$$(call Q_2,LD,    [iphonesimulator]) $(SIMULATOR_CC) $(SIMULATOR_ARM64_CFLAGS)      $$(EXTRA_FLAGS) -dynamiclib -o $$@ $$^ -L$(IOS_DESTDIR)$(XAMARIN_IOSSIMULATOR_SDK)/lib -fapplication-extension
@@ -117,6 +123,9 @@ define NativeCompilationTemplate
 .libs/iphoneos/%$(1).arm64.dylib: %.swift | .libs/iphoneos
 	$$(call Q_2,SWIFT, [iphoneos]) $(SWIFTC)    $(IOS_DEVICE_ARM64_SWIFTFLAGS)                                  $$< -o $$@
 
+.libs/iphoneos/%$(1).arm64.o: %.swift | .libs/iphoneos
+	$$(call Q_2,SWIFT, [iphoneos]) $(SWIFTC)    $(IOS_DEVICE_ARM64_SWIFTFLAGS)                                  $$< -o $$@ -emit-object
+
 .libs/iphoneos/%$(1).arm64.dylib: | .libs/iphoneos
 	$$(call Q_2,LD,    [iphoneos]) $(DEVICE_CC) $(DEVICE64_CFLAGS)      $$(EXTRA_FLAGS) -dynamiclib -o $$@ $$^ -L$(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/lib -fapplication-extension
 
@@ -137,6 +146,9 @@ define NativeCompilationTemplate
 .libs/maccatalyst/%$(1).x86_64.dylib: %.swift | .libs/maccatalyst
 	$$(call Q_2,SWIFT, [maccatalyst]) $(SWIFTC)   $(MACCATALYST_X64_SWIFTFLAGS)                                              $$< -o $$@
 
+.libs/maccatalyst/%$(1).x86_64.o: %.swift | .libs/maccatalyst
+	$$(call Q_2,SWIFT, [maccatalyst]) $(SWIFTC)   $(MACCATALYST_X64_SWIFTFLAGS)                                              $$< -o $$@ -emit-object
+
 .libs/maccatalyst/%$(1).x86_64.dylib: | .libs/maccatalyst
 	$$(call Q_2,LD,    [maccatalyst]) $(XCODE_CC) $(MACCATALYST_X86_64_CFLAGS)      $$(EXTRA_FLAGS) -dynamiclib -o $$@ $$^ -L$(IOS_DESTDIR)$(XAMARIN_MACCATALYST_SDK)/lib -fapplication-extension
 
@@ -154,6 +166,9 @@ define NativeCompilationTemplate
 
 .libs/maccatalyst/%$(1).arm64.dylib: %.swift | .libs/maccatalyst
 	$$(call Q_2,SWIFT, [maccatalyst]) $(SWIFTC)   $(MACCATALYST_ARM64_SWIFTFLAGS)                                           $$< -o $$@
+
+.libs/maccatalyst/%$(1).arm64.o: %.swift | .libs/maccatalyst
+	$$(call Q_2,SWIFT, [maccatalyst]) $(SWIFTC)   $(MACCATALYST_ARM64_SWIFTFLAGS)                                           $$< -o $$@ -emit-object
 
 .libs/maccatalyst/%$(1).arm64.dylib: | .libs/maccatalyst
 	$$(call Q_2,LD,    [maccatalyst]) $(XCODE_CC) $(MACCATALYST_ARM64_CFLAGS)      $$(EXTRA_FLAGS) -dynamiclib -o $$@ $$^ -L$(IOS_DESTDIR)$(XAMARIN_MACCATALYST_SDK)/lib -fapplication-extension
@@ -247,6 +262,9 @@ define NativeCompilationTemplate
 .libs/tvsimulator/%$(1).x86_64.dylib: %.swift | .libs/tvsimulator
 	$$(call Q_2,SWIFT, [tvsimulator]) $(SWIFTC)      $(TVOS_SIMULATOR_X64_SWIFTFLAGS)                                        $$< -o $$@
 
+.libs/tvsimulator/%$(1).x86_64.o: %.swift | .libs/tvsimulator
+	$$(call Q_2,SWIFT, [tvsimulator]) $(SWIFTC)      $(TVOS_SIMULATOR_X64_SWIFTFLAGS)                                        $$< -o $$@ -emit-object
+
 .libs/tvsimulator/%$(1).x86_64.dylib: | .libs/tvsimulator
 	$$(call Q_2,LD,    [tvsimulator]) $(SIMULATOR_CC) $(SIMULATORTV_CFLAGS)         $$(EXTRA_FLAGS) -dynamiclib -o $$@ $$^ -L$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/lib -fapplication-extension
 
@@ -266,6 +284,9 @@ define NativeCompilationTemplate
 
 .libs/tvsimulator/%$(1).arm64.dylib: %.swift | .libs/tvsimulator
 	$$(call Q_2,SWIFT, [tvsimulator]) $(SWIFTC)      $(TVOS_SIMULATOR_ARM64_SWIFTFLAGS)                                                  $$< -o $$@
+
+.libs/tvsimulator/%$(1).arm64.o: %.swift | .libs/tvsimulator
+	$$(call Q_2,SWIFT, [tvsimulator]) $(SWIFTC)      $(TVOS_SIMULATOR_ARM64_SWIFTFLAGS)                                                  $$< -o $$@ -emit-object
 
 .libs/tvsimulator/%$(1).arm64.dylib: | .libs/tvsimulator
 	$$(call Q_2,LD,    [tvsimulator]) $(SIMULATOR_CC) $(SIMULATORTV_ARM64_CFLAGS)         $$(EXTRA_FLAGS) -dynamiclib -o $$@ $$^ -L$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/lib -fapplication-extension
@@ -287,6 +308,9 @@ define NativeCompilationTemplate
 .libs/tvos/%$(1).arm64.dylib: %.swift | .libs/tvos
 	$$(call Q_2,SWIFT, [tvos]) $(SWIFTC)      $(TVOS_DEVICE_ARM64_SWIFTFLAGS)                                         $$< -o $$@
 
+.libs/tvos/%$(1).arm64.o: %.swift | .libs/tvos
+	$$(call Q_2,SWIFT, [tvos]) $(SWIFTC)      $(TVOS_DEVICE_ARM64_SWIFTFLAGS)                                         $$< -o $$@ -emit-object
+
 .libs/tvos/%$(1).arm64.dylib: | .libs/tvos
 	$$(call Q_2,LD,    [tvos]) $(DEVICE_CC)    $(DEVICETV_CFLAGS)            $$(EXTRA_FLAGS) -dynamiclib -o $$@ $$^ -L$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/lib -fapplication-extension
 
@@ -306,6 +330,15 @@ define NativeCompilationTemplate
 
 .libs/mac/%$(1).x86_64.dylib: %.swift | .libs/mac
 	$$(call Q_2,SWIFT, [mac]) $(SWIFTC) $(MACOS_X64_SWIFTFLAGS)                                                   $$< -o $$@
+
+.libs/mac/%$(1).x86_64.o: %.swift | .libs/mac
+	$$(call Q_2,SWIFT, [mac]) $(SWIFTC) $(MACOS_X64_SWIFTFLAGS)                                                   $$< -o $$@ -emit-object
+
+.libs/macos/%$(1).x86_64.dylib: %.swift | .libs/mac
+	$$(call Q_2,SWIFT, [macos]) $(SWIFTC) $(MACOS_X64_SWIFTFLAGS)                                                 $$< -o $$@
+
+.libs/macos/%$(1).x86_64.o: %.swift | .libs/mac
+	$$(call Q_2,SWIFT, [mac]) $(SWIFTC) $(MACOS_X64_SWIFTFLAGS)                                                   $$< -o $$@ -emit-object
 
 .libs/macos/%$(1).x86_64.dylib: %.swift | .libs/mac
 	$$(call Q_2,SWIFT, [macos]) $(SWIFTC) $(MACOS_X64_SWIFTFLAGS)                                                 $$< -o $$@
@@ -328,8 +361,14 @@ define NativeCompilationTemplate
 .libs/mac/%$(1).arm64.dylib: %.swift | .libs/mac
 	$$(call Q_2,SWIFT, [mac]) $(SWIFTC) $(MACOS_ARM64_SWIFTFLAGS)                                                $$< -o $$@
 
+.libs/mac/%$(1).arm64.o: %.swift | .libs/mac
+	$$(call Q_2,SWIFT, [mac]) $(SWIFTC) $(MACOS_ARM64_SWIFTFLAGS)                                                $$< -o $$@ -emit-object
+
 .libs/macos/%$(1).arm64.dylib: %.swift | .libs/mac
 	$$(call Q_2,SWIFT, [macos]) $(SWIFTC) $(MACOS_ARM64_SWIFTFLAGS)                                              $$< -o $$@
+
+.libs/macos/%$(1).arm64.o: %.swift | .libs/mac
+	$$(call Q_2,SWIFT, [macos]) $(SWIFTC) $(MACOS_ARM64_SWIFTFLAGS)                                              $$< -o $$@ -emit-object
 
 .libs/mac/%$(1).arm64.dylib: | .libs/mac
 	$$(call Q_2,LD,    [mac]) $(MAC_CC) $(MAC_CFLAGS)      $$(EXTRA_FLAGS) -arch arm64 -dynamiclib -o $$@ $$^ -L$(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/lib -fapplication-extension

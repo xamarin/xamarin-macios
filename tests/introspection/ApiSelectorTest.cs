@@ -38,6 +38,9 @@ namespace Introspection {
 
 		protected virtual bool Skip (Type type)
 		{
+			if (MemberHasEditorBrowsableNever (type))
+				return true;
+
 			if (type.ContainsGenericParameters)
 				return true;
 

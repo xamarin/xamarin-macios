@@ -436,17 +436,6 @@ WINDOWS_PACKAGE_TARGETS += $(DOTNET_PKG_DIR)/Microsoft.$1.Windows.Bundle.$2.zip
 endef
 $(foreach platform,$(DOTNET_WINDOWS_PLATFORMS),$(eval $(call CreateWindowsBundle,$(platform),$($(platform)_NUGET_VERSION_NO_METADATA),$(shell echo $(platform) | tr A-Z a-z),$(shell echo $(platform) | tr a-z A-Z))))
 
-define CreateMsi
-$(TMP_PKG_DIR)/Microsoft.NET.Workload.$1.$2.wsx: ./generate-wix.csharp Makefile $(TMP_PKG_DIR)/Microsoft.$1.Windows.Bundle.$2.zip
-	$$(Q_GEN) ./generate-wix.csharp "$1" "$$@" "$(TMP_PKG_DIR)/Microsoft.$1.Windows.Bundle.$2.zip.tmpdir/dotnet" "$2"
-
-$(TMP_PKG_DIR)/Microsoft.NET.Workload.$1.$2.msi: $(TMP_PKG_DIR)/Microsoft.NET.Workload.$1.$2.wsx .stamp-check-wixl
-	$$(Q_GEN) wixl -o "$$@" "$$<" -a x64
-
-MSI_TARGETS += $(DOTNET_PKG_DIR)/Microsoft.NET.Workload.$1.$2.msi
-endef
-$(foreach platform,$(DOTNET_WINDOWS_PLATFORMS),$(eval $(call CreateMsi,$(platform),$($(platform)_NUGET_VERSION_NO_METADATA))))
-
 NUGET_SOURCES:=$(shell grep https://pkgs.dev.azure.com $(TOP)/NuGet.config | sed -e 's/.*value="//'  -e 's/".*//')
 .stamp-install-workloads: Makefile $(WORKLOAD_TARGETS) $(RUNTIME_PACKS) $(REF_PACKS) $(SDK_PACKS) $(TEMPLATE_PACKS) $(WORKLOAD_PACKS)
 	$(Q) $(DOTNET) workload install --skip-manifest-update \
@@ -457,23 +446,9 @@ NUGET_SOURCES:=$(shell grep https://pkgs.dev.azure.com $(TOP)/NuGet.config | sed
 
 TARGETS += .stamp-install-workloads
 
-.stamp-check-wixl:
-	$(Q) if ! type wixl; then \
-		echo "Installing msitools to get wixl..."; \
-		if ! brew install msitools; then \
-			if ! type wixl; then \
-				echo "Failed to install wixl"; \
-				exit 1; \
-			fi; \
-		fi; \
-		echo "Installed msitools"; \
-	fi
-	$(Q) touch $@
-
 TARGETS += $(WORKLOAD_TARGETS) $(WINDOWS_PACKAGE_TARGETS)
 
-msi: $(MSI_TARGETS)
-package: $(PACKAGE_TARGETS) $(MSI_TARGETS) $(WINDOWS_PACKAGE_TARGETS)
+package: $(PACKAGE_TARGETS) $(WINDOWS_PACKAGE_TARGETS)
 
 # Helper targets for templates
 #
