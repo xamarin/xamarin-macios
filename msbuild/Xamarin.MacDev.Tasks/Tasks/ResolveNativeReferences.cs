@@ -264,7 +264,7 @@ namespace Xamarin.MacDev.Tasks {
 		{
 			var isCompressedXcframework = CompressionHelper.IsCompressed (xcframework);
 			var potentiallyCompressedFile = isCompressedXcframework ? Path.Combine (resourcePath, xcframework) : resourcePath;
-			var manifestPath = Path.Combine (isCompressedXcframework ? Path.GetFileNameWithoutExtension (xcframework) :  xcframework, "Info.plist");
+			var manifestPath = Path.Combine (isCompressedXcframework ? Path.GetFileNameWithoutExtension (xcframework) : xcframework, "Info.plist");
 			using var stream = CompressionHelper.TryGetPotentiallyCompressedFile (log, potentiallyCompressedFile, manifestPath);
 			if (stream is null) {
 				plist = null;
