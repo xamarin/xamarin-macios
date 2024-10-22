@@ -10,7 +10,7 @@ namespace Xamarin.Tests {
 	class XBuild {
 		public static string ToolPath {
 			get {
-				return Configuration.XIBuildPath;
+				throw new NotSupportedException ("Legacy projects not supported anymore");
 			}
 		}
 
