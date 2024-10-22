@@ -70,6 +70,6 @@ $(RSP_DIR)/dotnet/%-defines-dotnet.rsp: frameworks.sources Makefile.generator ge
 	$(Q) ./generate-defines.csharp $@.tmp '$(filter-out $(DOTNET_REMOVED_$(shell echo $* | tr a-z A-Z)_FRAMEWORKS),$($(shell echo $* | tr a-z A-Z)_FRAMEWORKS))'
 	$(Q) mv $@.tmp $@
 
-$(DOTNET_BUILD_DIR)/Xamarin.Apple.BindingAttributes.dll: bgen/Attributes.cs Makefile.generator | $(DOTNET_BUILD_DIR)
-	$(Q_DOTNET_BUILD) $(SYSTEM_CSC) $(DOTNET_FLAGS) -out:$@ $<
+$(DOTNET_BUILD_DIR)/Xamarin.Apple.BindingAttributes.dll: bgen/Attributes.cs bgen/PlatformName.cs Makefile.generator | $(DOTNET_BUILD_DIR)
+	$(Q_DOTNET_BUILD) $(SYSTEM_CSC) $(DOTNET_FLAGS) -out:$@ bgen/Attributes.cs bgen/PlatformName.cs
 

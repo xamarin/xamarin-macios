@@ -3,6 +3,7 @@
     <PropertyGroup>
         <TargetFramework>net$(BundledNETCoreAppTargetFrameworkVersion)</TargetFramework>
         <Nullable>enable</Nullable>
+        <NoWarn>APL0003</NoWarn>
     </PropertyGroup>
 
     <ItemGroup>
@@ -11,8 +12,14 @@
     </ItemGroup>
 
     <ItemGroup>
+        <Compile Include="..\..\..\src\ObjCBindings\BindingTypeAttribute.cs" >
+            <Link>external\BindginTypeAttribute.cs</Link>
+        </Compile>
         <Compile Include="..\..\..\src\bgen\Attributes.cs" >
             <Link>external\Attributes.cs</Link>
+        </Compile>
+        <Compile Include="..\..\..\src\bgen\PlatformName.cs" >
+            <Link>external\PlatformName.cs</Link>
         </Compile>
     </ItemGroup>
 
