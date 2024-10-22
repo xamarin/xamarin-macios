@@ -155,6 +155,12 @@ steps:
 
 # use a diff step depending if we have been trigger by a pipeline of by a PR/Commit
 - ${{ if or(contains(variables['Build.Reason'], 'ResourceTrigger'), contains(variables['Build.Reason'], 'BuildCompletion'), contains(variables['Build.DefinitionName'], 'xamarin-macios-ci-tests'), contains(variables['Build.DefinitionName'], 'xamarin-macios-pr-tests')) }}:
+  - bash: |
+      ls -la "$PIPELINE_WORKSPACE/macios" || true
+      rm -Rf "$PIPELINE_WORKSPACE/macios"
+    displayName: "Remove previously downloaded artifacts"
+    condition: always()
+
   - download: macios
     displayName: Download WorkloadRollback.json
     artifact: WorkloadRollback
@@ -168,8 +174,8 @@ steps:
     artifact: package-test-libraries
 
   - pwsh: |
-      Get-ChildItem -Path "$(Pipeline.Workspace)/macios" -Recurse -Force
-    displayName: 'Display downloads'
+      Get-ChildItem -Path "$(Pipeline.Workspace)/macios" -Recurse -Force | Format-Table -AutoSize | Out-String -Width 1000
+    displayName: 'List downloaded macios artifacts'
     timeoutInMinutes: 5
 
   # the default location when downloading is $(Pipeline.Workspace)/<pipeline resource identifier>/<artifact name>
@@ -204,8 +210,8 @@ steps:
 
 # print the downloads to make our life easier on debug
 - pwsh: |
-    Get-ChildItem -Path $(Build.SourcesDirectory)/artifacts -Recurse -Force
-  displayName: 'Display downloads'
+    Get-ChildItem -Path $(Build.SourcesDirectory)/artifacts -Recurse -Force | Format-Table -AutoSize | Out-String -Width 1000
+  displayName: 'List downloaded artifacts'
   timeoutInMinutes: 5
 
 - bash: |

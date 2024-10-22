@@ -883,15 +883,6 @@ public class NoMethodAttribute : Attribute {
 }
 
 #if NET
-public enum PlatformName : byte {
-	None,
-	MacOSX,
-	iOS,
-	WatchOS,
-	TvOS,
-	MacCatalyst,
-}
-
 public enum AvailabilityKind {
 	Introduced,
 	Deprecated,

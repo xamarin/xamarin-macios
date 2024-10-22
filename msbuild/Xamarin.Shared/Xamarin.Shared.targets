@@ -651,6 +651,13 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 
 		<RemoveDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(AppBundleDir).dSYM" />
 		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Files="$(DeviceSpecificOutputPath)*.bcsymbolmap" />
+
+		<!-- Embed the Info.plist + the compiled entitlements into any binlogs to ease diagnose problems. -->
+		<!-- This might not work correctly for remote Windows builds, but binlogs from VS don't contain files anyway -->
+		<ItemGroup>
+			<EmbedInBinlog Include="$([System.IO.Path]::GetFullPath('$(_AppBundleManifestPath)'))" />
+			<EmbedInBinlog Include="$([System.IO.Path]::GetFullPath('$(AppBundleManifest)'))" Condition="Exists('$(AppBundleManifest)')" />
+		</ItemGroup>
 	</Target>
 
 	<PropertyGroup>
@@ -696,6 +703,13 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			<Output TaskParameter="EntitlementsInSignature" PropertyName="_CompiledCodesignEntitlements" />
 		</CompileEntitlements>
 
+		<!-- Embed the Entitlements.plist + the compiled entitlements into any binlogs to ease diagnose problems. -->
+		<!-- This will probably not work correctly for remote Windows builds, but binlogs from VS don't contain files anyway -->
+		<ItemGroup>
+			<EmbedInBinlog Include="$(_CompiledEntitlements)" Condition="Exists('$(_CompiledEntitlements)')" />
+			<EmbedInBinlog Include="$(_CompiledCodesignEntitlements)" Condition="Exists('$(_CompiledCodesignEntitlements)')" />
+			<EmbedInBinlog Include="$([System.IO.Path]::GetFullPath('$(CodesignEntitlements)'))" Condition="Exists('$(CodesignEntitlements)')" />
+		</ItemGroup>
 
 		<ItemGroup>
 			<FileWrites Include="$(_CompiledEntitlementsPath)" />
@@ -2505,8 +2519,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		<Ditto
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
-			ToolExe="$(DittoExe)"
-			ToolPath="$(DittoPath)"
+			DittoPath="$(DittoPath)"
 			Source="@(_ResolvedAppExtensionReferences)"
 			Destination="$(_AppExtensionRoot)%(_ResolvedAppExtensionReferences.ContainerName)\%(_ResolvedAppExtensionReferences.FileName)%(_ResolvedAppExtensionReferences.Extension)"
 			TouchDestinationFiles="true"

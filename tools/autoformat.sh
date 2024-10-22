@@ -37,7 +37,6 @@ IFS=$'\n'
 cd ..
 
 # Start formatting!
-dotnet format "$SRC_DIR/tools/xibuild/xibuild.csproj"
 dotnet format whitespace "$SRC_DIR/tests/cecil-tests/cecil-tests.csproj"
 dotnet format whitespace "$SRC_DIR/tests/dotnet/UnitTests/DotNetUnitTests.csproj"
 dotnet format whitespace "$SRC_DIR/msbuild/Messaging/Xamarin.Messaging.Build/Xamarin.Messaging.Build.csproj"
