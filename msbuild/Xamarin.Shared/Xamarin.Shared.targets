@@ -509,7 +509,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		      property to run targets that add to the `PartialAppManifest` item group before we process them.
 		    * Some MSBuild properties can also add values.
 
-		    The precedence is: MSBuild properties can be overridden by the Info.plist, which can be overridden by a partial plist.
+		    The precedence is: MSBuild properties can be overridden by the Info.plist, which can be overridden by a partial plist (a partial plist can also specify the "Overwrite=false" metadata to not overwrite any existing entries).
 
 		2. In the `CompileAppManifest` target we get all the inputs from above, and compute a temporary app manifest, which is written to a temporary output file.
 
