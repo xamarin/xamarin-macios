@@ -20,13 +20,6 @@ namespace OpenGLES {
 			EAGLGetVersion ((nuint*) Unsafe.AsPointer<nuint> (ref major), (nuint*) Unsafe.AsPointer<nuint> (ref minor));
 		}
 
-#if !XAMCORE_3_0
-		[Obsolete ("iOS9 does not allow creating an empty instance")]
-		public EAGLContext ()
-		{
-		}
-#endif
-
 #if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("tvos")]

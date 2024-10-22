@@ -30,11 +30,6 @@
 
 #nullable enable
 
-// Adding this warning disable since AudioUnitPropertyIDType is removed from public API but used internally
-#if !XAMCORE_3_0
-#pragma warning disable CS0618
-#endif
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -396,22 +391,6 @@ namespace AudioUnit {
 
 		public bool IsPlaying { get { return _isPlaying; } }
 
-
-#if !XAMCORE_3_0
-		[Obsolete ("Use 'SetFormat' instead as it has the ability of returning a status code.")]
-		public unsafe void SetAudioFormat (AudioToolbox.AudioStreamBasicDescription audioFormat, AudioUnitScopeType scope, uint audioUnitElement = 0)
-		{
-			var err = AudioUnitSetProperty (Handle,
-							   AudioUnitPropertyIDType.StreamFormat,
-							   scope,
-							   audioUnitElement,
-							   &audioFormat,
-							   (uint) Marshal.SizeOf<AudioToolbox.AudioStreamBasicDescription> ());
-			if (err != 0)
-				throw new AudioUnitException (err);
-		}
-#endif
-
 		public unsafe AudioUnitStatus SetFormat (AudioToolbox.AudioStreamBasicDescription audioFormat, AudioUnitScopeType scope, uint audioUnitElement = 0)
 		{
 			return (AudioUnitStatus) AudioUnitSetProperty (Handle,
@@ -440,7 +419,7 @@ namespace AudioUnit {
 			return device;
 		}
 
-#if !XAMCORE_3_0 || MONOMAC || __MACCATALYST__
+#if MONOMAC || __MACCATALYST__
 #if !MONOMAC && !__MACCATALYST__
 		[Obsolete ("This API is not available on iOS.")]
 #endif
@@ -477,8 +456,6 @@ namespace AudioUnit {
 			if (err != 0)
 				throw new AudioUnitException ((int) err);
 			return inputDevice;
-#elif !XAMCORE_3_0
-			return 0;
 #endif
 		}
 #endif
@@ -1163,7 +1140,7 @@ namespace AudioUnit {
 #endif // !COREBUILD
 	}
 
-#if !XAMCORE_3_0 || MONOMAC || __MACCATALYST__
+#if MONOMAC || __MACCATALYST__
 	[StructLayout (LayoutKind.Sequential)]
 	struct AudioObjectPropertyAddress {
 #if !COREBUILD
@@ -1186,7 +1163,7 @@ namespace AudioUnit {
 		}
 #endif // !COREBUILD
 	}
-#endif // !XAMCORE_3_0 || MONOMAC || __MACCATALYST__
+#endif // MONOMAC || __MACCATALYST__
 
 #if NET
 	[SupportedOSPlatform ("ios")]
