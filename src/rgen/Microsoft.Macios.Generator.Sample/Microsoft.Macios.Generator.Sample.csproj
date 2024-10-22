@@ -5,6 +5,7 @@
         <Nullable>enable</Nullable>
         <RootNamespace>Microsoft.Macios.Generator.Sample</RootNamespace>
         <NoWarn>APL0003</NoWarn>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     </PropertyGroup>
 
     <ItemGroup>
