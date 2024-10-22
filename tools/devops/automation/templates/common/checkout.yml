@@ -21,6 +21,7 @@ steps:
     clean: true
     submodules: recursive
     path: s/xamarin-macios
+    fetchTags: false
 
 - pwsh: ./undo_github_merge.ps1 -SourceBranch "$(Build.SourceBranch)" -IsPr "${{ parameters.isPR }}"
   name: fix_commit
