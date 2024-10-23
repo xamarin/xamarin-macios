@@ -24,7 +24,7 @@ parameters:
 steps:
 
 - ${{ if eq(stageDependencies.configure_build.configure.outputs['configure_platforms.INTERNAL_DOTNET'],'1') }}:
-  - ${{ if and(eq(parameters.agentPoolComputed, 'ci')) }}:
+  - ${{ if eq(parameters.agentPoolComputed, 'ci') }}:
     - template: /eng/common/templates-official/steps/enable-internal-sources.yml
       parameters:
         repositoryName: /xamarin-macios
