@@ -52,6 +52,7 @@ jobs:
       INCLUDE_LEGACY_TVOS: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.INCLUDE_LEGACY_TVOS'] ]
       INCLUDE_LEGACY_WATCH: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.INCLUDE_LEGACY_WATCH'] ]
       INCLUDE_XAMARIN_LEGACY: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.INCLUDE_XAMARIN_LEGACY'] ]
+      INTERNAL_DOTNET: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.INTERNAL_DOTNET'] ]
       ${{ if eq(parameters.pool, 'automatic') }}:
         AgentPoolComputed: $[ stageDependencies.configure_build.AgentPoolSelector.outputs['setAgentPool.AgentPoolComputed'] ]
       ${{ if eq(parameters.pool, 'ci') }}:
