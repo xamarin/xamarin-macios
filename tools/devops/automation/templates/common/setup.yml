@@ -42,3 +42,7 @@ steps:
   displayName: 'Set Jenkins variables'
   env:
     BRANCH_NAME: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', '') ]
+
+# Write MSBuild logs into the jenkins-results directory, so they're uploaded after test runs.
+- pwsh: Write-Host "##vso[task.setvariable variable=MSBUILDDEBUGPATH]$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/$BULID_REPOSITORY_TITLE/jenkins-results/MSBuildCrashLogs"
+  displayName: 'Set MSBuild crash log directory'
