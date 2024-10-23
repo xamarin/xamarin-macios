@@ -19,9 +19,14 @@ parameters:
 - name: is1ESPipeline
   type: boolean
   default: false
+- name: condition
+  type: string
+  default: ''
 
 steps:
 - task: AzureCLI@2
+  ${{ if ne(parameters.condition, '') }}:
+    condition: ${{ parameters.condition }}
   displayName: 'Generate delegation SAS Token for ${{ parameters.storageAccount }}/${{ parameters.container }}'
   inputs:
     azureSubscription: ${{ parameters.federatedServiceConnection }}

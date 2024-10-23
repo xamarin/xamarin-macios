@@ -13,11 +13,16 @@ parameters:
 - name: repositoryName
   type: string
   default: ''
+- name: condition
+  type: string
+  default: ''
 
 steps:
 - ${{ if ne(variables['System.TeamProject'], 'public') }}:
   - ${{ if ne(parameters.legacyCredential, '') }}:
     - task: PowerShell@2
+      ${{ if ne(parameters.condition, '') }}:
+        condition: ${{ parameters.condition }}
       displayName: Setup Internal Feeds
       inputs:
         filePath: $(Build.SourcesDirectory)${{ parameters.repositoryName }}/eng/common/SetupNugetSources.ps1
@@ -30,6 +35,8 @@ steps:
   - ${{ else }}:
     - ${{ if eq(variables['System.TeamProject'], 'internal') }}:
       - task: PowerShell@2
+        ${{ if ne(parameters.condition, '') }}:
+          condition: ${{ parameters.condition }}
         displayName: Setup Internal Feeds
         inputs:
           filePath: $(Build.SourcesDirectory)${{ parameters.repositoryName }}/eng/common/SetupNugetSources.ps1
@@ -39,7 +46,10 @@ steps:
         parameters:
           federatedServiceConnection: ${{ parameters.nugetFederatedServiceConnection }}
           outputVariableName: 'dnceng-artifacts-feeds-read-access-token'
+          condition: ${{ parameters.condition }}
       - task: PowerShell@2
+        ${{ if ne(parameters.condition, '') }}:
+          condition: ${{ parameters.condition }}
         displayName: Setup Internal Feeds
         inputs:
           filePath: $(Build.SourcesDirectory)${{ parameters.repositoryName }}/eng/common/SetupNugetSources.ps1
@@ -48,3 +58,5 @@ steps:
   # It installed by default in some msbuild invocations (e.g. VS msbuild), but needs to be installed for others
   # (e.g. dotnet msbuild).
   - task: NuGetAuthenticate@1
+    ${{ if ne(parameters.condition, '') }}:
+      condition: ${{ parameters.condition }}

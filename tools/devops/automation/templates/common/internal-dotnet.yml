@@ -23,23 +23,26 @@ parameters:
 
 steps:
 
-- ${{ if eq(stageDependencies.configure_build.configure.outputs['configure_platforms.INTERNAL_DOTNET'],'1') }}:
-  - ${{ if eq(parameters.agentPoolComputed, 'ci') }}:
-    - template: /eng/common/templates-official/steps/enable-internal-sources.yml
-      parameters:
-        repositoryName: /xamarin-macios
+- ${{ if eq(parameters.agentPoolComputed, 'ci') }}:
+  - template: /eng/common/templates-official/steps/enable-internal-sources.yml
+    parameters:
+      repositoryName: /xamarin-macios
+      condition: eq(stageDependencies.configure_build.configure.outputs['configure_platforms.INTERNAL_DOTNET'],'1')
 
-    - template: /eng/common/templates-official/steps/enable-internal-runtimes.yml
-      parameters:
-        federatedServiceConnection: ${{ parameters.federatedServiceConnection }}
-        outputVariableName: ${{ parameters.dotnetInternalBuildContainerTokenVariableName }}
-        expiryInHours: ${{ parameters.dotnetInternalBuildContainerTokenExpiryInHours }}
-        base64Encode: ${{ parameters.dotnetInternalBuildContainerTokenBase64Encode }}
-  - ${{ else }}:
-    - bash: |
-        echo "This branch currently requires an internal build of .NET, but that's only supported in CI pipelines/agents, not PR pipelines/agents."
-        exit 1
-      displayName: "Internal build check"
+  - template: /eng/common/templates-official/steps/enable-internal-runtimes.yml
+    parameters:
+      federatedServiceConnection: ${{ parameters.federatedServiceConnection }}
+      outputVariableName: ${{ parameters.dotnetInternalBuildContainerTokenVariableName }}
+      expiryInHours: ${{ parameters.dotnetInternalBuildContainerTokenExpiryInHours }}
+      base64Encode: ${{ parameters.dotnetInternalBuildContainerTokenBase64Encode }}
+      condition: eq(stageDependencies.configure_build.configure.outputs['configure_platforms.INTERNAL_DOTNET'],'1')
 - ${{ else }}:
-  - bash: echo "This branch does not requre an internal build of .NET, so we're good to proceed."
-    displayName: "Internal build check"
+  - bash: |
+      echo "This branch currently requires an internal build of .NET, but that's only supported in CI pipelines/agents, not PR pipelines/agents."
+      exit 1
+    displayName: "Internal build check (1)"
+    condition: eq(stageDependencies.configure_build.configure.outputs['configure_platforms.INTERNAL_DOTNET'],'1')
+
+- bash: echo "This branch does not requre an internal build of .NET, so we're good to proceed."
+  displayName: "Internal build check (2)"
+  condition: eq(stageDependencies.configure_build.configure.outputs['configure_platforms.INTERNAL_DOTNET'],'')
