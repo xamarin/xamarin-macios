@@ -79,7 +79,7 @@ parameters:
 - name: XcodeChannel
   type: string
 
-- name: agentPoolComputed
+- name: agentPoolComputed4
   type: string
 
 steps:
@@ -270,7 +270,7 @@ steps:
     vsdropsPrefix: ${{ parameters.vsdropsPrefix }}
     testPrefix: ${{ parameters.testPrefix }}
     makeTarget: ${{ parameters.makeTarget }}
-    agentPoolComputed: ${{ parameters.agentPoolComputed }}
+    agentPoolComputed5: ${{ parameters.agentPoolComputed4 }}
 
 # clean the bot after we use it
 - template: ../common/teardown.yml

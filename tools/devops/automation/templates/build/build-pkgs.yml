@@ -35,14 +35,14 @@ parameters:
     type: string
     default: '$(MaciosUploadPrefix)'
 
-  - name: agentPoolComputed
+  - name: agentPoolComputed1
     type: string
 
 steps:
   - template: build.yml
     parameters:
       isPR: ${{ parameters.isPR }}
-      agentPoolComputed: ${{ parameters.agentPoolComputed }}
+      agentPoolComputed2: ${{ parameters.agentPoolComputed1 }}
       repositoryAlias: ${{ parameters.repositoryAlias }}
       commit: ${{ parameters.commit }}
       vsdropsPrefix: ${{ parameters.vsdropsPrefix }}

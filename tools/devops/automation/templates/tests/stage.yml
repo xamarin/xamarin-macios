@@ -141,4 +141,4 @@ stages:
         gitHubToken: ${{ parameters.gitHubToken }}
         xqaCertPass: ${{ parameters.xqaCertPass }}
         XcodeChannel: ${{ parameters.XcodeChannel }}
-        agentPoolComputed: $(AgentPoolComputed)
+        agentPoolComputed4: $(AgentPoolComputed)

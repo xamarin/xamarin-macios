@@ -44,7 +44,7 @@ parameters:
     type: boolean
     default: true
 
-  - name: agentPoolComputed
+  - name: agentPoolComputed2
     type: string
 
 steps:
@@ -69,7 +69,7 @@ steps:
 
   - template: ../common/internal-dotnet.yml
     parameters:
-      agentPoolComputed: ${{ parameters.agentPoolComputed }}
+      agentPoolComputed3: ${{ parameters.agentPoolComputed2 }}
 
   - bash: |
       make -C $(Build.SourcesDirectory)/xamarin-macios/tools/devops provisioning

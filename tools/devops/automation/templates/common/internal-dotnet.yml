@@ -18,12 +18,12 @@ parameters:
   type: boolean
   default: false
 
-- name: agentPoolComputed
+- name: agentPoolComputed3
   type: string
 
 steps:
 
-- ${{ if eq(parameters.agentPoolComputed, 'ci') }}:
+- ${{ if eq(parameters.agentPoolComputed3, 'ci') }}:
   - template: /eng/common/templates-official/steps/enable-internal-sources.yml
     parameters:
       repositoryName: /xamarin-macios

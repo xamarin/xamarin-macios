@@ -39,7 +39,7 @@ parameters:
   type: number
   default: 3
 
-- name: agentPoolComputed
+- name: agentPoolComputed5
   type: string
 
 steps:
@@ -106,7 +106,7 @@ steps:
 
 - template: ../common/internal-dotnet.yml
   parameters:
-    agentPoolComputed: ${{ parameters.agentPoolComputed }}
+    agentPoolComputed3: ${{ parameters.agentPoolComputed5 }}
 
 - bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/install-workloads.sh
   workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios
