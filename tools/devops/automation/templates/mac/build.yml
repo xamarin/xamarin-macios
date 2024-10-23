@@ -100,11 +100,7 @@ steps:
 # 3. Cancel the pipeline and do not execute any of the following steps.
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
-
-    if ( -not (Assert-HDFreeSpace -Size 5)) {
-      Set-Content -Path "$GITHUB_FAILURE_COMMENT_FILE" -Value "Not enough free space in the host $Env:AGENT_MACHINENAME."
-      exit 1
-    }
+    Assert-HDFreeSpace -Size 5
   env:
     CONTEXT: ${{ parameters.statusContext }}
     GITHUB_TOKEN: $(GitHub.Token)
