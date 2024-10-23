@@ -69,6 +69,7 @@ jobs:
   - template: build-mac-tests.yml
     parameters:
       isPR: ${{ parameters.isPR }}
+      agentPoolComputed6: $(AgentPoolComputed)
       repositoryAlias: ${{ parameters.repositoryAlias }}
       commit: ${{ parameters.commit }}
       vsdropsPrefix: ${{ parameters.vsdropsPrefix }}
