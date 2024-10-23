@@ -5,8 +5,7 @@ using Foundation;
 #nullable enable
 
 namespace AppKit {
-	public partial class NSPathControlItem
-	{
+	public partial class NSPathControlItem {
 	}
 }
 #endif // !__MACCATALYST__

@@ -7696,7 +7696,7 @@ namespace Foundation {
 
 	}
 
-	delegate void NSUrlSessionPendingTasks (NSUrlSessionTask [] dataTasks, NSUrlSessionTask [] uploadTasks, NSUrlSessionTask[] downloadTasks);
+	delegate void NSUrlSessionPendingTasks (NSUrlSessionTask [] dataTasks, NSUrlSessionTask [] uploadTasks, NSUrlSessionTask [] downloadTasks);
 	delegate void NSUrlSessionAllPendingTasks (NSUrlSessionTask [] tasks);
 	delegate void NSUrlSessionResponse (NSData data, NSUrlResponse response, NSError error);
 	delegate void NSUrlSessionDownloadResponse (NSUrl data, NSUrlResponse response, NSError error);
@@ -7771,7 +7771,7 @@ namespace Foundation {
 
 		// Fixed version (breaking change) only for NET
 		[Export ("getTasksWithCompletionHandler:")]
-		[Async (ResultTypeName="NSUrlSessionActiveTasks")]
+		[Async (ResultTypeName = "NSUrlSessionActiveTasks")]
 		void GetTasks (NSUrlSessionPendingTasks completionHandler);
 
 #if !NET
