@@ -203,8 +203,10 @@ $(TOP)/tools/common/SdkVersions.cs: $(TOP)/tools/common/SdkVersions.in.cs
 $(XHARNESS_EXECUTABLE): MSBUILD_EXE_PATH=
 $(XHARNESS_EXECUTABLE): $(xharness_dependencies) test.config test-system.config .stamp-src-project-files $(TOP)/tools/common/SdkVersions.cs
 	$(Q_GEN) $(DOTNET) build "/bl:$@.binlog" $(MSBUILD_VERBOSITY_QUIET) xharness/xharness.csproj
-xharness/xharness.csproj.inc: export BUILD_VERBOSITY=$(XBUILD_VERBOSITY)
+xharness/xharness.csproj.inc: export BUILD_VERBOSITY=$(DOTNET_BUILD_VERBOSITY)
 xharness/xharness.csproj.inc: export ABSOLUTE_PATHS=1
+xharness/xharness.csproj.inc: export DOTNET:=$(DOTNET)
+xharness/xharness.csproj.inc: export MSBUILD_EXE_PATH=
 -include xharness/xharness.csproj.inc
 
 killall:

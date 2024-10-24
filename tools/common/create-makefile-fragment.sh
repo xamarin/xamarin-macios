@@ -34,7 +34,11 @@ if test -z "$FRAGMENT_PATH"; then
 fi
 
 if test -z "$BUILD_EXECUTABLE"; then
-	BUILD_EXECUTABLE=msbuild
+	if test -z "$DOTNET"; then
+		echo "The DOTNET environment variable isn't set to the location of the 'dotnet' executable"
+		exit 1
+	fi
+	BUILD_EXECUTABLE="$DOTNET build"
 fi
 
 if test -z "$BUILD_VERBOSITY"; then

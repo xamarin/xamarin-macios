@@ -14,6 +14,7 @@ LOCAL_MMP_COMMAND=$(SYSTEM_MONO) --debug $(LOCAL_MMP)
 
 # mmp.csproj.inc contains the mmp_dependencies variable used to determine if mmp needs to be rebuilt or not.
 mmp.csproj.inc: export BUILD_VERBOSITY=$(MSBUILD_VERBOSITY)
+mmp.csproj.inc: export DOTNET:=$(DOTNET)
 -include mmp.csproj.inc
 
 $(MMP_DIR)/mmp.exe: $(mmp_dependencies)

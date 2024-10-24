@@ -233,6 +233,7 @@ DOTNET_PLATFORMS_MTOUCH=$(filter-out macOS,$(DOTNET_PLATFORMS))
 
 # mtouch.csproj.inc contains the mtouch_dependencies variable used to determine if mtouch needs to be rebuilt or not.
 mtouch.csproj.inc: export BUILD_VERBOSITY=$(MSBUILD_VERBOSITY)
+mtouch.csproj.inc: export DOTNET:=$(DOTNET)
 -include mtouch.csproj.inc
 
 $(MTOUCH_DIR)/mtouch.exe: $(mtouch_dependencies)
