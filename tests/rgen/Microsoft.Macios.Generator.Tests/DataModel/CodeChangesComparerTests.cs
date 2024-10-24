@@ -13,7 +13,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 	readonly CodeChangesComparer comparer = new ();
 
 	// returns a node that matches the given node type from an example syntax tree
-	T GetSyntaxNode <T> (ApplePlatform platform) where T: BaseTypeDeclarationSyntax
+	T GetSyntaxNode<T> (ApplePlatform platform) where T : BaseTypeDeclarationSyntax
 	{
 		var attrsText = @"
 using System;
@@ -55,7 +55,7 @@ public interface IInterface {
 }
 ";
 		var (_, sourceTrees) =
-			CreateCompilation (nameof(CodeChangesComparerTests), platform, attrsText, inputText);
+			CreateCompilation (nameof (CodeChangesComparerTests), platform, attrsText, inputText);
 		Assert.Equal (2, sourceTrees.Length);
 		// get the declarations we want to work with and the semantic model
 		var nodes = sourceTrees [1].GetRoot ().DescendantNodes ().ToArray ();
@@ -67,11 +67,11 @@ public interface IInterface {
 	}
 
 	[Theory]
-	[PlatformInlineData(ApplePlatform.iOS)]
-	[PlatformInlineData(ApplePlatform.TVOS)]
-	[PlatformInlineData(ApplePlatform.MacCatalyst)]
-	[PlatformInlineData(ApplePlatform.MacOSX)]
-	public void CompareDifferentFullyQualifiedSymbol(ApplePlatform platform)
+	[PlatformInlineData (ApplePlatform.iOS)]
+	[PlatformInlineData (ApplePlatform.TVOS)]
+	[PlatformInlineData (ApplePlatform.MacCatalyst)]
+	[PlatformInlineData (ApplePlatform.MacOSX)]
+	public void CompareDifferentFullyQualifiedSymbol (ApplePlatform platform)
 	{
 		var node = GetSyntaxNode<ClassDeclarationSyntax> (platform);
 		var changes1 = new CodeChanges (BindingType.SmartEnum, "name1", node, [], []);

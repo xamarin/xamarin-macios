@@ -65,9 +65,9 @@ readonly struct MemberCodeChange : IEquatable<MemberCodeChange> {
 		return HashCode.Combine (Name, Attributes);
 	}
 
-	public static bool operator ==(MemberCodeChange x, MemberCodeChange y)
+	public static bool operator == (MemberCodeChange x, MemberCodeChange y)
 	{
-		return x.Equals((object)y);
+		return x.Equals ((object) y);
 	}
 
 	public static bool operator != (MemberCodeChange x, MemberCodeChange y)

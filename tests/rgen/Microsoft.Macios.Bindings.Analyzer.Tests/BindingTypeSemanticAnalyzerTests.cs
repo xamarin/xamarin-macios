@@ -26,7 +26,7 @@ namespace Test {
 }
 ";
 
-		var (compilation, _)= CreateCompilation (nameof (CompareGeneratedCode), platform, inputText);
+		var (compilation, _) = CreateCompilation (nameof (CompareGeneratedCode), platform, inputText);
 		var diagnostics = await RunAnalyzer (new BindingTypeSemanticAnalyzer (), compilation);
 		var analyzerDiagnotics = diagnostics
 			.Where (d => d.Id == BindingTypeSemanticAnalyzer.DiagnosticId).ToArray ();

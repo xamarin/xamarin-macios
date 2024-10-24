@@ -68,9 +68,9 @@ readonly struct AttributeCodeChange : IEquatable<AttributeCodeChange> {
 	/// <param name="x">Code change to compare.</param>
 	/// <param name="y">Code change to compare.</param>
 	/// <returns>True if the code changes are equal.</returns>
-	public static bool operator ==(AttributeCodeChange x, AttributeCodeChange y)
+	public static bool operator == (AttributeCodeChange x, AttributeCodeChange y)
 	{
-		return x.Equals((object)y);
+		return x.Equals ((object) y);
 	}
 
 	/// <summary>

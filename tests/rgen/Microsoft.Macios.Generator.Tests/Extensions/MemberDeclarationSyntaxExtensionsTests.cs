@@ -56,7 +56,7 @@ public interface IInterface {
 ";
 		// create a compilation unit and get the diff syntax node, semantic model and expected attr result
 		var (compilation, sourceTrees) =
-			CreateCompilation (nameof(MemberDeclarationSyntaxExtensionsTests), platform, attrsText, inputText);
+			CreateCompilation (nameof (MemberDeclarationSyntaxExtensionsTests), platform, attrsText, inputText);
 		Assert.Equal (2, sourceTrees.Length);
 		// get the declarations we want to work with and the semantic model
 		var nodes = sourceTrees [1].GetRoot ().DescendantNodes ().ToArray ();

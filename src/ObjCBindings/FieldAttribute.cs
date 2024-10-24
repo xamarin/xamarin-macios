@@ -32,7 +32,7 @@ namespace ObjCBindings {
 			LibraryName = libraryName;
 		}
 
-		
+
 		/// <summary>
 		/// Get/Set the symbol represented by the attribute.
 		/// </summary>

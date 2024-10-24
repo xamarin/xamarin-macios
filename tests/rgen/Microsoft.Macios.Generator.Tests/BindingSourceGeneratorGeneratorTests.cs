@@ -44,7 +44,7 @@ namespace TestNamespace
 	public void CorrectUsingImports (ApplePlatform platform, string input, string expectedOutput)
 	{
 		// We need to create a compilation with the required source code.
-		var (compilation, _)= CreateCompilation (nameof (CorrectUsingImports),
+		var (compilation, _) = CreateCompilation (nameof (CorrectUsingImports),
 			platform, input);
 
 		// Run generators and retrieve all results.

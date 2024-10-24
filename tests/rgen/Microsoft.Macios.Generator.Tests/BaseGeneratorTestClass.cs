@@ -68,7 +68,7 @@ public class BaseGeneratorTestClass {
 	protected void CompareGeneratedCode (ApplePlatform platform, string className, string inputFileName, string inputText, string outputFileName, string expectedOutputText, string? expectedLibraryText)
 	{
 		// We need to create a compilation with the required source code.
-		var (compilation, _)= CreateCompilation (nameof (CompareGeneratedCode), platform, inputText);
+		var (compilation, _) = CreateCompilation (nameof (CompareGeneratedCode), platform, inputText);
 
 		// Run generators and retrieve all results.
 		var runResult = RunGenerators (compilation);

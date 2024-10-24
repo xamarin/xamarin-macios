@@ -34,7 +34,7 @@ class CodeChangesComparer : IEqualityComparer<CodeChanges> {
 		// compare the attrs, we need to sort them since attribute order does not matter
 		var xAttrs = x.Attributes.OrderBy (a => a.Name).ToArray ();
 		var yAttrs = y.Attributes.OrderBy (a => a.Name).ToArray ();
-		for(var index = 0; index < xAttrs.Length; index++) {
+		for (var index = 0; index < xAttrs.Length; index++) {
 			if (xAttrs [index] != yAttrs [index])
 				return false;
 		}
