@@ -208,7 +208,9 @@ namespace NetworkExtension {
 		Sleep = 15,
 		[iOS (13, 0)]
 		[MacCatalyst (13, 1)]
-		AppUpdate,
+		AppUpdate = 16,
+		[iOS (18, 1), MacCatalyst (18, 1), TV (18, 1), Mac (15, 1)]
+		InternalError = 17,
 	}
 
 	[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'Network.NWPathStatus' instead.")]
