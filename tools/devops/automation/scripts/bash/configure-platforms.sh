@@ -7,6 +7,9 @@ IFS=$'\n\t '
 
 FILE=$(pwd)/tmp.txt
 
+# Generate a required config file with some of the values we need
+make -C "$BUILD_SOURCESDIRECTORY/xamarin-macios" dotnet.config
+
 make -C "$BUILD_SOURCESDIRECTORY/xamarin-macios/tools/devops" print-variable-value-to-file FILE="$FILE" VARIABLE=DOTNET_PLATFORMS
 DOTNET_PLATFORMS=$(cat "$FILE")
 
