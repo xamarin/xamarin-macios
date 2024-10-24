@@ -81,9 +81,12 @@
 		-->
 		<_OriginalSuppressTrimAnalysisWarnings>$(SuppressTrimAnalysisWarnings)</_OriginalSuppressTrimAnalysisWarnings>
 		<SuppressTrimAnalysisWarnings Condition="'$(_UseNativeAot)' == 'true'">true</SuppressTrimAnalysisWarnings>
-		<!-- Otherwise suppress trimmer warnings unless we're trimming all assemblies -->
-		<SuppressTrimAnalysisWarnings Condition="'$(SuppressTrimAnalysisWarnings)' == '' And '$(TrimMode)' == 'full'">false</SuppressTrimAnalysisWarnings>
-		<SuppressTrimAnalysisWarnings Condition="'$(SuppressTrimAnalysisWarnings)' == '' And '$(PublishAot)' == 'true'">false</SuppressTrimAnalysisWarnings>
-		<SuppressTrimAnalysisWarnings Condition="'$(SuppressTrimAnalysisWarnings)' == ''">true</SuppressTrimAnalysisWarnings>
+
+		<!-- Otherwise only suppress trimmer warnings if we're not actually trimming any assemblies. -->
+		<SuppressTrimAnalysisWarnings Condition="'$(SuppressTrimAnalysisWarnings)' == '' And '$(TrimMode)' == 'copy'">true</SuppressTrimAnalysisWarnings>
+		<SuppressTrimAnalysisWarnings Condition="'$(SuppressTrimAnalysisWarnings)' == '' And '$(TrimMode)' != 'copy'">false</SuppressTrimAnalysisWarnings>
+
+		<!-- Always enable trim analyzers. This will report problems in code that's compiled, but not in any referenced packages / NuGets / projects, etc. -->
+		<EnableTrimAnalyzer Condition="'$(EnableTrimAnalyzer)' == ''">true</EnableTrimAnalyzer>
 	</PropertyGroup>
 </Project>
