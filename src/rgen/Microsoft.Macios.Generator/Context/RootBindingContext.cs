@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using Microsoft.CodeAnalysis;
+using Microsoft.Macios.Generator.Extensions;
 
 namespace Microsoft.Macios.Generator.Context;
 
@@ -22,26 +23,6 @@ class RootBindingContext {
 	public RootBindingContext (Compilation compilation)
 	{
 		Compilation = compilation;
-		CurrentPlatform = PlatformName.None;
-		// use the reference assembly to determine what platform we are binding
-		foreach (var referencedAssemblyName in compilation.ReferencedAssemblyNames) {
-			switch (referencedAssemblyName.Name) {
-			case "Microsoft.iOS":
-				CurrentPlatform = PlatformName.iOS;
-				break;
-			case "Microsoft.MacCatalyst":
-				CurrentPlatform = PlatformName.MacCatalyst;
-				break;
-			case "Microsoft.macOS":
-				CurrentPlatform = PlatformName.MacOSX;
-				break;
-			case "Microsoft.tvOS":
-				CurrentPlatform = PlatformName.TvOS;
-				break;
-			default:
-				CurrentPlatform = PlatformName.None;
-				break;
-			}
-		}
+		CurrentPlatform = compilation.GetCurrentPlatform ();
 	}
 }
