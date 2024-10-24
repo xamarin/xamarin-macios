@@ -26,14 +26,15 @@ namespace Xamarin.MacDev.Tasks {
 
 		#endregion
 
-		static string EscapeMangledResource (string name)
+		// The opposite function is UnpackLibraryResources.UnmangleResource
+		public static string EscapeMangledResource (string name)
 		{
 			var mangled = new StringBuilder ();
 
 			for (int i = 0; i < name.Length; i++) {
 				switch (name [i]) {
-				case '\\': mangled.Append ("_b"); break;
-				case '/': mangled.Append ("_f"); break;
+				case '\\':
+				case '/': mangled.Append ("_s"); break;
 				case '_': mangled.Append ("__"); break;
 				default: mangled.Append (name [i]); break;
 				}

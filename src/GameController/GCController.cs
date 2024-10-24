@@ -19,7 +19,6 @@ namespace GameController {
 
 #if !NET
 		// In an undefined enum (GCController.h).
-		// the API will use the new enum in XAMCORE_3_0 so the constant is not helpful anymore
 		public const int PlayerIndexUnset = -1;
 #endif
 	}

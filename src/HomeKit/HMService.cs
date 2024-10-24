@@ -20,14 +20,6 @@ namespace HomeKit {
 		{
 			return UpdateAssociatedServiceTypeAsync (serviceType.GetConstant ());
 		}
-
-#if !XAMCORE_3_0
-		[Obsolete]
-		public Task UpdateNameAsync (HMServiceType serviceType)
-		{
-			return UpdateNameAsync (serviceType.GetConstant ());
-		}
-#endif
 #endif
 	}
 }

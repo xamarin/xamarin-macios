@@ -21,35 +21,6 @@ using NUnit.Framework;
 using Xamarin.Utils;
 
 namespace MonoTouchFixtures.MapKit {
-
-#if !XAMCORE_3_0
-	class AnnotationViewPoker : MKAnnotationView {
-
-		static FieldInfo bkAnnotation;
-
-		static AnnotationViewPoker ()
-		{
-			var t = typeof (MKAnnotationView);
-			bkAnnotation = t.GetField ("__mt_Annotation_var", BindingFlags.Instance | BindingFlags.NonPublic);
-		}
-
-		public static bool NewRefcountEnabled ()
-		{
-			return NSObject.IsNewRefcountEnabled ();
-		}
-
-		public AnnotationViewPoker (IMKAnnotation annotation) : base (annotation, "reuse")
-		{
-		}
-
-		public NSObject AnnotationBackingField {
-			get {
-				return (NSObject) bkAnnotation.GetValue (this);
-			}
-		}
-	}
-#endif
-
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class AnnotationViewTest {
@@ -80,21 +51,6 @@ namespace MonoTouchFixtures.MapKit {
 				av.Annotation = null;
 			}
 		}
-
-#if !XAMCORE_3_0
-		[Test]
-		public void Annotation_BackingFields ()
-		{
-			if (AnnotationViewPoker.NewRefcountEnabled ())
-				Assert.Inconclusive ("backing fields are removed when newrefcount is enabled");
-
-			using (var a = new MKPolygon ())
-			using (var av = new AnnotationViewPoker (a)) {
-				Assert.AreSame (a, av.AnnotationBackingField, "1a");
-				Assert.AreSame (a, av.Annotation, "2a");
-			}
-		}
-#endif // !XAMCORE_3_0
 
 		[Test]
 		public void Default ()
