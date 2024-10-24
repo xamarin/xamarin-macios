@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.CodeAnalysis;
@@ -13,6 +14,8 @@ class EnumEmitter (ISymbolBindingContext<EnumDeclarationSyntax> context, TabbedS
 
 	public string SymbolName => $"{context.SymbolName}Extensions";
 
+	public IEnumerable<string> UsingStatements => [];
+	
 	public bool TryEmit ([NotNullWhen (false)] out ImmutableArray<Diagnostic>? diagnostics)
 	{
 		diagnostics = null;

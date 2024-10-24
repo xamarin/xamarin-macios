@@ -16,24 +16,33 @@ namespace Microsoft.Macios.Generator.Tests;
 /// </summary>
 public class BaseGeneratorTestClass {
 	protected BindingSourceGeneratorGenerator GeneratorGenerator;
-	protected CSharpGeneratorDriver _driver;
+	protected CSharpGeneratorDriver Driver;
+
+	// list of the defines for each platform, this is passed to the parser to ensure that
+	// we are testing the platforms as if they were being compiled.
+	readonly Dictionary<ApplePlatform, string []> platformDefines = new () {
+		{ ApplePlatform.iOS, new [] { "__IOS__" } },
+		{ ApplePlatform.TVOS, new [] { "__TVOS__" } },
+		{ ApplePlatform.MacOSX, new [] { "__MACOS__" } },
+		{ ApplePlatform.MacCatalyst, new [] { "__MACCATALYST__" } },
+	};
 
 	public BaseGeneratorTestClass ()
 	{
 		GeneratorGenerator = new BindingSourceGeneratorGenerator ();
-		_driver = CSharpGeneratorDriver.Create (GeneratorGenerator);
+		Driver = CSharpGeneratorDriver.Create (GeneratorGenerator);
 	}
 
 	protected Compilation RunGeneratorsAndUpdateCompilation (Compilation compilation, out ImmutableArray<Diagnostic> diagnostics)
 	{
-		_driver.RunGeneratorsAndUpdateCompilation (compilation, out var updatedCompilation, out diagnostics);
+		Driver.RunGeneratorsAndUpdateCompilation (compilation, out var updatedCompilation, out diagnostics);
 		return updatedCompilation;
 	}
 
 	protected GeneratorDriverRunResult RunGenerators (Compilation compilation)
-		=> _driver.RunGenerators (compilation).GetRunResult ();
+		=> Driver.RunGenerators (compilation).GetRunResult ();
 
-	protected Compilation CreateCompilation (string name, ApplePlatform platform, params string [] sources)
+	protected (Compilation Compilation, ImmutableArray<SyntaxTree> SyntaxTrees) CreateCompilation (string name, ApplePlatform platform, params string [] sources)
 	{
 		// get the dotnet bcl and fully load it for the test.
 		var references = Directory.GetFiles (Configuration.DotNetBclDir, "*.dll")
@@ -46,15 +55,20 @@ public class BaseGeneratorTestClass {
 		} else {
 			throw new InvalidOperationException ($"Could not find platform dll for {platform}");
 		}
-		var trees = sources.Select (s => CSharpSyntaxTree.ParseText (s));
-		var options = new CSharpCompilationOptions (OutputKind.NetModule);
-		return CSharpCompilation.Create (name, trees, references, options);
+
+		var parseOptions = new CSharpParseOptions (LanguageVersion.Latest, DocumentationMode.None, preprocessorSymbols: platformDefines [platform]);
+		var trees = sources.Select (s => CSharpSyntaxTree.ParseText (s, parseOptions)).ToImmutableArray ();
+
+		var options = new CSharpCompilationOptions (OutputKind.NetModule)
+			.WithAllowUnsafe (true);
+
+		return (CSharpCompilation.Create (name, trees, references, options), trees);
 	}
 
-	protected void CompareGeneratedCode (ApplePlatform platform, string className, string inputFileName, string inputText, string outputFileName, string expectedOutputText)
+	protected void CompareGeneratedCode (ApplePlatform platform, string className, string inputFileName, string inputText, string outputFileName, string expectedOutputText, string? expectedLibraryText)
 	{
 		// We need to create a compilation with the required source code.
-		var compilation = CreateCompilation (nameof (CompareGeneratedCode), platform, inputText);
+		var (compilation, _)= CreateCompilation (nameof (CompareGeneratedCode), platform, inputText);
 
 		// Run generators and retrieve all results.
 		var runResult = RunGenerators (compilation);
@@ -65,6 +79,12 @@ public class BaseGeneratorTestClass {
 		// Complex generators should be tested using text comparison.
 		Assert.Equal (expectedOutputText, generatedFileSyntax.GetText ().ToString (),
 			ignoreLineEndingDifferences: true);
+
+		if (expectedLibraryText is not null) {
+			// validate that Library.g.cs was created by the LibraryEmitter and matches the expectation
+			var generatedLibSyntax = runResult.GeneratedTrees.Single (t => t.FilePath.EndsWith ("Libraries.g.cs"));
+			Assert.Equal (expectedLibraryText, generatedLibSyntax.GetText ().ToString ());
+		}
 
 	}
 }

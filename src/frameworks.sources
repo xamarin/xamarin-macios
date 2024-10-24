@@ -2015,6 +2015,8 @@ SHARED_CORE_SOURCES = \
 	MinimumVersions.cs \
 	MonoPInvokeCallbackAttribute.cs \
 	ObjCBindings/BindingTypeAttribute.cs \
+	ObjCBindings/FieldAttribute.cs \
+	ObjCBindings/FieldTag.cs \
 	ObjCRuntime/ArgumentSemantic.cs \
 	ObjCRuntime/BindAsAttribute.cs \
 	ObjCRuntime/Blocks.cs \
