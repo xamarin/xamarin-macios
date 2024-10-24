@@ -97,11 +97,7 @@ steps:
 # 2. Cancel the pipeline and do not execute any of the following steps.
 - pwsh: | 
     Import-Module ./MaciosCI.psd1
-
-    if ( -not (Test-HDFreeSpace -Size 20)) {
-      New-GitHubComment -Header "Tests failed catastrophically on $Env:CONTEXT" -Emoji ":fire:" -Description "Not enough free space in the host $Env:AGENT_MACHINENAME."
-      Stop-Pipeline
-    }
+    Assert-HDFreeSpace -Size 20
   env:
     CONTEXT: ${{ parameters.statusContext }}
     GITHUB_TOKEN: $(GitHub.Token)
