@@ -17,6 +17,9 @@ parameters:
 - name: is1ESPipeline
   type: boolean
   default: false
+- name: condition
+  type: string
+  default: ''
 
 steps:
 - ${{ if ne(variables['System.TeamProject'], 'public') }}:
@@ -30,3 +33,4 @@ steps:
       container: internal
       permissions: rl
       is1ESPipeline: ${{ parameters.is1ESPipeline }}
+      condition: ${{ parameters.condition }}
