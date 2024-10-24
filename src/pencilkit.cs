@@ -123,7 +123,7 @@ namespace PencilKit {
 
 		[iOS (18, 1), NoMacCatalyst]
 		[Export ("canvasView:didRefineStrokes:withNewStrokes:")]
-		void DidRefineStrokes (PKCanvasView canvasView, PKStroke[] strokes, PKStroke[] newStrokes);
+		void DidRefineStrokes (PKCanvasView canvasView, PKStroke [] strokes, PKStroke [] newStrokes);
 	}
 
 	interface IPKCanvasViewDelegate { }
