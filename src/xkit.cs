@@ -2665,19 +2665,11 @@ namespace UIKit {
 		[Export ("editedRange")]
 		NSRange EditedRange {
 			get;
-#if !XAMCORE_3_0 && !MONOMAC && !__MACCATALYST__
-			[NotImplemented]
-			set;
-#endif
 		}
 
 		[Export ("changeInLength")]
 		nint ChangeInLength {
 			get;
-#if !XAMCORE_3_0 && !MONOMAC && !__MACCATALYST__
-			[NotImplemented]
-			set;
-#endif
 		}
 
 		[NullAllowed]
@@ -3132,10 +3124,6 @@ namespace UIKit {
 		[Export ("layoutOrientation")]
 		NSTextLayoutOrientation LayoutOrientation {
 			get;
-#if !XAMCORE_3_0 && !MONOMAC
-			[NotImplemented]
-			set;
-#endif
 		}
 	}
 

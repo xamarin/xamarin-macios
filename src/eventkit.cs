@@ -398,9 +398,7 @@ namespace EventKit {
 	///     
 	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/EventKit/Reference/EKParticipantClassRef/index.html">Apple documentation for <c>EKParticipant</c></related>
 	[BaseType (typeof (EKObject))]
-#if XAMCORE_3_0
 	[DisableDefaultCtor]
-#endif
 	interface EKParticipant : NSCopying {
 		[Export ("URL")]
 		NSUrl Url { get; }

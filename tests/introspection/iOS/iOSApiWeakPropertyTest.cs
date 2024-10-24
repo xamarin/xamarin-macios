@@ -41,14 +41,6 @@ namespace Introspection {
 			// NSString manually bound as smart enum CLSContextTopic
 			case "CLSContext":
 				return property.Name == "WeakTopic";
-#if !XAMCORE_3_0
-			// #37451 - setter does not exists but we have to keep it for binary compatibility
-			// OTOH we can't give it a selector (private API) even if we suspect Apple is mostly running `strings` on executable
-			case "IUIViewControllerPreviewing":
-				return property.Name == "WeakDelegate";
-			case "UIViewControllerPreviewingWrapper":
-				return property.Name == "WeakDelegate";
-#endif
 			case "CHHapticPatternDefinition":
 				return property.Name == "WeakParameterCurve" || property.Name == "WeakParameterCurveControlPoints";
 			}

@@ -50,9 +50,6 @@ namespace MonoTouchFixtures.CoreGraphics {
 		static CGColorSpace [] spaces = {
 			CGColorSpace.CreateDeviceGray (),
 			CGColorSpace.CreateDeviceRGB (),
-#if !XAMCORE_3_0
-			CGColorSpace.Null
-#endif
 		};
 
 		[Test]

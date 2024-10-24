@@ -260,12 +260,8 @@ namespace AudioUnit {
 		Main = 0, // 0
 	}
 
-#if XAMCORE_3_0
 	/// <summary>An enumeration whose values specify a kind of <see cref="T:AudioUnit.AudioUnit" />.</summary>
 	[Internal]
-#else
-	[Obsolete ("Please use the strongly typed properties instead.")]
-#endif
 	enum AudioUnitPropertyIDType { // UInt32 AudioUnitPropertyID
 								   // Audio Unit Properties
 		ClassInfo = 0,

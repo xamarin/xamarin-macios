@@ -14,11 +14,7 @@ using CoreGraphics;
 using UIKit;
 using NUnit.Framework;
 
-#if XAMCORE_3_0
 using TextAttributes = UIKit.UIStringAttributes;
-#else
-using TextAttributes = UIKit.UITextAttributes;
-#endif
 
 namespace MonoTouchFixtures.UIKit {
 

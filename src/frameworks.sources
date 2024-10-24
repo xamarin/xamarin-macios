@@ -203,7 +203,6 @@ AUDIOTOOLBOX_SOURCES = \
 	AudioToolbox/AudioFormatAvailability.cs \
 	AudioToolbox/AudioQueue.cs \
 	AudioToolbox/AudioServices.cs \
-	AudioToolbox/AudioSession.cs \
 	AudioToolbox/AudioToolbox.cs \
 	AudioToolbox/SystemSound.cs \
 	AudioToolbox/MusicPlayer.cs \
@@ -277,8 +276,6 @@ AVFOUNDATION_SOURCES = \
 	AVFoundation/AVCompat.cs \
 	AVFoundation/AVContentKeyResponse.cs \
 	AVFoundation/AVDepthData.cs \
-	AVFoundation/AVFragmentedAsset.cs \
-	AVFoundation/AVFragmentedAssetTrack.cs \
 	AVFoundation/AVLayerVideoGravity.cs \
 	AVFoundation/AVMetadataItemFilter.cs \
 	AVFoundation/AVMetadataMachineReadableCodeObject.cs \
@@ -419,7 +416,6 @@ CONTACTS_SOURCES = \
 	Contacts/CNContactFetchRequest.cs \
 	Contacts/CNContactStore.cs \
 	Contacts/CNInstantMessageAddress.cs \
-	Contacts/CNObsolete.cs \
 	Contacts/CNSocialProfile.cs \
 
 # CoreAnimation (this is really Quartz.framework)
@@ -648,7 +644,6 @@ COREMOTION_CORE_SOURCES = \
 	CoreMotion/Defs.cs \
 
 COREMOTION_SOURCES = \
-	CoreMotion/CMCompat.cs \
 	CoreMotion/Extras.cs \
 	CoreMotion/CMSensorDataList.cs \
 
@@ -861,7 +856,6 @@ FOUNDATION_SOURCES = \
 	Foundation/NSDictionary.cs \
 	Foundation/NSDictionary_2.cs \
 	Foundation/NSDirectoryEnumerator.cs \
-	Foundation/NSDistributedNotificationCenter.cs \
 	Foundation/NSEnumerator_1.cs \
 	Foundation/NSErrorException.cs \
 	Foundation/NSExceptionError.cs \
@@ -1018,7 +1012,6 @@ HEALTHKIT_SOURCES = \
 	HealthKit/HKAnchoredObjectQuery.cs \
 	HealthKit/HKCategoryValueSleepAnalysisAsleep.cs \
 	HealthKit/HKObjectType.cs \
-	HealthKit/HKObsolete.cs \
 	HealthKit/HKSampleQuery.cs \
 	HealthKit/HKSupportFunctions.cs \
 	HealthKit/HKUnit.cs \
@@ -1164,7 +1157,6 @@ MAPKIT_CORE_SOURCES = \
 MAPKIT_SOURCES = \
 	MapKit/MKAddressFilter.cs \
 	MapKit/MKCompat.cs \
-	MapKit/MKDirections.cs \
 	MapKit/MKFeatureDisplayPriority.cs \
 	MapKit/MKGeodesicPolyline.cs \
 	MapKit/MKLocalSearch.cs \
@@ -1207,7 +1199,6 @@ MEDIAPLAYER_SOURCES = \
 	MediaPlayer/MPMediaQuery.cs \
 	MediaPlayer/MPMoviePlayerController.cs \
 	MediaPlayer/MPNowPlayingInfoCenter.cs \
-	MediaPlayer/MPPlayableContentDelegate.cs \
 	MediaPlayer/MPRemoteCommandCenter.cs \
 	MediaPlayer/MPSkipIntervalCommand.cs \
 	MediaPlayer/MPVolumeSettings.cs \
@@ -1354,7 +1345,6 @@ MULTIPEERCONNECTIVITY_API_SOURCES = \
 	MultipeerConnectivity/Enums.cs \
 
 MULTIPEERCONNECTIVITY_SOURCES = \
-	MultipeerConnectivity/Compat.cs \
 	MultipeerConnectivity/MCSession.cs \
 
 # Natural Language
@@ -1633,7 +1623,6 @@ SCENEKIT_SOURCES = \
 	SceneKit/Constructors.cs \
 	SceneKit/SCNAnimatable.cs \
 	SceneKit/SCNCompat.cs \
-	SceneKit/SCNGeometry.cs \
 	SceneKit/SCNGeometrySource.cs \
 	SceneKit/SCNJavaScript.cs \
 	SceneKit/SCNNode.cs \
@@ -1643,7 +1632,6 @@ SCENEKIT_SOURCES = \
 	SceneKit/SCNRenderingOptions.cs \
 	SceneKit/SCNScene.cs \
 	SceneKit/SCNSceneLoadingOptions.cs \
-	SceneKit/SCNSceneRenderer.cs \
 	SceneKit/SCNSceneSource.cs \
 	SceneKit/SCNSkinner.cs \
 	SceneKit/SCNTechnique.cs \
@@ -1719,7 +1707,6 @@ SOCIAL_API_SOURCES = \
 	Social/Enums.cs \
 
 SOCIAL_SOURCES = \
-	Social/SLCompat.cs \
 	Social/SLComposeViewController.cs \
 	Social/SLRequest.cs \
 
@@ -1734,11 +1721,9 @@ SPRITEKIT_API_SOURCES = \
 	SpriteKit/Enums.cs \
 
 SPRITEKIT_SOURCES = \
-	SpriteKit/ObsoleteCompat.cs \
 	SpriteKit/SKAction.cs \
 	SpriteKit/SKKeyframeSequence.cs \
 	SpriteKit/SKNode.cs \
-	SpriteKit/SKFieldNode.cs \
 	SpriteKit/SKShapeNode.cs \
 	SpriteKit/SKUniform.cs \
 	SpriteKit/SKVideoNode.cs \
@@ -1760,7 +1745,6 @@ STOREKIT_SOURCES = \
 	StoreKit/SKAdNetworkCompat.cs \
 	StoreKit/SKCloudServiceSetupOptions.cs \
 	StoreKit/SKPayment.cs \
-	StoreKit/SKPaymentTransactionObserver.cs \
 	StoreKit/SwiftAPI.cs \
 
 # SystemConfiguration
@@ -1792,9 +1776,6 @@ TVSERVICES_CORE_SOURCES = \
 TWITTER_CORE_SOURCES = \
 	Twitter/Enums.cs \
 
-TWITTER_SOURCES = \
-	Twitter/TWCompat.cs \
-
 # UIKit
 
 UIKIT_API_SOURCES = \
@@ -1804,7 +1785,6 @@ UIKIT_CORE_SOURCES = \
     UIKit/UIFontDescriptor.cs \
     UIKit/UIGuidedAccessRestriction.cs \
     UIKit/UIOffset.cs \
-    UIKit/UIPrintInteractionController.cs \
     UIKit/UIStringAttributes.cs \
     UIKit/UITypes.cs \
     XKit/Types.cs \
@@ -1818,8 +1798,6 @@ UIKIT_SOURCES = \
 	UIKit/UIAccessibility.cs \
 	UIKit/UIAccessibilityCustomAction.cs \
 	UIKit/UIActionSheet.cs \
-	UIKit/UIActivityItemProvider.cs \
-	UIKit/UIActivityViewController.cs \
 	UIKit/UIAlertView.cs \
 	UIKit/UIAppearance.cs \
 	UIKit/UIApplication.cs \
@@ -1831,15 +1809,12 @@ UIKIT_SOURCES = \
 	UIKit/UICollectionView.cs \
 	UIKit/UICollectionViewLayout.cs \
 	UIKit/UICollectionViewLayoutAttributes.cs \
-	UIKit/UICollectionViewTransitionLayout.cs \
 	UIKit/UIColor.cs \
 	UIKit/UIConfigurationColorTransformer.cs \
 	UIKit/UIContentSizeCategory.cs \
 	UIKit/UIControl.cs \
 	UIKit/UIDevice.cs \
 	UIKit/UIDocumentBrowserViewController.cs \
-	UIKit/UIDocumentMenuViewController.cs \
-	UIKit/UIDocumentPickerViewController.cs \
 	UIKit/UIDragDropSessionExtensions.cs \
 	UIKit/UIDynamicAnimator.cs \
 	UIKit/UIEnumsExtensions.cs \
@@ -1862,7 +1837,6 @@ UIKIT_SOURCES = \
 	UIKit/UIPickerView.cs \
 	UIKit/UIPopoverController.cs \
 	UIKit/UIPopoverPresentationController.cs \
-	UIKit/UIPrint.cs \
 	UIKit/UIPushBehavior.cs \
 	UIKit/UIScreen.cs \
 	UIKit/UIScrollView.cs \
@@ -1870,9 +1844,6 @@ UIKIT_SOURCES = \
 	UIKit/UISearchController.cs \
 	UIKit/UISearchDisplayController.cs \
 	UIKit/UISegmentedControl.cs \
-	UIKit/UISimpleTextPrintFormatter.cs \
-	UIKit/UIStoryboardPopoverSegue.cs \
-	UIKit/UIStoryboardSegue.cs \
 	UIKit/UIStringDrawing.cs \
 	UIKit/UITableView.cs \
 	UIKit/UITableViewCell.cs \
@@ -2094,7 +2065,6 @@ SHARED_SOURCES = \
 	ObjCRuntime/RuntimeException.cs \
 	ObjCRuntime/RuntimeOptions.cs \
 	ObjCRuntime/Selector.mac.cs \
-	ObjCRuntime/SelectorMarshaler.cs \
 	ObjCRuntime/Stret.cs \
 	ObjCRuntime/ThreadSafeAttribute.cs \
 	ObjCRuntime/TrampolineBlockBase.cs \

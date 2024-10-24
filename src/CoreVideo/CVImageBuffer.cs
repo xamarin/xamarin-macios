@@ -112,17 +112,6 @@ namespace CoreVideo {
 				return h == IntPtr.Zero ? null : new CGColorSpace (h, false);
 			}
 		}
-#elif !XAMCORE_3_0
-		[Deprecated (PlatformName.MacOSX, 10, 4)]
-		[Unavailable (PlatformName.iOS)]
-#if IOS
-		[Obsolete ("This API is not available on this platform.")]
-#endif
-		public CGColorSpace? ColorSpace {
-			get {
-				return null;
-			}
-		}
 #endif
 
 #if MONOMAC
