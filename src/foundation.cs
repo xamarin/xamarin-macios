@@ -4622,28 +4622,6 @@ namespace Foundation {
 		[Field ("CarPlayErrorDomain", "CarPlay")]
 		NSString CarPlayErrorDomain { get; }
 
-#if !XAMCORE_3_0
-		// now exposed with the corresponding EABluetoothAccessoryPickerError enum
-		[NoMac, NoTV, NoWatch]
-		[MacCatalyst (13, 1)]
-		[Field ("EABluetoothAccessoryPickerErrorDomain", "ExternalAccessory")]
-		NSString EABluetoothAccessoryPickerErrorDomain { get; }
-
-		// now exposed with the corresponding MKErrorCode enum
-		[NoMac]
-		[NoWatch]
-		[MacCatalyst (13, 1)]
-		[Field ("MKErrorDomain", "MapKit")]
-		NSString MapKitErrorDomain { get; }
-
-		// now exposed with the corresponding WKErrorCode enum
-		[NoMac, NoTV]
-		[Unavailable (PlatformName.iOS)]
-		[MacCatalyst (13, 1)]
-		[Field ("WatchKitErrorDomain", "WatchKit")]
-		NSString WatchKitErrorDomain { get; }
-#endif
-
 		[Field ("NSUnderlyingErrorKey")]
 		NSString UnderlyingErrorKey { get; }
 
@@ -7718,14 +7696,7 @@ namespace Foundation {
 
 	}
 
-#if NET
-	delegate void NSUrlSessionPendingTasks (NSUrlSessionTask [] dataTasks, NSUrlSessionTask [] uploadTasks, NSUrlSessionTask[] downloadTasks);
-#elif XAMCORE_3_0
-	delegate void NSUrlSessionPendingTasks2 (NSUrlSessionTask [] dataTasks, NSUrlSessionTask [] uploadTasks, NSUrlSessionTask[] downloadTasks);
-#else
-	delegate void NSUrlSessionPendingTasks (NSUrlSessionDataTask [] dataTasks, NSUrlSessionUploadTask [] uploadTasks, NSUrlSessionDownloadTask [] downloadTasks);
-	delegate void NSUrlSessionPendingTasks2 (NSUrlSessionTask [] dataTasks, NSUrlSessionTask [] uploadTasks, NSUrlSessionTask [] downloadTasks);
-#endif
+	delegate void NSUrlSessionPendingTasks (NSUrlSessionTask [] dataTasks, NSUrlSessionTask [] uploadTasks, NSUrlSessionTask [] downloadTasks);
 	delegate void NSUrlSessionAllPendingTasks (NSUrlSessionTask [] tasks);
 	delegate void NSUrlSessionResponse (NSData data, NSUrlResponse response, NSError error);
 	delegate void NSUrlSessionDownloadResponse (NSUrl data, NSUrlResponse response, NSError error);
@@ -7798,19 +7769,10 @@ namespace Foundation {
 		[Async]
 		void Flush (Action completionHandler);
 
-#if !XAMCORE_3_0
-		// broken version that we must keep for XAMCORE_3_0 binary compatibility
-		// but that we do not have to expose on tvOS and watchOS, forcing people to use the correct API
-		[Obsolete ("Use GetTasks2 instead. This method may throw spurious InvalidCastExceptions, in particular for backgrounded tasks.")]
+		// Fixed version (breaking change) only for NET
 		[Export ("getTasksWithCompletionHandler:")]
 		[Async (ResultTypeName = "NSUrlSessionActiveTasks")]
 		void GetTasks (NSUrlSessionPendingTasks completionHandler);
-#elif NET
-		// Fixed version (breaking change) only for NET
-		[Export ("getTasksWithCompletionHandler:")]
-		[Async (ResultTypeName="NSUrlSessionActiveTasks")]
-		void GetTasks (NSUrlSessionPendingTasks completionHandler);
-#endif
 
 #if !NET
 		// Workaround, not needed for NET+
@@ -15606,16 +15568,6 @@ namespace Foundation {
 		[Sealed]
 		[Export ("initRecordDescriptor")]
 		IntPtr _InitRecordDescriptor ();
-
-#if !XAMCORE_3_0
-		[Obsolete ("Use the constructor instead.")]
-		[Export ("initListDescriptor")]
-		NSObject InitListDescriptor ();
-
-		[Obsolete ("Use the constructor instead.")]
-		[Export ("initRecordDescriptor")]
-		NSObject InitRecordDescriptor ();
-#endif
 
 		/*[Export ("aeDesc")]
 		const AEDesc AeDesc ();
