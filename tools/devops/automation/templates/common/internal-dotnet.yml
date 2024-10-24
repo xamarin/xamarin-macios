@@ -43,7 +43,9 @@ steps:
     displayName: "Internal build check (1)"
     condition: eq(variables['INTERNAL_DOTNET'],'1')
 
-- bash: echo "This branch does not requre an internal build of .NET, so we're good to proceed."
+- bash: |
+    echo "This branch does not requre an internal build of .NET, so we're good to proceed."
+    env
   displayName: "Internal build check (2)"
   condition: eq(variables['INTERNAL_DOTNET'],'')
   env:
