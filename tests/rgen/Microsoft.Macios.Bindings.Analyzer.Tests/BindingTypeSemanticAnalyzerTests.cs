@@ -26,13 +26,13 @@ namespace Test {
 }
 ";
 
-		var compilation = CreateCompilation (nameof (CompareGeneratedCode), platform, inputText);
+		var (compilation, _) = CreateCompilation (nameof (CompareGeneratedCode), platform, inputText);
 		var diagnostics = await RunAnalyzer (new BindingTypeSemanticAnalyzer (), compilation);
 		var analyzerDiagnotics = diagnostics
-			.Where (d => d.Id == BindingTypeSemanticAnalyzer.DiagnosticId).ToArray ();
+			.Where (d => d.Id == BindingTypeSemanticAnalyzer.RBI0001.Id).ToArray ();
 		Assert.Single (analyzerDiagnotics);
 		// verify the diagnostic message
-		VerifyDiagnosticMessage (analyzerDiagnotics [0], BindingTypeSemanticAnalyzer.DiagnosticId,
+		VerifyDiagnosticMessage (analyzerDiagnotics [0], BindingTypeSemanticAnalyzer.RBI0001.Id,
 			DiagnosticSeverity.Error, "The binding type 'Test.Examples' must declared as a partial class");
 	}
 }
