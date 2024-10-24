@@ -29,31 +29,6 @@ Copyright (C) 2011-2013 Xamarin. All rights reserved.
 		BeforeTargets="_CleanDebugSymbols;_CleanAppBundle;_DetectAppManifest;_DetectSdkLocations;_GenerateBundleName" />
 	
 	<PropertyGroup>
-		<CreateAppBundleDependsOn>
-			GetBundleResourceWithLogicalNameItems;
-			$(CreateAppBundleDependsOn)
-		</CreateAppBundleDependsOn>
-	</PropertyGroup>
-	
-	<Target Name="GetBundleResourceWithLogicalNameItems" Returns="@(_BundleResourceWithLogicalName)" DependsOnTargets="_GenerateBundleName">
-		<ItemGroup>
-			<!-- We need this metadata to fix the source in VS -->
-			<_BundleResourceWithLogicalName>
-				<BuildSessionId>$(BuildSessionId)</BuildSessionId>
-				<BuildServerPath>..\..\$(BuildAppName)\$(BuildSessionId)\%(Identity)</BuildServerPath>
-				<BuildServerPath Condition="'$(IsWatchApp)' == 'true' Or '$(IsAppExtension)' == 'true'">..\..\$(_AppBundleName)\$(BuildSessionId)\%(Identity)</BuildServerPath>
-			</_BundleResourceWithLogicalName>
-		</ItemGroup>
-		<CollectMonotouchReferences References="@(_MSBuildProjectReferenceExistent)">
-			<Output TaskParameter="MonoTouchReferences" ItemName="MonoTouchReferences" />
-		</CollectMonotouchReferences>
-		<!-- This will collect the bundle resource items in the referenced projects -->
-		<MSBuild Projects="@(MonoTouchReferences)" Targets="GetBundleResourceWithLogicalNameItems" BuildInParallel="$(BuildInParallel)" RebaseOutputs="true" Properties="%(MonoTouchReferences.SetConfiguration); %(MonoTouchReferences.SetPlatform)" Condition="'@(MonoTouchReferences)' != '' and '%(MonoTouchReferences.Private)' != 'false' and '$(UseCommonOutputDirectory)' != 'true'" ContinueOnError="$(ContinueOnError)">
-			<Output TaskParameter="TargetOutputs" ItemName="_BundleResourceWithLogicalName" />
-		</MSBuild>
-	</Target>
-	
-	<PropertyGroup>
 		<CreateIpaDependsOn>
 			$(CreateIpaDependsOn);
 			CopyIpaFromMac
