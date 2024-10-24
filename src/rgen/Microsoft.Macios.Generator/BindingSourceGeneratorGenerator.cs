@@ -21,6 +21,16 @@ namespace Microsoft.Macios.Generator;
 /// </summary>
 [Generator]
 public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
+	internal static readonly DiagnosticDescriptor RBI0000 = new (
+		"RBI0000",
+		new LocalizableResourceString (nameof (Resources.RBI0000Title), Resources.ResourceManager, typeof (Resources)),
+		new LocalizableResourceString (nameof (Resources.RBI0000MessageFormat), Resources.ResourceManager, typeof (Resources)),
+		"Usage",
+		DiagnosticSeverity.Error,
+		isEnabledByDefault: true,
+		description: new LocalizableResourceString (nameof (Resources.RBI0000Description), Resources.ResourceManager, typeof (Resources))
+	);
+	
 	static readonly CodeChangesComparer comparer = new ();
 	/// <inheritdoc cref="IIncrementalGenerator"/>
 	public void Initialize (IncrementalGeneratorInitializationContext context)
@@ -167,7 +177,9 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 			} else {
 				// we don't have a emitter for this type, so we can't generate the code, add a diagnostic letting the
 				// user we do not support what he is trying to do
-				continue;
+				context.ReportDiagnostic (Diagnostic.Create (RBI0000,
+					declaration.GetLocation (),
+					namedTypeSymbol.ToDisplayString ().Trim ()));
 			}
 		}
 	}
