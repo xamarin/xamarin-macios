@@ -20,11 +20,11 @@
     </resheader>
 
     <data name="RBI0000Description" xml:space="preserve">
-        <value>An unexpected error happened while generating the code. No code will be added to the compilation</value>
+        <value>An unexpected error happened while generating the code. No code will be added to the compilation.</value>
         <comment>An optional longer localizable description of the diagnostic.</comment>
     </data>
     <data name="RBI0000MessageFormat" xml:space="preserve">
-        <value>An unexpected error ocurred while process '{0}'. Please fill a bug report at https://github.com/xamarin/xamarin-macios/issues/new</value>
+        <value>An unexpected error ocurred while processing '{0}'. Please fill a bug report at https://github.com/xamarin/xamarin-macios/issues/new.</value>
         <comment>The format-able message the diagnostic displays.</comment>
     </data>
     <data name="RBI0000Title" xml:space="preserve">
