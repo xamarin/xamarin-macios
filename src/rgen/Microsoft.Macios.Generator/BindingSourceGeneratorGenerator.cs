@@ -21,19 +21,19 @@ namespace Microsoft.Macios.Generator;
 /// </summary>
 [Generator]
 public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
-	internal static readonly DiagnosticDescriptor RBI0000 = new(
+	internal static readonly DiagnosticDescriptor RBI0000 = new (
 		"RBI0000",
-		new LocalizableResourceString (nameof(Resources.RBI0000Title), Resources.ResourceManager, typeof(Resources)),
-		new LocalizableResourceString (nameof(Resources.RBI0000MessageFormat), Resources.ResourceManager,
-			typeof(Resources)),
+		new LocalizableResourceString (nameof (Resources.RBI0000Title), Resources.ResourceManager, typeof (Resources)),
+		new LocalizableResourceString (nameof (Resources.RBI0000MessageFormat), Resources.ResourceManager,
+			typeof (Resources)),
 		"Usage",
 		DiagnosticSeverity.Error,
 		isEnabledByDefault: true,
-		description: new LocalizableResourceString (nameof(Resources.RBI0000Description), Resources.ResourceManager,
-			typeof(Resources))
+		description: new LocalizableResourceString (nameof (Resources.RBI0000Description), Resources.ResourceManager,
+			typeof (Resources))
 	);
 
-	static readonly CodeChangesComparer comparer = new();
+	static readonly CodeChangesComparer comparer = new ();
 
 	/// <inheritdoc cref="IIncrementalGenerator"/>
 	public void Initialize (IncrementalGeneratorInitializationContext context)
@@ -107,7 +107,7 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 				continue;
 
 			// init sb and add the header
-			var sb = new TabbedStringBuilder (new());
+			var sb = new TabbedStringBuilder (new ());
 			sb.WriteHeader ();
 			var symbolBindingContext =
 				new SymbolBindingContext (rootContext, semanticModel, namedTypeSymbol, change.SymbolDeclaration);
@@ -150,7 +150,7 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 	static void GenerateLibraryCode (SourceProductionContext context, RootBindingContext rootContext,
 		ImmutableArray<CodeChanges> codeChangesList)
 	{
-		var sb = new TabbedStringBuilder (new());
+		var sb = new TabbedStringBuilder (new ());
 		sb.WriteHeader ();
 		// not need to collect the using statements, this file is completely generated
 		var emitter = new LibraryEmitter (rootContext, sb);
