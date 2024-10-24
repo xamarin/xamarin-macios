@@ -1007,6 +1007,10 @@ namespace Xamarin.Tests {
 			}
 		}
 
+		public static bool IsBuildingRemotely {
+			get => !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("MAC_AGENT_IP"));
+		}
+
 		public static string GetTestLibraryDirectory (ApplePlatform platform, bool? simulator = null)
 		{
 			string dir;

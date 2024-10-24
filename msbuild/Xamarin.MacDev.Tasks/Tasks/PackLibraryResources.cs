@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Collections.Generic;
@@ -16,6 +17,8 @@ namespace Xamarin.MacDev.Tasks {
 		public string Prefix { get; set; } = string.Empty;
 
 		public ITaskItem [] BundleResourcesWithLogicalNames { get; set; } = Array.Empty<ITaskItem> ();
+
+		public ITaskItem [] BundleOriginalResourcesWithLogicalNames { get; set; } = Array.Empty<ITaskItem> ();
 
 		#endregion
 
@@ -43,43 +46,8 @@ namespace Xamarin.MacDev.Tasks {
 			return mangled.ToString ();
 		}
 
-		bool ExecuteRemotely ()
-		{
-			// Fix LogicalName path for the Mac
-			foreach (var resource in BundleResourcesWithLogicalNames) {
-				var logicalName = resource.GetMetadata ("LogicalName");
-
-				if (!string.IsNullOrEmpty (logicalName)) {
-					resource.SetMetadata ("LogicalName", logicalName.Replace ("\\", "/"));
-				}
-			}
-
-			var runner = new TaskRunner (SessionId, BuildEngine4);
-
-			try {
-				var result = runner.RunAsync (this).Result;
-
-				if (result && EmbeddedResources is not null) {
-					// We must get the "real" file that will be embedded in the
-					// compiled assembly in Windows
-					foreach (var embeddedResource in EmbeddedResources.Where (x => runner.ShouldCopyItemAsync (task: this, item: x).Result)) {
-						runner.GetFileAsync (this, embeddedResource.ItemSpec).Wait ();
-					}
-				}
-
-				return result;
-			} catch (Exception ex) {
-				Log.LogErrorFromException (ex);
-
-				return false;
-			}
-		}
-
 		public override bool Execute ()
 		{
-			if (ShouldExecuteRemotely ())
-				return ExecuteRemotely ();
-
 			var results = new List<ITaskItem> ();
 
 			foreach (var item in BundleResourcesWithLogicalNames) {
@@ -97,9 +65,30 @@ namespace Xamarin.MacDev.Tasks {
 				results.Add (embedded);
 			}
 
+			foreach (var item in BundleOriginalResourcesWithLogicalNames) {
+				var originalItemGroup = item.GetMetadata ("OriginalItemGroup");
+				if (!TryGetMangledLogicalName (item, originalItemGroup, out var mangledLogicalName))
+					continue;
+				var embedded = new TaskItem (item);
+				embedded.SetMetadata ("LogicalName", mangledLogicalName);
+				results.Add (embedded);
+			}
+
 			EmbeddedResources = results.ToArray ();
 
 			return !Log.HasLoggedErrors;
+		}
+
+		bool TryGetMangledLogicalName (ITaskItem item, string itemName, [NotNullWhen (true)] out string? mangled)
+		{
+			var logicalName = item.GetMetadata ("LogicalName");
+			if (string.IsNullOrEmpty (logicalName)) {
+				Log.LogError (null, null, null, item.ItemSpec, 0, 0, 0, 0, MSBStrings.E0161);
+				mangled = null;
+				return false;
+			}
+			mangled = "__" + Prefix + "_item_" + itemName + "_" + EscapeMangledResource (logicalName);
+			return true;
 		}
 
 		public void Cancel ()

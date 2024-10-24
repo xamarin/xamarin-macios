@@ -81,7 +81,7 @@ namespace Xamarin.MacDev.Tasks {
 			var bundleResources = new List<ITaskItem> ();
 			foreach (var asset in ColladaAssets) {
 				var inputScene = asset.ItemSpec;
-				var logicalName = BundleResource.GetLogicalName (ProjectDir, prefixes, asset, !string.IsNullOrEmpty (SessionId));
+				var logicalName = BundleResource.GetLogicalName (this, ProjectDir, prefixes, asset);
 				var outputScene = Path.Combine (DeviceSpecificIntermediateOutputPath, logicalName);
 				var args = GenerateCommandLineCommands (inputScene, outputScene);
 				listOfArguments.Add (new (args, asset));

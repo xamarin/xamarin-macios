@@ -215,7 +215,7 @@ namespace Xamarin.MacDev.Tasks {
 			var prefixes = BundleResource.SplitResourcePrefixes (ResourcePrefix);
 			const string logicalNameKey = "_ComputedLogicalName_";
 			foreach (var item in FontFilesToRegister) {
-				var logicalName = BundleResource.GetLogicalName (ProjectDir, prefixes, item, !string.IsNullOrEmpty (SessionId));
+				var logicalName = BundleResource.GetLogicalName (this, ProjectDir, prefixes, item);
 				item.SetMetadata (logicalNameKey, logicalName);
 			}
 

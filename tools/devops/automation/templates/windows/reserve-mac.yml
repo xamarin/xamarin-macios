@@ -108,6 +108,10 @@ steps:
     github_token: ${{ parameters.gitHubToken }}
   timeoutInMinutes: 250
 
+- bash: $(Build.SourcesDirectory)/xamarin-macios/system-dependencies.sh --ignore-mono --ignore-visual-studio --ignore-mono --ignore-sharpie --ignore-shellcheck --ignore-yamllint --provision-simulators
+  displayName: 'Provision simulators'
+  timeoutInMinutes: 250
+
 - task: AzureKeyVault@2
   inputs:
     azureSubscription: 'Xamarin - SDK Engineering - macios-team-pair-to-mac-ci'

@@ -21,6 +21,8 @@ namespace Xamarin.MacDev.Tasks {
 		[Required]
 		public string IntermediateOutputPath { get; set; } = string.Empty;
 
+		public string MacProjectDir { get; set; } = string.Empty;
+
 		[Required]
 		public string ProjectDir { get; set; } = string.Empty;
 
@@ -76,7 +78,7 @@ namespace Xamarin.MacDev.Tasks {
 
 		protected virtual string GetBundleRelativeOutputPath (IList<string> prefixes, ITaskItem input)
 		{
-			return BundleResource.GetLogicalName (ProjectDir, prefixes, input, !string.IsNullOrEmpty (SessionId));
+			return BundleResource.GetLogicalName (this, ProjectDir, prefixes, input);
 		}
 
 		protected virtual IEnumerable<ITaskItem> GetCompiledBundleResources (ITaskItem input, ITaskItem output)

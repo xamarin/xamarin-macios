@@ -310,6 +310,12 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 		<MtouchInterpreter Condition="'$(MtouchInterpreter)' == '' And '$(UseInterpreter)' == 'True'">all</MtouchInterpreter>
 
 		<_AppBundleName>$(AssemblyName)</_AppBundleName>
+
+		<!-- If resources are pre-compiled/processed before being embedded in libraries, or if they're stored as-is -->
+		<BundleOriginalResources Condition="'$(BundleOriginalResources)' == '' And $([MSBuild]::VersionGreaterThanOrEquals($(TargetFrameworkVersion), 10.0))">true</BundleOriginalResources>
+		<!-- Does not apply unless we're actually building a library - and since BundleOriginalResources can be specified on the command line, use a secondary property -->
+		<!-- that also encapsulates whether we're a library or not (this makes conditions simpler) -->
+		<_BundleOriginalResources Condition="'$(OutputType)' == 'Library' And '$(IsAppExtension)' != 'true' And '$(BundleOriginalResources)' == 'true'">true</_BundleOriginalResources>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(IsBindingProject)' == 'true'">

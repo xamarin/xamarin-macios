@@ -28,12 +28,13 @@ Copyright (C) 2011-2013 Xamarin. All rights reserved.
 		DependsOnTargets="_SayHello" 
 		BeforeTargets="_CleanDebugSymbols;_CleanAppBundle;_DetectAppManifest;_DetectSdkLocations;_GenerateBundleName" />
 	
-	<PropertyGroup>
+	<!-- Don't know what GetBundleResourceWithLogicalNameItems is for -->
+<!-- 	<PropertyGroup>
 		<CreateAppBundleDependsOn>
 			GetBundleResourceWithLogicalNameItems;
 			$(CreateAppBundleDependsOn)
 		</CreateAppBundleDependsOn>
-	</PropertyGroup>
+	</PropertyGroup> -->
 	
 	<Target Name="GetBundleResourceWithLogicalNameItems" Returns="@(_BundleResourceWithLogicalName)" DependsOnTargets="_GenerateBundleName">
 		<ItemGroup>
@@ -201,7 +202,7 @@ Copyright (C) 2011-2013 Xamarin. All rights reserved.
 		</PropertyGroup>
 	</Target>
 
-	<Target Name="_ResolveUniversalTypeIdentifiers" BeforeTargets="_CompileImageAssets" Condition="'$(IsMacEnabled)' == 'true'"
+	<Target Name="_ResolveUniversalTypeIdentifiers" BeforeTargets="_CompileImageAssets" Condition="'$(IsMacEnabled)' == 'true' And '$(_BundleOriginalResources)' != 'true'"
 					Inputs="@(ImageAsset);" Outputs="@(ImageAsset -> '$(DeviceSpecificIntermediateOutputPath)%(FileName)%(Extension).ResolveUTIs.stamp')">
 
 		<ItemGroup>

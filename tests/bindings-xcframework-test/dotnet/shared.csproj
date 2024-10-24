@@ -33,9 +33,9 @@
       <Link>libframework.h</Link>
     </None>
     <TestLibrariesInput Include="$(TestLibrariesDirectory)\libframework.m" />
-    <TestLibrariesOutput Include="$(TestLibrariesDirectory)\.libs\XStaticArTest.xcframework" />
-    <TestLibrariesOutput Include="$(TestLibrariesDirectory)\.libs\XStaticObjectTest.xcframework" />
-    <TestLibrariesOutput Include="$(TestLibrariesDirectory)\.libs\XTest.xcframework" />
+    <TestLibrariesOutput Include="$(TestLibrariesDirectory)\.libs\XStaticArTest.xcframework\Info.plist" />
+    <TestLibrariesOutput Include="$(TestLibrariesDirectory)\.libs\XStaticObjectTest.xcframework\Info.plist" />
+    <TestLibrariesOutput Include="$(TestLibrariesDirectory)\.libs\XTest.xcframework\Info.plist" />
 
     <NativeReference Include="$(TestLibrariesDirectory)\.libs\XStaticArTest.xcframework">
       <Kind>Framework</Kind>

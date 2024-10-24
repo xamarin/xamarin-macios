@@ -228,32 +228,28 @@ steps:
     Get-Content -Path $(Build.SourcesDirectory)/xamarin-macios/tests/dotnet/Windows/config.runsettings | Write-Host
   displayName: 'Create runsettings for .NET tests'
 
-- pwsh: |
-    $Env:PATH = "$(Build.SourcesDirectory)\xamarin-macios\tests\dotnet\Windows\bin\dotnet;$env:PATH"
-    $Env:DOTNET = "$(Build.SourcesDirectory)\xamarin-macios\tests\dotnet\Windows\bin\dotnet\dotnet.exe"
-    & $(Build.SourcesDirectory)\xamarin-macios\tests\dotnet\Windows\bin\dotnet\dotnet.exe `
-        test `
-        "$(Build.SourcesDirectory)/xamarin-macios/tests/dotnet/UnitTests/DotNetUnitTests.csproj" `
-        --filter Category=Windows `
-        --verbosity quiet `
-        --settings $(Build.SourcesDirectory)/xamarin-macios/tests/dotnet/Windows/config.runsettings `
-        "--results-directory:$(Build.SourcesDirectory)/xamarin-macios/jenkins-results/" `
-        "--logger:console;verbosity=detailed" `
-        "--logger:trx;LogFileName=$(Build.SourcesDirectory)/xamarin-macios/jenkins-results/windows-dotnet-tests.trx" `
-        "--logger:html;LogFileName=$(Build.SourcesDirectory)/xamarin-macios/jenkins-results/windows-dotnet-tests.html" `
-        "-bl:$(Build.SourcesDirectory)/xamarin-macios/tests/dotnet/Windows/run-dotnet-tests.binlog"
-  displayName: 'Run .NET tests'
+- pwsh: $(Build.SourcesDirectory)\xamarin-macios\tools\devops\automation\scripts\run-local-windows-tests.ps1
+  displayName: 'Run .NET tests locally'
   timeoutInMinutes: 30
+  continueOnError: true
   ${{ if not(parameters.isPR) }}:
     retryCountOnTaskFailure: ${{ parameters.retryCount }}
 
 - pwsh: $(Build.SourcesDirectory)\xamarin-macios\tools\devops\automation\scripts\run-remote-windows-tests.ps1
   displayName: 'Run .NET tests remotely'
   timeoutInMinutes: 120
+  continueOnError: true
   ${{ if not(parameters.isPR) }}:
     retryCountOnTaskFailure: ${{ parameters.retryCount }}
   env:
     XMA_PASSWORD: $(XMA.Password)
+
+- pwsh: |
+    Write-Host "There are test failures, so failing the build"
+    exit 1
+  displayName: 'Fail if test failures'
+  timeoutInMinutes: 1
+  condition: eq(variables['Agent.JobStatus'], 'SucceededWithIssues')
 
 - pwsh: $(Build.SourcesDirectory)\xamarin-macios\tools\devops\automation\scripts\fetch-remote-binlogs.ps1
   displayName: 'Fetch remote binlogs'
