@@ -1,0 +1,18 @@
+{
+  "images" : [
+    {
+      "filename" : "Icon-blue-400x240.png",
+      "idiom" : "tv",
+      "scale" : "1x"
+    },
+    {
+      "filename" : "Icon-blue-400x240.png",
+      "idiom" : "tv",
+      "scale" : "2x"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

@@ -728,6 +728,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			_BeforeCoreCompileInterfaceDefinitions;
 			_ReadCoreCompileInterfaceDefinitions;
 			_CoreCompileInterfaceDefinitions;
+			_PostCompileInterfaceDefinitions;
 		</_CompileInterfaceDefinitionsDependsOn>
 	</PropertyGroup>
 
@@ -814,11 +815,17 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 
 		<!-- Cached the generated outputs items for incremental build support -->
 		<WriteItemsToFile Items="@(_IBTool_BundleResources)" ItemName="_BundleResourceWithLogicalName" File="$(_IBToolCache)" Overwrite="true" IncludeMetadata="true" />
-		<!-- Write out the list of assets we've processed, so that an inner build in a multi-rid build can skip processing them -->
-		<WriteItemsToFile Items="@(InterfaceDefinition)" Condition="'$(_SaveProcessedItems)' == 'true'" ItemName="InterfaceDefinition" File="$(_ProcessedInterfaceDefinitionsPath)" Overwrite="true" IncludeMetadata="false" />
 
 		<ItemGroup>
 			<FileWrites Include="$(_IBToolCache)" />
+		</ItemGroup>
+	</Target>
+
+	<Target Name="_PostCompileInterfaceDefinitions">
+		<!-- Write out the list of assets we've processed, so that an inner build in a multi-rid build can skip processing them -->
+		<!-- We need to do this even for incremental builds, when we don't need to run the IBTool task, so this is not in the _CoreCompileInterfaceDefinitions target -->
+		<WriteItemsToFile Items="@(InterfaceDefinition)" Condition="'$(_SaveProcessedItems)' == 'true'" ItemName="InterfaceDefinition" File="$(_ProcessedInterfaceDefinitionsPath)" Overwrite="true" IncludeMetadata="false" />
+		<ItemGroup>
 			<FileWrites Include="$(_ProcessedInterfaceDefinitionsPath)" />
 		</ItemGroup>
 	</Target>
@@ -902,12 +909,15 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			ToolExe="$(ACToolExe)"
 			ToolPath="$(ACToolPath)"
 			AccentColor="$(AccentColor)"
+			AlternateAppIcons="@(AlternateAppIcon)"
+			AppIcon="$(AppIcon)"
 			BundleIdentifier="$(_BundleIdentifier)"
 			CLKComplicationGroup="$(_CLKComplicationGroup)"
 			DeviceModel="$(TargetDeviceModel)"
 			DeviceOSVersion="$(TargetDeviceOSVersion)"
 			EnableOnDemandResources="$(EnableOnDemandResources)"
 			ImageAssets="@(ImageAsset)"
+			IncludeAllAppIcons="$(IncludeAllAppIcons)"
 			MinimumOSVersion="$(_MinimumOSVersion)"
 			NSExtensionPointIdentifier="$(_NSExtensionPointIdentifier)"
 			OptimizePNGs="$(OptimizePNGs)"

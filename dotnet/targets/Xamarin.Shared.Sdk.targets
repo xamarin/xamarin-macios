@@ -424,6 +424,18 @@
 			</_AssemblyPublishDirectories>
 			<_AssemblyPublishInputs Include="@(_AssemblyPublishDirectories -> '%(Identity)/**')" />
 		</ItemGroup>
+
+		<!-- We need to these files, so that they don't confuse incremental builds. They're only meant to convey information from an outer universal build to inner rid-specific builds, not between different outer builds. -->
+		<Delete Files="$(_ProcessedImageAssetsPath)" Condition="Exists('$(_ProcessedImageAssetsPath)')" />
+		<Delete Files="$(_ProcessedBundleResourcesPath)" Condition="Exists('$(_ProcessedBundleResourcesPath)')" />
+		<Delete Files="$(_ProcessedContentPath)" Condition="Exists('$(_ProcessedContentPath)')" />
+		<Delete Files="$(_ProcessedImageAssetsPath)" Condition="Exists('$(_ProcessedImageAssetsPath)')" />
+		<Delete Files="$(_ProcessedInterfaceDefinitionsPath)" Condition="Exists('$(_ProcessedInterfaceDefinitionsPath)')" />
+		<Delete Files="$(_ProcessedSceneKitAssetsPath)" Condition="Exists('$(_ProcessedSceneKitAssetsPath)')" />
+		<Delete Files="$(_ProcessedColladaAssetsPath)" Condition="Exists('$(_ProcessedColladaAssetsPath)')" />
+		<Delete Files="$(_ProcessedTextureAtlasesPath)" Condition="Exists('$(_ProcessedTextureAtlasesPath)')" />
+		<Delete Files="$(_ProcessedCoreMLModelsPath)" Condition="Exists('$(_ProcessedCoreMLModelsPath)')" />
+		<Delete Files="$(_CompiledEntitlementsPath)" Condition="Exists('$(_CompiledEntitlementsPath)')" />
 	</Target>
 
 	<Target Name="_CreateMergedAppBundle"
