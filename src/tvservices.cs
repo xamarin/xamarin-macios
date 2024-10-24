@@ -390,5 +390,9 @@ namespace TVServices {
 
 		[Field ("TVUserActivityTypeBrowsingChannelGuide")]
 		NSString BrowsingChannelGuide { get; }
+
+		[TV (18, 1)]
+		[Field ("TVUserActivityTypeBrowsingEntertainmentContent")]
+		NSString BrowsingEntertainmentContent { get; }
 	}
 }
