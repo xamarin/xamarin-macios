@@ -1459,11 +1459,29 @@ namespace Intents {
 		DigitalTouch,
 		Handwriting,
 		Sticker,
+		[Deprecated (PlatformName.iOS, 18, 1, message: "Use 'INMessageReaction' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 1, message: "Use 'INMessageReaction' instead.")]
+		[Deprecated (PlatformName.WatchOS, 11, 1, message: "Use 'INMessageReaction' instead.")]
 		TapbackLiked,
+		[Deprecated (PlatformName.iOS, 18, 1, message: "Use 'INMessageReaction' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 1, message: "Use 'INMessageReaction' instead.")]
+		[Deprecated (PlatformName.WatchOS, 11, 1, message: "Use 'INMessageReaction' instead.")]
 		TapbackDisliked,
+		[Deprecated (PlatformName.iOS, 18, 1, message: "Use 'INMessageReaction' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 1, message: "Use 'INMessageReaction' instead.")]
+		[Deprecated (PlatformName.WatchOS, 11, 1, message: "Use 'INMessageReaction' instead.")]
 		TapbackEmphasized,
+		[Deprecated (PlatformName.iOS, 18, 1, message: "Use 'INMessageReaction' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 1, message: "Use 'INMessageReaction' instead.")]
+		[Deprecated (PlatformName.WatchOS, 11, 1, message: "Use 'INMessageReaction' instead.")]
 		TapbackLoved,
+		[Deprecated (PlatformName.iOS, 18, 1, message: "Use 'INMessageReaction' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 1, message: "Use 'INMessageReaction' instead.")]
+		[Deprecated (PlatformName.WatchOS, 11, 1, message: "Use 'INMessageReaction' instead.")]
 		TapbackQuestioned,
+		[Deprecated (PlatformName.iOS, 18, 1, message: "Use 'INMessageReaction' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 1, message: "Use 'INMessageReaction' instead.")]
+		[Deprecated (PlatformName.WatchOS, 11, 1, message: "Use 'INMessageReaction' instead.")]
 		TapbackLaughed,
 		MediaCalendar,
 		MediaLocation,
