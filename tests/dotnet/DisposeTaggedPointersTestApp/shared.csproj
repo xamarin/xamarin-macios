@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+
+		<ApplicationTitle>DisposeTaggedPointersTestApp</ApplicationTitle>
+		<ApplicationId>com.xamarin.disposetaggedpointerstestapp</ApplicationId>
+
+		<UseInterpreter>true</UseInterpreter> <!-- to speed up the test run -->
+	</PropertyGroup>
+
+	<Import Project="../../common/shared-dotnet.csproj" />
+
+	<ItemGroup>
+		<Compile Include="../*.cs" />
+		<Compile Include="../../../monotouch-test/ObjCRuntime/TaggedPointerTest.Shared.cs" />
+	</ItemGroup>
+</Project>
