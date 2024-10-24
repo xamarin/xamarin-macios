@@ -4580,11 +4580,11 @@ namespace HealthKit {
 		[Static]
 		[Export ("sensitivityPointWithFrequency:tests:error:")]
 		[return: NullAllowed]
-		HKAudiogramSensitivityPoint GetSensitivityPoint (HKQuantity frequency, HKAudiogramSensitivityTest[] tests, [NullAllowed] out NSError error);
+		HKAudiogramSensitivityPoint GetSensitivityPoint (HKQuantity frequency, HKAudiogramSensitivityTest [] tests, [NullAllowed] out NSError error);
 
 		[Watch (11, 1), MacCatalyst (18, 1), Mac (15, 1), iOS (18, 1)]
 		[Export ("tests", ArgumentSemantic.Copy)]
-		HKAudiogramSensitivityTest[] Tests { get; }
+		HKAudiogramSensitivityTest [] Tests { get; }
 	}
 
 	[Watch (6, 0), iOS (13, 0), Mac (13, 0)]
@@ -4606,7 +4606,7 @@ namespace HealthKit {
 		[Watch (11, 1), MacCatalyst (18, 1), Mac (15, 1), iOS (18, 1)]
 		[Static]
 		[Export ("audiogramSampleWithSensitivityPoints:startDate:endDate:device:metadata:")]
-		HKAudiogramSample GetAudiogramSample (HKAudiogramSensitivityPoint[] sensitivityPoints, NSDate startDate, NSDate endDate, [NullAllowed] HKDevice device, [NullAllowed] NSDictionary<NSString, NSObject> metadata);
+		HKAudiogramSample GetAudiogramSample (HKAudiogramSensitivityPoint [] sensitivityPoints, NSDate startDate, NSDate endDate, [NullAllowed] HKDevice device, [NullAllowed] NSDictionary<NSString, NSObject> metadata);
 	}
 
 	[Watch (6, 0), iOS (13, 0), Mac (13, 0)]
@@ -5384,7 +5384,7 @@ namespace HealthKit {
 		[Static]
 		[Export ("clampingRangeWithLowerBound:upperBound:error:")]
 		[return: NullAllowed]
-		HKAudiogramSensitivityPointClampingRange Create ([NullAllowed] [BindAs (typeof (double?))] NSNumber lowerBound, [NullAllowed] [BindAs (typeof (double?))] NSNumber upperBound, [NullAllowed] out NSError error);
+		HKAudiogramSensitivityPointClampingRange Create ([NullAllowed][BindAs (typeof (double?))] NSNumber lowerBound, [NullAllowed][BindAs (typeof (double?))] NSNumber upperBound, [NullAllowed] out NSError error);
 	}
 
 	[Watch (11, 1), MacCatalyst (18, 1), Mac (15, 1), iOS (18, 1)]
