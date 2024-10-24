@@ -3,10 +3,12 @@
 This directory contains numerous short C# scripts, each in their own directory
 with its own project file.
 
-To create a new script, copy an existing script directory, and:
+To create a new script, the easy way is to run the `new-script.sh` script.
+
+The harder way is to copy an existing script directory, and:
 
 * Rename the csproj file to match the directory name.
-* Add your C# code.
+* Add your C# code, and document what it's supposed to do in a README.md file.
 * Edit the arguments to the `TemplateScript` template in the `fragment.mk`
   file according to how you named your script (directory). The first argument
   will be used in other makefiles that use the script, the second is the name
