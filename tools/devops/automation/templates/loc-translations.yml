@@ -24,6 +24,7 @@ steps:
     clean: true
     submodules: recursive
     path: s/xamarin-macios
+    fetchTags: false
 
 - ${{ if parameters.isPR }}:
   - pwsh: |
