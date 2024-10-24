@@ -30,7 +30,7 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 		isEnabledByDefault: true,
 		description: new LocalizableResourceString (nameof (Resources.RBI0000Description), Resources.ResourceManager, typeof (Resources))
 	);
-	
+
 	static readonly CodeChangesComparer comparer = new ();
 	/// <inheritdoc cref="IIncrementalGenerator"/>
 	public void Initialize (IncrementalGeneratorInitializationContext context)
