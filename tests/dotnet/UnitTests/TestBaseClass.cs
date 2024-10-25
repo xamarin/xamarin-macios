@@ -171,6 +171,16 @@ namespace Xamarin.Tests {
 			}
 		}
 
+		protected static bool CanExecute (ApplePlatform platform, Dictionary<string, string> properties)
+		{
+			if (properties.TryGetValue ("RuntimeIdentifier", out var runtimeIdentifiers)) {
+				return CanExecute (platform, runtimeIdentifiers);
+			} else if (properties.TryGetValue ("RuntimeIdentifiers", out runtimeIdentifiers)) {
+				return CanExecute (platform, runtimeIdentifiers);
+			}
+			return false;
+		}
+
 		protected static bool CanExecute (ApplePlatform platform, string runtimeIdentifiers)
 		{
 			switch (platform) {

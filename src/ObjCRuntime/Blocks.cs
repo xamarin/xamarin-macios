@@ -693,12 +693,7 @@ namespace ObjCRuntime {
 #endif
 
 	[Flags]
-#if XAMCORE_3_0
-	internal
-#else
-	public
-#endif
-	enum BlockFlags : int {
+	internal enum BlockFlags : int {
 		BLOCK_REFCOUNT_MASK = (0xffff),
 		BLOCK_NEEDS_FREE = (1 << 24),
 		BLOCK_HAS_COPY_DISPOSE = (1 << 25),

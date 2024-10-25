@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+
+		<ApplicationTitle>CompressedXCFrameworkInBindingProjectApp</ApplicationTitle>
+		<ApplicationId>com.xamarin.compressedxcframeworkinbindingprojectapp</ApplicationId>
+		<ApplicationVersion>1.0</ApplicationVersion>
+	</PropertyGroup>
+
+	<Import Project="../../common/shared-dotnet.csproj" />
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\BindingWithCompressedXCFramework\$(_PlatformName)\BindingWithCompressedXCFramework.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Include="../*.cs" />
+	</ItemGroup>
+</Project>

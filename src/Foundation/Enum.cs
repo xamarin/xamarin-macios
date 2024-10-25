@@ -75,7 +75,7 @@ namespace Foundation {
 		Synchronizable
 	}
 
-#if MONOMAC || !XAMCORE_3_0
+#if MONOMAC
 
 #if !NET
 	[Native]
@@ -89,9 +89,6 @@ namespace Foundation {
 		PPC = 0x00000012,
 		X86_64 = 0x01000007,
 		PPC64 = 0x01000012,
-#if !XAMCORE_3_0
-		[Watch (7, 0), TV (14, 0), iOS (14, 0)]
-#endif
 		ARM64 = 0x0100000c,
 	}
 #endif
@@ -1025,16 +1022,6 @@ namespace Foundation {
 		EndLineWithCarriageReturn = 1 << 4,
 		EndLineWithLineFeed = 1 << 5
 	}
-
-#if !XAMCORE_3_0
-	[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'NSWritingDirectionFormatType'.")]
-	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'NSWritingDirectionFormatType'.")]
-	[Flags]
-	[Native]
-	public enum NSTextWritingDirection : long {
-		Embedding = 0, Override = 2
-	}
-#endif
 
 	[Native]
 	public enum NSUrlSessionAuthChallengeDisposition : long {

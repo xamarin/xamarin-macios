@@ -59,3 +59,6 @@ variables:
 # point to the vsdrops that we will be using for the diff uploads.
 - name: VSDropsPrefix
   value: 'https://vsdrop.corp.microsoft.com/file/v1/xamarin-macios/device-tests'
+
+- name: BUILD_REPOSITORY_TITLE
+  value: 'xamarin-macios'

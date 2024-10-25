@@ -139,10 +139,6 @@ namespace EventKitUI {
 		[Export ("selectionStyle")]
 		EKCalendarChooserSelectionStyle SelectionStyle {
 			get;
-#if !XAMCORE_3_0
-			[NotImplemented]
-			set;
-#endif
 		}
 
 		[Export ("delegate", ArgumentSemantic.Weak), NullAllowed]

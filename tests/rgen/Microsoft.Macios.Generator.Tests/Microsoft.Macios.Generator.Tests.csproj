@@ -3,8 +3,8 @@
     <PropertyGroup>
         <TargetFramework>net$(BundledNETCoreAppTargetFrameworkVersion)</TargetFramework>
         <Nullable>enable</Nullable>
-
         <IsPackable>false</IsPackable>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 
         <RootNamespace>Microsoft.Macios.Generator.Tests</RootNamespace>
     </PropertyGroup>
