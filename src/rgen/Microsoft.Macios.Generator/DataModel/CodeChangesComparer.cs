@@ -32,22 +32,13 @@ class CodeChangesComparer : IEqualityComparer<CodeChanges> {
 			return false;
 
 		// compare the attrs, we need to sort them since attribute order does not matter
-		var xAttrs = x.Attributes.OrderBy (a => a.Name).ToArray ();
-		var yAttrs = y.Attributes.OrderBy (a => a.Name).ToArray ();
-		for (var index = 0; index < xAttrs.Length; index++) {
-			if (xAttrs [index] != yAttrs [index])
-				return false;
-		}
+		var attrComparer = new AttributesComparer ();
+		if (!attrComparer.Equals (x.Attributes, y.Attributes))
+			return false;
 
 		// compare the members, we need to sort them since member order does not matter
-		var xMembers = x.Members.OrderBy (m => m.Name).ToArray ();
-		var yMembers = y.Members.OrderBy (m => m.Name).ToArray ();
-		for (var index = 0; index < xMembers.Length; index++) {
-			if (xMembers [index] != yMembers [index])
-				return false;
-		}
-
-		return true;
+		var memberComparer = new MemberComparer ();
+		return memberComparer.Equals (x.Members, y.Members);
 	}
 
 	/// <inheritdoc />

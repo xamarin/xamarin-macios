@@ -40,17 +40,10 @@ readonly struct MemberCodeChange : IEquatable<MemberCodeChange> {
 	/// <inheritdoc />
 	public bool Equals (MemberCodeChange other)
 	{
-		if (Name != other.Name || Attributes.Length != other.Attributes.Length)
+		if (Name != other.Name)
 			return false;
-		// sort the attributes to make sure the order is the same and compare them
-		var xAttributes = Attributes.OrderBy (s => s.Name).ToArray ();
-		var yAttributes = other.Attributes.OrderBy (s => s.Name).ToArray ();
-		for (var index = 0; index < xAttributes.Length; index++) {
-			if (xAttributes [index] != yAttributes [index])
-				return false;
-		}
-
-		return true;
+		var attrComparer = new AttributesComparer ();
+		return attrComparer.Equals (Attributes, other.Attributes);
 	}
 
 	/// <inheritdoc />
