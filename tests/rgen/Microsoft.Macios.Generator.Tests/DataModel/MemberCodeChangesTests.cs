@@ -83,7 +83,7 @@ public class MemberCodeChangesTests {
 	[Fact]
 	public void NotEqualsDifferentAttributesCount ()
 	{
-		
+
 		var memberCodeChange1 = new MemberCodeChange ("name", [
 			new AttributeCodeChange ("name", ["arg1", "arg2"]),
 			new AttributeCodeChange ("name2", [])
