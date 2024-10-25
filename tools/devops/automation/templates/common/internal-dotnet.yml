@@ -23,36 +23,30 @@ parameters:
 
 steps:
 
-- template: /eng/common/templates-official/steps/enable-internal-sources.yml
-  parameters:
-    repositoryName: /xamarin-macios
-    condition: and(
-                eq(variables['INTERNAL_DOTNET'],'1'),
-                endsWith('${{ parameters.agentPoolComputed3 }}', '-Trusted')
-              )
+- ${{ if endsWith(parameters.agentPoolComputed3, '-Trusted') }}:
+  - template: /eng/common/templates-official/steps/enable-internal-sources.yml
+    parameters:
+      repositoryName: /xamarin-macios
+      condition: eq(variables['INTERNAL_DOTNET'],'1')
 
-- template: /eng/common/templates-official/steps/enable-internal-runtimes.yml
-  parameters:
-    federatedServiceConnection: ${{ parameters.federatedServiceConnection }}
-    outputVariableName: ${{ parameters.dotnetInternalBuildContainerTokenVariableName }}
-    expiryInHours: ${{ parameters.dotnetInternalBuildContainerTokenExpiryInHours }}
-    base64Encode: ${{ parameters.dotnetInternalBuildContainerTokenBase64Encode }}
-    condition: and(
-                eq(variables['INTERNAL_DOTNET'],'1'),
-                endsWith('${{ parameters.agentPoolComputed3 }}', '-Trusted')
-              )
-
-- bash: |
-    echo "This branch currently requires an internal build of .NET, but that's only supported in CI pipelines/agents, not PR pipelines/agents (agentPoolComputed: ${{ parameters.agentPoolComputed3 }})."
-    exit 1
-  displayName: "Internal build check"
-  condition: and(
-              eq(variables['INTERNAL_DOTNET'],'1'),
-              not(endsWith('${{ parameters.agentPoolComputed3 }}', '-Trusted'))
-            )
+  - template: /eng/common/templates-official/steps/enable-internal-runtimes.yml
+    parameters:
+      federatedServiceConnection: ${{ parameters.federatedServiceConnection }}
+      outputVariableName: ${{ parameters.dotnetInternalBuildContainerTokenVariableName }}
+      expiryInHours: ${{ parameters.dotnetInternalBuildContainerTokenExpiryInHours }}
+      base64Encode: ${{ parameters.dotnetInternalBuildContainerTokenBase64Encode }}
+      condition: eq(variables['INTERNAL_DOTNET'],'1')
+- ${{ else }}:
+  - bash: |
+      echo "This branch currently requires an internal build of .NET, but that's only supported in CI pipelines/agents, not PR pipelines/agents (agentPoolComputed: ${{ parameters.agentPoolComputed3 }})."
+      exit 1
+    displayName: "Internal build check (1)"
+    condition: eq(variables['INTERNAL_DOTNET'],'1')
 
 - bash: |
     echo "This branch does not requre an internal build of .NET, so we're good to proceed."
     env
-  displayName: "Public build check"
+  displayName: "Internal build check (2)"
   condition: eq(variables['INTERNAL_DOTNET'],'')
+  env:
+    ENV_VARIABLES: $[ convertToJson(variables) ]
