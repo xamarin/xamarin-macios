@@ -80,4 +80,20 @@ public class MemberCodeChangesTests {
 		Assert.True (memberCodeChange1 != memberCodeChange2);
 	}
 
+	[Fact]
+	public void NotEqualsDifferentAttributesCount ()
+	{
+		
+		var memberCodeChange1 = new MemberCodeChange ("name", [
+			new AttributeCodeChange ("name", ["arg1", "arg2"]),
+			new AttributeCodeChange ("name2", [])
+		]);
+		var memberCodeChange2 = new MemberCodeChange ("name", [
+			new AttributeCodeChange ("name", ["arg2", "arg1"])
+		]);
+		Assert.False (memberCodeChange1.Equals (memberCodeChange2));
+		Assert.False (memberCodeChange1 == memberCodeChange2);
+		Assert.True (memberCodeChange1 != memberCodeChange2);
+	}
+
 }
