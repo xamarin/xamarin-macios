@@ -173,13 +173,6 @@ namespace Introspection {
 			switch (type.Name) {
 			case "CAMetalLayer":
 				return TestRuntime.IsSimulatorOrDesktop && !TestRuntime.CheckXcodeVersion (11, 0);
-#if !XAMCORE_3_0
-			// mistake (base type) fixed by a breaking change
-			case "MFMailComposeViewControllerDelegate":
-				if (protocolName == "UINavigationControllerDelegate")
-					return true;
-				break;
-#endif
 			// special case: the Delegate property is id<A,B> so we made A subclass B in managed
 			// but this test see the conformance is not correct
 			case "UIImagePickerControllerDelegate":
@@ -940,14 +933,6 @@ namespace Introspection {
 				if ((type.Name == "UISearchBar") && !TestRuntime.CheckXcodeVersion (5, 1))
 					return true;
 				break;
-#if !XAMCORE_3_0
-			case "UINavigationControllerDelegate":
-				switch (type.Name) {
-				case "ABPeoplePickerNavigationControllerDelegate": // 37180
-					return true;
-				}
-				break;
-#endif
 			case "GKSavedGameListener":
 				switch (type.Name) {
 				case "GKLocalPlayerListener": // 37180

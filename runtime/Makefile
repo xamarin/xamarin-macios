@@ -515,9 +515,6 @@ $(foreach arch,$(MAC_ARCHITECTURES),.libs/mac/extension-main.$(arch).o): EXTRA_D
 .libs/mac/libxammac-system.a: .libs/mac/libxammac-system.x86_64.a .libs/mac/libxammac-system.arm64.a
 	$(call Q_2,LIPO,  [mac]) xcrun lipo -create $^ -o $@
 
-.libs/mac/libxammac-%.a: $(MACIOS_BINARIES_PATH)/libxammac-%.a | .libs/mac
-	$(Q) $(CP) $< $@
-
 .libs/mac/libxamarin%.a: .libs/mac/libxamarin%.x86_64.a
 	$(call Q_2,LIPO,  [mac]) xcrun lipo -create $^ -o $@
 

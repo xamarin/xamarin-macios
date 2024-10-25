@@ -179,9 +179,6 @@ namespace CoreImage {
 #if MONOMAC
 			case CIFormat.RGBA16: return FormatRGBA16;
 			case CIFormat.RGBAf: return FormatRGBAf;
-#elif !XAMCORE_3_0
-			case CIFormat.BGRA8: return FormatBGRA8;
-			case CIFormat.RGBA8: return FormatRGBA8;
 #endif
 			case CIFormat.kRGBAf: return FormatRGBAf;
 			case CIFormat.kBGRA8: return FormatBGRA8;

@@ -45,7 +45,7 @@ namespace TestNamespace
 	{
 		// We need to create a compilation with the required source code.
 		var compilation = CreateCompilation (nameof (CorrectUsingImports),
-			platform, usingImportInput);
+			platform, input);
 
 		// Run generators and retrieve all results.
 		var runResult = _driver.RunGenerators (compilation).GetRunResult ();

@@ -212,18 +212,6 @@ namespace Foundation {
 			strokeWidth, strikethroughStyle))
 		{
 		}
-
-#if !XAMCORE_3_0
-		// This is a [Category] -> C# extension method (see uikit.cs) but it targets on static selector
-		// the resulting syntax does not look good in user code so we provide a better looking API
-		// https://bugzilla.xamarin.com/show_bug.cgi?id=15268
-		// https://trello.com/c/iQpXOxCd/227-category-and-static-methods-selectors
-		// note: we cannot reuse the same method name - as it would break compilation of existing apps
-		public static NSAttributedString CreateFrom (NSTextAttachment attachment)
-		{
-			return (null as NSAttributedString)!.FromTextAttachment (attachment);
-		}
-#endif
 #endif
 	}
 }

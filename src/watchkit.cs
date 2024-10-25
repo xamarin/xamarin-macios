@@ -182,12 +182,6 @@ namespace WatchKit {
 		[Export ("reloadRootPageControllersWithNames:contexts:orientation:pageIndex:")]
 		void ReloadRootPageControllers (string [] names, [NullAllowed] NSObject [] contexts, WKPageOrientation orientation, nint pageIndex);
 
-#if !XAMCORE_3_0 && !NET
-		// now exposed with the corresponding WKErrorCode enum
-		[Field ("WatchKitErrorDomain")]
-		NSString ErrorDomain { get; }
-#endif
-
 		[Export ("dismissMediaPlayerController")]
 		void DismissMediaPlayerController ();
 
