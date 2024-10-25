@@ -12,5 +12,5 @@ enum BindingType {
 	/// <summary>
 	/// Binding type for a enum with backing fields.
 	/// </summary>
-	SmartEnum
+	SmartEnum,
 }

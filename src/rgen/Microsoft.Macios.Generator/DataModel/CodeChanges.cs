@@ -7,7 +7,7 @@ using Microsoft.Macios.Generator.Extensions;
 namespace Microsoft.Macios.Generator.DataModel;
 
 /// <summary>
-/// Structure that represents a set of changes that were made by the user that need to be appliend to the
+/// Structure that represents a set of changes that were made by the user that need to be applied to the
 /// generated code.
 /// </summary>
 readonly struct CodeChanges {
