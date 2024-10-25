@@ -16,7 +16,8 @@
 
 using System;
 using System.Collections.Generic;
-
+using System.Linq;
+using System.Text;
 using Mono.Cecil;
 
 using Clang.Ast;
@@ -54,7 +55,8 @@ namespace Extrospection {
 		void CheckAttributes (string memberName, ICustomAttributeProvider p)
 		{
 			foreach (var ca in p.CustomAttributes) {
-				if (ca.Constructor.DeclaringType.Name != "FieldAttribute")
+				if (ca.Constructor.DeclaringType.Name != "FieldAttribute" 
+				    && ca.Constructor.DeclaringType.Name != "FieldAttribute`1")
 					continue;
 
 				var name = ca.ConstructorArguments [0].Value as string;
