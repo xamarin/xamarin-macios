@@ -4,6 +4,8 @@
         <TargetFramework>net$(BundledNETCoreAppTargetFrameworkVersion)</TargetFramework>
         <Nullable>enable</Nullable>
         <RootNamespace>Microsoft.Macios.Generator.Sample</RootNamespace>
+        <NoWarn>APL0003</NoWarn>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     </PropertyGroup>
 
     <ItemGroup>
@@ -11,8 +13,14 @@
     </ItemGroup>
 
     <ItemGroup>
+        <Compile Include="..\..\..\src\ObjCBindings\BindingTypeAttribute.cs" >
+            <Link>external\BindingTypeAttribute.cs</Link>
+        </Compile>
         <Compile Include="..\..\..\src\bgen\Attributes.cs" >
             <Link>external\Attributes.cs</Link>
+        </Compile>
+        <Compile Include="..\..\..\src\bgen\PlatformName.cs" >
+            <Link>external\PlatformName.cs</Link>
         </Compile>
     </ItemGroup>
 

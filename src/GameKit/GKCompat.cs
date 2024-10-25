@@ -12,31 +12,6 @@ using NativeHandle = System.IntPtr;
 #endif
 
 namespace GameKit {
-
-#if !XAMCORE_3_0
-	public partial class GKMatchRequest {
-
-#if !NET
-		[Obsolete ("Use 'RecipientResponseHandler' property.")]
-#else
-		[Obsolete ("Use 'RecipientResponseHandler' property.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-		public virtual void SetRecipientResponseHandler (Action<GKPlayer, GKInviteRecipientResponse> handler)
-		{
-			RecipientResponseHandler = handler;
-		}
-	}
-
-	public partial class GKMatchmaker {
-
-		[Obsolete ("Use 'InviteHandler' property.")]
-		public virtual void SetInviteHandler (GKInviteHandler handler)
-		{
-			InviteHandler = handler;
-		}
-	}
-#endif // !XAMCORE_3_0
-
 #if WATCH && !NET
 	[Unavailable (PlatformName.WatchOS)]
 	[Obsolete ("This API is not available on this platform.")]

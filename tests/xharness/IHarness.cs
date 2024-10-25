@@ -22,7 +22,6 @@ namespace Xharness {
 		IResultParser ResultParser { get; }
 		AppBundleLocator AppBundleLocator { get; }
 		ITunnelBore TunnelBore { get; }
-		string XIBuildPath { get; }
 		List<iOSTestProject> IOSTestProjects { get; }
 		List<MacTestProject> MacTestProjects { get; }
 		bool INCLUDE_IOS { get; }

@@ -1216,15 +1216,6 @@ namespace WebKit {
 		[Export ("preventDefault")]
 		void PreventDefault ();
 
-#if !XAMCORE_3_0
-		[Obsolete ("Use the constructor instead.")]
-		[Export ("initEvent:canBubbleArg:cancelableArg:")]
-		void InitEvent (string eventTypeArg, bool canBubbleArg, bool cancelableArg);
-#endif
-
-#if !XAMCORE_3_0
-		[Sealed] // Just to avoid the duplicate selector error
-#endif
 		[Export ("initEvent:canBubbleArg:cancelableArg:")]
 		NativeHandle Constructor (string eventTypeArg, bool canBubbleArg, bool cancelableArg);
 	}
@@ -1237,14 +1228,6 @@ namespace WebKit {
 	[BaseType (typeof (DomEvent), Name = "DOMOverflowEvent")]
 	[DisableDefaultCtor]
 	partial interface DomOverflowEvent {
-#if !XAMCORE_3_0
-		[Obsolete ("Use the constructor instead.")]
-		[Export ("initOverflowEvent:horizontalOverflow:verticalOverflow:")]
-		void InitEvent (ushort orient, bool hasHorizontalOverflow, bool hasVerticalOverflow);
-#endif
-#if !XAMCORE_3_0
-		[Sealed] // Just to avoid the duplicate selector error
-#endif
 		[Export ("initOverflowEvent:horizontalOverflow:verticalOverflow:")]
 		NativeHandle Constructor (ushort orient, bool hasHorizontalOverflow, bool hasVerticalOverflow);
 
@@ -1278,14 +1261,6 @@ namespace WebKit {
 	[BaseType (typeof (DomEvent), Name = "DOMUIEvent")]
 	[DisableDefaultCtor]
 	partial interface DomUIEvent {
-#if !XAMCORE_3_0
-		[Obsolete ("Use the constructor instead.")]
-		[Export ("initUIEvent:canBubble:cancelable:view:detail:")]
-		void InitEvent (string eventType, bool canBubble, bool cancelable, DomAbstractView view, int /* int, not NSInteger */ detail);
-#endif
-#if !XAMCORE_3_0
-		[Sealed] // Just to avoid the duplicate selector error
-#endif
 		[Export ("initUIEvent:canBubble:cancelable:view:detail:")]
 		NativeHandle Constructor (string eventType, bool canBubble, bool cancelable, DomAbstractView view, int /* int, not NSInteger */ detail);
 
@@ -1319,25 +1294,9 @@ namespace WebKit {
 	[BaseType (typeof (DomUIEvent), Name = "DOMKeyboardEvent")]
 	[DisableDefaultCtor]
 	partial interface DomKeyboardEvent {
-#if !XAMCORE_3_0
-		[Obsolete ("Use the constructor instead.")]
-		[Export ("initKeyboardEvent:canBubble:cancelable:view:keyIdentifier:keyLocation:ctrlKey:altKey:shiftKey:metaKey:altGraphKey:")]
-		void InitEvent (string eventType, bool canBubble, bool cancelable, DomAbstractView view, string keyIdentifier, DomKeyLocation keyLocation, bool ctrlKey, bool altKey, bool shiftKey, bool metaKey, bool altGraphKey);
-
-		[Obsolete ("Use the constructor instead.")]
-		[Export ("initKeyboardEvent:canBubble:cancelable:view:keyIdentifier:keyLocation:ctrlKey:altKey:shiftKey:metaKey:")]
-		void InitEvent (string eventType, bool canBubble, bool cancelable, DomAbstractView view, string keyIdentifier, DomKeyLocation keyLocation, bool ctrlKey, bool altKey, bool shiftKey, bool metaKey);
-#endif
-
-#if !XAMCORE_3_0
-		[Sealed] // Just to avoid the duplicate selector error
-#endif
 		[Export ("initKeyboardEvent:canBubble:cancelable:view:keyIdentifier:keyLocation:ctrlKey:altKey:shiftKey:metaKey:altGraphKey:")]
 		NativeHandle Constructor (string eventType, bool canBubble, bool cancelable, DomAbstractView view, string keyIdentifier, DomKeyLocation keyLocation, bool ctrlKey, bool altKey, bool shiftKey, bool metaKey, bool altGraphKey);
 
-#if !XAMCORE_3_0
-		[Sealed] // Just to avoid the duplicate selector error
-#endif
 		[Export ("initKeyboardEvent:canBubble:cancelable:view:keyIdentifier:keyLocation:ctrlKey:altKey:shiftKey:metaKey:")]
 		NativeHandle Constructor (string eventType, bool canBubble, bool cancelable, DomAbstractView view, string keyIdentifier, DomKeyLocation keyLocation, bool ctrlKey, bool altKey, bool shiftKey, bool metaKey);
 
@@ -1377,14 +1336,6 @@ namespace WebKit {
 	[BaseType (typeof (DomUIEvent), Name = "DOMMouseEvent")]
 	[DisableDefaultCtor]
 	partial interface DomMouseEvent {
-#if !XAMCORE_3_0
-		[Obsolete ("Use the constructor instead.")]
-		[Export ("initMouseEvent:canBubble:cancelable:view:detail:screenX:screenY:clientX:clientY:ctrlKey:altKey:shiftKey:metaKey:button:relatedTarget:")]
-		void InitEvent (string eventType, bool canBubble, bool cancelable, DomAbstractView view, int /* int, not NSInteger */ detail, int /* int, not NSInteger */ screenX, int /* int, not NSInteger */ screenY, int /* int, not NSInteger */ clientX, int /* int, not NSInteger */ clientY, bool ctrlKey, bool altKey, bool shiftKey, bool metaKey, ushort button, IDomEventTarget relatedTarget);
-#endif
-#if !XAMCORE_3_0
-		[Sealed] // Just to avoid the duplicate selector error
-#endif
 		[Export ("initMouseEvent:canBubble:cancelable:view:detail:screenX:screenY:clientX:clientY:ctrlKey:altKey:shiftKey:metaKey:button:relatedTarget:")]
 		NativeHandle Constructor (string eventType, bool canBubble, bool cancelable, DomAbstractView view, int /* int, not NSInteger */ detail, int /* int, not NSInteger */ screenX, int /* int, not NSInteger */ screenY, int /* int, not NSInteger */ clientX, int /* int, not NSInteger */ clientY, bool ctrlKey, bool altKey, bool shiftKey, bool metaKey, ushort button, IDomEventTarget relatedTarget);
 
@@ -1442,14 +1393,6 @@ namespace WebKit {
 	[BaseType (typeof (DomMouseEvent), Name = "DOMWheelEvent")]
 	[DisableDefaultCtor]
 	partial interface DomWheelEvent {
-#if !XAMCORE_3_0
-		[Obsolete ("Use the constructor instead.")]
-		[Export ("initWheelEvent:wheelDeltaY:view:screenX:screenY:clientX:clientY:ctrlKey:altKey:shiftKey:metaKey:")]
-		void InitEvent (int /* int, not NSInteger */ wheelDeltaX, int /* int, not NSInteger */ wheelDeltaY, DomAbstractView view, int /* int, not NSInteger */ screenX, int /* int, not NSInteger */ screnY, int /* int, not NSInteger */ clientX, int /* int, not NSInteger */ clientY, bool ctrlKey, bool altKey, bool shiftKey, bool metaKey);
-#endif
-#if !XAMCORE_3_0
-		[Sealed] // Just to avoid the duplicate selector error
-#endif
 		[Export ("initWheelEvent:wheelDeltaY:view:screenX:screenY:clientX:clientY:ctrlKey:altKey:shiftKey:metaKey:")]
 		NativeHandle Constructor (int /* int, not NSInteger */ wheelDeltaX, int /* int, not NSInteger */ wheelDeltaY, DomAbstractView view, int /* int, not NSInteger */ screenX, int /* int, not NSInteger */ screnY, int /* int, not NSInteger */ clientX, int /* int, not NSInteger */ clientY, bool ctrlKey, bool altKey, bool shiftKey, bool metaKey);
 
