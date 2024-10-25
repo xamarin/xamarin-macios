@@ -102,6 +102,7 @@ namespace Xamarin.Tests {
 			new TemplateInfo (ApplePlatform.iOS, "ioslib", TemplateLanguage.CSharp),
 			new TemplateInfo (ApplePlatform.iOS, "ioslib", TemplateLanguage.VisualBasic),
 			new TemplateInfo (ApplePlatform.iOS, "iosbinding", TemplateLanguage.CSharp),
+			new TemplateInfo (ApplePlatform.iOS, "ios-notification-content-extension", TemplateLanguage.CSharp),
 			new TemplateInfo (ApplePlatform.iOS, "ios-notification-service-extension", TemplateLanguage.CSharp),
 
 			new TemplateInfo (ApplePlatform.TVOS, "tvos", TemplateLanguage.CSharp),
