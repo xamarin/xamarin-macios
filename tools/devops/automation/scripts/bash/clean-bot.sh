@@ -30,8 +30,10 @@ set +e
 	rm -rv "$SYSTEM_DEFAULTWORKINGDIRECTORY/packages" | sed 's/^/    /' || true
 
 	echo "Contents of SYSTEM_DEFAULTWORKINGDIRECTORY ($SYSTEM_DEFAULTWORKINGDIRECTORY):"
+	# shellcheck disable=SC2012
 	ls -la "$SYSTEM_DEFAULTWORKINGDIRECTORY" | sed 's/^/    /' || true
 	echo "Contents of BUILD_SOURCESDIRECTORY ($BUILD_SOURCESDIRECTORY):"
+	# shellcheck disable=SC2012
 	ls -la "$BUILD_SOURCESDIRECTORY" | sed 's/^/    /' || true
 )
 
