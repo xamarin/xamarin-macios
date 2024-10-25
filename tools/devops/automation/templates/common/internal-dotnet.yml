@@ -23,7 +23,7 @@ parameters:
 
 steps:
 
-- ${{ if endsWith(parameters.agentPoolComputed3, '-Trusted') }}:
+- ${{ if endsWith(variables['AGENTPOOLCOMPUTED'], '-Trusted') }}:
   - template: /eng/common/templates-official/steps/enable-internal-sources.yml
     parameters:
       repositoryName: /xamarin-macios
