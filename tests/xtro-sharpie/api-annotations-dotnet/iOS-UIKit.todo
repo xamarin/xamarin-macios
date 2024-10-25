@@ -1,7 +1,0 @@
-!missing-enum-value! UIPressType native value UIPressTypeTVRemoteFourColors = 33 not bound
-!missing-enum-value! UIPressType native value UIPressTypeTVRemoteOneTwoThree = 32 not bound
-!missing-field! UIMenuOpen not bound
-!missing-selector! NSObject::accessibilityTextInputResponder not bound
-!missing-selector! NSObject::accessibilityTextInputResponderBlock not bound
-!missing-selector! NSObject::setAccessibilityTextInputResponder: not bound
-!missing-selector! NSObject::setAccessibilityTextInputResponderBlock: not bound

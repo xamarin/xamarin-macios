@@ -2146,6 +2146,10 @@ namespace UIKit {
 		[NoiOS]
 		[NoMacCatalyst]
 		PageDown = 31,
+		[TV (18, 1), NoiOS, NoMacCatalyst]
+		TVRemoteOneTwoThree = 32,
+		[TV (18, 1), NoiOS, NoMacCatalyst]
+		TVRemoteFourColors = 33,
 	}
 
 	[NoWatch]
@@ -2833,7 +2837,9 @@ namespace UIKit {
 		[TV (17, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Field ("UIMenuAutoFill")]
 		AutoFill,
-
+		[TV (18, 1), iOS (18, 1), MacCatalyst (18, 1)]
+		[Field ("UIMenuOpen")]
+		Open,
 	}
 
 	[iOS (13, 0), TV (13, 0), Watch (6, 0)]
