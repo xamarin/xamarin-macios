@@ -55,8 +55,8 @@ namespace Extrospection {
 		void CheckAttributes (string memberName, ICustomAttributeProvider p)
 		{
 			foreach (var ca in p.CustomAttributes) {
-				if (ca.Constructor.DeclaringType.Name != "FieldAttribute" 
-				    && ca.Constructor.DeclaringType.Name != "FieldAttribute`1")
+				if (ca.Constructor.DeclaringType.Name != "FieldAttribute"
+					&& ca.Constructor.DeclaringType.Name != "FieldAttribute`1")
 					continue;
 
 				var name = ca.ConstructorArguments [0].Value as string;
