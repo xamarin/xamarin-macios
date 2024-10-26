@@ -98,13 +98,6 @@ namespace Photos {
 		SmartFolderEvents = 200,
 		SmartFolderFaces = 201,
 
-#if !XAMCORE_3_0
-		// this was added in the wrong enum type (ref bug #40019)
-		[Obsolete ("Incorrect value (exists in 'PHAssetCollectionSubtype').")]
-		SmartAlbumSelfPortraits = 210,
-		[Obsolete ("Incorrect value (exists in 'PHAssetCollectionSubtype').")]
-		SmartAlbumScreenshots = 211,
-#endif
 		Any = Int64.MaxValue,
 	}
 

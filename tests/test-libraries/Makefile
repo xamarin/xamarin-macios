@@ -446,10 +446,15 @@ SWIFTTEST_XCTARGETS += \
 
 all-local:: .libs/SwiftTest.xcframework
 
-.libs/XTest.xcframework.zip: .libs/XTest.xcframework
-	$(Q_ZIP) cd .libs && $(ZIP) -r "$(notdir $@)" "$(notdir $<)"
+define ZippedXcframework
+.libs/$(1).xcframework.zip: .libs/$(1).xcframework
+	$(Q_ZIP) cd .libs && $(ZIP) -r "$$(notdir $$@)" "$$(notdir $$<)"
+all-local:: .libs/$(1).xcframework.zip
+endef
 
-all-local:: .libs/XTest.xcframework.zip
+$(eval $(call ZippedXcframework,XTest))
+$(eval $(call ZippedXcframework,XStaticArTest))
+$(eval $(call ZippedXcframework,XStaticObjectTest))
 
 # Xamarin.Mac
 

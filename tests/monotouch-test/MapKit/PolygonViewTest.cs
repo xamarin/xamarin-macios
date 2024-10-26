@@ -11,39 +11,6 @@ using MapKit;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.MapKit {
-
-#if !XAMCORE_3_0
-	class PolygonViewPoker : MKPolygonView {
-
-		static FieldInfo bkPolygon;
-
-		static PolygonViewPoker ()
-		{
-			var t = typeof (MKPolygonView);
-			bkPolygon = t.GetField ("__mt_Polygon_var", BindingFlags.Instance | BindingFlags.NonPublic);
-		}
-
-		public static bool NewRefcountEnabled ()
-		{
-			return NSObject.IsNewRefcountEnabled ();
-		}
-
-		public PolygonViewPoker ()
-		{
-		}
-
-		public PolygonViewPoker (MKPolygon polygon) : base (polygon)
-		{
-		}
-
-		public MKPolygon PolygonBackingField {
-			get {
-				return (MKPolygon) bkPolygon.GetValue (this);
-			}
-		}
-	}
-#endif // !XAMCORE_3_0
-
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class PolygonViewTest {
@@ -56,33 +23,6 @@ namespace MonoTouchFixtures.MapKit {
 				Assert.That (pv.Frame, Is.EqualTo (frame), "Frame");
 			}
 		}
-
-#if !XAMCORE_3_0
-		[Test]
-		public void Defaults_BackingFields ()
-		{
-			if (PolygonViewPoker.NewRefcountEnabled ())
-				Assert.Inconclusive ("backing fields are removed when newrefcount is enabled");
-
-			using (var pv = new PolygonViewPoker ()) {
-				Assert.Null (pv.PolygonBackingField, "1a");
-				Assert.Null (pv.Polygon, "2a");
-			}
-		}
-
-		[Test]
-		public void Polygon_BackingFields ()
-		{
-			if (PolygonViewPoker.NewRefcountEnabled ())
-				Assert.Inconclusive ("backing fields are removed when newrefcount is enabled");
-
-			using (var p = new MKPolygon ())
-			using (var pv = new PolygonViewPoker (p)) {
-				Assert.AreSame (p, pv.PolygonBackingField, "1a");
-				Assert.AreSame (p, pv.Polygon, "2a");
-			}
-		}
-#endif // !XAMCORE_3_0
 	}
 }
 

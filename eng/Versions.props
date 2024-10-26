@@ -2,17 +2,18 @@
   <!--Package versions-->
   <PropertyGroup>
     <!-- Versions updated by maestro -->
-    <MicrosoftNETSdkPackageVersion>9.0.100-rc.2.24475.4</MicrosoftNETSdkPackageVersion>
-    <MicrosoftNETILLinkTasksPackageVersion>9.0.0-rtm.24475.3</MicrosoftNETILLinkTasksPackageVersion>
+    <MicrosoftNETSdkPackageVersion>9.0.100-rtm.24523.41</MicrosoftNETSdkPackageVersion>
+    <MicrosoftNETILLinkTasksPackageVersion>9.0.0</MicrosoftNETILLinkTasksPackageVersion>
     <MicrosoftNETILLinkPackageVersion>9.0.0-alpha.1.23556.4</MicrosoftNETILLinkPackageVersion>
     <MicrosoftDotNetBuildTasksFeedPackageVersion>9.0.0-beta.24516.2</MicrosoftDotNetBuildTasksFeedPackageVersion>
     <MicrosoftDotNetSharedFrameworkSdkVersion>8.0.0-beta.24413.2</MicrosoftDotNetSharedFrameworkSdkVersion>
-    <MicrosoftNETCoreAppRefPackageVersion>9.0.0-rtm.24475.3</MicrosoftNETCoreAppRefPackageVersion>
+    <MicrosoftNETCoreAppRefPackageVersion>9.0.0</MicrosoftNETCoreAppRefPackageVersion>
     <MicrosoftNETWorkloadEmscriptenCurrentManifest80100TransportVersion>8.0.0-rtm.23511.3</MicrosoftNETWorkloadEmscriptenCurrentManifest80100TransportVersion>
     <MicrosoftNETRuntimeMonoTargetsSdkPackageVersion>9.0.0-rc.2.24462.10</MicrosoftNETRuntimeMonoTargetsSdkPackageVersion>
     <MicrosoftTemplateEngineTasksVersion>7.0.100-alpha.1.21601.1</MicrosoftTemplateEngineTasksVersion>
-    <MicrosoftDotNetCecilPackageVersion>0.11.5-alpha.24467.1</MicrosoftDotNetCecilPackageVersion>
-    <MicrosoftDotNetXHarnessiOSSharedPackageVersion>10.0.0-prerelease.24511.1</MicrosoftDotNetXHarnessiOSSharedPackageVersion>
+    <MicrosoftDotNetCecilPackageVersion>0.11.5-alpha.24480.1</MicrosoftDotNetCecilPackageVersion>
+    <MicrosoftDotNetXHarnessiOSSharedPackageVersion>10.0.0-prerelease.24514.1</MicrosoftDotNetXHarnessiOSSharedPackageVersion>
+    <MicrosoftDotNetArcadeSdkPackageVersion>9.0.0-beta.24516.2</MicrosoftDotNetArcadeSdkPackageVersion>
     <!-- Manually updated versions -->
     <Emscriptennet7WorkloadVersion>$(MicrosoftNETWorkloadEmscriptenCurrentManifest80100Version)</Emscriptennet7WorkloadVersion>
     <EmscriptenWorkloadVersion>$(MicrosoftNETWorkloadEmscriptenCurrentManifest80100Version)</EmscriptenWorkloadVersion>

@@ -434,14 +434,6 @@ namespace Introspection {
 				break;
 			}
 
-			switch (type.Name) {
-#if !XAMCORE_3_0
-			case "NSRemoteSavePanel":
-			case "NSRemoteOpenPanel":
-				return true; // These two classes don't show up in any documentation.
-#endif
-			}
-
 			switch (type.Namespace) {
 			case "MonoMac.SceneKit":
 			case "SceneKit":

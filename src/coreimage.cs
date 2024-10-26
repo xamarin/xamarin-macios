@@ -5597,12 +5597,6 @@ namespace CoreImage {
 		[CoreImageFilterProperty ("inputCenter")]
 		CIVector Center { get; set; }
 #endif
-
-#if !XAMCORE_3_0
-		// binding mistake - it should never been added
-		[CoreImageFilterProperty ("inputCropAmount")]
-		float CropAmount { get; set; }
-#endif
 	}
 
 	/// <summary>The CIFaceBalance CoreImage filter</summary>

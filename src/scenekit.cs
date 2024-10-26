@@ -1369,11 +1369,7 @@ namespace SceneKit {
 		[Static, Export ("light")]
 		SCNLight Create ();
 
-#if XAMCORE_3_0
 		[NoiOS]
-#elif !MONOMAC
-		[Obsolete ("Do not use; this method only exist in macOS, not in iOS.")]
-#endif
 		[NoTV]
 		[Deprecated (PlatformName.MacOSX, 10, 10)]
 		[NoMacCatalyst]
@@ -1381,11 +1377,7 @@ namespace SceneKit {
 		[return: NullAllowed]
 		NSObject GetAttribute (NSString lightAttribute);
 
-#if XAMCORE_3_0
 		[NoiOS]
-#elif !MONOMAC
-		[Obsolete ("Do not use; this method only exist in macOS, not in iOS.")]
-#endif
 		[NoTV]
 		[Deprecated (PlatformName.MacOSX, 10, 10)]
 		[NoMacCatalyst]

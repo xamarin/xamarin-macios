@@ -44,11 +44,6 @@ TEST_SUITES+=(build-linkall)
 TEST_SUITES+=(build-introspection)
 TEST_SUITES+=(build-monotouch-test)
 
-# Don't build in parallel in CI, it fails randomly due to trying to write to the same files.
-if test -z "$BUILD_REVISION"; then
-	MAKE_FLAGS=-j
-fi
-
 make -f packaged-macos-tests.mk "${TEST_SUITES[@]}" $MAKE_FLAGS
 
 for app in linker/*/*/dotnet/*/bin/*/*/*/*.app */dotnet/*/bin/*/*/*/*.app; do
