@@ -18,8 +18,8 @@ class AttributeComparer : IComparer<AttributeCodeChange> {
 			return x.Arguments.Length.CompareTo (y.Arguments.Length);
 		// argument order is important, we do know that we already have the same length, loop and return if diff
 		for (int index = 0; index < x.Arguments.Length; index++) {
-			var xArgument = x.Arguments[index];
-			var yArgument = y.Arguments[index];
+			var xArgument = x.Arguments [index];
+			var yArgument = y.Arguments [index];
 			var compare = String.Compare (xArgument, yArgument, StringComparison.Ordinal);
 			if (compare != 0)
 				return compare;
@@ -35,8 +35,8 @@ class AttributesComparer : IEqualityComparer<ImmutableArray<AttributeCodeChange>
 		if (x.Length != y.Length)
 			return false;
 		var comparer = new AttributeComparer ();
-		var xOrdered = x.Sort(comparer).ToArray ();
-		var yOrdered = y.Sort(comparer).ToArray ();
+		var xOrdered = x.Sort (comparer).ToArray ();
+		var yOrdered = y.Sort (comparer).ToArray ();
 		for (var i = 0; i < x.Length; i++) {
 			if (xOrdered [i] != yOrdered [i])
 				return false;

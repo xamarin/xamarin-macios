@@ -8,7 +8,7 @@ public class AttributeComparerTests {
 	AttributeComparer comparer;
 	public AttributeComparerTests ()
 	{
-		comparer = new();
+		comparer = new ();
 	}
 
 	[Fact]
@@ -34,6 +34,6 @@ public class AttributeComparerTests {
 	{
 		var x = new AttributeCodeChange ("First", ["1", "2", "2"]);
 		var y = new AttributeCodeChange ("First", ["2", "1", "3"]);
-		Assert.Equal (String.Compare (x.Arguments[0], y.Arguments[0], StringComparison.Ordinal), comparer.Compare (x, y));
+		Assert.Equal (String.Compare (x.Arguments [0], y.Arguments [0], StringComparison.Ordinal), comparer.Compare (x, y));
 	}
 }
