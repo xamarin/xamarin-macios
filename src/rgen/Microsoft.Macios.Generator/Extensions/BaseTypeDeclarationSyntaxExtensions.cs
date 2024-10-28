@@ -22,26 +22,27 @@ public static class BaseTypeDeclarationSyntaxExtensions {
 		var namespaces = self.Ancestors ()
 			.OfType<NamespaceDeclarationSyntax> ()
 			.Reverse ()
+			.Select (ns => ns.Name.ToString ().Trim ())
 			.ToArray ();
 
 		// get all the classes
 		var parents = self.Ancestors ()
 			.OfType<BaseTypeDeclarationSyntax> ()
 			.Reverse ()
+			.Select (c => c.Identifier.ToFullString ().Trim ())
 			.ToArray ();
 
 		var sb = new StringBuilder ();
 		if (fileScoped is not null)
-			sb.Append ($"{fileScoped.Name}.");
-		foreach (var ns in namespaces) {
-			sb.Append ($"{ns.Name}.");
+			sb.Append ($"{fileScoped.Name}");
+		// not need to add a '.' before the namespaces, you cannot have both field scope and namespace
+		sb.AppendJoin (".", namespaces);
+		if (parents.Length > 0) {
+			sb.Append ('.');
+			sb.AppendJoin (".", parents);
 		}
 
-		foreach (var c in parents) {
-			sb.Append ($"{c.Identifier.ToFullString ().Trim ()}.");
-		}
-
-		sb.Append (self.Identifier.ToFullString ());
+		sb.Append ($".{self.Identifier.ToFullString ()}");
 		return sb.ToString ().Trim ();
 	}
 }
