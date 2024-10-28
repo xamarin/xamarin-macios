@@ -39,7 +39,7 @@ record FieldData {
 		foreach (var (name, value) in attributeData.NamedArguments) {
 			switch (name) {
 			case "LibraryName":
-				data.LibraryName = (string) value.Value!;
+				data.LibraryName = (string?) value.Value!;
 				break;
 			default:
 				data = null;
