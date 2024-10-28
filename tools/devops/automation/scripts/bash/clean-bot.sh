@@ -14,11 +14,27 @@ set +e
 
 # Clean workspace
 (
-	REPO_PATH="SYSTEM_DEFAULTWORKINGDIRECTORY/$(basename "$BUILD_REPOSITORY_NAME")"
-	if test -d "$REPO_PATH"; then
-		cd "$REPO_PATH"
-		git clean -xfd
-	fi
+	for repo in "$SYSTEM_DEFAULTWORKINGDIRECTORY"/.git "$SYSTEM_DEFAULTWORKINGDIRECTORY"/*/.git; do
+		if test -d "$repo"; then
+			cd "$repo"
+			cd ..
+			echo "Running 'git clean' (for all submodules too) in $(pwd)"
+			git clean -xffd | sed 's/^/    /' || true
+			git submodule foreach --recursive git clean -xffd | sed 's/^/    /' || true
+		else
+			echo "$repo is not a git repository"
+		fi
+	done
+
+	echo "Cleaning packages directory:"
+	rm -rv "$SYSTEM_DEFAULTWORKINGDIRECTORY/packages" | sed 's/^/    /' || true
+
+	echo "Contents of SYSTEM_DEFAULTWORKINGDIRECTORY ($SYSTEM_DEFAULTWORKINGDIRECTORY):"
+	# shellcheck disable=SC2012
+	ls -la "$SYSTEM_DEFAULTWORKINGDIRECTORY" | sed 's/^/    /' || true
+	echo "Contents of BUILD_SOURCESDIRECTORY ($BUILD_SOURCESDIRECTORY):"
+	# shellcheck disable=SC2012
+	ls -la "$BUILD_SOURCESDIRECTORY" | sed 's/^/    /' || true
 )
 
 # Delete all the simulator devices. These can take up a lot of space over time (I've seen 100+GB on the bots)
