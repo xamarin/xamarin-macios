@@ -903,8 +903,9 @@ function Find-AzureDevOpsWorkItemWithTitle {
     $headers = Get-AuthHeader -AccessToken $Env:ACCESSTOKEN
 
     $url = "$Env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI$Env:SYSTEM_TEAMPROJECT/_apis/wit/wiql?api-version=7.1"
+    $escapedTitle = $Title.Replace("'", "''")
     $payload = @{
-        "query" = "Select [System.Id] FROM WorkItems WHERE [System.State] = 'Active' AND [System.Title] = '$Title' AND [System.WorkItemType] = '$WorkItemType' AND [System.AreaPath] UNDER '$AreaPath'"
+        "query" = "Select [System.Id] FROM WorkItems WHERE [System.State] = 'Active' AND [System.Title] = '$escapedTitle' AND [System.WorkItemType] = '$WorkItemType' AND [System.AreaPath] UNDER '$AreaPath'"
     }
     $body = ConvertTo-Json $payload -Depth 100
 
