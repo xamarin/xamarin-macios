@@ -43,4 +43,12 @@ public class AttributesComparerTests {
 		ImmutableArray<AttributeCodeChange> y = [new ("name", []), new ("name1")];
 		Assert.True (comparer.Equals (x, y));
 	}
+
+	[Fact]
+	public void EqualsSameOrderSameArguments ()
+	{
+		ImmutableArray<AttributeCodeChange> x = [new("SupportedOSPlatform", ["ios15.0"]), new("SupportedOSPlatform", ["maccatalyst15.0"])];
+		ImmutableArray<AttributeCodeChange> y = [new("SupportedOSPlatform", ["maccatalyst15.0"]), new("SupportedOSPlatform", ["ios15.0"])];
+		Assert.True (comparer.Equals (x, y));
+	}
 }
