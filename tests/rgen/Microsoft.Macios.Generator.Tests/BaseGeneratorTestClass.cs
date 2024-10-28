@@ -42,7 +42,7 @@ public class BaseGeneratorTestClass {
 	protected GeneratorDriverRunResult RunGenerators (Compilation compilation)
 		=> Driver.RunGenerators (compilation).GetRunResult ();
 
-	protected (Compilation Compilation, ImmutableArray<SyntaxTree> SyntaxTrees) CreateCompilation (string name, ApplePlatform platform, params string [] sources)
+	protected CompilationResult CreateCompilation (string name, ApplePlatform platform, params string [] sources)
 	{
 		// get the dotnet bcl and fully load it for the test.
 		var references = Directory.GetFiles (Configuration.DotNetBclDir, "*.dll")
@@ -62,7 +62,7 @@ public class BaseGeneratorTestClass {
 		var options = new CSharpCompilationOptions (OutputKind.NetModule)
 			.WithAllowUnsafe (true);
 
-		return (CSharpCompilation.Create (name, trees, references, options), trees);
+		return new (CSharpCompilation.Create (name, trees, references, options), trees);
 	}
 
 	protected void CompareGeneratedCode (ApplePlatform platform, string className, string inputFileName, string inputText, string outputFileName, string expectedOutputText, string? expectedLibraryText)
