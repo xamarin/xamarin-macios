@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
 using Microsoft.Macios.Generator.Context;
@@ -21,19 +22,19 @@ namespace Microsoft.Macios.Generator;
 /// </summary>
 [Generator]
 public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
-	internal static readonly DiagnosticDescriptor RBI0000 = new (
+	internal static readonly DiagnosticDescriptor RBI0000 = new(
 		"RBI0000",
-		new LocalizableResourceString (nameof (Resources.RBI0000Title), Resources.ResourceManager, typeof (Resources)),
-		new LocalizableResourceString (nameof (Resources.RBI0000MessageFormat), Resources.ResourceManager,
-			typeof (Resources)),
+		new LocalizableResourceString (nameof(Resources.RBI0000Title), Resources.ResourceManager, typeof(Resources)),
+		new LocalizableResourceString (nameof(Resources.RBI0000MessageFormat), Resources.ResourceManager,
+			typeof(Resources)),
 		"Usage",
 		DiagnosticSeverity.Error,
 		isEnabledByDefault: true,
-		description: new LocalizableResourceString (nameof (Resources.RBI0000Description), Resources.ResourceManager,
-			typeof (Resources))
+		description: new LocalizableResourceString (nameof(Resources.RBI0000Description), Resources.ResourceManager,
+			typeof(Resources))
 	);
 
-	static readonly CodeChangesComparer comparer = new ();
+	static readonly CodeChangesComparer comparer = new();
 
 	/// <inheritdoc cref="IIncrementalGenerator"/>
 	public void Initialize (IncrementalGeneratorInitializationContext context)
@@ -65,9 +66,14 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 	/// </summary>
 	/// <param name="node">Node modified by the user.</param>
 	/// <returns>True if the binding generator should consider the node for code generation.</returns>
-	static bool IsValidNode (SyntaxNode node) => node switch {
-		EnumDeclarationSyntax or ClassDeclarationSyntax or InterfaceDeclarationSyntax => true,
-		_ => false,
+	internal static bool IsValidNode (SyntaxNode node) => node switch {
+		// we are only interested in enums, classes and interfaces, from classes and interfaces, we want
+		// to work only with those that have been marked as partial, otherwise we can't generate the code.
+		EnumDeclarationSyntax => true,
+		InterfaceDeclarationSyntax => true,
+		ClassDeclarationSyntax classDeclarationSyntax => classDeclarationSyntax.Modifiers.Any (m =>
+			m.IsKind (SyntaxKind.PartialKeyword)),
+		_ => false
 	};
 
 	static (CodeChanges Changes, bool BindingAttributeFound) GetChangesForSourceGen (GeneratorSyntaxContext context)
@@ -102,12 +108,13 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 			var semanticModel = compilation.GetSemanticModel (change.SymbolDeclaration.SyntaxTree);
 			// This is a bug in the roslyn analyzer for roslyn generator https://github.com/dotnet/roslyn-analyzers/issues/7436
 #pragma warning disable RS1039
-			if (semanticModel.GetDeclaredSymbol (change.SymbolDeclaration) is not INamedTypeSymbol namedTypeSymbol)
+			if (ModelExtensions.GetDeclaredSymbol (semanticModel, change.SymbolDeclaration) is not INamedTypeSymbol
+			    namedTypeSymbol)
 #pragma warning restore RS1039
 				continue;
 
 			// init sb and add the header
-			var sb = new TabbedStringBuilder (new ());
+			var sb = new TabbedStringBuilder (new());
 			sb.WriteHeader ();
 			if (EmitterFactory.TryCreate (change, rootContext, semanticModel, namedTypeSymbol, sb, out var emitter)) {
 				// write the using statements
@@ -148,7 +155,7 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 	static void GenerateLibraryCode (SourceProductionContext context, RootBindingContext rootContext,
 		ImmutableArray<CodeChanges> codeChangesList)
 	{
-		var sb = new TabbedStringBuilder (new ());
+		var sb = new TabbedStringBuilder (new());
 		sb.WriteHeader ();
 		// not need to collect the using statements, this file is completely generated
 		var emitter = new LibraryEmitter (rootContext, sb);

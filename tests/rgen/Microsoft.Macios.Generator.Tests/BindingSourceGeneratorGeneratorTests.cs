@@ -1,4 +1,5 @@
 using System.Linq;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Xamarin.Tests;
 using Xamarin.Utils;
 using Xunit;
@@ -27,12 +28,23 @@ using Foundation;
 using ObjCBindings;
 using System;
 
-namespace TestNamespace
+namespace TestNamespace;
+
+[Register(""AVAudioPCMBuffer"", true)]
+public unsafe partial class AVAudioPcmBuffer
 {
-	public partial class AVAudioPcmBuffer
-	{
-		// TODO: add binding code here
-	}
+	[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
+	static readonly NativeHandle class_ptr = Class.GetHandle (""AVAudioPCMBuffer"");
+
+	/// <summary>The Objective-C class handle for this class.</summary>
+	/// <value>The pointer to the Objective-C class.</value>
+	/// <remarks>
+	///     Each managed class mirrors an unmanaged Objective-C class.
+	///     This value contains the pointer to the Objective-C class.
+	///     It is similar to calling the managed <see cref=""ObjCRuntime.Class.GetHandle(string)"" /> or the native <see href=""https://developer.apple.com/documentation/objectivec/1418952-objc_getclass"">objc_getClass</see> method with the type name.
+	/// </remarks>
+	public override NativeHandle ClassHandle { get { return class_ptr; } }
+
 }
 ";
 
@@ -52,5 +64,47 @@ namespace TestNamespace
 		var generatedFile = runResult.GeneratedTrees.SingleOrDefault (t => t.FilePath.EndsWith ("AVAudioPcmBuffer.g.cs"));
 		Assert.NotNull (generatedFile);
 		Assert.Equal (expectedOutput, generatedFile.GetText ().ToString ());
+	}
+
+	const string nonPartialClass = @"
+namespace TestNamespace;
+public class NonPartialDeclaration {}
+";
+	const string partialClass = @"
+namespace TestNamespace;
+public partial class PartialDeclaration {}
+";
+	const string nonPartialInterface = @"
+namespace TestNamespace;
+public interface NonPartialInterface {}
+";
+	const string partialInterface = @"
+namespace TestNamespace;
+public partial interface PartialInterface {}
+";
+	const string enumType = @"
+namespace TestNamespace;
+public enum EnumType {
+	First,
+	Second,
+	Last,
+}";
+
+	[Theory]
+	[AllSupportedPlatforms (nonPartialClass, false)]
+	[AllSupportedPlatforms (partialClass, true)]
+	[AllSupportedPlatforms (nonPartialInterface, true)]
+	[AllSupportedPlatforms (partialInterface, true)]
+	[AllSupportedPlatforms (enumType, true)]
+	public void IsValidNodeTest (ApplePlatform platform, string inputText, bool expectedResult)
+	{
+		var (_, syntaxTrees) = CreateCompilation (nameof (IsValidNodeTest), platform, inputText);
+		Assert.Single (syntaxTrees);
+		var declaration = syntaxTrees [0].GetRoot ()
+			.DescendantNodes ()
+			.OfType<BaseTypeDeclarationSyntax> ()
+			.FirstOrDefault ();
+		Assert.NotNull (declaration);
+		Assert.Equal (expectedResult, BindingSourceGeneratorGenerator.IsValidNode (declaration));
 	}
 }

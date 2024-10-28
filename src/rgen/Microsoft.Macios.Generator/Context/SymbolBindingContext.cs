@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
@@ -15,6 +16,9 @@ class SymbolBindingContext {
 
 	public bool IsStatic => Symbol.IsStatic;
 
+	// keep track of the fields we have added to the symbol
+	Dictionary<string, int> fields = new ();
+
 	public SymbolBindingContext (RootBindingContext rootBindingContext,
 		SemanticModel semanticModel, INamedTypeSymbol symbol, BaseTypeDeclarationSyntax declarationSyntax)
 	{
@@ -22,5 +26,16 @@ class SymbolBindingContext {
 		SemanticModel = semanticModel;
 		Symbol = symbol;
 		DeclarationSyntax = declarationSyntax;
+	}
+
+	public string GetUniqueVariableName (string hintName)
+	{
+		if (fields.TryGetValue (hintName, out var count)) {
+
+		} else {
+			fields.Add (hintName, 0);
+			count = 0;
+		}
+		return $"{hintName}_{count}";
 	}
 }
