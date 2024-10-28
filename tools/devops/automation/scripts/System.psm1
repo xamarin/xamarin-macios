@@ -251,7 +251,7 @@ function Assert-HDFreeSpace {
 
     Write-Host ""
 
-    $stepUrl = "$Env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI$Env:SYSTEM_TEAMPROJECT/results?buildId=$Env:BUILD_BUILDID&view=logs&j=$Env:SYSTEM_JOBIDENTIFIER&t=$Env:SYSTEM_TASKINSTANCEID"
+    $stepUrl = "$Env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI$Env:SYSTEM_TEAMPROJECT/_build/results?buildId=$Env:BUILD_BUILDID&view=logs&j=$Env:SYSTEM_JOBID&t=$Env:SYSTEM_TASKINSTANCEID"
     $workItemTitle = "[CI] Bot '$Env:AGENT_MACHINENAME' out of disk space"
     $workItemMessage = @"
 <div>The bot <b>$Env:AGENT_MACHINENAME</b> does not have enough hard disk space left.</div>
