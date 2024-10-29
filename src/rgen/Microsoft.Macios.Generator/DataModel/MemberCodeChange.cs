@@ -60,7 +60,7 @@ readonly struct MemberCodeChange : IEquatable<MemberCodeChange> {
 
 	public static bool operator == (MemberCodeChange x, MemberCodeChange y)
 	{
-		return x.Equals ((object) y);
+		return x.Equals (y);
 	}
 
 	public static bool operator != (MemberCodeChange x, MemberCodeChange y)
