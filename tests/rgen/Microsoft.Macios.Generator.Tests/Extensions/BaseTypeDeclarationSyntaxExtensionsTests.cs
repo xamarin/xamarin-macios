@@ -24,10 +24,7 @@ public class BaseTypeDeclarationSyntaxExtensionsTests : BaseGeneratorTestClass {
 	}
 
 	[Theory]
-	[PlatformInlineData (ApplePlatform.iOS)]
-	[PlatformInlineData (ApplePlatform.TVOS)]
-	[PlatformInlineData (ApplePlatform.MacCatalyst)]
-	[PlatformInlineData (ApplePlatform.MacOSX)]
+	[AllSupportedPlatforms]
 	public void GetFullyQualifiedIdentifierFileScopedNamespace (ApplePlatform platform)
 	{
 		const string inputText = @"
@@ -40,10 +37,7 @@ public class Foo {
 	}
 
 	[Theory]
-	[PlatformInlineData (ApplePlatform.iOS)]
-	[PlatformInlineData (ApplePlatform.TVOS)]
-	[PlatformInlineData (ApplePlatform.MacCatalyst)]
-	[PlatformInlineData (ApplePlatform.MacOSX)]
+	[AllSupportedPlatforms]
 	public void GetFullyQualifiedIdentifierFileScopedNamespaceNestedClass (ApplePlatform platform)
 	{
 		const string inputText = @"
@@ -58,10 +52,7 @@ public class Foo {
 	}
 
 	[Theory]
-	[PlatformInlineData (ApplePlatform.iOS)]
-	[PlatformInlineData (ApplePlatform.TVOS)]
-	[PlatformInlineData (ApplePlatform.MacCatalyst)]
-	[PlatformInlineData (ApplePlatform.MacOSX)]
+	[AllSupportedPlatforms]
 	public void GetFullyQualifiedIdentifierNamespaceDeclaration (ApplePlatform platform)
 	{
 		const string inputText = @"
@@ -75,10 +66,7 @@ namespace Test {
 	}
 
 	[Theory]
-	[PlatformInlineData (ApplePlatform.iOS)]
-	[PlatformInlineData (ApplePlatform.TVOS)]
-	[PlatformInlineData (ApplePlatform.MacCatalyst)]
-	[PlatformInlineData (ApplePlatform.MacOSX)]
+	[AllSupportedPlatforms]
 	public void GetFullyQualifiedIdentifierMultipleNamespaceDeclaration (ApplePlatform platform)
 	{
 		const string inputText = @"
@@ -94,10 +82,7 @@ namespace Test2 {
 	}
 
 	[Theory]
-	[PlatformInlineData (ApplePlatform.iOS)]
-	[PlatformInlineData (ApplePlatform.TVOS)]
-	[PlatformInlineData (ApplePlatform.MacCatalyst)]
-	[PlatformInlineData (ApplePlatform.MacOSX)]
+	[AllSupportedPlatforms]
 	public void GetFullyQualifiedIdentifierNestedNamespaceDeclaration (ApplePlatform platform)
 	{
 		const string inputText = @"
@@ -112,10 +97,7 @@ namespace Foo {
 	}
 
 	[Theory]
-	[PlatformInlineData (ApplePlatform.iOS)]
-	[PlatformInlineData (ApplePlatform.TVOS)]
-	[PlatformInlineData (ApplePlatform.MacCatalyst)]
-	[PlatformInlineData (ApplePlatform.MacOSX)]
+	[AllSupportedPlatforms]
 	public void GetFullyQualifiedIdentifierNamespaceDeclarationNestedClass (ApplePlatform platform)
 	{
 		const string inputText = @"

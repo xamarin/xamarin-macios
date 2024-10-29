@@ -37,10 +37,7 @@ namespace TestNamespace
 ";
 
 	[Theory]
-	[PlatformInlineData (ApplePlatform.iOS, usingImportInput, usingImportOutput)]
-	[PlatformInlineData (ApplePlatform.TVOS, usingImportInput, usingImportOutput)]
-	[PlatformInlineData (ApplePlatform.MacOSX, usingImportInput, usingImportOutput)]
-	[PlatformInlineData (ApplePlatform.MacCatalyst, usingImportInput, usingImportOutput)]
+	[AllSupportedPlatforms (usingImportInput, usingImportOutput)]
 	public void CorrectUsingImports (ApplePlatform platform, string input, string expectedOutput)
 	{
 		// We need to create a compilation with the required source code.
