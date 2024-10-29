@@ -186,6 +186,7 @@ namespace Xamarin.MacDev.Tasks {
 			return rv;
 		}
 
+		// The opposite function is PackLibraryResources.EscapeMangledResource
 		static string UnmangleResource (string mangled)
 		{
 			var unmangled = new StringBuilder (mangled.Length);
@@ -201,6 +202,7 @@ namespace Xamarin.MacDev.Tasks {
 
 				if (escaped) {
 					switch (c) {
+					case 's': c = Path.DirectorySeparatorChar; break;
 					case 'b': c = '\\'; break;
 					case 'f': c = '/'; break;
 					case '_': c = '_'; break;

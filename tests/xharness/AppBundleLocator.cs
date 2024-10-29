@@ -16,7 +16,6 @@ namespace Xharness {
 	public class AppBundleLocator : IAppBundleLocator {
 		readonly IProcessManager processManager;
 		readonly Func<ILog> getLog;
-		readonly string msBuildPath;
 		readonly string systemDotnetPath;
 		readonly string dotnetPath;
 
@@ -24,11 +23,10 @@ namespace Xharness {
 		// config file found in the specified directory or any containing directories.
 		readonly Dictionary<string, string> dotnet_executables = new Dictionary<string, string> ();
 
-		public AppBundleLocator (IProcessManager processManager, Func<ILog> getLog, string msBuildPath, string systemDotnetPath, string dotnetPath)
+		public AppBundleLocator (IProcessManager processManager, Func<ILog> getLog, string systemDotnetPath, string dotnetPath)
 		{
 			this.processManager = processManager;
 			this.getLog = getLog;
-			this.msBuildPath = msBuildPath;
 			this.systemDotnetPath = systemDotnetPath;
 			this.dotnetPath = dotnetPath;
 		}
@@ -84,7 +82,10 @@ namespace Xharness {
 				using (var proc = new Process ()) {
 					var isDotNetProject = csproj.IsDotNetProject ();
 
-					proc.StartInfo.FileName = isDotNetProject ? GetDotNetExecutable (projectPath) : msBuildPath;
+					if (!isDotNetProject)
+						throw new NotSupportedException ("Legacy projects not supported anymore");
+
+					proc.StartInfo.FileName = GetDotNetExecutable (projectPath);
 					var args = new List<string> ();
 
 					if (isDotNetProject)

@@ -31,15 +31,7 @@ namespace Accounts {
 		CoreDataSaveFailed,
 		FailedSerializingAccountInfo,
 		InvalidCommand,
-#if XAMCORE_3_0
 		MissingTransportMessageId,
-#else
-		[Obsolete ("Use 'MissingTransportMessageId'.")]
-		MissingMessageID,
-#pragma warning disable 618 // MissingMessageID is obsolete
-		MissingTransportMessageId = MissingMessageID,
-#pragma warning restore 618
-#endif
 		CredentialItemNotFound,
 		CredentialItemNotExpired,
 	}

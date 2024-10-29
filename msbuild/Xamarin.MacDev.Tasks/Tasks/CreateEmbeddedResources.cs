@@ -17,22 +17,6 @@ namespace Xamarin.MacDev.Tasks {
 		[Output]
 		public ITaskItem [] EmbeddedResources { get; set; } = Array.Empty<ITaskItem> ();
 
-		static string EscapeMangledResource (string name)
-		{
-			var mangled = new StringBuilder ();
-
-			for (int i = 0; i < name.Length; i++) {
-				switch (name [i]) {
-				case '\\': mangled.Append ("_b"); break;
-				case '/': mangled.Append ("_f"); break;
-				case '_': mangled.Append ("__"); break;
-				default: mangled.Append (name [i]); break;
-				}
-			}
-
-			return mangled.ToString ();
-		}
-
 		public override bool Execute ()
 		{
 			if (ShouldExecuteRemotely ()) {
@@ -56,7 +40,7 @@ namespace Xamarin.MacDev.Tasks {
 				bundleResource.CopyMetadataTo (embeddedResource);
 
 				// mangle the resource name
-				var logicalName = "__" + Prefix + "_content_" + EscapeMangledResource (bundleResource.GetMetadata ("LogicalName"));
+				var logicalName = "__" + Prefix + "_content_" + PackLibraryResources.EscapeMangledResource (bundleResource.GetMetadata ("LogicalName"));
 				embeddedResource.SetMetadata ("LogicalName", logicalName);
 
 				// add it to the output connection

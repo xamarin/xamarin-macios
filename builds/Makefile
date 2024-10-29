@@ -91,7 +91,7 @@ package-download/all-package-references.csproj: $(GIT_DIRECTORY)/HEAD $(GIT_DIRE
 		download-packages.csproj \
 		/t:WriteBundledNETCorePlatformsPackageVersion \
 		/p:WriteFilePath=$(CURDIR)/BundledNETCorePlatformsPackageVersion.txt \
-		/p:PackageRuntimeIdentifiers="$(DOTNET_RUNTIME_IDENTIFIERS)" \
+		/p:PackageRuntimeIdentifiersMonoVM="$(DOTNET_MONOVM_RUNTIME_IDENTIFIERS)" \
 		/p:PackageRuntimeIdentifiersCoreCLR="$(DOTNET_CORECLR_RUNTIME_IDENTIFIERS)" \
 		/p:CustomDotNetVersion="$(DOWNLOAD_DOTNET_VERSION)" \
 		/p:MonoToolChainManifestVersionBand="$(MONO_TOOLCHAIN_MANIFEST_VERSION_BAND)" \
@@ -130,10 +130,12 @@ DOTNET_COMMON_TARGETS = \
 	$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),$(DOTNET_DESTDIR)/$($(platform)_NUGET_SDK_NAME)/Versions.plist) \
 	$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),$(DOTNET_DESTDIR)/$($(platform)_NUGET_SDK_NAME)/tools/buildinfo) \
 
+include $(TOP)/scripts/versions-check/fragment.mk
+$(VERSIONS_CHECK): downloads/$(DOTNET_INSTALL_NAME)
 define VersionInfo
-$(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/Versions.plist: $(TOP)/builds/Versions-$(1).plist.in Makefile $(TOP)/Make.config $(TOP)/versions-check.csharp | $(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)
-	$$(Q) $(TOP)/versions-check.csharp $$< "$(DOTNET_MIN_IOS_SDK_VERSION)" "$(MAX_IOS_DEPLOYMENT_TARGET)" "$(DOTNET_MIN_TVOS_SDK_VERSION)" "$(MAX_TVOS_DEPLOYMENT_TARGET)" "$(MIN_WATCH_OS_VERSION)" "$(MAX_WATCH_DEPLOYMENT_TARGET)" "$(DOTNET_MIN_MACOS_SDK_VERSION)" "$(MACOS_SDK_VERSION)" "$(DOTNET_MIN_MACCATALYST_SDK_VERSION)" "$(MACCATALYST_SDK_VERSION)"
-	$$(Q_GEN) sed -e 's/@XCODE_VERSION@/$(XCODE_VERSION)/g' -e "s/@MONO_VERSION@/$(DOTNET_VERSION)/g" $$< > $$@.tmp
+$(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/Versions.plist: $(TOP)/builds/Versions-$(1).plist.in Makefile $(TOP)/Make.config $(VERSIONS_CHECK) | $(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)
+	$$(Q) $(VERSIONS_CHECK_EXEC) $$< "$(DOTNET_MIN_IOS_SDK_VERSION)" "$(MAX_IOS_DEPLOYMENT_TARGET)" "$(DOTNET_MIN_TVOS_SDK_VERSION)" "$(MAX_TVOS_DEPLOYMENT_TARGET)" "$(MIN_WATCH_OS_VERSION)" "$(MAX_WATCH_DEPLOYMENT_TARGET)" "$(DOTNET_MIN_MACOS_SDK_VERSION)" "$(MACOS_SDK_VERSION)" "$(DOTNET_MIN_MACCATALYST_SDK_VERSION)" "$(MACCATALYST_SDK_VERSION)"
+	$$(QF_GEN) sed -e 's/@XCODE_VERSION@/$(XCODE_VERSION)/g' -e "s/@MONO_VERSION@/$(DOTNET_VERSION)/g" $$< > $$@.tmp
 	$$(Q) mv $$@.tmp $$@
 endef
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call VersionInfo,$(platform))))

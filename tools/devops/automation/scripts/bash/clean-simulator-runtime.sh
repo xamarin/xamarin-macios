@@ -10,6 +10,13 @@ for i in $(xcrun simctl runtime list | grep "watchOS.*Ready" | sed -e 's/.* - //
   xcrun simctl runtime delete "$i"
 done
 
+# delete all simulators not used in the last 90 days
+echo "Checking if there are any old runtimes to delete:"
+xcrun simctl runtime delete --notUsedSinceDays 90 --dry-run | sed 's/^/    /'
+echo "Deleting..."
+xcrun simctl runtime delete --notUsedSinceDays 90| sed 's/^/    /'
+echo "Delete completed."
+
 xcrun simctl runtime list -j > simruntime.json
 cat simruntime.json
 

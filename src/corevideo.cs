@@ -519,11 +519,7 @@ namespace CoreVideo {
 
 	/// <summary>A reusable set of <see cref="T:CoreVideo.CVPixelBuffer" />s.</summary>
 	[Partial]
-#if XAMCORE_3_0
 	interface CVPixelBufferPool {
-#else
-	interface CVPixelBufferPool : CVImageBuffer {
-#endif
 		[Field ("kCVPixelBufferPoolMinimumBufferCountKey")]
 		NSString MinimumBufferCountKey { get; }
 

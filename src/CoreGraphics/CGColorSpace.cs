@@ -72,32 +72,10 @@ namespace CoreGraphics {
 #endif
 	public class CGColorSpace : NativeObject {
 #if !COREBUILD
-#if !XAMCORE_3_0
-#if !NET
-		[Obsolete ("Use a real 'null' value instead of this managed wrapper over a null native instance.")]
-#else
-		[Obsolete ("Use a real 'null' value instead of this managed wrapper over a null native instance.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-		public readonly static CGColorSpace Null = CreateNull ();
-#endif
-
 #if !NET
 		public CGColorSpace (NativeHandle handle)
 			: base (handle, false)
 		{
-		}
-#endif
-
-#if !XAMCORE_3_0
-		static CGColorSpace CreateNull ()
-		{
-			var throwOnInitFailure = Class.ThrowOnInitFailure;
-			Class.ThrowOnInitFailure = false;
-			try {
-				return new CGColorSpace (IntPtr.Zero, true);
-			} finally {
-				Class.ThrowOnInitFailure = throwOnInitFailure;
-			}
 		}
 #endif
 
@@ -165,19 +143,6 @@ namespace CoreGraphics {
 		{
 			return new CGColorSpace (CGColorSpaceCreateDeviceCMYK (), true);
 		}
-
-#if !XAMCORE_3_0
-#if !NET
-		[Obsolete ("This method has been renamed 'CreateDeviceCmyk'.")]
-#else
-		[Obsolete ("This method has been renamed 'CreateDeviceCmyk'.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-		[EditorBrowsable (EditorBrowsableState.Never)]
-		public static /* CGColorSpaceRef */ CGColorSpace CreateDeviceCMYK ()
-		{
-			return new CGColorSpace (CGColorSpaceCreateDeviceCMYK (), true);
-		}
-#endif
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern unsafe static /* CGColorSpaceRef */ IntPtr CGColorSpaceCreateCalibratedGray (/* const CGFloat[3] */ nfloat* whitepoint, /* const CGFloat[3] */ nfloat* blackpoint, /* CGFloat */ nfloat gamma);
