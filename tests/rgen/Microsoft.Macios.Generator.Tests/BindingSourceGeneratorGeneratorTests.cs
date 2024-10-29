@@ -23,9 +23,9 @@ public partial class AVAudioPcmBuffer : AVAudioBuffer {
 
 #nullable enable
 
-using System;
 using Foundation;
 using ObjCBindings;
+using System;
 
 namespace TestNamespace
 {
@@ -44,11 +44,11 @@ namespace TestNamespace
 	public void CorrectUsingImports (ApplePlatform platform, string input, string expectedOutput)
 	{
 		// We need to create a compilation with the required source code.
-		var compilation = CreateCompilation (nameof (CorrectUsingImports),
+		var (compilation, _) = CreateCompilation (nameof (CorrectUsingImports),
 			platform, input);
 
 		// Run generators and retrieve all results.
-		var runResult = _driver.RunGenerators (compilation).GetRunResult ();
+		var runResult = Driver.RunGenerators (compilation).GetRunResult ();
 		Assert.Empty (runResult.Diagnostics);
 
 		// ensure that we do have all the needed attributes present
