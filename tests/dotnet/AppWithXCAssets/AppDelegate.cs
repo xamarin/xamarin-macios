@@ -50,7 +50,7 @@ namespace AppWithXCAssets {
 		{
 			await Task.Delay (1000); // wait a bit, otherwise it doesn't work
 
-			var supportsAlternateIcons =  UIApplication.SharedApplication.SupportsAlternateIcons;
+			var supportsAlternateIcons = UIApplication.SharedApplication.SupportsAlternateIcons;
 			if (!supportsAlternateIcons)
 				Console.WriteLine ("Alternate icons aren't currently supported, but trying anyway!");
 
@@ -68,7 +68,7 @@ namespace AppWithXCAssets {
 
 			UIApplication.SharedApplication.SetAlternateIconName (name, (err) => {
 				if (err is null) {
-					Console.WriteLine($"Switched to {(name is null ? "original icon" : $"alternate icon {name}")}");
+					Console.WriteLine ($"Switched to {(name is null ? "original icon" : $"alternate icon {name}")}");
 					button!.SetTitleColor (color, UIControlState.Normal);
 					ScheduleIconSwitching ();
 				} else {
