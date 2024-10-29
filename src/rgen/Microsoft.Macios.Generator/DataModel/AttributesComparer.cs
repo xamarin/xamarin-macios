@@ -12,10 +12,12 @@ class AttributeComparer : IComparer<AttributeCodeChange> {
 		// 1. Attribute name
 		// 2. Attribute param count
 		// 3. Attribute values
-		if (x.Name != y.Name)
-			return String.Compare (x.Name, y.Name, StringComparison.Ordinal);
-		if (x.Arguments.Length != y.Arguments.Length)
-			return x.Arguments.Length.CompareTo (y.Arguments.Length);
+		var nameComparison = String.Compare (x.Name, y.Name, StringComparison.Ordinal);
+		if (nameComparison != 0)
+			return nameComparison;
+		var lengthComparison = x.Arguments.Length.CompareTo (y.Arguments.Length);
+		if (lengthComparison != 0)
+			return lengthComparison;
 		// argument order is important, we do know that we already have the same length, loop and return if diff
 		for (int index = 0; index < x.Arguments.Length; index++) {
 			var xArgument = x.Arguments [index];

@@ -70,7 +70,7 @@ readonly struct AttributeCodeChange : IEquatable<AttributeCodeChange> {
 	/// <returns>True if the code changes are equal.</returns>
 	public static bool operator == (AttributeCodeChange x, AttributeCodeChange y)
 	{
-		return x.Equals ((object) y);
+		return x.Equals (y);
 	}
 
 	/// <summary>
