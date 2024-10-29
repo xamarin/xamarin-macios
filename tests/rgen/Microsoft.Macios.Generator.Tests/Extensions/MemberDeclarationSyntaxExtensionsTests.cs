@@ -97,4 +97,100 @@ public interface IInterface {
 			Assert.Equal ("2", attributeCodeChanges [1].Arguments [1]);
 		}
 	}
+
+	[Theory]
+	[PlatformInlineData (ApplePlatform.iOS)]
+	[PlatformInlineData (ApplePlatform.TVOS)]
+	[PlatformInlineData (ApplePlatform.MacOSX)]
+	[PlatformInlineData (ApplePlatform.MacCatalyst)]
+	public void GetAttributeCodeChangesSameAttrDiffText (ApplePlatform platform)
+	{
+		const string inputText = @"
+using System;
+using System.ComponentModel;
+using Foundation;
+using ObjCBindings;
+
+namespace AVFoundation;
+
+public class TestClass {
+
+	[EditorBrowsableAttribute (EditorBrowsableState.Never)]
+	public void SayHello () {
+	}
+
+	[System.ComponentModel.EditorBrowsableAttribute (System.ComponentModel.EditorBrowsableState.Never)]
+	public void SayGoodbye () {
+	}
+} 
+";
+		var (compilation, sourceTrees) =
+			CreateCompilation (nameof (MemberDeclarationSyntaxExtensionsTests), platform,  inputText);
+		Assert.Single (sourceTrees);
+		// get the declarations we want to work with and the semantic model
+		var declarations = sourceTrees [0].GetRoot ()
+			.DescendantNodes ()
+			.OfType<MethodDeclarationSyntax> ()
+			.ToArray ();
+		Assert.Equal (2, declarations.Length);
+		// get the attr for each of the declaration and assert they are the same attrs
+		var semanticModel = compilation.GetSemanticModel (sourceTrees [0]);
+		var sayHelloAttrs = declarations[0].GetAttributeCodeChanges (semanticModel);
+		var sayGoodbyeAttrs = declarations[0].GetAttributeCodeChanges (semanticModel);
+		Assert.Single (sayHelloAttrs);
+		Assert.Single (sayGoodbyeAttrs);
+		Assert.Equal (sayHelloAttrs[0].Name, sayGoodbyeAttrs[0].Name);
+		Assert.Equal (sayHelloAttrs[0].Arguments [0], sayGoodbyeAttrs[0].Arguments [0]);
+	}
+
+	[Theory]
+	[PlatformInlineData (ApplePlatform.iOS)]
+	[PlatformInlineData (ApplePlatform.TVOS)]
+	[PlatformInlineData (ApplePlatform.MacOSX)]
+	[PlatformInlineData (ApplePlatform.MacCatalyst)]
+	public void GetAttributeCodeChangesTypeOf (ApplePlatform platform)
+	{
+		
+		var attrsText = @"
+using System;
+
+namespace ObjCBindings;
+
+public class AttributeWithParams : Attribute {
+	Type _type;
+	public AttributeWithParams (Type type) {
+		_type = type;
+	}
+}
+";
+		var inputText = @"
+using System;
+using Foundation;
+using ObjCBindings;
+
+namespace AVFoundation;
+
+public class TestClass {
+
+	[AttributeWithParams (typeof(TestClass))]
+	public void SayHello () {
+	}
+} 
+";
+		// create a compilation unit and get the diff syntax node, semantic model and expected attr result
+		var (compilation, sourceTrees) =
+			CreateCompilation (nameof (MemberDeclarationSyntaxExtensionsTests), platform, attrsText, inputText);
+		Assert.Equal (2, sourceTrees.Length);
+		// get the declarations we want to work with and the semantic model
+		var nodes = sourceTrees [1].GetRoot ().DescendantNodes ().ToArray ();
+		var methodDeclarationSyntax = nodes
+			.OfType<MethodDeclarationSyntax> ()
+			.FirstOrDefault ();
+		Assert.NotNull (methodDeclarationSyntax);
+		var semanticModel = compilation.GetSemanticModel (sourceTrees [1]);
+		var methodAttrs = methodDeclarationSyntax.GetAttributeCodeChanges (semanticModel);
+		Assert.Single (methodAttrs);
+		Assert.Equal ("ObjCBindings.AttributeWithParams", methodAttrs [0].Name);
+		Assert.Equal ("AVFoundation.TestClass", methodAttrs [0].Arguments [0]);
+	}
 }
