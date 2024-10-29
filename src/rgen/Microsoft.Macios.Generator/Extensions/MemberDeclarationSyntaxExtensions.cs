@@ -33,9 +33,9 @@ static class MemberDeclarationSyntaxExtensions {
 						}
 						if (argSyntax.Expression is MemberAccessExpressionSyntax memberAccessExpressionSyntax) {
 							var eumExpr = memberAccessExpressionSyntax.ToFullString ().Trim ();
-							if (semanticModel.GetSymbolInfo (memberAccessExpressionSyntax).Symbol is IFieldSymbol 
-							    enumSymbol) {
-								arguments.Add (enumSymbol.ToDisplayString ().Trim());
+							if (semanticModel.GetSymbolInfo (memberAccessExpressionSyntax).Symbol is IFieldSymbol
+								enumSymbol) {
+								arguments.Add (enumSymbol.ToDisplayString ().Trim ());
 							} else {
 								// could not get the symbol, add the full expre
 								arguments.Add (eumExpr);
@@ -43,7 +43,7 @@ static class MemberDeclarationSyntaxExtensions {
 						}
 						if (argSyntax.Expression is TypeOfExpressionSyntax typeOfExpressionSyntax) {
 							if (semanticModel.GetSymbolInfo (typeOfExpressionSyntax.Type).Symbol is INamedTypeSymbol typeSymbol) {
-								arguments.Add (typeSymbol.ToDisplayString ().Trim());
+								arguments.Add (typeSymbol.ToDisplayString ().Trim ());
 							}
 						}
 					}

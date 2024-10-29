@@ -125,7 +125,7 @@ public class TestClass {
 } 
 ";
 		var (compilation, sourceTrees) =
-			CreateCompilation (nameof (MemberDeclarationSyntaxExtensionsTests), platform,  inputText);
+			CreateCompilation (nameof (MemberDeclarationSyntaxExtensionsTests), platform, inputText);
 		Assert.Single (sourceTrees);
 		// get the declarations we want to work with and the semantic model
 		var declarations = sourceTrees [0].GetRoot ()
@@ -135,12 +135,12 @@ public class TestClass {
 		Assert.Equal (2, declarations.Length);
 		// get the attr for each of the declaration and assert they are the same attrs
 		var semanticModel = compilation.GetSemanticModel (sourceTrees [0]);
-		var sayHelloAttrs = declarations[0].GetAttributeCodeChanges (semanticModel);
-		var sayGoodbyeAttrs = declarations[0].GetAttributeCodeChanges (semanticModel);
+		var sayHelloAttrs = declarations [0].GetAttributeCodeChanges (semanticModel);
+		var sayGoodbyeAttrs = declarations [0].GetAttributeCodeChanges (semanticModel);
 		Assert.Single (sayHelloAttrs);
 		Assert.Single (sayGoodbyeAttrs);
-		Assert.Equal (sayHelloAttrs[0].Name, sayGoodbyeAttrs[0].Name);
-		Assert.Equal (sayHelloAttrs[0].Arguments [0], sayGoodbyeAttrs[0].Arguments [0]);
+		Assert.Equal (sayHelloAttrs [0].Name, sayGoodbyeAttrs [0].Name);
+		Assert.Equal (sayHelloAttrs [0].Arguments [0], sayGoodbyeAttrs [0].Arguments [0]);
 	}
 
 	[Theory]
@@ -150,7 +150,7 @@ public class TestClass {
 	[PlatformInlineData (ApplePlatform.MacCatalyst)]
 	public void GetAttributeCodeChangesTypeOf (ApplePlatform platform)
 	{
-		
+
 		var attrsText = @"
 using System;
 
