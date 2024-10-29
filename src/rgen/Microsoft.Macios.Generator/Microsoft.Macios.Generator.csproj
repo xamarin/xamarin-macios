@@ -30,11 +30,7 @@
             <_Parameter1>Microsoft.Macios.Generator.Tests</_Parameter1>
         </AssemblyAttribute>
     </ItemGroup>
-
     <ItemGroup>
-        <Compile Include="..\..\bgen\PlatformName.cs" >
-            <Link>external\PlatformName.cs</Link>
-        </Compile>
         <Compile Include="..\..\bgen\Extensions\PlatformNameExtensions.cs" >
             <Link>external\PlatformNameExtensions.cs</Link>
         </Compile>
@@ -52,5 +48,9 @@
       </EmbeddedResource>
     </ItemGroup>
 
+    <ItemGroup>
+        <ProjectReference Include="..\Microsoft.Macios.Binding.Common\Microsoft.Macios.Binding.Common.csproj" PrivateAssets="all" />
+        <None Include="$(OutputPath)\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+    </ItemGroup>
 
 </Project>

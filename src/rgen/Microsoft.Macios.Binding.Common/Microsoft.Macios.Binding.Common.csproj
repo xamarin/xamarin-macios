@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net$(BundledNETCoreAppTargetFrameworkVersion)</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Compile Include="..\..\..\tools\common\ApplePlatform.cs">
+            <Link>external\ApplePlatform.cs</Link>
+        </Compile>
+        <Compile Include="..\..\..\tools\common\SdkVersions.cs">
+            <Link>external\SdkVersions.cs</Link>
+        </Compile>
+        <Compile Include="..\..\..\tools\common\TargetFramework.cs">
+            <Link>external\TargetFramework.cs</Link>
+        </Compile>
+        <Compile Include="../../../tools/common/Frameworks.cs" >
+            <Link>external\Frameworks.cs</Link>
+        </Compile>
+        <Compile Include="..\..\bgen\PlatformName.cs" >
+            <Link>external\PlatformName.cs</Link>
+        </Compile>
+    </ItemGroup>
+
+</Project>
