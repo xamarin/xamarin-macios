@@ -16,7 +16,7 @@
         <Compile Include="..\..\..\tools\common\TargetFramework.cs">
             <Link>external\TargetFramework.cs</Link>
         </Compile>
-        <Compile Include="../../../tools/common/Frameworks.cs" >
+        <Compile Include="..\..\..\tools\common\Frameworks.cs" >
             <Link>external\Frameworks.cs</Link>
         </Compile>
         <Compile Include="..\..\bgen\PlatformName.cs" >
