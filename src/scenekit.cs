@@ -1959,7 +1959,7 @@ namespace SceneKit {
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface SCNNode : SCNAnimatable, SCNBoundingVolume, SCNActionable, NSCopying, NSSecureCoding
-#if IOS || TVOS
+#if (IOS || TVOS) && !XAMCORE_5_0 // Conformance Removed in Xcode 16.1
 		, UIFocusItem
 #endif
 	{

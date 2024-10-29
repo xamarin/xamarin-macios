@@ -30906,4 +30906,27 @@ namespace UIKit {
 		UIView UIView { get; [Bind ("setUIView:")] set; }
 	}
 
+	[NoMac, NoWatch, NoTV, iOS (18, 1), MacCatalyst (18, 1)]
+	delegate IUITextInput UITextInputReturnHandler ();
+
+	[NoMac, NoWatch, NoTV, iOS (18, 1), MacCatalyst (18, 1)]
+	[Category]
+	[BaseType (typeof (NSObject))]
+	interface NSObject_UIAccessibilityTextOperations {
+
+		[return: NullAllowed]
+		[Export ("accessibilityTextInputResponder")]
+		IUITextInput GetAccessibilityTextInputResponder ();
+
+		[Export ("setAccessibilityTextInputResponder:")]
+		void SetAccessibilityTextInputResponder ([NullAllowed] IUITextInput textInput);
+
+		[return: NullAllowed]
+		[Export ("accessibilityTextInputResponderBlock")]
+		UITextInputReturnHandler GetAccessibilityTextInputResponderHandler ();
+
+		[Export ("setAccessibilityTextInputResponderBlock:")]
+		void SetAccessibilityTextInputResponderHandler ([NullAllowed] UITextInputReturnHandler handler);
+	}
+
 }

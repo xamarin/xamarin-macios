@@ -960,7 +960,7 @@ namespace Introspection {
 					return !TestRuntime.CheckXcodeVersion (8, 0);
 				case "SCNNode":
 				case "SCNReferenceNode":
-					return !TestRuntime.CheckXcodeVersion (9, 0);
+					return TestRuntime.CheckXcodeVersion (16, 1); // Conformance removed in Xcode 16.1 will be removed in XAMCORE_5_0
 				}
 				break;
 
@@ -1080,7 +1080,7 @@ namespace Introspection {
 					return !TestRuntime.CheckXcodeVersion (8, 0);
 				case "SCNNode":
 				case "SCNReferenceNode":
-					return !TestRuntime.CheckXcodeVersion (9, 0);
+					return TestRuntime.CheckXcodeVersion (16, 1); // Conformance removed in Xcode 16.1 will be removed in XAMCORE_5_0
 				}
 				break;
 

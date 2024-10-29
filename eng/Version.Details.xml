@@ -68,6 +68,23 @@
       <Uri>https://github.com/dotnet/runtime</Uri>
       <Sha>9bff9c5017d8444fdf76959c112dd9fed2da9317</Sha>
     </Dependency>
+    <!-- This is a subscription of the .NET 9/Xcode 16.0 versions of our packages -->
+    <Dependency Name="Microsoft.MacCatalyst.Sdk.net9.0_18.0" Version="18.0.9606-net9-rtm">
+      <Uri>https://github.com/xamarin/xamarin-macios</Uri>
+      <Sha>2f3ae2492519571ccf3f7280dfca232e42b5ada2</Sha>
+    </Dependency>
+    <Dependency Name="Microsoft.macOS.Sdk.net9.0_15.0" Version="15.0.9606-net9-rtm">
+      <Uri>https://github.com/xamarin/xamarin-macios</Uri>
+      <Sha>2f3ae2492519571ccf3f7280dfca232e42b5ada2</Sha>
+    </Dependency>
+    <Dependency Name="Microsoft.iOS.Sdk.net9.0_18.0" Version="18.0.9606-net9-rtm">
+      <Uri>https://github.com/xamarin/xamarin-macios</Uri>
+      <Sha>2f3ae2492519571ccf3f7280dfca232e42b5ada2</Sha>
+    </Dependency>
+    <Dependency Name="Microsoft.tvOS.Sdk.net9.0_18.0" Version="18.0.9606-net9-rtm">
+      <Uri>https://github.com/xamarin/xamarin-macios</Uri>
+      <Sha>2f3ae2492519571ccf3f7280dfca232e42b5ada2</Sha>
+    </Dependency>
   </ProductDependencies>
   <ToolsetDependencies>
     <Dependency Name="Microsoft.DotNet.Build.Tasks.Feed" Version="9.0.0-beta.24516.2">

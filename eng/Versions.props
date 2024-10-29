@@ -28,5 +28,10 @@
     <MicrosoftmacOSSdknet80_140PackageVersion>14.0.8523</MicrosoftmacOSSdknet80_140PackageVersion>
     <MicrosoftiOSSdknet80_170PackageVersion>17.0.8523</MicrosoftiOSSdknet80_170PackageVersion>
     <MicrosofttvOSSdknet80_170PackageVersion>17.0.8523</MicrosofttvOSSdknet80_170PackageVersion>
+    <!-- This is a subscription to the .NET 9/Xcode 16.0 versions of our packages -->
+    <MicrosoftMacCatalystSdknet90_180PackageVersion>18.0.9606-net9-rtm</MicrosoftMacCatalystSdknet90_180PackageVersion>
+    <MicrosoftmacOSSdknet90_150PackageVersion>15.0.9606-net9-rtm</MicrosoftmacOSSdknet90_150PackageVersion>
+    <MicrosoftiOSSdknet90_180PackageVersion>18.0.9606-net9-rtm</MicrosoftiOSSdknet90_180PackageVersion>
+    <MicrosofttvOSSdknet90_180PackageVersion>18.0.9606-net9-rtm</MicrosofttvOSSdknet90_180PackageVersion>
   </PropertyGroup>
 </Project>
