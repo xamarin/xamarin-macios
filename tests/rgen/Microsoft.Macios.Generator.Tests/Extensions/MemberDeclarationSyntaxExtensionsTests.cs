@@ -9,10 +9,7 @@ namespace Microsoft.Macios.Generator.Tests.Extensions;
 
 public class MemberDeclarationSyntaxExtensionsTests : BaseGeneratorTestClass {
 	[Theory]
-	[PlatformInlineData (ApplePlatform.iOS)]
-	[PlatformInlineData (ApplePlatform.TVOS)]
-	[PlatformInlineData (ApplePlatform.MacOSX)]
-	[PlatformInlineData (ApplePlatform.MacCatalyst)]
+	[AllSupportedPlatforms]
 	public void GetAttributeCodeChanges (ApplePlatform platform)
 	{
 		var attrsText = @"
@@ -99,10 +96,7 @@ public interface IInterface {
 	}
 
 	[Theory]
-	[PlatformInlineData (ApplePlatform.iOS)]
-	[PlatformInlineData (ApplePlatform.TVOS)]
-	[PlatformInlineData (ApplePlatform.MacOSX)]
-	[PlatformInlineData (ApplePlatform.MacCatalyst)]
+	[AllSupportedPlatforms]
 	public void GetAttributeCodeChangesSameAttrDiffText (ApplePlatform platform)
 	{
 		const string inputText = @"
@@ -144,10 +138,7 @@ public class TestClass {
 	}
 
 	[Theory]
-	[PlatformInlineData (ApplePlatform.iOS)]
-	[PlatformInlineData (ApplePlatform.TVOS)]
-	[PlatformInlineData (ApplePlatform.MacOSX)]
-	[PlatformInlineData (ApplePlatform.MacCatalyst)]
+	[AllSupportedPlatforms]
 	public void GetAttributeCodeChangesTypeOf (ApplePlatform platform)
 	{
 
