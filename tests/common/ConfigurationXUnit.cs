@@ -61,7 +61,7 @@ namespace Xamarin.Tests {
 		{
 			return Configuration.
 				GetIncludedPlatforms (true).
-				Select (v => dataValues.Prepend (platform).ToArray ());
+				Select (platform => dataValues.Prepend (platform).ToArray ());
 		}
 	}
 
