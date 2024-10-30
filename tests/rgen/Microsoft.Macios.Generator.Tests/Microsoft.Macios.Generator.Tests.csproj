@@ -22,6 +22,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\..\src\rgen\Microsoft.Macios.Binding.Common\Microsoft.Macios.Binding.Common.csproj" />
       <ProjectReference Include="..\..\..\src\rgen\Microsoft.Macios.Generator\Microsoft.Macios.Generator.csproj" />
     </ItemGroup>
     
@@ -38,20 +39,11 @@
         <Compile Include="..\..\common\ExecutionHelper.cs">
             <Link>external\ExecutionHelper.cs</Link>
         </Compile>
-        <Compile Include="..\..\..\tools\common\ApplePlatform.cs">
-            <Link>external\ApplePlatform.cs</Link>
-        </Compile>
-        <Compile Include="..\..\..\tools\common\TargetFramework.cs">
-            <Link>external\TargetFramework.cs</Link>
-        </Compile>
         <Compile Include="..\..\..\tools\common\StringUtils.cs">
             <Link>external\StringUtils.cs</Link>
         </Compile>
         <Compile Include="..\..\..\tools\common\Execution.cs">
             <Link>external\Execution.cs</Link>
-        </Compile>
-        <Compile Include="..\..\..\tools\common\SdkVersions.cs">
-            <Link>external\SdkVersions.cs</Link>
         </Compile>
         <Compile Include="..\..\mtouch\Cache.cs">
             <Link>external\Cache.cs</Link>
