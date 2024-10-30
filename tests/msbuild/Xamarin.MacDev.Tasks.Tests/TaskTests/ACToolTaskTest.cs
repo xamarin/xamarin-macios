@@ -97,8 +97,19 @@ namespace Xamarin.MacDev.Tasks {
 			ExecuteTask (actool);
 
 			Assert.IsNotNull (actool.PartialAppManifest, "PartialAppManifest");
-			var appIconsManifest = PDictionary.FromFile (actool.PartialAppManifest.ItemSpec!)!;
+			var appIconsManifestPath = actool.PartialAppManifest.ItemSpec!;
+			var appIconsManifest = PDictionary.FromFile (appIconsManifestPath)!;
 			Assert.AreEqual (0, appIconsManifest.Count, $"Partial plist contents: {actool.PartialAppManifest.ItemSpec}");
+			var expectedXml =
+				"""
+				<?xml version="1.0" encoding="UTF-8"?>
+				<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+				<plist version="1.0">
+				<dict>
+				</dict>
+				</plist>
+				""";
+			PListAsserts.AreStringsEqual (expectedXml, File.ReadAllText (appIconsManifestPath), "Partial plist contents");
 		}
 
 		[Test]
@@ -115,8 +126,33 @@ namespace Xamarin.MacDev.Tasks {
 
 			Assert.IsNotNull (actool.PartialAppManifest, "PartialAppManifest");
 
-			var appIconsManifest = PDictionary.FromFile (actool.PartialAppManifest.ItemSpec!)!;
-			Assert.AreEqual (0, appIconsManifest.Count, $"Partial plist contents: {actool.PartialAppManifest.ItemSpec}");
+			var appIconsManifestPath = actool.PartialAppManifest.ItemSpec!;
+			string expectedXml;
+			if (platform == ApplePlatform.TVOS) {
+				expectedXml =
+					"""
+					<?xml version="1.0" encoding="UTF-8"?>
+					<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+					<plist version="1.0">
+					<dict>
+						<key>CFBundleIcons</key>
+						<dict>
+							<key>CFBundleAlternateIcons</key>
+							<dict>
+								<key>AlternateAppIcons</key>
+								<dict>
+									<key>CFBundleIconName</key>
+									<string>AlternateAppIcons</string>
+								</dict>
+							</dict>
+						</dict>
+					</dict>
+					</plist>
+					""";
+			} else {
+				expectedXml = "";
+			}
+			PListAsserts.AreStringsEqual (expectedXml, File.ReadAllText (appIconsManifestPath), "Partial plist contents");
 		}
 
 		[Test]
@@ -138,73 +174,115 @@ namespace Xamarin.MacDev.Tasks {
 
 			Assert.IsNotNull (actool.PartialAppManifest, "PartialAppManifest");
 
-			var appIconsManifest = PDictionary.FromFile (actool.PartialAppManifest?.ItemSpec)!;
-			Assert.AreEqual (2, appIconsManifest.Count, $"Partial plist contents: {actool.PartialAppManifest.ItemSpec}");
+			var appIconsManifestPath = actool.PartialAppManifest?.ItemSpec!;
+			string expectedXml;
 			if (platform == ApplePlatform.MacOSX || platform == ApplePlatform.MacCatalyst) {
-				Assert.AreEqual ("AlternateAppIcons", appIconsManifest.Get<PString> ("CFBundleIconFile")?.Value, "CFBundleIconFile");
-				Assert.AreEqual ("AlternateAppIcons", appIconsManifest.Get<PString> ("CFBundleIconName")?.Value, "CFBundleIconName");
+				expectedXml =
+					"""
+					<?xml version="1.0" encoding="UTF-8"?>
+					<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+					<plist version="1.0">
+					<dict>
+						<key>CFBundleIconFile</key>
+						<string>AlternateAppIcons</string>
+						<key>CFBundleIconName</key>
+						<string>AlternateAppIcons</string>
+					</dict>
+					</plist>
+					""";
 			} else if (platform == ApplePlatform.TVOS) {
-				var cfBundleIcons = appIconsManifest.Get<PDictionary> ("CFBundleIcons");
-				Assert.AreEqual (1, cfBundleIcons.Count, "CFBundleIcons.Count");
-				Assert.AreEqual ("AlternateAppIcons", cfBundleIcons.Get<PString> ("CFBundlePrimaryIcon")?.Value, "CFBundlePrimaryIcon");
-
-				var tvTopShelfImage = appIconsManifest.Get<PDictionary> ("TVTopShelfImage");
-				Assert.AreEqual (2, tvTopShelfImage.Count, "TVTopShelfImage.Count");
-				Assert.AreEqual ("TopShelfImage", tvTopShelfImage.Get<PString> ("TVTopShelfPrimaryImage")?.Value, "TVTopShelfPrimaryImage");
-				Assert.AreEqual ("TopShelfImageWide", tvTopShelfImage.Get<PString> ("TVTopShelfPrimaryImageWide")?.Value, "TVTopShelfPrimaryImageWide");
+				expectedXml =
+					"""
+					<?xml version="1.0" encoding="UTF-8"?>
+					<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+					<plist version="1.0">
+					<dict>
+						<key>CFBundleIcons</key>
+						<dict>
+							<key>CFBundleAlternateIcons</key>
+							<dict>
+								<key>AlternateAppIcons</key>
+								<dict>
+									<key>CFBundleIconName</key>
+									<string>AlternateAppIcons</string>
+								</dict>
+							</dict>
+							<key>CFBundlePrimaryIcon</key>
+							<string>AppIcon</string>
+						</dict>
+						<key>TVTopShelfImage</key>
+						<dict>
+							<key>TVTopShelfPrimaryImage</key>
+							<string>TopShelfImage</string>
+							<key>TVTopShelfPrimaryImageWide</key>
+							<string>TopShelfImageWide</string>
+						</dict>
+					</dict>
+					</plist>
+					""";
 			} else {
-				{
-					// iPhone
-					var cfBundleIcons = appIconsManifest.Get<PDictionary> ("CFBundleIcons");
-					Assert.AreEqual (2, cfBundleIcons.Count, "CFBundleIcons.Count");
-
-					var cfBundlePrimaryIcon = cfBundleIcons.Get<PDictionary> ("CFBundlePrimaryIcon");
-					Assert.AreEqual (2, cfBundlePrimaryIcon.Count, "CFBundlePrimaryIcon.Length");
-
-					var cfBundleIconFiles = cfBundlePrimaryIcon.Get<PArray> ("CFBundleIconFiles");
-					Assert.AreEqual (1, cfBundleIconFiles.Count, "CFBundleIconFiles.Length");
-					Assert.AreEqual ("AlternateAppIcons60x60", ((PString) cfBundleIconFiles [0]).Value, "CFBundleIconFiles[0].Value");
-					Assert.AreEqual ("AlternateAppIcons", cfBundlePrimaryIcon.Get<PString> ("CFBundleIconName")?.Value, "CFBundleIconName");
-
-					var cfBundleAlternateIcons = cfBundleIcons.Get<PDictionary> ("CFBundleAlternateIcons");
-					Assert.AreEqual (1, cfBundleAlternateIcons.Count, "CFBundleAlternateIcons.Count");
-
-					var alternateAppIcons = cfBundleAlternateIcons.Get<PDictionary> ("AppIcons");
-					Assert.AreEqual (2, alternateAppIcons.Count, "AppIcons.Count");
-					Assert.AreEqual ("AppIcons", alternateAppIcons.Get<PString> ("CFBundleIconName")?.Value, "CFBundleIconName");
-
-					var appIcons_cfBundleIconFiles = alternateAppIcons.Get<PArray> ("CFBundleIconFiles");
-					Assert.AreEqual (2, appIcons_cfBundleIconFiles.Count, "AppIcons.CFBundleIconFiles.Length");
-					Assert.AreEqual ("AppIcons60x60", ((PString) appIcons_cfBundleIconFiles [0]).Value, "AppIcons.CFBundleIconFiles[0].Value");
-					Assert.AreEqual ("AppIcons76x76", ((PString) appIcons_cfBundleIconFiles [1]).Value, "AppIcons.CFBundleIconFiles[1].Value");
-				}
-				{
-					// iPad
-					var cfBundleIcons = appIconsManifest.Get<PDictionary> ("CFBundleIcons~ipad");
-					Assert.AreEqual (2, cfBundleIcons.Count, "CFBundleIcons.Count");
-
-					var cfBundlePrimaryIcon = cfBundleIcons.Get<PDictionary> ("CFBundlePrimaryIcon");
-					Assert.AreEqual (2, cfBundlePrimaryIcon.Count, "CFBundlePrimaryIcon.Length");
-
-					var cfBundleIconFiles = cfBundlePrimaryIcon.Get<PArray> ("CFBundleIconFiles");
-					Assert.AreEqual (2, cfBundleIconFiles.Count, "CFBundleIconFiles.Length");
-					Assert.AreEqual ("AlternateAppIcons60x60", ((PString) cfBundleIconFiles [0]).Value, "CFBundleIconFiles[0].Value");
-					Assert.AreEqual ("AlternateAppIcons76x76", ((PString) cfBundleIconFiles [1]).Value, "CFBundleIconFiles[1].Value");
-					Assert.AreEqual ("AlternateAppIcons", cfBundlePrimaryIcon.Get<PString> ("CFBundleIconName")?.Value, "CFBundleIconName");
-
-					var cfBundleAlternateIcons = cfBundleIcons.Get<PDictionary> ("CFBundleAlternateIcons");
-					Assert.AreEqual (1, cfBundleAlternateIcons.Count, "CFBundleAlternateIcons.Count");
-
-					var appIcons = cfBundleAlternateIcons.Get<PDictionary> ("AppIcons");
-					Assert.AreEqual (2, appIcons.Count, "AppIcons.Count");
-					Assert.AreEqual ("AppIcons", appIcons.Get<PString> ("CFBundleIconName")?.Value, "CFBundleIconName");
-
-					var appIcons_cfBundleIconFiles = appIcons.Get<PArray> ("CFBundleIconFiles");
-					Assert.AreEqual (2, appIcons_cfBundleIconFiles.Count, "AppIcons.CFBundleIconFiles.Length");
-					Assert.AreEqual ("AppIcons60x60", ((PString) appIcons_cfBundleIconFiles [0]).Value, "AppIcons.CFBundleIconFiles[0].Value");
-					Assert.AreEqual ("AppIcons76x76", ((PString) appIcons_cfBundleIconFiles [1]).Value, "AppIcons.CFBundleIconFiles[1].Value");
-				}
+				expectedXml =
+					"""
+					<?xml version="1.0" encoding="UTF-8"?>
+					<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+					<plist version="1.0">
+					<dict>
+						<key>CFBundleIcons</key>
+						<dict>
+							<key>CFBundleAlternateIcons</key>
+							<dict>
+								<key>AppIcons</key>
+								<dict>
+									<key>CFBundleIconFiles</key>
+									<array>
+										<string>AppIcons60x60</string>
+										<string>AppIcons76x76</string>
+									</array>
+									<key>CFBundleIconName</key>
+									<string>AppIcons</string>
+								</dict>
+							</dict>
+							<key>CFBundlePrimaryIcon</key>
+							<dict>
+								<key>CFBundleIconFiles</key>
+								<array>
+									<string>AlternateAppIcons60x60</string>
+								</array>
+								<key>CFBundleIconName</key>
+								<string>AlternateAppIcons</string>
+							</dict>
+						</dict>
+						<key>CFBundleIcons~ipad</key>
+						<dict>
+							<key>CFBundleAlternateIcons</key>
+							<dict>
+								<key>AppIcons</key>
+								<dict>
+									<key>CFBundleIconFiles</key>
+									<array>
+										<string>AppIcons60x60</string>
+										<string>AppIcons76x76</string>
+									</array>
+									<key>CFBundleIconName</key>
+									<string>AppIcons</string>
+								</dict>
+							</dict>
+							<key>CFBundlePrimaryIcon</key>
+							<dict>
+								<key>CFBundleIconFiles</key>
+								<array>
+									<string>AlternateAppIcons60x60</string>
+									<string>AlternateAppIcons76x76</string>
+								</array>
+								<key>CFBundleIconName</key>
+								<string>AlternateAppIcons</string>
+							</dict>
+						</dict>
+					</dict>
+					</plist>
+					""";
 			}
+			PListAsserts.AreStringsEqual (expectedXml, File.ReadAllText (appIconsManifestPath), "Partial plist contents");
 		}
 
 		[Test]
@@ -215,61 +293,87 @@ namespace Xamarin.MacDev.Tasks {
 		public void AppIcon (ApplePlatform platform)
 		{
 			var actool = CreateACToolTaskWithResources (platform);
-			if (platform == ApplePlatform.TVOS) {
-				actool.AppIcon = "BrandAssets";
-			} else {
-				actool.AppIcon = "AppIcons";
-			}
+			actool.AppIcon = "AppIcons";
 
 			ExecuteTask (actool);
 
 			Assert.IsNotNull (actool.PartialAppManifest, "PartialAppManifest");
 
-			var appIconsManifest = PDictionary.FromFile (actool.PartialAppManifest.ItemSpec!)!;
+			var appIconsManifestPath = actool.PartialAppManifest.ItemSpec!;
+			string expectedXml;
 			if (platform == ApplePlatform.MacOSX || platform == ApplePlatform.MacCatalyst) {
-				Assert.AreEqual (2, appIconsManifest.Count, $"Partial plist contents: {actool.PartialAppManifest.ItemSpec}");
-				Assert.AreEqual ("AppIcons", appIconsManifest.Get<PString> ("CFBundleIconFile")?.Value, "CFBundleIconFile");
-				Assert.AreEqual ("AppIcons", appIconsManifest.Get<PString> ("CFBundleIconName")?.Value, "CFBundleIconName");
+				expectedXml =
+					"""
+					<?xml version="1.0" encoding="UTF-8"?>
+					<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+					<plist version="1.0">
+					<dict>
+						<key>CFBundleIconFile</key>
+						<string>AppIcons</string>
+						<key>CFBundleIconName</key>
+						<string>AppIcons</string>
+					</dict>
+					</plist>
+					""";
 			} else if (platform == ApplePlatform.TVOS) {
-				Assert.AreEqual (2, appIconsManifest.Count, $"Partial plist contents: {actool.PartialAppManifest.ItemSpec}");
-
-				var cfBundleIcons = appIconsManifest.Get<PDictionary> ("CFBundleIcons");
-				Assert.AreEqual (1, cfBundleIcons.Count, "CFBundleIcons.Count");
-				Assert.AreEqual ("AppIcons", cfBundleIcons.Get<PString> ("CFBundlePrimaryIcon")?.Value, "CFBundlePrimaryIcon");
-
-				var tvTopShelfImage = appIconsManifest.Get<PDictionary> ("TVTopShelfImage");
-				Assert.AreEqual (2, tvTopShelfImage.Count, "TVTopShelfImage.Count");
-				Assert.AreEqual ("TopShelfImage", tvTopShelfImage.Get<PString> ("TVTopShelfPrimaryImage")?.Value, "TVTopShelfPrimaryImage");
-				Assert.AreEqual ("TopShelfImageWide", tvTopShelfImage.Get<PString> ("TVTopShelfPrimaryImageWide")?.Value, "TVTopShelfPrimaryImageWide");
+				expectedXml =
+					"""
+					<?xml version="1.0" encoding="UTF-8"?>
+					<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+					<plist version="1.0">
+					<dict>
+						<key>CFBundleIcons</key>
+						<dict>
+							<key>CFBundlePrimaryIcon</key>
+							<string>AppIcons</string>
+						</dict>
+						<key>TVTopShelfImage</key>
+						<dict>
+							<key>TVTopShelfPrimaryImage</key>
+							<string>TopShelfImage</string>
+							<key>TVTopShelfPrimaryImageWide</key>
+							<string>TopShelfImageWide</string>
+						</dict>
+					</dict>
+					</plist>
+					""";
 			} else {
-				{
-					// iPhone
-					var cfBundleIcons = appIconsManifest.Get<PDictionary> ("CFBundleIcons");
-					Assert.AreEqual (1, cfBundleIcons.Count, "CFBundleIcons.Count");
-
-					var cfBundlePrimaryIcon = cfBundleIcons.Get<PDictionary> ("CFBundlePrimaryIcon");
-					Assert.AreEqual (2, cfBundlePrimaryIcon.Count, "CFBundlePrimaryIcon.Length");
-
-					var cfBundleIconFiles = cfBundlePrimaryIcon.Get<PArray> ("CFBundleIconFiles");
-					Assert.AreEqual (1, cfBundleIconFiles.Count, "CFBundleIconFiles.Length");
-					Assert.AreEqual ("AppIcons60x60", ((PString) cfBundleIconFiles [0]).Value, "CFBundleIconFiles[0].Value");
-					Assert.AreEqual ("AppIcons", cfBundlePrimaryIcon.Get<PString> ("CFBundleIconName")?.Value, "CFBundleIconName");
-				}
-				{
-					// iPad
-					var cfBundleIcons = appIconsManifest.Get<PDictionary> ("CFBundleIcons~ipad");
-					Assert.AreEqual (1, cfBundleIcons.Count, "CFBundleIcons.Count");
-
-					var cfBundlePrimaryIcon = cfBundleIcons.Get<PDictionary> ("CFBundlePrimaryIcon");
-					Assert.AreEqual (2, cfBundlePrimaryIcon.Count, "CFBundlePrimaryIcon.Length");
-
-					var cfBundleIconFiles = cfBundlePrimaryIcon.Get<PArray> ("CFBundleIconFiles");
-					Assert.AreEqual (2, cfBundleIconFiles.Count, "CFBundleIconFiles.Length");
-					Assert.AreEqual ("AppIcons60x60", ((PString) cfBundleIconFiles [0]).Value, "CFBundleIconFiles[0].Value");
-					Assert.AreEqual ("AppIcons76x76", ((PString) cfBundleIconFiles [1]).Value, "CFBundleIconFiles[1].Value");
-					Assert.AreEqual ("AppIcons", cfBundlePrimaryIcon.Get<PString> ("CFBundleIconName")?.Value, "CFBundleIconName");
-				}
+				expectedXml =
+					"""
+					<?xml version="1.0" encoding="UTF-8"?>
+					<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+					<plist version="1.0">
+					<dict>
+						<key>CFBundleIcons</key>
+						<dict>
+							<key>CFBundlePrimaryIcon</key>
+							<dict>
+								<key>CFBundleIconFiles</key>
+								<array>
+									<string>AppIcons60x60</string>
+								</array>
+								<key>CFBundleIconName</key>
+								<string>AppIcons</string>
+							</dict>
+						</dict>
+						<key>CFBundleIcons~ipad</key>
+						<dict>
+							<key>CFBundlePrimaryIcon</key>
+							<dict>
+								<key>CFBundleIconFiles</key>
+								<array>
+									<string>AppIcons60x60</string>
+									<string>AppIcons76x76</string>
+								</array>
+								<key>CFBundleIconName</key>
+								<string>AppIcons</string>
+							</dict>
+						</dict>
+					</dict>
+					</plist>
+					""";
 			}
+			PListAsserts.AreStringsEqual (expectedXml, File.ReadAllText (appIconsManifestPath), "Partial plist contents");
 		}
 
 		[Test]
@@ -281,8 +385,8 @@ namespace Xamarin.MacDev.Tasks {
 		{
 			var actool = CreateACToolTaskWithResources (platform);
 			if (platform == ApplePlatform.TVOS) {
-				actool.AppIcon = "BrandAssets";
-				actool.AlternateAppIcons = new ITaskItem [] { new TaskItem ("AlternateBrandAssets") };
+				actool.AppIcon = "AppIcons";
+				actool.AlternateAppIcons = new ITaskItem [] { new TaskItem ("AlternateAppIcons") };
 			} else {
 				actool.AppIcon = "AppIcons";
 				actool.AlternateAppIcons = new ITaskItem [] { new TaskItem ("AlternateAppIcons") };
@@ -292,73 +396,115 @@ namespace Xamarin.MacDev.Tasks {
 
 			Assert.IsNotNull (actool.PartialAppManifest, "PartialAppManifest");
 
-			var appIconsManifest = PDictionary.FromFile (actool.PartialAppManifest.ItemSpec!)!;
-			Assert.AreEqual (2, appIconsManifest.Count, $"Partial plist contents: {actool.PartialAppManifest.ItemSpec}");
+			var appIconsManifestPath = actool.PartialAppManifest.ItemSpec!;
+			string expectedXml;
 			if (platform == ApplePlatform.MacOSX || platform == ApplePlatform.MacCatalyst) {
-				Assert.AreEqual ("AppIcons", appIconsManifest.Get<PString> ("CFBundleIconFile")?.Value, "CFBundleIconFile");
-				Assert.AreEqual ("AppIcons", appIconsManifest.Get<PString> ("CFBundleIconName")?.Value, "CFBundleIconName");
+				expectedXml =
+					"""
+					<?xml version="1.0" encoding="UTF-8"?>
+					<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+					<plist version="1.0">
+					<dict>
+						<key>CFBundleIconFile</key>
+						<string>AppIcons</string>
+						<key>CFBundleIconName</key>
+						<string>AppIcons</string>
+					</dict>
+					</plist>
+					""";
 			} else if (platform == ApplePlatform.TVOS) {
-				var cfBundleIcons = appIconsManifest.Get<PDictionary> ("CFBundleIcons");
-				Assert.AreEqual (1, cfBundleIcons.Count, "CFBundleIcons.Count");
-				Assert.AreEqual ("AppIcons", cfBundleIcons.Get<PString> ("CFBundlePrimaryIcon")?.Value, "CFBundlePrimaryIcon");
-
-				var tvTopShelfImage = appIconsManifest.Get<PDictionary> ("TVTopShelfImage");
-				Assert.AreEqual (2, tvTopShelfImage.Count, "TVTopShelfImage.Count");
-				Assert.AreEqual ("TopShelfImage", tvTopShelfImage.Get<PString> ("TVTopShelfPrimaryImage")?.Value, "TVTopShelfPrimaryImage");
-				Assert.AreEqual ("TopShelfImageWide", tvTopShelfImage.Get<PString> ("TVTopShelfPrimaryImageWide")?.Value, "TVTopShelfPrimaryImageWide");
+				expectedXml =
+					"""
+					<?xml version="1.0" encoding="UTF-8"?>
+					<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+					<plist version="1.0">
+					<dict>
+						<key>CFBundleIcons</key>
+						<dict>
+							<key>CFBundleAlternateIcons</key>
+							<dict>
+								<key>AlternateAppIcons</key>
+								<dict>
+									<key>CFBundleIconName</key>
+									<string>AlternateAppIcons</string>
+								</dict>
+							</dict>
+							<key>CFBundlePrimaryIcon</key>
+							<string>AppIcons</string>
+						</dict>
+						<key>TVTopShelfImage</key>
+						<dict>
+							<key>TVTopShelfPrimaryImage</key>
+							<string>TopShelfImage</string>
+							<key>TVTopShelfPrimaryImageWide</key>
+							<string>TopShelfImageWide</string>
+						</dict>
+					</dict>
+					</plist>
+					""";
 			} else {
-				{
-					// iPhone
-					var cfBundleIcons = appIconsManifest.Get<PDictionary> ("CFBundleIcons");
-					Assert.AreEqual (2, cfBundleIcons.Count, "CFBundleIcons.Count");
-
-					var cfBundlePrimaryIcon = cfBundleIcons.Get<PDictionary> ("CFBundlePrimaryIcon");
-					Assert.AreEqual (2, cfBundlePrimaryIcon.Count, "CFBundlePrimaryIcon.Length");
-					Assert.AreEqual ("AppIcons", cfBundlePrimaryIcon.Get<PString> ("CFBundleIconName")?.Value, "CFBundleIconName");
-
-					var cfBundleIconFiles = cfBundlePrimaryIcon.Get<PArray> ("CFBundleIconFiles");
-					Assert.AreEqual (1, cfBundleIconFiles.Count, "CFBundleIconFiles.Length");
-					Assert.AreEqual ("AppIcons60x60", ((PString) cfBundleIconFiles [0]).Value, "CFBundleIconFiles[0].Value");
-
-					var cfBundleAlternateIcons = cfBundleIcons.Get<PDictionary> ("CFBundleAlternateIcons");
-					Assert.AreEqual (1, cfBundleAlternateIcons.Count, "CFBundleAlternateIcons.Count");
-
-					var alternateAppIcons = cfBundleAlternateIcons.Get<PDictionary> ("AlternateAppIcons");
-					Assert.AreEqual (2, alternateAppIcons.Count, "CFBundleAlternateIcons.Count");
-					Assert.AreEqual ("AlternateAppIcons", alternateAppIcons.Get<PString> ("CFBundleIconName")?.Value, "CFBundleIconName");
-
-					var alternateAppIcons_CFBundleIconFiles = alternateAppIcons.Get<PArray> ("CFBundleIconFiles");
-					Assert.AreEqual (2, alternateAppIcons_CFBundleIconFiles.Count, "AlternateAppIcons.CFBundleIconFiles.Count");
-					Assert.AreEqual ("AlternateAppIcons60x60", ((PString) alternateAppIcons_CFBundleIconFiles [0]).Value, "AlternateAppIcons.CFBundleIconFiles[0]");
-					Assert.AreEqual ("AlternateAppIcons76x76", ((PString) alternateAppIcons_CFBundleIconFiles [1]).Value, "AlternateAppIcons.CFBundleIconFiles[1]");
-				}
-				{
-					// iPad
-					var cfBundleIcons = appIconsManifest.Get<PDictionary> ("CFBundleIcons~ipad");
-					Assert.AreEqual (2, cfBundleIcons.Count, "CFBundleIcons.Count");
-
-					var cfBundlePrimaryIcon = cfBundleIcons.Get<PDictionary> ("CFBundlePrimaryIcon");
-					Assert.AreEqual (2, cfBundlePrimaryIcon.Count, "CFBundlePrimaryIcon.Length");
-					Assert.AreEqual ("AppIcons", cfBundlePrimaryIcon.Get<PString> ("CFBundleIconName")?.Value, "CFBundleIconName");
-
-					var cfBundleIconFiles = cfBundlePrimaryIcon.Get<PArray> ("CFBundleIconFiles");
-					Assert.AreEqual (2, cfBundleIconFiles.Count, "CFBundleIconFiles.Length");
-					Assert.AreEqual ("AppIcons60x60", ((PString) cfBundleIconFiles [0]).Value, "CFBundleIconFiles[0].Value");
-					Assert.AreEqual ("AppIcons76x76", ((PString) cfBundleIconFiles [1]).Value, "CFBundleIconFiles[1].Value");
-
-					var cfBundleAlternateIcons = cfBundleIcons.Get<PDictionary> ("CFBundleAlternateIcons");
-					Assert.AreEqual (1, cfBundleAlternateIcons.Count, "CFBundleAlternateIcons.Count");
-
-					var alternateAppIcons = cfBundleAlternateIcons.Get<PDictionary> ("AlternateAppIcons");
-					Assert.AreEqual (2, alternateAppIcons.Count, "CFBundleAlternateIcons.Count");
-					Assert.AreEqual ("AlternateAppIcons", alternateAppIcons.Get<PString> ("CFBundleIconName")?.Value, "CFBundleIconName");
-
-					var alternateAppIcons_CFBundleIconFiles = alternateAppIcons.Get<PArray> ("CFBundleIconFiles");
-					Assert.AreEqual (2, alternateAppIcons_CFBundleIconFiles.Count, "AlternateAppIcons.CFBundleIconFiles.Count");
-					Assert.AreEqual ("AlternateAppIcons60x60", ((PString) alternateAppIcons_CFBundleIconFiles [0]).Value, "AlternateAppIcons.CFBundleIconFiles[0]");
-					Assert.AreEqual ("AlternateAppIcons76x76", ((PString) alternateAppIcons_CFBundleIconFiles [1]).Value, "AlternateAppIcons.CFBundleIconFiles[1]");
-				}
+				expectedXml =
+					"""
+					<?xml version="1.0" encoding="UTF-8"?>
+					<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+					<plist version="1.0">
+					<dict>
+						<key>CFBundleIcons</key>
+						<dict>
+							<key>CFBundleAlternateIcons</key>
+							<dict>
+								<key>AlternateAppIcons</key>
+								<dict>
+									<key>CFBundleIconFiles</key>
+									<array>
+										<string>AlternateAppIcons60x60</string>
+										<string>AlternateAppIcons76x76</string>
+									</array>
+									<key>CFBundleIconName</key>
+									<string>AlternateAppIcons</string>
+								</dict>
+							</dict>
+							<key>CFBundlePrimaryIcon</key>
+							<dict>
+								<key>CFBundleIconFiles</key>
+								<array>
+									<string>AppIcons60x60</string>
+								</array>
+								<key>CFBundleIconName</key>
+								<string>AppIcons</string>
+							</dict>
+						</dict>
+						<key>CFBundleIcons~ipad</key>
+						<dict>
+							<key>CFBundleAlternateIcons</key>
+							<dict>
+								<key>AlternateAppIcons</key>
+								<dict>
+									<key>CFBundleIconFiles</key>
+									<array>
+										<string>AlternateAppIcons60x60</string>
+										<string>AlternateAppIcons76x76</string>
+									</array>
+									<key>CFBundleIconName</key>
+									<string>AlternateAppIcons</string>
+								</dict>
+							</dict>
+							<key>CFBundlePrimaryIcon</key>
+							<dict>
+								<key>CFBundleIconFiles</key>
+								<array>
+									<string>AppIcons60x60</string>
+									<string>AppIcons76x76</string>
+								</array>
+								<key>CFBundleIconName</key>
+								<string>AppIcons</string>
+							</dict>
+						</dict>
+					</dict>
+					</plist>
+					""";
 			}
+			PListAsserts.AreStringsEqual (expectedXml, File.ReadAllText (appIconsManifestPath), "Partial plist contents");
 		}
 
 		[Test]
@@ -369,16 +515,44 @@ namespace Xamarin.MacDev.Tasks {
 		public void AlternateIcons (ApplePlatform platform)
 		{
 			var actool = CreateACToolTaskWithResources (platform);
-			if (platform == ApplePlatform.TVOS) {
-				actool.AlternateAppIcons = new ITaskItem [] { new TaskItem ("AlternateBrandAssets") };
-			} else {
-				actool.AlternateAppIcons = new ITaskItem [] { new TaskItem ("AlternateAppIcons") };
-			}
+			actool.AlternateAppIcons = new ITaskItem [] { new TaskItem ("AlternateAppIcons") };
 
 			ExecuteTask (actool);
 
-			var appIconsManifest = PDictionary.FromFile (actool.PartialAppManifest.ItemSpec!)!;
-			Assert.AreEqual (0, appIconsManifest.Count, $"Partial plist contents: {actool.PartialAppManifest.ItemSpec}");
+			string expectedXml;
+			switch (platform) {
+			case ApplePlatform.TVOS:
+				expectedXml = """
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleIcons</key>
+	<dict>
+		<key>CFBundleAlternateIcons</key>
+		<dict>
+			<key>AlternateAppIcons</key>
+			<dict>
+				<key>CFBundleIconName</key>
+				<string>AlternateAppIcons</string>
+			</dict>
+		</dict>
+	</dict>
+</dict>
+</plist>
+""";
+				break;
+			case ApplePlatform.iOS:
+			case ApplePlatform.MacOSX:
+			case ApplePlatform.MacCatalyst:
+				expectedXml = "";
+				break;
+			default:
+				throw new NotImplementedException (platform.ToString ());
+			}
+
+			var appIconsManifestPath = actool.PartialAppManifest.ItemSpec!;
+			PListAsserts.AreStringsEqual (expectedXml, File.ReadAllText (appIconsManifestPath), "Partial plist contents");
 		}
 
 		[Test]
@@ -392,7 +566,20 @@ namespace Xamarin.MacDev.Tasks {
 			actool.AppIcon = "InexistentAppIcons";
 
 			ExecuteTask (actool, 1);
-			Assert.AreEqual ("Can't find the AppIcon 'InexistentAppIcons' among the image resources.", Engine.Logger.ErrorEvents [0].Message, "Error message");
+			string expectedErrorMessage;
+			switch (platform) {
+			case ApplePlatform.TVOS:
+				expectedErrorMessage = "Can't find the AppIcon 'InexistentAppIcons' among the image resources. There are 2 app icons in the image resources: AlternateBrandAssets, AppIcons.";
+				break;
+			case ApplePlatform.iOS:
+			case ApplePlatform.MacOSX:
+			case ApplePlatform.MacCatalyst:
+				expectedErrorMessage = "Can't find the AppIcon 'InexistentAppIcons' among the image resources. There are 2 app icons in the image resources: AlternateAppIcons, AppIcons.";
+				break;
+			default:
+				throw new NotImplementedException (platform.ToString ());
+			}
+			Assert.AreEqual (expectedErrorMessage, Engine.Logger.ErrorEvents [0].Message, "Error message");
 		}
 
 		[Test]
@@ -406,7 +593,20 @@ namespace Xamarin.MacDev.Tasks {
 			actool.AlternateAppIcons = new ITaskItem [] { new TaskItem ("InexistentAlternateAppIcons") };
 
 			ExecuteTask (actool, 1);
-			Assert.AreEqual ("Can't find the AlternateAppIcon 'InexistentAlternateAppIcons' among the image resources.", Engine.Logger.ErrorEvents [0].Message, "Error message");
+			string expectedErrorMessage;
+			switch (platform) {
+			case ApplePlatform.TVOS:
+				expectedErrorMessage = "Can't find the AlternateAppIcon 'InexistentAlternateAppIcons' among the image resources. There are 5 app icons in the image resources: AlternateAppIcons, AppIcon, AppIcon-AppStore, AppIcons, AppIcons-AppStore.";
+				break;
+			case ApplePlatform.iOS:
+			case ApplePlatform.MacOSX:
+			case ApplePlatform.MacCatalyst:
+				expectedErrorMessage = "Can't find the AlternateAppIcon 'InexistentAlternateAppIcons' among the image resources. There are 2 app icons in the image resources: AlternateAppIcons, AppIcons.";
+				break;
+			default:
+				throw new NotImplementedException (platform.ToString ());
+			}
+			Assert.AreEqual (expectedErrorMessage, Engine.Logger.ErrorEvents [0].Message, "Error message");
 		}
 
 		[Test]
@@ -417,16 +617,11 @@ namespace Xamarin.MacDev.Tasks {
 		public void BothAlternateAndMainIcon (ApplePlatform platform)
 		{
 			var actool = CreateACToolTaskWithResources (platform);
-			if (platform == ApplePlatform.TVOS) {
-				actool.AlternateAppIcons = new ITaskItem [] { new TaskItem ("BrandAssets") };
-				actool.AppIcon = "BrandAssets";
-			} else {
-				actool.AlternateAppIcons = new ITaskItem [] { new TaskItem ("AppIcons") };
-				actool.AppIcon = "AppIcons";
-			}
+			actool.AlternateAppIcons = new ITaskItem [] { new TaskItem ("AppIcons") };
+			actool.AppIcon = "AppIcons";
 
 			ExecuteTask (actool, 1);
-			Assert.AreEqual ($"The image resource '{actool.AppIcon}' is specified as both 'AppIcon' and 'AlternateAppIcon'", Engine.Logger.ErrorEvents [0].Message, "Error message");
+			Assert.AreEqual ($"The image resource '{actool.AppIcon}' is specified as both 'AppIcon' and 'AlternateAppIcon'.", Engine.Logger.ErrorEvents [0].Message, "Error message");
 		}
 
 		[Test]
