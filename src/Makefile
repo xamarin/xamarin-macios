@@ -458,6 +458,7 @@ $($(2)_DOTNET_BUILD_DIR)/$(4)/Microsoft.$(1)%dll $($(2)_DOTNET_BUILD_DIR)/$(4)/M
 	$$(call Q_PROF_CSC,dotnet/$(4)-bit) \
 		$(DOTNET_CSC)  \
 		$(DOTNET_FLAGS) \
+		/analyzer:$(ROSLYN_GENERATOR_COMMON) \
 		/analyzer:$(ROSLYN_GENERATOR) \
 		-unsafe \
 		-optimize \
