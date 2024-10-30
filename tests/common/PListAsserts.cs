@@ -101,7 +101,7 @@ namespace Xamarin.Tests {
 		{
 			if (expected.GetType () != actual.GetType ()) {
 				Assert.Fail (
-					$"Expected item of type '{expected.GetType ().Name}' for key '{key}', got item of type '{actual.GetType ()}': {message}\n"+
+					$"Expected item of type '{expected.GetType ().Name}' for key '{key}', got item of type '{actual.GetType ()}': {message}\n" +
 					$"\tExpected xml:\n" +
 					$"\t\t{expectedXml.Replace ("\n", "\n\t\t")}\n" +
 					$"\tActual xml:\n" +
