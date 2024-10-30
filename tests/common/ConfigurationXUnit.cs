@@ -59,12 +59,9 @@ namespace Xamarin.Tests {
 
 		public override IEnumerable<object []> GetData (MethodInfo testMethod)
 		{
-			foreach (var platform in Configuration.GetAllPlatforms (true)) {
-				if (!Configuration.IsEnabled (platform))
-					continue;
-				var parameters = dataValues.Prepend (platform).ToArray ();
-				yield return parameters;
-			}
+			return Configuration.
+				GetIncludedPlatforms (true).
+				Select (v => dataValues.Prepend (platform).ToArray ());
 		}
 	}
 
