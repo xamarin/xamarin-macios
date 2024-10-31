@@ -6,5 +6,5 @@ namespace Microsoft.Macios.Generator;
 public static class AttributesNames {
 
 	public const string BindingAttribute = "ObjCBindings.BindingTypeAttribute";
-	public const string FieldAttribute = "ObjCBindings.FieldAttribute<ObjCBindings.EnumValue>";
+	public const string EnumFieldAttribute = "ObjCBindings.FieldAttribute<ObjCBindings.EnumValue>";
 }
