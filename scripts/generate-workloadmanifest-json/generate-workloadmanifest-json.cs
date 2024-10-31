@@ -1,16 +1,12 @@
-#!/usr/bin/env /Library/Frameworks/Mono.framework/Commands/csharp -s
-
 // arguments are: <platform> <outputPath>
 
 using System.IO;
 using System.Xml;
 
-var args = Args;
 var expectedArgumentCount = 9;
 if (args.Length != expectedArgumentCount) {
 	Console.WriteLine ($"Need {expectedArgumentCount} arguments, got {args.Length}");
-	Environment.Exit (1);
-	return;
+	return 1;
 }
 
 var argumentIndex = 0;
@@ -33,7 +29,7 @@ allApiVersions = allApiVersions.Select (v => v.Replace ('-', '_')).ToList ();
 var versionsPropsTable = File.ReadAllLines (versionsPropsPath).
 				Where (v => v.Count (f => f == '>') > 1).
 				Select (v => {
-					var split = v.Trim ().Split (new char [] { '<', '>', '/'}, StringSplitOptions.RemoveEmptyEntries);
+					var split = v.Trim ().Split (new char [] { '<', '>', '/' }, StringSplitOptions.RemoveEmptyEntries);
 					var name = split [0];
 					var value = split [1];
 					return new Tuple<string, string> (name, value);
@@ -75,7 +71,7 @@ using (TextWriter writer = new StreamWriter (outputPath)) {
 	writer.WriteLine ($"	}},");
 	writer.WriteLine ($"	\"packs\": {{");
 	foreach (var tfmVersion in allApiVersions) {
-		string apiVersion;
+		string? apiVersion = null;
 		var tfm = tfmVersion;
 		if (tfm == currentApiVersion) {
 			apiVersion = version;
@@ -129,14 +125,12 @@ using (TextWriter writer = new StreamWriter (outputPath)) {
 	writer.WriteLine ($"		\"Microsoft.{platform}.Templates.net9\": {{");
 	writer.WriteLine ($"			\"kind\": \"template\",");
 	writer.WriteLine ($"			\"version\": \"{version}\",");
-		writer.WriteLine ($"			\"alias-to\": {{");
-		writer.WriteLine ($"				\"any\": \"Microsoft.{platform}.Templates\",");
-		writer.WriteLine ($"			}}");
+	writer.WriteLine ($"			\"alias-to\": {{");
+	writer.WriteLine ($"				\"any\": \"Microsoft.{platform}.Templates\",");
+	writer.WriteLine ($"			}}");
 	writer.WriteLine ($"		}}");
 	writer.WriteLine ($"	}}");
 	writer.WriteLine ($"}}");
 }
 
-if (failed)
-        Environment.Exit (1);
-Environment.Exit (0);
+return failed ? 1 : 0;
