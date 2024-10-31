@@ -37,7 +37,7 @@ namespace Xamarin.Tests {
 					rv [kvp.Key] = kvp.Value;
 			}
 
-			if (Configuration.IsBuildingRemotely)
+			if (Configuration.IsBuildingRemotely && !rv.ContainsKey ("IsHotRestartBuild"))
 				AddRemoteProperties (rv);
 
 			return rv;
