@@ -14,51 +14,39 @@ using System;
 namespace UIKit {
 
 	public partial class UIBarButtonItem {
-		static Selector actionSel = new Selector ("InvokeAction:");
+		const string actionSelector = "InvokeAction:";
+		static Selector actionSel = new Selector (actionSelector);
 
-		[Register]
-		internal class Callback : NSObject {
-			internal UIBarButtonItem container;
-
-			public Callback ()
-			{
-				IsDirectBinding = false;
-			}
-
-			[Export ("InvokeAction:")]
-			[Preserve (Conditional = true)]
-			public void Call (NSObject sender)
-			{
-				if (container.clicked is not null)
-					container.clicked (sender, EventArgs.Empty);
-			}
+		[Export ("InvokeAction:")]
+		[Preserve (Conditional = true)]
+		void Call (NSObject sender)
+		{
+			if (clicked is not null)
+				clicked (sender, EventArgs.Empty);
 		}
 
 		public UIBarButtonItem (UIImage image, UIBarButtonItemStyle style, EventHandler handler)
-		: this (image, style, new Callback (), actionSel)
+		: this (image, style, null, actionSel)
 		{
-			callback = (Callback) Target;
-			callback.container = this;
+			Target = this;
 			clicked += handler;
 			MarkDirty ();
 		}
 
 
 		public UIBarButtonItem (string title, UIBarButtonItemStyle style, EventHandler handler)
-		: this (title, style, new Callback (), actionSel)
+		: this (title, style, null, actionSel)
 		{
-			callback = (Callback) Target;
-			callback.container = this;
+			Target = this;
 			clicked += handler;
 			MarkDirty ();
 		}
 
 
 		public UIBarButtonItem (UIBarButtonSystemItem systemItem, EventHandler handler)
-		: this (systemItem, new Callback (), actionSel)
+		: this (systemItem, null, actionSel)
 		{
-			callback = (Callback) Target;
-			callback.container = this;
+			Target = this;
 			clicked += handler;
 			MarkDirty ();
 		}
@@ -67,15 +55,12 @@ namespace UIKit {
 		{
 		}
 
-		internal EventHandler clicked;
-		internal Callback callback;
+		EventHandler clicked;
 
 		public event EventHandler Clicked {
 			add {
 				if (clicked is null) {
-					callback = new Callback ();
-					callback.container = this;
-					this.Target = callback;
+					Target = this;
 					this.Action = actionSel;
 					MarkDirty ();
 				}
