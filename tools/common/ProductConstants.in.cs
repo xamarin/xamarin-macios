@@ -1,6 +1,6 @@
 using System;
 
-#if MTOUCH || MMP || BUNDLER
+#if MTOUCH || MMP || BUNDLER || PRETRIM
 using Xamarin.Bundler;
 using Xamarin.Utils;
 #endif
