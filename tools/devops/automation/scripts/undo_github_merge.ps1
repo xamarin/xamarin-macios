@@ -15,7 +15,7 @@ if($IsPr.ToLower() -eq "true") {
 
     Write-Host "Refspec: $refspec"
 
-    git fetch origin "$refspec"
+    git fetch origin --no-tags "$refspec"
 
     $branch="$SourceBranch".Replace("merge", "head")
     $branch=$branch.Replace("refs", "origin")
