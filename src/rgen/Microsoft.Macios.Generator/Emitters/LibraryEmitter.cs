@@ -16,7 +16,7 @@ class LibraryEmitter (
 	public string SymbolName => "Libraries";
 	INamedTypeSymbol? LibrarySymbol { get; } = context.Compilation.GetTypeByMetadataName ("ObjCRuntime.Libraries");
 
-	bool IsSymbolPreset (string className)
+	bool IsSymbolPresent (string className)
 		=> LibrarySymbol is not null &&
 		   LibrarySymbol.GetMembers ().OfType<INamedTypeSymbol> ()
 			   .Any (v => v.Name == className);
@@ -45,7 +45,7 @@ class LibraryEmitter (
 						 StringComparer.Ordinal)) {
 				// verify if the symbol is already defined by the runtime
 				var className = name.Replace (".", string.Empty);
-				if (IsSymbolPreset (className))
+				if (IsSymbolPresent (className))
 					continue;
 
 				using (var nestedClass =

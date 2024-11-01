@@ -100,6 +100,7 @@ public enum TestEnum {
 		Assert.Multiple (() => {
 			foreach (var attrName in attrs.Keys) {
 				Assert.Contains (attrName, expectedAttributes);
+				Assert.Single (attrs [attrName]);
 			}
 		});
 	}

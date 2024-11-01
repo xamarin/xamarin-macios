@@ -36,7 +36,15 @@ static class NamedTypeSymbolExtensions {
 				continue;
 
 			// Get all the FieldAttribute, parse it and add the data to the result
-			if (attributes.TryGetValue (AttributesNames.EnumFieldAttribute, out var fieldAttrData)) {
+			if (attributes.TryGetValue (AttributesNames.EnumFieldAttribute, out var fieldAttrDataList)) {
+				if (fieldAttrDataList.Count != 1) {
+					// FieldAttribute restrictions does not allow it to appear more than once
+					diagnostics = [Diagnostic.Create (Diagnostics.RBI0000,
+						enumSymbol.Locations [0], fieldSymbol.ToDisplayString ().Trim ())];
+					return false;
+				}
+
+				var fieldAttrData = fieldAttrDataList [0];
 				var fieldSyntax = fieldAttrData.ApplicationSyntaxReference?.GetSyntax ();
 				if (fieldSyntax is null)
 					continue;
@@ -44,7 +52,9 @@ static class NamedTypeSymbolExtensions {
 				if (FieldData<EnumValue>.TryParse (fieldSyntax, fieldAttrData, out var fieldData)) {
 					fieldBucket.Add ((Symbol: fieldSymbol, FieldData: fieldData));
 				} else {
-					// TODO: diagnostics
+					diagnostics = [Diagnostic.Create (Diagnostics.RBI0000,
+						enumSymbol.Locations [0], fieldSymbol.ToDisplayString ().Trim ())];
+					return false;
 				}
 			}
 		}

@@ -126,7 +126,7 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 	}
 
 	/// <summary>
-	/// Code generator that emmits the static classes that contain the pointers to the library used
+	/// Code generator that emits the static classes that contain the pointers to the library used
 	/// by the binding. This is a single generated file.
 	/// </summary>
 	/// <param name="context">Source production context.</param>

@@ -4,7 +4,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.Macios.Generator.Extensions;
 
 namespace Microsoft.Macios.Generator.Context;
@@ -88,14 +87,13 @@ class RootBindingContext {
 		&& variableName.StartsWith (libraryName, StringComparison.Ordinal)
 		// has to end with the word library
 		&& variableName.EndsWith ("Library", StringComparison.Ordinal);
+	
+	INamedTypeSymbol GetObjCConstants () => Compilation.GetTypeByMetadataName ("ObjCRuntime.Constants")!;
 
 	public bool IsSystemLibrary (string name)
 	{
 		// use the semantic model to get the ObjcRuntime.Constants type and see if we do have a value for the library
-		var symbol = Compilation.GetTypeByMetadataName ("ObjCRuntime.Constants");
-		// this should not happen, we should have the Constants type
-		if (symbol is null)
-			return false;
+		var symbol = GetObjCConstants ();
 		return symbol.GetMembers ().OfType<IFieldSymbol> ()
 			.Select (f => f.Name)
 			.Any (s => IsLibraryName (s, name));
