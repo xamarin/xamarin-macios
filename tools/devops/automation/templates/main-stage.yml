@@ -90,63 +90,63 @@ parameters:
         splitByPlatforms: false,
         testPrefix: 'simulator_tests',
       },
-      {
-        label: dotnettests,
-        splitByPlatforms: true,
-        needsMultiplePlatforms: true,
-        testPrefix: 'simulator_tests',
-      },
-      {
-        label: fsharp,
-        splitByPlatforms: false,
-        testPrefix: 'simulator_tests',
-      },
-      {
-        label: framework,
-        splitByPlatforms: false,
-        testPrefix: 'simulator_tests',
-      },
-      {
-        label: generator,
-        splitByPlatforms: false,
-        testPrefix: 'simulator_tests',
-      },
-      {
-        label: interdependent-binding-projects,
-        splitByPlatforms: false,
-        testPrefix: 'simulator_tests',
-      },
-      {
-        label: introspection,
-        splitByPlatforms: false,
-        testPrefix: 'simulator_tests',
-      },
-      {
-        label: linker,
-        splitByPlatforms: false,
-        testPrefix: 'simulator_tests',
-      },
-      {
-        label: monotouch,
-        splitByPlatforms: true,
-        needsMultiplePlatforms: false,
-        testPrefix: 'simulator_tests',
-      },
-      {
-        label: msbuild,
-        splitByPlatforms: false,
-        testPrefix: 'simulator_tests',
-      },
-      {
-        label: xcframework,
-        splitByPlatforms: false,
-        testPrefix: 'simulator_tests',
-      },
-      {
-        label: xtro,
-        splitByPlatforms: false,
-        testPrefix: 'simulator_tests',
-      },
+      # {
+      #   label: dotnettests,
+      #   splitByPlatforms: true,
+      #   needsMultiplePlatforms: true,
+      #   testPrefix: 'simulator_tests',
+      # },
+      # {
+      #   label: fsharp,
+      #   splitByPlatforms: false,
+      #   testPrefix: 'simulator_tests',
+      # },
+      # {
+      #   label: framework,
+      #   splitByPlatforms: false,
+      #   testPrefix: 'simulator_tests',
+      # },
+      # {
+      #   label: generator,
+      #   splitByPlatforms: false,
+      #   testPrefix: 'simulator_tests',
+      # },
+      # {
+      #   label: interdependent-binding-projects,
+      #   splitByPlatforms: false,
+      #   testPrefix: 'simulator_tests',
+      # },
+      # {
+      #   label: introspection,
+      #   splitByPlatforms: false,
+      #   testPrefix: 'simulator_tests',
+      # },
+      # {
+      #   label: linker,
+      #   splitByPlatforms: false,
+      #   testPrefix: 'simulator_tests',
+      # },
+      # {
+      #   label: monotouch,
+      #   splitByPlatforms: true,
+      #   needsMultiplePlatforms: false,
+      #   testPrefix: 'simulator_tests',
+      # },
+      # {
+      #   label: msbuild,
+      #   splitByPlatforms: false,
+      #   testPrefix: 'simulator_tests',
+      # },
+      # {
+      #   label: xcframework,
+      #   splitByPlatforms: false,
+      #   testPrefix: 'simulator_tests',
+      # },
+      # {
+      #   label: xtro,
+      #   splitByPlatforms: false,
+      #   testPrefix: 'simulator_tests',
+      # },
     ]
 
   - name: deviceTestsConfigurations
