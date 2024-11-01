@@ -9,7 +9,7 @@ static class SourceProductionContextExtensions {
 	{
 		if (diagnostics is null)
 			return;
-		
+
 		foreach (Diagnostic diagnostic in diagnostics) {
 			context.ReportDiagnostic (diagnostic);
 		}
