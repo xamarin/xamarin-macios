@@ -49,7 +49,7 @@ steps:
         # build nugets
         - bash: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/build-nugets.sh
           displayName: 'Build Nugets'
-          condition: and(succeeded(), contains(variables['configuration.BuildNugets'], 'True'), ne(variables['ENABLE_DOTNET'], ''))
+          condition: and(succeeded(), contains(variables['configuration.BuildNugets'], 'True')))
           timeoutInMinutes: 180
 
         - bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/generate-workload-rollback.sh

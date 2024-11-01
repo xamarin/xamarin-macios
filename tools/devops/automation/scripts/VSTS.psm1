@@ -447,11 +447,6 @@ class BuildConfiguration {
 
         $this.StoreParentBuildVariables($configuration)
 
-        # store if dotnet has been enabled
-        $variableName = "ENABLE_DOTNET"
-        $variableValue = [Environment]::GetEnvironmentVariable($variableName)
-        $configuration | Add-Member -NotePropertyName $variableName -NotePropertyValue $variableValue
-
         # For each .NET platform we support, add a INCLUDE_DOTNET_<platform> variable specifying whether that platform is enabled or not.
         $dotnetPlatforms = $configuration.DOTNET_PLATFORMS.Split(' ', [StringSplitOptions]::RemoveEmptyEntries)
         foreach ($platform in $dotnetPlatforms) {
@@ -480,25 +475,6 @@ class BuildConfiguration {
                 $variableName = "$($rid)_NUGET_RUNTIME_NAME"
                 $variableValue = [Environment]::GetEnvironmentVariable("CONFIGURE_PLATFORMS_$variableName")
                 $configuration | Add-Member -NotePropertyName $variableName -NotePropertyValue $variableValue
-            }
-        }
-
-        # store all the variables needed when classic xamarin has been enabled
-        $configuration | Add-Member -NotePropertyName "INCLUDE_XAMARIN_LEGACY" -NotePropertyValue $Env:INCLUDE_XAMARIN_LEGACY
-
-        # if xamarin legacy has been included, check if we need to include the xamarin sdk for each of the platforms, otherewise it will be
-        # false for all
-        $xamarinPlatforms = @("ios", "macos", "tvos", "maccatalyst")
-        if ($configuration.INCLUDE_XAMARIN_LEGACY -eq "true") {
-            foreach ($platform in $xamarinPlatforms) {
-                $variableName = "INCLUDE_LEGACY_$($platform.ToUpper())"
-                $variableValue = [Environment]::GetEnvironmentVariable("$variableName")
-                $configuration | Add-Member -NotePropertyName $variableName -NotePropertyValue $variableValue
-            }
-        } else {
-            foreach ($platform in $xamarinPlatforms) {
-                $variableName = "INCLUDE_LEGACY_$($platform.ToUpper())"
-                $configuration | Add-Member -NotePropertyName $variableName -NotePropertyValue "false"
             }
         }
 

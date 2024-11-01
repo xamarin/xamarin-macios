@@ -427,7 +427,7 @@ namespace Xamarin.Tests {
 				var appExecutable = Path.Combine (appPath, Path.GetFileName (project_path));
 				Assert.That (appPath, Does.Not.Exist, "There is an .app");
 				Assert.That (appExecutable, Does.Not.Empty, "There is no executable");
-				Assert.That (Path.Combine (appPath, Configuration.GetBaseLibraryName (platform, true)), Does.Not.Exist, "Platform assembly is in the bundle");
+				Assert.That (Path.Combine (appPath, Configuration.GetBaseLibraryName (platform)), Does.Not.Exist, "Platform assembly is in the bundle");
 				break;
 			case ApplePlatform.MacCatalyst:
 				break;

@@ -176,76 +176,6 @@ define NativeCompilationTemplate
 .libs/maccatalyst/%$(1).arm64.framework: | .libs/maccatalyst
 	$$(call Q_2,LD,    [maccatalyst]) $(XCODE_CC) $(MACCATALYST_ARM64_CFLAGS)      $$(EXTRA_FLAGS) -dynamiclib -o $$@ $$^ -F$(IOS_DESTDIR)$(XAMARIN_MACCATALYST_SDK)/Frameworks -fapplication-extension
 
-## watch simulator
-
-.libs/watchsimulator/%$(1).x86.o: %.m $(EXTRA_DEPENDENCIES) | .libs/watchsimulator
-	$$(call Q_2,OBJC,  [watchsimulator]) $(SIMULATOR_CC) $(SIMULATORWATCH_OBJC_CFLAGS)   $$(EXTRA_DEFINES) $(SIMW_I) -g $(2) -c $$< -o $$@
-
-.libs/watchsimulator/%$(1).x86.o: %.c $(EXTRA_DEPENDENCIES) | .libs/watchsimulator
-	$$(call Q_2,CC,    [watchsimulator]) $(SIMULATOR_CC) $(SIMULATORWATCH_CFLAGS)        $$(EXTRA_DEFINES) $(SIMW_I) -g $(2) -c $$< -o $$@
-
-.libs/watchsimulator/%$(1).x86.o: %.s $(EXTRA_DEPENDENCIES) | .libs/watchsimulator
-	$$(call Q_2,ASM,   [watchsimulator]) $(SIMULATOR_CC) $(SIMULATORWATCH_CFLAGS)        $$(EXTRA_DEFINES) $(SIMW_I) -g $(2) -c $$< -o $$@
-
-.libs/watchsimulator/%$(1).x86.dylib: %.swift | .libs/watchsimulator
-	$$(call Q_2,SWIFT, [watchsimulator]) $(SWIFTC)       $(WATCHOS_SIMULATOR_X86_SWIFTFLAGS)                                    $$< -o $$@
-
-.libs/watchsimulator/%$(1).x86.dylib: | .libs/watchsimulator
-	$$(call Q_2,LD,    [watchsimulator]) $(SIMULATOR_CC) $(SIMULATORWATCH_CFLAGS)        $$(EXTRA_FLAGS) -dynamiclib -o $$@ $$^ -L$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/lib -fapplication-extension
-
-.libs/watchsimulator/%$(1).x86.framework: | .libs/watchsimulator
-	$$(call Q_2,LD,    [watchsimulator]) $(SIMULATOR_CC) $(SIMULATORWATCH_CFLAGS)        $$(EXTRA_FLAGS) -dynamiclib -o $$@ $$^ -F$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/Frameworks -fapplication-extension
-
-.libs/watchsimulator/%$(1).x86_64.o: %.m $(EXTRA_DEPENDENCIES) | .libs/watchsimulator
-	$$(call Q_2,OBJC,  [watchsimulator]) $(SIMULATOR_CC) $(SIMULATORWATCH64_OBJC_CFLAGS) $$(EXTRA_DEFINES) $(SIMW64_I) -g $(2) -c $$< -o $$@
-
-.libs/watchsimulator/%$(1).x86_64.o: %.c $(EXTRA_DEPENDENCIES) | .libs/watchsimulator
-	$$(call Q_2,CC,    [watchsimulator]) $(SIMULATOR_CC) $(SIMULATORWATCH64_CFLAGS)      $$(EXTRA_DEFINES) $(SIMW64_I) -g $(2) -c $$< -o $$@
-
-.libs/watchsimulator/%$(1).x86_64.o: %.s $(EXTRA_DEPENDENCIES) | .libs/watchsimulator
-	$$(call Q_2,ASM,   [watchsimulator]) $(SIMULATOR_CC) $(SIMULATORWATCH64_CFLAGS)      $$(EXTRA_DEFINES) $(SIMW64_I) -g $(2) -c $$< -o $$@
-
-.libs/watchsimulator/%$(1).x86_64.dylib: %.swift | .libs/watchsimulator
-	$$(call Q_2,SWIFT, [watchsimulator]) $(SWIFTC)       $(WATCHOS_SIMULATOR_X64_SWIFTFLAGS)                                      $$< -o $$@
-
-.libs/watchsimulator/%$(1).x86_64.dylib: | .libs/watchsimulator
-	$$(call Q_2,LD,    [watchsimulator]) $(SIMULATOR_CC) $(SIMULATORWATCH64_CFLAGS)      $$(EXTRA_FLAGS) -dynamiclib -o $$@ $$^ -L$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/lib -fapplication-extension
-
-.libs/watchsimulator/%$(1).x86_64.framework: | .libs/watchsimulator
-	$$(call Q_2,LD,    [watchsimulator]) $(SIMULATOR_CC) $(SIMULATORWATCH64_CFLAGS)      $$(EXTRA_FLAGS) -dynamiclib -o $$@ $$^ -F$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/Frameworks -fapplication-extension
-
-## watch device
-
-.libs/watchos/%$(1).armv7k.o: %.m $(EXTRA_DEPENDENCIES) | .libs/watchos
-	$$(call Q_2,OBJC,  [watchos]) $(DEVICE_CC) $(DEVICEWATCH_OBJC_CFLAGS)    $$(EXTRA_DEFINES) $(DEVW_I) -g $(2) -c $$< -o $$@ 
-
-.libs/watchos/%$(1).armv7k.o: %.c $(EXTRA_DEPENDENCIES) | .libs/watchos
-	$$(call Q_2,CC,    [watchos]) $(DEVICE_CC) $(DEVICEWATCH_CFLAGS)         $$(EXTRA_DEFINES) $(DEVW_I) -g $(2) -c $$< -o $$@ 
-
-.libs/watchos/%$(1).armv7k.dylib: %.swift | .libs/watchsimulator
-	$$(call Q_2,SWIFT, [watchos]) $(SWIFTC)    $(WATCHOS_DEVICE_ARMV7K_SWIFTFLAGS)                                  $$< -o $$@
-
-.libs/watchos/%$(1).armv7k.dylib: | .libs/watchos
-	$$(call Q_2,LD,    [watchos]) $(DEVICE_CC) $(DEVICEWATCH_CFLAGS)          $$(EXTRA_FLAGS) -dynamiclib -o $$@ $$^ -L$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/lib -fapplication-extension
-
-.libs/watchos/%$(1).armv7k.framework: | .libs/watchos
-	$$(call Q_2,LD,    [watchos]) $(DEVICE_CC) $(DEVICEWATCH_CFLAGS)          $$(EXTRA_FLAGS) -dynamiclib -o $$@ $$^ -F$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/Frameworks -fapplication-extension
-
-.libs/watchos/%$(1).arm64_32.o: %.m $(EXTRA_DEPENDENCIES) | .libs/watchos
-	$$(call Q_2,OBJC,  [watchos]) $(DEVICE_CC) $(DEVICEWATCH64_32_OBJC_CFLAGS)    $$(EXTRA_DEFINES) $(DEVW64_32_I) -g $(2) -c $$< -o $$@
-
-.libs/watchos/%$(1).arm64_32.o: %.c $(EXTRA_DEPENDENCIES) | .libs/watchos
-	$$(call Q_2,CC,    [watchos]) $(DEVICE_CC) $(DEVICEWATCH64_32_CFLAGS)         $$(EXTRA_DEFINES) $(DEVW64_32_I) -g $(2) -c $$< -o $$@
-
-.libs/watchos/%$(1).arm64_32.dylib: %.swift | .libs/watchsimulator
-	$$(call Q_2,SWIFT, [watchos]) $(SWIFTC)    $(WATCHOS_DEVICE_ARM64_32_SWIFTFLAGS)                                          $$< -o $$@
-
-.libs/watchos/%$(1).arm64_32.dylib: | .libs/watchos
-	$$(call Q_2,LD,    [watchos]) $(DEVICE_CC) $(DEVICEWATCH64_32_CFLAGS)          $$(EXTRA_FLAGS) -dynamiclib -o $$@ $$^ -L$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/lib -fapplication-extension
-
-.libs/watchos/%$(1).arm64_32.framework: | .libs/watchos
-	$$(call Q_2,LD,    [watchos]) $(DEVICE_CC) $(DEVICEWATCH64_32_CFLAGS)          $$(EXTRA_FLAGS) -dynamiclib -o $$@ $$^ -F$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/Frameworks -fapplication-extension
-
 ## tv simulator
 
 ### X64
@@ -390,7 +320,7 @@ $(eval $(call NativeCompilationTemplate,-dotnet-coreclr-debug,$(DEBUG_FLAGS) -DC
 $(eval $(call NativeCompilationTemplate,-dotnet-nativeaot,$(RELEASE_FLAGS) -DCORECLR_RUNTIME -DDOTNET -DNATIVEAOT))
 $(eval $(call NativeCompilationTemplate,-dotnet-nativeaot-debug,$(DEBUG_FLAGS) -DCORECLR_RUNTIME -DDOTNET -DNATIVEAOT))
 
-.libs/iphoneos .libs/iphonesimulator .libs/watchos .libs/watchsimulator .libs/tvos .libs/tvsimulator .libs/maccatalyst .libs/mac:
+.libs/iphoneos .libs/iphonesimulator .libs/tvos .libs/tvsimulator .libs/maccatalyst .libs/mac:
 	$(Q) mkdir -p $@
 
 %.csproj.inc: %.csproj $(TOP)/Make.config $(TOP)/mk/mono.mk $(TOP)/tools/common/create-makefile-fragment.sh

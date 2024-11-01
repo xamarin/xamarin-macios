@@ -500,9 +500,7 @@ install-system:
 	$(Q) cd $(HOME) && sudo dotnet workload remove $(DOTNET_PLATFORMS_LOWERCASE)
 	$(Q) cd $(HOME) && sudo dotnet workload install --from-rollback-file $(abspath $(TOP)/../WorkloadRollback.json) --source $(abspath $(TOP)/_build/nupkgs) --source https://api.nuget.org/v3/index.json $(DOTNET_PLATFORMS_LOWERCASE) -v diag
 
-ifdef ENABLE_DOTNET
 all-local:: $(TARGETS)
-endif
 
 clean-local::
 	$(Q) rm -Rf $(DOTNET_NUPKG_DIR)

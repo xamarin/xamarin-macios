@@ -155,23 +155,6 @@ parameters:
   - name: macTestsConfigurations
     type: object
 
-  - name: legacyPackageJobs
-    type: object
-    default: [
-      {
-        job: 'xamarin_ios_sign_notarize',
-        name: 'Xamarin.iOS',
-        pattern: 'xamarin.ios-*',
-        conditionVariable: "INCLUDE_LEGACY_IOS",
-      },
-      {
-        job: 'xamarin_mac_sing_notarie',
-        name: 'Xamarin.Mac',
-        pattern: 'xamarin.mac-*',
-        conditionVariable: "INCLUDE_LEGACY_MAC",
-      }
-    ]
-
   - name: stageDisplayNamePrefix
     type: string
     default: ''

@@ -11,7 +11,7 @@ namespace Xamarin.Tests {
 			foreach (var platform in Enum.GetValues<ApplePlatform> ()) {
 				if (platform == ApplePlatform.None)
 					continue;
-				var platformAssembly = Path.GetFileNameWithoutExtension (Configuration.GetBaseLibraryName (platform, true));
+				var platformAssembly = Path.GetFileNameWithoutExtension (Configuration.GetBaseLibraryName (platform));
 				if (platformAssembly == assemblyName)
 					return true;
 			}
@@ -308,7 +308,7 @@ namespace Xamarin.Tests {
 			expectedFiles.Add (Path.Combine (assemblyDirectory, "nunitlite.dll"));
 			bool forceSingleRid = (platform == ApplePlatform.MacCatalyst && !isReleaseBuild) || platform == ApplePlatform.MacOSX;
 			AddMultiRidAssembly (platform, expectedFiles, assemblyDirectory, "Touch.Client", runtimeIdentifiers, forceSingleRid, includeDebugFiles: includeDebugFiles);
-			AddMultiRidAssembly (platform, expectedFiles, assemblyDirectory, Path.GetFileNameWithoutExtension (Configuration.GetBaseLibraryName (platform, true)), runtimeIdentifiers, forceSingleRid, includeDebugFiles: includeDebugFiles);
+			AddMultiRidAssembly (platform, expectedFiles, assemblyDirectory, Path.GetFileNameWithoutExtension (Configuration.GetBaseLibraryName (platform)), runtimeIdentifiers, forceSingleRid, includeDebugFiles: includeDebugFiles);
 			expectedFiles.Add (Path.Combine (assemblyDirectory, "runtimeconfig.bin"));
 
 			switch (platform) {

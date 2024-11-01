@@ -1,28 +1,27 @@
 // this script is to make sure our versions.plist files are not out of date with our min/max supported OS versions.
 
-// arguments are: plistPath iOSMinVersion iOSMaxVersion tvOSMinVersion tvOSMaxVersion watchOSMinVersion watchOSMaxVersion macOSMinVersion macOSMaxVersion MacCatalystOSMinVersion MacCatalystOSMaxVersion
+// arguments are: plistPath iOSMinVersion iOSMaxVersion tvOSMinVersion tvOSMaxVersion macOSMinVersion macOSMaxVersion MacCatalystOSMinVersion MacCatalystOSMaxVersion
 
 using System.IO;
 using System.Xml;
 
 try {
-	var expectedArgumentCount = 11;
+	var expectedArgumentCount = 9;
 	if (args.Length != expectedArgumentCount) {
-		Console.WriteLine ("Need 11 arguments, got {0}", args.Length);
+		Console.WriteLine ($"Need {expectedArgumentCount} arguments, got {0}", args.Length);
 		return 1;
 	}
 
-	var plistPath = args [0];
-	var iOSMin = args [1];
-	var iOSMax = args [2];
-	var tvOSMin = args [3];
-	var tvOSMax = args [4];
-	var watchOSMin = args [5];
-	var watchOSMax = args [6];
-	var macOSMin = args [7];
-	var macOSMax = args [8];
-	var MacCatalystMin = args [9];
-	var MacCatalystMax = args [10];
+	var idx = 0;
+	var plistPath = args [idx++];
+	var iOSMin = args [idx++];
+	var iOSMax = args [idx++];
+	var tvOSMin = args [idx++];
+	var tvOSMax = args [idx++];
+	var macOSMin = args [idx++];
+	var macOSMax = args [idx++];
+	var MacCatalystMin = args [idx++];
+	var MacCatalystMax = args [idx++];
 
 	var doc = new System.Xml.XmlDocument ();
 	doc.Load (plistPath);
@@ -36,7 +35,7 @@ try {
 		var foundMin = false;
 		var versions = doc.SelectNodes ($"/plist/dict/key[text()='KnownVersions']/following-sibling::dict[1]/key[text()='{product}']/following-sibling::array[1]/string")!;
 		if (versions.Count == 0) {
-			// Skip this (iOS/tvOS/watchOS versions for macOS, or vice versa)
+			// Skip this (iOS/tvOS versions for macOS, or vice versa)
 			return;
 		}
 		var versionsHashSet = new HashSet<string> (versions.Cast<XmlNode> ().Select (v => v.InnerText));
@@ -82,7 +81,6 @@ try {
 
 	check ("iOS", iOSMin, iOSMax);
 	check ("tvOS", tvOSMin, tvOSMax);
-	check ("watchOS", watchOSMin, watchOSMax);
 	check ("macOS", macOSMin, macOSMax);
 	check ("MacCatalyst", MacCatalystMin, MacCatalystMax);
 
