@@ -1,24 +1,19 @@
-//
-// Sanitize callbacks
-//
-
-#if !WATCH
-
 using Foundation;
 using ObjCRuntime;
 using System;
+using System.Diagnostics.CodeAnalysis;
 
-// Disable until we get around to enable + fix any issues.
-#nullable disable
+#nullable enable
 
 namespace UIKit {
 
 	public partial class UIBarButtonItem {
-		const string actionSelector = "InvokeAction:";
+		const string actionSelector = "xamarinInvokeCallback:";
+
+		[DynamicDependencyAttribute ("Call(Foundation.NSObject)")]
 		static Selector actionSel = new Selector (actionSelector);
 
-		[Export ("InvokeAction:")]
-		[Preserve (Conditional = true)]
+		[Export (actionSelector)]
 		void Call (NSObject sender)
 		{
 			if (clicked is not null)
@@ -33,7 +28,6 @@ namespace UIKit {
 			MarkDirty ();
 		}
 
-
 		public UIBarButtonItem (string title, UIBarButtonItemStyle style, EventHandler handler)
 		: this (title, style, null, actionSel)
 		{
@@ -41,7 +35,6 @@ namespace UIKit {
 			clicked += handler;
 			MarkDirty ();
 		}
-
 
 		public UIBarButtonItem (UIBarButtonSystemItem systemItem, EventHandler handler)
 		: this (systemItem, null, actionSel)
@@ -55,7 +48,8 @@ namespace UIKit {
 		{
 		}
 
-		EventHandler clicked;
+		[DynamicDependencyAttribute ("Call(Foundation.NSObject)")]
+		EventHandler? clicked;
 
 		public event EventHandler Clicked {
 			add {
@@ -74,5 +68,3 @@ namespace UIKit {
 		}
 	}
 }
-
-#endif // !WATCH
