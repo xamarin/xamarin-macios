@@ -1063,13 +1063,6 @@ namespace Introspection {
 				}
 				break;
 #endif // __MACCATALYST__
-			case "UIBarButtonItem":
-				switch (selectorName) {
-				case "xamarinInvokeCallback:":
-					// This is an selector we use for our own purposes
-					return true;
-				}
-				break;
 			}
 
 			// old binding mistake
