@@ -160,9 +160,10 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 				SourceText.From (code, Encoding.UTF8));
 		} else {
 			// add to the diagnostics and continue to the next possible candidate
-			foreach (Diagnostic diagnostic in diagnostics) {
-				context.ReportDiagnostic (diagnostic);
-			}
+			if (diagnostics is not null)
+				foreach (Diagnostic diagnostic in diagnostics) {
+					context.ReportDiagnostic (diagnostic);
+				}
 		}
 	}
 
