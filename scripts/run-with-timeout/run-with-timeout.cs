@@ -1,5 +1,3 @@
-#!/usr/bin/env /Library/Frameworks/Mono.framework/Commands/csharp -s
-
 // arguments are: <platform> <outputPath>
 
 using System.Diagnostics;
@@ -8,45 +6,9 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Xml;
 
-static class NativeMethods {
-	[DllImport ("__Internal", SetLastError = true)]
-	static extern int kill (int pid, int signal);
-
-	public static void Abort (this Process process)
-	{
-		var exitTimeout = TimeSpan.FromSeconds (60);
-		var pid = process.Id;
-		Console.WriteLine ($"kill ({pid}, 6);");
-		var rv = kill (pid, 6 /* SIGABRT - this triggers a crash report */);
-		if (rv != 0) {
-			// This might randomly happen, because there's a race condition here: we waited for the process to exit,
-			// the timeout occurred so we decided to kill the process, and *then* the process exited, before we got
-			// around to kill it. In that case, the kill call would fail.
-			Console.WriteLine ($"Failed to execute 'kill -6 {pid}'. errno = {Marshal.GetLastWin32Error ()} - process already exited?");
-			return;
-		}
-		var watch = Stopwatch.StartNew ();
-		while (watch.Elapsed < exitTimeout) {
-			Console.WriteLine ($"kill ({pid}, 0);");
-			rv = kill (pid, 0); // check if pid is still alive (valid)
-			if (rv != 0) {
-				// Nope it's not, so it must have terminated.
-				return;
-			}
-			Thread.Sleep (50);
-		}
-
-		// Send SIGKILL - time to finish it off.
-		Console.WriteLine ($"kill ({pid}, 9);");
-		kill (pid, 9);
-	}
-}
-
-var args = Args;
 if (args.Length <= 1) {
 	Console.WriteLine ($"Need two arguments (the timeout + the command to launch), got {args.Length} argument(s)");
-	Environment.Exit (1);
-	return;
+	return 1;
 }
 
 var launchTimeout = TimeSpan.FromSeconds (10); // must launch within a few seconds.
@@ -109,4 +71,38 @@ for (var attempt = 0; attempt < maxLaunchAttempts; attempt++) {
 	break;
 }
 
-Environment.Exit (exitCode);
+return exitCode;
+
+static class NativeMethods {
+	[DllImport ("__Internal", SetLastError = true)]
+	static extern int kill (int pid, int signal);
+
+	public static void Abort (this Process process)
+	{
+		var exitTimeout = TimeSpan.FromSeconds (60);
+		var pid = process.Id;
+		Console.WriteLine ($"kill ({pid}, 6);");
+		var rv = kill (pid, 6 /* SIGABRT - this triggers a crash report */);
+		if (rv != 0) {
+			// This might randomly happen, because there's a race condition here: we waited for the process to exit,
+			// the timeout occurred so we decided to kill the process, and *then* the process exited, before we got
+			// around to kill it. In that case, the kill call would fail.
+			Console.WriteLine ($"Failed to execute 'kill -6 {pid}'. errno = {Marshal.GetLastWin32Error ()} - process already exited?");
+			return;
+		}
+		var watch = Stopwatch.StartNew ();
+		while (watch.Elapsed < exitTimeout) {
+			Console.WriteLine ($"kill ({pid}, 0);");
+			rv = kill (pid, 0); // check if pid is still alive (valid)
+			if (rv != 0) {
+				// Nope it's not, so it must have terminated.
+				return;
+			}
+			Thread.Sleep (50);
+		}
+
+		// Send SIGKILL - time to finish it off.
+		Console.WriteLine ($"kill ({pid}, 9);");
+		kill (pid, 9);
+	}
+}
