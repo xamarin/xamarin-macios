@@ -7,18 +7,20 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace UIKit {
 
-	public partial class UIBarButtonItem {
-		const string actionSelector = "xamarinInvokeCallback:";
-
-		[DynamicDependencyAttribute ("Call(Foundation.NSObject)")]
-		static Selector actionSel = new Selector (actionSelector);
-
-		[Export (actionSelector)]
-		void Call (NSObject sender)
+	[Category (typeof (UIBarButtonItem))]
+	static class UIBarButtonItem_Extensions {
+		[Export (UIBarButtonItem.actionSelector)]
+		static void Call (this UIBarButtonItem item, NSObject sender)
 		{
-			if (clicked is not null)
-				clicked (sender, EventArgs.Empty);
+			item.OnClicked (sender);
 		}
+	}
+
+	public partial class UIBarButtonItem {
+		internal const string actionSelector = "xamarinInvokeCallback:";
+
+		[DynamicDependencyAttribute ("Call(UIKit.UIBarButtonItem,Foundation.NSObject)", typeof (UIBarButtonItem_Extensions))]
+		static Selector actionSel = new Selector (actionSelector);
 
 		public UIBarButtonItem (UIImage image, UIBarButtonItemStyle style, EventHandler handler)
 		: this (image, style, null, actionSel)
@@ -48,8 +50,14 @@ namespace UIKit {
 		{
 		}
 
-		[DynamicDependencyAttribute ("Call(Foundation.NSObject)")]
+		[DynamicDependencyAttribute ("Call(UIKit.UIBarButtonItem,Foundation.NSObject)", typeof (UIBarButtonItem_Extensions))]
 		EventHandler? clicked;
+
+		internal void OnClicked (NSObject sender)
+		{
+			if (clicked is not null)
+				clicked (sender, EventArgs.Empty);
+		}
 
 		public event EventHandler Clicked {
 			add {
