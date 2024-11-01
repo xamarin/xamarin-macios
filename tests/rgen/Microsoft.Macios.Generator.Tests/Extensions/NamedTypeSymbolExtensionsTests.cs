@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -34,13 +36,20 @@ public class NotEnum {
 		Assert.Single (diagnostics);
 	}
 
-	const string emptyEnum = @"
+	class TestDataTryGetEnumFieldsNoFields : IEnumerable<object []> {
+		public IEnumerator<object[]> GetEnumerator ()
+		{
+
+			foreach (var platform in Configuration.GetIncludedPlatforms (true)) {
+				
+				const string emptyEnum = @"
 namespace Test;
 public enum MyEnum {
 }
 ";
+				yield return [platform, emptyEnum]; 
 
-	const string missingFieldAttributes = @"
+				const string missingFieldAttributes = @"
 namespace Test;
 public enum MyEnum {
 	First,
@@ -48,10 +57,53 @@ public enum MyEnum {
 	Last,
 }
 ";
+				yield return [platform, missingFieldAttributes];
+
+				
+				const string fieldWithQuotes = @"
+namespace Test;
+public enum MyEnum {
+	[Field<EnumValue> (""Field\""With\""Quotes"")]
+	First,
+}
+";
+				yield return [platform, fieldWithQuotes];
+
+				const string leadingWithNumber = @"
+namespace Test;
+public enum MyEnum {
+	[Field<EnumValue> (""42Tries"")]
+	First,
+}
+";
+				yield return [platform, leadingWithNumber];
+
+				const string fieldWithNewLines = @"
+namespace Test;
+public enum MyEnum {
+	[Field<EnumValue> (""With\nNew\nLine"")]
+	First,
+}
+";
+				yield return [platform, fieldWithNewLines];
+
+				const string fieldWithKeyword = @"
+namespace Test;
+public enum MyEnum {
+	[Field<EnumValue> (""class"")]
+	First,
+}
+";
+				yield return [platform, fieldWithKeyword];
+			}
+		}
+
+		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();
+	}
+
 
 	[Theory]
-	[AllSupportedPlatforms (emptyEnum)]
-	[AllSupportedPlatforms (missingFieldAttributes)]
+	[ClassData(typeof(TestDataTryGetEnumFieldsNoFields))]
 	public void TryGetEnumFieldsNoFields (ApplePlatform platform, string inputString)
 	{
 		var (compilation, syntaxTrees) = CreateCompilation (nameof (TryGetEnumFieldsNotEnum), platform, inputString);

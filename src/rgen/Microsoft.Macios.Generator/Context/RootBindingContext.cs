@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.Macios.Generator.Extensions;
 
 namespace Microsoft.Macios.Generator.Context;
@@ -19,7 +20,7 @@ class RootBindingContext {
 	public PlatformName CurrentPlatform { get; set; }
 	public Compilation Compilation { get; set; }
 
-	public Dictionary<string, string> Libraries { get; } = new ();
+	public Dictionary<string, string> Libraries { get; } = new();
 
 	public RootBindingContext (Compilation compilation)
 	{
@@ -65,11 +66,28 @@ class RootBindingContext {
 			libraryName = typeNamespace;
 		}
 
-		if (libraryName is not null && !Libraries.ContainsKey (libraryName))
+		if (libraryName.IsValidIdentifier () && !Libraries.ContainsKey (libraryName))
 			Libraries.Add (libraryName, libraryPath!);
 
-		return libraryName is not null;
+		// return that the library name is NOT null AND that it is a valid C# identifier by using the SyntaxFacts.
+		return libraryName.IsValidIdentifier ();
 	}
+
+	/// <summary>
+	/// Returns if the given variable name is the one that would be used for a given library.
+	/// </summary>
+	/// <param name="libraryName">The library against which we are comparing.</param>
+	/// <param name="variableName">The variable name.</param>
+	/// <remarks>The method does the comparison without creating a new string.</remarks>
+	/// <returns>True if the variable name matches the pattern {libraryName}Library.</returns>
+	static bool IsLibraryName (string libraryName, string variableName) =>
+		// the length of the variable names has to be equal to the current lib name legth + 7 which is the length of
+		// the word Library
+		variableName.Length == libraryName.Length + 7
+		// has to start with the name of the lib
+		&& variableName.StartsWith (libraryName, StringComparison.Ordinal)
+		// has to end with the word library
+		&& variableName.EndsWith ("Library", StringComparison.Ordinal);
 
 	public bool IsSystemLibrary (string name)
 	{
@@ -80,9 +98,6 @@ class RootBindingContext {
 			return false;
 		return symbol.GetMembers ().OfType<IFieldSymbol> ()
 			.Select (f => f.Name)
-			.Any (s =>
-				s.Length == name.Length + 7 /* "Library".Length" &&
-				s.StartsWith (name, StringComparison.Ordinal) && 
-				s.EndsWith ("Library", StringComparison.Ordinal));
+			.Any (s => IsLibraryName (s, name));
 	}
 }

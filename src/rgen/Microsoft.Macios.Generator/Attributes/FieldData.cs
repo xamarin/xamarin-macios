@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.CodeAnalysis;
+using Microsoft.Macios.Generator.Extensions;
 
 namespace Microsoft.Macios.Generator.Attributes;
 
@@ -30,6 +31,7 @@ record FieldData<T> where T : Enum {
 		data = default;
 
 		var count = attributeData.ConstructorArguments.Length;
+		string? symbolName = null;
 		switch (count) {
 		case 1:
 			data = new ((string) attributeData.ConstructorArguments [0].Value!);
@@ -40,11 +42,23 @@ record FieldData<T> where T : Enum {
 			// 1. The second argument is a string
 			// 2. The second argument is an enum
 			case T enumValue:
-				data = new ((string) attributeData.ConstructorArguments [0].Value!, enumValue);
+				if (attributeData.ConstructorArguments [0].TryGetIdentifier (out symbolName)) {
+					data = new(symbolName, enumValue);
+				} else {
+					// wrong content data from the user. The symbol provided cannot represent an identifier
+					return false;
+				}
 				break;
-			case string libraryName:
-				data = new ((string) attributeData.ConstructorArguments [0].Value!, libraryName);
+			case string libraryName: {
+				if (attributeData.ConstructorArguments [0].TryGetIdentifier (out symbolName)) {
+					data = new(symbolName, libraryName);
+				} else {
+					// wrong content data from the user. The symbol provided cannot represent an identifier
+					return false;
+				}
+
 				break;
+			}
 			default:
 				// unexpected value :/
 				return false;
