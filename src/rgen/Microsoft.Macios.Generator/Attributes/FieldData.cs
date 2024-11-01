@@ -36,7 +36,7 @@ record FieldData<T> where T : Enum {
 			break;
 		case 2:
 			switch (attributeData.ConstructorArguments [1].Value) {
-			// there are twi possible cases here:
+			// there are two possible cases here:
 			// 1. The second argument is a string
 			// 2. The second argument is an enum
 			case T enumValue:

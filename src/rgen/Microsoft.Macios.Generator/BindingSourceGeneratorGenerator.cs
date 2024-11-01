@@ -126,10 +126,10 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 				}
 			} else {
 				// we don't have a emitter for this type, so we can't generate the code, add a diagnostic letting the
-				// user we do not support what he is trying to do
+				// user we do not support what they are trying to do
 				// we don't have a emitter for this type, so we can't generate the code, add a diagnostic letting the
-				// user we do not support what he is trying to do
-				context.ReportDiagnostic (Diagnostic.Create (RBI0000,
+				// user we do not support what they are trying to do
+				context.ReportDiagnostic (Diagnostic.Create (RBI0000, // An unexpected error ocurred while processing '{0}'. Please fill a bug report at https://github.com/xamarin/xamarin-macios/issues/new.
 					change.SymbolDeclaration.GetLocation (),
 					namedTypeSymbol.ToDisplayString ().Trim ()));
 			}
@@ -150,7 +150,7 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 	{
 		var sb = new TabbedStringBuilder (new ());
 		sb.WriteHeader ();
-		// not need to collect the using statements, this file is completely generated
+		// no need to collect the using statements, this file is completely generated
 		var emitter = new LibraryEmitter (rootContext, sb);
 
 		if (emitter.TryEmit (out var diagnostics)) {

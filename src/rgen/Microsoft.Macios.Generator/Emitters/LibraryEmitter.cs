@@ -25,7 +25,7 @@ class LibraryEmitter (
 
 	public bool TryEmit ([NotNullWhen (false)] out ImmutableArray<Diagnostic>? diagnostics)
 	{
-		diagnostics = [];
+		diagnostics = null;
 
 		builder.AppendLine ("using Foundation;");
 		builder.AppendLine ("using ObjCBindings;");

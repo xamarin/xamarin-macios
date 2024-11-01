@@ -18,12 +18,12 @@ namespace ObjCBindings {
 		public T? Flags { get; set; } = default;
 
 		/// <summary>
-		/// Get/Set the symbol represented by the attribute.
+		/// Get/Set the native symbol represented by the attribute.
 		/// </summary>
 		public string SymbolName { get; set; }
 
 		/// <summary>
-		/// Get/Set the library that contains the symbol..
+		/// Get/Set the library that contains the symbol.
 		/// </summary>
 		public string? LibraryName { get; set; } = default;
 

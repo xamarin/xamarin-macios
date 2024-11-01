@@ -87,7 +87,7 @@ class EnumEmitter (SymbolBindingContext context, TabbedStringBuilder builder)
 			}
 
 			getValueBlock.AppendLine (
-				"throw new NotSupportedException ($\"{constant} has no associated enum value on this platform.\");");
+				"throw new NotSupportedException (string.Format ($\"The constant {0} has no associated enum value on this platform.\", constant));");
 		}
 
 		classBlock.AppendLine ();
