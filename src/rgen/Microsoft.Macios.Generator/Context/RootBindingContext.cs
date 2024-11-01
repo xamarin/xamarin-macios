@@ -87,7 +87,7 @@ class RootBindingContext {
 		&& variableName.StartsWith (libraryName, StringComparison.Ordinal)
 		// has to end with the word library
 		&& variableName.EndsWith ("Library", StringComparison.Ordinal);
-	
+
 	INamedTypeSymbol GetObjCConstants () => Compilation.GetTypeByMetadataName ("ObjCRuntime.Constants")!;
 
 	public bool IsSystemLibrary (string name)
