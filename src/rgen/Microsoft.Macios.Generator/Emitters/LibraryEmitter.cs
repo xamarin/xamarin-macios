@@ -5,7 +5,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.Macios.Generator.Context;
-using Microsoft.Macios.Generator.Extensions;
 
 namespace Microsoft.Macios.Generator.Emitters;
 
