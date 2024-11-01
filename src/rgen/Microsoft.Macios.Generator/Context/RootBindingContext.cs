@@ -80,7 +80,7 @@ class RootBindingContext {
 			return false;
 		return symbol.GetMembers ().OfType<IFieldSymbol> ()
 			.Select (f => f.Name)
-			.Any (s => 
+			.Any (s =>
 				s.Length == name.Length + 7 /* "Library".Length" &&
 				s.StartsWith (name, StringComparison.Ordinal) && 
 				s.EndsWith ("Library", StringComparison.Ordinal));
