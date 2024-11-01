@@ -43,7 +43,7 @@ record FieldData<T> where T : Enum {
 			// 2. The second argument is an enum
 			case T enumValue:
 				if (attributeData.ConstructorArguments [0].TryGetIdentifier (out symbolName)) {
-					data = new(symbolName, enumValue);
+					data = new (symbolName, enumValue);
 				} else {
 					// wrong content data from the user. The symbol provided cannot represent an identifier
 					return false;
@@ -51,7 +51,7 @@ record FieldData<T> where T : Enum {
 				break;
 			case string libraryName: {
 				if (attributeData.ConstructorArguments [0].TryGetIdentifier (out symbolName)) {
-					data = new(symbolName, libraryName);
+					data = new (symbolName, libraryName);
 				} else {
 					// wrong content data from the user. The symbol provided cannot represent an identifier
 					return false;

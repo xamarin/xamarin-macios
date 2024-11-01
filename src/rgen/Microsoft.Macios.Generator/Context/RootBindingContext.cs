@@ -20,7 +20,7 @@ class RootBindingContext {
 	public PlatformName CurrentPlatform { get; set; }
 	public Compilation Compilation { get; set; }
 
-	public Dictionary<string, string> Libraries { get; } = new();
+	public Dictionary<string, string> Libraries { get; } = new ();
 
 	public RootBindingContext (Compilation compilation)
 	{

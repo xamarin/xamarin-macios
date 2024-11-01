@@ -37,17 +37,17 @@ public class NotEnum {
 	}
 
 	class TestDataTryGetEnumFieldsNoFields : IEnumerable<object []> {
-		public IEnumerator<object[]> GetEnumerator ()
+		public IEnumerator<object []> GetEnumerator ()
 		{
 
 			foreach (var platform in Configuration.GetIncludedPlatforms (true)) {
-				
+
 				const string emptyEnum = @"
 namespace Test;
 public enum MyEnum {
 }
 ";
-				yield return [platform, emptyEnum]; 
+				yield return [platform, emptyEnum];
 
 				const string missingFieldAttributes = @"
 namespace Test;
@@ -59,7 +59,7 @@ public enum MyEnum {
 ";
 				yield return [platform, missingFieldAttributes];
 
-				
+
 				const string fieldWithQuotes = @"
 namespace Test;
 public enum MyEnum {
@@ -103,7 +103,7 @@ public enum MyEnum {
 
 
 	[Theory]
-	[ClassData(typeof(TestDataTryGetEnumFieldsNoFields))]
+	[ClassData (typeof (TestDataTryGetEnumFieldsNoFields))]
 	public void TryGetEnumFieldsNoFields (ApplePlatform platform, string inputString)
 	{
 		var (compilation, syntaxTrees) = CreateCompilation (nameof (TryGetEnumFieldsNotEnum), platform, inputString);
