@@ -18,7 +18,7 @@ static class NamedTypeSymbolExtensions {
 
 		// we can only return fields for enums
 		if (enumSymbol.TypeKind != TypeKind.Enum) {
-			diagnostics = [Diagnostic.Create (BindingSourceGeneratorGenerator.RBI0000,
+			diagnostics = [Diagnostic.Create (Diagnostics.RBI0000,
 				enumSymbol.Locations [0], enumSymbol.ToDisplayString ().Trim ())];
 			return false;
 		}

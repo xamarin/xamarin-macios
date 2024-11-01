@@ -3,7 +3,7 @@ using Microsoft.CodeAnalysis;
 
 namespace Microsoft.Macios.Generator.Extensions;
 
-public static class TypedConstantExtensions {
+static class TypedConstantExtensions {
 
 	public static bool TryGetIdentifier (this TypedConstant self, [NotNullWhen (true)] out string? value)
 	{

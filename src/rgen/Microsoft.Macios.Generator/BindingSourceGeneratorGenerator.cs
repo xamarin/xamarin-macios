@@ -21,18 +21,6 @@ namespace Microsoft.Macios.Generator;
 /// </summary>
 [Generator]
 public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
-	internal static readonly DiagnosticDescriptor RBI0000 = new (
-		"RBI0000",
-		new LocalizableResourceString (nameof (Resources.RBI0000Title), Resources.ResourceManager, typeof (Resources)),
-		new LocalizableResourceString (nameof (Resources.RBI0000MessageFormat), Resources.ResourceManager,
-			typeof (Resources)),
-		"Usage",
-		DiagnosticSeverity.Error,
-		isEnabledByDefault: true,
-		description: new LocalizableResourceString (nameof (Resources.RBI0000Description), Resources.ResourceManager,
-			typeof (Resources))
-	);
-
 	static readonly CodeChangesComparer comparer = new ();
 
 	/// <inheritdoc cref="IIncrementalGenerator"/>
@@ -120,23 +108,21 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 						SourceText.From (code, Encoding.UTF8));
 				} else {
 					// add to the diagnostics and continue to the next possible candidate
-					foreach (Diagnostic diagnostic in diagnostics) {
-						context.ReportDiagnostic (diagnostic);
-					}
+					context.ReportDiagnostics (diagnostics);
 				}
 			} else {
 				// we don't have a emitter for this type, so we can't generate the code, add a diagnostic letting the
 				// user we do not support what they are trying to do
 				// we don't have a emitter for this type, so we can't generate the code, add a diagnostic letting the
 				// user we do not support what they are trying to do
-				context.ReportDiagnostic (Diagnostic.Create (RBI0000, // An unexpected error ocurred while processing '{0}'. Please fill a bug report at https://github.com/xamarin/xamarin-macios/issues/new.
+				context.ReportDiagnostic (Diagnostic.Create (Diagnostics.RBI0000, // An unexpected error ocurred while processing '{0}'. Please fill a bug report at https://github.com/xamarin/xamarin-macios/issues/new.
 					change.SymbolDeclaration.GetLocation (),
 					namedTypeSymbol.ToDisplayString ().Trim ()));
 			}
 		}
 
 		// we are done with the types, generate the library and trampoline code
-		GenerateLibraryCode (context, rootContext, changesList);
+		GenerateLibraryCode (context, rootContext);
 	}
 
 	/// <summary>
@@ -144,9 +130,8 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 	/// by the binding. This is a single generated file.
 	/// </summary>
 	/// <param name="context">Source production context.</param>
-	/// <param name="codeChangesList">Code changes from the last compilation.</param>
-	static void GenerateLibraryCode (SourceProductionContext context, RootBindingContext rootContext,
-		ImmutableArray<CodeChanges> codeChangesList)
+	/// <param name="rootContext">The root context of the current generation.</param>
+	static void GenerateLibraryCode (SourceProductionContext context, RootBindingContext rootContext)
 	{
 		var sb = new TabbedStringBuilder (new ());
 		sb.WriteHeader ();
@@ -160,10 +145,7 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 				SourceText.From (code, Encoding.UTF8));
 		} else {
 			// add to the diagnostics and continue to the next possible candidate
-			if (diagnostics is not null)
-				foreach (Diagnostic diagnostic in diagnostics) {
-					context.ReportDiagnostic (diagnostic);
-				}
+			context.ReportDiagnostics (diagnostics);
 		}
 	}
 
