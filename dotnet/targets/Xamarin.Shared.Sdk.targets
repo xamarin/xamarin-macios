@@ -1695,7 +1695,11 @@
 		<ReadLinesFromFile File="%(_RidSpecificSymbolsListPath.Identity)">
 			<Output TaskParameter="Lines" ItemName="_AllExecutableSymbols" />
 		</ReadLinesFromFile>
-		<WriteLinesToFile File="$(_MtouchSymbolsList)" Lines="@(_AllExecutableSymbols->DistinctWithCase())" Overwrite="true" />
+		<WriteLinesToFile
+			SessionId="$(BuildSessionId)"
+			File="$(_MtouchSymbolsList)"
+			Lines="@(_AllExecutableSymbols->DistinctWithCase())"
+			Overwrite="true" />
 	</Target>
 
 	<!-- When we're building a universal app, we need to collect the list of user frameworks we need to run dsymutil on -->
