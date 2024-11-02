@@ -34,7 +34,12 @@ record FieldData<T> where T : Enum {
 		string? symbolName = null;
 		switch (count) {
 		case 1:
-			data = new ((string) attributeData.ConstructorArguments [0].Value!);
+			if (attributeData.ConstructorArguments [0].TryGetIdentifier (out symbolName)) {
+				data = new(symbolName);
+			} else {
+				// wrong content data from the user. The symbol provided cannot represent an identifier
+				return false;
+			}
 			break;
 		case 2:
 			switch (attributeData.ConstructorArguments [1].Value) {
