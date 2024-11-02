@@ -9,7 +9,7 @@ static class StringExtensions {
 	{
 		if (self is null)
 			return false;
-		var kind = SyntaxFacts.GetKeywordKind (self) ;
+		var kind = SyntaxFacts.GetKeywordKind (self);
 		return !SyntaxFacts.IsKeywordKind (kind) && SyntaxFacts.IsValidIdentifier (self);
 	}
 }
