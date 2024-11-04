@@ -95,6 +95,16 @@ public enum MyEnum {
 }
 ";
 				yield return [platform, fieldWithKeyword];
+
+				const string fieldWithTabs = @"
+namespace Test;
+public enum MyEnum {
+	[Field<EnumValue> ("" \tSecondBackendField\t \n"")]
+	First,
+}
+";
+				
+				yield return [platform, fieldWithTabs];
 			}
 		}
 
