@@ -22,23 +22,26 @@ class TestConfiguration {
     [string] $Title
     [string] $Platform
     [string] $Context
+    [string] $TestStage
 
     TestConfiguration (
         [TestSuite] $suite,
         [string] $title,
         [string] $platform,
-        [string] $context
+        [string] $context,
+        [string] $testStage
     )
     {
         $this.Suite = $suite
         $this.Title = $title
         $this.Platform = $platform
         $this.Context = $context
+        $this.TestStage = $testStage
     }
     
     [string]
     ToString() {
-        return "$($this.Suite.Label) : $($this.Title) - $($this.Platform) - $($this.Context)"
+        return "$($this.Suite.Label) : $($this.Title) - $($this.Platform) - $($this.Context) - $($this.TestStage)"
     }
 }
 
@@ -51,6 +54,7 @@ class TestResult {
     [string] $Title
     [string] $Platform
     [string] $Context
+    [string] $TestStage
     hidden [int] $Passed
     hidden [int] $Failed
     hidden [string[]] $NotTestSummaryLabels = @()
@@ -71,6 +75,7 @@ class TestResult {
         $this.Title = $testConfiguration.Title
         $this.Platform = $testConfiguration.Platform
         $this.Context = $testConfiguration.Context
+        $this.TestStage = $testConfiguration.TestStage
         Write-Host "TestsResult::new($path, $status, $testConfiguration, $attempt) Label: $($this.Label) Platform: $($this.Platform) Title: $($this.Title) Context: $($this.Context)"
     }
 
@@ -249,19 +254,16 @@ class TestResult {
 class ParallelTestsResults {
     [string] $BuildFailureMessage
     [string] $Context
-    [string] $TestPrefix
     [string] $VSDropsIndex
     [TestResult[]] $Results
 
     ParallelTestsResults (
         [TestResult[]] $results,
         [string] $context,
-        [string] $testPrefix,
         [string] $vsDropsIndex
     ) {
         $this.Results = $results
         $this.Context = $context
-        $this.TestPrefix = $testPrefix
         $this.VSDropsIndex = $vsDropsIndex
     }
 
@@ -324,8 +326,8 @@ class ParallelTestsResults {
     }
 
     [string] GetDownloadLinks($testResult) {
-        $dropsIndex = "$($this.VSDropsIndex)/$($this.TestPrefix)$($testResult.Title)-$($testResult.Attempt)/;/tests/vsdrops_index.html"
-        $artifactUrl = "$Env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI$Env:SYSTEM_TEAMPROJECT/_apis/build/builds/$Env:BUILD_BUILDID/artifacts?artifactName=HtmlReport-$($this.TestPrefix)$($testResult.Title)-$($testResult.Attempt)&api-version=6.0&`$format=zip"
+        $dropsIndex = "$($this.VSDropsIndex)/$($testResult.TestStage)$($testResult.Title)-$($testResult.Attempt)/;/tests/vsdrops_index.html"
+        $artifactUrl = "$Env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI$Env:SYSTEM_TEAMPROJECT/_apis/build/builds/$Env:BUILD_BUILDID/artifacts?artifactName=HtmlReport-$($testResult.TestStage)$($testResult.Title)-$($testResult.Attempt)&api-version=6.0&`$format=zip"
         $downloadInfo = "[Html Report (VSDrops)]($dropsIndex) [Download]($artifactUrl)"
         return $downloadInfo
     }
@@ -447,7 +449,9 @@ function New-TestResults {
         [string]
         $Context,
         [int]
-        $Attempt
+        $Attempt,
+        [string]
+        $TestStage
     )
     return [TestResult]::new($Path, $Status, [TestConfiguration]::new($Label, $Title, $Platform, $Context), $Attempt)
 }
@@ -486,6 +490,7 @@ function New-ParallelTestsResults {
         Write-Host "Got title: $title with entry: $( $entry | ConvertTo-Json -Depth 100 )"
         $platform = $entry["TEST_PLATFORM"]
         $label = $entry["LABEL"]
+        $testStage = $entry["TEST_STAGE"]
 
         if ($suites.Contains($label)) {
             $suite = $suites[$label]
@@ -493,7 +498,7 @@ function New-ParallelTestsResults {
             $suite = [TestSuite]::new($label)
             $suites[$label] = $suite
         }
-        $testConfig = [TestConfiguration]::new($suite, $title, $platform, "$Context - $title")
+        $testConfig = [TestConfiguration]::new($suite, $title, $platform, "$Context - $title", $testStage)
         $suite.TestConfigurations += $testConfig
         Write-Host "Added test config: $( $testConfig.Title )"
         Write-Host "To suite: $( $suite.Label )"
@@ -512,10 +517,10 @@ function New-ParallelTestsResults {
         }
         Write-Host "Stage dependency $($kvp.Name) is a test dependency"
 
-        $testPrefix = $kvp.Name
+        $testStage = $kvp.Name
         $outputs = $candidate.tests.outputs
 
-        Write-Host "Outputs for $($testPrefix):"
+        Write-Host "Outputs for $($testStage):"
         Write-Host $outputs
         $tests = [System.Collections.SortedList]::new()
         foreach ($name in $outputs.Keys) {
@@ -538,6 +543,7 @@ function New-ParallelTestsResults {
                     Bot = $bot
                     Platform = $platform
                     Attempt = $attempt
+                    TestStage = $testStage
                 }
                 if ($tests.Contains($label)) {
                     $testInfo = $tests[$label]
@@ -549,54 +555,55 @@ function New-ParallelTestsResults {
                 Write-Host "Added $label to tests ($title) Name: $name status: $($testResult.Status) bot: $($testResult.Bot) Platform: $($testResult.Platform) Attempt: $($testResult.Attempt)"
             }
         }
+    }
 
-        $testResults = [System.Collections.ArrayList]@()
-        foreach ($suite in $suites.Values | Sort-Object -Property Label) {
-            $label = $suite.Label
-            Write-Host "Processing results for $label with $($suite.TestConfigurations.Length) configurations"
-            foreach ($testConfig in $suite.TestConfigurations | Sort-Object -Property Title) {
-                $title = $testConfig.Title
-                $testResult = $null
-                Write-Host "`tProcessing config $title"
-                if ($tests.Contains($label)) {
-                    Write-Host "`t`tFound results for label: $label"
-                    $testInfo = $tests[$label]
-                    if ($testInfo.Contains($title)) {
-                        $testResult = $testInfo[$title]
-                        Write-Host "`t`tFound results for title '$title': $testResult"
-                    } else {
-                        Write-Host "`t`tFound NO results for title: $title"
-                    }
+    $testResults = [System.Collections.ArrayList]@()
+    foreach ($suite in $suites.Values | Sort-Object -Property Label) {
+        $label = $suite.Label
+        Write-Host "Processing results for $label with $($suite.TestConfigurations.Length) configurations"
+        foreach ($testConfig in $suite.TestConfigurations | Sort-Object -Property Title) {
+            $title = $testConfig.Title
+            $testResult = $null
+            Write-Host "`tProcessing config $title"
+            if ($tests.Contains($label)) {
+                Write-Host "`t`tFound results for label: $label"
+                $testInfo = $tests[$label]
+                if ($testInfo.Contains($title)) {
+                    $testResult = $testInfo[$title]
+                    Write-Host "`t`tFound results for title '$title': $testResult"
                 } else {
-                    Write-Host "`tFound NO results for label: $label"
+                    Write-Host "`t`tFound NO results for title: $title"
                 }
-
-
-                $platform = $testConfig.Platform
-                $title = $testConfig.Title
-                if ($null -eq $testResult) {
-                    $result = [TestResult]::new($null, "None", $testConfig, -1)
-                } else {
-                    $status = $testResult.Status
-                    $testAttempt = $testResult.Attempt
-
-                    $testSummaryPath = Join-Path "$Path" "${UploadPrefix}TestSummary-$TestPrefix$($title.Replace('-','_'))-$testAttempt" "TestSummary.md"
-
-                    Write-Host "`t`tTest results for $label on attempt $testAttempt is '$status' in $testSummaryPath"
-
-                    if (-not (Test-Path -Path $testSummaryPath -PathType Leaf)) {
-                        Write-Host "`t`tWARNING: Path $testSummaryPath does not exist"
-                    }
-
-                    $result = [TestResult]::new($testSummaryPath, $status, $testConfig, $testAttempt)
-                }
-
-                $testResults += $result
+            } else {
+                Write-Host "`tFound NO results for label: $label"
             }
+
+
+            $platform = $testConfig.Platform
+            $title = $testConfig.Title
+            if ($null -eq $testResult) {
+                $result = [TestResult]::new($null, "None", $testConfig, -1)
+            } else {
+                $status = $testResult.Status
+                $testAttempt = $testResult.Attempt
+                $testStage = $testResult.TestStage
+
+                $testSummaryPath = Join-Path "$Path" "${UploadPrefix}TestSummary-$testStage$($title.Replace('-','_'))-$testAttempt" "TestSummary.md"
+
+                Write-Host "`t`tTest results for $label on attempt $testAttempt is '$status' in $testSummaryPath"
+
+                if (-not (Test-Path -Path $testSummaryPath -PathType Leaf)) {
+                    Write-Host "`t`tWARNING: Path $testSummaryPath does not exist"
+                }
+
+                $result = [TestResult]::new($testSummaryPath, $status, $testConfig, $testAttempt)
+            }
+
+            $testResults += $result
         }
     }
 
-    return [ParallelTestsResults]::new($testResults, $Context, $TestPrefix, $VSDropsIndex)
+    return [ParallelTestsResults]::new($testResults, $Context, $VSDropsIndex)
 }
 
 Export-ModuleMember -Function New-TestResults

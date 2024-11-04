@@ -11,7 +11,7 @@ Describe "TestResults tests" {
         $platform = "iOS"
         $resultContext = "tests"
         $suite = [TestSuite]::new($label)
-        $testConfig = [TestConfiguration]::new($suite, $title, $platform, $resultContext)
+        $testConfig = [TestConfiguration]::new($suite, $title, $platform, $resultContext, "testStage")
         $jobStatus = "Succeeded"
         $attempt = 1
         $matrix = @"
@@ -19,6 +19,7 @@ Describe "TestResults tests" {
     "dotnettests_ios": {
         "LABEL": "dotnettests",
         "TESTS_LABELS": "--label=skip-all-tests,run-ios-tests,run-ios-simulator-tests,run-tvos-tests,run-mac-tests,run-maccatalyst-tests,run-dotnet-tests,run-system-permission-tests,run-dotnettests-tests",
+        "TEST_STAGE": "testStage",
         "LABEL_WITH_PLATFORM": "dotnettests_iOS",
         "STATUS_CONTEXT": "VSTS: simulator tests - dotnettests - iOS",
         "TEST_simulator_tests": "simulator_dotnettests_ios",
@@ -28,6 +29,7 @@ Describe "TestResults tests" {
       "dotnettests_tvos": {
         "LABEL": "dotnettests",
         "TESTS_LABELS": "--label=skip-all-tests,run-ios-tests,run-ios-simulator-tests,run-tvos-tests,run-mac-tests,run-maccatalyst-tests,run-dotnet-tests,run-system-permission-tests,run-dotnettests-tests",
+        "TEST_STAGE": "testStage",
         "LABEL_WITH_PLATFORM": "dotnettests_tvOS",
         "STATUS_CONTEXT": "VSTS: simulator tests - dotnettests - tvOS",
         "TEST_simulator_tests": "simulator_dotnettests_tvos",
@@ -37,6 +39,7 @@ Describe "TestResults tests" {
       "dotnettests_maccatalyst": {
         "LABEL": "dotnettests",
         "TESTS_LABELS": "--label=skip-all-tests,run-ios-tests,run-ios-simulator-tests,run-tvos-tests,run-mac-tests,run-maccatalyst-tests,run-dotnet-tests,run-system-permission-tests,run-dotnettests-tests",
+        "TEST_STAGE": "testStage",
         "LABEL_WITH_PLATFORM": "dotnettests_MacCatalyst",
         "STATUS_CONTEXT": "VSTS: simulator tests - dotnettests - MacCatalyst",
         "TEST_simulator_tests": "simulator_dotnettests_maccatalyst",
@@ -46,6 +49,7 @@ Describe "TestResults tests" {
       "dotnettests_macos": {
         "LABEL": "dotnettests",
         "TESTS_LABELS": "--label=skip-all-tests,run-ios-tests,run-ios-simulator-tests,run-tvos-tests,run-mac-tests,run-maccatalyst-tests,run-dotnet-tests,run-system-permission-tests,run-dotnettests-tests",
+        "TEST_STAGE": "testStage",
         "LABEL_WITH_PLATFORM": "dotnettests_macOS",
         "STATUS_CONTEXT": "VSTS: simulator tests - dotnettests - macOS",
         "TEST_simulator_tests": "simulator_dotnettests_macos",
@@ -55,6 +59,7 @@ Describe "TestResults tests" {
       "dotnettests_multiple": {
         "LABEL": "dotnettests",
         "TESTS_LABELS": "--label=skip-all-tests,run-ios-tests,run-ios-simulator-tests,run-tvos-tests,run-mac-tests,run-maccatalyst-tests,run-dotnet-tests,run-system-permission-tests,run-dotnettests-tests",
+        "TEST_STAGE": "testStage",
         "LABEL_WITH_PLATFORM": "dotnettests_Multiple",
         "STATUS_CONTEXT": "VSTS: simulator tests - dotnettests - Multiple",
         "TEST_simulator_tests": "simulator_dotnettests_multiple",
@@ -65,6 +70,7 @@ Describe "TestResults tests" {
     {
         "LABEL": "cecil",
         "TESTS_LABELS": "--label=skip-all-tests,run-ios-64-tests,run-ios-simulator-tests,run-tvos-tests,run-mac-tests,run-maccatalyst-tests,run-dotnet-tests,run-system-permission-tests,run-cecil-tests",
+        "TEST_STAGE": "testStage",
         "LABEL_WITH_PLATFORM": "cecil",
         "STATUS_CONTEXT": "VSTS: simulator tests - cecil",
         "TEST_simulator_tests": "simulator_cecil",
@@ -478,15 +484,15 @@ Describe "TestResults tests" {
 
 </details>
 
-[Html Report (VSDrops)](vsdropsIndex/simulator_testsdotnettests_MacCatalyst-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-simulator_testsdotnettests_MacCatalyst-1&api-version=6.0&`$format=zip)
+[Html Report (VSDrops)](vsdropsIndex/testStagedotnettests_maccatalyst-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-testStagedotnettests_maccatalyst-1&api-version=6.0&`$format=zip)
 
 ## Successes
 
-:white_check_mark: cecil: All 1 tests passed. [Html Report (VSDrops)](vsdropsIndex/simulator_testscecil-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-simulator_testscecil-1&api-version=6.0&`$format=zip)
-:white_check_mark: dotnettests (iOS): All 3 tests passed. [Html Report (VSDrops)](vsdropsIndex/simulator_testsdotnettests_iOS-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-simulator_testsdotnettests_iOS-1&api-version=6.0&`$format=zip)
-:white_check_mark: dotnettests (macOS): All 6 tests passed. [Html Report (VSDrops)](vsdropsIndex/simulator_testsdotnettests_macOS-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-simulator_testsdotnettests_macOS-1&api-version=6.0&`$format=zip)
-:white_check_mark: dotnettests (Multiple platforms): All 7 tests passed. [Html Report (VSDrops)](vsdropsIndex/simulator_testsdotnettests_Multiple-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-simulator_testsdotnettests_Multiple-1&api-version=6.0&`$format=zip)
-:white_check_mark: dotnettests (tvOS): All 4 tests passed. [Html Report (VSDrops)](vsdropsIndex/simulator_testsdotnettests_tvOS-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-simulator_testsdotnettests_tvOS-1&api-version=6.0&`$format=zip)
+:white_check_mark: cecil: All 1 tests passed. [Html Report (VSDrops)](vsdropsIndex/testStagececil-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-testStagececil-1&api-version=6.0&`$format=zip)
+:white_check_mark: dotnettests (iOS): All 3 tests passed. [Html Report (VSDrops)](vsdropsIndex/testStagedotnettests_ios-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-testStagedotnettests_ios-1&api-version=6.0&`$format=zip)
+:white_check_mark: dotnettests (macOS): All 6 tests passed. [Html Report (VSDrops)](vsdropsIndex/testStagedotnettests_macos-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-testStagedotnettests_macos-1&api-version=6.0&`$format=zip)
+:white_check_mark: dotnettests (Multiple platforms): All 7 tests passed. [Html Report (VSDrops)](vsdropsIndex/testStagedotnettests_multiple-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-testStagedotnettests_multiple-1&api-version=6.0&`$format=zip)
+:white_check_mark: dotnettests (tvOS): All 4 tests passed. [Html Report (VSDrops)](vsdropsIndex/testStagedotnettests_tvos-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-testStagedotnettests_tvos-1&api-version=6.0&`$format=zip)
 
 [comment]: <> (This is a test result report added by Azure DevOps)
 "
@@ -532,15 +538,15 @@ Describe "TestResults tests" {
 
 </details>
 
-[Html Report (VSDrops)](vsdropsIndex/simulator_testsdotnettests_MacCatalyst-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-simulator_testsdotnettests_MacCatalyst-1&api-version=6.0&`$format=zip)
+[Html Report (VSDrops)](vsdropsIndex/testStagedotnettests_maccatalyst-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-testStagedotnettests_maccatalyst-1&api-version=6.0&`$format=zip)
 
 ## Successes
 
-:white_check_mark: cecil: All 1 tests passed. [Html Report (VSDrops)](vsdropsIndex/simulator_testscecil-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-simulator_testscecil-1&api-version=6.0&`$format=zip)
-:white_check_mark: dotnettests (iOS): All 3 tests passed. [Html Report (VSDrops)](vsdropsIndex/simulator_testsdotnettests_iOS-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-simulator_testsdotnettests_iOS-1&api-version=6.0&`$format=zip)
-:white_check_mark: dotnettests (macOS): All 6 tests passed. [Html Report (VSDrops)](vsdropsIndex/simulator_testsdotnettests_macOS-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-simulator_testsdotnettests_macOS-1&api-version=6.0&`$format=zip)
-:white_check_mark: dotnettests (Multiple platforms): All 7 tests passed. [Html Report (VSDrops)](vsdropsIndex/simulator_testsdotnettests_Multiple-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-simulator_testsdotnettests_Multiple-1&api-version=6.0&`$format=zip)
-:white_check_mark: dotnettests (tvOS): All 4 tests passed. [Html Report (VSDrops)](vsdropsIndex/simulator_testsdotnettests_tvOS-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-simulator_testsdotnettests_tvOS-1&api-version=6.0&`$format=zip)
+:white_check_mark: cecil: All 1 tests passed. [Html Report (VSDrops)](vsdropsIndex/testStagececil-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-testStagececil-1&api-version=6.0&`$format=zip)
+:white_check_mark: dotnettests (iOS): All 3 tests passed. [Html Report (VSDrops)](vsdropsIndex/testStagedotnettests_ios-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-testStagedotnettests_ios-1&api-version=6.0&`$format=zip)
+:white_check_mark: dotnettests (macOS): All 6 tests passed. [Html Report (VSDrops)](vsdropsIndex/testStagedotnettests_macos-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-testStagedotnettests_macos-1&api-version=6.0&`$format=zip)
+:white_check_mark: dotnettests (Multiple platforms): All 7 tests passed. [Html Report (VSDrops)](vsdropsIndex/testStagedotnettests_multiple-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-testStagedotnettests_multiple-1&api-version=6.0&`$format=zip)
+:white_check_mark: dotnettests (tvOS): All 4 tests passed. [Html Report (VSDrops)](vsdropsIndex/testStagedotnettests_tvos-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-testStagedotnettests_tvos-1&api-version=6.0&`$format=zip)
 
 [comment]: <> (This is a test result report added by Azure DevOps)
 "
