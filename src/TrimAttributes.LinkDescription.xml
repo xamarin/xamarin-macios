@@ -29,6 +29,11 @@
     </type>
   </assembly>
 
+  <assembly fullname="System.Private.CoreLib" feature="ObjCRuntime.AggressiveAttributeTrimmingOnlyWithStaticRegistrar" featurevalue="true">
+    <type fullname="System.Runtime.CompilerServices.ExtensionAttribute">
+      <attribute internal="RemoveAttributeInstances" />
+    </type>
+  </assembly>
   <!-- https://github.com/dotnet/runtime/blob/d22c74dc974a757b48380a01dd0450efba31db64/src/libraries/System.Private.CoreLib/src/ILLink/ILLink.LinkAttributes.Shared.xml#L93-L350 -->
   <assembly fullname="System.Private.CoreLib" feature="ObjCRuntime.AggressiveAttributeTrimming" featurevalue="true">
     <!-- System -->
@@ -112,9 +117,6 @@
       <attribute internal="RemoveAttributeInstances" />
     </type>
     <type fullname="System.Runtime.CompilerServices.EnumeratorCancellationAttribute">
-      <attribute internal="RemoveAttributeInstances" />
-    </type>
-    <type fullname="System.Runtime.CompilerServices.ExtensionAttribute">
       <attribute internal="RemoveAttributeInstances" />
     </type>
     <type fullname="System.Runtime.CompilerServices.SkipLocalsInitAttribute">
