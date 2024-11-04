@@ -350,3 +350,19 @@ package-test-libraries.zip:
 	$(Q_GEN) cd $(TOP) && zip -9r --symlinks $(abspath $@).tmp ./tests/test-libraries
 	$(Q_GEN) cd $(TOP) && find tests -regex 'tests/test-libraries/custom-type-assembly/.libs/.*dll' -exec zip -9r --symlinks $(abspath $@).tmp {} +
 	$(Q) mv "$@".tmp "$@"
+
+build-all:
+	$(MAKE) build-all -C fsharp/dotnet
+	$(MAKE) build-all -C interdependent-binding-projects/dotnet
+	$(MAKE) build-all -C introspection/dotnet
+	$(MAKE) build-all -C monotouch-test/dotnet
+	$(MAKE) build-all -C xcframework-test/dotnet
+	$(MAKE) build-all -C "linker/ios/dont link/dotnet"
+	$(MAKE) build-all -C "linker/ios/link all/dotnet"
+	$(MAKE) build-all -C "linker/ios/link sdk/dotnet"
+	$(MAKE) build-all -C "linker/ios/trimmode copy/dotnet"
+	$(MAKE) build-all -C "linker/ios/trimmode link/dotnet"
+	$(MAKE) build -C dotnet/UnitTests
+	$(MAKE) build -C bgen
+	$(MAKE) build -C cecil-tests
+	$(MAKE) build -C xtro-sharpie
