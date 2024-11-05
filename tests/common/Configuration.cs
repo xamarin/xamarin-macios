@@ -915,10 +915,6 @@ namespace Xamarin.Tests {
 			}
 		}
 
-		public static string XIBuildPath {
-			get { return Path.GetFullPath (Path.Combine (RootPath, "tools", "xibuild", "xibuild")); }
-		}
-
 		public static string CloneTestDirectory (string directory)
 		{
 			// Copy the test projects to a temporary directory so that we can run the tests from there without affecting the working directory.
@@ -1009,6 +1005,10 @@ namespace Xamarin.Tests {
 			default:
 				throw new NotImplementedException (platform.ToString ());
 			}
+		}
+
+		public static bool IsBuildingRemotely {
+			get => !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("MAC_AGENT_IP"));
 		}
 
 		public static string GetTestLibraryDirectory (ApplePlatform platform, bool? simulator = null)

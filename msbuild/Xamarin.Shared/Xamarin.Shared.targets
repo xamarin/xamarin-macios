@@ -146,9 +146,9 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	-->
 	<Target Name="_ExpandNativeReferences" Condition="'$(DesignTimeBuild)' != 'true'" DependsOnTargets="_DetectSdkLocations;_ComputeTargetArchitectures;_GenerateBundleName;_SanitizeNativeReferences">
 		<ItemGroup>
-			<_XCFrameworkNativeReference Include="@(NativeReference -> '%(Identity)/.')" Condition="'%(Extension)' == '.xcframework'" />
+			<_XCFrameworkNativeReference Include="@(NativeReference -> '%(Identity)/.')" Condition="'%(Extension)' == '.xcframework' Or $([MSBuild]::ValueOrDefault('%(FileName)%(Extension)', '').EndsWith('.xcframework.zip'))" />
 			<_FrameworkNativeReference Include="@(NativeReference -> '%(Identity)/%(Filename)')" Condition="'%(Extension)' == '.framework'" />
-			<_FileNativeReference Include="@(NativeReference)" Condition="'%(Extension)' != '.framework' And '%(Extension)' != '.xcframework'" />
+			<_FileNativeReference Include="@(NativeReference)" Condition="'%(Extension)' != '.framework' And '%(Extension)' != '.xcframework' And '%(Extension)' != '.zip'" />
 		</ItemGroup>
 		<ResolveNativeReferences
 			SessionId="$(BuildSessionId)"
@@ -509,7 +509,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		      property to run targets that add to the `PartialAppManifest` item group before we process them.
 		    * Some MSBuild properties can also add values.
 
-		    The precedence is: MSBuild properties can be overridden by the Info.plist, which can be overridden by a partial plist.
+		    The precedence is: MSBuild properties can be overridden by the Info.plist, which can be overridden by a partial plist (a partial plist can also specify the "Overwrite=false" metadata to not overwrite any existing entries).
 
 		2. In the `CompileAppManifest` target we get all the inputs from above, and compute a temporary app manifest, which is written to a temporary output file.
 
@@ -651,6 +651,13 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 
 		<RemoveDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(AppBundleDir).dSYM" />
 		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Files="$(DeviceSpecificOutputPath)*.bcsymbolmap" />
+
+		<!-- Embed the Info.plist + the compiled entitlements into any binlogs to ease diagnose problems. -->
+		<!-- This might not work correctly for remote Windows builds, but binlogs from VS don't contain files anyway -->
+		<ItemGroup>
+			<EmbedInBinlog Include="$([System.IO.Path]::GetFullPath('$(_AppBundleManifestPath)'))" />
+			<EmbedInBinlog Include="$([System.IO.Path]::GetFullPath('$(AppBundleManifest)'))" Condition="Exists('$(AppBundleManifest)')" />
+		</ItemGroup>
 	</Target>
 
 	<PropertyGroup>
@@ -696,6 +703,13 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			<Output TaskParameter="EntitlementsInSignature" PropertyName="_CompiledCodesignEntitlements" />
 		</CompileEntitlements>
 
+		<!-- Embed the Entitlements.plist + the compiled entitlements into any binlogs to ease diagnose problems. -->
+		<!-- This will probably not work correctly for remote Windows builds, but binlogs from VS don't contain files anyway -->
+		<ItemGroup>
+			<EmbedInBinlog Include="$(_CompiledEntitlements)" Condition="Exists('$(_CompiledEntitlements)')" />
+			<EmbedInBinlog Include="$(_CompiledCodesignEntitlements)" Condition="Exists('$(_CompiledCodesignEntitlements)')" />
+			<EmbedInBinlog Include="$([System.IO.Path]::GetFullPath('$(CodesignEntitlements)'))" Condition="Exists('$(CodesignEntitlements)')" />
+		</ItemGroup>
 
 		<ItemGroup>
 			<FileWrites Include="$(_CompiledEntitlementsPath)" />
@@ -714,6 +728,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			_BeforeCoreCompileInterfaceDefinitions;
 			_ReadCoreCompileInterfaceDefinitions;
 			_CoreCompileInterfaceDefinitions;
+			_PostCompileInterfaceDefinitions;
 		</_CompileInterfaceDefinitionsDependsOn>
 	</PropertyGroup>
 
@@ -800,11 +815,17 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 
 		<!-- Cached the generated outputs items for incremental build support -->
 		<WriteItemsToFile Items="@(_IBTool_BundleResources)" ItemName="_BundleResourceWithLogicalName" File="$(_IBToolCache)" Overwrite="true" IncludeMetadata="true" />
-		<!-- Write out the list of assets we've processed, so that an inner build in a multi-rid build can skip processing them -->
-		<WriteItemsToFile Items="@(InterfaceDefinition)" Condition="'$(_SaveProcessedItems)' == 'true'" ItemName="InterfaceDefinition" File="$(_ProcessedInterfaceDefinitionsPath)" Overwrite="true" IncludeMetadata="false" />
 
 		<ItemGroup>
 			<FileWrites Include="$(_IBToolCache)" />
+		</ItemGroup>
+	</Target>
+
+	<Target Name="_PostCompileInterfaceDefinitions">
+		<!-- Write out the list of assets we've processed, so that an inner build in a multi-rid build can skip processing them -->
+		<!-- We need to do this even for incremental builds, when we don't need to run the IBTool task, so this is not in the _CoreCompileInterfaceDefinitions target -->
+		<WriteItemsToFile Items="@(InterfaceDefinition)" Condition="'$(_SaveProcessedItems)' == 'true'" ItemName="InterfaceDefinition" File="$(_ProcessedInterfaceDefinitionsPath)" Overwrite="true" IncludeMetadata="false" />
+		<ItemGroup>
 			<FileWrites Include="$(_ProcessedInterfaceDefinitionsPath)" />
 		</ItemGroup>
 	</Target>
@@ -822,6 +843,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			_BeforeCoreCompileImageAssets;
 			_ReadCompileImageAssets;
 			_CoreCompileImageAssets;
+			_PostCompileImageAssets;
 		</_CompileImageAssetsDependsOn>
 	</PropertyGroup>
 
@@ -888,12 +910,15 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			ToolExe="$(ACToolExe)"
 			ToolPath="$(ACToolPath)"
 			AccentColor="$(AccentColor)"
+			AlternateAppIcons="@(AlternateAppIcon)"
+			AppIcon="$(AppIcon)"
 			BundleIdentifier="$(_BundleIdentifier)"
 			CLKComplicationGroup="$(_CLKComplicationGroup)"
 			DeviceModel="$(TargetDeviceModel)"
 			DeviceOSVersion="$(TargetDeviceOSVersion)"
 			EnableOnDemandResources="$(EnableOnDemandResources)"
 			ImageAssets="@(ImageAsset)"
+			IncludeAllAppIcons="$(IncludeAllAppIcons)"
 			MinimumOSVersion="$(_MinimumOSVersion)"
 			NSExtensionPointIdentifier="$(_NSExtensionPointIdentifier)"
 			OptimizePNGs="$(OptimizePNGs)"
@@ -924,10 +949,16 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		<!-- Cache the generated outputs items for incremental build support -->
 		<WriteItemsToFile Items="@(_ACTool_PartialAppManifest)" ItemName="_PostCompilePartialAppManifest" File="$(_ACTool_PartialAppManifestCache)" Overwrite="true" IncludeMetadata="true" />
 		<WriteItemsToFile Items="@(_ACTool_BundleResources)" ItemName="_BundleResourceWithLogicalName" File="$(_ACTool_BundleResourceCache)" Overwrite="true" IncludeMetadata="true" />
-		<!-- Write out the list of assets we've processed, so that an inner build in a multi-rid build can skip processing them -->
-		<WriteItemsToFile Items="@(ImageAsset)" Condition="'$(_SaveProcessedItems)' == 'true'" ItemName="ImageAsset" File="$(_ProcessedImageAssetsPath)" Overwrite="true" IncludeMetadata="false" />
 		<ItemGroup>
 			<FileWrites Include="$(_ACTool_PartialAppManifestCache);$(_ACTool_BundleResourceCache)" />
+		</ItemGroup>
+	</Target>
+
+	<Target Name="_PostCompileImageAssets">
+		<!-- Write out the list of assets we've processed, so that an inner build in a multi-rid build can skip processing them -->
+		<!-- We need to do this even for incremental builds, when we don't need to run the ACTool task, so this is not in the _CoreCompileImageAssets target -->
+		<WriteItemsToFile Items="@(ImageAsset)" Condition="'$(_SaveProcessedItems)' == 'true'" ItemName="ImageAsset" File="$(_ProcessedImageAssetsPath)" Overwrite="true" IncludeMetadata="false" />
+		<ItemGroup>
 			<FileWrites Include="$(_ProcessedImageAssetsPath)" />
 		</ItemGroup>
 	</Target>
@@ -944,6 +975,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			_BeforeCoreCompileSceneKitAssets;
 			_ReadCoreCompileSceneKitAssets;
 			_CoreCompileSceneKitAssets;
+			_PostCompileSceneKitAssets;
 		</_CompileSceneKitAssetsDependsOn>
 	</PropertyGroup>
 
@@ -1010,10 +1042,16 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</CompileSceneKitAssets>
 
 		<WriteItemsToFile Items="@(_SceneKitAssets_BundleResources)" ItemName="_BundleResourceWithLogicalName" File="$(_SceneKitCache)" Overwrite="true" IncludeMetadata="true" />
-		<!-- Write out the list of assets we've processed, so that an inner build in a multi-rid build can skip processing them -->
-		<WriteItemsToFile Items="@(SceneKitAsset)" Condition="'$(_SaveProcessedItems)' == 'true'" ItemName="SceneKitAsset" File="$(_ProcessedSceneKitAssetsPath)" Overwrite="true" IncludeMetadata="false" />
 		<ItemGroup>
 			<FileWrites Include="$(_SceneKitCache)" />
+		</ItemGroup>
+	</Target>
+
+	<Target Name="_PostCompileSceneKitAssets">
+		<!-- Write out the list of assets we've processed, so that an inner build in a multi-rid build can skip processing them -->
+		<!-- We need to do this even for incremental builds, when we don't need to run the CompileSceneKitAssets task, so this is not in the SceneKitAsset target -->
+		<WriteItemsToFile Items="@(SceneKitAsset)" Condition="'$(_SaveProcessedItems)' == 'true'" ItemName="SceneKitAsset" File="$(_ProcessedSceneKitAssetsPath)" Overwrite="true" IncludeMetadata="false" />
+		<ItemGroup>
 			<FileWrites Include="$(_ProcessedSceneKitAssetsPath)" />
 		</ItemGroup>
 	</Target>
@@ -1027,6 +1065,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			_BeforeCoreCompileColladaAssets;
 			_ReadCoreCompileColladaAssets;
 			_CoreCompileColladaAssets;
+			_PostCompileColladaAssets;
 		</CompileColladaAssetsDependsOn>
 	</PropertyGroup>
 
@@ -1093,10 +1132,16 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</ScnTool>
 
 		<WriteItemsToFile Items="@(_Collada_BundleResources)" ItemName="_BundleResourceWithLogicalName" File="$(_ColladaCache)" Overwrite="true" IncludeMetadata="true" />
-		<!-- Write out the list of assets we've processed, so that an inner build in a multi-rid build can skip processing them -->
-		<WriteItemsToFile Items="@(Collada)" Condition="'$(_SaveProcessedItems)' == 'true'" ItemName="Collada" File="$(_ProcessedColladaAssetsPath)" Overwrite="true" IncludeMetadata="false" />
 		<ItemGroup>
 			<FileWrites Include="$(_ColladaCache)" />
+		</ItemGroup>
+	</Target>
+
+	<Target Name="_PostCompileColladaAssets">
+		<!-- Write out the list of assets we've processed, so that an inner build in a multi-rid build can skip processing them -->
+		<!-- We need to do this even for incremental builds, when we don't need to run the ScnTool task, so this is not in the _CoreCompileColladaAssets target -->
+		<WriteItemsToFile Items="@(Collada)" Condition="'$(_SaveProcessedItems)' == 'true'" ItemName="Collada" File="$(_ProcessedColladaAssetsPath)" Overwrite="true" IncludeMetadata="false" />
+		<ItemGroup>
 			<FileWrites Include="$(_ProcessedColladaAssetsPath)" />
 		</ItemGroup>
 	</Target>
@@ -1167,6 +1212,18 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			<_CompiledEntitlementsPath Condition="'$(_CompiledEntitlementsPath)' == ''">$(DeviceSpecificIntermediateOutputPath)Entitlements.xcent</_CompiledEntitlementsPath>
 			<_SaveProcessedItems Condition="'$(RuntimeIdentifiers)' != '' And '$(UsingAppleNETSdk)' == 'true'">true</_SaveProcessedItems>
 		</PropertyGroup>
+
+		<!-- Create an item group of all the paths that convey information from an outer (universal) build to its inner (rid-specific) builds (but not between (incremental) builds) -->
+		<ItemGroup>
+			<_ProcessedPaths Include="$(_ProcessedBundleResourcesPath)" />
+			<_ProcessedPaths Include="$(_ProcessedContentPath)" />
+			<_ProcessedPaths Include="$(_ProcessedImageAssetsPath)" />
+			<_ProcessedPaths Include="$(_ProcessedInterfaceDefinitionsPath)" />
+			<_ProcessedPaths Include="$(_ProcessedSceneKitAssetsPath)" />
+			<_ProcessedPaths Include="$(_ProcessedColladaAssetsPath)" />
+			<_ProcessedPaths Include="$(_ProcessedTextureAtlasesPath)" />
+			<_ProcessedPaths Include="$(_ProcessedCoreMLModelsPath)" />
+		</ItemGroup>
 	</Target>
 
 	<!-- TODO: check for duplicate items -->
@@ -1219,6 +1276,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			_BeforeCompileTextureAtlases;
 			_ReadCoreCompileTextureAtlases;
 			_CoreCompileTextureAtlases;
+			_PostCompileTextureAtlases;
 		</_CompileTextureAtlasesDependsOn>
 	</PropertyGroup>
 
@@ -1282,10 +1340,16 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 
 		<!-- Cached the generated outputs items for incremental build support -->
 		<WriteItemsToFile Items="@(_TextureAtlas_BundleResources)" ItemName="_BundleResourceWithLogicalName" File="$(_TextureAtlasCache)" Overwrite="true" IncludeMetadata="true" />
-		<!-- Write out the list of assets we've processed, so that an inner build in a multi-rid build can skip processing them -->
-		<WriteItemsToFile Items="@(AtlasTexture)" Condition="'$(_SaveProcessedItems)' == 'true'" ItemName="AtlasTexture" File="$(_ProcessedTextureAtlasesPath)" Overwrite="true" IncludeMetadata="false" />
 		<ItemGroup>
 			<FileWrites Include="$(_TextureAtlasCache)" />
+		</ItemGroup>
+	</Target>
+
+	<Target Name="_PostCompileTextureAtlases">
+		<!-- Write out the list of assets we've processed, so that an inner build in a multi-rid build can skip processing them -->
+		<!-- We need to do this even for incremental builds, when we don't need to run the TextureAtlas task, so this is not in the _CoreCompileTextureAtlases target -->
+		<WriteItemsToFile Items="@(AtlasTexture)" Condition="'$(_SaveProcessedItems)' == 'true'" ItemName="AtlasTexture" File="$(_ProcessedTextureAtlasesPath)" Overwrite="true" IncludeMetadata="false" />
+		<ItemGroup>
 			<FileWrites Include="$(_ProcessedTextureAtlasesPath)" />
 		</ItemGroup>
 	</Target>
@@ -1377,10 +1441,16 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		<!-- Cache the generated outputs items for incremental build support -->
 		<WriteItemsToFile Items="@(_CoreMLModel_PartialAppManifest)" ItemName="_PostCompilePartialAppManifest" File="$(_CoreMLModel_PartialAppManifestCache)" Overwrite="true" IncludeMetadata="true" />
 		<WriteItemsToFile Items="@(_CoreMLModel_BundleResources)" ItemName="_BundleResourceWithLogicalName" File="$(_CoreMLModel_BundleResourceCache)" Overwrite="true" IncludeMetadata="true" />
-		<!-- Write out the list of assets we've processed, so that an inner build in a multi-rid build can skip processing them -->
-		<WriteItemsToFile Items="@(CoreMLModel)" Condition="'$(_SaveProcessedItems)' == 'true'" ItemName="CoreMLModel" File="$(_ProcessedCoreMLModelsPath)" Overwrite="true" IncludeMetadata="false" />
 		<ItemGroup>
 			<FileWrites Include="$(_CoreMLModel_PartialAppManifestCache);$(_CoreMLModel_BundleResourceCache)" />
+		</ItemGroup>
+	</Target>
+
+	<Target Name="_PostCompileCoreMLModels">
+		<!-- Write out the list of assets we've processed, so that an inner build in a multi-rid build can skip processing them -->
+		<!-- We need to do this even for incremental builds, when we don't need to run the CoreMLCompiler task, so this is not in the _CoreCompileCoreMLModels target -->
+		<WriteItemsToFile Items="@(CoreMLModel)" Condition="'$(_SaveProcessedItems)' == 'true'" ItemName="CoreMLModel" File="$(_ProcessedCoreMLModelsPath)" Overwrite="true" IncludeMetadata="false" />
+		<ItemGroup>
 			<FileWrites Include="$(_ProcessedCoreMLModelsPath)" />
 		</ItemGroup>
 	</Target>
@@ -2505,8 +2575,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		<Ditto
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
-			ToolExe="$(DittoExe)"
-			ToolPath="$(DittoPath)"
+			DittoPath="$(DittoPath)"
 			Source="@(_ResolvedAppExtensionReferences)"
 			Destination="$(_AppExtensionRoot)%(_ResolvedAppExtensionReferences.ContainerName)\%(_ResolvedAppExtensionReferences.FileName)%(_ResolvedAppExtensionReferences.Extension)"
 			TouchDestinationFiles="true"

@@ -1185,15 +1185,6 @@ namespace AudioToolbox {
 			}
 		}
 
-#if !XAMCORE_3_0
-		[Obsolete ("Use 'AudioStreamDescription' instead.")]
-		public AudioStreamBasicDescription AudioStreamPacketDescription {
-			get {
-				return AudioStreamDescription;
-			}
-		}
-#endif
-
 		public AudioStreamBasicDescription AudioStreamDescription {
 			get {
 #if !MONOMAC

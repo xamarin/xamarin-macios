@@ -2166,9 +2166,7 @@ namespace MapKit {
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
-#if MONOMAC || XAMCORE_3_0 // "You do not create instances of this class directly"
 	[DisableDefaultCtor]
-#endif
 	interface MKLocalSearchCompletion {
 		[Export ("title", ArgumentSemantic.Strong)]
 		string Title { get; }

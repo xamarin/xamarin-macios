@@ -1,4 +1,4 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Macios.Generator", "Microsoft.Macios.Generator\Microsoft.Macios.Generator.csproj", "{8E9CF45D-E836-447E-9290-03A9CACE2704}"
 EndProject
@@ -11,6 +11,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Macios.Generator.Tests", "..\..\tests\rgen\Microsoft.Macios.Generator.Tests\Microsoft.Macios.Generator.Tests.csproj", "{CD222ACD-A54F-49D9-81CA-6D795CC31195}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Macios.Bindings.Analyzer.Tests", "..\..\tests\rgen\Microsoft.Macios.Bindings.Analyzer.Tests\Microsoft.Macios.Bindings.Analyzer.Tests.csproj", "{1AC4A248-CC98-4392-8690-4E2CAF6E194B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Macios.Binding.Common", "Microsoft.Macios.Binding.Common\Microsoft.Macios.Binding.Common.csproj", "{536758BC-2A88-4B79-ABB1-6B39494A5FE6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -42,5 +44,9 @@ Global
 		{1AC4A248-CC98-4392-8690-4E2CAF6E194B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1AC4A248-CC98-4392-8690-4E2CAF6E194B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1AC4A248-CC98-4392-8690-4E2CAF6E194B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{536758BC-2A88-4B79-ABB1-6B39494A5FE6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{536758BC-2A88-4B79-ABB1-6B39494A5FE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{536758BC-2A88-4B79-ABB1-6B39494A5FE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{536758BC-2A88-4B79-ABB1-6B39494A5FE6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

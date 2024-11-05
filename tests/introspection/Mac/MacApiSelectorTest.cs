@@ -158,13 +158,6 @@ namespace Introspection {
 			case "xamarinselector:removed:":
 				return true;
 #endif
-#if !XAMCORE_3_0
-			case "initWithPasteboardPropertyList:ofType:":
-				// This is a broken binding, but it's an abstract protocol
-				// method, so there's no way to remove it without breaking
-				// compat.
-				return true;
-#endif
 			case "readInBackgroundAndNotifyForModes:":
 			case "readInBackgroundAndNotify":
 			case "readToEndOfFileInBackgroundAndNotifyForModes:":
@@ -1322,27 +1315,6 @@ namespace Introspection {
 		protected override bool SkipInit (string selector, MethodBase m)
 		{
 			switch (selector) {
-#if !XAMCORE_3_0
-			// DomEvent
-			case "initEvent:canBubbleArg:cancelableArg:":
-			// DomOverflowEvent
-			case "initOverflowEvent:horizontalOverflow:verticalOverflow:":
-			// DomUIEvent
-			case "initUIEvent:canBubble:cancelable:view:detail:":
-			// DomKeyboardEvent
-			case "initKeyboardEvent:canBubble:cancelable:view:keyIdentifier:keyLocation:ctrlKey:altKey:shiftKey:metaKey:altGraphKey:":
-			case "initKeyboardEvent:canBubble:cancelable:view:keyIdentifier:keyLocation:ctrlKey:altKey:shiftKey:metaKey:":
-			// DomMouseEvent
-			case "initMouseEvent:canBubble:cancelable:view:detail:screenX:screenY:clientX:clientY:ctrlKey:altKey:shiftKey:metaKey:button:relatedTarget:":
-			// DomWheelEvent
-			case "initWheelEvent:wheelDeltaY:view:screenX:screenY:clientX:clientY:ctrlKey:altKey:shiftKey:metaKey:":
-			// QTMovie
-			case "movieWithTimeRange:error:":
-			case "initWithQuickTimeMedia:error:":
-			// NSAnimation
-			case "initWithDuration:animationCurve:":
-				return true;
-#endif
 			// Cinematic.CNDecision
 			case "initWithTime:detectionGroupID:strong:":
 			case "initWithTime:detectionID:strong:":

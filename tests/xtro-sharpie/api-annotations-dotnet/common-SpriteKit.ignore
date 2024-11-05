@@ -1,7 +1,7 @@
 ## it's an internal that is called from a non-generated binding
 !incorrect-designated-initializer! SKWarpGeometryGrid::initWithColumns:rows:sourcePositions:destPositions: is not a constructor
 
-## bad API signature, removed in XAMCORE_3_0
+## bad API signature, bound manually
 !extra-null-allowed! 'SpriteKit.SKShapeNode SpriteKit.SKShapeNode::FromPoints(CoreGraphics.CGPoint&,System.UIntPtr)' has a extraneous [NullAllowed] on parameter #0
 !extra-null-allowed! 'SpriteKit.SKShapeNode SpriteKit.SKShapeNode::FromSplinePoints(CoreGraphics.CGPoint&,System.UIntPtr)' has a extraneous [NullAllowed] on parameter #0
 
