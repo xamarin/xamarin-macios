@@ -8,6 +8,19 @@ where:
 configuration:
   resourceManagementConfiguration:
     scheduledSearches:
+    - decscription: Lock issues and pull requests with no activity in 180 days
+      frequencies:
+      - weekday:
+        day: Sunday
+        time: 12:00
+      filters:
+      - isClosed
+      - not:
+        - isLocked
+      - noActivitySince:
+          days: 180
+      actions:
+      - lockIssue
     - description: 
       frequencies:
       - weekday:
