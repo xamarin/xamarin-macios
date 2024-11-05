@@ -759,13 +759,8 @@ The default trim mode depends on numerous factors, and may also change in the fu
 The current (as of .NET 9) default values are:
 
 * iOS and iOS: `partial` when building for device, `copy` when building for the simulator.
-  > [!NOTE]
-  > This will change in .NET 10: it will be `partial` when building for device, _or_ when building for arm64 in the simulator; and then `copy` otherwise.
 * macOS: always `copy`.
 * Mac Catalyst: `partial` when building for the `"Release"` configuration, `copy` otherwise.
-  > [!NOTE]
-  > This will change in .NET 10: it will be `partial` when building for the `"Release"` configuration, _or_ when building for arm64; and then `copy` otherwise.
-
 
 Exceptions:
 
