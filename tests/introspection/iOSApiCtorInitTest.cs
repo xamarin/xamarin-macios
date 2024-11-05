@@ -14,9 +14,7 @@ using System.Reflection;
 using PassKit;
 #endif
 using Foundation;
-#if !__WATCHOS__
 using Metal;
-#endif
 using ObjCRuntime;
 using UIKit;
 
@@ -53,7 +51,6 @@ namespace Introspection {
 				if (TestRuntime.IsSimulatorOrDesktop && !TestRuntime.CheckXcodeVersion (7, 0))
 					return true;
 				break;
-#if !__WATCHOS__
 			case "MetalKit":
 			case "MonoTouch.MetalKit":
 			case "MetalPerformanceShaders":
@@ -64,7 +61,6 @@ namespace Introspection {
 				if (!TestRuntime.CheckXcodeVersion (7, 0) || (MTLDevice.SystemDefault is null))
 					return true;
 				break;
-#endif // !__WATCHOS__
 #if __TVOS__
 			case "MetalPerformanceShadersGraph":
 				if (TestRuntime.IsSimulatorOrDesktop)
@@ -96,11 +92,9 @@ namespace Introspection {
 				return true;
 			// Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: UISplitViewController is only supported when running under UIUserInterfaceIdiomPad
 			case "UISplitViewController":
-#if !__WATCHOS__
 			// Objective-C exception thrown.  Name: NSInternalInconsistencyException Reason: ADInterstitialAd is available on iPad only.
 			case "ADInterstitialAd":
 				return UIDevice.CurrentDevice.UserInterfaceIdiom == UIUserInterfaceIdiom.Phone;
-#endif
 
 			case "UIVideoEditorController":
 				return true;
@@ -184,23 +178,6 @@ namespace Introspection {
 			case "MTLHeapDescriptor":
 			case "MTLSharedEventListener":
 				return TestRuntime.IsSimulatorOrDesktop;
-#if __WATCHOS__
-			// The following watchOS 3.2 Beta 2 types Fails, but they can be created we verified using an ObjC app, we will revisit before stable
-			case "INRequestPaymentIntent":
-			case "INRequestRideIntent":
-			case "INResumeWorkoutIntent":
-			case "INRideVehicle":
-			case "INSearchCallHistoryIntent":
-			case "INSearchForMessagesIntent":
-			case "INSearchForPhotosIntent":
-			case "INSendMessageIntent":
-			case "INSendPaymentIntent":
-			case "INStartAudioCallIntent":
-			case "INStartPhotoPlaybackIntent":
-			case "INStartWorkoutIntent":
-			case "CLKComplicationWidgetMigrator": // Only available on device
-				return true;
-#endif
 			// iOS 11 Beta 1
 			case "UICollectionViewFocusUpdateContext": // [Assert] -init is not a useful initializer for this class. Use one of the designated initializers instead
 			case "UIFocusUpdateContext": // [Assert] -init is not a useful initializer for this class. Use one of the designated initializers instead
@@ -222,10 +199,6 @@ namespace Introspection {
 			case "INGetRestaurantGuestIntentResponse": // Objective-C exception thrown.  Name: NSInternalInconsistencyException Reason: Unable to initialize 'INGetRestaurantGuestIntentResponse'. Please make sure that your intent definition file is valid.
 				return TestRuntime.CheckXcodeVersion (10, 0);
 			case "CMMovementDisorderManager": // Not available in simulator, added info to radar://41110708 
-#if __WATCHOS__
-				// Doesn't exist in the simulator; aborts on device if the required entitlement isn't available.
-				return true;
-#endif
 				return TestRuntime.IsSimulatorOrDesktop;
 			case "RPSystemBroadcastPickerView": // Symbol not available in simulator
 				return TestRuntime.IsSimulatorOrDesktop;
@@ -243,7 +216,7 @@ namespace Introspection {
 				// MPSPredicate.mm:102: failed assertion `[MPSPredicate initWithBuffer:offset:] device: Apple A8 GPU does not support predication.'
 				return (TestRuntime.IsDevice && (UIScreen.MainScreen.NativeBounds.Width <= 1920));
 #endif
-#if __TVOS__ || __WATCHOS__
+#if __TVOS__
 			case "NSMetadataQuery":
 				// hangs on xcode 13 beta 1 on simulator
 				if (TestRuntime.CheckXcodeVersion (13, 0))

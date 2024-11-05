@@ -29,6 +29,9 @@ using NUnit.Framework;
 using Foundation;
 using ObjCRuntime;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Introspection {
 
 	[Preserve (AllMembers = true)]
@@ -155,7 +158,7 @@ namespace Introspection {
 			var failed_fields = new List<string> ();
 
 			Errors = 0;
-			int c = 0, n = 0;
+			int n = 0;
 			foreach (var p in AllProperties ()) {
 				if (p.PropertyType.FullName != NSStringType)
 					continue;

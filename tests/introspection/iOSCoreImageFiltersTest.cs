@@ -8,8 +8,6 @@
 // Copyright 2012-2013 Xamarin Inc. All rights reserved.
 //
 
-#if !__WATCHOS__
-
 using System;
 using System.Reflection;
 using CoreImage;
@@ -34,4 +32,3 @@ namespace Introspection {
 		}
 	}
 }
-#endif // !__WATCHOS__

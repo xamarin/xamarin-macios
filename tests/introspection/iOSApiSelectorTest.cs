@@ -18,6 +18,9 @@ using WatchConnectivity;
 #endif
 using NUnit.Framework;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Introspection {
 
 	[TestFixture]
@@ -34,12 +37,6 @@ namespace Introspection {
 		protected override bool Skip (Type type)
 		{
 			switch (type.Namespace) {
-#if __WATCHOS__
-			case "GameKit":
-				if (IntPtr.Size == 4)
-					return true;
-				break;
-#endif
 			// they don't answer on the simulator (Apple implementation does not work) but fine on devices
 			case "GameController":
 			case "MonoTouch.GameController":
@@ -127,52 +124,6 @@ namespace Introspection {
 			case "MTLRasterizationRateLayerDescriptor":
 			case "MTLRasterizationRateMapDescriptor":
 				return TestRuntime.IsSimulatorOrDesktop;
-#if __WATCHOS__
-				// The following watchOS 3.2 Beta 2 types Fails, but they can be created we verified using an ObjC app, we will revisit before stable
-			case "INPersonResolutionResult":
-			case "INPlacemarkResolutionResult":
-			case "INPreferences":
-			case "INRadioTypeResolutionResult":
-			case "INRelativeReferenceResolutionResult":
-			case "INRelativeSettingResolutionResult":
-			case "INRideCompletionStatus":
-			case "INSpeakableStringResolutionResult":
-			case "INStringResolutionResult":
-			case "INTemperatureResolutionResult":
-			case "INWorkoutGoalUnitTypeResolutionResult":
-			case "INWorkoutLocationTypeResolutionResult":
-			case "INBillPayeeResolutionResult":
-			case "INBillTypeResolutionResult":
-			case "INBooleanResolutionResult":
-			case "INCallRecordTypeResolutionResult":
-			case "INCarAirCirculationModeResolutionResult":
-			case "INCarAudioSourceResolutionResult":
-			case "INCarDefrosterResolutionResult":
-			case "INCarSeatResolutionResult":
-			case "INCarSignalOptionsResolutionResult":
-			case "INCurrencyAmountResolutionResult":
-			case "INDateComponentsRangeResolutionResult":
-			case "INDateComponentsResolutionResult":
-			case "INDoubleResolutionResult":
-			case "INImage":
-			case "INIntegerResolutionResult":
-			case "INInteraction":
-			case "INMessageAttributeOptionsResolutionResult":
-			case "INPaymentAmountResolutionResult":
-			case "INMessageAttributeResolutionResult":
-			case "INPaymentMethod":
-			case "INPaymentStatusResolutionResult":
-			case "INPaymentAccountResolutionResult":
-				return true;
-			case "CMMovementDisorderManager":
-				// From Xcode 10 beta 2:
-				// This requires a special entitlement:
-				//     Usage of CMMovementDisorderManager requires a special entitlement.  Please see for more information https://developer.apple.com/documentation/coremotion/cmmovementdisordermanager
-				// but that web page doesn't explain anything (it's mostly empty, so this is probably just lagging documentation)
-				// I also tried enabling every entitlement in Xcode, but it still didn't work.
-				return true;
-#endif
-
 			default:
 				return base.Skip (type);
 			}
@@ -448,26 +399,7 @@ namespace Introspection {
 				}
 				break;
 #endif
-#if __WATCHOS__
-			case "INUserContext":
-				switch (name) {
-				case "encodeWithCoder:":
-					if (!TestRuntime.CheckXcodeVersion (12, 0))
-						return true;
-					break;
 				}
-				break;
-			case "HKHealthStore":
-				switch (name) {
-				case "workoutSessionMirroringStartHandler":
-					if (TestRuntime.IsSimulatorOrDesktop)
-						return true;
-					break;
-				}
-				break;
-#endif
-				break;
-			}
 
 			switch (name) {
 			// UIResponderStandardEditActions - stuffed inside UIResponder
@@ -805,11 +737,6 @@ namespace Introspection {
 				case "HKElectrocardiogramVoltageMeasurement":
 					// NSCopying conformance added in Xcode 14
 					return !TestRuntime.CheckXcodeVersion (14, 0);
-#if __WATCHOS__
-				case "INParameter":
-					// NSCopying conformance added in Xcode 10
-					return !TestRuntime.CheckXcodeVersion (10, 0);
-#endif
 				}
 				break;
 
@@ -932,18 +859,6 @@ namespace Introspection {
 					break;
 				}
 				break;
-#if __WATCHOS__
-			case "fetchAllRecordZonesOperation":
-			case "fetchCurrentUserRecordOperation":
-			case "notificationFromRemoteNotificationDictionary:":
-			case "containerWithIdentifier:":
-			case "defaultContainer":
-			case "defaultRecordZone":
-				// needs investigation, seems all class selectors from CloudKit don't answer
-				if (declaredType.Namespace == "CloudKit")
-					return true;
-				break;
-#endif
 			case "affectsColorAppearance":
 				switch (declaredType.Name) {
 				case "UITraitTypesettingLanguage":

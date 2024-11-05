@@ -29,10 +29,8 @@ namespace Introspection {
 			var simulator = TestRuntime.IsSimulatorOrDesktop;
 			switch (symbolName) {
 			// Metal support inside simulator is only available in recent iOS9 SDK
-#if !__WATCHOS__
 			case "MTLCreateSystemDefaultDevice":
 				return simulator && !UIDevice.CurrentDevice.CheckSystemVersion (9, 0);
-#endif
 			// still most Metal helpers are not available on the simulator (even when the framework is present, it's missing symbols)
 			case "MPSSupportsMTLDevice":
 			case "MPSGetPreferredDevice":
@@ -78,10 +76,7 @@ namespace Introspection {
 			// we only want to check this on a version of iOS that
 			// 1. is the current SDK target (or a newer one)
 			var sdk = new Version (Constants.SdkVersion);
-#if __WATCHOS__
-			if (!TestRuntime.CheckSystemVersion (ApplePlatform.WatchOS, sdk.Major, sdk.Minor))
-				return true;
-#elif __IOS__ || __TVOS__
+#if __IOS__ || __TVOS__
 			if (!UIDevice.CurrentDevice.CheckSystemVersion (sdk.Major, sdk.Minor))
 				return true;
 #else

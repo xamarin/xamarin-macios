@@ -44,12 +44,6 @@
       "idiom": "iphone"
     },
     {
-      "filename": "icon-app-60@3x.png",
-      "size": "60x60",
-      "scale": "3x",
-      "idiom": "iphone"
-    },
-    {
       "size": "29x29",
       "scale": "1x",
       "idiom": "ipad"
@@ -139,13 +133,6 @@
       "role": "appLauncher",
       "size": "40x40",
       "subtype": "38mm",
-      "scale": "2x",
-      "idiom": "watch"
-    },
-    {
-      "role": "longLook",
-      "size": "44x44",
-      "subtype": "42mm",
       "scale": "2x",
       "idiom": "watch"
     },

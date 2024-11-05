@@ -8,6 +8,8 @@ using NUnit.Framework;
 using Foundation;
 using ObjCRuntime;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
 
 public class Application {
 	public bool IsSimulatorBuild {
@@ -53,29 +55,7 @@ namespace Introspection {
 			case "System":
 			case "System.Drawing":
 				return true;
-#if __IOS__
-#if !NET
-			// Some CF* types that requires CFNetwork which we always link with
-			// ref: tools/common/CompilerFlags.cs
-			case "CoreServices":
-#endif
-#if !NET
-			case "WatchKit": // Apple removed WatchKit from iOS
-#endif
-				return true;
-#elif __TVOS__ && !NET
-			// mistakes (can't be fixed without breaking binary compatibility)
-			case "CoreSpotlight":
-			case "WebKit":
-				return true;
-#elif __WATCHOS__ && !NET
-			// helpers (largely enums) for AVFoundation API - no p/invokes or obj-C API that requires native linking
-			case "AudioToolbox":
-				return true;
-			// mistakes (can't be fixed without breaking binary compatibility)
-			case "WebKit":
-				return true;
-#elif __MACOS__
+#if __MACOS__
 			// always included, ref: tools/common/CompilerFlags.cs
 			case "CFNetwork":
 				return true;
@@ -105,8 +85,6 @@ namespace Introspection {
 			return Frameworks.GetiOSFrameworks (app.IsSimulatorBuild);
 #elif __TVOS__
 			return Frameworks.TVOSFrameworks;
-#elif __WATCHOS__
-			return Frameworks.GetwatchOSFrameworks (app.IsSimulatorBuild);
 #elif __MACOS__
 			return Frameworks.MacFrameworks;
 #else
@@ -151,66 +129,5 @@ namespace Introspection {
 			AssertIfErrors ($"{Errors} unknown frameworks found:\n{ErrorData}");
 		}
 
-#if __IOS__ && !__MACCATALYST__ && !NET
-		[Test]
-		public void Simlauncher ()
-		{
-			TestRuntime.AssertSimulator ("Only needed on simulator");
-
-			var all = GetFrameworks ();
-
-			var namespaces = new HashSet<string> (StringComparer.OrdinalIgnoreCase);
-			foreach (Type t in Assembly.GetTypes ()) {
-				if (!t.IsPublic)
-					continue;
-				namespaces.Add (t.Namespace);
-			}
-
-			foreach (var line in File.ReadAllLines ("simlauncher64-sgen.frameworks")) {
-				var c = line.IndexOf (" (compatibility");
-				if (c < 0)
-					continue;
-				var path = line.Substring (1, c - 1);
-				if (!path.StartsWith ("/System/Library/Frameworks/", StringComparison.Ordinal))
-					continue;
-				var fx = Path.GetFileNameWithoutExtension (path);
-
-				// match with mtouch framework list
-				if (!all.TryGetValue (fx, out var framework)) {
-					// special cases
-					switch (fx) {
-					case "CoreAudio": // AudioToolbox, AVFoundation...
-					case "CoreFoundation": // implied (always linked)
-					case "CFNetwork": // implied (StartWWAN) and included (mostly) in CoreServices
-					case "OpenAL": // part of OpenTK
-						break;
-					case "CoreMIDI":
-						// CoreMidi (case) in the fx list
-						break;
-					default:
-						ReportError ($"{fx} is not part of mtouch's GetFrameworks");
-						break;
-					}
-				}
-
-				// match with Xamarin.iOS.dll namespaces
-				if (!namespaces.Contains (fx)) {
-					// special cases
-					switch (fx) {
-					case "CoreAudio": // AudioToolbox, AVFoundation...
-					case "CFNetwork": // implied (StartWWAN) and included (mostly) in CoreServices
-					case "OpenAL": // part of OpenTK
-						break;
-					default:
-						ReportError ($"{fx} is not part of mtouch's GetFrameworks");
-						break;
-					}
-				}
-
-			}
-
-			AssertIfErrors ($"{Errors} unknown frameworks found:\n{ErrorData}");
-		}
-#endif
 	}
 }

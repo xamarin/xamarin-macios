@@ -101,17 +101,6 @@ namespace Introspection {
 				// but that web page doesn't explain anything (it's mostly empty, so this is probably just lagging documentation)
 				// I also tried enabling every entitlement in Xcode, but it still didn't work.
 				return true;
-#if __WATCHOS__ && !NET
-			case "INCarAirCirculationModeResolutionResult":
-			case "INCarAudioSourceResolutionResult":
-			case "INCarDefrosterResolutionResult":
-			case "INCarSeatResolutionResult":
-			case "INRadioTypeResolutionResult":
-			case "INRelativeSettingResolutionResult":
-			case "INRelativeReferenceResolutionResult":
-				// These were bound by mistake, and they're gone in NET.
-				return true;
-#endif
 			case "SNClassificationResult": // Class is not being created properly
 				return true;
 			case "SNClassifySoundRequest": // Class is not being created properly
@@ -387,74 +376,7 @@ namespace Introspection {
 				case "DDDevice":
 				case "DDDeviceEvent":
 					return true;
-#if __WATCHOS__
-				case "CLKComplicationTemplate":
-				case "CLKComplicationTemplateCircularSmallRingImage":
-				case "CLKComplicationTemplateCircularSmallRingText":
-				case "CLKComplicationTemplateCircularSmallSimpleImage":
-				case "CLKComplicationTemplateCircularSmallSimpleText":
-				case "CLKComplicationTemplateCircularSmallStackImage":
-				case "CLKComplicationTemplateCircularSmallStackText":
-				case "CLKComplicationTemplateModularLargeColumns":
-				case "CLKComplicationTemplateModularLargeStandardBody":
-				case "CLKComplicationTemplateModularLargeTable":
-				case "CLKComplicationTemplateModularLargeTallBody":
-				case "CLKComplicationTemplateModularSmallColumnsText":
-				case "CLKComplicationTemplateModularSmallRingImage":
-				case "CLKComplicationTemplateModularSmallRingText":
-				case "CLKComplication":
-				case "CLKComplicationTemplateModularSmallSimpleImage":
-				case "CLKTextProvider":
-				case "CLKComplicationTemplateModularSmallSimpleText":
-				case "CLKTimeIntervalTextProvider":
-				case "CLKComplicationTemplateModularSmallStackImage":
-				case "CLKTimeTextProvider":
-				case "CLKComplicationTemplateModularSmallStackText":
-				case "CLKComplicationTemplateUtilitarianLargeFlat":
-				case "CLKComplicationTemplateUtilitarianSmallFlat":
-				case "CLKComplicationTemplateUtilitarianSmallRingImage":
-				case "CLKComplicationTemplateUtilitarianSmallRingText":
-				case "CLKComplicationTemplateUtilitarianSmallSquare":
-				case "CLKComplicationTimelineEntry":
-				case "CLKDateTextProvider":
-				case "CLKImageProvider":
-				case "CLKRelativeDateTextProvider":
-				case "CLKSimpleTextProvider":
-				case "WKAlertAction":
-				// watchOS 3
-				case "CLKComplicationTemplateExtraLargeSimpleImage":
-				case "CLKComplicationTemplateExtraLargeSimpleText":
-				case "CLKComplicationTemplateExtraLargeStackImage":
-				case "CLKComplicationTemplateExtraLargeStackText":
-				case "CLKComplicationTemplateExtraLargeColumnsText":
-				case "CLKComplicationTemplateExtraLargeRingImage":
-				case "CLKComplicationTemplateExtraLargeRingText":
-				// watchOS 5 / Xcode 10 GM
-				case "CLKComplicationTemplateGraphicBezelCircularText":
-				case "CLKComplicationTemplateGraphicCircular":
-				case "CLKComplicationTemplateGraphicCircularClosedGaugeImage":
-				case "CLKComplicationTemplateGraphicCircularClosedGaugeText":
-				case "CLKComplicationTemplateGraphicCircularImage":
-				case "CLKComplicationTemplateGraphicCircularOpenGaugeImage":
-				case "CLKComplicationTemplateGraphicCircularOpenGaugeRangeText":
-				case "CLKComplicationTemplateGraphicCircularOpenGaugeSimpleText":
-				case "CLKComplicationTemplateGraphicCornerCircularImage":
-				case "CLKComplicationTemplateGraphicCornerGaugeImage":
-				case "CLKComplicationTemplateGraphicCornerGaugeText":
-				case "CLKComplicationTemplateGraphicCornerStackText":
-				case "CLKComplicationTemplateGraphicCornerTextImage":
-				case "CLKComplicationTemplateGraphicRectangularLargeImage":
-				case "CLKComplicationTemplateGraphicRectangularStandardBody":
-				case "CLKComplicationTemplateGraphicRectangularTextGauge":
-				case "CLKFullColorImageProvider":
-				case "CLKGaugeProvider":
-				case "CLKSimpleGaugeProvider":
-				case "CLKTimeIntervalGaugeProvider":
-				// watchOS 6 / Xcode 11
-				case "CLKComplicationTemplateGraphicCircularStackImage":
-				case "CLKComplicationTemplateGraphicCircularStackText":
-					return true;
-#elif __TVOS__
+#if __TVOS__
 				case "TVTopShelfAction":
 				case "TVTopShelfCarouselContent":
 				case "TVTopShelfCarouselItem":
@@ -653,74 +575,7 @@ namespace Introspection {
 				case "DDDevice":
 				case "DDDeviceEvent":
 					return true;
-#if __WATCHOS__
-				case "CLKComplicationTemplate":
-				case "CLKComplicationTemplateCircularSmallRingImage":
-				case "CLKComplicationTemplateCircularSmallRingText":
-				case "CLKComplicationTemplateCircularSmallSimpleImage":
-				case "CLKComplicationTemplateCircularSmallSimpleText":
-				case "CLKComplicationTemplateCircularSmallStackImage":
-				case "CLKComplicationTemplateCircularSmallStackText":
-				case "CLKComplicationTemplateModularLargeColumns":
-				case "CLKComplicationTemplateModularLargeStandardBody":
-				case "CLKComplicationTemplateModularLargeTable":
-				case "CLKComplicationTemplateModularLargeTallBody":
-				case "CLKComplicationTemplateModularSmallColumnsText":
-				case "CLKComplicationTemplateModularSmallRingImage":
-				case "CLKComplicationTemplateModularSmallRingText":
-				case "CLKComplicationTemplateModularSmallSimpleImage":
-				case "CLKComplicationTemplateModularSmallSimpleText":
-				case "CLKComplicationTemplateModularSmallStackImage":
-				case "CLKComplicationTemplateModularSmallStackText":
-				case "CLKComplicationTemplateUtilitarianLargeFlat":
-				case "CLKComplicationTemplateUtilitarianSmallFlat":
-				case "CLKComplicationTemplateUtilitarianSmallRingImage":
-				case "CLKComplicationTemplateUtilitarianSmallRingText":
-				case "CLKComplicationTemplateUtilitarianSmallSquare":
-				case "CLKComplicationTimelineEntry":
-				case "CLKDateTextProvider":
-				case "CLKImageProvider":
-				case "CLKRelativeDateTextProvider":
-				case "CLKSimpleTextProvider":
-				case "CLKTextProvider":
-				case "CLKTimeIntervalTextProvider":
-				case "CLKTimeTextProvider":
-				case "CLKComplication":
-				case "WKAlertAction":
-				// watchOS 3
-				case "CLKComplicationTemplateExtraLargeSimpleImage":
-				case "CLKComplicationTemplateExtraLargeSimpleText":
-				case "CLKComplicationTemplateExtraLargeStackImage":
-				case "CLKComplicationTemplateExtraLargeStackText":
-				case "CLKComplicationTemplateExtraLargeColumnsText":
-				case "CLKComplicationTemplateExtraLargeRingImage":
-				case "CLKComplicationTemplateExtraLargeRingText":
-				// watchOS 5 / Xcode 10 GM
-				case "CLKComplicationTemplateGraphicBezelCircularText":
-				case "CLKComplicationTemplateGraphicCircular":
-				case "CLKComplicationTemplateGraphicCircularClosedGaugeImage":
-				case "CLKComplicationTemplateGraphicCircularClosedGaugeText":
-				case "CLKComplicationTemplateGraphicCircularImage":
-				case "CLKComplicationTemplateGraphicCircularOpenGaugeImage":
-				case "CLKComplicationTemplateGraphicCircularOpenGaugeRangeText":
-				case "CLKComplicationTemplateGraphicCircularOpenGaugeSimpleText":
-				case "CLKComplicationTemplateGraphicCornerCircularImage":
-				case "CLKComplicationTemplateGraphicCornerGaugeImage":
-				case "CLKComplicationTemplateGraphicCornerGaugeText":
-				case "CLKComplicationTemplateGraphicCornerStackText":
-				case "CLKComplicationTemplateGraphicCornerTextImage":
-				case "CLKComplicationTemplateGraphicRectangularLargeImage":
-				case "CLKComplicationTemplateGraphicRectangularStandardBody":
-				case "CLKComplicationTemplateGraphicRectangularTextGauge":
-				case "CLKFullColorImageProvider":
-				case "CLKGaugeProvider":
-				case "CLKSimpleGaugeProvider":
-				case "CLKTimeIntervalGaugeProvider":
-				// watchOS 6 / Xcode 11
-				case "CLKComplicationTemplateGraphicCircularStackImage":
-				case "CLKComplicationTemplateGraphicCircularStackText":
-					return true;
-#elif __TVOS__
+#if __TVOS__
 				case "TVTopShelfAction":
 				case "TVTopShelfCarouselContent":
 				case "TVTopShelfCarouselItem":
@@ -822,10 +677,6 @@ namespace Introspection {
 				// iOS 16
 				case "DDDevice":
 					return true;
-#if __WATCHOS__
-				case "CLKComplicationTimelineEntry":
-					return true;
-#endif
 				// Xcode 10
 				case "ILClassificationUIExtensionContext": // Conformance not in headers
 					return true;
@@ -1126,11 +977,9 @@ namespace Introspection {
 					return !TestRuntime.CheckXcodeVersion (8, 0);
 				}
 				break;
-#if !__WATCHOS__
 			// Undocumented conformance (members were inlinded in 'UIViewController' before so all subtypes should conform)
 			case "UIStateRestoring":
 				return type.Name == "UIViewController" || type.IsSubclassOf (typeof (UIViewController));
-#endif
 #if __IOS__ || __TVOS__
 			case "UIFocusItemContainer":
 			case "UICoordinateSpace":
