@@ -113,6 +113,7 @@ stages:
     - run_tests
     displayName: "Re-enable macOS bot for tests"
     timeoutInMinutes: 120
+    condition: always()
     workspace:
       clean: all
     pool:
