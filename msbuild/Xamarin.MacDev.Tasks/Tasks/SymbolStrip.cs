@@ -18,6 +18,8 @@ namespace Xamarin.MacDev.Tasks {
 		[Required]
 		public ITaskItem [] Executable { get; set; } = Array.Empty<ITaskItem> ();
 
+		public string StripPath { get; set; } = string.Empty;
+
 		// This can also be specified as metadata on the Executable item (as 'SymbolFile')
 		public string SymbolFile { get; set; } = string.Empty;
 
@@ -31,11 +33,19 @@ namespace Xamarin.MacDev.Tasks {
 			return string.Equals (value, "Framework", StringComparison.OrdinalIgnoreCase);
 		}
 
+		static string GetExecutable (List<string> arguments, string toolName, string toolPathOverride)
+		{
+			if (string.IsNullOrEmpty (toolPathOverride)) {
+				arguments.Insert (0, toolName);
+				return "xcrun";
+			}
+			return toolPathOverride;
+		}
+
 		void ExecuteStrip (ITaskItem item)
 		{
 			var args = new List<string> ();
-
-			args.Add ("strip");
+			var executable = GetExecutable (args, "strip", StripPath);
 
 			var symbolFile = GetNonEmptyStringOrFallback (item, "SymbolFile", SymbolFile);
 			if (!string.IsNullOrEmpty (symbolFile)) {
@@ -52,7 +62,7 @@ namespace Xamarin.MacDev.Tasks {
 
 			args.Add (Path.GetFullPath (item.ItemSpec));
 
-			ExecuteAsync ("xcrun", args).Wait ();
+			ExecuteAsync (executable, args).Wait ();
 		}
 
 		public override bool Execute ()

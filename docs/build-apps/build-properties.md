@@ -88,3 +88,9 @@ The default behavior is to use `xcrun metallib`.
 The full path to the Metal compiler.
 
 The default behavior is to use `xcrun metal`.
+
+## StripPath
+
+The full path to the `strip` command-line tool.
+
+The default behavior is to use `xcrun strip`.
