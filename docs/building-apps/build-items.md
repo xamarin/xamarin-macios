@@ -1,10 +1,10 @@
 ---
-title: .NET for iOS, Mac Catalyst, macOS, and tvOS Build Items
-description: .NET for iOS, Mac Catalyst, macOS, and tvOS Build Items
+title: .NET for iOS, Mac Catalyst, macOS, and tvOS build items
+description: .NET for iOS, Mac Catalyst, macOS, and tvOS build items
 ms.date: 09/19/2024
 ---
 
-# Build Items
+# Build items
 
 Build items control how .NET for iOS, Mac Catalyst, macOS, and tvOS
 application or library projects are built.
@@ -31,8 +31,8 @@ Example:
 ```
 
 See also:
-* The [AppIcon](build-properties.md#AppIcon) property.
-* The [IncludeAllAppIcons](build-properties.md#IncludeAllAppIcons) property.
+* The [AppIcon](build-properties.md#appicon) property.
+* The [IncludeAllAppIcons](build-properties.md#includeallappicons) property.
 
 ## AtlasTexture
 
@@ -64,14 +64,14 @@ Example:
 
 There are several metadata that can be set on the `CodesignBundle` item to direct how signing occurs:
 
-* [CodesignAllocate](build-properties#CodesignAllocate)
-* [CodesignEntitlements](build-properties#CodesignEntitlements)
-* [CodesignExtraArgs](build-properties#CodesignExtraArgs)
-* [CodesignKeychain](build-properties#CodesignKeychain)
-* [CodesignResourceRules](build-properties#CodesignResourceRules)
-* [CodesignSigningKey](build-properties#CodesignKey)
-* [CodesignUseHardenedRuntime](build-properties#UseHardenedRuntime)
-* [CodesignUseSecureTimestamp](build-properties#UseHardenedRuntime)
+* [CodesignAllocate](build-properties.md#codesignallocate)
+* [CodesignEntitlements](build-properties.md#codesignentitlements)
+* [CodesignExtraArgs](build-properties.md#codesignextraargs)
+* [CodesignKeychain](build-properties.md#codesignkeychain)
+* [CodesignResourceRules](build-properties.md#codesignresourcerules)
+* [CodesignSigningKey](build-properties.md#codesignkey)
+* [CodesignUseHardenedRuntime](build-properties.md#usehardenedruntime)
+* [CodesignUseSecureTimestamp](build-properties.md#usehardenedruntime)
 
 Example:
 
@@ -128,8 +128,8 @@ An item group that contains custom entitlements to add to the app.
 
 These entitlements are processed last, and will override any other
 entitlements, either from the file specified with the
-[Entitlements](build-properties#Entitlements) property, or from the
-provisioning profile in use (if any).
+[CodesignEntitlements](build-properties.md#codesignentitlements) property, or
+from the provisioning profile in use (if any).
 
 This is the format:
 
@@ -188,13 +188,13 @@ An item group that lists all the core source code for binding projects.
 
 An item group that lists all the native frameworks that should be included in a binding project.
 
-This item group is deprecated, use [NativeReference](#NativeReference) instead.
+This item group is deprecated, use [NativeReference](#nativereference) instead.
 
 ## ObjcBindingNativeLibrary
 
 An item group that lists all the native libraries that should be included in a binding project.
 
-This item group is deprecated, use [NativeReference](#NativeReference) instead.
+This item group is deprecated, use [NativeReference](#nativereference) instead.
 
 ## PartialAppManifest
 

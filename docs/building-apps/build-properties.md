@@ -1,10 +1,10 @@
 ---
-title: .NET for iOS, Mac Catalyst, macOS, and tvOS Build Properties
-description: .NET for iOS, Mac Catalyst, macOS, and tvOS Build Properties
+title: .NET for iOS, Mac Catalyst, macOS, and tvOS build properties
+description: .NET for iOS, Mac Catalyst, macOS, and tvOS build properties
 ms.date: 09/19/2024
 ---
 
-# Build Properties
+# Build properties
 
 MSBuild properties control the behavior of the
 [targets](build-targets.md).
@@ -42,8 +42,8 @@ Example:
 
 See also:
 
-* The [AlternateAppIcon](build-items.md#AlternateAppIcon) item group.
-* The [IncludeAllAppIcons](#IncludeAllAppIcons) property.
+* The [AlternateAppIcon](build-items.md#alternateappicon) item group.
+* The [IncludeAllAppIcons](#includeallappicons) property.
 
 ## ApplicationDisplayVersion
 
@@ -103,7 +103,7 @@ If a package (.ipa) should be created for the app bundle at the end of the build
 
 Only applicable to iOS and tvOS projects.
 
-See [CreatePackage](#CreatePackage) for macOS and Mac Catalyst projects.
+See [CreatePackage](#createpackage) for macOS and Mac Catalyst projects.
 
 ## CodesignAllocate
 
@@ -135,7 +135,7 @@ Typically "Entitlements.plist".
 
 We'll automatically set this to "Entitlements.plist" if such a file exists in the project root directory.
 
-This can be prevented by setting the [EnableDefaultCodesignEntitlements](#EnableDefaultCodesignEntitlements) property to `false`.
+This can be prevented by setting the [EnableDefaultCodesignEntitlements](#enabledefaultcodesignentitlements) property to `false`.
 
 ## CodesignExtraArgs
 
@@ -153,7 +153,7 @@ The keychain to use during code signing.
 
 Specifies the code signing key to use when signing the app bundle.
 
-Only applicable to macOS and Mac Catalyst apps, but it's recommended to use the [CodesignKey](#CodesignKey) property instead (which works on all platforms).
+Only applicable to macOS and Mac Catalyst apps, but it's recommended to use the [CodesignKey](#codesignkey) property instead (which works on all platforms).
 
 ## CodesignProvision
 
@@ -214,7 +214,7 @@ If a package (.pkg) should be created for the app bundle at the end of the build
 
 Only applicable to macOS and Mac Catalyst projects.
 
-See [BuildIpa](#BuildIpa) for iOS and tvOS projects.
+See [BuildIpa](#buildipa) for iOS and tvOS projects.
 
 ## DeviceSpecificBuild
 
@@ -300,14 +300,14 @@ Example:
 
 See also:
 
-* The [AlternateAppIcon](build-items.md#AlternateAppIcon) item group.
-* The [AppIcon](#AppIcon) property.
+* The [AlternateAppIcon](build-items.md#alternateappicon) item group.
+* The [AppIcon](#appicon) property.
 
 ## iOSMinimumVersion
 
 Specifies the minimum iOS version the app can run on.
 
-Applicable to iOS; setting this value will set [SupportedOSPlatformVersion](#SupportedOSPlatformVersion) for iOS projects (only).
+Applicable to iOS; setting this value will set [SupportedOSPlatformVersion](#supportedosplatformversion) for iOS projects (only).
 
 ## IPhoneResourcePrefix
 
@@ -315,7 +315,7 @@ The directory where resources are stored (this prefix will be removed when copyi
 
 Applicable to iOS, tvOS and Mac Catalyst projects.
 
-See also [MonoMacResourcePrefix](#MonoMacResourcePrefix) and [XamMacResourcePrefix](#XamMacResourcePrefix).
+See also [MonoMacResourcePrefix](#monomacresourceprefix) and [XamMacResourcePrefix](#xammacresourceprefix).
 
 ## IpaIncludeArtwork
 
@@ -326,7 +326,7 @@ Only applicable to iOS and tvOS projects.
 ## IpaPackageName
 
 Specifies the name of the resulting .ipa file (without the path) when creating
-an IPA package (see [BuildIpa](#BuildIpa)). [IpaPackagePath](#IpaPackagePath)
+an IPA package (see [BuildIpa](#buildipa)). [IpaPackagePath](#ipapackagepath)
 will override this value.
 
 Only applicable to iOS and tvOS projects.
@@ -334,14 +334,14 @@ Only applicable to iOS and tvOS projects.
 ## IpaPackageDir
 
 Specifies the directory of the resulting .ipa file when creating an IPA
-package (see [BuildIpa](#BuildIpa)). [IpaPackagePath](#IpaPackagePath) will
+package (see [BuildIpa](#buildipa)). [IpaPackagePath](#ipapackagepath) will
 override this value.
 
 Only applicable to iOS and tvOS projects.
 
 ## IpaPackagePath
 
-Specifies the path to the resulting .ipa file when creating an IPA package (see [BuildIpa](#BuildIpa)).
+Specifies the path to the resulting .ipa file when creating an IPA package (see [BuildIpa](#buildipa)).
 
 Only applicable to iOS and tvOS projects.
 
@@ -364,9 +364,9 @@ Only applicable to macOS projects.
 Specifies the link mode for the project (`None`, `SdkOnly` or `Full`).
 
 Applicable to macOS projects, but this property is deprecated, use
-[TrimMode][#TrimMode] instead.
+[TrimMode](#trimmode) instead.
 
-See also [MtouchLink](#MtouchLink).
+See also [MtouchLink](#mtouchlink).
 
 ## LinkWithSwiftSystemLibraries
 
@@ -386,7 +386,7 @@ The exact set of arguments may change in the future.
 
 Specifies the minimum Mac Catalyst (iOS) version the app can run on.
 
-Applicable to Mac Catalyst; setting this value will set [SupportedOSPlatformVersion](#SupportedOSPlatformVersion) for Mac Catalyst projects (only).
+Applicable to Mac Catalyst; setting this value will set [SupportedOSPlatformVersion](#supportedosplatformversion) for Mac Catalyst projects (only).
 
 ## MaciOSPrepareForBuildDependsOn
 
@@ -412,7 +412,7 @@ This property was introduced in .NET 9.
 
 Specifies the minimum macOS version the app can run on.
 
-Applicable to macOS; setting this value will set [SupportedOSPlatformVersion](#SupportedOSPlatformVersion) for macOS projects (only).
+Applicable to macOS; setting this value will set [SupportedOSPlatformVersion](#supportedosplatformversion) for macOS projects (only).
 
 ## MacOSXSdkVersion
 
@@ -420,7 +420,7 @@ The macOS SDK version to use for the build.
 
 Default: automatically detected according to the default version shipped with the selected Xcode.
 
-See also [MtouchSdkVersion](#MtouchSdkVersion).
+See also [MtouchSdkVersion](#mtouchsdkversion).
 
 ## MetalLibPath
 
@@ -440,7 +440,7 @@ Enables debug mode for app bundle creation.
 
 Only applicable to macOS projects.
 
-See also [MtouchDebug](#MtouchDebug).
+See also [MtouchDebug](#mtouchdebug).
 
 ## MonoBundlingExtraArgs
 
@@ -448,7 +448,7 @@ Additional arguments specifying how to create the app bundle.
 
 Only applicable to macOS projects.
 
-This property is deprecated, use [AppBundleExtraOptions](#AppBundleExtraOptions) instead.
+This property is deprecated, use [AppBundleExtraOptions](#appbundleextraoptions) instead.
 
 ## MonoMacResourcePrefix
 
@@ -456,7 +456,7 @@ The directory where resources are stored (this prefix will be removed when copyi
 
 Only applicable to macOS projects.
 
-See also [IPhoneResourcePrefix](#IPhoneResourcePrefix) and [XamMacResourcePrefix](#XamMacResourcePrefix).
+See also [IPhoneResourcePrefix](#iphoneresourceprefix) and [XamMacResourcePrefix](#xammacresourceprefix).
 
 ## MtouchDebug
 
@@ -464,7 +464,7 @@ Enables debug mode for app bundle creation.
 
 Applicable to iOS, tvOS and Mac Catalyst projects.
 
-See also [MmpDebug](#MmpDebug).
+See also [MmpDebug](#mmpdebug).
 
 ## MtouchEnableSGenConc
 
@@ -472,7 +472,7 @@ Enables the concurrent mode for the SGen garbage collector.
 
 Only applicable to iOS, tvOS and Mac Catalyst when not using NativeAOT.
 
-This property is deprecated, use [EnableSGenConc](#EnableSGenConc) instead.
+This property is deprecated, use [EnableSGenConc](#enablesgenconc) instead.
 
 ## MtouchExtraArgs
 
@@ -480,7 +480,7 @@ Additional arguments specifying how to create the app bundle.
 
 Only applicable to iOS, tvOS and Mac Catalyst projects.
 
-This property is deprecated, use [AppBundleExtraOptions](#AppBundleExtraOptions) instead.
+This property is deprecated, use [AppBundleExtraOptions](#appbundleextraoptions) instead.
 
 ## MtouchInterpreter
 
@@ -522,9 +522,9 @@ The default behavior is to not enable the interpreter.
 Specifies the link mode for the project (`None`, `SdkOnly`, `Full`).
 
 Applicable to iOS, tvOS and Mac Catalyst projects, but this property is
-deprecated, use [TrimMode][#TrimMode] instead.
+deprecated, use [TrimMode](#trimmode) instead.
 
-See also [LinkMode](#LinkMode).
+See also [LinkMode](#linkmode).
 
 ## MtouchSdkVersion
 
@@ -532,7 +532,7 @@ The iOS or tvOS SDK version to use for the build.
 
 Default: automatically detected according to the default version shipped with the selected Xcode.
 
-See also [MacOSXSdkVersion](#MacOSXSdkVersion).
+See also [MacOSXSdkVersion](#macosxsdkversion).
 
 ## MtouchUseLlvm
 
@@ -638,7 +638,7 @@ Only applicable to macOS and Mac Catalyst apps.
 
 ## PkgPackagePath
 
-Specifies the path to the resulting .pkg file when creating a package (see [CreatePackage](#CreatePackage)).
+Specifies the path to the resulting .pkg file when creating a package (see [CreatePackage](#createpackage)).
 
 Only applicable to macOS and Mac Catalyst apps.
 
@@ -716,10 +716,10 @@ Specifies the minimum OS version the app can run on.
 
 It's also possible to use a platform-specific property:
 
-* [iOSMinimumVersion](#iOSMinimumVersion)
-* [tvOSMinimumVersion](#tvOSMinimumVersion)
-* [macOSMinimumVersion](#macOSMinimumVersion)
-* [MacCatalystMinimumVersion](#MacCatalystMinimumVersion)
+* [iOSMinimumVersion](#iosminimumversion)
+* [tvOSMinimumVersion](#tvosminimumversion)
+* [macOSMinimumVersion](#macosminimumversion)
+* [MacCatalystMinimumVersion](#maccatalystminimumversion)
 
 ## TrimMode
 
@@ -742,8 +742,8 @@ See [TrimMode](/dotnet/core/deploying/trimming/trimming-options) for a bit more 
 > will be raised if `PublishTrimmed` is set to `false`).
 
 The `TrimMode` property is equivalent to the existing
-[MtouchLink](#MtouchLink) (for iOS, tvOS and Mac Catalyst) and
-[LinkMode](#LinkMode) (for macOS) properties, but the valid properties values
+[MtouchLink](#mtouchlink) (for iOS, tvOS and Mac Catalyst) and
+[LinkMode](#linkmode) (for macOS) properties, but the valid properties values
 are different (even though the semantics are the same):
 
 | MtouchLink/LinkMode | TrimMode |
@@ -772,7 +772,7 @@ Exceptions:
 * The default value is always `full` when building with NativeAOT.
 * MAUI changes the default value to `copy` when building for the `Debug`
   configuration _and_ the interpreter is enabled using
-  [UseInterpreter](#UseInterpreter) (which MAUI also enables by default when
+  [UseInterpreter](#useinterpreter) (which MAUI also enables by default when
   using the `"Debug"` configuration).
 
 > [!NOTE]
@@ -782,7 +782,7 @@ Exceptions:
 
 Specifies the minimum tvOS version the app can run on.
 
-Applicable to tvOS; setting this value will set [SupportedOSPlatformVersion](#SupportedOSPlatformVersion) for tvOS projects (only).
+Applicable to tvOS; setting this value will set [SupportedOSPlatformVersion](#supportedosplatformversion) for tvOS projects (only).
 
 ## UseHardenedRuntime
 
@@ -803,7 +803,7 @@ The default behavior is to not enable the interpreter.
 > [!NOTE]
 > MAUI changes the default by setting `UseInterpreter=true` for the `"Debug"` configuration.
 
-See [MtouchInterpreter](#MtouchInterpreter) for more information.
+See [MtouchInterpreter](#mtouchinterpreter) for more information.
 
 ## UseNativeHttpHandler
 
@@ -817,5 +817,5 @@ The directory where resources are stored (this prefix will be removed when copyi
 
 Applicable to macOS projects.
 
-See also [IPhoneResourcePrefix](#IPhoneResourcePrefix) and [MonoMacResourcePrefix](#MonoMacResourcePrefix).
+See also [IPhoneResourcePrefix](#iphoneresourceprefix) and [MonoMacResourcePrefix](#monomacresourceprefix).
 
