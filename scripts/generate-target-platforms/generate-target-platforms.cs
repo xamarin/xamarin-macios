@@ -12,7 +12,7 @@ if (args.Length != expectedArgumentCount) {
 var idx = 0;
 var platform = args [idx++];
 var dotnetTfm = args [idx++];
-var supportedApiVersions = args [idx++].Split (' ').Select (v => v.Replace (dotnetTfm + "-", "")).ToArray ();
+var supportedApiVersions = args [idx++].Split (' ').Select (v => v.Split ('-') [1]).Distinct ().ToHashSet ();
 var outputPath = args [idx++];
 var plistPath = $"../builds/Versions-{platform}.plist.in";
 
@@ -24,8 +24,6 @@ var currentSupportedTPVs = supportedTargetPlatformVersions.Where (v => v.StartsW
 var minSdkVersionName = $"DOTNET_MIN_{platform.ToUpper ()}_SDK_VERSION";
 var minSdkVersionString = File.ReadAllLines ("../Make.config").Single (v => v.StartsWith (minSdkVersionName + "=", StringComparison.Ordinal)).Substring (minSdkVersionName.Length + 1);
 var minSdkVersion = Version.Parse (minSdkVersionString);
-
-Console.WriteLine (string.Join (";", supportedApiVersions));
 
 using (TextWriter writer = new StreamWriter (outputPath)) {
 	writer.WriteLine ($"<!-- This file contains a generated list of the {platform} platform versions that are supported for this SDK -->");
