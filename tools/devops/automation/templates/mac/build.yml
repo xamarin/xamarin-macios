@@ -171,6 +171,10 @@ steps:
   displayName: Install dependencies.
   timeoutInMinutes: 60
 
+- task: UseDotNet@2
+  inputs:
+    version: 8.x
+
 - pwsh: >-
     $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/run_mac_tests.ps1
     -GithubToken $(GitHub.Token)

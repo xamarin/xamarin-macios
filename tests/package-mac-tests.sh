@@ -63,5 +63,11 @@ $CP -p ../mk/subdirs.mk "$DIR/mk"
 $CP -p ../mk/rules.mk "$DIR/mk"
 $CP -p ../mk/quiet.mk "$DIR/mk"
 $CP -p ../mk/mono.mk "$DIR/mk"
+$CP -cp ../Directory.Build.props "$DIR/"
+mkdir -p "$DIR/scripts/run-with-timeout"
+$CP -cp ../scripts/Directory.Build.props "$DIR/scripts/"
+$CP -cp ../scripts/*.mk "$DIR/scripts/"
+$CP -cp ../scripts/run-with-timeout/*.cs* "$DIR/scripts/run-with-timeout/"
+$CP -cp ../scripts/run-with-timeout/*.mk "$DIR/scripts/run-with-timeout/"
 
 cd mac-test-package && 7z a ../mac-test-package.7z ./*

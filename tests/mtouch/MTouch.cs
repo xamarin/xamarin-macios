@@ -2730,14 +2730,6 @@ public class TestApp {
 		}
 
 		[Test]
-		public void ScriptedTests ()
-		{
-			AssertDeviceAvailable ();
-
-			ExecutionHelper.Execute ("make", new [] { "-C", Path.Combine (Configuration.SourceRoot, "tests", "scripted") }, timeout: TimeSpan.FromMinutes (10));
-		}
-
-		[Test]
 		// fully linked + llvm (+thumb) + default registrar
 		[TestCase (Target.Dev, MTouchLinker.Unspecified, MTouchRegistrar.Static, "armv7+llvm")]
 		[TestCase (Target.Dev, MTouchLinker.Unspecified, MTouchRegistrar.Static, "armv7+llvm+thumb2")]

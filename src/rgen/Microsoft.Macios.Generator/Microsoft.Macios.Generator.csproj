@@ -14,16 +14,15 @@
         <PackageId>Microsoft.Macios.Generator</PackageId>
         <Version>0.1.0</Version>
         <!-- There is a bug in the roslyn analyzer for roslyn analyzers.... -->
-        <NoWarn>RS2007</NoWarn>
+        <NoWarn>RS2007;RS1041</NoWarn>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.4">
+        <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.11">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.3.0"/>
-        <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.3.0"/>
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.9.2"/>
     </ItemGroup>
 
     <ItemGroup>
@@ -31,11 +30,7 @@
             <_Parameter1>Microsoft.Macios.Generator.Tests</_Parameter1>
         </AssemblyAttribute>
     </ItemGroup>
-
     <ItemGroup>
-        <Compile Include="..\..\bgen\PlatformName.cs" >
-            <Link>external\PlatformName.cs</Link>
-        </Compile>
         <Compile Include="..\..\bgen\Extensions\PlatformNameExtensions.cs" >
             <Link>external\PlatformNameExtensions.cs</Link>
         </Compile>
@@ -53,5 +48,9 @@
       </EmbeddedResource>
     </ItemGroup>
 
+    <ItemGroup>
+        <ProjectReference Include="..\Microsoft.Macios.Binding.Common\Microsoft.Macios.Binding.Common.csproj" PrivateAssets="all" />
+        <None Include="$(OutputPath)\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+    </ItemGroup>
 
 </Project>

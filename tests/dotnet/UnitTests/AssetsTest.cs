@@ -260,35 +260,66 @@ namespace Xamarin.Tests {
 			"Image:samplepng2.png",
 			"Image:spritejpeg.jpeg",
 			"Image:xamlogo.svg",
+			"Image:Icon16.png",
+			"Image:Icon32.png",
 			"PackedImage:ZZZZExplicitlyPackedAsset-1.0.0-gamut0",
 			"Texture Rendition:TextureTest",
 		};
 
 		static HashSet<string> ExpectedAssetsMacCatalyst => new HashSet<string> (ExpectedAssetsAllPlatforms) {
-			"Image:Icon16.png",
-			"Image:Icon32.png",
+			"Icon Image:Icon1024.png",
+			"Icon Image:Icon128.png",
+			"Icon Image:Icon16.png",
+			"Icon Image:Icon256.png",
+			"Icon Image:Icon32.png",
+			"Icon Image:Icon512.png",
+			"Icon Image:Icon64.png",
+			"MultiSized Image:AppIcons",
+			"PackedImage:ZZZZPackedAsset-1.1.0-gamut0",
+			"PackedImage:ZZZZPackedAsset-2.1.0-gamut0",
 		};
 
 		static readonly HashSet<string> ExpectedAssetsiOS = new HashSet<string> (ExpectedAssetsAllPlatforms) {
+			"Icon Image:Icon1024.png",
+			"Image:Icon64.png",
+			"MultiSized Image:AlternateAppIcons",
+			"MultiSized Image:AppIcons",
 			"Vector:samplepdf.pdf",
 			"Vector:xamlogo.svg",
-			"Image:Icon16.png",
-			"Image:Icon32.png",
-			"Image:Icon64.png",
 		};
 
 		static readonly HashSet<string> ExpectedAssetstvOS = new HashSet<string> (ExpectedAssetsAllPlatforms) {
+			"Image:Icon-blue-1280x768.png",
+			"Image:Icon-blue-1920x720.png",
+			"Image:Icon-blue-2320x720.png",
+			"Image:Icon-blue-3840x1440.png",
+			"Image:Icon-blue-400x240.png",
+			"Image:Icon-blue-4640x1440.png",
+			"Image:Icon-green-400x240.png",
+			"Image:ZZZZFlattenedImage-1.1.0-gamut0",
+			"Image:ZZZZFlattenedImage-2.1.0-gamut0",
+			"Image:ZZZZRadiosityImage-1.0.0",
+			"Image:ZZZZRadiosityImage-2.0.0",
+			"ImageStack:AlternateAppIcons",
+			"ImageStack:AppIcons",
 			"Vector:samplepdf.pdf",
 			"Vector:xamlogo.svg",
-			"Image:Icon16.png",
-			"Image:Icon32.png",
 		};
 
 		static readonly HashSet<string> ExpectedAssetsmacOS = new HashSet<string> (ExpectedAssetsAllPlatforms) {
+			"Icon Image:Icon1024.png",
+			"Icon Image:Icon128.png",
+			"Icon Image:Icon16.png",
+			"Icon Image:Icon256.png",
+			"Icon Image:Icon32.png",
+			"Icon Image:Icon512.png",
+			"Icon Image:Icon64.png",
+			"MultiSized Image:AlternateAppIcons",
+			"MultiSized Image:AppIcons",
+			"PackedImage:ZZZZPackedAsset-1.1.0-gamut0",
+			"PackedImage:ZZZZPackedAsset-2.1.0-gamut0",
 			"Vector:samplepdf.pdf",
 			"Vector:xamlogo.svg",
-			"Image:Icon16.png",
-			"Image:Icon32.png",
 		};
 
 		class XCAssetTarget {
