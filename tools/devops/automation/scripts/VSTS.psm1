@@ -478,6 +478,8 @@ class BuildConfiguration {
             }
         }
 
+        $xamarinPlatforms = @("ios", "macos", "tvos", "maccatalyst")
+
         # add all the include platforms as well as the nuget os version
         foreach ($platform in $xamarinPlatforms) {
             $variableName = "INCLUDE_$($platform.ToUpper())"
