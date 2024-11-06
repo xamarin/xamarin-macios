@@ -26,7 +26,12 @@ configuration:
           day: Friday
           time: 0:0
       filters:
-      - isClosed
+      - isIssue
+      - isOpen
+      - hasLabel:
+          label: need-info
+      - noActivitySince:
+          days: 7
       actions:
       - lockIssue
     - description: 
