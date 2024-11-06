@@ -15,8 +15,6 @@ configuration:
         time: 12:00
       filters:
       - isClosed
-      - noActivitySince:
-          days: 180
       actions:
       - lockIssue
     - description: 
