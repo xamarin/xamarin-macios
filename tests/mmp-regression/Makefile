@@ -38,7 +38,7 @@ $(foreach test,$(ALL_TESTS),$(test)/bin): dylib/libTest.dylib
 	$(QF_GEN) if ! $(SYSTEM_MSBUILD) -- $(@D)/$(@D).csproj /p:Configuration=$(CONFIG); then EC=$$?; rm -Rf $@; exit $$EC; fi
 
 dylib/libTest.dylib: dylib/src.c
-	$(QF_GEN) $(XCODE_CC) $< -o$@ -arch x86_64 -shared -L /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib
+	$(QF_GEN) $(CLANG) $< -o$@ -arch x86_64 -shared -L /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib
 
 build: $(foreach test,$(ALL_TESTS),$(test)/bin)
 
