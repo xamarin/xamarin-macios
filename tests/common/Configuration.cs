@@ -1119,6 +1119,15 @@ namespace Xamarin.Tests {
 		{
 			return CallNM (file, "-gujA", arch);
 		}
+
+		public static bool IsStableRelease {
+			get {
+				var prereleaseIdentifier = GetVariable ("NUGET_PRERELEASE_IDENTIFIER", null);
+				if (prereleaseIdentifier is null)
+					throw new InvalidOperationException ($"The 'NUGET_PRERELEASE_IDENTIFIER' variable isn't set.");
+				return prereleaseIdentifier == string.Empty;
+			}
+		}
 	}
 }
 

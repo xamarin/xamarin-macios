@@ -54,6 +54,13 @@ namespace Xamarin.Utils {
 		public void DefaultLibraryTargetPlatformVersion (ApplePlatform platform)
 		{
 			// We might have to change the assert if the first minor OS version we release for a given .NET version is >0 (this happened for both .NET 7 and .NET 8).
+			if (!Configuration.IsStableRelease) {
+				// When we're adding support for new .NET versions (say during .NET 10 previews), we use the currently available OS versions, but only the last OS version.
+				// For instance: we might support "net10.0-ios18.1", but we won't support "net18.0-ios18.0" (because we haven't released .NET 10 packages at this point).
+				// This also means the default library TPV will be ios18.1, which means this test will fail. So just postpone it until the stable release, at which
+				// point we should be supporting "ios19.0" (for .NET 10).
+				Assert.Ignore ("This test only applies to stable releases.");
+			}
 			Assert.That (platform.GetDefaultTargetPlatformVersionLibrary (), Does.EndWith (".0"), "Default TPV for a library must end with .0");
 		}
 
