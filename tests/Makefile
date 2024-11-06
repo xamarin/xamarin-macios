@@ -352,17 +352,18 @@ package-test-libraries.zip:
 	$(Q) mv "$@".tmp "$@"
 
 build-all:
-	$(MAKE) build-all -C fsharp/dotnet
-	$(MAKE) build-all -C interdependent-binding-projects/dotnet
-	$(MAKE) build-all -C introspection/dotnet
-	$(MAKE) build-all -C monotouch-test/dotnet
-	$(MAKE) build-all -C xcframework-test/dotnet
+	$(MAKE) build -C bgen
+	$(MAKE) build -C cecil-tests
+	$(MAKE) build -C dotnet/UnitTests
+	$(MAKE) build -C rgen
+	$(MAKE) build -C xtro-sharpie
 	$(MAKE) build-all -C "linker/ios/dont link/dotnet"
 	$(MAKE) build-all -C "linker/ios/link all/dotnet"
 	$(MAKE) build-all -C "linker/ios/link sdk/dotnet"
 	$(MAKE) build-all -C "linker/ios/trimmode copy/dotnet"
 	$(MAKE) build-all -C "linker/ios/trimmode link/dotnet"
-	$(MAKE) build -C dotnet/UnitTests
-	$(MAKE) build -C bgen
-	$(MAKE) build -C cecil-tests
-	$(MAKE) build -C xtro-sharpie
+	$(MAKE) build-all -C fsharp/dotnet
+	$(MAKE) build-all -C interdependent-binding-projects/dotnet
+	$(MAKE) build-all -C introspection/dotnet
+	$(MAKE) build-all -C monotouch-test/dotnet
+	$(MAKE) build-all -C xcframework-test/dotnet
