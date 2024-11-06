@@ -20,6 +20,8 @@ using ObjCRuntime;
 using UIKit;
 #endif
 
+using Xamarin.Bundler;
+
 // Disable until we get around to enable + fix any issues.
 #nullable disable
 
@@ -936,6 +938,7 @@ namespace Registrar {
 			type.Handle = Class.GetHandle (type.ExportedName);
 		}
 
+		static bool computed_class_count;
 		protected override void OnRegisterType (ObjCType type)
 		{
 			type.Handle = Class.GetHandle (type.ExportedName);
@@ -944,6 +947,13 @@ namespace Registrar {
 				if (!type_map.ContainsKey (type.Handle))
 					type_map [type.Handle] = type;
 				return;
+			}
+
+			if (!computed_class_count && type.RegisterAttribute?.IsStubClass == true) {
+				// Asking Objective-C for the total number of registered Objective-C classes will also realize any stub (unrealized) Objective-C classes.
+				Class.GetClassCount ();
+				// We only need to do this once.
+				computed_class_count = true;
 			}
 
 			/*FIXME try to guess the name of the missing library - quite trivial for monotouch.dll*/

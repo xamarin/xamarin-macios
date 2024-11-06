@@ -855,6 +855,16 @@ namespace ObjCRuntime {
 		}
 
 		[DllImport (Messaging.LIBOBJC_DYLIB)]
+		unsafe extern static int objc_getClassList (IntPtr* buffer, int bufferCount);
+
+		/// <summary>Gets the total number of registered Objective-C classes in the process.</summary>
+		/// <remarks>A side-effect of counting all the registered Objective-C classes, is that all stub (unrealized) classes are also realized and can be used afterwards.</remarks>
+		internal unsafe static int GetClassCount ()
+		{
+			return objc_getClassList (null, 0);
+		}
+
+		[DllImport (Messaging.LIBOBJC_DYLIB)]
 		internal extern static IntPtr class_getMethodImplementation (IntPtr cls, IntPtr sel);
 
 		[DllImport (Messaging.LIBOBJC_DYLIB)]
