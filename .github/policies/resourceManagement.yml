@@ -8,7 +8,7 @@ where:
 configuration:
   resourceManagementConfiguration:
     scheduledSearches:
-    - decscription: Lock issues and pull requests with no activity in 180 days
+    - decscription:
       frequencies:
       - weekday:
         day: Sunday
