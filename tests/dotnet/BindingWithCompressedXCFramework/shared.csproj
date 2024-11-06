@@ -10,7 +10,13 @@
 		<ObjcBindingApiDefinition Include="../ApiDefinition.cs" />
 		<ObjcBindingCoreSource Include="../StructsAndEnums.cs" />
 		<NativeReference Include="../../../test-libraries/.libs/XTest.xcframework.zip" Kind="Framework" />
-		<NativeReference Include="../../../test-libraries/.libs/XStaticArTest.xcframework.zip" Kind="Static" />
-		<NativeReference Include="../../../test-libraries/.libs/XStaticObjectTest.xcframework.zip" Kind="Static" />
+		<NativeReference Include="../../../test-libraries/.libs/XStaticArTest.xcframework.zip">
+			<Kind>Static</Kind>
+			<Frameworks>CoreLocation ModelIO</Frameworks>
+		</NativeReference>
+		<NativeReference Include="../../../test-libraries/.libs/XStaticObjectTest.xcframework.zip" Kind="Static">
+			<Kind>Static</Kind>
+			<Frameworks>CoreLocation ModelIO</Frameworks>
+		</NativeReference>
 	</ItemGroup>
 </Project>
