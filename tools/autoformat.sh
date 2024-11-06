@@ -55,8 +55,6 @@ dotnet format whitespace "$SRC_DIR/tests/introspection/dotnet/iOS/introspection.
 dotnet format whitespace "$SRC_DIR/tests/introspection/dotnet/MacCatalyst/introspection.csproj"
 dotnet format whitespace "$SRC_DIR/tests/introspection/dotnet/macOS/introspection.csproj"
 dotnet format whitespace "$SRC_DIR/tests/introspection/dotnet/tvOS/introspection.csproj"
-dotnet format whitespace "$SRC_DIR/tests/introspection/iOS/introspection-ios.csproj"
-dotnet format whitespace "$SRC_DIR/tests/introspection/Mac/introspection-mac.csproj"
 dotnet format whitespace "$SRC_DIR/tests/monotouch-test/dotnet/iOS/monotouch-test.csproj"
 dotnet format whitespace "$SRC_DIR/tests/monotouch-test/dotnet/MacCatalyst/monotouch-test.csproj"
 dotnet format whitespace "$SRC_DIR/tests/monotouch-test/dotnet/macOS/monotouch-test.csproj"
