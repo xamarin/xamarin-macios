@@ -11,8 +11,20 @@ configuration:
     - decscription:
       frequencies:
       - weekday:
-        day: Sunday
-        time: 12:00
+          day: Monday
+          time: 0:0
+      - weekday:
+          day: Tuesday
+          time: 0:0
+      - weekday:
+          day: Wednesday
+          time: 0:0
+      - weekday:
+          day: Thursday
+          time: 0:0
+      - weekday:
+          day: Friday
+          time: 0:0
       filters:
       - isClosed
       actions:
