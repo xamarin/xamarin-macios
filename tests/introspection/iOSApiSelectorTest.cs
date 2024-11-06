@@ -399,7 +399,7 @@ namespace Introspection {
 				}
 				break;
 #endif
-				}
+			}
 
 			switch (name) {
 			// UIResponderStandardEditActions - stuffed inside UIResponder

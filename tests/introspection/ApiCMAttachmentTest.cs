@@ -140,8 +140,7 @@ namespace Introspection {
 				nativeObj = obj;
 			}
 
-			public NativeHandle Handle
-			{
+			public NativeHandle Handle {
 				get { return nativeObj.Handle; }
 			}
 		}
