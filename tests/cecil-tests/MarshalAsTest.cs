@@ -18,7 +18,6 @@ namespace Cecil.Tests {
 
 		HashSet<string> knownIssues = new HashSet<string> { };
 
-		[TestCaseSource (typeof (Helper), nameof (Helper.PlatformAssemblyDefinitions))]
 		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformAssemblyDefinitions))]
 		public void TestAssembly (AssemblyInfo info)
 		{

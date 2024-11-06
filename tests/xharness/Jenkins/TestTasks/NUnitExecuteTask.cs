@@ -132,7 +132,7 @@ namespace Xharness.Jenkins.TestTasks {
 			}
 		}
 
-		public override async Task RunTestAsync ()
+		public override Task RunTestAsync ()
 		{
 			throw new NotSupportedException ("Legacy projects not supported anymore");
 		}

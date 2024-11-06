@@ -61,7 +61,6 @@ stages:
       artifactName: '${{ parameters.uploadPrefix }}not-signed-package'
       signType: Real
       usePipelineArtifactTasks: true
-      condition: "ne(stageDependencies.configure_build.configure.outputs['configure_platforms.ENABLE_DOTNET'],'')"
       setupSteps:
       - template: tools/devops/automation/templates/common/checkout.yml@${{ parameters.repositoryAlias }}
         parameters:
@@ -84,7 +83,6 @@ stages:
       propsArtifactName: ${{ parameters.uploadPrefix }}not-signed-package
       binlogsArtifactName: ${{ parameters.uploadPrefix }}nuget-msi-convert-binlogs
       signType: Real
-      condition: "ne(stageDependencies.configure_build.configure.outputs['configure_platforms.ENABLE_DOTNET'],'')"
       preConvertSteps:
       - pwsh: |
           New-Item "$(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/governance" -ItemType Directory -ea 0
@@ -122,8 +120,7 @@ stages:
           or(
             eq(dependencies.nuget_convert.result, 'Succeeded'), 
             eq(dependencies.nuget_convert.result, 'SucceededWithIssues')
-          ),
-          ne(stageDependencies.configure_build.configure.outputs['configure_platforms.ENABLE_DOTNET'],'')
+          )
         )
       variables:
       - name: skipNugetSecurityAnalysis

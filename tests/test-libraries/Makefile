@@ -216,10 +216,6 @@ $$($(1)_DIRECTORIES):
 
 endef
 
-ifdef IOS_SUPPORTS_32BIT_ARCHITECTURES
-IOS_SIMULATOR_ARCHITECTURES=x86
-IOS_DEVICE_ARCHITECTURES=armv7 armv7s
-endif
 IOS_SIMULATOR_ARCHITECTURES+=x86_64 arm64
 IOS_DEVICE_ARCHITECTURES+=arm64
 
@@ -253,12 +249,6 @@ define LibTemplate
 $(5)_TARGETS += .libs/$(4)/libtest.$(1).a
 all-local:: $$($(5)_TARGETS)
 endef
-
-ifdef IOS_SUPPORTS_32BIT_ARCHITECTURES
-$(eval $(call LibTemplate,armv7+7s,.libs/iphoneos/libtest.armv7.o,.libs/iphoneos/libtest.armv7s.o,ios-fat,IOS))
-$(eval $(call LibTemplate,armv7+x86,.libs/iphoneos/libtest.armv7.o,.libs/iphonesimulator/libtest.x86.o,ios-fat,IOS))
-$(eval $(call LibTemplate,armv7s+x86,.libs/iphoneos/libtest.armv7s.o,.libs/iphonesimulator/libtest.x86.o,ios-fat,IOS))
-endif
 
 ifdef INCLUDE_TVOS
 $(eval $(call LibTemplate,arm64+x86_64,.libs/tvos/libtest.arm64.o,.libs/tvsimulator/libtest.x86_64.o,tvos-fat,TVOS))
