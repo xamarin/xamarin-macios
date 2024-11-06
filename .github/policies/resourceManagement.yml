@@ -26,7 +26,8 @@ configuration:
           day: Friday
           time: 0:0
       filters:
-      - isClosed
+      - not:
+        - isOpen
       - hasLabel:
           label: need-info
       - noActivitySince:
