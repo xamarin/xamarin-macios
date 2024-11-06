@@ -32,8 +32,9 @@ configuration:
           label: need-info
       - noActivitySince:
           days: 7
-      actions:
-      - lockIssue
+      - addReply:
+          reply: Hi @${issueAuthor}. Due to inactivity, we will be closing this issue. Please feel free to re-open this issue if the issue persists. For enhanced visibility, if over 7 days have passed, please open a new issue and link this issue there. Thank you.
+      - closeIssue
     - description: 
       frequencies:
       - weekday:
