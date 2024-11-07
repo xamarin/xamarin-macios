@@ -15,12 +15,20 @@ using ObjCRuntime;
 
 namespace Vision {
 	public partial class VNVector {
-
-		public static VNVector? Create (double r, double theta)
+		/// <summary>Create a new <see cref="VNVector" /> instance using polar coordinates.</summary>
+		/// <param name="polarCoordinates">The r and theta values of the vector.</param>
+		public VNVector ((double R, double Theta) polarCoordinates)
+			: base (NSObjectFlag.Empty)
 		{
-			var handle = Messaging.IntPtr_objc_msgSend (class_ptr, Selector.GetHandle ("alloc"));
-			handle = Messaging.IntPtr_objc_msgSend_Double_Double (handle, Selector.GetHandle ("initWithR:theta:"), r, theta);
-			return Runtime.GetNSObject<VNVector> (handle, true);
+			InitializeHandle (_InitWithRTheta (polarCoordinates.R, polarCoordinates.Theta));
+		}
+
+		/// <summary>Create a new <see cref="VNVector" /> instance using polar coordinates.</summary>
+		/// <param name="r">The r value (length) of the vector.</param>
+		/// <param name="theta">The theta value (angle) of the vector.</param>
+		public static VNVector Create (double r, double theta)
+		{
+			return new VNVector ((r, theta));
 		}
 	}
 }
