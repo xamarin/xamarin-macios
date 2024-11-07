@@ -40,7 +40,7 @@ parameters:
 steps:
 
 - pwsh: >-
-    $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/generate_agent_logs.ps1
+    $(System.DefaultWorkingDirectory)/$(BUILD_REPOSITORY_TITLE)/tools/devops/automation/scripts/generate_agent_logs.ps1
     -VstsToken "$(System.AccessToken)"
     -Style "${{ parameters.style }}"
     -Output "${{ parameters.outputPath }}"

@@ -56,12 +56,12 @@ steps:
     displayName: 'Display downloads'
     timeoutInMinutes: 5
 
-  - bash: ./xamarin-macios/tools/devops/automation/scripts/bash/configure-platforms.sh
+  - bash: ./$(BUILD_REPOSITORY_TITLE)/tools/devops/automation/scripts/bash/configure-platforms.sh
     name: configure_platforms
     displayName: 'Configure platforms'
 
   - pwsh: |
-      Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/MaciosCI.psd1
+      Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/$Env:BUILD_REPOSITORY_TITLE/tools/devops/automation/scripts/MaciosCI.psd1
       $jsonPath = Join-Path -Path "$(Build.ArtifactStagingDirectory)" -ChildPath "configuration.json"
       Write-Host "##vso[task.setvariable variable=CONFIG_PATH]$jsonPath"
       New-BuildConfiguration -ConfigFile $jsonPath
@@ -71,7 +71,7 @@ steps:
     name: labels
     displayName: 'Configure build'
 
-  - bash: ./xamarin-macios/tools/devops/automation/scripts/bash/configure-decisions.sh
+  - bash: ./$(BUILD_REPOSITORY_TITLE)/tools/devops/automation/scripts/bash/configure-decisions.sh
     name: decisions
     displayName: 'Make decisions'
 
@@ -79,7 +79,7 @@ steps:
     displayName: 'Show Bot Info'
 
   - pwsh: |
-      Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/MaciosCI.psd1
+      Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/$Env:BUILD_REPOSITORY_TITLE/tools/devops/automation/scripts/MaciosCI.psd1
       # load the configuration files and set the required variables to be used in the later stages
       $configPath = Get-ChildItem -Path "$(Pipeline.Workspace)/macios/build-configuration/configuration.json" -Recurse -Force
       $config = Import-BuildConfiguration -ConfigFile $configPath
