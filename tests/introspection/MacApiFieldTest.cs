@@ -175,27 +175,6 @@ namespace Introspection {
 			}
 		}
 
-		protected override bool SkipNotification (Type declaredType, string notificationName)
-		{
-			switch (declaredType.Name) {
-#if !NET
-			case "NSWorkspaceAccessibilityNotifications":
-			case "NSAccessibilityNotifications":
-				return true;
-			case "AVFragmentedMovieTrack":
-				switch (notificationName) {
-				case "AVFragmentedMovieTrackTotalSampleDataLengthDidChangeNotification":
-				case "AVFragmentedMovieTrackTimeRangeDidChangeNotification":
-					return true;
-				}
-				break;
-			case "NSTask":
-				return notificationName == "NSTaskDidTerminateNotification";
-#endif
-			}
-			return base.SkipNotification (declaredType, notificationName);
-		}
-
 		protected override string FindLibrary (string libraryName, bool requiresFullPath = false)
 		{
 			switch (libraryName) {

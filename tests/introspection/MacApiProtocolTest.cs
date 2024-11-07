@@ -23,20 +23,7 @@ namespace Introspection {
 
 		protected override bool Skip (Type type)
 		{
-#if !NET
-			switch (type.Namespace) {
-			case "Chip":
-				// The Chip framework is not stable, it's been added and removed and added and removed a few times already, so just skip verifying the entire framework.
-				// This is legacy Xamarin only, because we removed the framework for .NET.
-				return true;
-			}
-#endif
-
 			switch (type.Name) {
-#if !NET
-			case "NSDraggingInfo":
-				return true; // Incorrectly bound (BaseType on protocol), will be fixed for .NET.
-#endif
 			// special cases wrt sandboxing
 			case "NSRemoteOpenPanel":
 			case "NSRemoteSavePanel":
@@ -45,10 +32,6 @@ namespace Introspection {
 			case "AVCaptureSynchronizedData":
 			case "CXProvider":
 				return TestRuntime.IsVM; // skip only on vms
-#if !NET // NSMenuView does not exist in .NET
-			case "NSMenuView": // not longer supported
-				return true;
-#endif // !NET
 			case "ASAuthorizationProviderExtensionRegistrationHandler":
 				return true;
 			default:
@@ -346,10 +329,6 @@ namespace Introspection {
 				if (type.Name == "NSTextView")
 					return true;
 				break;
-#if !NET
-			case "NSDraggingInfo":
-				return true; // We have to keep the type to maintain backwards compatibility.
-#endif
 			case "NSAccessibility":
 			case "NSAccessibilityElement":
 				switch (type.Name) {

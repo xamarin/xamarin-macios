@@ -242,19 +242,6 @@ namespace Introspection {
 			return base.Check (encodedType, type);
 		}
 
-#if !NET
-		protected override bool CheckType (Type t, ref int n)
-		{
-			switch (t.Name) {
-			case "NSPasteboardReading":
-			case "NSPasteboardWriting":
-				return true;
-			}
-
-			return base.CheckType (t, ref n);
-		}
-#endif
-
 		protected override void CheckManagedMemberSignatures (MethodBase m, Type t, ref int n)
 		{
 #if !XAMCORE_5_0 // let's review the tests exceptions if we break things
@@ -265,13 +252,6 @@ namespace Introspection {
 				if (t.Name == "NSTableView")
 					return;
 				break;
-#if !NET
-			case "AddEventListener":
-				// Fixed in NET
-				if (t.Name == "DomNode")
-					return;
-				break;
-#endif // !NET
 			}
 #endif // XAMCORE_5_0
 			base.CheckManagedMemberSignatures (m, t, ref n);

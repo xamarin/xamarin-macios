@@ -16,6 +16,9 @@ using ObjCRuntime;
 using Foundation;
 using UIKit;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Introspection {
 
 	[TestFixture]
@@ -182,16 +185,6 @@ namespace Introspection {
 					return;
 				break;
 #endif // !XAMCORE_5_0
-#if !NET
-			case "get_ImagePickerControllerDelegate":
-			case "set_ImagePickerControllerDelegate":
-			case "get_NavigationControllerDelegate":
-			case "set_NavigationControllerDelegate":
-				// fixed in NET - alternative are the Weak* delegates
-				if (t.Name == "UIImagePickerController")
-					return;
-				break;
-#endif
 #if !XAMCORE_5_0 // let's review the tests exceptions if we break things
 			case "get_Model":
 			case "set_Model":

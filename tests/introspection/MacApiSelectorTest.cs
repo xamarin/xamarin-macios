@@ -117,12 +117,6 @@ namespace Introspection {
 				if (Mac.CheckSystemVersion (10, 15))
 					return true;
 				break;
-#if !NET
-			case "Chip":
-				// The Chip framework is not stable, it's been added and removed and added and removed a few times already, so just skip verifying the entire framework.
-				// This is legacy Xamarin only, because we removed the framework for .NET.
-				return true;
-#endif
 			}
 
 			return base.Skip (type);
@@ -154,10 +148,6 @@ namespace Introspection {
 				// The header declares this on an NSObject category but 
 				// it doesn't even respondsToSelector on NSView/NSCell...
 				return true;
-#if !NET
-			case "xamarinselector:removed:":
-				return true;
-#endif
 			case "readInBackgroundAndNotifyForModes:":
 			case "readInBackgroundAndNotify":
 			case "readToEndOfFileInBackgroundAndNotifyForModes:":
@@ -427,47 +417,6 @@ namespace Introspection {
 						return true;
 					}
 					break;
-#if !NET // NSMenuView does not exist in .NET
-				case "NSMenuView":
-					switch (selectorName) {
-					case "menuBarHeight":
-						return TestRuntime.IsVM; // skip on vms due to hadware problems
-					}
-					break;
-#endif // !NET
-#if !NET      // These should be not be marked [Abstract] but can't fix w/o breaking change...                                                                                        
-				case "NSScrollView":
-				case "NSTextView":
-					switch (selectorName) {
-					case "contentViewAtIndex:effectiveCharacterRange:":
-					case "didReplaceCharacters":
-					case "drawCharactersInRange:forContentView:":
-					case "rectsForCharacterRange:":
-					case "replaceCharactersInRange:withString:":
-					case "scrollRangeToVisible:":
-					case "shouldReplaceCharactersInRanges:withStrings:":
-					case "stringAtIndex:effectiveRange:endsWithSearchBoundary:":
-					case "stringLength":
-					case "allowsMultipleSelection":
-					case "isEditable":
-					case "firstSelectedRange":
-					case "isSelectable":
-					case "selectedRanges":
-					case "setSelectedRanges:":
-					case "string":
-					case "visibleCharacterRanges":
-						return true;
-					}
-					break;
-#endif
-				case "NSMenuDelegate":
-					switch (selectorName) {
-#if !NET
-					case "menu:willHighlightItem:":
-						return true; // bound
-#endif
-					}
-					break;
 				case "NSResponder":
 					switch (selectorName) {
 					case "smartMagnifyWithEvent:":
@@ -633,14 +582,6 @@ namespace Introspection {
 					if (selectorName == "encodeWithCoder:" && !Mac.CheckSystemVersion (10, 8))
 						return true;
 					break;
-				case "PdfView":
-					switch (selectorName) {
-#if !NET
-					case "menu:willHighlightItem:":
-						return true;
-#endif
-					}
-					break;
 				}
 				break;
 			case "MonoMac.SceneKit":
@@ -748,7 +689,6 @@ namespace Introspection {
 						// Selector not there: https://github.com/xamarin/maccore/issues/1949
 						return true;
 					}
-					break;
 					break;
 				}
 				break;
@@ -1082,7 +1022,7 @@ namespace Introspection {
 
 		protected override bool CheckResponse (bool value, Type actualType, MethodBase method, ref string name)
 		{
-			var declaredType = method.DeclaringType;
+			var declaredType = method.DeclaringType!;
 
 			switch (name) {
 			// NSDraggingDestination protocol
