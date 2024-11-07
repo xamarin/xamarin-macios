@@ -28757,7 +28757,15 @@ namespace AppKit {
 		string AlertRecoverySuggestionButtonTitle { get; }
 
 		[Export ("alertRecoverySuggestionButtonLaunchURL", ArgumentSemantic.Copy), NullAllowed]
-		NSUrl AlertRecoverySuggestionButtonLaunchUrl { get; set; }
+#if XAMCORE_5_0
+		NSUrl AlertRecoverySuggestionButtonLaunchUrl { get; }
+#else
+		NSUrl AlertRecoverySuggestionButtonLaunchUrl {
+			get;
+			[Obsolete ("Do not use, the native class doesn't have this setter.")]
+			set;
+		}
+#endif
 
 		[Export ("initWithDisabledMode:")]
 		NativeHandle Constructor (NSSharingCollaborationMode disabledMode);

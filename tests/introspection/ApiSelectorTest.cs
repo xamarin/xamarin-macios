@@ -1051,6 +1051,14 @@ namespace Introspection {
 				}
 				break;
 #endif // __MACCATALYST__
+#if !XAMCORE_5_0
+			case "NSSharingCollaborationModeRestriction":
+				switch (selectorName) {
+				case "setAlertRecoverySuggestionButtonLaunchURL:":// binding mistake
+					return true;
+				}
+				break;
+#endif
 			}
 
 			// old binding mistake
