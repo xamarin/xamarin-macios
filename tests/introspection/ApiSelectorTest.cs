@@ -1221,8 +1221,13 @@ namespace Introspection {
 				if (!init)
 					ReportError ("Selector {0} used on a constructor (not a method) on {1}", name, t.FullName);
 			} else {
-				if (init)
-					ReportError ("Selector {0} used on a method (not a constructor) on {1}", name, t.FullName);
+				if (init) {
+					var isPubliclyVisible = m.IsPublic || m.IsFamily || m.IsFamilyOrAssembly;
+					if (isPubliclyVisible || !m.Name.StartsWith ("_Init", StringComparison.Ordinal)) {
+						// ignore methods that start '_Init' and aren't publicly exposed, they're probably used by manually bound ctors.
+						ReportError ($"Selector {name} used on the method '{m.Name}' (not a constructor) on {t.FullName}");
+					}
+				}
 			}
 		}
 
