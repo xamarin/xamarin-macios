@@ -47,6 +47,7 @@ namespace Xamarin.Tests {
 		public static bool iOSSupports32BitArchitectures;
 		public static bool EnableXamarin;
 		public static bool XcodeIsStable;
+		public static string DOTNET_DIR;
 
 		static Version xcode_version;
 		public static Version XcodeVersion {
@@ -306,6 +307,7 @@ namespace Xamarin.Tests {
 			iOSSupports32BitArchitectures = !string.IsNullOrEmpty (GetVariable ("IOS_SUPPORTS_32BIT_ARCHITECTURES", ""));
 			EnableXamarin = !string.IsNullOrEmpty (GetVariable ("ENABLE_XAMARIN", ""));
 			XcodeIsStable = string.Equals (GetVariable ("XCODE_IS_STABLE", ""), "true", StringComparison.OrdinalIgnoreCase);
+			DOTNET_DIR = GetVariable ("DOTNET_DIR", "");
 
 			XcodeVersionString = GetVariable ("XCODE_VERSION", GetXcodeVersion (xcode_root));
 #if MONOMAC
@@ -497,7 +499,7 @@ namespace Xamarin.Tests {
 		public static string GetDotNetRoot ()
 		{
 			if (IsVsts) {
-				return Path.Combine (EvaluateVariable ("DOTNET_DIR"), "packs");
+				return Path.Combine (DOTNET_DIR, "packs");
 			} else {
 				return Path.Combine (SourceRoot, "_build");
 			}
