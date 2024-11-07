@@ -216,7 +216,7 @@ namespace Xamarin.Tests {
 				</NativeReference>
 				<NativeReference Name="XStaticArTest.xcframework.zip">
 					<ForceLoad></ForceLoad>
-					<Frameworks></Frameworks>
+					<Frameworks>CoreLocation ModelIO</Frameworks>
 					<IdentityWithoutPathSeparatorSuffix>../../../test-libraries/.libs/XStaticArTest.xcframework.zip</IdentityWithoutPathSeparatorSuffix>
 					<IsCxx></IsCxx>
 					<Kind>Static</Kind>
@@ -228,7 +228,7 @@ namespace Xamarin.Tests {
 				</NativeReference>
 				<NativeReference Name="XStaticObjectTest.xcframework.zip">
 					<ForceLoad></ForceLoad>
-					<Frameworks></Frameworks>
+					<Frameworks>CoreLocation ModelIO</Frameworks>
 					<IdentityWithoutPathSeparatorSuffix>../../../test-libraries/.libs/XStaticObjectTest.xcframework.zip</IdentityWithoutPathSeparatorSuffix>
 					<IsCxx></IsCxx>
 					<Kind>Static</Kind>
