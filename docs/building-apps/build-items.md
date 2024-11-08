@@ -62,7 +62,7 @@ Example:
 </ItemGroup>
 ```
 
-There are several metadata that can be set on the `CodesignBundle` item to direct how signing occurs:
+There are several pieces of metadata that can be set on the `CodesignBundle` item to direct how signing occurs:
 
 * [CodesignAllocate](build-properties.md#codesignallocate)
 * [CodesignEntitlements](build-properties.md#codesignentitlements)

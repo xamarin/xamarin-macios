@@ -1,6 +1,6 @@
 ---
 title: .NET for iOS, Mac Catalyst, macOS, and tvOS build targets
-description: .NET for iOS, Mac Catalyst, macOS, and tvOS build bargets
+description: .NET for iOS, Mac Catalyst, macOS, and tvOS build targets
 ms.date: 09/19/2024
 ---
 
