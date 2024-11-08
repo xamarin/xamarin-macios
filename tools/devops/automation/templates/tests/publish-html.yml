@@ -79,7 +79,11 @@ steps:
         $gihubComments = New-GitHubCommentsObjectFromUrl -Url "$(Build.Repository.Uri)" -Token $Env:GITHUB_TOKEN -Hash $Env:COMMENT_HASH -Debug
         $result = $gihubComments.NewCommentFromObject("Test results", $emoji, $parallelResults, "test results")
       } catch {
-        Write-Host "##vso[task.complete result=Failed;]Failed to compute test summaries: $_"
+        $msg = "Failed to compute test summaries: $_"
+        Write-Host "$msg"
+        Write-Debug "$msg"
+        $msg | Out-String
+        Write-Host "##vso[task.complete result=Failed;]$msg"
         New-GitHubComment -Header "Failed to compute test summaries on $Env:CONTEXT" -Emoji ":fire:" -Description "Failed to compute test summaries: $_."
       }
   env:
