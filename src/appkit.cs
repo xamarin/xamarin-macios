@@ -16090,18 +16090,22 @@ namespace AppKit {
 		[Export ("initWithFrame:")]
 		NativeHandle Constructor (CGRect frameRect);
 
+		[NullAllowed]
 		[Export ("window")]
 		NSWindow Window { get; }
 
+		[NullAllowed]
 		[Export ("superview")]
 		NSView Superview { get; }
 
 		[Export ("isDescendantOf:")]
 		bool IsDescendantOf (NSView aView);
 
+		[return: NullAllowed]
 		[Export ("ancestorSharedWithView:")]
 		NSView AncestorSharedWithView (NSView aView);
 
+		[NullAllowed]
 		[Export ("opaqueAncestor")]
 		NSView OpaqueAncestor { get; }
 
@@ -16142,10 +16146,10 @@ namespace AppKit {
 		void ViewDidMoveToSuperview ();
 
 		[Export ("didAddSubview:")]
-		void DidAddSubview ([NullAllowed] NSView subview);
+		void DidAddSubview (NSView subview);
 
 		[Export ("willRemoveSubview:")]
-		void WillRemoveSubview ([NullAllowed] NSView subview);
+		void WillRemoveSubview (NSView subview);
 
 		[Export ("removeFromSuperview")]
 		void RemoveFromSuperview ();
@@ -16304,6 +16308,7 @@ namespace AppKit {
 		[Export ("displayRectIgnoringOpacity:inContext:")]
 		void DisplayRectIgnoringOpacity (CGRect aRect, NSGraphicsContext context);
 
+		[return: NullAllowed]
 		[Export ("bitmapImageRepForCachingDisplayInRect:")]
 		NSBitmapImageRep BitmapImageRepForCachingDisplayInRect (CGRect rect);
 
@@ -16352,12 +16357,14 @@ namespace AppKit {
 		[Export ("translateRectsNeedingDisplayInRect:by:")]
 		void TranslateRectsNeedingDisplay (CGRect clipRect, CGSize delta);
 
+		[return: NullAllowed]
 		[Export ("hitTest:")]
 		NSView HitTest (CGPoint aPoint);
 
 		[Export ("mouse:inRect:")]
 		bool IsMouseInRect (CGPoint aPoint, CGRect aRect);
 
+		[return: NullAllowed]
 		[Export ("viewWithTag:")]
 		NSObject ViewWithTag (nint aTag);
 
@@ -16368,7 +16375,7 @@ namespace AppKit {
 		bool PerformKeyEquivalent (NSEvent theEvent);
 
 		[Export ("acceptsFirstMouse:")]
-		bool AcceptsFirstMouse (NSEvent theEvent);
+		bool AcceptsFirstMouse ([NullAllowed] NSEvent theEvent);
 
 		[Export ("shouldDelayWindowOrderingForEvent:")]
 		bool ShouldDelayWindowOrderingForEvent (NSEvent theEvent);
@@ -16416,12 +16423,15 @@ namespace AppKit {
 		[Export ("shouldDrawColor")]
 		bool ShouldDrawColor { get; }
 
+		[NullAllowed]
 		[Export ("enclosingScrollView")]
 		NSScrollView EnclosingScrollView { get; }
 
+		[return: NullAllowed]
 		[Export ("menuForEvent:")]
 		NSMenu MenuForEvent (NSEvent theEvent);
 
+		[return: NullAllowed]
 		[Static]
 		[Export ("defaultMenu")]
 		NSMenu DefaultMenu ();
@@ -16473,6 +16483,7 @@ namespace AppKit {
 		//[Export ("getRectsExposedDuringLiveResize:count:")]
 		// void GetRectsExposedDuringLiveResizecount
 
+		[NullAllowed]
 		[Export ("inputContext")]
 		NSTextInputContext InputContext { get; }
 
@@ -16535,15 +16546,16 @@ namespace AppKit {
 		[Export ("alphaValue")]
 		nfloat AlphaValue { get; set; }
 
-		[Export ("backgroundFilters", ArgumentSemantic.Copy), NullAllowed]
+		[Export ("backgroundFilters", ArgumentSemantic.Copy)]
 		CIFilter [] BackgroundFilters { get; set; }
 
-		[Export ("compositingFilter", ArgumentSemantic.Retain), NullAllowed]
+		[Export ("compositingFilter", ArgumentSemantic.Retain)]
 		CIFilter CompositingFilter { get; set; }
 
-		[Export ("contentFilters", ArgumentSemantic.Copy), NullAllowed]
+		[Export ("contentFilters", ArgumentSemantic.Copy)]
 		CIFilter [] ContentFilters { get; set; }
 
+		[NullAllowed]
 		[Export ("shadow", ArgumentSemantic.Copy)]
 		NSShadow Shadow { get; set; }
 
@@ -16578,10 +16590,10 @@ namespace AppKit {
 		bool DragPromisedFilesOfTypes (string [] typeArray, CGRect aRect, NSObject sourceObject, bool slideBack, NSEvent theEvent);
 
 		[Export ("exitFullScreenModeWithOptions:")]
-		void ExitFullscreenModeWithOptions (NSDictionary options);
+		void ExitFullscreenModeWithOptions ([NullAllowed] NSDictionary options);
 
 		[Export ("enterFullScreenMode:withOptions:")]
-		bool EnterFullscreenModeWithOptions (NSScreen screen, NSDictionary options);
+		bool EnterFullscreenModeWithOptions (NSScreen screen, [NullAllowed] NSDictionary options);
 
 		[Export ("isInFullScreenMode")]
 		bool IsInFullscreenMode { get; }
@@ -16708,12 +16720,15 @@ namespace AppKit {
 		[Export ("nextKeyView")]
 		NSView NextKeyView { get; set; }
 
+		[NullAllowed]
 		[Export ("previousKeyView")]
 		NSView PreviousKeyView { get; }
 
+		[NullAllowed]
 		[Export ("nextValidKeyView")]
 		NSView NextValidKeyView { get; }
 
+		[NullAllowed]
 		[Export ("previousValidKeyView")]
 		NSView PreviousValidKeyView { get; }
 
@@ -16748,7 +16763,7 @@ namespace AppKit {
 		NSData DataWithPdfInsideRect (CGRect rect);
 
 		[Export ("print:")]
-		void Print (NSObject sender);
+		void Print ([NullAllowed] NSObject sender);
 
 		[Export ("printJobTitle")]
 		string PrintJobTitle { get; }
@@ -16884,6 +16899,7 @@ namespace AppKit {
 		[Export ("preparedContentRect")]
 		CGRect PreparedContentRect { get; set; }
 
+		[NullAllowed]
 		[Export ("pressureConfiguration", ArgumentSemantic.Strong)]
 		NSPressureConfiguration PressureConfiguration { get; set; }
 
