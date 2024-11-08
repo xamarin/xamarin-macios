@@ -59,7 +59,7 @@ steps:
         gci env: | format-table -autosize | Out-String -Width 8192
 
         $vsdropsIndex="$Env:VSDROPSPREFIX/$Env:BUILD_BUILDNUMBER/$Env:BUILD_BUILDID/"
-        Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\$BUILD_REPOSITORY_TITLE\tools\devops\automation\scripts\MaciosCI.psd1
+        Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\$Env:BUILD_REPOSITORY_TITLE\tools\devops\automation\scripts\MaciosCI.psd1
         $DebugPreference = "Continue" # enable debug messages
 
         $parallelResults = New-ParallelTestsResults `
