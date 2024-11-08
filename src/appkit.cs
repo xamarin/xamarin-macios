@@ -16090,9 +16090,11 @@ namespace AppKit {
 		[Export ("initWithFrame:")]
 		NativeHandle Constructor (CGRect frameRect);
 
+		[NullAllowed]
 		[Export ("window")]
 		NSWindow Window { get; }
 
+		[NullAllowed]
 		[Export ("superview")]
 		NSView Superview { get; }
 
