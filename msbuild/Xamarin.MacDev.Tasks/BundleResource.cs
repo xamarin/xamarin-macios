@@ -74,7 +74,7 @@ namespace Xamarin.MacDev {
 		}
 
 		// Compute the path of 'item' relative to the project.
-		public static string GetVirtualProjectPath<T> (T task, ITaskItem item) where T: Task, IHasProjectDir, IHasSessionId
+		public static string GetVirtualProjectPath<T> (T task, ITaskItem item) where T : Task, IHasProjectDir, IHasSessionId
 		{
 			// If the Link metadata exists, use that, it takes precedence over anything else.
 			var link = item.GetMetadata ("Link");
@@ -170,7 +170,7 @@ namespace Xamarin.MacDev {
 			return rv;
 		}
 
-		public static string GetLogicalName<T> (T task, ITaskItem item) where T: Task, IHasProjectDir, IHasResourcePrefix, IHasSessionId
+		public static string GetLogicalName<T> (T task, ITaskItem item) where T : Task, IHasProjectDir, IHasResourcePrefix, IHasSessionId
 		{
 			var logicalName = item.GetMetadata ("LogicalName");
 

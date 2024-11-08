@@ -181,7 +181,7 @@ namespace Xamarin.Utils {
 		static bool IsValidWindowsDriveLetter (char c)
 		{
 			return (c >= 'a' && c <= 'z') ||
-			       (c >= 'A' && c <= 'Z');
+				   (c >= 'A' && c <= 'Z');
 		}
 
 		// Path.GetRelative doesn't exist on the net4.7.2 (which we need to target), so implement our own.
