@@ -22,6 +22,9 @@ using UIKit;
 
 using Xamarin.Utils;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Xamarin.Tests {
 	public sealed class PlatformInfo {
 		static PlatformInfo GetHostPlatformInfo ()
@@ -34,9 +37,6 @@ namespace Xamarin.Tests {
 #elif __TVOS__ || __IOS__
 			name = UIDevice.CurrentDevice.SystemName;
 			version = UIDevice.CurrentDevice.SystemVersion;
-#elif __WATCHOS__
-			name = WatchKit.WKInterfaceDevice.CurrentDevice.SystemName;
-			version = WatchKit.WKInterfaceDevice.CurrentDevice.SystemVersion;
 #elif MONOMAC || __MACOS__
 			using (var plist = NSDictionary.FromFile ("/System/Library/CoreServices/SystemVersion.plist")) {
 				name = (NSString) plist ["ProductName"];
@@ -51,7 +51,6 @@ namespace Xamarin.Tests {
 
 			var platformInfo = new PlatformInfo ();
 
-#if NET
 			if (name.StartsWith ("maccatalyst", StringComparison.Ordinal))
 				platformInfo.Name = ApplePlatform.MacCatalyst;
 			else if (name.StartsWith ("mac", StringComparison.Ordinal))
@@ -60,39 +59,16 @@ namespace Xamarin.Tests {
 				platformInfo.Name = ApplePlatform.iOS;
 			else if (name.StartsWith ("tvos", StringComparison.Ordinal))
 				platformInfo.Name = ApplePlatform.TVOS;
-			else if (name.StartsWith ("watchos", StringComparison.Ordinal))
-				platformInfo.Name = ApplePlatform.WatchOS;
 			else
 				throw new FormatException ($"Unknown product name: {name}");
-#else
-			if (name.StartsWith ("maccatalyst", StringComparison.Ordinal))
-				platformInfo.Name = PlatformName.MacCatalyst;
-			else if (name.StartsWith ("mac", StringComparison.Ordinal))
-				platformInfo.Name = PlatformName.MacOSX;
-			else if (name.StartsWith ("ios", StringComparison.Ordinal) || name.StartsWith ("iphoneos", StringComparison.Ordinal))
-				platformInfo.Name = PlatformName.iOS;
-			else if (name.StartsWith ("tvos", StringComparison.Ordinal))
-				platformInfo.Name = PlatformName.TvOS;
-			else if (name.StartsWith ("watchos", StringComparison.Ordinal))
-				platformInfo.Name = PlatformName.WatchOS;
-			else
-				throw new FormatException ($"Unknown product name: {name}");
-#endif
 
 			platformInfo.Version = Version.Parse (version);
-
-#if !NET
-			if (IntPtr.Size == 4)
-				platformInfo.Architecture = PlatformArchitecture.Arch32;
-			else if (IntPtr.Size == 8)
-				platformInfo.Architecture = PlatformArchitecture.Arch64;
-#endif
 
 			return platformInfo;
 		}
 
 #if __MACCATALYST__
-		static string? _iOSSupportVersion;
+		static string _iOSSupportVersion;
 		internal static string iOSSupportVersion {
 			get {
 				if (_iOSSupportVersion is null) {
@@ -109,23 +85,11 @@ namespace Xamarin.Tests {
 
 		public static readonly PlatformInfo Host = GetHostPlatformInfo ();
 
-#if NET
 		public ApplePlatform Name { get; private set; }
-#else
-		public PlatformName Name { get; private set; }
-		public PlatformArchitecture Architecture { get; private set; }
-#endif
 		public Version Version { get; private set; }
 
-#if NET
 		public bool IsMac => Name == ApplePlatform.MacOSX;
 		public bool IsIos => Name == ApplePlatform.iOS;
-#else
-		public bool IsMac => Name == PlatformName.MacOSX;
-		public bool IsIos => Name == PlatformName.iOS;
-		public bool IsArch32 => Architecture.HasFlag (PlatformArchitecture.Arch32);
-		public bool IsArch64 => Architecture.HasFlag (PlatformArchitecture.Arch64);
-#endif
 
 		PlatformInfo ()
 		{
@@ -138,38 +102,25 @@ namespace Xamarin.Tests {
 			return attributeProvider.IsAvailable (PlatformInfo.Host);
 		}
 
-#if NET
 		[UnconditionalSuppressMessage ("Trimming", "IL2045", Justification = "Some of the attributes this method uses may have been linked away, so things might not work. It actually works though, so unless something changes, we're going to assume it's trimmer-compatible.")]
-#endif
 		public static bool IsAvailable (this ICustomAttributeProvider attributeProvider, PlatformInfo targetPlatform)
 		{
 			var customAttributes = attributeProvider.GetCustomAttributes (true);
 
-#if NET
 			customAttributes = customAttributes.ToArray (); // don't iterate twice
 			if (customAttributes.Any (v => v is ObsoleteAttribute))
 				return false;
-#endif
 
 			return customAttributes
-#if NET
 				.OfType<OSPlatformAttribute> ()
-#else
-				.OfType<AvailabilityBaseAttribute> ()
-#endif
 				.IsAvailable (targetPlatform);
 		}
 
-#if NET
 		public static bool IsAvailableOnHostPlatform (this IEnumerable<OSPlatformAttribute> attributes)
-#else
-		public static bool IsAvailableOnHostPlatform (this IEnumerable<AvailabilityBaseAttribute> attributes)
-#endif
 		{
 			return attributes.IsAvailable (PlatformInfo.Host);
 		}
 
-#if NET
 		static IEnumerable<(OSPlatformAttribute Attribute, ApplePlatform Platform, Version Version)> ParseAttributes (IEnumerable<OSPlatformAttribute> attributes)
 		{
 			foreach (var attr in attributes) {
@@ -205,9 +156,7 @@ namespace Xamarin.Tests {
 			// return attributes.Count () == 0;
 		}
 
-#if NET
 		[UnconditionalSuppressMessage ("Trimming", "IL2045", Justification = "Some of the attributes this method uses may have been linked away, so things might not work. It actually works though, so unless something changes, we're going to assume it's trimmer-compatible.")]
-#endif
 		public static bool? IsAvailable (IEnumerable<(OSPlatformAttribute Attribute, ApplePlatform Platform, Version Version)> attributes, PlatformInfo targetPlatform, ApplePlatform attributePlatform)
 		{
 			// First we check for any unsupported attributes, and only once we know that there aren't any unsupported
@@ -240,44 +189,5 @@ namespace Xamarin.Tests {
 
 			return null;
 		}
-#else
-		public static bool IsAvailable (this IEnumerable<AvailabilityBaseAttribute> attributes, PlatformInfo targetPlatform)
-		{
-			// always "available" from a binding perspective if
-			// there are no explicit annotations saying otherwise
-			var available = true;
-
-			foreach (var attr in attributes) {
-				if (attr.Platform != targetPlatform.Name)
-					continue;
-
-				switch (attr.AvailabilityKind) {
-				case AvailabilityKind.Introduced:
-					if (attr.Version is not null)
-						available &= targetPlatform.Version >= attr.Version;
-
-					if (attr.Architecture != PlatformArchitecture.None &&
-						attr.Architecture != PlatformArchitecture.All)
-						available &= attr.Architecture.HasFlag (targetPlatform.Architecture);
-					break;
-				case AvailabilityKind.Deprecated:
-				case AvailabilityKind.Obsoleted:
-					if (attr.Version is not null)
-						available &= targetPlatform.Version < attr.Version;
-					// FIXME: handle architecture-level _un_availability?
-					// we didn't do this with the old AvailabilityAttribute...
-					break;
-				case AvailabilityKind.Unavailable:
-					available = false;
-					break;
-				}
-
-				if (!available)
-					return false;
-			}
-
-			return available;
-		}
-#endif
 	}
 }

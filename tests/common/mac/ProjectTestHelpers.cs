@@ -492,11 +492,6 @@ namespace TestCase
 				s.Write (testCase);
 		}
 
-		public static string FindRootDirectory ()
-		{
-			return Configuration.TargetDirectoryXM;
-		}
-
 		static string GenerateOutputCommand (string tmpDir, Guid guid)
 		{
 			return string.Format ("System.IO.File.Create(\"{0}\").Dispose();", Path.Combine (tmpDir, guid.ToString ()));

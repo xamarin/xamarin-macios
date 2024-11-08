@@ -18,7 +18,6 @@ namespace Cecil.Tests {
 
 	[TestFixture]
 	public partial class ApiTest {
-		[TestCaseSource (typeof (Helper), nameof (Helper.PlatformAssemblyDefinitions))]
 		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformAssemblyDefinitions))]
 		public void ARConfiguration_GetSupportedVideoFormats (AssemblyInfo info)
 		{

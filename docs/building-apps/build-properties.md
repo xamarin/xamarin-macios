@@ -710,6 +710,12 @@ only scan libraries with the `[LinkWith]` attribute for Objective-C classes:
 </PropertyGroup>
 ```
 
+## StripPath
+
+The full path to the `strip` command-line tool.
+
+The default behavior is to use `xcrun strip`.
+
 ## SupportedOSPlatformVersion
 
 Specifies the minimum OS version the app can run on.

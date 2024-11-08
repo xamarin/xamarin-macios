@@ -26,9 +26,8 @@ using NUnit.Framework;
 using Foundation;
 using ObjCRuntime;
 
-#if !NET
-using NativeHandle = System.IntPtr;
-#endif
+// Disable until we get around to enable + fix any issues.
+#nullable disable
 
 namespace Introspection {
 
@@ -177,16 +176,6 @@ namespace Introspection {
 					return !TestRuntime.CheckXcodeVersion (9, 0);
 				}
 				break;
-#if !NET
-			case "NSUrl":
-			case "ARQuickLookPreviewItem":
-				switch (selectorName) {
-				case "previewItemTitle":
-					// 'previewItemTitle' is inlined from the QLPreviewItem protocol and should be optional (fixed in .NET)
-					return true;
-				}
-				break;
-#endif
 			case "MKMapItem": // Selector not available on iOS 32-bit
 				switch (selectorName) {
 				case "encodeWithCoder:":
@@ -402,7 +391,7 @@ namespace Introspection {
 					return true;
 				}
 				break;
-#if (__WATCHOS__ || __MACOS__ || __MACCATALYST__)
+#if __MACOS__ || __MACCATALYST__
 			case "AVPlayerItem":
 				switch (selectorName) { // comes from AVPlayerItem+MPAdditions.h
 				case "nowPlayingInfo":
@@ -1023,7 +1012,6 @@ namespace Introspection {
 				case "willMoveToView:":
 				case "view":
 					return !TestRuntime.CheckXcodeVersion (15, 4);
-					break;
 				}
 				break;
 			case "ASAuthorizationPublicKeyCredentialLargeBlobRegistrationOutput":
@@ -1158,11 +1146,7 @@ namespace Introspection {
 			var fi = type.GetField ("class_ptr", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static);
 			if (fi is null)
 				return IntPtr.Zero; // e.g. *Delegate
-#if NET
 			return (NativeHandle) fi.GetValue (null);
-#else
-			return (IntPtr) fi.GetValue (null);
-#endif
 		}
 
 		[Test]

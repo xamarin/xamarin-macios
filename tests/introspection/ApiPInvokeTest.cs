@@ -21,6 +21,9 @@ using NUnit.Framework;
 using ObjCRuntime;
 using Foundation;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Introspection {
 	[Preserve (AllMembers = true)]
 	public abstract class ApiPInvokeTest : ApiBaseTest {
@@ -210,7 +213,6 @@ namespace Introspection {
 						// load from executable
 						path = null;
 						break;
-#if NET
 					case "libSystem.Globalization.Native":
 						// load from executable (like __Internal above since it's part of the static library)
 						path = null;
@@ -234,7 +236,6 @@ namespace Introspection {
 							path += ".dylib";
 						}
 						break;
-#endif
 					case "libc":
 						// we still have some rogue/not-fully-qualified DllImport
 						path = "/usr/lib/libSystem.dylib";
@@ -392,15 +393,5 @@ namespace Introspection {
 			if (!SkipAssembly (a))
 				Check (a);
 		}
-
-#if !NET
-		[Test]
-		public void SystemData ()
-		{
-			var a = typeof (System.Data.SqlClient.SqlCredential).Assembly;
-			if (!SkipAssembly (a))
-				Check (a);
-		}
-#endif
 	}
 }
