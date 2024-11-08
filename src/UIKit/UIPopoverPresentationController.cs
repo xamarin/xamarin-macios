@@ -27,22 +27,6 @@ namespace UIKit {
 			}
 		}
 	}
-
-#if !XAMCORE_3_0
-	public partial class UIPopoverPresentationControllerDelegate {
-		[Obsolete ("Use the overload with 'ref' parameters for 'targetRect' and 'inView'.")]
-		public virtual void WillRepositionPopover (UIPopoverPresentationController popoverPresentationController, CGRect targetRect, UIView inView)
-		{
-		}
-	}
-
-	public static partial class UIPopoverPresentationControllerDelegate_Extensions {
-		[Obsolete ("Use the overload with 'ref' parameters for 'targetRect' and 'inView'.")]
-		public static void WillRepositionPopover (IUIPopoverPresentationControllerDelegate This, UIPopoverPresentationController popoverPresentationController, CGRect targetRect, UIView inView)
-		{
-		}
-	}
-#endif
 }
 
 #endif // IOS

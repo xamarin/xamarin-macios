@@ -119,7 +119,8 @@ targets/Microsoft.$(1).Sdk.Versions.props: targets/Microsoft.Sdk.Versions.templa
 		-e "s/@PLATFORM@/$(1)/g" \
 		-e "s/@NUGET_VERSION_NO_METADATA@/$$($(2)_NUGET_VERSION_NO_METADATA)/g" \
 		-e "s/@NUGET_VERSION_FULL@/$$($(2)_NUGET_VERSION_FULL)/g" \
-		-e "s/@TARGET_PLATFORM_VERSION@/$$($(2)_NUGET_OS_VERSION)/g" \
+		-e "s/@TARGET_PLATFORM_VERSION_EXE@/$$($(2)_NUGET_OS_VERSION)/g" \
+		-e "s/@TARGET_PLATFORM_VERSION_LIBRARY@/$$($(2)_TARGET_PLATFORM_VERSION_LIBRARY)/g" \
 		-e "s/@CURRENT_BRANCH@/$$(CURRENT_BRANCH_SED_ESCAPED)/g" \
 		-e "s/@CURRENT_HASH_LONG@/$$(CURRENT_HASH_LONG)/g" \
 		-e 's*@VALID_RUNTIME_IDENTIFIERS@*$(foreach rid,$(3),\n\t\t<_XamarinValidRuntimeIdentifier Include="$(rid)" Platform="$(1)" />)*' \
@@ -171,23 +172,26 @@ Microsoft.$1.Sdk/targets/Microsoft.$1.Sdk.ImplicitNamespaceImports.props: target
 endef
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call ImplicitNamespaceImports,$(platform),$(foreach using,$(DOTNET_$(platform)_GLOBAL_USINGS),\n\t\t<Using Include=\"$(using)\" Platform=\"$(platform)\" \/>))))
 
+include $(TOP)/scripts/generate-target-platforms/fragment.mk
 define SupportedTargetPlatforms
-Microsoft.$(1).Sdk/targets/Microsoft.$(1).Sdk.SupportedTargetPlatforms.props: $(TOP)/builds/Versions-$(1).plist.in Makefile ./generate-target-platforms.csharp Makefile
+Microsoft.$(1).Sdk/targets/Microsoft.$(1).Sdk.SupportedTargetPlatforms.props: $(TOP)/builds/Versions-$(1).plist.in Makefile $(GENERATE_TARGET_PLATFORMS) Makefile
 	$(Q) rm -f $$@.tmp
-	$(Q) ./generate-target-platforms.csharp $(1) "$(DOTNET_TFM)" "$$(SUPPORTED_API_VERSIONS_$(2))" $$@.tmp
+	$(Q) $(GENERATE_TARGET_PLATFORMS_EXEC) $(1) "$(DOTNET_TFM)" "$$(SUPPORTED_API_VERSIONS_$(2))" $$@.tmp
 	$(Q) mv $$@.tmp $$@
 endef
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call SupportedTargetPlatforms,$(platform),$(shell echo $(platform) | tr a-z A-Z))))
 
+include $(TOP)/scripts/generate-workloadmanifest-json/fragment.mk
+include $(TOP)/scripts/generate-workloadmanifest-targets/fragment.mk
 define WorkloadTargets
-Workloads/Microsoft.NET.Sdk.$(1)/WorkloadManifest.json: Makefile $(TOP)/Make.config.inc $(GIT_DIRECTORY)/HEAD $(GIT_DIRECTORY)/index Makefile generate-workloadmanifest-json.csharp | Workloads/Microsoft.NET.Sdk.$(1)
+Workloads/Microsoft.NET.Sdk.$(1)/WorkloadManifest.json: Makefile $(TOP)/Make.config.inc $(GIT_DIRECTORY)/HEAD $(GIT_DIRECTORY)/index Makefile $(GENERATE_WORKLOADMANIFEST_JSON) | Workloads/Microsoft.NET.Sdk.$(1)
 	$$(Q) rm -f $$@.tmp
-	$$(Q_GEN) ./generate-workloadmanifest-json.csharp "$(1)" "$(3)" "$(5)" "$$(DOTNET_$(4)_RUNTIME_IDENTIFIERS)" "$$@.tmp" "$$(DOTNET_WINDOWS_PLATFORMS)" "$(DOTNET_TFM)_$$($(4)_NUGET_OS_VERSION)" "$(SUPPORTED_API_VERSIONS_$(4))" $(TOP)/eng/Versions.props
+	$$(Q_GEN) $(GENERATE_WORKLOADMANIFEST_JSON_EXEC) "$(1)" "$(3)" "$(5)" "$$(DOTNET_$(4)_RUNTIME_IDENTIFIERS)" "$$@.tmp" "$$(DOTNET_WINDOWS_PLATFORMS)" "$(DOTNET_TFM)_$$($(4)_NUGET_OS_VERSION)" "$(SUPPORTED_API_VERSIONS_$(4))" $(TOP)/eng/Versions.props
 	$$(Q) mv $$@.tmp $$@
 
-Workloads/Microsoft.NET.Sdk.$(1)/WorkloadManifest.targets: Makefile $(TOP)/Make.config.inc $(GIT_DIRECTORY)/HEAD $(GIT_DIRECTORY)/index Makefile generate-workloadmanifest-targets.csharp | Workloads/Microsoft.NET.Sdk.$(1)
+Workloads/Microsoft.NET.Sdk.$(1)/WorkloadManifest.targets: Makefile $(TOP)/Make.config.inc $(GIT_DIRECTORY)/HEAD $(GIT_DIRECTORY)/index Makefile $(GENERATE_WORKLOADMANIFEST_TARGETS) | Workloads/Microsoft.NET.Sdk.$(1)
 	$$(Q) rm -f $$@.tmp
-	$$(Q_GEN) ./generate-workloadmanifest-targets.csharp "$(1)" "$$@.tmp" "$$(DOTNET_WINDOWS_PLATFORMS)" "$(DOTNET_TFM)_$$($(4)_NUGET_OS_VERSION)" "$(SUPPORTED_API_VERSIONS_$(4))"
+	$$(Q_GEN) $(GENERATE_WORKLOADMANIFEST_TARGETS_EXEC) "$(1)" "$$@.tmp" "$$(DOTNET_WINDOWS_PLATFORMS)" "$(DOTNET_TFM)_$$($(4)_NUGET_OS_VERSION)" "$(SUPPORTED_API_VERSIONS_$(4))"
 	$$(Q) mv $$@.tmp $$@
 
 Workloads/Microsoft.NET.Sdk.$(1)/LICENSE: $(TOP)/LICENSE | Workloads/Microsoft.NET.Sdk.$(1)
@@ -206,9 +210,10 @@ $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call WorkloadTargets,$(platform)
 # Always use the commit distance as the third number in the VS component version, as it should always increase across all branches.
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(platform)_MSI_VERSION:=$($(shell echo $(platform) | tr '[:lower:]' '[:upper:]')_NUGET_OS_VERSION).$($(shell echo $(platform) | tr a-z A-Z)_NUGET_COMMIT_DISTANCE).0))
 
-$(DOTNET_NUPKG_DIR)/vs-workload.props: Makefile generate-vs-workload.csharp
+include $(TOP)/scripts/generate-vs-workload/fragment.mk
+$(DOTNET_NUPKG_DIR)/vs-workload.props: Makefile $(GENERATE_VS_WORKLOAD)
 	$(Q) rm -f $@.tmp
-	$(Q_GEN) ./generate-vs-workload.csharp \
+	$(Q_GEN) $(GENERATE_VS_WORKLOAD_EXEC) \
 		$(foreach platform,$(DOTNET_PLATFORMS),--platform $(platform) $($(platform)_MSI_VERSION)) \
 		$(foreach platform,$(DOTNET_WINDOWS_PLATFORMS),--windows-platform $(platform)) \
 		$(foreach platform,$(DOTNET_PLATFORMS),--shorten $($(shell echo $(platform) | tr '[:lower:]' '[:upper:]')_NUGET_VERSION_NO_METADATA)=$($(platform)_MSI_VERSION)) \

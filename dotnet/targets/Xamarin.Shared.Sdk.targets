@@ -415,6 +415,9 @@
 			</_AssemblyPublishDirectories>
 			<_AssemblyPublishInputs Include="@(_AssemblyPublishDirectories -> '%(Identity)/**')" />
 		</ItemGroup>
+
+		<!-- We need to these files, so that they don't confuse incremental builds. They're only meant to convey information from an outer universal build to inner rid-specific builds, not between different outer builds. -->
+		<Delete Files="@(_ProcessedPaths)" Condition="Exists('%(Identity)')" />
 	</Target>
 
 	<Target Name="_CreateMergedAppBundle"
@@ -867,8 +870,7 @@
 			Condition="'$(IsMacEnabled)' == 'true'"
 			AdditionalArguments="$(_DittoArchitectures)"
 			CopyFromWindows="true"
-			ToolExe="$(DittoExe)"
-			ToolPath="$(DittoPath)"
+			DittoPath="$(DittoPath)"
 			Source="%(_DirectoriesToPublish.SourceDirectory)"
 			Destination="%(_DirectoriesToPublish.TargetDirectory)"
 			TouchDestinationFiles="true"

@@ -56,12 +56,6 @@ namespace CoreImage {
 		RGBAf  = 3,
 
 		// Please, do not add values into MonoMac/iOS without adding an explicit value
-#elif !XAMCORE_3_0
-		[Obsolete ("This value can not be shared across Mac/iOS binaries, future proof with kBGRA8 instead.")]
-		BGRA8 = 2,
-		[Obsolete ("This value can not be shared across Mac/iOS binaries, future proof with kRGBA8 instead.")]
-		RGBA8 = 3,
-		// Please, do not add values into MonoMac/iOS without adding an explicit value
 #endif
 		kRGBAf = 4,
 		kBGRA8 = 5,

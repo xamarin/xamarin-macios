@@ -47,11 +47,38 @@ namespace Xamarin.Tests {
 		}
 	}
 
+	[AttributeUsage (AttributeTargets.Method, AllowMultiple = true, Inherited = true)]
+	public sealed class AllSupportedPlatformsAttribute : DataAttribute {
+
+		readonly object [] dataValues;
+
+		public AllSupportedPlatformsAttribute (params object [] parameters)
+		{
+			dataValues = parameters;
+		}
+
+		public override IEnumerable<object []> GetData (MethodInfo testMethod)
+		{
+			return Configuration.
+				GetIncludedPlatforms (true).
+				Select (platform => dataValues.Prepend (platform).ToArray ());
+		}
+	}
+
 	public partial class Configuration {
 		static string TestAssemblyDirectory {
 			get {
 				return Assembly.GetExecutingAssembly ().Location;
 			}
 		}
+
+		public static bool IsEnabled (ApplePlatform platform)
+			=> platform switch {
+				ApplePlatform.iOS => include_ios,
+				ApplePlatform.TVOS => include_tvos,
+				ApplePlatform.MacCatalyst => include_maccatalyst,
+				ApplePlatform.MacOSX => include_mac,
+				_ => false
+			};
 	}
 }

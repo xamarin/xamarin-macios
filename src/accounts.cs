@@ -41,12 +41,6 @@ namespace Accounts {
 		[Export ("initWithAccountType:")]
 		NativeHandle Constructor (ACAccountType type);
 
-#if !XAMCORE_3_0
-		// now exposed with the corresponding EABluetoothAccessoryPickerError enum
-		[Field ("ACErrorDomain")]
-		NSString ErrorDomain { get; }
-#endif
-
 		[NoMac]
 		[MacCatalyst (13, 1)]
 		[Export ("userFullName")]

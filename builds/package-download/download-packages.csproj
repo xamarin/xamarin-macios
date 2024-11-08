@@ -11,10 +11,11 @@
   <ItemGroup>
     <!-- Download any runtime packs as specified using the PackageRuntimeIdentifiers property -->
     <PackageRuntimeIdentifiers Include="$(PackageRuntimeIdentifiers.Split(' '))" />
+    <PackageRuntimeIdentifiersMonoVM Include="$(PackageRuntimeIdentifiersMonoVM.Split(' '))" />
     <PackageRuntimeIdentifiersCoreCLR Include="$(PackageRuntimeIdentifiersCoreCLR.Split(' '))" />
 
     <!-- download the runtime packs -->
-    <PackageDownload Include="@(PackageRuntimeIdentifiers -> 'Microsoft.NETCore.App.Runtime.Mono.%(Identity)')" Version="[$(ActualPackageVersion)]" />
+    <PackageDownload Include="@(PackageRuntimeIdentifiersMonoVM -> 'Microsoft.NETCore.App.Runtime.Mono.%(Identity)')" Version="[$(ActualPackageVersion)]" />
     <PackageDownload Include="@(PackageRuntimeIdentifiersCoreCLR -> 'Microsoft.NETCore.App.Runtime.%(Identity)')" Version="[$(ActualPackageVersion)]" />
 
     <!-- download the reference assemblies -->

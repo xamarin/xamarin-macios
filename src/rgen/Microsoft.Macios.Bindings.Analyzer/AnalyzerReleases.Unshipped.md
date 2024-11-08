@@ -1,4 +1,6 @@
-### New Rules
+## Release 0.1.0
 
-| Rule ID | Category | Severity | Notes |
-|---------|----------|----------|-------|
+### New Rules
+| Rule ID | Category | Severity | Notes                                                |
+|---------|----------|----------|------------------------------------------------------|
+| RBI0001 | Usage    | Error    | Binding types should be declared as partial classes. |

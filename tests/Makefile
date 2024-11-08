@@ -88,6 +88,7 @@ test.config: Makefile $(TOP)/Make.config $(TOP)/mk/mono.mk $(TOP)/eng/Version.De
 	@printf "XCODE_IS_STABLE=$(XCODE_IS_STABLE)\n" >> $@
 	@printf "XCODE_VERSION=$(XCODE_VERSION)\n" >> $@
 	@printf "$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),DOTNET_MIN_$(platform)_SDK_VERSION=$(DOTNET_MIN_$(platform)_SDK_VERSION)\\n)" | sed 's/^ //' >> $@
+	@printf "NUGET_PRERELEASE_IDENTIFIER=$(NUGET_PRERELEASE_IDENTIFIER)\n" >> $@
 
 test-system.config: Makefile $(TOP)/Make.config $(TOP)/mk/mono.mk $(TOP)/eng/Version.Details.xml
 	@rm -f $@
@@ -122,6 +123,7 @@ test-system.config: Makefile $(TOP)/Make.config $(TOP)/mk/mono.mk $(TOP)/eng/Ver
 	@printf "XCODE_IS_STABLE=$(XCODE_IS_STABLE)\n" >> $@
 	@printf "XCODE_VERSION=$(XCODE_VERSION)\n" >> $@
 	@printf "$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),DOTNET_MIN_$(platform)_SDK_VERSION=$(DOTNET_MIN_$(platform)_SDK_VERSION)\\n)" | sed 's/^ //' >> $@
+	@printf "NUGET_PRERELEASE_IDENTIFIER=$(NUGET_PRERELEASE_IDENTIFIER)\n" >> $@
 
 clean-local::
 	$(Q) $(SYSTEM_XBUILD) /t:Clean /p:Platform=iPhoneSimulator /p:Configuration=$(CONFIG) $(XBUILD_VERBOSITY) tests.sln
@@ -203,8 +205,10 @@ $(TOP)/tools/common/SdkVersions.cs: $(TOP)/tools/common/SdkVersions.in.cs
 $(XHARNESS_EXECUTABLE): MSBUILD_EXE_PATH=
 $(XHARNESS_EXECUTABLE): $(xharness_dependencies) test.config test-system.config .stamp-src-project-files $(TOP)/tools/common/SdkVersions.cs
 	$(Q_GEN) $(DOTNET) build "/bl:$@.binlog" $(MSBUILD_VERBOSITY_QUIET) xharness/xharness.csproj
-xharness/xharness.csproj.inc: export BUILD_VERBOSITY=$(XBUILD_VERBOSITY)
+xharness/xharness.csproj.inc: export BUILD_VERBOSITY=$(DOTNET_BUILD_VERBOSITY)
 xharness/xharness.csproj.inc: export ABSOLUTE_PATHS=1
+xharness/xharness.csproj.inc: export DOTNET:=$(DOTNET)
+xharness/xharness.csproj.inc: export MSBUILD_EXE_PATH=
 -include xharness/xharness.csproj.inc
 
 killall:
