@@ -187,8 +187,10 @@ namespace Xamarin.MacDev {
 			int matchlen = 0;
 			var prefixes = SplitResourcePrefixes (task.ResourcePrefix);
 			foreach (var prefix in prefixes) {
-				if (vpath.StartsWith (prefix, StringComparison.OrdinalIgnoreCase) && prefix.Length > matchlen)
-					matchlen = prefix.Length;
+				var mpath = vpath.Replace ('\\', '/');
+				var mprefix = prefix.Replace ('\\', '/');
+				if (mpath.StartsWith (mprefix, StringComparison.OrdinalIgnoreCase) && mprefix.Length > matchlen)
+					matchlen = mprefix.Length;
 			}
 			if (matchlen > 0) {
 				Trace (task, $"BundleResource.GetLogicalName ({item.ItemSpec}) => LogicalName={vpath.Substring (matchlen)} (vpath={vpath} matchlen={matchlen} prefixes={string.Join (",", prefixes)})");
