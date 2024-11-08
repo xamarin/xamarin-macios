@@ -49,13 +49,6 @@ namespace CoreMedia {
 		public CMTime Duration;
 #if !COREBUILD
 		public static readonly CMTimeRange Zero;
-
-#if !XAMCORE_3_0
-#if !WATCH
-		[Obsolete ("Use 'InvalidRange'.")]
-		public static readonly CMTimeRange Invalid;
-#endif // !WATCH
-#endif // !XAMCORE_3_0
 		public static readonly CMTimeRange InvalidRange;
 
 #if NET
@@ -89,11 +82,6 @@ namespace CoreMedia {
 			Zero = Marshal.PtrToStructure<CMTimeRange> (retZero)!;
 
 			var retInvalid = Dlfcn.dlsym (lib, "kCMTimeRangeInvalid");
-#if !XAMCORE_3_0
-#pragma warning disable CS0618 // Type or member is obsolete
-			Invalid = Marshal.PtrToStructure<CMTimeRange> (retInvalid)!;
-#pragma warning restore CS0618 // Type or member is obsolete
-#endif
 			InvalidRange = Marshal.PtrToStructure<CMTimeRange> (retInvalid)!;
 
 			var retMappingInvalid = Dlfcn.dlsym (lib, "kCMTimeMappingInvalid");

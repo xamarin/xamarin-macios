@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:element name="root" msdata:IsDataSet="true">
+            
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+
+    <data name="RBI0000Description" xml:space="preserve">
+        <value>An unexpected error happened while generating the code. No code will be added to the compilation.</value>
+        <comment>An optional longer localizable description of the diagnostic.</comment>
+    </data>
+    <data name="RBI0000MessageFormat" xml:space="preserve">
+        <value>An unexpected error ocurred while processing '{0}'. Please fill a bug report at https://github.com/xamarin/xamarin-macios/issues/new.</value>
+        <comment>The format-able message the diagnostic displays.</comment>
+    </data>
+    <data name="RBI0000Title" xml:space="preserve">
+        <value>Unexpected error</value>
+        <comment>The title of the diagnostic.</comment>
+    </data>
+</root>

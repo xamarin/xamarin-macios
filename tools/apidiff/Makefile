@@ -208,6 +208,3 @@ $(APIDIFF_DIR)/references/current/Microsoft.$(1).xml: $(DOTNET_DESTDIR)/$($(1)_N
 update-current-refs:: $(APIDIFF_DIR)/references/current/Microsoft.$(1).xml
 endef
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call GenerateCurrentReferenceXml,$(platform))))
-
-merger.exe: merger.cs
-	$(Q) $(SYSTEM_CSC) -debug $< -out:$@ /nologo

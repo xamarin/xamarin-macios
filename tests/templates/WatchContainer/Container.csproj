@@ -10,7 +10,7 @@
     <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
     <AssemblyName>Container</AssemblyName>
     <IntermediateOutputPath>obj\$(Platform)\$(Configuration)-watchos</IntermediateOutputPath>
-    <DefineConstants>XAMCORE_3_0;</DefineConstants>
+    <DefineConstants></DefineConstants>
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>

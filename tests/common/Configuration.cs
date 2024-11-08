@@ -47,6 +47,7 @@ namespace Xamarin.Tests {
 		public static bool iOSSupports32BitArchitectures;
 		public static bool EnableXamarin;
 		public static bool XcodeIsStable;
+		public static string DOTNET_DIR;
 
 		static Version xcode_version;
 		public static Version XcodeVersion {
@@ -306,6 +307,7 @@ namespace Xamarin.Tests {
 			iOSSupports32BitArchitectures = !string.IsNullOrEmpty (GetVariable ("IOS_SUPPORTS_32BIT_ARCHITECTURES", ""));
 			EnableXamarin = !string.IsNullOrEmpty (GetVariable ("ENABLE_XAMARIN", ""));
 			XcodeIsStable = string.Equals (GetVariable ("XCODE_IS_STABLE", ""), "true", StringComparison.OrdinalIgnoreCase);
+			DOTNET_DIR = GetVariable ("DOTNET_DIR", "");
 
 			XcodeVersionString = GetVariable ("XCODE_VERSION", GetXcodeVersion (xcode_root));
 #if MONOMAC
@@ -497,7 +499,7 @@ namespace Xamarin.Tests {
 		public static string GetDotNetRoot ()
 		{
 			if (IsVsts) {
-				return Path.Combine (EvaluateVariable ("DOTNET_DIR"), "packs");
+				return Path.Combine (DOTNET_DIR, "packs");
 			} else {
 				return Path.Combine (SourceRoot, "_build");
 			}
@@ -915,10 +917,6 @@ namespace Xamarin.Tests {
 			}
 		}
 
-		public static string XIBuildPath {
-			get { return Path.GetFullPath (Path.Combine (RootPath, "tools", "xibuild", "xibuild")); }
-		}
-
 		public static string CloneTestDirectory (string directory)
 		{
 			// Copy the test projects to a temporary directory so that we can run the tests from there without affecting the working directory.
@@ -1009,6 +1007,10 @@ namespace Xamarin.Tests {
 			default:
 				throw new NotImplementedException (platform.ToString ());
 			}
+		}
+
+		public static bool IsBuildingRemotely {
+			get => !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("MAC_AGENT_IP"));
 		}
 
 		public static string GetTestLibraryDirectory (ApplePlatform platform, bool? simulator = null)
@@ -1118,6 +1120,15 @@ namespace Xamarin.Tests {
 		public static IEnumerable<string> GetUndefinedNativeSymbols (string file, string arch = null)
 		{
 			return CallNM (file, "-gujA", arch);
+		}
+
+		public static bool IsStableRelease {
+			get {
+				var prereleaseIdentifier = GetVariable ("NUGET_PRERELEASE_IDENTIFIER", null);
+				if (prereleaseIdentifier is null)
+					throw new InvalidOperationException ($"The 'NUGET_PRERELEASE_IDENTIFIER' variable isn't set.");
+				return prereleaseIdentifier == string.Empty;
+			}
 		}
 	}
 }

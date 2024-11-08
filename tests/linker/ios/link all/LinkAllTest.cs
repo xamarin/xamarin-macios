@@ -278,9 +278,6 @@ namespace LinkAll {
 #endif // !__MACOS__
 
 		[Test]
-#if !XAMCORE_3_0 && !NET
-		[Availability ()]
-#endif
 #if NET
 		[SupportedOSPlatform ("none")]
 		[UnsupportedOSPlatform ("none)")]
@@ -298,9 +295,6 @@ namespace LinkAll {
 			string suffix = AssemblyName;
 
 			// since we're linking the attributes will NOT be available - even if they are used
-#if !XAMCORE_3_0
-			Assert.Null (Helper.GetType (prefix + "ObjCRuntime.AvailabilityAttribute, " + suffix), "AvailabilityAttribute");
-#endif
 			Assert.Null (Helper.GetType (prefix + "ObjCRuntime.IntroducedAttribute, " + suffix), "IntroducedAttribute");
 			Assert.Null (Helper.GetType (prefix + "ObjCRuntime.DeprecatedAttribute, " + suffix), "DeprecatedAttribute");
 			Assert.Null (Helper.GetType (prefix + "ObjCRuntime.ObsoletedAttribute, " + suffix), "ObsoletedAttribute");

@@ -108,11 +108,7 @@ namespace AddressBookUI {
 	///     
 	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/AddressBookUI/Reference/ABPeoplePickerNavigationControllerDelegate_Protocol/index.html">Apple documentation for <c>ABPeoplePickerNavigationControllerDelegate</c></related>
 	[Deprecated (PlatformName.iOS, 9, 0, message: "Use the 'Contacts' API instead.")]
-#if XAMCORE_3_0
 	[BaseType (typeof (NSObject))]
-#else
-	[BaseType (typeof (UINavigationControllerDelegate))]
-#endif
 	[Model]
 	[Protocol]
 	interface ABPeoplePickerNavigationControllerDelegate {

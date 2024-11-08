@@ -1,64 +1,47 @@
-//
-// Sanitize callbacks
-//
-
-#if !WATCH
-
 using Foundation;
 using ObjCRuntime;
 using System;
+using System.Diagnostics.CodeAnalysis;
 
-// Disable until we get around to enable + fix any issues.
-#nullable disable
+#nullable enable
 
 namespace UIKit {
 
-	public partial class UIBarButtonItem {
-		static Selector actionSel = new Selector ("InvokeAction:");
-
-		[Register]
-		internal class Callback : NSObject {
-			internal UIBarButtonItem container;
-
-			public Callback ()
-			{
-				IsDirectBinding = false;
-			}
-
-			[Export ("InvokeAction:")]
-			[Preserve (Conditional = true)]
-			public void Call (NSObject sender)
-			{
-				if (container.clicked is not null)
-					container.clicked (sender, EventArgs.Empty);
-			}
+	[Category (typeof (UIBarButtonItem))]
+	static class UIBarButtonItem_Extensions {
+		[Export (UIBarButtonItem.actionSelector)]
+		static void Call (this UIBarButtonItem item, NSObject sender)
+		{
+			item.OnClicked (sender);
 		}
+	}
+
+	public partial class UIBarButtonItem {
+		internal const string actionSelector = "xamarinInvokeCallback:";
+
+		[DynamicDependencyAttribute ("Call(UIKit.UIBarButtonItem,Foundation.NSObject)", typeof (UIBarButtonItem_Extensions))]
+		static Selector actionSel = new Selector (actionSelector);
 
 		public UIBarButtonItem (UIImage image, UIBarButtonItemStyle style, EventHandler handler)
-		: this (image, style, new Callback (), actionSel)
+		: this (image, style, null, actionSel)
 		{
-			callback = (Callback) Target;
-			callback.container = this;
+			Target = this;
 			clicked += handler;
 			MarkDirty ();
 		}
-
 
 		public UIBarButtonItem (string title, UIBarButtonItemStyle style, EventHandler handler)
-		: this (title, style, new Callback (), actionSel)
+		: this (title, style, null, actionSel)
 		{
-			callback = (Callback) Target;
-			callback.container = this;
+			Target = this;
 			clicked += handler;
 			MarkDirty ();
 		}
 
-
 		public UIBarButtonItem (UIBarButtonSystemItem systemItem, EventHandler handler)
-		: this (systemItem, new Callback (), actionSel)
+		: this (systemItem, null, actionSel)
 		{
-			callback = (Callback) Target;
-			callback.container = this;
+			Target = this;
 			clicked += handler;
 			MarkDirty ();
 		}
@@ -67,15 +50,19 @@ namespace UIKit {
 		{
 		}
 
-		internal EventHandler clicked;
-		internal Callback callback;
+		[DynamicDependencyAttribute ("Call(UIKit.UIBarButtonItem,Foundation.NSObject)", typeof (UIBarButtonItem_Extensions))]
+		EventHandler? clicked;
+
+		internal void OnClicked (NSObject sender)
+		{
+			if (clicked is not null)
+				clicked (sender, EventArgs.Empty);
+		}
 
 		public event EventHandler Clicked {
 			add {
 				if (clicked is null) {
-					callback = new Callback ();
-					callback.container = this;
-					this.Target = callback;
+					Target = this;
 					this.Action = actionSel;
 					MarkDirty ();
 				}
@@ -89,5 +76,3 @@ namespace UIKit {
 		}
 	}
 }
-
-#endif // !WATCH

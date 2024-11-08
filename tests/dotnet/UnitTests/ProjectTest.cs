@@ -503,19 +503,19 @@ namespace Xamarin.Tests {
 		[TestCase (ApplePlatform.iOS, "iossimulator-x84", true)] // it's x86, not x84
 		[TestCase (ApplePlatform.iOS, "iossimulator-arm", true)] // we don't support this
 		[TestCase (ApplePlatform.iOS, "helloworld", true)] // random text
-		[TestCase (ApplePlatform.iOS, "osx-x64", false)] // valid RID for another platform
+		[TestCase (ApplePlatform.iOS, "tvos-arm64", false)] // valid RID for another platform
 		[TestCase (ApplePlatform.TVOS, "tvos-x64", false)] // valid RID in a previous preview (and common mistake)
 		[TestCase (ApplePlatform.TVOS, "tvossimulator-x46", true)] // it's x64, not x46
 		[TestCase (ApplePlatform.TVOS, "tvossimulator-arm", true)] // we don't support this
 		[TestCase (ApplePlatform.TVOS, "helloworld", true)] // random text
-		[TestCase (ApplePlatform.TVOS, "osx-x64", false)] // valid RID for another platform
+		[TestCase (ApplePlatform.TVOS, "iossimulator-x64", false)] // valid RID for another platform
 		[TestCase (ApplePlatform.MacOSX, "osx-x46", true)] // it's x64, not x46
 		[TestCase (ApplePlatform.MacOSX, "macos-arm64", true)] // it's osx, not macos
 		[TestCase (ApplePlatform.MacOSX, "helloworld", true)] // random text
 		[TestCase (ApplePlatform.MacOSX, "ios-arm64", false)] // valid RID for another platform
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x46", true)] // it's x64, not x46
 		[TestCase (ApplePlatform.MacCatalyst, "helloworld", true)] // random text
-		[TestCase (ApplePlatform.MacCatalyst, "osx-x64", false)] // valid RID for another platform
+		[TestCase (ApplePlatform.MacCatalyst, "ios-arm64", false)] // valid RID for another platform
 		public void InvalidRuntimeIdentifier (ApplePlatform platform, string runtimeIdentifier, bool notRecognized)
 		{
 			var project = "MySimpleApp";
@@ -1169,7 +1169,19 @@ namespace Xamarin.Tests {
 			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
 			Clean (project_path);
 
-			DotNet.AssertBuild (project_path, GetDefaultProperties (runtimeIdentifiers));
+			// We want RuntimeIdentifier(s) so to be specified in a file, otherwise they're applied to the library
+			// project as well, and that might not be valid.
+			var properties = GetDefaultProperties (runtimeIdentifiers);
+			if (properties.ContainsKey ("RuntimeIdentifiers")) {
+				properties ["file:RuntimeIdentifiers"] = properties ["RuntimeIdentifiers"];
+				properties.Remove ("RuntimeIdentifiers");
+			}
+			if (properties.ContainsKey ("RuntimeIdentifier")) {
+				properties ["file:RuntimeIdentifier"] = properties ["RuntimeIdentifier"];
+				properties.Remove ("RuntimeIdentifier");
+			}
+
+			DotNet.AssertBuild (project_path, properties);
 
 			var appExecutable = GetNativeExecutable (platform, appPath);
 			ExecuteWithMagicWordAndAssert (platform, runtimeIdentifiers, appExecutable);
@@ -1650,6 +1662,30 @@ namespace Xamarin.Tests {
 			if (CanExecute (platform, runtimeIdentifiers)) {
 				var output = ExecuteWithMagicWordAndAssert (appExecutable);
 				Assert.That (output, Does.Contain ("42"), "Execution");
+			}
+		}
+
+		[Test]
+		[TestCase (ApplePlatform.MacCatalyst)]
+		[TestCase (ApplePlatform.iOS)]
+		[TestCase (ApplePlatform.TVOS)]
+		[TestCase (ApplePlatform.MacOSX)]
+		public void CompressedXCFrameworkInBindingProjectApp (ApplePlatform platform)
+		{
+			var project = "CompressedXCFrameworkInBindingProjectApp";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+
+			var runtimeIdentifiers = GetDefaultRuntimeIdentifier (platform);
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
+			Clean (project_path);
+			var properties = GetDefaultProperties (runtimeIdentifiers);
+			DotNet.AssertBuild (project_path, properties);
+
+			var appExecutable = GetNativeExecutable (platform, appPath);
+			Assert.That (appExecutable, Does.Exist, "There is an executable");
+
+			if (CanExecute (platform, properties)) {
+				ExecuteWithMagicWordAndAssert (appExecutable);
 			}
 		}
 

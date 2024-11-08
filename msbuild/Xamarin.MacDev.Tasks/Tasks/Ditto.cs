@@ -4,14 +4,19 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
+using Xamarin.Localization.MSBuild;
 using Xamarin.Messaging.Build.Client;
+using Xamarin.Utils;
 
 namespace Xamarin.MacDev.Tasks {
-	public class Ditto : XamarinToolTask, ITaskCallback {
+	public class Ditto : XamarinTask, ITaskCallback, ICancelableTask {
+		CancellationTokenSource? cancellationTokenSource;
+
 		#region Inputs
 
 		public string? AdditionalArguments { get; set; }
@@ -25,6 +30,8 @@ namespace Xamarin.MacDev.Tasks {
 		// copy the entire input to the Mac - so we need an option to select
 		// the mode.
 		public bool CopyFromWindows { get; set; }
+
+		public string? DittoPath { get; set; }
 
 		[Required]
 		public ITaskItem? Source { get; set; }
@@ -40,32 +47,6 @@ namespace Xamarin.MacDev.Tasks {
 
 		#endregion
 
-		protected override string ToolName {
-			get { return "ditto"; }
-		}
-
-		protected override string GenerateFullPathToTool ()
-		{
-			if (!string.IsNullOrEmpty (ToolPath))
-				return Path.Combine (ToolPath, ToolExe);
-
-			var path = Path.Combine ("/usr/bin", ToolExe);
-
-			return File.Exists (path) ? path : ToolExe;
-		}
-
-		protected override string GenerateCommandLineCommands ()
-		{
-			var args = new CommandLineArgumentBuilder ();
-
-			args.AddQuoted (Path.GetFullPath (Source!.ItemSpec));
-			args.AddQuoted (Path.GetFullPath (Destination!.ItemSpec));
-			if (!string.IsNullOrEmpty (AdditionalArguments))
-				args.Add (AdditionalArguments);
-
-			return args.ToString ();
-		}
-
 		public override bool Execute ()
 		{
 			if (ShouldExecuteRemotely ()) {
@@ -76,8 +57,31 @@ namespace Xamarin.MacDev.Tasks {
 				return taskRunner.RunAsync (this).Result;
 			}
 
-			if (!base.Execute ())
+			var src = Source!.ItemSpec;
+			if (!File.Exists (src) && !Directory.Exists (src)) {
+				Log.LogError (MSBStrings.E7131 /* The source '{0}' does not exist. */, src);
 				return false;
+			}
+
+			var executable = string.IsNullOrEmpty (DittoPath) ? "/usr/bin/ditto" : DittoPath!;
+			var args = new List<string> ();
+			args.Add (Path.GetFullPath (Source!.ItemSpec));
+			args.Add (Path.GetFullPath (Destination!.ItemSpec));
+#if NET
+			if (!string.IsNullOrEmpty (AdditionalArguments)) {
+#else
+			if (AdditionalArguments is not null && !string.IsNullOrEmpty (AdditionalArguments)) {
+#endif
+				if (StringUtils.TryParseArguments (AdditionalArguments, out var additionalArgs, out var ex)) {
+					args.AddRange (additionalArgs);
+				} else {
+					Log.LogError (MSBStrings.E7132 /* Unable to parse the 'AdditionalArguments' value: {0} */, AdditionalArguments);
+					return false;
+				}
+			}
+
+			cancellationTokenSource = new CancellationTokenSource ();
+			ExecuteAsync (Log, executable, args, cancellationToken: cancellationTokenSource.Token).Wait ();
 
 			// Create a list of all the files we've copied
 			var copiedFiles = new List<ITaskItem> ();
@@ -96,18 +100,13 @@ namespace Xamarin.MacDev.Tasks {
 			return !Log.HasLoggedErrors;
 		}
 
-		protected override void LogEventsFromTextOutput (string singleLine, MessageImportance messageImportance)
+		public void Cancel ()
 		{
-			// TODO: do proper parsing of error messages and such
-			Log.LogMessage (messageImportance, "{0}", singleLine);
-		}
-
-		public override void Cancel ()
-		{
-			base.Cancel ();
-
-			if (ShouldExecuteRemotely ())
+			if (ShouldExecuteRemotely ()) {
 				BuildConnection.CancelAsync (BuildEngine4).Wait ();
+			} else {
+				cancellationTokenSource?.Cancel ();
+			}
 		}
 
 		public IEnumerable<ITaskItem> GetAdditionalItemsToBeCopied ()
