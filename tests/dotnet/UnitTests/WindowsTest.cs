@@ -277,6 +277,8 @@ namespace Xamarin.Tests {
 		[TestCase (ApplePlatform.iOS, "ios-arm64")]
 		public void PluralRuntimeIdentifiersWithHotRestart (ApplePlatform platform, string runtimeIdentifiers)
 		{
+			Configuration.IgnoreIfNotOnWindows ();
+
 			var properties = GetHotRestartProperties ();
 			DotNetProjectTest.PluralRuntimeIdentifiersImpl (platform, runtimeIdentifiers, properties, isUsingHotRestart: true);
 		}

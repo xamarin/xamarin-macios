@@ -9,6 +9,7 @@ using Microsoft.Build.Utilities;
 using NUnit.Framework;
 
 using Xamarin.MacDev;
+using Xamarin.Tests;
 
 #nullable enable
 
@@ -40,6 +41,7 @@ namespace Xamarin.MacDev.Tasks {
 				Assert.AreEqual ("Archer_Attack.atlas/archer_attack_0001.png",
 					BundleResource.GetVirtualProjectPath (
 						new ResourceTask {
+							BuildEngine = new TestEngine (),
 							ProjectDir = "/Users/rolf/work/maccore/windows/xamarin-macios/tests/dotnet/LibraryWithResources/iOS",
 						},
 						CreateItem (
@@ -52,6 +54,7 @@ namespace Xamarin.MacDev.Tasks {
 				Assert.AreEqual ("Archer_Attack.atlas/archer_attack_0001.png",
 					BundleResource.GetVirtualProjectPath (
 						new ResourceTask {
+							BuildEngine = new TestEngine (),
 							ProjectDir = "C:/src/xamarin-macios/tests/dotnet/LibraryWithResources/iOS",
 							SessionId = "isVSBuild",
 						},
