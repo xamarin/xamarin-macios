@@ -1069,7 +1069,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</CompileColladaAssetsDependsOn>
 	</PropertyGroup>
 
-	<Target Name="_CompileColladaAssets" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="$(CompileColladaAssetsDependsOn)" />
+	<Target Name="_CompileColladaAssets" DependsOnTargets="$(CompileColladaAssetsDependsOn)" />
 
 	<!-- For multi-RID builds, we first build once for each RuntimeIdentifier, then build again to create a universal app bundle.
 	     In the case of resources, it's wasteful to build them multiple times, so we hoist it out to the outer build, and store the
