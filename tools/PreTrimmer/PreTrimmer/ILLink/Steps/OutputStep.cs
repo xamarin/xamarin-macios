@@ -62,7 +62,7 @@ namespace Mono.Linker.Steps
 
 		private void OutputLinkXml ()
 		{
-			LinkXmlFormatter.OutputDescriptors (
+			LinkXmlFormatter.WriteDescriptorsXml (
 				Path.Combine(Context.OutputDirectory, "ILLink.Descriptors.xml"),
 				Context.Annotations.preserved_types,
 				Context.Annotations.preserved_members,

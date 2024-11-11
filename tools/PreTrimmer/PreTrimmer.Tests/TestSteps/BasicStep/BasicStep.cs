@@ -3,6 +3,7 @@ using Mono.Cecil;
 using Mono.Linker.Steps;
 
 namespace PreTrimmer.Tests.TestSteps;
+
 class BasicStep : BaseStep
 {
 	protected override void ProcessAssembly (AssemblyDefinition assembly)

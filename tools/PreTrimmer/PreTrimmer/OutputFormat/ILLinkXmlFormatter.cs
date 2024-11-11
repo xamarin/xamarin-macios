@@ -8,7 +8,7 @@ using Mono.Cecil;
 
 namespace Mono.Linker {
 	internal class LinkXmlFormatter {
-		public static void OutputDescriptors (
+		public static void WriteDescriptorsXml (
 			string fileName,
 			Dictionary<TypeDefinition, TypePreserve> preservedTypes,
 			Dictionary<IMemberDefinition, List<IMemberDefinition>> preservedMembers,
@@ -16,7 +16,7 @@ namespace Mono.Linker {
 		{
 			var unhandledMembers = marked.Where (static m => m is not (TypeDefinition or FieldDefinition or EventDefinition or PropertyDefinition or MethodDefinition));
 			if (unhandledMembers.Any ())
-				throw new NotImplementedException ($"Not sure what to do with non-member marked item: {unhandledMembers.First ().GetType ().FullName}");
+				throw new NotImplementedException ($"Unable to output non-member marked item to link xml: {unhandledMembers.First ().GetType ().FullName}");
 			var markedMembers = marked
 				.OfType<IMemberDefinition> ()
 				.Where (m => m is not TypeDefinition)

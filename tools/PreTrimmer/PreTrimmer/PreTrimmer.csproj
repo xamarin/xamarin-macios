@@ -4,7 +4,7 @@
     <AssemblyName>CustomStepHost</AssemblyName>
     <TargetFramework>net$(BundledNETCoreAppTargetFrameworkVersion)</TargetFramework>
 
-    <DefineConstants>$(DefineConstants);BUNDLER</DefineConstants>
+    <DefineConstants>$(DefineConstants);PRETRIM</DefineConstants>
     <!-- Crashes roslyn with InvalidOperationException: Cannot enqueue data after PromiseNotToEnqueue -->
     <RunAnalyzers>false</RunAnalyzers>
     <OutputType>Library</OutputType>

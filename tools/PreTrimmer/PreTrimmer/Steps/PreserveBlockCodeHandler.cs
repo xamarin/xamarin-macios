@@ -12,7 +12,6 @@ using Xamarin.Bundler;
 #nullable enable
 
 namespace Xamarin.Linker.Steps {
-
 	public class PreserveBlockCodeHandler : ConfigurationAwareStep {
 		protected override string Name { get; } = "Preserve Block Code";
 		protected override int ErrorCode { get; } = 2240;
