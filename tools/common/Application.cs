@@ -24,7 +24,7 @@ using ClassRedirector;
 using PlatformResolver = MonoTouch.Tuner.MonoTouchResolver;
 #elif MMP
 using PlatformResolver = Xamarin.Bundler.MonoMacResolver;
-#elif NET
+#elif NET && !LEGACY_TOOLS
 using PlatformResolver = Xamarin.Linker.DotNetResolver;
 #else
 #error Invalid defines
@@ -107,7 +107,7 @@ namespace Xamarin.Bundler {
 		}
 
 		// Linker config
-#if !NET
+#if !NET || LEGACY_TOOLS
 		public LinkMode LinkMode = LinkMode.Full;
 #endif
 		bool? are_any_assemblies_trimmed;
@@ -115,7 +115,7 @@ namespace Xamarin.Bundler {
 			get {
 				if (are_any_assemblies_trimmed.HasValue)
 					return are_any_assemblies_trimmed.Value;
-#if NET
+#if NET && !LEGACY_TOOLS
 				// This shouldn't happen, we should always set AreAnyAssembliesTrimmed to some value for .NET.
 				throw ErrorHelper.CreateError (99, "A custom LinkMode value is not supported for .NET");
 #else
@@ -128,7 +128,7 @@ namespace Xamarin.Bundler {
 		}
 		public List<string> LinkSkipped = new List<string> ();
 		public List<string> Definitions = new List<string> ();
-#if !NET
+#if !NET || LEGACY_TOOLS
 		public I18nAssemblies I18n;
 #endif
 		public List<string> WarnOnTypeRef = new List<string> ();
@@ -444,7 +444,7 @@ namespace Xamarin.Bundler {
 			}
 		}
 
-#if !NET
+#if !NET || LEGACY_TOOLS
 		public static int Concurrency => Driver.Concurrency;
 #endif
 		public Version DeploymentTarget;
@@ -552,7 +552,7 @@ namespace Xamarin.Bundler {
 			InterpretedAssemblies.Clear ();
 		}
 
-#if !NET
+#if !NET || LEGACY_TOOLS
 		public void ParseI18nAssemblies (string i18n)
 		{
 			var assemblies = I18nAssemblies.None;
@@ -658,7 +658,7 @@ namespace Xamarin.Bundler {
 			}
 		}
 
-#if NET
+#if NET && !LEGACY_TOOLS
 		public bool RequireLinkWithAttributeForObjectiveCClassSearch;
 #else
 		public bool RequireLinkWithAttributeForObjectiveCClassSearch = true;
@@ -836,7 +836,7 @@ namespace Xamarin.Bundler {
 		public void InitializeCommon ()
 		{
 			InitializeDeploymentTarget ();
-#if !NET
+#if !NET || LEGACY_TOOLS
 			SelectRegistrar ();
 #endif
 			SelectMonoNative ();
@@ -1263,13 +1263,13 @@ namespace Xamarin.Bundler {
 				Registrar = RegistrarMode.PartialStatic;
 				break;
 #endif
-#if NET
+#if NET && !LEGACY_TOOLS
 			case "managed-static":
 				Registrar = RegistrarMode.ManagedStatic;
 				break;
 #endif
 			default:
-#if NET
+#if NET && !LEGACY_TOOLS
 				throw ErrorHelper.CreateError (20, Errors.MX0020, "--registrar", "managed-static, static, dynamic or default");
 #else
 				throw ErrorHelper.CreateError (20, Errors.MX0020, "--registrar", "static, dynamic or default");
@@ -1475,7 +1475,7 @@ namespace Xamarin.Bundler {
 			if (Platform == ApplePlatform.MacOSX)
 				throw ErrorHelper.CreateError (99, Errors.MX0099, "IsInterpreted isn't a valid operation for macOS apps.");
 
-#if !NET
+#if !NET || LEGACY_TOOLS
 			if (IsSimulatorBuild)
 				return false;
 #endif
@@ -1507,7 +1507,7 @@ namespace Xamarin.Bundler {
 		// revision/testing to be used so desired.
 		public bool IsAOTCompiled (string assembly)
 		{
-#if NET
+#if NET && !LEGACY_TOOLS
 			if (Platform == ApplePlatform.MacOSX)
 				return false; // AOT on .NET for macOS hasn't been implemented yet.
 #else
@@ -1645,7 +1645,7 @@ namespace Xamarin.Bundler {
 			if (enable_llvm)
 				aotArguments.Add ($"llvm-outfile={llvmOutputFile}");
 
-#if NET
+#if NET && !LEGACY_TOOLS
 			// If the interpreter is enabled, and we're building for x86_64, we're AOT-compiling but we
 			// don't have access to infinite trampolines. So we're bumping the trampoline count (unless
 			// the developer has already set a value) to something higher than the default.
@@ -1689,8 +1689,6 @@ namespace Xamarin.Bundler {
 					return ProductConstants.iOS;
 				case ApplePlatform.TVOS:
 					return ProductConstants.tvOS;
-				case ApplePlatform.WatchOS:
-					return ProductConstants.watchOS;
 				case ApplePlatform.MacOSX:
 					return ProductConstants.macOS;
 				default:

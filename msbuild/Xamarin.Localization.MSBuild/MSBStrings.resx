@@ -1576,6 +1576,40 @@
         <comment>SupportedOSPlatformVersion: don't translate (it's the name of an MSBuild property)</comment>
     </data>
 
+    <data name="E7127" xml:space="preserve">
+        <value>Can't find the AlternateAppIcon '{0}' among the image resources. There are {1} app icons in the image resources: {2}.</value>
+        <comment>
+            * AlternateAppIcon: don't translate (it's the name of an MSBuild property)
+            * {1}: count of image resources
+            * {2}: comma separated list of resources.
+        </comment>
+    </data>
+
+    <data name="E7128" xml:space="preserve">
+        <value>The image resource '{0}' is specified as both 'AppIcon' and 'AlternateAppIcon'.</value>
+        <comment>
+            * AppIcon: don't translate (it's the name of an MSBuild property)
+            * AlternateAppIcon: don't translate (it's the name of an MSBuild property)
+        </comment>
+    </data>
+
+    <data name="E7129" xml:space="preserve">
+        <value>Can't specify both 'XSAppIconAssets' in the Info.plist and 'AppIcon' in the project file. Please select one or the other.</value>
+        <comment>
+            * XSAppIconAssets: don't translate (it's the name of an MSBuild property)
+            * AppIcon: don't translate (it's the name of an MSBuild property)
+        </comment>
+    </data>
+
+    <data name="E7130" xml:space="preserve">
+        <value>Can't find the AppIcon '{0}' among the image resources. There are {1} app icons in the image resources: {2}.</value>
+        <comment>
+            * AppIcon: don't translate (it's the name of an MSBuild property)
+            * {1}: count of image resources
+            * {2}: comma separated list of resources.
+        </comment>
+    </data>
+
     <data name="E7131" xml:space="preserve">
         <value>The source '{0}' does not exist.</value>
         <comment>{0}: path to a file or a directory</comment>

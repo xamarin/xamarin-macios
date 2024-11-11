@@ -24,12 +24,4 @@ endif
 
 SUBDIRS+=mlaunch siminstaller
 
-ifdef ENABLE_DOTNET
-ifdef INCLUDE_XAMARIN_LEGACY
-SUBDIRS += nnyeah
-endif
-endif
-
-ifdef ENABLE_DOTNET
 SUBDIRS += dotnet-linker
-endif

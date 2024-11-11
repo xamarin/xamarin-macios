@@ -497,7 +497,7 @@ namespace Xamarin.Bundler {
 				if (Profile.IsSdkAssembly (root_wo_ext) || Profile.IsProductAssembly (root_wo_ext))
 					throw new ProductException (3, true, Errors.MX0003, root_wo_ext);
 
-				if (App.References.Exists (a => Path.GetFileNameWithoutExtension (a).Equals (root_wo_ext)))
+				if (App.References.Exists (a => Path.GetFileNameWithoutExtension (a).Equals (root_wo_ext, StringComparison.Ordinal)))
 					throw new ProductException (23, true, Errors.MM0023, root_wo_ext);
 
 				fx_dir = GetPlatformFrameworkDirectory (App);

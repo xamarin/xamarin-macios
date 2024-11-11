@@ -67,7 +67,7 @@ stages:
       parameters: 
         repositoryAlias: ${{ parameters.repositoryAlias }}
         commit: ${{ parameters.commit }}
-        testsLabels: '--label=skip-all-tests,run-ios-tests,run-ios-simulator-tests,run-tvos-tests,run-mac-tests,run-maccatalyst-tests,run-dotnet-tests,run-system-permission-tests'
+        testsLabels: '--label=skip-all-tests,run-ios-tests,run-ios-simulator-tests,run-tvos-tests,run-mac-tests,run-maccatalyst-tests,run-system-permission-tests'
         statusContext: 'VSTS: simulator tests' 
         uploadArtifacts: true
         use1ES: false

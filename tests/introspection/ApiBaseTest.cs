@@ -37,6 +37,9 @@ using ObjCRuntime;
 using UIKit;
 #endif
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Introspection {
 
 	public abstract class ApiBaseTest {
@@ -103,8 +106,6 @@ namespace Introspection {
 
 		protected TextWriter Writer {
 #if MONOMAC
-			get { return Console.Out; }
-#elif __WATCHOS__
 			get { return Console.Out; }
 #else
 			get { return AppDelegate.Runner.Writer; }
@@ -210,20 +211,12 @@ namespace Introspection {
 
 		public bool MemberHasObsolete (MemberInfo member)
 		{
-#if NET
 			return TestRuntime.HasOSPlatformAttributeForCurrentPlatform<ObsoletedOSPlatformAttribute> (member);
-#else
-			return member.GetCustomAttribute<ObsoleteAttribute> () is not null;
-#endif
 		}
 
 		public bool MemberHasUnsupported (MemberInfo member)
 		{
-#if NET
 			return TestRuntime.HasOSPlatformAttributeForCurrentPlatform<UnsupportedOSPlatformAttribute> (member);
-#else
-			return member.GetCustomAttribute<ObsoleteAttribute> () is not null;
-#endif
 		}
 
 		public bool MemberHasEditorBrowsableNever (MemberInfo member)

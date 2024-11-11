@@ -18,7 +18,7 @@ namespace Xamarin.Linker {
 
 		protected DerivedLinkContext LinkContext {
 			get {
-#if NET
+#if NET && !LEGACY_TOOLS
 				return Configuration.DerivedLinkContext;
 #else
 				return (DerivedLinkContext) base.context;
@@ -26,7 +26,7 @@ namespace Xamarin.Linker {
 			}
 		}
 
-#if NET
+#if NET && !LEGACY_TOOLS
 		protected LinkContext context {
 			get { return Context; }
 		}

@@ -155,23 +155,6 @@ parameters:
   - name: macTestsConfigurations
     type: object
 
-  - name: legacyPackageJobs
-    type: object
-    default: [
-      {
-        job: 'xamarin_ios_sign_notarize',
-        name: 'Xamarin.iOS',
-        pattern: 'xamarin.ios-*',
-        conditionVariable: "INCLUDE_LEGACY_IOS",
-      },
-      {
-        job: 'xamarin_mac_sing_notarie',
-        name: 'Xamarin.Mac',
-        pattern: 'xamarin.mac-*',
-        conditionVariable: "INCLUDE_LEGACY_MAC",
-      }
-    ]
-
   - name: stageDisplayNamePrefix
     type: string
     default: ''
@@ -228,7 +211,7 @@ stages:
               commit: ${{ parameters.commit }}
               testConfigurations: ${{ parameters.testConfigurations }}
               supportedPlatforms: ${{ parameters.supportedPlatforms }}
-              testsLabels: '--label=skip-all-tests,run-ios-tests,run-ios-simulator-tests,run-tvos-tests,run-mac-tests,run-maccatalyst-tests,run-dotnet-tests,run-system-permission-tests'
+              testsLabels: '--label=skip-all-tests,run-ios-tests,run-ios-simulator-tests,run-tvos-tests,run-mac-tests,run-maccatalyst-tests,run-system-permission-tests'
               statusContext: 'VSTS: simulator tests'
               uploadArtifacts: true
               use1ES: true
