@@ -49,8 +49,8 @@ static class NamedTypeSymbolExtensions {
 				if (fieldSyntax is null)
 					continue;
 
-				if (FieldData<EnumValue>.TryParse (fieldSyntax, fieldAttrData, out var fieldData)) {
-					fieldBucket.Add ((Symbol: fieldSymbol, FieldData: fieldData));
+				if (FieldData<EnumValue>.TryParse (fieldAttrData, out var fieldData)) {
+					fieldBucket.Add ((Symbol: fieldSymbol, FieldData: fieldData.Value));
 				} else {
 					diagnostics = [Diagnostic.Create (Diagnostics.RBI0000,
 						enumSymbol.Locations [0], fieldSymbol.ToDisplayString ().Trim ())];

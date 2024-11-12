@@ -10,12 +10,20 @@ using System.Runtime.Versioning;
 
 namespace AVFoundation;
 
+[SupportedOSPlatform ("ios11.0")]
+[SupportedOSPlatform ("tvos11.0")]
+[SupportedOSPlatform ("maccatalyst13.1")]
+[SupportedOSPlatform ("macos")]
 [BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
 static public partial class AVMediaCharacteristicsExtensions
 {
 
 	static IntPtr[] values = new IntPtr [18];
 
+	[SupportedOSPlatform ("ios11.0")]
+	[SupportedOSPlatform ("tvos11.0")]
+	[SupportedOSPlatform ("maccatalyst13.1")]
+	[SupportedOSPlatform ("macos")]
 	[Field ("AVMediaCharacteristicVisual", "AVFoundation")]
 	internal unsafe static IntPtr AVMediaCharacteristicVisual
 	{
@@ -26,6 +34,10 @@ static public partial class AVMediaCharacteristicsExtensions
 		}
 	}
 
+	[SupportedOSPlatform ("ios11.0")]
+	[SupportedOSPlatform ("tvos11.0")]
+	[SupportedOSPlatform ("maccatalyst13.1")]
+	[SupportedOSPlatform ("macos")]
 	[Field ("AVMediaCharacteristicAudible", "AVFoundation")]
 	internal unsafe static IntPtr AVMediaCharacteristicAudible
 	{
@@ -36,6 +48,10 @@ static public partial class AVMediaCharacteristicsExtensions
 		}
 	}
 
+	[SupportedOSPlatform ("ios11.0")]
+	[SupportedOSPlatform ("tvos11.0")]
+	[SupportedOSPlatform ("maccatalyst13.1")]
+	[SupportedOSPlatform ("macos")]
 	[Field ("AVMediaCharacteristicLegible", "AVFoundation")]
 	internal unsafe static IntPtr AVMediaCharacteristicLegible
 	{
@@ -46,6 +62,10 @@ static public partial class AVMediaCharacteristicsExtensions
 		}
 	}
 
+	[SupportedOSPlatform ("ios11.0")]
+	[SupportedOSPlatform ("tvos11.0")]
+	[SupportedOSPlatform ("maccatalyst13.1")]
+	[SupportedOSPlatform ("macos")]
 	[Field ("AVMediaCharacteristicFrameBased", "AVFoundation")]
 	internal unsafe static IntPtr AVMediaCharacteristicFrameBased
 	{
@@ -56,6 +76,10 @@ static public partial class AVMediaCharacteristicsExtensions
 		}
 	}
 
+	[SupportedOSPlatform ("ios11.0")]
+	[SupportedOSPlatform ("tvos11.0")]
+	[SupportedOSPlatform ("maccatalyst13.1")]
+	[SupportedOSPlatform ("macos")]
 	[Field ("AVMediaCharacteristicUsesWideGamutColorSpace", "AVFoundation")]
 	internal unsafe static IntPtr AVMediaCharacteristicUsesWideGamutColorSpace
 	{
@@ -66,6 +90,10 @@ static public partial class AVMediaCharacteristicsExtensions
 		}
 	}
 
+	[SupportedOSPlatform ("ios11.0")]
+	[SupportedOSPlatform ("tvos11.0")]
+	[SupportedOSPlatform ("maccatalyst13.1")]
+	[SupportedOSPlatform ("macos")]
 	[Field ("AVMediaCharacteristicIsMainProgramContent", "AVFoundation")]
 	internal unsafe static IntPtr AVMediaCharacteristicIsMainProgramContent
 	{
@@ -76,6 +104,10 @@ static public partial class AVMediaCharacteristicsExtensions
 		}
 	}
 
+	[SupportedOSPlatform ("ios11.0")]
+	[SupportedOSPlatform ("tvos11.0")]
+	[SupportedOSPlatform ("maccatalyst13.1")]
+	[SupportedOSPlatform ("macos")]
 	[Field ("AVMediaCharacteristicIsAuxiliaryContent", "AVFoundation")]
 	internal unsafe static IntPtr AVMediaCharacteristicIsAuxiliaryContent
 	{
@@ -86,6 +118,10 @@ static public partial class AVMediaCharacteristicsExtensions
 		}
 	}
 
+	[SupportedOSPlatform ("ios11.0")]
+	[SupportedOSPlatform ("tvos11.0")]
+	[SupportedOSPlatform ("maccatalyst13.1")]
+	[SupportedOSPlatform ("macos")]
 	[Field ("AVMediaCharacteristicContainsOnlyForcedSubtitles", "AVFoundation")]
 	internal unsafe static IntPtr AVMediaCharacteristicContainsOnlyForcedSubtitles
 	{
@@ -96,6 +132,10 @@ static public partial class AVMediaCharacteristicsExtensions
 		}
 	}
 
+	[SupportedOSPlatform ("ios11.0")]
+	[SupportedOSPlatform ("tvos11.0")]
+	[SupportedOSPlatform ("maccatalyst13.1")]
+	[SupportedOSPlatform ("macos")]
 	[Field ("AVMediaCharacteristicTranscribesSpokenDialogForAccessibility", "AVFoundation")]
 	internal unsafe static IntPtr AVMediaCharacteristicTranscribesSpokenDialogForAccessibility
 	{
@@ -106,6 +146,10 @@ static public partial class AVMediaCharacteristicsExtensions
 		}
 	}
 
+	[SupportedOSPlatform ("ios11.0")]
+	[SupportedOSPlatform ("tvos11.0")]
+	[SupportedOSPlatform ("maccatalyst13.1")]
+	[SupportedOSPlatform ("macos")]
 	[Field ("AVMediaCharacteristicDescribesMusicAndSoundForAccessibility", "AVFoundation")]
 	internal unsafe static IntPtr AVMediaCharacteristicDescribesMusicAndSoundForAccessibility
 	{
@@ -116,6 +160,10 @@ static public partial class AVMediaCharacteristicsExtensions
 		}
 	}
 
+	[SupportedOSPlatform ("ios11.0")]
+	[SupportedOSPlatform ("tvos11.0")]
+	[SupportedOSPlatform ("maccatalyst13.1")]
+	[SupportedOSPlatform ("macos")]
 	[Field ("AVMediaCharacteristicDescribesVideoForAccessibility", "AVFoundation")]
 	internal unsafe static IntPtr AVMediaCharacteristicDescribesVideoForAccessibility
 	{
@@ -126,6 +174,10 @@ static public partial class AVMediaCharacteristicsExtensions
 		}
 	}
 
+	[SupportedOSPlatform ("ios11.0")]
+	[SupportedOSPlatform ("tvos11.0")]
+	[SupportedOSPlatform ("maccatalyst13.1")]
+	[UnsupportedOSPlatform ("macos")]
 	[Field ("AVMediaCharacteristicEasyToRead", "AVFoundation")]
 	internal unsafe static IntPtr AVMediaCharacteristicEasyToRead
 	{
@@ -136,6 +188,10 @@ static public partial class AVMediaCharacteristicsExtensions
 		}
 	}
 
+	[SupportedOSPlatform ("ios11.0")]
+	[SupportedOSPlatform ("tvos11.0")]
+	[SupportedOSPlatform ("maccatalyst13.1")]
+	[SupportedOSPlatform ("macos")]
 	[Field ("AVMediaCharacteristicLanguageTranslation", "AVFoundation")]
 	internal unsafe static IntPtr AVMediaCharacteristicLanguageTranslation
 	{
@@ -146,6 +202,10 @@ static public partial class AVMediaCharacteristicsExtensions
 		}
 	}
 
+	[SupportedOSPlatform ("ios11.0")]
+	[SupportedOSPlatform ("tvos11.0")]
+	[SupportedOSPlatform ("maccatalyst13.1")]
+	[SupportedOSPlatform ("macos")]
 	[Field ("AVMediaCharacteristicDubbedTranslation", "AVFoundation")]
 	internal unsafe static IntPtr AVMediaCharacteristicDubbedTranslation
 	{
@@ -156,6 +216,10 @@ static public partial class AVMediaCharacteristicsExtensions
 		}
 	}
 
+	[SupportedOSPlatform ("ios11.0")]
+	[SupportedOSPlatform ("tvos11.0")]
+	[SupportedOSPlatform ("maccatalyst13.1")]
+	[SupportedOSPlatform ("macos")]
 	[Field ("AVMediaCharacteristicVoiceOverTranslation", "AVFoundation")]
 	internal unsafe static IntPtr AVMediaCharacteristicVoiceOverTranslation
 	{
@@ -166,6 +230,10 @@ static public partial class AVMediaCharacteristicsExtensions
 		}
 	}
 
+	[SupportedOSPlatform ("ios13.0")]
+	[SupportedOSPlatform ("tvos13.0")]
+	[SupportedOSPlatform ("maccatalyst13.1")]
+	[SupportedOSPlatform ("macos")]
 	[Field ("AVMediaCharacteristicIsOriginalContent", "AVFoundation")]
 	internal unsafe static IntPtr AVMediaCharacteristicIsOriginalContent
 	{
@@ -176,6 +244,10 @@ static public partial class AVMediaCharacteristicsExtensions
 		}
 	}
 
+	[SupportedOSPlatform ("ios14.0")]
+	[SupportedOSPlatform ("tvos14.0")]
+	[SupportedOSPlatform ("maccatalyst14.0")]
+	[SupportedOSPlatform ("macos")]
 	[Field ("AVMediaCharacteristicContainsHDRVideo", "AVFoundation")]
 	internal unsafe static IntPtr AVMediaCharacteristicContainsHDRVideo
 	{
@@ -186,6 +258,10 @@ static public partial class AVMediaCharacteristicsExtensions
 		}
 	}
 
+	[SupportedOSPlatform ("ios13.0")]
+	[SupportedOSPlatform ("tvos13.0")]
+	[SupportedOSPlatform ("maccatalyst13.1")]
+	[SupportedOSPlatform ("macos")]
 	[Field ("AVMediaCharacteristicContainsAlphaChannel", "AVFoundation")]
 	internal unsafe static IntPtr AVMediaCharacteristicContainsAlphaChannel
 	{

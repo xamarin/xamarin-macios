@@ -7,6 +7,9 @@ using ObjCBindings;
 namespace AVFoundation;
 
 [BindingType]
+[SupportedOSPlatform ("macos")]
+[SupportedOSPlatform ("ios11.0")]
+[SupportedOSPlatform ("tvos11.0")]
 [SupportedOSPlatform ("maccatalyst13.1")]
 enum AVMediaCharacteristics {
 	[Field<EnumValue> ("AVMediaCharacteristicVisual")]
@@ -43,6 +46,7 @@ enum AVMediaCharacteristics {
 	DescribesVideoForAccessibility = 10,
 
 #if !__MACOS__
+	[UnsupportedOSPlatform("macos")]
 	[Field<EnumValue> ("AVMediaCharacteristicEasyToRead")]
 	EasyToRead = 11,
 #endif

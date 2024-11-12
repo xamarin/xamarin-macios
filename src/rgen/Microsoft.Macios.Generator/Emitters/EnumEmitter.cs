@@ -5,6 +5,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Macios.Generator.Attributes;
 using Microsoft.Macios.Generator.Context;
+using Microsoft.Macios.Generator.DataModel;
 using Microsoft.Macios.Generator.Extensions;
 using ObjCBindings;
 
@@ -27,8 +28,11 @@ class EnumEmitter (SymbolBindingContext context, TabbedStringBuilder builder)
 			return;
 		}
 
-		classBlock.AppendLine ($"[Field (\"{enumField.FieldData.SymbolName}\", \"{libraryPath ?? libraryName}\")]");
+		// availability is the merge of the container plus whatever we added to the current members
+		var availability = enumField.Symbol.GetSupportedPlatforms ();
 
+		classBlock.AppendMemberAvailability (availability);
+		classBlock.AppendLine ($"[Field (\"{enumField.FieldData.SymbolName}\", \"{libraryPath ?? libraryName}\")]");
 		using (var propertyBlock = classBlock.CreateBlock ($"internal unsafe static IntPtr {enumField.FieldData.SymbolName}", true))
 		using (var getterBlock = propertyBlock.CreateBlock ("get", true)) {
 			getterBlock.AppendLine ($"fixed (IntPtr *storage = &values [{index}])");
@@ -81,7 +85,7 @@ class EnumEmitter (SymbolBindingContext context, TabbedStringBuilder builder)
 		using (var getValueBlock = classBlock.CreateBlock ($"public static {enumSymbol.Name} GetValue (NSString constant)", true)) {
 			getValueBlock.AppendLine ("if (constant is null)");
 			getValueBlock.AppendLine ("\tthrow new ArgumentNullException (nameof (constant));");
-			foreach ((IFieldSymbol? fieldSymbol, FieldData<EnumValue>? fieldData) in members) {
+			foreach ((IFieldSymbol fieldSymbol, FieldData<EnumValue> fieldData) in members) {
 				getValueBlock.AppendLine ($"if (constant.IsEqualTo ({fieldData.SymbolName}))");
 				getValueBlock.AppendLine ($"\treturn {enumSymbol.Name}.{fieldSymbol.Name};");
 			}
@@ -136,6 +140,7 @@ class EnumEmitter (SymbolBindingContext context, TabbedStringBuilder builder)
 		builder.AppendLine ($"namespace {context.Namespace};");
 		builder.AppendLine ();
 
+		builder.AppendMemberAvailability (context.SymbolAvailability);
 		builder.AppendGeneratedCodeAttribute ();
 		using (var classBlock = builder.CreateBlock ($"static public partial class {SymbolName}", true)) {
 			classBlock.AppendLine ();
