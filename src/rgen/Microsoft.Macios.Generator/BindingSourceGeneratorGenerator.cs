@@ -113,8 +113,6 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 			} else {
 				// we don't have a emitter for this type, so we can't generate the code, add a diagnostic letting the
 				// user we do not support what they are trying to do
-				// we don't have a emitter for this type, so we can't generate the code, add a diagnostic letting the
-				// user we do not support what they are trying to do
 				context.ReportDiagnostic (Diagnostic.Create (Diagnostics.RBI0000, // An unexpected error ocurred while processing '{0}'. Please fill a bug report at https://github.com/xamarin/xamarin-macios/issues/new.
 					change.SymbolDeclaration.GetLocation (),
 					namedTypeSymbol.ToDisplayString ().Trim ()));

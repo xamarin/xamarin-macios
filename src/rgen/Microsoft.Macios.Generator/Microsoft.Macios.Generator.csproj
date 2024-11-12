@@ -17,14 +17,6 @@
         <NoWarn>RS2007;RS1041;APL0003</NoWarn>
     </PropertyGroup>
 
-    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-      <DefineConstants>TRACE;CLASSIC_ENABLED</DefineConstants>
-    </PropertyGroup>
-
-    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-      <DefineConstants>TRACE;CLASSIC_ENABLED</DefineConstants>
-    </PropertyGroup>
-
     <ItemGroup>
         <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.11">
             <PrivateAssets>all</PrivateAssets>

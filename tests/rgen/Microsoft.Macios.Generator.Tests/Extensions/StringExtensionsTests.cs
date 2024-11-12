@@ -15,6 +15,7 @@ public class StringExtensionsTests {
 	[InlineData ("!test", false)]
 	[InlineData ("AVFoundation", true)]
 	[InlineData ("AVFoundation Test", false)]
+	[InlineData ("😁", false)]
 	[InlineData (null, false)]
 	public void IsValidIdentifier (string? identifier, bool expected)
 		=> Assert.Equal (expected, identifier.IsValidIdentifier ());
