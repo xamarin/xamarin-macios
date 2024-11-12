@@ -1,8 +1,8 @@
 <Dependencies>
   <ProductDependencies>
-    <Dependency Name="Microsoft.NET.Sdk" Version="9.0.101-servicing.24560.2">
+    <Dependency Name="Microsoft.NET.Sdk" Version="9.0.101-servicing.24561.8">
       <Uri>https://github.com/dotnet/sdk</Uri>
-      <Sha>cadc36fee20f31f09abd125c2ceaecb983c67085</Sha>
+      <Sha>8e8e27079dc1f0c53add11c3ac58fd9796aa8e73</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NET.ILLink" Version="9.0.0-alpha.1.23556.4">
       <Uri>https://github.com/dotnet/runtime</Uri>
