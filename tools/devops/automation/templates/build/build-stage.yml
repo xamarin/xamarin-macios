@@ -42,16 +42,10 @@ jobs:
     timeoutInMinutes: 1000
     variables:
       DOTNET_PLATFORMS: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.DOTNET_PLATFORMS'] ]
-      ENABLE_DOTNET: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.ENABLE_DOTNET'] ]
       INCLUDE_DOTNET_IOS: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.INCLUDE_DOTNET_IOS'] ]
       INCLUDE_DOTNET_MACCATALYST: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.INCLUDE_DOTNET_MACCATALYST'] ]
       INCLUDE_DOTNET_MACOS: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.INCLUDE_DOTNET_MACOS'] ]
       INCLUDE_DOTNET_TVOS: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.INCLUDE_DOTNET_TVOS'] ]
-      INCLUDE_LEGACY_IOS: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.INCLUDE_LEGACY_IOS'] ]
-      INCLUDE_LEGACY_MAC: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.INCLUDE_LEGACY_MAC'] ]
-      INCLUDE_LEGACY_TVOS: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.INCLUDE_LEGACY_TVOS'] ]
-      INCLUDE_LEGACY_WATCH: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.INCLUDE_LEGACY_WATCH'] ]
-      INCLUDE_XAMARIN_LEGACY: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.INCLUDE_XAMARIN_LEGACY'] ]
       ${{ if eq(parameters.pool, 'automatic') }}:
         AgentPoolComputed: $[ stageDependencies.configure_build.AgentPoolSelector.outputs['setAgentPool.AgentPoolComputed'] ]
       ${{ if eq(parameters.pool, 'ci') }}:

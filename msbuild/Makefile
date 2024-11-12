@@ -417,7 +417,6 @@ $(DOTNET_DESTDIR)/$(MACCATALYST_NUGET_SDK_NAME)/tools/msbuild/MacCatalyst/%: $(I
 
 MSBUILD_DIRECTORIES += $(DOTNET_DIRECTORIES)
 
-ifdef ENABLE_DOTNET
 MSBUILD_PRODUCTS += $(DOTNET_TARGETS)
 
 DOTNET_IOS_WINDOWS_OUTPUT_FILES =                                \
@@ -444,7 +443,6 @@ DOTNET_IOS_WINDOWS_MOBILEDEVICE_TOOLS_X64 = $(foreach file,$(IOS_WINDOWS_MOBILED
 
 all-local:: .dotnet-windows
 dotnet:: .dotnet-windows
-endif
 
 ##
 ## Common targets ##

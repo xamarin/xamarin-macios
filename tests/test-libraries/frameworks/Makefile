@@ -50,13 +50,8 @@ maccatalyst_INFO_PLIST_INFIX=/Versions/A/Resources
 maccatalyst_BINARY_INFIX=/Versions/A
 
 # For XCFrameworks, we have to lipo some of the RID-specific frameworks together (the ones with multiple RIDs below)
-ifdef IOS_SUPPORTS_32BIT_ARCHITECTURES
-iphonesimulator_XC_RUNTIMEIDENTIFIERS=iossimulator-x86 iossimulator-x64  iossimulator-arm64
-iphoneos_XC_RUNTIMEIDENTIFIERS=ios-arm ios-arm64
-else
 iphonesimulator_XC_RUNTIMEIDENTIFIERS=iossimulator-x64 iossimulator-arm64
 iphoneos_XC_RUNTIMEIDENTIFIERS=ios-arm64
-endif
 tvsimulator_XC_RUNTIMEIDENTIFIERS=tvossimulator-x64 tvossimulator-arm64
 tvos_XC_RUNTIMEIDENTIFIERS=tvos-arm64
 mac_XC_RUNTIMEIDENTIFIERS=osx-x64 osx-arm64
@@ -200,9 +195,7 @@ ZIPPED_TARGETS += .libs/$(1).xcframework.zip
 all-local:: .libs/$(1).xcframework.stamp
 endef
 
-ifdef ENABLE_DOTNET
 $(foreach name,$(NAMES),$(eval $(call XCFrameworkTemplate,$(name))))
-endif
 
 zip: $(ZIPPED_TARGETS)
 all-local:: $(ZIPPED_TARGETS)

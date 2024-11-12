@@ -60,7 +60,7 @@ namespace Xamarin.Tests {
 		public override IEnumerable<object []> GetData (MethodInfo testMethod)
 		{
 			return Configuration.
-				GetIncludedPlatforms (true).
+				GetIncludedPlatforms ().
 				Select (platform => dataValues.Prepend (platform).ToArray ());
 		}
 	}

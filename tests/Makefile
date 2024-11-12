@@ -1,25 +1,14 @@
 TOP = ..
-SUBDIRS=test-libraries
+SUBDIRS=test-libraries dotnet
 
 # disabled for now: mac-test
 
 include $(TOP)/Make.config
 include $(TOP)/mk/rules.mk
 
-ifdef ENABLE_DOTNET
-SUBDIRS += dotnet
-endif
-
 MTOUCH=$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/bin/mtouch
 
 XHARNESS_EXECUTABLE=xharness/bin/Debug/xharness.dll
-
-export MD_MTOUCH_SDK_ROOT=$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)
-export MSBUILD_EXE_PATH=$(MONO_PREFIX)/lib/mono/msbuild/15.0/bin/MSBuild.dll
-export TargetFrameworkFallbackSearchPaths=$(IOS_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild-frameworks
-export MSBuildExtensionsPathFallbackPathsOverride=$(IOS_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild
-export XAMMAC_FRAMEWORK_PATH=$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current
-export XamarinMacFrameworkRoot=$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current
 
 ifneq ($(RELEASE),)
 CONFIG=Release
@@ -68,8 +57,6 @@ test.config: Makefile $(TOP)/Make.config $(TOP)/mk/mono.mk $(TOP)/eng/Version.De
 	@echo "WATCH_SDK_VERSION=$(WATCH_SDK_VERSION)" >> $@
 	@echo "MACOS_SDK_VERSION=$(MACOS_SDK_VERSION)" >> $@
 	@echo "DOTNET_BCL_DIR=$(DOTNET_BCL_DIR)" >> $@
-	@echo "ENABLE_DOTNET=$(ENABLE_DOTNET)" >> $@
-	@echo "INCLUDE_XAMARIN_LEGACY=$(INCLUDE_XAMARIN_LEGACY)" >> $@
 	@printf "$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),DOTNET_$(platform)_RUNTIME_IDENTIFIERS='$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS)'\\n)" | sed 's/^ //' >> $@
 	@printf "$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),DOTNET_$(rid)_ARCHITECTURES='$(DOTNET_$(rid)_ARCHITECTURES)'\\n))" | sed 's/^ //' >> $@
 	@echo "DOTNET_CSC_COMMAND='$(DOTNET_CSC)'" >> $@
@@ -79,7 +66,6 @@ test.config: Makefile $(TOP)/Make.config $(TOP)/mk/mono.mk $(TOP)/eng/Version.De
 	@echo "DOTNET_DIR=$(DOTNET_DIR)" >> $@
 	@echo "INCLUDE_MAC=$(INCLUDE_MAC)" >> $@
 	@echo "INCLUDE_MACCATALYST=$(INCLUDE_MACCATALYST)" >> $@
-	@echo "IOS_SUPPORTS_32BIT_ARCHITECTURES=$(IOS_SUPPORTS_32BIT_ARCHITECTURES)" >> $@
 	@printf "$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),$(platform)_NUGET_SDK_NAME=$($(platform)_NUGET_SDK_NAME)\\n)" | sed 's/^ //' >> $@
 	@printf "$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),$(platform)_NUGET_REF_NAME=$($(platform)_NUGET_REF_NAME)\\n)" | sed 's/^ //' >> $@
 	@printf "$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),$(rid)_NUGET_RUNTIME_NAME=$($(rid)_NUGET_RUNTIME_NAME)\\n))" | sed 's/^ //' >> $@
@@ -103,8 +89,6 @@ test-system.config: Makefile $(TOP)/Make.config $(TOP)/mk/mono.mk $(TOP)/eng/Ver
 	@echo "MACOS_SDK_VERSION=$(MACOS_SDK_VERSION)" >> $@
 	@echo "DOTNET_TFM=$(DOTNET_TFM)" >> $@
 	@echo "DOTNET_BCL_DIR=$(DOTNET_BCL_DIR)" >> $@
-	@echo "ENABLE_DOTNET=$(ENABLE_DOTNET)" >> $@
-	@echo "INCLUDE_XAMARIN_LEGACY=$(INCLUDE_XAMARIN_LEGACY)" >> $@
 	@printf "$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),DOTNET_$(platform)_RUNTIME_IDENTIFIERS='$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS)'\\n)" | sed 's/^ //' >> $@
 	@printf "$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),DOTNET_$(rid)_ARCHITECTURES='$(DOTNET_$(rid)_ARCHITECTURES)'\\n))" | sed 's/^ //' >> $@
 	@echo "DOTNET_CSC_COMMAND='$(DOTNET_CSC)'" >> $@
@@ -113,7 +97,6 @@ test-system.config: Makefile $(TOP)/Make.config $(TOP)/mk/mono.mk $(TOP)/eng/Ver
 	@echo "DOTNET_DIR=$(DOTNET_DIR)" >> $@
 	@echo "INCLUDE_MAC=$(INCLUDE_MAC)" >> $@
 	@echo "INCLUDE_MACCATALYST=$(INCLUDE_MACCATALYST)" >> $@
-	@echo "IOS_SUPPORTS_32BIT_ARCHITECTURES=$(IOS_SUPPORTS_32BIT_ARCHITECTURES)" >> $@
 	@printf "$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),$(platform)_NUGET_SDK_NAME=$($(platform)_NUGET_SDK_NAME)\\n)" | sed 's/^ //' >> $@
 	@printf "$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),$(platform)_NUGET_REF_NAME=$($(platform)_NUGET_REF_NAME)\\n)" | sed 's/^ //' >> $@
 	@printf "$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),$(rid)_NUGET_RUNTIME_NAME=$($(rid)_NUGET_RUNTIME_NAME)\\n))" | sed 's/^ //' >> $@
@@ -350,3 +333,20 @@ package-test-libraries.zip:
 	$(Q_GEN) cd $(TOP) && zip -9r --symlinks $(abspath $@).tmp ./tests/test-libraries
 	$(Q_GEN) cd $(TOP) && find tests -regex 'tests/test-libraries/custom-type-assembly/.libs/.*dll' -exec zip -9r --symlinks $(abspath $@).tmp {} +
 	$(Q) mv "$@".tmp "$@"
+
+build-all:
+	$(MAKE) build -C bgen
+	$(MAKE) build -C cecil-tests
+	$(MAKE) build -C dotnet/UnitTests
+	$(MAKE) build -C rgen
+	$(MAKE) build -C xtro-sharpie
+	$(MAKE) build-all -C "linker/ios/dont link/dotnet"
+	$(MAKE) build-all -C "linker/ios/link all/dotnet"
+	$(MAKE) build-all -C "linker/ios/link sdk/dotnet"
+	$(MAKE) build-all -C "linker/ios/trimmode copy/dotnet"
+	$(MAKE) build-all -C "linker/ios/trimmode link/dotnet"
+	$(MAKE) build-all -C fsharp/dotnet
+	$(MAKE) build-all -C interdependent-binding-projects/dotnet
+	$(MAKE) build-all -C introspection/dotnet
+	$(MAKE) build-all -C monotouch-test/dotnet
+	$(MAKE) build-all -C xcframework-test/dotnet

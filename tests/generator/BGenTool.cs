@@ -52,20 +52,13 @@ namespace Xamarin.Tests {
 		public string? Out;
 		public int Verbosity = 1;
 
-		protected override string ToolPath { get { return Profile == Profile.macOSClassic ? Configuration.BGenClassicPath : Configuration.BGenPath; } }
+		protected override string ToolPath { get => throw new InvalidOperationException (); }
 		protected override string MessagePrefix { get { return "BI"; } }
-		protected override string MessageToolName { get { return Profile == Profile.macOSClassic ? "bgen-classic" : "bgen"; } }
+		protected override string MessageToolName { get { return "bgen"; } }
 
 		public BGenTool ()
 		{
-			if (Environment.OSVersion.Platform == PlatformID.Win32NT) {
-				EnvironmentVariables = new Dictionary<string, string> ();
-			} else {
-				EnvironmentVariables = new Dictionary<string, string> {
-					{ "MD_MTOUCH_SDK_ROOT", Configuration.SdkRootXI },
-					{ "XamarinMacFrameworkRoot", Configuration.SdkRootXM },
-				};
-			}
+			EnvironmentVariables = new Dictionary<string, string> ();
 		}
 
 		public void AddTestApiDefinition (string filename)
@@ -435,11 +428,7 @@ namespace Xamarin.Tests {
 			if (assembly is null) {
 				var parameters = new ReaderParameters ();
 				var resolver = new DefaultAssemblyResolver ();
-#if NET
-				var searchdir = Path.GetDirectoryName (Configuration.GetBaseLibrary (Profile.AsPlatform (), true));
-#else
-				var searchdir = Path.GetDirectoryName (Configuration.GetBaseLibrary (Profile));
-#endif
+				var searchdir = Path.GetDirectoryName (Configuration.GetBaseLibrary (Profile.AsPlatform ()));
 				resolver.AddSearchDirectory (searchdir);
 				parameters.AssemblyResolver = resolver;
 				var tmpDirectory = EnsureTempDir ();

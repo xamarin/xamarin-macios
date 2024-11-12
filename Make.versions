@@ -6,8 +6,8 @@
 #
 # IOS_NUGET_VERSION (major/minor/patch #)
 # TVOS_NUGET_VERSION (major/minor/patch #)
-# WATCHOS_NUGET_VERSION (major/minor/patch #)
 # MACOS_NUGET_VERSION (major/minor/patch #)
+# MACCATALYST_NUGET_VERSION (major/minor/patch #)
 #
 # Update version numbers on main as well, to the next version
 #
@@ -67,7 +67,6 @@ MAC_PACKAGE_VERSION=9.99.0.$(MAC_COMMIT_DISTANCE)
 
 IOS_NUGET_OS_VERSION=18.1
 TVOS_NUGET_OS_VERSION=18.1
-WATCHOS_NUGET_OS_VERSION=11.1
 MACOS_NUGET_OS_VERSION=15.1
 MACCATALYST_NUGET_OS_VERSION=18.1
 
