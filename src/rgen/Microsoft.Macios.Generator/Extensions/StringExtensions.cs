@@ -25,8 +25,8 @@ static class StringExtensions {
 			_ => ApplePlatform.None
 		};
 		if (platform == ApplePlatform.None)
-			return (platform, new Version());
-		return Version.TryParse (self [platform.AsString ().Length..], out var newVersion) ? 
+			return (platform, new Version ());
+		return Version.TryParse (self [platform.AsString ().Length..], out var newVersion) ?
 			(platform, newVersion) : (platform, new Version ());
 	}
 }

@@ -12,7 +12,7 @@ public class TabbedStringBuilderTests {
 
 	public TabbedStringBuilderTests ()
 	{
-		sb = new();
+		sb = new ();
 	}
 
 	[Theory]
@@ -290,7 +290,7 @@ Because we are using a raw string  we expected:
 	}
 
 	[Theory]
-	[MemberData (nameof(AppendMemberAvailabilityTestData))]
+	[MemberData (nameof (AppendMemberAvailabilityTestData))]
 	void AppendMemberAvailabilityTest (SymbolAvailability availability, string expectedString)
 	{
 		var block = new TabbedStringBuilder (sb);

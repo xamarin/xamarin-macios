@@ -27,7 +27,7 @@ readonly struct UnsupportedOSPlatformData {
 		data = default;
 		string platformName;
 		string? message = null;
-		
+
 		var count = attributeData.ConstructorArguments.Length;
 		switch (count) {
 		case 1:
@@ -45,7 +45,7 @@ readonly struct UnsupportedOSPlatformData {
 			data = new (platformName, message);
 			return true;
 		}
-		
+
 		// could be that the user used the named params because he did not know better
 		foreach (var (name, value) in attributeData.NamedArguments) {
 			switch (name) {
@@ -65,5 +65,5 @@ readonly struct UnsupportedOSPlatformData {
 		data = new (platformName, message);
 		return true;
 	}
-	
+
 }

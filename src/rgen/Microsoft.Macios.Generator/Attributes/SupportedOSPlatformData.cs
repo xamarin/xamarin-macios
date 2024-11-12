@@ -31,7 +31,7 @@ readonly struct SupportedOSPlatformData {
 		}
 
 		if (attributeData.NamedArguments.Length == 0) {
-			data = new(platformName);
+			data = new (platformName);
 			return true;
 		}
 
@@ -46,7 +46,7 @@ readonly struct SupportedOSPlatformData {
 			}
 		}
 
-		data = new(platformName);
+		data = new (platformName);
 		return true;
 	}
 }

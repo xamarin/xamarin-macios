@@ -311,7 +311,7 @@ public class PlatformAvailabilityTests {
 		var builder = PlatformAvailability.CreateBuilder (platform);
 		// create a list with the attr data + a platform unsupported one and ensure that we just
 		// have it unsupported
-		var obsoleteVersionList = new List<ObsoletedOSPlatformData> { new(platformName, message) };
+		var obsoleteVersionList = new List<ObsoletedOSPlatformData> { new (platformName, message) };
 		foreach (var v in versions) {
 			obsoleteVersionList.Add (new ObsoletedOSPlatformData ($"{platformName}{v}", message));
 		}

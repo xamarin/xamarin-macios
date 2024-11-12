@@ -103,7 +103,7 @@ public enum MyEnum {
 	First,
 }
 ";
-				
+
 				yield return [platform, fieldWithTabs];
 			}
 		}

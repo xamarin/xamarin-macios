@@ -5,14 +5,14 @@ using Xamarin.Utils;
 namespace Microsoft.Macios.Generator.Availability;
 
 readonly partial struct SymbolAvailability {
-	public static Builder CreateBuilder () => new();
+	public static Builder CreateBuilder () => new ();
 
 	public sealed class Builder {
-		readonly Dictionary<ApplePlatform, PlatformAvailability.Builder> platforms = new();
+		readonly Dictionary<ApplePlatform, PlatformAvailability.Builder> platforms = new ();
 
 		readonly HashSet<ApplePlatform> supportedPlatforms =
 			[ApplePlatform.iOS, ApplePlatform.TVOS, ApplePlatform.MacOSX, ApplePlatform.MacCatalyst];
-		
+
 		internal Builder () { }
 
 		PlatformAvailability.Builder GetBuilder (ApplePlatform platform)
@@ -51,9 +51,9 @@ readonly partial struct SymbolAvailability {
 			var builder = GetBuilder (unsupportedPlatform.Platform);
 			builder.Add (unsupportedPlatform);
 		}
-		
+
 		public void Clear () => platforms.Clear ();
-		
+
 		public SymbolAvailability ToImmutable ()
 		{
 			PlatformAvailability? iOS =

@@ -70,7 +70,7 @@ public enum TestEnum {
 	Second,
 }
 ";
-			HashSet<string> enumAttrs = new();
+			HashSet<string> enumAttrs = new ();
 			foreach (var platform in Configuration.GetIncludedPlatforms (true)) {
 				yield return [platform, enumText, attributesText, enumAttrs];
 			}
@@ -80,11 +80,11 @@ public enum TestEnum {
 	}
 
 	[Theory]
-	[ClassData (typeof(TestDataGetAttributeDataPresent))]
+	[ClassData (typeof (TestDataGetAttributeDataPresent))]
 	public void GetAttributeDataPresent (ApplePlatform platform, string inputText, string attributesText,
 		HashSet<string> expectedAttributes)
 	{
-		var (compilation, syntaxTrees) = CreateCompilation (nameof(GetAttributeDataPresent),
+		var (compilation, syntaxTrees) = CreateCompilation (nameof (GetAttributeDataPresent),
 			platform, inputText, attributesText);
 		Assert.Equal (2, syntaxTrees.Length);
 		var semanticModel = compilation.GetSemanticModel (syntaxTrees [0]);
@@ -185,11 +185,11 @@ public class ParentClass {
 	}
 
 	[Theory]
-	[ClassData (typeof(TestDataGetParents))]
+	[ClassData (typeof (TestDataGetParents))]
 	public void GetParentTests (ApplePlatform platform, string inputText,
 		Func<SyntaxNode, MemberDeclarationSyntax?> getNode, string [] expectedParents)
 	{
-		var (compilation, syntaxTrees) = CreateCompilation (nameof(GetAttributeDataPresent),
+		var (compilation, syntaxTrees) = CreateCompilation (nameof (GetAttributeDataPresent),
 			platform, inputText);
 		Assert.Single (syntaxTrees);
 		var semanticModel = compilation.GetSemanticModel (syntaxTrees [0]);
@@ -204,11 +204,11 @@ public class ParentClass {
 	class TestDataGetSupportedPlatforms : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()
 		{
-			
+
 			var builder = SymbolAvailability.CreateBuilder ();
 			Func<SyntaxNode, MemberDeclarationSyntax?> getNestedMethod =
 				rootNode => rootNode.DescendantNodes ().OfType<MethodDeclarationSyntax> ().LastOrDefault ();
-			
+
 			// base member decorated, not child
 			const string decoratedParent = @"
 using System;
@@ -221,12 +221,12 @@ public class ParentClass{
 	public void Method(){}
 }
 ";
-			builder.Add (new SupportedOSPlatformData("ios12.0"));	
+			builder.Add (new SupportedOSPlatformData ("ios12.0"));
 			foreach (var platform in Configuration.GetIncludedPlatforms (true)) {
 				yield return [platform, decoratedParent, getNestedMethod, builder.ToImmutable ()];
 			}
 			builder.Clear ();
-			
+
 			// base member decorated, child decorated
 			const string decoratedParentAndChild = @"
 using System;
@@ -241,13 +241,13 @@ public class ParentClass{
 	public void Method(){}
 }
 ";
-			builder.Add (new SupportedOSPlatformData("ios12.0"));	
-			builder.Add (new UnsupportedOSPlatformData("tvos"));	
+			builder.Add (new SupportedOSPlatformData ("ios12.0"));
+			builder.Add (new UnsupportedOSPlatformData ("tvos"));
 			foreach (var platform in Configuration.GetIncludedPlatforms (true)) {
 				yield return [platform, decoratedParentAndChild, getNestedMethod, builder.ToImmutable ()];
 			}
 			builder.Clear ();
-			
+
 			// base member, child, granchild not decorated
 			const string grandChild = @"
 using System;
@@ -263,13 +263,13 @@ public class ParentClass{
 	}
 }
 ";
-			builder.Add (new SupportedOSPlatformData("ios"));	
-			builder.Add (new UnsupportedOSPlatformData("tvos"));	
+			builder.Add (new SupportedOSPlatformData ("ios"));
+			builder.Add (new UnsupportedOSPlatformData ("tvos"));
 			foreach (var platform in Configuration.GetIncludedPlatforms (true)) {
 				yield return [platform, grandChild, getNestedMethod, builder.ToImmutable ()];
 			}
 			builder.Clear ();
-			
+
 			// all decorated
 			const string allDecorated = @"
 using System;
@@ -286,13 +286,13 @@ public class ParentClass{
 	}
 }
 ";
-			builder.Add (new SupportedOSPlatformData("ios13.0"));	
-			builder.Add (new UnsupportedOSPlatformData("tvos"));	
+			builder.Add (new SupportedOSPlatformData ("ios13.0"));
+			builder.Add (new UnsupportedOSPlatformData ("tvos"));
 			foreach (var platform in Configuration.GetIncludedPlatforms (true)) {
 				yield return [platform, allDecorated, getNestedMethod, builder.ToImmutable ()];
 			}
 			builder.Clear ();
-			
+
 			// enum decorated
 			Func<SyntaxNode, MemberDeclarationSyntax?> getEnumValue =
 				rootNode => rootNode.DescendantNodes ().OfType<EnumMemberDeclarationSyntax> ().LastOrDefault ();
@@ -311,26 +311,26 @@ public class ParentClass{
 	}
 }
 ";
-			
-			builder.Add (new SupportedOSPlatformData("ios13.0"));	
-			builder.Add (new UnsupportedOSPlatformData("tvos"));	
+
+			builder.Add (new SupportedOSPlatformData ("ios13.0"));
+			builder.Add (new UnsupportedOSPlatformData ("tvos"));
 			foreach (var platform in Configuration.GetIncludedPlatforms (true)) {
 				yield return [platform, enumDecorated, getEnumValue, builder.ToImmutable ()];
 			}
 			builder.Clear ();
-			
+
 		}
 
 		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();
 	}
 
 	[Theory]
-	[ClassData (typeof(TestDataGetSupportedPlatforms))]
+	[ClassData (typeof (TestDataGetSupportedPlatforms))]
 	void GetSupportedPlatforms (ApplePlatform platform, string inputText,
 		Func<SyntaxNode, MemberDeclarationSyntax?> getNode,
 		SymbolAvailability expectedAvailability)
 	{
-		var (compilation, syntaxTrees) = CreateCompilation (nameof(GetAttributeDataPresent),
+		var (compilation, syntaxTrees) = CreateCompilation (nameof (GetAttributeDataPresent),
 			platform, inputText);
 		Assert.Single (syntaxTrees);
 		var semanticModel = compilation.GetSemanticModel (syntaxTrees [0]);

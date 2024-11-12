@@ -58,7 +58,7 @@ readonly struct FieldData<T> where T : Enum {
 		}
 
 		if (attributeData.NamedArguments.Length == 0) {
-			data = new(symbolName, libraryName, flags);	
+			data = new (symbolName, libraryName, flags);
 			return true;
 		}
 
@@ -76,7 +76,7 @@ readonly struct FieldData<T> where T : Enum {
 				return false;
 			}
 		}
-		data = new(symbolName, libraryName, flags);	
+		data = new (symbolName, libraryName, flags);
 		return true;
 	}
 }

@@ -46,7 +46,7 @@ readonly struct ObsoletedOSPlatformData {
 		}
 
 		if (attributeData.NamedArguments.Length == 0) {
-			data = new(platformName, message, url);
+			data = new (platformName, message, url);
 			return true;
 		}
 
@@ -63,7 +63,7 @@ readonly struct ObsoletedOSPlatformData {
 			}
 		}
 
-		data = new(platformName, message, url);
+		data = new (platformName, message, url);
 		return true;
 	}
 }

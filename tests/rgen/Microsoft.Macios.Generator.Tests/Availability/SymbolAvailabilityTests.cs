@@ -85,23 +85,23 @@ public class SymbolAvailabilityTests {
 	public static IEnumerable<object []> AddSeveralPlatformTestData {
 		get {
 			yield return [
-				new Dictionary<ApplePlatform, object[]> {
-					{ ApplePlatform.iOS, [ new SupportedOSPlatformData (ApplePlatform.iOS.AsString ().ToLower())] }, 
+				new Dictionary<ApplePlatform, object []> {
+					{ ApplePlatform.iOS, [ new SupportedOSPlatformData (ApplePlatform.iOS.AsString ().ToLower())] },
 					{ ApplePlatform.MacOSX, [new SupportedOSPlatformData (ApplePlatform.MacOSX.AsString ().ToLower())] },
 				}
 			];
-			
+
 			yield return [
-				new Dictionary<ApplePlatform, object[]> {
-					{ ApplePlatform.iOS, [new SupportedOSPlatformData ("ios12.0")] }, 
+				new Dictionary<ApplePlatform, object []> {
+					{ ApplePlatform.iOS, [new SupportedOSPlatformData ("ios12.0")] },
 					{ ApplePlatform.MacOSX, [new SupportedOSPlatformData ("macos12.0"), new UnsupportedOSPlatformData ("macos11.0")] },
 					{ ApplePlatform.TVOS, [new SupportedOSPlatformData (ApplePlatform.TVOS.AsString ().ToLower())] },
 				}
 			];
-			
+
 			yield return [
-				new Dictionary<ApplePlatform, object[]> {
-					{ ApplePlatform.iOS, [new UnsupportedOSPlatformData (ApplePlatform.iOS.AsString ().ToLower())] }, 
+				new Dictionary<ApplePlatform, object []> {
+					{ ApplePlatform.iOS, [new UnsupportedOSPlatformData (ApplePlatform.iOS.AsString ().ToLower())] },
 					{ ApplePlatform.MacOSX, [new UnsupportedOSPlatformData (ApplePlatform.MacOSX.AsString ().ToLower())] },
 					{ ApplePlatform.TVOS, [new UnsupportedOSPlatformData (ApplePlatform.TVOS.AsString ().ToLower())] },
 					{ ApplePlatform.MacCatalyst, [new UnsupportedOSPlatformData (ApplePlatform.MacCatalyst.AsString ().ToLower())] }
@@ -111,21 +111,21 @@ public class SymbolAvailabilityTests {
 	}
 
 	[Theory]
-	[MemberData (nameof(AddSeveralPlatformTestData))]
-	void AddSeveralPlatformTest (Dictionary<ApplePlatform, object[]> platforms)
+	[MemberData (nameof (AddSeveralPlatformTestData))]
+	void AddSeveralPlatformTest (Dictionary<ApplePlatform, object []> platforms)
 	{
 		foreach (var (_, availabilityData) in platforms) {
 			foreach (var data in availabilityData) {
 				switch (data) {
-					case ObsoletedOSPlatformData obsoleted:
-						builder.Add (obsoleted);
-						break;
-					case SupportedOSPlatformData supported:
-						builder.Add (supported);
-						break;
-					case UnsupportedOSPlatformData unsupported:
-						builder.Add (unsupported);
-						break;
+				case ObsoletedOSPlatformData obsoleted:
+					builder.Add (obsoleted);
+					break;
+				case SupportedOSPlatformData supported:
+					builder.Add (supported);
+					break;
+				case UnsupportedOSPlatformData unsupported:
+					builder.Add (unsupported);
+					break;
 				}
 			}
 		}

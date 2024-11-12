@@ -6,13 +6,13 @@ using Xamarin.Utils;
 namespace Microsoft.Macios.Generator.Availability;
 
 readonly partial struct PlatformAvailability {
-	public static Builder CreateBuilder (ApplePlatform platform) => new(platform);
+	public static Builder CreateBuilder (ApplePlatform platform) => new (platform);
 
 	public sealed class Builder {
 		readonly ApplePlatform platform;
 		Version? supportedVersion;
-		readonly Dictionary<Version, string?> unsupported = new();
-		readonly Dictionary<Version, (string? Message, string? Url)> obsoleted = new();
+		readonly Dictionary<Version, string?> unsupported = new ();
+		readonly Dictionary<Version, (string? Message, string? Url)> obsoleted = new ();
 
 		internal Builder (ApplePlatform platform) => this.platform = platform;
 

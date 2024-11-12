@@ -24,7 +24,7 @@ public class SymbolAvailabilityEqualityTests {
 	{
 		leftBuilder.Add (new SupportedOSPlatformData ("ios12.0"));
 		rightBuilder.Add (new SupportedOSPlatformData ("ios13.0"));
-		
+
 		var left = leftBuilder.ToImmutable ();
 		var right = rightBuilder.ToImmutable ();
 		Assert.False (left.Equals (right));
@@ -37,7 +37,7 @@ public class SymbolAvailabilityEqualityTests {
 	public void EqualDifferentiOSWithNull ()
 	{
 		leftBuilder.Add (new SupportedOSPlatformData ("ios12.0"));
-		
+
 		var left = leftBuilder.ToImmutable ();
 		var right = rightBuilder.ToImmutable ();
 		Assert.False (left.Equals (right));
@@ -70,7 +70,7 @@ public class SymbolAvailabilityEqualityTests {
 		leftBuilder.Add (iOSSupport);
 		leftBuilder.Add (new SupportedOSPlatformData ("tvos13.0"));
 		rightBuilder.Add (iOSSupport);
-		
+
 		var left = leftBuilder.ToImmutable ();
 		var right = rightBuilder.ToImmutable ();
 		Assert.False (left.Equals (right));
@@ -109,7 +109,7 @@ public class SymbolAvailabilityEqualityTests {
 		leftBuilder.Add (new SupportedOSPlatformData ("maccatalyst13.0"));
 		rightBuilder.Add (iOSSupport);
 		rightBuilder.Add (tvOSSupport);
-		
+
 		var left = leftBuilder.ToImmutable ();
 		var right = rightBuilder.ToImmutable ();
 		Assert.False (left.Equals (right));
@@ -132,7 +132,7 @@ public class SymbolAvailabilityEqualityTests {
 		rightBuilder.Add (tvOSSupport);
 		rightBuilder.Add (maccatalystSupport);
 		rightBuilder.Add (new SupportedOSPlatformData ("macos12.0"));
-		
+
 		var left = leftBuilder.ToImmutable ();
 		var right = rightBuilder.ToImmutable ();
 		Assert.False (left.Equals (right));
@@ -154,7 +154,7 @@ public class SymbolAvailabilityEqualityTests {
 		rightBuilder.Add (iOSSupport);
 		rightBuilder.Add (tvOSSupport);
 		rightBuilder.Add (maccatalystSupport);
-		
+
 		var left = leftBuilder.ToImmutable ();
 		var right = rightBuilder.ToImmutable ();
 		Assert.False (left.Equals (right));

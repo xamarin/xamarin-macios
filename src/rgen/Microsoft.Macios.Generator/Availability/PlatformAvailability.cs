@@ -6,15 +6,15 @@ using Xamarin.Utils;
 namespace Microsoft.Macios.Generator.Availability;
 
 readonly partial struct PlatformAvailability : IEquatable<PlatformAvailability> {
-	static readonly Version defaultVersion = new();
+	static readonly Version defaultVersion = new ();
 
 	public ApplePlatform Platform { get; }
 	public Version? SupportedVersion { get; }
 
-	readonly Dictionary<Version, string?> unsupported = new();
+	readonly Dictionary<Version, string?> unsupported = new ();
 	public readonly IReadOnlyDictionary<Version, string?> UnsupportedVersions => unsupported;
 
-	readonly Dictionary<Version, (string? Message, string? Url)> obsoleted = new();
+	readonly Dictionary<Version, (string? Message, string? Url)> obsoleted = new ();
 	public readonly IReadOnlyDictionary<Version, (string? Message, string? Url)> ObsoletedVersions => obsoleted;
 
 	public static bool IsDefaultVersion (Version version) => version == defaultVersion;
@@ -35,15 +35,15 @@ readonly partial struct PlatformAvailability : IEquatable<PlatformAvailability> 
 		SupportedVersion = other.SupportedVersion;
 		// important, the default copy constructor of a record wont do this. It will use the same ref, not
 		// something we want to do because it will mean that two records will modify the same collection
-		unsupported = new(other.unsupported);
-		obsoleted = new(other.ObsoletedVersions);
+		unsupported = new (other.unsupported);
+		obsoleted = new (other.ObsoletedVersions);
 	}
-	
+
 	public PlatformAvailability MergeWithParent (PlatformAvailability? parent)
 	{
 		if (parent is null || Platform != parent.Value.Platform)
 			// we cant merge different platforms, do return a copy of this
-			return new(this);
+			return new (this);
 
 		// create a builder that will be used to create the merged result
 		var builder = new Builder (Platform);
@@ -79,16 +79,16 @@ readonly partial struct PlatformAvailability : IEquatable<PlatformAvailability> 
 
 		return builder.ToImmutable ();
 	}
-	
+
 	public bool Equals (PlatformAvailability other)
 	{
 		var obsoleteComparer = new DictionaryComparer<Version, (string?, string?)> ();
 		var unsupportedComparer = new DictionaryComparer<Version, string?> ();
 
-		return Platform == other.Platform && 
-		       Equals (SupportedVersion, other.SupportedVersion) &&
-		       unsupportedComparer.Equals (unsupported, other.unsupported) &&
-		       obsoleteComparer.Equals (obsoleted, other.obsoleted) && Platform == other.Platform;
+		return Platform == other.Platform &&
+			   Equals (SupportedVersion, other.SupportedVersion) &&
+			   unsupportedComparer.Equals (unsupported, other.unsupported) &&
+			   obsoleteComparer.Equals (obsoleted, other.obsoleted) && Platform == other.Platform;
 	}
 
 	public override bool Equals (object? obj)

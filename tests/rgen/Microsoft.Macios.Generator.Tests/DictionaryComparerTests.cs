@@ -4,13 +4,13 @@ using Xunit;
 namespace Microsoft.Macios.Generator.Tests;
 
 public class DictionaryComparerTests {
-	readonly DictionaryComparer<string, (string Name, string Surname)> comparer = new();
-	Dictionary<string, (string Name, string Surname)> left = new();
-	Dictionary<string, (string Name, string Surname)> right = new();
+	readonly DictionaryComparer<string, (string Name, string Surname)> comparer = new ();
+	Dictionary<string, (string Name, string Surname)> left = new ();
+	Dictionary<string, (string Name, string Surname)> right = new ();
 
 	[Fact]
 	public void EqualBothNull ()
-		=> Assert.True (comparer.Equals (null, null));	
+		=> Assert.True (comparer.Equals (null, null));
 
 	[Fact]
 	public void EqualLeftNull ()

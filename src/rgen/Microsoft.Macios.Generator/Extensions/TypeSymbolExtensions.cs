@@ -13,7 +13,7 @@ static class TypeSymbolExtensions {
 		var boundAttributes = symbol.GetAttributes ();
 		if (boundAttributes.Length == 0) {
 			// return an empty dictionary if there are no attributes
-			return new();
+			return new ();
 		}
 
 		var attributes = new Dictionary<string, List<AttributeData>> ();
@@ -43,13 +43,13 @@ static class TypeSymbolExtensions {
 		var current = symbol.ContainingSymbol;
 		if (current is null)
 			return [];
-		
+
 		while (current is not INamespaceSymbol) {
 			result.Add (current);
 			current = current.ContainingSymbol;
 		}
 
-		return [..result];
+		return [.. result];
 	}
 
 	static SymbolAvailability GetAvailabilityForSymbol (this ISymbol symbol)
@@ -94,7 +94,7 @@ static class TypeSymbolExtensions {
 
 		return builder.ToImmutable ();
 	}
-	
+
 	/// <summary>
 	/// 
 	/// </summary>
@@ -104,8 +104,8 @@ static class TypeSymbolExtensions {
 	{
 		var availability = GetAvailabilityForSymbol (symbol);
 		// get the parents and return the merge
-		foreach (var parent in GetParents(symbol)) {
-			availability = availability.MergeWithParent (GetAvailabilityForSymbol (parent));	
+		foreach (var parent in GetParents (symbol)) {
+			availability = availability.MergeWithParent (GetAvailabilityForSymbol (parent));
 		}
 		return availability;
 	}

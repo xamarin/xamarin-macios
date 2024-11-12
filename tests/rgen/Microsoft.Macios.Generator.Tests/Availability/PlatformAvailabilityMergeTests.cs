@@ -20,7 +20,7 @@ public class PlatformAvailabilityMergeTests {
 		childBuilder.AddObsoletedVersion (new Version (11, 0), null, null);
 		var child = childBuilder.ToImmutable ();
 		var wrongParent = wrongParentBuilder.ToImmutable ();
-		
+
 		var merged = child.MergeWithParent (wrongParent);
 		Assert.Equal (child.UnsupportedVersions.Count, merged.UnsupportedVersions.Count);
 		Assert.Equal (child.ObsoletedVersions.Count, merged.ObsoletedVersions.Count);

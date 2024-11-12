@@ -66,7 +66,7 @@ readonly partial struct SymbolAvailability : IEquatable<SymbolAvailability> {
 		if (parent is null)
 			return new SymbolAvailability (this);
 
-		return new(
+		return new (
 			Merge (iOS, parent.Value.iOS),
 			Merge (TvOS, parent.Value.TvOS),
 			Merge (MacCatalyst, parent.Value.MacCatalyst),

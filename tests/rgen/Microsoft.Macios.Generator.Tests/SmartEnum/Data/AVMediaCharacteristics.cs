@@ -46,7 +46,7 @@ enum AVMediaCharacteristics {
 	DescribesVideoForAccessibility = 10,
 
 #if !__MACOS__
-	[UnsupportedOSPlatform("macos")]
+	[UnsupportedOSPlatform ("macos")]
 	[Field<EnumValue> ("AVMediaCharacteristicEasyToRead")]
 	EasyToRead = 11,
 #endif
