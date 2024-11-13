@@ -11,7 +11,7 @@ namespace Microsoft.Macios.Generator.Availability;
 /// for a specific platform.
 /// </summary>
 readonly partial struct PlatformAvailability : IEquatable<PlatformAvailability> {
-	
+
 	/// <summary>
 	///  The default version that is used to represents that a platform is fully supported/unsupported.
 	/// </summary>
@@ -21,7 +21,7 @@ readonly partial struct PlatformAvailability : IEquatable<PlatformAvailability> 
 	/// Targeted platform.
 	/// </summary>
 	public ApplePlatform Platform { get; }
-	
+
 	/// <summary>
 	/// The supported version of the platform. If null, that means that the user did not add a SupportedOSPlatform
 	/// attribute. 
@@ -29,20 +29,20 @@ readonly partial struct PlatformAvailability : IEquatable<PlatformAvailability> 
 	public Version? SupportedVersion { get; }
 
 	readonly Dictionary<Version, string?> unsupported = new ();
-	
+
 	/// <summary>
 	/// Dictionary that contains all the obsoleted versions and their optional data.
 	/// </summary>
 	public readonly IReadOnlyDictionary<Version, string?> UnsupportedVersions => unsupported;
 
 	readonly Dictionary<Version, (string? Message, string? Url)> obsoleted = new ();
-	
+
 	/// <summary>
 	/// Dictionary tath contains all the unsupported versions and their optional data.
 	/// </summary>
 	public readonly IReadOnlyDictionary<Version, (string? Message, string? Url)> ObsoletedVersions => obsoleted;
 
-	
+
 	/// <summary>
 	/// Returns if a version is the default version.
 	/// </summary>

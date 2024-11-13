@@ -25,7 +25,7 @@ namespace MyNamespace {
 	}
 }
 ";
-		var (compilation, _) = CreateCompilation (nameof(TryComputeLibraryNamePlusLibsTests), platform, inputText);
+		var (compilation, _) = CreateCompilation (nameof (TryComputeLibraryNamePlusLibsTests), platform, inputText);
 		var rootContext = new RootBindingContext (compilation);
 		Assert.True (rootContext.TryComputeLibraryName (attributeLibName, ns, out var libName, out var libPath));
 		Assert.Equal (expectedLibraryName, libName);
@@ -46,7 +46,7 @@ namespace MyNamespace {
 	}
 }
 ";
-		var (compilation, _) = CreateCompilation (nameof(TryComputeLibraryNamePlusLibsTests), platform, inputText);
+		var (compilation, _) = CreateCompilation (nameof (TryComputeLibraryNamePlusLibsTests), platform, inputText);
 		var rootContext = new RootBindingContext (compilation);
 		Assert.Equal (rootContext.IsSystemLibrary (lib), expectedResult);
 	}

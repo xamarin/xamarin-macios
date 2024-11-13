@@ -14,7 +14,7 @@ readonly struct SupportedOSPlatformData {
 	/// Supported platform.
 	/// </summary>
 	public ApplePlatform Platform { get; }
-	
+
 	/// <summary>
 	/// Version in which the symbol is supported. The default new Version () value will be
 	/// used when the symbol has been obsoleted in all version.

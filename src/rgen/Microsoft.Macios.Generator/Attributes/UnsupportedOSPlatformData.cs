@@ -10,18 +10,18 @@ namespace Microsoft.Macios.Generator.Attributes;
 /// Represents the data found in a UsupportedOSPlatformAttribute.
 /// </summary>
 readonly struct UnsupportedOSPlatformData {
-	
+
 	/// <summary>
 	/// Unsupported platform.
 	/// </summary>
 	public ApplePlatform Platform { get; }
-	
+
 	/// <summary>
 	/// Version in which the symbol was obsoleted. The default new Version () value will be
 	/// used when the symbol has been obsoleted in all version.
 	/// </summary>
 	public Version Version { get; }
-	
+
 	/// <summary>
 	/// Optional unsupported message to report to the user.
 	/// </summary>
