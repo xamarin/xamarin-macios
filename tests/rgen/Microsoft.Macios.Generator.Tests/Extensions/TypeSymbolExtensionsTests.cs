@@ -44,7 +44,7 @@ public class TestClass {
 ";
 			var classAttrs = new HashSet<string> { "Test.SimpleAttribute", "Test.AttributeWithParamsAttribute" };
 
-			foreach (var platform in Configuration.GetIncludedPlatforms (true)) {
+			foreach (var platform in Configuration.GetIncludedPlatforms ()) {
 				yield return [platform, classText, attributesText, classAttrs];
 			}
 
@@ -58,7 +58,7 @@ public interface ITestInterface {
 }
 ";
 			var interfaceAttrs = new HashSet<string> { "Test.SimpleAttribute" };
-			foreach (var platform in Configuration.GetIncludedPlatforms (true)) {
+			foreach (var platform in Configuration.GetIncludedPlatforms ()) {
 				yield return [platform, interfaceText, attributesText, interfaceAttrs];
 			}
 
@@ -71,7 +71,7 @@ public enum TestEnum {
 }
 ";
 			HashSet<string> enumAttrs = new ();
-			foreach (var platform in Configuration.GetIncludedPlatforms (true)) {
+			foreach (var platform in Configuration.GetIncludedPlatforms ()) {
 				yield return [platform, enumText, attributesText, enumAttrs];
 			}
 		}
@@ -122,7 +122,7 @@ public class ParentClass{
 			Func<SyntaxNode, MemberDeclarationSyntax?> getNestedMethod =
 				rootNode => rootNode.DescendantNodes ().OfType<MethodDeclarationSyntax> ().LastOrDefault ();
 			var nestedMethodNestedClassParents = new [] { "ChildClass", "ParentClass" };
-			foreach (var platform in Configuration.GetIncludedPlatforms (true)) {
+			foreach (var platform in Configuration.GetIncludedPlatforms ()) {
 				yield return [platform, nestedMethodNestedClass, getNestedMethod, nestedMethodNestedClassParents];
 			}
 
@@ -136,7 +136,7 @@ public class ParentClass{
 }
 ";
 			var methodParents = new [] { "ParentClass" };
-			foreach (var platform in Configuration.GetIncludedPlatforms (true)) {
+			foreach (var platform in Configuration.GetIncludedPlatforms ()) {
 				yield return [platform, methodInClass, getNestedMethod, methodParents];
 			}
 
@@ -155,7 +155,7 @@ namespace Test {
 ";
 
 			var nestedNamespacesParents = new [] { "ParentClass" };
-			foreach (var platform in Configuration.GetIncludedPlatforms (true)) {
+			foreach (var platform in Configuration.GetIncludedPlatforms ()) {
 				yield return [platform, nestedNamespacesNestedClass, getNestedMethod, nestedNamespacesParents];
 			}
 
@@ -176,7 +176,7 @@ public class ParentClass {
 }
 ";
 			var enumParensts = new [] { "MyEnum", "ChildClass", "ParentClass" };
-			foreach (var platform in Configuration.GetIncludedPlatforms (true)) {
+			foreach (var platform in Configuration.GetIncludedPlatforms ()) {
 				yield return [platform, enumValueNested, getEnumValue, enumParensts];
 			}
 		}
@@ -222,7 +222,7 @@ public class ParentClass{
 }
 ";
 			builder.Add (new SupportedOSPlatformData ("ios12.0"));
-			foreach (var platform in Configuration.GetIncludedPlatforms (true)) {
+			foreach (var platform in Configuration.GetIncludedPlatforms ()) {
 				yield return [platform, decoratedParent, getNestedMethod, builder.ToImmutable ()];
 			}
 			builder.Clear ();
@@ -243,7 +243,7 @@ public class ParentClass{
 ";
 			builder.Add (new SupportedOSPlatformData ("ios12.0"));
 			builder.Add (new UnsupportedOSPlatformData ("tvos"));
-			foreach (var platform in Configuration.GetIncludedPlatforms (true)) {
+			foreach (var platform in Configuration.GetIncludedPlatforms ()) {
 				yield return [platform, decoratedParentAndChild, getNestedMethod, builder.ToImmutable ()];
 			}
 			builder.Clear ();
@@ -265,7 +265,7 @@ public class ParentClass{
 ";
 			builder.Add (new SupportedOSPlatformData ("ios"));
 			builder.Add (new UnsupportedOSPlatformData ("tvos"));
-			foreach (var platform in Configuration.GetIncludedPlatforms (true)) {
+			foreach (var platform in Configuration.GetIncludedPlatforms ()) {
 				yield return [platform, grandChild, getNestedMethod, builder.ToImmutable ()];
 			}
 			builder.Clear ();
@@ -288,7 +288,7 @@ public class ParentClass{
 ";
 			builder.Add (new SupportedOSPlatformData ("ios13.0"));
 			builder.Add (new UnsupportedOSPlatformData ("tvos"));
-			foreach (var platform in Configuration.GetIncludedPlatforms (true)) {
+			foreach (var platform in Configuration.GetIncludedPlatforms ()) {
 				yield return [platform, allDecorated, getNestedMethod, builder.ToImmutable ()];
 			}
 			builder.Clear ();
@@ -314,7 +314,7 @@ public class ParentClass{
 
 			builder.Add (new SupportedOSPlatformData ("ios13.0"));
 			builder.Add (new UnsupportedOSPlatformData ("tvos"));
-			foreach (var platform in Configuration.GetIncludedPlatforms (true)) {
+			foreach (var platform in Configuration.GetIncludedPlatforms ()) {
 				yield return [platform, enumDecorated, getEnumValue, builder.ToImmutable ()];
 			}
 			builder.Clear ();

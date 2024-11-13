@@ -40,7 +40,7 @@ public class NotEnum {
 		public IEnumerator<object []> GetEnumerator ()
 		{
 
-			foreach (var platform in Configuration.GetIncludedPlatforms (true)) {
+			foreach (var platform in Configuration.GetIncludedPlatforms ()) {
 
 				const string emptyEnum = @"
 namespace Test;

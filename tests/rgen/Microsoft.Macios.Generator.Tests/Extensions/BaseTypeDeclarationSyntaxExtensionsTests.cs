@@ -74,7 +74,7 @@ namespace Foo {
 
 	public IEnumerator<object []> GetEnumerator ()
 	{
-		foreach (var platform in Configuration.GetIncludedPlatforms (true)) {
+		foreach (var platform in Configuration.GetIncludedPlatforms ()) {
 			yield return [GetDeclaration<ClassDeclarationSyntax> (platform, filescopedNamespaceClass),
 				"Test.Foo"];
 			yield return [GetDeclaration<EnumDeclarationSyntax> (platform, filescopedNamespaceNestedEnum),
