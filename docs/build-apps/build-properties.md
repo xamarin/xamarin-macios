@@ -89,6 +89,12 @@ The full path to the Metal compiler.
 
 The default behavior is to use `xcrun metal`.
 
+## PlutilPath
+
+The full path to the `plutil` command-line tool.
+
+The default behavior is to use `xcrun plutil`.
+
 ## StripPath
 
 The full path to the `strip` command-line tool.
