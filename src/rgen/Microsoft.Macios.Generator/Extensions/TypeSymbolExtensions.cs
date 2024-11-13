@@ -3,11 +3,16 @@ using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
 using Microsoft.Macios.Generator.Attributes;
 using Microsoft.Macios.Generator.Availability;
-using Microsoft.Macios.Generator.DataModel;
 
 namespace Microsoft.Macios.Generator.Extensions;
 
 static class TypeSymbolExtensions {
+	/// <summary>
+	/// Retrieve a dictionary with the attribute data of all the attributes attached to a symbol. Because
+	/// an attribute can appear more than once, the valus are a collection of attribute data.
+	/// </summary>
+	/// <param name="symbol">The symbol whose attributes we want to retrieve.</param>
+	/// <returns>A dictionary with the attribute names as keys and the related attribute data.</returns>
 	public static Dictionary<string, List<AttributeData>> GetAttributeData (this ISymbol symbol)
 	{
 		var boundAttributes = symbol.GetAttributes ();
@@ -52,6 +57,12 @@ static class TypeSymbolExtensions {
 		return [.. result];
 	}
 
+	/// <summary>
+	/// Return the symbol availability WITHOUT taking into account the parent symbols availability.
+	/// </summary>
+	/// <param name="symbol">The symbols whose availability attributes we want to retrieve.</param>
+	/// <returns>The symbol availability WITHOUT taking into account the parent symbols.</returns>
+	/// <remarks>This is a helper method, you probably don't want to use it.</remarks>
 	static SymbolAvailability GetAvailabilityForSymbol (this ISymbol symbol)
 	{
 		//get the attribute of the symbol and look for the Supported and Unsupported attributes and
@@ -96,10 +107,13 @@ static class TypeSymbolExtensions {
 	}
 
 	/// <summary>
-	/// 
+	/// Returns the symbol availability taking into account the parent symbols availability.
+	///
+	/// That means that the attributes used on the current symbol are merged with the attributes used
+	/// in all the symbol parents following the correct child-parent order.
 	/// </summary>
-	/// <param name="symbol"></param>
-	/// <returns></returns>
+	/// <param name="symbol">The symbol whose availability we want to retrieve.</param>
+	/// <returns>A symbol availability structure for the symbol.</returns>
 	public static SymbolAvailability GetSupportedPlatforms (this ISymbol symbol)
 	{
 		var availability = GetAvailabilityForSymbol (symbol);

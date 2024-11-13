@@ -5,8 +5,15 @@ using Xamarin.Utils;
 namespace Microsoft.Macios.Generator.Availability;
 
 readonly partial struct SymbolAvailability {
+	/// <summary>
+	/// Create a new symbol availability builder.
+	/// </summary>
+	/// <returns></returns>
 	public static Builder CreateBuilder () => new ();
 
+	/// <summary>
+	/// A writable SymbolAvailability accessor.
+	/// </summary>
 	public sealed class Builder {
 		readonly Dictionary<ApplePlatform, PlatformAvailability.Builder> platforms = new ();
 
@@ -15,6 +22,12 @@ readonly partial struct SymbolAvailability {
 
 		internal Builder () { }
 
+		/// <summary>
+		/// Returns the PlatformAvailability for the given platform. If we did not have a builder for the
+		/// platform, a new one is created and added to the dictionary.
+		/// </summary>
+		/// <param name="platform">The platforms whose builder we want to retrieve.</param>
+		/// <returns>A PlatformAvailability.Builder for the given platform.</returns>
 		PlatformAvailability.Builder GetBuilder (ApplePlatform platform)
 		{
 			if (platforms.TryGetValue (platform, out var builder))
@@ -25,6 +38,10 @@ readonly partial struct SymbolAvailability {
 			return builder;
 		}
 
+		/// <summary>
+		/// Adds a new obsoleted version to the SymbolAvailability.
+		/// </summary>
+		/// <param name="obsoletedOsPlatform">The data of a ObsoleteOSPlatformAttribute.</param>
 		public void Add (ObsoletedOSPlatformData obsoletedOsPlatform)
 		{
 			if (!supportedPlatforms.Contains (obsoletedOsPlatform.Platform))
@@ -34,6 +51,10 @@ readonly partial struct SymbolAvailability {
 			builder.Add (obsoletedOsPlatform);
 		}
 
+		/// <summary>
+		/// Add a new supported version to the SymbolAvailability.
+		/// </summary>
+		/// <param name="supportedPlatform">The data of a SupportedOSPlatformAttribute.</param>
 		public void Add (SupportedOSPlatformData supportedPlatform)
 		{
 			if (!supportedPlatforms.Contains (supportedPlatform.Platform))
@@ -43,6 +64,10 @@ readonly partial struct SymbolAvailability {
 			builder.Add (supportedPlatform);
 		}
 
+		/// <summary>
+		/// Add a new unsuspported verison to the SymbolAvailability.
+		/// </summary>
+		/// <param name="unsupportedPlatform">The data of a UnsupportedOSPlatformAttribute.</param>
 		public void Add (UnsupportedOSPlatformData unsupportedPlatform)
 		{
 			if (!supportedPlatforms.Contains (unsupportedPlatform.Platform))
@@ -52,8 +77,15 @@ readonly partial struct SymbolAvailability {
 			builder.Add (unsupportedPlatform);
 		}
 
+		/// <summary>
+		/// Clear all the versions that have been added to the platform availability.
+		/// </summary>
 		public void Clear () => platforms.Clear ();
 
+		/// <summary>
+		/// Create the immutable structure from the builder data.
+		/// </summary>
+		/// <returns>A new readonly structure that contains the symbol availability.</returns>
 		public SymbolAvailability ToImmutable ()
 		{
 			PlatformAvailability? iOS =

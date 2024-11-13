@@ -6,11 +6,29 @@ using Xamarin.Utils;
 
 namespace Microsoft.Macios.Generator.Attributes;
 
+/// <summary>
+/// Represents the data found in a ObsoletedOSPlatformAttribute.
+/// </summary>
 readonly struct ObsoletedOSPlatformData {
+	/// <summary>
+	/// Obsoleted platform.
+	/// </summary>
 	public ApplePlatform Platform { get; }
+	
+	/// <summary>
+	/// Version in which the symbol was obsoleted. The default new Version () value will be
+	/// used when the symbol has been obsoleted in all version.
+	/// </summary>
 	public Version Version { get; }
+	
+	/// <summary>
+	/// Optional obsoleted message to report to the user.
+	/// </summary>
 	public string? Message { get; } = default;
 
+	/// <summary>
+	/// Optional url that points to the documentation.
+	/// </summary>
 	public string? Url { get; }
 
 	internal ObsoletedOSPlatformData (string platformName)
@@ -24,6 +42,12 @@ readonly struct ObsoletedOSPlatformData {
 		Url = url;
 	}
 
+	/// <summary>
+	/// Try to parse the attribute data to retrieve the information of an ObsoletedOSPlatformAttribute.
+	/// </summary>
+	/// <param name="attributeData">The attribute data to be parsed.</param>
+	/// <param name="data">The parsed data. Null if we could not parse the attribute data.</param>
+	/// <returns>True if the data was parsed.</returns>
 	public static bool TryParse (AttributeData attributeData,
 		[NotNullWhen (true)] out ObsoletedOSPlatformData? data)
 	{

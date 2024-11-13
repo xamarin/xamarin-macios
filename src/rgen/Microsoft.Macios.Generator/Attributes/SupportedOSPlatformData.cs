@@ -6,8 +6,19 @@ using Xamarin.Utils;
 
 namespace Microsoft.Macios.Generator.Attributes;
 
+/// <summary>
+/// Represents the data found in a SupportedOSPlatformAttribute.
+/// </summary>
 readonly struct SupportedOSPlatformData {
+	/// <summary>
+	/// Supported platform.
+	/// </summary>
 	public ApplePlatform Platform { get; }
+	
+	/// <summary>
+	/// Version in which the symbol is supported. The default new Version () value will be
+	/// used when the symbol has been obsoleted in all version.
+	/// </summary>
 	public Version Version { get; }
 
 	internal SupportedOSPlatformData (string platformName)
@@ -15,6 +26,12 @@ readonly struct SupportedOSPlatformData {
 		(Platform, Version) = platformName.GetPlatformAndVersion ();
 	}
 
+	/// <summary>
+	/// Try to parse the attribute data to retrieve the information of an SupportedOSPlatformAttribute.
+	/// </summary>
+	/// <param name="attributeData">The attribute data to be parsed.</param>
+	/// <param name="data">The parsed data. Null if we could not parse the attribute data.</param>
+	/// <returns>True if the data was parsed.</returns>
 	public static bool TryParse (AttributeData attributeData,
 		[NotNullWhen (true)] out SupportedOSPlatformData? data)
 	{

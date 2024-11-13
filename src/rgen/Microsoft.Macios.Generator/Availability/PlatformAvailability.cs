@@ -5,18 +5,49 @@ using Xamarin.Utils;
 
 namespace Microsoft.Macios.Generator.Availability;
 
+/// <summary>
+/// Structure that represents the availability os a symbol in a specific platform. This
+/// structure provides a union of all the Supported, Unsupported and Obsoleted attributes in a symbol
+/// for a specific platform.
+/// </summary>
 readonly partial struct PlatformAvailability : IEquatable<PlatformAvailability> {
+	
+	/// <summary>
+	///  The default version that is used to represents that a platform is fully supported/unsupported.
+	/// </summary>
 	static readonly Version defaultVersion = new ();
 
+	/// <summary>
+	/// Targeted platform.
+	/// </summary>
 	public ApplePlatform Platform { get; }
+	
+	/// <summary>
+	/// The supported version of the platform. If null, that means that the user did not add a SupportedOSPlatform
+	/// attribute. 
+	/// </summary>
 	public Version? SupportedVersion { get; }
 
 	readonly Dictionary<Version, string?> unsupported = new ();
+	
+	/// <summary>
+	/// Dictionary that contains all the obsoleted versions and their optional data.
+	/// </summary>
 	public readonly IReadOnlyDictionary<Version, string?> UnsupportedVersions => unsupported;
 
 	readonly Dictionary<Version, (string? Message, string? Url)> obsoleted = new ();
+	
+	/// <summary>
+	/// Dictionary tath contains all the unsupported versions and their optional data.
+	/// </summary>
 	public readonly IReadOnlyDictionary<Version, (string? Message, string? Url)> ObsoletedVersions => obsoleted;
 
+	
+	/// <summary>
+	/// Returns if a version is the default version.
+	/// </summary>
+	/// <param name="version">Version being tested.</param>
+	/// <returns>True if the version is default.</returns>
 	public static bool IsDefaultVersion (Version version) => version == defaultVersion;
 
 	PlatformAvailability (ApplePlatform platform, Version? supportedVersion,
@@ -29,6 +60,10 @@ readonly partial struct PlatformAvailability : IEquatable<PlatformAvailability> 
 		obsoleted = obsoletedVersions;
 	}
 
+	/// <summary>
+	/// Copy constructor.
+	/// </summary>
+	/// <param name="other">The availability to copy.</param>
 	public PlatformAvailability (PlatformAvailability other)
 	{
 		Platform = other.Platform;
@@ -39,6 +74,19 @@ readonly partial struct PlatformAvailability : IEquatable<PlatformAvailability> 
 		obsoleted = new (other.ObsoletedVersions);
 	}
 
+	/// <summary>
+	/// Merge the current platform availability with that of a parent symbol. This allows to ensure that
+	/// the right availability for the symbol is present.
+	///
+	/// The logic is as follows:
+	///
+	///	1. We always try to pik the most restrictive supported version.
+	/// 2. Merge unsupported versions, keep the childs message if the version is present in the parent.
+	/// 3. Merge the obsoleted versions, heep the childs message and url if the version is present in the parent.
+	/// </summary>
+	/// <param name="parent">The parent platform availability.</param>
+	/// <remarks>Merging two platform availabilities with diff platforms will result in a copy of the childs
+	/// availability.</remarks>
 	public PlatformAvailability MergeWithParent (PlatformAvailability? parent)
 	{
 		if (parent is null || Platform != parent.Value.Platform)
@@ -80,6 +128,7 @@ readonly partial struct PlatformAvailability : IEquatable<PlatformAvailability> 
 		return builder.ToImmutable ();
 	}
 
+	/// <inheritdoc />
 	public bool Equals (PlatformAvailability other)
 	{
 		var obsoleteComparer = new DictionaryComparer<Version, (string?, string?)> ();
@@ -91,11 +140,13 @@ readonly partial struct PlatformAvailability : IEquatable<PlatformAvailability> 
 			   obsoleteComparer.Equals (obsoleted, other.obsoleted) && Platform == other.Platform;
 	}
 
+	/// <inheritdoc />
 	public override bool Equals (object? obj)
 	{
 		return obj is PlatformAvailability other && Equals (other);
 	}
 
+	/// <inheritdoc />
 	public override int GetHashCode ()
 	{
 		return HashCode.Combine (unsupported, obsoleted, (int) Platform, SupportedVersion);

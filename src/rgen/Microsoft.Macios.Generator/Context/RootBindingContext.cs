@@ -82,14 +82,19 @@ class RootBindingContext {
 	static bool IsLibraryName (string libraryName, string variableName) =>
 		// the length of the variable names has to be equal to the current lib name legth + 7 which is the length of
 		// the word Library
-		variableName.Length == libraryName.Length + 7
+		variableName.Length + 7 == libraryName.Length
 		// has to start with the name of the lib
-		&& variableName.StartsWith (libraryName, StringComparison.Ordinal)
+		&& libraryName.StartsWith (variableName, StringComparison.Ordinal)
 		// has to end with the word library
-		&& variableName.EndsWith ("Library", StringComparison.Ordinal);
+		&& libraryName.EndsWith ("Library", StringComparison.Ordinal);
 
 	INamedTypeSymbol GetObjCConstants () => Compilation.GetTypeByMetadataName ("ObjCRuntime.Constants")!;
 
+	/// <summary>
+	/// Return if the given string represents a core library in the system.
+	/// </summary>
+	/// <param name="name">Name of the lib to check.</param>
+	/// <returns>True if the library is a core lib of the system.</returns>
 	public bool IsSystemLibrary (string name)
 	{
 		// use the semantic model to get the ObjcRuntime.Constants type and see if we do have a value for the library

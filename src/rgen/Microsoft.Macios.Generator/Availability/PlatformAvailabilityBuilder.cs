@@ -6,14 +6,26 @@ using Xamarin.Utils;
 namespace Microsoft.Macios.Generator.Availability;
 
 readonly partial struct PlatformAvailability {
+	/// <summary>
+	/// Create a new builder for the platform.
+	/// </summary>
+	/// <param name="platform">The platform whose availability is going to be described.</param>
+	/// <returns>A new builder for the provided platform.</returns>
 	public static Builder CreateBuilder (ApplePlatform platform) => new (platform);
 
+	/// <summary>
+	/// A writable PlatformAvailability accessor.
+	/// </summary>
 	public sealed class Builder {
 		readonly ApplePlatform platform;
 		Version? supportedVersion;
 		readonly Dictionary<Version, string?> unsupported = new ();
 		readonly Dictionary<Version, (string? Message, string? Url)> obsoleted = new ();
 
+		/// <summary>
+		/// Create a builder for the given platform.
+		/// </summary>
+		/// <param name="platform">The platform whose availability we are going to build.</param>
 		internal Builder (ApplePlatform platform) => this.platform = platform;
 
 		/// <summary>
@@ -73,6 +85,10 @@ readonly partial struct PlatformAvailability {
 			}
 		}
 
+		/// <summary>
+		/// Add a new unsupported version of the platform to the availability struct.
+		/// </summary>
+		/// <param name="unsupportedPlatform">An unsupported version.</param>
 		public void Add (UnsupportedOSPlatformData unsupportedPlatform)
 		{
 			if (unsupportedPlatform.Platform != platform)
@@ -81,7 +97,13 @@ readonly partial struct PlatformAvailability {
 		}
 
 
-		internal void AddObsoletedVersion (Version version, string? message, string? url)
+		/// <summary>
+		/// Add a new obsoleted version of the platform to the availability struct.
+		/// </summary>
+		/// <param name="version"></param>
+		/// <param name="message">Optional obsolete message.</param>
+		/// <param name="url">Optional documentation url.</param>
+		public void AddObsoletedVersion (Version version, string? message, string? url)
 		{
 			if (version == defaultVersion) {
 				// we are obsoleting for all versions
@@ -96,6 +118,10 @@ readonly partial struct PlatformAvailability {
 			}
 		}
 
+		/// <summary>
+		/// Add a new obsolete version from the ObsoletedOSPlatformAttribute.
+		/// </summary>
+		/// <param name="obsoletedPlatform">The data of the ObsoletedOSPlatformAttribute.</param>
 		public void Add (ObsoletedOSPlatformData obsoletedPlatform)
 		{
 			if (obsoletedPlatform.Platform != platform)
@@ -103,6 +129,10 @@ readonly partial struct PlatformAvailability {
 			AddObsoletedVersion (obsoletedPlatform.Version, obsoletedPlatform.Message, obsoletedPlatform.Url);
 		}
 
+		/// <summary>
+		/// Create the immutable structure from the builder data.
+		/// </summary>
+		/// <returns>A new readonly structure that contains the platform availability.</returns>
 		public PlatformAvailability ToImmutable ()
 		{
 			return new PlatformAvailability (platform, supportedVersion, unsupported, obsoleted);
